@@ -90,6 +90,16 @@ Flycast run. Track 3 SHA256 is
 This is prepared for a console diagnostic attempt, not physical-console
 acceptance, a public release, an SD write or a reported-bug fix.
 
+The user subsequently authorized a separate
+[console diagnostic prerelease](https://github.com/lamb2k/re4dc/releases/tag/diagnostic-coldload-c9776451-20261007).
+It publishes that unchanged GDEMU image and checksums, targeting runtime commit
+`c9776451`. The 864,603,757-byte archive has SHA256
+`83e6cc016ddd62a33283e61af5ce4bdd70eb7d9cb868f42ac3c1d925ca101556`.
+Every archive member and both public downloads pass full hash readback; release
+metadata and tag target are verified. This diagnostic is not marked latest;
+the regular r22j packages are unchanged. No SD write or issue closure follows
+publication, and the three reported faults remain unresolved.
+
 ## Missing weapon beam, issue 12
 
 The reporter and user confirm that the target dot already appears; only the beam
