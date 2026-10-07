@@ -40,6 +40,56 @@ Private evidence is under
 build definition that omitted the overlay line. No release, SD change or issue
 closure is part of this diagnostic follow-up.
 
+### Cold and warm load comparison
+
+Further private tests use the same early FILE1 r103 save. Its frame counter is
+508; the original save block intentionally stores and restores that counter.
+The warm test therefore uses controller timing based on display retraces, so
+loading the save cannot delay later controller inputs until an old source tick
+is reached. No gameplay counter or save contents are changed for these tests.
+
+* Cold title Load with the qualified ELF above and Flycast's interpreter plus
+  alignment checks completes three inventory closes in 368.09 seconds. All
+  backing hashes match, the alignment log records no misaligned access, and
+  movement continues through source tick 6120. This is a stricter emulator
+  check, not a model of every console cache, DMA or timing behavior.
+* An additional cold-load build uses the existing `POISON_RAM=0xA5` option for
+  unused RAM, the arena, VRAM and sound RAM. Its 361.22-second run completes
+  three closes with exact backing restoration, then movement and world
+  execution through source tick 8760. This deliberately different startup
+  fill does not reproduce the fault. It is not enabled in the manual candidate.
+* Normal New Game completes all three opening movies and the radio, followed
+  by ordinary pause-menu Load of the same r103 VMU. The 454.03-second run
+  completes three inventory closes and post-close movement through source tick
+  4200. The radio restores 3,145,600 bytes; the three inventories restore
+  3,122,752 / 3,122,688 / 3,122,688 bytes, with matching hashes `a8d7d4c8`,
+  `ce1429e8` and `8e0f19f0`. The runtime is the same qualified ELF above, with
+  ordinary Flycast execution rather than the interpreter used for alignment.
+
+Both normal cold cycles in the earlier synthetic-diagnostic run and all warm
+cycles succeed. Cold and warm paths have different live memory layouts, but
+these tests do not reproduce a failing-versus-passing distinction. They do not
+establish the reporter workaround's cause or fix issues 8, 9 or 2.
+
+Earlier incomplete fixtures remain preserved: warm v1 reached New Game and
+Load but no inventory cycle, and poison v1 stopped at the storage floor before
+the inventory test. Neither is counted as a passing inventory regression.
+Exact private reports are `cold-extended-qualification.json`,
+`warm-inventory-v2-qualification.json` and `save-frame-inspection.json` under
+the coldload evidence root above.
+
+A local manual diagnostic candidate is prepared from runtime source
+`c97764515c214ebf95d2c0c447c855c367313800`, using the qualified ELF above.
+The CUE and GDEMU folders are under `C:/RE4DC-Play-Discs`, named
+`crash-diagnostic-20261007-title` and `crash-diagnostic-20261007-gdemu`.
+They contain `READY.txt` and `SHA256SUMS.txt`; no automated input, warp,
+debug-save or forced-crash file is included. The GDI verifies all 1,195
+payloads in both namespaces and boots to the title menu in a 91.20-second
+Flycast run. Track 3 SHA256 is
+`b78efdfea87d8b9598b87c9a0575b1f677d379a624bf59ef0fc9a24457437c28`.
+This is prepared for a console diagnostic attempt, not physical-console
+acceptance, a public release, an SD write or a reported-bug fix.
+
 ## Missing weapon beam, issue 12
 
 The reporter and user confirm that the target dot already appears; only the beam
@@ -137,7 +187,9 @@ bridge start. Source door loading enters r109 generation 2, completes its room
 initialization and continues for the remainder of the 300-second run without
 HALT, MISSING or a hang. This is a real source door transition in Flycast, not a
 forced room jump or a reproduction of the reporter's hardware/save history.
-The console cause remains unresolved; the requested VMU and pacing are pending.
+The console cause remains unresolved. The reporter cannot provide the VMU;
+investigation continues without treating that file as a prerequisite. Pacing
+and a console capture with the improved crash context remain unconfirmed.
 
 ## Ganados use Leon's prelit lighting path
 
