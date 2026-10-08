@@ -1,5 +1,17 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-08: hanging lamp fire and combined manual candidate
+
+Admit source lamp effect owner 0x5e through the native sprite filter, preserving
+all other restrictions. Flame/smoke are visible in the matched r102 source-hit
+fixture; 2,795 source records are STRICT and required decisions match. Hardware
+model drawn frames 430/432 cost +2.137605 ms at 200 MHz; existing resident-only
+and sprite-cap limits still apply. This is not a console FPS measurement.
+The combined raw GDI passes cold Load, visible Leon, 39-second Yellow Herb
+Examine, exact 3 MiB restoration and movement. Console acceptance, bridge
+timeout and herb appearance remain open. No binary publication or SD change.
+See [lamp qualification](D367_LAMP_FIRE_20261008.md) for exact scope and builds.
+
 ## 2026-10-08: inventory retained-storage lifetime
 
 The supplied-save cold-load failure is reproduced and corrected by detaching

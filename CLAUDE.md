@@ -1,5 +1,14 @@
 # RE4 Dreamcast working handoff
 
+2026-10-08 lamp correction: source owner 0x5e now reaches the existing native
+sprite filter. The matched r102 impact shows flame/smoke, with 2,795 STRICT
+source records and identical required decisions. Paired drawn hardware-model
+frames cost +2.137605 ms; existing particle limits remain. The combined manual
+GDI passes cold Load, visible Leon, 39-second Yellow Herb Examine, exact 3 MiB
+restore and movement. See [qualification](port/dreamcast/docs/D367_LAMP_FIRE_20261008.md).
+Physical console, bridge timeout and herb appearance remain open; no binary
+release or SD write. This supersedes the pending lamp status in older entries.
+
 2026-10-08 inventory correction: detach the renderer's retained-storage borrow
 before the inventory swap reuses room memory. The supplied-save cold-load
 reproduction now passes Green and Yellow Herb examinations, visible Leon,

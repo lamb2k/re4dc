@@ -119,6 +119,8 @@ extern "C" void GXGetViewportv(f32*);
 static GXColor s_effect_col; // ChannelSet's final material colour (GXSetChanMatColor)
 static int EspSpriteEligible(cEsp* esp)
 {
+    // Et0a hanging lamps use 0x5e for their source flame/smoke sprites, including
+    // the impact fire. Keep the existing class, mask and blend restrictions.
     const u32 owner = esp->info.owner;
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     // EFFECT_ROOM (bit mask, effects30.mk): plus the room's own effects. 1: est sets of the room owner
@@ -130,11 +132,11 @@ static int EspSpriteEligible(cEsp* esp)
     } else if (owner == 0xD0) {
         room = RE4DC_EFFECT_ROOM & ((esp->m_Id == 0x15 || esp->m_Id == 0x48) ? 4 : 2);
     }
-    if (!room && !(owner == 0 || owner == 0x10 || (owner >= 0x34 && owner <= 0x4F))) {
+    if (!room && !(owner == 0 || owner == 0x10 || (owner >= 0x34 && owner <= 0x4F) || owner == 0x5E)) {
         return 0;
     }
 #else
-    if (!(owner == 0 || owner == 0x10 || (owner >= 0x34 && owner <= 0x4F))) {
+    if (!(owner == 0 || owner == 0x10 || (owner >= 0x34 && owner <= 0x4F) || owner == 0x5E)) {
         return 0; // muzzle flash (WEPxx), the shot's core effects, blood (EM10)
     }
 #endif
