@@ -57,6 +57,13 @@ int main(){unsigned bytes=1,generation,cells,cell_bytes,stale,refused;
   assert(re4dc_model_retained_storage(&bytes)==payload && bytes==131072 && free_bytes==82656);
   const int count=allocations;payload[0]=7;
   assert(re4dc_model_retained_storage(&bytes)==payload && payload[0]==7 && allocations==count);
+  // During the inventory swap, room ownership survives but heap 12 draws
+  // cannot reacquire this room cell. Restoring heap 4 reuses the same cell.
+  current=12;active=0;
+  for(unsigned draw=0;draw<3;++draw)
+   assert(!re4dc_model_retained_storage(&bytes) && bytes==0 && allocations==count && live && payload[0]==7);
+  current=4;active=1;
+  assert(re4dc_model_retained_storage(&bytes)==payload && bytes==131072 && allocations==count && payload[0]==7);
   assert(re4dc_room4_state(&generation,&cells,&cell_bytes,&stale,&refused) && cells==1 && cell_bytes==131072);
   re4dc_model_preparation_owner(nullptr);assert(!live && free_bytes==213824);
   re4dc_model_preparation_owner(nullptr);assert(!live);
@@ -93,6 +100,38 @@ int main(){unsigned bytes=1,generation,cells,cell_bytes,stale,refused;
    exe=root/"check"
    subprocess.run(["g++","-std=c++20","-O2","-DRE4DC_D349_RENDERER_STACK=1","-fsanitize=address,undefined","-fno-omit-frame-pointer","-I"+str(game/"platform/include"),str(root/"fixture.cpp"),"-o",str(exe)],check=True)
    subprocess.run([str(exe)],check=True)
+
+ def test_subscreen_detaches_before_window_reuse(self):
+  source=(ROOT/"port/dreamcast/game/sscrn_bridge.cpp").read_text()
+  body=source.split('extern "C" void re4dc_subscreen_swap_open(SubScreenWork* wk)',1)[1].split('extern "C" void re4dc_subscreen_swap_close',1)[0]
+  # The real swap entry must detach before packing can use the window as
+  # scratch, and before loading inventory data over the retained cache.
+  detach=body.index("re4dc_model_detach_retained_storage();")
+  self.assertLess(detach,body.index("re4dc_ssb_put_packed("))
+  self.assertLess(detach,body.index("memset(wk->pBuf"))
+  # This game translation unit does not receive the renderer's private knob
+  # header. Compile its actual entry without that macro: the platform detach
+  # API itself handles builds with the retained renderer disabled.
+  entry=body.split("    build_spans(lo, hi);",1)[0]+"}"
+  code=r"""
+#include <cassert>
+#include <cstdint>
+using u32=std::uintptr_t;
+struct SubScreenWork {void* pBuf;};
+bool swapped=false;constexpr u32 kSsAramSize=0x300000;
+int detaches=0;
+void re4dc_missing(const char*){assert(false);}
+unsigned long long re4dc_ssb_us(){return 0;}
+void re4dc_model_detach_retained_storage(){++detaches;}
+void swap_entry(SubScreenWork* wk)
+"""+entry+r"""
+int main(){SubScreenWork wk{(void*)0x800000};swap_entry(&wk);assert(detaches==1);}
+"""
+  with tempfile.TemporaryDirectory() as tmp:
+   path=Path(tmp);(path/"swap.cpp").write_text(code)
+   subprocess.run(["g++","-std=c++20",str(path/"swap.cpp"),"-o",str(path/"check")],check=True)
+   subprocess.run([str(path/"check")],check=True)
+
 
  def test_movie_loan_ownership(self):
   # MOVIE_HEAP_EVICT: the cache lent to a route movie is explicit state (architect review 2026-10-03). While lent a

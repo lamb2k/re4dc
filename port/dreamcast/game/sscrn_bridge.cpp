@@ -33,6 +33,7 @@ extern "C" {
 int OSCheckHeap(int heap);
 void OSReport(const char* fmt, ...);
 void re4dc_ui_invalidate_sources();
+void re4dc_model_detach_retained_storage();
 unsigned re4dc_vram_free();
 void re4dc_kos_heap_state(unsigned* free_chunks, unsigned* used, unsigned* break_room);
 int re4dc_fixture_read(const char* path, char* buffer, unsigned size);
@@ -449,6 +450,10 @@ extern "C" void re4dc_subscreen_swap_open(SubScreenWork* wk)
     if (swapped) re4dc_missing("sub screen area swapped twice");
     const unsigned long long t0 = re4dc_ssb_us();
     const u32 lo = u32(wk->pBuf), hi = lo + kSsAramSize;
+    // The room cache may lie in this window. Drop the renderer's borrow before
+    // packing/reusing it; heap 4 keeps ownership and its bytes are restored at
+    // close. Inventory draws on heap 12 cannot reacquire the room cache.
+    re4dc_model_detach_retained_storage();
     build_spans(lo, hi);
     unsigned bank = 0, pool = 0;
     const unsigned pool_before = re4dc_ssb_pool_free();

@@ -1,5 +1,18 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-08: inventory retained-storage lifetime
+
+The supplied-save cold-load failure is reproduced and corrected by detaching
+the existing renderer cache borrow before inventory reuses the room window.
+Green and Yellow Herb examinations, repeated exact 3 MiB restoration, visible
+Leon and subsequent movement pass in Flycast. Matched current-recipe uncapped
+village and house gates are STRICT (4,079 and 3,234 records), with required
+decisions identical and house movie/radio resources preserved. No hardware
+frame-time improvement or physical-console acceptance is claimed. The bridge
+timeout and missing lamp fire remain separate work. See the
+[inventory qualification](D367_INVENTORY_RETENTION_20261008.md).
+
+
 ## 2026-10-07: native Ganado prelit lighting and missing beam
 
 The user reconfirmed Leon's baked-lighting performance choice and requested the

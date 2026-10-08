@@ -45,7 +45,8 @@ extern "C" void* re4dc_model_static_lighting_storage(unsigned* bytes){*bytes=0;r
 #define RE4DC_TEST_RETAINED 0
 #endif
 alignas(32) unsigned char retained_scratch[131072];
-extern "C" void* re4dc_model_retained_storage(unsigned* bytes){*bytes=RE4DC_TEST_RETAINED?sizeof(retained_scratch):0;return *bytes?retained_scratch:nullptr;}
+bool retained_available=true;
+extern "C" void* re4dc_model_retained_storage(unsigned* bytes){*bytes=RE4DC_TEST_RETAINED && retained_available?sizeof(retained_scratch):0;return *bytes?retained_scratch:nullptr;}
 alignas(32) unsigned char preparation_scratch[12288];
 extern "C" void* re4dc_model_preparation_storage(unsigned* bytes){*bytes=sizeof(preparation_scratch);return preparation_scratch;}
 extern "C" int re4dc_model_defer_part(const Re4dcModelPart*){return 0;}
@@ -103,6 +104,27 @@ int main(){
  p.normal_stride=4;p.normal_shift=6;p.lighting=&lighting;
  run(q);assert(status==0 && committed && owned[0].argb==0xffff0000U);
  const auto red_triangle=expanded();
+#if RE4DC_TEST_RETAINED
+ // Inventory swaps out the room heap while the renderer still has a batch.
+ // Detach without freeing: the old cell is now source inventory/model bytes.
+ for(unsigned cycle=0;cycle<3;++cycle){
+  re4dc_model_detach_retained_storage();retained_available=false;
+  std::memset(retained_scratch,0xA5,sizeof(retained_scratch));
+  for(unsigned draw=0;draw<3;++draw){
+   run(q);const auto fallback=expanded();
+   assert(status==0 && fallback.size()==red_triangle.size());
+   assert(!memcmp(fallback.data(),red_triangle.data(),fallback.size()*32));
+   for(unsigned char byte:retained_scratch)assert(byte==0xA5);
+  }
+  // Restoring the room makes the same owned cell available again. Acquisition
+  // must initialize it and preserve the source packet output.
+  retained_available=true;run(q);const auto restored=expanded();
+  assert(status==0 && restored.size()==red_triangle.size());
+  assert(!memcmp(restored.data(),red_triangle.data(),restored.size()*32));
+  bool touched=false;for(unsigned char byte:retained_scratch)touched|=byte!=0xA5;
+  assert(touched);
+ }
+#endif
  auto litstrip=stream(0x98,{0,1,2});run(litstrip);assert(status==0 && owned[0].argb==0xffff0000U);
  lighting.lights[7].color[0]=0;lighting.lights[7].color[1]=255;
  run(q);assert(status==0 && owned[0].argb==0xff00ff00U);

@@ -1,5 +1,15 @@
 # RE4 Dreamcast working handoff
 
+2026-10-08 inventory correction: detach the renderer's retained-storage borrow
+before the inventory swap reuses room memory. The supplied-save cold-load
+reproduction now passes Green and Yellow Herb examinations, visible Leon,
+repeated exact 3 MiB restores and movement in Flycast. Current-recipe uncapped
+village (4,079 records) and house (3,234 records) gates are STRICT with identical
+required decisions and preserved house movie/radio resources. See
+[the inventory qualification](port/dreamcast/docs/D367_INVENTORY_RETENTION_20261008.md).
+Physical-console acceptance and the separately reported bridge timeout remain
+open; this does not authorize a binary release or SD change.
+
 2026-10-07 bug follow-up: NATIVE_LASER=1 restores the source weapon beam, while
 ACTOR_GANADO_SOURCE_LIGHT=0 implements the user's request that native Ganados
 share Leon's prelit lighting path. Beam and lighting each pass 2,911-record
