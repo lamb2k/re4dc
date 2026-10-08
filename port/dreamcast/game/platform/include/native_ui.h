@@ -10,6 +10,12 @@ struct Re4dcUiQuad {
     float xy[8], uv[8];
     unsigned color, blend, masked;
 };
+// Source subscreen tile, copied at its existing ordering-table callback.
+// Positions are view-space in GX triangle-strip order; colour is source RGBA.
+struct Re4dcSubscreenQuad {
+    float positions[4][3], projection[7], viewport[6];
+    unsigned color, blend, depth_test;
+};
 // EFFECT_SPRITES (effects30.mk): one projected effect sprite. Corners A,B,C,D in PVR
 // sprite order (A-B-C clockwise, D opposite B), screen x/y in 640x480 and z = 1/w.
 struct Re4dcEffectSprite {
@@ -48,6 +54,9 @@ void re4dc_ui_present();
 // Always called at source Render_swap, including a held picture.
 void re4dc_ui_end_frame(int present);
 void re4dc_ui_submit(const Re4dcUiQuad*);
+int re4dc_subscreen_quad(const Re4dcSubscreenQuad*);
+// Same source state; positions[0..1] are the line endpoints, width is GX sixth-pixels.
+int re4dc_subscreen_line(const Re4dcSubscreenQuad*, unsigned width);
 void re4dc_ui_invalidate_sources();
 int re4dc_ui_bind_core(void*,unsigned);
 int re4dc_ui_bind_option(void*,unsigned);

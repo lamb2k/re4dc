@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare inventory herb color/mask pairs and add them to an existing texture pack.
+"""Prepare inventory herb/fish color/mask pairs and add them to an existing texture pack.
 
 prepare_inventory_pairs.py SOURCE_TREE BASE_TEX_PAK NEW_OUTPUT_DIRECTORY
 
@@ -21,7 +21,17 @@ import texpack
 PAIRS = [
     {'color': 'b13109ae-0cd95eb5', 'mask': '1831e0c4-92be8b2a'},
     {'color': 'f5450d3b-e9eaa2b7', 'mask': '1831e0c4-92be8b2a'},
+    # Yellow Herb case foliage and the shared Black Bass / Large Bass case model.
+    {'color': '759e896a-2b7fe2da', 'mask': '1831e0c4-92be8b2a'},
+    {'color': 'bbb1a3cf-7b1f8f5b', 'mask': '9671c5c2-d80b9174'},
+    # Examine models use separate, higher-resolution source textures.
+    {'color': '56f9ee72-63f425d0', 'mask': '7eb7154f-ef1ce650'},
+    {'color': '74f9458a-1c357ea3', 'mask': '7eb7154f-ef1ce650'},
+    {'color': '63ddc827-0a23cdd0', 'mask': '7eb7154f-ef1ce650'},
+    {'color': '2d1f80f9-e3b5f041', 'mask': '10592447-b81a849d'},
 ]
+SOURCE_FILES = ['ss/eng/ss_pzzl.dat', 'ss/item/idm006.tpl', 'ss/item/idm019.tpl',
+                'ss/item/idm01c.tpl', 'ss/item/idm095.tpl', 'ss/item/idm097.tpl']
 
 
 def packages(blob):
@@ -37,7 +47,7 @@ def prepare(source, base, output):
     original = base.read_bytes()
     old = packages(original)
     output.mkdir(parents=True, exist_ok=False)
-    pairs = prepare_model_pairs(source, ['ss/eng/ss_pzzl.dat'], PAIRS, output / 'pairs')
+    pairs = prepare_model_pairs(source, SOURCE_FILES, PAIRS, output / 'pairs')
     combined = dict(old)
     for entry in pairs:
         key = tuple(int(word, 16) for word in entry['key'].split('-'))

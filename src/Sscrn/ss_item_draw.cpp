@@ -8,6 +8,11 @@
 #include "trans.h"
 #include "trans_ot.h"
 #include "camera.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+#include "native_ui.h"
+extern "C" void GXGetProjectionv(f32*);
+extern "C" void GXGetViewportv(f32*);
+#endif
 
 extern "C" {
 void DrawTexture(GXTexObj* obj, s16 x, s16 y, s16 z, s16 w, s16 h);
@@ -161,6 +166,25 @@ static void ss_Draw_line3d_trans(SsLinePrim* p)
 {
     GXSetLineWidth(p->width, 0);
     ss_Draw_line3d_local(&p->a, &p->b, pG->Cam.v_mat, p->color, p->blend, p->zupd);
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // The source helper above applies GX state but its FIFO writes are stubs.
+    // Keep this callback's source width and OT position in the native queue.
+    Re4dcSubscreenQuad line = {};
+    const Vec* points[2] = {&p->a, &p->b};
+    for (int i = 0; i < 2; ++i) {
+        Vec view;
+        PSMTXMultVec(pG->Cam.v_mat, points[i], &view);
+        line.positions[i][0] = view.x;
+        line.positions[i][1] = view.y;
+        line.positions[i][2] = view.z;
+    }
+    GXGetProjectionv(line.projection);
+    GXGetViewportv(line.viewport);
+    line.color = p->color;
+    line.blend = p->blend;
+    line.depth_test = p->zupd != 0;
+    re4dc_subscreen_line(&line, (u8) p->width);
+#endif
     GXSetLineWidth(6, 0);
 }
 
@@ -282,6 +306,26 @@ void ss_Draw_tile3d_local(Vec* a, Vec* b, Vec* c, Vec* d, Mtx mtx, u32 color, u3
     GXSetVtxAttrFmt(0, 0xB, 1, 5, 0);
     GXLoadPosMtxImm(mtx, 0);
     GXSetCurrentMtx(0);
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // The GX FIFO is a stub on Dreamcast. Submit the same colour tile at this
+    // OT position through the existing bounded native translucent queue.
+    Re4dcSubscreenQuad quad;
+    const Vec* points[4] = {a, b, c, d};
+    for (int i = 0; i < 4; ++i) {
+        Vec view;
+        PSMTXMultVec(mtx, points[i], &view);
+        quad.positions[i][0] = view.x;
+        quad.positions[i][1] = view.y;
+        quad.positions[i][2] = view.z;
+    }
+    GXGetProjectionv(quad.projection);
+    GXGetViewportv(quad.viewport);
+    quad.color = color;
+    quad.blend = blend;
+    quad.depth_test = zupd != 0; // both source GXSetZMode calls disable writes
+    re4dc_subscreen_quad(&quad);
+    return;
+#endif
     GXBegin(0x98, 0, 4);
     GXPosition3f32(a->x, a->y, a->z);
     GXColor4u8(cr, cg, cb, ca);

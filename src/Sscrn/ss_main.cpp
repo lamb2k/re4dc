@@ -27,6 +27,9 @@
 #include "motion.h"
 #include "esp.h"
 #include "sscrn.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+extern "C" void re4dc_ui_invalidate_sources();
+#endif
 
 // `inline`, defined BEFORE ss_main.h: a deferred inline whose address SubScreenTask takes is output
 // at the end of the file (after __static_initialization_and_destruction_0), in the order the deferred
@@ -581,6 +584,11 @@ void SsItemExamine::move(SUB_SCREEN* wk)
         static const Vec exam_light_ofs = {0.0f, 0.0f, 0.0f};
         static const Vec exam_light_size = {10000.0f, 10000.0f, 0.0f};
         cMap* m = wk->p_exam_model;
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+        // Examine reloads raw model/TPL bytes at the same address, bypassing
+        // TexRegist's source boundary. Drop the previous item's identities.
+        re4dc_ui_invalidate_sources();
+#endif
         m->modelInit(wk->pItemBin, wk->pItemTpl);
         m->be_flag |= 0x4000;
         m->LightInfo.init2(0, 1, &exam_light_ofs, &exam_light_size, 0x20);

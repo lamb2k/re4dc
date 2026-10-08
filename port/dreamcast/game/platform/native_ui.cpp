@@ -641,7 +641,12 @@ void start_presenter(){
 void present_fence(){
     if(!pvr_present_pending())return;
     const auto start=timer_us_gettime64();
-    if(pvr_present_wait()<0){++fence_timeouts;present_failures=present_failures|1;}
+    // The timed waiter can become runnable before the render/vblank IRQ
+    // completes, then resume with its old error after presentation finished.
+    // Recheck ownership before treating that timeout as an unfinished frame.
+    if(pvr_present_wait()<0 && pvr_present_pending()){
+        ++fence_timeouts;present_failures=present_failures|1;
+    }
     ++fence_blocked;fence_wait_us+=timer_us_gettime64()-start;
     present_resolved=present_submitted;
     present_report();
@@ -4086,6 +4091,55 @@ extern "C" int re4dc_effect_line(const Re4dcEffectLine* s){
 }
 #endif
 #endif
+#if RE4DC_SUBSCREEN && RE4DC_D349_RENDERER_STACK && RE4DC_PVR_STREAM
+#include "include/subscreen_quad_geometry.hpp"
+namespace {
+DeferredLighting* const kSubscreenQuadTag=reinterpret_cast<DeferredLighting*>(4);
+constexpr unsigned kSubscreenQuadNode=(sizeof(DeferredPart)+31)&~31U;
+}
+static int subscreen_submit(const Re4dcSubscreenQuad* q,const pvr_vertex_t* vertices,unsigned count){
+    if(!count)return 0;
+    alignas(32) pvr_vertex_t packet[13];
+    pvr_poly_cxt_t c;pvr_poly_cxt_col(&c,PVR_LIST_TR_POLY);
+    c.gen.culling=PVR_CULLING_NONE;c.gen.shading=PVR_SHADE_FLAT;c.gen.fog_type=PVR_FOG_DISABLE;
+    c.depth.comparison=q->depth_test?PVR_DEPTHCMP_GEQUAL:PVR_DEPTHCMP_ALWAYS;
+    c.depth.write=PVR_DEPTHWRITE_DISABLE;
+    constexpr pvr_blend_mode_t src[]={PVR_BLEND_ONE,PVR_BLEND_SRCALPHA,PVR_BLEND_SRCALPHA,PVR_BLEND_ONE};
+    constexpr pvr_blend_mode_t dst[]={PVR_BLEND_ZERO,PVR_BLEND_INVSRCALPHA,PVR_BLEND_ONE,PVR_BLEND_ONE};
+    c.blend.src=src[q->blend];c.blend.dst=dst[q->blend];
+    pvr_poly_compile(reinterpret_cast<pvr_poly_hdr_t*>(packet),&c);
+    std::memcpy(packet+1,vertices,count*sizeof(pvr_vertex_t));
+    const unsigned bytes=(count+1)*sizeof(pvr_vertex_t);
+    if(source_draws_finished){stream_select(PVR_LIST_TR_POLY);stream_send(packet,bytes);return 1;}
+    const unsigned required=kSubscreenQuadNode+bytes,margin=8192;
+    unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
+    if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
+        if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
+        if(!deferred_spill || required>deferred_spill_top){++dropped;return 0;}
+        storage=deferred_spill;top=&deferred_spill_top;
+    }
+    *top-=required;auto* node=new(storage+*top) DeferredPart{};
+    node->lighting=kSubscreenQuadTag;node->changed[0]=bytes;
+    std::memcpy(storage+*top+kSubscreenQuadNode,packet,bytes);
+    if(deferred_last)deferred_last->next=node;else deferred_first=node;
+    deferred_last=node;++deferred_count;
+    frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
+    return 1;
+}
+extern "C" int re4dc_subscreen_quad(const Re4dcSubscreenQuad* q){
+    if(!q || !frame_ready || stream_aborted || draining_parts)return 0;
+    pvr_vertex_t vertices[12];
+    return subscreen_submit(q,vertices,re4dc::subscreen::vertices(*q,vertices));
+}
+extern "C" int re4dc_subscreen_line(const Re4dcSubscreenQuad* q,unsigned width){
+    if(!q || !frame_ready || stream_aborted || draining_parts)return 0;
+    pvr_vertex_t vertices[12];
+    return subscreen_submit(q,vertices,re4dc::subscreen::line_vertices(*q,width,vertices));
+}
+#else
+extern "C" int re4dc_subscreen_quad(const Re4dcSubscreenQuad*){return 0;}
+extern "C" int re4dc_subscreen_line(const Re4dcSubscreenQuad*,unsigned){return 0;}
+#endif
 #if RE4DC_POST_F00
 #if !RE4DC_D349_RENDERER_STACK || !RE4DC_PVR_STREAM
 #error POST_F00 needs the D349 renderer stack and PVR_STREAM (deferred translucent queue)
@@ -4525,6 +4579,13 @@ extern "C" void re4dc_model_finish_source_draws(){
     // A future qualified PT material must also budget/enable that list.
     stream_select(PVR_LIST_TR_POLY);draining_list=PVR_LIST_TR_POLY;
     while(deferred_first && !stream_aborted){
+#if RE4DC_SUBSCREEN && RE4DC_PVR_STREAM
+        if(deferred_first->lighting==kSubscreenQuadTag){
+            const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kSubscreenQuadNode;
+            const unsigned bytes=deferred_first->changed[0];
+            deferred_first=deferred_first->next;stream_send(packet,bytes);continue;
+        }
+#endif
 #if RE4DC_EFFECT_SPRITES
         if(deferred_first->lighting==kSpriteTag){
             const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kSpriteNode;
