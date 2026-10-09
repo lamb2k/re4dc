@@ -653,7 +653,13 @@ def decode_stream(sbb, shd):
             o = shd['offset'] + blk * half * nch + c * half
             data += sbb[o:o + half]
             blk += 1
-        coef = (tuple(shd['coefs'][c]), (0, 0, shd['yn1'][c] & 0xFFFF, shd['yn2'][c] & 0xFFFF, 0, 0, 0))
+        # SND_SHD keeps a1 of the 8 predictor pairs in coef[0..7] and a2 in coef[8..15]
+        # (snd_str3.cpp: adpcm.a[i] = {coef[i], coef[i + 8]}); dsp_decode wants the pairs
+        # interleaved, as in a wavetable. Read as interleaved pairs, the filters are
+        # unstable and the decoded stream saturates (issue lamb2k/re4dc#15).
+        sc = shd['coefs'][c]
+        pairs = tuple(v for i in range(8) for v in (sc[i], sc[i + 8]))
+        coef = (pairs, (0, 0, shd['yn1'][c] & 0xFFFF, shd['yn2'][c] & 0xFFFF, 0, 0, 0))
         chans.append(dsp_decode(bytes(data[:need]), 0, shd['samples'], coef, None))
     return chans
 
@@ -759,7 +765,7 @@ def build_streams(mirror, out, keys):
     return report
 
 
-STREAM_VERSION = 2   # bump when build_streams output changes
+STREAM_VERSION = 3   # bump when build_streams output changes
 
 
 def cached_streams(mirror, out, keys, cache_dir):
