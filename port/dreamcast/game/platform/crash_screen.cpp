@@ -47,6 +47,7 @@ int g_nthreads;
 struct MissingSnapshot {
     char reason[80];
     unsigned ui, frames, vbl, vtx[3], opb[3], isp;
+    unsigned asic[3], opb_init;  // issue 9: raw ASIC event status A/B/C (latched even when not enabled)
     int pending, ta_ready;
     bool valid, pvr_valid;
 };
@@ -72,6 +73,12 @@ void capture_missing(const char* name)
             g_missing.opb[1] = PVR_GET(PVR_TA_OPB_POS); // raw register; word units on hardware
             g_missing.opb[2] = PVR_GET(PVR_TA_OPB_END);
             g_missing.isp = PVR_GET(PVR_ISP_VERTBUF_ADDR);
+            g_missing.opb_init = PVR_GET(PVR_TA_OPB_INIT);
+            // A pending render-done bit (A bit 2) means the interrupt was lost; C bits 0..4 are
+            // ISP out of memory, strip halt, OPB out of memory, TA input error, TA input overflow.
+            g_missing.asic[0] = *(volatile uint32_t*) ASIC_ACK_A;
+            g_missing.asic[1] = *(volatile uint32_t*) ASIC_ACK_B;
+            g_missing.asic[2] = *(volatile uint32_t*) ASIC_ACK_C;
         }
         g_missing.valid = true;
     }
@@ -159,6 +166,9 @@ void show(const char* kind, const char* detail, bool wait_render)
         put_text(0, row++, line, 0xFFFF);
         snprintf(line, sizeof(line), "opb %06x/%06x/%06x (pos raw)", g_missing.opb[0],
                  g_missing.opb[1], g_missing.opb[2]);
+        put_text(0, row++, line, 0xFFFF);
+        snprintf(line, sizeof(line), "asic %08x %08x %08x opbi %06x", g_missing.asic[0],
+                 g_missing.asic[1], g_missing.asic[2], g_missing.opb_init);
         put_text(0, row++, line, 0xFFFF);
     }
     if (re4dc_subscreen_brief) {
