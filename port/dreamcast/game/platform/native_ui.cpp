@@ -1,4 +1,7 @@
 #include <type_traits>
+#ifndef RE4DC_WORLD_AUTOSORT
+#define RE4DC_WORLD_AUTOSORT 0
+#endif
 #ifndef RE4DC_PS2_WORLD_DRAW
 #define RE4DC_PS2_WORLD_DRAW 0
 #endif
@@ -724,10 +727,21 @@ void present_submit(bool present,unsigned ta_faults){
 #endif
 #endif
 
+#if !RE4DC_WORLD_AUTOSORT
+constexpr float overlay_depth(){return 1.0f;}
+#endif
+
 #if RE4DC_PVR_STREAM
 // One serial PVR owner, no extra framebuffer or whole-scene packet copy.
 // KOS's opt-in manual flip preserves the source's late presentation decision.
 bool stream_scene,stream_aborted,stream_retire;
+#if RE4DC_WORLD_AUTOSORT
+bool world_autosort;
+unsigned overlay_layer;
+// Ordinary world 1/w is below one. Screen-space strips use increasing constant
+// depths so hardware sorting retains their emission order without changing UVs.
+float overlay_depth(){return world_autosort?float(2U+overlay_layer++):1.0f;}
+#endif
 unsigned stream_model_bytes,stream_peak_bytes,stream_discards,stream_black_frames;
 #if RE4DC_TA_DIRECT
 bool direct_open;               // re4dc_model_direct_begin/end: SQ held
@@ -810,6 +824,11 @@ void stream_open() {
     // Do not retain the main thread's SQ mutex across source task dispatch or
     // file/audio services. Each synchronous packet transfer reacquires it.
     sq_unlock();stream_scene=true;
+#if RE4DC_WORLD_AUTOSORT
+    // list_begin, not scene_begin, waits for and acquires this TA bank.
+    // Set its tiles only after that wait, never while the old bank renders.
+    world_autosort=false;overlay_layer=0;pvr_set_presort_mode(true);
+#endif
 }
 #if RE4DC_D349_RENDERER_STACK
 void stream_select(pvr_list_t list){
@@ -851,6 +870,16 @@ void stream_select(pvr_list_t list){
 #if RE4DC_TA_HASH
     ta_hash_marker(list);
 #endif
+}
+#endif
+#if RE4DC_WORLD_AUTOSORT
+void world_sort_begin(){
+    // Subscreen and pickup models deliberately interleave with their 2D art.
+    if(world_autosort || ui_order)return;
+#if RE4DC_ROUTE_MOVIES
+    if(movie_texture && movie_picture)return;
+#endif
+    pvr_set_presort_mode(false);world_autosort=true;
 }
 #endif
 #if RE4DC_POST_F00_DIAG
@@ -938,10 +967,11 @@ void hud_flush(HudBatch& b){if(b.n>1)stream_send(b.v,b.n*32);b.n=1;}
 void hud_rect(HudBatch& b,float x,float y,float w,float h,std::uint32_t argb){
     if(b.n+4>128)hud_flush(b);
     const float xs[4]={x,x,x+w,x+w},ys[4]={y+h,y,y+h,y};
+    const float layer=overlay_depth();
     for(unsigned k=0;k<4;++k){
         auto& v=b.v[b.n++];
         v.flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
-        v.x=RE4DC_UI_X(xs[k]);v.y=RE4DC_UI_Y(ys[k]);v.z=1.0f;v.u=v.v=0;v.argb=argb;v.oargb=0;
+        v.x=RE4DC_UI_X(xs[k]);v.y=RE4DC_UI_Y(ys[k]);v.z=layer;v.u=v.v=0;v.argb=argb;v.oargb=0;
     }
 }
 void hud_number(HudBatch& b,float x,float y,unsigned value,bool tenths,std::uint32_t argb){
@@ -2442,13 +2472,14 @@ void glyph_draw_run(unsigned first,unsigned count){
         const GlyphQuad& g=glyph_quads[i];
         if(n+5>sizeof(buf)/sizeof(buf[0]))flush();
         if(g.bank!=bank){std::memcpy(&buf[n++],&glyph_header(g.bank),sizeof(pvr_vertex_t));bank=g.bank;}
+        const float layer=overlay_depth();
         constexpr float kH=float(kGlyphAtlasH);
         const float u0=float((g.cell&7)*32)/256.0f,v0=float((g.cell>>3)*32)/kH;
         const float x[4]={g.x0*0.25f,g.x1*0.25f,g.x0*0.25f,g.x1*0.25f},y[4]={g.y0*0.25f,g.y0*0.25f,g.y1*0.25f,g.y1*0.25f};
         const float u[4]={u0,u0+g.cw/256.0f,u0,u0+g.cw/256.0f},v[4]={v0,v0,v0+g.ch/kH,v0+g.ch/kH};
         for(unsigned k=0;k<4;++k){
             pvr_vertex_t& p=buf[n++];
-            p.flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;p.x=RE4DC_UI_X(x[k]);p.y=RE4DC_UI_Y(y[k]);p.z=1.0f;p.u=u[k];p.v=v[k];p.argb=g.argb;p.oargb=0;
+            p.flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;p.x=RE4DC_UI_X(x[k]);p.y=RE4DC_UI_Y(y[k]);p.z=layer;p.u=u[k];p.v=v[k];p.argb=g.argb;p.oargb=0;
         }
         ++glyph_drawn;
     }
@@ -2744,7 +2775,8 @@ void pace_note_draw(int mode){
     for(int k=0;k<3;++k){
         const float x=40.0f+k*36,y=40.0f,w=28.0f,h=16.0f;const std::uint32_t argb=k==mode?on[k]:0x60ffffffU;
         const float xs[4]={x,x,x+w,x+w},ys[4]={y+h,y,y+h,y};
-        for(unsigned j=0;j<4;++j){auto& q=v[n++];q.flags=j==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;q.x=RE4DC_UI_X(xs[j]);q.y=RE4DC_UI_Y(ys[j]);q.z=1.0f;q.u=q.v=0;q.argb=argb;q.oargb=0;}
+        const float layer=overlay_depth();
+        for(unsigned j=0;j<4;++j){auto& q=v[n++];q.flags=j==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;q.x=RE4DC_UI_X(xs[j]);q.y=RE4DC_UI_Y(ys[j]);q.z=layer;q.u=q.v=0;q.argb=argb;q.oargb=0;}
     }
     stream_send(v,n*32);
 }
@@ -2782,8 +2814,9 @@ static void ui_draw_quad(unsigned i){
         alignas(32) pvr_vertex_t commands[5]{};std::uint32_t count;
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
+        const float layer=overlay_depth();
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
-            v[n].x=RE4DC_UI_X(q.xy[2*j]);v[n].y=RE4DC_UI_Y(q.xy[2*j+1]);v[n].z=1.0f;
+            v[n].x=RE4DC_UI_X(q.xy[2*j]);v[n].y=RE4DC_UI_Y(q.xy[2*j+1]);v[n].z=layer;
             v[n].u=q.uv[2*j]*q.image.width/t.width;v[n].v=q.uv[2*j+1]*q.image.height/t.height;v[n].argb=q.color;}
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
@@ -2856,8 +2889,9 @@ extern "C" void re4dc_ui_present(){
         alignas(32) pvr_vertex_t commands[5]{};std::uint32_t count;
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
+        const float layer=overlay_depth();
         for(unsigned n=0;n<4;++n){unsigned j=order[n];v[n].flags=n==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;
-            v[n].x=RE4DC_UI_X(q.xy[2*j]);v[n].y=RE4DC_UI_Y(q.xy[2*j+1]);v[n].z=1.0f;
+            v[n].x=RE4DC_UI_X(q.xy[2*j]);v[n].y=RE4DC_UI_Y(q.xy[2*j+1]);v[n].z=layer;
             v[n].u=q.uv[2*j]*q.image.width/t.width;v[n].v=q.uv[2*j+1]*q.image.height/t.height;v[n].argb=q.color;}
 #if RE4DC_PVR_STREAM
         stream_send(commands,sizeof(commands));
@@ -3922,6 +3956,17 @@ struct FxHeaderKey{unsigned fmt,w,h;const void* txr;unsigned char src,dst,screen
 FxHeaderKey fx_hdr_key{~0U,0,0,nullptr,0,0,0};
 alignas(32) pvr_poly_hdr_t fx_hdr_cache;
 #endif
+void fx_send(unsigned char* packet,bool screen){
+#if RE4DC_WORLD_AUTOSORT
+    if(world_autosort && screen){
+        auto* b=reinterpret_cast<pvr_sprite_txr_t*>(packet+sizeof(pvr_poly_hdr_t));
+        b->az=b->bz=b->cz=overlay_depth();
+    }
+#else
+    (void)screen;
+#endif
+    stream_send(packet,kSpritePacket);
+}
 void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     const auto& t=e->package.textures()[0];
     auto* h=reinterpret_cast<pvr_poly_hdr_t*>(out);
@@ -4021,7 +4066,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
     if(!e){++fx_missing;return 0;}
     if(source_draws_finished){
         alignas(32) unsigned char packet[kSpritePacket];fx_packet(*s,e,packet);
-        stream_select(PVR_LIST_TR_POLY);stream_send(packet,kSpritePacket);
+        stream_select(PVR_LIST_TR_POLY);fx_send(packet,s->screen);
         ++fx_direct;++fx_count;return 1;
     }
     const unsigned required=kSpriteNode+kSpritePacket,margin=8192;
@@ -4033,7 +4078,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
         storage=deferred_spill;top=&deferred_spill_top;
     }
     *top-=required;
-    auto* node=new(storage+*top) DeferredPart{};node->lighting=kSpriteTag;
+    auto* node=new(storage+*top) DeferredPart{};node->lighting=kSpriteTag;node->changed[0]=s->screen;
     fx_packet(*s,e,storage+*top+kSpriteNode);
     if(deferred_last)deferred_last->next=node;else deferred_first=node;
     deferred_last=node;++deferred_count;++fx_queued;++fx_count;
@@ -4171,6 +4216,15 @@ void post_pass(unsigned char* out,pvr_blend_mode_t src,pvr_blend_mode_t dst,unsi
         v[k].u=v[k].v=0;v[k].argb=argb;v[k].oargb=0;
     }
 }
+void post_send(unsigned char* packet,unsigned bytes){
+#if RE4DC_WORLD_AUTOSORT
+    if(world_autosort)for(unsigned offset=0;offset<bytes;offset+=kPostPass){
+        auto* v=reinterpret_cast<pvr_vertex_t*>(packet+offset+sizeof(pvr_poly_hdr_t));
+        const float layer=overlay_depth();for(unsigned i=0;i<4;++i)v[i].z=layer;
+    }
+#endif
+    stream_send(packet,bytes);
+}
 void post_packet(unsigned char* out){
     post_pass(out,PVR_BLEND_DESTCOLOR,PVR_BLEND_ONE,post_c);                    // d + c d
 #if RE4DC_POST_F00==4
@@ -4216,7 +4270,7 @@ extern "C" void re4dc_post_filter00(unsigned char rate,unsigned char type,signed
 #endif
     if(source_draws_finished){
         alignas(32) unsigned char packet[kPostBytes];post_packet(packet);
-        stream_select(PVR_LIST_TR_POLY);stream_send(packet,kPostBytes);++post_direct;return;
+        stream_select(PVR_LIST_TR_POLY);post_send(packet,kPostBytes);++post_direct;return;
     }
     const unsigned required=kPostNode+kPostBytes,margin=8192;
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
@@ -4299,6 +4353,9 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
     if(t.width!=width || t.height!=height)return 0; // repeated UVs cannot use padding
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
     stream_select(list);
+#if RE4DC_WORLD_AUTOSORT
+    world_sort_begin();
+#endif
     if(stream_aborted)return 0;
     pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     c.gen.culling=PVR_CULLING_NONE; // authored cull already applied after clipping
@@ -4333,6 +4390,9 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
     if(t.width!=width || t.height!=height)return 0; // repeated UVs cannot use padding
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
     stream_select(list);
+#if RE4DC_WORLD_AUTOSORT
+    world_sort_begin();
+#endif
     if(stream_aborted)return 0;
     pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     // PS2_WORLD_KERNEL=4 strips: the authored cull (0 drops screen area >= 0, i.e. clockwise with y down).
@@ -4442,6 +4502,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         const unsigned pass=k[4];
         const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
         stream_select(list);
+#if RE4DC_WORLD_AUTOSORT
+        world_sort_begin();
+#endif
         if(stream_aborted)return 0;
         pvr_poly_hdr_t header;
         auto* hw=reinterpret_cast<std::uint32_t*>(&header);
@@ -4507,6 +4570,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     const unsigned pass=k[4];
     const pvr_list_t list=pass==0?PVR_LIST_OP_POLY:pass==1?PVR_LIST_PT_POLY:PVR_LIST_TR_POLY;
     stream_select(list);
+#if RE4DC_WORLD_AUTOSORT
+    world_sort_begin();
+#endif
     if(stream_aborted)return 0;
     pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     const pvr_cull_mode_t cull[]={PVR_CULLING_NONE,PVR_CULLING_CCW,PVR_CULLING_CW};
@@ -4588,8 +4654,9 @@ extern "C" void re4dc_model_finish_source_draws(){
 #endif
 #if RE4DC_EFFECT_SPRITES
         if(deferred_first->lighting==kSpriteTag){
-            const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kSpriteNode;
-            deferred_first=deferred_first->next;stream_send(packet,kSpritePacket);continue;
+            auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kSpriteNode;
+            const bool screen=deferred_first->changed[0]!=0;
+            deferred_first=deferred_first->next;fx_send(packet,screen);continue;
         }
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
         if(deferred_first->lighting==kLineTag){
@@ -4600,9 +4667,9 @@ extern "C" void re4dc_model_finish_source_draws(){
 #endif
 #if RE4DC_POST_F00
         if(deferred_first->lighting==kPostTag){
-            const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kPostNode;
+            auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kPostNode;
             const unsigned bytes=deferred_first->changed[0];
-            deferred_first=deferred_first->next;stream_send(packet,bytes);continue;
+            deferred_first=deferred_first->next;post_send(packet,bytes);continue;
         }
 #endif
         // Copy the small view before I/O can yield. Retirement clears the queue

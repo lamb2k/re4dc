@@ -1867,6 +1867,20 @@ endif
 $(OBJDIR)/coarse.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_DRAW=1
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_DRAW=1
 endif
+# WORLD_AUTOSORT=1: world transparency correction. Existing PVR bank
+# sorting; menus/pickups retain source order, planar overlays retain layer order.
+# Enabled for the PS2 world + ordered UI profile after the r109 appearance,
+# bridge/inventory STRICT and r102 CPU gates. Use 0 for a comparison arm.
+WORLD_AUTOSORT ?= $(if $(filter 11,$(PS2_WORLD_DRAW)$(SS_UI_ORDER)),1,0)
+ifneq ($(WORLD_AUTOSORT),0)
+ifneq ($(WORLD_AUTOSORT),1)
+$(error WORLD_AUTOSORT must be 0 or 1)
+endif
+ifneq ($(PS2_WORLD_DRAW)$(SS_UI_ORDER),11)
+$(error WORLD_AUTOSORT needs PS2_WORLD_DRAW=1 SS_UI_ORDER=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_AUTOSORT=1
+endif
 # PS2_PRELOAD_LEAN=1 (needs PS2_WORLD_ROOMS=2 and QUALITY_ASSETS=1; native_ui.cpp + native_static.cpp, render only,
 # default 0): with the room's PS2 world package open, the room preload loads the package's own textures instead of
 # the room archive's (GameCube scenery the PS2 world replaces) and the Standard index's; those load on first sight
