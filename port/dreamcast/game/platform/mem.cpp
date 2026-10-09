@@ -201,8 +201,12 @@ void re4dc_log(const char* fmt, ...)
 #if RE4DC_VMU_DEBUG_SLOT
 void re4dc_dbgslot_ring(unsigned kind, unsigned a, unsigned b);
 #endif
+void re4dc_crash_screen_missing(const char* name) __attribute__((weak));
 void re4dc_missing(const char* name)
 {
+    // Keep the first failure before the intentional sleep loop hides it from
+    // the watchdog. The hook is absent when CRASH_SCREEN is disabled.
+    if (re4dc_crash_screen_missing) re4dc_crash_screen_missing(name);
     re4dc_log("RE4DC MISSING: %s called; halting\n", name);
 #if RE4DC_VMU_DEBUG_SLOT
     re4dc_dbgslot_ring(2, (unsigned) name, 0);

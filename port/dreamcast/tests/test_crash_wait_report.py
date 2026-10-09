@@ -31,6 +31,7 @@ def main():
         "bool trace_waiter(", "void show("))
     brief = function(bridge, 'extern "C" void re4dc_subscreen_brief(')
     signal = function(os_source, "s32 OSSignalSemaphore(OSSemaphore* sem)")
+    snapshot = screen[screen.index('struct MissingSnapshot {'):screen.index('void capture_missing(')]
     fixture = r'''
 #include <cassert>
 #include <cstdint>
@@ -83,6 +84,9 @@ void put_text(int,int row,const char* text,unsigned short){
     assert(row>=0 && row<kRows);
     rows.push_back(std::string(text).substr(0,kCols));
 }
+''' + snapshot + r'''
+struct pvr_stats_t {unsigned frame_count, vbl_count;};
+int pvr_get_stats(pvr_stats_t* out){out->frame_count=17;out->vbl_count=1900;return 0;}
 ''' + bodies + r'''
 #define RE4DC_CRASH_SCREEN 1
 using s32=int;
@@ -147,6 +151,16 @@ int main(){
     rows.clear();g_shown=0;swapped=false;kernel.wait_timeout=0;
     show("HANG","no new frame for 30 s",false);
     assert(has("main pr 8c112233 wait untimed") && !prefix("ss area "));
+    assert(prefix("bt1 ") && prefix("bt121 "));
+    rows.clear();g_shown=0;g_missing.valid=g_missing.pvr_valid=true;
+    g_missing.ui=15299;g_missing.frames=12;g_missing.vbl=100;g_missing.pending=1;g_missing.ta_ready=-1;
+    g_missing.vtx[0]=0x100000;g_missing.vtx[1]=0x180000;g_missing.vtx[2]=0x300000;g_missing.isp=0x400000;
+    g_missing.opb[0]=0x8000;g_missing.opb[1]=0x3000;g_missing.opb[2]=0x10000;
+    show("MISSING","native stream completion fence failed",false);
+    assert(has("MISSING native stream completion fence failed"));
+    assert(has("snap ui15299 pending1 ta-1") && has("pvr 12/17 vb 100/1900"));
+    assert(has("vtx 100000/180000/300000 isp 400000"));
+    assert(has("opb 008000/003000/010000 (pos raw)"));
     assert(prefix("bt1 ") && prefix("bt121 "));
     OSSemaphore sem;
     thd_current=&kernel;assert(OSSignalSemaphore(&sem)==0);
