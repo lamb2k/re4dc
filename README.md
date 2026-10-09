@@ -7,24 +7,26 @@
 The recovered GameCube code runs the gameplay, collision and enemy AI. A native PowerVR renderer,
 lighter PS2 room assets, streamed movies and VMU saves adapt it to Dreamcast hardware.
 
-**[Download r22j](https://github.com/lamb2k/re4dc/releases/tag/play-r22j-audio-performance-20261007)** ·
+**[Download the combined GDEMU test build](https://github.com/lamb2k/re4dc/releases/tag/test-combined-254eab36-20261008)** ·
 [Roadmap](port/dreamcast/docs/D367_THIRTY_FPS_ROUTE.md) ·
 [Port notes](port/dreamcast/README.md) · [Decompilation](docs/DECOMPILATION.md)
 
 ## Playing
 
+The latest console test is build `254eab36`. The desktop packages below are the earlier r22j build.
 Extract the complete package for your system:
 
 | System | Download | Launch |
 | --- | --- | --- |
-| Windows | [RE4DC-r22j.zip](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j.zip) | Double-click `Play-r22j.cmd`. Includes Flycast and keyboard/DualSense support. |
-| Steam Deck / SteamOS | [SteamOS package](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j-SteamOS.tar.gz) | In Desktop Mode, run `play.sh`; uses Flathub Flycast. |
-| CachyOS / Arch | [CachyOS package](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j-CachyOS.tar.gz) | Run `./play.sh`; uses native or Flathub Flycast. |
-| Dreamcast / GDEMU | [GDEMU image](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j-GDEMU.zip) | Copy `disc.gdi` and all three track files into a new numbered SD-card folder. |
+| Windows (r22j) | [RE4DC-r22j.zip](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j.zip) | Double-click `Play-r22j.cmd`. Includes Flycast and keyboard/DualSense support. |
+| Steam Deck / SteamOS (r22j) | [SteamOS package](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j-SteamOS.tar.gz) | In Desktop Mode, run `play.sh`; uses Flathub Flycast. |
+| CachyOS / Arch (r22j) | [CachyOS package](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j-CachyOS.tar.gz) | Run `./play.sh`; uses native or Flathub Flycast. |
+| Dreamcast / GDEMU | [Combined test ZIP](https://github.com/lamb2k/re4dc/releases/download/test-combined-254eab36-20261008/RE4DC-Combined-Console-Test-254eab36-20261008-GDEMU.zip) | Copy the four files inside `gdemu` into a new numbered SD card folder. |
 
-[SHA-256 checksums](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/SHA256SUMS.txt) · [Release notes and verification](https://github.com/lamb2k/re4dc/releases/tag/play-r22j-audio-performance-20261007)
+[Test build checksums](https://github.com/lamb2k/re4dc/releases/download/test-combined-254eab36-20261008/SHA256SUMS.txt) · [Test notes and verification](https://github.com/lamb2k/re4dc/releases/tag/test-combined-254eab36-20261008) · [r22j desktop checksums](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/SHA256SUMS.txt)
 
-Already have Flycast? Open `disc/disc.cue` from an emulator package and keep its `disc.bin` beside it.
+Already have Flycast? Open `gdemu/disc.gdi` from the combined test ZIP, keeping all track files beside it.
+For an r22j emulator package, open `disc/disc.cue` and keep its `disc.bin` beside it.
 For GDEMU, keep filenames unchanged and save any card-manager changes before ejecting the card.
 No BIOS or personal VMU saves are included; keep your existing saves separately.
 
@@ -43,23 +45,26 @@ Fast pacing is the default. A VMU in controller slot 1 shows FPS, game speed, CP
 
 ## Status and limitations
 
-**r22j, October 7, 2026:** restores room music in r104/r107 and adds indoor enemy culling
-and a CPU optimization. Includes the r22i herb, pickup layering, object animation and movie fixes.
+**Combined console test `254eab36`, October 8, 2026:** includes corrections to inventory memory
+handling, selection glow and grid, Examine textures, herb/fish and other inventory textures,
+lamp fire, and graphics presentation completion checks.
+
+Flycast checks cover save loading, walking, repeated inventory and Examine, lamp effects and
+bridge transitions. The published downloads are hash verified. These checks do not establish
+a fix for the original console crashes; physical Dreamcast confirmation is still pending.
+See the [test notes](https://github.com/lamb2k/re4dc/releases/tag/test-combined-254eab36-20261008)
+and [build checklist](port/dreamcast/docs/D367_PLAY_BUILD_CHECKLIST.md).
+
 The route extends through r10a; the unfinished r10b door shows **Coming Soon**. This is a prerelease,
 not the complete game.
 
-Combined New Game, movie, radio and logic checks pass in Flycast. All three grenade types trigger
-their mapped sound sample. The exact GDEMU image boots to the VMU prompt, and every archive member
-was hash checked. Continuous playthrough, mixed audio listening and physical Dreamcast acceptance
-remain pending. See the [build checklist](port/dreamcast/docs/D367_PLAY_BUILD_CHECKLIST.md).
-
-- **Performance:** below the 30 fps/full-speed target. The separate r22g console test ran the r100
-  outdoor fight at about 10 fps and 70% speed; this is not an r22j measurement.
-- **Presentation and sound:** some models/effects and textures need work. Rifle sound is lower quality;
+* **Stability:** the [bridge door presentation timeout](https://github.com/lamb2k/re4dc/issues/9)
+  and [freeze after loading a save and walking](https://github.com/lamb2k/re4dc/issues/2) remain unresolved.
+* **Performance:** below the 30 fps/full speed target. This candidate has no new physical console
+  performance measurement.
+* **Presentation and sound:** some models, effects and textures need work. Rifle sound is lower quality;
   the restored room music and grenade sounds still need listening checks on hardware.
-- **Stability:** the r103 hang remains under investigation. If the freeze report appears, attach a photo
-  to a bug report.
-- **Loading and saves:** room-entry pauses remain. Normal chapter 1-2 key-item pickups and reloading
+* **Loading and saves:** room entry pauses remain. Normal chapter 1-2 key item pickups and reloading
   a save made inside r106 still need checking.
 
 ## Development
@@ -98,7 +103,9 @@ Captured in Flycast from the play builds.
 
 [Open a Game bug issue](https://github.com/lamb2k/re4dc/issues/new/choose) with the build, room/chapter,
 steps to reproduce, system (Flycast or Dreamcast), and a screenshot or video. On Windows, attach the
-newest game log from `logs/`. For a console crash, include a photo of the crash report. One bug per issue.
+newest game log from `logs/`. For a console crash, include the Frame pacing setting and a clear photo
+of the complete diagnostic screen. To check the save load freeze, cold boot, load your existing save
+and walk before opening inventory. One bug per issue.
 
 ## Credits
 
