@@ -1,5 +1,14 @@
 # RE4 Dreamcast working handoff
 
+2026-10-09 issues 9 and 15: the crash screen adds an `asic` line (ASIC_ACK_A/B/C,
+TA_OPB_INIT) to the first-failure snapshot; disc streams decode with the SND_SHD
+coefficient order (battle music and radio voices no longer saturate); prebuilt
+banks use an anti-alias decimator (aica_banks.py decimate_aa, same sizes; refilter
+an existing disc with `aica_banks.py reconvert`). H2/bell STRICT, s30, calls, New
+Game and the inventory set pass in Flycast. A GDEMU test package was built; no
+release or SD write. TA_GUARD=1 was not used (it changes drawing). See
+[route doc](port/dreamcast/docs/D367_THIRTY_FPS_ROUTE.md) 2026-10-09.
+
 2026-10-08 lamp correction: source owner 0x5e now reaches the existing native
 sprite filter. The matched r102 impact shows flame/smoke, with 2,795 STRICT
 source records and identical required decisions. Paired drawn hardware-model

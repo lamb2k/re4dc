@@ -1,5 +1,30 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-09: issue 9 diagnostics and issue 15 audio (test build)
+
+- Issue 9 (bridge presentation hang on hardware): the first-failure snapshot
+  also latches ASIC_ACK_A/B/C and TA_OPB_INIT, printed as one `asic` line on
+  the stop screen (render-done lost vs ISP/TA overflow). Failure path only;
+  `_end` +32 B in the same 4 KiB page, arena and s30 heap unchanged.
+- Issue 15 (crushed audio): disc streams are decoded with the SND_SHD
+  coefficient order (STREAM_VERSION 3). Clipped samples in the staged
+  aica_str.dat: 0:2 763,211 -> 11, 0:8 1,177,151 -> 2, 1:3 80,601 -> 0,
+  1:14 216,988 -> 2, 1:140 163,020 -> 0, 1:141 88,322 -> 0, 1:152 71,647 -> 0.
+- Prebuilt banks use an anti-alias decimator (aica_banks.py decimate_aa,
+  Kaiser sinc, FILTER_VERSION 2; loops filtered circularly). Same sizes,
+  headers and layout; the runtime converter is unchanged. Banks on the disc:
+  1,579 -> 2,730 clipped of 16.0 M samples (sinc keeps peaks the box average
+  flattened). Existing discs are refiltered with `aica_banks.py reconvert`.
+- TA_GUARD=1 was not used: it skips parts once the TA estimate passes its
+  reserve (drawing changes) and is rejected with COARSE_ONE_SUBMIT=1. The
+  ASIC ACK line already shows TA/ISP overflow bits without it.
+- Gates (Flycast, ACT_CAP=0): H2 STRICT 1450..1569 / ..740 / 1218.., bell
+  STRICT, decision_cmp MUST-IDENTICAL; s30 340/340 at heap_before 55,392 with
+  calls 1:141 and 1:152 played and backing restored; New Game 1971/2360/1175;
+  cold Load inventory set (Combine, Examine, rotation, three exact restores).
+  Play disc payloads equal the 631cb271 disc except 1ST_READ.BIN, sscrn.ovl,
+  aica_str.dat and the 39 bank files. Physical console results pending.
+
 ## 2026-10-08: hanging lamp fire and combined manual candidate
 
 Admit source lamp effect owner 0x5e through the native sprite filter, preserving

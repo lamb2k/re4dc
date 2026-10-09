@@ -1,4 +1,21 @@
-# D367 play build checklist (user, 2026-09-29)
+# D367 play build checklist (user, 2026-10-09 current state at top)
+
+## 2026-10-09: test build for issues 9 and 15
+
+Play ELF = route-build.sh with the 631cb271 flags (DBG_WARP=0 PC_SAMPLER=0
+PACE_DEBUG=1 ROUTE_CH13=1 ACT_CAP=0 PS2_INTERIOR_ACTORS=2 GAME_ATLIST_OVERFLOW=1
+GAME_ATLIST_512=1 LEON_NATIVE_PIPE=0 LEON_FACE_LAZY=0 NATIVE_LASER=1
+ACTOR_GANADO_SOURCE_LIGHT=0); built at cc5da41b it reproduces the 631cb271
+image byte for byte. Disc = the 631cb271 qualification fixture
+(reporter-goal-20261008/inventory-world-sort-ram-v2.json, catalog pack d87983e1,
+padscript removed) plus an audio overlay:
+- bgm/aica_str.dat rebuilt with the 631cb271 stream list (index identical);
+- every prebuilt bank refiltered in place:
+  `aica_banks.py reconvert --root <631 disc sound files> --mirror /root/probe/d362-mirror,/root/probe/codex-audio-20261007/mirror --out <overlay>`
+  (each file proved: the box conversion of the mirror source reproduces the old image).
+Payloads must equal the 631cb271 disc manifest except 1ST_READ.BIN, dc/sscrn.ovl,
+bgm/aica_str.dat and the 39 bank files. Any new bank build gets the filter
+automatically (FILTER_VERSION in the cache key). TA_GUARD stays 0.
 
 ## 2026-10-07: native Ganado prelit lighting and missing beam
 
