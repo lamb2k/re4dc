@@ -82,6 +82,14 @@
 # (tools/ps2_room_ids.py writes dc/native/rXXX/ps2-world.ids next to each package); a hidden id is skipped and a moved
 # one is drawn with its object's matrix. Render-only, logic STRICT; without the ids file a room draws as before. Part
 # animation (chest lids) is not followed.
+# MOVIE_STAGE_ORDER=1 (2026-10-06, adapted from 25c4cd0f into c36a08cc; render and memory only, logic STRICT): a route
+# movie stages its heap 4 pieces largest first, so a fragmented heap 4 still fits them. PS2_WORLD_PARTS part pose
+# storage had left r100 s30 failing to stage at 84,064 B free; with the order s30 plays 340/340 at that level. Gates
+# at landing: H2 STRICT 0..740 / 1218..5696 / 1450..1569 with decision_cmp MUST-IDENTICAL, bell STRICT, New Game
+# 1971 / 2360 / 1175. On 631cb271 (catalog pack d87983e1, ACT_CAP=0): s30 340/340 at heap_before 55,392, and 55,904
+# with the scoped rifle armed (the rifle stays equipped); after s30 the first call in normal order (r101 first
+# visit, call 0xC, voice stream 1:152) plays to its end and its sub screen closes with the backing restored; the
+# Playing Manual follows as in the source, and after it Leon walks in r101.
 #   ASSETS=<private asset dir: leon4k/ganado runtime headers, ganado_source_extras.h, vmu_dialog_english.inc>
 #   OBJDIR=<fresh objdir per knob set: never seed one objdir from another (its .d files name the old
 #          targets, so edited headers/includes silently keep stale objects)>  OUT=<elf dir>
