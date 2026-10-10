@@ -193,6 +193,9 @@ loads every texture package from one file (room entry 7.2 -> 3.1 s, east walk 6.
 - WATER42_GRID_SKIP (2026-10-10, route doc "WATER42_GRID_SKIP", default 1 in the ROUTE_CH13 block): espgen42 (the
   r10a / r11a lake water) keeps only its plane; the GX-only grid update was ~18 hw ms of r11a logic. Logic reads only
   the plane; init RNG draws kept. Find a generator's rooms with a le_mirror SEQUENCE_OBSERVER scan (Kind 1, Espgen_id).
+- WATER45_NATIVE (2026-10-10, route doc "r10b lake water", default 1 in the ROUTE_CH13 block): the r10b lake surface
+  as a native PVR multiply queued in OT 0x10 (coarse images too), and the PS2 r10b sprite set (GC mist / backdrop
+  sheets dropped, PS2 haze). Lake view 61.1 -> 51.6 hw ms drawn. Logic STRICT (H2, bell, r10b).
 - Material pair 18d0fd82-2c9a9309 (2026-10-10, route doc "material pair 18d0fd82"): r10b / r11b room model TPL
   (#27 / #28) color + mask; built by pairs_from_log.py --file st1/r11b.das + VQ, staged by lane r11b mkfix r11b().
   pack-fixture.sh replaces an existing dc/tex.pak with a pack of the loose files only: merge the catalog pack first.

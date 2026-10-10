@@ -646,6 +646,43 @@ D:/Flycast-Evidence/re4-dreamcast/kosfix-20261010.
   21.8 vs 39.2 / 41.1 / 41.1, 21.9. As expected: the waits only run long on hardware.
 - **Recipe.** Next console test build: PVR_READY_STRICT=1 PVR_LATCH=1 (checklist top). The play recipe waits for a
   console result.
+## Progress 2026-10-10 (r10b lake water: WATER45_NATIVE, default 1 in the ROUTE_CH13 block)
+
+The r10b lake drew as a flat pale grey sheet. Two causes: nothing draws the water (espgen45's surface is a GX
+screen-copy draw, a stub on the Dreamcast; the PS2 world package has no lake surface mesh: SMD_000 is the lake bed),
+so the fog-coloured background shows; and the room's GameCube mist / backdrop sheets (owner 0xd0: sst 0x02 tex f2,
+sst 0x04 f6 / cb / 1d, sst 0x06 ff) plus est 0x23's white square paint over it. The PS2 release (SLUS-211.34 r10b
+EFF, the source of truth for the look) has none of those sheets (est 0x23's colour is 0,0,0,0), draws its lake as flat
+planes and retunes the haze (2100 mm, (180,185,175,30), R 5000). Lane lake, evidence
+D:/Flycast-Evidence/re4-dreamcast/lake-20261010.
+
+- **Water (espgen45.cpp re4dc_water45_draw, native_ui.cpp re4dc_water45_quad).** The plane (mat) over the grid and
+  the GX path's border (15 grid sizes, or the grid with flag bit 0) as 16 x 16 cells spaced t|t| around the eye, each
+  corner's factor = lerp(TEV col, 1, fog) (native_static.cpp re4dc_fog_amount: the PVR's loaded fog table), drawn as a
+  PVR multiply (DESTCOLOR, ZERO), TR, Gouraud, GEQUAL, no Z write; fully fogged and behind-camera cells are skipped.
+  Queued in OT layer 0x10 like Espgen45_TransSub: from Espgen45_Trans and, on a drawn coarse image, from the
+  logic-only EspgenTrans (trans.cpp re4dc_espgen_draw_pass). Drawing it during Trans instead put the quads into the
+  wrong PVR frame (every other image without water). Corners are two rolling rows on the stack (no bss: `_end` equal).
+- **Sprites (esp_sub.cpp, EFFECT_SPRITES).** r10b room sheets f2 / f6 / cb / 1d / ff (owner 0xd0) and est 0x23's
+  square (owner 0x01, id 0, tex 0) are not drawn; kPs2Haze gains r10b (every 1, PS2 colour, R 5000, scale
+  2100 / 1731.4); a sprite wholly under the surface seen from above is not drawn (the GC water writes Z first).
+- **Material pair 18d0fd82** (also 3594d8f5): rooms.toml [material_pairs] + pairs_from_log.py ROUTE_FILES st1/r10b.das,
+  so the asset pipeline builds it. Staging unchanged from 3594d8f5 (dc/tex/1/18d0fd82-2c9a9309.re4tex, VQ, into the pack).
+- **Gates.** Knob-off identity at 6516c62b: default recipe, play flags with ROUTE_CH13=0, and ROUTE_CH13=1
+  WATER45_NATIVE=0 vs HEAD ROUTE_CH13=1: 3 bytes each (the time stamp). missing.txt empty, MISALIGN 0, HALT 0.
+  Trace arms lkCT (85b7832e + warp aid) vs lkLT2 (+ this change), `_end` 8c3ebb3c both, text +3,584 B. H2 (g-h2, 480 s)
+  MUST-IDENTICAL frame (6986 ticks, every info row ok) and room 0100, s30 340/340 heap_before 57,504 = control. Bell
+  (g-bell, 300 s) MUST-IDENTICAL frame + room 0101 (5091 ticks; sq info only). r10b f6 (boarding, s10, the QTE, s21):
+  in-room ticks 166..3967 identical in every field but `st` at 803..842, Status_flg[0] 0x40000000 / 0x20000000 /
+  0x4000 (pad action / fire bits) one tick out of phase: the retrace-clocked pad script's presses landing one tick
+  later (two control runs are identical; raw words logged by a probe build); rng, player, enemies, decisions and
+  movies identical; QTE presses 10 vs 11 (wall-timed input).
+- **Cost (hw first; cost arms lkCC / lkLC, play flags + PC_SAMPLER).** Lake view 800:879: drawn 61.10 -> 51.60 hw ms
+  (RENDER/effects 10.31 -> 1.16, the water +1.5 in RENDER/other), skipped 14.45 -> 14.40; Flycast p50 / p99 / max
+  50 / 51 / 51 -> 43 / 48 / 48. Boss pass 4100:4179 (fixture fb): Flycast 35 / 37 / 37 -> 33 / 34 / 34; its hw pair is
+  not like for like (the pad script's phase moves the camera: lkLC draws the boss and Leon, lkCC the mist), hw
+  39.62 vs 69.18 drawn with 17.97 of it PACE/WAIT. Screens: route-lk-f6v21b (before) vs route-lk-f6v32 (after)
+  t0082 (dock) and t0145 (from the boat).
 
 ## Numbers (image, build, evidence)
 

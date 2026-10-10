@@ -4413,6 +4413,66 @@ extern "C" int re4dc_subscreen_line(const Re4dcSubscreenQuad* q,unsigned width){
     pvr_vertex_t vertices[12];
     return subscreen_submit(q,vertices,re4dc::subscreen::line_vertices(*q,width,vertices));
 }
+#if defined(RE4DC_WATER45_NATIVE) && RE4DC_WATER45_NATIVE
+// WATER45_NATIVE (ROUTE_CH13, r10b; espgen45.cpp re4dc_water45_draw): one view-space cell of the open-air
+// water surface. The GameCube draws the scene behind the water (its screen copy) times the TEV colour, alpha
+// blended by the raster alpha; here the same product is the PVR multiply blend (DESTCOLOR, ZERO) with the
+// per-corner factor rgb (owner-computed: alpha mix and fog fade to 1). Untextured, Gouraud, no fog (the
+// factor carries it), depth tested, no depth write; queued in source OT order like the subscreen quads.
+extern "C" int re4dc_water45_quad(const float positions[4][3],const float rgb[4][3],const float* projection,
+                                  const float* viewport){
+    if(!frame_ready || stream_aborted || draining_parts)return 0;
+    Re4dcSubscreenQuad q;
+    std::memcpy(q.positions,positions,sizeof(q.positions));
+    std::memcpy(q.projection,projection,sizeof(q.projection));
+    std::memcpy(q.viewport,viewport,sizeof(q.viewport));
+    q.color=0xFFFFFFFFU;q.blend=0;q.depth_test=1;
+    if(q.projection[0]!=0 || q.viewport[2]<=0 || q.viewport[3]<=0)return 0;
+    for(float f:q.projection)if(!re4dc::render::is_finite(f))return 0;
+    for(float f:q.viewport)if(!re4dc::render::is_finite(f))return 0;
+    for(const auto& p:q.positions)for(float f:p)if(!re4dc::render::is_finite(f))return 0;
+    const float near=q.projection[6]/(q.projection[5]-1),far=q.projection[6]/q.projection[5];
+    if(!re4dc::render::is_finite(near) || !re4dc::render::is_finite(far) || near<=0 || far<=near)return 0;
+    re4dc::render::ClipParameters clip{near,far,RE4DC_SCREEN_WF,RE4DC_SCREEN_HF,re4dc::subscreen::project,&q};
+    re4dc::render::RenderVertex v[4]{};
+    for(unsigned i=0;i<4;++i){
+        auto& p=v[i].position;
+        p.world_x=p.x=q.positions[i][0];p.world_y=p.y=q.positions[i][1];p.world_z=p.z=q.positions[i][2];
+        p.depth=-p.world_z;
+        if(p.depth>=near)re4dc::subscreen::project(p.x,p.y,p.z,&q);
+        v[i].light_red=rgb[i][0];v[i].light_green=rgb[i][1];v[i].light_blue=rgb[i][2];
+    }
+    alignas(32) pvr_vertex_t packet[13];
+    constexpr unsigned strips[2][3]={{0,1,2},{2,1,3}};
+    unsigned used=0;
+    for(const auto& indices:strips){
+        const re4dc::render::RenderVertex tri[]={v[indices[0]],v[indices[1]],v[indices[2]]};
+        used+=3*re4dc::render::clip_projected_triangle(tri,packet+1+used,0,clip);
+    }
+    if(!used)return 0;
+    pvr_poly_cxt_t c;pvr_poly_cxt_col(&c,PVR_LIST_TR_POLY);
+    c.gen.culling=PVR_CULLING_NONE;c.gen.shading=PVR_SHADE_GOURAUD;c.gen.fog_type=PVR_FOG_DISABLE;
+    c.depth.comparison=PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_DISABLE;
+    c.blend.src=PVR_BLEND_DESTCOLOR;c.blend.dst=PVR_BLEND_ZERO;
+    pvr_poly_compile(reinterpret_cast<pvr_poly_hdr_t*>(packet),&c);
+    const unsigned bytes=(used+1)*sizeof(pvr_vertex_t);
+    if(source_draws_finished){stream_select(PVR_LIST_TR_POLY);stream_send(packet,bytes);return 1;}
+    const unsigned required=kSubscreenQuadNode+bytes,margin=8192;
+    unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
+    if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
+        if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
+        if(!deferred_spill || required>deferred_spill_top){++dropped;return 0;}
+        storage=deferred_spill;top=&deferred_spill_top;
+    }
+    *top-=required;auto* node=new(storage+*top) DeferredPart{};
+    node->lighting=kSubscreenQuadTag;node->changed[0]=bytes;
+    std::memcpy(storage+*top+kSubscreenQuadNode,packet,bytes);
+    if(deferred_last)deferred_last->next=node;else deferred_first=node;
+    deferred_last=node;++deferred_count;
+    frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
+    return 1;
+}
+#endif
 #else
 extern "C" int re4dc_subscreen_quad(const Re4dcSubscreenQuad*){return 0;}
 extern "C" int re4dc_subscreen_line(const Re4dcSubscreenQuad*,unsigned){return 0;}

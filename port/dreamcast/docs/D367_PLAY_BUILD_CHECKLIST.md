@@ -1,5 +1,10 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: WATER45_NATIVE (r10b lake water, play recipe)
+
+No new flag: ROUTE_CH13=1 now also brings **WATER45_NATIVE=1** (the lake surface drawn natively, the PS2's r10b
+sprite set). No new staged file. Check: r10b dock and boat views show dark water, no pale sheet (route doc "r10b lake water").
+
 ## 2026-10-10: stream 1:148 (the r11b radio call voice) in bgm/aica_str.dat
 
 Stage **bgm/aica_str.dat built with `aica_banks.py streams --mirror <LE mirror with the .sbb> --out DIR --streams

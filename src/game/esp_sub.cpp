@@ -115,6 +115,12 @@ void re4dc_ps2fx_cycle(void)
 // game state only (m_Mat, the texture work, ChannelSet's colour, the current GX projection).
 #include "native_ui.h"
 extern "C" void GXGetProjectionv(f32*);
+#ifndef RE4DC_WATER45_NATIVE
+#define RE4DC_WATER45_NATIVE 0
+#endif
+#if RE4DC_WATER45_NATIVE
+extern "C" int re4dc_water45_hides(const f32 (*corner)[3]);   // espgen45.cpp
+#endif
 extern "C" void GXGetViewportv(f32*);
 static GXColor s_effect_col; // ChannelSet's final material colour (GXSetChanMatColor)
 static int EspSpriteEligible(cEsp* esp)
@@ -161,13 +167,22 @@ struct Ps2fxHaze {
     f32 range;
     f32 scale;
 };
-static const Ps2fxHaze kPs2Haze[3] = {
+#if RE4DC_WATER45_NATIVE
+#define PS2FX_HAZE_ROOMS 4
+#else
+#define PS2FX_HAZE_ROOMS 3
+#endif
+static const Ps2fxHaze kPs2Haze[PS2FX_HAZE_ROOMS] = {
     // r100: GC 60 x 1283.056 mm (+0.011), alpha 70, R 5090.2; PS2 11 x 2000 mm (+0.010), (235,235,210,34), R 5000
     {0x100, 5, 235, 235, 210, 34, 5000.0f, (2000.0f * 2.0f) / (1283.056f * 2.1f)},
     // r101: GC 39 x 1299.956 mm, alpha 25, R 6860.2; PS2 8 x 1900 mm, (255,250,240,35), R 5000
     {0x101, 2, 255, 250, 240, 35, 5000.0f, 1900.0f / 1299.956f},
     // r103: GC 41 x 1283.056 mm, alpha 30, R 7954.4; PS2 11 x 2100 mm, (255,255,225,35), R 5300
     {0x103, 1, 255, 255, 225, 35, 5300.0f, 2100.0f / 1283.056f},
+#if RE4DC_WATER45_NATIVE
+    // r10b (ROUTE_CH13 WATER45_NATIVE): GC 80 x 1731.403 mm, alpha 20, R 12093.6; PS2 30 x 2100 mm, (180,185,175,30), R 5000
+    {0x10b, 1, 180, 185, 175, 30, 5000.0f, 2100.0f / 1731.403f},
+#endif
 };
 static const Ps2fxHaze* Ps2fxHazeFor(cEsp* esp)
 {
@@ -175,7 +190,7 @@ static const Ps2fxHaze* Ps2fxHazeFor(cEsp* esp)
         return NULL;
     }
     const u16 room = G_ROOM_ID;
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < PS2FX_HAZE_ROOMS; ++i) {
         if (kPs2Haze[i].room == room) {
             return &kPs2Haze[i];
         }
@@ -343,6 +358,9 @@ static void EspSpriteEmit(cEsp* esp)
     const int ortho = P[0] != 0.0f;
     const f32 near_d = ortho ? 0.0f : P[6] / (P[5] - 1.0f), far_d = ortho ? 0.0f : P[6] / P[5];
     const Mtx& m = esp->m_Mat;
+#if RE4DC_WATER45_NATIVE
+    f32 corner[4][3];
+#endif
     for (int i = 0; i < 4; ++i) {
         const f32 x = m[0][0] * cx[i] + m[0][1] * cy[i] + m[0][2] + m[0][3];
         const f32 y = m[1][0] * cx[i] + m[1][1] * cy[i] + m[1][2] + m[1][3];
@@ -365,7 +383,19 @@ static void EspSpriteEmit(cEsp* esp)
         s.z[i] = inv;
         s.u[i] = tw->mtx[0][0] * cu[i] + tw->mtx[0][1] * cv[i] + tw->mtx[0][3];
         s.v[i] = tw->mtx[1][0] * cu[i] + tw->mtx[1][1] * cv[i] + tw->mtx[1][3];
+#if RE4DC_WATER45_NATIVE
+        corner[i][0] = x;
+        corner[i][1] = y;
+        corner[i][2] = z;
+#endif
     }
+#if RE4DC_WATER45_NATIVE
+    // WATER45_NATIVE: the GameCube's water writes Z (Espgen45_TransSub GXSetZMode(1, LEQUAL, 1)) before the effect
+    // layers, so a sprite wholly under the surface seen from above it is never drawn (r10b's lake mist sheets).
+    if (!ortho && re4dc_water45_hides(corner)) {
+        return;
+    }
+#endif
 #if RE4DC_EFFECT_PS2_HAZE
     const Ps2fxHaze* hz = ortho ? NULL : Ps2fxHazeFor(esp);
     if (hz) {
@@ -651,6 +681,20 @@ void EspCommonTrans(cEsp* esp)
 #endif
             return;
         }
+    }
+#endif
+#if RE4DC_EFFECT_SPRITES && RE4DC_WATER45_NATIVE
+    // WATER45_NATIVE (ROUTE_CH13): r10b's room sheets that the PS2 release dropped (SLUS-211.34 r10b EFF: no GC sst
+    // 0x02 mist sheets (tex f2), sst 0x04 cliff / backdrop sheets (f6, cb) and glows (1d), sst 0x06 screen tint
+    // (ff); its lake is flat planes, here the native water45 surface) are not drawn, nor est 0x23's white square
+    // (the PS2 sets its colour to 0, 0, 0, 0). Render only.
+    if (G_ROOM_ID == 0x10b &&
+        ((esp->info.owner == 0xD0 && (esp->m_Tex_id == 0xf2 || esp->m_Tex_id == 0xf6 || esp->m_Tex_id == 0xcb ||
+                                      esp->m_Tex_id == 0x1d || esp->m_Tex_id == 0xff)) ||
+         (esp->info.owner == 0x01 && esp->m_Id == 0 && esp->m_Tex_id == 0))) {
+        s_proj_type = -1;
+        s_tex_no = -1;
+        return;
     }
 #endif
 #if !RE4DC_EFFECT_LEAN

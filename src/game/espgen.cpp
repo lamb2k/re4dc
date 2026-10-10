@@ -56,6 +56,17 @@ int Espgen02_SetFreeWork(EspgenWork* w, EspGenWork* rec, EspSeqData* head, cMode
 // game/espgen40.cpp (declared with the record type in the original)
 void Espgen40_Move(EspGenWork* gen);
 
+#ifndef RE4DC_WATER45_NATIVE
+#define RE4DC_WATER45_NATIVE 0
+#endif
+#if RE4DC_WATER45_NATIVE
+// WATER45_NATIVE (ROUTE_CH13, r10b): a drawn coarse image runs EspgenTrans logic-only (PACE_TRANS_SKIP bit 2), which
+// skips Espgen45_Trans's OT queue; trans.cpp sets this for such a tick and the lake surface is queued here instead.
+extern "C" {
+int re4dc_espgen_draw_pass;
+void re4dc_water45_queue(EspgenWork* w);   // espgen45.cpp
+}
+#endif
 EspgenWork* EspgenArray = NULL;
 EspgenWork* pEspgenArrayBack = NULL;
 u32 nEspgen = 0;
@@ -606,6 +617,11 @@ static inline void fxEgTransOne(EspgenWork* w)
             // Status_flg[1] 0x20; the other entries only queue draws.
             if (re4dc_esp_logic_only && func != Espgen01_Trans) {
                 if (func == Espgen45_Trans) {
+#if RE4DC_WATER45_NATIVE
+                    if (re4dc_espgen_draw_pass) {
+                        re4dc_water45_queue(w);   // a drawn coarse image: the lake surface's OT entry (render only)
+                    }
+#endif
                     pG->Status_flg[1] &= ~0x20;
                 }
                 return;
@@ -674,6 +690,11 @@ int EspgenTrans()
                 // Status_flg[1] 0x20; the other entries only queue draws.
                 if (re4dc_esp_logic_only && func != Espgen01_Trans) {
                     if (func == Espgen45_Trans) {
+#if RE4DC_WATER45_NATIVE
+                        if (re4dc_espgen_draw_pass) {
+                            re4dc_water45_queue(w);   // a drawn coarse image: the lake surface's OT entry (render only)
+                        }
+#endif
                         pG->Status_flg[1] &= ~0x20;
                     }
                     continue;

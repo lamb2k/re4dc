@@ -606,6 +606,12 @@ extern "C" int re4dc_esp_logic_only, re4dc_esp_logic_queued;
 extern "C" int re4dc_esp_sprite_pass;   // esp.cpp (COARSE_FX_SPRITES, effects30.mk)
 #endif
 #endif
+#ifndef RE4DC_WATER45_NATIVE
+#define RE4DC_WATER45_NATIVE 0
+#endif
+#if RE4DC_WATER45_NATIVE
+extern "C" int re4dc_espgen_draw_pass;   // espgen.cpp (WATER45_NATIVE, ROUTE_CH13)
+#endif
 #if RE4DC_PACE_CHECK
 extern "C" void re4dc_pace_check(int phase);
 #endif
@@ -975,7 +981,13 @@ void Trans()
             EspgenTrans();
         } else if (RE4DC_PACE_TRANS_SKIP & 2048) {
             re4dc_esp_logic_only = 1;
+#if RE4DC_WATER45_NATIVE
+            re4dc_espgen_draw_pass = coarseTick && !re4dc_pace_drop_models;   // a drawn coarse image (espgen.cpp)
+#endif
             EspgenTrans();
+#if RE4DC_WATER45_NATIVE
+            re4dc_espgen_draw_pass = 0;
+#endif
             re4dc_esp_logic_only = 0;
         }
     }

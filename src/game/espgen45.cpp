@@ -26,6 +26,16 @@
 #ifndef RE4DC_WATER45_GRID_SKIP
 #define RE4DC_WATER45_GRID_SKIP 0
 #endif
+// RE4DC_WATER45_NATIVE (ROUTE_CH13, r10b; needs RE4DC_WATER45_LEAN): the water surface drawn natively
+// (re4dc_water45_draw): the flat plane (mat) over the grid and its far border, the GameCube's "scene behind x
+// TEV colour" as a PVR multiply. Without it nothing draws the lake (GX is a stub; the PS2 world has no water
+// mesh) and the fog-coloured background shows through. Render only: reads the plane, writes nothing.
+#ifndef RE4DC_WATER45_NATIVE
+#define RE4DC_WATER45_NATIVE 0
+#endif
+#if RE4DC_WATER45_NATIVE && !RE4DC_WATER45_LEAN
+#error RE4DC_WATER45_NATIVE replaces the GX draw that RE4DC_WATER45_LEAN removes
+#endif
 
 // Effect controller 45: weather water surface (same height-field model as Espgen42, following the
 // camera). The Estgen45Set* entry points let the room script (esp4c) override its parameters.
@@ -438,6 +448,143 @@ void Espgen45_Move(EspgenWork* w)
     Espgen45MoveTbl[w->step](w);
 }
 
+#if RE4DC_WATER45_NATIVE
+extern "C" {
+void GXGetProjectionv(f32* p);
+void GXGetViewportv(f32* v);
+float re4dc_fog_amount(float z);                    // platform/native_static.cpp
+int re4dc_water45_quad(const float positions[4][3], const float rgb[4][3], const float* projection,
+                       const float* viewport);      // platform/native_ui.cpp
+}
+// Espgen45_TransSub's surface, natively: the GX path's far border (g45_mul = 15 grid sizes, unless flag bit 0
+// bounds it to the grid) and grid as one flat plane in grid space (y 0), cut into WATER45_CELLS x WATER45_CELLS
+// cells spaced t*|t| (fine near the centre, which follows the camera target). Each corner's factor is the
+// GameCube's result over the scene behind: TEV C0 (col, overrides applied) x screen (stage 0; the raster alpha that
+// blends it is the channel's white material alpha, 1), fogged toward the background: m = lerp(col, 1, fog).
+// Cells whose four corners are fully fogged multiply by 1 and are skipped. No bump, refraction warp or specular.
+#define WATER45_CELLS 16
+extern "C" void re4dc_water45_draw(EspgenWork* w)
+{
+    if (G_ROOM_ID != 0x10b) {
+        return;   // r10b only: the one espgen45 room the route draws and proves
+    }
+    Espgen42Work* p = (Espgen42Work*) w->work;
+    GXColor col = p->col;
+    if (g_bColorOverWrite == 1) {
+        col.r = g_r; col.g = g_g; col.b = g_b; col.a = g_a;
+    } else if (g_bColorMul == 1) {
+        col.r = (u8) ((f32) col.r * (f32) (int) g_r / 255.0f);
+        col.g = (u8) ((f32) col.g * (f32) (int) g_g / 255.0f);
+        col.b = (u8) ((f32) col.b * (f32) (int) g_b / 255.0f);
+    }
+    CameraCurrentProjection();
+    f32 projection[7];
+    f32 viewport[6];
+    GXGetProjectionv(projection);
+    GXGetViewportv(viewport);
+    Mtx mv;
+    PSMTXConcat(pG->Cam.v_mat, p->mat, mv);
+    const f32 c[3] = {(f32) col.r / 255.0f, (f32) col.g / 255.0f, (f32) col.b / 255.0f};
+    const f32 ex = (p->flag & 1) ? (f32) (int) (p->nx >> 1) : 7.5f * (f32) (int) p->nx;
+    const f32 ez = (p->flag & 1) ? (f32) (int) (p->ny >> 1) : 7.5f * (f32) (int) p->ny;
+    // The cells centre on the eye over the plane (the room may pin the plane's centre: Estgen45SetTargetCamera(0)) and
+    // reach the GX path's border around it (the far cells fade into the fog), clipped to the surface.
+    Mtx vi;
+    Vec eye = {0.0f, 0.0f, 0.0f};
+    Vec le;
+    PSMTXInverse(pG->Cam.v_mat, vi);
+    PSMTXMultVec(vi, &eye, &eye);
+    PSMTXMultVec(p->inv, &eye, &le);
+    const f32 reach = 2.0f * (ex > ez ? ex : ez);   // covers the whole surface from any eye over it
+    // Two rows of corners at a time (view-space position, factor): row j - 1 and row j bound row j - 1's cells.
+    const int n = WATER45_CELLS;
+    f32 row[2][WATER45_CELLS + 1][6];
+    for (int j = 0; j <= n; ++j) {
+        f32 (*cur)[6] = row[j & 1];
+        f32 tz = (f32) (2 * j - n) / (f32) n;
+        tz = tz * (tz < 0.0f ? -tz : tz);
+        for (int i = 0; i <= n; ++i) {
+            f32 tx = (f32) (2 * i - n) / (f32) n;
+            tx = tx * (tx < 0.0f ? -tx : tx);
+            f32 lx = le.x + tx * reach;
+            f32 lz = le.z + tz * reach;
+            lx = lx < -ex ? -ex : lx > ex ? ex : lx;
+            lz = lz < -ez ? -ez : lz > ez ? ez : lz;
+            Vec l = {lx, 0.0f, lz};
+            Vec v;
+            PSMTXMultVec(mv, &l, &v);
+            cur[i][0] = v.x; cur[i][1] = v.y; cur[i][2] = v.z;
+            const f32 f = v.z < 0.0f ? re4dc_fog_amount(-v.z) : 0.0f;
+            for (int q = 0; q < 3; ++q) {
+                cur[i][3 + q] = c[q] + (1.0f - c[q]) * f;
+            }
+        }
+        if (j == 0) {
+            continue;
+        }
+        const f32 (*prev)[6] = row[(j - 1) & 1];
+        for (int i = 0; i < n; ++i) {
+            const f32* k[4] = {prev[i], prev[i + 1], cur[i], cur[i + 1]};
+            f32 pos[4][3];
+            f32 cr[4][3];
+            int unity = 1;
+            int behind = 1;
+            for (int q = 0; q < 4; ++q) {
+                for (int e = 0; e < 3; ++e) {
+                    pos[q][e] = k[q][e];
+                    cr[q][e] = k[q][3 + e];
+                    if (cr[q][e] < 0.998f) {
+                        unity = 0;
+                    }
+                }
+                if (pos[q][2] < 0.0f) {
+                    behind = 0;
+                }
+            }
+            if (unity || behind) {
+                continue;
+            }
+            re4dc_water45_quad(pos, cr, projection, viewport);
+        }
+    }
+}
+
+// The surface's OT entry (layer 0x10, as Espgen45_Trans queues Espgen45_TransSub): drawn in the render pass of the
+// image being built. Espgen45_Trans and the logic-only coarse pass (espgen.cpp) call it; render only.
+extern "C" void re4dc_water45_queue(EspgenWork* w)
+{
+    if (G_ROOM_ID == 0x10b && (w->flag & 1) && !(w->flag & 2)) {
+        AddOtDirect(0x10, w, (void (*)()) re4dc_water45_draw, 1, 0x80, NULL, 0.0f);
+    }
+}
+
+// EspSpriteEmit (esp_sub.cpp): 1 when the r10b surface is drawn natively this frame, the eye is above the plane and all
+// four view-space corners are under it: the GameCube's water Z hides such a sprite (drawn after the water's OT layer).
+extern "C" int re4dc_water45_hides(const f32 (*corner)[3])
+{
+    EspgenWork* w = g_pWater45;
+    if (w == NULL || !(w->flag & 1) || (w->flag & 2) || G_ROOM_ID != 0x10b) {
+        return 0;
+    }
+    Espgen42Work* p = (Espgen42Work*) w->work;
+    // The plane y = h in view space: normal n = R (0, 1, 0), offset d = -(n . (R (0, h, 0) + t)); a point's side is
+    // n . x + d (> 0: above). The eye is the view origin: above when d > 0.
+    const Mtx& V = pG->Cam.v_mat;
+    const f32 h = p->mat[1][3];
+    const f32 nx = V[0][1], ny = V[1][1], nz = V[2][1];
+    const f32 d = -(nx * (V[0][1] * h + V[0][3]) + ny * (V[1][1] * h + V[1][3]) + nz * (V[2][1] * h + V[2][3]));
+    if (!(d > 0.0f)) {
+        return 0;
+    }
+    for (int i = 0; i < 4; ++i) {
+        if (nx * corner[i][0] + ny * corner[i][1] + nz * corner[i][2] + d >= 0.0f) {
+            return 0;
+        }
+    }
+    return 1;
+}
+#endif
+
 // EspgenTransTbl entry: queues Espgen45_TransSub in OT layer 0x10 (drawn after the opaque scene) and
 // clears Status_flg[1] bit 0x20 (the "override parameters changed this frame" flag).
 void Espgen45_Trans(EspgenWork* w)
@@ -445,6 +592,8 @@ void Espgen45_Trans(EspgenWork* w)
     if ((w->flag & 1) && !(w->flag & 2)) {
 #if !RE4DC_WATER45_LEAN
         AddOtDirect(0x10, w, (void (*)()) Espgen45_TransSub, 1, 0x80, NULL, 0.0f);
+#elif RE4DC_WATER45_NATIVE
+        re4dc_water45_queue(w);
 #endif
     }
     pG->Status_flg[1] &= ~0x20;

@@ -34,7 +34,9 @@ ROUTE_FILES = ["st1/r100.das", "st1/r101.das", "st1/r103.das", "em/em10.drs", "e
                "em/wep02.drs", "etc/core.das",
                # r103's two remaining pairs (warp-r101-pbdoor6): images in the sub-screen object
                # archive and in the route events
-               "ss/cmn/ss_oc101.dat", "evd/r101s30.evd"]
+               "ss/cmn/ss_oc101.dat", "evd/r101s30.evd",
+               # r10b boarding (lake-20261010): 18d0fd82-2c9a9309, st1/r10b.arc entry 27
+               "st1/r10b.das"]
 
 
 def pairs_from_logs(logs):

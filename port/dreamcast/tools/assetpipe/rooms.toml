@@ -24,6 +24,8 @@ pairs = [
     # r101 first entry (bswap-rtp2) and the r100 house fight (user play log, 2026-09-24)
     ["a6d90f64-9a95aa05", "3976971a-8be3b5b1"], ["4d28f9bb-8deaf624", "8ecb10ec-b516c37d"],
     ["1770ec7a-8119b489", "b308228f-3f8462a1"], ["3d9d333a-125fadf1", "d56e57e8-6edc9482"],
+    # r10b boarding (st1/r10b.arc entry 27 TPL images 0/1; lake-20261010 "pair missing 18d0fd82-2c9a9309")
+    ["71edfaa9-5e1dd270", "a1c67505-45451a25"],
 ]
 
 [defaults]

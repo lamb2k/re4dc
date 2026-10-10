@@ -2081,6 +2081,18 @@ extern "C" void re4dc_fog_capture(int type,float start,float end,unsigned rgba){
     fog_now.type=type;fog_now.start=start;fog_now.end=end;fog_now.rgba=rgba;
 }
 extern "C" unsigned re4dc_fog_enabled(){return fog_now.type!=0;}
+#if defined(RE4DC_WATER45_NATIVE) && RE4DC_WATER45_NATIVE
+// WATER45_NATIVE (espgen45.cpp): the fog amount re4dc_fog_frame's table gives eye depth z (GX curve + far ramp).
+// The table this frame's PVR fog holds (fog_loaded): effects switch the source fog off around their own draws.
+extern "C" float re4dc_fog_amount(float z){
+    if(fog_loaded.type<=0)return 0.0f;
+    const float far=fog_loaded.far>1.0f?fog_loaded.far:(fog_loaded.end>1.0f?fog_loaded.end:1.0f);
+    float f=gx_fog(fog_loaded.type,fog_loaded.start,fog_loaded.end,z);
+    const float ramp=(z-kFogRamp*far)/((1.0f-kFogRamp)*far);
+    if(ramp>0){const float s=ramp>=1?1.0f:ramp*ramp*(3.0f-2.0f*ramp);f+=(1.0f-f)*s;}
+    return f;
+}
+#endif
 #if RE4DC_ACTOR_FOG_GATE
 // ACTOR_FOG_GATE: the fogged source View far last noted (re4dc_fog_note_far, already clamped to
 // FOG_FAR), the value re4dc_fog_far_for_gate gives SCENERY_GATE for the same View; 0 when unknown.

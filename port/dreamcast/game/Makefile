@@ -74,7 +74,7 @@ $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH13=1
 # r108 / r10a play their resident BGM0 track for the second room track (src/game/snd.cpp; the BGM1 slot is 0 bytes).
 $(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH13=1
 # r10b: espgen45 (the lake height field) keeps hA/hB/pos but skips its GX-only normal/bump/display-list buffers
-# (1.36 MB of heap 4; GX is a stub here and the PS2 world draws the lake surface).
+# (1.36 MB of heap 4; GX is a stub here: WATER45_NATIVE draws the surface).
 $(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_WATER45_LEAN=1
 WATER45_GRID_SKIP ?= 1
 ifeq ($(WATER45_GRID_SKIP),1)
@@ -85,6 +85,14 @@ endif
 WATER42_GRID_SKIP ?= 1
 ifeq ($(WATER42_GRID_SKIP),1)
 $(OBJDIR)/src/game/Espgen42.o: GAME_CPPFLAGS += -DRE4DC_WATER42_GRID_SKIP=1
+endif
+# WATER45_NATIVE=1 (default with ROUTE_CH13=1): espgen45 draws the lake surface natively (re4dc_water45_draw: the
+# plane over the grid and far border, the GameCube's scene x TEV colour as a PVR multiply, fogged per corner). Without
+# it nothing draws the water (GX stub, no water mesh in the PS2 world): the fog-coloured background shows (pale lake).
+WATER45_NATIVE ?= 1
+ifeq ($(WATER45_NATIVE),1)
+$(OBJDIR)/src/game/espgen45.o $(OBJDIR)/src/game/espgen.o $(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_WATER45_NATIVE=1
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WATER45_NATIVE=1
 endif
 # em27ObaHitCk scans enemy slots through the sparse backing (workAt) instead of raw slot math, which read an
 # unbacked slot's 0xFF filler as a NaN position and dragged the fish to NaN (r10b dock / boss collision storm).
