@@ -46,7 +46,7 @@ over its corners.
 | transformed records | 3,660 | 4,545 | 4,489 | |
 | plan palette / workspace bytes | 32,000 / 26,112 | 14,336 / 11,424 | 29,568 / 24,640 | |
 
-Character data (play knobs, measured): coarse_actor.o A -3,752 bytes, B +11,976 bytes. The CHAR_DATA_BLOCK pads in
+Character data (play knobs, measured): coarse_actor.o A -3,924 bytes, B +11,976 bytes. The CHAR_DATA_BLOCK pads in
 16 KiB steps: A keeps 442,368 bytes, B takes one more step (458,752 bytes), 16 KiB less heap 4.
 
 ## Regenerating the assets

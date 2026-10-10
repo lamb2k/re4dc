@@ -12,7 +12,7 @@
 #   roles and their immutable asset IDs, today's atlas ec255e66-76812316 and the hair colour / mask images (UVs mapped
 #   into the same tiles), so every charbake texture variant applies as it is. Render only: collision, animation,
 #   game state and AI read nothing here. Plan bytes: A 14,336 palette / 11,424 workspace, B 29,568 / 24,640 (today
-#   32,000 / 26,112). Character data (play knobs, 6f9e0122): coarse_actor.o A -3,752 bytes, B +11,976 bytes; the
+#   32,000 / 26,112). Character data (play knobs, 6f9e0122): coarse_actor.o A -3,924 bytes, B +11,976 bytes; the
 #   CHAR_DATA_BLOCK pads in 16 KiB steps: A keeps 442,368 bytes, B takes one more step (458,752: heap 4 -16 KiB).
 #   PS2_LEON_DIR: the private directory holding the arm's ps2leon_runtime.h and ps2leon_hair_runs.h
 #   (re4-assets-private/ps2leon-20261010/arm-a or arm-b; tools/d367/ps2leon/pack_arm.py writes them).
