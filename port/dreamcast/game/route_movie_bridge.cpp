@@ -14,6 +14,12 @@
 #include "snd.h"
 #include "route_movie.h"
 #include <string.h>
+#if defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
+#include "cam_ctrl.h"
+#define ROUTE_SCE_MODE(flags) (((flags) & ROUTE_MOVIE_SCE_TRUE) ? 1 : 0)
+#else
+#define ROUTE_SCE_MODE(flags) 0
+#endif
 extern "C" void re4dc_log(const char* fmt, ...);
 
 // Source Evt_*_Func handlers read only funcMode (and NowCut/NowFrame in mode 1)
@@ -179,7 +185,7 @@ int RouteMoviePlay(unsigned id, unsigned flags, RouteEvtFunc func, RouteMovieTic
         return RE4DC_MOVIE_UNHANDLED;
     }
     // Event::ExeBeginEvt: scenario event nesting, event-running status, begin func.
-    SceEventStart(0);
+    SceEventStart(ROUTE_SCE_MODE(flags));
     BitOn(pG->Status_flg[2], 0x00080000);
     BitOn(pG->Status_flg[2], 0x00010000);
     BitOff(pG->Status_flg[3], 0x01000000);
@@ -223,6 +229,11 @@ int RouteMoviePlay(unsigned id, unsigned flags, RouteEvtFunc func, RouteMovieTic
     }
     BitOff(pG->Status_flg[2], 0x00080000);
     BitOff(pG->Status_flg[2], 0x00010000);
+#if defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
+    if (flags & ROUTE_MOVIE_SCE_TRUE) {
+        CamCtrl.Comeback(0);  // EvtReadExec's own Comeback (SceEventEnd(0) skips it after a mode-1 start)
+    }
+#endif
     SceEventEnd(0);
     re4dc_log("route cutscene: id=%05x terminal=%d skip_func=%d end_func=%d pose=%s scenario0=%08x system=%08x\n",
               id, st, st == RE4DC_MOVIE_SKIP && func != 0, func != 0,

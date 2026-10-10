@@ -101,7 +101,7 @@ LOWER_ORDER = (8, 5, 1, 6, 2, 7, 0, 3)
 # r109). A room's second-slot track (BGM1, 0 bytes in the frozen layout) is replaced at runtime by a resident one
 # (snd.cpp, ROUTE_CH13). Only rooms of the planned route add entries. r104 and r107 both request
 # bank 9; it must also be prebuilt, otherwise runtime conversion exhausts the unreserved AICA bytes.
-ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r10a': [3], 'r10b': [3], 'r11b': [10], 'r11a': [10]}
+ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r10a': [3], 'r10b': [3], 'r11b': [10], 'r11a': [10], 'r119': [3]}
 
 # Leon's other stage-1 weapons (--weapons; stage.sh AICA_WEAPONS=1; issue lamb2k/re4dc#1, silent weapons). The GC
 # loads the equipped weapon's SE block (WEP, block 2) on every weapon change (weaponLoad -> its .drs) into the one WEP
@@ -153,6 +153,9 @@ ROOMS = {
     # r11a (route lane r11a, chapter 2-1): em24 is also read at room entry, as in r108 / r10a (route-r11a-x1a:
     # "blk 9 (34040 bytes) does not fit the room arena"). bgmtbl: bio4midi #10 (as r11b).
     'r11a': ['st1/r11a.dar', 'em/em12.drs', 'em/em24.drs'],
+    # r119 (route lane r119, El Gigante): em2b (the giant, script spawn, rel-stripped) and em21 (the dog that helps, set
+    # by the dog event). bgmtbl: slot 0 = bio4midi #3 (as r109 / r10a / r10b), stream 0:5 (the giant battle).
+    'r119': ['st1/r119.dar', 'em/em2b.drs', 'em/em21.drs'],
     # r40b (St4, follow-up 7): em1f (bringup inventory: em1f/em1f, st4_0)
     'r40b': ['st4/r40b.dar', 'em/em1f.drs'],
 }

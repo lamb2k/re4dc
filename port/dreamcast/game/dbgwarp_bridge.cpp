@@ -28,6 +28,9 @@
 //    PlWepHitCheck3 registers a hit) every frame no hit is pending, until its hp is gone. The enemy's
 //    own damage check then runs its death, and whatever the room links to it (SceExecLinkEmDead) runs
 //    as in play: r100's s03 Ganado (id 0x12) -> r100_Sce_zombi_dead -> the ambush + s20.
+//    `kill <em id> <room frame> <room> <kind>` registers that weapon kind instead (cDmgInfo m_Wep): r119's
+//    giant (id 0x2b) loses hp only on the parasite (part 0x3F) or to kind 0xD, which em2b's damage check
+//    turns into hp 0 (the rocket launcher kill of the original game).
 //  - Move: `goto <room frame> x y z [ang]` (first room, up to 4) moves Leon there at or after that
 //    frame, outside events; an area trigger at the spot then fires as when he walks in (r100: area
 //    6 pre-reads s03/s20, area 0xA starts s03), so a fresh room entry (its entry event and call)
@@ -38,7 +41,7 @@
 // /cd/dc/warp.txt (tools/d367/warp.py writes it from a named preset):
 //   room 0x100 | jp 0 | pos x y z | dir 0x8000 | ang <rad> | rsf <room> <bit>... |
 //   scenario <0|1> <hex> | find <hex> | unlock <0|1> <hex> | dead <no>... | inv default | area <no> [dx dz] |
-//   act <frame> <a|b|x|y|start|fwd|back|none|0xMASK> <hold> | arm <frame> <item id> | trg <no> <frame> [room] | kill <id> <frame> [room] |
+//   act <frame> <a|b|x|y|start|fwd|back|none|0xMASK> <hold> | arm <frame> <item id> | trg <no> <frame> [room] | kill <id> <frame> [room [kind]] |
 //   goto <frame> x y z [ang] | dump | name <preset> | late <mask> [tick] [room] (warp_late.h) | entry <n> |
 //   radio <frame> <call no 0..23> (source radio replay, resource-lifetime test only)
 //   god (Leon's life refilled every frame) | alert <frame> (the crowd hunts Leon from that frame of its entry)
@@ -114,6 +117,7 @@ struct Warp {
     int kill_id;
     u32 kill_frame, kill_hits;
     u16 kill_room;  // 0: any room
+    u8 kill_kind;   // cDmgInfo kind of each hit (1: handgun)
     cEm* kill_em;   // the target once found (kept until its hp is gone)
     u32 kill_watch; // after the kill: state lines left
     struct Goto { u32 frame; f32 pos[3]; f32 ang; bool has_ang, done; u8 entry; } go[4];
@@ -271,6 +275,7 @@ void load()
             wp.kill_id = (int) num(tok[1]);
             wp.kill_frame = num(tok[2]);
             wp.kill_room = n >= 4 ? (u16) num(tok[3]) : 0;
+            wp.kill_kind = n >= 5 ? (u8) num(tok[4]) : 1;
         } else if (!strcmp(k, "goto") && n >= 5 && wp.n_go < 4) {
             Warp::Goto& g = wp.go[wp.n_go++];
             g.entry = wp.parse_entry;
@@ -405,7 +410,7 @@ void kill_poll()
     YARARE_INFO* part = emSphereAtCk(em, &c, &c, 5000.0f, 1, 5000.0f);
     if (!part) part = &em->hitInfo;
     Vec from = pPL ? pPL->pos : em->pos;
-    em->dmg.set(0, 10, 1, &from, part->rad, part);
+    em->dmg.set(0, 10, wp.kill_kind, &from, part->rad, part);
     ++wp.kill_hits;
 }
 

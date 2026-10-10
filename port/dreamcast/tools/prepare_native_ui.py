@@ -461,6 +461,11 @@ ROOM_CONTRACTS={
     'r11b':dict(slots=33,smd=4,effs=(7,),itm=9,model_slots=(28,)),
     # r11a: r107's 27-slot layout.
     'r11a':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    # r119 (route lane r119, El Gigante): 33 slots, SMD#4, EFF#7, ITM#9, model TPL#31 (after BIN#30: the room's tree,
+    # R119Init SetTree ROOM_ARC 0x22 / 0x23); SAT#27/#28 (the hut collision), SAT#29, EMI#26 and DSE#32 byte-identical.
+    'r119':dict(slots=33,smd=4,effs=(7,),itm=9,model_slots=(31,)),
+    # r118 (route lane r119): 29 slots, SMD#4, EFF#7 room effects, EFF#27 local effects, ITM#9; DSE#26, EMI#28.
+    'r118':dict(slots=29,smd=4,effs=(7,27),itm=9,model_slots=()),
     # r40b (St4, st4_0 + em1f; follow-up 7): r40c's 27-slot layout (header ends at 232 of 256: no growth).
     'r40b':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
 }

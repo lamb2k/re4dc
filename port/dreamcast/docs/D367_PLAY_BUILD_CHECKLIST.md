@@ -60,6 +60,16 @@ request would fail "SND: File Not Found"). aica_banks.py still reads the banks f
 (/root/re4data), never from a staged disc. io_probe.cpp (IO_PROBE builds) still names them: not for play discs.
 Gates (lane sbb, evidence D:/Flycast-Evidence/re4-dreamcast/sbb-20261010): see docs/lanes/route.md "SBB_STUB".
 
+## 2026-10-10: r119 (El Gigante, after r11a) staging recipe (not built, not released)
+
+The r11a recipe with ROUTE_CH21=1 SBB_STUB=1; the build writes a fifth overlay, **em2b.ovl: stage dc/em2b.ovl**.
+Add (lane r119 tools/mkfix.py `base`): st1/r119.arc (released) + st1/r119.dar (aica-r119), **em/em2b.drs = the
+prepared archive** (prepare_enemy_motions --textures tex-em2b, then aica_banks; the GC body does not fit heap 4) and
+its 89 motion keys dc/mot/*.fcv, bgm/aica_str.dat with stream 0:5, dc/native/r119/{MAINSCENARIO.re4mesh,
+ps2-world.r4pw/.re4mesh/.ids}, dc/movie/r119s00/s10/s20/s30.seq, and the r119 / em2b / PS2 world textures (VQ
+overlays first) plus pair 41387140-38190dc7 (into the pack). Checks: r11a door 0 -> r119, the four movies, the
+giant textured, door 0 / 6 "Coming Soon", door 1 -> r11a.
+
 ## 2026-10-10: r11a (chapter 2-1, after r11b) staging recipe (not built, not released)
 
 The r11b recipe below with SBB_STUB=1; no new build flag (ROUTE_CH21=1 covers r11a). Add (lane r11a tools/mkfix.py

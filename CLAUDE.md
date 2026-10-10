@@ -188,6 +188,8 @@ loads every texture package from one file (room entry 7.2 -> 3.1 s, east walk 6.
   dc/em2f.ovl (checklist 2026-10-10).
 - r11b (2026-10-10, route doc "r11b", ROUTE_CH21 needs ROUTE_OVL): chapter 2-1 starts in r11b after the r10b save;
   em22 is a room overlay (stage dc/em22.ovl); stage the le_mirror'd etc/emleon01.esl (raw on the disc: R11bInit hang).
+- r119 (2026-10-10, route doc "r119"): El Gigante under ROUTE_CH21; em2b is a room overlay (stage dc/em2b.ovl) and
+  must be staged prepared (textures + motion leases, dc/mot keys): the GC body does not fit r119's heap 4.
 - r11a (2026-10-10, route doc "r11a"): data only. A room counts as built when dc/native/<room>/ps2-world.r4pw is
   staged. aica_banks ROOMS r11a reads em24 at room entry.
 - WATER42_GRID_SKIP (2026-10-10, route doc "WATER42_GRID_SKIP", default 1 in the ROUTE_CH13 block): espgen42 (the

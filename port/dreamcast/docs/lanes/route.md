@@ -485,7 +485,70 @@ change is aica_banks.py: ROOMS r11a gains em/em24.drs and ROOM_BGM0 gains r11a [
   when entered from r11b (r11b's set resident; rejects 0, missing 0); AICA arena 948,672 of 1,004,192.
 - **Disc.** +11.3 MB over r11b (harness image 1,025,087,488 -> 1,036,402,688 B). Without SBB_STUB this is about 1 MB
   over track 3; with SBB_STUB=1 (3b87488f) about 332 MB stay free.
-- **Next: r119** (r11a door 0; then r118 -> r117, the chapter 2-1 end).
+- **Next: r119** (r11a door 0; then r118 -> r117, the chapter 2-1 end): done, see "r119" below.
+
+## Progress 2026-10-10 (r119: El Gigante, chapter 2-1, behind ROUTE_CH21)
+
+r119 (the village square: El Gigante, the dog, the parasite) plays from r11a door 0 through its four events to the
+giant's death; its exits to rooms not on the disc (door 0 r118, door 6 r10e) show "Coming Soon", door 1 returns to
+r11a. Everything is behind ROUTE_CH21=1 (default 0: knob-off images byte-identical). Lane tree
+/root/probe/lanes-20261010/r119, evidence D:/Flycast-Evidence/re4-dreamcast/r119-20261010.
+
+- **em2b is a room overlay** (MODULES `em2b:ovl`, the fourth route overlay at 0x8E000000 + 3 * 4 MiB; modules.cpp
+  g_route_ovl[4], MODULE(30, em2b)). em2b.ovl 66,064 B; log `route overlay: em2b load 1 64864 B (284 relocs)`
+  when R119's fight sets the giant. em2b.cpp lint fixes (off-GC only): `new (em) cEm2b;` and the six enemy slot
+  scans through EmMgr.workAt with null slots skipped (sparse enemy backing).
+- **Events through RouteMoviePlay** (src/st1/r119.cpp; each call falls back to its source event when its movie is
+  not on the disc (RE4DC_MOVIE_UNHANDLED); the ARAM pre-reads and the loads into the giant's block are skipped when
+  s00's movie is on the disc): s00 0x11900 (entrance, Evt_R119S00_Func begin / end), s10 0x11910
+  (the dog, Evt_R119S10_Func), s20 0x11920 (death, Evt_R119S20_Func), s30 0x11930 (the parasite). s30's source
+  call is EvtReadExec(.., 0xA0): new flag ROUTE_MOVIE_SCE_TRUE (ROUTE_CH21 builds) starts it with SceEventStart(1)
+  (enemies stay out of event mode) and runs EvtReadExec's camera Comeback; 0x20 = ROUTE_MOVIE_KEEP_POSE. Movies
+  (convert_route_movies.py, 288x192): s00 1928, s10 446, s20 782, s30 140 pictures; all played to the end.
+- **Heap 4 (measured first).** r119 after init: 3,854,656 B free in two cells, the largest 2,770,912 B. em2b's GC
+  body is 4,792,224 B (4,689,664 rel-stripped), so it cannot load as is. prepare_enemy_motions.py now takes em2b in
+  SMALL (textures) and MOTION_SMALL (motion), with the consumer audit in the tool: every FCV goes to MotionSetCore
+  (directly, em2bBlendMotSet, MotSetObj16, the player's grab motions); the one other read is ARC(0xE2)'s header
+  (resident). Prepared body 2,258,208 B: textures 1,048,576 B out (29 TPLs to native packages), 89 clips
+  (1,417,280 B) to motion leases (dc/mot/*.fcv, no hot set), 29 clips over the 32 KB lease slot (1,269,984 B) stay
+  resident. In the fight (route-r119-fb census, frame 900): heap 4 1,096,896 B free in 7 cells, largest 578,656;
+  the s10 movie opened at 1,048,032 free and s20 at 641,120; no allocation failure in any run.
+- **Assets.** Room container as r11a (GC st1/r119.das sha f04e1f81..; ROOM_CONTRACTS r119 33 slots, model TPL#31
+  = the SetTree tree): tex-r119 144 images, compact 4,255,552 -> 3,068,128, pkg 1,048,256 B, release 43 BINs,
+  resident archive 1,306,176 B, container 4,307,616 B. PS2 world ps2_room_r4im --color-light ps2 --lod-uv-guard
+  0.002: 1,058,272 B re4mesh, 35 textures. em2b textures (41) + r119 (VQ by vq_native_ui from the run logs:
+  em2b 4,046,848 -> 557,056 B VRAM, the giant's two 512x512 bodies 524,288 -> 67,584 each); one material pair
+  (41387140-38190dc7). AICA: ROOMS r119 (em2b, em21), ROOM_BGM0 r119 [3]; every other bank byte-identical to
+  r11a's; r119 arena 612,256 of 1,004,192. aica_str.dat + stream 0:5 (the battle, 3,145,728 B).
+- **Warp rig:** `kill <id> <frame> <room> <kind>` registers that weapon kind (test builds only). The giant loses hp
+  only on the parasite or to kind 0xD (em2b's rocket launcher case sets hp 0), so the route run kills it with
+  `kill 0x2b 2200 0x119 0xd` after `trg 0` (DebugTrg(0): the parasite event). The climb / slash QTE is not
+  exercised by the rig.
+- **Gates** (arms on d74b8ec8: T = trace flags + ROUTE_CH21=1 SBB_STUB=1, B = the same from a clean d74b8ec8;
+  C cost / P play twin; SBB off every disc). Knob-off identity: default recipe and play flags 0 bytes different
+  (one earlier play pair differed by 1 byte: dbgslot_bridge's `__TIME__` stamp); overlays identical, `_end` equal.
+  CH21 `_end` 8c3ebb7c vs 8c3ebadc (same 4 KiB page: the trace image is page-tight, so r119.cpp has no helper
+  function; an earlier version crossed a page and cost s30 8 KB of heap_before). missing.txt empty on every arm;
+  MISALIGN 0 in every run. H2 (ACT_CAP=0): STRICT 1450..1569, 0..740, 1218..6992, decision_cmp MUST-IDENTICAL
+  (6985 ticks, om info only as before); s30 340/340 heap_before 57,504 both. Bell STRICT frame (5090) + room,
+  MUST-IDENTICAL. Evidence route-r119-{h2,bell}{T,B}4; route-r119-{g3,g4,g5,w2,b1,f6s}C2 (05450fc9 base), g3C3 / ngP3 (d74b8ec8). New Game (P): 1971 / 2360, r100, s40 1175. f6s: r10b -> QTE ->
+  chapter 1-3 save (rc=0) -> r11b s00 1484/1484. Route g3/g4/g5 (C): r11a door 0 -> r119, s00, the dog s10, the
+  parasite s30, the kill, s20, then door 0 "door to r118 (not on this disc): Coming Soon", door 6 r10e, door 1 ->
+  r11a. HALT 0, MISSING 0, upload FAILED 0, pair missing 0.
+- **Numbers.** hw ms first (hwproject SH-4 model, cost arm r119C, drawn / skipped ms per tick), then Flycast PACE draw
+  ms over 300-frame windows (p50 / max of the windows, vsync off).
+
+  | view (window) | hw drawn / skipped | Flycast p50 / max |
+  |---|---|---|
+  | quiet, the r11a door (q 500:579) | 112.0 / 7.3 (LOGIC 5.4, TRANS 4.0, RENDER 91.7: models(other) 59.3, world 16.8) | 72.1 / 75.0 (12.5 fps) |
+  | El Gigante (b 900:979) | 90.6 / 11.7 (LOGIC 7.0, TRANS 5.5, RENDER 65.5: models(other) 32.6, world 10.7) | 62.6 / 69.4 (12.6-13.8 fps) |
+
+  Boss window proof: the same fixture's Flycast run (route-r119-fb) logs the giant at (120668, 2306, 10028) at frame
+  980 and Leon at (124231, 2309, 11585) at frame 900 (3.9 m); shot t0124 shows it over Leon. The quiet view's RENDER
+  is the source-drawn room models (the huts, roofs, gate and the three SetTree trees): RENDER/models(other) 59 ms is
+  the next r119 perf item. Headroom: heap 4 above; VRAM free 93,440..192,256 B in the fight (missing 0); AICA arena
+  612,256 of 1,004,192.
+- **Next: r118** (r119 door 0; then r117, the chapter 2-1 end).
 
 ## Progress 2026-10-10 (WATER42_GRID_SKIP: espgen42 without its height grid, r10a + r11a)
 

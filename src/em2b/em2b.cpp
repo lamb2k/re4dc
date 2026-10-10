@@ -451,7 +451,11 @@ extern "C" void _unresolved()
 // EmInitFunc of the module: constructs the cEm2b class in the manager's work.
 void Em2bInit(cEm* em)
 {
+#if !defined(__PPC__)
+    new (em) cEm2b;   // no value-init: () zeroes the subArc the manager set (off the GC)
+#else
     new (em) cEm2b();
+#endif
 }
 
 // Destructor: destroys the parasite head object, the ten tentacle objects and the three chain
@@ -4831,8 +4835,18 @@ int em2bSearchTree(cEm2b* em)
         return 0;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Scan: unbacked sparse slots read as absent (no allocation), as em21.cpp's scans.
+        cEmTree* e = (cEmTree*) EmMgr.workAt(i);
+#else
         cEmTree* e = (cEmTree*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
+#if !defined(__PPC__)
+        if (!e) {
+            continue;
+        }
+#endif
         if ((e->be_flag & 0x201) != 1) {
             continue;
         }
@@ -5116,9 +5130,19 @@ void em2bDashScrCk(cEm2b* em, Vec* pos, f32 rad)
         }
     }
     for (i = 0; i < (int) EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Scan: unbacked sparse slots read as absent (no allocation), as em21.cpp's scans.
+        cEmRock* e = (cEmRock*) EmMgr.workAt(i);
+#else
         cEmRock* e = (cEmRock*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
         cModel* p;
 
+#if !defined(__PPC__)
+        if (!e) {
+            continue;
+        }
+#endif
         if ((e->be_flag & 0x201) != 1) {
             continue;
         }
@@ -5516,8 +5540,18 @@ int em2bSearchDog(cEm2b* em)
         return 0;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Scan: unbacked sparse slots read as absent (no allocation), as em21.cpp's scans.
+        cEm* e = (cEm*) EmMgr.workAt(i);
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
+#if !defined(__PPC__)
+        if (!e) {
+            continue;
+        }
+#endif
         if ((e->be_flag & 0x201) != 1) {
             continue;
         }
@@ -6235,8 +6269,18 @@ int em2bStayCk(cEm2b* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Scan: unbacked sparse slots read as absent (no allocation), as em21.cpp's scans.
+        cEm* e = (cEm*) EmMgr.workAt(i);
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
+#if !defined(__PPC__)
+        if (!e) {
+            continue;
+        }
+#endif
         if ((e->be_flag & 0x201) != 1) {
             continue;
         }
@@ -6275,9 +6319,19 @@ void em2bObaHitCk(cEm2b* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Scan: unbacked sparse slots read as absent (no allocation), as em21.cpp's scans.
+        cEm* e = (cEm*) EmMgr.workAt(i);
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
         Vec d;
 
+#if !defined(__PPC__)
+        if (!e) {
+            continue;
+        }
+#endif
         if ((e->be_flag & 0x201) != 1) {
             continue;
         }
@@ -6357,8 +6411,18 @@ int em2bFriendCk(cEm2b* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Scan: unbacked sparse slots read as absent (no allocation), as em21.cpp's scans.
+        cEm* e = (cEm*) EmMgr.workAt(i);
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
+#if !defined(__PPC__)
+        if (!e) {
+            continue;
+        }
+#endif
         if ((e->be_flag & 0x201) != 1) {
             continue;
         }

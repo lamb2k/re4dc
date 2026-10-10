@@ -1,5 +1,14 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-10: r119, El Gigante (ROUTE_CH21, lane r119)
+
+- r119 plays from r11a door 0 through s00 / s10 / s20 / s30 (PS2 movies) to the giant's death; exits to r118 / r10e
+  show "Coming Soon" (route doc "r119"). em2b is a room overlay; its archive fits heap 4 only prepared (textures to
+  native packages + motion leases: 4.79 MB -> 2.26 MB body; r119's largest free cell is 2.77 MB).
+- r119 hw ms (cost arm, drawn / skipped): quiet 112.0 / 7.3, boss 90.6 / 11.7; RENDER dominates (source-drawn room
+  models 59 ms in the quiet view). Flycast p50 72.1 / 62.6. Gates on d74b8ec8: H2 + bell STRICT / MUST-IDENTICAL,
+  s30 heap_before 57,504 = control (the CH21 trace image is page-tight: keep r119.cpp lean).
+
 ## 2026-10-10: WATER42_GRID_SKIP, r10a / r11a lake water (ROUTE_CH13 block, lane fix21)
 
 - espgen42 keeps only its water plane (the only thing logic reads: GetWaterHeight / GetWaterCrossPos /

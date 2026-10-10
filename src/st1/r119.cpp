@@ -99,6 +99,24 @@ extern "C" void koya_init();
 extern "C" void Evt_R119S00_Func(Event* e);
 extern "C" void Evt_R119S10_Func(Event* e);
 extern "C" void Evt_R119S20_Func(Event* e);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH21
+// Route cutscenes (ROUTE_CH21, r119 El Gigante): the four events are presented by their PS2 movies
+// (docs/ROUTE_CUTSCENES.md); the surrounding source code (the giant set, the boss meter, doors, the fight
+// loop, the dog set, the death sequence) runs unchanged. No evd is read while the movies own the events,
+// so their ARAM pre-reads and the loads into the giant's module block (EvtReadExec em 0x2B) are skipped.
+// The handlers' begin / end modes run; their per-cut modes only hand scroll objects to the event bodies
+// and hide them for the cuts, and the end mode restores them. EvtReadExec flags: s00 / s10 / s20 0 (no
+// fade); s30 0xA0 = 0x80 the "true" scenario start (ROUTE_MOVIE_SCE_TRUE) + 0x20 no player
+// reposition (ROUTE_MOVIE_KEEP_POSE).
+// A movie that is not on the disc falls back to its source event (RouteMoviePlay returns UNHANDLED); the room's
+// evd pre-reads follow s00's media. (No helper function: the ROUTE_CH21 trace image sits just under a 4 KiB page.)
+#include "route_movie.h"
+#define R119_ROUTE_MOVIES 1
+#define R119_MOVIES_OWN() re4dc_movie_available(0x11900)
+#else
+#define R119_ROUTE_MOVIES 0
+#define R119_MOVIES_OWN() 0
+#endif
 
 // Third SetTree block: the pRoomArc read goes through the struct view `pGS` so the `lwz pG` depends
 // on the preceding pos/rot stores (a plain `pG` load is a fixed scalar that sched2 hoists above them).
@@ -113,7 +131,9 @@ void R119Init()
 #line 95 "D:/Bio4/Prog/r119.cpp"
     r119_work = (R119Work*) MEM_CALLOC(sizeof(R119Work), 1, 0xd);
 
+    if (!R119_MOVIES_OWN()) {
     EvtMgr.EvtReadAram("event/evd/r119s00.evd", 0, 0, 0, 0);
+    }
     EvtMgr.SetFunc("evt_r119s00_func", (void*) Evt_R119S00_Func);
     EvtMgr.SetFunc("evt_r119s10_func", (void*) Evt_R119S10_Func);
     EvtMgr.SetFunc("evt_r119s20_func", (void*) Evt_R119S20_Func);
@@ -261,10 +281,15 @@ static void r119_EventGolemAppear()
 
     RsfSet(G_ROOM_ID, 0);
     pG->Status_flg[1] |= 0x800;
+#if R119_ROUTE_MOVIES
+    if (RouteMoviePlay(0x11900, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R119S00_Func, 0) == RE4DC_MOVIE_UNHANDLED)
+#endif
+    {
     EvtMgr.EvtReadExec("event/evd/r119s00.evd", 0, 0);
     EvtMgr.EvtReadAram("event/evd/r119s10.evd", 0, 0, 0, 0);
     EvtMgr.EvtReadAram("event/evd/r119s20.evd", 0, 0, 0, 0);
     EvtMgr.EvtReadAram("event/evd/r119s30.evd", 0, 0, 0, 0);
+    }
     r119_work->golem = EmSetFromList2(0x28, 0);
     GamePointBossReset();
     Cckpt.m_LifeMeter.flags = (u32) r119_work->golem;
@@ -304,6 +329,10 @@ static void r119_EventGolemAppear()
             RsfSet(G_ROOM_ID, 7);
             SndRoomStrStop(3);
             pG->Status_flg[1] |= 0x800;
+#if R119_ROUTE_MOVIES
+            if (RouteMoviePlay(0x11920, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R119S20_Func, 0) ==
+                RE4DC_MOVIE_UNHANDLED)
+#endif
             EvtMgr.EvtReadExec("event/evd/r119s20.evd", 0x2B, 0);
             SceAtSetEnable(3, 0);
             SceAtSetEnable(4, 0);
@@ -369,6 +398,10 @@ static void r119_EventGolemAppear()
 static void r119_EventParasiet()
 {
     pG->Status_flg[1] |= 0x800;
+#if R119_ROUTE_MOVIES
+    if (RouteMoviePlay(0x11930, ROUTE_MOVIE_SND_EVENT | ROUTE_MOVIE_SCE_TRUE | ROUTE_MOVIE_KEEP_POSE, 0, 0) ==
+        RE4DC_MOVIE_UNHANDLED)
+#endif
     EvtMgr.EvtReadExec("event/evd/r119s30.evd", 0x2B, 0xA0);
     pG->Status_flg[1] &= ~0x800;
 }
@@ -380,6 +413,9 @@ static void r119_EventDogAppear()
     Vec ang;
 
     pG->Status_flg[1] |= 0x800;
+#if R119_ROUTE_MOVIES
+    if (RouteMoviePlay(0x11910, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R119S10_Func, 0) == RE4DC_MOVIE_UNHANDLED)
+#endif
     EvtMgr.EvtReadExec("event/evd/r119s10.evd", 0x2B, 0);
     pG->Status_flg[1] &= ~0x800;
     PSet(r119_work->dog, EmSetFromList2(0x29, 0));

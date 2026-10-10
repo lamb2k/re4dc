@@ -113,7 +113,14 @@ MODULES += em22:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em22
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 $(OBJDIR)/mod/st1_2/src/st1/r11b.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
-ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o
+# r119 (route lane r119, the village square, El Gigante; r11a door 0): em2b (module 30, the giant) is a fourth room
+# overlay (em2b.ovl, linked after em22 so the earlier overlays are unchanged); r119's four events (s00 entrance,
+# s10 the dog, s20 death, s30 the parasite) are presented by their PS2 movies (src/st1/r119.cpp).
+MODULES += em2b:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em2b
+$(OBJDIR)/mod/st1_2/src/st1/r119.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
+ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o
 endif
 endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
@@ -782,7 +789,7 @@ ENEMY_DEMAND ?= 0
 # Direct-slot consumers reviewed for this module set. Audit any newly linked
 # module before enabling sparse enemy backing; census/reference remain usable.
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl wep01 wep07 wep09 wep11 wep13 wep19,$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl wep01 wep07 wep09 wep11 wep13 wep19,$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif
