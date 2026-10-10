@@ -192,8 +192,26 @@ static const Re4dcLook re4dc_looks[]={
     {1,100, 70,1,7,1,1,"GA","GA: GC fog + r100 colour + filter"},   // GD + match + filter
     {0,100,100,0,7,0,0,"DC","DC: current look"},             // the play build's look (as the knobs-off image)
     {1,100, 70,1,7,0,2,"GX","GX: GD, flicker filter off"},   // GD with the vertical filter forced OFF
+#if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
+    // charbake (charbake.mk CHARBAKE_TOGGLE): the DC look with each character texture variant (re4dc_look_chr)
+    {0,100,100,0,7,0,0,"CA","CA: DC + characters AO"},     // ambient occlusion baked into Leon + Ganados
+    {0,100,100,0,7,0,0,"CS","CS: DC + characters AO + sky"},   // AO + soft sky / ground light
+    {0,100,100,0,7,0,0,"CG","CG: DC + characters GC bright"},  // SKY graded toward the GameCube (hair too)
+    {0,100,100,0,7,0,0,"CV","CV: DC + Leon VQ texture"},   // Leon atlas as VQ (66 KB VRAM, not 524), play shading
+    {0,100,100,0,7,0,0,"CQ","CQ: CG with Leon VQ"},        // CG with Leon atlas as VQ
+#endif
 };
 constexpr unsigned kLooks=sizeof(re4dc_looks)/sizeof(re4dc_looks[0]);
+#if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
+#include "../charbake_variants.h"
+extern "C" void re4dc_charbake_set(unsigned variant);  // coarse_actor.cpp (charbake.mk CHARBAKE_TOGGLE)
+// The character variant of a preset: the last kCharbakeLooks presets are charbake_variants.h rows 1.. in order,
+// every other preset draws the play textures (row 0).
+constexpr unsigned kCharbakeLooks=5;
+static_assert(re4dc_charbake::kCount==kCharbakeLooks+1,"one look preset per charbake variant");
+static unsigned re4dc_look_chr(unsigned mode){return mode+kCharbakeLooks>=kLooks ? mode+kCharbakeLooks+1-kLooks : 0;}
+static unsigned re4dc_look_chr_last; // the variant the presets last set (0 at boot)
+#endif
 extern "C" { unsigned re4dc_look_mode; }
 #if defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
 extern "C" void re4dc_ps2fx_set(unsigned flags);
@@ -217,6 +235,11 @@ extern "C" void re4dc_look_set(unsigned mode){
     const Re4dcLook& lk=re4dc_looks[re4dc_look_mode];
 #if defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
     re4dc_ps2fx_set(lk.fx); // masked to the built features
+#endif
+#if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
+    if(re4dc_look_chr(re4dc_look_mode)!=re4dc_look_chr_last){
+        re4dc_look_chr_last=re4dc_look_chr(re4dc_look_mode);re4dc_charbake_set(re4dc_look_chr_last);
+    }
 #endif
     if(re4dc_look_scaler_boot==~0U)re4dc_look_scaler_boot=PVR_GET(PVR_SCALER_CFG);
     const unsigned vs=lk.soft==1?1025U:lk.soft==2?1024U:(re4dc_look_scaler_boot&0xffffU);
