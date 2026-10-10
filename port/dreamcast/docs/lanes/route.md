@@ -877,6 +877,57 @@ a room that is not on the disc.
   Flycast: 520 of 800 pictures decoded, 35 underruns, the same QTE outcome and the same save. The same image
   without the r117 files (752 MB) plays 800/800. Code is excluded. Check s20 on the real play disc.
 
+## Progress 2026-10-10 (issue 9 i9c: latch v2, PVR_RECOVER, TA_BIN_DIAG; all default off)
+
+Lane i9c (branch fix/issue9-render-hang-20261010). Console: the r108 -> r109 bridge door freeze (d74b8ec8 photos,
+`MISSING native stream completion fence failed`, `rdy K0 Q0 Y100 rb1 rc0 er05`).
+
+Photo decode (d74b8ec8, PVR_READY_STRICT=1 PVR_LATCH=1): Y100 = the present fence waited the full 10 s on one UI
+frame; o=t=p=c=S-1 and R=I=c-1 with rb1 = the last render was started and never finished (P1, an ISP/TSP render that
+never signals done; the TA side was complete). er05 = SB_ISTERR bit 0 (ISP out of cache) and bit 3 (OPB / object
+list pointer overflow); the v1 latch is cumulative since boot, so the bits may predate the hung scene. bt1 (rebuilt
+d74 ELF): re4dc_missing <- present_report <- present_fence <- re4dc_pvr_vram_fence <- texture::Package::upload <-
+load(Re4dcUiImage), called from a room module: a UI image load at r109 entry.
+
+Issue 11 (VGA look test, scaler register writes mid game) shows the same `Y100 rb1 er05`: er05 is the signature of
+an ISP wedge from any cause, not specific to this door. The door path writes no SPG / VO / scaler registers.
+
+Cause ranking (tiler model TA_BIN_DIAG, Flycast; fence partials calibrate the model OPB at ~0.87 x hw):
+1. ISP wedge on r109's first scenes, the largest of the route: entry param ~1.66 MB of 2 MB vertex bank, OPB pool
+   118.6K of 144K, an OP tile 1391 entries deep (r100, fine on console: 0.93 MB, 91K, 886). Not proven.
+2. Per-tile OP depth (no documented limit found).
+3. Texture upload through the TA FIFO during the fence: not excluded.
+Excluded: TR autosort load (r100 has more per tile), malformed parameters (0 short strips, 0 orphans, 0 list
+mismatches). A root fix (more OPB / vertex headroom, VRAM) is a design decision, not done here.
+
+Knobs (render only, default 0):
+- PVR_LATCH=2: ring codes collapse (`*N`), error row `er e<bit>@<first frame>x<count>` per SB_ISTERR bit 0..5 plus
+  `mx v<max vertex> o<max OPB>`, scene row `sc <frame> v.. o.. | <frame> v.. o..` (last two scenes), recover
+  counts `rv<P1>/<P2>@<frame>` on the rdy row. One photo reads all of it.
+- PVR_RECOVER=1 (requires PVR_READY_STRICT=1): inside the strict 100 ms wait slices, a render busy for 1 s (100 ms
+  after an ISP/TA error) gets an ISP/TSP reset and a synthesized render done (P1); a TA bank whose list-done
+  interrupts never all arrive gets a TA reset (after a TA error) and the missing list-done chains (P2). After 8
+  in a row it shows the stop screen "PVR render recovery gave up". The movie upload fence
+  (re4dc_ui_movie_upload_begin, r119 s30 terminal 3 on the r118 lane) waits in the same recovering slices.
+  Fault injection: /cd/dc/crashtest.txt `pvrhang <frame> <n>` / `pvrlist <frame>`.
+- TA_BIN_DIAG=1 (requires TA_HASH=1, test only): per-scene `tabin:` tiler model lines.
+
+Gates (evidence D:\Flycast-Evidence\re4-dreamcast\i9c-20261010): knob-off identity only __TIME__ and one __LINE__
+literal, overlays identical, _end equal; H2 STRICT 1450..1569 / 0..740 / 1218.., room DISCRETE om only,
+decision_cmp MUST-IDENTICAL 6987 ticks; bell STRICT 0..5100, MUST-IDENTICAL; MISALIGN 0; missing.txt empty;
+New Game 1971/2360/1175; s30 340/340 but heap_before 57504 vs control 65696 (FAILS the literal gate: the code grows
+the image past the 2244 B arena margin; latch v2 + strict alone already exceed it); r108 -> r109 door crossed HALT 0
+MISSING 0; r10a -> r10b entered; recover counts 0 in every normal run. Injection: one hang recovers (P1 at frame
+400, play continues), 8 hangs reach the stop screen with readable v2 rows, a missing list recovers (P2).
+hw ms (hwproject, knobs on vs off): r101 square 48.2 vs 48.1, r100 house fight 68.0 vs 67.1 (within the
+model band). Writes while a render is in flight (lookfix 76f99440 lesson: PVR_SCALER_CFG mid render gives this
+exact P1 screen): the door frame writes no SPG / VO / scaler registers; the fog table / colour / far are written only
+after present_fence when they change (re4dc_fog_frame_pending; LOOK_ANY is off in the play recipe); texture package
+uploads are fenced (the bt stack); pvr_set_bg_color is KOS state applied at render start; still unfenced: glyph
+palette banks (pvr_set_pal_entry, glyph_bank) and glyph / OSD texel loads into cells no queued render samples.
+Console test package (not published): C:\RE4DC-Play-Discs\test-fbdd1dbc-20261010-gdemu-package (d74b8ec8 data +
+this patch, PVR_LATCH=2 PVR_RECOVER=1).
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land
