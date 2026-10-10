@@ -80,6 +80,10 @@ u32 re4dc_vi_retrace_count(void);
 
 int re4dc_fixture_read(const char* path, char* buffer, unsigned size);
 void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture anchors (overlay)
+#if defined(RE4DC_LOOK_TOGGLE)
+extern "C" void re4dc_look_set(unsigned mode);  // native_static.cpp (post30.mk LOOK_TOGGLE)
+extern "C" void re4dc_look_osd_toggle(void);  // native_static.cpp (post30.mk LOOK_TOGGLE)
+#endif
 #if defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
 void re4dc_ps2fx_set(unsigned flags);  // esp_sub.cpp (effects30.mk EFFECT_PS2_TOGGLE)
 #endif
@@ -312,6 +316,12 @@ void load()
             wp.has_alert = true;
             wp.alert_frame = num(tok[1]);
             wp.alert_entry = wp.parse_entry;
+#if defined(RE4DC_LOOK_TOGGLE)
+        } else if (!strcmp(k, "look") && n >= 2) {
+            re4dc_look_set(num(tok[1]));   // post30.mk LOOK_TOGGLE: the look preset at load (gallery columns)
+        } else if (!strcmp(k, "lookosd")) {
+            re4dc_look_osd_toggle();       // LOOK_TOGGLE: the on-screen preset label always shown (label checks)
+#endif
         } else if (!strcmp(k, "freeze") && n >= 2) {
             wp.has_freeze = true;
             wp.freeze_tick = num(tok[1]);

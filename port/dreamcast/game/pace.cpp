@@ -68,7 +68,11 @@ extern "C" int re4dc_quality_pace(void) __attribute__((weak));      // QUALITY b
 extern "C" unsigned re4dc_logic_trace_hash(void);                  // logic_trace.cpp
 #endif
 #if defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
-extern "C" const char* re4dc_ps2fx_label(void);                    // esp_sub.cpp (effects30.mk EFFECT_PS2_TOGGLE)
+extern "C" const char* re4dc_ps2fx_label(void);
+#if defined(RE4DC_LOOK_TOGGLE)
+extern "C" const char* re4dc_look_label(void);  // native_static.cpp (post30.mk LOOK_TOGGLE): the look preset
+#define re4dc_ps2fx_label re4dc_look_label
+#endif                    // esp_sub.cpp (effects30.mk EFFECT_PS2_TOGGLE)
 #endif
 
 enum { PACE_SMOOTH = 0, PACE_FAST = 1, PACE_OFF = 2 };

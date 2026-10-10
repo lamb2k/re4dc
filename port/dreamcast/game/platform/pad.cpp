@@ -389,6 +389,10 @@ int re4dc_pad_debug_state(void);  // ui_bridge.cpp: RE4DC_PAD_DBG_* (which debug
 #if RE4DC_PACE_CATCHUP && RE4DC_PACE_DEBUG
 void re4dc_pace_cycle_mode(void);  // pace.cpp: Smooth -> Fast -> Off (test builds)
 #endif
+#if defined(RE4DC_LOOK_TOGGLE)
+extern "C" void re4dc_look_cycle(void);  // native_static.cpp (post30.mk LOOK_TOGGLE)
+extern "C" void re4dc_look_osd_toggle(void);  // native_static.cpp: the preset label always shown / 3 s
+#endif
 #if defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
 void re4dc_ps2fx_cycle(void);  // esp_sub.cpp: the next effect look (effects30.mk EFFECT_PS2_TOGGLE)
 #endif
@@ -527,7 +531,29 @@ u32 PADRead(PADStatus* status)
             if (paceChord) p->button &= (u16) ~PAD_BUTTON_START;
         }
 #endif
-#if defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
+#if defined(RE4DC_LOOK_TOGGLE)
+        // Test builds (post30.mk LOOK_TOGGLE, look study 2026-10-10): a START press that begins with X held (L and R
+        // up) steps the look preset (native_static.cpp re4dc_look_cycle: DC, GC, GD, G7, SK, GH; with
+        // EFFECT_PS2_TOGGLE the preset also sets the effect look); that START is masked until released.
+        if (i == 0) {
+            static u8 lookStartHeld, lookChord;
+            if (mapped.button & PAD_BUTTON_START) {
+                const unsigned held = mapped.button & (PAD_TRIGGER_L | PAD_TRIGGER_R | PAD_BUTTON_X | PAD_BUTTON_Y);
+                if (!lookStartHeld && held == (PAD_BUTTON_X | PAD_BUTTON_Y)) {
+                    lookChord = 1;
+                    re4dc_look_osd_toggle();  // X + Y + START: the on-screen preset label always shown / 3 s
+                } else if (!lookStartHeld && held == PAD_BUTTON_X) {
+                    lookChord = 1;
+                    re4dc_look_cycle();
+                }
+                lookStartHeld = 1;
+            } else {
+                lookStartHeld = 0;
+                lookChord = 0;
+            }
+            if (lookChord) p->button &= (u16) ~PAD_BUTTON_START;
+        }
+#elif defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
         // Test builds (effects30.mk EFFECT_PS2_TOGGLE): a START press that begins with X held (L and R up: R + START
         // paces, L + START is the debug slot) steps the effect look (esp_sub.cpp re4dc_ps2fx_cycle: GC, GF, PH,
         // PS); that START is masked until released. X has no game function. Real bits only; fixture bits pass.

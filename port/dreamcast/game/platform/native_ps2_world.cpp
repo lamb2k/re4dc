@@ -21,6 +21,12 @@
 #include <cmath>
 #include "native_render_profile.hpp"
 #include "include/native_ps2_world.h"
+// FOG_FAR_CAP (post30.mk, look study 2026-10-10): the PS2 world's 25 m cap follows FOG_FAR.
+#ifdef RE4DC_FAR_CAP
+#define RE4DC_PS2_FAR RE4DC_FAR_CAP
+#else
+#define RE4DC_PS2_FAR 25000
+#endif
 #include "include/native_model.h"
 #include "../../room/ps2_source_owner.hpp"
 extern "C" void* re4dc_static_alloc(unsigned);
@@ -658,7 +664,7 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
     if(room!=0x101){re4dc_ps2_mesh_retire();return 0;}
 #endif
     if(!finite_word(far) || far<=40)return fallback(3);
-    state.frame=re4dc_ui_frame();state.flushed=~0u;state.far=far<25000?far:25000;
+    state.frame=re4dc_ui_frame();state.flushed=~0u;state.far=far<RE4DC_PS2_FAR?far:RE4DC_PS2_FAR;
     const bool drawn=re4dc_ps2_mesh_draw(0,state.far)!=0;state.pending=true;
     return drawn?1:fallback(4);
 #endif
@@ -674,7 +680,7 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
     WorldDraw draw(owner);if(!draw.qualified())return fallback(2);
     for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)if(!finite_word(screen[r][c]))return fallback(3);
     if(!finite_word(far) || far<=40)return fallback(3);
-    state.owner=draw.owner();state.frame=re4dc_ui_frame();state.flushed=~0u;state.far=far<25000?far:25000;
+    state.owner=draw.owner();state.frame=re4dc_ui_frame();state.flushed=~0u;state.far=far<RE4DC_PS2_FAR?far:RE4DC_PS2_FAR;
     std::memcpy(state.screen,screen,sizeof(state.screen));for(auto& c:state.count)c={};
 #if RE4DC_PS2_WORLD_KERNEL
     for(auto& k:kernel)k={};
@@ -693,7 +699,7 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 extern "C" int re4dc_ps2_world_source_draw(){
     using namespace re4dc::room::ps2;
     RE4DC_PS2_WORLD_FOG_LATCH();
-    state.frame=re4dc_ui_frame();state.flushed=~0u;state.far=25000;
+    state.frame=re4dc_ui_frame();state.flushed=~0u;state.far=RE4DC_PS2_FAR;
     const bool drawn=re4dc_ps2_mesh_draw(0,state.far)!=0;state.pending=true;
     return drawn;
 }

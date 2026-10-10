@@ -4579,6 +4579,99 @@ extern "C" void re4dc_post_filter00(unsigned char rate,unsigned char type,signed
     frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
 }
 #endif
+#if defined(RE4DC_LOOK_TOGGLE)
+#if !RE4DC_D349_RENDERER_STACK || !RE4DC_PVR_STREAM
+#error LOOK_TOGGLE: the grade quad needs the D349 renderer stack and PVR_STREAM (deferred translucent queue)
+#endif
+namespace {
+// LOOK_TOGGLE GM / GA (look study 2026-10-10): one full-screen translucent quad, blend (DESTCOLOR, ZERO), colour c:
+// d -> d c per channel in the 8-bit tile buffer before the RGB565 write-out. Queued at Filter00Render's OT slot (as
+// POST_F00), so the scenery, actors and translucent parts drawn before it are graded and the HUD is not.
+DeferredLighting* const kGradeTag=reinterpret_cast<DeferredLighting*>(6); // unique: 1 sprite, 2 post, 3 laser line, 4 sub screen
+constexpr unsigned kGradeNode=(sizeof(DeferredPart)+31)&~31U,kGradeBytes=sizeof(pvr_poly_hdr_t)+4*sizeof(pvr_vertex_t);
+unsigned grade_queued,grade_direct,grade_dropped;
+void grade_packet(unsigned char* out,std::uint32_t argb){
+    pvr_poly_cxt_t c;pvr_poly_cxt_col(&c,PVR_LIST_TR_POLY);
+    c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_ALWAYS;c.depth.write=PVR_DEPTHWRITE_DISABLE;
+    c.blend.src=PVR_BLEND_DESTCOLOR;c.blend.dst=PVR_BLEND_ZERO;
+    pvr_poly_compile(reinterpret_cast<pvr_poly_hdr_t*>(out),&c);
+    auto* v=reinterpret_cast<pvr_vertex_t*>(out+sizeof(pvr_poly_hdr_t));
+    const float xs[4]={0,0,640,640},ys[4]={480,0,480,0};
+    for(unsigned k=0;k<4;++k){
+        v[k].flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;v[k].x=xs[k];v[k].y=ys[k];v[k].z=1.0f;
+        v[k].u=v[k].v=0;v[k].argb=argb;v[k].oargb=0;
+    }
+}
+void grade_send(unsigned char* packet,unsigned bytes){
+#if RE4DC_WORLD_AUTOSORT
+    if(world_autosort)for(unsigned off=0;off<bytes;off+=kGradeBytes){
+        auto* v=reinterpret_cast<pvr_vertex_t*>(packet+off+sizeof(pvr_poly_hdr_t));
+        const float layer=overlay_depth();for(unsigned i=0;i<4;++i)v[i].z=layer;}
+#endif
+    stream_send(packet,bytes);
+}
+// The preset label: the BIOS font (bfont, 12x24, as the crash screen) rendered into a 512x32 RGB565 texture when
+// the text changes (32 KiB of VRAM, allocated on first use; no label if that fails), drawn as one quad in the top
+// picture top-left corner (y 66..98, under the top letterbox bar the game draws over y < 60; the HUD is bottom right).
+constexpr unsigned kOsdW=512,kOsdH=32;
+pvr_ptr_t osd_vram;const char* osd_loaded;bool osd_failed;
+bool osd_texture(const char* text){
+    if(osd_failed)return false;
+    if(!osd_vram){osd_vram=pvr_mem_malloc(kOsdW*kOsdH*2);if(!osd_vram){osd_failed=true;re4dc_log("look label: no VRAM\n");return false;}}
+    if(text!=osd_loaded){
+        static unsigned short buf[kOsdW*kOsdH];
+        memset(buf,0,sizeof(buf));bfont_draw_str_ex(buf+4*kOsdW+4,kOsdW,0xFFFFU,0,16,1,text);
+        pvr_txr_load(buf,osd_vram,sizeof(buf));osd_loaded=text;
+        re4dc_log("look label: '%s' vram=%p frame=%u\n",text,(void*)osd_vram,frame);
+    }
+    return true;
+}
+void osd_packet(unsigned char* out){
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,PVR_TXRFMT_RGB565|PVR_TXRFMT_NONTWIDDLED,kOsdW,kOsdH,osd_vram,PVR_FILTER_NONE);
+    c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_ALWAYS;c.depth.write=PVR_DEPTHWRITE_DISABLE;
+    c.blend.src=PVR_BLEND_ONE;c.blend.dst=PVR_BLEND_ZERO;c.gen.fog_type=PVR_FOG_DISABLE;
+    pvr_poly_compile(reinterpret_cast<pvr_poly_hdr_t*>(out),&c);
+    auto* v=reinterpret_cast<pvr_vertex_t*>(out+sizeof(pvr_poly_hdr_t));
+    const float w=float(std::min(kOsdW,unsigned(strlen(osd_loaded))*12U+8U)),u1=w/float(kOsdW); // the text's width only
+    const float x0=20,y0=66,xs[4]={x0,x0,x0+w,x0+w},ys[4]={y0+kOsdH,y0,y0+kOsdH,y0},us[4]={0,0,u1,u1},vs[4]={1,0,1,0};
+    for(unsigned k=0;k<4;++k){
+        v[k].flags=k==3?PVR_CMD_VERTEX_EOL:PVR_CMD_VERTEX;v[k].x=xs[k];v[k].y=ys[k];v[k].z=1.0f;
+        v[k].u=us[k];v[k].v=vs[k];v[k].argb=0xffffffffU;v[k].oargb=0;
+    }
+}
+}
+extern "C" unsigned re4dc_look_grade_argb(void);
+extern "C" const char* re4dc_look_osd_text(void);
+extern "C" void re4dc_look_grade_post(void){
+    const unsigned argb=re4dc_look_grade_argb();
+    const char* text=re4dc_look_osd_text();
+    if((!argb && !text) || !frame_ready || stream_aborted || draining_parts)return;
+    const bool osd=text && osd_texture(text);
+    if(!argb && !osd)return;
+    const unsigned bytes=(argb?kGradeBytes:0U)+(osd?kGradeBytes:0U);
+    if(source_draws_finished){
+        alignas(32) unsigned char packet[2*kGradeBytes];
+        if(argb)grade_packet(packet,argb);
+        if(osd)osd_packet(packet+(argb?kGradeBytes:0U));
+        stream_select(PVR_LIST_TR_POLY);grade_send(packet,bytes);++grade_direct;return;
+    }
+    const unsigned required=kGradeNode+bytes,margin=8192;
+    unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
+    if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
+        if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
+        if(!deferred_spill || required>deferred_spill_top){++grade_dropped;return;}
+        storage=deferred_spill;top=&deferred_spill_top;
+    }
+    *top-=required;
+    auto* node=new(storage+*top) DeferredPart{};node->lighting=kGradeTag;node->changed[0]=bytes;
+    if(argb)grade_packet(storage+*top+kGradeNode,argb);
+    if(osd)osd_packet(storage+*top+kGradeNode+(argb?kGradeBytes:0U));
+    if(deferred_last)deferred_last->next=node;else deferred_first=node;
+    deferred_last=node;++deferred_count;
+    if(!(grade_queued++%1800))re4dc_log("look grade: argb=%08x queued=%u direct=%u dropped=%u\n",argb,grade_queued,grade_direct,grade_dropped);
+    frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
+}
+#endif
 #if RE4DC_COARSE_WORLD & 8
 extern "C" void re4dc_coarse_world_flush();
 #endif
@@ -4758,6 +4851,15 @@ static void ps2_check_header(pvr_poly_hdr_t& header){
     hw[2]=(hw[2]&~std::uint32_t(PVR_TA_PM2_FOG))|FIELD_PREP(PVR_TA_PM2_FOG,PVR_FOG_DISABLE);
 }
 #endif
+#if defined(RE4DC_SKY_FAR) || defined(RE4DC_LOOK_TOGGLE)
+// SKY_FAR=2 (post30.mk, look study): the sky / backdrop rows' headers with the table fog off (words 0..3 after
+// the compile or the header cache, as ps2_check_header).
+extern "C" unsigned re4dc_ps2_sky_header; // native_static.cpp ps2_pass
+static void ps2_sky_header(pvr_poly_hdr_t& header){
+    auto* hw=reinterpret_cast<std::uint32_t*>(&header);
+    hw[2]=(hw[2]&~std::uint32_t(PVR_TA_PM2_FOG))|FIELD_PREP(PVR_TA_PM2_FOG,PVR_FOG_DISABLE);
+}
+#endif
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
 #if RE4DC_TA_DIRECT
     if(direct_open){re4dc_missing("native direct part nested");return 0;}
@@ -4836,6 +4938,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #if RE4DC_PS2_INTERIOR_CULL==2
         if(re4dc_ps2_check_header)ps2_check_header(header);
 #endif
+#if defined(RE4DC_SKY_FAR) || defined(RE4DC_LOOK_TOGGLE)
+        if(re4dc_ps2_sky_header)ps2_sky_header(header);
+#endif
         std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
         model_pending=model_used+count;model_handle=handle;
         if(!stream_scene)stream_open();
@@ -4897,6 +5002,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
 #if RE4DC_PS2_INTERIOR_CULL==2
     if(re4dc_ps2_check_header)ps2_check_header(header);
 #endif
+#if defined(RE4DC_SKY_FAR) || defined(RE4DC_LOOK_TOGGLE)
+    if(re4dc_ps2_sky_header)ps2_sky_header(header);
+#endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
     model_pending=model_used+count;model_handle=handle;
     if(!stream_scene)stream_open();
@@ -4956,6 +5064,13 @@ extern "C" void re4dc_model_finish_source_draws(){
             deferred_first=deferred_first->next;stream_send(packet,kLinePacket);continue;
         }
 #endif
+#endif
+#if defined(RE4DC_LOOK_TOGGLE)
+        if(deferred_first->lighting==kGradeTag){
+            auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kGradeNode;
+            const unsigned bytes=deferred_first->changed[0];
+            deferred_first=deferred_first->next;grade_send(packet,bytes);continue;
+        }
 #endif
 #if RE4DC_POST_F00
         if(deferred_first->lighting==kPostTag){

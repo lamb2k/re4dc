@@ -45,6 +45,9 @@ static u8 g_cont_bias = 0;
 void Filter00CommonInit();
 void Filter00Render();
 void Filter00RenderContrast();
+#if defined(RE4DC_LOOK_TOGGLE)
+extern "C" void re4dc_look_grade_post(void);
+#endif
 #if RE4DC_POST_F00
 extern "C" void re4dc_post_filter00(u8 rate, u8 type, s8 power, u8 level, u8 pow, u8 bias, int valid);
 #endif
@@ -108,6 +111,12 @@ void Filter00Render()
         { 1, 4, 5, 0 }, { 1, 4, 1, 0 }, { 1, 1, 1, 0 }, { 1, 2, 1, 0 }, { 1, 2, 0, 0 }, { 1, 4, 3, 0 },
     };
 
+#if defined(RE4DC_LOOK_TOGGLE)
+    // LOOK_TOGGLE (post30.mk, test builds; render only): the GM / GA colour match quad at this OT slot.
+    if (!(pG->Disp_flg & 0x100000)) {
+        re4dc_look_grade_post();
+    }
+#endif
     if ((pG->Disp_flg & 0x100000) || (blur_rate == 0 && is_eff_spread_on == 0 && g_cont_level == 0)) {
         pG->Status_flg[0] &= ~0x80000;
         return;

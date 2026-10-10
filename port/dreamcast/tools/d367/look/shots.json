@@ -1,0 +1,152 @@
+{
+ "comment": "Look gallery shots (look study 2026-10-10). dc.warp = warp.txt lines (DBG_WARP=1 test builds); the run ends frozen at dc.freeze (global tick) and the last framebuffer shot is the image. gc = the GameCube reference file in the private gallery (re4-assets-private/look-gallery-20261010/gc, Dolphin 2609 1x, copy filter on). crop = x0,y0,x1,y1 in 640x480 space (close-ups); gc_crop when the GC framing differs. base = the play-content fixture the shot stages (overlays are replaced by the arm's own).",
+ "bases": {
+  "play": "/root/probe/lanes-20261010/kosfix/fixtures/hw-fight-kfH.json",
+  "r10b": "/root/probe/lanes-20261010/lake/fixtures/lake-lkA1.json"
+ },
+ "shots": [
+  {
+   "name": "r100start",
+   "title": "r100 first outdoor view (after the call)",
+   "base": "play",
+   "seconds": 45,
+   "gc": "r100start.png",
+   "dc": {
+    "freeze": 520,
+    "warp": [
+     "room 0x100",
+     "pos -99685 -484 -1343",
+     "ang 2.2460",
+     "rsf 0x100 13",
+     "scenario 0 0x00000010",
+     "inv default"
+    ]
+   }
+  },
+  {
+   "name": "r100path",
+   "title": "r100 path toward the house",
+   "base": "play",
+   "seconds": 50,
+   "gc": "r100path.png",
+   "dc": {
+    "freeze": 620,
+    "warp": [
+     "room 0x100",
+     "pos -99685 -484 -1343",
+     "ang 2.2460",
+     "rsf 0x100 13",
+     "scenario 0 0x00000010",
+     "inv default",
+     "act_clock source",
+     "act 30 fwd 600"
+    ]
+   }
+  },
+  {
+   "name": "r100house",
+   "title": "r100 first house, inside",
+   "base": "play",
+   "seconds": 45,
+   "gc": "r100house.png",
+   "approx": "GC: Leon walked in by the input movie, facing the inner wall; DC: placed in the room centre",
+   "dc": {
+    "freeze": 480,
+    "warp": [
+     "room 0x100",
+     "pos -84000 860 -38475",
+     "ang -1.5708",
+     "rsf 0x100 0 1 3 10 13",
+     "scenario 0 0x00000010",
+     "inv default"
+    ]
+   }
+  },
+  {
+   "name": "r101wide",
+   "title": "r101 square wide (east), Ganados",
+   "base": "play",
+   "seconds": 50,
+   "gc": "r101wide.png",
+   "dc": {
+    "freeze": 480,
+    "warp": [
+     "room 0x101",
+     "pos -7914 0 2000",
+     "ang 1.5708",
+     "find 0x00002000",
+     "inv default",
+     "god"
+    ]
+   }
+  },
+  {
+   "name": "r101F",
+   "title": "r101 square view F (cameras.json F, GC villagers off)",
+   "base": "play",
+   "seconds": 130,
+   "gc": "r101F.png",
+   "dc": {
+    "freeze": 1109,
+    "warp": [
+     "room 0x101",
+     "pos -7914 0 -254",
+     "ang 2.9600",
+     "find 0x00002000",
+     "inv default",
+     "god"
+    ]
+   }
+  },
+  {
+   "name": "leon",
+   "title": "Leon close-up (from r100start)",
+   "from": "r100start",
+   "crop": [
+    140,
+    150,
+    300,
+    300
+   ]
+  },
+  {
+   "name": "ganado",
+   "title": "Ganado close-up (r101 F: the villager at Leon's left)",
+   "from": "r101F",
+   "crop": [
+    0,
+    150,
+    150,
+    330
+   ],
+   "approx": "GC: the F stand with villagers on (run F1); DC: the F stand, the nearest Ganado",
+   "gc": "ganado-r101F-villagers.png"
+  },
+  {
+   "name": "leon-r101F",
+   "title": "Leon close-up (from r101F; charbake)",
+   "from": "r101F",
+   "crop": [
+    130,
+    160,
+    370,
+    420
+   ]
+  },
+  {
+   "name": "r10b",
+   "title": "r10b (room start; the lake path)",
+   "base": "r10b",
+   "seconds": 50,
+   "gc": "r10b.png",
+   "dc": {
+    "freeze": 520,
+    "warp": [
+     "room 0x10b",
+     "inv default",
+     "god"
+    ]
+   }
+  }
+ ]
+}

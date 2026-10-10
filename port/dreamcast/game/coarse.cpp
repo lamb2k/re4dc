@@ -92,7 +92,11 @@ extern "C" void re4dc_model_packet_abort();
 #endif
 namespace {
 constexpr float kNear = 40.0f;         // clip plane, mm in front of the eye
+#ifdef RE4DC_FAR_CAP
+constexpr float kFar = float(RE4DC_FAR_CAP); // FOG_FAR_CAP (post30.mk, look study): follows FOG_FAR
+#else
 constexpr float kFar = 25000.0f;       // block cull distance (FOG_FAR: opaque fog there)
+#endif
 constexpr unsigned kSplit = 30000;     // vertices per header (native_ui's store-queue window)
 constexpr unsigned kMaxPolys = 1u << 16;
 #if RE4DC_PS2_WORLD_DRAW
