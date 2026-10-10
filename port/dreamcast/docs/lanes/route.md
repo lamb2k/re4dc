@@ -397,6 +397,38 @@ __DATE__/__TIME__, both the play and the default recipe, overlays identical). La
   (prepare_native_ui contract exists, 27 slots), the PS2 world, textures, its AICA bank entry (ROOMS r11a exists)
   and then ROUTE_CH21 coverage of its own exits.
 
+## Progress 2026-10-10 (SBB_STUB: the GC stream banks leave the disc)
+
+bgm/bio4bgm.sbb (139,395,072 B) and bgm/bio4evt.sbb (193,495,040 B) are off the play disc with SBB_STUB=1 (default
+0: image byte-identical). Lane tree /root/probe/lanes-20261010/sbb, evidence D:/Flycast-Evidence/re4-dreamcast/sbb-20261010.
+
+- **What the DC build did with them.** Only src/game/snd_str0.cpp Snd_str_init opens one (DVDOpen of
+  FileTbl[StrFileTbl[blk]], file 1 = bio4bgm, file 0x5F = bio4evt), and src/game/snd.cpp SndStrReq refuses the
+  request when that FileTbl entry is -1 (so simply leaving the files off would silence and stall every stream: the
+  scenario waits on ready / stopped). Every read of them is snd_str2.cpp's DVDReadAsyncPrio(cb_dvd_read_end), which
+  platform/audio_strm.cpp's link wrap skips (completion at the next audio frame, no disc access) in every build.
+  Stream lengths, loop points, rates and the .sbb offsets come from SND_SHD / SND_RIT in bgm/bio4str.hed (loaded by
+  snd.cpp, still staged); audio_aica.cpp keys aica_str.dat entries by SND_SHD[7] and never opens a .sbb; the end of
+  a stream is detected from the emulated voice address (re4dc_strm_advance), not from the file. Nothing read the
+  payload; the logic sees only the entry number and DVDFileInfo, which the stub keeps (retail sizes, no open).
+  io_probe.cpp (IO_PROBE test builds) still names them; aica_banks.py reads them from the source mirror.
+- **Change.** platform/dvd.cpp fileSize(): under RE4DC_SBB_STUB the two paths return the retail size without an
+  fs_open; Makefile SBB_STUB ?= 0 sets it on dvd.o only. No new staged file (no header file is needed).
+- **Gates (ACT_CAP=0, arms at ab21e8ab: sbbT = play flags + ROUTE_CH21=1 + traces + SBB_STUB=1 on discs without
+  the banks; sbbB = the same with SBB_STUB=0 and the banks).** Knob-off identity: sbbQ (play flags, knob off) vs
+  sbbO (the same flags from a clean ab21e8ab worktree): objcopy images differ in 2 bytes (the time stamp), the four
+  overlays identical, `_end` 8c3e231c both (also with the knob on). missing.txt empty on all five arms; MISALIGN 0
+  in every run. H2 (g-h2, 480 s): STRICT 1450..1569, 0..740, 1218..6990 and whole room 0100 (6810 ticks, om too);
+  decision_cmp MUST-IDENTICAL (6992 ticks); s30 340/340 both, heap 57504 -> 79200 both; radio call voice 1:141 and
+  calls 10003 / 10020 shown 1465 / 571 both. Bell (g-bell, 300 s): STRICT frame 0..5100 and room 0101, MUST-IDENTICAL
+  (5101 ticks). r10b (f6s, 600 s): stream 0:4 starts, room 010b STRICT, MUST-IDENTICAL (5482 ticks). r11b ambush
+  (a1, 150 s): em22 load, streams 1:36 then 0:17, room 011b STRICT, MUST-IDENTICAL (1951 ticks). Stream event
+  sequences (ready / start / stopped / closed, ids, voices, rates) identical to the control in every pair; the aica
+  times differ by a few ms (the audio thread is wall-timed). New Game (sbbP play ELF, banks removed, 420 s): intros
+  1971 / 2360, s40 1175, streams 1:3 and 1:140 play; HALT 0, MISSING 0, "SND: File Not Found" 0 everywhere.
+- **Disc.** Staged payload 1,010,718,720 B -> 677,828,608 B on the same fixture: **332,890,112 B (162,544 sectors)
+  freed on track 3**. No hw ms arm: the change only skips two file opens (boot / first stream); no per-frame code.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

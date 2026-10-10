@@ -144,8 +144,26 @@ static void normalise(const char* in, char* out, size_t n)
     out[i] = 0;
 }
 
+#if RE4DC_SBB_STUB
+// SBB_STUB=1: the GC stream banks need not be on the disc. The recovered stream player (src/game/snd_str*.cpp)
+// still opens them (DVDOpen in Snd_str_init; SndStrReq refuses a stream whose FileTbl entry is -1), but its only
+// reads go through __wrap_DVDReadAsyncPrio (platform/audio_strm.cpp), which never touches the file; the stream
+// headers (lengths, loop points, rates) come from bgm/bio4str.hed, and the heard audio from bgm/aica_str.dat.
+// The entry keeps the retail file size, so DVDFileInfo.length is the value the file would give.
+static s32 sbbStubSize(const char* rel)
+{
+    if (strcmp(rel, "bgm/bio4bgm.sbb") == 0) return 139395072;
+    if (strcmp(rel, "bgm/bio4evt.sbb") == 0) return 193495040;
+    return -1;
+}
+#endif
+
 static s32 fileSize(const char* rel)
 {
+#if RE4DC_SBB_STUB
+    const s32 stub = sbbStubSize(rel);
+    if (stub >= 0) return stub;
+#endif
     Re4dcIoScope io;
     char full[96];
     snprintf(full, sizeof(full), "%s%s", g_root, rel);

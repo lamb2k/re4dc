@@ -289,6 +289,17 @@ endif
 # ARAM DMAs complete at the next audio frame, as on the GC, instead of inside the
 # call, so streams go ready -> playing -> ended and scenario waits return.
 GAME_LDFLAGS += -Wl,--wrap=DVDReadAsyncPrio -Wl,--wrap=ARQPostRequest
+# SBB_STUB=1 (default 0: no effect): bgm/bio4bgm.sbb and bgm/bio4evt.sbb (332,890,112 B of GC stream payload)
+# leave the disc. The stream player's reads of them are the wrapped, skipped ones above; platform/dvd.cpp gives
+# both entries their retail size without opening them, so FileTbl entry numbers, DVDFileInfo and every stream
+# state stay as they are. The headers the player uses come from bgm/bio4str.hed (still staged).
+SBB_STUB ?= 0
+ifneq ($(SBB_STUB),0)
+ifneq ($(SBB_STUB),1)
+$(error SBB_STUB must be 0 or 1)
+endif
+$(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_SBB_STUB=1
+endif
 # AICA_STREAMS=1 (default; with AICA_AUDIO=1): streams play from bgm/aica_str.dat
 # (tools/aica_banks.py; a disc without it keeps them silent). 0: silent streams.
 AICA_STREAMS ?= 1

@@ -1,5 +1,20 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: SBB_STUB=1, the GC stream banks leave the disc (play recipe)
+
+Play ELF: add **SBB_STUB=1** to the route-build.sh flags below (r11b / r10b recipes). Disc: **remove
+bgm/bio4bgm.sbb (139,395,072 B) and bgm/bio4evt.sbb (193,495,040 B)**: 332,890,112 B (162,544 sectors) leave
+track 3; no new file is staged (keep bgm/bio4str.hed and bgm/aica_str.dat). Why it is safe: the recovered stream
+player (src/game/snd_str*.cpp) only opens the banks (DVDOpen in Snd_str_init; SndStrReq refuses a stream whose
+FileTbl entry is -1). Its headers (lengths, loop points, rates, the .sbb offsets aica_str.dat is keyed by) come from
+bio4str.hed; its only reads of the banks are the wrapped, skipped ones (platform/audio_strm.cpp
+__wrap_DVDReadAsyncPrio, every build since the AICA work); the heard audio is aica_str.dat. With the knob,
+platform/dvd.cpp gives both FileTbl entries their retail size without opening them, so entry numbers,
+DVDFileInfo.length and every stream state are unchanged. A knob-off ELF needs the banks on the disc (every stream
+request would fail "SND: File Not Found"). aica_banks.py still reads the banks from the source mirror
+(/root/re4data), never from a staged disc. io_probe.cpp (IO_PROBE builds) still names them: not for play discs.
+Gates (lane sbb, evidence D:/Flycast-Evidence/re4-dreamcast/sbb-20261010): see docs/lanes/route.md "SBB_STUB".
+
 ## 2026-10-10: r11b (chapter 2-1's start) staging recipe (not built, not released)
 
 The r10b recipe below plus ROUTE_CH21=1 on the play ELF; the build writes a fourth overlay, **em22.ovl: stage
@@ -9,6 +24,7 @@ dc/em22.ovl** with dc/pl0f.ovl + dc/em2f.ovl. Add (lane r11b tools/mkfix.py `bas
 with #10 prebuilt, dc/native/r11b/{MAINSCENARIO.re4mesh, ps2-world.r4pw/.re4mesh/.ids}, dc/movie/r11bs00.seq,
 the r11b + em22 + PS2 world textures (into the pack). Disc +31.5 MB loose (~42 MB free on track03). Checks: the
 chapter 1-3 save, door 6 into r11b, s00, the radio call, the ambush, the three "Coming Soon" doors.
+With SBB_STUB=1 (section above) also remove bgm/bio4bgm.sbb and bgm/bio4evt.sbb: track03 then has ~343 MB free (~10 MB + 332.9 MB).
 
 ## 2026-10-10: r10b (chapter 1-3's end) play disc staging recipe (not built, not released)
 
@@ -31,8 +47,8 @@ Disc = the 2026-10-09 test disc contents (631cb271 fixture + tex pak d87983e1 + 
 - no dc/warp.txt, no dc/padscript.txt.
 Checks before the SD card: pack keys and file list against the 10-09 disc (only the r10b files, the overlays and
 1ST_READ.BIN differ; the removals above are gone); boot the real disc in Flycast to the VMU prompt; New Game intros
-1971 / 2360; the r10a -> r10b door, boarding, the QTE, "Coming Soon". Next disc-space lever: bio4bgm / bio4evt.sbb
-(332 MB of old sound reads; stub them later).
+1971 / 2360; the r10a -> r10b door, boarding, the QTE, "Coming Soon". The bio4bgm / bio4evt.sbb lever is done:
+SBB_STUB=1 (top section).
 
 ## 2026-10-09: test build for issues 9 and 15
 
