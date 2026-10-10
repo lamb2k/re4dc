@@ -7,13 +7,13 @@
 The recovered GameCube code runs the gameplay, collision and enemy AI. A native PowerVR renderer,
 lighter PS2 room assets, streamed movies and VMU saves adapt it to Dreamcast hardware.
 
-**[Download the combined GDEMU test build](https://github.com/lamb2k/re4dc/releases/tag/test-combined-254eab36-20261008)** ·
+**[Download the latest GDEMU test build](https://github.com/lamb2k/re4dc/releases/tag/test-d74b8ec8-20261010)** ·
 [Roadmap](port/dreamcast/docs/D367_THIRTY_FPS_ROUTE.md) ·
 [Port notes](port/dreamcast/README.md) · [Decompilation](docs/DECOMPILATION.md)
 
 ## Playing
 
-The latest console test is build `254eab36`. The desktop packages below are the earlier r22j build.
+The latest console test is build `d74b8ec8`. The desktop packages below are the earlier r22j build.
 Extract the complete package for your system:
 
 | System | Download | Launch |
@@ -21,11 +21,11 @@ Extract the complete package for your system:
 | Windows (r22j) | [RE4DC-r22j.zip](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j.zip) | Double-click `Play-r22j.cmd`. Includes Flycast and keyboard/DualSense support. |
 | Steam Deck / SteamOS (r22j) | [SteamOS package](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j-SteamOS.tar.gz) | In Desktop Mode, run `play.sh`; uses Flathub Flycast. |
 | CachyOS / Arch (r22j) | [CachyOS package](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/RE4DC-r22j-CachyOS.tar.gz) | Run `./play.sh`; uses native or Flathub Flycast. |
-| Dreamcast / GDEMU | [Combined test ZIP](https://github.com/lamb2k/re4dc/releases/download/test-combined-254eab36-20261008/RE4DC-Combined-Console-Test-254eab36-20261008-GDEMU.zip) | Copy the four files inside `gdemu` into a new numbered SD card folder. |
+| Dreamcast / GDEMU | [Console test ZIP](https://github.com/lamb2k/re4dc/releases/download/test-d74b8ec8-20261010/RE4DC-Console-Test-d74b8ec8-20261010-GDEMU.zip) | Copy the four files inside `gdemu` into a new numbered SD card folder. |
 
-[Test build checksums](https://github.com/lamb2k/re4dc/releases/download/test-combined-254eab36-20261008/SHA256SUMS.txt) · [Test notes and verification](https://github.com/lamb2k/re4dc/releases/tag/test-combined-254eab36-20261008) · [r22j desktop checksums](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/SHA256SUMS.txt)
+[Test build checksums](https://github.com/lamb2k/re4dc/releases/download/test-d74b8ec8-20261010/SHA256SUMS.txt) · [Test notes](https://github.com/lamb2k/re4dc/releases/tag/test-d74b8ec8-20261010) · [r22j desktop checksums](https://github.com/lamb2k/re4dc/releases/download/play-r22j-audio-performance-20261007/SHA256SUMS.txt)
 
-Already have Flycast? Open `gdemu/disc.gdi` from the combined test ZIP, keeping all track files beside it.
+Already have Flycast? Open `gdemu/disc.gdi` from the console test ZIP, keeping all track files beside it.
 For an r22j emulator package, open `disc/disc.cue` and keep its `disc.bin` beside it.
 For GDEMU, keep filenames unchanged and save any card-manager changes before ejecting the card.
 No BIOS or personal VMU saves are included; keep your existing saves separately.
@@ -45,27 +45,29 @@ Fast pacing is the default. A VMU in controller slot 1 shows FPS, game speed, CP
 
 ## Status and limitations
 
-**Combined console test `254eab36`, October 8, 2026:** includes corrections to inventory memory
-handling, selection glow and grid, Examine textures, herb/fish and other inventory textures,
-lamp fire, and graphics presentation completion checks.
+**Console test `d74b8ec8`, October 10, 2026:** the game plays through the end of the third chapter
+(the lake, the boat ride and the lake monster) and into the next one (the wolves on the lake shore),
+up to a **Coming Soon** screen. This is a prerelease, not the complete game.
 
-Flycast checks cover save loading, walking, repeated inventory and Examine, lamp effects and
-bridge transitions. The published downloads are hash verified. These checks do not establish
-a fix for the original console crashes; physical Dreamcast confirmation is still pending.
-See the [test notes](https://github.com/lamb2k/re4dc/releases/tag/test-combined-254eab36-20261008)
-and [build checklist](port/dreamcast/docs/D367_PLAY_BUILD_CHECKLIST.md).
+Recent progress:
 
-The route extends through r10a; the unfinished r10b door shows **Coming Soon**. This is a prerelease,
-not the complete game.
+* Music and voices rebuilt to remove crackling and clipping.
+* The lake is drawn as dark water, as on the PS2.
+* Safer graphics waits, and an error screen that records what the graphics chip was doing. Console
+  photos from players narrowed the bridge door freeze down to one frame the chip never finishes; a fix
+  is in progress.
+* Look options in testing: GameCube style fog and colour, and softer character shading.
 
-* **Stability:** the [bridge door presentation timeout](https://github.com/lamb2k/re4dc/issues/9)
-  and [freeze after loading a save and walking](https://github.com/lamb2k/re4dc/issues/2) remain unresolved.
-* **Performance:** below the 30 fps/full speed target. This candidate has no new physical console
-  performance measurement.
-* **Presentation and sound:** some models, effects and textures need work. Rifle sound is lower quality;
-  the restored room music and grenade sounds still need listening checks on hardware.
-* **Loading and saves:** room entry pauses remain. Normal chapter 1-2 key item pickups and reloading
-  a save made inside r106 still need checking.
+Known issues:
+
+* **Stability:** the [bridge door freeze](https://github.com/lamb2k/re4dc/issues/9) still happens on
+  real consoles. [Frozen cutscene video](https://github.com/lamb2k/re4dc/issues/16) is being looked into.
+* **Performance:** below the 30 fps/full speed target.
+* **Presentation and sound:** some models, effects and textures need work. The music on the third
+  chapter results screen is silent. Rifle sound is lower quality.
+* **Loading:** room entry pauses remain.
+
+See the [build checklist](port/dreamcast/docs/D367_PLAY_BUILD_CHECKLIST.md) for details.
 
 ## Development
 
@@ -104,8 +106,7 @@ Captured in Flycast from the play builds.
 [Open a Game bug issue](https://github.com/lamb2k/re4dc/issues/new/choose) with the build, room/chapter,
 steps to reproduce, system (Flycast or Dreamcast), and a screenshot or video. On Windows, attach the
 newest game log from `logs/`. For a console crash, include the Frame pacing setting and a clear photo
-of the complete diagnostic screen. To check the save load freeze, cold boot, load your existing save
-and walk before opening inventory. One bug per issue.
+of the complete diagnostic screen. One bug per issue.
 
 ## Credits
 
