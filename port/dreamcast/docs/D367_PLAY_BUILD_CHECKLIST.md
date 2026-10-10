@@ -1,5 +1,14 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: material pair 18d0fd82-2c9a9309 (r10b / r11b, disc data)
+
+Add **dc/tex/1/18d0fd82-2c9a9309.re4tex** (/root/probe/lanes/route/pairs-r11b, VQ, 18,576 B) to the texture set
+that goes into the pack: lane r11b tools/mkfix.py r11b() now does (r11b / r11a discs); a chapter 1-3-only disc needs
+it too (r10b opens it after s00). Rebuild: `tools/d367/pairs_from_log.py --iso <GC disc 1> --file st1/r11b.das --log
+<run log with its "pair missing" line> --output DIR`, then vq_native_ui.py --model-min-bytes 16384 (route doc "material
+pair 18d0fd82"). pack-fixture.sh packs only the staged loose dc/tex files and its output replaces the fixture's
+existing dc/tex.pak: merge the catalog pack (d87983e1) in first. Check: no `open failed` for 18d0fd82 in r10b / r11b.
+
 ## 2026-10-10: WATER42_GRID_SKIP (r10a / r11a lake water, play recipe)
 
 No new flag: ROUTE_CH13=1 now also brings **WATER42_GRID_SKIP=1** (espgen42 keeps only its water plane; the height
@@ -37,7 +46,7 @@ dc/em22.ovl** with dc/pl0f.ovl + dc/em2f.ovl. Add (lane r11b tools/mkfix.py `bas
 (the disc carried the raw GC file; without it R11bInit hangs), st1/r11b.arc + r11b.dar, em/em22.drs (rel-stripped;
 **drop it from the r10b removal list**), bgm/aica_str.dat with streams 0:17 + 1:36 (15,800,320 B), bgm/bio4midi.dat
 with #10 prebuilt, dc/native/r11b/{MAINSCENARIO.re4mesh, ps2-world.r4pw/.re4mesh/.ids}, dc/movie/r11bs00.seq,
-the r11b + em22 + PS2 world textures (into the pack). Disc +31.5 MB loose (~42 MB free on track03). Checks: the
+the r11b + em22 + PS2 world textures and the material pair 18d0fd82 (pairs-r11b) (into the pack). Disc +31.5 MB loose (~42 MB free on track03). Checks: the
 chapter 1-3 save, door 6 into r11b, s00, the radio call, the ambush, the three "Coming Soon" doors.
 With SBB_STUB=1 (section above) also remove bgm/bio4bgm.sbb and bgm/bio4evt.sbb: track03 then has ~343 MB free (~10 MB + 332.9 MB).
 

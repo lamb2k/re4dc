@@ -546,6 +546,32 @@ D:/Flycast-Evidence/re4-dreamcast/fix21-20261010.
   the model is not meaningful there (all 12 ticks are drawn; 9 with the wait, 3 at 42.9 without). Evidence
   hwmodel-fix21-f21C0-e1 / -e5, hwmodel-fix21-f21C1-e1 / -e5; Flycast route-f21-e1C0 / e1C1 / e5C0 / e5C1.
 
+## Progress 2026-10-10 (r10b / r11b material pair 18d0fd82-2c9a9309 on the disc)
+
+`native UI: package rejected: open failed` for 18d0fd82-2c9a9309 (256x256) followed by `pair missing ...
+color=71edfaa9-5e1dd270 mask=a1c67505-45451a25`: a material-pair package (a model part with a separate mask image draws
+from one package keyed by prepare_native_ui.material_pair_identity) that no staged texture set built. The two source
+images are images 0 and 1 of the room model TPL in both lake rooms: st1/r11b.arc #28 (ROOM_CONTRACTS r11b model slot
+28) and st1/r10b.arc #27 (find-texture-source.py). The first request is in r10b, after s00 (route-f21-f6rC1), then
+again in r11b before door 0. Data only, no code. Lane fix21, evidence D:/Flycast-Evidence/re4-dreamcast/fix21-20261010.
+
+- **Package.** `tools/d367/pairs_from_log.py --iso <GC disc 1> --file st1/r11b.das --log <a run log with the pair
+  line> --output pairs` (131,216 B, ARGB4444), then the model-texture VQ rule the asset pipeline applies to pairs
+  (vq_native_ui.py --model-min-bytes 16384 over a one-line synthetic load log): 18,432 B VRAM (package 18,576 B; a noisy
+  ground-dirt decal, PSNR 23.9 dB, previews identical by eye). Private output /root/probe/lanes/route/pairs-r11b (with
+  the raw16 pairs report).
+- **Staging.** Lane r11b tools/mkfix.py r11b() now adds pairs-r11b to the r11b texture set, so the r11b / r11a play
+  fixtures (and pack-fixture.sh packs of them) carry it; a chapter 1-3-only disc needs it too (r10b requests it).
+  Pack check: pack-fixture.sh of the r10b -> r11b fixture holds the key byte for byte. Caveat for play discs:
+  pack-fixture.sh builds the pack from the staged loose dc/tex files only, and its output replaces any dc/tex.pak the
+  input fixture already carries (the 10-09 catalog pack d87983e1 in the r10b / r11b fixtures): merge the catalog pack's
+  packages in before packing, or the pack loses them.
+- **Runs (image 079650ba = f21C1 / f21T1; both .sbb banks off).** route-f21-f6rN (r10b -> s00 / s10 / QTE / s22 ->
+  save -> door 6 -> r11b s00, the radio call): 18d0fd82 loads in r10b and r11b, `open failed` only for the known early
+  PS2 world open at the chapter end (retried); route-f21-w2N (r11b -> r11a -> r119 door) and route-f21-a1N (the
+  ambush): open failed 0. HALT 0, MISSING 0, MISALIGN 0, no allocation failure. The image is item 1's; H2 / bell /
+  New Game discs carry no r10b / r11b room textures, so their gates are 079650ba's.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land
