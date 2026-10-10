@@ -46,6 +46,8 @@
 //   radio <frame> <call no 0..23> (source radio replay, resource-lifetime test only)
 //   god (Leon's life refilled every frame) | alert <frame> (the crowd hunts Leon from that frame of its entry)
 //   fxmode <flags> (EFFECT_PS2_TOGGLE builds: the effect look at load; 1 fade clamp, 2 PS2 haze, 4 PS2 streak)
+//   charbake <variant> [room frame] (CHARBAKE_TOGGLE builds: the character texture variant at load, or switched at
+//   that frame of the first room, as the look toggle switches it at run time; up to 8 timed lines)
 //  - Later rooms: `entry <n>` (n >= 2) scopes the `act` / `goto` lines after it to the n-th room entry of the run
 //    (their frames count in that room; the door that leads there is the source's). Without it every act / goto
 //    belongs to the first room, as before. A fixture with entries also logs Leon's placement in those rooms.
@@ -82,6 +84,9 @@ void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture an
 void re4dc_ps2fx_set(unsigned flags);  // esp_sub.cpp (effects30.mk EFFECT_PS2_TOGGLE)
 #endif
 }
+#if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
+extern "C" void re4dc_charbake_set(unsigned variant);  // coarse_actor.cpp (charbake.mk CHARBAKE_TOGGLE)
+#endif
 
 namespace {
 struct Act { u32 frame; u16 buttons; s8 stick; u16 hold; u8 entry; };
@@ -134,6 +139,10 @@ struct Warp {
     u32 census[6];
     bool census_done[6];
     unsigned n_census;
+#if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
+    struct CharbakeAt { u32 frame; u8 variant; bool done; } charbake_at[8];  // charbake <variant> <room frame>
+    unsigned n_charbake_at;
+#endif
     bool act_source_clock;  // opt-in fixture holds count source pad ticks, not wall-time stalls
     u8 parse_entry, max_entry;  // `entry <n>`: the room entry later act / goto lines belong to (1 = first room)
 #if RE4DC_WARP_JUMP
@@ -315,6 +324,12 @@ void load()
             wp.late_mask = num(tok[1]);
             wp.late_tick = n >= 3 ? num(tok[2]) : 1400;
             wp.late_room = n >= 4 ? (u16) num(tok[3]) : 0x100;
+#if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
+        } else if (!strcmp(k, "charbake") && n >= 2) {
+            // charbake.mk CHARBAKE_TOGGLE: the character variant at load, or at a room frame of the first room
+            if (n < 3) re4dc_charbake_set(num(tok[1]));
+            else if (wp.n_charbake_at < 8) wp.charbake_at[wp.n_charbake_at++] = {num(tok[2]), (u8) num(tok[1]), false};
+#endif
         } else {
             re4dc_log("warp: unknown line '%s'\n", k);
         }
@@ -654,6 +669,15 @@ void re4dc_warp_poll(void)
             warp_heap4_census((unsigned) wp.room_frames);
         }
     }
+#if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
+    for (unsigned i = 0; i < wp.n_charbake_at; ++i) {
+        Warp::CharbakeAt& c = wp.charbake_at[i];
+        if (c.done || wp.room_frames < c.frame) continue;
+        c.done = true;
+        re4dc_log("warp: charbake %u at room frame %u\n", (unsigned) c.variant, (unsigned) wp.room_frames);
+        re4dc_charbake_set(c.variant);
+    }
+#endif
     for (unsigned i = 0; i < wp.n_arm; ++i) {
         Warp::ArmItem& a = wp.arm[i];
         if (a.done || wp.room_frames < a.frame) continue;

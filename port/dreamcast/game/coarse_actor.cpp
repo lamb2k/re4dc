@@ -12,6 +12,9 @@
 #if RE4DC_COARSE_SKIN_FTRV
 #include "coarse_skin.h"
 #endif
+#if RE4DC_CHARBAKE_TOGGLE
+#include "charbake_variants.h" // charbake.mk CHARBAKE_TOGGLE: the character texture variants (keys only)
+#endif
 
 extern "C" void re4dc_log(const char*, ...);
 extern "C" void GXGetProjectionv(float*);
@@ -28,9 +31,20 @@ extern "C" int re4dc_coarse_ganado_texture_key(const Re4dcUiImage*,unsigned*,uns
 #endif
 
 namespace {
+#if RE4DC_CHARBAKE_TOGGLE
+// charbake.mk CHARBAKE_TOGGLE (test builds): re4dc_charbake_set (end of this file) selects a variant of
+// charbake_variants.h. The texture cache keeps the first key it learns for an image identity (native_ui.cpp
+// image_key), so each variant draws through its own identity (token); the plans, the texture key hook and
+// COARSE_LEON's readiness check read image, crc and fnv.
+constexpr const re4dc_charbake::Variant& kCharbakeBoot=re4dc_charbake::variants[RE4DC_CHARBAKE_VARIANT%re4dc_charbake::kCount];
+unsigned texture_tokens[re4dc_charbake::kCount];
+Re4dcUiImage image{&texture_tokens[RE4DC_CHARBAKE_VARIANT%re4dc_charbake::kCount],nullptr,512,512,6,0xffffffffU,0};
+unsigned crc=kCharbakeBoot.leon_crc, fnv=kCharbakeBoot.leon_fnv;
+#else
 unsigned texture_token;
 const Re4dcUiImage image{&texture_token,nullptr,512,512,6,0xffffffffU,0};
 constexpr unsigned crc=0xec255e66U, fnv=0x76812316U;
+#endif
 #if RE4DC_ACTOR_PL08
 // The pl08 atlas: the production atlas with only pl00-only tiles replaced (key 7506e95f-68cf2211, NS/pl08/tex). Only
 // a proved pl08 plan leases it, so the texture cache uploads it only where pl08 draws.
@@ -329,3 +343,29 @@ extern "C" int re4dc_coarse_leon(cModel* m) {
 }
 
 #include "coarse_actor_owner_leon.inc"
+#if RE4DC_CHARBAKE_TOGGLE
+// charbake.mk CHARBAKE_TOGGLE (test builds): a look toggle preset (post30.mk LOOK_TOGGLE) or DBG_WARP's
+// `charbake <n> [room frame]` selects a character variant (charbake_variants.h): Leon's atlas, the cast atlas and the
+// two hair colour images (whose derived pair keys the hair materials draw), each through its own image identity and
+// key. CHARBAKE_VARIANT is the boot variant; variant 0 is the play build's textures. Called between frames (the pad
+// read, the warp file or the warp poll at the top of the game loop), so one frame never mixes two variants; the
+// previous variant's uploads age out of the texture cache like any texture the scene stopped drawing.
+extern "C" void re4dc_charbake_ganado_set(unsigned variant);  // coarse_ganado_cast.cpp
+namespace { unsigned charbake_variant=RE4DC_CHARBAKE_VARIANT%re4dc_charbake::kCount; }
+extern "C" void re4dc_charbake_set(unsigned v){
+    charbake_variant=v%re4dc_charbake::kCount;
+    const auto& e=re4dc_charbake::variants[charbake_variant];
+    image.pixels=&texture_tokens[charbake_variant];crc=e.leon_crc;fnv=e.leon_fnv;
+    for(unsigned k=0;k<2;++k) {
+        hair_colours[k].pixels=&hair_tokens[charbake_variant][k];
+        hair_colour_crc[k]=e.hair_colour_crc[k];hair_colour_fnv[k]=e.hair_colour_fnv[k];
+        hair_pair_crc[k]=e.hair_pair_crc[k];hair_pair_fnv[k]=e.hair_pair_fnv[k];
+    }
+    re4dc_charbake_ganado_set(charbake_variant);
+    re4dc_log("charbake: variant %u %s leon %08x-%08x ganado %08x-%08x hair %08x %08x\n",charbake_variant,e.label,crc,fnv,
+              e.ganado_crc,e.ganado_fnv,e.hair_pair_crc[0],e.hair_pair_crc[1]);
+}
+extern "C" void re4dc_charbake_cycle(void){re4dc_charbake_set(charbake_variant+1);}
+extern "C" unsigned re4dc_charbake_variant(void){return charbake_variant;}
+extern "C" const char* re4dc_charbake_label(void){return re4dc_charbake::variants[charbake_variant].label;}
+#endif

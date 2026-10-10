@@ -27,6 +27,9 @@
 #if RE4DC_COARSE_SKIN_FTRV
 #include "coarse_skin.h"
 #endif
+#if RE4DC_CHARBAKE_TOGGLE
+#include "charbake_variants.h" // charbake.mk CHARBAKE_TOGGLE: the character texture variants (keys only)
+#endif
 
 extern "C" void re4dc_log(const char*, ...);
 extern "C" void GXGetProjectionv(float*);
@@ -72,8 +75,35 @@ constexpr unsigned kTierApps = kApps, kFarSkinBytes = 0;
 inline const gc::Chunk& cast_chunk(unsigned a, unsigned i) { return gc::chunks[a][i]; }
 inline unsigned cast_app(unsigned a) { return a; }
 #endif
+#if RE4DC_CHARBAKE_TOGGLE
+// charbake.mk CHARBAKE_TOGGLE (test builds): the selected variant (re4dc_charbake_ganado_set, from coarse_actor.cpp
+// re4dc_charbake_set) gives the cast atlas (charbake_variants.h kGanadoCrc / kGanadoFnv) its key, read by the plans,
+// the texture key hook and the readiness check, and every cast image its own identity per variant (the texture cache
+// keeps the first key of an identity). far_texture keeps matching the bundle keys.
+unsigned texture_tokens[re4dc_charbake::kCount][gc::texture_count];
+unsigned charbake_variant=RE4DC_CHARBAKE_VARIANT%re4dc_charbake::kCount;
+#define RE4DC_GC_TOKEN(t) (&texture_tokens[charbake_variant][t])
+gc::Texture charbake_textures[gc::texture_count];
+bool charbake_ready;
+const gc::Texture* charbake_keys(){
+    if(!charbake_ready){
+        const auto& e=re4dc_charbake::variants[charbake_variant];
+        for(unsigned t=0;t<gc::texture_count;++t) {
+            charbake_textures[t]=gc::textures[t];
+            if(gc::textures[t].crc==re4dc_charbake::kGanadoCrc && gc::textures[t].fnv==re4dc_charbake::kGanadoFnv)
+                {charbake_textures[t].crc=e.ganado_crc;charbake_textures[t].fnv=e.ganado_fnv;}
+        }
+        charbake_ready=true;
+    }
+    return charbake_textures;
+}
+#define RE4DC_GC_KEYS charbake_keys()
+#else
 unsigned texture_token[gc::texture_count];
-Re4dcUiImage image_of(unsigned t){return Re4dcUiImage{&texture_token[t],nullptr,gc::textures[t].width,gc::textures[t].height,6,0xffffffffU,0};}
+#define RE4DC_GC_TOKEN(t) (&texture_token[t])
+#define RE4DC_GC_KEYS gc::textures
+#endif
+Re4dcUiImage image_of(unsigned t){return Re4dcUiImage{RE4DC_GC_TOKEN(t),nullptr,gc::textures[t].width,gc::textures[t].height,6,0xffffffffU,0};}
 struct Binding { cModel* owner; unsigned serial; cParts* list; cParts* parts[kBones]; unsigned appearance;
                  cModelInfo* infos[4]; const ModelData* qualified[4]; unsigned short signature[4]; };
 Binding bindings[32];
@@ -640,11 +670,16 @@ extern "C" int re4dc_coarse_ganado_source(const void* info,Re4dcActorSource* out
 }
 extern "C" int re4dc_coarse_ganado_texture_key(const Re4dcUiImage* i,unsigned* c,unsigned* f) {
     for(unsigned t=0;t<gc::texture_count;++t){
-        if(i->pixels!=&texture_token[t] || i->width!=gc::textures[t].width || i->height!=gc::textures[t].height || i->format!=6 || i->palette_bytes)continue;
-        *c=gc::textures[t].crc;*f=gc::textures[t].fnv;return 1;
+        if(i->pixels!=RE4DC_GC_TOKEN(t) || i->width!=gc::textures[t].width || i->height!=gc::textures[t].height || i->format!=6 || i->palette_bytes)continue;
+        *c=RE4DC_GC_KEYS[t].crc;*f=RE4DC_GC_KEYS[t].fnv;return 1;
     }
     return 0;
 }
+#if RE4DC_CHARBAKE_TOGGLE
+extern "C" void re4dc_charbake_ganado_set(unsigned variant){
+    charbake_variant=variant%re4dc_charbake::kCount;charbake_ready=false;charbake_keys();
+}
+#endif
 
 // Called with coarse store queues closed. Opaque submissions complete here;
 // none borrow the shared palette after the next info overwrites it.
@@ -667,7 +702,7 @@ extern "C" int re4dc_coarse_ganado(cModel* m) {
     }
     auto& infos=bound->infos;auto& parts=bound->parts;const unsigned app=bound->appearance;
     const Re4dcUiImage image=image_of(gc::appearance_texture[app]);
-    const auto& tex=gc::textures[gc::appearance_texture[app]];
+    const auto& tex=RE4DC_GC_KEYS[gc::appearance_texture[app]];
     if(m->invisible_factor*m->invisible_factor2<=0)return 1;
     if(m->invisible_factor*m->invisible_factor2<.999f)return 0;
     for(unsigned i=0;i<4;++i)if(visible(infos[i])) {

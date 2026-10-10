@@ -1,0 +1,271 @@
+{
+ "comment": "charbake (D367, 2026-10-10): offline character texture processing. Paths are relative to the private store (re4-assets-private); every input is pinned by sha256. Outputs (never committed to the repo) go to <store>/charbake-20261010. See README.md.",
+ "out": "charbake-20261010",
+ "blender_job": {
+  "res": 2048,
+  "samples": 128,
+  "distances": [
+   0.05,
+   0.15,
+   0.4
+  ],
+  "threads": 6,
+  "margin": 16
+ },
+ "characters": {
+  "leon": {
+   "atlas": {
+    "key": "ec255e66-76812316",
+    "width": 512,
+    "height": 512,
+    "payload": "rgb565",
+    "source_png": "character-prototype-20260925/deliverables/leon-4k/leon-4k-diffuse-512.png",
+    "source_png_sha256": "4c061820d9871d443ba7eccc82ef20c4ce5578b2cacee42ac052c30ee62e3e48",
+    "current_package_sha256": "5dbe0c60639084b402aafd923243fc85a946c0bbf1cfbc3030fd61200bd00297",
+    "current_quantization": "trunc"
+   },
+   "meshes": [
+    {
+     "name": "leon-4k-hair-v2",
+     "path": "character-prototype-20260925/runtime/leon-hair-v2/mesh.json",
+     "sha256": "9dfb9b7d1eb458471decf16cf382028363f18821e44ab43260263630ce8a0a62",
+     "bake_infos": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     "occluder_infos": [],
+     "occluder_note": "hair (info 7) is alpha-blended cards: as a solid occluder it blackens the scalp seen through it"
+    }
+   ]
+  },
+  "ganado": {
+   "atlas": {
+    "key": "1279a218-f8cb0063",
+    "width": 1024,
+    "height": 512,
+    "payload": "vq",
+    "source_png": "cast-20260925/atlases/human.png",
+    "source_png_sha256": "5b6cde4ddecff0c1d2e8beb031a667b3f4ccb1c34c1638cc8652f68652806da1",
+    "current_package_sha256": "9c4219b4c35e67b889664ff96583b3fcaf7cb308a493df644e458ae873b935cc",
+    "current_quantization": "pvrtex-vq"
+   },
+   "meshes": [
+    {
+     "name": "em12-01",
+     "path": "cast-20260925/ganado-em12-01/v4-fit/conservative-mesh.json",
+     "sha256": "686576a284cccdec915cf796b906c08f374503ddfaf63e814d30b51f7693192c",
+     "bake_infos": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "occluder_infos": []
+    },
+    {
+     "name": "em15-00",
+     "path": "cast-20260925/ganado-em15-00/v4-fit/conservative-mesh.json",
+     "sha256": "9aabc153444ddaf8ef84344503b53be50dfe16dea2e9950ebe6176906060733b",
+     "bake_infos": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "occluder_infos": []
+    },
+    {
+     "name": "em15-03",
+     "path": "cast-20260925/ganado-em15-03/v4-fit/conservative-mesh.json",
+     "sha256": "36e9ac0fd0bfb208adfebac390563554e5d26d490788b16f4789cd6e4ca27c1c",
+     "bake_infos": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "occluder_infos": []
+    },
+    {
+     "name": "em15-04",
+     "path": "cast-20260925/ganado-em15-04/v4-fit/conservative-mesh.json",
+     "sha256": "cca45bef26a3783268efdc933f5bfef4bdc4811ee147ba5cb8f09f250b4ffcb2",
+     "bake_infos": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "occluder_infos": []
+    },
+    {
+     "name": "em15-0b",
+     "path": "cast-20260925/ganado-em15-0b/v4-fit/conservative-mesh.json",
+     "sha256": "1d5c8d74f3e093095a89e19732dfd58c19e6cedd1d7355dad0cdd35746ce0585",
+     "bake_infos": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "occluder_infos": []
+    }
+   ]
+  }
+ },
+ "hair": {
+  "comment": "Leon's two hair colour pairs (ARGB4444 64x128, materials 1 and 2 of the hair runs): the RGB565 source colour truncated to 4 bits with the I4 mask as alpha (build_hair checks that this rebuilds the play pair). Packages extracted from the play tex.pak into <out>/src.",
+  "textures": [
+   {
+    "pair": "fc24a99c-03d13534",
+    "colour": "ac381b1a-3ade84b1",
+    "mask": "94e9dc56-070dc44a",
+    "pair_sha256": "f1bf58aec0c4d5e4ffc0da733134fd942f72033959856522bce05740d8e64fa2",
+    "colour_sha256": "8e0031324e25fbea9ebf3931f24f732ad8aee5201accca359014225cdd0a6889",
+    "mask_sha256": "7c31c97e4a219414da390ff4f9e7c72ed0b580e02d062513fc4c4c003dc4239a"
+   },
+   {
+    "pair": "9cf7f055-d40aae38",
+    "colour": "7a9de1fd-0e415f15",
+    "mask": "94e9dc56-070dc44a",
+    "pair_sha256": "5f369d26429d00b7541b7162d69d269e096498c9fafce8338536431d7c1d3cfb",
+    "colour_sha256": "fc0a9b8f919c80c18736b6b84460353490705be83fa2a3e6a958a7b3b3213a9c",
+    "mask_sha256": "7c31c97e4a219414da390ff4f9e7c72ed0b580e02d062513fc4c4c003dc4239a"
+   }
+  ]
+ },
+ "toggle": [
+  {
+   "label": "CUR"
+  },
+  {
+   "label": "AO",
+   "leon": "ao",
+   "ganado": "ao"
+  },
+  {
+   "label": "SKY",
+   "leon": "aosky",
+   "ganado": "aosky"
+  },
+  {
+   "label": "GCB",
+   "leon": "gcb",
+   "ganado": "gcb",
+   "hair": "gcb"
+  },
+  {
+   "label": "LVQ",
+   "leon": "vq"
+  },
+  {
+   "label": "GVQ",
+   "leon": "gcbvq",
+   "ganado": "gcb",
+   "hair": "gcb"
+  }
+ ],
+ "variants": {
+  "q": {
+   "comment": "quantisation only: round to the nearest RGB565 level instead of truncating (no shading)",
+   "shade": null,
+   "quant": "none"
+  },
+  "ao": {
+   "comment": "ambient occlusion only (broad 0.4 m, mid 0.15 m, crevice 0.05 m), floor 0.55, no gain: the mean texel darkens 12 % (Leon) / 10 % (cast)",
+   "shade": {
+    "ao": {
+     "ao_400": 0.3,
+     "ao_150": 0.3,
+     "ao_050": 0.3
+    },
+    "floor": 0.55,
+    "sky": 1.0,
+    "ground": 1.0,
+    "gain": 1.0
+   },
+   "quant": "none"
+  },
+  "aosky": {
+   "comment": "AO + a soft sky/ground term (lit from above, as the GameCube's outdoor light)",
+   "shade": {
+    "ao": {
+     "ao_400": 0.3,
+     "ao_150": 0.3,
+     "ao_050": 0.3
+    },
+    "floor": 0.55,
+    "sky": 1.15,
+    "ground": 0.8,
+    "gain": 1.0
+   },
+   "quant": "none"
+  },
+  "gcb": {
+   "comment": "GameCube brightness: SKY plus a texel-space gain and a warm tint toward the GameCube frames. Look gallery luma, GameCube / Dreamcast, of Leon's jacket: r100start 1.72, r101F 1.18, r101wide 0.70 (backlit), geometric mean 1.12; hair 1.57 / 1.21 / 0.89, mean 1.19, and warmer (R/B 1.48 against 1.30). The GameCube lights per room and direction; a bake can only take a middle value.",
+   "shade": {
+    "ao": {
+     "ao_400": 0.3,
+     "ao_150": 0.3,
+     "ao_050": 0.3
+    },
+    "floor": 0.55,
+    "sky": 1.15,
+    "ground": 0.8,
+    "gain": 1.0
+   },
+   "quant": "none",
+   "grade": {
+    "gain": 1.2,
+    "tint": [
+     1.05,
+     1.0,
+     0.92
+    ]
+   },
+   "hair": {
+    "gain": 1.3,
+    "tint": [
+     1.04,
+     1.0,
+     0.88
+    ]
+   }
+  },
+  "vq": {
+   "comment": "no shading, Leon's atlas encoded as VQ (pvrtex full codebook, RGB565, as the Ganado atlas already is): 512x512 16-bit, 524 KB of VRAM, becomes 66 KB. A texture-memory option (room for the world): the hw model does not price texture reads, so any speed effect of VQ on the console is unmeasured",
+   "shade": null,
+   "quant": "none",
+   "payload": "vq"
+  },
+  "gcbvq": {
+   "comment": "GCB with Leon's atlas encoded as VQ (the toggle and the staged pak pair it with the GCB Ganado and hair)",
+   "shade": {
+    "ao": {
+     "ao_400": 0.3,
+     "ao_150": 0.3,
+     "ao_050": 0.3
+    },
+    "floor": 0.55,
+    "sky": 1.15,
+    "ground": 0.8,
+    "gain": 1.0
+   },
+   "quant": "none",
+   "grade": {
+    "gain": 1.2,
+    "tint": [
+     1.05,
+     1.0,
+     0.92
+    ]
+   },
+   "payload": "vq"
+  }
+ }
+}

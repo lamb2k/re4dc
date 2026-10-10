@@ -1221,5 +1221,7 @@ include post30.mk
 include crowd.mk
 # D367 generic native models (NATIVE_MODEL_REGISTRY; default off: no effect).
 include native_model_registry.mk
+# D367 charbake (CHARBAKE_HAIR, CHARBAKE_TOGGLE; default off: no effect).
+include charbake.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
 include knobs.mk

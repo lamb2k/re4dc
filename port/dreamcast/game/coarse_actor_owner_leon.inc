@@ -4,7 +4,11 @@
 #include "actor_material_owner.h"
 #include "actor_lifetime.h"
 #include "actor_material_policy.h"
+#if RE4DC_CHARBAKE_HAIR
+#include "leon_hair_runs_g2.h" // charbake.mk CHARBAKE_HAIR: the same hair, one run per material (cb_hair.py)
+#else
 #include "leon_hair_runs.h"
+#endif
 #include "warp_late.h"
 #if !RE4DC_COARSE_SOURCE_ACTORS || !RE4DC_COARSE_ONE_SUBMIT || RE4DC_COARSE_SKIN_FTRV != 1 || !RE4DC_NATIVE_ACTOR_FAST
 #error ACTOR_TRANSACTION requires the source ledger, ONE_SUBMIT and SKIN_FTRV=1 native path
@@ -15,11 +19,25 @@
 namespace {
 unsigned owner_binding_revision;
 cModel* owner_root_parts;
+#if RE4DC_CHARBAKE_TOGGLE
+// charbake.mk CHARBAKE_TOGGLE (test builds): the hair colour images take the selected variant's identity and key
+// (coarse_actor.cpp re4dc_charbake_set); the materials draw the pair keys the runtime derives from those
+// (native_ui.cpp model_mask_key; charbake_variants.h). Variant 0 holds the keys below the #else.
+unsigned hair_tokens[re4dc_charbake::kCount][2],hair_mask_token;
+Re4dcUiImage hair_colours[2]={{&hair_tokens[RE4DC_CHARBAKE_VARIANT%re4dc_charbake::kCount][0],nullptr,64,128,14,0xffffffffu,0},
+                              {&hair_tokens[RE4DC_CHARBAKE_VARIANT%re4dc_charbake::kCount][1],nullptr,64,128,14,0xffffffffu,0}};
+const Re4dcUiImage hair_mask{&hair_mask_token,nullptr,64,128,0,0xffffffffu,0};
+unsigned hair_colour_crc[2]={kCharbakeBoot.hair_colour_crc[0],kCharbakeBoot.hair_colour_crc[1]},
+         hair_colour_fnv[2]={kCharbakeBoot.hair_colour_fnv[0],kCharbakeBoot.hair_colour_fnv[1]};
+unsigned hair_pair_crc[2]={kCharbakeBoot.hair_pair_crc[0],kCharbakeBoot.hair_pair_crc[1]},
+         hair_pair_fnv[2]={kCharbakeBoot.hair_pair_fnv[0],kCharbakeBoot.hair_pair_fnv[1]};
+#else
 unsigned hair_tokens[3];
 const Re4dcUiImage hair_colours[2]={{&hair_tokens[0],nullptr,64,128,14,0xffffffffu,0},{&hair_tokens[1],nullptr,64,128,14,0xffffffffu,0}};
 const Re4dcUiImage hair_mask{&hair_tokens[2],nullptr,64,128,0,0xffffffffu,0};
 constexpr unsigned hair_colour_crc[2]={0xac381b1a,0x7a9de1fd},hair_colour_fnv[2]={0x3ade84b1,0x0e415f15};
 constexpr unsigned hair_pair_crc[2]={0xfc24a99c,0x9cf7f055},hair_pair_fnv[2]={0x03d13534,0xd40aae38};
+#endif
 bool owner_leon_bind(cModel* m) {
     if(!m || m->id || m->nParts!=119 || !m->pList || !m->pParts || (m->be_flag&0x4000))return false;
     // Current dual archive/model adoption records supply exact role identity,
@@ -133,18 +151,20 @@ extern "C" int re4dc_actor_hair_texture_key(const Re4dcUiImage* i,unsigned* c,un
     return 0;
 }
 extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p) {
+    // The hair runs of the included header: 14 (leon_hair_runs.h), 2 with CHARBAKE_HAIR (leon_hair_runs_g2.h).
+    constexpr unsigned kHair=leon_hair_runs::run_count;
 #if RE4DC_ACTOR_PL08
     // pl08 (0x108): nine roles; the same hair (role 7, pl00's runs 7..20) and one role-8 run last, its whole chunk.
     const bool pl08=p && p->appearance==0x108;
-    if(!p || (pl08?(p->count!=9 || p->run_count!=22 || p->runs[21].role!=8 || p->runs[21].material ||
-                    p->runs[21].triangles!=p->input[8].triangles || p->runs[21].stream.data!=p->input[8].stream.data):
-                   (p->appearance!=0x100 || p->count!=8 || p->run_count!=21)) || p->material_count!=3 ||
+    if(!p || (pl08?(p->count!=9 || p->run_count!=8+kHair || p->runs[7+kHair].role!=8 || p->runs[7+kHair].material ||
+                    p->runs[7+kHair].triangles!=p->input[8].triangles || p->runs[7+kHair].stream.data!=p->input[8].stream.data):
+                   (p->appearance!=0x100 || p->count!=8 || p->run_count!=7+kHair)) || p->material_count!=3 ||
        p->input[7].palette_count!=229 || p->immutable_asset_id[7]!=8 || !p->info[7] || !(p->info[7]->be_flag&0x40))return 0;
 #else
-    if(!p || p->appearance!=0x100 || p->count!=8 || p->material_count!=3 || p->run_count!=21 ||
+    if(!p || p->appearance!=0x100 || p->count!=8 || p->material_count!=3 || p->run_count!=7+kHair ||
        p->input[7].palette_count!=229 || p->immutable_asset_id[7]!=8 || !p->info[7] || !(p->info[7]->be_flag&0x40))return 0;
 #endif
-    for(unsigned k=0;k<14;++k) {
+    for(unsigned k=0;k<kHair;++k) {
         const auto& want=leon_hair_runs::runs[k];const auto& r=p->runs[7+k];
         if(r.role!=7 || r.material!=want.material || r.immutable_asset_id!=29+k || r.triangles!=want.triangles ||
            r.uv.data!=leon_hair_runs::uv || r.uv.size!=sizeof(leon_hair_runs::uv) || r.stream.data!=want.stream || r.stream.size!=want.bytes)return 0;

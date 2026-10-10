@@ -973,7 +973,7 @@ extern "C" int re4dc_actor_plan_ganado(cModel* m,Re4dcActorPlan* out) {
     if(!out || !owner_ganado_bind(m))return 0;
 #endif
     Re4dcActorPlan p{};const unsigned a=bound->appearance,t=gc::appearance_texture[a];
-    p.count=owner_info_count[owner_current_slot];p.appearance=a;p.image=image_of(t);p.crc=gc::textures[t].crc;p.fnv=gc::textures[t].fnv;p.palettes=owner_ganado_palettes;
+    p.count=owner_info_count[owner_current_slot];p.appearance=a;p.image=image_of(t);p.crc=RE4DC_GC_KEYS[t].crc;p.fnv=RE4DC_GC_KEYS[t].fnv;p.palettes=owner_ganado_palettes;
 #define RE4DC_GANADO_ROLE(app,role,prefix) re4dc_actor::plan_chunk(p,role,bound->infos[role],gc::chunks[app][role],RE4DC_OWNER_INPUT(ganadocast,prefix,gc::chunks[app][role],34))
 #define RE4DC_GANADO_APP(app) \
     case app: RE4DC_GANADO_ROLE(app,0,a##app##_i0);RE4DC_GANADO_ROLE(app,1,a##app##_i1); \
@@ -990,7 +990,7 @@ extern "C" int re4dc_actor_plan_ganado(cModel* m,Re4dcActorPlan* out) {
 #undef RE4DC_GANADO_FAR_ROLE
         for(unsigned role=0;role<4;++role)p.immutable_asset_id[role]=kOwnerFarAsset+a*4u+role;
         const unsigned ft=far_texture(a);  // skin_init's far_same proved it is a near atlas
-        p.image=image_of(ft);p.crc=gc::textures[ft].crc;p.fnv=gc::textures[ft].fnv;
+        p.image=image_of(ft);p.crc=RE4DC_GC_KEYS[ft].crc;p.fnv=RE4DC_GC_KEYS[ft].fnv;
         owner_plan_app=a+kApps;
     } else
 #endif
