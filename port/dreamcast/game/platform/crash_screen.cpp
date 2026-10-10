@@ -52,7 +52,11 @@ struct MissingSnapshot {
     unsigned ui, frames, vbl, vtx[3], opb[3], isp;
     unsigned asic[3], opb_init;  // issue 9: raw ASIC event status A/B/C (latched even when not enabled)
 #if RE4DC_PVR_LATCH
+#if RE4DC_PVR_LATCH >= 2
+    char latch[6][54];           // latch v2: rows 0..5 (state, totals, ring, rdy, er/max, last two scenes)
+#else
     char latch[4][54];           // re4dc_pvr_latch_line 0..3 at the failure (one screen row each)
+#endif
 #endif
     int pending, ta_ready;
     bool valid, pvr_valid;
@@ -86,7 +90,7 @@ void capture_missing(const char* name)
             g_missing.asic[1] = *(volatile uint32_t*) ASIC_ACK_B;
             g_missing.asic[2] = *(volatile uint32_t*) ASIC_ACK_C;
 #if RE4DC_PVR_LATCH
-            for (unsigned i = 0; i < 4; ++i)
+            for (unsigned i = 0; i < sizeof(g_missing.latch) / sizeof(g_missing.latch[0]); ++i)
                 if (!re4dc_pvr_latch_line || !re4dc_pvr_latch_line(i, g_missing.latch[i], sizeof(g_missing.latch[i])))
                     g_missing.latch[i][0] = 0;
 #endif
@@ -176,10 +180,10 @@ void show(const char* kind, const char* detail, bool wait_render)
         snprintf(line, sizeof(line), "v%06x/%06x/%06x o%06x/%06x/%06x i%06x", g_missing.vtx[0], g_missing.vtx[1],
                  g_missing.vtx[2], g_missing.opb[0], g_missing.opb[1], g_missing.opb[2], g_missing.isp);
         put_text(0, row++, line, 0xFFFF);
-        for (int i = 0; i < 4; ++i)
+        for (unsigned i = 0; i < sizeof(g_missing.latch) / sizeof(g_missing.latch[0]); ++i)
             if (g_missing.latch[i][0]) put_text(0, row++, g_missing.latch[i], 0x07FF);
     } else if (re4dc_pvr_latch_line) {
-        for (unsigned i = 0; i < 4; ++i)
+        for (unsigned i = 0; i < sizeof(g_missing.latch) / sizeof(g_missing.latch[0]); ++i)
             if (re4dc_pvr_latch_line(i, line, sizeof(line) < 54 ? sizeof(line) : 54)) put_text(0, row++, line, 0x07FF);
     }
 #else

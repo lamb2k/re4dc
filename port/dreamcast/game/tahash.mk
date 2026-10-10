@@ -7,11 +7,20 @@
 # two different builds' lines compare.
 # TA_HASH=3: as 2, and a header counts only once a vertex follows it (header-only polygons, which draw nothing,
 # are left out).
+# TA_BIN_DIAG=1 (issue 9, test builds only; needs TA_HASH=1): replaces the ta_hash line with a model of the hardware
+# tiler per scene ("tabin:" object pointer blocks against the KOS overflow pool, deepest tile per list, translucent
+# triangles in the busiest tile, an ISP/TSP parameter estimate). platform/native_ui.cpp namespace tabin.
 TA_HASH ?= 0
+TA_BIN_DIAG ?= 0
+ifeq ($(TA_BIN_DIAG),1)
+ifneq ($(TA_HASH),1)
+$(error TA_BIN_DIAG=1 needs TA_HASH=1)
+endif
+endif
 .PHONY: tahash-force
 $(OBJDIR)/tahash.h: tahash-force
 	@mkdir -p $(dir $@)
-	@printf '#define RE4DC_TA_HASH %s\n' '$(TA_HASH)' > $@.tmp
+	@printf '#define RE4DC_TA_HASH %s\n#define RE4DC_TA_BIN_DIAG %s\n' '$(TA_HASH)' '$(TA_BIN_DIAG)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 TAHASH_PLATFORM = $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o
