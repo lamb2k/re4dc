@@ -56,7 +56,8 @@ Recent progress:
 * Safer graphics waits, and an error screen that records what the graphics chip was doing. Console
   photos from players narrowed the bridge door freeze down to one frame the chip never finishes; a fix
   is in progress.
-* Look options in testing: GameCube style fog and colour, and softer character shading.
+* Look options in testing: the [look test build](https://github.com/lamb2k/re4dc/releases/tag/test-look-630909dd-20261010)
+  switches between GameCube style fog, colour and character shading while you play (hold X, press START).
 
 Known issues:
 
