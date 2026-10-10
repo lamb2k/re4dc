@@ -1016,7 +1016,12 @@ void blk_cut(int t)
 // One ring: while a stream plays, another one stays silent.
 struct StrEnt { u32 sbb_ofs, rate, flags, nch, a_samples, b_samples, a_ofs, b_ofs; };  // flags: 1 loops | blk << 8 | no << 16
 const u32 kStrMagic = 0x31534941;   // "AIS1"
-const int kStrEntMax = 16;
+#ifndef RE4DC_STR_ENT_MAX
+#define RE4DC_STR_ENT_MAX 16
+#endif
+// ROUTE_CH21 discs carry 17 streams (r118 added 0:23; aica_banks.py --streams ch21 + 0:23): 16 refused the whole file
+// ("header invalid", every disc stream silent). The 2 KB header holds up to 63 entries.
+const int kStrEntMax = RE4DC_STR_ENT_MAX;
 StrEnt g_strEnt[kStrEntMax];
 u32 g_strEntN;
 

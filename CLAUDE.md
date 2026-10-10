@@ -197,6 +197,11 @@ loads every texture package from one file (room entry 7.2 -> 3.1 s, east walk 6.
   with per-light constants hoisted + fsrra (r119 quiet -15.5 hw ms). Torch flicker defeats any light bake.
 - r118 (2026-10-10, route doc "r118", ROUTE_CH21): r119 door 0 -> r118; BGM0 is bgmtbl slot 0 (snd.cpp CH21
   case); stage the r118 arc/dar/bio4midi #11, aica_str 0:23, PS2 world and the two material pairs.
+- r117 (2026-10-10, route doc "r117", ROUTE_CH21): the chapter 2-1 end. Stage:
+  - dc/pl11.ovl (Ashley, a room overlay; tools/ovl_helpers.py RO moves keep cSubChar out of the image);
+  - em11 prepared (prepare_enemy_motions, dc/mot keys);
+  - the chapter 2-1 end backdrops VQ'd inside dc/tex.pak (pack entries win over loose files).
+  The CH21 aica_str.dat has 17 entries: RE4DC_STR_ENT_MAX=32.
 - r11a (2026-10-10, route doc "r11a"): data only. A room counts as built when dc/native/<room>/ps2-world.r4pw is
   staged. aica_banks ROOMS r11a reads em24 at room entry.
 - WATER42_GRID_SKIP (2026-10-10, route doc "WATER42_GRID_SKIP", default 1 in the ROUTE_CH13 block): espgen42 (the

@@ -810,6 +810,73 @@ em/em22.drs, the r118 Ganados). Warp presets r118-entry (from r119 door 0) and r
 - **Next room: r117** (the chapter 2-1 end): key 0x3C door; check its enemy modules / effects with
   `assets.sh discover r117`, the PS2 world, bgmtbl, and whether its archive fits heap 4 after the em22 overlay.
 
+## Progress 2026-10-10 (r117: the chapter 2-1 end, behind ROUTE_CH21, lane r117)
+
+r118's door 4 (key 0x3C, in the ITA of r10c and r118) now leads to r117: Ashley is found upstairs (s00, PS2 movie),
+Saddler appears in area 6 (s10, PS2 movie), then the source SceSetChapterEnd(CHAPTER_2_1, -1) shows the
+"End of Chapter 2-1" results with "Save?". Door 0 and door 0x0B lead back to r118 (on the disc). r117 has no exit to
+a room that is not on the disc.
+- **Code (ROUTE_CH21 block; knob off: identical image).**
+  - r117.cpp: R117_ROUTE_MOVIES, the r119 pattern. When dc/movie/r117s00.seq is present, the two evds are neither
+    loaded nor registered; s00 (0x11700) and s10 (0x11710) run through RouteMoviePlay with the source begin and end
+    funcs. The surrounding code (Item_find 0x00100000, the door, Ashley's SubCharInit, the chapter end) is unchanged.
+  - pl11 (Ashley) is a room overlay (ROUTE_OVL slot 4, dc/pl11.ovl, 38,384 B). em11 (the later-visit Ganados, ESL
+    0x50/0x51) is a static member of the EM10_SHARED group.
+  - em11_set.cpp: `new (em) cEm10;` replaces the value-init (the em2a trap: value-init zeroes subArc off the GC).
+  - tools/ovl_helpers.py: RE4DC_OVL_HELPERS_RO=.ovl_pl11 also moves read-only data that only the overlay reaches.
+    COMDAT names are normalised, a COMDAT group moves when no image object defines it, and nothing referenced from
+    data that stays in the image moves (work/blocked.tsv). cSubChar's 32 KB of code and its vtable move into
+    pl11.ovl. Without this the image is 38 KB larger.
+  - audio_aica.cpp: RE4DC_STR_ENT_MAX=32 under CH21 (default 16). The CH21 aica_str.dat has 17 entries (1:148 and
+    0:23 appended for r11b / r118), so every stream on CH21 discs failed "header invalid". This was already true
+    for r118 discs: the r118 lane's d4 run shows it.
+  - le_mirror.py static_module_ids dedupes bindings: pl11 has rows in two exclusive #if blocks.
+  - prepare_enemy_motions.py: em11 joins GANADO; KNOB_STATIC_MODULES compacts its static REL against its own row.
+  - aica_banks.py: ROOMS r117 (st1/r117.dar + em/pl11.drs + em/em11.drs) and ROOM_BGM0 r117 [11]. The bgmtbl r117
+    entries 0 and 1 are both bio4midi #11 (already built for r118); there is no stream, and snd.cpp is unchanged.
+  - prepare_native_ui.py: an r117 room contract (38 slots, header_grow 32: the 328 > 320 B header, the chandelier
+    BIN#27 / TPL#28).
+  - warp.py: presets r117-entry, r117-ashley and r117-revisit (`--door`: door 0 -> r118).
+- **Staging (all ROUTE_CH21 discs).**
+  - st1/r117.arc: the compact room container, 884,096 B; 161 identities, 176 room images.
+  - st1/r117.dar and em/pl11.drs + em/em11.drs from `aica_banks.py`: the r117 arena is 986,688 of 1,004,192 B, and
+    every other bank is byte-identical to r118's.
+  - em/em11.drs **prepared**: `prepare_enemy_motions.py` with an empty diagnostic hot set, the em2b recipe. Body
+    3,759,808 -> 1,323,136 B, 157 motion keys go to dc/mot. Unprepared, it fails heap 4 on a revisit ("DVD: Memory
+    allocate failed", largest cell 3.1 MB).
+  - dc/pl11.ovl from the same build.
+  - dc/native/r117/MAINSCENARIO.re4mesh, and the PS2 world dc/native/r117/ps2-world.{r4pw,re4mesh,ids}:
+    ps2_room_r4im with `--color-light ps2 --lod-uv-guard 0.002 --gc-lit`; 839,008 B, 59 textures, 619,520 B VRAM,
+    238 placements.
+  - dc/movie/r117s00.seq (890 pictures) and r117s10.seq (4,160): convert_route_movies.py at 288x192.
+  - The room / pl11 / em11 textures (VQ by the room rule) plus material pairs: d1fdb548-e80a6158, 2c69ded3-df61482f
+    and 32bf9191-34bc4375 (room), and e1cd6919-a1b4d41c and fbec854a-b7656a09 (em11).
+  - The chapter 2-1 end screen's backdrops b5abaf9b / c69c425c (640x360) and 6ad8a6c4, VQ'd into dc/tex.pak like
+    chapter 1-3's (2,228,224 -> 284,672 B). At 16 bits, the second 1 MiB backdrop found no contiguous VRAM after r117
+    and the results screen drew without it.
+- **Runs (cost arm qC: 630909dd + this).** HALT 0, MISSING 0 and MISALIGN 0 in every run.
+  - pk1: r118 door 4 (unlocked) -> r117. vram_free 81,152 at entry, no upload failures; Flycast 25.9 fps.
+  - pa1: Ashley's door -> s00 890/890 -> the radio call and Playing Manual 3 -> area 6 -> s10 4,160/4,160 -> "End of
+    Chapter 2-1", "Save?". The Save itself is the shared source path, proven in r10b.
+  - pd1: revisit -> door 0 -> r118.
+  - pr1b: revisit with the em11 Ganados. Heap 4 is 2.92 MB free after em11 (motion leases: 8 x 111 KB); 0 pair
+    missing; Flycast 29.9 fps.
+  - Heap 4: the pl11 overlay takes 38 KB at module bind; the PS2 mesh opens at 5,035,872 B free.
+- **Not checked by a walk:** picking up the key 0x3C (the r118 ITA; the presets set door_unlock instead).
+- **Gates:**
+  - Knob-off identity vs 630909dd: the default recipe and the play flags without ROUTE_CH21 differ in the build
+    stamp only (3 / 4 bytes); overlays are equal; missing.txt is empty.
+  - H2 (480 s): STRICT for 1450..1569, 0..740 and 1218..; room DISCRETE with om at 741 as before; MUST-IDENTICAL
+    (6,988 ticks). s30 played 340/340 with heap_before 61,600; the base had 65,696 and the floor is 57,504. The trace
+    image `_end` is 8c3e9adc -> 8c3ea2fc (+2,080 B), which crosses one 4 KiB page.
+  - Bell (300 s): STRICT on frame and on room 0101; MUST-IDENTICAL (sq info only).
+  - New Game: 12000 1971/1971, 12001 2360/2360, s40 1175/1175.
+  - r10b f6 -> QTE -> save -> r11b s00; r11a -> r11b; r11a -> r119 (s00 / s10 / s30 / s20, all terminal 1);
+    r118 <-> r117.
+- **Disc-layout note.** On this lane's f6 disc (811 MB, r117 content added), r10b s20 hit one 361 ms read stall in
+  Flycast: 520 of 800 pictures decoded, 35 underruns, the same QTE outcome and the same save. The same image
+  without the r117 files (752 MB) plays 800/800. Code is excluded. Check s20 on the real play disc.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

@@ -140,6 +140,23 @@ static void r117_ThunderMove();
 extern "C" void Evt_R117S00_Func(Event* e);
 extern "C" void Evt_R117S10_Func(Event* e);
 static void R117S0_WhiteFade();
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH21
+// Route cutscenes (ROUTE_CH21, r117 the chapter 2-1 end): s00 (Ashley found) and s10 (Saddler) are presented by
+// their PS2 movies (docs/ROUTE_CUTSCENES.md); the surrounding source code (the flags, Ashley's partner set, the
+// sub screen terminal, the door, the player position, the chapter end) runs unchanged. While the movies own the
+// events no evd is read: the two DC.setData registrations and the ARAM load are skipped, and Ashley's archive
+// (enemy module 3) is read at its own size (EmReadSearch(3, 0, 0)) instead of being sized for the 4.28 MB s10 evd
+// that the source swaps into it. The handlers' begin / end modes run; s10's per-cut mode shows three scroll
+// objects for good (cuts 0x14 / 0x20: smd 0x27, 0x28, 0x2E, as R117Init's revisit branch shows 0x2E), applied when
+// the movie ends. A movie that is not on the disc falls back to its source event; the evd registrations follow
+// s00's media.
+#include "route_movie.h"
+#define R117_ROUTE_MOVIES 1
+#define R117_MOVIES_OWN() re4dc_movie_available(0x11700)
+#else
+#define R117_ROUTE_MOVIES 0
+#define R117_MOVIES_OWN() 0
+#endif
 
 // Room init (the church interior, chapter 2-1): thunder task, the chandelier rope object (SetObjSmd from
 // room archive 0x1F/0x20), the light mechanism state. Until Ashley is found (Item_find_flg 0x00100000):
@@ -161,10 +178,17 @@ void R117Init()
         if (getRoomEtcDoor(0, &door, 1)) {
             cEmDoorSetCloseLock(door);
         }
+#if R117_ROUTE_MOVIES
+        if (R117_MOVIES_OWN()) {
+            EmReadSearch(3, 0, 0);
+        } else
+#endif
+        {
         W->evd0 = DC.setData(EvtMgr.NameChange("evd/r117s00.evd"));
         W->evd0->setCommand(CMND_ARAM_LOAD, 0, 0);
         W->evd1 = DC.setData(EvtMgr.NameChange("evd/r117s10.evd"));
         EmReadSearch(3, 0, W->evd1->m_size);
+        }
         SceAtDataSet_exec(7, SCE_LEVEL10, 0, (TaskFunc) r117_EventAshleyFind, 0, 1);
         SceAtDataSet_exec(4, SCE_LEVEL10, 0, (TaskFunc) r117_EventChandelier, 0, 1);
         EvtMgr.SetFunc("evt_r117s00_func", (void*) Evt_R117S00_Func);
@@ -386,6 +410,13 @@ static void r117_EventAshleyFind()
 
     BitOn(pG->Item_find_flg, 0x00100000);
     BitOff(pG->door_flags_51CC, 0x8000);
+#if R117_ROUTE_MOVIES
+    if (!W->evd0) {
+        // SetEvt started the evd directly (no EvtReadExec): no fade, no pose flag; the source sets System_flg 0x400.
+        RouteMoviePlay(0x11700, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R117S00_Func, 0);
+        pG->System_flg |= 0x400;
+    } else
+#endif
     if (W->evd0->waitLoadOk() == 1) {
         MemorySwap(W->mod->pArc, (u32) W->evd0->m_addr, W->evd0->m_size);
         EvtMgr.SetEvt(W->mod->pArc, (u32*) 0);
@@ -407,6 +438,9 @@ static void r117_EventAshleyFind()
         SceAtExecute(0x8F);
         SceSleep(1);
     }
+#if R117_ROUTE_MOVIES
+    if (W->evd1)
+#endif
     W->evd1->setCommand(CMND_ARAM_LOAD, 0, 0);
     SceAtDataSet_exec(6, SCE_LEVEL10, 0, (TaskFunc) r117_EventSaddlerAppear, 0, 1);
     if (getRoomEtcDoor(0, &door, 1)) {
@@ -427,6 +461,15 @@ static void r117_EventSaddlerAppear()
     EmMgr.destroy(pSUB);
     pG->Status_flg[3] &= ~0x04000000;
     SceSleep(3);
+#if R117_ROUTE_MOVIES
+    if (!W->evd1) {
+        // SetEvt with StatusFlag 0x400 (the event's own flag; nothing outlives it).
+        RouteMoviePlay(0x11710, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R117S10_Func, 0);
+        SmdGetObjPtr(0x27)->be_flag &= ~2;  // cut 0x14
+        SmdGetObjPtr(0x28)->be_flag &= ~2;
+        SmdGetObjPtr(0x2E)->be_flag &= ~2;  // cut 0x20
+    } else
+#endif
     if (W->evd1->waitLoadOk() == 1) {
         MemorySwap(W->mod->pArc, (u32) W->evd1->m_addr, W->evd1->m_size);
         if (EvtMgr.SetEvt(W->mod->pArc, (u32*) &ev)) {

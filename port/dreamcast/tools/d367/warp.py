@@ -200,7 +200,20 @@ PRESETS = {
     # so door 4 is a plain door (without it, R118Init hooks the locked-door message).
     "r118-door117-unlocked": dict(room=0x118, pos=(23412, 12026, -26482), ang=1.7196, unlock={0: 0x10000000},
                                   door=[("fwd", 30, 20), ("a", 60, 4), ("a", 150, 4), ("a", 240, 4)],
-                                  notes="at the r118 -> r117 door, unlocked (r117 not on the disc: Coming Soon)"),
+                                  notes="at the r118 -> r117 door, unlocked (r117 on CH21 discs from lane r117)"),
+    # r117 (St1, the chapter 2-1 end; ROUTE_CH21) as r118's door 4 delivers Leon (r118 AEV: dst 169, -1000, 6073,
+    # angle 2.922), before Ashley is found (Item_find 0x00100000 clear: door 0 locked, area 7 = the s00 event).
+    "r117-entry": dict(room=0x117, pos=(169, -1000, 6073), ang=2.922,
+                       notes="r117 from the r118 door 4 (before Ashley is found)"),
+    # Upstairs at Ashley's door (area 7, centre 6202, 3998, -3927): A starts s00 (Ashley found, Playing Manual 3);
+    # the goto then puts Leon in area 6 (centre -4476, -1037, 3169): s10 (Saddler) -> chapter 2-1 end + save.
+    "r117-ashley": dict(room=0x117, pos=(6202, 3998, -3700), ang=3.1416,
+                        acts=[("a", 30, 4)], goto=[(400, (-4476, -1037, 3169))],
+                        notes="r117 at Ashley's door: s00, then area 6: s10 and the chapter 2-1 end"),
+    # A revisit after Ashley is found (Part 0): door 0 open, ESL 0x50/0x51 (em11 Ganados) spawn.
+    "r117-revisit": dict(room=0x117, pos=(80, -1000, 7800), ang=0.0, find=0x00100000,
+                         door=[("a", 600, 6), ("a", 660, 6), ("a", 720, 6)],
+                         notes="r117 revisit (Ashley found): em11 Ganados; --door: door 0 -> r118"),
     # r40b (St4, st4_0 + em1f) as r40a's door 1 delivers Leon (r40a AEV: dst 1749, 0, 4498, angle -1.801); r40b's
     # only door arrival.
     "r40b-entry": dict(room=0x40b, pos=(1749, 0, 4498), ang=-1.801,

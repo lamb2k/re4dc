@@ -1,5 +1,12 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-10: r117, the chapter 2-1 end (ROUTE_CH21, lane r117)
+
+- r118 door 4 -> r117 -> s00 (Ashley) -> s10 (Saddler) -> "End of Chapter 2-1" + Save (route doc "r117"). Ashley
+  (pl11) is a room overlay; em11 ships prepared (motion leases). CH21 discs now play their streams: aica_str.dat
+  has 17 entries and the player read 16. H2 + bell STRICT, MUST-IDENTICAL; s30 heap_before 61,600 (floor 57,504).
+  Next: chapter 2-2 (r118 part 1 -> r112 -> r111 -> r113 -> r11c).
+
 ## 2026-10-10: r118 past El Gigante (ROUTE_CH21, lane r118)
 
 - r119 door 0 -> r118 -> back, and r118's r117 door shows "Coming Soon" (route doc "r118"). Code is the r118 BGM0

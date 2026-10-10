@@ -1,5 +1,24 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: r117 (ROUTE_CH21 discs)
+
+Stage the following:
+- st1/r117.arc, plus st1/r117.dar and the merged banks (aica_banks with ROOMS r117).
+- em/pl11.drs and em/em11.drs. em11 must be **prepared**: prepare_enemy_motions, with its dc/mot keys.
+- dc/pl11.ovl from the same build.
+- dc/native/r117/{MAINSCENARIO.re4mesh, ps2-world.r4pw, ps2-world.re4mesh, ps2-world.ids}.
+- dc/movie/r117s00.seq and r117s10.seq.
+- The r117 / pl11 / em11 textures and the five material pairs.
+- The VQ chapter 2-1 end backdrops b5abaf9b-5f0d7500, c69c425c-2a504ae2 and 6ad8a6c4-60365df4, **inside dc/tex.pak**
+  (a pack entry wins over a loose file).
+
+No new flag. ROUTE_CH21 now reads up to 32 aica_str entries, so the r11b / r118 streams play.
+Check:
+- r118 door 4 enters r117.
+- Ashley's door plays s00 then s10.
+- "End of Chapter 2-1" shows both backdrops and "Save?".
+- A revisit spawns the two em11 Ganados with no "Memory allocate failed".
+
 ## 2026-10-10: r118 (ROUTE_CH21 discs)
 
 Stage st1/r118.arc, st1/r118.dar + bgm/bio4midi.dat (aica_banks with ROOMS r118), bgm/aica_str.dat with streams

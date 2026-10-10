@@ -25,7 +25,10 @@ MAX_CLIP=32768
 # archive's 4,367,968 B body did not fit r104's heap 4 (DVD: Memory allocate failed, EmSetFromList2 Id=13).
 # em17 (r108's chapter 1-3 Ganados, route lane c13): em17/em10.cpp, em10_tmpl.cpp, em17_set.cpp, the same three
 # units; its GC archive did not fit r108's heap 4 next to the room and its PS2 world (route-c13-r102c).
-GANADO=('em12.drs','em15.drs','em13.drs','em17.drs')
+# em11 (r117's later-visit Ganados, ESL 0x50/0x51, chapter 2-1; route lane r117 2026-10-10): em11/em10.cpp,
+# em10_tmpl.cpp, em11_set.cpp, the same three units; its 5.8 MB GC archive did not fit r117's heap 4 (largest cell
+# 3.1 MB: DVD: Memory allocate failed, readEmData em/em11.drs).
+GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs')
 SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs')
 # Small enemies whose motions also leave the body: em21 (r100 trap dog) plays every clip through
 # MotionSetCore/MotionMove (src/em21/em21.cpp; ARC() otherwise only feeds modelInit), the leased
@@ -44,6 +47,9 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 # with the knob-conditional module set (ROUTE_OVL_MODULES). The room's heap 4: r119 frees 3,854,656 B in two
 # cells, the largest 2,770,912 B, under the 4,689,664 B rel-stripped body.
 ROUTE_OVL_MODULES=('em2b',)
+# Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
+# their own registry row like the room overlays above: em11 (ROUTE_CH21, r117).
+KNOB_STATIC_MODULES=('em11',)
 # Leon's archives, textures-only: pl00 (jacket, costume 0) and pl08 (no jacket, costume 1: title.cpp picks it in
 # every room but r120/r100/r101/r103/r106 once the r106 closet event has run). Same cPlLeon consumers, so pl08
 # takes pl00's reviewed textures-only contract (route lane 2026-10-01, r104).
@@ -73,7 +79,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     if bad:raise ValueError('unqualified enemy: '+', '.join(bad))
     # Retain the already-implemented static REL policy; don't restore PPC code.
     converted=mirror.compact_static_rel(file,converted,coverage,mirror.static_module_ids(
-        tuple(m for m in ROUTE_OVL_MODULES if m==source.stem.lower())))
+        tuple(m for m in ROUTE_OVL_MODULES+KNOB_STATIC_MODULES if m==source.stem.lower())))
     slot=mirror.native_payload_slot(converted)
     size,base=struct.unpack_from('<I4xI',converted,slot+4)
     body=converted[base:base+size]

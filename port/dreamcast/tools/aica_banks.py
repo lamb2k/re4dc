@@ -101,7 +101,7 @@ LOWER_ORDER = (8, 5, 1, 6, 2, 7, 0, 3)
 # r109). A room's second-slot track (BGM1, 0 bytes in the frozen layout) is replaced at runtime by a resident one
 # (snd.cpp, ROUTE_CH13). Only rooms of the planned route add entries. r104 and r107 both request
 # bank 9; it must also be prebuilt, otherwise runtime conversion exhausts the unreserved AICA bytes.
-ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r10a': [3], 'r10b': [3], 'r11b': [10], 'r11a': [10], 'r119': [3], 'r118': [11]}
+ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r10a': [3], 'r10b': [3], 'r11b': [10], 'r11a': [10], 'r119': [3], 'r118': [11], 'r117': [11]}
 
 # Leon's other stage-1 weapons (--weapons; stage.sh AICA_WEAPONS=1; issue lamb2k/re4dc#1, silent weapons). The GC
 # loads the equipped weapon's SE block (WEP, block 2) on every weapon change (weaponLoad -> its .drs) into the one WEP
@@ -161,6 +161,10 @@ ROOMS = {
     # Ganados; not on this route). bgmtbl: slot 0 = bio4midi #11, slot 1 = #9 (snd.cpp plays slot 1's requests on the
     # resident slot-0 track, as r108 / r10a), stream 0:0x17.
     'r118': ['st1/r118.dar', 'em/em22.drs'],
+    # r117 (route lane r117, the church interior, chapter 2-1's end): pl11 (Ashley, enemy module 3: R117Init reads her
+    # archive, SubCharInit after the s00 event) and em11 (the Ganados R117Init sets on a later visit, Part 0).
+    # bgmtbl: slot 0 = bio4midi #11 (as r118) in both entries (0 and the post-s10 entry 1), no slot 1, no stream.
+    'r117': ['st1/r117.dar', 'em/pl11.drs', 'em/em11.drs'],
     # r40b (St4, follow-up 7): em1f (bringup inventory: em1f/em1f, st4_0)
     'r40b': ['st4/r40b.dar', 'em/em1f.drs'],
 }

@@ -123,7 +123,17 @@ $(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 # r118 (route lane r118, the church; r119 door 0): no new module (its entry enemy em22 is r11b's overlay); slot 1's
 # BGM (bio4midi #9) plays on the resident slot-0 track, as r108 / r10a (src/game/snd.cpp).
 $(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
-ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o
+# r117 (route lane r117, the church interior, chapter 2-1's end; r118 door 4, key 0x3C): Ashley joins (SubCharInit
+# -> enemy module 3 = pl11.rel, module 47, cSubAshley), so pl11 is a fifth room overlay (pl11.ovl, linked after em2b;
+# it is re-read in every room she is in). em11 (module 13, the Ganados R117Init sets on a later visit) joins the
+# EM10_SHARED group (em11_set.cpp only; alone it would carry a second em10.cpp). s00 / s10 are presented by their PS2
+# movies (src/st1/r117.cpp); the chapter end (SceSetChapterEnd(CHAPTER_2_1, -1)) and its save run unchanged.
+MODULES += pl11:ovl em11
+# The CH21 stream file has 17 entries (r118's 0:23): the reader's table takes 32 (it refused the file at 16).
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_STR_ENT_MAX=32
+export RE4DC_LINK_OVERLAY += .ovl_pl11
+$(OBJDIR)/mod/st1_3/src/st1/r117.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
+ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o $(OBJDIR)/mod/st1_3/src/st1/r117.o
 endif
 endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
@@ -230,7 +240,11 @@ ifneq ($(EM1F_SHARED)$(WORLD_ROOM_MODULES)$(EM10_SHARED),111)
 $(error EM1F_SHARED must be 0 or 1, and 1 needs WORLD_ROOM_MODULES=1 and EM10_SHARED=1)
 endif
 endif
-EM10_GROUP = $(filter em12 em15 em13 em17 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
+ifeq ($(ROUTE_CH21)$(EM10_SHARED)$(WORLD_STAGE_MODULES),110)
+else ifeq ($(ROUTE_CH21),1)
+$(error ROUTE_CH21=1 needs EM10_SHARED=1 (em11 in the em10g group) and WORLD_STAGE_MODULES=0 (pl11 is a CH21 overlay))
+endif
+EM10_GROUP = $(filter em12 em15 em13 em17 em11 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(filter 1,$(EM10_SHARED)),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
 MODULE_OBJS =
 MODULES_MK = $(OBJDIR)/modules.mk
@@ -742,6 +756,11 @@ LINK_TIGHT ?= 0
 LINK_OVL_HELPERS ?= 0
 endif
 LINK_ENV = RE4DC_LINK_OVL_HELPERS=$(LINK_OVL_HELPERS)
+ifeq ($(ROUTE_CH21),1)
+# pl11 (Ashley, r117 on) reaches the DOL partner class cSubChar (32 KB of code the image otherwise drops): its code
+# moves with its vtable and the other read-only data only pl11 reaches (tools/ovl_helpers.py RE4DC_OVL_HELPERS_RO).
+LINK_ENV += RE4DC_OVL_HELPERS_RO=.ovl_pl11
+endif
 ifeq ($(LINK_TIGHT),1)
 LINK_KOS_SCRIPT = $(KOS_BASE)/utils/ldscripts/shlelf.xc
 ifeq ($(findstring -T$(LINK_KOS_SCRIPT),$(KOS_LDFLAGS)),)
@@ -846,7 +865,7 @@ ENEMY_DEMAND ?= 0
 # Direct-slot consumers reviewed for this module set. Audit any newly linked
 # module before enabling sparse enemy backing; census/reference remain usable.
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl wep01 wep07 wep09 wep11 wep13 wep19,$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19,$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif

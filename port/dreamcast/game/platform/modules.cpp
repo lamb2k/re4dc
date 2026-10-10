@@ -69,12 +69,16 @@ MODULE(em27)
 MODULE(em18)
 MODULE(em17)
 MODULE(em24)
+#if defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
+MODULE(em11)
+#endif
 #if !RE4DC_ROUTE_OVL
 MODULE(pl0f)
 MODULE(em2f)
 #if defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
 MODULE(em22)
 MODULE(em2b)
+MODULE(pl11)
 #endif
 #endif
 #endif
@@ -154,10 +158,13 @@ static const Re4dcModule g_modules[] = {
 #if RE4DC_ROUTE_OVL
     {5, "em22", 0, 0, 0, 0, 0, 0, 0},   // ROUTE_CH21: r11b: script-spawn (the shore wolves); overlay em22.ovl
     {30, "em2b", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH21: r119: enabled-later,script-spawn (El Gigante); overlay em2b.ovl
+    {47, "pl11", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH21: r117 on: Ashley (enemy module 3, cSubAshley); overlay pl11.ovl
 #else
     MODULE(5, em22),   // ROUTE_CH21: r11b: script-spawn (the shore wolves)
     MODULE(30, em2b),  // ROUTE_CH21: r119: enabled-later,script-spawn (El Gigante)
+    MODULE(47, pl11),  // ROUTE_CH21: r117 on: Ashley (enemy module 3, cSubAshley)
 #endif
+    MODULE(13, em11),  // ROUTE_CH21: r117: enabled-later (the Ganados of a later visit; em10g group)
 #endif
 #endif
 #if defined(RE4DC_WEAPON_MODULES) && RE4DC_WEAPON_MODULES
@@ -278,9 +285,9 @@ struct RouteOverlayHeader {
 constexpr u32 kRouteOverlayMagic = 0x4F344552;  // "RE4O"
 struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
 #if defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
-RouteOverlay g_route_ovl[4];  // 0 = pl0f, 1 = em2f, 2 = em22 (ROUTE_CH21: r11b), 3 = em2b (r119)
-#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : 3)
-#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30)
+RouteOverlay g_route_ovl[5];  // 0 = pl0f, 1 = em2f, 2 = em22 (ROUTE_CH21: r11b), 3 = em2b (r119), 4 = pl11 (r117 on)
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : 4)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47)
 #else
 RouteOverlay g_route_ovl[2];  // 0 = pl0f, 1 = em2f
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : 1)

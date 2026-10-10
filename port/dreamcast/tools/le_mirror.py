@@ -2454,7 +2454,8 @@ def static_module_ids(extra=()):
         raise ValueError('not a knob-conditional MODULES entry: ' + ', '.join(sorted(set(extra) - conditional)))
     if set(extra) - {n for _, n in bindings}:
         raise ValueError('no registry row for: ' + ', '.join(sorted(set(extra) - {n for _, n in bindings})))
-    bindings = [(i, n) for i, n in bindings if n not in conditional or n in extra]
+    # A module may have rows under mutually exclusive #if blocks (pl11: WORLD_STAGE_MODULES, ROUTE_CH21): one binding.
+    bindings = list(dict.fromkeys((i, n) for i, n in bindings if n not in conditional or n in extra))
     selected = re.search(r'^MODULES = (.*)$', makefile, re.M)
     if not bindings or selected is None or set(selected[1].split()) | set(extra) != {n for _, n in bindings}:
         raise ValueError('static module registry and Makefile disagree')
