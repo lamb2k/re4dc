@@ -710,9 +710,51 @@ include $(MODULES_MK)
 # of a GD-ROM (a GDI on GDEMU, tools/d367/mkgdi.sh). CD-R images are unaffected.
 GAME_LDFLAGS += -Wl,--wrap=cdrom_read_toc
 
+# LINK_TIGHT=1 (default 1 with ROUTE_CH21=1, else 0: no effect): link with a copy of KOS's shlelf.xc without its ten
+# empty icache-aligned .sub0...sub9 sections. Nothing in the image uses them, but their ALIGN(0x2000) still moves
+# .init and everything after it (rodata, data, bss, so _end and the KOS heap) to the next 8 KiB boundary: 0..8 KiB
+# of padding, and a jump of 8 KiB whenever .text crosses a boundary (the r119 lane's s30 heap_before cliff). With
+# the padding gone, image growth costs heap linearly.
+# LINK_OVL_HELPERS=1 (default 1 with ROUTE_CH21=1, else 0: no effect): image code that only one room overlay
+# (ROUTE_OVL: pl0f, em2f, em22, em2b) reaches moves into that overlay (tools/link.sh, tools/ovl_helpers.py: the
+# .text sections a link without that overlay drops); obj/ovlh/moves.tsv lists them. The sub screen overlay is
+# left alone.
+ifeq ($(ROUTE_CH21),1)
+LINK_TIGHT ?= 1
+LINK_OVL_HELPERS ?= 1
+else
+LINK_TIGHT ?= 0
+LINK_OVL_HELPERS ?= 0
+endif
+LINK_ENV = RE4DC_LINK_OVL_HELPERS=$(LINK_OVL_HELPERS)
+ifeq ($(LINK_TIGHT),1)
+LINK_KOS_SCRIPT = $(KOS_BASE)/utils/ldscripts/shlelf.xc
+ifeq ($(findstring -T$(LINK_KOS_SCRIPT),$(KOS_LDFLAGS)),)
+$(error LINK_TIGHT=1: KOS_LDFLAGS does not name -T$(LINK_KOS_SCRIPT))
+endif
+$(OBJDIR)/shlelf-tight.ld: $(LINK_KOS_SCRIPT) Makefile
+	@mkdir -p $(dir $@)
+	awk '/Custom sections, aligned to the icache size/{skip=1} !skip{print} skip && /sub9 is bigger than icache size/{skip=0}' $< > $@.tmp
+	@! grep -q 'sub[0-9]\|ICACHE_SIZE)' $@.tmp && grep -q '^  \.init' $@.tmp || { echo 'LINK_TIGHT: unexpected shlelf.xc layout' >&2; exit 1; }
+	mv $@.tmp $@
+$(TARGET): $(OBJDIR)/shlelf-tight.ld
+LINK_ENV += KOS_LDFLAGS='$(subst -T$(LINK_KOS_SCRIPT),-T$(abspath $(OBJDIR))/shlelf-tight.ld,$(KOS_LDFLAGS))'
+endif
+# MOVIE_FENCE_RETRY=1 (timing only; default 1 with ROUTE_CH21=1, else 0: no effect): a route movie retries a
+# not-ready render fence (up to 3 more times, logged) before a picture upload instead of failing the movie. One
+# LINK_TIGHT image layout ended r119 s30 at its first picture that way (terminal=3, uploaded=0).
+ifeq ($(ROUTE_CH21),1)
+MOVIE_FENCE_RETRY ?= 1
+else
+MOVIE_FENCE_RETRY ?= 0
+endif
+ifeq ($(MOVIE_FENCE_RETRY),1)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_FENCE_RETRY=1
+endif
+
 $(TARGET): $(KOS_BASE)/lib/$(KOS_ARCH)/libkallisti.a $(OBJS) $(GAME30_LINK_INPUTS) tools/link.sh tools/gen_aliases.py tools/gen_missing.py platform/aliases-manual.ld
 	@if [ "$(PVR_STREAM)" = 1 ]; then test "$$($(KOS_CC_BASE)/bin/$(KOS_CC_PREFIX)-nm -g --defined-only $(KOS_BASE)/lib/$(KOS_ARCH)/libkallisti.a | grep -Ec ' T _pvr_(set_manual_flip|resolve_frame)$$')" -eq 2 || { echo 'PVR_STREAM requires the pinned manual-flip KOS patch' >&2; exit 1; }; fi
-	GAME_LDFLAGS='$(GAME_LDFLAGS)' bash tools/link.sh $(TARGET) "$(GAME_OPT)" $(OBJS) $(GAME30_LINK_INPUTS)
+	$(LINK_ENV) GAME_LDFLAGS='$(GAME_LDFLAGS)' bash tools/link.sh $(TARGET) "$(GAME_OPT)" $(OBJS) $(GAME30_LINK_INPUTS)
 
 # Undefined-symbol inventory over every gameplay unit, REL modules included.
 census: $(CENSUS_OBJS) $(PLATFORM_OBJS) $(SDK_OBJS)

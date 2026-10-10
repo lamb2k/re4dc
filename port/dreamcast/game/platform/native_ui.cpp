@@ -5044,7 +5044,18 @@ extern "C" int re4dc_ui_movie_upload_begin(){
 #if RE4DC_PVR_PIPELINE
     present_fence();
 #endif
+#if RE4DC_MOVIE_FENCE_RETRY
+    // A not-ready fence on the first picture ended r119 s30 (terminal=3, uploaded=0) in one image
+    // layout (r118 lane, 2026-10-10): retry before failing the movie. Timing only.
+    for(int attempt=0;;++attempt){
+        const auto qr=re4dc::gpu::quiesce();
+        if(qr==re4dc::gpu::FenceResult::ready)return 1;
+        re4dc_log("route movie upload fence: result=%d attempt=%d\n",(int)qr,attempt);
+        if(attempt>=3)return 0;
+    }
+#else
     return re4dc::gpu::quiesce()==re4dc::gpu::FenceResult::ready;
+#endif
 }
 // movie_width active UYVY pixels per 1024-byte texture row; padding is never sampled.
 extern "C" void re4dc_ui_movie_upload_rows(const void* uyvy,unsigned y,unsigned rows){

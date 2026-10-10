@@ -1,5 +1,12 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-10: LINK_TIGHT + LINK_OVL_HELPERS, heap margin for CH21 (lane r118)
+
+- Link-only, default 1 with ROUTE_CH21 (route doc "LINK_TIGHT"): the KOS script's empty icache-aligned .sub0..9
+  padding is gone and single-overlay helpers move into their room overlay. Trace `_end` -9.4 KB, play -12.3 KB;
+  s30 heap_before 57,504 -> 65,696. MOVIE_FENCE_RETRY (timing only) keeps a not-ready fence from ending a movie.
+  H2 + bell STRICT, MUST-IDENTICAL; New Game, r10b, r11b, r11a, r119 play through.
+
 ## 2026-10-10: r119, El Gigante (ROUTE_CH21, lane r119)
 
 - r119 plays from r11a door 0 through s00 / s10 / s20 / s30 (PS2 movies) to the giant's death; exits to r118 / r10e

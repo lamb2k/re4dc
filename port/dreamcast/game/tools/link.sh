@@ -27,6 +27,9 @@ python3 tools/gen_aliases.py obj/undefined.txt obj/nm-pairs.txt obj/aliases.ld
 OVL=${RE4DC_LINK_OVERLAY:-}
 OVL_DIR=$(dirname "$TARGET")
 rm -f "$OVL_DIR"/*.ovl
+# RE4DC_LINK_OVL_HELPERS=1 (Makefile LINK_OVL_HELPERS): image code that only one room overlay reaches moves into
+# that overlay (tools/ovl_helpers.py, below); the overlay's output section also keeps <section>.h*.
+HELPERS=${RE4DC_LINK_OVL_HELPERS:-0}
 # ovl_script <file> [<index shifted by 1 MiB>]
 ovl_script() {
     printf 'SECTIONS {\n' > "$1"
@@ -34,7 +37,11 @@ ovl_script() {
     for s in $OVL; do
         local at=$((0x8E000000 + i * 0x400000))
         [ "${2:-}" = "$i" ] && at=$((at + 0x100000))
-        printf '  %s 0x%X : { KEEP(*(%s)) }\n' "$s" $at "$s" >> "$1"
+        if [ "$HELPERS" = 1 ]; then
+            printf '  %s 0x%X : { KEEP(*(%s)) KEEP(*(%s.h*)) }\n' "$s" $at "$s" "$s" >> "$1"
+        else
+            printf '  %s 0x%X : { KEEP(*(%s)) }\n' "$s" $at "$s" >> "$1"
+        fi
         i=$((i + 1))
     done
     printf '}\nINSERT AFTER .ocram;\n' >> "$1"
@@ -65,6 +72,23 @@ if grep -qx '_re4dc_trans_ss_guard' obj/defined.txt && grep -qx '_re4dc_ss_ui_or
 fi
 python3 tools/gen_missing.py obj/missing.txt obj/missing.cpp
 kos-c++ $KOS_CFLAGS $OPT -Iplatform/include -c obj/missing.cpp -o obj/missing.o
+if [ "$HELPERS" = 1 ] && [ -n "$OVL" ]; then
+    # Room overlays only (not the sub screen's .ovl_Sscrn, which lives on its own schedule): per overlay, the same
+    # link with that overlay discarded; the .text sections it alone reached move into it. gen_overlay.py below still
+    # proves every overlay relocatable and unreferenced by the image.
+    H=obj/ovlh
+    rm -rf $H; mkdir -p $H
+    kos-c++ $OPT ${GAME_LDFLAGS:-} $OVL_LD -Wl,--print-gc-sections -o $H/x.elf $OBJS obj/missing.o obj/aliases-all.ld 2> $H/base.gc
+    ROOM_OVL=
+    for s in $OVL; do
+        [ "$s" = .ovl_Sscrn ] && continue
+        ROOM_OVL="$ROOM_OVL $s"
+        { echo 'SECTIONS {'; echo "  /DISCARD/ : { *($s) }"; grep -v "^  $s " obj/overlay-a.ld | grep -v '^SECTIONS'; } > $H/discard.ld
+        kos-c++ $OPT ${GAME_LDFLAGS:-} -Wl,-T,$H/discard.ld -Wl,--print-gc-sections -o $H/x.elf $OBJS obj/missing.o obj/aliases-all.ld 2> $H/$s.gc
+    done
+    rm -f $H/x.elf
+    OBJS=$(printf '%s\n' $OBJS | python3 tools/ovl_helpers.py $H $ROOM_OVL)
+fi
 kos-c++ $OPT ${GAME_LDFLAGS:-} $OVL_LD -o $TARGET $OBJS obj/missing.o obj/aliases-all.ld
 if [ -n "$OVL" ]; then
     # Per overlay, a second link with only that overlay 1 MiB higher: gen_overlay.py takes every

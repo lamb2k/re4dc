@@ -1,5 +1,11 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: LINK_TIGHT, LINK_OVL_HELPERS, MOVIE_FENCE_RETRY (ROUTE_CH21 block)
+
+No new flag or staged file: ROUTE_CH21=1 now links without the KOS .sub padding, moves single-overlay helpers into
+dc/pl0f / em2f / em2b .ovl (stage the overlays from the same build: they grew), and retries a not-ready movie fence.
+Check: build.log prints "ovl_helpers: 31 sections"; s30 heap_before >= 57,504.
+
 ## 2026-10-10: WATER45_NATIVE (r10b lake water, play recipe)
 
 No new flag: ROUTE_CH13=1 now also brings **WATER45_NATIVE=1** (the lake surface drawn natively, the PS2's r10b

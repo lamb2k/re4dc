@@ -747,6 +747,34 @@ D:/Flycast-Evidence/re4-dreamcast/lake-20261010.
   39.62 vs 69.18 drawn with 17.97 of it PACE/WAIT. Screens: route-lk-f6v21b (before) vs route-lk-f6v32 (after)
   t0082 (dock) and t0145 (from the boat).
 
+## Progress 2026-10-10 (LINK_TIGHT + LINK_OVL_HELPERS: heap margin for the CH21 images, lane r118)
+
+The CH21 trace image was page-tight: s30 heap_before sat exactly at the control (57,504), and any image growth risked
+the r100 s30 movie cliff. Two link-only knobs, default 1 in the ROUTE_CH21 block (no effect elsewhere):
+- **LINK_TIGHT.** KOS shlelf.xc has ten empty .sub0..9 sections, each `ALIGN(0x2000)`, so .init and everything after
+  it (rodata, data, bss, `_end`, the KOS heap) moves to the next 8 KiB boundary: 0..8 KiB of padding, and an 8 KiB
+  jump whenever .text crosses one. The Makefile links with a copy of the script without that block
+  (`$(OBJDIR)/shlelf-tight.ld`, awk; the rule fails if the KOS layout changes).
+- **LINK_OVL_HELPERS.** Image code that only one room overlay reaches moves into that overlay: tools/link.sh links
+  once per overlay with that overlay discarded (`--print-gc-sections`), tools/ovl_helpers.py renames the .text
+  sections that only the discard link drops into `<ovl>.h<n>` (COMDAT members skipped) and the overlay scripts KEEP
+  them; obj/ovlh/moves.tsv lists them. 31 sections, 4,724 B (pl0f 43,060 -> 45,576, em2f 16,472 -> 16,800, em2b
+  66,064 -> 68,140, em22 unchanged). The sub screen overlay is left alone (19.7 KB of Sscrn-only code; lifetime risk).
+- **MOVIE_FENCE_RETRY** (timing only, same block): a route movie retries a not-ready render fence before a picture
+  upload (up to 3 more times, logged as "route movie upload fence"). One intermediate image layout ended r119 s30 at
+  its first picture (terminal=3, uploaded=0, `re4dc_ui_movie_upload_begin` false) deterministically; the cause is
+  layout/timing dependent (two other layouts play it 140/140) and was not reproduced again.
+- **`_end`.** Trace 8c3ebb7c -> 8c3e9adc (final image, all three r118-lane changes), play 8c3e233c -> 8c3df73c, cost
+  8c3e993c -> 8c3e85bc. Trace arena slack ("left to KOS" - 147,520) 1,160 -> 2,376 B; s30 heap_before 57,504 ->
+  65,696 (+8,192).
+- **Gates (final image l4, bc2593cd + this + ACTOR_EXACT_FAST + r118).** Knob-off identity: default recipe and play
+  flags without ROUTE_CH21 differ from bc2593cd in the time stamp only (3 / 4 bytes), overlays equal; missing.txt
+  empty; MISALIGN 0, HALT 0. H2 (480 s) STRICT 1450..1569, 0..740, 1218..; room DISCRETE with om at 741 as before;
+  MUST-IDENTICAL (6986 ticks); s30 340/340 heap_before 65,696 >= 57,504. Bell (300 s) STRICT frame + room 0101,
+  MUST-IDENTICAL (sq info only). New Game: 12000 1971/1971, 12001 2360/2360, s40 1175/1175. r10b f6 -> QTE -> save
+  -> r11b s00 1484/1484 (same QTE outcome as the control). r119 g3: s00 / s10 / s30 / s20 all terminal=1 (s30
+  140/140). r11a -> r11b.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land
