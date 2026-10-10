@@ -173,7 +173,11 @@ def hair_runs(mesh, native, bb, today):
     for i, r in enumerate(rows):
         out.append('{run%d,sizeof(run%d),%d,%d,%d},\n' % (i, i, r['triangles'], r['material'], r['asset_id']))
     pal = len({struct.unpack_from('<3hH', (native / 'info7.pos').read_bytes(), 8 * k)[3] for k in range(len((native / 'info7.pos').read_bytes()) // 8)})
-    out.append('};\nstatic constexpr unsigned role=7,palette_count=%d,run_count=%d;\n}\n' % (pal, len(rows)))
+    # material_mask: bit k = hair material k drawn by a run; the owner plans declare only those materials (the
+    # transaction refuses a declared material no run draws). A single-material arm must use material 1.
+    mask = sum(1 << m for m in {r['material'] for r in rows})
+    assert mask in (2, 6), 'hair runs must use material 1, or materials 1 and 2 (mask %#x)' % mask
+    out.append('};\nstatic constexpr unsigned role=7,palette_count=%d,run_count=%d,material_mask=%d;\n}\n' % (pal, len(rows), mask))
     return ''.join(out), dict(uv_entries=len(uvs), flags=flags, runs=rows, tris=tris, uvs=uvs)
 
 

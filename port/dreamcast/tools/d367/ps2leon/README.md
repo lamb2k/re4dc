@@ -74,6 +74,11 @@ blender -b --factory-startup --python bl_render.py -- $WORK/renders-job.json
 python make_sheet.py                  # $WORK/sheet-ingame.png, $WORK/sheet-shape.png
 ```
 
+In-game stills: `tools/d367/look/look.sh <column>` with `ARM=<route-build label>` (or the knobs, to build),
+`SHOTS="r100start r101F"`, `GALLERY=$WORK/gallery`, `NOSHEET=1` (one Flycast at a time, discs deleted), then
+`python make_dc_sheet.py $WORK/gallery <look gallery dir> $WORK/sheet-dc.png` (columns today / A / B beside the
+GameCube frames, with the Leon close-up crops of shots.json).
+
 B's targets are in `mk_job_b.py` (per role and part). B's hair takes 1,108 triangles; its weights are rounded to
 1/256 (`snap_weights.py`, 216 palettes, at most 0.054 mm in the captured pose) so the hair chunk's workspace stays
 within today's.
@@ -83,17 +88,29 @@ within today's.
 - `pack_arm.py --today` reproduces the play bundle: every array byte-equal except role 7's chunk blob i7_gx (same
   size and header, 108 bytes of one meshlet in another order; the owner path does not draw it, role 7 draws the hair
   runs), and the skeleton, chunk table, weights and hair runs equal.
-- `preflight.py`: PASS for A and B (array limits, palettes <= 256, weights, strips <= 64 indices, meshlets).
+- `preflight.py`: PASS for A and B (array limits, palettes <= 256, weights, strips <= 64 indices, meshlets, and
+  the hair material_mask against the runs).
 - Knob-off identity: PS2_LEON=0 builds equal their base commit byte for byte (play knobs and the default recipe).
 - Both arms compile and link with no missing symbols (route-build.sh, the look gallery's play knobs).
+- In game (Flycast stills r100start / r101F, hw model r101 fight): both arms draw on the owner path (the run log's
+  `COARSE_LEON skin ... entries=` line, "leon pass 1 / 2" in the hw actor table).
 
-Not done here (tester): hw ms, the STRICT logic traces (H2, bell), the s30 heap gate, New Game, the pl08 rooms,
-in-game captures of every view.
+Arm A's hair uses one material (hair colour 0, as the PS2 draws it). The transaction refuses a plan whose declared
+materials are not all drawn by a run (coarse_actor_transaction.inc, 26), so under PS2_LEON the Leon and pl08 plans
+declare the atlas plus the hair materials of the header's `material_mask` (A 0x2, B 0x6; pack_arm.py writes it).
+Without that A falls back to the source path, which draws the GameCube model: check for the skin line before
+judging a still or a cost.
+
+Not done here (tester): hw ms of the other views, Flycast frame times, the STRICT logic traces (H2, bell), the s30
+heap gate, New Game, the pl08 rooms, the console.
 
 ## Notes
 
 - pl08 rooms (ACTOR_PL08): pl08 draws its own roles 0, 1 and 8 (body, jacket, role 8) and the arm's roles 2..7
   (knife, face, head, hands, hair); the plan constants cover both. Look for seams at the neck and wrists there.
 - `PS2_LEON` needs `CHARBAKE_HAIR=0` (the arms bring their own hair runs) and `LEON_NATIVE_PIPE=0`.
+- The hair runs are built as CHARBAKE_HAIR's (one restripified run per material). CHARBAKE_HAIR stays off in the
+  play recipe because the console showed dark notched triangles on Leon's hair with it (02567f84; Flycast does not
+  show them). Check the arms' hair on a console before judging them.
 - A runtime switch between Leons is not built: every mesh compiled in costs about 235 KB of character data, and the
   owner path's immutable asset IDs cannot be rebound (a switch needs new ID ranges per arm). Build one disc per arm.

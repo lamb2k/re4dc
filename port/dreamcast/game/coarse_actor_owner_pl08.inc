@@ -86,9 +86,9 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
 #else
     if(p.palette_bytes!=26144 || p.workspace_bytes!=26112)return 0;
 #endif
-    p.material_count=3;
+    p.material_count=1+RE4DC_LEON_HAIR_MATERIALS;  // PS2_LEON: only the hair materials the arm's runs draw
     p.materials[0].image=pl08_image;p.materials[0].crc=pl08_crc;p.materials[0].fnv=pl08_fnv;
-    for(unsigned i=0;i<2;++i) {
+    for(unsigned i=0;i<RE4DC_LEON_HAIR_MATERIALS;++i) {
         auto& mat=p.materials[i+1];mat.image=hair_colours[i];mat.mask=hair_mask;
         mat.crc=hair_pair_crc[i];mat.fnv=hair_pair_fnv[i];
         // pl08's hair is pl00's BIN9 with pl00's TPL7 (byte-identical): the pl00 owner's hair materials, unchanged.

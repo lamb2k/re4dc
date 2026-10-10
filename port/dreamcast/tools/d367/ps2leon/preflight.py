@@ -114,14 +114,25 @@ def check(runtime, hair):
         ok &= r.startswith('None')
         print('  chunk %d: tris %4d pos %4d nrm %4d pal %3d stream %5d -> %s' % (info, ntri, npos, nnrm, npal, sb, r))
     p, npos, nnrm, npal, _ = chunks[7]
+    used = set()
     for m in RUN.finditer(ht):
         i, ntri, mat, aid = map(int, m.groups())
+        used.add(mat)
         r = preflight(A[p + '_pos'], A[p + '_nrm'], H['uv'], H['run%d' % i], W[p], npos, nnrm, npal, ntri)
         ok &= r.startswith('None')
         print('  hair run %d: material %d asset %d tris %4d -> %s' % (i, mat, aid, ntri, r))
     pal = re.search(r'palette_count=(\d+)', ht)
     print('  hair header palette_count %s, chunk 7 palettes %d: %s' % (pal.group(1), npal, 'OK' if int(pal.group(1)) == npal else 'MISMATCH'))
     ok &= int(pal.group(1)) == npal
+    # The transaction (coarse_actor_transaction.inc) refuses a plan whose declared materials are not all drawn by a
+    # run: the PS2_LEON plans declare the atlas + the hair materials of material_mask, which must match the runs.
+    mm = re.search(r'material_mask=(\d+)', ht)
+    if mm is not None or '--bundle' not in sys.argv:
+        mask = int(mm.group(1)) if mm else -1
+        want = sum(1 << k for k in used)
+        good = mask == want and mask in (2, 6)
+        print('  hair material_mask %s, runs draw materials %s: %s' % (mask, sorted(used), 'OK' if good else 'MISMATCH'))
+        ok &= good
     print('PREFLIGHT', 'PASS' if ok else 'FAIL')
     return ok
 

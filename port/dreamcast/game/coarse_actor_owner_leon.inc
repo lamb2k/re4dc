@@ -9,6 +9,11 @@
 // pack_arm.py, restripified as CHARBAKE_HAIR's runs), the leon_hair_runs.h API; its palette_count is chunk 7's.
 #include "ps2leon_hair_runs.h"
 #define RE4DC_LEON_HAIR_PALETTES leon_hair_runs::palette_count
+// The plans declare only the hair materials the runs draw (the transaction refuses a declared material no run uses):
+// A draws all its hair with hair colour 0 (material 1, as the PS2 does), B with both colours (materials 1 and 2).
+static_assert(leon_hair_runs::material_mask==2u || leon_hair_runs::material_mask==6u,
+              "PS2_LEON hair runs must use material 1, or materials 1 and 2");
+#define RE4DC_LEON_HAIR_MATERIALS (leon_hair_runs::material_mask==6u?2u:1u)
 #elif RE4DC_CHARBAKE_HAIR
 #include "leon_hair_runs_g2.h" // charbake.mk CHARBAKE_HAIR: the same hair, one run per material (cb_hair.py)
 #else
@@ -16,6 +21,9 @@
 #endif
 #ifndef RE4DC_LEON_HAIR_PALETTES
 #define RE4DC_LEON_HAIR_PALETTES 229
+#endif
+#ifndef RE4DC_LEON_HAIR_MATERIALS
+#define RE4DC_LEON_HAIR_MATERIALS 2
 #endif
 #include "warp_late.h"
 #if !RE4DC_COARSE_SOURCE_ACTORS || !RE4DC_COARSE_ONE_SUBMIT || RE4DC_COARSE_SKIN_FTRV != 1 || !RE4DC_NATIVE_ACTOR_FAST
@@ -132,9 +140,9 @@ extern "C" int re4dc_actor_plan_leon(cModel* m,Re4dcActorPlan* out) {
 #else
     if(p.palette_bytes!=32000 || p.workspace_bytes!=26112)return 0;
 #endif
-    p.material_count=3;
+    p.material_count=1+RE4DC_LEON_HAIR_MATERIALS;
     p.materials[0].image=image;p.materials[0].crc=crc;p.materials[0].fnv=fnv;
-    for(unsigned i=0;i<2;++i) {
+    for(unsigned i=0;i<RE4DC_LEON_HAIR_MATERIALS;++i) {
         auto& mat=p.materials[i+1];mat.image=hair_colours[i];mat.mask=hair_mask;
         mat.crc=hair_pair_crc[i];mat.fnv=hair_pair_fnv[i];
         // Source attr04: alpha>0, SRC_ALPHA/INV_SRC_ALPHA, LEQUAL/write,
@@ -172,10 +180,10 @@ extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p
     const bool pl08=p && p->appearance==0x108;
     if(!p || (pl08?(p->count!=9 || p->run_count!=8+kHair || p->runs[7+kHair].role!=8 || p->runs[7+kHair].material ||
                     p->runs[7+kHair].triangles!=p->input[8].triangles || p->runs[7+kHair].stream.data!=p->input[8].stream.data):
-                   (p->appearance!=0x100 || p->count!=8 || p->run_count!=7+kHair)) || p->material_count!=3 ||
+                   (p->appearance!=0x100 || p->count!=8 || p->run_count!=7+kHair)) || p->material_count!=1+RE4DC_LEON_HAIR_MATERIALS ||
        p->input[7].palette_count!=RE4DC_LEON_HAIR_PALETTES || p->immutable_asset_id[7]!=8 || !p->info[7] || !(p->info[7]->be_flag&0x40))return 0;
 #else
-    if(!p || p->appearance!=0x100 || p->count!=8 || p->material_count!=3 || p->run_count!=7+kHair ||
+    if(!p || p->appearance!=0x100 || p->count!=8 || p->material_count!=1+RE4DC_LEON_HAIR_MATERIALS || p->run_count!=7+kHair ||
        p->input[7].palette_count!=RE4DC_LEON_HAIR_PALETTES || p->immutable_asset_id[7]!=8 || !p->info[7] || !(p->info[7]->be_flag&0x40))return 0;
 #endif
     for(unsigned k=0;k<kHair;++k) {
@@ -183,7 +191,7 @@ extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p
         if(r.role!=7 || r.material!=want.material || r.immutable_asset_id!=29+k || r.triangles!=want.triangles ||
            r.uv.data!=leon_hair_runs::uv || r.uv.size!=sizeof(leon_hair_runs::uv) || r.stream.data!=want.stream || r.stream.size!=want.bytes)return 0;
     }
-    for(unsigned k=0;k<2;++k) {
+    for(unsigned k=0;k<RE4DC_LEON_HAIR_MATERIALS;++k) {
         const auto& m=p->materials[k+1];
         if(m.image.pixels!=hair_colours[k].pixels || m.mask.pixels!=hair_mask.pixels || m.crc!=hair_pair_crc[k] || m.fnv!=hair_pair_fnv[k] ||
            m.image.width!=64 || m.image.height!=128 || m.image.format!=14 || m.mask.width!=64 || m.mask.height!=128 || m.mask.format!=0 ||

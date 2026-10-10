@@ -2,7 +2,8 @@
 # PS2_LEON defaults to 0 and then contributes nothing (identical image).
 #   PS2_LEON=1  arm A: the full PS2 Leon (pl00 / wep02 from the PS2 disc at the GC roles' arcs): 5,155 triangles (the
 #               5,167 stored minus 12 zero-area strip joints), 3,115 positions, 8 owner draw runs (one hair run: the
-#               PS2 draws all hair with one colour image), 298 palette matrices.
+#               PS2 draws all hair with one colour image, so the plans declare two materials, not three: the header's
+#               material_mask), 298 palette matrices.
 #   PS2_LEON=2  arm B: the PS2 Leon's budget redistributed (legs 924 -> 299; head/hair +420, back/shoulders +140,
 #               arms +60), every part reduced from the GameCube sections with the cl lane's Blender pipeline: 5,162
 #               triangles, 3,368 positions, 9 owner draw runs, 615 palette matrices.
