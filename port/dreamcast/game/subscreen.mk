@@ -79,7 +79,7 @@ SUBSCREEN_TA_SWITCH = 1
 endif
 ifeq ($(SUBSCREEN_OVL),1)
 MODULES += Sscrn:ovl
-export RE4DC_LINK_OVERLAY = .ovl_Sscrn
+export RE4DC_LINK_OVERLAY += .ovl_Sscrn
 else
 MODULES += Sscrn
 endif

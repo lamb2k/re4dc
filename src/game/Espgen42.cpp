@@ -164,6 +164,11 @@ static inline void AddWaterPowerCore45(EspgenWork* w, Vec v)
     u32 z;
     u32 idx;
     int i;
+#if defined(RE4DC_WATER45_GRID_SKIP) && RE4DC_WATER45_GRID_SKIP
+    if (p->hA == NULL) {
+        return;   // espgen45 without its grid (ROUTE_CH13 r10b): splashes have no height field to push
+    }
+#endif
 
     PSMTXMultVec(p->inv, &v, &v);
     if (v.x < (f32) (-p->nx / 2)) {

@@ -183,6 +183,9 @@ loads every texture package from one file (room entry 7.2 -> 3.1 s, east walk 6.
 - r21y (564f5168; route doc "r21y"): r21x + the camera fix (cCamera destructors memset(this, 9, 0x200) and four
   end* paths left `extra` set -> the next `delete extra` faulted on the console at the r100 window jump; Flycast resets
   silently: treat "log head decreased: reset" as a possible console fault) + the VMU CPU line as %. Released play-r21y-camera-fix-20261004 (the only release page now).
+- r10b (2026-10-10, route doc "r10b", ROUTE_CH13): chapter 1-3 ends at r10b; pl0f / em2f are heap-4 room overlays
+  (ROUTE_OVL: tools/link.sh multi-overlay, platform/modules.cpp loader); play discs must stage dc/pl0f.ovl +
+  dc/em2f.ovl (checklist 2026-10-10).
 - Chapter 1-3 (c4ec84e9; route doc "chapter 1-3"): ROUTE_CH13=1, default off; resident-track music in r108/r10a;
   "Coming Soon" at doors into rooms not on the disc. Test disc r21z-c13 awaits the user's console play.
 - User 2026-10-04 "Pursue All": logic speed-ups are unparked (exact, STRICT), alongside the drawing lanes, cheaper

@@ -1,5 +1,29 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: r10b (chapter 1-3's end) play disc staging recipe (not built, not released)
+
+Play ELF = route-build.sh with the 2026-10-09 test-build flags plus `PRIM_CAP_R10B=327680` (DBG_WARP=0
+PC_SAMPLER=0 PACE_DEBUG=1 ROUTE_CH13=1 ACT_CAP=0 PS2_INTERIOR_ACTORS=2 GAME_ATLIST_OVERFLOW=1 GAME_ATLIST_512=1
+LEON_NATIVE_PIPE=0 LEON_FACE_LAZY=0 NATIVE_LASER=1 ACTOR_GANADO_SOURCE_LIGHT=0 PRIM_CAP_R10B=327680). ROUTE_CH13=1
+brings ROUTE_OVL=1, WATER45_GRID_SKIP=1 and the em27 slot fix by default. The build writes **three overlays next to
+the ELF: sscrn.ovl, pl0f.ovl, em2f.ovl.** Never stage the warp test aid (r10b-warp-testaid.patch) into a play image.
+
+Disc = the 2026-10-09 test disc contents (631cb271 fixture + tex pak d87983e1 + the audio overlay) plus r10b
+(lane r10b tools/mkfix.py `base`):
+- st1/r10b.arc + r10b.dar, em/pl0f.drs (rel-stripped: le_mirror --compact-static-rel=pl0f), em/em2f.drs,
+  bgm/aica_str.dat with stream 0:4 (the boss), the r10b PS2 world (dc/native/r10b/ps2-world.*), MAINSCENARIO.re4mesh,
+  the six r10b movies (r10bs00/s10/s20/s20c/s21/s22), r10b textures in the pack;
+- **dc/pl0f.ovl and dc/em2f.ovl from the same build** (lane tools/addovl.py adds them to a fixture; stage-scenario.py
+  places only 1ST_READ.BIN and dc/sscrn.ovl itself). Without them entering r10b stops in "route overlay missing";
+- removals (never read by the play route; D:/Flycast-Evidence/re4-dreamcast/r10b-20261009/disc-audit.json): em/em10,
+  em11, em1f, em20, em22, em25, em2b, em2c, em2d .drs; st1/r100, r101, r103, r120 .das; st1/r120.dar + .arc;
+  le_mirror_report.json. Payload 990,220,914 B against the GD's 1,032,499,200 B.
+- no dc/warp.txt, no dc/padscript.txt.
+Checks before the SD card: pack keys and file list against the 10-09 disc (only the r10b files, the overlays and
+1ST_READ.BIN differ; the removals above are gone); boot the real disc in Flycast to the VMU prompt; New Game intros
+1971 / 2360; the r10a -> r10b door, boarding, the QTE, "Coming Soon". Next disc-space lever: bio4bgm / bio4evt.sbb
+(332 MB of old sound reads; stub them later).
+
 ## 2026-10-09: test build for issues 9 and 15
 
 Play ELF = route-build.sh with the 631cb271 flags (DBG_WARP=0 PC_SAMPLER=0

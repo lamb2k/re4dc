@@ -20,20 +20,28 @@ sh-elf-c++filt < obj/defined.txt > obj/defined-dem.txt
 paste obj/defined.txt obj/defined-dem.txt > obj/nm-pairs.txt
 sh-elf-nm $OBJS 2>/dev/null | grep -E " U " | awk '{print $2}' | sort -u | comm -23 - obj/defined.txt > obj/undefined.txt
 python3 tools/gen_aliases.py obj/undefined.txt obj/nm-pairs.txt obj/aliases.ld
-# RE4DC_LINK_OVERLAY=.ovl_<mod> (subscreen.mk SUBSCREEN_OVL=1): that section is placed outside
-# RAM (after .ocram, so _end and the arena do not move), kept whole (--gc-sections would drop it:
-# the image no longer references it), and turned into <dir of target>/<mod>.ovl below.
+# RE4DC_LINK_OVERLAY=".ovl_<mod> ..." (subscreen.mk SUBSCREEN_OVL=1: .ovl_Sscrn; Makefile ROUTE_OVL=1:
+# .ovl_pl0f .ovl_em2f): each section is placed outside RAM (after .ocram, so _end and the arena do
+# not move), kept whole (--gc-sections would drop it: the image no longer references it), and
+# turned into <dir of target>/<mod lower case>.ovl below. Overlay i links at 0x8E000000 + i * 4 MiB.
 OVL=${RE4DC_LINK_OVERLAY:-}
-OVL_OUT=$(dirname "$TARGET")/sscrn.ovl
-rm -f "$OVL_OUT"
-OVL_A=0x8E000000; OVL_B=0x8E100000
+OVL_DIR=$(dirname "$TARGET")
+rm -f "$OVL_DIR"/*.ovl
+# ovl_script <file> [<index shifted by 1 MiB>]
 ovl_script() {
-    printf 'SECTIONS {\n  %s %s : { KEEP(*(%s)) }\n}\nINSERT AFTER .ocram;\n' "$OVL" "$2" "$OVL" > "$1"
+    printf 'SECTIONS {\n' > "$1"
+    local i=0 s
+    for s in $OVL; do
+        local at=$((0x8E000000 + i * 0x400000))
+        [ "${2:-}" = "$i" ] && at=$((at + 0x100000))
+        printf '  %s 0x%X : { KEEP(*(%s)) }\n' "$s" $at "$s" >> "$1"
+        i=$((i + 1))
+    done
+    printf '}\nINSERT AFTER .ocram;\n' >> "$1"
 }
 OVL_LD=
 if [ -n "$OVL" ]; then
-    ovl_script obj/overlay-a.ld $OVL_A
-    ovl_script obj/overlay-b.ld $OVL_B
+    ovl_script obj/overlay-a.ld
     OVL_LD="-Wl,-T,obj/overlay-a.ld"
 fi
 # manual aliases (platform/aliases-manual.ld) come first so they win
@@ -59,12 +67,20 @@ python3 tools/gen_missing.py obj/missing.txt obj/missing.cpp
 kos-c++ $KOS_CFLAGS $OPT -Iplatform/include -c obj/missing.cpp -o obj/missing.o
 kos-c++ $OPT ${GAME_LDFLAGS:-} $OVL_LD -o $TARGET $OBJS obj/missing.o obj/aliases-all.ld
 if [ -n "$OVL" ]; then
-    # Second link with the overlay 1 MiB higher: gen_overlay.py takes every overlay word that moved
-    # by exactly that as a relocation, and fails on any other difference (a PC-relative reference
-    # across the overlay boundary, or an image word that points into the overlay).
-    kos-c++ $OPT ${GAME_LDFLAGS:-} -Wl,-T,obj/overlay-b.ld -o obj/overlay-b.elf $OBJS obj/missing.o obj/aliases-all.ld
-    python3 tools/gen_overlay.py "$TARGET" obj/overlay-b.elf "$OVL" $OVL_A $OVL_B "$OVL_OUT"
-    sh-elf-objcopy -R "$OVL" "$TARGET"
-    rm -f obj/overlay-b.elf
+    # Per overlay, a second link with only that overlay 1 MiB higher: gen_overlay.py takes every
+    # overlay word that moved by exactly that as a relocation, and fails on any other difference
+    # (a PC-relative reference across the overlay boundary, or an image word - other overlays
+    # included - that points into the overlay).
+    i=0
+    for s in $OVL; do
+        a=$((0x8E000000 + i * 0x400000))
+        ovl_script obj/overlay-b.ld $i
+        kos-c++ $OPT ${GAME_LDFLAGS:-} -Wl,-T,obj/overlay-b.ld -o obj/overlay-b.elf $OBJS obj/missing.o obj/aliases-all.ld
+        m=${s#.ovl_}
+        python3 tools/gen_overlay.py "$TARGET" obj/overlay-b.elf "$s" $a $((a + 0x100000)) "$OVL_DIR/${m,,}.ovl" || exit 1
+        rm -f obj/overlay-b.elf
+        i=$((i + 1))
+    done
+    for s in $OVL; do sh-elf-objcopy -R "$s" "$TARGET"; done
 fi
 sh-elf-size $TARGET

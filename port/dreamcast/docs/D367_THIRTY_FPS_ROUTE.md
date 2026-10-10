@@ -1,5 +1,13 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-10: r10b to chapter 1-3's end (ROUTE_CH13, lane r10b)
+
+- r10b plays to SceSetChapterEnd(CHAPTER_1_3, 6) and "Coming Soon" at door 6 (route doc "r10b"). The boat (pl0f) and
+  Del Lago (em2f) are heap-4 room overlays (ROUTE_OVL): the resident image is no larger than 19f62e62's (`_end` in
+  the same 4 KiB page; s30 heap_before 57,504 = control). H2 and bell STRICT / MUST-IDENTICAL against 19f62e62.
+- r10b hw ms (cost arm, drawn): dock 127.9 -> 61.3, lake 63.3 -> 60.2, boss pass (Del Lago within 2 m, frame ~4139) 42.6 -> 39.5. Two fixes: the em27 fish
+  NaN (raw slot math read an unbacked sparse slot) and espgen45's GX-only height grid skipped (no RNG; STRICT pair).
+
 ## 2026-10-09: PACE_CAP=2 measured against the play recipe (decision pending)
 
 The user asked to revisit PACE_CAP=2 now that the logic lane found no exact speedups left. The play default stays

@@ -101,7 +101,7 @@ LOWER_ORDER = (8, 5, 1, 6, 2, 7, 0, 3)
 # r109). A room's second-slot track (BGM1, 0 bytes in the frozen layout) is replaced at runtime by a resident one
 # (snd.cpp, ROUTE_CH13). Only rooms of the planned route add entries. r104 and r107 both request
 # bank 9; it must also be prebuilt, otherwise runtime conversion exhausts the unreserved AICA bytes.
-ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r10a': [3]}
+ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r10a': [3], 'r10b': [3]}
 
 # Leon's other stage-1 weapons (--weapons; stage.sh AICA_WEAPONS=1; issue lamb2k/re4dc#1, silent weapons). The GC
 # loads the equipped weapon's SE block (WEP, block 2) on every weapon change (weaponLoad -> its .drs) into the one WEP
@@ -132,6 +132,9 @@ ROOMS = {
     'r102': ['st1/r102.dar', 'em/em18.drs'],
     'r108': ['st1/r108.dar', 'em/em17.drs', 'em/em23.drs', 'em/em24.drs'],
     'r10a': ['st1/r10a.dar', 'em/em12.drs', 'em/em24.drs', 'em/em2a.drs'],
+    # r10b (chapter 1-3's end, the lake): the ESL lists pl0f (Leon's boat, entry) / em2f (Del Lago, enabled later);
+    # R10bInit's r10b_setEm sets five em27 fish (EmSetEvent). bgmtbl: slot 0 = bio4midi #3 (as r109 / r10a), no slot 1.
+    'r10b': ['st1/r10b.dar', 'em/pl0f.drs', 'em/em2f.drs', 'em/em27.drs'],
     # r210 (St2, world coverage lane): no enemy archive (assets.sh discover r210: lists emleon03/04, no entries)
     'r210': ['st2/r210.dar'],
     # r40c (St4, world coverage lane): no enemy archive (discover r40c: omake00.esl, no entries)

@@ -21,6 +21,15 @@
 
 typedef unsigned long u32;
 
+// ROUTE_OVL=1 (Makefile, with ROUTE_CH13=1): pl0f and em2f are room overlays (/cd/dc/pl0f.ovl,
+// /cd/dc/em2f.ovl, tools/link.sh). The table entry stays empty until the game links the module;
+// the bind then reads the overlay into heap 4 and relocates it. The unlink, or the room heap
+// rebuild (gameRoomMemInit), fills the code with trap instructions and frees it.
+#ifndef RE4DC_ROUTE_OVL
+#define RE4DC_ROUTE_OVL 0
+#endif
+#define RE4DC_MODULE_OVL (RE4DC_SUBSCREEN_OVL || RE4DC_ROUTE_OVL)
+
 extern "C" {
 // The stage entry objects (src/st<N>/st<N>.cpp) walk the linker-script
 // ctor / dtor label lists renamed to these; no module has constructors
@@ -60,6 +69,10 @@ MODULE(em27)
 MODULE(em18)
 MODULE(em17)
 MODULE(em24)
+#if !RE4DC_ROUTE_OVL
+MODULE(pl0f)
+MODULE(em2f)
+#endif
 #endif
 #if defined(RE4DC_WEAPON_MODULES) && RE4DC_WEAPON_MODULES
 MODULE(wep01)
@@ -89,9 +102,10 @@ struct Re4dcModule {
 
 #define MODULE(id, name) {id, #name, name##_prolog, name##_epilog, re4dc_mod_##name##_data, \
     re4dc_mod_##name##_data_end, re4dc_mod_##name##_bss, re4dc_mod_##name##_bss_end, re4dc_mod_##name##_pristine}
-#if RE4DC_SUBSCREEN_OVL
+#if RE4DC_MODULE_OVL
 // SUBSCREEN_OVL=1: the Sscrn entry is filled by re4dc_module_overlay() each time sscrn_bridge.cpp
-// has read and relocated sscrn.ovl; the image holds no pointer into the overlay.
+// has read and relocated sscrn.ovl; the image holds no pointer into the overlay. ROUTE_OVL=1: the
+// same for pl0f / em2f, loaded by re4dc_module_bind() below.
 static Re4dcModule g_modules[] = {
 #else
 static const Re4dcModule g_modules[] = {
@@ -125,6 +139,13 @@ static const Re4dcModule g_modules[] = {
     MODULE(22, em18),  // ROUTE_CH13: r102 (the merchant): enabled-later,script-load
     MODULE(21, em17),  // ROUTE_CH13: r108: enabled-later,entry,script-load
     MODULE(8, em24),   // ROUTE_CH13: r108 (room entry) / r10a: entry
+#if RE4DC_ROUTE_OVL
+    {43, "pl0f", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH13: r10b: entry (Leon's boat); overlay pl0f.ovl
+    {39, "em2f", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH13: r10b: enabled-later,script-load (Del Lago); overlay em2f.ovl
+#else
+    MODULE(43, pl0f),  // ROUTE_CH13: r10b: entry (Leon's boat)
+    MODULE(39, em2f),  // ROUTE_CH13: r10b: enabled-later,script-load (Del Lago)
+#endif
 #endif
 #if defined(RE4DC_WEAPON_MODULES) && RE4DC_WEAPON_MODULES
     MODULE(3, wep01),  // WEAPON_MODULES: Punisher
@@ -225,6 +246,114 @@ static void freshState(unsigned i)
               unsigned(m.bss_end - m.bss), capture ? "captured" : "restored");
 }
 
+#if RE4DC_ROUTE_OVL
+#include <stdio.h>
+#include <stdint.h>
+#include <kos/fs.h>
+#include <arch/cache.h>
+typedef unsigned char u8;
+extern "C" void re4dc_module_overlay(u32 id, void (*prolog)(void), void (*epilog)(void), char* data, char* data_end,
+                                     char* bss, char* bss_end, char* pristine);
+extern "C" int re4dc_static_heap_free();  // ui_bridge.cpp: heap 4 free bytes
+namespace {
+// tools/gen_overlay.py: a 64-byte header, the module bytes as linked at `base`, the relocation offsets.
+struct RouteOverlayHeader {
+    u32 magic, version, image_bytes, relocs, base;
+    u32 prolog, epilog, data, data_end, bss, bss_end, pristine;  // offsets from base
+    u32 image_hash, reloc_hash, pad[2];
+};
+constexpr u32 kRouteOverlayMagic = 0x4F344552;  // "RE4O"
+struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
+RouteOverlay g_route_ovl[2];  // 0 = pl0f, 1 = em2f
+u32 ovlHash(const void* p, u32 bytes)
+{
+    u32 h = 2166136261U;
+    for (u32 i = 0; i < bytes; i += 4) h = (h ^ *reinterpret_cast<const u32*>(static_cast<const u8*>(p) + i)) * 16777619U;
+    return h;
+}
+}
+
+// src/game/main_mem.cpp (C++ linkage, include/main_mem.h).
+void* mem_alloc(u32 size, const char* file, int line, int flag, int heap);
+void Mem_free_h(void* p, int heap);
+
+// On a link of pl0f / em2f with no code loaded: read /cd/dc/<mod>.ovl into heap 4, check, relocate,
+// bind the table entry. Any failure stops the game here (re4dc_missing): never a stub.
+static void routeOverlayLoad(unsigned index)
+{
+    const Re4dcModule& m = g_modules[index];
+    RouteOverlay& o = g_route_ovl[m.id == 43 ? 0 : 1];
+    char path[32];
+    snprintf(path, sizeof(path), "/cd/dc/%s.ovl", m.name);
+    file_t f = fs_open(path, O_RDONLY);
+    if (f < 0) re4dc_missing("route overlay missing on the disc");
+    const u32 total = u32(fs_total(f));
+    const int free_before = re4dc_static_heap_free();
+    u8* block = static_cast<u8*>(mem_alloc(total, "route overlay", 0, 1, 4));
+    if (!block) {
+        fs_close(f);
+        re4dc_log("route overlay: %s %lu B does not fit heap 4 (free %d)\n", m.name, total, free_before);
+        re4dc_missing("route overlay does not fit heap 4");
+    }
+    u32 got = 0;
+    while (got < total) {
+        const ssize_t r = fs_read(f, block + got, total - got);
+        if (r <= 0) break;
+        got += u32(r);
+    }
+    fs_close(f);
+    const RouteOverlayHeader h = *reinterpret_cast<const RouteOverlayHeader*>(block);
+    u8* image = block + sizeof(RouteOverlayHeader);
+    u32* reloc = reinterpret_cast<u32*>(image + h.image_bytes);
+    if (got != total || h.magic != kRouteOverlayMagic || h.version != 1 ||
+        sizeof(RouteOverlayHeader) + h.image_bytes + h.relocs * 4 != total ||
+        ovlHash(image, h.image_bytes) != h.image_hash || ovlHash(reloc, h.relocs * 4) != h.reloc_hash)
+        re4dc_missing("route overlay corrupt (size / hash)");
+    const u32 delta = u32(image) - h.base;
+    for (u32 i = 0; i < h.relocs; ++i) {
+        const u32 at = reloc[i];
+        if (at + 4 > h.image_bytes || (at & 3)) re4dc_missing("route overlay relocation out of range");
+        *reinterpret_cast<u32*>(image + at) += delta;
+    }
+    dcache_flush_range(reinterpret_cast<uintptr_t>(image), h.image_bytes);
+    icache_flush_range(reinterpret_cast<uintptr_t>(image), h.image_bytes);
+    o.block = block;
+    o.image_bytes = h.image_bytes;
+    ++o.loads;
+    re4dc_module_overlay(m.id, reinterpret_cast<void (*)(void)>(image + h.prolog),
+                         reinterpret_cast<void (*)(void)>(image + h.epilog), reinterpret_cast<char*>(image + h.data),
+                         reinterpret_cast<char*>(image + h.data_end), reinterpret_cast<char*>(image + h.bss),
+                         reinterpret_cast<char*>(image + h.bss_end), reinterpret_cast<char*>(image + h.pristine));
+    re4dc_log("route overlay: %s load %u %lu B (%lu relocs) at %08lx heap4 %d -> %d\n", m.name, o.loads, h.image_bytes,
+              h.relocs, u32(image), free_before, re4dc_static_heap_free());
+}
+
+// Unlink or room heap rebuild: fill the code with `trapa #0xFF` (a stale call into it stops loudly
+// in the exception handler instead of running reused memory as code until the cell is reused), free it,
+// empty the table entry (the next link reads the overlay again: a fresh link).
+static void routeOverlayRelease(unsigned index, const char* why)
+{
+    Re4dcModule& m = g_modules[index];
+    if (m.id != 43 && m.id != 39) return;
+    RouteOverlay& o = g_route_ovl[m.id == 43 ? 0 : 1];
+    if (!o.block) return;
+    u8* image = o.block + sizeof(RouteOverlayHeader);
+    for (u32 i = 0; i + 2 <= o.image_bytes; i += 2) *reinterpret_cast<unsigned short*>(image + i) = 0xC3FF;
+    dcache_flush_range(reinterpret_cast<uintptr_t>(image), o.image_bytes);
+    icache_flush_range(reinterpret_cast<uintptr_t>(image), o.image_bytes);
+    Mem_free_h(o.block, 4);
+    o.block = 0;
+    re4dc_module_overlay(m.id, 0, 0, 0, 0, 0, 0, 0);
+    re4dc_log("route overlay: %s released (%s) heap4 %d\n", m.name, why, re4dc_static_heap_free());
+}
+
+// gameRoomMemInit (src/game/game.cpp), before heap 4 is rebuilt.
+extern "C" void re4dc_route_overlay_room_reset()
+{
+    for (unsigned i = 0; i < kModules; ++i) routeOverlayRelease(i, "room reset");
+}
+#endif
+
 // Binds the header the game read (include/main_sub.h OSModuleHeader: id at 0,
 // prolog at 0x34, epilog at 0x38) to the compiled module; 1 = known module.
 extern "C" int re4dc_module_bind(void* header)
@@ -264,7 +393,12 @@ extern "C" int re4dc_module_bind(void* header)
         *epilog = 0;
         return 0;
     }
-#if RE4DC_SUBSCREEN_OVL
+#if RE4DC_ROUTE_OVL
+    if (m->prolog == 0 && (m->id == 43 || m->id == 39)) {
+        routeOverlayLoad(unsigned(index));
+    }
+#endif
+#if RE4DC_MODULE_OVL
     if (m->prolog == 0) {
         re4dc_log("module: %s is an overlay that is not loaded; link failed\n", m->name);
         *prolog = 0;
@@ -296,7 +430,7 @@ extern "C" int re4dc_module_bind(void* header)
     return 1;
 }
 
-#if RE4DC_SUBSCREEN_OVL
+#if RE4DC_MODULE_OVL
 // sscrn_bridge.cpp, after reading and relocating an overlay: its entry points and state span.
 // The bytes came fresh from disc (pristine .data, zero .bss): the next link captures them.
 extern "C" void re4dc_module_overlay(u32 id, void (*prolog)(void), void (*epilog)(void), char* data, char* data_end,
@@ -335,6 +469,9 @@ extern "C" int re4dc_module_unbind(void* header)
     s.stopped = header;
     ++s.unlinks;
     h[1] = kUnlinkedMark;
+#if RE4DC_ROUTE_OVL
+    routeOverlayRelease(unsigned(index), "unlink");
+#endif
     return 1;
 }
 

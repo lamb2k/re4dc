@@ -435,6 +435,9 @@ ROOM_CONTRACTS={
     'r108':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
     'r109':dict(slots=30,smd=4,effs=(7,),itm=9,model_slots=()),
     'r10a':dict(slots=46,smd=4,effs=(7,42),itm=9,model_slots=(),header_grow=32),
+    # r10b (route, chapter 1-3's end, the lake): 36 slots, SMD#4, EFF#7 room effects, EFF#34 local effects,
+    # ITM#9, model TPL#27 (after BIN#26: the floating island); FCV#28-31, EMI#32, DSE#33, UWF#35 byte-identical.
+    'r10b':dict(slots=36,smd=4,effs=(7,34),itm=9,model_slots=(27,)),
     # r210 (St2, world coverage lane): 36 slots, SMD#4, EFF#7, ITM#9, model TPL#31 (after BIN#30); FCV#27-29/#32-35
     # (the lift motions) and every other slot stay byte-identical.
     'r210':dict(slots=36,smd=4,effs=(7,),itm=9,model_slots=(31,)),

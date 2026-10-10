@@ -17,6 +17,16 @@
 #include "main_sub.h"
 #include "joy.h"
 
+#ifndef RE4DC_WATER45_LEAN
+#define RE4DC_WATER45_LEAN 0
+#endif
+// RE4DC_WATER45_GRID_SKIP (ROUTE_CH13, r10b; needs RE4DC_WATER45_LEAN): no height-field grid at all.
+// Logic reads only the plane (mat / inv / nx / ny: GetWaterHeight, GetWaterCrossPos); the grid feeds
+// only the GX draw. The grid update takes no RNG; the init keeps its fRand1_1 calls (shared RNG).
+#ifndef RE4DC_WATER45_GRID_SKIP
+#define RE4DC_WATER45_GRID_SKIP 0
+#endif
+
 // Effect controller 45: weather water surface (same height-field model as Espgen42, following the
 // camera). The Estgen45Set* entry points let the room script (esp4c) override its parameters.
 // Espgen42 owns the water init (EspWaterInit): it resets this unit's overrides and g_pWater45.
@@ -226,6 +236,9 @@ void Espgen45_Move00(EspgenWork* w)
     if (tex == NULL) {
         return;
     }
+#if RE4DC_WATER45_GRID_SKIP
+    return;
+#endif
     noise = (u8*) GXGetTexObjData(tex) + 0x80000000;
     u32 nx = p->nx;
     f32 hx = (f32) (int) (nx / 2);
@@ -301,6 +314,7 @@ void Espgen45_Move00(EspgenWork* w)
                 // `lfs g45_wave_mul`; the plain static read is a fixed scalar that never aliases the in-struct store
                 // and floated 6 insns up. The pos address is computed before the store (target `lwz pos` early).
                 pv->y = next[k] = (n * FGet(g45_wave_mul) + next[k]) * spread;
+#if !RE4DC_WATER45_LEAN
                 Vec* nrm = p->nrm;   // before the v.x/v.z reads: kept across the call (`lfsx nrm[k].x`, `4(nrm+k*12)`)
                 v.x = p->pos[k - 1].y - p->pos[k + 1].y;
                 v.y = 2.0f;
@@ -323,6 +337,7 @@ void Espgen45_Move00(EspgenWork* w)
                 nrm[k].x += (fx - hx) * inx;
                 nrm[k].z += (fy - hy) * iny;
                 nrm[k].y *= 0.25f;
+#endif
                 fx += 1.0f;
                 k++;
             }
@@ -361,6 +376,7 @@ void Espgen45_Move00(EspgenWork* w)
                 HB *= 0.92f;
 #undef HB
                 pv->y = n * 0.0018f + hA[k];
+#if !RE4DC_WATER45_LEAN
                 Vec* nrm = p->nrm;
                 v.x = p->pos[k - 1].y - p->pos[k + 1].y;
                 v.y = 2.0f;
@@ -395,6 +411,7 @@ void Espgen45_Move00(EspgenWork* w)
                 nrm[k].x += ((f32) j - (f32) (p->nx / 2)) * (1.0f / (f32) (int) p->nx);
                 nk->z += ((f32) i - (f32) (p->ny / 2)) * (1.0f / (f32) (int) p->ny);
                 nk->y *= 0.25f;
+#endif
                 k++;
             }
             asm("" : : "r"(dead));   // COMPILER-DIFF: use of the moved asm set (see above); emits nothing
@@ -403,8 +420,10 @@ void Espgen45_Move00(EspgenWork* w)
     {
         u32 n = sizeof(Vec) * (p->nx + 1) * (p->ny + 1);   // nx first: fold attaches the 12 to (ny + 1) as the target
         DCStoreRange(p->pos, n);
+#if !RE4DC_WATER45_LEAN
         DCStoreRange(p->nrm, n);
         DCStoreRange(p->bump, sizeof(Vec) * (p->nx + 1) * (p->ny + 1));
+#endif
     }
 }
 
@@ -424,7 +443,9 @@ void Espgen45_Move(EspgenWork* w)
 void Espgen45_Trans(EspgenWork* w)
 {
     if ((w->flag & 1) && !(w->flag & 2)) {
+#if !RE4DC_WATER45_LEAN
         AddOtDirect(0x10, w, (void (*)()) Espgen45_TransSub, 1, 0x80, NULL, 0.0f);
+#endif
     }
     pG->Status_flg[1] &= ~0x20;
 }
@@ -827,6 +848,11 @@ EspgenWork* SetWaterWork45(EspgenWork* w, Vec* pos, Vec* rot, f32 size, u32 nx, 
         rate = 0.0001f;
     }
     p->mat[1][1] *= rate;
+#if RE4DC_WATER45_GRID_SKIP
+    p->hA = NULL;
+    p->hB = NULL;
+    p->pos = NULL;
+#else
     n = sizeof(f32) * (p->nx + 1) * (p->ny + 1);
 #line 1452 "D:/Bio4/Prog/espgen45.cpp"
     p->hA = (f32*) MEM_ALLOC(n, 1, 13);
@@ -847,6 +873,8 @@ EspgenWork* SetWaterWork45(EspgenWork* w, Vec* pos, Vec* rot, f32 size, u32 nx, 
         goto nomem;
     }
     memclr_asm(p->pos, n);
+#endif
+#if !RE4DC_WATER45_LEAN
 #line 1475 "D:/Bio4/Prog/espgen45.cpp"
     p->nrm = (Vec*) MEM_ALLOC(n, 1, 13);
     if (p->nrm == NULL) {
@@ -926,12 +954,35 @@ EspgenWork* SetWaterWork45(EspgenWork* w, Vec* pos, Vec* rot, f32 size, u32 nx, 
             }
         }
     }
+#else
+    // RE4DC_WATER45_LEAN (ROUTE_CH13, r10b): the normal / bump / display-list buffers only feed the GX
+    // draw (refraction + indirect bump), which the Dreamcast does not run: the PS2 world draws the lake.
+    // The height field (hA / hB / pos) and its RNG use are unchanged.
+    p->nrm = NULL;
+    p->bump = NULL;
+    p->dl = NULL;
+    p->dlSize = 0;
+    if (0) {
+    nomem:
+        pLog->err(0, 0, "Espgen45 : not enough memory");
+        PushEspgen(w);
+        return NULL;
+    }
+#endif
     // One counter pair for the init loops: `jj` (inner fRand loop, then the two x edges: it crosses the
     // call, so callee-saved r28) and `i2`/`idx` (fRand rows, `i2 = p->ny` for the far edge, the two y edges).
-    fy = 0.0f;
     int jj;
     int i2;
     int idx;
+#if RE4DC_WATER45_GRID_SKIP
+    for (i2 = 0; i2 < p->ny + 1; i2++) {
+        for (jj = 0; jj < p->nx + 1; jj++) {
+            (void) fRand1_1();   // the grid init's shared-RNG draws, same count and order
+        }
+    }
+    return w;
+#else
+    fy = 0.0f;
     for (i2 = 0; i2 < p->ny + 1; i2++) {
         idx = i2 * (p->nx + 1);
         fx = 0.0f;
@@ -940,15 +991,19 @@ EspgenWork* SetWaterWork45(EspgenWork* w, Vec* pos, Vec* rot, f32 size, u32 nx, 
             p->pos[idx].y = fRand1_1() * 0.2f;
             fx += 1.0f;
             p->pos[idx].z = fy - (f32) (int) (p->ny / 2);
+#if !RE4DC_WATER45_LEAN
             p->nrm[idx].x = 0.0f;
             p->nrm[idx].y = 1.0f;
             p->nrm[idx].z = 0.0f;
+#endif
             p->hA[idx] = 0.0f;
             p->hB[idx] = 0.0f;
+#if !RE4DC_WATER45_LEAN
             Vec* n = &p->nrm[idx];
             n->x += ((f32) jj - (f32) (int) (p->nx / 2)) * (1.0f / (f32) (int) p->nx);
             n->z += ((f32) i2 - (f32) (int) (p->ny / 2)) * (1.0f / (f32) (int) p->ny);
             n->y *= 0.25f;
+#endif
             idx++;
         }
         fy += 1.0f;
@@ -981,16 +1036,23 @@ EspgenWork* SetWaterWork45(EspgenWork* w, Vec* pos, Vec* rot, f32 size, u32 nx, 
     {
         u32 n2 = sizeof(Vec) * (p->nx + 1) * (p->ny + 1);
         DCStoreRange(p->pos, n2);
+#if !RE4DC_WATER45_LEAN
         DCStoreRange(p->nrm, n2);
+#endif
     }
+#if !RE4DC_WATER45_LEAN
     DCStoreRange(p->bump, sizeof(Vec) * (p->nx + 1) * (p->ny + 1));
+#endif
     {
         u32 n3 = sizeof(f32) * (p->nx + 1) * (p->ny + 1);
         DCStoreRange(p->hA, n3);
         DCStoreRange(p->hB, n3);
     }
+#if !RE4DC_WATER45_LEAN
     DCStoreRange(p->dl, p->dlSize);
+#endif
     return w;
+#endif   // RE4DC_WATER45_GRID_SKIP
 }
 
 // Frees the six grid buffers and clears g_pWater45.

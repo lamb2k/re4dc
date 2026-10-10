@@ -5,6 +5,9 @@
 enum {
     ROUTE_MOVIE_SND_EVENT = 1,  // evd header sndFlag bit31 clear: SndEventInit/SndEventEnd
     ROUTE_MOVIE_KEEP_POSE = 2,  // caller sets Event StatusFlag 0x800: ExeEndEvt keeps the pose
+    // RouteMoviePlayQte only (ROUTE_CH13 builds): the cut runs Event::ExecActBtn each frame (the source
+    // Event::Run's button-mash prompt and count) and the end func sees that same event (GetActBtnCount).
+    ROUTE_MOVIE_ACT_COUNT = 4,
 };
 class Event;
 typedef void (*RouteEvtFunc)(Event*);

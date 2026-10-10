@@ -18,11 +18,23 @@ extern "C" void re4dc_log(const char* fmt, ...);
 
 // Source Evt_*_Func handlers read only funcMode (and NowCut/NowFrame in mode 1)
 // in the begin/end/cancel modes used here; no event body exists to fetch.
+#if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
+static Event* routeEndEvent;  // ROUTE_MOVIE_ACT_COUNT: the QTE cut's event, handed to the end func
+#endif
 static void routeFunc(RouteEvtFunc func, int mode)
 {
     if (func == 0) {
         return;
     }
+#if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
+    if (routeEndEvent != 0 && mode == 2) {
+        Event* e = routeEndEvent;
+        routeEndEvent = 0;
+        e->funcMode = 2;
+        func(e);
+        return;
+    }
+#endif
     alignas(8) static u8 storage[sizeof(Event)];
     memset(storage, 0, sizeof(storage));
     Event* e = (Event*) storage;
@@ -122,6 +134,11 @@ int RouteMoviePlayQte(unsigned id, unsigned flags, RouteEvtFunc func, unsigned q
     for (; f < qte_frames; ++f) {
         e->NowFrame = f;
         func(e);
+#if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
+        if (flags & ROUTE_MOVIE_ACT_COUNT) {
+            e->ExecActBtn();  // Event::Run's prompt and A-press count (r10b s20, the rope)
+        }
+#endif
         if (e->StatusFlag & 0x4000) {
             break;  // CancelSet: the handler ends the cut (the QTE passed)
         }
@@ -135,12 +152,23 @@ int RouteMoviePlayQte(unsigned id, unsigned flags, RouteEvtFunc func, unsigned q
     }
     re4dc_log("route QTE: id=%05x cut=%#x frames=%u/%u passed=%d room0=%08x picture=%s\n", id, qte_cut, f, qte_frames,
               (e->StatusFlag & 0x4000) != 0, pG->Room_flg[0], open ? "movie" : "none");
+#if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
+    if (flags & ROUTE_MOVIE_ACT_COUNT) {
+        re4dc_log("route QTE: id=%05x act button %#x presses=%d\n", id, e->actBtnNo, e->actBtnCount);
+    }
+#endif
     re4dc_fixture_state("qte", 0, -1);
     re4dc_ui_movie_background(0);
     const int end = open ? re4dc_movie_end() : st;
     re4dc_weapon_heap4_movie_restore();
     re4dc_ps2_interior_movie_restore();
     pG->Disp_flg = disp;
+#if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
+    if (flags & ROUTE_MOVIE_ACT_COUNT) {
+        // The end func reads the count from the cut's event (Event::ExeEndEvt calls it on the same event).
+        routeEndEvent = e;
+    }
+#endif
     routeEnd(id, flags, func, end);
     return end == RE4DC_MOVIE_UNHANDLED ? RE4DC_MOVIE_ERROR : end;
 }

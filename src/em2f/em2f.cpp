@@ -142,7 +142,12 @@ extern "C" void _unresolved()
 // EmInitFunc of the module: constructs the cEm2f class in the manager's work.
 void Em2fInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEm2f;
+#else
     new (em) cEm2f();
+#endif
 }
 
 // Per-frame damage check (cEm2f::move): the monster only takes real damage from the harpoons: a
@@ -1492,7 +1497,13 @@ void em2fSetPosBetweenBoat(cEm2f* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if (!e->isAlive()) {
             continue;
@@ -1527,7 +1538,13 @@ void em2fSetPosRisingD(cEm2f* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if (!e->isAlive()) {
             continue;
@@ -1566,7 +1583,13 @@ void em2fSetPosPackman(cEm2f* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if (!e->isAlive()) {
             continue;

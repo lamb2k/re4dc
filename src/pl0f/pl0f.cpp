@@ -198,7 +198,12 @@ extern "C" void _unresolved()
 // EmInitFunc: placement-constructs the boat in the cEm work.
 void Pl0fInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cPl0f;
+#else
     new (em) cPl0f();
+#endif
 }
 
 // Per-frame update (emMove): clears the no-crash / no-drop flags, runs the r_no_0 routine, the
@@ -1723,7 +1728,13 @@ int pl0fCrashCk(cPl0f* em)
     u32 n;
 
     for (n = 0; n < EmMgr.nArray; n++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(n);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * n);
+#endif
 
         if ((e->be_flag & 0x201) == 1 && e->id == 0x2F && (s16) e->hp > 0) {
             for (i = 0; i < 2; i++) {
@@ -3397,7 +3408,13 @@ int testSearchEm2f(cPl0f* em)
 
     w->pBoss = 0;
     for (n = 0; n < EmMgr.nArray; n++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(n);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * n);
+#endif
 
         if ((e->be_flag & 0x201) == 1 && e->id == 0x2F && (s16) e->hp > 0 && e->set == 1) {
             Vec v;

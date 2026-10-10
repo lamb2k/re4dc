@@ -558,6 +558,12 @@ void gameRoomInit()
         pG->nPrim = RE4DC_PRIM_CAP_R107;
     }
 #endif
+#if defined(RE4DC_PRIM_CAP_R10B) && RE4DC_PRIM_CAP_R10B
+    // PRIM_CAP_R10B (heap 4 for the r10b lake boss): room value 458,752 B, measured peak 279,808 B per frame.
+    if (pG->room_id == 0x10B && pG->nPrim > RE4DC_PRIM_CAP_R10B) {
+        pG->nPrim = RE4DC_PRIM_CAP_R10B;
+    }
+#endif
     primInit();
     {
         Vec pos;
@@ -1424,10 +1430,16 @@ void gameDoordemo()
 #if RE4DC_WEAPON_HEAP4
 void re4dc_weapon_heap4_room_reset();   // read.cpp
 #endif
+#if defined(RE4DC_ROUTE_OVL) && RE4DC_ROUTE_OVL
+extern "C" void re4dc_route_overlay_room_reset();   // platform/modules.cpp: pl0f / em2f overlays leave heap 4
+#endif
 void gameRoomMemInit()
 {
 #if RE4DC_WEAPON_HEAP4
     re4dc_weapon_heap4_room_reset();
+#endif
+#if defined(RE4DC_ROUTE_OVL) && RE4DC_ROUTE_OVL
+    re4dc_route_overlay_room_reset();
 #endif
 #if defined(RE4DC_GAME) && !defined(__PPC__)
     re4dc_motion_retire_all();

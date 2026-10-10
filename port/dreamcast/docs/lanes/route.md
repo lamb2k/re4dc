@@ -289,6 +289,66 @@ The history of the r106 bring-up is below.
 - Not yet proven: the emblem halves (r104 -> r107) and r105's key item picked up in play; the warp rig sets
   `door_unlock` / `item_flags`. A user play disc is the check (memory: user play over scripts).
 
+## Progress 2026-10-09/10 (r10b: chapter 1-3's end, behind ROUTE_CH13)
+
+r10b (the lake: Leon's boat pl0f, Del Lago em2f, the em27 fish) plays to `SceSetChapterEnd(CHAPTER_1_3, 6)`; door 6
+to r11b shows "Coming Soon". All of it is behind ROUTE_CH13=1 (default 0: the image is byte-identical apart from
+__DATE__/__TIME__). Lane tree /root/probe/lanes-20261009/r10b, evidence D:/Flycast-Evidence/re4-dreamcast/r10b-20261009.
+
+- **Route movies.** r10bs00/s10/s20/s20c/s21/s22 through RouteMoviePlay; the s20 QTE through RouteMoviePlayQte
+  (ExecActBtn; routeEndEvent). Full route (fixture f6, warp aid): boarding, s10, the QTE passes with 17 presses, s22,
+  the chapter 1-3 results and "Save?", then "Coming Soon". HALT 0, MISSING 0, no allocation failure.
+- **pl0f / em2f are room overlays (ROUTE_OVL=1, default with ROUTE_CH13=1).** gen_modules.py `<mod>:ovl` (the
+  SUBSCREEN_OVL mechanism); tools/link.sh now takes a list of overlay sections, links overlay i at 0x8E000000 +
+  i * 4 MiB, proves each one separately (a second link with only that overlay 1 MiB higher: the rest of the image,
+  other overlays included, must not change) and writes `<mod>.ovl` (sscrn.ovl, pl0f.ovl 43,060 B / 309 relocations,
+  em2f.ovl 16,472 B / 70). platform/modules.cpp: the table entry is empty until the game links the module; the bind
+  reads /cd/dc/<mod>.ovl into heap 4 (checks size + FNV hashes, relocates, flushes the caches); the unlink and
+  gameRoomMemInit (before heap 4 is rebuilt) fill the code with `trapa #0xFF`, free it and empty the entry. A link
+  with no loadable overlay stops in re4dc_missing (never a stub); missing.txt is empty. Staging: route-build.sh copies
+  the .ovl files to the program dir, build.sh / stage.sh copy every *.ovl; a harness fixture adds
+  `dc/pl0f.ovl` + `dc/em2f.ovl` (lane tool addovl.py). Log: `route overlay: pl0f load 1 41760 B (309 relocs) ...`.
+- **Image and heap 4.** Trace arm r10bT2 vs the 19f62e62 control tiB: .text 2,574,884 vs 2,576,836, total 4,037,952
+  vs 4,039,744; `_end` 8c3ebafc vs 8c3eb8bc (same 4 KiB page, so the arena is unchanged). H2: the r100 s30 movie
+  340/340 with heap_before 57,504 = control 57,504; New Game heaps identical (7,941,952 / 1,010,528).
+- **espgen45 (the lake water): RE4DC_WATER45_LEAN + RE4DC_WATER45_GRID_SKIP (Makefile, ROUTE_CH13 block).** GX is a stub
+  on the Dreamcast, so the generator never drew anything; the PS2 world draws the lake. Logic reads only the plane
+  (GetWaterHeight / GetWaterCrossPos use mat / inv / nx / ny). LEAN drops the normal / bump / display-list buffers;
+  GRID_SKIP drops the height field too (hA / hB / pos, ~571 KB) and its per-frame update: Move00 keeps the plane
+  header (Status_flg[0] 0x200, mat, inv) and returns. The grid update takes no RNG; the init's fRand1_1 draws (the
+  shared RNG) are kept, same count and order. AddWaterPower skips a grid-less 0x45 water. Proof: STRICT pair on r10b,
+  grid on (r10bTg) vs off (r10bTs), fixture f6 through boarding, s10, the QTE and the chapter end:
+  decision_cmp all MUST fields identical except `st` for 6 ticks at the last, ungated post-QTE press (entry 45),
+  which lands on a different game tick because the grid-on arm spends longer in the s00 movie (heap loan): input skew,
+  not logic (rng, player, enemies, effects identical throughout). heap 4 free at r10b frame 1400: 1,051,520 B.
+- **em27 fish NaN (RE4DC_EM27_SLOT_FIX, ROUTE_CH13 block).** em27ObaHitCk walked the enemy slots with raw slot math
+  (`pArray + size * i`); with the sparse enemy backing an unbacked slot reads as 0xFF filler, `be_flag` 0xFFFFFFFF
+  passes the alive test and the filler position (NaN) is pushed into the fish (`OBA e=6 ... epos=-nan,0,-nan`).
+  The fix walks `EmMgr.workAt(i)` and skips null slots (as em27JumpCk and em21 already do). After: 11,820 fish
+  position samples on the route, 0 NaN. hw dock 127.9 -> 61.3 ms drawn. The default image's r107 fish use the same
+  scan: whether to enable the fix outside ROUTE_CH13 is a coordinator decision (it changes r107 logic).
+- **Disc.** Removed (never read by the play route, each with a code reason, disc-audit.json): em10/11/1f/20/22/25/2b/2c/2d
+  .drs (modules not linked), st1/r100/r101/r103/r120 .das (native rooms read .dar), st1/r120.dar/.arc (New Game skips
+  r120: nativeSkipOpeningRoom; New Game+ needs game_cnt != 0, incremented only in r333 (stage 3), so it is
+  unreachable on this disc), le_mirror_report.json. pl0f.drs is rel-stripped (le_mirror --compact-static-rel).
+  Next disc-space lever: bio4bgm / bio4evt.sbb (332 MB, the old sound reads; stub them later), no change now.
+- **hw ms first (hwproject SH-4 model, cost arm, drawn / skipped ms per frame), then Flycast (PACE draw ms over
+  300-frame windows, p50 / p99 / max, vsync off).** Before = r10bC (lean + PRIM_CAP_R10B, no fish fix, grid on); after
+  = r10bO (the landed state: fish fix, grid skip, overlays). Evidence hwmodel-r10b-r10bC-* / hwmodel-r10b-r10bO-*.
+
+  | view (window) | hw before | hw after | Flycast before | Flycast after |
+  |---|---|---|---|---|
+  | dock, quiet (500:579) | 127.9 / 94.9 | 61.3 / 14.7 | 94.4 / 94.4 / 94.4 (5.8 fps) | 32.9 / 33.3 / 33.3 (29.9 fps) |
+  | lake (800:879) | 63.3 / 21.9 | 60.2 / 14.4 | 101.2 / 101.4 / 101.4 (5.6 fps) | 39.9 / 47.1 / 47.1 (22.5 fps) |
+  | boss pass (4100:4179) | 42.6 / 19.6 | 39.5 / 16.5 | 29.2 / 43.0 / 43.0 | 26.7 / 68.8 / 68.8 |
+
+  Boss window proof: fixture fb (f6 without the kill; boarding presses are state-gated, so the trace and cost arms
+  reach the same ticks); the trace arm's LP log puts em2f surfaced (y -245) 1.9 m from Leon at frame 4139 (Leon in
+  the water after being thrown off; the camera then faces the water: no screenshot shows the boss). The earlier
+  "boss" window (700:779, 132.2 -> 60.8 ms) was a warp with Leon standing on the water, not a boss view.
+  Headroom at r10b (route f6, frame 1400): heap 4 free 1,051,520 B (the two overlays hold 59,680 B), VRAM free
+  203,520 B, AICA largest free 1,004,192 B.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

@@ -23,6 +23,7 @@
 #   --area-rules F   extra function->area rules for hwreport (TSV: regex<TAB>area; 'file:regex' matches
 #                    the source file), checked before the built-in D367 rules
 #   --count A:B      counted frames (default 2401:2520)
+#   HWM_SECONDS=s    (env) emulator run limit, default 3600 (hwtrace-run.ps1); a late window needs more
 #   --trace A:B:S    traced frames (default 2401:2520:8 = 15 frames, ~0.9 GB)
 #   --ref DIR        reference hwproject output dir to diff against (default $HWM_REF)
 #   --pcs FILE       run.pcs of a normal (dynarec) capture of the same build: adds sampled Flycast ms
@@ -118,7 +119,7 @@ else
   echo "[tracing $NFR frames in $E; ~6 min for 2401:2520:8]"
   T0=$(date +%s)
   "$PS" -NoProfile -ExecutionPolicy Bypass -File "$(wslpath -w "$E/hwtrace-run.ps1")" -Out trace -Cue "$(wslpath -w "$DC")" \
-        "${FA[@]}" -Count "$COUNT" -Trace "$TRACE" -Tail "$TAIL" </dev/null | tr -d '\r'
+        "${FA[@]}" -Count "$COUNT" -Trace "$TRACE" -Tail "$TAIL" ${HWM_SECONDS:+-Seconds $HWM_SECONDS} </dev/null | tr -d '\r'
   echo "[trace run $(( $(date +%s) - T0 )) s]"
   [ "$KEEP" = 1 ] || rm -f "$DB" "$DC"
   N=$(ls "$E"/trace/trace-*.bin 2>/dev/null | wc -l)

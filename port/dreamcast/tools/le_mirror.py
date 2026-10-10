@@ -12,6 +12,8 @@ rejected room has no .dar output (including removal of an older generated one).
 listed in the existing game registry/Makefile, after whole-file qualification.
 It retains source archive slots, assets and sound. Use a separate output tree for
 this selectable candidate; the default mirror remains the full reference.
+--compact-static-rel=<a,b> also admits those knob-conditional MODULES entries
+(ROUTE_CH13: pl0f); stage their archives only on images that link them.
 
     le_mirror.py <src-tree> <dst-tree> [--force] [--require <deps.txt>]
 
@@ -1382,6 +1384,17 @@ def fmt_eff(sw, off, size, ctx):
                             stop = motions[k + 1] if k + 1 < len(motions) else limit
                             if motion < start + 4 + 4 * sw.val32(start):
                                 raise ValueError('effect motion overlaps table')
+                            if bytes(sw.data[motion:motion + 4]) == b'\x20\x20\xaf\x30':
+                                # r10b EFF#7 efm1: its motion table points at TPL images whose zero
+                                # bytes read 0x20 (magic 0x2020AF30), not FCV keys. No source codec
+                                # applies. Neither platform can read it as a motion (maxFrame 0x2020 has
+                                # the high bits set either way), so the bytes stay identical by contract
+                                # (safe raw: unreadable as FCV on the GameCube too).
+                                sw._check(motion, stop - motion)
+                                sw._mark(motion, stop - motion)
+                                print('le_mirror: %s/efm%d/motion%d: 0x20-filled TPL image (not an FCV), kept '
+                                      'byte-identical' % (ctx, i, k), file=sys.stderr)
+                                continue
                             with sw.bounded(motion, stop - motion):
                                 fmt_fcv(sw, motion, stop - motion, ctx + '/efm%d/motion%d' % (i, k))
                     else:
@@ -2421,8 +2434,10 @@ def prepare_native_room(rel, converted_container, decoded, entries):
 STATIC_REL_VERSION = 0xDC000001
 
 
-def static_module_ids():
-    """Use the existing binding table; refuse a stale Makefile/registry pair."""
+def static_module_ids(extra=()):
+    """Use the existing binding table; refuse a stale Makefile/registry pair. `extra` names knob-conditional
+    modules (--compact-static-rel=<a,b>) whose archives are staged only on images that link them (ROUTE_CH13:
+    r10b's pl0f / em2f); their registry rows must exist like the default set's."""
     root = Path(__file__).resolve().parents[3]
     registry = (root / 'port/dreamcast/game/platform/modules.cpp').read_text()
     # Lines may carry a trailing comment (em2a, e6f65cc). Sscrn (id 71) is the SUBSCREEN-conditional
@@ -2433,9 +2448,13 @@ def static_module_ids():
     # Knob-conditional modules (`MODULES += ...` under WORLD_STAGE_MODULES=1, with #if-guarded registry rows) are
     # not part of the default image's static set this mirror compacts against.
     conditional = {n for line in re.findall(r'^MODULES \+= (.*)$', makefile, re.M) for n in line.split()}
-    bindings = [(i, n) for i, n in bindings if n not in conditional]
+    if set(extra) - conditional:
+        raise ValueError('not a knob-conditional MODULES entry: ' + ', '.join(sorted(set(extra) - conditional)))
+    if set(extra) - {n for _, n in bindings}:
+        raise ValueError('no registry row for: ' + ', '.join(sorted(set(extra) - {n for _, n in bindings})))
+    bindings = [(i, n) for i, n in bindings if n not in conditional or n in extra]
     selected = re.search(r'^MODULES = (.*)$', makefile, re.M)
-    if not bindings or selected is None or set(selected[1].split()) != {n for _, n in bindings}:
+    if not bindings or selected is None or set(selected[1].split()) | set(extra) != {n for _, n in bindings}:
         raise ValueError('static module registry and Makefile disagree')
     result = {int(i): n for i, n in bindings}
     if len(result) != len(bindings):
@@ -2561,8 +2580,9 @@ def main():
         del argv[i:i + 2]
     args = [a for a in argv if not a.startswith("--")]
     force = "--force" in argv
-    compact_modules = "--compact-static-rel" in argv
-    bindings = static_module_ids() if compact_modules else {}
+    compact_modules = "--compact-static-rel" in argv or any(a.startswith("--compact-static-rel=") for a in argv)
+    extra = [n for a in argv if a.startswith("--compact-static-rel=") for n in a.split("=", 1)[1].split(",") if n]
+    bindings = static_module_ids(extra) if compact_modules else {}
     native_rooms = "--native-rooms" in argv
     decode_rooms = "--decode-rooms" in argv or native_rooms
     if len(args) != 2:

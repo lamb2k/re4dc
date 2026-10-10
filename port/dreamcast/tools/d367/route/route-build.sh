@@ -40,6 +40,9 @@ rm -rf "$P"; mkdir -p "$P"
 $TOOL/sh-elf-objcopy -R .stack -O binary $ELF $O/prog.bin
 /root/work/kos/utils/scramble/scramble $O/prog.bin "$P/1ST_READ.BIN"
 cp $O/sscrn.ovl "$P/sscrn.ovl"
+# ROUTE_OVL=1: the r10b room overlays; stage-scenario.py places only sscrn.ovl, so the route fixture
+# carries them: "replace": {"dc/pl0f.ovl": "<P>/pl0f.ovl", "dc/em2f.ovl": "<P>/em2f.ovl"}.
+for f in $O/*.ovl; do [ "${f##*/}" = sscrn.ovl ] || cp "$f" "$P/"; done
 python3 - "$ELF" "$O/sscrn.ovl" "$P" "$H/programs-route.json" "candidate-route$L" <<'PY'
 import hashlib, json, subprocess, sys
 from pathlib import Path

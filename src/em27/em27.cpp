@@ -937,7 +937,14 @@ void em27ObaHitCk(cEm27* em)
         return;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__) && defined(RE4DC_EM27_SLOT_FIX) && RE4DC_EM27_SLOT_FIX
+        // Unbacked sparse enemy slots read as absent (as em21's scans and em27JumpCk); raw slot
+        // math read 0xFF filler (NaN pos) and pushed the fish to NaN positions (ROUTE_CH13 r10b).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = em27MgrWork(i);
+#endif
 
         {
             int dead = !(e->be_flag & 1);

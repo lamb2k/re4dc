@@ -111,6 +111,41 @@ extern "C" void Evt_R10BS22_Func(Event* e);
 extern "C" void Evt_R10BSXX_Func_Pl0f(Event* e);
 extern "C" void Evt_R10BSXX_Func_Em2f(Event* e);
 static void r10b_setEm();
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH13
+// Route cutscenes (ROUTE_CH13, chapter 1-3's end): r10b's five events are presented by their PS2 movies
+// (docs/ROUTE_CUTSCENES.md); the surrounding source code (the boat swap, the boss set, the death watcher,
+// the rope QTE's count and outcome, the chapter end) runs unchanged. No evd is read while the movies own the
+// events, so the event units, their ARAM pre-reads and the swap into the boss module (readEvent/freeEvent,
+// EspEmDataSwapPush/Pop) are skipped. s20 (the rope) ends on its cancel cut 9, the button mash
+// (ActBtn 0x29 from frame 100, more than 14 presses pass): r10bs20c is that cut alone (285 pictures), so it
+// starts at picture 800 - 285 = 515.
+#include "route_movie.h"
+#include "fade.h"
+#include "game.h"
+#define R10B_ROUTE_MOVIES 1
+static u8 r10bMoviesOwn = 0xFF;
+static int r10bMoviesOwnCheck()
+{
+    if (r10bMoviesOwn == 0xFF) {
+        r10bMoviesOwn = re4dc_movie_available(0x10b00) && re4dc_movie_available(0x10b10) &&
+                        re4dc_movie_available(0x10b20) && re4dc_movie_available(0x10b21) &&
+                        re4dc_movie_available(0x10b22);
+        OSReport("route movie r10b: %s\n", r10bMoviesOwn ? "movies own s00/s10/s20/s21/s22" : "no media, source events");
+    }
+    return r10bMoviesOwn;
+}
+#define R10B_MOVIES_OWN() r10bMoviesOwnCheck()
+// s20's cancel mode plays the event's own stream on the running event key; the movie carries that audio.
+static void r10bS20MovieFunc(Event* e)
+{
+    if (e->funcMode != 3) {
+        Evt_R10BS20_Func(e);
+    }
+}
+#else
+#define R10B_ROUTE_MOVIES 0
+#define R10B_MOVIES_OWN() 0
+#endif
 
 // Room init (the lake, Del Lago): System_flg 0x800, the water-follow task, water hit effects; area 4 =
 // the cliff event once (Room_flg bit 0); event units 1..4 pre-read into the boss module's block; the
@@ -132,10 +167,12 @@ void R10bInit()
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtDataSet_exec(4, SCE_LEVEL10, 0, (TaskFunc) r10b_GakeEvent, 0, 1);
     }
+    if (!R10B_MOVIES_OWN()) {
     readEvent(1, 0, 0);
     readEvent(2, 0, 0);
     readEvent(3, 0, 0);
     readEvent(4, 0, 0);
+    }
     EvtMgr.SetFunc("evt_r10bs00_func", (void*) Evt_R10BS00_Func);
     EvtMgr.SetFunc("evt_r10bs10_func", (void*) Evt_R10BS10_Func);
     EvtMgr.SetFunc("evt_r10bs20_func", (void*) Evt_R10BS20_Func);
@@ -301,6 +338,29 @@ static void R10b_chkEmDie()
             EffectEventDelete();
             DmgMgr.beginEvent(0);
             SceSleep(2);
+#if R10B_ROUTE_MOVIES
+            if (R10B_MOVIES_OWN()) {
+                // The rope (s20): the mash count lands in r10b_work->count through the handler's end mode.
+                RouteMoviePlayQte(0x10b20, ROUTE_MOVIE_SND_EVENT | ROUTE_MOVIE_ACT_COUNT,
+                                  (RouteEvtFunc) r10bS20MovieFunc, 9, 515, 285);
+                if (r10b_work->count > 14) {
+                    // s22 (Leon cuts free) with the evd's StatusFlag 0x400: the fade to black before the end.
+                    if (RouteMoviePlay(0x10b22, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R10BS22_Func, 0) !=
+                        RE4DC_MOVIE_UNHANDLED) {
+                        FadeSetW(2, 0x2D, 0, 0);
+                    }
+                } else {
+                    // s21 (pulled under) with StatusFlag 0x100000 | 0x200: the died demo at its end.
+                    RouteMoviePlay(0x10b21, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R10BS21_Func, 0);
+                    DiedemoExec(0, 1);
+                    return;
+                }
+                SceEventStart(0);
+                SceSetChapterEnd(CHAPTER_1_3, 6);
+                SceSleep(1);
+                continue;
+            }
+#endif
             if (readEvent(0, 1, &evt)) {
                 if (EvtMgr.SetEvt(evt, 0) == 0) {
                     r10b_work->count = 30;
@@ -358,6 +418,17 @@ static void R10b_chkWater()
             EffectEventDelete();
             DmgMgr.beginEvent(0);
             SceSleep(2);
+#if R10B_ROUTE_MOVIES
+            if (R10B_MOVIES_OWN()) {
+                // s10 (Del Lago appears). Its cancel mode starts the boss stream (SndRoomStrStart(1, 0, 1));
+                // without a skip the evd's own stream packet did, so the movie's end starts it either way.
+                if (RouteMoviePlay(0x10b10, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R10BS10_Func, 0) !=
+                    RE4DC_MOVIE_SKIP) {
+                    SndRoomStrStart(1, 0, 1);
+                }
+            } else
+#endif
+            {
             if (readEvent(4, 1, &evt)) {
                 EvtMgr.SetEvt(evt, 0);
                 while (EvtMgr.IsAliveEvt(evtKey(&EvtMgr), 0, 0)) {
@@ -366,6 +437,7 @@ static void R10b_chkWater()
                 freeEvent(4);
             }
             readEvent(0, 0, 0);
+            }
             GamePointBossReset();
             r10b_work->boss = EmSetFromList2(0xA1, 1);
             SceExec(0x12, (TaskFunc) R10b_chkEmDie, 0, 0, SCE_PRIO_DEF_2, 0);
@@ -432,6 +504,11 @@ static void r10b_GakeEvent()
         DmgMgr.beginEvent(0);
         EffectEventDelete();
         SceSleep(2);
+#if R10B_ROUTE_MOVIES
+        if (R10B_MOVIES_OWN()) {
+            RouteMoviePlay(0x10b00, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R10BS00_Func, 0);
+        } else
+#endif
         if (readEvent(3, 1, &evt)) {
             EvtMgr.SetEvt(evt, 0);
             while (EvtMgr.IsAliveEvt(&EvtMgr.NowExeEvtKey, 0, 0)) {

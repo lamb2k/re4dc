@@ -61,8 +61,15 @@ def main():
     img_b = binary(elf_b, ["-j", section])
     if not img_a or len(img_a) != len(img_b) or len(img_a) % 4:
         sys.exit("gen_overlay: %s missing or sized differently (%d / %d)" % (section, len(img_a), len(img_b)))
-    rest_a = binary(elf_a, ["-R", section, "-R", ".ocram"])
-    rest_b = binary(elf_b, ["-R", section, "-R", ".ocram"])
+    # The rest: every other overlay section is linked at the same address in both ELFs, but is left
+    # out too (outside RAM: a binary dump across it would be mostly gap).
+    drop = ["-R", ".ocram"]
+    for line in subprocess.check_output(["sh-elf-objdump", "-h", elf_a], text=True).splitlines():
+        f = line.split()
+        if len(f) > 1 and f[1].startswith(".ovl_"):
+            drop += ["-R", f[1]]
+    rest_a = binary(elf_a, drop)
+    rest_b = binary(elf_b, drop)
     if rest_a != rest_b:
         bad = [i for i in range(0, min(len(rest_a), len(rest_b)), 4) if rest_a[i:i + 4] != rest_b[i:i + 4]]
         sys.exit("gen_overlay: the image outside %s changes with its address (%d words, first at +0x%x): "
