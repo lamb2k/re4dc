@@ -80,7 +80,12 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
 #undef RE4DC_PL08_OWN
 #undef RE4DC_PL08_SHARED
     // Palette/workspace bytes of the nine role chunks (palettes 214,2,1,61,29,2,2,229,3).
+#if RE4DC_PS2_LEON
+    // PS2_LEON: roles 2..7 are the arm's (pl08's own 0, 1, 8 unchanged); totals precomputed in ps2leon_runtime.h.
+    if(p.palette_bytes!=leon4k::pl08_plan_palette_bytes || p.workspace_bytes!=leon4k::pl08_plan_workspace_bytes)return 0;
+#else
     if(p.palette_bytes!=26144 || p.workspace_bytes!=26112)return 0;
+#endif
     p.material_count=3;
     p.materials[0].image=pl08_image;p.materials[0].crc=pl08_crc;p.materials[0].fnv=pl08_fnv;
     for(unsigned i=0;i<2;++i) {

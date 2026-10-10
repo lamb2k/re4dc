@@ -4,10 +4,18 @@
 #include "actor_material_owner.h"
 #include "actor_lifetime.h"
 #include "actor_material_policy.h"
-#if RE4DC_CHARBAKE_HAIR
+#if RE4DC_PS2_LEON
+// ps2leon.mk PS2_LEON: the arm's hair as one owned run per hair material it uses (A: 1, B: 2; tools/d367/ps2leon
+// pack_arm.py, restripified as CHARBAKE_HAIR's runs), the leon_hair_runs.h API; its palette_count is chunk 7's.
+#include "ps2leon_hair_runs.h"
+#define RE4DC_LEON_HAIR_PALETTES leon_hair_runs::palette_count
+#elif RE4DC_CHARBAKE_HAIR
 #include "leon_hair_runs_g2.h" // charbake.mk CHARBAKE_HAIR: the same hair, one run per material (cb_hair.py)
 #else
 #include "leon_hair_runs.h"
+#endif
+#ifndef RE4DC_LEON_HAIR_PALETTES
+#define RE4DC_LEON_HAIR_PALETTES 229
 #endif
 #include "warp_late.h"
 #if !RE4DC_COARSE_SOURCE_ACTORS || !RE4DC_COARSE_ONE_SUBMIT || RE4DC_COARSE_SKIN_FTRV != 1 || !RE4DC_NATIVE_ACTOR_FAST
@@ -118,7 +126,12 @@ extern "C" int re4dc_actor_plan_leon(cModel* m,Re4dcActorPlan* out) {
     RE4DC_LEON_OWNER(0,i0);RE4DC_LEON_OWNER(1,i1);RE4DC_LEON_OWNER(2,i2);RE4DC_LEON_OWNER(3,i3);
     RE4DC_LEON_OWNER(4,i4);RE4DC_LEON_OWNER(5,i5);RE4DC_LEON_OWNER(6,i6);RE4DC_LEON_OWNER(7,i7);
 #undef RE4DC_LEON_OWNER
+#if RE4DC_PS2_LEON
+    // The arm's palette / workspace bytes (ps2leon_runtime.h, from its chunks' palette counts).
+    if(p.palette_bytes!=leon4k::plan_palette_bytes || p.workspace_bytes!=leon4k::plan_workspace_bytes)return 0;
+#else
     if(p.palette_bytes!=32000 || p.workspace_bytes!=26112)return 0;
+#endif
     p.material_count=3;
     p.materials[0].image=image;p.materials[0].crc=crc;p.materials[0].fnv=fnv;
     for(unsigned i=0;i<2;++i) {
@@ -151,7 +164,8 @@ extern "C" int re4dc_actor_hair_texture_key(const Re4dcUiImage* i,unsigned* c,un
     return 0;
 }
 extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p) {
-    // The hair runs of the included header: 14 (leon_hair_runs.h), 2 with CHARBAKE_HAIR (leon_hair_runs_g2.h).
+    // The hair runs of the included header: 14 (leon_hair_runs.h), 2 with CHARBAKE_HAIR (leon_hair_runs_g2.h), the
+    // arm's with PS2_LEON (ps2leon_hair_runs.h: 1 for A, 2 for B).
     constexpr unsigned kHair=leon_hair_runs::run_count;
 #if RE4DC_ACTOR_PL08
     // pl08 (0x108): nine roles; the same hair (role 7, pl00's runs 7..20) and one role-8 run last, its whole chunk.
@@ -159,10 +173,10 @@ extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p
     if(!p || (pl08?(p->count!=9 || p->run_count!=8+kHair || p->runs[7+kHair].role!=8 || p->runs[7+kHair].material ||
                     p->runs[7+kHair].triangles!=p->input[8].triangles || p->runs[7+kHair].stream.data!=p->input[8].stream.data):
                    (p->appearance!=0x100 || p->count!=8 || p->run_count!=7+kHair)) || p->material_count!=3 ||
-       p->input[7].palette_count!=229 || p->immutable_asset_id[7]!=8 || !p->info[7] || !(p->info[7]->be_flag&0x40))return 0;
+       p->input[7].palette_count!=RE4DC_LEON_HAIR_PALETTES || p->immutable_asset_id[7]!=8 || !p->info[7] || !(p->info[7]->be_flag&0x40))return 0;
 #else
     if(!p || p->appearance!=0x100 || p->count!=8 || p->material_count!=3 || p->run_count!=7+kHair ||
-       p->input[7].palette_count!=229 || p->immutable_asset_id[7]!=8 || !p->info[7] || !(p->info[7]->be_flag&0x40))return 0;
+       p->input[7].palette_count!=RE4DC_LEON_HAIR_PALETTES || p->immutable_asset_id[7]!=8 || !p->info[7] || !(p->info[7]->be_flag&0x40))return 0;
 #endif
     for(unsigned k=0;k<kHair;++k) {
         const auto& want=leon_hair_runs::runs[k];const auto& r=p->runs[7+k];
