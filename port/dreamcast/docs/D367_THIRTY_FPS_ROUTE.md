@@ -1,5 +1,13 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-10: r11a, chapter 2-1 (ROUTE_CH21 image unchanged, lane r11a)
+
+- r11a plays from r11b door 0; door 0 to r119 shows "Coming Soon" (route doc "r11a"). It is data only: the room
+  container, the PS2 world, textures, and the AICA room bank (em24 added). The image is unchanged.
+- r11a hw ms (cost arm, drawn / skipped): quiet 58.8 / 39.0, Ganados 68.1 / 37.0. LOGIC is ~27 ms in both, ~18 of
+  it from espgen42's water grid. Flycast p50 36.2 / 42.1. Next perf item: an espgen42 grid skip (WATER45 pattern,
+  needs its own audit + STRICT).
+
 ## 2026-10-10: r11b, chapter 2-1's start (ROUTE_CH21, lane r11b)
 
 - r11b plays from the r10b door 6 transition (after the chapter 1-3 save); r11a / r10c / r10d show "Coming Soon"

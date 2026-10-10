@@ -15,6 +15,14 @@ request would fail "SND: File Not Found"). aica_banks.py still reads the banks f
 (/root/re4data), never from a staged disc. io_probe.cpp (IO_PROBE builds) still names them: not for play discs.
 Gates (lane sbb, evidence D:/Flycast-Evidence/re4-dreamcast/sbb-20261010): see docs/lanes/route.md "SBB_STUB".
 
+## 2026-10-10: r11a (chapter 2-1, after r11b) staging recipe (not built, not released)
+
+The r11b recipe below with SBB_STUB=1; no new build flag (ROUTE_CH21=1 covers r11a). Add (lane r11a tools/mkfix.py
+`base`): st1/r11a.arc (released) + st1/r11a.dar (aica-r11a: ROOM / FOOT / em12 / em24 prebuilt),
+dc/native/r11a/{MAINSCENARIO.re4mesh, ps2-world.r4pw/.re4mesh/.ids}, and the r11a + r11a PS2 world textures (into
+the pack). em12 / em24 .drs, bio4midi.dat and aica_str.dat stay as r11b's. Disc +11.3 MB. Checks: r11b door 0 ->
+r11a, r11a door 0 -> "Coming Soon" (r119), door 1 -> r11b, the Ganados at the r119 door.
+
 ## 2026-10-10: r11b (chapter 2-1's start) staging recipe (not built, not released)
 
 The r10b recipe below plus ROUTE_CH21=1 on the play ELF; the build writes a fourth overlay, **em22.ovl: stage

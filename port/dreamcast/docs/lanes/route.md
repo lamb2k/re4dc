@@ -429,6 +429,64 @@ bgm/bio4bgm.sbb (139,395,072 B) and bgm/bio4evt.sbb (193,495,040 B) are off the 
 - **Disc.** Staged payload 1,010,718,720 B -> 677,828,608 B on the same fixture: **332,890,112 B (162,544 sectors)
   freed on track 3**. No hw ms arm: the change only skips two file opens (boot / first stream); no per-frame code.
 
+## Progress 2026-10-10 (r11a: the lake shore path, chapter 2-1, behind ROUTE_CH21)
+
+r11a plays from r11b door 0. Its door 0 (to r119) shows "Coming Soon"; door 1 leads back to r11b. **No game code
+changed**: the existing ROUTE_CH21 image already covers it. route_end.cpp counts a room as built when
+dc/native/r11a/ps2-world.r4pw is on the disc, r11a is in the PS2 world registry, and em12 is linked. The only repo
+change is aica_banks.py: ROOMS r11a gains em/em24.drs and ROOM_BGM0 gains r11a [10]. Lane tree
+/root/probe/lanes-20261010/r11a, evidence D:/Flycast-Evidence/re4-dreamcast/r11a-20261010.
+
+- **Room container** (recipe as r106; byte-identical to the world-coverage lane's 10-03 outputs): GC st1/r11a.das
+  (sha 631355a9..) -> le_mirror -> tex-r11a (164 images) -> compact w-r11ac (4,489,984 -> 3,243,744, 95 identities)
+  -> pkg-r11a (convert_room_bins --color prelit, 1,138,976 B) -> room_smd release. 183 scenery BINs released; resident
+  archive 1,422,816 B; container 5,475,136 B (ROOM_CONTRACTS r11a, 27 slots, already present).
+- **PS2 world.** ps2_room_r4im.py r11a (ps2rooms inputs, `--color-light ps2 --lod-uv-guard 0.002`): 735,296 B
+  re4mesh, 18,376 B r4pw, 37 textures (551,424 B VRAM), 242 placements.
+- **Sound.** `aica_banks.py build --route title,r100,r101,r103,r104,r107,r102,r108,r109,r10a,r10b,r11b,r11a
+  --fixed-route title,r100,r101,r103 --weapons` over r11b's AICA mirror plus the released r11a.dar. Every other
+  output (bio4midi.dat with #10, every .drs and .dar) is byte-identical to aica-r11b. Only st1/r11a.dar is new: ROOM
+  171,104 B at 8,000 Hz, FOOT 142,200 at 8,000, em12 601,288 at 11,025, em24 34,040 at 8,000; arena 948,672 of
+  1,004,192. em24 is read at room entry, as in r108 / r10a. Without it, route-r11a-x1a logged "blk 9 (34040 bytes)
+  does not fit the room arena". r11a needs no stream that is not already in aica_str.dat.
+- **Enemies.** The ESL (etc/emleon01.esl, list 1) has 11 em12 entries in r11a, all alive at entry: types 0/1/3/4
+  around the huts (21,760..70,090, 93,000..110,050) and at the r119 door (-53,060..-33,470, 67,540..75,950).
+  route-r11a-e4a: the `kill 0x12` rig found a live Ganado at (-53004, 7345, 69840). route-r11a-e5a (Leon at the r119
+  door cluster, `alert`): two Ganados attack, one with a torch (shot t0036).
+- **Gates** (image r11aS = play flags + ROUTE_CH21=1 SBB_STUB=1 DBG_WARP=1 on 3b87488f, ELF 594a3a87; play twin r11aP
+  0f5ede82; both .sbb banks left off the staged discs):
+  - The ELF sources are those of 3b87488f, so knob-off identity, H2 / bell STRICT and s30 are 3b87488f's own gates.
+    missing.txt is empty and MISALIGN is 0 in every run.
+  - route-r11a-w2S: r11b warp, walk through door 0, r11a entered, walk to door 0, "door to r119 (not on this disc):
+    Coming Soon"; HALT 0, MISSING 0.
+  - route-r11a-b1a: r11a door 1 -> r11b entered (#2).
+  - route-r11a-f6sS: r10b -> s00/s10/s20 QTE/s22 -> chapter 1-3 save (card-vmu rc=0) -> door 6 -> r11b s00 1484/1484;
+    HALT 0.
+  - route-r11a-ngS2 (play ELF, padscript-newgame): r120s00 1971/1971, s01 2360/2360, r100, s40 1175/1175; heaps
+    7,941,952 / 1,010,528 (= r11b's ngP).
+  - No allocation failure in any run.
+  - Two problems are r11b's, not r11a's; they are in r11b's own runs too: one `package rejected: open failed` for
+    18d0fd82-2c9a9309 (256x256) in r11b before door 0 (also route-r11b-d0a), and `stream sbb=9900000 (1:148) not in
+    aica_str.dat` on r11b entry.
+- **Numbers.** hw ms come first: the hwproject SH-4 model on cost arm r11aC (play flags + ROUTE_CH21=1 PC_SAMPLER=1
+  DBG_WARP=1), drawn / skipped ms per tick, 6 traced ticks each. Then Flycast PACE draw ms over 300-frame windows
+  (frame >= 900), p50 / max, vsync off.
+
+  | view (window) | hw drawn / skipped | Flycast p50 / max |
+  |---|---|---|
+  | quiet, the r11b door (e1 500:579) | 58.8 / 39.0 (LOGIC 27.5, TRANS 5.4, RENDER 17.5) | 36.2 / 36.5 (22.2 fps, speed 100) |
+  | Ganados at the r119 door (e5 700:779) | 68.1 / 37.0 (LOGIC 27.3, TRANS 5.3, RENDER 24.1) | 42.1 / 44.4 (15-16.7 fps) |
+
+  LOGIC is high even in the quiet view because of the lake water generator: **Espgen42_Move00 13.3 hw ms +
+  PSVECNormalize 4.5** per drawn tick (functions.tsv, q). That is the same height-grid update that
+  WATER45_GRID_SKIP removed from r10b's espgen45 (r10b dock 127.9 -> 61.3). The next r11a item is an espgen42
+  equivalent, which needs its own logic-reader audit and a STRICT pair. Headroom: heap 4 free 780,640 B quiet
+  (largest 779,840), 812,448 in the fight (largest 744,288); VRAM free 318,208 quiet, 264,960 in the fight, 91,904
+  when entered from r11b (r11b's set resident; rejects 0, missing 0); AICA arena 948,672 of 1,004,192.
+- **Disc.** +11.3 MB over r11b (harness image 1,025,087,488 -> 1,036,402,688 B). Without SBB_STUB this is about 1 MB
+  over track 3; with SBB_STUB=1 (3b87488f) about 332 MB stay free.
+- **Next: r119** (r11a door 0; then r118 -> r117, the chapter 2-1 end).
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

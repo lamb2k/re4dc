@@ -188,6 +188,8 @@ loads every texture package from one file (room entry 7.2 -> 3.1 s, east walk 6.
   dc/em2f.ovl (checklist 2026-10-10).
 - r11b (2026-10-10, route doc "r11b", ROUTE_CH21 needs ROUTE_OVL): chapter 2-1 starts in r11b after the r10b save;
   em22 is a room overlay (stage dc/em22.ovl); stage the le_mirror'd etc/emleon01.esl (raw on the disc: R11bInit hang).
+- r11a (2026-10-10, route doc "r11a"): data only. A room counts as built when dc/native/<room>/ps2-world.r4pw is
+  staged. aica_banks ROOMS r11a reads em24 at room entry. espgen42 (the lake water) costs ~18 hw ms of logic there.
 - Chapter 1-3 (c4ec84e9; route doc "chapter 1-3"): ROUTE_CH13=1, default off; resident-track music in r108/r10a;
   "Coming Soon" at doors into rooms not on the disc. Test disc r21z-c13 awaits the user's console play.
 - User 2026-10-04 "Pursue All": logic speed-ups are unparked (exact, STRICT), alongside the drawing lanes, cheaper
