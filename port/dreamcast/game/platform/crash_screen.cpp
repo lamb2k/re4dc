@@ -29,6 +29,9 @@ extern "C" void re4dc_halt(const char* file, int line);
 extern "C" void re4dc_task_brief(char* out, unsigned size, const void* wait);  // scheduler.cpp
 extern "C" void re4dc_subscreen_brief(char* out, unsigned size) __attribute__((weak));
 extern "C" int pvr_present_pending(void) __attribute__((weak));
+#if RE4DC_PVR_LATCH
+extern "C" int re4dc_pvr_latch_line(unsigned which, char* out, unsigned size) __attribute__((weak));  // native_ui.cpp
+#endif
 static const unsigned kLogSize = 0x10000;  // mem.cpp RE4DC_LOG_SIZE
 
 namespace {
@@ -48,6 +51,9 @@ struct MissingSnapshot {
     char reason[80];
     unsigned ui, frames, vbl, vtx[3], opb[3], isp;
     unsigned asic[3], opb_init;  // issue 9: raw ASIC event status A/B/C (latched even when not enabled)
+#if RE4DC_PVR_LATCH
+    char latch[3][54];           // re4dc_pvr_latch_line 0..2 at the failure (one screen row each)
+#endif
     int pending, ta_ready;
     bool valid, pvr_valid;
 };
@@ -79,6 +85,11 @@ void capture_missing(const char* name)
             g_missing.asic[0] = *(volatile uint32_t*) ASIC_ACK_A;
             g_missing.asic[1] = *(volatile uint32_t*) ASIC_ACK_B;
             g_missing.asic[2] = *(volatile uint32_t*) ASIC_ACK_C;
+#if RE4DC_PVR_LATCH
+            for (unsigned i = 0; i < 3; ++i)
+                if (!re4dc_pvr_latch_line || !re4dc_pvr_latch_line(i, g_missing.latch[i], sizeof(g_missing.latch[i])))
+                    g_missing.latch[i][0] = 0;
+#endif
         }
         g_missing.valid = true;
     }
@@ -152,6 +163,26 @@ void show(const char* kind, const char* detail, bool wait_render)
     put_text(0, row++, line, 0xF800);
     snprintf(line, sizeof(line), "stage %08lx  ui frame %u", re4dc_stage, re4dc_ui_frame());
     put_text(0, row++, line, 0xFFFF);
+#if RE4DC_PVR_LATCH
+    // PVR_LATCH: the same snapshot in two rows, then the latch rows (state, totals, event ring) captured at the
+    // first failure; a hang without a failure prints the latch rows as they are now.
+    if (g_missing.valid && g_missing.pvr_valid) {
+        pvr_stats_t st{};
+        pvr_get_stats(&st);
+        snprintf(line, sizeof(line), "snap ui%u p%d ta%d pvr %u/%u vb %u/%u", g_missing.ui, g_missing.pending,
+                 g_missing.ta_ready, g_missing.frames, (unsigned) st.frame_count, g_missing.vbl,
+                 (unsigned) st.vbl_count);
+        put_text(0, row++, line, 0xFFFF);
+        snprintf(line, sizeof(line), "v%06x/%06x/%06x o%06x/%06x/%06x i%06x", g_missing.vtx[0], g_missing.vtx[1],
+                 g_missing.vtx[2], g_missing.opb[0], g_missing.opb[1], g_missing.opb[2], g_missing.isp);
+        put_text(0, row++, line, 0xFFFF);
+        for (int i = 0; i < 3; ++i)
+            if (g_missing.latch[i][0]) put_text(0, row++, g_missing.latch[i], 0x07FF);
+    } else if (re4dc_pvr_latch_line) {
+        for (unsigned i = 0; i < 3; ++i)
+            if (re4dc_pvr_latch_line(i, line, sizeof(line) < 54 ? sizeof(line) : 54)) put_text(0, row++, line, 0x07FF);
+    }
+#else
     if (g_missing.valid && g_missing.pvr_valid) {
         pvr_stats_t st{};
         pvr_get_stats(&st);
@@ -171,6 +202,7 @@ void show(const char* kind, const char* detail, bool wait_render)
                  g_missing.asic[1], g_missing.asic[2], g_missing.opb_init);
         put_text(0, row++, line, 0xFFFF);
     }
+#endif
     if (re4dc_subscreen_brief) {
         re4dc_subscreen_brief(line, sizeof(line));
         if (line[0]) put_text(0, row++, line, 0xFFFF);

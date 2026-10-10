@@ -146,6 +146,16 @@
 #include <kos/genwait.h>
 #include <kos/sem.h>
 #endif
+#if RE4DC_PVR_LATCH
+#if RE4DC_PVR_PIPELINE != 2 || !RE4DC_PVR_STREAM
+#error PVR_LATCH reads the KOS async-present state: needs PVR_PIPELINE=2 and PVR_STREAM=1
+#endif
+#include <dc/asic.h>
+#include <dc/vblank.h>
+extern "C" {
+#include "pvr_internal.h"   // KOS pvr_state (Makefile: -I$(KOS_BASE)/kernel/arch/dreamcast/hardware/pvr)
+}
+#endif
 #include "native_ui.h"
 #include "hud_source_mask.h"
 #include "native_model.h"
@@ -612,6 +622,102 @@ bool guard_present(bool present,unsigned ta_faults){
     return present;
 }
 #endif
+#if RE4DC_PVR_LATCH
+// PVR_LATCH=1 (issue 9, hardware diagnosis; needs CRASH_SCREEN=1): a ring of the last PVR events with their UI
+// frame, event totals and the KOS PVR state, printed on the stop screen. The raw ASIC_ACK_A/B/C words read at the
+// failure cannot show an error event: KOS's ASIC dispatcher (asic.c handler_irq) acknowledges every pending bit
+// of all three registers on each ASIC interrupt, vblank included, whether or not the event is enabled. Here every
+// PVR event gets a chained handler (the previous handler, KOS's or the fast-wake chain, still runs first). Nothing
+// new is enabled: an event without its own interrupt (ISP render done, the five error events in a release KOS) is
+// still seen at the next dispatch, which reads all pending bits. Thread-side marks: scene open / close, fence,
+// TA bank wait over 95 ms (KOS ignores pvr_wait_ready's 100 ms timeout and writes the next scene anyway), bank
+// switches. Render-only: no frame, timing or logic decision reads any of it.
+namespace latch {
+constexpr unsigned kRing=64;
+volatile unsigned char ring_code[kRing];
+volatile unsigned short ring_frame[kRing];
+volatile unsigned head;
+// totals: S scene opened, c/d closed presented/discarded, o m t n p list done, R I render done TSP/ISP, F flip,
+// e error events (any), W TA bank waits over 95 ms, X fence failures
+enum {kS,kC,kO,kT,kP,kR,kI,kF,kE,kW,kX,kCounts};
+volatile unsigned counts[kCounts];
+volatile unsigned errors;          // error event bits: 1 ISP out of memory, 2 strip halt, 4 OPB out of memory, 8 TA input error, 16 TA input overflow
+volatile unsigned last_flips;
+asic_evt_handler_entry_t prev[12];
+constexpr std::uint16_t kEvents[12]={ASIC_EVT_PVR_OPAQUEDONE,ASIC_EVT_PVR_OPAQUEMODDONE,ASIC_EVT_PVR_TRANSDONE,
+    ASIC_EVT_PVR_TRANSMODDONE,ASIC_EVT_PVR_PTDONE,ASIC_EVT_PVR_RENDERDONE_TSP,ASIC_EVT_PVR_RENDERDONE_ISP,
+    ASIC_EVT_PVR_ISP_OUTOFMEM,ASIC_EVT_PVR_STRIP_HALT,ASIC_EVT_PVR_OPB_OUTOFMEM,ASIC_EVT_PVR_TA_INPUT_ERR,
+    ASIC_EVT_PVR_TA_INPUT_OVERFLOW};
+constexpr char kCodes[12]={'o','m','t','n','p','R','I','1','2','3','4','5'};
+constexpr unsigned char kCount[12]={kO,kO,kT,kT,kP,kR,kI,kE,kE,kE,kE,kE};
+void put(char c){
+    const int o=irq_disable();
+    const unsigned h=head;
+    ring_code[h%kRing]=static_cast<unsigned char>(c);ring_frame[h%kRing]=static_cast<unsigned short>(frame);head=h+1;
+    irq_restore(o);
+}
+void bump(unsigned k){const int o=irq_disable();counts[k]=counts[k]+1;irq_restore(o);}
+void event(uint32_t code,void* data){
+    const unsigned i=unsigned(reinterpret_cast<std::uintptr_t>(data));
+    if(i>=12)return;
+    if(prev[i].hdl)prev[i].hdl(code,prev[i].data);
+    put(kCodes[i]);counts[kCount[i]]=counts[kCount[i]]+1;
+    if(i>=7)errors=errors|(1U<<(i-7));
+}
+void vblank(uint32_t,void*){
+    const unsigned f=unsigned(pvr_state.frame_count);
+    if(f!=last_flips){last_flips=f;put('F');counts[kF]=counts[kF]+1;}
+}
+void install(){
+    last_flips=unsigned(pvr_state.frame_count);
+    for(unsigned i=0;i<12;++i)prev[i]=asic_evt_set_handler(kEvents[i],event,reinterpret_cast<void*>(std::uintptr_t(i)));
+    const int handle=vblank_handler_add(vblank,nullptr);
+    re4dc_log("native PVR latch: 12 events chained (kos handlers %d/%d/%d) vblank=%d\n",prev[0].hdl!=nullptr,
+              prev[5].hdl!=nullptr,prev[9].hdl!=nullptr,handle);
+}
+// Thread side: the scene's first list (KOS pvr_start_ta_rendering waits up to 100 ms for the TA bank, then
+// proceeds even on a timeout).
+void list_begin_timed(pvr_list_t list,bool& failed){
+    const bool busy=pvr_check_ready()<0;
+    const auto t=busy?timer_us_gettime64():0;
+    failed=pvr_list_begin(list)<0;
+    if(busy && timer_us_gettime64()-t>95000){put('W');bump(kW);}
+}
+}
+// The stop screen's lines (crash_screen.cpp, which = 0..2), formatted at the failure; 0 past the last line.
+extern "C" int re4dc_pvr_latch_line(unsigned which,char* out,unsigned size){
+    using namespace latch;
+    if(which==0){
+        snprintf(out,size,"st ta%d rb%d rc%d le%02x lt%02x tt%d vt%d db%d pd%d er%02x",int(pvr_state.ta_busy),
+            int(pvr_state.render_busy),int(pvr_state.render_completed),unsigned(pvr_state.lists_enabled),
+            unsigned(pvr_state.lists_transferred),int(pvr_state.ta_target),int(pvr_state.view_target),
+            int(pvr_state.vbuf_doublebuf),pvr_present_pending(),errors);
+        return 1;
+    }
+    if(which==1){
+        snprintf(out,size,"n S%u c%u o%u t%u p%u R%u I%u F%u W%u X%u",counts[kS]%1000,counts[kC]%1000,
+            counts[kO]%1000,counts[kT]%1000,counts[kP]%1000,counts[kR]%1000,counts[kI]%1000,counts[kF]%1000,
+            counts[kW]%1000,counts[kX]%1000);
+        return 1;
+    }
+    if(which==2){
+        // Newest events last; a frame's events follow its last two digits and ':'.
+        const unsigned h=head,n=h<kRing?h:kRing;
+        char tmp[kRing*4+8];unsigned len=0,last=~0U;
+        for(unsigned k=h-n;k!=h;++k){
+            const unsigned f=ring_frame[k%kRing];
+            if(f!=last){tmp[len++]=' ';tmp[len++]=char('0'+f/10%10);tmp[len++]=char('0'+f%10);tmp[len++]=':';last=f;}
+            tmp[len++]=char(ring_code[k%kRing]);
+        }
+        tmp[len]=0;
+        // Keep the newest end that fits.
+        const unsigned room=size>4?size-4:0;
+        snprintf(out,size,"ev%s",len>room?tmp+(len-room):tmp);
+        return 1;
+    }
+    return 0;
+}
+#endif
 #if RE4DC_PVR_PIPELINE
 // Frame N's render and flip overlap frame N+1's CPU work. The late present/
 // discard decision is unchanged (Render_swap still makes it); a presenter
@@ -643,12 +749,18 @@ void start_presenter(){
 }
 void present_fence(){
     if(!pvr_present_pending())return;
+#if RE4DC_PVR_LATCH
+    latch::put('f');
+#endif
     const auto start=timer_us_gettime64();
     // The timed waiter can become runnable before the render/vblank IRQ
     // completes, then resume with its old error after presentation finished.
     // Recheck ownership before treating that timeout as an unfinished frame.
     if(pvr_present_wait()<0 && pvr_present_pending()){
         ++fence_timeouts;present_failures=present_failures|1;
+#if RE4DC_PVR_LATCH
+        latch::put('X');latch::bump(latch::kX);
+#endif
     }
     ++fence_blocked;fence_wait_us+=timer_us_gettime64()-start;
     present_resolved=present_submitted;
@@ -791,6 +903,9 @@ void stream_open() {
         if(ta_double_wanted){
             if(pvr_set_vbuf_doublebuf(true)<0)re4dc_missing("TA double buffer switch refused");
             ta_double=true;ta_double_wanted=false;
+#if RE4DC_PVR_LATCH
+            latch::put('D');
+#endif
             re4dc_log("ta bank: double at frame %u" "\n",frame);
         }
     }
@@ -817,7 +932,12 @@ void stream_open() {
 #else
     stream_list=PVR_LIST_TR_POLY;
 #endif
+#if RE4DC_PVR_LATCH
+    {bool failed;latch::list_begin_timed(stream_list,failed);if(failed)re4dc_missing("native stream list begin failed");}
+    latch::put('S');latch::bump(latch::kS);
+#else
     if(pvr_list_begin(stream_list)<0)re4dc_missing("native stream list begin failed");
+#endif
 #if RE4DC_TA_HASH
     ta_hash_reset();ta_hash_marker(stream_list);
 #endif
@@ -929,6 +1049,9 @@ void stream_close(bool present) {
     sq_lock((void*)PVR_TA_INPUT);
     if(pvr_list_finish()<0 || pvr_scene_finish()<0)re4dc_missing("native stream finish failed");
     stream_scene=false;
+#if RE4DC_PVR_LATCH
+    latch::put(present?'c':'d');latch::bump(latch::kC);
+#endif
 #if RE4DC_PVR_PIPELINE
     present_submit(present,ta_faults); // resolved by the presenter; fenced before reuse
 #else
@@ -1991,6 +2114,9 @@ extern "C" void re4dc_ui_ta_single_bank(){
     present_fence();
     if(pvr_set_vbuf_doublebuf(false)<0)re4dc_missing("TA single-bank switch refused");
     ta_double=false;
+#if RE4DC_PVR_LATCH
+    latch::put('s');
+#endif
     re4dc_log("ta bank: single at frame %u (sub screen backing) scene_discarded=%d fence_us=%llu" "\n",frame,open?1:0,
               (unsigned long long)(timer_us_gettime64()-t));
 }
@@ -2576,6 +2702,9 @@ extern "C" void re4dc_ui_init(){
 #endif
 #if RE4DC_TA_GUARD
         install_guard();
+#endif
+#if RE4DC_PVR_LATCH
+        latch::install();   // after install_fast_wake: chains its render-done handler
 #endif
 #if RE4DC_TA_GUARD || RE4DC_PERF_HUD || RE4DC_TA_VERTBUF_KB!=1024 || RE4DC_TA_DOUBLEBUF || RE4DC_TA_OPB_BINS!=16 || RE4DC_TA_OPB_OVERFLOW!=3
         re4dc_log("native VRAM layout: vertbuf=%u KiB x%u banks (%s) opb_bins=%u overflow=%u texture_pool_free=%u\n",

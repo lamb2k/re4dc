@@ -417,10 +417,15 @@ POISON_RAM ?= 0
 # draws a report (stop kind, PC/PR/stage, threads, newest log lines) into frame buffer 0, for a photo
 # on hardware where the log ring cannot be read. platform/crash_screen.cpp.
 CRASH_SCREEN ?= 0
+# PVR_LATCH=1 (issue 9 hardware diagnosis, default 0; needs CRASH_SCREEN=1, PVR_PIPELINE=2): chained handlers on
+# every PVR ASIC event (list done, render done, the five TA/ISP error events) and thread-side scene marks feed a
+# 64-entry ring, totals and the KOS PVR state, printed on the stop screen in place of the raw asic line (KOS
+# acknowledges all pending ASIC bits on every interrupt, so that line always read zero). Render-only.
+PVR_LATCH ?= 0
 .PHONY: crash-screen-force
 $(OBJDIR)/crash-screen.h: crash-screen-force
 	@mkdir -p $(dir $@)
-	@printf '#define RE4DC_CRASH_SCREEN %s\n' '$(CRASH_SCREEN)' > $@.tmp
+	@printf '#define RE4DC_CRASH_SCREEN %s\n#define RE4DC_PVR_LATCH %s\n' '$(CRASH_SCREEN)' '$(PVR_LATCH)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 $(OBJDIR)/platform/fault.o $(OBJDIR)/platform/crash_screen.o $(OBJDIR)/platform/os.o: $(OBJDIR)/crash-screen.h
@@ -867,13 +872,16 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_VRAM_PAGES %s\n#define RE4DC_VRAM_CENSUS %s\n' '$(VRAM_PAGES)' '$(VRAM_CENSUS)' >> $@.tmp
 	@printf '#define RE4DC_UI_HANDLES %s\n#define RE4DC_UI_HEADERS %s\n' '$(UI_HANDLES)' '$(UI_HEADERS)' >> $@.tmp
 	@printf '#define RE4DC_TEX_RESIDENT %s\n#define RE4DC_TEX_RESIDENT_RESERVE_KB %s\n#define RE4DC_TEX_PAYLOAD_CRC %s\n#define RE4DC_TEX_SLOTS %s\n' '$(TEX_RESIDENT)' '$(TEX_RESIDENT_RESERVE_KB)' '$(TEX_PAYLOAD_CRC)' '$(TEX_SLOTS)' >> $@.tmp
-	@printf '#define RE4DC_TEX_KEEP %s\n' '$(TEX_KEEP)' >> $@.tmp
+	@printf '#define RE4DC_TEX_KEEP %s\n#define RE4DC_PVR_LATCH %s\n' '$(TEX_KEEP)' '$(PVR_LATCH)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_WINDOW %s\n' '$(MOVIE_WINDOW)' >> $@.tmp
 	@if [ "$(MOVIE_WINDOW)" = 1 ] && { [ "$(VRAM_PAGES)" != 1 ] || [ "$(TEX_RESIDENT)" != 1 ]; }; then echo 'MOVIE_WINDOW=1 needs VRAM_PAGES=1 TEX_RESIDENT=1' >&2; exit 1; fi
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/model_bridge.o: $(OBJDIR)/pipeline30.h
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/pipeline30.h
+ifeq ($(PVR_LATCH),1)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -I$(KOS_BASE)/kernel/arch/dreamcast/hardware/pvr
+endif
 $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -include $(OBJDIR)/pipeline30.h
 $(OBJDIR)/native-reuse/texture_package.o: $(OBJDIR)/pipeline30.h
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/pipeline30.h
