@@ -428,6 +428,12 @@ CRASH_SCREEN ?= 0
 # 64-entry ring, totals and the KOS PVR state, printed on the stop screen in place of the raw asic line (KOS
 # acknowledges all pending ASIC bits on every interrupt, so that line always read zero). Render-only.
 PVR_LATCH ?= 0
+# PVR_READY_STRICT=1 (issue 9 fix, default 0; needs PVR_PIPELINE=2): KOS starts writing the next scene into a TA bank
+# whose previous scene was never handed to a render once pvr_wait_ready()'s 100 ms wait expires (pvr_scene.c
+# pvr_start_ta_rendering ignores the result). Link wraps of pvr_list_begin / pvr_set_presort_mode keep waiting in
+# 100 ms slices (bounded at 10 s) and present_fence does the same for pvr_present_wait; each expired slice is
+# counted (with PVR_LATCH: ring codes K / Q / Y and a "rdy" stop screen row). platform/native_ui.cpp namespace ready.
+PVR_READY_STRICT ?= 0
 .PHONY: crash-screen-force
 $(OBJDIR)/crash-screen.h: crash-screen-force
 	@mkdir -p $(dir $@)
@@ -880,13 +886,17 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_TEX_RESIDENT %s\n#define RE4DC_TEX_RESIDENT_RESERVE_KB %s\n#define RE4DC_TEX_PAYLOAD_CRC %s\n#define RE4DC_TEX_SLOTS %s\n' '$(TEX_RESIDENT)' '$(TEX_RESIDENT_RESERVE_KB)' '$(TEX_PAYLOAD_CRC)' '$(TEX_SLOTS)' >> $@.tmp
 	@printf '#define RE4DC_TEX_KEEP %s\n#define RE4DC_PVR_LATCH %s\n' '$(TEX_KEEP)' '$(PVR_LATCH)' >> $@.tmp
 	@printf '#define RE4DC_MOVIE_WINDOW %s\n' '$(MOVIE_WINDOW)' >> $@.tmp
+	@printf '#define RE4DC_PVR_READY_STRICT %s\n' '$(PVR_READY_STRICT)' >> $@.tmp
 	@if [ "$(MOVIE_WINDOW)" = 1 ] && { [ "$(VRAM_PAGES)" != 1 ] || [ "$(TEX_RESIDENT)" != 1 ]; }; then echo 'MOVIE_WINDOW=1 needs VRAM_PAGES=1 TEX_RESIDENT=1' >&2; exit 1; fi
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/model_bridge.o: $(OBJDIR)/pipeline30.h
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/pipeline30.h
-ifeq ($(PVR_LATCH),1)
+ifneq ($(filter 1,$(PVR_LATCH) $(PVR_READY_STRICT)),)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -I$(KOS_BASE)/kernel/arch/dreamcast/hardware/pvr
+endif
+ifeq ($(PVR_READY_STRICT),1)
+GAME_LDFLAGS += -Wl,--wrap=pvr_list_begin -Wl,--wrap=pvr_set_presort_mode
 endif
 $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -include $(OBJDIR)/pipeline30.h
 $(OBJDIR)/native-reuse/texture_package.o: $(OBJDIR)/pipeline30.h

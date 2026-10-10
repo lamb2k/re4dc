@@ -146,9 +146,9 @@
 #include <kos/genwait.h>
 #include <kos/sem.h>
 #endif
-#if RE4DC_PVR_LATCH
+#if RE4DC_PVR_LATCH || RE4DC_PVR_READY_STRICT
 #if RE4DC_PVR_PIPELINE != 2 || !RE4DC_PVR_STREAM
-#error PVR_LATCH reads the KOS async-present state: needs PVR_PIPELINE=2 and PVR_STREAM=1
+#error PVR_LATCH and PVR_READY_STRICT read the KOS async-present state: need PVR_PIPELINE=2 and PVR_STREAM=1
 #endif
 #include <dc/asic.h>
 #include <dc/vblank.h>
@@ -684,7 +684,96 @@ void list_begin_timed(pvr_list_t list,bool& failed){
     if(busy && timer_us_gettime64()-t>95000){put('W');bump(kW);}
 }
 }
-// The stop screen's lines (crash_screen.cpp, which = 0..2), formatted at the failure; 0 past the last line.
+#endif
+#if RE4DC_PVR_READY_STRICT
+// PVR_READY_STRICT=1 (issue 9): never write a scene into a TA bank, a tile matrix or a VRAM page the PVR may still
+// read after a timed-out wait. KOS (pinned toolchain, kernel/arch/dreamcast/hardware/pvr) waits 100 ms and then
+// carries on regardless in three places this build reaches:
+// - pvr_scene.c pvr_start_ta_rendering() (static, inlined into pvr_list_begin at a scene's first list):
+//   pvr_wait_ready()'s timeout is ignored, so the next scene's TA input goes into the bank whose previous scene was
+//   never handed to a render (no TA list init: it is appended to it). When that render finally starts,
+//   pvr_begin_queued_render() puts the background plane at the TA's current vertex position, in the middle of the
+//   new scene, and pvr_sync_reg_buffer() re-inits the TA under a half-written scene: a corrupted render (an ISP
+//   lockup on real hardware) or a scene whose list-done events never all arrive (never rendered).
+//   With one bank (TA_DOUBLEBUF off, the sub-screen backing) pvr_wait_render_done()'s timeout is ignored there too:
+//   TA input into the bank the render reads.
+// - pvr_buffers.c pvr_set_presort_mode() (WORLD_AUTOSORT, stream_open / world_sort_begin): writes the TA target
+//   bank's tile matrix; with one bank after an ignored pvr_wait_render_done() timeout, the matrix being rendered.
+// - pvr_irq.c pvr_present_wait() (present_fence: every scene open in single-bank mode and every VRAM upload / free)
+//   returns -1 after ONE 100 ms wait; the build halts there ("completion fence failed"), so a render that is only
+//   slow (a GPU-bound frame queued behind the previous one) stops the game.
+// Here (link wraps, the toolchain stays as pinned) each wait goes on in 100 ms slices up to kSlices (10 s, inside
+// the 30 s hang watchdog); every expired slice is counted and, with PVR_LATCH, put in the event ring with its UI
+// frame: K TA bank (previous scene not yet handed to a render), Q render done (one bank / tile matrix),
+// Y present fence. Past the bound the failure is reported as before (the stop screen names it). No TA or ISP reset
+// (rejected: it would hide the failure). Render-only: no frame, timing or logic decision reads any of it; in
+// Flycast no wait ever expires (renders complete at once), so the image behaves exactly as without the knob.
+// Checked and left alone (they do not proceed into a busy bank): pvr_render_lists() (starts a render only with
+// render_busy and render_completed clear, all lists in), pvr_apply_decision()/pvr_present_async() (a decision
+// applies only after render-done), the fast-wake and latch chains (KOS's handler runs first), pvr_scene_finish()
+// (its blank lists follow a list_begin of the same scene), pvr_set_vbuf_doublebuf() (refuses while busy),
+// re4dc_ui_ta_single_bank() and stream_open()'s single-bank path (present_fence first, which halts on failure), the
+// gpu::quiesce() callers (after present_fence; a timeout halts or skips the VRAM change).
+namespace pvr_ready {
+constexpr unsigned kSliceMs=100,kSlices=100;
+volatile int test_slices;   // crash_screen.cpp "pvrwait" test (re4dc_pvr_ready_test_arm): slices to expire
+volatile unsigned ta_timeouts,render_timeouts,present_timeouts,first_frame=~0U,last_frame;
+void note(char code,volatile unsigned& n){
+    n=n+1;if(first_frame==~0U)first_frame=frame;last_frame=frame;
+#if RE4DC_PVR_LATCH
+    latch::put(code);
+#else
+    (void)code;
+#endif
+}
+// Wait until a KOS PVR flag clears (KOS wakes the flag's genwait queue: ta_busy at render start, render_busy at
+// render done). Returns false only past the bound.
+bool wait_clear(volatile int& flag,const char* what,char code,volatile unsigned& n){
+    const int o=irq_disable();
+    unsigned slices=0;
+    while(flag && slices<kSlices)
+        if(genwait_wait((void*)&flag,what,kSliceMs)<0 && flag){note(code,n);++slices;}
+    const bool ok=!flag;
+    irq_restore(o);
+    return ok;
+}
+// Before KOS's own 100 ms waits run (they then return at once).
+void acquire_bank(){
+    if(pvr_state.ta_checked_ready)return;   // this scene already owns its TA bank
+    // Crash test (dc/crashtest.txt "pvrwait", never on a play disc): one expired 100 ms slice per scene, counted as
+    // a TA bank timeout, so the stop screen's rdy row can be checked in Flycast (renders never stall there).
+    if(test_slices>0){
+        test_slices=test_slices-1;
+        const int o=irq_disable();genwait_wait((void*)&test_slices,"re4dc ready test",kSliceMs);irq_restore(o);
+        note('K',ta_timeouts);
+    }
+    if(!wait_clear(pvr_state.ta_busy,"re4dc TA bank",'K',ta_timeouts))re4dc_missing("PVR TA bank wait timed out (strict)");
+    if(!pvr_state.vbuf_doublebuf && !wait_clear(pvr_state.render_busy,"re4dc render done",'Q',render_timeouts))
+        re4dc_missing("PVR render wait timed out (strict)");
+}
+int present_wait(){
+    for(unsigned slices=0;;){
+        if(pvr_present_wait()==0 || !pvr_present_pending())return 0;
+        note('Y',present_timeouts);
+        if(++slices>=kSlices)return -1;
+    }
+}
+}
+extern "C" void re4dc_pvr_ready_test_arm(int slices){pvr_ready::test_slices=slices;}
+extern "C" int __real_pvr_list_begin(pvr_list_t list);
+extern "C" int __wrap_pvr_list_begin(pvr_list_t list){
+    // DMA lists (unused here) do not touch the TA at list_begin, as in KOS.
+    if(!(pvr_state.dma_mode && pvr_state.dma_buffers[pvr_state.ram_target].base[list]))pvr_ready::acquire_bank();
+    return __real_pvr_list_begin(list);
+}
+extern "C" void __real_pvr_set_presort_mode(bool presort);
+extern "C" void __wrap_pvr_set_presort_mode(bool presort){
+    pvr_ready::acquire_bank();   // the target bank's tile matrix is free only once the bank is acquired
+    __real_pvr_set_presort_mode(presort);
+}
+#endif
+#if RE4DC_PVR_LATCH
+// The stop screen's lines (crash_screen.cpp, which = 0..3), formatted at the failure; 0 past the last line.
 extern "C" int re4dc_pvr_latch_line(unsigned which,char* out,unsigned size){
     using namespace latch;
     if(which==0){
@@ -715,6 +804,16 @@ extern "C" int re4dc_pvr_latch_line(unsigned which,char* out,unsigned size){
         snprintf(out,size,"ev%s",len>room?tmp+(len-room):tmp);
         return 1;
     }
+#if RE4DC_PVR_READY_STRICT
+    if(which==3){
+        // PVR_READY_STRICT: expired 100 ms slices (K TA bank, Q render done, Y present fence) and the UI frames of
+        // the first and the last one; "rdy K0 Q0 Y0" = the path never fired.
+        if(pvr_ready::first_frame==~0U)snprintf(out,size,"rdy K0 Q0 Y0");
+        else snprintf(out,size,"rdy K%u Q%u Y%u first %u last %u",pvr_ready::ta_timeouts,pvr_ready::render_timeouts,
+                      pvr_ready::present_timeouts,pvr_ready::first_frame,pvr_ready::last_frame);
+        return 1;
+    }
+#endif
     return 0;
 }
 #endif
@@ -756,7 +855,11 @@ void present_fence(){
     // The timed waiter can become runnable before the render/vblank IRQ
     // completes, then resume with its old error after presentation finished.
     // Recheck ownership before treating that timeout as an unfinished frame.
+#if RE4DC_PVR_READY_STRICT
+    if(pvr_ready::present_wait()<0 && pvr_present_pending()){   // keeps waiting past 100 ms (bounded)
+#else
     if(pvr_present_wait()<0 && pvr_present_pending()){
+#endif
         ++fence_timeouts;present_failures=present_failures|1;
 #if RE4DC_PVR_LATCH
         latch::put('X');latch::bump(latch::kX);

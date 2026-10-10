@@ -596,6 +596,57 @@ r11b radio call. Lane fix21, evidence D:/Flycast-Evidence/re4-dreamcast/fix21-20
   save screen in r10b (route-f21-f6rC1, also the r11a lane's f6sS); `sbb=000000` (0:0) in r10b after the QTE and in the
   r101 bell warp (also before SBB_STUB).
 
+## Progress 2026-10-10 (PVR_READY_STRICT: no scene into a busy TA bank, issue 9)
+
+The issue 9 diagnosis (r108 -> r109 bridge door hang on a console; C:/Game Dev/Emulators/issue9-diagnosis-20261010.md)
+found a latent KOS defect on the way. Lane tree /root/probe/lanes-20261010/kosfix, evidence
+D:/Flycast-Evidence/re4-dreamcast/kosfix-20261010.
+
+- **Defect.** The pinned KOS (/root/work/kos-re4dc-d367, toolchain, not in the repo) pvr_scene.c
+  pvr_start_ta_rendering() (static, inlined into pvr_list_begin at a scene's first list) ignores pvr_wait_ready()'s
+  100 ms timeout: the next scene's TA input is appended to the bank whose previous scene was never handed to a render
+  (no TA list init). When that render starts, pvr_begin_queued_render() writes the background plane at the TA's
+  current vertex position (inside the new scene) and pvr_sync_reg_buffer() re-inits the TA under the half-written
+  scene: a corrupted render (an ISP lockup on hardware) or a scene whose list-done events never all arrive. With one
+  bank the same function also ignores pvr_wait_render_done()'s timeout (TA input into the bank being rendered), as
+  does pvr_set_presort_mode() (WORLD_AUTOSORT: the tile matrix being rendered). pvr_present_wait() returns after one
+  100 ms wait; present_fence() then halts ("completion fence failed"), so a render that is only slow stops the game.
+- **Fix, PVR_READY_STRICT=1 (default 0, needs PVR_PIPELINE=2).** No toolchain edit: link wraps
+  (`-Wl,--wrap=pvr_list_begin -Wl,--wrap=pvr_set_presort_mode`) acquire the TA bank before KOS's own waits run (ta_busy
+  clear, plus render_busy clear with one bank), and present_fence() retries pvr_present_wait(); every wait goes on in
+  100 ms slices up to 10 s, then the stop screen names it. No TA / ISP reset. Every expired slice is counted; with
+  PVR_LATCH=1 the ring gets K (TA bank) / Q (render done) / Y (present fence) and the stop screen a row
+  `rdy K<n> Q<n> Y<n> first <ui frame> last <ui frame>`. Checked and unchanged (they never proceed into a busy bank):
+  pvr_render_lists (render only with render_busy / render_completed clear and all lists in), the async decision
+  (applied only at render-done), the fast-wake and latch chains (KOS's handler runs first), pvr_scene_finish's blank
+  lists, pvr_set_vbuf_doublebuf (refuses while busy), re4dc_ui_ta_single_bank and the single-bank stream_open (fence
+  first, halt on failure), the gpu::quiesce callers (after present_fence; halt or skip the VRAM change). Comment
+  block: platform/native_ui.cpp namespace pvr_ready. Test aid: dc/crashtest.txt `pvrwait`.
+- **Gates** (arms from route-build.sh with the 10-10 test flags + ROUTE_CH21=1 SBB_STUB=1, ACT_CAP=0; kfC control
+  traced from a clean worktree of the same HEAD, kfT = kfC + PVR_LATCH=1 PVR_READY_STRICT=1):
+  - knob-off identity: kfQ (patched tree, play flags, knobs off) vs kfO (clean tree): objcopy images differ only in
+    the __TIME__ string, four overlays identical, `_end` 8c3e231c both. Fresh objdirs; missing.txt empty on every arm.
+  - H2 (480 s): STRICT 1450..1569, 0..740, 1218..6990; whole room DISCRETE float drift only (om 476, as every gate
+    since 19f62e62); decision_cmp MUST-IDENTICAL (6993 ticks). s30 in the H2 runs: 340/340 shown, heap 57504 -> 79200
+    in both arms (= control).
+  - bell (300 s): STRICT 0..5100 and room 0101, MUST-IDENTICAL (5100 ticks).
+  - MISALIGN 0 in every run; HALT 0 and MISSING 0 except the forced test.
+  - New Game (kfP play image, 420 s): r120s00 1971/1971, r120s01 2360/2360, r100 s40 1175/1175.
+  - r108 -> r109 bridge door (i9b fixture): DOORDEMO START / END, room enter 109.
+  - r10a -> r10b door (r10b w1 walk) entered; r10b chapter 1-3 end (f6s, 600 s): s00 / s10 / s20 QTE / s21 played,
+    the save, room 10b #2. The f6s trace is identical through the first visit and the QTE, then shifts after the
+    wall-timed chapter end (room 10b #2 at vbl 18015 vs 18022; Status_flg 18 ticks; control vs control repeat is
+    identical): the wall-timed event class, not a logic change; H2 and bell are the STRICT gates.
+  - forced failure (crashtest pvrwait, route-kf-missT2 shots/t0113/frames/fb1.png): `rdy K3 Q0 Y0 first 582 last 584`.
+- **Numbers** (hwproject SH-4 model drawn / skipped hw ms, stride 7; kfH strict+latch vs kfHc control, untraced):
+  r101 square (hw22e e-sq, 1330:1409, 6 traced drawn ticks): 71.55 / 26.09 vs 70.91 / 25.60; r100 house fight
+  (e-fight, 2300:2379, 1 drawn + 11 skipped ticks): 69.89 / 68.01 vs 69.60 / 67.60. Both inside the model's sampling
+  noise (the bucket split moves by more than the total). Flycast PACE draw ms per 300-tick window from tick 1500
+  (p50 / p99 / max, fps): square 52.4 / 60.4 / 60.4, 14.3 vs 53.3 / 61.3 / 61.3, 14.4; fight 39.3 / 40.9 / 40.9,
+  21.8 vs 39.2 / 41.1 / 41.1, 21.9. As expected: the waits only run long on hardware.
+- **Recipe.** Next console test build: PVR_READY_STRICT=1 PVR_LATCH=1 (checklist top). The play recipe waits for a
+  console result.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

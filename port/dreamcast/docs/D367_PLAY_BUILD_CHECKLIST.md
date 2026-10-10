@@ -24,6 +24,22 @@ grid and its per-frame update are gone; init RNG draws kept). No disc change. r1
 (Flycast 22 -> 30 fps), Ganados 68.1 -> 49.3; heap 4 +1.1 MB in r11a, +1.0 MB in r10a. `WATER42_GRID_SKIP=0` restores
 the grid. Gates: docs/lanes/route.md "WATER42_GRID_SKIP".
 
+## 2026-10-10: next TEST build adds PVR_READY_STRICT=1 PVR_LATCH=1 (issue 9; not the play recipe yet)
+
+For the next console test disc (the r108 -> r109 bridge door hang, issue 9) add **PVR_READY_STRICT=1 PVR_LATCH=1**
+to the route-build.sh play flags (both need CRASH_SCREEN=1 and PVR_PIPELINE=2, already in the recipe). They go into
+the default play recipe only after a console confirms. No disc change.
+- PVR_READY_STRICT (default 0; knob-off image byte-identical apart from the time stamp): KOS's
+  pvr_start_ta_rendering() ignores pvr_wait_ready()'s 100 ms timeout and writes the next scene into the TA bank whose
+  previous scene was never handed to a render (and, with one bank, into the bank being rendered). Link wraps of
+  pvr_list_begin / pvr_set_presort_mode keep waiting in 100 ms slices (bounded at 10 s, then the stop screen names
+  the wait); present_fence keeps waiting for pvr_present_wait the same way instead of stopping after one 100 ms
+  wait. platform/native_ui.cpp namespace pvr_ready documents every PVR wait that was checked.
+- With PVR_LATCH the stop screen gets a row `rdy K<n> Q<n> Y<n> first <ui frame> last <ui frame>` (expired slices:
+  K TA bank, Q render done, Y present fence; `rdy K0 Q0 Y0` = the path never fired) and the event ring the codes
+  K / Q / Y. Test aid: dc/crashtest.txt `pvrwait` (never on a play disc) forces three K slices and the stop screen.
+- Gates (D:/Flycast-Evidence/re4-dreamcast/kosfix-20261010): see docs/lanes/route.md "PVR_READY_STRICT".
+
 ## 2026-10-10: SBB_STUB=1, the GC stream banks leave the disc (play recipe)
 
 Play ELF: add **SBB_STUB=1** to the route-build.sh flags below (r11b / r10b recipes). Disc: **remove
