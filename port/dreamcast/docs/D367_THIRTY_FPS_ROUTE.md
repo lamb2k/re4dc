@@ -1,5 +1,14 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-10: WATER42_GRID_SKIP, r10a / r11a lake water (ROUTE_CH13 block, lane fix21)
+
+- espgen42 keeps only its water plane (the only thing logic reads: GetWaterHeight / GetWaterCrossPos /
+  AddWaterPower bounds); the GX-only height grid and its per-frame update are skipped, init RNG draws kept. It runs in
+  r10a and r11a only (scan of every effect record on GC disc 1). STRICT in r11a (three views) and r10a; H2 / bell
+  STRICT, MUST-IDENTICAL; s30 heap_before 65,696 >= 57,504. Route doc "WATER42_GRID_SKIP".
+- r11a hw ms: quiet 58.8 -> 41.2 drawn work (LOGIC 29.3 -> 16.4; now under the 30 fps cap), Ganados 68.1 -> 49.3
+  drawn (LOGIC 34.3 -> 14.1). Flycast p50 36.2 -> 27.2 (29.9 fps), 42.1 -> 35.1.
+
 ## 2026-10-10: r11a, chapter 2-1 (ROUTE_CH21 image unchanged, lane r11a)
 
 - r11a plays from r11b door 0; door 0 to r119 shows "Coming Soon" (route doc "r11a"). It is data only: the room

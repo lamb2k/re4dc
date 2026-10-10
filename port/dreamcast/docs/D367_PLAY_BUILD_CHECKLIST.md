@@ -1,5 +1,12 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: WATER42_GRID_SKIP (r10a / r11a lake water, play recipe)
+
+No new flag: ROUTE_CH13=1 now also brings **WATER42_GRID_SKIP=1** (espgen42 keeps only its water plane; the height
+grid and its per-frame update are gone; init RNG draws kept). No disc change. r11a quiet 58.8 -> 41.2 hw ms of work
+(Flycast 22 -> 30 fps), Ganados 68.1 -> 49.3; heap 4 +1.1 MB in r11a, +1.0 MB in r10a. `WATER42_GRID_SKIP=0` restores
+the grid. Gates: docs/lanes/route.md "WATER42_GRID_SKIP".
+
 ## 2026-10-10: SBB_STUB=1, the GC stream banks leave the disc (play recipe)
 
 Play ELF: add **SBB_STUB=1** to the route-build.sh flags below (r11b / r10b recipes). Disc: **remove

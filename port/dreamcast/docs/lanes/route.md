@@ -487,6 +487,65 @@ change is aica_banks.py: ROOMS r11a gains em/em24.drs and ROOM_BGM0 gains r11a [
   over track 3; with SBB_STUB=1 (3b87488f) about 332 MB stay free.
 - **Next: r119** (r11a door 0; then r118 -> r117, the chapter 2-1 end).
 
+## Progress 2026-10-10 (WATER42_GRID_SKIP: espgen42 without its height grid, r10a + r11a)
+
+espgen42 (the room lake water) skips its height grid and per-frame update with WATER42_GRID_SKIP=1, the default
+inside the ROUTE_CH13 block (the default image, ROUTE_CH13=0, is byte-identical apart from the build stamp). Same
+pattern as r10b's WATER45_GRID_SKIP. Lane tree /root/probe/lanes-20261010/fix21, evidence
+D:/Flycast-Evidence/re4-dreamcast/fix21-20261010.
+
+- **What logic reads (src/game/Espgen42.cpp).** g_pWater is file-static; nothing outside the file reads
+  Espgen42Work (grep: only espgen45.cpp shares the layout). The entry points the game calls (GetWaterHeight,
+  GetWaterCrossPos, AddWaterPower; 30 callers: player, weapons, enemies, objects, effects) read only the plane:
+  Status_flg[0] 0x200 (set in Move00 before anything else), mat, inv, nx, ny and the 45 unit's flag. AddWaterPower is
+  the only writer of the grid (hA / hB) and nothing reads it back except Move00 and the GX draw (TransSub: pos / nrm
+  as vertex arrays, bump as an indirect texture, dl as the display list; GX is a stub here and the PS2 world draws the
+  lake). RNG: Move00 takes none; SetWaterWork draws fRand1_1 once per grid point ((nx + 1) x (ny + 1), for the initial
+  pos.y). The debug branch (Debug_flg + B) writes hB only.
+- **Change.** Under RE4DC_WATER42_GRID_SKIP: SetWaterWork keeps the plane (mat / inv / nx / ny / size / rate), leaves
+  hA / hB / pos / nrm / bump / dl NULL (no allocation, no display list) and makes the same fRand1_1 calls in the same
+  order; Move00 sets Status_flg[0] 0x200, keeps the noise-texture check, then returns; AddWaterPower returns on a
+  grid-less 0x42 water; Trans queues no draw. Makefile: `WATER42_GRID_SKIP ?= 1` in the ROUTE_CH13 block
+  (Espgen42.o only).
+- **Where espgen42 runs.** A scan of every effect sequence record in GC disc 1 (st1/*.das, evd, em drs: le_mirror's
+  sequence observer, Kind 1 and Espgen_id 0x42) finds two rooms: r10a (120 x 120 grid, cell 530) and r11a
+  (128 x 128, cell 600), both centred at (45151, -9200, 98120). None in r100 / r101 / r103 or any event. (0x45 is in
+  r102, r107, r10b-r10e, r112, r11b and two st2 events.) The heap-4 census confirms it: Espgen42.cpp holds
+  1,125,984 B in r11a (6 blocks) and 990,368 B in r10a with the grid, nothing without.
+- **Gates (arms at d3fe14d8 + this change, play flags + ROUTE_CH21=1 SBB_STUB=1, both .sbb banks off the discs; trace
+  arms f21T0 = WATER42_GRID_SKIP=0 vs f21T1 = default, LOGIC_TRACE=1 GAME_DECISION_TRACE=1 PACE_MODE=off).**
+  - Knob-off identity: f21C0 (knob 0) vs f21O (the same flags from a clean d3fe14d8 worktree): objcopy images differ in
+    2 bytes (the time stamp), all four overlays identical, `_end` 8c3e991c both; the default recipe (ROUTE_CH13=0)
+    f21D vs f21DO: 3 time-stamp bytes. Knob on: image -128 B, `_end` 8c3e989c (same 4 KiB page). missing.txt empty on
+    every arm; MISALIGN 0 in every run.
+  - r11a STRICT (frame and room 011a, decision_cmp MUST-IDENTICAL): e1 quiet 2402 ticks, e5 Ganados at the r119 door
+    2186 ticks (info sq only), lk lake view 1944 ticks. r10a STRICT (entry warp, 2925 ticks).
+  - H2 (ACT_CAP=0): STRICT 1450..1569, 0..740, 1218..6992; whole room DISCRETE with om only in the call window (476
+    ticks from 741, as r21w/x/y); decision_cmp MUST-IDENTICAL (6993 ticks). s30 340/340, heap_before 65,696 >= 57,504
+    (control). Bell: STRICT frame 0..5099 and room 0101, MUST-IDENTICAL (5100 ticks).
+  - New Game (play ELF f21P): intros 1971 / 2360, r100, s40 1175; HALT 0. r11b ambush (a1): em22 load, streams 1:36 +
+    0:17. r11b door 0 -> r11a -> r119 door "Coming Soon" (w2). r10b -> s00 / s10 / the s20 QTE / s22 -> chapter 1-3 save
+    (card-vmu rc=0) -> door 6 -> r11b s00 1484/1484 (f6r on the cost arm f21C1: the trace arms run the QTE movie
+    slower and miss presses, 10 of 17, as the sbb lane's trace run did). HALT 0, MISSING 0, no allocation failure in
+    any run.
+  - Look: GX never drew the lake on the Dreamcast, so the image cannot change; screenshot pairs (lk, e1, e5, r10a at
+    60 / 120 s) show the same scene (pose differences only: the shots are wall-timed and the after arm runs faster).
+  - Heap 4: +1.13 MB free in r11a (census free 772,448 -> 1,906,624 at frame 900), +1.0 MB in r10a (550,656 ->
+    1,549,184).
+- **Numbers (hw ms first: hwproject SH-4 model, cost arms f21C0 / f21C1 = play flags + ROUTE_CH21=1 SBB_STUB=1
+  DBG_WARP=1 PC_SAMPLER=1, 12 traced ticks; then Flycast PACE draw ms over 300-frame windows from frame 900, p50 / p99
+  / max, vsync off).**
+
+  | view (window) | hw before drawn / skipped | hw after | Flycast before | Flycast after |
+  |---|---|---|---|---|
+  | r11a quiet (e1 500:579) | 58.8 / 39.1 (LOGIC 29.3) | 41.2 drawn work + 26.1 pace wait (LOGIC 16.4) | 36.2 / 36.7 / 36.7 (22.2 fps) | 27.2 / 27.3 / 27.3 (29.9 fps, capped) |
+  | r11a Ganados (e5 700:779) | 68.1 / 37.1 (LOGIC 34.3) | 49.3 / 20.4 (LOGIC 14.1) | 42.1 / 45.0 / 45.0 (15-16 fps) | 35.1 / 38.6 / 38.6 (27-30 fps) |
+
+  Function rows (quiet, drawn tick): Espgen42_Move00 13.26 -> 0 (gone), PSVECNormalize 4.55 -> 0.25. After the change
+  the quiet view runs under the 30 fps cap, so its drawn tick carries the pace wait and the drawn / skipped split of
+  the model is not meaningful there (all 12 ticks are drawn; 9 with the wait, 3 at 42.9 without). Evidence
+  hwmodel-fix21-f21C0-e1 / -e5, hwmodel-fix21-f21C1-e1 / -e5; Flycast route-f21-e1C0 / e1C1 / e5C0 / e5C1.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

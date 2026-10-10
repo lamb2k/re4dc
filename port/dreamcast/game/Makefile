@@ -80,6 +80,12 @@ WATER45_GRID_SKIP ?= 1
 ifeq ($(WATER45_GRID_SKIP),1)
 $(OBJDIR)/src/game/espgen45.o $(OBJDIR)/src/game/Espgen42.o: GAME_CPPFLAGS += -DRE4DC_WATER45_GRID_SKIP=1
 endif
+# r10a / r11a: espgen42 (the room lake water) without its height grid (hA / hB / pos / nrm / bump / display list) or
+# its per-frame update (r11a ~18 hw ms of logic). Logic reads only the plane; the init's shared-RNG draws are kept.
+WATER42_GRID_SKIP ?= 1
+ifeq ($(WATER42_GRID_SKIP),1)
+$(OBJDIR)/src/game/Espgen42.o: GAME_CPPFLAGS += -DRE4DC_WATER42_GRID_SKIP=1
+endif
 # em27ObaHitCk scans enemy slots through the sparse backing (workAt) instead of raw slot math, which read an
 # unbacked slot's 0xFF filler as a NaN position and dragged the fish to NaN (r10b dock / boss collision storm).
 $(OBJDIR)/mod/em27/src/em27/em27.o: GAME_CPPFLAGS += -DRE4DC_EM27_SLOT_FIX=1

@@ -16,6 +16,15 @@
 #include "main_sub.h"
 #include "joy.h"
 
+// RE4DC_WATER42_GRID_SKIP (ROUTE_CH13 block: r10a, r11a): no height-field grid for the room water. Logic
+// reads only the plane (GetWaterHeight / GetWaterCrossPos / AddWaterPower's bounds use mat / inv / nx / ny,
+// and g_pWater is file-static); the grid (hA / hB / pos / nrm / bump / dl) feeds only the GX draw, which
+// is a stub on the Dreamcast (the PS2 world draws the lake). The per-frame update takes no RNG; the init
+// keeps its fRand1_1 draws (shared RNG), same count and order. Same pattern as RE4DC_WATER45_GRID_SKIP.
+#ifndef RE4DC_WATER42_GRID_SKIP
+#define RE4DC_WATER42_GRID_SKIP 0
+#endif
+
 // Effect controller 42: room water surface. A (nx+1) x (ny+1) height field simulated on two
 // ping-pong buffers, rendered as triangle strips through a display list with an indirect bump
 // texture built every frame from the normals. Shared with the weather water (espgen45):
@@ -88,6 +97,11 @@ static inline void AddWaterPowerCore(EspgenWork* w, Vec v)
     u32 z;
     u32 idx;
     int i;
+#if RE4DC_WATER42_GRID_SKIP
+    if (p->hA == NULL) {
+        return;   // espgen42 without its grid (ROUTE_CH13 r10a / r11a): no height field to push
+    }
+#endif
 
     PSMTXMultVec(p->inv, &v, &v);
     if (v.x < (f32) (-p->nx / 2)) {
@@ -540,6 +554,9 @@ void Espgen42_Move00(EspgenWork* w)
     if (tex == NULL) {
         return;
     }
+#if RE4DC_WATER42_GRID_SKIP
+    return;   // the plane header (Status_flg[0] 0x200, mat, inv) is all logic reads
+#endif
     noise = (u8*) GXGetTexObjData(tex) + 0x80000000;
     u32 nx = p->nx;
     u32 ny = p->ny;
@@ -732,7 +749,9 @@ void Espgen42_Move(EspgenWork* w)
 void Espgen42_Trans(EspgenWork* w)
 {
     if ((w->flag & 1) && !(w->flag & 2)) {
+#if !RE4DC_WATER42_GRID_SKIP
         AddOtDirect(0x10, w, (void (*)()) Espgen42_TransSub, 1, 0x80, NULL, 0.0f);
+#endif
     }
 }
 
@@ -962,6 +981,29 @@ EspgenWork* SetWaterWork(EspgenWork* w, Vec* pos, Vec* rot, f32 size, u32 nx, u3
         rate = 0.0001f;
     }
     p->mat[1][1] *= rate;
+#if RE4DC_WATER42_GRID_SKIP
+    p->hA = NULL;
+    p->hB = NULL;
+    p->pos = NULL;
+    p->nrm = NULL;
+    p->bump = NULL;
+    p->dl = NULL;
+    p->dlSize = 0;
+    (void) m;
+    (void) n;
+    (void) d;
+    (void) i;
+    (void) j;
+    (void) k;
+    (void) fx;
+    (void) fy;
+    for (int gy = 0; gy < p->ny + 1; gy++) {
+        for (int gx = 0; gx < p->nx + 1; gx++) {
+            (void) fRand1_1();   // the grid init's shared-RNG draws, same count and order
+        }
+    }
+    return w;
+#else
     n = sizeof(f32) * (p->nx + 1) * (p->ny + 1);
 #line 1050 "D:/Bio4/Prog/Espgen42.cpp"
     p->hA = (f32*) MEM_ALLOC(n, 1, 13);
@@ -1131,6 +1173,7 @@ EspgenWork* SetWaterWork(EspgenWork* w, Vec* pos, Vec* rot, f32 size, u32 nx, u3
     }
     DCStoreRange(p->dl, p->dlSize);
     return w;
+#endif   // RE4DC_WATER42_GRID_SKIP
 }
 
 // Frees all grid buffers and forgets the room water generator.
