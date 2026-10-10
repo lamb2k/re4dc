@@ -48,6 +48,8 @@
 //   fxmode <flags> (EFFECT_PS2_TOGGLE builds: the effect look at load; 1 fade clamp, 2 PS2 haze, 4 PS2 streak)
 //   charbake <variant> [room frame] (CHARBAKE_TOGGLE builds: the character texture variant at load, or switched at
 //   that frame of the first room, as the look toggle switches it at run time; up to 8 timed lines)
+//   lookstep <room frame> (LOOK_TOGGLE builds: the next look preset at that frame of the first room, the call the
+//   X + START chord makes; up to 16 timed lines; issue #11 preset stepping checks)
 //  - Later rooms: `entry <n>` (n >= 2) scopes the `act` / `goto` lines after it to the n-th room entry of the run
 //    (their frames count in that room; the door that leads there is the source's). Without it every act / goto
 //    belongs to the first room, as before. A fixture with entries also logs Leon's placement in those rooms.
@@ -83,6 +85,7 @@ void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture an
 #if defined(RE4DC_LOOK_TOGGLE)
 extern "C" void re4dc_look_set(unsigned mode);  // native_static.cpp (post30.mk LOOK_TOGGLE)
 extern "C" void re4dc_look_osd_toggle(void);  // native_static.cpp (post30.mk LOOK_TOGGLE)
+extern "C" void re4dc_look_cycle(void);  // native_static.cpp (post30.mk LOOK_TOGGLE)
 #endif
 #if defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
 void re4dc_ps2fx_set(unsigned flags);  // esp_sub.cpp (effects30.mk EFFECT_PS2_TOGGLE)
@@ -146,6 +149,8 @@ struct Warp {
 #if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
     struct CharbakeAt { u32 frame; u8 variant; bool done; } charbake_at[8];  // charbake <variant> <room frame>
     unsigned n_charbake_at;
+    struct LookStep { u32 frame; bool done; } lookstep[16];  // lookstep <room frame> (LOOK_TOGGLE)
+    unsigned n_lookstep;
 #endif
     bool act_source_clock;  // opt-in fixture holds count source pad ticks, not wall-time stalls
     u8 parse_entry, max_entry;  // `entry <n>`: the room entry later act / goto lines belong to (1 = first room)
@@ -321,6 +326,8 @@ void load()
             re4dc_look_set(num(tok[1]));   // post30.mk LOOK_TOGGLE: the look preset at load (gallery columns)
         } else if (!strcmp(k, "lookosd")) {
             re4dc_look_osd_toggle();       // LOOK_TOGGLE: the on-screen preset label always shown (label checks)
+        } else if (!strcmp(k, "lookstep") && n >= 2 && wp.n_lookstep < 16) {
+            wp.lookstep[wp.n_lookstep++] = {num(tok[1]), false};   // LOOK_TOGGLE: next preset at a room frame
 #endif
         } else if (!strcmp(k, "freeze") && n >= 2) {
             wp.has_freeze = true;
@@ -686,6 +693,15 @@ void re4dc_warp_poll(void)
         c.done = true;
         re4dc_log("warp: charbake %u at room frame %u\n", (unsigned) c.variant, (unsigned) wp.room_frames);
         re4dc_charbake_set(c.variant);
+    }
+#endif
+#if defined(RE4DC_LOOK_TOGGLE)
+    for (unsigned i = 0; i < wp.n_lookstep; ++i) {
+        Warp::LookStep& s = wp.lookstep[i];
+        if (s.done || wp.room_frames < s.frame) continue;
+        s.done = true;
+        re4dc_log("warp: lookstep at room frame %u\n", (unsigned) wp.room_frames);
+        re4dc_look_cycle();
     }
 #endif
     for (unsigned i = 0; i < wp.n_arm; ++i) {
