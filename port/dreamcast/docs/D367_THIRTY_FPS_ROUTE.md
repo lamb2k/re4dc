@@ -1,5 +1,47 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-09: PACE_CAP=2 measured against the play recipe (decision pending)
+
+The user asked to revisit PACE_CAP=2 now that the logic lane found no exact speedups left. The play default stays
+PACE_CAP=1 (Fast). Evidence: D:/Flycast-Evidence/re4-dreamcast/pace2-20261009; review sheet and strip charts:
+C:/Game Dev/Emulators/pace2-review.
+
+- What it does (pace.cpp/pace.mk, compile time only): logic keeps the 29.97 Hz vblank clock in every setting. When
+  the game is at least one tick (2 vblanks) behind, an iteration runs its whole logic tick with the image dropped
+  (v2: no model OT, no present). PACE_CAP is the most consecutive dropped images: 1 = up to 2 ticks per drawn frame,
+  2 = up to 3. Fast mode only takes the second drop (Smooth's 15 fps floor blocks it; Off disables pacing). Below
+  real time either way the game runs in slow motion: speed = ticks per second / 29.97. No runtime or Options
+  selection exists; RE4DCCFG stores only the mode (2 bits, all used).
+- hw model on the 19f62e62 recipe (cost arms PACE_FORCE=2 and PACE_FORCE=T, stride 7), console factor 1.155
+  outdoors (world submitted) and 1.03 indoors, replayed through the pacing rule (tools/d367/pacesim.py):
+
+  | view (window) | model ms drawn / skipped | PACE_CAP=1 speed / fps | PACE_CAP=2 speed / fps |
+  |---|---:|---:|---:|
+  | r101 square fight, worst view, ACT_CAP=0 (1330:1409) | 71.10 / 25.20 | 60% / 9.0 | 71% / 7.1 |
+  | r100 house fight (2300:2379) | 54.30 / 22.33 | 75% / 11.3 | 88% / 8.8 |
+  | r100 quiet outdoor (1240:1319) | 39.47 / 11.68 | 100% / 18.6 | 100% / 18.6 |
+  | r100 house interior, quiet (800:879) | 38.33 / 12.35 | 100% / 23.1 | 100% / 23.1 |
+
+  A second consecutive skip costs what a first does (D S S arm: square 25.04, fight 21.43). Input latency (pad read
+  to the image showing it): square 105 -> 120 ms mean, fight 84 -> 97. Views already at 100% are unchanged.
+- Logic STRICT (Flycast, ACT_CAP=0, trace builds of the recipe):
+  - bell: PACE_CAP=2 Fast vs the unpaced control route-ti-bellB: whole room STRICT, decision_cmp MUST-IDENTICAL
+    (5,102 ticks; Flycast ran the fight in the saturated D S S pattern throughout).
+  - H2: PACE_CAP=2 Fast vs the unpaced control: STRICT to 740. The r100s03 movie (ticks 741..) ends on wall time,
+    and any paced arm reaches its end at a different tick (control 1217, PACE_CAP=1 Fast 1216, PACE_CAP=2 Fast
+    1215); the padscript and Frame_cnt-scheduled work then fall on other ticks, so the later windows differ, as for
+    any timing change.
+  - Equalised pair: PACE_CAP=1 vs PACE_CAP=2, both Fast with PACE_TEST_DRAW_US=40000 (the same emulated draw load,
+    so the movie ends at tick 1213 in both and the r101 load completes at 180 in both): H2 STRICT 1450..1569 /
+    ..740 / 1218.., whole room STRICT, decision_cmp MUST-IDENTICAL (5,808 ticks); bell whole room STRICT,
+    MUST-IDENTICAL (4,374). One arm drew D S, the other D S S.
+- Flycast (vsync off) does not reproduce hardware pacing: its vblanks outrun the guest timer, so even the unpaced
+  control shows 58% speed at 29 ms of work. Its PACE windows only confirm the direction (H2 tail: CAP 1 69%
+  13.1 fps, CAP 2 81% 8.0 fps).
+- A runtime choice (a fourth "Fast+" value) would need: the cap as a variable in pace.cpp (want_skip, the
+  lag-drop limit, kKeepVb), a third RE4DCCFG pacing bit, the chord and quality.txt values. The in-game Options row
+  itself is still unbuilt.
+
 ## 2026-10-09: issue 9 diagnostics and issue 15 audio (test build)
 
 - Issue 9 (bridge presentation hang on hardware): the first-failure snapshot

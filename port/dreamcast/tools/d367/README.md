@@ -44,7 +44,8 @@ EXTRA_MAKE="$LH $M1 $PERF OBJDIR=/path/obj-<name>"
 - Add each new lane step here when it lands. Untracked -D knobs don't trigger rebuilds: delete the
   tree ELF, use a fresh OBJDIR per flag set, and record the ELF sha256.
 - Frame pacing and the coarse square (f4da5fd; `pace.mk`, `game30.mk`) are not in PERF. Play discs add
-  `PACE_CATCHUP=2 PACE_MODE=fast PACE_CAP=2`. The coarse-square arms add `PACE_CATCHUP=2 PACE_MODE=off
+  `PACE_CATCHUP=2 PACE_MODE=fast` (PACE_CAP stays 1 by user decision; PACE_CAP=2 measured 2026-10-09 in
+  D367_THIRTY_FPS_ROUTE.md; `pacesim.py` replays the pacing rule on hw model drawn / skipped ms). The coarse-square arms add `PACE_CATCHUP=2 PACE_MODE=off
   PACE_TRANS_SKIP=4063 COARSE=1` (every tick drawn; test builds) and, for the gates, `DBG_WARP=1
   LOGIC_TRACE=1 LOGIC_TRACE_MASK_RENDER=1 GAME_DECISION_TRACE=1 ACT_CAP=0` (the r101 square plan,
   `docs/D367_SQUARE_PERF_PLAN.md`).
