@@ -1,5 +1,10 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-10: r118 past El Gigante (ROUTE_CH21, lane r118)
+
+- r119 door 0 -> r118 -> back, and r118's r117 door shows "Coming Soon" (route doc "r118"). Code is the r118 BGM0
+  slot (snd.cpp, CH21) + aica_banks + warp presets; the rest is staged data. HALT 0, MISSING 0. Next: r117.
+
 ## 2026-10-10: ACTOR_EXACT_FAST, r119 exact-lit trees (lane r118)
 
 - Render only, default 1 with ROUTE_CH21 (route doc "ACTOR_EXACT_FAST"): r119 quiet 109.3 -> 93.8 hw ms drawn;

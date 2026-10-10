@@ -191,6 +191,16 @@ PRESETS = {
     # r11a as r119's door 1 delivers Leon (em12).
     "r11a-entry": dict(room=0x11a, pos=(-58032, 7346, 69783), ang=1.362,
                        notes="r11a from the r119 door (St1, em12)"),
+    # r118 (route lane r118, the church; ROUTE_CH21) as r119's door 0 delivers Leon (r119 AEV: dst 94554, 2258, 12986,
+    # angle -1.842), before Ashley's rescue (Item_find_flg 0x00100000 clear: no enemies, the alternate layout).
+    "r118-entry": dict(room=0x118, pos=(94554, 2258, 12986), ang=-1.842,
+                       notes="r118 from the r119 door (St1, before the rescue: no enemies)"),
+    # At r118's door 4 (to r117): r117 door 0's arrival in r118 (dst 23412, 12026, -26482, angle -1.422) turned to face
+    # the door (+pi). *-unlocked sets door_unlock[0] 0x10000000 (r118_checkDoor117KeyUse after the key 0x3C is used),
+    # so door 4 is a plain door (without it, R118Init hooks the locked-door message).
+    "r118-door117-unlocked": dict(room=0x118, pos=(23412, 12026, -26482), ang=1.7196, unlock={0: 0x10000000},
+                                  door=[("fwd", 30, 20), ("a", 60, 4), ("a", 150, 4), ("a", 240, 4)],
+                                  notes="at the r118 -> r117 door, unlocked (r117 not on the disc: Coming Soon)"),
     # r40b (St4, st4_0 + em1f) as r40a's door 1 delivers Leon (r40a AEV: dst 1749, 0, 4498, angle -1.801); r40b's
     # only door arrival.
     "r40b-entry": dict(room=0x40b, pos=(1749, 0, 4498), ang=-1.801,

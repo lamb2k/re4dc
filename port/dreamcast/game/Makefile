@@ -120,6 +120,9 @@ MODULES += em2b:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em2b
 $(OBJDIR)/mod/st1_2/src/st1/r119.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 $(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
+# r118 (route lane r118, the church; r119 door 0): no new module (its entry enemy em22 is r11b's overlay); slot 1's
+# BGM (bio4midi #9) plays on the resident slot-0 track, as r108 / r10a (src/game/snd.cpp).
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o
 endif
 endif

@@ -1837,6 +1837,10 @@ static u16 s_ch13LogRoom = 0xFFFF;
 static int ch13_bgm1_sub()
 {
     u16 room = pG->room_id;
+#if defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
+    // r118 (ROUTE_CH21): slot 1 is bio4midi #9 (r118_checkBgm starts slot 1), the same frozen-layout gap.
+    if (room == 0x118) return (pSnd->room_bgm_tbl[0] >> 16) & 0x8000;
+#endif
     return (room == 0x108 || room == 0x10A) && ((pSnd->room_bgm_tbl[0] >> 16) & 0x8000);
 }
 

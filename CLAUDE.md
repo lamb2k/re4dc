@@ -195,6 +195,8 @@ loads every texture package from one file (room entry 7.2 -> 3.1 s, east walk 6.
   come from the same build as the image. MOVIE_FENCE_RETRY: a not-ready fence no longer ends a route movie.
 - ACTOR_EXACT_FAST (2026-10-10, route doc "ACTOR_EXACT_FAST", default 1 with ROUTE_CH21): exact actor lighting
   with per-light constants hoisted + fsrra (r119 quiet -15.5 hw ms). Torch flicker defeats any light bake.
+- r118 (2026-10-10, route doc "r118", ROUTE_CH21): r119 door 0 -> r118; BGM0 is bgmtbl slot 0 (snd.cpp CH21
+  case); stage the r118 arc/dar/bio4midi #11, aica_str 0:23, PS2 world and the two material pairs.
 - r11a (2026-10-10, route doc "r11a"): data only. A room counts as built when dc/native/<room>/ps2-world.r4pw is
   staged. aica_banks ROOMS r11a reads em24 at room entry.
 - WATER42_GRID_SKIP (2026-10-10, route doc "WATER42_GRID_SKIP", default 1 in the ROUTE_CH13 block): espgen42 (the

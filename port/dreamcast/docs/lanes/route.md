@@ -791,6 +791,25 @@ significant lights, so no fold, and the bake key changes every frame: a bake gav
 - **Next for r119 perf.** The boss itself (em2b, GC-drawn: models(other) ~33 ms) needs a native draw path; the
   quiet view's remaining cost is the source-drawn huts / roofs / gate.
 
+## Progress 2026-10-10 (r118: past El Gigante, chapter 2-1, behind ROUTE_CH21, lane r118)
+
+r119 door 0 now leads to r118 (route r119 -> r118 -> r117, key 0x3C at the r117 door). Code: r118's BGM0 is bgmtbl
+slot 0 (#11; slot 1 #9, stream 0:0x17): snd.cpp ch13_bgm1_sub returns slot 0's flag for room 0x118 under
+RE4DC_ROUTE_CH21 (snd.o only, CH21 block); aica_banks ROOM_BGM0 r118 [11] and ROOMS r118 (st1/r118.dar +
+em/em22.drs, the r118 Ganados). Warp presets r118-entry (from r119 door 0) and r118-door117-unlocked.
+- **Staging (all ROUTE_CH21 discs).** st1/r118.arc (the room container), st1/r118.dar from `aica_banks.py` (r118
+  arena 581,216 B) and bgm/bio4midi.dat with #11, bgm/aica_str.dat with 1:148 and 0:23, dc/native/r118/
+  MAINSCENARIO.re4mesh, the PS2 world dc/native/r118/ps2-world.{r4pw,re4mesh,ids} (ps2_room_r4im with
+  `--lod-uv-guard` and `--gc-lit` from gc_room_lit.py: 925,728 B, 72 textures, 984 KB VRAM), the room's textures plus
+  the two material pairs 4605d017-2d97db21 and b34e217d-8dfb0009 (dc/tex, merged into the pack with the catalog pack).
+- **Runs (final image l4C).** w1: r11a -> r119 (fight, s30, kill) -> door 0 -> r118 entry 3 -> door back to r119.
+  d4: r118 at the r117 door, unlocked: "door to r117 (not on this disc): Coming Soon". HALT 0, MISSING 0, MISALIGN 0,
+  no allocation or upload failures, texture missing 0. r118 entered from r119: vram_free 364,288 at entry (direct
+  entry 2,509,568), heap 4 free 7.88 MB of 7.92 at entry; the PS2 mesh opens at 942,912 B, em22 at entry. Flycast
+  draw in r118 (direct, d4) 16 ms a frame. A size=984 work backing grows to ~422 KB (the rain particles).
+- **Next room: r117** (the chapter 2-1 end): key 0x3C door; check its enemy modules / effects with
+  `assets.sh discover r117`, the PS2 world, bgmtbl, and whether its archive fits heap 4 after the em22 overlay.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

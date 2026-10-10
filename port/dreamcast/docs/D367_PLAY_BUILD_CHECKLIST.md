@@ -1,5 +1,12 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: r118 (ROUTE_CH21 discs)
+
+Stage st1/r118.arc, st1/r118.dar + bgm/bio4midi.dat (aica_banks with ROOMS r118), bgm/aica_str.dat with streams
+1:148 and 0:23, dc/native/r118/{MAINSCENARIO.re4mesh, ps2-world.r4pw, ps2-world.re4mesh, ps2-world.ids}, the r118
+textures and material pairs 4605d017-2d97db21 + b34e217d-8dfb0009 merged into dc/tex.pak with the catalog pack.
+Check: r119 door 0 enters r118 (music #11), its r117 door says "Coming Soon".
+
 ## 2026-10-10: ACTOR_EXACT_FAST (ROUTE_CH21 block)
 
 No new flag or staged file: ROUTE_CH21=1 brings ACTOR_EXACT_FAST=1 (faster exact actor lighting). Check: r119 trees
