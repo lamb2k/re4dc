@@ -1,5 +1,10 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-10: ACTOR_EXACT_FAST, r119 exact-lit trees (lane r118)
+
+- Render only, default 1 with ROUTE_CH21 (route doc "ACTOR_EXACT_FAST"): r119 quiet 109.3 -> 93.8 hw ms drawn;
+  boss 88.0 -> 89.5 (unchanged: the giant is GC-drawn, next item). H2 + bell STRICT, MUST-IDENTICAL.
+
 ## 2026-10-10: LINK_TIGHT + LINK_OVL_HELPERS, heap margin for CH21 (lane r118)
 
 - Link-only, default 1 with ROUTE_CH21 (route doc "LINK_TIGHT"): the KOS script's empty icache-aligned .sub0..9

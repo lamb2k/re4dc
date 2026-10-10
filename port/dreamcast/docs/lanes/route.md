@@ -775,6 +775,22 @@ the r100 s30 movie cliff. Two link-only knobs, default 1 in the ROUTE_CH21 block
   -> r11b s00 1484/1484 (same QTE outcome as the control). r119 g3: s00 / s10 / s30 / s20 all terminal=1 (s30
   140/140). r11a -> r11b.
 
+## Progress 2026-10-10 (ACTOR_EXACT_FAST: r119's exact-lit trees, lane r118)
+
+r119's quiet-view RENDER/models(other) was the actor path's exact per-vertex lighting: 92% of
+evaluate_prepared_source_lighting came from pass_lights_exact <- re4dc_actor_submit <- ModelRender. Census: cEmTree
+(id 0x49, 3 parts) 4,835 exact-lit vertices a frame under up to eight flickering torch lights (more than three
+significant lights, so no fold, and the bake key changes every frame: a bake gave nothing), cEmTorch 314.
+- **ACTOR_EXACT_FAST=1** (render only, default 1 with ROUTE_CH21): pass_lights_exact computes each light's constants
+  once outside the vertex loop and the distance with fsrra; same lights, order, ambient start, clamps, material and
+  tev scale (float rounding only).
+- **hw ms (cost arms l1C -> l3C, drawn).** Quiet q 500:579: 109.3 -> 93.8 (-15.5). Boss b 900:979 (El Gigante,
+  proven in the r119 doc): 88.0 -> 89.5 (noise; the boss's own body dominates, few exact vertices). Flycast PACE
+  300-frame windows p50 / max: quiet 72 / 74 -> 69.5 / 73; boss pass window 78 -> 74, after it 61-62 both.
+- **Gates.** As LINK_TIGHT (same final image l4): H2 + bell STRICT, MUST-IDENTICAL; play-throughs pass.
+- **Next for r119 perf.** The boss itself (em2b, GC-drawn: models(other) ~33 ms) needs a native draw path; the
+  quiet view's remaining cost is the source-drawn huts / roofs / gate.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

@@ -3147,9 +3147,71 @@ void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     }
 }
 
+#ifndef RE4DC_ACTOR_EXACT_FAST
+#define RE4DC_ACTOR_EXACT_FAST 0
+#endif
 // Pass 2 (exact, slow): the generic path's per-vertex evaluator.
 void pass_lights_exact(Part& e, const Lights& L, const Records& r, unsigned n) {
     static const u8 white[4] = {255, 255, 255, 255};
+#if RE4DC_ACTOR_EXACT_FAST
+    // ACTOR_EXACT_FAST=1 (render only): evaluate_prepared_source_lighting's arithmetic (source_lighting.cpp) per
+    // vertex, with the per-light constants (colour / 255, a, k, position, direction) taken out of the vertex loop,
+    // one fsrra for the light distance instead of a square root and three divisions, and one division for the
+    // attenuation. Same light order, ambient start, clamp, material and TEV scale; results differ from the reference
+    // evaluator only in float rounding (the 8-bit colour, rarely by one step).
+    const SourceLighting& S = *L.source;
+    const re4dc::render::PreparedSourceLights& P = L.prepared;
+    const bool vertex_colour = (S.ambient_vertex || S.material_vertex) && e.p.colors;
+    struct FastLight { float x, y, z, dx, dy, dz, a0, a1, a2, k0, k1, k2, r, g, b; };
+    FastLight fl[8];
+    const unsigned count = P.count < 8U ? P.count : 8U;
+    for (unsigned j = 0; j < count; ++j) {
+        const SourceLight& s = P.lights[j];
+        fl[j] = {s.position[0], s.position[1], s.position[2], s.direction[0], s.direction[1], s.direction[2],
+                 s.a[0], s.a[1], s.a[2], s.k[0], s.k[1], s.k[2],
+                 s.color[0] / 255.f, s.color[1] / 255.f, s.color[2] / 255.f};
+    }
+    const bool attenuate = S.attenuation == 1;
+    const unsigned diffuse_mode = S.diffuse;
+    for (unsigned i = 0; i < n; ++i) {
+        float w[3], nn[3];
+        world_of(e.f, e.p, r, i, w, nn);
+        const u8* color = vertex_colour ? e.p.colors + r.ci(i) * 4 : white;
+        const u8* ambient = S.ambient_vertex ? color : S.ambient;
+        const u8* material = S.material_vertex ? color : S.material;
+        float out0 = S.enable ? ambient[0] / 255.f : 1.f, out1 = S.enable ? ambient[1] / 255.f : 1.f,
+              out2 = S.enable ? ambient[2] / 255.f : 1.f;
+        for (unsigned j = 0; j < count; ++j) {
+            const FastLight& l = fl[j];
+            float lx = l.x - w[0], ly = l.y - w[1], lz = l.z - w[2];
+            const float d2 = lx * lx + ly * ly + lz * lz;
+            float distance = 0.0f;
+            if (d2 > 0.0f) {
+                const float rs = inverse_sqrt(d2);
+                distance = d2 * rs;
+                lx *= rs; ly *= rs; lz *= rs;
+            } else { lx = nn[0]; ly = nn[1]; lz = nn[2]; }
+            float attenuation = 1.0f;
+            if (attenuate) {
+                const float cosine = std::max(0.f, lx * l.dx + ly * l.dy + lz * l.dz);
+                const float angular = std::max(0.f, l.a0 + l.a1 * cosine + l.a2 * cosine * cosine);
+                const float denominator = l.k0 + l.k1 * distance + l.k2 * d2;
+                attenuation = denominator > 0 ? angular / denominator : 0;
+            }
+            float diffuse = diffuse_mode ? nn[0] * lx + nn[1] * ly + nn[2] * lz : 1.f;
+            if (diffuse_mode == 2) diffuse = std::max(0.f, diffuse);
+            const float f = attenuation * diffuse;
+            out0 += l.r * f; out1 += l.g * f; out2 += l.b * f;
+        }
+        const float rgb0 = material[0] / 255.f * std::min(std::max(out0, 0.f), 1.f) * S.tev_scale;
+        const float rgb1 = material[1] / 255.f * std::min(std::max(out1, 0.f), 1.f) * S.tev_scale;
+        const float rgb2 = material[2] / 255.f * std::min(std::max(out2, 0.f), 1.f) * S.tev_scale;
+        const u32 a = e.colors ? u32(e.colors[r.ci(i) * 4 + 3]) << 24 : e.alpha;
+        e.cache.v[i].argb = a | (channel(rgb0 * 255.0f) << 16) | (channel(rgb1 * 255.0f) << 8) | channel(rgb2 * 255.0f);
+    }
+    stats.slow_light_vertices += n;
+    return;
+#endif
     for (unsigned i = 0; i < n; ++i) {
         float w[3], nn[3], rgb[3];
         world_of(e.f, e.p, r, i, w, nn);

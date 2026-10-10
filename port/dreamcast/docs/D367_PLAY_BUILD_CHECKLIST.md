@@ -1,5 +1,10 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: ACTOR_EXACT_FAST (ROUTE_CH21 block)
+
+No new flag or staged file: ROUTE_CH21=1 brings ACTOR_EXACT_FAST=1 (faster exact actor lighting). Check: r119 trees
+lit by the torches as before.
+
 ## 2026-10-10: LINK_TIGHT, LINK_OVL_HELPERS, MOVIE_FENCE_RETRY (ROUTE_CH21 block)
 
 No new flag or staged file: ROUTE_CH21=1 now links without the KOS .sub padding, moves single-overlay helpers into

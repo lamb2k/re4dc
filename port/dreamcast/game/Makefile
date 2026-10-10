@@ -289,6 +289,18 @@ CROWD_FLAT ?= 0
 # ACTOR_SKIN_FTRV=1: skinned palette matrices (screen x [R*q | t]) built with FTRV instead of
 # scalar maths (render only, native_actor_fast.cpp skin_position_matrix).
 ACTOR_SKIN_FTRV ?= 0
+# ACTOR_EXACT_FAST=1 (render only; default 1 with ROUTE_CH21=1, else 0: no effect): the actor path's exact per-vertex
+# lighting (parts whose lights do not fold into three directions, e.g. r119's trees under up to eight flickering torch
+# lights: ~46 hw ms a frame) with the per-light constants out of the vertex loop and fsrra for the light distance
+# (native_actor_fast.cpp pass_lights_exact); same formula and order, float rounding only.
+ifeq ($(ROUTE_CH21),1)
+ACTOR_EXACT_FAST ?= 1
+else
+ACTOR_EXACT_FAST ?= 0
+endif
+ifeq ($(ACTOR_EXACT_FAST),1)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_EXACT_FAST=1
+endif
 ifeq ($(NATIVE_ACTOR)$(NATIVE_ACTOR_FAST),11)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/native_actor.o,$(PLATFORM_OBJS))
 else

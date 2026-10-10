@@ -193,6 +193,8 @@ loads every texture package from one file (room entry 7.2 -> 3.1 s, east walk 6.
 - LINK_TIGHT / LINK_OVL_HELPERS (2026-10-10, route doc "LINK_TIGHT", default 1 with ROUTE_CH21): no KOS .sub
   padding; helpers only one room overlay reaches live in that overlay (obj/ovlh/moves.tsv), so the overlays must
   come from the same build as the image. MOVIE_FENCE_RETRY: a not-ready fence no longer ends a route movie.
+- ACTOR_EXACT_FAST (2026-10-10, route doc "ACTOR_EXACT_FAST", default 1 with ROUTE_CH21): exact actor lighting
+  with per-light constants hoisted + fsrra (r119 quiet -15.5 hw ms). Torch flicker defeats any light bake.
 - r11a (2026-10-10, route doc "r11a"): data only. A room counts as built when dc/native/<room>/ps2-world.r4pw is
   staged. aica_banks ROOMS r11a reads em24 at room entry.
 - WATER42_GRID_SKIP (2026-10-10, route doc "WATER42_GRID_SKIP", default 1 in the ROUTE_CH13 block): espgen42 (the
