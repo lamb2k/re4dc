@@ -216,8 +216,41 @@ extern "C" { unsigned re4dc_look_mode; }
 #if defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
 extern "C" void re4dc_ps2fx_set(unsigned flags);
 #endif
+#include "pvr_internal.h"   // KOS pvr_state.render_busy (post30.mk LOOK_TOGGLE: -I$(KOS_BASE)/kernel/arch/dreamcast/hardware/pvr)
 static unsigned re4dc_look_scaler_boot=~0U; // PVR_SCALER_CFG as KOS left it (vertical filter on for 480i TV)
 static bool re4dc_look_applied;
+// Issue #11 (console, VGA box, 2026-10-10): stepping to GS hung the PVR (render started, never finished; error
+// bits ISP + OPB out of memory). The preset wrote SCALER_CFG from the pad poll, i.e. at any point of a render: the
+// ISP/TSP write-out reads the vertical scale factor while it renders, and on VGA KOS never enables the vertical
+// filter at all (pvr_init: VSCALE 1024 for VGA, 1025 only for interlaced TV), so GS switched the scaler on in a mode
+// the port never runs it in, mid-render. Now (render only, LOOK_TOGGLE builds only):
+// - VGA: SCALER_CFG is never written (GS / GA / GX change nothing there);
+// - an unchanged value is not written (GS / GA on a TV, where KOS already set 1025);
+// - a real change (GX on a TV, and back) is applied in the ISP render-done interrupt, after KOS's handler, only
+//   while no render is in flight (pvr_state.render_busy clear, interrupts off: renders start only from the PVR
+//   interrupts / vblank, so none can start under the write). The next render is the first to use it.
+static volatile unsigned re4dc_look_scaler_want=~0U,re4dc_look_scaler_writes;
+static asic_evt_handler_entry_t re4dc_look_kos_done;
+static bool re4dc_look_chained;
+static void re4dc_look_render_done(uint32_t code,void* data){
+    (void)data;
+    if(re4dc_look_kos_done.hdl)re4dc_look_kos_done.hdl(code,re4dc_look_kos_done.data);
+    const unsigned w=re4dc_look_scaler_want;
+    if(w==~0U || pvr_state.render_busy)return;
+    PVR_SET(PVR_SCALER_CFG,w);re4dc_look_scaler_want=~0U;re4dc_look_scaler_writes=re4dc_look_scaler_writes+1;
+}
+static const char* re4dc_look_scaler_request(unsigned cfg){
+    if(vid_mode && vid_mode->cable_type==CT_VGA){re4dc_look_scaler_want=~0U;return "vga: scaler untouched";}
+    const int o=irq_disable();
+    const bool same=unsigned(PVR_GET(PVR_SCALER_CFG))==cfg;
+    re4dc_look_scaler_want=same?~0U:cfg;
+    if(!same && !re4dc_look_chained){
+        re4dc_look_kos_done=asic_evt_set_handler(ASIC_EVT_PVR_RENDERDONE_TSP,re4dc_look_render_done,nullptr);
+        re4dc_look_chained=true;
+    }
+    irq_restore(o);
+    return same?"unchanged":"queued for render done";
+}
 // On-screen label (native_ui.cpp re4dc_look_grade_post draws it in the top letterbox): 3 s after each preset change,
 // or always while "always show" is on (hold X + Y, press START).
 extern "C" unsigned re4dc_vi_retrace_count(void);
@@ -243,9 +276,9 @@ extern "C" void re4dc_look_set(unsigned mode){
 #endif
     if(re4dc_look_scaler_boot==~0U)re4dc_look_scaler_boot=PVR_GET(PVR_SCALER_CFG);
     const unsigned vs=lk.soft==1?1025U:lk.soft==2?1024U:(re4dc_look_scaler_boot&0xffffU);
-    PVR_SET(PVR_SCALER_CFG,(re4dc_look_scaler_boot&~0xffffU)|vs);
-    re4dc_log("look: preset %u %s (curve %u cap %u fog colour %u%% sky %u fx %u grade %u vscale %u scaler %08x)\n",re4dc_look_mode,lk.label,
-        lk.curve,lk.cap,lk.rgb,lk.sky,lk.fx,lk.grade,vs,unsigned(PVR_GET(PVR_SCALER_CFG)));
+    const char* how=re4dc_look_scaler_request((re4dc_look_scaler_boot&~0xffffU)|vs);
+    re4dc_log("look: preset %u %s (curve %u cap %u fog colour %u%% sky %u fx %u grade %u vscale %u scaler %08x %s)\n",re4dc_look_mode,lk.label,
+        lk.curve,lk.cap,lk.rgb,lk.sky,lk.fx,lk.grade,vs,unsigned(PVR_GET(PVR_SCALER_CFG)),how);
 }
 // GM / GA: the r100 outdoor cuts (fog colour 8d8775 with a negative fog start: cuts 0-3, 5-9, 12-15; the house
 // cuts 4 / 10 / 11 start at 9.8 m and match the GameCube already) get one full-screen multiply. Per channel

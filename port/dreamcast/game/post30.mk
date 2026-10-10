@@ -36,7 +36,8 @@
 #                GameCube fog curve + SKY_FAR=1 + fog colour 70 %, GM = GD + the r100 outdoor colour match (one
 #                full-screen DESTCOLOR multiply quad, native_ui.cpp re4dc_look_grade_post), GS = GD + the PVR vertical
 #                flicker filter forced on (VSCALE 1025; KOS already sets it for 480i TV), GA = GM + GS, DC = the play
-#                build, GX = GD with the filter forced off). Hold X and press START to step them; the preset name
+#                build, GX = GD with the filter forced off; issue #11: the scaler is never written on VGA, and on a TV
+#                only when the value changes, in the render-done interrupt with no render in flight). Hold X and press START to step them; the preset name
 #                shows top left for 3 s (BIOS font, one textured quad; X + Y + START keeps it shown) and on the VMU
 #                PACE page; DBG_WARP's `look <n>` sets one at load and `lookosd` keeps the label shown. Needs
 #                EFFECT_PS2_TOGGLE=1 (the same chord and the VMU label slot; a preset also sets the effect look). The
@@ -65,6 +66,8 @@ $(error LOOK_TOGGLE needs PS2_WORLD_MESH=1 (the sky placements are PS2 world row
 endif
 # re4dc_look_set sets each preset's effect look (re4dc_ps2fx_set): native_static.o needs the toggle define too.
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_EFFECT_PS2_TOGGLE=1
+# Issue #11: the scaler write waits for an idle PVR (KOS pvr_state.render_busy, pvr_internal.h).
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -I$(KOS_BASE)/kernel/arch/dreamcast/hardware/pvr
 endif
 ifneq ($(filter-out 0 1,$(LOOK_TOGGLE)),)
 $(error LOOK_TOGGLE is 0 or 1)

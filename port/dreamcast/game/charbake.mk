@@ -10,6 +10,11 @@
 #                      Leon's translucent pass costs about half (hw model at 686b550f: -1.5 ms per drawn tick at the
 #                      r101 square, -1.4 in the r100 house fight, -0.2 in the r101 fight). CHARBAKE_HAIR_DIR: the
 #                      private directory holding leon_hair_runs_g2.h (default COARSE_ACTOR_ASSET_DIR, the play bundle).
+#                      Keep it OFF (issue #11, 2026-10-10): on a real console the look test disc (on in every preset)
+#                      showed dark notched triangles on the back of Leon's head. Flycast does not show them (same view,
+#                      0 vs 1: 74 pixels differ, nothing visible), so the regroup can only be judged on hardware; the
+#                      likely cause is the order change across the two hair materials (59 coincident cross-material
+#                      pairs no longer adjacent, all of material 2 before material 1). Not in any play recipe.
 #   CHARBAKE_TOGGLE=1  test builds: the character texture variants at run time (charbake_variants.h: CUR = the play
 #                      textures, AO, SKY, GCB, LVQ = Leon's atlas as VQ, GVQ = GCB with Leon as VQ; coarse_actor.cpp
 #                      re4dc_charbake_set / _cycle / _label, which the look toggle's presets call (native_static.cpp,
