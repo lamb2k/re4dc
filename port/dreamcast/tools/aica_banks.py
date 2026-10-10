@@ -758,6 +758,12 @@ ROUTE_STREAMS = [
 # 1:140 (09310000, r100 first call), 1:141 (09400000, r100 call after the s20 truck), 1:142, 1:144,
 # 1:145, 1:152. One-shots streamed through the same ring; disc cost ~4 MB.
 CALL_VOICE_STREAMS = [(1, 140), (1, 141), (1, 142), (1, 144), (1, 145), (1, 152)]
+# The play disc's list through chapter 2-1 (ROUTE_CH21: r10b, r11b, r11a), `--streams ch21`. Each room's streams are
+# appended, so every earlier entry keeps its data bytes (only the 2 KB header grows): 0:4 (r10b, the boss), 0:17 + 1:36
+# (r11b, the battle and the ambush), 1:148 (the r11b radio call voice, 22 s one-shot; requested on r11b entry after
+# the Ope radio 1:3: "stream sbb=9900000 (1:148) not in aica_str.dat" without it).
+CH21_STREAMS = ROUTE_STREAMS + CALL_VOICE_STREAMS + [(0, 4), (0, 17), (1, 36), (1, 148)]
+STREAM_PRESETS = {'ch21': CH21_STREAMS}
 
 
 def nibble_to_sample(n):
@@ -1105,7 +1111,7 @@ def main():
     ap.add_argument('cmd', choices=('plan', 'build', 'merge', 'streams', 'disc', 'reconvert'))
     ap.add_argument('--root', help='reconvert: a disc data tree whose prebuilt banks are refiltered '
                     '(--mirror may list several unconverted mirrors, comma separated, tried in order)')
-    ap.add_argument('--streams', default=','.join('%d:%d' % k for k in ROUTE_STREAMS), help='blk:no list')
+    ap.add_argument('--streams', default=','.join('%d:%d' % k for k in ROUTE_STREAMS), help='blk:no list, or a preset name: ' + ', '.join(sorted(STREAM_PRESETS)))
     ap.add_argument('--call-voices', action='store_true',
                     help='add CALL_VOICE_STREAMS (the radio call voices) to --streams')
     ap.add_argument('--overlay')
@@ -1120,6 +1126,8 @@ def main():
     ap.add_argument('--json')
     ap.add_argument('--check', action='store_true', help='decode the AICA output and report SNR')
     a = ap.parse_args()
+    if a.streams in STREAM_PRESETS:   # a named list (ch21: the chapter 2-1 play disc), call voices included
+        a.streams = ','.join('%d:%d' % k for k in STREAM_PRESETS[a.streams])
     if a.call_voices:
         a.streams = ','.join([k for k in a.streams.split(',') if k] + ['%d:%d' % k for k in CALL_VOICE_STREAMS])
     if a.cmd == 'merge':

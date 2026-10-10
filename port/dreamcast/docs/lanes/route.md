@@ -572,6 +572,30 @@ again in r11b before door 0. Data only, no code. Lane fix21, evidence D:/Flycast
   ambush): open failed 0. HALT 0, MISSING 0, MISALIGN 0, no allocation failure. The image is item 1's; H2 / bell /
   New Game discs carry no r10b / r11b room textures, so their gates are 079650ba's.
 
+## Progress 2026-10-10 (stream 1:148, the r11b radio call voice, in aica_str.dat)
+
+`aica: stream sbb=9900000 not in aica_str.dat, silent` on r11b entry: bio4str.hed block 1 request 148 (SND_SHD
+offset 0x9900000, 22.0 s stereo one-shot at 32 kHz), requested right after the Ope radio 1:3, i.e. the voice of the
+r11b radio call. Lane fix21, evidence D:/Flycast-Evidence/re4-dreamcast/fix21-20261010.
+
+- **Change.** tools/aica_banks.py: CH21_STREAMS = ROUTE_STREAMS + CALL_VOICE_STREAMS + 0:4 (r10b) + 0:17, 1:36 (r11b)
+  + 1:148, selectable as `--streams ch21` (STREAM_PRESETS). It names the list the r11b lane passed by hand (14
+  streams) and appends 1:148, so every earlier entry and its data bytes are unchanged: only the 2 KB header grows by
+  one entry. `aica_banks.py streams --mirror <LE mirror with the .sbb> --out DIR --streams 0:2,...,1:36` reproduces
+  the r11b file byte for byte (15,800,320 B, sha 0a9dfd80..); `--streams ch21` gives 16,504,832 B (sha c49229aa..):
+  bytes [2048, 15,800,320) identical, entries 0..13 identical, entry 14 = {0x9900000, 32000, 0x940100, 2, 704000 (A),
+  0, 0xF11800, 0}. Staged by lane r11b tools/mkfix.py r11b() (rooms/str-r11b-ch21). test_aica_banks.py: 12 tests OK.
+- **Runs (image 079650ba; both .sbb banks off).** route-f21-f6rN (r10b -> chapter 1-3 save -> door 6 -> r11b s00, the
+  radio call): `stream 1:148 ready / start ... stopped` 21.8 s after its start, right after 1:3; no "not in
+  aica_str.dat" for it. H2 with the 14-stream vs the 15-stream file (route-f21-h2o / h2nn, ACT_CAP=0): STRICT 1450..1569,
+  0..740, 1218..6991 and the whole room, MUST-IDENTICAL (6992 ticks); the stream event sequences (start / stopped,
+  ids) identical; s30 340/340. Bell (bello / bellnn): STRICT frame and room, MUST-IDENTICAL (5100 ticks). New Game
+  (play ELF f21P, 15-stream file): intros 1971 / 2360, s40 1175, 1:3 and 1:140 play. r11b -> r11a (w2N) and the ambush
+  (a1N): HALT 0. HALT 0, MISSING 0, MISALIGN 0, no allocation failure in every run.
+- **Still silent (not this change):** 0:29 (sbb 0x3480000, 60 s one-shot music) requested on the chapter 1-3 results /
+  save screen in r10b (route-f21-f6rC1, also the r11a lane's f6sS); `sbb=000000` (0:0) in r10b after the QTE and in the
+  r101 bell warp (also before SBB_STUB).
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

@@ -196,6 +196,9 @@ loads every texture package from one file (room entry 7.2 -> 3.1 s, east walk 6.
 - Material pair 18d0fd82-2c9a9309 (2026-10-10, route doc "material pair 18d0fd82"): r10b / r11b room model TPL
   (#27 / #28) color + mask; built by pairs_from_log.py --file st1/r11b.das + VQ, staged by lane r11b mkfix r11b().
   pack-fixture.sh replaces an existing dc/tex.pak with a pack of the loose files only: merge the catalog pack first.
+- Disc streams (2026-10-10, route doc "stream 1:148"): `aica_banks.py streams --streams ch21` is the chapter 2-1
+  play list (CH21_STREAMS); append new streams at the end so earlier entries stay byte-identical. 0:29 (chapter 1-3
+  results music) is still not in it.
 - Chapter 1-3 (c4ec84e9; route doc "chapter 1-3"): ROUTE_CH13=1, default off; resident-track music in r108/r10a;
   "Coming Soon" at doors into rooms not on the disc. Test disc r21z-c13 awaits the user's console play.
 - User 2026-10-04 "Pursue All": logic speed-ups are unparked (exact, STRICT), alongside the drawing lanes, cheaper

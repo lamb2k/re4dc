@@ -1,5 +1,13 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: stream 1:148 (the r11b radio call voice) in bgm/aica_str.dat
+
+Stage **bgm/aica_str.dat built with `aica_banks.py streams --mirror <LE mirror with the .sbb> --out DIR --streams
+ch21`** (16,504,832 B, sha256 c49229aa..; lane r11b rooms/str-r11b-ch21, staged by lane r11b mkfix r11b()): the r11b
+14-stream file plus 1:148 appended (earlier entries byte-identical after the header). Check: on r11b entry `stream
+1:148 start` after 1:3, no "sbb=9900000 not in aica_str.dat". Still silent, not covered: 0:29 on the chapter 1-3
+results screen (route doc "stream 1:148").
+
 ## 2026-10-10: material pair 18d0fd82-2c9a9309 (r10b / r11b, disc data)
 
 Add **dc/tex/1/18d0fd82-2c9a9309.re4tex** (/root/probe/lanes/route/pairs-r11b, VQ, 18,576 B) to the texture set
@@ -44,7 +52,7 @@ r11a, r11a door 0 -> "Coming Soon" (r119), door 1 -> r11b, the Ganados at the r1
 The r10b recipe below plus ROUTE_CH21=1 on the play ELF; the build writes a fourth overlay, **em22.ovl: stage
 dc/em22.ovl** with dc/pl0f.ovl + dc/em2f.ovl. Add (lane r11b tools/mkfix.py `base`): **etc/emleon01.esl le_mirror'd**
 (the disc carried the raw GC file; without it R11bInit hangs), st1/r11b.arc + r11b.dar, em/em22.drs (rel-stripped;
-**drop it from the r10b removal list**), bgm/aica_str.dat with streams 0:17 + 1:36 (15,800,320 B), bgm/bio4midi.dat
+**drop it from the r10b removal list**), bgm/aica_str.dat with streams 0:17 + 1:36 + 1:148 (`--streams ch21`, 16,504,832 B), bgm/bio4midi.dat
 with #10 prebuilt, dc/native/r11b/{MAINSCENARIO.re4mesh, ps2-world.r4pw/.re4mesh/.ids}, dc/movie/r11bs00.seq,
 the r11b + em22 + PS2 world textures and the material pair 18d0fd82 (pairs-r11b) (into the pack). Disc +31.5 MB loose (~42 MB free on track03). Checks: the
 chapter 1-3 save, door 6 into r11b, s00, the radio call, the ambush, the three "Coming Soon" doors.
