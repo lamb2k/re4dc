@@ -349,6 +349,54 @@ __DATE__/__TIME__). Lane tree /root/probe/lanes-20261009/r10b, evidence D:/Flyca
   Headroom at r10b (route f6, frame 1400): heap 4 free 1,051,520 B (the two overlays hold 59,680 B), VRAM free
   203,520 B, AICA largest free 1,004,192 B.
 
+## Progress 2026-10-10 (r11b: chapter 2-1's start, behind ROUTE_CH21)
+
+r11b (the lake shore: Leon lands from the boat, the wolf (em22) ambush) plays from the r10b door 6 transition that
+follows the chapter 1-3 end save. Its three exits to rooms not on the disc (r11a, r10c, r10d) show "Coming Soon".
+Everything is behind ROUTE_CH21=1 (needs ROUTE_OVL=1, so ROUTE_CH13=1; default 0: byte-identical apart from
+__DATE__/__TIME__, both the play and the default recipe, overlays identical). Lane tree
+/root/probe/lanes-20261010/r11b, evidence D:/Flycast-Evidence/re4-dreamcast/r11b-20261010.
+
+- **em22 is a room overlay** (MODULES `em22:ovl`, overlay slot 3 at 0x8E000000 + 2 * 4 MiB; platform/modules.cpp
+  g_route_ovl gains em22 under RE4DC_ROUTE_CH21 through ROUTE_OVL_SLOT / ROUTE_OVL_ID). em22.ovl 27,236 B;
+  log `route overlay: em22 load 1 26496 B (169 relocs)` when the ambush spawns the wolves. em22.cpp lint fixes
+  (off-GC only): `new (em) cEm22;` (value-init zeroes subArc), em22EmWork through EmMgr.workAt, em22DoorOpenCk
+  skips null doors (the sparse enemy backing; same trap as the em27 fish).
+- **r11bs00 through RouteMoviePlay** (id 0x11b00, ROUTE_MOVIE_SND_EVENT, end function Evt_R11BS00_Func; else the
+  source evd). 1484/1484 pictures, dropped 0.
+- **Trap: chapter 2's enemy list.** etc/emleon01.esl was on the disc raw (big-endian: room read as 0x1b01), never
+  read before r11b; EmSetFromList2 returned errEm and the boat's setPos hung in R11bInit. Stage the le_mirror'd
+  copy. le_mirror's knob-conditional set now strips `:ovl`.
+- **Assets.** prepare_native_ui ROOM_CONTRACTS r11b (33 slots, smd 4, effect 7, item 9, model slot 28); aica_banks
+  ROOMS r11b (+ em22 / em27 / pl0f drs) and ROOM_BGM0 r11b [10]: with `--fixed-route title,r100,r101,r103` every bank
+  is identical to r10b's except bio4midi.dat, which gains #10 prebuilt (r11b arena 797,312 of 1,004,192). Streams
+  0:17 (the battle) and 1:36 (the ambush) added to aica_str.dat. em22.drs rel-stripped
+  (le_mirror --compact-static-rel=em22). PS2 world built with --lod-uv-guard 0.002 (760,544 B, 60 textures).
+- **Gates.** Knob-off identity PASS (3 bytes: the time stamp). Trace arms r11bT (1f7865d3) vs r11bB (base 67fda5c8):
+  `_end` 8c3ebb5c vs 8c3ebafc (same 4 KiB page, +96 B text); missing 0, MISALIGN 0. H2 ACT_CAP=0 STRICT in
+  1450..1569, 0..740 and 1218..6990, decision_cmp MUST-IDENTICAL (6991 ticks); s30 340/340, heap_before 57,504 =
+  control. Bell STRICT frame + room, MUST-IDENTICAL (5101 ticks). New Game: intros 1971 / 2360, r100, s04.
+  Route f6s: r10b to the chapter 1-3 results, save (card-vmu save rc=0, syswrite rc=0), door 6, r11b, s00, the
+  radio call; HALT 0, MISSING 0. Doors: r11a / r10c / r10d "Coming Soon". Ambush a1: em22 loads, seven wolves,
+  streams 1:36 + 0:17, SHAKE OFF QTE; HALT 0, no allocation failure.
+- **Numbers (hw first: hwproject SH-4 model, cost arm r11bC = play flags + ROUTE_CH21=1 PC_SAMPLER=1 DBG_WARP=1,
+  drawn / skipped ms; then Flycast PACE draw ms over 300-frame windows, p50 / p99 / max, vsync off, route runs).**
+
+  | view (window) | hw drawn / skipped | Flycast p50 / p99 / max |
+  |---|---|---|
+  | quiet, the landing (e1 500:579) | 40.0 / 39.4 (1 drawn traced tick; RENDER 22.8) | 34.4 / 34.5 / 34.5 (28.5 fps) |
+  | wolves (a1 700:779) | 81.6 / 26.3 (LOGIC 12.5, TRANS 8.3, RENDER 49.6) | 50.5 / 66.8 / 66.8 (13-14 fps) |
+
+  Wolf window proof: the cost run's log has the em22 overlay load and seven em22 (id 22) set 7-15 m from Leon after
+  the goto at frame 200; LOGIC is 12.5 ms in the window (0 in the quiet view). Headroom: heap 4 free 2,250,528 B
+  after init, 1,106,976 B in the fight (largest 1,105,152; the two overlays hold 70,464 B); VRAM free 122,112 B in the
+  fight (texture slots 448 as on r10b, rejects 0, missing 0); AICA largest free 1,004,192 B. Disc +31.5 MB
+  (208 files, loose textures; ~42 MB were free on track03).
+- **Next: r11a** (exit 1). Script is small (two player water effects, the water hit table; no events); enemies from
+  the ESL: em12 (linked, heap 4 worst case 1,105,152 B: measure one run). Needs the room container
+  (prepare_native_ui contract exists, 27 slots), the PS2 world, textures, its AICA bank entry (ROOMS r11a exists)
+  and then ROUTE_CH21 coverage of its own exits.
+
 ## Numbers (image, build, evidence)
 
 ## Ready to land

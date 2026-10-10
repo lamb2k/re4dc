@@ -2447,7 +2447,9 @@ def static_module_ids(extra=()):
     makefile = (root / 'port/dreamcast/game/Makefile').read_text()
     # Knob-conditional modules (`MODULES += ...` under WORLD_STAGE_MODULES=1, with #if-guarded registry rows) are
     # not part of the default image's static set this mirror compacts against.
-    conditional = {n for line in re.findall(r'^MODULES \+= (.*)$', makefile, re.M) for n in line.split()}
+    # `<mod>:ovl` (a room overlay, ROUTE_OVL) names the module <mod>.
+    conditional = {n.partition(':')[0] for line in re.findall(r'^MODULES \+= (.*)$', makefile, re.M)
+                   for n in line.split()}
     if set(extra) - conditional:
         raise ValueError('not a knob-conditional MODULES entry: ' + ', '.join(sorted(set(extra) - conditional)))
     if set(extra) - {n for _, n in bindings}:

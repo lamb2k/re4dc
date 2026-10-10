@@ -1,5 +1,12 @@
 # D367: 30 fps on real hardware, three-room route
 
+## 2026-10-10: r11b, chapter 2-1's start (ROUTE_CH21, lane r11b)
+
+- r11b plays from the r10b door 6 transition (after the chapter 1-3 save); r11a / r10c / r10d show "Coming Soon"
+  (route doc "r11b"). em22 (wolves) is a heap-4 room overlay; `_end` in the same 4 KiB page as 67fda5c8; H2 and bell
+  STRICT / MUST-IDENTICAL; s30 heap_before 57,504 = control.
+- r11b hw ms (cost arm, drawn): landing 40.0, wolf ambush 81.6 (LOGIC 12.5, RENDER 49.6). Flycast p50 34.4 / 50.5.
+
 ## 2026-10-10: r10b to chapter 1-3's end (ROUTE_CH13, lane r10b)
 
 - r10b plays to SceSetChapterEnd(CHAPTER_1_3, 6) and "Coming Soon" at door 6 (route doc "r10b"). The boat (pl0f) and

@@ -456,6 +456,9 @@ ROOM_CONTRACTS={
     'r10c':dict(slots=35,smd=4,effs=(7,),itm=9,model_slots=(28,)),
     # r10f: 48 slots, models TPL#28 (BIN#27) and TPL#32 (BIN#31; BIN#30 alone); FCV#29/#33-46, EMI#47 byte-identical.
     'r10f':dict(slots=48,smd=4,effs=(7,),itm=9,model_slots=(28,32)),
+    # r11b (route lane r11b, chapter 2-1's start, the lake shore): 33 slots, SMD#4, EFF#7, ITM#9, model TPL#28
+    # (after BIN#27: the floating island, as r10b); FCV#29-32 (the island motions) byte-identical.
+    'r11b':dict(slots=33,smd=4,effs=(7,),itm=9,model_slots=(28,)),
     # r11a: r107's 27-slot layout.
     'r11a':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
     # r40b (St4, st4_0 + em1f; follow-up 7): r40c's 27-slot layout (header ends at 232 of 256: no growth).

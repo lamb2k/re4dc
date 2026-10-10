@@ -137,7 +137,11 @@ extern "C" void _unresolved()
 // EmInitFunc of the module: constructs the cEm22 class in the manager's work.
 void Em22Init(cEm* em)
 {
+#if !defined(__PPC__)
+    new (em) cEm22;   // no value-init: () zeroes the subArc the manager set (off the GC)
+#else
     new (em) cEm22();
+#endif
 }
 
 // Per-frame damage check (cEm22::move): an explosion / fire damage volume kills the dog outright
@@ -2890,7 +2894,12 @@ int em22ScreenInCk(cEm22* em)
 // Work `no` of the enemy manager without the range check (the callers loop over nArray).
 static inline cEmDoor* em22EmWork(u32 no)
 {
+#if !defined(__PPC__)
+    // Scan helper: unbacked sparse slots read as absent (no allocation), as em21.cpp's scans.
+    return (cEmDoor*) EmMgr.workAt(no);
+#else
     return (cEmDoor*) ((u8*) EmMgr.pArray + EmMgr.size * no);
+#endif
 }
 
 // Opens a closed door (cEmDoor) the dog runs into from its side (within reach and angle).
@@ -2908,6 +2917,11 @@ void em22DoorOpenCk(cEm22* em)
         cEmDoor* door = em22EmWork(i);
         EmDoorWork* dw;
 
+#if !defined(__PPC__)
+        if (!door) {
+            continue;
+        }
+#endif
         if ((door->be_flag & 0x201) != 1) {
             continue;
         }

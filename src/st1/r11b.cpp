@@ -76,6 +76,17 @@ static void R11b_Event();
 static void r11b_str_check();
 extern "C" void Evt_R11BS00_Func(Event* e);
 static void r11b_bort_pos_chk();
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH21
+// Route cutscene (ROUTE_CH21, chapter 2-1's start): r11bs00 (Del Lago takes the two Ganados' victim) is
+// presented by its PS2 movie (docs/ROUTE_CUTSCENES.md). The handler's begin / end modes run (object 0x7C
+// hidden, then restored); its per-cut modes only draw (splashes, the water render targets on the event's
+// player stand-in), so they have no movie counterpart. EvtReadExec flags 4 (the fade in after the event
+// starts) becomes the fade in after the movie.
+#include "route_movie.h"
+#define R11B_ROUTE_MOVIES 1
+#else
+#define R11B_ROUTE_MOVIES 0
+#endif
 
 // Room init (the lake shore / boat dock): System_flg 0x800; JumpPoint 1 (arriving by boat) marks the
 // s00 event seen (Room_flg bit 0); Item_find_flg 8 / 2, Scenario_flg[0] 0x01000000, three door flags
@@ -407,6 +418,12 @@ static void R11b_Event()
     }
     BitOn(pG->Status_flg[1], 0x800);
     if (!(pG->System_flg & 0x40)) {
+#if R11B_ROUTE_MOVIES
+        if (RouteMoviePlay(0x11b00, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R11BS00_Func, 0) !=
+            RE4DC_MOVIE_UNHANDLED) {
+            FadeSetW(0x80000002, 0x1E, 0, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r11bs00.evd", 0, 4);
     }
     BitOff(pG->System_flg, 0x400);

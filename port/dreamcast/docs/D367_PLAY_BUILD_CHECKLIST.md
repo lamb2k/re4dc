@@ -1,5 +1,15 @@
 # D367 play build checklist (user, 2026-10-09 current state at top)
 
+## 2026-10-10: r11b (chapter 2-1's start) staging recipe (not built, not released)
+
+The r10b recipe below plus ROUTE_CH21=1 on the play ELF; the build writes a fourth overlay, **em22.ovl: stage
+dc/em22.ovl** with dc/pl0f.ovl + dc/em2f.ovl. Add (lane r11b tools/mkfix.py `base`): **etc/emleon01.esl le_mirror'd**
+(the disc carried the raw GC file; without it R11bInit hangs), st1/r11b.arc + r11b.dar, em/em22.drs (rel-stripped;
+**drop it from the r10b removal list**), bgm/aica_str.dat with streams 0:17 + 1:36 (15,800,320 B), bgm/bio4midi.dat
+with #10 prebuilt, dc/native/r11b/{MAINSCENARIO.re4mesh, ps2-world.r4pw/.re4mesh/.ids}, dc/movie/r11bs00.seq,
+the r11b + em22 + PS2 world textures (into the pack). Disc +31.5 MB loose (~42 MB free on track03). Checks: the
+chapter 1-3 save, door 6 into r11b, s00, the radio call, the ambush, the three "Coming Soon" doors.
+
 ## 2026-10-10: r10b (chapter 1-3's end) play disc staging recipe (not built, not released)
 
 Play ELF = route-build.sh with the 2026-10-09 test-build flags plus `PRIM_CAP_R10B=327680` (DBG_WARP=0
