@@ -8,6 +8,7 @@
 // Gigante, 0x2B, set by PS2_GIGANTE; bit 1: Del Lago, 0x2F, set by PS2_DELLAGO) take the source GX lighting record
 // (actor_source_lighting below) instead of the constant colour, as ACTOR_GANADO_SOURCE_LIGHT does for every non-Leon
 // plan; the lit kernel then folds the lights as it does on the source path (GIGANTE_LIGHTS reads base.model's id).
+// Bit 2: the female Ganado (0x17 / 0x16, PS2_GANADO_F); bit 4: the parasite dog (0x22, PS2_WOLF, lane ps2cast-4).
 #if RE4DC_ACTOR_GANADO_SOURCE_LIGHT || RE4DC_NMR_SOURCE_LIGHT
 #define RE4DC_ACTOR_SOURCE_LIT 1
 #else
@@ -329,7 +330,8 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
 #if RE4DC_NMR_SOURCE_CULL
     // NATIVE_MODEL_REGISTRY: the selected registry bosses (bit 1 em2f) cull as the source path does (model_bridge.cpp;
     // the plan admits CullMode 0 only), not cull none: from inside Del Lago's body the source shows no inner faces.
-    if(p.appearance>=nmr::appearance_first && ((RE4DC_NMR_SOURCE_CULL&2) && m->id==0x2F))
+    if(p.appearance>=nmr::appearance_first && (((RE4DC_NMR_SOURCE_CULL&2) && m->id==0x2F) ||
+                                               ((RE4DC_NMR_SOURCE_CULL&16) && m->id==0x22)))
         b.cull=(unsigned char)re4dc_model_cull(m->CullMode,(pG->Debug_flg[0]&0x20000000)!=0);
 #endif
 #if RE4DC_ACTOR_GANADO_SOURCE_LIGHT
@@ -340,7 +342,7 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
 #elif RE4DC_NMR_SOURCE_LIGHT
     if(p.appearance>=nmr::appearance_first &&
        (((RE4DC_NMR_SOURCE_LIGHT&1) && m->id==0x2B) || ((RE4DC_NMR_SOURCE_LIGHT&2) && m->id==0x2F) ||
-        ((RE4DC_NMR_SOURCE_LIGHT&4) && (m->id==0x17 || m->id==0x16)))) {
+        ((RE4DC_NMR_SOURCE_LIGHT&4) && (m->id==0x17 || m->id==0x16)) || ((RE4DC_NMR_SOURCE_LIGHT&16) && m->id==0x22))) {
         if(const unsigned why=actor_source_lighting(m,*r)){ATD(m,26,why,p.appearance);return actor_decline(*r,failed);}
         b.lighting=&r->lit;
     }

@@ -80,6 +80,23 @@ PRESETS = {
     # model on GC and PS2 (no geometry change), so only type 0 converts (lane ps2cast-2)
     'dellago-em2f-00': dict(archive='em2f', sections=[(4, 'body')], tpl=5, rooms=['r10b'], types=[0],
                             category='boss', model_id=0x2f, shift=2),
+    # lane ps2cast-4 (PS2_ANIMALS): the stage-1 animals, the cast's registry descriptors (stage1-animals.json) re-pointed
+    # at the PS2 meshes. Same BIN / TPL arcs as the cast's source-bindings (type 0 TPL ARC 5, type 1 ARC 6; the crow's
+    # body BIN 5 + wing BIN 6 (folded) or 7 (spread), TPL 8: em23SetWing). The crow's PS2 wing BINs carry reduced bone
+    # tables (subset_bones).
+    'dog-00': dict(archive='em21', sections=[(4, 'body')], tpl=5, rooms=['r103', 'r119'], types=[0], category='animal', model_id=0x21),
+    'dog-01': dict(archive='em21', sections=[(4, 'body')], tpl=6, rooms=['r100', 'r103'], types=[1], category='animal', model_id=0x21),
+    'cow-00': dict(archive='em26', sections=[(4, 'body')], tpl=5, rooms=['r101', 'r103'], types=[0], category='animal', model_id=0x26),
+    'cow-01': dict(archive='em26', sections=[(4, 'body')], tpl=6, rooms=['r103'], types=[1], category='animal', model_id=0x26),
+    'chicken-00': dict(archive='em28', sections=[(4, 'body')], tpl=5, rooms=['r101', 'r103'], types=[0], category='animal', model_id=0x28),
+    'chicken-01': dict(archive='em28', sections=[(4, 'body')], tpl=6, rooms=['r101', 'r103'], types=[1], category='animal', model_id=0x28),
+    'crow-folded': dict(archive='em23', sections=[(5, 'body'), (6, 'folded-wings')], tpl=8, rooms=['r100', 'r105', 'r108', 'r109'],
+                        types=[], category='animal', model_id=0x23, subset_bones=True),
+    'crow-spread': dict(archive='em23', sections=[(5, 'body'), (7, 'spread-wings')], tpl=8, rooms=['r100', 'r105', 'r108', 'r109'],
+                        types=[], category='animal', model_id=0x23, subset_bones=True),
+    # lane ps2cast-4 (PS2_WOLF): the parasite dog (Colmillos) em22, src/em22 em22_R0_Init modelInit(ARC 4, ARC 5): one
+    # 42-bone body BIN (the back parasites are cObj16 objects, ARC 0x39 / 0x47, not part of this model)
+    'wolf-em22-00': dict(archive='em22', sections=[(4, 'body')], tpl=5, rooms=['r11b', 'r118'], types=[0], category='animal', model_id=0x22, lit=True),
 }
 
 
@@ -268,9 +285,17 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
         m = pb.parse_bin(pbin)
         gsk = gc_skeleton(gbin)
         # skeleton identity: PS2 (id, parent, translation) == GC (attach, parent, translation)
-        assert len(m.bones) == len(gsk) == len(bones), (role, len(m.bones), len(gsk))
-        id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in zip(m.bones, gsk))
-        dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], g['translation'])) for pb_, g in zip(m.bones, gsk))
+        assert len(gsk) == len(bones), (role, len(gsk), len(bones))
+        if len(m.bones) == len(gsk):
+            pairs = list(zip(m.bones, gsk))
+        else:
+            # a reduced PS2 bone table (lane ps2cast-4: the crow's wing BINs carry only the bones they weight): each
+            # PS2 bone is matched to the GC part of the same id (GC attach == index), parent and rest translation
+            # checked per bone; weight ids are GC part ids either way
+            assert spec.get('subset_bones') and len(m.bones) < len(gsk), (role, len(m.bones), len(gsk))
+            pairs = [(pb_, gsk[pb_['id']]) for pb_ in m.bones]
+        id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in pairs)
+        dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], g['translation'])) for pb_, g in pairs)
         dt_body = max(max(abs(x - y) for x, y in zip(g['translation'], b['translation'])) for g, b in zip(gsk, bones))
         assert id_parent and dt <= bone_tol, (role, id_parent, dt)
         tris = pb.triangles(m)
@@ -433,8 +458,10 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
     # is unchanged while the static data shrinks (the s30 heap-4 gate). A lit-Ganado image needs the normal bundle.
     flat = os.environ.get('PS2CAST_FLAT_NORMALS') == '1'
     val['flat_normals'] = flat
-    if flat and spec['category'] != 'human':
-        raise ValueError('PS2CAST_FLAT_NORMALS is for the unlit Ganado cast only')
+    # lane ps2cast-4: the registry animals (dog, cow, chicken) draw flat too (the constant actor light, as today's cast
+    # animals); a preset marked lit (em22: the source lighting record) keeps its normals
+    if flat and (spec['category'] not in ('human', 'animal') or spec.get('lit')):
+        raise ValueError('PS2CAST_FLAT_NORMALS is for the unlit Ganado cast and the flat registry animals only')
     if shift != 4 or flat:
         pm = dict(mesh)
         if shift != 4:
@@ -474,7 +501,9 @@ def pack_atlas(items):
     area = sum(w * h for _, w, h in items)
     side = max(max(w for _, w, _ in items), max(h for _, _, h in items))
     cands = []
-    s = side
+    # from side / 2 (lane ps2cast-4): a single wide image (em22's 512 x 256 TPL) takes a 2:1 atlas of its own size
+    # instead of a square one twice as large (a too small candidate simply fails to pack)
+    s = max(side // 2, 8)
     while s <= 2048:
         cands += [(s, s), (2 * s, s)]
         s *= 2

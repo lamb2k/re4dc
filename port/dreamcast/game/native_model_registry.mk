@@ -193,7 +193,7 @@ NATIVE_MODEL_REGISTRY_SHIFT ?= 1
 ifneq ($(NATIVE_MODEL_REGISTRY_SHIFT),1)
 $(error PS2_DELLAGO=1 needs NATIVE_MODEL_REGISTRY_SHIFT=1 (or unset))
 endif
-$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_DROP_BUMP=1 -DRE4DC_NMR_SOURCE_CULL=2
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_DROP_BUMP=1
 endif
 # NATIVE_MODEL_REGISTRY_MASK=1 (lane ps2cast-3, 2026-10-11; default 0; needs NATIVE_MODEL_REGISTRY_PACK=1; render only): a
 #              package section may be drawn as two runs (package ref word 12): its opaque triangles with the chunk
@@ -224,9 +224,46 @@ $(error NATIVE_MODEL_REGISTRY_MASK needs NATIVE_MODEL_REGISTRY_PACK=1)
 endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_MASK=1
 endif
-ifneq ($(PS2_GIGANTE)$(PS2_DELLAGO)$(PS2_GANADO_F),000)
-# bit 2 (PS2_GANADO_F): the female Ganado's registry plan (em17 / em16) is lit like her source path today.
-$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_SOURCE_LIGHT=$(shell echo $$(( $(if $(filter 1,$(PS2_GIGANTE)),1,0) + $(if $(filter 1,$(PS2_DELLAGO)),2,0) + $(if $(filter 1,$(PS2_GANADO_F)),4,0) )))
+# PS2_ANIMALS=1 (lane ps2cast-4, 2026-10-11; default 0; render only): the stage-1 animals (dog em21, cow em26, chicken em28)
+#              from their PS2 meshes. Disc data only: the r100 / r101 / r103 room packages dc/native/r1xx/registry.re4nmr
+#              (model_registry.py --package-room over tools/d367/model-registry/ps2-animals.json, the ps2_cast.py regcast
+#              of the PS2 presets dog-00/01, cow-00/01, chicken-00/01) and their atlases in dc/tex.pak replace today's cast
+#              packages with the same descriptor names, rows and room lists; they draw flat and cull none exactly as the
+#              cast animals do today, so the image is unchanged by the knob (it only checks the registry pack path). The
+#              crow (em23) is not converted: its GC materials need bump + an unknown material program + the wing mask
+#              (a material contract, see docs/lanes/ps2cast.md "Lane ps2cast-4").
+PS2_ANIMALS ?= 0
+ifeq ($(filter $(PS2_ANIMALS),0 1),)
+$(error PS2_ANIMALS must be 0 or 1)
+endif
+ifeq ($(PS2_ANIMALS),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_PACK),1)
+$(error PS2_ANIMALS=1 draws the animals from room packages (NATIVE_MODEL_REGISTRY=1 NATIVE_MODEL_REGISTRY_PACK=1))
+endif
+endif
+# PS2_WOLF=1 (lane ps2cast-4; default 0; render only): the parasite dog (Colmillos, em22, r11b r118) through the registry
+#              owner path with its PS2 mesh (1,735 tris vs GC 3,978; 42 bones). Today em22 draws on the source path, so its
+#              registry plan takes the source lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bit 4) and the source cull
+#              (RE4DC_NMR_SOURCE_CULL bit 4). The mesh is disc data: dc/native/r11b|r118/registry.re4nmr (model_registry.py
+#              over tools/d367/model-registry/ps2-wolf.json) and its atlas in dc/tex.pak; without a package em22 keeps
+#              the source path. The back parasites (cObj16, ARC 0x39 / 0x47) stay on the source path.
+PS2_WOLF ?= 0
+ifeq ($(filter $(PS2_WOLF),0 1),)
+$(error PS2_WOLF must be 0 or 1)
+endif
+ifeq ($(PS2_WOLF),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_PACK),1)
+$(error PS2_WOLF=1 needs NATIVE_MODEL_REGISTRY=1 NATIVE_MODEL_REGISTRY_PACK=1)
+endif
+endif
+ifneq ($(PS2_DELLAGO)$(PS2_WOLF),00)
+# RE4DC_NMR_SOURCE_CULL bits: 2 em2f (PS2_DELLAGO), 16 em22 (PS2_WOLF)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_SOURCE_CULL=$(shell echo $$(( $(if $(filter 1,$(PS2_DELLAGO)),2,0) + $(if $(filter 1,$(PS2_WOLF)),16,0) )))
+endif
+ifneq ($(PS2_GIGANTE)$(PS2_DELLAGO)$(PS2_GANADO_F)$(PS2_WOLF),0000)
+# bit 2 (PS2_GANADO_F): the female Ganado's registry plan (em17 / em16) is lit like her source path today; bit 4
+# (PS2_WOLF): em22 likewise.
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_SOURCE_LIGHT=$(shell echo $$(( $(if $(filter 1,$(PS2_GIGANTE)),1,0) + $(if $(filter 1,$(PS2_DELLAGO)),2,0) + $(if $(filter 1,$(PS2_GANADO_F)),4,0) + $(if $(filter 1,$(PS2_WOLF)),16,0) )))
 endif
 NATIVE_MODEL_REGISTRY_BONES ?= 48
 NATIVE_MODEL_REGISTRY_SHIFT ?= 0

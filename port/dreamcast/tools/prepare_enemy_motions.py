@@ -29,12 +29,17 @@ MAX_CLIP=32768
 # em10_tmpl.cpp, em11_set.cpp, the same three units; its 5.8 MB GC archive did not fit r117's heap 4 (largest cell
 # 3.1 MB: DVD: Memory allocate failed, readEmData em/em11.drs).
 GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs')
-SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs')
+SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs')
 # em2f (Del Lago, r10b; lane ps2cast-2 2026-10-10, PS2_DELLAGO discs): textures only (--keep-motion-resident). Its
 # model TPLs (ARC 5 type 0, ARC 7 type 1) reach only modelInit (src/em2f/em2f.cpp em2f_R0_Init); the source path
 # uploads their colour texels (materialSetup -> re4dc_model_material) and never reads them on the CPU. The bump map
 # (an IA8 image, bound only by bumpSetup to the GX stubs) is not a native format and stays resident. Its EFF slot
 # (ARC 8, EspDataLoad) keeps its own textures (top-level TPLs only are selected). em2f is a ROUTE_OVL room overlay.
+# em22 (parasite dog, r11b r118; lane ps2cast-4 2026-10-11, PS2_WOLF discs): textures only (--keep-motion-resident), the
+# em2f contract. Its body TPL (ARC 5) reaches only modelInit (src/em22/em22.cpp em22_R0_Init); the back parasites'
+# TPLs (ARC 0x3A / 0x48) only SetObj16 (cObj16 model textures, as em2b's parasite); the source path uploads their
+# colour texels and never reads them on the CPU. Its EFF slot (ARC 6, EspDataLoad) keeps its own textures (top-level
+# TPLs only are selected). The registry owner path proves its texture rows only on a texture-prepared archive.
 # Small enemies whose motions also leave the body: em21 (r100 trap dog) plays every clip through
 # MotionSetCore/MotionMove (src/em21/em21.cpp; ARC() otherwise only feeds modelInit), the leased
 # evaluators in motion.cpp. Needed for heap 4 in r100's post-house ambush (em21 + em23 + em2a).
@@ -51,7 +56,7 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 # SetRock; its EFF slot keeps its own textures. em2b is a ROUTE_OVL room overlay, so its static REL is stripped
 # with the knob-conditional module set (ROUTE_OVL_MODULES). The room's heap 4: r119 frees 3,854,656 B in two
 # cells, the largest 2,770,912 B, under the 4,689,664 B rel-stripped body.
-ROUTE_OVL_MODULES=('em2b','em2f')
+ROUTE_OVL_MODULES=('em2b','em2f','em22')
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
 # their own registry row like the room overlays above: em11 (ROUTE_CH21, r117).
 KNOB_STATIC_MODULES=('em11',)

@@ -1,0 +1,86 @@
+{
+ "registry": "ps2-animals",
+ "about": "NATIVE_MODEL_REGISTRY descriptors for the stage-1 animals from the PS2 meshes (lane ps2cast-4, PS2_ANIMALS; tools/ps2_cast.py regcast). Replaces the external cast's v8-tiles descriptors (stage1-animals-rooms.json) with the same names, BIN / TPL rows and room lists; the crow joins its rooms. Render only: the GC skeleton, motions, collision and AI are unchanged. Textures: the PS2 TPLs (same size as the GC's; the GC bake was not better, see the lane doc). Normals flattened (PS2CAST_FLAT_NORMALS=1): the animals draw with the constant actor light, normals are never read.",
+ "cast_dir": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-4-20261011/regcast-animals-flat",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "dog, cow, chicken: flat (as today's registry animals); crow: the source GX lighting record (as today's source-path crow; NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bit 3)",
+ "descriptors": [
+  {
+   "name": "cow-00",
+   "archive": "em26",
+   "model_id": "0x26",
+   "source_types": [
+    0
+   ]
+  },
+  {
+   "name": "cow-01",
+   "archive": "em26",
+   "model_id": "0x26",
+   "source_types": [
+    1
+   ]
+  },
+  {
+   "name": "chicken-00",
+   "archive": "em28",
+   "model_id": "0x28",
+   "source_types": [
+    0
+   ]
+  },
+  {
+   "name": "chicken-01",
+   "archive": "em28",
+   "model_id": "0x28",
+   "source_types": [
+    1
+   ]
+  },
+  {
+   "name": "dog-00",
+   "archive": "em21",
+   "model_id": "0x21",
+   "source_types": [
+    0
+   ]
+  },
+  {
+   "name": "dog-01",
+   "archive": "em21",
+   "model_id": "0x21",
+   "source_types": [
+    1
+   ]
+  }
+ ],
+ "room_packages": {
+  "100": {
+   "descriptors": [
+    "dog-01"
+   ],
+   "evidence": "today's r100 package (dog-01)"
+  },
+  "101": {
+   "descriptors": [
+    "cow-00",
+    "chicken-00",
+    "chicken-01"
+   ],
+   "evidence": "today's r101 package"
+  },
+  "103": {
+   "descriptors": [
+    "cow-00",
+    "cow-01",
+    "chicken-00",
+    "chicken-01",
+    "dog-00",
+    "dog-01"
+   ],
+   "evidence": "today's r103 package (frozen-r7-r103)"
+  }
+ }
+}

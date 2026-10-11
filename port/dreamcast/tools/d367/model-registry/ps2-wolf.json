@@ -1,0 +1,16 @@
+{
+ "registry": "ps2-wolf",
+ "about": "NATIVE_MODEL_REGISTRY descriptor for the PS2 parasite dog (Colmillos, em22) mesh (lane ps2cast-4, PS2_WOLF; tools/ps2_cast.py regcast). Render only: the GC skeleton, motions, collision, AI, the back parasites (cObj16 objects, still the source path) are unchanged; the PS2 mesh replaces the GC source body on the owner path. Texture: the PS2 TPL (512 x 256, the GC bake was not better).",
+ "cast_dir": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-4-20261011/regcast-wolf",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bit 4), as the source path lights it today; source cull",
+ "descriptors": [
+  {"name": "wolf-em22-00", "archive": "em22", "model_id": "0x22", "source_types": [0], "module": "src/em22/em22.cpp em22_R0_Init: modelInit(ARC 4, ARC 5)"}
+ ],
+ "room_packages": {
+  "11b": {"descriptors": ["wolf-em22-00"], "evidence": "inventory r11b: em22"},
+  "118": {"descriptors": ["wolf-em22-00"], "evidence": "inventory r118: em22"}
+ }
+}

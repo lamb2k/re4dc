@@ -302,8 +302,48 @@ dl-gctex in C:/Game Dev/Emulators/ps2cast-3-20261011). Assets: re4-assets-privat
   r108 STRICT 1,100 (em17 on screen); New Game 1971 / 2360, s40 1175; MISALIGN 0; HALT 0 outside the freeze screens;
   s30 340/340 with heap 61,600 for PS2_DELLAGO alone (= control), 57,504 with PS2_GANADO_F (see above).
 
+## Lane ps2cast-4 (2026-10-11): PS2 animals, PS2 parasite dog, Ashley and crow findings
+
+Evidence D:/Flycast-Evidence/re4-dreamcast/ps2cast-4-20261011, scripts / sheets C:/Game Dev/Emulators/ps2cast-4-20261011,
+assets re4-assets-private/ps2cast-4-20261011 (store 3452312). Asset recipe: PS2 mesh; texture = PS2 TPL where it is not
+weaker (the GC bakes of every family below showed seam streaks and no gain at equal resolution); VQ RGB565 as today.
+
+- **PS2_ANIMALS=1** (data knob, image byte-identical to knob off): dog em21 (699 -> 1,059 tris), cow em26 (700 -> 652),
+  chicken em28 (149 -> 408) from the PS2 meshes (ps2_cast.py presets dog-00/01, cow-00/01, chicken-00/01;
+  PS2CAST_FLAT_NORMALS=1: the animals draw with the constant actor light, normals never read). Packages r100 / r101 / r103
+  from tools/d367/model-registry/ps2-animals.json (same descriptor names and rooms as today's packages): arena r100
+  26,248 -> 24,144, r101 28,872 -> 23,936, r103 57,936 -> 50,896 B. VRAM unchanged (dog / chicken 128x128 VQ 6,144 B, cow
+  256x256 VQ 18,432 B each, as today). Runs (PS2): dog 203, cow 109, chicken 46. Census: admitted / declined identical to
+  today (r100 dog 5,803/0; r103 cow-00 16,797/3, cow-01 4,199/1, chickens 12,600 / 4,200 / 0). hw ms (drawn, 600:679):
+  r100 dog view 44.76 -> 44.52, r103 62.98 -> 62.49.
+  Gates: knob-off identity (play + default recipe); H2 STRICT 1450..1569, 0..740, 1218.., room, decision_cmp
+  MUST-IDENTICAL; r101 bell STRICT 7,496; r103 STRICT 3,836; s30 340/340 heap_before 63,712 >= 61,600 (the first full-normal
+  packages gave 58,880: rejected); New Game 1971 / 2360 / 1175; MISALIGN / HALT / MISSING 0.
+- **PS2_WOLF=1** (em22, r11b r118): 3,978 -> 1,735 tris, 177 palettes, 264 runs; registry owner path with the source
+  lighting record (NMR_SOURCE_LIGHT bit 4) and source cull (NMR_SOURCE_CULL bit 4), as the source path draws it today. Atlas
+  512x256 VQ (pack_atlas now takes a 2:1 atlas of a single wide image). Needs the texture-prepared em/em22.drs
+  (prepare_enemy_motions.py em22 texture contract, then aica_banks; body 903,776 -> 822,112 B): on today's archive every
+  plan is registry-declined (ATX_INFO why=6, the Del Lago case). The archive is a load-timing change of the same class as
+  em2f's. Packages r11b / r118 36,768 B (arena 42,168). r118 with PS2_GANADO_F needs one combined package (not built).
+  Census r11b: admitted 1,449 / declined 0 by frame 788. hw ms r11b 900:979 drawn 75.64 -> 64.86 (frame mix differs).
+  Image +640 B (_end); s30 heap_before 61,600 = control (no IMAGE_PAD needed). Gates: H2 windows STRICT, decision_cmp
+  MUST-IDENTICAL (whole-room align: field om differs on 476 ticks from 741, run-to-run movie timing, unverified); r11b
+  STRICT 3,700 (both arms on the prepared archive); New Game 1971 / 2360 / 1175; MISALIGN / HALT / MISSING 0.
+- **Crow em23: not converted, needs a decision.** PS2 750 / 668 tris (folded / spread; the PS2 wing BINs have reduced bone
+  tables, ps2_cast.py subset_bones handles them). Today it draws on the source path; on the registry path its GC materials
+  are a contract: body flag 0x83 (bump + specularSetup2: both GX-only on the DC source path, so a source_drops rule is
+  justified) and the folded wings' I4 mask (the PS2 wing is opaque: mask runs, or accept the PS2 opaque wing).
+- **Ashley pl11: PS2 differs, not converted, needs a decision.** Body 3,819 GC / 3,459 PS2 tris; the PS2 skeleton has 81
+  bones, the GC 141: bones 64..80 (skirt / cloth) differ in parent and rest, so PS2 weights cannot bind the GC cloth
+  skeleton without re-weighting; 141 bones also exceed the registry cap (128) and pl11 is a partner, not an em model.
+- The objects survey (om / etc / set pieces): C:/Game Dev/Emulators/ps2cast-4-20261011/OBJECTS.md (every loose object is
+  still GC source).
+
 ## Ready to land
 
+- lane ps2cast-4: PS2_ANIMALS (data knob), PS2_WOLF (default off; disc needs the prepared em22.drs + r11b/r118 packages),
+  ps2_cast.py presets / subset_bones / 2:1 atlas / animal flat normals, prepare_enemy_motions em22 contract, specs
+  ps2-animals.json / ps2-wolf.json.
 - lane ps2cast-3: RE4DC_NMR_SOURCE_CULL under PS2_DELLAGO (the 2440 fix; PS2_DELLAGO's open defect is closed),
   NATIVE_MODEL_REGISTRY_MASK + PS2_GANADO_F (default off; heap gate needs UI_OS=1 or a decision), tools/ps2_mask_runs.py,
   tools/ps2_gctex_bake.py, model_registry.py mask_runs. Discs: r108 / r118 packages + pair in tex.pak
