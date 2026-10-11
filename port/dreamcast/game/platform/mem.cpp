@@ -37,6 +37,13 @@ static const unsigned long kMinHeap = 0x300000;
 static const unsigned long kArenaKosBytes = RE4DC_ARENA_KOS_BYTES;
 static_assert(kArenaKosBytes % 32 == 0 && kArenaKosBytes <= 0x40000);
 
+#if RE4DC_IMAGE_PAD_BYTES > 0
+// IMAGE_PAD_BYTES (Makefile): image padding that moves _end (the KOS break, the arena, heap 4) to a reference image's.
+static_assert(RE4DC_IMAGE_PAD_BYTES % 32 == 0);
+extern "C" unsigned char re4dc_image_pad[RE4DC_IMAGE_PAD_BYTES];
+unsigned char re4dc_image_pad[RE4DC_IMAGE_PAD_BYTES] __attribute__((used, aligned(32)));
+#endif
+
 static unsigned char g_frameBuffer[2][32] __attribute__((aligned(32)));
 static unsigned char g_fifo[32] __attribute__((aligned(32)));
 
@@ -55,6 +62,9 @@ void re4dc_mem_init(void)
     // A selected candidate may leave RE4DC_ARENA_KOS_BYTES more to KOS (Makefile).
     unsigned long want = 13 * 1024 * 1024 - kArenaKosBytes;
     printf("re4dc_mem: arena request %lu bytes (%lu left to KOS)\n", want, kArenaKosBytes);
+#if RE4DC_IMAGE_PAD_BYTES > 0
+    printf("re4dc_mem: image pad %lu bytes at %08lx\n", (unsigned long) RE4DC_IMAGE_PAD_BYTES, (unsigned long) re4dc_image_pad);
+#endif
     unsigned long step = 0x40000;
 #if defined(RE4DC_ARENA_FIT) && RE4DC_ARENA_FIT
     // ARENA_FIT=1: when the full request does not fit under the KOS break limit, take what does,

@@ -884,6 +884,12 @@ ARENA_FIT_KOS_BYTES ?= 131072
 # uses ~366 KiB of it with the route's bgm/bio4str.hed and etc/memcard.das (boot log "sound region
 # used"); SOUND_REGION_BYTES=0x60000 gives the unused 128 KiB to heap 4. Too small exits at boot.
 SOUND_REGION_BYTES ?= 0x80000
+# IMAGE_PAD_BYTES=N (default 0: no effect): N bytes of .bss (platform/mem.cpp re4dc_image_pad) so _end, and with it the
+# KOS break, the arena and heap 4, start where a reference image's do. The game's own spawn checks read heap-4 free bytes
+# (em10 "alloc[..]:free[..]", the texture keep), so with ARENA_FIT a 4 KiB step of heap 4 changes the logic (the combo
+# build: UI_OS made the knobs-on image 3,680 bytes smaller, heap 4 +4 KiB, one more r100 Ganado at frame 661). A test
+# build pads by the control's _end minus its own so the trace stays STRICT. Multiple of 32.
+IMAGE_PAD_BYTES ?= 0
 .PHONY: core-budget-force
 $(OBJDIR)/core-budget.h: core-budget-force
 	@mkdir -p $(dir $@)
@@ -893,6 +899,7 @@ $(OBJDIR)/core-budget.h: core-budget-force
 	@printf '#define RE4DC_ARENA_KOS_BYTES %s\n' '$(ARENA_KOS_BYTES)' >> $@.tmp
 	@printf '#define RE4DC_ARENA_FIT %s\n#define RE4DC_ARENA_FIT_KOS_BYTES %s\n' '$(ARENA_FIT)' '$(ARENA_FIT_KOS_BYTES)' >> $@.tmp
 	@printf '#define RE4DC_SOUND_REGION_BYTES %s\n' '$(SOUND_REGION_BYTES)' >> $@.tmp
+	@printf '#define RE4DC_IMAGE_PAD_BYTES %s\n' '$(IMAGE_PAD_BYTES)' >> $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 $(OBJDIR)/platform/mem.o: $(OBJDIR)/core-budget.h
