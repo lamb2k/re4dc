@@ -100,3 +100,57 @@ malformed payload rejection, and packed-versus-loose precedence. The actual
 runtime `Package::adopt/validate` is compiled with host-only filesystem/PVR
 stubs; upload and gameplay are not executed. A missing pinned encoder skips its
 roundtrip test explicitly rather than claiming an encoding result.
+
+## Ancillary material-pair dependencies
+
+A source model can select a combined color-and-mask key. Supplying the two
+single-image packages does not satisfy that lookup. The room world manifests
+above cover PS2 world keys; they do not cover every item, effect or actor texture.
+
+`tools/prepare_room_material_pairs.py` prepares separate composite supplements
+without changing a fixture or texture pack. It reads exact source bindings from:
+
+- ITM model and TPL tables, paired by the source table slot.
+- Local SMD placement BIN/TPL indices.
+- EFF effect-model records, including EFF members inside ETM archives.
+- Explicit top-level archive BIN/TPL bindings supplied with a source-code witness.
+- Matching-room runtime `pair missing` lines, with validated pair identities.
+
+The helper uses the existing `prepare_native_ui.prepare_model_pairs` converter;
+it does not resize textures, change model material bindings, or invent pairs
+between unrelated images. The staging report pins source archive and image
+hashes, source material indices, the exact composite bytes, format, body CRC,
+and the generator hash. These are GC source material composites, not evidence
+of PS2 model geometry.
+
+Example, using a retained room source archive:
+
+```sh
+python3 tools/prepare_room_material_pairs.py \
+  --source-root /private/room-source --file st1/r11e.das --room r11e \
+  --fixture /private/cx-r11e-entry.unarmed.json \
+  --log /private/cx-r11e-left/capture/run-output.txt \
+  --output /private/room-pair-supplement
+```
+
+For a source-reviewed top-level BIN/TPL selection, add e.g.
+`--top-binding 31:32 --binding-source /checkout/src/st1/r10f.cpp`. The indices
+are zero-based tagged-archive indices, not `ROOM_ARC_PTR` word offsets. For an
+observed external actor pair, supply its original archive separately, e.g.
+`--extra-file em/em29.drs=/private/source/em/em29.drs`.
+
+With `--fixture`, the replacement dictionary contains only missing dependencies.
+Packed entries take precedence; existing valid packed or loose winners stay
+unchanged even when their render bytes differ from a newly prepared native
+candidate. An invalid existing winner is a blocker, not a loose override.
+The fixture owner applies the returned `replace` dictionary to a new immutable
+variant and audits selected bytes before runtime TEX_CHECK.
+
+Coverage is bounded. Common/cross-file SMD bindings and unresolved named ETM or
+top-level models appear as room binding gaps. Actor, player, weapon and core
+archives supplied through `--extra-file` provide image inputs for observed
+pairs; their model bindings are not statically scanned. Dynamic palettes,
+resource changes and unvisited room/view paths remain outside the static scan.
+A zero room-gap count does not establish universal scene texture coverage.
+Package-parser acceptance does not establish rendered appearance, room VRAM
+fit, hardware performance or PS2 geometry provenance.
