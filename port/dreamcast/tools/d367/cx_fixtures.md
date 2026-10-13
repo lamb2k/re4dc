@@ -119,3 +119,31 @@ primary alias (`E113_EVD.EVQ`). Existing single-extension aliases stay unchanged
 alias collisions are rejected. The output must be new, and a provenance sidecar
 records both script hashes. The stage utility still verifies both runtime
 namespaces, the independent raw reader, payload hashes and the original boot area.
+
+## Portable definitions and extra overview views
+
+The standard room fixture recipe is checked-in source:
+`cx_room_fixtures.py::entry_for` selects the named incoming source doors, resolves
+other arrivals from the source AEV scan, and preserves chapter requirements.
+The generation loop defines entry, left, right and walk headings/actions. The
+reproduction command above supplies private assets as inputs; generated private
+fixture JSON is not the only definition of those presets.
+
+Additional named heading presets live in `cx_view_presets.json`. The
+`r112-overviews` set defines `overview-back` (+pi) and `overview-quarter`
+(+pi/2), measured from the exact captured entry warp heading. Reproduce with:
+
+```sh
+python3 port/dreamcast/tools/d367/cx_fixture_views.py \
+  --source-fixture PRIVATE/cx-r112-entry.armed.json \
+  --view-set r112-overviews --out PRIVATE/r112-overviews-NEW \
+  --arm-tool port/dreamcast/tools/d367/texchk/fixture_arm.py \
+  --candidate-dir PRIVATE/programs/candidate-routecxARM --arm-label cxARM
+```
+
+This command copies the entry fixture's exact assets and source warp commands.
+Only the warp name and heading change. It records source fixture/warp and
+registry SHA-256, refuses existing output names, re-arms every overlay, and
+requires that only `dc/warp.txt` differs in the replacement map. The candidate
+must therefore match the captured entry arm. Camera visibility still requires
+new target captures.

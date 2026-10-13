@@ -1,0 +1,20 @@
+{
+  "schema": "re4dc-cx-view-presets/1",
+  "standard_room_generator": "cx_room_fixtures.py",
+  "view_sets": {
+    "r112-overviews": {
+      "room": "r112",
+      "source_view": "entry",
+      "views": [
+        {
+          "name": "overview-back",
+          "heading_delta_radians": 3.141592653589793
+        },
+        {
+          "name": "overview-quarter",
+          "heading_delta_radians": 1.5707963267948966
+        }
+      ]
+    }
+  }
+}
