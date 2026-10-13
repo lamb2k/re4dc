@@ -73,6 +73,7 @@ class EvidenceGateTests(unittest.TestCase):
 
     def test_missing_module_and_crash_screen_are_fatal(self):
         for line in ('RE4DC MISSING: DLL link/unlink failed called; halting',
+                     'OSPanic D:/Bio4/Prog/r10f.cpp:143: ch23 r10f: unexpected AEV boundary',
                      'CRASH_SCREEN: no new frame for 30 s (ui frame 230)'):
             self.assertEqual('FAIL', assess(GOOD + line + '\n', 'r117')['no_fatal']['status'])
         self.assertEqual('PASS', assess('CRASH_SCREEN: ready (fault, halt, 30 s hang)\n' + GOOD,

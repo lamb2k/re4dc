@@ -32,7 +32,7 @@ def assess(text, room):
             result[name]['reason'] = reason
 
     entries = [l for l in lines if re.search(r'warp: room enter 0*%x\b' % room, l)]
-    fatal = [l for l in lines if re.search(r'\b(?:HALT|FAULT|MISALIGN)\b|RE4DC MISSING:|CRASH_SCREEN: no new frame', l)]
+    fatal = [l for l in lines if re.search(r'\b(?:HALT|FAULT|MISALIGN|OSPanic)\b|RE4DC MISSING:|CRASH_SCREEN: no new frame', l)]
     gate('entry', entries)
     gate('no_fatal', entries, fatal)
     unknown = [l for l in lines if 'warp: unknown line' in l or 'warp: area ' in l and 'not found' in l]
