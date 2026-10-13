@@ -7,14 +7,19 @@
 # programs/candidate-route<label> + programs-route.json. out-<label>/resolved-knobs.txt holds the knobs as make
 # resolved them (build-r21.sh + game/knobs.mk: defaults, these flags, Makefile overrides); candidate.txt only
 # repeats the command line.
+# Private lanes may set ROUTE_OUT_ROOT, ROUTE_PROGRAMS_DIR, ROUTE_PROGRAMS_JSON and
+# ROUTE_REGISTRY_LOCK. An empty ROUTE_PROGRAMS_JSON disables the registry update.
 set -euo pipefail
 L=$1; shift
 T=${TREE:-$(cd "$(dirname "$0")/../../../../.." && pwd)}   # TREE=<checkout>: build another tree (a landing control)
-E=/root/probe/lanes/route
+E=${ROUTE_OUT_ROOT:-/root/probe/lanes/route}
 H="/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/continuation-20260927/playability-r11-r1"
+PROGRAMS=${ROUTE_PROGRAMS_DIR:-$H/programs}
+REGISTRY=${ROUTE_PROGRAMS_JSON-$H/programs-route.json}
+REGISTRY_LOCK=${ROUTE_REGISTRY_LOCK:-$E/programs-route.lock}
 # build-r21.sh passes ASSETS unquoted to make: the space-free link to the verified bundle.
 A=/root/probe/lanes/play-actor-bundle
-O=$E/out-$L; rm -rf $O; mkdir -p $O
+O=$E/out-$L; rm -rf "$O"; mkdir -p "$O"
 PLAY="LOGIC_TRACE=0 GAME_DECISION_TRACE=0 ACTOR_TRANSACTION_DIAG=0 GAME_PWC_DIAG=1 ARENA_FIT_KOS_BYTES=147456 QUALITY_PICKER=0"
 ( cd $T && ASSETS=$A OBJDIR=$O/obj OUT=$O \
     bash port/dreamcast/tools/d367/build-r21.sh $PLAY PACE_MODE=fast DBG_WARP=1 PC_SAMPLER=1 "$@" ) \
@@ -35,7 +40,7 @@ sha256sum $ELF > $O/elf.sha256
 (cd $T && git rev-parse HEAD && git status --short) > $O/stack.txt
 echo "$PLAY PACE_MODE=fast DBG_WARP=1 PC_SAMPLER=1 $*" > $O/candidate.txt
 # Harness program dir (as prepare-r21.py): scrambled 1ST_READ.BIN, the overlay, the log symbols.
-P="$H/programs/candidate-route$L"
+P="$PROGRAMS/candidate-route$L"
 rm -rf "$P"; mkdir -p "$P"
 $TOOL/sh-elf-objcopy -R .stack -O binary $ELF $O/prog.bin
 /root/work/kos/utils/scramble/scramble $O/prog.bin "$P/1ST_READ.BIN"
@@ -43,10 +48,11 @@ cp $O/sscrn.ovl "$P/sscrn.ovl"
 # ROUTE_OVL=1: the r10b room overlays; stage-scenario.py places only sscrn.ovl, so the route fixture
 # carries them: "replace": {"dc/pl0f.ovl": "<P>/pl0f.ovl", "dc/em2f.ovl": "<P>/em2f.ovl"}.
 for f in $O/*.ovl; do [ "${f##*/}" = sscrn.ovl ] || cp "$f" "$P/"; done
-python3 - "$ELF" "$O/sscrn.ovl" "$P" "$H/programs-route.json" "candidate-route$L" <<'PY'
+python3 - "$ELF" "$O/sscrn.ovl" "$P" "$REGISTRY" "candidate-route$L" "$REGISTRY_LOCK" <<'PY'
 import hashlib, json, subprocess, sys
 from pathlib import Path
-elf, ovl, out, pj, arm = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3]), Path(sys.argv[4]), sys.argv[5]
+elf, ovl, out = map(Path, sys.argv[1:4])
+registry, arm, lock_path = sys.argv[4:7]
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
 syms = {}
 for line in subprocess.check_output(['/opt/toolchains/dc/sh-elf/bin/sh-elf-nm', '-S', str(elf)], text=True).splitlines():
@@ -57,9 +63,14 @@ assert len(syms) >= 3, syms
 (out / 'syms.txt').write_text(' '.join(hex(syms[n] - 0x8c000000) for n in ('_re4dc_logbuf', '_re4dc_log_head', '_re4dc_stage')) + '\n')
 (elf.parent / 'syms.txt').write_text(' '.join(hex(syms[n] - 0x8c000000) for n in ('_re4dc_logbuf', '_re4dc_log_head', '_re4dc_stage', '_re4dc_pcs') if n in syms) + '\n')
 import fcntl, os
+if not registry:
+    sys.exit(0)
+pj = Path(registry)
 # Concurrent builds share this file: lock (on ext4, where flock is reliable) around the
 # read-modify-write and replace atomically, else a parallel build drops this arm's entry.
-lock = open('/root/probe/lanes/route/programs-route.lock', 'w'); fcntl.flock(lock, fcntl.LOCK_EX)
+pj.parent.mkdir(parents=True, exist_ok=True)
+Path(lock_path).parent.mkdir(parents=True, exist_ok=True)
+lock = open(lock_path, 'w'); fcntl.flock(lock, fcntl.LOCK_EX)
 report = json.loads(pj.read_text()) if pj.exists() else {}
 report[arm] = dict(elf=str(elf), elf_sha256=sha(elf), overlay_sha256=sha(ovl), symbols=syms,
                    resolved_knobs=str(elf.parent / 'resolved-knobs.txt'),
