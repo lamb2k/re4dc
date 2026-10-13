@@ -75,6 +75,8 @@ class EvidenceGateTests(unittest.TestCase):
         for line in ('RE4DC MISSING: DLL link/unlink failed called; halting',
                      'CRASH_SCREEN: no new frame for 30 s (ui frame 230)'):
             self.assertEqual('FAIL', assess(GOOD + line + '\n', 'r117')['no_fatal']['status'])
+        self.assertEqual('PASS', assess('CRASH_SCREEN: ready (fault, halt, 30 s hang)\n' + GOOD,
+                                      'r117')['no_fatal']['status'])
 
     def test_other_room_model_declines_are_scoped(self):
         other = 'warp: room enter 112 (#2) vbl=900\nNMRM decline t=800 why=shape\nNMRPACK refuse room=0112 why=shape\nNMRS f=900 overflow=2\n'
