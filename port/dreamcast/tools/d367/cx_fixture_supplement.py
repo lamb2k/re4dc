@@ -27,7 +27,8 @@ def main():
     ap.add_argument('--report', type=Path, required=True)
     a = ap.parse_args()
     supplement = json.loads(a.supplement.read_text())
-    if supplement['schema'] != 're4dc-composite-pair-staging/1':
+    if supplement['schema'] not in ('re4dc-composite-pair-staging/1',
+                                    're4dc-composite-pair-staging/2'):
         raise ValueError('unsupported supplement schema')
     if not re.fullmatch(r'[a-z0-9-]+', a.suffix):
         raise ValueError('invalid variant suffix')
@@ -65,7 +66,8 @@ def main():
         data.setdefault('provenance', {})['cx_texture_supplement'] = dict(
             source_fixture=str(source), source_fixture_sha256=sha(source),
             supplement=str(a.supplement), supplement_sha256=sha(a.supplement),
-            acceptance=supplement['acceptance'])
+            acceptance=supplement['acceptance'],
+            coverage_gaps=supplement.get('coverage_gaps', []))
         stem = source.name.removesuffix('.unarmed.json')
         unarmed = source.with_name(stem+'.'+a.suffix+'.unarmed.json')
         armed = source.with_name(stem+'.'+a.suffix+'.armed.json')
