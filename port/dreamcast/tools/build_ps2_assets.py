@@ -309,9 +309,11 @@ def build(a, profile, sources, fingerprint, checker):
             require(extracted['scenario_smd'] is not None, 'room has no scenario SMD: ' + room)
             run('gc_room_lit.py', [room, inputs / 'gc-lit-cut0.json', '--iso', gc], out / 'logs' / (room + '-light.log'))
             result = out / 'rooms' / room
-            run('ps2_room_r4im.py', [room, inputs, result, *profile['converter_args']], out / 'logs' / (room + '-convert.log'))
+            converter_args = profile.get('room_converter_args', {}).get(room, profile['converter_args'])
+            run('ps2_room_r4im.py', [room, inputs, result, *converter_args], out / 'logs' / (room + '-convert.log'))
             checked = validate_runtime(result, checker)
-            manifest['rooms'][room] = dict(extraction=extracted, lighting=record(inputs / 'gc-lit-cut0.json'), validation=checked)
+            manifest['rooms'][room] = dict(extraction=extracted, lighting=record(inputs / 'gc-lit-cut0.json'),
+                                           converter_args=converter_args, validation=checked)
             for p in runtime_files(result):
                 manifest['runtime_files'][str(p.relative_to(out))] = record(p)
     # Stage a candidate overlay; this is not an ISO, release fixture, or an installed game.

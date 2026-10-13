@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "description": "Reviewed PS2 prelit world recipe; first automation validation rooms. No game data.",
+  "description": "PS2 prelit native-world recipes with package validation; additional room candidates still require integration and visual gates. No game data.",
   "source": {
     "serial": "SLUS_211.34",
     "system_cnf_version": "1.01",
@@ -48,6 +48,30 @@
   ],
   "rooms": [
     "r102",
-    "r106"
-  ]
+    "r106",
+    "r10c",
+    "r10d",
+    "r10e",
+    "r10f",
+    "r111",
+    "r112",
+    "r113",
+    "r117",
+    "r11c",
+    "r11d",
+    "r11e",
+    "r11f"
+  ],
+  "room_converter_args": {
+    "r117": [
+      "--color-light",
+      "ps2",
+      "--lights",
+      "0,5",
+      "--lod-uv-guard",
+      "0.002",
+      "--vertex-alpha",
+      "tr4"
+    ]
+  }
 }

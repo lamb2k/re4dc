@@ -1,8 +1,9 @@
 # Build PS2-derived Dreamcast world assets
 
 `make assets` extracts local discs and runs the existing native-world converter. The
-initial verified profile builds **r102 and r106** into R4IM meshes, R4PW placements,
-R4ID object IDs and RE4DCTX PowerVR textures, then prepares a candidate overlay.
+profile supports **14 room recipes**, with **r102 and r106** as the default build.
+It produces R4IM meshes, R4PW placements, R4ID object IDs and RE4DCTX PowerVR
+textures, then prepares a candidate overlay.
 These are the formats the Dreamcast renderer already uses.
 
 This is the first automated part of a full asset build. It does **not** yet rebuild
@@ -69,11 +70,15 @@ decoder when reading GameCube room lighting. `g++` builds the existing host copy
 the runtime's package checks. These dependencies do not add PowerPC or PS2 emulation
 to the Dreamcast game. Missing executables are reported before reading the discs.
 
-To build one supported room or choose an output directory:
+To select supported rooms or choose an output directory:
 
 ```sh
 make assets PYTHON=.assets/venv/bin/python ROOMS=r106 ASSETS_OUT=.assets/r106-review
 make assets-check PYTHON=.assets/venv/bin/python
+
+# All qualified conversion recipes; outputs remain candidates for integration.
+make assets PYTHON=.assets/venv/bin/python ASSETS_OUT=.assets/worlds-all \
+  ROOMS='r102 r106 r10c r10d r10e r10f r111 r112 r113 r117 r11c r11d r11e r11f'
 ```
 
 A successful repeat verifies the source/script fingerprint and output hashes before
@@ -111,7 +116,9 @@ fixtures, test discs or SD cards.
 ## Compatibility and remaining coverage
 
 The recipe retains PS2 prelighting, lights `0,5` for NORMAL groups, UV guard `0.002`,
-`--vertex-alpha tr4` and `--cutout-max-alpha 224`. There is no replacement mesh or
+`--vertex-alpha tr4` and `--cutout-max-alpha 224`. **r117 preserves its shipped
+recipe without the cutout-224 rule**, through an explicit per-room argument list.
+There is no replacement mesh or
 texture format, new runtime lighting, wholesale PS2 EFF loading, or simulation change.
 
 Fresh extraction reproduced all 155 consumed input files across r102/r106, including
@@ -123,8 +130,33 @@ and Linux linear algebra produce tiny differences in some fitted placement
 coefficients (maximum observed difference `9.094947017729282e-13` in r102),
 so the R4PW and matching R4ID checksums can differ across operating systems. Full
 cross-platform binary identity is not claimed. Running the new helper set on
-Windows also reproduces the retained sidecars and IDs byte for byte. Build comparisons must distinguish
-that from a changed mesh, material, texture, placement mapping or visible transform.
+Windows also reproduces the retained r102/r106 sidecars and IDs byte for byte.
+Build comparisons must distinguish that from a changed mesh, material, texture, placement mapping or visible transform.
+
+| Recipe group | Rooms | Qualification scope |
+| --- | --- | --- |
+| Retained package reproduction | r102, r106, r117 | Same meshes, textures, material records and object mappings as retained packages; platform placement rounding is described below |
+| Chapter 2-2 asset handoff | r111, r112, r113, r11c | Fresh-disc candidates for the chapter 2-2 lane; that lane owns gameplay, packing and disc integration |
+| Updated world candidates | r10c, r10d, r10e, r10f, r11d, r11e, r11f | Adds the current vertex-alpha/cutout recipe and IDs to older UV-guard conversions; intentional alpha changes require visual review |
+
+Every listed room uses PS2 scenario geometry and textures. This world profile does
+not replace a missing PS2 world with GameCube geometry. The GameCube lighting
+calibration dependency remains explicit above. The profile does not yet establish
+PS2 coverage for actors, effects, menus, movies or other game assets.
+
+r117 reproduced 237 extracted inputs, its mesh and all 59 texture files. Its maximum
+observed platform placement difference was `6.286495629614919e-12`; material records
+and ID mappings were unchanged. The per-room manifest records the exact converter
+arguments, runtime acceptance, world heap cost and unique texture payload cost.
+
+The r112 handoff must resolve its six prepared world VQ keys into the final texture
+pack. Loose VQ files alone are insufficient because packed keys win at runtime. The
+TEX_CHECK gate must verify the integrated disc's actual key selection. Optional
+texture-compression probes are separate candidates and are not enabled by this recipe.
+
+An independent fresh-checkout worker rebuilt the default two rooms, verified all
+248 runtime manifest entries and exercised reuse. This was a fresh checkout on an
+already prepared host; it does not certify fresh OS setup or a complete disc build.
 
 Remaining work toward a complete `make assets` + disc build:
 
@@ -141,6 +173,6 @@ Remaining work toward a complete `make assets` + disc build:
 The October 13 alignment audit used coordinator base `e6d06520`, the live Claude
 session and memory, the PS2 room/effect survey, and the active worktrees. PS2 FX
 option A remains render-side recipes; `PS2_FX_ROOMS` stays off by default and follows
-the coordinator's post-test-9 sequence. The active ch22, issue-26 and PS2 enemy
-lanes retain their ownership. The tooling branch was then rebased onto `85e7da5d`,
+the coordinator's post-test-9 sequence. The chapter 2-2 coordinator accepted the four-world asset-only handoff; its lane
+retains gameplay and integration. The issue-26 and PS2 enemy lanes retain ownership. The tooling branch was then rebased onto `85e7da5d`,
 which includes the landed PS2 enemy work. This tooling does not land other lanes.
