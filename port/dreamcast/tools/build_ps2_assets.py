@@ -15,12 +15,14 @@ import shutil
 import struct
 import subprocess
 import sys
+import tempfile
 import urllib.request
 import zipfile
 import zlib
 
 HERE = Path(__file__).resolve().parent
 PROFILE = HERE / 'ps2_assets' / 'worlds.json'
+from d367.ps2world import world_registry  # existing runtime-derived host checks
 
 
 def require(condition, message):
@@ -38,6 +40,22 @@ def sha(path):
 
 def record(path):
     return dict(bytes=path.stat().st_size, sha256=sha(path))
+
+
+def host_tools():
+    result = {}
+    for name in ('mono', 'powerpc-linux-gnu-gcc', 'qemu-ppc', 'g++'):
+        exe = shutil.which(name)
+        require(exe is not None, f'missing {name}; install the prerequisites in PS2_ASSET_BUILD.md')
+        version = subprocess.run([exe, '--version'], capture_output=True, text=True, check=True, timeout=15)
+        result[name] = dict(version=version.stdout.splitlines()[0], sha256=sha(Path(exe).resolve()))
+    return result
+
+
+def runtime_checker(scratch):
+    # Fresh scratch avoids stale compiler/header/shim binaries in a shared cache.
+    world_registry.CACHE = scratch
+    return world_registry.checker()[0]
 
 
 def iso_file(f, name):
@@ -133,8 +151,11 @@ def fetch_tool(cache, name, pin):
 
 def source_hashes():
     names = ['build_ps2_assets.py', 'ps2_room_extract.py', 'ps2_room_r4im.py', 'ps2_room_ids.py',
-             'gc_room_lit.py', 'room_smd.py', 'convert_room_bins.py', 'mesh_lod.py', 'ps2src.py',
-             'assetpipe/rooms.py', 'assetpipe/config.py', 'assetpipe/util.py']
+             'gc_room_lit.py', 'room_smd.py', 'decode_yz2.py', 'convert_room_bins.py', 'mesh_lod.py', 'ps2src.py',
+             'assetpipe/rooms.py', 'assetpipe/config.py', 'assetpipe/util.py',
+             'd367/ps2world/world_registry.py', 'd367/ps2world/ps2_world_check.cpp',
+             'd367/ps2world/hostinc/kos/fs.h', '../room/instanced_mesh.hpp', '../room/room_package.hpp',
+             '../../../src/game/yz2asm.cpp', '../../../src/game/yz2code.cpp']
     files = [HERE / name for name in names]
     files += sorted(p for p in (HERE / 'ps2_assets').glob('*.py') if not p.name.startswith('test_'))
     files += [PROFILE, HERE / 'ps2_assets/requirements.txt']
@@ -146,7 +167,7 @@ def runtime_files(root):
                   list((root / 'tex').glob('*.re4tex')))
 
 
-def validate_runtime(root):
+def validate_runtime(root, checker):
     """Check file integrity, IDs, and every texture binding before staging anything."""
     import ps2_room_ids
     mesh = (root / 'ps2-world.re4mesh').read_bytes()
@@ -154,6 +175,8 @@ def validate_runtime(root):
     magic, version, total, crc = struct.unpack_from('<4s3I', mesh)
     require(magic == b'R4IM' and version in (2, 3) and total == len(mesh), 'invalid R4IM header')
     require(crc == zlib.crc32(mesh[80:]), 'R4IM CRC mismatch')
+    accepted = world_registry.run_check(checker, root / 'ps2-world.re4mesh', root / 'ps2-world.r4pw')
+    require(accepted['ok'], 'runtime world open rejected: ' + str(accepted['why']))
     side = (root / 'ps2-world.r4pw').read_bytes()
     require(len(side) >= 32, 'short R4PW')
     magic, version, npl, nparts, nmesh, crc, _, _ = struct.unpack_from('<4s7I', side)
@@ -167,12 +190,12 @@ def validate_runtime(root):
     im, iv, count, icrc = struct.unpack_from('<4s3I', ids)
     require(im == b'R4ID' and iv == 1 and icrc == crc and count == max(fields) + 1 and
             len(ids) == (16 + count + 31) // 32 * 32, 'R4ID does not match its sidecar')
-    required = set()
+    required = {}
     for i in range(nparts):
-        tex, tex2, *_ = struct.unpack_from('<IIHHBBBB', side, 32 + i * 16)
-        required.add(f'{tex:08x}-{tex2:08x}.re4tex')
+        tex, tex2, width, height, *_ = struct.unpack_from('<IIHHBBBB', side, 32 + i * 16)
+        required.setdefault(f'{tex:08x}-{tex2:08x}.re4tex', set()).add((width, height))
     found = {p.name for p in (root / 'tex').glob('*.re4tex')}
-    require(required == found, 'missing or unused texture bindings: ' + str(required ^ found))
+    require(set(required) == found, 'missing or unused texture bindings: ' + str(set(required) ^ found))
     vram = 0
     for name in sorted(required):
         data = (root / 'tex' / name).read_bytes()
@@ -180,6 +203,9 @@ def validate_runtime(root):
         h = struct.unpack_from('<8s10I', data)
         require(h[:7] == (b'RE4DCTX\0', 2, 48, 96, 1, 48, 144) and
                 len(data) == 144 + h[7] and zlib.crc32(data[48:]) == h[8], 'invalid RE4DCTX: ' + name)
+        for width, height in required[name]:
+            why, rule = world_registry.tex_package_error(data, width, height)
+            require(why is None and rule == 'header', f'runtime texture rejected: {name}: {why}')
         desc = struct.unpack_from('<64s8I', data, 48)
         _, w, height, fmt, off, size, flags, payload, _ = desc
         expected = 2048 + w * height // 4 if payload == 2 else w * height * 2
@@ -192,7 +218,32 @@ def validate_runtime(root):
             fnv = ((fnv ^ byte) * 16777619) & 0xffffffff
         require(name == f'{zlib.crc32(texels):08x}-{fnv:08x}.re4tex', 'texture identity mismatch: ' + name)
         vram += size
-    return dict(placements=npl, parts=nparts, meshes=nmesh, textures=len(required), texture_vram_bytes=vram)
+    return dict(placements=npl, parts=nparts, meshes=nmesh, textures=len(required), texture_vram_bytes=vram,
+                runtime_open='accepted', heap_bytes=accepted['heap_bytes'])
+
+
+def verify_overlay(out, rooms, checker):
+    """Derive the complete inventory from checked room outputs, never from a manifest."""
+    expected, staged = {}, {}
+    for room in rooms:
+        root = out / 'rooms' / room
+        validate_runtime(root, checker)
+        for path in runtime_files(root):
+            value = record(path)
+            expected[str(path.relative_to(out))] = value
+            target = ('stage/tex/' if path.suffix == '.re4tex' else 'stage/rooms/' + room + '/') + path.name
+            if target in staged:
+                # Same key in two rooms may have different descriptor labels only.
+                require(staged[target].read_bytes()[112:] == path.read_bytes()[112:],
+                        'texture identity collision: ' + path.name)
+            else:
+                staged[target] = path
+                expected[target] = value
+    actual = {str(p.relative_to(out)) for p in (out / 'stage').rglob('*') if p.is_file()}
+    require(actual == set(staged), 'staged inventory differs: ' + str(actual ^ set(staged)))
+    for target in staged:
+        require(record(out / target) == expected[target], 'staged bytes differ from room output: ' + target)
+    return expected
 
 
 def run(script, args, log):
@@ -218,24 +269,29 @@ def main():
     require(rooms and all(re.fullmatch('r[0-9a-f]{3}', room) for room in rooms), 'invalid room names')
     require(all(room in profile['rooms'] for room in rooms),
             'room not in the reviewed profile; r100/r101 and new rooms need their own reviewed recipe')
-    require(shutil.which('mono') is not None, 'install mono-runtime first (see PS2_ASSET_BUILD.md)')
+    toolchain = host_tools()
     versions = {name: importlib.metadata.version(name) for name in profile['python_packages']}
     require(versions == profile['python_packages'], 'install the pinned ps2_assets/requirements.txt')
     ps2, gc = Path(a.ps2_iso).resolve(), Path(a.gc_iso).resolve()
     sources = dict(ps2=check_ps2(ps2, profile['source']), gc=check_gc(gc, profile['gc_source']))
     fingerprint = dict(sources={key: value['sha256'] for key, value in sources.items()},
                        scripts=source_hashes(), packages=versions, rooms=rooms, platform=sys.platform,
-                       python=sys.version, recipe=profile)
+                       python=sys.version, recipe=profile, host_tools=toolchain)
+    with tempfile.TemporaryDirectory(prefix='re4dc-world-check-') as scratch:
+        build(a, profile, sources, fingerprint, runtime_checker(Path(scratch)))
+
+
+def build(a, profile, sources, fingerprint, checker):
+    rooms = fingerprint['rooms']
+    ps2, gc = Path(sources['ps2']['path']), Path(sources['gc']['path'])
     out = a.out.resolve()
     if out.exists():
         manifest_path = out / 'manifest.json'
         require(manifest_path.is_file(), f'output already exists without a completed manifest: {out}; use a new ASSETS_OUT')
         old = json.loads(manifest_path.read_text())
         require(old['fingerprint'] == fingerprint, 'inputs or recipe changed; choose a new ASSETS_OUT')
-        for room in rooms:
-            validate_runtime(out / 'rooms' / room)
-        for path, expected in old['runtime_files'].items():
-            require(record(out / path) == expected, 'completed output changed: ' + path)
+        verified = verify_overlay(out, rooms, checker)
+        require(old['runtime_files'] == verified, 'completed output inventory or bytes changed')
         print('Verified existing build: ' + str(out))
         return
     tools = {name: fetch_tool(a.tools.resolve(), name, pin) for name, pin in profile['tools'].items()}
@@ -254,7 +310,7 @@ def main():
             run('gc_room_lit.py', [room, inputs / 'gc-lit-cut0.json', '--iso', gc], out / 'logs' / (room + '-light.log'))
             result = out / 'rooms' / room
             run('ps2_room_r4im.py', [room, inputs, result, *profile['converter_args']], out / 'logs' / (room + '-convert.log'))
-            checked = validate_runtime(result)
+            checked = validate_runtime(result, checker)
             manifest['rooms'][room] = dict(extraction=extracted, lighting=record(inputs / 'gc-lit-cut0.json'), validation=checked)
             for p in runtime_files(result):
                 manifest['runtime_files'][str(p.relative_to(out))] = record(p)
@@ -270,9 +326,7 @@ def main():
                 require(dst.read_bytes()[112:] == src.read_bytes()[112:], 'texture identity collision: ' + src.name)
             else:
                 shutil.copyfile(src, dst)
-    for p in sorted(stage.rglob('*')):
-        if p.is_file():
-            manifest['runtime_files'][str(p.relative_to(out))] = record(p)
+    manifest['runtime_files'] = verify_overlay(out, rooms, checker)
     (out / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     print('Validated candidate world overlay: ' + str(stage))
     print('Integration still needs the matching build, texture-pack rebuild, and release gates.')

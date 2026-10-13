@@ -44,7 +44,8 @@ Use Linux or WSL on a case-sensitive Linux filesystem. Tested with Ubuntu 24.04,
 Python 3.12 and Mono 6.8. From a fresh checkout of this branch:
 
 ```sh
-sudo apt-get install python3 python3-venv make mono-runtime
+sudo apt-get install python3 python3-venv make mono-runtime g++ \
+  gcc-powerpc-linux-gnu libc6-dev-powerpc-cross qemu-user
 python3 -m venv .assets/venv
 .assets/venv/bin/python -m pip install -r port/dreamcast/tools/ps2_assets/requirements.txt
 
@@ -62,6 +63,11 @@ are pinned in `tools/ps2_assets/requirements.txt`; no private helper scripts are
 The official DATUDAS release executable differs from the maintainers' older local
 build of the same source. Extraction output is checked against the retained inputs
 during the compatibility audit; the workflow pins the downloadable release.
+
+The PowerPC cross compiler and QEMU are used only by the existing **offline** YZ2
+decoder when reading GameCube room lighting. `g++` builds the existing host copy of
+the runtime's package checks. These dependencies do not add PowerPC or PS2 emulation
+to the Dreamcast game. Missing executables are reported before reading the discs.
 
 To build one supported room or choose an output directory:
 
@@ -87,9 +93,11 @@ Under `ASSETS_OUT` (default `.assets/worlds`):
 | `logs` and `work` | Tool logs and complete intermediate extraction |
 | `stage/rooms/rXXX` and `stage/tex` | Validated candidate overlay for later disc integration |
 
-The preflight checks mesh/sidecar CRCs and counts, ID-to-sidecar binding, texture
-headers/CRCs/identity, missing texture references and texture-key collisions across
-rooms. Reports include mesh bytes and texture VRAM bytes; these are asset costs,
+The preflight uses the existing host runtime checker for mesh structure and sidecar
+records, plus the existing texture loader rules, ID-to-sidecar binding, CRCs,
+texture identity, missing references and texture-key collisions across rooms.
+Reusing a build checks its complete staged inventory as well as file hashes.
+Reports include mesh bytes and texture VRAM bytes; these are asset costs,
 not measured frame time or complete runtime residency.
 
 To integrate a reviewed overlay, the release owner maps its room files to
@@ -107,12 +115,15 @@ The recipe retains PS2 prelighting, lights `0,5` for NORMAL groups, UV guard `0.
 texture format, new runtime lighting, wholesale PS2 EFF loading, or simulation change.
 
 Fresh extraction reproduced all 155 consumed input files across r102/r106, including
-both cut-0 lighting JSON files. Both reviewed meshes and all 119 textures match
-byte for byte, as do material records and placement-to-object mappings. Windows
+both cut-0 lighting JSON files. Both meshes and every texture match the retained
+converter references byte for byte, as do material records and placement-to-object
+mappings. There are 118 emitted texture files: 76 in r102 and 42 in r106. r102's
+77 source texture entries include two that share the same runtime key. Windows
 and Linux linear algebra produce tiny differences in some fitted placement
 coefficients (maximum observed difference `9.094947017729282e-13` in r102),
 so the R4PW and matching R4ID checksums can differ across operating systems. Full
-cross-platform binary identity is not claimed. Build comparisons must distinguish
+cross-platform binary identity is not claimed. Running the new helper set on
+Windows also reproduces the retained sidecars and IDs byte for byte. Build comparisons must distinguish
 that from a changed mesh, material, texture, placement mapping or visible transform.
 
 Remaining work toward a complete `make assets` + disc build:
@@ -131,4 +142,5 @@ The October 13 alignment audit used coordinator base `e6d06520`, the live Claude
 session and memory, the PS2 room/effect survey, and the active worktrees. PS2 FX
 option A remains render-side recipes; `PS2_FX_ROOMS` stays off by default and follows
 the coordinator's post-test-9 sequence. The active ch22, issue-26 and PS2 enemy
-lanes retain their ownership. This tooling does not land their work.
+lanes retain their ownership. The tooling branch was then rebased onto `85e7da5d`,
+which includes the landed PS2 enemy work. This tooling does not land other lanes.
