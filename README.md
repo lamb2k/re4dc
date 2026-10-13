@@ -17,6 +17,10 @@ One command builds your own program and puts it on the latest test disc: `bash p
 See [CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md); contributors and their coding agents should then read
 [CLAUDE.md](CLAUDE.md) or [AGENTS.md](AGENTS.md) (section "Outside contributors start here").
 
+For original-disc asset work, [the PS2 asset build guide](port/dreamcast/docs/PS2_ASSET_BUILD.md)
+identifies the supported USA `SLUS_211.34` source and the new `make assets` world workflow
+(initially r102/r106), including the remaining GameCube dependencies and full-disc build gaps.
+
 ## Playing
 
 The latest build is console test `c29c4bf5` (r22j test 7). Desktop packages will return with a later test build;
@@ -114,4 +118,5 @@ Built on the [RE4 GameCube decompilation](docs/DECOMPILATION.md),
 [KallistiOS](https://github.com/KallistiOS/KallistiOS) and [Flycast](https://github.com/flyinghead/flycast).
 An independent fan project for research and preservation, not affiliated with Capcom, Sega or Nintendo.
 Resident Evil is a Capcom trademark; game code and data belong to their owners. Project tools and
-documentation are [CC0](LICENSE).
+documentation are [CC0](LICENSE), except attributed third-party helpers with their own
+[notices](port/dreamcast/tools/ps2_assets/README.md).

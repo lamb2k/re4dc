@@ -46,8 +46,8 @@ def sha(path):
     return h.hexdigest()
 
 
-def afs_index(f):
-    base = AFS_SECTOR * 2048
+def afs_index(f, sector=AFS_SECTOR):
+    base = sector * 2048
     f.seek(base)
     magic, n = struct.unpack('<4sI', f.read(8))
     assert magic == b'AFS\0', magic
@@ -90,7 +90,7 @@ def compare(a, b):
     return diff
 
 
-def extract(room, iso_f, index, work, inputs):
+def extract(room, iso_f, index, work, inputs, dat_exe=DAT_EXE, smd_exe=SMD_EXE):
     member = index.get(room + '.dat')
     if member is None:
         raise SystemExit('%s.dat not in the AFS' % room)
@@ -102,7 +102,7 @@ def extract(room, iso_f, index, work, inputs):
     assert len(data) == member['size']
     (work / (room + '.dat')).write_bytes(data)
     member = dict(member, sha256=hashlib.sha256(data).hexdigest())
-    run_tool(DAT_EXE, [room + '.dat'], work, work / 'dat.log')
+    run_tool(dat_exe, [room + '.dat'], work, work / 'dat.log')
     idxj = (work / (room + '.idxJ')).read_text(encoding='utf-8-sig')
     entries = re.findall(r'^DAT_(\d+):(.+)$', idxj, re.M)
     names = [Path(e[1].strip().replace('\\', '/')).name for e in entries]
@@ -117,7 +117,7 @@ def extract(room, iso_f, index, work, inputs):
     if smds[0] != room + '_004.SMD' or smxs[0] != room + '_005.SMX':
         raise SystemExit('%s: scenario SMD/SMX are %s/%s, not _004/_005 (converter names)' % (room, smds[0], smxs[0]))
     sub = work / room
-    run_tool(SMD_EXE, [smds[0]], sub, work / 'smd.log')
+    run_tool(smd_exe, [smds[0]], sub, work / 'smd.log')
     stem = room + '_004'
     if inputs.exists():
         shutil.rmtree(inputs)

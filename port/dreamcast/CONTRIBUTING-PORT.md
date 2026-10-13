@@ -129,6 +129,11 @@ your own copies of the games; the repository holds the tools and recipes, never 
 path is not one command: several outputs are frozen results of conversion and review work that the
 maintainers keep outside the repository.
 
+The first automated world profile is now `make assets` (r102/r106). See the
+[PS2 asset build guide](docs/PS2_ASSET_BUILD.md) for the exact USA PS2 source revision,
+one-time setup, conversion command, validation and remaining coverage. It produces
+a candidate native-world overlay; it does not yet replace the full-disc procedure.
+
 | Source you need | What the port makes from it | Rebuilt by a script from the disc? |
 | --- | --- | --- |
 | GameCube Resident Evil 4 debug disc 1 (G4BE08, extracted file tree) | base disc tree: rooms, enemies, sound banks, menus | mostly (`tools/le_mirror.py`, `tools/d367/stage.sh`, `tools/aica_banks.py disc`) |
@@ -136,7 +141,7 @@ maintainers keep outside the repository.
 | same | room archives with Dreamcast audio (`st1/rXXX.dar`) | per room steps, not one command |
 | same plus game run logs | texture package `dc/tex.pak` (VQ textures) | no: the VQ selection comes from logs of test runs |
 | PS2 Resident Evil 4, USA (SLUS 21134), `BIO4MOV.AFS` | cutscene movies `dc/movie/*.seq` | yes (`tools/convert_route_movies.py`, needs ffmpeg) |
-| PS2 USA, `BIO4DAT.AFS` rooms (plus two JADERLINK unpack tools) | PS2 room worlds `dc/native/rXXX/ps2-world.*` | converters exist; the released set is a reviewed frozen output |
+| PS2 USA, `BIO4DAT.AFS` rooms (plus two JADERLINK unpack tools) | PS2 room worlds `dc/native/rXXX/ps2-world.*` | `make assets` for r102/r106; remaining released rooms are reviewed frozen output |
 | PS2 USA characters | PS2 Leon and villager meshes (compiled into the program), registry packs, pl08 pack | no: needs Blender and review steps |
 | none (made by hand or by tools) | title art, look presets, glyphs, character bakes, test scripts | no |
 

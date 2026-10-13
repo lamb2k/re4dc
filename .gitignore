@@ -40,3 +40,7 @@ tools/research/mwccdbg/retrowin32
 # port/dreamcast/build-public.sh output
 /port/dreamcast/out-public/
 /port/dreamcast/out-contrib/
+
+# Private disc-derived output from make assets.
+/.assets/
+/asset-audit/

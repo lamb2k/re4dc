@@ -24,44 +24,46 @@ world-mesh-r21/tools/ps2_world_r4im.py; this tool runs the same rules straight f
   their own mesh in world space (identity placement).
 usage: ps2_room_r4im.py <room> <input dir> <out dir> [--lights 0,4]
 """
-import argparse, collections, hashlib, importlib.util, json, math, struct, sys, zlib
+import argparse, collections, hashlib, importlib.util, json, math, os, struct, sys, zlib
 from pathlib import Path
 import numpy as np
 from PIL import Image
 
-import os
 HERE = Path(__file__).resolve().parent
-# Runs on Windows Python (numpy, PIL). RE4_WORLD_AGENT: the private world-agent-20260926 tree (OBJ-reader,
-# TPL decoder, RE4DCTX codec, gx_light and VQ helpers); RE4_TOOLS: the repo's port/dreamcast/tools
-# (convert_room_bins, mesh_lod), this file's own directory when it sits there.
-WA = Path(os.environ.get('RE4_WORLD_AGENT', 'C:/Game Dev/Emulators/re4-assets-private/world-agent-20260926'))
-MESH_TOOLS = Path(os.environ.get('RE4_TOOLS', HERE if (HERE / 'convert_room_bins.py').exists() else
-                                 '//wsl.localhost/Ubuntu-24.04/root/probe/d367-resume-20260928/step1/port/dreamcast/tools'))
+# Helpers are repository-local so a fresh checkout uses the same conversion rules.
+MESH_TOOLS = Path(os.environ.get('RE4_TOOLS', HERE))
 sys.path.insert(0, str(MESH_TOOLS))
 import convert_room_bins as crb  # noqa: E402
+from ps2_assets import scenario as ps, tpl, texture as codec  # noqa: E402
+from ps2_assets.light import gx_light  # noqa: E402
+from ps2_assets.vq import nearest  # noqa: E402
+TPL_SWIZZLE = 'jl'
 
+# Keep the explicit legacy override for active maintainer lanes. The normal build
+# needs only this repository; build_ps2_assets.py clears these overrides deliberately.
+if os.environ.get('RE4_WORLD_AGENT'):
+    WA = Path(os.environ['RE4_WORLD_AGENT'])
+    TPL_SWIZZLE = 'gs'
 
-def load(name, path):
-    spec = importlib.util.spec_from_file_location(name, path)
-    m = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(m)
-    return m
+    def load(name, path):
+        spec = importlib.util.spec_from_file_location(name, path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
 
+    def selected(path, names):
+        import ast
+        tree = ast.parse(Path(path).read_text(encoding='utf-8-sig'))
+        nodes = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in names]
+        env = {'math': math, 'np': np}
+        exec(compile(ast.Module(body=nodes, type_ignores=[]), str(path), 'exec'), env)
+        return env
 
-def selected(path, names):
-    import ast
-    tree = ast.parse(Path(path).read_text(encoding='utf-8-sig'))
-    nodes = [n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name in names]
-    env = {'math': math, 'np': np}
-    exec(compile(ast.Module(body=nodes, type_ignores=[]), str(path), 'exec'), env)
-    return env
-
-
-ps = load('ps2_tree_materials', WA / 'from-main/ps2-trees/tools/ps2_tree_materials.py')
-tpl = load('ps2_tpl_decode', WA / 'from-main/ps2-trees/tools/ps2_tpl_decode.py')
-codec = load('g_re4tex', WA.parent / 'character-prototype-20260925/tools/g_re4tex.py')
-gx_light = selected(WA / 'from-main/original-world/reference/tools/ow_extract.py', {'gx_light'})['gx_light']
-nearest = selected(WA / 'c1/tools/vq_review.py', {'nearest'})['nearest']
+    ps = load('ps2_tree_materials', WA / 'from-main/ps2-trees/tools/ps2_tree_materials.py')
+    tpl = load('ps2_tpl_decode', WA / 'from-main/ps2-trees/tools/ps2_tpl_decode.py')
+    codec = load('g_re4tex', WA.parent / 'character-prototype-20260925/tools/g_re4tex.py')
+    gx_light = selected(WA / 'from-main/original-world/reference/tools/ow_extract.py', {'gx_light'})['gx_light']
+    nearest = selected(WA / 'c1/tools/vq_review.py', {'nearest'})['nearest']
 
 OWNER = 0x50
 PS2_TO_PART_CULL = {0: 2, 1: 1, 2: 0}
@@ -279,7 +281,7 @@ CUTOUT_MAX_ALPHA = 0   # --cutout-max-alpha (0: off, the historical packages)
 
 
 def build_textures(room, src, out, used, gains):
-    dec = tpl.cmd_decode(src / f'{room}_004.TPL', out / 'textures-source', set(used), False, False, 'gs')
+    dec = tpl.cmd_decode(src / f'{room}_004.TPL', out / 'textures-source', set(used), False, False, TPL_SWIZZLE)
     (out / 'tex').mkdir(exist_ok=True); (out / 'textures-packed').mkdir(exist_ok=True)
     rows = {}
     for t in sorted(used):
@@ -344,7 +346,7 @@ def gains_for(groups):
 def final_gains(room, src, out, groups):
     vmax = gains_for(groups)
     used = sorted({int(t) for g in groups for t in np.unique(g['tex'])})
-    dec = tpl.cmd_decode(src / f'{room}_004.TPL', out / 'textures-source', set(used), False, False, 'gs')
+    dec = tpl.cmd_decode(src / f'{room}_004.TPL', out / 'textures-source', set(used), False, False, TPL_SWIZZLE)
     gains = {}
     for t in used:
         base = next(r for r in dec['textures'] if r['entry'] == t and r['level'] == 'base')
