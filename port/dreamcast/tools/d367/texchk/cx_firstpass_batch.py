@@ -7,7 +7,6 @@ that finished scenario's disc links. No game builds, trace flags or runtime edit
 """
 import argparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import csv
 import hashlib
 import json
 import os
@@ -16,7 +15,6 @@ import re
 import shutil
 import subprocess
 import sys
-import time
 
 
 def sha(path):
@@ -89,18 +87,13 @@ def main():
             (stage / 'cx-inputs.json').write_text(json.dumps(inputs, indent=2) + '\n')
             (stage / 'disc.sha256').write_text(meta['disc_sha256'] + '  disc/disc.bin\n')
             (stage / 'PURPOSE.txt').write_text(f'Codex first-pass {room} {view}: source entry, native PS2 world, TEX_CHECK=2, census=1, both logic/decision traces=0. Retain {view} stills and actual gate evidence. No combined-image heap or physical-console acceptance.\n')
-            while True:
-                listing = subprocess.check_output(['tasklist', '/FI', 'IMAGENAME eq flycast.exe', '/FO', 'CSV', '/NH'], text=True, **hidden)
-                count = sum(1 for row in csv.reader(listing.splitlines()) if row and row[0].lower() == 'flycast.exe')
-                if count < 10:
-                    break
-                emit(scenario=scenario, status='WAITING_FOR_EXISTING_HOST_CEILING', count=count)
-                time.sleep(5)
             with (stage / 'cx-runner.log').open('xb') as log:
                 run = subprocess.run([sys.executable, str(run_script), scenario, '--seconds', str(seconds), '--period', '10'],
                                      stdout=log, stderr=subprocess.STDOUT, **hidden)
             run_result = json.loads((stage / 'capture/run-result.json').read_text())
             assert run_result['owned_emulator_exited'] is True
+            capture_ok = (run.returncode == 0 and not run_result.get('errors')
+                          and run_result['status'] == 'RUN_COMPLETE_AWAITING_REVIEW')
             gate_path = stage / 'cx-gate.json'
             gate_tools = stage / 'cx-gate-tools'
             gate_tools.mkdir()
@@ -123,10 +116,15 @@ def main():
                     (path.parent / 'disc.sha256').write_text(meta['disc_sha256'] + '  disc.bin\n')
                     path.unlink()
             summary = {'scenario': scenario, 'status': run_result['status'], 'gate': gates['overall'],
+                       'capture_returncode': run.returncode, 'capture_ok': capture_ok,
+                       'capture_errors': run_result.get('errors', []),
                        'checks': {key: value['status'] for key, value in gates.items() if isinstance(value, dict) and 'status' in value},
                        'disc_sha256': meta['disc_sha256'], 'discs_removed': True}
             results.append(summary)
             emit(**summary)
+            if not capture_ok:
+                emit(room=room, status='STILL_VIEWS_DEFERRED', reason='capture did not complete successfully')
+                break
             if view == 'walk' and (gates['no_fatal']['status'] != 'PASS' or gates['ps2_world_draw']['status'] != 'PASS'):
                 emit(room=room, status='STILL_VIEWS_DEFERRED', reason='walk did not establish a live native room without fatal errors')
                 break
@@ -139,6 +137,8 @@ def main():
             room = pending[future]
             try:
                 report['results'][room] = future.result()
+                if any(result.get('capture_ok') is False for result in report['results'][room]):
+                    report['errors'][room] = 'one or more captures did not complete successfully; see capture_returncode and capture_errors'
             except Exception as exc:
                 report['errors'][room] = repr(exc)
                 emit(room=room, status='WORKER_ERROR', error=repr(exc))
