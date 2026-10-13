@@ -1,7 +1,7 @@
 # Build PS2-derived Dreamcast world assets
 
 `make assets` extracts local discs and runs the existing native-world converter. The
-profile supports **14 room recipes**, with **r102 and r106** as the default build.
+profile supports **56 room recipes**, with **r102 and r106** as the default build.
 It produces R4IM meshes, R4PW placements, R4ID object IDs and RE4DCTX PowerVR
 textures, then prepares a candidate overlay.
 These are the formats the Dreamcast renderer already uses.
@@ -76,7 +76,7 @@ To select supported rooms or choose an output directory:
 make assets PYTHON=.assets/venv/bin/python ROOMS=r106 ASSETS_OUT=.assets/r106-review
 make assets-check PYTHON=.assets/venv/bin/python
 
-# All qualified conversion recipes; outputs remain candidates for integration.
+# The initial 14-room qualification set; outputs remain candidates for integration.
 make assets PYTHON=.assets/venv/bin/python ASSETS_OUT=.assets/worlds-all \
   ROOMS='r102 r106 r10c r10d r10e r10f r111 r112 r113 r117 r11c r11d r11e r11f'
 ```
@@ -138,6 +138,7 @@ Build comparisons must distinguish that from a changed mesh, material, texture, 
 | Retained package reproduction | r102, r106, r117 | Same meshes, textures, material records and object mappings as retained packages; platform placement rounding is described below |
 | Chapter 2-2 asset handoff | r111, r112, r113, r11c | Fresh-disc candidates for the chapter 2-2 lane; that lane owns gameplay, packing and disc integration |
 | Updated world candidates | r10c, r10d, r10e, r10f, r11d, r11e, r11f | Adds the current vertex-alpha/cutout recipe and IDs to older UV-guard conversions; intentional alpha changes require visual review |
+| Castle candidates | 40 required route rooms plus optional r21a/r22c | Fresh PS2 scenario conversion, complete object/material/ID coverage, all source texture/mip decoder equivalence and per-room runtime package acceptance; gameplay and total memory still require testing |
 
 Every listed room uses PS2 scenario geometry and textures. This world profile does
 not replace a missing PS2 world with GameCube geometry. The GameCube lighting
@@ -176,3 +177,28 @@ option A remains render-side recipes; `PS2_FX_ROOMS` stays off by default and fo
 the coordinator's post-test-9 sequence. The chapter 2-2 coordinator accepted the four-world asset-only handoff; its lane
 retains gameplay and integration. The issue-26 and PS2 enemy lanes retain ownership. The tooling branch was then rebased onto `85e7da5d`,
 which includes the landed PS2 enemy work. This tooling does not land other lanes.
+
+
+## Castle conversion coverage
+
+The profile additionally includes these 42 rooms in route order:
+
+```text
+r200 r202 r207 r203 r201 r208 r204 r205 r209 r20a r20b r20c r20f r206
+r20d r20e r210 r222 r219 r211 r216 r212 r213 r214 r217 r218 r215 r229
+r221 r22b r220 r223 r224 r21d r225 r21b r226 r227 r228 r22a r21a r22c
+```
+
+Pass any subset through `ROOMS='...'` and choose a fresh `ASSETS_OUT`. The 40
+required rooms include r22b; r21a and r22c are optional. All 42 converted with the
+same current recipe without converter changes or GameCube world replacement.
+Each room was checked against its PS2 SMD/OBJ groups, placements, source-object
+IDs and material references. All source TPL images and mip levels match the
+legacy decoder. These are candidate assets, not playable-room certification.
+
+The user-approved per-room handoff also requires texture fitting, explicit pack
+winners, armed warp fixtures, first-pass Flycast, texture checks and zero model/world
+fallback. Those checks are separate from `make assets` package acceptance. The
+coordinator owns shared packs, combined-image memory, strict traces, gameplay
+bring-up and landing. Test-9's existing stage-module coverage does not by itself
+establish castle gameplay support.

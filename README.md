@@ -19,7 +19,7 @@ See [CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md); contributors an
 
 For original-disc asset work, [the PS2 asset build guide](port/dreamcast/docs/PS2_ASSET_BUILD.md)
 identifies the supported USA `SLUS_211.34` source and the new `make assets` world workflow
-(14 room recipes, default r102/r106), including the remaining GameCube dependencies and full-disc build gaps.
+(56 room recipes, default r102/r106), including the remaining GameCube dependencies and full-disc build gaps.
 
 ## Playing
 
