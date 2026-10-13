@@ -80,7 +80,8 @@ def main():
                     stdout=log, stderr=subprocess.STDOUT, **hidden)
             if stage_run.returncode:
                 emit(scenario=scenario, status='STAGE_FAILED', returncode=stage_run.returncode)
-                return results + [{'scenario': scenario, 'status': 'STAGE_FAILED'}]
+                return results + [{'scenario': scenario, 'status': 'STAGE_FAILED',
+                                   'stage_returncode': stage_run.returncode}]
             meta = json.loads((stage / 'stage.json').read_text())
             assert meta['status'] == 'STAGED_PAYLOAD_IDENTITY_PASS'
             assert meta['fixture'] == json.loads(fixture.read_text()), 'fixture changed during staging'
@@ -137,6 +138,8 @@ def main():
             room = pending[future]
             try:
                 report['results'][room] = future.result()
+                if any(result.get('status') == 'STAGE_FAILED' for result in report['results'][room]):
+                    report['errors'][room] = 'staging failed; see stage_returncode and staging log'
                 if any(result.get('capture_ok') is False for result in report['results'][room]):
                     report['errors'][room] = 'one or more captures did not complete successfully; see capture_returncode and capture_errors'
             except Exception as exc:
