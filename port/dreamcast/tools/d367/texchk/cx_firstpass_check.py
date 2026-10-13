@@ -32,7 +32,7 @@ def assess(text, room):
             result[name]['reason'] = reason
 
     entries = [l for l in lines if re.search(r'warp: room enter 0*%x\b' % room, l)]
-    fatal = [l for l in lines if re.search(r'\b(?:HALT|FAULT|MISALIGN)\b', l)]
+    fatal = [l for l in lines if re.search(r'\b(?:HALT|FAULT|MISALIGN)\b|RE4DC MISSING:|CRASH_SCREEN:', l)]
     gate('entry', entries)
     gate('no_fatal', entries, fatal)
     unknown = [l for l in lines if 'warp: unknown line' in l or 'warp: area ' in l and 'not found' in l]
@@ -42,16 +42,22 @@ def assess(text, room):
     # settling and a few units of idle animation are not a short-walk proof.
     active_room = None
     motions, points = [], []
+    anchor, last_point, displacement = None, None, 0.0
     for line in lines:
         match = re.search(r'warp: room enter ([0-9a-fA-F]+)', line)
         if match:
             active_room = int(match[1], 16)
+            anchor = last_point = None
         if active_room == room and re.search(r'warp: act \d+ .*stick=-?[1-9]\d* hold=[1-9]', line):
             motions.append(line)
+            anchor = last_point
         match = re.search(r'warp: (?:placed|frame \d+) room=([0-9a-fA-F]+) pl=(-?\d+),(-?\d+),(-?\d+)', line)
         if match and int(match[1], 16) == room:
-            points.append((int(match[2]), int(match[4])))
-    displacement = max(((x-points[0][0])**2 + (z-points[0][1])**2 for x, z in points), default=0)**0.5
+            point = (int(match[2]), int(match[4]))
+            points.append(point)
+            if anchor is not None and active_room == room:
+                displacement = max(displacement, ((point[0]-anchor[0])**2 + (point[1]-anchor[1])**2)**0.5)
+            last_point = point
     gate('short_walk', motions if motions and displacement >= 32 else [],
          reason='requires a fired movement action and >=32 source units horizontal displacement')
     result['short_walk'].update(horizontal_displacement=displacement, positions_xz=points)
@@ -61,6 +67,9 @@ def assess(text, room):
     draw, world_bad = [], []
     world_room = None
     for line in lines:
+        entry = re.search(r'warp: room enter ([0-9a-fA-F]+)', line)
+        if entry and int(entry[1], 16) != world_room:
+            world_room = None
         match = re.search(r'PS2MESH room=([0-9a-fA-F]+) open', line)
         if match:
             world_room = int(match[1], 16)
@@ -76,17 +85,35 @@ def assess(text, room):
          reason='requires matching PS2MESH room/open, no-std and positive native draws')
 
     census, model_bad, incomplete = [], [], []
+    active_room = None
+    required = ('f', 'room', 'id', 'ot', 'parts', 'infos', 'plan', 'native', 'crowd',
+                'declined', 'registry_declined', 'absent', 'would')
+    counters = ('native', 'crowd', 'declined', 'registry_declined', 'absent', 'would')
     for line in lines:
+        match = re.search(r'warp: room enter ([0-9a-fA-F]+)', line)
+        if match:
+            active_room = int(match[1], 16)
         if line.startswith('NMRS ') and ' room=' in line:
             f = fields(line)
+            if not re.fullmatch(r'[0-9a-fA-F]+', f.get('room', '')):
+                incomplete.append(line)
+                continue
             if int(f['room'], 16) != room:
                 continue
+            if not all(k in f for k in required) or not all(f[k].isdigit() for k in counters):
+                incomplete.append(line)
+                continue
+            if not sum(int(f[k]) for k in counters):
+                incomplete.append(line)
+                continue
             census.append(line)
-            if any(int(f.get(k, 0)) for k in ('declined', 'registry_declined', 'absent', 'would')):
+            if any(int(f[k]) for k in ('declined', 'registry_declined', 'absent', 'would')):
                 model_bad.append(line)
-        if line.startswith('NMRS ') and 'overflow=' in line and int(fields(line)['overflow']):
+        if active_room == room and line.startswith('NMRS ') and 'overflow=' in line and int(fields(line)['overflow']):
             incomplete.append(line)
-        if line.startswith('NMRM decline ') or line.startswith('NMRPACK refuse '):
+        if line.startswith('NMRM decline ') and active_room == room:
+            model_bad.append(line)
+        if line.startswith('NMRPACK refuse ') and re.search(r'room=0*%x\b' % room, line):
             model_bad.append(line)
     gate('model_source_fallback', census if not incomplete else [], model_bad,
          reason='requires complete matching-room NMRS census; native counts need a separate PS2 asset audit')

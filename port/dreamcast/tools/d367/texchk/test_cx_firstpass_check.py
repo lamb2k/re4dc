@@ -55,6 +55,31 @@ class EvidenceGateTests(unittest.TestCase):
         self.assertEqual('PASS', result['ps2_world_draw']['status'])
         self.assertEqual('PASS', result['model_source_fallback']['status'])
 
+    def test_partial_and_zero_census_do_not_prove_coverage(self):
+        start = GOOD.index('NMRS ')
+        for row in ('NMRS f=784 room=0117 id=00\n', GOOD[start:].replace('native=600', 'native=0')):
+            self.assertEqual('UNPROVEN', assess(GOOD[:start] + row, 'r117')['model_source_fallback']['status'])
+
+    def test_motion_before_action_and_room_reentry_do_not_count(self):
+        action = 'warp: act 0 buttons=0000 stick=100 hold=12 vbl=500\n'
+        late = GOOD.replace(action, '') + action
+        self.assertEqual('UNPROVEN', assess(late, 'r117')['short_walk']['status'])
+        reentry = GOOD.replace('warp: frame 600', 'warp: room enter 117 (#2) vbl=600\nwarp: frame 600')
+        self.assertEqual('UNPROVEN', assess(reentry, 'r117')['short_walk']['status'])
+
+    def test_draw_after_other_room_entry_does_not_count(self):
+        mixed = GOOD.replace('PS2MESH frame=600', 'warp: room enter 112 (#2) vbl=900\nPS2MESH frame=600')
+        self.assertEqual('UNPROVEN', assess(mixed, 'r117')['ps2_world_draw']['status'])
+
+    def test_missing_module_and_crash_screen_are_fatal(self):
+        for line in ('RE4DC MISSING: DLL link/unlink failed called; halting',
+                     'CRASH_SCREEN: no new frame for 30 s (ui frame 230)'):
+            self.assertEqual('FAIL', assess(GOOD + line + '\n', 'r117')['no_fatal']['status'])
+
+    def test_other_room_model_declines_are_scoped(self):
+        other = 'warp: room enter 112 (#2) vbl=900\nNMRM decline t=800 why=shape\nNMRPACK refuse room=0112 why=shape\nNMRS f=900 overflow=2\n'
+        self.assertEqual('PASS', assess(GOOD + other, 'r117')['model_source_fallback']['status'])
+
 
 if __name__ == '__main__':
     unittest.main()
