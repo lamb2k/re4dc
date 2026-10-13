@@ -175,6 +175,23 @@ class FirstPassReportIntegrityTests(unittest.TestCase):
         self.assertIsNone(empty['vram_sampled_used_max'])
         self.assertIsNone(empty['vram_sampled_free_min'])
 
+    def test_no_texture_coverage_is_unproven_but_explicit_failures_stay_failures(self):
+        def no_coverage(_):
+            print('no coverage: no uploads checked')
+            return False
+        self.tex_check.side_effect = no_coverage
+        path, _, _ = self.make_run(log='HALT missing module\n')
+        self.assertEqual('UNPROVEN', report.inspect_run(path)['checks']['tex_check']['status'])
+        for failure in (
+                'texchk: FAIL missing a-b 8x8 fmt=0 frame=2',
+                'native UI: upload FAILED',
+                'texchk: frame=2 fails=1 skips=0 meta_changes=0 vram_changes=0 binds=0 arms=0',
+                'texchk: frame=2 fails=0 skips=0 meta_changes=1 vram_changes=0 binds=0 arms=0',
+                'texchk: room frame=2 fails=0 changes=1'):
+            with self.subTest(failure=failure):
+                path, _, _ = self.make_run(log=failure + '\n')
+                self.assertEqual('FAIL', report.inspect_run(path)['checks']['tex_check']['status'])
+
     def test_selected_missing_scenario_is_preserved_as_unavailable(self):
         name = 'cx-r117-missing-01'
         result = self.build([name], [name])

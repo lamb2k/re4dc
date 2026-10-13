@@ -59,6 +59,14 @@ def inspect_run(path):
     with contextlib.redirect_stdout(output):
         tex_pass = texchk.check(log)
     checks['tex_check'] = {'status': 'PASS' if tex_pass else 'FAIL', 'report': output.getvalue()}
+    texture_errors = any(texchk.FAIL.search(line) or texchk.CHANGE.search(line)
+                         or any(pattern.search(line) for pattern in texchk.OTHER) for line in text.splitlines())
+    for match in texchk.SUMMARY.finditer(text):
+        texture_errors = texture_errors or any(int(match.group(index)) for index in (2, 4, 5))
+    for match in texchk.ROOM.finditer(text):
+        texture_errors = texture_errors or any(int(match.group(index)) for index in (2, 3))
+    if 'no coverage:' in output.getvalue() and not texture_errors:
+        checks['tex_check'].update(status='UNPROVEN', reason='no texture uploads checked; raw texchk rejects absent coverage')
     if tex_pass and checks['ps2_world_draw']['status'] != 'PASS':
         checks['tex_check'].update(status='UNPROVEN', reason='generic texture coverage does not establish a live target world')
     expected = {'status': 'RUN_COMPLETE_AWAITING_REVIEW', 'reader_exit': 0,
