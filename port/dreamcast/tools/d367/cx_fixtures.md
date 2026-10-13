@@ -80,3 +80,18 @@ and texture selection result. `PASS_PATHS_AND_ARM` is a static check only. Attac
 first-pass logs/stills/TEX_CHECK and fallback results to the exact fixture SHA.
 Use the walk plus two independent view fixtures when the bridge has no supported
 camera-control directive. Keep initial diagnostic fixtures immutable once used.
+
+The legacy private staging harness cannot add event certificate names with two
+extensions (for example `evd/e113.evd.evq`) to the primary ISO namespace. Adapt
+only an owned harness copy before staging those fixtures:
+
+```sh
+python3 port/dreamcast/tools/d367/texchk/cx_iso_names.py \
+  --input PRIVATE/stage-scenario.py --output PRIVATE/stage-scenario-v2.py
+```
+
+This retains exact Rock Ridge and Joliet names and payloads while making a valid
+primary alias (`E113_EVD.EVQ`). Existing single-extension aliases stay unchanged;
+alias collisions are rejected. The output must be new, and a provenance sidecar
+records both script hashes. The stage utility still verifies both runtime
+namespaces, the independent raw reader, payload hashes and the original boot area.
