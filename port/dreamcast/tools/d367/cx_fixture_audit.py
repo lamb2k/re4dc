@@ -12,6 +12,36 @@ def load(path):
     return json.loads(Path(path).read_text())
 
 
+def archive_error_history(room_dir, manifest):
+    """Associate conversion errors only with currently selected archive roots."""
+    selected = set()
+    for row in manifest.get('dependencies', []):
+        if not row.get('destination', '').endswith(('.arc', '.dar')):
+            continue
+        selected.update(p for p in Path(row['source']).parents
+                        if p.parent == room_dir and p.name.startswith('ancillary'))
+    if not selected:
+        # A failed preparation has no selected ARC/DAR yet; its exact current
+        # failure path is recorded in the manifest, not inferred from mtime.
+        for reason in manifest.get('blockers', []):
+            for match in re.finditer(re.escape(str(room_dir)) + r'/ancillary(?:-[0-9a-f]+)?(?=/)', reason):
+                selected.add(Path(match.group()))
+    active, historical = [], []
+    for folder in sorted(room_dir.glob('ancillary*')):
+        if not folder.is_dir():
+            continue
+        for relative, dictionary in (('tex/native-ui-report.json', True),
+                                     ('mirror/le_mirror_report.json', False)):
+            p = folder / relative
+            if not p.exists():
+                continue
+            report = load(p)
+            rows = report.get('errors', []) if dictionary else [r for r in report if r.get('error')]
+            target = active if folder in selected else historical
+            target.extend(dict(report=str(p), **row) for row in rows)
+    return active, historical, sorted(map(str, selected))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--root', required=True, type=Path)
@@ -60,12 +90,7 @@ def main():
                               errors=errors))
         dep_path = a.dependencies / 'rooms' / (room + '.json') if a.dependencies else None
         dep = load(dep_path) if dep_path and dep_path.exists() else None
-        archive_errors = []
-        for p in (a.root / room).glob('ancillary-*/tex/native-ui-report.json'):
-            report = load(p)
-            archive_errors += [dict(report=str(p), **row) for row in report.get('errors', [])]
-        for p in (a.root / room).glob('ancillary-*/mirror/le_mirror_report.json'):
-            archive_errors += [dict(report=str(p), **row) for row in load(p) if row.get('error')]
+        archive_errors, historical_errors, selected_roots = archive_error_history(a.root / room, manifest)
         if room[1] == '2':
             reasons.append('Common test9 arm does not provide required stage module: ' + str(manifest.get('stage_module')))
         if room == 'r11c':
@@ -76,6 +101,7 @@ def main():
         rooms[room] = dict(manifest=str(manifest_path), source_entry=manifest['entry_source'],
                            ancillary_status=manifest['ancillary_status'], stage_module=manifest.get('stage_module'),
                            views=views, blockers=reasons, archive_conversion_errors=archive_errors,
+                           historical_archive_errors=historical_errors, selected_archive_roots=selected_roots,
                            dependency_manifest=str(dep_path) if dep_path else None,
                            dependency_errors=[d for d in dep['dependencies'] if d.get('error')] if dep else [],
                            texture_selection=selected,

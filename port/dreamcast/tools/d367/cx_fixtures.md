@@ -51,6 +51,17 @@ Any conversion rejection remains a blocker and retains its log. New room AICA
 banks, object/native-model coverage, events, and runtime modules require their
 own qualification. A generated archive is not gameplay acceptance.
 
+The native mirror supports authored empty ITM tables (zero id count, both model
+and texture offsets null), following the zero-iteration loop in
+`src/game/item_model.cpp::cItmSys::DataLoad`. AEV type 0 scratch is cleared by
+`sceAtDataLoopInit`; type 2 never reads its union in `sceAtFunc_exec`. Their
+unused authored bytes are preserved. Type 11 accepts a small nonzero placeholder
+only for an enabled, uncreated, unparented quad whose corresponding SAT/EAT slot
+will be overwritten by `sceAtSetScrAt`. Live callback and parent fields still
+require null values, and unreplaced collision slots and PPC addresses reject.
+Synthetic layout/rejection tests cover these source contracts; control room
+ARC/DAR byte identity is a separate private-source check.
+
 `cx_room_dependencies.py --iso SOURCE --fixture-index OUT/index.json --out DEPS`
 uses the source ESL selection rules, archive tables, and room scripts to prepare
 available endian-correct ESL/model files and qualified EVD transports. Add
@@ -65,6 +76,16 @@ records. The chosen loose files are staged, but packed entries still win their
 keys. Audit actual packed/loose winner bytes before claiming the selection was
 tested. Shared pack application belongs to the pack owner.
 
+World-only texture lists do not include every material composite used by item
+or actor draws. For a separately qualified supplement, create new variants:
+`cx_fixture_supplement.py --supplement SUPPLEMENT.json --fixture ORIGINAL.unarmed.json
+--arm-tool fixture_arm.py --candidate-dir CANDIDATE --arm-label ARM
+--suffix pairfixed --report REPORT.json`. Repeat `--fixture` for every view.
+The supplement must provide exact package SHA-256 and native-parser PASS for
+each pair. The tool refuses shared-pack shadowing, writes only new named
+variants, records source-fixture and supplement hashes, and re-arms overlays.
+A static winner/path check still needs a new runtime TEX_CHECK capture.
+
 ## Audit and run
 
 ```sh
@@ -76,7 +97,10 @@ python3 port/dreamcast/tools/d367/cx_fixture_audit.py \
 
 The audit reports every required room ARC/DAR, missing source path, mismatched
 build overlay, unsupported status requirement, source entry, dependency error,
-and texture selection result. `PASS_PATHS_AND_ARM` is a static check only. Attach
+and texture selection result. Conversion errors are associated with the selected
+archive roots or the exact current failed preparation path; retained older
+errors are reported separately as `historical_archive_errors`.
+`PASS_PATHS_AND_ARM` is a static check only. Attach
 first-pass logs/stills/TEX_CHECK and fallback results to the exact fixture SHA.
 Use the walk plus two independent view fixtures when the bridge has no supported
 camera-control directive. Keep initial diagnostic fixtures immutable once used.
