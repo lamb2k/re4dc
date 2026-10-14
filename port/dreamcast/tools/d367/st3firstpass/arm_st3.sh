@@ -17,9 +17,9 @@ src, out, cand = sys.argv[1:4]
 d = json.load(open(src)); r = d['replace']
 for n in ('st3_0', 'st3_1', 'st3_2', 'st3_3'):
     r['rel/%s.rel' % n] = '/root/probe/lanes-20261014/st3/relout/rel/%s.rel' % n
-for m in ('em1d', 'em1e', 'em3b'):
+for m in ('em1d', 'em1e', 'em3b', 'em25'):
     r['dc/%s.ovl' % m] = cand + '/%s.ovl' % m
-d.setdefault('provenance', {})['st3_lane'] = {'added': ['rel/st3_*.rel (le_mirror --compact-static-rel)', 'dc/em1d.ovl', 'dc/em1e.ovl', 'dc/em3b.ovl']}
+d.setdefault('provenance', {})['st3_lane'] = {'added': ['rel/st3_*.rel (le_mirror --compact-static-rel)', 'dc/em1d.ovl', 'dc/em1e.ovl', 'dc/em3b.ovl', 'dc/em25.ovl']}
 json.dump(d, open(out, 'w'), indent=1, sort_keys=True)
 PY
 python3 "$TOOLS/port/dreamcast/tools/d367/texchk/fixture_arm.py" "$TMP" "$OUT" "$L" --candidate-dir "$CAND"
