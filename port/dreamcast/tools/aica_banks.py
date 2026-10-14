@@ -102,7 +102,10 @@ LOWER_ORDER = (8, 5, 1, 6, 2, 7, 0, 3)
 # (snd.cpp, ROUTE_CH13). Only rooms of the planned route add entries. r104 and r107 both request
 # bank 9; it must also be prebuilt, otherwise runtime conversion exhausts the unreserved AICA bytes.
 ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r10a': [3], 'r10b': [3], 'r11b': [10], 'r11a': [10], 'r119': [3], 'r118': [11], 'r117': [11],
-             'r112': [1], 'r111': [6], 'r113': [6], 'r11c': [6]}
+             'r112': [1], 'r111': [6], 'r113': [6], 'r11c': [6],
+             # chapter 2-3 (lane ch22-1014; the runtime's "blk 3 (N GC bytes) does not fit" sizes matched to the
+             # bio4midi entries): r11d #6 (as r11c), r10f / r11f / r200 #8 (740151 GC bytes)
+             'r11d': [6], 'r10f': [8], 'r11f': [8], 'r200': [8]}
 
 # Leon's other stage-1 weapons (--weapons; stage.sh AICA_WEAPONS=1; issue lamb2k/re4dc#1, silent weapons). The GC
 # loads the equipped weapon's SE block (WEP, block 2) on every weapon change (weaponLoad -> its .drs) into the one WEP
@@ -150,7 +153,7 @@ ROOMS = {
     # Follow-up 7 (world coverage lane, St1; assets.sh discover: the rooms' ESL / script enemies)
     'r109': ['st1/r109.dar', 'em/em23.drs'],
     'r10c': ['st1/r10c.dar', 'em/em12.drs'],
-    'r10f': ['st1/r10f.dar', 'em/em13.drs'],
+    'r10f': ['st1/r10f.dar', 'em/em13.drs', 'em/pl11.drs'],   # pl11: Ashley (chapter 2-3, lane ch22-1014)
     # r11a (route lane r11a, chapter 2-1): em24 is also read at room entry, as in r108 / r10a (route-r11a-x1a:
     # "blk 9 (34040 bytes) does not fit the room arena"). bgmtbl: bio4midi #10 (as r11b).
     'r11a': ['st1/r11a.dar', 'em/em12.drs', 'em/em24.drs'],
@@ -179,6 +182,13 @@ ROOMS = {
     # with the room's own banks at 8 kHz and pl11 the arena has no room for pl14's (55,324 B at 8 kHz; 8.8 KB over), so
     # Luis's bank stays silent (open, as r118's later archive).
     'r11c': ['st1/r11c.dar', 'em/pl11.drs', 'em/em13.drs'],
+    # Chapter 2-3 (lane ch22-1014, ROUTE_CH23; assets.sh discover + run logs): Ashley (pl11) follows Leon through
+    # every room. r11d: em3b (no sound block) and em16 (enabled later); r11e: em2b (the second El Gigante, script
+    # load); r11f: em35 (Mendez); r200: em12 / em18 / em3b (pre-read for s00) and pl11. r10f's row is below.
+    'r11d': ['st1/r11d.dar', 'em/pl11.drs', 'em/em16.drs'],
+    'r11e': ['st1/r11e.dar', 'em/pl11.drs', 'em/em2b.drs'],
+    'r11f': ['st1/r11f.dar', 'em/pl11.drs', 'em/em35.drs'],
+    'r200': ['st2/r200.dar', 'em/pl11.drs', 'em/em12.drs', 'em/em18.drs'],
     # r40b (St4, follow-up 7): em1f (bringup inventory: em1f/em1f, st4_0)
     'r40b': ['st4/r40b.dar', 'em/em1f.drs'],
 }
@@ -592,7 +602,10 @@ def plan(mirror, rooms, budget, fixed=(), weapons=()):
     the frozen layout (route lane, r106 2026-10-01)."""
     frozen, fixed_slots = {}, None
     if fixed:
-        _, _, funiq, fixed_slots, _ = plan(mirror, list(fixed), budget)
+        # nested levels ([[...], [...]]): each level is planned on the frozen result of the levels before it, so a
+        # route extension keeps every bank of the previous route byte-identical (lane ch22-1014: em18 of r102)
+        levels = [list(x) for x in fixed] if isinstance(fixed[0], (list, tuple)) else [list(fixed)]
+        _, _, funiq, fixed_slots, _ = plan(mirror, levels[-1], budget, levels[:-1])
         frozen = {k: b.cap for k, b in funiq.items()}
     data = {}
     resident = load_banks(mirror, RESIDENT, data)
@@ -798,7 +811,11 @@ CH21R_STREAMS = (ROUTE_STREAMS[:4] + [(1, 0x33)] + CALL_VOICE_STREAMS + [(0, 4),
 # r11c (0:0xA), and the event streams of r118 after the rescue (1:5 room stream, 1:0xE0 the altar view) and r113 (1:0x27,
 # the shoulder ride), appended so every earlier entry keeps its data bytes. `--streams ch22`.
 CH22_STREAMS = CH21R_STREAMS + [(0, 0x19), (0, 9), (0, 0xA), (1, 5), (1, 0xE0), (1, 0x27)]
-STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS}
+# Chapter 2-3 (ROUTE_CH23, lane ch22-1014): ch22 plus the streams the 2-3 rooms requested ("stream sbb=... not in
+# aica_str.dat" in the first-pass runs): r11d 0:22, r200 0:24, r11e 1:76; appended so every earlier entry keeps its
+# data bytes. `--streams ch23`.
+CH23_STREAMS = CH22_STREAMS + [(0, 22), (0, 24), (1, 76)]
+STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch23': CH23_STREAMS}
 
 
 def nibble_to_sample(n):
@@ -1154,7 +1171,9 @@ def main():
     ap.add_argument('--out')
     ap.add_argument('--route', default='title,r100,r101,r103')
     ap.add_argument('--fixed-route', default='', help='plan/build: rooms of --route whose caps and layout stay as '
-                    'planned alone (e.g. title,r100,r101,r103); the rest fit that layout with their own banks')
+                    'planned alone (e.g. title,r100,r101,r103); the rest fit that layout with their own banks. '
+                    '";" separates nested levels: "title,r100,r101,r103;title,...,r11c" freezes the 2-2 route as '
+                    'planned on the first level, then fits the remaining rooms')
     ap.add_argument('--weapons', action='store_true', help='plan/build/disc: also prebuild WEAPONS (Leon\'s other '
                     'stage-1 weapons) into the WEP slot, each at the highest cap that fits it; the layout is unchanged')
     ap.add_argument('--cache')
@@ -1187,8 +1206,10 @@ def main():
         return
     rooms = [r for r in a.route.split(',') if r]
     budget = AICA_POOL - MOVIE_RESERVE - STREAM_RING
-    fixed = [r for r in a.fixed_route.split(',') if r]
-    assert set(fixed) <= set(rooms), 'every --fixed-route room must be in --route'
+    # 'a,b;a,b,c,d': nested freeze levels (each level's rooms planned on the levels before it); one level = as before
+    fixed = [[r for r in lv.split(',') if r] for lv in a.fixed_route.split(';') if lv.strip(',')]
+    assert all(set(lv) <= set(rooms) for lv in fixed), 'every --fixed-route room must be in --route'
+    fixed = fixed[0] if len(fixed) == 1 else fixed
     weapons = WEAPONS if a.weapons else ()
     res, per_room, uniq, slots, arena = plan(a.mirror, rooms, budget, fixed, weapons)
     rep = report(res, per_room, uniq, slots, arena, budget)
