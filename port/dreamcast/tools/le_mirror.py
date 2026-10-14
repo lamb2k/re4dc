@@ -2471,6 +2471,13 @@ def static_module_ids(extra=()):
         rows=re.findall(r'^    \{61, \"em35\", 0, 0, 0, 0, 0, 0, 0\}, // Mendez, room overlay$',registry,re.M)
         if len(rows)!=1:raise ValueError('em35 overlay registry identity changed')
         bindings.append(('61','em35'))
+    # ROUTE_CH3 soldier overlays (stage 3 lane): the reviewed em1d id90 / em1e id92 room-overlay rows.
+    for ident, name in (('90', 'em1d'), ('92', 'em1e')):
+        if name in extra:
+            rows = re.findall(r'^    \{%s, "%s", 0, 0, 0, 0, 0, 0, 0\},  // ROUTE_CH3: .*$' % (ident, name), registry, re.M)
+            if len(rows) != 1:
+                raise ValueError(name + ' overlay registry identity changed')
+            bindings.append((ident, name))
     makefile = (root / 'port/dreamcast/game/Makefile').read_text()
     # Knob-conditional modules (`MODULES += ...` under WORLD_STAGE_MODULES=1, with #if-guarded registry rows) are
     # not part of the default image's static set this mirror compacts against.

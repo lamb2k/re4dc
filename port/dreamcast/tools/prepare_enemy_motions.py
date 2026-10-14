@@ -28,7 +28,10 @@ MAX_CLIP=32768
 # em11 (r117's later-visit Ganados, ESL 0x50/0x51, chapter 2-1; route lane r117 2026-10-10): em11/em10.cpp,
 # em10_tmpl.cpp, em11_set.cpp, the same three units; its 5.8 MB GC archive did not fit r117's heap 4 (largest cell
 # 3.1 MB: DVD: Memory allocate failed, readEmData em/em11.drs).
-GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs')
+# em1d / em1e (ROUTE_CH3, the island soldiers of r300 / r301 r303 r305; stage 3 lane 2026-10-14): em1d/em10.cpp,
+# em10_tmpl.cpp, em1d_set.cpp (em1e the same), the em11 contract. Their GC archives (4,634,272 / 4,502,752 B bodies)
+# did not fit r300's heap 4 on the disc-2 image (4,042,976 B free: DVD: Memory allocate failed, Em set failed Id=1d).
+GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em1d.drs','em1e.drs')
 SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.drs','em18.drs')
 # em18 (the merchant, r102 r10d r10e r112; lane ps2cast2 2026-10-14, PS2_CAST_MERCHANT discs): textures only
 # (--keep-motion-resident), the em22 contract. Its model TPLs (ARC 6 body / hands / goods, ARC 8 head, ARC 0xF robe and
@@ -66,7 +69,7 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 # SetRock; its EFF slot keeps its own textures. em2b is a ROUTE_OVL room overlay, so its static REL is stripped
 # with the knob-conditional module set (ROUTE_OVL_MODULES). The room's heap 4: r119 frees 3,854,656 B in two
 # cells, the largest 2,770,912 B, under the 4,689,664 B rel-stripped body.
-ROUTE_OVL_MODULES=('em2b','em2f','em22')
+ROUTE_OVL_MODULES=('em2b','em2f','em22','em1d','em1e')
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
 # their own registry row like the room overlays above: em11 (ROUTE_CH21, r117), em18 (ROUTE_CH13, r102: module 22).
 KNOB_STATIC_MODULES=('em11','em18')

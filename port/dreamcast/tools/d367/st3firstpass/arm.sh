@@ -23,6 +23,16 @@ import glob, os
 for f in sorted(glob.glob('/root/probe/lanes-20261014/st3/pairs-r3/*.re4tex')):
     k = os.path.basename(f)
     r['dc/tex/%s/%s' % (k[0], k)] = f
+import filecmp
+for m in ('em1d', 'em1e'):
+    o = '/root/probe/lanes-20261014/st3/emprep/out-%s' % m
+    if os.path.exists(o + '/%s.drs' % m):
+        r['em/%s.drs' % m] = o + '/%s.drs' % m
+        for k in sorted(os.listdir(o + '/mot')):
+            key = 'dc/mot/' + k
+            if key in r and not filecmp.cmp(r[key], o + '/mot/' + k, shallow=False):
+                raise SystemExit('motion key collision ' + key)
+            r.setdefault(key, o + '/mot/' + k)
 d.setdefault('provenance', {})['st3_lane'] = {'added': ['rel/st3_*.rel (le_mirror --compact-static-rel)', 'dc/em1d.ovl', 'dc/em1e.ovl', 'dc/em3b.ovl', 'dc/em25.ovl']}
 json.dump(d, open(out, 'w'), indent=1, sort_keys=True)
 PY
