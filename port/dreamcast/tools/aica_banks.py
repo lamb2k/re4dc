@@ -813,7 +813,6 @@ CH21R_STREAMS = (ROUTE_STREAMS[:4] + [(1, 0x33)] + CALL_VOICE_STREAMS + [(0, 4),
 # r11c (0:0xA), and the event streams of r118 after the rescue (1:5 room stream, 1:0xE0 the altar view) and r113 (1:0x27,
 # the shoulder ride), appended so every earlier entry keeps its data bytes. `--streams ch22`.
 CH22_STREAMS = CH21R_STREAMS + [(0, 0x19), (0, 9), (0, 0xA), (1, 5), (1, 0xE0), (1, 0x27)]
-<<<<<<< HEAD
 # Chapter 1 completion (lane audio16, 2026-10-16): every stream the chapter 1 rooms (r100..r10b) request that ch21r lacks,
 # appended so entries 0..17 and their data bytes stay identical to the ch21r file (only the 2 KB header grows). From the
 # rooms' bgm/bgmtbl.dat entries and their scripts' SndStrReq / SndRoomStrStart / EvtSndStrPlay calls; the full-play logs
