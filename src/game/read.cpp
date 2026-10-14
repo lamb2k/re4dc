@@ -367,8 +367,16 @@ void OptionDataRead()
 // systemResetCommon releases the module slots, so an enemy archive read into heap 4 was freed into the
 // current heap 0's free list (heap 0 then hands out memory over the rebuilt heaps). A block inside a
 // destroyed heap's range went with that heap: it is only forgotten.
+// A live heap that owns the address wins (a destroyed heap's stale range can overlap the current
+// room heap, e.g. a retired r11c pl11 archive in live heap 4 over an old heap 0 range).
 static void ModuleMemFree(void* p)
 {
+    for (int i = 0; i < MEM_HEAP_NUM; i++) {
+        if (Heap[i].handle >= 0 && Heap[i].start <= (u32) p && (u32) p < Heap[i].end) {
+            Mem_free(p);
+            return;
+        }
+    }
     for (int i = 0; i < MEM_HEAP_NUM; i++) {
         if (Heap[i].handle < 0 && Heap[i].start <= (u32) p && (u32) p < Heap[i].end) {
             OSReport("module free: %p dropped (heap %d destroyed)\n", p, i);
