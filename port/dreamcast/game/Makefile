@@ -204,6 +204,17 @@ $(error TRUCK_DIAG=1 needs ROUTE_CH23=1 DBG_WARP=1)
 endif
 $(OBJDIR)/mod/em3b/src/em3b/em3b.o: GAME_CPPFLAGS += -DRE4DC_TRUCK_DIAG=1
 endif
+# SUB_EM_FUNC=1: SetSubDamage stores Ashley's routine-4 handler explicitly (the decomp's PowerPC r4 pin in
+# cSubChar::setEmFunc is dropped off PowerPC, so the handler was an uninitialised local: the guest rebooted when the
+# r200 truck ran Ashley over, and any other SetSubDamage on Ashley - em3c, boats - calls garbage). Default 0 keeps
+# the image identical.
+SUB_EM_FUNC ?= 0
+ifeq ($(filter $(SUB_EM_FUNC),0 1),)
+$(error SUB_EM_FUNC must be 0 or 1)
+endif
+ifeq ($(SUB_EM_FUNC),1)
+$(OBJDIR)/src/game/pl_sub.o: GAME_CPPFLAGS += -DRE4DC_SUB_EM_FUNC=1
+endif
 ifneq ($(ROUTE_CH23),0)
 ifneq ($(ROUTE_CH23)$(ROUTE_CH21)$(ROUTE_OVL),111)
 $(error ROUTE_CH23 must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1)

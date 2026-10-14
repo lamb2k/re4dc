@@ -370,6 +370,12 @@ void SetSubDamage(int type, void* mot)
     }
     if (sub->id == 3) {
         sub->setEmFunc();
+#if defined(RE4DC_SUB_EM_FUNC) && RE4DC_SUB_EM_FUNC && !defined(__PPC__)
+        // setEmFunc takes `mot` from PowerPC r4 (the original's register pin, still live from this call). Off
+        // PowerPC the pin is dropped and subFunc got an uninitialised local, so Ashley's routine 4 called garbage:
+        // a guest reboot when the r200 truck runs her over (lane ch22-1014). Store the handler explicitly.
+        sub->subFunc = (void (*)()) mot;
+#endif
         sub->r_no_0 = 4;
         sub->r_no_1 = 0;
         sub->r_no_2 = 0;
