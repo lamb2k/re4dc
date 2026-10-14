@@ -47,6 +47,17 @@ def v2_args(s):
         quals = []
         while s[i] in "PRCUS":
             quals.append(s[i]); i += 1
+        if s[i] == "F" and quals == ["P"]:
+            # P F <args> _ <return>: a pointer to function (r318 SetCallBack__7cObjScrPFP4cObj_v, ROUTE_CH3).
+            j = s.index("_", i + 1)
+            inner = v2_args(s[i + 1:j])
+            if inner == ["void"]:
+                inner = []
+            ret = v2_args(s[j + 1:j + 2])[0] if s[j + 1] in V2_BASIC else None
+            if ret is None:
+                raise KeyError(s[j + 1:])
+            out.append("%s (*)(%s)" % (ret, ", ".join(inner))); i = j + 2
+            continue
         if s[i].isdigit():
             n = int(re.match(r"\d+", s[i:]).group(0))
             i += len(str(n))

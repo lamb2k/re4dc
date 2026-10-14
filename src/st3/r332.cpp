@@ -48,7 +48,11 @@
 // across them by the action button), the down / rocket cut scenes and the s00/s10/s20 events.
 
 extern "C" char* strstr(const char* s, const char* sub);
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+extern "C" void* memcpy(void* d, const void* s, unsigned int n);  // re4dc_prelude.h type
+#else
 extern "C" void* memcpy(void* d, const void* s, u32 n);
+#endif
 // The list id as an int return (the callers mask it themselves).
 int GetEmIdFromListI(u32 no) asm("GetEmIdFromList");
 

@@ -1,8 +1,36 @@
+diff --git a/port/dreamcast/tools/assetpipe/discover.py b/port/dreamcast/tools/assetpipe/discover.py
+index b244b3fd..b9c9ea46 100644
+--- a/port/dreamcast/tools/assetpipe/discover.py
++++ b/port/dreamcast/tools/assetpipe/discover.py
+@@ -94,6 +94,8 @@ def esl_list_numbers(room):
+         if room in (0x200, 0x201, 0x202, 0x203, 0x204, 0x207, 0x208):
+             return late + [(2, "else, !(Scenario_flg[0] & 0x40000)"), (3, "else")]
+         return late + [(3, "else")]
++    if stage == 3:
++        return [(6 if room <= 0x314 else 7, "always")]
+     if stage == 4:
+         if room > 0x404:
+             return [(8, "always")]
 diff --git a/port/dreamcast/tools/d367/cx_room_fixtures.py b/port/dreamcast/tools/d367/cx_room_fixtures.py
-index 53e86a37..292c0524 100644
+index 53e86a37..d7506dc1 100644
 --- a/port/dreamcast/tools/d367/cx_room_fixtures.py
 +++ b/port/dreamcast/tools/d367/cx_room_fixtures.py
-@@ -165,7 +165,7 @@ def main():
+@@ -121,6 +121,14 @@ def entry_for(room, doors):
+                  notes='r221.cpp SceAtExecRoomJump(0x22B, &vecZero, &vecZero, 0); event-only arrival')
+         source = dict(kind='source script room jump', file='src/st2/r221.cpp', line=543,
+                       expression='SceAtExecRoomJump(0x22B, (Vec*) &vecZero, (Vec*) &vecZero, 0)')
++    elif room in ('r322', 'r323', 'r324', 'r328'):
++        # st3 lane: no AEV door (any type) on Disc 2 targets these rooms, no SceAtExecRoomJump in src/st3 names
++        # them and they have no Evd event file: unreferenced rooms. Following r22b's vecZero jump form, the
++        # origin is used as a diagnostic arrival; it is NOT a source arrival and may be outside the floor.
++        p = dict(room=int(room[1:], 16), pos=[0, 0, 0], ang=0.0,
++                 notes='%s: no source arrival exists (unreferenced room); vecZero diagnostic preset' % room)
++        source = dict(kind='no source arrival (unreferenced room); vecZero diagnostic preset',
++                      checked=['Disc 2 AEV all types', 'src/st3 SceAtExecRoomJump', 'Evd files'])
+     else:
+         raise ValueError('No source-derived part-0 arrival for ' + room)
+     if room in ('r112', 'r111', 'r113', 'r11c'):
+@@ -165,7 +173,7 @@ def main():
      if scan_path.exists() and meta_path.exists() and read(meta_path) == scan_meta:
          doors = read(scan_path)
      else:
@@ -11,6 +39,23 @@ index 53e86a37..292c0524 100644
          write(scan_path, doors)
          write(meta_path, scan_meta)
      repo = HERE.parents[3]
+diff --git a/port/dreamcast/tools/le_mirror.py b/port/dreamcast/tools/le_mirror.py
+index 2e24a115..116f9b00 100644
+--- a/port/dreamcast/tools/le_mirror.py
++++ b/port/dreamcast/tools/le_mirror.py
+@@ -1923,6 +1923,12 @@ def fmt_smx(sw, off, size, ctx):
+             # on the wheel objects 6 / 8 / 0xA / 0x33 (R10cRotWork), and the only SetCallBack in the source is
+             # r318's. Preserve these opaque type-0 authoring bytes unswapped, as r120's.
+             pass
++        elif kind == 0 and ((ctx.startswith('st3/r300.arc#') and sw.data[p] == 0x00) or
++                            (ctx.startswith('st3/r303.arc#') and sw.data[p] == 0x0B)):
++            # st3 lane: r300 object 0x00 (r300.cpp only sets SmdGetObjPtr(0)->type = 0) and r303 object 0x0B (the
++            # door: setPos / setAng / type = 0 / its pos for SndCall) are never read through cObj::work, and the
++            # only SetCallBack in the source is r318's. Preserve these opaque type-0 authoring bytes, as r10c's.
++            pass
+         elif any(sw.data[work:work + 116]):
+             # Type zero's normal mover ignores work, but room callbacks may
+             # consume it. Do not guess its scalar layout from nonzero bytes.
 diff --git a/port/dreamcast/tools/ps2_assets/worlds.json b/port/dreamcast/tools/ps2_assets/worlds.json
 index 9d6244ee..c44bccb2 100644
 --- a/port/dreamcast/tools/ps2_assets/worlds.json
@@ -77,3 +122,40 @@ index 9d6244ee..c44bccb2 100644
 +    "sha256": "118640eb02953d5a8234d3f9e27ea535e75b0346b9cf22aa764b65c3d76f1b12"
    }
  }
+diff --git a/port/dreamcast/tools/ps2_room_extract.py b/port/dreamcast/tools/ps2_room_extract.py
+index 114e8467..68516c15 100644
+--- a/port/dreamcast/tools/ps2_room_extract.py
++++ b/port/dreamcast/tools/ps2_room_extract.py
+@@ -114,10 +114,19 @@ def extract(room, iso_f, index, work, inputs, dat_exe=DAT_EXE, smd_exe=SMD_EXE):
+                     obj_group_kinds={}, bins=0, files={}, status='no scenario SMD in the dat')
+     if not smxs:
+         raise SystemExit('%s: no SMX in the dat (%s)' % (room, names))
+-    if smds[0] != room + '_004.SMD' or smxs[0] != room + '_005.SMX':
+-        raise SystemExit('%s: scenario SMD/SMX are %s/%s, not _004/_005 (converter names)' % (room, smds[0], smxs[0]))
+     sub = work / room
+-    run_tool(smd_exe, [smds[0]], sub, work / 'smd.log')
++    renamed = None
++    if smds[0] != room + '_004.SMD' or smxs[0] != room + '_005.SMX':
++        # Located by type, not index (st3 lane): a dat that starts with cutscene members (r30f, r334: BIN/TPL/FCV/SEQ
++        # _000.._036) has its scenario pair later. Require the same shape as _004/_005 (the SMX right after the SMD)
++        # and present them to the SMD tool and the converter under the fixed names; _004/_005 rooms never reach here.
++        si, xi = names.index(smds[0]), names.index(smxs[0])
++        if xi != si + 1 or (sub / (room + '_004.SMD')).exists() or (sub / (room + '_005.SMX')).exists():
++            raise SystemExit('%s: scenario SMD/SMX are %s/%s, not an adjacent pair (converter names)' % (room, smds[0], smxs[0]))
++        shutil.copy2(sub / smds[0], sub / (room + '_004.SMD'))
++        shutil.copy2(sub / smxs[0], sub / (room + '_005.SMX'))
++        renamed = dict(smd=smds[0], smx=smxs[0])
++    run_tool(smd_exe, [room + '_004.SMD'], sub, work / 'smd.log')
+     stem = room + '_004'
+     if inputs.exists():
+         shutil.rmtree(inputs)
+@@ -139,7 +148,8 @@ def extract(room, iso_f, index, work, inputs, dat_exe=DAT_EXE, smd_exe=SMD_EXE):
+     for g in re.findall(r'^g (\S+)', obj, re.M):
+         k = 'NORMAL' if 'NORMAL' in g.upper() else ('COLOR' if 'COLOR' in g.upper() else 'OTHER')
+         kinds[k] = kinds.get(k, 0) + 1
+-    return dict(room=room, member=member, dat_entries=names, scenario_smd=smds[0], smx=smxs[0],
++    extra = dict(scenario_renamed_from=renamed) if renamed else {}
++    return dict(room=room, member=member, dat_entries=names, scenario_smd=smds[0], smx=smxs[0], **extra,
+                 other_smds=smds[1:], obj_group_kinds=kinds,
+                 bins=len(list((inputs / (stem + '_BIN')).glob('*.BIN'))), files=tree_hashes(inputs),
+                 aux=tree_hashes(aux))

@@ -582,7 +582,13 @@ static void r301_setEmBowgun()
     em3.setFindPL();
     em4.setFindPL();
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* em = (cEm*) EmMgr.workAt(i);
+        if (!em) continue;
+#else
         cEm* em = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if (em->id == 0x20 && em0.getPtr() != em && em1.getPtr() != em && em2.getPtr() != em && em->type != 6) {
             cEmWrap w;

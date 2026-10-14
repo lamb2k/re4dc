@@ -147,7 +147,13 @@ static void r311_checkEmMoveCtrl()
         SceSleep(15);
         n = 0;
         for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+            // Unbacked sparse enemy slots read as absent (as em21's scans).
+            cEm* p = (cEm*) EmMgr.workAt(i);
+            if (!p) continue;
+#else
             cEm* p = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
             if (p->id >= 0x10 && p->id <= 0x20 && (p->be_flag & 0x201) == 1) {
                 em.setPtr(p, 1);
