@@ -24,7 +24,16 @@ extern "C" void re4dc_log(const char*,...);
 namespace re4dc_material { namespace life {
 constexpr unsigned kParkArchives=4,kParkAssets=16,kParkInfos=32,kParkNone=~0u;
 struct ParkArchive { Archive o;unsigned slot,hash; };                         // slot: archives[] index at open
+#if RE4DC_NMR_PARK_UNRELOCATED
+// PS2_CAST_* (native_model_registry.mk, lane ps2cast2): was_current = the asset's current() at open. An archive BIN that
+// calcModelAddr has not relocated yet (no instance of it exists: r102's em18 is read ahead, the shop opens before
+// setEm(0x4C) creates the merchant) is not current() at open and cannot be at close either; the bytes hash proves it is
+// unchanged, so it is republished as it was instead of revoking the whole archive (which left the merchant on the source
+// path for the rest of the room). An asset that was current at open must still be current at close.
+struct ParkAsset { Asset a;unsigned slot,owner,new_slot,new_serial,was_current; };
+#else
 struct ParkAsset { Asset a;unsigned slot,owner,new_slot,new_serial; };       // owner: park_archives index
+#endif
 struct ParkInfo { Info i;unsigned asset_owner,tpl_owner; };                  // park_archives index or kParkNone
 using ParkSaved=int(*)(const void*,unsigned);
 struct Park {
@@ -99,7 +108,13 @@ void park_open(const void* window,unsigned bytes,ParkSaved saved) {
     for(unsigned k=0;k<kArchives;++k)if(take[k]) {
         const unsigned pk=park.narchive++;
         park_archives[pk]={archives[k],k,park_hash(archives[k].base,archives[k].bytes)};
+#if RE4DC_NMR_PARK_UNRELOCATED
+        for(unsigned j=0;j<kAssets;++j)if(assets[j].data && assets[j].archive==k) {
+            auto& pa=park_assets[park.nasset++];pa={assets[j],j,pk,kParkNone,0};pa.was_current=current(assets[j])?1u:0u;assets[j]={};
+        }
+#else
         for(unsigned j=0;j<kAssets;++j)if(assets[j].data && assets[j].archive==k){park_assets[park.nasset++]={assets[j],j,pk,kParkNone,0};assets[j]={};}
+#endif
         archives[k]={};
     }
     // Infos naming a parked asset / TPL owner, or whose cModelInfo is in the window (its bytes leave with it).
@@ -147,7 +162,11 @@ void park_close(bool restored) {
         const unsigned serial=s<kAssets?next():0u;
         if(serial) {
             assets[s]=a.a;assets[s].archive=slot_of[k];assets[s].owner_revision=rev_of[k];assets[s].serial=serial;assets[s].pending=0;
+#if RE4DC_NMR_PARK_UNRELOCATED
+            if(current(assets[s]) || !a.was_current){a.new_slot=s;a.new_serial=serial;continue;}
+#else
             if(current(assets[s])){a.new_slot=s;a.new_serial=serial;continue;}
+#endif
         }
         revoke(slot_of[k]);slot_of[k]=kParkNone;park_drop_archive(k);
     }

@@ -7,11 +7,13 @@ set -euo pipefail
 OUT=$1
 HERE=$(cd "$(dirname "$0")" && pwd); GAME=$HERE/../../game
 mkdir -p "$OUT"
-for v in "0 0" "1 0" "1 1"; do
+# 4th variant (PS2_CAST_MERCHANT, 2026-10-14): RE4DC_NMR_PARK_UNRELOCATED=1 (an archive adopted but not relocated
+# when the screen opens is republished, not revoked).
+for v in "0 0 0" "1 0 0" "1 1 0" "1 1 1"; do
   set -- $v
-  bin=$OUT/swap_park_test-cert$1-wide$2
-  g++ -std=gnu++20 -O1 -g -Wall -Wextra -Wno-unused-function -Wno-misleading-indentation -fsanitize=address,undefined -fno-sanitize-recover=all \
-      -DRE4DC_SS_CERT=$1 -DTEST_WIDE=$2 -I"$GAME" -I"$GAME/platform/include" "$HERE/swap_park_test.cpp" -o "$bin"
+  bin=$OUT/swap_park_test-cert$1-wide$2-unrel$3
+  g++ -std=gnu++20 -O1 -g -Wall -Wextra -Wno-unused-function -Wno-misleading-indentation -Wno-missing-field-initializers -fsanitize=address,undefined -fno-sanitize-recover=all \
+      -DRE4DC_SS_CERT=$1 -DTEST_WIDE=$2 -DRE4DC_NMR_PARK_UNRELOCATED=$3 -I"$GAME" -I"$GAME/platform/include" "$HERE/swap_park_test.cpp" -o "$bin"
   "$bin"
 done
 echo "SS_CERT HOST GATES PASS"

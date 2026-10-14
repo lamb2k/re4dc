@@ -131,7 +131,12 @@ void reset() {
 struct Arch { unsigned char* base;cModelInfo* info;cModel m; };
 // A DRS with one BIN (entry 4) and one TPL (entry 5) at `at`, adopted as family 2 under key `at` and relocated as
 // the source does after adoption; its cModelInfo at `info_at`, adopted through the load-time proof.
-Arch make(unsigned char* at,unsigned char* info_at,bool adopt_info=true) {
+void relocate(const Arch& a) {
+    for(unsigned j=0;j<7;++j){const unsigned p=unsigned(reinterpret_cast<std::uintptr_t>(a.base+kBin+kOffs[j]));std::memcpy(a.base+kBin+kFields[j],&p,4);}
+}
+// relocated=false: the archive is adopted but calcModelAddr has not run yet (no instance: r102's em18 read ahead of
+// setEm(0x4C)), so no cModelInfo exists either; relocate() + re4dc_actor_info_adopt() do it later.
+Arch make(unsigned char* at,unsigned char* info_at,bool adopt_info=true,bool relocated=true) {
     Arch a{at,reinterpret_cast<cModelInfo*>(info_at),{}};
     std::memset(at,0,kArchiveBytes);
     const unsigned head[4]={2,0,kBin,kTplOff};std::memcpy(at,head,8);std::memcpy(at+16,head+2,8);
@@ -139,7 +144,8 @@ Arch make(unsigned char* at,unsigned char* info_at,bool adopt_info=true) {
     pristine_bin(at+kBin);
     const unsigned self=unsigned(reinterpret_cast<std::uintptr_t>(at+kTplOff));std::memcpy(at+kTplOff+8,&self,4);
     re4dc_actor_archive_adopt(at,at,kArchiveBytes,2);
-    for(unsigned j=0;j<7;++j){const unsigned p=unsigned(reinterpret_cast<std::uintptr_t>(at+kBin+kOffs[j]));std::memcpy(at+kBin+kFields[j],&p,4);}
+    if(!relocated)return a;
+    relocate(a);
     *a.info=cModelInfo{reinterpret_cast<ModelData*>(at+kBin),at+kTplOff,nullptr};
     a.m.pModelInfo=a.info;a.m.serial=1;
     if(adopt_info)re4dc_actor_info_adopt(a.info);
@@ -285,6 +291,23 @@ void room_rows_change() {
         room_rows_publish(nullptr,0,nullptr,0,8);swap_close();CHECK(!proof(a));}
 #endif
 }
+void unrelocated_at_open() {
+    // An adopted archive whose BIN is not relocated yet when the sub screen opens (PS2_CAST_MERCHANT, r102 em18).
+    // Knob off: the unpark revokes the archive (its asset was not current() at open, so it cannot be at close).
+    // RE4DC_NMR_PARK_UNRELOCATED: republished as it was; relocation + info adoption after close then prove it.
+    reset();{Arch a=make(W+0x10000,W+0x20000,false,false);CHECK(live_archives()==1);swap_open();ui_frees();swap_close();
+#if RE4DC_NMR_PARK_UNRELOCATED
+        CHECK(live_archives()==1 && park.published_archives==1 && park.published_assets==1);
+        relocate(a);*a.info=cModelInfo{reinterpret_cast<ModelData*>(a.base+kBin),a.base+kTplOff,nullptr};
+        a.m.pModelInfo=a.info;a.m.serial=1;re4dc_actor_info_adopt(a.info);CHECK(proof(a));
+        // An asset that was current at open and is not at close is still dropped (a moved section).
+        reset();Arch b=make(W+0x10000,W+0x20000);swap_open();park_assets[0].a.section[2]=W;swap_close();
+        CHECK(!proof(b) && live_archives()==0);
+#else
+        (void)a;CHECK(live_archives()==0);
+#endif
+    }
+}
 #endif
 }
 
@@ -300,7 +323,7 @@ int main() {
     gap_without_park();
 #if RE4DC_SS_CERT
     repair();restore_failed();bytes_changed();skipped_free_cell();cross_boundary();genuine_retire();overlapping_owner();
-    outside_objects();serials();nested_and_pending();capacity();room_rows_change();
+    outside_objects();serials();nested_and_pending();capacity();room_rows_change();unrelocated_at_open();
 #endif
     std::printf("swap_park_test ss_cert=%d wide=%d role_words=%u blob_bits=%u test_role=%u test_blob=%u checks=%u fails=%u log=%u %s\n",
                 RE4DC_SS_CERT,TEST_WIDE,kRoleMaskWords,kBlobMaskBits,kTestRole,kTestBlob,checks,fails,log_lines,fails?"FAIL":"PASS");

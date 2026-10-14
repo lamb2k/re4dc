@@ -28,6 +28,9 @@ constexpr unsigned kPackModels=8,kPackParts=128,kPackTexFacts=16;
 #elif RE4DC_ROUTE_CH22
 // Complete Luis six-info body (74) plus its independent gun (9).
 constexpr unsigned kPackModels=8,kPackParts=83,kPackTexFacts=16;
+#elif defined(RE4DC_NMR_FACTS) && RE4DC_NMR_FACTS
+// PS2_CAST_* (native_model_registry.mk): the chapter-1 PS2 cast packages' source material facts (merchant em18: 35).
+constexpr unsigned kPackModels=8,kPackParts=RE4DC_NMR_FACTS,kPackTexFacts=16;
 #else
 constexpr unsigned kPackModels=8,kPackParts=32,kPackTexFacts=16;
 #endif

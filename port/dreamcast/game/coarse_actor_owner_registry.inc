@@ -768,7 +768,7 @@ extern "C" int re4dc_registry_covered_roles(const cModel* m,const Re4dcActorPlan
     return 1;
 }
 #endif
-#if RE4DC_ROUTE_CH22 || RE4DC_ROUTE_CH23
+#if RE4DC_ROUTE_CH22 || RE4DC_ROUTE_CH23 || RE4DC_NMR_MERCHANT
 // em18_R0_Init sets 0x20 on its robe (BIN0xE/TPL0xF), and
 // em18ClothPartsSet sets it on the closed/open coat (BIN0xC/0xB, TPL0xF).
 // This nominates the exact certified role; info() still requires white color,

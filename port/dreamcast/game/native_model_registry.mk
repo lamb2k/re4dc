@@ -318,6 +318,35 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_SHIFT=1
 endif
 endif
 
+# PS2_CAST_MERCHANT=1 (lane ps2cast2 2026-10-14; default 0; render only): the merchant (em18; r102, later r10d r10e r112)
+#              through the registry owner path with his PS2 mesh (closed / open coat descriptors merchant18-c0 / -o0: 61
+#              bones, 7 sections, robe + coat mask runs; tools/d367/model-registry/ps2-merchant-ch1.json over Codex's
+#              ps2_cast.py regcast-merchant18). Runtime side: 40 source material facts per room package (RE4DC_NMR_FACTS;
+#              the merchant needs 35, the default cap is 32), the source robe / coat material-colour flag (be_flag 0x20)
+#              that em18_R0_Init / em18ClothPartsSet set (re4dc_registry_merchant_robe, the ROUTE_CH23 rule) and the
+#              registry skeleton capacity >= 64. Mask runs need NATIVE_MODEL_REGISTRY_MASK=1. RE4DC_NMR_PARK_UNRELOCATED
+#              (actor_swap_park.inc): r102 reads em18 ahead and opens the shop sub screen before setEm(0x4C) creates the
+#              merchant, so his archive's BINs are not relocated yet when the screen parks the archive; the unpark required
+#              every parked asset to be current() and revoked the whole archive (the merchant then drew GC for the rest of
+#              the room). Unrelocated-at-open assets are republished unchanged (the bytes hash already proves it). The mesh is disc data:
+#              dc/native/r102/registry.re4nmr and its atlases; without the package the merchant keeps the source path.
+PS2_CAST_MERCHANT ?= 0
+ifeq ($(filter $(PS2_CAST_MERCHANT),0 1),)
+$(error PS2_CAST_MERCHANT must be 0 or 1)
+endif
+ifeq ($(PS2_CAST_MERCHANT),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_PACK)$(NATIVE_MODEL_REGISTRY_MASK),11)
+$(error PS2_CAST_MERCHANT=1 needs NATIVE_MODEL_REGISTRY_PACK=1 and NATIVE_MODEL_REGISTRY_MASK=1)
+endif
+ifeq ($(filter $(NATIVE_MODEL_REGISTRY_BONES),64 80 96 128),)
+$(error PS2_CAST_MERCHANT=1 needs NATIVE_MODEL_REGISTRY_BONES >= 64 (61-bone merchant))
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_MERCHANT=1 -DRE4DC_NMR_PARK_UNRELOCATED=1
+endif
+ifneq ($(PS2_CAST_MERCHANT),0)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_FACTS=40
+endif
+
 # ACTOR_PROOF_LEAN (default 0; needs ACTOR_TRANSACTION=1; render only; independent of the registry knobs): one actor
 # transaction proves each thing once, for Leon, the Ganado cast and registry plans alike. The decisions are the =0
 # decisions:
