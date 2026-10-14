@@ -1,0 +1,21 @@
+name ch23-s4d-r11d-r10f-r11f
+# Codex ch23-r11d-forward start; door 1 opened from inside (unlock 0x00010000) -> r10f door 1 -> r11f
+room 0x11d
+pos -16682 0 -12589
+ang 1.5133
+find 0x00100000
+status 3 0x04000000
+unlock 0 0x00010000
+inv default
+god
+goto 200 21608 -122 13489 sub
+act 260 a 4
+act 340 a 4
+act 420 a 4
+entry 2
+goto 240 57195 -31029 -176170 sub
+act 300 a 4
+act 380 a 4
+act 460 a 4
+entry 3
+act 300 fwd 12
