@@ -31,7 +31,7 @@
 //    `kill <em id> <room frame> <room> <kind>` registers that weapon kind instead (cDmgInfo m_Wep): r119's
 //    giant (id 0x2b) loses hp only on the parasite (part 0x3F) or to kind 0xD, which em2b's damage check
 //    turns into hp 0 (the rocket launcher kill of the original game).
-//  - Move: `goto <room frame> x y z [ang]` (first room, up to 4) moves Leon there at or after that
+//  - Move: `goto <room frame> x y z [ang] [sub]` (up to 8; `sub` moves Ashley beside him) moves Leon there at or after that
 //    frame, outside events; an area trigger at the spot then fires as when he walks in (r100: area
 //    6 pre-reads s03/s20, area 0xA starts s03), so a fresh room entry (its entry event and call)
 //    reaches a later event without a scripted walk.
@@ -120,7 +120,7 @@ struct Warp {
     u32 status[4];  // `status <0..3> <hex>`: pG->Status_flg bits (3: 0x04000000 Ashley follows, sce_sys.cpp)
     u8 dead[64];
     unsigned n_dead;
-    Act act[16];
+    Act act[32];
     unsigned n_act;
     bool has_trg, trg_fired;
     int trg_no;
@@ -138,7 +138,7 @@ struct Warp {
     bool has_drop;  // `drop <item id> [num]` (issue 23): the kill target drops this item instead of its own roll
     u16 drop_id;
     int drop_num;
-    struct Goto { u32 frame; f32 pos[3]; f32 ang; bool has_ang, done; u8 entry; } go[4];
+    struct Goto { u32 frame; f32 pos[3]; f32 ang; bool has_ang, done, sub; u8 entry; } go[8];  // `sub`: Ashley too
     unsigned n_go;
     // arm <room frame> <item id>: once at that frame of the first room, ItemMgr.debugWeapon(id) (the case's armed
     // weapon) and the weapon reload SubScreenExit does when a new weapon was equipped in the inventory (SndBlkStop(2),
@@ -202,7 +202,7 @@ void load()
 {
     wp.loaded = true;
     wp.parse_entry = wp.max_entry = 1;
-    static char text[2048];
+    static char text[4096];
     const int len = re4dc_fixture_read("/cd/dc/warp.txt", text, sizeof(text) - 1);
     if (len <= 0) return;
     text[len] = 0;
@@ -272,7 +272,7 @@ void load()
         } else if (!strcmp(k, "entry") && n >= 2 && num(tok[1]) >= 1 && num(tok[1]) <= 8) {
             wp.parse_entry = (u8) num(tok[1]);
             if (wp.parse_entry > wp.max_entry) wp.max_entry = wp.parse_entry;
-        } else if (!strcmp(k, "act") && n >= 4 && wp.n_act < 16) {
+        } else if (!strcmp(k, "act") && n >= 4 && wp.n_act < 32) {
             Act& a = wp.act[wp.n_act++];
             a.entry = wp.parse_entry;
             a.frame = num(tok[1]);
@@ -318,12 +318,16 @@ void load()
             wp.has_drop = true;
             wp.drop_id = (u16) num(tok[1]);
             wp.drop_num = n >= 3 ? (int) num(tok[2]) : 0;
-        } else if (!strcmp(k, "goto") && n >= 5 && wp.n_go < 4) {
+        } else if (!strcmp(k, "goto") && n >= 5 && wp.n_go < 8) {
             Warp::Goto& g = wp.go[wp.n_go++];
             g.entry = wp.parse_entry;
             g.frame = num(tok[1]);
             for (int i = 0; i < 3; ++i) g.pos[i] = (f32) strtod(tok[2 + i], nullptr);
-            g.has_ang = n >= 6;
+            // trailing `sub`: the partner (pSUB, Ashley) is moved beside Leon too, so a door she must follow through
+            // (CheckDoorJumpWithAshley: within 5000 by route) works after a long move (chapter 2-2 / 2-3 door walks)
+            g.sub = !strcmp(tok[n - 1], "sub");
+            const int m = g.sub ? n - 1 : n;
+            g.has_ang = m >= 6;
             g.ang = g.has_ang ? (f32) strtod(tok[5], nullptr) : 0.0f;
             g.done = false;
 #if RE4DC_WARP_JUMP
@@ -554,9 +558,15 @@ void goto_poll()
             Vec a = {0.0f, g.ang, 0.0f};
             pPL->setAng(&a);
         }
-        char what[64];
-        snprintf(what, sizeof(what), "goto %u at room frame %u pl=%d,%d,%d", i, (unsigned) wp.room_frames, (int) p.x,
-                 (int) p.y, (int) p.z);
+        bool sub = false;
+        if (g.sub && pSubEm) {
+            Vec q = {p.x + 120.0f, p.y, p.z + 120.0f};
+            pSubEm->setPos(&q);
+            sub = true;
+        }
+        char what[80];
+        snprintf(what, sizeof(what), "goto %u at room frame %u pl=%d,%d,%d%s", i, (unsigned) wp.room_frames, (int) p.x,
+                 (int) p.y, (int) p.z, sub ? " +sub" : "");
         stamp(what);
         // padscript presses can wait for the move ("goto=<n>", n = goto index + 1; c13 door walks)
         re4dc_fixture_state("goto", int(i + 1), -1);
