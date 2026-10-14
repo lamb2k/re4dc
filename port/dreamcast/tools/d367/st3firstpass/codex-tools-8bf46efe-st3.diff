@@ -1,0 +1,79 @@
+diff --git a/port/dreamcast/tools/d367/cx_room_fixtures.py b/port/dreamcast/tools/d367/cx_room_fixtures.py
+index 53e86a37..292c0524 100644
+--- a/port/dreamcast/tools/d367/cx_room_fixtures.py
++++ b/port/dreamcast/tools/d367/cx_room_fixtures.py
+@@ -165,7 +165,7 @@ def main():
+     if scan_path.exists() and meta_path.exists() and read(meta_path) == scan_meta:
+         doors = read(scan_path)
+     else:
+-        doors = {**stage_route.scan(iso, 1), **stage_route.scan(iso, 2)}
++        doors = {**stage_route.scan(iso, 1), **stage_route.scan(iso, 2), **stage_route.scan(iso, 3)}  # st3 lane: disc-2 door scan
+         write(scan_path, doors)
+         write(meta_path, scan_meta)
+     repo = HERE.parents[3]
+diff --git a/port/dreamcast/tools/ps2_assets/worlds.json b/port/dreamcast/tools/ps2_assets/worlds.json
+index 9d6244ee..c44bccb2 100644
+--- a/port/dreamcast/tools/ps2_assets/worlds.json
++++ b/port/dreamcast/tools/ps2_assets/worlds.json
+@@ -102,7 +102,50 @@
+     "r228",
+     "r22a",
+     "r21a",
+-    "r22c"
++    "r22c",
++    "r300",
++    "r301",
++    "r303",
++    "r304",
++    "r305",
++    "r306",
++    "r307",
++    "r308",
++    "r309",
++    "r30a",
++    "r30b",
++    "r30c",
++    "r30d",
++    "r30e",
++    "r30f",
++    "r310",
++    "r311",
++    "r312",
++    "r313",
++    "r314",
++    "r315",
++    "r316",
++    "r317",
++    "r318",
++    "r31a",
++    "r31b",
++    "r31c",
++    "r31d",
++    "r320",
++    "r321",
++    "r322",
++    "r323",
++    "r324",
++    "r325",
++    "r326",
++    "r327",
++    "r328",
++    "r329",
++    "r330",
++    "r331",
++    "r332",
++    "r333",
++    "r334"
+   ],
+   "room_converter_args": {
+     "r117": [
+@@ -115,5 +158,9 @@
+       "--vertex-alpha",
+       "tr4"
+     ]
++  },
++  "gc_source_disc2": {
++    "bytes": 1459978240,
++    "sha256": "118640eb02953d5a8234d3f9e27ea535e75b0346b9cf22aa764b65c3d76f1b12"
+   }
+ }
