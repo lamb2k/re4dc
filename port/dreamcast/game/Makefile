@@ -305,10 +305,15 @@ endif
 # (module 83: r211..r219, lint clean) and em1f (module 109: the St4 Ganados of r406/r40a/r40b/r40d/r410; its one
 # value-init trap fixed by assets.sh --fix) so one more St2 (r219) and St4 (r40a) room can be entered with their
 # source script and enemies. A separate knob: WORLD_STAGE_MODULES=1 images stay as they were.
+# The route recipe (ROUTE_CH21=1) excludes WORLD_STAGE_MODULES=1 (pl11 is a CH21 overlay there); with ROUTE_CH23=1
+# (st2_0 linked as the chapter 2-3 stage module) WORLD_ROOM_MODULES=1 links st2_2 / em1f on top of the route set
+# without WORLD_STAGE_MODULES (no st4_0, no resident pl11), so the castle rooms r211..r219 load in a route image.
 WORLD_ROOM_MODULES ?= 0
 ifneq ($(WORLD_ROOM_MODULES),0)
 ifneq ($(WORLD_ROOM_MODULES)$(WORLD_STAGE_MODULES),11)
-$(error WORLD_ROOM_MODULES must be 0 or 1, and 1 needs WORLD_STAGE_MODULES=1)
+ifneq ($(WORLD_ROOM_MODULES)$(WORLD_STAGE_MODULES)$(ROUTE_CH23),101)
+$(error WORLD_ROOM_MODULES must be 0 or 1, and 1 needs WORLD_STAGE_MODULES=1 or ROUTE_CH23=1)
+endif
 endif
 MODULES += st2_2 em1f
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_ROOM_MODULES=1
