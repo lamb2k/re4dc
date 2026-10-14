@@ -172,6 +172,12 @@ ROOMS = {
     # chapter 2-1 list (the later archive's bank does not fit and stays silent; open). r112: em18 (the merchant), bgmtbl #1 (as r102), streams 0:0x19. r111 / r113: em17 (the
     # Ganados) and em2a (the crows), bgmtbl #6 (r113's slot 1 is #3: snd.cpp plays it on the slot-0 track), stream 0:9.
     'r112': ['st1/r112.dar', 'em/em18.drs', 'em/pl11.drs'],
+    # Stage 3 (ROUTE_CH3 first pass, disc 2; assets.sh discover with the stage-3 ESL rule: etc/emleon06.esl):
+    # r300 em1d (the island soldiers, enabled later), r301 em1e (enabled later + entry) / em3b (entry), r303 em1e.
+    # Banks not built yet (needs a disc-2 mirror); the soldiers' archives also do not fit heap 4 uncompacted.
+    'r300': ['st3/r300.dar', 'em/em1d.drs'],
+    'r301': ['st3/r301.dar', 'em/em1e.drs', 'em/em3b.drs'],
+    'r303': ['st3/r303.dar', 'em/em1e.drs'],
     'r111': ['st1/r111.dar', 'em/em17.drs', 'em/em2a.drs', 'em/pl11.drs'],
     'r113': ['st1/r113.dar', 'em/em17.drs', 'em/em2a.drs', 'em/pl11.drs'],
     # r11c (the cabin, chapter 2-2's end): Ashley (pl11, module 3), Luis (pl14, module 4) and the siege Ganados (em13),

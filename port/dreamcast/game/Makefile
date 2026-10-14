@@ -370,6 +370,8 @@ MODULES += em3b:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em3b
 endif
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+# The stage-3 PS2 world packages (native_static.cpp re4dc_ps2_world_room, PS2_WORLD_REGISTRY rooms).
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 # r30a calls EtcModel.cpp's setRoomEtcBreakDisp by its C name (as r200; ROUTE_CH23 sets the same export alias).
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_WORLD_STAGE_MODULES=1
 endif
