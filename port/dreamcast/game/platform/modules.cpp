@@ -59,13 +59,18 @@ MODULE(st3_1)
 MODULE(st3_2)
 MODULE(st3_3)
 #endif
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
 MODULE(st1_0)
 MODULE(st1_1)
 MODULE(st1_2)
 MODULE(st1_3)
+#endif
 MODULE(wep02)
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
 MODULE(em12)
+#endif
 MODULE(em23)
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
 MODULE(em15)
 MODULE(em26)
 MODULE(em28)
@@ -75,12 +80,15 @@ MODULE(em29)
 MODULE(em2e)
 MODULE(em13)
 MODULE(em27)
+#endif
 #if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
 MODULE(em18)
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
 MODULE(em17)
 MODULE(em24)
 #if defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
 MODULE(em11)
+#endif
 #endif
 #if !RE4DC_ROUTE_OVL
 MODULE(pl0f)
@@ -157,13 +165,18 @@ static const Re4dcModule g_modules[] = {
     {63, "em3b", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r301 vehicles, room overlay
 #endif
 #endif
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(74, st1_0),
     MODULE(73, st1_1),
     MODULE(78, st1_2),
     MODULE(86, st1_3),
+#endif
     MODULE(4, wep02),
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(18, em12),
+#endif
     MODULE(7, em23),
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(19, em15),
     MODULE(14, em26),
     MODULE(17, em28),
@@ -173,10 +186,13 @@ static const Re4dcModule g_modules[] = {
     MODULE(38, em2e),  // r106: script-load
     MODULE(34, em13),  // r104: enabled-later
     MODULE(16, em27),  // r107: entry
+#endif
 #if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
     MODULE(22, em18),  // ROUTE_CH13: r102 (the merchant): enabled-later,script-load
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(21, em17),  // ROUTE_CH13: r108: enabled-later,entry,script-load
     MODULE(8, em24),   // ROUTE_CH13: r108 (room entry) / r10a: entry
+#endif
 #if RE4DC_ROUTE_OVL
     {43, "pl0f", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH13: r10b: entry (Leon's boat); overlay pl0f.ovl
     {39, "em2f", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH13: r10b: enabled-later,script-load (Del Lago); overlay em2f.ovl
@@ -194,7 +210,9 @@ static const Re4dcModule g_modules[] = {
     MODULE(30, em2b),  // ROUTE_CH21: r119: enabled-later,script-spawn (El Gigante)
     MODULE(47, pl11),  // ROUTE_CH21: r117 on: Ashley (enemy module 3, cSubAshley)
 #endif
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(13, em11),  // ROUTE_CH21: r117: enabled-later (the Ganados of a later visit; em10g group)
+#endif
 #endif
 #if defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
 #if RE4DC_ROUTE_OVL

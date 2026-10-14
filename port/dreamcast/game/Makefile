@@ -484,8 +484,23 @@ ifeq ($(ROUTE_CH21)$(EM10_SHARED)$(WORLD_STAGE_MODULES),110)
 else ifeq ($(ROUTE_CH21),1)
 $(error ROUTE_CH21=1 needs EM10_SHARED=1 (em11 in the em10g group) and WORLD_STAGE_MODULES=0 (pl11 is a CH21 overlay))
 endif
+# DISC2=1 (stage 3 lane, default 0: no effect; needs ROUTE_CH3=1): the disc-2 (island) image. The island never links
+# a stage-1 room or Ganado REL, so the image drops the resident stage-1 modules st1_0..st1_3 and the stage-1 enemy
+# RELs (em12 em15 em13 em17 em11 = the em10g group, em21 em24 em26 em27 em28 em29 em2a em2e): their bytes return to
+# heap 4. wep02 (Red9), em18 (the merchant: r30a / r312 / r31a / r329 / r331) and em23 (r30a) stay. Route overlays
+# cost no image bytes and stay linked (their .ovl files are simply not staged on disc 2). A disc-2 room that links a
+# dropped module halts at OSLink "module: id N not in the image" (the existing ROUTE check), never a silent stub.
+DISC2 ?= 0
+ifneq ($(DISC2),0)
+ifneq ($(DISC2)$(ROUTE_CH3),11)
+$(error DISC2 must be 0 or 1 and needs ROUTE_CH3=1)
+endif
+DISC2_DROPPED = st1_0 st1_1 st1_2 st1_3 em12 em15 em13 em17 em11 em21 em24 em26 em27 em28 em29 em2a em2e
+MODULES := $(filter-out $(DISC2_DROPPED),$(MODULES))
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2=1
+endif
 EM10_GROUP = $(filter em12 em15 em13 em17 em11 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
-MODULE_ARGS = $(if $(filter 1,$(EM10_SHARED)),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
+MODULE_ARGS = $(if $(and $(filter 1,$(EM10_SHARED)),$(strip $(EM10_GROUP))),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
 MODULE_OBJS =
 MODULES_MK = $(OBJDIR)/modules.mk
 GAME_OBJS = $(patsubst $(ROOT)/%.cpp,$(OBJDIR)/%.o,$(GAME_SRCS))
