@@ -1,0 +1,13 @@
+name ch22-s3-r11c-siege
+# Codex r11c-siege-native start (cabin interior, Ashley following), god; the siege runs to its own end
+room 0x11c
+pos 90900 0 -55600
+ang 0
+find 0x00100000
+status 3 0x04000000
+inv default
+act_clock source
+god
+alivelog 300
+census 900
+census 6000
