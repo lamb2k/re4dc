@@ -1,0 +1,30 @@
+name ch23-s4e-r11d-r10f-r11f
+# Codex ch23-r11d-forward start; door 1 opened from inside (unlock 0x00010000) -> r10f; the r10f door to r11f
+# (area 1, centre 57196,-31030,-176170) tried facing four directions (s4d stood there 1300 frames with A, no jump)
+room 0x11d
+pos -16682 0 -12589
+ang 1.5133
+find 0x00100000
+status 3 0x04000000
+unlock 0 0x00010000
+inv default
+god
+goto 200 21608 -122 13489 sub
+act 260 a 4
+act 340 a 4
+act 420 a 4
+entry 2
+goto 240 57196 -31030 -176170 0 sub
+act 300 a 4
+act 380 a 4
+goto 600 57196 -31030 -176170 1.5708 sub
+act 660 a 4
+act 740 a 4
+goto 960 57196 -31030 -176170 3.1416 sub
+act 1020 a 4
+act 1100 a 4
+goto 1320 57196 -31030 -176170 -1.5708 sub
+act 1380 a 4
+act 1460 a 4
+entry 3
+act 300 fwd 12
