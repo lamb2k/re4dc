@@ -1,6 +1,6 @@
 """fp_check.py: verdict of a full-play gate run (tools/d367/fullplay).
 
-    python fp_check.py <evidence dir> [--known known-issues.txt] [--conf segments.conf]
+    python fp_check.py <evidence dir> [--known known-issues.txt] [--conf segments.conf[,segments-ch22.conf]]
 
 Reads <evidence>/<segment>/run-output.txt + run-result.json for every segment of segments.conf that ran, applies the
 failure rules (RULES below), the per-segment goals, the leak check (repeated visits of a room in one segment) and the
@@ -41,9 +41,17 @@ RULES = [
 ]
 DELIBERATE_FREEZE = re.compile(r'warp: frozen at tick|route end: .*Coming Soon, holding')
 
+def conf_text(paths):
+    """paths: one conf file or a comma-separated list; bare names are looked up next to this file"""
+    out = []
+    for p in str(paths).split(','):
+        p = Path(p.strip())
+        out.append((p if p.exists() or p.is_absolute() else HERE / p).read_text())
+    return '\n'.join(out)
+
 def parse_conf(path):
     segs = []
-    for line in Path(path).read_text().splitlines():
+    for line in conf_text(path).splitlines():
         if not line.strip() or line.lstrip().startswith('#'):
             continue
         f = [x.strip() for x in line.split('|')]
@@ -331,11 +339,13 @@ def main(argv):
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument('evidence'); ap.add_argument('--known', default=str(HERE / 'known-issues.txt'))
-    ap.add_argument('--conf', default=str(HERE / 'segments.conf'))
+    ap.add_argument('--conf', help='segment conf file(s), comma-separated; default: the gate run\'s own (gate.json conf) '
+                    'or segments.conf')
     a = ap.parse_args(argv)
     ev = Path(a.evidence)
     prep = json.loads((ev / 'prep.json').read_text()) if (ev / 'prep.json').exists() else None
     meta = json.loads((ev / 'gate.json').read_text()) if (ev / 'gate.json').exists() else {}
+    a.conf = a.conf or meta.get('conf') or 'segments.conf'
     build = prep['release_tree_commit'] if prep else meta.get('build', '')
     known = parse_known(a.known, build)
     segs = [s for s in parse_conf(a.conf) if (ev / s['name']).exists() or s['name'] in meta.get('segments', [])]

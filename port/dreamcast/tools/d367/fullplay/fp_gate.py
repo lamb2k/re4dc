@@ -88,6 +88,8 @@ def main():
     ap.add_argument('release'); ap.add_argument('--label'); ap.add_argument('--evidence')
     ap.add_argument('--only'); ap.add_argument('--jobs', type=int, default=int(os.environ.get('FP_JOBS', '8')))
     ap.add_argument('--known', default=str(HERE / 'known-issues.txt')); ap.add_argument('--keep-discs', action='store_true')
+    ap.add_argument('--conf', default='segments.conf',
+                    help='segment conf file(s), comma-separated (segments-ch22.conf: chapters 2-2/2-3, route releases)')
     a = ap.parse_args()
     t0 = time.time()
     stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
@@ -98,7 +100,7 @@ def main():
     def log(m):
         line = '%s %s' % (datetime.datetime.now().strftime('%H:%M:%S'), m)
         print(line, flush=True); logf.write(line + '\n'); logf.flush()
-    meta = dict(input=str(a.release), label=label, start=stamp, segments=[])
+    meta = dict(input=str(a.release), label=label, start=stamp, segments=[], conf=a.conf)
     log('full-play gate %s -> %s' % (a.release, ev))
     g, tracks, ok, note = release_tracks(a.release, ev, log)
     meta.update(tracks=tracks, tracks_ok=ok, tracks_verified=note)
@@ -117,7 +119,7 @@ def main():
         (ev / 'gate.json').write_text(json.dumps(meta, indent=1))
         return 2
     prep = json.loads((ev / 'prep.json').read_text())
-    segs = fp_check.parse_conf(HERE / 'segments.conf')
+    segs = fp_check.parse_conf(a.conf)
     if a.only:
         segs = [s for s in segs if s['name'] in a.only.split(',')]
     segs.sort(key=lambda s: -s['seconds'])
