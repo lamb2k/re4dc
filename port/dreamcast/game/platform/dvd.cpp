@@ -112,7 +112,14 @@ enum { DVD_STATE_END = 0, DVD_STATE_BUSY = 1, DVD_RESULT_FATAL = -1, DVD_RESULT_
 static char g_entryPath[MAX_ENTRIES][64];
 static s32 g_entrySize[MAX_ENTRIES];  // -1: not on the disc
 static int g_entryCount;
+#if defined(RE4DC_DISC2) && RE4DC_DISC2
+// DISC2=1 (the island image): report GameCube disc 2 (diskNumber 1), so StageInit's disc check (src/game/game.cpp:
+// stage 3 needs disc 2; stage 1 / 2 rooms other than r22c need disc 1) asks for no swap on the island, and a
+// disc-1 save loaded here asks for disc 1 (DVDChangeDiskAsync below logs it; no swap prompt exists yet).
+static DVDDiskID g_diskId = {{'G', '4', 'B', 'E'}, {'0', '8'}, 1, 0, 0, 0, {0}};
+#else
 static DVDDiskID g_diskId = {{'G', '4', 'B', 'E'}, {'0', '8'}, 0, 0, 0, 0, {0}};
+#endif
 static const char* g_root = "/cd/";
 
 #if RE4DC_IO_PROBE

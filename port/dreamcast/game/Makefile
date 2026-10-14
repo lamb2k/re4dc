@@ -497,7 +497,7 @@ $(error DISC2 must be 0 or 1 and needs ROUTE_CH3=1)
 endif
 DISC2_DROPPED = st1_0 st1_1 st1_2 st1_3 em12 em15 em13 em17 em11 em21 em24 em26 em27 em28 em29 em2a em2e
 MODULES := $(filter-out $(DISC2_DROPPED),$(MODULES))
-$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2=1
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2=1
 endif
 EM10_GROUP = $(filter em12 em15 em13 em17 em11 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(and $(filter 1,$(EM10_SHARED)),$(strip $(EM10_GROUP))),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
