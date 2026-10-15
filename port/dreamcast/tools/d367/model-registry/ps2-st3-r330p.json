@@ -1,0 +1,50 @@
+{
+ "registry": "ps2-st3-r330p",
+ "about": "lane ps2cast (2026-10-15): room 330 package of the stage-3 soldiers as POOL descriptors (NATIVE_MODEL_REGISTRY_POOL; model_registry.py --pool): one pool per body BIN with every head, hit head, hand pose and accessory its Set table and em10SetAccesory attach, from the PS2 BINs. Render only.",
+ "cast_dir": "/root/probe/lanes-20261015/ps2cast/conv-st3/regcast-st3p",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "soldier-em1f-ap",
+   "archive": "em1f",
+   "model_id": "0x1f",
+   "source_types": [
+    14,
+    15,
+    16
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet types [14, 15, 16] + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory (case 0xE..0x18): body 0x22f / TPL 0x230 section pool (ps2_cast.py _soldier_pool)",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "soldier-em1f-bp",
+   "archive": "em1f",
+   "model_id": "0x1f",
+   "source_types": [
+    24
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet types [24] + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory (case 0xE..0x18): body 0x247 / TPL 0x248 section pool (ps2_cast.py _soldier_pool)",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ]
+  }
+ ],
+ "room_packages": {
+  "330": {
+   "descriptors": [
+    "soldier-em1f-ap",
+    "soldier-em1f-bp"
+   ],
+   "evidence": "emleon06/07 (GC Disc 2 + PS2 lists 6/7)"
+  }
+ }
+}
