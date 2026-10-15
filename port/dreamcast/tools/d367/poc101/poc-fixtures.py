@@ -21,12 +21,9 @@ import sys
 
 LAYERS = [  # bit, row name, knobs (any on = built), kind (0 exact render, 1 look, 2 exact logic, 3 alternative rung)
     (0x001, 'SG LEAN', ['SG_SELECT_LEAN'], 0),
-    (0x008, 'UI OT', ['UI_OT_CACHE'], 0),
     (0x080, 'SKIN ZAM*', ['SKIN_SH4ZAM'], 1),
     (0x002, 'WORLD LOD*', ['WORLD_LOD', 'WORLD_LOD_PROBE'], 1),
-    (0x004, 'LEON SEL*', ['LEON_LOD'], 1),
-    (0x100, 'LEON U70*', ['LEON_LOD'], 3),
-    (0x010, 'GANADOLOD*', ['GANADO_LOD'], 1),
+    (0x004, 'DETAIL*', ['LEON_LOD', 'GANADO_LOD'], 1),
     (0x020, 'FLATLIGHT*', ['CROWD_FLAT_LIGHT'], 1),
 ]
 here = os.path.dirname(os.path.abspath(__file__))

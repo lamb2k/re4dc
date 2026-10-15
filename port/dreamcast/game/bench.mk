@@ -71,10 +71,12 @@ POC_CPPFLAGS := -DRE4DC_BENCH_POC=1
 POC_CPPFLAGS += $(if $(filter-out 0,$(SG_SELECT_LEAN)),-DRE4DC_POC_HAS_SGSEL=1)
 POC_CPPFLAGS += $(if $(filter-out 0,$(WORLD_LOD)),-DRE4DC_POC_HAS_WLOD=1,$(if $(filter-out 0,$(WORLD_LOD_PROBE)),-DRE4DC_POC_HAS_WLOD=2))
 POC_CPPFLAGS += $(if $(filter-out 0,$(LEON_LOD)),-DRE4DC_POC_HAS_LEON=1)
-POC_CPPFLAGS += $(if $(filter-out 0,$(UI_OT_CACHE)),-DRE4DC_POC_HAS_UIOT=1)
 POC_CPPFLAGS += $(if $(filter-out 0,$(GANADO_LOD)),-DRE4DC_POC_HAS_GLOD=1)
 POC_CPPFLAGS += $(if $(filter-out 0,$(CROWD_FLAT_LIGHT)),-DRE4DC_POC_HAS_FLATLIGHT=1)
 POC_CPPFLAGS += $(if $(filter-out 0,$(SKIN_SH4ZAM)),-DRE4DC_POC_HAS_SKINZ=1)
+POC_CPPFLAGS += $(if $(filter-out 0,$(SKIN_SH4ZAM)),$(if $(POC_SKINZ_ON),-DRE4DC_POC_SKINZ_ON=$(POC_SKINZ_ON),$(error BENCH_POC=1 SKIN_SH4ZAM needs POC_SKINZ_ON=<stage mask of the SKIN ZAM row>)))
+# UI_OT_CACHE (B3) is not a POC layer: dropped by the coordinator 10-15 (-0.13 ms MODELLED, KOS squeeze image growth).
+$(if $(filter-out 0,$(UI_OT_CACHE)),$(error BENCH_POC: UI_OT_CACHE was dropped from POC101))
 $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += $(POC_CPPFLAGS)
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_BENCH_POC=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_POC=1

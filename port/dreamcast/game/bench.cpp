@@ -88,7 +88,7 @@ extern "C" void re4dc_leon_lod_set(unsigned level);     // lane leonlod LEON_LOD
 extern "C" void re4dc_ganado_lod_set(unsigned level);   // lane leonlod GANADO_LOD (0 = as shipped)
 #endif
 #if defined(RE4DC_POC_HAS_SKINZ) && RE4DC_POC_HAS_SKINZ
-extern "C" void re4dc_skin_sh4zam_set(unsigned on);     // lane sh4zam SKIN_SH4ZAM (XMTRX-blend skinning)
+extern "C" void re4dc_skin_sh4zam_set(unsigned mask);   // lane sh4zam SKIN_SH4ZAM (stage mask, sh4zam_skin.c)
 #endif
 #endif
 #ifndef RE4DC_BENCH_AUTO_S
@@ -131,9 +131,6 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",    "/cd/dc/bench2
 #ifndef RE4DC_POC_HAS_LEON
 #define RE4DC_POC_HAS_LEON 0
 #endif
-#ifndef RE4DC_POC_HAS_UIOT
-#define RE4DC_POC_HAS_UIOT 0
-#endif
 #ifndef RE4DC_POC_HAS_GLOD
 #define RE4DC_POC_HAS_GLOD 0
 #endif
@@ -143,14 +140,16 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",    "/cd/dc/bench2
 #ifndef RE4DC_POC_HAS_SKINZ
 #define RE4DC_POC_HAS_SKINZ 0
 #endif
+// The DETAIL row (coordinator 10-15: the user's chosen character detail): Leon at leonlod level 4 (u70) and the
+// Ganados at level 2 (g70), together.
 #ifndef RE4DC_POC_LEON_ON
-#define RE4DC_POC_LEON_ON 1       // leonlod level of the LEON SEL row (1 = sel: hair, torso, arms kept)
-#endif
-#ifndef RE4DC_POC_LEON_ALT
-#define RE4DC_POC_LEON_ALT 4      // leonlod level of the LEON U70 row (4 = u70, uniform 70 %)
+#define RE4DC_POC_LEON_ON 4       // leonlod level 4 = u70 (uniform 70 %)
 #endif
 #ifndef RE4DC_POC_GLOD_ON
-#define RE4DC_POC_GLOD_ON 1
+#define RE4DC_POC_GLOD_ON 2       // ganado level 2 = g70
+#endif
+#ifndef RE4DC_POC_SKINZ_ON
+#define RE4DC_POC_SKINZ_ON 0      // SKIN_SH4ZAM stage mask of the SKIN ZAM row (bench.mk POC_SKINZ_ON: the lane's set)
 #endif
 struct PocLayer {
     unsigned bit;
@@ -165,10 +164,8 @@ const PocLayer kPocLayer[] = {
     {0x002, RE4DC_POC_HAS_WLOD == 2 ? "WLODPROBE" : "WORLD LOD", RE4DC_POC_HAS_WLOD == 2 ? "WORLD_LOD_PROBE" : "WORLD_LOD",
      RE4DC_POC_HAS_WLOD == 2 ? "FAR SCENERY: HALF THE FAR PIECES LEFT OUT (STAND-IN)"
                              : "FAR SCENERY: SIMPLER MESHES BEYOND 12 M (PIXEL-ERROR FLOOR)", RE4DC_POC_HAS_WLOD, 1},
-    {0x004, "LEON SEL", "LEON_LOD", "LEON ONE RUNG LIGHTER, HAIR/TORSO/ARMS KEPT (LEVEL 1)", RE4DC_POC_HAS_LEON, 1},
-    {0x100, "LEON U70", "LEON_LOD", "LEON AT 70 % TRIANGLES, UNIFORM (LEVEL 4; NOT IN ALL ON)", RE4DC_POC_HAS_LEON, 3},
-    {0x008, "UI OT", "UI_OT_CACHE", "HUD LIST REBUILT ONLY WHEN IT CHANGES (EXACT)", RE4DC_POC_HAS_UIOT, 0},
-    {0x010, "GANADOLOD", "GANADO_LOD", "GANADOS ONE LOD RUNG LIGHTER (APPROXIMATION)", RE4DC_POC_HAS_GLOD, 1},
+    {0x004, "DETAIL", "LEON_LOD+GANADO_LOD", "LEON AND GANADOS AT 70 % TRIANGLES (LEON U70, GANADO G70)",
+     RE4DC_POC_HAS_LEON | RE4DC_POC_HAS_GLOD, 1},
     {0x020, "FLATLIGHT", "CROWD_FLAT_LIGHT", "CROWD LIGHTING: ONE FLAT LIGHT (APPROXIMATION)", RE4DC_POC_HAS_FLATLIGHT, 1},
     {0x080, "SKIN ZAM", "SKIN_SH4ZAM", "SKINNING: BONE BLEND IN XMTRX, SH4ZAM (RENDER ONLY)", RE4DC_POC_HAS_SKINZ, 1},
 };
@@ -209,13 +206,13 @@ void poc_apply(unsigned m)
     re4dc_sg_select_lean_set((m & 0x001u) ? 1u : 0u);
 #endif
 #if RE4DC_POC_HAS_LEON
-    re4dc_leon_lod_set((m & 0x004u) ? RE4DC_POC_LEON_ON : (m & 0x100u) ? RE4DC_POC_LEON_ALT : 0u);
+    re4dc_leon_lod_set((m & 0x004u) ? RE4DC_POC_LEON_ON : 0u);
 #endif
 #if RE4DC_POC_HAS_GLOD
-    re4dc_ganado_lod_set((m & 0x010u) ? RE4DC_POC_GLOD_ON : 0u);
+    re4dc_ganado_lod_set((m & 0x004u) ? RE4DC_POC_GLOD_ON : 0u);
 #endif
 #if RE4DC_POC_HAS_SKINZ
-    re4dc_skin_sh4zam_set((m & 0x080u) ? 1u : 0u);
+    re4dc_skin_sh4zam_set((m & 0x080u) ? (unsigned) RE4DC_POC_SKINZ_ON : 0u);
 #endif
 }
 #else
