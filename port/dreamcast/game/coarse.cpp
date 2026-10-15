@@ -667,14 +667,14 @@ void blob(Out& o, const Vec& at, float r)
 
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 }  // namespace (re-opened below)
-extern "C" unsigned re4dc_bench_hide(void);   // geometry sweep (bench.cpp): 1 / 4 Ganados, 2 Leon not drawn
+extern "C" unsigned re4dc_bench_hide(void);   // geometry sweep (bench.cpp): 1 / 4 Ganados, 2 Leon, 8 world not drawn
 namespace {
 #endif
 void draw_model(Out& o, cModel* m, std::uint32_t rgb, float t)
 {
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     // Geometry sweep (bench.cpp, render only): a hidden Ganado / Leon is not drawn (trans.cpp BenchActorDraw's rule).
-    if (const unsigned h = re4dc_bench_hide()) {
+    if (const unsigned h = re4dc_bench_hide() & 7u) {
         unsigned n = 0;   // the model's place in EmMgr's alive list
         for (const cUnit* u = EmMgr.pAlive; u && u != (const cUnit*) m && n < 256; u = u->pNext) ++n;
         const bool ganado = m != (cModel*) pPL && m != (cModel*) pSUB && m->id >= 0x10 && m->id <= 0x20;
@@ -874,11 +874,15 @@ extern "C" int re4dc_coarse_tick(int dropped)
 extern "C" void re4dc_bench_phase(int phase);
 extern "C" float re4dc_bench_world_far(float far);   // geometry sweep: the PS2 world's far plane (render only)
 #define BENCH_PH(p) re4dc_bench_phase(p)
+// geometry sweep NO WORLD (bench.cpp hide bit 8, render only): no scenery is submitted (PS2 world, collision pieces,
+// coarse world); actors, effects and the HUD still draw
+#define BENCH_NO_WORLD ((re4dc_bench_hide() & 8u) != 0)
 namespace {
 struct BenchPhaseOther { ~BenchPhaseOther() { re4dc_bench_phase(4); } };
 }
 #else
 #define BENCH_PH(p) ((void) 0)
+#define BENCH_NO_WORLD false
 #endif
 
 // Render() of a coarse image: the whole opaque view, before the effect / HUD OTs.
@@ -901,7 +905,7 @@ extern "C" void re4dc_coarse_draw(void)
     setup_camera();
     if(re4dc_fog_note_far)re4dc_fog_note_far(View._zfar);
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
-    g_ps2_world=re4dc_ps2_world_draw(G_ROOM_ID,g_S,re4dc_bench_world_far(View._zfar))!=0;   // geometry sweep setting 6
+    g_ps2_world=BENCH_NO_WORLD || re4dc_ps2_world_draw(G_ROOM_ID,g_S,re4dc_bench_world_far(View._zfar))!=0;   // geometry sweep
 #else
     g_ps2_world=re4dc_ps2_world_draw(G_ROOM_ID,g_S,View._zfar)!=0;
 #endif
@@ -956,9 +960,9 @@ extern "C" void re4dc_coarse_draw(void)
                   s0->polygon_num == coarse_world::kPolys;
     }
 #endif
-    draw_world(o);
+    if (!BENCH_NO_WORLD) draw_world(o);
 #if RE4DC_COARSE_WORLD
-    if (g_world) {
+    if (g_world && !BENCH_NO_WORLD) {
         CoarseView v;
         for (unsigned r = 0; r < 3; ++r) {
             for (unsigned c = 0; c < 4; ++c) {

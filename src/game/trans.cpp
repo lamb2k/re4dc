@@ -135,9 +135,12 @@ void ProcessTickGet(int no, const char* name);
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 // Benchmark disc page 2 (port/dreamcast/game/bench.cpp): 1 actor prep, 2 actor draw, 3 world draw, 4 other.
 extern "C" void re4dc_bench_phase(int phase);
+extern "C" unsigned re4dc_bench_hide(void);   // geometry sweep: bit 8 = no world (SCROLL OT) drawn
 #define BENCH_PH(p) re4dc_bench_phase(p)
+#define BENCH_NO_WORLD ((re4dc_bench_hide() & 8u) != 0)
 #else
 #define BENCH_PH(p) ((void) 0)
+#define BENCH_NO_WORLD false
 #endif
 void DCStoreRangeNoSync(void* addr, u32 nBytes);
 void GXSetCurrentGXThread();
@@ -2572,7 +2575,7 @@ void Render()
     ExecOt(OT_TYPE_SUBSCRN_FAR);
     SetDrawTmpBufType(0);
     BENCH_PH(3);
-    ExecOt(OT_TYPE_SCROLL);
+    if (!BENCH_NO_WORLD) ExecOt(OT_TYPE_SCROLL);
     BENCH_PH(4);
     SetDrawTmpBufType(0);
     ExecOt(OT_TYPE_SUBSCRN);
@@ -2675,7 +2678,6 @@ static inline bool re4dc_gcobj_class(unsigned kind, unsigned id, bool only_stati
 // is drawn, bit 4 = every other one (odd places in EmMgr's alive list), bit 2 = Leon is not drawn (hide: ModelRender returns before
 // drawing, as on a skipped iteration; coarse.cpp draw_model does the same for the coarse / cast paths).
 extern "C" int re4dc_bench_push(int phase);
-extern "C" unsigned re4dc_bench_hide(void);
 struct BenchActorDraw {
     int prev = -1;
     bool hide = false;
@@ -2686,7 +2688,7 @@ struct BenchActorDraw {
         for (; u && u != (const cUnit*) m && n < 256; u = u->pNext) ++n;
         if (u == (const cUnit*) m) {
             prev = re4dc_bench_push(2);
-            if (const unsigned h = re4dc_bench_hide()) {
+            if (const unsigned h = re4dc_bench_hide() & 7u) {
                 const bool ganado = m != (cModel*) pPL && m != (cModel*) pSUB && m->id >= 0x10 && m->id <= 0x20;
                 hide = (ganado && ((h & 1) || ((h & 4) && (n & 1)))) || ((h & 2) && m == (cModel*) pPL);
             }

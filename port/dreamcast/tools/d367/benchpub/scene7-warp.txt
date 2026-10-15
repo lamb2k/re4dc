@@ -1,0 +1,11 @@
+name bench-r103-sweep
+# Benchmark disc (BENCHMARK=1, bench.mk), scene 7 = /cd/dc/bench7.txt: the r103 farm geometry sweep. Scene 3's
+# fixture; at room frame 300 (10 s) the game logic freezes and the view is drawn as shipped, without Ganados, with the
+# world's far plane at 12.5 m and with no world, 6.5 s each.
+room 0x103
+pos 7500 38 -400
+ang -2.30
+inv default
+god
+alivelog 150
+bench 7 300 300 R103 FARM

@@ -1,13 +1,12 @@
-name bench-r101-sweep
-# Public benchmark disc v2 (BENCHMARK=1, bench.mk), scene 3 = /cd/dc/bench3.txt: the geometry sweep. Scene 1's
-# fixture (the r101 cross view, crowd alerted at room frame 30, god, no pad input); after room frame 600 (20 s) the
-# game logic freezes (bench.cpp) and the same frame state is drawn under six render-only settings, 6.5 s each.
-room 0x101
-pos -7914 0 2000
-ang 1.5708
-find 0x00002000
+name bench-r103-farm
+# Benchmark disc (BENCHMARK=1, bench.mk), scene 3 = /cd/dc/bench3.txt: the r103 farm, wide outdoor exploration view
+# (lane crowd12 2026-10-15, view "A230"): Leon near the r106 door looking back over the farm (barn, windmill, fences,
+# fog); the room's Ganados (5 alive) are not alerted and mostly out of view. God, no pad input. The room is entered
+# through the game's room change (DISCRD "from=door"). Settle room frames 0..299 (10 s), measure 300..1199 (30 s).
+room 0x103
+pos 7500 38 -400
+ang -2.30
 inv default
 god
-alert 30
 alivelog 150
-bench 3 600 600 GEOMETRY SWEEP
+bench 3 300 1200 R103 FARM
