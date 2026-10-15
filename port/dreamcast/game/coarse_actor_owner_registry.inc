@@ -698,8 +698,11 @@ void scene_report(unsigned frame) {
 void scene_note(cModel* m,unsigned plan,unsigned cls) {
     const unsigned frame=re4dc_ui_frame();
     const unsigned short room=(unsigned short)G_ROOM_ID;
-    if(room!=scene_room || frame-scene_last_frame>=600) {
-        // One report per 600 UI frames and at every room change (the rows are per room).
+#ifndef RE4DC_NMR_CENSUS_PERIOD
+#define RE4DC_NMR_CENSUS_PERIOD 600  // NATIVE_MODEL_REGISTRY_CENSUS_PERIOD (native_model_registry.mk)
+#endif
+    if(room!=scene_room || frame-scene_last_frame>=RE4DC_NMR_CENSUS_PERIOD) {
+        // One report per 600 UI frames (by default) and at every room change (the rows are per room).
         if(scene_count)scene_report(frame);
         if(room!=scene_room){scene_count=0;scene_overflow=0;scene_room=room;}
         scene_last_frame=frame;
