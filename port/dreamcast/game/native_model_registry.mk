@@ -17,6 +17,8 @@
 #              by reason and the largest accepted rest-inverse deviation, and the scene census of every model whose
 #              first OT pass reaches the transaction (native, crowd-skip, declined, registry-declined, absent).
 #              With 0 none of the census storage, counters or the per-actor scene walk is compiled.
+# NATIVE_MODEL_REGISTRY_CENSUS_PERIOD (diagnostic, default 600): the census report period in UI frames (a one-minute
+#              room check reaches a report before its deadline with e.g. 150). Only with the census; 600 adds no define.
 # NATIVE_MODEL_REGISTRY_DIR: a private bundle from tools/d367/model_registry.py (native_model_registry.h, the three
 #              source-row includes, tex/). Stage its tex/*.re4tex on the disc (dc/tex/<crc>-<fnv>.re4tex).
 # NATIVE_MODEL_REGISTRY_PACK (default 0: the compiled provider above, kept as a diagnostic):
@@ -70,6 +72,7 @@ endif
 endif
 NATIVE_MODEL_REGISTRY ?= 0
 NATIVE_MODEL_REGISTRY_CENSUS ?= 0
+NATIVE_MODEL_REGISTRY_CENSUS_PERIOD ?= 600
 NATIVE_MODEL_REGISTRY_PACK ?= 0
 NATIVE_MODEL_REGISTRY_TX ?= 0
 ifeq ($(filter $(NATIVE_MODEL_REGISTRY_TX),0 1 2),)
@@ -95,6 +98,15 @@ ifeq ($(NATIVE_MODEL_REGISTRY),0)
 ifneq ($(NATIVE_MODEL_REGISTRY_CENSUS),0)
 $(error NATIVE_MODEL_REGISTRY_CENSUS needs NATIVE_MODEL_REGISTRY=1 or 2)
 endif
+endif
+ifneq ($(NATIVE_MODEL_REGISTRY_CENSUS_PERIOD),600)
+ifneq ($(NATIVE_MODEL_REGISTRY_CENSUS),1)
+$(error NATIVE_MODEL_REGISTRY_CENSUS_PERIOD needs NATIVE_MODEL_REGISTRY_CENSUS=1)
+endif
+ifeq ($(shell echo '$(NATIVE_MODEL_REGISTRY_CENSUS_PERIOD)' | grep -E '^[1-9][0-9]{1,4}$$'),)
+$(error NATIVE_MODEL_REGISTRY_CENSUS_PERIOD must be 10..99999 UI frames)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_CENSUS_PERIOD=$(NATIVE_MODEL_REGISTRY_CENSUS_PERIOD)
 endif
 ifneq ($(NATIVE_MODEL_REGISTRY),0)
 ifeq ($(filter $(NATIVE_MODEL_REGISTRY),1 2),)
