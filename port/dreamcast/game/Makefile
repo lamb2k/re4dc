@@ -154,6 +154,33 @@ endif
 override ALIVE_CAP_PARK := 1
 override R101_CAP_WAVES := 1
 endif
+# PS2_CH3_ENEMY=1 (castle lane 2026-10-15, user 10-15 "the PS2 logic holistically for enemy spawns" per chapter;
+#   CHANGES GAMEPLAY by design; default 0 = off; needs ROUTE_CH31=1): one umbrella for every PS2 enemy-spawn change of
+#   chapter 3 (3-1 .. 3-4: r200 r202 r207 r203 r201 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e; table in
+#   C:\Game Dev\Emulators\CASTLE-ROUTE-20261015.md) plus the cap on top. It forces PS2_ENEMY_RULES=1; adopts the PS2
+#   emleon02 / emleon03 rows of r201 r203 r207 r208 / r204 r20e (platform/ps2_enemy_ch3.cpp, private table
+#   PS2_ENEMY_CH3_DIR/ps2_enemy_ch3_data.inc from tools/d367/castle/ps2_enemy_ch3.py; every baseline byte checked);
+#   ORs PS2_ENEMY_CASTLE with 0x03 (r208 room code, r20b waves); sets ALIVE_CAP=6 when not given. Chapter 3 rooms
+#   hold only (no ALIVE_CAP_PARK: their code keeps wrap pointers). Not ported on purpose: Easy-only branches; r205
+#   (Normal result identical: the PS2 list holds 0x57 / 0x6D and R205Init sends both); r209 (same as GC).
+PS2_CH3_ENEMY ?= 0
+PS2_ENEMY_CH3_DIR ?=
+ifneq ($(PS2_CH3_ENEMY),0)
+ifneq ($(PS2_CH3_ENEMY)$(ROUTE_CH31),11)
+$(error PS2_CH3_ENEMY must be 0 or 1 and needs ROUTE_CH31=1)
+endif
+ifeq ($(wildcard $(PS2_ENEMY_CH3_DIR)/ps2_enemy_ch3_data.inc),)
+$(error PS2_CH3_ENEMY needs PS2_ENEMY_CH3_DIR/ps2_enemy_ch3_data.inc (tools/d367/castle/ps2_enemy_ch3.py))
+endif
+override PS2_ENEMY_RULES := 1
+override PS2_ENEMY_CASTLE := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_CASTLE),0) | 0x03 )))
+ifeq ($(or $(ALIVE_CAP),0),0)
+override ALIVE_CAP := 6
+endif
+$(OBJDIR)/src/game/stage.o $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_PS2_CH3_ENEMY=1
+$(OBJDIR)/platform/ps2_enemy_ch3.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_CH3_ENEMY=1 -I$(PS2_ENEMY_CH3_DIR)
+$(OBJDIR)/platform/ps2_enemy_ch3.o: $(PS2_ENEMY_CH3_DIR)/ps2_enemy_ch3_data.inc
+endif
 # PS2_ENEMY_RULES=1 (test 9 lane PS2EN, default 0; changes gameplay by design): the PS2 USA enemy rules of the
 # chapter 1 rooms. Enemy list emleon00 gets the PS2 start-alive bits / flags (stage.cpp, at list read); r101 sends
 # its reset waves when fewer than 5 Ganados are alive (GameCube: after 5 / 10 kills) and holds two villagers back
@@ -532,6 +559,9 @@ PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch22.o,$(PLATFORM_OBJ
 endif
 ifneq ($(ROUTE_CH23)$(PS2_ENEMY_RULES),11)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch23.o,$(PLATFORM_OBJS))
+endif
+ifneq ($(PS2_CH3_ENEMY),1)
+PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch3.o,$(PLATFORM_OBJS))
 endif
 # LAKE_RIPPLES (ROUTE_CH13 block above): native_lake.cpp is built only with the knob on (1 or 2).
 ifeq ($(filter 1 2,$(LAKE_RIPPLES)),)
