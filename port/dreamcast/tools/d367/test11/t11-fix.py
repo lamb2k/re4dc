@@ -268,7 +268,7 @@ CLASH += [('wlod119m', 'wlod119b')]
 # Decimate at the p4 per-cluster triangle counts. r101 from bake13 (+ ps2_strip_groups.py), r119 from r119-tr4 (6 m split).
 _WL = []
 for _r, _x in (('101', ('re4mesh', 'r4pw', 'r4sg', 'ids')), ('119', ('re4mesh', 'r4pw', 'ids'))):
-    for _a, _d in (('p1', 'p1'), ('p4', 'p4'), ('p8', 'p8'), ('p4b', 'p4-blender')):
+    for _a, _d in (('p1', 'p1'), ('p4', 'p4'), ('p8', 'p8'), ('p4b', 'p4-blender'), ('p4m', 'p4m64')):
         DATA['wl%s%s' % (_r, _a)] = {'dc/native/r%s/ps2-world.%s' % (_r, x): '%s/r%s-%s/ps2-world.%s' % (WLOD, _r, _d, x)
                                      for x in _x}
         _WL.append('wl%s%s' % (_r, _a))

@@ -377,6 +377,7 @@ def verify(src_path, out_path, report_path=None):
 
 
 _CHUNKS = {}
+FAR_LET_VERTICES = 64   # --far-let-verts: the source meshlets' size, so culling stays as fine
 
 
 def emit(src, plan, part_mesh, far, decision):
@@ -460,7 +461,7 @@ def emit(src, plan, part_mesh, far, decision):
             if (pi, n) not in _CHUNKS:
                 keyed = far[(pi, n)][3]
                 strips = [c for s in mesh_lod.stripify(keyed) for c in crb.split_strip(s) if len(c) >= 3]
-                _CHUNKS[(pi, n)] = list(mesh_lod.pack_meshlets(strips, MAX_LET_VERTICES, lambda k: k[:3]))
+                _CHUNKS[(pi, n)] = list(mesh_lod.pack_meshlets(strips, FAR_LET_VERTICES, lambda k: k[:3]))
             far_first[n] = (len(out['lets']), 0)
             count = 0
             for chunk in _CHUNKS[(pi, n)]:
@@ -552,6 +553,8 @@ def main():
                     help='a cluster this far from every walkable point is far-only (switch 12 m + camera offset)')
     ap.add_argument('--max-growth', type=int, default=0, help='bytes the package may grow (additive far levels)')
     ap.add_argument('--no-add', action='store_true', help='replacement only (no additive far levels)')
+    ap.add_argument('--far-let-verts', type=int, default=64,
+                    help='vertex limit of a far meshlet (the PS2 source meshlets hold ~64: as fine a cull)')
     ap.add_argument('--protect-bins', default='', help='comma list of mesh bins with no far level (adds to the table)')
     ap.add_argument('--report')
     ap.add_argument('--export-clusters', help='write the far-level candidates\' level-0 triangles (model-unit positions, '
@@ -577,6 +580,8 @@ def main():
     if a.max_error is None:
         assert floor_px is not None, 'give --max-error-px, --max-error-mm or --table'
         a.max_error = floor_px * (a.switch_mm - a.hyst_mm) / a.focal_px
+    global FAR_LET_VERTICES
+    FAR_LET_VERTICES = a.far_let_verts
     mesh_lod.UV_GUARD = a.uv_guard if a.uv_guard > 0 else None
     mesh_lod.COLOUR_GUARD = a.colour_guard if a.colour_guard >= 0 else None
     export = {} if a.export_clusters else None
@@ -747,7 +752,7 @@ def main():
                    growth=len(blob) - in_bytes, floor_px=floor_px, max_error_mm=round(a.max_error, 2),
                    switch_mm=a.switch_mm, hyst_mm=a.hyst_mm, focal_px=a.focal_px, target=a.target,
                    uv_guard=a.uv_guard, colour_guard=a.colour_guard, min_saving=a.min_saving, split_mm=a.split_mm,
-                   far_only_mm=a.far_only_mm if walk else None, max_growth=a.max_growth,
+                   far_only_mm=a.far_only_mm if walk else None, max_growth=a.max_growth, far_let_verts=a.far_let_verts,
                    protect_bins=sorted(protect), external=bool(external), ship_source=ship_source, **tot)
     print(json.dumps(summary, indent=1))
     if ship_source:
