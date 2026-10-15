@@ -451,6 +451,13 @@ PRIM_CAP_R10B ?= 0
 ifneq ($(PRIM_CAP_R10B),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R10B=$(PRIM_CAP_R10B)
 endif
+# PRIM_MIN_ST3=<bytes> (default 0: no effect; st3 lane 2026-10-15): the island rooms (r300..r33f) get a primitive buffer
+# of at least this many bytes (room values 262,144 .. 655,360). The buffer's tail funds the native actor palette bank
+# (64 KiB); r31b's 262,144 B left Leon on the GameCube path at its entry frame (LEONGC acq=10). Costs heap 4.
+PRIM_MIN_ST3 ?= 0
+ifneq ($(PRIM_MIN_ST3),0)
+$(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_MIN_ST3=$(PRIM_MIN_ST3)
+endif
 # PRIM_WATER=1 (test only): per-room peak primitive-buffer bytes per frame ("prim water:" lines, trans.cpp).
 ifeq ($(PRIM_WATER),1)
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PRIM_WATER=1

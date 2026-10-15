@@ -573,6 +573,15 @@ void gameRoomInit()
         pG->nPrim = RE4DC_PRIM_CAP_R10B;
     }
 #endif
+#if defined(RE4DC_PRIM_MIN_ST3) && RE4DC_PRIM_MIN_ST3
+    // PRIM_MIN_ST3 (st3 lane, issue: GC Leon at r31b entry): the island rooms' room values range 262,144 (r31b) ..
+    // 655,360 (r303). The prim buffer's tail also funds the native actor palette bank (64 KiB) and workspace; at
+    // r31b's entry frame a 262,144 B buffer left less than that, so Leon's plan declined (LEONGC why=0 acq=10) and he
+    // drew through the GameCube path. Raise the island rooms (0x300..0x33F) to at least this many bytes.
+    if (pG->room_id >= 0x300 && pG->room_id <= 0x33F && !(pG->System_flg & 0x200000) && pG->nPrim < RE4DC_PRIM_MIN_ST3) {
+        pG->nPrim = RE4DC_PRIM_MIN_ST3;
+    }
+#endif
     primInit();
     {
         Vec pos;
