@@ -68,6 +68,36 @@ def _soldier(archive, body, head, rooms, types):
                 model_id=int(archive[2:], 16), lit=True, subset_bones=True)
 
 
+def _soldier_pool(archive, body, rooms, types, heads=(0x231, 0x249, 0x24b, 0x24d), skip=(), no_stump=(0x24d,)):
+    """NATIVE_MODEL_REGISTRY_POOL (lane ps2cast 2026-10-15): a stage-3 soldier body's whole section pool, so every
+    spawn of the body binds whatever head, hit head, hand pose and accessory it shows. One pool per body BIN (mot[1]
+    0x22F / TPL mot[0] 0x230, or 0x247 / 0x248): every em10HeadSet head mot[2] with its TPL mot[5] (0x231 / 0x232,
+    0x249 / 0x24A, 0x24B / 0x24C, 0x24D / 0x24E) and the hit head mot[3] 0x233 under each of those TPLs; em10HandSet
+    right mot[6..9] 0x234..0x237 and left mot[11..15] 0x238..0x23C, TPL mot[0]; em10SetAccesory (em10.cpp case
+    0xE..0x18) 0x24F / 0x250 (flag 0x200), 0x243 / 0x244 (0x100), 0x245 / mot[0] (flag 2), hoods 0x23D / 0x23E
+    (0x40000), 0x23F / 0x240 (0x4000), 0x241 / 0x242 (0x1000). Caps (0x262 / 0x265) are separate Obj12 objects.
+    `heads`: only the heads the archive's Set table pairs with this body (em1e / em1f heads carry a body-specific
+    bone 31; the converter refuses a head on a body it is never set on). `skip`: accessory BINs whose GC skeleton
+    does not fit this body (em1f's hood 0x23D is a 37-part section; em1f body 0x247 has 34 bones), or whose PS2
+    materials index past the body TPL (em1e 0x245 / mot[0] under TPL 0x248: image 2 of 2)."""
+    tpl = body + 1
+    heads = [(h, n) for h, n in [(0x231, 'head-a'), (0x249, 'head-b'), (0x24b, 'head-c'), (0x24d, 'head-d')] if h in heads]
+    sections = [(body, 'body')]
+    sections += [(h, n, h + 1) for h, n in heads]
+    # `no_stump`: heads whose stump 0x233 is left out: its GC material names image 1 of that head's one-image GC TPL
+    # (em1d / em1f 0x24E, em1e 0x24A), so the source certificate refuses the info (Error::Material) and no role row
+    # can prove it (the PS2 TPLs have two images)
+    sections += [(0x233, 'hit-' + n[5:], h + 1) for h, n in heads if h not in no_stump]
+    sections += [(0x234, 'right-hand', tpl), (0x235, 'right-open', tpl), (0x236, 'right-point', tpl), (0x237, 'right-grip', tpl),
+                 (0x238, 'left-hand', tpl), (0x239, 'left-open', tpl), (0x23a, 'left-point', tpl), (0x23b, 'left-grip', tpl),
+                 (0x23c, 'left-grip2', tpl)]
+    sections += [(0x24f, 'acc-mask', 0x250), (0x243, 'acc-vest', 0x244), (0x245, 'acc-pack', tpl)]
+    sections += [(0x23d, 'hood-a', 0x23e), (0x23f, 'hood-b', 0x240), (0x241, 'hood-c', 0x242)]
+    sections = [x for x in sections if x[0] not in skip]
+    return dict(archive=archive, sections=sections, tpl=tpl, rooms=rooms, types=types, category='registry',
+                model_id=int(archive[2:], 16), lit=True, subset_bones=True, body_bone_extras=True)
+
+
 # arc numbers (PL_ARC = entry index + 4), from the source's Em15Set / Em12Set tables (cast recover_cast.py)
 PRESETS = {
     'ganado-em15-00': _ganado('em15', 0x1bc, ['r101'], [0x00]),
@@ -179,6 +209,13 @@ PRESETS = {
     'soldier-em1f-0f': _soldier('em1f', 0x22f, 0x249, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r330', 'r334'], [15]),
     'soldier-em1f-10': _soldier('em1f', 0x22f, 0x24b, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r330', 'r334'], [16]),
     'soldier-em1f-18': _soldier('em1f', 0x247, 0x24d, ['r304', 'r30c', 'r311', 'r330'], [24]),
+    # NATIVE_MODEL_REGISTRY_POOL: one pool per (archive, body BIN); rooms / types from the stage-3 enemy lists
+    'soldier-em1d-ap': _soldier_pool('em1d', 0x22f, ['r300', 'r320', 'r327'], [14, 15, 16, 17]),
+    'soldier-em1d-bp': _soldier_pool('em1d', 0x247, ['r320', 'r327'], [18, 19, 20, 21]),
+    'soldier-em1e-ap': _soldier_pool('em1e', 0x22f, ['r301', 'r305', 'r30e', 'r316', 'r31d'], [14, 15], (0x231, 0x249), no_stump=(0x249,)),
+    'soldier-em1e-bp': _soldier_pool('em1e', 0x247, ['r301', 'r303', 'r305', 'r30e', 'r316'], [23, 25], (0x24b, 0x24d), skip=(0x245,), no_stump=()),
+    'soldier-em1f-ap': _soldier_pool('em1f', 0x22f, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r330', 'r334'], [14, 15, 16], (0x231, 0x249, 0x24b)),
+    'soldier-em1f-bp': _soldier_pool('em1f', 0x247, ['r304', 'r30c', 'r311', 'r330'], [24], (0x24d,), skip=(0x23d,)),
     # lane ps2cast2 (2026-10-14): the chapter-1 non-Ganado actors still drawn from the GC source (CH1 audit fix 5).
     # Each is one modelInit(BIN, TPL) of its module's R0 init; lit (normals kept) like the source path draws them.
     # em2a_R0_Init: type 0 bear trap modelInit(ARC 4, ARC 5), type 1 (6, 7), type 2 (8, 9) (types 1 / 2 scale
@@ -512,16 +549,46 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
             by_attach = {}
             for g in gsk:
                 by_attach.setdefault(g['attach'], g)
+            # body_bone_extras: a part no PS2 vertex weights (the soldier hit head 0x233's bone 31, set on both bodies,
+            # whose bone 31 differ) is not drawn through, so its translation is recorded, not required
+            weighted = ({b_ for _, cs in pb.triangles(m) for c in cs for b_, v in c['w'] if v > 0}
+                        if spec.get('body_bone_extras') else None)
             for g in gsk:
                 b = bones[id_to_index[g['attach']]]
                 # a section root (parent -1) carries the body bone's rest position (model space)
                 want = b['translation'] if g['parent'] >= 0 else [r[3] for r in b['rest'][:3]]
+                if weighted is not None and g['attach'] not in weighted and g['parent'] >= 0 and \
+                        max(abs(x - y) for x, y in zip(g['translation'], want)) > bone_tol:
+                    assert g['parent'] == b['parent'], (role, 'unweighted GC section part parent', g['id'])
+                    val.setdefault('unweighted_parts_off_body', {}).setdefault(role, []).append(g['attach'])
+                    continue
                 assert g['parent'] in (b['parent'], -1) and max(abs(x - y) for x, y in zip(g['translation'], want)) <= bone_tol,                     (role, 'GC section part', g['id'], 'attach', g['attach'], 'differs from the body bone', g['translation'], want)
-            assert set(pb_['id'] for pb_ in m.bones) <= set(by_attach), (role, 'PS2 bones outside the GC section attach ids')
+            extra = sorted(set(pb_['id'] for pb_ in m.bones) - set(by_attach))
+            # body_bone_extras (the stage-3 soldier accessory pool: 0x24F / 0x245 carry PS2 bones their GC section
+            # drops): such a PS2 bone is checked against the BODY bone of its id instead (parent, translation); the
+            # weights name body bones either way
+            assert not extra or spec.get('body_bone_extras'), (role, 'PS2 bones outside the GC section attach ids')
             # a PS2 bone takes the GC part of its id with the same parent (a repeated hand root: parent -1)
             cands = {}
             for g in gsk:
                 cands.setdefault(g['attach'], []).append(g)
+            for x in extra:
+                if x not in id_to_index:
+                    # a PS2 bone past the body's (0x245's 37-bone table on the 34-bone body 0x247): never weighted
+                    assert x not in weighted, (role, 'a weighted PS2 bone outside the body', x)
+                    pb_ = next(q for q in m.bones if q['id'] == x)
+                    cands[x] = [dict(id=x, attach=x, parent=pb_['parent'], translation=list(pb_['pos']))]
+                    val.setdefault('unweighted_bones_past_body', {}).setdefault(role, []).append(x)
+                    continue
+                b = bones[id_to_index[x]]
+                t = b['translation']
+                if x not in weighted:  # an unweighted extra bone: parent checked, translation recorded only
+                    t = list(next(pb_['pos'] for pb_ in m.bones if pb_['id'] == x))
+                    if max(abs(p - q) for p, q in zip(t, b['translation'])) > bone_tol:
+                        val.setdefault('unweighted_parts_off_body', {}).setdefault(role, []).append(x)
+                cands[x] = [dict(id=x, attach=x, parent=b['parent'], translation=t)]
+            if extra:
+                val.setdefault('body_bone_extras', {})[role] = extra
             pairs = [(pb_, dict(next((g for g in cands[pb_['id']] if g['parent'] == pb_['parent']), cands[pb_['id']][0]),
                                 attach=pb_['id'])) for pb_ in m.bones]
             id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in pairs)
@@ -991,7 +1058,7 @@ def main():
         regcast(a.cast, a.overlay, a.outs)
     else:
         for k, v in sorted(PRESETS.items()):
-            print(k, v['archive'], [(hex(x), r) for x, r in v['sections']], 'tpl', hex(v['tpl']), v['rooms'])
+            print(k, v['archive'], [(hex(x[0]), x[1]) for x in v['sections']], 'tpl', hex(v['tpl']), v['rooms'])
 
 
 if __name__ == '__main__':
