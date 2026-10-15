@@ -190,7 +190,10 @@ for dest, name in [('1ST_READ.BIN', '1ST_READ.BIN'), ('dc/sscrn.ovl', 'sscrn.ovl
     src = cas(HERE / 'programs' / a.arm / name); assert sha(src) == program['files'][name]['sha256']; changes[dest] = src
     digests[dest] = program['files'][name]['sha256']
 fixture = json.loads(cas_text(a.fixture)) if a.fixture else {}
-for dest, source in fixture.get('replace', {}).items(): changes[dest] = cas((a.fixture.parent / source).resolve())
+for dest, source in fixture.get('replace', {}).items():
+    # a replaced MEDIA / program destination must not keep its old digest: drop it so file_sha() hashes the new
+    # source (castle lane 2026-10-15: 14 replaced MEDIA textures failed 'Payload/namespace mismatch')
+    changes[dest] = cas((a.fixture.parent / source).resolve()); digests.pop(dest, None)
 removals = fixture.get('remove', []); assert not (set(removals) & set(changes))
 def file_sha(src):
     # ext4 fixture sources (tex.pak etc.) are hashed once per (path, size, mtime, inode)
