@@ -123,8 +123,9 @@ Sweep pages (page 4 and on): what geometry and effects cost
 A sweep scene goes back to a scene's view. After a set time (with villagers
 on screen in the village) the game stands still: nothing moves, nothing
 thinks, the same picture is drawn every tick (the game's frame skipping is
-off for this) and the disc draws that one picture in nine ways, 6.5 seconds
-each (about a minute per sweep):
+off for this) and the disc draws that one picture in up to nine ways, 6.5
+seconds each (the sweep page lists the ways this disc draws; the village
+sweep of part 1 draws the first seven, without the two effect rows):
 AS SHIPPED   as the game draws it
 HALF GANADO  every other villager left out
 NO GANADOS   no villagers drawn
