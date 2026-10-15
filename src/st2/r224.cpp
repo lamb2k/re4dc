@@ -88,7 +88,12 @@ struct PlPtr {
 // Enemy manager work `i` (address recomputed per use, em_set idiom).
 static inline cEm* r224_emWork(u32 i)
 {
+#if !defined(__PPC__)
+    // Unbacked sparse enemy slots read as absent (as em21's scans).
+    return (cEm*) EmMgr.workAt(i);
+#else
     return (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 }
 
 static void r224_cam_task();
@@ -385,9 +390,17 @@ static void r224_toroko()
 // is a 4th ref for the hoisted 1.85 constant so it ranks above zero in global-alloc (f27 vs f26;
 // zero has no REG_EQUIV doubling, the pool constant has).
 static inline f32 FCRef(const f32& v) { return v; }
+#if defined(__PPC__)
 asm(".section \".rodata\"\n\t.align 2\nr224_zero:\n\t.long 0\n\t.section \".text\"");
 extern const f32 r224_zero;
 extern const f32 r224_zero_v asm("r224_zero");
+#else
+// Port: the matching trick above names a local .rodata label; SH-4 C symbols carry a leading
+// underscore, so `extern r224_zero` does not bind to it (missing.txt _r224_zero). A plain zero
+// constant has the same value.
+static const f32 r224_zero = 0.0f;
+static const f32 r224_zero_v = 0.0f;
+#endif
 
 // The lever handle (smd 0x3F) slides between reva_low and reva_high with acceleration reva_acc and its SE.
 static void reva_common_move()
