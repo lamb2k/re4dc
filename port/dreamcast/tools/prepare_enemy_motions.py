@@ -86,6 +86,12 @@ BOUNDED_PROFILES={
         source='53b653c169d7a022407c8dd75d1a304d904709aae278f80cda5f843dc3b361a0',retain=(0x46,)),
     'pl11-r11f': dict(name='pl11.drs',module=47,cap=32768,count=69,
         source='f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58',retain=(0x40,0x43)),
+    # castle lane 2026-10-15: pl11-r11f plus Ashley's near-enemy clips kept in the body (MOTION_MISS_LOG, Flycast:
+    # entries 0 / 6 / 61 cycled through the two slabs in r203, 61 / 6 / 0 / 3 / 1 / 18 in r208, 140-160 ms per miss).
+    # Retained arcs 18 19 21 24 36 68 108 109 (= r11f entries 0 1 3 6 18 47 60 61, 29,056 B); the rest stays bounded.
+    'pl11-hot': dict(name='pl11.drs',module=47,cap=32768,count=61,
+        source='f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58',
+        retain=(0x40,0x43,18,19,21,24,36,68,108,109)),
 }
 
 def prepare(source, destination, hot_slots=(), textures=None, keep_motion_resident=False, compact_effects=False, bounded_profile=None):

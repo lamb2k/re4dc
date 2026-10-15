@@ -3043,3 +3043,11 @@ $(error MOTION_BOUNDED_R11F needs MOTION_USAGE_LOG=0)
 endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_BOUNDED_R11F=1
 endif
+# MOTION_MISS_LOG=1 (castle lane 2026-10-15; diagnostic, log only, default 0): "motion miss" lines (clip, wait, slab).
+MOTION_MISS_LOG ?= 0
+ifeq ($(filter $(MOTION_MISS_LOG),0 1),)
+$(error MOTION_MISS_LOG must be 0 or 1)
+endif
+ifeq ($(MOTION_MISS_LOG),1)
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_MISS_LOG=1
+endif
