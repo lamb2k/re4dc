@@ -87,6 +87,23 @@ Why newlib wins here:
   makes one copy of it, but direct call-site use (the user's rule) would inline that body at ~600 sites.
   Suggestion: an out-of-line `shz_memcpy` in libsh4zam.a for the generic case, inline only the fixed-size forms.
 
+Size and alignment histogram: **not collected** before the handover. The ratio of instructions (62.8k -> 134.7k per
+frame at the cross, with the same calls) points to medium copies with 4-aligned pointers, where the 0-31 byte
+destination prelude dominates. To collect it, use a MEMPROF build (game30.mk MEMPROF=1: memprof.cpp logs the
+heaviest call sites by bytes) extended with size and (dst | src) & 7 buckets.
+
+Cycles at the cross (hw model, 200 MHz, model unconfirmed): newlib ~85k cycles (0.423 ms) against shz_memcpy ~174k
+(0.872 ms) per frame.
+
+What would fix it: a word-aligned head (when (dst ^ src) & 3 == 0, copy 0-3 bytes, then 4-byte words to the
+8 / 32-byte boundary), and the FMOV.D / movca / SQ path only at sizes where the prelude is amortised (>= 128-256 B) and
+only for main RAM.
+
+Main-RAM restriction (ours, platform/shz_mem.c): only calls whose ranges lie in main RAM take SH4ZAM. With
+copies into VRAM, the G2 bus (AICA RAM, 32-bit accesses only), the TA FIFO or P4 allowed, our house scene stuck in
+texture and movie loading. FMOV.D stores and movca.l are not valid there. Suggestion for upstream: document that
+shz_memcpy / shz_memset8 are main-RAM only, or dispatch on the address.
+
 Upstream code note: `shz_memcpy32_store_sh4_` does not name dr4-dr10 as asm inputs, and `shz_memcpy32_load_sh4_` only
 clobbers them. GCC may legally place FP code between the two statements. They are adjacent in shz_memcpy32_sh4 today,
 so this is latent. Suggestion: make it one asm statement, or give the store "f" inputs.
