@@ -5217,6 +5217,31 @@ void pace_note_draw(int mode){
     stream_send(v,n*32);
 }
 #endif
+#ifndef RE4DC_UI_OT_CACHE
+#define RE4DC_UI_OT_CACHE 0
+#endif
+#if RE4DC_UI_OT_CACHE && RE4DC_PVR_STREAM && RE4DC_SS_UI_ORDER
+// UI_OT_CACHE (game30.mk; lane uicoll 2026-10-15, backlog B3; exact, render only): ui_draw_quad writes each
+// quad's packet (the same zeroed 5 x 32 bytes, header + 4 vertices, as before) into a 32-aligned batch of 8 and the
+// batch goes to the TA in one stream_send: one store-queue lock / unlock per 8 quads instead of per quad. The TA
+// receives the same words in the same order. The batch is sent when full, before a glyph run and the door picture,
+// and at the end of both drawing loops (ui_order_flush, re4dc_ui_present), so nothing else is sent while a quad
+// waits in it. POC101 builds (RE4DC_POC_UIOT): batched only while POC layer 0x08 is on.
+#if defined(RE4DC_POC_UIOT) && RE4DC_POC_UIOT
+extern "C" int re4dc_poc_on(unsigned bit);
+#define RE4DC_UOC_ON() (re4dc_poc_on(0x08U)!=0)
+#else
+#define RE4DC_UOC_ON() true
+#endif
+constexpr unsigned kUocBatch=8;
+alignas(32) pvr_vertex_t uoc_batch[kUocBatch*5];
+unsigned uoc_batch_n;
+static void uoc_flush(){
+    if(!uoc_batch_n)return;
+    const unsigned n=uoc_batch_n;uoc_batch_n=0;
+    stream_send(uoc_batch,n*5*unsigned(sizeof(pvr_vertex_t)));
+}
+#endif
 #if RE4DC_SS_UI_ORDER
 // Same quad bytes/header path as final present; source model barriers can consume
 // a prefix without dropping/reordering the unconsumed UI or reallocating storage.
@@ -5226,7 +5251,11 @@ static void ui_draw_quad(unsigned i){
 #endif
         if(!handles[i])return;
 #if RE4DC_NATIVE_MES
+#if RE4DC_UI_OT_CACHE && RE4DC_PVR_STREAM
+        if(handles[i]==kGlyphRun){uoc_flush();glyph_draw_run(quads[i].image.width,quads[i].image.height);return;}
+#else
         if(handles[i]==kGlyphRun){glyph_draw_run(quads[i].image.width,quads[i].image.height);return;}
+#endif
 #endif
         const auto& q=quads[i];const auto& t=handles[i]->package.textures()[0];
 #if RE4DC_UI_HEADERS
@@ -5250,7 +5279,14 @@ static void ui_draw_quad(unsigned i){
 #else
         pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);
 #endif
+#if RE4DC_UI_OT_CACHE && RE4DC_PVR_STREAM
+        const bool uoc_batched=RE4DC_UOC_ON();
+        alignas(32) pvr_vertex_t uoc_local[5];
+        pvr_vertex_t* const commands=uoc_batched?uoc_batch+uoc_batch_n*5:uoc_local;
+        std::memset(commands,0,5*sizeof(pvr_vertex_t));std::uint32_t count;
+#else
         alignas(32) pvr_vertex_t commands[5]{};std::uint32_t count;
+#endif
         re4dc::render::begin_pvr_packet(commands,count,header);
         pvr_vertex_t* v=commands+count;const unsigned order[]={0,1,3,2};
         const float layer=overlay_depth();
@@ -5258,7 +5294,12 @@ static void ui_draw_quad(unsigned i){
             v[n].x=RE4DC_UI_X(q.xy[2*j]);v[n].y=RE4DC_UI_Y(q.xy[2*j+1]);v[n].z=layer;
             v[n].u=q.uv[2*j]*RE4DC_COVER_W(handles[i]->package,q.image.width)/t.width;v[n].v=q.uv[2*j+1]*RE4DC_COVER_H(handles[i]->package,q.image.height)/t.height;v[n].argb=q.color;}
 #if RE4DC_PVR_STREAM
+#if RE4DC_UI_OT_CACHE
+        if(uoc_batched){if(++uoc_batch_n==kUocBatch)uoc_flush();}
+        else{uoc_flush();stream_send(commands,5*unsigned(sizeof(pvr_vertex_t)));}
+#else
         stream_send(commands,sizeof(commands));
+#endif
 #else
         re4dc::render::submit_pvr(commands,sizeof(commands));
 #endif
@@ -5269,6 +5310,9 @@ static void ui_order_flush(){
     if(re4dc_vi_black() || stream_aborted)return;
     stream_select(PVR_LIST_TR_POLY);
     while(quads_flushed<nquad && !stream_aborted)ui_draw_quad(quads_flushed++);
+#if RE4DC_UI_OT_CACHE && RE4DC_PVR_STREAM
+    uoc_flush();
+#endif
 }
 #endif
 extern "C" void re4dc_ui_present(){
@@ -5304,13 +5348,20 @@ extern "C" void re4dc_ui_present(){
 #if RE4DC_DOOR_FREEZE && RE4DC_PVR_STREAM
     // The door picture goes over the UI drawn before the loading banner and under the banner (door_ui_mark).
     bool door_done=false;
+#if RE4DC_UI_OT_CACHE && RE4DC_SS_UI_ORDER
+#define RE4DC_DOOR_SPLIT(i) if((i)==door_ui_mark && !stream_aborted){uoc_flush();door_draw();door_done=true;}
+#else
 #define RE4DC_DOOR_SPLIT(i) if((i)==door_ui_mark && !stream_aborted){door_draw();door_done=true;}
+#endif
 #else
 #define RE4DC_DOOR_SPLIT(i)
 #endif
 #if RE4DC_SS_UI_ORDER
     if(frame%120==0)re4dc_log("native UI order: frame=%u active=%u flushed=%u queued=%u\n",frame,unsigned(ui_order),quads_flushed,nquad);
     for(unsigned i=quads_flushed;i<nquad && !movie_override && !re4dc_vi_black();++i){RE4DC_DOOR_SPLIT(i)ui_draw_quad(i);}
+#if RE4DC_UI_OT_CACHE && RE4DC_PVR_STREAM
+    uoc_flush();
+#endif
 #else
     for(unsigned i=0;i<nquad && !movie_override && !re4dc_vi_black();++i){
         RE4DC_DOOR_SPLIT(i)
