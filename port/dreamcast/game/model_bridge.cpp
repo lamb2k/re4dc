@@ -434,6 +434,10 @@ extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
 #if defined(RE4DC_GCOBJ_SKIP) && (RE4DC_GCOBJ_SKIP == 3 || RE4DC_GCOBJ_SKIP == 4)
     if(re4dc_gcobj_class(((const cModel*)model)->kindid,((const cModel*)model)->id,RE4DC_GCOBJ_SKIP==4))return;
 #endif
+#if defined(RE4DC_GCOBJ_SKIP) && RE4DC_GCOBJ_SKIP == 6
+    {const cModel* gm=(const cModel*)model;
+     if(re4dc_gcobj_class(gm->kindid,gm->id,false)&&!re4dc_gcobj_class(gm->kindid,gm->id,true))return;}
+#endif
 #if RE4DC_NATIVE_ACTOR
     bind_actor_frame();
 #endif

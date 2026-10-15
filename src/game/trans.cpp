@@ -2691,6 +2691,11 @@ void ModelRender(cModel* m)
         return;
     }
 #endif
+#if defined(RE4DC_GCOBJ_SKIP) && RE4DC_GCOBJ_SKIP == 5
+    if (re4dc_gcobj_class(m->kindid, m->id, false) && !re4dc_gcobj_class(m->kindid, m->id, true)) {
+        return;
+    }
+#endif
 #if RE4DC_EFM_PS2_CUT
     // EFM_PS2_CUT (render only): an effect model the PS2 release deleted is not drawn; its object runs unchanged.
     if (re4dc_efm_ps2_cut(m)) {
