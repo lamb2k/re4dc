@@ -38,7 +38,7 @@
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 HWM_BIN=${HWM_BIN:-/mnt/d/Flycast-Evidence/re4-dreamcast/hwmodel-bin}
-HWM_EVROOT=${HWM_EVROOT:-/mnt/d/Flycast-Evidence/re4-dreamcast}
+HWM_EVROOT=${HWM_EVROOT:-/mnt/c/Flycast-Evidence/re4-dreamcast}   # new evidence on C: (user 10-15); the inputs may stay on D:
 # disc images are staged outside evidence dirs (and off the trace drive), deleted after the run
 HWM_DISCS=${HWM_DISCS:-/mnt/c/Flycast-Evidence/re4-dreamcast/_hwmodel-discs}
 HWM_MINFREE_MB=${HWM_MINFREE_MB:-10000}   # refuse to start if the trace drive would drop below this

@@ -916,8 +916,20 @@ static int Ps2fxPuzzleSuppress(cEsp* esp);
 #if RE4DC_PS2_FX_COMMON_HAZE
 static int Ps2fxCommonHazeSuppress(cEsp* esp);
 #endif
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE && !RE4DC_PS2_FX_COMMON_HAZE
+extern "C" u32 re4dc_logic_waste_mask;
+static int lwFxInner;
+static int lwFxClass(cEsp* esp);   // LOGIC_WASTE bit 0x02 (after Ps2fxClass)
+#endif
+#line 919   // LOGIC_WASTE blocks keep the knob-off line numbers (EspCommonTrans's __LINE__)
 static int Ps2fxClass(cEsp* esp)
 {
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE && !RE4DC_PS2_FX_COMMON_HAZE
+    if ((re4dc_logic_waste_mask & 2) && !lwFxInner) {
+        return lwFxClass(esp);
+    }
+#endif
+#line 921
 #if defined(RE4DC_FX_LEVEL)
     if (FxLevelThin(esp)) {
         return 1;
@@ -1061,6 +1073,74 @@ static int Ps2fxClass(cEsp* esp)
 #endif
     return 0;
 }
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE && !RE4DC_PS2_FX_COMMON_HAZE
+// LOGIC_WASTE bit 0x02 (game30.mk; logic waste census item 2; render only, exact): after the FX level thinning (per pool
+// slot, first in the cascade and evaluated here as before) Ps2fxClass's verdict is a function of the sprite's recipe
+// fields (id, texture, owner, blend, near / far delete, start colour, life) and the room, re4dc_ps2fx and FX level,
+// for every sprite except: the camera haze (id 0x15: population, slot subset, fade key and camera box per frame), r117
+// (the puzzle trails, per frame) and the static id-0 copies the r100 streak anchors test by position. Many sprites
+// share a recipe, so the verdicts are kept per recipe (64 entries, direct-mapped). The verdict's only other effects are
+// the ps2fx ext / gen "not drawn" log lines, printed on the first sighting (a miss) as before. Check mode (0x100):
+// every reuse is also computed and compared ("LWF ... mis=" must stay 0).
+struct LwFxEntry {
+    u32 k[4];
+    u32 v;   // verdict + 1 (0: empty)
+};
+static LwFxEntry lwFx[64];
+static u32 lwFxStat[4];
+static int lwFxClass(cEsp* esp)
+{
+    const u16 room = G_ROOM_ID;
+    if (esp->m_Id == 0x15 || room == 0x117 || (esp->m_Id == 0 && esp->m_Life_max == 0 && esp->m_Blend_type == 1)) {
+        lwFxInner = 1;
+        const int r = Ps2fxClass(esp);
+        lwFxInner = 0;
+        return r;
+    }
+#if defined(RE4DC_FX_LEVEL)
+    if (FxLevelThin(esp)) {
+        return 1;
+    }
+#endif
+    u32 k[4];
+    k[0] = (u32) esp->m_Id | ((u32) esp->m_Tex_id << 8) | ((u32) esp->info.owner << 16) | ((u32) esp->m_Blend_type << 24);
+    k[1] = (u32) esp->m_Del_near | ((u32) esp->m_Del_far << 16);
+    k[2] = (u32) esp->m_Col_start_r | ((u32) esp->m_Col_start_g << 8) | ((u32) esp->m_Col_start_b << 16) |
+           ((u32) re4dc_ps2fx << 24);
+#if defined(RE4DC_FX_LEVEL)
+    k[3] = (u32) esp->m_Life_max | ((u32) room << 16) ^ ((u32) re4dc_fx_level << 30);
+#else
+    k[3] = (u32) esp->m_Life_max | ((u32) room << 16);
+#endif
+    LwFxEntry& e = lwFx[((k[0] ^ (k[1] * 3) ^ (k[2] * 5) ^ (k[3] * 7)) * 0x9E3779B1u) >> 26];
+    lwFxStat[0]++;
+    if (e.v && e.k[0] == k[0] && e.k[1] == k[1] && e.k[2] == k[2] && e.k[3] == k[3]) {
+        lwFxStat[1]++;
+        if (re4dc_logic_waste_mask & 0x100) {
+            lwFxInner = 1;
+            const int r = Ps2fxClass(esp);
+            lwFxInner = 0;
+            if ((u32) r + 1 != e.v) {
+                lwFxStat[2]++;
+            }
+        }
+        if ((lwFxStat[0] & 0x3FFF) == 0) {
+            re4dc_log("LWF calls=%u hits=%u mis=%u\n", lwFxStat[0], lwFxStat[1], lwFxStat[2]);
+        }
+        return (int) e.v - 1;
+    }
+    lwFxInner = 1;
+    const int r = Ps2fxClass(esp);
+    lwFxInner = 0;
+    e.k[0] = k[0];
+    e.k[1] = k[1];
+    e.k[2] = k[2];
+    e.k[3] = k[3];
+    e.v = (u32) r + 1;
+    return r;
+}
+#endif
+#line 1064
 #endif
 #if RE4DC_PS2_FX_STAGE1
 // Three stationary r104 source records differ only in size and RGBA. Source

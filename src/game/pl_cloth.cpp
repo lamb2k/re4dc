@@ -433,10 +433,20 @@ void testJacketSetLeon(cModel* pl, PlCloth* pCloth)
 }
 
 // Jacket (costume 0): the Move3 variant with parallel collision.
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+extern "C" u32 re4dc_logic_approx_mask;
+extern int re4dc_lw_cloth_half;   // pendulum.cpp (LOGIC_APPROX_MASK 0x01)
+#endif
 void testJacketMoveLeon(cModel* pl, PlCloth* pCloth)
 {
     if (pG->pl_costume == 0) {
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+        re4dc_lw_cloth_half = re4dc_logic_approx_mask & 1;
         PenClothMove3(pl, (PenCloth*) pCloth);
+        re4dc_lw_cloth_half = 0;
+#else
+        PenClothMove3(pl, (PenCloth*) pCloth);
+#endif
     }
 }
 

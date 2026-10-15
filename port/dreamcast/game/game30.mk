@@ -3043,6 +3043,20 @@ endif
 #                (A memo of the route line tests, rckLineHitCheck, was measured and dropped: its world check cost
 #                what its hits saved; docs/lanes/el-20261005.md.)
 GAME_LQ_MEMO ?= 0
+# LOGIC_WASTE=1 (lane logicwaste 2026-10-15; logic waste census LOGIC-WASTE-CENSUS-20261015.md; exact): compiles the
+#                census memos; LOGIC_WASTE_MASK (default 0) is the data word re4dc_logic_waste_mask (atari.cpp), so
+#                images with different masks share one code layout. Bits: 0x01 getPos body offset, 0x02 effect
+#                classifier verdict per recipe (render), 0x08 camera obstruction lines, 0x100 check mode (each
+#                reused answer is also computed and compared: "LWM" / "LWF ... mis=" must stay 0; not for trace builds).
+LOGIC_WASTE ?= 0
+LOGIC_WASTE_MASK ?= 0
+# LOGIC_APPROX_MASK (same build, second data word re4dc_logic_approx_mask; NOT exact, user 10-15 approximation rule,
+#                gated by gameplay equivalence): 0x01 Leon's jacket cloth constraints at half rate, 0x02 sound surround /
+#                occlusion slots at half rate (interleaved).
+LOGIC_APPROX_MASK ?= 0
+ifneq ($(LOGIC_WASTE),0)
+GAME_CPPFLAGS += -DRE4DC_LOGIC_WASTE=$(LOGIC_WASTE) -DRE4DC_LOGIC_WASTE_MASK=$(LOGIC_WASTE_MASK) -DRE4DC_LOGIC_APPROX_MASK=$(LOGIC_APPROX_MASK)
+endif
 ifneq ($(GAME_LQ_MEMO),0)
 $(OBJDIR)/src/game/atari.o $(OBJDIR)/logic_trace.o: GAME_CPPFLAGS += -DRE4DC_LQ_MEMO=$(GAME_LQ_MEMO)
 endif

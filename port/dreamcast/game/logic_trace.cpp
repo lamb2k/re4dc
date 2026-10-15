@@ -171,8 +171,14 @@ extern "C" int re4dc_dt_window(void)
 #if defined(RE4DC_LQ_MEMO) && RE4DC_LQ_MEMO
 extern "C" void re4dc_lqm_note(unsigned kind, unsigned a, unsigned b);   // GAME_LQ_MEMO (atari.cpp): its recorder
 #endif
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+extern "C" void re4dc_lw_note(unsigned kind, unsigned a, unsigned b);   // LOGIC_WASTE (atari.cpp): its recorder
+#endif
 extern "C" unsigned re4dc_dt_note(unsigned kind, unsigned a, unsigned b)
 {
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+    re4dc_lw_note(kind, a, b);
+#endif
 #if defined(RE4DC_LQ_MEMO) && RE4DC_LQ_MEMO
     re4dc_lqm_note(kind, a, b);
 #endif

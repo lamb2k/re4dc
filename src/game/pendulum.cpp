@@ -839,6 +839,13 @@ void PenClothMove2(cModel* m, PenCloth* c)
 
 // Variant with the parallel collision check on every constraint and the side neighbours kept
 // above the floor too.
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+// LOGIC_APPROX_MASK 0x01 (atari.cpp; NOT exact): set by testJacketMoveLeon around Leon's jacket. On odd frames the
+// angle limits and the Bundle_num constraint passes (their collision volumes) are skipped; the wind (its fRand0_1 draw,
+// so the shared random stream keeps its count), the follow / gravity step and the final pass (link lengths, the
+// diamond check, floor, speed, the parts' matrices) run every frame. A reset frame (be_flag 0x00200000) is never skipped.
+int re4dc_lw_cloth_half;
+#endif
 void PenClothMove3(cModel* m, PenCloth* c)
 {
     Mtx mtx;
@@ -928,7 +935,12 @@ void PenClothMove3(cModel* m, PenCloth* c)
         }
     }
 
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+    const int lwSkip = re4dc_lw_cloth_half && (pG->Frame_cnt & 1) && !(m->be_flag & 0x00200000);
+    if (!lwSkip && !(c->Flag & 0x10) && c->pMax) {
+#else
     if (!(c->Flag & 0x10) && c->pMax) {
+#endif
         for (i = 0, pp = c->pCloth; i < c->Num; i++, pp++) {
             parts = PEN_PARTS(m, c, *pp);
             w = PEN_WORK(parts);
@@ -972,7 +984,11 @@ void PenClothMove3(cModel* m, PenCloth* c)
         }
     }
 
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+    if (!lwSkip && !(c->Flag & 2)) {
+#else
     if (!(c->Flag & 2)) {
+#endif
         for (k = 0; k < c->Bundle_num; k++) {
             for (i = 0, pp = c->pCloth; i < c->Num; i++, pp++) {
                 parts = PEN_PARTS(m, c, *pp);

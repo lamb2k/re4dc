@@ -52,6 +52,9 @@ extern u32 g_at2_total_cyc;
 u8 polyBit[0x400];
 // the piece the last hitCheck2 hit (hitCheck transforms the normal with its matrix)
 static cSat* pBypassAt;
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+void re4dc_lw_sat_epoch();   // LOGIC_WASTE (the block at the end of this file)
+#endif
 #if defined(RE4DC_LQ_MEMO) && RE4DC_LQ_MEMO
 // GAME_LQ_MEMO (game30.mk; lane el; exact): wallAdjust's repeated line query (the block at the end of this file).
 static int lqmVecSame(const Vec* a, const Vec* b);
@@ -2169,6 +2172,9 @@ void cSatMgr::destroy(cSat* p)
     if (p->m_Flag & 2) {
         Mem_free(p->pFile);
     }
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+    re4dc_lw_sat_epoch();
+#endif
     cManager<cSat>::destroy(p);
 }
 
@@ -2179,6 +2185,9 @@ int cSatMgr::construct(cSat* p, u32 id)
     p->be_flag = 1;
     new (p) cSat();
     p->m_Flag = 0;
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+    re4dc_lw_sat_epoch();
+#endif
     return 1;
 }
 
@@ -2261,6 +2270,9 @@ void cSat::init(cSatFile* f, Vec* pos, Vec* rot)
     }
     m_Flag = 4;
     *this = f;
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+    re4dc_lw_sat_epoch();
+#endif
     setCoord(pos, rot);
     blockInit(block_p);
 }
@@ -2960,4 +2972,257 @@ static void lqmPairCount(int same, int mis)
     }
 }
 #endif
+#endif
+
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+// LOGIC_WASTE (game30.mk; logic waste census LOGIC-WASTE-CENSUS-20261015.md; exact): re4dc_logic_waste_mask is a
+// data word (LOGIC_WASTE_MASK, default 0), so every bit shares one code layout. Bits:
+//   0x01 cAtariInfo::getPos keeps each body's rotated offset (atariInfo.cpp)
+//   0x02 Ps2fxClass verdicts per effect recipe (esp_sub.cpp; render only)
+//   0x08 camera obstruction lines: SatMgr's answer reused when the line, flags and room collision are unchanged
+//   0x100 check mode: every reused answer is also computed and compared ("LWM" / "LWF" lines, mismatches must be 0;
+//         not for trace builds: the extra queries add decision notes)
+// (Census item 6, the wall check reuse, was built and measured: 0 of 7,632 wallAdjust queries at the r101 cross
+// repeated their inputs bit for bit, since the bodies follow animated parts; it was removed.)
+// The room collision (SatMgr's pieces) is proved unchanged at every lookup: lwSceneGen compares each slot's
+// alive state and, for alive pieces, its file, block root, polygon count and both matrices with a snapshot, and
+// the piece hooks (construct / destroy / init) bump an epoch, so a piece rebuilt on reused memory is new too.
+// A line query reads only those pieces and its own arguments (seCk is copied to SEck first); it writes its outputs
+// (pos1 moves on a hit), SEck, pBypassAt (read only by hitCheck right after a hit) and polyBit (scratch, cleared
+// per piece before each use). Trace builds record the decision notes of the computed answer and give them again
+// with a reused one.
+extern "C" void re4dc_log(const char* fmt, ...);
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE
+extern "C" unsigned re4dc_dt_note(unsigned kind, unsigned a, unsigned b);
+#endif
+extern "C" {
+u32 __attribute__((section(".data"))) re4dc_logic_waste_mask = RE4DC_LOGIC_WASTE_MASK;
+// Both words are kept in .data (a 0 mask would otherwise go to .bss and move the layout).
+// LOGIC_APPROX_MASK (game30.mk; census approximation arms, user 10-15 "I'm good with approximations"; NOT exact,
+// gated by gameplay equivalence): 0x01 Leon's jacket constraints at half rate (pendulum.cpp PenClothMove3),
+// 0x02 sound surround / occlusion slots at half rate, interleaved (snd.cpp sndSurroundCalc).
+u32 __attribute__((section(".data"))) re4dc_logic_approx_mask = RE4DC_LOGIC_APPROX_MASK;
+}
+static u32 lwEpoch = 1;
+void re4dc_lw_sat_epoch()
+{
+    ++lwEpoch;
+}
+#define LW_SAT_MAX 32
+struct LwSatSnap {
+    u32 alive;
+    void* file;
+    void* blk;
+    u32 npoly;
+    u32 m[24];   // mat, imat
+};
+static LwSatSnap lwSnap[LW_SAT_MAX];
+static u32 lwSnapEpoch, lwSnapN, lwSnapSize, lwGen = 1;
+static void* lwSnapArr;
+// The generation of the room collision now (0: not provable, no reuse).
+static u32 lwSceneGen(cSatMgr* mgr)
+{
+    const u32 n = mgr->nArray;
+    if (mgr != &SatMgr || n > LW_SAT_MAX) {
+        return 0;
+    }
+    int same = lwSnapEpoch == lwEpoch && lwSnapArr == (void*) mgr->pArray && lwSnapN == n && lwSnapSize == mgr->size;
+    u8* p = (u8*) mgr->pArray;
+    for (u32 i = 0; i < n; i++, p += mgr->size) {
+        cSat* sat = (cSat*) p;
+        LwSatSnap& s = lwSnap[i];
+        const u32 alive = sat->isAlive();
+        if (!alive) {
+            if (s.alive) {
+                s.alive = 0;
+                same = 0;
+            }
+            continue;
+        }
+        const u32* m = (const u32*) sat->mat;   // mat 0x60, imat 0x90: contiguous
+        int d = !s.alive || s.file != (void*) sat->pFile || s.blk != (void*) sat->block_p || s.npoly != sat->polygon_num;
+        for (u32 k = 0; k < 24; k++) {
+            if (s.m[k] != m[k]) {
+                d = 1;
+                s.m[k] = m[k];
+            }
+        }
+        if (d) {
+            s.alive = 1;
+            s.file = (void*) sat->pFile;
+            s.blk = (void*) sat->block_p;
+            s.npoly = sat->polygon_num;
+            same = 0;
+        }
+    }
+    if (!same) {
+        lwSnapEpoch = lwEpoch;
+        lwSnapArr = (void*) mgr->pArray;
+        lwSnapN = n;
+        lwSnapSize = mgr->size;
+        if (++lwGen == 0) {
+            lwGen = 1;
+        }
+    }
+    return lwGen;
+}
+
+static inline int lwSame(const u32* a, const u32* b, u32 n)
+{
+    for (u32 i = 0; i < n; i++) {
+        if (a[i] != b[i]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+static inline void lwCopy(u32* d, const void* s, u32 n)
+{
+    const u32* q = (const u32*) s;
+    for (u32 i = 0; i < n; i++) {
+        d[i] = q[i];
+    }
+}
+
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE
+#define LW_NOTES 48
+struct LwNotes {
+    u32 n;   // words (3 per note); LQM_NOTE_OVER style overflow: 0xFFFFFFFF
+    u32 w[3 * LW_NOTES];
+};
+static LwNotes* lwRec;
+extern "C" void re4dc_lw_note(unsigned kind, unsigned a, unsigned b)
+{
+    LwNotes* r = lwRec;
+    if (!r || r->n == 0xFFFFFFFFu) {
+        return;
+    }
+    if (r->n + 3 > 3 * LW_NOTES) {
+        r->n = 0xFFFFFFFFu;
+        return;
+    }
+    r->w[r->n] = kind;
+    r->w[r->n + 1] = a;
+    r->w[r->n + 2] = b;
+    r->n += 3;
+}
+static void lwReplay(const LwNotes* r)
+{
+    for (u32 i = 0; i < r->n; i += 3) {
+        re4dc_dt_note(r->w[i], r->w[i + 1], r->w[i + 2]);
+    }
+}
+#endif
+
+static u32 lwStat[8];   // [0] camera lookups, [1] reuses, [4] check-mode mismatches, [7] log pacing
+static void lwStatLog()
+{
+    if ((++lwStat[7] & 0x3FF) == 0) {
+        re4dc_log("LWM cam=%u/%u mis=%u gen=%u n=%u\n", lwStat[1], lwStat[0], lwStat[4], lwGen, SatMgr.nArray);
+    }
+}
+
+// Bit 0x08: SatMgr.hitCheck for cameraHitCheck (cam_ctrl.cpp).
+struct LwLine {
+    u32 k[12];   // p0, p1, flag, mask, seCk, SEck in, gen, 0
+    u32 ret;
+    u32 p1[3];
+    u32 hit[3];
+    u32 nrm[3];
+    cSat* bypass;
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE
+    LwNotes notes;
+#endif
+};
+static LwLine lwLine[8];
+static u32 lwLineNext;
+extern "C" int re4dc_lw_cam_hitcheck(Vec* pos0, Vec* pos1, Vec* hit, Vec* nrm, int flag, int mask)
+{
+    if (!(re4dc_logic_waste_mask & 0x08)) {
+        return SatMgr.hitCheck(pos0, pos1, hit, nrm, flag, mask);
+    }
+    const u32 gen = lwSceneGen(&SatMgr);
+    u32 k[12];
+    lwCopy(k, pos0, 3);
+    lwCopy(k + 3, pos1, 3);
+    k[6] = (u32) flag;
+    k[7] = (u32) mask;
+    k[8] = (u32) SatMgr.seCk;
+    k[9] = (u32) SEck;
+    k[10] = gen;
+    k[11] = 0;
+    lwStat[0]++;
+    lwStatLog();
+    if (gen) {
+        for (u32 i = 0; i < 8; i++) {
+            LwLine& e = lwLine[i];
+            if (!lwSame(e.k, k, 12)) {
+                continue;
+            }
+            lwStat[1]++;
+            if (re4dc_logic_waste_mask & 0x100) {
+                Vec h, nn;
+                Vec p1 = *pos1;
+                const int r = SatMgr.hitCheck(pos0, &p1, &h, &nn, flag, mask);
+                int bad = (u32) r != e.ret || !lwSame((const u32*) &p1, e.p1, 3) || !lwSame((const u32*) &h, e.hit, 3) ||
+                          (r && !lwSame((const u32*) &nn, e.nrm, 3));
+                if (bad) {
+                    lwStat[4]++;
+                    re4dc_log("LWM cam mismatch ret %u/%u\n", (u32) r, e.ret);
+                }
+            }
+            ((SEckView*) &SEck)->v = SatMgr.seCk;
+            lwCopy((u32*) pos1, e.p1, 3);
+            if (hit) {
+                lwCopy((u32*) hit, e.hit, 3);
+            }
+            if (e.ret) {
+                pBypassAt = e.bypass;
+                if (nrm) {
+                    lwCopy((u32*) nrm, e.nrm, 3);
+                }
+            }
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE
+            lwReplay(&e.notes);
+#endif
+            return (int) e.ret;
+        }
+    }
+    Vec h, nn;
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE
+    LwNotes rec;
+    rec.n = 0;
+    LwNotes* outer = lwRec;
+    lwRec = &rec;
+#endif
+    const int r = SatMgr.hitCheck(pos0, pos1, &h, &nn, flag, mask);
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE
+    lwRec = outer;
+#endif
+    if (hit) {
+        *hit = h;
+    }
+    if (r && nrm) {
+        *nrm = nn;
+    }
+    if (gen && hit && nrm) {
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE
+        if (rec.n == 0xFFFFFFFFu) {
+            return r;
+        }
+#endif
+        LwLine& e = lwLine[lwLineNext++ & 7];
+        lwCopy(e.k, k, 12);
+        e.ret = (u32) r;
+        lwCopy(e.p1, pos1, 3);
+        lwCopy(e.hit, &h, 3);
+        lwCopy(e.nrm, &nn, 3);
+        e.bypass = pBypassAt;
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE
+        e.notes = rec;
+#endif
+    }
+    return r;
+}
+
 #endif

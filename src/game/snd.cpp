@@ -556,6 +556,9 @@ static int sndWallCheckSub(Vec* pos)
 static u32 sndWallAltId[48];
 static u8 sndWallAltHit[48];   // 0: no verdict, 1: clear, 2: blocked
 static u32 sndWallAltTick;
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+extern "C" u32 re4dc_logic_approx_mask;
+#endif
 static void sndWallCheckAlt(int slot, u32 id, SND_SIT* sit, u8* vol, u8* svol, Vec* pos)
 {
     int hit;
@@ -566,7 +569,13 @@ static void sndWallCheckAlt(int slot, u32 id, SND_SIT* sit, u8* vol, u8* svol, V
     if (sit->wall_vol < 1 || sit->wall_vol > 99) {
         return;
     }
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+    // LOGIC_APPROX_MASK 0x02 visits a slot every other call: its verdict then alternates on bit 1 of the tick.
+    if ((sndWallAltTick & ((re4dc_logic_approx_mask & 2) ? 2u : 1u)) && sndWallAltHit[slot] != 0 &&
+        sndWallAltId[slot] == id) {
+#else
     if ((sndWallAltTick & 1) && sndWallAltHit[slot] != 0 && sndWallAltId[slot] == id) {
+#endif
         hit = sndWallAltHit[slot] - 1;
     } else {
         hit = sndWallCheckSub(pos) == 1;
@@ -2382,6 +2391,13 @@ static void sndSurroundCalc()
         if (w->type == 0) {
             continue;
         }
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE && defined(RE4DC_SND_WALL_ALT) && RE4DC_SND_WALL_ALT
+        // LOGIC_APPROX_MASK 0x02 (atari.cpp; NOT exact, audio): each tracked sound is updated every other call
+        // (slot parity against the call count): its end check, volume, pan, pitch and filter lag one frame.
+        if ((re4dc_logic_approx_mask & 2) && ((u32) i ^ sndWallAltTick) & 1) {
+            continue;
+        }
+#endif
         c->ovr_flag = 0;
         idx = 0;
         if (w->type & 0x1) {

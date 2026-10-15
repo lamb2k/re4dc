@@ -116,10 +116,56 @@ void cAtariInfo::move()
 }
 
 // World position of the body: the rotated offset added to the parts (or model) position.
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+// LOGIC_WASTE bit 0 (game30.mk; logic waste census item 1; exact): the rotated body offset, a pure function of
+// m_offset and the model's angle, is kept per body; the collision code asks for it about 20 times per tick and the
+// two inputs are almost always unchanged (bit for bit). Direct-mapped by the body's address.
+extern "C" u32 re4dc_logic_waste_mask;
+struct LwPosEntry {
+    const cAtariInfo* who;
+    u32 k[6];
+    u32 v[3];
+};
+static LwPosEntry lwPos[64];
+static u32 lwPosStat[3];   // check mode: hits (log pacing), hits checked, mismatches
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
 void cAtariInfo::getPos(cModel* m, Vec* out)
 {
     Vec v;
 
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+    if (re4dc_logic_waste_mask & 1) {
+        const u32* o = (const u32*) &m_offset;
+        const u32* a = (const u32*) &m->ang;
+        LwPosEntry& e = lwPos[((u32) this >> 3) & 63];
+        u32* w = (u32*) &v;
+        if (e.who == this && e.k[0] == o[0] && e.k[1] == o[1] && e.k[2] == o[2] && e.k[3] == a[0] &&
+            e.k[4] == a[1] && e.k[5] == a[2]) {
+            w[0] = e.v[0];
+            w[1] = e.v[1];
+            w[2] = e.v[2];
+            if (re4dc_logic_waste_mask & 0x100) {   // check mode
+                Vec r;
+                RotVector(&m_offset, &m->ang, &r);
+                const u32* q = (const u32*) &r;
+                lwPosStat[1]++;
+                if (q[0] != w[0] || q[1] != w[1] || q[2] != w[2]) {
+                    lwPosStat[2]++;
+                }
+                if ((++lwPosStat[0] & 0xFFFF) == 0) {
+                    re4dc_log("LWP hits=%u mis=%u\n", lwPosStat[1], lwPosStat[2]);
+                }
+            }
+        } else {
+            const u32 k0 = o[0], k1 = o[1], k2 = o[2], k3 = a[0], k4 = a[1], k5 = a[2];
+            RotVector(&m_offset, &m->ang, &v);
+            e.who = this;
+            e.k[0] = k0; e.k[1] = k1; e.k[2] = k2; e.k[3] = k3; e.k[4] = k4; e.k[5] = k5;
+            e.v[0] = w[0]; e.v[1] = w[1]; e.v[2] = w[2];
+        }
+    } else
+#endif
     RotVector(&m_offset, &m->ang, &v);
     if (m_parts_no != 0) {
         PSVECAdd(&m->getPartsPtr(m_parts_no - 1)->world, &v, out);

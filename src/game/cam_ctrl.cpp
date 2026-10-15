@@ -368,6 +368,9 @@ void CameraControl::CoreDataRead(CameraDataHeader* core)
     pG->pCamCore = calcAddr(core);
 }
 
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+extern "C" int re4dc_lw_cam_hitcheck(Vec* pos0, Vec* pos1, Vec* hit, Vec* nrm, int flag, int mask);
+#endif
 // Line of sight test for cameras: from -> to against characters, objects and the scenery (walls
 // only, camera-ignored attributes masked); the nearest hit in *pos / *nrm. 1 when blocked.
 int cameraHitCheck(Vec* pos, Vec* nrm, Vec* from, Vec* to)
@@ -393,7 +396,11 @@ int cameraHitCheck(Vec* pos, Vec* nrm, Vec* from, Vec* to)
 
     hitA = EmHitCheck(&posA, &nrmA, from, to, 1);
     hitB = ObjHitCheck(&posB, &nrmB, from, to, 1);
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+    hitC = re4dc_lw_cam_hitcheck(from, to, &posC, &nrmC, 0x8000, 0x1C2810);   // LOGIC_WASTE bit 0x08 (atari.cpp)
+#else
     hitC = SatMgr.hitCheck(from, to, &posC, &nrmC, 0x8000, 0x1C2810);
+#endif
     if (hitA | hitB | hitC) {
         // COMPILER-DIFF: codeless anchor. The empty loop leaves NOTE_INSN_LOOP_BEG/END here, which ends
         // the first cse pass's extended basic block at this point (cse1 stops at LOOP_END). Without it
