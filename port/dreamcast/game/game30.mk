@@ -3316,10 +3316,39 @@ endif
 #   frame) and the actor-path clears (docs/lanes/sh4zam-direct.md "memset").
 GAME_SHZ_MEMSET ?= 0
 ifneq ($(GAME_SHZ_MEMSET),0)
+ifneq ($(GAME_SHZ_MEM),)
+ifneq ($(GAME_SHZ_MEM),0)
+$(error GAME_SHZ_MEMSET (memset only, build time) and GAME_SHZ_MEM (run-time mask) both wrap memset: pick one)
+endif
+endif
 PLATFORM_OBJS += $(OBJDIR)/platform/shz_memset.o
 GAME30_LINK_INPUTS += $(KOS_PORTS)/lib/libsh4zam.a
 GAME_LDFLAGS += -Wl,--wrap=memset
 $(OBJDIR)/platform/shz_memset.o: platform/shz_memset.c
 	@mkdir -p $(dir $@)
 	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -fno-tree-loop-distribute-patterns -std=gnu11 $(SH4ZAM_INC) -MMD -MP -c $< -o $@
+endif
+
+# GAME_SHZ_MEM=1 (lane sh4zam-adopt 2026-10-15; EXACT; default 0 = not built, the previous image). User rule 10-15: the
+#   port copies with SH4ZAM, not newlib. Global link wraps (memset / memcpy / memmove) send every call in the program
+#   (game, port, KOS, newlib / libstdc++, GCC-emitted calls) to platform/shz_mem.c, which calls shz_memset8 / shz_memcpy /
+#   shz_memmove from the kos-ports SH4ZAM install ($(KOS_PORTS)/include/sh4zam, lib/libsh4zam.a). Run-time mask
+#   re4dc_shz_mem_mask (re4dc_shz_mem_set; boot SHZ_MEM_BOOT, a .data word): 0x1 memset >= 64 B, 0x2 memcpy >= 32 B,
+#   0x4 memmove >= 32 B (forward overlap only); smaller calls and clear bits go to newlib. Byte-identical: gate STRICT.
+#   Not covered: GCC's inline __movmem* helpers (libgcc, register calling convention), which stay as they are.
+GAME_SHZ_MEM ?= 0
+SHZ_MEM_BOOT ?= 0
+ifneq ($(GAME_SHZ_MEM),0)
+ifneq ($(filter-out 0,$(MEM_MOVCA) $(MEMPROF)),)
+$(error GAME_SHZ_MEM and MEM_MOVCA / MEMPROF all wrap memset / memcpy: pick one)
+endif
+ifeq ($(wildcard $(KOS_PORTS)/include/sh4zam/shz_mem.h),)
+$(error SH4ZAM is not installed in KOS_PORTS=$(KOS_PORTS): run make install in $(KOS_PORTS)/sh4zam at SH4ZAM_SHA (toolchain.lock))
+endif
+PLATFORM_OBJS += $(OBJDIR)/platform/shz_mem.o
+GAME_LDFLAGS += -Wl,--wrap=memset -Wl,--wrap=memcpy -Wl,--wrap=memmove
+GAME30_LINK_INPUTS += $(KOS_PORTS)/lib/libsh4zam.a
+$(OBJDIR)/platform/shz_mem.o: platform/shz_mem.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -fno-tree-loop-distribute-patterns -fno-builtin -std=gnu11 $(SH4ZAM_INC) -DRE4DC_SHZ_MEM_BOOT=$(SHZ_MEM_BOOT) -MMD -MP -c $< -o $@
 endif
