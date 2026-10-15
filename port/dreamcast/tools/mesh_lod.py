@@ -72,6 +72,15 @@ UV_GUARD = None
 # baked lighting in vertex colours and some tessellation exists only to carry a lighting gradient: a collapse that
 # would move a corner onto a vertex of a visibly different colour is refused (lane worldlod 2026-10-15).
 COLOUR_GUARD = None
+# BORDER_EPS (None = off, the historical behaviour; ps2_world_vert_ladder.py --border-px): the largest error, in model
+# units, a collapse of an open-border vertex may reach. Borders then hold tighter than the interior, so neighbouring
+# meshes (planks, wall boards, trims) keep meeting and no light slivers open between them.
+BORDER_EPS = None
+# VERTEX_EPS (None = off; ps2_world_vert_ladder.py per-vertex screen error): {vertex id: largest error in model units a
+# collapse removing that vertex may reach}, and the radius below which a loose piece may be dropped (the smallest of its
+# vertices'). A thin post the camera can stand next to keeps a tight bound while the far roofs of the same cluster
+# reduce.
+VERTEX_EPS = None
 
 
 def _c1555(c):
@@ -348,6 +357,10 @@ class Simplifier:
                 continue
             if not self.vt[u] or not self._valid(u, v):
                 continue
+            if BORDER_EPS is not None and u in self.border and cost > BORDER_EPS * BORDER_EPS:
+                continue
+            if VERTEX_EPS is not None and cost > VERTEX_EPS.get(u, 0.0) ** 2:
+                continue
             self.error = max(self.error, math.sqrt(cost))
             self._collapse(u, v)
         self._drop_small(eps)
@@ -377,7 +390,11 @@ class Simplifier:
             ps = [self.pos[x] for x in vs]
             c = [(min(p[a] for p in ps) + max(p[a] for p in ps)) * 0.5 for a in range(3)]
             r = max(math.sqrt(_dot(_sub(p, c), _sub(p, c))) for p in ps)
-            if r <= eps:
+            if VERTEX_EPS is not None:
+                lim = min(eps, min(VERTEX_EPS.get(x, 0.0) for x in vs))
+            else:
+                lim = eps
+            if r <= lim:
                 self.error = max(self.error, r)
                 for t in ts:
                     self._kill(t)

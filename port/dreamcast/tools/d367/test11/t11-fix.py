@@ -277,9 +277,11 @@ CLASH += [(_a, 'wlod101') for _a in _WL if _a.startswith('wl101')]
 # lane worldvert (10-15, game WORLD_VERT=1): wv101 = bake13's r101 package (level 0, unchanged) + wholesale levels 1..3
 # (tools/ps2_world_vert_ladder.py, then ps2_strip_groups.py) as ps2-wvN.re4mesh / ps2-wvN.r4sg (ISO9660: one dot). Order: after bake13.
 WVERT = PRIV + '/worldvert-20261015'
-DATA['wv101'] = {'dc/native/r101/%s' % x: '%s/r101-v1/%s' % (WVERT, x)
+DATA['wv101'] = {'dc/native/r101/%s' % x: '%s/r101-v2/%s' % (WVERT, x)
                  for x in ['ps2-world.%s' % e for e in ('re4mesh', 'r4pw', 'r4sg', 'ids')] +
-                 ['ps2-wv%d.%s' % (n, e) for n in (1, 2, 3) for e in ('re4mesh', 'r4sg')]}
+                 ['ps2-wv%d.%s' % (n, e) for n in (1, 2) for e in ('re4mesh', 'r4sg')]}
+# wvscan: candidate L2 fixes in slots 1..3 (r101-scan/SLOTS.txt), look scans only
+DATA['wvscan'] = {k: v.replace('/r101-v1/', '/r101-scan/') for k, v in DATA['wv101'].items()}
 CLASH += [(_a, _b) for _a in _WL if _a.startswith('wl119') for _b in ('wlod119m', 'wlod119b')]
 NAME =re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
