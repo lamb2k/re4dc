@@ -64,7 +64,7 @@ def main(argv):
             built.append((bit, name, kind))
     rows = [('ALL OFF', 0)]
     rows += [(n, b) for b, n, k in built if k != 3]
-    if len(built) > 1 or not built:
+    if len([1 for b, n, k in built if k != 3]) > 1:   # ALL ON differs from a single layer's row
         rows.append(('ALL ON', 0x8000))
     rows += [(n, b) for b, n, k in built if k == 3]
     if len(rows) < 9: rows.append(('ALL OFF 2', 0))

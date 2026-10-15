@@ -76,6 +76,15 @@ int re4dc_pace_get_mode(void);   // pace.cpp
 void re4dc_pace_set_mode(int mode, const char* why);
 }
 
+// POC101 layers' own run-time switches (declared outside the unnamed namespace: C linkage, the missing-stub trap)
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+#if defined(RE4DC_POC_HAS_PVS) && RE4DC_POC_HAS_PVS
+extern "C" void re4dc_ps2_pvs_set(unsigned on);   // native_static.cpp PS2_PVS (lane t2exact)
+#endif
+#if defined(RE4DC_POC_HAS_FARHALF) && RE4DC_POC_HAS_FARHALF
+extern "C" int re4dc_far_half_rt;                 // act_cap.cpp FAR_HALF_RT (lane farhalf)
+#endif
+#endif
 #ifndef RE4DC_BENCH_AUTO_S
 #define RE4DC_BENCH_AUTO_S 20
 #endif
@@ -182,12 +191,6 @@ bool g_poc_in_sweep;
 unsigned g_poc_row_mask[kAllScenes];   // the mask each scene asked for (pages, log)
 // Layers with their own run-time switch in the lane's code: set from the mask whenever it changes (the scene's `poc`
 // line, a sweep setting, the sweep end).
-#if RE4DC_POC_HAS_PVS
-extern "C" void re4dc_ps2_pvs_set(unsigned on);   // native_static.cpp PS2_PVS (lane t2exact)
-#endif
-#if RE4DC_POC_HAS_FARHALF
-extern "C" int re4dc_far_half_rt;                 // act_cap.cpp FAR_HALF_RT (lane farhalf)
-#endif
 void poc_apply(unsigned m)
 {
     (void) m;
