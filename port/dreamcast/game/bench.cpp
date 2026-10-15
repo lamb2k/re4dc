@@ -81,9 +81,6 @@ void re4dc_pace_set_mode(int mode, const char* why);
 #if defined(RE4DC_POC_HAS_PVS) && RE4DC_POC_HAS_PVS
 extern "C" void re4dc_ps2_pvs_set(unsigned on);   // native_static.cpp PS2_PVS (lane t2exact)
 #endif
-#if defined(RE4DC_POC_HAS_FARHALF) && RE4DC_POC_HAS_FARHALF
-extern "C" int re4dc_far_half_rt;                 // act_cap.cpp FAR_HALF_RT (lane farhalf)
-#endif
 #endif
 #ifndef RE4DC_BENCH_AUTO_S
 #define RE4DC_BENCH_AUTO_S 20
@@ -136,8 +133,8 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",   "/cd/dc/bench2.
 #ifndef RE4DC_POC_HAS_FLATLIGHT
 #define RE4DC_POC_HAS_FLATLIGHT 0
 #endif
-#ifndef RE4DC_POC_HAS_FARHALF
-#define RE4DC_POC_HAS_FARHALF 0
+#ifndef RE4DC_POC_HAS_SKINMOVCA
+#define RE4DC_POC_HAS_SKINMOVCA 0
 #endif
 struct PocLayer {
     unsigned bit;
@@ -156,10 +153,10 @@ const PocLayer kPocLayer[] = {
      RE4DC_POC_HAS_LEON == 2 ? "LEON: 70 % RUNG, FEWER TRIANGLES (STAND-IN)"
                              : "LEON: ONE RUNG LIGHTER, HAIR/TORSO/ARMS KEPT", RE4DC_POC_HAS_LEON, 1},
     {0x08, "UI OT", "UI_OT_CACHE", "HUD LIST REBUILT ONLY WHEN IT CHANGES (EXACT)", RE4DC_POC_HAS_UIOT, 0},
-    {0x10, "FAR MESH", "CROWD_FAR", "FAR GANADOS: LOW-POLY MESH (APPROXIMATION)", RE4DC_POC_HAS_FARMESH, 1},
+    {0x10, "GANADO LOD", "GANADO_LOD", "GANADOS: ONE LOD RUNG LIGHTER (APPROXIMATION)", RE4DC_POC_HAS_FARMESH, 1},
     {0x20, "FLATLIGHT", "CROWD_FLAT_LIGHT", "CROWD LIGHTING: ONE FLAT LIGHT (APPROXIMATION)", RE4DC_POC_HAS_FLATLIGHT, 1},
     {0x40, "COLL", "COLL_BROADPHASE_CACHE", "COLLISION: BROAD-PHASE CANDIDATES CACHED (EXACT LOGIC)", RE4DC_POC_HAS_COLL, 2},
-    {0x80, "FARHALF!", "FAR_HALF", "FAR GANADOS HALF-RATE UPDATE: LOGIC CHANGE, GATE PENDING", RE4DC_POC_HAS_FARHALF, 3},
+    {0x80, "SKIN MOVCA", "SKIN_MOVCA", "SKINNING OUTPUT WRITTEN WITHOUT A READ (EXACT, CACHE)", RE4DC_POC_HAS_SKINMOVCA, 0},
 };
 constexpr int kPocLayers = (int) (sizeof(kPocLayer) / sizeof(kPocLayer[0]));
 unsigned poc_built()
@@ -196,9 +193,6 @@ void poc_apply(unsigned m)
     (void) m;
 #if RE4DC_POC_HAS_PVS
     re4dc_ps2_pvs_set((m & 0x01u) ? 1u : 0u);
-#endif
-#if RE4DC_POC_HAS_FARHALF
-    re4dc_far_half_rt = (m & 0x80u) ? 1 : 0;
 #endif
 }
 #else

@@ -26,9 +26,9 @@ LAYERS = [  # bit, row name, knobs (any on = built), kind (0 exact render, 1 loo
     (0x40, 'COLL', ['COLL_BROADPHASE_CACHE'], 2),
     (0x02, 'WORLD LOD*', ['WORLD_LOD', 'WORLD_LOD_PROBE'], 1),
     (0x04, 'LEON RUNG*', ['LEON_LOD'], 1),
-    (0x10, 'FAR MESH*', ['CROWD_FAR'], 1),
+    (0x10, 'GANADO LOD*', ['GANADO_LOD'], 1),
+    (0x80, 'SKIN MOVCA', ['SKIN_MOVCA'], 0),
     (0x20, 'FLATLIGHT*', ['CROWD_FLAT_LIGHT'], 1),
-    (0x80, 'FARHALF!', ['FAR_HALF'], 3),
 ]
 here = os.path.dirname(os.path.abspath(__file__))
 SCENE1 = os.path.join(here, '..', 'benchpub', 'scene1-warp.txt')
@@ -88,9 +88,6 @@ def main(argv):
         fn = 'warp.txt' if first else 'bench%d.txt' % no
         first = False
         txt = 'name %s\n' % nm + '\n'.join(body) + '\n' + bl + '\n' + 'poc 0x%x\n' % mask
-        if kn.get('FAR_HALF_RT', '0') != '0':
-            # lane farhalf's own run-time switch (on unless a fixture says `farhalf 0`): on only in its own row
-            txt += 'farhalf %d\n' % (1 if mask & 0x80 else 0)
         assert len(txt) < 2048, fn
         open(os.path.join(out, fn), 'w').write(txt)
         print('%-12s %-40s poc 0x%x' % (fn, bl, mask))
