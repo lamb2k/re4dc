@@ -29,6 +29,9 @@
 #include "TexRender.h"
 #include "cSceObj.h"
 #include "db_log.h"
+#include "em_set.h"
+#include "geometry.h"
+#include "camera.h"
 
 // Room 3-01 (D:/Bio4/Prog/r301.cpp): the water render target, the enemy waves of the beach (with the
 // bowgun and rocket launcher Ganados), the rock wall, the shelf and the continue point (the rock that
@@ -94,12 +97,82 @@ static inline void r301ps2_wait_alive(int n)
         SceSleep(1);
     }
 }
-// EmFarDeleteNoWrap(keep, offscreen) is the shared PS2 helper (the ch22 lane's commit); without it the far
-// deletes are skipped and logged once.
+// PS2 EmFarDeleteNoWrap(keep, offscreen) (st3_0 0x2de8; spec PS2-ENEMY-CODE-DIFF Follow-up D). Lane-local copy of
+// the r104 form plus the off-screen test, until the shared helper lands (RE4DC_HAVE_EM_FAR_DELETE): while more than
+// `keep` Ganados (0x10..0x20) are alive, destroy the farthest one from the player (3D d^2 > 3000; never types
+// 0x16/2/5/6/0xA/0xD nor flag 0x10000000 ones); with `offscreen` only those whose sphere (y + 1000, r 1000) is
+// outside the camera frustum. The list entry's alive bit is cleared. Returns the number destroyed.
 #if defined(RE4DC_HAVE_EM_FAR_DELETE)
 #define R301_FAR_DELETE(keep) EmFarDeleteNoWrap((keep), 1)
 #else
-#define R301_FAR_DELETE(keep) OSReport("[r301-ps2] EmFarDeleteNoWrap(%d, 1) skipped (no shared helper)\n", (keep))
+static int r301ps2_farDelete(int keep, int offscreen)
+{
+    int n = 0;
+    int done = 0;
+    u32 i;
+
+    for (i = 0; i < EmMgr.nArray; i++) {
+        cEm* em = (cEm*) EmMgr.workAt(i);
+
+        if (em != 0 && em->id >= 0x10 && em->id < 0x21 && SceCheckEmAlive(em) == 1) {
+            n++;
+        }
+    }
+    while (done < n - keep) {
+        cEm* best = 0;
+        f32 bestD = 0.0f;
+
+        for (i = 0; i < EmMgr.nArray; i++) {
+            cEm* em = (cEm*) EmMgr.workAt(i);
+            f32 dx, dy, dz, d2;
+
+            if (em == 0 || !(em->id >= 0x10 && em->id < 0x21) || SceCheckEmAlive(em) != 1) {
+                continue;
+            }
+            switch (em->type) {
+            case 0x16: case 2: case 5: case 6: case 0xA: case 0xD:
+                continue;
+            }
+            if (em->flag & 0x10000000) {
+                continue;
+            }
+            dx = em->pos.x - pPL->pos.x;
+            dy = em->pos.y - pPL->pos.y;
+            dz = em->pos.z - pPL->pos.z;
+            d2 = dx * dx + dy * dy + dz * dz;
+            if (!(d2 > 3000.0f) || !(d2 > bestD)) {
+                continue;
+            }
+            if (offscreen == 1) {
+                GeoSphere sp;
+
+                sp.pos = em->pos;
+                sp.pos.y += 1000.0f;
+                sp.r = 1000.0f;
+                if (collision_sphere_hexahedron(&sp, (GeoHexahedron*) CameraViewFrustumPtr(&pG->Cam)) == 1) {
+                    continue;
+                }
+            }
+            bestD = d2;
+            best = em;
+        }
+        if (best == 0) {
+            break;
+        }
+        {
+            EmListData* l = GetListPtrFromEm(best);
+
+            if (l != 0) {
+                l->be_flag &= ~1;
+            }
+        }
+        OSReport("[r301-ps2] far delete id=%x keep=%d d2=%d\n", best->id, keep, (int) bestD);
+        EmMgr.destroy(best);
+        done++;
+    }
+    return done;
+}
+#define R301_FAR_DELETE(keep) r301ps2_farDelete((keep), 1)
 #endif
 
 static void r301ps2_setEmBowgun2()

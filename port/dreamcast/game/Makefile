@@ -381,11 +381,13 @@ $(OBJDIR)/mod/st3_0/src/st3/r300.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 ROUTE_MOVIE_GAME_CH3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o
 # PS2_ENEMY_ST3=<mask> (stage 3 lane, default 0: no effect; changes gameplay by design, PS2 USA = source of truth):
 # the PS2 room-code enemy gates of the island. Bit 0: r30f (setem < 6, the 0xF8 send < 7). Bit 1: r301 (the PS2
-# wave tasks: sends while < 9 / < 8 alive, room-save chaining, far deletes to 7 / 4). Bit 3: clamp the gates to cap 6.
+# wave tasks: sends while < 9 / < 8 alive, room-save chaining, far deletes to 7 / 4). Bit 3: clamp the gates to cap 6. Bit 4: r311 skip path
+# despawns Zealots 0xF0..0xF2 (PS2).
 PS2_ENEMY_ST3 ?= 0
 ifneq ($(PS2_ENEMY_ST3),0)
 $(OBJDIR)/mod/st3_1/src/st3/r30f.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2_ENEMY_ST3)
 $(OBJDIR)/mod/st3_0/src/st3/r301.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2_ENEMY_ST3)
+$(OBJDIR)/mod/st3_1/src/st3/r311.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2_ENEMY_ST3)
 endif
 # r30a calls EtcModel.cpp's setRoomEtcBreakDisp by its C name (as r200; ROUTE_CH23 sets the same export alias).
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_WORLD_STAGE_MODULES=1
