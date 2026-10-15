@@ -5,7 +5,13 @@ unsigned workspace_scratch_limit() {
     const unsigned limit=reserve<=workspace_bytes?workspace_bytes-reserve:0;
     return workspace_end<limit?workspace_end:limit;
 }
+#if RE4DC_ACTOR_NO_CLEAR
+// ACTOR_NO_CLEAR: the cache's own drop (prepare_frame's "one skin table at a time"): no Frame matches again and
+// no skin table pointer survives; a dropped Frame is fully reset (Frame{}) when it is reused as the victim.
+void owned_skin_invalidate_frames(){for(auto& f:frames){f.frame=~0U;f.skin_positions=f.skin_dirs=nullptr;f.skin_ready=f.dirs_ready=nullptr;}}
+#else
 void owned_skin_invalidate_frames(){for(auto& f:frames)f=Frame{};}
+#endif
 extern "C" int re4dc_actor_workspace_acquire(unsigned bytes,Re4dcActorWorkspaceLease* out) {
     if(!out || !bytes || bytes>UINT32_MAX-31)return 0;
     bytes=(bytes+31)&~31u;

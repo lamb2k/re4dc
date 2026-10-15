@@ -1797,6 +1797,19 @@ endif
 AVK_SFLAGS += -DRE4DC_ACTOR_MOVCA=1
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_MOVCA=1
 endif
+# ACTOR_NO_CLEAR=1 (lane memlay 2026-10-15; render only, default 0: nothing changes): repeated per-part clears on
+#              the actor path (MEMPROF, benchmark-r101 on 12.1: ~240 KB of memset per frame) are dropped where the
+#              cleared words are never read: lights_reset sets the fold's fields one by one (as MEMSET_LEAN, plus
+#              half_post), Lights::prepared is not default-initialised (assigned before pass_lights_exact reads it),
+#              re4dc_model_submit builds its Leon x0.5 / static "plain" copies only when they are used, and the
+#              Frame cache invalidation drops entries as prepare_frame does instead of rewriting four Frames.
+ACTOR_NO_CLEAR ?= 0
+ifneq ($(ACTOR_NO_CLEAR),0)
+ifneq ($(ACTOR_NO_CLEAR),1)
+$(error ACTOR_NO_CLEAR must be 0 or 1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/native_model.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_NO_CLEAR=1
+endif
 # MEM_MOVCA=1 (lane memlay 2026-10-15; default 0: nothing changes): memset / memcpy through link wraps
 #              (platform/memprof.cpp): every whole 32-byte line of a cached main-RAM (P1) destination is allocated
 #              with movca.l and then fully written, so it is not read from RAM first (the write-allocate fill);

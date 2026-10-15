@@ -673,12 +673,25 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     // textures. Records already halved are skipped: the owner's lit record (LEON_SOURCE_LIGHT marker
     // normal_matrix[3]) and every x0.5 record (marker normal_matrix[7], also on the owner's flat record), so a
     // deferred part re-submitted at the drain is not halved twice. normal_matrix[3]/[7] are unused translation words.
+#if defined(RE4DC_ACTOR_NO_CLEAR) && RE4DC_ACTOR_NO_CLEAR
+    // ACTOR_NO_CLEAR (game30.mk): the x0.5 copies are built only for a Leon 2x part (copy-constructed: the same
+    // words as default construction + assignment); every other part no longer default-initialises ~0.7 KB here.
+    alignas(Re4dcModelPart) unsigned char hr_view_mem[sizeof(Re4dcModelPart)];
+    alignas(re4dc::render::SourceLighting) unsigned char hr_lighting_mem[sizeof(re4dc::render::SourceLighting)];
+    if(p && p->lighting && p->lighting->normal_matrix[3]!=1.0e30f && p->lighting->normal_matrix[7]!=1.0e30f &&
+       re4dc_leon_hr_image(&p->image)){
+        auto* hr_lighting=::new(static_cast<void*>(hr_lighting_mem)) re4dc::render::SourceLighting(*p->lighting);
+        hr_lighting->tev_scale*=0.5f;hr_lighting->normal_matrix[7]=1.0e30f;
+        auto* hr_view=::new(static_cast<void*>(hr_view_mem)) Re4dcModelPart(*p);
+        hr_view->lighting=hr_lighting;p=hr_view;
+#else
     Re4dcModelPart hr_view;
     re4dc::render::SourceLighting hr_lighting;
     if(p && p->lighting && p->lighting->normal_matrix[3]!=1.0e30f && p->lighting->normal_matrix[7]!=1.0e30f &&
        re4dc_leon_hr_image(&p->image)){
         hr_view=*p;hr_lighting=*p->lighting;hr_lighting.tev_scale*=0.5f;hr_lighting.normal_matrix[7]=1.0e30f;
         hr_view.lighting=&hr_lighting;p=&hr_view;
+#endif
         if(leon_hr_parts++<4 || !(leon_hr_parts&1023U))
             re4dc_log("LEON_HR source part %ux%u fmt=%u x0.5 n=%u\n",p->image.width,p->image.height,p->image.format,leon_hr_parts);
     }
@@ -689,9 +702,15 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     if(p && re4dc_static_submit(p))return;
     // A fallback part leaves the static identity words behind: they differ per
     // object, and the translucent queue snapshots parts as word differences.
+#if defined(RE4DC_ACTOR_NO_CLEAR) && RE4DC_ACTOR_NO_CLEAR
+    alignas(Re4dcModelPart) unsigned char plain_mem[sizeof(Re4dcModelPart)];  // ACTOR_NO_CLEAR: built only when used
+    if(p && p->world){auto* plain=::new(static_cast<void*>(plain_mem)) Re4dcModelPart(*p);plain->serial=0;
+        plain->world=plain->view=nullptr;plain->source_key[0]=0;plain->source_key[1]=0xff;p=plain;}
+#else
     Re4dcModelPart plain;
     if(p && p->world){plain=*p;plain.serial=0;plain.world=plain.view=nullptr;
         plain.source_key[0]=0;plain.source_key[1]=0xff;p=&plain;}
+#endif
 #endif
 #if RE4DC_NATIVE_ACTOR
     // Non-scenery parts (actors, weapons, room SMD objects): dense per-info
