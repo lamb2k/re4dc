@@ -3847,14 +3847,14 @@ bool ps2_open(){
 #endif
 #if RE4DC_WORLD_VERT
     // WORLD_VERT (lane worldvert, render only): level N of the room's wholesale world reduction
-    // (tools/ps2_world_vert_ladder.py) is ps2-world.vN.re4mesh (+ ps2-world.vN.r4sg) beside the level-0 package; the
+    // (tools/ps2_world_vert_ladder.py) is ps2-wvN.re4mesh (+ ps2-wvN.r4sg; ISO9660 allows one dot) beside the level-0 package; the
     // R4PW sidecar and ids file are shared (same mesh / part / placement records). Memory neutral: the heap-4 block is
     // always sized by the level-0 file (one buffer the size of level 0; the sidecar sits at the same offset), and a level
     // file larger than level 0, or absent, falls back to level 0. ps2w.vert_loaded records what is resident.
     const unsigned l0size=fm!=FILEHND_INVALID?unsigned(fs_total(fm)):0U;
     ps2w.vert_loaded=0;
     if(world_vert_level && fm!=FILEHND_INVALID){
-        char vpath[48];snprintf(vpath,sizeof(vpath),"/cd/dc/native/r%03x/ps2-world.v%u.re4mesh",ps2w.room,world_vert_level);
+        char vpath[48];snprintf(vpath,sizeof(vpath),"/cd/dc/native/r%03x/ps2-wv%u.re4mesh",ps2w.room,world_vert_level);
         const file_t fv=fs_open(vpath,O_RDONLY);
         if(fv!=FILEHND_INVALID && unsigned(fs_total(fv))<=l0size && fs_total(fv)>0){fs_close(fm);fm=fv;ps2w.vert_loaded=world_vert_level;}
         else if(fv!=FILEHND_INVALID)fs_close(fv);
@@ -4035,7 +4035,7 @@ bool ps2_open(){
         const unsigned g0size=fg!=FILEHND_INVALID?unsigned(fs_total(fg)):0U;
         if(ps2w.vert_loaded && fg!=FILEHND_INVALID){
             fs_close(fg);
-            snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.v%u.r4sg",ps2w.room,ps2w.vert_loaded);
+            snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-wv%u.r4sg",ps2w.room,ps2w.vert_loaded);
             fg=fs_open(gpath,O_RDONLY);
             if(fg!=FILEHND_INVALID && unsigned(fs_total(fg))>g0size){fs_close(fg);fg=FILEHND_INVALID;}
         }
@@ -5016,7 +5016,7 @@ extern "C" unsigned re4dc_world_vert_level_set(unsigned level){
     for(unsigned pass=0;pass<2 && !got;++pass){
         const unsigned want=pass?0U:level;
         char path[48];
-        if(want)snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.v%u.re4mesh",ps2w.room,want);
+        if(want)snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-wv%u.re4mesh",ps2w.room,want);
         else snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
         const file_t f=fs_open(path,O_RDONLY);
         if(f==FILEHND_INVALID)continue;
@@ -5031,7 +5031,7 @@ extern "C" unsigned re4dc_world_vert_level_set(unsigned level){
     if(ps2w.sg_block){
         // the group block holds level 0's size (open); a level's records are the same size or smaller
         char gpath[48];
-        if(ps2w.vert_loaded)snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.v%u.r4sg",ps2w.room,ps2w.vert_loaded);
+        if(ps2w.vert_loaded)snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-wv%u.r4sg",ps2w.room,ps2w.vert_loaded);
         else snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
         const auto& mh=ps2w.package.header();
         const file_t fg=fs_open(gpath,O_RDONLY);

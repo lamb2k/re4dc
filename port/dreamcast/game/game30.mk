@@ -2744,7 +2744,7 @@ endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_LOD=1 -DRE4DC_WORLD_LOD_MM=$(WORLD_LOD_MM) -DRE4DC_WORLD_LOD_HYST_MM=$(WORLD_LOD_HYST_MM)
 endif
 # WORLD_VERT=1 (native_static.cpp, render only, default 0; lane worldvert 2026-10-15): wholesale world vertex levels.
-# tools/ps2_world_vert_ladder.py writes level N of a room's PS2 world as ps2-world.vN.re4mesh (+ .vN.r4sg) beside the
+# tools/ps2_world_vert_ladder.py writes level N of a room's PS2 world as ps2-wvN.re4mesh (+ ps2-wvN.r4sg) beside the
 # level-0 package (same R4PW sidecar / ids). WORLD_VERT_LEVEL (default 0 = the source package) picks the level at open;
 # re4dc_world_vert_level_set(n) swaps it in place at run time (bench rows). Memory neutral: heap-4 blocks are sized by
 # level 0. A missing or larger level file falls back to level 0. Collision is untouched (separate file).
