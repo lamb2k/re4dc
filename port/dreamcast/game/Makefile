@@ -387,7 +387,10 @@ $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 # r300's s00 (the island landing) is presented by its PS2 movie (src/st3/r300.cpp, ROUTE_MOVIES).
 $(OBJDIR)/mod/st3_0/src/st3/r300.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
-ROUTE_MOVIE_GAME_CH3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o
+# r316s00 / r329s00 (Ashley taken / the reunion) likewise (st3 lane 2026-10-15: their GC evds are not on disc 2).
+$(OBJDIR)/mod/st3_2/src/st3/r316.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r329.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+ROUTE_MOVIE_GAME_CH3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o $(OBJDIR)/mod/st3_2/src/st3/r316.o $(OBJDIR)/mod/st3_3/src/st3/r329.o
 # PS2_ENEMY_ST3=<mask> (stage 3 lane, default 0: no effect; changes gameplay by design, PS2 USA = source of truth):
 # the PS2 room-code enemy gates of the island. Bit 0: r30f (setem < 6, the 0xF8 send < 7). Bit 1: r301 (the PS2
 # wave tasks: sends while < 9 / < 8 alive, room-save chaining, far deletes to 7 / 4). Bit 3: clamp the gates to cap 6. Bit 2: r327 (the PS2 camp: first table, late task, appear
