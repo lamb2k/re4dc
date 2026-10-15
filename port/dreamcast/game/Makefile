@@ -351,6 +351,13 @@ $(OBJDIR)/platform/ps2_enemy_ch23.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH23=1 -
 $(OBJDIR)/platform/ps2_enemy_ch23.o: $(PS2_ENEMY_CH23_DIR)/ps2_enemy_ch23_data.inc
 endif
 endif
+# FOG_OFF_CLEAR=1 (castle lane 2026-10-15, default 0: no effect): while the source fog is off, load an all-clear PVR
+# fog table once (native_static.cpp re4dc_fog_frame), so table-fog actor packets are not drawn with a stale or start-up
+# table (warp into a fog-off castle room: Leon drawn flat grey). Render-only.
+FOG_OFF_CLEAR ?= 0
+ifneq ($(FOG_OFF_CLEAR),0)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_FOG_OFF_CLEAR=1
+endif
 # ROUTE_CH3=1 (stage 3 / GC Disc 2 first pass, default 0: no effect; needs ROUTE_CH21=1 ROUTE_OVL=1): the island
 # stage modules st3_0 (module 76: r300..r30c, r30e), st3_1 (87: r30d, r30f, r310..r312), st3_2 (88: r315..r31d) and
 # st3_3 (101: r320..r333) are linked resident, as st2_0 for ROUTE_CH23 (a stage REL stays linked across the rooms of
