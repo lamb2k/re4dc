@@ -1,0 +1,86 @@
+RE4DC (lane discread, 2026-10-15; LinkOrder console stops; test 14 KOS_DISC_FIX): a GD DMA read never returns with
+a DMA completion still to be signalled, and no DMA wait starts with a stale completion count (comment in the patch).
+Applied after kos-804b319-cdrom-hang-fixes.patch.
+
+--- a/kernel/arch/dreamcast/hardware/cdrom.c
++++ b/kernel/arch/dreamcast/hardware/cdrom.c
+@@ -13,6 +13,8 @@
+ 
+ #include <dc/asic.h>
+ #include <dc/cdrom.h>
++#include <arch/timer.h>
++#include <arch/irq.h>
+ #include <dc/g1ata.h>
+ #include <dc/memory.h>
+ #include <dc/syscalls.h>
+@@ -65,6 +67,38 @@
+ static bool dma_blocking = false;
+ static bool dma_auto_unlock = false;
+ static semaphore_t dma_done = SEM_INITIALIZER(0);
++
++/* RE4DC KOS_DMA_DONE_FIX (lane discread 10-15, LinkOrder console stops; part of KOS_DISC_FIX since test 14).
++   cdrom_read_sectors_dma_irq() returned at once when the BIOS already reported the DMA read completed after the
++   start poll, taking a dma_done count only if one was there at that moment. On a console the GD-DMA end interrupt
++   (or the vblank check) signals dma_done afterwards: that count was left over, and the NEXT DMA wait (a sector
++   read or a blocking stream request) returned as soon as its command started, before any of its data had landed.
++   A failed DMA read on that branch also left dma_in_progress set (later stream requests refused). Flycast lands a
++   DMA inside the syscall and raises its interrupt there, so the count was always taken.
++   Fix: no DMA starts with a count left over (drained: re4dc_cdrom_stale_done), and a DMA read returns only with the
++   GD-DMA engine idle (SB_GDST, 1 s bound) and nothing left to signal (an open completion is closed here:
++   re4dc_cdrom_early_done). Both counters are shown on the crash screen. */
++unsigned re4dc_cdrom_stale_done, re4dc_cdrom_early_done;
++static void re4dc_dma_drain(void) {
++    int old = irq_disable();
++    if(!dma_in_progress)
++        while(sem_count(&dma_done) > 0 && sem_trywait(&dma_done) == 0)
++            ++re4dc_cdrom_stale_done;
++    irq_restore(old);
++}
++static void re4dc_dma_settle(void) {
++    uint64_t t0 = timer_us_gettime64();
++    while((*(volatile uint32_t *)0xa05f7418 & 1) && timer_us_gettime64() - t0 < 1000000)
++        thd_pass();
++    int old = irq_disable();
++    if(dma_in_progress) {
++        dma_in_progress = false;
++        dma_blocking = false;
++        ++re4dc_cdrom_early_done;
++    }
++    irq_restore(old);
++    re4dc_dma_drain();
++}
+ static asic_evt_handler_entry_t old_dma_irq = {NULL, NULL};
+ static int vblank_hnd = -1;
+ 
+@@ -373,6 +407,7 @@
+ static int cdrom_read_sectors_dma_irq(cd_read_params_t *params) {
+ 
+     sem_wait_scoped(&_g1_ata_sem);
++    re4dc_dma_drain();
+     cmd_hnd = cdrom_req_cmd(CD_CMD_DMAREAD, params);
+ 
+     if(cmd_hnd <= 0) {
+@@ -400,6 +435,7 @@
+             sem_wait(&dma_done);
+         }
+     }
++    re4dc_dma_settle();
+ 
+     cmd_hnd = 0;
+ 
+@@ -561,6 +597,7 @@
+     sem_wait(&_g1_ata_sem);
+ 
+     if(stream_dma) {
++        re4dc_dma_drain();
+         dma_in_progress = true;
+         dma_blocking = block;
+         dma_auto_unlock = !block;
+@@ -578,6 +615,7 @@
+             return ERR_OK;
+         }
+         sem_wait(&dma_done);
++        re4dc_dma_settle();
+     }
+     else {
+         rs = syscall_gdrom_pio_transfer(cmd_hnd, &params);

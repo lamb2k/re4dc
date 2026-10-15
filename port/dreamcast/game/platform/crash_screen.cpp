@@ -309,7 +309,7 @@ void show(const char* kind, const char* detail, bool wait_render)
     put_text(0, row++, "of this screen: github.com/lamb2k/re4dc/issues", 0xFFE0);
     snprintf(line, sizeof(line), "%s %s", kind, detail);
     put_text(0, row++, line, 0xF800);
-    snprintf(line, sizeof(line), "stage %08lx  ui frame %u", re4dc_stage, re4dc_ui_frame());
+    snprintf(line, sizeof(line), "stage %08lx  ui frame %u" RE4DC_GD_FMT, re4dc_stage, re4dc_ui_frame() RE4DC_GD_ARGS);
     put_text(0, row++, line, 0xFFFF);
 #if RE4DC_CRASH_FAULT_DETAIL
     fault_detail(row);
