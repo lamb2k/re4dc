@@ -159,7 +159,7 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",    "/cd/dc/bench2
 // The DETAIL row (coordinator 10-15: the user's chosen character detail): Leon at leonlod level 4 (u70) and the
 // Ganados at level 2 (g70), together.
 #ifndef RE4DC_POC_LEON_ON
-#define RE4DC_POC_LEON_ON 4       // leonlod level 4 = u70 (uniform 70 %)
+#define RE4DC_POC_LEON_ON 0       // user 10-15 (late): Leon stays at the full model (level 0); no Leon LOD row
 #endif
 #ifndef RE4DC_POC_GLOD_ON
 #define RE4DC_POC_GLOD_ON 2       // ganado level 2 = g70
@@ -181,8 +181,8 @@ const PocLayer kPocLayer[] = {
     {0x002, RE4DC_POC_HAS_WLOD == 2 ? "WLODPROBE" : "WORLD LOD", RE4DC_POC_HAS_WLOD == 2 ? "WORLD_LOD_PROBE" : "WORLD_LOD",
      RE4DC_POC_HAS_WLOD == 2 ? "FAR SCENERY: HALF THE FAR PIECES LEFT OUT (STAND-IN)"
                              : "FAR SCENERY: SIMPLER MESHES BEYOND 12 M (PIXEL-ERROR FLOOR)", RE4DC_POC_HAS_WLOD, 1},
-    {0x004, "DETAIL", "LEON_LOD+GANADO_LOD", "LEON AND GANADOS AT 70 % TRIANGLES (LEON U70, GANADO G70)",
-     RE4DC_POC_HAS_LEON | RE4DC_POC_HAS_GLOD, 1},
+    {0x004, "DETAIL", "GANADO_LOD", "GANADOS AT 70 % TRIANGLES (G70); LEON KEEPS HIS FULL MODEL",
+     RE4DC_POC_HAS_GLOD, 1},
     {0x020, "FLATLIGHT", "CROWD_FLAT_LIGHT", "CROWD LIGHTING: ONE FLAT LIGHT (APPROXIMATION)", RE4DC_POC_HAS_FLATLIGHT, 1},
     {0x080, "SKIN ZAM", "SKIN_SH4ZAM", "SKINNING: BONE BLEND IN XMTRX, SH4ZAM (RENDER ONLY)", RE4DC_POC_HAS_SKINZ, 1},
     {0x008, "LOGIC EX", "LOGIC_WASTE_MASK", "GAME LOGIC: REPEATED ANSWERS REUSED (EXACT)", RE4DC_POC_HAS_LOGIC, 2},

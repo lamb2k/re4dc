@@ -24,7 +24,7 @@ LAYERS = [  # bit, row name, knobs (any on = built), kind (0 exact render, 1 loo
     (0x008, 'LOGIC EX', ['LOGIC_WASTE'], 2),
     (0x080, 'SKIN ZAM*', ['SKIN_SH4ZAM'], 1),
     (0x002, 'WORLD LOD*', ['WORLD_LOD', 'WORLD_LOD_PROBE'], 1),
-    (0x004, 'DETAIL*', ['LEON_LOD', 'GANADO_LOD'], 1),
+    (0x004, 'DETAIL*', ['GANADO_LOD'], 1),   # Ganado g70 only; Leon full (user 10-15)
     (0x020, 'FLATLIGHT*', ['CROWD_FLAT_LIGHT'], 1),
     (0x010, 'LOGIC APX*', ['LOGIC_WASTE'], 4),   # logic approximation (gameplay-equivalence gated)
 ]
