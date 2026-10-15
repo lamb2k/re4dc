@@ -4,6 +4,8 @@
 #   $P/RE4DC-Benchmark-NOT-THE-GAME-<sha>-GDEMU.zip  (README.txt first, gdemu/ four files, SHA256SUMS.txt)
 #   $P/gdemu/, $P/README.txt, $P/SHA256SUMS.txt (zip sha256 + file sha256s)
 # Env: K (work dir), P (Windows output, default C:\Game Dev\Emulators\RE4DC-Benchmark-v2),
+#      README_SRC (README template, default README-package.txt; POC101: ../poc101/README-poc101.txt), ZPREFIX (zip name
+#      prefix, default RE4DC-Benchmark-NOT-THE-GAME),
 #      GATED (required): the track03.bin sha256 of the image the gates ran (the r1 evidence disc); the zip is made only
 #      when the staged image is that image (coordinator 2026-10-15, after a package was zipped from a re-mastered dev disc).
 set -euo pipefail
@@ -16,13 +18,13 @@ P=${P:-"/mnt/c/Game Dev/Emulators/RE4DC-Benchmark-v2"}
 [ $(wc -l < $O/stack.txt) -le 1 ] || { echo "out-$L was built from a dirty tree"; cat $O/stack.txt; exit 1; }
 SHA=$(head -1 $O/stack.txt | cut -c1-8)
 grep -qx "BENCH_ID=$SHA" <(tr ' ' '\n' < $O/resolved-knobs.txt) || { echo "BENCH_ID is not the source sha $SHA"; exit 1; }
-Z=RE4DC-Benchmark-NOT-THE-GAME-$SHA-GDEMU.zip
+Z=${ZPREFIX:-RE4DC-Benchmark-NOT-THE-GAME}-$SHA-GDEMU.zip
 GATED=${GATED:?GATED=<track03 sha256 of the gated image>}
 T3=$(cd $D/gdemu && sha256sum track03.bin | cut -c1-64)
 [ "$T3" = "$GATED" ] || { echo "staged track03 $T3 is not the gated image $GATED" >&2; exit 1; }
 echo "staged image = gated image: track03 $T3"
 S=$K/zip-$L; rm -rf $S; mkdir -p $S
-python3 - "$here/README-package.txt" "$D/fix" "$SHA" > $S/README.txt <<'PY'
+python3 - "${README_SRC:-$here/README-package.txt}" "$D/fix" "$SHA" > $S/README.txt <<'PY'
 import sys, os, re
 src, fix, sha = sys.argv[1:4]
 rows = []
@@ -54,7 +56,7 @@ print('zip ok', zf.namelist())
 PY
 grep -n -- '–\|—' $S/README.txt && { echo "long dash in README"; exit 1; } || true
 mkdir -p "$P"
-rm -rf "$P/gdemu" "$P"/RE4DC-Benchmark-NOT-THE-GAME-*-GDEMU.zip
+rm -rf "$P/gdemu" "$P"/${ZPREFIX:-RE4DC-Benchmark-NOT-THE-GAME}-*-GDEMU.zip
 cp $S/$Z $S/README.txt "$P/"
 mkdir -p "$P/gdemu"; cp $D/gdemu/{disc.gdi,track01.bin,track02.raw,track03.bin} "$P/gdemu/"
 (cd $S && sha256sum $Z && cat SHA256SUMS.txt) > "$P/SHA256SUMS.txt"
