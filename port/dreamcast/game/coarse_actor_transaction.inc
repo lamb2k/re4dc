@@ -633,6 +633,9 @@ extern "C" int re4dc_crowd_far(cModel* m) {
 #if RE4DC_LEON_NATIVE_PIPE
 #include "coarse_actor_leon_pipe.inc"  // LEON_NATIVE_PIPE (native_model_registry.mk): Leon's lean owner passes
 #endif
+#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+extern "C" void re4dc_ganado_lod_retired();  // coarse_ganado_lod.inc (coarse_ganado_cast.cpp)
+#endif
 extern "C" void re4dc_actor_transaction_retire() {
     // Revoke exported owners without traversing old primitive storage. This is
     // called BEFORE FrameLedger retirement and SetPrimBuffPtr storage reuse.
@@ -650,6 +653,12 @@ extern "C" void re4dc_actor_transaction_retire() {
     re4dc_actor_model_frame_retire(); // next primitive owner must reacquire its workspace
     actor_palette_arena.retire();
     re4dc_actor_texture_retire_all();
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+    leon_lod::retired();          // LEON_LOD: a level asked for since the last load loads here (nothing owned is live)
+#endif
+#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+    re4dc_ganado_lod_retired();   // GANADO_LOD: the same for the cast Ganados (coarse_ganado_lod.inc)
+#endif
 }
 #if RE4DC_CROWD_INVIS_SKIP
 // CROWD_INVIS_SKIP (crowd.mk): each Ganado's path in this Render, for the next Trans's decision (owner admission:

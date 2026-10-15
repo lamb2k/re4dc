@@ -4,8 +4,10 @@
 // image: the image header (lod_pack.py derive) keeps every other Leon table and leaves those rows null, and one buffer
 // the size of the largest rung (arm A, today's Leon) holds the rung drawn now. The hands stay LEON_HAND_PACK's.
 //   - Level: re4dc_leon_lod_set(n) (the package's level order: 0 = arm A, the boot default LEON_LOD_LEVEL), applied at
-//     the next room enter (re4dc_leon_lod_room_enter, ui_bridge.cpp: a load point, ~0.1 MB read); if no rung is
-//     loaded, Leon's owner plan tries once more (up to 3 failures). The skeleton, animation, game state and the hands are untouched: only the drawn mesh changes.
+//     the next room enter (re4dc_leon_lod_room_enter, ui_bridge.cpp: a load point, ~0.1 MB read) or, mid-room (the
+//     poc101 frozen sweep), at the end of the next actor retirement (coarse_actor_transaction.inc, once a tick, when no
+//     owned record is live: one disc read hitch); if no rung is loaded, Leon's owner plan tries once more (up to 3
+//     failures). The skeleton, animation, game state and the hands are untouched: only the drawn mesh changes.
 //   - A load re-qualifies the six role chunks and the hair run (their immutable IDs are reset, as LEON_HAND_PACK does
 //     for a hand slot) and forces the FTRV palette program to be rebuilt from the new weights (skin_state).
 //   - A failed read leaves the rows null: the owner plans decline (Leon falls back to the source path, which
@@ -28,7 +30,7 @@ constexpr unsigned kMaxLevels=8,kRoles[6]={0,1,2,3,4,7};
 alignas(32) unsigned char buf[leon_lod_caps::buffer_bytes];
 unsigned nlevels,file_bytes;
 int dir_state;  // 0 not read, 1 ready, 2 failed
-unsigned level_req=RE4DC_LEON_LOD_LEVEL,level_cur=~0u,loads,fails,generation;
+unsigned level_req=RE4DC_LEON_LOD_LEVEL,level_cur=~0u,level_tried=~0u,loads,fails,generation;
 re4dc_source::ChunkInput input[8];
 unsigned plan_palette_bytes,plan_workspace_bytes,pl08_plan_palette_bytes,pl08_plan_workspace_bytes;
 unsigned hair_palettes=leon_hair_runs::boot_palette_count;
@@ -114,7 +116,15 @@ extern "C" unsigned re4dc_leon_lod_level() {return leon_lod::level_cur;}
 extern "C" void re4dc_leon_lod_room_enter() {
     using namespace leon_lod;
     if(level_cur==level_req)return;   // the first room enter loads the boot level; ready() retries a failed load
-    if(owned_live())re4dc_actor_transaction_retire();
+    if(owned_live())re4dc_actor_transaction_retire();   // (its retired() hook may already load the level)
+    if(level_cur==level_req)return;
     fails=0;
     load(level_req);
 }
+// coarse_actor_transaction.inc re4dc_actor_transaction_retire, after every owned record is revoked: a level change
+// asked for since the last load (once per request; the boot level loads at first use).
+namespace leon_lod { void retired() {
+    if(level_cur==~0u || level_req==level_cur || level_tried==level_req)return;
+    level_tried=level_req;fails=0;
+    if(load(level_req))level_tried=~0u;
+} }

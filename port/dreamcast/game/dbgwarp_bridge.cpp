@@ -106,9 +106,12 @@ void re4dc_ps2fx_set(unsigned flags);  // esp_sub.cpp (effects30.mk EFFECT_PS2_T
 }
 #if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
 extern "C" void re4dc_charbake_set(unsigned variant);  // coarse_actor.cpp (charbake.mk CHARBAKE_TOGGLE)
+#endif
 #if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
 extern "C" void re4dc_leon_lod_set(unsigned level);  // coarse_actor_leon_lod.inc (ps2leon.mk LEON_LOD)
 #endif
+#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+extern "C" void re4dc_ganado_lod_set(unsigned level);  // coarse_ganado_lod.inc (ps2leon.mk GANADO_LOD)
 #endif
 
 namespace {
@@ -168,6 +171,10 @@ struct Warp {
     u32 census[6];
     bool census_done[6];
     unsigned n_census;
+    // lodat <room frame> <leon level|-> <ganado level|-> (up to 8; leonlod): a LEON_LOD / GANADO_LOD level change in the
+    // first room, applied by the game at its next actor retirement (the poc101 sweep's mid-room path).
+    struct LodAt { u32 frame; int leon, ganado; bool done; } lodat[8];
+    unsigned n_lodat;
 #if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
     struct CharbakeAt { u32 frame; u8 variant; bool done; } charbake_at[8];  // charbake <variant> <room frame>
     unsigned n_charbake_at;
@@ -401,6 +408,9 @@ void load()
         } else if (!strcmp(k, "lookstep") && n >= 2 && wp.n_lookstep < 16) {
             wp.lookstep[wp.n_lookstep++] = {num(tok[1]), false};   // LOOK_TOGGLE: next preset at a room frame
 #endif
+        } else if (!strcmp(k, "lodat") && n >= 4 && wp.n_lodat < 8) {
+            wp.lodat[wp.n_lodat++] = {num(tok[1]), tok[2][0] == '-' ? -1 : (int) num(tok[2]),
+                                      tok[3][0] == '-' ? -1 : (int) num(tok[3]), false};
         } else if (!strcmp(k, "still") && n >= 3 && wp.n_still < 8) {
             wp.still_tick[wp.n_still] = num(tok[1]);
             wp.still_ms[wp.n_still++] = num(tok[2]);
@@ -431,6 +441,12 @@ void load()
             // ps2leon.mk LEON_LOD: Leon's mesh level (package order), applied at the next room enter / first draw
             re4dc_leon_lod_set(num(tok[1]));
             re4dc_log("warp: leonlod %u\n", num(tok[1]));
+#endif
+#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+        } else if (!strcmp(k, "glod") && n >= 2) {
+            // ps2leon.mk GANADO_LOD: the cast Ganados' mesh level (package order), applied at the first draw / next retire
+            re4dc_ganado_lod_set(num(tok[1]));
+            re4dc_log("warp: glod %u\n", num(tok[1]));
 #endif
 #if defined(RE4DC_KOS_SQUEEZE) && RE4DC_KOS_SQUEEZE
         } else if (!strcmp(k, "squeeze")) {
@@ -921,6 +937,18 @@ void re4dc_warp_poll(void)
             wp.census_done[i] = true;
             warp_heap4_census((unsigned) wp.room_frames);
         }
+    }
+    for (unsigned i = 0; i < wp.n_lodat; ++i) {
+        Warp::LodAt& c = wp.lodat[i];
+        if (c.done || wp.rooms != 1 || wp.room_frames < c.frame) continue;
+        c.done = true;
+        re4dc_log("warp: lodat leon %d ganado %d at room frame %u\n", c.leon, c.ganado, (unsigned) wp.room_frames);
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+        if (c.leon >= 0) re4dc_leon_lod_set((unsigned) c.leon);
+#endif
+#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+        if (c.ganado >= 0) re4dc_ganado_lod_set((unsigned) c.ganado);
+#endif
     }
 #if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
     for (unsigned i = 0; i < wp.n_charbake_at; ++i) {

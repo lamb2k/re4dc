@@ -76,6 +76,13 @@ extern "C" re4dc_source::BlobError re4dc_actor_immutable_chunk_proof(
     if(entry.error==BlobError::None)output=entry.proof;
     return entry.error;
 }
+#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+// GANADO_LOD (coarse_ganado_lod.inc): a level load rebinds the body / head IDs to the new bytes; called only from the
+// actor retirement (no owned record holds a proof) or before any owner plan.
+extern "C" void re4dc_actor_immutable_chunk_reset(unsigned asset_id) {
+    if(asset_id && asset_id<=RE4DC_IMMUTABLE_CHUNK_COUNT)actor_immutable_chunks[asset_id-1]={};
+}
+#endif
 #if RE4DC_ACTOR_PL08_PACK
 namespace {
 // ACTOR_PL08_PACK: the three pl08 IDs belong to one published costume package (coarse_actor_pl08_pack.inc). Every

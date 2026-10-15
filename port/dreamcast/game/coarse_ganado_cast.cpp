@@ -13,7 +13,13 @@
 #include "global.h"
 #include "model.h"
 #include "native_actor.hpp"
+#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+// GANADO_LOD (ps2leon.mk): the bundle header without the body / head arrays (glod_pack.py derive, a build output);
+// coarse_ganado_lod.inc points those rows at the level loaded from dc/native/ganado/ganado_lod.re4gl.
+#include "ganado_cast_runtime_lod.h"
+#else
 #include "ganado_cast_runtime.h" // private generated bundle, outside the repository
+#endif
 #include "actor_ganado_ps2_stump.h"
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
 #include "ganado_ps2_stump_runtime.h" // private ps2_ganado_stump.py export
@@ -701,10 +707,20 @@ extern "C" void re4dc_charbake_ganado_set(unsigned variant){
 }
 #endif
 
+#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+#if RE4DC_CROWD_FAR || !RE4DC_COARSE_SKIN_FTRV
+#error GANADO_LOD needs COARSE_SKIN_FTRV and no CROWD_FAR tier
+#endif
+#include "coarse_ganado_lod.inc" // GANADO_LOD: the cast Ganados' body / head level from the disc package
+#define RE4DC_GANADO_LOD_READY() ganado_lod::ready()
+#else
+#define RE4DC_GANADO_LOD_READY() true
+#endif
 // Called with coarse store queues closed. Opaque submissions complete here;
 // none borrow the shared palette after the next info overwrites it.
 extern "C" int re4dc_coarse_ganado(cModel* m) {
     ++frame_candidates;
+    if(!RE4DC_GANADO_LOD_READY())return 0;  // GANADO_LOD: no level loaded (the source path draws)
     if(mesh_limit>=0 && frame_meshes>=unsigned(mesh_limit))return stress_layout?1:0;
     ++attempts;
 #if RE4DC_ACTOR_EARLY_COARSE

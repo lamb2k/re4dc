@@ -1031,6 +1031,7 @@ extern "C" int re4dc_actor_plan_ganado(cModel* m,Re4dcActorPlan* out) {
 #else
     if(!out || !owner_ganado_bind(m))return 0;
 #endif
+    if(!RE4DC_GANADO_LOD_READY())return 0;  // GANADO_LOD: no level loaded (the source path draws)
     Re4dcActorPlan p{};const unsigned a=bound->appearance,t=gc::appearance_texture[a];
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
     const bool stump=owner_ps2_stump_selected();
@@ -1038,9 +1039,17 @@ extern "C" int re4dc_actor_plan_ganado(cModel* m,Re4dcActorPlan* out) {
 #endif
     p.count=owner_info_count[owner_current_slot];p.appearance=a;p.image=image_of(t);p.crc=RE4DC_GC_KEYS[t].crc;p.fnv=RE4DC_GC_KEYS[t].fnv;p.palettes=owner_ganado_palettes;
 #define RE4DC_GANADO_ROLE(app,role,prefix) re4dc_actor::plan_chunk(p,role,bound->infos[role],gc::chunks[app][role],RE4DC_OWNER_INPUT(ganadocast,prefix,gc::chunks[app][role],34))
+#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+// GANADO_LOD: the body / head inputs are the loaded level's (coarse_ganado_lod.inc); the hands stay the image's.
+#define RE4DC_GANADO_LOD_ROLE(app,role) re4dc_actor::plan_chunk(p,role,bound->infos[role],gc::chunks[app][role],ganado_lod::input[app][role])
+#define RE4DC_GANADO_APP(app) \
+    case app: RE4DC_GANADO_LOD_ROLE(app,0);RE4DC_GANADO_LOD_ROLE(app,1); \
+              RE4DC_GANADO_ROLE(app,2,a##app##_i2);RE4DC_GANADO_ROLE(app,3,a##app##_i3);break
+#else
 #define RE4DC_GANADO_APP(app) \
     case app: RE4DC_GANADO_ROLE(app,0,a##app##_i0);RE4DC_GANADO_ROLE(app,1,a##app##_i1); \
               RE4DC_GANADO_ROLE(app,2,a##app##_i2);RE4DC_GANADO_ROLE(app,3,a##app##_i3);break
+#endif
     owner_plan_app=a;
 #if RE4DC_CROWD_FAR
     if(
