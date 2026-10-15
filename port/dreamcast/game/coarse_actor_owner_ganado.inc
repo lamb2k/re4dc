@@ -531,8 +531,8 @@ bool invis_owner(cModel* m, const InvisRec& r) {
     for (unsigned i = 0; i < 4; ++i) {
         if (!visible(r.role[i])) continue;
         Mtx pm;
-        PSMTXConcat(m->pParts->mat, r.role[i]->mat, pm);
-        PSMTXConcat(pG->Cam.v_mat, pm, mv[i]);
+        RE4DC_RENDER_MTXConcat(m->pParts->mat, r.role[i]->mat, pm);
+        RE4DC_RENDER_MTXConcat(pG->Cam.v_mat, pm, mv[i]);
         vis |= 1U << i;
     }
     if (!vis) return true;  // re4dc_crowd_offscreen: no visible chunk is "all culled"

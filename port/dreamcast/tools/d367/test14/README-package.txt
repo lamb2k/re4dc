@@ -10,8 +10,7 @@ test 13; test 14 makes the game read the disc less and do less work per frame.
 
 New in test 14:
 * The village (r101) keeps all of its textures in graphics memory: they are
-  loaded when the room starts, and the radio call no longer makes the
-  on-screen display reload its pictures from the disc afterwards.
+  loaded when the room starts.
 * The farm after the village (r103) reads the disc far less during play:
   the villagers' animations stay in memory instead of being read again, and
   the room's textures are loaded when it starts.
@@ -20,6 +19,9 @@ New in test 14:
   library are fixed. This may help the "stops while loading" reports.
 * A few parts of each frame are quicker (fewer repeated settings and
   clears); the picture is the same.
+* The drawing maths uses the Dreamcast CPU's own matrix instructions
+  (SH4ZAM). The picture can differ from test 13 by a pixel here and there;
+  the game itself plays the same.
 
 Known issue from test 12, unchanged: the cutscene at the r100 cliff (after the
 first house) is skipped; the game goes on normally after it.

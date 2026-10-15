@@ -21,7 +21,7 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 WTREE=${TREE:-$(MSYS_NO_PATHCONV=1 wsl -d Ubuntu-24.04 -- wslpath -u "$(cygpath -w "$HERE/../../../../..")" 2>/dev/null)}
 case "$WTREE" in /root/*|/home/*|/mnt/*) ;; *) echo "set TREE=<WSL path of the checkout> ($WTREE)"; exit 1 ;; esac
 GALLERY=${GALLERY:-"/c/Game Dev/Emulators/re4-assets-private/look-gallery-20261010"}
-EV=${EV:-/d/Flycast-Evidence/re4-dreamcast/look-gallery}
+EV=${EV:-/c/Flycast-Evidence/re4-dreamcast/look-gallery}   # new evidence on C: (user 10-15)
 H="/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/continuation-20260927/playability-r11-r1"
 HW="/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/continuation-20260927/playability-r11-r1"
 WL=/root/probe/look-gallery/$L
