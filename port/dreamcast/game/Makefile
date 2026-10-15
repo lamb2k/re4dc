@@ -131,6 +131,28 @@ $(error LAKE_ZBIAS must be 0 or a decimal between 0.9 and 1.1 (e.g. 1.001))
 endif
 $(OBJDIR)/platform/native_lake.o: PLATFORM_CPPFLAGS += -DRE4DC_LAKE_ZBIAS=$(LAKE_ZBIAS)f
 endif
+# PS2_CH1_ENEMY=1 (lane alivecap 2026-10-15, user 10-15 "the PS2 logic holistically for enemy spawns in chapter 1, with
+#   our game cutting out more when it hits our threshold"; CHANGES GAMEPLAY by design; default 0 = off): one umbrella
+#   for every PS2 enemy-spawn rule of the stage 1 route (1-1 .. 2-1: r100-r10e, r117-r119, r11a, r11b; table in
+#   C:\Game Dev\Emulators\ALIVECAP-20261015.md) plus the cap on top. It forces PS2_ENEMY_RULES=1 (list start bits:
+#   r101 villagers, r103 animals, r107 fish + Ganados, r10a snakes; r101 waves < 5 / villagers < 9; r107 areas 6/7/8),
+#   ORs PS2_ENEMY_ROOMS with 0x33f (0x01 r100 trap, 0x02 r101 s21 / dog, 0x04 r104, 0x08 r108 bell rows, 0x10 r11a,
+#   0x20 r11b, 0x100 r101 area-15 trio, 0x200 r118 0x7D), sets ALIVE_CAP=6 when not given (r101 through
+#   R101_ALIVE_CAP, the same N) and ALIVE_CAP_PARK=1 (more than N alive anyway: the farthest off-screen Ganado is
+#   parked and re-queued, never deleted). PS2 gates stricter than the cap (r101 waves < 5, r111 < 5, r113 / r118 < 6)
+#   stay as they are. Chapter 2-2 / 2-3 bits (0x40 r11c, 0x80 r11d) are not part of it.
+PS2_CH1_ENEMY ?= 0
+ifneq ($(PS2_CH1_ENEMY),0)
+ifneq ($(PS2_CH1_ENEMY),1)
+$(error PS2_CH1_ENEMY must be 0 or 1)
+endif
+override PS2_ENEMY_RULES := 1
+override PS2_ENEMY_ROOMS := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_ROOMS),0) | 0x33f )))
+ifeq ($(or $(ALIVE_CAP),0),0)
+override ALIVE_CAP := 6
+endif
+override ALIVE_CAP_PARK := 1
+endif
 # PS2_ENEMY_RULES=1 (test 9 lane PS2EN, default 0; changes gameplay by design): the PS2 USA enemy rules of the
 # chapter 1 rooms. Enemy list emleon00 gets the PS2 start-alive bits / flags (stage.cpp, at list read); r101 sends
 # its reset waves when fewer than 5 Ganados are alive (GameCube: after 5 / 10 kills) and holds two villagers back
@@ -182,6 +204,11 @@ endif
 #   order, queued sends and villager rule; the generic hold stands aside there); without the bit the generic hold
 #   runs in r101 too. Setting R101_ALIVE_CAP to another value as well is an error.
 # ALIVE_CAP_LOG=1 (diagnostic, default 0): "alivecap:" lines (holds, releases, destroys).
+# ALIVE_CAP_PARK=1 (default 0; set by PS2_CH1_ENEMY): when more than N are alive anyway (sends kept for callers that
+#   use the returned enemy, event Ganados), the farthest off-screen unhurt Ganado in its plain AI routine is parked:
+#   destroyed and re-queued in the hold (list entry alive, not set), so it still counts as alive and comes back below
+#   the cap; no kill or death link. Not in rooms whose code holds pointers of its sends (r101 r104 r10a r10c r10f
+#   r11c r11d).
 ALIVE_CAP ?= 0
 ALIVE_CAP_LOG ?= 0
 ifneq ($(ALIVE_CAP),0)
@@ -193,6 +220,9 @@ ifeq ($(ALIVE_CAP_R101),1)
 R101_ALIVE_CAP := $(ALIVE_CAP)
 endif
 $(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/sce_com.o $(OBJDIR)/src/game/sce_sys.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP=$(ALIVE_CAP) -DRE4DC_ALIVE_CAP_R101=$(ALIVE_CAP_R101) -DRE4DC_ALIVE_CAP_LOG=$(ALIVE_CAP_LOG)
+ifneq ($(or $(ALIVE_CAP_PARK),0),0)
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_PARK=1
+endif
 endif
 # PS2_ENEMY_CASTLE=<mask> (lane castle 2026-10-15, default 0: no effect; needs PS2_ENEMY_RULES=1; changes gameplay by
 # design): PS2 USA room-code enemy rules for the castle (st2_*.rel, Normal mode, each read from the PS2 disassembly;

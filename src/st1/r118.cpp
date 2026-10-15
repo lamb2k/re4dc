@@ -59,15 +59,13 @@ static void r118_ThunderMove();
 // puzzle on dials 0x31/0x32/0x33 with message 2.
 #if defined(RE4DC_PS2_ENEMY_ROOMS) && (RE4DC_PS2_ENEMY_ROOMS & 0x200)
 // PS2_ENEMY_ROOMS bit 0x200 (lane alivecap 2026-10-15; PS2-ENEMY-CODE-DIFF-20261015.md item 9): PS2 R118Init (st1_3
-// 0xd8b0) sends 0x79..0x7F without 0x7D; R118Main sends it later. The GameCube AEV lacks the PS2 area.
+// 0xd8b0) sends 0x79..0x7F without 0x7D; R118Main sends it later. The GameCube AEV lacks the PS2 areas 0x12 / 0x13.
 #include "area.h"
 #include "dbg_tool.h"
 #include "r118_ps2_area.h"
-#ifndef R118_PS2_AREA
-#error PS2_ENEMY_ROOMS bit 0x200 needs the PS2 r118 AEV area quad (R118_PS2_AREA, from the ps2code lane)
-#endif
 #define R118_PS2_HOLD 1
-static AreaData r118Ps2Area = R118_PS2_AREA;
+static AreaData r118Ps2AreaA = R118_PS2_AREA_A;   // PS2 AEV 0x12
+static AreaData r118Ps2AreaB = R118_PS2_AREA_B;   // PS2 AEV 0x13
 #else
 #define R118_PS2_HOLD 0
 #endif
@@ -133,10 +131,10 @@ void R118Init()
 void R118Main()
 {
 #if R118_PS2_HOLD
-    // PS2 st1_3 task 0xe6b8 (as r113's B7): Leon in the PS2 area (Room_flg[2] bit 31 there, its quad tested here),
+    // PS2 st1_3 task 0xe6b8 (as r113's B7): Leon in a PS2 flag area (Room_flg[2] bit 31 there; quads tested here),
     // room save flag 2 clear, fewer than 6 Ganados alive: 0x7D is sent once and flag 2 set (set even if the send
     // fails, as the source). Only after the rescue (R118Init sends the others then).
-    if ((pG->Item_find_flg & 0x00100000) && RsfCheck(G_ROOM_ID, 2) == 0 && AreaHitCheck(&r118Ps2Area, &pPL->pos) &&
+    if ((pG->Item_find_flg & 0x00100000) && RsfCheck(G_ROOM_ID, 2) == 0 && (AreaHitCheck(&r118Ps2AreaA, &pPL->pos) || AreaHitCheck(&r118Ps2AreaB, &pPL->pos)) &&
         SceCountEmAlive(0x10, 0x20) < 6) {
         EmSetFromList2(0x7D, 1);
         RsfSet(G_ROOM_ID, 2);

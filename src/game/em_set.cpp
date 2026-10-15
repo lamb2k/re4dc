@@ -179,6 +179,13 @@ int checkListId(int no)
 #ifndef RE4DC_ALIVE_CAP_LOG
 #define RE4DC_ALIVE_CAP_LOG 0
 #endif
+#ifndef RE4DC_ALIVE_CAP_PARK
+#define RE4DC_ALIVE_CAP_PARK 0
+#endif
+#if RE4DC_ALIVE_CAP_PARK
+#include "camera.h"
+#include "geometry.h"
+#endif
 extern "C" void OSReport(const char* fmt, ...);
 static u8 aliveCapHeld[64];
 static u8 aliveCapSent[64];   // 1: a deferred room-code send (its list alive bit is the caller's business)
@@ -317,6 +324,93 @@ extern "C" void re4dc_aliveCapDestroy(int lo, int hi)
     aliveCapN = n;
 }
 
+#if RE4DC_ALIVE_CAP_PARK
+// ALIVE_CAP_PARK=1 (PS2_CH1_ENEMY): when more than N are alive anyway (sends kept for their callers, event
+// Ganados), the farthest off-screen one is parked as the PS2 EmFarDelete picks (3D d2 > 3000, sphere y+1000 r1000
+// outside the view, not types 2/5/6/0xA/0xD/0x16, not flag 0x10000000) - but re-queued instead of deleted: its list
+// entry goes back to "alive, not set" and into the hold, so it counts as alive (SceCountEmAlive), is released again
+// below the cap and no kill / death link is recorded. Only an unhurt Ganado in its plain AI routine, created from a
+// list entry of this room, not a kept entry, and not in a room whose code holds enemy pointers of its sends (r101 has
+// its own cap; r104 / r10a / r10c / r10f / r11c / r11d wrappers or batches).
+static int aliveCapParkRoom()
+{
+    switch (pG->stage_no << 8 | pG->room_no) {
+    case 0x101: case 0x104: case 0x10A: case 0x10C: case 0x10F: case 0x11C: case 0x11D:
+        return 0;
+    }
+    return 1;
+}
+
+static void aliveCapPark(int live)
+{
+    static u32 last;
+    cEm* best = 0;
+    f32 bestD = 0.0f;
+    u32 i;
+
+    if (live <= RE4DC_ALIVE_CAP || !aliveCapRoom() || !aliveCapParkRoom() || (u32) (pG->Frame_cnt - last) < 30) {
+        return;
+    }
+    for (i = 0; i < EmMgr.nArray; i++) {
+        cEm* em = emSetWork(i);
+        f32 dx, dy, dz, d2;
+
+        if (!em || !aliveCapGanado(em->id) || !em->isAlive() || em->checkStatus(EM_STATUS_ACTIVE) == 0) {
+            continue;
+        }
+        switch (em->type) {
+        case 0x16: case 2: case 5: case 6: case 0xA: case 0xD:
+            continue;
+        }
+        if ((em->flag & 0x10000000) || em->r_no_0 != 1 || em->hp != em->hp_max || (em->dmg.m_Flag & 1)) {
+            continue;
+        }
+        const int no = em->emset_no;
+        if (no == 0xFF || aliveCapKeep(no)) {
+            continue;
+        }
+        EmListData* d = EM_LIST(no);
+        if (d->id != em->id || pG->stage_no != d->room >> 8 || pG->room_no != (d->room & 0xFF)) {
+            continue;
+        }
+        {
+            GeoSphere sph;
+
+            sph.pos = em->pos;
+            sph.pos.y += 1000.0f;
+            sph.r = 1000.0f;
+            if (collision_sphere_hexahedron(&sph, (GeoHexahedron*) CameraViewFrustumPtr(&pG->Cam))) {
+                continue;   // in view
+            }
+        }
+        dx = em->pos.x - pPL->pos.x;
+        dy = em->pos.y - pPL->pos.y;
+        dz = em->pos.z - pPL->pos.z;
+        d2 = dx * dx + dy * dy + dz * dz;
+        if (!(d2 > 3000.0f) || !(d2 > bestD)) {
+            continue;
+        }
+        bestD = d2;
+        best = em;
+    }
+    if (best == 0) {
+        return;
+    }
+    const int no = best->emset_no;
+    EmListData* d = EM_LIST(no);
+
+    last = pG->Frame_cnt;
+    d->be_flag = (u8) ((d->be_flag | 1) & ~2);   // alive in the list, not set: EmSetFromList2 can create it again
+    aliveCapPush(no, 0);
+    EmMgr.destroy(best);
+    aliveCapLast = pG->Frame_cnt;                 // the next release waits its 30 frames
+#if RE4DC_ALIVE_CAP_LOG
+    OSReport("alivecap: park 0x%02x room %03x frame %u live %d held %d\n", no, (unsigned) pG->room_id,
+             (unsigned) pG->Frame_cnt, live - 1, aliveCapN);
+#endif
+}
+#endif
+
 // Once per frame (ScenarioMove, busy = event / item / pause): one held Ganado in below the cap.
 extern "C" void re4dc_aliveCapMove(int busy)
 {
@@ -338,6 +432,11 @@ extern "C" void re4dc_aliveCapMove(int busy)
             OSReport("alivecap: peak %d room %03x frame %u held %d\n", live, (unsigned) pG->room_id,
                      (unsigned) pG->Frame_cnt, re4dc_aliveCapHeldCount(0x10, 0x20));
         }
+    }
+#endif
+#if RE4DC_ALIVE_CAP_PARK
+    if (!busy && pPL != 0) {
+        aliveCapPark(aliveCapLive());
     }
 #endif
     if (aliveCapN == 0 || busy || pPL == 0) {
