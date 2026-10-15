@@ -64,12 +64,12 @@ CODE        the numbers above in one line, with a check value at the end
 
 Results page 2: where the processor's time goes
 The Dreamcast's processor has built-in counters. This page uses them to
-split each drawn frame into parts and shows, for each part and scene:
-MS          milliseconds the processor spent in that part, per drawn frame
+split each picture into parts and shows, for each part and scene:
+MS          milliseconds the processor spent in that part, per picture
 ST%         the share of that time the processor stood still waiting for
             data from memory (data cache misses). A high number means that
             part is slowed down by memory, not by the amount of math.
-RD K, WR K  thousands of data cache misses per drawn frame, on reads and on
+RD K, WR K  thousands of data cache misses per picture, on reads and on
             writes
 The parts:
 LOGIC       the game itself: enemies, Leon, the camera, scripts
@@ -80,16 +80,25 @@ WORLD DRAW  sending the village or house scenery to the graphics chip
 OTHER       everything else: effects, fire, haze, text, sound and disc
             checks
 WAIT        the processor has nothing to do until the next frame
-TOTAL       all parts together (the time between two drawn frames); its
+TOTAL       all parts together (the time between two pictures); its
             ST% is for the working parts only
-Below the table one line per scene sums up the characters: how many
-milliseconds they take and how much of that is waiting for memory.
+"Per picture" means one drawn frame plus the game ticks the game ran
+without drawing before the next one (the game keeps 30 ticks a second and
+skips drawing when it falls behind).
+Below the table, per scene:
+- the characters: how many milliseconds they take and how much of that is
+  waiting for memory
+- DRAWN TICK: processor milliseconds of the tick that draws; then how many
+  skipped ticks come with each picture and the milliseconds of each
+- I-MISS: thousands of instruction cache misses per picture and the share
+  of time stalled on them; D-MISS: data cache misses (reads plus writes)
 CODE 2      the page 2 numbers in one line, with its own check value: for
             each scene the milliseconds of the six parts, the ST% of the
-            five working parts, and their read plus write misses in
-            thousands
-The counters take turns: each drawn frame counts one kind of event, so each
-number comes from about a quarter of the frames. On an emulator the counters
+            five working parts, their read plus write misses in
+            thousands, the drawn tick / skipped tick numbers and the
+            instruction cache numbers
+The counters take turns: each picture counts one kind of event, so each
+number comes from about a fifth of the frames. On an emulator the counters
 do not count; page 2 then says so and shows times only.
 
 Results page 3: what geometry costs

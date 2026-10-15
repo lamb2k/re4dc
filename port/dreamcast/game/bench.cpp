@@ -13,7 +13,8 @@
 // photo tells whether actor work is memory-bound. Counter 1 (PRFC0) stays KOS's cycle timer (perf_cntr_timer_ns) and
 // gives the time; counter 2 (PRFC1) counts one event per drawn-frame period (a drawn iteration and the skipped ones after
 // it, up to the next drawn iteration), in turn: D-cache miss pipeline freeze cycles (0x25), operand-cache read misses
-// (0x04), operand-cache write misses (0x05), I-cache miss freeze cycles (0x24). Each event's value is taken against the
+// (0x04), operand-cache write misses (0x05), I-cache miss freeze cycles (0x24), I-cache misses (0x08). The CPU work of
+// a picture is also split into its drawn tick and its skipped ticks (ms of each, skipped ticks per picture). Each event's value is taken against the
 // cycles of the same periods and parts (ratio), so a draw / skip pattern that lines up with the rotation cannot bias it.
 // Parts are marked by re4dc_bench_phase() in src/game/main.cpp (logic = TaskScheduler, wait = after DRAW REMAIN: vblank
 // and pace wait, swap), src/game/trans.cpp (actor prep = the objTrans / emTrans / source actor prepare and plan stage of
@@ -99,15 +100,18 @@ unsigned g_tick_seq;
 constexpr int kPh = 6;   // parts of the frame (re4dc_bench_phase numbers)
 constexpr int kWork = 5; // parts that are CPU work (not the wait)
 const char* const kPhName[kPh] = {"LOGIC", "ACTOR PREP", "ACTOR DRAW", "WORLD DRAW", "OTHER", "WAIT"};
-constexpr int kEv = 4;
-const unsigned kEvCode[kEv] = {0x25, 0x04, 0x05, 0x24};   // D-miss freeze cyc, OC read miss, OC write miss, I-miss freeze
-enum { EV_DSTALL, EV_RDMISS, EV_WRMISS, EV_ISTALL };
+constexpr int kEv = 5;
+// D-miss freeze cycles, OC read misses, OC write misses, I-miss freeze cycles, I-cache misses
+const unsigned kEvCode[kEv] = {0x25, 0x04, 0x05, 0x24, 0x08};
+enum { EV_DSTALL, EV_RDMISS, EV_WRMISS, EV_ISTALL, EV_IMISS };
 struct Pmc {
     unsigned periods;                     // drawn-frame periods measured
     unsigned long long cyc[kPh];          // cycles of every period, by part
     unsigned ev_periods[kEv];             // periods that counted event e
     unsigned long long ev[kEv][kPh];      // event e's count, by part
     unsigned long long ev_cyc[kEv][kPh];  // cycles of the periods that counted event e, by part
+    unsigned long long d_cyc, s_cyc;      // work cycles (no wait) of the drawn iterations / of the skipped ones
+    unsigned s_ticks;                     // skipped iterations
 };
 Pmc g_pmc[kScenes];
 bool g_pmc_hw;          // counter 2 counts here (the console; not Flycast)
@@ -116,6 +120,9 @@ int g_ph = 4, g_ev_i;
 struct Pmc* g_period_dst;   // where the running drawn-frame period is counted (nullptr: nowhere)
 bool g_period_live;
 unsigned long long g_c0, g_e0, g_pc[kPh], g_pe[kPh];
+unsigned long long g_pd, g_ps, g_iter_w0;   // this period: drawn / skipped iterations' work cycles; work at iteration start
+unsigned g_pskips;
+bool g_iter_drawn;
 inline unsigned long long cyc_now() { return g_cyc_pmc ? perf_cntr_count(PRFC0) : timer_us_gettime64() * 200ULL; }
 void pmc_event(unsigned ev)
 {
@@ -169,6 +176,16 @@ unsigned pm_miss_k10_sum(const Pmc& m, int p0, int p1)   // read + write misses 
     for (int p = p0; p <= p1; ++p) v += pm_k10(m, EV_RDMISS, p) + pm_k10(m, EV_WRMISS, p);
     return v;
 }
+unsigned pm_imiss_k10(const Pmc& m)   // I-cache misses of the work parts, 0.1 k per picture
+{
+    unsigned v = 0;
+    for (int p = 0; p < kWork; ++p) v += pm_k10(m, EV_IMISS, p);
+    return v;
+}
+// drawn tick / skipped tick: CPU work ms x10 of the drawn iteration, of one skipped iteration, skipped ticks per picture x10
+unsigned pm_d10(const Pmc& m) { return m.periods ? (unsigned) ((m.d_cyc / m.periods + 10000) / 20000) : 0; }
+unsigned pm_s10(const Pmc& m) { return m.s_ticks ? (unsigned) ((m.s_cyc / m.s_ticks + 10000) / 20000) : 0; }
+unsigned pm_skips10(const Pmc& m) { return m.periods ? (m.s_ticks * 10 + m.periods / 2) / m.periods : 0; }
 
 // ---------------------------------------------------------------- geometry sweep (scene 3, results page 3)
 // Coordinator 2026-10-15: what cutting triangles buys on the console. Scene 3 holds the r101 cross view (scene 1's
@@ -396,10 +413,11 @@ void draw_results(const Fb& fb) {
 }
 
 // The second code: per scene P/Q, ms x10 of the six parts . D-miss stall % of the five work parts . operand-cache
-// misses (read + write) per drawn frame in whole k of the five work parts, then a check value as on page 1.
+// misses (read + write) per picture in whole k of the five work parts / drawn tick ms x10 . skipped tick ms x10 .
+// skipped ticks per picture x10 / I-cache misses per picture (0.1 k) . I-miss stall %, then a check value as on page 1.
 void make_code2(char* out, unsigned size)
 {
-    char part[kScenes][96];
+    char part[kScenes][128];
     for (int k = 0; k < kScenes; ++k) {
         const Pmc& m = g_pmc[k];
         char* q = part[k];
@@ -409,8 +427,10 @@ void make_code2(char* out, unsigned size)
         for (int p = 0; p < kWork; ++p) q += snprintf(q, end - q, p ? ".%u" : "/%u", pm_pct(m, EV_DSTALL, p));
         for (int p = 0; p < kWork; ++p)
             q += snprintf(q, end - q, p ? ".%u" : "/%u", (pm_k10(m, EV_RDMISS, p) + pm_k10(m, EV_WRMISS, p) + 5) / 10);
+        q += snprintf(q, end - q, "/%u.%u.%u/%u.%u", pm_d10(m), pm_s10(m), pm_skips10(m), pm_imiss_k10(m),
+                      pm_pct_sum(m, EV_ISTALL, 0, kWork - 1));
     }
-    char body[256];
+    char body[300];
     snprintf(body, sizeof(body), "%s %s %s", RE4DC_BENCH_ID, part[0], part[1]);
     unsigned ck = 0;
     for (const char* p = body; *p; ++p) ck = (ck * 31 + (unsigned char) *p) % 251;
@@ -420,7 +440,7 @@ void make_code2(char* out, unsigned size)
 // Page 2: the CPU frame by part, per drawn frame, both scenes side by side.
 void draw_counters(const Fb& fb)
 {
-    char line[128], code[224], a[12], b[12], c[12], d[12];
+    char line[160], code[300], a[12], b[12], c[12], d[12];
     fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
     int y = 30;
     fb_fill(fb, 30, y - 4, 580, 30, 0x900000);
@@ -431,8 +451,8 @@ void draw_counters(const Fb& fb)
     // columns: part (10) then per scene MS (5) STALL% (3) READ k (5) WRITE k (5)
     snprintf(line, sizeof(line), "%-10s %-21s %-21s", "", g_scene[0].name, g_scene[1].name);
     fb_text(fb, 14, y, 2, 2, kCyan, line); y += 18;
-    snprintf(line, sizeof(line), "%-10s %5s %3s %5s %5s %5s %3s %5s %5s", "PART", "MS", "ST%", "RD K", "WR K", "MS", "ST%",
-             "RD K", "WR K");
+    snprintf(line, sizeof(line), "%-10s %5s %3s %5s %5s %5s %3s %5s %5s", "PER PICTURE", "MS", "ST%", "RD K", "WR K", "MS",
+             "ST%", "RD K", "WR K");
     fb_text(fb, 14, y, 2, 2, kCyan, line); y += 20;
     for (int p = 0; p <= kPh; ++p) {   // kPh = the total row
         char col[kScenes][32];
@@ -455,47 +475,55 @@ void draw_counters(const Fb& fb)
         fb_text(fb, 14, y, 2, 2, p == kPh ? kYellow : (p == 1 || p == 2) ? kGreen : kWhite, row); y += 18;
     }
     y += 4;
-    if (g_pmc_hw) {
-        for (int k = 0; k < kScenes; ++k) {
-            const Pmc& m = g_pmc[k];
-            if (!m.periods) continue;
-            snprintf(line, sizeof(line), "%s: ACTORS %s MS, %u%% STALLED ON MEMORY", g_scene[k].name, d1(pm_ms10_sum(m, 1, 2), a),
-                     pm_pct_sum(m, EV_DSTALL, 1, 2));
-            fb_text(fb, 14, y, 2, 2, kGreen, line); y += 20;
+    if (!g_pmc_hw) { fb_text(fb, 14, y, 2, 2, kRed, "NO COUNTERS HERE (EMULATOR?): TIMES ONLY"); y += 18; }
+    for (int k = 0; k < kScenes; ++k) {
+        const Pmc& m = g_pmc[k];
+        if (!m.periods) continue;
+        if (g_pmc_hw) {
+            snprintf(line, sizeof(line), "%s: ACTORS %s MS, %u%% WAITING ON MEMORY", g_scene[k].name,
+                     d1(pm_ms10_sum(m, 1, 2), a), pm_pct_sum(m, EV_DSTALL, 1, 2));
+            fb_text(fb, 14, y, 2, 2, kGreen, line); y += 16;
         }
-    } else {
-        fb_text(fb, 14, y, 2, 2, kRed, "COUNTERS DO NOT COUNT HERE (EMULATOR?)"); y += 20;
-        fb_text(fb, 14, y, 2, 2, kRed, "TIMES ONLY. RUN IT ON A DREAMCAST."); y += 20;
+        // drawn tick vs skipped tick (CPU work, no wait), I-cache vs D-cache misses per picture
+        char e[12], f[12];
+        snprintf(line, sizeof(line), "%s: DRAWN TICK %s MS + %s SKIPPED TICKS X %s MS. I-MISS %s K (%s%% STALL), D-MISS %s K",
+                 g_scene[k].name, d1(pm_d10(m), a), d1(pm_skips10(m), b), d1(pm_s10(m), c),
+                 g_pmc_hw ? d1(pm_imiss_k10(m), d) : "-",
+                 g_pmc_hw ? (snprintf(e, sizeof(e), "%u", pm_pct_sum(m, EV_ISTALL, 0, kWork - 1)), e) : "-",
+                 g_pmc_hw ? d1(pm_miss_k10_sum(m, 0, kWork - 1), f) : "-");
+        fb_text(fb, 8, y, 1, 2, kWhite, line); y += 14;
     }
     y += 2;
-    fb_text(fb, 14, y, 1, 2, kGrey, "PER DRAWN FRAME. MS: CPU TIME. ST%: SHARE OF IT THE CPU STOOD WAITING FOR MEMORY (CACHE MISSES)"); y += 16;
-    fb_text(fb, 14, y, 1, 2, kGrey, "RD K / WR K: THOUSANDS OF DATA CACHE MISSES ON READS / WRITES. WAIT: IDLE UNTIL THE NEXT FRAME"); y += 20;
+    fb_text(fb, 14, y, 1, 2, kGrey, "PER PICTURE = 1 DRAWN TICK + SKIPPED TICKS TO THE NEXT. MS: CPU TIME. ST%: SHARE WAITING ON MEMORY"); y += 14;
+    fb_text(fb, 14, y, 1, 2, kGrey, "RD K / WR K: THOUSANDS OF DATA CACHE MISSES ON READS / WRITES. WAIT: IDLE UNTIL THE NEXT PICTURE"); y += 16;
     make_code2(code, sizeof(code));
     fb_text(fb, 14, y, 2, 2, kGreen, "CODE 2 (ONE LINE WHEN TYPED):"); y += 18;
     if (text_w(code, 1) <= fb.w - 16) { fb_text(fb, 8, y, 1, 3, kGreen, code); y += 26; }
     else {   // wraps after the first scene
         char* sp = strchr(code, ' ');
         if (sp) *sp = 0;
-        fb_text(fb, 8, y, 1, 3, kGreen, code); y += 24;
-        if (sp) { fb_text(fb, 8, y, 1, 3, kGreen, sp + 1); y += 26; }
+        fb_text(fb, 8, y, 1, 3, kGreen, code); y += 22;
+        if (sp) { fb_text(fb, 8, y, 1, 3, kGreen, sp + 1); y += 22; }
     }
-    fb_text(fb, 14, y, 2, 3, kCyan, "A: RUN AGAIN   B: PAGE 3 (GEOMETRY)");
+    fb_text(fb, 14, y, 2, 2, kCyan, "A: RUN AGAIN   B: PAGE 3 (GEOMETRY)");
 }
 
 void log_counters()
 {
-    char code[224];
+    char code[300];
     make_code2(code, sizeof(code));
     for (int k = 0; k < kScenes; ++k) {
         const Pmc& m = g_pmc[k];
-        re4dc_log("bench: pmc run %u scene %d %s periods=%u hw=%d cyc=%s ev_periods=%u/%u/%u/%u\n", g_run, k + 1,
+        re4dc_log("bench: pmc run %u scene %d %s periods=%u hw=%d cyc=%s ev_periods=%u/%u/%u/%u/%u drawn10=%u "
+                  "skipped10=%u skips_per_picture10=%u imiss_k10=%u istall%%=%u\n", g_run, k + 1,
                   g_scene[k].name, m.periods, g_pmc_hw ? 1 : 0, g_cyc_pmc ? "pmc" : "tmu", m.ev_periods[0],
-                  m.ev_periods[1], m.ev_periods[2], m.ev_periods[3]);
+                  m.ev_periods[1], m.ev_periods[2], m.ev_periods[3], m.ev_periods[4], pm_d10(m), pm_s10(m),
+                  pm_skips10(m), pm_imiss_k10(m), pm_pct_sum(m, EV_ISTALL, 0, kWork - 1));
         for (int p = 0; p < kPh; ++p)
-            re4dc_log("bench: pmc scene %d part %s ms10=%u dstall%%=%u istall%%=%u rd_k10=%u wr_k10=%u cyc=%llu "
-                      "ev=%llu/%llu/%llu/%llu\n", k + 1, kPhName[p], pm_ms10(m, p), pm_pct(m, EV_DSTALL, p),
-                      pm_pct(m, EV_ISTALL, p), pm_k10(m, EV_RDMISS, p), pm_k10(m, EV_WRMISS, p), m.cyc[p],
-                      m.ev[0][p], m.ev[1][p], m.ev[2][p], m.ev[3][p]);
+            re4dc_log("bench: pmc scene %d part %s ms10=%u dstall%%=%u istall%%=%u rd_k10=%u wr_k10=%u imiss_k10=%u "
+                      "cyc=%llu ev=%llu/%llu/%llu/%llu/%llu\n", k + 1, kPhName[p], pm_ms10(m, p), pm_pct(m, EV_DSTALL, p),
+                      pm_pct(m, EV_ISTALL, p), pm_k10(m, EV_RDMISS, p), pm_k10(m, EV_WRMISS, p), pm_k10(m, EV_IMISS, p),
+                      m.cyc[p], m.ev[0][p], m.ev[1][p], m.ev[2][p], m.ev[3][p], m.ev[4][p]);
     }
     re4dc_log("bench: code2 %s build %s\n", code, RE4DC_BENCH_ID);
 }
@@ -555,8 +583,8 @@ void draw_sweep(const Fb& fb)
         fb_text(fb, 14, y, 2, 2, kGreen, line); y += 18;
     }
     y += 4;
-    fb_text(fb, 14, y, 1, 2, kGrey, "VERTK: THOUSANDS OF VERTICES SENT TO THE GRAPHICS CHIP PER FRAME. CPU / ACTOR / WORLD / GPU: MS"); y += 16;
-    fb_text(fb, 14, y, 1, 2, kGrey, "PER FRAME. LOWER ROWS: WHAT 1000 FEWER VERTICES SAVE, FROM THE DIFFERENCE TO AS SHIPPED"); y += 20;
+    fb_text(fb, 14, y, 1, 2, kGrey, "PER PICTURE (GAME FROZEN: EVERY TICK IS DRAWN). VERTK: THOUSANDS OF VERTICES SENT TO THE GRAPHICS"); y += 16;
+    fb_text(fb, 14, y, 1, 2, kGrey, "CHIP. CPU / ACTOR / WORLD / GPU: MS. LOWER ROWS: WHAT 1000 FEWER VERTICES SAVE (VS AS SHIPPED)"); y += 20;
     make_code3(code, sizeof(code));
     fb_text(fb, 14, y, 2, 2, kGreen, "CODE 3:"); y += 18;
     fb_text(fb, 8, y, 1, 3, kGreen, code); y += 28;
@@ -825,6 +853,14 @@ int re4dc_bench_push(int phase)
 void re4dc_bench_iter(int drawn)
 {
     re4dc_bench_phase(4);   // the wait of the previous iteration ends here
+    if (g_period_live) {    // the previous iteration's work (all parts but the wait): drawn or skipped
+        unsigned long long w = 0;
+        for (int p = 0; p < kWork; ++p) w += g_pc[p];
+        if (g_iter_drawn) g_pd += w - g_iter_w0;
+        else { g_ps += w - g_iter_w0; ++g_pskips; }
+        g_iter_w0 = w;
+    }
+    g_iter_drawn = drawn != 0;
     sweep_step();
     if (!drawn) return;
     Pmc* const target = period_target();
@@ -843,9 +879,11 @@ void re4dc_bench_iter(int drawn)
             m.ev[g_ev_i][p] += g_pe[p];
             m.ev_cyc[g_ev_i][p] += g_pc[p];
         }
+        m.d_cyc += g_pd; m.s_cyc += g_ps; m.s_ticks += g_pskips;
         g_ev_i = (g_ev_i + 1) % kEv;
     }
     for (int p = 0; p < kPh; ++p) g_pc[p] = g_pe[p] = 0;
+    g_pd = g_ps = g_iter_w0 = 0; g_pskips = 0;
     g_period_live = now;
     g_period_dst = target;
     if (now) {
