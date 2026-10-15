@@ -14,7 +14,9 @@
 #   B  the benchmark disc program
 #   Q  B + KOS_SQUEEZE=1 KOS_WATCH=1 (the KOS out-of-memory gate twin; a "squeeze <bytes> <frag>" warp line sets it)
 #   K  knob-off identity: the release make line alone from this tree; its binary must equal $BASE's
-# Env: T (tree, default this checkout), BASE (release out dir, default out-t121tP = test 12.1), LP, BENCH_ID.
+# Env: T (tree, default this checkout), BASE (release out dir, default out-t121tP = test 12.1), LP, BENCH_ID,
+#      BENCH_XK (extra knobs after the benchmark knobs, arms B and Q only: a variant disc, e.g. the castle preview's
+#      knob line; the K arm stays the release make line).
 set -u
 here=$(cd "$(dirname "$0")" && pwd)
 T=${T:-$(cd "$here/../../../../.." && pwd)}
@@ -35,8 +37,8 @@ b() { local lab=$1; shift; local t0=$(date +%s)
   rm -rf $K/programs/candidate-route$lab
   echo "rc=$rc $lab elf=$(cut -c1-16 $O/elf.sha256 2>/dev/null) bin=$(bin $O/re4dc-game.elf | cut -c1-16) $(( $(date +%s) - t0 ))s missing=$(wc -c < $O/missing.txt 2>/dev/null) tree=$(cd $T && git rev-parse --short=8 HEAD) dirty=$(cd $T && git status --short --untracked-files=no | wc -l)" | tee -a $K/logs-build.txt; }
 for x in "$@"; do case $x in
-  B) b ${LP}B $REC $BW ;;
-  Q) b ${LP}Q $REC $BW KOS_SQUEEZE=1 KOS_WATCH=1 ;;
+  B) b ${LP}B $REC $BW ${BENCH_XK:-} ;;
+  Q) b ${LP}Q $REC $BW ${BENCH_XK:-} KOS_SQUEEZE=1 KOS_WATCH=1 ;;
   K) b ${LP}K $REC
      a=$(bin /root/probe/lanes/route/out-${LP}K/re4dc-game.elf); r=$(bin $BASE/re4dc-game.elf)
      [ "$a" = "$r" ] && echo "IDENTITY OK ${LP}K binary $a == $BASE" || echo "IDENTITY FAIL ${LP}K binary $a != $BASE $r" ;;
