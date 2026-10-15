@@ -68,7 +68,7 @@ $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_AUTO_S=$(BENCH_AUTO_S)
 endif
 ifeq ($(BENCH_POC),1)
 POC_CPPFLAGS := -DRE4DC_BENCH_POC=1
-POC_CPPFLAGS += $(if $(filter-out 0,$(PS2_WORLD_PVS)),-DRE4DC_POC_HAS_PVS=1)
+POC_CPPFLAGS += $(if $(filter-out 0,$(PS2_PVS)),-DRE4DC_POC_HAS_PVS=1)
 POC_CPPFLAGS += $(if $(filter-out 0,$(WORLD_LOD)),-DRE4DC_POC_HAS_WLOD=1,$(if $(filter-out 0,$(WORLD_LOD_PROBE)),-DRE4DC_POC_HAS_WLOD=2))
 POC_CPPFLAGS += $(if $(filter-out 0,$(LEON_LOD)),-DRE4DC_POC_HAS_LEON=$(if $(filter 70,$(LEON_LOD)),2,1))
 POC_CPPFLAGS += $(if $(filter-out 0,$(UI_OT_CACHE)),-DRE4DC_POC_HAS_UIOT=1)
@@ -79,6 +79,11 @@ POC_CPPFLAGS += $(if $(filter-out 0,$(FAR_HALF)),-DRE4DC_POC_HAS_FARHALF=1)
 $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += $(POC_CPPFLAGS)
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_BENCH_POC=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_POC=1
+ifneq ($(filter-out 0,$(FAR_HALF)),)
+ifneq ($(FAR_HALF_RT),1)
+$(error BENCH_POC with FAR_HALF needs FAR_HALF_RT=1 (bench.cpp poc_apply sets its run-time switch))
+endif
+endif
 # the layers' hooks (each acts only while its bit is on)
 ifneq ($(filter-out 0,$(WORLD_LOD))$(filter-out 0,$(WORLD_LOD_PROBE)),)
 ifneq ($(filter-out 0,$(WORLD_LOD)),)

@@ -21,7 +21,7 @@ import os
 import sys
 
 LAYERS = [  # bit, row name, knobs (any on = built), kind (0 exact render, 1 look, 2 exact logic, 3 logic approx)
-    (0x01, 'PVS', ['PS2_WORLD_PVS'], 0),
+    (0x01, 'PVS', ['PS2_PVS'], 0),
     (0x08, 'UI OT', ['UI_OT_CACHE'], 0),
     (0x40, 'COLL', ['COLL_BROADPHASE_CACHE'], 2),
     (0x02, 'WORLD LOD*', ['WORLD_LOD', 'WORLD_LOD_PROBE'], 1),

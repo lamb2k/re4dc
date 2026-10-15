@@ -139,7 +139,7 @@ struct PocLayer {
     int kind;             // 0 exact render, 1 render approximation, 2 exact logic, 3 logic approximation
 };
 const PocLayer kPocLayer[] = {
-    {0x01, "PVS", "PS2_WORLD_PVS", "OCCLUSION: HIDDEN SCENERY CELLS NOT SENT (EXACT)", RE4DC_POC_HAS_PVS, 0},
+    {0x01, "PVS", "PS2_PVS", "OCCLUSION: HIDDEN SCENERY CELLS NOT SENT (EXACT)", RE4DC_POC_HAS_PVS, 0},
     {0x02, RE4DC_POC_HAS_WLOD == 2 ? "WLODPROBE" : "WORLD LOD", RE4DC_POC_HAS_WLOD == 2 ? "WORLD_LOD_PROBE" : "WORLD_LOD",
      RE4DC_POC_HAS_WLOD == 2 ? "FAR SCENERY: HALF THE FAR PIECES LEFT OUT (STAND-IN)"
                              : "FAR SCENERY: SIMPLER MESHES BEYOND 12 M (PIXEL-ERROR FLOOR)", RE4DC_POC_HAS_WLOD, 1},
@@ -180,6 +180,24 @@ unsigned g_poc_scene;              // the running live scene's mask (its fixture
 unsigned g_poc_sweep;              // a sweep row's mask while a sweep setting is applied
 bool g_poc_in_sweep;
 unsigned g_poc_row_mask[kAllScenes];   // the mask each scene asked for (pages, log)
+// Layers with their own run-time switch in the lane's code: set from the mask whenever it changes (the scene's `poc`
+// line, a sweep setting, the sweep end).
+#if RE4DC_POC_HAS_PVS
+extern "C" void re4dc_ps2_pvs_set(unsigned on);   // native_static.cpp PS2_PVS (lane t2exact)
+#endif
+#if RE4DC_POC_HAS_FARHALF
+extern "C" int re4dc_far_half_rt;                 // act_cap.cpp FAR_HALF_RT (lane farhalf)
+#endif
+void poc_apply(unsigned m)
+{
+    (void) m;
+#if RE4DC_POC_HAS_PVS
+    re4dc_ps2_pvs_set((m & 0x01u) ? 1u : 0u);
+#endif
+#if RE4DC_POC_HAS_FARHALF
+    re4dc_far_half_rt = (m & 0x80u) ? 1 : 0;
+#endif
+}
 #else
 constexpr bool kPoc = false;
 constexpr int kScenes = 5;       // the measured scenes
@@ -424,6 +442,7 @@ void sweep_apply(int k)
     g_world_far = 0.0f;
     g_poc_in_sweep = k >= 0;
     g_poc_sweep = setting_mask(k);
+    poc_apply(k >= 0 ? g_poc_sweep : g_poc_scene);
 #else
     g_hide = k == 1 ? 4u : k == 2 ? 1u : k == 4 ? 2u : k == 6 ? 8u : k == 7 ? 16u : k == 8 ? 24u : 0u;
     g_world_far = k == 5 ? kNearFar : k == 3 ? kMidFar : 0.0f;
@@ -1252,6 +1271,7 @@ void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* nam
     poc_sweep_rows();
     g_poc_scene = 0;            // all off unless the fixture's `poc` line (after this `bench` line) says otherwise
     g_poc_in_sweep = false;
+    poc_apply(0);
     g_poc_row_mask[no - 1] = 0;
 #endif
     re4dc_log("bench: scene %d %s%s armed: %s room frames %u..%u (run %u)\n", no, s.name, s.preview ? " (preview)" : "",
@@ -1315,6 +1335,7 @@ void re4dc_bench_poc(unsigned mask)
     const unsigned want = mask & kPocAllOn ? poc_all_on() | (mask & ~kPocAllOn) : mask;
     g_poc_scene = want & poc_built();
     g_poc_row_mask[g_cur] = g_poc_scene;
+    poc_apply(g_poc_scene);
     re4dc_log("bench: poc scene %d mask %02x (asked %04x, built %02x, all on %02x)%s\n", g_cur + 1, g_poc_scene, mask,
               poc_built(), poc_all_on(), want & ~poc_built() ? " LAYERS NOT IN THIS IMAGE DROPPED" : "");
 }
