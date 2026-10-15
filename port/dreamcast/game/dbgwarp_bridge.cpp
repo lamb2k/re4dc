@@ -89,6 +89,9 @@ const char* re4dc_bench_next_scene(void);
 int re4dc_bench_scene_no(void);
 const char* re4dc_bench_results(void);
 #endif
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+void re4dc_bench_poc(unsigned mask);  // bench.cpp (bench.mk BENCH_POC)
+#endif
 #if defined(RE4DC_LEON_LIGHT_TOGGLE) && RE4DC_LEON_LIGHT_TOGGLE
 extern "C" void re4dc_leon_light_set(unsigned mode);  // native_actor_fast.cpp (crowd.mk LEON_LIGHT_TOGGLE)
 #endif
@@ -414,6 +417,11 @@ void load()
                 strncat(name, tok[i], sizeof(name) - strlen(name) - 1);
             }
             re4dc_bench_scene_def((int) num(tok[1]), num(tok[2]), num(tok[3]), name);
+#endif
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+        } else if (!strcmp(k, "poc") && n >= 2) {
+            // POC101 (bench.mk BENCH_POC): `poc <mask>` after the `bench` line, the speed-up layers this scene runs with
+            re4dc_bench_poc(num(tok[1]));
 #endif
         } else {
             re4dc_log("warp: unknown line '%s'\n", k);

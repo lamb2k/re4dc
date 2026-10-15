@@ -53,6 +53,28 @@ endif
 ifeq ($(PMC_ROW),1)
 $(error BENCHMARK=1 owns performance counter 2 (results page 2); PMC_ROW=1 uses it too)
 endif
+# BENCH_POC=1 (lane poc101 2026-10-15, POC101 disc; needs BENCHMARK=1): the speed-up layers as run-time toggles in one
+# image. Scenes 1..9 = live runs of the r101 cross, one per row, the fixture's `poc <mask>` line (after its `bench`
+# line) turns layers on (bench.cpp kPocLayer bits; 0x8000 = ALL ON); scene 10 = frozen render sweep (all off, each
+# render layer, all on); scene 11 = look sweep (all off / all on: development still sheets). A layer is in the image
+# when its knob is on in the make line; its code asks re4dc_poc_on(bit) at its decision point (BENCH_POC builds only).
+# 0 (default): nothing changes (knob-off identity with the definitive benchmark program).
+BENCH_POC ?= 0
+ifeq ($(BENCH_POC),1)
+POC_CPPFLAGS := -DRE4DC_BENCH_POC=1
+POC_CPPFLAGS += $(if $(filter-out 0,$(PS2_WORLD_PVS)),-DRE4DC_POC_HAS_PVS=1)
+POC_CPPFLAGS += $(if $(filter-out 0,$(WORLD_LOD)),-DRE4DC_POC_HAS_WLOD=1,$(if $(filter-out 0,$(WORLD_LOD_PROBE)),-DRE4DC_POC_HAS_WLOD=2))
+POC_CPPFLAGS += $(if $(filter-out 0,$(LEON_LOD)),-DRE4DC_POC_HAS_LEON=$(if $(filter 70,$(LEON_LOD)),2,1))
+POC_CPPFLAGS += $(if $(filter-out 0,$(UI_OT_CACHE)),-DRE4DC_POC_HAS_UIOT=1)
+POC_CPPFLAGS += $(if $(filter-out 0,$(COLL_BROADPHASE_CACHE)),-DRE4DC_POC_HAS_COLL=1)
+POC_CPPFLAGS += $(if $(filter-out 0,$(CROWD_FAR)),-DRE4DC_POC_HAS_FARMESH=1)
+POC_CPPFLAGS += $(if $(filter-out 0,$(CROWD_FLAT_LIGHT)),-DRE4DC_POC_HAS_FLATLIGHT=1)
+POC_CPPFLAGS += $(if $(filter-out 0,$(FAR_HALF)),-DRE4DC_POC_HAS_FARHALF=1)
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += $(POC_CPPFLAGS)
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_BENCH_POC=1
+else ifneq ($(BENCH_POC),0)
+$(error BENCH_POC must be 0 or 1)
+endif
 PLATFORM_OBJS += $(OBJDIR)/bench.o
 # included after the link rule: name the object as its prerequisite too
 $(TARGET): $(OBJDIR)/bench.o

@@ -9,7 +9,8 @@
 #          KOS_SQUEEZE twin's gate disc
 #   IP.BIN title "RE4DC BENCHMARK (NOT THE GAME)", product T0002 (not the game's T0000)
 # Output: $K/disc-<label>[-sq<bytes>-<frag>]/gdemu (disc.gdi, track01.bin, track02.raw, track03.bin) + gdemu-sha256.txt.
-# Env: FIXSET (a tester disc with some of the scenes, e.g. "3 4 7" = part 2: the first scene's fixture becomes warp.txt,
+# Env: FIXDIR + FIXTAG (POC101: a directory of prepared fixtures, the disc masters into disc-<label>-<FIXTAG>),
+#      FIXSET (a tester disc with some of the scenes, e.g. "3 4 7" = part 2: the first scene's fixture becomes warp.txt,
 #      the others bench<n>.txt; the disc masters into disc-<label>-s<set>, which bench-zip.sh reads with the same FIXSET),
 #      K (work dir, default /root/probe/bench-public), PKG_JSON (default the 12.1 package json), S1 .. S7
 #      (scene fixtures instead of scene<n>-warp.txt, "-" leaves scene n out: development checks only, never a tester
@@ -20,7 +21,7 @@ L=${1:?arm label}; SQB=${2:-}; SQF=${3:-0}
 K=${K:-/root/probe/bench-public}
 O=/root/probe/lanes/route/out-$L
 PKG_JSON=${PKG_JSON:-/root/probe/t12dark/rel/fix/pkg-t121tP.json}
-D=$K/disc-$L${FIXSET:+-s${FIXSET// /}}${SQB:+-sq$SQB-$SQF}
+D=$K/disc-$L${FIXSET:+-s${FIXSET// /}}${FIXTAG:+-$FIXTAG}${SQB:+-sq$SQB-$SQF}
 # development fixtures (S1..S7) never master into the staging dir a tester zip is made from (bench-zip.sh reads disc-<label>)
 [ -z "${S1:-}${S2:-}${S3:-}${S4:-}${S5:-}${S6:-}${S7:-}" ] || D=$D-dev
 [ -s $O/re4dc-game.elf ] || { echo "no build $O" >&2; exit 1; }
@@ -41,7 +42,12 @@ print('program overlays from the bench build:', n)
 PY
 PKG_K=$D python3 /root/probe/lanes-20261011/test8/t8-pkgtree.py $L $D/pkg.json > $D/pkgtree.txt
 tail -1 $D/pkgtree.txt | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $D/pkgtree.txt; exit 1; }
-if [ -n "${FIXSET:-}" ]; then
+if [ -n "${FIXDIR:-}" ]; then
+  # POC101 (lane poc101): a directory of prepared fixtures (tools/d367/poc101/poc-fixtures.py): warp.txt + bench<n>.txt
+  [ -s $FIXDIR/warp.txt ] || { echo "FIXDIR: no warp.txt in $FIXDIR" >&2; exit 1; }
+  { [ -z "$SQB" ] || echo "squeeze $SQB $SQF"; tr -d '\r' < $FIXDIR/warp.txt; } > $D/fix/warp.txt
+  for f in $FIXDIR/bench*.txt; do [ -e "$f" ] && tr -d '\r' < $f > $D/fix/$(basename $f); done
+elif [ -n "${FIXSET:-}" ]; then
   set -- $FIXSET; first=$1; shift
   for n in $first "$@"; do [ -s $here/scene$n-warp.txt ] || { echo "FIXSET: no scene$n-warp.txt" >&2; exit 1; }; done
   { [ -z "$SQB" ] || echo "squeeze $SQB $SQF"; tr -d '\r' < $here/scene$first-warp.txt; } > $D/fix/warp.txt
