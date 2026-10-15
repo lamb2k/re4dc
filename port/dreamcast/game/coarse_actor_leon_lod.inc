@@ -8,6 +8,8 @@
 //     poc101 frozen sweep), at the end of the next actor retirement (coarse_actor_transaction.inc, once a tick, when no
 //     owned record is live: one disc read hitch); if no rung is loaded, Leon's owner plan tries once more (up to 3
 //     failures). The skeleton, animation, game state and the hands are untouched: only the drawn mesh changes.
+//   - Cutscenes keep the full model (user 2026-10-15): while an in-engine event holds the game (Status_flg[1]
+//     0x10000000) the wanted level is 0; the switch in and out is a load at the next retirement (one ~0.1 MB read).
 //   - A load re-qualifies the six role chunks and the hair run (their immutable IDs are reset, as LEON_HAND_PACK does
 //     for a hand slot) and forces the FTRV palette program to be rebuilt from the new weights (skin_state).
 //   - A failed read leaves the rows null: the owner plans decline (Leon falls back to the source path, which
@@ -102,29 +104,33 @@ bool load(unsigned level) {
         L.roles[4].triangles,L.roles[5].triangles,L.hair[1]);
     return true;
 }
-// The owner plans' gate: the first plan loads the requested rung (nothing of Leon's owner path is live before it).
+// The level drawn now: level 0 (the full model) while an in-engine event / cutscene holds the game (Status_flg[1]
+// 0x10000000, user decision 2026-10-15: cutscenes keep the full model), else the requested gameplay level.
+unsigned want() {return (pG && (pG->Status_flg[1]&0x10000000u))?0u:level_req;}
+// The owner plans' gate: the first plan loads the wanted rung (nothing of Leon's owner path is live before it).
 bool ready() {
     if(level_cur!=~0u)return true;
     if(dir_state==2 || fails>=3)return false;
-    return load(level_req);
+    return load(want());
 }
 }
 #pragma GCC pop_options
-// Run-time level (poc101 rows, warp `leonlod <n>`): applied at the next room enter.
+// Run-time gameplay level (poc101 rows, warp `leonlod <n>`): applied at the next room enter or actor retirement.
 extern "C" void re4dc_leon_lod_set(unsigned level) {leon_lod::level_req=level;}
 extern "C" unsigned re4dc_leon_lod_level() {return leon_lod::level_cur;}
 extern "C" void re4dc_leon_lod_room_enter() {
     using namespace leon_lod;
-    if(level_cur==level_req)return;   // the first room enter loads the boot level; ready() retries a failed load
+    if(level_cur==want())return;   // the first room enter loads the boot level; ready() retries a failed load
     if(owned_live())re4dc_actor_transaction_retire();   // (its retired() hook may already load the level)
-    if(level_cur==level_req)return;
+    if(level_cur==want())return;
     fails=0;
-    load(level_req);
+    load(want());
 }
 // coarse_actor_transaction.inc re4dc_actor_transaction_retire, after every owned record is revoked: a level change
-// asked for since the last load (once per request; the boot level loads at first use).
+// asked for since the last load, or an event start / end (once per wanted level; the boot level loads at first use).
 namespace leon_lod { void retired() {
-    if(level_cur==~0u || level_req==level_cur || level_tried==level_req)return;
-    level_tried=level_req;fails=0;
-    if(load(level_req))level_tried=~0u;
+    const unsigned w=want();
+    if(level_cur==~0u || w==level_cur || level_tried==w)return;
+    level_tried=w;fails=0;
+    if(load(w))level_tried=~0u;
 } }

@@ -9,6 +9,8 @@
 //     retirement (re4dc_actor_transaction_retire, once a tick, when no owned record is live): one ~0.1 MB disc read.
 //   - A load re-qualifies the body / head immutable chunks (IDs 9 + 4a + role) and rebuilds the FTRV palette groups and
 //     the pregate balls of every appearance from the new weights. Skeleton, motions, hands and game state are untouched.
+//   - Cutscenes keep the full models: while an in-engine event holds the game the wanted level is 0 (the switch in and
+//     out is a load at the next retirement).
 //   - A failed read leaves the rows null: the owner plans decline (the Ganado keeps the source path) and the next
 //     request tries again.
 #include <fcntl.h>
@@ -104,10 +106,13 @@ bool load(unsigned level) {
     return true;
 }
 // The owner plans' gate: the first plan loads the requested level.
+// The level drawn now: level 0 (today's full meshes) while an in-engine event / cutscene holds the game (Status_flg[1]
+// 0x10000000; user 2026-10-15: cutscenes keep the full models), else the requested gameplay level.
+unsigned want() {return (pG && (pG->Status_flg[1]&0x10000000u))?0u:level_req;}
 bool ready() {
     if(level_cur!=~0u)return true;
     if(dir_state==2 || fails>=3)return false;
-    return load(level_req);
+    return load(want());
 }
 } }
 #pragma GCC pop_options
@@ -117,7 +122,8 @@ extern "C" unsigned re4dc_ganado_lod_level() {return ganado_lod::level_cur;}
 // coarse_actor_transaction.inc re4dc_actor_transaction_retire, after every owned record is revoked.
 extern "C" void re4dc_ganado_lod_retired() {
     using namespace ganado_lod;
-    if(level_cur==~0u || level_req==level_cur || level_tried==level_req)return;  // the boot level loads at first use
-    level_tried=level_req;fails=0;   // one try per request here (a failure leaves the rows null: ready() retries)
-    if(load(level_req))level_tried=~0u;
+    const unsigned w=want();
+    if(level_cur==~0u || w==level_cur || level_tried==w)return;  // the boot level loads at first use
+    level_tried=w;fails=0;   // one try per wanted level here (a failure leaves the rows null: ready() retries)
+    if(load(w))level_tried=~0u;
 }
