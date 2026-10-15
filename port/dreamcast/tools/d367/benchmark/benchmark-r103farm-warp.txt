@@ -1,0 +1,12 @@
+name benchmark-r103farm
+# The r103 farm benchmark view (lane farhalf 2026-10-15, for bench-hw.sh): the definitive benchmark disc's scene 4
+# (benchpub/scene4-warp.txt on bench/definitive-2026-10, lane crowd12 view "A230") without its `bench` line: Leon near the
+# r106 door looking back over the farm (barn, windmill, fences, fog); the room's Ganados (5 alive) are not alerted and
+# mostly out of view, the far-Ganado case of FAR_HALF. God, no pad input. Settle room frames 0..299, measure 300..1199.
+# bench-hwwindow 500:1399
+room 0x103
+pos 7500 38 -400
+ang -2.30
+inv default
+god
+alivelog 150

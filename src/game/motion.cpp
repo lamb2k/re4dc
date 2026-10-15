@@ -437,6 +437,122 @@ void MotionSetCore(cModel* m, void* w_, void* data_, int seq_, int hokan, int fl
     }
 }
 
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE && defined(RE4DC_DT_IK_APART) && RE4DC_DT_IK_APART
+extern "C" unsigned re4dc_dt_ik;   // logic_trace.cpp
+#endif
+#if defined(RE4DC_FAR_HALF) && RE4DC_FAR_HALF == 1
+// FAR_HALF=1 (game30.mk; lane farhalf 2026-10-15; port/dreamcast/game/act_cap.cpp): the reduced ("pose") tick of a
+// far, off-screen Ganado. cEmMgr::move sets re4dc_far_half_skip to the work around its emMove; MotionMove of that
+// model then does everything that moves state other than the pose: the root speed (position / angle), the frame
+// bookkeeping and the model matrix of MotionMoveCore, both sequence steps (Mot_state, SE, loop), the hokan counter
+// (MotionGetSpeed blends the root speed over it). It skips the key evaluation, the part matrices, the leg IK and its
+// floor queries, the hokan pose blend and the blend table; the parts follow the body by translation instead.
+extern "C" cModel* re4dc_far_half_skip;   // em.cpp
+
+// MotionMoveCore without the per-joint keys: Mot_frame / _old / _sav, the flip error clear, the model matrix and the
+// 0x04000000 clear (the part flags it sets are pose bookkeeping for MotionHokan / the blend table).
+static void farHalfCore(cModel* m, MotionWork* w)
+{
+    if (w->pMot == 0) {
+        return;
+    }
+    if (!(w->Mot_attr & 0x8000)) {
+        w->Mot_frame = SEQ_FRAME(w->Seq.frame);
+    } else {
+        w->Mot_frame = w->Seq_frame;
+    }
+    w->Mot_frame_old = w->Mot_frame_sav;
+    w->Mot_frame_sav = w->Mot_frame;
+    if (!(w->Mot_flag & 0x40000000)) {
+        RotMatrix(m->mat, &m->ang);
+        TransMatrix(m->mat, &m->pos);
+        ScaleMatrix(m->mat, &m->scale);
+    }
+    w->Mot_flag &= ~0x04000000;
+    if ((w->Mot_attr & 0x40) && MOTION(m)->flip == 0) {
+        w->Mot_attr &= ~0x40;
+    }
+}
+
+// The parts keep last pose and follow the body: world positions and matrices move by pos - Pos_world (as
+// PartsWorldPosCalc, without moving m->mat, which the reduced tick rebuilt from pos), r_scale as partsWorldCalc.
+extern "C" void re4dc_far_half_follow(cModel* m)
+{
+    Vec d;
+
+    m->r_scale = m->scale;
+    PSVECSubtract(&m->pos, &MOTION(m)->Pos_world, &d);
+    for (cModel* p = m->pParts; p != 0; p = p->pParts) {
+        PSVECAdd(&p->world, &d, &p->world);
+        p->mat[0][3] += d.x;
+        p->mat[1][3] += d.y;
+        p->mat[2][3] += d.z;
+    }
+    MOTION(m)->Pos_world = m->pos;
+}
+
+static u16 farHalfMotionMove(cModel* m)
+{
+    Vec spd;
+    Vec rot;
+    Vec spd2;
+    Vec rot2;
+    f32 rate;
+    f32 inv;
+
+    if (MOTION(m)->blend != 0) {
+        MOTION(m)->blend->Seq_speed = MOTION(m)->Seq_speed;
+    }
+    if (MOTION(m)->Mot_attr & 1) {   // the root speed, exactly as MotionMove
+        MotionGetSpeed(m, MOTION(m), 0, &spd, &rot);
+        if (MOTION(m)->blend != 0) {
+            MOTION(m)->blend->Mot_flag |= 0x08000000;
+            rate = MOTION(m)->blend->Brate;
+            if (!(MOTION(m)->blend->Mot_flag & 0x80000000)) {
+                if (rate != 0.0f) {
+                    MOTION(m)->blend->Hokan_cnt = 0;
+                    MotionGetSpeed(m, MOTION(m)->blend, 0, &spd2, &rot2);
+                    inv = 1.0f - rate;
+                    VecLinearCombination(&spd2, &spd, rate, inv, &spd);
+                    VecLinearCombination(&rot2, &rot, rate, inv, &rot);
+                }
+            } else {
+                if (rate != 0.0f) {
+                    MOTION(m)->blend->Hokan_cnt = 0;
+                    MotionGetSpeed(m, MOTION(m)->blend, 0, &spd2, &rot2);
+                    VecLinearCombination(&spd2, &spd, rate, 1.0f, &spd);
+                    VecLinearCombination(&rot2, &rot, rate, 1.0f, &rot);
+                }
+            }
+        }
+        MotionAddSpeed(m, MOTION(m), &spd, &rot);
+    }
+    farHalfCore(m, MOTION(m));
+    MotionSequenceCtrl(MOTION(m));
+    MOTION(m)->Mot_attr &= ~0x2000;
+    if (MOTION(m)->blend != 0) {
+        MOTION(m)->blend->Mot_flag |= 0x08000000;
+        rate = MOTION(m)->blend->Brate;
+        if ((s32) MOTION(m)->blend->Mot_flag >= 0) {
+            if (rate != 0.0f) {
+                farHalfCore(m, MOTION(m)->blend);
+            }
+            MotionSequenceCtrl(MOTION(m)->blend);
+        } else {
+            MOTION(m)->Mot_attr |= 0x2000;
+            farHalfCore(m, MOTION(m)->blend);
+            MotionSequenceCtrl(MOTION(m)->blend);
+        }
+    }
+    re4dc_far_half_follow(m);
+    if (MOTION(m)->Hokan_cnt != 0) {
+        MOTION(m)->Hokan_cnt--;   // MotionHokan's counter step; the pose blend waits for the next full tick
+    }
+    m->ang.y = LIMIT_ANGLE(m->ang.y);
+    return MOTION(m)->Mot_state;
+}
+#endif
+
 // One frame of the model's motion: with Mot_attr bit 0 moves the model by the root speed (mixed
 // with the blend motion by Brate), evaluates the main motion (MotionMoveCore + sequence step),
 // then the blend motion either as a matrix slerp (matBlend) or, for Mot_flag sign-bit blends, as
@@ -445,6 +561,15 @@ void MotionSetCore(cModel* m, void* w_, void* data_, int seq_, int hokan, int fl
 // 4/8 ended).
 u16 MotionMove(cModel* m)
 {
+#if defined(RE4DC_FAR_HALF) && RE4DC_FAR_HALF == 1
+    // the reduced tick, unless something this tick needs the pose: a fixed part (partsFixAdjust moves pos by its
+    // world position) or a motion-driven camera
+    if (m == re4dc_far_half_skip && m->Fix_parts == 0 &&
+        (MOTION(m)->pAttachCam == 0 || MOTION(m)->pAttachCam->type == 0) &&
+        (MOTION(m)->blend == 0 || MOTION(m)->blend->pAttachCam == 0 || MOTION(m)->blend->pAttachCam->type == 0)) {
+        return farHalfMotionMove(m);
+    }
+#endif
     static int new_add = 1;
     cModel* p;
     Vec spd;
@@ -557,7 +682,13 @@ u16 MotionMove(cModel* m)
         PSMTXConcat(m->mat, tmp, tmp);
         MTX_COPY(tmp, m->mat);
         m->partsWorldCalc();
+#if defined(RE4DC_DECISION_TRACE) && RE4DC_DECISION_TRACE && defined(RE4DC_DT_IK_APART) && RE4DC_DT_IK_APART
+        re4dc_dt_ik = 1;   // DT_IK_APART (game30.mk; trace builds): the IK floor queries out of "lq"
         InverseKinematics(m, 1);
+        re4dc_dt_ik = 0;
+#else
+        InverseKinematics(m, 1);
+#endif
         MTX_COPY(save, m->mat);
         m->partsWorldCalc();
     }

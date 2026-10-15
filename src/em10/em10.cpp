@@ -2536,6 +2536,10 @@ void em10KickHitMark(cEm10* em)
 #if defined(RE4DC_SKEL_FTRV) && RE4DC_SKEL_FTRV
 extern "C" int re4dc_skel_scope;
 #endif
+#if defined(RE4DC_FAR_HALF) && RE4DC_FAR_HALF == 1
+extern "C" cModel* re4dc_far_half_skip;          // em.cpp: the work on its FAR_HALF reduced tick
+extern "C" void re4dc_far_half_follow(cModel* m);   // motion.cpp
+#endif
 void cEm10::move()
 {
 #if defined(RE4DC_SKEL_FTRV) && RE4DC_SKEL_FTRV
@@ -2668,7 +2672,17 @@ void cEm10::move()
         em10NeckMove(this);
         em10WaistMove(this);
         em10SlopeMove(this);
+#if defined(RE4DC_FAR_HALF) && RE4DC_FAR_HALF == 1
+        // FAR_HALF=1 (game30.mk, lane farhalf): the reduced tick of a far, off-screen Ganado keeps its last pose; the
+        // parts follow the body (motion.cpp re4dc_far_half_follow) instead of a new part-world pass
+        if ((cModel*) this == re4dc_far_half_skip && Fix_parts == 0) {
+            re4dc_far_half_follow(this);
+        } else {
+            partsWorldCalc();
+        }
+#else
         partsWorldCalc();
+#endif
         em10ScaleCompress(this);
         em10BombNeckMove(this);
         partsFixAdjust();

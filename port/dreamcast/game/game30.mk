@@ -2062,16 +2062,53 @@ ACT_CAP_TABLE ?= 0
 #   damage, lock-on, hp, the engagement radius, the hold time) is unchanged. With BENCH_LEVERS=1 it acts only when the
 #   warp fixture's `lever far` is set. A level-1 logic approximation: gate with decisions (decision_cmp), not STRICT.
 ACT_CAP_FAR_M ?= 0
+# FAR_HALF=1|2 (lane farhalf 2026-10-15, backlog D1; default 0 = nothing built or changed): far / off-screen Ganados update
+#   at half rate in every room (act_cap.cpp, independent of the cap; builds act_cap.o without ACT_CAP / ACT_CAP_TABLE).
+#   Eligible: ids 0x10..0x20 in a walking / idle routine, farther than FAR_HALF_M metres (default 12 = em10StayCk's outer
+#   limit), outside the last view frustum + ACT_CAP_VIEW_M, hp > 0, no pending damage, not the lock-on target, not parked
+#   by the cap. They alternate a full tick and a reduced tick (never two reduced in a row).
+#   1 = pose half (exact candidate): the reduced tick runs AI / routine / movement / collision as always and skips only
+#       the pose (motion keys, part matrices, foot IK + its floor queries, hokan blend): motion.cpp, em10.cpp. Rnd untouched.
+#   2 = full half (APPROXIMATION, gameplay changes): the reduced tick skips emMove (the cap's parked tick).
+#   FAR_HALF_LOG=N: one "FH" census line per N ticks (measurement builds).
+#   FAR_HALF_RT=1 (DBG_WARP test / benchmark builds): a run-time switch, on unless the warp fixture (benchmark scene)
+#       says `farhalf 0`, so one benchmark disc measures off and on (console A/B).
+FAR_HALF ?= 0
+FAR_HALF_M ?= 12
+FAR_HALF_LOG ?= 0
+FAR_HALF_RT ?= 0
+ifneq ($(FAR_HALF_RT),0)
+ifeq ($(FAR_HALF),0)
+$(error FAR_HALF_RT needs FAR_HALF=1 or 2)
+endif
+ifneq ($(DBG_WARP),1)
+$(error FAR_HALF_RT needs DBG_WARP=1 (the switch is a warp fixture line))
+endif
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_FAR_HALF_RT=1
+endif
+ifeq ($(FAR_HALF),1)
+$(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_FAR_HALF=1
+$(OBJDIR)/mod/%/em10.o: GAME_CPPFLAGS += -DRE4DC_FAR_HALF=1
+endif
+# DT_IK_APART=1 (trace builds with GAME_DECISION_TRACE, lane farhalf; both arms of a pair): the leg IK's floor queries
+#   (MotionMove -> InverseKinematics -> getFloor; they move only the feet of the pose) go to decision bucket 7, which is
+#   not logged, instead of "lq". FAR_HALF=1 skips them on its reduced ticks, so lq can only be compared with them apart.
+DT_IK_APART ?= 0
+ifneq ($(DT_IK_APART),0)
+$(OBJDIR)/src/game/motion.o $(OBJDIR)/logic_trace.o: GAME_CPPFLAGS += -DRE4DC_DT_IK_APART=1
+endif
 .PHONY: act-cap-force
 $(OBJDIR)/act-cap.h: act-cap-force
 	@mkdir -p $(dir $@)
 	@printf '#define RE4DC_ACT_CAP %s\n#define RE4DC_ACT_CAP_ROOM %s\n#define RE4DC_ACT_CAP_RANGE_M %s\n#define RE4DC_ACT_CAP_VIEW_M %s\n#define RE4DC_ACT_CAP_CREEP %s\n#define RE4DC_ACT_CAP_LOG %s\n' '$(ACT_CAP)' '$(ACT_CAP_ROOM)' '$(ACT_CAP_RANGE_M)' '$(ACT_CAP_VIEW_M)' '$(ACT_CAP_CREEP)' '$(ACT_CAP_LOG)' > $@.tmp
 	@if [ '$(ACT_CAP_TABLE)' != 0 ]; then printf '#define RE4DC_ACT_CAP_TABLE %s\n' '$(ACT_CAP_TABLE)' >> $@.tmp; fi
 	@if [ '$(ACT_CAP_FAR_M)' != 0 ]; then printf '#define RE4DC_ACT_CAP_FAR_M %s\n' '$(ACT_CAP_FAR_M)' >> $@.tmp; fi
+	@if [ '$(FAR_HALF)' != 0 ]; then printf '#define RE4DC_FAR_HALF %s\n#define RE4DC_FAR_HALF_M %s\n#define RE4DC_FAR_HALF_LOG %s\n' '$(FAR_HALF)' '$(FAR_HALF_M)' '$(FAR_HALF_LOG)' >> $@.tmp; fi
+	@if [ '$(FAR_HALF_RT)' != 0 ]; then printf '#define RE4DC_FAR_HALF_RT 1\n' >> $@.tmp; fi
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 $(OBJDIR)/src/game/em.o: $(OBJDIR)/act-cap.h
-ifneq ($(ACT_CAP)$(ACT_CAP_TABLE),00)
+ifneq ($(ACT_CAP)$(ACT_CAP_TABLE)$(FAR_HALF),000)
 PLATFORM_OBJS += $(OBJDIR)/act_cap.o
 $(OBJDIR)/src/game/em.o: GAME_CPPFLAGS += -include $(OBJDIR)/act-cap.h
 $(OBJDIR)/act_cap.o: act_cap.cpp $(OBJDIR)/act-cap.h
