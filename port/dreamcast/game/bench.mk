@@ -12,6 +12,12 @@
 #                  Measurement = the existing one-second pace windows (pace.cpp: drawn frames, ticks, GPU render time),
 #                  the tick log snapshot (CPU), the disc read meter (reads, game blocked time) and KOS headroom per tick.
 #                  Warp lines: `bench <scene no> <begin room frame> <end room frame> <name>` (the measured window).
+#                  v2 (2026-10-15): a second results page (B or Y switches pages) with SH-4 performance counters by
+#                  part of the frame (logic, actor prep, actor draw, world draw, other, wait), per drawn frame:
+#                  time (counter 1 cycles, KOS's ns timer), D-cache miss pipeline freeze cycles, operand-cache read and
+#                  write misses and I-cache miss freeze cycles on counter 2, one event per drawn-frame period in turn
+#                  (not per vblank tick: the 10-04 hwcal aliasing trap), every ratio taken over the same periods.
+#                  Marks: src/game/main.cpp, src/game/trans.cpp, coarse.cpp. A second CODE line with its own check.
 #   BENCH_ID=<id>  build id shown on the start and results screens and in the results code (default dev).
 BENCHMARK ?= 0
 BENCH_ID ?= dev
@@ -40,12 +46,16 @@ endif
 ifneq ($(PACE_VMU),1)
 $(error BENCHMARK=1 needs PACE_VMU=1 (the one-second pace windows))
 endif
+ifeq ($(PMC_ROW),1)
+$(error BENCHMARK=1 owns performance counter 2 (results page 2); PMC_ROW=1 uses it too)
+endif
 PLATFORM_OBJS += $(OBJDIR)/bench.o
 # included after the link rule: name the object as its prerequisite too
 $(TARGET): $(OBJDIR)/bench.o
 GAME_LDFLAGS += -Wl,--wrap=OSInit -Wl,--wrap=maple_dev_status -Wl,--wrap=maple_enum_dev -Wl,--wrap=re4dc_ui_frame
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_BENCHMARK=1
 $(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_BENCHMARK=1
+$(OBJDIR)/src/game/main.o $(OBJDIR)/src/game/trans.o $(OBJDIR)/coarse.o: GAME_CPPFLAGS += -DRE4DC_BENCHMARK=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCHMARK=1
 $(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCHMARK=1
 .PHONY: bench-force

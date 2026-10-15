@@ -132,6 +132,13 @@ void OSReport(const char* fmt, ...);
 int EspTrans();
 void EspgenTrans();
 void ProcessTickGet(int no, const char* name);
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+// Benchmark disc page 2 (port/dreamcast/game/bench.cpp): 1 actor prep, 2 actor draw, 3 world draw, 4 other.
+extern "C" void re4dc_bench_phase(int phase);
+#define BENCH_PH(p) re4dc_bench_phase(p)
+#else
+#define BENCH_PH(p) ((void) 0)
+#endif
 void DCStoreRangeNoSync(void* addr, u32 nBytes);
 void GXSetCurrentGXThread();
 void GXSetDrawSync(u16 token);
@@ -1105,6 +1112,7 @@ void Trans()
     if (roomSwapped) {coarseTick = 0;re4dc_coarse_image = 0;}
 #if RE4DC_COARSE_SOURCE_ACTORS
 
+    BENCH_PH(1);
 #if RE4DC_ACTOR_TRANSACTION
     re4dc_actor_transaction_retire();
 #endif
@@ -1113,8 +1121,9 @@ void Trans()
         // Full/check source path wins before any PTS presentation stage is skipped.
         const int plan=RE4DC_PACE_CHECK?0:sourceActorPlan();
         if(plan<=0) {coarseTick=0;re4dc_coarse_image=0;}
-        if(plan<0)return; // explicit malformed-list failure; never rewalk a cycle
+        if(plan<0){BENCH_PH(4);return;} // explicit malformed-list failure; never rewalk a cycle
     }
+    BENCH_PH(4);
 #endif
 #endif
 #if RE4DC_FRONT_LEAN && defined(__sh__)
@@ -1211,6 +1220,7 @@ void Trans()
         }
     }
 #endif
+    BENCH_PH(1);
 #if RE4DC_PACE_CATCHUP >= 2
     // v2: a dropped image needs no model OT (iteration k+1 draws nothing); every other Trans
     // stage above (effects, shadows, cloth, filters, render textures) ran as usual.
@@ -1289,6 +1299,7 @@ void Trans()
     }
 #endif
 #endif
+    BENCH_PH(4);
     ProcessTickGet(5, "objTrans");
     DCStoreRangeNoSync(primStart, (u8*) pG->prim_base - primStart);
 }
@@ -2560,11 +2571,13 @@ void Render()
     SetDrawTmpBufType(0);
     ExecOt(OT_TYPE_SUBSCRN_FAR);
     SetDrawTmpBufType(0);
+    BENCH_PH(3);
     ExecOt(OT_TYPE_SCROLL);
+    BENCH_PH(4);
     SetDrawTmpBufType(0);
     ExecOt(OT_TYPE_SUBSCRN);
     SetDrawTmpBufType(0);
-    ExecOt(OT_TYPE_MODEL);
+    ExecOt(OT_TYPE_MODEL);   // actors' ModelRender: BenchActorDraw
     SetDrawTmpBufType(0);
     ExecOt(OT_TYPE_SHADOW_DRAW);
     SetDrawTmpBufType(0);
@@ -2655,6 +2668,20 @@ static inline bool re4dc_gcobj_class(unsigned kind, unsigned id, bool only_stati
 }
 #endif
 
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+// Benchmark disc page 2: an actor's OT callback (Leon, the partner, every EmMgr model) is "actor draw" wherever its
+// OT runs (the coarse image draws source actors from the later OTs); the part it interrupted resumes after it.
+extern "C" int re4dc_bench_push(int phase);
+struct BenchActorDraw {
+    int prev = -1;
+    explicit BenchActorDraw(cModel* m) {
+        const u8* a = (const u8*) EmMgr.pArray;
+        if (a && (const u8*) m >= a && (const u8*) m < a + (u32) EmMgr.size * (u32) EmMgr.nArray) prev = re4dc_bench_push(2);
+    }
+    ~BenchActorDraw() { if (prev >= 0) re4dc_bench_phase(prev); }
+};
+#endif
+
 // OT callback for a model: z mode by z_mode (0 test+write, 1 test only, 2 off), the alpha-omit
 // compare, then commonModelTrans with the camera view; invisible models (invisible_factor 0) skip.
 #if defined(RE4DC_ENCV) && RE4DC_ENCV
@@ -2663,6 +2690,9 @@ static void ModelRenderBody(cModel* m)
 void ModelRender(cModel* m)
 #endif
 {
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+    BenchActorDraw benchActorDraw(m);
+#endif
 #if !(defined(RE4DC_ENCV) && RE4DC_ENCV)
 #if RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_PS2_WORLD_TRANSITION_OWNER
     SourceWorldModelScope sourceWorldModelScope;

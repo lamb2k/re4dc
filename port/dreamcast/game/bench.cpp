@@ -6,7 +6,22 @@
 // console disc (start screen in the KOS framebuffer before pvr_init, own 5x7 font, results drawn into the displayed
 // framebuffer while the frame loop stops, re4dc_ui_frame kept moving for CRASH_SCREEN's watchdog) and on the T12 Phases
 // disc meters (one-second pace windows, tick log CPU, disc read meter). hwcal traps kept out: no VMU file (its write
-// failed with -7 on the console: results are on screen only), no per-frame PMC rotation (no PMC at all).
+// failed with -7 on the console: results are on screen only), no PMC rotation per vblank tick.
+//
+// v2 (2026-10-15, after the first console run: console / Flycast CPU 1.39 with Ganados, 1.23 without): results page 2
+// (B or Y) splits the CPU frame into parts and shows per drawn frame the time and the SH-4 counters of each part, so one
+// photo tells whether actor work is memory-bound. Counter 1 (PRFC0) stays KOS's cycle timer (perf_cntr_timer_ns) and
+// gives the time; counter 2 (PRFC1) counts one event per drawn-frame period (a drawn iteration and the skipped ones after
+// it, up to the next drawn iteration), in turn: D-cache miss pipeline freeze cycles (0x25), operand-cache read misses
+// (0x04), operand-cache write misses (0x05), I-cache miss freeze cycles (0x24). Each event's value is taken against the
+// cycles of the same periods and parts (ratio), so a draw / skip pattern that lines up with the rotation cannot bias it.
+// Parts are marked by re4dc_bench_phase() in src/game/main.cpp (logic = TaskScheduler, wait = after DRAW REMAIN: vblank
+// and pace wait, swap), src/game/trans.cpp (actor prep = the objTrans / emTrans / source actor prepare and plan stage of
+// Trans; actor draw = ModelRender of an EmMgr model (Leon, partner, enemies) wherever its OT runs, nested; Render's
+// SCROLL OT = world draw) and coarse.cpp (the coarse image: PS2 world + coarse world = world draw, draw_actors = actor
+// draw). Everything else is "other" (effects, HUD, ids, messages, watchers, iTask, render begin / done). Interrupts and other KOS
+// threads count in the part they interrupt. Where the counters do not count (an emulator), page 2 says so and shows
+// times only (from the TMU).
 //
 // Flow:
 //   OSInit wrap   start screen: what the disc is, that it is not the game, START or 20 s; memory cards are hidden from
@@ -30,6 +45,7 @@
 #include <dc/maple.h>
 #include <dc/maple/controller.h>
 #include <dc/video.h>
+#include <dc/perfctr.h>
 #include <arch/timer.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -71,6 +87,74 @@ unsigned g_run = 1;               // run number (A on the results screen starts 
 unsigned g_room_frame;
 bool g_prev_include, g_last_include;
 unsigned g_tick_seq;
+
+// ---------------------------------------------------------------- counters (results page 2)
+constexpr int kPh = 6;   // parts of the frame (re4dc_bench_phase numbers)
+constexpr int kWork = 5; // parts that are CPU work (not the wait)
+const char* const kPhName[kPh] = {"LOGIC", "ACTOR PREP", "ACTOR DRAW", "WORLD DRAW", "OTHER", "WAIT"};
+constexpr int kEv = 4;
+const unsigned kEvCode[kEv] = {0x25, 0x04, 0x05, 0x24};   // D-miss freeze cyc, OC read miss, OC write miss, I-miss freeze
+enum { EV_DSTALL, EV_RDMISS, EV_WRMISS, EV_ISTALL };
+struct Pmc {
+    unsigned periods;                     // drawn-frame periods measured
+    unsigned long long cyc[kPh];          // cycles of every period, by part
+    unsigned ev_periods[kEv];             // periods that counted event e
+    unsigned long long ev[kEv][kPh];      // event e's count, by part
+    unsigned long long ev_cyc[kEv][kPh];  // cycles of the periods that counted event e, by part
+};
+Pmc g_pmc[kScenes];
+bool g_pmc_hw;          // counter 2 counts here (the console; not Flycast)
+bool g_cyc_pmc;         // counter 1 is KOS's cycle timer here; else cycles = TMU microseconds x 200
+int g_ph = 4, g_ev_i, g_period_scene = -1;
+bool g_period_live;
+unsigned long long g_c0, g_e0, g_pc[kPh], g_pe[kPh];
+inline unsigned long long cyc_now() { return g_cyc_pmc ? perf_cntr_count(PRFC0) : timer_us_gettime64() * 200ULL; }
+void pmc_event(unsigned ev)
+{
+    perf_cntr_stop(PRFC1);
+    perf_cntr_clear(PRFC1);
+    perf_cntr_start(PRFC1, (perf_cntr_event_t) ev, PMCR_COUNT_CPU_CYCLES);
+}
+// Whether the counters count: 2 ms of busy wait must give ~400,000 cycles on each.
+void pmc_detect()
+{
+    pmc_event(PMCR_ELAPSED_TIME_MODE);
+    const unsigned long long a0 = perf_cntr_count(PRFC1), c0 = perf_cntr_count(PRFC0);
+    const uint64_t t0 = timer_us_gettime64();
+    while (timer_us_gettime64() - t0 < 2000) {}
+    const unsigned long long a = perf_cntr_count(PRFC1) - a0, c = perf_cntr_count(PRFC0) - c0;
+    perf_cntr_stop(PRFC1);
+    g_pmc_hw = a > 300000 && a < 500000;
+    g_cyc_pmc = perf_cntr_timer_enabled() && c > 300000 && c < 500000;
+    re4dc_log("bench: counters: counter 2 %llu cycles in 2 ms (%s), counter 1 %llu (%s)\n", a,
+              g_pmc_hw ? "counts" : "does not count", c, g_cyc_pmc ? "cycle timer" : "TMU time");
+}
+// per drawn frame values of scene k, part p
+unsigned pm_ms10(const Pmc& m, int p) { return m.periods ? (unsigned) ((m.cyc[p] / m.periods + 10000) / 20000) : 0; }
+bool pm_has(const Pmc& m, int e, int p) { return g_pmc_hw && m.ev_periods[e] && m.ev_cyc[e][p]; }
+unsigned pm_pct(const Pmc& m, int e, int p)   // a cycle event as % of the part's cycles
+{
+    return pm_has(m, e, p) ? (unsigned) ((m.ev[e][p] * 100ULL + m.ev_cyc[e][p] / 2) / m.ev_cyc[e][p]) : 0;
+}
+unsigned pm_k10(const Pmc& m, int e, int p)   // a count event per drawn frame, 0.1 k (density x the part's cycles)
+{
+    if (!pm_has(m, e, p) || !m.periods) return 0;
+    const unsigned long long per_frame = m.ev[e][p] * (m.cyc[p] / m.periods) / m.ev_cyc[e][p];
+    return (unsigned) ((per_frame + 50) / 100);
+}
+// several parts together (actors = prep + draw; all work = parts 0..4)
+unsigned pm_ms10_sum(const Pmc& m, int p0, int p1)
+{
+    unsigned long long c = 0;
+    for (int p = p0; p <= p1; ++p) c += m.cyc[p];
+    return m.periods ? (unsigned) ((c / m.periods + 10000) / 20000) : 0;
+}
+unsigned pm_pct_sum(const Pmc& m, int e, int p0, int p1)
+{
+    unsigned long long n = 0, c = 0;
+    for (int p = p0; p <= p1; ++p) { n += m.ev[e][p]; c += m.ev_cyc[e][p]; }
+    return g_pmc_hw && c ? (unsigned) ((n * 100ULL + c / 2) / c) : 0;
+}
 
 // ---------------------------------------------------------------- framebuffer text (hwcal r21v)
 const uint8_t* glyph(char c) {
@@ -232,7 +316,112 @@ void draw_results(const Fb& fb) {
     y += 32;
     fb_text(fb, 36, y, 2, 2, kWhite, "PHOTOGRAPH THIS SCREEN. POST IT WITH YOUR"); y += 20;
     fb_text(fb, 36, y, 2, 2, kWhite, "CONSOLE REGION AND GDEMU / ODE / BURNED DISC."); y += 26;
-    fb_text(fb, 36, y, 2, 3, kCyan, "PRESS A TO RUN AGAIN");
+    fb_text(fb, 36, y, 2, 3, kCyan, "A: RUN AGAIN   B: PAGE 2 (COUNTERS)");
+}
+
+// The second code: per scene P/Q, ms x10 of the six parts . D-miss stall % of the five work parts . operand-cache
+// misses (read + write) per drawn frame in whole k of the five work parts, then a check value as on page 1.
+void make_code2(char* out, unsigned size)
+{
+    char part[kScenes][96];
+    for (int k = 0; k < kScenes; ++k) {
+        const Pmc& m = g_pmc[k];
+        char* q = part[k];
+        char* const end = part[k] + sizeof(part[k]);
+        q += snprintf(q, end - q, "%c", 'P' + k);
+        for (int p = 0; p < kPh; ++p) q += snprintf(q, end - q, p ? ".%u" : "%u", pm_ms10(m, p));
+        for (int p = 0; p < kWork; ++p) q += snprintf(q, end - q, p ? ".%u" : "/%u", pm_pct(m, EV_DSTALL, p));
+        for (int p = 0; p < kWork; ++p)
+            q += snprintf(q, end - q, p ? ".%u" : "/%u", (pm_k10(m, EV_RDMISS, p) + pm_k10(m, EV_WRMISS, p) + 5) / 10);
+    }
+    char body[256];
+    snprintf(body, sizeof(body), "%s %s %s", RE4DC_BENCH_ID, part[0], part[1]);
+    unsigned ck = 0;
+    for (const char* p = body; *p; ++p) ck = (ck * 31 + (unsigned char) *p) % 251;
+    snprintf(out, size, "%s %s %02X", part[0], part[1], ck);
+}
+
+// Page 2: the CPU frame by part, per drawn frame, both scenes side by side.
+void draw_counters(const Fb& fb)
+{
+    char line[128], code[224], a[12], b[12], c[12], d[12];
+    fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
+    int y = 30;
+    fb_fill(fb, 30, y - 4, 580, 30, 0x900000);
+    fb_center(fb, y, 2, 3, kWhite, "BENCHMARK DISC - NOT THE GAME"); y += 34;
+    fb_center(fb, y, 2, 3, kYellow, "PAGE 2: WHERE THE CPU TIME GOES"); y += 30;
+    snprintf(line, sizeof(line), "BUILD %s   RUN %u", RE4DC_BENCH_ID, g_run);
+    fb_center(fb, y, 2, 2, kGrey, line); y += 24;
+    // columns: part (10) then per scene MS (5) STALL% (3) READ k (5) WRITE k (5)
+    snprintf(line, sizeof(line), "%-10s %-21s %-21s", "", g_scene[0].name, g_scene[1].name);
+    fb_text(fb, 14, y, 2, 2, kCyan, line); y += 18;
+    snprintf(line, sizeof(line), "%-10s %5s %3s %5s %5s %5s %3s %5s %5s", "PART", "MS", "ST%", "RD K", "WR K", "MS", "ST%",
+             "RD K", "WR K");
+    fb_text(fb, 14, y, 2, 2, kCyan, line); y += 20;
+    for (int p = 0; p <= kPh; ++p) {   // kPh = the total row
+        char col[kScenes][32];
+        for (int k = 0; k < kScenes; ++k) {
+            const Pmc& m = g_pmc[k];
+            if (!m.periods) { snprintf(col[k], sizeof(col[k]), "%5s %3s %5s %5s", "-", "-", "-", "-"); continue; }
+            if (p == kPh) {   // total: all parts; stall % of the work parts
+                snprintf(col[k], sizeof(col[k]), "%5s %3s %5s %5s", d1(pm_ms10_sum(m, 0, kPh - 1), a),
+                         g_pmc_hw ? (snprintf(c, sizeof(c), "%u", pm_pct_sum(m, EV_DSTALL, 0, kWork - 1)), c) : "-", "", "");
+            } else if (p == kPh - 1 || !g_pmc_hw) {
+                snprintf(col[k], sizeof(col[k]), "%5s %3s %5s %5s", d1(pm_ms10(m, p), a), "-", "-", "-");
+            } else {
+                snprintf(c, sizeof(c), "%u", pm_pct(m, EV_DSTALL, p));
+                snprintf(col[k], sizeof(col[k]), "%5s %3s %5s %5s", d1(pm_ms10(m, p), a), c, d1(pm_k10(m, EV_RDMISS, p), b),
+                         d1(pm_k10(m, EV_WRMISS, p), d));
+            }
+        }
+        char row[128];
+        snprintf(row, sizeof(row), "%-10s %s %s", p == kPh ? "TOTAL" : kPhName[p], col[0], col[1]);
+        fb_text(fb, 14, y, 2, 2, p == kPh ? kYellow : (p == 1 || p == 2) ? kGreen : kWhite, row); y += 18;
+    }
+    y += 4;
+    if (g_pmc_hw) {
+        for (int k = 0; k < kScenes; ++k) {
+            const Pmc& m = g_pmc[k];
+            if (!m.periods) continue;
+            snprintf(line, sizeof(line), "%s: ACTORS %s MS, %u%% STALLED ON MEMORY", g_scene[k].name, d1(pm_ms10_sum(m, 1, 2), a),
+                     pm_pct_sum(m, EV_DSTALL, 1, 2));
+            fb_text(fb, 14, y, 2, 2, kGreen, line); y += 20;
+        }
+    } else {
+        fb_text(fb, 14, y, 2, 2, kRed, "COUNTERS DO NOT COUNT HERE (EMULATOR?)"); y += 20;
+        fb_text(fb, 14, y, 2, 2, kRed, "TIMES ONLY. RUN IT ON A DREAMCAST."); y += 20;
+    }
+    y += 2;
+    fb_text(fb, 14, y, 1, 2, kGrey, "PER DRAWN FRAME. MS: CPU TIME. ST%: SHARE OF IT THE CPU STOOD WAITING FOR MEMORY (CACHE MISSES)"); y += 16;
+    fb_text(fb, 14, y, 1, 2, kGrey, "RD K / WR K: THOUSANDS OF DATA CACHE MISSES ON READS / WRITES. WAIT: IDLE UNTIL THE NEXT FRAME"); y += 20;
+    make_code2(code, sizeof(code));
+    fb_text(fb, 14, y, 2, 2, kGreen, "CODE 2 (ONE LINE WHEN TYPED):"); y += 18;
+    if (text_w(code, 1) <= fb.w - 16) { fb_text(fb, 8, y, 1, 3, kGreen, code); y += 26; }
+    else {   // wraps after the first scene
+        char* sp = strchr(code, ' ');
+        if (sp) *sp = 0;
+        fb_text(fb, 8, y, 1, 3, kGreen, code); y += 24;
+        if (sp) { fb_text(fb, 8, y, 1, 3, kGreen, sp + 1); y += 26; }
+    }
+    fb_text(fb, 14, y, 2, 3, kCyan, "A: RUN AGAIN   B: PAGE 1 (RESULTS)");
+}
+
+void log_counters()
+{
+    char code[224];
+    make_code2(code, sizeof(code));
+    for (int k = 0; k < kScenes; ++k) {
+        const Pmc& m = g_pmc[k];
+        re4dc_log("bench: pmc run %u scene %d %s periods=%u hw=%d cyc=%s ev_periods=%u/%u/%u/%u\n", g_run, k + 1,
+                  g_scene[k].name, m.periods, g_pmc_hw ? 1 : 0, g_cyc_pmc ? "pmc" : "tmu", m.ev_periods[0],
+                  m.ev_periods[1], m.ev_periods[2], m.ev_periods[3]);
+        for (int p = 0; p < kPh; ++p)
+            re4dc_log("bench: pmc scene %d part %s ms10=%u dstall%%=%u istall%%=%u rd_k10=%u wr_k10=%u cyc=%llu "
+                      "ev=%llu/%llu/%llu/%llu\n", k + 1, kPhName[p], pm_ms10(m, p), pm_pct(m, EV_DSTALL, p),
+                      pm_pct(m, EV_ISTALL, p), pm_k10(m, EV_RDMISS, p), pm_k10(m, EV_WRMISS, p), m.cyc[p],
+                      m.ev[0][p], m.ev[1][p], m.ev[2][p], m.ev[3][p]);
+    }
+    re4dc_log("bench: code2 %s build %s\n", code, RE4DC_BENCH_ID);
 }
 
 void log_results() {
@@ -261,6 +450,8 @@ void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* nam
     strncpy(s.name, name ? name : "-", sizeof(s.name) - 1);
     s.begin = begin; s.end = end; s.defined = true;
     s.min_fps10 = ~0u; s.kos_min = ~0u;
+    memset(&g_pmc[no - 1], 0, sizeof(g_pmc[no - 1]));
+    g_period_live = false;
     g_cur = no - 1;
     g_prev_include = g_last_include = false;
     re4dc_log("bench: scene %d %s armed: measure room frames %u..%u (run %u)\n", no, s.name, begin, end, g_run);
@@ -302,17 +493,30 @@ int re4dc_bench_scene_no(void) { return g_cur + 1; }
 // caller then runs scene 1 again. Draws into the displayed framebuffer, again whenever the display flips.
 const char* re4dc_bench_results(void)
 {
+    g_period_live = false;   // no counter period runs on the results screen
+    if (g_pmc_hw) perf_cntr_stop(PRFC1);
     log_results();
+    log_counters();
     re4dc_log("bench: results screen fb=%08lx ctrl=%08lx\n", (unsigned long) *(volatile uint32_t*) 0xA05F8050,
               (unsigned long) *(volatile uint32_t*) 0xA05F8044);
     uint32_t last_sof = ~0u;
+    int page = 0, shown = -1;
     bool up = false, down = false;   // A must be up first (a held A does not restart), then pressed and released
+    bool pup = false, pdown = false; // B or Y: the same, switches the page
     for (;;) {
         const uint32_t sof = *(volatile uint32_t*) 0xA05F8050;
-        if (sof != last_sof) { last_sof = sof; draw_results(fb_displayed()); }
-        const bool a = (pad_buttons() & CONT_A) != 0;
+        if (sof != last_sof || page != shown) {
+            last_sof = sof; shown = page;
+            if (page) draw_counters(fb_displayed()); else draw_results(fb_displayed());
+        }
+        const unsigned btn = pad_buttons();
+        const bool a = (btn & CONT_A) != 0, by = (btn & (CONT_B | CONT_Y)) != 0;
         if (!a) { if (down) break; up = true; }
         else if (up) down = true;
+        if (!by) {
+            if (pdown) { page ^= 1; pdown = false; re4dc_log("bench: results page %d\n", page + 1); }
+            pup = true;
+        } else if (pup) pdown = true;
         ++g_results_ticks;
         spin_us(30000);
     }
@@ -358,6 +562,57 @@ void re4dc_bench_disc(unsigned reads, unsigned long long block_us, unsigned long
     s.reads += reads; s.block_us += block_us; s.disc_us += dt_us;
 }
 
+// ---------------------------------------------------------------- counter marks (main.cpp, trans.cpp, coarse.cpp)
+// The frame enters part `phase` (0 logic, 1 actor prep, 2 actor draw, 3 world draw, 4 other, 5 wait): the part left
+// gets the cycles and the counter 2 events since the last mark.
+void re4dc_bench_phase(int phase)
+{
+    if (g_period_live) {
+        const unsigned long long c = cyc_now(), e = g_pmc_hw ? perf_cntr_count(PRFC1) : 0;
+        g_pc[g_ph] += c - g_c0;
+        g_pe[g_ph] += e - g_e0;
+        g_c0 = c; g_e0 = e;
+    }
+    g_ph = phase;
+}
+// A nested part (an actor's OT callback inside another part): returns the part to resume.
+int re4dc_bench_push(int phase)
+{
+    const int prev = g_ph;
+    re4dc_bench_phase(phase);
+    return prev;
+}
+// Top of every main loop iteration (after the pace decision). A drawn iteration closes the running drawn-frame period
+// (counted when the scene measured all through it) and starts the next one on the next event.
+void re4dc_bench_iter(int drawn)
+{
+    re4dc_bench_phase(4);   // the wait of the previous iteration ends here
+    if (!drawn) return;
+    const Scene& s = g_scene[g_cur];
+    const bool now = s.defined && s.measuring;
+    if (g_period_live && now && g_period_scene == g_cur) {
+        Pmc& m = g_pmc[g_cur];
+        ++m.periods;
+        ++m.ev_periods[g_ev_i];
+        for (int p = 0; p < kPh; ++p) {
+            m.cyc[p] += g_pc[p];
+            m.ev[g_ev_i][p] += g_pe[p];
+            m.ev_cyc[g_ev_i][p] += g_pc[p];
+        }
+        g_ev_i = (g_ev_i + 1) % kEv;
+    }
+    for (int p = 0; p < kPh; ++p) g_pc[p] = g_pe[p] = 0;
+    g_period_live = now;
+    g_period_scene = g_cur;
+    if (now) {
+        if (g_pmc_hw) {
+            pmc_event(kEvCode[g_ev_i]);
+            g_e0 = perf_cntr_count(PRFC1);
+        }
+        g_c0 = cyc_now();
+    }
+}
+
 // ---------------------------------------------------------------- banner (native_ui.cpp, every presented frame)
 const char* re4dc_bench_banner(void) { return "BENCHMARK DISC - NOT THE GAME"; }
 
@@ -394,6 +649,7 @@ extern "C" void __wrap_OSInit(void)
     __real_OSInit();
     if (done) return;
     done = true;
+    pmc_detect();
     vid_set_mode(DM_640x480, PM_RGB565);
     const Fb fb = fb_boot();
     const uint64_t t0 = timer_us_gettime64();
@@ -418,7 +674,7 @@ extern "C" void __wrap_OSInit(void)
                                   "IT RUNS TWO SCRIPTED SCENES BY ITSELF",
                                   "(ABOUT 4 MINUTES), THEN SHOWS RESULTS.",
                                   "AFTER START DO NOT TOUCH THE CONTROLLER.",
-                                  "PHOTOGRAPH THE RESULTS SCREEN."};
+                                  "PHOTOGRAPH BOTH RESULTS PAGES (B SWITCHES)."};
             for (const char* s : body) { fb_text(fb, 60, y, 2, 2, s[0] == 'G' ? kGreen : kWhite, s); y += 22; }
             y += 8;
             char msg[64];

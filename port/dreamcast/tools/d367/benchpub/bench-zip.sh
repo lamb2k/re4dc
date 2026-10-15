@@ -3,14 +3,14 @@
 # The zip is written on ext4 and crosses to Windows once (release build rule 3), with the extracted gdemu folder:
 #   $P/RE4DC-Benchmark-NOT-THE-GAME-<sha>-GDEMU.zip  (README.txt first, gdemu/ four files, SHA256SUMS.txt)
 #   $P/gdemu/, $P/README.txt, $P/SHA256SUMS.txt (zip sha256 + file sha256s)
-# Env: K (work dir), P (Windows output, default C:\Game Dev\Emulators\RE4DC-Benchmark-Public).
+# Env: K (work dir), P (Windows output, default C:\Game Dev\Emulators\RE4DC-Benchmark-v2).
 set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 L=${1:?arm label}
 K=${K:-/root/probe/bench-public}
 O=/root/probe/lanes/route/out-$L
 D=$K/disc-$L
-P=${P:-"/mnt/c/Game Dev/Emulators/RE4DC-Benchmark-Public"}
+P=${P:-"/mnt/c/Game Dev/Emulators/RE4DC-Benchmark-v2"}
 [ $(wc -l < $O/stack.txt) -le 1 ] || { echo "out-$L was built from a dirty tree"; cat $O/stack.txt; exit 1; }
 SHA=$(head -1 $O/stack.txt | cut -c1-8)
 grep -qx "BENCH_ID=$SHA" <(tr ' ' '\n' < $O/resolved-knobs.txt) || { echo "BENCH_ID is not the source sha $SHA"; exit 1; }

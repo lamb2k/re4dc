@@ -102,6 +102,15 @@ extern "C" int re4dc_pace_itask(void);
 extern "C" int re4dc_pace_end(void);
 extern "C" void re4dc_pace_test_draw(void);
 extern "C" void re4dc_pace_test_tick(void);
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+// Benchmark disc page 2 (port/dreamcast/game/bench.cpp): CPU counters by part of the frame. Parts: 0 logic,
+// 1 actor prep, 2 actor draw, 3 world draw, 4 other, 5 wait (vblank / pace wait, swap).
+extern "C" void re4dc_bench_iter(int drawn);
+extern "C" void re4dc_bench_phase(int phase);
+#define BENCH_PH(p) re4dc_bench_phase(p)
+#else
+#define BENCH_PH(p) ((void) 0)
+#endif
 #endif
 #if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR
 extern "C" int re4dc_loadind_active;
@@ -259,6 +268,13 @@ RESTART:
             // Render_swap); the logic tick below runs in full either way.
             re4dc_pace_begin();
 #endif
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+#if RE4DC_PACE_CATCHUP
+            re4dc_bench_iter(!re4dc_pace_skipping);   // a drawn iteration starts a counter period
+#else
+            re4dc_bench_iter(1);
+#endif
+#endif
             StopwatchInit();
             ProcessTickInit();
             MWC("top");
@@ -275,7 +291,9 @@ RESTART:
             ClearOt();
             MWC("clear");
             pG->Frame_cnt++;
+            BENCH_PH(0);
             TaskScheduler();
+            BENCH_PH(4);
             MWC("tasks");
 #if RE4DC_VMU_CONTEXT && !defined(__PPC__)
             re4dc_vmu_snapshot();
@@ -348,6 +366,7 @@ RESTART:
             DC.check();
             Block.checkCondition();
             ProcessTickGet(3, "DRAW REMAIN");
+            BENCH_PH(5);
 #if RE4DC_PACE_CATCHUP
             if (!re4dc_pace_skipping)
 #endif

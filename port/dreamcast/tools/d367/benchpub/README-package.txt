@@ -1,5 +1,5 @@
-RE4 DREAMCAST BENCHMARK DISC - THIS IS NOT THE GAME
-===================================================
+RE4 DREAMCAST BENCHMARK DISC (VERSION 2) - THIS IS NOT THE GAME
+================================================================
 
 This disc only measures how fast the RE4 Dreamcast port runs on your
 console. It cannot be played: there is no title menu and no New Game, and
@@ -7,7 +7,9 @@ it saves nothing (it does not touch your VMU). To play, use the current test
 release: https://github.com/lamb2k/re4dc/releases
 
 Build SHA_PLACEHOLDER: the test 12.1 program and data, plus the two scripted
-benchmark scenes.
+benchmark scenes. Version 2 runs the same scenes as version 1 and shows the
+same first results page, so old and new results compare directly. It adds a
+second results page that shows where the console's processor spends its time.
 
 What it does (about 4 minutes, no input needed)
 1. A start screen says what the disc is. Press START (or wait 20 seconds),
@@ -18,8 +20,8 @@ What it does (about 4 minutes, no input needed)
 3. Scene 2, the first house (r100): a short cutscene plays, then Leon waits
    at the back window while the villagers close in. About 17 seconds are
    measured.
-4. A results screen shows the numbers for each scene and a code.
-5. Press A on the results screen to run both scenes again (optional).
+4. The results appear on two pages. Press B (or Y) to switch between them.
+5. Press A on either page to run both scenes again (optional).
 
 A red banner "BENCHMARK DISC - NOT THE GAME" stays at the top of the screen
 the whole time.
@@ -27,8 +29,9 @@ the whole time.
 How to report
 Open a new issue named "Benchmark results" at
 https://github.com/lamb2k/re4dc/issues and include:
-- a photo of the results screen (sharp, straight on, all text readable)
-- the CODE line from the results screen, typed out
+- a photo of each results page (sharp, straight on, all text readable)
+- the CODE line from page 1 and the CODE 2 line from page 2, typed out
+  (CODE 2 may wrap onto two lines on screen; type it as one line)
 - your console region (NTSC-U, NTSC-J or PAL)
 - how you ran it: GDEMU, another optical drive emulator (say which), or a
   burned disc
@@ -39,9 +42,10 @@ Setup
 Copy the four files in the gdemu folder (disc.gdi, track01.bin, track02.raw,
 track03.bin) to a new folder on your SD card, the same way as any GDEMU
 game. The menu lists it as "RE4DC BENCHMARK (NOT THE GAME)". Flycast can
-open gdemu/disc.gdi as well, but emulator numbers are not console numbers.
+open gdemu/disc.gdi as well, but emulator numbers are not console numbers,
+and page 2 stays mostly empty there (see below).
 
-The results screen
+Results page 1: how fast each scene ran
 FPS         average frames drawn per second
 MIN1S       the lowest one-second window
 CPU         milliseconds of game work per game tick (30 ticks a second)
@@ -52,5 +56,35 @@ WAIT MS/S   milliseconds per second the game waited for the disc
 KOS MIN KB  the lowest free system memory during the scene, in KB (this
             disc gives the system 64 KB more than the game disc does)
 CODE        the numbers above in one line, with a check value at the end
+
+Results page 2: where the processor's time goes
+The Dreamcast's processor has built-in counters. This page uses them to
+split each drawn frame into parts and shows, for each part and scene:
+MS          milliseconds the processor spent in that part, per drawn frame
+ST%         the share of that time the processor stood still waiting for
+            data from memory (data cache misses). A high number means that
+            part is slowed down by memory, not by the amount of math.
+RD K, WR K  thousands of data cache misses per drawn frame, on reads and on
+            writes
+The parts:
+LOGIC       the game itself: enemies, Leon, the camera, scripts
+ACTOR PREP  getting the characters ready to draw: animation results,
+            skinning, lighting, choosing what is visible
+ACTOR DRAW  sending the characters to the graphics chip
+WORLD DRAW  sending the village or house scenery to the graphics chip
+OTHER       everything else: effects, fire, haze, text, sound and disc
+            checks
+WAIT        the processor has nothing to do until the next frame
+TOTAL       all parts together (the time between two drawn frames); its
+            ST% is for the working parts only
+Below the table one line per scene sums up the characters: how many
+milliseconds they take and how much of that is waiting for memory.
+CODE 2      the page 2 numbers in one line, with its own check value: for
+            each scene the milliseconds of the six parts, the ST% of the
+            five working parts, and their read plus write misses in
+            thousands
+The counters take turns: each drawn frame counts one kind of event, so each
+number comes from about a quarter of the frames. On an emulator the counters
+do not count; page 2 then says so and shows times only.
 
 SHA256SUMS.txt lists the sha256 of each file in the gdemu folder.
