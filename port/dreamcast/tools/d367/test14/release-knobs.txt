@@ -3,11 +3,11 @@
 # out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.
 # @ASSETS@ = the unpacked Build-Assets zip (re4dc-assets/).
 # test: 14
-# tag: test-d2cd2a88-20261015
-# source: d2cd2a88
+# tag: test-ba856017-20261015
+# source: ba856017
 # recipe: port/dreamcast/tools/d367/test14/t14-build.sh
-# image-sha256: 5c59ffe6f2824fac51a9ec54cf0eecbdc5a1a5ae5779409306dfae12bf4e9e8d
-# assets-zip: RE4DC-Test14-d2cd2a88-Build-Assets.zip
+# image-sha256: eb2bc4e4e6c40b56134570170a1d1bc71f05acf884696eb0882d854959e87cfb
+# assets-zip: RE4DC-Test14-ba856017-Build-Assets.zip
 LOGIC_TRACE=0
 GAME_DECISION_TRACE=0
 ACTOR_TRANSACTION_DIAG=0
@@ -149,6 +149,7 @@ DISC_COMPAT=1
 DISC_READ_FALLBACK=0
 GAME_SH4ZAM=1
 GAME_SH4ZAM_RENDER_ONLY=1
+ROOM_REENTRY_EVICT=1
 MEMSET_LEAN=0
 IMAGE_PAD_BYTES=0
 DBG_WARP=0

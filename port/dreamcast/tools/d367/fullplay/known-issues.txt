@@ -33,6 +33,6 @@ db351823,40fb4deb,135fde2b,a93e8be0,bd57e195 | texture | ch21 | fbec854a-b7656a0
 # --- Test 13 RC (2026-10-15): rows that the test 12.2 control shows the same way (fullplay-20261015 t122ctl-095515,
 # t122ctlh2-100441). Scoped to the test 13 release tree; 12.2 itself (2602b5c3 / 677229c8) shows them too.
 # (Route goals are not matchable here: the h2 segment's s30 goal still reports FAIL; 12.2 fails it the same way.)
-05e5ff76,677229c8 | alloc | h2 | alloc\[[0-9a-f]+\]:free\[[0-9a-f]+\] native UI texture staging | KNOWN_ISSUES "The cutscene at the r100 cliff (after the first house) is skipped" (12.2 control the same)
-05e5ff76,677229c8 | movie | h2 | id=10030 | KNOWN_ISSUES "The cutscene at the r100 cliff (after the first house) is skipped" (s30 terminal=3 0/340; 12.2 the same)
-05e5ff76,677229c8 | vram | boat | r10b: 12 thrash-guard refusal | KNOWN_ISSUES "On the r10b boat, a few effect pictures can be skipped while video memory is full" (12.2 control: the same 12)
+05e5ff76,677229c8,d2cd2a88,ba856017 | alloc | h2 | alloc\[[0-9a-f]+\]:free\[[0-9a-f]+\] native UI texture staging | KNOWN_ISSUES "The cutscene at the r100 cliff (after the first house) is skipped" (12.2 control the same)
+05e5ff76,677229c8,d2cd2a88,ba856017 | movie | h2 | id=10030 | KNOWN_ISSUES "The cutscene at the r100 cliff (after the first house) is skipped" (s30 terminal=3 0/340; 12.2 the same)
+05e5ff76,677229c8,d2cd2a88,ba856017 | vram | boat | r10b: 12 thrash-guard refusal | KNOWN_ISSUES "On the r10b boat, a few effect pictures can be skipped while video memory is full" (12.2 control: the same 12)

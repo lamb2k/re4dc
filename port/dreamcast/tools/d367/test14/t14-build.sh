@@ -67,12 +67,14 @@ T13=${T13-$T13REC}
 T14_1=${T14_1-}
 T14_18="GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1"
 T14_17="MOTION_COLD_POOL=262144"
+# RC fix 10-15 (coordinator option b): ROOM_REENTRY_EVICT=1, the r101 death / Continue re-entry fragmentation (crash death)
+T14_RE=${T14_RE-ROOM_REENTRY_EVICT=1}
 T14_15="G1_DIAG_INLINE=1 G1_FP_UNSIGNED=1 G1_PRESORT_LAZY=1"
 T14_NC=${T14_NC-ACTOR_NO_CLEAR=1}
 # T14_DISC="" (env): the variant without the disc items (KOS_DISC_FIX=0), ready in case the console verdict on
 # KOS_DISC_FIX goes against it (LinkOrder2 console halt 10-15, "invalid prepared enemy motion archive", under analysis).
 T14_DISC=${T14_DISC-DISC_COMPAT=1 DISC_READ_FALLBACK=0}
-T14REC="$T14_1 $T14_17 $T14_15 $T14_NC $T14_DISC $T14_18 MEMSET_LEAN=0"
+T14REC="$T14_1 $T14_17 $T14_15 $T14_NC $T14_DISC $T14_18 $T14_RE MEMSET_LEAN=0"
 T14=${T14-$T14REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"

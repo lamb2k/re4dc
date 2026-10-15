@@ -3567,6 +3567,9 @@ PreloadPick preload_picks[kTextureCount];
 #if defined(RE4DC_ROOM_CHANGE_EVICT) && RE4DC_ROOM_CHANGE_EVICT
 unsigned rce_retire_frame;bool rce_armed;   // ROOM_CHANGE_EVICT: set at room retirement (room_change_retire)
 #endif
+#if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
+unsigned rce_last_room=~0U;                 // ROOM_REENTRY_EVICT: the room of the previous room-change evict
+#endif
 #if RE4DC_QUALITY_ASSETS
 bool preload_room_pass; // Standard: skip the index's drop keys in the room-identity pass only
 #endif
@@ -3836,12 +3839,30 @@ void preload_identities(){
         // load()'s evictions.
         rce_armed=false;
         unsigned closed=0,closed_bytes=0,kept=0,kept_bytes=0;
+#if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
+        // ROOM_REENTRY_EVICT: the same room entered again (Continue after a death, a room's own door): the old visit's
+        // last frames drew this room's dynamic set, so the window kept it (57 entries, 526 KB in r101) beside the
+        // pinned resident list and the next uploads found no contiguous block. On a re-entry every entry this pass did
+        // not pin closes; the room's listed set is pinned above and loads with the preload.
+        re4dc::profile::Source rce_src{};
+#if defined(__sh__)
+        re4dc_profile_source(&rce_src);
+#endif
+        const bool rce_same=rce_src.room==rce_last_room;rce_last_room=rce_src.room;
+#endif
         for(auto& e:entries){
             if(!e.valid || RE4DC_ENTRY_PINNED(e))continue;
             const unsigned sz=e.package.vram_bytes();
+#if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
+            if(!rce_same && e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
+#else
             if(e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
+#endif
             close_entry(e);++closed;closed_bytes+=sz;
         }
+#if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
+        if(rce_same)re4dc_log("native UI: room re-entry evict: room=%03x\n",unsigned(rce_src.room));
+#endif
         re4dc_log("native UI: room change evict: closed=%u kb=%u kept=%u kept_kb=%u listed_resident=%u free=%u window=%u\n",
             closed,closed_bytes/1024,kept,kept_bytes/1024,resident,(unsigned)pvr_mem_available(),unsigned(RE4DC_ROOM_CHANGE_EVICT));
     }

@@ -1816,6 +1816,21 @@ $(error ROOM_CHANGE_EVICT needs TEX_KEEP=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOM_CHANGE_EVICT=$(ROOM_CHANGE_EVICT)U
 endif
+# ROOM_REENTRY_EVICT=1 (test 14 RC, render only, default 0 = image unchanged; needs ROOM_CHANGE_EVICT): when the room
+# entered is the room just left (Continue after a death, r101 -> r101), the room-change evict closes every kept entry
+# the new room's first preload pass did not pin, instead of keeping what the old visit drew in its last frames. Without
+# it the r101 death / Continue re-entry kept 57 entries (526 KB) beside the 190-key resident list and three 256x256
+# textures found no contiguous block (crash suite death, test 14 RC 10-15). Logs "native UI: room re-entry evict:".
+ROOM_REENTRY_EVICT ?= 0
+ifneq ($(filter-out 0 1,$(ROOM_REENTRY_EVICT)),)
+$(error ROOM_REENTRY_EVICT must be 0 or 1)
+endif
+ifeq ($(ROOM_REENTRY_EVICT),1)
+ifeq ($(ROOM_CHANGE_EVICT),0)
+$(error ROOM_REENTRY_EVICT needs ROOM_CHANGE_EVICT)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOM_REENTRY_EVICT=1
+endif
 # PRELOAD_LARGE_FIRST=1 (lane vram12 D5, render only, default 0; needs TEX_RESIDENT=1): the room-entry preload loads its
 # picks of 16 KiB or more first, then the rest (two forward sweeps in disc order), so small packages do not fragment
 # the pool ahead of the large ones.
