@@ -178,7 +178,7 @@ ifeq ($(or $(ALIVE_CAP),0),0)
 override ALIVE_CAP := 6
 endif
 $(OBJDIR)/src/game/stage.o $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_PS2_CH3_ENEMY=1
-$(OBJDIR)/platform/ps2_enemy_ch3.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_CH3_ENEMY=1 -I$(PS2_ENEMY_CH3_DIR)
+$(OBJDIR)/platform/ps2_enemy_ch3.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_CH3_ENEMY=1 -DRE4DC_PS2_ENEMY_RULES=1 -I$(PS2_ENEMY_CH3_DIR)
 $(OBJDIR)/platform/ps2_enemy_ch3.o: $(PS2_ENEMY_CH3_DIR)/ps2_enemy_ch3_data.inc
 endif
 # PS2_ENEMY_RULES=1 (test 9 lane PS2EN, default 0; changes gameplay by design): the PS2 USA enemy rules of the
