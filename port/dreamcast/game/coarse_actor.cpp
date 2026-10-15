@@ -212,11 +212,25 @@ bool visible(const cModelInfo* info) {
 }
 }
 
+#if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
+#include "chunk_find.h"
+#endif
 // These hooks are called before model_bridge casts a cModelInfo pointer.
 extern "C" int re4dc_coarse_actor_source(const void* info,Re4dcActorSource* out) {
 #if RE4DC_COARSE_GANADO
     if(re4dc_coarse_ganado_source(info,out))return 1;
 #endif
+#if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
+    // GC_CENSUS_TRIM (lane t2exact, chunk_find.h): the same element, found from the table's address range.
+    if(const auto* p=re4dc_chunk_find(leon4k::chunks,info)){
+        const auto& c=*p;*out={c.positions,c.normals,c.position_count,c.normal_count,c.palette_count,0};return 1;
+    }
+#if RE4DC_LEON_HAND_TABLE
+    if(const auto* p=re4dc_chunk_find(leon_hands::chunks,info)){
+        const auto& c=*p;*out={c.positions,c.normals,c.position_count,c.normal_count,c.palette_count,0};return 1;
+    }
+#endif
+#else
     for(const auto& c:leon4k::chunks)if(info==&c){
         *out={c.positions,c.normals,c.position_count,c.normal_count,c.palette_count,0};return 1;
     }
@@ -224,6 +238,7 @@ extern "C" int re4dc_coarse_actor_source(const void* info,Re4dcActorSource* out)
     for(const auto& c:leon_hands::chunks)if(info==&c){
         *out={c.positions,c.normals,c.position_count,c.normal_count,c.palette_count,0};return 1;
     }
+#endif
 #endif
     return 0;
 }

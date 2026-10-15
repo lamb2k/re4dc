@@ -58,8 +58,18 @@ union WGPipe {
 extern "C" volatile WGPipe GXWGFifo[1] __attribute__((aligned(32)));
 volatile WGPipe GXWGFifo[1] __attribute__((aligned(32)));
 
+#if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
+// GC_CENSUS_TRIM (lane t2exact, ../gx_fast.h): the same state words, exported for the inline readers / writer.
+#if (RE4DC_GXF_JITTER+0) != (RE4DC_RES_ALTERNATE+0)
+#error GC_CENSUS_TRIM: RE4DC_GXF_JITTER must equal RE4DC_RES_ALTERNATE (census_trim.mk)
+#endif
+extern "C" { f32 re4dc_gxf_projection[7]; f32 re4dc_gxf_viewport[6] = {0, 0, 640, 480, 0, 1}; }
+#define g_projection re4dc_gxf_projection
+#define g_viewport re4dc_gxf_viewport
+#else
 static f32 g_projection[7];
 static f32 g_viewport[6] = {0, 0, 640, 480, 0, 1};
+#endif
 static u32 g_stat_begin, g_stat_verts;
 // Only the material alpha needed by the source model adapter. Not a TEV VM.
 static unsigned g_model_alpha=255, g_model_alpha_source;

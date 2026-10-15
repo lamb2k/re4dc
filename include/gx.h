@@ -227,5 +227,7 @@ void GXSetDither(u8 dither);
 }
 #endif
 #define GXSetTexCoordGen(dst_coord, func, src_param, mtx) GXSetTexCoordGen2(dst_coord, func, src_param, mtx, 0, 125)
+// GC_CENSUS_TRIM (lane t2exact): inline GX state readers / writer for the hot callers (default off: macros only).
+#include "../port/dreamcast/game/gx_fast.h"
 
 #endif

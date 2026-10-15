@@ -92,6 +92,12 @@ const char* re4dc_bench_results(void);
 #if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
 void re4dc_bench_poc(unsigned mask);  // bench.cpp (bench.mk BENCH_POC)
 #endif
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+extern "C" void re4dc_ps2_pvs_set(unsigned on);  // native_static.cpp (t2exact.mk PS2_PVS)
+#endif
+#if defined(RE4DC_SG_SELECT_LEAN) && RE4DC_SG_SELECT_LEAN
+extern "C" void re4dc_sg_select_lean_set(unsigned on);  // native_static.cpp (t2exact.mk SG_SELECT_LEAN)
+#endif
 #if defined(RE4DC_LEON_LIGHT_TOGGLE) && RE4DC_LEON_LIGHT_TOGGLE
 extern "C" void re4dc_leon_light_set(unsigned mode);  // native_actor_fast.cpp (crowd.mk LEON_LIGHT_TOGGLE)
 #endif
@@ -451,6 +457,18 @@ void load()
 #if defined(RE4DC_KOS_SQUEEZE) && RE4DC_KOS_SQUEEZE
         } else if (!strcmp(k, "squeeze")) {
             // KOS_SQUEEZE (platform/os.cpp reads this line at OSInit)
+#endif
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+        } else if (!strcmp(k, "pvs") && n >= 2) {
+            // PS2_PVS (t2exact.mk): `pvs 0|1` switches the occlusion set off / on at run time (same image)
+            re4dc_ps2_pvs_set(num(tok[1]));
+            re4dc_log("warp: pvs %u\n", (unsigned) num(tok[1]));
+#endif
+#if defined(RE4DC_SG_SELECT_LEAN) && RE4DC_SG_SELECT_LEAN
+        } else if (!strcmp(k, "sglean") && n >= 2) {
+            // SG_SELECT_LEAN (t2exact.mk): `sglean 0|1` original / lean strip-group tests at run time (same image)
+            re4dc_sg_select_lean_set(num(tok[1]));
+            re4dc_log("warp: sglean %u\n", (unsigned) num(tok[1]));
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
         } else if (!strcmp(k, "bench") && n >= 5) {

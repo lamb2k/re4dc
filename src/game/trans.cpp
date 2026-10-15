@@ -723,6 +723,10 @@ extern "C" void re4dc_pace_check(int phase);
 #endif
 #include "coarse_source_frame.h"
 extern "C" int re4dc_room4_state(unsigned*,unsigned*,unsigned*,unsigned*,unsigned*);
+#if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
+extern "C" const bool* const re4dc_room4_live_ptr;
+extern "C" const unsigned* const re4dc_room4_generation_ptr;
+#endif
 extern "C" void* re4dc_prim_tail(unsigned,unsigned);
 extern "C" void re4dc_log(const char*,...);
 namespace {
@@ -781,8 +785,14 @@ bool sourceActorIdentity(FrameIdentity& now) {
     // even when frame/room numbers or the manager lists have not changed.
     if(sourceActorActive && (unsigned(pG->prim_cnt)!=sourceActorPrimBase ||
        unsigned(pG->nPrim)!=sourceActorPrimBytes || unsigned(pG->vtx_buf_no)!=sourceActorPrimBuffer))return false;
+#if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
+    // GC_CENSUS_TRIM (lane t2exact): re4dc_room4_state's live flag and generation, read in place.
+    (void)cells;(void)bytes;(void)stale;(void)refused;
+    if(sourceActorEpoch==UINT32_MAX || !*re4dc_room4_live_ptr || !(generation=*re4dc_room4_generation_ptr))return false;
+#else
     if(sourceActorEpoch==UINT32_MAX ||
        !re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused) || !generation)return false;
+#endif
     now={unsigned(pG->Frame_cnt),(unsigned(pG->stage_no)<<8)|pG->room_no,
         generation,sourceActorEpoch,unsigned(re4dc_alive_gen[1]),unsigned(re4dc_alive_gen[2])};
     return true;

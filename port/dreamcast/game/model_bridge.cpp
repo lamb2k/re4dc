@@ -814,7 +814,7 @@ extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
     p.shift=d->shift;p.flags=d->flags;p.material_flags=part->flags;
     p.cull=re4dc_model_cull(m->CullMode,(pG->Debug_flg[0]&0x20000000)!=0);
     p.blend=info->blend_mode;p.depth_mode=m->z_mode;
-    memcpy(p.modelview,mv,sizeof(p.modelview));GXGetProjectionv(p.projection);GXGetViewportv(p.viewport);
+    memcpy(p.modelview,mv,sizeof(p.modelview));RE4DC_GXF_GET_PROJECTION(p.projection);RE4DC_GXF_GET_VIEWPORT(p.viewport);
 #if RE4DC_NATIVE_FOG
     // Fog as the source set it for this draw (effects/filters/thermal turn it
     // off temporarily) rides in the spare source_key[2] byte, so the part

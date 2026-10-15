@@ -123,10 +123,19 @@ bool visible(const cModelInfo* info) {
 }
 
 // These hooks are called before model_bridge casts a cModelInfo pointer.
+#if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
+#include "chunk_find.h"
+#endif
 extern "C" int re4dc_coarse_ganado_source(const void* info,Re4dcActorSource* out) {
+#if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
+    if(const auto* p=re4dc_chunk_find(ganado874::chunks,info)){
+        const auto& c=*p;*out={c.positions,c.normals,c.position_count,c.normal_count,c.palette_count,0};return 1;
+    }
+#else
     for(const auto& c:ganado874::chunks)if(info==&c){
         *out={c.positions,c.normals,c.position_count,c.normal_count,c.palette_count,0};return 1;
     }
+#endif
     return 0;
 }
 extern "C" int re4dc_coarse_ganado_texture_key(const Re4dcUiImage* i,unsigned* c,unsigned* f) {

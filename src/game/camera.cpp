@@ -62,10 +62,10 @@ void CameraSetProjection(int type)
     ProjType = type;
     switch (type) {
     case 1:
-        GXSetProjection(pG->Cam.ProjMat, 0);
+        RE4DC_GXF_SET_PROJECTION(pG->Cam.ProjMat, 0);
         break;
     case 2:
-        GXSetProjection(pG->Cam.ProjMat, 1);
+        RE4DC_GXF_SET_PROJECTION(pG->Cam.ProjMat, 1);
         break;
     }
 }

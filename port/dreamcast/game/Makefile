@@ -2172,6 +2172,8 @@ include charbake.mk
 # D367 ps2leon (PS2_LEON test arms; default off: no effect).
 include ps2leon.mk
 include vmu_context.mk
+# Lane t2exact (GC_CENSUS_TRIM ...; default off: no effect).
+include t2exact.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
 include knobs.mk
 

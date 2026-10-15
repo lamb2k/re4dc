@@ -1152,8 +1152,8 @@ static void EspSpriteEmit(cEsp* esp)
         s.image.palette_bytes = td->CLUTHeader->numEntries * 2;
     }
     f32 P[7], V[6];
-    GXGetProjectionv(P);
-    GXGetViewportv(V);
+    RE4DC_GXF_GET_PROJECTION(P);
+    RE4DC_GXF_GET_VIEWPORT(V);
     if (V[2] <= 0.0f || V[3] <= 0.0f) {
         return;
     }

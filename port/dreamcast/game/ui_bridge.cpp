@@ -107,7 +107,7 @@ extern "C" void re4dc_draw_id_quad(const IdUnit* u) {
     Mtx model;
     RE4DC_RENDER_MTXConcat(IDSystem::m_scrn_mat, u->mat, model);
     float projection[7], viewport[6];
-    GXGetProjectionv(projection); GXGetViewportv(viewport);
+    RE4DC_GXF_GET_PROJECTION(projection); RE4DC_GXF_GET_VIEWPORT(viewport);
     for (unsigned i=0; i<4; ++i) {
 #if RE4DC_UI_QUAD_LEAN
         float x,y;
@@ -590,6 +590,14 @@ struct Room4 {
     unsigned live_cells,live_bytes,stale_frees,refused;
 };
 Room4 room4{};
+#if defined(RE4DC_GC_CENSUS_TRIM) && RE4DC_GC_CENSUS_TRIM
+}
+// GC_CENSUS_TRIM (lane t2exact): sourceActorIdentity (trans.cpp, ~110-170 calls a frame) reads the two words it uses
+// from re4dc_room4_state() directly.
+extern "C" const bool* const re4dc_room4_live_ptr=&room4.live;
+extern "C" const unsigned* const re4dc_room4_generation_ptr=&room4.generation;
+namespace {
+#endif
 
 void* room_alloc4(unsigned bytes,const char* tag,bool clear){
     if(!room4.live || !memCheckHeapActive(4)){

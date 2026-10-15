@@ -297,6 +297,41 @@ static int rl_has(const RList *l, u32 pc)
     while (lo <= hi) { int mid = (lo + hi) / 2; if (pc < l->r[mid].lo) hi = mid - 1; else if (pc >= l->r[mid].hi) lo = mid + 1; else return 1; }
     return 0;
 }
+/* D remap (--dmap FILE, layout what-if): lines "lo hi delta" (hex, hex, signed decimal bytes); a traced data
+   access or DMA source in system RAM with lo <= phys < hi is moved by delta (e.g. IMAGE_PAD_BYTES: everything from
+   the pad's position up to the kernel stack). Code fetches are not moved. */
+typedef struct { u32 lo, hi; s32 d; } DRange;
+static DRange dmap[64]; static int ndmap;
+static u32 dmap_addr(u32 a)
+{
+    u32 p = a & 0x1FFFFFFF;
+    if (p < 0x0C000000 || p >= 0x10000000) return a;
+    u32 q = p & 0x0CFFFFFF;                   /* RAM mirrors */
+    for (int i = 0; i < ndmap; i++)
+        if (q >= dmap[i].lo && q < dmap[i].hi) return (u32)(a + dmap[i].d);
+    return a;
+}
+/* C remap (--cmap FILE, same format): instruction fetches in a range are moved by delta bytes (any multiple of 2: a
+   sub-line shift changes which 32 B lines a function's code occupies). Literal-pool loads are data: give the same
+   ranges to --dmap. */
+static DRange cmap[64]; static int ncmap;
+static u32 cmap_pc(u32 pc)
+{
+    u32 q = pc & 0x0CFFFFFF;
+    for (int i = 0; i < ncmap; i++)
+        if (q >= cmap[i].lo && q < cmap[i].hi) return (u32)(pc + cmap[i].d);
+    return pc;
+}
+static void load_ranges(const char *path, DRange *r, int *n, const char *what)
+{
+    FILE *f = fopen(path, "r"); u32 lo, hi; int d;
+    if (!f) { perror(path); exit(1); }
+    while (*n < 64 && fscanf(f, "%x %x %d", &lo, &hi, &d) == 3) {
+        r[*n].lo = lo & 0x0CFFFFFF; r[*n].hi = hi & 0x0CFFFFFF; r[*n].d = d; (*n)++;
+    }
+    fclose(f);
+    fprintf(stderr, "%s %d ranges\n", what, *n);
+}
 /* IC remap: map old code line (32 B) to new line address */
 static u32 *icmap;     /* indexed by (pc & 0xFFFFFF) >> 5 : new physical line address or 0 */
 static u8 *pinned;     /* OC-RAM what-if: per 32 B line of RAM, 1 = lives in OC RAM (always hits) */
@@ -621,11 +656,12 @@ static void step(u32 pc, const Ev *ev, int nev, int taken_next, u32 next_pc)
     }
 
     /* ---- instruction fetch ---- */
-    u32 iline = (pc & 0x1FFFFFFF) >> 5;
+    u32 fpc = ncmap ? cmap_pc(pc) : pc;
+    u32 iline = (fpc & 0x1FFFFFFF) >> 5;
     double tf = 0; int icat = C_IMISS;
     if (iline != cur_iline) {
         cur_iline = iline;
-        u32 a = pc;
+        u32 a = fpc;
         if (icmap && ram_valid(pc) && icmap[(pc & 0xFFFFFF) >> 5]) a = icmap[(pc & 0xFFFFFF) >> 5] | 0x80000000u;
         if ((pc >> 29) == 5) {        /* P2: uncached fetch */
             double start = bus_start(t_prev);
@@ -641,7 +677,7 @@ static void step(u32 pc, const Ev *ev, int nev, int taken_next, u32 next_pc)
                     double fw;
                     double full = start + fill_cost2(a & 0x1FFFFFFF, &fw) + ICFILL_EXTRA;
                     bus_free = full; n_ifill++;
-                    ic_first = start + fw + ICFILL_EXTRA; ic_full = full; ic_crit = (pc >> 3) & 3; ic_line = iline;
+                    ic_first = start + fw + ICFILL_EXTRA; ic_full = full; ic_crit = (fpc >> 3) & 3; ic_line = iline;
                     fetch_ready = ic_first;
                     s->imiss++;
                 }
@@ -650,7 +686,7 @@ static void step(u32 pc, const Ev *ev, int nev, int taken_next, u32 next_pc)
     }
     tf = fetch_ready;
     if (iline == ic_line && ic_full > t_prev) {           /* later beats of a line still being filled */
-        double w = ic_first + 2.0 * ((((pc >> 3) & 3) - ic_crit) & 3);
+        double w = ic_first + 2.0 * ((((fpc >> 3) & 3) - ic_crit) & 3);
         if (w > ic_full) w = ic_full;
         if (w > tf) tf = w;
     }
@@ -791,7 +827,7 @@ static void run_trace(const char *path)
                 npend = 0;
             } else {
                 if (npend < (1 << 20)) {
-                    pend[npend].addr = a; pend[npend].type = type; pend[npend].size = 1 << ((b >> 24) & 3);
+                    pend[npend].addr = ndmap ? dmap_addr(a) : a; pend[npend].type = type; pend[npend].size = 1 << ((b >> 24) & 3);
                     pend[npend].size_code = (b >> 24) & 15;
                     if (type >= 4 && type <= 7) pend[npend].size = 32;
                     pendpc[npend] = b & 0xFFFFFF; npend++;
@@ -809,7 +845,7 @@ static void run_trace(const char *path)
 static void usage(void)
 {
     fprintf(stderr, "hwsim --elf ELF [--out P] [--oc-kb 16|8] [--oix] [--fill-hit C --fill-miss C --fill-ovh C] "
-            "[--wb-hit C --wb-miss C] [--sq-cost C] [--streampf] [--pin FILE] [--icmap FILE] [--skip FILE] "
+            "[--wb-hit C --wb-miss C] [--sq-cost C] [--streampf] [--pin FILE] [--icmap FILE] [--dmap FILE] [--cmap FILE] [--skip FILE] "
             "[--fdiv FILE --fdiv-lat N --fdiv-lock N] [--perfect-ic] [--perfect-dc] [--no-dma] [--dma-burst C] [--burst-tail C] [--wa-stream] [--wa-nofill] [--no-dep] trace...\n");
     exit(2);
 }
@@ -835,6 +871,8 @@ int main(int argc, char **argv)
         else if (!strcmp(a, "--streampf")) STREAMPF = 1;
         else if (!strcmp(a, "--pin")) pinf = ARG;
         else if (!strcmp(a, "--icmap")) icf = ARG;
+        else if (!strcmp(a, "--dmap")) load_ranges(ARG, dmap, &ndmap, "dmap");
+        else if (!strcmp(a, "--cmap")) load_ranges(ARG, cmap, &ncmap, "cmap");
         else if (!strcmp(a, "--skip")) rl_load(&skip_ranges, ARG);
         else if (!strcmp(a, "--fdiv")) rl_load(&fdiv_ranges, ARG);
         else if (!strcmp(a, "--fdiv-lat")) FDIV_LAT_OVR = atof(ARG);
