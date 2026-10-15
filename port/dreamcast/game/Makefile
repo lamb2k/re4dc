@@ -228,7 +228,13 @@ endif
 # PS2_ENEMY_CASTLE=<mask> (lane castle 2026-10-15, default 0: no effect; needs PS2_ENEMY_RULES=1; changes gameplay by
 # design): PS2 USA room-code enemy rules for the castle (st2_*.rel, Normal mode, each read from the PS2 disassembly;
 # Easy-only branches are not ported). One bit per room; reserved bits are not implemented yet:
-#   0x01 r208 (reserved: init 6 sends, group A only while alive < 4, group D 2 sends, area D < 5)
+#   0x01 r208 (st2_0 0x11598 / 0x11ff0 / 0x13e18 / 0x13e58 / 0x14180; needs the PS2 emleon02 rows: PS2_CH3_ENEMY):
+#        R208Init sends 6 (3, 5, 6, 7, 1, 0x11; rank >= 7: 3, 0x5F, 0x60, 7, 0x61, 0x5E) where the GC sends 9 / 11;
+#        group A (areas 6/7) sends its two events + 0xD only while fewer than 4 are alive, 0x3C / 0x3D at exactly
+#        1; group D sends 0x23 / 0x25 (GC also 0x24 / 0x26); area 0x15 opens it below 5 alive (GC <= 5); the
+#        over-the-wall feed after the crank runs while the reset count is < 9 (GC <= 5), every 300 / 190 frames
+#        (GC 590 / 320). Not ported (open, ps2code lane): the PS2's extra virtual call on each fed Ganado and its
+#        wrap bookkeeping of fed Ganados (R208_EmSetEvent / R208_setEm setPtr into W+724).
 #   0x02 r20b: the hall waves never send list row 3 (em[1]); the random wave (Rnd() % 6, same draw) sends one
 #        Ganado in cases 0-2 (0x14 / 0x15 / 0x16) where the GC sends two (st2_1 R20bEmSetMain 0x14618..0x14da8)
 #   0x04 r216: the init sends only the display armor 0xE8 (armor[3]); the GC sends 0xE5..0xE8 (st2_2 R216Init 0x10e58)
@@ -239,7 +245,7 @@ ifneq ($(PS2_ENEMY_CASTLE),0)
 ifneq ($(PS2_ENEMY_RULES),1)
 $(error PS2_ENEMY_CASTLE needs PS2_ENEMY_RULES=1)
 endif
-$(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
+$(OBJDIR)/mod/st2_0/src/st2/r208.o $(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
 endif
 # R101_ALIVE_CAP=N (lane crowd12 2026-10-14; CHANGES GAMEPLAY by design; default 0 = off; needs PS2_ENEMY_ROOMS bit 0x02):
 #   at most N Ganados alive at once in the r101 village fight. Start-list Ganados beyond N are held at room entry
@@ -1489,8 +1495,11 @@ HEAP4_PARTS_RESERVE_BYTES ?= 73728
 CH23_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH23)),em3b:ovl em35:ovl)
 # Luis preserves its archive pointers and both manager scans use workAt (CH22 guarded adapter).
 CH22_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH22)),pl14:ovl)
+# CH31 (castle lane): st2_1 / em1a / em1b / em14 pass the discover lint (slot-math in r206.cpp and the em1a / em1b /
+# em14 _set.cpp value-init rewritten by assets.sh discover --fix); no other direct-slot consumer.
+CH31_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH31)),st2_1 em1a em1b em14)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif
