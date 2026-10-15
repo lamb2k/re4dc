@@ -435,15 +435,23 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
             # a partial GC section skeleton (stage-3 soldier head / hands: the parts they weight, by attach id):
             # each part must be the body bone of its attach id (parent, translation; a section root has parent -1);
             # PS2 ids are attach ids too
-            assert spec.get('subset_bones') and len(gsk) < len(bones), (role, len(gsk), len(bones))
-            by_attach = {g['attach']: g for g in gsk}
+            # (em11 type 7 hands: 41 parts on the 37-bone body, two hand roots repeated by attach id)
+            assert spec.get('subset_bones'), (role, len(gsk), len(bones))
+            by_attach = {}
+            for g in gsk:
+                by_attach.setdefault(g['attach'], g)
             for g in gsk:
                 b = bones[id_to_index[g['attach']]]
                 # a section root (parent -1) carries the body bone's rest position (model space)
                 want = b['translation'] if g['parent'] >= 0 else [r[3] for r in b['rest'][:3]]
                 assert g['parent'] in (b['parent'], -1) and max(abs(x - y) for x, y in zip(g['translation'], want)) <= bone_tol,                     (role, 'GC section part', g['id'], 'attach', g['attach'], 'differs from the body bone', g['translation'], want)
-            assert sorted(pb_['id'] for pb_ in m.bones) == sorted(by_attach), (role, 'PS2 bones != GC section attach ids')
-            pairs = [(pb_, dict(by_attach[pb_['id']], attach=pb_['id'])) for pb_ in m.bones]
+            assert set(pb_['id'] for pb_ in m.bones) <= set(by_attach), (role, 'PS2 bones outside the GC section attach ids')
+            # a PS2 bone takes the GC part of its id with the same parent (a repeated hand root: parent -1)
+            cands = {}
+            for g in gsk:
+                cands.setdefault(g['attach'], []).append(g)
+            pairs = [(pb_, dict(next((g for g in cands[pb_['id']] if g['parent'] == pb_['parent']), cands[pb_['id']][0]),
+                                attach=pb_['id'])) for pb_ in m.bones]
             id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in pairs)
             dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], g['translation'])) for pb_, g in pairs)
             dt_body = 0.0

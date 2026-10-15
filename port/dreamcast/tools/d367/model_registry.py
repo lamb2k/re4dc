@@ -617,7 +617,7 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             raise Fail(f'{name}: attach map is not the identity (a local attachment index needs its own map)')
         parents = [p['parent'] for p in pb]
         # partial_sections (descriptor opt-in; lane ps2cast-st3, the stage-3 soldiers): a head / hand BIN may carry
-        # only the parts it weights, each attached to the body part of its attach id (GC calcWeightMat); its parents
+        # only the parts it weights (or repeat a hand root by attach id: em11 type 7), each attached to the body part of its attach id (GC calcWeightMat); its parents
         # name body parts (a section root: -1). The registry skins every section from the body's parts either way.
         partial = set()
         if d.get('partial_sections'):
@@ -626,7 +626,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 if len(q) == bones:
                     continue
                 at = [p['attach'] for p in q]
-                if len(q) > bones or len(set(at)) != len(at) or any(not (0 <= a < bones) for a in at) or                         any(p['id'] != i or p['parent'] not in (-1, parents[p['attach']]) for i, p in enumerate(q)) or                         any(p['parent'] == -1 and parents[p['attach']] != -1 and parents[p['attach']] in at for p in q):
+                if any(not (0 <= a < bones) for a in at) or \
+                        any(p['id'] != i or p['parent'] not in (-1, parents[p['attach']]) for i, p in enumerate(q)):
                     raise Fail(f'{name} section {k}: partial skeleton is not a subset of the body hierarchy')
                 partial.add(k)
         if not luis and any([p['parent'] for p in b['part_bindings']] != parents for k, b in enumerate(binds) if k not in partial):
