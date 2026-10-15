@@ -621,8 +621,15 @@ void god_alert_poll()
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 // BENCHMARK: the scene's end state (the determinism check compares these lines between runs): Leon, the Ganados of
 // the rooms' count range (model ids 0x10..0x20) with position, hp and flags, folded into one hash.
+extern "C" int re4dc_ss_ui_order() __attribute__((weak));   // sscrn_bridge.cpp: 1 while the sub screen window is swapped
 void bench_state_log(unsigned frame)
 {
+    // the room's em works are sub screen bytes while the window is swapped (a radio call): no walk then
+    if (re4dc_ss_ui_order && re4dc_ss_ui_order()) {
+        re4dc_log("bench: state scene %d room %03x room_frame %u: not taken, the sub screen window is swapped\n",
+                  re4dc_bench_scene_no(), (unsigned) pG->room_id, frame);
+        return;
+    }
     unsigned h = 2166136261u;
     int alive = 0, listed = 0;
     for (int id = 0x10; id <= 0x20; ++id) {
@@ -652,7 +659,7 @@ bool bench_poll()
         if (wp.god && pG) pG->pl_life = pG->pl_life_max;
         return true;
     }
-    if (!re4dc_bench_tick(wp.room_frames)) return false;
+    if (re4dc_bench_tick(wp.room_frames) != 1) return false;   // 2: the geometry sweep freezes the logic after this tick
     bench_state_log(wp.room_frames);
     const char* next = re4dc_bench_next_scene();
     if (!next) {
@@ -1035,3 +1042,12 @@ int re4dc_warp_late_set(void) { return wp.has_late ? 1 : 0; }
 
 }  // extern "C"
 #endif  // RE4DC_DBG_WARP
+
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+// Benchmark geometry sweep (bench.cpp): the scene state line now (the frozen logic must keep its hash).
+extern "C" void re4dc_bench_state_now(const char* why)
+{
+    re4dc_log("bench: state check: %s\n", why ? why : "-");
+    bench_state_log(wp.room_frames);
+}
+#endif

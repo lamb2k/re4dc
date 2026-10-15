@@ -665,8 +665,27 @@ void blob(Out& o, const Vec& at, float r)
     }
 }
 
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+}  // namespace (re-opened below)
+extern "C" unsigned re4dc_bench_hide(void);   // geometry sweep (bench.cpp): 1 / 4 Ganados, 2 Leon, 8 world, 16 effects
+extern "C" int re4dc_bench_actor_slot(const void* m);   // trans.cpp: the model's place in the Trans-time alive snapshot
+extern "C" void re4dc_bench_ganado(int path);
+namespace {
+#endif
 void draw_model(Out& o, cModel* m, std::uint32_t rgb, float t)
 {
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+    // Geometry sweep (bench.cpp, render only): a hidden Ganado / Leon is not drawn (trans.cpp BenchActorDraw's rule).
+    // never a walk of the live alive list here (render time): the Trans-time snapshot, compared by value (trans.cpp)
+    {
+        const bool ganado = m != (cModel*) pPL && m != (cModel*) pSUB && m->id >= 0x10 && m->id <= 0x20;
+        if (const unsigned h = re4dc_bench_hide() & 7u) {
+            const int n = re4dc_bench_actor_slot(m);
+            if ((ganado && ((h & 1) || ((h & 4) && n >= 0 && (n & 1)))) || ((h & 2) && m == (cModel*) pPL)) return;
+        }
+        if (ganado) re4dc_bench_ganado(1);
+    }
+#endif
 #if RE4DC_COARSE_SOURCE_ACTORS
     // Both source-handled and invalid membership suppress this substitute.
     // Invalid membership is logged by the owner and invalidates the candidate.
@@ -855,6 +874,24 @@ extern "C" int re4dc_coarse_tick(int dropped)
     return ctx;
 }
 
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+// Benchmark disc page 2 (bench.cpp): 2 actor draw, 3 world draw, 4 other (set again on every return).
+extern "C" void re4dc_bench_phase(int phase);
+extern "C" float re4dc_bench_world_far(float far);   // geometry sweep: the PS2 world's far plane (render only)
+#define BENCH_PH(p) re4dc_bench_phase(p)
+// geometry sweep NO WORLD (bench.cpp hide bit 8, render only): no scenery is submitted (PS2 world, collision pieces,
+// coarse world); actors, effects and the HUD still draw
+#define BENCH_NO_WORLD ((re4dc_bench_hide() & 8u) != 0)
+#define BENCH_NO_FX ((re4dc_bench_hide() & 16u) != 0)   // NO EFFECTS: no effect markers
+namespace {
+struct BenchPhaseOther { ~BenchPhaseOther() { re4dc_bench_phase(4); } };
+}
+#else
+#define BENCH_PH(p) ((void) 0)
+#define BENCH_NO_WORLD false
+#define BENCH_NO_FX false
+#endif
+
 // Render() of a coarse image: the whole opaque view, before the effect / HUD OTs.
 extern "C" void re4dc_coarse_draw(void)
 {
@@ -865,12 +902,20 @@ extern "C" void re4dc_coarse_draw(void)
     if (!pG || !SatMgr.pArray) {
         return;
     }
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+    BenchPhaseOther benchPhaseOther;
+#endif
+    BENCH_PH(3);
     const std::uint64_t t0 = timer_us_gettime64();
 #if RE4DC_PS2_WORLD_DRAW
     // Texture/file work must precede coarse_begin acquiring the TA store queues.
     setup_camera();
     if(re4dc_fog_note_far)re4dc_fog_note_far(View._zfar);
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+    g_ps2_world=BENCH_NO_WORLD || re4dc_ps2_world_draw(G_ROOM_ID,g_S,re4dc_bench_world_far(View._zfar))!=0;   // geometry sweep
+#else
     g_ps2_world=re4dc_ps2_world_draw(G_ROOM_ID,g_S,View._zfar)!=0;
+#endif
 #endif
     Out o{re4dc_coarse_begin(1), 0, 0};
     if (!o.sq) {
@@ -922,9 +967,9 @@ extern "C" void re4dc_coarse_draw(void)
                   s0->polygon_num == coarse_world::kPolys;
     }
 #endif
-    draw_world(o);
+    if (!BENCH_NO_WORLD) draw_world(o);
 #if RE4DC_COARSE_WORLD
-    if (g_world) {
+    if (g_world && !BENCH_NO_WORLD) {
         CoarseView v;
         for (unsigned r = 0; r < 3; ++r) {
             for (unsigned c = 0; c < 4; ++c) {
@@ -958,8 +1003,10 @@ extern "C" void re4dc_coarse_draw(void)
         o.sq = re4dc_coarse_begin(1);
     }
 #endif
+    BENCH_PH(2);
     draw_actors(o);
-    draw_effects(o);
+    BENCH_PH(4);
+    if (!BENCH_NO_FX) draw_effects(o);
     if (o.sq) {
         re4dc_coarse_end(o.n);
     }

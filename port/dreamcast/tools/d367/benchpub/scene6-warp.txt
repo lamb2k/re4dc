@@ -1,0 +1,15 @@
+name bench-r101-sweep
+# Benchmark disc (BENCHMARK=1, bench.mk), scene 6 = /cd/dc/bench6.txt: the r101 cross geometry sweep. Scene 1's
+# fixture (the r101 cross view, crowd alerted at room frame 30, god, no pad input); at room frame 1000 (33 s) the game
+# logic freezes (bench.cpp) with Ganados on screen (Flycast probes 600 / 800 / 1000: 1000 draws 4-5 Ganados, 34.7k
+# vertices as shipped vs 27.5k without them) and the same frame state is drawn under nine render-only settings, 6.5 s
+# each.
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150
+bench 6 1000 1000 R101 CROSS
