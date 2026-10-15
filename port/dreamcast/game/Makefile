@@ -376,6 +376,17 @@ endif
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 # The stage-3 PS2 world packages (native_static.cpp re4dc_ps2_world_room, PS2_WORLD_REGISTRY rooms).
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+# r300's s00 (the island landing) is presented by its PS2 movie (src/st3/r300.cpp, ROUTE_MOVIES).
+$(OBJDIR)/mod/st3_0/src/st3/r300.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+ROUTE_MOVIE_GAME_CH3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o
+# PS2_ENEMY_ST3=<mask> (stage 3 lane, default 0: no effect; changes gameplay by design, PS2 USA = source of truth):
+# the PS2 room-code enemy gates of the island. Bit 0: r30f (setem < 6, the 0xF8 send < 7). Bit 1: r301 (the PS2
+# wave tasks: sends while < 9 / < 8 alive, room-save chaining, far deletes to 7 / 4). Bit 3: clamp the gates to cap 6.
+PS2_ENEMY_ST3 ?= 0
+ifneq ($(PS2_ENEMY_ST3),0)
+$(OBJDIR)/mod/st3_1/src/st3/r30f.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2_ENEMY_ST3)
+$(OBJDIR)/mod/st3_0/src/st3/r301.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2_ENEMY_ST3)
+endif
 # r30a calls EtcModel.cpp's setRoomEtcBreakDisp by its C name (as r200; ROUTE_CH23 sets the same export alias).
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_WORLD_STAGE_MODULES=1
 endif
@@ -1093,7 +1104,7 @@ $(OBJDIR)/route-movies.h: route-movies-force
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 ROUTE_MOVIE_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/pad.o
-ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23)
+ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3)
 $(ROUTE_MOVIE_PLATFORM) $(ROUTE_MOVIE_GAME): $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/route-movies.h
