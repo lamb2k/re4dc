@@ -1,0 +1,18 @@
+name sz-r101house
+# benchmark-r101house (lane crowd12, 2026-10-14; the stack's dense check scene): the r101 house siege. The fight is on
+# (find 0x2000, crowd alerted), Leon is placed in AT area 8 (the house), so the house event s21 runs: the window
+# breaks, the PS2 rules send 9 Ganados (0x3C..0x46) on top of the survivors, ladders come up. god. Window after the
+# s21 movie: probe S4-r101house-probe (c12S4tW) shows alive 12 (9 sent + 3), 9 models drawn all near (1.5..3.8 m)
+# from room frame ~750 to ~3150, so the window 1500..2400 sits inside the siege.
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150
+area 8
+# bench-window 1500 2400
+# bench-hwwindow 1700:2599
+# STACK v3 data (crowd12 2026-10-14): tex_merge.py of tex-t11.pak + fx12 ps2lib (5182665f) + vram12 world VQ tex-vr12-ps2vq.pak (0cfe783a), wrap-safe marked; objs r101 (32dfe338)

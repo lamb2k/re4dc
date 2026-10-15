@@ -105,7 +105,7 @@ extern "C" void re4dc_draw_id_quad(const IdUnit* u) {
 #endif
     CameraCurrentProjection();
     Mtx model;
-    PSMTXConcat(IDSystem::m_scrn_mat, u->mat, model);
+    RE4DC_RENDER_MTXConcat(IDSystem::m_scrn_mat, u->mat, model);
     float projection[7], viewport[6];
     GXGetProjectionv(projection); GXGetViewportv(viewport);
     for (unsigned i=0; i<4; ++i) {

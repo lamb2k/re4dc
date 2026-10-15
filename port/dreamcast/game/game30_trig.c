@@ -18,6 +18,13 @@
  * GAME_TRIG_LEAN=1 (lane gskel, at the end of the file) replaces the three public functions with
  * leaf versions of the same operations (see there).
  */
+#if defined(RE4DC_SH4_APPROX_LOGIC) && RE4DC_SH4_APPROX_LOGIC
+/* SH4_APPROX_LOGIC (game30.mk, lane approx; NOT exact): Bruceleeto's fe2aed7945. sh4zam pulls in newlib's __int32_t
+ * (long); fdlibm.h typedefs its own (int): keep fdlibm's under other names. */
+#include <sh4zam/shz_trig.h>
+#define __int32_t re4dc_fd_int32_t
+#define __uint32_t re4dc_fd_uint32_t
+#endif
 #include "fdlibm.h"
 
 static const float
@@ -484,6 +491,20 @@ void re4dc_sincosf(float x, float *s, float *c)
 	__int32_t n,hx,ix;
 	hx = lfbits(x);
 	ix = hx&0x7fffffff;
+#if defined(RE4DC_SH4_APPROX_LOGIC) && RE4DC_SH4_APPROX_LOGIC
+	/* SH4_APPROX_LOGIC (Bruceleeto fe2aed7945): sin / cos from shz_sincosf (ftrc + FSCA) for every caller; large,
+	 * inf and NaN arguments keep the exact sincosf_big path. */
+	if(ix > 0x43490f80) {			/* large, inf or NaN */
+	    sincosf_big(x,s,c);
+	    return;
+	}
+	{
+	    shz_sincos_t r = shz_sincosf(x);
+	    *s = r.sin;
+	    *c = r.cos;
+	    return;
+	}
+#endif
 	if(ix <= 0x3f490fd8) {			/* |x| ~< pi/4 */
 	    if(ix<0x32000000) {			/* both kernels: |x| < 2**-27 */
 		*s = x;

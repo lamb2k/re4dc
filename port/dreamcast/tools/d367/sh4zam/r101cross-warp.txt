@@ -1,0 +1,12 @@
+name sz-r101cross
+# lane approx (2026-10-15): benchmark-r101 scene as the public benchmark disc's scene 1 (benchpub/scene1-warp.txt at
+# 819835d0) without its BENCHMARK-only "bench" line: r101 square, Leon by the burning cross, crowd alerted at room
+# frame 30, god, no pad input; Ganados at the R101_ALIVE_CAP=6 rule (12.1 recipe). Data = T121_DATA (t11-fix.py).
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150

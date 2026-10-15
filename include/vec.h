@@ -36,6 +36,33 @@ void PSMTXMultVec(const Mtx m, const Vec* src, Vec* dst);
 void PSMTXMultVecArray(const Mtx m, const Vec* srcBase, Vec* dstBase, u32 count);
 void PSMTXMultVecSR(const Mtx m, const Vec* src, Vec* dst);
 void PSMTXTransApply(const Mtx src, Mtx dst, f32 xT, f32 yT, f32 zT);
+// RE4DC SH4_APPROX_RENDER: as include/dolphin/mtx.h (render-only call sites; off = the exact PS entry points).
+// RE4DC GAME_SH4ZAM (lane sh4zam-direct 2026-10-15; RE4DC_SH4ZAM_RENDER): the same render-only call sites, plus the
+// normal-matrix / skin-palette inverses and the effect sprite's position transform (RE4DC_RENDER_MTXInverse /
+// RE4DC_RENDER_MTXMultVec), take the SH4ZAM direct mapping (port/dreamcast/game/platform/sh4zam_direct.c: XMTRX/FTRV
+// concat, FIPR rows, FSRRA 1/det, FSCA sin / cos). Not bit-exact; render only. Off: the exact PS entry points.
+#if defined(RE4DC_SH4ZAM_RENDER) && RE4DC_SH4ZAM_RENDER
+void re4dc_zam_MTXConcat(const Mtx a, const Mtx b, Mtx ab);
+void re4dc_zam_MTXRotRad(Mtx m, char axis, f32 rad);
+u32 re4dc_zam_MTXInverse(const Mtx src, Mtx inv);
+void re4dc_zam_MTXMultVec(const Mtx m, const Vec* src, Vec* dst);
+#define RE4DC_RENDER_MTXConcat re4dc_zam_MTXConcat
+#define RE4DC_RENDER_MTXRotRad re4dc_zam_MTXRotRad
+#define RE4DC_RENDER_MTXInverse re4dc_zam_MTXInverse
+#define RE4DC_RENDER_MTXMultVec re4dc_zam_MTXMultVec
+#elif defined(RE4DC_SH4_APPROX_RENDER) && RE4DC_SH4_APPROX_RENDER
+void re4dc_shz_MTXConcat(const Mtx a, const Mtx b, Mtx ab);
+void re4dc_shz_MTXRotRad(Mtx m, char axis, f32 rad);
+#define RE4DC_RENDER_MTXConcat re4dc_shz_MTXConcat
+#define RE4DC_RENDER_MTXRotRad re4dc_shz_MTXRotRad
+#define RE4DC_RENDER_MTXInverse PSMTXInverse
+#define RE4DC_RENDER_MTXMultVec PSMTXMultVec
+#else
+#define RE4DC_RENDER_MTXConcat PSMTXConcat
+#define RE4DC_RENDER_MTXRotRad PSMTXRotRad
+#define RE4DC_RENDER_MTXInverse PSMTXInverse
+#define RE4DC_RENDER_MTXMultVec PSMTXMultVec
+#endif
 
 void C_MTXOrtho(Mtx44 m, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
 void C_MTXPerspective(Mtx44 m, f32 fovY, f32 aspect, f32 n, f32 f);

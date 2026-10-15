@@ -46,7 +46,7 @@ T13_6=${T13_6-ROOM_CHANGE_EVICT=60}
 T13REC="$T13R $T13G $T13_6"
 T13=${T13-$T13REC}
 # Test 14 knobs (TEST14-SCOPE.md rows; all render, I/O or exact: STRICT rT vs kT, identity kP vs test 13):
-#   1  SS_HOLD_RESTORE=1 CORE_PIN=1 + data res14 (lane t14-r101res; VRAM rule: r101 resident list complete, the sub screen
+#   1  (knobs out, see below) SS_HOLD_RESTORE=1 CORE_PIN=1 + data res14 (lane t14-r101res; VRAM rule: r101 resident list complete, the sub screen
 #      hold restores the evicted room keys at the close, the HUD core set is never evicted)
 #   17 MOTION_COLD_POOL=262144 + data res14r3 (lane t14-r103res c9dc83ed: cold motion keys in heap 4 instead of slab
 #      eviction; the r103 resident list)
@@ -56,13 +56,23 @@ T13=${T13-$T13REC}
 #      MEMSET_LEAN stays 0 (ACTOR_NO_CLEAR covers its clear).
 #   11/12 subset: DISC_COMPAT=1 DISC_READ_FALLBACK=0 (lane discread 2cfb535d; forces KOS_DISC_FIX=1: the KOS GD-DMA
 #      completion fix + fs_iso9660 mutex; the timing-neutral subset, STRICT in Flycast). Product number unchanged (T0000).
-#   18 SH4ZAM render only: merged when its lane reports (not in T14REC yet).
-T14_1="SS_HOLD_RESTORE=1 CORE_PIN=1"
+#   18 GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 (lane sh4zam-direct e4e3336c; render only, not bit-exact: STRICT logic, the
+#      look accepted by the user 10-15)
+#   Row 1's knobs are OUT after the RC gates on the intermediate candidate (bb2c4c51, 10-15): CORE_PIN=1 kept the 4 HUD
+#   keys pinned through r105's chapter 1-2 results screen, which then found no contiguous 512 KiB block for its 631x169
+#   picture (texchk FAIL, crash suite ch12) and refused 63-102 effect sprites (guard_p; test 13: 8). SS_HOLD_RESTORE=1
+#   alone matched test 13 there (8) but restores nothing without CORE_PIN (lane note: the HUD is hidden before the
+#   post-bell call); without both r105 refuses 0. Row 1's data (the r101 list in res14r3) stays: r101 bell 0 uploads
+#   after the preload (test 13: 4).
+T14_1=${T14_1-}
+T14_18="GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1"
 T14_17="MOTION_COLD_POOL=262144"
 T14_15="G1_DIAG_INLINE=1 G1_FP_UNSIGNED=1 G1_PRESORT_LAZY=1"
 T14_NC=${T14_NC-ACTOR_NO_CLEAR=1}
-T14_DISC="DISC_COMPAT=1 DISC_READ_FALLBACK=0"
-T14REC="$T14_1 $T14_17 $T14_15 $T14_NC $T14_DISC MEMSET_LEAN=0"
+# T14_DISC="" (env): the variant without the disc items (KOS_DISC_FIX=0), ready in case the console verdict on
+# KOS_DISC_FIX goes against it (LinkOrder2 console halt 10-15, "invalid prepared enemy motion archive", under analysis).
+T14_DISC=${T14_DISC-DISC_COMPAT=1 DISC_READ_FALLBACK=0}
+T14REC="$T14_1 $T14_17 $T14_15 $T14_NC $T14_DISC $T14_18 MEMSET_LEAN=0"
 T14=${T14-$T14REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"
