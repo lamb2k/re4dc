@@ -53,6 +53,12 @@ MODULE(em1f)
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
 MODULE(st2_0)
 #endif
+#if defined(RE4DC_ROUTE_CH31) && RE4DC_ROUTE_CH31
+MODULE(st2_1)
+MODULE(em1a)
+MODULE(em1b)
+MODULE(em14)
+#endif
 MODULE(st1_0)
 MODULE(st1_1)
 MODULE(st1_2)
@@ -138,6 +144,12 @@ static const Re4dcModule g_modules[] = {
     MODULE(75, st2_0), // chapter 2-3 castle approach (r200)
     {63, "em3b", 0, 0, 0, 0, 0, 0, 0}, // vehicles, room overlay
     {61, "em35", 0, 0, 0, 0, 0, 0, 0}, // Mendez, room overlay
+#endif
+#if defined(RE4DC_ROUTE_CH31) && RE4DC_ROUTE_CH31
+    MODULE(82, st2_1), // ROUTE_CH31: castle chapter 3 (r204 r205 r206 r209 r20a..r20f)
+    MODULE(24, em1a),  // ROUTE_CH31: r208 / r209 Ganados (em10g group)
+    MODULE(25, em1b),  // ROUTE_CH31: r201 / r20c Ganados (em10g group)
+    MODULE(35, em14),  // ROUTE_CH31: r204 / r20f Ganados (em10g group)
 #endif
     MODULE(74, st1_0),
     MODULE(73, st1_1),

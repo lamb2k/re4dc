@@ -105,7 +105,9 @@ ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r
              'r112': [1], 'r111': [6], 'r113': [6], 'r11c': [6],
              # chapter 2-3 (lane ch22-1014; the runtime's "blk 3 (N GC bytes) does not fit" sizes matched to the
              # bio4midi entries): r11d #6 (as r11c), r10f / r11f / r200 #8 (740151 GC bytes)
-             'r11d': [6], 'r10f': [8], 'r11f': [8], 'r200': [8]}
+             'r11d': [6], 'r10f': [8], 'r11f': [8], 'r200': [8],
+             # chapter 3-1 (castle lane 2026-10-15): r202 plays #8 at entry (740160 GC bytes, as r200)
+             'r202': [8]}
 
 # Leon's other stage-1 weapons (--weapons; stage.sh AICA_WEAPONS=1; issue lamb2k/re4dc#1, silent weapons). The GC
 # loads the equipped weapon's SE block (WEP, block 2) on every weapon change (weaponLoad -> its .drs) into the one WEP
@@ -189,6 +191,15 @@ ROOMS = {
     'r11e': ['st1/r11e.dar', 'em/pl11.drs', 'em/em2b.drs'],
     'r11f': ['st1/r11f.dar', 'em/pl11.drs', 'em/em35.drs'],
     'r200': ['st2/r200.dar', 'em/pl11.drs', 'em/em12.drs', 'em/em18.drs'],
+    # Chapter 3-1 (castle lane 2026-10-15; assets.sh discover + first-pass runs, "aica: blk 5/6 ... does not fit"):
+    # Ashley (pl11) follows Leon; Ganados em11 (r202 r207 r203), the merchant em18 (r202), em1b (r201), em1a (r208),
+    # em14 (r204). Room archives are the compact31 (upload-only + native mips) .dar files.
+    'r202': ['st2/r202.dar', 'em/pl11.drs', 'em/em11.drs', 'em/em18.drs'],
+    'r207': ['st2/r207.dar', 'em/pl11.drs', 'em/em11.drs'],
+    'r203': ['st2/r203.dar', 'em/pl11.drs', 'em/em11.drs'],
+    'r201': ['st2/r201.dar', 'em/pl11.drs', 'em/em1b.drs'],
+    'r208': ['st2/r208.dar', 'em/pl11.drs', 'em/em1a.drs'],
+    'r204': ['st2/r204.dar', 'em/pl11.drs', 'em/em14.drs'],
     # r40b (St4, follow-up 7): em1f (bringup inventory: em1f/em1f, st4_0)
     'r40b': ['st4/r40b.dar', 'em/em1f.drs'],
 }
@@ -815,7 +826,11 @@ CH22_STREAMS = CH21R_STREAMS + [(0, 0x19), (0, 9), (0, 0xA), (1, 5), (1, 0xE0), 
 # aica_str.dat" in the first-pass runs): r11d 0:22, r200 0:24, r11e 1:76; appended so every earlier entry keeps its
 # data bytes. `--streams ch23`.
 CH23_STREAMS = CH22_STREAMS + [(0, 22), (0, 24), (1, 76)]
-STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch23': CH23_STREAMS}
+# Chapter 3-1 (castle lane 2026-10-15): ch23 plus r207's radio call voice 1:153 (sbb 0x9ba0000, "not in
+# aica_str.dat, silent" on r207 entry); appended so every earlier entry keeps its data bytes. `--streams ch31`.
+CH31_STREAMS = CH23_STREAMS + [(1, 153)]
+STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch23': CH23_STREAMS,
+                  'ch31': CH31_STREAMS}
 
 
 def nibble_to_sample(n):

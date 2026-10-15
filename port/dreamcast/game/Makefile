@@ -317,6 +317,20 @@ $(OBJDIR)/platform/ps2_enemy_ch23.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH23=1 -
 $(OBJDIR)/platform/ps2_enemy_ch23.o: $(PS2_ENEMY_CH23_DIR)/ps2_enemy_ch23_data.inc
 endif
 endif
+# ROUTE_CH31=1 (castle lane 2026-10-15, default 0: no effect; needs ROUTE_CH23=1 and EM10_SHARED=1): chapter 3-1's
+# remaining code modules (assets.sh discover r201 r204 r208): st2_1 (module 82: r204 r205 r206 r209 r20a..r20f,
+# resident like st2_0 because stage modules survive room changes; its slot-math lint in r206.cpp fixed by --fix) and
+# the castle Ganado RELs em1a (24: r208 r209), em1b (25: r201 r20c) and em14 (35: r204 r20f ...). The three are
+# em10.cpp + em10_tmpl.cpp + their own <em>_set.cpp (value-init lint fixed by --fix), so they join the em10g group
+# (one em10.cpp in the image, as em11 / em13 / em17); one Ganado REL is live per room on the 3-1 route.
+ROUTE_CH31 ?= 0
+ifneq ($(ROUTE_CH31),0)
+ifneq ($(ROUTE_CH31)$(ROUTE_CH23)$(EM10_SHARED),111)
+$(error ROUTE_CH31 must be 0 or 1 and needs ROUTE_CH23=1 EM10_SHARED=1)
+endif
+MODULES += st2_1 em1a em1b em14
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH31=1
+endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
 # wep01 (module 3, Punisher; the merchant's medallion reward), wep07 (54, shotgun; r101 house), wep09 (62, rifle; its
@@ -430,7 +444,7 @@ ifeq ($(ROUTE_CH21)$(EM10_SHARED)$(WORLD_STAGE_MODULES),110)
 else ifeq ($(ROUTE_CH21),1)
 $(error ROUTE_CH21=1 needs EM10_SHARED=1 (em11 in the em10g group) and WORLD_STAGE_MODULES=0 (pl11 is a CH21 overlay))
 endif
-EM10_GROUP = $(filter em12 em15 em13 em17 em11 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
+EM10_GROUP = $(filter em12 em15 em13 em17 em11 em1a em1b em14 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(filter 1,$(EM10_SHARED)),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
 MODULE_OBJS =
 MODULES_MK = $(OBJDIR)/modules.mk

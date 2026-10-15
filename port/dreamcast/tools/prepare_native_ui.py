@@ -490,6 +490,17 @@ ROOM_CONTRACTS={
     'r11e':dict(slots=42,smd=4,effs=(7,30),itm=9,model_slots=(29,),header_grow=32),
     'r11f':dict(slots=44,smd=4,effs=(7,),itm=9,model_slots=(28,31,34,37,40)),
     'r200':dict(slots=28,smd=4,effs=(7,),itm=9,model_slots=()),
+    # Chapter 3-1 (castle lane 2026-10-15; slot tags of the GC disc 1 St2/<room>.das, decoded by le_mirror): standard
+    # scenery/effect/item owners only (SMD#4 TPL0, EFF#7, ITM#9), as r200; the local model BIN/TPL pairs (r202 #27/#28
+    # and #38/#39, r201 #30/#31, r208 #36/#37, r204 #27/#28 and #41/#42), every FCV/SEQ motion, EMI, collision, AEV and
+    # sound slot stay byte-identical. r207 and r203 have r200's 28-slot layout. No header growth: each header plus the
+    # NTR slot fits before the first payload (r208: flush at 544 B).
+    'r201':dict(slots=32,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r202':dict(slots=51,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r203':dict(slots=28,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r204':dict(slots=43,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r207':dict(slots=28,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r208':dict(slots=65,smd=4,effs=(7,),itm=9,model_slots=()),
     # r40b (St4, st4_0 + em1f; follow-up 7): r40c's 27-slot layout (header ends at 232 of 256: no growth).
     'r40b':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
 }
