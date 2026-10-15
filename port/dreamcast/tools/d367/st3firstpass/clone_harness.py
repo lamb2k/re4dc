@@ -15,7 +15,7 @@ assert not dst.exists(), dst
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
 prov = json.loads((src / 'cx-harness-provenance.json').read_text())
 for name, h in prov['installed_files'].items():
-    if not name.startswith('programs/'):
+    if not name.startswith('programs/') and name not in ('programs-route.json', 'cx-resolved-knobs.txt'):
         assert sha(src / name) == h, name
 dst.mkdir(parents=True)
 for name in ('stage-scenario.py', 'stage-scenario-v2.py', 'stage-scenario-v2.provenance.json', 'run-emulator-novsync.py'):

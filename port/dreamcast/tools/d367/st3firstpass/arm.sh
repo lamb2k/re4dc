@@ -47,12 +47,17 @@ for f in sorted(glob.glob('/root/probe/lanes-20261014/st3/tex-em/*.re4tex')):
 # disc-2 image (data only; PS2 = source of truth). Differences: survey re4-ps2-table-survey-20261013 (42 + 29 rows).
 for n in ('06', '07'):
     r['etc/emleon%s.esl' % n] = '/root/probe/lanes-20261014/st3/ps2-esl/emleon%s.esl' % n
+# Island route movies (lane conversion, convert_route_movies.py at 288x192 full range; private derived media).
+for f in sorted(glob.glob('/root/probe/lanes-20261014/st3/movies/movies-288x192-full/*/*.seq')):
+    r['dc/movie/' + os.path.basename(f)] = f
 keep_removed = [x for x in d.get('remove', []) if x in r and x.startswith('em/')]  # archives this lane now stages
 if 'remove' in d: d['remove'] = [x for x in d['remove'] if x not in keep_removed]
 d.setdefault('provenance', {})['st3_lane'] = {'added': ['rel/st3_*.rel (le_mirror --compact-static-rel)', 'dc/em1d.ovl', 'dc/em1e.ovl', 'dc/em3b.ovl', 'dc/em25.ovl']}
 json.dump(d, open(out, 'w'), indent=1, sort_keys=True)
 PY
 python3 "$TOOLS/port/dreamcast/tools/d367/texchk/fixture_arm.py" "$TMP" "$OUT" "$L" --candidate-dir "$CAND"
+# A material-pair image this arm replaces must not also be removed (stage-scenario-v2 asserts the sets are disjoint).
+python3 -c "import json,sys;d=json.load(open(sys.argv[1]));d['remove']=[x for x in d.get('remove',[]) if x not in d['replace']];json.dump(d,open(sys.argv[1],'w'),indent=1,sort_keys=True)" "$OUT"
 PAKFILE=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['replace']['dc/tex.pak'])" "$OUT")
 python3 "$TOOLS/port/dreamcast/tools/audit_ps2_texture_winners.py" --pack "$PAKFILE" \
   --room "$( [ -f $LANE/texture-fit/rooms/$ROOM.json ] && echo $LANE/texture-fit/rooms/$ROOM.json || echo $LANE/texture-fit2/rooms/$ROOM.json )" --fixture "$ROOM=$OUT" --output "$D/cx-$ROOM-$VIEW-$VAR.pack-audit.json" > /dev/null
