@@ -111,6 +111,13 @@ extern "C" unsigned re4dc_coarse_world_room();   // coarse.cpp: coarse_world.h k
 #ifndef RE4DC_MESH_CLIP_LEAN
 #define RE4DC_MESH_CLIP_LEAN 0 // 1: clipper frustum pre-cull + one clip_vertex per corner (exact in pixels)
 #endif
+#ifndef RE4DC_WORLD_LOD_PROBE
+#define RE4DC_WORLD_LOD_PROBE 0
+#endif
+#if RE4DC_WORLD_LOD_PROBE
+// WORLD_LOD_PROBE: far meshlets skipped, their vertices (since the last PS2MESH log line).
+static unsigned world_lod_probe_stats[2];
+#endif
 static constexpr unsigned kClipOnce=16; // MESH_CLIP_LEAN: longer clipped strips take the per-triangle path
 #if defined(RE4DC_MESH_CLIP_ACCEPT) && RE4DC_MESH_CLIP_ACCEPT==2
 // MESH_CLIP_ACCEPT=2 (diagnostic): accepted triangles checked, dropped triangles checked, mismatches, crossings.
@@ -165,6 +172,9 @@ static volatile unsigned ps2_mask_select=1U+RE4DC_PS2_PASS_MASK_SELECT;
 #endif
 #ifndef RE4DC_MESH_LOD_PX
 #define RE4DC_MESH_LOD_PX 3
+#endif
+#if RE4DC_WORLD_LOD_PROBE && !RE4DC_MESH_LOD
+#error "WORLD_LOD_PROBE needs MESH_LOD=1 (the PS2 world packages are R4IM v3; the probe is in draw_clusters)"
 #endif
 // Source fog on the native path: GXSetFog state becomes PVR table fog on model
 // headers (native_ui.cpp), ramped to 100% at the source View far plane, and
@@ -2353,7 +2363,24 @@ struct MeshDraw : Emitter {
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
             const auto* lets=package.meshlets()+lv.first_meshlet;
+#if RE4DC_WORLD_LOD_PROBE
+            // WORLD_LOD_PROBE (lane worldlod 2026-10-15, test only): the crude stand-in for C1's offline distance LOD.
+            // A PS2 world meshlet whose nearest point is beyond RE4DC_WORLD_LOD_PROBE_MM is drawn only if its index in the
+            // level is even (about half the far meshlets: holes, the look is not judged). Same far plane.
+            const bool probe_far=ps2 && depth>float(RE4DC_WORLD_LOD_PROBE_MM);
+#endif
             for(unsigned i=0;i<lv.meshlet_count;++i){
+#if RE4DC_WORLD_LOD_PROBE
+                if(probe_far && (i&1U)){
+                    const auto& m=lets[i];
+                    float md=-mvq[11],mr=0;
+                    for(unsigned a=0;a<3;++a){
+                        md-=mvq[8+a]*(float(m.bounds_min[a])+float(m.bounds_max[a]))*0.5f;
+                        mr+=std::fabs(mvq[8+a])*(float(m.bounds_max[a])-float(m.bounds_min[a]))*0.5f;
+                    }
+                    if(md-mr>float(RE4DC_WORLD_LOD_PROBE_MM)){++world_lod_probe_stats[0];world_lod_probe_stats[1]+=m.vertex_count;continue;}
+                }
+#endif
 #if RE4DC_PS2_INTERIOR_CULL
                 if(pc_state<0){
                     const bool hid=pc::grid_hidden(pc_wq,lets[i].bounds_min,lets[i].bounds_max)>0;
@@ -4740,6 +4767,10 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
     re4dc_log("PS2MESH frame=%u strips=%u culled=%u clipped=%u vertices=%u clusters=%u/%u lod=%u,%u,%u,%u\n",frame,
         stats.strips,stats.strips_culled,stats.strips_clipped,stats.vertices,stats.clusters_visible,stats.clusters_culled,
         stats.lod_draws[0],stats.lod_draws[1],stats.lod_draws[2],stats.lod_draws[3]);
+#if RE4DC_WORLD_LOD_PROBE
+    re4dc_log("WLODPROBE frame=%u skipped_meshlets=%u skipped_vertices=%u mm=%u\n",frame,world_lod_probe_stats[0],
+        world_lod_probe_stats[1],unsigned(RE4DC_WORLD_LOD_PROBE_MM));
+#endif
 #if RE4DC_PS2_PASS_MASK==2
     re4dc_log("PS2MASK frame=%u masked=%d checked=%u mismatched=%u\n",frame,int(ps2w.masked),ps2_mask_stats[0],ps2_mask_stats[1]);
 #endif
