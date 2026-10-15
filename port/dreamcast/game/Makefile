@@ -403,6 +403,8 @@ endif
 MODULES += em3b:ovl em35:ovl st2_0
 export RE4DC_LINK_OVERLAY += .ovl_em3b .ovl_em35
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH23=1
+# snd.cpp ch13_bgm1_sub: r200 plays its resident BGM0 track for the BGM1 request (frozen layout, BGM1 = 0 B).
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH23=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH23=1
 ROUTE_CH23_ROOM_OBJS = $(OBJDIR)/mod/st1_3/src/st1/r10f.o $(OBJDIR)/mod/st1_3/src/st1/r11d.o \
     $(OBJDIR)/mod/st1_3/src/st1/r11e.o $(OBJDIR)/mod/st1_3/src/st1/r11f.o $(OBJDIR)/mod/st2_0/src/st2/r200.o
@@ -440,7 +442,7 @@ $(error ROUTE_CH31 must be 0 or 1 and needs ROUTE_CH23=1 EM10_SHARED=1)
 endif
 MODULES += st2_1 em1a em1b em14
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH31=1
-# snd.cpp ch13_bgm1_sub: r200 / r202 play their resident BGM0 track for the BGM1 request (frozen layout, BGM1 = 0 B).
+# snd.cpp ch13_bgm1_sub: r202 plays its resident BGM0 track for the BGM1 request (frozen layout, BGM1 = 0 B).
 $(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH31=1
 endif
 # ROUTE_CH32=1 (castle lane 2026-10-15, default 0: no effect; needs ROUTE_CH31=1): the enemy modules of chapters 3-2

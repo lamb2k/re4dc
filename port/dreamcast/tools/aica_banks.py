@@ -221,7 +221,8 @@ ROOMS = {
     'r20b': ['st2/r20b.dar', 'em/em18.drs', 'em/em22.drs'],
     'r20c': ['st2/r20c.dar', 'em/em11.drs', 'em/em1b.drs', 'em/em25.drs'],
     'r20f': ['st2/r20f.dar', 'em/em14.drs', 'em/em25.drs'],
-    'r206': ['st2/r206.dar', 'em/em11.drs'],
+    # r206: Ashley (pl11) is beside Leon for the snipe, s10 and after s20 (cx32g: em11 'does not fit' without her row)
+    'r206': ['st2/r206.dar', 'em/pl11.drs', 'em/em11.drs'],
     'r20d': ['st2/r20d.dar', 'em/em11.drs', 'em/em19.drs', 'em/em25.drs'],
     'r20e': ['st2/r20e.dar', 'em/em3c.drs'],
     # r40b (St4, follow-up 7): em1f (bringup inventory: em1f/em1f, st4_0)
