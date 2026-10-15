@@ -2065,7 +2065,8 @@ ACT_CAP_FAR_M ?= 0
 # FAR_HALF=1|2 (lane farhalf 2026-10-15, backlog D1; default 0 = nothing built or changed): far / off-screen Ganados update
 #   at half rate in every room (act_cap.cpp, independent of the cap; builds act_cap.o without ACT_CAP / ACT_CAP_TABLE).
 #   Eligible: ids 0x10..0x20 in a walking / idle routine, farther than FAR_HALF_M metres (default 12 = em10StayCk's outer
-#   limit), outside the last view frustum + ACT_CAP_VIEW_M, hp > 0, no pending damage, not the lock-on target, not parked
+#   limit), not on screen (outside the last view frustum + ACT_CAP_VIEW_M, or beyond the build's FOG_FAR draw range,
+#   where the fog is 100 %), hp > 0, no pending damage, not the lock-on target, not parked
 #   by the cap. They alternate a full tick and a reduced tick (never two reduced in a row).
 #   1 = pose half (exact candidate): the reduced tick runs AI / routine / movement / collision as always and skips only
 #       the pose (motion keys, part matrices, foot IK + its floor queries, hokan blend): motion.cpp, em10.cpp. Rnd untouched.
@@ -2105,6 +2106,7 @@ $(OBJDIR)/act-cap.h: act-cap-force
 	@if [ '$(ACT_CAP_FAR_M)' != 0 ]; then printf '#define RE4DC_ACT_CAP_FAR_M %s\n' '$(ACT_CAP_FAR_M)' >> $@.tmp; fi
 	@if [ '$(FAR_HALF)' != 0 ]; then printf '#define RE4DC_FAR_HALF %s\n#define RE4DC_FAR_HALF_M %s\n#define RE4DC_FAR_HALF_LOG %s\n' '$(FAR_HALF)' '$(FAR_HALF_M)' '$(FAR_HALF_LOG)' >> $@.tmp; fi
 	@if [ '$(FAR_HALF_RT)' != 0 ]; then printf '#define RE4DC_FAR_HALF_RT 1\n' >> $@.tmp; fi
+	@if [ '$(FAR_HALF)' != 0 ]; then printf '#define RE4DC_FAR_HALF_DRAW_MM %s\n' '$(or $(FOG_FAR),0)' >> $@.tmp; fi
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 $(OBJDIR)/src/game/em.o: $(OBJDIR)/act-cap.h
