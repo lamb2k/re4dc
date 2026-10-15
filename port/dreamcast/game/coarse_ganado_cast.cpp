@@ -291,8 +291,8 @@ unsigned gate_cull(cModel* m, unsigned app, cModelInfo* const* infos, cParts* co
     for (unsigned i = 0; i < 4; ++i) {
         if (!visible(infos[i])) continue;
         Mtx pm;
-        PSMTXConcat(m->pParts->mat, infos[i]->mat, pm);
-        PSMTXConcat(pG->Cam.v_mat, pm, mv[i]);
+        RE4DC_RENDER_MTXConcat(m->pParts->mat, infos[i]->mat, pm);
+        RE4DC_RENDER_MTXConcat(pG->Cam.v_mat, pm, mv[i]);
         gate_visible |= 1U << i;
     }
     ++gate_actors;
@@ -411,8 +411,8 @@ unsigned gate_cull_once(cModel* m, unsigned app, cModelInfo* const* infos, cPart
 #endif
         } else {
             Mtx pm;
-            PSMTXConcat(m->pParts->mat, infos[i]->mat, pm);
-            PSMTXConcat(pG->Cam.v_mat, pm, mv[i]);
+            RE4DC_RENDER_MTXConcat(m->pParts->mat, infos[i]->mat, pm);
+            RE4DC_RENDER_MTXConcat(pG->Cam.v_mat, pm, mv[i]);
             last = int(i);
         }
         gate_visible |= 1U << i;
@@ -829,8 +829,8 @@ extern "C" int re4dc_coarse_ganado(cModel* m) {
         std::memcpy(mv,gate_mv[i],sizeof(mv));  // gate_cull's PSMTXConcat pair on the same matrices
         (void)pm;
 #else
-        PSMTXConcat(m->pParts->mat,src->mat,pm);
-        PSMTXConcat(pG->Cam.v_mat,pm,mv);
+        RE4DC_RENDER_MTXConcat(m->pParts->mat,src->mat,pm);
+        RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
 #endif
         if(stress_layout){
             const unsigned slot=frame_meshes%7,row=frame_meshes/7;
@@ -876,8 +876,8 @@ extern "C" int re4dc_coarse_ganado(cModel* m) {
         std::memcpy(mv,gate_mv[i],sizeof(mv));  // gate_cull's PSMTXConcat pair on the same matrices
         (void)pm;
 #else
-        PSMTXConcat(m->pParts->mat,src->mat,pm);
-        PSMTXConcat(pG->Cam.v_mat,pm,mv);
+        RE4DC_RENDER_MTXConcat(m->pParts->mat,src->mat,pm);
+        RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
 #endif
         if(stress_layout){
             // Arrange the existing live poses in camera space for a bounded

@@ -201,8 +201,8 @@ extern "C" int re4dc_coarse_ganado(cModel* m) {
         if(!re4dc_actor_skin_register(pG->Frame_cnt,&c,nullptr,&palette[0][0],c.palette_count)){
             ++rejected;continue;
         }
-        PSMTXConcat(m->pParts->mat,src->mat,pm);
-        PSMTXConcat(pG->Cam.v_mat,pm,mv);
+        RE4DC_RENDER_MTXConcat(m->pParts->mat,src->mat,pm);
+        RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
         if(stress_layout){
             // Arrange the existing live poses in camera space for a bounded
             // renderer stress test. Source positions, bones, AI and camera

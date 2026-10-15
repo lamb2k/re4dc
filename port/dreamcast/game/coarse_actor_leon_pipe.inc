@@ -206,7 +206,7 @@ ActorOwnedRecord* leon_acquire(cModel* m,const FrameIdentity& frame,const ModelI
         // (the binding fixed this source order: the plan's record laid its parts out in it)
         if(order==r.count || r.part[order].info!=info)return leon_decline(r,failed);
         auto& part=r.part[order];part.flags=info->be_flag;
-        Mtx pm,mv;PSMTXConcat(m->pParts->mat,info->mat,pm);PSMTXConcat(pG->Cam.v_mat,pm,mv);
+        Mtx pm,mv;RE4DC_RENDER_MTXConcat(m->pParts->mat,info->mat,pm);RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
         std::memcpy(part.mv,mv,sizeof(mv));
         for(float f:part.mv)if(!coarse_finite(f))return leon_decline(r,failed);
         bindings[order]={info,part.source,palettes[part.role],p.input[part.role].palette_count};
@@ -249,7 +249,7 @@ int leon_pass(cModel* m,ActorOwnedRecord& r,bool admitting) {
             actor_release(r);actor_fail();return -1;
         }
         if(!lean_held) {
-            Mtx pm,mv;PSMTXConcat(m->pParts->mat,info->mat,pm);PSMTXConcat(pG->Cam.v_mat,pm,mv);
+            Mtx pm,mv;RE4DC_RENDER_MTXConcat(m->pParts->mat,info->mat,pm);RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
             if(std::memcmp(r.part[order].mv,mv,sizeof(mv))){actor_release(r);actor_fail();return -1;}
         }
         ++order;

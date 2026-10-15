@@ -333,8 +333,8 @@ extern "C" int re4dc_coarse_leon(cModel* m) {
             ++rejected;continue;
         }
         if(!mv_src || std::memcmp(mv_src->mat,src->mat,sizeof(Mtx))){
-            PSMTXConcat(m->pParts->mat,src->mat,pm);
-            PSMTXConcat(pG->Cam.v_mat,pm,mv);
+            RE4DC_RENDER_MTXConcat(m->pParts->mat,src->mat,pm);
+            RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
             mv_src=src;
         }
         std::memcpy(mvs[n],mv,sizeof(mv));
@@ -366,8 +366,8 @@ extern "C" int re4dc_coarse_leon(cModel* m) {
         if(!re4dc_actor_skin_register(pG->Frame_cnt,&c,nullptr,&palette[0][0],c.palette_count)){
             ++rejected;continue;
         }
-        PSMTXConcat(m->pParts->mat,src->mat,pm);
-        PSMTXConcat(pG->Cam.v_mat,pm,mv);
+        RE4DC_RENDER_MTXConcat(m->pParts->mat,src->mat,pm);
+        RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
         Re4dcModelPart p{};
         p.model=m;p.info=&c;p.part=&c;p.position_count=c.position_count;p.normal_count=c.normal_count;
         p.position_stride=6;p.normal_stride=6;p.normal_shift=14;p.shift=4;
