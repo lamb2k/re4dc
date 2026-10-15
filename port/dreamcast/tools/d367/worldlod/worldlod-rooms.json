@@ -1,0 +1,348 @@
+{
+ "doc": "Lane worldlod per-room table (ps2_world_far_lod.py --table): one game-wide look floor (floor_px at switch_mm - hyst_mm, focal_px), per-room plans from WORLD-BUDGET-BY-ROOM-20261015.md \"Buffered targets\" (MODELLED; k = thousand TA world vertices per frame at the room's typical / worst projected view; target = the buffered 20 fps worst-view target, null where world cuts alone cannot reach 20 fps). plan: target (cut to target_worst_k, never below the floor), floor (cut to the floor), untouched (the source package ships). New rooms (2-2 / 2-3 / castle) get a row before conversion. Per area: protect = {room: [mesh bins]} with no far level (landmarks: skyline, rooflines, church / bell tower, cliff edges, gondola towers, doors and paths the player navigates by; the same kinds in every room of the area), fog = the per-room fog settings seen (checked consistent within an area). Areas in route order.",
+ "floor_px": 1.0,
+ "floor_status": "PENDING the user's pick from the r119 / r101 sheets (1 / 4 / 8 px); coordinator 10-15: about 1 px at the transition",
+ "switch_mm": 12000,
+ "hyst_mm": 500,
+ "focal_px": 514.7,
+ "colour_guard": 2,
+ "uv_guard": 0.02,
+ "area_order": [
+  "village",
+  "farm-valley",
+  "lake",
+  "ch2-1",
+  "ch2-2",
+  "ch2-3"
+ ],
+ "areas": {
+  "village": {
+   "rooms": [
+    "r100",
+    "r101",
+    "r103",
+    "r106"
+   ],
+   "protect": {},
+   "fog": {
+    "r101": "type=2 start=-7074 end=175030 far=25000 colour=716c5a80 (Flycast log, 10-15)"
+   }
+  },
+  "farm-valley": {
+   "rooms": [
+    "r104",
+    "r105",
+    "r107"
+   ],
+   "protect": {},
+   "fog": {}
+  },
+  "lake": {
+   "rooms": [
+    "r102",
+    "r108",
+    "r109",
+    "r10a",
+    "r10b"
+   ],
+   "protect": {},
+   "fog": {}
+  },
+  "ch2-1": {
+   "rooms": [
+    "r117",
+    "r118",
+    "r119",
+    "r11a",
+    "r11b"
+   ],
+   "protect": {},
+   "fog": {
+    "r119": "type=4 start=3502 end=187197 far=25000 colour=191c1d82 (Flycast log, 10-15)"
+   }
+  },
+  "ch2-2": {
+   "rooms": [
+    "r111",
+    "r112",
+    "r113",
+    "r11c"
+   ],
+   "protect": {},
+   "fog": {}
+  },
+  "ch2-3": {
+   "rooms": [
+    "r10f",
+    "r11d",
+    "r11e",
+    "r11f",
+    "r200"
+   ],
+   "protect": {},
+   "fog": {}
+  }
+ },
+ "rooms": {
+  "r100": {
+   "area": "village",
+   "chapter": "1-1",
+   "ganado_units": 9.5,
+   "world_typ_k": 6.6,
+   "world_worst_k": 14.4,
+   "target_worst_k": 3.2,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r101": {
+   "area": "village",
+   "chapter": "1-1",
+   "ganado_units": 6.5,
+   "world_typ_k": 10.5,
+   "world_worst_k": 15.9,
+   "target_worst_k": null,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r102": {
+   "area": "lake",
+   "chapter": "1-3",
+   "ganado_units": 0.3,
+   "world_typ_k": 1.7,
+   "world_worst_k": 9.3,
+   "target_worst_k": 16.5,
+   "plan": "untouched",
+   "why": "no Ganados (user 10-15): the buffer exists for uncertain Ganado logic; plain 20 fps target applies"
+  },
+  "r103": {
+   "area": "village",
+   "chapter": "1-1",
+   "ganado_units": 5.3,
+   "world_typ_k": 9.5,
+   "world_worst_k": 16.3,
+   "target_worst_k": 6.5,
+   "plan": "target",
+   "why": "cut to the buffered 20 fps target"
+  },
+  "r104": {
+   "area": "farm-valley",
+   "chapter": "1-2",
+   "ganado_units": 9.0,
+   "world_typ_k": 8.1,
+   "world_worst_k": 17.4,
+   "target_worst_k": 3.9,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r105": {
+   "area": "farm-valley",
+   "chapter": "1-2",
+   "ganado_units": 6.3,
+   "world_typ_k": 4.0,
+   "world_worst_k": 8.8,
+   "target_worst_k": 5.0,
+   "plan": "target",
+   "why": "cut to the buffered 20 fps target"
+  },
+  "r106": {
+   "area": "village",
+   "chapter": "1-1",
+   "ganado_units": 6.5,
+   "world_typ_k": 9.4,
+   "world_worst_k": 17.9,
+   "target_worst_k": 4.7,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r107": {
+   "area": "farm-valley",
+   "chapter": "1-2",
+   "ganado_units": 6.5,
+   "world_typ_k": 4.4,
+   "world_worst_k": 27.0,
+   "target_worst_k": 5.4,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r108": {
+   "area": "lake",
+   "chapter": "1-3",
+   "ganado_units": 6.0,
+   "world_typ_k": 3.6,
+   "world_worst_k": 11.7,
+   "target_worst_k": 5.5,
+   "plan": "target",
+   "why": "cut to the buffered 20 fps target"
+  },
+  "r109": {
+   "area": "lake",
+   "chapter": "1-3",
+   "ganado_units": 0.3,
+   "world_typ_k": 14.8,
+   "world_worst_k": 22.6,
+   "target_worst_k": 17.1,
+   "plan": "untouched",
+   "why": "no Ganados (user 10-15): the buffer exists for uncertain Ganado logic; plain 20 fps target applies (r109 would need only ~1k off its worst view)"
+  },
+  "r10a": {
+   "area": "lake",
+   "chapter": "1-3",
+   "ganado_units": 6.5,
+   "world_typ_k": 3.5,
+   "world_worst_k": 13.3,
+   "target_worst_k": 4.7,
+   "plan": "target",
+   "why": "cut to the buffered 20 fps target"
+  },
+  "r10b": {
+   "area": "lake",
+   "chapter": "1-3",
+   "ganado_units": 5.5,
+   "world_typ_k": 2.3,
+   "world_worst_k": 10.2,
+   "target_worst_k": 10.6,
+   "plan": "untouched",
+   "why": "already under target"
+  },
+  "r10f": {
+   "area": "ch2-3",
+   "chapter": "2-3",
+   "ganado_units": 6.7,
+   "world_typ_k": 3.2,
+   "world_worst_k": 9.8,
+   "target_worst_k": null,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r111": {
+   "area": "ch2-2",
+   "chapter": "2-2",
+   "ganado_units": 5.7,
+   "world_typ_k": 7.3,
+   "world_worst_k": 15.5,
+   "target_worst_k": null,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r112": {
+   "area": "ch2-2",
+   "chapter": "2-2",
+   "ganado_units": 1.0,
+   "world_typ_k": 2.0,
+   "world_worst_k": 9.3,
+   "target_worst_k": 11.0,
+   "plan": "untouched",
+   "why": "no Ganados (user 10-15): the buffer exists for uncertain Ganado logic; plain 20 fps target applies"
+  },
+  "r113": {
+   "area": "ch2-2",
+   "chapter": "2-2",
+   "ganado_units": 6.7,
+   "world_typ_k": 9.5,
+   "world_worst_k": 15.4,
+   "target_worst_k": null,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r117": {
+   "area": "ch2-1",
+   "chapter": "2-1",
+   "ganado_units": 2.0,
+   "world_typ_k": 6.7,
+   "world_worst_k": 24.0,
+   "target_worst_k": 6.5,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone) (not Ganado-free: El Gigante / enemies + Ashley keep the buffered target)"
+  },
+  "r118": {
+   "area": "ch2-1",
+   "chapter": "2-1",
+   "ganado_units": 7.0,
+   "world_typ_k": 7.8,
+   "world_worst_k": 14.0,
+   "target_worst_k": null,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r119": {
+   "area": "ch2-1",
+   "chapter": "2-1",
+   "ganado_units": 3.0,
+   "world_typ_k": 8.8,
+   "world_worst_k": 32.6,
+   "target_worst_k": 9.9,
+   "plan": "target",
+   "why": "cut to the buffered 20 fps target (not Ganado-free: El Gigante / enemies + Ashley keep the buffered target)"
+  },
+  "r11a": {
+   "area": "ch2-1",
+   "chapter": "2-1",
+   "ganado_units": 6.0,
+   "world_typ_k": 1.9,
+   "world_worst_k": 10.4,
+   "target_worst_k": 5.5,
+   "plan": "target",
+   "why": "cut to the buffered 20 fps target"
+  },
+  "r11b": {
+   "area": "ch2-1",
+   "chapter": "2-1",
+   "ganado_units": 1.5,
+   "world_typ_k": 2.9,
+   "world_worst_k": 9.3,
+   "target_worst_k": 13.2,
+   "plan": "untouched",
+   "why": "no Ganados (user 10-15): the buffer exists for uncertain Ganado logic; plain 20 fps target applies"
+  },
+  "r11c": {
+   "area": "ch2-2",
+   "chapter": "2-2",
+   "ganado_units": 10.4,
+   "world_typ_k": 5.2,
+   "world_worst_k": 21.5,
+   "target_worst_k": null,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r11d": {
+   "area": "ch2-3",
+   "chapter": "2-3",
+   "ganado_units": 5.7,
+   "world_typ_k": 8.4,
+   "world_worst_k": 19.6,
+   "target_worst_k": null,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  },
+  "r11e": {
+   "area": "ch2-3",
+   "chapter": "2-3",
+   "ganado_units": 3.7,
+   "world_typ_k": 1.8,
+   "world_worst_k": 6.5,
+   "target_worst_k": 2.5,
+   "plan": "target",
+   "why": "cut to the buffered 20 fps target"
+  },
+  "r11f": {
+   "area": "ch2-3",
+   "chapter": "2-3",
+   "ganado_units": 3.0,
+   "world_typ_k": 8.2,
+   "world_worst_k": 14.4,
+   "target_worst_k": 9.8,
+   "plan": "target",
+   "why": "cut to the buffered 20 fps target"
+  },
+  "r200": {
+   "area": "ch2-3",
+   "chapter": "2-3",
+   "ganado_units": 6.7,
+   "world_typ_k": 2.2,
+   "world_worst_k": 7.2,
+   "target_worst_k": null,
+   "plan": "floor",
+   "why": "cut to the look floor (target out of reach by world cuts alone)"
+  }
+ }
+}

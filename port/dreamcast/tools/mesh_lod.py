@@ -67,6 +67,15 @@ def _qeval(q, p):
 
 # Converter option (ps2_room_r4im.py --lod-uv-guard): see the module docstring.
 UV_GUARD = None
+# COLOUR_GUARD (None = off, the historical behaviour; ps2_world_far_lod.py --colour-guard): the largest change, in 5-bit
+# steps of any ARGB1555 colour channel, a surviving corner's vertex colour may take in a collapse. PS2 world meshes carry
+# baked lighting in vertex colours and some tessellation exists only to carry a lighting gradient: a collapse that
+# would move a corner onto a vertex of a visibly different colour is refused (lane worldlod 2026-10-15).
+COLOUR_GUARD = None
+
+
+def _c1555(c):
+    return ((c >> 10) & 31, (c >> 5) & 31, c & 31)
 
 
 def _uv_affine(p0, p1, p2, t0, t1, t2, x):
@@ -187,6 +196,46 @@ class Simplifier:
                 return False
         if UV_GUARD is not None and not self._uv_kept(u, v):
             return False
+        if COLOUR_GUARD is not None and not self._colour_kept(u, v):
+            return False
+        return True
+
+    def _colour_kept(self, u, v):
+        """Every surviving corner at u keeps its vertex colour within COLOUR_GUARD steps when moved to v."""
+        wedge = {}
+        v_col = None
+        for t in self.vt[u]:
+            tv = self.tv[t]
+            if v in tv:
+                ta = self.ta[t]
+                wedge.setdefault(ta[tv.index(u)][0], ta[tv.index(v)][2])
+                if v_col is None:
+                    v_col = ta[tv.index(v)][2]
+        if v_col is None:
+            for t in self.vt[v]:
+                v_col = self.ta[t][self.tv[t].index(v)][2]
+                break
+        for t in self.vt[u]:
+            tv = self.tv[t]
+            if v in tv:
+                continue
+            uv_u, _, c_u = self.ta[t][tv.index(u)]
+            c_new = wedge.get(uv_u, v_col)
+            if c_u is None or c_new is None or not isinstance(c_u, int):
+                continue
+            a, b = _c1555(c_u), _c1555(c_new)
+            if max(abs(a[i] - b[i]) for i in range(3)) > COLOUR_GUARD:
+                return False
+        # the removed triangles' own corners at u vanish: their colour must also be representable by v's
+        for t in self.vt[u]:
+            tv = self.tv[t]
+            if v in tv:
+                ta = self.ta[t]
+                c_u, c_v = ta[tv.index(u)][2], ta[tv.index(v)][2]
+                if isinstance(c_u, int) and isinstance(c_v, int):
+                    a, b = _c1555(c_u), _c1555(c_v)
+                    if max(abs(a[i] - b[i]) for i in range(3)) > COLOUR_GUARD:
+                        return False
         return True
 
     def _uv_kept(self, u, v):

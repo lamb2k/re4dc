@@ -2725,11 +2725,15 @@ endif
 # WORLD_LOD=1 (native_static.cpp, render only, default 0; lane worldlod 2026-10-15, backlog C1): offline world distance LOD.
 # tools/ps2_world_far_lod.py gives each PS2 world LOD cluster a FAR level (its level 0 simplified to about half the
 # triangles, UV guard on, cluster borders locked) with a marker error the screen-space choice never reaches, so a package
-# with far levels draws unchanged without this knob. With it, a cluster whose nearest point is beyond WORLD_LOD_MM
-# (default 12000 = 12 m) and whose screen-space choice is level 0 draws its far level. The 25 m far plane is unchanged.
+# with far levels draws unchanged without this knob. With it, a cluster farther than WORLD_LOD_MM (default 12000 = 12 m;
+# eye to bounding sphere, so turning the camera does not switch it) +- WORLD_LOD_HYST_MM (500: no popping at the edge)
+# whose screen-space choice is level 0 draws its far level. The 25 m far plane is unchanged. The converter keeps every
+# far level within one game-wide screen-error floor at WORLD_LOD_MM - WORLD_LOD_HYST_MM (tools/d367/worldlod/
+# worldlod-rooms.json floor_px).
 # A WORLDLOD line beside each PS2MESH line counts far-level draws and far clusters without one. Needs MESH_LOD=1.
 WORLD_LOD ?= 0
 WORLD_LOD_MM ?= 12000
+WORLD_LOD_HYST_MM ?= 500
 ifneq ($(WORLD_LOD),0)
 ifneq ($(WORLD_LOD),1)
 $(error WORLD_LOD must be 0 or 1)
@@ -2737,7 +2741,7 @@ endif
 ifneq ($(PS2_WORLD_MESH),1)
 $(error WORLD_LOD needs PS2_WORLD_MESH=1)
 endif
-$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_LOD=1 -DRE4DC_WORLD_LOD_MM=$(WORLD_LOD_MM)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_LOD=1 -DRE4DC_WORLD_LOD_MM=$(WORLD_LOD_MM) -DRE4DC_WORLD_LOD_HYST_MM=$(WORLD_LOD_HYST_MM)
 endif
 # WORLD_LOD_PROBE=1 (native_static.cpp, render only, TEST ONLY, default 0; lane worldlod 2026-10-15): the crude cost probe
 # for backlog C1 (offline world distance LOD). A PS2 world meshlet whose nearest point is beyond WORLD_LOD_PROBE_MM

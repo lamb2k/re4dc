@@ -258,6 +258,23 @@ T13_DATA = T121_DATA + ',objs13d,ashley13,bake13,t13tex'
 WLOD = PRIV + '/worldlod-20261015'
 DATA['wlod101'] = {'dc/native/r101/ps2-world.%s' % x: '%s/r101-far-v1/ps2-world.%s' % (WLOD, x)
                    for x in ('re4mesh', 'r4pw', 'r4sg', 'ids')}
+# r119 look sheet (10-15): far levels by this tool's simplifier (m) or by Blender's Decimate at the same per-cluster
+# triangle counts (b); both on the shipped r119-tr4 package, clusters split at 6 m (--split-mm 6000).
+for _v, _d in (('wlod119m', 'r119-far-mine'), ('wlod119b', 'r119-far-blender')):
+    DATA[_v] = {'dc/native/r119/ps2-world.%s' % x: '%s/%s/ps2-world.%s' % (WLOD, _d, x) for x in ('re4mesh', 'r4pw', 'ids')}
+CLASH += [('wlod119m', 'wlod119b')]
+# Look floor sheets (10-15, user rules: one game-wide screen-error floor at 11.5 m, colour + UV guards, walk-volume
+# replacement, pools compacted): wl<room>p<px> = this tool's simplifier at a 1 / 4 / 8 px floor, wl<room>p4b = Blender's
+# Decimate at the p4 per-cluster triangle counts. r101 from bake13 (+ ps2_strip_groups.py), r119 from r119-tr4 (6 m split).
+_WL = []
+for _r, _x in (('101', ('re4mesh', 'r4pw', 'r4sg', 'ids')), ('119', ('re4mesh', 'r4pw', 'ids'))):
+    for _a, _d in (('p1', 'p1'), ('p4', 'p4'), ('p8', 'p8'), ('p4b', 'p4-blender')):
+        DATA['wl%s%s' % (_r, _a)] = {'dc/native/r%s/ps2-world.%s' % (_r, x): '%s/r%s-%s/ps2-world.%s' % (WLOD, _r, _d, x)
+                                     for x in _x}
+        _WL.append('wl%s%s' % (_r, _a))
+CLASH += [(_a, _b) for _a in _WL for _b in _WL if _a < _b and _a[:5] == _b[:5]]
+CLASH += [(_a, 'wlod101') for _a in _WL if _a.startswith('wl101')]
+CLASH += [(_a, _b) for _a in _WL if _a.startswith('wl119') for _b in ('wlod119m', 'wlod119b')]
 NAME =re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 

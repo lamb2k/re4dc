@@ -126,6 +126,16 @@ static unsigned world_lod_probe_stats[2];
 // one (cumulative, the WORLDLOD line beside PS2MESH).
 static constexpr float kFarLodError=1.0e29f;
 static unsigned world_lod_stats[2];
+#ifndef RE4DC_WORLD_LOD_HYST_MM
+#define RE4DC_WORLD_LOD_HYST_MM 500
+#endif
+// No popping (user 10-15): one switch distance for every room, measured from the eye to the cluster's bounding sphere
+// (turning the camera does not move it), with a band of +-RE4DC_WORLD_LOD_HYST_MM: a cluster goes far beyond
+// WORLD_LOD_MM + HYST and comes back to full detail inside WORLD_LOD_MM - HYST. One bit per package cluster (the first
+// kWorldLodBits; clusters past that switch at WORLD_LOD_MM without the band). Instanced placements share a cluster's
+// bit: each still decides by its own distance outside the band.
+static constexpr unsigned kWorldLodBits=8192;
+static unsigned world_lod_far_bits[kWorldLodBits/32];
 #endif
 static constexpr unsigned kClipOnce=16; // MESH_CLIP_LEAN: longer clipped strips take the per-triangle path
 #if defined(RE4DC_MESH_CLIP_ACCEPT) && RE4DC_MESH_CLIP_ACCEPT==2
@@ -2372,11 +2382,29 @@ struct MeshDraw : Emitter {
 #if RE4DC_WORLD_LOD
             // WORLD_LOD (lane worldlod, backlog C1): tools/ps2_world_far_lod.py gives a PS2 world cluster one more level,
             // last, with the marker error kFarLodError, which the screen-space choice above never reaches (so the same
-            // data draws unchanged without this knob). Beyond RE4DC_WORLD_LOD_MM a cluster whose choice is level 0
-            // draws that far level (about half the triangles); a coarser screen-space level stays. Same far plane.
-            if(ps2 && !level && cl.level_count>1 && depth>float(RE4DC_WORLD_LOD_MM) &&
-               levels[cl.first_level+cl.level_count-1].error>=kFarLodError){
-                level=cl.level_count-1;++world_lod_stats[0];
+            // data draws unchanged without this knob). Beyond RE4DC_WORLD_LOD_MM (+- the hysteresis band) a cluster whose
+            // choice is level 0 draws that far level; a coarser screen-space level stays. Same far plane. The converter
+            // keeps every far level within one screen-error ceiling at WORLD_LOD_MM - HYST (the game-wide look floor).
+            if(ps2 && !level && cl.level_count>1 && levels[cl.first_level+cl.level_count-1].error>=kFarLodError){
+                {
+                    // eye distance to the cluster's bounding sphere (view space: rotation-invariant), radius = half the
+                    // box diagonal through the modelview rows (placement scale included)
+                    float cx=mvq[3],cy=mvq[7],cz=mvq[11],r2=0;
+                    for(unsigned a=0;a<3;++a){
+                        const float m=(lo[a]+hi[a])*0.5f,e=(hi[a]-lo[a])*0.5f;
+                        cx+=mvq[a]*m;cy+=mvq[4+a]*m;cz+=mvq[8+a]*m;
+                        r2+=(mvq[a]*mvq[a]+mvq[4+a]*mvq[4+a]+mvq[8+a]*mvq[8+a])*e*e;
+                    }
+                    const float dist=std::sqrt(cx*cx+cy*cy+cz*cz)-std::sqrt(r2);
+                    bool go_far;
+                    if(c<kWorldLodBits){
+                        unsigned& w=world_lod_far_bits[c>>5];const unsigned bit=1U<<(c&31U);
+                        go_far=(w&bit)?dist>float(RE4DC_WORLD_LOD_MM-RE4DC_WORLD_LOD_HYST_MM)
+                                   :dist>float(RE4DC_WORLD_LOD_MM+RE4DC_WORLD_LOD_HYST_MM);
+                        w=go_far?(w|bit):(w&~bit);
+                    }else go_far=dist>float(RE4DC_WORLD_LOD_MM);
+                    if(go_far){level=cl.level_count-1;++world_lod_stats[0];}
+                }
             }else if(ps2 && depth>float(RE4DC_WORLD_LOD_MM))++world_lod_stats[1];
 #endif
             ++stats.lod_draws[level<3?level:3];
@@ -4787,8 +4815,8 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
         stats.strips,stats.strips_culled,stats.strips_clipped,stats.vertices,stats.clusters_visible,stats.clusters_culled,
         stats.lod_draws[0],stats.lod_draws[1],stats.lod_draws[2],stats.lod_draws[3]);
 #if RE4DC_WORLD_LOD
-    re4dc_log("WORLDLOD frame=%u far_draws=%u far_no_level=%u mm=%u\n",frame,world_lod_stats[0],world_lod_stats[1],
-        unsigned(RE4DC_WORLD_LOD_MM));
+    re4dc_log("WORLDLOD frame=%u far_draws=%u far_no_level=%u mm=%u hyst=%u\n",frame,world_lod_stats[0],world_lod_stats[1],
+        unsigned(RE4DC_WORLD_LOD_MM),unsigned(RE4DC_WORLD_LOD_HYST_MM));
 #endif
 #if RE4DC_WORLD_LOD_PROBE
     re4dc_log("WLODPROBE frame=%u skipped_meshlets=%u skipped_vertices=%u mm=%u\n",frame,world_lod_probe_stats[0],
