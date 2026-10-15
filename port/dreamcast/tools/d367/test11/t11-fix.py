@@ -253,6 +253,11 @@ DATA['t13tex'] = {'dc/tex.pak': T13D + '/tex-t13v.pak'}
 CLASH += [('objs13d', 'objs13'), ('t13tex', 'leonhr')]
 # order: objs13d after items12 (its dars replace the test 12 ones), bake13 after sg101 / smx101, t13tex after t121tex
 T13_DATA = T121_DATA + ',objs13d,ashley13,bake13,t13tex'
+# lane worldlod (10-15, backlog C1, game WORLD_LOD=1): wlod101 = bake13 with far levels (tools/ps2_world_far_lod.py, then
+# ps2_strip_groups.py; README in the folder). Without WORLD_LOD the far levels are never drawn. Order: after bake13.
+WLOD = PRIV + '/worldlod-20261015'
+DATA['wlod101'] = {'dc/native/r101/ps2-world.%s' % x: '%s/r101-far-v1/ps2-world.%s' % (WLOD, x)
+                   for x in ('re4mesh', 'r4pw', 'r4sg', 'ids')}
 NAME =re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
