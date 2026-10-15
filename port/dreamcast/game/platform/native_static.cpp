@@ -121,6 +121,17 @@ static unsigned world_lod_probe_stats[2];
 #ifndef RE4DC_WORLD_LOD
 #define RE4DC_WORLD_LOD 0
 #endif
+#ifndef RE4DC_WORLD_VERT
+#define RE4DC_WORLD_VERT 0
+#endif
+#if RE4DC_WORLD_VERT
+#ifndef RE4DC_WORLD_VERT_LEVEL
+#define RE4DC_WORLD_VERT_LEVEL 0
+#endif
+// WORLD_VERT (lane worldvert): the wanted wholesale world level (0 = the source package), set by WORLD_VERT_LEVEL or at
+// run time by re4dc_world_vert_level_set (bench rows).
+static unsigned world_vert_level=RE4DC_WORLD_VERT_LEVEL;
+#endif
 #if RE4DC_WORLD_LOD
 // WORLD_LOD: the far level's marker error (ps2_world_far_lod.py FAR_ERROR 1e30); far-level draws, far clusters without
 // one (cumulative, the WORLDLOD line beside PS2MESH).
@@ -3509,6 +3520,10 @@ struct Ps2World {
 #if RE4DC_PS2_STRIP_GROUPS
     unsigned char* sg_block=nullptr; const std::uint8_t* sg=nullptr; unsigned sg_groups=0; // ps2-world.r4sg (heap 4)
 #endif
+#if RE4DC_WORLD_VERT
+    unsigned vert_loaded=0; // WORLD_VERT: the level resident in storage
+    unsigned sg_bytes=0;    // WORLD_VERT: bytes of the strip-group block (level 0's size)
+#endif
 } ps2w;
 #if RE4DC_PS2_WORLD_R11F_OWNER
 unsigned r11fPackageGeneration=1,r11fSidecarCrc;
@@ -3817,14 +3832,40 @@ bool ps2_open(){
     snprintf(mpath,sizeof(mpath),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
     snprintf(ppath,sizeof(ppath),"/cd/dc/native/r%03x/ps2-world.r4pw",ps2w.room);
     re4dc_log("PS2MESH room=%03x open\n",ps2w.room);
+#if RE4DC_WORLD_VERT
+    file_t fm=fs_open(mpath,O_RDONLY);
+#else
     const file_t fm=fs_open(mpath,O_RDONLY);
+#endif
     const file_t fp=fs_open(ppath,O_RDONLY);
 #else
+#if RE4DC_WORLD_VERT
+#error "WORLD_VERT needs PS2_WORLD_ROOMS"
+#endif
     const file_t fm=fs_open("/cd/dc/native/r101/ps2-world.re4mesh",O_RDONLY);
     const file_t fp=fs_open("/cd/dc/native/r101/ps2-world.r4pw",O_RDONLY);
 #endif
+#if RE4DC_WORLD_VERT
+    // WORLD_VERT (lane worldvert, render only): level N of the room's wholesale world reduction
+    // (tools/ps2_world_vert_ladder.py) is ps2-world.vN.re4mesh (+ ps2-world.vN.r4sg) beside the level-0 package; the
+    // R4PW sidecar and ids file are shared (same mesh / part / placement records). Memory neutral: the heap-4 block is
+    // always sized by the level-0 file (one buffer the size of level 0; the sidecar sits at the same offset), and a level
+    // file larger than level 0, or absent, falls back to level 0. ps2w.vert_loaded records what is resident.
+    const unsigned l0size=fm!=FILEHND_INVALID?unsigned(fs_total(fm)):0U;
+    ps2w.vert_loaded=0;
+    if(world_vert_level && fm!=FILEHND_INVALID){
+        char vpath[48];snprintf(vpath,sizeof(vpath),"/cd/dc/native/r%03x/ps2-world.v%u.re4mesh",ps2w.room,world_vert_level);
+        const file_t fv=fs_open(vpath,O_RDONLY);
+        if(fv!=FILEHND_INVALID && unsigned(fs_total(fv))<=l0size && fs_total(fv)>0){fs_close(fm);fm=fv;ps2w.vert_loaded=world_vert_level;}
+        else if(fv!=FILEHND_INVALID)fs_close(fv);
+        re4dc_log("WORLDVERT room=%03x want=%u loaded=%u\n",ps2w.room,world_vert_level,ps2w.vert_loaded);
+    }
+    const unsigned msize=fm!=FILEHND_INVALID?unsigned(fs_total(fm)):0U,psize=fp!=FILEHND_INVALID?unsigned(fs_total(fp)):0U;
+    const unsigned mbytes=(l0size+31U)&~31U,pbytes=(psize+31U)&~31U,total=mbytes+pbytes+kLutBytes+kGatherBytes;
+#else
     const unsigned msize=fm!=FILEHND_INVALID?unsigned(fs_total(fm)):0U,psize=fp!=FILEHND_INVALID?unsigned(fs_total(fp)):0U;
     const unsigned mbytes=(msize+31U)&~31U,pbytes=(psize+31U)&~31U,total=mbytes+pbytes+kLutBytes+kGatherBytes;
+#endif
     const int before=re4dc_static_heap_free();
 #if RE4DC_PS2_OPEN_TRACE
     re4dc_log("PS2OPEN opened mesh=%d/%u sidecar=%d/%u heap=%d\n",int(fm),msize,int(fp),psize,before);
@@ -3988,12 +4029,29 @@ bool ps2_open(){
         // PS2_STRIP_GROUPS: tools/ps2_strip_groups.py's group records for this exact package (mesh crc / bytes, R4PW
         // crc, record crc). Absent or not matching: no groups (the whole-meshlet path).
         char gpath[48];snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
+#if RE4DC_WORLD_VERT
+        // WORLD_VERT: the level's own group records, in a block sized by level 0's (memory neutral; larger: no groups).
+        file_t fg=fs_open(gpath,O_RDONLY);
+        const unsigned g0size=fg!=FILEHND_INVALID?unsigned(fs_total(fg)):0U;
+        if(ps2w.vert_loaded && fg!=FILEHND_INVALID){
+            fs_close(fg);
+            snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.v%u.r4sg",ps2w.room,ps2w.vert_loaded);
+            fg=fs_open(gpath,O_RDONLY);
+            if(fg!=FILEHND_INVALID && unsigned(fs_total(fg))>g0size){fs_close(fg);fg=FILEHND_INVALID;}
+        }
+        const unsigned galloc=(g0size+31U)&~31U;
+#else
         const file_t fg=fs_open(gpath,O_RDONLY);
+#endif
         const unsigned gsize=fg!=FILEHND_INVALID?unsigned(fs_total(fg)):0U;
         const char* gwhy=fg==FILEHND_INVALID?"absent":nullptr;
         unsigned char* gb=nullptr;
         if(!gwhy && (gsize<32U || gsize>262144U || (gsize&15U)))gwhy="size";
+#if RE4DC_WORLD_VERT
+        if(!gwhy && !(gb=static_cast<unsigned char*>(re4dc_static_alloc(galloc))))gwhy="heap";
+#else
         if(!gwhy && !(gb=static_cast<unsigned char*>(re4dc_static_alloc((gsize+31U)&~31U))))gwhy="heap";
+#endif
         if(!gwhy && fs_read(fg,gb,gsize)!=ssize_t(gsize))gwhy="read";
         if(fg!=FILEHND_INVALID)fs_close(fg);
         std::uint32_t w[8]={};
@@ -4003,7 +4061,11 @@ bool ps2_open(){
                w[5]!=mh.bytes || w[6]!=h.crc || gsize!=32U+16U*w[2]*w[3] || ps2_crc32(gb+32,gsize-32U)!=w[7])gwhy="header";
         }
         if(gwhy){if(gb)re4dc_static_free(gb);}
-        else {ps2w.sg_block=gb;ps2w.sg=gb+32;ps2w.sg_groups=w[3];}
+        else {ps2w.sg_block=gb;ps2w.sg=gb+32;ps2w.sg_groups=w[3];
+#if RE4DC_WORLD_VERT
+              ps2w.sg_bytes=galloc;
+#endif
+        }
         re4dc_log("PS2SG room=%03x groups=%s per_meshlet=%u bytes=%u heap=%d\n",ps2w.room,gwhy?gwhy:"ok",unsigned(w[3]),gsize,
                   re4dc_static_heap_free());
     }
@@ -4940,6 +5002,58 @@ extern "C" int re4dc_ps2_dyn_source(unsigned room,const void* object,unsigned se
 #endif
 #if RE4DC_PS2_WORLD_ROOMS
 namespace { void ps2_free(){re4dc_ps2_mesh_retire();} }
+#if RE4DC_WORLD_VERT
+// WORLD_VERT run-time level (bench rows; call between frames, never from a draw). A resident package is swapped IN PLACE:
+// the level file is read into the same level-0-sized block (the sidecar behind it, the ids, the baked-object gate, area
+// hides and per-cluster bits all key on the unchanged sidecar / mesh / part / cluster records) and its strip groups into
+// the same group block. A missing or larger file, or a failed read, goes back to level 0. Not resident: the next open
+// loads the level. Returns the level now resident (or wanted).
+extern "C" unsigned re4dc_world_vert_level_set(unsigned level){
+    world_vert_level=level;
+    if(!ps2w.storage || ps2w.vert_loaded==level)return ps2w.storage?ps2w.vert_loaded:level;
+    const unsigned mbytes=reinterpret_cast<std::uintptr_t>(ps2w.parts)?unsigned(reinterpret_cast<const unsigned char*>(ps2w.parts)-ps2w.storage)-unsigned(sizeof(Ps2Head)):0U;
+    unsigned got=0;
+    for(unsigned pass=0;pass<2 && !got;++pass){
+        const unsigned want=pass?0U:level;
+        char path[48];
+        if(want)snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.v%u.re4mesh",ps2w.room,want);
+        else snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
+        const file_t f=fs_open(path,O_RDONLY);
+        if(f==FILEHND_INVALID)continue;
+        const unsigned n=unsigned(fs_total(f));
+        ps2w.package.close();
+        const bool ok=n && n<=mbytes && fs_read(f,ps2w.storage,n)==ssize_t(n) && ps2w.package.adopt(ps2w.storage,n,true,true);
+        fs_close(f);
+        if(ok){ps2w.vert_loaded=want;got=1;}
+    }
+    if(!got){re4dc_missing("WORLD_VERT level-0 reload failed");return 0;}
+#if RE4DC_PS2_STRIP_GROUPS
+    if(ps2w.sg_block){
+        // the group block holds level 0's size (open); a level's records are the same size or smaller
+        char gpath[48];
+        if(ps2w.vert_loaded)snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.v%u.r4sg",ps2w.room,ps2w.vert_loaded);
+        else snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
+        const auto& mh=ps2w.package.header();
+        const file_t fg=fs_open(gpath,O_RDONLY);
+        const unsigned gsize=fg!=FILEHND_INVALID?unsigned(fs_total(fg)):0U;
+        std::uint32_t w[8]={};
+        bool ok=fg!=FILEHND_INVALID && gsize>=32U && gsize<=ps2w.sg_bytes && fs_read(fg,ps2w.sg_block,gsize)==ssize_t(gsize);
+        if(fg!=FILEHND_INVALID)fs_close(fg);
+        if(ok){
+            std::memcpy(w,ps2w.sg_block,32);
+            ok=!std::memcmp(ps2w.sg_block,"R4SG",4) && w[1]==1U && w[2]==mh.meshlet_count && w[3] && w[3]<=8U && w[4]==mh.crc &&
+               w[5]==mh.bytes && gsize==32U+16U*w[2]*w[3] && ps2_crc32(ps2w.sg_block+32,gsize-32U)==w[7];
+        }
+        ps2w.sg=ok?ps2w.sg_block+32:nullptr;ps2w.sg_groups=ok?w[3]:0U;
+    }
+#endif
+#if RE4DC_WORLD_LOD
+    std::memset(world_lod_far_bits,0,sizeof(world_lod_far_bits));
+#endif
+    re4dc_log("WORLDVERT room=%03x want=%u loaded=%u swap frame=%u\n",ps2w.room,level,ps2w.vert_loaded,re4dc_ui_frame());
+    return ps2w.vert_loaded;
+}
+#endif
 // The rooms that have a PS2 world package (tools/ps2_room_r4im.py, dc/native/r%03x/ps2-world.*): the one list
 // native_ps2_world.cpp (re4dc_ps2_world_covers) and the =2 preload share. r106: the route lane (stage 1-1 end);
 // r104 / r105 / r107 (chapter 1-2, route lane): their GC scenery is released like r106's.

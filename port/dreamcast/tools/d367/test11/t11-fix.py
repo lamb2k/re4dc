@@ -274,6 +274,11 @@ for _r, _x in (('101', ('re4mesh', 'r4pw', 'r4sg', 'ids')), ('119', ('re4mesh', 
         _WL.append('wl%s%s' % (_r, _a))
 CLASH += [(_a, _b) for _a in _WL for _b in _WL if _a < _b and _a[:5] == _b[:5]]
 CLASH += [(_a, 'wlod101') for _a in _WL if _a.startswith('wl101')]
+# lane worldvert (10-15, game WORLD_VERT=1): wv101 = bake13's r101 package (level 0, unchanged) + wholesale levels 1..3
+# (tools/ps2_world_vert_ladder.py, then ps2_strip_groups.py) as ps2-world.vN.re4mesh / .vN.r4sg. Order: after bake13.
+WVERT = PRIV + '/worldvert-20261015'
+DATA['wv101'] = {'dc/native/r101/ps2-world.%s' % x: '%s/r101-v1/ps2-world.%s' % (WVERT, x)
+                 for x in ('re4mesh', 'r4pw', 'r4sg', 'ids', 'v1.re4mesh', 'v1.r4sg', 'v2.re4mesh', 'v2.r4sg', 'v3.re4mesh', 'v3.r4sg')}
 CLASH += [(_a, _b) for _a in _WL if _a.startswith('wl119') for _b in ('wlod119m', 'wlod119b')]
 NAME =re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 

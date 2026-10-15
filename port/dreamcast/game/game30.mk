@@ -2743,6 +2743,20 @@ $(error WORLD_LOD needs PS2_WORLD_MESH=1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_LOD=1 -DRE4DC_WORLD_LOD_MM=$(WORLD_LOD_MM) -DRE4DC_WORLD_LOD_HYST_MM=$(WORLD_LOD_HYST_MM)
 endif
+# WORLD_VERT=1 (native_static.cpp, render only, default 0; lane worldvert 2026-10-15): wholesale world vertex levels.
+# tools/ps2_world_vert_ladder.py writes level N of a room's PS2 world as ps2-world.vN.re4mesh (+ .vN.r4sg) beside the
+# level-0 package (same R4PW sidecar / ids). WORLD_VERT_LEVEL (default 0 = the source package) picks the level at open;
+# re4dc_world_vert_level_set(n) swaps it in place at run time (bench rows). Memory neutral: heap-4 blocks are sized by
+# level 0. A missing or larger level file falls back to level 0. Collision is untouched (separate file).
+WORLD_VERT ?= 0
+WORLD_VERT_LEVEL ?= 0
+ifneq ($(WORLD_VERT),0)
+ifneq ($(WORLD_VERT),1)
+$(error WORLD_VERT must be 0 or 1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_VERT=1 -DRE4DC_WORLD_VERT_LEVEL=$(WORLD_VERT_LEVEL)
+endif
+
 # WORLD_LOD_PROBE=1 (native_static.cpp, render only, TEST ONLY, default 0; lane worldlod 2026-10-15): the crude cost probe
 # for backlog C1 (offline world distance LOD). A PS2 world meshlet whose nearest point is beyond WORLD_LOD_PROBE_MM
 # (default 12000 = 12 m) is drawn only if its index in its LOD level is even: about half the far vertices, with holes.
