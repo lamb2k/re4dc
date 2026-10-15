@@ -6,6 +6,12 @@
 # with stage-ms-c.py, hwproject.sh --count A:B --trace A:B:S --drop-traces; disc deleted after. Default window: global
 # frames 500:1399 (about room frames 300..1200), 15 traced frames. Then bench-split.py prints the subsystem split.
 # Evidence: C:\Flycast-Evidence\re4-dreamcast\bench-20261014\hwmodel-<name>.
+# Space (measured 2026-10-15, lane alivecap, t12rc hwmodel-t12rc6-r101v3): a run needs about 2.8 GB on C: at its peak
+# (staged disc 843 MB + its _bench-discs copy 843 MB while it is copied + 15 traces x 70 MB before --drop-traces +
+# proj/elf/flycast ~0.1 GB; the finished evidence dir is ~0.1 GB). The C: guard is that need + 5 GB = 8 GB
+# (BENCH_MIN_GB; was 18) and hwproject keeps 5000 MB free (MINFREE; was 15000).
+# BENCH_DATA=T12_DATA takes the test 12 data set from t11-fix.py (default T11_DATA); BENCH_WARP=<file> replaces the
+# scene's warp file (e.g. a v3 scene without its bench-replace lines when the data set already carries them).
 set -u
 SC=$1; L=$2; N=$3
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -18,11 +24,13 @@ EV=${BENCH_EV:-/mnt/c/Flycast-Evidence/re4-dreamcast/bench-20261014}
 B=/root/probe/lanes/route/out-$L
 LOG=/root/probe/bench-stage; mkdir -p $LOG/fix "$EV" /mnt/c/Flycast-Evidence/re4-dreamcast/_bench-discs
 FREE=$(df -BG --output=avail /mnt/c | tail -1 | tr -dc 0-9)
-[ "$FREE" -ge "${BENCH_MIN_GB:-18}" ] || { echo "C: has $FREE GB free: not staging"; exit 1; }
-D=$(python3 -c "import re;print(re.search(r\"^T11_DATA = '([^']*)'\", open('$T11/t11-fix.py').read(), re.M).group(1))")
+[ "$FREE" -ge "${BENCH_MIN_GB:-8}" ] || { echo "C: has $FREE GB free: not staging"; exit 1; }
+DV=${BENCH_DATA:-T11_DATA}
+D=$(python3 -c "import re;print(re.search(r\"^$DV = '([^']*)'\", open('$T11/t11-fix.py').read(), re.M).group(1))")
+WARPF=${BENCH_WARP:-$HERE/benchmark-$SC-warp.txt}
 FIX=$LOG/fix/hw-$N.json
-python3 $T11/t11-fix.py $L $FIX --data $D --warp $HERE/benchmark-$SC-warp.txt > $LOG/fix-hw-$N.txt || exit 1
-python3 $HERE/fix-replace.py $FIX $HERE/benchmark-$SC-warp.txt >> $LOG/fix-hw-$N.txt || exit 1
+python3 $T11/t11-fix.py $L $FIX --data $D --warp $WARPF > $LOG/fix-hw-$N.txt || exit 1
+python3 $HERE/fix-replace.py $FIX $WARPF >> $LOG/fix-hw-$N.txt || exit 1
 E=$EV/hwmodel-$N
 [ ! -e "$E" ] || { echo "$E exists"; exit 1; }
 cd "$HW" || exit 1
@@ -36,13 +44,13 @@ DBC=/mnt/c/Flycast-Evidence/re4-dreamcast/_bench-discs/hwmodel-$N.bin
 FA=$(bash /root/probe/perf-20261004/kit/fa.sh $B/re4dc-game.elf | awk '{print $NF}')
 A=${WIN%:*}; Z=${WIN#*:}
 echo "frameaddr $FA window $WIN stride $STRIDE"
-HWM_EVROOT=$EV HWM_DISCS=/mnt/c/Flycast-Evidence/re4-dreamcast/_bench-discs HWM_MINFREE_MB=${MINFREE:-15000} \
+HWM_EVROOT=$EV HWM_DISCS=/mnt/c/Flycast-Evidence/re4-dreamcast/_bench-discs HWM_MINFREE_MB=${MINFREE:-5000} \
   bash $TREE/port/dreamcast/tools/hwmodel/hwproject.sh --name $N --disc "$DISC" --frameaddr $FA --count $WIN \
   --trace $A:$Z:$STRIDE --drop-traces $B
 rc=$?
 rm -f "$DISC" "$DBC"; rm -rf "$S"
-cp $FIX $E/fixture.json 2>/dev/null; cp $HERE/benchmark-$SC-warp.txt $E/warp.txt 2>/dev/null
-echo "benchmark-$SC $L count=$WIN trace=$A:$Z:$STRIDE" > $E/SCENE.txt
+cp $FIX $E/fixture.json 2>/dev/null; cp $WARPF $E/warp.txt 2>/dev/null
+echo "benchmark-$SC $L count=$WIN trace=$A:$Z:$STRIDE data=$DV warp=$WARPF" > $E/SCENE.txt
 echo "done $N rc=$rc"
 sed -n 1,8p $E/proj/projection.txt
 python3 $HERE/bench-split.py $E
