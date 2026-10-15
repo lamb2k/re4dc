@@ -11,7 +11,7 @@ here=$(cd "$(dirname "$0")" && pwd)
 L=${1:?arm label}
 K=${K:-/root/probe/bench-public}
 O=/root/probe/lanes/route/out-$L
-D=$K/disc-$L
+D=$K/disc-$L${FIXSET:+-s${FIXSET// /}}   # FIXSET: as bench-package.sh (a disc with some of the scenes)
 P=${P:-"/mnt/c/Game Dev/Emulators/RE4DC-Benchmark-v2"}
 [ $(wc -l < $O/stack.txt) -le 1 ] || { echo "out-$L was built from a dirty tree"; cat $O/stack.txt; exit 1; }
 SHA=$(head -1 $O/stack.txt | cut -c1-8)

@@ -22,10 +22,12 @@ All scenes of the definitive benchmark
 2  R100 HOUSE    the first house: a short cutscene plays, then Leon waits at
                  the back window while the villagers close in. About 17
                  seconds are measured.
-3  R103 FARM     the farm: a wide outdoor view (barn, windmill, fences, fog)
-                 with few or no villagers in sight. 30 seconds are measured.
-4  R10B DEL LAGO the lake: Leon in the boat, pulled along by the lake
-                 monster, then aiming the harpoon. 30 seconds are measured.
+3  R10B DELLAGO  the lake (Del Lago): Leon in the boat, pulled along by the
+                 lake monster, then aiming the harpoon. A cutscene plays
+                 first. 30 seconds are measured.
+4  R103 FARM     the farm: a wide outdoor view (barn, windmill, fences, fog)
+                 with five villagers far off at its end. 30 seconds are
+                 measured.
 5  R209 CASTLE*  PREVIEW of unreleased content (see below).
 6  R101 CROSS    the village again, as a geometry sweep (page 4 and on).
 7  R103 FARM     the farm again, as a geometry sweep.
