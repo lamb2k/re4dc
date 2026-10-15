@@ -441,6 +441,22 @@ endif
 MODULES += st2_1 em1a em1b em14
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH31=1
 endif
+# ROUTE_CH32=1 (castle lane 2026-10-15, default 0: no effect; needs ROUTE_CH31=1): the enemy modules of chapters 3-2
+# to 3-4 (assets.sh discover r205 r209 r20a r20b r20c r20f r206 r20d r20e): em2d (32: r205 r20a), em25 (10: r20c r20f
+# r20d), em19 (23: r20d; em10.cpp + em10_tmpl.cpp + em19_set.cpp, so it joins the em10g group) and em3c (68: r20e).
+# Lint fixed by assets.sh discover --fix (em2d / em3c slot-math, value-init in all four). em22 (r20b) is ROUTE_CH21's
+# room overlay, em23 (r20a) and em18 (r20b) are already linked.
+ROUTE_CH32 ?= 0
+ifneq ($(ROUTE_CH32),0)
+ifneq ($(ROUTE_CH32)$(ROUTE_CH31),11)
+$(error ROUTE_CH32 must be 0 or 1 and needs ROUTE_CH31=1)
+endif
+# em2d / em25 / em3c are room overlays (as em22 / em3b / em35: no resident image growth, heap 4 couples to image size);
+# em19 shares em10.cpp, so it is resident in the em10g group.
+MODULES += em2d:ovl em25:ovl em3c:ovl em19
+export RE4DC_LINK_OVERLAY += .ovl_em2d .ovl_em25 .ovl_em3c
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH32=1
+endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
 # wep01 (module 3, Punisher; the merchant's medallion reward), wep07 (54, shotgun; r101 house), wep09 (62, rifle; its
@@ -561,7 +577,7 @@ ifeq ($(ROUTE_CH21)$(EM10_SHARED)$(WORLD_STAGE_MODULES),110)
 else ifeq ($(ROUTE_CH21),1)
 $(error ROUTE_CH21=1 needs EM10_SHARED=1 (em11 in the em10g group) and WORLD_STAGE_MODULES=0 (pl11 is a CH21 overlay))
 endif
-EM10_GROUP = $(filter em12 em15 em13 em17 em11 em1a em1b em14 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
+EM10_GROUP = $(filter em12 em15 em13 em17 em11 em1a em1b em14 em19 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(filter 1,$(EM10_SHARED)),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
 MODULE_OBJS =
 MODULES_MK = $(OBJDIR)/modules.mk
@@ -1542,8 +1558,11 @@ CH22_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH22)),pl14:ovl)
 # CH31 (castle lane): st2_1 / em1a / em1b / em14 pass the discover lint (slot-math in r206.cpp and the em1a / em1b /
 # em14 _set.cpp value-init rewritten by assets.sh discover --fix); no other direct-slot consumer.
 CH31_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH31)),st2_1 em1a em1b em14)
+# CH32 (castle lane): em2d / em25 / em19 / em3c after assets.sh discover --fix (em2d 4 + em3c 3 slot-math sites,
+# value-init in all four); discover reports no other lint for r205 r20a r20c r20f r20d r20e.
+CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3c:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif

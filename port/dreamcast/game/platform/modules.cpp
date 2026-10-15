@@ -59,6 +59,9 @@ MODULE(em1a)
 MODULE(em1b)
 MODULE(em14)
 #endif
+#if defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32
+MODULE(em19)
+#endif
 MODULE(st1_0)
 MODULE(st1_1)
 MODULE(st1_2)
@@ -150,6 +153,12 @@ static const Re4dcModule g_modules[] = {
     MODULE(24, em1a),  // ROUTE_CH31: r208 / r209 Ganados (em10g group)
     MODULE(25, em1b),  // ROUTE_CH31: r201 / r20c Ganados (em10g group)
     MODULE(35, em14),  // ROUTE_CH31: r204 / r20f Ganados (em10g group)
+#endif
+#if defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32
+    {32, "em2d", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH32: r205 / r20a, room overlay
+    {10, "em25", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH32: r20c / r20f / r20d, room overlay
+    MODULE(23, em19),  // ROUTE_CH32: r20d Ganados (em10g group)
+    {68, "em3c", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH32: r20e armor, room overlay
 #endif
     MODULE(74, st1_0),
     MODULE(73, st1_1),
