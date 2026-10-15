@@ -161,6 +161,22 @@ $(error PS2_ENEMY_ROOMS needs PS2_ENEMY_RULES=1)
 endif
 $(OBJDIR)/src/game/stage.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r108.o $(OBJDIR)/mod/st1_3/src/st1/r108.o $(OBJDIR)/mod/st1_2/src/st1/r11a.o $(OBJDIR)/mod/st1_2/src/st1/r11b.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ROOMS=$(PS2_ENEMY_ROOMS)
 endif
+# PS2_ENEMY_CASTLE=<mask> (lane castle 2026-10-15, default 0: no effect; needs PS2_ENEMY_RULES=1; changes gameplay by
+# design): PS2 USA room-code enemy rules for the castle (st2_*.rel, Normal mode, each read from the PS2 disassembly;
+# Easy-only branches are not ported). One bit per room; reserved bits are not implemented yet:
+#   0x01 r208 (reserved: init 6 sends, group A only while alive < 4, group D 2 sends, area D < 5)
+#   0x02 r20b: the hall waves never send list row 3 (em[1]); the random wave (Rnd() % 6, same draw) sends one
+#        Ganado in cases 0-2 (0x14 / 0x15 / 0x16) where the GC sends two (st2_1 R20bEmSetMain 0x14618..0x14da8)
+#   0x04 r216: the init sends only the display armor 0xE8 (armor[3]); the GC sends 0xE5..0xE8 (st2_2 R216Init 0x10e58)
+#   0x08 r21a (reserved: alive-gated waves), 0x10 r205 (reserved: +0x57), 0x20 r226 (reserved: PS2-only 0xB3/0xB5
+#        reinforcement block, alive < 11), 0x40 r227 (reserved: PS2-only task, alive < 7 sends 0xF7/0xF5)
+PS2_ENEMY_CASTLE ?= 0
+ifneq ($(PS2_ENEMY_CASTLE),0)
+ifneq ($(PS2_ENEMY_RULES),1)
+$(error PS2_ENEMY_CASTLE needs PS2_ENEMY_RULES=1)
+endif
+$(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
+endif
 # R101_ALIVE_CAP=N (lane crowd12 2026-10-14; CHANGES GAMEPLAY by design; default 0 = off; needs PS2_ENEMY_ROOMS bit 0x02):
 #   at most N Ganados alive at once in the r101 village fight. Start-list Ganados beyond N are held at room entry
 #   (fresh fight only); the room code's sends beyond N (the square three at the alert, the s21 house nine) are
