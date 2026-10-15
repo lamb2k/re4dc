@@ -58,6 +58,39 @@ What upstream could add to close it: a batch `shz_xmtrx_transform_vec4_n` / `tra
 software pipeline, plus a variant that also returns 1/w (FSRRA) and the outcode mask. Our avk_sh4.S loop is the
 reference implementation. We can share it under SH4ZAM's MIT terms if the author wants it.
 
+## memcpy / memmove / memset (GAME_SHZ_MEM, global link wraps, 10-15)
+
+This is one image with a run-time mask, so every arm has the same code layout. The pricing is MODELLED, r101 cross,
+model unconfirmed: the store-miss term is under refit against the console Bench A/B. "Function" is the function row
+of the routine itself; "frame" is the whole-frame total.
+
+| mask | routine | newlib (fn ms, insn) | SH4ZAM (fn ms, insn) | frame delta |
+|---|---|---|---|---|
+| 0x1 memset >= 64 B | L_store_long_loop + memset | 0.628 + 0.233, 155k | shz_memset8_sh4_ 0.622 + wrapper/head/tail 0.383 + 0.028, 163k | +0.14 |
+| 0x6 memcpy + memmove >= 32 B | L_al4both_loop + memcpy | 0.332 + 0.091, 63k | shz_memcpy inlined in __wrap_memcpy 0.872 + 0.053, 143k | +0.15 |
+| 0x7 all | | | | +0.34 |
+
+The "copies" bucket shows -0.50 / -0.42 / -0.92 because the inlined SH4ZAM bodies are counted under the caller, not
+under copies. Read the function rows, not the bucket.
+
+Why newlib wins here:
+- **memcpy, medium sizes (32 to ~128 B, most of our calls).** shz_memcpy_sh4 aligns the *destination* to 32 bytes with
+  the byte loop (shz_memcpy1_sh4_, up to 31 single-byte moves) before any wide path. Newlib's L_al4both moves 4-byte
+  words when both pointers are 4-aligned, and they almost always are here. Instructions go 63k -> 143k.
+  Suggestion: align the destination in 4-byte and then 8-byte steps when (dst ^ src) & 3 == 0, and use the
+  32-byte movca / FMOV.D path only above a size (e.g. 256 B) where the prelude is amortised.
+- **memset.** shz_memset8 ties newlib's 4-byte store loop (0.622 vs 0.628): the stores are bound by the write-back,
+  not the issue width. The rest is our wrapper's head and tail. A memset that does movca.l per 32-byte line and then
+  FMOV.D pairs would skip the write-allocate fill. It is untested on console: the Bench B MEM_MOVCA console pair was
+  +0.5 ms at the house, so this needs a console A/B before anyone relies on it.
+- **Inline header code size.** shz_memcpy is SHZ_FORCE_INLINE with every alignment branch inlined. A global wrap
+  makes one copy of it, but direct call-site use (the user's rule) would inline that body at ~600 sites.
+  Suggestion: an out-of-line `shz_memcpy` in libsh4zam.a for the generic case, inline only the fixed-size forms.
+
+Upstream code note: `shz_memcpy32_store_sh4_` does not name dr4-dr10 as asm inputs, and `shz_memcpy32_load_sh4_` only
+clobbers them. GCC may legally place FP code between the two statements. They are adjacent in shz_memcpy32_sh4 today,
+so this is latent. Suggestion: make it one asm statement, or give the store "f" inputs.
+
 ## API gaps and pitfalls (for upstream)
 
 1. **shz_matrix.h is not self-contained for vendoring.** With only the xmtrx / vector / scalar / mem headers, shz_mat4x4_t /
