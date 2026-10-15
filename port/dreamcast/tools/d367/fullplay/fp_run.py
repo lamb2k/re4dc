@@ -26,6 +26,18 @@ KEYS = dict(a=(0x2D, 0), b=(0x2E, 0), x=(0x1F, 0), y=(0x20, 0), start=(0x1C, 0),
             up=(0x48, 1), down=(0x50, 1), left=(0x4B, 1), right=(0x4D, 1))
 VK = dict(a=0x58, b=0x43, x=0x53, y=0x44, start=0x0D, up=0x26, down=0x28, left=0x25, right=0x27)
 
+# RE4DC_EMU=console (opt-in): run flycast-console (GD-ROM/GDEMU DMA timing + optional SH-4 cache model) instead of the
+# harness flycast.exe. CRASH REPRO ONLY, never timing. RE4DC_GD_* pass through the environment; RE4DC_CONSOLE_DYNAREC=no
+# runs the interpreter (needed for the operand/instruction cache model). See docs/tools/flycast-console.md.
+CONSOLE_EXE = Path(os.environ.get('RE4DC_CONSOLE_EXE',
+                                  r'C:\Flycast-Evidence\re4-dreamcast\flycast-console-bin\flycast-console.exe'))
+
+def emu_exe():
+    if os.environ.get('RE4DC_EMU', '') == 'console':
+        assert CONSOLE_EXE.exists(), 'RE4DC_EMU=console: no %s' % CONSOLE_EXE
+        return CONSOLE_EXE
+    return TEMPLATE / 'flycast.exe'
+
 def sha(p):
     h = hashlib.sha256()
     with open(p, 'rb') as f:
@@ -121,7 +133,7 @@ def main():
     assert a.base or 'disc.gdi' in linked, 'no disc.gdi in %s' % disc
     for name in ('emu.cfg', 'read_log.py', 'capture_ui_vram.py'):
         shutil.copyfile(TEMPLATE / name, cap / name)
-    shutil.copyfile(TEMPLATE / 'flycast.exe', cap / 'flycast.exe')  # the template exe is at the NTFS 1024-link limit
+    shutil.copyfile(emu_exe(), cap / 'flycast.exe')  # the template exe is at the NTFS 1024-link limit
     for src in (TEMPLATE / 'data').rglob('*'):
         if src.is_file():
             d = cap / src.relative_to(TEMPLATE); d.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(src, d)
@@ -140,6 +152,8 @@ def main():
     cfg = (cap / 'emu.cfg').read_text()
     cfg = re.sub(r'(?m)^Debug.GDBPort = \d+', 'Debug.GDBPort = %d' % port, cfg)
     cfg = cfg.replace('rend.vsync = yes', 'rend.vsync = no')
+    if os.environ.get('RE4DC_EMU', '') == 'console' and os.environ.get('RE4DC_CONSOLE_DYNAREC', 'yes') == 'no':
+        cfg = cfg.replace('[config]\n', '[config]\nDynarec.Enabled = no\n', 1)
     (cap / 'emu.cfg').write_text(cfg)
     steps = []
     if a.keys:
@@ -152,7 +166,9 @@ def main():
             steps.append(dict(rx=re.compile(rx if rx != '-' else ''), delay=float(delay), keys=k[0].split('+'), hold=float(k[1]) if len(k) > 1 else 0.15))
     stop = re.compile(a.stop) if a.stop else None
     rep = dict(name=a.name, status='STARTING', start_utc=now(), disc=str(disc), tracks=linked, seconds=a.seconds,
-               vmu=a.vmu, keys=a.keys, stop=a.stop, fixtures=fixtures, errors=[], key_log=[])
+               vmu=a.vmu, keys=a.keys, stop=a.stop, fixtures=fixtures, errors=[], key_log=[],
+               emu=os.environ.get('RE4DC_EMU', 'harness'),
+               emu_env={k: v for k, v in os.environ.items() if k.startswith('RE4DC_GD_') or k == 'RE4DC_CONSOLE_DYNAREC'})
     while count_flycasts() >= maxfc:
         time.sleep(5)
     startup = subprocess.STARTUPINFO(); startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW; startup.wShowWindow = 0
