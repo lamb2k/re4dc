@@ -1,0 +1,10 @@
+name sh4zam-eq-bell
+# lane sh4zam-direct 2026-10-15: bell-trg-warp.txt with the bell forced at room frame 300 so that the bell, its
+# movie and the aftermath fit a 60 s run (lean rule). Gameplay-equivalence scene for GAME_SH4ZAM_LOGIC.
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+find 0x00002000
+inv default
+god
+trg 0 300 0x101
