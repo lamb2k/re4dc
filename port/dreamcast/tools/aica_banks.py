@@ -91,6 +91,14 @@ def pref_cap(t):
 # ambience, weapon, door, core UI, music last.
 LOWER_ORDER = (8, 5, 1, 6, 2, 7, 0, 3)
 
+# Fixed caps under the planner's floor for banks that do not fit the frozen arena even at 8 kHz (decision 2026-10-15:
+# no arena relayout; match the PS2's lower rates, else the least audible ambience first, enemy voices kept). The
+# planner never lowers these further. r201 (castle lane): ROOM 257,900 + FOOT 92,284 + pl11 68,064 + em1b 682,196 =
+# 1,100,444 B against the frozen 956,448 B arena. The PS2 keeps r201's banks at 8 / 12 kHz (no lower rate to match),
+# and em1b's bank is em11's (same key here, and em1b.snd == em11.snd on the PS2), frozen at 8 kHz by the earlier route.
+# ROOM 32 kHz sources 8000 -> 4000 Hz (128,980 B), FOOT 8000 -> 4000 Hz (46,176 B): 925,416 B, voices unchanged.
+FORCED_CAPS = {('st2/r201.dar', 6): 4000, ('st2/r201.dar', 5): 4000}
+
 # Route: resident banks and the room-arena banks of each room (enemy lists from
 # the frontier ESL audit, /root/probe/d367-agents/frontier/frontier-ledger.json).
 # em/pl08.drs: Leon without the jacket (costume 1, every room after r106; title.cpp) loads into the same player
@@ -569,7 +577,7 @@ class Bank:
         self.table, self.samples, self.coefs = table, samples, coefs
         self.fnv = fnv1a(table)
         self.key = (self.fnv, asz)
-        self.cap = pref_cap(t)
+        self.cap = FORCED_CAPS.get((spec, t), pref_cap(t))
 
     def bytes_at(self, cap):
         return bank_bytes(self.samples, cap)
