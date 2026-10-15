@@ -76,6 +76,10 @@ int re4dc_pace_get_mode(void);   // pace.cpp
 void re4dc_pace_set_mode(int mode, const char* why);
 }
 
+#ifndef RE4DC_BENCH_AUTO_S
+#define RE4DC_BENCH_AUTO_S 20
+#endif
+
 namespace {
 // ---------------------------------------------------------------- scenes
 // Definitive disc (2026-10-15): scenes 1..5 are measured (results pages 1 to 3: r101 cross, r100 house, r103 farm,
@@ -1558,7 +1562,14 @@ extern "C" void __wrap_OSInit(void)
     vid_set_mode(DM_640x480, PM_RGB565);
     const Fb fb = fb_boot();
     const uint64_t t0 = timer_us_gettime64();
-    constexpr unsigned kAuto = 20;
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+    // bench.mk BENCH_AUTO_S (default 20; 1 for hw-model trace builds): read from data, so both builds have the same code
+    // and layout (the trace image differs from the console image in this one word)
+    static volatile unsigned auto_s = RE4DC_BENCH_AUTO_S;
+    const unsigned kAuto = auto_s;
+#else
+    constexpr unsigned kAuto = RE4DC_BENCH_AUTO_S;
+#endif
     unsigned shown = ~0u;
     bool pressed = false;
     for (;;) {

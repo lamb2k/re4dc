@@ -60,6 +60,12 @@ endif
 # when its knob is on in the make line; its code asks re4dc_poc_on(bit) at its decision point (BENCH_POC builds only).
 # 0 (default): nothing changes (knob-off identity with the definitive benchmark program).
 BENCH_POC ?= 0
+# BENCH_AUTO_S=N: seconds the start screen waits for START before it starts by itself (default 20). hw-model trace builds
+# (interpreter, no pad input) use 1: same image layout, one constant.
+BENCH_AUTO_S ?= 20
+ifneq ($(BENCH_AUTO_S),20)
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_AUTO_S=$(BENCH_AUTO_S)
+endif
 ifeq ($(BENCH_POC),1)
 POC_CPPFLAGS := -DRE4DC_BENCH_POC=1
 POC_CPPFLAGS += $(if $(filter-out 0,$(PS2_WORLD_PVS)),-DRE4DC_POC_HAS_PVS=1)
