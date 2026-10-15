@@ -93,11 +93,15 @@ LOWER_ORDER = (8, 5, 1, 6, 2, 7, 0, 3)
 
 # Fixed caps under the planner's floor for banks that do not fit the frozen arena even at 8 kHz (decision 2026-10-15:
 # no arena relayout; match the PS2's lower rates, else the least audible ambience first, enemy voices kept). The
-# planner never lowers these further. r201 (castle lane): ROOM 257,900 + FOOT 92,284 + pl11 68,064 + em1b 682,196 =
-# 1,100,444 B against the frozen 956,448 B arena. The PS2 keeps r201's banks at 8 / 12 kHz (no lower rate to match),
-# and em1b's bank is em11's (same key here, and em1b.snd == em11.snd on the PS2), frozen at 8 kHz by the earlier route.
-# ROOM 32 kHz sources 8000 -> 4000 Hz (128,980 B), FOOT 8000 -> 4000 Hz (46,176 B): 925,416 B, voices unchanged.
-FORCED_CAPS = {('st2/r201.dar', 6): 4000, ('st2/r201.dar', 5): 4000}
+# planner never lowers these further. The frozen ARENA slot is 1,004,192 B (layout line of the build log). Enemy voices
+# of the castle Ganados (em1a / em1b / em14 / em19) are em11's bank (same key; on the PS2 em1b.snd == em11.snd), frozen
+# at 8 kHz by the earlier route. The PS2 keeps these rooms' banks at 8 / 12 / 16 kHz, so there is no lower rate to match.
+# r201: ROOM 257,900 + FOOT 92,284 + pl11 68,064 + em11 682,196 = 1,100,444 B; ROOM 8000 -> 4000 Hz (128,980 B).
+# r209: ROOM 267,144 + FOOT 79,476 + em11 682,196 = 1,028,864 B; ROOM 8000 -> 4000 Hz (133,608 B).
+# r20c / r20d: em11 + em25 (131,516 B at 8 kHz) + room: 1,055,520 / 1,043,552 B; ROOM 8000 -> 4000 Hz (74,772 /
+# 72,924 B). FOOT and every voice bank keep their planned rates.
+FORCED_CAPS = {('st2/r201.dar', 6): 4000, ('st2/r209.dar', 6): 4000,
+               ('st2/r20c.dar', 6): 4000, ('st2/r20d.dar', 6): 4000}
 
 # Route: resident banks and the room-arena banks of each room (enemy lists from
 # the frontier ESL audit, /root/probe/d367-agents/frontier/frontier-ledger.json).
@@ -208,6 +212,18 @@ ROOMS = {
     'r201': ['st2/r201.dar', 'em/pl11.drs', 'em/em1b.drs'],
     'r208': ['st2/r208.dar', 'em/pl11.drs', 'em/em1a.drs'],
     'r204': ['st2/r204.dar', 'em/pl11.drs', 'em/em14.drs'],
+    # Chapters 3-2 .. 3-4 (castle lane 2026-10-15, ROUTE_CH32; assets.sh discover lists): Ashley is captured at 3-1's end
+    # (r204s00) and returns as the player in 3-4 (r20d / r20e; her player bank is not planned yet). Room archives are the
+    # rel31 (compact32 + GC scenery release) .dar files.
+    'r205': ['st2/r205.dar', 'em/em2d.drs'],
+    'r209': ['st2/r209.dar', 'em/em1a.drs'],
+    'r20a': ['st2/r20a.dar', 'em/em23.drs', 'em/em2d.drs'],
+    'r20b': ['st2/r20b.dar', 'em/em18.drs', 'em/em22.drs'],
+    'r20c': ['st2/r20c.dar', 'em/em11.drs', 'em/em1b.drs', 'em/em25.drs'],
+    'r20f': ['st2/r20f.dar', 'em/em14.drs', 'em/em25.drs'],
+    'r206': ['st2/r206.dar', 'em/em11.drs'],
+    'r20d': ['st2/r20d.dar', 'em/em11.drs', 'em/em19.drs', 'em/em25.drs'],
+    'r20e': ['st2/r20e.dar', 'em/em3c.drs'],
     # r40b (St4, follow-up 7): em1f (bringup inventory: em1f/em1f, st4_0)
     'r40b': ['st4/r40b.dar', 'em/em1f.drs'],
 }

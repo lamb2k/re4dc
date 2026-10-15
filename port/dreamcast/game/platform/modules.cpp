@@ -324,7 +324,17 @@ struct RouteOverlayHeader {
 };
 constexpr u32 kRouteOverlayMagic = 0x4F344552;  // "RE4O"
 struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
-#if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+#if defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+// ROUTE_CH32 (needs ROUTE_CH31 -> ROUTE_CH23): the ROUTE_CH22 + CH23 eight, then em2d (32), em25 (10), em3c (68).
+RouteOverlay g_route_ovl[11];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : (id) == 61 ? 7 : (id) == 32 ? 8 : (id) == 10 ? 9 : 10)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 66 || (id) == 63 || (id) == 61 || (id) == 32 || (id) == 10 || (id) == 68)
+#elif defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32
+// ROUTE_CH32 without ROUTE_CH22: the ROUTE_CH23 seven, then em2d (32), em25 (10), em3c (68).
+RouteOverlay g_route_ovl[10];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 63 ? 5 : (id) == 61 ? 6 : (id) == 32 ? 7 : (id) == 10 ? 8 : 9)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 63 || (id) == 61 || (id) == 32 || (id) == 10 || (id) == 68)
+#elif defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
 RouteOverlay g_route_ovl[8];  // old five, then pl14, em3b and em35
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : 7)
 #define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 66 || (id) == 63 || (id) == 61)

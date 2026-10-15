@@ -31,7 +31,8 @@ MAX_CLIP=32768
 # em1a / em1b / em14 (castle chapter 3 Ganados, ROUTE_CH31; castle lane 2026-10-15): em1x/em10.cpp, em10_tmpl.cpp,
 # em1x_set.cpp, the em10g group's units, so the same consumers; their GC archives (3.9-4.3 MB bodies) did not fit heap 4
 # in r208 / r201 / r204 next to the room and its PS2 world (cx-r20x-t12-01: readEmData error).
-GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em1a.drs','em1b.drs','em14.drs')
+# em19 (r20d Ganados, ROUTE_CH32; same em10.cpp / em10_tmpl.cpp / em19_set.cpp units, 4,293,760 B GC body).
+GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em1a.drs','em1b.drs','em14.drs','em19.drs')
 SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.drs','em18.drs')
 # em18 (the merchant, r102 r10d r10e r112; lane ps2cast2 2026-10-14, PS2_CAST_MERCHANT discs): textures only
 # (--keep-motion-resident), the em22 contract. Its model TPLs (ARC 6 body / hands / goods, ARC 8 head, ARC 0xF robe and
@@ -72,7 +73,7 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 ROUTE_OVL_MODULES=('em2b','em2f','em22')
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
 # their own registry row like the room overlays above: em11 (ROUTE_CH21, r117), em18 (ROUTE_CH13, r102: module 22).
-KNOB_STATIC_MODULES=('em11','em18','em1a','em1b','em14')
+KNOB_STATIC_MODULES=('em11','em18','em1a','em1b','em14','em19')
 GANADO_OVERSIZED_RESIDENT=('em1b.drs',)  # + ROUTE_CH31's castle Ganado RELs
 # Leon's archives, textures-only: pl00 (jacket, costume 0) and pl08 (no jacket, costume 1: title.cpp picks it in
 # every room but r120/r100/r101/r103/r106 once the r106 closet event has run). Same cPlLeon consumers, so pl08
