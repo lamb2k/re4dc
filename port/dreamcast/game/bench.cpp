@@ -237,6 +237,9 @@ struct Pmc {
     unsigned long long ev_cyc[kEv][kPh];  // cycles of the periods that counted event e, by part
     unsigned long long d_cyc, s_cyc;      // work cycles (no wait) of the drawn iterations / of the skipped ones
     unsigned s_ticks;                     // skipped iterations
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+    unsigned long long sk_cyc[kPh];       // lane/skiptick split: cycles of the skipped iterations, by part (wait included)
+#endif
     unsigned long long ta_calls, ta_bytes;   // TA input of the drawn frames (native_ui's completed frame)
     unsigned ta_n;
     unsigned long long gan[2];               // Ganados drawn (trans.cpp ModelRender, coarse.cpp draw_model)
@@ -250,6 +253,9 @@ bool g_period_live;
 unsigned long long g_c0, g_e0, g_pc[kPh], g_pe[kPh];
 unsigned long long g_pd, g_ps, g_iter_w0, g_pgan[2];   // this period: drawn / skipped iterations' work cycles; work at iteration start
 unsigned g_pskips;
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+unsigned long long g_iter_pc0[kPh], g_psk[kPh];   // per-part cycles at the iteration start; this period's skipped iterations by part
+#endif
 bool g_iter_drawn;
 inline unsigned long long cyc_now() { return g_cyc_pmc ? perf_cntr_count(PRFC0) : timer_us_gettime64() * 200ULL; }
 void pmc_event(unsigned ev)
@@ -314,6 +320,15 @@ unsigned pm_imiss_k10(const Pmc& m)   // I-cache misses of the work parts, 0.1 k
 unsigned pm_d10(const Pmc& m) { return m.periods ? (unsigned) ((m.d_cyc / m.periods + 10000) / 20000) : 0; }
 unsigned pm_s10(const Pmc& m) { return m.s_ticks ? (unsigned) ((m.s_cyc / m.s_ticks + 10000) / 20000) : 0; }
 unsigned pm_skips10(const Pmc& m) { return m.periods ? (m.s_ticks * 10 + m.periods / 2) / m.periods : 0; }
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+// skipped-tick split (lane/skiptick 63c3ea48): ms x10 of part p in one skipped tick / in the drawn tick
+unsigned pm_sk10(const Pmc& m, int p) { return m.s_ticks ? (unsigned) ((m.sk_cyc[p] / m.s_ticks + 10000) / 20000) : 0; }
+unsigned pm_dk10(const Pmc& m, int p)
+{
+    if (!m.periods || m.cyc[p] < m.sk_cyc[p]) return 0;
+    return (unsigned) (((m.cyc[p] - m.sk_cyc[p]) / m.periods + 10000) / 20000);
+}
+#endif
 
 // ---------------------------------------------------------------- TA input (all scenes, results pages 3 and 4)
 unsigned pm_verts10(const Pmc& m)   // TA vertices per drawn frame, 0.1 k (32-byte TA commands less the headers)
@@ -993,6 +1008,50 @@ void draw_ticks_poc(const Fb& fb)
     fb_text(fb, 14, y, 2, 2, kGreen, "CODE 3:"); y += 16;
     fb_code(fb, y, 2, code);
 }
+// Split page code (lane/skiptick 63c3ea48 format): per row H..P the drawn tick's six parts ms x10 . joined, / one skipped
+// tick's six parts.
+void make_code5(char* out, unsigned size)
+{
+    char body[400] = "", part[96];
+    for (int k = 0; k < kScenes; ++k) {
+        if (!present(k)) continue;
+        const Pmc& m = g_pmc[k];
+        char* q = part;
+        char* const end = part + sizeof(part);
+        q += snprintf(q, end - q, "%c", 'H' + k);
+        for (int p = 0; p < kPh; ++p) q += snprintf(q, end - q, p ? ".%u" : "%u", pm_dk10(m, p));
+        for (int p = 0; p < kPh; ++p) q += snprintf(q, end - q, p ? ".%u" : "/%u", pm_sk10(m, p));
+        code_add(body, sizeof(body), part);
+    }
+    finish_code(out, size, body);
+}
+// The drawn / skipped split, one line per row: the skipped tick's parts (it draws nothing, so its ADRAW and WORLD are 0)
+// and both ticks' work. Page 2 is per picture (drawn + skips x skipped).
+void draw_split_poc(const Fb& fb, int page)
+{
+    char line[160], code[420], nm[12], v[8][12];
+    snprintf(line, sizeof(line), "PAGE %d OF %d: DRAWN AND SKIPPED TICKS, EACH WAY", page, g_pages);
+    int y = page_head(fb, line);
+    fb_text(fb, 14, y, 1, 2, kGrey, "MS OF CPU OF ONE SKIPPED TICK BY PART (IT RUNS THE GAME, BUILDS THE NEXT PICTURE, DRAWS NOTHING)"); y += 16;
+    fb_text(fb, 20, y, 2, 2, kCyan, "  ROW     SLOGIC SAPREP SOTHER SWAIT SWORK DWORK"); y += 18;
+    for (int k = 0; k < kScenes; ++k) {
+        const Pmc& m = g_pmc[k];
+        if (!present(k)) continue;
+        short_name(k, nm);
+        if (!m.periods) { snprintf(line, sizeof(line), "%d %-9s NOT MEASURED", k + 1, nm); fb_text(fb, 20, y, 2, 2, kRed, line); y += 18; continue; }
+        unsigned sw = 0, dw = 0;
+        for (int p = 0; p < kWork; ++p) { sw += pm_sk10(m, p); dw += pm_dk10(m, p); }
+        snprintf(line, sizeof(line), "%d %-9s%6s %6s %6s%6s%6s%6s", k + 1, nm, d1(pm_sk10(m, 0), v[0]), d1(pm_sk10(m, 1), v[1]),
+                 d1(pm_sk10(m, 4), v[2]), d1(pm_sk10(m, 5), v[3]), d1(sw, v[4]), d1(dw, v[5]));
+        fb_text(fb, 20, y, 2, 2, row_color(k), line); y += 18;
+    }
+    y += 4;
+    fb_text(fb, 14, y, 1, 2, kGrey, "SWORK / DWORK: ALL PARTS BUT WAIT OF ONE SKIPPED / THE DRAWN TICK (= PAGE 3 SKIP / DRAWN)"); y += 16;
+    make_code5(code, sizeof(code));
+    snprintf(line, sizeof(line), "CODE %d:", page);
+    fb_text(fb, 14, y, 2, 2, kGreen, line); y += 16;
+    fb_code(fb, y, 2, code);
+}
 // Last page: what each layer is, whether this image has it, and the mask each row ran with.
 void draw_layers_poc(const Fb& fb, int page)
 {
@@ -1048,6 +1107,17 @@ void log_counters()
     re4dc_log("bench: code2 %s build %s\n", code, RE4DC_BENCH_ID);
     make_code3(code, sizeof(code));
     re4dc_log("bench: code3 %s build %s\n", code, RE4DC_BENCH_ID);
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+    for (int k = 0; k < kScenes; ++k) {
+        const Pmc& m = g_pmc[k];
+        if (!present(k) || !m.periods) continue;
+        re4dc_log("bench: split scene %d %s drawn10=%u/%u/%u/%u/%u/%u skip10=%u/%u/%u/%u/%u/%u skips10=%u\n", k + 1,
+                  scene_name(k), pm_dk10(m, 0), pm_dk10(m, 1), pm_dk10(m, 2), pm_dk10(m, 3), pm_dk10(m, 4), pm_dk10(m, 5),
+                  pm_sk10(m, 0), pm_sk10(m, 1), pm_sk10(m, 2), pm_sk10(m, 3), pm_sk10(m, 4), pm_sk10(m, 5), pm_skips10(m));
+    }
+    make_code5(code, sizeof(code));
+    re4dc_log("bench: code5 %s build %s\n", code, RE4DC_BENCH_ID);
+#endif
 }
 
 void log_sweep()
@@ -1260,7 +1330,7 @@ const char* re4dc_bench_results(void)
     int sweep_page[kSweeps], ns = 0;
     for (int s = 0; s < kSweeps; ++s)
         if (present(kSweep0 + s)) sweep_page[ns++] = s;
-    g_pages = 3 + ns + (kPoc ? 1 : 0);
+    g_pages = 3 + ns + (kPoc ? 2 : 0);   // POC101: + the drawn / skipped split, + what each row is
     log_results();
     log_counters();
     log_sweep();
@@ -1276,6 +1346,7 @@ const char* re4dc_bench_results(void)
             last_sof = sof; shown = page;
 #if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
             if (page == g_pages - 1) draw_layers_poc(fb_displayed(), page + 1);
+            else if (page == g_pages - 2) draw_split_poc(fb_displayed(), page + 1);
             else if (page >= 3) draw_sweep(fb_displayed(), sweep_page[page - 3], page + 1);
             else if (page == 2) draw_ticks_poc(fb_displayed());
             else if (page == 1) draw_counters_poc(fb_displayed());
@@ -1381,6 +1452,12 @@ void re4dc_bench_iter(int drawn)
         if (g_iter_drawn) g_pd += w - g_iter_w0;
         else { g_ps += w - g_iter_w0; ++g_pskips; }
         g_iter_w0 = w;
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+        for (int p = 0; p < kPh; ++p) {
+            if (!g_iter_drawn) g_psk[p] += g_pc[p] - g_iter_pc0[p];
+            g_iter_pc0[p] = g_pc[p];
+        }
+#endif
     }
     g_iter_drawn = drawn != 0;
     sweep_step();
@@ -1402,10 +1479,16 @@ void re4dc_bench_iter(int drawn)
             m.ev_cyc[g_ev_i][p] += g_pc[p];
         }
         m.d_cyc += g_pd; m.s_cyc += g_ps; m.s_ticks += g_pskips;
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+        for (int p = 0; p < kPh; ++p) m.sk_cyc[p] += g_psk[p];
+#endif
         m.gan[0] += g_pgan[0]; m.gan[1] += g_pgan[1];
         g_ev_i = (g_ev_i + 1) % kEv;
     }
     for (int p = 0; p < kPh; ++p) g_pc[p] = g_pe[p] = 0;
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+    for (int p = 0; p < kPh; ++p) g_iter_pc0[p] = g_psk[p] = 0;
+#endif
     g_pd = g_ps = g_iter_w0 = 0; g_pskips = 0; g_pgan[0] = g_pgan[1] = 0;
     g_period_live = now;
     g_period_dst = target;

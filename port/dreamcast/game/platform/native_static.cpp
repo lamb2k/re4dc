@@ -121,6 +121,14 @@ static unsigned world_lod_probe_stats[2];
 #ifndef RE4DC_WORLD_LOD
 #define RE4DC_WORLD_LOD 0
 #endif
+// POC101 (bench.mk BENCH_POC=1): WORLD_LOD / WORLD_LOD_PROBE act only while the POC layer 0x02 is on (bench.cpp
+// re4dc_poc_on: the row's or the sweep setting's mask), so one image measures off and on.
+#if defined(RE4DC_POC_WLOD) && RE4DC_POC_WLOD
+extern "C" int re4dc_poc_on(unsigned bit);
+#define RE4DC_POC_WLOD_ON() (re4dc_poc_on(0x02U)!=0)
+#else
+#define RE4DC_POC_WLOD_ON() true
+#endif
 #if RE4DC_WORLD_LOD
 // WORLD_LOD: the far level's marker error (ps2_world_far_lod.py FAR_ERROR 1e30); far-level draws, far clusters without
 // one (cumulative, the WORLDLOD line beside PS2MESH).
@@ -2374,7 +2382,7 @@ struct MeshDraw : Emitter {
             // last, with the marker error kFarLodError, which the screen-space choice above never reaches (so the same
             // data draws unchanged without this knob). Beyond RE4DC_WORLD_LOD_MM a cluster whose choice is level 0
             // draws that far level (about half the triangles); a coarser screen-space level stays. Same far plane.
-            if(ps2 && !level && cl.level_count>1 && depth>float(RE4DC_WORLD_LOD_MM) &&
+            if(ps2 && !level && cl.level_count>1 && depth>float(RE4DC_WORLD_LOD_MM) && RE4DC_POC_WLOD_ON() &&
                levels[cl.first_level+cl.level_count-1].error>=kFarLodError){
                 level=cl.level_count-1;++world_lod_stats[0];
             }else if(ps2 && depth>float(RE4DC_WORLD_LOD_MM))++world_lod_stats[1];
@@ -2386,7 +2394,7 @@ struct MeshDraw : Emitter {
             // WORLD_LOD_PROBE (lane worldlod 2026-10-15, test only): the crude stand-in for C1's offline distance LOD.
             // A PS2 world meshlet whose nearest point is beyond RE4DC_WORLD_LOD_PROBE_MM is drawn only if its index in the
             // level is even (about half the far meshlets: holes, the look is not judged). Same far plane.
-            const bool probe_far=ps2 && depth>float(RE4DC_WORLD_LOD_PROBE_MM);
+            const bool probe_far=ps2 && depth>float(RE4DC_WORLD_LOD_PROBE_MM) && RE4DC_POC_WLOD_ON();
 #endif
             for(unsigned i=0;i<lv.meshlet_count;++i){
 #if RE4DC_WORLD_LOD_PROBE

@@ -72,6 +72,15 @@ POC_CPPFLAGS += $(if $(filter-out 0,$(CROWD_FLAT_LIGHT)),-DRE4DC_POC_HAS_FLATLIG
 POC_CPPFLAGS += $(if $(filter-out 0,$(FAR_HALF)),-DRE4DC_POC_HAS_FARHALF=1)
 $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += $(POC_CPPFLAGS)
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_BENCH_POC=1
+# the layers' hooks (each acts only while its bit is on)
+ifneq ($(filter-out 0,$(WORLD_LOD))$(filter-out 0,$(WORLD_LOD_PROBE)),)
+ifneq ($(filter-out 0,$(WORLD_LOD)),)
+ifneq ($(filter-out 0,$(WORLD_LOD_PROBE)),)
+$(error BENCH_POC: WORLD_LOD and WORLD_LOD_PROBE share layer 0x02; build one)
+endif
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_POC_WLOD=1
+endif
 else ifneq ($(BENCH_POC),0)
 $(error BENCH_POC must be 0 or 1)
 endif
