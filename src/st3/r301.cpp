@@ -86,6 +86,8 @@ static void setTexRender();
 #if R301_PS2
 #define R301_GATE(n) (((RE4DC_PS2_ENEMY_ST3 & 8) && (n) > 6) ? 6 : (n))
 static inline int r301ps2_alive() { return SceCountEmAlive(0x10, 0x20); }
+// One line per PS2-gated send (the decisions check reads them: alive count at the send against the gate).
+#define R301_LOG(what, id, n) OSReport("[r301-ps2] %s id=%x alive=%d gate=%d\n", (what), (id), r301ps2_alive(), R301_GATE(n))
 static inline void r301ps2_wait_alive(int n)
 {
     while (r301ps2_alive() >= R301_GATE(n)) {
@@ -113,6 +115,7 @@ static void r301ps2_setEmBowgun2()
     em0.setFindPL();
     SceSleep(180);
     r301ps2_wait_alive(8);
+    R301_LOG("bowgun2", 0x22, 8);
     em1.setPtr(0x22, -1, 0);
     em1.setFindPL();
     em2.setPtr(0xF, -1, 0);
@@ -195,6 +198,7 @@ static void r301ps2_checkEmReset1()
     pG->Room_flg[0] |= 0x80000000;
     for (;;) {
         if (f0 == 0 && em0.isActive() == 0 && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[0], 9);
             em2.setEm(ids[0], -1, 0, 1, 1);
             em2.setFlag(1);
             em2.setGoto(&pPL->pos, 0xB);
@@ -202,6 +206,7 @@ static void r301ps2_checkEmReset1()
             SceSleep(1);
         }
         if (f0 == 1 && f1 == 0 && em2.isActive() == 0 && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[1], 9);
             em3.setEm(ids[1], -1, 0, 1, 1);
             em3.setFlag(1);
             em3.setGoto(&pPL->pos, 0xB);
@@ -209,6 +214,7 @@ static void r301ps2_checkEmReset1()
             SceSleep(1);
         }
         if (f2 == 0 && RsfCheck(G_ROOM_ID, 6) && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[2], 9);
             em4.setEm(ids[2], -1, 0, 1, 1);
             em4.setFlag(1);
             em4.setGoto(&pPL->pos, 0xB);
@@ -216,6 +222,7 @@ static void r301ps2_checkEmReset1()
             SceSleep(1);
         }
         if (f1 == 1 && f3 == 0 && em3.isActive() == 0 && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[3], 9);
             em5.setEm(ids[3], -1, 0, 1, 1);
             em5.setFlag(1);
             em5.setGoto(&pPL->pos, 0xB);
@@ -249,16 +256,19 @@ static void r301ps2_checkEmReset2()
     SceSleep(1);
     for (;;) {
         if (f0 == 0 && em0.isActive() == 0 && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[0], 9);
             em2.setEm(ids[0], -1, 0, 1, 1);
             em2.setGoto(&pPL->pos, 0xB);
             f0 = 1;
             SceSleep(1);
         }
         if (f1 == 0 && em1.isActive() == 0 && RsfCheck(G_ROOM_ID, 7) && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[1], 9);
             em3.setEm(ids[1], -1, 0, 1, 1);
             em3.setGoto(&pPL->pos, 0xB);
             SceSleep(300);
             r301ps2_wait_alive(9);
+            R301_LOG("send", ids[2], 9);
             em4.setEm(ids[2], -1, 0, 1, 1);
             em4.setGoto(&pPL->pos, 0xB);
             f1 = 1;
@@ -297,6 +307,7 @@ static void r301ps2_checkEmReset3()
                 SceSleep(1);
             }
             r301ps2_wait_alive(9);
+            R301_LOG("send", ids[0], 9);
             em1.setEm(ids[0], -1, 0, 1, 1);
             em1.setGoto(&pos, 0xB);
             SceSleep(30);
@@ -304,6 +315,7 @@ static void r301ps2_checkEmReset3()
                 SceSleep(1);
             }
             r301ps2_wait_alive(9);
+            R301_LOG("send", ids[1], 9);
             em2.setEm(ids[1], -1, 0, 1, 1);
             em2.setGoto(&pos, 0xB);
             f = 1;

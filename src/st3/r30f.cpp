@@ -272,6 +272,7 @@ void R30fInit()
 cEm* setem(u8 no, int force)
 {
 #if R30F_PS2_GATES
+    OSReport("[r30f-ps2] setem no=%x force=%d alive=%d gate=6\n", no, force, SceCountEmAlive(0x10, 0x20));
     if ((u32) SceCountEmAlive(0x10, 0x20) < 6 || force == 0) {
 #else
     if ((u32) SceCountEmAlive(0x10, 0x20) <= 9 || force == 0) {
