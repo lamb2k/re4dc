@@ -215,6 +215,18 @@ endif
 ifeq ($(SUB_EM_FUNC),1)
 $(OBJDIR)/src/game/pl_sub.o: GAME_CPPFLAGS += -DRE4DC_SUB_EM_FUNC=1
 endif
+# MOVIE_POLL_SETTLE=1: a route movie's first audio polls tolerate KOS snd_stream_poll's -1 for a stale channel
+# position (the AICA has not restarted the stream's channel yet, so it still reports the previous voice's offset,
+# beyond the stream buffer) for up to 200 ms after snd_stream_start, instead of ending the movie (terminal 3, no
+# picture). r11f s02/s10 failed this way whenever a game voice had just played on that channel ("chan0(0).pos =
+# 21589"); r11f's movie guard then blocks progression. Default 0 keeps the image identical.
+MOVIE_POLL_SETTLE ?= 0
+ifeq ($(filter $(MOVIE_POLL_SETTLE),0 1),)
+$(error MOVIE_POLL_SETTLE must be 0 or 1)
+endif
+ifeq ($(MOVIE_POLL_SETTLE),1)
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_POLL_SETTLE=1
+endif
 ifneq ($(ROUTE_CH23),0)
 ifneq ($(ROUTE_CH23)$(ROUTE_CH21)$(ROUTE_OVL),111)
 $(error ROUTE_CH23 must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1)
