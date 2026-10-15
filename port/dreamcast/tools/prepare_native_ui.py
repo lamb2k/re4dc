@@ -492,6 +492,8 @@ ROOM_CONTRACTS={
     'r200':dict(slots=28,smd=4,effs=(7,),itm=9,model_slots=()),
     # r40b (St4, st4_0 + em1f; follow-up 7): r40c's 27-slot layout (header ends at 232 of 256: no growth).
     'r40b':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    # Stage 3 island (st3 lane 2026-10-15): r330 (St3/r330.das, 31 slots; EFF #27 stays resident).
+    'r330':dict(slots=31,smd=4,effs=(7,),itm=9,model_slots=()),
 }
 
 def compact_room(source_file, textures, destination, compact_effects=False, compact_palettes=False, compact_uvs=False, compact_mips=False):
