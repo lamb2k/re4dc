@@ -2,7 +2,7 @@
 # one exists, and the ps2cast merchant (PS2_CAST_MERCHANT=1: ps2lib cast/<room>/merchant-em18 registry, the prepared
 # em18.drs ec1c6c16 and its four PS2 pictures, loose) in the merchant rooms.
 import json,sys,os,glob,struct
-P='/root/probe/lanes-20261014/st3/vq33/tex-st3vq.pak'
+P='/root/probe/lanes-20261014/st3/vq33/tex-st3vq4.pak'
 RES='/root/probe/lanes-20261014/st3/resident/resident-st3.bin'   # ROOM_RESIDENT lists (resident_keys.py, e2 runs)
 CAST='/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast'
 blob=open(P,'rb').read(); m,v,c,io,do=struct.unpack_from('<8s4I',blob,0)
@@ -23,7 +23,7 @@ for f in sys.argv[1:]:
         r[k]=reg; r['em/em18.drs']=CAST+'/r102/merchant-em18/em/em18.drs'
         for t in glob.glob(CAST+'/r102/merchant-em18/dc/tex/*/*.re4tex'):
             key=os.path.basename(t)[:-7]
-            if key in packed: raise SystemExit('merchant picture %s is in the pak'%key)
+            if key in packed: continue   # the pak serves it (vqroom.py VQ)
             r['dc/tex/%s/%s.re4tex'%(key[0],key)]=t
         notes.append('merchant')
     d.setdefault('provenance',{})['st3_vq33']='dc/tex.pak = tex-st3vq.pak (vqroom.py VQ + chap05..07 + material pairs) '+' '.join(notes)
