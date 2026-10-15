@@ -84,14 +84,11 @@ extern "C" void re4dc_sg_select_lean_set(unsigned on);  // lane t2exact SG_SELEC
 #if defined(RE4DC_POC_HAS_LEON) && RE4DC_POC_HAS_LEON
 extern "C" void re4dc_leon_lod_set(unsigned level);     // lane leonlod LEON_LOD (0 = as shipped)
 #endif
-#if defined(RE4DC_POC_HAS_UIOT) && RE4DC_POC_HAS_UIOT
-extern "C" void re4dc_ui_ot_cache_set(unsigned on);     // lane uicoll UI_OT_CACHE (native_ui.cpp, boot 1)
-#endif
 #if defined(RE4DC_POC_HAS_GLOD) && RE4DC_POC_HAS_GLOD
 extern "C" void re4dc_ganado_lod_set(unsigned level);   // lane leonlod GANADO_LOD (0 = as shipped)
 #endif
 #if defined(RE4DC_POC_HAS_SKINZ) && RE4DC_POC_HAS_SKINZ
-extern "C" void re4dc_skin_sh4zam_set(unsigned mask);   // lane sh4zam SKIN_SH4ZAM (stage mask, sh4zam_skin.c)
+extern "C" void re4dc_skin_sh4zam_set(unsigned on);     // lane sh4zam SKIN_SH4ZAM (XMTRX-blend skinning)
 #endif
 #endif
 #ifndef RE4DC_BENCH_AUTO_S
@@ -155,9 +152,6 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",    "/cd/dc/bench2
 #ifndef RE4DC_POC_GLOD_ON
 #define RE4DC_POC_GLOD_ON 1
 #endif
-#ifndef RE4DC_POC_SKINZ_ON
-#define RE4DC_POC_SKINZ_ON 0      // SKIN_SH4ZAM stage mask of the SKIN ZAM row (bench.mk POC_SKINZ_ON: the lane's set)
-#endif
 struct PocLayer {
     unsigned bit;
     const char* tag;      // row / setting name (10 characters at most)
@@ -217,14 +211,11 @@ void poc_apply(unsigned m)
 #if RE4DC_POC_HAS_LEON
     re4dc_leon_lod_set((m & 0x004u) ? RE4DC_POC_LEON_ON : (m & 0x100u) ? RE4DC_POC_LEON_ALT : 0u);
 #endif
-#if RE4DC_POC_HAS_UIOT
-    re4dc_ui_ot_cache_set((m & 0x008u) ? 1u : 0u);
-#endif
 #if RE4DC_POC_HAS_GLOD
     re4dc_ganado_lod_set((m & 0x010u) ? RE4DC_POC_GLOD_ON : 0u);
 #endif
 #if RE4DC_POC_HAS_SKINZ
-    re4dc_skin_sh4zam_set((m & 0x080u) ? (unsigned) RE4DC_POC_SKINZ_ON : 0u);
+    re4dc_skin_sh4zam_set((m & 0x080u) ? 1u : 0u);
 #endif
 }
 #else

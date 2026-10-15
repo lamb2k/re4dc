@@ -94,39 +94,3 @@ order file; the edited object moves what follows it), not work. Re-measured belo
 Item pickup fixture: r101 ITA record 2 (green herb, item 0x6 at 11284 1753 13763), Leon at its trigger (12400 1753
 14210, ang -1.953), A every 40 frames: the take / examine screen opens (o-pickup2 shot t0030). The first attempt
 (record 3, item 0x1001) faced a barrel (the item is inside a breakable).
-
-## B3 result: UI_OT_CACHE=1 = the TA batch (commit ed47f14c)
-
-Cost (hw model, MODELLED, r101 cross 500:799, 10 traced frames; arm ub1rW = t2crW + UI_OT_CACHE=1):
-
-| | control t2crW (u0) | padded control uprW (u3, knob off, IMAGE_PAD_BYTES=1440) | batch ub1rW (u2) |
-|---|---:|---:|---:|
-| image _end | 8c423f3c | 8c42451c | 8c4244dc |
-| ui_draw_quad + batch flush (inclusive) | 0.238 | - | **0.156** |
-| whole frame | 57.30 | 58.91 | 59.68 |
-| world submit bucket | 17.26 | 18.67 | 19.32 |
-| transform_sched / walk_lean / MeshDraw::draw dmiss | 0.36 / 0.17 / 0.24 | 0.69 / 0.33 / 0.50 | 0.80 / 0.42 / 0.57 |
-
-- **Work removed: -0.08 ms MODELLED per drawn frame (x1.15 OTHER = -0.09 corrected)**, the store-queue lock /
-  unlock and stream_send entry per quad (20 HUD quads at the cross). Exact by construction (same words, same order).
-- The whole-frame model cannot see it: moving the image end by 1,440 bytes with no code change (padded control)
-  costs +1.6 ms MODELLED, all of it D-cache misses in the world kernels at identical instruction counts. The batch
-  arm sits +0.8 above the padded control, inside that layout noise. **Finding for the data-layout backlog:** the
-  world transform / walk / meshlet draw double their D-misses when the heap arena moves by 1.4 KB, i.e. the
-  current test 13 layout is a lucky alias pattern. Aligning the world kernels' streams (output vertex buffer vs
-  input meshlets vs constants) so they cannot alias in the 16 KB operand cache would make ~1.2-1.6 ms of world
-  submit independent of every future image change. Not this lane's scope; reported.
-- .bss +1,280 B (the batch), image _end +1,440 B (KOS heap 1.4 KB smaller).
-
-Gates (Flycast, warped, 60 s per run, max 2 in parallel; knob-off trace arm uh0rT vs knob-on uk1rT, both
-TA_HASH=2 + LOGIC_TRACE; evidence C:\Flycast-Evidence\re4-dreamcast\uicoll-20261015\{o,k}-<scene>):
-
-| scene | TA hash per frame | logic trace |
-|---|---|---|
-| r101 cross fight (cross-warp, alert 30) | IDENTICAL, 587 presented frames | STRICT 588 ticks, MUST-IDENTICAL |
-| radio call (door103-warp: post-bell call opened and closed) | IDENTICAL, 840 | STRICT 844 (473 sub-screen ticks masked), MUST-IDENTICAL |
-| door (door-warp: call done via rsf 10, walk, A, r103 entered) | IDENTICAL, 649 | STRICT 653, MUST-IDENTICAL |
-| item pickup (pickup2-warp: r101 green herb, take / examine screen) | IDENTICAL, 701 | STRICT 702, MUST-IDENTICAL |
-| menu (inv-warp: attache case open, command list, Examine, close) | IDENTICAL, 758 | STRICT 759 (521 masked), MUST-IDENTICAL |
-
-Knob-off identity: play image c1ae83dd + 6 overlays IDENTICAL to test 13 (out-t13mrP, 05e5ff76).
