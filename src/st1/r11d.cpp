@@ -34,8 +34,11 @@
 #include "flr_at.h"
 #include "rnd.h"
 
+// PS2_ENEMY_ROOMS bit 0x80 (lane alivecap 2026-10-15): the PS2 r11d enemy rules (list rows from
+// ps2_enemy_ch23.cpp under the same bit).
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23 && \
-    defined(RE4DC_PS2_ENEMY_RULES) && RE4DC_PS2_ENEMY_RULES
+    defined(RE4DC_PS2_ENEMY_RULES) && RE4DC_PS2_ENEMY_RULES && \
+    defined(RE4DC_PS2_ENEMY_ROOMS) && (RE4DC_PS2_ENEMY_ROOMS & 0x80)
 #define CH23_PS2_ROOM 1
 #include "libgpu.h"
 extern "C" void OSPanic(const char* file, int line, const char* msg, ...);

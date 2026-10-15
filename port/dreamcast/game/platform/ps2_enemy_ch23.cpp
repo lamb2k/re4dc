@@ -21,10 +21,25 @@ struct Ps2EnemyCh23List {
 };
 #include "ps2_enemy_ch23_data.inc"
 
+#if defined(RE4DC_PS2_ENEMY_ROOMS)
+#define PS2_ROOMS (RE4DC_PS2_ENEMY_ROOMS)
+#else
+#define PS2_ROOMS 0
+#endif
+/* Rows this adapter owns (room = u16 at row byte 0x18; room 0 = an empty slot the PS2 fills).
+ * r11d rows (the PS2 Bella-sisters village: 6 start dead, HP +200, set / Character) only with
+ * PS2_ENEMY_ROOMS bit 0x80; the other chapter 2-3 rows (r10f, r11e, r11f, r200) always.
+ */
+static int ps2EnemyCh23Owned(const unsigned char *d)
+{
+    const unsigned room = d[0x18] | (d[0x19] << 8);
+    return room == 0 || room != 0x11D || (PS2_ROOMS & 0x80);
+}
+
 extern "C" int re4dc_ps2EnemyListCh23(int list_no, void *data, unsigned size)
 {
     const Ps2EnemyCh23List *list = NULL;
-    unsigned i, j;
+    unsigned i, j, nv = 0, nr = 0;
     for (i = 0; i < sizeof(ps2_enemy_ch23_lists) / sizeof(ps2_enemy_ch23_lists[0]); ++i) {
         if (ps2_enemy_ch23_lists[i].list_no == list_no) {
             list = &ps2_enemy_ch23_lists[i];
@@ -43,6 +58,8 @@ extern "C" int re4dc_ps2EnemyListCh23(int list_no, void *data, unsigned size)
     for (i = 0; i < list->baseline_count; ++i) {
         const Ps2EnemyCh23Row &row = list->baseline[i];
         const unsigned offset = static_cast<unsigned>(row.index) * 32;
+        if (!ps2EnemyCh23Owned(row.data)) continue;
+        ++nv;
         if (offset > size || size - offset < 32) {
             printf("PS2_ENEMY_CH23: FAIL list=%d row=%u buffer=%u\n", list_no,
                    static_cast<unsigned>(row.index), size);
@@ -60,10 +77,12 @@ extern "C" int re4dc_ps2EnemyListCh23(int list_no, void *data, unsigned size)
     }
     for (i = 0; i < list->replacement_count; ++i) {
         const Ps2EnemyCh23Row &row = list->replacement[i];
+        if (!ps2EnemyCh23Owned(row.data)) continue;
+        ++nr;
         memcpy(bytes + static_cast<unsigned>(row.index) * 32, row.data, 32);
     }
     printf("PS2_ENEMY_CH23: list=%d verified=%u replaced=%u full32=1\n",
-           list_no, list->baseline_count, list->replacement_count);
+           list_no, nv, nr);
     return 1;
 }
 #endif

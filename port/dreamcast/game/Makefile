@@ -154,12 +154,40 @@ endif
 #        areas (flags 64/65) while fewer than 9 are alive (the ROUTE_CH22 r11a code, now also in chapter 2-1)
 #   0x20 r11b: the shore ambush leaves 0x3E/0x3F for later (PS2 area 0x0B, fewer than 2 em22 alive); the 8 fish
 #        are drawn / moved only while Leon is in PS2 area 0x0A
+#   0x40 r11c (needs ROUTE_CH22; lane alivecap 2026-10-15): Luis' cabin as on the PS2 (st1_3.rel): 7 new em13 rows,
+#        HP +200, Character 2 -> 6; waves of 5 refilled below 5 alive, kill limit 40 / timer 9000 (easy 30 / 7200)
+#   0x80 r11d (needs ROUTE_CH23; lane alivecap 2026-10-15): the PS2 Bella-sisters village (6 start dead and come
+#        in by area / reinforcement, HP +200, set / Character as the PS2 list)
+# ROUTE_CH22 no longer applies the r100 / r104 / r11a rows itself (bits 0x01 / 0x04 / 0x10 own them).
 PS2_ENEMY_ROOMS ?= 0
 ifneq ($(PS2_ENEMY_ROOMS),0)
 ifneq ($(PS2_ENEMY_RULES),1)
 $(error PS2_ENEMY_ROOMS needs PS2_ENEMY_RULES=1)
 endif
 $(OBJDIR)/src/game/stage.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r108.o $(OBJDIR)/mod/st1_3/src/st1/r108.o $(OBJDIR)/mod/st1_2/src/st1/r11a.o $(OBJDIR)/mod/st1_2/src/st1/r11b.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ROOMS=$(PS2_ENEMY_ROOMS)
+$(OBJDIR)/mod/st1_3/src/st1/r11c.o $(OBJDIR)/mod/st1_3/src/st1/r11d.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ROOMS=$(PS2_ENEMY_ROOMS)
+$(OBJDIR)/platform/ps2_enemy_ch22.o $(OBJDIR)/platform/ps2_enemy_ch23.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_ENEMY_ROOMS=$(PS2_ENEMY_ROOMS)
+endif
+# ALIVE_CAP=N (lane alivecap 2026-10-15, user rule 10-15 "Ganados at 6"; CHANGES GAMEPLAY by design; default 0 = off):
+#   at most N Ganados (ids 0x10..0x20) alive at once in every room. Start-list Ganados beyond N are held at room entry
+#   (their list entry untouched) and come in one at a time, at least 30 frames apart, outside events / pauses, while
+#   fewer than N are alive, farthest from Leon first (em_set.cpp). SceCountEmAlive counts held ones as alive, so room
+#   scripts' alive tests, waves and kill counts read as uncapped; SceDestroyEm drops held ones of its range. Room-code
+#   sends are not deferred. r101: with PS2_ENEMY_ROOMS bit 0x02 the cap is R101_ALIVE_CAP=N (crowd12's r101 hold
+#   order, queued sends and villager rule; the generic hold stands aside there); without the bit the generic hold
+#   runs in r101 too. Setting R101_ALIVE_CAP to another value as well is an error.
+# ALIVE_CAP_LOG=1 (diagnostic, default 0): "alivecap:" lines (holds, releases, destroys).
+ALIVE_CAP ?= 0
+ALIVE_CAP_LOG ?= 0
+ifneq ($(ALIVE_CAP),0)
+ALIVE_CAP_R101 := $(shell [ $$(( ($(PS2_ENEMY_ROOMS)) & 2 )) -ne 0 ] && echo 1 || echo 0)
+ifneq ($(filter-out 0 $(ALIVE_CAP),$(R101_ALIVE_CAP)),)
+$(error ALIVE_CAP=$(ALIVE_CAP) with R101_ALIVE_CAP=$(R101_ALIVE_CAP): set ALIVE_CAP only (it sets r101's cap too))
+endif
+ifeq ($(ALIVE_CAP_R101),1)
+R101_ALIVE_CAP := $(ALIVE_CAP)
+endif
+$(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/sce_com.o $(OBJDIR)/src/game/sce_sys.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP=$(ALIVE_CAP) -DRE4DC_ALIVE_CAP_R101=$(ALIVE_CAP_R101) -DRE4DC_ALIVE_CAP_LOG=$(ALIVE_CAP_LOG)
 endif
 # PS2_ENEMY_CASTLE=<mask> (lane castle 2026-10-15, default 0: no effect; needs PS2_ENEMY_RULES=1; changes gameplay by
 # design): PS2 USA room-code enemy rules for the castle (st2_*.rel, Normal mode, each read from the PS2 disassembly;

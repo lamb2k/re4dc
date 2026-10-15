@@ -43,8 +43,11 @@
 #include "db_log.h"
 #include "eprintf.h"
 
+// PS2_ENEMY_ROOMS bit 0x40 (lane alivecap 2026-10-15): the PS2 cabin (waves of 5, refills below 5 alive, 7 new
+// em13 rows, HP +200; list rows from ps2_enemy_ch22.cpp under the same bit).
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_CH22 && \
-    defined(RE4DC_PS2_ENEMY_RULES) && RE4DC_PS2_ENEMY_RULES
+    defined(RE4DC_PS2_ENEMY_RULES) && RE4DC_PS2_ENEMY_RULES && \
+    defined(RE4DC_PS2_ENEMY_ROOMS) && (RE4DC_PS2_ENEMY_ROOMS & 0x40)
 #define CH22_PS2_ROOM 1
 #include "libgpu.h"
 extern "C" void OSPanic(const char* file, int line, const char* msg, ...);

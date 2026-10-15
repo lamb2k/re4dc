@@ -7,10 +7,10 @@
 #include "player.h"
 #include "esp.h"
 
-// PS2_ENEMY_ROOMS bit 0x10 (lane ps2enemy 2026-10-14) runs the same PS2 r11a rules in chapter 2-1 (no ROUTE_CH22).
+// PS2_ENEMY_ROOMS bit 0x10 (lane ps2enemy 2026-10-14) runs the PS2 r11a rules (chapter 2-1 and ROUTE_CH22 alike);
+// its held list rows come from that bit only (stage.cpp), so ROUTE_CH22 alone keeps the GameCube r11a.
 #if defined(RE4DC_GAME) && !defined(__PPC__) && \
-    ((RE4DC_ROUTE_CH22 && defined(RE4DC_PS2_ENEMY_RULES) && RE4DC_PS2_ENEMY_RULES) || \
-     (defined(RE4DC_PS2_ENEMY_ROOMS) && (RE4DC_PS2_ENEMY_ROOMS & 0x10)))
+    defined(RE4DC_PS2_ENEMY_ROOMS) && (RE4DC_PS2_ENEMY_ROOMS & 0x10)
 #define CH22_PS2_ROOM 1
 #include "libgpu.h"
 #include "sce_at.h"

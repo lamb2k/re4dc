@@ -261,10 +261,10 @@ void StageSet()
 // code (r101 0x1A/0x1B, r107 0xA5..0xA9 / 0xED..0xEF: see those rooms) or simply not on the PS2 (r101's
 // chicken, three cows and three chickens of r103, two snakes of r10a). The emleon01 rooms (r10f..r11d)
 // are not converted until their PS2 room code is ported.
-// PS2_ENEMY_ROOMS list rows (lane ps2enemy): with ROUTE_CH22 the qualified chapter 2-2 full-record adapter
-// (ps2_enemy_ch22.cpp, applied after this) writes the PS2 rows of r100 / r104 (list 0) and r11a (list 1) itself and
-// checks their baseline bytes, so these patches stand aside there (the room code rules stay).
-#if defined(RE4DC_PS2_ENEMY_ROOMS) && !(defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22)
+// PS2_ENEMY_ROOMS list rows (lane ps2enemy): r100 / r104 (list 0) and r11a (list 1) belong to these bits alone; the
+// ROUTE_CH22 full-record adapter (ps2_enemy_ch22.cpp, applied after this) only owns the chapter 2-2 rooms, so
+// ROUTE_CH22 no longer changes r100 / r104 / r11a by itself (lane alivecap 2026-10-15).
+#if defined(RE4DC_PS2_ENEMY_ROOMS)
 #define RE4DC_PS2_ROOMS_LIST RE4DC_PS2_ENEMY_ROOMS
 #else
 #define RE4DC_PS2_ROOMS_LIST 0
