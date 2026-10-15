@@ -28,7 +28,10 @@ MAX_CLIP=32768
 # em11 (r117's later-visit Ganados, ESL 0x50/0x51, chapter 2-1; route lane r117 2026-10-10): em11/em10.cpp,
 # em10_tmpl.cpp, em11_set.cpp, the same three units; its 5.8 MB GC archive did not fit r117's heap 4 (largest cell
 # 3.1 MB: DVD: Memory allocate failed, readEmData em/em11.drs).
-GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs')
+# em1a / em1b / em14 (castle chapter 3 Ganados, ROUTE_CH31; castle lane 2026-10-15): em1x/em10.cpp, em10_tmpl.cpp,
+# em1x_set.cpp, the em10g group's units, so the same consumers; their GC archives (3.9-4.3 MB bodies) did not fit heap 4
+# in r208 / r201 / r204 next to the room and its PS2 world (cx-r20x-t12-01: readEmData error).
+GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em1a.drs','em1b.drs','em14.drs')
 SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.drs','em18.drs')
 # em18 (the merchant, r102 r10d r10e r112; lane ps2cast2 2026-10-14, PS2_CAST_MERCHANT discs): textures only
 # (--keep-motion-resident), the em22 contract. Its model TPLs (ARC 6 body / hands / goods, ARC 8 head, ARC 0xF robe and
@@ -69,7 +72,8 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 ROUTE_OVL_MODULES=('em2b','em2f','em22')
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
 # their own registry row like the room overlays above: em11 (ROUTE_CH21, r117), em18 (ROUTE_CH13, r102: module 22).
-KNOB_STATIC_MODULES=('em11','em18')
+KNOB_STATIC_MODULES=('em11','em18','em1a','em1b','em14')
+GANADO_OVERSIZED_RESIDENT=('em1b.drs',)  # + ROUTE_CH31's castle Ganado RELs
 # Leon's archives, textures-only: pl00 (jacket, costume 0) and pl08 (no jacket, costume 1: title.cpp picks it in
 # every room but r120/r100/r101/r103/r106 once the r106 closet event has run). Same cPlLeon consumers, so pl08
 # takes pl00's reviewed textures-only contract (route lane 2026-10-01, r104).
@@ -171,7 +175,9 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
         if len(native)>(profile['cap'] if profile else MAX_CLIP):
             # em21: a clip over the runtime's slot limit stays resident (ordinary FCV, exact bytes);
             # the Ganado contract keeps refusing, as before.
-            if name in MOTION_SMALL:oversized.append({'source_arc_indices':[i+4 for i in slots],'bytes':len(native)});continue
+            # em1b (castle lane 2026-10-15): one Ganado clip over the slot limit stays resident the same way (exact bytes,
+            # ordinary FCV path); every other em1b clip streams. Other Ganados keep refusing.
+            if name in MOTION_SMALL or name in GANADO_OVERSIZED_RESIDENT:oversized.append({'source_arc_indices':[i+4 for i in slots],'bytes':len(native)});continue
             raise ValueError('clip exceeds validated cache slot')
         prefix=codec.header_size(len(parsed.joints));resident=(prefix+31)&~31
         if resident>=len(native):continue
