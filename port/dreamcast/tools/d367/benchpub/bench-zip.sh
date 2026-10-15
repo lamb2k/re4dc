@@ -22,7 +22,22 @@ T3=$(cd $D/gdemu && sha256sum track03.bin | cut -c1-64)
 [ "$T3" = "$GATED" ] || { echo "staged track03 $T3 is not the gated image $GATED" >&2; exit 1; }
 echo "staged image = gated image: track03 $T3"
 S=$K/zip-$L; rm -rf $S; mkdir -p $S
-tr -d '\r' < $here/README-package.txt | sed "s/SHA_PLACEHOLDER/$SHA/g" | sed 's/$/\r/' > $S/README.txt
+python3 - "$here/README-package.txt" "$D/fix" "$SHA" > $S/README.txt <<'PY'
+import sys, os, re
+src, fix, sha = sys.argv[1:4]
+rows = []
+for f in sorted(os.listdir(fix)):
+    for line in open(os.path.join(fix, f)):
+        m = re.match(r'bench (\d+) (\d+) (\d+) (.+)', line.strip())
+        if m:
+            no, b, e, name = int(m.group(1)), int(m.group(2)), int(m.group(3)), m.group(4)
+            how = 'sweep, the game freezes at room frame %d' % b if b == e else 'measured room frames %d..%d (%d s of game time)' % (b, e - 1, (e - b) // 30)
+            rows.append((no, '%d  %-14s %s' % (no, name, how)))
+rows.sort()
+t = open(src).read().replace('\r', '').replace('SHA_PLACEHOLDER', sha).replace('SCENES_PLACEHOLDER', '\n'.join(r for _, r in rows))
+sys.stdout.write(t.replace('\n', '\r\n'))
+PY
+grep -q PLACEHOLDER $S/README.txt && { echo "README placeholder left" >&2; exit 1; }
 (cd $D/gdemu && sha256sum disc.gdi track01.bin track02.raw track03.bin | sed 's#  #  gdemu/#') > $S/SHA256SUMS.txt
 cmp <(cut -c1-64 $S/SHA256SUMS.txt) <(cut -c1-64 $D/gdemu-sha256.txt)
 python3 - "$S/$Z" "$S/README.txt" "$D/gdemu" "$S/SHA256SUMS.txt" <<'PY'

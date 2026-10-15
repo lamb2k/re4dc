@@ -667,18 +667,23 @@ void blob(Out& o, const Vec& at, float r)
 
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 }  // namespace (re-opened below)
-extern "C" unsigned re4dc_bench_hide(void);   // geometry sweep (bench.cpp): 1 / 4 Ganados, 2 Leon, 8 world not drawn
+extern "C" unsigned re4dc_bench_hide(void);   // geometry sweep (bench.cpp): 1 / 4 Ganados, 2 Leon, 8 world, 16 effects
+extern "C" int re4dc_bench_actor_slot(const void* m);   // trans.cpp: the model's place in the Trans-time alive snapshot
+extern "C" void re4dc_bench_ganado(int path);
 namespace {
 #endif
 void draw_model(Out& o, cModel* m, std::uint32_t rgb, float t)
 {
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     // Geometry sweep (bench.cpp, render only): a hidden Ganado / Leon is not drawn (trans.cpp BenchActorDraw's rule).
-    if (const unsigned h = re4dc_bench_hide() & 7u) {
-        unsigned n = 0;   // the model's place in EmMgr's alive list
-        for (const cUnit* u = EmMgr.pAlive; u && u != (const cUnit*) m && n < 256; u = u->pNext) ++n;
+    // never a walk of the live alive list here (render time): the Trans-time snapshot, compared by value (trans.cpp)
+    {
         const bool ganado = m != (cModel*) pPL && m != (cModel*) pSUB && m->id >= 0x10 && m->id <= 0x20;
-        if ((ganado && ((h & 1) || ((h & 4) && (n & 1)))) || ((h & 2) && m == (cModel*) pPL)) return;
+        if (const unsigned h = re4dc_bench_hide() & 7u) {
+            const int n = re4dc_bench_actor_slot(m);
+            if ((ganado && ((h & 1) || ((h & 4) && n >= 0 && (n & 1)))) || ((h & 2) && m == (cModel*) pPL)) return;
+        }
+        if (ganado) re4dc_bench_ganado(1);
     }
 #endif
 #if RE4DC_COARSE_SOURCE_ACTORS
@@ -877,12 +882,14 @@ extern "C" float re4dc_bench_world_far(float far);   // geometry sweep: the PS2 
 // geometry sweep NO WORLD (bench.cpp hide bit 8, render only): no scenery is submitted (PS2 world, collision pieces,
 // coarse world); actors, effects and the HUD still draw
 #define BENCH_NO_WORLD ((re4dc_bench_hide() & 8u) != 0)
+#define BENCH_NO_FX ((re4dc_bench_hide() & 16u) != 0)   // NO EFFECTS: no effect markers
 namespace {
 struct BenchPhaseOther { ~BenchPhaseOther() { re4dc_bench_phase(4); } };
 }
 #else
 #define BENCH_PH(p) ((void) 0)
 #define BENCH_NO_WORLD false
+#define BENCH_NO_FX false
 #endif
 
 // Render() of a coarse image: the whole opaque view, before the effect / HUD OTs.
@@ -999,7 +1006,7 @@ extern "C" void re4dc_coarse_draw(void)
     BENCH_PH(2);
     draw_actors(o);
     BENCH_PH(4);
-    draw_effects(o);
+    if (!BENCH_NO_FX) draw_effects(o);
     if (o.sq) {
         re4dc_coarse_end(o.n);
     }

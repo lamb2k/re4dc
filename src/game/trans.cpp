@@ -138,9 +138,11 @@ extern "C" void re4dc_bench_phase(int phase);
 extern "C" unsigned re4dc_bench_hide(void);   // geometry sweep: bit 8 = no world (SCROLL OT) drawn
 #define BENCH_PH(p) re4dc_bench_phase(p)
 #define BENCH_NO_WORLD ((re4dc_bench_hide() & 8u) != 0)
+#define BENCH_NO_FX ((re4dc_bench_hide() & 16u) != 0)   // geometry sweep NO EFFECTS: the effect draw passes skipped
 #else
 #define BENCH_PH(p) ((void) 0)
 #define BENCH_NO_WORLD false
+#define BENCH_NO_FX false
 #endif
 void DCStoreRangeNoSync(void* addr, u32 nBytes);
 void GXSetCurrentGXThread();
@@ -1095,6 +1097,35 @@ static int invisSkip(cModel* m, int ot, int ret)
 }
 #endif
 
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+// Benchmark disc: which models are actors (members of EmMgr's alive list) and their list places, as a snapshot taken
+// here in Trans (logic context, where the OT is built). Render code never walks the live list: Render draws the
+// previous iteration's OT after the next tick's logic, when a listed unit may have been freed or re-linked (console
+// fault 2026-10-15, 03a4813a: u->pNext read from a stale unit in BenchActorDraw). It compares a model's address
+// against the last two snapshots by value only (the newest that holds it gives its place) and never dereferences them.
+namespace {
+constexpr unsigned kBenchSnap = 256;
+const void* g_benchSnap[2][kBenchSnap];
+unsigned g_benchSnapN[2], g_benchSnapI;
+void benchAliveSnapshot()
+{
+    const unsigned k = g_benchSnapI ^ 1u;
+    unsigned n = 0;
+    for (const cUnit* u = EmMgr.pAlive; u && n < kBenchSnap; u = u->pNext) g_benchSnap[k][n++] = u;
+    g_benchSnapN[k] = n;
+    g_benchSnapI = k;
+}
+}  // namespace
+extern "C" int re4dc_bench_actor_slot(const void* m)   // coarse.cpp too: the model's list place, -1 not an actor
+{
+    for (unsigned j = 0; j < 2; ++j) {
+        const unsigned k = g_benchSnapI ^ j, n = g_benchSnapN[k] < kBenchSnap ? g_benchSnapN[k] : kBenchSnap;
+        for (unsigned i = 0; i < n; ++i)
+            if (g_benchSnap[k][i] == m) return (int) i;
+    }
+    return -1;
+}
+#endif
 void Trans()
 {
     u8* primStart = (u8*) pG->prim_base;
@@ -1105,6 +1136,9 @@ void Trans()
     const int roomSwapped = roomListsSwapped();
 #else
     const int roomSwapped = 0;
+#endif
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+    benchAliveSnapshot();
 #endif
 #if defined(RE4DC_CROWD_INVIS_SKIP) && RE4DC_CROWD_INVIS_SKIP
     invisTransBegin();
@@ -2596,6 +2630,7 @@ void Render()
     // The prior Trans ticket has this exact source frame; native begin and
     // opaque drawing have completed, but source effect callbacks have not.
 #if RE4DC_COARSE
+    if (BENCH_NO_FX) re4dc_ps2_fx_common_render(0,1); else   // NO EFFECTS: retired as for a skipped image
     re4dc_ps2_fx_common_render(coarse,0);
 #else
     re4dc_ps2_fx_common_render(0,0);
@@ -2603,19 +2638,20 @@ void Render()
 #endif
 #if RE4DC_PS2_FX_ADDITIONS
 #if RE4DC_COARSE
+    if (BENCH_NO_FX) re4dc_ps2_fx_stage1_render(0,1); else   // NO EFFECTS: retired as for a skipped image
     re4dc_ps2_fx_stage1_render(coarse,0);
 #else
     re4dc_ps2_fx_stage1_render(0,0);
 #endif
 #endif
     ClearZbuf();
-    ExecOt(OT_TYPE_EFFECT);
+    if (!BENCH_NO_FX) ExecOt(OT_TYPE_EFFECT);
     ExecOt(OT_TYPE_WORLD);
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
     // Actual source model registration table 0x0b; preserve every callback.
-    { SourceWorldRenderScope sourceWorldScope; ExecOt(OT_TYPE_EFFECT_VU1); }
+    if (!BENCH_NO_FX) { SourceWorldRenderScope sourceWorldScope; ExecOt(OT_TYPE_EFFECT_VU1); }
 #else
-    ExecOt(OT_TYPE_EFFECT_VU1);
+    if (!BENCH_NO_FX) ExecOt(OT_TYPE_EFFECT_VU1);
 #endif
     ExecOt(OT_TYPE_SCREEN);
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
@@ -2678,20 +2714,20 @@ static inline bool re4dc_gcobj_class(unsigned kind, unsigned id, bool only_stati
 // is drawn, bit 4 = every other one (odd places in EmMgr's alive list), bit 2 = Leon is not drawn (hide: ModelRender returns before
 // drawing, as on a skipped iteration; coarse.cpp draw_model does the same for the coarse / cast paths).
 extern "C" int re4dc_bench_push(int phase);
+extern "C" void re4dc_bench_ganado(int path);
 struct BenchActorDraw {
     int prev = -1;
     bool hide = false;
     explicit BenchActorDraw(cModel* m) {
-        // an actor = a member of EmMgr's alive list (the Ganados are not inside EmMgr.pArray); n = its list position
-        unsigned n = 0;
-        const cUnit* u = EmMgr.pAlive;
-        for (; u && u != (const cUnit*) m && n < 256; u = u->pNext) ++n;
-        if (u == (const cUnit*) m) {
+        // an actor = a member of EmMgr's alive list (the Ganados are not inside EmMgr.pArray) as of the snapshot taken
+        // when the OT was built (benchAliveSnapshot); n = its list place
+        const int n = re4dc_bench_actor_slot(m);
+        if (n >= 0) {
             prev = re4dc_bench_push(2);
-            if (const unsigned h = re4dc_bench_hide() & 7u) {
-                const bool ganado = m != (cModel*) pPL && m != (cModel*) pSUB && m->id >= 0x10 && m->id <= 0x20;
+            const bool ganado = m != (cModel*) pPL && m != (cModel*) pSUB && m->id >= 0x10 && m->id <= 0x20;
+            if (const unsigned h = re4dc_bench_hide() & 7u)
                 hide = (ganado && ((h & 1) || ((h & 4) && (n & 1)))) || ((h & 2) && m == (cModel*) pPL);
-            }
+            if (ganado && !hide) re4dc_bench_ganado(0);
         }
     }
     ~BenchActorDraw() { if (prev >= 0) re4dc_bench_phase(prev); }
