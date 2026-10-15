@@ -551,6 +551,9 @@ extern "C" void re4dc_subscreen_swap_open(SubScreenWork* wk)
 #endif
 }
 
+#if defined(RE4DC_SS_CLOSE_POISON) && RE4DC_SS_CLOSE_POISON >= 2
+extern "C" void re4dc_poison_dead_stack(const char*);  // platform/subscreen_backing.cpp
+#endif
 extern "C" void re4dc_subscreen_swap_close(SubScreenWork* wk)
 {
     w11_text_check("before-close");
@@ -581,6 +584,24 @@ extern "C" void re4dc_subscreen_swap_close(SubScreenWork* wk)
     re4dc_ssb_close();
 #if defined(RE4DC_TRACE_SS_MASK) && RE4DC_TRACE_SS_MASK
     { extern void re4dc_logic_trace_ss_mask(int); re4dc_logic_trace_ss_mask(0); }
+#endif
+#if RE4DC_SS_CLOSE_POISON
+    // SS_CLOSE_POISON=1 (mcheck.mk; debug only, default 0): the bytes close does not put back (the payload of the
+    // free cells skipped at open, which held the sub screen's heap 12 and data) are filled with 0xA5, so a reference
+    // the screen left behind reads poison on Flycast too instead of the screen's still-valid-looking bytes.
+    {
+        const u32 lo = u32(wk->pBuf), hi = lo + kSsAramSize;
+        u32 at = lo, poisoned = 0;
+        for (unsigned i = 0; i <= nspan; ++i) {
+            const u32 end = i < nspan ? spans[i].start : hi;
+            if (end > at) { memset(reinterpret_cast<void*>(at), 0xA5, end - at); poisoned += end - at; }
+            if (i < nspan) at = spans[i].start + spans[i].bytes;
+        }
+        re4dc_log("subscreen backing: close poison %u B outside %u spans\n", poisoned, nspan);
+    }
+#if RE4DC_SS_CLOSE_POISON >= 2
+    re4dc_poison_dead_stack("close");
+#endif
 #endif
 #line 578
     swapped = false;

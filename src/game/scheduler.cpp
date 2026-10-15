@@ -118,6 +118,12 @@ u32 GetStackSize(int no)
 
 // Once per frame from the main thread: runs every slot except the ISR one in order (slot 2 first
 // restores the debug menu's stop flag); debug_mode 6 prints the stack usage.
+#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK
+extern "C" void re4dc_ot_check_task(unsigned slot);  // model_asset_bridge.cpp (debug only)
+#endif
+#if defined(RE4DC_DEAD_STACK_POISON) && RE4DC_DEAD_STACK_POISON
+extern "C" void re4dc_poison_task_stack(OSThread*);  // platform/os.cpp (debug only)
+#endif
 void TaskScheduler()
 {
     u32 i;
@@ -133,6 +139,9 @@ void TaskScheduler()
         }
         pCTask = t;
         TaskSchedulerMain(t);
+#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK
+        re4dc_ot_check_task(i);
+#endif
     }
     pCTask = CTASK_MAIN;
     if (pG->debug_mode == 6) {
@@ -197,6 +206,33 @@ void TaskSchedulerMain(TASK* t)
     }
 #endif
     StackOverflowCheck(t);
+#if defined(RE4DC_DEAD_STACK_POISON) && RE4DC_DEAD_STACK_POISON
+    if (t != &Task[TASK_ISR] && (t->Status == TASK_RUN || t->Status == TASK_SLEEP)) re4dc_poison_task_stack(&t->Thread);
+#endif
+#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK
+    // MODEL_WALK_CHECK (debug only): the slot's stack high water. TaskSchedulerInit filled every stack with
+    // 0xB3; the untouched words above the guard word are the bytes this slot has never used. A slot that
+    // reaches 0 ran into the slot below it (slots are contiguous, slot k-1's stack top is slot k's guard).
+    {
+        static u32 hwm_free[TASK_NUM];
+        static bool hwm_init;
+        if (!hwm_init) {
+            for (u32 i = 0; i < TASK_NUM; ++i) hwm_free[i] = ~0u;
+            hwm_init = true;
+        }
+        const u32 slot = (u32) (t - Task);
+        const u32* p = (const u32*) (t->pStack - t->StackSize);
+        const u32 guard = p[0];
+        u32 n = 0;
+        for (++p; n + 1 < (t->StackSize >> 2) && *p == 0xB3B3B3B3u; ++p) ++n;
+        if (n * 4 < hwm_free[slot]) {
+            hwm_free[slot] = n * 4;
+            if (n * 4 < 0x1000)
+                OSReport("MWC stack slot=%u free=%u guard=%08x bottom=%08x frame=%u\n", (unsigned) slot, (unsigned) (n * 4),
+                         (unsigned) guard, (unsigned) (t->pStack - t->StackSize), (unsigned) pG->Frame_cnt);
+        }
+    }
+#endif
 }
 
 // Debug: prints how much of each task stack has been touched (bytes no longer 0xB3).

@@ -1,0 +1,4 @@
+trc sq101-i2 itemstT /root/probe/lanes-20261014/items/fix/sq101-i-itemstT.json 2400 600
+trc h2-i2 itemstT /root/probe/lanes-20261014/items/fix/h2-i-itemstT.json 4700 900
+trc wi119-i2 itemstT /root/probe/lanes-20261014/items/fix/wi119-i-itemstT.json 2400 600
+trc wi11a-i2 itemstT /root/probe/lanes-20261014/items/fix/wi11a-i-itemstT.json 2400 600

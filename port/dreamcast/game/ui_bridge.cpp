@@ -366,6 +366,9 @@ extern "C" void re4dc_pl08_pack_room_leave();
 #if defined(RE4DC_LEON_HAND_PACK) && RE4DC_LEON_HAND_PACK
 extern "C" void re4dc_leon_hands_room_enter();              // coarse_actor_leon_hands.inc
 #endif
+#if defined(RE4DC_STATIC_OBJ_BATCH) && RE4DC_STATIC_OBJ_BATCH
+extern "C" void re4dc_sob_room_leave();                     // model_bridge.cpp STATIC_OBJ_BATCH
+#endif
 extern "C" void re4dc_room_leave(){
 #if RE4DC_MOVIE_WORLD_ARENA
     // Must run before any native owner or source heap is retired.
@@ -382,6 +385,9 @@ extern "C" void re4dc_room_leave(){
 #endif
 #if RE4DC_ACTOR_PL08_PACK
     re4dc_pl08_pack_room_leave();                        // the pl08 costume package cell (coarse_actor_pl08_pack.inc)
+#endif
+#if defined(RE4DC_STATIC_OBJ_BATCH) && RE4DC_STATIC_OBJ_BATCH
+    re4dc_sob_room_leave();                              // merged static-object lists (heap-4 cells)
 #endif
     re4dc_ui_retire_room();
     re4dc_room4_close();

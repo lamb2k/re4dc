@@ -20,7 +20,7 @@ newest test release and its Build-Assets zip from GitHub and checks them against
 `SHA256SUMS.txt`, builds the program, puts it on the release disc and prints the path of
 `disc.gdi` (under `port/dreamcast/out-contrib/disc`). Options:
 
-* `--release <tag>` picks a release, for example `--release test-eb4e8813-20261014` (test 11).
+* `--release <tag>` picks a release by its tag (`test-<source commit>-<date>`, as on the releases page).
   An older release needs the `build-public.sh` of its own source commit (see "Which recipe" below).
 * `--toolchain <dir>` uses or builds the toolchain there; a toolchain already in the environment
   (`RE4DC_KOS_BASE`) is used as is.
@@ -94,7 +94,7 @@ Either way, measure your change against your own build with the change switched 
 
 ## 3. Put it on a release disc
 
-    python3 port/dreamcast/tools/swap-program.py RE4DC-Console-Test-eb4e8813-20261014-GDEMU.zip \
+    python3 port/dreamcast/tools/swap-program.py RE4DC-Console-Test-<commit>-<date>-GDEMU.zip \
         port/dreamcast/out-public mydisc
 
 `mydisc` gets `disc.gdi` and its three tracks: the release disc with your program as the boot file and
@@ -150,6 +150,7 @@ maintainers keep outside the repository.
 | same | Dreamcast room meshes (`dc/native/rXXX/MAINSCENARIO.re4mesh`) | yes, per room (`tools/convert_room_bins.py`) |
 | same | room archives with Dreamcast audio (`st1/rXXX.dar`) | per room steps, not one command |
 | same plus game run logs | texture package `dc/tex.pak` (VQ textures) | no: the VQ selection comes from logs of test runs |
+| none (the lists are in the repository, made from game run logs) | per-room resident texture lists `dc/resident.bin` (ROOM_RESIDENT) | yes (`tools/d367/vram/resident_keys.py pack` of `tools/d367/vram/resident/r*.tsv`) |
 | PS2 Resident Evil 4, USA (SLUS 21134), `BIO4MOV.AFS` | cutscene movies `dc/movie/*.seq` | yes (`tools/convert_route_movies.py`, needs ffmpeg) |
 | PS2 USA, `BIO4DAT.AFS` rooms (plus two JADERLINK unpack tools) | PS2 room worlds `dc/native/rXXX/ps2-world.*` | converters exist; the released set is a reviewed frozen output |
 | PS2 USA characters | PS2 Leon and villager meshes (compiled into the program), registry packs, pl08 pack | no: needs Blender and review steps |

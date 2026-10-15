@@ -133,11 +133,48 @@ void SndInit()
 #line 120 SND_FILE
     r = DvdRead(0, (void*) SND_DATA_TOP, 0, 0, 0, 0x11, __FILE__, __LINE__);
     str_flag = Dvd.ReadCheck(r, &len, 0, 0) > 0;
+#if defined(RE4DC_DISC_READ_FALLBACK) && RE4DC_DISC_READ_FALLBACK
+    // DISC_READ_FALLBACK (issue #28): a read that "completed" without its data (DreamShell's ISO loader) left garbage
+    // offsets here and Snd_str_blk_init faulted. Check both block headers; read the file once more (the disc reader
+    // has switched to PIO by then); if it is still bad, run without streamed sound instead of faulting.
+    {
+        auto ok = [](const u8* d, int n) -> bool {
+            for (int b = 0; b < 2; b++) {
+                const u32 o = ((const u32*) d)[b];
+                if (n < 8 || (o & 3) || o + 12 > (u32) n) return false;
+                const u32* h = (const u32*) (d + o);
+                if (h[0] > 0x10000 || (h[1] & 3) || (h[2] % __alignof__(SND_RIT)) || o + h[1] >= (u32) n ||
+                    o + h[2] >= (u32) n)
+                    return false;
+            }
+            return true;
+        };
+        if (!ok((const u8*) SND_DATA_TOP, len)) {
+            re4dc_log("SND: stream table (file 0, %d bytes) is not valid; reading it again\n", len);
+            r = DvdRead(0, (void*) SND_DATA_TOP, 0, 0, 0, 0x11, __FILE__, __LINE__);
+            str_flag = Dvd.ReadCheck(r, &len, 0, 0) > 0;
+            if (!ok((const u8*) SND_DATA_TOP, len)) {
+                static u32 s_no_str[64];
+                re4dc_log("SND: stream table still not valid (%d bytes): streamed music and speech are off\n", len);
+                str_flag = 0;
+                adr = SND_DATA_TOP + ALIGN32(len > 0 ? len : 0);
+                for (i = 0; i < 2; i++) {
+                    SndMem.str_file[i] = (SndStrFile*) s_no_str;
+                    Snd_str_blk_init(i, s_no_str);
+                }
+                goto str_done;
+            }
+        }
+    }
+#endif
     adr = SND_DATA_TOP + ALIGN32(len);
     for (i = 0; i < 2; i++) {
         SndMem.str_file[i] = (SndStrFile*) (SND_DATA_TOP + ((u32*) SND_DATA_TOP)[i]);
         Snd_str_blk_init(i, SndMem.str_file[i]);
     }
+#if defined(RE4DC_DISC_READ_FALLBACK) && RE4DC_DISC_READ_FALLBACK
+str_done:
+#endif
 
     SndMem.bgm_file = (u32*) adr;
 #line 133 SND_FILE
@@ -2727,6 +2764,16 @@ void SndBlkInit(int type, int id, int no)
     if (blk != 3 && blk != 4) {
         adr += *(u32*) adr;
     }
+#if defined(RE4DC_DISC_READ_FALLBACK) && RE4DC_DISC_READ_FALLBACK
+    // DISC_READ_FALLBACK (issue #28): a block whose header is not plausible stays unregistered (its sounds are
+    // silent) instead of faulting later.
+    if ((adr & 3) || ((u32*) adr)[0] > 0x10000 || ((u32*) adr)[1] >= 0x800000 || ((u32*) adr)[2] >= 0x800000 ||
+        ((u32*) adr)[3] >= 0x800000 || (((u32*) adr)[2] % __alignof__(SND_SIT))) {
+        re4dc_log("SND: block %d (type %d id 0x%x) header at %08x is not valid; block not registered\n", blk, type, id,
+                  (unsigned) adr);
+        return;
+    }
+#endif
     Snd_iss_blk_init(blk, (void*) adr);
     SND_BIT_SET(pSnd->blk_flag, blk);
 }

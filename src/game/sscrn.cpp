@@ -49,6 +49,9 @@ void re4dc_threads_stack_report(void);
 void re4dc_subscreen_aram_init(SubScreenWork* wk);
 void re4dc_subscreen_swap_open(SubScreenWork* wk);
 void re4dc_subscreen_swap_close(SubScreenWork* wk);
+#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK
+void re4dc_ot_check(const char* where);  // model_asset_bridge.cpp (debug only)
+#endif
 #endif
 void* memset(void* dst, int c, unsigned int n);
 char* strchr(const char* s, int c);
@@ -647,6 +650,9 @@ void SubScreenExec()
 void SubScreenExitCore(SubScreenWork* wk)
 {
     if (pG->Status_flg[0] & 0x00040000) {
+#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK
+        re4dc_ot_check("ssexit0");
+#endif
         MapMgr.roomInit();
         DLL_Unlink(wk->p_module);
         wk->relAddr = 0;
@@ -663,6 +669,9 @@ void SubScreenExitCore(SubScreenWork* wk)
         MGR_PTR(cModel::mm) = &ModInfoMgr;
         MGR_PTR(cModel::pm) = &PartsMgr;
         pG->Status_flg[0] &= ~0x00040000;
+#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK
+        re4dc_ot_check("ssexit1");
+#endif
     }
 }
 

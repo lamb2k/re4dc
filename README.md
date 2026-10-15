@@ -7,7 +7,7 @@
 The recovered GameCube code runs the gameplay, collision and enemy AI. A native PowerVR renderer,
 lighter PS2 room assets, streamed movies and VMU saves adapt it to Dreamcast hardware.
 
-**[Download the latest GDEMU test build](https://github.com/lamb2k/re4dc/releases/tag/test-a93e8be0-20261014)** ·
+**[Download the latest GDEMU test build](https://github.com/lamb2k/re4dc/releases/latest)** ·
 [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) · [Roadmap](port/dreamcast/docs/D367_THIRTY_FPS_ROUTE.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
 
@@ -19,14 +19,14 @@ See [CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md); contributors an
 
 ## Playing
 
-The latest build is console test `a93e8be0` (r22j test 10: test 9.1 plus Leon's PS2 model after the boat, a sharper Leon face and safer disc read retries). Desktop packages will return with a later test build;
+The latest build is console test 12 (test 10 plus the unreleased test 11: PS2 objects, items, caps and the merchant, a brighter Leon, less work per frame in the village, and the radio call crash fixed). Desktop packages will return with a later test build;
 until then, play the console test in Flycast. Extract the complete package:
 
 | System | Download | Launch |
 | --- | --- | --- |
-| Dreamcast / GDEMU | [Console test ZIP](https://github.com/lamb2k/re4dc/releases/download/test-a93e8be0-20261014/RE4DC-Console-Test-a93e8be0-20261014-GDEMU.zip) | Copy the four files inside `gdemu` into a new numbered SD card folder. |
+| Dreamcast / GDEMU | Console test ZIP (`RE4DC-Console-Test-...-GDEMU.zip`) on the [latest release](https://github.com/lamb2k/re4dc/releases/latest) | Copy the four files inside `gdemu` into a new numbered SD card folder. |
 
-[Test build checksums](https://github.com/lamb2k/re4dc/releases/download/test-a93e8be0-20261014/SHA256SUMS.txt) · [Test notes](https://github.com/lamb2k/re4dc/releases/tag/test-a93e8be0-20261014)
+The release page also has the test build checksums (`SHA256SUMS.txt`) and the test notes.
 
 Already have Flycast? Open `gdemu/disc.gdi` from the console test ZIP, keeping all track files beside it.
 For GDEMU, keep filenames unchanged and save any card-manager changes before ejecting the card.
@@ -41,22 +41,25 @@ No BIOS or personal VMU saves are included; keep your existing saves separately.
 | Knife | L |
 | Inventory | Y |
 | Pause / options | START |
-| Speed display: Off → VMU → Screen | Hold R, press START |
+| Speed display: Off → On screen | Hold R, press START |
 
 Options has the Frame pacing row (Fast is the default) and the Rendering row: Standard (the default, the full
 640x480 picture) or FSAA, which smooths edges by drawing twice the pixels and is slower in busy scenes. FSAA lasts
 until the console is switched off; every boot starts in Standard.
-The speed display shows the frame rate and game speed on a VMU in controller slot 1 or on screen, and the setting is saved.
-In Off and Screen the VMU shows Leon, Ashley, Hunnigan and Luis pages.
+The speed display shows the frame rate and game speed on screen; it is off unless you switch it on.
+The VMU in controller slot 1 shows Leon, Ashley, Hunnigan and Luis pages.
 
 ## Status and limitations
 
-**Console test `a93e8be0` (r22j test 10), October 14, 2026:** the game plays to the end of chapter two, part one
+**Console test 12, October 15, 2026:** the game plays to the end of chapter two, part one
 (the lake and the boat ride, the wolves, the El Gigante fight, finding Ashley and the chapter results),
 up to a **Coming Soon** screen. This is a prerelease, not the complete game.
 
 Recent progress:
 
+* Test 12: PS2 models for the room objects in the first two villages, the items you pick up, the villagers' caps
+  and the merchant; a brighter Leon; at most 6 villagers attack at once; the radio call crash is fixed
+  (confirmed on a real console).
 * Fixes for the random console crashes and broken textures of test 7 and test 8 (please confirm on a console).
 * Doors hold the last picture and fade to black, with the PS2 Loading banner.
 * The village fight follows the PS2 rules: fewer villagers at once, new waves when fewer than 5 are left.
@@ -66,7 +69,8 @@ Recent progress:
 
 Known issues (full list: [KNOWN_ISSUES.md](port/dreamcast/docs/KNOWN_ISSUES.md)):
 
-* **Stability:** random crashes on a real console (fixed in test 9, needs a console check); a few menu actions can stop the game.
+* **Stability:** random crashes on a real console (fixed in test 9, needs a console check); a few menu actions can stop the game;
+  the r100 cliff cutscene is skipped (test 12).
 * **Picture:** some textures are missing; water, ripples and shadows are incomplete; characters are not lit by the scene.
 * **Sound:** the rifle sound is lower quality.
 * **Performance:** below the 30 fps / full speed target; pauses when entering rooms.

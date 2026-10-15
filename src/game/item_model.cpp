@@ -3,6 +3,9 @@
 // item objects (obj16 etc.) fetch them with ItemGetBinTplAddr.
 #include "item_model.h"
 #include "main_mem.h"
+#if RE4DC_ITEMS_CENSUS
+extern "C" void re4dc_items_census_model(const char* kind, u32 owner, u32 id, const void* model); // eff_sys.cpp
+#endif
 
 cItmSys* g_pItemModelSys;
 
@@ -108,6 +111,9 @@ int cItmSys::DataLoad(u32 addr)
     for (i = 0; i < idTbl->num; i++) {
         u16 id = idTbl->id[i].id;
 
+#if RE4DC_ITEMS_CENSUS
+        re4dc_items_census_model("itm", 0, id, (u8*) binTbl + binTbl->ofs[i]);
+#endif
         g_pItemModelSys->ItmRegist((u8*) binTbl + binTbl->ofs[i], (u8*) tplTbl + tplTbl->ofs[i], id);
     }
     return 1;

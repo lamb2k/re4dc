@@ -407,14 +407,47 @@ s32 DVDReadAsyncPrio(DVDFileInfo* fi, void* addr, s32 length, s32 offset, DVDCal
             }
             got += (s32) r;
         }
+#if RE4DC_DISC_READ_VERIFY
+        // DISC_READ_VERIFY=1 (Makefile): a short or failed read is retried from where it stopped on a fresh handle
+        // (3 tries), and a read that still falls short is DVD_RESULT_FATAL, never a partial count the caller takes
+        // for a complete buffer.
+        const bool short_first = got != want;
+        for (int tries = 1; got != want && tries <= 3; ++tries) {
+            static unsigned retries;
+            re4dc_log("disc read verify: short read %s got=%d want=%d offset=%d errno=%d, retry %d (retries %u)\n", full,
+                      (int) got, (int) want, (int) offset, errno, tries, ++retries);
+            thd_sleep(20 * tries);
+            file_t g = fs_open(full, O_RDONLY);
+            if (g < 0) continue;
+            if (fs_seek(g, offset + got, SEEK_SET) == (off_t) (offset + got)) {
+                while (got < want) {
+                    ssize_t r = fs_read(g, (u8*) addr + got, (size_t) (want - got));
+                    if (r <= 0) break;
+                    got += (s32) r;
+                }
+            }
+            fs_close(g);
+        }
+#endif
 #if RE4DC_DVD_FDCACHE
         if (!cached) fs_close(f);
-        else if (got != want) fd_drop(f);   // a failed read never leaves a suspect fd cached
+#if RE4DC_DISC_READ_VERIFY
+        else if (got != want || short_first) fd_drop(f);   // a retried handle is not kept either
 #else
+        else if (got != want) fd_drop(f);   // a failed read never leaves a suspect fd cached
+#endif
+#else
+#if RE4DC_DISC_READ_VERIFY
+        (void) short_first;
+#endif
         fs_close(f);
 #endif
         // The SDK reports the requested (32-byte aligned) length on success.
+#if RE4DC_DISC_READ_VERIFY
+        result = got == want ? length : DVD_RESULT_FATAL;
+#else
         result = got == want ? length : got;
+#endif
         if (got != want) {
             static unsigned short_reads;
             if (++short_reads <= 8)

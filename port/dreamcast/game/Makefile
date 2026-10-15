@@ -809,6 +809,51 @@ IO_SERIAL ?= 0
 # and the free AICA sound memory with this byte. Flycast starts with zeroed memory; a Dreamcast does not.
 # A run that differs from the same fixture with POISON_RAM=0 reads memory it never wrote.
 POISON_RAM ?= 0
+# IMAGE_CHECK=1 (test 11 console faults, test discs only, default 0): at OSInit, before the game's first disc read,
+# the screen shows the CRC-32 of the loaded code (_start.._etext, to compare with the build's), the raw KOS maple
+# unit pointers, and then the loaded image compared with /cd/1ST_READ.BIN read back through the drive (mismatching
+# bytes in the code and after it, first offsets); held 10 s for a photo, also logged ("image check:").
+IMAGE_CHECK ?= 0
+ifneq ($(filter $(IMAGE_CHECK),0 1),$(IMAGE_CHECK))
+$(error IMAGE_CHECK must be 0 or 1)
+endif
+ifeq ($(IMAGE_CHECK),1)
+$(OBJDIR)/platform/os.o: PLATFORM_CPPFLAGS += -DRE4DC_IMAGE_CHECK=1
+endif
+# DCINV_PURGE=1 (test 11 console faults, default 0): the SDK's DCInvalidateRange (platform/misc.cpp) writes dirty
+# lines back before invalidating them (KOS dcache_purge_range, ocbp) instead of discarding them (dcache_inval_range,
+# ocbi). On GC the game invalidates a buffer that hardware (EFB copy, DVD, ARAM DMA) is about to overwrite; on the
+# port nothing writes behind the cache for those buffers, so ocbi only throws away the CPU's newest stores - and the
+# bytes of whatever shares the first and last line. Flycast does not model the operand cache and never shows it.
+# DCINV_AUDIT=1 (console proof, test discs, default 0): before each DCInvalidateRange, count the lines the operand
+# cache holds dirty in that range (OC address array), per caller; "dcinv:" log lines name each caller's first discard
+# and a summary every 5 s, for the crash screen.
+DCINV_PURGE ?= 0
+DCINV_AUDIT ?= 0
+ifneq ($(filter $(DCINV_PURGE),0 1),$(DCINV_PURGE))
+$(error DCINV_PURGE must be 0 or 1)
+endif
+ifneq ($(filter $(DCINV_AUDIT),0 1),$(DCINV_AUDIT))
+$(error DCINV_AUDIT must be 0 or 1)
+endif
+ifneq ($(DCINV_PURGE)$(DCINV_AUDIT),00)
+$(OBJDIR)/platform/misc.o: PLATFORM_CPPFLAGS += -DRE4DC_DCINV_PURGE=$(DCINV_PURGE) -DRE4DC_DCINV_AUDIT=$(DCINV_AUDIT)
+endif
+# MAPLE_RECV_PURGE=1 (test 12 console faults, default 0): KOS maple_frame_init clears a frame's receive buffer through
+# its uncached (P2) alias and maple DMA then writes the device's answer to RAM, but nothing writes back or drops the
+# buffer's cached (P1) lines first. A device frame lives in a calloc'd maple_device_t (the detect frame in .bss, cleared
+# at start-up): those zeroing stores sit dirty in the operand cache and, when evicted, overwrite the answer the DMA
+# has just landed (Flycast cache observer + maple DMA: DMA-OVER-DIRTY then CLOBBER-WB on the unit A0 and detect
+# receive buffers within 0.1 s of boot). A link wrap of maple_frame_init (platform/misc.cpp) writes those 32 lines back
+# (ocbp) before KOS clears the buffer. Boot and hot-plug window only; once clean the P1 lines are never cached again.
+MAPLE_RECV_PURGE ?= 0
+ifneq ($(filter $(MAPLE_RECV_PURGE),0 1),$(MAPLE_RECV_PURGE))
+$(error MAPLE_RECV_PURGE must be 0 or 1)
+endif
+ifneq ($(MAPLE_RECV_PURGE),0)
+$(OBJDIR)/platform/misc.o: PLATFORM_CPPFLAGS += -DRE4DC_MAPLE_RECV_PURGE=1
+GAME_LDFLAGS += -Wl,--wrap=maple_frame_init
+endif
 # CRASH_SCREEN=1 (hardware readiness, default 0): a fault, a source HALT() or 30 s without a new frame
 # draws a report (stop kind, PC/PR/stage, threads, newest log lines) into frame buffer 0, for a photo
 # on hardware where the log ring cannot be read. platform/crash_screen.cpp.
@@ -926,14 +971,53 @@ endif
 # request is retried for 10 ms, then the stale flag is cleared (cdrom_abort_cmd with abort_dma), the stream restarted
 # where it stood and the request repeated. DVD_STUCK_TEST=<seconds> + DVD_STUCK_ADDR=<address of KOS dma_in_progress>
 # (test discs only) set the flag on demand. Not with IO_PROBE=1 (it wraps the same entry points).
+# DISC_READ_FALLBACK=1 (issue #28, default 0; same file): a DMA read (stream request or sector read) that fails, or
+# reports OK without landing (a marker in the destination's last 32 bytes survives: DreamShell's ISO loader), or a
+# stream stop that times out latches the session to PIO sector reads; the read is redone by PIO. It also validates the
+# sound stream table / ISS block headers (src/game/snd.cpp) and re-reads or skips a bad one instead of faulting.
+# DISC_FAIL_TEST=1|2 (test discs only): every DMA stream request (1), and also every DMA sector read (2), is skipped and
+# reported OK: the emulator's failure on demand.
+# DISC_READ_VERIFY=1 (test 11 console faults, default 0; same file + platform/dvd.cpp): a DMA read KOS reports done is
+# not handed back until the G1 GD-DMA engine is idle (SB_GDST); fs_iso9660's non-blocking 32-byte stream request is
+# made blocking so it gets the same wait; DVD_READ_SAFE never aborts a refused request while the GD DMA is running (up
+# to 2 s); a short or failed DVDReadAsyncPrio read is retried on a fresh handle (3 tries) and then reported
+# DVD_RESULT_FATAL instead of a partial count. Each event logs a "disc read verify:" line.
+# DISC_GD_ATOMIC=1 (test 11 console faults, default 0; same file): every GD-ROM BIOS syscall KOS makes runs with
+# interrupts masked. KOS's vblank and G1 DMA handlers call the BIOS (exec_server, check_command) from interrupt context
+# and write the cdrom driver's shared cmd_response/cmd_status, while a thread may be inside a BIOS call of its own;
+# the BIOS is not re-entrant. Flycast's HLE BIOS runs each syscall atomically, so it never shows this.
+DISC_GD_ATOMIC ?= 0
+ifneq ($(filter $(DISC_GD_ATOMIC),0 1),$(DISC_GD_ATOMIC))
+$(error DISC_GD_ATOMIC must be 0 or 1)
+endif
+DISC_READ_VERIFY ?= 0
+ifneq ($(filter $(DISC_READ_VERIFY),0 1),$(DISC_READ_VERIFY))
+$(error DISC_READ_VERIFY must be 0 or 1)
+endif
+ifeq ($(DISC_READ_VERIFY),1)
+$(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_READ_VERIFY=1
+endif
+DISC_READ_FALLBACK ?= 0
+DISC_FAIL_TEST ?= 0
 DVD_READ_SAFE ?= 0
 DVD_STUCK_TEST ?= 0
 DVD_STUCK_ADDR ?= 0
-ifneq ($(DVD_READ_SAFE)$(DVD_STUCK_TEST),00)
+ifneq ($(DVD_READ_SAFE)$(DVD_STUCK_TEST)$(DISC_READ_FALLBACK)$(DISC_FAIL_TEST)$(DISC_READ_VERIFY)$(DISC_GD_ATOMIC),000000)
 ifeq ($(IO_PROBE),1)
-$(error DVD_READ_SAFE / DVD_STUCK_TEST and IO_PROBE=1 wrap the same cdrom entry points)
+$(error DVD_READ_SAFE / DVD_STUCK_TEST / DISC_READ_FALLBACK and IO_PROBE=1 wrap the same cdrom entry points)
 endif
 GAME_LDFLAGS += -Wl,--wrap=cdrom_stream_start -Wl,--wrap=cdrom_stream_request
+ifneq ($(DISC_READ_FALLBACK)$(DISC_FAIL_TEST)$(DISC_READ_VERIFY),000)
+GAME_LDFLAGS += -Wl,--wrap=cdrom_read_sectors_ex -Wl,--wrap=cdrom_stream_stop
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_READ_FALLBACK=$(DISC_READ_FALLBACK) -DRE4DC_DISC_FAIL_TEST=$(DISC_FAIL_TEST) -DRE4DC_DISC_READ_VERIFY=$(DISC_READ_VERIFY)
+endif
+ifeq ($(DISC_READ_FALLBACK),1)
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_DISC_READ_FALLBACK=1
+endif
+ifeq ($(DISC_GD_ATOMIC),1)
+GAME_LDFLAGS += -Wl,--wrap=syscall_gdrom_check_drive -Wl,--wrap=syscall_gdrom_send_command -Wl,--wrap=syscall_gdrom_check_command -Wl,--wrap=syscall_gdrom_exec_server -Wl,--wrap=syscall_gdrom_abort_command -Wl,--wrap=syscall_gdrom_dma_callback -Wl,--wrap=syscall_gdrom_dma_transfer -Wl,--wrap=syscall_gdrom_dma_check -Wl,--wrap=syscall_gdrom_pio_callback -Wl,--wrap=syscall_gdrom_pio_transfer -Wl,--wrap=syscall_gdrom_pio_check
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_GD_ATOMIC=1
+endif
 $(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DVD_READ_SAFE=$(DVD_READ_SAFE) -DRE4DC_DVD_STUCK_TEST=$(DVD_STUCK_TEST) -DRE4DC_DVD_STUCK_ADDR=$(DVD_STUCK_ADDR)
 else
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/dvd_read_safe.o,$(PLATFORM_OBJS))
@@ -1427,6 +1511,17 @@ $(OBJDIR)/parts-budget.h: parts-budget-force
 	@printf '#define RE4DC_HEAP4_PARTS_RESERVE %s\n#define RE4DC_HEAP4_PARTS_RESERVE_ROOM %s\n#define RE4DC_HEAP4_PARTS_RESERVE_BYTES %s\n' '$(HEAP4_PARTS_RESERVE)' '$(HEAP4_PARTS_RESERVE_ROOM)' '$(HEAP4_PARTS_RESERVE_BYTES)' >> $@.tmp
 	@cmp -s $@.tmp $@ || cp $@.tmp $@
 	@rm -f $@.tmp
+# SS_FREEZE_RESERVE=1 (test 12 radio-call HALT, default 0 = image unchanged): parts_bridge.cpp serves the sub screen
+# pool freeze copies and the stand-in work from a static SS_FREEZE_RESERVE_BYTES block (bump, reset at thaw, malloc
+# fallback) instead of the KOS heap. +SS_FREEZE_RESERVE_BYTES of .bss = that much less heap 4 under ARENA_FIT.
+SS_FREEZE_RESERVE ?= 0
+SS_FREEZE_RESERVE_BYTES ?= 16384
+ifneq ($(filter $(SS_FREEZE_RESERVE),0 1),$(SS_FREEZE_RESERVE))
+$(error SS_FREEZE_RESERVE must be 0 or 1)
+endif
+ifeq ($(SS_FREEZE_RESERVE),1)
+$(OBJDIR)/parts_bridge.o: GAME_CPPFLAGS += -DRE4DC_SS_FREEZE_RESERVE=1 -DRE4DC_SS_FREEZE_RESERVE_BYTES=$(SS_FREEZE_RESERVE_BYTES)
+endif
 $(OBJDIR)/parts_bridge.o: parts_bridge.cpp $(OBJDIR)/parts-budget.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(KOS_CFLAGS) $(GAME_CPPFLAGS) -include $(OBJDIR)/parts-budget.h -MMD -MP -c $< -o $@
@@ -1566,6 +1661,66 @@ MOVIE_WINDOW ?= 0
 # census (blocks, free extents, largest, size histogram) every 120 frames and after each preload.
 VRAM_PAGES ?= 0
 VRAM_CENSUS ?= 0
+# VRAM_ROOM_LOG=1 (lane vram12 D4, render/log only, default 0 = image unchanged; needs UI_VRAM=1 VRAM_PAGES=1): the
+# per-room VRAM report of the CLAUDE.md graphics memory rule (native_ui.cpp: "vram room:" pinned / dynamic / other /
+# free / largest free block, "vram gaps:" refusals, thrash-guard skips, no contiguous block, GameCube effect pictures,
+# dropped parts, silent sound blocks) at each room-entry preload, every 600 frames and at the room change. Gates:
+# tools/d367/vram/vram_gate.py, fullplay/fp_check.py.
+# KOS_WATCH=1 (diagnostic, default 0 = image unchanged): native_ui.cpp logs "kos watch:" KOS malloc headroom (free
+# chunks + sbrk room below the kernel stack) every 60 frames and at each new low (2 KiB steps). Test 12 bell HALT
+# ("Out of memory. Requested sbrk_base 0x8cff0000") accounting.
+KOS_WATCH ?= 0
+ifneq ($(filter $(KOS_WATCH),0 1),$(KOS_WATCH))
+$(error KOS_WATCH must be 0 or 1)
+endif
+ifeq ($(KOS_WATCH),1)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_KOS_WATCH=1
+endif
+VRAM_ROOM_LOG ?= 0
+ifneq ($(filter-out 0 1,$(VRAM_ROOM_LOG)),)
+$(error VRAM_ROOM_LOG must be 0 or 1)
+endif
+ifeq ($(VRAM_ROOM_LOG),1)
+ifneq ($(UI_VRAM)$(VRAM_PAGES),11)
+$(error VRAM_ROOM_LOG=1 needs UI_VRAM=1 VRAM_PAGES=1)
+endif
+endif
+# TEX_META_EVICT=1 (lane vram12 D5, render only, default 0; needs UI_VRAM=1 TEX_RESIDENT=1): the KOS heap that
+# ARENA_FIT_KOS_BYTES leaves (~138 KB at r101 entry; heap 4 cannot give more: the spawn checks read its free bytes)
+# holds every open texture package's descriptor, so with VRAM no longer the limit it is. A streamed package takes
+# one KOS block (descriptor + pointer table + flags: 160 B for one texture, was three blocks, 184 B); the cache keeps
+# 8 KiB of KOS heap free (pack sector reads, motion file opens) by evicting least recently used uploads, and a
+# refused descriptor evicts and opens again instead of failing the load every frame; the native model slab
+# (64 KiB) is allocated before the first room-entry preload, not after it. Logs kos= headroom (VRAM_ROOM_LOG).
+TEX_META_EVICT ?= 0
+# PRELOAD_LARGE_FIRST=1 (lane vram12 D5, render only, default 0; needs TEX_RESIDENT=1): the room-entry preload loads its
+# picks of 16 KiB or more first, then the rest (two forward sweeps in disc order), so small packages do not fragment
+# the pool ahead of the large ones.
+PRELOAD_LARGE_FIRST ?= 0
+# ROOM_RESIDENT=1 (lane vram12 D5, render only, default 0; needs TEX_RESIDENT=1): the room-entry preload also loads
+# the room's list in dc/resident.bin (tools/d367/vram/resident_keys.py: the textures its scenes otherwise load on
+# first sight), so the room's set is resident from its entry. Without the file the preload is as before.
+ROOM_RESIDENT ?= 0
+ifneq ($(filter-out 0 1,$(ROOM_RESIDENT)),)
+$(error ROOM_RESIDENT must be 0 or 1)
+endif
+ifeq ($(ROOM_RESIDENT)$(TEX_RESIDENT),10)
+$(error ROOM_RESIDENT=1 needs TEX_RESIDENT=1)
+endif
+ifneq ($(filter-out 0 1,$(PRELOAD_LARGE_FIRST)),)
+$(error PRELOAD_LARGE_FIRST must be 0 or 1)
+endif
+ifeq ($(PRELOAD_LARGE_FIRST)$(TEX_RESIDENT),10)
+$(error PRELOAD_LARGE_FIRST=1 needs TEX_RESIDENT=1)
+endif
+ifneq ($(filter-out 0 1,$(TEX_META_EVICT)),)
+$(error TEX_META_EVICT must be 0 or 1)
+endif
+ifeq ($(TEX_META_EVICT),1)
+ifneq ($(UI_VRAM)$(TEX_RESIDENT),11)
+$(error TEX_META_EVICT=1 needs UI_VRAM=1 TEX_RESIDENT=1)
+endif
+endif
 ifneq ($(VRAM_PAGES),1)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/vram_pages.o,$(PLATFORM_OBJS))
 endif
@@ -1590,6 +1745,10 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_PT_BLEND_FIX %s\n' '$(PT_BLEND_FIX)' >> $@.tmp
 	@printf '#define RE4DC_TEX_CHECK %s\n' '$(TEX_CHECK)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_PAGES %s\n#define RE4DC_VRAM_CENSUS %s\n' '$(VRAM_PAGES)' '$(VRAM_CENSUS)' >> $@.tmp
+	@printf '#define RE4DC_VRAM_ROOM_LOG %s\n' '$(VRAM_ROOM_LOG)' >> $@.tmp
+	@printf '#define RE4DC_TEX_META_EVICT %s\n' '$(TEX_META_EVICT)' >> $@.tmp
+	@printf '#define RE4DC_PRELOAD_LARGE_FIRST %s\n' '$(PRELOAD_LARGE_FIRST)' >> $@.tmp
+	@printf '#define RE4DC_ROOM_RESIDENT %s\n' '$(ROOM_RESIDENT)' >> $@.tmp
 	@printf '#define RE4DC_UI_HANDLES %s\n#define RE4DC_UI_HEADERS %s\n' '$(UI_HANDLES)' '$(UI_HEADERS)' >> $@.tmp
 	@printf '#define RE4DC_TEX_RESIDENT %s\n#define RE4DC_TEX_RESIDENT_RESERVE_KB %s\n#define RE4DC_TEX_PAYLOAD_CRC %s\n#define RE4DC_TEX_SLOTS %s\n' '$(TEX_RESIDENT)' '$(TEX_RESIDENT_RESERVE_KB)' '$(TEX_PAYLOAD_CRC)' '$(TEX_SLOTS)' >> $@.tmp
 	@printf '#define RE4DC_TEX_KEEP %s\n#define RE4DC_PVR_LATCH %s\n' '$(TEX_KEEP)' '$(PVR_LATCH)' >> $@.tmp

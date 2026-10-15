@@ -95,6 +95,14 @@ DATA['objs'] = {k: v for _r in OBJS_ROOMS for k, v in DATA['objs-' + _r].items()
 # objs12: the rooms whose library rows passed the test 12 gates (r100: H2 STRICT 4702 + s30 340/340; r101: warp STRICT
 # 2402 + LEON-GC + TEX_CHECK); the other rooms are test 13 (coordinator 10-14: the all-room objects pass is test 13).
 DATA['objs12'] = {k: v for _r in ('r100', 'r101') for k, v in DATA['objs-' + _r].items()}
+# objs12b (lane objs cca4f2bf, 10-15, coordinator: the breakable class stays GameCube): objs12 with every cEmBox /
+# cEmBarrel etc model left GC (EtcModel.cpp SetBox / SetBarrel: et0100 et0200 et1100 et1200 et1e00 et1f00 et2d00
+# et2e00/01 et2f00/01 et3c00). Their break (debris effects owned by the box model) is where et1100's PS2 geometry went
+# wrong. r100b: et0100 et0200 GC; r101b: et0100 et0200 et1100 et1e00 GC. Every other object as objs12. (Only these data
+# set lines are taken from cca4f2bf; its --uv-fold option and test 14 study sets stay on lane/objs.)
+DATA['objs-r100b'] = {'st1/r100.dar': OBJS + '/r100b/r100.dar'}
+DATA['objs-r101b'] = {'st1/r101.dar': OBJS + '/r101b/r101.dar'}
+DATA['objs12b'] = {**DATA['objs-r100b'], **DATA['objs-r101b']}
 # test 13, not ready (tex13/NOT-READY.txt): r11a + et1000 torch from r109's PS2 ETM (--etm-from), and the PS2-picture
 # object dars (tools/ps2_objects_tex.py; colour-only swap: flag-4 mask pairs missing until the items lane pair logic).
 DATA['objs-r11a2'] = {'st1/r11a.dar': OBJS + '/r11ao2/r11a.dar'}
@@ -109,18 +117,69 @@ for _r in ('r100', 'r101'):
 #               PS2 effect library, FX_PS2_PACK / PAL4) + vram12 tex-vr12-both.pak (blackgc14vl: r101 world VQ + Leon's
 #               atlas ec255e66-76812316 as VQ, user decision 10-14 23:58 "Leon ships VQ") + the merchant's 4 texture
 #               keys (packed, not loose: test 11's loose-texture lesson), then tex_wrapsafe.py (TEX_WRAP_SAFE)
+#               + (vram12 D5) dc/resident.bin: the per-room first-sight texture lists (ROOM_RESIDENT=1), built by
+#               t12-texpak.sh from vram/resident/r*.tsv
 #   objs12    = lane objs' r100 + r101 PS2 room objects from ps2lib/objects (r101 = 32dfe338); accepted for test 12
 #               (coordinator 10-15)
 #   sg101     = PS2_STRIP_GROUPS=1 r101 world package (ps2lib/world/r101-sg4, built from the r101 package f5592282 =
 #               smx101's ps2-world.re4mesh); it comes after smx101 in T12_DATA so it replaces that mesh. If smx101 ever
 #               changes, regenerate it (tools/ps2_strip_groups.py + worldlean/sgcheck.py): the runtime refuses a stale r4sg
 #   merchant  = ps2lib/cast/r102/merchant-em18 (PS2_CAST_MERCHANT=1): registry + em18.drs (its textures are in t12tex)
-T12D = os.environ.get('T12D', '/root/probe/lanes-20261014/t12rc/data')   # T12D=<dir>: a lane's own tex-t12b.pak
-DATA['t12tex'] = dict(DATA['blackgc14p'], **{'dc/tex.pak': T12D + '/tex-t12b.pak'})
+T12D = os.environ.get('T12D', '/root/probe/lanes-20261014/t12rc/data')   # T12D=<dir>: a lane's own tex-t12b.pak + resident.bin
+DATA['t12tex'] = dict(DATA['blackgc14p'], **{'dc/tex.pak': T12D + '/tex-t12d.pak', 'dc/resident.bin': T12D + '/resident.bin'})
 MERCHANT = PRIV + '/ps2lib/cast/r102/merchant-em18'
 DATA['merchant'] = {k: MERCHANT + '/' + k for k in ('dc/native/r102/registry.re4nmr', 'em/em18.drs')}
 CLASH += [('t12tex', o) for o in ('blackgc14p', 'blackgc14', 'blackgc', 'blackps2', 'leonhr', 'blackgc14v', 'blackgc14vl')]
-T12_DATA = 'r119c,em29,fbec,r100tr4,smx101,sg101,t12tex,objs12,merchant'
+# PS2 Ganado accessories (test 12 item, lane ps2cast 2026-10-15; tools/d367/ps2cast/ps2_accessories.py): the village
+# Ganados' cObj12 caps / hats / glasses (em15 ARC 0x25F..0x269, em10SetAccesory) with the PS2 geometry and the PS2
+# pictures (8 dc/tex packages, loose here; a release puts them in tex.pak). em15.drs keeps its size and every other
+# byte outside ARC 0x25F..0x268 (the span is re-laid out in place; 2 NTR rows rebased). Disc data only; NOT in T11_DATA.
+DATA['acc12'] = {'em/em15.drs': PRIV + '/ps2lib/cast/common/acc12/em15.drs',
+                 'tex': PRIV + '/ps2lib/cast/common/acc12/tex'}
+# acc12all: the same conversion in every Ganado archive that carries these entries (byte-identical GC and PS2 entries):
+# em12 (r100, r11a), em13 (r104), em15 (r101), em17 (r108; no ARC 0x262..0x264).
+DATA['acc12all'] = dict(DATA['acc12'], **{'em/%s.drs' % n: PRIV + '/ps2lib/cast/common/acc12/%s.drs' % n
+                                          for n in ('em12', 'em13', 'em17')})
+CLASH += [('acc12', 'acc12all')]
+# PS2 pickups / debris (lane items, docs/lanes/items.md; test 12 candidate, NOT in T11_DATA). tools/ps2_items.py pack
+# writes the PS2 item models (ITM), the breakable debris models (Efm in the room EFF and the ETM .eff members) and their
+# PS2 pictures over the GC bytes in place (payload size unchanged), on top of lane objs' dars (objs-20261014/<room>o;
+# r119: r119c). items-<room> therefore replaces objs-<room> (and r119c). 'items' = every route room + core.das (core
+# EFF debris) + the 18 SS/cmn pick-up zoom models + tex-items.pak (tex-t11.pak + the 71 PS2 item / debris packages).
+# Pair the arm with EFM_PS2_CUT=1 to stop drawing the debris models the PS2 deleted. Disc data only.
+ITEMS_ROOMS = 'r100 r101 r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r117 r118 r119 r11a r11b'.split()
+ITEMS = PRIV + '/items-20261014'
+for _r in ITEMS_ROOMS:
+    DATA['items-' + _r] = {'st1/%s.dar' % _r: '%s/%si/%s.dar' % (ITEMS, _r, _r)}
+DATA['items'] = {k: v for _r in ITEMS_ROOMS for k, v in DATA['items-' + _r].items()}
+DATA['items']['etc/core.das'] = ITEMS + '/core/core.das'
+DATA['items']['dc/tex.pak'] = ITEMS + '/tex-items.pak'
+for _f in sorted(Path(ITEMS + '/sscmn').glob('itm*')) if Path(ITEMS + '/sscmn').is_dir() else []:
+    DATA['items']['ss/cmn/' + _f.name] = str(_f)
+CLASH += [('items', 'leonhr')]
+# Test 12 round 3 (rc dry run, 2026-10-15): items + acc12 join the stack.
+#   t12tex  now = tex-t12c.pak: t12-texpak.sh also merges lane items' tex-items.pak (86 PS2 pickup / debris packages)
+#           and acc12's 8 accessory packages (packed, not loose); sha256 1d52762d
+#   items12 = lane items' data on the RC's dars: r100 / r101 / r119 = the lane's dars (packed on objs12 / r119c, the same
+#           inputs as the RC); the other 14 route rooms = ps2_items.py pack (ps2_items-v2 lib) re-run on the RC's own
+#           dars (p2b-20261011 objects / audio-overlay; objs for those rooms is test 13), same asset names and results
+#           per room as the lane, NTR verify OK; core.das = the lane's (pack-core on the RC's core.das gives the same
+#           439ba106); the 18 SS/cmn pick-up zoom models. No tex.pak here (it is in t12tex). Recipe knob EFM_PS2_CUT=1.
+#   acc12d  = acc12all without the loose 'tex' (its 8 packages are in t12tex)
+T12I = T12D + '/items'
+DATA['items12'] = {k: v for _r in ('r100', 'r101', 'r119') for k, v in DATA['items-' + _r].items()}
+# Release candidate (10-15): r100 / r101 items repacked on the objs12b dars (ps2_items.py pack, lane items lib; the same
+# run on the objs12 dars reproduces the lane's e28f4c55 / 298daec6; same asset results: r100 17 ps2, r101 29 ps2 + 1 NONE):
+# r100 4abfcc88 (on objs r100b c0eced0b), r101 f77af17a (on objs r101b fbb12e34).
+for _r in ('r100', 'r101'):
+    DATA['items12']['st1/%s.dar' % _r] = '%s/%sb/%s.dar' % (T12I, _r, _r)
+for _r in ('r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r117 r118 r11a r11b').split():
+    DATA['items12']['st1/%s.dar' % _r] = '%s/%s/%s.dar' % (T12I, _r, _r)
+DATA['items12'].update({k: v for k, v in DATA['items'].items() if k == 'etc/core.das' or k.startswith('ss/cmn/')})
+DATA['acc12d'] = {k: v for k, v in DATA['acc12all'].items() if k != 'tex'}
+CLASH += [('items12', 'items'), ('acc12d', 'acc12'), ('acc12d', 'acc12all')]
+# order matters: items12 after objs12 / r119c (its dars replace theirs), acc12d last
+T12_DATA = 'r119c,em29,fbec,r100tr4,smx101,sg101,t12tex,objs12b,merchant,items12,acc12d'
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 

@@ -31,6 +31,7 @@ import convert_tpl as C  # noqa: E402
 import le_mirror as mirror  # noqa: E402
 from prepare_native_ui import image_identity  # noqa: E402
 from fx_pal4_pack import read_pak  # noqa: E402
+import ps2_tpl_decode as GS  # noqa: E402  (the world agent's PS2 TPL decoder: GS memory model unswizzle, CSM1 CLUT)
 
 
 def dat_entries(blob):
@@ -42,7 +43,10 @@ def dat_entries(blob):
 
 
 def ps2_eff_textures(e):
-    """{id: [picture]}, picture = (w, h, rgba list) in GameCube orientation, or None when not a linear PSMT4."""
+    """{id: [picture]}, picture = (w, h, rgba list) in GameCube orientation, or None when the PS2 picture is neither
+    PSMT4 (bitdepth 8, 16-colour CLUT) nor PSMT8 (bitdepth 9, 256-colour CSM1 CLUT). Interlace bit 1 = GS swizzle
+    (indices uploaded as PSMCT32; unswizzled with ps2_tpl_decode.unswizzle_gs, lane vram12 2026-10-15), bit 0 = the
+    PS2 renderer swaps U and V."""
     hdr = struct.unpack_from('<12I', e, 0)
     if hdr[0] != 0xB:
         raise ValueError('PS2 EFF version %#x' % hdr[0])
@@ -65,18 +69,27 @@ def ps2_eff_textures(e):
             d = t + start + 0x30 * k
             w, h, depth, inter = struct.unpack_from('<HHHH', e, d)
             io, po = struct.unpack_from('<II', e, d + 0x20)
-            if depth != 8 or inter & ~1:
+            if depth not in (8, 9) or inter & ~3:
                 pics.append(None)
                 continue
-            raw = e[t + io:t + io + w * h // 2]
-            idx = []
-            for b in raw:
-                idx += (b & 15, b >> 4)
-            clut = []
-            for c in range(16):   # 8x2 CLUT in a 16-wide buffer: 0-7 at +0, 8-15 at +0x40
-                q = t + po + (c if c < 8 else 16 + c - 8) * 4
-                r, g, b, a = e[q:q + 4]
-                clut.append((r, g, b, 255 if a >= 128 else a * 255 // 128))
+            bits = 4 if depth == 8 else 8
+            raw = e[t + io:t + io + w * h * bits // 8]
+            if inter & 2:
+                idx = list(GS.unswizzle_gs(raw, w, h, bits))
+            elif bits == 8:
+                idx = list(raw)
+            else:
+                idx = []
+                for b in raw:
+                    idx += (b & 15, b >> 4)
+            if bits == 4:
+                clut = []
+                for c in range(16):   # 8x2 CLUT in a 16-wide buffer: 0-7 at +0, 8-15 at +0x40
+                    q = t + po + (c if c < 8 else 16 + c - 8) * 4
+                    r, g, b, a = e[q:q + 4]
+                    clut.append((r, g, b, 255 if a >= 128 else a * 255 // 128))
+            else:                     # 256 colours, CSM1 order (entries 8-15 <-> 16-23 of every 32)
+                clut = [c[:4] for c in GS.clut(e, t + po, 256)]
             px = [clut[v] for v in idx]
             if inter & 1:   # transposed on the PS2: picture (x, y) is stored at (y, x)
                 px = [px[x * w + y] for y in range(w) for x in range(h)]
@@ -227,7 +240,7 @@ def convert_set(gc_ctx, gids, gc_tpls, ps2, ps2_name, outdir, keys_seen):
         ppics = ps2[tid]
         if not gpics or any(p is None for p in ppics):
             row['dc_format'] = 'NOT_CONVERTED'
-            row['note'] = 'PS2 picture is not a linear PSMT4 (swizzled or 8 bpp)' if gpics else 'no GC pictures'
+            row['note'] = 'PS2 picture is neither PSMT4 nor PSMT8' if gpics else 'no GC pictures'
             rows.append(row)
             continue
         weights = {}
@@ -272,25 +285,50 @@ def pair_effs(gc_ids, ps2_effs):
     return out
 
 
-def lib_main(a):
-    """lib <libroot> <converter tag> [--rooms r100,...] [--no-common]: convert into ps2lib/effects-tex + INDEX.tsv rows."""
-    import subprocess
-    libroot, tag = Path(a[0]), a[1]
-    rooms = ROUTE
-    if '--rooms' in a:
-        rooms = a[a.index('--rooms') + 1].split(',')
-    common = '--no-common' not in a
+# Enemy effect tables (lane vram12, 2026-10-15): each enemy's own EFF in its GameCube em/emXX.drs, paired with the PS2
+# emXX.dat EFF (inputs of the ps2cast lane). Library folder effects-tex/<emXX>.
+ENEMY_INPUTS = Path('/root/probe/lanes/ps2cast/inputs')
+
+
+def enemies_available():
+    return sorted(p.stem for p in ENEMY_INPUTS.glob('em*.drs') if (ENEMY_INPUTS / (p.stem + '.dat')).exists())
+
+
+def lib_jobs(rooms, common=True, enemies=()):
+    """(library folder, [(le_mirror rel, GameCube path)], PS2 .dat path, PS2 label, only these EFF contexts or None)."""
     cache = Path('/root/probe/worldfx-cache')
     gc_tree = Path('/root/re4data')
     ps2_core = Path('/root/probe/lanes-20261014/fx12/ps2/Core.dat')
-    out_root = libroot / 'effects-tex'
-    rows_all, keys_seen, summary = [], {}, []
     jobs = []
     if common:
         jobs.append(('common', [('etc/core.das', gc_tree / 'etc/core.das')], ps2_core, 'Core.dat',
                      {'etc/core.das:0#1'}))
     for r in rooms:
         jobs.append((r, [('st1/%s.arc' % r, cache / ('%s.gc' % r))], cache / ('%s.ps2' % r), '%s.dat' % r, None))
+    for em in enemies:
+        jobs.append((em, [('em/%s.drs' % em, ENEMY_INPUTS / ('%s.drs' % em))], ENEMY_INPUTS / ('%s.dat' % em), '%s.dat' % em, None))
+    return jobs
+
+
+def lib_args(a):
+    rooms = ROUTE
+    if '--rooms' in a:
+        rooms = a[a.index('--rooms') + 1].split(',')
+    enemies = enemies_available()
+    if '--enemies' in a:
+        enemies = [x for x in a[a.index('--enemies') + 1].split(',') if x]
+    return rooms, '--no-common' not in a, enemies
+
+
+def lib_main(a):
+    """lib <libroot> <converter tag> [--rooms r100,...] [--no-common] [--enemies em13,...|'']: convert into
+    ps2lib/effects-tex + INDEX.tsv rows (enemies default: every emXX with both inputs in ENEMY_INPUTS). A row whose
+    package bytes (sha256) did not change keeps its converter tag and gate."""
+    libroot, tag = Path(a[0]), a[1]
+    rooms, common, enemies = lib_args(a)
+    out_root = libroot / 'effects-tex'
+    rows_all, keys_seen, summary = [], {}, []
+    jobs = lib_jobs(rooms, common, enemies)
     for room, files, ps2_path, ps2_label, only in jobs:
         gc_ids, gc_tpls = gc_eff_tables_files(files)
         if only:
@@ -299,7 +337,10 @@ def lib_main(a):
         ps2_effs = {}
         for k, (ty, s0, s1) in enumerate(dat_entries(blob)):
             if ty == 'EFF':
-                ps2_effs[k] = ps2_eff_textures(blob[s0:s1])
+                try:
+                    ps2_effs[k] = ps2_eff_textures(blob[s0:s1])
+                except (ValueError, IndexError, struct.error) as ex:   # an EFF without a picture table
+                    print('%s: PS2 %s entry %d skipped (%s)' % (room, ps2_label, k, ex))
         outdir = out_root / room
         nconv = nnone = nskip = 0
         for ctx, ent in pair_effs(gc_ids, ps2_effs):
@@ -319,8 +360,19 @@ def lib_main(a):
     idx = libroot / 'INDEX.tsv'
     old = idx.read_text().splitlines() if idx.exists() else [INDEX_HEAD]
     keep = [l for l in old[1:] if l and not l.startswith('effects-tex\t')]
-    new = ['\t'.join(['effects-tex', r['room'], r['gc_id'], r['ps2_source'], r['dc_format'] or ('-' if r['ps2_source'] == 'NONE' else ''),
-                      tag, r['sha256'] or '-', str(r['bytes']), 'UNGATED', 'fx12']) for r in rows_all]
+    prev = {}
+    for l in old[1:]:
+        f = l.split('\t')
+        if len(f) >= 10 and f[0] == 'effects-tex':
+            prev[(f[1], f[2])] = f
+    new = []
+    for r in rows_all:
+        dc = r['dc_format'] or ('-' if r['ps2_source'] == 'NONE' else '')
+        row = ['effects-tex', r['room'], r['gc_id'], r['ps2_source'], dc, tag, r['sha256'] or '-', str(r['bytes']), 'UNGATED', 'fx12']
+        o = prev.get((r['room'], r['gc_id']))
+        if o and o[6] == row[6] and o[3] == row[3] and o[4] == row[4]:
+            row = o[:10]   # unchanged package: keep its converter tag, gate and owner
+        new.append('\t'.join(row))
     idx.write_text('\n'.join([INDEX_HEAD] + keep + new) + '\n')
     notes = out_root / 'NOTES.tsv'
     notes.write_text('room\tgc_id\tps2_source\tnote\n' + ''.join('%s\t%s\t%s\t%s\n' % (r['room'], r['gc_id'], r['ps2_source'], r['note']) for r in rows_all))

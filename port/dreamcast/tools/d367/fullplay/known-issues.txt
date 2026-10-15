@@ -1,7 +1,9 @@
 # Known issues the full-play gate does not count (fp_check.py). One per line:
 #   builds | category | segment | regex on the log line (or failure text) | why, with the KNOWN_ISSUES.md row / issue
 # builds: comma-separated commit prefixes of the release tree (prep.json release_tree_commit), or *.
-# categories: crash hang missing misalign dropped-free log gc-fallback texture alloc io movie route leak reset-memory
+# categories: crash hang missing misalign dropped-free log gc-fallback texture alloc io movie route leak reset-memory vram
+# (vram and gc-fallback also match vram/vram_gate.py's failure text: 'r101: 3 thrash-guard refusal(s) ...', 'GameCube
+# effect picture <key>: ...'; ps2lib NONE rows are known gaps without an entry here.)
 # Every entry must name a KNOWN_ISSUES.md row (or the bug report it came from). Keep it short: a known issue that
 # spreads to new rooms or builds fails the gate again.
 

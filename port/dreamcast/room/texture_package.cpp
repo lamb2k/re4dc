@@ -28,6 +28,16 @@ extern "C" void re4dc_pvr_vram_fence();
 
 namespace re4dc::texture {
 namespace {
+#if defined(RE4DC_TEX_META_EVICT) && RE4DC_TEX_META_EVICT
+// TEX_META_EVICT=1 (lane vram12 D5): a streamed package takes one KOS allocation instead of three. Its texture
+// pointer table and ownership flags follow the descriptor prefix in the metadata block (a one-texture package: 160 B
+// of KOS heap instead of 184 B, dlmalloc's 16-byte minimum chunk per table), so the KOS heap that
+// ARENA_FIT_KOS_BYTES leaves holds ~15% more resident packages. close() frees the tables only when they are not
+// that tail.
+constexpr unsigned kTableCopies=RE4DC_UI_VRAM?2U:1U;
+std::size_t meta_tail_offset(std::size_t metadata_bytes){return (metadata_bytes+3U)&~std::size_t(3);}
+std::size_t meta_tail_bytes(std::uint32_t count){return kTableCopies*count*sizeof(pvr_ptr_t)+count*sizeof(bool);}
+#endif
 inline void vram_fence() {
 #if RE4DC_PVR_PIPELINE
     re4dc_pvr_vram_fence();
@@ -286,7 +296,11 @@ bool Package::open_streamed(const char* path) {
     }
     size_=static_cast<std::size_t>(total);
     metadata_bytes_=static_cast<std::size_t>(prefix);
+#if defined(RE4DC_TEX_META_EVICT) && RE4DC_TEX_META_EVICT
+    metadata_=static_cast<std::uint8_t*>(std::malloc(meta_tail_offset(metadata_bytes_)+meta_tail_bytes(h.texture_count)));
+#else
     metadata_=static_cast<std::uint8_t*>(std::malloc(metadata_bytes_));
+#endif
     if(!metadata_) { error_="streamed metadata allocation failed";close();return false; }
     std::memcpy(metadata_,&h,sizeof(h));
     if(!storage::read_exact(file_,metadata_+sizeof(h),metadata_bytes_-sizeof(h))) {
@@ -601,11 +615,29 @@ bool Package::upload() {
     }
 #endif
     vram_fence();
-#if RE4DC_UI_VRAM
+#if defined(RE4DC_TEX_META_EVICT) && RE4DC_TEX_META_EVICT
+    if(streamed_ && metadata_ != nullptr) {   // the tables in the metadata block's tail (open_streamed_impl)
+        pvr_textures_ = reinterpret_cast<pvr_ptr_t*>(metadata_ + meta_tail_offset(metadata_bytes_));
+        owns_texture_ = reinterpret_cast<bool*>(pvr_textures_ + kTableCopies * header_->texture_count);
+        std::memset(pvr_textures_, 0, meta_tail_bytes(header_->texture_count));
+    } else {
+        pvr_textures_ = static_cast<pvr_ptr_t*>(std::calloc(kTableCopies * header_->texture_count, sizeof(pvr_ptr_t)));
+        if(pvr_textures_ == nullptr) {
+            error_ = "texture pointer allocation failed";
+            return false;
+        }
+        owns_texture_ = static_cast<bool*>(std::calloc(header_->texture_count, sizeof(bool)));
+        if(owns_texture_ == nullptr) {
+            error_ = "texture ownership allocation failed";
+            return false;
+        }
+    }
+#elif RE4DC_UI_VRAM
     pvr_textures_ = static_cast<pvr_ptr_t*>(std::calloc(2U * header_->texture_count, sizeof(pvr_ptr_t)));
 #else
     pvr_textures_ = static_cast<pvr_ptr_t*>(std::calloc(header_->texture_count, sizeof(pvr_ptr_t)));
 #endif
+#if !(defined(RE4DC_TEX_META_EVICT) && RE4DC_TEX_META_EVICT)
     if(pvr_textures_ == nullptr) {
         error_ = "texture pointer allocation failed";
         return false;
@@ -615,6 +647,7 @@ bool Package::upload() {
         error_ = "texture ownership allocation failed";
         return false;
     }
+#endif
     std::uint32_t uploaded = 0;
     for(std::uint32_t index = 0; index < header_->texture_count; ++index) {
         const Texture& texture = textures()[index];
@@ -779,9 +812,19 @@ void Package::close() {
 #endif
             }
         }
+#if defined(RE4DC_TEX_META_EVICT) && RE4DC_TEX_META_EVICT
+        // owns_texture_ is set only after pvr_textures_: with no table there is no flag array either
+        if(!(streamed_ && metadata_ != nullptr &&
+             reinterpret_cast<std::uint8_t*>(pvr_textures_) == metadata_ + meta_tail_offset(metadata_bytes_))) {
+            std::free(pvr_textures_);
+            std::free(owns_texture_);
+        }
+    }
+#else
         std::free(pvr_textures_);
     }
     std::free(owns_texture_);
+#endif
     owns_texture_ = nullptr;
     pvr_textures_ = nullptr;
     vram_bytes_ = 0;

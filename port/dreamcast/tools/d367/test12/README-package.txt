@@ -1,15 +1,19 @@
 RE4 Dreamcast test 12, source SHA_PLACEHOLDER (2026 10 15)
 
+See Known Issues: https://github.com/lamb2k/re4dc/blob/dreamcast-port/port/dreamcast/docs/KNOWN_ISSUES.md
+
 Extract the gdemu folder and use its four disc files with your usual GDEMU setup.
 Flycast can open gdemu/disc.gdi directly (if menu or popup text looks broken
 in Flycast, use its per-pixel renderer setting). This build follows test 10
 (test 11 was not released; its changes are listed below too) and plays to the
 end of chapter two, part one.
 
-Known issues: https://github.com/lamb2k/re4dc/blob/dreamcast-port/port/dreamcast/docs/KNOWN_ISSUES.md
-
 New in test 12:
-* The village (r101) runs faster: its fire and smoke use the PS2 pictures, the
+* Fixed: a crash screen when a radio call opens on a real Dreamcast
+  (MISSING sub screen pool freeze allocation), confirmed on a console.
+* The controller and VMU answers at start-up are read more safely on a real
+  Dreamcast.
+* The village (r101) does less work each frame: its fire and smoke use the PS2 pictures, the
   distant haze is drawn as fog by the graphics chip, fewer textures are reloaded
   during the fight, and the world is drawn with less work.
 * In the village fight at most 6 villagers attack at once. The others wait and
@@ -20,11 +24,18 @@ New in test 12:
 * Leon's textures are compressed, which leaves more graphics memory for the
   rooms.
 * The merchant uses his PS2 model.
-* Boxes, barrels and other objects in the first village (r100) and the village
-  (r101) use their PS2 models.
+* Objects in the first village (r100) and the village (r101) use their PS2
+  models; the boxes and barrels you can break keep the GameCube models.
 * Armed villagers hold their weapons with the PS2 grip.
+* Villagers' caps, hats and glasses use their PS2 models and pictures.
+* Items you can pick up, their close-ups in the inventory, and the pieces of
+  broken boxes and barrels use their PS2 models and pictures on the whole
+  route; the few pieces the PS2 version removed are not drawn.
 * Options has a Rendering row again: Standard (the default) or FSAA, which
-  smooths edges and is slower in busy scenes.
+  smooths edges and is slower in busy scenes. Every start begins in Standard.
+
+Known issue new in test 12: the cutscene at the r100 cliff (after the first
+house) is skipped; the game goes on normally after it.
 
 From test 11 (not released before):
 * Leon is lit by the scene's lights, and Leon and the villagers cast shadows.

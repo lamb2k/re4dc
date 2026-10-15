@@ -351,3 +351,41 @@ weaker (the GC bakes of every family below showed seam streaks and no gain at eq
 - lane ps2cast-2: NATIVE_MODEL_REGISTRY_SOURCE_LIGHT (PS2_GIGANTE lit), PS2_DELLAGO (default off, open tick-2440 defect; its disc needs the
   r10b package, the atlas and the texture-only em2f.drs from re4-assets-private/ps2cast-2-20261010), the em2f
   texture-only contract, model_registry.py source_drops. See the section above.
+
+## Test 12: PS2 Ganado accessories (cObj12), data set acc12all (2026-10-15)
+
+What: em10SetAccesory hangs a cObj12 on a Ganado's head joint (SetObj12 + setParent(em, 4, 1)) from the Ganado
+archive's ARC 0x25F..0x269: caps (Cap_type 1/2: BIN 0x25F, TPL 0x260 / 0x261), kinds 3/4 (BIN 0x262, TPL 0x263 /
+0x264), hats (kinds 5/6: BIN 0x265, TPL 0x266 / 0x267), glasses (pGlasses: BIN 0x268, TPL 0x269, 2 images). Every disc
+drew the GameCube data (crowd12 census: 2,786 of 7,943 actor-path triangles at 12 alive in the village).
+
+How (disc data only, the executable is unchanged; tools/d367/ps2cast/ps2_accessories.py): each BIN is rebuilt with the
+PS2 BIN of the same ARC (ps2_objects.rebuild: GC header, joints, part headers kept; le_mirror form) and each TPL
+record gets the key of the PS2 picture of the same image (decoded from the PS2 TPL, encoded as a dc/tex package: 64x64,
+32x64 and 128x128 opaque VQ; the glasses' two 32x32 images ARGB4444 with the PS2 lens alpha). The span ARC 0x25F..0x268
+is re-laid out in place: the archive keeps its size and every byte outside the span; the moved TPL records' NTR rows
+are rebased and the NTR crc refreshed; empty alias slots (em17 0x262..0x264) follow their entry. Every output must
+pass a port of SourceIdentityTable::adopt (read.cpp halts "invalid prepared enemy texture identities" otherwise: the
+first em15 candidate wrote the NTR crc one word off and halted at r101 entry; the check now runs in build and census).
+GC triangles = PS2 triangles (104 / 116 / 102 / 112): the PS2 meshes are the same models, so no CPU or TA saving.
+Texture VRAM: the 8 GC packages (16-bit, 94,208 B) become 27,648 B (VQ), -66,560 B when all are resident.
+The GC and PS2 accessory entries are byte-identical in em12 (r100, r11a), em13 (r104), em15 (r101) and em17 (r108,
+without 0x262..0x264); em11 (r117) has a different layout (not converted). Outputs: re4-assets-private
+ps2lib/cast/common/acc12/{em12,em13,em15,em17}.drs + tex/ (8 packages) + per-archive reports. Data sets (t11-fix.py):
+acc12 = em15 only, acc12all = all four. ACC_CROWD_TIER (crowd12) is unaffected: object id, kind and parenting are the
+source's.
+
+Gates (Flycast, MODELLED; arms acctT / accmW / acctW from lane/acc12 = lane/t11 20a3b047 code; control = T11_DATA,
+test = T11_DATA + acc12 / acc12all; evidence C:/Flycast-Evidence/re4-dreamcast/ps2cast-20261014/acc12):
+| Gate | Result |
+|---|---|
+| Knob-off identity | by construction: no code change (the arms are the lane/t11 images) |
+| r101 square STRICT (sq101c vs sq101a2, stop 2400) | STRICT 2402 ticks, 0 masked, decisions MUST-IDENTICAL |
+| H2 + s30 (h2c vs h2a2 em15; h2c vs h2all em12 r100) | STRICT 4702 ticks, MUST-IDENTICAL; s30 340/340, heap_before 126,688 in all three |
+| r104 (em13), r108 (em17), r11a (em12) warps, stop 1800 | STRICT 1802 ticks each, MUST-IDENTICAL |
+| TEX_CHECK=2, r101 village view 150 s (v101c / v101a) | acc12 0 fails; control fails the known 9fe00ef7 256x256 fragmentation twice |
+| GC-fallback count, offline (census) | 0 GC accessory BIN / image in each converted archive (test 11: 12 in em15) |
+| GC-fallback count, runtime (accessory texture loads by key) | r101 v101 12 GC -> 0 GC / 13 PS2; sq101 11 -> 0 / 11; r100 (H2) 16 -> 0 / 16; r104 8 -> 0 / 8; r108 3 -> 0 / 6; r11a 8 -> 0 / 8 |
+| Faults / HALT / MISSING / LEON-GC | 0 in every run above |
+Look sheet: acc12/sheets/ACC12-HAT-SHEET.png (hat Ganado: GC data on DC | PS2 data on DC | PS2): the PS2 hat has the
+darker straw and the dark band the PS2 shows. Release: stage acc12all and merge the 8 packages into tex.pak.

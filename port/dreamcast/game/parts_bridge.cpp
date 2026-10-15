@@ -106,6 +106,42 @@ template<class T> unsigned Registry<T>::nmgr;
 template<class T> Frozen<T> Registry<T>::fz[8];
 template<class T> unsigned Registry<T>::nfz;
 void* frozen_dummy;
+#if defined(RE4DC_SS_FREEZE_RESERVE) && RE4DC_SS_FREEZE_RESERVE
+// SS_FREEZE_RESERVE=1 (test 12 radio-call HALT, 2026-10-15): the slot-table copies and the stand-in work that a sub
+// screen open takes (r100 first call: 1310 + 460 + 340 + 60 slots x 4 B + 3,552 B = 12,248 B) come from this static
+// block instead of the KOS heap, so a call cannot fail them ("MISSING sub screen pool freeze allocation" on a console
+// whose KOS heap was short / broken up at the call). Bump allocation, reset at thaw; a request that does not fit falls
+// back to malloc (logged). The block is .bss: with ARENA_FIT the image growth comes out of heap 4, not KOS.
+namespace {
+unsigned char g_freeze_reserve[RE4DC_SS_FREEZE_RESERVE_BYTES] __attribute__((aligned(32)));
+u32 g_freeze_used, g_freeze_peak, g_freeze_fallback;
+void* freeze_alloc(u32 n, bool zero) {
+    const u32 a = (n + 31) & ~31U;
+    if (g_freeze_used + a <= sizeof(g_freeze_reserve)) {
+        void* p = g_freeze_reserve + g_freeze_used;
+        g_freeze_used += a;
+        if (g_freeze_used > g_freeze_peak) g_freeze_peak = g_freeze_used;
+        if (zero) memset(p, 0, n);
+        return p;
+    }
+    re4dc_log("work backing: freeze reserve short (%u used + %u > %u), heap fallback\n", (unsigned)g_freeze_used,
+        (unsigned)a, (unsigned)sizeof(g_freeze_reserve));
+    ++g_freeze_fallback;
+    return zero ? calloc(1, n) : malloc(n);
+}
+void freeze_free(void* p) {
+    if (p && ((unsigned char*)p < g_freeze_reserve || (unsigned char*)p >= g_freeze_reserve + sizeof(g_freeze_reserve)))
+        free(p);
+}
+}
+#define RE4DC_FREEZE_MALLOC(n) freeze_alloc((n), false)
+#define RE4DC_FREEZE_CALLOC(n) freeze_alloc((n), true)
+#define RE4DC_FREEZE_FREE(p) freeze_free(p)
+#else
+#define RE4DC_FREEZE_MALLOC(n) malloc(n)
+#define RE4DC_FREEZE_CALLOC(n) calloc(1, (n))
+#define RE4DC_FREEZE_FREE(p) free(p)
+#endif
 #if defined(RE4DC_WORKAT_INLINE) && RE4DC_WORKAT_INLINE
 #define RE4DC_FROZEN_ADD(n) (re4dc_frozen_pools += (n))
 #else
@@ -128,7 +164,7 @@ template<class T> unsigned freeze_type(u32 lo,u32 hi) {
         if(!sparse(m) || !m->pArray || u32(m->pArray)<lo || u32(m->pArray)>=hi) continue;
         Pool<T>* p=pool(m);
         const u32 count=m->nArray<p->capacity?m->nArray:p->capacity;
-        T** copy=(T**)malloc(count*sizeof(T*)+4);
+        T** copy=(T**)RE4DC_FREEZE_MALLOC(count*sizeof(T*)+4);
         if(!copy) { re4dc_missing("sub screen pool freeze allocation"); return n; }
         memcpy(copy,p->slots(),count*sizeof(T*));
         Registry<T>::fz[Registry<T>::nfz++]={m,m->pArray,count,copy,m->nArray};
@@ -149,7 +185,7 @@ template<class T> void thaw_type() {
                 (unsigned)sizeof(T),f.pool,(void*)f.m->pArray);
             f.m->pArray=(T*)f.pool;f.m->nArray=f.nArray;
         }
-        free(f.slots);
+        RE4DC_FREEZE_FREE(f.slots);
     }
     RE4DC_FROZEN_ADD(0u - Registry<T>::nfz);
     Registry<T>::nfz=0;
@@ -333,13 +369,26 @@ extern "C" unsigned re4dc_parts_freeze(u32 lo, u32 hi) {
     static_assert(sizeof(cObj) <= 0x2000 && sizeof(cModelInfo) <= 0x2000 && kDummy <= 0x2000, "stand-in size");
     const u32 bytes = (sizeof(cObj) > kDummy ? sizeof(cObj) : kDummy) > sizeof(cModelInfo)
         ? (sizeof(cObj) > kDummy ? sizeof(cObj) : kDummy) : sizeof(cModelInfo);
-    frozen_dummy = calloc(1, bytes);
+    frozen_dummy = RE4DC_FREEZE_CALLOC(bytes);
     if (!frozen_dummy) re4dc_missing("sub screen pool stand-in allocation");
-    return freeze_type<cParts>(lo, hi) + freeze_type<cModelInfo>(lo, hi) + freeze_type<cObj>(lo, hi) +
+    const unsigned n = freeze_type<cParts>(lo, hi) + freeze_type<cModelInfo>(lo, hi) + freeze_type<cObj>(lo, hi) +
            freeze_type<cEm>(lo, hi);
+#if defined(RE4DC_SS_FREEZE_RESERVE) && RE4DC_SS_FREEZE_RESERVE
+    // One line per open for the console crash screen / serial log: RESERVE = every freeze allocation came from the
+    // static block; FALLBACK = some went to the KOS heap (count).
+    re4dc_log("work backing: freeze %s %u B of %u, %u pools, fallback %u\n", g_freeze_fallback ? "FALLBACK" : "RESERVE",
+        (unsigned)g_freeze_used, (unsigned)sizeof(g_freeze_reserve), n, (unsigned)g_freeze_fallback);
+    g_freeze_fallback = 0;
+#endif
+    return n;
 }
 extern "C" void re4dc_parts_thaw() {
     thaw_type<cParts>(); thaw_type<cModelInfo>(); thaw_type<cObj>(); thaw_type<cEm>();
-    free(frozen_dummy); frozen_dummy = 0;
+    RE4DC_FREEZE_FREE(frozen_dummy); frozen_dummy = 0;
+#if defined(RE4DC_SS_FREEZE_RESERVE) && RE4DC_SS_FREEZE_RESERVE
+    re4dc_log("work backing: freeze reserve used %u peak %u of %u\n", (unsigned)g_freeze_used, (unsigned)g_freeze_peak,
+        (unsigned)sizeof(g_freeze_reserve));
+    g_freeze_used = 0;
+#endif
 }
 #endif

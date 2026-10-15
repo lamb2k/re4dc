@@ -531,6 +531,28 @@ void re4dc_ssb_stats(unsigned* blocks, unsigned* reclaimed_uploads, unsigned* re
 }
 
 unsigned re4dc_ssb_pool_free() { return (unsigned) pvr_mem_available(); }
+
+#if defined(RE4DC_SS_CLOSE_POISON) && RE4DC_SS_CLOSE_POISON >= 2
+// SS_CLOSE_POISON=2 (mcheck.mk; debug only): 0xA5 over the dead stack of the calling thread, from 256 bytes below
+// this frame down to 8 KiB or the stack's guard word. No calls while filling (a callee's frame would lie inside).
+void re4dc_poison_dead_stack(const char* tag)
+{
+    kthread_t* const t = thd_current;
+    volatile unsigned probe = 0;
+    const unsigned sp = (unsigned) (uintptr_t) &probe;
+    const unsigned lo = t ? (unsigned) (uintptr_t) t->stack : 0;
+    if (!lo || sp < lo + 512) {
+        re4dc_log("subscreen backing: %s dead stack not poisoned (thread %d stack %08x sp %08x)\n", tag, t ? t->tid : -1, lo, sp);
+        return;
+    }
+    const unsigned hi = (sp - 256) & ~3U;
+    const unsigned from = hi - lo > 8192 + 16 ? hi - 8192 : lo + 16;
+    for (volatile unsigned* w = reinterpret_cast<volatile unsigned*>(from); w < reinterpret_cast<volatile unsigned*>(hi); ++w)
+        *w = 0xA5A5A5A5U;
+    re4dc_log("subscreen backing: %s dead stack poison %08x-%08x (thread %d stack %08x+%x sp %08x)\n", tag, from, hi,
+              t->tid, lo, (unsigned) t->stack_size, sp);
+}
+#endif
 unsigned re4dc_ssb_bank_bytes() { return kBankBytes; }
 unsigned long long re4dc_ssb_us() { return timer_us_gettime64(); }
 

@@ -733,6 +733,99 @@ void OSSetArenaHi(void* hi) { g_arenaHi = hi; }
 #if RE4DC_IO_PROBE
 extern "C" void re4dc_ioprobe_run(void);
 #endif
+#if defined(RE4DC_IMAGE_CHECK) && RE4DC_IMAGE_CHECK
+#include <dc/biosfont.h>
+#include <dc/video.h>
+#include <dc/maple.h>
+#include <stdio.h>
+#include <string.h>
+#include <malloc.h>
+extern char ic_start[] __asm__("_start");  // the linker symbols by their assembler names
+extern char ic_etext[] __asm__("_etext");
+extern char ic_edata[] __asm__("_edata");
+namespace {
+char g_ic_lines[16][80];
+int g_ic_n;
+void ic_line(const char* s)
+{
+    if (g_ic_n < 16) {
+        strncpy(g_ic_lines[g_ic_n], s, 79);
+        g_ic_lines[g_ic_n][79] = 0;
+        ++g_ic_n;
+    }
+    re4dc_log("image check: %s\n", s);
+}
+void ic_draw()
+{
+    if (!vram_s) return;
+    for (int i = 0; i < g_ic_n; ++i)
+        bfont_draw_str(vram_s + (40 + i * 26) * 640 + 24, 640, true, g_ic_lines[i]);
+}
+unsigned ic_crc(const unsigned char* p, unsigned n)
+{
+    unsigned c = 0xFFFFFFFFu;
+    while (n--) {
+        c ^= *p++;
+        for (int k = 0; k < 8; ++k) c = (c >> 1) ^ (0xEDB88320u & (0u - (c & 1u)));
+    }
+    return ~c;
+}
+void image_check()
+{
+    char b[96];
+    const unsigned base = (unsigned) (uintptr_t) ic_start, et = (unsigned) (uintptr_t) ic_etext,
+                   ed = (unsigned) (uintptr_t) ic_edata;
+    snprintf(b, sizeof(b), "IMAGE CHECK code %08x-%08x crc %08x", base, et,
+             ic_crc((const unsigned char*) ic_start, et - base));
+    ic_line(b);
+    int o = snprintf(b, sizeof(b), "maple units:");
+    for (int pt = 0; pt < MAPLE_PORT_COUNT; ++pt)
+        for (int u = 0; u < MAPLE_UNIT_COUNT; ++u)
+            if (maple_state.ports[pt].units[u] && o < (int) sizeof(b) - 14)
+                o += snprintf(b + o, sizeof(b) - o, " %c%d=%08x", 'A' + pt, u,
+                              (unsigned) (uintptr_t) maple_state.ports[pt].units[u]);
+    ic_line(b);
+    ic_draw();
+    file_t f = fs_open("/cd/1ST_READ.BIN", O_RDONLY);
+    if (f < 0) {
+        ic_line("1ST_READ.BIN: open failed");
+    } else {
+        const unsigned kBuf = 32768;
+        unsigned char* buf = (unsigned char*) memalign(32, kBuf);
+        unsigned pos = 0, bad_code = 0, bad_data = 0, nfirst = 0, first[4] = {0, 0, 0, 0}, fcrc = 0xFFFFFFFFu;
+        ssize_t r = 0;
+        while (buf && (r = fs_read(f, buf, kBuf)) > 0) {
+            for (ssize_t i = 0; i < r; ++i, ++pos) {
+                fcrc ^= buf[i];
+                for (int k = 0; k < 8; ++k) fcrc = (fcrc >> 1) ^ (0xEDB88320u & (0u - (fcrc & 1u)));
+                const unsigned a = base + pos;
+                if (a >= ed) continue;
+                if (*(const unsigned char*) (uintptr_t) a != buf[i]) {
+                    if (a < et) {
+                        ++bad_code;
+                        if (nfirst < 4) first[nfirst++] = pos;
+                    } else {
+                        ++bad_data;
+                    }
+                }
+            }
+        }
+        fs_close(f);
+        free(buf);
+        snprintf(b, sizeof(b), "file %u bytes crc %08x read %d", pos, ~fcrc, (int) r);
+        ic_line(b);
+        snprintf(b, sizeof(b), "mismatch code %u data %u", bad_code, bad_data);
+        ic_line(b);
+        if (nfirst) {
+            snprintf(b, sizeof(b), "first code offsets %x %x %x %x", first[0], first[1], first[2], first[3]);
+            ic_line(b);
+        }
+    }
+    ic_draw();
+    thd_sleep(10000);
+}
+}  // namespace
+#endif
 void OSInit(void)
 {
     static int done;
@@ -742,6 +835,9 @@ void OSInit(void)
     done = 1;
     re4dc_fault_init();
     re4dc_set_stage(1);
+#if defined(RE4DC_IMAGE_CHECK) && RE4DC_IMAGE_CHECK
+    image_check();
+#endif
     // KOS threads are always preemptive (thd_set_mode is a no-op in this
     // KOS); the game's cooperative hand-offs work because every game thread
     // blocks in a platform primitive until the scheduler resumes it.
@@ -913,5 +1009,31 @@ int re4dc_fixture_read(const char* path, char* buffer, unsigned size)
 // DBIsDebuggerPresent: the hang detector halts after 3600 idle vsyncs when no
 // debugger is attached; keep it armed like retail.
 BOOL DBIsDebuggerPresent(void) { return 0; }
+
+#if defined(RE4DC_DEAD_STACK_POISON) && RE4DC_DEAD_STACK_POISON
+// DEAD_STACK_POISON=1 (mcheck.mk; debug only): 0xA5 below a blocked task thread's saved stack pointer (its dead
+// stack) down to its guard word. Called by the main thread while the task waits on its resume semaphore.
+void re4dc_poison_task_stack(OSThread* thread)
+{
+    if (thread == NULL || thread->kt == NULL || thread->kt == thd_current) return;
+    kthread_t* const k = thread->kt;
+    const unsigned lo = (unsigned) (uintptr_t) k->stack, sp = k->context.r[15];
+    if (!lo || sp < lo + 64 || sp > lo + k->stack_size) return;
+    for (volatile unsigned* w = (volatile unsigned*) (lo + 16); w < (volatile unsigned*) ((sp - 32) & ~3U); ++w)
+        *w = 0xA5A5A5A5U;
+}
+// The calling thread's own dead stack: `bytes` below 256 bytes under this frame (bounded by its stack when KOS
+// knows it). No calls while filling.
+void __attribute__((noinline)) re4dc_poison_own_stack(unsigned bytes)
+{
+    volatile unsigned probe = 0;
+    const unsigned sp = (unsigned) (uintptr_t) &probe, hi = (sp - 256) & ~3U;
+    const unsigned lo = (unsigned) (uintptr_t) thd_current->stack;
+    unsigned from = hi - bytes;
+    if (lo && from < lo + 16) from = lo + 16;
+    if (from >= hi) return;
+    for (volatile unsigned* w = (volatile unsigned*) from; w < (volatile unsigned*) hi; ++w) *w = 0xA5A5A5A5U;
+}
+#endif
 
 }  // extern "C"

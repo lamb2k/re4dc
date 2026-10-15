@@ -1897,6 +1897,8 @@ void re4dc_cabin_audio_publish_end(unsigned token)
 // computes free AICA RAM as 1900544 - this - its own stream buffers (KOS
 // snd_mem_available() reports the largest block, in use or not).
 unsigned re4dc_aica_used_bytes(void) { return g_aicaUsed; }
+// Sound bank blocks left silent so far (does not fit / rejected / layout refused): native_ui.cpp VRAM_ROOM_LOG.
+unsigned re4dc_aica_skipped_blocks(void) { return S.blocks_skipped; }
 
 #ifndef RE4DC_AICA_STR_TEST
 #define RE4DC_AICA_STR_TEST 0   // evidence only: stream number of block 0 to request in every room

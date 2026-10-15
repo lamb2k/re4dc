@@ -206,6 +206,28 @@ ifneq ($(PS2_FX_GEN)$(PS2_FX_ROOMS),11)
 $(error PS2_FX_GEN must be 0 or 1 and needs PS2_FX_ROOMS=1)
 endif
 endif
+# EFM_PS2_CUT=1 (lane items 2026-10-14; render only, default 0): effect models (Efm, effect record Id 0xFC..0xFF:
+#                    debris / break pieces) that the PS2 release deleted from the room or core EFF are not drawn
+#                    (r101 0x02, r106 0x5a, r10a 0x7b, r10b 0x7b / 0x7c, r119 0x14 / 0x16 / 0x17, r11a 0x0f, core 0x3e;
+#                    eff_sys.cpp kEfmPs2Cut, the ps2_source=NONE rows of ps2lib/breakables). trans.cpp ModelRender
+#                    returns before the draw; the object, its records, Rnd() and its motion run as before. Log:
+#                    "efm ps2 cut:" once per row and room.
+EFM_PS2_CUT ?= 0
+ifneq ($(EFM_PS2_CUT),0)
+ifneq ($(EFM_PS2_CUT),1)
+$(error EFM_PS2_CUT is 0 or 1)
+endif
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_EFM_PS2_CUT=1
+$(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_EFM_PS2_CUT=1
+endif
+# ITEMS_CENSUS=1 (lane items 2026-10-14; diagnostic, test builds only, default 0; log only): "itemcen:" lines, the
+#                    ModelData signature of every item model (cItmSys::DataLoad) and effect model (EspDataLoad) the game
+#                    registers; tools/d367/items_census.py counts the GameCube fallbacks against the PS2 library.
+ITEMS_CENSUS ?= 0
+ifneq ($(ITEMS_CENSUS),0)
+$(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_ITEMS_CENSUS=1
+$(OBJDIR)/src/game/item_model.o: GAME_CPPFLAGS += -DRE4DC_ITEMS_CENSUS=1
+endif
 # FX_LEVEL=0|1|2 (test 11 lane fx 2026-10-14; needs PS2_FX_ROOMS=1; render only; unset by default = no code): one
 #                    effects-quality dial over every PS2-derived room effect recipe (room SST / EST effects with the PS2
 #                    look on, the PS2-added haze, r11b's PS2 rain). 0 = PS2 as-is, 1 = reduced, 2 = low; each level

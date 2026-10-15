@@ -108,6 +108,12 @@ extern "C" int re4dc_loadind_active;
 extern "C" void re4dc_loadind_frame();
 #endif
 void SetPrimBuffPtr();
+#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK
+extern "C" void re4dc_ot_check(const char* where);  // model_asset_bridge.cpp (debug only)
+#define MWC(w) re4dc_ot_check(w)
+#else
+#define MWC(w)
+#endif
 void Trans();
 // game/eprintf.cpp
 void EprintfInit();
@@ -255,6 +261,7 @@ RESTART:
 #endif
             StopwatchInit();
             ProcessTickInit();
+            MWC("top");
             Render_before();
             ClearOTagR(MainOt, 5);
             PadRead();
@@ -266,8 +273,10 @@ RESTART:
             ProcessTickGet(4, "RENDER SETUP");
             SetPrimBuffPtr();
             ClearOt();
+            MWC("clear");
             pG->Frame_cnt++;
             TaskScheduler();
+            MWC("tasks");
 #if RE4DC_VMU_CONTEXT && !defined(__PPC__)
             re4dc_vmu_snapshot();
 #endif
@@ -295,8 +304,10 @@ RESTART:
             if (!(pG->System_flg & 0x100000)) {
                 Trans();
             }
+            MWC("trans");
             Dvd.Watcher();
             SndWatcher();
+            MWC("watch");
             ProcessTickGet(5, "SndWatcher");
             FadeControl(0);
             cMes.Move();
@@ -304,11 +315,13 @@ RESTART:
             if (!PTS(512))
 #endif
             cMes.Trans();
+            MWC("mes");
             CinescoMove();
             if (!(pG->Debug_flg[0] & 0x8000)) {
                 Draw_cinesco();
             }
             FadeControl(1);
+            MWC("fade");
 #if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR
             if (re4dc_loadind_active) {
                 re4dc_loadind_frame();
@@ -318,6 +331,7 @@ RESTART:
             if (!PTS(256))
 #endif
             DrawOTag(&MainOt[4]);
+            MWC("otag");
             if (pG->debug_mode != 7) {
                 pLog->disp();
             }
@@ -327,7 +341,9 @@ RESTART:
             if (re4dc_pace_itask())
 #endif
             iTaskScheduler();
+            MWC("itask");
             Render_done();
+            MWC("rdone");
             Block.checkCommand();
             DC.check();
             Block.checkCondition();
@@ -350,6 +366,7 @@ RESTART:
 #if defined(RE4DC_TICK_LOG) && RE4DC_TICK_LOG
             ProcessTickLog();  // GAME_TICK_LOG: per-subsystem timing line every N frames
 #endif
+            MWC("end");
             ret = systemResetCheck();
             if (ret == 1) {
                 goto RESTART;

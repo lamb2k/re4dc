@@ -32,3 +32,45 @@ endif
 $(OBJDIR)/coarse_actor.o $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_MCHECK_LEONGC=1
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_MCHECK_LEONGC=1  # SKINACQ lines: why the skin lease declined
 endif
+# MODEL_WALK_CHECK=1 (test 11 radio-call fault, 2026-10-14; debug only, default 0): "MWC bad" when an OT chain holds a
+#   node, cModel or model info outside main RAM or misaligned (model_asset_bridge.cpp walkcheck), checked at the main
+#   loop's steps (main.cpp top / clear / tasks / trans / watch / mes / fade / otag / itask / rdone / end), after each
+#   task slot (scheduler.cpp taskN), in sscrn.cpp SubScreenExitCore (ssexit0 / ssexit1, with the OT entries listed for
+#   a few steps after the close) and before the draw-plan walk (which then skips a broken table). Gate: zero "MWC bad".
+#   =2 (console locator disc): the first bad link stops the game with "MWC <where> t<table> <what> ..." as the stop
+#   screen's reason, so a photograph names the step that broke the chain.
+MODEL_WALK_CHECK ?= 0
+ifneq ($(filter $(MODEL_WALK_CHECK),0 1 2),$(MODEL_WALK_CHECK))
+$(error MODEL_WALK_CHECK must be 0, 1 or 2)
+endif
+ifneq ($(MODEL_WALK_CHECK),0)
+$(OBJDIR)/model_asset_bridge.o $(OBJDIR)/src/game/main.o $(OBJDIR)/src/game/sscrn.o $(OBJDIR)/src/game/scheduler.o: GAME_CPPFLAGS += -DRE4DC_MODEL_WALK_CHECK=$(MODEL_WALK_CHECK)
+endif
+# SS_CLOSE_POISON=1 (test 11 radio-call fault; debug only, default 0): sub screen close fills the window bytes it does
+#   not restore (free-cell payloads skipped at open: the screen's heap 12) with 0xA5 (sscrn_bridge.cpp), so a stale
+#   reference into the closed screen faults or shows as "MWC bad" on Flycast as well.
+#   =2 also fills the dead stack below the closing thread's stack pointer (the frames the restore used, the packed
+#   stream's read buffer among them) with 0xA5 after the restore, so a later read of an uninitialised local or a
+#   reference into that dead stack shows on Flycast (whose stream bytes differ from the console's).
+# DEAD_STACK_POISON=1 (test 11 radio-call fault; debug only, default 0, needs MODEL_WALK_CHECK): every task's dead stack
+#   (below its saved stack pointer, after each slot of TaskScheduler) and 6 KiB of the main thread's (at the "top" and
+#   "rdone" checkpoints) are filled with 0xA5, so an uninitialised local that reaches an OT entry shows as "MWC bad".
+DEAD_STACK_POISON ?= 0
+ifneq ($(filter $(DEAD_STACK_POISON),0 1),$(DEAD_STACK_POISON))
+$(error DEAD_STACK_POISON must be 0 or 1)
+endif
+ifeq ($(DEAD_STACK_POISON),1)
+ifeq ($(MODEL_WALK_CHECK),0)
+$(error DEAD_STACK_POISON=1 needs MODEL_WALK_CHECK=1 or 2)
+endif
+$(OBJDIR)/model_asset_bridge.o $(OBJDIR)/src/game/scheduler.o: GAME_CPPFLAGS += -DRE4DC_DEAD_STACK_POISON=1
+$(OBJDIR)/platform/os.o: PLATFORM_CPPFLAGS += -DRE4DC_DEAD_STACK_POISON=1
+endif
+SS_CLOSE_POISON ?= 0
+ifneq ($(filter $(SS_CLOSE_POISON),0 1 2),$(SS_CLOSE_POISON))
+$(error SS_CLOSE_POISON must be 0, 1 or 2)
+endif
+ifneq ($(SS_CLOSE_POISON),0)
+$(OBJDIR)/sscrn_bridge.o: GAME_CPPFLAGS += -DRE4DC_SS_CLOSE_POISON=$(SS_CLOSE_POISON)
+$(OBJDIR)/platform/subscreen_backing.o: PLATFORM_CPPFLAGS += -DRE4DC_SS_CLOSE_POISON=$(SS_CLOSE_POISON)
+endif

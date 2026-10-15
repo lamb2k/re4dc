@@ -1,0 +1,51 @@
+trc sq101-c objstT /root/probe/lanes-20261014/items/fix/sq101-c-objstT.json 2400 600
+trc sq101-i itemstT /root/probe/lanes-20261014/items/fix/sq101-i-itemstT.json 2400 600
+run sq101-m itemsmW /root/probe/lanes-20261014/items/fix/sq101-i-itemsmW.json 150
+trc h2-c objstT /root/probe/lanes-20261014/items/fix/h2-c-objstT.json 4700 900
+trc h2-i itemstT /root/probe/lanes-20261014/items/fix/h2-i-itemstT.json 4700 900
+run h2-m itemsmW /root/probe/lanes-20261014/items/fix/h2-i-itemsmW.json 330
+trc wi119-c objstT /root/probe/lanes-20261014/items/fix/wi119-c-objstT.json 2400 600
+trc wi119-i itemstT /root/probe/lanes-20261014/items/fix/wi119-i-itemstT.json 2400 600
+run wi119-m itemsmW /root/probe/lanes-20261014/items/fix/wi119-i-itemsmW.json 150
+trc wi105-c objstT /root/probe/lanes-20261014/items/fix/wi105-c-objstT.json 2400 600
+trc wi105-i itemstT /root/probe/lanes-20261014/items/fix/wi105-i-itemstT.json 2400 600
+run wi105-m itemsmW /root/probe/lanes-20261014/items/fix/wi105-i-itemsmW.json 150
+trc wi106-c objstT /root/probe/lanes-20261014/items/fix/wi106-c-objstT.json 2400 600
+trc wi106-i itemstT /root/probe/lanes-20261014/items/fix/wi106-i-itemstT.json 2400 600
+run wi106-m itemsmW /root/probe/lanes-20261014/items/fix/wi106-i-itemsmW.json 150
+trc wi103-c objstT /root/probe/lanes-20261014/items/fix/wi103-c-objstT.json 2400 600
+trc wi103-i itemstT /root/probe/lanes-20261014/items/fix/wi103-i-itemstT.json 2400 600
+run wi103-m itemsmW /root/probe/lanes-20261014/items/fix/wi103-i-itemsmW.json 150
+trc wi108-c objstT /root/probe/lanes-20261014/items/fix/wi108-c-objstT.json 2400 600
+trc wi108-i itemstT /root/probe/lanes-20261014/items/fix/wi108-i-itemstT.json 2400 600
+run wi108-m itemsmW /root/probe/lanes-20261014/items/fix/wi108-i-itemsmW.json 150
+trc wi118-c objstT /root/probe/lanes-20261014/items/fix/wi118-c-objstT.json 2400 600
+trc wi118-i itemstT /root/probe/lanes-20261014/items/fix/wi118-i-itemstT.json 2400 600
+run wi118-m itemsmW /root/probe/lanes-20261014/items/fix/wi118-i-itemsmW.json 150
+trc wi10a-c objstT /root/probe/lanes-20261014/items/fix/wi10a-c-objstT.json 2400 600
+trc wi10a-i itemstT /root/probe/lanes-20261014/items/fix/wi10a-i-itemstT.json 2400 600
+run wi10a-m itemsmW /root/probe/lanes-20261014/items/fix/wi10a-i-itemsmW.json 150
+trc wi10b-c objstT /root/probe/lanes-20261014/items/fix/wi10b-c-objstT.json 2400 600
+trc wi10b-i itemstT /root/probe/lanes-20261014/items/fix/wi10b-i-itemstT.json 2400 600
+run wi10b-m itemsmW /root/probe/lanes-20261014/items/fix/wi10b-i-itemsmW.json 150
+trc wi11a-c objstT /root/probe/lanes-20261014/items/fix/wi11a-c-objstT.json 2400 600
+trc wi11a-i itemstT /root/probe/lanes-20261014/items/fix/wi11a-i-itemstT.json 2400 600
+run wi11a-m itemsmW /root/probe/lanes-20261014/items/fix/wi11a-i-itemsmW.json 150
+trc wi11b-c objstT /root/probe/lanes-20261014/items/fix/wi11b-c-objstT.json 2400 600
+trc wi11b-i itemstT /root/probe/lanes-20261014/items/fix/wi11b-i-itemstT.json 2400 600
+run wi11b-m itemsmW /root/probe/lanes-20261014/items/fix/wi11b-i-itemsmW.json 150
+trc wi117-c objstT /root/probe/lanes-20261014/items/fix/wi117-c-objstT.json 2400 600
+trc wi117-i itemstT /root/probe/lanes-20261014/items/fix/wi117-i-itemstT.json 2400 600
+run wi117-m itemsmW /root/probe/lanes-20261014/items/fix/wi117-i-itemsmW.json 150
+trc wi102-c objstT /root/probe/lanes-20261014/items/fix/wi102-c-objstT.json 2400 600
+trc wi102-i itemstT /root/probe/lanes-20261014/items/fix/wi102-i-itemstT.json 2400 600
+run wi102-m itemsmW /root/probe/lanes-20261014/items/fix/wi102-i-itemsmW.json 150
+trc wi104-c objstT /root/probe/lanes-20261014/items/fix/wi104-c-objstT.json 2400 600
+trc wi104-i itemstT /root/probe/lanes-20261014/items/fix/wi104-i-itemstT.json 2400 600
+run wi104-m itemsmW /root/probe/lanes-20261014/items/fix/wi104-i-itemsmW.json 150
+trc wi107-c objstT /root/probe/lanes-20261014/items/fix/wi107-c-objstT.json 2400 600
+trc wi107-i itemstT /root/probe/lanes-20261014/items/fix/wi107-i-itemstT.json 2400 600
+run wi107-m itemsmW /root/probe/lanes-20261014/items/fix/wi107-i-itemsmW.json 150
+trc wi109-c objstT /root/probe/lanes-20261014/items/fix/wi109-c-objstT.json 2400 600
+trc wi109-i itemstT /root/probe/lanes-20261014/items/fix/wi109-i-itemstT.json 2400 600
+run wi109-m itemsmW /root/probe/lanes-20261014/items/fix/wi109-i-itemsmW.json 150

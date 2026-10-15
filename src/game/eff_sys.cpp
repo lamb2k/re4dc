@@ -105,6 +105,77 @@ void EffCallToolStateCallBack();
 void RoomEfmRegist(cModel* m, u8 id);
 void RoomEfmRegist(void* model, void* tpl, u8 id);
 
+#if RE4DC_ITEMS_CENSUS || RE4DC_EFM_PS2_CUT
+#include "model.h"
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
+#if RE4DC_ITEMS_CENSUS
+// ITEMS_CENSUS=1 (lane items 2026-10-14, diagnostic, default 0; log only): one "itemcen:" line per item model
+// (item_model.cpp cItmSys::DataLoad) and per effect model (EspDataLoad) as the game registers it, with the ModelData
+// signature (vertex / normal / display list counts). tools/d367/items_census.py compares the lines with the lane's
+// PS2 library (re4-assets-private ps2lib items / breakables manifests): a model with the GameCube signature where
+// the library has a PS2 one is a GC fallback (gate: 0 on the route).
+extern "C" void re4dc_items_census_model(const char* kind, u32 owner, u32 id, const void* model)
+{
+    const ModelData* d = (const ModelData*) model;
+    re4dc_log("itemcen: room=%03x kind=%s owner=%02x id=%02x nv=%u nn=%u nd=%u\n", (unsigned) G_ROOM_ID, kind,
+              (unsigned) owner, (unsigned) id, (unsigned) d->nVtx, (unsigned) d->nNrm, (unsigned) d->displist_num);
+}
+#endif
+#if RE4DC_EFM_PS2_CUT
+// EFM_PS2_CUT=1 (lane items 2026-10-14; render only, default 0): the effect models (Efm, effect record Id 0xFC..0xFF)
+// whose model the PS2 release deleted from the room / core EFF (no PS2 model with that id, so every PS2 record using
+// it is gone too) are not drawn. trans.cpp ModelRender returns before drawing such an object; its obj04 / obj05 /
+// obj09 work, the records, Rnd() and every move run as before (the same early return as the PACE skip).
+// Rows: room (0xffff = every room: core EFF), efm id, registering owner kind (0 core EFF = owner 0, 1 room EFF =
+// owner 1, 2 an ETM .eff = any other owner): efm ids are one table, so a row matches only while the id is registered
+// by the EFF the PS2 deleted it from (a room or ETM that registers the same id keeps its model). Source:
+// ps2_items.py convert, ps2_source=NONE rows.
+struct EfmPs2CutRow {
+    u16 room;
+    u8 id;
+    u8 kind;
+};
+static const EfmPs2CutRow kEfmPs2Cut[] = {
+    {0x101, 0x02, 1}, {0x106, 0x5a, 1}, {0x10a, 0x7b, 1}, {0x10b, 0x7b, 1}, {0x10b, 0x7c, 1},
+    {0x119, 0x14, 1}, {0x119, 0x16, 1}, {0x119, 0x17, 1}, {0x11a, 0x0f, 2}, {0xffff, 0x3e, 0},
+};
+static unsigned s_efmCutLogged[sizeof(kEfmPs2Cut) / sizeof(kEfmPs2Cut[0])];
+static unsigned s_efmCutCount;
+extern "C" int re4dc_efm_ps2_cut(const cModel* m)
+{
+    const cModelInfo* info = m->pModelInfo;
+    unsigned k;
+
+    if (info == 0 || info->pData == 0) {
+        return 0;
+    }
+    for (k = 0; k < sizeof(kEfmPs2Cut) / sizeof(kEfmPs2Cut[0]); k++) {
+        void* model;
+        unsigned owner;
+        const EfmPs2CutRow* r = &kEfmPs2Cut[k];
+        if (r->room != 0xffff && r->room != G_ROOM_ID) {
+            continue;
+        }
+        owner = g_pEspSys->efmWk[r->id].owner;
+        if (owner == 0xD2 || (r->kind == 0 && owner != 0) || (r->kind == 1 && owner != 1) ||
+            (r->kind == 2 && owner < 2)) {
+            continue;
+        }
+        model = g_pEspSys->efmWk[r->id].model;
+        if (model == (void*) info->pData) {
+            s_efmCutCount++;
+            if (s_efmCutLogged[k] != (unsigned) G_ROOM_ID + 1U) {
+                s_efmCutLogged[k] = (unsigned) G_ROOM_ID + 1U;
+                re4dc_log("efm ps2 cut: room=%03x id=%02x total=%u\n", (unsigned) G_ROOM_ID, (unsigned) r->id, s_efmCutCount);
+            }
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif
+
 #define OWNER_ERR(owner, fmt_s, fmt_x)                                                              \
     if ((owner) <= 0xD0) {                                                                          \
         pLog->err(0, 0, fmt_s, owner_name_tbl[owner]);                                              \
@@ -424,6 +495,9 @@ int EspDataLoad(u32 addr, u32 owner, int flag)
             x = (u8*) e + e->ofsX;
         }
         id = efmIds->ent[i].id;
+#if RE4DC_ITEMS_CENSUS
+        re4dc_items_census_model("efm", owner, id, model);
+#endif
         efmRegist(model, tpl, mot, x, id, owner);
     }
     return 1;

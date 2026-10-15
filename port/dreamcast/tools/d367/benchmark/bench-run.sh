@@ -58,3 +58,6 @@ cp "//wsl.localhost/Ubuntu-24.04$FIXD/$N.json" $S/fixture.json 2>/dev/null
 mv $S "$E/$N" && mv $S-run-stdout.txt "$E/$N/run-stdout.txt"
 echo "$N halt=$(grep -ac HALT $E/$N/capture/run-output.txt) fault=$(grep -ac FAULT $E/$N/capture/run-output.txt) last=$(grep -a '^warp: frame' $E/$N/capture/run-output.txt | tail -1 | cut -c1-40)"
 python "$HERE/bench-ms.py" "$E/$N/capture/run-output.txt" $BW
+# VRAM gaps gate (CLAUDE.md graphics memory rule; vram/vram_gate.py): the per-room VRAM table and FAIL on refusals,
+# thrash-guard skips under pressure, "no contiguous block" and GameCube effect pictures not listed as ps2lib NONE rows.
+python "$HERE/../vram/vram_gate.py" "$E/$N/capture/run-output.txt" || echo "VRAM gate: FAIL ($N)"

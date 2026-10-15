@@ -11,6 +11,15 @@ import json, os, re, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / 'vram'))
+import vram_gate  # noqa: E402  (vram/vram_gate.py: the VRAM gaps of the CLAUDE.md graphics memory rule)
+_VRAM_INDEX = []
+
+def vram_index():
+    """ps2lib effect key -> INDEX rows (vram_gate.load_index), read once; None when ps2lib is not on this host."""
+    if not _VRAM_INDEX:
+        _VRAM_INDEX.append(vram_gate.load_index(vram_gate.ps2lib_root()))
+    return _VRAM_INDEX[0]
 
 # (category, regex, what). A line matching any rule fails the segment unless a known issue covers it.
 RULES = [
@@ -271,6 +280,17 @@ def check_segment(evdir, seg, known):
             item = dict(cat='movie', what='s30 dropped %s pictures' % m.group(2), line=ln.strip()[:200])
             k = known_for(known, 'movie', seg['name'], ln)
             (res['known'] if k else res['failures']).append(dict(item, why=k) if k else item)
+    # VRAM gaps (vram/vram_gate.py; CLAUDE.md graphics memory rule): budget refusals, thrash-guard skips and GameCube
+    # effect pictures that ps2lib/INDEX.tsv does not list as NONE (the known gaps) fail; "no contiguous block" lines are
+    # judged by RULES above. The per-room VRAM table ("vram room:" lines, VRAM_ROOM_LOG=1) goes to REPORT.md.
+    vg = vram_gate.analyse(lines, vram_index(), nocontig=False)
+    res['vram_rooms'] = vg['rooms']
+    res['notes'] += vg['notes']
+    for item in vg['failures']:
+        k = known_for(known, item['cat'], seg['name'], item['what'] + ' ' + item['line'])
+        (res['known'] if k else res['failures']).append(dict(item, why=k) if k else item)
+    for item in vg['known_gaps']:
+        res['known'].append(dict(item, why='ps2lib INDEX.tsv ps2_source=NONE (no PS2 counterpart)'))
     text = '\n'.join(lines)
     missing_goals = [g for g in seg['goals'] if not re.search(g, text)]
     for g in missing_goals:
@@ -342,6 +362,17 @@ def report(evdir, results, rm, prep, meta, verdict):
                 continue
             done.add(key)
             L.append('- %s [%s] %s: %s%s' % (name, k['cat'], k['what'], k['why'], ('  \n  `%s`' % k['line']) if k['line'] else ''))
+    L.append('')
+    vr = [(r['name'], r['vram_rooms']) for r in results if r.get('vram_rooms')]
+    L.append('## VRAM per room (vram room: lines; MODELLED Flycast runs)')
+    if vr:
+        for name, rooms in vr:
+            L.append('')
+            L.append('%s:' % name)
+            L.append('')
+            L += vram_gate.table(rooms)
+    else:
+        L.append('- no "vram room:" lines (build without VRAM_ROOM_LOG=1)')
     L.append('')
     L.append('## Memory on repeated room visits (leak check)')
     any_rows = False

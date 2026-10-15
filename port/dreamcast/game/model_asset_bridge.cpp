@@ -19,6 +19,227 @@
 extern "C" void re4dc_log(const char* fmt, ...);
 extern "C" unsigned re4dc_otm_exec_skips,re4dc_otm_exec_mismatch;   // trans_ot.cpp
 #endif
+#ifndef RE4DC_MODEL_WALK_CHECK
+#define RE4DC_MODEL_WALK_CHECK 0
+#endif
+#if RE4DC_MODEL_WALK_CHECK
+// MODEL_WALK_CHECK=1 (mcheck.mk; debug only, default 0): the test 11 console fault (read address error in
+// walk_signature, node pointer 0x4125a0c3, at the end of every radio call). Flycast reads any address, so the
+// broken chain is found by checking it: every OT table's chain (node: main RAM, aligned; a ModelRender entry's
+// cModel and its info chain) at named points of the frame (re4dc_ot_check, main.cpp / sscrn.cpp) and before the
+// walks below, which then skip a broken table. "MWC bad" lines name the first bad link with the previous node,
+// the last model entry and the newest entries of that chain; "MWC sweeps" counts.
+#include "global.h"
+#include <string.h>
+#include <stdio.h>
+extern "C" void re4dc_log(const char* fmt, ...);
+extern "C" void* GetPrimBuff(int size);
+extern "C" int re4dc_ss_ui_order();
+namespace walkcheck {
+unsigned sweeps,bad_total,reported,broken;   // broken: tables found broken by the last sweep
+bool ram(const void* p,unsigned bytes){
+    const std::uintptr_t a=reinterpret_cast<std::uintptr_t>(p);
+    return a>=0x8c000000u && a+bytes<=0x8d000000u && !(a&3);
+}
+// Where p lies: B<t> bucket array of table t, P prim buffer (+offset), W sub screen window (pStFnt, 3 MiB), R RAM.
+void loc(const void* p,char* out){
+    const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(p));
+    for(unsigned t=0;t<OT_MAX;++t){
+        const unsigned lo=unsigned(reinterpret_cast<std::uintptr_t>(g_OtWork[t].list)),hi=lo+g_OtWork[t].max*sizeof(OtData);
+        if(lo && a>=lo && a<hi){out[0]='B';out[1]=char('a'+t);out[2]=0;return;}
+    }
+    const unsigned pb=unsigned(pG->prim_cnt),pe=pb+unsigned(pG->nPrim)*2;
+    if(pb && a>=pb && a<pe){out[0]='P';out[1]=0;return;}
+    const unsigned wb=unsigned(reinterpret_cast<std::uintptr_t>(pG->pStFnt));
+    if(wb && a>=wb && a<wb+0x300000u){out[0]='W';out[1]=0;return;}
+    out[0]=a>=0x8c000000u && a<0x8d000000u?'R':'X';out[1]=0;
+}
+struct Seen { const OtData* node; void* data; void* func; unsigned kind; };
+// Checks table t's chain; false (and one report while reported < 24) on the first bad link.
+bool check_table(unsigned t,const char* where){
+    const auto& ot=g_OtWork[t];
+    if(!ot.list || !ot.max)return true;
+    constexpr unsigned kRing=12;
+    Seen ring[kRing];unsigned nseen=0,idx=0;
+    const OtData* prev=nullptr;const OtData* lastm=nullptr;
+    const OtData* node=&ot.list[ot.max-1];
+    const char* what=nullptr;unsigned val=0;
+    while(node){
+        if(!ram(node,sizeof(OtData))){what="node";val=unsigned(reinterpret_cast<std::uintptr_t>(node));break;}
+        if(node->data){
+            ring[nseen%kRing]={node,node->data,reinterpret_cast<void*>(node->func),node->kind};++nseen;
+            if(node->func==(void (*)(void*))ModelRender){
+                const auto* model=static_cast<const cModel*>(node->data);
+                if(!ram(model,sizeof(cModel))){what="model";val=unsigned(reinterpret_cast<std::uintptr_t>(model));break;}
+                unsigned n=0;
+                for(const auto* info=model->pModelInfo;info;info=info->pList){
+                    if(!ram(info,0x18) || ++n>512){what="info";val=unsigned(reinterpret_cast<std::uintptr_t>(info));break;}
+                }
+                if(what)break;
+                lastm=node;
+            }
+        }
+        prev=node;node=node->next;
+        if(++idx>200000){what="loop";val=idx;break;}
+    }
+    if(!what)return true;
+    ++bad_total;
+#if RE4DC_MODEL_WALK_CHECK >= 2
+    // MODEL_WALK_CHECK=2 (console locator): stop at the first bad link with where / table / what on the stop screen.
+    {
+        const OtData* at=(what[0]=='n' || what[0]=='l')?prev:node;
+        char why[80];
+        snprintf(why,sizeof(why),"MWC %s t%u %s %08x at %08x d%08x n%08x f%08x f%u",where,t,what,val,
+                 unsigned(reinterpret_cast<std::uintptr_t>(at)),at?unsigned(reinterpret_cast<std::uintptr_t>(at->data)):0u,
+                 at?unsigned(reinterpret_cast<std::uintptr_t>(at->next)):0u,
+                 at?unsigned(reinterpret_cast<std::uintptr_t>(at->func)):0u,unsigned(pG->Frame_cnt));
+        re4dc_log("%s\n",why);
+        re4dc_missing(why);
+    }
+#endif
+    if(reported>=24)return false;
+    ++reported;
+    char l1[4],l2[4];
+    re4dc_log("MWC bad at=%s f=%u room=%03x ss=%d t=%u models=%d i=%u what=%s val=%08x bad_total=%u\n",where,
+              unsigned(pG->Frame_cnt),unsigned(pG->room_id),re4dc_ss_ui_order(),t,int(g_OtModels>>t&1),idx,what,val,bad_total);
+    if(prev){
+        loc(prev,l1);
+        const unsigned* w=reinterpret_cast<const unsigned*>(prev);
+        re4dc_log("MWC prev node=%08x[%s] data=%08x func=%08x next=%08x kind=%04x words %08x %08x %08x %08x\n",
+                  unsigned(reinterpret_cast<std::uintptr_t>(prev)),l1,unsigned(reinterpret_cast<std::uintptr_t>(prev->data)),
+                  unsigned(reinterpret_cast<std::uintptr_t>(prev->func)),unsigned(reinterpret_cast<std::uintptr_t>(prev->next)),
+                  unsigned(prev->kind),w[4],w[5],w[6],w[7]);
+    }
+    if(what[0]!='n' && what[0]!='l'){   // the bad model / info belongs to this node
+        const auto* model=static_cast<const cModel*>(node->data);
+        loc(node,l1);loc(model,l2);
+        re4dc_log("MWC owner node=%08x[%s] model=%08x[%s] func=%08x kind=%04x\n",unsigned(reinterpret_cast<std::uintptr_t>(node)),l1,
+                  unsigned(reinterpret_cast<std::uintptr_t>(model)),l2,unsigned(reinterpret_cast<std::uintptr_t>(node->func)),unsigned(node->kind));
+    }
+    if(lastm){
+        const auto* m=static_cast<const cModel*>(lastm->data);
+        const unsigned* w=reinterpret_cast<const unsigned*>(m);
+        loc(m,l1);
+        re4dc_log("MWC lastmodel node=%08x model=%08x[%s] kindid=%u be=%08x info=%08x w0=%08x %08x %08x %08x\n",
+                  unsigned(reinterpret_cast<std::uintptr_t>(lastm)),unsigned(reinterpret_cast<std::uintptr_t>(m)),l1,
+                  unsigned(m->kindid),unsigned(m->be_flag),unsigned(reinterpret_cast<std::uintptr_t>(m->pModelInfo)),w[0],w[1],w[2],w[3]);
+    }
+    re4dc_log("MWC prim base=%08x n=%u cur=%08x win=%08x\n",unsigned(pG->prim_cnt),unsigned(pG->nPrim),
+              unsigned(reinterpret_cast<std::uintptr_t>(GetPrimBuff(0))),unsigned(reinterpret_cast<std::uintptr_t>(pG->pStFnt)));
+    const unsigned first=nseen>kRing?nseen-kRing:0;
+    for(unsigned k=first;k<nseen;++k){
+        const Seen& s=ring[k%kRing];
+        loc(s.node,l1);loc(s.data,l2);
+        re4dc_log("MWC chain %u node=%08x[%s] data=%08x[%s] func=%08x kind=%04x\n",k,unsigned(reinterpret_cast<std::uintptr_t>(s.node)),l1,
+                  unsigned(reinterpret_cast<std::uintptr_t>(s.data)),l2,unsigned(reinterpret_cast<std::uintptr_t>(s.func)),s.kind);
+    }
+    return false;
+}
+unsigned sweep(const char* where){
+    unsigned b=0;
+    for(unsigned t=0;t<OT_MAX;++t)if(!check_table(t,where))b|=1u<<t;
+    ++sweeps;
+    if(sweeps%1800==0)re4dc_log("MWC sweeps=%u bad_total=%u\n",sweeps,bad_total);
+    return b;
+}
+}
+namespace walkcheck {
+// Sub screen close: every OT entry made before SubScreenExitCore (ssexit0) is compared after it (ssexit1). The
+// window restore puts the area's bytes back as they were at open: an entry inside the area is overwritten.
+struct Snap { const OtData* node; void* data; void* func; const OtData* next; unsigned t; };
+Snap snap[512];
+unsigned nsnap;
+bool in_buckets(const void* p){
+    const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(p));
+    for(unsigned t=0;t<OT_MAX;++t){
+        const unsigned lo=unsigned(reinterpret_cast<std::uintptr_t>(g_OtWork[t].list)),hi=lo+g_OtWork[t].max*sizeof(OtData);
+        if(lo && a>=lo && a<hi)return true;
+    }
+    return false;
+}
+void snapshot(const char* where){
+    nsnap=0;unsigned inwin=0,inprim=0,nodes=0;
+    const unsigned wb=unsigned(reinterpret_cast<std::uintptr_t>(pG->pStFnt));
+    for(unsigned t=0;t<OT_MAX;++t){
+        const auto& ot=g_OtWork[t];
+        if(!ot.list || !ot.max)continue;
+        unsigned guard=0;
+        for(const OtData* n=&ot.list[ot.max-1];n && ram(n,sizeof(OtData)) && guard<200000;n=n->next,++guard){
+            if(in_buckets(n))continue;
+            ++nodes;
+            char l[4];loc(n,l);
+            if(l[0]=='W')++inwin;
+            if(l[0]=='P')++inprim;
+            if(nsnap<512)snap[nsnap++]={n,n->data,reinterpret_cast<void*>(n->func),n->next,t};
+        }
+    }
+    const unsigned b0=unsigned(reinterpret_cast<std::uintptr_t>(g_OtWork[0].list));
+    re4dc_log("MWC snap at=%s f=%u nodes=%u in_prim=%u in_window=%u prim=%08x+%x buckets0=%08x window=%08x+300000 cur=%08x\n",where,
+              unsigned(pG->Frame_cnt),nodes,inprim,inwin,unsigned(pG->prim_cnt),unsigned(pG->nPrim),b0,wb,
+              unsigned(reinterpret_cast<std::uintptr_t>(GetPrimBuff(0))));
+}
+void compare(const char* where){
+    unsigned changed=0,logged=0;
+    for(unsigned i=0;i<nsnap;++i){
+        const Snap& s=snap[i];
+        const OtData* n=s.node;
+        if(n->data==s.data && reinterpret_cast<void*>(n->func)==s.func && n->next==s.next)continue;
+        ++changed;
+        if(logged++<12){
+            char l[4];loc(n,l);
+            re4dc_log("MWC clobbered at=%s t=%u node=%08x[%s] data %08x->%08x func %08x->%08x next %08x->%08x\n",where,s.t,
+                      unsigned(reinterpret_cast<std::uintptr_t>(n)),l,unsigned(reinterpret_cast<std::uintptr_t>(s.data)),
+                      unsigned(reinterpret_cast<std::uintptr_t>(n->data)),unsigned(reinterpret_cast<std::uintptr_t>(s.func)),
+                      unsigned(reinterpret_cast<std::uintptr_t>(n->func)),unsigned(reinterpret_cast<std::uintptr_t>(s.next)),
+                      unsigned(reinterpret_cast<std::uintptr_t>(n->next)));
+        }
+    }
+    re4dc_log("MWC compare at=%s entries=%u changed=%u\n",where,nsnap,changed);
+}
+}
+namespace walkcheck {
+unsigned dump_left;   // sweeps still to list after a sub screen close
+void dump(const char* where){
+    unsigned lines=0;
+    for(unsigned t=0;t<OT_MAX;++t){
+        const auto& ot=g_OtWork[t];
+        if(!ot.list || !ot.max)continue;
+        unsigned guard=0;
+        for(const OtData* n=&ot.list[ot.max-1];n && ram(n,sizeof(OtData)) && guard<200000;n=n->next,++guard){
+            if(in_buckets(n) && !n->data)continue;
+            if(lines++<60){
+                char l1[4],l2[4];loc(n,l1);loc(n->data,l2);
+                re4dc_log("MWC list at=%s f=%u t=%u node=%08x[%s] data=%08x[%s] func=%08x kind=%04x next=%08x\n",where,
+                          unsigned(pG->Frame_cnt),t,unsigned(reinterpret_cast<std::uintptr_t>(n)),l1,
+                          unsigned(reinterpret_cast<std::uintptr_t>(n->data)),l2,unsigned(reinterpret_cast<std::uintptr_t>(n->func)),
+                          unsigned(n->kind),unsigned(reinterpret_cast<std::uintptr_t>(n->next)));
+            }
+        }
+    }
+    re4dc_log("MWC list at=%s f=%u entries=%u\n",where,unsigned(pG->Frame_cnt),lines);
+}
+}
+extern "C" void re4dc_ot_check(const char* where);
+// scheduler.cpp: after each task slot of TaskScheduler.
+extern "C" void re4dc_ot_check_task(unsigned slot){
+    static char w[12];
+    snprintf(w,sizeof(w),"task%u",slot);
+    re4dc_ot_check(w);
+}
+#if defined(RE4DC_DEAD_STACK_POISON) && RE4DC_DEAD_STACK_POISON
+extern "C" void re4dc_poison_own_stack(unsigned bytes);  // platform/os.cpp (debug only)
+#endif
+extern "C" void re4dc_ot_check(const char* where){
+#if defined(RE4DC_DEAD_STACK_POISON) && RE4DC_DEAD_STACK_POISON
+    if(!strcmp(where,"top") || !strcmp(where,"rdone"))re4dc_poison_own_stack(6144);
+#endif
+    if(walkcheck::dump_left && strcmp(where,"clear")){--walkcheck::dump_left;walkcheck::dump(where);}
+    if(!strcmp(where,"ssexit1"))walkcheck::dump_left=7;
+    if(!strcmp(where,"ssexit0"))walkcheck::snapshot(where);
+    walkcheck::sweep(where);
+    if(!strcmp(where,"ssexit1")){walkcheck::compare(where);walkcheck::snapshot("ssexit1");}
+}
+#endif
 #if RE4DC_FRONT_LEAN && RE4DC_D349_RENDERER_STACK
 extern "C" int re4dc_model_asset_update_idle();
 namespace {
@@ -57,6 +278,9 @@ WalkSignature walk_signature(){
 #else
         if(!ot.list || !ot.max)continue;
 #endif
+#if RE4DC_MODEL_WALK_CHECK
+        if(walkcheck::broken>>table&1)continue;
+#endif
         for(auto* node=&ot.list[ot.max-1];node;node=node->next){
             if(!node->data || node->func!=(void (*)(void*))ModelRender)continue;
             auto* model=static_cast<cModel*>(node->data);
@@ -79,6 +303,9 @@ WalkSignature walk_signature(){
 extern "C" void re4dc_prepare_model_assets(){
 #if RE4DC_D349_RENDERER_STACK
     if(!re4dc_model_diagnostic_enabled())return;
+#if RE4DC_MODEL_WALK_CHECK
+    walkcheck::broken=walkcheck::sweep("walk");
+#endif
 #if RE4DC_FRONT_LEAN
     // Same registrations as the last walk and nothing pending in the plan
     // owner: every part would hit (or keep its negative admission) again.
@@ -119,6 +346,9 @@ extern "C" void re4dc_prepare_model_assets(){
         if(!ot.list || !ot.max)continue;
 #if RE4DC_OT_MASK == 1
         if(!(g_OtModels>>table&1))continue;   // no model entry in this table since its clear
+#endif
+#if RE4DC_MODEL_WALK_CHECK
+        if(walkcheck::broken>>table&1)continue;
 #endif
         for(auto* node=&ot.list[ot.max-1];node;node=node->next){
             // Empty bucket sentinels do not initialize func. Check data first.

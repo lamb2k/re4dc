@@ -4,19 +4,20 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-Last updated: October 14, 2026. The current public build is console test `a93e8be0` (r22j test 10: test 9.1 plus Leon's PS2 model after the boat, a sharper Leon face and safer disc read retries).
+Last updated: October 15, 2026. The current public build is console test 12 (the newest release on the
+[releases page](https://github.com/lamb2k/re4dc/releases/latest)). Test 11 was not released; its changes are in test 12.
 Test 8 (`d4bc5f45`) was withdrawn.
 
 ## Status at a glance
 
 | Status | Meaning | Count |
 | --- | --- | --- |
-| ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 0 |
+| ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 8 |
 | 🟢 Fixed in test 9 / 9.1 / 10 / 12 | Fixed and checked in our tests; the problem was not console-only | 7 |
 | 🛠️ In progress | Being fixed now | 1 |
-| 🔍 Investigating | Being reproduced or traced | 3 |
-| ⏸️ Open | Known, not yet worked on | 13 |
+| 🔍 Investigating | Being reproduced or traced | 4 |
+| ⏸️ Open | Known, not yet worked on | 16 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Stability
@@ -34,6 +35,8 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | Black screen when started from DreamShell with an IDE mod | test 9 | ⏸️ Open: not tested yet; we test GDEMU and Flycast only | [#28](https://github.com/lamb2k/re4dc/issues/28) |
 | A texture is refused for about 2 seconds when video memory is too broken up, though enough is free (r105 key event, r10b, r119) | test 9, 9.1, 10 | ⏸️ Open (found by the full-play check) | |
 | A small menu texture does not fit in memory as the r100 cliff movie starts | test 9, 9.1, 10 | ⏸️ Open (found by the full-play check) | |
+| The cutscene at the r100 cliff (after the first house) is skipped; the game goes on normally after it | test 12 | ⏸️ Open: at that point there is not enough free memory in one piece for the movie. Planned for test 13 | |
+| A crash screen (`MISSING sub screen pool freeze allocation`) when a radio call opens on a real console | test 11 (not released), test 12 preview | ✅ Confirmed fixed on a real Dreamcast (test 12 preview): the call screen now keeps its copies in memory set aside for it | |
 
 ## Picture
 
@@ -54,6 +57,8 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | The chapter 2-1 results screen is missing one texture | test 9, 9.1, 10 | 🟢 Fixed in test 12 | |
 | Some effects (31 shared fire, smoke and spark pictures) still use the GameCube pictures; the rest of the village effects use the PS2 ones | test 12 | ⏸️ Open: those pictures are stored in a PS2 format that is not converted yet | |
 | The merchant is not lit by the scene's lights: his robe reads brown-black instead of the PS2's blue-black | test 12 | ⏸️ Open: a lit version is waiting for a look check | |
+| Some rooms look almost pitch black, as if they had no light | test 12 | 🔍 Investigating: we are comparing every room on the disc with test 10. Please tell us which rooms | |
+| Broken boxes and barrels leave dark debris in the rooms after the village (r103, r104, r106, r107, r108, r10a, r10b, r117, r118, r11a, r11b) | test 8 to test 12 | ⏸️ Open: those rooms use the PS2 boxes with the GameCube debris effect. Planned for test 13 | |
 
 ## Sound
 
@@ -71,13 +76,14 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | In the village fight at most 6 villagers attack at once; the others wait and join as villagers fall | test 12 | ⏸️ Open: by design, for the frame rate. Every villager still appears, and the waves, the kills and the bell are unchanged | |
 | Pauses when entering rooms | all | ⏸️ Open | |
 | FSAA (Options, Rendering) is slower than Standard in busy scenes such as the village fight: it draws twice the pixels | test 12 | ⏸️ Open: by design; Standard is the default | |
+| FSAA: busiest scenes have less geometry headroom (FSAA borrows 225 KB of the 1.95 MB per-frame geometry buffer; measured peak use 82% in the busiest test scene, El Gigante) | test 12 | ⏸️ Open: by design; Standard keeps the full buffer | |
 
-## Console checklist for test 10
+## Console checklist for test 12
 
-Test 10: https://github.com/lamb2k/re4dc/releases/tag/test-a93e8be0-20261014 (the checklist is the same as test 9, plus: does Leon stay the PS2 model after the boat, and how does his face look?)
+Test 12: the newest release on the [releases page](https://github.com/lamb2k/re4dc/releases/latest) (the checklist is the same as test 10, plus: do the radio calls open and close without a crash screen, and are the controller and VMU found at start-up?)
 
 These fixes can only be confirmed on a real Dreamcast, because emulators draw the old and new versions the same.
-If you play test 9 on a console, please report on any of these in the test 9 feedback issue:
+If you play test 12 on a console, please report on any of these in a bug report:
 
 1. **Long play in the village and the first house.** Play for 20 minutes or more, through room loads. Any crash screen?
 2. **Trees and fences by the first house.** Do branch tips, leaves and fence gaps show the sky or wall behind them, or
