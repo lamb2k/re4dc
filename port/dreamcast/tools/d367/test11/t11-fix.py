@@ -267,6 +267,11 @@ DATA['res14r3'] = {'dc/resident.bin': T14R3D + '/resident.bin'}
 # Test 14 (t14/rc, 2026-10-15; TEST14-SCOPE.md, test14/t14-build.sh T14REC): test 13's data + res14r3 (replaces T13's
 # dc/resident.bin; order: last).
 T14_DATA = T13_DATA + ',res14r3'
+# lane worldlod (10-15, backlog C1, game WORLD_LOD=1): wlod101 = bake13 with far levels (tools/ps2_world_far_lod.py, then
+# ps2_strip_groups.py; README in the folder). Without WORLD_LOD the far levels are never drawn. Order: after bake13.
+WLOD = PRIV + '/worldlod-20261015'
+DATA['wlod101'] = {'dc/native/r101/ps2-world.%s' % x: '%s/r101-far-v1/ps2-world.%s' % (WLOD, x)
+                   for x in ('re4mesh', 'r4pw', 'r4sg', 'ids')}
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 

@@ -118,6 +118,15 @@ extern "C" unsigned re4dc_coarse_world_room();   // coarse.cpp: coarse_world.h k
 // WORLD_LOD_PROBE: far meshlets skipped, their vertices (since the last PS2MESH log line).
 static unsigned world_lod_probe_stats[2];
 #endif
+#ifndef RE4DC_WORLD_LOD
+#define RE4DC_WORLD_LOD 0
+#endif
+#if RE4DC_WORLD_LOD
+// WORLD_LOD: the far level's marker error (ps2_world_far_lod.py FAR_ERROR 1e30); far-level draws, far clusters without
+// one (cumulative, the WORLDLOD line beside PS2MESH).
+static constexpr float kFarLodError=1.0e29f;
+static unsigned world_lod_stats[2];
+#endif
 static constexpr unsigned kClipOnce=16; // MESH_CLIP_LEAN: longer clipped strips take the per-triangle path
 #if defined(RE4DC_MESH_CLIP_ACCEPT) && RE4DC_MESH_CLIP_ACCEPT==2
 // MESH_CLIP_ACCEPT=2 (diagnostic): accepted triangles checked, dropped triangles checked, mismatches, crossings.
@@ -173,8 +182,8 @@ static volatile unsigned ps2_mask_select=1U+RE4DC_PS2_PASS_MASK_SELECT;
 #ifndef RE4DC_MESH_LOD_PX
 #define RE4DC_MESH_LOD_PX 3
 #endif
-#if RE4DC_WORLD_LOD_PROBE && !RE4DC_MESH_LOD
-#error "WORLD_LOD_PROBE needs MESH_LOD=1 (the PS2 world packages are R4IM v3; the probe is in draw_clusters)"
+#if (RE4DC_WORLD_LOD_PROBE || RE4DC_WORLD_LOD) && !RE4DC_MESH_LOD
+#error "WORLD_LOD / WORLD_LOD_PROBE need MESH_LOD=1 (the PS2 world packages are R4IM v3; both act in draw_clusters)"
 #endif
 // Source fog on the native path: GXSetFog state becomes PVR table fog on model
 // headers (native_ui.cpp), ramped to 100% at the source View far plane, and
@@ -2360,6 +2369,16 @@ struct MeshDraw : Emitter {
             if(depth<near)depth=near;
             unsigned level=cl.level_count-1;
             while(level && levels[cl.first_level+level].error*lod_scale>depth)--level;
+#if RE4DC_WORLD_LOD
+            // WORLD_LOD (lane worldlod, backlog C1): tools/ps2_world_far_lod.py gives a PS2 world cluster one more level,
+            // last, with the marker error kFarLodError, which the screen-space choice above never reaches (so the same
+            // data draws unchanged without this knob). Beyond RE4DC_WORLD_LOD_MM a cluster whose choice is level 0
+            // draws that far level (about half the triangles); a coarser screen-space level stays. Same far plane.
+            if(ps2 && !level && cl.level_count>1 && depth>float(RE4DC_WORLD_LOD_MM) &&
+               levels[cl.first_level+cl.level_count-1].error>=kFarLodError){
+                level=cl.level_count-1;++world_lod_stats[0];
+            }else if(ps2 && depth>float(RE4DC_WORLD_LOD_MM))++world_lod_stats[1];
+#endif
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
             const auto* lets=package.meshlets()+lv.first_meshlet;
@@ -2371,7 +2390,7 @@ struct MeshDraw : Emitter {
 #endif
             for(unsigned i=0;i<lv.meshlet_count;++i){
 #if RE4DC_WORLD_LOD_PROBE
-                if(probe_far && (i&1U)){
+                if(probe_far && (RE4DC_WORLD_LOD_PROBE==2 || (i&1U))){ // =2: every far meshlet (the 12 m cull ceiling)
                     const auto& m=lets[i];
                     float md=-mvq[11],mr=0;
                     for(unsigned a=0;a<3;++a){
@@ -4767,6 +4786,10 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
     re4dc_log("PS2MESH frame=%u strips=%u culled=%u clipped=%u vertices=%u clusters=%u/%u lod=%u,%u,%u,%u\n",frame,
         stats.strips,stats.strips_culled,stats.strips_clipped,stats.vertices,stats.clusters_visible,stats.clusters_culled,
         stats.lod_draws[0],stats.lod_draws[1],stats.lod_draws[2],stats.lod_draws[3]);
+#if RE4DC_WORLD_LOD
+    re4dc_log("WORLDLOD frame=%u far_draws=%u far_no_level=%u mm=%u\n",frame,world_lod_stats[0],world_lod_stats[1],
+        unsigned(RE4DC_WORLD_LOD_MM));
+#endif
 #if RE4DC_WORLD_LOD_PROBE
     re4dc_log("WLODPROBE frame=%u skipped_meshlets=%u skipped_vertices=%u mm=%u\n",frame,world_lod_probe_stats[0],
         world_lod_probe_stats[1],unsigned(RE4DC_WORLD_LOD_PROBE_MM));

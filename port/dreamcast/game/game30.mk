@@ -2798,21 +2798,39 @@ $(error PS2_ROOM_PIN must be 0 or 1)
 endif
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_ROOM_PIN=1
 endif
+# WORLD_LOD=1 (native_static.cpp, render only, default 0; lane worldlod 2026-10-15, backlog C1): offline world distance LOD.
+# tools/ps2_world_far_lod.py gives each PS2 world LOD cluster a FAR level (its level 0 simplified to about half the
+# triangles, UV guard on, cluster borders locked) with a marker error the screen-space choice never reaches, so a package
+# with far levels draws unchanged without this knob. With it, a cluster whose nearest point is beyond WORLD_LOD_MM
+# (default 12000 = 12 m) and whose screen-space choice is level 0 draws its far level. The 25 m far plane is unchanged.
+# A WORLDLOD line beside each PS2MESH line counts far-level draws and far clusters without one. Needs MESH_LOD=1.
+WORLD_LOD ?= 0
+WORLD_LOD_MM ?= 12000
+ifneq ($(WORLD_LOD),0)
+ifneq ($(WORLD_LOD),1)
+$(error WORLD_LOD must be 0 or 1)
+endif
+ifneq ($(PS2_WORLD_MESH),1)
+$(error WORLD_LOD needs PS2_WORLD_MESH=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_LOD=1 -DRE4DC_WORLD_LOD_MM=$(WORLD_LOD_MM)
+endif
 # WORLD_LOD_PROBE=1 (native_static.cpp, render only, TEST ONLY, default 0; lane worldlod 2026-10-15): the crude cost probe
 # for backlog C1 (offline world distance LOD). A PS2 world meshlet whose nearest point is beyond WORLD_LOD_PROBE_MM
 # (default 12000 = 12 m) is drawn only if its index in its LOD level is even: about half the far vertices, with holes.
 # The far plane is unchanged. A WLODPROBE line beside each PS2MESH line counts the skipped meshlets and vertices.
-# Never a release knob: the real C1 is a converter level (WORLD_LOD).
+# Never a release knob: the real C1 is a converter level (WORLD_LOD). =2 (calibration) skips every far meshlet: the
+# ceiling, comparable with the console sweep's "world 12.5 m" row.
 WORLD_LOD_PROBE ?= 0
 WORLD_LOD_PROBE_MM ?= 12000
 ifneq ($(WORLD_LOD_PROBE),0)
-ifneq ($(WORLD_LOD_PROBE),1)
-$(error WORLD_LOD_PROBE must be 0 or 1)
+ifneq ($(filter-out 1 2,$(WORLD_LOD_PROBE)),)
+$(error WORLD_LOD_PROBE must be 0, 1 or 2)
 endif
 ifneq ($(PS2_WORLD_MESH),1)
 $(error WORLD_LOD_PROBE needs PS2_WORLD_MESH=1)
 endif
-$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_LOD_PROBE=1 -DRE4DC_WORLD_LOD_PROBE_MM=$(WORLD_LOD_PROBE_MM)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_LOD_PROBE=$(WORLD_LOD_PROBE) -DRE4DC_WORLD_LOD_PROBE_MM=$(WORLD_LOD_PROBE_MM)
 endif
 # PS2_STRIP_GROUPS=1 (native_static.cpp, render only, default 0; lane objs 2026-10-15): reads dc/native/rNNN/
 # ps2-world.r4sg (tools/ps2_strip_groups.py: up to 4 spatial strip groups per meshlet, corners renumbered per group, in
