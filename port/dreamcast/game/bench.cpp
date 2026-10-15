@@ -90,6 +90,10 @@ extern "C" void re4dc_ganado_lod_set(unsigned level);   // lane leonlod GANADO_L
 #if defined(RE4DC_POC_HAS_SKINZ) && RE4DC_POC_HAS_SKINZ
 extern "C" void re4dc_skin_sh4zam_set(unsigned mask);   // lane sh4zam SKIN_SH4ZAM (stage mask, sh4zam_skin.c)
 #endif
+#if defined(RE4DC_POC_HAS_LOGIC) && RE4DC_POC_HAS_LOGIC
+extern "C" uint32_t re4dc_logic_waste_mask;    // lane logicwaste LOGIC_WASTE (atari.cpp .data words; read per use)
+extern "C" uint32_t re4dc_logic_approx_mask;
+#endif
 #endif
 #ifndef RE4DC_BENCH_AUTO_S
 #define RE4DC_BENCH_AUTO_S 20
@@ -140,6 +144,18 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",    "/cd/dc/bench2
 #ifndef RE4DC_POC_HAS_SKINZ
 #define RE4DC_POC_HAS_SKINZ 0
 #endif
+#ifndef RE4DC_POC_HAS_LOGIC
+#define RE4DC_POC_HAS_LOGIC 0     // LOGIC_WASTE=1: rows LOGIC EX (exact memos) and LOGIC APX (approximations)
+#endif
+// LOGIC EX row: LOGIC_WASTE_MASK exact bits 0x01 getPos offset, 0x02 effect verdict per recipe, 0x08 camera lines
+// (0x100 check mode stays off). LOGIC APX row: LOGIC_APPROX_MASK 0x01 jacket cloth half rate, 0x02 sound slots half rate.
+// The memos are keyed by their full inputs, so switching them between rows (each from a soft reset) is safe.
+#ifndef RE4DC_POC_LOGIC_EX_ON
+#define RE4DC_POC_LOGIC_EX_ON 0x0Bu
+#endif
+#ifndef RE4DC_POC_LOGIC_APX_ON
+#define RE4DC_POC_LOGIC_APX_ON 0x03u
+#endif
 // The DETAIL row (coordinator 10-15: the user's chosen character detail): Leon at leonlod level 4 (u70) and the
 // Ganados at level 2 (g70), together.
 #ifndef RE4DC_POC_LEON_ON
@@ -157,7 +173,8 @@ struct PocLayer {
     const char* knob;     // the build knob
     const char* words;    // what it is, plain words (last page)
     int built;            // 0 not in this image, else the variant (see the RE4DC_POC_HAS_* notes)
-    int kind;             // 0 exact render, 1 render approximation, 2 exact logic, 3 alternative rung
+    int kind;             // 0 exact render, 1 render approximation, 2 exact logic, 3 alternative rung,
+                          // 4 logic approximation (gameplay-equivalence gated; live rows and ALL ON, never in a sweep)
 };
 const PocLayer kPocLayer[] = {
     {0x001, "SG LEAN", "SG_SELECT_LEAN", "SCENE GRAPH: LEANER PICK OF WHAT TO DRAW (EXACT)", RE4DC_POC_HAS_SGSEL, 0},
@@ -168,6 +185,9 @@ const PocLayer kPocLayer[] = {
      RE4DC_POC_HAS_LEON | RE4DC_POC_HAS_GLOD, 1},
     {0x020, "FLATLIGHT", "CROWD_FLAT_LIGHT", "CROWD LIGHTING: ONE FLAT LIGHT (APPROXIMATION)", RE4DC_POC_HAS_FLATLIGHT, 1},
     {0x080, "SKIN ZAM", "SKIN_SH4ZAM", "SKINNING: BONE BLEND IN XMTRX, SH4ZAM (RENDER ONLY)", RE4DC_POC_HAS_SKINZ, 1},
+    {0x008, "LOGIC EX", "LOGIC_WASTE_MASK", "GAME LOGIC: REPEATED ANSWERS REUSED (EXACT)", RE4DC_POC_HAS_LOGIC, 2},
+    {0x010, "LOGIC APX", "LOGIC_APPROX_MASK", "GAME LOGIC: JACKET CLOTH, SOUND SLOTS AT HALF RATE (APPROX)",
+     RE4DC_POC_HAS_LOGIC, 4},
 };
 constexpr int kPocLayers = (int) (sizeof(kPocLayer) / sizeof(kPocLayer[0]));
 unsigned poc_built()
@@ -213,6 +233,10 @@ void poc_apply(unsigned m)
 #endif
 #if RE4DC_POC_HAS_SKINZ
     re4dc_skin_sh4zam_set((m & 0x080u) ? (unsigned) RE4DC_POC_SKINZ_ON : 0u);
+#endif
+#if RE4DC_POC_HAS_LOGIC
+    re4dc_logic_waste_mask = (m & 0x008u) ? RE4DC_POC_LOGIC_EX_ON : 0u;
+    re4dc_logic_approx_mask = (m & 0x010u) ? RE4DC_POC_LOGIC_APX_ON : 0u;
 #endif
 }
 #else
@@ -416,7 +440,7 @@ void poc_sweep_rows()
     int n = 0;
     kSweepSet[0][n++] = 0;
     for (int i = 0; i < kPocLayers; ++i)
-        if (kPocLayer[i].built && kPocLayer[i].kind != 2) kSweepSet[0][n++] = (signed char) (1 + i);
+        if (kPocLayer[i].built && kPocLayer[i].kind != 2 && kPocLayer[i].kind != 4) kSweepSet[0][n++] = (signed char) (1 + i);
     kSweepSet[0][n++] = kSetAllOn;
     kSweepSet[0][n] = -1;
     kSweepSet[1][0] = 0; kSweepSet[1][1] = kSetAllOn; kSweepSet[1][2] = -1;
@@ -1095,16 +1119,16 @@ void draw_split_poc(const Fb& fb, int page)
 // Last page: what each layer is, whether this image has it, and the mask each row ran with.
 void draw_layers_poc(const Fb& fb, int page)
 {
-    static const char* const kKind[4] = {"EXACT", "LOOK*", "EXACT", "LOOK*ALT"};
+    static const char* const kKind[5] = {"EXACT", "LOOK*", "EXACT", "LOOK*ALT", "LOGIC*"};
     char line[200];
     snprintf(line, sizeof(line), "PAGE %d OF %d: WHAT EACH ROW TURNS ON", page, g_pages);
     int y = page_head(fb, line);
     fb_text(fb, 14, y, 1, 2, kCyan, "LAYER      MASK  KIND    IN THIS DISC  WHAT IT IS"); y += 16;
     for (const PocLayer& l : kPocLayer) {
-        snprintf(line, sizeof(line), "%-10s %03X   %-8s %-13s %s", l.tag, l.bit, kKind[l.kind & 3],
+        snprintf(line, sizeof(line), "%-10s %03X   %-8s %-13s %s", l.tag, l.bit, kKind[l.kind % 5],
                  !l.built ? "NO" : (l.bit == 0x02 && l.built == 2) ? "YES, STAND-IN" : "YES",
                  l.words);
-        fb_text(fb, 14, y, 1, 2, l.built ? (l.kind == 1 || l.kind == 3 ? kYellow : kWhite) : kGrey, line); y += 16;
+        fb_text(fb, 14, y, 1, 2, l.built ? (l.kind == 1 || l.kind >= 3 ? kYellow : kWhite) : kGrey, line); y += 16;
     }
     y += 8;
     fb_text(fb, 14, y, 1, 2, kCyan, "ROW  NAME        MASK  LAYERS ON"); y += 16;

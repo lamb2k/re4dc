@@ -24,7 +24,9 @@ SCENES_PLACEHOLDER
 
 ALL OFF is test 14 as it ships. ALL OFF 2 repeats it at the end, so the
 difference between the two shows the run-to-run noise. ALL ON is every
-layer except the alternative Leon rung (LEON U70), which has its own row.
+layer on this disc together. LOGIC EX reuses repeated game logic answers
+(exact); LOGIC APX* runs Leon's jacket cloth and the sound slots at half
+rate (an approximation: the game plays the same, the details differ).
 
 The last scene freezes the game at one room frame and draws it with each
 layer alone, then all on; its page shows the CPU and GPU change of each.

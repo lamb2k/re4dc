@@ -75,6 +75,7 @@ POC_CPPFLAGS += $(if $(filter-out 0,$(GANADO_LOD)),-DRE4DC_POC_HAS_GLOD=1)
 POC_CPPFLAGS += $(if $(filter-out 0,$(CROWD_FLAT_LIGHT)),-DRE4DC_POC_HAS_FLATLIGHT=1)
 POC_CPPFLAGS += $(if $(filter-out 0,$(SKIN_SH4ZAM)),-DRE4DC_POC_HAS_SKINZ=1)
 POC_CPPFLAGS += $(if $(filter-out 0,$(SKIN_SH4ZAM)),$(if $(POC_SKINZ_ON),-DRE4DC_POC_SKINZ_ON=$(POC_SKINZ_ON),$(error BENCH_POC=1 SKIN_SH4ZAM needs POC_SKINZ_ON=<stage mask of the SKIN ZAM row>)))
+POC_CPPFLAGS += $(if $(filter-out 0,$(LOGIC_WASTE)),-DRE4DC_POC_HAS_LOGIC=1)
 # UI_OT_CACHE (B3) is not a POC layer: dropped by the coordinator 10-15 (-0.13 ms MODELLED, KOS squeeze image growth).
 $(if $(filter-out 0,$(UI_OT_CACHE)),$(error BENCH_POC: UI_OT_CACHE was dropped from POC101))
 $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += $(POC_CPPFLAGS)
