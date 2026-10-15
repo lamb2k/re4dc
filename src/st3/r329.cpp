@@ -42,6 +42,16 @@ static inline void setVec(Vec* v, f32 x, f32 y, f32 z)
     v->z = z;
 }
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscene (ROUTE_CH3, st3 lane 2026-10-15): r329s00 is presented by its PS2 movie (dc/movie/r329s00.seq) when
+// the disc carries it, as r300s00: the GC evd is not on the disc-2 image (EvtRead: DC.setData failed, then "mem over",
+// and the event never ran). With the movie no evd is read; the handler's begin / end modes run and the code after
+// the event is unchanged. Without the movie the source event path applies.
+#include "route_movie.h"
+#define R329_ROUTE_MOVIES 1
+#else
+#define R329_ROUTE_MOVIES 0
+#endif
 static void R329EventS00();
 extern "C" void Evt_R329S00_Func(Event* e);
 
@@ -56,6 +66,9 @@ void R329Init()
     EvtMgr.SetFunc("evt_r329s00_func", (void*) Evt_R329S00_Func);
     EvtMgr.SetFunc("evt_r329s99_func", (void*) Evt_R329S00_Func);
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
+#if R329_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x32900))
+#endif
         EvtMgr.EvtReadAram("event/evd/r329s00.evd", 3, 0, 0, 0);
         pG->Status_flg[3] |= 0x04000000;
         if (DebugTrg(1) == 0) {
@@ -96,6 +109,11 @@ static void R329EventS00()
         SceEventStart(0);
         pG->System_flg |= 0x400;
         SceSleep(1);
+#if R329_ROUTE_MOVIES
+        if (re4dc_movie_available(0x32900)) {
+            RouteMoviePlay(0x32900, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R329S00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r329s00.evd", 3, 0);
         FadeSetW(0x80000002, 30, 0, 0);
         {

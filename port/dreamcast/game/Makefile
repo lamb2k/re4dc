@@ -351,6 +351,13 @@ $(OBJDIR)/platform/ps2_enemy_ch23.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH23=1 -
 $(OBJDIR)/platform/ps2_enemy_ch23.o: $(PS2_ENEMY_CH23_DIR)/ps2_enemy_ch23_data.inc
 endif
 endif
+# FOG_OFF_CLEAR=1 (castle lane 2026-10-15, default 0: no effect): while the source fog is off, load an all-clear PVR
+# fog table once (native_static.cpp re4dc_fog_frame), so table-fog actor packets are not drawn with a stale or start-up
+# table (warp into a fog-off castle room: Leon drawn flat grey). Render-only.
+FOG_OFF_CLEAR ?= 0
+ifneq ($(FOG_OFF_CLEAR),0)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_FOG_OFF_CLEAR=1
+endif
 # ROUTE_CH3=1 (stage 3 / GC Disc 2 first pass, default 0: no effect; needs ROUTE_CH21=1 ROUTE_OVL=1): the island
 # stage modules st3_0 (module 76: r300..r30c, r30e), st3_1 (87: r30d, r30f, r310..r312), st3_2 (88: r315..r31d) and
 # st3_3 (101: r320..r333) are linked resident, as st2_0 for ROUTE_CH23 (a stage REL stays linked across the rooms of
@@ -380,7 +387,10 @@ $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 # r300's s00 (the island landing) is presented by its PS2 movie (src/st3/r300.cpp, ROUTE_MOVIES).
 $(OBJDIR)/mod/st3_0/src/st3/r300.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
-ROUTE_MOVIE_GAME_CH3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o
+# r316s00 / r329s00 (Ashley taken / the reunion) likewise (st3 lane 2026-10-15: their GC evds are not on disc 2).
+$(OBJDIR)/mod/st3_2/src/st3/r316.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r329.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+ROUTE_MOVIE_GAME_CH3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o $(OBJDIR)/mod/st3_2/src/st3/r316.o $(OBJDIR)/mod/st3_3/src/st3/r329.o
 # PS2_ENEMY_ST3=<mask> (stage 3 lane, default 0: no effect; changes gameplay by design, PS2 USA = source of truth):
 # the PS2 room-code enemy gates of the island. Bit 0: r30f (setem < 6, the 0xF8 send < 7). Bit 1: r301 (the PS2
 # wave tasks: sends while < 9 / < 8 alive, room-save chaining, far deletes to 7 / 4). Bit 3: clamp the gates to cap 6. Bit 2: r327 (the PS2 camp: first table, late task, appear
