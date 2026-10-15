@@ -78,8 +78,8 @@ void re4dc_pace_set_mode(int mode, const char* why);
 
 // POC101 layers' own run-time switches (declared outside the unnamed namespace: C linkage, the missing-stub trap)
 #if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
-#if defined(RE4DC_POC_HAS_OCC) && RE4DC_POC_HAS_OCC
-extern "C" void re4dc_occluder_cull_set(unsigned on);   // native_static.cpp OCCLUDER_CULL (lane t2exact)
+#if defined(RE4DC_POC_HAS_SGSEL) && RE4DC_POC_HAS_SGSEL
+extern "C" void re4dc_sg_select_lean_set(unsigned on);  // lane t2exact SG_SELECT_LEAN
 #endif
 #if defined(RE4DC_POC_HAS_LEON) && RE4DC_POC_HAS_LEON
 extern "C" void re4dc_leon_lod_set(unsigned level);     // lane leonlod LEON_LOD (0 = as shipped)
@@ -87,8 +87,8 @@ extern "C" void re4dc_leon_lod_set(unsigned level);     // lane leonlod LEON_LOD
 #if defined(RE4DC_POC_HAS_GLOD) && RE4DC_POC_HAS_GLOD
 extern "C" void re4dc_ganado_lod_set(unsigned level);   // lane leonlod GANADO_LOD (0 = as shipped)
 #endif
-#if defined(RE4DC_POC_HAS_SKINMOVCA) && RE4DC_POC_HAS_SKINMOVCA
-extern "C" void re4dc_skin_movca_set(unsigned on);      // lane skin-movca SKIN_MOVCA
+#if defined(RE4DC_POC_HAS_SKINZ) && RE4DC_POC_HAS_SKINZ
+extern "C" void re4dc_skin_sh4zam_set(unsigned on);     // lane sh4zam SKIN_SH4ZAM (XMTRX-blend skinning)
 #endif
 #endif
 #ifndef RE4DC_BENCH_AUTO_S
@@ -122,8 +122,8 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",    "/cd/dc/bench2
 // that asks for a layer not built is not run. kind: 0 exact render (no look change), 1 render approximation (look
 // changes: judged on the still sheet), 2 exact logic (logic hash unchanged), 3 an alternative rung of a look layer
 // (its own row and sweep setting, never in ALL ON: the user picks one rung). level: what a setter receives when on.
-#ifndef RE4DC_POC_HAS_OCC
-#define RE4DC_POC_HAS_OCC 0
+#ifndef RE4DC_POC_HAS_SGSEL
+#define RE4DC_POC_HAS_SGSEL 0
 #endif
 #ifndef RE4DC_POC_HAS_WLOD
 #define RE4DC_POC_HAS_WLOD 0      // 1 WORLD_LOD (C1, real), 2 WORLD_LOD_PROBE (stand-in)
@@ -134,17 +134,14 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",    "/cd/dc/bench2
 #ifndef RE4DC_POC_HAS_UIOT
 #define RE4DC_POC_HAS_UIOT 0
 #endif
-#ifndef RE4DC_POC_HAS_COLL
-#define RE4DC_POC_HAS_COLL 0
-#endif
 #ifndef RE4DC_POC_HAS_GLOD
 #define RE4DC_POC_HAS_GLOD 0
 #endif
 #ifndef RE4DC_POC_HAS_FLATLIGHT
 #define RE4DC_POC_HAS_FLATLIGHT 0
 #endif
-#ifndef RE4DC_POC_HAS_SKINMOVCA
-#define RE4DC_POC_HAS_SKINMOVCA 0
+#ifndef RE4DC_POC_HAS_SKINZ
+#define RE4DC_POC_HAS_SKINZ 0
 #endif
 #ifndef RE4DC_POC_LEON_ON
 #define RE4DC_POC_LEON_ON 1       // leonlod level of the LEON SEL row (1 = sel: hair, torso, arms kept)
@@ -164,17 +161,16 @@ struct PocLayer {
     int kind;             // 0 exact render, 1 render approximation, 2 exact logic, 3 alternative rung
 };
 const PocLayer kPocLayer[] = {
-    {0x001, "OCCLUDE", "OCCLUDER_CULL", "SCENERY HIDDEN BEHIND NEAR OCCLUDERS NOT SENT (EXACT)", RE4DC_POC_HAS_OCC, 0},
+    {0x001, "SG LEAN", "SG_SELECT_LEAN", "SCENE GRAPH: LEANER PICK OF WHAT TO DRAW (EXACT)", RE4DC_POC_HAS_SGSEL, 0},
     {0x002, RE4DC_POC_HAS_WLOD == 2 ? "WLODPROBE" : "WORLD LOD", RE4DC_POC_HAS_WLOD == 2 ? "WORLD_LOD_PROBE" : "WORLD_LOD",
      RE4DC_POC_HAS_WLOD == 2 ? "FAR SCENERY: HALF THE FAR PIECES LEFT OUT (STAND-IN)"
                              : "FAR SCENERY: SIMPLER MESHES BEYOND 12 M (PIXEL-ERROR FLOOR)", RE4DC_POC_HAS_WLOD, 1},
     {0x004, "LEON SEL", "LEON_LOD", "LEON ONE RUNG LIGHTER, HAIR/TORSO/ARMS KEPT (LEVEL 1)", RE4DC_POC_HAS_LEON, 1},
     {0x100, "LEON U70", "LEON_LOD", "LEON AT 70 % TRIANGLES, UNIFORM (LEVEL 4; NOT IN ALL ON)", RE4DC_POC_HAS_LEON, 3},
     {0x008, "UI OT", "UI_OT_CACHE", "HUD LIST REBUILT ONLY WHEN IT CHANGES (EXACT)", RE4DC_POC_HAS_UIOT, 0},
-    {0x040, "COLL", "COLL_BROADPHASE_CACHE", "COLLISION: BROAD-PHASE CANDIDATES CACHED (EXACT LOGIC)", RE4DC_POC_HAS_COLL, 2},
     {0x010, "GANADOLOD", "GANADO_LOD", "GANADOS ONE LOD RUNG LIGHTER (APPROXIMATION)", RE4DC_POC_HAS_GLOD, 1},
     {0x020, "FLATLIGHT", "CROWD_FLAT_LIGHT", "CROWD LIGHTING: ONE FLAT LIGHT (APPROXIMATION)", RE4DC_POC_HAS_FLATLIGHT, 1},
-    {0x080, "SKINMOVCA", "SKIN_MOVCA", "SKINNING OUTPUT WRITTEN WITHOUT A READ (EXACT, CACHE)", RE4DC_POC_HAS_SKINMOVCA, 0},
+    {0x080, "SKIN ZAM", "SKIN_SH4ZAM", "SKINNING: BONE BLEND IN XMTRX, SH4ZAM (RENDER ONLY)", RE4DC_POC_HAS_SKINZ, 1},
 };
 constexpr int kPocLayers = (int) (sizeof(kPocLayer) / sizeof(kPocLayer[0]));
 unsigned poc_built()
@@ -209,8 +205,8 @@ unsigned g_poc_row_mask[kAllScenes];   // the mask each scene asked for (pages, 
 void poc_apply(unsigned m)
 {
     (void) m;
-#if RE4DC_POC_HAS_OCC
-    re4dc_occluder_cull_set((m & 0x001u) ? 1u : 0u);
+#if RE4DC_POC_HAS_SGSEL
+    re4dc_sg_select_lean_set((m & 0x001u) ? 1u : 0u);
 #endif
 #if RE4DC_POC_HAS_LEON
     re4dc_leon_lod_set((m & 0x004u) ? RE4DC_POC_LEON_ON : (m & 0x100u) ? RE4DC_POC_LEON_ALT : 0u);
@@ -218,8 +214,8 @@ void poc_apply(unsigned m)
 #if RE4DC_POC_HAS_GLOD
     re4dc_ganado_lod_set((m & 0x010u) ? RE4DC_POC_GLOD_ON : 0u);
 #endif
-#if RE4DC_POC_HAS_SKINMOVCA
-    re4dc_skin_movca_set((m & 0x080u) ? 1u : 0u);
+#if RE4DC_POC_HAS_SKINZ
+    re4dc_skin_sh4zam_set((m & 0x080u) ? 1u : 0u);
 #endif
 }
 #else
