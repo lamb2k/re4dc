@@ -151,6 +151,18 @@ unsigned re4dc_avk_light_rigid_n16s6(const AvkLight*);
 #endif
 void re4dc_log(const char* fmt, ...);
 }
+#if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
+// SKIN_SH4ZAM (game30.mk; platform/sh4zam_skin.c, the SH4ZAM XMTRX API): run-time mask bits 0x02 skin table, 0x04 probe
+// light directions, 0x08 C position pass (0x10: per-run matrix in XMTRX, no table), 0x40 vertex lines by
+// shz_dcache_alloc_line. At file scope (extern "C" names inside the unnamed namespace would not bind).
+extern "C" {
+extern unsigned re4dc_skin_sh4zam_mask;
+void re4dc_shz_skin_table(const float* screen, const float* palette, unsigned entries, float q, float* out);
+void re4dc_shz_probe_dirs(const float* palette, unsigned entries, const float* l, const float* m, float* out);
+unsigned re4dc_shz_pos_skin_u16(const AvkPos* a, const float* screen, const float* palette, float q);
+void re4dc_shz_cache_lines(void* v, unsigned n, std::uint32_t flags);
+}
+#endif
 #else
 #define RE4DC_AVK 0
 #endif
@@ -2095,6 +2107,19 @@ const float* skin_light_dirs(Frame& f, const Lights& L, unsigned i, float* fallb
 // fold changes (skin_light_dirs' arithmetic for direction 0, directions 1 and 2 zero) instead of the kernels' record
 // walks (avk_build_dirs*) finding unbuilt entries meshlet by meshlet.
 void probe_dirs_all(Frame& f, const Lights& L) {
+#if RE4DC_AVK && defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
+    // SKIN_SH4ZAM 0x04: XMTRX rows = the fold's directions, one FTRV per palette column (sh4zam_skin.c).
+    if (re4dc_skin_sh4zam_mask & 0x04U) {
+#if RE4DC_LEON_LIGHT_FILL
+        const float* fill = L.count == 2 ? &L.dir[1][0] : nullptr;
+#else
+        const float* fill = nullptr;
+#endif
+        re4dc_shz_probe_dirs(f.palette, f.palette_entries, &L.dir[0][0], fill, f.skin_dirs);
+        std::memset(f.dirs_ready, 1, f.palette_entries);
+        return;
+    }
+#endif
     const float l0 = L.dir[0][0], l1 = L.dir[0][1], l2 = L.dir[0][2];
     const float* P = f.palette;
     float* out = f.skin_dirs;
@@ -3075,6 +3100,14 @@ void avk_build_all(Frame& f) {
     f.avk_all = true;
     const unsigned entries = f.palette_entries;
     if (!entries) return;
+#if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
+    // SKIN_SH4ZAM 0x02: the same entries from the SH4ZAM XMTRX API (sh4zam_skin.c re4dc_shz_skin_table).
+    if ((re4dc_skin_sh4zam_mask & 0x02U) && !(reinterpret_cast<std::uintptr_t>(f.skin_positions) & 7U)) {
+        re4dc_shz_skin_table(f.screen, f.palette, entries, f.q, f.skin_positions);
+        std::memset(f.skin_ready, 1, entries);
+        return;
+    }
+#endif
 #if RE4DC_ACTOR_SKIN_FTRV == 1 && defined(__sh__) && !defined(ACTOR_TEST_XMTRX)
     if (!(reinterpret_cast<std::uintptr_t>(f.skin_positions) & 7U)) {
         load_xmtrx(f.screen);
@@ -3263,6 +3296,20 @@ unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k,
                                                    : (s16_uv ? re4dc_avk_pos_rigid_s16 : re4dc_avk_pos_rigid_u16);
 #endif
     const u8* rec = reinterpret_cast<const u8*>(r.r);
+#if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
+    // SKIN_SH4ZAM 0x08: the skinned u16-uv pass in C on SH4ZAM calls (sh4zam_skin.c re4dc_shz_pos_skin_u16); 0x10: each
+    // palette run's matrix built in XMTRX (screen x palette entry x q), no skin table.
+    if (skin && !s16_uv && (re4dc_skin_sh4zam_mask & 0x08U)) {
+        const bool fuse = (re4dc_skin_sh4zam_mask & 0x10U) != 0;
+#if RE4DC_SKIN_SH4ZAM_CHECK
+        if (!f.avk_all) avk_build_all(f);  // =2: the check runs the asm kernel from the table
+#else
+        if (!fuse && !f.avk_all) avk_build_all(f);
+#endif
+        a.rec = rec; a.n = n; a.dst = e.cache.v; a.oc = e.cache.oc;
+        return re4dc_shz_pos_skin_u16(&a, fuse ? f.screen : nullptr, f.palette, f.q);
+    }
+#endif
     if (skin && !f.avk_all) avk_build_all(f);
     a.rec = rec; a.n = n; a.dst = e.cache.v; a.oc = e.cache.oc;
     // A stop is not reached (every entry is built); if one were, the C path would finish the rest.
@@ -3572,6 +3619,15 @@ void pass_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bo
     all = ~0U; any = 0;
     alignas(8) float temp[16];
     unsigned i = 0;
+#if RE4DC_AVK && defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
+    // SKIN_SH4ZAM 0x40: the meshlet's vertex lines allocated without a RAM fill (32-byte aligned P1 RAM only), the
+    // words prime() wrote put back; passes 1 and 2 write every other word before anything reads it.
+    if ((re4dc_skin_sh4zam_mask & 0x40U) && n && n <= kMaxVertices) {
+        const std::uintptr_t va = reinterpret_cast<std::uintptr_t>(e.cache.v);
+        if (!(va & 31U) && (va >> 24) == 0x8cU && ((va + n * 32U - 1U) >> 24) == 0x8cU)
+            re4dc_shz_cache_lines(e.cache.v, n, PVR_CMD_VERTEX);
+    }
+#endif
 #if RE4DC_AVK
 #if RE4DC_AVK == 2
     if (!avk_ref) {

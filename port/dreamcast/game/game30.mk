@@ -3216,6 +3216,22 @@ endif
 GAME_SH4ZAM ?= 0
 GAME_SH4ZAM_RENDER_ONLY ?= 0
 SH4ZAM_SELFTEST ?= 0
+# GAME_SH4ZAM_LOGIC=1 (lane sh4zam-direct 2026-10-15; GAMEPLAY APPROXIMATION, default 0 = nothing changes; the user
+#   decides it under the approximation rule): the gameplay-maths arm on top of the render-only candidate. It is the
+#   global rebinding below (every PS* caller on the SH4ZAM bodies: Bruceleeto's MTXConcat = shz_xmtrx_load_cols_4x3 +
+#   shz_xmtrx_transform_vec4, re4dc_sincosf = shz_sincosf with the big-argument path kept, FIPR / FSRRA vector maths)
+#   plus the logic loops that transform several vectors by one matrix with XMTRX loaded once
+#   (include/re4dc_xm.h RE4DC_XM_*: shz_xmtrx_load_rows_3x4 + shz_xmtrx_transform_point3 / vec3; atari.cpp pieces,
+#   em_sub hit parts, obj09 / BoxWorldCalc corners, VIEW::orientation, ...). Gate: gameplay equivalence (kills,
+#   triggers, doors, waves, room clears, cutscenes), never STRICT. Needs GAME_SH4ZAM=1.
+GAME_SH4ZAM_LOGIC ?= 0
+ifneq ($(GAME_SH4ZAM_LOGIC),0)
+ifeq ($(GAME_SH4ZAM),0)
+$(error GAME_SH4ZAM_LOGIC needs GAME_SH4ZAM=1)
+endif
+override GAME_SH4ZAM_RENDER_ONLY := 0
+GAME_CPPFLAGS += -DRE4DC_SH4ZAM_LOGIC=1
+endif
 ifneq ($(GAME_SH4ZAM),0)
 ifneq ($(SH4_APPROX_ON),0)
 $(error GAME_SH4ZAM and SH4_APPROX_RENDER / SH4_APPROX_LOGIC both rebind the render call sites: pick one)
@@ -3243,11 +3259,61 @@ endif
 ifneq ($(GAME_TRIG_FSCA),0)
 $(error GAME_SH4ZAM (global) and GAME_TRIG_FSCA both replace re4dc_sincosf)
 endif
+# Measured exceptions (hw model, r101 cross + house, 10-15): PSMTXInverse and PSMTXMultVec keep their mtx_sh4.S bodies
+# in the global rebinding; the SH4ZAM compositions (re4dc_zam_MTXInverse: cofactor crosses + FIPR + FSRRA,
+# re4dc_zam_MTXMultVec: three shz_dot8f) took more cycles per call (docs/lanes/sh4zam-upstream.md). The other 10 entry
+# points are rebound. The render-only call sites (phase 1) are unchanged.
 GAME30_LINK_INPUTS := $(patsubst platform/ps_alias_sh4.ld,$(OBJDIR)/ps_alias_sh4_zam.ld,$(GAME30_LINK_INPUTS))
 $(OBJDIR)/ps_alias_sh4_zam.ld: platform/ps_alias_sh4.ld
 	@mkdir -p $(dir $@)
-	sed -e 's/^_PSMTXConcat = .*;$$/_PSMTXConcat = _re4dc_zam_MTXConcat;/' -e 's/^_PSMTXInverse = .*;$$/_PSMTXInverse = _re4dc_zam_MTXInverse;/' -e 's/^_PSMTXRotRad = .*;$$/_PSMTXRotRad = _re4dc_zam_MTXRotRad;/' -e 's/^_PSMTXRotAxisRad = .*;$$/_PSMTXRotAxisRad = _re4dc_zam_MTXRotAxisRad;/' -e 's/^_PSMTXMultVec = .*;$$/_PSMTXMultVec = _re4dc_zam_MTXMultVec;/' -e 's/^_PSMTXMultVecSR = .*;$$/_PSMTXMultVecSR = _re4dc_zam_MTXMultVecSR;/' -e 's/^_PSVECNormalize = .*;$$/_PSVECNormalize = _re4dc_zam_VECNormalize;/' -e 's/^_PSVECSquareMag = .*;$$/_PSVECSquareMag = _re4dc_zam_VECSquareMag;/' -e 's/^_PSVECMag = .*;$$/_PSVECMag = _re4dc_zam_VECMag;/' -e 's/^_PSVECDotProduct = .*;$$/_PSVECDotProduct = _re4dc_zam_VECDotProduct;/' -e 's/^_PSVECSquareDistance = .*;$$/_PSVECSquareDistance = _re4dc_zam_VECSquareDistance;/' -e 's/^_PSVECDistance = .*;$$/_PSVECDistance = _re4dc_zam_VECDistance;/' $< > $@
-	test $$(grep -c '= _re4dc_zam_' $@) = 12
+	sed -e 's/^_PSMTXConcat = .*;$$/_PSMTXConcat = _re4dc_zam_MTXConcat;/' -e 's/^_PSMTXRotRad = .*;$$/_PSMTXRotRad = _re4dc_zam_MTXRotRad;/' -e 's/^_PSMTXRotAxisRad = .*;$$/_PSMTXRotAxisRad = _re4dc_zam_MTXRotAxisRad;/' -e 's/^_PSMTXMultVecSR = .*;$$/_PSMTXMultVecSR = _re4dc_zam_MTXMultVecSR;/' -e 's/^_PSVECNormalize = .*;$$/_PSVECNormalize = _re4dc_zam_VECNormalize;/' -e 's/^_PSVECSquareMag = .*;$$/_PSVECSquareMag = _re4dc_zam_VECSquareMag;/' -e 's/^_PSVECMag = .*;$$/_PSVECMag = _re4dc_zam_VECMag;/' -e 's/^_PSVECDotProduct = .*;$$/_PSVECDotProduct = _re4dc_zam_VECDotProduct;/' -e 's/^_PSVECSquareDistance = .*;$$/_PSVECSquareDistance = _re4dc_zam_VECSquareDistance;/' -e 's/^_PSVECDistance = .*;$$/_PSVECDistance = _re4dc_zam_VECDistance;/' $< > $@
+	test $$(grep -c '= _re4dc_zam_' $@) = 10
 $(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 -Ithird_party/sh4zam/include
 endif
+endif
+
+# SKIN_SH4ZAM=1 (lane sh4zam-direct 2026-10-15, step "adopt SH4ZAM for skinning"; render only; default 0 = not built,
+#   the previous image). The actor skinning chain on the SH4ZAM XMTRX API (platform/sh4zam_skin.c): palette bones and
+#   groups (shz_xmtrx_init_zero + shz_xmtrx_blend), the skin table, probe light directions, a C position pass on
+#   shz_xmtrx_transform_vec4, the per-run matrix built in XMTRX, the GameCube weight palette and the vertex cache lines
+#   by shz_dcache_alloc_line. One image carries the SH4ZAM and the previous paths; the run-time mask
+#   re4dc_skin_sh4zam_set(mask) picks each stage (bits in sh4zam_skin.c). SKIN_SH4ZAM_BOOT = the mask at boot (a .data
+#   word: arms that differ only in it share one code layout). Not bit-exact where FTRV / FMAC replace scalar sums:
+#   gate = STRICT (logic untouched) + a PACE_MODE=off still sheet. Needs ACTOR_VTX_KERNEL (the hooks sit in its paths).
+SKIN_SH4ZAM ?= 0
+SKIN_SH4ZAM_BOOT ?= 0
+ifneq ($(SKIN_SH4ZAM),0)
+ifeq ($(filter-out 0,$(ACTOR_VTX_KERNEL)),)
+$(error SKIN_SH4ZAM needs ACTOR_VTX_KERNEL)
+endif
+ifneq ($(filter-out 1 2,$(SKIN_SH4ZAM)),)
+$(error SKIN_SH4ZAM must be 0, 1 or 2)
+endif
+# =2 (check build, Flycast): each SH4ZAM stage that runs is compared with the previous path ("SKZCHK" log lines).
+SKIN_SH4ZAM_CHECK := $(if $(filter 2,$(SKIN_SH4ZAM)),1,0)
+GAME_CPPFLAGS += -DRE4DC_SKIN_SH4ZAM=1
+PLATFORM_CPPFLAGS += -DRE4DC_SKIN_SH4ZAM=1 -DRE4DC_SKIN_SH4ZAM_CHECK=$(SKIN_SH4ZAM_CHECK)
+PLATFORM_OBJS += $(OBJDIR)/platform/sh4zam_skin.o
+$(OBJDIR)/platform/sh4zam_skin.o: platform/sh4zam_skin.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 -Ithird_party/sh4zam/include -DRE4DC_SKIN_SH4ZAM_BOOT=$(SKIN_SH4ZAM_BOOT) -DRE4DC_SKIN_SH4ZAM_CHECK=$(SKIN_SH4ZAM_CHECK) -MMD -MP -c $< -o $@
+endif
+
+# GAME_SHZ_MEMSET=1 (lane sh4zam-direct 2026-10-15; EXACT, render + logic; default 0 = not built, the previous image).
+#   memset on SH4ZAM's shz_memset8 (one FMOV.D store per 8 bytes; newlib's loop stores 4 bytes at a time): a link wrap
+#   (-Wl,--wrap=memset) sends every memset of 64 bytes or more (SHZ_MEMSET_MIN) through platform/shz_memset.c, which
+#   aligns the head with byte stores and fills the body with shz_memset8 (third_party/sh4zam/source/sh4/shz_mem_sh4.s,
+#   the unmodified upstream file at the pin). Byte-identical results, so STRICT must stay identical. Measured first:
+#   memset is 0.85 hw ms at the r101 cross (L_store_long_loop), led by the value-initialised world MeshDraw (~106 KB a
+#   frame) and the actor-path clears (docs/lanes/sh4zam-direct.md "memset").
+GAME_SHZ_MEMSET ?= 0
+ifneq ($(GAME_SHZ_MEMSET),0)
+PLATFORM_OBJS += $(OBJDIR)/platform/shz_memset.o $(OBJDIR)/platform/shz_mem_sh4.o
+GAME_LDFLAGS += -Wl,--wrap=memset
+$(OBJDIR)/platform/shz_memset.o: platform/shz_memset.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -fno-tree-loop-distribute-patterns -std=gnu11 -Ithird_party/sh4zam/include -MMD -MP -c $< -o $@
+$(OBJDIR)/platform/shz_mem_sh4.o: third_party/sh4zam/source/sh4/shz_mem_sh4.s
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) -c $< -o $@
 endif
