@@ -54,6 +54,15 @@ static void em3b_R1_StopCart_Damage(cEm3b* em);
 static void em3b_R1_Cart_Lost(cEm3b* em);
 static void subem3bRunDown();
 
+#if defined(RE4DC_TRUCK_DIAG) && RE4DC_TRUCK_DIAG
+// Diagnostic only: spin about half a second (interrupts and the log stay live) so a report reaches the host log.
+static void re4dc_truck_diag_hold()
+{
+    for (volatile u32 i = 0; i < 20000000u; i = i + 1) {
+    }
+}
+#endif
+
 #define ARC(no) PL_ARC_PTR(em->subArc, no)
 
 // Scalar-reference store: the following pPL/pSUB loads stay below it (they are reloaded after it).
@@ -882,6 +891,11 @@ void em3bRunDownCkTruck(cEm3b* em)
 
             p = em->getPartsPtr(parts[i]);
             if (em3bDistXZ(p, &pSUB->pos) < 6250000.0f) {
+#if defined(RE4DC_TRUCK_DIAG) && RE4DC_TRUCK_DIAG
+                OSReport("TRUCK runover partner f=%u part=%d subArc=%p\n", (unsigned) pG->Frame_cnt, parts[i],
+                         (void*) em->subArc);
+                re4dc_truck_diag_hold();
+#endif
                 U16Set(pG->ashley_life, zero);
                 // reference store: pSUB and rot.y are re-read for LIMIT_ANGLE (a plain store is forwarded)
                 FSet(pSUB->ang.y, pSUB->ang.y + Muku(&pSUB->pos, &p->world, pSUB->ang.y, PI));
@@ -992,6 +1006,16 @@ static void subem3bRunDown()
     int st = sub->r_no_2;
     PlArc* arc = ((cEm*) sub->dmgType)->subArc;
 
+#if defined(RE4DC_TRUCK_DIAG) && RE4DC_TRUCK_DIAG
+    // Read-only: the partner run-over (chapter 2-3 r200 reboot lead). Held briefly so the line reaches the
+    // host log before anything that follows can reset the guest.
+    if (st == 0) {
+        OSReport("TRUCK subRunDown f=%u st=%d truck=%p arc=%p mot=%p ashley_life=%d\n", (unsigned) pG->Frame_cnt, st,
+                 (void*) sub->dmgType, (void*) arc, arc ? (void*) PL_ARC_PTR(arc, 0xF) : (void*) 0,
+                 (int) (s16) pG->ashley_life);
+        re4dc_truck_diag_hold();
+    }
+#endif
     sub->subArc = arc;
     switch (st) {
     case 0:

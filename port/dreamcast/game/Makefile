@@ -282,6 +282,29 @@ $(error TRUCK_DIAG=1 needs ROUTE_CH23=1 DBG_WARP=1)
 endif
 $(OBJDIR)/mod/em3b/src/em3b/em3b.o: GAME_CPPFLAGS += -DRE4DC_TRUCK_DIAG=1
 endif
+# SUB_EM_FUNC=1: SetSubDamage stores Ashley's routine-4 handler explicitly (the decomp's PowerPC r4 pin in
+# cSubChar::setEmFunc is dropped off PowerPC, so the handler was an uninitialised local: the guest rebooted when the
+# r200 truck ran Ashley over, and any other SetSubDamage on Ashley - em3c, boats - calls garbage). Default 0 keeps
+# the image identical.
+SUB_EM_FUNC ?= 0
+ifeq ($(filter $(SUB_EM_FUNC),0 1),)
+$(error SUB_EM_FUNC must be 0 or 1)
+endif
+ifeq ($(SUB_EM_FUNC),1)
+$(OBJDIR)/src/game/pl_sub.o: GAME_CPPFLAGS += -DRE4DC_SUB_EM_FUNC=1
+endif
+# MOVIE_POLL_SETTLE=1: a route movie's first audio polls tolerate KOS snd_stream_poll's -1 for a stale channel
+# position (the AICA has not restarted the stream's channel yet, so it still reports the previous voice's offset,
+# beyond the stream buffer) for up to 200 ms after snd_stream_start, instead of ending the movie (terminal 3, no
+# picture). r11f s02/s10 failed this way whenever a game voice had just played on that channel ("chan0(0).pos =
+# 21589"); r11f's movie guard then blocks progression. Default 0 keeps the image identical.
+MOVIE_POLL_SETTLE ?= 0
+ifeq ($(filter $(MOVIE_POLL_SETTLE),0 1),)
+$(error MOVIE_POLL_SETTLE must be 0 or 1)
+endif
+ifeq ($(MOVIE_POLL_SETTLE),1)
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_POLL_SETTLE=1
+endif
 ifneq ($(ROUTE_CH23),0)
 ifneq ($(ROUTE_CH23)$(ROUTE_CH21)$(ROUTE_OVL),111)
 $(error ROUTE_CH23 must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1)
@@ -383,10 +406,15 @@ endif
 # (module 83: r211..r219, lint clean) and em1f (module 109: the St4 Ganados of r406/r40a/r40b/r40d/r410; its one
 # value-init trap fixed by assets.sh --fix) so one more St2 (r219) and St4 (r40a) room can be entered with their
 # source script and enemies. A separate knob: WORLD_STAGE_MODULES=1 images stay as they were.
+# The route recipe (ROUTE_CH21=1) excludes WORLD_STAGE_MODULES=1 (pl11 is a CH21 overlay there); with ROUTE_CH23=1
+# (st2_0 linked as the chapter 2-3 stage module) WORLD_ROOM_MODULES=1 links st2_2 / em1f on top of the route set
+# without WORLD_STAGE_MODULES (no st4_0, no resident pl11), so the castle rooms r211..r219 load in a route image.
 WORLD_ROOM_MODULES ?= 0
 ifneq ($(WORLD_ROOM_MODULES),0)
 ifneq ($(WORLD_ROOM_MODULES)$(WORLD_STAGE_MODULES),11)
-$(error WORLD_ROOM_MODULES must be 0 or 1, and 1 needs WORLD_STAGE_MODULES=1)
+ifneq ($(WORLD_ROOM_MODULES)$(WORLD_STAGE_MODULES)$(ROUTE_CH23),101)
+$(error WORLD_ROOM_MODULES must be 0 or 1, and 1 needs WORLD_STAGE_MODULES=1 or ROUTE_CH23=1)
+endif
 endif
 MODULES += st2_2 em1f
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_ROOM_MODULES=1

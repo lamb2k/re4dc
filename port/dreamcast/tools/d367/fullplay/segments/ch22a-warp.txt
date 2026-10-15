@@ -1,0 +1,23 @@
+name ch22-s1a-r117-r118-r112
+# chapter 2-2 start state (Ashley found + following), r117 window door 0b -> r118 door 3 -> r112
+room 0x117
+pos 9800 -1313 7645
+ang 1.5708
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+dump
+goto 60 10900 -1313 7645 1.5708 sub
+act 120 a 4
+act 200 a 4
+act 280 a 4
+act 360 a 4
+entry 2
+goto 240 -45700 -9 -13265 sub
+act 300 a 4
+act 380 a 4
+act 460 a 4
+act 540 a 4
+entry 3
+act 400 fwd 12

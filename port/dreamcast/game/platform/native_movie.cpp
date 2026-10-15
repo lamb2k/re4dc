@@ -346,7 +346,22 @@ void* audio(snd_stream_hnd_t,int requested,int* received){
     if(take)m.last_real_sample=m.samples+take/4;
     m.samples+=bytes/4;*received=requested;return m.callback;
 }
+#if defined(RE4DC_MOVIE_POLL_SETTLE) && RE4DC_MOVIE_POLL_SETTLE
+// MOVIE_POLL_SETTLE (Makefile): right after snd_stream_start the AICA may not have restarted the stream's channel,
+// so snd_stream_poll reads the previous voice's play offset (beyond the stream buffer) and returns -1. That is not
+// a stream failure: for 200 ms after start it is a no-refill pass (the ring was primed before the start).
+int poll_audio(){
+    const int r=snd_stream_poll(m.stream);
+    if(r==-1 && m.started && timer_us_gettime64()-m.start<200000ULL){
+        static unsigned long long logged_start;
+        if(logged_start!=m.start){logged_start=m.start;re4dc_log("route movie audio settle: id=%05x stale channel position after start\n",m.id);}
+        return 0;
+    }
+    return r;
+}
+#else
 int poll_audio(){return snd_stream_poll(m.stream);}
+#endif
 // Sequential transport through the shared ReaderGuard: 32 KiB aligned chunks,
 // the header is sector padded so every full chunk stays aligned.
 bool transport(void* destination,unsigned bytes){
