@@ -150,8 +150,6 @@ u32 g_tick;
 // reduced ticks dropped by a late damage / death (late), and wake-ups (eligible -> ineligible transitions).
 struct FhStats {
     u32 ticks, live, elig, red, late, wakes, maxLive, maxElig;
-    u32 near, thr, view, thrOnly, rtn, rtnMask[4];   // FAR_HALF_LOG reasons (sums), the last refused routine r_no_0/1
-    u32 fogged;                                        // in the frustum but beyond the draw range
 } g_fh;
 #endif
 
@@ -244,18 +242,6 @@ Entry* find(cEm* e)
 }
 
 #if RE4DC_FAR_HALF
-// FAR_HALF: on screen = inside the last view frustum (inflated as the cap's test) and nearer than the draw range. The
-// draw range is the build's FOG_FAR (RE4DC_FAR_HALF_DRAW_MM, millimetre-scale source units; 0 = none): the Dreamcast fog
-// table reaches 100 % there and actors and scenery are culled at it, so an in-frustum Ganado beyond it is not on screen.
-bool onScreen(const cEm* e, f32 d2)
-{
-#if defined(RE4DC_FAR_HALF_DRAW_MM) && RE4DC_FAR_HALF_DRAW_MM > 0
-    constexpr f32 kDraw = (f32) RE4DC_FAR_HALF_DRAW_MM + kBodyR + kViewR;
-    if (d2 > kDraw * kDraw) return false;
-#endif
-    return inView(e);
-}
-
 // FAR_HALF: may this tick reduce anything at all (same pauses as roomOn, plus the swapped sub screen lists).
 bool farHalfOn()
 {
@@ -274,13 +260,9 @@ void logFarHalf()
 #if RE4DC_FAR_HALF_LOG
     if (g_fh.ticks < RE4DC_FAR_HALF_LOG) return;
     const unsigned t = g_fh.ticks;
-    re4dc_log("FH t=%u rm=%x n=%u mode=%u live=%u/%u elig=%u/%u red=%u late=%u wake=%u near=%u view=%u thr=%u "
-              "thronly=%u fog=%u rtn=%x mask=%08x,%08x,%08x,%08x\n", (unsigned) pG->Frame_cnt,
+    re4dc_log("FH t=%u rm=%x n=%u mode=%u live=%u/%u elig=%u/%u red=%u late=%u wake=%u\n", (unsigned) pG->Frame_cnt,
               ((unsigned) pG->stage_no << 8) | pG->room_no, t, (unsigned) RE4DC_FAR_HALF, g_fh.live * 10 / t,
-              g_fh.maxLive, g_fh.elig * 10 / t, g_fh.maxElig, g_fh.red, g_fh.late, g_fh.wakes, g_fh.near * 10 / t,
-              g_fh.view * 10 / t, g_fh.thr * 10 / t, g_fh.thrOnly * 10 / t, g_fh.fogged * 10 / t, (unsigned) g_fh.rtn,
-              (unsigned) g_fh.rtnMask[0],
-              (unsigned) g_fh.rtnMask[1], (unsigned) g_fh.rtnMask[2], (unsigned) g_fh.rtnMask[3]);
+              g_fh.maxLive, g_fh.elig * 10 / t, g_fh.maxElig, g_fh.red, g_fh.late, g_fh.wakes);
     g_fh = FhStats();
 #endif
 }
@@ -374,18 +356,8 @@ extern "C" void re4dc_act_cap_select(void)
             bool f = false;
             if (fon && !x.parked) {
                 const f32 dx = pPL->pos.x - e->pos.x, dz = pPL->pos.z - e->pos.z;
-                const f32 d2 = dx * dx + dz * dz;
-                f = d2 > kFh2 && !threat(e) && e->hp > 0 && !e->dmg.m_Flag && pPL->pLockEm != e && !onScreen(e, d2);
-#if RE4DC_FAR_HALF_LOG
-                // census of the reasons (each counted on its own) and the routines the whitelist refused
-                const bool nr = d2 <= kFh2, th = threat(e), vw = onScreen(e, d2);
-                g_fh.near += nr; g_fh.thr += th; g_fh.view += vw; g_fh.fogged += inView(e) && !vw;
-                if (th && !nr && !vw) {   // far and unseen, refused only for its routine
-                    g_fh.thrOnly++;
-                    g_fh.rtn = ((u32) e->r_no_0 << 8) | e->r_no_1;
-                    if (e->r_no_0 == 1 && e->r_no_1 < 128) g_fh.rtnMask[e->r_no_1 >> 5] |= 1u << (e->r_no_1 & 31);
-                }
-#endif
+                f = dx * dx + dz * dz > kFh2 && !threat(e) && e->hp > 0 && !e->dmg.m_Flag && pPL->pLockEm != e &&
+                    !inView(e);
             }
             if (f) {
                 x.phase ^= 1;
