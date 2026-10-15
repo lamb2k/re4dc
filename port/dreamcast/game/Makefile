@@ -1014,8 +1014,10 @@ $(KOSFIX)/cdrom.c: $(KOS_BASE)/kernel/arch/dreamcast/hardware/cdrom.c $(KOS_PATC
 	cp $< $(KOSFIX)/p-cd/kernel/arch/dreamcast/hardware/
 	patch --fuzz=0 -s -p1 -d $(KOSFIX)/p-cd < $(KOS_PATCHES)/kos-804b319-cdrom-hang-fixes.patch
 	cp $(KOSFIX)/p-cd/kernel/arch/dreamcast/hardware/cdrom.c $@
+# -fmacro-prefix-map: cdrom.c's __FILE__ (assert / dbglog) names kosfix/cdrom.c, not $(OBJDIR): the image must not
+# depend on the build label or directory (build-public.sh and fp_twin.sh rebuild the release image elsewhere).
 $(KOSFIX)/%.o: $(KOSFIX)/%.c
-	kos-cc $(KOS_CFLAGS) -O2 -MMD -MP -c $< -o $@
+	kos-cc $(KOS_CFLAGS) -O2 -fmacro-prefix-map=$(KOSFIX)/=kosfix/ -MMD -MP -c $< -o $@
 endif
 ifeq ($(DISC_COMPAT),1)
 $(OBJDIR)/platform/gdrom_mount.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_COMPAT=1

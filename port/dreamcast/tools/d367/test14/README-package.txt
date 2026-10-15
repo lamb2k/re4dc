@@ -1,33 +1,25 @@
-RE4 Dreamcast test 13, source SHA_PLACEHOLDER (2026 10 15)
+RE4 Dreamcast test 14, source SHA_PLACEHOLDER (2026 10 15)
 
 See Known Issues: https://github.com/lamb2k/re4dc/blob/dreamcast-port/port/dreamcast/docs/KNOWN_ISSUES.md
 
 Extract the gdemu folder and use its four disc files with your usual GDEMU setup.
 Flycast can open gdemu/disc.gdi directly (if menu or popup text looks broken
-in Flycast, use its per-pixel renderer setting). This build follows test 12.2
-and plays to the end of chapter two, part one.
+in Flycast, use its per-pixel renderer setting). This build follows test 13
+and plays to the end of chapter two, part one. Its content is the same as
+test 13; test 14 makes the game read the disc less and do less work per frame.
 
-New in test 13:
-* Enemies in chapter 1 follow the PS2 version's rules in every room: which
-  villagers are there at the start, when more arrive, and the extra group in
-  the village square. At most 6 villagers are active at once in any room; the
-  others wait and join as villagers fall, so every villager still appears and
-  the kills, waves and events are unchanged.
-* Fixed: broken boxes and barrels no longer leave dark debris in the rooms
-  after the village. Breakable boxes and barrels use the GameCube models
-  everywhere; the other room objects from r102 to r11b (doors, gates, racks,
-  the floating islands, the r119 tree and more) use their PS2 models and
-  pictures.
-* Ashley uses her PS2 model (with a resting face; her GameCube facial
-  expressions are not shown yet).
-* The village (r101) does less work each frame: the doors, windows and racks
-  that stand still are drawn together with the village itself until something
-  moves them, and a few other parts of the frame are quicker.
-* r103 after the village and r100 after coming back from the village keep
-  their textures in graphics memory: textures are loaded when the room starts
-  instead of during play, so there are fewer disc reads and fewer missing
-  effect pictures right after the door.
-* r107 hides the scenery groups the PS2 version hides in each area.
+New in test 14:
+* The village (r101) keeps all of its textures in graphics memory: they are
+  loaded when the room starts, and the radio call no longer makes the
+  on-screen display reload its pictures from the disc afterwards.
+* The farm after the village (r103) reads the disc far less during play:
+  the villagers' animations stay in memory instead of being read again, and
+  the room's textures are loaded when it starts.
+* Disc reads finish more safely on the console: a read now waits until the
+  drive's transfer has really finished, and two drive hangs in the disc
+  library are fixed. This may help the "stops while loading" reports.
+* A few parts of each frame are quicker (fewer repeated settings and
+  clears); the picture is the same.
 
 Known issue from test 12, unchanged: the cutscene at the r100 cliff (after the
 first house) is skipped; the game goes on normally after it.
