@@ -496,6 +496,13 @@ PRIM_CAP_R10B ?= 0
 ifneq ($(PRIM_CAP_R10B),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R10B=$(PRIM_CAP_R10B)
 endif
+# PRIM_CAP_R202=<bytes> (castle lane 2026-10-15, default 0: no effect): the same cap for r202 (room value 425,984 B),
+# so em11 (1,323,136 B) fits heap 4 next to the room archive and the PS2 world (short 73,248 B on cx-r202-s31f-01).
+# Value to be set from PRIM_WATER with r202's Ganados on screen.
+PRIM_CAP_R202 ?= 0
+ifneq ($(PRIM_CAP_R202),0)
+$(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R202=$(PRIM_CAP_R202)
+endif
 # PRIM_WATER=1 (test only): per-room peak primitive-buffer bytes per frame ("prim water:" lines, trans.cpp).
 ifeq ($(PRIM_WATER),1)
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PRIM_WATER=1

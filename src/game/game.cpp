@@ -573,6 +573,13 @@ void gameRoomInit()
         pG->nPrim = RE4DC_PRIM_CAP_R10B;
     }
 #endif
+#if defined(RE4DC_PRIM_CAP_R202) && RE4DC_PRIM_CAP_R202
+    // PRIM_CAP_R202 (castle lane 2026-10-15, heap 4 for r202's Ganados): room value 425,984 B; with the room archive,
+    // its PS2 world and parts, em11's 1,323,136 B body found 1,249,888 B free (cx-r202-s31f-01, Flycast).
+    if (pG->room_id == 0x202 && pG->nPrim > RE4DC_PRIM_CAP_R202) {
+        pG->nPrim = RE4DC_PRIM_CAP_R202;
+    }
+#endif
     primInit();
     {
         Vec pos;
