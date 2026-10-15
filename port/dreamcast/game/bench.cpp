@@ -78,8 +78,17 @@ void re4dc_pace_set_mode(int mode, const char* why);
 
 // POC101 layers' own run-time switches (declared outside the unnamed namespace: C linkage, the missing-stub trap)
 #if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
-#if defined(RE4DC_POC_HAS_PVS) && RE4DC_POC_HAS_PVS
-extern "C" void re4dc_ps2_pvs_set(unsigned on);   // native_static.cpp PS2_PVS (lane t2exact)
+#if defined(RE4DC_POC_HAS_OCC) && RE4DC_POC_HAS_OCC
+extern "C" void re4dc_occluder_cull_set(unsigned on);   // native_static.cpp OCCLUDER_CULL (lane t2exact)
+#endif
+#if defined(RE4DC_POC_HAS_LEON) && RE4DC_POC_HAS_LEON
+extern "C" void re4dc_leon_lod_set(unsigned level);     // lane leonlod LEON_LOD (0 = as shipped)
+#endif
+#if defined(RE4DC_POC_HAS_GLOD) && RE4DC_POC_HAS_GLOD
+extern "C" void re4dc_ganado_lod_set(unsigned level);   // lane leonlod GANADO_LOD (0 = as shipped)
+#endif
+#if defined(RE4DC_POC_HAS_SKINMOVCA) && RE4DC_POC_HAS_SKINMOVCA
+extern "C" void re4dc_skin_movca_set(unsigned on);      // lane skin-movca SKIN_MOVCA
 #endif
 #endif
 #ifndef RE4DC_BENCH_AUTO_S
@@ -100,26 +109,27 @@ namespace {
 // all on only, development still sheets; not on the console disc). Pages 1-3 show one row per live run, page 4 the
 // sweep, page 5 what each layer is.
 constexpr bool kPoc = true;
-constexpr int kScenes = 9;
-constexpr int kAllScenes = 11;
-constexpr int kSweep0 = 9;
+constexpr int kScenes = 12;
+constexpr int kAllScenes = 14;
+constexpr int kSweep0 = 12;
 constexpr int kSweeps = kAllScenes - kSweep0;
-const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",   "/cd/dc/bench2.txt",  "/cd/dc/bench3.txt",
-                                            "/cd/dc/bench4.txt", "/cd/dc/bench5.txt",  "/cd/dc/bench6.txt",
-                                            "/cd/dc/bench7.txt", "/cd/dc/bench8.txt",  "/cd/dc/bench9.txt",
-                                            "/cd/dc/bench10.txt", "/cd/dc/bench11.txt"};
+const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",    "/cd/dc/bench2.txt",  "/cd/dc/bench3.txt",
+                                            "/cd/dc/bench4.txt",  "/cd/dc/bench5.txt",  "/cd/dc/bench6.txt",
+                                            "/cd/dc/bench7.txt",  "/cd/dc/bench8.txt",  "/cd/dc/bench9.txt",
+                                            "/cd/dc/bench10.txt", "/cd/dc/bench11.txt", "/cd/dc/bench12.txt",
+                                            "/cd/dc/bench13.txt", "/cd/dc/bench14.txt"};
 // The layers (bit = the `poc <mask>` bit). built: the layer's knob is in this image (bench.mk RE4DC_POC_HAS_*); a row
 // that asks for a layer not built is not run. kind: 0 exact render (no look change), 1 render approximation (look
-// changes: judged on the still sheet), 2 exact logic (logic hash unchanged), 3 logic approximation (decisions gate pending: warning row only, never
-// in ALL ON). The status text says whether the layer is the lane's real r101 piece or a labelled stand-in.
-#ifndef RE4DC_POC_HAS_PVS
-#define RE4DC_POC_HAS_PVS 0
+// changes: judged on the still sheet), 2 exact logic (logic hash unchanged), 3 an alternative rung of a look layer
+// (its own row and sweep setting, never in ALL ON: the user picks one rung). level: what a setter receives when on.
+#ifndef RE4DC_POC_HAS_OCC
+#define RE4DC_POC_HAS_OCC 0
 #endif
 #ifndef RE4DC_POC_HAS_WLOD
 #define RE4DC_POC_HAS_WLOD 0      // 1 WORLD_LOD (C1, real), 2 WORLD_LOD_PROBE (stand-in)
 #endif
 #ifndef RE4DC_POC_HAS_LEON
-#define RE4DC_POC_HAS_LEON 0      // 1 selective rung (real), 2 the 70 % rung (stand-in)
+#define RE4DC_POC_HAS_LEON 0
 #endif
 #ifndef RE4DC_POC_HAS_UIOT
 #define RE4DC_POC_HAS_UIOT 0
@@ -127,8 +137,8 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",   "/cd/dc/bench2.
 #ifndef RE4DC_POC_HAS_COLL
 #define RE4DC_POC_HAS_COLL 0
 #endif
-#ifndef RE4DC_POC_HAS_FARMESH
-#define RE4DC_POC_HAS_FARMESH 0
+#ifndef RE4DC_POC_HAS_GLOD
+#define RE4DC_POC_HAS_GLOD 0
 #endif
 #ifndef RE4DC_POC_HAS_FLATLIGHT
 #define RE4DC_POC_HAS_FLATLIGHT 0
@@ -136,27 +146,35 @@ const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt",   "/cd/dc/bench2.
 #ifndef RE4DC_POC_HAS_SKINMOVCA
 #define RE4DC_POC_HAS_SKINMOVCA 0
 #endif
+#ifndef RE4DC_POC_LEON_ON
+#define RE4DC_POC_LEON_ON 1       // leonlod level of the LEON SEL row (1 = sel: hair, torso, arms kept)
+#endif
+#ifndef RE4DC_POC_LEON_ALT
+#define RE4DC_POC_LEON_ALT 4      // leonlod level of the LEON U70 row (4 = u70, uniform 70 %)
+#endif
+#ifndef RE4DC_POC_GLOD_ON
+#define RE4DC_POC_GLOD_ON 1
+#endif
 struct PocLayer {
     unsigned bit;
-    const char* tag;      // row / setting name (9 characters at most)
+    const char* tag;      // row / setting name (10 characters at most)
     const char* knob;     // the build knob
-    const char* words;    // what it is, plain words (page 5)
+    const char* words;    // what it is, plain words (last page)
     int built;            // 0 not in this image, else the variant (see the RE4DC_POC_HAS_* notes)
-    int kind;             // 0 exact render, 1 render approximation, 2 exact logic, 3 logic approximation
+    int kind;             // 0 exact render, 1 render approximation, 2 exact logic, 3 alternative rung
 };
 const PocLayer kPocLayer[] = {
-    {0x01, "PVS", "PS2_PVS", "OCCLUSION: HIDDEN SCENERY CELLS NOT SENT (EXACT)", RE4DC_POC_HAS_PVS, 0},
-    {0x02, RE4DC_POC_HAS_WLOD == 2 ? "WLODPROBE" : "WORLD LOD", RE4DC_POC_HAS_WLOD == 2 ? "WORLD_LOD_PROBE" : "WORLD_LOD",
+    {0x001, "OCCLUDE", "OCCLUDER_CULL", "SCENERY HIDDEN BEHIND NEAR OCCLUDERS NOT SENT (EXACT)", RE4DC_POC_HAS_OCC, 0},
+    {0x002, RE4DC_POC_HAS_WLOD == 2 ? "WLODPROBE" : "WORLD LOD", RE4DC_POC_HAS_WLOD == 2 ? "WORLD_LOD_PROBE" : "WORLD_LOD",
      RE4DC_POC_HAS_WLOD == 2 ? "FAR SCENERY: HALF THE FAR PIECES LEFT OUT (STAND-IN)"
                              : "FAR SCENERY: SIMPLER MESHES BEYOND 12 M (PIXEL-ERROR FLOOR)", RE4DC_POC_HAS_WLOD, 1},
-    {0x04, RE4DC_POC_HAS_LEON == 2 ? "LEON 70%" : "LEON RUNG", "LEON_LOD",
-     RE4DC_POC_HAS_LEON == 2 ? "LEON: 70 % RUNG, FEWER TRIANGLES (STAND-IN)"
-                             : "LEON: ONE RUNG LIGHTER, HAIR/TORSO/ARMS KEPT", RE4DC_POC_HAS_LEON, 1},
-    {0x08, "UI OT", "UI_OT_CACHE", "HUD LIST REBUILT ONLY WHEN IT CHANGES (EXACT)", RE4DC_POC_HAS_UIOT, 0},
-    {0x10, "GANADO LOD", "GANADO_LOD", "GANADOS: ONE LOD RUNG LIGHTER (APPROXIMATION)", RE4DC_POC_HAS_FARMESH, 1},
-    {0x20, "FLATLIGHT", "CROWD_FLAT_LIGHT", "CROWD LIGHTING: ONE FLAT LIGHT (APPROXIMATION)", RE4DC_POC_HAS_FLATLIGHT, 1},
-    {0x40, "COLL", "COLL_BROADPHASE_CACHE", "COLLISION: BROAD-PHASE CANDIDATES CACHED (EXACT LOGIC)", RE4DC_POC_HAS_COLL, 2},
-    {0x80, "SKIN MOVCA", "SKIN_MOVCA", "SKINNING OUTPUT WRITTEN WITHOUT A READ (EXACT, CACHE)", RE4DC_POC_HAS_SKINMOVCA, 0},
+    {0x004, "LEON SEL", "LEON_LOD", "LEON ONE RUNG LIGHTER, HAIR/TORSO/ARMS KEPT (LEVEL 1)", RE4DC_POC_HAS_LEON, 1},
+    {0x100, "LEON U70", "LEON_LOD", "LEON AT 70 % TRIANGLES, UNIFORM (LEVEL 4; NOT IN ALL ON)", RE4DC_POC_HAS_LEON, 3},
+    {0x008, "UI OT", "UI_OT_CACHE", "HUD LIST REBUILT ONLY WHEN IT CHANGES (EXACT)", RE4DC_POC_HAS_UIOT, 0},
+    {0x040, "COLL", "COLL_BROADPHASE_CACHE", "COLLISION: BROAD-PHASE CANDIDATES CACHED (EXACT LOGIC)", RE4DC_POC_HAS_COLL, 2},
+    {0x010, "GANADOLOD", "GANADO_LOD", "GANADOS ONE LOD RUNG LIGHTER (APPROXIMATION)", RE4DC_POC_HAS_GLOD, 1},
+    {0x020, "FLATLIGHT", "CROWD_FLAT_LIGHT", "CROWD LIGHTING: ONE FLAT LIGHT (APPROXIMATION)", RE4DC_POC_HAS_FLATLIGHT, 1},
+    {0x080, "SKINMOVCA", "SKIN_MOVCA", "SKINNING OUTPUT WRITTEN WITHOUT A READ (EXACT, CACHE)", RE4DC_POC_HAS_SKINMOVCA, 0},
 };
 constexpr int kPocLayers = (int) (sizeof(kPocLayer) / sizeof(kPocLayer[0]));
 unsigned poc_built()
@@ -166,7 +184,7 @@ unsigned poc_built()
         if (l.built) m |= l.bit;
     return m;
 }
-// ALL ON: every built layer but the logic approximations (they run only as their own warning row)
+// ALL ON: every built layer but the alternative rungs (LEON U70: the user picks one Leon rung)
 unsigned poc_all_on()
 {
     unsigned m = 0;
@@ -174,25 +192,34 @@ unsigned poc_all_on()
         if (l.built && l.kind != 3) m |= l.bit;
     return m;
 }
-unsigned poc_render_on()   // what a frozen sweep can show (render layers)
+unsigned poc_render_on()   // the ALL ON sweep setting (render layers; a frozen sweep cannot show logic)
 {
     unsigned m = 0;
     for (const PocLayer& l : kPocLayer)
         if (l.built && l.kind <= 1) m |= l.bit;
     return m;
 }
-constexpr unsigned kPocAllOn = 0x8000u;   // `poc all`: ALL ON, whatever this image has built
+constexpr unsigned kPocAllOn = 0x8000u;   // `poc 0x8000`: ALL ON, whatever this image has built
 unsigned g_poc_scene;              // the running live scene's mask (its fixture's `poc` line; 0 = all off)
 unsigned g_poc_sweep;              // a sweep row's mask while a sweep setting is applied
 bool g_poc_in_sweep;
 unsigned g_poc_row_mask[kAllScenes];   // the mask each scene asked for (pages, log)
 // Layers with their own run-time switch in the lane's code: set from the mask whenever it changes (the scene's `poc`
-// line, a sweep setting, the sweep end).
+// line, a sweep setting, the sweep end). Layers without one ask re4dc_poc_on(bit) at their decision point.
 void poc_apply(unsigned m)
 {
     (void) m;
-#if RE4DC_POC_HAS_PVS
-    re4dc_ps2_pvs_set((m & 0x01u) ? 1u : 0u);
+#if RE4DC_POC_HAS_OCC
+    re4dc_occluder_cull_set((m & 0x001u) ? 1u : 0u);
+#endif
+#if RE4DC_POC_HAS_LEON
+    re4dc_leon_lod_set((m & 0x004u) ? RE4DC_POC_LEON_ON : (m & 0x100u) ? RE4DC_POC_LEON_ALT : 0u);
+#endif
+#if RE4DC_POC_HAS_GLOD
+    re4dc_ganado_lod_set((m & 0x010u) ? RE4DC_POC_GLOD_ON : 0u);
+#endif
+#if RE4DC_POC_HAS_SKINMOVCA
+    re4dc_skin_movca_set((m & 0x080u) ? 1u : 0u);
 #endif
 }
 #else
@@ -396,7 +423,7 @@ void poc_sweep_rows()
     int n = 0;
     kSweepSet[0][n++] = 0;
     for (int i = 0; i < kPocLayers; ++i)
-        if (kPocLayer[i].built && kPocLayer[i].kind <= 1) kSweepSet[0][n++] = (signed char) (1 + i);
+        if (kPocLayer[i].built && kPocLayer[i].kind != 2) kSweepSet[0][n++] = (signed char) (1 + i);
     kSweepSet[0][n++] = kSetAllOn;
     kSweepSet[0][n] = -1;
     kSweepSet[1][0] = 0; kSweepSet[1][1] = kSetAllOn; kSweepSet[1][2] = -1;
@@ -588,7 +615,7 @@ const char* d1(unsigned v10, char* buf) { snprintf(buf, 12, "%u.%u", v10 / 10, v
 // The scene names the pages show when a scene has not run (its fixture names it when it runs).
 #if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
 const char* const kDefName[kAllScenes] = {"ALL OFF", "ROW 2", "ROW 3", "ROW 4", "ROW 5", "ROW 6", "ROW 7", "ROW 8",
-                                          "ROW 9", "R101 CROSS", "R101 LOOK"};
+                                          "ROW 9", "ROW 10", "ROW 11", "ROW 12", "R101 CROSS", "R101 LOOK"};
 #else
 const char* const kDefName[kAllScenes] = {"R101 CROSS", "R100 HOUSE", "R103 FARM", "R10B DELLAGO", "R209 CASTLE",
                                           "R101 CROSS", "R103 FARM"};
@@ -693,8 +720,7 @@ void preview_note(const Fb& fb, int& y)
 {
     if (!kPoc && !any_preview()) return;
     if (kPoc) {   // POC101: '*' marks a row whose look changes (approximation or stand-in), '!' a logic change
-        fb_text(fb, 14, y, 1, 2, kYellow, "* LOOK CHANGES (APPROXIMATION OR STAND-IN): SEE THE STILL SHEET.  ! LOGIC CHANGE:"); y += 14;
-        fb_text(fb, 14, y, 1, 2, kYellow, "  ITS DECISIONS GATE HAS NOT PASSED, NOT IN ALL ON. PAGE 5 SAYS WHAT EACH ROW IS."); y += 16;
+        fb_text(fb, 14, y, 1, 2, kYellow, "YELLOW ROWS CHANGE THE LOOK (SEE THE STILL SHEET). THE LAST PAGE SAYS WHAT EACH ROW IS."); y += 16;
         return;
     }
     fb_text(fb, 14, y, 1, 2, kYellow, "* PREVIEW (UNRELEASED CASTLE, NOT IN ANY TEST RELEASE): ITS ZEALOTS STILL DRAW THROUGH"); y += 14;
@@ -945,6 +971,7 @@ void draw_sweep(const Fb& fb, int s, int page)
 
 #if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
 // ---------------------------------------------------------------- POC101 pages (one row per live run of the cross)
+constexpr int kPocRowStep = 16;   // 12 rows: 16 px apart (glyphs 14 px) so a page and its code fit above 470
 bool row_ok(int k) { return present(k) && g_scene[k].windows; }
 uint32_t row_color(int k) { return k == 0 ? kGreen : g_scene[k].preview ? kYellow : strchr(scene_name(k), '!') ? kRed : kWhite; }
 // Page 1: how fast each row ran, and its CPU per tick against ALL OFF.
@@ -953,17 +980,17 @@ void draw_results_poc(const Fb& fb)
     char v[9][12], nm[12], line[160], code[420];
     snprintf(line, sizeof(line), "PAGE 1 OF %d: HOW FAST THE R101 CROSS RAN, EACH WAY", g_pages);
     int y = page_head(fb, line);
-    fb_text(fb, 20, y, 2, 2, kCyan, "  ROW        FPS  MIN   CPU  DCPU   GPU SPD RD/S KOS"); y += 18;
+    fb_text(fb, 20, y, 2, 2, kCyan, "   ROW        FPS  MIN   CPU  DCPU   GPU SPD RD/S KOS"); y += 18;
     const Scene& s0 = g_scene[0];
     for (int k = 0; k < kScenes; ++k) {
         const Scene& s = g_scene[k];
         short_name(k, nm);
         if (!present(k)) continue;
-        if (!s.windows) { snprintf(line, sizeof(line), "%d %-9s NOT MEASURED", k + 1, nm); fb_text(fb, 20, y, 2, 2, kRed, line); y += 18; continue; }
+        if (!s.windows) { snprintf(line, sizeof(line), "%2d %-9s NOT MEASURED", k + 1, nm); fb_text(fb, 20, y, 2, 2, kRed, line); y += kPocRowStep; continue; }
         if (k && row_ok(0)) dd1((int) cpu10(s) - (int) cpu10(s0), v[3]); else snprintf(v[3], 12, "-");
-        snprintf(line, sizeof(line), "%d %-9s%5s%5s%6s%6s%6s%4u%5s%4u", k + 1, nm, d1(fps10(s), v[0]), d1(s.min_fps10, v[1]),
+        snprintf(line, sizeof(line), "%2d %-9s%5s%5s%6s%6s%6s%4u%5s%4u", k + 1, nm, d1(fps10(s), v[0]), d1(s.min_fps10, v[1]),
                  d1(cpu10(s), v[2]), v[3], d1(gpu10(s), v[4]), speed_pct(s), d1(reads_ps10(s), v[5]), kos_kb(s));
-        fb_text(fb, 20, y, 2, 2, row_color(k), line); y += 18;
+        fb_text(fb, 20, y, 2, 2, row_color(k), line); y += kPocRowStep;
     }
     y += 4;
     fb_text(fb, 14, y, 1, 2, kGrey, "FPS: DRAWN FRAMES PER SECOND  MIN: WORST SECOND  CPU: GAME CPU MS PER TICK  DCPU: VS ROW 1 (ALL OFF)"); y += 14;
@@ -980,16 +1007,16 @@ void draw_counters_poc(const Fb& fb)
     snprintf(line, sizeof(line), "PAGE 2 OF %d: WHERE THE CPU TIME GOES, EACH WAY", g_pages);
     int y = page_head(fb, line);
     fb_text(fb, 14, y, 1, 2, kGrey, "MS OF CPU PER PICTURE (ONE DRAWN TICK + THE SKIPPED TICKS BEFORE THE NEXT PICTURE)"); y += 16;
-    fb_text(fb, 20, y, 2, 2, kCyan, "  ROW      LOGIC APREP ADRAW WORLD OTHER  WAIT TOTAL"); y += 18;
+    fb_text(fb, 20, y, 2, 2, kCyan, "   ROW      LOGIC APREP ADRAW WORLD OTHER  WAIT TOTAL"); y += 18;
     for (int k = 0; k < kScenes; ++k) {
         const Pmc& m = g_pmc[k];
         if (!present(k)) continue;
         short_name(k, nm);
-        if (!m.periods) { snprintf(line, sizeof(line), "%d %-9s NOT MEASURED", k + 1, nm); fb_text(fb, 20, y, 2, 2, kRed, line); y += 18; continue; }
+        if (!m.periods) { snprintf(line, sizeof(line), "%2d %-9s NOT MEASURED", k + 1, nm); fb_text(fb, 20, y, 2, 2, kRed, line); y += kPocRowStep; continue; }
         for (int p = 0; p < kPh; ++p) d1(pm_ms10(m, p), v[p]);
         d1(pm_ms10_sum(m, 0, kPh - 1), v[6]);
-        snprintf(line, sizeof(line), "%d %-9s%5s%6s%6s%6s%6s%6s%6s", k + 1, nm, v[0], v[1], v[2], v[3], v[4], v[5], v[6]);
-        fb_text(fb, 20, y, 2, 2, row_color(k), line); y += 18;
+        snprintf(line, sizeof(line), "%2d %-9s%5s%6s%6s%6s%6s%6s%6s", k + 1, nm, v[0], v[1], v[2], v[3], v[4], v[5], v[6]);
+        fb_text(fb, 20, y, 2, 2, row_color(k), line); y += kPocRowStep;
     }
     y += 4;
     fb_text(fb, 14, y, 1, 2, kGrey, "LOGIC: THE GAME (AI, ANIMATION, SCRIPTS)  APREP / ADRAW: CHARACTERS PREPARED / SENT TO THE GPU"); y += 14;
@@ -1006,20 +1033,20 @@ void draw_ticks_poc(const Fb& fb)
     snprintf(line, sizeof(line), "PAGE 3 OF %d: TICKS, GEOMETRY AND CACHES, EACH WAY", g_pages);
     int y = page_head(fb, line);
     fb_text(fb, 14, y, 1, 2, kGrey, "PER PICTURE: ONE DRAWN TICK AND THE SKIPPED TICKS (GAME RUNS, NOTHING DRAWN) BEFORE THE NEXT"); y += 16;
-    fb_text(fb, 20, y, 2, 2, kCyan, "  ROW      DRAWN SKIPS  SKIP VERTK  HDRS DST% IST%"); y += 18;
+    fb_text(fb, 20, y, 2, 2, kCyan, "   ROW      DRAWN SKIPS  SKIP VERTK  HDRS DST% IST%"); y += 18;
     for (int k = 0; k < kScenes; ++k) {
         const Pmc& m = g_pmc[k];
         if (!present(k)) continue;
         short_name(k, nm);
-        if (!m.periods) { snprintf(line, sizeof(line), "%d %-9s NOT MEASURED", k + 1, nm); fb_text(fb, 20, y, 2, 2, kRed, line); y += 18; continue; }
+        if (!m.periods) { snprintf(line, sizeof(line), "%2d %-9s NOT MEASURED", k + 1, nm); fb_text(fb, 20, y, 2, 2, kRed, line); y += kPocRowStep; continue; }
         snprintf(v[4], 12, "%u", pm_hdrs(m));
         if (g_pmc_hw) {
             snprintf(v[5], 12, "%u", pm_pct_sum(m, EV_DSTALL, 0, kWork - 1));
             snprintf(v[6], 12, "%u", pm_pct_sum(m, EV_ISTALL, 0, kWork - 1));
         } else { snprintf(v[5], 12, "-"); snprintf(v[6], 12, "-"); }
-        snprintf(line, sizeof(line), "%d %-9s%5s%6s%6s%6s%6s%5s%5s", k + 1, nm, d1(pm_d10(m), v[0]), d1(pm_skips10(m), v[1]),
+        snprintf(line, sizeof(line), "%2d %-9s%5s%6s%6s%6s%6s%5s%5s", k + 1, nm, d1(pm_d10(m), v[0]), d1(pm_skips10(m), v[1]),
                  d1(pm_s10(m), v[2]), d1(pm_verts10(m), v[3]), v[4], v[5], v[6]);
-        fb_text(fb, 20, y, 2, 2, row_color(k), line); y += 18;
+        fb_text(fb, 20, y, 2, 2, row_color(k), line); y += kPocRowStep;
     }
     y += 4;
     fb_text(fb, 14, y, 1, 2, kGrey, "DRAWN: CPU MS OF THE DRAWN TICK  SKIPS: SKIPPED TICKS PER PICTURE  SKIP: CPU MS OF EACH SKIPPED"); y += 14;
@@ -1053,17 +1080,17 @@ void draw_split_poc(const Fb& fb, int page)
     snprintf(line, sizeof(line), "PAGE %d OF %d: DRAWN AND SKIPPED TICKS, EACH WAY", page, g_pages);
     int y = page_head(fb, line);
     fb_text(fb, 14, y, 1, 2, kGrey, "MS OF CPU OF ONE SKIPPED TICK BY PART (IT RUNS THE GAME, BUILDS THE NEXT PICTURE, DRAWS NOTHING)"); y += 16;
-    fb_text(fb, 20, y, 2, 2, kCyan, "  ROW     SLOGIC SAPREP SOTHER SWAIT SWORK DWORK"); y += 18;
+    fb_text(fb, 20, y, 2, 2, kCyan, "   ROW     SLOGIC SAPREP SOTHER SWAIT SWORK DWORK"); y += 18;
     for (int k = 0; k < kScenes; ++k) {
         const Pmc& m = g_pmc[k];
         if (!present(k)) continue;
         short_name(k, nm);
-        if (!m.periods) { snprintf(line, sizeof(line), "%d %-9s NOT MEASURED", k + 1, nm); fb_text(fb, 20, y, 2, 2, kRed, line); y += 18; continue; }
+        if (!m.periods) { snprintf(line, sizeof(line), "%2d %-9s NOT MEASURED", k + 1, nm); fb_text(fb, 20, y, 2, 2, kRed, line); y += kPocRowStep; continue; }
         unsigned sw = 0, dw = 0;
         for (int p = 0; p < kWork; ++p) { sw += pm_sk10(m, p); dw += pm_dk10(m, p); }
-        snprintf(line, sizeof(line), "%d %-9s%6s %6s %6s%6s%6s%6s", k + 1, nm, d1(pm_sk10(m, 0), v[0]), d1(pm_sk10(m, 1), v[1]),
+        snprintf(line, sizeof(line), "%2d %-9s%6s %6s %6s%6s%6s%6s", k + 1, nm, d1(pm_sk10(m, 0), v[0]), d1(pm_sk10(m, 1), v[1]),
                  d1(pm_sk10(m, 4), v[2]), d1(pm_sk10(m, 5), v[3]), d1(sw, v[4]), d1(dw, v[5]));
-        fb_text(fb, 20, y, 2, 2, row_color(k), line); y += 18;
+        fb_text(fb, 20, y, 2, 2, row_color(k), line); y += kPocRowStep;
     }
     y += 4;
     fb_text(fb, 14, y, 1, 2, kGrey, "SWORK / DWORK: ALL PARTS BUT WAIT OF ONE SKIPPED / THE DRAWN TICK (= PAGE 3 SKIP / DRAWN)"); y += 16;
@@ -1075,16 +1102,16 @@ void draw_split_poc(const Fb& fb, int page)
 // Last page: what each layer is, whether this image has it, and the mask each row ran with.
 void draw_layers_poc(const Fb& fb, int page)
 {
-    static const char* const kKind[4] = {"EXACT", "LOOK*", "EXACT", "LOGIC!"};
+    static const char* const kKind[4] = {"EXACT", "LOOK*", "EXACT", "LOOK*ALT"};
     char line[200];
     snprintf(line, sizeof(line), "PAGE %d OF %d: WHAT EACH ROW TURNS ON", page, g_pages);
     int y = page_head(fb, line);
     fb_text(fb, 14, y, 1, 2, kCyan, "LAYER      MASK  KIND    IN THIS DISC  WHAT IT IS"); y += 16;
     for (const PocLayer& l : kPocLayer) {
-        snprintf(line, sizeof(line), "%-10s %02X    %-7s %-13s %s", l.tag, l.bit, kKind[l.kind & 3],
-                 !l.built ? "NO" : (l.bit == 0x02 && l.built == 2) || (l.bit == 0x04 && l.built == 2) ? "YES, STAND-IN" : "YES",
+        snprintf(line, sizeof(line), "%-10s %03X   %-8s %-13s %s", l.tag, l.bit, kKind[l.kind & 3],
+                 !l.built ? "NO" : (l.bit == 0x02 && l.built == 2) ? "YES, STAND-IN" : "YES",
                  l.words);
-        fb_text(fb, 14, y, 1, 2, l.built ? (l.kind == 3 ? kRed : l.kind == 1 ? kYellow : kWhite) : kGrey, line); y += 16;
+        fb_text(fb, 14, y, 1, 2, l.built ? (l.kind == 1 || l.kind == 3 ? kYellow : kWhite) : kGrey, line); y += 16;
     }
     y += 8;
     fb_text(fb, 14, y, 1, 2, kCyan, "ROW  NAME        MASK  LAYERS ON"); y += 16;
