@@ -481,6 +481,33 @@ static void r101_capRelease()
 #else
 #define R101_SEND(no) setEm((no), -1, 1, 1, 1)
 #endif
+#if RE4DC_R101_ALIVE_CAP && defined(RE4DC_R101_CAP_WAVES) && RE4DC_R101_CAP_WAVES
+// R101_CAP_WAVES=1 (lane alivecap 2026-10-15, set by PS2_CH1_ENEMY; default 0): the two reset waves go through the
+// cap too (crowd12's cap left them: they fire below 5 alive and send 5, so up to 9 were alive). A wave Ganado that
+// would pass the cap is queued instead (its wave-1 wrapper stays empty: setNoSuspend checks isAlive). The wave's
+// own emNum += 5 then counts only the ones sent now; each queued one adds its 1 when r101_capRelease sends it, so the
+// kill target (emNum - alive) moves exactly as without the cap.
+#define R101_CAP_WAVES 1
+static int r101WaveQueued;
+static int r101_capWaveSend(cEmWrap* w, int no)
+{
+    if (SceCountEmAlive(0x10, 0x20) >= RE4DC_R101_ALIVE_CAP) {
+        r101_capPush(no);
+#if RE4DC_R101_CAP_LOG
+        OSReport("r101cap: wave queue 0x%02x (alive %d, queued %d)\n", no, SceCountEmAlive(0x10, 0x20), r101CapN);
+#endif
+        return 1;
+    }
+    if (w) {
+        w->setEm(no, -1, 1, 1, 1);
+    } else {
+        setEm(no, -1, 1, 1, 1);
+    }
+    return 0;
+}
+#else
+#define R101_CAP_WAVES 0
+#endif
 
 #if R101_PS2_TRIO
 // PS2_ENEMY_ROOMS bit 0x100 (lane alivecap 2026-10-15; PS2-ENEMY-CODE-DIFF-20261015.md item 8): PS2 r101_FindPlayer
@@ -1075,6 +1102,12 @@ static void r101_Event20()
 // The second reset wave, by the side the player is on.
 static void r101_checkEmReset2()
 {
+#if R101_CAP_WAVES
+#define R101_WAVE2(no) (r101WaveQueued += r101_capWaveSend(0, (no)))
+    r101WaveQueued = 0;
+#else
+#define R101_WAVE2(no) setEm((no), -1, 1, 1, 1)
+#endif
     RsfSet(G_ROOM_ID, 2);
 #if defined(RE4DC_PS2_ENEMY_RULES) && RE4DC_PS2_ENEMY_RULES
     if (SceAtHitCheck(0x1A) == 1 || SceAtHitCheck(0x17) == 1) {   // PS2 adds area 0x17
@@ -1082,26 +1115,31 @@ static void r101_checkEmReset2()
     if (SceAtHitCheck(0x1A) == 1) {
 #endif
         if (RsfCheck(G_ROOM_ID, 0) == 0) {
-            setEm(0x28, -1, 1, 1, 1);
-            setEm(0x29, -1, 1, 1, 1);
-            setEm(0x2A, -1, 1, 1, 1);
-            setEm(0x2B, -1, 1, 1, 1);
-            setEm(0x2C, -1, 1, 1, 1);
+            R101_WAVE2(0x28);
+            R101_WAVE2(0x29);
+            R101_WAVE2(0x2A);
+            R101_WAVE2(0x2B);
+            R101_WAVE2(0x2C);
         } else {
-            setEm(0x2E, -1, 1, 1, 1);
-            setEm(0x2F, -1, 1, 1, 1);
-            setEm(0x30, -1, 1, 1, 1);
-            setEm(0x31, -1, 1, 1, 1);
-            setEm(0x32, -1, 1, 1, 1);
+            R101_WAVE2(0x2E);
+            R101_WAVE2(0x2F);
+            R101_WAVE2(0x30);
+            R101_WAVE2(0x31);
+            R101_WAVE2(0x32);
         }
     } else {
-        setEm(0x36, -1, 1, 1, 1);
-        setEm(0x37, -1, 1, 1, 1);
-        setEm(0x38, -1, 1, 1, 1);
-        setEm(0x39, -1, 1, 1, 1);
-        setEm(0x3A, -1, 1, 1, 1);
+        R101_WAVE2(0x36);
+        R101_WAVE2(0x37);
+        R101_WAVE2(0x38);
+        R101_WAVE2(0x39);
+        R101_WAVE2(0x3A);
     }
+#if R101_CAP_WAVES
+    r101_work->emNum += 5 - r101WaveQueued;
+    r101WaveQueued = 0;
+#else
     r101_work->emNum += 5;
+#endif
 }
 
 // End of a reset-wave cutscene: camera back, the five new Ganados of `side` may suspend again, the
@@ -1115,7 +1153,12 @@ static void r101_checkEmReset_end(int side)
         r101_work->pEm[2]->setNoSuspend(0);
         r101_work->pEm[3]->setNoSuspend(0);
         r101_work->pEm[4]->setNoSuspend(0);
+#if R101_CAP_WAVES
+        r101_work->emNum += 5 - r101WaveQueued;
+        r101WaveQueued = 0;
+#else
         r101_work->emNum += 5;
+#endif
     } else {
         CamCtrl.Comeback(0);
         r101_work->pEm[5]->setNoSuspend(0);
@@ -1123,7 +1166,12 @@ static void r101_checkEmReset_end(int side)
         r101_work->pEm[7]->setNoSuspend(0);
         r101_work->pEm[8]->setNoSuspend(0);
         r101_work->pEm[9]->setNoSuspend(0);
+#if R101_CAP_WAVES
+        r101_work->emNum += 5 - r101WaveQueued;
+        r101WaveQueued = 0;
+#else
         r101_work->emNum += 5;
+#endif
     }
 #if defined(RE4DC_PS2_ENEMY_RULES) && RE4DC_PS2_ENEMY_RULES
     RsfSet(G_ROOM_ID, 15);   // PS2: the second wave may come once this cutscene has ended
@@ -1137,6 +1185,12 @@ static void r101_checkEmReset()
     int side;
     cPlayer* pl;
 
+#if R101_CAP_WAVES
+#define R101_WAVE1(k, no) (r101WaveQueued += r101_capWaveSend(r101_work->pEm[k], (no)))
+    r101WaveQueued = 0;
+#else
+#define R101_WAVE1(k, no) r101_work->pEm[k]->setEm((no), -1, 1, 1, 1)
+#endif
     RsfSet(G_ROOM_ID, 3);
     if (pPL->pos.x > -3300.0f) {
         RsfSet(G_ROOM_ID, 0);
@@ -1156,11 +1210,11 @@ static void r101_checkEmReset()
         SndStrReq(1, 0x3E, 0x80000003, 0, 0, 0.0f);
         side = 0;
         RsfSet(G_ROOM_ID, 0);
-        r101_work->pEm[0]->setEm(0x28, -1, 1, 1, 1);
-        r101_work->pEm[1]->setEm(0x29, -1, 1, 1, 1);
-        r101_work->pEm[2]->setEm(0x2A, -1, 1, 1, 1);
-        r101_work->pEm[3]->setEm(0x2B, -1, 1, 1, 1);
-        r101_work->pEm[4]->setEm(0x2C, -1, 1, 1, 1);
+        R101_WAVE1(0, 0x28);
+        R101_WAVE1(1, 0x29);
+        R101_WAVE1(2, 0x2A);
+        R101_WAVE1(3, 0x2B);
+        R101_WAVE1(4, 0x2C);
         r101_work->pEm[0]->setNoSuspend(1);
         r101_work->pEm[1]->setNoSuspend(1);
         r101_work->pEm[2]->setNoSuspend(1);
@@ -1171,11 +1225,11 @@ static void r101_checkEmReset()
         SndStrReq(1, 0x3B, 0x80000003, 0, 0, 0.0f);
         side = 1;
         RsfSet(G_ROOM_ID, 1);
-        r101_work->pEm[5]->setEm(0x2E, -1, 1, 1, 1);
-        r101_work->pEm[6]->setEm(0x2F, -1, 1, 1, 1);
-        r101_work->pEm[7]->setEm(0x30, -1, 1, 1, 1);
-        r101_work->pEm[8]->setEm(0x31, -1, 1, 1, 1);
-        r101_work->pEm[9]->setEm(0x32, -1, 1, 1, 1);
+        R101_WAVE1(5, 0x2E);
+        R101_WAVE1(6, 0x2F);
+        R101_WAVE1(7, 0x30);
+        R101_WAVE1(8, 0x31);
+        R101_WAVE1(9, 0x32);
         r101_work->pEm[5]->setNoSuspend(1);
         r101_work->pEm[6]->setNoSuspend(1);
         r101_work->pEm[7]->setNoSuspend(1);

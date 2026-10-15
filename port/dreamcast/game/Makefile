@@ -139,7 +139,7 @@ endif
 #   ORs PS2_ENEMY_ROOMS with 0x33f (0x01 r100 trap, 0x02 r101 s21 / dog, 0x04 r104, 0x08 r108 bell rows, 0x10 r11a,
 #   0x20 r11b, 0x100 r101 area-15 trio, 0x200 r118 0x7D), sets ALIVE_CAP=6 when not given (r101 through
 #   R101_ALIVE_CAP, the same N) and ALIVE_CAP_PARK=1 (more than N alive anyway: the farthest off-screen Ganado is
-#   parked and re-queued, never deleted). PS2 gates stricter than the cap (r101 waves < 5, r111 < 5, r113 / r118 < 6)
+#   parked and re-queued, never deleted) and R101_CAP_WAVES=1 (r101's reset waves capped too). PS2 gates stricter than the cap (r101 waves < 5, r111 < 5, r113 / r118 < 6)
 #   stay as they are. Chapter 2-2 / 2-3 bits (0x40 r11c, 0x80 r11d) are not part of it.
 PS2_CH1_ENEMY ?= 0
 ifneq ($(PS2_CH1_ENEMY),0)
@@ -152,6 +152,7 @@ ifeq ($(or $(ALIVE_CAP),0),0)
 override ALIVE_CAP := 6
 endif
 override ALIVE_CAP_PARK := 1
+override R101_CAP_WAVES := 1
 endif
 # PS2_ENEMY_RULES=1 (test 9 lane PS2EN, default 0; changes gameplay by design): the PS2 USA enemy rules of the
 # chapter 1 rooms. Enemy list emleon00 gets the PS2 start-alive bits / flags (stage.cpp, at list read); r101 sends
@@ -252,6 +253,12 @@ R101_ALIVE_CAP ?= 0
 R101_CAP_LOG ?= 0
 ifneq ($(R101_ALIVE_CAP)$(R101_CAP_LOG),00)
 $(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -DRE4DC_R101_ALIVE_CAP=$(R101_ALIVE_CAP) -DRE4DC_R101_CAP_LOG=$(R101_CAP_LOG)
+endif
+# R101_CAP_WAVES=1 (lane alivecap 2026-10-15, set by PS2_CH1_ENEMY; default 0; needs R101_ALIVE_CAP): the reset waves go
+#   through the cap as well (queued beyond it; the wave's emNum += 5 counts the ones sent, each queued one adds its 1
+#   when released), so r101 never has more than N alive (crowd12's cap left the waves: up to 9).
+ifneq ($(or $(R101_CAP_WAVES),0),0)
+$(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -DRE4DC_R101_CAP_WAVES=1
 endif
 # em27ObaHitCk scans enemy slots through the sparse backing (workAt) instead of raw slot math, which read an
 # unbacked slot's 0xFF filler as a NaN position and dragged the fish to NaN (r10b dock / boss collision storm).
