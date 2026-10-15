@@ -433,6 +433,10 @@ int SceCheckEmAlive(cEm* em)
     return 1;
 }
 
+#if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
+extern "C" int re4dc_aliveCapHeldCount(int lo, int hi);
+extern "C" void re4dc_aliveCapDestroy(int lo, int hi);
+#endif
 // Number of living, active enemies with id in lo..hi (hi -1 = just lo).
 int SceCountEmAlive(int lo, int hi)
 {
@@ -455,6 +459,9 @@ int SceCountEmAlive(int lo, int hi)
             }
         }
     }
+#if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
+    cnt += re4dc_aliveCapHeldCount(lo, hi);   // ALIVE_CAP: held start-list Ganados count as alive (em_set.cpp)
+#endif
     return cnt;
 }
 
@@ -483,6 +490,9 @@ void SceDestroyEm(int lo, int hi)
             }
         }
     }
+#if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
+    re4dc_aliveCapDestroy(lo, hi);
+#endif
 }
 
 // Room start: no pending item events.

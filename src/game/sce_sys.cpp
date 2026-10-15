@@ -142,6 +142,9 @@ void scenarioLoopAfterInit()
     SceAtCheckMoveScrAt();
 }
 
+#if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
+extern "C" void re4dc_aliveCapMove(int busy);
+#endif
 // Once per frame (game loop): unless an item pick-up or a pause holds the scenario, the event
 // cancel key, the room's main function and the event manager run; then all scenario tasks
 // (scheduler), then the after-hooks. Skipped in the debug "no scenario" mode.
@@ -168,6 +171,11 @@ void ScenarioMove()
     }
     SceSys.scheduler();
     scenarioLoopAfterInit();
+#if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
+    // ALIVE_CAP (em_set.cpp): one held Ganado in below the cap, never during an event, item pick-up or pause.
+    re4dc_aliveCapMove(SceSys.event_start_cnt != 0 || SceSys.m_item_get != 0 || SceSys.pause != 0 ||
+                       (pG->Status_flg[0] & 0x101000) != 0);
+#endif
 }
 
 // Iteration start over the scenario tasks (ordering table head).
