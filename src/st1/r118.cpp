@@ -57,6 +57,21 @@ static void r118_ThunderMove();
 // the dog 0x78, starts stream 1/5, the show-view event once (Room_flg bit 0), Ashley's call on area 9,
 // else the alternate layout (object 0x1B hidden, areas 8/2 off). Then the BGM task and r108's symbol
 // puzzle on dials 0x31/0x32/0x33 with message 2.
+#if defined(RE4DC_PS2_ENEMY_ROOMS) && (RE4DC_PS2_ENEMY_ROOMS & 0x200)
+// PS2_ENEMY_ROOMS bit 0x200 (lane alivecap 2026-10-15; PS2-ENEMY-CODE-DIFF-20261015.md item 9): PS2 R118Init (st1_3
+// 0xd8b0) sends 0x79..0x7F without 0x7D; R118Main sends it later. The GameCube AEV lacks the PS2 area.
+#include "area.h"
+#include "dbg_tool.h"
+#include "r118_ps2_area.h"
+#ifndef R118_PS2_AREA
+#error PS2_ENEMY_ROOMS bit 0x200 needs the PS2 r118 AEV area quad (R118_PS2_AREA, from the ps2code lane)
+#endif
+#define R118_PS2_HOLD 1
+static AreaData r118Ps2Area = R118_PS2_AREA;
+#else
+#define R118_PS2_HOLD 0
+#endif
+
 void R118Init()
 {
     cModel* m;
@@ -90,7 +105,9 @@ void R118Init()
         EmSetFromList2(0x7A, 1);
         EmSetFromList2(0x7B, 1);
         EmSetFromList2(0x7C, 1);
+#if !R118_PS2_HOLD
         EmSetFromList2(0x7D, 1);
+#endif
         EmSetFromList2(0x7E, 1);
         EmSetFromList2(0x7F, 1);
         SndRoomStrStart(1, 5, 1);
@@ -112,9 +129,20 @@ void R118Init()
     FlrAtSetDefVal(0, 0, 3);
 }
 
-// Per-frame room main: nothing.
+// Per-frame room main: nothing (PS2_ENEMY_ROOMS bit 0x200: the held 0x7D).
 void R118Main()
 {
+#if R118_PS2_HOLD
+    // PS2 st1_3 task 0xe6b8 (as r113's B7): Leon in the PS2 area (Room_flg[2] bit 31 there, its quad tested here),
+    // room save flag 2 clear, fewer than 6 Ganados alive: 0x7D is sent once and flag 2 set (set even if the send
+    // fails, as the source). Only after the rescue (R118Init sends the others then).
+    if ((pG->Item_find_flg & 0x00100000) && RsfCheck(G_ROOM_ID, 2) == 0 && AreaHitCheck(&r118Ps2Area, &pPL->pos) &&
+        SceCountEmAlive(0x10, 0x20) < 6) {
+        EmSetFromList2(0x7D, 1);
+        RsfSet(G_ROOM_ID, 2);
+        OSReport("ps2en: r118 sends 0x7d (alive %d)\n", SceCountEmAlive(0x10, 0x20));
+    }
+#endif
 }
 
 // End of the show view: fade the stream out over 50 frames, camera back to the player, SceEventEnd.

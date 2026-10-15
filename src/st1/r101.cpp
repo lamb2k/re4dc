@@ -344,6 +344,15 @@ void R101Init()
     }
 }
 
+#if defined(RE4DC_PS2_ENEMY_ROOMS) && (RE4DC_PS2_ENEMY_ROOMS & 0x100)
+#if !(RE4DC_PS2_ENEMY_ROOMS & 0x02)
+#error PS2_ENEMY_ROOMS bit 0x100 (r101 trio) needs bit 0x02
+#endif
+#define R101_PS2_TRIO 1
+#include "r101_ps2_area15.h"
+#else
+#define R101_PS2_TRIO 0
+#endif
 #if defined(RE4DC_PS2_ENEMY_RULES) && RE4DC_PS2_ENEMY_RULES
 // PS2 enemy rules (PS2 USA st1_1.rel R101Main): list entries 0x1A / 0x1B (two villagers) start dead
 // (stage.cpp list patch) and join the fight one at a time while fewer than 9 Ganados are alive and the
@@ -473,6 +482,47 @@ static void r101_capRelease()
 #define R101_SEND(no) setEm((no), -1, 1, 1, 1)
 #endif
 
+#if R101_PS2_TRIO
+// PS2_ENEMY_ROOMS bit 0x100 (lane alivecap 2026-10-15; PS2-ENEMY-CODE-DIFF-20261015.md item 8): PS2 r101_FindPlayer
+// (st1_1 0x5e10) no longer sends the square trio 0x22 / 0x23 / 0x24; a task registered in R101Init (0x3568, body
+// 0x5ca8) sends them once Leon is in PS2 AEV area 15 while the fight is on (room save flag 6 set, 7 and 8 clear) and
+// fewer than 7 Ganados are alive: it sets room save flag 11, disables area 15, sends all three, emNum += 3.
+// The GameCube AEV has no area 15: its quad (PS2 r101.dat) is tested here, as area 0x21 above. Under R101_ALIVE_CAP
+// the PS2 gate (< 7) stays and the sends go through the cap: one sent now adds 1 to emNum here, one queued adds its
+// 1 when it is released (r101_capRelease), so emNum still rises by 3 in all.
+#ifndef R101_PS2_AREA15
+#error PS2_ENEMY_ROOMS bit 0x100 needs the PS2 r101 AEV area 15 quad (R101_PS2_AREA15, from the ps2code lane)
+#endif
+static AreaData r101Ps2Area15 = R101_PS2_AREA15;
+
+static void r101_ps2Trio()
+{
+    static const u8 trio[3] = {0x22, 0x23, 0x24};
+
+    if (RsfCheck(G_ROOM_ID, 6) == 0 || RsfCheck(G_ROOM_ID, 7) || RsfCheck(G_ROOM_ID, 8) || RsfCheck(G_ROOM_ID, 11)) {
+        return;
+    }
+    if (AreaHitCheck(&r101Ps2Area15, &pPL->pos) == 0 || SceCountEmAlive(0x10, 0x20) >= 7) {
+        return;
+    }
+    RsfSet(G_ROOM_ID, 11);
+    for (int k = 0; k < 3; k++) {
+#if RE4DC_R101_ALIVE_CAP
+        const int before = r101CapN;
+
+        r101_capSend(trio[k]);
+        if (r101CapN == before) {
+            r101_work->emNum++;
+        }
+#else
+        setEm(trio[k], -1, 1, 1, 1);
+        r101_work->emNum++;
+#endif
+    }
+    OSReport("ps2en: r101 area 15 trio (alive %d, emNum %d)\n", SceCountEmAlive(0x10, 0x20), r101_work->emNum);
+}
+#endif
+
 // Per-frame room main: nothing (PS2_ENEMY_RULES: the PS2 villager reinforcements).
 void R101Main()
 {
@@ -489,6 +539,9 @@ void R101Main()
         r101_ps2Villager(12, 0x1B, inArea);
         r101_ps2Villager(13, 0x1A, inArea);
     }
+#if R101_PS2_TRIO
+    r101_ps2Trio();
+#endif
 #endif
 }
 
@@ -1219,9 +1272,11 @@ extern "C" void r101_FindPlayer()
     BitOff(pG->door_flags_51CC, 0x20);
     SceAtSetEnable(7, 0);
     r101_work->evt00->setCommand(CMND_DEL_DATA, 0, 0);
+#if !R101_PS2_TRIO
     R101_SEND(0x22);
     R101_SEND(0x23);
     R101_SEND(0x24);
+#endif
     SceAtDataSet_exec(0, SCE_LEVEL10, 0, (TaskFunc) r101_DoorDontOpen100, 0, 1);
     SceAtDataSet_exec(2, SCE_LEVEL10, 0, (TaskFunc) r101_DoorDontOpen103, 0, 1);
     SndRoomStrStart(1, 3, 1);

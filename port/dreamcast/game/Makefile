@@ -158,14 +158,19 @@ endif
 #        HP +200, Character 2 -> 6; waves of 5 refilled below 5 alive, kill limit 40 / timer 9000 (easy 30 / 7200)
 #   0x80 r11d (needs ROUTE_CH23; lane alivecap 2026-10-15): the PS2 Bella-sisters village (6 start dead and come
 #        in by area / reinforcement, HP +200, set / Character as the PS2 list)
+#   0x100 r101 (needs 0x02): the square trio 0x22-0x24 is not sent at the fight start but from PS2 area 15 (rsf 6 set,
+#        7 / 8 clear, fewer than 7 alive; rsf 11, emNum + 3). Needs include/r101_ps2_area15.h (PS2 quad, pending)
+#   0x200 r118: 0x7D held at R118Init, sent once in the PS2 area (Room_flg[2] bit 31 there) while fewer than 6 are
+#        alive (rsf 2). Needs include/r118_ps2_area.h (PS2 quad, pending)
 # ROUTE_CH22 no longer applies the r100 / r104 / r11a rows itself (bits 0x01 / 0x04 / 0x10 own them).
+# include/em_far_delete.h: the shared PS2 EmFarDelete / EmFarDeleteNoWrap helper (header-only; r301 / r327 lanes).
 PS2_ENEMY_ROOMS ?= 0
 ifneq ($(PS2_ENEMY_ROOMS),0)
 ifneq ($(PS2_ENEMY_RULES),1)
 $(error PS2_ENEMY_ROOMS needs PS2_ENEMY_RULES=1)
 endif
 $(OBJDIR)/src/game/stage.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r108.o $(OBJDIR)/mod/st1_3/src/st1/r108.o $(OBJDIR)/mod/st1_2/src/st1/r11a.o $(OBJDIR)/mod/st1_2/src/st1/r11b.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ROOMS=$(PS2_ENEMY_ROOMS)
-$(OBJDIR)/mod/st1_3/src/st1/r11c.o $(OBJDIR)/mod/st1_3/src/st1/r11d.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ROOMS=$(PS2_ENEMY_ROOMS)
+$(OBJDIR)/mod/st1_3/src/st1/r11c.o $(OBJDIR)/mod/st1_3/src/st1/r11d.o $(OBJDIR)/mod/st1_3/src/st1/r118.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ROOMS=$(PS2_ENEMY_ROOMS)
 $(OBJDIR)/platform/ps2_enemy_ch22.o $(OBJDIR)/platform/ps2_enemy_ch23.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_ENEMY_ROOMS=$(PS2_ENEMY_ROOMS)
 endif
 # ALIVE_CAP=N (lane alivecap 2026-10-15, user rule 10-15 "Ganados at 6"; CHANGES GAMEPLAY by design; default 0 = off):
