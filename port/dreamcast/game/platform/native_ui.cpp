@@ -473,6 +473,29 @@ Entry* handles[kQuadCount]; unsigned nquad,frame,used,peak,staging_peak;
 #ifndef RE4DC_SS_UI_ORDER
 #define RE4DC_SS_UI_ORDER 0
 #endif
+#ifndef RE4DC_UI_OT_CACHE
+#define RE4DC_UI_OT_CACHE 0
+#endif
+#if RE4DC_UI_OT_CACHE
+#if !RE4DC_UI_HANDLES || !RE4DC_SS_UI_ORDER || !RE4DC_PVR_STREAM || !RE4DC_D349_RENDERER_STACK || RE4DC_TA_GUARD
+#error UI_OT_CACHE needs UI_HANDLES=1 SS_UI_ORDER=1 PVR_STREAM=1 D349_RENDERER_STACK=1 TA_GUARD=0
+#endif
+// UI_OT_CACHE (game30.mk; lane uicoll 2026-10-15, backlog B3; exact, render only). No new storage beyond these
+// ~90 bytes: the KOS heap is the limit (the 48 KiB squeeze gate has ~6 KB to spare in the r101 fight).
+// The previous frame's queued quads stay in frame_storage: the deferred snapshots keep at least 8192 bytes above
+// the queue base (every deferred allocation checks max(8192, nquad * quad)), so quads[0, kUocPos) are written only
+// by the queue. re4dc_ui_submit compares an incoming quad with the quad queued at the same position last time and,
+// when every word matches and the image's texture handle passes resolve()'s own hit test, keeps it in place: no
+// finite test, no copy, no handle hash. ui_draw_quad's batch lives in the free middle of frame_storage.
+constexpr unsigned kUocPos=8192/sizeof(Re4dcUiQuad);
+unsigned char uoc_hint[kUocPos]; // position -> handle_table index its image used last time (a hint: the hit test decides)
+unsigned uoc_vn;                 // quads[0, uoc_vn): admitted quads (finite) or glyph runs of the last frame with UI
+unsigned uoc_on=1;               // re4dc_ui_ot_cache_set (POC101 layer 0x08)
+constexpr unsigned kUocSeq=96;
+unsigned char uoc_prev[kUocSeq]; // submission number in the frame -> queue position it took last frame (0xff: none)
+unsigned uoc_seq;                // submissions so far this frame
+inline void uoc_frame_end(){if(nquad)uoc_vn=nquad<kUocPos?nquad:kUocPos;uoc_seq=0;}
+#endif
 #if RE4DC_SS_UI_ORDER
 #if !RE4DC_D349_RENDERER_STACK || !RE4DC_PVR_STREAM
 #error SS_UI_ORDER requires the existing streamed source renderer
@@ -4430,6 +4453,9 @@ extern "C" void re4dc_ui_retire_room(){
     // No queued draw may outlive its source room. Shared cached uploads may be
     // reloaded from their stable identities; no archive texels are needed.
     // Core descriptors belong to the persistent core region and survive this reset.
+#if RE4DC_UI_OT_CACHE
+    uoc_frame_end();
+#endif
     nquad=0;model_used=0;model_handle=nullptr;sources_reset();room_identities.clear();identity_hits=0;
     for(auto& e:enemy_identities){e.table.clear();e.archive=nullptr;}
 #if RE4DC_PVR_STREAM
@@ -4842,6 +4868,9 @@ extern "C" void re4dc_ui_begin_skip(){
     if(stream_scene || stream_retire)re4dc_missing("native previous frame unresolved");
     stream_aborted=false;stream_model_bytes=0;
 #endif
+#if RE4DC_UI_OT_CACHE
+    uoc_frame_end();
+#endif
     nquad=0;model_used=0;frame_ready=false;pace_skip_frame=true;++pace_skipped_frames;
     re4dc_prepare_model_assets();
 }
@@ -5069,6 +5098,9 @@ extern "C" void re4dc_ui_begin(){
 #endif
     if(model_diagnostic==1 && frame%120==0)
         re4dc_log("native model DIAGNOSTIC boundary: frame=%u previous_bytes=%u committed_parts=%u invalid=%u resource=%u overflow=%u presented=%u\n",frame,model_used*32,model_parts,model_invalid,model_resource,model_overflow,model_presented);
+#if RE4DC_UI_OT_CACHE
+    uoc_frame_end();
+#endif
     nquad=0;model_used=0;++frame;
 #if RE4DC_TEX_CHECK
     texchk::frame_sweep();
@@ -5139,8 +5171,71 @@ extern "C" void re4dc_ui_begin(){
     frame_header_hits=model_header_hits;frame_header_builds=model_header_builds;
     frame_pvr_calls=frame_pvr_bytes=frame_queue_peak=frame_queue_drops=0;
 }
+#if RE4DC_UI_OT_CACHE
+// UI_OT_CACHE memo hit (see the state block at frame_storage). Submissions are numbered within a frame (every call,
+// culled ones included), and uoc_prev[] keeps the queue position each one took last frame. A quad is a hit when it
+// equals, word for word apart from its colour, a quad still held in the queue storage below max(nquad, uoc_vn)
+// (an admitted, finite quad: this frame's queue or last frame's) at that position, and the position's hinted handle
+// passes resolve()'s hit test for its image: the descriptor and shape, no mask, a stamp newer than the last source
+// reset and than its entry's last close, and (indexed images) the live palette identical to the handle's copy. A
+// handle holding a descriptor lives only in that descriptor's slot pair and at most once, so it is the handle
+// resolve() would hit and its entry is the entry resolve() returns; the touch and counters are resolve()'s. The
+// colour plays no part in the finite test or the texture, so it is simply stored.
+typedef std::uint32_t uoc_word __attribute__((may_alias));
+constexpr unsigned kUocColorWord=unsigned(offsetof(Re4dcUiQuad,color))/4;
+inline bool uoc_same(const Re4dcUiQuad& a,const Re4dcUiQuad& b){
+    const uoc_word* x=reinterpret_cast<const uoc_word*>(&a);const uoc_word* y=reinterpret_cast<const uoc_word*>(&b);
+    std::uint32_t d=0;
+    for(unsigned n=0;n<kUocColorWord;++n)d|=x[n]^y[n];
+    for(unsigned n=kUocColorWord+1;n<sizeof(Re4dcUiQuad)/4;++n)d|=x[n]^y[n];
+    return !d;
+}
+inline unsigned uoc_slot(const Re4dcUiImage& image,unsigned shape){
+    const unsigned a=unsigned(reinterpret_cast<std::uintptr_t>(image.pixels));
+#if RE4DC_UI_QUAD_LEAN==3
+    return ((a>>5)^(a>>13)^(shape>>11))&7U;
+#else
+    return ((a>>5)^(a>>13)^(shape>>11))&255U;
+#endif
+}
+inline bool uoc_handle_is(const Handle& h,const Re4dcUiImage& image,unsigned shape){
+    return h.pixels==image.pixels && h.shape==shape && h.palette==image.palette && !h.mask_pixels && !h.mask_shape &&
+           !h.mask_palette && h.palette_bytes==image.palette_bytes;
+}
+Entry* uoc_resolve_hit(const Re4dcUiImage& image,unsigned hint){
+    unsigned shape;
+    if(!handle_shape(image,shape,true))return nullptr;
+    Handle& h=handle_table[hint];
+    if(!uoc_handle_is(h,image,shape) || !(h.stamp>handle_reset && h.stamp>entry_closed[h.entry]))return nullptr;
+    if((image.format==8 || image.format==9) && !palette_same(hint,image))return nullptr;
+    Entry& e=entries[h.entry];const bool pin=true;
+    RE4DC_TOUCH(e);
+    ++handle_hits;RE4DC_PROFILE_COUNT(TextureHits,1);return &e;
+}
+// After a full admission: remember which handle the image's resolve() used (none found leaves a stale hint, which
+// only fails the next hit test).
+void uoc_note(unsigned p,const Re4dcUiImage& image,const Entry* e){
+    unsigned shape;
+    if(p>=kUocPos || !handle_shape(image,shape,true))return;
+    const unsigned s=uoc_slot(image,shape);
+#if RE4DC_UI_QUAD_LEAN
+    const unsigned ways[2]={s,s^1U};
+#else
+    const unsigned ways[1]={s};
+#endif
+    for(unsigned w:ways)if(uoc_handle_is(handle_table[w],image,shape) && &entries[handle_table[w].entry]==e){uoc_hint[p]=(unsigned char)w;return;}
+}
+#if RE4DC_UI_OT_CACHE>=2
+unsigned uoc_hits,uoc_misses,uoc_mismatch,uoc_why[4],uoc_seen;
+#endif
+#endif
 extern "C" void re4dc_ui_submit(const Re4dcUiQuad* q){
     RE4DC_PROFILE_SCOPE(UiEnqueue);
+#if RE4DC_UI_OT_CACHE
+    const unsigned uoc_s=uoc_seq++;
+    unsigned uoc_pp=0xffU;
+    if(uoc_s<kUocSeq){uoc_pp=uoc_prev[uoc_s];uoc_prev[uoc_s]=0xffU;}
+#endif
     if(!frame_ready)return;
 #if RE4DC_PVR_STREAM
     if(stream_aborted)return;
@@ -5153,6 +5248,43 @@ extern "C" void re4dc_ui_submit(const Re4dcUiQuad* q){
     if((nquad+1)*sizeof(Re4dcUiQuad)>deferred_top){RE4DC_WHD_ABORT(3,__builtin_return_address(0),unsigned(sizeof(Re4dcUiQuad)));++dropped;++frame_queue_drops;stream_aborted=true;return;}
 #else
     if(nquad==kQuadCount){++dropped;return;}
+#endif
+#if RE4DC_UI_OT_CACHE
+    const unsigned uoc_keep=nquad>uoc_vn?nquad:uoc_vn;
+#if RE4DC_UI_OT_CACHE>=2
+    ++uoc_why[uoc_pp>=uoc_keep?0:!handles[uoc_pp]?1:!uoc_same(quads[uoc_pp],*q)?2:3];
+    if((++uoc_seen&2047)==0)re4dc_log("UOC why none=%u nohandle=%u differ=%u same=%u vn=%u\n",uoc_why[0],uoc_why[1],uoc_why[2],uoc_why[3],uoc_vn);
+#endif
+#if RE4DC_NATIVE_MES
+    if(uoc_on && uoc_pp<uoc_keep && handles[uoc_pp] && handles[uoc_pp]!=kGlyphRun && uoc_same(quads[uoc_pp],*q)){
+#else
+    if(uoc_on && uoc_pp<uoc_keep && handles[uoc_pp] && uoc_same(quads[uoc_pp],*q)){
+#endif
+        if(Entry* e=uoc_resolve_hit(q->image,uoc_hint[uoc_pp])){
+#if RE4DC_UI_OT_CACHE>=2
+            // Check build: the full path on the same quad must admit it and resolve the same entry.
+            bool finite=true;
+            for(unsigned n=0;n<8;++n)if(!std::isfinite(q->xy[n]) || !std::isfinite(q->uv[n]))finite=false;
+            Entry* ref=resolve(q->image,nullptr,true);
+            if((!finite || ref!=e) && uoc_mismatch++<8)
+                re4dc_log("UOC MISMATCH pos=%u from=%u finite=%d entry=%d full=%d\n",nquad,uoc_pp,finite?1:0,int(e-entries),ref?int(ref-entries):-1);
+            if((++uoc_hits&1023)==0)re4dc_log("UOC hits=%u misses=%u mismatch=%u\n",uoc_hits,uoc_misses,uoc_mismatch);
+#endif
+            if(!drawn && !nquad) re4dc_log("native UI: first quad xy=%d,%d color=%08x\n",(int)q->xy[0],(int)q->xy[1],q->color);
+            if(uoc_pp!=nquad){
+                new(quads+nquad) Re4dcUiQuad(*q);
+                if(nquad<kUocPos)uoc_hint[nquad]=uoc_hint[uoc_pp];
+            }else quads[nquad].color=q->color;
+            if(uoc_s<kUocSeq && nquad<kUocPos)uoc_prev[uoc_s]=(unsigned char)nquad;
+            handles[nquad++]=e;
+            RE4DC_PROFILE_COUNT(UiQuads,1);RE4DC_PROFILE_COUNT(UiBytes,sizeof(Re4dcUiQuad));
+            RE4DC_PROFILE_HIGH(UiCapacity,sizeof(frame_storage));
+            return;
+        }
+    }
+#if RE4DC_UI_OT_CACHE>=2
+    ++uoc_misses;
+#endif
 #endif
 #if RE4DC_UI_QUAD_LEAN
     {
@@ -5190,6 +5322,10 @@ extern "C" void re4dc_ui_submit(const Re4dcUiQuad* q){
     Entry* handle=load(q->image);
 #endif
     if(!handle){++missing;return;}
+#if RE4DC_UI_OT_CACHE
+    uoc_note(nquad,q->image,handle);
+    if(uoc_s<kUocSeq && nquad<kUocPos)uoc_prev[uoc_s]=(unsigned char)nquad;
+#endif
     handles[nquad]=handle;new(quads+nquad++) Re4dcUiQuad(*q);
     RE4DC_PROFILE_COUNT(UiQuads,1);RE4DC_PROFILE_COUNT(UiBytes,sizeof(Re4dcUiQuad));
     RE4DC_PROFILE_HIGH(UiCapacity,sizeof(frame_storage));
@@ -5217,30 +5353,29 @@ void pace_note_draw(int mode){
     stream_send(v,n*32);
 }
 #endif
-#ifndef RE4DC_UI_OT_CACHE
-#define RE4DC_UI_OT_CACHE 0
-#endif
-#if RE4DC_UI_OT_CACHE && RE4DC_PVR_STREAM && RE4DC_SS_UI_ORDER
-// UI_OT_CACHE (game30.mk; lane uicoll 2026-10-15, backlog B3; exact, render only): ui_draw_quad writes each
-// quad's packet (the same zeroed 5 x 32 bytes, header + 4 vertices, as before) into a 32-aligned batch of 8 and the
-// batch goes to the TA in one stream_send: one store-queue lock / unlock per 8 quads instead of per quad. The TA
-// receives the same words in the same order. The batch is sent when full, before a glyph run and the door picture,
-// and at the end of both drawing loops (ui_order_flush, re4dc_ui_present), so nothing else is sent while a quad
-// waits in it. POC101 builds (RE4DC_POC_UIOT): batched only while POC layer 0x08 is on.
-#if defined(RE4DC_POC_UIOT) && RE4DC_POC_UIOT
-extern "C" int re4dc_poc_on(unsigned bit);
-#define RE4DC_UOC_ON() (re4dc_poc_on(0x08U)!=0)
-#else
-#define RE4DC_UOC_ON() true
-#endif
+#if RE4DC_UI_OT_CACHE
+// UI_OT_CACHE, TA side: ui_draw_quad writes each quad's packet (the same zeroed 5 x 32 bytes, header + 4 vertices,
+// as before) into a batch of 8 and the batch goes to the TA in one stream_send: one store-queue lock / unlock per 8
+// quads instead of per quad. The TA receives the same words in the same order. The batch is sent when full, before
+// a glyph run and the door picture, and at the end of both drawing loops (ui_order_flush, re4dc_ui_present), so
+// nothing else is sent while a quad waits in it. The batch takes no storage of its own: it is a 32-aligned 1280 B
+// piece of frame_storage between the kept quads (this frame's queue and last frame's quads the memo may still
+// compare) and the deferred snapshots; when that gap is smaller, the quad is sent alone as before.
 constexpr unsigned kUocBatch=8;
-alignas(32) pvr_vertex_t uoc_batch[kUocBatch*5];
+pvr_vertex_t* uoc_batch;
 unsigned uoc_batch_n;
 static void uoc_flush(){
     if(!uoc_batch_n)return;
     const unsigned n=uoc_batch_n;uoc_batch_n=0;
     stream_send(uoc_batch,n*5*unsigned(sizeof(pvr_vertex_t)));
 }
+static pvr_vertex_t* uoc_batch_area(){
+    const unsigned keep=nquad>uoc_vn?nquad:uoc_vn;
+    const unsigned lo=(keep*unsigned(sizeof(Re4dcUiQuad))+31U)&~31U,hi=deferred_top&~31U;
+    return hi>=lo+kUocBatch*5*unsigned(sizeof(pvr_vertex_t))?reinterpret_cast<pvr_vertex_t*>(frame_storage+lo):nullptr;
+}
+// Runtime switch (POC101 layer 0x08): 0 = every quad resolved, copied and sent alone, as without the knob.
+extern "C" void re4dc_ui_ot_cache_set(unsigned on){uoc_flush();uoc_on=on?1U:0U;}
 #endif
 #if RE4DC_SS_UI_ORDER
 // Same quad bytes/header path as final present; source model barriers can consume
@@ -5280,7 +5415,7 @@ static void ui_draw_quad(unsigned i){
         pvr_poly_hdr_t header;pvr_poly_compile(&header,&c);
 #endif
 #if RE4DC_UI_OT_CACHE && RE4DC_PVR_STREAM
-        const bool uoc_batched=RE4DC_UOC_ON();
+        const bool uoc_batched=uoc_on && (uoc_batch_n || (uoc_batch=uoc_batch_area())!=nullptr);
         alignas(32) pvr_vertex_t uoc_local[5];
         pvr_vertex_t* const commands=uoc_batched?uoc_batch+uoc_batch_n*5:uoc_local;
         std::memset(commands,0,5*sizeof(pvr_vertex_t));std::uint32_t count;

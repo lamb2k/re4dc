@@ -894,20 +894,20 @@ ifneq ($(UI_QUAD_LEAN),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_QUAD_LEAN=$(UI_QUAD_LEAN)
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_UI_QUAD_LEAN=$(UI_QUAD_LEAN)
 endif
-# UI_OT_CACHE=1 (lane uicoll 2026-10-15, backlog B3; exact, render only; docs/lanes/uicoll.md): the HUD's ID quads.
-#   native_ui.cpp ui_draw_quad: the quads go to the TA in batches of 8 (one store-queue lock per batch; the same words
-#   in the same order; 1.3 KB .bss). The per-unit corner memo in ui_bridge.cpp was built and measured slower than the
-#   projection it saves (draw_id_quad +0.037 MODELLED at the cross) and was removed. With BENCH_POC=1 (POC101 disc)
-#   the batch is used only while POC layer 0x08 is on (RE4DC_POC_UIOT).
+# UI_OT_CACHE=1 (lane uicoll 2026-10-15, backlog B3; exact, render only; docs/lanes/uicoll.md): the HUD's ID quads,
+#   with no storage of its own (~90 B .bss; the 48 KiB KOS squeeze gate has ~6 KB to spare in the r101 fight).
+#   native_ui.cpp re4dc_ui_submit: a quad equal word for word to the quad queued at the same position last frame,
+#   whose image's texture handle passes resolve()'s own hit test, stays in place (no finite test, copy or handle hash).
+#   ui_draw_quad: the quads go to the TA in batches of 8 (one store-queue lock per batch; the same words in the same
+#   order), the batch in the free middle of frame_storage. Runtime switch re4dc_ui_ot_cache_set(0/1) (POC101 layer
+#   0x08). =2: check build (every memo hit also runs the full path and compares; "UOC" lines). A per-unit corner
+#   memo in ui_bridge.cpp measured slower than the projection it saves (+0.037 MODELLED) and needs ~4 KB: not built.
 UI_OT_CACHE ?= 0
-ifneq ($(filter-out 0 1,$(UI_OT_CACHE)),)
-$(error UI_OT_CACHE must be 0 or 1)
+ifneq ($(filter-out 0 1 2,$(UI_OT_CACHE)),)
+$(error UI_OT_CACHE must be 0, 1 or 2)
 endif
-ifeq ($(UI_OT_CACHE),1)
-$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_OT_CACHE=1
-ifeq ($(BENCH_POC),1)
-$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_POC_UIOT=1
-endif
+ifneq ($(UI_OT_CACHE),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_OT_CACHE=$(UI_OT_CACHE)
 endif
 # LINK_ORDER=<file> (G; exact, code placement only): an ld --section-ordering-file that puts the hot
 #                    input sections first in .text (tools/d367/ordgen_c3.py from hwproject evidence: call
