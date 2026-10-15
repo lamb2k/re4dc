@@ -1,0 +1,69 @@
+{
+ "registry": "ps2-merchant-st3",
+ "about": "lane ps2cast-st3 (2026-10-15): the em18 merchant in the island rooms (GC Disc 2 em18.drs = disc 1 em18.drs, sha fb1e1f40), same descriptors as ps2-merchant-ch1 (PS2_CAST_MERCHANT=1). Render only.",
+ "cast_dir": "/root/probe/lanes-20261015/ps2cast/conv-st3/regcast-merchant18-st3",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "descriptors": [
+  {
+   "name": "merchant18-c0",
+   "archive": "em18",
+   "model_id": "0x18",
+   "source_types": [],
+   "module": "src/em18/em18.cpp em18_R0_Init: body5/6, robe14/15, head7/8, hands18,19/6, cloth12/15, goods13/6",
+   "mask_runs": {
+    "1": "/root/probe/codex-ch23-enemies-20261013/models/merchant18-c0-mask-robe",
+    "5": "/root/probe/codex-ch23-enemies-20261013/models/merchant18-c0-mask-cloth"
+   }
+  },
+  {
+   "name": "merchant18-o0",
+   "archive": "em18",
+   "model_id": "0x18",
+   "source_types": [],
+   "module": "src/em18/em18.cpp em18ClothPartsSet(on=1): replaces source cloth info with BIN11/TPL15",
+   "mask_runs": {
+    "1": "/root/probe/codex-ch23-enemies-20261013/models/merchant18-o0-mask-robe",
+    "5": "/root/probe/codex-ch23-enemies-20261013/models/merchant18-o0-mask-cloth"
+   }
+  }
+ ],
+ "room_packages": {
+  "312": {
+   "descriptors": [
+    "merchant18-c0",
+    "merchant18-o0"
+   ],
+   "evidence": "emleon06/07: em18 type 0 (r312 r31a r331) / type 6 (r30a r329)"
+  },
+  "31a": {
+   "descriptors": [
+    "merchant18-c0",
+    "merchant18-o0"
+   ],
+   "evidence": "emleon06/07: em18 type 0 (r312 r31a r331) / type 6 (r30a r329)"
+  },
+  "331": {
+   "descriptors": [
+    "merchant18-c0",
+    "merchant18-o0"
+   ],
+   "evidence": "emleon06/07: em18 type 0 (r312 r31a r331) / type 6 (r30a r329)"
+  },
+  "30a": {
+   "descriptors": [
+    "merchant18-c0",
+    "merchant18-o0"
+   ],
+   "evidence": "emleon06/07: em18 type 0 (r312 r31a r331) / type 6 (r30a r329)"
+  },
+  "329": {
+   "descriptors": [
+    "merchant18-c0",
+    "merchant18-o0"
+   ],
+   "evidence": "emleon06/07: em18 type 0 (r312 r31a r331) / type 6 (r30a r329)"
+  }
+ }
+}

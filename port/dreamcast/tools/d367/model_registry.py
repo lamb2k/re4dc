@@ -616,7 +616,20 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
         if any(p['id'] != i or p['attach'] != i for i, p in enumerate(pb)):
             raise Fail(f'{name}: attach map is not the identity (a local attachment index needs its own map)')
         parents = [p['parent'] for p in pb]
-        if not luis and any([p['parent'] for p in b['part_bindings']] != parents for b in binds):
+        # partial_sections (descriptor opt-in; lane ps2cast-st3, the stage-3 soldiers): a head / hand BIN may carry
+        # only the parts it weights, each attached to the body part of its attach id (GC calcWeightMat); its parents
+        # name body parts (a section root: -1). The registry skins every section from the body's parts either way.
+        partial = set()
+        if d.get('partial_sections'):
+            for k, b in enumerate(binds[1:], 1):
+                q = b['part_bindings']
+                if len(q) == bones:
+                    continue
+                at = [p['attach'] for p in q]
+                if len(q) > bones or len(set(at)) != len(at) or any(not (0 <= a < bones) for a in at) or                         any(p['id'] != i or p['parent'] not in (-1, parents[p['attach']]) for i, p in enumerate(q)) or                         any(p['parent'] == -1 and parents[p['attach']] != -1 and parents[p['attach']] in at for p in q):
+                    raise Fail(f'{name} section {k}: partial skeleton is not a subset of the body hierarchy')
+                partial.add(k)
+        if not luis and any([p['parent'] for p in b['part_bindings']] != parents for k, b in enumerate(binds) if k not in partial):
             raise Fail(f'{name}: sections disagree on the hierarchy')
         if parents[0] != -1 or any(not (-1 <= q < i) for i, q in enumerate(parents)):
             raise Fail(f'{name}: parents are not a forest in index order')
@@ -648,7 +661,7 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 raise Fail(f'{name} section {i}: archive BIN {b["bin"]} differs from source-bindings (counts/flags)')
             if luis and f['normalized'] != LUIS_NORMALIZED[b['bin']]:
                 raise Fail(f'{name} section {i}: pinned normalized source BIN differs')
-            if not luis and b['parts'] != bones:
+            if not luis and b['parts'] != bones and i not in partial:
                 raise Fail(f'{name} section {i}: BIN has {b["parts"]} parts, the skeleton {bones}')
             # the runtime signature (coarse_ganado_cast.cpp fingerprint): FNV-1a of the first 64 bytes of the LE positions
             if '%08x' % digest(f['positions_le_first64'])[2] != b['source_vertex_fnv64_le']:

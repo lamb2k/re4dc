@@ -1,0 +1,62 @@
+{
+ "registry": "ps2-st3-r304",
+ "about": "lane ps2cast-st3 (2026-10-15): room 304 package of the stage-3 soldiers (em1d / em1e / em1f) from their PS2 meshes (ps2_cast.py _soldier presets + regcast). Render only.",
+ "cast_dir": "/root/probe/lanes-20261015/ps2cast/conv-st3/regcast-st3",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "soldier-em1f-0e",
+   "archive": "em1f",
+   "model_id": "0x1f",
+   "source_types": [
+    14
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet type 14: body 0x22f / TPL 0x230, head 0x231 / TPL 0x232, hands 0x234 / 0x238 (TPL mot[0])",
+   "partial_sections": true
+  },
+  {
+   "name": "soldier-em1f-0f",
+   "archive": "em1f",
+   "model_id": "0x1f",
+   "source_types": [
+    15
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet type 15: body 0x22f / TPL 0x230, head 0x249 / TPL 0x24a, hands 0x234 / 0x238 (TPL mot[0])",
+   "partial_sections": true
+  },
+  {
+   "name": "soldier-em1f-10",
+   "archive": "em1f",
+   "model_id": "0x1f",
+   "source_types": [
+    16
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet type 16: body 0x22f / TPL 0x230, head 0x24b / TPL 0x24c, hands 0x234 / 0x238 (TPL mot[0])",
+   "partial_sections": true
+  },
+  {
+   "name": "soldier-em1f-18",
+   "archive": "em1f",
+   "model_id": "0x1f",
+   "source_types": [
+    24
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet type 24: body 0x247 / TPL 0x248, head 0x24d / TPL 0x24e, hands 0x234 / 0x238 (TPL mot[0])",
+   "partial_sections": true
+  }
+ ],
+ "room_packages": {
+  "304": {
+   "descriptors": [
+    "soldier-em1f-0e",
+    "soldier-em1f-0f",
+    "soldier-em1f-10",
+    "soldier-em1f-18"
+   ],
+   "evidence": "emleon06/07 (GC Disc 2 + PS2 lists 6/7)"
+  }
+ }
+}

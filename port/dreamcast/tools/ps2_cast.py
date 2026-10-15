@@ -59,6 +59,15 @@ def _ganado(archive, base, rooms, types, hands=(0x1c0, 0x1c5)):
                 tpl=base + 1, rooms=rooms, types=types, category='human')
 
 
+def _soldier(archive, body, head, rooms, types):
+    """Stage-3 soldier (em10.cpp class 2; src/<em>/<em>_set.cpp): body BIN mot[1] / TPL mot[0] (0x22F / 0x230 or
+    0x247 / 0x248), head BIN mot[2] / TPL mot[5] (0x231 / 0x232, 0x249 / 0x24A, 0x24B / 0x24C, 0x24D / 0x24E),
+    relaxed hands (em10HandSet type 0) BIN mot[6] 0x234 and mot[11] 0x238 with TPL mot[0]."""
+    return dict(archive=archive, sections=[(body, 'body'), (head, 'head'), (0x234, 'right-hand'), (0x238, 'left-hand')],
+                tpl=body + 1, section_tpls={head: head + 1}, rooms=rooms, types=types, category='registry',
+                model_id=int(archive[2:], 16), lit=True, subset_bones=True)
+
+
 # arc numbers (PL_ARC = entry index + 4), from the source's Em15Set / Em12Set tables (cast recover_cast.py)
 PRESETS = {
     'ganado-em15-00': _ganado('em15', 0x1bc, ['r101'], [0x00]),
@@ -136,6 +145,26 @@ PRESETS = {
                            category='boss', model_id=0x35, shift=2, lit=True),
     'mendez35-legs': dict(archive='em35', sections=[(8, 'body')], tpl=5, rooms=['r11f'], types=[2],
                           category='boss', model_id=0x35, lit=True),
+    # stage-3 soldiers (lane ps2cast-st3, 2026-10-15): one descriptor per Em1dSet / Em1eSet / Em1fSet (body, head) pair
+    # em1d type 2 (the gatling gunner): modelInit(mot[1] 0x22B, mot[0] 0x22C); em10 skips its head and hands
+    'soldier-em1d-02': dict(archive='em1d', sections=[(0x22b, 'body')], tpl=0x22c, rooms=['r300', 'r320', 'r327'], types=[2], category='registry',
+                            model_id=0x1d, lit=True),
+    'soldier-em1d-0e': _soldier('em1d', 0x22f, 0x231, ['r300', 'r320', 'r327'], [14]),
+    'soldier-em1d-12': _soldier('em1d', 0x247, 0x231, ['r320', 'r327'], [18]),
+    'soldier-em1d-0f': _soldier('em1d', 0x22f, 0x249, ['r300', 'r320', 'r327'], [15]),
+    'soldier-em1d-13': _soldier('em1d', 0x247, 0x249, ['r320', 'r327'], [19]),
+    'soldier-em1d-10': _soldier('em1d', 0x22f, 0x24b, ['r300', 'r320', 'r327'], [16]),
+    'soldier-em1d-14': _soldier('em1d', 0x247, 0x24b, ['r320', 'r327'], [20]),
+    'soldier-em1d-11': _soldier('em1d', 0x22f, 0x24d, ['r300', 'r320', 'r327'], [17]),
+    'soldier-em1d-15': _soldier('em1d', 0x247, 0x24d, ['r320', 'r327'], [21]),
+    'soldier-em1e-0e': _soldier('em1e', 0x22f, 0x231, ['r301', 'r305', 'r30e', 'r316', 'r31d'], [14]),
+    'soldier-em1e-0f': _soldier('em1e', 0x22f, 0x249, ['r301', 'r30e', 'r316', 'r31d'], [15]),
+    'soldier-em1e-17': _soldier('em1e', 0x247, 0x24d, ['r301', 'r305', 'r30e', 'r316'], [23]),
+    'soldier-em1e-19': _soldier('em1e', 0x247, 0x24b, ['r301', 'r303', 'r305', 'r30e', 'r316'], [25]),
+    'soldier-em1f-0e': _soldier('em1f', 0x22f, 0x231, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r334'], [14]),
+    'soldier-em1f-0f': _soldier('em1f', 0x22f, 0x249, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r330', 'r334'], [15]),
+    'soldier-em1f-10': _soldier('em1f', 0x22f, 0x24b, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r330', 'r334'], [16]),
+    'soldier-em1f-18': _soldier('em1f', 0x247, 0x24d, ['r304', 'r30c', 'r311', 'r330'], [24]),
 }
 
 
@@ -236,7 +265,12 @@ def ps2_entry(ps2, arc, tag):
 
 def gc_skeleton(bin_bytes):
     mdl = modelbin.parse(bin_bytes)
-    mdl.check_tree()
+    try:
+        mdl.check_tree()
+    except ValueError:
+        # the stage-3 soldier bodies list some parents after their children (em1d BIN 0x22F: part 8 -> parent 27);
+        # the rest pose is the same accumulation, resolved parent first (acyclic checked)
+        return _gc_skeleton_any_order(mdl)
     bones = []
     for p in mdl.parts:
         m = np.eye(4)
@@ -245,6 +279,28 @@ def gc_skeleton(bin_bytes):
             m = np.asarray(bones[p.parent]['rest']) @ m
         bones.append(dict(id=p.no, parent=p.parent, attach=p.attach, translation=list(p.pos), rest=m.tolist(), capture=m.tolist()))
     return bones
+
+
+def _gc_skeleton_any_order(mdl):
+    # a section BIN with a partial skeleton (stage-3 soldier heads: 12 parts, attach ids 0-4 / 27-33) names its
+    # parents by attach id (the body's part number), so parts are resolved by attach
+    parts = {p.attach: p for p in mdl.parts}
+    assert len(parts) == len(mdl.parts), 'GC section parts share an attach id'
+    rest = {}
+
+    def resolve(a, depth=0):
+        if a in rest:
+            return rest[a]
+        assert depth <= len(parts) and a in parts, ('GC part parent not in the section', a)
+        p = parts[a]
+        m = np.eye(4)
+        m[:3, 3] = p.pos
+        if p.parent >= 0:
+            m = resolve(p.parent, depth + 1) @ m
+        rest[a] = m
+        return m
+    return [dict(id=p.no, parent=p.parent, attach=p.attach, translation=list(p.pos), rest=resolve(p.attach).tolist(),
+                 capture=resolve(p.attach).tolist()) for p in mdl.parts]
 
 
 def gc_mesh(bin_bytes):
@@ -375,8 +431,23 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
         m = pb.parse_bin(pbin)
         gsk = gc_skeleton(gbin)
         # skeleton identity: PS2 (id, parent, translation) == GC (attach, parent, translation)
-        assert len(gsk) == len(bones), (role, len(gsk), len(bones))
-        if len(m.bones) == len(gsk):
+        if len(gsk) != len(bones):
+            # a partial GC section skeleton (stage-3 soldier head / hands: the parts they weight, by attach id):
+            # each part must be the body bone of its attach id (parent, translation; a section root has parent -1);
+            # PS2 ids are attach ids too
+            assert spec.get('subset_bones') and len(gsk) < len(bones), (role, len(gsk), len(bones))
+            by_attach = {g['attach']: g for g in gsk}
+            for g in gsk:
+                b = bones[id_to_index[g['attach']]]
+                # a section root (parent -1) carries the body bone's rest position (model space)
+                want = b['translation'] if g['parent'] >= 0 else [r[3] for r in b['rest'][:3]]
+                assert g['parent'] in (b['parent'], -1) and max(abs(x - y) for x, y in zip(g['translation'], want)) <= bone_tol,                     (role, 'GC section part', g['id'], 'attach', g['attach'], 'differs from the body bone', g['translation'], want)
+            assert sorted(pb_['id'] for pb_ in m.bones) == sorted(by_attach), (role, 'PS2 bones != GC section attach ids')
+            pairs = [(pb_, dict(by_attach[pb_['id']], attach=pb_['id'])) for pb_ in m.bones]
+            id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in pairs)
+            dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], g['translation'])) for pb_, g in pairs)
+            dt_body = 0.0
+        elif len(m.bones) == len(gsk):
             pairs = list(zip(m.bones, gsk))
         else:
             # a reduced PS2 bone table (lane ps2cast-4: the crow's wing BINs carry only the bones they weight): each
@@ -384,9 +455,10 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
             # checked per bone; weight ids are GC part ids either way
             assert spec.get('subset_bones') and len(m.bones) < len(gsk), (role, len(m.bones), len(gsk))
             pairs = [(pb_, gsk[pb_['id']]) for pb_ in m.bones]
-        id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in pairs)
-        dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], g['translation'])) for pb_, g in pairs)
-        dt_body = max(max(abs(x - y) for x, y in zip(g['translation'], b['translation'])) for g, b in zip(gsk, bones))
+        if len(gsk) == len(bones):
+            id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in pairs)
+            dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], g['translation'])) for pb_, g in pairs)
+            dt_body = max(max(abs(x - y) for x, y in zip(g['translation'], b['translation'])) for g, b in zip(gsk, bones))
         assert id_parent and dt <= bone_tol, (role, id_parent, dt)
         tris = pb.triangles(m)
         for mat in m.materials:
