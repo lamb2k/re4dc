@@ -829,6 +829,9 @@ void image_check()
 #if defined(RE4DC_KOS_SQUEEZE) && RE4DC_KOS_SQUEEZE
 extern "C" void re4dc_kos_squeeze(void);  // below
 #endif
+#if defined(RE4DC_SH4ZAM_SELFTEST) && RE4DC_SH4ZAM_SELFTEST
+extern "C" void re4dc_zam_selftest(void);  // platform/sh4zam_selftest.c (SH4ZAM_SELFTEST=1, test builds only)
+#endif
 void OSInit(void)
 {
     static int done;
@@ -857,6 +860,9 @@ void OSInit(void)
     re4dc_log("OSInit: arena %08lx-%08lx (%lu KB)\n", re4dc_mem.arena_lo, re4dc_mem.arena_hi,
               (re4dc_mem.arena_hi - re4dc_mem.arena_lo) / 1024);
     re4dc_pcs_start();  // PC_SAMPLER=1 only; empty inline otherwise
+#if defined(RE4DC_SH4ZAM_SELFTEST) && RE4DC_SH4ZAM_SELFTEST
+    re4dc_zam_selftest();  // SH4ZAM_SELFTEST=1: "ZAMTEST" ulp lines, before any game code
+#endif
 #if RE4DC_IO_PROBE
     re4dc_ioprobe_run();  // no-op unless /cd/dc/ioprobe.txt exists
 #endif

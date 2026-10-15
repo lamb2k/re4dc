@@ -2198,7 +2198,7 @@ void EspCommonTrans(cEsp* esp)
         RE4DC_RENDER_MTXRotRad(m, 'z', esp->m_Ang.z);
         RE4DC_RENDER_MTXConcat(m, esp->m_Mat, esp->m_Mat);
         RE4DC_RENDER_MTXConcat(pG->Cam.v_mat, esp->parent->mat, m2);
-        PSMTXMultVec(m2, &esp->m_Pos, &p);
+        RE4DC_RENDER_MTXMultVec(m2, &esp->m_Pos, &p);
         esp->m_Mat[0][3] += p.x;
         esp->m_Mat[1][3] += p.y;
         esp->m_Mat[2][3] += p.z;
@@ -2251,7 +2251,7 @@ void EspCommonTrans(cEsp* esp)
         EspSpriteEmit(esp);
     }
 #endif
-    PSMTXInverse(esp->m_Mat, inv);
+    RE4DC_RENDER_MTXInverse(esp->m_Mat, inv);
     PSMTXTranspose(inv, inv);
     GXLoadNrmMtxImm(inv, 0);
 #if !RE4DC_EFFECT_LEAN

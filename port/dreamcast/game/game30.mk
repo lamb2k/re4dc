@@ -3090,3 +3090,57 @@ $(OBJDIR)/ps_alias_sh4_approx.ld: platform/ps_alias_sh4.ld
 	grep -qx '_PSMTXConcat = _re4dc_shz_MTXConcat;' $@
 $(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 -Ithird_party/sh4zam/include
 endif
+
+# GAME_SH4ZAM=1 (lane sh4zam-direct 2026-10-15; NOT bit-exact; default 0 = the previous image). Phase 1 of the SH4ZAM
+# direct mapping asked for by an SH4ZAM author's review ("directly map to sh4zam calls as phase 1. Not fully optimal but
+# will gain"): the SDK matrix / vector entry points that do FPU arithmetic get thin SH4ZAM bodies in
+# platform/sh4zam_direct.c (XMTRX + FTRV concat, FIPR rows / dots, FSRRA normalize / magnitude / 1/det, FSCA sin / cos).
+# Data-movement entry points (Identity, Copy, Transpose, Scale, Trans, Reorder, VECAdd / Subtract / Scale / Cross) keep
+# the exact platform/mtx_sh4.S bodies. XMTRX rules and results: docs/lanes/sh4zam-direct.md.
+#   GAME_SH4ZAM=1 GAME_SH4ZAM_RENDER_ONLY=1 (the test 14 candidate): only the render-only call sites (include/dolphin/
+#     mtx.h RE4DC_RENDER_MTXConcat / RotRad / Inverse / MultVec: lane approx's list plus the normal-matrix and palette
+#     inverses and the effect sprite's position) take the SH4ZAM bodies. Logic is untouched: gate STRICT identical,
+#     stills for the look.
+#   GAME_SH4ZAM=1 alone (global, phase 2, UNMEASURED): also every PS* caller (ps_alias_sh4.ld rebound by sed, needs
+#     GAME_SH4_MATH=1) and re4dc_sincosf (FSCA for RotMatrix / PSMTXRotRad / PSMTXRotAxisRad callers; game30_trig.c,
+#     needs GAME_TRIG_LEAN=1 GAME_SINCOS=1). Gameplay changes: decisions gate, never STRICT.
+#   SH4ZAM_SELFTEST=1 (test builds only; needs GAME_SH4ZAM=1): platform/sh4zam_selftest.c logs "ZAMTEST" ulp lines
+#     at OSInit (each re4dc_zam_* routine against the exact C bodies).
+GAME_SH4ZAM ?= 0
+GAME_SH4ZAM_RENDER_ONLY ?= 0
+SH4ZAM_SELFTEST ?= 0
+ifneq ($(GAME_SH4ZAM),0)
+ifneq ($(SH4_APPROX_ON),0)
+$(error GAME_SH4ZAM and SH4_APPROX_RENDER / SH4_APPROX_LOGIC both rebind the render call sites: pick one)
+endif
+GAME_CPPFLAGS += -DRE4DC_SH4ZAM_RENDER=1
+PLATFORM_CPPFLAGS += -DRE4DC_SH4ZAM_RENDER=1
+PLATFORM_OBJS += $(OBJDIR)/platform/sh4zam_direct.o
+$(OBJDIR)/platform/sh4zam_direct.o: platform/sh4zam_direct.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 -Ithird_party/sh4zam/include -MMD -MP -c $< -o $@
+ifneq ($(SH4ZAM_SELFTEST),0)
+PLATFORM_CPPFLAGS += -DRE4DC_SH4ZAM_SELFTEST=1
+PLATFORM_OBJS += $(OBJDIR)/platform/sh4zam_selftest.o
+$(OBJDIR)/platform/sh4zam_selftest.o: platform/sh4zam_selftest.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 -MMD -MP -c $< -o $@
+endif
+ifeq ($(GAME_SH4ZAM_RENDER_ONLY),0)
+ifneq ($(GAME_SH4_MATH),1)
+$(error GAME_SH4ZAM (global) rebinds the PS entry points in platform/ps_alias_sh4.ld: needs GAME_SH4_MATH=1)
+endif
+ifneq ($(GAME_TRIG_LEAN)$(GAME_SINCOS),11)
+$(error GAME_SH4ZAM (global) changes the lean re4dc_sincosf: needs GAME_TRIG_LEAN=1 and GAME_SINCOS=1)
+endif
+ifneq ($(GAME_TRIG_FSCA),0)
+$(error GAME_SH4ZAM (global) and GAME_TRIG_FSCA both replace re4dc_sincosf)
+endif
+GAME30_LINK_INPUTS := $(patsubst platform/ps_alias_sh4.ld,$(OBJDIR)/ps_alias_sh4_zam.ld,$(GAME30_LINK_INPUTS))
+$(OBJDIR)/ps_alias_sh4_zam.ld: platform/ps_alias_sh4.ld
+	@mkdir -p $(dir $@)
+	sed -e 's/^_PSMTXConcat = .*;$$/_PSMTXConcat = _re4dc_zam_MTXConcat;/' -e 's/^_PSMTXInverse = .*;$$/_PSMTXInverse = _re4dc_zam_MTXInverse;/' -e 's/^_PSMTXRotRad = .*;$$/_PSMTXRotRad = _re4dc_zam_MTXRotRad;/' -e 's/^_PSMTXRotAxisRad = .*;$$/_PSMTXRotAxisRad = _re4dc_zam_MTXRotAxisRad;/' -e 's/^_PSMTXMultVec = .*;$$/_PSMTXMultVec = _re4dc_zam_MTXMultVec;/' -e 's/^_PSMTXMultVecSR = .*;$$/_PSMTXMultVecSR = _re4dc_zam_MTXMultVecSR;/' -e 's/^_PSVECNormalize = .*;$$/_PSVECNormalize = _re4dc_zam_VECNormalize;/' -e 's/^_PSVECSquareMag = .*;$$/_PSVECSquareMag = _re4dc_zam_VECSquareMag;/' -e 's/^_PSVECMag = .*;$$/_PSVECMag = _re4dc_zam_VECMag;/' -e 's/^_PSVECDotProduct = .*;$$/_PSVECDotProduct = _re4dc_zam_VECDotProduct;/' -e 's/^_PSVECSquareDistance = .*;$$/_PSVECSquareDistance = _re4dc_zam_VECSquareDistance;/' -e 's/^_PSVECDistance = .*;$$/_PSVECDistance = _re4dc_zam_VECDistance;/' $< > $@
+	test $$(grep -c '= _re4dc_zam_' $@) = 12
+$(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 -Ithird_party/sh4zam/include
+endif
+endif
