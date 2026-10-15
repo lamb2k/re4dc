@@ -2671,12 +2671,26 @@ static inline bool re4dc_gcobj_class(unsigned kind, unsigned id, bool only_stati
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 // Benchmark disc page 2: an actor's OT callback (Leon, the partner, every EmMgr model) is "actor draw" wherever its
 // OT runs (the coarse image draws source actors from the later OTs); the part it interrupted resumes after it.
+// Geometry sweep (bench.cpp, logic frozen, render only): re4dc_bench_hide() bit 1 = no Ganado (model ids 0x10..0x20)
+// is drawn, bit 4 = every other one (odd places in EmMgr's alive list), bit 2 = Leon is not drawn (hide: ModelRender returns before
+// drawing, as on a skipped iteration; coarse.cpp draw_model does the same for the coarse / cast paths).
 extern "C" int re4dc_bench_push(int phase);
+extern "C" unsigned re4dc_bench_hide(void);
 struct BenchActorDraw {
     int prev = -1;
+    bool hide = false;
     explicit BenchActorDraw(cModel* m) {
-        const u8* a = (const u8*) EmMgr.pArray;
-        if (a && (const u8*) m >= a && (const u8*) m < a + (u32) EmMgr.size * (u32) EmMgr.nArray) prev = re4dc_bench_push(2);
+        // an actor = a member of EmMgr's alive list (the Ganados are not inside EmMgr.pArray); n = its list position
+        unsigned n = 0;
+        const cUnit* u = EmMgr.pAlive;
+        for (; u && u != (const cUnit*) m && n < 256; u = u->pNext) ++n;
+        if (u == (const cUnit*) m) {
+            prev = re4dc_bench_push(2);
+            if (const unsigned h = re4dc_bench_hide()) {
+                const bool ganado = m != (cModel*) pPL && m != (cModel*) pSUB && m->id >= 0x10 && m->id <= 0x20;
+                hide = (ganado && ((h & 1) || ((h & 4) && (n & 1)))) || ((h & 2) && m == (cModel*) pPL);
+            }
+        }
     }
     ~BenchActorDraw() { if (prev >= 0) re4dc_bench_phase(prev); }
 };
@@ -2692,6 +2706,9 @@ void ModelRender(cModel* m)
 {
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     BenchActorDraw benchActorDraw(m);
+    if (benchActorDraw.hide) {
+        return;
+    }
 #endif
 #if !(defined(RE4DC_ENCV) && RE4DC_ENCV)
 #if RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_PS2_WORLD_TRANSITION_OWNER

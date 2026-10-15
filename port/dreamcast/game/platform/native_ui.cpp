@@ -7820,6 +7820,10 @@ extern "C" void* re4dc_model_static_lighting_storage(unsigned* bytes){
 }
 
 extern "C" const Re4dcNativeFrameStats* re4dc_native_frame_stats(){return &completed_frame;}
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+// Benchmark geometry sweep (bench.cpp): the last completed frame's TA input, stream calls (one header each) and bytes.
+extern "C" void re4dc_bench_ta(unsigned* calls,unsigned* bytes){*calls=completed_frame.pvr_calls;*bytes=completed_frame.pvr_bytes;}
+#endif
 
 extern "C" void* re4dc_model_deferred_storage(unsigned* bytes){
     *bytes=model_packets?kModelDeferredSpillBytes:0;

@@ -18,6 +18,10 @@
 #                  write misses and I-cache miss freeze cycles on counter 2, one event per drawn-frame period in turn
 #                  (not per vblank tick: the 10-04 hwcal aliasing trap), every ratio taken over the same periods.
 #                  Marks: src/game/main.cpp, src/game/trans.cpp, coarse.cpp. A second CODE line with its own check.
+#                  Scene 3 (/cd/dc/bench3.txt, results page 3, CODE 3): the geometry sweep, the r101 cross view with the
+#                  game logic frozen (TaskScheduler skipped, state hash logged and checked) and six render-only settings
+#                  (as shipped, half / no Ganados, PS2 world far 18.75 m, no Leon, world far 12.5 m): TA
+#                  vertices, CPU / GPU ms and misses per frame, and ms per 1k vertices from the differences.
 #   BENCH_ID=<id>  build id shown on the start and results screens and in the results code (default dev).
 BENCHMARK ?= 0
 BENCH_ID ?= dev

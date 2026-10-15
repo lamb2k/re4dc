@@ -60,12 +60,19 @@ void __real_OSInit(void);
 void* __real_maple_dev_status(maple_device_t* dev);
 maple_device_t* __real_maple_enum_dev(int p, int u);
 unsigned __real_re4dc_ui_frame(void);
+int re4dc_bench_frozen;   // geometry sweep: main.cpp does not run TaskScheduler (the game logic holds still)
+void re4dc_bench_state_now(const char* why);   // dbgwarp_bridge.cpp: the scene state line (hash) now
+void re4dc_bench_ta(unsigned* calls, unsigned* bytes);   // platform/native_ui.cpp: the last completed frame's TA input
+int re4dc_pace_get_mode(void);   // pace.cpp
+void re4dc_pace_set_mode(int mode, const char* why);
 }
 
 namespace {
 // ---------------------------------------------------------------- scenes
-constexpr int kScenes = 2;
-const char* const kScenePath[kScenes] = {"/cd/dc/warp.txt", "/cd/dc/bench2.txt"};
+constexpr int kScenes = 2;       // the measured scenes (results pages 1 and 2)
+constexpr int kAllScenes = 3;    // and scene 3, the geometry sweep (results page 3)
+constexpr int kSweepScene = 2;
+const char* const kScenePath[kAllScenes] = {"/cd/dc/warp.txt", "/cd/dc/bench2.txt", "/cd/dc/bench3.txt"};
 struct Scene {
     char name[24];
     unsigned begin, end;          // measured room frames [begin, end)
@@ -81,7 +88,7 @@ struct Scene {
     unsigned kos_min;
     unsigned end_frame;
 };
-Scene g_scene[kScenes];
+Scene g_scene[kAllScenes];
 int g_cur;                        // scene being run
 unsigned g_run = 1;               // run number (A on the results screen starts the next)
 unsigned g_room_frame;
@@ -105,7 +112,8 @@ struct Pmc {
 Pmc g_pmc[kScenes];
 bool g_pmc_hw;          // counter 2 counts here (the console; not Flycast)
 bool g_cyc_pmc;         // counter 1 is KOS's cycle timer here; else cycles = TMU microseconds x 200
-int g_ph = 4, g_ev_i, g_period_scene = -1;
+int g_ph = 4, g_ev_i;
+struct Pmc* g_period_dst;   // where the running drawn-frame period is counted (nullptr: nowhere)
 bool g_period_live;
 unsigned long long g_c0, g_e0, g_pc[kPh], g_pe[kPh];
 inline unsigned long long cyc_now() { return g_cyc_pmc ? perf_cntr_count(PRFC0) : timer_us_gettime64() * 200ULL; }
@@ -154,6 +162,74 @@ unsigned pm_pct_sum(const Pmc& m, int e, int p0, int p1)
     unsigned long long n = 0, c = 0;
     for (int p = p0; p <= p1; ++p) { n += m.ev[e][p]; c += m.ev_cyc[e][p]; }
     return g_pmc_hw && c ? (unsigned) ((n * 100ULL + c / 2) / c) : 0;
+}
+unsigned pm_miss_k10_sum(const Pmc& m, int p0, int p1)   // read + write misses of several parts, 0.1 k per drawn frame
+{
+    unsigned v = 0;
+    for (int p = p0; p <= p1; ++p) v += pm_k10(m, EV_RDMISS, p) + pm_k10(m, EV_WRMISS, p);
+    return v;
+}
+
+// ---------------------------------------------------------------- geometry sweep (scene 3, results page 3)
+// Coordinator 2026-10-15: what cutting triangles buys on the console. Scene 3 holds the r101 cross view (scene 1's
+// fixture) and from its `bench 3 <room frame>` line on the game logic stands still (main.cpp skips TaskScheduler:
+// AI, motion, camera, effects move, scenario and the warp rig; the state hash is logged at the freeze, at the end of
+// the sweep and at the scene end, and must not change) while pacing is off (every iteration draws). Six render-only
+// settings, each kSettleUs then kMeasureUs: as shipped; every other Ganado not drawn (odd places in EmMgr's alive list); no Ganado
+// drawn; the PS2 world's far plane at 18.75 m (shipped 25 m); Leon not drawn; the far plane at 12.5 m. A Ganado or Leon "not drawn" returns before its draw (coarse.cpp draw_model, trans.cpp
+// ModelRender), as on a skipped iteration. The shipped Ganados are the PS2 cast (coarse_ganado_cast.cpp): no LOD
+// levels (its far bundle, CROWD_FAR, is not in this build), so a forced crowd tier changes nothing there (Flycast
+// check: identical TA counts) and the Ganado rows remove whole Ganados instead; Leon (coarse_leon) has no LOD
+// levels either (a 16 px LOD threshold changed nothing). Removing a model also removes its per-model work (bones,
+// set-up), which an LOD would keep: the "ms per 1k vertices" of a removal is an upper bound for an LOD's saving. Per setting and drawn frame: TA vertices (the frame's 32-byte TA commands less its headers,
+// native_ui's frame counters) and headers, CPU ms by part, GPU ms, D-stall %, data cache misses. Page 3 derives ms per
+// 1k vertices from the differences against "as shipped".
+constexpr int kSet = 6;
+const char* const kSetName[kSet] = {"AS SHIPPED", "HALF GANADO", "NO GANADOS", "WORLD 18.8M", "NO LEON", "WORLD 12.5M"};
+constexpr unsigned long long kSettleUs = 1500000, kMeasureUs = 5000000, kSlotUs = kSettleUs + kMeasureUs;
+constexpr float kNearFar = 12500.0f, kMidFar = 18750.0f;   // the PS2 world's far plane (shipped 25000)
+struct Sweep {
+    Pmc pmc;
+    unsigned long long ta_calls, ta_bytes;
+    unsigned ta_n;
+    unsigned long long rnd_sum_ns;
+    unsigned rnd_n, windows;
+};
+Sweep g_sw[kSet];
+enum { SW_IDLE, SW_RUN, SW_DONE };
+int g_sw_state, g_sw_k = -1, g_sw_saved_pace, g_sw_prev_win = -1;
+bool g_sw_measuring, g_sw_logged;
+unsigned long long g_sw_t0;
+unsigned g_hide;
+float g_world_far;
+void sweep_apply(int k)
+{
+    g_hide = k == 1 ? 4u : k == 2 ? 1u : k == 4 ? 2u : 0u;
+    g_world_far = k == 5 ? kNearFar : k == 3 ? kMidFar : 0.0f;
+}
+unsigned sw_verts10(const Sweep& w)   // TA vertices per frame, 0.1 k
+{
+    if (!w.ta_n || w.ta_bytes / 32 < w.ta_calls) return 0;
+    return (unsigned) (((w.ta_bytes / 32 - w.ta_calls) / w.ta_n + 50) / 100);
+}
+unsigned sw_hdrs(const Sweep& w) { return w.ta_n ? (unsigned) ((w.ta_calls + w.ta_n / 2) / w.ta_n) : 0; }
+unsigned sw_cpu10(const Sweep& w) { return pm_ms10_sum(w.pmc, 0, kWork - 1); }
+unsigned sw_act10(const Sweep& w) { return pm_ms10_sum(w.pmc, 1, 2); }
+unsigned sw_wld10(const Sweep& w) { return pm_ms10(w.pmc, 3); }
+unsigned sw_gpu10(const Sweep& w) { return w.rnd_n ? (unsigned) ((w.rnd_sum_ns / w.rnd_n + 50000) / 100000) : 0; }
+// ms per 1k vertices x100 from setting 0 against setting b (0.1 ms and 0.1 k units); -1 when the vertices did not drop
+int sw_slope100(unsigned (*f)(const Sweep&), int b)
+{
+    const int dv = (int) sw_verts10(g_sw[0]) - (int) sw_verts10(g_sw[b]);
+    if (dv <= 0 || !g_sw[0].pmc.periods || !g_sw[b].pmc.periods) return -1;
+    return ((int) f(g_sw[0]) - (int) f(g_sw[b])) * 100 / dv;
+}
+const char* d2s(int v100, char* buf)
+{
+    if (v100 < 0 && v100 != -1) { snprintf(buf, 12, "-%d.%02d", -v100 / 100, -v100 % 100); return buf; }
+    if (v100 == -1) { snprintf(buf, 12, "-"); return buf; }
+    snprintf(buf, 12, "%d.%02d", v100 / 100, v100 % 100);
+    return buf;
 }
 
 // ---------------------------------------------------------------- framebuffer text (hwcal r21v)
@@ -403,7 +479,7 @@ void draw_counters(const Fb& fb)
         fb_text(fb, 8, y, 1, 3, kGreen, code); y += 24;
         if (sp) { fb_text(fb, 8, y, 1, 3, kGreen, sp + 1); y += 26; }
     }
-    fb_text(fb, 14, y, 2, 3, kCyan, "A: RUN AGAIN   B: PAGE 1 (RESULTS)");
+    fb_text(fb, 14, y, 2, 3, kCyan, "A: RUN AGAIN   B: PAGE 3 (GEOMETRY)");
 }
 
 void log_counters()
@@ -422,6 +498,136 @@ void log_counters()
                       m.ev[0][p], m.ev[1][p], m.ev[2][p], m.ev[3][p]);
     }
     re4dc_log("bench: code2 %s build %s\n", code, RE4DC_BENCH_ID);
+}
+
+// The third code: S, then per setting TA vertices per frame (0.1 k) . CPU ms x10 . GPU ms x10, settings joined by /,
+// then a check value as on page 1.
+void make_code3(char* out, unsigned size)
+{
+    char body[160], part[160];
+    char* q = part;
+    char* const end = part + sizeof(part);
+    q += snprintf(q, end - q, "S");
+    for (int k = 0; k < kSet; ++k)
+        q += snprintf(q, end - q, "%s%u.%u.%u", k ? "/" : "", sw_verts10(g_sw[k]), sw_cpu10(g_sw[k]), sw_gpu10(g_sw[k]));
+    snprintf(body, sizeof(body), "%s %s", RE4DC_BENCH_ID, part);
+    unsigned ck = 0;
+    for (const char* p = body; *p; ++p) ck = (ck * 31 + (unsigned char) *p) % 251;
+    snprintf(out, size, "%s %02X", part, ck);
+}
+
+// Page 3: the geometry sweep, one row per setting, and the cost per 1k vertices derived from the rows.
+void draw_sweep(const Fb& fb)
+{
+    char line[128], code[192], a[12], b[12], c[12], d[12], e[12], f[12], g[12];
+    fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
+    int y = 30;
+    fb_fill(fb, 30, y - 4, 580, 30, 0x900000);
+    fb_center(fb, y, 2, 3, kWhite, "BENCHMARK DISC - NOT THE GAME"); y += 34;
+    fb_center(fb, y, 2, 3, kYellow, "PAGE 3: WHAT GEOMETRY COSTS"); y += 30;
+    snprintf(line, sizeof(line), "BUILD %s   RUN %u   R101 CROSS, GAME FROZEN", RE4DC_BENCH_ID, g_run);
+    fb_center(fb, y, 2, 2, kGrey, line); y += 24;
+    snprintf(line, sizeof(line), "%-11s %5s %5s %5s %5s %5s %3s %5s", "SETTING", "VERTK", "CPU", "ACTOR", "WORLD", "GPU",
+             "ST%", "MISSK");
+    fb_text(fb, 14, y, 2, 2, kCyan, line); y += 20;
+    for (int k = 0; k < kSet; ++k) {
+        const Sweep& w = g_sw[k];
+        if (!w.pmc.periods) {
+            snprintf(line, sizeof(line), "%-11s  NOT MEASURED", kSetName[k]);
+            fb_text(fb, 14, y, 2, 2, kRed, line); y += 18;
+            continue;
+        }
+        snprintf(e, sizeof(e), "%u", pm_pct_sum(w.pmc, EV_DSTALL, 0, kWork - 1));
+        snprintf(line, sizeof(line), "%-11s %5s %5s %5s %5s %5s %3s %5s", kSetName[k], d1(sw_verts10(w), a),
+                 d1(sw_cpu10(w), b), d1(sw_act10(w), c), d1(sw_wld10(w), d), d1(sw_gpu10(w), f), g_pmc_hw ? e : "-",
+                 g_pmc_hw ? d1(pm_miss_k10_sum(w.pmc, 0, kWork - 1), g) : "-");
+        fb_text(fb, 14, y, 2, 2, k ? kWhite : kYellow, line); y += 18;
+    }
+    y += 6;
+    fb_text(fb, 14, y, 2, 2, kCyan, "MS PER 1000 VERTICES     CPU    GPU  VERTK"); y += 20;
+    struct Row { const char* name; int b; };
+    const Row rows[] = {{"GANADOS (NONE)", 2}, {"GANADOS (HALF)", 1}, {"LEON (NONE)", 4}, {"WORLD (18.8 M FAR)", 3},
+                        {"WORLD (12.5 M FAR)", 5}};
+    for (const Row& r : rows) {
+        const int dv = (int) sw_verts10(g_sw[0]) - (int) sw_verts10(g_sw[r.b]);
+        snprintf(line, sizeof(line), "%-22s %6s %6s %6s", r.name, d2s(sw_slope100(sw_cpu10, r.b), a),
+                 d2s(sw_slope100(sw_gpu10, r.b), b), dv > 0 ? d1((unsigned) dv, c) : "-");
+        fb_text(fb, 14, y, 2, 2, kGreen, line); y += 18;
+    }
+    y += 4;
+    fb_text(fb, 14, y, 1, 2, kGrey, "VERTK: THOUSANDS OF VERTICES SENT TO THE GRAPHICS CHIP PER FRAME. CPU / ACTOR / WORLD / GPU: MS"); y += 16;
+    fb_text(fb, 14, y, 1, 2, kGrey, "PER FRAME. LOWER ROWS: WHAT 1000 FEWER VERTICES SAVE, FROM THE DIFFERENCE TO AS SHIPPED"); y += 20;
+    make_code3(code, sizeof(code));
+    fb_text(fb, 14, y, 2, 2, kGreen, "CODE 3:"); y += 18;
+    fb_text(fb, 8, y, 1, 3, kGreen, code); y += 28;
+    fb_text(fb, 14, y, 2, 3, kCyan, "A: RUN AGAIN   B: PAGE 1 (RESULTS)");
+}
+
+void log_sweep()
+{
+    char code[192];
+    for (int k = 0; k < kSet; ++k) {
+        const Sweep& w = g_sw[k];
+        re4dc_log("bench: sweep run %u setting %d %s frames=%u verts10=%u hdrs=%u cpu10=%u act10=%u wld10=%u logic10=%u "
+                  "other10=%u gpu10=%u gpu_windows=%u dstall%%=%u miss_k10=%u ta_calls=%llu ta_bytes=%llu ta_n=%u\n",
+                  g_run, k + 1, kSetName[k], w.pmc.periods, sw_verts10(w), sw_hdrs(w), sw_cpu10(w), sw_act10(w),
+                  sw_wld10(w), pm_ms10(w.pmc, 0), pm_ms10(w.pmc, 4), sw_gpu10(w), w.windows,
+                  pm_pct_sum(w.pmc, EV_DSTALL, 0, kWork - 1), pm_miss_k10_sum(w.pmc, 0, kWork - 1), w.ta_calls,
+                  w.ta_bytes, w.ta_n);
+    }
+    char a[12], b[12];
+    const int bs[5] = {2, 1, 3, 4, 5};
+    for (int b_ : bs)
+        re4dc_log("bench: sweep slope vs setting %d %s: cpu %s gpu %s ms per 1k vertices\n", b_ + 1, kSetName[b_],
+                  d2s(sw_slope100(sw_cpu10, b_), a), d2s(sw_slope100(sw_gpu10, b_), b));
+    make_code3(code, sizeof(code));
+    re4dc_log("bench: code3 %s build %s\n", code, RE4DC_BENCH_ID);
+}
+
+void sweep_start()
+{
+    memset(g_sw, 0, sizeof(g_sw));
+    g_sw_state = SW_RUN; g_sw_k = -1; g_sw_prev_win = -1;
+    g_sw_logged = false; g_sw_measuring = false;
+    g_sw_saved_pace = re4dc_pace_get_mode();
+    re4dc_pace_set_mode(2, "bench sweep");   // PACE_OFF: every iteration draws
+    re4dc_bench_frozen = 1;
+    re4dc_log("bench: sweep: game logic frozen after room frame %u (pace mode %d -> off)\n", g_room_frame, g_sw_saved_pace);
+}
+// Top of a main loop iteration while the sweep runs: the setting by elapsed time; after the last one the logic resumes.
+void sweep_step()
+{
+    if (g_sw_state != SW_RUN) return;
+    const unsigned long long now = timer_us_gettime64();
+    if (!g_sw_logged) {
+        g_sw_logged = true;
+        g_sw_t0 = now;
+        re4dc_bench_state_now("sweep start (logic frozen)");
+    }
+    const unsigned long long t = now - g_sw_t0;
+    const int k = (int) (t / kSlotUs);
+    if (k >= kSet) {
+        g_sw_measuring = false;
+        sweep_apply(-1);
+        re4dc_bench_state_now("sweep end (logic still frozen)");
+        re4dc_bench_frozen = 0;
+        re4dc_pace_set_mode(g_sw_saved_pace, "bench sweep end");
+        g_sw_state = SW_DONE;
+        re4dc_log("bench: sweep done\n");
+        return;
+    }
+    if (k != g_sw_k) {
+        g_sw_k = k;
+        sweep_apply(k);
+        re4dc_log("bench: sweep setting %d %s\n", k + 1, kSetName[k]);
+    }
+    g_sw_measuring = t - (unsigned long long) k * kSlotUs >= kSettleUs;
+}
+Pmc* period_target()
+{
+    if (g_cur == kSweepScene) return g_sw_measuring && g_sw_k >= 0 ? &g_sw[g_sw_k].pmc : nullptr;
+    const Scene& s = g_scene[g_cur];
+    return g_cur < kScenes && s.defined && s.measuring ? &g_pmc[g_cur] : nullptr;
 }
 
 void log_results() {
@@ -444,14 +650,21 @@ extern "C" {
 // A `bench <no> <begin> <end> <name>` line of the current fixture: the measured room frames of scene no (1-based).
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name)
 {
-    if (no < 1 || no > kScenes) return;
+    if (no < 1 || no > kAllScenes) return;
     Scene& s = g_scene[no - 1];
     memset(&s, 0, sizeof(s));
     strncpy(s.name, name ? name : "-", sizeof(s.name) - 1);
     s.begin = begin; s.end = end; s.defined = true;
     s.min_fps10 = ~0u; s.kos_min = ~0u;
-    memset(&g_pmc[no - 1], 0, sizeof(g_pmc[no - 1]));
+    if (no - 1 < kScenes) memset(&g_pmc[no - 1], 0, sizeof(g_pmc[no - 1]));
+    if (no - 1 == kSweepScene) {
+        memset(g_sw, 0, sizeof(g_sw));
+        g_sw_state = SW_IDLE; g_sw_k = -1; g_sw_measuring = false;
+        re4dc_bench_frozen = 0;
+        sweep_apply(-1);
+    }
     g_period_live = false;
+    g_period_dst = nullptr;
     g_cur = no - 1;
     g_prev_include = g_last_include = false;
     re4dc_log("bench: scene %d %s armed: measure room frames %u..%u (run %u)\n", no, s.name, begin, end, g_run);
@@ -467,6 +680,19 @@ int re4dc_bench_tick(unsigned room_frame)
     unsigned f = 0, u = 0, b = 0;
     re4dc_kos_heap_state(&f, &u, &b);
     if (f + b < s.kos_min) s.kos_min = f + b;
+    if (g_cur == kSweepScene) {   // 2 = the logic freezes after this tick, 1 = the sweep is over
+        if (g_sw_state == SW_DONE) {
+            s.done = true;
+            s.end_frame = room_frame;
+            re4dc_log("bench: scene 3 end room frame %u (sweep done)\n", room_frame);
+            return 1;
+        }
+        if (g_sw_state == SW_IDLE && room_frame >= s.begin) {
+            sweep_start();
+            return 2;
+        }
+        return 0;
+    }
     if (room_frame == s.begin) {
         s.measuring = true;
         re4dc_log("bench: scene %d begin room frame %u\n", g_cur + 1, room_frame);
@@ -485,7 +711,7 @@ int re4dc_bench_tick(unsigned room_frame)
 // After a scene ended: the fixture of the next scene, or nullptr after the last one (then the results screen).
 const char* re4dc_bench_next_scene(void)
 {
-    return g_cur + 1 < kScenes ? kScenePath[g_cur + 1] : nullptr;
+    return g_cur + 1 < kAllScenes ? kScenePath[g_cur + 1] : nullptr;
 }
 int re4dc_bench_scene_no(void) { return g_cur + 1; }
 
@@ -497,6 +723,7 @@ const char* re4dc_bench_results(void)
     if (g_pmc_hw) perf_cntr_stop(PRFC1);
     log_results();
     log_counters();
+    log_sweep();
     re4dc_log("bench: results screen fb=%08lx ctrl=%08lx\n", (unsigned long) *(volatile uint32_t*) 0xA05F8050,
               (unsigned long) *(volatile uint32_t*) 0xA05F8044);
     uint32_t last_sof = ~0u;
@@ -507,14 +734,16 @@ const char* re4dc_bench_results(void)
         const uint32_t sof = *(volatile uint32_t*) 0xA05F8050;
         if (sof != last_sof || page != shown) {
             last_sof = sof; shown = page;
-            if (page) draw_counters(fb_displayed()); else draw_results(fb_displayed());
+            if (page == 2) draw_sweep(fb_displayed());
+            else if (page == 1) draw_counters(fb_displayed());
+            else draw_results(fb_displayed());
         }
         const unsigned btn = pad_buttons();
         const bool a = (btn & CONT_A) != 0, by = (btn & (CONT_B | CONT_Y)) != 0;
         if (!a) { if (down) break; up = true; }
         else if (up) down = true;
         if (!by) {
-            if (pdown) { page ^= 1; pdown = false; re4dc_log("bench: results page %d\n", page + 1); }
+            if (pdown) { page = (page + 1) % 3; pdown = false; re4dc_log("bench: results page %d\n", page + 1); }
             pup = true;
         } else if (pup) pdown = true;
         ++g_results_ticks;
@@ -531,6 +760,15 @@ const char* re4dc_bench_results(void)
 // that completed in the window. A window counts when the scene measured at its start and at its end.
 void re4dc_bench_window(unsigned drawn, unsigned ticks, unsigned vblanks, unsigned long long rnd_sum_ns, unsigned rnd_n)
 {
+    if (g_cur == kSweepScene) {   // geometry sweep: GPU render time of windows wholly inside one setting's measure
+        const int k = g_sw_measuring ? g_sw_k : -1;
+        if (k >= 0 && k == g_sw_prev_win) {
+            g_sw[k].rnd_sum_ns += rnd_sum_ns; g_sw[k].rnd_n += rnd_n; ++g_sw[k].windows;
+        }
+        g_sw_prev_win = k;
+        g_prev_include = g_last_include = false;
+        return;
+    }
     Scene& s = g_scene[g_cur];
     const bool now = s.defined && s.measuring;
     const bool include = now && g_prev_include;
@@ -587,11 +825,17 @@ int re4dc_bench_push(int phase)
 void re4dc_bench_iter(int drawn)
 {
     re4dc_bench_phase(4);   // the wait of the previous iteration ends here
+    sweep_step();
     if (!drawn) return;
-    const Scene& s = g_scene[g_cur];
-    const bool now = s.defined && s.measuring;
-    if (g_period_live && now && g_period_scene == g_cur) {
-        Pmc& m = g_pmc[g_cur];
+    Pmc* const target = period_target();
+    const bool now = target != nullptr;
+    if (g_period_live && now && g_period_dst == target) {
+        Pmc& m = *target;
+        if (g_cur == kSweepScene && g_sw_k >= 0) {   // the frame just completed was drawn under this setting
+            unsigned calls = 0, bytes = 0;
+            re4dc_bench_ta(&calls, &bytes);
+            g_sw[g_sw_k].ta_calls += calls; g_sw[g_sw_k].ta_bytes += bytes; ++g_sw[g_sw_k].ta_n;
+        }
         ++m.periods;
         ++m.ev_periods[g_ev_i];
         for (int p = 0; p < kPh; ++p) {
@@ -603,7 +847,7 @@ void re4dc_bench_iter(int drawn)
     }
     for (int p = 0; p < kPh; ++p) g_pc[p] = g_pe[p] = 0;
     g_period_live = now;
-    g_period_scene = g_cur;
+    g_period_dst = target;
     if (now) {
         if (g_pmc_hw) {
             pmc_event(kEvCode[g_ev_i]);
@@ -615,6 +859,10 @@ void re4dc_bench_iter(int drawn)
 
 // ---------------------------------------------------------------- banner (native_ui.cpp, every presented frame)
 const char* re4dc_bench_banner(void) { return "BENCHMARK DISC - NOT THE GAME"; }
+
+// ---------------------------------------------------------------- geometry sweep settings (render only)
+unsigned re4dc_bench_hide(void) { return g_hide; }   // 1 every Ganado, 4 every other Ganado, 2 Leon not drawn
+float re4dc_bench_world_far(float far) { return g_world_far > 0.0f && g_world_far < far ? g_world_far : far; }
 
 // ---------------------------------------------------------------- wraps
 extern "C" void* __wrap_maple_dev_status(maple_device_t* dev)
@@ -671,8 +919,8 @@ extern "C" void __wrap_OSInit(void)
                                   "TO PLAY, USE THE CURRENT TEST RELEASE:",
                                   "GITHUB.COM/LAMB2K/RE4DC - RELEASES",
                                   "",
-                                  "IT RUNS TWO SCRIPTED SCENES BY ITSELF",
-                                  "(ABOUT 4 MINUTES), THEN SHOWS RESULTS.",
+                                  "IT RUNS THREE SCRIPTED SCENES BY ITSELF",
+                                  "(ABOUT 5 MINUTES), THEN SHOWS RESULTS.",
                                   "AFTER START DO NOT TOUCH THE CONTROLLER.",
                                   "PHOTOGRAPH BOTH RESULTS PAGES (B SWITCHES)."};
             for (const char* s : body) { fb_text(fb, 60, y, 2, 2, s[0] == 'G' ? kGreen : kWhite, s); y += 22; }

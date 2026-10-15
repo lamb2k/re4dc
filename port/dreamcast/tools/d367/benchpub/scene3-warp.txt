@@ -1,0 +1,13 @@
+name bench-r101-sweep
+# Public benchmark disc v2 (BENCHMARK=1, bench.mk), scene 3 = /cd/dc/bench3.txt: the geometry sweep. Scene 1's
+# fixture (the r101 cross view, crowd alerted at room frame 30, god, no pad input); after room frame 600 (20 s) the
+# game logic freezes (bench.cpp) and the same frame state is drawn under six render-only settings, 6.5 s each.
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150
+bench 3 600 600 GEOMETRY SWEEP

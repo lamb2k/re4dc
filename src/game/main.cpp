@@ -107,6 +107,7 @@ extern "C" void re4dc_pace_test_tick(void);
 // 1 actor prep, 2 actor draw, 3 world draw, 4 other, 5 wait (vblank / pace wait, swap).
 extern "C" void re4dc_bench_iter(int drawn);
 extern "C" void re4dc_bench_phase(int phase);
+extern "C" int re4dc_bench_frozen;   // geometry sweep: TaskScheduler does not run
 #define BENCH_PH(p) re4dc_bench_phase(p)
 #else
 #define BENCH_PH(p) ((void) 0)
@@ -292,6 +293,11 @@ RESTART:
             MWC("clear");
             pG->Frame_cnt++;
             BENCH_PH(0);
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+            // Geometry sweep (bench.cpp): the game logic holds still (no task runs: AI, motion, camera, effects
+            // move, scenario, the warp rig); Trans and Render redraw the same state.
+            if (!re4dc_bench_frozen)
+#endif
             TaskScheduler();
             BENCH_PH(4);
             MWC("tasks");

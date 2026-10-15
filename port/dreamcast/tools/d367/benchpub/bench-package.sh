@@ -3,12 +3,12 @@
 # Release build rule 3: the disc tree and the GDI are built on WSL ext4 ($K) and cross to C: once.
 #   data   the test release's data set (pkg json of $BASE's label, t11-fix.py --data ...), with the five program
 #          overlays the json takes from the release program replaced by this arm's (overlays are linked to their ELF)
-#   dc/    warp.txt = scene1-warp.txt, bench2.txt = scene2-warp.txt (a squeeze level, if given, is prepended to
-#          warp.txt for the KOS_SQUEEZE twin's gate disc)
+#   dc/    warp.txt = scene1-warp.txt, bench2.txt = scene2-warp.txt, bench3.txt = scene3-warp.txt (the geometry
+#          sweep; a squeeze level, if given, is prepended to warp.txt for the KOS_SQUEEZE twin's gate disc)
 #   IP.BIN title "RE4DC BENCHMARK (NOT THE GAME)", product T0002 (not the game's T0000)
 # Output: $K/disc-<label>[-sq<bytes>-<frag>]/gdemu (disc.gdi, track01.bin, track02.raw, track03.bin) + gdemu-sha256.txt.
-# Env: K (work dir, default /root/probe/bench-public), PKG_JSON (default the 12.1 package json), S1 / S2 (scene
-#      fixtures instead of scene1-warp.txt / scene2-warp.txt: short development checks only, never a tester disc).
+# Env: K (work dir, default /root/probe/bench-public), PKG_JSON (default the 12.1 package json), S1 / S2 / S3
+#      (scene fixtures instead of scene1/2/3-warp.txt: short development checks only, never a tester disc).
 set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 L=${1:?arm label}; SQB=${2:-}; SQF=${3:-0}
@@ -36,7 +36,8 @@ PKG_K=$D python3 /root/probe/lanes-20261011/test8/t8-pkgtree.py $L $D/pkg.json >
 tail -1 $D/pkgtree.txt | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $D/pkgtree.txt; exit 1; }
 { [ -z "$SQB" ] || echo "squeeze $SQB $SQF"; tr -d '\r' < ${S1:-$here/scene1-warp.txt}; } > $D/fix/warp.txt
 tr -d '\r' < ${S2:-$here/scene2-warp.txt} > $D/fix/bench2.txt
-[ $(stat -c %s $D/fix/warp.txt) -lt 2048 ] && [ $(stat -c %s $D/fix/bench2.txt) -lt 2048 ]
+tr -d '\r' < ${S3:-$here/scene3-warp.txt} > $D/fix/bench3.txt
+[ $(stat -c %s $D/fix/warp.txt) -lt 2048 ] && [ $(stat -c %s $D/fix/bench2.txt) -lt 2048 ] && [ $(stat -c %s $D/fix/bench3.txt) -lt 2048 ]
 TITLE="RE4DC BENCHMARK (NOT THE GAME)" PRODUCT=T0002 bash $here/../mkgdi.sh $O/re4dc-game.elf $D/pkgtree $D/gdemu $D/fix | tail -2
 head -c 256 $D/gdemu/IP.BIN | grep -aq "RE4DC BENCHMARK (NOT THE GAME)" || { echo "IP.BIN title missing" >&2; exit 1; }
 rm -f $D/gdemu/IP.BIN

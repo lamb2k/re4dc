@@ -652,7 +652,7 @@ bool bench_poll()
         if (wp.god && pG) pG->pl_life = pG->pl_life_max;
         return true;
     }
-    if (!re4dc_bench_tick(wp.room_frames)) return false;
+    if (re4dc_bench_tick(wp.room_frames) != 1) return false;   // 2: the geometry sweep freezes the logic after this tick
     bench_state_log(wp.room_frames);
     const char* next = re4dc_bench_next_scene();
     if (!next) {
@@ -1035,3 +1035,12 @@ int re4dc_warp_late_set(void) { return wp.has_late ? 1 : 0; }
 
 }  // extern "C"
 #endif  // RE4DC_DBG_WARP
+
+#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+// Benchmark geometry sweep (bench.cpp): the scene state line now (the frozen logic must keep its hash).
+extern "C" void re4dc_bench_state_now(const char* why)
+{
+    re4dc_log("bench: state check: %s\n", why ? why : "-");
+    bench_state_log(wp.room_frames);
+}
+#endif

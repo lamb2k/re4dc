@@ -7,11 +7,13 @@ it saves nothing (it does not touch your VMU). To play, use the current test
 release: https://github.com/lamb2k/re4dc/releases
 
 Build SHA_PLACEHOLDER: the test 12.1 program and data, plus the two scripted
-benchmark scenes. Version 2 runs the same scenes as version 1 and shows the
-same first results page, so old and new results compare directly. It adds a
-second results page that shows where the console's processor spends its time.
+benchmark scenes. Version 2 runs the same two scenes as version 1 and shows
+the same first results page, so old and new results compare directly. It
+adds a second results page that shows where the console's processor spends
+its time, and a third scene and page that measure what drawing more or less
+detail costs.
 
-What it does (about 4 minutes, no input needed)
+What it does (about 5 minutes, no input needed)
 1. A start screen says what the disc is. Press START (or wait 20 seconds),
    then put the controller down until the results screen.
 2. Scene 1, the village (r101): Leon stands by the burning cross while the
@@ -20,8 +22,10 @@ What it does (about 4 minutes, no input needed)
 3. Scene 2, the first house (r100): a short cutscene plays, then Leon waits
    at the back window while the villagers close in. About 17 seconds are
    measured.
-4. The results appear on two pages. Press B (or Y) to switch between them.
-5. Press A on either page to run both scenes again (optional).
+4. Scene 3, the village again: the picture freezes and is drawn six
+   different ways (about 40 seconds; see page 3 below).
+5. The results appear on three pages. Press B (or Y) for the next page.
+6. Press A on any page to run all the scenes again (optional).
 
 A red banner "BENCHMARK DISC - NOT THE GAME" stays at the top of the screen
 the whole time.
@@ -29,9 +33,10 @@ the whole time.
 How to report
 Open a new issue named "Benchmark results" at
 https://github.com/lamb2k/re4dc/issues and include:
-- a photo of each results page (sharp, straight on, all text readable)
-- the CODE line from page 1 and the CODE 2 line from page 2, typed out
-  (CODE 2 may wrap onto two lines on screen; type it as one line)
+- a photo of each of the three results pages (sharp, straight on, all text
+  readable)
+- the CODE line from page 1, CODE 2 from page 2 and CODE 3 from page 3,
+  typed out (CODE 2 may wrap onto two lines on screen; type it as one line)
 - your console region (NTSC-U, NTSC-J or PAL)
 - how you ran it: GDEMU, another optical drive emulator (say which), or a
   burned disc
@@ -86,5 +91,33 @@ CODE 2      the page 2 numbers in one line, with its own check value: for
 The counters take turns: each drawn frame counts one kind of event, so each
 number comes from about a quarter of the frames. On an emulator the counters
 do not count; page 2 then says so and shows times only.
+
+Results page 3: what geometry costs
+Scene 3 goes back to the village view of scene 1. After 20 seconds the game
+stands still (nothing moves, nothing thinks; the same picture is drawn over
+and over) and the disc draws that one picture six ways, 6.5 seconds each:
+AS SHIPPED   as the game draws it
+HALF GANADO  every other villager left out
+NO GANADOS   no villagers drawn
+WORLD 18.8M  the village scenery drawn only up to 18.75 m (normally 25 m)
+NO LEON      Leon left out
+WORLD 12.5M  the scenery drawn only up to 12.5 m
+For each way the page shows:
+VERTK       thousands of corner points (vertices) sent to the graphics
+            chip per frame
+CPU         milliseconds of processor work per frame
+ACTOR       of that, the characters
+WORLD       of that, the scenery
+GPU         milliseconds the graphics chip needs per frame
+ST%, MISSK  as on page 2 (waiting for memory, cache misses in thousands)
+The lower rows divide the difference against AS SHIPPED by the number of
+vertices left out: milliseconds per 1000 vertices, for the processor and for
+the graphics chip. Leaving a model out also saves its fixed work (its
+skeleton, its set-up), so for the characters this is the most a simpler
+model could save.
+CODE 3      for each of the six ways: vertices (in hundreds), CPU and GPU
+            milliseconds times ten, then a check value
+The game stands still only during these 39 seconds; it is never saved and
+the disc starts each scene fresh.
 
 SHA256SUMS.txt lists the sha256 of each file in the gdemu folder.
