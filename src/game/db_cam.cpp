@@ -5,6 +5,7 @@
 // shoulder camera offset editor (adjust_qFPS, shared with the t_camera tool).
 
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "vec.h"
 #include "atari.h"
 #include "global.h"
@@ -332,8 +333,9 @@ void debugCamera::move(Camera* cam, JOY* joy, int flag)
         Vec pos;
         Vec at;
         PSMTXInverse(pPL->mat, inv);
-        PSMTXMultVec(inv, &pG->Cam.param.pos, &pos);
-        PSMTXMultVec(inv, &pG->Cam.param.at, &at);
+        RE4DC_XM_LOAD(inv);
+        RE4DC_XM_POINT(inv, &pG->Cam.param.pos, &pos);
+        RE4DC_XM_POINT(inv, &pG->Cam.param.at, &at);
         eprintf(72, 420, 5, 0, "CAMPOS @pPl->mat: (%5.1f, %5.1f, %5.1f)", pos.x, pos.y, pos.z);
         eprintf(72, 434, 5, 0, "TARGET @pPl->mat: (%5.1f, %5.1f, %5.1f)", at.x, at.y, at.z);
     }
@@ -1473,8 +1475,9 @@ int adjust_qFPS(JOY* joy, int x, int y, int flag, int* out)
             BitOff(pG->Stop_flg, 0x40000000);
             menu_level = 1;
         } else if (joy->trg & JOY_A) {
-            PSMTXMultVec(inv, &g->Cam.param.pos, &QOFS(p_offset)->Campos);
-            PSMTXMultVec(inv, &g->Cam.param.at, &QOFS(p_offset)->target);
+            RE4DC_XM_LOAD(inv);
+            RE4DC_XM_POINT(inv, &g->Cam.param.pos, &QOFS(p_offset)->Campos);
+            RE4DC_XM_POINT(inv, &g->Cam.param.at, &QOFS(p_offset)->target);
             if (symmetry_flag) {
                 memcpy(p_counter, p_offset, sizeof(QfpsOfs));
                 FSet(QOFS(p_counter)->Campos.x, -QOFS(p_counter)->Campos.x);
@@ -1629,8 +1632,9 @@ int adjust_qFPS(JOY* joy, int x, int y, int flag, int* out)
         }
     }
     if (menu_level == 2) {
-        PSMTXMultVec(inv, &cam->param.at, &target);
-        PSMTXMultVec(inv, &cam->param.pos, &campos);
+        RE4DC_XM_LOAD(inv);
+        RE4DC_XM_POINT(inv, &cam->param.at, &target);
+        RE4DC_XM_POINT(inv, &cam->param.pos, &campos);
         if (pG->Frame_cnt & 0x18) {
             eprintf(120, 14, 5, 0, "--- CAMERA OFFSET ---");
         }
@@ -1638,8 +1642,9 @@ int adjust_qFPS(JOY* joy, int x, int y, int flag, int* out)
         eprintf(120, 42, 4, 0, "Campos: (%f, %f, %f)", campos.x, campos.y, campos.z);
     }
     if (menu_level == 3) {
-        PSMTXMultVec(inv, &cam->param.at, &target);
-        PSMTXMultVec(inv, &cam->param.pos, &close);
+        RE4DC_XM_LOAD(inv);
+        RE4DC_XM_POINT(inv, &cam->param.at, &target);
+        RE4DC_XM_POINT(inv, &cam->param.pos, &close);
         if (pG->Frame_cnt & 0x18) {
             eprintf(120, 14, 5, 0, "---- CLOSE POINT ----");
         }

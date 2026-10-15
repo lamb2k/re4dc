@@ -4,6 +4,7 @@
 // Distance helpers move pos or at and rebuild.
 
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "vec.h"
 #include "camera.h"
 #include "db_log.h"
@@ -66,8 +67,9 @@ void CameraSetOrientationRoll(Camera* cam)
     }
     PSVECCrossProduct(&dir, &right, &up);
     PSMTXRotAxisRad(m, &dir, cam->param.roll);
-    PSMTXMultVec(m, &right, &right);
-    PSMTXMultVec(m, &up, &up);
+    RE4DC_XM_LOAD(m);
+    RE4DC_XM_POINT(m, &right, &right);
+    RE4DC_XM_POINT(m, &up, &up);
     if (right.x != 0.0f || right.y != 0.0f || right.z != 0.0f) {
 #line 91 "D:/Bio4/Prog/cam_sys.cpp"
         VECNormalize(&right, &right);

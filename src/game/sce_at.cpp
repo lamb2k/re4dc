@@ -1,4 +1,5 @@
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "atari.h"
 #include "map_obj.h"
 #include "light.h"
@@ -844,10 +845,11 @@ void sceAtGetArea(AreaData* out, SceAtWork* w)
         p[2].z = out->u.xz4.p[2].z;
         p[3].x = out->u.xz4.p[3].x;
         p[3].z = out->u.xz4.p[3].z;
-        PSMTXMultVec(mat, &p[0], &p[0]);
-        PSMTXMultVec(mat, &p[1], &p[1]);
-        PSMTXMultVec(mat, &p[2], &p[2]);
-        PSMTXMultVec(mat, &p[3], &p[3]);
+        RE4DC_XM_LOAD(mat);
+        RE4DC_XM_POINT(mat, &p[0], &p[0]);
+        RE4DC_XM_POINT(mat, &p[1], &p[1]);
+        RE4DC_XM_POINT(mat, &p[2], &p[2]);
+        RE4DC_XM_POINT(mat, &p[3], &p[3]);
         out->u.xz4.floor = p[0].y;
         out->u.xz4.p[0].x = p[0].x;
         out->u.xz4.p[0].z = p[0].z;

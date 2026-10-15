@@ -4,6 +4,7 @@
 // body-body contacts, player push, water/sand drag) are accumulated with AddForce and integrated
 // (Calc: velocity, RK2 angular velocity, orientation re-orthonormalised).
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "light.h"
 #include "obj.h"
 #include "esp.h"
@@ -252,10 +253,12 @@ static void Obj09HitCheck(cObj* obj)
         lp.x = pos_tbl[i].x * w1->size.x;
         lp.y = pos_tbl[i].y * w1->size.y;
         lp.z = pos_tbl[i].z * w1->size.z;
-        PSMTXMultVec(m1, &lp, &wp);
-        PSMTXMultVec(m1, &n, &n);
-        PSMTXMultVec(inv, &wp, &p);
-        PSMTXMultVec(inv, &n, &n);
+        RE4DC_XM_LOAD(m1);
+        RE4DC_XM_POINT(m1, &lp, &wp);
+        RE4DC_XM_POINT(m1, &n, &n);
+        RE4DC_XM_LOAD(inv);
+        RE4DC_XM_POINT(inv, &wp, &p);
+        RE4DC_XM_POINT(inv, &n, &n);
         if (p.x > -w2->size.x * 0.5f && p.x < w2->size.x * 0.5f && p.y > -w2->size.y * 0.5f &&
             p.y < w2->size.y * 0.5f && p.z > -w2->size.z * 0.5f && p.z < w2->size.z * 0.5f) {
             depth = 1.0e16f;

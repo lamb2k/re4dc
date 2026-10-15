@@ -5,6 +5,7 @@
 // update); the pl_cloth / em_cloth / obj units pick one per accessory.
 
 #include "pendulum.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #if !defined(__PPC__)
 extern "C" unsigned char re4dc_locked_cache[];
 #endif
@@ -1545,8 +1546,9 @@ void penClothAtCkParallel(Vec* pos, Vec* up, PenAtWork* wk)
             f32 l1;
             f32 l0;
 
-            PSMTXMultVec(a->inv, &p1, &lp1);
-            PSMTXMultVec(a->inv, &p0, &lp0);
+            RE4DC_XM_LOAD(a->inv);
+            RE4DC_XM_POINT(a->inv, &p1, &lp1);
+            RE4DC_XM_POINT(a->inv, &p0, &lp0);
             l1 = lp1.x * lp1.x + lp1.z * lp1.z;
             l0 = lp0.x * lp0.x + lp0.z * lp0.z;
             ld.x = lp0.x - lp1.x;
@@ -1598,8 +1600,9 @@ void penClothAtCkParallel(Vec* pos, Vec* up, PenAtWork* wk)
             lp0.x += q.x;
             lp0.y += q.y;
             lp0.z += q.z;
-            PSMTXMultVec(a->mat, &lp1, &p1);
-            PSMTXMultVec(a->mat, &lp0, &p0);
+            RE4DC_XM_LOAD(a->mat);
+            RE4DC_XM_POINT(a->mat, &lp1, &p1);
+            RE4DC_XM_POINT(a->mat, &lp0, &p0);
         }
     }
     *up = p1;

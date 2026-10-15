@@ -6,6 +6,7 @@
 // and model-info managers (PartsMgr, ModInfoMgr), and the debug skeleton display.
 #if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "actor_lifetime.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #endif
 #include "atari.h"
 #include "model.h"
@@ -1155,9 +1156,10 @@ void cModel::debugSkeletonDisp()
     az.x = 0.0f;
     az.y = 0.0f;
     az.z = 25.0f;
-    PSMTXMultVec(p->mat, &ax, &ax);
-    PSMTXMultVec(p->mat, &ay, &ay);
-    PSMTXMultVec(p->mat, &az, &az);
+    RE4DC_XM_LOAD(p->mat);
+    RE4DC_XM_POINT(p->mat, &ax, &ax);
+    RE4DC_XM_POINT(p->mat, &ay, &ay);
+    RE4DC_XM_POINT(p->mat, &az, &az);
     Draw_line3d(&p->world, &ax, 0xFFFF0000, 0);
     Draw_line3d(&p->world, &ay, 0xFF00FF00, 0);
     Draw_line3d(&p->world, &az, 0xFF0000FF, 0);
@@ -1184,9 +1186,10 @@ void cModel::debugSkeletonDisp()
         az.x = 0.0f;
         az.y = 0.0f;
         az.z = 25.0f;
-        PSMTXMultVec(p->mat, &ax, &ax);
-        PSMTXMultVec(p->mat, &ay, &ay);
-        PSMTXMultVec(p->mat, &az, &az);
+        RE4DC_XM_LOAD(p->mat);
+        RE4DC_XM_POINT(p->mat, &ax, &ax);
+        RE4DC_XM_POINT(p->mat, &ay, &ay);
+        RE4DC_XM_POINT(p->mat, &az, &az);
         Draw_line3d(&p->world, &ax, 0xFFFF0000, 0);
         Draw_line3d(&p->world, &ay, 0xFF00FF00, 0);
         Draw_line3d(&p->world, &az, 0xFF0000FF, 0);
