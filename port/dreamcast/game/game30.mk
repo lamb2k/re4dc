@@ -3159,8 +3159,16 @@ endif
 # SH4_APPROX_RENDER=1 / SH4_APPROX_LOGIC=1 (lane approx 2026-10-15; NOT bit-exact; default 0 = the previous image). The
 # contributor Bruceleeto measured two SH4ZAM approximations as gains on his fork (github.com/Bruceleeto/re4dc
 # dreamcast-port): 8e769a9dd8, MTXConcat as an XMTRX load of b's rows plus one FTRV per row of a, and fe2aed7945,
-# re4dc_sincosf from shz_sincosf (ftrc + FSCA). SH4ZAM (MIT) is vendored in third_party/sh4zam (pin 0fd3a1e1, the
-# headers these two need). platform/sh4_approx.c holds the kernels.
+# re4dc_sincosf from shz_sincosf (ftrc + FSCA). SH4ZAM (MIT, Falco Girgis and contributors) comes from kos-ports:
+# `make install GIT_CHANGESET=$SH4ZAM_SHA` in $KOS_PORTS/sh4zam (pin in port/dreamcast/toolchain.lock; the contributor
+# kit's tools/setup-toolchain.sh does it) installs $KOS_PORTS/include/sh4zam and $KOS_PORTS/lib/libsh4zam.a. It is no
+# longer vendored (the SH4ZAM author asked for the kos-ports port so fixes reach us). platform/sh4_approx.c holds the kernels.
+SH4ZAM_INC := -I$(KOS_PORTS)/include
+ifneq ($(filter-out 0,$(SH4_APPROX_RENDER) $(SH4_APPROX_LOGIC) $(GAME_SH4ZAM)),)
+ifeq ($(wildcard $(KOS_PORTS)/include/sh4zam/shz_xmtrx.h),)
+$(error SH4ZAM is not installed in KOS_PORTS=$(KOS_PORTS): run make install in $(KOS_PORTS)/sh4zam at SH4ZAM_SHA (toolchain.lock))
+endif
+endif
 #   SH4_APPROX_RENDER=1: the render-only call sites (include/dolphin/mtx.h RE4DC_RENDER_MTXConcat /
 #     RE4DC_RENDER_MTXRotRad: calcWeightMat's skin palette, the commonModelTrans / invis / static-gate modelviews,
 #     EspCommonTrans's sprite matrices, the ID quad, the native actor transaction / Leon pipe / crowd gate modelviews)
@@ -3178,7 +3186,7 @@ PLATFORM_CPPFLAGS += -DRE4DC_SH4_APPROX_RENDER=1
 PLATFORM_OBJS += $(OBJDIR)/platform/sh4_approx.o
 $(OBJDIR)/platform/sh4_approx.o: platform/sh4_approx.c
 	@mkdir -p $(dir $@)
-	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 -Ithird_party/sh4zam/include -MMD -MP -c $< -o $@
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 $(SH4ZAM_INC) -MMD -MP -c $< -o $@
 endif
 ifneq ($(SH4_APPROX_LOGIC),0)
 ifneq ($(GAME_SH4_MATH),1)
@@ -3195,7 +3203,7 @@ $(OBJDIR)/ps_alias_sh4_approx.ld: platform/ps_alias_sh4.ld
 	@mkdir -p $(dir $@)
 	sed 's/^_PSMTXConcat = _re4dc_sh4_MTXConcat;/_PSMTXConcat = _re4dc_shz_MTXConcat;/' $< > $@
 	grep -qx '_PSMTXConcat = _re4dc_shz_MTXConcat;' $@
-$(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 -Ithird_party/sh4zam/include
+$(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 $(SH4ZAM_INC)
 endif
 
 # GAME_SH4ZAM=1 (lane sh4zam-direct 2026-10-15; NOT bit-exact; default 0 = the previous image). Phase 1 of the SH4ZAM
@@ -3241,7 +3249,7 @@ PLATFORM_CPPFLAGS += -DRE4DC_SH4ZAM_RENDER=1
 PLATFORM_OBJS += $(OBJDIR)/platform/sh4zam_direct.o
 $(OBJDIR)/platform/sh4zam_direct.o: platform/sh4zam_direct.c
 	@mkdir -p $(dir $@)
-	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 -Ithird_party/sh4zam/include -MMD -MP -c $< -o $@
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 $(SH4ZAM_INC) -MMD -MP -c $< -o $@
 ifneq ($(SH4ZAM_SELFTEST),0)
 PLATFORM_CPPFLAGS += -DRE4DC_SH4ZAM_SELFTEST=1
 PLATFORM_OBJS += $(OBJDIR)/platform/sh4zam_selftest.o
@@ -3268,7 +3276,7 @@ $(OBJDIR)/ps_alias_sh4_zam.ld: platform/ps_alias_sh4.ld
 	@mkdir -p $(dir $@)
 	sed -e 's/^_PSMTXConcat = .*;$$/_PSMTXConcat = _re4dc_zam_MTXConcat;/' -e 's/^_PSMTXRotRad = .*;$$/_PSMTXRotRad = _re4dc_zam_MTXRotRad;/' -e 's/^_PSMTXRotAxisRad = .*;$$/_PSMTXRotAxisRad = _re4dc_zam_MTXRotAxisRad;/' -e 's/^_PSMTXMultVecSR = .*;$$/_PSMTXMultVecSR = _re4dc_zam_MTXMultVecSR;/' -e 's/^_PSVECNormalize = .*;$$/_PSVECNormalize = _re4dc_zam_VECNormalize;/' -e 's/^_PSVECSquareMag = .*;$$/_PSVECSquareMag = _re4dc_zam_VECSquareMag;/' -e 's/^_PSVECMag = .*;$$/_PSVECMag = _re4dc_zam_VECMag;/' -e 's/^_PSVECDotProduct = .*;$$/_PSVECDotProduct = _re4dc_zam_VECDotProduct;/' -e 's/^_PSVECSquareDistance = .*;$$/_PSVECSquareDistance = _re4dc_zam_VECSquareDistance;/' -e 's/^_PSVECDistance = .*;$$/_PSVECDistance = _re4dc_zam_VECDistance;/' $< > $@
 	test $$(grep -c '= _re4dc_zam_' $@) = 10
-$(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 -Ithird_party/sh4zam/include
+$(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 $(SH4ZAM_INC)
 endif
 endif
 
@@ -3296,24 +3304,22 @@ PLATFORM_CPPFLAGS += -DRE4DC_SKIN_SH4ZAM=1 -DRE4DC_SKIN_SH4ZAM_CHECK=$(SKIN_SH4Z
 PLATFORM_OBJS += $(OBJDIR)/platform/sh4zam_skin.o
 $(OBJDIR)/platform/sh4zam_skin.o: platform/sh4zam_skin.c
 	@mkdir -p $(dir $@)
-	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 -Ithird_party/sh4zam/include -DRE4DC_SKIN_SH4ZAM_BOOT=$(SKIN_SH4ZAM_BOOT) -DRE4DC_SKIN_SH4ZAM_CHECK=$(SKIN_SH4ZAM_CHECK) -MMD -MP -c $< -o $@
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 $(SH4ZAM_INC) -DRE4DC_SKIN_SH4ZAM_BOOT=$(SKIN_SH4ZAM_BOOT) -DRE4DC_SKIN_SH4ZAM_CHECK=$(SKIN_SH4ZAM_CHECK) -MMD -MP -c $< -o $@
 endif
 
 # GAME_SHZ_MEMSET=1 (lane sh4zam-direct 2026-10-15; EXACT, render + logic; default 0 = not built, the previous image).
 #   memset on SH4ZAM's shz_memset8 (one FMOV.D store per 8 bytes; newlib's loop stores 4 bytes at a time): a link wrap
 #   (-Wl,--wrap=memset) sends every memset of 64 bytes or more (SHZ_MEMSET_MIN) through platform/shz_memset.c, which
-#   aligns the head with byte stores and fills the body with shz_memset8 (third_party/sh4zam/source/sh4/shz_mem_sh4.s,
-#   the unmodified upstream file at the pin). Byte-identical results, so STRICT must stay identical. Measured first:
+#   aligns the head with byte stores and fills the body with shz_memset8 (source/sh4/shz_mem_sh4.s, linked from
+#   kos-ports libsh4zam.a at the toolchain.lock pin). Byte-identical results, so STRICT must stay identical. Measured first:
 #   memset is 0.85 hw ms at the r101 cross (L_store_long_loop), led by the value-initialised world MeshDraw (~106 KB a
 #   frame) and the actor-path clears (docs/lanes/sh4zam-direct.md "memset").
 GAME_SHZ_MEMSET ?= 0
 ifneq ($(GAME_SHZ_MEMSET),0)
-PLATFORM_OBJS += $(OBJDIR)/platform/shz_memset.o $(OBJDIR)/platform/shz_mem_sh4.o
+PLATFORM_OBJS += $(OBJDIR)/platform/shz_memset.o
+GAME30_LINK_INPUTS += $(KOS_PORTS)/lib/libsh4zam.a
 GAME_LDFLAGS += -Wl,--wrap=memset
 $(OBJDIR)/platform/shz_memset.o: platform/shz_memset.c
 	@mkdir -p $(dir $@)
-	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -fno-tree-loop-distribute-patterns -std=gnu11 -Ithird_party/sh4zam/include -MMD -MP -c $< -o $@
-$(OBJDIR)/platform/shz_mem_sh4.o: third_party/sh4zam/source/sh4/shz_mem_sh4.s
-	@mkdir -p $(dir $@)
-	kos-cc $(KOS_CFLAGS) -c $< -o $@
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -fno-tree-loop-distribute-patterns -std=gnu11 $(SH4ZAM_INC) -MMD -MP -c $< -o $@
 endif

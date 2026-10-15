@@ -47,7 +47,18 @@ The steps below are what `contrib.sh` does, for when you want to run them by han
 ## 1. Toolchain
 
 You need the exact toolchain the maintainers use: KallistiOS commit 804b3195 with the three patches in
-`patches/`, and the KOS "stable" SH4 compiler (GCC 15.2.0, binutils 2.45.1, newlib 4.6.0.20260123).
+`patches/`, the KOS "stable" SH4 compiler (GCC 15.2.0, binutils 2.45.1, newlib 4.6.0.20260123), and
+kos-ports with its sh4zam port installed (SH4ZAM, the SH4 maths library by Falco Girgis and contributors, MIT).
+
+**SH4ZAM.** The game uses SH4ZAM from kos-ports, not a copy in this repository, so upstream fixes and
+new features reach us. `toolchain.lock` pins the kos-ports commit (`KOS_PORTS_SHA`) and the SH4ZAM
+upstream commit (`SH4ZAM_SHA`); `tools/install-sh4zam.sh` checks kos-ports out at its pin and runs
+`make install GIT_CHANGESET=$SH4ZAM_SHA` in `kos-ports/sh4zam`, which installs the headers into
+`kos-ports/include/sh4zam` and `libsh4zam.a` into `kos-ports/lib` (the build reads them through
+`KOS_PORTS`, i.e. `RE4DC_KOS_PORTS`). The setup script and `contrib.sh` run it for you. To update
+SH4ZAM, bump `SH4ZAM_SHA` (and `KOS_PORTS_SHA` if the port itself changed) in `toolchain.lock`, rerun
+`tools/install-sh4zam.sh`, rebuild, and gate the change like any other (render-only users: stills and
+logic STRICT; logic users: decisions-identical).
 
 **Script.**
 

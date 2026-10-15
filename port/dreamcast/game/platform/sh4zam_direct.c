@@ -2,7 +2,7 @@
  *
  * Phase 1 of the SH4ZAM direct mapping (review by an SH4ZAM author, 10-15: "directly map to sh4zam calls as phase 1.
  * Not fully optimal but will gain."). Each GameCube SDK matrix / vector entry point that does FPU arithmetic gets a
- * thin body made of SH4ZAM v0.9.0 calls (third_party/sh4zam, MIT, pin 0fd3a1e1): XMTRX + FTRV for the concat,
+ * thin body made of SH4ZAM v0.9.0 calls (kos-ports sh4zam, MIT, pin 0fd3a1e1): XMTRX + FTRV for the concat,
  * FIPR (shz_dot8f / shz_dot6f) for the matrix x vector rows and dot products, FSRRA (shz_inv_sqrtf / shz_invf) for
  * normalize / magnitude / the inverse's 1/det, FSCA (shz_sincosf) for sin / cos. Data-movement entry points
  * (Identity, Copy, Transpose, Scale, Trans, Reorder, VECAdd / Subtract / Scale) do no arithmetic that SH4ZAM could

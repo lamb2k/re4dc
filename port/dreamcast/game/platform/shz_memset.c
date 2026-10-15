@@ -1,6 +1,6 @@
 /* shz_memset.c: GAME_SHZ_MEMSET=1 (game30.mk; lane sh4zam-direct 2026-10-15; EXACT, default 0 = not built).
  *
- * memset through SH4ZAM's shz_memset8 (third_party/sh4zam, MIT, Copyright (c) 2025, 2026 Falco Girgis and SH4ZAM
+ * memset through SH4ZAM's shz_memset8 (kos-ports sh4zam, MIT, Copyright (c) 2025, 2026 Falco Girgis and SH4ZAM
  * Contributors; pin 0fd3a1e1 v0.9.0; the out-of-line body is the unmodified upstream source/sh4/shz_mem_sh4.s): one
  * FMOV.D (8-byte) store per 8 bytes instead of newlib's 4-byte store loop. The link wraps memset
  * (-Wl,--wrap=memset), so every caller (the value-initialised aggregates GCC clears with memset, the game, KOS) takes

@@ -7,7 +7,7 @@
  * RE4DC_RENDER_MTXRotRad) take them with SH4_APPROX_RENDER=1; SH4_APPROX_LOGIC=1 also binds PSMTXConcat itself to
  * re4dc_shz_MTXConcat (ps_alias_sh4.ld) and gives re4dc_sincosf the FSCA path (game30_trig.c).
  *
- * SH4ZAM (MIT, third_party/sh4zam, pin 0fd3a1e1 v0.9.0): shz_xmtrx_load_cols_4x3 + shz_xmtrx_transform_vec4 (one
+ * SH4ZAM (MIT, kos-ports sh4zam, pin 0fd3a1e1 v0.9.0): shz_xmtrx_load_cols_4x3 + shz_xmtrx_transform_vec4 (one
  * FTRV per row) and shz_sincosf (ftrc of x * 65536 / 2 pi, then FSCA: 1/65536-turn steps, truncated).
  *
  * re4dc_shz_MTXConcat: ab = a x b for 3x4 row matrices. XMTRX columns = b's three rows and (0 0 0 1); each row of a

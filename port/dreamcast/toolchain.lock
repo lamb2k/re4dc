@@ -1,3 +1,6 @@
 RE4_SOURCE_SHA=9dcd989370be7f083a9b66cfd19907fda627c893
 KOS_SHA=804b3195ebd1a06a27cc2b3a5eacf7a2429040a3
 KOS_PORTS_SHA=f4faacc42faaf552625777b7709e871a827e1055
+# SH4ZAM (gyrovorbis/sh4zam, MIT): installed by kos-ports (KOS_PORTS_SHA above) with
+# `make install GIT_CHANGESET=$SH4ZAM_SHA` in kos-ports/sh4zam (tools/install-sh4zam.sh). v0.9.0.
+SH4ZAM_SHA=0fd3a1e1fa0809d33198c062632b1494ec2f57df

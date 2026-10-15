@@ -2,7 +2,7 @@
   "repository": "https://github.com/gyrovorbis/sh4zam.git",
   "commit": "0fd3a1e1fa0809d33198c062632b1494ec2f57df",
   "license": "MIT",
-  "status": "optional measured candidate; not installed into KOS or selected by the game",
+  "status": "installed from kos-ports (port/dreamcast/toolchain.lock SH4ZAM_SHA, tools/install-sh4zam.sh); used by the SH4_APPROX_* and GAME_SH4ZAM knobs",
   "toolchain": "existing SH-GCC 15.2 / kos-re4dc-d336; no upgrade",
   "files_sha256": {
     "LICENSE": "1a4848616ddb76da5ba8816daf21fedba78670ba35a1be12390d76d1c11ba95a",

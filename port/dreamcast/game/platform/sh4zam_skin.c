@@ -1,6 +1,6 @@
 /* sh4zam_skin.c: SKIN_SH4ZAM=1 (game30.mk; lane sh4zam-direct 2026-10-15; render only; default 0 = not built).
  *
- * The actor skinning chain on the SH4ZAM API (third_party/sh4zam, MIT, Copyright (c) 2025, 2026 Falco Girgis and
+ * The actor skinning chain on the SH4ZAM API (kos-ports sh4zam, MIT, Copyright (c) 2025, 2026 Falco Girgis and
  * SH4ZAM Contributors; pin 0fd3a1e1 v0.9.0), as the user asked ("adopt SH4ZAM, call its API directly") after an SH4ZAM
  * author's review of our skinning loop ("shz_xmtrx_init_zero(); shz_xmtrx_blend(); ... Can all be done within XMTRX
  * registers using the XMTRX API" and "load it into XMTRX ONCE then just call shz_xmtrx_transform_vecN()").

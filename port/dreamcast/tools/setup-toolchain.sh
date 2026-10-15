@@ -9,6 +9,7 @@
 # Layout (PREFIX defaults to $HOME/re4dc-toolchain):
 #   PREFIX/sh-elf   the cross compiler (sh-elf-gcc ...)
 #   PREFIX/kos      the patched KallistiOS tree, built
+#   PREFIX/kos-ports kos-ports at KOS_PORTS_SHA, with sh4zam installed at SH4ZAM_SHA (tools/install-sh4zam.sh)
 #   PREFIX/env.sh   source this before building the game
 #
 # Host packages (Ubuntu 24.04 names):
@@ -32,7 +33,7 @@ PREFIX=$(cd "$PREFIX" && pwd)
 KOS=$PREFIX/kos
 CC_BASE=$PREFIX/sh-elf
 
-for c in make gcc g++ bison flex makeinfo git curl python3 patch genisoimage; do
+for c in make gcc g++ bison flex makeinfo git curl python3 patch genisoimage cmake; do
   command -v "$c" >/dev/null || { echo "setup-toolchain: missing host tool: $c" >&2; exit 1; }
 done
 
@@ -70,6 +71,7 @@ cat > "$PREFIX/env.sh" <<ENV
 export RE4DC_KOS_BASE="$KOS"
 export RE4DC_KOS_CC_BASE="$CC_BASE"
 export KOS_TOOLS_BASE="$KOS"
+export RE4DC_KOS_PORTS="$PREFIX/kos-ports"
 export PATH="$CC_BASE/bin:\$PATH"
 ENV
 
@@ -85,6 +87,10 @@ done
 # Host tools the disc tools use (makeip, scramble).
 make -C "$KOS/utils/makeip" >/dev/null
 make -C "$KOS/utils/scramble" >/dev/null
+
+echo "== kos-ports $KOS_PORTS_SHA + sh4zam $SH4ZAM_SHA into $PREFIX/kos-ports"
+# shellcheck disable=SC1091
+( . "$PREFIX/env.sh" && bash "$PORT/tools/install-sh4zam.sh" "$PREFIX/kos-ports" )
 
 echo "== Python packages (asset tools only; the game build needs just python3)"
 if python3 -m pip --version >/dev/null 2>&1; then
