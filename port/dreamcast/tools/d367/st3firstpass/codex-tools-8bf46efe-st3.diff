@@ -57,10 +57,10 @@ index 2e24a115..116f9b00 100644
              # Type zero's normal mover ignores work, but room callbacks may
              # consume it. Do not guess its scalar layout from nonzero bytes.
 diff --git a/port/dreamcast/tools/prepare_native_ui.py b/port/dreamcast/tools/prepare_native_ui.py
-index a5619acc..4dee4a8b 100644
+index a5619acc..318d7ac5 100644
 --- a/port/dreamcast/tools/prepare_native_ui.py
 +++ b/port/dreamcast/tools/prepare_native_ui.py
-@@ -409,6 +409,18 @@ def _compact_upload_only(decoded, references, palettes, textures, allowed, effec
+@@ -409,6 +409,31 @@ def _compact_upload_only(decoded, references, palettes, textures, allowed, effec
  # RTP, MDT, CNS, scripts, sound) stays byte-identical; only upload-only images move
  # to the existing native packages.
  ROOM_CONTRACTS={
@@ -74,6 +74,19 @@ index a5619acc..4dee4a8b 100644
 +    'r304':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
 +    'r305':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
 +    'r306':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
++    'r307':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
++    'r308':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
++    'r309':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
++    'r30a':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
++    'r30e':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
++    # stage 3 lane: model TPLs that follow a BIN; header within 32 B of the first payload (header_grow=32).
++    'r30b':dict(slots=38,smd=4,effs=(7,),itm=9,model_slots=(28,),header_grow=32),
++    'r30c':dict(slots=35,smd=4,effs=(7,),itm=9,model_slots=(30,),header_grow=32),
++    'r30d':dict(slots=44,smd=4,effs=(7,),itm=9,model_slots=(28, 36),header_grow=32),
++    'r30f':dict(slots=64,smd=4,effs=(7,),itm=9,model_slots=(28, 45),header_grow=32),
++    'r310':dict(slots=33,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
++    'r311':dict(slots=42,smd=4,effs=(7,),itm=9,model_slots=(28, 32),header_grow=32),
++    'r312':dict(slots=44,smd=4,effs=(7,),itm=9,model_slots=(28, 36),header_grow=32),
 +    'r301':dict(slots=34,smd=4,effs=(7,29),itm=9,model_slots=(),header_grow=32),
 +    'r300':dict(slots=49,smd=4,effs=(7,),itm=9,model_slots=(30,39,42),header_grow=32),
      'r100':dict(slots=51,smd=5,effs=(8,),itm=10,model_slots=(26,28,33,36,38,46)),

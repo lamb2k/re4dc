@@ -366,6 +366,9 @@ $(error ROUTE_CH3 must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1)
 endif
 MODULES += st3_0 st3_1 st3_2 st3_3 em1d:ovl em1e:ovl em25:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em1d .ovl_em1e .ovl_em25
+# em36 (85: r306..r310, r326) and em1f (109: r304 / r30b / r30c / r30f / r311 / r321 / r330 Ganados) room overlays.
+MODULES += em36:ovl em1f:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em36 .ovl_em1f
 ifneq ($(ROUTE_CH23),1)
 MODULES += em3b:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em3b
@@ -1391,7 +1394,7 @@ CH23_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH23)),em3b:ovl em35:ovl)
 # Luis preserves its archive pointers and both manager scans use workAt (CH22 guarded adapter).
 CH22_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH22)),pl14:ovl)
 # CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
-CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),st3_0 st3_1 st3_2 st3_3 em1d:ovl em1e:ovl em25:ovl em3b:ovl)
+CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),st3_0 st3_1 st3_2 st3_3 em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl)
 ifeq ($(ENEMY_DEMAND),1)
 ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)

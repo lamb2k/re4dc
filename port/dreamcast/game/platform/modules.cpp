@@ -161,6 +161,8 @@ static const Re4dcModule g_modules[] = {
     {90, "em1d", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r300 soldiers, room overlay
     {92, "em1e", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r301 / r303 / r305 soldiers, room overlay
     {10, "em25", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r304 (room entry), room overlay
+    {85, "em36", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r306..r310 / r326, room overlay
+    {109, "em1f", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH3: island Ganados (r304 r30b r30c r30f r311 r321 r330), room overlay
 #if !(defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23)
     {63, "em3b", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r301 vehicles, room overlay
 #endif
@@ -341,7 +343,7 @@ constexpr u32 kRouteOverlayMagic = 0x4F344552;  // "RE4O"
 struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
 #if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
 // ROUTE_CH3: one slot per overlay id (any knob combination); ids not in the table are never bound.
-constexpr u32 kRouteOvlIds[] = {43, 39, 5, 30, 47, 66, 63, 61, 90, 92, 10};
+constexpr u32 kRouteOvlIds[] = {43, 39, 5, 30, 47, 66, 63, 61, 90, 92, 10, 85, 109};
 RouteOverlay g_route_ovl[sizeof(kRouteOvlIds) / sizeof(kRouteOvlIds[0])];
 int routeOvlSlot(u32 id)
 {

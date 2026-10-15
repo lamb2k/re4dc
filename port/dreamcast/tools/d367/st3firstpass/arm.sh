@@ -17,15 +17,17 @@ src, out, cand = sys.argv[1:4]
 d = json.load(open(src)); r = d['replace']
 for n in ('st3_0', 'st3_1', 'st3_2', 'st3_3'):
     r['rel/%s.rel' % n] = '/root/probe/lanes-20261014/st3/relout/rel/%s.rel' % n
-for m in ('em1d', 'em1e', 'em3b', 'em25'):
+import os
+for m in ('em1d', 'em1e', 'em3b', 'em25', 'em36', 'em1f'):
+    if not os.path.exists(cand + '/%s.ovl' % m): continue
     r['dc/%s.ovl' % m] = cand + '/%s.ovl' % m
 import glob, os
-for f in sorted(glob.glob('/root/probe/lanes-20261014/st3/pairs-r3/*.re4tex')):
+for f in sorted(set(glob.glob('/root/probe/lanes-20261014/st3/pairs-r3/*.re4tex')) | set(glob.glob('/root/probe/lanes-20261014/st3/pairs-all/*.re4tex'))):
     k = os.path.basename(f)
     r['dc/tex/%s/%s' % (k[0], k)] = f
 import filecmp
-for m in ('em1d', 'em1e'):
-    o = '/root/probe/lanes-20261014/st3/emprep/out-%s' % m
+for m in ('em1d', 'em1e', 'em1f'):
+    o = '/root/probe/lanes-20261014/st3/emprep/outT-%s' % m  # motion stream + upload-only textures (tex-em)
     if os.path.exists(o + '/%s.drs' % m):
         r['em/%s.drs' % m] = o + '/%s.drs' % m
         for k in sorted(os.listdir(o + '/mot')):
@@ -33,13 +35,27 @@ for m in ('em1d', 'em1e'):
             if key in r and not filecmp.cmp(r[key], o + '/mot/' + k, shallow=False):
                 raise SystemExit('motion key collision ' + key)
             r.setdefault(key, o + '/mot/' + k)
+# Native textures of the soldier archives (prepare_native_ui em/em1d|em1e|em1f.drs -> tex-em); the outT archives
+# keep no texels for them.
+for f in sorted(glob.glob('/root/probe/lanes-20261014/st3/tex-em/*.re4tex')):
+    k = os.path.basename(f); key = 'dc/tex/%s/%s' % (k[0], k)
+    if key in d.get('remove', []): continue  # the pack (dc/tex.pak) already serves it
+    if key in r and not filecmp.cmp(r[key], f, shallow=False):
+        raise SystemExit('texture key collision ' + key)
+    r.setdefault(key, f)
+# PS2 enemy lists 6 / 7 (stage 3 only, stage.cpp checkEmListNo): the PS2 USA tables replace the GC ones on the
+# disc-2 image (data only; PS2 = source of truth). Differences: survey re4-ps2-table-survey-20261013 (42 + 29 rows).
+for n in ('06', '07'):
+    r['etc/emleon%s.esl' % n] = '/root/probe/lanes-20261014/st3/ps2-esl/emleon%s.esl' % n
+keep_removed = [x for x in d.get('remove', []) if x in r and x.startswith('em/')]  # archives this lane now stages
+if 'remove' in d: d['remove'] = [x for x in d['remove'] if x not in keep_removed]
 d.setdefault('provenance', {})['st3_lane'] = {'added': ['rel/st3_*.rel (le_mirror --compact-static-rel)', 'dc/em1d.ovl', 'dc/em1e.ovl', 'dc/em3b.ovl', 'dc/em25.ovl']}
 json.dump(d, open(out, 'w'), indent=1, sort_keys=True)
 PY
 python3 "$TOOLS/port/dreamcast/tools/d367/texchk/fixture_arm.py" "$TMP" "$OUT" "$L" --candidate-dir "$CAND"
 PAKFILE=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['replace']['dc/tex.pak'])" "$OUT")
 python3 "$TOOLS/port/dreamcast/tools/audit_ps2_texture_winners.py" --pack "$PAKFILE" \
-  --room "$LANE/texture-fit/rooms/$ROOM.json" --fixture "$ROOM=$OUT" --output "$D/cx-$ROOM-$VIEW-$VAR.pack-audit.json" > /dev/null
+  --room "$( [ -f $LANE/texture-fit/rooms/$ROOM.json ] && echo $LANE/texture-fit/rooms/$ROOM.json || echo $LANE/texture-fit2/rooms/$ROOM.json )" --fixture "$ROOM=$OUT" --output "$D/cx-$ROOM-$VIEW-$VAR.pack-audit.json" > /dev/null
 python3 - "$D/cx-$ROOM-$VIEW-$VAR.pack-audit.json" "$ROOM" "$OUT" <<'PY'
 import hashlib, json, sys
 a = json.load(open(sys.argv[1])); row = a['rooms'][sys.argv[2]]
