@@ -405,3 +405,35 @@ Cost (MODELLED, same image, warp sglean 0 vs 1; r101 cross, frames 300..389 at s
 
 Evidence: hwmodel-sgs0-cross / sgs1-cross (final), sgq0/sgq1, sgr0/sgr1 (earlier), sgchk-cross (v1 check),
 sgchk5-cross (final check). Scripts: /root/probe/lanes-20261015/t2exact/s/bsg.sh, hwq.sh, cmpsg.sh, j2build.sh.
+
+### Job 2 gates (2026-10-15 evening; trace arm sggrT = test 13 recipe + SG_SELECT_LEAN=1, lean on from boot)
+
+- STRICT vs the t2crT control: fight (r101 cross, 802 ticks) STRICT; bell (trg at room frame 300, 547 ticks) STRICT;
+  door103 (1,402 ticks, door frames masked as usual) STRICT; decisions MUST-IDENTICAL in all three. Runs c0-bell,
+  sg2-fight, sg3-bell, sg3-door; strict/*. (sg-*, sg2-door: cut short by the runner's C: capacity guard, renamed
+  _failed-capguard-*; their prefixes were STRICT too.)
+- Knob-off identity: sgoffrP image c1ae83dd = test 13 (earlier, unchanged tree).
+- Align logger (hwmodel Flycast, interpreter, 60 s, twin sgsq, segments/bell-warp.txt): 0 misaligned accesses.
+- KOS squeeze (48 KiB, kos-sg): **FAIL**. fight / call / door pass (min headroom 6,120 / 38,152 / 18,736); leave100 and
+  leave103 with 4 KiB pieces fail: "Out of memory ... diff 4096" then OSCreateThread failed at the room change (B5's twin
+  passed all ten, headroom 640..2,080 B higher). Release _end: sggrP 8c41cbfc vs knob-off sgoffrP 8c41c53c = **+1,728 B**
+  (the =1 image keeps the original functions beside the lean ones for the runtime toggle). Not recipe-ready as built;
+  a recipe form would need a lean-only variant (no toggle, originals dropped) and a re-run of the squeeze.
+- hw model (MODELLED, same image sg6rW, warp sglean 0 / 1, 3 traced frames): r101 cross 84.0 -> 83.3 (-0.7; pipe part
+  -0.18, x1.23 world correction -0.22; the rest is I-cache placement). r100 house (frames 1300..1389): 45.8 -> 45.8,
+  0.00: r100 has no strip groups, so sg_select never runs there (hwmodel-sgs0-house / sgs1-house).
+
+### Job 3: .r4sg for every room (from the sgprice table above; NOT built)
+
+Rooms gaining >= 0.4 ms (typical view): MODELLED: r100 0.66, r101 has it, r103 0.53 (farm 0.71), r104 0.43, r106 0.75,
+r107 0.49, r108 0.42, r10b 0.50, r118 0.51, r119 0.53, r11b 0.43 (10 rooms). Corrected (x1.23) adds r105 0.48, r109
+0.44, r117 0.43. Below the bar: r102, r10a, r11a. Work: see Job 1 "Effort" (about a day for the rooms with gates, the
+heap 4 proofs dominate; sparse 10 B format 19-76 KB a room needs a runtime reader change, dense G=4 33-123 KB a room
+needs equal heap 4 savings).
+
+### SLAB_PIN (job 3 WIP from the 10-15 stop; layout lever, NOT built or measured)
+
+Uncommitted native_ui.cpp + t2exact.mk change found in the tree after the stop: pins the 64 KiB native model slab head
+to operand-cache index 0x3080 +- 0x200 with a temporary filler block. Layout lever, so console A/B only. Saved as
+/root/probe/lanes-20261015/t2exact/slab-pin-wip-on-866edc60.patch and on local branch lane/t2exact-slabpin; not in the
+lane stack.
