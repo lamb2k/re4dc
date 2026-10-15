@@ -24,6 +24,16 @@ ifneq ($(LOGIC_TRACE),1)
 $(OBJDIR)/platform/mem.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_ATOMIC=1
 endif
 endif
+# LBX_CENSUS=1 (lane lbcull 2026-10-15, test only; needs TA_HASH>=1 and LETTERBOX_CLIP>=1): "lbx census:" per 60
+# scenes: strips / vertices / header runs of the OP, TR and PT lists in the visible band, wholly under the letterbox
+# bars, or wholly off screen (native_ui.cpp lbxc). Measures what a band cull could drop.
+LBX_CENSUS ?= 0
+ifeq ($(LBX_CENSUS),1)
+ifeq ($(TA_HASH),0)
+$(error LBX_CENSUS=1 needs TA_HASH=1, 2 or 3)
+endif
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/letterbox_clip.o: PLATFORM_CPPFLAGS += -DRE4DC_LBX_CENSUS=1
+endif
 ifeq ($(TA_BIN_DIAG),1)
 ifneq ($(TA_HASH),1)
 $(error TA_BIN_DIAG=1 needs TA_HASH=1)

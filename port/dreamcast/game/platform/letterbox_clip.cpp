@@ -97,6 +97,20 @@ extern "C" void re4dc_lbx_open(int list, void (*send)(const void*, unsigned))
     ++op_frames;
 }
 
+#if defined(RE4DC_LETTERBOX_CULL) && RE4DC_LETTERBOX_CULL
+// LETTERBOX_CULL (Makefile): the rows (640x480 units) that (c)'s black polygons cover in the frame being built: exactly
+// re4dc_lbx_open's condition and edges (the previous frame's opaque bars). 0: no bars this frame, cull the full frame.
+extern "C" int re4dc_lbx_cull_rows(float* top, float* bot)
+{
+    if (prev_mask != 3U) return 0;
+    *top = prev_top;
+    *bot = prev_bot;
+    return 1;
+}
+#endif
+#if defined(RE4DC_LBX_CENSUS) && RE4DC_LBX_CENSUS
+extern "C" unsigned re4dc_lbx_mask(void) { return prev_mask; }  // native_ui.cpp tabin::lbx (tahash.mk)
+#endif
 #if defined(RE4DC_MCHECK_SAFE) && RE4DC_MCHECK_SAFE
 extern "C" {
 unsigned re4dc_lbx_rows_last;  // the tile rows cleared for the scene being closed (MCHECK_SAFE log)

@@ -20,6 +20,7 @@ LOG=/root/probe/bench-stage; mkdir -p $LOG/fix "$EV" /mnt/c/Flycast-Evidence/re4
 FREE=$(df -BG --output=avail /mnt/c | tail -1 | tr -dc 0-9)
 [ "$FREE" -ge "${BENCH_MIN_GB:-18}" ] || { echo "C: has $FREE GB free: not staging"; exit 1; }
 D=$(python3 -c "import re;print(re.search(r\"^T11_DATA = '([^']*)'\", open('$T11/t11-fix.py').read(), re.M).group(1))")
+D=${BENCH_DATA:-$D}   # BENCH_DATA: the whole data set (e.g. T121_DATA's list), not T11_DATA
 FIX=$LOG/fix/hw-$N.json
 python3 $T11/t11-fix.py $L $FIX --data $D --warp $HERE/benchmark-$SC-warp.txt > $LOG/fix-hw-$N.txt || exit 1
 python3 $HERE/fix-replace.py $FIX $HERE/benchmark-$SC-warp.txt >> $LOG/fix-hw-$N.txt || exit 1

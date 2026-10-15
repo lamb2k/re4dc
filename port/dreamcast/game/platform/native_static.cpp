@@ -1788,6 +1788,10 @@ unsigned owner_tests=0,owner_hid=0; // PS2_INTERIOR_ACTORS=2: owner-path Ganados
 }
 #endif
 #endif
+#if defined(RE4DC_LETTERBOX_CULL) && RE4DC_LETTERBOX_CULL
+extern "C" int re4dc_lbx_cull_rows(float* top,float* bot); // platform/letterbox_clip.cpp
+namespace { unsigned lbx_cull_frames,lbx_cull_seen; }      // world passes 0 culled to the band / seen
+#endif
 #if RE4DC_PS2_WORLD_LEAN
 // PS2_WORLD_LEAN (game30.mk, render only, default 0; lane objs 2026-10-14, r101 world submit). Bits:
 //  1 world-space placement pretest: per pass the six cull planes (the four screen edges group_visible uses, near and
@@ -4011,11 +4015,39 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_SKY_ANY
     const float pass_cull_far=cull_far;
 #endif
+#if defined(RE4DC_LETTERBOX_CULL) && RE4DC_LETTERBOX_CULL
+    // LETTERBOX_CULL (Makefile; render only): while LETTERBOX_CLIP's black polygons cover the bars, the cull projection
+    // Pc narrows the vertical screen planes to the visible band. GX clip y_c = P3 y + P4 z, w = -z; group_visible's planes
+    // keep (-1 + oy) w <= y_c <= (1 + oy) w, rows 0..480 of the viewport. The band rows top..bot (640x480 units, widened by
+    // one row) are y_c / w in [c - s, c + s], c = 1 + oy - (top + bot) / 480, s = (bot - top) / 480; with
+    // y_c' = (y_c - c w) / s + oy w the same planes test the band: Pc3 = P3 / s, Pc4 = (P4 + c) / s - oy. Only the
+    // world pass's cull planes (lean world_planes / side_setup) read Pc; the transform and the clipper keep P.
+    float lbx_pc[7];const float* Pcull=P;
+    {
+        float top,bot;
+        if(re4dc_lbx_cull_rows(&top,&bot)){
+            top-=1.0f;bot+=1.0f;
+            const float oy=2*ps2w.viewport[1]/ps2w.viewport[3],s=(bot-top)/480.0f,cc=1.0f+oy-(top+bot)/480.0f;
+            if(s>0.25f && s<1.0f){
+                for(unsigned i=0;i<7;++i)lbx_pc[i]=P[i];
+                lbx_pc[3]=P[3]/s;lbx_pc[4]=(P[4]+cc)/s-oy;Pcull=lbx_pc;
+                if(!pass)++lbx_cull_frames;
+            }
+        }
+#if RE4DC_PS2_WORLD_LEAN
+        if(!pass && !(++lbx_cull_seen%600))
+            re4dc_log("letterbox cull: frames=%u band=%u pre_culled=%u pl_inside=%u sg_culled=%u sg_vskip=%u\n",lbx_cull_seen,
+                      lbx_cull_frames,lean::st.pre_culled,lean::st.pl_inside,lean::st.sg_culled,lean::st.sg_vskip);
+#endif
+    }
+#else
+    const float* Pcull=P;
+#endif
 #if RE4DC_PS2_WORLD_LEAN
     lean::World lw;
     const bool lw_on=(lean::kMode&1U)!=0;
-    if(lw_on)lean::world_planes(ps2w.view,P,ps2w.viewport,near,cull_far,lw);
-    if(lean::kMode&2U)lean::side_setup(P,ps2w.viewport);
+    if(lw_on)lean::world_planes(ps2w.view,Pcull,ps2w.viewport,near,cull_far,lw);
+    if(lean::kMode&2U)lean::side_setup(Pcull,ps2w.viewport);
     lean::prime_at=nullptr;lean::primed=0; // bit 4: the prime holds within this pass only
     if(!pass){
         const unsigned f=re4dc_ui_frame();
@@ -4198,8 +4230,8 @@ int ps2_pass(unsigned pass,float zfar){
             const float grow[3]={std::fabs(mesh.step[0]),std::fabs(mesh.step[1]),std::fabs(mesh.step[2])}; // cluster boxes round out by < 1 step
             float am[9];lean::abs9(mv,am);
             lean_in=lean::box_class(mesh.bounds_min,mesh.bounds_max,mv,am,near,cull_far,grow);
-            if((lean::kMode&8U) && (lean_in!=0)!=re4dc::render::group_visible(bounds,mv,P,ps2w.viewport,near,cull_far,0))++lean::st.class_diff;
-        }else lean_in=re4dc::render::group_visible(bounds,mv,P,ps2w.viewport,near,cull_far,0)?1U:0U;
+            if((lean::kMode&8U) && (lean_in!=0)!=re4dc::render::group_visible(bounds,mv,Pcull,ps2w.viewport,near,cull_far,0))++lean::st.class_diff;
+        }else lean_in=re4dc::render::group_visible(bounds,mv,Pcull,ps2w.viewport,near,cull_far,0)?1U:0U;
         if(!lean_in){++c.culled;continue;}
         if(lean_in==2)++lean::st.pl_inside;
 #else

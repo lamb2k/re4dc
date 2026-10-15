@@ -1417,6 +1417,86 @@ void ta_hash_reset(){for(unsigned i=0;i<5;++i){ta_hash_h[i]=2166136261u;ta_hash_
 #else
 void ta_hash_reset(){for(unsigned i=0;i<5;++i){ta_hash_h[i]=2166136261u;ta_hash_words[i]=0;}}
 #endif
+#if defined(RE4DC_LBX_CENSUS) && RE4DC_LBX_CENSUS
+// LBX_CENSUS (tahash.mk, test only; lane lbcull 2026-10-15): how much of the submitted geometry lies wholly under the
+// gameplay letterbox bars (screen rows 0..59 and 420..479 of 480, scaled to the render height). Fed from re4dc_ta_hash
+// (every TA burst). Per list, every strip (and sprite) is classed by its screen box: 0 in the visible band (touches rows
+// 60..419 inside the frame), 1 wholly under the bars (inside the frame, above row 60 or below row 420), 2 wholly outside
+// the frame. A header run (one polygon / sprite header and the strips that follow it: the submit unit of an object
+// part) is class 1 when its strips are all class 1 or 2 with at least one 1, class 2 when all are 2. Summed per 60
+// scenes over the presented scenes with both bars on (LETTERBOX_CLIP's previous-frame state), logged as "lbx census:".
+extern "C" unsigned re4dc_lbx_mask(void);
+namespace lbxc {
+struct C{ unsigned strips[3],verts[3],objs[3],objverts[3]; };
+C c[5],acc[5];
+struct S{ float x0,x1,y0,y1,cx; unsigned n; bool run_any,run_band,run_bar,sprite,vtx64,half,hdr64; unsigned run_verts; };
+S st[5];
+unsigned scenes,bar_scenes;
+inline void vtx(S& s,float x,float y){
+    if(!s.n){s.x0=s.x1=x;s.y0=s.y1=y;}
+    else{s.x0=x<s.x0?x:s.x0;s.x1=x>s.x1?x:s.x1;s.y0=y<s.y0?y:s.y0;s.y1=y>s.y1?y:s.y1;}
+    ++s.n;
+}
+inline unsigned cls(const S& s){
+    const float W=RE4DC_SCREEN_WF,H=RE4DC_SCREEN_HF,top=60.0f*H/480.0f,bot=420.0f*H/480.0f;
+    if(!(s.x0==s.x0&&s.x1==s.x1&&s.y0==s.y0&&s.y1==s.y1))return 0;
+    if(s.x1<0||s.x0>W||s.y1<0||s.y0>H)return 2;
+    if(s.y1<=top||s.y0>=bot)return 1;
+    return 0;
+}
+inline void strip_end(unsigned l){
+    S& s=st[l];if(!s.n)return;
+    const unsigned k=cls(s);++c[l].strips[k];c[l].verts[k]+=s.n;
+    s.run_any=true;if(k==0)s.run_band=true;if(k==1)s.run_bar=true;s.run_verts+=s.n;s.n=0;
+}
+inline void run_end(unsigned l){
+    S& s=st[l];strip_end(l);if(!s.run_any)return;
+    const unsigned k=s.run_band?0U:s.run_bar?1U:2U;++c[l].objs[k];c[l].objverts[k]+=s.run_verts;
+    s.run_any=s.run_band=s.run_bar=false;s.run_verts=0;
+}
+void block(unsigned l,const std::uint32_t* q){
+    S& s=st[l];
+    const float* f=reinterpret_cast<const float*>(q);
+    if(s.half){s.half=false;if(s.sprite){vtx(s,s.cx,f[0]);vtx(s,f[2],f[3]);strip_end(l);}return;}
+    if(s.hdr64){s.hdr64=false;return;}
+    const std::uint32_t pcw=q[0];const unsigned t=pcw>>29;
+    if(t==4u||t==5u){
+        run_end(l);
+        const bool tex=pcw&8,off=pcw&4,vol=pcw&64;const unsigned col=(pcw>>4)&3;
+        s.sprite=t==5u;
+        s.hdr64=!s.sprite && ((!vol && col==2 && tex && off) || (vol && col==2));
+        s.vtx64=s.sprite || (tex && col==1) || (vol && tex);
+        return;
+    }
+    if(t!=7u)return;
+    if(s.sprite){s.half=true;vtx(s,f[1],f[2]);vtx(s,f[4],f[5]);s.cx=f[7];return;}
+    if(s.vtx64)s.half=true;
+    vtx(s,f[1],f[2]);
+    if(pcw&(1u<<28))strip_end(l);
+}
+void feed(unsigned l,const void* data,unsigned bytes){
+    if(l>4 || l==1 || l==3)return;  // modifier volume lists: not geometry
+    const auto* w=static_cast<const std::uint32_t*>(data);
+    for(unsigned b=0;b<bytes/32;++b)block(l,w+b*8);
+}
+void scene_end(unsigned fr,bool present){
+    for(unsigned l=0;l<5;++l)run_end(l);
+    if(present && re4dc_lbx_mask()==3U){
+        ++bar_scenes;
+        for(unsigned l=0;l<5;++l)for(unsigned k=0;k<3;++k){acc[l].strips[k]+=c[l].strips[k];acc[l].verts[k]+=c[l].verts[k];
+            acc[l].objs[k]+=c[l].objs[k];acc[l].objverts[k]+=c[l].objverts[k];}
+    }
+    std::memset(c,0,sizeof(c));std::memset(st,0,sizeof(st));
+    if(++scenes%60==0){
+        for(unsigned l=0;l<5;l+=2){const C& a=acc[l];
+            re4dc_log("lbx census: f=%u l=%u scenes=%u strips=%u,%u,%u verts=%u,%u,%u objs=%u,%u,%u objverts=%u,%u,%u\n",fr,l,
+                      bar_scenes,a.strips[0],a.strips[1],a.strips[2],a.verts[0],a.verts[1],a.verts[2],a.objs[0],a.objs[1],a.objs[2],
+                      a.objverts[0],a.objverts[1],a.objverts[2]);}
+        std::memset(acc,0,sizeof(acc));bar_scenes=0;
+    }
+}
+}
+#endif
 void ta_hash_marker(pvr_list_t list){const std::uint32_t w=0xF00D0000u|(unsigned)list;re4dc_ta_hash(&w,4);}
 #if defined(RE4DC_MCHECK_PT) && RE4DC_MCHECK_PT
 // MCHECK_PT=1: observe packet boundaries per list before checking actual PT
@@ -1980,6 +2060,9 @@ void stream_close(bool present) {
 #endif
 #if RE4DC_PVR_LATCH>=2
     latch::scene_close();
+#endif
+#if defined(RE4DC_LBX_CENSUS) && RE4DC_LBX_CENSUS
+    lbxc::scene_end(frame,present);  // before re4dc_lbx_close moves the bar state on
 #endif
 #if defined(RE4DC_LETTERBOX_CLIP) && RE4DC_LETTERBOX_CLIP
     re4dc_lbx_close(); // platform/letterbox_clip.cpp: tile row clip in the region array of the bank being filled
@@ -5722,6 +5805,9 @@ extern "C" void re4dc_ta_hash(const void* data,unsigned bytes){
 #if RE4DC_TA_BIN_DIAG
     tabin::cur_ra=__builtin_return_address(0);
     tabin::feed(l,data,bytes);
+#endif
+#if defined(RE4DC_LBX_CENSUS) && RE4DC_LBX_CENSUS
+    lbxc::feed(unsigned(stream_list),data,bytes);
 #endif
     const auto* w=static_cast<const std::uint32_t*>(data);
     std::uint32_t h=ta_hash_h[l];

@@ -427,6 +427,22 @@ $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/letterbox_clip.o: PLATFORM_CPP
 $(OBJDIR)/platform/letterbox_clip.o: PLATFORM_CPPFLAGS += -I$(KOS_BASE)/kernel/arch/dreamcast/hardware/pvr
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_LETTERBOX_CLIP=$(LETTERBOX_CLIP)
 endif
+# LETTERBOX_CULL=1 (lane lbcull 2026-10-15, default 0: nothing compiled; render only; needs LETTERBOX_CLIP>=1): while
+# LETTERBOX_CLIP (c) covers the bars with its opaque black polygons (both bars opaque in the previous frame), the PS2 world
+# pass culls against the visible band instead of the full 4:3 frustum: its placement / cluster / meshlet / strip-group
+# box tests use the top and bottom planes through the bars' inner edges (one pixel of margin), so world geometry wholly
+# under the bars is neither transformed nor submitted. Same frames and rows as the black polygons that hide it.
+# Gameplay and AI visibility checks never read these planes.
+LETTERBOX_CULL ?= 0
+ifeq ($(filter $(LETTERBOX_CULL),0 1),)
+$(error LETTERBOX_CULL must be 0 or 1)
+endif
+ifeq ($(LETTERBOX_CULL),1)
+ifeq ($(LETTERBOX_CLIP),0)
+$(error LETTERBOX_CULL=1 needs LETTERBOX_CLIP=1 or 2 (its opaque bars hide what the band cull drops))
+endif
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/letterbox_clip.o: PLATFORM_CPPFLAGS += -DRE4DC_LETTERBOX_CULL=1
+endif
 # DOOR_FREEZE=1 (test 9 lane DOOR, default 0; render only): the door transition's stop filter (src/game/filter09.cpp,
 # Filter09) on the PVR: the picture on screen frozen into a 320x240 RGB565 texture (150 KiB, only while the filter is
 # in use, freed before the next room's texture preload), drawn every frame with the source's spreading feedback as
