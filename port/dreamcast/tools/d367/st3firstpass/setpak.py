@@ -3,12 +3,14 @@
 # em18.drs ec1c6c16 and its four PS2 pictures, loose) in the merchant rooms.
 import json,sys,os,glob,struct
 P='/root/probe/lanes-20261014/st3/vq33/tex-st3vq.pak'
+RES='/root/probe/lanes-20261014/st3/resident/resident-st3.bin'   # ROOM_RESIDENT lists (resident_keys.py, e2 runs)
 CAST='/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast'
 blob=open(P,'rb').read(); m,v,c,io,do=struct.unpack_from('<8s4I',blob,0)
 packed=set('%08x-%08x'%struct.unpack_from('<2I',blob,io+16*i) for i in range(c))
 for f in sys.argv[1:]:
     d=json.load(open(f)); r=d['replace']
     r['dc/tex.pak']=P
+    if os.path.exists(RES): r['dc/resident.bin']=RES
     room=os.path.basename(f).split('-')[1]; notes=[]
     rel='/root/probe/lanes-20261014/st3/rel33/rel-%s/st3'%room
     if os.path.isdir(rel):
