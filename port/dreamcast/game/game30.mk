@@ -2722,6 +2722,22 @@ $(error PS2_ROOM_PIN must be 0 or 1)
 endif
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_ROOM_PIN=1
 endif
+# WORLD_LOD_PROBE=1 (native_static.cpp, render only, TEST ONLY, default 0; lane worldlod 2026-10-15): the crude cost probe
+# for backlog C1 (offline world distance LOD). A PS2 world meshlet whose nearest point is beyond WORLD_LOD_PROBE_MM
+# (default 12000 = 12 m) is drawn only if its index in its LOD level is even: about half the far vertices, with holes.
+# The far plane is unchanged. A WLODPROBE line beside each PS2MESH line counts the skipped meshlets and vertices.
+# Never a release knob: the real C1 is a converter level (WORLD_LOD).
+WORLD_LOD_PROBE ?= 0
+WORLD_LOD_PROBE_MM ?= 12000
+ifneq ($(WORLD_LOD_PROBE),0)
+ifneq ($(WORLD_LOD_PROBE),1)
+$(error WORLD_LOD_PROBE must be 0 or 1)
+endif
+ifneq ($(PS2_WORLD_MESH),1)
+$(error WORLD_LOD_PROBE needs PS2_WORLD_MESH=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_LOD_PROBE=1 -DRE4DC_WORLD_LOD_PROBE_MM=$(WORLD_LOD_PROBE_MM)
+endif
 # PS2_STRIP_GROUPS=1 (native_static.cpp, render only, default 0; lane objs 2026-10-15): reads dc/native/rNNN/
 # ps2-world.r4sg (tools/ps2_strip_groups.py: up to 4 spatial strip groups per meshlet, corners renumbered per group, in
 # a re-ordered ps2-world.re4mesh of the same size) into heap 4 (r101: 110,496 B). A meshlet that straddles the frustum
