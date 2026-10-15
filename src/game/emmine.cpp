@@ -3,6 +3,7 @@
 // enemy, beep and explode (mines) or fall down as a three-node rope (arrows).
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "map_obj.h"
 #include "light.h"
 #include "widget.h"
@@ -1333,10 +1334,12 @@ int emMineHitCk(cEmMine* em)
                 b.x = 0.0f;
                 b.y = 0.0f;
                 b.z = 1.0f;
-                PSMTXMultVec(em->mat, &a, &a);
-                PSMTXMultVec(em->mat, &b, &b);
-                PSMTXMultVec(inv, &a, &a);
-                PSMTXMultVec(inv, &b, &b);
+                RE4DC_XM_LOAD(em->mat);
+                RE4DC_XM_POINT(em->mat, &a, &a);
+                RE4DC_XM_POINT(em->mat, &b, &b);
+                RE4DC_XM_LOAD(inv);
+                RE4DC_XM_POINT(inv, &a, &a);
+                RE4DC_XM_POINT(inv, &b, &b);
                 PSVECSubtract(&b, &a, &dir);
                 len = SQRTF(dir.x * dir.x + dir.z * dir.z);
                 em->ang.x = -atan2f(dir.y, len);

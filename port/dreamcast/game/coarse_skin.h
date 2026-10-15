@@ -18,6 +18,14 @@ extern "C" void re4dc_coarse_skin_groups(const void* stream, unsigned groups, co
 struct CoarseGroupHeader { short offset[3]; unsigned short count, n, pad[3]; };
 struct CoarseGroupEntry { float w[4]; unsigned out, pad; };
 static_assert(sizeof(CoarseGroupHeader) == 16 && sizeof(CoarseGroupEntry) == 24, "coarse palette groups");
+#if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
+// SKIN_SH4ZAM (game30.mk; platform/sh4zam_skin.c): every caller goes through the run-time switch (mask bit 0x01 picks
+// the SH4ZAM XMTRX bodies, else these asm routines).
+extern "C" void re4dc_shz_skin_bones(const float* inv, const CoarseBoneJob* jobs, unsigned n);
+extern "C" void re4dc_shz_skin_groups(const void* stream, unsigned groups, const float* T, float* out, unsigned entries);
+#define re4dc_coarse_skin_bones re4dc_shz_skin_bones
+#define re4dc_coarse_skin_groups re4dc_shz_skin_groups
+#endif
 
 // One chunk's palette entries from the generated Weight table ({u8 bone[3], count; float value[3]}),
 // grouped by (count, bones) in order of first appearance. Marks used bones. Returns the stream bytes

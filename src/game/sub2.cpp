@@ -3,6 +3,7 @@
 // screen projection (GetScreenPos / Get3DPosFrom2D), line-sphere tests and the parabola / stop
 // distance helpers of the throwing and movement code. (D:/Bio4/Prog/sub2.cpp)
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "global.h"
 #include "atari.h"
 #include "model.h"
@@ -327,8 +328,9 @@ void BoxWorldCalc(Vec* src, Vec* dst, Vec* pos, Vec* rot)
 
     RotMatrix(mtx, rot);
     TransMatrix(mtx, pos);
+    RE4DC_XM_LOAD(mtx); // one XMTRX load for the 8 corners (GAME_SH4ZAM_LOGIC)
     for (i = 0; i < 8; i++) {
-        PSMTXMultVec(mtx, &src[i], &dst[i]);
+        RE4DC_XM_POINT(mtx, &src[i], &dst[i]);
     }
 }
 
