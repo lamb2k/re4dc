@@ -106,6 +106,19 @@ static void r201_checkSwitch(int on);
 static void r201_execEvent00();
 static void r201_execEvent00_sub();
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH3) && RE4DC_ROUTE_MOVIES_CH3
+// ROUTE_MOVIES_CH3 (castle lane 2026-10-15): r201 s00 (the castle entrance) is presented by its PS2 movie.
+// While the movie owns the event no evd is read (no DC.setData / ARAM load, the swap module is read at its own
+// size); the handler's begin / end modes run, the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md).
+#include "route_movie.h"
+#include "fade.h"
+#define R201_ROUTE_MOVIES 1
+static int r201MovieOwns;
+#define R201_MOVIES_OWN() (re4dc_movie_available(0x20100))
+#else
+#define R201_ROUTE_MOVIES 0
+#endif
+
 // Room init: JumpPoint 2 skips ahead (entrance seen, switch pulled, claw-man dead, reset wave). The
 // altar (r201_initAltar); the picture item 0x80 at area 0x20 until taken; the claw-man up-cut on area
 // 0xF once (Room_flg bit 2) and its appearance on area 0x10 until it is dead (bit 0), then the reset
@@ -200,9 +213,18 @@ void R201Init()
         }
     }
     if (!(pG->Item_find_flg & 0x10000)) {
+#if R201_ROUTE_MOVIES
+        r201MovieOwns = R201_MOVIES_OWN();
+        if (r201MovieOwns) {
+            EmReadSearch(0x1B, 0, 0);
+        } else {
+#endif
         r201_work.p->evd = DC.setData(EvtMgr.NameChange("evd/r201s00.evd"));
         r201_work.p->evd->setCommand(CMND_ARAM_LOAD, 0, 0);
         EmReadSearch(0x1B, 0, r201_work.p->evd->m_size);
+#if R201_ROUTE_MOVIES
+        }
+#endif
         SceAtDataSet_exec(8, SCE_LEVEL10, 0, (TaskFunc) r201_execEvent00, 0, 1);
     } else {
         EmReadSearch(0x1B, 0, 0);
@@ -1098,6 +1120,13 @@ static void r201_execEvent00()
 
     BitOn(pG->Item_find_flg, 0x10000);
     SceEventStart(0);
+#if R201_ROUTE_MOVIES
+    if (r201MovieOwns) {
+        pG->System_flg |= 0x400;
+        SceSleep(2);
+        RouteMoviePlay(0x20100, ROUTE_MOVIE_SND_EVENT | ROUTE_MOVIE_KEEP_POSE, 0, 0);
+    } else {
+#endif
     if (r201_work.p->evd->waitLoadOk() == 1) {
         pG->System_flg |= 0x400;
         SceSleep(2);
@@ -1111,6 +1140,9 @@ static void r201_execEvent00()
         MemorySwap(m->pArc, (u32) r201_work.p->evd->m_addr, r201_work.p->evd->m_size);
     }
     r201_work.p->evd->setCommand(CMND_DEL_DATA, 0, 0);
+#if R201_ROUTE_MOVIES
+    }
+#endif
     SceEventEnd(0);
     OpeOwTypeSet(4);
 }

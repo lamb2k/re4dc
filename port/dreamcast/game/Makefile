@@ -440,6 +440,8 @@ $(error ROUTE_CH31 must be 0 or 1 and needs ROUTE_CH23=1 EM10_SHARED=1)
 endif
 MODULES += st2_1 em1a em1b em14
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH31=1
+# snd.cpp ch13_bgm1_sub: r200 / r202 play their resident BGM0 track for the BGM1 request (frozen layout, BGM1 = 0 B).
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH31=1
 endif
 # ROUTE_CH32=1 (castle lane 2026-10-15, default 0: no effect; needs ROUTE_CH31=1): the enemy modules of chapters 3-2
 # to 3-4 (assets.sh discover r205 r209 r20a r20b r20c r20f r206 r20d r20e): em2d (32: r205 r20a), em25 (10: r20c r20f
@@ -456,6 +458,8 @@ endif
 MODULES += em2d:ovl em25:ovl em3c:ovl em19
 export RE4DC_LINK_OVERLAY += .ovl_em2d .ovl_em25 .ovl_em3c
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH32=1
+# snd.cpp ch13_bgm1_sub: r20a / r20b, the same BGM1 gap.
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH32=1
 endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
@@ -1172,6 +1176,19 @@ ROUTE_MOVIES ?= 0
 # ROUTE_MOVIE_TEXHASH=1: verification builds log the texture FNV of pictures 0/1/30/300.
 ROUTE_MOVIE_YUV ?= 1
 ROUTE_MOVIE_TEXHASH ?= 0
+# ROUTE_MOVIES_CH3=1 (castle lane 2026-10-15; default 0: no effect; needs ROUTE_MOVIES=1 ROUTE_CH31=1): the chapter 3
+# castle events are presented by their PS2 movies (BIO4MOV.AFS -> tools/convert_route_movies.py, private dc/movie):
+# r201 s00, r203 s00, r204 s00 (3-1 end), r209 s00, r20b s00 (3-2 end), r206 s00 / s10 (3-3 end) / s20 (3-4 end).
+# While a room's movies are on the disc no evd is read and the swap module is read at its own size; every gameplay
+# effect of the callers runs unchanged and a missing movie falls back to the source event (src/st2/*.cpp).
+ROUTE_MOVIES_CH3 ?= 0
+ifneq ($(ROUTE_MOVIES_CH3),0)
+ifneq ($(ROUTE_MOVIES_CH3)$(ROUTE_MOVIES)$(ROUTE_CH31),111)
+$(error ROUTE_MOVIES_CH3 must be 0 or 1 and needs ROUTE_MOVIES=1 ROUTE_CH31=1)
+endif
+ROUTE_MOVIE_GAME_CH3 = $(OBJDIR)/mod/st2_0/src/st2/r201.o $(OBJDIR)/mod/st2_0/src/st2/r203.o     $(OBJDIR)/mod/st2_1/src/st2/r204.o $(OBJDIR)/mod/st2_1/src/st2/r206.o $(OBJDIR)/mod/st2_1/src/st2/r209.o     $(OBJDIR)/mod/st2_1/src/st2/r20b.o
+$(ROUTE_MOVIE_GAME_CH3): GAME_CPPFLAGS += -DRE4DC_ROUTE_MOVIES_CH3=1
+endif
 # ROUTE_MOVIE_DIAG=1: test builds log the movie loop's per-picture timing and the failing step.
 #   2/3/4 are test-only proofs of the route movie VRAM claim (platform/native_ui.cpp; 0 and 1 compile
 #   them out): 2 = the movie claim's normal pass releases nothing, so only its fallback (end this
@@ -1255,7 +1272,7 @@ $(OBJDIR)/route-movies.h: route-movies-force
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 ROUTE_MOVIE_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/pad.o
-ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23)
+ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3)
 $(ROUTE_MOVIE_PLATFORM) $(ROUTE_MOVIE_GAME): $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/route-movies.h

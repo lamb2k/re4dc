@@ -1882,6 +1882,15 @@ static int ch13_bgm1_sub()
     // r113 (ROUTE_CH22, chapter 2-2): slot 1 is bio4midi #3, the same frozen-layout gap.
     if (room == 0x113) return (pSnd->room_bgm_tbl[0] >> 16) & 0x8000;
 #endif
+#if defined(RE4DC_ROUTE_CH31) && RE4DC_ROUTE_CH31
+    // r200 / r202 (castle lane, ROUTE_CH31, chapter 3-1): slot 1 names a second track, the same frozen-layout gap
+    // (cxt12c r200 / r202: "aica: blk 4 converted bank rejected (slot), block silent").
+    if (room == 0x200 || room == 0x202) return (pSnd->room_bgm_tbl[0] >> 16) & 0x8000;
+#endif
+#if defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32
+    // r20a / r20b (castle lane, ROUTE_CH32, chapter 3-2): the same gap (cx32d r20a / r20b).
+    if (room == 0x20A || room == 0x20B) return (pSnd->room_bgm_tbl[0] >> 16) & 0x8000;
+#endif
     return (room == 0x108 || room == 0x10A) && ((pSnd->room_bgm_tbl[0] >> 16) & 0x8000);
 }
 
