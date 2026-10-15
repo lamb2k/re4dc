@@ -501,6 +501,17 @@ ROOM_CONTRACTS={
     'r204':dict(slots=43,smd=4,effs=(7,),itm=9,model_slots=()),
     'r207':dict(slots=28,smd=4,effs=(7,),itm=9,model_slots=()),
     'r208':dict(slots=65,smd=4,effs=(7,),itm=9,model_slots=()),
+    # Chapter 3-2 .. 3-4 (castle lane 2026-10-15): the same standard owners (SMD#4 TPL0, EFF#7, ITM#9), slot counts
+    # from the GC disc 1 St2/<room>.das; every other slot stays byte-identical.
+    'r205':dict(slots=31,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r209':dict(slots=38,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),  # header flush: + the NTR slot
+    'r20a':dict(slots=31,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r20b':dict(slots=29,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r20c':dict(slots=31,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r20f':dict(slots=29,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r206':dict(slots=59,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r20d':dict(slots=61,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r20e':dict(slots=35,smd=4,effs=(7,),itm=9,model_slots=()),
     # r40b (St4, st4_0 + em1f; follow-up 7): r40c's 27-slot layout (header ends at 232 of 256: no growth).
     'r40b':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
 }
