@@ -35,21 +35,6 @@
 // With N at or above the number of live Ganados nothing is ever parked and cEmMgr::move runs
 // exactly the reference code path (the selection only reads game state): the logic trace is
 // STRICT against the reference build.
-//
-// FAR_HALF=1|2 (game30.mk; lane farhalf 2026-10-15, backlog D1; default 0 = not compiled): far / off-screen
-// Ganados update at half rate, in every room, independently of the cap above (built with or without it).
-// Eligible on a tick = a Ganado (ids 0x10..0x20) in a whitelisted walking / idle routine (threat() below),
-// farther than RE4DC_FAR_HALF_M metres from Leon (horizontal), outside the previous frame's view frustum
-// inflated by RE4DC_ACT_CAP_VIEW_M, hp > 0, no pending damage, not the lock-on target, and not parked by the
-// cap. An eligible Ganado alternates strictly: one tick full, one tick reduced (never two reduced ticks in a
-// row; any ineligible tick is a full one), so one that turns visible or comes within N m is full on that tick.
-//   1 = pose half (the exact candidate): the reduced tick runs the whole AI / routine / movement / collision
-//       path and only skips the pose work (key evaluation, part matrices, foot IK, hokan blend) in MotionMove;
-//       the parts then follow the body by translation (PartsWorldPosCalc). The Rnd stream is untouched.
-//   2 = full half (approximation): the reduced tick skips emMove as the cap's parked tick does (plDist2 kept
-//       current); the far Ganado walks at half speed and its Rnd draws move.
-// Never runs while the radio-call sub screen has swapped the room lists (re4dc_ss_ui_order), during an event
-// pause or while characters are frozen: every Ganado is then a full one.
 #include "global.h"
 #include "player.h"
 #include "em.h"
@@ -82,25 +67,6 @@
 #endif
 #ifndef RE4DC_ACT_CAP_TABLE
 #define RE4DC_ACT_CAP_TABLE 0
-#endif
-#ifndef RE4DC_FAR_HALF
-#define RE4DC_FAR_HALF 0
-#endif
-#if RE4DC_FAR_HALF
-#ifndef RE4DC_FAR_HALF_M
-#define RE4DC_FAR_HALF_M 12
-#endif
-#ifndef RE4DC_FAR_HALF_LOG
-#define RE4DC_FAR_HALF_LOG 0   // N > 0: one "FH" census line per N ticks with live Ganados
-#endif
-extern "C" int re4dc_ss_ui_order() __attribute__((weak));   // sscrn_bridge.cpp: 1 while the room lists are swapped
-#if defined(RE4DC_FAR_HALF_RT) && RE4DC_FAR_HALF_RT
-// FAR_HALF_RT=1 (game30.mk; DBG_WARP test / benchmark builds): the run-time switch, set by each warp fixture
-// (dbgwarp_bridge.cpp: 1 unless the fixture says `farhalf 0`), so one benchmark disc measures off and on.
-extern "C" {
-int re4dc_far_half_rt = 1;
-}
-#endif
 #endif
 
 namespace {
@@ -137,21 +103,10 @@ struct Entry {
     u8 must;
     u8 slot;
     f32 key;
-#if RE4DC_FAR_HALF
-    u8 fh;      // eligible for the half rate this tick
-    u8 phase;   // 1 = this tick is the reduced one
-#endif
 };
 Entry g_e[kMax];
 int g_n;
 u32 g_tick;
-#if RE4DC_FAR_HALF
-// FH census (RE4DC_FAR_HALF_LOG): per window, ticks with live Ganados, live / eligible / reduced sums and maxima,
-// reduced ticks dropped by a late damage / death (late), and wake-ups (eligible -> ineligible transitions).
-struct FhStats {
-    u32 ticks, live, elig, red, late, wakes, maxLive, maxElig;
-} g_fh;
-#endif
 
 // Stats (RE4DC_ACT_CAP_LOG): per window, max/sum of the per-tick counts.
 struct Stats {
@@ -200,9 +155,6 @@ bool inView(const cEm* e)
 
 bool roomOn()
 {
-#if RE4DC_FAR_HALF && !RE4DC_ACT_CAP && !RE4DC_ACT_CAP_TABLE
-    return false;   // FAR_HALF built without a cap: the cap never parks
-#endif
 #if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
     // late-activation arms (warp_late.h): the cap works only once the late mask's bit 8 is open
     if (RE4DC_WARP_LATE_SET() && !RE4DC_WARP_LATE(RE4DC_LATE_ACT_CAP)) return false;
@@ -235,38 +187,8 @@ Entry* find(cEm* e)
     Entry& n = g_e[g_n++];
     n.em = e; n.serial = e->serial; n.activeSince = g_tick; n.parked = 0; n.seen = 0; n.must = 0;
     n.slot = (u8) (g_n - 1); n.key = 0.0f;
-#if RE4DC_FAR_HALF
-    n.fh = 0; n.phase = (u8) (e->serial & 1);   // staggers the reduced ticks of a group
-#endif
     return &n;
 }
-
-#if RE4DC_FAR_HALF
-// FAR_HALF: may this tick reduce anything at all (same pauses as roomOn, plus the swapped sub screen lists).
-bool farHalfOn()
-{
-#if defined(RE4DC_FAR_HALF_RT) && RE4DC_FAR_HALF_RT
-    if (!re4dc_far_half_rt) return false;
-#endif
-    if (!pG || !pPL) return false;
-    if (re4dc_ss_ui_order && re4dc_ss_ui_order()) return false;
-    if (pG->Status_flg[1] & 0x10000000) return false;
-    if (pG->Stop_flg & 0x20000000) return false;
-    return true;
-}
-
-void logFarHalf()
-{
-#if RE4DC_FAR_HALF_LOG
-    if (g_fh.ticks < RE4DC_FAR_HALF_LOG) return;
-    const unsigned t = g_fh.ticks;
-    re4dc_log("FH t=%u rm=%x n=%u mode=%u live=%u/%u elig=%u/%u red=%u late=%u wake=%u\n", (unsigned) pG->Frame_cnt,
-              ((unsigned) pG->stage_no << 8) | pG->room_no, t, (unsigned) RE4DC_FAR_HALF, g_fh.live * 10 / t,
-              g_fh.maxLive, g_fh.elig * 10 / t, g_fh.maxElig, g_fh.red, g_fh.late, g_fh.wakes);
-    g_fh = FhStats();
-#endif
-}
-#endif
 
 void logStats()
 {
@@ -344,39 +266,6 @@ extern "C" void re4dc_act_cap_select(void)
         x.parked = p;
         act += !p; park += p;
     }
-#if RE4DC_FAR_HALF
-    // FAR_HALF: which of the cap's active Ganados take this tick reduced (strict alternation while eligible)
-    {
-        constexpr f32 kFh2 = (f32) (RE4DC_FAR_HALF_M * 1000) * (f32) (RE4DC_FAR_HALF_M * 1000);
-        const bool fon = farHalfOn();
-        int elig = 0, red = 0;
-        for (int i = 0; i < g_n; i++) {
-            Entry& x = g_e[i];
-            cEm* e = x.em;
-            bool f = false;
-            if (fon && !x.parked) {
-                const f32 dx = pPL->pos.x - e->pos.x, dz = pPL->pos.z - e->pos.z;
-                f = dx * dx + dz * dz > kFh2 && !threat(e) && e->hp > 0 && !e->dmg.m_Flag && pPL->pLockEm != e &&
-                    !inView(e);
-            }
-            if (f) {
-                x.phase ^= 1;
-                elig++;
-                red += x.phase;
-            } else {
-                if (x.fh) g_fh.wakes++;
-                x.phase = (u8) (x.serial & 1);
-            }
-            x.fh = f;
-        }
-        if (live) {
-            g_fh.ticks++; g_fh.live += live; g_fh.elig += elig; g_fh.red += red;
-            if ((u32) live > g_fh.maxLive) g_fh.maxLive = live;
-            if ((u32) elig > g_fh.maxElig) g_fh.maxElig = elig;
-            logFarHalf();
-        }
-    }
-#endif
 #if RE4DC_ACT_CAP_LOG
     if (live) {
         g_st.ticks++; g_st.live += live; g_st.act += act; g_st.park += park; g_st.must += must;
@@ -398,17 +287,6 @@ extern "C" int re4dc_act_cap_parked(cEm* e)
     for (int i = 0; i < g_n; i++) {
         const Entry& x = g_e[i];
         if (x.em != e) continue;
-#if RE4DC_FAR_HALF
-        // FAR_HALF: an active Ganado on its reduced tick -> 1 (=2: skip emMove) or 2 (=1: pose skip), unless it
-        // was hit or killed earlier in this tick
-        if (!x.parked && x.serial == e->serial && x.fh && x.phase) {
-            if ((e->be_flag & 0x201) != 1 || e->hp <= 0 || e->dmg.m_Flag) {
-                g_fh.late++;
-                return 0;
-            }
-            return RE4DC_FAR_HALF == 2 ? 1 : 2;
-        }
-#endif
         if (!x.parked || x.serial != e->serial) return 0;
         // hit or killed earlier in this tick (explosion, another Ganado): react this tick
         if ((e->be_flag & 0x201) != 1 || e->hp <= 0 || e->dmg.m_Flag) return 0;

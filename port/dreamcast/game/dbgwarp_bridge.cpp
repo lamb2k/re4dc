@@ -107,9 +107,6 @@ void re4dc_ps2fx_set(unsigned flags);  // esp_sub.cpp (effects30.mk EFFECT_PS2_T
 #if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
 extern "C" void re4dc_charbake_set(unsigned variant);  // coarse_actor.cpp (charbake.mk CHARBAKE_TOGGLE)
 #endif
-#if defined(RE4DC_FAR_HALF_RT) && RE4DC_FAR_HALF_RT
-extern "C" int re4dc_far_half_rt;  // act_cap.cpp (game30.mk FAR_HALF_RT): FAR_HALF on (1) / off (0) at run time
-#endif
 
 namespace {
 struct Act { u32 frame; u16 buttons; s8 stick; u16 hold; u8 entry; bool ev; };
@@ -225,9 +222,6 @@ void load()
 {
     wp.loaded = true;
     wp.parse_entry = wp.max_entry = 1;
-#if defined(RE4DC_FAR_HALF_RT) && RE4DC_FAR_HALF_RT
-    re4dc_far_half_rt = 1;   // FAR_HALF_RT: every fixture (benchmark scene) runs with FAR_HALF on unless it says `farhalf 0`
-#endif
     static char text[2048];
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
@@ -288,11 +282,6 @@ void load()
             for (int i = 1; i < n && wp.n_dead < 64; ++i) wp.dead[wp.n_dead++] = (u8) num(tok[i]);
         } else if (!strcmp(k, "inv") && n >= 2) {
             if (strcmp(tok[1], "default")) re4dc_log("warp: inv %s not supported (new-game inventory kept)\n", tok[1]);
-#if defined(RE4DC_FAR_HALF_RT) && RE4DC_FAR_HALF_RT
-        } else if (!strcmp(k, "farhalf") && n >= 2) {
-            re4dc_far_half_rt = num(tok[1]) != 0;   // FAR_HALF_RT (game30.mk): the A/B switch of a benchmark scene
-            re4dc_log("warp: farhalf %d\n", re4dc_far_half_rt);
-#endif
         } else if (!strcmp(k, "radio") && n >= 3 && num(tok[2]) < 24) {
             wp.has_radio=true;wp.radio_frame=num(tok[1]);wp.radio_no=(int)num(tok[2]);
         } else if (!strcmp(k, "area") && n >= 2) {

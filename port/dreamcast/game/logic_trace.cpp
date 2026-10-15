@@ -88,11 +88,6 @@ extern "C" unsigned short re4dc_rnd_state(void);   // src/game/rnd.cpp (trace bu
 // Global scope: an extern "C" name defined inside the unnamed namespace links to a silent stub.
 extern "C" unsigned re4dc_dt_snd;
 unsigned re4dc_dt_snd;
-#if defined(RE4DC_DT_IK_APART) && RE4DC_DT_IK_APART
-// DT_IK_APART=1 (game30.mk): set by MotionMove around the leg IK; its floor queries go to bucket 7 (not logged).
-extern "C" unsigned re4dc_dt_ik;
-unsigned re4dc_dt_ik;
-#endif
 #endif
 
 namespace {
@@ -182,9 +177,6 @@ extern "C" unsigned re4dc_dt_note(unsigned kind, unsigned a, unsigned b)
     re4dc_lqm_note(kind, a, b);
 #endif
     if (re4dc_dt_snd) kind = 6;
-#if defined(RE4DC_DT_IK_APART) && RE4DC_DT_IK_APART
-    if (re4dc_dt_ik) kind = 7;
-#endif
     g_dt[kind & 7].word(a);
     g_dt[kind & 7].word(b);
     ++g_dtn[kind & 7];
