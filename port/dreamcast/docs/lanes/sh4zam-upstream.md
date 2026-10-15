@@ -25,6 +25,39 @@ inside the +-0.4 layout noise; docs/lanes/sh4zam-direct.md). In the global rebin
 PSMTXInverse (cofactor crosses + FIPR + FSRRA) and PSMTXMultVec (three shz_dot8f) took more cycles per call than
 mtx_sh4.S, so they stay on mtx_sh4.S (game30.mk).
 
+## Candidate upstream gain: the skinned vertex loop (coordinator decision 10-15: our asm stays, boot mask 0)
+
+Both sides use the same strategy: XMTRX is loaded once per palette run, then there is one FTRV per vertex. The
+difference is in how each vertex is scheduled.
+
+| | avk_sh4.S re4dc_avk_pos_skin_u16 (ours) | sh4zam_skin.c re4dc_shz_pos_skin_u16 (shz_xmtrx_load_4x4 / apply_3x4 + shz_xmtrx_transform_vec4 + shz_inv_sqrtf) |
+|---|---|---|
+| hw ms per frame (r101 cross) | 2.247 | 4.841 |
+| cycles per frame (200 MHz) | ~449k | ~968k (2.15x) |
+| instructions per frame | 567k | 816k (1.44x) |
+| cycles per instruction | 0.79 | 1.19 |
+| XMTRX reloads per frame | ~770 (palette-run changes) | the same ~770 (each also builds screen x entry x q in XMTRX) |
+
+Why ours is faster:
+- **One pass does everything.** The u16 position and uv decode (FLOAT from int16), the FTRV, the FSRRA of w*w, the
+  perspective multiply, the six outcode compares and the uv scale/bias are interleaved in one loop. The C version does
+  the same work, but GCC can't overlap the FTRV result latency (~4 cycles) or the FSRRA latency with the next vertex's
+  loads: transform_vec4 is an asm statement that returns its result in registers, so the compiler treats it as a
+  serial point. That is the CPI gap (0.79 vs 1.19).
+- **Fused FSRRA.** Ours issues FSRRA on w*w while the x/y FMULs of the previous vertex retire. The C version waits on
+  the inv result before x and y.
+- **Outcodes are not the difference.** GCC also compiles the six outcode compares without per-plane branches (6
+  branches in the whole C function against 14 in ours, which is unrolled). The gap is the serialised FTRV and FSRRA
+  latency and the extra decode and store instructions (1.44x the count).
+- **No per-run copy.** The C run setup scales the palette entry into a stack pq[12], then shz_xmtrx_apply_3x4 reads it
+  back. Ours folds q into the entry once when the skin table is built (the 0x2 stage).
+- **Call overhead is not the cause.** The SH4ZAM calls inline, so there is no call/return per vertex. The cost is
+  in scheduling and in the extra instructions.
+
+What upstream could add to close it: a batch `shz_xmtrx_transform_vec4_n` / `transform_point3_n` with a two-vertex
+software pipeline, plus a variant that also returns 1/w (FSRRA) and the outcode mask. Our avk_sh4.S loop is the
+reference implementation. We can share it under SH4ZAM's MIT terms if the author wants it.
+
 ## API gaps and pitfalls (for upstream)
 
 1. **shz_matrix.h is not self-contained for vendoring.** With only the xmtrx / vector / scalar / mem headers, shz_mat4x4_t /
