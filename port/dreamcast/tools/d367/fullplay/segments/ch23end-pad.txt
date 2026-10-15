@@ -1,34 +1,40 @@
-# wait for the area-4 goto (goto 3), then A through s00 and the chapter 2-3 results; save at the card screen
-0 0000 1 goto=3 200000
+# Ordinary source-clock controller aim and handgun input; no direct damage or state writes.
+clock source
+0 0000 1 goto=2 36000
++30 1000 1
++15 0020 20
++20 0028 6
++6 0021 5
++5 0020 196
++196 0120 2
++2 0020 18
++18 0120 2
++2 0020 18
++18 0120 2
++2 0020 18
++18 0120 2
++2 0020 18
++18 0120 2
++2 0020 18
++18 0120 2
++2 0020 18
++18 0120 2
++2 0020 18
++18 0120 2
++2 0020 18
++18 0120 2
++2 0020 18
++18 0120 2
++2 0020 18
++18 0000 1
++1 0000 1 goto=3 200000
+# chapter 2-3 end: the s00 movie, then one A through the results (u6-04: the card screen followed it); the save
+# presses are gated on the card states (2/1 slot select, 2/6 confirm: LEFT = yes, then A) so none lands elsewhere
 +1200 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+250 0100 8
-+60 0100 6 card=2/1 900000
-+10 0001 6 card=2/6 3000
-+120 0100 6
-+120 0100 6
-+120 0100 6
-+120 0100 6
-+120 0100 6
++250 0100 8 card=2/1 3000
++60 0001 6 card=2/6 3000
++30 0100 6 card=2/6 600
++200 0100 6
++200 0100 6
++200 0100 6
++200 0100 6
