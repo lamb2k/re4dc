@@ -35,13 +35,22 @@
 __attribute__((section(".data"))) unsigned re4dc_shz_mem_mask = RE4DC_SHZ_MEM_BOOT;
 void re4dc_shz_mem_set(unsigned mask) { re4dc_shz_mem_mask = mask; }
 
+/* Only main RAM (any P0-P3 mirror of 0x0C000000-0x0CFFFFFF) takes the SH4ZAM paths. VRAM, AICA sound RAM on the G2
+ * bus (32-bit accesses only: no FMOV.D, no movca), the TA FIFO and P4 keep newlib. The first Flycast house run
+ * without this check left the game in texture / movie loading (hwmodel-m6h / m7h, 10-15). */
+static inline int shz_main_ram(const void* p, size_t n)
+{
+    const uintptr_t a = (uintptr_t) p & 0x1fffffffu;
+    return ((uintptr_t) p >> 29) != 7u && a >= 0x0c000000u && a + n <= 0x0d000000u;
+}
+
 void* __real_memset(void* dst, int c, size_t n);
 void* __real_memcpy(void* __restrict dst, const void* __restrict src, size_t n);
 void* __real_memmove(void* dst, const void* src, size_t n);
 
 void* __wrap_memset(void* dst, int c, size_t n)
 {
-    if (n < SHZ_MEMSET_MIN || !(re4dc_shz_mem_mask & 1u))
+    if (n < SHZ_MEMSET_MIN || !(re4dc_shz_mem_mask & 1u) || !shz_main_ram(dst, n))
         return __real_memset(dst, c, n);
     uint8_t* p = (uint8_t*) dst;
     const uint8_t b = (uint8_t) c;
@@ -56,14 +65,16 @@ void* __wrap_memset(void* dst, int c, size_t n)
 
 void* __wrap_memcpy(void* __restrict dst, const void* __restrict src, size_t n)
 {
-    if (n < SHZ_MEMCPY_MIN || !(re4dc_shz_mem_mask & 2u))
+    if (n < SHZ_MEMCPY_MIN || !(re4dc_shz_mem_mask & 2u) || !shz_main_ram(dst, n) || !shz_main_ram(src, n)
+        || ((uintptr_t) dst < (uintptr_t) src + n && (uintptr_t) src < (uintptr_t) dst + n)) /* overlap (UB): keep newlib */
         return __real_memcpy(dst, src, n);
     return shz_memcpy(dst, src, n);
 }
 
 void* __wrap_memmove(void* dst, const void* src, size_t n)
 {
-    if (n < SHZ_MEMCPY_MIN || !(re4dc_shz_mem_mask & 4u) || (uintptr_t) dst > (uintptr_t) src)
+    if (n < SHZ_MEMCPY_MIN || !(re4dc_shz_mem_mask & 4u) || (uintptr_t) dst > (uintptr_t) src
+        || !shz_main_ram(dst, n) || !shz_main_ram(src, n))
         return __real_memmove(dst, src, n);
     /* shz_memmove: dst <= src copies forward with shz_memcpy (each block is loaded before it is stored); its own
      * backward branch (memmove) is not reached here */
