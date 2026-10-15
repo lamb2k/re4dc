@@ -1,0 +1,38 @@
+{
+ "registry": "ps2-ch2-r117p",
+ "about": "lane ps2cast (2026-10-15): r117 room package = the em11 type 7 zealot as a POOL descriptor (NATIVE_MODEL_REGISTRY_POOL; model_registry.py --pool): body 0x1FC / TPL 0x1FD, heads 0x1FE / 0x1FF / 0x200 (TPL 0x201), right hands 0x204..0x207 and left hands 0x208..0x20C (TPL 0x1FD), hoods 0x202 / 0x203 (TPL 0x1FD), accessories 0x20D / 0x20F / 0x211 / 0x213 / 0x215 / 0x217 (TPL = BIN + 1), all from the PS2 em11 BINs. Render only. With PS2_ASHLEY_ROOMS=1 Ashley's r117 package goes beside it as partner.re4nmr.",
+ "cast_dir": "/root/probe/lanes-20261015/ps2cast/conv-ch2/regcast-zealotp",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit preset (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em11-07p",
+   "archive": "em11",
+   "model_id": "0x11",
+   "source_types": [
+    7
+   ],
+   "module": "src/em11/em11_set.cpp Em11Set type 7 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261015/ps2cast/conv-ch2/zp-mask-hood",
+    "16": "/root/probe/lanes-20261015/ps2cast/conv-ch2/zp-mask-acc1",
+    "20": "/root/probe/lanes-20261015/ps2cast/conv-ch2/zp-mask-acc5"
+   }
+  }
+ ],
+ "room_packages": {
+  "117": {
+   "descriptors": [
+    "zealot-em11-07p"
+   ],
+   "evidence": "emleon01: r117 em11 type 7"
+  }
+ }
+}

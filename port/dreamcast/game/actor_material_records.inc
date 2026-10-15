@@ -6,7 +6,13 @@
 // three room blobs. Widen only this combination; all narrower recipes keep their original layout and code.
 #if RE4DC_ACTOR_PL08 && RE4DC_NATIVE_MODEL_REGISTRY
 #define RE4DC_ACTOR_WIDE_IDENTITY 1
+#if RE4DC_NMR_POOL
+// NATIVE_MODEL_REGISTRY_POOL: a pool descriptor carries one role row per pool section (the zealot / soldier pools: ~20),
+// beside a partner package's rows; 128 role bits leave 66 room rows.
+constexpr unsigned kRoleMaskWords=4,kBlobMaskBits=64;
+#else
 constexpr unsigned kRoleMaskWords=3,kBlobMaskBits=64;
+#endif
 using BlobMask=std::uint64_t;
 #else
 #define RE4DC_ACTOR_WIDE_IDENTITY 0

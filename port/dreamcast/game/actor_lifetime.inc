@@ -209,7 +209,9 @@ extern "C" void re4dc_actor_info_adopt(cModelInfo* info) {
             // Multiple rows may intentionally share default hand geometry.
             if(found.info && (found.tpl_owner!=k || found.tpl!=p))return;
             found.roles[r/32]|=1u<<(r%32);
-#if RE4DC_ACTOR_WIDE_IDENTITY
+#if RE4DC_ACTOR_WIDE_IDENTITY && RE4DC_NMR_POOL
+            found={info,ai,a.serial,{found.roles[0],found.roles[1],found.roles[2],found.roles[3]},k,o.revision,p,n};
+#elif RE4DC_ACTOR_WIDE_IDENTITY
             found={info,ai,a.serial,{found.roles[0],found.roles[1],found.roles[2]},k,o.revision,p,n};
 #else
             found={info,ai,a.serial,{found.roles[0],found.roles[1]},k,o.revision,p,n};
@@ -576,6 +578,51 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
     }
     if(n!=count || seen!=((1u<<count)-1)){ATD(m,25,n,seen);return 0;}return 1;
 }
+#if RE4DC_NMR_POOL
+// NATIVE_MODEL_REGISTRY_POOL (native_model_registry.mk): a pool descriptor's sections are a pool of source BIN + TPL
+// identities (one role row each: the body, heads, every hand pose, every accessory the source can attach). An actor
+// binds it when each of its source infos proves exactly one current pool row of the appearance (the same per-info
+// proof as re4dc_actor_role_bindings: find_info, the readopt rule, one unique current row), no two infos prove the
+// same row, and the first info, and only it, is the body (section 0). out[k] / sec[k] keep source info order.
+extern "C" int re4dc_actor_pool_bindings(cModel* m,unsigned appearance,unsigned sections,cModelInfo** out,unsigned char* sec,unsigned count) {
+    using namespace re4dc_material;using namespace life;
+    if(!m || !out || !sec || !count || count>8u || !sections || sections>64u || exhausted){ATD(m,30,appearance,exhausted);return 0;}
+    unsigned seen[2]={0,0},n=0;
+    for(unsigned k=0;k<count;++k){out[k]=nullptr;sec[k]=0;}
+    for(auto* p=m->pModelInfo;p;p=p->pList) {
+        if(n==count){ATD(m,21,appearance,n+1);return 0;}
+        auto* i=find_info(p);
+#if RE4DC_CROWD_READOPT
+#if RE4DC_CROWD_READOPT_MEMO
+        if(!i) {
+            if(!adopt_memo(p,false)){re4dc_actor_info_adopt(p);i=find_info(p);if(!i)adopt_memo(p,true);}
+            CROWD_LIFE(++(i?crowd_readopt_ok:crowd_readopt_fail));
+        }
+#else
+        if(!i){re4dc_actor_info_adopt(p);i=find_info(p);CROWD_LIFE(++(i?crowd_readopt_ok:crowd_readopt_fail));}
+#endif
+#endif
+#if RE4DC_ACTOR_TRANSACTION_DIAG
+        if(!i)re4dc_actor_txdiag_info(m,p,n);
+#endif
+        if(!i){ATD(m,22,appearance,n);return 0;}
+        unsigned role=sections;
+#if RE4DC_NATIVE_MODEL_REGISTRY_TX
+        for(unsigned r=registry_role_next(*i,0);r<RE4DC_ROLE_COUNT;r=registry_role_next(*i,r+1))
+#else
+        for(unsigned r=0;r<RE4DC_ROLE_COUNT;++r)
+#endif
+            if(RE4DC_ROLE(r).appearance==appearance && info_current(*i,r)) {
+                if(role!=sections && role!=RE4DC_ROLE(r).role){ATD(m,24,appearance,n);return 0;}
+                role=RE4DC_ROLE(r).role;
+            }
+        if(role>=sections || (n==0)!=(role==0) || (seen[role/32]&(1u<<(role%32)))){ATD(m,23,appearance,n*256+role);return 0;}
+        seen[role/32]|=1u<<(role%32);out[n]=p;sec[n]=(unsigned char)role;++n;
+    }
+    if(n!=count){ATD(m,25,n,count);return 0;}
+    return 1;
+}
+#endif
 extern "C" unsigned re4dc_actor_stream_begin(const void* p,unsigned bytes) {
     using namespace re4dc_material::life;
     if(!p || !bytes || exhausted)return 0;

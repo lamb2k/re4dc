@@ -21,6 +21,12 @@ gives the PS2 section the GC look for those cards without changing its geometry:
    for its translucent draw; coincident triangles (the same three positions) across the two runs are listed (real
    hardware breaks equal-depth ties by order: the opaque run draws first, so a coincident pair keeps a fixed order).
 
+--atlas-rgba <png> (lane ps2cast 2026-10-14, Ashley): the PS2 texture's own alpha instead of the GC bake. The cast's atlas
+with the PS2 alpha (ps2_ashley.py atlas-rgba.png: PS2 alpha 0x80 = 255) decides and paints the run: a triangle is a hair
+triangle when the atlas alpha under it (corners, edge midpoints, centroid) falls below 128 anywhere, and the pair texture
+samples the atlas colour + alpha at each texel's original UV. Used where the PS2 moved alpha cards into a section whose
+GC source has several masked materials (Ashley's PS2 hair in GC extra 9). The GC arguments are still read for the record.
+
 Output (<out>/): mask-runs.json (section, triangles per run, keys, coincidence report, inputs), opaque.blob, hair.blob,
 hair.uv (u16 pairs / 32768), colour.png, mask.png, pair.png, <pair key>.re4tex.
 Usage (Windows Python, numpy + PIL):
@@ -93,6 +99,7 @@ def main():
     for k in ('cast', 'drs', 'bin', 'tpl', 'section', 'out'):
         ap.add_argument(k)
     ap.add_argument('--size'); ap.add_argument('--max-mm', type=float, default=8.0); ap.add_argument('--ss', type=int, default=2)
+    ap.add_argument('--atlas-rgba')
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     cast = Path(a.cast); sec = int(a.section)
@@ -113,9 +120,16 @@ def main():
     if not masked.any():
         raise SystemExit('the GC section has no masked material')
     colour_ids = sorted(set(S['mat'][masked].tolist())); mask_ids = sorted(set(S['alpha'][masked].tolist()))
-    if len(colour_ids) != 1 or len(mask_ids) != 1:
+    atlas = None
+    if a.atlas_rgba:
+        atlas = np.asarray(Image.open(a.atlas_rgba).convert('RGBA'), float)
+        if not a.size:
+            raise SystemExit('--atlas-rgba needs --size')
+        ci = mi = -1
+    elif len(colour_ids) != 1 or len(mask_ids) != 1:
         raise SystemExit(f'one masked GC material expected: colour {colour_ids} mask {mask_ids}')
-    ci, mi = colour_ids[0], mask_ids[0]
+    else:
+        ci, mi = colour_ids[0], mask_ids[0]
     W, H = (map(int, a.size.split('x')) if a.size else (tims[ci].width, tims[ci].height))
     cen = S['v'].mean(1)
 
@@ -133,6 +147,11 @@ def main():
     tc = np.asarray([P[[k[0] for k in t]].mean(0) for t in tris])
     d, ti, _ = closest(tc)
     hair = masked[ti] & (d <= a.max_mm)
+    if atlas is not None:
+        # the PS2 alpha under the triangle: corners, edge midpoints and centroid of its atlas UVs
+        wts = np.asarray([[1, 0, 0], [0, 1, 0], [0, 0, 1], [.5, .5, 0], [0, .5, .5], [.5, 0, .5], [1 / 3, 1 / 3, 1 / 3]])
+        hair = np.asarray([bk.sample(atlas, wts @ UV[[k[2] for k in t]])[:, 3].min() < 128 for t in tris])
+        d = np.zeros(len(tris))
     H_tris = [t for t, h in zip(tris, hair) if h]; O_tris = [t for t, h in zip(tris, hair) if not h]
     if not H_tris:
         raise SystemExit('no PS2 triangle lies on a masked GC material')
@@ -183,6 +202,7 @@ def main():
             nt.append((vi, ni, nmap[tj]))
         H_new.append(tuple(nt))
     nuv = np.asarray(nuv)
+    t_old_uv = {id(nt): np.asarray([UV[k[2]] for k in ot]) for nt, ot in zip(H_new, H_tris)}
     uvb = b''.join(struct.pack('<2H', *(int(round(x * 32768)) for x in np.clip(u, 0, 1))) for u in nuv)
     # bake the GC colour + mask onto the hair texture
     acc = np.zeros((H, W, 3)); msk = np.zeros((H, W)); cnt = np.zeros((H, W))
@@ -201,10 +221,15 @@ def main():
             continue
         b = np.clip(b[ins], 0, None); b /= b.sum(1, keepdims=True); q = q[ins]
         p = b @ v
-        dd, tt, bb_ = closest(p, masked)
-        guv = (bb_[:, :, None] * S['uv'][tt]).sum(1)
-        col = bk.sample(imgs[ci], guv); al = bk.sample(imgs[mi], guv)
-        alv = al[:, 3] if (imgs[mi][..., 3] < 255).any() else al[:, :3].mean(1)
+        if atlas is not None:
+            # the texel's original atlas UV (the island map is affine per triangle): colour + PS2 alpha
+            ouv = b @ t_old_uv[id(t)]
+            px = bk.sample(atlas, ouv); col = px[:, :3]; alv = px[:, 3]
+        else:
+            dd, tt, bb_ = closest(p, masked)
+            guv = (bb_[:, :, None] * S['uv'][tt]).sum(1)
+            col = bk.sample(imgs[ci], guv); al = bk.sample(imgs[mi], guv)
+            alv = al[:, 3] if (imgs[mi][..., 3] < 255).any() else al[:, :3].mean(1)
         tx = (q[:, 0] // a.ss).astype(int); ty = (q[:, 1] // a.ss).astype(int)
         np.add.at(acc, (ty, tx), col[:, :3]); np.add.at(msk, (ty, tx), alv); np.add.at(cnt, (ty, tx), 1)
     cov = cnt > 0
@@ -231,7 +256,9 @@ def main():
     spec = importlib.util.spec_from_file_location('build_blob', FASTPATH); bb = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bb)
     flags, bounds = c['stream'][2], c['stream'][16:32]
-    oblob, ost = build_run(bb, O_tris, c['positions'], c['normals'], c['uv'], flags, bounds)
+    # a section whose every PS2 triangle lies on a masked GC material (the zealot accessories 0x20F / 0x217) has no
+    # opaque run: mask_only (NATIVE_MODEL_REGISTRY_POOL packages; the pinned Luis hair is ps2_luis_mask.py's)
+    oblob, ost = build_run(bb, O_tris, c['positions'], c['normals'], c['uv'], flags, bounds) if O_tris else (b'', {})
     hblob, hst = build_run(bb, H_new, c['positions'], c['normals'], uvb, flags, bounds)
     (out / 'opaque.blob').write_bytes(oblob); (out / 'hair.blob').write_bytes(hblob); (out / 'hair.uv').write_bytes(uvb)
     # coincidence: triangles over the same three positions (rounded to 1/16 mm) across and within the runs
@@ -244,6 +271,8 @@ def main():
     co = [gr for gr in groups.values() if len(gr) > 1]
     cross = [gr for gr in co if len({x[0] for x in gr}) > 1]
     rep = dict(tool='tools/ps2_mask_runs.py', cast=str(cast), header_sha256=sha(hdr.read_bytes()), section=sec,
+               **({'mask_only': True} if not O_tris else {}),
+               source='atlas-rgba ' + sha(Path(a.atlas_rgba).read_bytes()) if atlas is not None else 'gc-bake',
                gc=dict(drs_sha256=sha(db), bin=a.bin, tpl=a.tpl, colour_image=ci, mask_image=mi,
                        masked_triangles=int(masked.sum()), triangles=len(S['v'])),
                triangles=dict(chunk=len(tris), opaque=len(O_tris), hair=len(H_tris)), max_mm=a.max_mm,

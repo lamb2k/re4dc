@@ -1,0 +1,61 @@
+{
+ "registry": "ps2-ch1-r11b",
+ "about": "lane ps2cast2 (2026-10-14): r11b combined room package = the test 10 package (ps2-wolf, byte-identical descriptors) + the chapter-1 PS2 cast additions ['fish-em27-00', 'boat-pl0f-00'].",
+ "cast_dir": "/root/probe/lanes-20261014/ps2cast/work/conv/regcast-merged-r11b",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bit 4), as the source path lights it today; source cull",
+ "cast_sources": [
+  "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-4-20261011/regcast-wolf",
+  "/root/probe/lanes-20261014/ps2cast/work/conv/regcast-ch1"
+ ],
+ "descriptors": [
+  {
+   "name": "wolf-em22-00",
+   "archive": "em22",
+   "model_id": "0x22",
+   "source_types": [
+    0
+   ],
+   "module": "src/em22/em22.cpp em22_R0_Init: modelInit(ARC 4, ARC 5)"
+  },
+  {
+   "name": "fish-em27-00",
+   "archive": "em27",
+   "model_id": "0x27",
+   "source_types": [
+    0,
+    1
+   ],
+   "module": "src/em27/em27.cpp em27_R0_Init: modelInit(ARC 4, ARC 5)",
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261014/ps2cast/work/conv/mask-fish-em27-00"
+   },
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "boat-pl0f-00",
+   "archive": "pl0f",
+   "model_id": "0x0f",
+   "source_types": [],
+   "module": "src/pl0f/pl0f.cpp pl0f_R0_Init: modelInit(ARC 5, ARC 6)",
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ]
+  }
+ ],
+ "room_packages": {
+  "11b": {
+   "descriptors": [
+    "wolf-em22-00",
+    "fish-em27-00",
+    "boat-pl0f-00"
+   ],
+   "evidence": "test 10 package + CH1 audit models-by-room.md"
+  }
+ }
+}

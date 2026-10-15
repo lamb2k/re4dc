@@ -29,6 +29,9 @@ unsigned re4dc_actor_stream_begin(const void* stream,unsigned capacity);
 void re4dc_actor_stream_end(unsigned ticket,const void* stream,unsigned capacity);
 int re4dc_actor_material_owner_proof(cModel*,cModelInfo*,unsigned appearance,unsigned role,unsigned revision);
 int re4dc_actor_role_bindings(cModel*,unsigned appearance,cModelInfo** out,unsigned count);
+#if RE4DC_NMR_POOL
+int re4dc_actor_pool_bindings(cModel*,unsigned appearance,unsigned sections,cModelInfo** out,unsigned char* sec,unsigned count);
+#endif
 unsigned re4dc_actor_binding_revision(cModel*);
 unsigned re4dc_actor_role_source_bin(cModel*,cModelInfo*,unsigned appearance,unsigned role);
 }

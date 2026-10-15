@@ -1,0 +1,60 @@
+{
+ "registry": "ps2-ch2-r111",
+ "about": "lane ps2cast (2026-10-15): chapter 2 room 111 package = the route crows + ganado-em17-0c (em17 type 0xc, as r108 / r118), descriptors as ps2-r108.json",
+ "cast_dir": "/root/probe/lanes-20261015/ps2cast/conv-ch2/regcast-ch2",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "em17: the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bits 2 and 4); crow: the source GX lighting record and source cull, as ps2-crow",
+ "descriptors": [
+  {
+   "name": "ganado-em17-0c",
+   "archive": "em17",
+   "model_id": "0x17",
+   "source_types": [
+    12
+   ],
+   "module": "src/em17 Em17Set type 0xc: body 0x1cd, TPL 0x1ce, head 0x1cf, hands 0x1c0 / 0x1c5",
+   "mask_runs": {
+    "1": "/mnt/c/Game Dev/Emulators/re4-assets-private/ps2cast-3-20261011/em17-0c-mask2"
+   }
+  },
+  {
+   "name": "crow-folded",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,0): body BIN 5 + wing BIN 6"
+  },
+  {
+   "name": "crow-spread",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,1): body BIN 5 + wing BIN 7"
+  }
+ ],
+ "room_packages": {
+  "111": {
+   "descriptors": [
+    "crow-folded",
+    "crow-spread",
+    "ganado-em17-0c"
+   ],
+   "evidence": "emleon01: r111 em17 types 0/1/3/12 (12 = 0xc: registry), crows"
+  }
+ },
+ "cast_sources": [
+  "/mnt/c/Game Dev/Emulators/re4-assets-private/p2b-20261011/regcast-r108"
+ ]
+}

@@ -1,0 +1,29 @@
+{
+ "registry": "ps2-ch2-r117",
+ "about": "lane ps2cast (2026-10-15): r117 room package = the em11 type 7 zealot (Em11Set type 7: body 0x1FC / TPL 0x1FD, head 0x1FE / TPL 0x201, relaxed hands 0x204 / 0x208) from its PS2 mesh. Render only. With PS2_ASHLEY_ROOMS=1 Ashley's r117 package goes beside it as partner.re4nmr.",
+ "cast_dir": "/root/probe/lanes-20261015/ps2cast/conv-ch2/regcast-zealot",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit preset (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em11-07",
+   "archive": "em11",
+   "model_id": "0x11",
+   "source_types": [
+    7
+   ],
+   "module": "src/em11/em11_set.cpp Em11Set type 7 + em10ModelInit",
+   "partial_sections": true
+  }
+ ],
+ "room_packages": {
+  "117": {
+   "descriptors": [
+    "zealot-em11-07"
+   ],
+   "evidence": "emleon01: r117 em11 type 7"
+  }
+ }
+}

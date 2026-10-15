@@ -28,7 +28,20 @@ struct Re4dcActorPlan {
     unsigned material_count=0,run_count=0;
     Re4dcActorOwnedMaterial materials[kRe4dcActorMaterials]{};
     Re4dcActorPlannedRun runs[kRe4dcActorRuns]{};
+#if defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL
+    // NATIVE_MODEL_REGISTRY_POOL (native_model_registry.mk; every object): a pool descriptor's plan keeps its roles in
+    // source info order and names, per role, the pool section (role row and chunk) that info proved. pool=0 for every
+    // other plan: role k is section k.
+    unsigned pool=0;
+    unsigned char section[kRe4dcActorRoles]{};
+#endif
 };
+#if defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL
+inline unsigned re4dc_plan_section(const Re4dcActorPlan* p,unsigned k) {return p->pool?p->section[k]:k;}
+#define RE4DC_PLAN_ROLE(p,k) re4dc_plan_section((p),(k))
+#else
+#define RE4DC_PLAN_ROLE(p,k) (k)
+#endif
 extern "C" {
 int re4dc_actor_plan_leon(cModel*,Re4dcActorPlan*);
 int re4dc_actor_plan_ganado(cModel*,Re4dcActorPlan*);
@@ -62,6 +75,15 @@ int re4dc_actor_transaction_candidate(cModel*);
 #else
 #define RE4DC_LEON_LIKE(app) ((app)==0x100u)
 #define RE4DC_LEON_FACE_ROLE(p,i) ((p).count==8 && (i)==3)
+#endif
+// A role whose info may carry the shape bit (be_flag 2) on the owner path: Leon's bone-driven face and, under
+// PS2_ASHLEY=2 (native_model_registry.mk; user look decision pending), Ashley's head drawn at its PS2 rest face
+// (coarse_actor_owner_registry.inc re4dc_registry_ashley_face). Off: exactly RE4DC_LEON_FACE_ROLE.
+#if defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY >= 2
+extern "C" int re4dc_registry_ashley_face(unsigned appearance,unsigned role);
+#define RE4DC_ACTOR_SHAPE_ROLE(p,i) (RE4DC_LEON_FACE_ROLE(p,i) || re4dc_registry_ashley_face((p).appearance,(i)))
+#else
+#define RE4DC_ACTOR_SHAPE_ROLE(p,i) RE4DC_LEON_FACE_ROLE(p,i)
 #endif
 namespace re4dc_actor {
 inline bool exact_infos(cModelInfo* first,cModelInfo* const* roles,unsigned n) {

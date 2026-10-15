@@ -117,7 +117,19 @@ inline bool room_colour_scale(unsigned scale,bool flat_native_look) {
 inline unsigned source_model_tev_group(const cModel* m,bool leon,bool registry) {
     // cSubLuis::init uses group 1. pSubEm is player.h's canonical pSUB alias;
     // registry_model and frame membership have already proved this descriptor.
+#if defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY
+    // PS2_ASHLEY on route builds: the partner is Luis (id 4) or Ashley (id 3, pl_ashley.cpp TevScaleGroup = 1).
+    return registry && m && m==(const cModel*)pSubEm && (m->id==4 || m->id==3) ? 1u : (leon?1u:0u);
+#else
     return registry && m && m==(const cModel*)pSubEm && m->id==4 ? 1u : (leon?1u:0u);
+#endif
+}
+#endif
+#if RE4DC_NATIVE_MODEL_REGISTRY && defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY && !(defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22)
+// PS2_ASHLEY: the partner Ashley (pSUB, model id 3) is set up with TEV group 1 like Leon and Luis (pl_ashley.cpp
+// TevScaleGroup = 1; census: ACTOR_MATERIAL live tevgrp=1); her registry descriptor is drawn with the same native look.
+inline unsigned source_model_tev_group(const cModel* m,bool leon,bool registry) {
+    return registry && m && m==(const cModel*)pSubEm && m->id==3 ? 1u : (leon?1u:0u);
 }
 #endif
 Error texture(const void* descriptor,const Texture& e) {
@@ -223,6 +235,9 @@ namespace re4dc_material {
 #if RE4DC_NMR_CROW
 bool crow_rows;  // PS2_CROW: compare() is proving a registry crow (model id 0x23) plan
 #endif
+#if RE4DC_NMR_BOAT
+bool boat_rows;  // PS2_CAST_BOAT: compare() is proving a registry boat (pl0f, model id 0x0f) plan
+#endif
 #if RE4DC_ACTOR_MATERIAL_RECORD
 // archive=false: a record hit; the archive verdict (TPL and ModelPart header bytes, checked last) is the record's.
 Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic,bool archive) {
@@ -249,6 +264,12 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
     // checks immediately below and the transaction lighting check still apply.
     if(re4dc_registry_merchant_robe(row.appearance,row.role,row.source_bin,row.source_tpl))expected|=0x20u;
 #endif
+#if RE4DC_NATIVE_MODEL_REGISTRY && defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY >= 2
+    // PS2_ASHLEY=2: Ashley's head (role 1) keeps the source shape bit; the owner path draws its PS2 rest face (the
+    // source shapes still run on the GC buffer; user look decision pending).
+    const bool ashley_face=re4dc_registry_ashley_face(row.appearance,row.role)!=0;
+    if(ashley_face)expected|=2;
+#endif
     if((i->be_flag&~8u)!=expected)return Error::PassGroup;
     if(i->invisible_factor!=1.0f || i->blend_mode || i->colorWord!=0xffffffffu ||
        i->color2[0] || i->color2[1] || i->color2[2] || i->color2[3] ||
@@ -258,7 +279,11 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
         // shape.cpp writes the prepared destination buffer, not vtxOrig.
         // Native-look explicitly retains the reviewed bone-driven Leon face.
         // Source callback/ShapeMove still runs; this does not emulate morphs.
+#if RE4DC_NATIVE_MODEL_REGISTRY && defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY >= 2
+        const bool face=(RE4DC_ACTOR_LEON_NATIVE_LOOK && RE4DC_LEON_LIKE(row.appearance) && row.role==3) || ashley_face;
+#else
         const bool face=RE4DC_ACTOR_LEON_NATIVE_LOOK && RE4DC_LEON_LIKE(row.appearance) && row.role==3;
+#endif
         if(i->pShape && !readable(i->pShape,4))return Error::BadRange;
         for(const auto& shape:i->shape) {
             if(!coarse_finite(shape.rate) || (shape.data && !readable(shape.data,4)))return Error::BadRange;
@@ -301,11 +326,17 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
         if(f&0x13)out.required|=Specular;
         // All material bytes, including alphaRef/specType/specPow/specTexOrg,
         // already matched. Unknown source flag programs remain unsupported.
-#if RE4DC_NMR_CROW
+#if RE4DC_NMR_CROW && RE4DC_NMR_BOAT
+        // PS2_CROW + PS2_CAST_BOAT: the crow's and the boat's flag 0x80, as below.
+        if(f&~((crow_rows || boat_rows)?0x87u:7u))return Error::Material;
+#elif RE4DC_NMR_CROW
         // PS2_CROW (Phase 2 A3): the crow body's flag 0x80 (specularSetup2) is GX only on the DC source path, so a crow
         // registry plan (crow_rows, set by compare for model id 0x23) drawing none is the source image (model_registry.py
         // source_drops "alt-specular").
         if(f&~(crow_rows?0x87u:7u))return Error::Material;
+#elif RE4DC_NMR_BOAT
+        // PS2_CAST_BOAT: the boat's flag 0x80 (specularSetup2) is GX only on the DC source path (as the crow's).
+        if(f&~(boat_rows?0x87u:7u))return Error::Material;
 #else
         if(f&~7u)return Error::Material;
 #endif
@@ -358,6 +389,9 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
 #if RE4DC_NMR_CROW
     crow_rows=registry && m->id==0x23;
 #endif
+#if RE4DC_NMR_BOAT
+    boat_rows=registry && m->id==0x0f;
+#endif
     if(registry ? !re4dc_registry_model(m,p) :
        ((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
         (!leon && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type)))) {
@@ -370,7 +404,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
 #else
        m->invisible_factor!=1.0f || m->invisible_factor2!=1.0f || m->alpha_omit!=255 ||
 #endif
-#if defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+#if (defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22) || (defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY)
        m->TevScaleGroup!=source_model_tev_group(m,leon,registry) ||
 #else
        m->TevScaleGroup!=(leon?1:0) ||
@@ -418,16 +452,16 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
         }
 #endif
 #if RE4DC_ACTOR_MATERIAL_RECORD
-        out.role=k;const auto* row=diagnostic?find(p->appearance,k):rec?&RE4DC_ROLE(rec->row[k]):
-                                   actor_current_role(m,p->info[k],p->appearance,k);
+        out.role=k;const auto* row=diagnostic?find(p->appearance,RE4DC_PLAN_ROLE(p,k)):rec?&RE4DC_ROLE(rec->row[k]):
+                                   actor_current_role(m,p->info[k],p->appearance,RE4DC_PLAN_ROLE(p,k));
 #else
-        out.role=k;const auto* row=diagnostic?find(p->appearance,k):actor_current_role(m,p->info[k],p->appearance,k);
+        out.role=k;const auto* row=diagnostic?find(p->appearance,RE4DC_PLAN_ROLE(p,k)):actor_current_role(m,p->info[k],p->appearance,RE4DC_PLAN_ROLE(p,k));
 #endif
         if(!row){out.error=Error::MissingRole;return out;}
 #if RE4DC_ACTOR_PROOF_LEAN == 2
         if(!diagnostic) {
             ++actor_lean_c.owner;
-            if(!re4dc_actor_material_owner_proof(m,p->info[k],p->appearance,k,RE4DC_ACTOR_MATERIAL_RECORD_REVISION)) {
+            if(!re4dc_actor_material_owner_proof(m,p->info[k],p->appearance,RE4DC_PLAN_ROLE(p,k),RE4DC_ACTOR_MATERIAL_RECORD_REVISION)) {
                 ++actor_lean_c.owner_bad;out.error=Error::MissingOwnerProof;return out;
             }
         }
@@ -453,9 +487,9 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
             continue;
         }
 #endif
-        out.role=k;const auto* row=diagnostic?find(p->appearance,k):actor_current_role(m,p->info[k],p->appearance,k);
+        out.role=k;const auto* row=diagnostic?find(p->appearance,RE4DC_PLAN_ROLE(p,k)):actor_current_role(m,p->info[k],p->appearance,RE4DC_PLAN_ROLE(p,k));
         if(!row){out.error=Error::MissingRole;return out;}
-        if(!diagnostic && !re4dc_actor_material_owner_proof(m,p->info[k],p->appearance,k,RE4DC_ACTOR_MATERIAL_RECORD_REVISION)) {
+        if(!diagnostic && !re4dc_actor_material_owner_proof(m,p->info[k],p->appearance,RE4DC_PLAN_ROLE(p,k),RE4DC_ACTOR_MATERIAL_RECORD_REVISION)) {
             out.error=Error::MissingOwnerProof;return out;
         }
         out.error=info(p->info[k],*row,out,diagnostic);if(out.error!=Error::None)return out;
@@ -529,6 +563,17 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     // is what the source path draws too (trans.cpp bumpSetup only reaches the GX stubs; model_bridge binds the colour
     // texture alone), so the bump need is met by the same image (model_registry.py "source_drops").
     if(registry && m->id==0x2F)implemented|=Bump;
+#if RE4DC_NMR_BOAT
+    // PS2_CAST_BOAT: the lake boat's (pl0f, model 0x0f) source bump setup reaches the same GX stubs as Del Lago's
+    // (model_registry.py source_drops "bump", "alt-specular").
+    if(registry && m->id==0x0fu)implemented|=Bump;
+#endif
+#if defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY
+    // PS2_ASHLEY: the partner Ashley's (pSUB, model 3) source bump setup reaches the same GX stubs (model_registry.py
+    // source_drops "bump"); =2 also draws her head at the PS2 rest face (the GC shapes are not shown; user look decision
+    // pending), which is the head role's Morph need (info() above admits only that role's shape bit).
+    if(registry && m->id==3u && m==(cModel*)pSubEm)implemented|=RE4DC_NMR_ASHLEY>=2?unsigned(Bump|Morph):unsigned(Bump);
+#endif
 #if RE4DC_ROUTE_CH22
     // Qualified Luis source rows retain the material/TPL proof; the source
     // bump setup reaches the same unimplemented GX stage as Del Lago.
@@ -543,6 +588,11 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     // source-path limitation only; target visual acceptance remains separate.
     if(registry && m->id==0x35)implemented|=Bump;
 #endif
+#endif
+#if RE4DC_NMR_POOL && RE4DC_NMR_DROP_BUMP
+    // NATIVE_MODEL_REGISTRY_POOL: a pool plan's source bump setup (the zealot accessory 0x213) reaches the same GX stubs
+    // as Del Lago's (model_registry.py source_drops "bump").
+    if(registry && p->pool)implemented|=Bump;
 #endif
 #if RE4DC_NMR_CROW
     // PS2_CROW (Phase 2 A3, user decision 2026-10-11): a registry crow (em23, 0x23) draws no bump stage (as the source

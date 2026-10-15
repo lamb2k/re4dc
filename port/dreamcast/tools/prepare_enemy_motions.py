@@ -33,7 +33,17 @@ MAX_CLIP=32768
 # did not fit r300's heap 4 on the disc-2 image (4,042,976 B free: DVD: Memory allocate failed, Em set failed Id=1d).
 
 GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em1d.drs','em1e.drs','em1f.drs')
-SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.drs','em18.drs')
+SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.drs','em18.drs','pl11.drs','pl0f.drs')
+# pl0f (the lake boat, r10b r11b; lane ps2cast 2026-10-15, PS2_CAST_BOAT discs): textures only (--keep-motion-resident),
+# the em2f contract. Its one model TPL (ARC 6) reaches only modelInit (src/pl0f/pl0f.cpp pl0f_R0_Init, modelInit(ARC 5,
+# ARC 6)); the source path uploads its colour texels and never reads them on the CPU. ARC 8 (Leon's harpoon hand BIN,
+# cPlBody::initWepHand) and ARC 7 are BINs (unchanged). Its EFF slot (ARC 4, EspDataLoad) keeps its own textures
+# (top-level TPLs only are selected). The registry owner path proves its texture rows only on a texture-prepared archive.
+# pl11 (Ashley, cSubAshley; r117 first; lane ps2cast 2026-10-14, PS2_ASHLEY discs): textures only
+# (--keep-motion-resident), the em18 contract. Her model TPLs (ARC 5 body / extras / hands, ARC 8 hair, ARC 0xB head)
+# reach only modelInit and ModInfoMgr.create (src/pl11/pl11.cpp cSubAshley::modelSet / setHand); the source path
+# uploads their colour texels and never reads them on the CPU. Her EFF slot (ARC 0x11, EspDataLoad group 4) keeps its
+# own textures (top-level TPLs only are selected). Codex's bounded 'pl11-r11f' profile below audits the same TPLs.
 # em18 (the merchant, r102 r10d r10e r112; lane ps2cast2 2026-10-14, PS2_CAST_MERCHANT discs): textures only
 # (--keep-motion-resident), the em22 contract. Its model TPLs (ARC 6 body / hands / goods, ARC 8 head, ARC 0xF robe and
 # coat) reach only modelInit and ModInfoMgr.create (src/em18/em18.cpp em18_R0_Init, em18ClothPartsSet, the goods and hand
@@ -70,7 +80,9 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 # SetRock; its EFF slot keeps its own textures. em2b is a ROUTE_OVL room overlay, so its static REL is stripped
 # with the knob-conditional module set (ROUTE_OVL_MODULES). The room's heap 4: r119 frees 3,854,656 B in two
 # cells, the largest 2,770,912 B, under the 4,689,664 B rel-stripped body.
-ROUTE_OVL_MODULES=('em2b','em2f','em22','em1d','em1e','em1f')
+ROUTE_OVL_MODULES=('em2b','em2f','em22','em1d','em1e','em1f','pl11')
+# pl11 (Ashley; PS2_ASHLEY discs, lane ps2cast 2026-10-14): the route overlay dc/pl11.ovl carries her module, so her
+# archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
 # their own registry row like the room overlays above: em11 (ROUTE_CH21, r117), em18 (ROUTE_CH13, r102: module 22).
 KNOB_STATIC_MODULES=('em11','em18')
@@ -156,7 +168,8 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
         if not texture_ranges:raise ValueError('no qualified enemy textures selected')
     # em2f: its DMY entries keep le_mirror's whole-file qualification from stripping the static REL (today's disc
     # carries the whole REL too); it moves intact behind the tables like the 64-byte descriptor does.
-    if rel and rel+64!=len(body) and name!='em2f.drs':raise ValueError('expected retained 64-byte static REL descriptor')
+    # pl0f: the release disc carries its whole REL too (pl0f is in no static / overlay module list); it moves intact.
+    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
     original_size,original_base=struct.unpack_from('>I4xI',original,slot+4)
     codec=mirror.motion_codec();ranges=[];entries=[];files={};oversized=[]
     for off in ([] if keep_motion_resident else sorted(set(offsets))):

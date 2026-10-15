@@ -1,0 +1,43 @@
+{
+ "registry": "ps2-ch2-r118p",
+ "about": "NATIVE_MODEL_REGISTRY room package for r118 with both PS2 cast members (lane p2b item B2): the female Ganado (em17 / em16 type 0xc, PS2_GANADO_F, GC hair mask) and the parasite dog (Colmillos, em22, PS2_WOLF). Render only; the descriptors are the ones of ps2-ganado-f17-mask (ps2cast-3) and ps2-wolf (ps2cast-4), from one merged cast dir (merge_cast.py). POOL: em17 type 0xc as ganado-em17-0cp (NATIVE_MODEL_REGISTRY_POOL).",
+ "cast_dir": "/root/probe/lanes-20261015/ps2cast/conv-ch2/regcast-r118p",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bits 2 and 4), as the source path lights them today; em22 source cull",
+ "descriptors": [
+  {
+   "name": "ganado-em17-0cp",
+   "archive": "em17",
+   "model_id": "0x17",
+   "source_types": [
+    12
+   ],
+   "module": "src/em17/em17_set.cpp Em17Set type 0xc pool (as ps2-ch2-r113p)",
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261015/ps2cast/conv-ch2/e17p-mask-head"
+   },
+   "pool": true,
+   "partial_sections": true
+  },
+  {
+   "name": "wolf-em22-00",
+   "archive": "em22",
+   "model_id": "0x22",
+   "source_types": [
+    0
+   ],
+   "module": "src/em22/em22.cpp em22_R0_Init: modelInit(ARC 4, ARC 5)"
+  }
+ ],
+ "room_packages": {
+  "118": {
+   "descriptors": [
+    "ganado-em17-0cp",
+    "wolf-em22-00"
+   ],
+   "evidence": "inventory r118: em17 type 0xc, em22"
+  }
+ }
+}

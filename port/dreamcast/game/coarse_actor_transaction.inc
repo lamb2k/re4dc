@@ -146,7 +146,7 @@ bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
         if(!info || !info->pData || info->invisible_factor!=1.0f || info->blend_mode ||
            info->colorWord!=0xffffffffu || info->flagsDC || info->pAddTpl || info->nAddTex ||
            info->texBlendTbl || info->pTexAnim || info->uvU || info->uvV || info->uvScrollU || info->uvScrollV ||
-           ((info->be_flag&2) && !RE4DC_LEON_FACE_ROLE(p,i)))return false;
+           ((info->be_flag&2) && !RE4DC_ACTOR_SHAPE_ROLE(p,i)))return false;
         re4dc_source::ChunkProof proof{};
         if(re4dc_actor_immutable_chunk_proof(p.immutable_asset_id[i],p.input[i],proof)!=re4dc_source::BlobError::None)return false;
         palette_bytes+=proof.palette_bytes;
@@ -217,7 +217,7 @@ unsigned actor_semantics_why(cModel* m,const Re4dcActorPlan& p,unsigned* detail)
         if(info->pAddTpl || info->nAddTex)return 17;
         if(info->texBlendTbl || info->pTexAnim)return 18;
         if(info->uvU || info->uvV || info->uvScrollU || info->uvScrollV)return 19;
-        if((info->be_flag&2) && !RE4DC_LEON_FACE_ROLE(p,i))return 20;
+        if((info->be_flag&2) && !RE4DC_ACTOR_SHAPE_ROLE(p,i))return 20;
         re4dc_source::ChunkProof proof{};
         if(re4dc_actor_immutable_chunk_proof(p.immutable_asset_id[i],p.input[i],proof)!=re4dc_source::BlobError::None)return 21;
         palette_bytes+=proof.palette_bytes;
@@ -416,7 +416,11 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
     if(p.appearance>=nmr::appearance_first &&
        (((RE4DC_NMR_SOURCE_LIGHT&1) && m->id==0x2B) || ((RE4DC_NMR_SOURCE_LIGHT&2) && m->id==0x2F) ||
         ((RE4DC_NMR_SOURCE_LIGHT&4) && (m->id==0x17 || m->id==0x16)) || ((RE4DC_NMR_SOURCE_LIGHT&16) && m->id==0x22) ||
-        ((RE4DC_NMR_SOURCE_LIGHT&8) && m->id==0x23) || ((RE4DC_NMR_SOURCE_LIGHT&32) && m->id==0x18))) {
+        ((RE4DC_NMR_SOURCE_LIGHT&8) && m->id==0x23) || ((RE4DC_NMR_SOURCE_LIGHT&32) && m->id==0x18)
+#if RE4DC_NMR_POOL
+        || ((RE4DC_NMR_SOURCE_LIGHT&64) && p.pool)
+#endif
+        )) {
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
         if(!captured)
 #endif

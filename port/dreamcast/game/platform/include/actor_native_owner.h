@@ -40,7 +40,12 @@ struct Re4dcActorSkinLease {
 };
 // Material identity is independent of the source info / its one skin palette.
 // All textures are leased together before the actor can emit its first header.
-constexpr unsigned kRe4dcActorMaterials=3,kRe4dcActorRuns=RE4DC_ACTOR_PL08?22u:21u;
+// PS2_ASHLEY (native_model_registry.mk, RE4DC_ACTOR_MATERIALS=4 in every object): Ashley's descriptors carry her one PS2
+// atlas plus three mask pairs (head, hair, extra 9), four materials; every other build keeps three.
+#ifndef RE4DC_ACTOR_MATERIALS
+#define RE4DC_ACTOR_MATERIALS 3
+#endif
+constexpr unsigned kRe4dcActorMaterials=RE4DC_ACTOR_MATERIALS,kRe4dcActorRuns=RE4DC_ACTOR_PL08?22u:21u;
 struct Re4dcActorOwnedMaterial {
     Re4dcUiImage image{},mask{};
     unsigned crc=0,fnv=0,material_flags=0,blend=0,depth_mode=0;

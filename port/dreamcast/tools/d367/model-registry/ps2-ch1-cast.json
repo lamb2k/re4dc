@@ -1,0 +1,126 @@
+{
+ "registry": "ps2-ch1-cast",
+ "about": "lane ps2cast2 (2026-10-14): the chapter-1 non-Ganado actors (traps em2a, bat em29, crawler em2e, fish em27, snake em24, boat pl0f) from their PS2 meshes (ps2_cast.py regcast). Render only.",
+ "cast_dir": "/root/probe/lanes-20261014/ps2cast/work/conv/regcast-ch1",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "trap-em2a-00",
+   "archive": "em2a",
+   "model_id": "0x2a",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2a/em2a.cpp em2a_R0_Init type 0: modelInit(ARC 4, ARC 5)"
+  },
+  {
+   "name": "trap-em2a-02",
+   "archive": "em2a",
+   "model_id": "0x2a",
+   "source_types": [
+    2
+   ],
+   "module": "src/em2a/em2a.cpp em2a_R0_Init type 2: modelInit(ARC 8, ARC 9)"
+  },
+  {
+   "name": "bat-em29-00",
+   "archive": "em29",
+   "model_id": "0x29",
+   "source_types": [],
+   "module": "src/em29/em29.cpp em29_R0_Init: modelInit(ARC 4, ARC 5)",
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261014/ps2cast/work/conv/mask-bat-em29-00"
+   }
+  },
+  {
+   "name": "crawler-em2e-00",
+   "archive": "em2e",
+   "model_id": "0x2e",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2e/em2e.cpp em2e_R0_Init type 0: modelInit(ARC 4, ARC 5)"
+  },
+  {
+   "name": "crawler-em2e-01",
+   "archive": "em2e",
+   "model_id": "0x2e",
+   "source_types": [
+    1
+   ],
+   "module": "src/em2e/em2e.cpp em2e_R0_Init type 1: modelInit(ARC 4, ARC 6)"
+  },
+  {
+   "name": "fish-em27-00",
+   "archive": "em27",
+   "model_id": "0x27",
+   "source_types": [
+    0,
+    1
+   ],
+   "module": "src/em27/em27.cpp em27_R0_Init: modelInit(ARC 4, ARC 5)",
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261014/ps2cast/work/conv/mask-fish-em27-00"
+   },
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "snake-em24-00",
+   "archive": "em24",
+   "model_id": "0x24",
+   "source_types": [],
+   "module": "src/em24/em24.cpp em24_R0_Init: modelInit(ARC 5, ARC 6)",
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "boat-pl0f-00",
+   "archive": "pl0f",
+   "model_id": "0x0f",
+   "source_types": [],
+   "module": "src/pl0f/pl0f.cpp pl0f_R0_Init: modelInit(ARC 5, ARC 6)",
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ]
+  }
+ ],
+ "room_packages": {
+  "106": {
+   "descriptors": [
+    "trap-em2a-00",
+    "trap-em2a-02",
+    "bat-em29-00",
+    "crawler-em2e-00",
+    "crawler-em2e-01"
+   ],
+   "evidence": "CH1 audit models-by-room.md"
+  },
+  "107": {
+   "descriptors": [
+    "trap-em2a-00",
+    "fish-em27-00"
+   ],
+   "evidence": "CH1 audit models-by-room.md"
+  },
+  "10a": {
+   "descriptors": [
+    "trap-em2a-02",
+    "snake-em24-00"
+   ],
+   "evidence": "CH1 audit models-by-room.md"
+  },
+  "11a": {
+   "descriptors": [
+    "snake-em24-00"
+   ],
+   "evidence": "CH1 audit models-by-room.md"
+  }
+ }
+}
