@@ -7,16 +7,32 @@
 #include <cstring>
 namespace {
 using re4dc_material::kRoomRoles;using re4dc_material::kRoomBlobs;
+// PS2_ASHLEY (native_model_registry.mk, RE4DC_NMR_ASHLEY): Ashley's GC TPLs give 28 source texture facts per package and
+// 17 per role (pl11 TPL 5), 10 source BIN models (three hand sets: 0xC..0x10), and her r117 package + skin needs more than 192 KiB (the loader allocates the actual size;
+// the generator allows 256 KiB only for r117). Off: 16 / 8 / 192 KiB as before.
+#if defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY
+#define RE4DC_NMR_TEX_FACTS 32u
+#define RE4DC_NMR_ROLE_TEXTURES 17u
+#define RE4DC_NMR_PACK_KIB 256u
+#define RE4DC_NMR_PACK_MODELS 10u
+#define RE4DC_NMR_ROLE_TN_BAD(tn,room) ((tn)>pack_role_texture_max(room))
+#else
+#define RE4DC_NMR_TEX_FACTS 16
+#define RE4DC_NMR_ROLE_TEXTURES 8u
+#define RE4DC_NMR_PACK_KIB 192u
+#define RE4DC_NMR_PACK_MODELS 8
+#define RE4DC_NMR_ROLE_TN_BAD(tn,room) ((tn)>8)
+#endif
 // CH23 r11f retains all three PS2 Mendez forms and both mask passes. Allocate
 // only the validated file + skin bytes; this is a ceiling, never a static arena.
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
 constexpr unsigned kPackMaxBytes=640u*1024u;
-constexpr unsigned pack_room_max(unsigned room) { return room==0x11fu?kPackMaxBytes:192u*1024u; }
-constexpr unsigned pack_role_texture_max(unsigned room) { return room==0x11fu?9u:8u; }
+constexpr unsigned pack_room_max(unsigned room) { return room==0x11fu?kPackMaxBytes:RE4DC_NMR_PACK_KIB*1024u; }
+constexpr unsigned pack_role_texture_max(unsigned room) { return room==0x11fu && RE4DC_NMR_ROLE_TEXTURES<9u?9u:RE4DC_NMR_ROLE_TEXTURES; }
 #else
-constexpr unsigned kPackMaxBytes=192u*1024u;
+constexpr unsigned kPackMaxBytes=RE4DC_NMR_PACK_KIB*1024u;
 constexpr unsigned pack_room_max(unsigned) { return kPackMaxBytes; }
-constexpr unsigned pack_role_texture_max(unsigned) { return 8u; }
+constexpr unsigned pack_role_texture_max(unsigned) { return RE4DC_NMR_ROLE_TEXTURES; }
 #endif
 constexpr unsigned kPackHeader=64,kPackKinds=12,kPackPayload=kPackHeader+kPackKinds*16;
 enum PackKind : unsigned {kDesc,kRef,kGeom,kBlob,kTex,kParents,kBind,kFModel,kFPart,kFTex,kRole,kSBlob};
@@ -24,15 +40,15 @@ constexpr unsigned kPackRecord[kPackKinds]={48,16,64,1,16,1,48,96,32,68,32,32};
 // CH23 closed/open em13 needs 35 source material facts; all three em35 forms
 // need 124. Facts stay in the validated room package; no added static arena.
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
-constexpr unsigned kPackModels=8,kPackParts=128,kPackTexFacts=16;
+constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=128,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
 #elif RE4DC_ROUTE_CH22
 // Complete Luis six-info body (74) plus its independent gun (9).
-constexpr unsigned kPackModels=8,kPackParts=83,kPackTexFacts=16;
+constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=83,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
 #elif defined(RE4DC_NMR_FACTS) && RE4DC_NMR_FACTS
 // PS2_CAST_* (native_model_registry.mk): the chapter-1 PS2 cast packages' source material facts (merchant em18: 35).
-constexpr unsigned kPackModels=8,kPackParts=RE4DC_NMR_FACTS,kPackTexFacts=16;
+constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=RE4DC_NMR_FACTS,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
 #else
-constexpr unsigned kPackModels=8,kPackParts=32,kPackTexFacts=16;
+constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=32,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
 #endif
 constexpr unsigned kPackCapacity[kPackKinds]={kRegDescriptors,kRegChunks,kRegGeometry,kPackMaxBytes,kRegTextures,
     kRegDescriptors*kRegBones,kRegDescriptors*kRegBones,kPackModels,kPackParts,kPackTexFacts,kRoomRoles,kRoomBlobs};
@@ -85,7 +101,14 @@ bool pack_alias(const PackSpan& a,const PackSpan& b,const unsigned char* geom) {
 
 // Validation and the record build. On kPwNone the pack_* records describe the package at base; nothing is published.
 // Descriptor word 44: 0, or under NATIVE_MODEL_REGISTRY_SHIFT the position shift 1..4 (0 = 4).
+#if RE4DC_NMR_SLOTS
+// PS2_ASHLEY: bits 8..15 = a draw-slot descriptor's source joint count (0 = an ordinary descriptor); bits 0..7 the shift.
 #if RE4DC_NMR_SHIFT
+#define RE4DC_NMR_WORD44_BAD(w) (((w)&255u)>4 || ((w)>>16))
+#else
+#define RE4DC_NMR_WORD44_BAD(w) (((w)&255u) || ((w)>>16))
+#endif
+#elif RE4DC_NMR_SHIFT
 #define RE4DC_NMR_WORD44_BAD(w) ((w)>4)
 #else
 #define RE4DC_NMR_WORD44_BAD(w) (w)
@@ -205,6 +228,24 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         for(unsigned k=0;k<n;++k)if(r[k]<0x20 || r[k]>0x7e)return kPwDescriptor;
         for(unsigned k=n;k<16;++k)if(r[k])return kPwDescriptor;
         const unsigned app=pu32(r,16),id=pu32(r,20),bones=pu32(r,24),sections=pu32(r,28),first=pu32(r,32),pat=pu32(r,36),bfirst=pu32(r,40);
+#if RE4DC_NMR_SLOTS
+        // A draw-slot descriptor (word 44 bits 8..15 = S source joints): parents run = S source parents (u8, 0xff =
+        // root, else an earlier joint) + `bones` slot bytes (strictly increasing joints < S); bind run = S inverses.
+        const unsigned S=(pu32(r,44)>>8)&255u,pjoints=S?S+bones:bones,bjoints=S?S:bones;
+        if(app!=nmr::appearance_first+d || id>255 || !bones || bones>max_bones || !sections || sections>8 || first!=refs ||
+           pat!=parents_used || bfirst!=binds_used || RE4DC_NMR_WORD44_BAD(pu32(r,44)) || refs+sections>sec[kRef].count ||
+           (S && S<=bones) || pat+pjoints>sec[kParents].count || bfirst+bjoints>sec[kBind].count)return kPwDescriptor;
+        if(S) {
+            const auto* up=reinterpret_cast<const unsigned char*>(parents+pat);
+            if(up[0]!=0xffu)return kPwSkeleton;
+            for(unsigned k=1;k<S;++k)if(up[k]!=0xffu && up[k]>=k)return kPwSkeleton;
+            for(unsigned k=0;k<bones;++k)if(up[S+k]>=S || (k && up[S+k]<=up[S+k-1]))return kPwSkeleton;
+        } else {
+            if(parents[pat]!=-1)return kPwSkeleton;
+            for(unsigned k=1;k<bones;++k)if(parents[pat+k]<-1 || parents[pat+k]>=int(k))return kPwSkeleton;
+        }
+        for(unsigned k=0;k<bjoints;++k)for(unsigned e=0;e<12;++e)if(!coarse_finite(bind[bfirst+k][e]))return kPwSkeleton;
+#else
         if(app!=nmr::appearance_first+d || id>255 || !bones || bones>max_bones || !sections || sections>8 || first!=refs ||
            pat!=parents_used || bfirst!=binds_used || RE4DC_NMR_WORD44_BAD(pu32(r,44)) || refs+sections>sec[kRef].count ||
            pat+bones>sec[kParents].count || bfirst+bones>sec[kBind].count)return kPwDescriptor;
@@ -212,10 +253,17 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         if(parents[pat]!=-1)return kPwSkeleton;
         for(unsigned k=1;k<bones;++k)if(parents[pat+k]<-1 || parents[pat+k]>=int(k))return kPwSkeleton;
         for(unsigned k=0;k<bones;++k)for(unsigned e=0;e<12;++e)if(!coarse_finite(bind[bfirst+k][e]))return kPwSkeleton;
+#endif
         std::memset(desc.name,0,sizeof(desc.name));std::memcpy(desc.name,r,n);
         desc.appearance=app;desc.model_id=id;desc.bones=bones;desc.sections=sections;desc.first_chunk=first;desc.skin_bytes=0;
         desc.parents=parents+pat;desc.bind=bind+bfirst;
-#if RE4DC_NMR_SHIFT
+#if RE4DC_NMR_SLOTS
+        desc.source_bones=S;
+        desc.source_parents=S?reinterpret_cast<const unsigned char*>(parents+pat):nullptr;
+#endif
+#if RE4DC_NMR_SHIFT && RE4DC_NMR_SLOTS
+        desc.shift=(pu32(r,44)&255u)?(pu32(r,44)&255u):4u;
+#elif RE4DC_NMR_SHIFT
         desc.shift=pu32(r,44)?pu32(r,44):4u;
 #endif
         for(unsigned i=0;i<sections;++i) {
@@ -310,7 +358,11 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
             }
 #endif
         }
+#if RE4DC_NMR_SLOTS
+        refs+=sections;parents_used+=pjoints;binds_used+=bjoints;
+#else
         refs+=sections;parents_used+=bones;binds_used+=bones;
+#endif
     }
     detail=0;
     if(refs!=sec[kRef].count || parents_used!=sec[kParents].count || binds_used!=sec[kBind].count)return kPwDescriptor;
@@ -345,7 +397,7 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
            role>=pack_desc[app-nmr::appearance_first].sections || fm>=sec[kFModel].count || !tn || tn>pack_role_texture_max(room) ||
 #else
-           role>=pack_desc[app-nmr::appearance_first].sections || fm>=sec[kFModel].count || !tn || tn>8 ||
+           role>=pack_desc[app-nmr::appearance_first].sections || fm>=sec[kFModel].count || !tn || RE4DC_NMR_ROLE_TN_BAD(tn,room) ||
 #endif
            tf>sec[kFTex].count || tn>sec[kFTex].count-tf || pu32(r,28) || !bin || !tpl)return kPwRole;
         for(unsigned u=0;u<k;++u)if(pack_roles[u].appearance==app && pack_roles[u].role==role)return kPwDuplicate;

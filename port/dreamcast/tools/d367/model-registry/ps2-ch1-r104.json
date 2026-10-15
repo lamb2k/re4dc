@@ -1,0 +1,46 @@
+{
+ "registry": "ps2-ch1-r104-merchant13",
+ "about": "lane ps2cast2 (2026-10-14): r104 em13 type 6 (the robed merchant form, ESL r104 em13/t06 x1) = Codex CH23 merchant13-c0/-o0 (ps2-r10f.json), cast copied with r104 added to its rooms. Render only.",
+ "cast_dir": "/root/probe/lanes-20261014/ps2cast/work/conv/regcast-merchant13",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "Source lighting and cull need guarded CH23 runtime qualification; mask runs preserve robe and cloth alpha. Source hand variants outside normal merchant wait/trade remain unqualified.",
+ "descriptors": [
+  {
+   "name": "merchant13-c0",
+   "archive": "em13",
+   "model_id": "0x13",
+   "source_types": [
+    6
+   ],
+   "module": "src/em13/em13_set.cpp Em13Set type6 + src/em10/em10.cpp em10ModelInit; closed cloth BIN0x1ee/TPL0x1f1",
+   "mask_runs": {
+    "1": "/root/probe/codex-ch23-enemies-20261013/models/merchant13-c0-mask-robe",
+    "2": "/root/probe/codex-ch23-enemies-20261013/models/merchant13-c0-mask-cloth"
+   }
+  },
+  {
+   "name": "merchant13-o0",
+   "archive": "em13",
+   "model_id": "0x13",
+   "source_types": [
+    6
+   ],
+   "module": "src/em10/em10.cpp em10_R1_Trade and em10ClothPartsSet: open cloth BIN0x1ed/TPL0x1f1",
+   "mask_runs": {
+    "1": "/root/probe/codex-ch23-enemies-20261013/models/merchant13-o0-mask-robe",
+    "2": "/root/probe/codex-ch23-enemies-20261013/models/merchant13-o0-mask-cloth"
+   }
+  }
+ ],
+ "room_packages": {
+  "104": {
+   "descriptors": [
+    "merchant13-c0",
+    "merchant13-o0"
+   ],
+   "evidence": "ESL r104 em13/t06 x1 (CH1 audit rosters.txt); test 10 census: em13 t06 GC"
+  }
+ }
+}

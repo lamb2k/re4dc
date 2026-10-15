@@ -1,0 +1,77 @@
+{
+ "registry": "ps2-ch1-r100",
+ "about": "lane ps2cast2 (2026-10-14): r100 combined room package = the test 10 package (ps2-crow, byte-identical descriptors) + the chapter-1 PS2 cast additions ['trap-em2a-00', 'trap-em2a-02'].",
+ "cast_dir": "/root/probe/lanes-20261014/ps2cast/work/conv/regcast-merged-r100",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "dog-01: flat (as the PS2_ANIMALS package); crow: the source GX lighting record and source cull (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT / RE4DC_NMR_SOURCE_CULL bit 8), as the source path draws it today",
+ "cast_sources": [
+  "/mnt/c/Game Dev/Emulators/re4-assets-private/p2a3-crow-20261011/regcast-crow",
+  "/root/probe/lanes-20261014/ps2cast/work/conv/regcast-ch1"
+ ],
+ "descriptors": [
+  {
+   "name": "dog-01",
+   "archive": "em21",
+   "model_id": "0x21",
+   "source_types": [
+    1
+   ]
+  },
+  {
+   "name": "crow-folded",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,0): body BIN 5 + wing BIN 6"
+  },
+  {
+   "name": "crow-spread",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,1): body BIN 5 + wing BIN 7"
+  },
+  {
+   "name": "trap-em2a-00",
+   "archive": "em2a",
+   "model_id": "0x2a",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2a/em2a.cpp em2a_R0_Init type 0: modelInit(ARC 4, ARC 5)"
+  },
+  {
+   "name": "trap-em2a-02",
+   "archive": "em2a",
+   "model_id": "0x2a",
+   "source_types": [
+    2
+   ],
+   "module": "src/em2a/em2a.cpp em2a_R0_Init type 2: modelInit(ARC 8, ARC 9)"
+  }
+ ],
+ "room_packages": {
+  "100": {
+   "descriptors": [
+    "dog-01",
+    "crow-folded",
+    "crow-spread",
+    "trap-em2a-00",
+    "trap-em2a-02"
+   ],
+   "evidence": "test 10 package + CH1 audit models-by-room.md"
+  }
+ }
+}

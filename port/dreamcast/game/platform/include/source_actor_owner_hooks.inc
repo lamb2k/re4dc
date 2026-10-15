@@ -38,8 +38,19 @@ extern "C" int re4dc_actor_transaction_candidate(cModel* m) {
 #if defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
     // Cabin Luis only: his exact loaded registry descriptor nominates the
     // prepared partner. Ownership still requires the ledger and every plan proof.
+#if defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY
+    // PS2_ASHLEY: the partner Ashley (pSUB id 3) likewise, by her draw-slot descriptor.
+    if(!m || !(m==(cModel*)pPL || (m!=(cModel*)pSUB && ((m->id>=0x10 && m->id<=0x20) ||
+       re4dc_registry_candidate(m))) || (m==(cModel*)pSUB && (m->id==4 || m->id==3) && re4dc_registry_candidate(m))))return 0;
+#else
     if(!m || !(m==(cModel*)pPL || (m!=(cModel*)pSUB && ((m->id>=0x10 && m->id<=0x20) ||
        re4dc_registry_candidate(m))) || (m==(cModel*)pSUB && m->id==4 && re4dc_registry_candidate(m))))return 0;
+#endif
+#elif defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY
+    // PS2_ASHLEY (native_model_registry.mk): the partner Ashley (pSUB id 3) is nominated only by her exact loaded
+    // draw-slot descriptor; ownership still requires the ledger and every plan proof.
+    if(!m || !(m==(cModel*)pPL || (m!=(cModel*)pSUB && ((m->id>=0x10 && m->id<=0x20) ||
+       re4dc_registry_candidate(m))) || (m==(cModel*)pSUB && m->id==3 && re4dc_registry_candidate(m))))return 0;
 #else
     if(!m || !(m==(cModel*)pPL || (m!=(cModel*)pSUB && ((m->id>=0x10 && m->id<=0x20) ||
        re4dc_registry_candidate(m)))))return 0;

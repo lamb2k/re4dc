@@ -63,6 +63,15 @@ int re4dc_actor_transaction_candidate(cModel*);
 #define RE4DC_LEON_LIKE(app) ((app)==0x100u)
 #define RE4DC_LEON_FACE_ROLE(p,i) ((p).count==8 && (i)==3)
 #endif
+// A role whose info may carry the shape bit (be_flag 2) on the owner path: Leon's bone-driven face and, under
+// PS2_ASHLEY=2 (native_model_registry.mk; user look decision pending), Ashley's head drawn at its PS2 rest face
+// (coarse_actor_owner_registry.inc re4dc_registry_ashley_face). Off: exactly RE4DC_LEON_FACE_ROLE.
+#if defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY >= 2
+extern "C" int re4dc_registry_ashley_face(unsigned appearance,unsigned role);
+#define RE4DC_ACTOR_SHAPE_ROLE(p,i) (RE4DC_LEON_FACE_ROLE(p,i) || re4dc_registry_ashley_face((p).appearance,(i)))
+#else
+#define RE4DC_ACTOR_SHAPE_ROLE(p,i) RE4DC_LEON_FACE_ROLE(p,i)
+#endif
 namespace re4dc_actor {
 inline bool exact_infos(cModelInfo* first,cModelInfo* const* roles,unsigned n) {
     unsigned seen=0,count=0;

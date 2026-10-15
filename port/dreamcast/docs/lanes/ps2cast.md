@@ -339,6 +339,34 @@ weaker (the GC bakes of every family below showed seam streaks and no gain at eq
 - The objects survey (om / etc / set pieces): C:/Game Dev/Emulators/ps2cast-4-20261011/OBJECTS.md (every loose object is
   still GC source).
 
+## PS2_ASHLEY at run time (lane ps2cast, 2026-10-15; test 13, default off)
+
+PS2_ASHLEY (778e4674) was offline-checked only. The first Flycast census (r117 follow warp) showed Ashley
+registry-declined on every frame, so she stayed on her GameCube model. 33014c75 fixes four things, all behind the knob:
+
+1. Four owner materials. Her plan has the atlas plus three mask pairs (head, hair, extra 9). The owner capacity was three,
+   so the plan declined at the third mask run. RE4DC_ACTOR_MATERIALS=4 now applies in every object under the knob.
+2. TEV group 1. The partner Ashley uses group 1, like Leon and Luis. Before the fix, the certificate declined her as a
+   LiveModifier.
+3. The head shape bit and the Morph / Bump needs, accepted in the certificate under =2 (rest face; Bump is dropped as for
+   Del Lago).
+4. The slot palettes' bind. A draw-slot descriptor's bind run has one inverse per SOURCE joint, so slot b must use
+   bind[source_parents[source_bones + b]]. Before the fix she drew with large spikes on the cloth / hair slots.
+
+Results (MODELLED, Flycast; build lane/ps2cast3 33014c75, test 11 recipe + PS2_ASHLEY=2, disc data
+ps2lib cast/r117/ashley-pl11):
+- Census r117 follow warp, 120 s: admitted 2400/2400 drawn frames, declines 0. A walk run with 4 Leon gotos, so she
+  runs after him: 2530 admitted, 0 declines. TEX_CHECK 0 fails. No HALT / FAULT / MISSING.
+- H2 STRICT 4702 ticks MUST-IDENTICAL, s30 340/340, heap_before 126,688. r117 follow STRICT 2402 MUST-IDENTICAL
+  (knob-off control padded to the same _end, PAD_T=1088).
+- Knob off: bin 217b1110 and overlays 9cbc854b, identical to before the fix.
+- Heap 4: the r117 package uses 239,688 B. Look sheet (GC on DC | PS2 on DC back / front | PCSX2):
+  C:/Flycast-Evidence/re4-dreamcast/ps2cast-20261014/ashley-sheet/ASHLEY-SHEET.png. On DC she draws flat-lit and
+  slightly brighter than PS2, like the merchant without PS2_CAST_MERCHANT_LIT.
+- Not covered: cutscenes s00 / s10, because the ch21 padscript stalls in the Files menu (a harness limit). Rooms after
+  r117 (r11c / r11f / r112) have no packages yet. Face expressions still need the user's look decision (=2 shows the
+  rest face).
+
 ## Ready to land
 
 - lane ps2cast-4: PS2_ANIMALS (data knob), PS2_WOLF (default off; disc needs the prepared em22.drs + r11b/r118 packages),

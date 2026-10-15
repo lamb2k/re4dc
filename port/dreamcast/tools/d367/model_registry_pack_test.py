@@ -7,6 +7,11 @@ one variant per rule below into <out dir> (private: they hold converted meshes),
 for the expected reason, and the original to pass. 'fixed' variants recompute every hash the change touches (the
 geometry hash, the payload CRC32 / FNV-1a, the header CRC32), so the structural rule itself must refuse them.
 Prints one line per case and exits 1 on any mismatch.
+
+--slots (lane ps2cast 2026-10-14, PS2_ASHLEY): the package carries a draw-slot descriptor (model_registry.py --slots,
+Ashley r117). The check is built as the PS2_ASHLEY image builds it (RE4DC_NMR_ASHLEY / SLOTS / MASK / DROP_BUMP /
+BONES 64 / FACTS 72 / ACTOR_PL08) and runs the draw-slot cases (slot map order and range, source parents, the source
+joint count, word 44, a source-only bind); a reader built without the knob must refuse the same package.
 """
 import json, os, struct, subprocess, sys, zlib
 
@@ -182,11 +187,36 @@ def alias_cases(good):
     return rows, []
 
 
+def slot_cases(good):
+    """Draw-slot descriptor rules (descriptor 0 is the slot descriptor); every mutation has repaired hashes."""
+    g = Pack(good); d0 = g.rec('desc', 0, 48)
+    S = (g.u32(d0 + 44) >> 8) & 255; bones = g.u32(d0 + 24)
+    pat = g.sec('parents')['at'] + g.u32(d0 + 36); bat = g.sec('bind')['at'] + 48 * g.u32(d0 + 40)
+    if not S:
+        sys.exit('--slots: descriptor 0 is not a draw-slot descriptor')
+    hidden = next(j for j in range(S) if j not in set(g.b[pat + S:pat + S + bones]))  # a source joint no slot draws
+
+    def case(name, why, edit=lambda p: None):
+        q = Pack(good); edit(q); return name, why, q.fix()
+    rows = [case('good', 'none'),
+            case('slot-order', 'skeleton', lambda p: (p.put(pat + S + 1, p.b[pat + S], '<B'))),
+            case('slot-range', 'skeleton', lambda p: p.put(pat + S + bones - 1, S, '<B')),
+            case('source-root', 'skeleton', lambda p: p.put(pat, 0, '<B')),
+            case('source-forward', 'skeleton', lambda p: p.put(pat + 5, 5, '<B')),
+            case('source-count', 'descriptor', lambda p: p.put(d0 + 44, (p.u32(d0 + 44) & 0xff) | (bones << 8))),
+            case('word44-high', 'descriptor', lambda p: p.put(d0 + 44, p.u32(d0 + 44) | (1 << 16))),
+            case('source-bind-nan', 'skeleton', lambda p: p.put(bat + 48 * hidden + 4, 0x7fc00000)),
+            case('parents-short', 'descriptor', lambda p: p.put(d0 + 44, (p.u32(d0 + 44) & 0xff) | ((S + 1) << 8)))]
+    return rows, []
+
+
 def main():
     args = sys.argv[1:]
     room = '103'
     alias = '--immutable-arrays' in args
     if alias: args.remove('--immutable-arrays')
+    slots = '--slots' in args
+    if slots: args.remove('--slots')
     if '--room' in args:
         i = args.index('--room'); room = args[i + 1]; del args[i:i + 2]
     if len(args) != 2:
@@ -203,21 +233,26 @@ def main():
     c = reg.index('namespace nmr {'); d = reg.index('constexpr unsigned kRegDescriptors=16'); d = reg.index('\n', d) + 1
     types = ('#pragma once\n#include <cstdint>\nnamespace re4dc_material {\n' + mat[a:b] + '#include "actor_material_records.inc"\n}\n'
              + reg[c:d])
-    if alias:
+    if alias or slots:  # MASK builds validate mask runs through registry_geom_view
         start=reg.index('nmr::Chunk registry_geom_view('); end=reg.index('\n}',start)+2
         types+='\n'+reg[start:end]+'\n'
     open(os.path.join(out, 'pack_test_types.h'), 'w').write(types)
     exe = os.path.join(out, 'model_registry_pack_test')
+    # platform/include: actor_material_records.inc includes actor_ganado_ps2_stump.h (since 32619278)
     cc = ['g++', '-std=c++17', '-O1', '-Wall', '-Wno-unused-function', '-Wno-unused-variable', '-I', out, '-I', GAME,
+          '-I', os.path.join(GAME, 'platform', 'include'),
           os.path.join(HERE, 'model_registry_pack_test.cpp'), '-o', exe]
     if alias:
         cc[1:1]=['-DRE4DC_NMR_IMMUTABLE_ALIAS=1','-DRE4DC_ROUTE_CH23=1','-DRE4DC_NMR_MASK=1',
                  '-DRE4DC_NMR_DROP_BUMP=1','-DRE4DC_NMR_BONES=96','-DRE4DC_NMR_SHIFT=1','-DRE4DC_ACTOR_PL08=1']
+    if slots:
+        cc[1:1] = ['-DRE4DC_NMR_ASHLEY=2', '-DRE4DC_NMR_SLOTS=1', '-DRE4DC_NMR_MASK=1', '-DRE4DC_NMR_DROP_BUMP=1',
+                   '-DRE4DC_NMR_BONES=64', '-DRE4DC_NMR_FACTS=72', '-DRE4DC_ACTOR_PL08=1']
     r = subprocess.run(cc, capture_output=True, text=True)
     if r.returncode:
         sys.exit('build failed:\n' + r.stderr[-4000:])
     files, want = [], {}
-    built, skipped = alias_cases(good) if alias else cases(good)
+    built, skipped = alias_cases(good) if alias else slot_cases(good) if slots else cases(good)
     if skipped:
         print('skipped (records absent in this package): ' + ' '.join(skipped))
     for name, why, p in built:
@@ -252,6 +287,16 @@ def main():
             assert all(mutated[a:a+len(b)]==b for a,b in immutable)
             assert all(mutated[a:a+len(b)]==b for j,(a,b) in enumerate(streams) if j!=i)
         print('PASS independent-stream-mutation-canaries')
+    if slots:
+        # A reader without the draw-slot rules must refuse the package: PS2_ASHLEY off (refused by the 192 KiB ceiling
+        # before anything else) and, to reach the descriptor rule, the PS2_ASHLEY capacities without RE4DC_NMR_SLOTS.
+        for tag, drop, want in (('knob-off', ('-DRE4DC_NMR_SLOTS=1', '-DRE4DC_NMR_ASHLEY=2'), 'size'),
+                                ('no-slot-rules', ('-DRE4DC_NMR_SLOTS=1',), 'descriptor')):
+            legacy = exe + '-' + tag; legacy_cc = [a for a in cc if a not in drop]
+            legacy_cc[legacy_cc.index('-o') + 1] = legacy
+            subprocess.run(legacy_cc, check=True, capture_output=True)
+            got = subprocess.check_output([legacy, room, src], text=True).split()[-2]
+            print(('PASS' if got == want else 'FAIL') + f' {tag}-rejects-slots expected={want} got={got}'); bad += got != want
     json.dump(dict(package=src, room=room, cases=rows, failures=bad), open(os.path.join(out, 'results.json'), 'w'), indent=1)
     print(f'{len(rows) - bad}/{len(files)} as expected')
     sys.exit(1 if bad else 0)

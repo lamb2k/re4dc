@@ -115,6 +115,20 @@ PRESETS = {
                          rooms=['r10f'], types=[6], category='registry', model_id=0x13, lit=True),
     # Standalone merchant em18 uses a different archive and source info order.
     # em18_R0_Init appends robe, head, both hands, cloth, then hidden goods.
+    # lane ps2cast 2026-10-14: Ashley (pl11, r117 ...). Converted by ps2_ashley.py (141 GC joints, draw slots, PS2 cloth
+    # weights moved onto the GC cloth links); this entry only carries the finish / regcast metadata.
+    'ashley11': dict(archive='pl11', sections=[(4, 'body'), (7, 'head'), (6, 'hair'), (9, 'extra9'), (0xA, 'extraA'),
+                                               (0xC, 'right-hand'), (0xF, 'left-hand')],
+                     tpl=5, section_tpls={7: 0xB, 6: 8}, rooms=['r117'], types=[], category='registry', model_id=3,
+                     converter='ps2_ashley.py'),
+    'ashley11-h1': dict(archive='pl11', sections=[(4, 'body'), (7, 'head'), (6, 'hair'), (9, 'extra9'), (0xA, 'extraA'),
+                                                  (0xD, 'right-hand'), (0x10, 'left-hand')],
+                        tpl=5, section_tpls={7: 0xB, 6: 8}, rooms=['r117'], types=[], category='registry', model_id=3,
+                        converter='ps2_ashley.py --hands 1'),
+    'ashley11-h3': dict(archive='pl11', sections=[(4, 'body'), (7, 'head'), (6, 'hair'), (9, 'extra9'), (0xA, 'extraA'),
+                                                  (0xE, 'right-hand'), (0xF, 'left-hand')],
+                        tpl=5, section_tpls={7: 0xB, 6: 8}, rooms=['r117'], types=[], category='registry', model_id=3,
+                        converter='ps2_ashley.py --hands 3'),
     'merchant18-c0': dict(archive='em18', sections=[(5, 'body'), (14, 'robe'), (7, 'head'),
                             (18, 'right-hand'), (19, 'left-hand'), (12, 'cloth'), (13, 'goods')],
                          tpl=6, section_tpls={14: 15, 7: 8, 12: 15},
@@ -136,6 +150,36 @@ PRESETS = {
                            category='boss', model_id=0x35, shift=2, lit=True),
     'mendez35-legs': dict(archive='em35', sections=[(8, 'body')], tpl=5, rooms=['r11f'], types=[2],
                           category='boss', model_id=0x35, lit=True),
+    # lane ps2cast2 (2026-10-14): the chapter-1 non-Ganado actors still drawn from the GC source (CH1 audit fix 5).
+    # Each is one modelInit(BIN, TPL) of its module's R0 init; lit (normals kept) like the source path draws them.
+    # em2a_R0_Init: type 0 bear trap modelInit(ARC 4, ARC 5), type 1 (6, 7), type 2 (8, 9) (types 1 / 2 scale
+    # parts 1 / 2 pos.z by hp at init: the wire / bomb models)
+    'trap-em2a-00': dict(archive='em2a', sections=[(4, 'body')], tpl=5, rooms=['r100', 'r105', 'r106', 'r107', 'r10a'],
+                         types=[0], category='registry', model_id=0x2a, lit=True),
+    'trap-em2a-02': dict(archive='em2a', sections=[(8, 'body')], tpl=9, rooms=['r100', 'r105', 'r106', 'r107', 'r10a'],
+                         types=[2], category='registry', model_id=0x2a, lit=True, shift=2),   # 4.2 m long: GC shift 2
+    # em29_R0_Init: the bat, modelInit(ARC 4, ARC 5); 7 PS2 corners sit one texel past a GX_REPEAT image edge
+    'bat-em29-00': dict(archive='em29', sections=[(4, 'body')], tpl=5, rooms=['r106', 'r10e'], types=[],
+                        category='registry', model_id=0x29, lit=True, uv_edge_texels=1),
+    # em2e_R0_Init: the wall crawler, type 0 modelInit(ARC 4, ARC 5), type 1 (ARC 4, ARC 6)
+    'crawler-em2e-00': dict(archive='em2e', sections=[(4, 'body')], tpl=5, rooms=['r106'], types=[0],
+                            category='registry', model_id=0x2e, lit=True),
+    'crawler-em2e-01': dict(archive='em2e', sections=[(4, 'body')], tpl=6, rooms=['r106'], types=[1],
+                            category='registry', model_id=0x2e, lit=True),
+    # em27_R0_Init: the lake fish, modelInit(ARC 4, ARC 5) for every type (type 1 only scales x3)
+    'fish-em27-00': dict(archive='em27', sections=[(4, 'body')], tpl=5, rooms=['r107', 'r10b', 'r11b', 'r10e'], types=[0, 1],
+                         category='registry', model_id=0x27, lit=True),
+    # em24_R0_Init: the snake, modelInit(ARC 5, ARC 6) (ARC 0x19 + 0x1A..0x1C are the dropped item models, SetWeapon)
+    'snake-em24-00': dict(archive='em24', sections=[(5, 'body')], tpl=6, rooms=['r10a', 'r108', 'r11a'], types=[],
+                          category='registry', model_id=0x24, lit=True),
+    # pl0f_R0_Init: the boat, modelInit(ARC 5, ARC 6) for every type / set
+    'boat-pl0f-00': dict(archive='pl0f', sections=[(5, 'body')], tpl=6, rooms=['r10b', 'r11b', 'r10e'], types=[],
+                         category='registry', model_id=0x0f, lit=True, shift=3),   # 2.7 m: positions beyond +-2048 mm
+    # Em11Set type 7 + em10ModelInit: body BIN mot[1] 0x1FC / TPL mot[0] 0x1FD, head (em10HeadSet) BIN mot[2] 0x1FE /
+    # TPL mot[5] 0x201, relaxed hands (em10HandSet type 0) BIN mot[6] 0x204 and mot[11] 0x208, both with TPL mot[0]
+    'zealot-em11-07': dict(archive='em11', sections=[(0x1fc, 'body'), (0x1fe, 'head'), (0x204, 'right-hand'), (0x208, 'left-hand')],
+                           tpl=0x1fd, section_tpls={0x1fe: 0x201}, rooms=['r117'], types=[7], category='registry',
+                           model_id=0x11, lit=True, subset_bones=True),
 }
 
 
@@ -342,6 +386,8 @@ def winding_agreement(verts, tris, corner_normals):
 
 def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.001):
     spec = PRESETS[preset]
+    if spec.get('converter'):
+        raise SystemExit(f'{preset} is converted by {spec["converter"]}, not ps2_cast.py convert')
     out.mkdir(parents=True, exist_ok=True)
     ps2, gc, rec = inputs(spec['archive'], out, ps2_iso, gc_iso)
     ptd = load_module('ps2_tpl_decode', WA / 'from-main/ps2-trees/tools/ps2_tpl_decode.py')
@@ -436,6 +482,17 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                 if any(tuple(a) != tuple(b) for a, b in zip(raw_uvs, normalized)):
                     val['repeat_uv_triangles_shifted'] = val.get('repeat_uv_triangles_shifted', 0) + 1
                 raw_uvs = normalized
+            if spec.get('uv_edge_texels'):
+                # lane ps2cast2: a PS2 corner up to uv_edge_texels texels outside its 256 image (the bat: 7 corners at
+                # 257 on a GX_REPEAT image) is clamped to the image edge (counted); anything farther is refused.
+                k = spec['uv_edge_texels']
+                if any(not -k <= x <= 256 + k for uv in raw_uvs for x in uv):
+                    raise ValueError('PS2 UV beyond uv_edge_texels')
+                clamped = [[min(256, max(0, x)) for x in uv] for uv in raw_uvs]
+                n = sum(tuple(a) != tuple(b) for a, b in zip(raw_uvs, clamped))
+                if n:
+                    val['uv_edge_corners_clamped'] = val.get('uv_edge_corners_clamped', 0) + n
+                raw_uvs = clamped
             cs = []
             fa, fb, fc = (np.asarray(c['p']) for c in corners)
             face = np.cross(fb - fa, fc - fa)

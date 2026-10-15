@@ -1,7 +1,18 @@
 #!/usr/bin/env python3
 """model_registry.py <spec.json> <out dir> [--tree <checkout>] [--package-room <hex room>] [--source-normal-length]
-  [--wide-identity] [--ch23-facts] [--ch23-mendez-budget] [--ch22-luis-coverage]
+  [--wide-identity] [--ch23-facts] [--ch23-mendez-budget] [--ch22-luis-coverage] [--slots]
 (D367 generic native models, 2026-10-03)
+
+--slots (lane ps2cast 2026-10-14, default off: output unchanged; package only, NATIVE_MODEL_REGISTRY_SLOTS images):
+a cast whose source.json lists "draw_slots" (ps2_ashley.py: Ashley's 141-joint GC skeleton, 68 joints drawn) packs
+its chunks on those draw slots (header bone_count = slot count, weights name slots) while the descriptor keeps the
+complete source skeleton for the runtime's full proof: descriptor word 44 bits 8..15 = source joint count S, the
+parents run = S source parents (u8, 0xff = root) followed by the slot map (bones bytes, strictly increasing source
+joint indices), the bind run = S rest inverses. Sections may be attachment models (head / hair / hands: a local part
+table whose attach ids name distinct source joints) instead of the full skeleton. The target image is PS2_ASHLEY's
+(RE4DC_NMR_ASHLEY): up to 32 source texture facts and 10 source BIN models per package and 17 texture facts per role
+(pl11 TPL 5 has 17 images), and
+a 256 KiB package + skin ceiling in her rooms (the loader allocates the actual size; packages without --slots keep 192 KiB).
 
 --ch22-luis-coverage (default off, --package-room 11c only): the exact pinned
 Luis conversion retains all six source identities while head/face share one
@@ -70,6 +81,7 @@ import hashlib, json, os, re, shutil, struct, sys, zlib
 MATERIAL_ROWS = 64          # actor_lifetime.inc Info::roles mask capacity
 SOURCE_BLOBS = 32           # actor_lifetime.inc Asset::templates mask capacity
 CH22_LUIS_COVERAGE = False  # explicit room11c pinned source coverage; package-only
+SLOTS = False               # --slots: draw-slot descriptors (source.json draw_slots), package only
 WIDE_IDENTITY = False       # --wide-identity: 64 / 96 and the pl08 base rows (RE4DC_ACTOR_WIDE_IDENTITY)
 ACTOR_MATERIALS = 3         # actor_native_owner.h kRe4dcActorMaterials
 ACTOR_CHUNKS = 8            # Re4dcActorPlan info[8]
@@ -493,11 +505,21 @@ def main():
             sys.exit('model_registry: --ch22-luis-coverage requires --package-room 11c')
         CH22_LUIS_COVERAGE = True
         PACK_CAPACITY['fpart'] = 83  # exact room11c Luis body + independent gun
+    global SLOTS, PACK_MAX_BYTES
+    if '--slots' in args:
+        args.remove('--slots')
+        if package_room is None:
+            sys.exit('model_registry: --slots is package only (--package-room)')
+        SLOTS = True
+        PACK_CAPACITY['ftex'] = 32  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): pl11 TPLs 5 + 8 + 0xB = 28 images
+        PACK_CAPACITY['fmodel'] = 10  # and 10 source BIN models (5 shared + the hands 0xC..0x10 of three hand sets)
+        # RE4DC_NMR_ASHLEY: a 256 KiB package + skin ceiling (Ashley + her mask runs) in every room she follows Leon to
+        # (r117, then the chapter 2 rooms; coarse_actor_registry_pack_check.inc RE4DC_NMR_PACK_KIB applies to every room).
+        PACK_MAX_BYTES = 256 * 1024
     if '--ch23-facts' in args:
         args.remove('--ch23-facts')
         PACK_CAPACITY['fpart'] = 128  # RE4DC_ROUTE_CH23, coarse_actor_registry_pack_check.inc
     if '--ch23-mendez-budget' in args:
-        global PACK_MAX_BYTES
         args.remove('--ch23-mendez-budget')
         if package_room != 0x11f or PACK_CAPACITY['fpart'] != 128:
             sys.exit('model_registry: --ch23-mendez-budget requires --package-room 11f and --ch23-facts')
@@ -616,7 +638,15 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
         if any(p['id'] != i or p['attach'] != i for i, p in enumerate(pb)):
             raise Fail(f'{name}: attach map is not the identity (a local attachment index needs its own map)')
         parents = [p['parent'] for p in pb]
-        if not luis and any([p['parent'] for p in b['part_bindings']] != parents for b in binds):
+        draw_slots = src.get('draw_slots')
+        if draw_slots is not None and not SLOTS:
+            raise Fail(f'{name}: source.json has draw_slots (needs --slots, a NATIVE_MODEL_REGISTRY_SLOTS package)')
+
+        def attachment(b):
+            # --slots: an attachment model's local part table (fewer parts, distinct attach ids naming source joints)
+            a = [p['attach'] for p in b['part_bindings']]
+            return draw_slots is not None and len(a) == b['parts'] < bones and len(set(a)) == len(a) and all(0 <= x < bones for x in a)
+        if not luis and any([p['parent'] for p in b['part_bindings']] != parents and not attachment(b) for b in binds):
             raise Fail(f'{name}: sections disagree on the hierarchy')
         if parents[0] != -1 or any(not (-1 <= q < i) for i, q in enumerate(parents)):
             raise Fail(f'{name}: parents are not a forest in index order')
@@ -635,6 +665,12 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             ti = [-sum(inv[r][k] * t[k] for k in range(3)) for r in range(3)]
             bind.append([inv[0][0], inv[0][1], inv[0][2], ti[0], inv[1][0], inv[1][1], inv[1][2], ti[1],
                          inv[2][0], inv[2][1], inv[2][2], ti[2]])
+        draw = bones
+        if draw_slots is not None:
+            if (not draw_slots or bones > 255 or any(not isinstance(x, int) for x in draw_slots) or
+                    any(not 0 <= x < bones for x in draw_slots) or draw_slots != sorted(set(draw_slots))):
+                raise Fail(f'{name}: draw_slots must be strictly increasing source joints < {bones} (<= 255 joints)')
+            draw = len(draw_slots)
         # ---- sections against the archive
         sections, need, contract = [], 0, []
         for i, b in enumerate(binds):
@@ -648,7 +684,7 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 raise Fail(f'{name} section {i}: archive BIN {b["bin"]} differs from source-bindings (counts/flags)')
             if luis and f['normalized'] != LUIS_NORMALIZED[b['bin']]:
                 raise Fail(f'{name} section {i}: pinned normalized source BIN differs')
-            if not luis and b['parts'] != bones:
+            if not luis and b['parts'] != bones and not attachment(b):
                 raise Fail(f'{name} section {i}: BIN has {b["parts"]} parts, the skeleton {bones}')
             # the runtime signature (coarse_ganado_cast.cpp fingerprint): FNV-1a of the first 64 bytes of the LE positions
             if '%08x' % digest(f['positions_le_first64'])[2] != b['source_vertex_fnv64_le']:
@@ -689,8 +725,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
         seen_identity[identity] = name
         # ---- chunks
         chunks, hbones = parse_header(hdr)
-        if hbones != bones:
-            raise Fail(f'{name}: header bone_count {hbones} != skeleton {bones}')
+        if hbones != draw:
+            raise Fail(f'{name}: header bone_count {hbones} != skeleton {bones}' + (f' draw slots {draw}' if draw_slots else ''))
         expected_roles = [0,1,3,4,5] if luis else list(range(len(sections)))
         if [c['source_info'] for c in chunks] != expected_roles:
             raise Fail(f'{name}: header chunks {[c["source_info"] for c in chunks]} are not one per source section in order')
@@ -698,7 +734,7 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             raise Fail(f'{name}: {len(chunks)} chunks > {ACTOR_CHUNKS}')
         skin = 0
         for c in chunks:
-            err = preflight_chunk(c, bones)
+            err = preflight_chunk(c, draw)
             if err:
                 raise Fail(f'{name} chunk {c["source_info"]}: preflight {err}')
             if source_normal_length:
@@ -765,7 +801,7 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 cc_ = dict(c, stream=rb[k], stream_bytes=len(rb[k]), triangles=mj['runs'][k.split('.')[0]]['triangles'])
                 if k == 'hair.blob':
                     cc_['uv'] = rb['hair.uv']
-                err = preflight_chunk(cc_, bones)
+                err = preflight_chunk(cc_, draw)
                 if err:
                     raise Fail(f'{name} section {si} {k}: preflight {err}')
             tw, th = mj['texture']['width'], mj['texture']['height']
@@ -796,12 +832,14 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             raise Fail(f'{name}: {len(materials)} materials > {ACTOR_MATERIALS}')
         entry = dict(name=name, revision=rev, base_revision=base_rev, level=level, archive=arcname,
                      archive_sha256=audit[arcname]['sha256'], model_id=int(d['model_id'], 16), source_types=d['source_types'],
-                     bones=bones, parents=parents, bind=bind, sections=sections, chunks=chunks, skin_bytes=skin,
+                     bones=draw, parents=parents, bind=bind, sections=sections, chunks=chunks, skin_bytes=skin,
                      header=L['runtime_header'], header_sha256=L['header_sha256'], rooms=e.get('rooms', []),
                      needs=need_names(need), category=e.get('category'), status=e.get('status'), spec=d,
                      position_shift=int(e.get('position_shift', 4)))
         if luis:
             entry['source_coverage_manifest_sha256'] = luis['reviewed_manifest_sha256']
+        if draw_slots is not None:
+            entry.update(source_bones=bones, slots=list(draw_slots))
         if not 1 <= entry['position_shift'] <= 4:
             raise Fail(f'{name}: position_shift {entry["position_shift"]} outside 1..4')
         # "source_drops": ["bump"] (lane ps2cast-2): the source path itself never draws the bump stage (trans.cpp
@@ -942,6 +980,8 @@ def write_outputs(out, spec, runtime, contracts, textures, used_tex, bins, tpls,
          'struct Texture { unsigned crc, fnv, width, height; };',
          'struct Descriptor { const char* name; unsigned appearance, model_id, bones, sections, first_chunk, skin_bytes; '
          'const signed char* parents; const float (*bind)[12]; };']
+    if any(r.get('slots') for r in runtime):
+        L[:0] = ['#if !RE4DC_NATIVE_MODEL_REGISTRY_PACK', '#error draw-slot descriptors (--slots) require the room package loader', '#endif']
     if any(r.get('source_coverage_manifest_sha256') for r in runtime):
         L[:0] = ['#if !RE4DC_NATIVE_MODEL_REGISTRY_PACK', '#error Luis source coverage requires the room package loader', '#endif']
     tex_index = {t: i for i, t in enumerate(used_tex)}
@@ -962,7 +1002,7 @@ def write_outputs(out, spec, runtime, contracts, textures, used_tex, bins, tpls,
             chunk_rows.append('{%d,%d,%d,%d,%d,%d,%s::%s_pos,%s::%s_nrm,%s::%s_uv,%s::%s_gx,%s::%s_weights,%d,%d,%d},' % (
                 c['source_info'], c['position_count'], c['normal_count'], c['palette_count'], c['triangles'], c['stream_bytes'],
                 ns, p, ns, p, ns, p, ns, p, ns, p, len(c['uv']), tex_index[c['texture']], c['skin_bytes']))
-        L.append('static const signed char parents[] = {%s};' % ','.join(str(x) for x in r['parents']))
+        L.append('static const signed char parents[] = {%s};' % ','.join(str(x) for x in ([-1] if r.get('slots') else r['parents'])))
         L.append('static const float bind[][12] = {')
         for row in r['bind']:
             L.append('{%s},' % ','.join(cfloat(x) for x in row))
@@ -1128,7 +1168,12 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
                 word12 = (rg[0] + 1) | ((rg[1] + 1) << 8) | (tex_index[mk_['colour_texture']] << 16) | (tex_index[mk_['mask_texture']] << 24)
             ownership = (0x80000000 | c['draw_owner']) if 'draw_owner' in c else c['source_info']
             refs.append((g, tex_index[c['texture']], ownership, word12))
-        parents += bytes(p & 0xff for p in r['parents']); bind += r['bind']
+        if r.get('slots'):
+            # --slots: S source parents (u8, 0xff root) then the slot map; S binds; word 44 bits 8..15 = S
+            parents += bytes(0xff if p < 0 else p for p in r['parents']) + bytes(r['slots'])
+        else:
+            parents += bytes(p & 0xff for p in r['parents'])
+        bind += r['bind']
         name = r['name'].encode()
         if len(name) > 15:
             raise Fail(f'{r["name"]}: descriptor name longer than 15 bytes')
@@ -1136,13 +1181,16 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
                                                          first_ref, parents_at, bind_first,
                                                          # word 44: the position shift read by NATIVE_MODEL_REGISTRY_SHIFT=1
                                                          # images (0 = 4, what every image assumes)
-                                                         0 if r['position_shift'] == 4 else r['position_shift']))
+                                                         (0 if r['position_shift'] == 4 else r['position_shift']) |
+                                                         (r['source_bones'] << 8 if r.get('slots') else 0)))
     # source identity facts, in first-use order
     fmodel, fpart, ftex, fm_index, ft_index, roles = [], [], [], {}, {}, []
     for r in runtime:
         for s in r['sections']:
             mk, tk = (r['archive'], s['bin']), (r['archive'], s['tpl'])
             role_texture_max = 9 if room == 0x11f and PACK_CAPACITY['fpart'] == 128 else 8
+            if SLOTS:
+                role_texture_max = 17  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): GC pl11 TPL 5 has 17 images
             if len(tpls[tk]['textures']) > role_texture_max:
                 raise Fail(f'package {r["name"]}: source TPL has {len(tpls[tk]["textures"])} images > {role_texture_max}')
             if mk not in fm_index:

@@ -358,8 +358,76 @@ $(error PS2_CAST_MERCHANT=1 needs NATIVE_MODEL_REGISTRY_BONES >= 64 (61-bone mer
 endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_MERCHANT=1 -DRE4DC_NMR_PARK_UNRELOCATED=1
 endif
+# PS2_CAST_BOAT=1 (lane ps2cast 2026-10-15; default 0; render only): the lake boat (pl0f, model id 0x0f; r10b, then r11b)
+#              through the registry owner path with its PS2 mesh (boat-pl0f-00: 1,210 tris as GC, position shift 3, the PS2
+#              atlas; tools/d367/model-registry/ps2-boat-r10b.json = the released Del Lago descriptor + the boat). Its GC
+#              material needs bump and the alternate specular (flag 0x80): both reach only GX stubs on the DC source path,
+#              so the certificate accepts their absence for registry model 0x0f (RE4DC_NMR_BOAT, the twin of
+#              model_registry.py source_drops "bump", "alt-specular"; the crow's rule). Leon's harpoon hand (pl0f ARC 8,
+#              cPlBody::initWepHand) is already the PS2 hand of LEON_HAND_PACK (pose 7). Disc data: dc/native/r10b/
+#              registry.re4nmr (80,448 B, heap-4 arena 84,176 B) + the boat atlas, and em/pl0f.drs texture-prepared
+#              (prepare_enemy_motions.py SMALL, textures only; heap-4 body 807,520 -> 757,664 B). Without the package the
+#              boat keeps the source path. Needs PS2_DELLAGO=1 (the bump drop rule block and position shift).
+PS2_CAST_BOAT ?= 0
+ifeq ($(filter $(PS2_CAST_BOAT),0 1),)
+$(error PS2_CAST_BOAT must be 0 or 1)
+endif
+ifeq ($(PS2_CAST_BOAT),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_PACK)$(PS2_DELLAGO),11)
+$(error PS2_CAST_BOAT=1 needs NATIVE_MODEL_REGISTRY_PACK=1 and PS2_DELLAGO=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_BOAT=1
+endif
+# PS2_ASHLEY=1|2 (lane ps2cast 2026-10-14; default 0; render only): Ashley (pl11, the partner pSUB, model id 3; r117
+#              first) through the registry owner path with her PS2 mesh (tools/ps2_ashley.py: PS2 geometry / UVs / weights,
+#              the PS2 cloth influences moved onto the GC cloth links the source solver already moves - no second solver,
+#              no extra PenCloth call, no game RNG). Her GC skeleton has 141 joints (parents > 127, more than any registry
+#              capacity), so the package carries a draw-slot descriptor (RE4DC_NMR_SLOTS; model_registry.py --slots): the
+#              skeleton proof walks and checks all 141 source joints (parent + rest inverse) in a 255-entry scratch list,
+#              the binding keeps the 64 drawn joints as slots (the recipe's kRegBones 64 holds them: PS2_GIGANTE pins 64
+#              outside ROUTE_CH23; ps2_ashley.py folds the six lightest GC skirt links into their parents), every other capacity is
+#              unchanged. Also: the partner nomination for pSUB id 3 (source_actor_owner_hooks.inc), 32 source texture facts
+#              per package / 17 per role (pl11 TPL 5), 10 source BIN models (three setHand sets: one descriptor each), 72
+#              source part facts, and a 256 KiB package + skin ceiling (the loader allocates the actual size: the r117
+#              package is 229,952 B, heap-4 arena 239,656 B; the texture-prepared pl11.drs frees 241,408 B of resident
+#              archive). Static cost (warp arm): +288 B of coarse_actor.o character data (inside its 16 KiB padding slack), _end +960 B.
+#              =1: everything above, but the head info keeps its shape bit (be_flag 2), so the transaction declines her
+#              (actor_semantics clause 20) and she stays on the source path: a proof / census build only.
+#              =2: also admits the head (role 1, BIN 7) drawn at the PS2 rest face: her GC face expressions (setFace shapes
+#              0x6C / 0x6D) are not shown. USER LOOK DECISION PENDING; not for a release before that decision.
+#              Needs NATIVE_MODEL_REGISTRY_PACK=1, MASK=1 (head / hair / extra 9 mask runs) and the bump drop rule
+#              (RE4DC_NMR_DROP_BUMP, set here: the DC source path never draws the GC bump stage). Disc data:
+#              dc/native/r117/registry.re4nmr + its atlas and three pair packages; pl/pl11.drs must be texture-prepared.
+#              Not with NATIVE_MODEL_REGISTRY=2 (compare mode).
+#              Runtime (2026-10-15, Flycast census, r117 follow warp): =2 admits her on every drawn frame (2400/2400,
+#              0 declines, TEX_CHECK 0 fails) after four fixes: four owner materials (atlas + three mask pairs;
+#              RE4DC_ACTOR_MATERIALS=4 below), her source TEV group 1 (as Luis), the head's shape bit / Morph need and
+#              the bump drop in the certificate (coarse_actor_material.inc), and the slot palettes' bind (one inverse
+#              per SOURCE joint: slot b uses its joint's; coarse_actor_owner_registry.inc registry_palettes).
+PS2_ASHLEY ?= 0
+ifeq ($(filter $(PS2_ASHLEY),0 1 2),)
+$(error PS2_ASHLEY must be 0, 1 or 2)
+endif
+ifneq ($(PS2_ASHLEY),0)
+ifneq ($(NATIVE_MODEL_REGISTRY_PACK)$(NATIVE_MODEL_REGISTRY_MASK),11)
+$(error PS2_ASHLEY needs NATIVE_MODEL_REGISTRY_PACK=1 and NATIVE_MODEL_REGISTRY_MASK=1)
+endif
+ifeq ($(filter $(NATIVE_MODEL_REGISTRY_BONES),64 80 96 128),)
+$(error PS2_ASHLEY needs NATIVE_MODEL_REGISTRY_BONES >= 64 (64 draw slots))
+endif
+ifeq ($(NATIVE_MODEL_REGISTRY),2)
+$(error PS2_ASHLEY is not modelled by NATIVE_MODEL_REGISTRY=2 (compare mode))
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_ASHLEY=$(PS2_ASHLEY) -DRE4DC_NMR_SLOTS=1 -DRE4DC_NMR_DROP_BUMP=1 -DRE4DC_NMR_FACTS=72
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_NMR_ASHLEY=$(PS2_ASHLEY)
+# Her descriptors plan four materials (the PS2 atlas + head / hair / extra 9 mask pairs; the default owner capacity is
+# three, which declined her at the third mask run: census NMRD plan=). Every object, as the plan crosses objects.
+GAME_CPPFLAGS += -DRE4DC_ACTOR_MATERIALS=4
+PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_MATERIALS=4
+else
 ifneq ($(PS2_CAST_MERCHANT),0)
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_FACTS=40
+endif
 endif
 
 # ACTOR_PROOF_LEAN (default 0; needs ACTOR_TRANSACTION=1; render only; independent of the registry knobs): one actor

@@ -146,7 +146,7 @@ bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
         if(!info || !info->pData || info->invisible_factor!=1.0f || info->blend_mode ||
            info->colorWord!=0xffffffffu || info->flagsDC || info->pAddTpl || info->nAddTex ||
            info->texBlendTbl || info->pTexAnim || info->uvU || info->uvV || info->uvScrollU || info->uvScrollV ||
-           ((info->be_flag&2) && !RE4DC_LEON_FACE_ROLE(p,i)))return false;
+           ((info->be_flag&2) && !RE4DC_ACTOR_SHAPE_ROLE(p,i)))return false;
         re4dc_source::ChunkProof proof{};
         if(re4dc_actor_immutable_chunk_proof(p.immutable_asset_id[i],p.input[i],proof)!=re4dc_source::BlobError::None)return false;
         palette_bytes+=proof.palette_bytes;
@@ -217,7 +217,7 @@ unsigned actor_semantics_why(cModel* m,const Re4dcActorPlan& p,unsigned* detail)
         if(info->pAddTpl || info->nAddTex)return 17;
         if(info->texBlendTbl || info->pTexAnim)return 18;
         if(info->uvU || info->uvV || info->uvScrollU || info->uvScrollV)return 19;
-        if((info->be_flag&2) && !RE4DC_LEON_FACE_ROLE(p,i))return 20;
+        if((info->be_flag&2) && !RE4DC_ACTOR_SHAPE_ROLE(p,i))return 20;
         re4dc_source::ChunkProof proof{};
         if(re4dc_actor_immutable_chunk_proof(p.immutable_asset_id[i],p.input[i],proof)!=re4dc_source::BlobError::None)return 21;
         palette_bytes+=proof.palette_bytes;
