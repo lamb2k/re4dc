@@ -1502,7 +1502,19 @@ void re4dc_bench_iter(int drawn)
 }
 
 // ---------------------------------------------------------------- banner (native_ui.cpp, every presented frame)
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+// POC101: "NOT THE GAME - POC <row or sweep setting>"; the generation moves when the text changes (native_ui redraws).
+const char* re4dc_bench_banner(void)
+{
+    static char text[44];
+    const char* what = g_poc_in_sweep && g_sw_k >= 0 ? kSetName_(g_sw_k) : scene_name(g_cur);
+    snprintf(text, sizeof(text), "NOT THE GAME - POC %.20s", what);
+    return text;
+}
+unsigned re4dc_bench_banner_gen(void) { return (unsigned) g_cur * 64u + (g_poc_in_sweep ? (unsigned) g_sw_k + 1u : 0u); }
+#else
 const char* re4dc_bench_banner(void) { return "BENCHMARK DISC - NOT THE GAME"; }
+#endif
 
 // ---------------------------------------------------------------- geometry sweep settings (render only)
 unsigned re4dc_bench_hide(void) { return g_hide; }   // 1 every Ganado, 4 every other one, 2 Leon, 8 world, 16 effects

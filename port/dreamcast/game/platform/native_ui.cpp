@@ -2276,9 +2276,25 @@ void speed_draw(){
 // row 0 (y 32..60: LETTERBOX_CLIP renders no translucent list in row 0).
 extern "C" const char* re4dc_bench_banner(void);   // bench.cpp
 pvr_ptr_t bench_vram;bool bench_failed;unsigned bench_w;
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+// POC101: the banner names the row / sweep setting being drawn (bench.cpp), redrawn when it changes, so every photo and
+// still says which layers were on.
+extern "C" unsigned re4dc_bench_banner_gen(void);
+unsigned bench_banner_gen_seen;
+#endif
 void bench_banner_draw(){
     constexpr unsigned W=512,H=32;
     if(bench_failed)return;
+#if defined(RE4DC_BENCH_POC) && RE4DC_BENCH_POC
+    if(bench_vram && re4dc_bench_banner_gen()!=bench_banner_gen_seen){
+        bench_banner_gen_seen=re4dc_bench_banner_gen();
+        volatile unsigned short* t=reinterpret_cast<volatile unsigned short*>(bench_vram);
+        for(unsigned i=0;i<W*H;++i)t[i]=0x9000U;
+        const char* text=re4dc_bench_banner();
+        bfont_draw_str_ex(reinterpret_cast<unsigned short*>(bench_vram)+4*W+8,W,0xFFFFU,0x9000U,16,1,text);
+        bench_w=std::min(W,unsigned(strlen(text))*12U+16U);
+    }
+#endif
     if(!bench_vram){
         bench_vram=pvr_mem_malloc(W*H*2);
         if(!bench_vram){bench_failed=true;re4dc_log("bench banner: no VRAM\n");return;}

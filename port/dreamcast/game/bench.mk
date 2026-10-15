@@ -72,6 +72,7 @@ POC_CPPFLAGS += $(if $(filter-out 0,$(CROWD_FLAT_LIGHT)),-DRE4DC_POC_HAS_FLATLIG
 POC_CPPFLAGS += $(if $(filter-out 0,$(FAR_HALF)),-DRE4DC_POC_HAS_FARHALF=1)
 $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += $(POC_CPPFLAGS)
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_BENCH_POC=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_POC=1
 # the layers' hooks (each acts only while its bit is on)
 ifneq ($(filter-out 0,$(WORLD_LOD))$(filter-out 0,$(WORLD_LOD_PROBE)),)
 ifneq ($(filter-out 0,$(WORLD_LOD)),)
