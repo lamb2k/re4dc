@@ -367,6 +367,45 @@ ps2lib cast/r117/ashley-pl11):
   r117 (r11c / r11f / r112) have no packages yet. Face expressions still need the user's look decision (=2 shows the
   rest face).
 
+## PS2_ASHLEY_ROOMS: Ashley in the chapter 2-2 / 2-3 rooms (lane ps2cast, 2026-10-15; test 13, default off)
+
+Ashley follows Leon through r117, r118, r112, r111, r113, r11c and r11f. Six of those rooms already have a registry package
+for other PS2 actors (r111 / r113 crows, r112 merchant, r118 em17 + wolf, r11c Luis, r11f Mendez). One merged package per
+room did not fit (r112: 35 chunks against 32; r11f: 366,432 + 229,952 B against the 256 KiB ceiling), and the coordinator
+chose a second package per room (10-15). Heap 4 is the same either way (both files are resident while the room is open).
+
+- Disc data: the room keeps its own `dc/native/r<room>/registry.re4nmr`; Ashley's package is
+  `dc/native/r<room>/partner.re4nmr` (229,952 B, heap-4 cell 229,984 B; the r112 / r118 / r11f payloads are identical to
+  r111's apart from the header room). r117 has no room package, so her package stays `registry.re4nmr` there.
+- Loader (coarse_actor_registry_pack.inc, RE4DC_NMR_PARTNER): both files are read and validated before anything is
+  published. pack_validate takes a PackBase (the room package's counts) and places the partner's records after the room
+  package's; indices inside a file stay file-relative (format unchanged), and the run-time cross references are made
+  absolute (descriptor appearance / first chunk, chunk texture / geometry / mask runs, role appearance). Texture keys stay
+  unique across both files. One view; two heap-4 cells (the room cell holds both skin arenas, one contiguous arena);
+  registry_gview reads a geometry from its own package. A room without registry.re4nmr publishes the partner alone; a
+  partner that fails validation is refused alone ("NMRPACK partner refuse"), the room package stays published.
+- Capacities under the knob: chunks 48 (r112: 14 + 21), fact models 20 (r112: 8 + 10). Everything else fits.
+- Certificate fix (route builds): ROUTE_CH22's TEV-group rule named only Luis (id 4), so Ashley (id 3, group 1) failed
+  semantics clause 28 on every chapter 2 build. With PS2_ASHLEY both partners take group 1 (coarse_actor_material.inc).
+- Host check: `tools/d367/ps2cast/partner_pack_test.py <game> <out> <room> <room package|-> <partner>` builds the target
+  validator with the partner flags; all seven rooms pass (r111 r112 r113 r117 r118 r11c r11f, route flags CH22 + CH23,
+  bones 96, immutable alias).
+- Specs: model-registry/ps2-ashley-r112.json, -r118.json, -r11f.json (ashley_rooms.py).
+
+Run time (Flycast, MODELLED; test-only tree test/ps2cast-ch2 = test/alivecap-ch2-1015 eb6413b6 + this lane; route recipe
+of the ch22 lane's cxac1 + PS2_CAST_MERCHANT=1 PS2_ASHLEY=2 PS2_ASHLEY_ROOMS=1 ACTOR_TRANSACTION_DIAG=1; data ch22
+route-v6 + ps2lib Ashley packages + the texture-prepared em18.drs; one 55 s warp run per room, status 3 0x04000000):
+- r112: room package + partner open (heap 4 7,569,152 -> 7,215,968: both cells 352,968 B); Ashley AND the merchant
+  admitted on every drawn frame (ATX ev 16/18 only; NMRS no declines), TEX_CHECK 0, LEON-GC 0, no HALT / FAULT. The
+  merchant needed the texture-prepared em18.drs (route-v6 carries the untreated one: ATX_INFO why=6) and
+  PS2_CAST_MERCHANT=1 (in the test 12 recipe already).
+- r117: Ashley admitted (her package alone). TEX_CHECK shows 3 lines for e1cd6919-a1b4d41c (missing from the route data);
+  the knob-off control on the same data shows the same key plus 78 VRAM-budget / upload lines, so this is route data,
+  not this change (owner: chapter 2 route data / VRAM).
+- r118, r111, r113, r11c, r11f: runs blocked by the C: floor (15.3 GB < 16 GB) on 10-15; see PS2CAST-20261014.md.
+- Knob-off identity (test 11 recipe, play arm): image 412198a0, all overlays identical to 80f2f58b; with PS2_ASHLEY=2 and
+  the rooms knob off, image eafa01ab identical too.
+
 ## Ready to land
 
 - lane ps2cast-4: PS2_ANIMALS (data knob), PS2_WOLF (default off; disc needs the prepared em22.drs + r11b/r118 packages),

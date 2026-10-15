@@ -63,7 +63,12 @@ static_assert(sizeof(nmr::Weight)==16,"package weight records");
 #ifndef RE4DC_NMR_BONES
 #define RE4DC_NMR_BONES 48
 #endif
-constexpr unsigned kRegDescriptors=16,kRegChunks=32,kRegGeometry=32,kRegTextures=16,kRegBones=RE4DC_NMR_BONES;
+#if defined(RE4DC_NMR_PARTNER) && RE4DC_NMR_PARTNER
+#define RE4DC_NMR_CHUNKS 48  // PS2_ASHLEY_ROOMS: a room package + Ashley's partner package (r112: 14 + 21 chunks)
+#else
+#define RE4DC_NMR_CHUNKS 32
+#endif
+constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=32,kRegTextures=16,kRegBones=RE4DC_NMR_BONES;
 #if RE4DC_NMR_SLOTS
 // A draw-slot descriptor's source skeleton (parents are u8 with 0xff = root, so at most 255 joints): the draw-slot
 // capacity stays kRegBones (bindings, palettes, jobs); only the skeleton proof walks the source joints.
@@ -127,7 +132,16 @@ nmr::Chunk registry_geom_view(const unsigned char* geom,const unsigned char* blo
     v.stream=blob+w[11];v.weights=reinterpret_cast<const nmr::Weight*>(blob+w[12]);v.mask_geometry[0]=v.mask_geometry[1]=~0u;
     return v;
 }
+#if defined(RE4DC_NMR_PARTNER) && RE4DC_NMR_PARTNER
+// PS2_ASHLEY_ROOMS: geometries from registry_geom_base2 on are the partner package's (its own header table and blob).
+const unsigned char *registry_geom2,*registry_blob2;unsigned registry_geom_base2=~0u;
+nmr::Chunk registry_gview(unsigned g){
+    if(g<registry_geom_base2)return registry_geom_view(registry_geom,registry_blob,g);
+    nmr::Chunk v=registry_geom_view(registry_geom2,registry_blob2,g-registry_geom_base2);v.geometry=g;return v;
+}
+#else
 nmr::Chunk registry_gview(unsigned g){return registry_geom_view(registry_geom,registry_blob,g);}
+#endif
 Re4dcUiImage registry_mask_image(unsigned t) {
     return Re4dcUiImage{&registry_tokens[t],nullptr,registry.textures[t].width,registry.textures[t].height,0,0xffffffffU,0};
 }

@@ -117,7 +117,12 @@ inline bool room_colour_scale(unsigned scale,bool flat_native_look) {
 inline unsigned source_model_tev_group(const cModel* m,bool leon,bool registry) {
     // cSubLuis::init uses group 1. pSubEm is player.h's canonical pSUB alias;
     // registry_model and frame membership have already proved this descriptor.
+#if defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY
+    // PS2_ASHLEY on route builds: the partner is Luis (id 4) or Ashley (id 3, pl_ashley.cpp TevScaleGroup = 1).
+    return registry && m && m==(const cModel*)pSubEm && (m->id==4 || m->id==3) ? 1u : (leon?1u:0u);
+#else
     return registry && m && m==(const cModel*)pSubEm && m->id==4 ? 1u : (leon?1u:0u);
+#endif
 }
 #endif
 #if RE4DC_NATIVE_MODEL_REGISTRY && defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY && !(defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22)

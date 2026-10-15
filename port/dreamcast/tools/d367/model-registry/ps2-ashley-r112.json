@@ -1,0 +1,68 @@
+{
+ "registry": "ps2-ashley-r112",
+ "about": "PS2_ASHLEY (lane ps2cast 2026-10-14, default off; render only): Ashley (pl11, cSubAshley, pSUB id 3) on her PS2 model. ps2_ashley.py conversion: 141-joint GC skeleton kept for the full source proof, 68 draw slots, PS2 cloth weights moved onto the GC cloth links the source solver already moves (no second solver, no RNG). Seven sections in cSubAshley::modelSet order: body 4/5, head 7/0xB, hair 6/8, extra 9/5, extra 0xA/5, right hand 0xC/5, left hand 0xF/5 (ashley11); ashley11-h1 / -h3: the setHand(1) / setHand(3) hand pairs (the chunks they share are stored once). Room package r112 (lane ps2cast 2026-10-15, offline): Ashley follows Leon here in chapter 2.",
+ "cast_dir": "/root/probe/lanes-20261014/ps2cast/ashley/regcast-ashley-ch2",
+ "revision_overlay": "ps2-ashley",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "descriptors": [
+  {
+   "name": "ashley11",
+   "archive": "pl11",
+   "model_id": "0x3",
+   "source_types": [],
+   "module": "src/pl11/pl11.cpp cSubAshley::modelSet: body 4/5, head 7/0xB (subShape), hair 6/8, extras 9/5 and 0xA/5, setHand(0) 0xC/5 + 0xF/5",
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261014/ps2cast/ashley/mask-head",
+    "2": "/root/probe/lanes-20261014/ps2cast/ashley/mask-hair",
+    "3": "/root/probe/lanes-20261014/ps2cast/ashley/mask-extra9"
+   },
+   "notes": "bump: the DC source path never draws the GC bump stage (needs NATIVE_MODEL_REGISTRY_DROP_BUMP). mask runs: head (1) and hair (2) GC-baked eyelash/hair cards (ps2_mask_runs.py), extra 9 (3) the PS2 hair cards with the PS2 TPL 8 alpha (ps2_mask_runs.py --atlas-rgba)."
+  },
+  {
+   "name": "ashley11-h1",
+   "archive": "pl11",
+   "model_id": "0x3",
+   "source_types": [],
+   "module": "src/pl11/pl11.cpp cSubAshley::modelSet: body 4/5, head 7/0xB (subShape), hair 6/8, extras 9/5 and 0xA/5, hands 0xD/5 + 0x10/5 (setHand(1))",
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261014/ps2cast/ashley/mask-h1-head",
+    "2": "/root/probe/lanes-20261014/ps2cast/ashley/mask-h1-hair",
+    "3": "/root/probe/lanes-20261014/ps2cast/ashley/mask-h1-extra9"
+   },
+   "notes": "bump: the DC source path never draws the GC bump stage (needs NATIVE_MODEL_REGISTRY_DROP_BUMP). mask runs: head (1) and hair (2) GC-baked eyelash/hair cards (ps2_mask_runs.py), extra 9 (3) the PS2 hair cards with the PS2 TPL 8 alpha (ps2_mask_runs.py --atlas-rgba)."
+  },
+  {
+   "name": "ashley11-h3",
+   "archive": "pl11",
+   "model_id": "0x3",
+   "source_types": [],
+   "module": "src/pl11/pl11.cpp cSubAshley::modelSet: body 4/5, head 7/0xB (subShape), hair 6/8, extras 9/5 and 0xA/5, hands 0xE/5 + 0xF/5 (setHand(3))",
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261014/ps2cast/ashley/mask-h3-head",
+    "2": "/root/probe/lanes-20261014/ps2cast/ashley/mask-h3-hair",
+    "3": "/root/probe/lanes-20261014/ps2cast/ashley/mask-h3-extra9"
+   },
+   "notes": "bump: the DC source path never draws the GC bump stage (needs NATIVE_MODEL_REGISTRY_DROP_BUMP). mask runs: head (1) and hair (2) GC-baked eyelash/hair cards (ps2_mask_runs.py), extra 9 (3) the PS2 hair cards with the PS2 TPL 8 alpha (ps2_mask_runs.py --atlas-rgba)."
+  }
+ ],
+ "room_packages": {
+  "112": {
+   "descriptors": [
+    "ashley11",
+    "ashley11-h1",
+    "ashley11-h3"
+   ],
+   "evidence": "stage route: Ashley follows (warp presets r112-entry / r111-entry / r11c-entry; r11f the chapter 2-3 hall)"
+  }
+ }
+}

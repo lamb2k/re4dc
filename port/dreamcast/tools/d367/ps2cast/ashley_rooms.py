@@ -3,8 +3,9 @@ Copies ashley_package.sh's r117 cast (<A>/regcast-ashley11) to <A>/regcast-ashle
 every room list, and writes model-registry/ps2-ashley-r<room>.json per room (the r117 spec, same three descriptors). Then:
   model_registry.py model-registry/ps2-ashley-r<room>.json <W>/reg-r<room> --tree <T> --package-room <room> --pack-bones 64
       --wide-identity --source-normal-length --ch23-facts --slots
-Rooms that already have a package (r112 merchant, r118 em17 + wolf, r11f Mendez) need a merged package: not built here
-(capacity: chunks / the 256 KiB ceiling; see docs/lanes/ps2cast.md)."""
+Every room but r117 already has a room package (r111 / r113 crows, r112 merchant, r118 em17 + wolf, r11c Luis, r11f
+Mendez): Ashley's package goes on the disc as dc/native/r<room>/partner.re4nmr (PS2_ASHLEY_ROOMS=1, a second package per
+room; docs/lanes/ps2cast.md)."""
 import glob, json, os, shutil, sys
 A = '/root/probe/lanes-20261014/ps2cast/ashley'
 T = '/root/probe/lanes-20261014/ps2cast/t11tree/port/dreamcast/tools/d367/model-registry'

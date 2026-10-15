@@ -405,6 +405,24 @@ endif
 #              the bump drop in the certificate (coarse_actor_material.inc), and the slot palettes' bind (one inverse
 #              per SOURCE joint: slot b uses its joint's; coarse_actor_owner_registry.inc registry_palettes).
 PS2_ASHLEY ?= 0
+# PS2_ASHLEY_ROOMS=1 (lane ps2cast 2026-10-15; default 0; render only; needs PS2_ASHLEY=1|2): Ashley in the chapter 2-2 /
+#              2-3 rooms whose own registry package already carries other PS2 actors (r111 / r113 crows, r112 merchant,
+#              r118 Ganados + wolf, r11c Luis, r11f Mendez). Her package is the room's SECOND package,
+#              dc/native/r<room>/partner.re4nmr, read and validated with the room's registry.re4nmr before either is
+#              published (RE4DC_NMR_PARTNER: pack_validate places the partner's records after the room package's; one
+#              view; two heap-4 cells, the room cell holding both skin arenas). A room without registry.re4nmr publishes
+#              the partner alone; a refused partner leaves the room package published. Chunk capacity 48 (r112: 14 + 21).
+#              Without the knob a partner.re4nmr on the disc is never opened.
+PS2_ASHLEY_ROOMS ?= 0
+ifeq ($(filter $(PS2_ASHLEY_ROOMS),0 1),)
+$(error PS2_ASHLEY_ROOMS must be 0 or 1)
+endif
+ifeq ($(PS2_ASHLEY_ROOMS),1)
+ifeq ($(PS2_ASHLEY),0)
+$(error PS2_ASHLEY_ROOMS=1 needs PS2_ASHLEY=1 or 2)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_PARTNER=1
+endif
 ifeq ($(filter $(PS2_ASHLEY),0 1 2),)
 $(error PS2_ASHLEY must be 0, 1 or 2)
 endif
