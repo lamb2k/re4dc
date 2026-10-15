@@ -253,9 +253,9 @@ unsigned pm_gan(const Pmc& m)   // Ganados drawn per picture (the path that drew
 constexpr int kSet = 9;
 const char* const kSetName[kSet] = {"AS SHIPPED", "HALF GANADO", "NO GANADOS", "WORLD 18.8M", "NO LEON",
                                     "WORLD 12.5M", "NO WORLD", "NO EFFECTS", "NO WORLD+FX"};
-// the rows of each sweep, in order (user 2026-10-15: part 1's cross sweep without the two effect rows, which come with
-// part 2's farm sweep)
-const signed char kSweepSet[kSweeps][kSet + 1] = {{0, 1, 2, 4, 3, 5, 6, -1, -1, -1}, {0, 1, 2, 4, 3, 5, 6, 7, 8, -1}};
+// the rows of each sweep, in order (user 2026-10-15: both sweeps draw all nine; the cross's world and effects on / off
+// costs are the main question)
+const signed char kSweepSet[kSweeps][kSet + 1] = {{0, 1, 2, 4, 3, 5, 6, 7, 8, -1}, {0, 1, 2, 4, 3, 5, 6, 7, 8, -1}};
 int sweep_n(int s)
 {
     int n = 0;
