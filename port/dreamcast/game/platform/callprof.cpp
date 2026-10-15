@@ -8,10 +8,11 @@
 #include <cstdint>
 extern "C" void re4dc_log(const char*,...);
 namespace {
-constexpr unsigned kKinds=13;
-const char* const kNames[kKinds]={"PSMTXConcat","PSMTXInverse","PSMTXMultVec","PSMTXMultVecSR","RotVector","sinf","cosf","acosf","atan2f","sqrtf","memcmp","re4dc_sincosf","PSMTXRotAxisRad"};
+constexpr unsigned kKinds=16;
+const char* const kNames[kKinds]={"PSMTXConcat","PSMTXInverse","PSMTXMultVec","PSMTXMultVecSR","RotVector","sinf","cosf","acosf","atan2f","sqrtf","memcmp","re4dc_sincosf","PSMTXRotAxisRad","PSMTXRotRad","RotMatrix","low_RotMatrix"};
 struct Row { std::uintptr_t ra; unsigned calls; };
-constexpr unsigned kRows=64;
+constexpr unsigned kRows=RE4DC_CALLPROF>=2?256:64;  // CALLPROF=2 (lane approx): 256 slots, top 48 rows
+constexpr unsigned kTop=RE4DC_CALLPROF>=2?48:10;
 Row rows[kKinds][kRows];
 unsigned lost[kKinds];
 struct PartRow { unsigned key; unsigned parts; };
@@ -39,15 +40,15 @@ extern "C" void re4dc_callprof_part_key(unsigned path,unsigned key){
 extern "C" void re4dc_callprof_log(unsigned frame,unsigned frames){
     logging=true;
     for(unsigned k=0;k<kKinds;++k){
-        Row top[10]{};
+        Row top[kTop]{};
         unsigned total=0;
         for(const Row& r:rows[k]){
             if(!r.ra)continue;
             total+=r.calls;
-            for(unsigned i=0;i<10;++i)if(r.calls>top[i].calls){for(unsigned j=9;j>i;--j)top[j]=top[j-1];top[i]=r;break;}
+            for(unsigned i=0;i<kTop;++i)if(r.calls>top[i].calls){for(unsigned j=kTop-1;j>i;--j)top[j]=top[j-1];top[i]=r;break;}
         }
         if(total)re4dc_log("CALLPROF frame=%u fn=%s total=%u per_frame=%u lost=%u\n",frame,kNames[k],total,total/frames,lost[k]);
-        for(unsigned i=0;i<10 && top[i].ra;++i)
+        for(unsigned i=0;i<kTop && top[i].ra;++i)
             re4dc_log("CALLPROF frame=%u fn=%s rank=%u ra=%08x calls=%u per_frame=%u\n",frame,kNames[k],i,unsigned(top[i].ra),
                 top[i].calls,top[i].calls/frames);
         for(Row& r:rows[k])r={};
@@ -601,4 +602,134 @@ ___wrap_PSMTXRotAxisRad:
 2:      .long ___real_PSMTXRotAxisRad
         .popsection
 )ASM");
+#if RE4DC_CALLPROF >= 2
+// CALLPROF=2 (lane approx): the callers of re4dc_sincosf's callers.
+asm(R"ASM(
+        .pushsection .text
+        .global ___wrap_PSMTXRotRad
+        .type ___wrap_PSMTXRotRad, @function
+        .align 2
+___wrap_PSMTXRotRad:
+        mov.l r4,@-r15
+        mov.l r5,@-r15
+        mov.l r6,@-r15
+        mov.l r7,@-r15
+        fmov.s fr4,@-r15
+        fmov.s fr5,@-r15
+        fmov.s fr6,@-r15
+        fmov.s fr7,@-r15
+        fmov.s fr8,@-r15
+        fmov.s fr9,@-r15
+        fmov.s fr10,@-r15
+        fmov.s fr11,@-r15
+        sts.l pr,@-r15
+        sts pr,r5
+        mov #13,r4
+        mov.l 1f,r0
+        jsr @r0
+        nop
+        lds.l @r15+,pr
+        fmov.s @r15+,fr11
+        fmov.s @r15+,fr10
+        fmov.s @r15+,fr9
+        fmov.s @r15+,fr8
+        fmov.s @r15+,fr7
+        fmov.s @r15+,fr6
+        fmov.s @r15+,fr5
+        fmov.s @r15+,fr4
+        mov.l @r15+,r7
+        mov.l @r15+,r6
+        mov.l @r15+,r5
+        mov.l @r15+,r4
+        mov.l 2f,r0
+        jmp @r0
+        nop
+        .align 2
+1:      .long _re4dc_callprof_note
+2:      .long ___real_PSMTXRotRad
+        .global ___wrap__Z9RotMatrixPA4_fP3Vec
+        .type ___wrap__Z9RotMatrixPA4_fP3Vec, @function
+        .align 2
+___wrap__Z9RotMatrixPA4_fP3Vec:
+        mov.l r4,@-r15
+        mov.l r5,@-r15
+        mov.l r6,@-r15
+        mov.l r7,@-r15
+        fmov.s fr4,@-r15
+        fmov.s fr5,@-r15
+        fmov.s fr6,@-r15
+        fmov.s fr7,@-r15
+        fmov.s fr8,@-r15
+        fmov.s fr9,@-r15
+        fmov.s fr10,@-r15
+        fmov.s fr11,@-r15
+        sts.l pr,@-r15
+        sts pr,r5
+        mov #14,r4
+        mov.l 1f,r0
+        jsr @r0
+        nop
+        lds.l @r15+,pr
+        fmov.s @r15+,fr11
+        fmov.s @r15+,fr10
+        fmov.s @r15+,fr9
+        fmov.s @r15+,fr8
+        fmov.s @r15+,fr7
+        fmov.s @r15+,fr6
+        fmov.s @r15+,fr5
+        fmov.s @r15+,fr4
+        mov.l @r15+,r7
+        mov.l @r15+,r6
+        mov.l @r15+,r5
+        mov.l @r15+,r4
+        mov.l 2f,r0
+        jmp @r0
+        nop
+        .align 2
+1:      .long _re4dc_callprof_note
+2:      .long ___real__Z9RotMatrixPA4_fP3Vec
+        .global ___wrap_low_RotMatrix
+        .type ___wrap_low_RotMatrix, @function
+        .align 2
+___wrap_low_RotMatrix:
+        mov.l r4,@-r15
+        mov.l r5,@-r15
+        mov.l r6,@-r15
+        mov.l r7,@-r15
+        fmov.s fr4,@-r15
+        fmov.s fr5,@-r15
+        fmov.s fr6,@-r15
+        fmov.s fr7,@-r15
+        fmov.s fr8,@-r15
+        fmov.s fr9,@-r15
+        fmov.s fr10,@-r15
+        fmov.s fr11,@-r15
+        sts.l pr,@-r15
+        sts pr,r5
+        mov #15,r4
+        mov.l 1f,r0
+        jsr @r0
+        nop
+        lds.l @r15+,pr
+        fmov.s @r15+,fr11
+        fmov.s @r15+,fr10
+        fmov.s @r15+,fr9
+        fmov.s @r15+,fr8
+        fmov.s @r15+,fr7
+        fmov.s @r15+,fr6
+        fmov.s @r15+,fr5
+        fmov.s @r15+,fr4
+        mov.l @r15+,r7
+        mov.l @r15+,r6
+        mov.l @r15+,r5
+        mov.l @r15+,r4
+        mov.l 2f,r0
+        jmp @r0
+        nop
+        .align 2
+1:      .long _re4dc_callprof_note
+2:      .long ___real_low_RotMatrix
+        .popsection
+)ASM");
+#endif
 #endif

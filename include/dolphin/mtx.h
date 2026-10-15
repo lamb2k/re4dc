@@ -368,6 +368,20 @@ void C_QUATCompA(const Quaternion* qprev, const Quaternion* q, const Quaternion*
 #define QUATSquad       C_QUATSquad
 #define QUATCompA       C_QUATCompA
 
+// RE4DC SH4_APPROX_RENDER (port/dreamcast/game/game30.mk; lane approx 2026-10-15, after Bruceleeto's SH4ZAM
+// measurements): render-only call sites (skin palettes, modelviews, effect sprite matrices, UI) name their concat and
+// rotation through these. Off (default): the exact PS entry points, so the image is unchanged. On: SH4ZAM's XMTRX /
+// FTRV concat and FSCA sin / cos (port/dreamcast/game/platform/sh4_approx.c), not bit-exact; render only.
+#if defined(RE4DC_SH4_APPROX_RENDER) && RE4DC_SH4_APPROX_RENDER
+void re4dc_shz_MTXConcat(const Mtx a, const Mtx b, Mtx ab);
+void re4dc_shz_MTXRotRad(Mtx m, char axis, f32 rad);
+#define RE4DC_RENDER_MTXConcat re4dc_shz_MTXConcat
+#define RE4DC_RENDER_MTXRotRad re4dc_shz_MTXRotRad
+#else
+#define RE4DC_RENDER_MTXConcat PSMTXConcat
+#define RE4DC_RENDER_MTXRotRad PSMTXRotRad
+#endif
+
 #ifdef __cplusplus
 }
 #endif

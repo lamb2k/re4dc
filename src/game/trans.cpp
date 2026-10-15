@@ -2102,13 +2102,13 @@ static void invisInfoModelview(cModel* m, cModelInfo* info, ModelData* d, Mtx mv
 {
     Mtx pm;
     if (m->be_flag & 0x4000) {
-        PSMTXConcat(m->mat, (f32(*)[4]) &info->x5C, pm);
+        RE4DC_RENDER_MTXConcat(m->mat, (f32(*)[4]) &info->x5C, pm);
     } else if (d->weight_palette_num <= 1 && d->weight_ext_num <= 0xFF && !(info->be_flag & 2) && d->nParts == 1) {
-        PSMTXConcat(m->getPartsPtr(d->pHead->partsNo)->mat, (f32(*)[4]) &info->x5C, pm);
+        RE4DC_RENDER_MTXConcat(m->getPartsPtr(d->pHead->partsNo)->mat, (f32(*)[4]) &info->x5C, pm);
     } else {
-        PSMTXConcat(m->pParts->mat, (f32(*)[4]) &info->x5C, pm);
+        RE4DC_RENDER_MTXConcat(m->pParts->mat, (f32(*)[4]) &info->x5C, pm);
     }
-    PSMTXConcat(pG->Cam.v_mat, pm, mv);
+    RE4DC_RENDER_MTXConcat(pG->Cam.v_mat, pm, mv);
 }
 #if RE4DC_CROWD_INVIS_SKIP == 2
 // =2: the crowd entry the source draw just left (native_actor_fast.cpp) against the one invisReplayRender would note:
@@ -2263,12 +2263,12 @@ void calcWeightMat(cModel* m)
 
     PSMTXInverse(m->pParts->mat, inv);
     for (p = (cPartsWk*) m->pParts; p != 0; p = p->next) {
-        PSMTXConcat(inv, ((cModel*) p)->mat, tmp);
+        RE4DC_RENDER_MTXConcat(inv, ((cModel*) p)->mat, tmp);
         if (i > 0xF7) {
             pLog->err(0, 0, "commonScreenMatSub() SMAT OVERFLOW %d", i);
             break;
         }
-        PSMTXConcat(tmp, p->bindMat, pG->mtxPalette[i]);
+        RE4DC_RENDER_MTXConcat(tmp, p->bindMat, pG->mtxPalette[i]);
         i++;
     }
 }
@@ -2955,14 +2955,14 @@ void commonModelTrans(cModel* m, cModelInfo* info, Mtx viewMat, int flag)
         Mtx nrm;
         Mtx pm;
         if (m->be_flag & 0x4000) {
-            PSMTXConcat(m->mat, (f32(*)[4]) &info->x5C, pm);
+            RE4DC_RENDER_MTXConcat(m->mat, (f32(*)[4]) &info->x5C, pm);
         } else if (d->weight_palette_num <= 1 && d->weight_ext_num <= 0xFF && !(info->be_flag & 2) && d->nParts == 1) {
-            PSMTXConcat(m->getPartsPtr(d->pHead->partsNo)->mat, (f32(*)[4]) &info->x5C, pm);
+            RE4DC_RENDER_MTXConcat(m->getPartsPtr(d->pHead->partsNo)->mat, (f32(*)[4]) &info->x5C, pm);
         } else {
-            PSMTXConcat(m->pParts->mat, (f32(*)[4]) &info->x5C, pm);
+            RE4DC_RENDER_MTXConcat(m->pParts->mat, (f32(*)[4]) &info->x5C, pm);
         }
         mat0 = m->mat;
-        PSMTXConcat(viewMat, pm, mv);
+        RE4DC_RENDER_MTXConcat(viewMat, pm, mv);
 #if RE4DC_FRONT_LEAN && defined(__sh__)
         // The normal matrix only lights; a lit native mesh never reads it. 'inv' is rebuilt by
         // PSMTXScale below before its other use.
@@ -3444,13 +3444,13 @@ static void frontNativeModelTrans(cModel* m, Mtx viewMat, int dry)
         Mtx pm;
         Mtx mv;
         if (m->be_flag & 0x4000) {
-            PSMTXConcat(m->mat, (f32(*)[4]) &info->x5C, pm);
+            RE4DC_RENDER_MTXConcat(m->mat, (f32(*)[4]) &info->x5C, pm);
         } else if (d->weight_palette_num <= 1 && d->weight_ext_num <= 0xFF && !(info->be_flag & 2) && d->nParts == 1) {
-            PSMTXConcat(m->getPartsPtr(d->pHead->partsNo)->mat, (f32(*)[4]) &info->x5C, pm);
+            RE4DC_RENDER_MTXConcat(m->getPartsPtr(d->pHead->partsNo)->mat, (f32(*)[4]) &info->x5C, pm);
         } else {
-            PSMTXConcat(m->pParts->mat, (f32(*)[4]) &info->x5C, pm);
+            RE4DC_RENDER_MTXConcat(m->pParts->mat, (f32(*)[4]) &info->x5C, pm);
         }
-        PSMTXConcat(viewMat, pm, mv);
+        RE4DC_RENDER_MTXConcat(viewMat, pm, mv);
 #if RE4DC_FRONT_LEAN
         if (!g_leanRender)
 #endif
@@ -3578,11 +3578,11 @@ static int sceneryGate(cModel* m)
     Mtx mv;
     f32 projection[7];
     if (m->be_flag & 0x4000) {
-        PSMTXConcat(m->mat, (f32(*)[4]) &drawn->x5C, pm);
+        RE4DC_RENDER_MTXConcat(m->mat, (f32(*)[4]) &drawn->x5C, pm);
     } else {
-        PSMTXConcat(m->getPartsPtr(d->pHead->partsNo)->mat, (f32(*)[4]) &drawn->x5C, pm);
+        RE4DC_RENDER_MTXConcat(m->getPartsPtr(d->pHead->partsNo)->mat, (f32(*)[4]) &drawn->x5C, pm);
     }
-    PSMTXConcat(pG->Cam.v_mat, pm, mv);
+    RE4DC_RENDER_MTXConcat(pG->Cam.v_mat, pm, mv);
     GXGetProjectionv(projection);
     if (!re4dc_static_gate(m, &mv[0][0], projection, View._zfar)) {
         return 0;

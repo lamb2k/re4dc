@@ -363,7 +363,7 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
             part.flags=captured->flags[order];std::memcpy(part.mv,captured->mv[order],sizeof(part.mv));
         } else {
 #endif
-        Mtx pm,mv;PSMTXConcat(m->pParts->mat,info->mat,pm);PSMTXConcat(pG->Cam.v_mat,pm,mv);
+        Mtx pm,mv;RE4DC_RENDER_MTXConcat(m->pParts->mat,info->mat,pm);RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
         std::memcpy(part.mv,mv,sizeof(mv));
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
         }
@@ -940,18 +940,18 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
         }
 #if RE4DC_ACTOR_PROOF_LEAN == 1
         if(!lean_held) {
-            Mtx pm,mv;PSMTXConcat(m->pParts->mat,info->mat,pm);PSMTXConcat(pG->Cam.v_mat,pm,mv);
+            Mtx pm,mv;RE4DC_RENDER_MTXConcat(m->pParts->mat,info->mat,pm);RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
             if(std::memcmp(r->part[order].mv,mv,sizeof(mv))){actor_release(*r);actor_fail();return -1;}
         }
 #elif RE4DC_ACTOR_PROOF_LEAN == 2
         {
-            Mtx pm,mv;PSMTXConcat(m->pParts->mat,info->mat,pm);PSMTXConcat(pG->Cam.v_mat,pm,mv);
+            Mtx pm,mv;RE4DC_RENDER_MTXConcat(m->pParts->mat,info->mat,pm);RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
             const bool same=!std::memcmp(r->part[order].mv,mv,sizeof(mv));
             if(lean_held){++actor_lean_c.mv;if(!same)++actor_lean_c.mv_bad;}
             if(!same){actor_release(*r);actor_fail();return -1;}
         }
 #else
-        Mtx pm,mv;PSMTXConcat(m->pParts->mat,info->mat,pm);PSMTXConcat(pG->Cam.v_mat,pm,mv);
+        Mtx pm,mv;RE4DC_RENDER_MTXConcat(m->pParts->mat,info->mat,pm);RE4DC_RENDER_MTXConcat(pG->Cam.v_mat,pm,mv);
         if(std::memcmp(r->part[order].mv,mv,sizeof(mv))){actor_release(*r);actor_fail();return -1;}
 #endif
         ++order;

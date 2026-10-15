@@ -2163,7 +2163,7 @@ void EspCommonTrans(cEsp* esp)
             esp->m_Mat[1][3] = -(oy * sy);
         }
         low_RotMatrix(m, &esp->m_Ang);
-        PSMTXConcat(m, esp->m_Mat, esp->m_Mat);
+        RE4DC_RENDER_MTXConcat(m, esp->m_Mat, esp->m_Mat);
         esp->m_Mat[0][3] += esp->m_Pos.x;
         esp->m_Mat[1][3] += esp->m_Pos.y;
         esp->m_Mat[2][3] += esp->m_Pos.z;
@@ -2195,9 +2195,9 @@ void EspCommonTrans(cEsp* esp)
             esp->m_Mat[1][1] = -sy;
             esp->m_Mat[1][3] = -(oy * sy);
         }
-        PSMTXRotRad(m, 'z', esp->m_Ang.z);
-        PSMTXConcat(m, esp->m_Mat, esp->m_Mat);
-        PSMTXConcat(pG->Cam.v_mat, esp->parent->mat, m2);
+        RE4DC_RENDER_MTXRotRad(m, 'z', esp->m_Ang.z);
+        RE4DC_RENDER_MTXConcat(m, esp->m_Mat, esp->m_Mat);
+        RE4DC_RENDER_MTXConcat(pG->Cam.v_mat, esp->parent->mat, m2);
         PSMTXMultVec(m2, &esp->m_Pos, &p);
         esp->m_Mat[0][3] += p.x;
         esp->m_Mat[1][3] += p.y;
@@ -2229,17 +2229,17 @@ void EspCommonTrans(cEsp* esp)
             esp->m_Mat[1][3] = -(oy * sy);
         }
         low_RotMatrix(m, &esp->m_Ang);
-        PSMTXConcat(m, esp->m_Mat, esp->m_Mat);
+        RE4DC_RENDER_MTXConcat(m, esp->m_Mat, esp->m_Mat);
         if (esp->m_Tool_flg & 0x80000) {
             Mtx m3;
-            PSMTXRotRad(m3, 'y', EspGetCameraPan() * (3.1415927f / 180.0f));
-            PSMTXConcat(m3, esp->m_Mat, esp->m_Mat);
+            RE4DC_RENDER_MTXRotRad(m3, 'y', EspGetCameraPan() * (3.1415927f / 180.0f));
+            RE4DC_RENDER_MTXConcat(m3, esp->m_Mat, esp->m_Mat);
         }
         esp->m_Mat[0][3] += esp->m_Pos.x;
         esp->m_Mat[1][3] += esp->m_Pos.y;
         esp->m_Mat[2][3] += esp->m_Pos.z;
-        PSMTXConcat(esp->parent->mat, esp->m_Mat, esp->m_Mat);
-        PSMTXConcat(pG->Cam.v_mat, esp->m_Mat, esp->m_Mat);
+        RE4DC_RENDER_MTXConcat(esp->parent->mat, esp->m_Mat, esp->m_Mat);
+        RE4DC_RENDER_MTXConcat(pG->Cam.v_mat, esp->m_Mat, esp->m_Mat);
     }
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
     // Eligible (tested above): the native sprite is the only output. The normal matrix (read by no sprite),
