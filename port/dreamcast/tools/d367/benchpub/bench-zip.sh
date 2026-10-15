@@ -15,14 +15,16 @@ D=$K/disc-$L${FIXSET:+-s${FIXSET// /}}   # FIXSET: as bench-package.sh (a disc w
 P=${P:-"/mnt/c/Game Dev/Emulators/RE4DC-Benchmark-v2"}
 [ $(wc -l < $O/stack.txt) -le 1 ] || { echo "out-$L was built from a dirty tree"; cat $O/stack.txt; exit 1; }
 SHA=$(head -1 $O/stack.txt | cut -c1-8)
-grep -qx "BENCH_ID=$SHA" <(tr ' ' '\n' < $O/resolved-knobs.txt) || { echo "BENCH_ID is not the source sha $SHA"; exit 1; }
-Z=RE4DC-Benchmark-NOT-THE-GAME-$SHA-GDEMU.zip
+# BENCH_ID = the source sha, or <sha>-<arm label> for a variant arm (e.g. 1234abcd-ZAMR); the zip and README carry it
+BID=$(tr ' ' '\n' < $O/resolved-knobs.txt | sed -n 's/^BENCH_ID=//p' | tail -1)
+case "$BID" in "$SHA"|"$SHA"-*) ;; *) echo "BENCH_ID $BID is not the source sha $SHA (or <sha>-<label>)"; exit 1;; esac
+Z=RE4DC-Benchmark-NOT-THE-GAME-$BID-GDEMU.zip
 GATED=${GATED:?GATED=<track03 sha256 of the gated image>}
 T3=$(cd $D/gdemu && sha256sum track03.bin | cut -c1-64)
 [ "$T3" = "$GATED" ] || { echo "staged track03 $T3 is not the gated image $GATED" >&2; exit 1; }
 echo "staged image = gated image: track03 $T3"
 S=$K/zip-$L; rm -rf $S; mkdir -p $S
-python3 - "$here/README-package.txt" "$D/fix" "$SHA" > $S/README.txt <<'PY'
+python3 - "$here/README-package.txt" "$D/fix" "$BID" > $S/README.txt <<'PY'
 import sys, os, re
 src, fix, sha = sys.argv[1:4]
 rows = []
