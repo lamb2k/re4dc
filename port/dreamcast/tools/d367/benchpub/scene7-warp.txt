@@ -1,11 +1,12 @@
 name bench-r103-sweep
-# Benchmark disc, scene 7 = /cd/dc/bench7.txt: the r103 farm geometry sweep. Scene 4's fixture; at room frame 300 (10 s)
-# the game logic freezes (5 Ganados drawn at the far end of the view: Flycast probes 150 / 300 alike, 31.5k vertices as
-# shipped vs 26.6k without them) and the view is drawn in all nine ways, 6.5 s each.
+# Benchmark disc, scene 7 = /cd/dc/bench7.txt: the r103 farm geometry sweep. Scene 4's fixture; at room frame 1200 (40 s;
+# scene 4's end state, identical in every run: from the soft reset Leon's position at room frame 300 differed between
+# runs) the game logic freezes with the Ganados at the far end of the view (Flycast: 5 drawn at room frame 300, 31.5k
+# vertices as shipped vs 26.6k without them) and the view is drawn in all nine ways, 6.5 s each.
 room 0x103
 pos 7500 38 -400
 ang -2.30
 inv default
 god
 alivelog 150
-bench 7 300 300 R103 FARM
+bench 7 1200 1200 R103 FARM

@@ -1103,15 +1103,62 @@ static int invisSkip(cModel* m, int ot, int ret)
 // previous iteration's OT after the next tick's logic, when a listed unit may have been freed or re-linked (console
 // fault 2026-10-15, 03a4813a: u->pNext read from a stale unit in BenchActorDraw). It compares a model's address
 // against the last two snapshots by value only (the newest that holds it gives its place) and never dereferences them.
+// While the sub screen window is swapped in (a radio call, the inventory: roomListsSwapped) the room's em works are
+// sub screen bytes and EmMgr.pAlive is no list: no snapshot then (the game skips its own walks the same way; its
+// actors are hidden by the Disp_flg bits meanwhile). Console faults 2026-10-15 (03a4813a in BenchActorDraw, c12f790a
+// here, both at the r100 radio call: a "node" 0x4028e0c3, its pNext read at the odd 0x4028e0cb). Every step is
+// also checked before it is followed (4-aligned, in main RAM, at most kBenchSnap hops); a rejected pointer ends the
+// walk and is logged. While swapped the same checked walk runs once per swap as a probe (no snapshot kept) and logs
+// the first pointer it rejects: the evidence that the swapped bytes are no list (Flycast performs odd reads silently).
 namespace {
 constexpr unsigned kBenchSnap = 256;
 const void* g_benchSnap[2][kBenchSnap];
-unsigned g_benchSnapN[2], g_benchSnapI;
-void benchAliveSnapshot()
+unsigned g_benchSnapN[2], g_benchSnapI, g_benchSwapSkips, g_benchRejects;
+bool g_benchSwapped;
+inline bool benchUnitPtrOk(const void* p)
 {
-    const unsigned k = g_benchSnapI ^ 1u;
+    const uintptr_t a = (uintptr_t) p;
+    return !(a & 3u) && (a & 0x1FFFFFFFu) >= 0x0C000000u && (a & 0x1FFFFFFFu) < 0x0D000000u - 0x40u;
+}
+// The checked walk: fills out (when given) and returns the units seen; *bad = the pointer that ended it, if rejected.
+unsigned benchCheckedWalk(const void** out, const void** bad)
+{
     unsigned n = 0;
-    for (const cUnit* u = EmMgr.pAlive; u && n < kBenchSnap; u = u->pNext) g_benchSnap[k][n++] = u;
+    *bad = nullptr;
+    const cUnit* u = EmMgr.pAlive;
+    while (u && n < kBenchSnap) {
+        if (!benchUnitPtrOk(u)) { *bad = u; break; }
+        if (out) out[n] = u;
+        ++n;
+        u = u->pNext;
+    }
+    return n;
+}
+void benchAliveSnapshot(int swapped)
+{
+    const void* bad = nullptr;
+    if (swapped) {
+        ++g_benchSwapSkips;
+        if (!g_benchSwapped) {   // first Trans of this swap: the probe walk (nothing kept), then no more walks
+            g_benchSwapped = true;
+            const unsigned n = benchCheckedWalk(nullptr, &bad);
+            re4dc_log("bench: alive snapshot skipped: sub screen window swapped (em list %p; checked probe: %u hops, "
+                      "%s %p; skips so far %u)\n", (void*) EmMgr.pAlive, n, bad ? "rejected" : "ended at", bad,
+                      g_benchSwapSkips);
+        }
+        const unsigned k = g_benchSnapI ^ 1u;
+        g_benchSnapN[k] = 0;
+        g_benchSnapI = k;
+        return;
+    }
+    if (g_benchSwapped) {
+        g_benchSwapped = false;
+        re4dc_log("bench: alive snapshot resumed after the sub screen (%u Trans skipped)\n", g_benchSwapSkips);
+    }
+    const unsigned k = g_benchSnapI ^ 1u;
+    const unsigned n = benchCheckedWalk(g_benchSnap[k], &bad);
+    if (bad && g_benchRejects++ < 8)
+        re4dc_log("bench: alive snapshot: pointer %p rejected after %u units (list %p)\n", bad, n, (void*) EmMgr.pAlive);
     g_benchSnapN[k] = n;
     g_benchSnapI = k;
 }
@@ -1138,7 +1185,7 @@ void Trans()
     const int roomSwapped = 0;
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
-    benchAliveSnapshot();
+    benchAliveSnapshot(roomSwapped);   // never while the sub screen window is swapped in
 #endif
 #if defined(RE4DC_CROWD_INVIS_SKIP) && RE4DC_CROWD_INVIS_SKIP
     invisTransBegin();

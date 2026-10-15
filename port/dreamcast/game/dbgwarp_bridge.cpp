@@ -621,8 +621,15 @@ void god_alert_poll()
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 // BENCHMARK: the scene's end state (the determinism check compares these lines between runs): Leon, the Ganados of
 // the rooms' count range (model ids 0x10..0x20) with position, hp and flags, folded into one hash.
+extern "C" int re4dc_ss_ui_order() __attribute__((weak));   // sscrn_bridge.cpp: 1 while the sub screen window is swapped
 void bench_state_log(unsigned frame)
 {
+    // the room's em works are sub screen bytes while the window is swapped (a radio call): no walk then
+    if (re4dc_ss_ui_order && re4dc_ss_ui_order()) {
+        re4dc_log("bench: state scene %d room %03x room_frame %u: not taken, the sub screen window is swapped\n",
+                  re4dc_bench_scene_no(), (unsigned) pG->room_id, frame);
+        return;
+    }
     unsigned h = 2166136261u;
     int alive = 0, listed = 0;
     for (int id = 0x10; id <= 0x20; ++id) {
