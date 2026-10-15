@@ -15,7 +15,7 @@
 extern "C" unsigned re4dc_dbgslot_pad(unsigned buttons);  // dbgslot_bridge.cpp
 #endif
 #if RE4DC_DBG_WARP
-extern "C" void re4dc_warp_pad(unsigned short* buttons, signed char* stickY);  // dbgwarp_bridge.cpp
+extern "C" void re4dc_warp_pad(unsigned short* buttons, signed char* stickX, signed char* stickY);  // dbgwarp_bridge.cpp
 #endif
 
 typedef signed char s8;
@@ -648,7 +648,7 @@ u32 PADRead(PADStatus* status)
         p->triggerRight = mapped.triggerRight;
 #if RE4DC_DBG_WARP
         if (i == 0) {
-            re4dc_warp_pad(&p->button, &p->stickY);  // test warp rig: boot card screen, door test
+            re4dc_warp_pad(&p->button, &p->stickX, &p->stickY);  // test warp rig: boot card screen, door test
             // A warp `act` mask with R (0x0020) also gives the analog trigger the aim reads.
             if ((p->button & PAD_TRIGGER_R) && !p->triggerRight) p->triggerRight = 0xC0;
         }

@@ -7,8 +7,14 @@
 #if RE4DC_PS2_LEON
 // ps2leon.mk PS2_LEON: the arm's hair as one owned run per hair material it uses (A: 1, B: 2; tools/d367/ps2leon
 // pack_arm.py, restripified as CHARBAKE_HAIR's runs), the leon_hair_runs.h API; its palette_count is chunk 7's.
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+// LEON_LOD=1: the hair run row is filled from the loaded rung (lod_pack.py derive: no hair arrays in the image).
+#include "ps2leon_hair_runs_lod.h"
+#define RE4DC_LEON_HAIR_PALETTES leon_lod::hair_palettes
+#else
 #include "ps2leon_hair_runs.h"
 #define RE4DC_LEON_HAIR_PALETTES leon_hair_runs::palette_count
+#endif
 // The plans declare only the hair materials the runs draw (the transaction refuses a declared material no run uses):
 // A draws all its hair with hair colour 0 (material 1, as the PS2 does), B with both colours (materials 1 and 2).
 static_assert(leon_hair_runs::material_mask==2u || leon_hair_runs::material_mask==6u,
@@ -83,6 +89,30 @@ inline unsigned leon_hand_key(unsigned costume,int right,int left) {
 #define RE4DC_LEON_STD_PAL(r) leon_hand_pack::std_pal(r)
 #endif
 #define RE4DC_LEON_HAND_ANY (RE4DC_LEON_HAND_TABLE || RE4DC_LEON_HAND_PACK)
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+#if !RE4DC_LEON_HAND_PACK || !RE4DC_PS2_LEON
+#error LEON_LOD needs PS2_LEON=1 and LEON_HAND_PACK=1
+#endif
+#include "coarse_actor_leon_lod.inc" // LEON_LOD: Leon's mesh rung from dc/native/pl00/leon_lod.re4lp
+// The owner inputs, plan bytes and hair run arrays of the loaded rung (roles 5 / 6 stay the hand pack's).
+#define RE4DC_LEON_ROLE_INPUT(r,prefix) leon_lod::input[r]
+#define RE4DC_LEON_PLAN_PAL leon_lod::plan_palette_bytes
+#define RE4DC_LEON_PLAN_WS leon_lod::plan_workspace_bytes
+#define RE4DC_PL08_PLAN_PAL leon_lod::pl08_plan_palette_bytes
+#define RE4DC_PL08_PLAN_WS leon_lod::pl08_plan_workspace_bytes
+#define RE4DC_LEON_HAIR_UV_DATA leon_lod::hair_uv
+#define RE4DC_LEON_HAIR_UV_SIZE leon_lod::hair_uv_bytes
+#define RE4DC_LEON_LOD_READY() leon_lod::ready()
+#else
+#define RE4DC_LEON_ROLE_INPUT(r,prefix) RE4DC_OWNER_INPUT(leon4k,prefix,leon4k::chunks[r],119)
+#define RE4DC_LEON_PLAN_PAL leon4k::plan_palette_bytes
+#define RE4DC_LEON_PLAN_WS leon4k::plan_workspace_bytes
+#define RE4DC_PL08_PLAN_PAL leon4k::pl08_plan_palette_bytes
+#define RE4DC_PL08_PLAN_WS leon4k::pl08_plan_workspace_bytes
+#define RE4DC_LEON_HAIR_UV_DATA leon_hair_runs::uv
+#define RE4DC_LEON_HAIR_UV_SIZE sizeof(leon_hair_runs::uv)
+#define RE4DC_LEON_LOD_READY() true
+#endif
 #if !RE4DC_COARSE_SOURCE_ACTORS || !RE4DC_COARSE_ONE_SUBMIT || RE4DC_COARSE_SKIN_FTRV != 1 || !RE4DC_NATIVE_ACTOR_FAST
 #error ACTOR_TRANSACTION requires the source ledger, ONE_SUBMIT and SKIN_FTRV=1 native path
 #endif
@@ -195,9 +225,9 @@ extern "C" int re4dc_actor_plan_leon(cModel* m,Re4dcActorPlan* out) {
 #if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
     if(RE4DC_WARP_LATE(RE4DC_LATE_LEON_SOURCE))return 0; // test-only old-path arm (warp_late.h 0x10)
 #endif
-    if(!m || !out || m->id || RE4DC_LEON_OT_BAD(m) || !owner_leon_bind(m))return 0;
+    if(!m || !out || m->id || RE4DC_LEON_OT_BAD(m) || !RE4DC_LEON_LOD_READY() || !owner_leon_bind(m))return 0;
     Re4dcActorPlan p{};p.count=8;p.appearance=0x100;p.image=image;p.crc=crc;p.fnv=fnv;p.palettes=owner_leon_palettes;
-#define RE4DC_LEON_OWNER(role,prefix) re4dc_actor::plan_chunk(p,role,infos[role],leon4k::chunks[role],RE4DC_OWNER_INPUT(leon4k,prefix,leon4k::chunks[role],119))
+#define RE4DC_LEON_OWNER(role,prefix) re4dc_actor::plan_chunk(p,role,infos[role],leon4k::chunks[role],RE4DC_LEON_ROLE_INPUT(role,prefix))
     RE4DC_LEON_OWNER(0,i0);RE4DC_LEON_OWNER(1,i1);RE4DC_LEON_OWNER(2,i2);RE4DC_LEON_OWNER(3,i3);
 #if RE4DC_LEON_HAND_ANY
     // LEON_HAND_DIR: roles 5 / 6 draw the PS2 hand of the current pose (leon_hand_pick); the plan bytes follow.
@@ -211,7 +241,7 @@ extern "C" int re4dc_actor_plan_leon(cModel* m,Re4dcActorPlan* out) {
     leon_cur[5]=hand5.chunk;leon_cur[6]=hand6.chunk;leon_cur_key=leon_hand_key(0,hand5.pose,hand6.pose);
     const unsigned hand_palette=leon_r32(hand5.chunk->palette_count*48u)+leon_r32(hand6.chunk->palette_count*48u)
         -leon_r32(RE4DC_LEON_STD_PAL(5)*48u)-leon_r32(RE4DC_LEON_STD_PAL(6)*48u);
-    if(p.palette_bytes!=leon4k::plan_palette_bytes+hand_palette || p.workspace_bytes!=leon4k::plan_workspace_bytes)return 0;
+    if(p.palette_bytes!=RE4DC_LEON_PLAN_PAL+hand_palette || p.workspace_bytes!=RE4DC_LEON_PLAN_WS)return 0;
 #else
     RE4DC_LEON_OWNER(4,i4);RE4DC_LEON_OWNER(5,i5);RE4DC_LEON_OWNER(6,i6);RE4DC_LEON_OWNER(7,i7);
 #endif
@@ -250,7 +280,7 @@ extern "C" int re4dc_actor_plan_leon(cModel* m,Re4dcActorPlan* out) {
     }
     for(const auto& run:leon_hair_runs::runs) {
         auto& r=p.runs[p.run_count++];r.role=7;r.material=run.material;r.immutable_asset_id=run.asset_id;r.triangles=run.triangles;
-        r.uv={leon_hair_runs::uv,sizeof(leon_hair_runs::uv)};r.stream={run.stream,run.bytes};
+        r.uv={RE4DC_LEON_HAIR_UV_DATA,RE4DC_LEON_HAIR_UV_SIZE};r.stream={run.stream,run.bytes};
     }
     if((re4dc_actor_material_runs_capability(&p)&3u)!=3u)return 0;
     *out=p;return 1;
@@ -279,7 +309,7 @@ extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p
     for(unsigned k=0;k<kHair;++k) {
         const auto& want=leon_hair_runs::runs[k];const auto& r=p->runs[7+k];
         if(r.role!=7 || r.material!=want.material || r.immutable_asset_id!=29+k || r.triangles!=want.triangles ||
-           r.uv.data!=leon_hair_runs::uv || r.uv.size!=sizeof(leon_hair_runs::uv) || r.stream.data!=want.stream || r.stream.size!=want.bytes)return 0;
+           r.uv.data!=RE4DC_LEON_HAIR_UV_DATA || r.uv.size!=RE4DC_LEON_HAIR_UV_SIZE || r.stream.data!=want.stream || r.stream.size!=want.bytes)return 0;
     }
     for(unsigned k=0;k<RE4DC_LEON_HAIR_MATERIALS;++k) {
         const auto& m=p->materials[k+1];
@@ -299,6 +329,13 @@ namespace { unsigned leon_hand_asset(unsigned pose) {return kLeonHandAsset0+pose
 // LEON_HAND_PACK: a slot change re-qualifies its role's chunk (IDs 6 / 7 hold the slot's current bytes).
 namespace leon_hand_pack { void reset_role_ids(unsigned role) {actor_immutable_chunks[role]={};} }
 #endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+// LEON_LOD: a rung load re-qualifies roles 0-4 / 7 (IDs 1..5, 8, shared by pl08's roles 2..7) and the hair run (ID 29).
+namespace leon_lod { void reset_ids() {
+    for(unsigned k=0;k<6;++k)actor_immutable_chunks[kRoles[k]]={};
+    for(const auto& run:leon_hair_runs::runs)if(run.asset_id && run.asset_id<=RE4DC_IMMUTABLE_CHUNK_COUNT)actor_immutable_chunks[run.asset_id-1]={};
+} }
+#endif
 #if RE4DC_ACTOR_PL08_PACK
 #include "coarse_actor_pl08_pack.inc" // ACTOR_PL08_PACK: the pl08-only chunks from a costume-resident heap-4 cell
 #endif
@@ -308,6 +345,9 @@ namespace leon_hand_pack { void reset_role_ids(unsigned role) {actor_immutable_c
 #include "coarse_actor_transaction.inc"
 #if RE4DC_ACTOR_PL08_PACK
 namespace { bool pl08_pack_owned_live() {return actor_owned_live;} }
+#endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+namespace leon_lod { bool owned_live() {return actor_owned_live;} }
 #endif
 #include "coarse_actor_material.inc" // actor-lifetime-r2 current-owner/material policy
 #if RE4DC_ACTOR_EARLY_COARSE

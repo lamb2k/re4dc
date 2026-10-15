@@ -78,14 +78,14 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
 #if RE4DC_ACTOR_PL08_PACK
     if(!pl08_pack.published)return 0;  // no costume package published: the whole model keeps the source path
 #endif
-    if(!m || !out || m->id || RE4DC_LEON_OT_BAD(m) || !owner_pl08_bind(m))return 0;
+    if(!m || !out || m->id || RE4DC_LEON_OT_BAD(m) || !RE4DC_LEON_LOD_READY() || !owner_pl08_bind(m))return 0;
     Re4dcActorPlan p{};p.count=9;p.appearance=0x108;p.image=pl08_image;p.crc=pl08_crc;p.fnv=pl08_fnv;p.palettes=owner_pl08_palettes;
 #if RE4DC_ACTOR_PL08_PACK
 #define RE4DC_PL08_OWN(role,prefix,k) re4dc_actor::plan_chunk(p,role,pl08_infos[role],pl08_pack_chunks[k],pl08_pack_input(k))
 #else
 #define RE4DC_PL08_OWN(role,prefix,k) re4dc_actor::plan_chunk(p,role,pl08_infos[role],leon_pl08::chunks[k],RE4DC_OWNER_INPUT(leon_pl08,prefix,leon_pl08::chunks[k],119))
 #endif
-#define RE4DC_PL08_SHARED(role,prefix) re4dc_actor::plan_chunk(p,role,pl08_infos[role],leon4k::chunks[role],RE4DC_OWNER_INPUT(leon4k,prefix,leon4k::chunks[role],119))
+#define RE4DC_PL08_SHARED(role,prefix) re4dc_actor::plan_chunk(p,role,pl08_infos[role],leon4k::chunks[role],RE4DC_LEON_ROLE_INPUT(role,prefix))
 #if RE4DC_LEON_HAND_ANY
     const LeonHandPick hand5=leon_hand_pick(5,pl08_infos[5],leon4k::chunks[5],RE4DC_LEON_STD_INPUT(5));
     const LeonHandPick hand6=leon_hand_pick(6,pl08_infos[6],leon4k::chunks[6],RE4DC_LEON_STD_INPUT(6));
@@ -108,7 +108,7 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
 #if RE4DC_PS2_LEON
     // PS2_LEON: roles 2..7 are the arm's (pl08's own 0, 1, 8 unchanged); totals precomputed in ps2leon_runtime.h.
 #if RE4DC_LEON_HAND_ANY
-    if(p.palette_bytes!=leon4k::pl08_plan_palette_bytes+hand_palette || p.workspace_bytes!=leon4k::pl08_plan_workspace_bytes)return 0;
+    if(p.palette_bytes!=RE4DC_PL08_PLAN_PAL+hand_palette || p.workspace_bytes!=RE4DC_PL08_PLAN_WS)return 0;
 #else
     if(p.palette_bytes!=leon4k::pl08_plan_palette_bytes || p.workspace_bytes!=leon4k::pl08_plan_workspace_bytes)return 0;
 #endif
@@ -135,7 +135,7 @@ extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
     }
     for(const auto& run:leon_hair_runs::runs) {
         auto& r=p.runs[p.run_count++];r.role=7;r.material=run.material;r.immutable_asset_id=run.asset_id;r.triangles=run.triangles;
-        r.uv={leon_hair_runs::uv,sizeof(leon_hair_runs::uv)};r.stream={run.stream,run.bytes};
+        r.uv={RE4DC_LEON_HAIR_UV_DATA,RE4DC_LEON_HAIR_UV_SIZE};r.stream={run.stream,run.bytes};
     }
     {
         const auto& c=p.input[8];auto& r=p.runs[p.run_count++];

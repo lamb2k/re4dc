@@ -106,10 +106,13 @@ void re4dc_ps2fx_set(unsigned flags);  // esp_sub.cpp (effects30.mk EFFECT_PS2_T
 }
 #if defined(RE4DC_CHARBAKE_TOGGLE) && RE4DC_CHARBAKE_TOGGLE
 extern "C" void re4dc_charbake_set(unsigned variant);  // coarse_actor.cpp (charbake.mk CHARBAKE_TOGGLE)
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+extern "C" void re4dc_leon_lod_set(unsigned level);  // coarse_actor_leon_lod.inc (ps2leon.mk LEON_LOD)
+#endif
 #endif
 
 namespace {
-struct Act { u32 frame; u16 buttons; s8 stick; u16 hold; u8 entry; bool ev; };
+struct Act { u32 frame; u16 buttons; s8 stick; u16 hold; u8 entry; bool ev; s8 stickx; };
 struct Rsf { u16 room; u8 bit; };
 // Replays a source radio call to test movie-to-subscreen resource handoff.
 // This command exists only in the DBG_WARP test rig; it does not certify route order.
@@ -201,6 +204,11 @@ struct Warp {
     // stays on screen, the same image in two arms whose logic is STRICT).
     bool has_freeze;
     u32 freeze_tick;
+    // still <room frame> <ms> (up to 8; leonlod 2026-10-15): the game thread holds at the top of that frame of the first
+    // room for <ms>
+    // (the last presented image stays on screen for the harness's periodic framebuffer shots), then play goes on.
+    u32 still_tick[8], still_ms[8];
+    unsigned n_still, still_next;
 #if defined(RE4DC_WARP_AFTER_RESET) && RE4DC_WARP_AFTER_RESET
     // after_reset (WARP_AFTER_RESET=1, lane resetmem): the rig stays passive (title, card load, play) until the first
     // soft reset, then warps from the title shown after it (the s30 heap gate after load -> reset -> New Game).
@@ -305,15 +313,26 @@ void load()
             a.buttons = 0;
             a.stick = 0;
             a.ev = n >= 5 && !strcmp(tok[4], "ev");  // `ev`: pressed during an event too (issue 23: answers a prompt)
-            const char* b = tok[2];
-            if (!strcmp(b, "a")) a.buttons = 0x0100;
-            else if (!strcmp(b, "b")) a.buttons = 0x0200;
-            else if (!strcmp(b, "x")) a.buttons = 0x0400;
-            else if (!strcmp(b, "y")) a.buttons = 0x0800;
-            else if (!strcmp(b, "start")) a.buttons = 0x1000;
-            else if (!strcmp(b, "fwd")) a.stick = 80;
-            else if (!strcmp(b, "back")) a.stick = -80;
-            else if (b[0] == '0' && b[1] == 'x') a.buttons = (u16) num(b);  // a raw button mask (R 0x0020 + A: 0x0120)
+            a.stickx = 0;
+            // one input or several joined by '+' (leonlod 2026-10-15: "b+fwd" runs, "b+back" quick-turns,
+            // "0x0020+left" aims and turns); left / right push the stick's X axis.
+            char ib[48];
+            strncpy(ib, tok[2], sizeof(ib) - 1); ib[sizeof(ib) - 1] = 0;
+            for (char* b = ib; b && *b;) {
+                char* nx = strchr(b, '+');
+                if (nx) *nx++ = 0;
+                if (!strcmp(b, "a")) a.buttons |= 0x0100;
+                else if (!strcmp(b, "b")) a.buttons |= 0x0200;
+                else if (!strcmp(b, "x")) a.buttons |= 0x0400;
+                else if (!strcmp(b, "y")) a.buttons |= 0x0800;
+                else if (!strcmp(b, "start")) a.buttons |= 0x1000;
+                else if (!strcmp(b, "fwd")) a.stick = 80;
+                else if (!strcmp(b, "back")) a.stick = -80;
+                else if (!strcmp(b, "left")) a.stickx = -80;
+                else if (!strcmp(b, "right")) a.stickx = 80;
+                else if (b[0] == '0' && b[1] == 'x') a.buttons |= (u16) num(b);  // a raw mask (R 0x0020 + A: 0x0120)
+                b = nx;
+            }
         } else if (!strcmp(k, "census") && n >= 2 && wp.n_census < 6) {
             wp.census_done[wp.n_census] = false;
             wp.census[wp.n_census++] = num(tok[1]);
@@ -382,6 +401,9 @@ void load()
         } else if (!strcmp(k, "lookstep") && n >= 2 && wp.n_lookstep < 16) {
             wp.lookstep[wp.n_lookstep++] = {num(tok[1]), false};   // LOOK_TOGGLE: next preset at a room frame
 #endif
+        } else if (!strcmp(k, "still") && n >= 3 && wp.n_still < 8) {
+            wp.still_tick[wp.n_still] = num(tok[1]);
+            wp.still_ms[wp.n_still++] = num(tok[2]);
         } else if (!strcmp(k, "freeze") && n >= 2) {
             wp.has_freeze = true;
             wp.freeze_tick = num(tok[1]);
@@ -403,6 +425,12 @@ void load()
 #if defined(RE4DC_WARP_AFTER_RESET) && RE4DC_WARP_AFTER_RESET
         } else if (!strcmp(k, "after_reset")) {
             wp.after_reset = true;
+#endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+        } else if (!strcmp(k, "leonlod") && n >= 2) {
+            // ps2leon.mk LEON_LOD: Leon's mesh level (package order), applied at the next room enter / first draw
+            re4dc_leon_lod_set(num(tok[1]));
+            re4dc_log("warp: leonlod %u\n", num(tok[1]));
 #endif
 #if defined(RE4DC_KOS_SQUEEZE) && RE4DC_KOS_SQUEEZE
         } else if (!strcmp(k, "squeeze")) {
@@ -844,6 +872,17 @@ void re4dc_warp_room_enter(void)
 void re4dc_warp_poll(void)
 {
     if (!wp.active) return;
+    // `still` counts this room's poll frames (wp.room_frames, the clock the act lines share in the first room).
+    if (wp.still_next < wp.n_still && pG && wp.rooms == 1 && wp.room_frames >= wp.still_tick[wp.still_next]) {
+        const unsigned i = wp.still_next++;
+        re4dc_log("warp: still %u at room frame %u tick %u pad %u hold %u ms\n", i, (unsigned) wp.room_frames,
+                  (unsigned) pG->Frame_cnt, (unsigned) wp.pad_frames, (unsigned) wp.still_ms[i]);
+        const u32 keep = pG->System_flg & 0x20000000;
+        pG->System_flg |= 0x20000000;   // no hang check while held (as `freeze`)
+        if (wp.still_ms[i]) thd_sleep(wp.still_ms[i]);
+        pG->System_flg = (pG->System_flg & ~0x20000000) | keep;
+        re4dc_log("warp: still %u released\n", i);
+    }
     if (wp.has_freeze && pG && (u32) pG->Frame_cnt >= wp.freeze_tick) {
         re4dc_log("warp: frozen at tick %u\n", (unsigned) pG->Frame_cnt);
         // A still fixture, not a hang: set the game's own "no hang check" bit (exception.cpp sets it
@@ -968,7 +1007,7 @@ static void re4dc_warp_cut(const char* why)
 }
 
 // platform/pad.cpp PADRead, port A after the real / scripted bits: the scheduled warp actions.
-void re4dc_warp_pad(unsigned short* buttons, signed char* stickY)
+void re4dc_warp_pad(unsigned short* buttons, signed char* stickX, signed char* stickY)
 {
     if (!wp.loaded) load();
     if (!wp.active) return;
@@ -1003,6 +1042,7 @@ void re4dc_warp_pad(unsigned short* buttons, signed char* stickY)
         const Act& a = wp.act[wp.cur_act];
         *buttons |= a.buttons;
         if (a.stick) *stickY = a.stick;
+        if (a.stickx) *stickX = a.stickx;
         return;
     }
     while (wp.next_act < wp.n_act && wp.act[wp.next_act].entry < wp.rooms) ++wp.next_act;  // an earlier room's, unfired
@@ -1010,12 +1050,13 @@ void re4dc_warp_pad(unsigned short* buttons, signed char* stickY)
         const Act& a = wp.act[wp.next_act];
         wp.cur_act = (int) wp.next_act++;
         wp.cur_until = wp.pad_frames + a.hold;
-        char what[48];
-        snprintf(what, sizeof(what), "act %u buttons=%04x stick=%d hold=%u", (unsigned) wp.cur_act,
-                 (unsigned) a.buttons, (int) a.stick, (unsigned) a.hold);
+        char what[72];
+        snprintf(what, sizeof(what), "act %u buttons=%04x stick=%d,%d hold=%u pad=%u", (unsigned) wp.cur_act,
+                 (unsigned) a.buttons, (int) a.stickx, (int) a.stick, (unsigned) a.hold, (unsigned) wp.pad_frames);
         stamp(what);
         *buttons |= a.buttons;
         if (a.stick) *stickY = a.stick;
+        if (a.stickx) *stickX = a.stickx;
     }
 }
 

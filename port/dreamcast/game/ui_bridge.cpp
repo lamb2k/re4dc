@@ -366,6 +366,9 @@ extern "C" void re4dc_pl08_pack_room_leave();
 #if defined(RE4DC_LEON_HAND_PACK) && RE4DC_LEON_HAND_PACK
 extern "C" void re4dc_leon_hands_room_enter();              // coarse_actor_leon_hands.inc
 #endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+extern "C" void re4dc_leon_lod_room_enter();                // coarse_actor_leon_lod.inc
+#endif
 #if defined(RE4DC_STATIC_OBJ_BATCH) && RE4DC_STATIC_OBJ_BATCH
 extern "C" void re4dc_sob_room_leave();                     // model_bridge.cpp STATIC_OBJ_BATCH
 #endif
@@ -451,6 +454,9 @@ extern "C" void re4dc_room_enter(){
 #endif
 #if defined(RE4DC_LEON_HAND_PACK) && RE4DC_LEON_HAND_PACK
     re4dc_leon_hands_room_enter();                       // Leon's home hand poses into the AICA hand cache
+#endif
+#if defined(RE4DC_LEON_LOD) && RE4DC_LEON_LOD
+    re4dc_leon_lod_room_enter();                         // a LEON_LOD level change requested since the last enter
 #endif
     room_frames=0;steady_logged=false;
     audit(0);
