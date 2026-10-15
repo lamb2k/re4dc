@@ -116,7 +116,7 @@ void cAtariInfo::move()
 }
 
 // World position of the body: the rotated offset added to the parts (or model) position.
-#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE >= 2
 // LOGIC_WASTE bit 0 (game30.mk; logic waste census item 1; exact): the rotated body offset, a pure function of
 // m_offset and the model's angle, is kept per body; the collision code asks for it about 20 times per tick and the
 // two inputs are almost always unchanged (bit for bit). Direct-mapped by the body's address.
@@ -134,7 +134,7 @@ void cAtariInfo::getPos(cModel* m, Vec* out)
 {
     Vec v;
 
-#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE >= 2
     if (re4dc_logic_waste_mask & 1) {
         const u32* o = (const u32*) &m_offset;
         const u32* a = (const u32*) &m->ang;

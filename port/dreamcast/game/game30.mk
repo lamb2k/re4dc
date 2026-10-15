@@ -3010,6 +3010,9 @@ GAME_LQ_MEMO ?= 0
 #                images with different masks share one code layout. Bits: 0x01 getPos body offset, 0x02 effect
 #                classifier verdict per recipe (render), 0x08 camera obstruction lines, 0x100 check mode (each
 #                reused answer is also computed and compared: "LWM" / "LWF ... mis=" must stay 0; not for trace builds).
+#                Kept (lane logicwaste 2026-10-15): 0x02 (hw -0.21 ms cross / -0.05 house MODELLED, STRICT). Closed (no net
+#                gain): 0x01 getPos (+0.07..0.1), 0x08 camera lines (+0.07), approx 0x02 sound (0.02 ceiling); their code
+#                compiles only with LOGIC_WASTE=2 (LOGIC_WASTE=1 = the kept bits, smaller image).
 LOGIC_WASTE ?= 0
 LOGIC_WASTE_MASK ?= 0
 # LOGIC_APPROX_MASK (same build, second data word re4dc_logic_approx_mask; NOT exact, user 10-15 approximation rule,

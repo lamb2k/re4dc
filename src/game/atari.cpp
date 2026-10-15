@@ -52,7 +52,7 @@ extern u32 g_at2_total_cyc;
 u8 polyBit[0x400];
 // the piece the last hitCheck2 hit (hitCheck transforms the normal with its matrix)
 static cSat* pBypassAt;
-#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE >= 2
 void re4dc_lw_sat_epoch();   // LOGIC_WASTE (the block at the end of this file)
 #endif
 #if defined(RE4DC_LQ_MEMO) && RE4DC_LQ_MEMO
@@ -2172,7 +2172,7 @@ void cSatMgr::destroy(cSat* p)
     if (p->m_Flag & 2) {
         Mem_free(p->pFile);
     }
-#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE >= 2
     re4dc_lw_sat_epoch();
 #endif
     cManager<cSat>::destroy(p);
@@ -2185,7 +2185,7 @@ int cSatMgr::construct(cSat* p, u32 id)
     p->be_flag = 1;
     new (p) cSat();
     p->m_Flag = 0;
-#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE >= 2
     re4dc_lw_sat_epoch();
 #endif
     return 1;
@@ -2270,7 +2270,7 @@ void cSat::init(cSatFile* f, Vec* pos, Vec* rot)
     }
     m_Flag = 4;
     *this = f;
-#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE
+#if defined(RE4DC_LOGIC_WASTE) && RE4DC_LOGIC_WASTE >= 2
     re4dc_lw_sat_epoch();
 #endif
     setCoord(pos, rot);
@@ -3003,6 +3003,9 @@ u32 __attribute__((section(".data"))) re4dc_logic_waste_mask = RE4DC_LOGIC_WASTE
 // 0x02 sound surround / occlusion slots at half rate, interleaved (snd.cpp sndSurroundCalc).
 u32 __attribute__((section(".data"))) re4dc_logic_approx_mask = RE4DC_LOGIC_APPROX_MASK;
 }
+// LOGIC_WASTE=2 keeps the closed census memos (getPos, camera lines, sound half rate; measured no net gain,
+// lane logicwaste 2026-10-15) for re-measurement; LOGIC_WASTE=1 compiles only the kept bits and the mask words.
+#if RE4DC_LOGIC_WASTE >= 2
 static u32 lwEpoch = 1;
 void re4dc_lw_sat_epoch()
 {
@@ -3225,4 +3228,5 @@ extern "C" int re4dc_lw_cam_hitcheck(Vec* pos0, Vec* pos1, Vec* hit, Vec* nrm, i
     return r;
 }
 
+#endif
 #endif
