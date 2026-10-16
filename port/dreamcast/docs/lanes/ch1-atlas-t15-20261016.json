@@ -1,0 +1,1047 @@
+{
+  "all": {
+    "finite_patch_16bit_bytes": 43836996,
+    "format_payload_counts": {
+      "(0, 2)": 84,
+      "(2, 1)": 12,
+      "(2, 2)": 13
+    },
+    "max_uv_span": [
+      23.277343327354174,
+      28.753906183701474
+    ],
+    "outside_unit_parts": 120,
+    "parts": 238,
+    "repeating_parts": 113,
+    "unique_resident_bytes": 709120,
+    "unique_textures": 109
+  },
+  "cells": [
+    {
+      "groups": [
+        {
+          "keys": [
+            "ed14895f-1dfda513"
+          ],
+          "lossless_vq_codebook_possible": true,
+          "parts": [
+            160
+          ],
+          "state": [
+            0,
+            2,
+            0,
+            255,
+            0,
+            0
+          ],
+          "sum_finite_patch_16bit_bytes": 34056,
+          "sum_raw_tile_16bit_bytes": 32768,
+          "vq_original_vector_union": 256
+        }
+      ],
+      "keys": 1,
+      "mesh": 204,
+      "parts": 1,
+      "state_groups": 1
+    },
+    {
+      "groups": [
+        {
+          "keys": [
+            "1a6203f9-0076f63c",
+            "2284a6d7-4f09117b",
+            "782aed8c-a11abc8a",
+            "8e9bbc69-46e23fa2",
+            "9c1015e5-dbf96e86",
+            "9fe8893b-101055f2",
+            "ed14895f-1dfda513"
+          ],
+          "lossless_vq_codebook_possible": false,
+          "parts": [
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167
+          ],
+          "state": [
+            0,
+            2,
+            0,
+            255,
+            0,
+            0
+          ],
+          "sum_finite_patch_16bit_bytes": 627432,
+          "sum_raw_tile_16bit_bytes": 180224,
+          "vq_original_vector_union": 1602
+        }
+      ],
+      "keys": 7,
+      "mesh": 205,
+      "parts": 7,
+      "state_groups": 1
+    },
+    {
+      "groups": [
+        {
+          "keys": [
+            "1a6203f9-0076f63c",
+            "1adb038f-8c46c492",
+            "1f7e9cd9-dfae224d",
+            "478f047b-9cdbcec6",
+            "5df07929-a30d4fdc",
+            "63089054-43d521f9",
+            "6531ba6c-4efc6bac",
+            "6d47e0e6-8454336c",
+            "782aed8c-a11abc8a",
+            "82519729-ce050ed6",
+            "8e9bbc69-46e23fa2",
+            "8ef87bf6-9edc5a43",
+            "ac80e1ff-f3eaafbd",
+            "dd622ae4-a41c9e00",
+            "ed14895f-1dfda513",
+            "f5cb6ced-7652a3a1",
+            "ff084d79-36fda215"
+          ],
+          "lossless_vq_codebook_possible": false,
+          "parts": [
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186
+          ],
+          "state": [
+            0,
+            2,
+            0,
+            255,
+            0,
+            0
+          ],
+          "sum_finite_patch_16bit_bytes": 27245608,
+          "sum_raw_tile_16bit_bytes": 618496,
+          "vq_original_vector_union": 4053
+        }
+      ],
+      "keys": 17,
+      "mesh": 206,
+      "parts": 19,
+      "state_groups": 1
+    },
+    {
+      "groups": [
+        {
+          "keys": [
+            "1a6203f9-0076f63c",
+            "6d47e0e6-8454336c",
+            "782aed8c-a11abc8a",
+            "8e9bbc69-46e23fa2"
+          ],
+          "lossless_vq_codebook_possible": false,
+          "parts": [
+            187,
+            188,
+            189,
+            190
+          ],
+          "state": [
+            0,
+            2,
+            0,
+            255,
+            0,
+            0
+          ],
+          "sum_finite_patch_16bit_bytes": 89484,
+          "sum_raw_tile_16bit_bytes": 98304,
+          "vq_original_vector_union": 968
+        }
+      ],
+      "keys": 4,
+      "mesh": 207,
+      "parts": 4,
+      "state_groups": 1
+    },
+    {
+      "groups": [
+        {
+          "keys": [
+            "183beb3c-7d272c2a",
+            "1a6203f9-0076f63c",
+            "5f6ca8e9-290510a7",
+            "63a500b1-c326b4a6",
+            "6d47e0e6-8454336c",
+            "782aed8c-a11abc8a",
+            "7c925f03-83cfe717",
+            "85607cd4-ca88bf3b",
+            "8aa080ee-578144a1",
+            "8e9bbc69-46e23fa2",
+            "8ef87bf6-9edc5a43",
+            "929e8902-683dbf1e",
+            "93799a1c-67be730b",
+            "a63ddc29-da80a6e3",
+            "b0920af0-420b71c5",
+            "b8f39978-2e0cccd9",
+            "d097cc1e-f483a774",
+            "d8ad768c-478ba8d6",
+            "ec88813e-c4a0460a",
+            "ed14895f-1dfda513",
+            "f5cb6ced-7652a3a1"
+          ],
+          "lossless_vq_codebook_possible": false,
+          "parts": [
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211,
+            212,
+            213,
+            214
+          ],
+          "state": [
+            0,
+            2,
+            0,
+            255,
+            0,
+            0
+          ],
+          "sum_finite_patch_16bit_bytes": 4049562,
+          "sum_raw_tile_16bit_bytes": 1243136,
+          "vq_original_vector_union": 4687
+        }
+      ],
+      "keys": 21,
+      "mesh": 208,
+      "parts": 24,
+      "state_groups": 1
+    },
+    {
+      "groups": [
+        {
+          "keys": [
+            "1a6203f9-0076f63c",
+            "308b32a1-bd84c500",
+            "393a3beb-9e2125a7",
+            "6558ceb2-8870156a",
+            "6d47e0e6-8454336c",
+            "782aed8c-a11abc8a",
+            "8e378331-34a34a56",
+            "93799a1c-67be730b",
+            "994e89c5-da857ed5",
+            "9a9f254e-deb70f2a",
+            "bf9a3478-544d24b5",
+            "cbe4a5dc-586f2c03",
+            "dc138369-30f10462",
+            "ed14895f-1dfda513"
+          ],
+          "lossless_vq_codebook_possible": false,
+          "parts": [
+            215,
+            216,
+            217,
+            218,
+            219,
+            220,
+            221,
+            222,
+            223,
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230
+          ],
+          "state": [
+            0,
+            2,
+            0,
+            255,
+            0,
+            0
+          ],
+          "sum_finite_patch_16bit_bytes": 1535062,
+          "sum_raw_tile_16bit_bytes": 593920,
+          "vq_original_vector_union": 3374
+        }
+      ],
+      "keys": 14,
+      "mesh": 209,
+      "parts": 16,
+      "state_groups": 1
+    },
+    {
+      "groups": [
+        {
+          "keys": [
+            "1a6203f9-0076f63c",
+            "2710d6e7-9c38a246",
+            "673bc5b0-0ff1b8b9",
+            "6d47e0e6-8454336c",
+            "782aed8c-a11abc8a",
+            "ed14895f-1dfda513"
+          ],
+          "lossless_vq_codebook_possible": false,
+          "parts": [
+            231,
+            232,
+            233,
+            234,
+            235,
+            236
+          ],
+          "state": [
+            0,
+            2,
+            0,
+            255,
+            0,
+            0
+          ],
+          "sum_finite_patch_16bit_bytes": 118648,
+          "sum_raw_tile_16bit_bytes": 139264,
+          "vq_original_vector_union": 1298
+        }
+      ],
+      "keys": 6,
+      "mesh": 210,
+      "parts": 6,
+      "state_groups": 1
+    },
+    {
+      "groups": [
+        {
+          "keys": [
+            "b9a81e82-7626a129"
+          ],
+          "lossless_vq_codebook_possible": true,
+          "parts": [
+            237
+          ],
+          "state": [
+            0,
+            2,
+            0,
+            255,
+            0,
+            0
+          ],
+          "sum_finite_patch_16bit_bytes": 7800,
+          "sum_raw_tile_16bit_bytes": 8192,
+          "vq_original_vector_union": 120
+        }
+      ],
+      "keys": 1,
+      "mesh": 211,
+      "parts": 1,
+      "state_groups": 1
+    }
+  ],
+  "evidence": {
+    "bell": {
+      "lines": [
+        {
+          "line": 260,
+          "text": "TA headroom 1: opb overflow 3 -> 4 (+48000 B pool per bank), vertex buffer 2097152 -> 2049024 B per bank"
+        },
+        {
+          "line": 261,
+          "text": "MV shadows: OP_MOD blocks 8 words, 48128 B per bank from the vertex buffer (now 2000896 B)"
+        },
+        {
+          "line": 275,
+          "text": "native VRAM layout: vertbuf=1954 KiB x2 banks (double-buffered) opb_bins=16 overflow=4 texture_pool_free=2567424"
+        },
+        {
+          "line": 278,
+          "text": "native UI: texture VRAM budget=2444544 pool=2510080 reserve=65536 (LRU evict + fragmentation retry)"
+        },
+        {
+          "line": 1157,
+          "text": "vram room: r=120 at=exit f=167 frames=81 pinned=0 dynamic=0 other=57344 free=2510080 largest=2508800 min_free=2510080 min_largest=2508800 peak_pinned=0 loads=0 evicted=0 retries=0"
+        },
+        {
+          "line": 2110,
+          "text": "vram room: r=101 at=preload f=182 frames=15 pinned=1387576 dynamic=0 other=57384 free=1122464 largest=964608 min_free=1122464 min_largest=964608 peak_pinned=1387576 loads=239 evicted=0 retries=0"
+        },
+        {
+          "line": 2877,
+          "text": "vram room: r=101 at=preload f=183 frames=16 pinned=2037304 dynamic=0 other=57384 free=472736 largest=288768 min_free=472736 min_largest=288768 peak_pinned=2037304 loads=340 evicted=0 retries=0"
+        },
+        {
+          "line": 2926,
+          "text": "vram room: r=101 at=preload f=184 frames=17 pinned=2074168 dynamic=0 other=57384 free=435872 largest=251904 min_free=435872 min_largest=251904 peak_pinned=2074168 loads=342 evicted=0 retries=0"
+        },
+        {
+          "line": 3056,
+          "text": "vram room: r=101 at=preload f=185 frames=18 pinned=2313784 dynamic=0 other=57384 free=196256 largest=12288 min_free=196256 min_largest=12288 peak_pinned=2313784 loads=355 evicted=0 retries=0"
+        },
+        {
+          "line": 3120,
+          "text": "vram room: r=101 at=preload f=186 frames=19 pinned=2313784 dynamic=0 other=57384 free=196256 largest=12288 min_free=196256 min_largest=12288 peak_pinned=2313784 loads=355 evicted=0 retries=0"
+        },
+        {
+          "line": 5981,
+          "text": "native texture claim: movie window at a466eb00 cost=154688 B entries=41 pinned_ok=0"
+        },
+        {
+          "line": 5982,
+          "text": "native texture claim: bytes=196608 fits=1 released=41 (154688 B) free=350944 used=2159096 claims=1 fallback=0 (0, 0 B)"
+        },
+        {
+          "line": 5984,
+          "text": "route movie start: id=10130 path=/cd/dc/movie/r101s30.seq size=288x192 frames=1331 media_us=44411033 staged=363328 heap=2160832->1796640 range=full path=pvr-yuv-converter"
+        },
+        {
+          "line": 7327,
+          "text": "native texture unclaim: claims=0 preload=1 free=350944"
+        },
+        {
+          "line": 7504,
+          "text": "vram room: r=101 at=preload f=488 frames=321 pinned=2001080 dynamic=321920 other=57384 free=187040 largest=4096 min_free=187040 min_largest=4096 peak_pinned=2313784 loads=397 evicted=0 retries=0"
+        },
+        {
+          "line": 8269,
+          "text": "native texture claim: movie window at a4671b00 cost=106880 B entries=27 pinned_ok=0"
+        },
+        {
+          "line": 9174,
+          "text": "vram room: r=101 at=tick f=767 frames=600 pinned=549440 dynamic=1719576 other=32808 free=265600 largest=10240 min_free=187040 min_largest=4096 peak_pinned=2313784 loads=417 evicted=35 retries=10"
+        },
+        {
+          "line": 10346,
+          "text": "native texture unclaim: claims=0 preload=0 free=265600"
+        },
+        {
+          "line": 14137,
+          "text": "MV shadows: frames=600 casters=656 tris=17540 clipped=150 skipped=1140 failed=0 sends=656 bytes=1164544 scenes=299 receivers=40724 near=101 lit=600 len=1091"
+        },
+        {
+          "line": 15637,
+          "text": "vram room: r=101 at=tick f=1367 frames=1200 pinned=672864 dynamic=1608472 other=32808 free=253280 largest=10240 min_free=187040 min_largest=4096 peak_pinned=2313784 loads=419 evicted=35 retries=10"
+        },
+        {
+          "line": 23727,
+          "text": "MV shadows: frames=1200 casters=656 tris=17540 clipped=150 skipped=1740 failed=0 sends=656 bytes=1164544 scenes=299 receivers=82124 near=101 lit=1200 len=1121"
+        },
+        {
+          "line": 25226,
+          "text": "vram room: r=101 at=tick f=1967 frames=1800 pinned=664640 dynamic=1616696 other=32808 free=253280 largest=10240 min_free=187040 min_largest=4096 peak_pinned=2313784 loads=419 evicted=35 retries=10"
+        }
+      ],
+      "sha256": "db3c0bac61b8562cfaf7c4f881ffa907379de0b6c78b12824c902bef277de2c5",
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/codex-cpu-t15-20261016/spatial-bell-full-spatial32v3/capture/run-output.txt"
+    },
+    "costs": {
+      "label": "Self costs from 30 sampled frames500:799 stride10; console-fit model, not console timing or atlas savings.",
+      "rows": [
+        {
+          "console_fit_ms": 1.2185,
+          "function": "(anonymous namespace)::MeshDraw::run()",
+          "nominal_ms": 1.12
+        },
+        {
+          "console_fit_ms": 0.8556,
+          "function": "(anonymous namespace)::ps2_pass(unsigned int, float)",
+          "nominal_ms": 0.7829
+        },
+        {
+          "console_fit_ms": 0.6131,
+          "function": "re4dc_ps2_world_direct_begin",
+          "nominal_ms": 0.5514
+        },
+        {
+          "console_fit_ms": 0.1488,
+          "function": "re4dc_model_direct_end",
+          "nominal_ms": 0.1328
+        },
+        {
+          "console_fit_ms": 0.1133,
+          "function": "(anonymous namespace)::stream_select(pvr_list_type)",
+          "nominal_ms": 0.1018
+        }
+      ],
+      "sha256": "5f37f033059298df51900cab693e294a5e25feba086351c8e59a237b04e290c0",
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/codex-cpu-t15-20261016/hwmodel-cxt16sp32-cross/proj/rep/functions.tsv"
+    },
+    "cross": {
+      "lines": [
+        {
+          "line": 263,
+          "text": "TA headroom 1: opb overflow 3 -> 4 (+48000 B pool per bank), vertex buffer 2097152 -> 2049024 B per bank"
+        },
+        {
+          "line": 264,
+          "text": "MV shadows: OP_MOD blocks 8 words, 48128 B per bank from the vertex buffer (now 2000896 B)"
+        },
+        {
+          "line": 278,
+          "text": "native VRAM layout: vertbuf=1954 KiB x2 banks (double-buffered) opb_bins=16 overflow=4 texture_pool_free=2567424"
+        },
+        {
+          "line": 281,
+          "text": "native UI: texture VRAM budget=2444544 pool=2510080 reserve=65536 (LRU evict + fragmentation retry)"
+        },
+        {
+          "line": 489,
+          "text": "vram room: r=120 at=exit f=167 frames=80 pinned=0 dynamic=0 other=57344 free=2510080 largest=2508800 min_free=2510080 min_largest=2508800 peak_pinned=0 loads=0 evicted=0 retries=0"
+        },
+        {
+          "line": 1384,
+          "text": "vram room: r=101 at=preload f=182 frames=15 pinned=1387576 dynamic=0 other=57384 free=1122464 largest=964608 min_free=1122464 min_largest=964608 peak_pinned=1387576 loads=239 evicted=0 retries=0"
+        },
+        {
+          "line": 2146,
+          "text": "vram room: r=101 at=preload f=183 frames=16 pinned=2037304 dynamic=0 other=57384 free=472736 largest=288768 min_free=472736 min_largest=288768 peak_pinned=2037304 loads=340 evicted=0 retries=0"
+        },
+        {
+          "line": 2182,
+          "text": "vram room: r=101 at=preload f=184 frames=17 pinned=2074168 dynamic=0 other=57384 free=435872 largest=251904 min_free=435872 min_largest=251904 peak_pinned=2074168 loads=342 evicted=0 retries=0"
+        },
+        {
+          "line": 2308,
+          "text": "vram room: r=101 at=preload f=185 frames=18 pinned=2313784 dynamic=0 other=57384 free=196256 largest=12288 min_free=196256 min_largest=12288 peak_pinned=2313784 loads=355 evicted=0 retries=0"
+        },
+        {
+          "line": 2368,
+          "text": "vram room: r=101 at=preload f=186 frames=19 pinned=2313784 dynamic=0 other=57384 free=196256 largest=12288 min_free=196256 min_largest=12288 peak_pinned=2313784 loads=355 evicted=0 retries=0"
+        },
+        {
+          "line": 2820,
+          "text": "vram room: r=101 at=tick f=767 frames=600 pinned=1168770 dynamic=1145014 other=57384 free=196256 largest=12288 min_free=196256 min_largest=12288 peak_pinned=2313784 loads=355 evicted=0 retries=0"
+        },
+        {
+          "line": 2830,
+          "text": "MV shadows: frames=600 casters=1200 tris=32856 clipped=48 skipped=1800 failed=0 sends=1200 bytes=2179584 scenes=591 receivers=51603 near=101 lit=600 len=1398"
+        }
+      ],
+      "sha256": "1cd744bb8cafec2d172c42a0ba663a12cbba790cca6c121add41160dae378407",
+      "source": "/mnt/c/Flycast-Evidence/re4-dreamcast/codex-cpu-t15-20261016/hwmodel-cxt16sp32-cross/boot.log"
+    }
+  },
+  "full_census": "/mnt/c/Game Dev/Emulators/_codex_atlas_t15_20261016/final/census.json",
+  "full_census_sha256": "56699d6649a333a0a2db99fbf95a0a868162cc7ddd28d4a3783f8af9e5446d5f",
+  "opaque": {
+    "finite_patch_16bit_bytes": 42871012,
+    "format_payload_counts": {
+      "(0, 2)": 84
+    },
+    "max_uv_span": [
+      23.277343327354174,
+      28.753906183701474
+    ],
+    "outside_unit_parts": 115,
+    "parts": 197,
+    "repeating_parts": 108,
+    "unique_resident_bytes": 582144,
+    "unique_textures": 84
+  },
+  "package_crc_conventions": {
+    "loader_descriptor_and_payload": 12,
+    "payload_only": 97
+  },
+  "pricing": {
+    "candidate": {
+      "exact_vq_vector_count": 210,
+      "gutter_pixels_at_least": 2,
+      "mesh": 208,
+      "nonspatial_world_references": {
+        "929e8902-683dbf1e": [],
+        "b0920af0-420b71c5": []
+      },
+      "note": "Lossless texel/codebook construction feasibility only. UV requantization, loader residency and visible drawlist still require verification.",
+      "original_payload_bytes": 4864,
+      "page_size": [
+        128,
+        64
+      ],
+      "parts": [
+        205,
+        208
+      ],
+      "payload_bytes": 4096,
+      "payload_delta_if_both_originals_retired": -768,
+      "payload_delta_if_both_originals_stay": 4096,
+      "rects": [
+        {
+          "atlas_origin": [
+            0,
+            0
+          ],
+          "exact_vq_vectors": 209,
+          "height": 36,
+          "key": "929e8902-683dbf1e",
+          "part": 205,
+          "source_origin": [
+            -2,
+            -2
+          ],
+          "width": 68
+        },
+        {
+          "atlas_origin": [
+            68,
+            0
+          ],
+          "exact_vq_vectors": 1,
+          "height": 30,
+          "key": "b0920af0-420b71c5",
+          "part": 208,
+          "source_origin": [
+            -2,
+            -2
+          ],
+          "width": 36
+        }
+      ],
+      "resident_index": {
+        "matching_records": [],
+        "sha256": "de98da1ec2e755327da4b21b5ad9b2b4f62175bee767aef77e55a028bf77d09f",
+        "source": "/root/probe/lanes-20261015/t15k/data/res16/resident.bin"
+      },
+      "source_uv_bounds": {
+        "205": [
+          0.0,
+          0.0,
+          0.9999999997671694,
+          0.9960937497680789
+        ],
+        "208": [
+          0.0,
+          0.0,
+          0.9999999997671694,
+          0.7890624998162821
+        ]
+      },
+      "source_uv_spans": {
+        "205": [
+          0.9999999997671694,
+          0.9960937497680789
+        ],
+        "208": [
+          0.9999999997671694,
+          0.7890624998162821
+        ]
+      },
+      "uv_remap_grid_estimate": {
+        "bias": [
+          0.015625,
+          0.03125
+        ],
+        "limitation": "Python double decode and mapped arithmetic, float32 grid coefficients. Not exact SH4 arithmetic or raster output.",
+        "max_error_texels_uv": [
+          0.0006103608757257462,
+          0.0
+        ],
+        "scale": [
+          1.192111085401848e-05,
+          7.599708169436781e-06
+        ]
+      }
+    },
+    "compatible_existing_vq_pairs": [
+      {
+        "existing_vectors": 237,
+        "keys": [
+          "183beb3c-7d272c2a",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 254,
+        "keys": [
+          "1a6203f9-0076f63c",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 223,
+        "keys": [
+          "5f6ca8e9-290510a7",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 212,
+        "keys": [
+          "63a500b1-c326b4a6",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 247,
+        "keys": [
+          "6d47e0e6-8454336c",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 244,
+        "keys": [
+          "782aed8c-a11abc8a",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 248,
+        "keys": [
+          "7c925f03-83cfe717",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 249,
+        "keys": [
+          "85607cd4-ca88bf3b",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 245,
+        "keys": [
+          "8aa080ee-578144a1",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 227,
+        "keys": [
+          "8e9bbc69-46e23fa2",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 195,
+        "keys": [
+          "8ef87bf6-9edc5a43",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 210,
+        "keys": [
+          "929e8902-683dbf1e",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 249,
+        "keys": [
+          "93799a1c-67be730b",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 242,
+        "keys": [
+          "a63ddc29-da80a6e3",
+          "b0920af0-420b71c5"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 185,
+        "keys": [
+          "b0920af0-420b71c5",
+          "b8f39978-2e0cccd9"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 248,
+        "keys": [
+          "b0920af0-420b71c5",
+          "d097cc1e-f483a774"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 250,
+        "keys": [
+          "b0920af0-420b71c5",
+          "ec88813e-c4a0460a"
+        ],
+        "mesh": 208
+      },
+      {
+        "existing_vectors": 243,
+        "keys": [
+          "b0920af0-420b71c5",
+          "f5cb6ced-7652a3a1"
+        ],
+        "mesh": 208
+      }
+    ],
+    "historical_camera_census": {
+      "ideal_reduction_max": 62,
+      "ideal_reduction_min": 62,
+      "limitations": "Historical t2exact poses, current spatial32 geometry, Python double arithmetic, zero viewport origin. No dynamic/protected parts, LOD emission, strip groups or exact current118 claim.",
+      "poses": 56,
+      "source": "/mnt/c/Users/lambd/AppData/Local/Temp/t2x/pvs/cams-cross.txt",
+      "source_sha256": "1ca348eab6bd10916c484cebc823f72f4a31ea9936a58ea61355b1664506901a",
+      "spatial_parts_max": 66,
+      "spatial_parts_min": 66
+    },
+    "samecell_pairs": 479,
+    "samekey_candidates": [
+      {
+        "key": "6d47e0e6-8454336c",
+        "mesh": 206,
+        "parts": [
+          175,
+          176
+        ],
+        "referenced_vertex_sum": 112,
+        "same_uv_grid": true,
+        "source_texture_indices": [
+          1,
+          2
+        ],
+        "uv_grids": [
+          [
+            0.0,
+            0.0,
+            1.5259021893143654e-05,
+            1.5259021893143654e-05
+          ],
+          [
+            0.0,
+            0.0,
+            1.5259021893143654e-05,
+            1.5259021893143654e-05
+          ]
+        ]
+      },
+      {
+        "key": "782aed8c-a11abc8a",
+        "mesh": 206,
+        "parts": [
+          177,
+          178
+        ],
+        "referenced_vertex_sum": 680,
+        "same_uv_grid": false,
+        "source_texture_indices": [
+          1,
+          2
+        ],
+        "uv_grids": [
+          [
+            0.1875,
+            0.0,
+            5.900949872739147e-06,
+            1.5259021893143654e-05
+          ],
+          [
+            0.0,
+            0.0,
+            8.762016477703582e-06,
+            1.5259021893143654e-05
+          ]
+        ]
+      },
+      {
+        "key": "6d47e0e6-8454336c",
+        "mesh": 208,
+        "parts": [
+          195,
+          196
+        ],
+        "referenced_vertex_sum": 160,
+        "same_uv_grid": true,
+        "source_texture_indices": [
+          1,
+          2
+        ],
+        "uv_grids": [
+          [
+            0.0,
+            0.0,
+            1.5259021893143654e-05,
+            1.5259021893143654e-05
+          ],
+          [
+            0.0,
+            0.0,
+            1.5259021893143654e-05,
+            1.5259021893143654e-05
+          ]
+        ]
+      },
+      {
+        "key": "782aed8c-a11abc8a",
+        "mesh": 208,
+        "parts": [
+          197,
+          198,
+          199
+        ],
+        "referenced_vertex_sum": 2841,
+        "same_uv_grid": false,
+        "source_texture_indices": [
+          0,
+          1,
+          2
+        ],
+        "uv_grids": [
+          [
+            -1.621108889579773,
+            0.0,
+            4.5717693865299225e-05,
+            1.5259021893143654e-05
+          ],
+          [
+            0.1875,
+            0.0,
+            5.900949872739147e-06,
+            1.5259021893143654e-05
+          ],
+          [
+            0.0,
+            0.0,
+            8.762016477703582e-06,
+            1.5259021893143654e-05
+          ]
+        ]
+      },
+      {
+        "key": "6d47e0e6-8454336c",
+        "mesh": 209,
+        "parts": [
+          219,
+          220
+        ],
+        "referenced_vertex_sum": 32,
+        "same_uv_grid": true,
+        "source_texture_indices": [
+          1,
+          2
+        ],
+        "uv_grids": [
+          [
+            0.0,
+            0.0,
+            1.5259021893143654e-05,
+            1.5259021893143654e-05
+          ],
+          [
+            0.0,
+            0.0,
+            1.5259021893143654e-05,
+            1.5259021893143654e-05
+          ]
+        ]
+      },
+      {
+        "key": "782aed8c-a11abc8a",
+        "mesh": 209,
+        "parts": [
+          221,
+          222
+        ],
+        "referenced_vertex_sum": 189,
+        "same_uv_grid": false,
+        "source_texture_indices": [
+          1,
+          2
+        ],
+        "uv_grids": [
+          [
+            0.1875,
+            0.0,
+            5.900949872739147e-06,
+            1.5259021893143654e-05
+          ],
+          [
+            0.0,
+            0.0,
+            8.762016477703582e-06,
+            1.5259021893143654e-05
+          ]
+        ]
+      }
+    ]
+  },
+  "scope": "Asset-wide census; not a visible drawlist. Current runtime spatial32v3 fixture, all referenced levels.",
+  "script_sha256": {
+    "census.py": "63d1fc7e461737a8547bc25be1d75ffbb8c53c08736b6735f4e91b79020e39b0",
+    "evidence.py": "e8b3c491ecfdb19b70da8c2fecd7e6eb529861404654ca4382a5d3a8e4da6e4d",
+    "price.py": "f314a71c93f238862cc0a7718c83212e1540b2ac08de72a82fe60e1abff29151"
+  },
+  "source_head": "1f001a1f",
+  "sources": {
+    "fixture": "/mnt/c/Flycast-Evidence/re4-dreamcast/codex-cpu-t15-20261016/hwmodel-cxt16sp32-cross/fixture.json",
+    "fixture_sha256": "bb830aac6c6fe603e09109018d14034048559d56268d603bf74fe142a4c67b5e",
+    "mesh": "/root/probe/codex-ch1-render-20261015/assets/spatial32v3/ps2-wv5.re4mesh",
+    "mesh_sha256": "5dd5e15f8c9826cd7db02a2e2ff3f86488ce8cba7efdba2e4d4cf8194f62e732",
+    "tex_pack": "/root/probe/lanes-20261015/t13rc/data/tex-t13v.pak",
+    "tex_pack_sha256": "9bbe65e631c3de9e9b23c45798ff300a4427c9ad164409a210461b16f0da0cb5"
+  },
+  "spatial": {
+    "finite_patch_16bit_bytes": 33707652,
+    "format_payload_counts": {
+      "(0, 2)": 46
+    },
+    "max_uv_span": [
+      23.277343327354174,
+      28.753906183701474
+    ],
+    "outside_unit_parts": 42,
+    "parts": 78,
+    "repeating_parts": 36,
+    "unique_resident_bytes": 374528,
+    "unique_textures": 46
+  },
+  "spatial_state_groups": 8
+}
