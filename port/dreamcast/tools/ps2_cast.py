@@ -252,6 +252,16 @@ for _a, _types, _rooms in (('em14', (7, 8, 9), ['r20f']), ('em19', (7, 8, 9), ['
                            ('em1a', (7, 8, 9), ['r209']), ('em1b', (7, 8, 10), ['r201', 'r20c'])):
     for _t in _types:
         PRESETS[f'zealot-{_a}-{_t:02x}p'] = _zealot_pool(_a, _t, _rooms)
+# Em14Set type 6 (r20f; not a Ganado: Ganado stays 0): body mot[1] 0x1E7 / TPL mot[0] 0x1E8, head mot[2..4] 0x1E9 with
+# TPL mot[5] 0x1EA, mot[16] 0x1F0 with mot[17] 0x1F1, right hands mot[6..9] 0x1F4..0x1F7, left mot[11..14] 0x1F8..0x1FB,
+# mot[18..20] 0x1ED..0x1EF.
+# em10.cpp: the robe ModInfoMgr.create(mot[16], mot[17]); the second info create(mot[19] or mot[18], mot[17]); the
+# third create(mot[20], mot[0]).
+PRESETS['zealot-em14-06p'] = dict(archive='em14', sections=[
+    (0x1e7, 'body'), (0x1e9, 'head'), (0x1f0, 'extra'),
+    (0x1f4, 'right-hand'), (0x1f8, 'left-hand'), (0x1ed, 'acc0'), (0x1ee, 'acc1'), (0x1ef, 'acc2')],
+    tpl=0x1e8, section_tpls={0x1e9: 0x1ea, 0x1f0: 0x1f1, 0x1ed: 0x1f1, 0x1ee: 0x1f1}, rooms=['r20f'], types=[6], category='registry',
+    model_id=0x14, lit=True, subset_bones=True)
 
 
 def section_specs(spec):

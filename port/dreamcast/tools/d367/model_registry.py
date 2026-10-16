@@ -963,7 +963,12 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             names = sel['descriptors']; known = {r['name'] for r in runtime}; rname = 'r%x%02x' % (package_room >> 8, package_room & 255)
             for n in names:
                 if n not in known:
-                    raise Fail(f'room package {rname}: {n} is not a runtime descriptor (contract or unknown)')
+                    cs = [c for c in contracts if c['name'] == n]
+                    why = 'unknown'
+                    if cs:
+                        secs = ', '.join('%s BIN %s %s' % (x['kind'], x['bin'], '/'.join(x['needs'])) for x in cs[0]['sections'])
+                        why = '%s (sections: %s)' % (cs[0]['contract'], secs)
+                    raise Fail(f'room package {rname}: {n} is not a runtime descriptor: {why}')
             pr = [dict(r, appearance=APPEARANCE0 + i) for i, r in enumerate(x for x in runtime if x['name'] in names)]
             for r in pr:
                 if rname not in r['rooms']:
