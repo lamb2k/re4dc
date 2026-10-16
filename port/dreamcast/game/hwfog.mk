@@ -50,3 +50,22 @@ $(OBJDIR)/hwfog.o: hwfog.cpp
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_HW_FOG_HAZE=1
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_HW_FOG_HAZE=1
 endif
+# MIST_CUT=<mask> (lane mist16 2026-10-16, tester hack evidence; render only, test arms; unset = no code, identical
+#   image): the build default of the runtime mask re4dc_mist_cut (port/dreamcast/docs/MIST_CUT.md), one bit per effect
+#   class not drawn: 1 haze / mist (Esp15 camera haze, Esp48 sheets; the fog-table veil of HW_FOG_HAZE / EFFECT_HAZE_LEAN
+#   stays), 2 world translucent mist cards (native_static.cpp kMistParts), 4 window glows / streaks (room table 0xd0
+#   Esp0a / Esp0e), 32 room dust / smoke / particles (other 0xd0), 8 fire / torches / lamps, 64 every other effect
+#   owner (shots, blood, sparks), 128 water (Esp42 / Esp45), 16 = diagnostic ceiling only: no translucent world part at
+#   all (foliage, ground overlays, shadow decals). Arms: B = 1, C = 2, D = 3 (all mist), E = 239 (every effect sprite +
+#   mist cards), F = 255. Generators, Rnd() draws, the effect pool and motion are unchanged (draw-time only).
+MIST_CUT ?=
+ifneq ($(MIST_CUT),)
+ifeq ($(filter $(MIST_CUT),$(shell seq 1 255)),)
+$(error MIST_CUT is a mask 1..255)
+endif
+ifneq ($(EFFECT_SPRITES)$(EFFECT_PS2_HAZE),11)
+$(error MIST_CUT needs EFFECT_SPRITES=1 and EFFECT_PS2_HAZE=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_MIST_CUT=$(MIST_CUT)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_MIST_CUT=$(MIST_CUT)
+endif

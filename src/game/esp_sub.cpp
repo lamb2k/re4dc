@@ -103,6 +103,15 @@ u8 re4dc_ps2fx = 0;
 #else
 u8 re4dc_ps2fx = PS2FX_BUILT;
 #endif
+#if defined(RE4DC_MIST_CUT)
+// MIST_CUT (hwfog.mk, lane mist16 2026-10-16; render only, test arms): the build default of a runtime mask.
+// 1: no camera haze sprite (Esp15) and no mist sheet (Esp48) is drawn (the fog-table veil stays); 2: the world's
+// translucent mist / backdrop parts (native_static.cpp kMistParts) are not drawn; 4: no other room-table ambient
+// sprite (owner 0xd0: window glows / streaks / shafts, smoke, dust); 8: no other effect sprite of any owner (fire,
+// torches, sparks, blood, muzzle flash, splashes); 16 (native_static.cpp): diagnostic, no translucent world part at all.
+// Generators, Rnd() draws, the pool and every motion run as before.
+unsigned re4dc_mist_cut = RE4DC_MIST_CUT;
+#endif
 // VMU label: GC (as the base), GF (GC + the fade clamp), PH (PS2 haze), PS (PS2 haze + streak), ST (streak only).
 const char* re4dc_ps2fx_label(void)
 {
@@ -1198,6 +1207,38 @@ static GXColor Ps2fxStaticColor(const cEsp* esp, const Ps2fxStatic* row)
     return col;
 }
 #endif
+#if defined(RE4DC_MIST_CUT)
+// MIST_CUT effect classes (mask bits; 2 and 16 are world parts, native_static.cpp): 1 haze / mist (Esp15 camera haze,
+// Esp48 mist sheets), 4 window glows / streaks / shafts (room table 0xd0 Esp0a / Esp0e), 32 room dust / smoke /
+// particles (the other room table 0xd0 effects), 8 fire / torches / lamps (room EST owner 0x01, torch and lamp owners),
+// 64 every other owner (shots, blood, sparks, splashes), 128 water (Esp42 / Esp45, any owner).
+static unsigned MistCutClass(cEsp* esp)
+{
+    const u32 o = esp->info.owner;
+    if (esp->m_Id == 0x42 || esp->m_Id == 0x45) return 128;
+    if (esp->m_Id == 0x15 || esp->m_Id == 0x48) return 1;
+    if (o == 0xD0) return (esp->m_Id == 0x0a || esp->m_Id == 0x0e) ? 4 : 32;
+    if (o == 0x01 || o == 0x5E || o == 0x5F || o == 0x60 || o == 0x64 || o == 0x68 || o == 0x6D || o == 0x70 || o == 0x8C) return 8;
+    return 64;
+}
+// Counts of the sprites the mask declined per class, one log line per room / 600 frames.
+static u32 s_mist_cut_n[8], s_mist_cut_frame;
+static u16 s_mist_cut_room;
+static void MistCutNote(unsigned cls)
+{
+    const unsigned k = cls == 1 ? 0 : cls == 4 ? 1 : cls == 32 ? 2 : cls == 8 ? 3 : cls == 64 ? 4 : 5;
+    ++s_mist_cut_n[k];
+    if (s_mist_cut_room != G_ROOM_ID || (u32) (pG->Frame_cnt - s_mist_cut_frame) >= 600) {
+        re4dc_log("mist cut: mask=%u room=%03x frame=%u haze=%u glow=%u dust=%u fire=%u other=%u water=%u\n",
+                  re4dc_mist_cut, (unsigned) G_ROOM_ID, (unsigned) pG->Frame_cnt, (unsigned) s_mist_cut_n[0],
+                  (unsigned) s_mist_cut_n[1], (unsigned) s_mist_cut_n[2], (unsigned) s_mist_cut_n[3],
+                  (unsigned) s_mist_cut_n[4], (unsigned) s_mist_cut_n[5]);
+        s_mist_cut_room = G_ROOM_ID;
+        s_mist_cut_frame = pG->Frame_cnt;
+        for (int i = 0; i < 8; ++i) s_mist_cut_n[i] = 0;
+    }
+}
+#endif
 static void EspSpriteEmit(cEsp* esp)
 {
     // GX blend factors 0..7 (ZERO ONE DSTCLR/SRCCLR INVxCLR SRCA INVSRCA DSTA INVDSTA) have the
@@ -1216,6 +1257,15 @@ static void EspSpriteEmit(cEsp* esp)
     if (tw->Owner == 0xD2 || !tw->pTpl || esp->m_Ptn_no >= tw->pTpl->numDescriptors) {
         return;
     }
+#if defined(RE4DC_MIST_CUT)
+    {   // a recipe haze sprite (Esp15 with a PS2 row) is declined further down, after the fog rows' notes
+        const unsigned cls = MistCutClass(esp);
+        if ((re4dc_mist_cut & cls) && (cls != 1 || esp->m_Id == 0x48 || !Ps2fxHazeFor(esp))) {
+            MistCutNote(cls);
+            return;
+        }
+    }
+#endif
     const TEXDescriptor* td = TEXGet(tw->pTpl, RE4DC_FX_FLIP_PTN(esp->m_Ptn_no, tw->pTpl->numDescriptors));   // effects30.mk
     const TEXHeader* th = td->textureHeader;
     Re4dcEffectSprite s;
@@ -1363,6 +1413,12 @@ static void EspSpriteEmit(cEsp* esp)
             if (re4dc_hwfog_haze(hz->room, d, indoor)) {
                 return;
             }
+        }
+#endif
+#if defined(RE4DC_MIST_CUT)
+        if (re4dc_mist_cut & 1) {   // MIST_CUT bit 1: not even the near haze (after the fog rows' notes)
+            MistCutNote(1);
+            return;
         }
 #endif
 #if defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 2)

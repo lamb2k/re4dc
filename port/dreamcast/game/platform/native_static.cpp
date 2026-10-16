@@ -273,6 +273,9 @@ static const char* re4dc_look_scaler_request(unsigned cfg){
 // On-screen label (native_ui.cpp re4dc_look_grade_post draws it in the top letterbox): 3 s after each preset change,
 // or always while "always show" is on (hold X + Y, press START).
 extern "C" unsigned re4dc_vi_retrace_count(void);
+#if defined(RE4DC_MIST_CUT)
+extern "C" unsigned re4dc_mist_cut;   // esp_sub.cpp (hwfog.mk MIST_CUT)
+#endif
 static unsigned re4dc_look_osd_until;static bool re4dc_look_osd_always;
 extern "C" void re4dc_look_osd_toggle(void){
     re4dc_look_osd_always=!re4dc_look_osd_always;re4dc_look_osd_until=re4dc_vi_retrace_count()+180U;
@@ -4394,6 +4397,29 @@ void end_pass(unsigned pass,unsigned nparts,unsigned frame,unsigned r){
 }
 }
 #endif
+#if defined(RE4DC_MIST_CUT)
+// MIST_CUT (hwfog.mk, lane mist16 2026-10-16; esp_sub.cpp re4dc_mist_cut, render only). Bit 2: the world's translucent
+// mist / backdrop cards. The chapter 1 outdoor inventory (port/dreamcast/docs/MIST_CUT.md) found one: the grey fogged
+// treeline band e967b886 (r10b texture 7, staged in r10b / r11b); every other TR-pass part there is foliage, leaf litter,
+// ground blend overlays or shadow decals. Bit 16 (diagnostic ceiling only, never a look): no TR-pass world part at all.
+namespace mistcut{
+constexpr std::uint32_t kMistParts[][2]={{0xe967b886U,0x9bd0a435U}};
+static unsigned skipped,last_room;static std::uint32_t last_frame;
+static bool world_part(unsigned pass,std::uint32_t crc,std::uint32_t fnv){
+    if(pass!=2)return false;
+    bool cut=(re4dc_mist_cut&16U)!=0;
+    if(!cut && (re4dc_mist_cut&2U))for(const auto& k:kMistParts)cut=cut||(k[0]==crc && k[1]==fnv);
+    if(!cut)return false;
+    ++skipped;
+    const std::uint32_t f=re4dc_vi_retrace_count();
+    if(last_room!=ps2w.room || f-last_frame>=1200U){
+        re4dc_log("mist cut world: mask=%u room=%03x parts=%u\n",re4dc_mist_cut,unsigned(ps2w.room),skipped);
+        last_room=ps2w.room;last_frame=f;skipped=0;
+    }
+    return true;
+}
+}
+#endif
 int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
@@ -4701,6 +4727,9 @@ int ps2_pass(unsigned pass,float zfar){
             R11fUvScope uvScope(part,pl.placement,pl.mesh,index,pass);
 #endif
             if(meta.pass!=pass)continue;
+#if defined(RE4DC_MIST_CUT)
+            if(mistcut::world_part(pass,meta.crc,meta.fnv))continue;
+#endif
             ++c.parts;part.cull=meta.cull;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             // Offset belongs to this exact placement/part draw, never its
