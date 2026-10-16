@@ -17,7 +17,7 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 16 | Fixed and checked in our tests; the problem was not console-only | 22 |
 | 🛠️ In progress | Being fixed now | 0 |
 | 🔍 Investigating | Being reproduced or traced | 4 |
-| ⏸️ Open | Known, not yet worked on | 12 |
+| ⏸️ Open | Known, not yet worked on | 13 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Stability
@@ -65,7 +65,8 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | Right after the door from the village into r103, some effect pictures can be missing for a moment and more textures load from the disc during play | test 12, 12.1, 12.2 | 🟢 Fixed in test 13: the village's leftover textures are cleared at the door, so r103 (and r100 when you go back) loads its textures when the room starts | |
 | Ashley shows a resting face: her facial expressions are not shown | test 13 | ⏸️ Open: Ashley now uses her PS2 model; the expressions come later | |
 | Foliage: Off removes walls and floor in r109 (the cabin); use Near or Full there | test 15 | ⏸️ Open: Near (the default) and Full draw the cabin normally | |
-| In the village (r101) the burning stake has lost its crossbar and a plank of the pyre, and the fence by the house on the right of the square shows only its posts (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16: the stake, the pyre and the fences around the square keep their full detail (checked in game at the village cross) | |
+| In the village (r101) the burning stake has lost its crossbar and a plank of the pyre (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16: the stake and the pyre keep their full detail (checked in game at the village cross) | |
+| In the village (r101) the fence by the house on the right of the square shows only its posts, without its rails (the simplified village scenery of test 15) | test 15 | ⏸️ Open: keeping that fence's detail in the scenery simplification did not bring the rails back, so they are lost in a later step; a hand fix is planned | |
 
 ## Sound
 
