@@ -775,7 +775,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 raise Fail(f'{name}: lod_of {d["lod_of"]} must be an earlier descriptor with the same source identity')
         elif identity in seen_identity:
             raise Fail(f'{name}: source identity {identity} is ambiguous with {seen_identity[identity]}')
-        seen_identity[identity] = name
+        if not d.get('lod_of'):
+            seen_identity[identity] = name  # a level keeps the full descriptor's name here (lane stress16b: two levels of one)
         # ---- chunks
         chunks, hbones = parse_header(hdr)
         if hbones != draw:
