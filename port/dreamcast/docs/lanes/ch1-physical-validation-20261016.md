@@ -3,8 +3,8 @@
 This is the current handover for branch `codex/ch1-render-poc-20261015` and
 supersedes the compatibility status and cost number in the earlier POC notes.
 It covers the isolated tree `/root/probe/codex-ch1-render-20261015/tree` only.
-The goal remains active. Physical appearance, performance and stability acceptance
-is still required before converting another room or promoting this candidate.
+The goal is blocked awaiting physical appearance, performance and stability
+acceptance before converting another room or promoting this candidate.
 
 ## Current implementation
 
