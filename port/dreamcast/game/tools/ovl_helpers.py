@@ -172,8 +172,11 @@ def main():
         moves[obj] = [(sec, s) for sec, s in moves[obj] if sec not in grouped or (s in ro and sec in private.get(obj, ()))]
         if not moves[obj]:
             del moves[obj]
-    if ro:
-        blocked = image_referenced(work, [s for s in overlays if s in ro], base, present, moves)
+    # RE4DC_OVL_HELPERS_SAFE (STAGE_OVL, lane ch3found16): overlays whose moves are also checked against the image data
+    # that stays (a vtable in .rodata naming a method only the overlay reaches: CameraLookDownEm::move for st1_0).
+    safe = set(os.environ.get('RE4DC_OVL_HELPERS_SAFE', '').split())
+    if ro or safe:
+        blocked = image_referenced(work, [s for s in overlays if s in ro or s in safe], base, present, moves)
         for obj in list(moves):
             moves[obj] = [(sec, s) for sec, s in moves[obj] if (obj, sec) not in blocked]
             if not moves[obj]:

@@ -105,6 +105,21 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_TABLE=1 -I$(LEON_HA
 $(OBJDIR)/coarse_actor.o: $(LEON_HAND_DIR)/ps2leon_hands.h
 endif
 endif
+# LEON_OT_WATER=1 (castle lane 2026-10-15; default 0: no effect; render only; needs LEON_HAND_POSES=1): the player's
+#              model also keeps the PS2 owner path at ot_type 5. R205Main and R229Main (src/st2) set pPL->ot_type = 5
+#              (the water ordering table) every frame, so before this Leon went to the GameCube body for the whole
+#              room (cx32c r205: LEONGC why=4, NMRS id=00 ot=5 declined 1199/1200). The native path draws its own TA
+#              lists, so ot 5 is drawn as the ot 0 ride case already is: one pass, every part.
+LEON_OT_WATER ?= 0
+ifeq ($(filter $(LEON_OT_WATER),0 1),)
+$(error LEON_OT_WATER must be 0 or 1)
+endif
+ifeq ($(LEON_OT_WATER),1)
+ifneq ($(LEON_HAND_POSES),1)
+$(error LEON_OT_WATER needs LEON_HAND_POSES=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_OT_WATER=1
+endif
 # LEON_HAND_PACK=1 (issue #26 follow-up, 2026-10-13; default 0: no effect; render only; needs LEON_HAND_POSES=1, PS2_LEON=1,
 #              ACTOR_PL08=1, no LEON_HAND_DIR): the hands with no image growth. Every hand pose of the outfit, the
 #              standard hands included, is the disc package dc/native/pl00/leon_hands_pl00.re4hp (tools/d367/ps2leon/

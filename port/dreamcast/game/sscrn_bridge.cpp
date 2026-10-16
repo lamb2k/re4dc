@@ -399,6 +399,16 @@ extern "C" void re4dc_subscreen_aram_init(SubScreenWork* wk)
 void* re4dc_ss_alloc_above(u32 size, const char* file, int line)
 {
     const u32 lo = u32(pG->pStFnt), hi = lo + kSsAramSize;
+#if defined(RE4DC_SS_POOL_TOP) && RE4DC_SS_POOL_TOP
+    {
+        // SS_POOL_TOP: the pools go to the top of heap 4, so the window's free tail and the free space above the
+        // window stay one block (r221 em2c, 2.89 MB). Same pools, sizes and the same above-the-window rule.
+        void* re4dc_mem_alloc_top(u32 size, const char* file, int line, int heap);  // main_mem.cpp
+        void* t = re4dc_mem_alloc_top(size, file, line, 0xD);
+        if (t && (!lo || u32(t) >= hi)) return t;
+        if (t) Mem_free(t);
+    }
+#endif
     void* held[256];
     unsigned n = 0;
     void* p = nullptr;

@@ -3397,3 +3397,11 @@ $(OBJDIR)/sh4zam-inline.ok: $(SH4ZAM_OBJS)
 	@if sh-elf-nm -u $^ | grep ' _shz_' >&2; then echo "$^: undefined SH4ZAM symbols above (out-of-line SH4ZAM calls need libsh4zam.a: make sh4zam-lib, and link it)" >&2; exit 1; fi
 	@touch $@
 endif
+# MOTION_MISS_LOG=1 (castle lane 2026-10-15; diagnostic, log only, default 0): "motion miss" lines (clip, wait, slab).
+MOTION_MISS_LOG ?= 0
+ifeq ($(filter $(MOTION_MISS_LOG),0 1),)
+$(error MOTION_MISS_LOG must be 0 or 1)
+endif
+ifeq ($(MOTION_MISS_LOG),1)
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_MISS_LOG=1
+endif

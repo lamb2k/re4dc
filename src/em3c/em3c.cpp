@@ -122,7 +122,12 @@ extern "C" void _unresolved()
 // by em3c_R0_Init on the first move).
 void Em3cInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEm3c;
+#else
     new (em) cEm3c();
+#endif
 }
 
 // Per-frame damage reaction, run from move() once the enemy is past init. Consumes the hit the
@@ -2383,7 +2388,13 @@ int em3cStayCk(cEm3c* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if ((e->be_flag & 0x201) == 1 && e->id == 0x3C && e->hp > 0 && e != em && e->checkStatus(EM_STATUS_ACTIVE)
             && EM3C_WK(e)->L_pl_route < w->L_pl_route) {
@@ -2474,7 +2485,13 @@ void em3cDoorOpenCk(cEm3c* em)
         return;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEmDoor* e = (cEmDoor*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEmDoor* e = (cEmDoor*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
         EmDoorWork* dw;
 
         if ((e->be_flag & 0x201) != 1) {
@@ -2550,7 +2567,13 @@ void em3cAtkSuspend(cEm3c* em, int on)
         pG->Status_flg[2] &= ~0x02000000;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if ((e->be_flag & 0x201) == 1 && e->id == 0x3C && e != em && e->r_no_0 == 1 && e->r_no_1 <= 1) {
             if (on) {

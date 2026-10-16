@@ -182,7 +182,12 @@ extern "C" void _unresolved()
 // EmInitFunc of the module: constructs the cEm25 class in the manager's work.
 void Em25Init(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEm25;
+#else
     new (em) cEm25();
+#endif
 }
 
 // Per-frame damage check (cEm25::move): a floor parasite (Mode 0) in an explosion / fire volume burns

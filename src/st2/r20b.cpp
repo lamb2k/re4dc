@@ -91,6 +91,19 @@ static void R20bDoorEventEnd();
 static void setTexRender();
 static void R20bEventS00();
 extern "C" void Evt_R20BS00_Func(Event* e);
+
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH3) && RE4DC_ROUTE_MOVIES_CH3
+// ROUTE_MOVIES_CH3 (castle lane 2026-10-15): r20b s00 (the chapter 3-2 end) is presented by its PS2 movie.
+// While the movie owns the event no evd is read (no DC.setData / ARAM load, the swap module is read at its own
+// size); the handler's begin / end modes run, the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md).
+#include "route_movie.h"
+#include "fade.h"
+#define R20B_ROUTE_MOVIES 1
+static int r20bMovieOwns;
+#define R20B_MOVIES_OWN() (re4dc_movie_available(0x20b00))
+#else
+#define R20B_ROUTE_MOVIES 0
+#endif
 void EvtTexRenderCamTrans(Event* e, int cut);
 
 // Room init (the great hall): s00/s99 callbacks, Room_flg[0] bit 31 (lower floor) cleared, the upper
@@ -117,6 +130,10 @@ void R20bInit()
         ((cEmDoor*) door0)->setDoor((cEmDoor*) door1);
     }
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
+#if R20B_ROUTE_MOVIES
+        r20bMovieOwns = R20B_MOVIES_OWN();
+        if (!r20bMovieOwns)
+#endif
         EvtMgr.EvtReadAram("event/evd/r20bs00.evd", (u8) GetEmIdFromListI(0x11), 0, 0, 0);
         SceAtDataSet_exec(2, SCE_LEVEL10, 0, (TaskFunc) R20bEventS00, 0, 1);
         SmdSetTrans(0x51, 1);
@@ -321,6 +338,14 @@ static void OpenBoxTreasure(int id)
 }
 
 // The enemy waves of the hall, keyed to the at areas the player crosses.
+// PS2_ENEMY_CASTLE bit 0x02 (PS2 USA st2_1 R20bEmSetMain 0x14618): list row 3 (em[1]) is never sent, and the
+// random wave sends one Ganado in cases 0-2. Default off: the GC waves.
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x02)
+#define R20B_PS2_WAVES 1
+#else
+#define R20B_PS2_WAVES 0
+#endif
+
 static void R20bEmSetMain()
 {
     cEm* door0;
@@ -331,10 +356,14 @@ static void R20bEmSetMain()
 
     SceSleep(1);
     if (RsfCheck(G_ROOM_ID, 3)) {
-        r20b_work.p->em[1].setEm(3, -1, 0, 1, 1);
+        if (!R20B_PS2_WAVES) {
+            r20b_work.p->em[1].setEm(3, -1, 0, 1, 1);
+        }
         r20b_work.p->em[2].setEm(4, -1, 0, 1, 1);
         r20b_work.p->em[3].setEm(5, -1, 0, 1, 1);
-        r20b_work.p->em[1].setFlag(1);
+        if (!R20B_PS2_WAVES) {
+            r20b_work.p->em[1].setFlag(1);
+        }
         r20b_work.p->em[2].setFlag(1);
         r20b_work.p->em[3].setFlag(1);
     }
@@ -349,7 +378,9 @@ static void R20bEmSetMain()
                 r20b_work.p->em[0].setEm(0x11, -1, 0, 1, 1);
                 r20b_work.p->em[0].setFlag(1);
                 r20b_work.p->em[4].setEm(6, -1, 0, 1, 1);
-                r20b_work.p->em[1].setEm(3, -1, 0, 1, 1);
+                if (!R20B_PS2_WAVES) {
+                    r20b_work.p->em[1].setEm(3, -1, 0, 1, 1);
+                }
                 r20b_work.p->em[2].setEm(4, -1, 0, 1, 1);
                 r20b_work.p->em[3].setEm(5, -1, 0, 1, 1);
             }
@@ -357,10 +388,12 @@ static void R20bEmSetMain()
         if (BitCk(pG->Room_flg[2], 0x40000000) || BitCk(pG->Room_flg[2], 0x20000000)) {
             if (RsfCheck(G_ROOM_ID, 3) == 0) {
                 RsfSet(G_ROOM_ID, 3);
-                r20b_work.p->em[1].setEm(3, -1, 0, 1, 1);
+                if (!R20B_PS2_WAVES) {
+                    r20b_work.p->em[1].setEm(3, -1, 0, 1, 1);
+                }
                 r20b_work.p->em[2].setEm(4, -1, 0, 1, 1);
                 r20b_work.p->em[3].setEm(5, -1, 0, 1, 1);
-                r20b_work.p->em[1].setFlag(1);
+                if (!R20B_PS2_WAVES) r20b_work.p->em[1].setFlag(1);
                 r20b_work.p->em[2].setFlag(1);
                 r20b_work.p->em[3].setFlag(1);
             }
@@ -432,6 +465,9 @@ static void R20bEmSetMain()
 
                     RsfSet(G_ROOM_ID, 5);
                     r = Rnd() % 6;
+                    if (R20B_PS2_WAVES && r < 3) {
+                        r += 3;   // PS2 jump table: cases 0/1/2 send 0x14 / 0x15 / 0x16 alone, as cases 3/4/5
+                    }
                     switch (r) {
                     case 0:
                         r20b_work.p->em[5].setEm(0x14, -1, 0, 1, 1);
@@ -699,6 +735,11 @@ static void R20bEventS00()
         SceAtSetEnable(2, 0);
         SceDestroyEm(0x22, 0x22);
         SceSleep(1);
+#if R20B_ROUTE_MOVIES
+        if (r20bMovieOwns) {
+            RouteMoviePlay(0x20b00, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R20BS00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r20bs00.evd", (u8) GetEmIdFromListI(0x11), 0);
         SceSetChapterEnd(CHAPTER_3_2, -1);
     }

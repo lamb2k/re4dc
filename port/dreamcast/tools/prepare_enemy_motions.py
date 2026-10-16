@@ -31,13 +31,29 @@ MAX_CLIP=32768
 # em16 (r11d's chapter 2-3 night-village Ganados and the Bella sisters, chainsaw types 3 / 4; lane ch2code16 2026-10-16):
 # em16/em10.cpp, em10_tmpl.cpp, em16_set.cpp, the same three units (ROUTE_CH23 links it in the em10g group); its 4,246,528 B
 # GC body never fit r11d's heap 4 next to the room, Ashley and em3b (CH22-ROUTE-20261014 blocker 1).
-GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em16.drs')
+# em1a / em1b / em14 (castle chapter 3 Ganados, ROUTE_CH31; castle lane 2026-10-15): em1x/em10.cpp, em10_tmpl.cpp,
+# em1x_set.cpp, the em10g group's units, so the same consumers; their GC archives (3.9-4.3 MB bodies) did not fit heap 4
+# in r208 / r201 / r204 next to the room and its PS2 world (cx-r20x-t12-01: readEmData error).
+# em19 (r20d Ganados, ROUTE_CH32; same em10.cpp / em10_tmpl.cpp / em19_set.cpp units, 4,293,760 B GC body).
+# em1c (r218 Ganados, ROUTE_CH41; em10.cpp / em10_tmpl.cpp / em1c_set.cpp, 4,988,480 B GC body).
+GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em16.drs','em1a.drs','em1b.drs','em14.drs','em19.drs','em1c.drs')
 SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.drs','em18.drs','pl11.drs','pl0f.drs')
 # em2a / em24 / em27 / em29 / em2e (the chapter 1 traps, snake, fish, bat and wall crawler; lane ps2cast 2026-10-15,
 # registry room packages of the released chapter 1-1..2-1 rooms): textures only (--keep-motion-resident). Each module's
 # model TPL reaches only modelInit (src/em2a/em2a.cpp ARC 5 / 7 / 9, em24 ARC 6, em27 ARC 5, em29 ARC 5, em2e ARC 5 / 6);
 # none uploads or reads texels on the CPU, so the prepared R4NREF descriptors replace exactly what the source path draws.
 SMALL+=('em2a.drs','em24.drs','em27.drs','em29.drs','em2e.drs')
+# em2c (Verdugo, r221) / em38 (Salazar + the Queen, r228) (lane ch3found16 2026-10-16, ROUTE_BOSS4 stress test): textures
+# only (--keep-motion-resident). em2c's model TPL (ARC 6) reaches only modelInit (Em2c R0 init: modelInit(ARC 5 / 0x86,
+# ARC 6)); its ice blend is a TexRender target (em2cTexrenderInit), not TPL texels. em38's model TPL (ARC 8) and ARC 0xA
+# reach only modelInit and ModInfoMgr.create (em38 R0 init, the pl11 pattern). Their EFF slots (em2c ARC 4, em38 ARC
+# 0xB, EspDataLoad) keep their own textures (top-level TPLs only are selected). Motions stay resident: both modules keep
+# raw FCV pointers (em2c w->blendM0.., em38 w->mot[]), so motion streaming needs its own consumer audit.
+SMALL+=('em2c.drs','em38.drs')
+# em2d (Novistadors, r205 / r20a, ROUTE_CH32 room overlay; lane ch3found16 2026-10-16): textures only. Its model TPL reaches
+# only modelInit (em2d R0 init, modelInit(bin, tpl)); its EFF slot (ARC 4, EspDataLoad) keeps its own textures. The GC
+# body (3,700,672 B) did not fit r205's heap 4 (largest 2,334,560 B, cx-r205-h1-01 Flycast).
+SMALL+=('em2d.drs',)
 # pl0f (the lake boat, r10b r11b; lane ps2cast 2026-10-15, PS2_CAST_BOAT discs): textures only (--keep-motion-resident),
 # the em2f contract. Its one model TPL (ARC 6) reaches only modelInit (src/pl0f/pl0f.cpp pl0f_R0_Init, modelInit(ARC 5,
 # ARC 6)); the source path uploads its colour texels and never reads them on the CPU. ARC 8 (Leon's harpoon hand BIN,
@@ -89,8 +105,9 @@ ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11')
 # archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
 # their own registry row like the room overlays above: em11 (ROUTE_CH21, r117), em18 (ROUTE_CH13, r102: module 22),
-# em16 (ROUTE_CH23, r11d: module 20).
-KNOB_STATIC_MODULES=('em11','em18','em16')
+# em16 (ROUTE_CH23, r11d: module 20), and the castle Ganados (ROUTE_CH31 / CH32 / CH41).
+KNOB_STATIC_MODULES=('em11','em18','em16','em1a','em1b','em14','em19','em1c')
+GANADO_OVERSIZED_RESIDENT=('em1b.drs',)  # + ROUTE_CH31's castle Ganado RELs
 # Leon's archives, textures-only: pl00 (jacket, costume 0) and pl08 (no jacket, costume 1: title.cpp picks it in
 # every room but r120/r100/r101/r103/r106 once the r106 closet event has run). Same cPlLeon consumers, so pl08
 # takes pl00's reviewed textures-only contract (route lane 2026-10-01, r104).
@@ -103,6 +120,12 @@ BOUNDED_PROFILES={
         source='53b653c169d7a022407c8dd75d1a304d904709aae278f80cda5f843dc3b361a0',retain=(0x46,)),
     'pl11-r11f': dict(name='pl11.drs',module=47,cap=32768,count=69,
         source='f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58',retain=(0x40,0x43)),
+    # castle lane 2026-10-15: pl11-r11f plus Ashley's near-enemy clips kept in the body (MOTION_MISS_LOG, Flycast:
+    # entries 0 / 6 / 61 cycled through the two slabs in r203, 61 / 6 / 0 / 3 / 1 / 18 in r208, 140-160 ms per miss).
+    # Retained arcs 18 19 21 24 36 68 108 109 (= r11f entries 0 1 3 6 18 47 60 61, 29,056 B); the rest stays bounded.
+    'pl11-hot': dict(name='pl11.drs',module=47,cap=32768,count=61,
+        source='f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58',
+        retain=(0x40,0x43,18,19,21,24,36,68,108,109)),
 }
 
 def prepare(source, destination, hot_slots=(), textures=None, keep_motion_resident=False, compact_effects=False, bounded_profile=None):
@@ -175,7 +198,8 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     # carries the whole REL too); it moves intact behind the tables like the 64-byte descriptor does.
     # pl0f: the release disc carries its whole REL too (pl0f is in no static / overlay module list); it moves intact.
     # em24: the release disc carries its whole REL too (le_mirror keeps it: 394,176 B on the disc = the GC file).
-    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
+    # em2c / em38 (ROUTE_BOSS4 room overlays): le_mirror keeps their whole REL as for pl0f; it moves intact.
+    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
     original_size,original_base=struct.unpack_from('>I4xI',original,slot+4)
     codec=mirror.motion_codec();ranges=[];entries=[];files={};oversized=[]
     for off in ([] if keep_motion_resident else sorted(set(offsets))):
@@ -194,7 +218,9 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
         if len(native)>(profile['cap'] if profile else MAX_CLIP):
             # em21: a clip over the runtime's slot limit stays resident (ordinary FCV, exact bytes);
             # the Ganado contract keeps refusing, as before.
-            if name in MOTION_SMALL:oversized.append({'source_arc_indices':[i+4 for i in slots],'bytes':len(native)});continue
+            # em1b (castle lane 2026-10-15): one Ganado clip over the slot limit stays resident the same way (exact bytes,
+            # ordinary FCV path); every other em1b clip streams. Other Ganados keep refusing.
+            if name in MOTION_SMALL or name in GANADO_OVERSIZED_RESIDENT:oversized.append({'source_arc_indices':[i+4 for i in slots],'bytes':len(native)});continue
             raise ValueError('clip exceeds validated cache slot')
         prefix=codec.header_size(len(parsed.joints));resident=(prefix+31)&~31
         if resident>=len(native):continue

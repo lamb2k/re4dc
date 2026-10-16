@@ -44,7 +44,12 @@ extern "C" void _unresolved()
 // builds the enemy through Em10SetFunc).
 void Em1bInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEm10;
+#else
     new (em) cEm10();
+#endif
 }
 
 // Em10SetFunc of this module: the castle zealots (class 1): model types 7 (default; voice 0 / 2), 8 (voice 3) and 10 (voice 1). Fills the work's motion table mot[0..40] (body / head / hand

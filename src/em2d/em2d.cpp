@@ -341,7 +341,12 @@ extern "C" void _unresolved()
 // EmInitFunc of the module: constructs the cEm2d class in the manager's work.
 void Em2dInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEm2d;
+#else
     new (em) cEm2d();
+#endif
 }
 
 // Per-frame damage check (cEm2d::move). An explosion / fire volume takes 500 every 120 frames
@@ -5554,7 +5559,13 @@ int em2dStayCk(cEm2d* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if ((e->be_flag & 0x201) == 1 && e->id == 0x2D && e->hp > 0 && e != em && e->checkStatus(EM_STATUS_ACTIVE) &&
             (EM2D_WK(e)->flags & 0x200) && e->plDist2 < em->plDist2) {
@@ -5791,7 +5802,13 @@ void em2dDoorOpenCk(cEm2d* em)
         return;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEmDoor* e = (cEmDoor*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEmDoor* e = (cEmDoor*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
         EmDoorWork* dw;
 
         if ((e->be_flag & 0x201) != 1) {
@@ -6370,7 +6387,13 @@ int em2dSomebodyFindCk(cEm2d* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
         f32 d;
 
         if ((e->be_flag & 0x201) != 1) {
@@ -6545,7 +6568,13 @@ void em2dHumSeMove(cEm2d* em)
         (cam->param.pos.z - em->pos.z) * (cam->param.pos.z - em->pos.z);
     cnt = 0;
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if ((e->be_flag & 0x201) == 1 && e->id == 0x2D && e->hp > 0 && e != em && e->checkStatus(EM_STATUS_ACTIVE) &&
             (EM2D_WK(e)->flags & 0x40000) &&

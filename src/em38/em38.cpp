@@ -149,7 +149,12 @@ extern "C" void _unresolved()
 // em38_R0_Init does the per-type setup on the first move.
 void Em38Init(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEm38;
+#else
     new (em) cEm38();
+#endif
 }
 
 // Per-frame damage reaction of every part, from move(). Consumes dmHit: applies em38SetDmVal
@@ -1764,7 +1769,12 @@ void em38EyeMove(cEm38* em)
 // Work `no` of the enemy manager without the range check (the callers loop over nArray).
 static inline cEm38* em38EmWork(u32 no)
 {
+#if !defined(__PPC__)
+    // Unbacked sparse enemy slots read as absent (as em21's scans); the callers skip 0.
+    return (cEm38*) EmMgr.workAt(no);
+#else
     return (cEm38*) ((u8*) EmMgr.pArray + EmMgr.size * no);
+#endif
 }
 
 // Finds the other parts of the boss among the alive enemies.
@@ -1776,6 +1786,9 @@ void em38SearchParts(cEm38* em)
     for (i = 0; i < EmMgr.nArray; i++) {
         cEm38* p = em38EmWork(i);
 
+#if !defined(__PPC__)
+        if (!p) continue;
+#endif
         if ((p->be_flag & 0x201) == 1 && p->id == 0x38 && p != em) {
             switch (p->type) {
             case 0:
@@ -1861,6 +1874,9 @@ void em38BirthParasite(cEm38* em)
         for (i = 0; i < EmMgr.nArray; i++) {
             cEm25* p = (cEm25*) em38EmWork(i);
 
+#if !defined(__PPC__)
+            if (!p) continue;
+#endif
             // isAlive() (not the open-coded flag test): the inline's extra RTL keeps the loop
             // above loop.c's 71-insn threshold in pass 2, so `li 240` stays inside the loop
             if (p->isAlive() && p->id == 0x25) {

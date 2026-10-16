@@ -3011,6 +3011,24 @@ extern "C" void re4dc_fog_frame(){
 #endif
      }}
 #endif
+#if defined(RE4DC_FOG_OFF_CLEAR) && RE4DC_FOG_OFF_CLEAR
+    // FOG_OFF_CLEAR (castle lane 2026-10-15): until the first fog-on frame nothing loads a PVR fog table, but table-fog
+    // draws (actor packets whose material asks for fog) still read it: after a boot or warp straight into a fog-off
+    // room that is KOS's start-up table (the castle rooms: Leon drawn flat grey). Load an all-clear table once, only
+    // while no table was ever loaded (fog_loaded.type -1); the source turns fog off around later draws of fog rooms,
+    // so a fog-off frame after a load must keep the loaded table.
+    if(!fog_now.type && fog_loaded.type==-1){
+        static int cleared;
+        if(!cleared){
+            float clear[129];
+            for(unsigned j=0;j<129;++j)clear[j]=0.0f;
+            pvr_fog_table_custom(clear);
+            cleared=1;
+            re4dc_log("native fog: off since boot, table cleared\n");
+        }
+        return;
+    }
+#endif
 #if RE4DC_LOOK_ANY
 #if defined(RE4DC_LOOK_TOGGLE)
     re4dc_look_grade_rgb_now=(fog_now.type && (fog_now.rgba>>8)==0x8d8775U && fog_now.start<1000.0f)?0xffdee3d7U:0U;
