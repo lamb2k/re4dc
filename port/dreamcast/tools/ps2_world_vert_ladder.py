@@ -86,6 +86,24 @@ def level_pv(src, lets, part, mesh, locked_pos, a, eps_of):
         return None
     locked = {ids[x] for x in ids if x in locked_pos}
     ve = {i: eps_of(p) for i, p in pos.items()}
+    tef = getattr(a, 'thin_edge_frac', 0.0)
+    if tef > 0:
+        # --thin-edge-frac (lane worldtest16, 10-16): a vertex never moves more than this share of its shortest edge, at
+        # every distance. The piece guard below misses thin parts fused into a larger piece (r101 mesh 0x17: the house
+        # front and its fence rails are one connected piece, so the piece box is house-sized) and works only within
+        # --thin-mm of the walk path; the rails 11-14 m from the village cross collapsed. Rails, slats, posts, frames and
+        # chair legs have short cross edges, so they keep their shape; large ground and wall triangles are not limited.
+        short = {}
+        for t, _ in tris:
+            for u, v in ((t[0], t[1]), (t[1], t[2]), (t[2], t[0])):
+                e = math.sqrt(sum((pos[u][k] - pos[v][k]) ** 2 for k in range(3)))
+                if e > 0:
+                    for x in (u, v):
+                        if e < short.get(x, 1e30):
+                            short[x] = e
+        for i in ve:
+            if i in short:
+                ve[i] = min(ve[i], tef * short[i])
     if a.thin_frac > 0:
         # thin-part guard: a connected piece (post, plank, beam, frame) never loses more than thin_frac of its middle
         # extent, so it cannot collapse into a sliver or vanish however coarse the screen bound around it is
@@ -405,6 +423,9 @@ def main():
                     help='bound each vertex by its own camera distance (walk field) instead of the nearest point of its cluster')
     ap.add_argument('--thin-frac', type=float, default=0.0,
                     help='per-vertex mode: cap the error of a connected piece at this share of its middle extent')
+    ap.add_argument('--thin-edge-frac', type=float, default=0.0,
+                    help='per-vertex mode: a vertex moves at most this share of its shortest incident edge, at any '
+                         'distance (thin rails / slats / posts inside larger mixed pieces; 0 = off)')
     ap.add_argument('--thin-mm', type=float, default=0.0,
                     help='apply --thin-frac only to vertices closer than this to the camera region (0 = everywhere)')
     ap.add_argument('--near-px', type=float, help='screen error for clusters within --near-mm of the walkable area')

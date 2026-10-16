@@ -4,7 +4,7 @@ WT_PROTECT_BOX="x0,z0,x1,z1,maxsize[;...]" (world mm): every cluster with a plac
 at most maxsize wide (x and z) keeps level 0, like a --protect-bins landmark. For rooms whose landmarks share a mesh bin
 with the rest of the village (r101: the burning stake's crossbar and pyre planks are clusters of large bins)."""
 import os, sys, importlib.util
-T = '/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/tools'
+T = os.environ.get('WT_TOOLS', '/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/tools')  # WT_TOOLS: another tools tree
 sys.path.insert(0, T)
 spec = importlib.util.spec_from_file_location('lad', T + '/ps2_world_vert_ladder.py')
 lad = importlib.util.module_from_spec(spec); spec.loader.exec_module(lad)
