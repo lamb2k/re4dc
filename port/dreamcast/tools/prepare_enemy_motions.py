@@ -40,6 +40,13 @@ SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.d
 # model TPL reaches only modelInit (src/em2a/em2a.cpp ARC 5 / 7 / 9, em24 ARC 6, em27 ARC 5, em29 ARC 5, em2e ARC 5 / 6);
 # none uploads or reads texels on the CPU, so the prepared R4NREF descriptors replace exactly what the source path draws.
 SMALL+=('em2a.drs','em24.drs','em27.drs','em29.drs','em2e.drs')
+# em2c (Verdugo, r221) / em38 (Salazar + the Queen, r228) (lane ch3found16 2026-10-16, ROUTE_BOSS4 stress test): textures
+# only (--keep-motion-resident). em2c's model TPL (ARC 6) reaches only modelInit (Em2c R0 init: modelInit(ARC 5 / 0x86,
+# ARC 6)); its ice blend is a TexRender target (em2cTexrenderInit), not TPL texels. em38's model TPL (ARC 8) and ARC 0xA
+# reach only modelInit and ModInfoMgr.create (em38 R0 init, the pl11 pattern). Their EFF slots (em2c ARC 4, em38 ARC
+# 0xB, EspDataLoad) keep their own textures (top-level TPLs only are selected). Motions stay resident: both modules keep
+# raw FCV pointers (em2c w->blendM0.., em38 w->mot[]), so motion streaming needs its own consumer audit.
+SMALL+=('em2c.drs','em38.drs')
 # pl0f (the lake boat, r10b r11b; lane ps2cast 2026-10-15, PS2_CAST_BOAT discs): textures only (--keep-motion-resident),
 # the em2f contract. Its one model TPL (ARC 6) reaches only modelInit (src/pl0f/pl0f.cpp pl0f_R0_Init, modelInit(ARC 5,
 # ARC 6)); the source path uploads its colour texels and never reads them on the CPU. ARC 8 (Leon's harpoon hand BIN,
@@ -183,7 +190,8 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     # carries the whole REL too); it moves intact behind the tables like the 64-byte descriptor does.
     # pl0f: the release disc carries its whole REL too (pl0f is in no static / overlay module list); it moves intact.
     # em24: the release disc carries its whole REL too (le_mirror keeps it: 394,176 B on the disc = the GC file).
-    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
+    # em2c / em38 (ROUTE_BOSS4 room overlays): le_mirror keeps their whole REL as for pl0f; it moves intact.
+    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
     original_size,original_base=struct.unpack_from('>I4xI',original,slot+4)
     codec=mirror.motion_codec();ranges=[];entries=[];files={};oversized=[]
     for off in ([] if keep_motion_resident else sorted(set(offsets))):

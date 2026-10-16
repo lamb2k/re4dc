@@ -512,6 +512,10 @@ ROOM_CONTRACTS={
     'r206':dict(slots=59,smd=4,effs=(7,),itm=9,model_slots=()),
     'r20d':dict(slots=61,smd=4,effs=(7,),itm=9,model_slots=()),
     'r20e':dict(slots=35,smd=4,effs=(7,),itm=9,model_slots=()),
+    # Chapter 4 boss rooms (lane ch3found16 2026-10-16, ROUTE_BOSS4 stress test): r221 (Verdugo) and r228 (Salazar),
+    # the same standard owners, slot counts from the GC disc 1 St2/<room>.das.
+    'r221':dict(slots=34,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),  # header flush: + the NTR slot
+    'r228':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
     # r40b (St4, st4_0 + em1f; follow-up 7): r40c's 27-slot layout (header ends at 232 of 256: no growth).
     'r40b':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
 }
