@@ -111,3 +111,29 @@ ec102af4-532d8307	E	 dc/native/r111/partner.re4nmr; dc/native/r112/partner.re4nm
 f4aa2647-4aabbf30	W	 dc/native/r112/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/f
 f8a80076-637a9f6b	W	 dc/native/r10f/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/f
 fc75dd46-779f14bd	W	 loose /root/probe/lanes-20261015/ps2cast/conv-t14/reg-104/tex
+# v3 (10-16): r11c siege set, r111/r112 preload over the byte limit (target 1,850,000); G = GameCube base-archive picture; da197067 left 16-bit (PSNR 28.0)
+001c0ae3-f6006faa	G	 not found (base disc / GameCube archive)
+0275ee90-18fed2a2	G	 not found (base disc / GameCube archive)
+08c726af-530b3ab2	G	 not found (base disc / GameCube archive)
+27a625d0-d454162d	G	 not found (base disc / GameCube archive)
+2b19e82f-169ea5d5	G	 not found (base disc / GameCube archive)
+2c9c252a-51c59944	G	 not found (base disc / GameCube archive)
+2de71f34-0ade9016	W	 loose /root/re4data/private/ch2data-20261016/files/dc/tex/2
+30606550-f5b75425	G	 not found (base disc / GameCube archive)
+35e0df78-33e39e88	G	 not found (base disc / GameCube archive)
+3a68bedf-5cec72a4	G	 not found (base disc / GameCube archive)
+4ebf297c-3088cfc6	G	 not found (base disc / GameCube archive)
+772a9be5-dddaf464	G	 not found (base disc / GameCube archive)
+7c4f357a-0fb1bf34	G	 not found (base disc / GameCube archive)
+818c728e-a0e4c49d	G	 not found (base disc / GameCube archive)
+862bd374-a98ce31f	G	 not found (base disc / GameCube archive)
+8a80e52f-47695eb1	G	 not found (base disc / GameCube archive)
+944e47b4-3622741f	G	 not found (base disc / GameCube archive)
+9cf7f055-d40aae38	G	 not found (base disc / GameCube archive)
+b363dd20-79c95eb2	G	 not found (base disc / GameCube archive)
+b75bcc8c-a3d59b3c	G	 not found (base disc / GameCube archive)
+d4df1d7f-5925718b	G	 not found (base disc / GameCube archive)
+de2278c6-500222e5	G	 not found (base disc / GameCube archive)
+fb338eee-cc800cbf	W	 dc/native/r11c/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/f
+fc24a99c-03d13534	G	 not found (base disc / GameCube archive)
+fed05d68-c5d3a36b	G	 not found (base disc / GameCube archive)

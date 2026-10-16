@@ -82,7 +82,10 @@ def main():
     # lane cast16 requests (10-16): Ashley's PS2 partner packages for the 2-2 / 2-3 rooms (ps2lib cast rows; her
     # archive stays the bounded pl11 above), and r113's em17 pool registry (reg-113p: plan R, 0 declines) + its textures
     PL = '/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast'
-    for r in ('r111', 'r112', 'r113', 'r11c', 'r11f'):
+    # r11f is held back: with its partner package the Mendez segment logs "IKInit(): missing Root", "MotionMoveCore():
+    # Em[3h], Invalid parts" / "MODEL HAS NO PARTS" after s11 and the game resets (runs v2/v7/v9 s-mendez; h2/h3 without
+    # it pass). r11f keeps the GameCube Ashley until cast16 fixes the package.
+    for r in ('r111', 'r112', 'r113', 'r11c'):
         rep['dc/native/%s/partner.re4nmr' % r] = '%s/%s/ashley-pl11/dc/native/%s/partner.re4nmr' % (PL, r, r)
     R113P = '/root/probe/lanes-20261015/ps2cast/conv-ch2/reg-113p'
     rep['dc/native/r113/registry.re4nmr'] = R113P + '/package/r113/registry.re4nmr'
