@@ -69,3 +69,24 @@ endif
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_MIST_CUT=$(MIST_CUT)
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_MIST_CUT=$(MIST_CUT)
 endif
+# FOLIAGE_TRIM=<level> (lane mist16 2026-10-16; user: "we should get the fixes from foliage agent in", the Options row is a
+#   fast follow; render only; unset = no code, identical image). The chapter 1 outdoor translucent overdraw is the PS2
+#   world's brush / leaf cards (r100 woods: 3.3 of 3.8 screens), not mist. platform/include/foliage_keys.inc classes the
+#   translucent world parts' texture keys offline by texel alpha (mist-20261016/sh/census.py + gen_trim.py; docs/MIST_CUT.md).
+#   1 = NEAR: near-binary cut-out cards (leaf / brush / branch cards, fence gaps) drawn in the punch-through list (alpha
+#   test, no blend, no per-tile sort) and only to FOLIAGE_NEAR_MM (default 12000: the fog ramp's far half hides them
+#   beyond), near-invisible parts not drawn; soft decals, shadow strips, ground blends and vertex-alpha overlays as today.
+#   2 = OFF (test arm / the later Options row's Off): no translucent world pass at all (the tester's 10-16 patch).
+#   re4dc_foliage is one .data word (0 FULL, 1 NEAR, 2 OFF). Needs PT_BLEND_FIX=1 (punch-through with SRCALPHA /
+#   INVSRCALPHA: ONE / ZERO draws cut-out texels solid on PVR hardware, the test 8 leaves) and PS2_WORLD_MESH=1.
+FOLIAGE_TRIM ?=
+FOLIAGE_NEAR_MM ?= 12000
+ifneq ($(FOLIAGE_TRIM),)
+ifeq ($(filter $(FOLIAGE_TRIM),1 2),)
+$(error FOLIAGE_TRIM is 1 (near) or 2 (off))
+endif
+ifneq ($(PT_BLEND_FIX)$(PS2_WORLD_MESH),11)
+$(error FOLIAGE_TRIM needs PT_BLEND_FIX=1 and PS2_WORLD_MESH=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_FOLIAGE_TRIM=$(FOLIAGE_TRIM) -DRE4DC_FOLIAGE_NEAR_MM=$(FOLIAGE_NEAR_MM)
+endif

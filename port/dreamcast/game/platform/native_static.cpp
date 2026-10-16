@@ -4420,6 +4420,47 @@ static bool world_part(unsigned pass,std::uint32_t crc,std::uint32_t fnv){
 }
 }
 #endif
+#if defined(RE4DC_FOLIAGE_TRIM)
+// FOLIAGE_TRIM=<level> (hwfog.mk, lane mist16 2026-10-16, user: "we should get the fixes from foliage agent in"; render
+// only; unset = no code). The chapter 1 outdoor overdraw is the PS2 world's translucent (pass 2) brush / leaf cards, not
+// mist (port/dreamcast/docs/MIST_CUT.md). include/foliage_keys.inc classes their texture keys offline by texel alpha:
+// 1 near-invisible (max alpha < 0.1), 2 near-binary cut-out (>= 95 % of texels at 0 or >= 0.9, or max at the opaque level
+// with <= 25 % mid texels: leaf / brush / branch cards, fence gaps), 3 soft but reaching the opaque level (listed, drawn as
+// today). re4dc_foliage (one .data word; a later Options row sets it): 0 FULL = today; 1 NEAR = a class 1 part is not
+// drawn, a class 2 part is drawn in the punch-through list (alpha test at PT_ALPHA_REF 128, PT_BLEND_FIX header: no
+// blend, no per-tile sort) and only to FOLIAGE_NEAR_MM (the cards beyond it are hidden by the fog ramp's far half);
+// soft decals, shadow strips, ground blends and the vertex-alpha overlays (reserved bit 0) stay translucent;
+// 2 OFF = no translucent world pass at all (re4dc_ps2_mesh_draw; the tester's 10-16 binary patch, patch255 "wtr").
+extern "C" { unsigned re4dc_foliage=RE4DC_FOLIAGE_TRIM; }
+namespace foliage{
+struct Key { std::uint32_t crc,fnv; unsigned level; };
+constexpr Key kKeys[]={
+#include "include/foliage_keys.inc"
+};
+constexpr float kNear=float(RE4DC_FOLIAGE_NEAR_MM);
+static unsigned moved,dropped,last_room;static std::uint32_t last_frame;
+// The pass a pass-2 part draws in at NEAR: 1 punch-through, 2 translucent (as today), 3 not drawn.
+static unsigned pass_of(const Ps2Part& m){
+    if(m.pass!=2 || re4dc_foliage!=1U || (m.reserved&1U))return m.pass;
+    unsigned level=0,lo=0,hi=sizeof(kKeys)/sizeof(kKeys[0]); // kKeys is sorted by crc, fnv
+    while(lo<hi){
+        const unsigned mid=(lo+hi)/2;const Key& k=kKeys[mid];
+        if(k.crc<m.crc || (k.crc==m.crc && k.fnv<m.fnv))lo=mid+1;
+        else{if(k.crc==m.crc && k.fnv==m.fnv)level=k.level;hi=mid;}
+    }
+    return level==1?3U:level==2?1U:2U;
+}
+static void note(unsigned pass,unsigned drawn_pass){
+    if(drawn_pass==3){if(pass==2)++dropped;}else if(pass==1)++moved;
+    const std::uint32_t f=re4dc_vi_retrace_count();
+    if(last_room!=ps2w.room || f-last_frame>=1200U){
+        re4dc_log("foliage: level=%u room=%03x moved=%u dropped=%u near=%u\n",re4dc_foliage,unsigned(ps2w.room),moved,dropped,
+                  unsigned(RE4DC_FOLIAGE_NEAR_MM));
+        last_room=ps2w.room;last_frame=f;moved=dropped=0;
+    }
+}
+}
+#endif
 int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
@@ -4726,7 +4767,13 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_WORLD_R11F_OWNER
             R11fUvScope uvScope(part,pl.placement,pl.mesh,index,pass);
 #endif
+#if defined(RE4DC_FOLIAGE_TRIM)
+            const unsigned foliage_pass=foliage::pass_of(meta);
+            if(foliage_pass!=meta.pass && (pass==1 || pass==2))foliage::note(pass,foliage_pass);
+            if(foliage_pass!=pass)continue;
+#else
             if(meta.pass!=pass)continue;
+#endif
 #if defined(RE4DC_MIST_CUT)
             if(mistcut::world_part(pass,meta.crc,meta.fnv))continue;
 #endif
@@ -4748,6 +4795,9 @@ int ps2_pass(unsigned pass,float zfar){
             d.alpha=0xff000000U;d.vertex_alpha=false;d.cull_far=cull_far;d.direct=true;
 #endif
             d.part_index=index;d.lod_scale=lod_scale;
+#if defined(RE4DC_FOLIAGE_TRIM)
+            const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
+#endif
 #if RE4DC_PS2_PVS
             if(pvs_cur){d.pvs_set=pvs_cur;d.pvs_first=pvs::base[i]+pvs::poff[index];}
 #endif
@@ -4756,6 +4806,14 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_STRIP_GROUPS
             d.sg=ps2w.sg;d.sg_groups=ps2w.sg_groups;
 #endif
+#endif
+#if defined(RE4DC_FOLIAGE_TRIM)
+            if(foliage_near){
+                d.cull_far=foliage::kNear; // the placement's inside test was against the pass far: test its clusters
+#if RE4DC_PS2_WORLD_LEAN
+                d.lean_inside=false;
+#endif
+            }
 #endif
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
             const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
@@ -4977,6 +5035,9 @@ extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
 #endif
 #if RE4DC_PS2_INTERIOR_CULL==2
     if(!pass)pc_scan(re4dc_ui_frame());
+#endif
+#if defined(RE4DC_FOLIAGE_TRIM)
+    if(pass==2 && re4dc_foliage==2U)return 1; // FOLIAGE OFF: no translucent world pass (drawn, nothing to submit)
 #endif
     if(pass>2 || !ps2w.camera || !ps2_open())return 0;
 #if RE4DC_MOVIE_WORLD_ARENA
