@@ -209,6 +209,7 @@ override ALIVE_CAP := 6
 endif
 override ALIVE_CAP_PARK := 1
 $(OBJDIR)/src/game/stage.o: GAME_CPPFLAGS += -DRE4DC_PS2_CH2_ENEMY=1
+endif
 # PS2_CH3_ENEMY=1 (castle lane 2026-10-15, user 10-15 "the PS2 logic holistically for enemy spawns" per chapter;
 #   CHANGES GAMEPLAY by design; default 0 = off; needs ROUTE_CH31=1): one umbrella for every PS2 enemy-spawn change of
 #   chapter 3 (3-1 .. 3-4: r200 r202 r207 r203 r201 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e; table in
