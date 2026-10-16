@@ -1,0 +1,22 @@
+name ch2-door-r11d-r10f
+# lane ch2code16: door r11d -> r10f -> back (arrival points from stage_route.py; Ashley beside: goto sub)
+room 0x11d
+pos 20214 0 13952
+ang -1.8170
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+goto 60 20795 0 14098 1.3246 sub
+act 120 a 4
+act 200 a 4
+act 280 a 4
+act 360 a 4
+act 460 fwd 30
+entry 2
+goto 240 -25718 4000 16268 -1.7906 sub
+act 300 a 4
+act 380 a 4
+act 460 a 4
+act 540 a 4
+act 640 fwd 30
