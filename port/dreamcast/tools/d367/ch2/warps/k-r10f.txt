@@ -1,0 +1,16 @@
+name ch2-cap6-r10f
+# lane ch2code16 cap-6 decisions check: the rig kills one Ganado (id 0x13) every 90 room frames from 300 (31 kills), so
+# held spawns must come in, waves / sends must keep firing and the live count must stay <= 6 (alivecap peak lines).
+room 0x10f
+pos -25133 4000 16399
+ang 1.3510
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+dump
+alivelog 60
+census 300
+act 360 fwd 12
+kill 0x13 300 0x10f 1
+killrep 30 90

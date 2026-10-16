@@ -14,9 +14,10 @@ act 280 a 4
 act 360 a 4
 act 460 fwd 30
 entry 2
-goto 240 51172 1 -71057 -2.2616 sub
-act 300 a 4
-act 380 a 4
-act 460 a 4
-act 540 a 4
-act 640 fwd 30
+# r11c door 0 -> r113 is a walk-in door (AEV trig 02, lock 0; area x 49011..50511, z -73163..-69113; r11c.cpp never
+# disables it), so the way back is open: stand east of it facing -x and walk in (10-16 resume).
+goto 240 51400 1 -71100 -1.5708 sub
+act 300 fwd 60
+act 420 fwd 60
+goto 600 51400 1 -71100 -1.5708 sub
+act 660 fwd 60

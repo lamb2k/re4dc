@@ -79,6 +79,20 @@ def main():
         rep['st1/r113.dar'] = f113
     else:
         notes.append('st1/r113.dar refit not built (lane/fit-r113.py): r113 Ganado voices silent')
+    # lane cast16 requests (10-16): Ashley's PS2 partner packages for the 2-2 / 2-3 rooms (ps2lib cast rows; her
+    # archive stays the bounded pl11 above), and r113's em17 pool registry (reg-113p: plan R, 0 declines) + its textures
+    PL = '/mnt/c/Game Dev/Emulators/re4-assets-private/ps2lib/cast'
+    for r in ('r111', 'r112', 'r113', 'r11c', 'r11f'):
+        rep['dc/native/%s/partner.re4nmr' % r] = '%s/%s/ashley-pl11/dc/native/%s/partner.re4nmr' % (PL, r, r)
+    R113P = '/root/probe/lanes-20261015/ps2cast/conv-ch2/reg-113p'
+    rep['dc/native/r113/registry.re4nmr'] = R113P + '/package/r113/registry.re4nmr'
+    for p in sorted(Path(R113P + '/tex').glob('*.re4tex')):
+        k = 'dc/tex/%s/%s' % (p.name[0], p.name)
+        if k in rb or k in rep:   # one key, one picture (0e80c998: reg-108's bytes ship, cast16 10-16)
+            if sha(rb.get(k) or rep[k]) != sha(str(p)):
+                notes.append('reg-113p: %s differs, the existing copy kept' % k)
+            continue
+        rep[k] = str(p)
     # em16
     rep['em/em16.drs'] = '%s/snd/em16.drs' % LANE
     for p in sorted(Path('%s/em16/prep-em16/mot' % LANE).glob('*.fcv')):

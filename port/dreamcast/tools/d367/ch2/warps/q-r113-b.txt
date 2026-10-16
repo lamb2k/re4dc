@@ -1,0 +1,18 @@
+name ch2-kos48-r113-b
+# lane ch2code16 cap-6 decisions check: the rig kills one Ganado (id 0x17) every 90 room frames from 300 (31 kills), so
+# held spawns must come in, waves / sends must keep firing and the live count must stay <= 6 (alivecap peak lines).
+room 0x113
+pos -47609 12 7084
+ang 1.8890
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+dump
+alivelog 60
+census 300
+act 360 fwd 12
+kill 0x17 300 0x113 1
+killrep 30 90
+# KOS squeeze gate (lane ch2code16): 48 KiB held from OSInit
+squeeze 49152

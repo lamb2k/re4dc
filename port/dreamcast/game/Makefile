@@ -163,28 +163,24 @@ endif
 #   r11f, r200 truck wave 0x6A..0x70), PS2_ENEMY_ROOMS |= 0x80 (r11d, the PS2 Bella-sisters village), plus the cap on
 #   top: ALIVE_CAP=6 when not given and ALIVE_CAP_PARK=1 (as PS2_CH1_ENEMY). Without it ROUTE_CH22 / ROUTE_CH23 keep
 #   the GameCube lists and room code. Documented cap exceptions (kept sends: their callers use the returned enemy):
-#   the r10f gondola riders and 32 / 35, the GameCube cabin C8-D1 (r11c). Park never acts in r10f, r11c, r11d.
-# PS2_CH2_CABIN=1 (an OPTION for the user, default 0; needs PS2_CH2_ENEMY=1): r11c as on the PS2 (PS2_ENEMY_ROOMS 0x40:
-#   7 new em13 rows, HP +200, waves of 5 refilled below 5, kill limit 40 / timer 9000). It changes the cabin fight, so it
-#   stays a separate switch until the user chooses; without it r11c keeps the GameCube cabin (9 sent at once, the
-#   documented cap-6 exception).
+#   the r10f gondola riders and 32 / 35, the r11c cabin below. Park never acts in r10f, r11c, r11d.
+#   The PS2 cabin is part of the unit (user decision 10-16: "why wouldn't it if we are using the enemy cap for ps2 as a
+#   standing decision"): r11c as on the PS2 (PS2_ENEMY_ROOMS 0x40: 7 new em13 rows, HP +200, waves of 5 refilled below 5
+#   alive, kill limit 40 / timer 9000). Its peak stays under the cap; park never acts in r11c (its script keeps the
+#   enemy pointers). The GameCube cabin (9 sent at once) remains only with PS2_CH2_ENEMY=0.
 PS2_CH2_ENEMY ?= 0
-PS2_CH2_CABIN ?= 0
 ifeq ($(filter $(PS2_CH2_ENEMY),0 1),)
 $(error PS2_CH2_ENEMY must be 0 or 1)
 endif
-ifeq ($(filter $(PS2_CH2_CABIN),0 1),)
-$(error PS2_CH2_CABIN must be 0 or 1)
-endif
-ifeq ($(PS2_CH2_CABIN)$(PS2_CH2_ENEMY),10)
-$(error PS2_CH2_CABIN=1 needs PS2_CH2_ENEMY=1)
+ifneq ($(PS2_CH2_CABIN),)
+$(error PS2_CH2_CABIN was folded into PS2_CH2_ENEMY (user 10-16): the PS2 cabin is always on with it)
 endif
 ifeq ($(PS2_CH2_ENEMY),1)
 ifneq ($(or $(ROUTE_CH22),0)$(or $(ROUTE_CH23),0),11)
 $(error PS2_CH2_ENEMY=1 needs ROUTE_CH22=1 ROUTE_CH23=1)
 endif
 override PS2_ENEMY_RULES := 1
-override PS2_ENEMY_ROOMS := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_ROOMS),0) | 0x80 | ($(PS2_CH2_CABIN) << 6) )))
+override PS2_ENEMY_ROOMS := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_ROOMS),0) | 0x80 | 0x40 )))
 ifeq ($(or $(ALIVE_CAP),0),0)
 override ALIVE_CAP := 6
 endif
