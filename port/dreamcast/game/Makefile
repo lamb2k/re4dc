@@ -2310,6 +2310,7 @@ include vmu_context.mk
 include t2exact.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
 include knobs.mk
+include esppool.mk
 
 # Validate after all knob defaults and included recipes are available.
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)
