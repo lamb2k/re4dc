@@ -48,6 +48,12 @@ What a picture costs: one drawn tick plus about one skipped tick, about 99 ms pe
    - ACTOR_PROOF_LEAN, ACTOR_MATERIAL_RECORD and ACTOR_BIND_REUSE produce a byte-identical image (arm ap1rW = ap0rW) even though the -D flags reach coarse_actor.cpp.
    - Find out why (run -E on the `#if` chain around coarse_actor_transaction.inc) before building ACTOR_PLAN on top of them.
 
+7. **Clue from the user's console: the r10b lake runs at almost 30 fps (CONSOLE, the user reading the speed display).**
+   - The lake keeps Leon, the HUD, sound, fog, KOS and the frame overhead. It has one big few-part model (Del Lago), few world pieces, a full-screen water fill, and no Ganados.
+   - So the fixed costs fit in 33 ms, and fill and vertex count alone don't sink a room. The village's extra ~65 ms per picture is per-piece fees (world pieces, character part draws) plus Ganado logic, run twice once the drawn tick passes 33 ms.
+   - The norms projection says r10b runs at 14.5 fps, so it overweights vertices. Recalibrate it on console readings before ranking rooms.
+   - Add the lake as a benchmark scene: cross minus lake isolates the village's own cost.
+
 ## Ground rules that bite
 - Measure each saving incrementally on top of the previous stack (arm N vs N-1).
 - The hw model's console fit is data fill +6, I fill +5, store miss 0; render is still under-priced by x1.07-1.19. Cache, layout and GPU levers count only from CONSOLE A/B.
