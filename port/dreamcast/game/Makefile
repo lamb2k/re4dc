@@ -1187,6 +1187,31 @@ ifeq ($(DISC_READ_METER),1)
 $(error DISC_READ_METER=1 needs DVD_READ_SAFE=1 (it counts in the platform/dvd_read_safe.cpp wraps))
 endif
 endif
+# DOOR_PREFETCH=1 (lane doorprefetch16, 2026-10-16; default 0 = image unchanged; user 10-16: "Start the next room's reads
+# while the door sound and music hand over"): a room change waits on its sounds with the drive idle, ~0.5 s for the door
+# sound / SE fade (gameDoordemo, old room loaded, next room known) and 0.1..1.3 s for the old music to let go of its slot
+# (gameRoomInit's SndRoomBgmLoad; 0.9..1.3 s on the music doors). In those waits the native texture cache loads the
+# room's known textures (its PS2 world part textures from the R4PW sidecar + its dc/resident.bin list) into VRAM, a time
+# slice a frame (DOOR_PREFETCH_STEP_MS, default 28), budgeted like the preload pass, down to the KOS floor
+# (DOOR_PREFETCH_KOS_FLOOR, default RETIRE_KOS_FLOOR or 65536). No main RAM. The SndRoomBgmLoad busy loop sleeps a frame
+# per check inside that window so the main loop runs. Only load timing changes (decisions gate). Needs TEX_RESIDENT,
+# UI_VRAM, TEX_META_EVICT and TEX_PACK (#error otherwise). Code: platform/include/door_prefetch.inc (native_ui.cpp);
+# hooks from the forced header platform/include/door_prefetch.h in game.cpp and snd.cpp (lines kept). Log "DOORPF:".
+DOOR_PREFETCH ?= 0
+DOOR_PREFETCH_STEP_MS ?= 28
+DOOR_PREFETCH_KOS_FLOOR ?= 0
+ifneq ($(filter $(DOOR_PREFETCH),0 1),$(DOOR_PREFETCH))
+$(error DOOR_PREFETCH must be 0 or 1)
+endif
+DOOR_PREFETCH_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/src/game/snd.o
+$(DOOR_PREFETCH_GAME): GAME_CPPFLAGS += -include $(CURDIR)/platform/include/door_prefetch.h
+ifeq ($(DOOR_PREFETCH),1)
+$(DOOR_PREFETCH_GAME): GAME_CPPFLAGS += -DRE4DC_DOOR_PREFETCH=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_DOOR_PREFETCH=1 -DRE4DC_DOOR_PREFETCH_STEP_MS=$(DOOR_PREFETCH_STEP_MS)
+ifneq ($(DOOR_PREFETCH_KOS_FLOOR),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_DOOR_PREFETCH_KOS_FLOOR=$(DOOR_PREFETCH_KOS_FLOOR)U
+endif
+endif
 .PHONY: io-probe-force
 $(OBJDIR)/io-probe.h: io-probe-force
 	@mkdir -p $(dir $@)

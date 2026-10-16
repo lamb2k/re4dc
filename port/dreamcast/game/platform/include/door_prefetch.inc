@@ -1,0 +1,271 @@
+// DOOR_PREFETCH=1 (Makefile; lane doorprefetch16, 2026-10-16; default 0: this file is not compiled with the knob off).
+// Included by native_ui.cpp (file scope, after the texture cache, the preload pass and VRAM_ROOM_LOG).
+//
+// A room change has two waits in which the drive is idle (DOOR-PAUSE-CH1-20261016.md):
+//   window 1, gameDoordemo: after the door press the game waits for every sound to fade (SndStatDisp, ~0.5 s on 11 of
+//     13 chapter 1 doors). The old room is still loaded (heap 4, KOS, its textures); the door's next room is known.
+//   window 2, gameRoomInit: SndRoomBgmLoad waits for the old music to let go of its slot (0.9..1.3 s on the 5 music
+//     doors, ~0.1..0.2 s on others). The new room's heap 4 is in place; its enemy archives and the room-entry texture
+//     preload come only after the wait (ScenarioRoomInit).
+// During both, this loads the room's KNOWN textures into VRAM, a time slice per frame (DOOR_PREFETCH_STEP_MS):
+//   - its PS2 world's part textures (dc/native/r<room>/ps2-world.r4pw, the R4PW sidecar's part table: crc, fnv, size;
+//     PS2_PRELOAD_LEAN's room pass picks the same keys from the open package);
+//   - its resident list (dc/resident.bin records of the room: ROOM_RESIDENT, lane resident16's lists; core keys, room
+//     0, are not listed: CORE_PIN keeps them).
+// No main RAM: the lists are read in 2 KB pieces into a stack buffer, the pictures go straight to VRAM through the
+// cache's own load() (tex.pak, the same packages and formats as the preload pass). The room-entry preload pass that
+// follows finds them resident and does not read them again; nothing else changes:
+//   - the regular preload pass keeps its timing and picks (window 2 defers it until the wait ends, as before the
+//     prefetch it ran after the wait); enemy textures still come with their archives;
+//   - picks are budgeted like the preload pass (slots, bytes, the reserve) and stop at the KOS floor (RETIRE_KOS_FLOOR,
+//     else 64 KiB): KOS above it is what the room change keeps for the next room's start;
+//   - evictions go through load()'s LRU (oldest first: the old room's textures; the window's own loads are newest);
+//   - window 1 does not touch the door freeze picture (no release, nothing drawn): only uploads in idle frame time;
+//   - VRAM_ROOM_LOG: window 1's uploads are moved out of the old room's visit (they are not gameplay uploads of that
+//     room; vram_gate.py would fail them in a room with a resident list); window 2's count as the new room's preload.
+// The game task only sets requests (re4dc_dpf_begin / re4dc_dpf_end); the main loop's frame start opens, steps and
+// closes the window (re4dc_dpf_frame). Window 2's busy loop sleeps one frame per check (re4dc_dpf_yield), so the main
+// loop runs while the old music fades; base builds ran no main loop frame there (the frames are not presented anyway:
+// the door picture is released for the pending preload and held, DOOR_FREEZE's door_held).
+// Log: "DOORPF: open window=W room=R frame=F" and at the close "DOORPF: close window=W room=R ..." (counts, bytes, us).
+#if !RE4DC_TEX_RESIDENT || !RE4DC_UI_VRAM || !RE4DC_TEX_META_EVICT || !RE4DC_TEX_PACK
+#error "DOOR_PREFETCH=1 needs TEX_RESIDENT, UI_VRAM, TEX_META_EVICT and TEX_PACK"
+#endif
+namespace {
+#ifndef RE4DC_DOOR_PREFETCH_STEP_MS
+#define RE4DC_DOOR_PREFETCH_STEP_MS 28
+#endif
+constexpr unsigned long long kDpfStepUs=RE4DC_DOOR_PREFETCH_STEP_MS*1000ULL;
+#if defined(RE4DC_DOOR_PREFETCH_KOS_FLOOR) && RE4DC_DOOR_PREFETCH_KOS_FLOOR
+constexpr unsigned kDpfKosFloor=RE4DC_DOOR_PREFETCH_KOS_FLOOR;
+#elif defined(RE4DC_RETIRE_KOS_FLOOR) && RE4DC_RETIRE_KOS_FLOOR
+constexpr unsigned kDpfKosFloor=RE4DC_RETIRE_KOS_FLOOR;
+#else
+constexpr unsigned kDpfKosFloor=65536U;
+#endif
+// Requests from the game task (single words; read at the main loop's frame start).
+volatile unsigned dpf_req,dpf_req_room,dpf_end_req,dpf_task_window;
+volatile unsigned dpf_w2_idle;   // main loop: window 2 has nothing left to load (its busy loop spins again, as before)
+// Main loop state.
+unsigned dpf_open,dpf_room,dpf_n,dpf_next,dpf_frame0,dpf_vroom;
+bool dpf_built;
+struct DpfStats { unsigned parts,keys,resident,picked,loaded,failed,kb,steps,reads,evicted,evicted_kb,kos_closed; unsigned long long us,build_us; const char* stop; };
+DpfStats dpf;
+
+// One key of the room's lists: resident (touched: newest in the LRU order, counted once per frame) or a new pick.
+void dpf_pick(unsigned crc,unsigned fnv,unsigned w,unsigned h,unsigned fmt,unsigned limit,unsigned byte_limit,
+              unsigned& n,unsigned& resident,unsigned& bytes){
+    if(!w || !h || w>1024 || h>1024)return;
+    const Key key{crc,fnv};
+    for(auto& e:entries)if(e.valid && e.key==key){
+        if(e.frame!=frame){e.frame=frame;++resident;bytes+=e.package.vram_bytes();}
+        return;
+    }
+    for(const auto& m:missing_keys)if((m.crc|m.fnv) && m==key)return;
+    for(unsigned k=0;k<n;++k)if(preload_picks[k].key==key)return;
+    ++dpf.keys;
+    if(n+resident>=limit)return;
+    const unsigned least=preload_least(w,h);
+    if(bytes+least>byte_limit)return;
+    preload_picks[n++]={key,(unsigned short)w,(unsigned short)h,(unsigned short)fmt};bytes+=least;
+}
+
+// Reads [0, need) of `path` in 2 KB pieces (sector-aligned offsets, 32-byte aligned buffer: a DMA stream read, like
+// texpack's sector reads) and hands each piece's 16-byte records, from `first` on, to `use`. Returns false if absent.
+template<class F> bool dpf_records(const char* path,unsigned first,unsigned need,unsigned long long* total,F use){
+    alignas(32) unsigned char buf[2048];
+    for(unsigned off=0;off<need;off+=sizeof(buf)){
+        const unsigned len=need-off<sizeof(buf)?need-off:unsigned(sizeof(buf));
+        ++dpf.reads;
+        if(re4dc::texture::read_file_range(path,off,buf,len,total)!=re4dc::texture::RangeRead::ok)return false;
+        for(unsigned i=off<first?first-off:0;i+16<=len;i+=16)use(buf+i);
+    }
+    return true;
+}
+
+void dpf_build(){
+    dpf_built=true;
+    const unsigned long long t0=timer_us_gettime64();
+    const unsigned budget=vram_budget,reserve=RE4DC_TEX_RESIDENT_RESERVE_KB*1024U;
+    unsigned pinned=0,pinned_bytes=0;
+    for(const auto& e:entries)if(e.valid && RE4DC_ENTRY_PINNED(e)){++pinned;pinned_bytes+=e.package.vram_bytes();}
+    const unsigned limit=kTextureCount>RE4DC_TEX_RESIDENT_RESERVE_SLOTS+pinned?kTextureCount-RE4DC_TEX_RESIDENT_RESERVE_SLOTS-pinned:0;
+    const unsigned byte_limit=budget>reserve+pinned_bytes?budget-reserve-pinned_bytes:0;
+    unsigned n=0,resident=0,bytes=0;
+    // 1. The PS2 world's part textures, in part order (repeats skipped), as the PS2_PRELOAD_LEAN room pass.
+    char path[48];
+    std::sprintf(path,"/cd/dc/native/r%03x/ps2-world.r4pw",dpf_room&0xFFFU);
+    struct Head { char magic[4]; std::uint32_t version,placements,parts,meshes,crc,reserved[2]; };
+    static_assert(sizeof(Head)==32,"R4PW header");
+    Head h{};
+    unsigned long long total=0;
+    ++dpf.reads;
+    if(re4dc::texture::read_file_range(path,0,&h,sizeof(h),&total)==re4dc::texture::RangeRead::ok &&
+       !std::memcmp(h.magic,"R4PW",4) && h.version==1 && h.parts && h.parts<=4096 && 32ULL+16ULL*h.parts<=total){
+        dpf.parts=h.parts;
+        dpf_records(path,32,32+16*h.parts,nullptr,[&](const unsigned char* p){
+            std::uint32_t crc,fnv;std::uint16_t w,hh;
+            std::memcpy(&crc,p,4);std::memcpy(&fnv,p+4,4);std::memcpy(&w,p+8,2);std::memcpy(&hh,p+10,2);
+            dpf_pick(crc,fnv,w,hh,5,limit,byte_limit,n,resident,bytes);
+        });
+    }
+    // 2. The room's resident list (16-byte records: u16 room, width, height, format; u32 crc, fnv).
+    total=0;
+    ++dpf.reads;
+    alignas(4) unsigned char first[16];
+    if(re4dc::texture::read_file_range("/cd/dc/resident.bin",0,first,sizeof(first),&total)==re4dc::texture::RangeRead::ok &&
+       total>=16 && total<=65536)
+        dpf_records("/cd/dc/resident.bin",0,unsigned(total)&~15U,nullptr,[&](const unsigned char* p){
+            std::uint16_t r[4];std::uint32_t k[2];std::memcpy(r,p,8);std::memcpy(k,p+8,8);
+            if(r[0] && r[0]==dpf_room)dpf_pick(k[0],k[1],r[1],r[2],r[3],limit,byte_limit,n,resident,bytes);
+        });
+    // Package-name order (disc order), large ones first with PRELOAD_LARGE_FIRST, as the preload pass.
+    for(unsigned i=1;i<n;++i){
+        const PreloadPick p=preload_picks[i];unsigned j=i;
+        for(;j && (preload_picks[j-1].key.crc>p.key.crc || (preload_picks[j-1].key.crc==p.key.crc && preload_picks[j-1].key.fnv>p.key.fnv));--j)preload_picks[j]=preload_picks[j-1];
+        preload_picks[j]=p;
+    }
+#if RE4DC_PRELOAD_LARGE_FIRST
+    {
+        constexpr unsigned kPreloadLarge=16U*1024U;
+        unsigned m=0;
+        for(unsigned i=0;i<n;++i)if(preload_least(preload_picks[i].width,preload_picks[i].height)>=kPreloadLarge){
+            const PreloadPick p=preload_picks[i];
+            for(unsigned j=i;j>m;--j)preload_picks[j]=preload_picks[j-1];
+            preload_picks[m++]=p;
+        }
+    }
+#endif
+    dpf_n=n;dpf_next=0;dpf.resident=resident;dpf.picked=n;
+    dpf.build_us=timer_us_gettime64()-t0;
+}
+
+// ROOM_CHANGE_EVICT, early: the old room's kept textures that the next room's first preload pass will close anyway
+// (not drawn in the old room's last RE4DC_ROOM_CHANGE_EVICT frames; window 2: the rule against the retirement frame
+// itself, rce_retire_frame) close before the window's uploads, so these fill one large free pool instead of the old
+// room's holes (fewer "fragmented VRAM" retries) and their descriptors give back KOS. Entries the room's lists touched
+// (frame >= dpf_frame0) and pinned ones stay. Not for a re-entry of the same room (ROOM_REENTRY_EVICT's own rule).
+void dpf_early_evict(){
+#if defined(RE4DC_ROOM_CHANGE_EVICT) && RE4DC_ROOM_CHANGE_EVICT
+    re4dc::profile::Source src{};
+#if defined(__sh__)
+    re4dc_profile_source(&src);
+#endif
+    unsigned ref;
+    if(dpf_open==1){
+        if(dpf_room==unsigned(src.room))return;
+        ref=frame;
+    }else{
+        if(!rce_armed)return;
+#if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
+        if(dpf_room==rce_last_room)return;
+#endif
+        ref=rce_retire_frame;
+    }
+    for(auto& e:entries){
+        if(!e.valid || RE4DC_ENTRY_PINNED(e) || RE4DC_CORE_PINNED(e) || e.frame>=dpf_frame0)continue;
+        if(e.frame+RE4DC_ROOM_CHANGE_EVICT>=ref)continue;
+        const unsigned sz=e.package.vram_bytes();
+        close_entry(e);++dpf.evicted;dpf.evicted_kb+=(sz+512)/1024;
+    }
+#endif
+}
+// Window 1 (old room still loaded): KOS below the floor closes the least recently used old-room texture, as
+// RETIRE_KOS_FLOOR would at the retirement; false when none is left (the window stops).
+bool dpf_kos_room(){
+    if(dpf_open!=1)return false;
+    Entry* victim=nullptr;
+    for(auto& e:entries){
+        if(!e.valid || RE4DC_ENTRY_PINNED(e) || RE4DC_CORE_PINNED(e) || e.frame>=dpf_frame0)continue;
+        if(!victim || e.frame<victim->frame)victim=&e;
+    }
+    if(!victim)return false;
+    close_entry(*victim);++dpf.kos_closed;
+    return true;
+}
+
+void dpf_step(){
+    if(!dpf_built){dpf_build();dpf_early_evict();}
+    const unsigned long long t0=timer_us_gettime64();
+    const unsigned budget=vram_budget,reserve=RE4DC_TEX_RESIDENT_RESERVE_KB*1024U;
+#if RE4DC_VRAM_ROOM_LOG
+    const unsigned loads0=loads;
+#endif
+    ++dpf.steps;
+    while(dpf_next<dpf_n){
+        if(timer_us_gettime64()-t0>=kDpfStepUs)break;
+        if(kos_headroom()<kDpfKosFloor){
+            if(dpf_kos_room())continue;
+            dpf.stop="kos";dpf_next=dpf_n;break;
+        }
+        const PreloadPick& p=preload_picks[dpf_next];
+        // Budget as the preload pass (TEX_KEEP form): this window's uploads and touches count as pinned, the rest is
+        // evictable; stop when the next pick cannot fit.
+        unsigned pins=0,stale=0;
+        for(const auto& e:entries)if(e.valid){
+            const unsigned sz=e.package.vram_bytes();
+            if(RE4DC_ENTRY_PINNED(e) || e.frame>=dpf_frame0)pins+=sz;else stale+=sz;
+        }
+        if(pins+reserve>=budget || (unsigned)pvr_mem_available()+stale<reserve+preload_least(p.width,p.height)){
+            dpf.stop="full";dpf_next=dpf_n;break;
+        }
+        ++dpf_next;
+        bool have=false;
+        for(auto& e:entries)if(e.valid && e.key==p.key){e.frame=frame;have=true;break;}
+        if(have)continue;
+        const Re4dcUiImage image{reinterpret_cast<const void*>(1),nullptr,p.width,p.height,p.format,0xffffffffU,0};
+        if(Entry* e=load(image,true,&p.key)){++dpf.loaded;dpf.kb+=(e->package.vram_bytes()+512)/1024;}
+        else ++dpf.failed;
+    }
+#if RE4DC_VRAM_ROOM_LOG
+    // Window 1 runs at the end of the old room's visit: its uploads are the next room's, not that room's gameplay.
+    if(dpf_open==1 && vroom.room==dpf_vroom)vroom.base[11]+=loads-loads0;
+#endif
+    dpf.us+=timer_us_gettime64()-t0;
+    if(dpf_open==2 && dpf_next>=dpf_n)dpf_w2_idle=1;
+}
+
+void dpf_close(){
+    re4dc_log("DOORPF: close window=%u room=%03x frames=%u steps=%u parts=%u keys=%u resident=%u picked=%u loaded=%u failed=%u left=%u kb=%u us=%u build_us=%u reads=%u stop=%s free=%u kos=%u evict=%u/%u kos_closed=%u\n",
+        dpf_open,dpf_room,frame-dpf_frame0,dpf.steps,dpf.parts,dpf.keys,dpf.resident,dpf.picked,dpf.loaded,dpf.failed,
+        dpf_n>dpf_next?dpf_n-dpf_next:0U,dpf.kb,unsigned(dpf.us),unsigned(dpf.build_us),dpf.reads,dpf.stop,
+        (unsigned)pvr_mem_available(),kos_headroom(),dpf.evicted,dpf.evicted_kb,dpf.kos_closed);
+    dpf_open=0;dpf_n=dpf_next=0;
+}
+
+// Main loop, frame start, where the preload pass would run. Returns true when the window owns this frame's texture
+// work (the regular preload pass waits): window 2 always; window 1 only while no preload pass is due (a pass the old
+// room still has pending runs first, as without the prefetch).
+bool dpf_frame(bool ready){
+    const unsigned end=dpf_end_req;
+    if(dpf_open && end==dpf_open){dpf_end_req=0;dpf_close();}
+    const unsigned req=dpf_req;
+    if(req && !dpf_open){
+        dpf_req=0;
+        if(dpf_end_req==req){dpf_end_req=0;re4dc_log("DOORPF: skip window=%u room=%03x (no wait)\n",req,dpf_req_room);return false;}
+        dpf_open=req;dpf_room=dpf_req_room;dpf_frame0=frame;dpf_built=false;dpf=DpfStats{};dpf.stop="-";
+#if RE4DC_VRAM_ROOM_LOG
+        dpf_vroom=vroom.room;
+#endif
+        re4dc_log("DOORPF: open window=%u room=%03x frame=%u free=%u kos=%u\n",dpf_open,dpf_room,frame,(unsigned)pvr_mem_available(),kos_headroom());
+    }
+    if(!dpf_open || (dpf_open==1 && preload_pending))return false;
+    if(ready && !vram_claims && dpf_next<=dpf_n && (!dpf_built || dpf_next<dpf_n))dpf_step();
+    return true;
+}
+}  // namespace
+
+// Game task side (game.cpp / snd.cpp through platform/include/door_prefetch.h).
+extern "C" void re4dc_dpf_begin(int window,unsigned room){
+    if(window!=1 && window!=2)return;
+    dpf_req_room=room&0xFFFFU;
+    dpf_w2_idle=0;
+    dpf_task_window=unsigned(window);
+    dpf_req=unsigned(window);
+}
+extern "C" void re4dc_dpf_end(int window){
+    if(dpf_task_window!=unsigned(window))return;
+    dpf_task_window=0;
+    dpf_end_req=unsigned(window);
+}
+extern "C" int re4dc_dpf_yield(void){return dpf_task_window==2 && !dpf_w2_idle;}

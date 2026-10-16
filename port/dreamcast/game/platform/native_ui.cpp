@@ -5059,6 +5059,9 @@ extern "C" void re4dc_ui_door_mark(){if(door_ui_mark==~0U)door_ui_mark=nquad;doo
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
 #include "include/native_ui_source_world.inc"
 #endif
+#if defined(RE4DC_DOOR_PREFETCH) && RE4DC_DOOR_PREFETCH
+#include "include/door_prefetch.inc"   // DOOR_PREFETCH: the room's known textures during the room change's sound waits
+#endif
 extern "C" void re4dc_ui_begin(){
 #if RE4DC_KOS_HEAP_CHECK
     re4dc_heap_check();
@@ -5161,6 +5164,9 @@ extern "C" void re4dc_ui_begin(){
     // A preload pass that met a pack read error: once the pack is ready (or absent / invalid: per-file loads), run it
     // again for the picks it skipped (resident ones are kept).
     if(preload_after_pack && texpack::settled()){preload_after_pack=false;preload_pending=true;}
+#endif
+#if defined(RE4DC_DOOR_PREFETCH) && RE4DC_DOOR_PREFETCH
+    if(!dpf_frame(frame_ready))   // DOOR_PREFETCH (door_prefetch.inc): a room change's sound wait owns the frame's texture work
 #endif
     if(preload_pending && frame_ready && !vram_claims)preload_identities();
 #endif
