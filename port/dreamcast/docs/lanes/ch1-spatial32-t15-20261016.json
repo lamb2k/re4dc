@@ -1,0 +1,63 @@
+{
+  "status": "BOUNDED_SCENERY_GATES_PASS_MODEL_ONLY",
+  "scene": "r101 burning cross; full PS2 Leon jacket, g70 gameplay Ganados, cap6, approved L2 geometry",
+  "source_base": "3e303c5e",
+  "cost_baseline": "cxt16baserW",
+  "fixture": "spatial32v3",
+  "model_window": {
+    "first": 500,
+    "last": 799,
+    "stride": 10,
+    "samples": 30
+  },
+  "model_baseline_ms": 61.42063516666666,
+  "model_candidate_ms": 60.69214616666667,
+  "model_delta_ms": -0.728489,
+  "runtime_binary_changed": false,
+  "end_delta_bytes": 0,
+  "matching_heap4_delta_bytes": 0,
+  "scenes": {
+    "fight": {
+      "logic_verdict": "STRICT",
+      "decision_verdict": "MUST-IDENTICAL",
+      "records": 903,
+      "subscreen_masked_records": 0
+    },
+    "bell": {
+      "logic_verdict": "STRICT",
+      "decision_verdict": "MUST-IDENTICAL",
+      "records": 2002,
+      "subscreen_masked_records": 473
+    },
+    "door": {
+      "logic_verdict": "STRICT",
+      "decision_verdict": "MUST-IDENTICAL",
+      "records": 1264,
+      "subscreen_masked_records": 473
+    }
+  },
+  "identity_and_progression_pass": true,
+  "inspected_frozen_viewpoints": [
+    "vc",
+    "a2",
+    "vs",
+    "vt"
+  ],
+  "limitations": [
+    "MODELLED only; no console gain accepted.",
+    "Requantized static positions, maximum error 1.552 mm, UV 0.000071; protected dynamic/gated data retained.",
+    "Masked subscreen records do not compare swapped actor/player/object backing.",
+    "Full bell source completion is not movie cadence/audio quality acceptance.",
+    "Bounded scripted routes and views, not full chapter/H2 acceptance.",
+    "Pressure matrix belongs to the actor reference fixture, not spatial32v3.",
+    "Opt-in fixture; not promoted to default or console package."
+  ],
+  "proof_files": [
+    "cxt16sp32-cross-summary.json",
+    "spatial32-current-audit.json",
+    "spatial32-visual-metrics.json",
+    "spatial32-gate-identities.json",
+    "spatial32v3-gates-summary.json"
+  ],
+  "evidence_root": "C:\\Flycast-Evidence\\re4-dreamcast\\codex-cpu-t15-20261016"
+}

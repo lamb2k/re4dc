@@ -1,0 +1,23 @@
+{
+  "scope": "Console-fit SH-4 model self cost; 30 samples 500:799 stride10. Four named selection functions only, not all LOD work or removable cost. Never add nominal-profile numbers to this series.",
+  "cxt16base-cross": {
+    "whole_frame_ms": 61.42063516666666,
+    "selection_self_ms": {
+      "(anonymous namespace)::lean::box_class(float const*, float const*, float const*, float const*, float, float, float const*)": 0.8188683333333344,
+      "(anonymous namespace)::lean::world_out((anonymous namespace)::lean::World const&, float const*, float const*, float const*)": 0.5315464999999991,
+      "(anonymous namespace)::lean::box_mask(float const*, float const*, float const*, float const*, float, float)": 0.4883643333333331,
+      "(anonymous namespace)::lean::sg_select(unsigned short const*, unsigned int, float const*, unsigned int, unsigned short*, unsigned short*, unsigned int&, unsigned int&, unsigned int&)": 0.8742246666666671
+    },
+    "selection_self_total_ms": 2.713003833333334
+  },
+  "cxt16sp32-cross": {
+    "whole_frame_ms": 60.69214616666667,
+    "selection_self_ms": {
+      "(anonymous namespace)::lean::box_class(float const*, float const*, float const*, float const*, float, float, float const*)": 0.7891950000000001,
+      "(anonymous namespace)::lean::world_out((anonymous namespace)::lean::World const&, float const*, float const*, float const*)": 0.31734966666666575,
+      "(anonymous namespace)::lean::box_mask(float const*, float const*, float const*, float const*, float, float)": 0.47138066666666667,
+      "(anonymous namespace)::lean::sg_select(unsigned short const*, unsigned int, float const*, unsigned int, unsigned short*, unsigned short*, unsigned int&, unsigned int&, unsigned int&)": 0.8367178333333333
+    },
+    "selection_self_total_ms": 2.4146431666666657
+  }
+}
