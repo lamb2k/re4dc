@@ -38,6 +38,7 @@ All newly introduced runtime knobs still default to zero. The new all-off image
 | GDEMU/DMA timing | `gdemu-final-s01..s10-{0,1}`: ten matched seeds, jitter 20,000 SH-4 cycles, original installed console emulator 41905914. All twenty runs reach r103 and tick 2000; each pair is STRICT for 2,002 records and MUST-IDENTICAL for decisions. No trace gaps, NULs, faults, OOM, texture failure or Leon GC fallback. |
 | Actual SH-4 cache model, full H2 | `cache-final-h2-v2-{0,1}`: 2,502 STRICT records, 493 established subscreen-masked records, 2,501 MUST-IDENTICAL decisions. Zero NULs, gaps, faults, fatal exits and alignment warnings. TEXCHK and LEON-GC pass. |
 | Full H2 movie playback | Each cache arm uploads and presents all s03 1,465/1,465, s20 571/571 and s30 340/340 frames, with no skip. s30 returns the world on its first attempt (`restored=1`, 13 slots, 363,360 bytes). Both arms retain one startup audio underrun per movie (18,556 silence bytes); continuous audible playback has not been reviewed. |
+| Current-build full bell | `cache-final-bell-{0,1}`, current `cxfm0rT` / `cxfm1rT` and pinned `d10cdde0` cache emulator: 2,202 STRICT records (473 established masked), 2,201 MUST-IDENTICAL decisions, zero gaps/NULs/faults/fatals/misalignment; TEXCHK and LEON-GC pass. Both decode all 1,331 frames of movie 10130 without a skip. Baseline uploads/presents 1,305, candidate 1,313; 26/18 decoded frames are not presented. Both retain one startup underrun, 18,556 silence bytes. The qualified debug trigger does not validate the natural fight timer or continuous display/audio. |
 | Cache fight / call / door | Complete cache-aware traces pass for fight and call; the original door trace fault was fixed by `a9533269`, then `cache-fixed-door-{0,1}` pass STRICT/MUST through r103. See earlier iteration notes for exact images. |
 | KOS pressure | `kosfm-<scene>-49152-{0,1}`: ten of ten pass with 48 KiB deliberately held, as one block and as fragmented blocks, across fight, call, door, return to r100 and return to r103. Minimum measured headroom is 7,456 bytes; smallest top chunk is 4,608 bytes. Diagnostic arm `cxfmsqrW`. |
 | Movie ledger host checks | 1,179 assertions, 25 source contracts, UBSan and guard-page adapters pass. Includes r100 round-trip, all slots, failed/corrupt reload and stale generation. These adapters do not execute Dreamcast file I/O. |
@@ -70,6 +71,14 @@ Dirty OCBI callers resolve to the disc-stream destination invalidation before
 DMA, and no subsequent lost-write read is observed. This is source-based
 classification of observed accesses, not an exhaustive clean-memory or hardware
 certification. See `cache-audit-h2-site-classification.json`.
+
+The current-build bell follow-up also has 35 classified sites per arm in the
+same four categories, with zero unknown sites or overflow. Its final census
+sums are 130,897 and 133,091, each exactly matching that arm's garbage-read
+total. All stale-read, lost-write, clobbered-writeback, dirty-DMA and SQ-over-valid
+counters remain zero. See `cache-final-bell-site-classification.json`.
+The final post-bell stills show Leon, scenery and HUD restored in both arms;
+these sampled views do not establish continuous visual or audible acceptance.
 
 `gdi-cache-retry-bench-baseline` has exactly one NUL in its initial
 `OSCreateThread` log line. The complete raw capture is retained and its original
@@ -156,6 +165,15 @@ preserved logs; the full summaries live in E. The emulator fix lives only in
 `C:\Game Dev\Emulators\flycast-console-codex-ch1`; the installed console emulator
 is unchanged. Cache-aware logging reads P1 cache bytes without cache fills,
 evictions, writebacks, guest writes or guest-cycle changes.
+
+The final bell coverage closes an audit gap: the earlier `compat-full-bell`
+pair used the pre-movie-fix image. Reproduce the current pair with Windows
+`python.exe Q/compat-run.py cache-final-bell` (use fresh labels for another run).
+Review from WSL using `cache-peek-review.py bell cache-final`,
+`cache-final-bell-movies-review.py`, and `cache-bell-site-review.py` in Q.
+The physical package's `recipes/bell-followup` holds this runner/review snapshot
+and its own checksums; `reports` includes all three results and the sampled
+visual review. This follow-up changes no game code, build or disc bytes.
 
 ## Remaining acceptance
 
