@@ -423,6 +423,13 @@ static int aliveCapParkRoom()
                   // there freed live pointers (heap 4 corruption from the s20 ambush, test 13 RC H2 gate)
     case 0x101: case 0x104: case 0x10A: case 0x10C: case 0x10F: case 0x11C: case 0x11D:
         return 0;
+#if defined(RE4DC_PS2_CH3_ENEMY) && RE4DC_PS2_CH3_ENEMY
+    // PS2_CH3_ENEMY: the castle chapter 3 rooms keep cEmWrap pointers of their sends (r201..r20f; r20a and
+    // r20d send nothing that matters, kept out too): hold only, no parking.
+    case 0x200: case 0x201: case 0x202: case 0x203: case 0x204: case 0x205: case 0x206: case 0x207:
+    case 0x208: case 0x209: case 0x20A: case 0x20B: case 0x20C: case 0x20D: case 0x20E: case 0x20F:
+        return 0;
+#endif
     }
     return 1;
 }

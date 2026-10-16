@@ -264,6 +264,25 @@ void R208Init()
     W->gotoWait = 900;
     EatMgr.registEffInfo(EAT_ET_ROOM0, (AtEffInfo*) &r208_eff_info4);
     EatMgr.registEffInfo(EAT_ET_ROOM1, (AtEffInfo*) &r208_eff_info5);
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x01)
+    // PS2 USA R208Init (st2_0 0x11598..0x117a8): six sends, not nine (eleven at rank > 6). The PS2 list holds rows
+    // 1, 2, 4..8 and 0x11 back; rows 2, 4 and 8 are never sent. Rank >= 7 sends the PS2-only rows 0x5E..0x61.
+    if (pG->Game_level < 7) {
+        W->em[1].setEm(3, 2, 0, 1, 1);
+        W->em[3].setEm(5, 2, 0, 1, 1);
+        W->em[4].setEm(6, 2, 0, 1, 1);
+        W->em[5].setEm(7, 2, 0, 1, 1);
+        W->em[7].setEm(1, 2, 0, 1, 1);
+        W->em[8].setEm(0x11, 2, 0, 1, 1);
+    } else {
+        W->em[1].setEm(3, 2, 0, 1, 1);
+        W->em[3].setEm(0x5F, 2, 0, 1, 1);
+        W->em[4].setEm(0x60, 2, 0, 1, 1);
+        W->em[5].setEm(7, 2, 0, 1, 1);
+        W->em[7].setEm(0x61, 2, 0, 1, 1);
+        W->em[8].setEm(0x5E, 2, 0, 1, 1);
+    }
+#else
     W->em[0].setEm(2, 2, 0, 1, 1);
     W->em[1].setEm(3, 2, 0, 1, 1);
     W->em[2].setEm(4, 2, 0, 1, 1);
@@ -277,6 +296,7 @@ void R208Init()
         W->em[9].setEm(0x3C, 2, 0, 1, 1);
         W->em[10].setEm(0x3D, 2, 0, 1, 1);
     }
+#endif
     SceAtDataSet_exec(6, SCE_LEVEL10, 0, (TaskFunc) atari_exec_A, 0, 1);
     SceAtDataSet_exec(7, SCE_LEVEL10, 0, (TaskFunc) atari_exec_A, 0, 1);
     SceAtDataSet_exec(8, SCE_LEVEL10, 0, (TaskFunc) atari_exec_B, 0, 1);
@@ -423,12 +443,21 @@ void R208Main()
     alive = SceCountEmAlive(0x10, 0x20);
     if (RsfCheck(G_ROOM_ID, 4) && RsfCheck(G_ROOM_ID, 6) == 0) {
         if (W->emSetWait == 0) {
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x01)
+            if ((RsfCheck(G_ROOM_ID, 5) == 0 && getResetNum() < 2) || (RsfCheck(G_ROOM_ID, 5) && getResetNum() < 9)) {
+                if (RsfCheck(G_ROOM_ID, 5)) {
+                    W->emSetWait = 300;
+                } else {
+                    W->emSetWait = 190;
+                }
+#else
             if ((RsfCheck(G_ROOM_ID, 5) == 0 && getResetNum() <= 1) || (RsfCheck(G_ROOM_ID, 5) && getResetNum() <= 5)) {
                 if (RsfCheck(G_ROOM_ID, 5)) {
                     W->emSetWait = 590;
                 } else {
                     W->emSetWait = 320;
                 }
+#endif
                 if (alive <= 5) {
                     int no;
 
@@ -977,7 +1006,11 @@ static void atari_exec_B()
 // Area 0x15: group D (behind the gates) when five or fewer are alive.
 static void atari_exec_D()
 {
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x01)
+    if ((u32) SceCountEmAlive(0x10, 0x20) < 5) {
+#else
     if ((u32) SceCountEmAlive(0x10, 0x20) <= 5) {
+#endif
         emGroupeD_reset();
     }
 }
@@ -991,6 +1024,19 @@ extern "C" void emGroupeA_reset()
         return;
     }
     RsfSet(G_ROOM_ID, 1);
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x01)
+    alive = SceCountEmAlive(0x10, 0x20);
+    if (alive < 4) {
+        R208_EmSetEvent(EM_LIST(0x20));
+        R208_EmSetEvent(EM_LIST(0x22));
+        W->em[11].setEm(0xD, 2, 0, 1, 1);
+    }
+    if (alive == 1) {
+        W->em[9].setEm(0x3C, 2, 0, 1, 1);
+        W->em[10].setEm(0x3D, 2, 0, 1, 1);
+    }
+    return;
+#endif
     R208_EmSetEvent(EM_LIST(0x20));
     R208_EmSetEvent(EM_LIST(0x22));
     alive = SceCountEmAlive(0x10, 0x20);
@@ -1056,8 +1102,10 @@ extern "C" void emGroupeD_reset()
     RsfSet(G_ROOM_ID, 4);
     W->em[28].setEm(0x23, 2, 0, 1, 1);
     W->em[30].setEm(0x25, 2, 0, 1, 1);
+#if !(defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x01))
     W->em[29].setEm(0x24, 2, 0, 1, 1);
     W->em[31].setEm(0x26, 2, 0, 1, 1);
+#endif
     W->em[28].setNoSuspend(1);
     W->em[29].setNoSuspend(1);
     W->em[30].setNoSuspend(1);

@@ -3308,3 +3308,11 @@ $(OBJDIR)/ps_alias_sh4_zam.ld: platform/ps_alias_sh4.ld
 $(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 $(SH4ZAM_INC)
 endif
 endif
+# MOTION_MISS_LOG=1 (castle lane 2026-10-15; diagnostic, log only, default 0): "motion miss" lines (clip, wait, slab).
+MOTION_MISS_LOG ?= 0
+ifeq ($(filter $(MOTION_MISS_LOG),0 1),)
+$(error MOTION_MISS_LOG must be 0 or 1)
+endif
+ifeq ($(MOTION_MISS_LOG),1)
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_MISS_LOG=1
+endif

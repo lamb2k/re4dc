@@ -93,6 +93,19 @@ static void r204_EventChandelier2();
 static void r204_EventExec();
 static void r204_openTerm();
 void Evt_R204S00_Func(Event* e);
+
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH3) && RE4DC_ROUTE_MOVIES_CH3
+// ROUTE_MOVIES_CH3 (castle lane 2026-10-15): r204 s00 (the chapter 3-1 end) is presented by its PS2 movie.
+// While the movie owns the event no evd is read (no DC.setData / ARAM load, the swap module is read at its own
+// size); the handler's begin / end modes run, the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md).
+#include "route_movie.h"
+#include "fade.h"
+#define R204_ROUTE_MOVIES 1
+static int r204MovieOwns;
+#define R204_MOVIES_OWN() (re4dc_movie_available(0x20400))
+#else
+#define R204_ROUTE_MOVIES 0
+#endif
 static void r204_checkEmDead();
 static void door_move();
 
@@ -261,6 +274,10 @@ void R204Init()
     }
     setTexRender();
     if (!RsfCheck(G_ROOM_ID, 0)) {
+#if R204_ROUTE_MOVIES
+        r204MovieOwns = R204_MOVIES_OWN();
+        if (!r204MovieOwns)
+#endif
         EvtMgr.EvtReadAram("event/evd/r204s00.evd", 0, 0, 0, 0);
         EmReadSearch(0x14, 0, 0);
     }
@@ -982,6 +999,12 @@ static void r204_EventExec()
         RsfSet(G_ROOM_ID, 0);
         BitOn(pG->Scenario_flg[0], 0x40000);
         SndRoomStrVolSet(1, 200);
+#if R204_ROUTE_MOVIES
+        if (r204MovieOwns &&
+            RouteMoviePlay(0x20400, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R204S00_Func, 0) != RE4DC_MOVIE_UNHANDLED) {
+            FadeSetW(2, 0x2D, 0, 0);  // the evd's flags 0x10 (StatusFlag 0x400): the fade before the chapter end
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r204s00.evd", 0x14, 0x10);
         SndRoomStrVolReset(500);
         if (pSubEm != 0) {

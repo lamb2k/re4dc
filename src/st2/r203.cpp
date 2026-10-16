@@ -64,6 +64,19 @@ static void r203_ShelfOpened();
 static void r203_StreamCheck();
 extern "C" void Evt_R203S00_Func(Event* e);
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH3) && RE4DC_ROUTE_MOVIES_CH3
+// ROUTE_MOVIES_CH3 (castle lane 2026-10-15): r203 s00 (Ashley meets Leon again) is presented by its PS2 movie.
+// While the movie owns the event no evd is read (no DC.setData / ARAM load, the swap module is read at its own
+// size); the handler's begin / end modes run, the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md).
+#include "route_movie.h"
+#include "fade.h"
+#define R203_ROUTE_MOVIES 1
+static int r203MovieOwns;
+#define R203_MOVIES_OWN() (re4dc_movie_available(0x20300))
+#else
+#define R203_ROUTE_MOVIES 0
+#endif
+
 // Room init: once the key item was taken (Item_find_flg 0x00010000) two Ganados (0x27/0x29) plus three
 // wanderers (0x34..0x36, list 2); otherwise the nine Ganados of the table (list 2), area 0x8A = the key
 // pickup wave and the key-carrier's escape. Area 1 = the locked door with the key-use watcher until
@@ -109,8 +122,15 @@ void R203Init()
             SubCharInit(1, &pPL->pos, pPL->ang.y);
             SubCharCtrl(SCC_CHASE, 0);
         }
+#if R203_ROUTE_MOVIES
+        r203MovieOwns = R203_MOVIES_OWN();
+        if (!r203MovieOwns) {
+#endif
         r203_work.p->data = DC.setData(EvtMgr.NameChange("evd/r203s00.evd"));
         r203_work.p->data->setCommand(CMND_ARAM_LOAD, 0, 0);
+#if R203_ROUTE_MOVIES
+        }
+#endif
         SceAtDataSet_exec(3, SCE_LEVEL10, 0, (TaskFunc) r203_EventMeetAgain, 0, 1);
         EvtMgr.SetFunc("evt_r203s00_func", (void*) Evt_R203S00_Func);
     }
@@ -244,6 +264,11 @@ static void r203_EventMeetAgain()
     RsfSet(G_ROOM_ID, 3);
     m = SearchEmModule(0x11);
     SceEventStart(0);
+#if R203_ROUTE_MOVIES
+    if (r203MovieOwns) {
+        RouteMoviePlay(0x20300, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R203S00_Func, 0);
+    } else
+#endif
     if (r203_work.p->data->waitLoadOk() == 1) {
         MemorySwap(m->pArc, (u32) r203_work.p->data->m_addr, r203_work.p->data->m_size);
         EvtMgr.SetEvt(m->pArc, 0);

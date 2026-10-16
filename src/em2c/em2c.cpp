@@ -327,7 +327,12 @@ extern "C" void _unresolved()
 // EmInitFunc of the module: constructs the cEm2c class in the manager's work.
 void Em2cInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEm2c;
+#else
     new (em) cEm2c();
+#endif
 }
 
 // Damage reaction after a hit while alive (em2cDmCk): by the state flags, then by the weapon.
@@ -5453,7 +5458,13 @@ void em2cDoorOpenCk(cEm2c* em)
         return;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEmDoor* e = (cEmDoor*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEmDoor* e = (cEmDoor*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
         EmDoorWork* dw;
 
         if ((e->be_flag & 0x201) != 1) {
@@ -5536,7 +5547,13 @@ void em2cDoorOpenCk2(cEm2c* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEmDoor* e = (cEmDoor*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEmDoor* e = (cEmDoor*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
         EmDoorWork* dw;
 
         if ((e->be_flag & 0x201) != 1) {
@@ -6324,7 +6341,13 @@ void em2cGetTail(cEm2c* em)
         return;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if ((e->be_flag & 0x201) != 1) {
             continue;
@@ -6352,7 +6375,13 @@ int em2cDoorCk(cEm2c* em)
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if ((e->be_flag & 0x201) != 1) {
             continue;

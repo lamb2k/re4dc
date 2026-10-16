@@ -28,7 +28,12 @@ MAX_CLIP=32768
 # em11 (r117's later-visit Ganados, ESL 0x50/0x51, chapter 2-1; route lane r117 2026-10-10): em11/em10.cpp,
 # em10_tmpl.cpp, em11_set.cpp, the same three units; its 5.8 MB GC archive did not fit r117's heap 4 (largest cell
 # 3.1 MB: DVD: Memory allocate failed, readEmData em/em11.drs).
-GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs')
+# em1a / em1b / em14 (castle chapter 3 Ganados, ROUTE_CH31; castle lane 2026-10-15): em1x/em10.cpp, em10_tmpl.cpp,
+# em1x_set.cpp, the em10g group's units, so the same consumers; their GC archives (3.9-4.3 MB bodies) did not fit heap 4
+# in r208 / r201 / r204 next to the room and its PS2 world (cx-r20x-t12-01: readEmData error).
+# em19 (r20d Ganados, ROUTE_CH32; same em10.cpp / em10_tmpl.cpp / em19_set.cpp units, 4,293,760 B GC body).
+# em1c (r218 Ganados, ROUTE_CH41; em10.cpp / em10_tmpl.cpp / em1c_set.cpp, 4,988,480 B GC body).
+GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em1a.drs','em1b.drs','em14.drs','em19.drs','em1c.drs')
 SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.drs','em18.drs','pl11.drs','pl0f.drs')
 # em2a / em24 / em27 / em29 / em2e (the chapter 1 traps, snake, fish, bat and wall crawler; lane ps2cast 2026-10-15,
 # registry room packages of the released chapter 1-1..2-1 rooms): textures only (--keep-motion-resident). Each module's
@@ -86,7 +91,8 @@ ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11')
 # archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
 # their own registry row like the room overlays above: em11 (ROUTE_CH21, r117), em18 (ROUTE_CH13, r102: module 22).
-KNOB_STATIC_MODULES=('em11','em18')
+KNOB_STATIC_MODULES=('em11','em18','em1a','em1b','em14','em19','em1c')
+GANADO_OVERSIZED_RESIDENT=('em1b.drs',)  # + ROUTE_CH31's castle Ganado RELs
 # Leon's archives, textures-only: pl00 (jacket, costume 0) and pl08 (no jacket, costume 1: title.cpp picks it in
 # every room but r120/r100/r101/r103/r106 once the r106 closet event has run). Same cPlLeon consumers, so pl08
 # takes pl00's reviewed textures-only contract (route lane 2026-10-01, r104).
@@ -99,6 +105,12 @@ BOUNDED_PROFILES={
         source='53b653c169d7a022407c8dd75d1a304d904709aae278f80cda5f843dc3b361a0',retain=(0x46,)),
     'pl11-r11f': dict(name='pl11.drs',module=47,cap=32768,count=69,
         source='f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58',retain=(0x40,0x43)),
+    # castle lane 2026-10-15: pl11-r11f plus Ashley's near-enemy clips kept in the body (MOTION_MISS_LOG, Flycast:
+    # entries 0 / 6 / 61 cycled through the two slabs in r203, 61 / 6 / 0 / 3 / 1 / 18 in r208, 140-160 ms per miss).
+    # Retained arcs 18 19 21 24 36 68 108 109 (= r11f entries 0 1 3 6 18 47 60 61, 29,056 B); the rest stays bounded.
+    'pl11-hot': dict(name='pl11.drs',module=47,cap=32768,count=61,
+        source='f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58',
+        retain=(0x40,0x43,18,19,21,24,36,68,108,109)),
 }
 
 def prepare(source, destination, hot_slots=(), textures=None, keep_motion_resident=False, compact_effects=False, bounded_profile=None):
@@ -190,7 +202,9 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
         if len(native)>(profile['cap'] if profile else MAX_CLIP):
             # em21: a clip over the runtime's slot limit stays resident (ordinary FCV, exact bytes);
             # the Ganado contract keeps refusing, as before.
-            if name in MOTION_SMALL:oversized.append({'source_arc_indices':[i+4 for i in slots],'bytes':len(native)});continue
+            # em1b (castle lane 2026-10-15): one Ganado clip over the slot limit stays resident the same way (exact bytes,
+            # ordinary FCV path); every other em1b clip streams. Other Ganados keep refusing.
+            if name in MOTION_SMALL or name in GANADO_OVERSIZED_RESIDENT:oversized.append({'source_arc_indices':[i+4 for i in slots],'bytes':len(native)});continue
             raise ValueError('clip exceeds validated cache slot')
         prefix=codec.header_size(len(parsed.joints));resident=(prefix+31)&~31
         if resident>=len(native):continue

@@ -53,6 +53,19 @@ MODULE(em1f)
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
 MODULE(st2_0)
 #endif
+#if defined(RE4DC_ROUTE_CH31) && RE4DC_ROUTE_CH31
+MODULE(st2_1)
+MODULE(em1a)
+MODULE(em1b)
+MODULE(em14)
+#endif
+#if defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32
+MODULE(em19)
+#endif
+#if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
+MODULE(em1c)
+MODULE(st2_3)
+#endif
 MODULE(st1_0)
 MODULE(st1_1)
 MODULE(st1_2)
@@ -138,6 +151,23 @@ static const Re4dcModule g_modules[] = {
     MODULE(75, st2_0), // chapter 2-3 castle approach (r200)
     {63, "em3b", 0, 0, 0, 0, 0, 0, 0}, // vehicles, room overlay
     {61, "em35", 0, 0, 0, 0, 0, 0, 0}, // Mendez, room overlay
+#endif
+#if defined(RE4DC_ROUTE_CH31) && RE4DC_ROUTE_CH31
+    MODULE(82, st2_1), // ROUTE_CH31: castle chapter 3 (r204 r205 r206 r209 r20a..r20f)
+    MODULE(24, em1a),  // ROUTE_CH31: r208 / r209 Ganados (em10g group)
+    MODULE(25, em1b),  // ROUTE_CH31: r201 / r20c Ganados (em10g group)
+    MODULE(35, em14),  // ROUTE_CH31: r204 / r20f Ganados (em10g group)
+#endif
+#if defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32
+    {32, "em2d", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH32: r205 / r20a, room overlay
+    {10, "em25", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH32: r20c / r20f / r20d, room overlay
+    MODULE(23, em19),  // ROUTE_CH32: r20d Ganados (em10g group)
+    {68, "em3c", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH32: r20e armor, room overlay
+#endif
+#if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
+    MODULE(81, em1c),  // ROUTE_CH41: r218 Ganados (em10g group)
+    MODULE(97, st2_3), // ROUTE_CH41: castle chapter 4 (r220..r22c; 4-1 ends in r229 / r221 / r22b)
+    {31, "em2c", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH41: r221 boss, room overlay
 #endif
     MODULE(74, st1_0),
     MODULE(73, st1_1),
@@ -303,7 +333,27 @@ struct RouteOverlayHeader {
 };
 constexpr u32 kRouteOverlayMagic = 0x4F344552;  // "RE4O"
 struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
-#if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+#if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+// ROUTE_CH41 (needs ROUTE_CH32): the ROUTE_CH32 eleven, then em2c (31).
+RouteOverlay g_route_ovl[12];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : (id) == 61 ? 7 : (id) == 32 ? 8 : (id) == 10 ? 9 : (id) == 68 ? 10 : 11)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 66 || (id) == 63 || (id) == 61 || (id) == 32 || (id) == 10 || (id) == 68 || (id) == 31)
+#elif defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
+// ROUTE_CH41 without ROUTE_CH22: the ROUTE_CH32 ten, then em2c (31).
+RouteOverlay g_route_ovl[11];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 63 ? 5 : (id) == 61 ? 6 : (id) == 32 ? 7 : (id) == 10 ? 8 : (id) == 68 ? 9 : 10)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 63 || (id) == 61 || (id) == 32 || (id) == 10 || (id) == 68 || (id) == 31)
+#elif defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+// ROUTE_CH32 (needs ROUTE_CH31 -> ROUTE_CH23): the ROUTE_CH22 + CH23 eight, then em2d (32), em25 (10), em3c (68).
+RouteOverlay g_route_ovl[11];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : (id) == 61 ? 7 : (id) == 32 ? 8 : (id) == 10 ? 9 : 10)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 66 || (id) == 63 || (id) == 61 || (id) == 32 || (id) == 10 || (id) == 68)
+#elif defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32
+// ROUTE_CH32 without ROUTE_CH22: the ROUTE_CH23 seven, then em2d (32), em25 (10), em3c (68).
+RouteOverlay g_route_ovl[10];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 63 ? 5 : (id) == 61 ? 6 : (id) == 32 ? 7 : (id) == 10 ? 8 : 9)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 63 || (id) == 61 || (id) == 32 || (id) == 10 || (id) == 68)
+#elif defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
 RouteOverlay g_route_ovl[8];  // old five, then pl14, em3b and em35
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : 7)
 #define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 66 || (id) == 63 || (id) == 61)

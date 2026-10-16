@@ -101,6 +101,19 @@ static void r206_auto_door_ck();
 static void Evt_R206S00_Func(Event* e);
 static void Evt_R206S10_Func(Event* e);
 static void Evt_R206S20_Func(Event* e);
+
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH3) && RE4DC_ROUTE_MOVIES_CH3
+// ROUTE_MOVIES_CH3 (castle lane 2026-10-15): r206 s00 (Luis), s10 (after the snipe) and s20 (the reunion) are presented by their PS2 movies; all three must exist.
+// While the movie owns the event no evd is read (no DC.setData / ARAM load, the swap module is read at its own
+// size); the handler's begin / end modes run, the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md).
+#include "route_movie.h"
+#include "fade.h"
+#define R206_ROUTE_MOVIES 1
+static int r206MovieOwns;
+#define R206_MOVIES_OWN() (re4dc_movie_available(0x20600) && re4dc_movie_available(0x20610) && re4dc_movie_available(0x20620))
+#else
+#define R206_ROUTE_MOVIES 0
+#endif
 static void funcAshley(cEm* p);
 static void funcAshley2(cEm* p);
 static void funcAshley3(cEm* p);
@@ -183,6 +196,9 @@ void R206Init()
         BitOn(pG->Scenario_flg[0], 0x10000000);
         BitOn(pG->Status_flg[3], 0x04000000);
     }
+#if R206_ROUTE_MOVIES
+    r206MovieOwns = R206_MOVIES_OWN();
+#endif
     EvtMgr.SetFunc("evt_r206s00_func", (void*) Evt_R206S00_Func);
     EvtMgr.SetFunc("evt_r206s10_func", (void*) Evt_R206S10_Func);
     EvtMgr.SetFunc("evt_r206s20_func", (void*) Evt_R206S20_Func);
@@ -213,8 +229,16 @@ void R206Main()
 // Luis' death: event r206s00 (slot 0x11), r206s10 pre-loaded, chapter 3-3 ends (SceSetChapterEnd(CHAPTER_3_3)).
 void r206_die_event()
 {
+#if R206_ROUTE_MOVIES
+    if (r206MovieOwns) {
+        RouteMoviePlay(0x20600, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R206S00_Func, 0);
+    } else {
+#endif
     EvtMgr.EvtReadExec("event/evd/r206s00.evd", 0x11, 0);
     EvtMgr.EvtReadAram("event/evd/r206s10.evd", 0, 0, 0, 0);
+#if R206_ROUTE_MOVIES
+    }
+#endif
     SceSetChapterEnd(CHAPTER_3_3, -1);
 }
 
@@ -225,6 +249,11 @@ static void r206_gouryuu_event()
     BitOn(pG->door_flags_51C8, 1);
     BitOn(pG->door_flags_51CC, 0x80000000);
     SceSleep(1);
+#if R206_ROUTE_MOVIES
+    if (r206MovieOwns) {
+        RouteMoviePlay(0x20620, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R206S20_Func, 0);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r206s20.evd", 0x11, 0);
     SceSetChapterEnd(CHAPTER_3_4, -1);
     FadeSetW(1, 0, 0, 0);
@@ -533,7 +562,13 @@ int chkAliveGanadeNum()
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* em = (cEm*) EmMgr.workAt(i);
+        if (!em) continue;
+#else
         cEm* em = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if (em->id >= 0x10 && em->id <= 0x20 && em->checkStatus(EM_STATUS_ACTIVE) != 0 && (em->be_flag & 0x201) == 1) {
             cnt++;
@@ -733,6 +768,11 @@ static void r206_snipe()
     } while (1);
 snipe_done:
     SceSleep(1);
+#if R206_ROUTE_MOVIES
+    if (r206MovieOwns) {
+        RouteMoviePlay(0x20610, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R206S10_Func, 0);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r206s10.evd", 0x11, 0);
     FadeSetW(0x80000002, 0x1E, 0, 0);
     {

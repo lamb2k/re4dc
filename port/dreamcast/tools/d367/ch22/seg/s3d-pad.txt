@@ -1,0 +1,12 @@
+# wait for the post-siege s10 movie (route movie 0x11c10 -> fixture movie=1/7184) and its end, then A through the
+# chapter 2-2 results (chap02.dat); save at the card screen (presses gated on card 2/1 slot select and 2/6 confirm: LEFT = yes, then A)
+0 0000 1 movie=1/7184 200000
++1 0000 1 movie=4/1 20000
++600 0100 8
++250 0100 8 card=2/1 3000
++60 0001 6 card=2/6 3000
++30 0100 6 card=2/6 600
++200 0100 6
++200 0100 6
++200 0100 6
++200 0100 6

@@ -88,11 +88,11 @@ def main():
     ap.add_argument('release'); ap.add_argument('--label'); ap.add_argument('--evidence')
     ap.add_argument('--only'); ap.add_argument('--jobs', type=int, default=int(os.environ.get('FP_JOBS', '8')))
     ap.add_argument('--known', default=str(HERE / 'known-issues.txt')); ap.add_argument('--keep-discs', action='store_true')
-    ap.add_argument('--conf', default=str(HERE / 'segments.conf'), help='segment list (crash.conf: the align crash suite)')
+    ap.add_argument('--conf', default=str(HERE / 'segments.conf'), help='segment conf file(s), comma-separated (crash.conf: the align crash suite; segments-ch22.conf: chapters 2-2/2-3, route releases)')
     ap.add_argument('--align', action='store_true', help='every segment on the hwmodel Flycast with the align logger (fp_run.py --align)')
     a = ap.parse_args()
-    if not Path(a.conf).exists():
-        a.conf = str(HERE / a.conf)  # a bare name: the conf next to this script
+    # each bare name: the conf next to this script
+    a.conf = ','.join(c if Path(c).exists() else str(HERE / c) for c in a.conf.split(','))
     t0 = time.time()
     stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
     label = a.label or re.sub(r'[^A-Za-z0-9]', '', Path(a.release).stem)[-12:] or 'rel'

@@ -1,0 +1,30 @@
+name ch22-s1b-r112-r111-r113-r11c
+# r112 (from r118) door 0 -> r111 door 2 -> r113 window shoulder ride (area 3) + door 2 -> r11c
+room 0x112
+pos -5153 -8474 52054
+ang -2.4590
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+goto 120 -20922 0 -19392 sub
+act 180 a 4
+act 260 a 4
+act 340 a 4
+entry 2
+goto 240 41617 2650 -27631 sub
+act 300 a 4
+act 380 a 4
+act 460 a 4
+entry 3
+dump
+goto 240 2843 778 -28529 sub
+act 300 a 4
+act 380 a 4
+goto 1400 3795 459 -28543 sub
+act 1460 a 4
+act 1540 a 4
+act 1620 a 4
+act 1700 a 4
+entry 4
+act 600 fwd 12
