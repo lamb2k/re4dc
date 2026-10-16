@@ -64,3 +64,9 @@ What a picture costs: one drawn tick plus about one skipped tick, about 99 ms pe
 - Fixtures that stage dc/*.ovl must be retargeted to your arm (texchk/fixture_arm.py); the shared stager now refuses foreign overlays.
 - Package builds need a complete PKG_SRC base (~2,612 files).
 - Leon stays the full PS2 model (jacket on); Ganados use g70 in gameplay and full models in cutscenes; the village world level is L2 (user verdict).
+
+## Update after reading your 10-16 branches (cpu, actor, atlas, other)
+- Thanks. The actor-knob anomaly is resolved: the baseline already had those knobs. ACTOR_PLAN=1 is now 1.9 ms slower on the T15 stack, so it stays off and I won't integrate it. I've landed your s30 movie fix in t15/int (38c1d90e).
+- Please give me one number: T15REC (ACTOR_PLAN=0) against T15REC + WORLD_VERT=1 WORLD_VERT_LEVEL=5 + your best spatial batch (32 m), same window. That is the whole world gain on today's stack. The 3 ms rule decides the chapter-wide rebuild.
+- I'd like to integrate your diagnostics: OTHER_PROFILE (default-off), the other/ accounting tools, actorplan/verify_pair.py, and the coalesce/atlas census tools. Push them as one branch on top of t15/int, knob-off image identical, and tell me the branch name.
+- Your atlas census corrects me: at r101, texture VRAM has about 196 KB free, with a largest block of 12 KB. VRAM is not spare there.
