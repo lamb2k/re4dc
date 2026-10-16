@@ -683,6 +683,14 @@ void* mem_alloc(u32 size, const char* file, int line, int flag, int heap)
                 u32 tc = cells[r]; cells[r] = cells[best]; cells[best] = tc;
                 re4dc_log("heap census 4: %8u bytes %4u cells %s\n", bytes[r], cells[r], tags[r]);
             }
+            // Layout (fragmentation): free cells >= 16 KB and allocated cells >= 32 KB, by address.
+            for (OSHeapCell* c = d->free; c != NULL; c = c->next)
+                if ((u32) c->size >= 0x4000) re4dc_log("heap map 4: free %08x %u\n", (u32) c, (u32) c->size);
+            for (OSHeapCell* c = d->allocated; c != NULL; c = c->next) {
+                const u8* t = (const u8*) c + c->size - 0x20;
+                const char* k = (c->size >= 0x40 && !t[0] && t[1] == 'M' && t[2] == 'A' && t[3] == 'D') ? (const char*) t + 4 : "-";
+                if ((u32) c->size >= 0x8000) re4dc_log("heap map 4: used %08x %u %s\n", (u32) c, (u32) c->size, k);
+            }
         }
     }
 #endif
@@ -712,6 +720,46 @@ void* mem_alloc(u32 size, const char* file, int line, int flag, int heap)
 #endif
     return p;
 }
+
+#if defined(RE4DC_SS_POOL_TOP) && RE4DC_SS_POOL_TOP
+// SS_POOL_TOP (lane ch3found16 2026-10-16): place a tagged block at the top end of the heap's highest free cell.
+// Every lower free cell that could take it is held, a filler takes the top cell's low part, then the block takes the
+// rest; held cells and the filler are freed again. Same block, same size, only the address. Returns 0 when the top cell
+// cannot take it (the caller keeps its first-fit path).
+void* re4dc_mem_alloc_top(u32 size, const char* file, int line, int heap)
+{
+    if (heap == MEM_HEAP_CURRENT) heap = CurrentHeap;
+    if (size == 0 || !memCheckHeapActive(heap)) return NULL;
+    const int h = Heap[heap].handle;
+    OSHeapDescriptor* d = HeapHead + h;
+    const u32 need = ((((size + 0x1F) & ~0x1Fu) + 0x20) + 0x20 + 0x1F) & ~0x1Fu;  // tag + cell header
+    OSHeapCell* top = NULL;
+    for (OSHeapCell* c = d->free; c != NULL; c = c->next)
+        if (top == NULL || c > top) top = c;
+    if (top == NULL || (u32) top->size < need + 0x80) return NULL;
+    void* held[64];
+    unsigned n = 0;
+    for (;;) {
+        OSHeapCell* low = NULL;
+        for (OSHeapCell* c = d->free; c != NULL; c = c->next)
+            if (c != top && (u32) c->size >= need && (low == NULL || c < low)) low = c;
+        if (low == NULL || n == 64) break;
+        void* q = OSAllocFromHeap(h, (u32) low->size - 0x20);
+        if (q == NULL) break;
+        held[n++] = q;
+    }
+    void* filler = OSAllocFromHeap(h, (u32) top->size - need - 0x20);
+    void* p = NULL;
+    if (filler != NULL && (u8*) filler == (u8*) top + 0x20) p = mem_alloc(size, file, line, 1, heap);
+    if (filler != NULL) OSFreeToHeap(h, filler);
+    for (unsigned i = 0; i < n; ++i) OSFreeToHeap(h, held[i]);
+    if (p != NULL && (u8*) p < (u8*) top) {
+        Mem_free_h(p, heap);
+        return NULL;
+    }
+    return p;
+}
+#endif
 
 // mem_alloc plus zero fill.
 void* mem_calloc(u32 size, const char* file, int line, int flag, int heap)
