@@ -132,10 +132,13 @@ T15_G="ACTOR_PROBE_LIGHT=2 GANADO_LIT=1 GANADO_LIT_NEAREST=0"
 #      effect areas), r10b / r11a / r11b never cut (kViewRoomMin). Gates in C:/Flycast-Evidence/re4-dreamcast/viewdist-20261016.
 #      T15_V="" builds the control without it.
 T15_V=${T15_V-VIEW_DIST_OPTION=1}
+#   W  WORLD_VERT=1 WORLD_VERT_LEVEL=5 (ChatGPT world32, user GO 10-16, -4.16 ms MODELLED at the r101 cross): r101 world
+#      as the approved L2 geometry in 32 m static batches (data wv32r101). Render only. T15_W="" builds the control.
+T15_W=${T15_W-WORLD_VERT=1 WORLD_VERT_LEVEL=5}
 # lane resident16 (10-16): the room preload runs again when SS heap 11 closes (chapter title / results / save screens), so
 #   r105 after the chapter 1-2 save screen loads its set back in one pass instead of 81 disc reads in play. Render only.
 T15_P="SS11_PRELOAD=1"
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P"
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"

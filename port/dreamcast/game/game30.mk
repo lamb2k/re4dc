@@ -2825,6 +2825,20 @@ $(error PS2_ROOM_PIN must be 0 or 1)
 endif
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_ROOM_PIN=1
 endif
+# WORLD_VERT=1 (native_static.cpp, render only, default 0; lane worldvert 2026-10-15): wholesale world vertex levels.
+# tools/ps2_world_vert_ladder.py writes level N of a room's PS2 world as ps2-wvN.re4mesh (+ ps2-wvN.r4sg) beside the
+# level-0 package (same R4PW sidecar / ids). WORLD_VERT_LEVEL (default 0 = the source package) picks the level at open;
+# The level is selected only at open. Memory neutral: heap-4 blocks are sized by
+# level 0. A missing or larger level file falls back to level 0. Collision is untouched (separate file).
+WORLD_VERT ?= 0
+WORLD_VERT_LEVEL ?= 0
+ifneq ($(WORLD_VERT),0)
+ifneq ($(WORLD_VERT),1)
+$(error WORLD_VERT must be 0 or 1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_VERT=1 -DRE4DC_WORLD_VERT_LEVEL=$(WORLD_VERT_LEVEL)
+endif
+
 # PS2_STRIP_GROUPS=1 (native_static.cpp, render only, default 0; lane objs 2026-10-15): reads dc/native/rNNN/
 # ps2-world.r4sg (tools/ps2_strip_groups.py: up to 4 spatial strip groups per meshlet, corners renumbered per group, in
 # a re-ordered ps2-world.re4mesh of the same size) into heap 4 (r101: 110,496 B). A meshlet that straddles the frustum
