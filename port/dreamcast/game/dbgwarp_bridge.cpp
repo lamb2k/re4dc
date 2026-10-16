@@ -83,7 +83,6 @@ extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <arch/timer.h>
 #include <kos/thread.h>
 
@@ -750,9 +749,9 @@ void saddler_poll()
     if (wp.saddler_rel) {
         // straight ahead of Leon (his yaw: +z at 0, as the game's sinf / cosf convention), turned to face him
         const f32 dist = wp.saddler_pos[0], a = pPL->ang.y;
-        wp.saddler_pos[0] = pPL->pos.x + dist * sinf(a);
+        wp.saddler_pos[0] = pPL->pos.x + dist * __builtin_sinf(a);
         wp.saddler_pos[1] = pPL->pos.y;
-        wp.saddler_pos[2] = pPL->pos.z + dist * cosf(a);
+        wp.saddler_pos[2] = pPL->pos.z + dist * __builtin_cosf(a);
         wp.saddler_ang = a + 3.1415927f;
         if (wp.saddler_ang > 3.1415927f) wp.saddler_ang -= 6.2831853f;
     }

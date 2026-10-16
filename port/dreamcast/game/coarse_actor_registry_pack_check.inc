@@ -35,6 +35,12 @@ using re4dc_material::kRoomRoles;using re4dc_material::kRoomBlobs;
 #define RE4DC_NMR_PACK_MODELS 8
 #define RE4DC_NMR_ROLE_TN_BAD(tn,room) ((tn)>8)
 #endif
+// STRESS_SADDLER (lane stress16b, stress disc only): the stand-in room package holds Saddler's full PS2 mesh and two gameplay
+// levels of it (body + head + tentacle, ~0.9 MB); a 1 MiB ceiling (the loader still allocates only the file + skin bytes).
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+#undef RE4DC_NMR_PACK_KIB
+#define RE4DC_NMR_PACK_KIB 1024u
+#endif
 // CH23 r11f retains all three PS2 Mendez forms and both mask passes. Allocate
 // only the validated file + skin bytes; this is a ceiling, never a static arena.
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
@@ -53,7 +59,12 @@ constexpr unsigned kPackRecord[kPackKinds]={48,16,64,1,16,1,48,96,32,68,32,32};
 // need 124. Facts stay in the validated room package; no added static arena.
 #if defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL
 // NATIVE_MODEL_REGISTRY_POOL: the pool sections' source part facts (each package its own; Luis 83, a pool ~60).
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+// STRESS_SADDLER: Saddler's source part facts (body 83 + head 83 + tentacle 60).
+constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=256,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
+#else
 constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=160,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
+#endif
 #elif defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
 constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=128,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
 #elif RE4DC_ROUTE_CH22

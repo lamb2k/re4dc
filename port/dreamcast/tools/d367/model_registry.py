@@ -559,6 +559,15 @@ def main():
         ACTOR_MATERIALS = 4  # RE4DC_ACTOR_MATERIALS=4 (native_model_registry.mk with the pool): atlas + three mask pairs
         PACK_CAPACITY.update(ref=64, geom=64, fmodel=48, fpart=160, ftex=64)
         PACK_MAX_BYTES = 256 * 1024
+    if '--stress-saddler' in args:
+        # --stress-saddler (lane stress16b 2026-10-16; the model-only Saddler stress disc, STRESS_SADDLER images only:
+        # coarse_actor_registry_pack_check.inc): Saddler full + two gameplay levels in one room package: 256 part facts
+        # (body 83 + head 83 + tentacle 60), a 1 MiB package + skin ceiling. Needs --pool.
+        args.remove('--stress-saddler')
+        if not POOL:
+            sys.exit('model_registry: --stress-saddler needs --pool')
+        PACK_CAPACITY['fpart'] = 256
+        PACK_MAX_BYTES = 1024 * 1024
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
