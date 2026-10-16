@@ -12,6 +12,7 @@ Codex's first-pass fixtures and the ch22 lane's AICA banks / streams) adds over 
     ch22 lane's AICA room banks transplanted (aica_transplant.py), their MAINSCENARIO packages and compact textures;
   - em16 (r11d Ganados): the GC archive prepared like em11 (prepare_enemy_motions.py Ganado contract, textures + cold
     motions: heap 4 4,246,528 -> 1,445,792 B), its AICA bank transplanted, its dc/mot keys and textures;
+  - r113.dar: its ROOM bank refit 11025 -> 8000 Hz so em17 fits the room arena (lane/fit-r113.py);
   - the 201 base-disc pictures route-v7 un-removed (2-2 / 2-3 rooms read them) stay on the disc.
 Writes OUTDIR/ch2-data.json {"replace": {disc path: source}, "unremove": [...], "provenance": ...}; --copy copies every
 source under OUTDIR/files (durable, ext4) and points the map there.
@@ -64,6 +65,12 @@ def main():
                     notes.append('%s: %s differs from test 15, test 15 kept' % (r, k))
                 continue
             rep.setdefault(k, str(p))
+    # r113: its own room banks refit so em17 (the Ganados' voices) fits the arena (lane/fit-r113.py)
+    f113 = '%s/snd/fit113/out/st1/r113.dar' % LANE
+    if os.path.exists(f113):
+        rep['st1/r113.dar'] = f113
+    else:
+        notes.append('st1/r113.dar refit not built (lane/fit-r113.py): r113 Ganado voices silent')
     # em16
     rep['em/em16.drs'] = '%s/snd/em16.drs' % LANE
     for p in sorted(Path('%s/em16/prep-em16/mot' % LANE).glob('*.fcv')):

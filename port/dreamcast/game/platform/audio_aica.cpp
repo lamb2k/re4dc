@@ -263,6 +263,9 @@ static_assert(sizeof(AicaBankHeader) == 96, "AicaBankHeader");
 struct Slot { u32 base, size; };
 Slot g_slot[9];
 u32 g_arenaNext;
+#if defined(RE4DC_AICA_BGM0_SPILL) && RE4DC_AICA_BGM0_SPILL
+int g_spillBlk = -1;   // the room-arena block placed in the BGM0 slot's tail (AICA_BGM0_SPILL), or -1
+#endif
 bool g_layout, g_layoutWarned;
 inline u32 slot_of(int t) { return (t == 5 || t == 6 || t >= 8) ? 8 : (u32) t; }
 
@@ -516,8 +519,33 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
     if (g_mapUsed + n > kMapMax) { re4dc_log("aica: map pool full\n"); return false; }
     Slot& sl = g_slot[h.slot];
     u32 base;
+#if defined(RE4DC_AICA_BGM0_SPILL) && RE4DC_AICA_BGM0_SPILL
+    // A BGM0 bank about to overwrite a room-arena bank spilled into its slot's tail silences that bank first.
+    if (h.slot == 3 && g_spillBlk >= 0 && g_blk[g_spillBlk].valid
+        && g_slot[3].base + ((total + 31) & ~31u) > g_blk[g_spillBlk].aica) {
+        re4dc_log("aica: BGM0 bank %u bytes overlaps blk %d spilled at %06x, blk %d silent\n", (unsigned) total,
+                  g_spillBlk, (unsigned) g_blk[g_spillBlk].aica, g_spillBlk);
+        blk_free(g_spillBlk);
+        g_spillBlk = -1;
+    }
+#endif
     if (h.slot == 8) {
         u32 need = (total + 31) & ~31u;
+#if defined(RE4DC_AICA_BGM0_SPILL) && RE4DC_AICA_BGM0_SPILL
+        // Arena full: the unused tail of the BGM0 slot (lane ch2code16). One spilled bank at a time.
+        if (g_arenaNext + need > sl.size && (g_spillBlk < 0 || !g_blk[g_spillBlk].valid) && g_blk[3].valid
+            && g_blk[3].aica == g_slot[3].base) {
+            const u32 used = (g_blk[3].aica_size + 31) & ~31u;
+            if (used + need <= g_slot[3].size) {
+                base = g_slot[3].base + used;
+                g_spillBlk = t;
+                re4dc_log("aica: blk %d (%u bytes) spills to the BGM0 slot tail at %06x (arena %u of %u used, BGM0 %u of %u)\n",
+                          t, (unsigned) total, (unsigned) base, (unsigned) g_arenaNext, (unsigned) sl.size, (unsigned) used,
+                          (unsigned) g_slot[3].size);
+                goto placed;
+            }
+        }
+#endif
         if (g_arenaNext + need > sl.size) {
             re4dc_log("aica: blk %d (%u bytes) does not fit the room arena (%u of %u used), block silent\n", t,
                       (unsigned) total, (unsigned) g_arenaNext, (unsigned) sl.size);
@@ -534,6 +562,9 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
         }
         base = sl.base;
     }
+#if defined(RE4DC_AICA_BGM0_SPILL) && RE4DC_AICA_BGM0_SPILL
+placed:
+#endif
     Blk& b = g_blk[t];
     b.smp = smp;
     b.adpcm = adpcm;

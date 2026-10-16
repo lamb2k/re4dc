@@ -326,6 +326,14 @@ MODULES += pl11:ovl em11
 # AICA_STR_ENT_MAX=48 ship together. 32 bytes of .bss per entry (48: +512 B). The 2 KB header holds up to 63.
 AICA_STR_ENT_MAX ?= 32
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_STR_ENT_MAX=$(AICA_STR_ENT_MAX)
+# AICA_BGM0_SPILL (lane ch2code16, 10-16; default 0 = image unchanged): a prebuilt room-arena bank that does not fit
+# the arena goes to the unused tail of the BGM0 slot (the room's bio4midi bank is often far smaller than the 264,576 B
+# slot: r11c's #6 uses 48,000), instead of staying silent. r11c's Luis (pl14, 55,324 B at 8 kHz) is 8.8 KB over the
+# arena. A later BGM0 load that would overlap the spilled bank silences it first (logged). Chapter 2 recipe only.
+AICA_BGM0_SPILL ?= 0
+ifeq ($(AICA_BGM0_SPILL),1)
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_BGM0_SPILL=1
+endif
 export RE4DC_LINK_OVERLAY += .ovl_pl11
 $(OBJDIR)/mod/st1_3/src/st1/r117.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o $(OBJDIR)/mod/st1_3/src/st1/r117.o

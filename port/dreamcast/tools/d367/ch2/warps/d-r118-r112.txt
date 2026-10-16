@@ -1,5 +1,6 @@
 name ch2-door-r118-r112
 # lane ch2code16: door r118 -> r112 -> back (arrival points from stage_route.py; Ashley beside: goto sub)
+# forward door point = fullplay/segments ch22a / ch22b known-good goto (10-16 resume: the stage_route arrival+step missed the walk-in trigger)
 room 0x118
 pos -44397 157 -14419
 ang 2.1460
@@ -7,7 +8,7 @@ find 0x00100000
 status 3 0x04000000
 inv default
 god
-goto 60 -44900 157 -14092 -0.9956 sub
+goto 60 -45700 -9 -13265 sub
 act 120 a 4
 act 200 a 4
 act 280 a 4
