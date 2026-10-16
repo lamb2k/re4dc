@@ -875,7 +875,10 @@ CH31_STREAMS = CH23_STREAMS + [(1, 153)]
 # Chapter 3 foundations (lane ch3found16, 2026-10-16): the ch1 file (test 15, 45 entries, unchanged) plus every ch31
 # stream it lacks (the chapter 2-2 / 2-3 rooms and r207's radio voice 1:153), appended so entries 0..44 and their data
 # bytes stay identical to the ch1 file. `--streams ch3`; the reader needs AICA_STR_ENT_MAX >= len(CH3_STREAMS).
-CH3_STREAMS = CH1_STREAMS + [k for k in CH31_STREAMS if k not in CH1_STREAMS]
+# + the castle room streams the ch3found16 runs requested (cxc3fmW, Flycast: "stream sbb=1d18000" r208, "sbb=25e0000" r209 /
+#   r20c, both "not in aica_str.dat, silent"): 0:15 and 0:20 (bio4bgm.sbb; 25e0000 is also 1:49's offset in bio4evt.sbb,
+#   the room BGM block is 0). 55 entries.
+CH3_STREAMS = CH1_STREAMS + [k for k in CH31_STREAMS if k not in CH1_STREAMS] + [(0, 15), (0, 20)]
 STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch1': CH1_STREAMS,
                   'ch23': CH23_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS}
 
