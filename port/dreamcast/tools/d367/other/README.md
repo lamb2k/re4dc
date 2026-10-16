@@ -132,9 +132,46 @@ entire category as idle time. Polling includes the final successful condition
 check, and is a diagnostic cost, not an accepted optimization saving.
 
 Function categories describe implementation. The ownership report uses known
-call ancestors and explicitly retains unresolved contexts. The current t15
+call ancestors and explicitly retains unresolved contexts. An ordinary t15
 model build lacks benchmark phase markers; some preparation is inlined, source
 model callbacks do not identify EmMgr membership in the exported call tree, and
 game tasks switch KOS threads. Consequently these reports cannot reproduce the
 console benchmark's exact OTHER phase. Console interrupts and other threads are
 charged to the phase they interrupt, not universally to OTHER.
+
+
+## Default-off benchmark ownership diagnostic
+
+`OTHER_PROFILE=1` adds trace-visible NOP markers at the historical `76f40d95`
+BENCH_PH boundaries and its guarded two-snapshot EmMgr membership rule. It does
+not import unrelated benchmark behavior. The disabled arm must first pass
+loadable-image and `_end` identity against its intended reference. The enabled
+arm changes code layout and BSS; record those changes and matched-frame heap,
+camera, simulation and geometry counters before interpreting its trace.
+
+```sh
+python3 "$O/replay.py" "$E" --out "$A/benchmark-original"
+python3 "$O/replay.py" "$E" --out "$A/benchmark-replay" \
+  --simulator "$A/simulator/hwsim_cg_frames" --benchmark-phases
+python3 "$O/verify_replay.py" --original "$A/benchmark-original" \
+  --exported "$A/benchmark-replay" --out "$A/benchmark-validation.json"
+python3 "$O/bench_phases.py" --evidence "$E" --replay "$A/benchmark-replay" \
+  --out "$A/benchmark-phases"
+```
+
+The phase exporter uses 0 logic, 1 preparation, 2 actor draw, 3 world draw,
+4 OTHER and 5 wait tail. Phase 6 is diagnostic instrumentation. It resolves
+marker PCs from the exact ELF, rejects incomplete marker sets and excludes marker
+aliases from the function map. Traces must begin at the established Frame_cnt
+cut, in phase4 before phase0; actor and instrumentation stacks start empty there.
+The report verifies balanced stacks and one main logic/wait-tail marker per
+sample. Deferred charges retain the phase of the charged instruction.
+
+`bench_phases.py` reports every phase's disjoint function self costs and separately
+lists OTHER's functions and categories. Its forced draw/drop group means are
+sampled image groups, not physical-iteration labels or adjacent measured pairs.
+It neither scales costs to the old console15.8 ms result nor claims a production
+gain. Markers and bracketed snapshot/check work are isolated, but incidental
+register/stack, cache and code-placement effects remain in this diagnostic build.
+Qualify the exporter on this exact trace: the frame, PC and call-tree output must
+remain byte-identical to the original host model. Keep hardware acceptance separate.

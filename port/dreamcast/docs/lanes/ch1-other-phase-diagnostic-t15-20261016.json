@@ -1,0 +1,1238 @@
+{
+  "status": "DIAGNOSTIC_ONLY_DEFAULT_OFF",
+  "source_base": "3e303c5ecdcd993b14b22d540994708ecdd6a306",
+  "host_accounting_commit": "39c82e3a",
+  "build": {
+    "arms": {
+      "reference": {
+        "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/codex-cpu-t15-20261016/hwmodel-cxt16skip-cross/re4dc-game.elf",
+        "elf_sha256": "897440d52a335b44f0dd0e6d7ead8f18609f2608bb44b9955e9c76bb9842f35c",
+        "loadable_sha256": "f5d8e2570bd52e03b1de8484f0133b398aafb0a29fe72fb27b21329bc44964da",
+        "image_bytes": 3374164,
+        "end": "8c429098",
+        "text": 2712236,
+        "data": 657936,
+        "bss": 922680,
+        "marker_symbols": 0
+      },
+      "off": {
+        "path": "/root/probe/codex-other-t15-20261016/builds/out-cxoth0rW/re4dc-game.elf",
+        "elf_sha256": "654a9109bafbe15118bd3a07c7b4ec5bc00c3f929133710b6c79bd32102f0940",
+        "loadable_sha256": "f5d8e2570bd52e03b1de8484f0133b398aafb0a29fe72fb27b21329bc44964da",
+        "image_bytes": 3374164,
+        "end": "8c429098",
+        "text": 2712236,
+        "data": 657936,
+        "bss": 922680,
+        "marker_symbols": 0
+      },
+      "on": {
+        "path": "/root/probe/codex-other-t15-20261016/builds/out-cxoth1rW/re4dc-game.elf",
+        "elf_sha256": "d1b8cffcf52c31d81466293a3f0cae10d94803ee7c8a75998416091aed03fd59",
+        "loadable_sha256": "0e63dd17a6f951e2fe3ab5ccee77e998c3cdffd25cb8fbaa618f4f9bdbd3c64f",
+        "image_bytes": 3375060,
+        "end": "8c429c38",
+        "text": 2713132,
+        "data": 657936,
+        "bss": 924760,
+        "marker_symbols": 25
+      }
+    },
+    "off_identity": true,
+    "off_end_identity": true
+  },
+  "marker_audit": {
+    "markers": [
+      [
+        "8c023a9e",
+        "T",
+        "re4dc_other_marker_main_phase4_2942"
+      ],
+      [
+        "8c023af0",
+        "T",
+        "re4dc_other_marker_main_phase0_2991"
+      ],
+      [
+        "8c023af8",
+        "T",
+        "re4dc_other_marker_main_phase4_2996"
+      ],
+      [
+        "8c023d10",
+        "T",
+        "re4dc_other_marker_main_phase5_3447"
+      ],
+      [
+        "8c023f04",
+        "T",
+        "re4dc_other_marker_trans_instr_begin_28680"
+      ],
+      [
+        "8c023f0c",
+        "T",
+        "re4dc_other_marker_trans_instr_end_28687"
+      ],
+      [
+        "8c023fb8",
+        "T",
+        "re4dc_other_marker_trans_phase1_28853"
+      ],
+      [
+        "8c023ff0",
+        "T",
+        "re4dc_other_marker_trans_phase4_28918"
+      ],
+      [
+        "8c02414c",
+        "T",
+        "re4dc_other_marker_trans_phase1_29226"
+      ],
+      [
+        "8c0241a6",
+        "T",
+        "re4dc_other_marker_trans_phase4_29374"
+      ],
+      [
+        "8c0245bc",
+        "T",
+        "re4dc_other_marker_trans_phase4_30690"
+      ],
+      [
+        "8c03dc46",
+        "T",
+        "re4dc_other_marker_trans_instr_begin_48145"
+      ],
+      [
+        "8c03dc56",
+        "T",
+        "re4dc_other_marker_trans_push_actor_48160"
+      ],
+      [
+        "8c03dc58",
+        "T",
+        "re4dc_other_marker_trans_instr_end_48164"
+      ],
+      [
+        "8c03dd44",
+        "T",
+        "re4dc_other_marker_trans_instr_begin_48428"
+      ],
+      [
+        "8c03dd4c",
+        "T",
+        "re4dc_other_marker_trans_pop_actor_48437"
+      ],
+      [
+        "8c03dd4e",
+        "T",
+        "re4dc_other_marker_trans_instr_end_48441"
+      ],
+      [
+        "8c03df22",
+        "T",
+        "re4dc_other_marker_trans_instr_begin_48865"
+      ],
+      [
+        "8c04fff8",
+        "T",
+        "re4dc_other_marker_trans_phase3_55059"
+      ],
+      [
+        "8c04fffe",
+        "T",
+        "re4dc_other_marker_trans_phase4_55065"
+      ],
+      [
+        "8c05030e",
+        "T",
+        "re4dc_other_marker_coarse_phase3_5500"
+      ],
+      [
+        "8c05062e",
+        "T",
+        "re4dc_other_marker_coarse_phase2_6214"
+      ],
+      [
+        "8c050690",
+        "T",
+        "re4dc_other_marker_coarse_phase4_6358"
+      ],
+      [
+        "8c050982",
+        "T",
+        "re4dc_other_marker_coarse_phase4_7202"
+      ],
+      [
+        "8c050a02",
+        "T",
+        "re4dc_other_marker_coarse_phase4_7332"
+      ]
+    ],
+    "all_25_are_nop": true,
+    "addresses_unique": true
+  },
+  "capture": {
+    "status": "PASS_WITH_RECORDED_DYN_FAST_DIFFERENCE",
+    "reference": "/mnt/c/Flycast-Evidence/re4-dreamcast/codex-cpu-t15-20261016/hwmodel-cxt16skip-cross",
+    "instrumented": "/mnt/c/Flycast-Evidence/re4-dreamcast/codex-other-t15-20261016/hwmodel-cxoth1-cross",
+    "payload_files": 2621,
+    "changed_payloads": [
+      "1ST_READ.BIN",
+      "dc/sscrn.ovl",
+      "dc/pl11.ovl",
+      "dc/pl0f.ovl",
+      "dc/em2f.ovl",
+      "dc/em2b.ovl",
+      "dc/em22.ovl"
+    ],
+    "all_other_payload_hashes_equal": true,
+    "warp_equal": true,
+    "world": [
+      [
+        "WORLDVERT room=101 want=5 loaded=5"
+      ],
+      [
+        "WORLDVERT room=101 want=5 loaded=5"
+      ]
+    ],
+    "world_equal": true,
+    "ganado": [
+      [
+        "GANADOLOD dir levels=4 file=326880 buffer=106112 why=0",
+        "GANADOLOD level=2 name=g70 bytes=71584 read_us=16719 body_head_tris=3046 skin=11952"
+      ],
+      [
+        "GANADOLOD dir levels=4 file=326880 buffer=106112 why=0",
+        "GANADOLOD level=2 name=g70 bytes=71584 read_us=16771 body_head_tris=3046 skin=11952"
+      ]
+    ],
+    "ganado_equal_excluding_io_time": true,
+    "matched_counter_rows": [
+      {
+        "key": "PCACT frame=240",
+        "equal": true,
+        "reference": "PCACT frame=240 trans=194 active=0 tests=0 hidden=0 view=0/55 reused=55",
+        "instrumented": "PCACT frame=240 trans=194 active=0 tests=0 hidden=0 view=0/55 reused=55"
+      },
+      {
+        "key": "PCACT frame=360",
+        "equal": true,
+        "reference": "PCACT frame=360 trans=434 active=0 tests=0 hidden=0 view=0/175 reused=175",
+        "instrumented": "PCACT frame=360 trans=434 active=0 tests=0 hidden=0 view=0/175 reused=175"
+      },
+      {
+        "key": "PCACT frame=480",
+        "equal": true,
+        "reference": "PCACT frame=480 trans=674 active=0 tests=0 hidden=0 view=0/295 reused=295",
+        "instrumented": "PCACT frame=480 trans=674 active=0 tests=0 hidden=0 view=0/295 reused=295"
+      },
+      {
+        "key": "PCCULL frame=186",
+        "equal": true,
+        "reference": "PCCULL frame=186 active=0 cell=-1 eye=-9107,1615,2499 corner=0 portals=0 frames=0/1 placements=0 clusters=0 meshlets=0 tests=0",
+        "instrumented": "PCCULL frame=186 active=0 cell=-1 eye=-9107,1615,2499 corner=0 portals=0 frames=0/1 placements=0 clusters=0 meshlets=0 tests=0"
+      },
+      {
+        "key": "PCCULL frame=240",
+        "equal": true,
+        "reference": "PCCULL frame=240 active=0 cell=-1 eye=-9155,1593,2524 corner=0 portals=0 frames=0/55 placements=0 clusters=0 meshlets=0 tests=0",
+        "instrumented": "PCCULL frame=240 active=0 cell=-1 eye=-9155,1593,2524 corner=0 portals=0 frames=0/55 placements=0 clusters=0 meshlets=0 tests=0"
+      },
+      {
+        "key": "PCCULL frame=360",
+        "equal": true,
+        "reference": "PCCULL frame=360 active=0 cell=-1 eye=-11195,1615,2501 corner=0 portals=0 frames=0/175 placements=0 clusters=0 meshlets=0 tests=0",
+        "instrumented": "PCCULL frame=360 active=0 cell=-1 eye=-11195,1615,2501 corner=0 portals=0 frames=0/175 placements=0 clusters=0 meshlets=0 tests=0"
+      },
+      {
+        "key": "PCCULL frame=480",
+        "equal": true,
+        "reference": "PCCULL frame=480 active=0 cell=-1 eye=-13284,1764,2501 corner=0 portals=0 frames=0/295 placements=0 clusters=0 meshlets=0 tests=0",
+        "instrumented": "PCCULL frame=480 active=0 cell=-1 eye=-13284,1764,2501 corner=0 portals=0 frames=0/295 placements=0 clusters=0 meshlets=0 tests=0"
+      },
+      {
+        "key": "PS2LEAN frame=240",
+        "equal": false,
+        "reference": "PS2LEAN frame=240 mode=23 pre_culled=7286 pl_inside=484 cl_inside=916 skipped=1938 prime_reuse=6204 check_bad=0 prime_bad=0 dyn_fast=8415 class_diff=0 sg_tests=15169 sg_culled=28508 sg_meshlets=11662 sg_vskip=395850",
+        "instrumented": "PS2LEAN frame=240 mode=23 pre_culled=7286 pl_inside=484 cl_inside=916 skipped=1938 prime_reuse=6204 check_bad=0 prime_bad=0 dyn_fast=9075 class_diff=0 sg_tests=15169 sg_culled=28508 sg_meshlets=11662 sg_vskip=395850"
+      },
+      {
+        "key": "PS2LEAN frame=360",
+        "equal": false,
+        "reference": "PS2LEAN frame=360 mode=23 pre_culled=23783 pl_inside=1848 cl_inside=3236 skipped=6936 prime_reuse=19097 check_bad=0 prime_bad=0 dyn_fast=26775 class_diff=0 sg_tests=49786 sg_culled=91902 sg_meshlets=37332 sg_vskip=1282054",
+        "instrumented": "PS2LEAN frame=360 mode=23 pre_culled=23783 pl_inside=1848 cl_inside=3236 skipped=6936 prime_reuse=19097 check_bad=0 prime_bad=0 dyn_fast=28875 class_diff=0 sg_tests=49786 sg_culled=91902 sg_meshlets=37332 sg_vskip=1282054"
+      },
+      {
+        "key": "PS2LEAN frame=480",
+        "equal": false,
+        "reference": "PS2LEAN frame=480 mode=23 pre_culled=40230 pl_inside=3535 cl_inside=6114 skipped=12981 prime_reuse=32294 check_bad=0 prime_bad=0 dyn_fast=45135 class_diff=0 sg_tests=85889 sg_culled=156776 sg_meshlets=63701 sg_vskip=2193378",
+        "instrumented": "PS2LEAN frame=480 mode=23 pre_culled=40230 pl_inside=3535 cl_inside=6114 skipped=12981 prime_reuse=32294 check_bad=0 prime_bad=0 dyn_fast=48675 class_diff=0 sg_tests=85889 sg_culled=156776 sg_meshlets=63701 sg_vskip=2193378"
+      },
+      {
+        "key": "PS2MESH frame=240",
+        "equal": true,
+        "reference": "PS2MESH frame=240 strips=119222 culled=49240 clipped=3243 vertices=709197 clusters=11710/6269 lod=10889,711,110,0",
+        "instrumented": "PS2MESH frame=240 strips=119222 culled=49240 clipped=3243 vertices=709197 clusters=11710/6269 lod=10889,711,110,0"
+      },
+      {
+        "key": "PS2MESH frame=240 pass=0",
+        "equal": true,
+        "reference": "PS2MESH frame=240 pass=0 placements=179 culled=104 parts=110 native=110 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "instrumented": "PS2MESH frame=240 pass=0 placements=179 culled=104 parts=110 native=110 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000"
+      },
+      {
+        "key": "PS2MESH frame=240 pass=1",
+        "equal": true,
+        "reference": "PS2MESH frame=240 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "instrumented": "PS2MESH frame=240 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000"
+      },
+      {
+        "key": "PS2MESH frame=240 pass=2",
+        "equal": true,
+        "reference": "PS2MESH frame=240 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "instrumented": "PS2MESH frame=240 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000"
+      },
+      {
+        "key": "PS2MESH frame=360",
+        "equal": true,
+        "reference": "PS2MESH frame=360 strips=397844 culled=153227 clipped=7932 vertices=2310667 clusters=36618/19239 lod=34284,2213,121,0",
+        "instrumented": "PS2MESH frame=360 strips=397844 culled=153227 clipped=7932 vertices=2310667 clusters=36618/19239 lod=34284,2213,121,0"
+      },
+      {
+        "key": "PS2MESH frame=360 pass=0",
+        "equal": true,
+        "reference": "PS2MESH frame=360 pass=0 placements=179 culled=109 parts=94 native=94 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "instrumented": "PS2MESH frame=360 pass=0 placements=179 culled=109 parts=94 native=94 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000"
+      },
+      {
+        "key": "PS2MESH frame=360 pass=1",
+        "equal": true,
+        "reference": "PS2MESH frame=360 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "instrumented": "PS2MESH frame=360 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000"
+      },
+      {
+        "key": "PS2MESH frame=360 pass=2",
+        "equal": true,
+        "reference": "PS2MESH frame=360 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "instrumented": "PS2MESH frame=360 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000"
+      },
+      {
+        "key": "PS2MESH frame=480",
+        "equal": true,
+        "reference": "PS2MESH frame=480 strips=708452 culled=268896 clipped=12187 vertices=4102158 clusters=62374/31398 lod=58666,3587,121,0",
+        "instrumented": "PS2MESH frame=480 strips=708452 culled=268896 clipped=12187 vertices=4102158 clusters=62374/31398 lod=58666,3587,121,0"
+      },
+      {
+        "key": "PS2MESH frame=480 pass=0",
+        "equal": true,
+        "reference": "PS2MESH frame=480 pass=0 placements=183 culled=109 parts=100 native=100 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "instrumented": "PS2MESH frame=480 pass=0 placements=183 culled=109 parts=100 native=100 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000"
+      },
+      {
+        "key": "PS2MESH frame=480 pass=1",
+        "equal": true,
+        "reference": "PS2MESH frame=480 pass=1 placements=32 culled=23 parts=9 native=9 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "instrumented": "PS2MESH frame=480 pass=1 placements=32 culled=23 parts=9 native=9 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000"
+      },
+      {
+        "key": "PS2MESH frame=480 pass=2",
+        "equal": true,
+        "reference": "PS2MESH frame=480 pass=2 placements=18 culled=6 parts=21 native=21 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "instrumented": "PS2MESH frame=480 pass=2 placements=18 culled=6 parts=21 native=21 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000"
+      },
+      {
+        "key": "native model DIAGNOSTIC: frame=120",
+        "equal": true,
+        "reference": "native model DIAGNOSTIC: frame=120 packets=0 parts=0 invalid=0 resource=0 overflow=0 input=0 emitted=0 peak=0 heap=<separately compared> black=0",
+        "instrumented": "native model DIAGNOSTIC: frame=120 packets=0 parts=0 invalid=0 resource=0 overflow=0 input=0 emitted=0 peak=0 heap=<separately compared> black=0"
+      },
+      {
+        "key": "native model DIAGNOSTIC: frame=240",
+        "equal": true,
+        "reference": "native model DIAGNOSTIC: frame=240 packets=0 parts=9593 invalid=0 resource=0 overflow=0 input=806910 emitted=584490 peak=0 heap=<separately compared> black=0",
+        "instrumented": "native model DIAGNOSTIC: frame=240 packets=0 parts=9593 invalid=0 resource=0 overflow=0 input=806910 emitted=584490 peak=0 heap=<separately compared> black=0"
+      },
+      {
+        "key": "native model DIAGNOSTIC: frame=360",
+        "equal": true,
+        "reference": "native model DIAGNOSTIC: frame=360 packets=0 parts=28900 invalid=0 resource=0 overflow=0 input=2548316 emitted=1980163 peak=0 heap=<separately compared> black=0",
+        "instrumented": "native model DIAGNOSTIC: frame=360 packets=0 parts=28900 invalid=0 resource=0 overflow=0 input=2548316 emitted=1980163 peak=0 heap=<separately compared> black=0"
+      },
+      {
+        "key": "native model DIAGNOSTIC: frame=480",
+        "equal": true,
+        "reference": "native model DIAGNOSTIC: frame=480 packets=0 parts=48638 invalid=0 resource=0 overflow=0 input=4462350 emitted=3494098 peak=0 heap=<separately compared> black=0",
+        "instrumented": "native model DIAGNOSTIC: frame=480 packets=0 parts=48638 invalid=0 resource=0 overflow=0 input=4462350 emitted=3494098 peak=0 heap=<separately compared> black=0"
+      },
+      {
+        "key": "warp frame 300",
+        "equal": true,
+        "reference": "warp: frame 300 room=101 pl=-10006,0,1998 status1=00000200 rsf=02000000",
+        "instrumented": "warp: frame 300 room=101 pl=-10006,0,1998 status1=00000200 rsf=02000000"
+      },
+      {
+        "key": "warp frame 600",
+        "equal": true,
+        "reference": "warp: frame 600 room=101 pl=-12092,0,2003 status1=00000200 rsf=02000000",
+        "instrumented": "warp: frame 600 room=101 pl=-12092,0,2003 status1=00000200 rsf=02000000"
+      },
+      {
+        "key": "warp: alive 6 room 101 frame 150",
+        "equal": true,
+        "reference": "warp: alive 6 room 101 frame 150",
+        "instrumented": "warp: alive 6 room 101 frame 150"
+      },
+      {
+        "key": "warp: alive 6 room 101 frame 300",
+        "equal": true,
+        "reference": "warp: alive 6 room 101 frame 300",
+        "instrumented": "warp: alive 6 room 101 frame 300"
+      },
+      {
+        "key": "warp: alive 6 room 101 frame 450",
+        "equal": true,
+        "reference": "warp: alive 6 room 101 frame 450",
+        "instrumented": "warp: alive 6 room 101 frame 450"
+      },
+      {
+        "key": "warp: alive 6 room 101 frame 600",
+        "equal": true,
+        "reference": "warp: alive 6 room 101 frame 600",
+        "instrumented": "warp: alive 6 room 101 frame 600"
+      }
+    ],
+    "heap_free_rows": [
+      {
+        "key": "native model DIAGNOSTIC: frame=120",
+        "reference": 4969504,
+        "instrumented": 4969504,
+        "delta": 0
+      },
+      {
+        "key": "native model DIAGNOSTIC: frame=240",
+        "reference": 720000,
+        "instrumented": 720000,
+        "delta": 0
+      },
+      {
+        "key": "native model DIAGNOSTIC: frame=360",
+        "reference": 723808,
+        "instrumented": 723808,
+        "delta": 0
+      },
+      {
+        "key": "native model DIAGNOSTIC: frame=480",
+        "reference": 722656,
+        "instrumented": 722656,
+        "delta": 0
+      }
+    ],
+    "snapshot_guard_messages": [],
+    "entry_memory": {
+      "reference": {
+        "heap4_start": 2357719328,
+        "heap4_end": 2365321280,
+        "heap4_total": 7601952,
+        "heap4_free": 7577856,
+        "arena_bytes": 12050432,
+        "remaining_to_KOS": 200664,
+        "kos_free": 9384,
+        "kos_used": 12159680,
+        "kos_break": 180224,
+        "kos_largest": null,
+        "kos_largest_status": "Not logged by this fixture; VRAM and AICA largest values are different pools",
+        "heap4_raw": "room lifecycle: phase=enter room=101 generation=1 frames=0 heap4=8c87f120-8cfbf040 size=7601952 free=7577856 heap_check=ok native4=1/23968 stale=0 refused=0",
+        "kos_raw": "room lifecycle: phase=enter vram_free=2510080 kos_free=9384 kos_used=12159680 kos_break=180224 aram_sp=700000 aram_blocks=2 modules=1/0/0/1 threads=4/4/0 heap=4"
+      },
+      "instrumented": {
+        "heap4_start": 2357722304,
+        "heap4_end": 2365324256,
+        "heap4_total": 7601952,
+        "heap4_free": 7577856,
+        "arena_bytes": 12050432,
+        "remaining_to_KOS": 197688,
+        "kos_free": 6408,
+        "kos_used": 12159680,
+        "kos_break": 180224,
+        "kos_largest": null,
+        "kos_largest_status": "Not logged by this fixture; VRAM and AICA largest values are different pools",
+        "heap4_raw": "room lifecycle: phase=enter room=101 generation=1 frames=0 heap4=8c87fcc0-8cfbfbe0 size=7601952 free=7577856 heap_check=ok native4=1/23968 stale=0 refused=0",
+        "kos_raw": "room lifecycle: phase=enter vram_free=2510080 kos_free=6408 kos_used=12159680 kos_break=180224 aram_sp=700000 aram_blocks=2 modules=1/0/0/1 threads=4/4/0 heap=4"
+      },
+      "deltas": {
+        "heap4_start": 2976,
+        "heap4_end": 2976,
+        "heap4_total": 0,
+        "heap4_free": 0,
+        "arena_bytes": 0,
+        "remaining_to_KOS": -2976,
+        "kos_free": -2976,
+        "kos_used": 0,
+        "kos_break": 0
+      }
+    },
+    "implementation_path_differences": [
+      {
+        "counter": "dyn_fast",
+        "frame": 240,
+        "reference": 8415,
+        "instrumented": 9075,
+        "delta": 660,
+        "presented": 55,
+        "delta_per_presented": 12.0
+      },
+      {
+        "counter": "dyn_fast",
+        "frame": 360,
+        "reference": 26775,
+        "instrumented": 28875,
+        "delta": 2100,
+        "presented": 175,
+        "delta_per_presented": 12.0
+      },
+      {
+        "counter": "dyn_fast",
+        "frame": 480,
+        "reference": 45135,
+        "instrumented": 48675,
+        "delta": 3540,
+        "presented": 295,
+        "delta_per_presented": 12.0
+      }
+    ],
+    "path_difference_analysis": {
+      "source": "port/dreamcast/game/platform/native_static.cpp:3824-3833,5221-5225",
+      "mechanism": "dyn_fast counts negative 64-bit address-hash filter hits, not emitted geometry; lean_bit is ((a>>4)^(a>>10)^(a>>16))&63.",
+      "interpretation": "The diagnostic shifts heap addresses by2976 bytes. The differing filter-hit count is consistent with changed hash collisions; all camera, actor, emitted-geometry and other checked counters match.",
+      "limitation": "No production timing comparison is valid across this instrumentation-induced address/layout change."
+    },
+    "reference_only_counter_keys": [],
+    "candidate_only_counter_keys": [],
+    "limitations": [
+      "Counter and asset matching is scene provenance, not a full STRICT or physical-console gate.",
+      "Vblank counts and I/O durations are excluded; nominal frame identifiers and simulation/geometry counts are compared."
+    ]
+  },
+  "simulator_build": {
+    "source": "/root/probe/d367-agents/design-logic/tools/hwsim_cg.c",
+    "source_sha256": "d9e873b15f5634a8d2c9c7a4fb75eb0b6a4c68bc38ea57e5af86835b310e9295",
+    "copied_source_sha256": "3e1638b68c7a5e3a656c5ea66b81310fc615b8f09ee76db153d73e6ff4997113",
+    "command": [
+      "cc",
+      "-std=c99",
+      "-O2",
+      "/root/probe/codex-other-t15-20261016/audit/bench-simulator-final/hwsim_cg_frames.c",
+      "-lm",
+      "-o",
+      "/root/probe/codex-other-t15-20261016/audit/bench-simulator-final/hwsim_cg_frames"
+    ],
+    "executable": "/root/probe/codex-other-t15-20261016/audit/bench-simulator-final/hwsim_cg_frames",
+    "executable_sha256": "48231fbb6c0cabeda148e894b77469c4698d546a0616343234ce42979e941f2c",
+    "change": "Export self-cost frame/phase deltas and narrow polling PCs; model execution and trace order unchanged"
+  },
+  "raw_trace_manifest": {
+    "evidence": "/mnt/c/Flycast-Evidence/re4-dreamcast/codex-other-t15-20261016/hwmodel-cxoth1-cross",
+    "samples": 43,
+    "total_bytes": 901764344,
+    "files": [
+      {
+        "name": "trace-00500.bin",
+        "bytes": 19108688,
+        "sha256": "bd30b80b1301ada4b55e12d4df179b5e67798b080ea364e81e23970a11033463"
+      },
+      {
+        "name": "trace-00507.bin",
+        "bytes": 47899496,
+        "sha256": "012d436525a4137b1b92b744aeeda2b95c0efcacee48287f8e5b4e233821d7bc"
+      },
+      {
+        "name": "trace-00514.bin",
+        "bytes": 18880784,
+        "sha256": "35174879dba8f39a5c0684125a02a4b39e77de23ebec414ff3f79380c6fd3d30"
+      },
+      {
+        "name": "trace-00521.bin",
+        "bytes": 47785112,
+        "sha256": "71e73a65a0a64a2e93264fc320a18e7635a650beeba4ea0e7d5bf02dd8a70137"
+      },
+      {
+        "name": "trace-00528.bin",
+        "bytes": 18961360,
+        "sha256": "a391cc89aa283c473650b2a19035eee5573a5a5b1721096fb0b6ce88eef7b38f"
+      },
+      {
+        "name": "trace-00535.bin",
+        "bytes": 47621720,
+        "sha256": "e94268618a8450bd6774d84a1f8904e211b91495d732c4dc9f002da867ba95c4"
+      },
+      {
+        "name": "trace-00542.bin",
+        "bytes": 18998280,
+        "sha256": "7f726ea4ad6bf66d9e8bfc0d040d9339b7eb3c9dbe69308cb81481da6f795c4b"
+      },
+      {
+        "name": "trace-00549.bin",
+        "bytes": 47712520,
+        "sha256": "4b9e5b64ba03d21019b3981f9fdd060af29e581660c21fc6aa95b84daa16e6dc"
+      },
+      {
+        "name": "trace-00556.bin",
+        "bytes": 13807904,
+        "sha256": "649719f7f76ff44d82dc4e207f6f0c070585845bee2de54ca4836f4e7dcba5f3"
+      },
+      {
+        "name": "trace-00563.bin",
+        "bytes": 48381648,
+        "sha256": "22ce45bfc5c1f7a09661a47154af6256f51dd401b2e5020d70f97685760a4b14"
+      },
+      {
+        "name": "trace-00570.bin",
+        "bytes": 16507608,
+        "sha256": "2fe4209894e2a42c4a75eac20d8ab6278e5e57f7b46b7c313b87191b19a9aecd"
+      },
+      {
+        "name": "trace-00577.bin",
+        "bytes": 48323088,
+        "sha256": "db44531067abe92a0672dede25977072c5949e1fd279a87f14c45c775edb30e2"
+      },
+      {
+        "name": "trace-00584.bin",
+        "bytes": 6665200,
+        "sha256": "a245046cc047436fce79662e2a169d02eff62174d5b165eb128afd716c66af69"
+      },
+      {
+        "name": "trace-00591.bin",
+        "bytes": 27983424,
+        "sha256": "1fb9f9690267bafd85f886def81a30ace6320fd9a6f39bb33ccf553cfad98c3f"
+      },
+      {
+        "name": "trace-00598.bin",
+        "bytes": 6491448,
+        "sha256": "6d0b71e3a09704792d190444e7304c4e74fa8775d347833c9f52164ea981bc38"
+      },
+      {
+        "name": "trace-00605.bin",
+        "bytes": 27422992,
+        "sha256": "423ee5a9094d2a14e5bcf6bf33b4b7d57acdddd1be7f1f2e278f5a1dc6f483fc"
+      },
+      {
+        "name": "trace-00612.bin",
+        "bytes": 6191248,
+        "sha256": "a4485b262fe8f4a19bd3eae84c26937a80a542586411f27834450c90997835d9"
+      },
+      {
+        "name": "trace-00619.bin",
+        "bytes": 27577312,
+        "sha256": "1356b1aeb7f0cb190702c1b315929e007cb1940fa53cd639cdd21b8314a7f18a"
+      },
+      {
+        "name": "trace-00626.bin",
+        "bytes": 6160528,
+        "sha256": "71c85eb8e488169710b71d7c9ced8762eaa1f45e448052df92bda62ca662dae6"
+      },
+      {
+        "name": "trace-00633.bin",
+        "bytes": 26637160,
+        "sha256": "c0d44e5ab02491f81a1fea7b5d827dad1ad2e7b089899e929f8bdb526a324f36"
+      },
+      {
+        "name": "trace-00640.bin",
+        "bytes": 6843248,
+        "sha256": "cf69496d3cf6bcca78a53a553a081f8a8e85a3a0f8677e7f27f9744f0b9c561b"
+      },
+      {
+        "name": "trace-00647.bin",
+        "bytes": 27491968,
+        "sha256": "372df9cfcdc0c74ae79f376dace8c0207e8fa2558246d2a4ca68c0de3162e859"
+      },
+      {
+        "name": "trace-00654.bin",
+        "bytes": 6170856,
+        "sha256": "ca955faead495518f8b6f5dc67a214b130699fb94e5116a94a922bf067242302"
+      },
+      {
+        "name": "trace-00661.bin",
+        "bytes": 26891368,
+        "sha256": "ac16bef4680324dfa17cdb183f528ada5605345690446a7d6158f3715b442118"
+      },
+      {
+        "name": "trace-00668.bin",
+        "bytes": 6266952,
+        "sha256": "aa42906c16d0fc1194aedb48a9eddfbaa9eef77c3e203e1f59f6148874aab26e"
+      },
+      {
+        "name": "trace-00675.bin",
+        "bytes": 27587152,
+        "sha256": "4f39ba9b57d3d402118d04253ff8337a325a980e89d59c2f9cf09ec5482a89b6"
+      },
+      {
+        "name": "trace-00682.bin",
+        "bytes": 6150096,
+        "sha256": "f45262c6b39037314bbff9bb9d3ae16ddd3b8e8f7d9e9d5038f286285ee38432"
+      },
+      {
+        "name": "trace-00689.bin",
+        "bytes": 31751632,
+        "sha256": "72513a560b384caebac0d633da3d199b451d5860b6af73db07d73fd2471beb98"
+      },
+      {
+        "name": "trace-00696.bin",
+        "bytes": 6862832,
+        "sha256": "1e13f19d2a06cc16b9e16a6bd55822b3274f6a484b87bef149c45f3f8865c1db"
+      },
+      {
+        "name": "trace-00703.bin",
+        "bytes": 25317472,
+        "sha256": "16273cd79a547ce1a4fd8c8454e022f63843e1bb94fa05e482c9fa5355473412"
+      },
+      {
+        "name": "trace-00710.bin",
+        "bytes": 6615752,
+        "sha256": "531951c24da90da6a883bbf7c41f211d23c751d37e9c24671b3cfaac9e33a93a"
+      },
+      {
+        "name": "trace-00717.bin",
+        "bytes": 26154384,
+        "sha256": "17f7c16ba016a88a2879c323bbc079d24fd651aa2ba61a469610aaaa858b187f"
+      },
+      {
+        "name": "trace-00724.bin",
+        "bytes": 6760984,
+        "sha256": "f1e1a3ee3fa9260e3a1118c0551e09b952f228f9c6bf8eddbe57fa317d1fc29d"
+      },
+      {
+        "name": "trace-00731.bin",
+        "bytes": 24590000,
+        "sha256": "640e2c7465d412084ecf71855cf9f6d634a93fc7d2da69a38b3e85edb89dc088"
+      },
+      {
+        "name": "trace-00738.bin",
+        "bytes": 6597168,
+        "sha256": "a71d0bb59a656521436698cf3e8a6516ae236b4448c1a5d34c6c1f6f6a1de7a5"
+      },
+      {
+        "name": "trace-00745.bin",
+        "bytes": 24380216,
+        "sha256": "d0e23c82f85302be5f8b951013e1c5f0268ab6c98c8c7acc81bd2314ae32261d"
+      },
+      {
+        "name": "trace-00752.bin",
+        "bytes": 7468976,
+        "sha256": "4c965265f255389f43af43a5d9ec2adf20b2f25bf4f67a4c7799c42c2d18bea8"
+      },
+      {
+        "name": "trace-00759.bin",
+        "bytes": 25863144,
+        "sha256": "94160380c783c98f4f9c72643e958fe067f940477336d672057aa07561c92617"
+      },
+      {
+        "name": "trace-00766.bin",
+        "bytes": 6605424,
+        "sha256": "312de478077603704cb5a26c1916f179e95e74ecd5afe50de2ad06340aae3efa"
+      },
+      {
+        "name": "trace-00773.bin",
+        "bytes": 26172960,
+        "sha256": "a5243696295c7539abbfd3ca96a599b5435d63e90283566ab518dffcbe8cc349"
+      },
+      {
+        "name": "trace-00780.bin",
+        "bytes": 6838128,
+        "sha256": "c7d6fecca679d38ede8d3c7d135b9b4b968531c5daab408462ac4fb1367f83d4"
+      },
+      {
+        "name": "trace-00787.bin",
+        "bytes": 26520040,
+        "sha256": "c8ebec6721cd8c42550bb9d44c9dcb5a54a89826befe06ca5cba10c10e393592"
+      },
+      {
+        "name": "trace-00794.bin",
+        "bytes": 6746072,
+        "sha256": "b5922e08e4b712bd4ee50885285c9c6f526e601884cd405ff7428d73a85fb33b"
+      }
+    ],
+    "owner": {
+      "pid": 41236,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\codex-other-t15-20261016\\hwmodel-cxoth1-cross\\flycast.exe",
+      "creation_time_EDT": "2026-10-16T11:03:29.124654-04:00",
+      "exit_observed": true,
+      "reader_stop": "process-exited",
+      "reader_elapsed_seconds": 98.85
+    },
+    "retained": true,
+    "trace_window": "500:799:7; 43 selected frames",
+    "capture_caveat": "The existing global emulator cap delayed launch; unrelated model/route instances existed outside this lane. No host wall-time performance claim is made."
+  },
+  "simulator_validation": {
+    "status": "PASS",
+    "original": "/root/probe/codex-other-t15-20261016/audit/bench-original",
+    "exported": "/root/probe/codex-other-t15-20261016/audit/bench-replay-final",
+    "unchanged_model_outputs": {
+      "cgsim.frames.tsv": {
+        "original_sha256": "59219ec37fb5e9bc6497c63723eb22ea8cf22a037c6cfa93041e5e55151503b2",
+        "exported_sha256": "59219ec37fb5e9bc6497c63723eb22ea8cf22a037c6cfa93041e5e55151503b2",
+        "byte_identical": true
+      },
+      "cgsim.pcs.tsv": {
+        "original_sha256": "f48f3c11b2cd84da03bedd9afae1be859ae54aa2c9b3019e26ad6630afa076d5",
+        "exported_sha256": "f48f3c11b2cd84da03bedd9afae1be859ae54aa2c9b3019e26ad6630afa076d5",
+        "byte_identical": true
+      },
+      "cg.cg.tsv": {
+        "original_sha256": "7aea9af2498a794815bc8915734811ced525ac34515fc09441c9c27a20b96600",
+        "exported_sha256": "7aea9af2498a794815bc8915734811ced525ac34515fc09441c9c27a20b96600",
+        "byte_identical": true
+      }
+    },
+    "entry_scanner_fixture": {
+      "expected": {
+        "8c000100": 1,
+        "8c000104": 2,
+        "8c000106": 1
+      },
+      "observed": {
+        "8c000100": 1,
+        "8c000104": 2,
+        "8c000106": 1
+      },
+      "truncated_record_rejected": true
+    },
+    "scope": "Host profiler only; this validation does not establish console performance or game correctness."
+  },
+  "benchmark_phases": {
+    "status": "PASS",
+    "evidence": "/mnt/c/Flycast-Evidence/re4-dreamcast/codex-other-t15-20261016/hwmodel-cxoth1-cross",
+    "replay": "/root/probe/codex-other-t15-20261016/audit/bench-replay-final",
+    "samples": 43,
+    "groups": {
+      "dropped_image": 22,
+      "drawn_image": 21
+    },
+    "elf_sha256": "d1b8cffcf52c31d81466293a3f0cae10d94803ee7c8a75998416091aed03fd59",
+    "definition_source": "76f40d95 src/game/{main,trans}.cpp and port/dreamcast/game/coarse.cpp BENCH_PH / EmMgr snapshot",
+    "units": "nominal instrumented model milliseconds; means within sampled forced image groups",
+    "reconciliation": {
+      "all_function_phase_charges_exact": true,
+      "all_marker_stacks_balanced": true,
+      "all_final_phases_OTHER": true,
+      "maximum_frame_delta_ms": 0.0
+    },
+    "group_phase_means_ms": {
+      "dropped_image": {
+        "logic": 14.111552727272727,
+        "actor preparation": 0.04289818181818182,
+        "actor draw": 0.0,
+        "world draw": 0.0,
+        "OTHER": 1.1544593181818181,
+        "wait tail": 5.786644772727272,
+        "instrumentation": 0.011548863636363637
+      },
+      "drawn_image": {
+        "logic": 14.718019523809525,
+        "actor preparation": 1.6590833333333332,
+        "actor draw": 13.923759285714286,
+        "world draw": 13.838225000000001,
+        "OTHER": 9.701346428571428,
+        "wait tail": 14.959860952380954,
+        "instrumentation": 0.08362357142857142
+      }
+    },
+    "forced_pair_sum_of_separate_means_ms": {
+      "logic": 28.829572251082254,
+      "actor preparation": 1.701981515151515,
+      "actor draw": 13.923759285714286,
+      "world draw": 13.838225000000001,
+      "OTHER": 10.855805746753246,
+      "wait tail": 20.746505725108225,
+      "instrumentation": 0.09517243506493506
+    },
+    "other_pair_categories": [
+      {
+        "category": "actor submit",
+        "nominal_self_ms": 2.5419843831168834
+      },
+      {
+        "category": "effects setup+submit",
+        "nominal_self_ms": 2.165237803030303
+      },
+      {
+        "category": "shared image and material helpers",
+        "nominal_self_ms": 0.9171244155844157
+      },
+      {
+        "category": "unclassified",
+        "nominal_self_ms": 0.7745816341991344
+      },
+      {
+        "category": "effects update",
+        "nominal_self_ms": 0.7060770562770564
+      },
+      {
+        "category": "ordering tables and primitive allocation",
+        "nominal_self_ms": 0.5009947402597403
+      },
+      {
+        "category": "collision",
+        "nominal_self_ms": 0.44155402597402593
+      },
+      {
+        "category": "shared copies and clears",
+        "nominal_self_ms": 0.43867331168831164
+      },
+      {
+        "category": "kos/sound/idle",
+        "nominal_self_ms": 0.43203117965367965
+      },
+      {
+        "category": "shared math and formatting",
+        "nominal_self_ms": 0.33958235930735936
+      },
+      {
+        "category": "skinning",
+        "nominal_self_ms": 0.27534666666666663
+      },
+      {
+        "category": "world submit",
+        "nominal_self_ms": 0.238611893939394
+      },
+      {
+        "category": "UI submission and bridge",
+        "nominal_self_ms": 0.21276648268398266
+      },
+      {
+        "category": "packet setup and submit",
+        "nominal_self_ms": 0.1714952380952381
+      },
+      {
+        "category": "PVR and store queue helpers",
+        "nominal_self_ms": 0.15038142857142858
+      },
+      {
+        "category": "fog and haze",
+        "nominal_self_ms": 0.1404917316017316
+      },
+      {
+        "category": "GX state and command stubs",
+        "nominal_self_ms": 0.13322212121212113
+      },
+      {
+        "category": "KOS scheduling and synchronization",
+        "nominal_self_ms": 0.07771084415584417
+      },
+      {
+        "category": "player/scene/other logic",
+        "nominal_self_ms": 0.057406839826839834
+      },
+      {
+        "category": "interrupts and device service",
+        "nominal_self_ms": 0.05565050865800866
+      },
+      {
+        "category": "frame scheduling self",
+        "nominal_self_ms": 0.04728627705627707
+      },
+      {
+        "category": "audio",
+        "nominal_self_ms": 0.03382790043290044
+      },
+      {
+        "category": "pacing, retrace and idle routines",
+        "nominal_self_ms": 0.003236904761904762
+      },
+      {
+        "category": "motion/animation",
+        "nominal_self_ms": 0.00053
+      }
+    ],
+    "other_pair_top_functions": [
+      {
+        "entry": "8c02c8ec",
+        "func": "EspCommonTrans.part.0",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp_sub.cpp:1973",
+        "category": "effects setup+submit",
+        "nominal_self_ms": 0.5524171428571428
+      },
+      {
+        "entry": "8c0e1580",
+        "func": "Ps2fxClass(cEsp*)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp_sub.cpp:920",
+        "category": "effects setup+submit",
+        "nominal_self_ms": 0.48215499999999994
+      },
+      {
+        "entry": "8c024b4c",
+        "func": "EspTrans",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp.cpp:633",
+        "category": "effects setup+submit",
+        "nominal_self_ms": 0.4006669913419913
+      },
+      {
+        "entry": "8c03a4a0",
+        "func": "re4dc_actor_submit",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_actor_fast.cpp:4676",
+        "category": "actor submit",
+        "nominal_self_ms": 0.27664285714285713
+      },
+      {
+        "entry": "8c04ec00",
+        "func": "re4dc_prepare_model_assets",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/model_asset_bridge.cpp:309",
+        "category": "actor submit",
+        "nominal_self_ms": 0.2609962987012987
+      },
+      {
+        "entry": "8c0322a8",
+        "func": "(anonymous namespace)::resolve(Re4dcUiImage const&, Re4dcModelPart const*, bool)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_ui.cpp:3503",
+        "category": "shared image and material helpers",
+        "nominal_self_ms": 0.22889095238095236
+      },
+      {
+        "entry": "8c0115e8",
+        "func": "clearOtWork",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/trans_ot.cpp:79",
+        "category": "ordering tables and primitive allocation",
+        "nominal_self_ms": 0.2250206601731602
+      },
+      {
+        "entry": "8c02ded8",
+        "func": "re4dc_effect_sprite",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_ui.cpp:6865",
+        "category": "shared image and material helpers",
+        "nominal_self_ms": 0.21799880952380954
+      },
+      {
+        "entry": "8c025720",
+        "func": "idSysMove02",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/id_sys.cpp:1069",
+        "category": "effects update",
+        "nominal_self_ms": 0.20672461038961037
+      },
+      {
+        "entry": "8c010820",
+        "func": "re4dc_line_leaf2",
+        "source": "??:?",
+        "category": "collision",
+        "nominal_self_ms": 0.1997259632034632
+      },
+      {
+        "entry": "8c025d60",
+        "func": "re4dc_avk_pos_skin_s16",
+        "source": "??:?",
+        "category": "skinning",
+        "nominal_self_ms": 0.18014642857142857
+      },
+      {
+        "entry": "8c05022c",
+        "func": "ExecOt",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/trans_ot.cpp:296",
+        "category": "ordering tables and primitive allocation",
+        "nominal_self_ms": 0.16849761904761903
+      },
+      {
+        "entry": "8c0237ac",
+        "func": "idSysMove03",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/id_sys.cpp:1172",
+        "category": "effects update",
+        "nominal_self_ms": 0.16669375541125542
+      },
+      {
+        "entry": "8c046638",
+        "func": "re4dc_draw_id_quad",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/ui_bridge.cpp:83",
+        "category": "UI submission and bridge",
+        "nominal_self_ms": 0.16299095238095238
+      },
+      {
+        "entry": "8c03dc30",
+        "func": "ModelRender(cModel*)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/trans.cpp:2571",
+        "category": "actor submit",
+        "nominal_self_ms": 0.15665380952380953
+      },
+      {
+        "entry": "8c1f6574",
+        "func": "(anonymous namespace)::Converter::levels_impl(unsigned int, unsigned short const*, unsigned short const*, unsigned short const*, unsigned int, unsigned long const*, unsigned short const*)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_actor_fast.cpp:998",
+        "category": "actor submit",
+        "nominal_self_ms": 0.13837642857142857
+      },
+      {
+        "entry": "8c1f5d90",
+        "func": "(anonymous namespace)::Converter::compute((anonymous namespace)::Converter::Lod&, unsigned int, bool)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_actor_fast.cpp:888",
+        "category": "actor submit",
+        "nominal_self_ms": 0.13791023809523809
+      },
+      {
+        "entry": "8c0dfb44",
+        "func": "EspSpriteEligible(cEsp*)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp_sub.cpp:182",
+        "category": "effects setup+submit",
+        "nominal_self_ms": 0.1292261904761905
+      },
+      {
+        "entry": "8c025418",
+        "func": "IDSystem::move()",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/id_sys.cpp:579",
+        "category": "effects update",
+        "nominal_self_ms": 0.12910109307359308
+      },
+      {
+        "entry": "8c0266c0",
+        "func": "re4dc_avk_pos_rigid_s16",
+        "source": "??:?",
+        "category": "actor submit",
+        "nominal_self_ms": 0.11808380952380954
+      },
+      {
+        "entry": "8c03bab4",
+        "func": "(anonymous namespace)::build_lights(Re4dcModelPart const&, (anonymous namespace)::Frame const&, float const*, (anonymous namespace)::Lights&)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_actor_fast.cpp:1715",
+        "category": "actor submit",
+        "nominal_self_ms": 0.11684761904761906
+      },
+      {
+        "entry": "8c025210",
+        "func": "re4dc_esp_coarse_sprite_visible",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp_sub.cpp:1807",
+        "category": "effects setup+submit",
+        "nominal_self_ms": 0.11668666666666666
+      },
+      {
+        "entry": "8c237ebc",
+        "func": "re4dc_zam_MTXConcat",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/sh4zam_direct.c:52",
+        "category": "shared math and formatting",
+        "nominal_self_ms": 0.10739285714285715
+      },
+      {
+        "entry": "8c0dfbd0",
+        "func": "Ps2fxHazeFor(cEsp*)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp_sub.cpp:369",
+        "category": "fog and haze",
+        "nominal_self_ms": 0.10545857142857143
+      },
+      {
+        "entry": "8c027880",
+        "func": "re4dc_avk_light_rigid",
+        "source": "??:?",
+        "category": "actor submit",
+        "nominal_self_ms": 0.10433095238095239
+      },
+      {
+        "entry": "8c016a04",
+        "func": "Snd_search_req_work_snd_id",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/../../../src/game/snd_sub2.cpp:137",
+        "category": "kos/sound/idle",
+        "nominal_self_ms": 0.10317747835497836
+      },
+      {
+        "entry": "8c1f59d4",
+        "func": "(anonymous namespace)::Converter::collapse_map((anonymous namespace)::Converter::Lod const&, unsigned int, unsigned int, unsigned short*, unsigned short*, unsigned int&)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_actor_fast.cpp:845",
+        "category": "actor submit",
+        "nominal_self_ms": 0.10089452380952381
+      },
+      {
+        "entry": "8c031780",
+        "func": "IdCalcVertex",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/id_sys.cpp:951",
+        "category": "effects setup+submit",
+        "nominal_self_ms": 0.09775017316017315
+      },
+      {
+        "entry": "8c072310",
+        "func": "(anonymous namespace)::load(Re4dcUiImage const&, bool, (anonymous namespace)::Key const*)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_ui.cpp:3069",
+        "category": "shared image and material helpers",
+        "nominal_self_ms": 0.0881952380952381
+      },
+      {
+        "entry": "8c030868",
+        "func": "re4dc::texture::SourceIdentityTable::lookup(void const*, unsigned int, unsigned int, unsigned int, unsigned int&, unsigned int&, void const*, unsigned int, unsigned int) const",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/../room/texture_package.cpp:172",
+        "category": "world submit",
+        "nominal_self_ms": 0.08758738095238094
+      },
+      {
+        "entry": "8c0274c0",
+        "func": "re4dc_avk_light_skin",
+        "source": "??:?",
+        "category": "skinning",
+        "nominal_self_ms": 0.08751190476190476
+      },
+      {
+        "entry": "8c1f5110",
+        "func": "(anonymous namespace)::Converter::finish(unsigned short const*, unsigned int, unsigned char const*, unsigned int, unsigned int, unsigned long const*)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_actor_fast.cpp:723",
+        "category": "actor submit",
+        "nominal_self_ms": 0.08476095238095238
+      },
+      {
+        "entry": "8c1f8508",
+        "func": "(anonymous namespace)::Converter::pack(unsigned int, unsigned int, unsigned int, bool)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_actor_fast.cpp:678",
+        "category": "actor submit",
+        "nominal_self_ms": 0.08383904761904762
+      },
+      {
+        "entry": "8c0315d8",
+        "func": "idSysMove00",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/id_sys.cpp:896",
+        "category": "effects update",
+        "nominal_self_ms": 0.08135395021645021
+      },
+      {
+        "entry": "8c02b818",
+        "func": "(anonymous namespace)::Part::whole(unsigned char const*, unsigned int, unsigned int)",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/platform/native_actor_fast.cpp:2889",
+        "category": "actor submit",
+        "nominal_self_ms": 0.07954309523809523
+      },
+      {
+        "entry": "8c047790",
+        "func": "IDSystem::trans()",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/id_sys.cpp:1454",
+        "category": "effects setup+submit",
+        "nominal_self_ms": 0.07830214285714285
+      },
+      {
+        "entry": "8c0104a4",
+        "func": "re4dc_line_walk2",
+        "source": "??:?",
+        "category": "collision",
+        "nominal_self_ms": 0.07812161255411255
+      },
+      {
+        "entry": "8c02ec44",
+        "func": "cEsp::ChannelSet()",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/esp_sub.cpp:1731",
+        "category": "effects setup+submit",
+        "nominal_self_ms": 0.07701761904761904
+      },
+      {
+        "entry": "8c264510",
+        "func": "L_cleanup_loop",
+        "source": "libc_a-memcpy.o:?",
+        "category": "shared copies and clears",
+        "nominal_self_ms": 0.07240857142857143
+      },
+      {
+        "entry": "8c03ef58",
+        "func": "re4dc_draw_model_part",
+        "source": "/root/probe/codex-other-t15-20261016/tree/port/dreamcast/game/model_bridge.cpp:789",
+        "category": "actor submit",
+        "nominal_self_ms": 0.07239428571428572
+      }
+    ],
+    "limitations": [
+      "This is not the historical 15.8 ms console result or a production speedup.",
+      "Instrumentation includes marker PCs and bracketed snapshots/membership work; incidental register, stack, cache and layout perturbations remain.",
+      "Interrupts and other KOS threads retain the phase they interrupt, as in the console phase timer.",
+      "Forced-pair means combine different sampled iterations, not adjacent captured physical pairs.",
+      "Nominal phase costs are not scaled with a whole-frame console projection ratio."
+    ]
+  }
+}

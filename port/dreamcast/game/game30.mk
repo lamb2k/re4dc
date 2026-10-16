@@ -39,6 +39,12 @@ GAME_ROT_CACHE ?= 0
 LOGIC_TRACE ?= 0
 GAME_TICK_LOG ?= 0
 LOGIC_TRACE_DELAY_US ?= 0
+# Offline phase ownership diagnostic only. Default off emits no code/data/flags.
+# Mirrors the definitive benchmark phase boundaries and safe EmMgr snapshots.
+OTHER_PROFILE ?= 0
+ifeq ($(OTHER_PROFILE),1)
+$(OBJDIR)/src/game/main.o $(OBJDIR)/src/game/trans.o $(OBJDIR)/coarse.o: GAME_CPPFLAGS += -DRE4DC_OTHER_PROFILE=1
+endif
 # LOGIC_TRACE_MASK_RENDER=1 (trace builds only, opt-in): leave the render-only be_flag 0x08000000
 # out of the hash (logic_trace.cpp; the frame pacing gates). Default 0: hashes unchanged.
 LOGIC_TRACE_MASK_RENDER ?= 0

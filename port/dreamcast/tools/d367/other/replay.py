@@ -52,12 +52,14 @@ def main():
     parser.add_argument('--prepare-only', action='store_true')
     parser.add_argument('--summarize-only', action='store_true', help='rebuild summaries for an existing replay')
     parser.add_argument('--phase-config', type=Path, help='ELF-locked phase boundary and busy-loop addresses')
+    parser.add_argument('--benchmark-phases', action='store_true', help='read OTHER_PROFILE marker PCs from this ELF')
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     if (args.out / 'cg.cg.tsv').exists() and not args.summarize_only:
         raise SystemExit('Output already contains a replay; choose a new --out directory')
     elf = args.evidence / 're4dc-game.elf'
     environment = os.environ.copy()
+    environment.pop('OTHER_MARKERS_FILE', None)
     phase_keys = {'OTHER_SEGMENT_ENTRY','OTHER_WAIT_LOOP_START','OTHER_WAIT_LOOP_END',
                   'OTHER_WAIT_FUNC_START','OTHER_WAIT_FUNC_END','OTHER_WAIT_CALL_PC','OTHER_WAIT_RETURN_PC'}
     for name in phase_keys:
@@ -77,6 +79,27 @@ def main():
     demangled = subprocess.check_output([args.nm, '-n', '-C', str(elf)], text=True)
     symbols = [line.split(None, 2) for line in demangled.splitlines()]
     symbols = [s for s in symbols if len(s) == 3 and s[1] in 'TtWw']
+    marker_symbols = [s for s in symbols if 're4dc_other_marker_' in s[2]]
+    symbols = [s for s in symbols if 're4dc_other_marker_' not in s[2]]
+    if args.benchmark_phases:
+        kinds = {'phase0':1,'phase1':2,'phase2':3,'phase3':4,'phase4':5,'phase5':6,
+                 'instr_begin':7,'instr_end':8,'push_actor':9,'pop_actor':10}
+        markers = []
+        for addr,kind,name in marker_symbols:
+            match = re.fullmatch(r'_?re4dc_other_marker_(main|trans|coarse)_(phase[0-5]|instr_begin|instr_end|push_actor|pop_actor)_[0-9]+',name)
+            if not match:
+                raise SystemExit(f'Unsupported benchmark marker: {name}')
+            markers.append(dict(pc=addr,event=kinds[match[2]],unit=match[1],kind=match[2],symbol=name))
+        if set(kinds.values()) != {m['event'] for m in markers} or {m['unit'] for m in markers} != {'main','trans','coarse'}:
+            raise SystemExit('Incomplete OTHER_PROFILE marker set')
+        if len({m['pc'] for m in markers}) != len(markers):
+            raise SystemExit('Duplicate marker addresses')
+        marker_path = args.out / 'bench_markers.txt'
+        marker_path.write_text(''.join(f"{m['pc']} {m['event']}\n" for m in markers))
+        (args.out/'bench_markers.json').write_text(json.dumps(dict(elf_sha256=hashlib.sha256(elf.read_bytes()).hexdigest(),
+             markers=markers,phase6='instrumentation',initial_phase=4,
+             reason='Frame_cnt advances in OTHER immediately before phase0; marker symbols excluded from function starts'),indent=2)+'\n')
+        environment['OTHER_MARKERS_FILE'] = str(marker_path)
     funcs = sorted({s[0] for s in symbols})
     watches = [s for s in symbols if key(s[2]) in EXACT or
                re.search(r'(sourceActorPrepare|sourceActorPlan|draw_actors|draw_scenery)', key(s[2]))]
