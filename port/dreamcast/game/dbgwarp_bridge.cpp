@@ -226,6 +226,10 @@ struct Warp {
     // (the last presented image stays on screen for the harness's periodic framebuffer shots), then play goes on.
     u32 still_tick[8], still_ms[8];
     unsigned n_still, still_next;
+    // pstill <pad frame> <ms> (up to 8; lane popup16 2026-10-16): as `still`, on the act clock (PADRead calls of the first
+    // room), so it also holds inside the sub screen, whose loop pauses the room frames (item menu popup stills).
+    u32 pstill_pad[8], pstill_ms[8];
+    unsigned n_pstill, pstill_next;
 #if defined(RE4DC_WARP_AFTER_RESET) && RE4DC_WARP_AFTER_RESET
     // after_reset (WARP_AFTER_RESET=1, lane resetmem): the rig stays passive (title, card load, play) until the first
     // soft reset, then warps from the title shown after it (the s30 heap gate after load -> reset -> New Game).
@@ -427,6 +431,9 @@ void load()
         } else if (!strcmp(k, "lodat") && n >= 4 && wp.n_lodat < 8) {
             wp.lodat[wp.n_lodat++] = {num(tok[1]), tok[2][0] == '-' ? -1 : (int) num(tok[2]),
                                       tok[3][0] == '-' ? -1 : (int) num(tok[3]), false};
+        } else if (!strcmp(k, "pstill") && n >= 3 && wp.n_pstill < 8) {
+            wp.pstill_pad[wp.n_pstill] = num(tok[1]);
+            wp.pstill_ms[wp.n_pstill++] = num(tok[2]);
         } else if (!strcmp(k, "still") && n >= 3 && wp.n_still < 8) {
             wp.still_tick[wp.n_still] = num(tok[1]);
             wp.still_ms[wp.n_still++] = num(tok[2]);
@@ -1079,6 +1086,16 @@ void re4dc_warp_pad(unsigned short* buttons, signed char* stickX, signed char* s
     if (!wp.act_source_clock && gap > 30) re4dc_warp_cut("hold");
     if (wp.rooms < 1 || wp.rooms > wp.max_entry) return;
     ++wp.pad_frames;
+    if (wp.pstill_next < wp.n_pstill && wp.rooms == 1 && wp.pad_frames >= wp.pstill_pad[wp.pstill_next]) {
+        const unsigned i = wp.pstill_next++;
+        re4dc_log("warp: pstill %u at pad %u hold %u ms\n", i, (unsigned) wp.pad_frames, (unsigned) wp.pstill_ms[i]);
+        const u32 keep = pG->System_flg & 0x20000000;
+        pG->System_flg |= 0x20000000;   // no hang check while held (as `still`)
+        if (wp.pstill_ms[i]) thd_sleep(wp.pstill_ms[i]);
+        pG->System_flg = (pG->System_flg & ~0x20000000) | keep;
+        wp.last_pad_vbl = re4dc_vi_retrace_count();   // the hold is not a stall: no act cut
+        re4dc_log("warp: pstill %u released\n", i);
+    }
     // An event took the game (Status_flg[1] 0x10000000): the running action ends there, so a
     // held stick never walks Leon back into the trigger after the event (movies pause PADRead).
     const bool ev_act = (wp.cur_act >= 0 && wp.cur_act < (int) wp.n_act && wp.pad_frames < wp.cur_until &&

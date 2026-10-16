@@ -443,7 +443,7 @@ seconds after boot, instead of a whole title -> intro -> r100 walk.
   (`warp.py list` lists them). Lines: `room 0x100`, `pos x y z`, `ang <rad>` or `dir 0x8000`,
   `rsf <room> <bit>...` (room save flags), `scenario <0|1> <hex>`, `find <hex>` (Item_find_flg),
   `unlock <0|1> <hex>`, `inv default`, `act <room frame> <a|b|x|y|start|fwd|back> <hold>`,
-  `trg <no> <room frame> [room]` (`--trg NO:FRAME[:ROOM]`), `kill <em id> <room frame> [room]`
+  `trg <no> <room frame> [room]` (`--trg NO:FRAME[:ROOM]`), `pstill <pad frame> <ms>` (up to 8: holds the game thread on the act clock, so it also holds inside the sub screen for item-menu stills; lane popup16), `kill <em id> <room frame> [room]`
   (`--kill ID:FRAME[:ROOM]`), `goto <room frame> x y z [ang]` (up to 4), `dump`. Issue #1 (2026-10-05):
   `act` also takes a raw GameCube button mask (`0x0020` = R, which the rig also gives the analog trigger the aim
   reads; `0x0120` = R + A, fire), and `arm <room frame> <item id>` (up to 8, first room) arms that weapon
