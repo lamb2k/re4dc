@@ -1,0 +1,27 @@
+name ch2-door-r113-r11c
+# lane ch2code16: door r113 -> r11c -> back (arrival points from stage_route.py; Ashley beside: goto sub)
+room 0x113
+pos 1444 585 -28003
+ang -1.5400
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+goto 60 2043 585 -28021 1.6016 sub
+act 120 a 4
+act 200 a 4
+act 280 a 4
+act 360 a 4
+act 460 fwd 30
+entry 2
+# r11c door 0 -> r113 is a walk-in door (AEV trig 02, lock 0; area x 49011..50511, z -73163..-69113; r11c.cpp never
+# disables it), so the way back is open: inside the area facing -x, A (run j4: walking in alone does not fire it).
+goto 240 51400 1 -71100 -1.5708 sub
+act 300 fwd 60
+act 420 fwd 60
+goto 600 50100 1 -71100 -1.5708 sub
+act 660 a 4
+act 740 a 4
+act 820 a 4
+act 900 fwd 30
+act 960 a 4

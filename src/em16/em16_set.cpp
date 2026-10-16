@@ -44,7 +44,11 @@ extern "C" void _unresolved()
 // builds the enemy through Em10SetFunc).
 void Em16Init(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    new (em) cEm10;  // value-initialisation would zero the fields cEmMgr::construct set (subArc; e6f65cc)
+#else
     new (em) cEm10();
+#endif
 }
 
 // Em10SetFunc of this module: the village Ganados (class 0): model types 12 (default), 11 (voice 1), 3 and 4 (chainsaw); two weapon slots differ from em10. Fills the work's motion table mot[0..40] (body / head / hand

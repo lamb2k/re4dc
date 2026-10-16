@@ -1,0 +1,17 @@
+name ch23-s6u-r10f-r200-shoot-end
+# r10f (from r11f) with the False Eye door opened (unlock 0x00800000) -> door 2 -> r200: truck area 0, then area 4 (s00, chapter 2-3 end)
+room 0x10f
+pos 56199 -31238 -177006
+ang 0
+find 0x00100000
+status 3 0x04000000
+unlock 0 0x00800000
+inv default
+god
+goto 200 13301 3999 14481 sub
+act 260 a 4
+act 340 a 4
+act 420 a 4
+entry 2
+goto 300 13288 500 549 1.4270 sub
+goto 2000 75905 9841 1303 sub

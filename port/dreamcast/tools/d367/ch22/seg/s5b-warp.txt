@@ -1,0 +1,37 @@
+name cx-r11f-second-form-D27
+room 0x11f
+pos 7720 -1020 -10620
+ang 1.4730
+inv default
+act_clock source
+goto 300 39654 -8000 -46840 1.4730
+god
+alivelog 30
+dump
+# Diagnostic only: submit normal kind1 damage through existing source bridge.
+kill 0x35 1200 0x11f 1
+# One additional source-damage target after the first-form transition.
+killrep 1 300
+
+# Source area80 AFTER source item enable: read-only runtime proven center; ordinary A.
+goto 1800 36440 -8000 -59908 0
+act 1810 a 3
+act 1850 a 3
+act 1900 a 3
+
+# Diagnostic approach only; ordinary A must cause the source window jump.
+goto 3000 39850.000 -8000.000 -59582.405 1.57075000
+
+# s5b: after the window exit, the area 00 door to r10f (centre 6778,-1034,-10127, door->1:0f), four facings, Ashley beside
+goto 3800 6778 -1034 -10127 0 sub
+act 3860 a 4
+act 3940 a 4
+goto 4200 6778 -1034 -10127 1.5708 sub
+act 4260 a 4
+act 4340 a 4
+goto 4600 6778 -1034 -10127 3.1416 sub
+act 4660 a 4
+act 4740 a 4
+goto 5000 6778 -1034 -10127 -1.5708 sub
+act 5060 a 4
+act 5140 a 4

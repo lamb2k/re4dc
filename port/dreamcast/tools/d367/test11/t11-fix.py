@@ -367,6 +367,19 @@ DATA['water16h'] = {'dc/resident.bin': RS16D + '/water16h/resident.bin'}
 # the room preloads (user rule 10-16: VQ by default when it frees needed capacity). Replaces vq16cs. sha256 ae84c909afea8f4a.
 DATA['water16i'] = {'dc/resident.bin': RS16D + '/water16i/resident.bin'}
 DATA['vq16w'] = {'dc/tex.pak': RS16D + '/vq16w/tex-vq16c.pak'}
+# Chapters 2-2 / 2-3 (lane ch2code16, 10-16; CH2-CODE-COMPLETE-20261016.md): ch2 = the chapter 2 route data (tools/d367/ch2/
+# mkch2data.py: route-v7's 2-2 / 2-3 rooms over test 15's data, r11d / r11e released rooms, em16 prepared, the 53-entry
+# chapter 1+2 stream file). Order: last (after T15_DATA). Needs the game's chapter 2 knobs (ch2/ch2-build.sh CH2REC,
+# AICA_STR_ENT_MAX >= 53). 'unremove': base-disc pictures the 2-2 / 2-3 rooms read stay on the disc.
+CH2D = os.environ.get('CH2D', '/root/re4data/private/ch2data-20261016')
+UNREMOVE = {}
+if os.path.exists(CH2D + '/ch2-data.json'):
+    _c2 = json.load(open(CH2D + '/ch2-data.json'))
+    DATA['ch2'] = dict(_c2['replace'])
+    # the chapter 2 room overlays (ROUTE_CH22 pl14, ROUTE_CH23 em3b / em35) of the arm under test: the base fixture has
+    # no row for them, so its label swap cannot reach them (a missing overlay halts "route overlay missing on the disc")
+    DATA['ch2']['ovl'] = ['em3b', 'em35', 'pl14']
+    UNREMOVE['ch2'] = _c2['unremove']
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
@@ -404,7 +417,16 @@ def main():
     for a_, b_ in CLASH:
         assert not (a_ in names and b_ in names), 'data sets %s and %s replace the same files' % (a_, b_)
     for nm in names:
+        rm -= set(UNREMOVE.get(nm, ()))
         for k, v in DATA[nm].items():
+            if k == 'ovl':
+                prog = os.path.dirname(os.path.dirname(next(x for x in r.values() if isinstance(x, str) and
+                                                             'candidate-route' + new + '/' in x)))
+                for o_ in v:
+                    f_ = '%s/candidate-route%s/%s.ovl' % (prog, new, o_)
+                    assert os.path.exists(f_), f_
+                    r['dc/%s.ovl' % o_] = f_; rm.discard('dc/%s.ovl' % o_); rec.append('%s ovl %s' % (nm, o_))
+                continue
             if k == 'tex':
                 for t in (v if isinstance(v, list) else [v]):
                     texdir(t, r, rec)
