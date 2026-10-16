@@ -2,7 +2,8 @@
 """Offline feasibility census for camera-keyed world draw decisions.
 
 Uses existing R4IM readers and historical camera samples with current assets.
-Float64 geometric enumeration is not SH-4 bit-exact validation or a speed test.
+Float64 geometric enumeration is a proxy, not the runtime's conservative view-AABB
+and crossed-plane implementation, SH-4 bit-exact validation, or a speed test.
 No game files are modified. Only immutable opaque placements are candidates.
 """
 import argparse
@@ -12,6 +13,7 @@ import json
 import math
 import struct
 import sys
+import zlib
 from pathlib import Path
 
 import numpy as np
@@ -41,9 +43,13 @@ def main():
     idblob = ids_path.read_bytes()
     idmagic, idversion, idcount, idcrc = struct.unpack_from('<4s3I', idblob)
     assert (idmagic, idversion, idcount, idcrc) == (b'R4ID', 1, len(p.placements), p.sidecar_crc)
+    assert len(idblob) >= 16 + idcount
     ids = idblob[16:16 + idcount]
     gb = group_path.read_bytes()
-    ng = struct.unpack_from('<I', gb, 12)[0]
+    magic, version, nlet, ng, mesh_crc, mesh_bytes, side_crc, payload_crc = struct.unpack_from('<4s7I', gb)
+    assert magic == b'R4SG' and version == 1 and nlet == p.nlet and 1 <= ng <= 8
+    assert (mesh_crc, mesh_bytes, side_crc) == (p.mesh_crc, p.mesh_bytes, p.sidecar_crc)
+    assert len(gb) == 32 + 16 * nlet * ng and zlib.crc32(gb[32:]) == payload_crc
     groups = np.frombuffer(gb, '<u2', offset=32).reshape(-1, ng, 8)
     gates = set(range(209, 223))
     protected = []
@@ -177,11 +183,15 @@ def main():
     # This is just decisions; it excludes lookup/index, guards, alignment and the stream itself.
     complete_bytes = cluster_bytes + math.ceil(nlet_instances * ng / 8)
     out = dict(status='OFFLINE_FEASIBILITY_CENSUS_NOT_RUNTIME_PROOF',
-        basis='Current spatial32v3 approved-L2 package geometry; historical 2026-10-15 cross camera poses; float64 conservative box enumeration. Not a matched current trace or performance measurement.',
+        basis='Current spatial32v3 approved-L2 package geometry; historical 2026-10-15 cross camera poses; float64 geometric proxy. Not reconstructed runtime decisions, a matched current trace, or a performance measurement.',
+        proxy_differences=['Proxy tests transformed box corners against all six planes; runtime cluster/meshlet tests use conservative view-space AABB supports with different margins.',
+                          'Proxy tests group boxes against all six planes; runtime sg_select tests only crossed side/near planes and never far.',
+                          'The 20-value camera input omits viewport; zero viewport offset is assumed here and not certified by that input.',
+                          'Placement pretests, fully-inside propagation and interior state are not replayed; candidate pool excludes protected live gates.'],
         files={str(x): sha(x) for x in (mesh, side, ids_path, group_path, Path(a.cameras))},
         protected_placement_rows=protected, candidate_cluster_instances=len(candidates),
         candidate_placements=len(mats), candidate_all_level_meshlet_instances=nlet_instances,
-        historical_camera_samples=len(cameras), unique_full_camera_samples=len({tuple(x) for x in cameras}),
+        historical_camera_samples=len(cameras), unique_view_projection_samples=len({tuple(x) for x in cameras}),
         unique_cluster_lod_lists=len({tuple(r[0] for r in x) for x in records}),
         unique_complete_draw_lists=len(set(records)),
         historical_counts={k:dict(min=min(s[k] for s in stats), max=max(s[k] for s in stats), mean=sum(s[k] for s in stats)/len(stats)) for k in stats[0]},

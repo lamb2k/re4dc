@@ -29,15 +29,15 @@ Evidence: `C:/Flycast-Evidence/re4-dreamcast/codex-cpu-t15-20261016/drawlist-cos
 
 ## Offline census
 
-`drawlist_census.py` uses the existing R4IM reader and the **current spatial32v3 package**, selecting only immutable opaque candidates. The camera input is the historical 2026-10-15 t2exact cross sample: 56 unique full camera poses from its frames 500–799. It is not a new Test15 camera capture. The census uses float64 geometric box tests and cannot establish SH-4 bit-exact decisions or performance.
+`drawlist_census.py` uses the existing R4IM reader and the **current spatial32v3 package**, selecting only immutable opaque candidates. The camera input is the historical 2026-10-15 t2exact cross sample: 56 unique view/projection samples from its frames 500–799. It is not a new Test15 camera capture. The census is a **geometric proxy**, not reconstructed runtime draw decisions. It uses transformed corners against six planes; runtime cluster/meshlet culling uses conservative view-space AABB supports and different margins. Runtime strip selection tests only crossed side/near planes, never far. The 20-value input omits the viewport, so the proxy assumes zero viewport offset. Placement pretests, inside propagation and interior state are not replayed. Float64 arithmetic is also not SH-4 bit-exact. These limitations prevent using the counts below as runtime hit rates or performance evidence.
 
 - 301 candidate cluster instances across 9 placements; 637 meshlet instances across all LOD levels.
-- The 56 poses produce 6 unique cluster visibility/LOD lists and 16 unique full cluster/meshlet/strip-group decision lists. This shows useful repeated decisions in this sample, despite all 56 camera keys differing.
-- A synthetic 90-degree turn at the same eye changes 135 of the 301 complete cluster decisions; changing projection scale by 20% changes 32.
-- All 32 probes displaced by 250 mm in X or Z change at least one decision; the mean is 8.375 clusters and the maximum is 14. Most decisions remain stable, but copying a whole cell's center list would be incorrect.
+- The proxy's 56 poses produce 6 unique cluster visibility/LOD lists and 16 unique full cluster/meshlet/strip-group lists. This suggests repeated decisions worth measuring in the runtime, despite all 56 view/projection keys differing.
+- In the proxy, a synthetic 90-degree turn at the same eye changes 135 of the 301 complete cluster decisions; changing projection scale by 20% changes 32. The source audit independently establishes that these inputs affect runtime decisions; these exact counts are proxy results.
+- All 32 proxy probes displaced by 250 mm in X or Z change at least one decision; the mean is 8.375 clusters and the maximum is 14. Most proxy decisions remain stable, but this cannot certify a whole cell's center list.
 - A dense cluster-only list takes 76 bytes per pose; a simple representation adding masks for every candidate meshlet at every LOD takes 395 bytes. An illustrative 1,024 positions × 16 yaw × 4 pitch grid would take 4.98 MB / 25.89 MB before indices, guards and projection variants. This is an example uncompressed layout, not a required coverage estimate or lower bound. Deduplication could be substantial; these 56 poses need only 16 distinct full lists, but do not establish room coverage.
 
-Evidence: `ch1-drawlist-census-t15-20261016.json`, with hashes of the input package, sidecars and camera file. The first local census attempt misread the R4ID header and was rejected; the retained script validates its magic/version/count/CRC and slices IDs after the 16-byte header.
+Evidence: `ch1-drawlist-census-t15-20261016.json`, with hashes of the input package, sidecars and camera file. The first local census attempt misread the R4ID header and was rejected; the retained script validates its magic/version/count/CRC/length and slices IDs after the 16-byte header. It also validates the R4SG header, linked mesh/sidecar identities, length and payload CRC. Independent review caught the structural culling differences above; the retained report labels every census count as proxy evidence.
 
 ## Concrete first implementation candidate
 
