@@ -671,7 +671,7 @@ void gameRoomInit()
     DbMenuRoomInit();
     SstSet(1, 0xFFFF, 1, 0, 0x2F, 1);
     cMes.roomInit();
-    SndRoomBgmLoad(); RE4DC_DOORPH("room.bgm");
+    RE4DC_DPF_BEGIN(2, pG->room_id); SndRoomBgmLoad(); RE4DC_DPF_END(2); RE4DC_DOORPH("room.bgm");
     DbWork = new cDbWork;
     U32Set(pG->Disp_flg, 0);
     if (pG->System_flg & 0x200000) {
@@ -1420,10 +1420,10 @@ void gameDoordemo()
     ClearOt(); RE4DC_DOORPH("demo.cancel");
     {
         int req = SndDoorSeLoad();
-        SndNextRoomInit();
+        SndNextRoomInit(); RE4DC_DPF_BEGIN(1, pG->next_room);
         while (SndStatDisp(req) == 0) {
             TaskSleep(1);
-        }
+        } RE4DC_DPF_END(1);
     }
     if (!Flag54(0x80000) && !Flag54(0x100)) {
         DoorSeCall(0);

@@ -1935,7 +1935,7 @@ void SndRoomBgmLoad()
 #endif
             SndPlayWork* w = &pSnd->bgm_work[i];
             while (w->stat != 0) {
-                SndWatcher();
+                SndWatcher(); RE4DC_DPF_YIELD();
             }
             if (w->used == 0) {
                 SndBgmLoad((u8) b);
