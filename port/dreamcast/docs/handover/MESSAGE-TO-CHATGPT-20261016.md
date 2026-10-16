@@ -6,17 +6,20 @@
 - **Resident room textures for all of chapter 1** (lane/resident16): r100, r106, then 1-2, 1-3 and r119, with VQ where a room doesn't fit. This is the VRAM / disc-read bug path. It touches the t11-fix.py data sets and the resident lists.
 - **Disc process** (lane/disc16): one standard GDI checked against mkdcdisc's layout, disc_lint, a weak-GDEMU-clone timing profile in the console-like Flycast, and a compatibility doc.
 
-Your lane, unchanged from the handover: the CPU savings plan (village world L2, character draw plan, fused character vertex kernel, scenery batching). Base on `t15/int`. The handover docs are on branch `handover/chatgpt-20261015`.
+Your lane, unchanged from the handover: the CPU savings plan. Please build these in parallel, not one after another; I want all of them to land:
+- village world L2 (lane/worldvert 713f9319: about 17.7k -> 12.6k vertices at the cross in Flycast). Send me the L2-fixed still sheet (worldvert-20261015/WORLDVERT-R101-L2FIX.png or a fresh one) before it goes into a build;
+- scenery batching (fewer, bigger pieces, merged offline in the world packages; start from wv2's 256-vertex meshlets, 804 pieces vs 1,335, which sent more vertices to the TA: 15.5k vs 12.6k);
+- the character draw plan and the fused character vertex kernel.
+Stop estimating savings before building: build, then one measurement each (ms/frame vs the previous stack, STRICT identical, KOS squeeze), then one benchmark disc with everything so I can measure the cross on the console. Base on `t15/int`. The handover docs are on branch `handover/chatgpt-20261015`.
 
 ## Major gains the plan doesn't target yet
 Labels: CONSOLE = measured on the user's Dreamcast; MODELLED = hw model; EST = estimate. All figures are for the r101 cross unless stated.
 
-What a picture costs: one drawn tick plus about one skipped tick, about 99 ms per picture (CONSOLE). Of that, 33 ms is game logic run on both ticks (CONSOLE). 20 fps with 30 Hz logic means about 1.5 ticks per picture, i.e. drawn + 0.5 x skipped ≤ 50 ms. **Skipped-tick and logic cost count as much as drawing.**
+What a picture costs: one drawn tick plus about one skipped tick, about 99 ms per picture (CONSOLE). Of that, 33 ms is game logic run on both ticks (CONSOLE). 20 fps with 30 Hz logic means about 1.5 ticks per picture, i.e. drawn + 0.5 x skipped ≤ 50 ms. **Logic cost counts as much as drawing.**
 
-1. **Overhead on skipped ticks: about 6.4 ms per skipped tick (CONSOLE, derived).**
-   - A skipped tick at the cross costs 22.9 ms while its logic is 16.5. At the house it is 29.3 vs 22.9.
-   - So about 6.4 ms per skipped tick is non-logic work on a tick that draws nothing: probably pose/skin/matrix preparation, OT/GX bookkeeping, sound and effect updates. None of it is needed when nothing is drawn.
-   - Nobody has profiled it. Making skipped ticks pure logic is possibly the single biggest untargeted lever, up to about -6 ms per picture EST.
+1. **Skipped ticks: 22.9 ms each at the cross vs 16.5 ms of logic (CONSOLE). Check the 6.4 ms gap for duplicated work.**
+   - The skipped-tick lane (lane/skiptick 63c3ea48) found no wait: a skipped tick starts building the next picture. So most of the 6.4 ms is probably drawing work already counted, not waste.
+   - What is unchecked: whether any of it is done twice (pose/matrix preparation on the skipped tick and again on the drawn tick, or HUD/OT bookkeeping repeated). Profile one skipped tick per function, and only build a change if duplicates show up. EST ceiling: a few ms per picture, possibly 0.
    - Exactness: game logic results must stay STRICT-identical.
 2. **The OTHER bucket: 15.8 ms per picture (CONSOLE), largely unaccounted.**
    - The model lists UI/HUD about 4.3, copies 2.25, KOS idle 1.8, direct-begin, fog, packets and clears.
@@ -24,8 +27,7 @@ What a picture costs: one drawn tick plus about one skipped tick, about 99 ms pe
 3. **Game logic: 16.5 ms per tick at the cross, 22.9 at the house. The house is logic-bound.**
    - It is real simulation, not port waste: Ganado 0.84 ms per tick each, Leon 3.4 (cloth 1.4), effects 2.3, fixed 4.8 (MODELLED / census).
    - Approximations are approved as a class: each is a default-off runtime switch that must pass a gameplay-equivalence gate (same kills, triggers, doors, waves, room clears, cutscenes, no desync), with a still pair if visible.
-   - Candidates not yet built:
-     - a collision broadphase cache for actor line queries (B2);
+   - Candidates not yet built (the B2 collision cache was already dropped: ceiling ~0.5, net 0.2-0.35 ms):
      - Ganado AI "think" at a lower rate when far or off screen. A far-half-rate version measured about 0 at cap 6 because few Ganados were far, so target per-Ganado cost instead;
      - effect logic.
    - Leon's jacket cloth at half rate is built (about -0.74 MODELLED, LOGIC_APPROX_MASK 0x01). It is waiting on a motion still pair for the user.
