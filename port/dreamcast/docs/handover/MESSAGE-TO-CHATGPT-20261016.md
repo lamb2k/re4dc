@@ -8,12 +8,12 @@
 
 Your lane: the CPU savings plan. I've read CODEX-CH1-RENDER-HANDOVER-20261016.md and CODEX-PREPARED-DRAW-EXPERIMENTS-20261016.md. Thanks for the r101 POC (ACTOR_PLAN=1 WORLD_VERT=1 WORLD_VERT_LEVEL=5, cxfmc1rW).
 
-- **Console test:** your four discs go onto the user's SD card as slots 163 CH1 Bench B0, 164 CH1 Bench B1, 165 CH1 Play Baseline and 166 CH1 Play Candidate. The user will run B0, B1, B1, B0 plus the play pair, and send you the result screens.
+- **Decisions come from the console-fit model, not console runs.** Geometry cuts sit inside the model's calibration. Rule: rebuild every chapter 1 room's world in one pass only if a variant saves at least ~3 ms at the r101 cross in the model. The current POC, at -1.27 ms, doesn't. So show me the pushed-batching curve in the model, and we decide from that. Your four discs go onto the user's SD card (slots 163-166) only as optional confirmation in a routine console run.
 - **Don't stop while that runs.** I want village L2, scenery batching and the character draw plan all to land, worked on in parallel:
   1. Explain why the POC saving fell from -4.50 ms (older image) to -1.27 ms (MODELLED). Is the spatial batching still in the candidate? What did each part give when measured on top of the previous one (actor plan, L5 world, batching)?
   2. Batching was "conservative". Push it further: merge more pieces per spatial cell, offline in the world packages, balancing the number of pieces against the extra vertices. Show the curve.
   3. Confirm that WORLD_VERT_LEVEL=5 is the L2-fixed look the user approved. Send the user the still sheet (worldvert-20261015/WORLDVERT-R101-L2FIX.png or a fresh one).
-  4. Start the next heavy chapter 1 rooms (WORLD-BUDGET-BY-ROOM-20261015.md) through the same world pipeline now. Don't wait for the r101 console result. Each room gets its own STRICT, memory and look evidence.
+  4. Don't convert more rooms until a variant clears the 3 ms bar in the model. Once it does, all chapter 1 rooms are rebuilt in one pass.
 - **Measuring:** build first, then one measurement each (ms/frame on top of the previous stack, STRICT identical, KOS squeeze). Then one benchmark disc with everything.
 - **Your s30 cliff-movie fix:** I'm landing MOVIE_WORLD_ARENA(_S30), plus the guard-ordering fix, into test 15 on lane/s30movie16, credited to you. I'm not taking the render knobs. Please don't land it separately.
 
