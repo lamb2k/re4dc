@@ -2909,7 +2909,7 @@ int SndStatDisp(int req)
     int y2 = 0x10;
     int ret = 0;
     int stop = SndStopCheck();
-    int read = Dvd.ReadCheck(req, 0, 0, 0);
+    int read = Dvd.ReadCheck(req, 0, 0, 0); RE4DC_DPF_READ(read);
 
     if (stop == 0) {
         eprintf(0x18, 0x10, 0, 0, "Stop WAIT");
