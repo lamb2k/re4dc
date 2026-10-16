@@ -513,6 +513,11 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
     // Two descriptors whose sections prove the same source identity (model + TPL rows) would be ambiguous.
     for(unsigned a=0;a<sec[kDesc].count;++a)for(unsigned b=a+1;b<sec[kDesc].count;++b) {
         if(PKD[a].sections!=PKD[b].sections)continue;
+#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+        // NATIVE_MODEL_REGISTRY_LOD: a gameplay level proves its full descriptor's identity by design; the search never
+        // binds a level (registry_lod_want chooses between the two), so the pair is not ambiguous.
+        if(PKD[b].lod_of==a+1u)continue;
+#endif
         bool same=true;
         for(unsigned i=0;i<PKD[a].sections && same;++i) {
             const re4dc_material::Role* x=nullptr;const re4dc_material::Role* y=nullptr;
