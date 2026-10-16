@@ -1,0 +1,139 @@
+# vq16-ch2.txt (lane ch2code16, 10-16; coordinator/user rule: VQ by default when it frees needed capacity, PSNR
+# floor ~29 dB, UI / text / alpha-critical stay 16-bit): vq_plan.py 2100000 over the chapter 2 room censuses (r117 r118
+# r112 r111 r113 r11c r11d r11e r10f r11f r200), excluding vram/resident/r000.tsv (HUD), ARGB4444 and sub-screen loads.
+# PSNR floor 29 dB: left 16-bit: 18a2f60f-1d95523f(27.7) 46490715-327b2d12(26.8) 4bc5699e-a00e5646(27.5) 5498155d-18d309bd(28.6) 59e49a07-ca6db876(26.8) 74d83c35-fbddfdd0(27.9) ad7402cc-29fdf156(28.5) f078961b-e7954b5c(27.8)
+0565db13-f24678e3
+06d984e4-44fa79a5
+090a361b-cafc85f7
+11254b71-94c8510f
+113fc8ab-c0410091
+15084354-96053d43
+156ada47-5d63e419
+195c057c-1363748f
+1979269a-a6ede7b2
+1b90c708-1f3da540
+1d141ee0-9b9623d3
+281ad1c2-08119313
+28aa9882-500bacb9
+357eaed3-383122ab
+37b2b53c-02fd827c
+382341da-49c54277
+39912c90-c0b463cd
+3c963e92-0fdb80de
+3ed80ff8-4aa5c2e6
+43aff05a-cfb2b1a5
+480af527-bac55b79
+49fa9a03-8971e1c8
+4be1d830-84eb6020
+4cdc9d13-8a346811
+4deda82f-ba71623d
+4e6cbd8a-ac76e6f2
+4fea3b33-b755a313
+5217614c-9f7bd4f5
+5484fd1f-2a46f24d
+55ecd54a-974e74d5
+57d16e1c-9471e465
+5ccbf729-b6b50df8
+5f9872fa-3383c4e7
+634fe733-ff454553
+6915f051-59b82b87
+6c675e55-f3151e87
+6cd37a3c-a4e20e93
+761aeac4-f4288afc
+7b5612f1-c1efe05b
+7cbeec32-563d7133
+7d7b6f54-67d90ec0
+84a2f233-53e58de6
+858a2987-1de9afc4
+88743fcb-fe409d6e
+8daf2cb8-9cb22e71
+8fb0fccf-d75e4a3f
+90ec2b33-d940e913
+997023cc-ca6338c3
+a3e89a1a-bfa9a48a
+a5c1134d-5ec22578
+a950578f-214786bc
+a9a206d4-62941900
+ad4eff25-47ddb395
+adb2fec2-88788389
+b3c2a412-d219779c
+c0022741-b68d5208
+c04c896d-babf53c9
+c08b1189-fe2815de
+c0d9a948-1e003299
+c2b2f0d5-6d8c2613
+c2f9df89-ac4f719e
+c31d4c0c-2cb68104
+c4033daf-d6c0ca99
+c4435730-f9c89c02
+c4cc2918-bd34735a
+cd1fa1a8-376b4409
+ce3b26ef-87330d67
+cf6897a9-ec426ee6
+d13b87a6-f700fa27
+dc847ebc-3a0eb060
+dd9a6431-4b3f5e5d
+dfd64ea0-53d75934
+e164464f-62055d17
+e4828860-f2f59c85
+e4e26547-e3c324d3
+e682475b-9fae7b67
+e99389ad-f8efa2ae
+eabf8453-62820a5a
+eacaab38-9654aec9
+ebb75d78-8b85a203
+edd58d4e-ef965928
+edf84ac5-b07d6bf6
+ef0b5bcc-2df7d4ec
+f2a597eb-b9feee25
+f4fae528-9e5bab79
+f8aa5095-c6ea92b3
+fa146aef-e21f3ebc
+fc971e8b-39542581
+fdef2aaa-7ae25576
+# v2 (10-16, VQ-by-default rule): world/cast ARGB4444 cutouts added for r118/r112/r10f/r111 (vq_plan target 1,900,000;
+# effect, UI, sub-only and GameCube-base-archive keys excluded)
+29409138-cfda5545	W	 dc/native/r102/ps2-world.r4pw; dc/native/r112/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/2
+31eba624-be2e70cc	E	 dc/native/r102/registry.re4nmr; dc/native/r104/registry.re4nmr; dc/native/r10f/registry.re4nmr; dc/native/r112/registry.re4nmr; em/em13.drs; em/em14.drs; em/em1
+32bf9191-34bc4375	W	 loose /root/probe/lanes-20261010/r117/rooms/pairs-r117
+32f13b42-5a22f75d	E	 dc/native/r111/partner.re4nmr; dc/native/r112/partner.re4nmr; dc/native/r113/partner.re4nmr; dc/native/r117/partner.re4nmr; dc/native/r118/partner.re4nmr; dc/na
+3f690586-7edb7c3e	W	 loose /root/probe/lanes-20261015/ps2cast/conv-t14/reg-104/tex
+59e93b35-17a47231	E	 dc/native/r108/registry.re4nmr; dc/native/r113/registry.re4nmr; dc/native/r118/registry.re4nmr; em/em16.drs; em/em17.drs; loose /root/re4data/private/ch2data-20
+69936e52-91ee526f	W	 loose /root/re4data/private/ch2data-20261016/files/dc/tex/6
+76e37230-4ba329a4	W	 dc/native/r111/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/7
+7fb06e97-9b4c4423	W	 dc/native/r118/ps2-world.r4pw; loose /root/probe/lanes-20261010/r118/rooms/r118-ps2-uvg/tex
+9d03764d-7bdedc57	W	 loose /root/re4data/private/ch2data-20261016/files/dc/tex/9
+a8611f20-ab1161b5	W	 dc/native/r102/ps2-world.r4pw; dc/native/r112/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/a
+b5535ab0-d4751dd4	W	 dc/native/r112/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/b
+c9a717ba-3a23ed45	W	 dc/native/r102/ps2-world.r4pw; dc/native/r112/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/c
+dd35a4d5-4c6a010e	W	 dc/native/r111/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/d
+ec102af4-532d8307	E	 dc/native/r111/partner.re4nmr; dc/native/r112/partner.re4nmr; dc/native/r113/partner.re4nmr; dc/native/r117/partner.re4nmr; dc/native/r118/partner.re4nmr; dc/na
+f4aa2647-4aabbf30	W	 dc/native/r112/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/f
+f8a80076-637a9f6b	W	 dc/native/r10f/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/f
+fc75dd46-779f14bd	W	 loose /root/probe/lanes-20261015/ps2cast/conv-t14/reg-104/tex
+# v3 (10-16): r11c siege set, r111/r112 preload over the byte limit (target 1,850,000); G = GameCube base-archive picture; da197067 left 16-bit (PSNR 28.0)
+001c0ae3-f6006faa	G	 not found (base disc / GameCube archive)
+0275ee90-18fed2a2	G	 not found (base disc / GameCube archive)
+08c726af-530b3ab2	G	 not found (base disc / GameCube archive)
+27a625d0-d454162d	G	 not found (base disc / GameCube archive)
+2b19e82f-169ea5d5	G	 not found (base disc / GameCube archive)
+2c9c252a-51c59944	G	 not found (base disc / GameCube archive)
+2de71f34-0ade9016	W	 loose /root/re4data/private/ch2data-20261016/files/dc/tex/2
+30606550-f5b75425	G	 not found (base disc / GameCube archive)
+35e0df78-33e39e88	G	 not found (base disc / GameCube archive)
+3a68bedf-5cec72a4	G	 not found (base disc / GameCube archive)
+4ebf297c-3088cfc6	G	 not found (base disc / GameCube archive)
+772a9be5-dddaf464	G	 not found (base disc / GameCube archive)
+7c4f357a-0fb1bf34	G	 not found (base disc / GameCube archive)
+818c728e-a0e4c49d	G	 not found (base disc / GameCube archive)
+862bd374-a98ce31f	G	 not found (base disc / GameCube archive)
+8a80e52f-47695eb1	G	 not found (base disc / GameCube archive)
+944e47b4-3622741f	G	 not found (base disc / GameCube archive)
+9cf7f055-d40aae38	G	 not found (base disc / GameCube archive)
+b363dd20-79c95eb2	G	 not found (base disc / GameCube archive)
+b75bcc8c-a3d59b3c	G	 not found (base disc / GameCube archive)
+d4df1d7f-5925718b	G	 not found (base disc / GameCube archive)
+de2278c6-500222e5	G	 not found (base disc / GameCube archive)
+fb338eee-cc800cbf	W	 dc/native/r11c/ps2-world.r4pw; loose /root/re4data/private/ch2data-20261016/files/dc/tex/f
+fc24a99c-03d13534	G	 not found (base disc / GameCube archive)
+fed05d68-c5d3a36b	G	 not found (base disc / GameCube archive)

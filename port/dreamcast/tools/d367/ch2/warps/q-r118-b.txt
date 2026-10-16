@@ -1,0 +1,22 @@
+name ch2-kos48-r118-b
+# lane ch2code16: door r118 -> r112 -> back. A direct warp into r118 with Ashley found stalls (no room frames, work
+# backing grows, Em[3h] invalid parts: 10-16 g2), so this starts as fullplay ch22a does: r117 window door 0b -> r118,
+# door 3 (walk-in) -> r112, then r112's door back (Ashley beside: goto sub).
+room 0x117
+pos 9800 -1313 7645
+ang 1.5708
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+goto 60 10900 -1313 7645 1.5708 sub
+act 120 a 4
+act 200 a 4
+act 280 a 4
+act 360 a 4
+entry 2
+alivelog 60
+kill 0x17 300 0x118 1
+killrep 30 90
+# KOS squeeze gate (lane ch2code16): 48 KiB held from OSInit
+squeeze 49152

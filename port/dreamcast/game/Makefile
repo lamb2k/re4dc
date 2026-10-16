@@ -177,6 +177,39 @@ endif
 override ALIVE_CAP_PARK := 1
 override R101_CAP_WAVES := 1
 endif
+# PS2_CH2_ENEMY=1 (lane ch2code16 2026-10-16, user 10-15 per-chapter rule "the PS2 logic holistically for enemy spawns ...
+#   with our game cutting out more when it hits our threshold"; CHANGES GAMEPLAY by design; default 0 = off; needs
+#   ROUTE_CH22=1 ROUTE_CH23=1 and PS2_ENEMY_CH22_DIR / PS2_ENEMY_CH23_DIR): the one umbrella for every PS2 enemy-spawn
+#   change of chapters 2-2 and 2-3 (r111 r112 r113 r11c r11d r11e r10f r11f r200; table in
+#   C:\Game Dev\Emulators\CH2-CODE-COMPLETE-20261016.md): the qualified PS2 list rows (platform/ps2_enemy_ch22.cpp /
+#   ps2_enemy_ch23.cpp, applied at list read) and the PS2 room code (r111 alive < 5 by area, r113 0xB7 below 6, r10f,
+#   r11f, r200 truck wave 0x6A..0x70), PS2_ENEMY_ROOMS |= 0x80 (r11d, the PS2 Bella-sisters village), plus the cap on
+#   top: ALIVE_CAP=6 when not given and ALIVE_CAP_PARK=1 (as PS2_CH1_ENEMY). Without it ROUTE_CH22 / ROUTE_CH23 keep
+#   the GameCube lists and room code. Documented cap exceptions (kept sends: their callers use the returned enemy):
+#   the r10f gondola riders and 32 / 35, the r11c cabin below. Park never acts in r10f, r11c, r11d.
+#   The PS2 cabin is part of the unit (user decision 10-16: "why wouldn't it if we are using the enemy cap for ps2 as a
+#   standing decision"): r11c as on the PS2 (PS2_ENEMY_ROOMS 0x40: 7 new em13 rows, HP +200, waves of 5 refilled below 5
+#   alive, kill limit 40 / timer 9000). Its peak stays under the cap; park never acts in r11c (its script keeps the
+#   enemy pointers). The GameCube cabin (9 sent at once) remains only with PS2_CH2_ENEMY=0.
+PS2_CH2_ENEMY ?= 0
+ifeq ($(filter $(PS2_CH2_ENEMY),0 1),)
+$(error PS2_CH2_ENEMY must be 0 or 1)
+endif
+ifneq ($(PS2_CH2_CABIN),)
+$(error PS2_CH2_CABIN was folded into PS2_CH2_ENEMY (user 10-16): the PS2 cabin is always on with it)
+endif
+ifeq ($(PS2_CH2_ENEMY),1)
+ifneq ($(or $(ROUTE_CH22),0)$(or $(ROUTE_CH23),0),11)
+$(error PS2_CH2_ENEMY=1 needs ROUTE_CH22=1 ROUTE_CH23=1)
+endif
+override PS2_ENEMY_RULES := 1
+override PS2_ENEMY_ROOMS := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_ROOMS),0) | 0x80 | 0x40 )))
+ifeq ($(or $(ALIVE_CAP),0),0)
+override ALIVE_CAP := 6
+endif
+override ALIVE_CAP_PARK := 1
+$(OBJDIR)/src/game/stage.o: GAME_CPPFLAGS += -DRE4DC_PS2_CH2_ENEMY=1
+endif
 # PS2_ENEMY_RULES=1 (test 9 lane PS2EN, default 0; changes gameplay by design): the PS2 USA enemy rules of the
 # chapter 1 rooms. Enemy list emleon00 gets the PS2 start-alive bits / flags (stage.cpp, at list read); r101 sends
 # its reset waves when fewer than 5 Ganados are alive (GameCube: after 5 / 10 kills) and holds two villagers back
@@ -312,6 +345,17 @@ MODULES += pl11:ovl em11
 # AICA_STR_ENT_MAX=48 ship together. 32 bytes of .bss per entry (48: +512 B). The 2 KB header holds up to 63.
 AICA_STR_ENT_MAX ?= 32
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_STR_ENT_MAX=$(AICA_STR_ENT_MAX)
+# AICA_SPILL (lane ch2code16, 10-16; default 0 = image unchanged): banks the frozen layout has no room for use space
+# it leaves idle, instead of staying silent. (1) A prebuilt room-arena bank that does not fit the arena goes to the
+# unused tail of the BGM0 slot (the room's bio4midi bank is often far smaller than the 264,576 B slot: r11c's #6 uses
+# 48,000; r11c's Luis, pl14 55,324 B at 8 kHz, is 8.8 KB over the arena). A later BGM0 load that would overlap it
+# silences it first (logged). (2) A runtime-converted BGM1 bank with no free AICA RAM (the layout has no BGM1 slot:
+# r11f's Mendez music, 139,420 B at 8 kHz) goes to the top of the room arena, above the room's banks; a room bank that
+# later needs that space drops it (logged), the next room load frees it. Chapter 2 recipe only.
+AICA_SPILL ?= 0
+ifeq ($(AICA_SPILL),1)
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SPILL=1
+endif
 export RE4DC_LINK_OVERLAY += .ovl_pl11
 $(OBJDIR)/mod/st1_3/src/st1/r117.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o $(OBJDIR)/mod/st1_3/src/st1/r117.o
@@ -332,9 +376,9 @@ $(OBJDIR)/src/game/snd.o $(OBJDIR)/mod/st1_3/src/st1/r11c.o $(OBJDIR)/mod/pl14/s
 ROUTE_CH22_ROOM_OBJS = $(OBJDIR)/mod/st1_3/src/st1/r111.o $(OBJDIR)/mod/st1_3/src/st1/r112.o \
     $(OBJDIR)/mod/st1_3/src/st1/r113.o $(OBJDIR)/mod/st1_3/src/st1/r11c.o $(OBJDIR)/mod/st1_2/src/st1/r11a.o
 $(ROUTE_CH22_ROOM_OBJS) $(OBJDIR)/src/game/stage.o $(OBJDIR)/src/game/trans.o $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH22=1
-ifeq ($(PS2_ENEMY_RULES),1)
+ifeq ($(PS2_CH2_ENEMY),1)
 ifeq ($(wildcard $(PS2_ENEMY_CH22_DIR)/ps2_enemy_ch22_data.inc),)
-$(error ROUTE_CH22 with PS2_ENEMY_RULES needs qualified PS2_ENEMY_CH22_DIR/ps2_enemy_ch22_data.inc)
+$(error PS2_CH2_ENEMY needs qualified PS2_ENEMY_CH22_DIR/ps2_enemy_ch22_data.inc)
 endif
 $(ROUTE_CH22_ROOM_OBJS): GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_RULES=1
 $(OBJDIR)/platform/ps2_enemy_ch22.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH22=1 -DRE4DC_PS2_ENEMY_RULES=1 -I$(PS2_ENEMY_CH22_DIR)
@@ -382,7 +426,9 @@ ifneq ($(ROUTE_CH23),0)
 ifneq ($(ROUTE_CH23)$(ROUTE_CH21)$(ROUTE_OVL),111)
 $(error ROUTE_CH23 must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1)
 endif
-MODULES += em3b:ovl em35:ovl st2_0
+# em16 (module 20, r11d: the night village Ganados and the Bella sisters, chainsaw types 3 / 4) joins the em10g group
+# (EM10_SHARED: em16_set.cpp only, its value-init trap fixed); r11d loads em16 + em3b only.
+MODULES += em3b:ovl em35:ovl st2_0 em16
 export RE4DC_LINK_OVERLAY += .ovl_em3b .ovl_em35
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH23=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH23=1
@@ -393,9 +439,9 @@ $(ROUTE_CH23_ROOM_OBJS) $(OBJDIR)/src/game/stage.o $(OBJDIR)/mod/em3b/src/em3b/e
 ROUTE_MOVIE_GAME_CH23 = $(OBJDIR)/mod/st1_3/src/st1/r11f.o $(OBJDIR)/mod/st2_0/src/st2/r200.o
 # Existing export alias needed by r200, without enabling the unrelated world-test module set.
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_WORLD_STAGE_MODULES=1
-ifeq ($(PS2_ENEMY_RULES),1)
+ifeq ($(PS2_CH2_ENEMY),1)
 ifeq ($(wildcard $(PS2_ENEMY_CH23_DIR)/ps2_enemy_ch23_data.inc),)
-$(error ROUTE_CH23 with PS2_ENEMY_RULES needs qualified PS2_ENEMY_CH23_DIR/ps2_enemy_ch23_data.inc)
+$(error PS2_CH2_ENEMY needs qualified PS2_ENEMY_CH23_DIR/ps2_enemy_ch23_data.inc)
 endif
 $(ROUTE_CH23_ROOM_OBJS): GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_RULES=1
 $(OBJDIR)/platform/ps2_enemy_ch23.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH23=1 -DRE4DC_PS2_ENEMY_RULES=1 -I$(PS2_ENEMY_CH23_DIR)
@@ -479,10 +525,15 @@ endif
 # (module 83: r211..r219, lint clean) and em1f (module 109: the St4 Ganados of r406/r40a/r40b/r40d/r410; its one
 # value-init trap fixed by assets.sh --fix) so one more St2 (r219) and St4 (r40a) room can be entered with their
 # source script and enemies. A separate knob: WORLD_STAGE_MODULES=1 images stay as they were.
+# The route recipe (ROUTE_CH21=1) excludes WORLD_STAGE_MODULES=1 (pl11 is a CH21 overlay there); with ROUTE_CH23=1
+# (st2_0 linked as the chapter 2-3 stage module) WORLD_ROOM_MODULES=1 links st2_2 / em1f on top of the route set
+# without WORLD_STAGE_MODULES (no st4_0, no resident pl11), so the castle rooms r211..r219 load in a route image.
 WORLD_ROOM_MODULES ?= 0
 ifneq ($(WORLD_ROOM_MODULES),0)
 ifneq ($(WORLD_ROOM_MODULES)$(WORLD_STAGE_MODULES),11)
-$(error WORLD_ROOM_MODULES must be 0 or 1, and 1 needs WORLD_STAGE_MODULES=1)
+ifneq ($(WORLD_ROOM_MODULES)$(WORLD_STAGE_MODULES)$(ROUTE_CH23),101)
+$(error WORLD_ROOM_MODULES must be 0 or 1, and 1 needs WORLD_STAGE_MODULES=1 or ROUTE_CH23=1)
+endif
 endif
 MODULES += st2_2 em1f
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_ROOM_MODULES=1
@@ -510,17 +561,17 @@ ifeq ($(ROUTE_CH21)$(EM10_SHARED)$(WORLD_STAGE_MODULES),110)
 else ifeq ($(ROUTE_CH21),1)
 $(error ROUTE_CH21=1 needs EM10_SHARED=1 (em11 in the em10g group) and WORLD_STAGE_MODULES=0 (pl11 is a CH21 overlay))
 endif
-EM10_GROUP = $(filter em12 em15 em13 em17 em11 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
+EM10_GROUP = $(filter em12 em15 em13 em17 em11 em16 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(filter 1,$(EM10_SHARED)),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
 MODULE_OBJS =
 MODULES_MK = $(OBJDIR)/modules.mk
 GAME_OBJS = $(patsubst $(ROOT)/%.cpp,$(OBJDIR)/%.o,$(GAME_SRCS))
 CENSUS_OBJS = $(patsubst $(ROOT)/%.cpp,$(OBJDIR)/%.o,$(CENSUS_SRCS))
 PLATFORM_OBJS = $(patsubst %.cpp,$(OBJDIR)/%.o,$(PLATFORM_SRCS))
-ifneq ($(ROUTE_CH22)$(PS2_ENEMY_RULES),11)
+ifneq ($(ROUTE_CH22)$(PS2_CH2_ENEMY),11)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch22.o,$(PLATFORM_OBJS))
 endif
-ifneq ($(ROUTE_CH23)$(PS2_ENEMY_RULES),11)
+ifneq ($(ROUTE_CH23)$(PS2_CH2_ENEMY),11)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch23.o,$(PLATFORM_OBJS))
 endif
 # LAKE_RIPPLES (ROUTE_CH13 block above): native_lake.cpp is built only with the knob on (1 or 2).
@@ -1721,7 +1772,7 @@ HEAP4_PARTS_RESERVE_BYTES ?= 73728
 # Direct-slot consumers reviewed for this module set. Audit any newly linked
 # module before enabling sparse enemy backing; census/reference remain usable.
 # CH23 em3b/em35: guarded default-initialization and sparse scans reviewed; stage st2_0 already audited.
-CH23_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH23)),em3b:ovl em35:ovl)
+CH23_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH23)),em3b:ovl em35:ovl em16)
 # Luis preserves its archive pointers and both manager scans use workAt (CH22 guarded adapter).
 CH22_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH22)),pl14:ovl)
 ifeq ($(ENEMY_DEMAND),1)

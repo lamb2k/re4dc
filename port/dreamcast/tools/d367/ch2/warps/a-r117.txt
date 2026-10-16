@@ -1,0 +1,12 @@
+name ch2-ashley-still-r117
+# lane ch2code16: Ashley still pair (bounded pl11-r11f vs test 15's textures-only pl11), r117 after the rescue,
+# Ashley beside Leon, no input; shots at 30 / 60 s. Same arm, data ch2 vs ch2 with test 15's em/pl11.drs.
+room 0x117
+pos 9800 -1313 7645
+ang 1.5708
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+goto 60 10300 -1313 7645 1.5708 sub
+act 200 back 20

@@ -52,11 +52,12 @@ def loads(log, room):
 
 
 def package(fix, key, cache={}):
+    # pak first, as the runtime (and vq16c-texpak.sh) look textures up: a loose copy shadowed by the pak never loads.
     r = fix['replace']
     loose = r.get('dc/tex/%s/%s.re4tex' % (key[0], key))
-    if loose:
-        return Path(loose).read_bytes(), 'loose'
-    pak = r['dc/tex.pak']
+    pak = r.get('dc/tex.pak')
+    if not pak:
+        return (Path(loose).read_bytes(), 'loose') if loose else (None, 'absent')
     if pak not in cache:
         blob = Path(pak).read_bytes()
         magic, ver, count, ioff, doff = struct.unpack_from('<8s4I', blob, 0)
@@ -68,7 +69,7 @@ def package(fix, key, cache={}):
         cache[pak] = (blob, idx)
     blob, idx = cache[pak]
     if key not in idx:
-        return None, 'absent'
+        return (Path(loose).read_bytes(), 'loose') if loose else (None, 'absent')
     o, n = idx[key]
     return blob[o:o + n], 'pak'
 

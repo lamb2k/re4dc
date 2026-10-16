@@ -88,7 +88,8 @@ def main():
     ap.add_argument('release'); ap.add_argument('--label'); ap.add_argument('--evidence')
     ap.add_argument('--only'); ap.add_argument('--jobs', type=int, default=int(os.environ.get('FP_JOBS', '8')))
     ap.add_argument('--known', default=str(HERE / 'known-issues.txt')); ap.add_argument('--keep-discs', action='store_true')
-    ap.add_argument('--conf', default=str(HERE / 'segments.conf'), help='segment list (crash.conf: the align crash suite)')
+    ap.add_argument('--conf', default='segments.conf',
+                    help='segment conf file(s), comma-separated (crash.conf: the align crash suite; segments-ch22.conf: chapters 2-2/2-3)')
     ap.add_argument('--align', action='store_true', help='every segment on the hwmodel Flycast with the align logger (fp_run.py --align)')
     a = ap.parse_args()
     if not Path(a.conf).exists():
