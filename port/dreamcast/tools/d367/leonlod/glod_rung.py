@@ -51,7 +51,10 @@ def reduce(src, dst, spec, work, ratio, head_pow=1.0):
     tris = role_tris(json.loads(Path(src).read_text()))
     s = dict(spec)
     # the head (role 1: face, ears, hair) keeps more of its triangles than the body: ratio ** head_pow
-    s['targets'] = {'0': {'*': max(4, int(round(tris[0] * ratio)))}, '1': {'*': max(4, int(round(tris[1] * ratio ** head_pow)))}}
+    # a one-role appearance (lane cast16: Mendez's separated legs) has no head role
+    s['targets'] = {'0': {'*': max(4, int(round(tris[0] * ratio)))}}
+    if 1 in tris:
+        s['targets']['1'] = {'*': max(4, int(round(tris[1] * ratio ** head_pow)))}
     sp = work / 'spec.json'
     sp.write_text(json.dumps(s, indent=1))
     r = subprocess.run([sys.executable, str(HERE / 'lod_mesh.py'), str(src), str(dst), '--spec', str(sp), '--report',
