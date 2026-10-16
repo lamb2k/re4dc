@@ -143,6 +143,17 @@ def base_ok():
     t = memo.with_name('base-verified.%d' % os.getpid()); t.write_text(json.dumps({k: BASE_SHA})); os.replace(t, memo)
     return True
 
+def iso_primary_name(name, directory=False):
+    # lane ch2code16 2026-10-16 (Codex's stage-scenario-v2 ISO-name fix, cx_iso_names.py): an ISO9660 primary name keeps
+    # only A-Z, 0-9 and _ and one extension, so a two-extension event file (evd/e113.evd.evq, r113 / r11c / r11f events)
+    # stages; every name the old upper()/'-'->'_' rule accepted maps to the same primary name as before.
+    def clean(part):
+        return ''.join(c if ('A' <= c <= 'Z' or '0' <= c <= '9' or c == '_') else '_' for c in part.upper())
+    if directory or '.' not in name:
+        return clean(name)
+    stem, ext = name.rsplit('.', 1)
+    return clean(stem) + '.' + clean(ext)
+
 def ensure_dir(iso, parent):
     done = ''
     for name in [p for p in parent.split('/') if p]:
@@ -150,7 +161,7 @@ def ensure_dir(iso, parent):
         try: iso.get_record(rr_path=path)
         except Exception:
             base = primary_path(iso.get_record(rr_path=done or '/')).rstrip('/')
-            iso.add_directory(iso_path=base + '/' + name.upper().replace('-', '_'), rr_name=name, joliet_path=path)
+            iso.add_directory(iso_path=base + '/' + iso_primary_name(name, directory=True), rr_name=name, joliet_path=path)
         done = path
 
 def add(iso, files):
@@ -158,7 +169,7 @@ def add(iso, files):
     for path, source in files.items():
         parent, name = path.rsplit('/', 1) if '/' in path else ('', path)
         ensure_dir(iso, parent)
-        ip = primary_path(iso.get_record(rr_path='/' + parent)).rstrip('/') + '/' + name.upper().replace('-', '_') + ';1'
+        ip = primary_path(iso.get_record(rr_path='/' + parent)).rstrip('/') + '/' + iso_primary_name(name) + ';1'
         stream = source.open('rb'); streams.append(stream)
         iso.add_fp(stream, source.stat().st_size, iso_path=ip, rr_name=name, joliet_path='/' + path)
     return streams
