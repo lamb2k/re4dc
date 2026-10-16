@@ -2,6 +2,7 @@
 # Reproduce the bounded CPU fixture only. No game assets/dependency downloads,
 # toolchain installs, emulator launch or recovered-game changes are performed.
 # Usage: build_room_layout_probe.sh PACKAGE_ROOT SH4ZAM_CHECKOUT NEW_OUTPUT_DIR
+#   (SH4ZAM_CHECKOUT: port/dreamcast/game/third_party/sh4zam after git submodule update --init)
 # PACKAGE_ROOT is the four-owner bake/compact output described in D364.
 set -euo pipefail
 if [[ $# != 3 ]]; then
@@ -15,19 +16,18 @@ probe_output=$(realpath -m -- "$3")
 if [[ -e "$probe_output" ]]; then
     echo "refusing to overwrite probe output: $probe_output" >&2; exit 2
 fi
-python3 -c 'import pathlib,json,hashlib,subprocess,sys
-p=pathlib.Path(sys.argv[1]);lock=json.loads(pathlib.Path(sys.argv[2]).read_text())
-assert subprocess.check_output(["git","rev-parse","HEAD"],cwd=p,text=True).strip()==lock["commit"],"SH4ZAM pin mismatch"
-assert not subprocess.check_output(["git","diff","--name-only","HEAD"],cwd=p,text=True).strip(),"SH4ZAM tracked source is dirty"
-for f,h in lock["files_sha256"].items(): assert hashlib.sha256((p/f).read_bytes()).hexdigest()==h,f
-' "$candidate_shz" "$project_port/room/sh4zam.lock.json"
+# SH4ZAM_CHECKOUT is normally the submodule game/third_party/sh4zam. Its pin is the submodule commit recorded in this
+# repository (2026-10-16; the probe was first measured at 0fd3a1e1, R4_ROOM_PACKAGE_V4_CHECKPOINT.md).
+shz_pin=$(git -C "$project_port" rev-parse HEAD:port/dreamcast/game/third_party/sh4zam)
+[[ $(git -C "$candidate_shz" rev-parse HEAD) == "$shz_pin" ]] || { echo "SH4ZAM pin mismatch (want the submodule commit $shz_pin)" >&2; exit 2; }
+[[ -z $(git -C "$candidate_shz" diff --name-only HEAD) ]] || { echo 'SH4ZAM tracked source is dirty' >&2; exit 2; }
 : "${RE4DC_KOS_BASE:?Set RE4DC_KOS_BASE to the existing pinned KOS checkout}"
 source "$project_port/kos-env.sh"
 [[ $($KOS_CC_BASE/bin/sh-elf-g++ -dumpfullversion) == 15.2.0 ]] || { echo 'requires the pinned GCC15.2' >&2; exit 2; }
 [[ $(git -C "$KOS_BASE" rev-parse HEAD) == 804b3195ebd1a06a27cc2b3a5eacf7a2429040a3 ]] || { echo 'KOS pin mismatch' >&2; exit 2; }
 mkdir -p -- "$probe_output"
 cp -- "$candidate_shz/LICENSE" "$probe_output/SH4ZAM-LICENSE.txt"
-cp -- "$project_port/room/sh4zam.lock.json" "$probe_output/sh4zam.lock.json"
+echo "$shz_pin" > "$probe_output/sh4zam-commit.txt"
 flags=(-std=c++20 -O3 -fno-predictive-commoning -flto=1 -ffat-lto-objects
        -fno-strict-aliasing -fno-fast-math -Wall -Wextra
        -DRE4DC_STATIC_SH4ZAM=1 -DRE4DC_NATIVE_RENDER_PROFILE=1

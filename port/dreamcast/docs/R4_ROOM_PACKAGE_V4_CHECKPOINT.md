@@ -101,7 +101,8 @@ No source heap or complete reference+candidate representation is present here.
 ## SH4ZAM pin and decision
 
 Pinned [SH4ZAM 0fd3a1e1fa0809d33198c062632b1494ec2f57df](https://github.com/gyrovorbis/sh4zam/tree/0fd3a1e1fa0809d33198c062632b1494ec2f57df),
-MIT; `room/sh4zam.lock.json` records file hashes. GCC15.2 builds its selected
+MIT; `room/sh4zam.lock.json` recorded its file hashes (removed 2026-10-16: SH4ZAM is now the submodule
+`game/third_party/sh4zam`, pinned by its commit, and `tests/build_room_layout_probe.sh` checks against that). GCC15.2 builds its selected
 headers/assembly without SDK changes. The pinned PVR DMA example uses XMTRX,
 positive reciprocal, near interpolation, aligned copies and KOS vertex buffers.
 Its loader/frame owner/large buffers/compiler flags were not imported.

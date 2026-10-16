@@ -29,6 +29,8 @@ case "$OUT$OBJDIR$ASSETS" in *' '*) echo "build-public: OUT, OBJDIR and ASSETS m
 : "${RE4DC_KOS_BASE:?source the toolchain env first (tools/setup-toolchain.sh writes PREFIX/env.sh)}"
 [ -f "$RE4DC_KOS_BASE/lib/dreamcast/libkallisti.a" ] || { echo "build-public: $RE4DC_KOS_BASE is not a built KOS" >&2; exit 2; }
 [ -f "$RELEASE_KNOBS" ] || { echo "build-public: no knob file $RELEASE_KNOBS" >&2; exit 2; }
+[ -f "$PORT/game/third_party/sh4zam/include/sh4zam/shz_xmtrx.h" ] || { echo "build-public: the SH4ZAM submodule" \
+  "(port/dreamcast/game/third_party/sh4zam) is empty: run git submodule update --init" >&2; exit 2; }
 ASSETS=$(cd "$ASSETS" && pwd)
 rm -rf "$OBJDIR"; mkdir -p "$OUT" "$OBJDIR"
 rm -f "$OUT"/re4dc-game.elf "$OUT"/*.ovl

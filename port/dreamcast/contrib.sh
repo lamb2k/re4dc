@@ -55,8 +55,13 @@ else
 fi
 command -v sh-elf-objcopy >/dev/null || export PATH="${RE4DC_KOS_CC_BASE:-/opt/toolchains/dc/sh-elf}/bin:$PATH"
 command -v sh-elf-objcopy >/dev/null || die "sh-elf-objcopy not found: set RE4DC_KOS_CC_BASE or source the toolchain env.sh"
-# SH4ZAM from kos-ports at the toolchain.lock pin (a no-op when it is already installed at that pin).
-bash "$PORT/tools/install-sh4zam.sh" || die "installing sh4zam from kos-ports failed (tools/install-sh4zam.sh)"
+# SH4ZAM is the git submodule game/third_party/sh4zam, at the commit this checkout pins (a clone without
+# --recurse-submodules leaves it empty).
+if [ ! -f "$PORT/game/third_party/sh4zam/include/sh4zam/shz_xmtrx.h" ]; then
+  echo "== SH4ZAM submodule (git submodule update --init)"
+  git -C "$PORT" submodule update --init game/third_party/sh4zam ||
+    die "git submodule update --init failed (SH4ZAM, port/dreamcast/game/third_party/sh4zam)"
+fi
 
 echo "== release"
 DL=$OUT/download

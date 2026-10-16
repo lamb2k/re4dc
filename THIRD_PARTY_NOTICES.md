@@ -3,9 +3,8 @@
 ## SH4ZAM
 
 The Dreamcast port uses SH4ZAM (https://github.com/gyrovorbis/sh4zam), the SH4 maths library by Falco Girgis and
-SH4ZAM contributors, as a kos-ports dependency: it is installed by kos-ports' sh4zam port (`make install` in
-`kos-ports/sh4zam`) at the commits pinned in `port/dreamcast/toolchain.lock` (`KOS_PORTS_SHA`, `SH4ZAM_SHA`), and is not
-copied into this repository. Thanks to Bruceleeto, who measured the first SH4ZAM gains on his fork and brought it to the port.
+SH4ZAM contributors, as the git submodule `port/dreamcast/game/third_party/sh4zam`, pinned to the upstream commit this
+repository records for it (`git submodule status`); its files are not copied into this repository. Thanks to Bruceleeto, who measured the first SH4ZAM gains on his fork and brought it to the port.
 
     MIT License
 

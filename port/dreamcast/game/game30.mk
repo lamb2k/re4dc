@@ -3276,16 +3276,27 @@ endif
 # SH4_APPROX_RENDER=1 / SH4_APPROX_LOGIC=1 (lane approx 2026-10-15; NOT bit-exact; default 0 = the previous image). The
 # contributor Bruceleeto measured two SH4ZAM approximations as gains on his fork (github.com/Bruceleeto/re4dc
 # dreamcast-port): 8e769a9dd8, MTXConcat as an XMTRX load of b's rows plus one FTRV per row of a, and fe2aed7945,
-# re4dc_sincosf from shz_sincosf (ftrc + FSCA). SH4ZAM (MIT, Falco Girgis and contributors) comes from kos-ports:
-# `make install GIT_CHANGESET=$SH4ZAM_SHA` in $KOS_PORTS/sh4zam (pin in port/dreamcast/toolchain.lock; the contributor
-# kit's tools/setup-toolchain.sh does it) installs $KOS_PORTS/include/sh4zam and $KOS_PORTS/lib/libsh4zam.a. It is no
-# longer vendored (the SH4ZAM author asked for the kos-ports port so fixes reach us). platform/sh4_approx.c holds the kernels.
-SH4ZAM_INC := -I$(KOS_PORTS)/include
-ifneq ($(filter-out 0,$(SH4_APPROX_RENDER) $(SH4_APPROX_LOGIC) $(GAME_SH4ZAM)),)
-ifeq ($(wildcard $(KOS_PORTS)/include/sh4zam/shz_xmtrx.h),)
-$(error SH4ZAM is not installed in KOS_PORTS=$(KOS_PORTS): run make install in $(KOS_PORTS)/sh4zam at SH4ZAM_SHA (toolchain.lock))
+# re4dc_sincosf from shz_sincosf (ftrc + FSCA). platform/sh4_approx.c holds the kernels.
+# SH4ZAM (MIT, Falco Girgis and contributors) is the git submodule game/third_party/sh4zam (github.com/gyrovorbis/sh4zam,
+# lane sh4zam-submodule 2026-10-16, at the SH4ZAM author's request). Its pin is the submodule commit and nothing else
+# (`git submodule status`); bumping it: CONTRIBUTING-PORT.md section 1. The build reads only its headers: every SH4ZAM
+# call the port makes is inline, so no libsh4zam.a is linked, and $(OBJDIR)/sh4zam-inline.ok fails the build if an
+# SH4ZAM object is left with an undefined shz_ symbol (link.sh would otherwise turn it into a stub). `make sh4zam-lib`
+# builds libsh4zam.a from the submodule (kos-cmake, as kos-ports' sh4zam port does) for a change that needs it.
+SH4ZAM_DIR := third_party/sh4zam
+SH4ZAM_INC := -I$(SH4ZAM_DIR)/include
+SH4ZAM_ON := $(if $(filter-out 0,$(SH4_APPROX_RENDER) $(SH4_APPROX_LOGIC) $(GAME_SH4ZAM)),1,0)
+ifeq ($(SH4ZAM_ON),1)
+ifeq ($(wildcard $(SH4ZAM_DIR)/include/sh4zam/shz_xmtrx.h),)
+$(error SH4ZAM submodule port/dreamcast/game/$(SH4ZAM_DIR) is empty: run git submodule update --init (or clone with --recurse-submodules))
 endif
 endif
+.PHONY: sh4zam-lib
+sh4zam-lib:
+	@test -f $(SH4ZAM_DIR)/CMakeLists.txt || { echo "SH4ZAM submodule $(SH4ZAM_DIR) is empty: run git submodule update --init" >&2; exit 1; }
+	kos-cmake -S $(SH4ZAM_DIR) -B $(OBJDIR)/sh4zam
+	cmake --build $(OBJDIR)/sh4zam
+	@echo "libsh4zam.a: $(OBJDIR)/sh4zam/libsh4zam.a"
 #   SH4_APPROX_RENDER=1: the render-only call sites (include/dolphin/mtx.h RE4DC_RENDER_MTXConcat /
 #     RE4DC_RENDER_MTXRotRad: calcWeightMat's skin palette, the commonModelTrans / invis / static-gate modelviews,
 #     EspCommonTrans's sprite matrices, the ID quad, the native actor transaction / Leon pipe / crowd gate modelviews)
@@ -3375,4 +3386,14 @@ $(OBJDIR)/ps_alias_sh4_zam.ld: platform/ps_alias_sh4.ld
 	test $$(grep -c '= _re4dc_zam_' $@) = 12
 $(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 $(SH4ZAM_INC)
 endif
+endif
+# The objects that include SH4ZAM must leave no shz_ symbol undefined: nothing links libsh4zam.a (SH4ZAM_DIR above).
+ifeq ($(SH4ZAM_ON),1)
+SH4ZAM_OBJS := $(if $(filter 1,$(SH4_APPROX_ON)),$(OBJDIR)/platform/sh4_approx.o) \
+  $(if $(filter-out 0,$(GAME_SH4ZAM)),$(OBJDIR)/platform/sh4zam_direct.o) \
+  $(if $(filter-out 0,$(SH4_APPROX_LOGIC))$(if $(filter-out 0,$(GAME_SH4ZAM)),$(filter 0,$(GAME_SH4ZAM_RENDER_ONLY))),$(OBJDIR)/game30_trig.o)
+$(TARGET): $(OBJDIR)/sh4zam-inline.ok
+$(OBJDIR)/sh4zam-inline.ok: $(SH4ZAM_OBJS)
+	@if sh-elf-nm -u $^ | grep ' _shz_' >&2; then echo "$^: undefined SH4ZAM symbols above (out-of-line SH4ZAM calls need libsh4zam.a: make sh4zam-lib, and link it)" >&2; exit 1; fi
+	@touch $@
 endif

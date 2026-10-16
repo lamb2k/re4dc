@@ -13,7 +13,8 @@ lighter PS2 room assets, streamed movies and VMU saves adapt it to Dreamcast har
 
 ## Contributing
 
-One command builds your own program and puts it on the latest test disc: `bash port/dreamcast/contrib.sh`.
+Clone with `git clone --recurse-submodules https://github.com/lamb2k/re4dc.git` (the SH4ZAM maths library is a git
+submodule). One command then builds your own program and puts it on the latest test disc: `bash port/dreamcast/contrib.sh`.
 See [CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md); contributors and their coding agents should then read
 [CLAUDE.md](CLAUDE.md) or [AGENTS.md](AGENTS.md) (section "Outside contributors start here").
 

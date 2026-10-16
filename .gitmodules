@@ -1,0 +1,3 @@
+[submodule "port/dreamcast/game/third_party/sh4zam"]
+	path = port/dreamcast/game/third_party/sh4zam
+	url = https://github.com/gyrovorbis/sh4zam.git

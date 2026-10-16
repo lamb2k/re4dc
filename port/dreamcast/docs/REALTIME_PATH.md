@@ -139,7 +139,7 @@ Split/D349 and 35.293 ms for v3 prelit. This is a storage/CPU trade, not a game
 speedup. SH4ZAM transform/reciprocal did not win; keep D349 math as default.
 Initial qualification is complete; layout/math micro-tuning is not current work.
 Keep its pinned implementation and PVR DMA example review in
-room/sh4zam.lock.json and R4_ROOM_PACKAGE_V4_CHECKPOINT.md.
+R4_ROOM_PACKAGE_V4_CHECKPOINT.md (the pin itself: the submodule game/third_party/sh4zam since 2026-10-16).
 
 After the generic visual bridge has largely disappeared and remaining costs are
 measured, evaluate useful XMTRX/SH4ZAM transforms, actor skinning, positive-depth

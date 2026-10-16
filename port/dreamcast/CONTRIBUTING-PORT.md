@@ -11,7 +11,11 @@ On Ubuntu 24.04 (or WSL) install the host packages once:
     sudo apt install build-essential bison flex texinfo libgmp-dev libmpfr-dev libmpc-dev \
         libelf-dev libjpeg-dev libpng-dev git curl python3 genisoimage
 
-Then, from the repository root:
+Clone with the submodules (SH4ZAM is one, see section 1):
+
+    git clone --recurse-submodules https://github.com/lamb2k/re4dc.git
+
+(in a clone made without it: `git submodule update --init`). Then, from the repository root:
 
     bash port/dreamcast/contrib.sh
 
@@ -47,18 +51,26 @@ The steps below are what `contrib.sh` does, for when you want to run them by han
 ## 1. Toolchain
 
 You need the exact toolchain the maintainers use: KallistiOS commit 804b3195 with the three patches in
-`patches/`, the KOS "stable" SH4 compiler (GCC 15.2.0, binutils 2.45.1, newlib 4.6.0.20260123), and
-kos-ports with its sh4zam port installed (SH4ZAM, the SH4 maths library by Falco Girgis and contributors, MIT).
+`patches/`, and the KOS "stable" SH4 compiler (GCC 15.2.0, binutils 2.45.1, newlib 4.6.0.20260123).
 
-**SH4ZAM.** The game uses SH4ZAM from kos-ports, not a copy in this repository, so upstream fixes and
-new features reach us. `toolchain.lock` pins the kos-ports commit (`KOS_PORTS_SHA`) and the SH4ZAM
-upstream commit (`SH4ZAM_SHA`); `tools/install-sh4zam.sh` checks kos-ports out at its pin and runs
-`make install GIT_CHANGESET=$SH4ZAM_SHA` in `kos-ports/sh4zam`, which installs the headers into
-`kos-ports/include/sh4zam` and `libsh4zam.a` into `kos-ports/lib` (the build reads them through
-`KOS_PORTS`, i.e. `RE4DC_KOS_PORTS`). The setup script and `contrib.sh` run it for you. To update
-SH4ZAM, bump `SH4ZAM_SHA` (and `KOS_PORTS_SHA` if the port itself changed) in `toolchain.lock`, rerun
-`tools/install-sh4zam.sh`, rebuild, and gate the change like any other (render-only users: stills and
-logic STRICT; logic users: decisions-identical).
+**SH4ZAM.** SH4ZAM, the SH4 maths library by Falco Girgis and contributors (MIT,
+https://github.com/gyrovorbis/sh4zam), is a git submodule at `port/dreamcast/game/third_party/sh4zam`. Its pin
+is the submodule commit this repository records, and nothing else (`git submodule status` shows it). The build
+reads its headers from there (every SH4ZAM call the port makes is inline, so no `libsh4zam.a` is linked; `make
+sh4zam-lib` in `game/` builds one from the submodule with cmake if a change needs it). An empty submodule stops
+the build with "run git submodule update --init"; `contrib.sh` runs that for you.
+
+**Bumping SH4ZAM** (to a newer upstream commit):
+
+    cd port/dreamcast/game/third_party/sh4zam            # from the repository root
+    git fetch origin && git checkout <new commit>
+    cd - && git add port/dreamcast/game/third_party/sh4zam
+    git commit -m "SH4ZAM: bump to <new commit>"
+
+Then rebuild and gate it like any other change: the program with every SH4ZAM knob off must stay byte for
+byte the same (knob-off identity); the SH4ZAM knobs' users take the release recipe through STRICT (logic is
+tick for tick the same; render-only users also get a still pair) and, for the logic users (`SH4_APPROX_LOGIC`,
+global `GAME_SH4ZAM`), the decisions check. Others who pull the bump run `git submodule update` once.
 
 **Script.**
 
