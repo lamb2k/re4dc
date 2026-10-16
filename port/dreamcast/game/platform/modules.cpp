@@ -37,24 +37,33 @@ extern "C" {
 // (checked when the module object is linked), so both lists are empty.
 void (*re4dc_module_ctors[])(void) = {0};
 void (*re4dc_module_dtors[])(void) = {0};
+// STAGE_OVL=1 (lane ch3found16 2026-10-16, heap 4): every stage module (st1_0..st1_3, st2_0..st2_3, st4_0) is a
+// room overlay (/cd/dc/<st>.ovl), read into heap 4 when its room links it and freed at the room heap rebuild, so
+// only the current room's stage code is resident. A stopRelData unlink (sub screen, movies) keeps the block, so the
+// relink restarts with the module's state.
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+#define SMODULE_DECL(name)
+#else
+#define SMODULE_DECL(name) MODULE(name)
+#endif
 #define MODULE(name) void name##_prolog(void); void name##_epilog(void); \
     extern char re4dc_mod_##name##_data[], re4dc_mod_##name##_data_end[], re4dc_mod_##name##_bss[], \
         re4dc_mod_##name##_bss_end[], re4dc_mod_##name##_pristine[];
 // WORLD_STAGE_MODULES=1 rows first: tools/assetpipe/wiring.py wire() appends after the default list's last row.
 #if defined(RE4DC_WORLD_STAGE_MODULES) && RE4DC_WORLD_STAGE_MODULES
-MODULE(st2_0)
-MODULE(st4_0)
+SMODULE_DECL(st2_0)
+SMODULE_DECL(st4_0)
 MODULE(pl11)
 #endif
 #if defined(RE4DC_WORLD_ROOM_MODULES) && RE4DC_WORLD_ROOM_MODULES
-MODULE(st2_2)
+SMODULE_DECL(st2_2)
 MODULE(em1f)
 #endif
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
-MODULE(st2_0)
+SMODULE_DECL(st2_0)
 #endif
 #if defined(RE4DC_ROUTE_CH31) && RE4DC_ROUTE_CH31
-MODULE(st2_1)
+SMODULE_DECL(st2_1)
 MODULE(em1a)
 MODULE(em1b)
 MODULE(em14)
@@ -64,15 +73,15 @@ MODULE(em19)
 #endif
 #if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
 MODULE(em1c)
-MODULE(st2_3)
+SMODULE_DECL(st2_3)
 #endif
 #if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && !(defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41)
-MODULE(st2_3)
+SMODULE_DECL(st2_3)
 #endif
-MODULE(st1_0)
-MODULE(st1_1)
-MODULE(st1_2)
-MODULE(st1_3)
+SMODULE_DECL(st1_0)
+SMODULE_DECL(st1_1)
+SMODULE_DECL(st1_2)
+SMODULE_DECL(st1_3)
 MODULE(wep02)
 MODULE(em12)
 MODULE(em23)
@@ -131,6 +140,11 @@ struct Re4dcModule {
     char* pristine;     // .data as linked, captured before the first prolog
 };
 
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+#define SMODULE(id, name) {id, #name, 0, 0, 0, 0, 0, 0, 0}
+#else
+#define SMODULE(id, name) MODULE(id, name)
+#endif
 #define MODULE(id, name) {id, #name, name##_prolog, name##_epilog, re4dc_mod_##name##_data, \
     re4dc_mod_##name##_data_end, re4dc_mod_##name##_bss, re4dc_mod_##name##_bss_end, re4dc_mod_##name##_pristine}
 #if RE4DC_MODULE_OVL
@@ -142,21 +156,21 @@ static Re4dcModule g_modules[] = {
 static const Re4dcModule g_modules[] = {
 #endif
 #if defined(RE4DC_WORLD_STAGE_MODULES) && RE4DC_WORLD_STAGE_MODULES
-    MODULE(75, st2_0), // WORLD_STAGE_MODULES: r200..r203, r207, r208, r210, r222
-    MODULE(96, st4_0), // WORLD_STAGE_MODULES: the St4 rooms
+    SMODULE(75, st2_0), // WORLD_STAGE_MODULES: r200..r203, r207, r208, r210, r222
+    SMODULE(96, st4_0), // WORLD_STAGE_MODULES: the St4 rooms
     MODULE(47, pl11),  // WORLD_STAGE_MODULES: the partner Ashley (cSubAshley; r210 spawns her at entry)
 #endif
 #if defined(RE4DC_WORLD_ROOM_MODULES) && RE4DC_WORLD_ROOM_MODULES
-    MODULE(83, st2_2), // WORLD_ROOM_MODULES: r211..r219
+    SMODULE(83, st2_2), // WORLD_ROOM_MODULES: r211..r219
     MODULE(109, em1f), // WORLD_ROOM_MODULES: the St4 Ganados (r406, r40a, r40b, r40d, r410)
 #endif
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
-    MODULE(75, st2_0), // chapter 2-3 castle approach (r200)
+    SMODULE(75, st2_0), // chapter 2-3 castle approach (r200)
     {63, "em3b", 0, 0, 0, 0, 0, 0, 0}, // vehicles, room overlay
     {61, "em35", 0, 0, 0, 0, 0, 0, 0}, // Mendez, room overlay
 #endif
 #if defined(RE4DC_ROUTE_CH31) && RE4DC_ROUTE_CH31
-    MODULE(82, st2_1), // ROUTE_CH31: castle chapter 3 (r204 r205 r206 r209 r20a..r20f)
+    SMODULE(82, st2_1), // ROUTE_CH31: castle chapter 3 (r204 r205 r206 r209 r20a..r20f)
     MODULE(24, em1a),  // ROUTE_CH31: r208 / r209 Ganados (em10g group)
     MODULE(25, em1b),  // ROUTE_CH31: r201 / r20c Ganados (em10g group)
     MODULE(35, em14),  // ROUTE_CH31: r204 / r20f Ganados (em10g group)
@@ -169,20 +183,20 @@ static const Re4dcModule g_modules[] = {
 #endif
 #if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
     MODULE(81, em1c),  // ROUTE_CH41: r218 Ganados (em10g group)
-    MODULE(97, st2_3), // ROUTE_CH41: castle chapter 4 (r220..r22c; 4-1 ends in r229 / r221 / r22b)
+    SMODULE(97, st2_3), // ROUTE_CH41: castle chapter 4 (r220..r22c; 4-1 ends in r229 / r221 / r22b)
     {31, "em2c", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH41: r221 boss, room overlay
 #endif
 #if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4
 #if !(defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41)
-    MODULE(97, st2_3), // ROUTE_BOSS4: r221 / r228 room code
+    SMODULE(97, st2_3), // ROUTE_BOSS4: r221 / r228 room code
     {31, "em2c", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_BOSS4: r221 Verdugo, room overlay
 #endif
     {79, "em38", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_BOSS4: r228 Salazar + the Queen, room overlay
 #endif
-    MODULE(74, st1_0),
-    MODULE(73, st1_1),
-    MODULE(78, st1_2),
-    MODULE(86, st1_3),
+    SMODULE(74, st1_0),
+    SMODULE(73, st1_1),
+    SMODULE(78, st1_2),
+    SMODULE(86, st1_3),
     MODULE(4, wep02),
     MODULE(18, em12),
     MODULE(7, em23),
@@ -394,6 +408,23 @@ RouteOverlay g_route_ovl[2];  // 0 = pl0f, 1 = em2f
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : 1)
 #define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39)
 #endif
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+RouteOverlay g_stage_ovl[9];
+inline int stageSlot(u32 id)
+{
+    switch (id) {
+    case 74: return 0; case 73: return 1; case 78: return 2; case 86: return 3;   // st1_0 st1_1 st1_2 st1_3
+    case 75: return 4; case 82: return 5; case 83: return 6; case 97: return 7;   // st2_0 st2_1 st2_2 st2_3
+    case 96: return 8;                                                           // st4_0
+    }
+    return -1;
+}
+#define OVL_ID(id) (ROUTE_OVL_ID(id) || stageSlot(id) >= 0)
+#define OVL_REF(id) (stageSlot(id) >= 0 ? g_stage_ovl[stageSlot(id)] : g_route_ovl[ROUTE_OVL_SLOT(id)])
+#else
+#define OVL_ID(id) ROUTE_OVL_ID(id)
+#define OVL_REF(id) g_route_ovl[ROUTE_OVL_SLOT(id)]
+#endif
 u32 ovlHash(const void* p, u32 bytes)
 {
     u32 h = 2166136261U;
@@ -416,7 +447,7 @@ void Mem_free_h(void* p, int heap);
 static void routeOverlayLoad(unsigned index)
 {
     const Re4dcModule& m = g_modules[index];
-    RouteOverlay& o = g_route_ovl[ROUTE_OVL_SLOT(m.id)];
+    RouteOverlay& o = OVL_REF(m.id);
     char path[32];
     snprintf(path, sizeof(path), "/cd/dc/%s.ovl", m.name);
     file_t f = fs_open(path, O_RDONLY);
@@ -479,8 +510,8 @@ static void routeOverlayLoad(unsigned index)
 static void routeOverlayRelease(unsigned index, const char* why)
 {
     Re4dcModule& m = g_modules[index];
-    if (!ROUTE_OVL_ID(m.id)) return;
-    RouteOverlay& o = g_route_ovl[ROUTE_OVL_SLOT(m.id)];
+    if (!OVL_ID(m.id)) return;
+    RouteOverlay& o = OVL_REF(m.id);
     if (!o.block) return;
     u8* image = o.block + sizeof(RouteOverlayHeader);
     for (u32 i = 0; i + 2 <= o.image_bytes; i += 2) *reinterpret_cast<unsigned short*>(image + i) = 0xC3FF;
@@ -554,7 +585,7 @@ extern "C" int re4dc_module_bind(void* header)
         return 0;
     }
 #if RE4DC_ROUTE_OVL
-    if (m->prolog == 0 && ROUTE_OVL_ID(m->id)) {
+    if (m->prolog == 0 && OVL_ID(m->id)) {
         routeOverlayLoad(unsigned(index));
     }
 #endif
@@ -633,6 +664,9 @@ extern "C" int re4dc_module_unbind(void* header)
     ++s.unlinks;
     h[1] = kUnlinkedMark;
 #if RE4DC_ROUTE_OVL
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+    if (stageSlot(h[0]) < 0)  // a stage overlay stays loaded until the room heap rebuild (stopRelData / restartRelData)
+#endif
     routeOverlayRelease(unsigned(index), "unlink");
 #endif
     return 1;

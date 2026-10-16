@@ -1826,6 +1826,26 @@ ENEMY_DEMAND ?= 0
 HEAP4_PARTS_RESERVE ?= 0
 HEAP4_PARTS_RESERVE_ROOM ?= 0x100
 HEAP4_PARTS_RESERVE_BYTES ?= 73728
+# STAGE_OVL=1 (lane ch3found16 2026-10-16, default 0: no effect; needs ROUTE_OVL via ROUTE_CH13=1): every linked stage module
+#   (st1_0..st1_3, st2_0..st2_3, st4_0) becomes a room overlay (/cd/dc/<st>.ovl, platform/modules.cpp stage slots): read into
+#   heap 4 when its room links the room REL, kept over stopRelData / restartRelData, freed at the room heap rebuild. Only the
+#   current room's stage code is resident; the others' bytes leave the image (heap 4 pays the image).
+STAGE_OVL ?= 0
+ifneq ($(STAGE_OVL),0)
+ifneq ($(STAGE_OVL),1)
+$(error STAGE_OVL must be 0 or 1)
+endif
+STAGE_OVL_NAMES := $(sort $(filter st1_0 st1_1 st1_2 st1_3 st2_0 st2_1 st2_2 st2_3 st4_0,$(MODULES)))
+MODULES := $(filter-out $(STAGE_OVL_NAMES),$(MODULES)) $(addsuffix :ovl,$(STAGE_OVL_NAMES))
+export RE4DC_LINK_OVERLAY += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
+export RE4DC_OVL_HELPERS_SAFE += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_STAGE_OVL=1
+# The st1_1 / st1_3 room code keeps its debug-window menu (cDbgWindow, src/Tools/db_toolbase.cpp: only the Sscrn module
+# links a private copy); as a whole kept overlay it now references it, so the image gets the one translation unit.
+GAME_SRCS += $(ROOT)/src/Tools/db_toolbase.cpp
+$(TARGET): $(OBJDIR)/src/Tools/db_toolbase.o
+endif
+STAGE_OVL_AUDITED_MODULES = $(if $(filter 1,$(STAGE_OVL)),st1_0:ovl st1_1:ovl st1_2:ovl st1_3:ovl st2_0:ovl st2_1:ovl st2_2:ovl st2_3:ovl st4_0:ovl)
 # Direct-slot consumers reviewed for this module set. Audit any newly linked
 # module before enabling sparse enemy backing; census/reference remain usable.
 # CH23 em3b/em35: guarded default-initialization and sparse scans reviewed; stage st2_0 already audited.
@@ -1841,7 +1861,7 @@ CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3
 CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
 BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif
