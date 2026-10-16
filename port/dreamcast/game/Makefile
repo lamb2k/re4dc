@@ -374,7 +374,7 @@ ifneq ($(STRESS_SADDLER),0)
 ifneq ($(STRESS_SADDLER)$(ROUTE_CH21)$(ROUTE_OVL)$(DBG_WARP),1111)
 $(error STRESS_SADDLER must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1 DBG_WARP=1)
 endif
-ifneq ($(ROUTE_CH22)$(ROUTE_CH23),00)
+ifneq ($(filter 1,$(ROUTE_CH22) $(ROUTE_CH23)),)
 $(error STRESS_SADDLER=1 is for the test 15 recipe (ROUTE_CH21 only): its overlay slot follows the five CH21 slots)
 endif
 MODULES += em31:ovl
