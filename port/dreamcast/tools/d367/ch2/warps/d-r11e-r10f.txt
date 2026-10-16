@@ -1,10 +1,12 @@
 name ch2-door-r11e-r10f
 # lane ch2code16: door r11e -> r10f -> back (arrival points from stage_route.py; Ashley beside: goto sub)
+# the area 1 door is locked until door_unlock[0] 0x00080000 (r11e.cpp R11eInit: the key use event; 10-16 resume)
 room 0x11e
 pos 63262 -26 28662
 ang -1.1310
 find 0x00100000
 status 3 0x04000000
+unlock 0 0x00080000
 inv default
 god
 goto 60 63804 -26 28406 2.0106 sub

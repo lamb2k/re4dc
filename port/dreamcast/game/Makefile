@@ -326,13 +326,16 @@ MODULES += pl11:ovl em11
 # AICA_STR_ENT_MAX=48 ship together. 32 bytes of .bss per entry (48: +512 B). The 2 KB header holds up to 63.
 AICA_STR_ENT_MAX ?= 32
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_STR_ENT_MAX=$(AICA_STR_ENT_MAX)
-# AICA_BGM0_SPILL (lane ch2code16, 10-16; default 0 = image unchanged): a prebuilt room-arena bank that does not fit
-# the arena goes to the unused tail of the BGM0 slot (the room's bio4midi bank is often far smaller than the 264,576 B
-# slot: r11c's #6 uses 48,000), instead of staying silent. r11c's Luis (pl14, 55,324 B at 8 kHz) is 8.8 KB over the
-# arena. A later BGM0 load that would overlap the spilled bank silences it first (logged). Chapter 2 recipe only.
-AICA_BGM0_SPILL ?= 0
-ifeq ($(AICA_BGM0_SPILL),1)
-$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_BGM0_SPILL=1
+# AICA_SPILL (lane ch2code16, 10-16; default 0 = image unchanged): banks the frozen layout has no room for use space
+# it leaves idle, instead of staying silent. (1) A prebuilt room-arena bank that does not fit the arena goes to the
+# unused tail of the BGM0 slot (the room's bio4midi bank is often far smaller than the 264,576 B slot: r11c's #6 uses
+# 48,000; r11c's Luis, pl14 55,324 B at 8 kHz, is 8.8 KB over the arena). A later BGM0 load that would overlap it
+# silences it first (logged). (2) A runtime-converted BGM1 bank with no free AICA RAM (the layout has no BGM1 slot:
+# r11f's Mendez music, 139,420 B at 8 kHz) goes to the top of the room arena, above the room's banks; a room bank that
+# later needs that space drops it (logged), the next room load frees it. Chapter 2 recipe only.
+AICA_SPILL ?= 0
+ifeq ($(AICA_SPILL),1)
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_SPILL=1
 endif
 export RE4DC_LINK_OVERLAY += .ovl_pl11
 $(OBJDIR)/mod/st1_3/src/st1/r117.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1

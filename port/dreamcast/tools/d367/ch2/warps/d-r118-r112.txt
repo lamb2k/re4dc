@@ -1,20 +1,26 @@
 name ch2-door-r118-r112
-# lane ch2code16: door r118 -> r112 -> back (arrival points from stage_route.py; Ashley beside: goto sub)
-# forward door point = fullplay/segments ch22a / ch22b known-good goto (10-16 resume: the stage_route arrival+step missed the walk-in trigger)
-room 0x118
-pos -44397 157 -14419
-ang 2.1460
+# lane ch2code16: door r118 -> r112 -> back. A direct warp into r118 with Ashley found stalls (no room frames, work
+# backing grows, Em[3h] invalid parts: 10-16 g2), so this starts as fullplay ch22a does: r117 window door 0b -> r118,
+# door 3 (walk-in) -> r112, then r112's door back (Ashley beside: goto sub).
+room 0x117
+pos 9800 -1313 7645
+ang 1.5708
 find 0x00100000
 status 3 0x04000000
 inv default
 god
-goto 60 -45700 -9 -13265 sub
+goto 60 10900 -1313 7645 1.5708 sub
 act 120 a 4
 act 200 a 4
 act 280 a 4
 act 360 a 4
-act 460 fwd 30
 entry 2
+goto 240 -45700 -9 -13265 sub
+act 300 a 4
+act 380 a 4
+act 460 a 4
+act 540 a 4
+entry 3
 goto 240 -4774 -8474 52519 0.6826 sub
 act 300 a 4
 act 380 a 4

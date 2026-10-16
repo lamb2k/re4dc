@@ -5,7 +5,8 @@ ch2 = what the 10-14 route fixture (lane ch22-1014 fix/route-v7.json: the test 1
 Codex's first-pass fixtures and the ch22 lane's AICA banks / streams) adds over the test 10 package, layered on test 15's data
 (T15_DATA), with these resolutions (CH2-CODE-COMPLETE-20261016.md "Data set ch2"):
   - files test 15 already replaces keep test 15's bytes: the r117 world (blackps2 relight), em17 (PS2 accessories acc12),
-    em2a (prep14), pl11 (the PS2 Ashley textures-only archive, ashley13), texture 60079405-d856504e (cast15 r118 pool);
+    em2a (prep14), texture 60079405-d856504e (cast15 r118 pool); except pl11: route-v7's bounded Ashley (PREFER_V7,
+    heap 4 in r118 after the rescue; same PS2 texture keys);
   - bgm/aica_str.dat = aica_banks.py --streams ch2 (OUTDIR/str-ch2, built separately; game AICA_STR_ENT_MAX >= 53);
   - r11d / r11e: the room archives compacted + released against their converted room package (prep-room.sh; the GC GX
     payload leaves the resident archive: r11d 4,276,096 -> 1,219,488 B, r11e 4,011,360 -> 1,078,976 B of heap 4), the
@@ -27,7 +28,14 @@ T10 = '/root/probe/lanes-20261014/t10s/fix/pkg-t10stP.json'
 LANE = '/root/probe/lanes-20261016/ch2'
 CX = '/root/probe/codex-cx-fixtures-20261013/output'
 KEEP_T15 = {'dc/native/r117/ps2-world.ids', 'dc/native/r117/ps2-world.r4pw', 'dc/native/r117/ps2-world.re4mesh',
-            'dc/tex/6/60079405-d856504e.re4tex', 'em/em17.drs', 'em/em2a.drs', 'em/pl11.drs'}
+            'dc/tex/6/60079405-d856504e.re4tex', 'em/em17.drs', 'em/em2a.drs'}
+# Files where route-v7's bytes replace test 15's: pl11 = Codex's bounded 'pl11-r11f' Ashley (prepare_enemy_motions.py
+# --bounded-profile, motions cold, top-level textures external): heap 4 384,064 B body vs test 15's textures-only
+# archive (828,384 B resident). With test 15's, r118 after the rescue (em17 + em3b + em22 + Ashley) ran heap 4 out
+# ("ModelInit() Parts allocate was failed", "cSubChar::modelSet() failed", heap4 free 352 B: run g4, 10-16); with the
+# bounded one it keeps 334,720 B free (g5). Both resolve Ashley's textures to the same PS2 keys (2353f21e, 2c9c252a,
+# 56d70169, bc5bb46e: test 15's dc/tex files, loaded in both runs), so the PS2 Ashley look stays. MOTION_BOUNDED_R11F.
+PREFER_V7 = {'em/pl11.drs'}
 
 
 def sha(p):
@@ -48,7 +56,7 @@ def main():
             continue
         if k == 'bgm/aica_str.dat':
             continue
-        if k in rb and rb[k] != ra.get(k):
+        if k in rb and rb[k] != ra.get(k) and k not in PREFER_V7:
             if sha(rb[k]) == sha(v):
                 continue
             raise SystemExit('unresolved conflict with test 15 data: %s (t15 %s, v7 %s)' % (k, rb[k], v))
@@ -100,7 +108,7 @@ def main():
             if not d.exists() or sha(str(d)) != sha(v):
                 shutil.copyfile(v, d)
             rep[k] = str(d)
-    prov = {'v7': V7, 't10': T10, 'keep_t15': sorted(KEEP_T15), 'notes': notes,
+    prov = {'v7': V7, 't10': T10, 'keep_t15': sorted(KEEP_T15), 'prefer_v7': sorted(PREFER_V7), 'notes': notes,
             'count': len(rep), 'bytes': sum(os.path.getsize(v) for v in rep.values())}
     json.dump({'replace': rep, 'unremove': unremove, 'provenance': prov}, open(out / 'ch2-data.json', 'w'), indent=1, sort_keys=True)
     print('ch2 data', len(rep), 'files', prov['bytes'], 'bytes', len(unremove), 'unremoved', notes)
