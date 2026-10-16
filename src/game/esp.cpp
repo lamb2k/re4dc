@@ -233,8 +233,7 @@ extern "C" void re4dc_log(const char* fmt, ...);
 static u32 espd_room = 0xFFFFFFFFu, espd_n, espd_peak, espd_logged, espd_steal, espd_refuse;
 static void espd_report(const char* why)
 {
-    re4dc_log("esp pool: %s room %03x slots %u peak %u steals %u refused %u
-", why, (unsigned) espd_room,
+    re4dc_log("esp pool: %s room %03x slots %u peak %u steals %u refused %u\n", why, (unsigned) espd_room,
               (unsigned) espd_n, (unsigned) espd_peak, (unsigned) espd_steal, (unsigned) espd_refuse);
 }
 #define ESPD_STEAL() (++espd_steal)
