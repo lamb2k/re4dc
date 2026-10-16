@@ -244,6 +244,9 @@ extern "C" int re4dc_coarse_actor_source(const void* info,Re4dcActorSource* out)
 }
 #if RE4DC_NATIVE_MODEL_REGISTRY
 extern "C" int re4dc_registry_texture_key(const Re4dcUiImage*,unsigned*,unsigned*);  // coarse_actor_owner_registry.inc
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+extern "C" unsigned re4dc_nmr_lod_pick;  // dbgwarp_bridge.cpp `saddler` line: 0 full, k = the k-th gameplay level
+#endif
 #endif
 extern "C" int re4dc_coarse_actor_texture_key(const Re4dcUiImage* i,unsigned* c,unsigned* f) {
 #if RE4DC_ACTOR_TRANSACTION
