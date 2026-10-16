@@ -94,6 +94,8 @@ def esl_list_numbers(room):
         if room in (0x200, 0x201, 0x202, 0x203, 0x204, 0x207, 0x208):
             return late + [(2, "else, !(Scenario_flg[0] & 0x40000)"), (3, "else")]
         return late + [(3, "else")]
+    if stage == 3:
+        return [(6 if room <= 0x314 else 7, "always")]
     if stage == 4:
         if room > 0x404:
             return [(8, "always")]

@@ -28,6 +28,9 @@ MAX_CLIP=32768
 # em11 (r117's later-visit Ganados, ESL 0x50/0x51, chapter 2-1; route lane r117 2026-10-10): em11/em10.cpp,
 # em10_tmpl.cpp, em11_set.cpp, the same three units; its 5.8 MB GC archive did not fit r117's heap 4 (largest cell
 # 3.1 MB: DVD: Memory allocate failed, readEmData em/em11.drs).
+# em1d / em1e / em1f (ROUTE_CH3, the island soldiers and Ganados of r300 / r301 r303 r305; stage 3 lane 2026-10-14): em1d/em10.cpp,
+# em10_tmpl.cpp, em1d_set.cpp (em1e the same), the em11 contract. Their GC archives (4,634,272 / 4,502,752 B bodies)
+# did not fit r300's heap 4 on the disc-2 image (4,042,976 B free: DVD: Memory allocate failed, Em set failed Id=1d).
 # em16 (r11d's chapter 2-3 night-village Ganados and the Bella sisters, chainsaw types 3 / 4; lane ch2code16 2026-10-16):
 # em16/em10.cpp, em10_tmpl.cpp, em16_set.cpp, the same three units (ROUTE_CH23 links it in the em10g group); its 4,246,528 B
 # GC body never fit r11d's heap 4 next to the room, Ashley and em3b (CH22-ROUTE-20261014 blocker 1).
@@ -36,7 +39,8 @@ MAX_CLIP=32768
 # in r208 / r201 / r204 next to the room and its PS2 world (cx-r20x-t12-01: readEmData error).
 # em19 (r20d Ganados, ROUTE_CH32; same em10.cpp / em10_tmpl.cpp / em19_set.cpp units, 4,293,760 B GC body).
 # em1c (r218 Ganados, ROUTE_CH41; em10.cpp / em10_tmpl.cpp / em1c_set.cpp, 4,988,480 B GC body).
-GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em16.drs','em1a.drs','em1b.drs','em14.drs','em19.drs','em1c.drs')
+GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em16.drs','em1a.drs','em1b.drs','em14.drs','em19.drs','em1c.drs',
+        'em1d.drs','em1e.drs','em1f.drs')
 SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.drs','em18.drs','pl11.drs','pl0f.drs')
 # em2a / em24 / em27 / em29 / em2e (the chapter 1 traps, snake, fish, bat and wall crawler; lane ps2cast 2026-10-15,
 # registry room packages of the released chapter 1-1..2-1 rooms): textures only (--keep-motion-resident). Each module's
@@ -100,7 +104,7 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 # SetRock; its EFF slot keeps its own textures. em2b is a ROUTE_OVL room overlay, so its static REL is stripped
 # with the knob-conditional module set (ROUTE_OVL_MODULES). The room's heap 4: r119 frees 3,854,656 B in two
 # cells, the largest 2,770,912 B, under the 4,689,664 B rel-stripped body.
-ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11')
+ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11','em1d','em1e','em1f')
 # pl11 (Ashley; PS2_ASHLEY discs, lane ps2cast 2026-10-14): the route overlay dc/pl11.ovl carries her module, so her
 # archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against

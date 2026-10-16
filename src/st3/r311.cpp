@@ -147,7 +147,13 @@ static void r311_checkEmMoveCtrl()
         SceSleep(15);
         n = 0;
         for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+            // Unbacked sparse enemy slots read as absent (as em21's scans).
+            cEm* p = (cEm*) EmMgr.workAt(i);
+            if (!p) continue;
+#else
             cEm* p = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
             if (p->id >= 0x10 && p->id <= 0x20 && (p->be_flag & 0x201) == 1) {
                 em.setPtr(p, 1);
@@ -293,6 +299,14 @@ static void r311_moveEmDoor(int open)
     }
 }
 
+#if !defined(RE4DC_PS2_ENEMY_ST3)
+#define RE4DC_PS2_ENEMY_ST3 0
+#endif
+// PS2_ENEMY_ST3 bit 4 (stage 3 lane, PS2-ENEMY-CODE-DIFF-20261015 Follow-up B): the PS2 r311 skip path
+// (execEmAppear_end, st3_1 0x11438, its only caller is the cutscene-skip branch) setEm + destroy()s Zealots
+// 0xF0..0xF2. Default 0: GameCube code.
+#define R311_PS2_SKIP_DESPAWN (RE4DC_PS2_ENEMY_ST3 & 0x10)
+
 // The wave was skipped: every wave enemy is put at the goal point right away.
 void r311_execEmAppear_end()
 {
@@ -309,6 +323,18 @@ void r311_execEmAppear_end()
     if (r311_work->doorOpen == 1) {
         SceExec(0x12, (TaskFunc) r311_moveEmDoor, 0, 0, 2, 0);
     }
+#if R311_PS2_SKIP_DESPAWN
+    {
+        // PS2 (st3_1 0x114f4): the skipped wave also removes the three start-alive Zealots 0xF0..0xF2.
+        cEmWrap z;
+
+        for (i = 0xF0; i <= 0xF2; i++) {
+            z.setEm(i, -1, 0, 1, 1);
+            OSReport("[r311-ps2] skip despawn id=%x\n", i);
+            z.destroy();
+        }
+    }
+#endif
     SceAtGetCenterPos(&center, 5);
     const u8* list = r311_emList;
     for (i = 0; i < 7; i++) {

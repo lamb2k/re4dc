@@ -5486,8 +5486,16 @@ namespace { void ps2_free(){re4dc_ps2_mesh_retire();} }
 namespace { const std::uint32_t kPs2WorldRoomBits[6][8]={
 #include "include/ps2_world_rooms.inc"
 }; }
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+// ROUTE_CH3 (stage-3 first pass): the island rooms whose PS2 world package passed the lane's conversion and
+// runtime_open validation (/root/probe/lanes-20261014/st3/st3-handback-state.json; all but r313 / r314 / r334).
+namespace { const std::uint32_t kPs2WorldSt3Bits[8]={0x3de7fffbU,0x000f03ffU,0x00000000U,0x00000000U,0x00000000U,0x00000000U,0x00000000U,0x00000000U}; }
+#endif
 extern "C" int re4dc_ps2_world_room(unsigned room){
     const unsigned stage=room>>8,index=room&255U;
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+    if(stage==3)return (kPs2WorldSt3Bits[index>>5]>>(index&31U))&1U;
+#endif
     return stage<6 && ((kPs2WorldRoomBits[stage][index>>5]>>(index&31U))&1U);
 }
 #else
