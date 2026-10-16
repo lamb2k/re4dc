@@ -6,11 +6,18 @@
 - **Resident room textures for all of chapter 1** (lane/resident16): r100, r106, then 1-2, 1-3 and r119, with VQ where a room doesn't fit. This is the VRAM / disc-read bug path. It touches the t11-fix.py data sets and the resident lists.
 - **Disc process** (lane/disc16): one standard GDI checked against mkdcdisc's layout, disc_lint, a weak-GDEMU-clone timing profile in the console-like Flycast, and a compatibility doc.
 
-Your lane, unchanged from the handover: the CPU savings plan. Please build these in parallel, not one after another; I want all of them to land:
-- village world L2 (lane/worldvert 713f9319: about 17.7k -> 12.6k vertices at the cross in Flycast). Send me the L2-fixed still sheet (worldvert-20261015/WORLDVERT-R101-L2FIX.png or a fresh one) before it goes into a build;
-- scenery batching (fewer, bigger pieces, merged offline in the world packages; start from wv2's 256-vertex meshlets, 804 pieces vs 1,335, which sent more vertices to the TA: 15.5k vs 12.6k);
-- the character draw plan and the fused character vertex kernel.
-Stop estimating savings before building: build, then one measurement each (ms/frame vs the previous stack, STRICT identical, KOS squeeze), then one benchmark disc with everything so I can measure the cross on the console. Base on `t15/int`. The handover docs are on branch `handover/chatgpt-20261015`.
+Your lane: the CPU savings plan. I've read CODEX-CH1-RENDER-HANDOVER-20261016.md and CODEX-PREPARED-DRAW-EXPERIMENTS-20261016.md. Thanks for the r101 POC (ACTOR_PLAN=1 WORLD_VERT=1 WORLD_VERT_LEVEL=5, cxfmc1rW).
+
+- **Console test:** your four discs go onto the user's SD card as slots 163 CH1 Bench B0, 164 CH1 Bench B1, 165 CH1 Play Baseline and 166 CH1 Play Candidate. The user will run B0, B1, B1, B0 plus the play pair, and send you the result screens.
+- **Don't stop while that runs.** I want village L2, scenery batching and the character draw plan all to land, worked on in parallel:
+  1. Explain why the POC saving fell from -4.50 ms (older image) to -1.27 ms (MODELLED). Is the spatial batching still in the candidate? What did each part give when measured on top of the previous one (actor plan, L5 world, batching)?
+  2. Batching was "conservative". Push it further: merge more pieces per spatial cell, offline in the world packages, balancing the number of pieces against the extra vertices. Show the curve.
+  3. Confirm that WORLD_VERT_LEVEL=5 is the L2-fixed look the user approved. Send the user the still sheet (worldvert-20261015/WORLDVERT-R101-L2FIX.png or a fresh one).
+  4. Start the next heavy chapter 1 rooms (WORLD-BUDGET-BY-ROOM-20261015.md) through the same world pipeline now. Don't wait for the r101 console result. Each room gets its own STRICT, memory and look evidence.
+- **Measuring:** build first, then one measurement each (ms/frame on top of the previous stack, STRICT identical, KOS squeeze). Then one benchmark disc with everything.
+- **Your s30 cliff-movie fix:** I'm landing MOVIE_WORLD_ARENA(_S30), plus the guard-ordering fix, into test 15 on lane/s30movie16, credited to you. I'm not taking the render knobs. Please don't land it separately.
+
+Base on `t15/int`. The handover docs are on branch `handover/chatgpt-20261015`.
 
 ## Major gains the plan doesn't target yet
 Labels: CONSOLE = measured on the user's Dreamcast; MODELLED = hw model; EST = estimate. All figures are for the r101 cross unless stated.
