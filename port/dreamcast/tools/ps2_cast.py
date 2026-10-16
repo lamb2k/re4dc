@@ -81,6 +81,14 @@ PRESETS = {
     # type 0 (TYPE_A) modelInit(ARC 5, ARC 7) + ModInfoMgr.create(ARC 6, ARC 7): body + head, one 64-bone skeleton
     'gigante-em2b-00': dict(archive='em2b', sections=[(5, 'body'), (6, 'head')], tpl=7, rooms=['r119'], types=[0],
                             category='boss', model_id=0x2b, shift=2),
+    # lane cast16 (2026-10-16): em2b's other model types (em2b.cpp em2bModelInit): TYPE_B 1 = BIN 8 + head 9, TPL 0xA;
+    # TYPE_C 2 = BIN 0xB + head 0xC, TPL 0xD (the r11e giant, chapter 2-3 fork B); type 3 = BIN 0xE + head 0xF, TPL 0x10.
+    'gigante-em2b-01': dict(archive='em2b', sections=[(8, 'body'), (9, 'head')], tpl=0xa, rooms=[], types=[1],
+                            category='boss', model_id=0x2b, shift=2),
+    'gigante-em2b-02': dict(archive='em2b', sections=[(0xb, 'body'), (0xc, 'head')], tpl=0xd, rooms=['r11e'], types=[2],
+                            category='boss', model_id=0x2b, shift=2),
+    'gigante-em2b-03': dict(archive='em2b', sections=[(0xe, 'body'), (0xf, 'head')], tpl=0x10, rooms=[], types=[3],
+                            category='boss', model_id=0x2b, shift=2),
     # src/em2f em2f.cpp type 0 (the r10b Del Lago fight): modelInit(ARC 4, ARC 5); type 1 (ARC 6 / 7) is the same
     # model on GC and PS2 (no geometry change), so only type 0 converts (lane ps2cast-2)
     'dellago-em2f-00': dict(archive='em2f', sections=[(4, 'body')], tpl=5, rooms=['r10b'], types=[0],
@@ -195,6 +203,16 @@ PRESETS = {
         (0x1d3, 'whood', 0x1d4), (0x1d3, 'whood-b', 0x1d5)],
         tpl=0x1ce, rooms=['r108', 'r113', 'r118'], types=[12], category='registry', model_id=0x17, lit=True,
         subset_bones=True),
+    # NATIVE_MODEL_REGISTRY_POOL (lane cast16 2026-10-16): Em16Set type 11 (r11d). Its body / head / hands / TPL equal
+    # em15 type 11 (native_appearance_alias.py: 13 entries identical), but its em10SackSet sack (mot[21] 0x1D1 with TPL
+    # mot[22] 0x1D2) and whood (mot[23] 0x1D3 with TPL mot[24] 0x1D4 / mot[25] 0x1D5) are em16's own entries, so the
+    # alias table holds it out ('accessory-differs') and the actor drew GC. As a pool it binds every section it shows.
+    'ganado-em16-0bp': dict(archive='em16', sections=[
+        (0x1c9, 'body'), (0x1cb, 'head'), (0x1cc, 'head-hit'),
+        (0x1c0, 'right-hand'), (0x1c1, 'right-open'), (0x1c2, 'right-point'), (0x1c3, 'right-grip'), (0x1c4, 'right-scythe'),
+        (0x1c5, 'left-hand'), (0x1c6, 'left-open'), (0x1c7, 'left-point'), (0x1c8, 'left-grip'),
+        (0x1d1, 'sack', 0x1d2), (0x1d3, 'whood', 0x1d4), (0x1d3, 'whood-b', 0x1d5)],
+        tpl=0x1ca, rooms=['r11d'], types=[11], category='registry', model_id=0x16, lit=True, subset_bones=True),
     # NATIVE_MODEL_REGISTRY_POOL (lane ps2cast 2026-10-15): the type 7 zealot's whole section pool, so every spawn's
     # source infos bind (em10ModelInit order: body, em10HeadSet head mot[2] / hit heads mot[3] / mot[4] with TPL mot[5];
     # em10HandSet right mot[6..9] and left mot[11..15], TPL mot[0]; em10SetAccesory hoods mot[26] / mot[27] with TPL
@@ -210,6 +228,40 @@ PRESETS = {
                                  0x213: 0x214, 0x215: 0x216, 0x217: 0x218},
         rooms=['r117'], types=[7], category='registry', model_id=0x11, lit=True, subset_bones=True),
 }
+
+
+# lane cast16 (2026-10-16): the castle Zealot modules (em14 / em19 / em1a / em1b: em10.cpp + <em>_set.cpp) use em11's
+# type 7 section layout (the same ARC numbers, own archives). Types 8 / 9 change the TPL / body / head rows, type 10
+# (em1b) is bodyless-head (mot[2..5] = 0). Each is a NATIVE_MODEL_REGISTRY_POOL preset like zealot-em11-07p.
+def _zealot_pool(archive, typ, rooms):
+    base = PRESETS['zealot-em11-07p']
+    body, tpl, head, htpl = {7: (0x1fc, 0x1fd, 0x1fe, 0x201), 8: (0x1fc, 0x21a, 0x21b, 0x21c),
+                             9: (0x21d, 0x21e, 0x21f, 0x201), 10: (0x221, 0x222, None, None)}[typ]
+    secs = [(body, 'body')]
+    if head is not None:
+        secs += [(head, 'head'), (0x1ff, 'head-hit'), (0x200, 'head-hit2')]
+    secs += [x for x in base['sections'] if x[1] not in ('body', 'head', 'head-hit', 'head-hit2')]
+    st = {k: v for k, v in base['section_tpls'].items() if k not in (0x1fe, 0x1ff, 0x200)}
+    if head is not None:
+        st.update({head: htpl, 0x1ff: htpl, 0x200: htpl})
+    return dict(archive=archive, sections=secs, tpl=tpl, section_tpls=st, rooms=rooms, types=[typ],
+                category='registry', model_id=int(archive[2:], 16), lit=True, subset_bones=True)
+
+
+for _a, _types, _rooms in (('em14', (7, 8, 9), ['r20f']), ('em19', (7, 8, 9), ['r20d']),
+                           ('em1a', (7, 8, 9), ['r209']), ('em1b', (7, 8, 10), ['r201', 'r20c'])):
+    for _t in _types:
+        PRESETS[f'zealot-{_a}-{_t:02x}p'] = _zealot_pool(_a, _t, _rooms)
+# Em14Set type 6 (r20f; not a Ganado: Ganado stays 0): body mot[1] 0x1E7 / TPL mot[0] 0x1E8, head mot[2..4] 0x1E9 with
+# TPL mot[5] 0x1EA, mot[16] 0x1F0 with mot[17] 0x1F1, right hands mot[6..9] 0x1F4..0x1F7, left mot[11..14] 0x1F8..0x1FB,
+# mot[18..20] 0x1ED..0x1EF.
+# em10.cpp: the robe ModInfoMgr.create(mot[16], mot[17]); the second info create(mot[19] or mot[18], mot[17]); the
+# third create(mot[20], mot[0]).
+PRESETS['zealot-em14-06p'] = dict(archive='em14', sections=[
+    (0x1e7, 'body'), (0x1e9, 'head'), (0x1f0, 'extra'),
+    (0x1f4, 'right-hand'), (0x1f8, 'left-hand'), (0x1ed, 'acc0'), (0x1ee, 'acc1'), (0x1ef, 'acc2')],
+    tpl=0x1e8, section_tpls={0x1e9: 0x1ea, 0x1f0: 0x1f1, 0x1ed: 0x1f1, 0x1ee: 0x1f1}, rooms=['r20f'], types=[6], category='registry',
+    model_id=0x14, lit=True, subset_bones=True)
 
 
 def section_specs(spec):
