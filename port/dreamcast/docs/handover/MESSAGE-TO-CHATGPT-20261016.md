@@ -13,6 +13,9 @@ Your lane: the CPU savings plan. I've read CODEX-CH1-RENDER-HANDOVER-20261016.md
   1. Explain why the POC saving fell from -4.50 ms (older image) to -1.27 ms (MODELLED). Is the spatial batching still in the candidate? What did each part give when measured on top of the previous one (actor plan, L5 world, batching)?
   2. Batching was "conservative". Push it further: merge more pieces per spatial cell, offline in the world packages, balancing the number of pieces against the extra vertices. Show the curve.
   3. Confirm that WORLD_VERT_LEVEL=5 is the L2-fixed look the user approved. Send the user the still sheet (worldvert-20261015/WORLDVERT-R101-L2FIX.png or a fresh one).
+  3b. "More aggressive batching" should mean two things beyond merging same-texture neighbours. Please price both in the model:
+     - **Texture atlases per spatial cell**, so pieces with different textures can merge. VRAM (8 MB) is the spare resource. Split or exclude tiling/wrapping textures.
+     - **Precomputed per-cell draw lists**: visible pieces and their detail level stored offline per camera cell/direction, so the per-frame walk, cull and LOD work disappears. That work is about 133 of 234 cycles per world corner today.
   4. Don't convert more rooms until a variant clears the 3 ms bar in the model. Once it does, all chapter 1 rooms are rebuilt in one pass.
 - **Measuring:** build first, then one measurement each (ms/frame on top of the previous stack, STRICT identical, KOS squeeze). Then one benchmark disc with everything.
 - **Your s30 cliff-movie fix:** I'm landing MOVIE_WORLD_ARENA(_S30), plus the guard-ordering fix, into test 15 on lane/s30movie16, credited to you. I'm not taking the render knobs. Please don't land it separately.
