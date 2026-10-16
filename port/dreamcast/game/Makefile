@@ -645,7 +645,7 @@ endif
 # rule (SS_POOL_HIGH / SS_POOL_TOP placement) is unchanged: only the size.
 PRIM_BUF_KB ?= 0
 ifneq ($(PRIM_BUF_KB),0)
-GAME_CPPFLAGS += -DRE4DC_PRIM_BUF_KB=$(PRIM_BUF_KB)
+$(OBJDIR)/src/game/game.o $(OBJDIR)/src/Sscrn/ss_item_draw.o: GAME_CPPFLAGS += -DRE4DC_PRIM_BUF_KB=$(PRIM_BUF_KB)
 endif
 # PRIM_WATER=1 (test only): per-room peak primitive-buffer bytes per frame ("prim water:" lines, trans.cpp).
 ifeq ($(PRIM_WATER),1)
