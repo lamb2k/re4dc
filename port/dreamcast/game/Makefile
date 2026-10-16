@@ -382,7 +382,7 @@ export RE4DC_LINK_OVERLAY += .ovl_em31
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_STRESS_SADDLER=1
 $(OBJDIR)/mod/em31/src/em31/em31.o $(OBJDIR)/dbgwarp_bridge.o $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_STRESS_SADDLER=1
 # with BENCHMARK=1 (bench.mk): four scenes (full, g70, g50, full again) under the stress disc's own name
-$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=4 '-DRE4DC_BENCH_NAME="SADDLER STRESS"'
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=4 '-DRE4DC_BENCH_NAME="SADDLER STRESS"' '-DRE4DC_BENCH_MENU="X: FULL ONLY  Y: G70 ONLY  B: G50 ONLY"'
 endif
 # ROUTE_CH22=1 (default 0): chapter 2-2 room adapters and Luis' cabin overlay.
 # The overlay follows the five CH21 slots; the chapter movie list remains explicit.

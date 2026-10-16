@@ -95,6 +95,7 @@ void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture an
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name);  // bench.cpp (bench.mk BENCHMARK)
 int re4dc_bench_tick(unsigned room_frame);
 const char* re4dc_bench_next_scene(void);
+const char* re4dc_bench_first_scene(void);
 int re4dc_bench_scene_no(void);
 const char* re4dc_bench_results(void);
 #endif
@@ -258,7 +259,7 @@ u32 num(const char* s) { return (u32) strtoul(s, nullptr, 0); }
 // BENCHMARK=1 (bench.mk, bench.cpp): the scene fixture to arm at the next soft reset, and the reset is pending.
 const char* bench_next;
 bool bench_pending;
-void load(const char* path = "/cd/dc/warp.txt")
+void load(const char* path = nullptr)
 #else
 void load()
 #endif
@@ -267,6 +268,7 @@ void load()
     wp.parse_entry = wp.max_entry = 1;
     static char text[4096];
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+    if (!path) path = re4dc_bench_first_scene();   // scene 1, or the start screen's single scene
     const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
     re4dc_log("warp: bench fixture %s (%d bytes)\n", path, len);
 #else

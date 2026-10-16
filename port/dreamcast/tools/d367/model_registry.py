@@ -568,6 +568,8 @@ def main():
             sys.exit('model_registry: --stress-saddler needs --pool')
         PACK_CAPACITY['fpart'] = 256
         PACK_MAX_BYTES = 1024 * 1024
+        global STRESS_SADDLER
+        STRESS_SADDLER = True
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
@@ -1157,6 +1159,7 @@ PACK_MAX_BYTES = 192 * 1024  # coarse_actor_registry_pack_check.inc kPackMaxByte
 # source blobs are bounded by the lifetime masks (MATERIAL_ROWS / SOURCE_BLOBS minus the reviewed rows, checked above).
 PACK_BONES = 48
 PACK_CAPACITY = dict(desc=16, ref=32, geom=32, tex=16, fmodel=8, fpart=32, ftex=16)
+STRESS_SADDLER = False  # --stress-saddler (lane stress16b)
 
 
 def align32(n):
@@ -1281,6 +1284,8 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
             role_texture_max = 9 if room == 0x11f and PACK_CAPACITY['fpart'] == 128 else 8
             if SLOTS:
                 role_texture_max = 17  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): GC pl11 TPL 5 has 17 images
+            if STRESS_SADDLER:
+                role_texture_max = 17  # the POOL image's RE4DC_NMR_ROLE_TEXTURES (em31 TPL 7 has 11 images)
             if len(tpls[tk]['textures']) > role_texture_max:
                 raise Fail(f'package {r["name"]}: source TPL has {len(tpls[tk]["textures"])} images > {role_texture_max}')
             if mk not in fm_index:

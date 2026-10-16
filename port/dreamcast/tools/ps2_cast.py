@@ -155,10 +155,10 @@ PRESETS = {
     # lane stress16b (2026-10-16, the model-only Saddler stress disc STRESS_SADDLER): em31 = Saddler's final form (r332;
     # src/t_emlist "Saddler2" types Body / Tentacle; r332.cpp setEm 0xA8 / 0xA9). src/em31/em31.cpp em31_R0_Init: type 0
     # modelInit(ARC 4, ARC 7) + ModInfoMgr.create(ARC 5, ARC 7) (body + head, one 83-part skeleton); type 1 modelInit(ARC 8,
-    # ARC 7) (the tentacle on its back, 60 parts). GC data from the 2004.11.25 review-ROM Disc 2 (--gc-iso).
-    'saddler-em31-00': dict(archive='em31', sections=[(4, 'body'), (5, 'head')], tpl=7, rooms=['r332'], types=[0],
+    # ARC 7) (the tentacle on its back, 60 parts). r119 = the stress disc's stand-in room. GC data from the 2004.11.25 review-ROM Disc 2 (--gc-iso).
+    'saddler-em31-00': dict(archive='em31', sections=[(4, 'body'), (5, 'head')], tpl=7, rooms=['r332', 'r119'], types=[0],
                             category='boss', model_id=0x31, shift=2, lit=True, ps2_bone_table_skip=(5,)),
-    'saddler-em31-01': dict(archive='em31', sections=[(8, 'body')], tpl=7, rooms=['r332'], types=[1],
+    'saddler-em31-01': dict(archive='em31', sections=[(8, 'body')], tpl=7, rooms=['r332', 'r119'], types=[1],
                             category='boss', model_id=0x31, shift=2, lit=True),
     'mendez35-full': dict(archive='em35', sections=[(4, 'body'), (6, 'extra')], tpl=5, rooms=['r11f'], types=[0],
                           category='boss', model_id=0x35, shift=2, lit=True),

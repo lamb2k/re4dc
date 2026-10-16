@@ -53,6 +53,9 @@ namespace {
 #ifndef RE4DC_BENCH_SCENES
 #define RE4DC_BENCH_SCENES 2
 #endif
+#ifndef RE4DC_BENCH_MENU
+#define RE4DC_BENCH_MENU "X: SCENE 1 ONLY  Y: SCENE 2  B: SCENE 3"
+#endif
 #ifndef RE4DC_BENCH_NAME
 #define RE4DC_BENCH_NAME "BENCHMARK DISC"
 #endif
@@ -60,6 +63,9 @@ constexpr int kScenes = RE4DC_BENCH_SCENES;
 static_assert(kScenes >= 2 && kScenes <= 4, "RE4DC_BENCH_SCENES 2..4");
 constexpr bool kTight = kScenes > 2;   // more result rows: smaller rows, no photo note
 const char* const kScenePath[4] = {"/cd/dc/warp.txt", "/cd/dc/bench2.txt", "/cd/dc/bench3.txt", "/cd/dc/bench4.txt"};
+// The start screen's choice on a disc of more than two scenes (the Saddler stress disc: START all, X / Y / B one scene):
+// -1 = every scene in order, k = scene k + 1 alone (then the results screen).
+int g_only = -1;
 struct Scene {
     char name[24];
     unsigned begin, end;          // measured room frames [begin, end)
@@ -311,8 +317,11 @@ int re4dc_bench_tick(unsigned room_frame)
 // After a scene ended: the fixture of the next scene, or nullptr after the last one (then the results screen).
 const char* re4dc_bench_next_scene(void)
 {
+    if (g_only >= 0) return nullptr;
     return g_cur + 1 < kScenes ? kScenePath[g_cur + 1] : nullptr;
 }
+// The first scene's fixture (the warp rig's first load): scene 1, or the start screen's single scene.
+const char* re4dc_bench_first_scene(void) { return kScenePath[g_only >= 0 ? g_only : 0]; }
 int re4dc_bench_scene_no(void) { return g_cur + 1; }
 
 // Results screen (the warp rig's poll, the frame loop stopped there): returns when A was pressed and released; the
@@ -336,7 +345,7 @@ const char* re4dc_bench_results(void)
     ++g_run;
     re4dc_log("bench: A pressed: run %u\n", g_run);
     g_cur = 0;
-    return kScenePath[0];
+    return kScenePath[g_only >= 0 ? g_only : 0];
 }
 
 // ---------------------------------------------------------------- measurement hooks
@@ -436,6 +445,12 @@ extern "C" void __wrap_OSInit(void)
                                   kTight ? "(ABOUT 6 MINUTES), THEN SHOWS RESULTS." : "(ABOUT 4 MINUTES), THEN SHOWS RESULTS.",
                                   "AFTER START DO NOT TOUCH THE CONTROLLER.",
                                   "PHOTOGRAPH THE RESULTS SCREEN."};
+            if (kTight) {
+                // the scene menu (a disc of more than two scenes)
+                const char* menu[] = {"START: ALL SCENES IN ORDER", RE4DC_BENCH_MENU};
+                fb_text(fb, 60, 418, 2, 2, kYellow, menu[0]);
+                fb_text(fb, 60, 440, 2, 2, kYellow, menu[1]);
+            }
             for (const char* s : body) { fb_text(fb, 60, y, 2, 2, s[0] == 'G' ? kGreen : kWhite, s); y += 22; }
             y += 8;
             char msg[64];
@@ -446,6 +461,17 @@ extern "C" void __wrap_OSInit(void)
         }
         const unsigned btn = pad_buttons();
         if (btn & CONT_START) pressed = true;
+        if (kTight && !pressed) {
+            // X / Y / B: one scene alone (the stress disc's arm menu); released like START
+            static unsigned held;
+            const unsigned pick = btn & (CONT_X | CONT_Y | CONT_B);
+            if (pick) held = pick;
+            else if (held) {
+                g_only = (held & CONT_X) ? 0 : (held & CONT_Y) ? 1 : 2;
+                pressed = true;
+                break;
+            }
+        }
         if ((pressed && !(btn & CONT_START)) || el >= kAuto) break;   // START released, or timeout
         thd_sleep(20);
     }
@@ -453,7 +479,8 @@ extern "C" void __wrap_OSInit(void)
     fb_center(fb, 200, 3, 4, kWhite, RE4DC_BENCH_NAME " - NOT THE GAME");
     fb_center(fb, 250, 2, 3, kCyan, "STARTING - HANDS OFF THE CONTROLLER");
     g_masked = true;
-    re4dc_log("bench: start (%s) build %s\n", pressed ? "START" : "auto", RE4DC_BENCH_ID);
+    re4dc_log("bench: start (%s) build %s scene %s\n", pressed ? "START" : "auto", RE4DC_BENCH_ID,
+              g_only >= 0 ? kScenePath[g_only] : "all");
 }
 
 }  // extern "C"
