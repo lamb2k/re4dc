@@ -36,6 +36,14 @@
 #if RE4DC_WATER45_NATIVE && !RE4DC_WATER45_LEAN
 #error RE4DC_WATER45_NATIVE replaces the GX draw that RE4DC_WATER45_LEAN removes
 #endif
+// RE4DC_WATER_PS2 (lane water16, 2026-10-16; render only; needs RE4DC_WATER45_NATIVE): the room water as the PS2 draws
+// it (re4dc_water_ps2_draw below). Default 0.
+#ifndef RE4DC_WATER_PS2
+#define RE4DC_WATER_PS2 0
+#endif
+#if RE4DC_WATER_PS2 && !RE4DC_WATER45_NATIVE
+#error RE4DC_WATER_PS2 needs RE4DC_WATER45_NATIVE
+#endif
 
 // Effect controller 45: weather water surface (same height-field model as Espgen42, following the
 // camera). The Estgen45Set* entry points let the room script (esp4c) override its parameters.
@@ -587,10 +595,188 @@ extern "C" void re4dc_water45_draw(EspgenWork* w)
     }
 }
 
+#if RE4DC_WATER_PS2
+// WATER_PS2: the PS2 draws no generator water (SLUS_211.34: Espgen42_Trans is `jr ra`, Espgen45_Trans only clears
+// Status_flg[1] 0x20; no grid, no screen copy). Its rooms carry the water as stacked Esp08 world planes: a flat dark
+// base (core texture 0xf7), two slow scrolling layers of the room's water picture 0xf2 and an animated noise layer
+// (0xfe / 0xef). Those records exist only in the PS2 EFF, so they are drawn here render-side, once per drawn image,
+// from the table water_ps2_table.inc (tools/d367/water/water_ps2_table.py): no PS2 record is spawned and no effect
+// slot, generator, area or Rnd() state is touched. Each row is one native layer (platform/include/native_water_ps2.inc:
+// an eye-centred grid of textured translucent strips, UV repeat, table fog). Rows with an area draw while that effect
+// area is on (EffGetAreaState, read only); the others while the room's water generator (42 or 45) is live. The
+// texture pictures are the GameCube's effect textures by id (FX_PS2_PACK puts the PS2 picture under each GameCube
+// key); animated ones show the pattern AnmMove would (the record's rate over the texture's anm table, from the vblank
+// clock), every RE4DC_WATER_PS2_FLIP-th picture. The FX level dial drops the extra layers (the table's level column).
+#include <string.h>
+#include "tpl.h"
+#include "native_ui.h"
+struct WaterPs2Row {
+    u16 room;
+    s16 area;                        // effect area (EffGetAreaState); -1: while the room's water generator is live
+    f32 x, y, z, hx, hz, ry, ru, rv, su, sv;
+    u32 argb;
+    u8 tex, src, dst, level, rate, ptn0;
+};
+#include "water_ps2_table.inc"
+#ifndef RE4DC_WATER_PS2_FLIP
+#define RE4DC_WATER_PS2_FLIP 4
+#endif
+extern "C" {
+unsigned re4dc_ui_frame(void);
+u32 re4dc_vi_retrace_count(void);
+int re4dc_fx_level_get(void) __attribute__((weak));
+int re4dc_water42_live(void);   // Espgen42.cpp (WATER_PS2)
+}
+static unsigned s_wps2_frame = ~0U;
+static u8 s_wps2_dummy;
+
+// 1 when the current room has PS2 water rows.
+extern "C" int re4dc_water_ps2_rows(void)
+{
+    for (u32 i = 0; i < sizeof(kWaterPs2) / sizeof(kWaterPs2[0]); ++i) {
+        if (kWaterPs2[i].room == G_ROOM_ID) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// The pattern cEsp::AnmMove would show `tick` ticks into the loop (Anm_cnt += rate per tick; a pattern of time T
+// x 32 counts), then every RE4DC_WATER_PS2_FLIP-th picture.
+static u32 WaterPs2Pattern(const WaterPs2Row& r, const EspTexWk* tw, u32 n, u32 tick)
+{
+    const EspAnmData* anm = tw->pAnm;
+    if (n <= 1 || anm == NULL || r.rate == 0) {
+        return 0;
+    }
+    u32 frames = anm->Frames;
+    if (frames == 0 || frames > n) {
+        frames = n;
+    }
+    u32 total = 0;
+    for (u32 i = 0; i < frames; ++i) {
+        total += anm->Data_num ? anm->Frame_cnt[anm->Frames + i] : 1;
+    }
+    if (total == 0) {
+        return 0;
+    }
+    u32 units = (tick * (u32) r.rate) % (total * 32u);
+    u32 p = 0;
+    for (; p < frames; ++p) {
+        const u32 t = (anm->Data_num ? anm->Frame_cnt[anm->Frames + p] : 1) * 32u;
+        if (units < t) {
+            break;
+        }
+        units -= t;
+    }
+    p = (p + r.ptn0) % frames;
+    if (frames >= RE4DC_WATER_PS2_FLIP) {
+        p -= p % RE4DC_WATER_PS2_FLIP;
+    }
+    return p;
+}
+
+// OT callback (layer 0x10): the room's PS2 water layers, bottom-up, once per drawn image.
+extern "C" void re4dc_water_ps2_draw(void*)
+{
+    const unsigned f = re4dc_ui_frame();
+    if (f == s_wps2_frame) {
+        return;
+    }
+    s_wps2_frame = f;
+    const int live = (g_pWater45 != NULL && (g_pWater45->flag & 1) && !(g_pWater45->flag & 2)) || re4dc_water42_live();
+    const int level = re4dc_fx_level_get ? re4dc_fx_level_get() : 0;
+    CameraCurrentProjection();
+    Re4dcWaterLayer L;
+    memset(&L, 0, sizeof(L));
+    GXGetProjectionv(L.projection);
+    GXGetViewportv(L.viewport);
+    const Mtx& vm = pG->Cam.v_mat;
+    Mtx vi;
+    PSMTXInverse(vm, vi);
+    const f32 ex = vi[0][3], ez = vi[2][3];
+    const u32 tick = re4dc_vi_retrace_count() >> 1;
+    GXColor fin = {0xFF, 0xFF, 0xFF, 0xFF};
+    const int fin_on = EffIsSetFinalCol();
+    if (fin_on) {
+        EffGetFinalCol(&fin);
+    }
+    for (u32 i = 0; i < sizeof(kWaterPs2) / sizeof(kWaterPs2[0]); ++i) {
+        const WaterPs2Row& r = kWaterPs2[i];
+        if (r.room != G_ROOM_ID || level > r.level) {
+            continue;
+        }
+        if (r.area < 0 ? !live : !EffGetAreaState(r.area)) {
+            continue;
+        }
+        memset(&L.image, 0, sizeof(L.image));
+        if (r.tex != 0xF7) {   // 0xf7: the core's white picture, drawn untextured
+            const EspTexWk* tw = &g_pEspSys->Esp_tex_tbl[r.tex];
+            if (tw->Owner == 0xD2 || tw->pTpl == NULL || tw->pTpl->numDescriptors == 0) {
+                continue;
+            }
+            const TEXDescriptor* td = TEXGet(tw->pTpl, WaterPs2Pattern(r, tw, tw->pTpl->numDescriptors, tick));
+            const TEXHeader* th = td->textureHeader;
+            L.image.pixels = th->data;
+            L.image.width = th->width;
+            L.image.height = th->height;
+            L.image.format = th->format;
+            L.image.palette_format = 0xffffffffU;
+            if (td->CLUTHeader) {
+                L.image.palette = td->CLUTHeader->data;
+                L.image.palette_format = td->CLUTHeader->format;
+                L.image.palette_bytes = td->CLUTHeader->numEntries * 2;
+            }
+        }
+        const f32 c = cosf(r.ry), s = sinf(r.ry);
+        Mtx m = {{c, 0.0f, s, r.x}, {0.0f, 1.0f, 0.0f, r.y}, {-s, 0.0f, c, r.z}};
+        Mtx mv;
+        PSMTXConcat(vm, m, mv);
+        memcpy(L.mv, mv, sizeof(L.mv));
+        const f32 dx = ex - r.x, dz = ez - r.z;
+        L.eye_x = c * dx - s * dz;
+        L.eye_z = s * dx + c * dz;
+        L.half_x = r.hx;
+        L.half_z = r.hz;
+        L.u_per_mm = r.ru;
+        L.v_per_mm = r.rv;
+        L.u0 = r.su * (f32) tick;
+        L.u0 -= (f32) (s32) L.u0;
+        L.v0 = r.sv * (f32) tick;
+        L.v0 -= (f32) (s32) L.v0;
+        u32 a = r.argb >> 24, cr = (r.argb >> 16) & 0xFF, cg = (r.argb >> 8) & 0xFF, cb = r.argb & 0xFF;
+        if (fin_on) {
+            cr = cr * fin.r >> 8;
+            cg = cg * fin.g >> 8;
+            cb = cb * fin.b >> 8;
+            a = a * fin.a >> 8;
+        }
+        L.argb = a << 24 | cr << 16 | cg << 8 | cb;
+        L.src = r.src;
+        L.dst = r.dst;
+        re4dc_water_layer(&L);
+    }
+}
+
+// EspgenTrans (espgen.cpp), once per drawn image: the room's PS2 water as one OT entry (layer 0x10, the GameCube water
+// generators' layer). Render only.
+extern "C" void re4dc_water_ps2_queue(void)
+{
+    if (re4dc_water_ps2_rows()) {
+        AddOtDirect(0x10, &s_wps2_dummy, (void (*)()) re4dc_water_ps2_draw, 1, 0x80, NULL, 0.0f);
+    }
+}
+#endif
+
 // The surface's OT entry (layer 0x10, as Espgen45_Trans queues Espgen45_TransSub): drawn in the render pass of the
 // image being built. Espgen45_Trans and the logic-only coarse pass (espgen.cpp) call it; render only.
 extern "C" void re4dc_water45_queue(EspgenWork* w)
 {
+#if RE4DC_WATER_PS2
+    if (re4dc_water_ps2_rows()) {
+        return;   // WATER_PS2: the PS2 layers replace the GameCube surface (re4dc_water_ps2_queue)
+    }
+#endif
     if (G_ROOM_ID == 0x10b && (w->flag & 1) && !(w->flag & 2)) {
         AddOtDirect(0x10, w, (void (*)()) re4dc_water45_draw, 1, 0x80, NULL, 0.0f);
     }

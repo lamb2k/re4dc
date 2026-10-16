@@ -131,6 +131,24 @@ $(error LAKE_ZBIAS must be 0 or a decimal between 0.9 and 1.1 (e.g. 1.001))
 endif
 $(OBJDIR)/platform/native_lake.o: PLATFORM_CPPFLAGS += -DRE4DC_LAKE_ZBIAS=$(LAKE_ZBIAS)f
 endif
+# WATER_PS2=1 (lane water16 2026-10-16; render only, default 0; needs WATER45_NATIVE=1): the room water of r107, r108,
+# r10a, r10b, r11a and r11b as the PS2 draws it. The PS2 has no generator water (Espgen42_Trans is `jr ra`, Espgen45_Trans
+# only clears a flag): its rooms stack Esp08 world planes (a flat dark base, two scrolling 0xf2 water layers, an
+# animated noise layer). espgen45.cpp re4dc_water_ps2_draw draws those planes once per drawn image from the generated
+# table src/game/water_ps2_table.inc (tools/d367/water/water_ps2_table.py) as native layers (platform/include/
+# native_water_ps2.inc: eye-centred grids of textured translucent strips, UV repeat, table fog). In r10b it replaces the
+# WATER45_NATIVE multiply and the LAKE_RIPPLES layers. No PS2 record is spawned: effect slots, generators, areas and
+# Rnd() are untouched (logic STRICT). WATER_PS2_FLIP=n: animated layers show every n-th picture (default 4).
+WATER_PS2 ?= 0
+WATER_PS2_FLIP ?= 4
+ifneq ($(WATER_PS2),0)
+ifneq ($(WATER_PS2)$(WATER45_NATIVE),11)
+$(error WATER_PS2 must be 0 or 1 and needs WATER45_NATIVE=1)
+endif
+$(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2=1 -DRE4DC_WATER_PS2_FLIP=$(WATER_PS2_FLIP)
+$(OBJDIR)/src/game/Espgen42.o $(OBJDIR)/src/game/espgen.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_WATER_PS2=1
+endif
 # PS2_CH1_ENEMY=1 (lane alivecap 2026-10-15, user 10-15 "the PS2 logic holistically for enemy spawns in chapter 1, with
 #   our game cutting out more when it hits our threshold"; CHANGES GAMEPLAY by design; default 0 = off): one umbrella
 #   for every PS2 enemy-spawn rule of the stage 1 route (1-1 .. 2-1: r100-r10e, r117-r119, r11a, r11b; table in

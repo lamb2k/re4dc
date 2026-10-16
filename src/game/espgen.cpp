@@ -67,6 +67,9 @@ int re4dc_espgen_draw_pass;
 void re4dc_water45_queue(EspgenWork* w);   // espgen45.cpp
 }
 #endif
+#if defined(RE4DC_WATER_PS2) && RE4DC_WATER_PS2
+extern "C" void re4dc_water_ps2_queue(void);   // espgen45.cpp (WATER_PS2): the room's PS2 water layers
+#endif
 EspgenWork* EspgenArray = NULL;
 EspgenWork* pEspgenArrayBack = NULL;
 u32 nEspgen = 0;
@@ -661,6 +664,12 @@ int EspgenTrans()
         }
         fxEgTransOne(&base[i]);
     }
+#if defined(RE4DC_WATER_PS2) && RE4DC_WATER_PS2
+#if RE4DC_PACE_TRANS_SKIP
+    if (!re4dc_esp_logic_only || re4dc_espgen_draw_pass)
+#endif
+        re4dc_water_ps2_queue();   // WATER_PS2: once per drawn image (render only)
+#endif
     return 1;
 }
 #else
@@ -706,6 +715,12 @@ int EspgenTrans()
             pLog->err(0, 0, "ESP_CTRL : CTRL_ID[%x] is invalid.", w->id);
         }
     }
+#if defined(RE4DC_WATER_PS2) && RE4DC_WATER_PS2
+#if RE4DC_PACE_TRANS_SKIP
+    if (!re4dc_esp_logic_only || re4dc_espgen_draw_pass)
+#endif
+        re4dc_water_ps2_queue();   // WATER_PS2: once per drawn image (render only)
+#endif
     return 1;
 }
 #endif

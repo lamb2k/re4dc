@@ -81,6 +81,20 @@ int re4dc_effect_stage1_batch(Re4dcEffectSprite*, unsigned count, unsigned dst, 
 unsigned re4dc_ps2_fx_stage1_image(Re4dcUiImage*);
 #endif
 int re4dc_effect_line(const Re4dcEffectLine*);
+#if defined(RE4DC_WATER_PS2) && RE4DC_WATER_PS2
+// WATER_PS2 (espgen45.cpp, lane water16): one PS2 water layer, a horizontal plane drawn as an eye-centred grid of
+// textured translucent strips (native_ui.cpp, include/native_water_ps2.inc). image.pixels null: untextured.
+struct Re4dcWaterLayer {
+    Re4dcUiImage image;
+    float mv[3][4];                       // plane local (x, 0, z) in mm -> view space
+    float eye_x, eye_z, half_x, half_z;   // the eye over the plane and the plane's half extents (local mm)
+    float u_per_mm, v_per_mm, u0, v0;     // texture repeats per mm and the scroll offset (repeats)
+    float projection[7], viewport[6];     // GX's
+    unsigned argb;
+    unsigned char src, dst, pad[2];       // PVR blend factors
+};
+int re4dc_water_layer(const Re4dcWaterLayer*);
+#endif
 void re4dc_ui_glyph(const Re4dcUiGlyph*);
 void re4dc_ui_glyph_fonts_changed();
 void re4dc_ui_init();

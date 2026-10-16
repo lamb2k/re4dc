@@ -744,6 +744,13 @@ void Espgen42_Move(EspgenWork* w)
     Espgen42MoveTbl[w->step](w);
 }
 
+#if defined(RE4DC_WATER_PS2) && RE4DC_WATER_PS2
+// WATER_PS2 (espgen45.cpp re4dc_water_ps2_draw): 1 while the room water generator is live (read only).
+extern "C" int re4dc_water42_live(void)
+{
+    return g_pWater != NULL && (g_pWater->flag & 1) && !(g_pWater->flag & 2);
+}
+#endif
 // Queues Espgen42_TransSub in the world OT (0x10, layer 1, priority 0x80) while the generator is
 // live and not suspended.
 void Espgen42_Trans(EspgenWork* w)

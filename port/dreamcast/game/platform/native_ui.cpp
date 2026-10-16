@@ -7221,6 +7221,9 @@ extern "C" int re4dc_water45_quad(const float positions[4][3],const float rgb[4]
     frame_queue_peak=std::max(frame_queue_peak,unsigned(sizeof(frame_storage))-deferred_top+deferred_spill_capacity-deferred_spill_top);
     return 1;
 }
+#if defined(RE4DC_WATER_PS2) && RE4DC_WATER_PS2
+#include "include/native_water_ps2.inc"   // WATER_PS2 (lane water16): PS2 water layers
+#endif
 #if defined(RE4DC_LAKE_RIPPLES) && RE4DC_LAKE_RIPPLES
 // LAKE_RIPPLES (native_lake.cpp): a prebuilt TR packet (headers and vertices) queued like the water quad above.
 extern "C" int re4dc_ui_tr_packet(const void* packet,unsigned bytes){
@@ -8006,6 +8009,12 @@ extern "C" void re4dc_model_finish_source_draws(){
             const unsigned bytes=deferred_first->changed[0];
             deferred_first=deferred_first->next;stream_send(packet,bytes);continue;
         }
+#if defined(RE4DC_WATER_PS2) && RE4DC_WATER_PS2
+        if(deferred_first->lighting==kWaterTag){   // WATER_PS2: the layer's vertices are generated here
+            const auto* w=reinterpret_cast<const WaterNode*>(reinterpret_cast<const unsigned char*>(deferred_first)+kWaterNode);
+            deferred_first=deferred_first->next;water_emit(*w);continue;
+        }
+#endif
 #endif
 #if RE4DC_EFFECT_SPRITES
         if(deferred_first->lighting==kSpriteTag){

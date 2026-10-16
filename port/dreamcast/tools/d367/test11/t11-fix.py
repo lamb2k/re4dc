@@ -296,6 +296,11 @@ T15_DATA = T14_DATA + ',cast15,glod,res16'  # res16 after res14r3: the HUD fix c
 # 248 records, sha256 de98da1ec2e75532 (resident_keys.py pack r000 r101 r103).
 T15RD = os.environ.get('T15RD', '/root/probe/lanes-20261015/t15k/data/res16')
 DATA['res16'] = {'dc/resident.bin': T15RD + '/resident.bin'}  # order: after res14r3
+# Lane water16 (WATER_PS2=1, 10-16): water16 = res16 + the water rooms' WATER_PS2 pictures (tools/d367/water/resident/
+# r107 r108 r10a r10b r11a r11b .tsv, water_resident.py pack over res16; 93 records, sha256 a7460744). Order: after res16.
+# When the rooms' full lists land (lane resident), pack those lists with these rows instead.
+W16RD = os.environ.get('W16RD', '/root/probe/lanes-20261016/water-k/data/water16')
+DATA['water16'] = {'dc/resident.bin': W16RD + '/resident.bin'}
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
