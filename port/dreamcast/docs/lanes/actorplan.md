@@ -2,6 +2,39 @@
 
 Handover state, written at the coordinator's STOP on 2026-10-15. CPU and rendering optimization moves to another team.
 
+## Correction from the isolated Codex continuation (2026-10-15)
+
+The identical-image experiment below did **not** compare off against on.
+`tools/d367/build-r21.sh` already enables `ACTOR_PROOF_LEAN=1`,
+`ACTOR_MATERIAL_RECORD=1` and `ACTOR_BIND_REUSE=1`. Both ap0rW and ap1rW
+therefore compiled and executed the enabled path. The resolved recipes,
+compiler commands, replayed preprocessing, object disassembly, ELF loadable
+images and staged scrambled executables all confirm this. There is no
+compiler, linker or staging no-op to fix.
+
+Fresh explicit 0/0/0 versus 1/1/1 builds (cxas-offrW / cxas-onrW), on the
+same a4d28b22 checkpoint and T15 recipe, produce distinct loadable images:
+`b615f02fb67ee4e5f9f2e3a7a102e28df683599ab2959564c2da1ddcba4a4731`
+versus `d9cad4f66d813eb2999b46b58390db0bd755504fbc7856c71c9cfec87ef99d5c`.
+The latter exactly reproduces both historical programs. `actorplan/verify_pair.py`
+now rejects a pair with identical switch settings or loadable bytes before it
+can be reported as a switch experiment.
+
+At benchmark-r101-t12, T15_DATA, PACE_MODE=off, global frames 500:799,
+stride 10 (30 sampled frames), the fresh pair measures **MODELLED** nominal
+63.63 -> 61.85 ms/frame and console-fit 67.932 -> 65.853 ms/frame. Owned
+setup is 7.101 -> 4.770 nominal ms/frame. The existing knobs' saving is
+already in the enabled baseline; it is not an additional ACTOR_PLAN gain.
+Trace call counts differ slightly, so these are whole-path observations,
+not a claim that every total-frame delta comes from the three checks.
+
+Private audit and evidence:
+`/root/probe/codex-ch1-render-20261015/audit` and
+`C:\Flycast-Evidence\re4-dreamcast\codex-ch1-render-20261015\hwmodel-cxas-{off,on}-cross`.
+The continuation work is recorded in [ch1-render-poc-20261015.md](ch1-render-poc-20261015.md).
+The remainder of this document preserves the original handover measurements
+and proposal; its no-op diagnosis is superseded by this correction.
+
 - Branch `lane/actorplan`, worktree `/root/probe/lanes-20261015/actorplan`.
 - Base `cb4e24c6` (t15/int: T15REC + LOGIC_WASTE=1 LOGIC_WASTE_MASK=0x02).
 - Evidence root: `C:\Flycast-Evidence\re4-dreamcast\actorplan-20261015\`.
@@ -9,18 +42,18 @@ Handover state, written at the coordinator's STOP on 2026-10-15. CPU and renderi
   - `C:\Game Dev\Emulators\CPU-ANSWER-20261015.md`: fixes 2 and 3, where the A1 / A4-A6 buckets come from.
   - `C:\Game Dev\Emulators\CPU-SAVINGS-PLAN-20261015.md`: the user's plan; this lane is its steps 2 and 3.
 
-## Status in one table
+## Original checkpoint status (a4d28b22)
 
 | Item | State | Knob | Notes |
 |---|---|---|---|
 | Fix 2 ceiling (characters) | Priced, MODELLED | - | See "Ceilings" below |
-| Existing exact knobs (ACTOR_PROOF_LEAN, ACTOR_MATERIAL_RECORD, ACTOR_BIND_REUSE) | Measured: **no effect** | existing, default 0 | The image is byte-identical with them on in the t15 recipe. Cause not found yet (see "Known failures") |
+| Existing exact knobs (ACTOR_PROOF_LEAN, ACTOR_MATERIAL_RECORD, ACTOR_BIND_REUSE) | **Already enabled in both historical arms** | Make defaults 0, build-r21 recipe 1 | Corrected explicit off/on experiment above |
 | Fix 2 draw plan (ACTOR_PLAN) | **Proposed only**, no code | not created | Candidate items listed below |
 | Fix 3 ceiling | Priced, MODELLED (calibration trace only) | - | |
 | Fix 3 fused kernel (ACTOR_ONEPASS) | **Proposed only**, no code | not created | The coordinator put it on hold until fix 2 is gated |
 | Object path (b) ceiling | Base numbers only | - | The coordinator asked for it after fix 2: not priced |
 
-No source file changed on this branch. The only commit is the lane tools (`port/dreamcast/tools/d367/actorplan/`) and this doc. No gate has run, because no knob was built.
+At the original checkpoint no source file changed. Its only commit added the lane tools (`port/dreamcast/tools/d367/actorplan/`) and this doc; it had no implementation gates. The continuation linked above implements and measures the bounded POC.
 
 ## Measurements (all MODELLED, SH-4 hw model; nominal hwsim plus the design-logic call-tree build `hwsim_cg`)
 
@@ -120,7 +153,7 @@ one_chunk self is mostly per-meshlet bookkeeping, the constant-colour fill and `
 
 - ELF 6701cabd. The `objcopy -O binary -R .stack` image is **byte-identical** to ap0rW.
 - `coarse_actor.o` disassembly is identical too, although build.log line 924 passes all three -D flags to coarse_actor.cpp.
-- The hw traces, the call tree and every number are identical. **Saving 0.00 ms MODELLED.**
+- The hw traces, the call tree and every number are identical because both arms enable the same knobs. This is not a valid off/on saving measurement.
 - Evidence: `actorplan-20261015\hwmodel-ap1-cross`.
 
 ## Ceilings (MODELLED; corr = nominal x1.09 console-fit x1.13 render residual, per CPU-ANSWER)
@@ -148,7 +181,7 @@ The user's plan (CPU-SAVINGS-PLAN step 3) agrees: keep small scratch buffers whe
 3. **Role-row memo across frames** (~0.3 of role_bindings + info_current + actor_current_role + find_info):
    - Key: model, appearance, the info list (pointers, pData, tpl_addr) and life::serial/epoch.
    - Measure the compare cost against the saving.
-4. **Certificate / immutable_chunk_proof memo across frames** (~0.2): what ACTOR_MATERIAL_RECORD was meant to do. First fix the no-op (see "Known failures").
+4. **Certificate / immutable_chunk_proof memo across frames** (~0.2, historical estimate): ACTOR_MATERIAL_RECORD was already enabled in the baseline. Any further memo must be measured incrementally; it is not a dormant path to enable.
 5. **Lights once per actor** (~0.1-0.2): build_lights/probe_lights per chunk. probe_dirs_all is already about once per actor.
 6. **memcpy/memset audit** (~0.2): 664 memcpy a frame on the owned path (part records, modelviews, Frame copies).
 7. The user's plan step 2 wants more than a cache: prepare parts, materials and bindings at **asset load**, and update shared character state once per rendered tick.
@@ -157,17 +190,17 @@ Gate before the large build: the estimate must reach >= 2 ms. Items 1-6 total ~1
 
 ## Known failures and traps
 
-- **ACTOR_PROOF_LEAN / ACTOR_MATERIAL_RECORD / ACTOR_BIND_REUSE compile to nothing in the t15 recipe.** The image is identical. Next check:
+- **Resolved: the three switches were already enabled by build-r21.sh.** The historical investigation checklist was:
   - Preprocess coarse_actor.cpp with the build.log line 924 flags plus `-E`.
   - grep for `lean_serial` / `owner_ganado_bind_tx`.
   - Follow the `#if` chain around `coarse_actor_transaction.inc`. ACTOR_BIND_REUSE's code is in coarse_ganado_cast.cpp, which builds into coarse_ganado.o as well.
-- Two hw runs at once are fine: per-name disc staging. But `actorplan/hw.sh` builds `bench-hw-keep.sh` by deleting `--drop-traces` with sed, and the copy then stops at `rc: unbound variable` after hwproject. The projection is complete, but `SCENE.txt`/`fixture.json` are not copied into the hwmodel dir. Fix that `set -u` line before reuse.
+- The old `actorplan/hw.sh` sed-generated wrapper stopped at `rc: unbound variable` after hwproject and omitted fixture metadata. The continuation replaces that wrapper with the existing ext4 stager and direct hwproject/cg calls, with isolated output paths and saved metadata.
 - The call-tree simulator `/root/probe/d367-agents/design-logic/tools/hwsim_cg` is the older hwsim without `--console-fit`. Its numbers are **nominal**. Scale with the CPU-ANSWER factors, or port the cg option into tools/hwmodel/hwsim.c.
 - Calibration trace trap (CPU-ANSWER): drop frame 1033 of hwmodel-ml-skip. It was not used here.
 
-## Exact next experiment
+## Historical experiment plan (superseded)
 
-1. Resolve the no-op above, rebuild ap1rW, and re-price:
+1. The old plan was to resolve the supposed no-op, rebuild ap1rW, and re-price. This same-on comparison is invalid; use the explicit off/on pair in the correction above. Historical commands:
    - `XON="PACE_MODE=off PC_SAMPLER_BYTES=8192" bash tools/d367/actorplan/build.sh ap1 rW ACTOR_PROOF_LEAN=1 ACTOR_MATERIAL_RECORD=1 ACTOR_BIND_REUSE=1`
    - `bash tools/d367/actorplan/hw.sh r101-t12 ap1rW ap1b-cross 500:799 10`
    - `bash tools/d367/actorplan/cg.sh /mnt/c/Flycast-Evidence/re4-dreamcast/actorplan-20261015/hwmodel-ap1b-cross`

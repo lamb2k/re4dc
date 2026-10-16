@@ -119,7 +119,8 @@ WP="DBG_WARP=1 PC_SAMPLER=1"
 PL="DBG_WARP=0 PC_SAMPLER=0"
 b() { lab=$1; tree=$2; shift 2; t0=$(date +%s); echo "== $lab $(date +%T) tree=$tree $*" >> $K/logs-build.txt
   (cd $tree && TREE=$tree bash /root/probe/d367-buildslot.sh bash port/dreamcast/tools/d367/route/route-build.sh $lab $F $LOOK "$@" >> $K/logs-build.txt 2>&1)
-  rc=$?; O=/root/probe/lanes/route/out-$lab
+  rc=$?; O=${ROUTE_OUT_ROOT:-/root/probe/lanes/route}/out-$lab
+  [ "$rc" = 0 ] || return "$rc"
   end=$(/opt/toolchains/dc/sh-elf/bin/sh-elf-nm $O/re4dc-game.elf 2>/dev/null | awk '$3=="_end"{print $1}')
   echo "rc=$rc $lab $(cut -c1-16 $O/elf.sha256 2>/dev/null) $(( $(date +%s) - t0 ))s missing=$(wc -c < $O/missing.txt 2>/dev/null) end=$end $(cd $tree && git rev-parse --short=8 HEAD) $*" | sed 's/PS2_LEON_DIR=[^ ]* //;s/PS2_GANADO_DIR=[^ ]* //' | tee -a $K/logs-build.txt | cut -c1-400
   echo "$end" > $O/end.txt; }

@@ -74,6 +74,12 @@ int re4dc_actor_preflight_owned_runs(Re4dcModelPart*,const Re4dcActorDrawRun*,un
     const Re4dcActorOwnedMaterial*,unsigned,const Re4dcActorWorkspaceLease*,const Re4dcActorSkinLease*,const Re4dcActorTextureLease*);
 int re4dc_actor_submit_owned_runs(Re4dcModelPart*,const Re4dcActorDrawRun*,unsigned,
     const Re4dcActorOwnedMaterial*,unsigned,const Re4dcActorWorkspaceLease*,const Re4dcActorSkinLease*,const Re4dcActorTextureLease*);
+#if RE4DC_ACTOR_PLAN
+// Only for the unchanged subset of runs preflighted by actor_acquire in this
+// transaction call, while ACTOR_PROOF_LEAN's lifetime token still holds.
+int re4dc_actor_submit_preflighted_runs(Re4dcModelPart*,const Re4dcActorDrawRun*,unsigned,
+    const Re4dcActorOwnedMaterial*,unsigned,const Re4dcActorWorkspaceLease*,const Re4dcActorSkinLease*,const Re4dcActorTextureLease*);
+#endif
 int re4dc_actor_preflight_owned(Re4dcModelPart*,const Re4dcActorChunk*,unsigned,
     const Re4dcActorWorkspaceLease*,const Re4dcActorSkinLease*,const Re4dcActorTextureLease*);
 // 0 is decline before any owned call, 1 complete synchronously, -1 frame failed.
