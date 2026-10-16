@@ -39,6 +39,15 @@ if [ -n "${BENCH_WORLD_LEVELS:-}" ]; then
   done
   [ "${#EXTRA[@]}" -gt 0 ] || { echo 'BENCH_WORLD_LEVELS has no level files'; exit 1; }
 fi
+# Explicit data-only spatial batching experiment (same program, same world allocation).
+# Do not combine it with a different WORLD_VERT ladder: the topology/sidecar is a matched set.
+if [ -n "${BENCH_WORLD_BATCH:-}" ]; then
+  [ -z "${BENCH_WORLD_LEVELS:-}" ] || { echo 'choose WORLD_LEVELS or WORLD_BATCH'; exit 1; }
+  for n in ps2-world.re4mesh ps2-world.r4pw ps2-world.ids ps2-world.r4sg ps2-wv5.re4mesh ps2-wv5.r4sg; do
+    test -f "$BENCH_WORLD_BATCH/$n"
+    EXTRA+=(--set "dc/native/r101/$n=$BENCH_WORLD_BATCH/$n")
+  done
+fi
 python3 "$D367/test11/t11-fix.py" "$2" "$FIX_RAW" --data "$D" --warp "$WARPF" "${EXTRA[@]}" > "$K/hw/fixture-$N.log"
 python3 "$D367/benchmark/fix-replace.py" "$FIX_RAW" "$WARPF" >> "$K/hw/fixture-$N.log"
 python3 "$D367/texchk/fixture_arm.py" "$FIX_RAW" "$FIX" "$2" --programs-dir "$RE4DC_PROGRAMS_DIR" >> "$K/hw/fixture-$N.log"

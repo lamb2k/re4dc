@@ -1,6 +1,7 @@
 #!/bin/bash
 # cg.sh <hwmodel dir> (WSL): call-tree pass (design-logic hwsim_cg, nominal) over the kept traces -> <dir>/cg, then
-# deletes the raw traces (hwmodel: a size list stays).
+# deletes the raw traces (hwmodel: a size list stays). ACTORPLAN_KEEP_TRACES=1 or
+# <dir>/trace/keep.txt retains them for explicit per-frame accounting/replay.
 set -euo pipefail
 E=$1; A=/root/probe/d367-agents/design-logic/tools; P=$E/cg
 N=/opt/toolchains/dc/sh-elf/bin/sh-elf-nm; ELF=$E/re4dc-game.elf; mkdir -p $P
@@ -10,5 +11,8 @@ VBR=$($N $ELF | awk '$3=="_irq_vma_table"{print $1}')
 : > $P/cg.watch.txt
 TR=$(ls $E/trace/trace-*.bin)
 $A/hwsim_cg --elf $ELF --out $P/cgsim --cg $P/cg --cg-vbr ${VBR:-0} --cg-funcs $P/cg.funcs.txt --cg-watch $P/cg.watch.txt $TR > $P/cg.log 2>&1
-ls -la $E/trace/*.bin > $E/trace/sizes.txt; rm -f $E/trace/trace-*.bin
+ls -la $E/trace/*.bin > $E/trace/sizes.txt
+if [ "${ACTORPLAN_KEEP_TRACES:-0}" != 1 ] && [ ! -f "$E/trace/keep.txt" ]; then
+  rm -f $E/trace/trace-*.bin
+fi
 tail -2 $P/cg.log
