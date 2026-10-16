@@ -444,15 +444,27 @@ bool registry_skeleton(cModel* m,RegistryBinding& b,const nmr::Descriptor& desc)
 // gameplay model, the full model in cutscenes): the descriptor to draw for full (or level) descriptor d now. While an
 // in-engine event / cutscene holds the game (Status_flg[1] 0x10000000, as GANADO_LOD) the full one; otherwise its
 // gameplay level when the package has one whose role rows prove this model's infos, else the full one.
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+// STRESS_SADDLER (stress disc only): the warp line's level, 0 = the full descriptor, k = the k-th gameplay level of it.
+extern "C" unsigned re4dc_nmr_lod_pick;
+#endif
 unsigned registry_lod_want(cModel* m,unsigned d,unsigned count) {
     if(d>=registry.descriptor_count)return d;
     const unsigned full=registry.descriptors[d].lod_of?registry.descriptors[d].lod_of-1u:d;
     if(pG && (pG->Status_flg[1]&0x10000000u))return full;
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    if(!re4dc_nmr_lod_pick)return full;
+    unsigned seen=0;
+#endif
     for(unsigned l=0;l<registry.descriptor_count;++l) {
         const auto& ld=registry.descriptors[l];
         if(ld.lod_of!=full+1u || ld.sections!=count)continue;
         cModelInfo* probe[8]{};
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+        if(re4dc_actor_role_bindings(m,ld.appearance,probe,count) && ++seen==re4dc_nmr_lod_pick)return l;
+#else
         if(re4dc_actor_role_bindings(m,ld.appearance,probe,count))return l;
+#endif
     }
     return full;
 }

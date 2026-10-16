@@ -361,6 +361,29 @@ $(OBJDIR)/mod/st1_3/src/st1/r117.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21=1
 ROUTE_MOVIE_GAME_CH21 = $(OBJDIR)/mod/st1_2/src/st1/r11b.o $(OBJDIR)/mod/st1_2/src/st1/r119.o $(OBJDIR)/mod/st1_3/src/st1/r117.o
 endif
 endif
+# STRESS_SADDLER=1 (lane stress16b 2026-10-16; default 0: no effect; stress disc only, never a play image; needs
+#   ROUTE_CH21=1 without ROUTE_CH22 / ROUTE_CH23, DBG_WARP=1): the model-only Saddler stress disc ("RE4DC Saddler Stress (NOT
+#   THE GAME)"). em31 (module 89, Saddler's final form: body type 0 + the tentacle on its back, type 1; r332 on GC Disc 2)
+#   is a sixth room overlay (em31.ovl, linked after pl11 so the earlier overlays keep their bytes). The warp line
+#   `saddler <room frame> x y z ang [lod]` creates both parts in the warp room through EmSetEvent (no list entry, no room
+#   code); under the knob em31 runs no boss logic: idle and one attack loop (body HeadAtk, tentacle T_Atk), with its
+#   per-frame parts / cloth / collision / route work as in the fight. `lod`: 0 full PS2 mesh, 1 / 2 the package's first /
+#   second gameplay level (NATIVE_MODEL_REGISTRY_LOD; g70 / g50 on the stress disc).
+STRESS_SADDLER ?= 0
+ifneq ($(STRESS_SADDLER),0)
+ifneq ($(STRESS_SADDLER)$(ROUTE_CH21)$(ROUTE_OVL)$(DBG_WARP),1111)
+$(error STRESS_SADDLER must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1 DBG_WARP=1)
+endif
+ifneq ($(ROUTE_CH22)$(ROUTE_CH23),00)
+$(error STRESS_SADDLER=1 is for the test 15 recipe (ROUTE_CH21 only): its overlay slot follows the five CH21 slots)
+endif
+MODULES += em31:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em31
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_STRESS_SADDLER=1
+$(OBJDIR)/mod/em31/src/em31/em31.o $(OBJDIR)/dbgwarp_bridge.o $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_STRESS_SADDLER=1
+# with BENCHMARK=1 (bench.mk): four scenes (full, g70, g50, full again) under the stress disc's own name
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=4 '-DRE4DC_BENCH_NAME="SADDLER STRESS"'
+endif
 # ROUTE_CH22=1 (default 0): chapter 2-2 room adapters and Luis' cabin overlay.
 # The overlay follows the five CH21 slots; the chapter movie list remains explicit.
 ROUTE_CH22 ?= 0
@@ -1776,7 +1799,7 @@ CH23_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH23)),em3b:ovl em35:ovl em16)
 # Luis preserves its archive pointers and both manager scans use workAt (CH22 guarded adapter).
 CH22_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH22)),pl14:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(if $(filter 1,$(STRESS_SADDLER)),em31:ovl),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif

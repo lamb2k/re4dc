@@ -130,6 +130,9 @@ extern "C" void re4dc_leon_lod_set(unsigned level);  // coarse_actor_leon_lod.in
 extern "C" void re4dc_ganado_lod_set(unsigned level);  // coarse_ganado_lod.inc (ps2leon.mk GANADO_LOD)
 #endif
 
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+extern "C" { unsigned re4dc_nmr_lod_pick; }  // read by coarse_actor_owner_registry.inc (STRESS_SADDLER): 0 full, k = k-th level
+#endif
 namespace {
 struct Act { u32 frame; u16 buttons; s8 stick; u16 hold; u8 entry; bool ev; s8 stickx; };
 struct Rsf { u16 room; u8 bit; };
@@ -196,6 +199,14 @@ struct Warp {
     unsigned n_charbake_at;
     struct LookStep { u32 frame; bool done; } lookstep[16];  // lookstep <room frame> (LOOK_TOGGLE)
     unsigned n_lookstep;
+#endif
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    // saddler <room frame> x y z ang [lod] (STRESS_SADDLER, lane stress16b): Saddler's final form (em31 body + tentacle)
+    // created in the first room through EmSetEvent at that frame; lod = the registry level to draw (0 full).
+    bool has_saddler, saddler_done;
+    u32 saddler_frame;
+    f32 saddler_pos[3], saddler_ang;
+    unsigned saddler_lod;
 #endif
     bool act_source_clock;  // opt-in fixture holds count source pad ticks, not wall-time stalls
     u8 parse_entry, max_entry;  // `entry <n>`: the room entry later act / goto lines belong to (1 = first room)
@@ -412,6 +423,15 @@ void load()
             re4dc_ganlit_set(num(tok[1]));   // GANADO_LIT_TOGGLE: the Ganado lighting mode at load (0..9)
         } else if (!strcmp(k, "ganfill") && n >= 2) {
             re4dc_ganlit_fill_set(num(tok[1]));   // GANADO_LIT_TOGGLE: the Ganado camera fill, percent (0..100)
+#endif
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+        } else if (!strcmp(k, "saddler") && n >= 6) {
+            wp.has_saddler = true;
+            wp.saddler_frame = num(tok[1]);
+            for (int i = 0; i < 3; ++i) wp.saddler_pos[i] = (f32) strtod(tok[2 + i], nullptr);
+            wp.saddler_ang = (f32) strtod(tok[5], nullptr);
+            wp.saddler_lod = n >= 7 ? num(tok[6]) : 0u;
+            re4dc_nmr_lod_pick = wp.saddler_lod;
 #endif
         } else if (!strcmp(k, "dump")) {
             wp.dump = true;
@@ -711,6 +731,34 @@ void goto_poll()
     }
 }
 // `god` / `alert` (benchmark fixtures, the hwcal disc's invuln / alert): every frame / once at the room frame.
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+// STRESS_SADDLER: the body (type 0) and the tentacle (type 1) from two free-standing list records (EmSetEvent: no list
+// index, no room code); em31's own init loads em/em31.drs + em31.ovl (EmCreate -> EmReadSearch) and builds both models.
+void saddler_poll()
+{
+    if (!wp.has_saddler || wp.saddler_done || wp.rooms != 1 || wp.room_frames < wp.saddler_frame || !pPL ||
+        (pG->Status_flg[1] & 0x10000000)) return;
+    wp.saddler_done = true;
+    static EmListData d[2];
+    cEm* got[2] = {nullptr, nullptr};
+    for (int t = 0; t < 2; ++t) {
+        memset(&d[t], 0, sizeof(d[t]));
+        d[t].id = 0x31;
+        d[t].type = (u8) t;
+        d[t].hp = 30000;
+        for (int i = 0; i < 3; ++i) d[t].pos[i] = (s16) (wp.saddler_pos[i] / 10.0f);
+        d[t].rot[1] = (s16) (wp.saddler_ang * 16384.0f / 3.1415927f);
+        d[t].room = (u16) pG->room_id;
+        cEm* em = EmSetEvent(&d[t]);
+        got[t] = em == errEm ? nullptr : em;
+    }
+    char what[160];
+    snprintf(what, sizeof(what), "saddler set at room frame %u body=%08x tentacle=%08x pos=%d,%d,%d lod=%u",
+             (unsigned) wp.room_frames, (unsigned) (uintptr_t) got[0], (unsigned) (uintptr_t) got[1],
+             (int) wp.saddler_pos[0], (int) wp.saddler_pos[1], (int) wp.saddler_pos[2], wp.saddler_lod);
+    stamp(what);
+}
+#endif
 void god_alert_poll()
 {
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
@@ -960,6 +1008,9 @@ void re4dc_warp_poll(void)
     if (wp.rooms == 1 && bench_poll()) return;
 #endif
     god_alert_poll();
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    if (wp.rooms == 1) saddler_poll();
+#endif
     kill_poll();
 #if RE4DC_WARP_JUMP
     jump_poll();

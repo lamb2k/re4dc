@@ -174,13 +174,14 @@ ifeq ($(filter $(PS2_GIGANTE),0 1),)
 $(error PS2_GIGANTE must be 0 or 1)
 endif
 ifeq ($(PS2_GIGANTE),1)
-ifeq ($(ROUTE_CH23),1)
+# STRESS_SADDLER (lane stress16b, stress disc only): Saddler's body has 83 bones, as Mendez: the ROUTE_CH23 capacity rule.
+ifneq ($(filter 1,$(ROUTE_CH23) $(STRESS_SADDLER)),)
 NATIVE_MODEL_REGISTRY_BONES ?= 96
 else
 NATIVE_MODEL_REGISTRY_BONES ?= 64
 endif
 NATIVE_MODEL_REGISTRY_SHIFT ?= 1
-ifeq ($(ROUTE_CH23),1)
+ifneq ($(filter 1,$(ROUTE_CH23) $(STRESS_SADDLER)),)
 # Mendez has 83 bones. A larger existing registry capacity still admits the 64-bone Gigante.
 ifeq ($(filter $(NATIVE_MODEL_REGISTRY_BONES),96 128),)
 $(error PS2_GIGANTE=1 with ROUTE_CH23=1 needs registry capacity 96 or 128 for Mendez)

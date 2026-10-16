@@ -152,6 +152,14 @@ PRESETS = {
                           category='registry', model_id=0x3b, lit=True, shift=3),
     # em35_R0_Init: whole body + extra, divided upper body, and separated legs.
     # All use the original GC skeleton/animation; the PS2 bone tables match it.
+    # lane stress16b (2026-10-16, the model-only Saddler stress disc STRESS_SADDLER): em31 = Saddler's final form (r332;
+    # src/t_emlist "Saddler2" types Body / Tentacle; r332.cpp setEm 0xA8 / 0xA9). src/em31/em31.cpp em31_R0_Init: type 0
+    # modelInit(ARC 4, ARC 7) + ModInfoMgr.create(ARC 5, ARC 7) (body + head, one 83-part skeleton); type 1 modelInit(ARC 8,
+    # ARC 7) (the tentacle on its back, 60 parts). GC data from the 2004.11.25 review-ROM Disc 2 (--gc-iso).
+    'saddler-em31-00': dict(archive='em31', sections=[(4, 'body'), (5, 'head')], tpl=7, rooms=['r332'], types=[0],
+                            category='boss', model_id=0x31, shift=2, lit=True, ps2_bone_table_skip=(5,)),
+    'saddler-em31-01': dict(archive='em31', sections=[(8, 'body')], tpl=7, rooms=['r332'], types=[1],
+                            category='boss', model_id=0x31, shift=2, lit=True),
     'mendez35-full': dict(archive='em35', sections=[(4, 'body'), (6, 'extra')], tpl=5, rooms=['r11f'], types=[0],
                           category='boss', model_id=0x35, shift=2, lit=True),
     'mendez35-upper': dict(archive='em35', sections=[(7, 'body')], tpl=5, rooms=['r11f'], types=[1],
@@ -554,6 +562,15 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
             id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in pairs)
             dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], g['translation'])) for pb_, g in pairs)
             dt_body = 0.0
+        elif arc in spec.get('ps2_bone_table_skip', ()):
+            # lane stress16b (Saddler em31 BIN 5, the head): the PS2 bone table reads as 143 interleaved entries for the
+            # 83-part GC skeleton (a record layout ps2_bin.parse_bin does not decode); the PS2 nodes still name GC part ids
+            # (bone_ids 34..73), so the weights map by id as usual and the GC section skeleton stands in for the table.
+            # The skeleton identity is then checked only by validation.json's rest / posed surface distance to the GC
+            # mesh (stress disc only; not a release conversion).
+            assert all(0 <= i < len(gsk) for n in m.nodes for i in n['bone_ids']), (role, 'PS2 node bone id outside the GC skeleton')
+            pairs = [(dict(id=g['attach'], parent=g['parent'], pos=list(g['translation'])), g) for g in gsk]
+            val.setdefault('ps2_bone_table_skipped', []).append(hex(arc))
         elif len(m.bones) == len(gsk):
             pairs = list(zip(m.bones, gsk))
         else:
