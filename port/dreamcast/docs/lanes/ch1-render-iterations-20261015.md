@@ -1,5 +1,7 @@
 # Chapter 1 render POC: persistent iteration
 
+> Current snapshot: [physical-test handover, 2026-10-16 UTC](ch1-physical-validation-20261016.md). The final combined image saves 1.268 ms in the model; earlier image measurements below remain historical evidence.
+
 The user requested a persistent goal on 2026-10-15 after the bounded POC in
 `ch1-render-poc-20261015.md` (local commit `168042a3`). The goal is active.
 

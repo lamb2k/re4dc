@@ -1,5 +1,7 @@
 # Chapter 1 cliff movie: retained-world memory loan
 
+> Current snapshot: [physical-test handover, 2026-10-16 UTC](ch1-physical-validation-20261016.md). The final combined image saves 1.268 ms in the model; earlier image measurements below remain historical evidence.
+
 Local experimental branch: `codex/ch1-render-poc-20261015`.
 The extension defaults off. This is emulator/component evidence, not physical
 Dreamcast acceptance or permission to publish/copy a package to an SD card.

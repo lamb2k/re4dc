@@ -1,5 +1,7 @@
 # Chapter 1 render POC, 2026-10-15
 
+> Current snapshot: [physical-test handover, 2026-10-16 UTC](ch1-physical-validation-20261016.md). The final combined image saves 1.268 ms in the model; earlier image measurements below remain historical evidence.
+
 ## Result and scope
 
 The isolated r101 POC combines a small, same-call actor preparation change with
