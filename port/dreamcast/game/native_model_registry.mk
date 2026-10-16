@@ -572,6 +572,26 @@ endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_MATERIAL_RECORD=$(ACTOR_MATERIAL_RECORD)
 endif
 
+# ACTOR_PLAN: bounded preparation POC on the existing owned-actor transaction.
+# Reuse only proofs made in this synchronous call: Leon's plan bind for its
+# palette build, and the all-runs acquisition preflight for the first submission.
+# No persistent plan copy, new arena, changed vertices, or new frame owner.
+# =2 runs the old checks and reports APB/APREP disagreements; =0 is byte-identical.
+ACTOR_PLAN ?= 0
+ifeq ($(filter $(ACTOR_PLAN),0 1 2),)
+$(error ACTOR_PLAN must be 0, 1 or 2)
+endif
+ifneq ($(ACTOR_PLAN),0)
+ifneq ($(ACTOR_TRANSACTION)$(COARSE_ONE_SUBMIT)$(ACTOR_PROOF_LEAN)$(ACTOR_BIND_REUSE),1111)
+$(error ACTOR_PLAN needs ACTOR_TRANSACTION=1 COARSE_ONE_SUBMIT=1 ACTOR_PROOF_LEAN=1 ACTOR_BIND_REUSE=1)
+endif
+ifneq ($(filter-out 0,$(LEON_NATIVE_PIPE)),)
+$(error ACTOR_PLAN and LEON_NATIVE_PIPE are separate experiments)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_PLAN=$(ACTOR_PLAN)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_PLAN=$(ACTOR_PLAN)
+endif
+
 # LEON_NATIVE_PIPE (default 0; lane ln 2026-10-05 experiment; needs ACTOR_TRANSACTION=1 and COARSE_ONE_SUBMIT=1; render
 # only, exact): Leon (pl00) through the owner transaction with what it repeats done once (coarse_actor_leon_pipe.inc,
 # platform/include/native_actor_leon_pipe.inc): one owner_leon_bind per pass-1 call with its finite test as one exponent

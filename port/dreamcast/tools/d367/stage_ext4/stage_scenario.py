@@ -187,7 +187,8 @@ for entry in media:
     assert dest not in changes; changes[dest] = src; digests[dest] = entry['sha256']
 program = json.loads(cas_text(a.programs))[a.arm]
 for dest, name in [('1ST_READ.BIN', '1ST_READ.BIN'), ('dc/sscrn.ovl', 'sscrn.ovl')]:
-    src = cas(HERE / 'programs' / a.arm / name); assert sha(src) == program['files'][name]['sha256']; changes[dest] = src
+    src = cas(Path(os.environ.get('RE4DC_PROGRAMS_DIR', str(HERE / 'programs'))) / a.arm / name)
+    assert sha(src) == program['files'][name]['sha256']; changes[dest] = src
     digests[dest] = program['files'][name]['sha256']
 fixture = json.loads(cas_text(a.fixture)) if a.fixture else {}
 for dest, source in fixture.get('replace', {}).items(): changes[dest] = cas((a.fixture.parent / source).resolve())

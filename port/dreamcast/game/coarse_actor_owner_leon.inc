@@ -119,8 +119,19 @@ inline unsigned leon_hand_key(unsigned costume,int right,int left) {
 #if RE4DC_ACTOR_SWAP || RE4DC_FRONT_NATIVE >= 2
 #error ACTOR_TRANSACTION is incompatible with duplicate-draw/replay adapters
 #endif
+#if RE4DC_ACTOR_PLAN
+extern "C" unsigned re4dc_actor_tx_serial;
+extern "C" unsigned re4dc_actor_binding_peek(cModel*);
+namespace re4dc_material { namespace life { extern unsigned serial; extern bool exhausted; } }
+#endif
 namespace {
 unsigned owner_binding_revision;
+#if RE4DC_ACTOR_PLAN
+// A single-use proof of the bind already performed while preparing this plan.
+// It never survives another transaction, tick, binding or lifetime mutation.
+// Reuse the existing parts/infos records; allocate no second plan or palette.
+struct LeonPreparedBind { cModel* model;unsigned tx,frame,life,revision; } leon_prepared_bind{};
+#endif
 cModel* owner_root_parts;
 #if RE4DC_CHARBAKE_TOGGLE
 // charbake.mk CHARBAKE_TOGGLE (test builds): the hair colour images take the selected variant's identity and key
@@ -163,6 +174,26 @@ bool owner_leon_bind(cModel* m) {
            !coarse_finite((&parts[i]->mat[0][0])[j]))return false;
     return true;
 }
+#if RE4DC_ACTOR_PLAN
+bool owner_leon_bind_prepared(cModel* m) {
+    using namespace re4dc_material;
+    const LeonPreparedBind t=leon_prepared_bind;leon_prepared_bind.model=nullptr;
+    const bool reuse=m && t.model==m && t.tx==re4dc_actor_tx_serial && t.frame==unsigned(pG->Frame_cnt) &&
+        !life::exhausted && t.life==life::serial && t.revision==owner_binding_revision &&
+        owner==m && owner_serial==m->serial && owner_parts==m->pList && owner_root_parts==m->pParts &&
+        !m->id && m->nParts==119 && m->pList && m->pParts && !(m->be_flag&0x4000) &&
+        re4dc_actor::exact_infos(m->pModelInfo,infos,8) && re4dc_actor_binding_peek(m)==t.revision;
+#if RE4DC_ACTOR_PLAN == 2
+    const bool full=owner_leon_bind(m);
+    static unsigned checks,hits,bad;
+    ++checks;if(reuse){++hits;if(!full)++bad;}
+    if(checks%120==0)re4dc_log("APB checks=%u hits=%u bad=%u\n",checks,hits,bad);
+    return full;
+#else
+    return reuse || owner_leon_bind(m);
+#endif
+}
+#endif
 #if RE4DC_ACTOR_TRANSACTION_DIAG
 // WP2 census (diagnostic): the first owner_leon_bind clause that fails, in its order; detail = part index etc.
 unsigned owner_leon_bind_why(cModel* m,unsigned* detail) {
@@ -195,12 +226,19 @@ unsigned owner_leon_bind_why(cModel* m,unsigned* detail) {
 }
 #endif
 int owner_leon_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) {
+#if RE4DC_ACTOR_PLAN
+    if(!owner_leon_bind_prepared(m))return 0;
+#define RE4DC_LEON_BIND_FOR_PALETTE(m) true
+#else
+#define RE4DC_LEON_BIND_FOR_PALETTE(m) owner_leon_bind(m)
+#endif
 #if RE4DC_LEON_HAND_ANY
-    if(!owner_leon_bind(m) || !skin_build(leon_cur_key,leon_cur,8))return 0;
+    if(!RE4DC_LEON_BIND_FOR_PALETTE(m) || !skin_build(leon_cur_key,leon_cur,8))return 0;
     for(unsigned i=0;i<8;++i)if(p.input[i].palette_count!=leon_cur[i]->palette_count)return 0;
 #else
-    if(!owner_leon_bind(m) || !skin_init())return 0;
+    if(!RE4DC_LEON_BIND_FOR_PALETTE(m) || !skin_init())return 0;
 #endif
+#undef RE4DC_LEON_BIND_FOR_PALETTE
     for(unsigned i=0;i<8;++i)if(p.info[i]!=infos[i] || !output[i])return 0;
     Mtx inv;if(!PSMTXInverse(m->pParts->mat,inv))return 0;
     alignas(32) float invx[16];coarse_inv_xmtrx(inv,invx);
@@ -226,6 +264,9 @@ extern "C" int re4dc_actor_plan_leon(cModel* m,Re4dcActorPlan* out) {
     if(RE4DC_WARP_LATE(RE4DC_LATE_LEON_SOURCE))return 0; // test-only old-path arm (warp_late.h 0x10)
 #endif
     if(!m || !out || m->id || RE4DC_LEON_OT_BAD(m) || !RE4DC_LEON_LOD_READY() || !owner_leon_bind(m))return 0;
+#if RE4DC_ACTOR_PLAN
+    leon_prepared_bind={m,re4dc_actor_tx_serial,unsigned(pG->Frame_cnt),re4dc_material::life::serial,owner_binding_revision};
+#endif
     Re4dcActorPlan p{};p.count=8;p.appearance=0x100;p.image=image;p.crc=crc;p.fnv=fnv;p.palettes=owner_leon_palettes;
 #define RE4DC_LEON_OWNER(role,prefix) re4dc_actor::plan_chunk(p,role,infos[role],leon4k::chunks[role],RE4DC_LEON_ROLE_INPUT(role,prefix))
     RE4DC_LEON_OWNER(0,i0);RE4DC_LEON_OWNER(1,i1);RE4DC_LEON_OWNER(2,i2);RE4DC_LEON_OWNER(3,i3);

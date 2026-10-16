@@ -327,6 +327,12 @@ def main():
     s = json.dumps(d).replace('candidate-route' + old + '/', 'candidate-route' + new + '/')
     d = json.loads(s)
     r = d['replace']
+    # An isolated lane can keep its programs outside the shared harness directory.
+    if os.environ.get('RE4DC_PROGRAMS_DIR'):
+        marker = 'candidate-route' + new + '/'
+        for dest, source in list(r.items()):
+            if isinstance(source, str) and marker in source:
+                r[dest] = str(Path(os.environ['RE4DC_PROGRAMS_DIR']) / ('candidate-route' + new) / source.split(marker, 1)[1])
     rm = set(d.get('remove', []))
     rec = []
     names = [x for v in opt.get('--data', []) for x in v.split(',') if x]

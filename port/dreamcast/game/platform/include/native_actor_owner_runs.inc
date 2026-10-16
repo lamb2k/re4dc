@@ -41,10 +41,31 @@ extern "C" int re4dc_actor_preflight_owned_runs(Re4dcModelPart* part,const Re4dc
     }
     return 1;
 }
+#if RE4DC_ACTOR_PLAN
+static int owned_submit_runs(Re4dcModelPart* part,const Re4dcActorDrawRun* runs,unsigned n,
+    const Re4dcActorOwnedMaterial* materials,unsigned nm,const Re4dcActorWorkspaceLease* workspace_lease,
+    const Re4dcActorSkinLease* skin_lease,const Re4dcActorTextureLease* textures,bool prepared) {
+    // The caller already checked every run (including the other OT group)
+    // before publishing the actor. Keep current resource checks, pin commits,
+    // world barriers, kernel qualification and the post-submit checks below.
+    if(prepared && (!part || !runs || !materials || !n || n>kRe4dcActorRuns || owned_submission ||
+       !re4dc_actor_workspace_validate(workspace_lease) || !re4dc_actor_skin_validate(skin_lease) ||
+       !owned_all_textures(textures,nm)))return 0;
+#if RE4DC_ACTOR_PLAN == 2
+    const int full=re4dc_actor_preflight_owned_runs(part,runs,n,materials,nm,workspace_lease,skin_lease,textures);
+    static unsigned checks,bad;
+    if(prepared){++checks;if(!full)++bad;
+        if(checks%600==0)re4dc_log("APREP checks=%u bad=%u\n",checks,bad);}
+    if(!full)return 0;
+#else
+    if(!prepared && !re4dc_actor_preflight_owned_runs(part,runs,n,materials,nm,workspace_lease,skin_lease,textures))return 0;
+#endif
+#else
 extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart* part,const Re4dcActorDrawRun* runs,unsigned n,
     const Re4dcActorOwnedMaterial* materials,unsigned nm,const Re4dcActorWorkspaceLease* workspace_lease,
     const Re4dcActorSkinLease* skin_lease,const Re4dcActorTextureLease* textures) {
     if(!re4dc_actor_preflight_owned_runs(part,runs,n,materials,nm,workspace_lease,skin_lease,textures))return 0;
+#endif
     Re4dcActorStreamState before{};if(!re4dc_actor_stream_state(&before))return 0;
     // Commit ALL texture scene pins before any first-pass emission. Release of
     // an actor lease later cannot evict an already-submitted GPU texture.
@@ -76,6 +97,18 @@ extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart* part,const Re4dcAct
     }
     return 1;
 }
+#if RE4DC_ACTOR_PLAN
+extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart* p,const Re4dcActorDrawRun* r,unsigned n,
+    const Re4dcActorOwnedMaterial* m,unsigned nm,const Re4dcActorWorkspaceLease* w,
+    const Re4dcActorSkinLease* s,const Re4dcActorTextureLease* t) {
+    return owned_submit_runs(p,r,n,m,nm,w,s,t,false);
+}
+extern "C" int re4dc_actor_submit_preflighted_runs(Re4dcModelPart* p,const Re4dcActorDrawRun* r,unsigned n,
+    const Re4dcActorOwnedMaterial* m,unsigned nm,const Re4dcActorWorkspaceLease* w,
+    const Re4dcActorSkinLease* s,const Re4dcActorTextureLease* t) {
+    return owned_submit_runs(p,r,n,m,nm,w,s,t,true);
+}
+#endif
 // Retain the former one-material API for other isolated callers. Its current
 // material fields are copied explicitly; no new rendering policy is inferred.
 namespace {

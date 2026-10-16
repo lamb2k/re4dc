@@ -10,6 +10,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #define RE4DC_MOVIE_WORLD_ARENA 1
+#define RE4DC_MOVIE_WORLD_ARENA_S30 1
 #define RE4DC_PS2_WORLD_DYNAMIC 1
 #define RE4DC_PS2_WORLD_PARTS 1
 #define RE4DC_PS2_PASS_MASK 1
@@ -66,7 +67,7 @@ struct Package {
     struct Header{unsigned part_count=16,mesh_count=1;} h;
     struct Mesh{unsigned part_count=16,first_part=0;} mesh;
     bool live=false;
-    bool adopt(const void* p,unsigned n,bool,bool){CHECK(p&&n==797056);live=!adopt_fail;return live;}
+    bool adopt(const void* p,unsigned n,bool,bool){CHECK(p&&(n==797056||n==1537920));live=!adopt_fail;return live;}
     void close(){live=false;}
     const Header& header()const{return h;}
     const Mesh* meshes()const{return &mesh;}
@@ -118,28 +119,31 @@ static void* movie_sep_raw;static void* movie_sep;unsigned re4dc_movie_stream_st
 void* cell(unsigned offset,unsigned bytes){
     auto* c=reinterpret_cast<Room4Cell*>(heap_begin+offset);*c={kRoom4Magic,room4.generation,bytes,{}};return c+1;
 }
-void initialize(){
+void initialize(unsigned room=0x11f){
     CHECK(mprotect(heap_begin,rw_bytes,PROT_READ|PROT_WRITE)==0);
     room4={true,7};heap_active=true;for(auto& h:Heap)h={-1,0,0};Heap[4]={1,uintptr_t(heap_begin),uintptr_t(heap_begin+rw_bytes)};
     ps2_movie={};ps2w={};ready=true;direct_open=draining_parts=stream_aborted=source_draws_finished=stream_scene=false;
     movie_texture=nullptr;movie_background=movie_picture=false;vram_frees=0;present_pending=hold_present=hold_ta=hold_render=false;present_failures=0;pvr_state={};
     reset_calls=discard_calls=close_calls=fence_calls=reads=opens=world_frees=heap_allocs=heap_frees=0;
     fail_reads=0;fail_open=adopt_fail=stale_on_read=false;service_token=0;movie_sep=movie_sep_raw=nullptr;re4dc_movie_stream_staged=0;
-    saved_world=static_cast<unsigned char*>(cell(0,811264));ps2w.storage=saved_world;ps2w.bytes=811264;
-    mesh_file.assign(797056,0x63);side_file.assign(9076,0);
-    auto* h=reinterpret_cast<Ps2Head*>(side_file.data());std::memcpy(h->magic,"R4PW",4);h->version=1;h->parts=16;h->meshes=1;h->placements=169;
+    const unsigned mb=room==0x100?1537920:797056,sb=room==0x100?19612:9076,cap=room==0x100?1562656:811264;
+    const unsigned np=room==0x100?304:16,placements=room==0x100?283:169;
+    ps2w.room=ps2w.want=room;ps2w.package.h.part_count=np;ps2w.package.mesh.part_count=np;
+    saved_world=static_cast<unsigned char*>(cell(0,cap));ps2w.storage=saved_world;ps2w.bytes=cap;
+    mesh_file.assign(mb,0x63);side_file.assign(sb,0);
+    auto* h=reinterpret_cast<Ps2Head*>(side_file.data());std::memcpy(h->magic,"R4PW",4);h->version=1;h->parts=np;h->meshes=1;h->placements=placements;
     auto* parts=reinterpret_cast<Ps2Part*>(side_file.data()+32);
-    for(unsigned i=0;i<16;++i){parts[i].width=parts[i].height=16;parts[i].pass=i%3;parts[i].cull=i%3;}
-    h->crc=ps2_crc32(side_file.data()+32,9044);
-    std::memcpy(saved_world,mesh_file.data(),mesh_file.size());std::memcpy(saved_world+797056,side_file.data(),side_file.size());
-    CHECK(ps2_movie.capture(saved_world,811264,7));ps2w.package.live=true;
-    ps2w.parts=reinterpret_cast<const Ps2Part*>(saved_world+797056+32);
-    ps2w.placements=reinterpret_cast<const Ps2Placement*>(ps2w.parts+16);ps2w.nplacements=169;ps2w.camera=ps2w.masked=true;
-    ps2_movie_files={797056,9076,ps2_crc32(mesh_file.data(),mesh_file.size()),movie_world::fnv(mesh_file.data(),mesh_file.size()),ps2_crc32(side_file.data(),side_file.size()),movie_world::fnv(side_file.data(),side_file.size())};
-    dyn::block=static_cast<unsigned char*>(cell(811328,64));dyn::nslots=1;
-    dyn::slots=static_cast<dyn::Slot*>(cell(811424,sizeof(dyn::Slot)));*dyn::slots={};
+    for(unsigned i=0;i<np;++i){parts[i].width=parts[i].height=16;parts[i].pass=i%3;parts[i].cull=i%3;}
+    h->crc=ps2_crc32(side_file.data()+32,sb-32);
+    std::memcpy(saved_world,mesh_file.data(),mesh_file.size());std::memcpy(saved_world+mb,side_file.data(),side_file.size());
+    CHECK(ps2_movie.capture(saved_world,cap,7));ps2w.package.live=true;
+    ps2w.parts=reinterpret_cast<const Ps2Part*>(saved_world+mb+32);
+    ps2w.placements=reinterpret_cast<const Ps2Placement*>(ps2w.parts+np);ps2w.nplacements=placements;ps2w.camera=ps2w.masked=true;
+    ps2_movie_files={mb,sb,ps2_crc32(mesh_file.data(),mesh_file.size()),movie_world::fnv(mesh_file.data(),mesh_file.size()),ps2_crc32(side_file.data(),side_file.size()),movie_world::fnv(side_file.data(),side_file.size())};
+    dyn::block=static_cast<unsigned char*>(cell(cap+64,64));dyn::nslots=1;
+    dyn::slots=static_cast<dyn::Slot*>(cell(cap+160,sizeof(dyn::Slot)));*dyn::slots={};
     dyn::slots->serial=0xabc;dyn::slots->rest[3]=71;dyn::slots->source=true;dyn::slots->nparts=1;dyn::slots->pose_offset=56;
-    dyn::slots->parts=static_cast<dyn::PartPose*>(cell(811680,sizeof(dyn::PartPose)));*dyn::slots->parts={};dyn::slots->parts->pose[5]=42;
+    dyn::slots->parts=static_cast<dyn::PartPose*>(cell(cap+416,sizeof(dyn::PartPose)));*dyn::slots->parts={};dyn::slots->parts->pose[5]=42;
     dyn::frame=9;dyn::nmoved=3;std::memset(dyn::state,4,sizeof(dyn::state));
 }
 std::vector<void*> allocate_player(unsigned token){
@@ -149,6 +153,38 @@ std::vector<void*> allocate_player(unsigned token){
     return p;
 }
 void free_player(unsigned token,const std::vector<void*>& p){for(void* v:p)CHECK(re4dc_ps2_mesh_movie_free(token,v));}
+void test_s30_roundtrip_and_failures(){
+    initialize(0x100);
+    CHECK(!re4dc_ps2_mesh_movie_borrow(0x10020));CHECK(!re4dc_ps2_mesh_movie_borrow(0x11f10));
+    const auto slot=*dyn::slots;const auto pose=*dyn::slots->parts;
+    auto token=re4dc_ps2_mesh_movie_borrow(0x10030);CHECK(token);
+    auto allocations=allocate_player(token);service_token=token;
+    void* sep=re4dc_movie_sep_alloc(32,32768);CHECK(sep&&ps2_movie.live==13);
+    free_player(token,allocations);re4dc_movie_sep_free(sep);service_token=0;
+    CHECK(re4dc_ps2_mesh_movie_return(token,0)==1);
+    CHECK(reads==2&&opens==2&&ps2w.nplacements==283&&ps2w.package.live&&ps2w.masked);
+    CHECK(!std::memcmp(saved_world,mesh_file.data(),mesh_file.size()));
+    CHECK(!std::memcmp(saved_world+1537920,side_file.data(),side_file.size()));
+    CHECK(!std::memcmp(dyn::slots,&slot,sizeof(slot)));CHECK(!std::memcmp(dyn::slots->parts,&pose,sizeof(pose)));
+    CHECK(heap_allocs==0&&heap_frees==0&&world_frees==0);
+    for(unsigned bad=0;bad<3;++bad){
+        initialize(0x100);
+        if(bad==0)--ps2_movie_files.side;
+        if(bad==1){ps2_movie_files.mesh-=32;ps2_movie_files.side+=32;}
+        if(bad==2)ps2w.want=0x101;
+        CHECK(!re4dc_ps2_mesh_movie_borrow(0x10030));CHECK(!discard_calls&&!reads);
+    }
+    for(unsigned fault=0;fault<4;++fault){
+        initialize(0x100);token=re4dc_ps2_mesh_movie_borrow(0x10030);CHECK(token);
+        if(fault==0)mesh_file[400000]^=1;
+        if(fault==1)side_file[9000]^=1;
+        if(fault==2)fail_reads=20;
+        if(fault==3)stale_on_read=true;
+        CHECK(re4dc_ps2_mesh_movie_return(token,0)==-1);
+        CHECK(!ps2w.parts&&!ps2w.package.live&&!world_frees);
+        CHECK(mprotect(heap_begin,rw_bytes,PROT_READ|PROT_WRITE)==0);
+    }
+}
 void test_roundtrip_and_slots(){
     initialize();stream_scene=true;pvr_state={true,true};
     auto original_slot=*dyn::slots;auto original_pose=*dyn::slots->parts;
@@ -390,8 +426,10 @@ void test_transitions(){
 }
 }
 int main(){
-    const size_t page=size_t(sysconf(_SC_PAGESIZE));rw_bytes=(900000+page-1)&~(page-1);region_bytes=rw_bytes+2*page;
+    const size_t page=size_t(sysconf(_SC_PAGESIZE));rw_bytes=(1700000+page-1)&~(page-1);region_bytes=rw_bytes+2*page;
     region=mmap(nullptr,region_bytes,PROT_NONE,MAP_PRIVATE|MAP_ANONYMOUS,-1,0);CHECK(region!=MAP_FAILED);heap_begin=static_cast<unsigned char*>(region)+page;
-    test_roundtrip_and_slots();test_declines();test_restore_faults();test_protected_stale_and_boundaries();test_every_partial_allocation_and_service();player::test_terminals();heap_host::test_transitions();
+    player::re4dc_movie_world_scope(0x10030);CHECK(player::movie_scope==0x10030);
+    player::re4dc_movie_world_scope(0x10020);CHECK(player::movie_scope==0);
+    test_s30_roundtrip_and_failures();test_roundtrip_and_slots();test_declines();test_restore_faults();test_protected_stale_and_boundaries();test_every_partial_allocation_and_service();player::test_terminals();heap_host::test_transitions();
     CHECK(munmap(region,region_bytes)==0);std::printf("PASS: %u assertions; actual production lifecycle/restore/UI/service helpers; guard pages + UBSan\n",checks);
 }

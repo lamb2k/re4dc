@@ -8,7 +8,14 @@ import argparse,hashlib,json,re,subprocess,tempfile
 G=Path(__file__).resolve().parents[1]/'game'
 
 def function(path,signature):
-    text=(G/path).read_text();start=text.index(signature);brace=text.index('{',start)
+    text=(G/path).read_text()
+    # The cabin integration gives this unchanged body a different name when
+    # CABIN_SOURCE=1. This suite exercises MOVIE_WORLD_ARENA with CABIN_SOURCE=0.
+    conditional='#if RE4DC_CABIN_SOURCE\nstatic int movie_cabin_ui_try_close_body(){\n#else\nextern "C" int re4dc_ui_movie_try_close(){\n#endif'
+    if path=='platform/native_ui.cpp':
+        assert text.count(conditional)==1
+        text=text.replace(conditional,'extern "C" int re4dc_ui_movie_try_close(){')
+    start=text.index(signature);brace=text.index('{',start)
     while ';' in text[start:brace]:
         start=text.index(signature,start+len(signature));brace=text.index('{',start)
     # Ignore braces in literals/comments, while retaining the exact source span.
@@ -27,6 +34,7 @@ def extract():
         'extern "C" int re4dc_room4_cell_valid(']),
       ('platform/native_ui.cpp',['extern "C" int re4dc_ui_movie_try_close(', 'extern "C" int re4dc_ui_movie_handoff_ready(']),
       ('platform/native_static.cpp',[
+        'bool ps2_movie_layout(',
         'bool ps2_movie_blocked(', 'bool ps2_movie_current(', 'void ps2_movie_unpublish(',
         'std::uint32_t ps2_crc32(', 'bool ps2_movie_reload(', 'bool ps2_movie_dyn_valid(',
         'extern "C" int re4dc_ps2_mesh_movie_blocked(',
@@ -53,7 +61,8 @@ def extract_player():
     parts=[function(path,'struct Movie {').rstrip()+' m;\n']
     parts.append('unsigned movie_world_token=0,movie_scope=0,movie_epoch=1,movie_readers=0;\nbool movie_full_call=false,movie_retiring=false,movie_finishing=false;\n')
     parts.append(function(path,'struct MovieFinishScope {').rstrip()+';\n')
-    for signature in ['bool movie_world_current(', 'void movie_stage_free(', 'int finish(',
+    for signature in ['bool movie_world_id(', 'extern "C" void re4dc_movie_world_scope(',
+                      'bool movie_world_current(', 'void movie_stage_free(', 'int finish(',
                       'extern "C" int re4dc_movie_end(', 'extern "C" int re4dc_movie_cancel(',
                       'extern "C" int re4dc_movie_world_before_room_retire(']:
         parts.append(function(path,signature))

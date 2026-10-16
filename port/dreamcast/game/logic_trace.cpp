@@ -470,6 +470,12 @@ extern "C" __attribute__((section(".text.re4dc_logic_trace"))) void re4dc_logic_
 #else
     if (pPL) {
 #endif
+#if RE4DC_TRACE_SS_MASK && !RE4DC_LOGIC_TRACE_OWNERSHIP
+        // The subscreen owns this backing: pParts is no longer a game pointer.
+        // Its digest is printed as "~" below, just like the skipped enemy and
+        // object walks. Keep the scalar fixture-position reads unchanged.
+        if (!ssm)
+#endif
         model_state(ps, pf, pm, pPL);
         p[0] = bits(trace_value(&pPL->pos.x)); p[1] = bits(trace_value(&pPL->pos.y)); p[2] = bits(trace_value(&pPL->pos.z));
         a[0] = bits(trace_value(&pPL->ang.x)); a[1] = bits(trace_value(&pPL->ang.y)); a[2] = bits(trace_value(&pPL->ang.z));

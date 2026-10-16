@@ -984,6 +984,13 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
     }
     if(order!=r->count){actor_release(*r);actor_fail();return -1;}
     Re4dcActorDrawRun runs[kRe4dcActorRuns];unsigned n=0;
+#if RE4DC_ACTOR_PLAN
+    // Acquisition preflighted both groups. This first-pass array is an
+    // unchanged subset, with no source callback or lifetime mutation since.
+    const auto submit_owned=lean_held?re4dc_actor_submit_preflighted_runs:re4dc_actor_submit_owned_runs;
+#else
+    const auto submit_owned=re4dc_actor_submit_owned_runs;
+#endif
     for(unsigned i=0;i<r->count;++i) {
         const auto& p=r->part[i];
         if(!(p.flags&8))continue;
@@ -1012,7 +1019,7 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
 #endif
     }
     (void)pco_nearest;(void)pco_check;
-    const int result=pco_skip?1:n?re4dc_actor_submit_owned_runs(&r->base,runs,n,r->plan.materials,r->plan.material_count,&r->workspace,&r->skin,r->textures):1;
+    const int result=pco_skip?1:n?submit_owned(&r->base,runs,n,r->plan.materials,r->plan.material_count,&r->workspace,&r->skin,r->textures):1;
 #if RE4DC_PS2_INTERIOR_OWNER == 2
     if(pco_check) {
         float have=0;const int noted=re4dc_actor_crowd_peek(m,&have);
@@ -1024,7 +1031,7 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
     }
 #endif
 #else
-    const int result=n?re4dc_actor_submit_owned_runs(&r->base,runs,n,r->plan.materials,r->plan.material_count,&r->workspace,&r->skin,r->textures):1;
+    const int result=n?submit_owned(&r->base,runs,n,r->plan.materials,r->plan.material_count,&r->workspace,&r->skin,r->textures):1;
 #endif
 #if RE4DC_CROWD_OUTPUT
     if(r->crowd_ganado) {

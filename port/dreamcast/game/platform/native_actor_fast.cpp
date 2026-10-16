@@ -3689,6 +3689,51 @@ void pass_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     }
 }
 
+#if RE4DC_ACTOR_ONEPASS
+#if RE4DC_ACTOR_ONEPASS == 2
+alignas(32) pvr_vertex_t onepass_ref_v[kMaxVertices];
+alignas(32) u8 onepass_ref_oc[kMaxVertices];
+unsigned onepass_checked,onepass_vertices,onepass_bad,onepass_mask_bad;
+#endif
+// Fuse the traversal in bounded blocks while retaining both qualified AVK
+// arithmetic kernels. Each unique indexed vertex is still processed once;
+// clipping and SQ emission keep the existing whole-meshlet cache and owner.
+// No matrix/pose reuse across frames and no strip-ordered vertex expansion.
+void pass_onepass(Part& e,const Lights& L,const Records& r,unsigned n,const PosConst& k,
+                  bool s16_uv,unsigned& all,unsigned& any) {
+    const Cache saved=e.cache;
+    all=~0U;any=0;
+    for(unsigned first=0;first<n;first+=RE4DC_ACTOR_ONEPASS_BLOCK) {
+        const unsigned count=std::min(unsigned(RE4DC_ACTOR_ONEPASS_BLOCK),n-first);
+        Records sub=r;sub.r+=first*r.stride;
+        e.cache.v=saved.v+first;e.cache.oc=saved.oc+first;
+        unsigned a,o;
+        pass_positions(e,sub,count,k,s16_uv,a,o);
+        pass_lights(e,L,sub,count);
+        all&=a;any|=o;
+    }
+    e.cache=saved;
+#if RE4DC_ACTOR_ONEPASS == 2
+    e.cache.v=onepass_ref_v;e.cache.oc=onepass_ref_oc;
+    unsigned a,o;
+    pass_positions(e,r,n,k,s16_uv,a,o);
+    pass_lights(e,L,r,n);
+    stats.position_transforms-=n;
+    e.cache=saved;
+    ++onepass_checked;onepass_vertices+=n;
+    if(a!=all || o!=any)++onepass_mask_bad;
+    for(unsigned i=0;i<n;++i) {
+        // x/y/z/u/v/argb (six words); flags/oargb are primed after this pass.
+        if(std::memcmp(&saved.v[i].x,&onepass_ref_v[i].x,6*sizeof(u32)) ||
+           saved.oc[i]!=onepass_ref_oc[i])++onepass_bad;
+    }
+    if(!(onepass_checked%256))
+        re4dc_log("AONE checks=%u vertices=%u vertex_bad=%u mask_bad=%u block=%u\n",
+            onepass_checked,onepass_vertices,onepass_bad,onepass_mask_bad,unsigned(RE4DC_ACTOR_ONEPASS_BLOCK));
+#endif
+}
+#endif
+
 #ifndef RE4DC_ACTOR_EXACT_FAST
 #define RE4DC_ACTOR_EXACT_FAST 0
 #endif
@@ -5538,6 +5583,12 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         ++stats.meshlets; stats.vertices += nv; stats.corners += ni; stats.triangles += nt;
         if (kCrowd) stats.crowd_triangles[tier] += nt;
         unsigned all, any;
+#if RE4DC_ACTOR_ONEPASS
+        const bool onepass=nv>=unsigned(RE4DC_ACTOR_ONEPASS_BLOCK)*2U && lights.fast &&
+            !lights.constant && bake==kBakeNone && !e.colors;
+        if(onepass)pass_onepass(e,lights,r,nv,k,s16_uv,all,any);
+        else
+#endif
         pass_positions(e, r, nv, k, s16_uv, all, any);
         if (all & kOcCull) {
             ++stats.meshlets_culled;
@@ -5545,6 +5596,10 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
             continue;
         }
         e.prime(nv);
+#if RE4DC_ACTOR_ONEPASS
+        if(onepass) {} // colours were written beside positions in each block
+        else
+#endif
         if (lights.constant) {
 #if RE4DC_AVK
             if (!e.colors) {

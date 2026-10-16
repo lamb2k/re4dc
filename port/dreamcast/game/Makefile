@@ -1293,10 +1293,13 @@ $(CABIN_SOURCE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/cabin-source.h -includ
 # D38: exact full blocking r11f10/11f11 movies borrow the retained world cell.
 # No resolution/audio changes, source-heap expansion or allocator fallback.
 MOVIE_WORLD_ARENA ?= 0
+# Bounded Chapter 1 extension: full r100s30 borrows the same retained owner.
+MOVIE_WORLD_ARENA_S30 ?= 0
 .PHONY: movie-world-arena-force
 $(OBJDIR)/movie-world-arena.h: movie-world-arena-force
 	@mkdir -p $(dir $@)
 	@printf '#define RE4DC_MOVIE_WORLD_ARENA %s\n' '$(MOVIE_WORLD_ARENA)' > $@.tmp
+	@printf '#define RE4DC_MOVIE_WORLD_ARENA_S30 %s\n' '$(MOVIE_WORLD_ARENA_S30)' >> $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 MOVIE_WORLD_ARENA_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o
@@ -2261,6 +2264,11 @@ include t2exact.mk
 include knobs.mk
 
 # Validate after all knob defaults and included recipes are available.
+ifneq ($(MOVIE_WORLD_ARENA_S30),0)
+ifneq ($(MOVIE_WORLD_ARENA),1)
+$(error MOVIE_WORLD_ARENA_S30 needs MOVIE_WORLD_ARENA=1)
+endif
+endif
 ifeq ($(MOVIE_WORLD_ARENA),1)
 ifneq ($(ROUTE_MOVIES)$(ROUTE_MOVIE_YUV)$(PS2_WORLD_DRAW)$(PS2_WORLD_MESH)$(IO_ALIGNED)$(MOVIE_HEAP_EVICT)$(D349_RENDERER_STACK)$(PVR_STREAM),11111111)
 $(error MOVIE_WORLD_ARENA=1 needs ROUTE_MOVIES/ROUTE_MOVIE_YUV/PS2_WORLD_DRAW/PS2_WORLD_MESH/IO_ALIGNED/MOVIE_HEAP_EVICT/D349_RENDERER_STACK/PVR_STREAM=1)
