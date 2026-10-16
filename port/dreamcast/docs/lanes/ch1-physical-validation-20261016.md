@@ -6,6 +6,11 @@ It covers the isolated tree `/root/probe/codex-ch1-render-20261015/tree` only.
 The goal is blocked awaiting physical appearance, performance and stability
 acceptance before converting another room or promoting this candidate.
 
+The later [prepared world/character trials](prepared-draw-experiments-20261016.md)
+were both slower in the complete frame model and were archived without changing
+this runtime or the physical packages. Their bounded checks are separate from
+the package acceptance evidence below.
+
 ## Current implementation
 
 Runtime source is local commit `bce6fd98`, following trace-guard fix `a9533269`.
