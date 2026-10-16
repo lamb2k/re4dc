@@ -1,0 +1,13 @@
+name ch2-entry-r11d
+# lane ch2code16: entry smoke (Codex cx-r11d source arrival), Ashley found + following, god, alive census
+room 0x11d
+pos 20214 0 13952
+ang -1.8170
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+dump
+alivelog 150
+census 300
+act 360 fwd 12

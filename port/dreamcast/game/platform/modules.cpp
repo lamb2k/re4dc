@@ -76,6 +76,9 @@ MODULE(em24)
 #if defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
 MODULE(em11)
 #endif
+#if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
+MODULE(em16)
+#endif
 #if !RE4DC_ROUTE_OVL
 MODULE(pl0f)
 MODULE(em2f)
@@ -177,6 +180,9 @@ static const Re4dcModule g_modules[] = {
     MODULE(47, pl11),  // ROUTE_CH21: r117 on: Ashley (enemy module 3, cSubAshley)
 #endif
     MODULE(13, em11),  // ROUTE_CH21: r117: enabled-later (the Ganados of a later visit; em10g group)
+#endif
+#if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
+    MODULE(20, em16),  // ROUTE_CH23: r11d: enabled-later,entry (the night village Ganados + Bella sisters; em10g group)
 #endif
 #if defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
 #if RE4DC_ROUTE_OVL

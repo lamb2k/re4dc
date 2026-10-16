@@ -330,6 +330,16 @@ for _n in ('res16c', 'res16d', 'res16e', 'res16f', 'res16g'):
     DATA[_n] = {'dc/resident.bin': RS16L + '/' + _n + '/resident.bin'}
 for _n in ('vq16c', 'vq16cr'):
     DATA[_n] = {'dc/tex.pak': RS16L + '/' + _n + '/tex-vq16c.pak'}
+# Chapters 2-2 / 2-3 (lane ch2code16, 10-16; CH2-CODE-COMPLETE-20261016.md): ch2 = the chapter 2 route data (tools/d367/ch2/
+# mkch2data.py: route-v7's 2-2 / 2-3 rooms over test 15's data, r11d / r11e released rooms, em16 prepared, the 53-entry
+# chapter 1+2 stream file). Order: last (after T15_DATA). Needs the game's chapter 2 knobs (ch2/ch2-build.sh CH2REC,
+# AICA_STR_ENT_MAX >= 53). 'unremove': base-disc pictures the 2-2 / 2-3 rooms read stay on the disc.
+CH2D = os.environ.get('CH2D', '/root/re4data/private/ch2data-20261016')
+UNREMOVE = {}
+if os.path.exists(CH2D + '/ch2-data.json'):
+    _c2 = json.load(open(CH2D + '/ch2-data.json'))
+    DATA['ch2'] = _c2['replace']
+    UNREMOVE['ch2'] = _c2['unremove']
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
@@ -367,6 +377,7 @@ def main():
     for a_, b_ in CLASH:
         assert not (a_ in names and b_ in names), 'data sets %s and %s replace the same files' % (a_, b_)
     for nm in names:
+        rm -= set(UNREMOVE.get(nm, ()))
         for k, v in DATA[nm].items():
             if k == 'tex':
                 for t in (v if isinstance(v, list) else [v]):
