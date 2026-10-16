@@ -230,6 +230,30 @@ PRESETS = {
 }
 
 
+# lane cast16 (2026-10-16): the castle Zealot modules (em14 / em19 / em1a / em1b: em10.cpp + <em>_set.cpp) use em11's
+# type 7 section layout (the same ARC numbers, own archives). Types 8 / 9 change the TPL / body / head rows, type 10
+# (em1b) is bodyless-head (mot[2..5] = 0). Each is a NATIVE_MODEL_REGISTRY_POOL preset like zealot-em11-07p.
+def _zealot_pool(archive, typ, rooms):
+    base = PRESETS['zealot-em11-07p']
+    body, tpl, head, htpl = {7: (0x1fc, 0x1fd, 0x1fe, 0x201), 8: (0x1fc, 0x21a, 0x21b, 0x21c),
+                             9: (0x21d, 0x21e, 0x21f, 0x201), 10: (0x221, 0x222, None, None)}[typ]
+    secs = [(body, 'body')]
+    if head is not None:
+        secs += [(head, 'head'), (0x1ff, 'head-hit'), (0x200, 'head-hit2')]
+    secs += [x for x in base['sections'] if x[1] not in ('body', 'head', 'head-hit', 'head-hit2')]
+    st = {k: v for k, v in base['section_tpls'].items() if k not in (0x1fe, 0x1ff, 0x200)}
+    if head is not None:
+        st.update({head: htpl, 0x1ff: htpl, 0x200: htpl})
+    return dict(archive=archive, sections=secs, tpl=tpl, section_tpls=st, rooms=rooms, types=[typ],
+                category='registry', model_id=int(archive[2:], 16), lit=True, subset_bones=True)
+
+
+for _a, _types, _rooms in (('em14', (7, 8, 9), ['r20f']), ('em19', (7, 8, 9), ['r20d']),
+                           ('em1a', (7, 8, 9), ['r209']), ('em1b', (7, 8, 10), ['r201', 'r20c'])):
+    for _t in _types:
+        PRESETS[f'zealot-{_a}-{_t:02x}p'] = _zealot_pool(_a, _t, _rooms)
+
+
 def section_specs(spec):
     """Source BIN/role/TPL selections; old single-TPL presets keep their order."""
     overrides = spec.get('section_tpls', {})
