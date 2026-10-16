@@ -168,3 +168,72 @@ budget (r107, r109, r104, r106) spend their cost on structure. That needs the ma
 
 Private data: `re4-assets-private\worldtest-20261016\terrain-<room>` (the wv5 mesh, class.json, L2.json, job.log,
 SHA256SUMS). Runs: `C:\Flycast-Evidence\re4-dreamcast\worldtest-20261016\t-<room>-<cam>-<A|T>`.
+
+## Next: the Blender pass, top 3 rooms by structure cost (10-16)
+
+All figures are MODELLED (not measured): 1.1 ms per 1k on-screen world TA vertices, over the price2 view samples (door
+arrivals and enemy set positions with 16 yaws each, plus the sheet cameras) on the shipping level 0. A part counts as
+"structure" when terrain mode classes it so. Script: `scripts/price_struct.py`; data: `price-struct.json`. r101 is
+left out because it already ships the reduced world32/C16 set.
+
+| Rank | Room | World p90 / structure p90 | Worst view / structure in it | Structure share | Note |
+| --- | --- | --- | --- | --- | --- |
+| 1 | r107 | 29.82 / 29.05 ms | 38.95 / 37.80 ms | 0.96 | Canyon sight lines; worst world of chapter 1 |
+| 2 | r109 | 24.88 / 24.40 ms | 34.97 / 33.73 ms | 0.97 | The cabin: almost everything is structure |
+| 3 | r104 | 19.19 / 17.74 ms | 25.68 / 23.32 ms | 0.90 | Next are r106 (17.21 p90) and r103 (17.17); r105 has one 28.74 ms worst view |
+
+Terrain mode cannot help these rooms. Structure is 90-97% of their world cost.
+
+## Lost-part check (required gate for any reduced world; coordinator 10-16)
+
+The tool is `scripts/lostpart.py`. It runs offline in about 20-90 s per room. There is one verdict per set:
+`lostpart/<set>.txt` (PASS/FAIL list), `<set>.json` (every piece's numbers) and `<set>-flags.png` (thumbnails).
+
+**How it works.**
+- Every original (placement, part) is split into connected pieces. A part is one texture of one mesh, so fused meshes
+  split by texture first.
+- Each piece is compared with the reduced world's triangles of the same texture, so batched outputs need no part
+  identity.
+- **Silhouette test:** X, Y and Z silhouettes at 128 px on the piece's longest side. With no back-face culling, the +/-
+  views of an axis are identical, so the 6 axes reduce to 3.
+- **Walk-path cameras:** the room's sheet cameras, door arrivals and enemy set positions, at 8 yaws each, 320x240,
+  clipped at the near plane. Each piece is checked against reduced triangles of its own texture, so a changed occluder
+  is not counted as a lost part.
+- A piece is flagged FAIL when any of these holds:
+  - its coverage drops below 0.90 and the loss is at least 4 px² on screen at its walk-path distance;
+  - its thin pixels (what a 3x3 opening removes) keep less than 0.75;
+  - a camera loses at least 20 px of it and keeps less than 50%.
+
+**Validation.** Original = crowd12 bake13 level 0; reduced = each set's ps2-wv5.
+
+| Set | Flagged of 4494 | Stake crossbar 0xb9 | Pyre planks 0x75 (6) | Fence rails 0x17 | Gone completely |
+| --- | --- | --- | --- | --- | --- |
+| self (original vs original) | 0 (PASS) | pass | pass | pass | 0 |
+| test 15 wv32r101 | 1657 | **FLAG** (cov 0) | **FLAG** (cov 0) | **FLAG** (87) | 382 |
+| test 16 C (C4) | 1598 | pass | pass | **FLAG** (87) | 358 |
+| test 17 C16 | 1511 | pass | pass | pass | 349 |
+
+- The check finds all three known losses and clears them where the sets fixed them.
+- **C16 does not pass.** 464 pieces are flagged by both the silhouette test and the cameras, mainly beams, planks,
+  posts and boards (bins 0x7c, 0x75, 0x19, 0x1f, 0x73, 0x1a, 0xf, 0xe).
+- An in-game pair confirms it (`lostpart/r101-C16-ingame.png`; same ELF, original world vs C16):
+  - at the em15 position, the slanted roof/fence beam is gone;
+  - at the r102 door, the fence boards and a post change.
+- So the shipped test 15/16 worlds, and C16, lose structure away from the cross.
+
+**Terrain sets (test 17 candidates, held):**
+- **r102:** FAIL, 5 rock pieces, all terrain. They keep 0.85-0.89 of their silhouette (the "slightly flatter" cave).
+- **r108:** FAIL, 31 pieces, all classed terrain:
+  - the dead trees (0x72) lose thin branch tips;
+  - nine 0x4e strips (12 triangles, about 2 m) vanish completely, and the em17 cameras show them (up to 1003 px).
+- **r10a:** FAIL, 24 pieces. Its trees (0xa9, 0xab, 0xac) are classed terrain and lose their branch tips.
+- **Root cause:** the terrain classifier counts trees as terrain (irregular and large), so a structure test needs
+  "thin branches" as well.
+- **r102 seam:** the merchant-cave streak stays with `--lock-borders` (`TERRAIN-r102-c2-locked.png`). It is not an
+  open-border crack; most likely it is a sliver triangle stretched across a UV seam on the fold. Coverage cannot see
+  it.
+
+**Other gates on the held terrain data** (land17 = t15/int d7c4c0a3 + wt17terr; ELFs w17trT and w17tmW):
+- STRICT + decisions r102/r108/r10a: MUST-IDENTICAL, drift 0.
+- TEXCHK/LEON-GC: PASS on all 6 runs.
+- KOS/GDEMU: not run. fp_twin refuses a twin of a build made from a dirty tree.

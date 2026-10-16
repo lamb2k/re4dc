@@ -1,0 +1,8 @@
+LOST-PART CHECK r102-T17: FAIL (5 of 616 pieces flagged)
+original /root/probe/world16-20261016/rooms/r102/src.re4mesh /root/probe/world16-20261016/rooms/r102/src.r4pw
+reduced  C:/Game Dev/Emulators/re4-assets-private/world-terrain-wt17-20261016/r102/ps2-wv5.re4mesh /root/probe/world16-20261016/rooms/r102/src.r4pw
+FAIL bin 0x04 part 26 placement 4 tris 86 box [-16233, -6656, -1739]..[-15539, -2839, 1705] walk 4748 mm: cov 0.89 thin 1.00 (Y) lost 1632 screen px
+FAIL bin 0x05 part 33 placement 5 tris 120 box [-9228, -8433, 9419]..[-7946, -6296, 12695] walk 7381 mm: cov 0.85 thin 1.00 (Y) lost 584 screen px
+FAIL bin 0x09 part 52 placement 9 tris 64 box [-13262, -8462, 39948]..[-11800, -6437, 41275] walk 7467 mm: cov 0.85 thin 1.00 (Y) lost 354 screen px
+FAIL bin 0x06 part 41 placement 6 tris 148 box [357, -8320, 14781]..[1951, -5842, 18969] walk 7099 mm: cov 0.98 thin 0.70 (Y) lost 246 screen px
+FAIL bin 0x09 part 55 placement 9 tris 23 box [-9888, -8537, 41610]..[-8715, -8412, 42570] walk 8475 mm: cov 0.89 thin 1.00 (X) lost 30 screen px

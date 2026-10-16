@@ -1,0 +1,5 @@
+LOST-PART CHECK r101-self: PASS (0 of 4494 pieces flagged)
+original C:/Game Dev/Emulators/re4-assets-private/crowd12-bake-20261015/r101-t13/ps2-world.re4mesh C:/Game Dev/Emulators/re4-assets-private/crowd12-bake-20261015/r101-t13/ps2-world.r4pw
+reduced  C:/Game Dev/Emulators/re4-assets-private/crowd12-bake-20261015/r101-t13/ps2-world.re4mesh C:/Game Dev/Emulators/re4-assets-private/crowd12-bake-20261015/r101-t13/ps2-world.r4pw
+
+pieces inside box -7000,1500,-500,6500,-1500,7000:

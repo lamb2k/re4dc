@@ -1,0 +1,27 @@
+LOST-PART CHECK r10a-T17: FAIL (24 of 3242 pieces flagged)
+original /root/probe/world16-20261016/rooms/r10a/src.re4mesh /root/probe/world16-20261016/rooms/r10a/src.r4pw
+reduced  C:/Game Dev/Emulators/re4-assets-private/world-terrain-wt17-20261016/r10a/ps2-wv5.re4mesh /root/probe/world16-20261016/rooms/r10a/src.r4pw
+FAIL bin 0xa9 part 340 placement 169 tris 220 box [7765, -2568, 76536]..[10136, -836, 79475] walk 1774 mm: cov 0.85 thin 0.71 (Y) lost 12149 screen px
+FAIL bin 0xab part 342 placement 183 tris 127 box [5143, -2566, 82329]..[6964, -1644, 83807] walk 2164 mm: cov 0.78 thin 1.00 (Y) lost 4158 screen px
+FAIL bin 0xa9 part 340 placement 177 tris 220 box [56284, -5246, 99977]..[58875, -2975, 102670] walk 4141 mm: cov 0.83 thin 0.75 (Y) lost 2412 screen px
+FAIL bin 0xa9 part 340 placement 179 tris 220 box [8501, -5052, 91144]..[11248, -2617, 93184] walk 3835 mm: cov 0.85 thin 0.57 (Y) lost 2326 screen px
+FAIL bin 0xab part 342 placement 189 tris 127 box [53920, -4171, 95471]..[55751, -3581, 96989] walk 3876 mm: cov 0.77 thin 1.00 (Y) lost 1369 screen px
+FAIL bin 0xa9 part 340 placement 181 tris 220 box [42108, -7139, 86556]..[44995, -5165, 89095] walk 6152 mm: cov 0.84 thin 0.68 (Y) lost 1013 screen px
+FAIL bin 0xa9 part 340 placement 175 tris 220 box [47590, -7080, 109956]..[50481, -4926, 112074] walk 6003 mm: cov 0.85 thin 0.65 (Y) lost 987 screen px
+FAIL bin 0xa9 part 340 placement 173 tris 220 box [57396, -7120, 86414]..[60224, -5211, 88980] walk 6166 mm: cov 0.85 thin 0.66 (Y) lost 975 screen px
+FAIL bin 0xac part 343 placement 192 tris 734 box [70915, -10005, 93245]..[77115, -6940, 97155] walk 8472 mm: cov 0.88 thin 0.71 (X) lost 888 screen px | cam em12 yaw 0.00 18/39 px
+FAIL bin 0xa9 part 340 placement 171 tris 220 box [67501, -6075, 80833]..[70263, -3979, 83418] walk 5027 mm: cov 0.88 thin 0.70 (X) lost 779 screen px
+FAIL bin 0xab part 342 placement 183 tris 144 box [6802, -4237, 82286]..[8698, -2826, 83901] walk 3567 mm: cov 0.84 thin 0.66 (Z) lost 725 screen px
+FAIL bin 0xab part 342 placement 185 tris 127 box [40437, -5904, 110673]..[42104, -4982, 112451] walk 5466 mm: cov 0.79 thin 0.99 (Y) lost 567 screen px
+FAIL bin 0xab part 342 placement 187 tris 127 box [45491, -6028, 95820]..[46981, -5106, 97638] walk 5567 mm: cov 0.80 thin 1.00 (Y) lost 556 screen px
+FAIL bin 0xab part 342 placement 191 tris 127 box [60133, -6254, 92316]..[61894, -5664, 94056] walk 5959 mm: cov 0.79 thin 1.00 (Y) lost 521 screen px
+FAIL bin 0xab part 342 placement 189 tris 144 box [55507, -5985, 95831]..[57387, -4607, 97369] walk 5296 mm: cov 0.80 thin 0.65 (X) lost 469 screen px
+FAIL bin 0xab part 342 placement 191 tris 144 box [61947, -8068, 93186]..[63758, -6690, 94746] walk 7396 mm: cov 0.79 thin 0.65 (Z) lost 190 screen px
+FAIL bin 0xab part 342 placement 187 tris 144 box [45466, -7699, 94073]..[47081, -6288, 95963] walk 6994 mm: cov 0.84 thin 0.70 (X) lost 185 screen px
+FAIL bin 0xab part 342 placement 185 tris 144 box [40167, -7575, 112274]..[41575, -6164, 114081] walk 6870 mm: cov 0.85 thin 0.68 (X) lost 168 screen px
+FAIL bin 0xab part 342 placement 183 tris 61 box [5777, -4535, 83614]..[6864, -3858, 84100] walk 4196 mm: cov 0.84 thin 0.76 (Z) lost 168 screen px
+FAIL bin 0xab part 342 placement 189 tris 61 box [54821, -5991, 97281]..[55960, -5435, 97787] walk 5713 mm: cov 0.84 thin 0.69 (Z) lost 93 screen px
+FAIL bin 0xac part 343 placement 192 tris 10 box [74160, -9855, 94595]..[74520, -9250, 94850] walk 9566 mm: cov 0.55 thin 1.00 (Z) lost 54 screen px
+FAIL bin 0x42 part 112 placement 66 tris 248 box [22145, -10500, 109515]..[72095, -510, 120310] walk 5528 mm: cov 1.00 thin 1.00 (X) lost 0 screen px | cam em12 yaw 1.57 0/52 px
+FAIL bin 0xab part 342 placement 185 tris 61 box [40302, -7873, 111063]..[41002, -7196, 111965] walk 7534 mm: cov 0.83 thin 0.83 (Z) lost 44 screen px
+FAIL bin 0xab part 342 placement 191 tris 61 box [60707, -8074, 94195]..[61766, -7518, 94898] walk 7796 mm: cov 0.89 thin 0.78 (Z) lost 33 screen px
