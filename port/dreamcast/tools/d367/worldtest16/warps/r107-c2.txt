@@ -1,0 +1,8 @@
+name wt-r107-c2
+viewdist 0
+room 0x107
+pos 74980 180 -34790
+ang 3.927
+inv default
+god
+freeze 400

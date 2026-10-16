@@ -81,6 +81,11 @@ BORDER_EPS = None
 # vertices'). A thin post the camera can stand next to keeps a tight bound while the far roofs of the same cluster
 # reduce.
 VERTEX_EPS = None
+# KEEP_PIECES (False = the historical behaviour; ps2_world_vert_ladder.py --keep-pieces, lane worldtest16 2026-10-16): no
+# connected piece is ever deleted. _drop_small drops nothing, and a collapse that would remove the last live triangles
+# of a piece (a plank, post, chair leg, branch or grass card folding away) is refused. In game the reduction deleted
+# whole planks, chair legs, tree trunks and fence rails next to the camera (worldtest16 sheets).
+KEEP_PIECES = False
 
 
 def _c1555(c):
@@ -168,6 +173,25 @@ class Simplifier:
         for a, b in edges:
             self._push(a, b)
             self._push(b, a)
+        if KEEP_PIECES:
+            par = {}
+
+            def find(a):
+                while par.setdefault(a, a) != a:
+                    par[a] = par[par[a]]
+                    a = par[a]
+                return a
+            for t in self.tv:
+                r0 = find(t[0])
+                for x in t[1:]:
+                    r1 = find(x)
+                    if r0 != r1:
+                        par[r1] = r0
+            self.comp = {v: find(v) for v in self.vt}
+            self.comp_live = {}
+            for t in self.tv:
+                c = self.comp[t[0]]
+                self.comp_live[c] = self.comp_live.get(c, 0) + 1
 
     # ---- candidates
     def _cost(self, u, v):
@@ -192,6 +216,10 @@ class Simplifier:
     def _valid(self, u, v):
         if not any(v in self.tv[t] for t in self.vt[u]):
             return False  # the edge disappeared since this candidate was queued
+        if KEEP_PIECES:
+            gone = sum(1 for t in self.vt[u] if v in self.tv[t])
+            if self.comp_live[self.comp[u]] - gone < 2:
+                return False  # the piece would fold away: keep it
         pv = self.pos[v]
         for t in self.vt[u]:
             tv = self.tv[t]
@@ -286,6 +314,8 @@ class Simplifier:
                 break
         for t in removed:
             self.alive[t] = False
+            if KEEP_PIECES:
+                self.comp_live[self.comp[u]] -= 1
             for x in self.tv[t]:
                 if x != u:
                     self.vt[x].discard(t)
@@ -344,6 +374,8 @@ class Simplifier:
         if not self.alive[t]:
             return
         self.alive[t] = False
+        if KEEP_PIECES:
+            self.comp_live[self.comp[self.tv[t][0]]] -= 1
         for x in set(self.tv[t]):
             if x in self.vt:
                 self.vt[x].discard(t)
@@ -366,6 +398,8 @@ class Simplifier:
         self._drop_small(eps)
 
     def _drop_small(self, eps):
+        if KEEP_PIECES:
+            return
         live = [t for t in range(len(self.tv)) if self.alive[t]]
         parent = {}
 

@@ -1,0 +1,9 @@
+name wt-r104-c2
+viewdist 0
+room 0x104
+pos -6040 1010 8570
+ang 2.356
+rsf 0x104 1
+inv default
+god
+freeze 400

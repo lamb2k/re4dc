@@ -1,0 +1,8 @@
+name wt-r105-c2
+viewdist 0
+room 0x105
+pos 32440 2840 -7090
+ang 5.498
+inv default
+god
+freeze 400

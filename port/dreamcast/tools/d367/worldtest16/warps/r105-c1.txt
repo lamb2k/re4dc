@@ -1,0 +1,8 @@
+name wt-r105-c1
+viewdist 0
+room 0x105
+pos -33040 0 -1792
+ang 1.963
+inv default
+god
+freeze 400

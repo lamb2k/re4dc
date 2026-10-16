@@ -1,0 +1,8 @@
+name wt-r103-c1
+viewdist 0
+room 0x103
+pos -47609 12 7084
+ang 2.356
+inv default
+god
+freeze 400
