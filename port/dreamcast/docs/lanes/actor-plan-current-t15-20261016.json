@@ -1,0 +1,135 @@
+{
+  "status": "BEHAVIOR_AND_PRESSURE_PASS_NO_NEW_PERFORMANCE_ADOPTION",
+  "source_head": "3e303c5ecdcd993b14b22d540994708ecdd6a306",
+  "runtime_changes": false,
+  "current_plan1_elf_sha256": "1f98fe56859c114ad09a818dd4b6f33658c42c73d11229186ec5ad9428cef8c6",
+  "plan0_elf_sha256": "088f26bb0fa22374da3f27de5f01838bc8cbf9ecb934ae24948a5e2e30ffe5cc",
+  "model": "SH-4 console-fit projection, not physical-console measurement",
+  "scene": "r101 burning-cross benchmark-r101-t12, T15 exact fixture",
+  "window": {
+    "frames": "500:799",
+    "stride": 10,
+    "samples": 30
+  },
+  "plan0_model_ms": 59.51510533333333,
+  "existing_plan1_model_ms": 61.42063516666666,
+  "conditional_plan1_minus_plan0_ms": 1.9055298333333326,
+  "new_incremental_stack_gain_ms": 0,
+  "image_delta": {
+    "text_delta": 608,
+    "data_delta": 0,
+    "bss_delta": 0,
+    "end_delta": 608
+  },
+  "matched_later_heap4_delta_bytes": -4096,
+  "entry_kos_free_delta_bytes": 3488,
+  "gate_statuses": {
+    "plan2-current-summary.json": "PASS",
+    "plan-fight-summary.json": "PASS",
+    "plan-bell-summary.json": "PASS",
+    "plan-door-summary.json": "PASS"
+  },
+  "pressure": {
+    "kos-fight-49152-0": {
+      "verdict": "PASS",
+      "min_headroom": 7352,
+      "min_top": 6048,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 94.88
+    },
+    "kos-fight-49152-1": {
+      "verdict": "PASS",
+      "min_headroom": 7264,
+      "min_top": 5184,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 92.16
+    },
+    "kos-call-49152-0": {
+      "verdict": "PASS",
+      "min_headroom": 36872,
+      "min_top": 35712,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 93.17
+    },
+    "kos-call-49152-1": {
+      "verdict": "PASS",
+      "min_headroom": 36768,
+      "min_top": 35296,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 93.36
+    },
+    "kos-door-49152-0": {
+      "verdict": "PASS",
+      "min_headroom": 13952,
+      "min_top": 9600,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 183.41
+    },
+    "kos-door-49152-1": {
+      "verdict": "PASS",
+      "min_headroom": 13864,
+      "min_top": 8736,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 182.61
+    },
+    "kos-leave100-49152-0": {
+      "verdict": "PASS",
+      "min_headroom": 7552,
+      "min_top": 5280,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 92.03
+    },
+    "kos-leave100-49152-1": {
+      "verdict": "PASS",
+      "min_headroom": 7464,
+      "min_top": 4416,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 93.72
+    },
+    "kos-leave103-49152-0": {
+      "verdict": "PASS",
+      "min_headroom": 7552,
+      "min_top": 5280,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 92.2
+    },
+    "kos-leave103-49152-1": {
+      "verdict": "PASS",
+      "min_headroom": 7464,
+      "min_top": 4416,
+      "held": 49152,
+      "end_count": 1,
+      "elapsed_s": 92.97
+    }
+  },
+  "evidence_root": "C:\\Flycast-Evidence\\re4-dreamcast\\codex-actor-t15-20261016",
+  "evidence_sha256": {
+    "build-identity.json": "f0cf00c0bac8243d2b9c6ea61de59258f00ac1c8f645226324001f12258753cd",
+    "current-control-audit.json": "f4c0beaf32392fd953a201785d577e54ad3911a506e66bdb475e45731e4718c7",
+    "current-model-comparison.json": "0abd9a72ed620ccbf4f3a42e392a17652ecf2286ca09fe3a02c8937b7663a64e",
+    "current-memory-comparison.json": "3d51af81f811d628d929b4519b135006505cb4ddc7e8686e56d613b558ff7595",
+    "actor-plan-scope.json": "449e22d82744df3863bdafa9212323efefe7fdd6982f4fd3ea46d5b6bf45f212",
+    "plan2-current-summary.json": "4efd5cef742066963bd8dc97cd4fd959d6cc53d963446da2149fac692380eab8",
+    "plan-fight-summary.json": "82ce7a39bfde0c1cc74b5ba84ce081dd9248e57281906f7ba2a1044a9e2b8c78",
+    "plan-bell-summary.json": "4edf982fba26b9a4911dd2e96e408ef37c925f597635f0084a2fec7febc2956b",
+    "plan-door-summary.json": "0f0c985272cb01bb064d823f6e03ae640faf712315de01968b8881067407a4da",
+    "squeeze-summary.json": "ce61d59f3fdde49e14a5587e715fd834aa00ee580ba8b880abdb10b9a5f2a9c7"
+  },
+  "limits": [
+    "PLAN1 already enabled; no additive gain or default change.",
+    "Callgraph setup attribution is not isolated savings.",
+    "Bell/door each have 473 TRACE_SS_MASK records.",
+    "TA equality does not certify decoded movie contents or console cadence.",
+    "Pressure radio segment proves r100 subscreen open, not call closure.",
+    "No full H2 or physical-console acceptance."
+  ]
+}
