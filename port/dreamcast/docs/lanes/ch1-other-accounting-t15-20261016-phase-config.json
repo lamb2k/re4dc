@@ -1,0 +1,13 @@
+{
+  "elf_sha256": "897440d52a335b44f0dd0e6d7ead8f18609f2608bb44b9955e9c76bb9842f35c",
+  "source": "game/pace.cpp:684 busy-loop; audited exact ELF disassembly",
+  "environment": {
+    "OTHER_SEGMENT_ENTRY": "8c06da78",
+    "OTHER_WAIT_LOOP_START": "8c23e71c",
+    "OTHER_WAIT_LOOP_END": "8c23e726",
+    "OTHER_WAIT_FUNC_START": "8c21e5b8",
+    "OTHER_WAIT_FUNC_END": "8c21e5c0",
+    "OTHER_WAIT_CALL_PC": "8c23e71c",
+    "OTHER_WAIT_RETURN_PC": "8c23e720"
+  }
+}

@@ -1,0 +1,476 @@
+{
+  "status": "HOST_PROFILING_COMPLETE_CONSOLE_OTHER_MAPPING_UNRESOLVED",
+  "source_base": "3e303c5ecdcd993b14b22d540994708ecdd6a306",
+  "scene": "r101-t12 burning cross; approved L2 geometry, WORLD_VERT_LEVEL=5 contiguous 4m package variant",
+  "base": {
+    "tag": "cxt16baserW",
+    "pacing": "off",
+    "window": "500:799",
+    "stride": 10,
+    "elf_sha256": "1f98fe56859c114ad09a818dd4b6f33658c42c73d11229186ec5ad9428cef8c6",
+    "groups": {
+      "drawn_image": {
+        "samples": 30,
+        "nominal_ms": 57.702093833333336,
+        "console_projection_ms": 61.42063516666666
+      }
+    }
+  },
+  "forced": {
+    "tag": "cxt16skiprW",
+    "pacing": "fast FORCE=2",
+    "window": "500:799",
+    "stride": 7,
+    "elf_sha256": "897440d52a335b44f0dd0e6d7ead8f18609f2608bb44b9955e9c76bb9842f35c",
+    "groups": {
+      "dropped_image": {
+        "samples": 22,
+        "nominal_ms": 21.326136136363637,
+        "console_projection_ms": 22.364405
+      },
+      "drawn_image": {
+        "samples": 21,
+        "nominal_ms": 70.30214095238095,
+        "console_projection_ms": 74.03366023809524
+      }
+    }
+  },
+  "physical_phase_analysis": {
+    "status": "PASS",
+    "scope": "Nominal offline model, reconstructed population means, no console timing.",
+    "samples": {
+      "dropped_image": 22,
+      "drawn_image": 21
+    },
+    "boundaries_exactly_one_per_trace": true,
+    "function_phase_reconciliation_exact": true,
+    "retrace_caller_split_reconciliation_exact": true,
+    "busy_loop_is_subset_of_pace_end_self": true,
+    "phase_config": {
+      "elf_sha256": "897440d52a335b44f0dd0e6d7ead8f18609f2608bb44b9955e9c76bb9842f35c",
+      "source": "game/pace.cpp:684 busy-loop; audited exact ELF disassembly",
+      "environment": {
+        "OTHER_SEGMENT_ENTRY": "8c06da78",
+        "OTHER_WAIT_LOOP_START": "8c23e71c",
+        "OTHER_WAIT_LOOP_END": "8c23e726",
+        "OTHER_WAIT_FUNC_START": "8c21e5b8",
+        "OTHER_WAIT_FUNC_END": "8c21e5c0",
+        "OTHER_WAIT_CALL_PC": "8c23e71c",
+        "OTHER_WAIT_RETURN_PC": "8c23e720"
+      }
+    },
+    "phase_means": {
+      "drawn_image": {
+        "prefix": {
+          "nominal_ms": 34.30621023809524,
+          "identified_pace_polling_nominal_ms": 14.509957142857143,
+          "wait_detail_nominal_ms": {
+            "busy_loop_pc": 7.812890476190476,
+            "retrace_from_busy_loop": 6.697066666666666,
+            "retrace_other_call": 0.00035
+          }
+        },
+        "suffix": {
+          "nominal_ms": 35.99593071428571,
+          "identified_pace_polling_nominal_ms": 0.0,
+          "wait_detail_nominal_ms": {
+            "busy_loop_pc": 0.0,
+            "retrace_from_busy_loop": 0.0,
+            "retrace_other_call": 0.0007902380952380952
+          }
+        }
+      },
+      "dropped_image": {
+        "prefix": {
+          "nominal_ms": 20.990116136363635,
+          "identified_pace_polling_nominal_ms": 5.026795227272727,
+          "wait_detail_nominal_ms": {
+            "busy_loop_pc": 2.706715,
+            "retrace_from_busy_loop": 2.3200802272727272,
+            "retrace_other_call": 0.000265
+          }
+        },
+        "suffix": {
+          "nominal_ms": 0.33602,
+          "identified_pace_polling_nominal_ms": 0.0,
+          "wait_detail_nominal_ms": {
+            "busy_loop_pc": 0.0,
+            "retrace_from_busy_loop": 0.0,
+            "retrace_other_call": 9e-05
+          }
+        }
+      }
+    },
+    "reconstructed_physical_means": {
+      "physical_draw_mean": {
+        "parts": [
+          "drawn_image.suffix",
+          "dropped_image.prefix"
+        ],
+        "nominal_ms": 56.986046850649345,
+        "identified_pace_polling_nominal_ms": 5.026795227272727,
+        "after_identified_pace_polling_nominal_ms": 51.959251623376616
+      },
+      "physical_skip_mean": {
+        "parts": [
+          "dropped_image.suffix",
+          "drawn_image.prefix"
+        ],
+        "nominal_ms": 34.64223023809524,
+        "identified_pace_polling_nominal_ms": 14.509957142857143,
+        "after_identified_pace_polling_nominal_ms": 20.132273095238094
+      }
+    },
+    "caveats": [
+      "Each physical mean combines independently sampled prefix and suffix means, not adjacent captured ticks.",
+      "Phase boundary assigns costs when charged by the model; some pipeline stalls are attributed to an earlier PC.",
+      "Identified polling includes the final successful loop check; all bookkeeping, other retrace callers, IRQs and unknown waits remain.",
+      "FORCE=2 runs iTaskScheduler every iteration; this is not the production catchup schedule.",
+      "This is not the console OTHER benchmark phase and cannot validate a claimed console skip saving."
+    ]
+  },
+  "physical_skip_top_self_excluding_whole_pacing_functions": [
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c010e90",
+      "func": "re4dc_pwc_ftrv_run",
+      "file": "??",
+      "category": "motion/animation",
+      "self_nominal_ms": 0.9772333333333333
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c010820",
+      "func": "re4dc_line_leaf2",
+      "file": "??",
+      "category": "collision",
+      "self_nominal_ms": 0.8939507142857143
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c011780",
+      "func": "cEsp::CommonMove()",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/esp_sub.cpp",
+      "category": "effects update",
+      "self_nominal_ms": 0.5480342857142857
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c0104a4",
+      "func": "re4dc_line_walk2",
+      "file": "??",
+      "category": "collision",
+      "self_nominal_ms": 0.44243095238095237
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c010174",
+      "func": "cSatMgr::hitCheck2(Vec*, Vec*, Vec*, unsigned long*, int, int)",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/atari.cpp",
+      "category": "collision",
+      "self_nominal_ms": 0.40632380952380953
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c01e148",
+      "func": "penClothAtCkParallel",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/pendulum.cpp",
+      "category": "motion/animation",
+      "self_nominal_ms": 0.4045233333333333
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c024b48",
+      "func": "EspTrans",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp.cpp",
+      "category": "effects setup+submit",
+      "self_nominal_ms": 0.4018780952380952
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c0e1538",
+      "func": "Ps2fxClass(cEsp*)",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp_sub.cpp",
+      "category": "effects setup+submit",
+      "self_nominal_ms": 0.3848176190476191
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c01b270",
+      "func": "EspMove",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp.cpp",
+      "category": "effects update",
+      "self_nominal_ms": 0.34509261904761906
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c013250",
+      "func": "int (anonymous namespace)::hfReg<5>(HermitePrm*, Vec*, unsigned short*)",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/../../../src/game/motion.cpp",
+      "category": "motion/animation",
+      "self_nominal_ms": 0.3352552380952381
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c01164c",
+      "func": "cEsp48::move()",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/../../../src/game/esp48.cpp",
+      "category": "effects update",
+      "self_nominal_ms": 0.32174190476190473
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c0126e0",
+      "func": "re4dc_pmc_run",
+      "file": "??",
+      "category": "motion/animation",
+      "self_nominal_ms": 0.3184702380952381
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c018b84",
+      "func": "RotVector",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/sub2.cpp",
+      "category": "shared math and formatting",
+      "self_nominal_ms": 0.31341642857142854
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c01ca34",
+      "func": "PenClothMove3",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/pendulum.cpp",
+      "category": "motion/animation",
+      "self_nominal_ms": 0.31097285714285716
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c2221c8",
+      "func": "re4dc_sh4_MTXConcat",
+      "file": "",
+      "category": "shared math and formatting",
+      "self_nominal_ms": 0.2975395238095238
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c042970",
+      "func": "cLightMgr::setModel2(cModel*)",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/../../../src/game/light.cpp",
+      "category": "actor submit",
+      "self_nominal_ms": 0.2837340476190476
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c011a08",
+      "func": "cEsp::AnmMove()",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/esp_sub.cpp",
+      "category": "effects update",
+      "self_nominal_ms": 0.2703878571428571
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c012ea8",
+      "func": "cModel::getPartsPtr(int)",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/../../../src/game/model.cpp",
+      "category": "motion/animation",
+      "self_nominal_ms": 0.2597661904761905
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c010574",
+      "func": "re4dc_line_piece2",
+      "file": "??",
+      "category": "collision",
+      "self_nominal_ms": 0.2527852380952381
+    },
+    {
+      "physical_group": "physical_skip_mean",
+      "entry": "8c023eb8",
+      "func": "Trans",
+      "file": "/root/probe/codex-cpu-t15-20261016/tree/port/dreamcast/game/D:/Bio4/Prog/trans.cpp",
+      "category": "frame scheduling self",
+      "self_nominal_ms": 0.25218999999999997
+    }
+  ],
+  "physical_skip_category_upper_bounds_nominal_ms": {
+    "GX state and command stubs": 0.006744870129870131,
+    "KOS scheduling and synchronization": 0.2087836255411255,
+    "PVR and store queue helpers": 0.00914151515151515,
+    "UI submission and bridge": 0.008171948051948054,
+    "actor submit": 0.7679257900432901,
+    "audio": 0.14354880952380958,
+    "collision": 3.642336666666667,
+    "effects setup+submit": 1.4948089826839823,
+    "effects update": 2.0758307142857144,
+    "enemy logic/AI": 0.9363035714285717,
+    "fog and haze": 0.04932095238095238,
+    "frame scheduling self": 0.27061991341991337,
+    "frame/TA/UI overhead": 0.06919380952380952,
+    "interrupts and device service": 0.25032093073593076,
+    "kos/sound/idle": 0.5561370779220779,
+    "motion/animation": 4.2681476190476175,
+    "ordering tables and primitive allocation": 0.28431781385281385,
+    "pacing, retrace and idle routines": 14.536909285714286,
+    "player/scene/other logic": 0.44621619047619054,
+    "shared copies and clears": 0.4025612229437231,
+    "shared image and material helpers": 0.015230292207792208,
+    "shared math and formatting": 2.522513636363637,
+    "unclassified": 1.5729706493506512,
+    "world submit": 0.10417435064935066
+  },
+  "protected_callback_observed_self_nominal_ms": {
+    "base:Esp09_Trans": 0,
+    "base:Esp0e_Trans": 0,
+    "base:Esp45_Trans": 0,
+    "base:Esp47_Trans": 0,
+    "skip:Esp09_Trans": 0,
+    "skip:Esp0e_Trans": 0,
+    "skip:Esp45_Trans": 0,
+    "skip:Esp47_Trans": 0
+  },
+  "decision": {
+    "accepted_runtime_change": false,
+    "new_exact_repeat_work_candidate": null,
+    "reason": "No demonstrated redundant repeat work in audited OTHER helpers. Large remaining work is stateful logic or preparation for the next visible image. Small helper totals bound the audited opportunity; they are not predicted savings.",
+    "not_retested": [
+      "UI_OT_CACHE",
+      "WORLD_DRAW_PLAN",
+      "ACTOR_DRAW_PLAN",
+      "MOVCA/SQ/PREF/layout changes"
+    ],
+    "scope_limit": "This does not rule out other optimizations; it does not reproduce console OTHER or the 6.4 ms console residual."
+  },
+  "requested_console_other_mapping": {
+    "status": "UNRESOLVED_IN_CURRENT_UNMARKED_TRACES",
+    "historical_console_other_ms": 15.8,
+    "exact_model_phase4_ms": null,
+    "definition_commit": "76f40d95",
+    "recoverable_forced_elf_anchors": {
+      "task_call": "8c023aee",
+      "task_return": "8c023af2",
+      "wait_after_draw_remain": "8c023c08",
+      "other_after_pace_begin": "8c023a9e",
+      "coarse_world_after_guards": "8c0502ce",
+      "ps2_world_call": "8c050582",
+      "ps2_world_return": "8c050586",
+      "model_render_entry": "8c03dc30"
+    },
+    "missing": [
+      "Dynamic EmMgr membership snapshot at OT construction for each ModelRender callback and nested phase restoration.",
+      "Audited control-flow regions for inlined sourceActorPlan/sourceActorPrepare and coarse draw_actors, including early returns.",
+      "Exact counter barriers are compiled out; Frame_cnt store even occupies TaskScheduler call delay slot."
+    ],
+    "reason": "Both objTrans and emTrans register the same ModelRender callback through ModelTrans. Current actor transaction eligibility is not equivalent to EmMgr snapshot membership. Raw records have PCs and memory addresses, not argument/register or memory values."
+  },
+  "validation": {
+    "base_exporter": {
+      "status": "PASS",
+      "original": "/root/probe/codex-other-t15-20261016/audit/base-watch",
+      "exported": "/root/probe/codex-other-t15-20261016/audit/base-function-frames",
+      "unchanged_model_outputs": {
+        "cgsim.frames.tsv": {
+          "original_sha256": "48155c843942b76992cd32e039565e295d1c7de4251d324ffcc8288870878e6f",
+          "exported_sha256": "48155c843942b76992cd32e039565e295d1c7de4251d324ffcc8288870878e6f",
+          "byte_identical": true
+        },
+        "cgsim.pcs.tsv": {
+          "original_sha256": "6779756766651969a77302560dddc6a3cfd3399a23454d265de6fe56f1a6d578",
+          "exported_sha256": "6779756766651969a77302560dddc6a3cfd3399a23454d265de6fe56f1a6d578",
+          "byte_identical": true
+        },
+        "cg.cg.tsv": {
+          "original_sha256": "d9ee7a7f6330d350584b491a95921cd1821757e1eaa446d7a37c1b0c3e0bad9d",
+          "exported_sha256": "d9ee7a7f6330d350584b491a95921cd1821757e1eaa446d7a37c1b0c3e0bad9d",
+          "byte_identical": true
+        }
+      },
+      "entry_scanner_fixture": {
+        "expected": {
+          "8c000100": 1,
+          "8c000104": 2,
+          "8c000106": 1
+        },
+        "observed": {
+          "8c000100": 1,
+          "8c000104": 2,
+          "8c000106": 1
+        },
+        "truncated_record_rejected": true
+      },
+      "scope": "Host profiler only; this validation does not establish console performance or game correctness."
+    },
+    "phase_exporter": {
+      "status": "PASS",
+      "original": "/root/probe/codex-other-t15-20261016/audit/skip-function-frames",
+      "exported": "/root/probe/codex-other-t15-20261016/audit/skip-segments-v2",
+      "unchanged_model_outputs": {
+        "cgsim.frames.tsv": {
+          "original_sha256": "c7894f7034fba96159b843ad161562c2e6e6e661e9c7e970f54e62dce75909c2",
+          "exported_sha256": "c7894f7034fba96159b843ad161562c2e6e6e661e9c7e970f54e62dce75909c2",
+          "byte_identical": true
+        },
+        "cgsim.pcs.tsv": {
+          "original_sha256": "3dcaad1122dcf114ba8f965ea9c879698a807881504bb157e7099ef31f1af8e8",
+          "exported_sha256": "3dcaad1122dcf114ba8f965ea9c879698a807881504bb157e7099ef31f1af8e8",
+          "byte_identical": true
+        },
+        "cg.cg.tsv": {
+          "original_sha256": "2d7c14da23262d63b194e27ba1ea2d6fbbd6a1294f39bcdd8e64e49687a287fc",
+          "exported_sha256": "2d7c14da23262d63b194e27ba1ea2d6fbbd6a1294f39bcdd8e64e49687a287fc",
+          "byte_identical": true
+        }
+      },
+      "entry_scanner_fixture": {
+        "expected": {
+          "8c000100": 1,
+          "8c000104": 2,
+          "8c000106": 1
+        },
+        "observed": {
+          "8c000100": 1,
+          "8c000104": 2,
+          "8c000106": 1
+        },
+        "truncated_record_rejected": true
+      },
+      "scope": "Host profiler only; this validation does not establish console performance or game correctness."
+    },
+    "final_simulator": {
+      "source": "/root/probe/d367-agents/design-logic/tools/hwsim_cg.c",
+      "source_sha256": "d9e873b15f5634a8d2c9c7a4fb75eb0b6a4c68bc38ea57e5af86835b310e9295",
+      "copied_source_sha256": "c0f1669687c671396bb5d41c3d0d72bfd0f0aaa3a984ae8c03702d3f5187a93e",
+      "command": [
+        "cc",
+        "-std=c99",
+        "-O2",
+        "/root/probe/codex-other-t15-20261016/audit/segment-simulator-final/hwsim_cg_frames.c",
+        "-lm",
+        "-o",
+        "/root/probe/codex-other-t15-20261016/audit/segment-simulator-final/hwsim_cg_frames"
+      ],
+      "executable": "/root/probe/codex-other-t15-20261016/audit/segment-simulator-final/hwsim_cg_frames",
+      "executable_sha256": "0c79a92f2c56437ecba5292a985c799da2ad1b916abb13560ac75c85ad2c29e9",
+      "change": "Export self-cost frame/phase deltas and narrow polling PCs; model execution and trace order unchanged"
+    },
+    "final_executable_matches_qualified_exporter": true,
+    "all_function_phase_charges_reconcile": true,
+    "retrace_caller_shares_reconcile": true,
+    "runtime_files_modified": false,
+    "runtime_builds_launched": 0,
+    "console_tests_launched": 0,
+    "strict_runtime_gate": "NOT_APPLICABLE_HOST_TOOLS_ONLY"
+  },
+  "artifacts": {
+    "root": "/root/probe/codex-other-t15-20261016",
+    "base_account": "/root/probe/codex-other-t15-20261016/audit/base-account-final",
+    "base_partition": "/root/probe/codex-other-t15-20261016/audit/base-partition-final",
+    "skip_account": "/root/probe/codex-other-t15-20261016/audit/skip-account-final",
+    "skip_partition": "/root/probe/codex-other-t15-20261016/audit/skip-partition-final",
+    "physical_phases": "/root/probe/codex-other-t15-20261016/audit/skip-phases",
+    "raw_replay": "/root/probe/codex-other-t15-20261016/audit/skip-segments-v2"
+  },
+  "limitations": [
+    "No inclusive values added to self costs. Partial call-tree ancestry is retained as context only.",
+    "Do not equate nominal model ms, calibrated projections, physical console phases or hardware acceptance.",
+    "All raw input traces remain in place; source evidence was not deleted or modified."
+  ]
+}
