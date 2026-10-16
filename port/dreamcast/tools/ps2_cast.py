@@ -81,6 +81,14 @@ PRESETS = {
     # type 0 (TYPE_A) modelInit(ARC 5, ARC 7) + ModInfoMgr.create(ARC 6, ARC 7): body + head, one 64-bone skeleton
     'gigante-em2b-00': dict(archive='em2b', sections=[(5, 'body'), (6, 'head')], tpl=7, rooms=['r119'], types=[0],
                             category='boss', model_id=0x2b, shift=2),
+    # lane cast16 (2026-10-16): em2b's other model types (em2b.cpp em2bModelInit): TYPE_B 1 = BIN 8 + head 9, TPL 0xA;
+    # TYPE_C 2 = BIN 0xB + head 0xC, TPL 0xD (the r11e giant, chapter 2-3 fork B); type 3 = BIN 0xE + head 0xF, TPL 0x10.
+    'gigante-em2b-01': dict(archive='em2b', sections=[(8, 'body'), (9, 'head')], tpl=0xa, rooms=[], types=[1],
+                            category='boss', model_id=0x2b, shift=2),
+    'gigante-em2b-02': dict(archive='em2b', sections=[(0xb, 'body'), (0xc, 'head')], tpl=0xd, rooms=['r11e'], types=[2],
+                            category='boss', model_id=0x2b, shift=2),
+    'gigante-em2b-03': dict(archive='em2b', sections=[(0xe, 'body'), (0xf, 'head')], tpl=0x10, rooms=[], types=[3],
+                            category='boss', model_id=0x2b, shift=2),
     # src/em2f em2f.cpp type 0 (the r10b Del Lago fight): modelInit(ARC 4, ARC 5); type 1 (ARC 6 / 7) is the same
     # model on GC and PS2 (no geometry change), so only type 0 converts (lane ps2cast-2)
     'dellago-em2f-00': dict(archive='em2f', sections=[(4, 'body')], tpl=5, rooms=['r10b'], types=[0],
