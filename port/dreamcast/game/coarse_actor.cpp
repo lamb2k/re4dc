@@ -30,7 +30,12 @@
 // LEON_HAND_POSES=1 admits both so the boat ride keeps the PS2 body; default: 7 only, as before).
 #if defined(RE4DC_LEON_HAND_POSES) && RE4DC_LEON_HAND_POSES
 #include "player.h"
+#if defined(RE4DC_LEON_OT_WATER) && RE4DC_LEON_OT_WATER
+// LEON_OT_WATER (crowd.mk): r205 / r229 put the player at ot_type 5 (water) every frame; same one-pass rule as ot 0.
+#define RE4DC_LEON_OT_BAD(m) ((m)->ot_type!=7 && !(((m)->ot_type==0 || (m)->ot_type==5) && (m)==(cModel*)pPL))
+#else
 #define RE4DC_LEON_OT_BAD(m) ((m)->ot_type!=7 && !((m)->ot_type==0 && (m)==(cModel*)pPL))
+#endif
 #else
 #define RE4DC_LEON_OT_BAD(m) ((m)->ot_type!=7)
 #endif

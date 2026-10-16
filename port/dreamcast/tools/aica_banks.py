@@ -93,6 +93,18 @@ def pref_cap(t):
 # ambience, weapon, door, core UI, music last.
 LOWER_ORDER = (8, 5, 1, 6, 2, 7, 0, 3)
 
+# Fixed caps under the planner's floor for banks that do not fit the frozen arena even at 8 kHz (decision 2026-10-15:
+# no arena relayout; match the PS2's lower rates, else the least audible ambience first, enemy voices kept). The
+# planner never lowers these further. The frozen ARENA slot is 1,004,192 B (layout line of the build log). Enemy voices
+# of the castle Ganados (em1a / em1b / em14 / em19) are em11's bank (same key; on the PS2 em1b.snd == em11.snd), frozen
+# at 8 kHz by the earlier route. The PS2 keeps these rooms' banks at 8 / 12 / 16 kHz, so there is no lower rate to match.
+# r201: ROOM 257,900 + FOOT 92,284 + pl11 68,064 + em11 682,196 = 1,100,444 B; ROOM 8000 -> 4000 Hz (128,980 B).
+# r209: ROOM 267,144 + FOOT 79,476 + em11 682,196 = 1,028,864 B; ROOM 8000 -> 4000 Hz (133,608 B).
+# r20c / r20d: em11 + em25 (131,516 B at 8 kHz) + room: 1,055,520 / 1,043,552 B; ROOM 8000 -> 4000 Hz (74,772 /
+# 72,924 B). FOOT and every voice bank keep their planned rates.
+FORCED_CAPS = {('st2/r201.dar', 6): 4000, ('st2/r209.dar', 6): 4000,
+               ('st2/r20c.dar', 6): 4000, ('st2/r20d.dar', 6): 4000}
+
 # Route: resident banks and the room-arena banks of each room (enemy lists from
 # the frontier ESL audit, /root/probe/d367-agents/frontier/frontier-ledger.json).
 # em/pl08.drs: Leon without the jacket (costume 1, every room after r106; title.cpp) loads into the same player
@@ -107,7 +119,9 @@ ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r
              'r112': [1], 'r111': [6], 'r113': [6], 'r11c': [6],
              # chapter 2-3 (lane ch22-1014; the runtime's "blk 3 (N GC bytes) does not fit" sizes matched to the
              # bio4midi entries): r11d #6 (as r11c), r10f / r11f / r200 #8 (740151 GC bytes)
-             'r11d': [6], 'r10f': [8], 'r11f': [8], 'r200': [8]}
+             'r11d': [6], 'r10f': [8], 'r11f': [8], 'r200': [8],
+             # chapter 3-1 (castle lane 2026-10-15): r202 plays #8 at entry (740160 GC bytes, as r200)
+             'r202': [8]}
 
 # Leon's other stage-1 weapons (--weapons; stage.sh AICA_WEAPONS=1; issue lamb2k/re4dc#1, silent weapons). The GC
 # loads the equipped weapon's SE block (WEP, block 2) on every weapon change (weaponLoad -> its .drs) into the one WEP
@@ -191,6 +205,28 @@ ROOMS = {
     'r11e': ['st1/r11e.dar', 'em/pl11.drs', 'em/em2b.drs'],
     'r11f': ['st1/r11f.dar', 'em/pl11.drs', 'em/em35.drs'],
     'r200': ['st2/r200.dar', 'em/pl11.drs', 'em/em12.drs', 'em/em18.drs'],
+    # Chapter 3-1 (castle lane 2026-10-15; assets.sh discover + first-pass runs, "aica: blk 5/6 ... does not fit"):
+    # Ashley (pl11) follows Leon; Ganados em11 (r202 r207 r203), the merchant em18 (r202), em1b (r201), em1a (r208),
+    # em14 (r204). Room archives are the compact31 (upload-only + native mips) .dar files.
+    'r202': ['st2/r202.dar', 'em/pl11.drs', 'em/em11.drs', 'em/em18.drs'],
+    'r207': ['st2/r207.dar', 'em/pl11.drs', 'em/em11.drs'],
+    'r203': ['st2/r203.dar', 'em/pl11.drs', 'em/em11.drs'],
+    'r201': ['st2/r201.dar', 'em/pl11.drs', 'em/em1b.drs'],
+    'r208': ['st2/r208.dar', 'em/pl11.drs', 'em/em1a.drs'],
+    'r204': ['st2/r204.dar', 'em/pl11.drs', 'em/em14.drs'],
+    # Chapters 3-2 .. 3-4 (castle lane 2026-10-15, ROUTE_CH32; assets.sh discover lists): Ashley is captured at 3-1's end
+    # (r204s00) and returns as the player in 3-4 (r20d / r20e; her player bank is not planned yet). Room archives are the
+    # rel31 (compact32 + GC scenery release) .dar files.
+    'r205': ['st2/r205.dar', 'em/em2d.drs'],
+    'r209': ['st2/r209.dar', 'em/em1a.drs'],
+    'r20a': ['st2/r20a.dar', 'em/em23.drs', 'em/em2d.drs'],
+    'r20b': ['st2/r20b.dar', 'em/em18.drs', 'em/em22.drs'],
+    'r20c': ['st2/r20c.dar', 'em/em11.drs', 'em/em1b.drs', 'em/em25.drs'],
+    'r20f': ['st2/r20f.dar', 'em/em14.drs', 'em/em25.drs'],
+    # r206: Ashley (pl11) is beside Leon for the snipe, s10 and after s20 (cx32g: em11 'does not fit' without her row)
+    'r206': ['st2/r206.dar', 'em/pl11.drs', 'em/em11.drs'],
+    'r20d': ['st2/r20d.dar', 'em/em11.drs', 'em/em19.drs', 'em/em25.drs'],
+    'r20e': ['st2/r20e.dar', 'em/em3c.drs'],
     # r40b (St4, follow-up 7): em1f (bringup inventory: em1f/em1f, st4_0)
     'r40b': ['st4/r40b.dar', 'em/em1f.drs'],
 }
@@ -560,7 +596,7 @@ class Bank:
         self.table, self.samples, self.coefs = table, samples, coefs
         self.fnv = fnv1a(table)
         self.key = (self.fnv, asz)
-        self.cap = pref_cap(t)
+        self.cap = FORCED_CAPS.get((spec, t), pref_cap(t))
 
     def bytes_at(self, cap):
         return bank_bytes(self.samples, cap)
@@ -837,8 +873,18 @@ CH23_STREAMS = CH22_STREAMS + [(0, 22), (0, 24), (1, 76)]
 # appended so entries 0..44 and their data bytes stay identical to the test 15 snd16 file. 53 entries: the reader needs
 # AICA_STR_ENT_MAX >= 53 (the chapter 2 arms use 56; test 15 keeps 48 with snd16). `--streams ch2`.
 CH2_STREAMS = CH1_STREAMS + [s for s in CH23_STREAMS if s not in CH1_STREAMS]
+# Chapter 3-1 (castle lane 2026-10-15): ch23 plus r207's radio call voice 1:153 (sbb 0x9ba0000, "not in
+# aica_str.dat, silent" on r207 entry); appended so every earlier entry keeps its data bytes. `--streams ch31`.
+CH31_STREAMS = CH23_STREAMS + [(1, 153)]
+# Chapter 3 foundations (lane ch3found16, 2026-10-16): the ch1 file (test 15, 45 entries, unchanged) plus every ch31
+# stream it lacks (the chapter 2-2 / 2-3 rooms and r207's radio voice 1:153), appended so entries 0..44 and their data
+# bytes stay identical to the ch1 file. `--streams ch3`; the reader needs AICA_STR_ENT_MAX >= len(CH3_STREAMS).
+# + the castle room streams the ch3found16 runs requested (cxc3fmW, Flycast: "stream sbb=1d18000" r208, "sbb=25e0000" r209 /
+#   r20c, both "not in aica_str.dat, silent"): 0:15 and 0:20 (bio4bgm.sbb; 25e0000 is also 1:49's offset in bio4evt.sbb,
+#   the room BGM block is 0). 55 entries.
+CH3_STREAMS = CH1_STREAMS + [k for k in CH31_STREAMS if k not in CH1_STREAMS] + [(0, 15), (0, 20)]
 STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch1': CH1_STREAMS,
-                  'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS}
+                  'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS}
 
 
 def nibble_to_sample(n):

@@ -476,6 +476,19 @@ unsigned* load(Binding& b,unsigned i) {
         re4dc_motion_wait_total_us+=wait;
 #endif
         if(wait>stats.worst_wait_us)stats.worst_wait_us=wait;
+#if RE4DC_MOTION_MISS_LOG
+        // MOTION_MISS_LOG=1 (diagnostic, log only): every key miss with its clip and wait (the first 256, then every 16th).
+        { static unsigned misses;++misses;
+          if(misses<=256 || !(misses&15))
+              re4dc_log("motion miss #%u: archive=%u entry=%u bytes=%u wait_us=%u slab=%d evictions=%u\n",misses,b.bytes,i,size,
+                        unsigned(wait),
+#if RE4DC_MOTION_RESERVE
+                        int(data==b.slab[0] || data==b.slab[1]),
+#else
+                        0,
+#endif
+                        unsigned(stats.evictions)); }
+#endif
     }
     return reinterpret_cast<unsigned*>(s.data+prefix(s.data)-4*s.data[2]);
 }

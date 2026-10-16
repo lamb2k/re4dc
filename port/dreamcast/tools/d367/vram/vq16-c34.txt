@@ -1,0 +1,6 @@
+# vq16-c34 (lane ch3found16 2026-10-16, user rule 10-16: VQ by default when it frees needed capacity, PSNR >= 29 dB,
+# RGB565 only, castle loose keys not in the test 15 pak): key, size, PSNR dB, rooms (cxc3fmW Flycast loads)
+25723363-12cb1338 256x256 32.5 r20d
+51a19081-01ed2ba6 64x128 31.7 r203
+5d836993-5be99583 256x256 31.8 r20b
+f5e335d9-15739bf7 256x256 33.4 r204

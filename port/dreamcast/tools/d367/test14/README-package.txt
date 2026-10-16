@@ -14,9 +14,10 @@ New in test 14:
 * The farm after the village (r103) reads the disc far less during play:
   the villagers' animations stay in memory instead of being read again, and
   the room's textures are loaded when it starts.
-* Disc reads finish more safely on the console: a read now waits until the
-  drive's transfer has really finished, and two drive hangs in the disc
-  library are fixed. This may help the "stops while loading" reports.
+* Disc reads finish safely on the console: a read now waits until the
+  drive's transfer has really finished, and a left-over "done" signal can
+  no longer end the next read early (the likely cause of the GDEMU freezes
+  and crashes, #27); two drive hangs in the disc library are fixed too.
 * A few parts of each frame are quicker (fewer repeated settings and
   clears); the picture is the same.
 * The drawing maths uses the Dreamcast CPU's own matrix instructions

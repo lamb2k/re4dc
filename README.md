@@ -20,14 +20,27 @@ See [CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md); contributors an
 
 ## Playing
 
-The latest build is console test 13 (test 12.2 plus the PS2 enemy rules in every chapter 1 room with at most 6 villagers active at once, PS2 room objects after the village with the dark box debris fixed, the PS2 Ashley, and less work per frame in the village). Desktop packages will return with a later test build;
+The latest build is console test 15.1, a hotfix of test 15: the see-through haze and mist sprites around Leon are gone (the distant haze stays as fog) and Foliage Off now leaves out every see-through card while the r109 cabin keeps its walls. Test 15 is test 14 plus the r100 cliff cutscene, the missing chapter 1 sounds and music, villagers lit by the room, PS2 models for the last GameCube enemies and the boat, PS2 water, every chapter 1 room's textures kept in graphics memory, and two new Options rows: View distance and Foliage. Desktop packages will return with a later test build;
 until then, play the console test in Flycast. Extract the complete package:
 
 | System | Download | Launch |
 | --- | --- | --- |
 | Dreamcast / GDEMU | Console test ZIP (`RE4DC-Console-Test-...-GDEMU.zip`) on the [latest release](https://github.com/lamb2k/re4dc/releases/latest) | Copy the four files inside `gdemu` into a new numbered SD card folder. |
 
-The release page also has the test build checksums (`SHA256SUMS.txt`) and the test notes.
+The release page also has the test build checksums (`SHA256SUMS.txt`), the test notes, the Build-Assets zip for
+contributors (see Contributing).
+
+### Benchmark disc (not the game)
+
+`RE4DC-Benchmark-NOT-THE-GAME-...-GDEMU.zip` is a separate disc that only measures speed on a real console. It is
+not on the test 15 release; a new benchmark disc will come with a later test build. It cannot be played: no title menu, no New Game, no saves, and it does not touch your VMU. A red
+"BENCHMARK DISC - NOT THE GAME" banner stays on screen, and the GDEMU menu lists it as
+"RE4DC BENCHMARK (NOT THE GAME)". It runs two scripted scenes by itself (the village by the burning cross, then the
+first house at its back window) and ends on a results screen; a full run takes about 4 minutes.
+
+To report, open a new issue titled "Benchmark results" with a sharp photo of the results screen, the CODE line typed
+out, your console region, how you ran it (GDEMU, another drive emulator, or a burned disc) and your video cable.
+The README inside the zip explains each number. Flycast runs it too, but emulator numbers are not console numbers.
 
 Already have Flycast? Open `gdemu/disc.gdi` from the console test ZIP, keeping all track files beside it.
 For GDEMU, keep filenames unchanged and save any card-manager changes before ejecting the card.
@@ -63,12 +76,15 @@ The VMU in controller slot 1 shows Leon, Ashley, Hunnigan and Luis pages.
 
 ## Status and limitations
 
-**Console test 13, October 15, 2026:** the game plays to the end of chapter two, part one
+**Console test 15, October 16, 2026:** the game plays to the end of chapter two, part one
 (the lake and the boat ride, the wolves, the El Gigante fight, finding Ashley and the chapter results),
 up to a **Coming Soon** screen. This is a prerelease, not the complete game.
 
 Recent progress:
 
+* Test 15.1 (hotfix): no haze or mist sprites around Leon in any room (the distant haze stays as fog); Foliage Off leaves out every see-through brush, leaf, shadow and mist card, and the r109 cabin keeps its walls and floor.
+* Test 15: the r100 cliff cutscene plays again; footsteps and ambience in the farm, the missing room music, the merchant's voice and other chapter 1 sounds; the villagers and the merchant are lit by the room's lights; PS2 models for the traps, bats, snake, fish, the boat and the r104 / r117 / r118 enemies; the pool, river and lake from the shore draw their water the PS2 way; every chapter 1 room keeps its textures in graphics memory; Options rows View distance and Foliage (both reset at each boot).
+* Test 14: a disc read fix for the GDEMU freezes and crashes ([#27](https://github.com/lamb2k/re4dc/issues/27); please confirm on a console); the village keeps all its textures in graphics memory; the farm (r103) reads the disc far less; less work per frame.
 * Test 13: the PS2 enemy rules in every chapter 1 room, with at most 6 villagers active at once; PS2 room
   objects from r102 to r11b with the GameCube breakable boxes (no more dark debris); the PS2 Ashley; less work per
   frame in the village; fewer disc reads in r103 and r100 after the village.
@@ -84,11 +100,15 @@ Recent progress:
 
 Known issues (full list: [KNOWN_ISSUES.md](port/dreamcast/docs/KNOWN_ISSUES.md)):
 
-* **Stability:** random crashes on a real console (fixed in test 9, needs a console check); a few menu actions can stop the game;
-  the r100 cliff cutscene is skipped (test 12).
-* **Picture:** some textures are missing; water, ripples and shadows are incomplete; characters are not lit by the scene.
-* **Sound:** the rifle sound is lower quality.
-* **Performance:** below the 30 fps / full speed target; pauses when entering rooms.
+* **Stability:** random crashes and freezes on GDEMU while a room loads: one cause is fixed since test 14 (the
+  Dreamcast system library could take an old "disc read finished" signal and use half-read data; needs a console
+  check, [#27](https://github.com/lamb2k/re4dc/issues/27)), and a standard disc layout comes in test 16. The memory corruption crashes of tests 7
+  and 8 were fixed in test 9 (needs a console check). A few menu actions can stop the game.
+* **Picture:** some textures are missing; the ripples out on the lake are incomplete; the night lake has no torch
+  flames or rain; in the village (r101) the burning stake misses its crossbar and a pyre plank, and the fence by the
+  house misses its rails; the item menu's confirm popup differs from test 13.
+* **Sound:** the rifle sound is lower quality; radio call subtitles fall behind the voice.
+* **Loading:** pauses when entering rooms.
 
 ## Development
 
@@ -133,6 +153,7 @@ of the complete diagnostic screen. One bug per issue.
 
 Built on the [RE4 GameCube decompilation](docs/DECOMPILATION.md),
 [KallistiOS](https://github.com/KallistiOS/KallistiOS) and [Flycast](https://github.com/flyinghead/flycast).
+Third-party code in the program and its licences: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 An independent fan project for research and preservation, not affiliated with Capcom, Sega or Nintendo.
 Resident Evil is a Capcom trademark; game code and data belong to their owners. Project tools and
 documentation are [CC0](LICENSE).

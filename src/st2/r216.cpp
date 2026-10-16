@@ -137,10 +137,15 @@ void R216Init()
         r216_work.p->pole[2].setOpened();
     } else {
         SceAtDataSet_exec(0x80, SCE_LEVEL10, 0, (TaskFunc) r216_BattleStart, 0, 1);
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x04)
+        // PS2 USA R216Init (st2_2 0x10e58): only the fourth display armor is sent, on every difficulty.
+        r216_work.p->armor[3].em.setEm(0xE8, -1, 1, 1, 1);
+#else
         r216_work.p->armor[0].em.setEm(0xE5, -1, 1, 1, 1);
         r216_work.p->armor[1].em.setEm(0xE6, -1, 1, 1, 1);
         r216_work.p->armor[2].em.setEm(0xE7, -1, 1, 1, 1);
         r216_work.p->armor[3].em.setEm(0xE8, -1, 1, 1, 1);
+#endif
         SceAtDataSet_exec(5, SCE_LEVEL10, 0, (TaskFunc) r216_ArmorDispOnOff, (void*) 1, 1);
         SceAtDataSet_exec(6, SCE_LEVEL10, 0, (TaskFunc) r216_ArmorDispOnOff, 0, 1);
     }

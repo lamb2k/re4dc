@@ -69,6 +69,23 @@ endif
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_MIST_CUT=$(MIST_CUT)
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_MIST_CUT=$(MIST_CUT)
 endif
+# HAZE_SPRITE_CUT=1 (lane nohaze16 2026-10-16, user "i don't think we need those sprites at all"; render only; default 0 =
+#   no code, identical image): no haze / mist sprite is drawn in any room at any Foliage setting: the camera haze around
+#   Leon (Esp15: the PS2 recipe rows' near haze that HW_FOG_HAZE keeps, and every other Esp15), the mist sheets (Esp48)
+#   and the PS2 haze additions (r118 / r11c). The distant haze stays as the PVR fog table (the HW_FOG_HAZE rows and the
+#   EFFECT_HAZE_LEAN M3 veil are fed before the cut) and every room keeps its own fog. Code: src/game/esp_sub.cpp
+#   (HazeCutNote, EspSpriteEmit, the additions loop). Generators, Rnd() draws, the effect pool, the PS2 population choice
+#   and every motion run as before (draw-time only). Log: one `haze cut: room=...` line per room. Docs: docs/MIST_CUT.md.
+HAZE_SPRITE_CUT ?= 0
+ifneq ($(filter-out 0 1,$(HAZE_SPRITE_CUT)),)
+$(error HAZE_SPRITE_CUT is 0 or 1)
+endif
+ifeq ($(HAZE_SPRITE_CUT),1)
+ifneq ($(EFFECT_SPRITES)$(EFFECT_PS2_HAZE),11)
+$(error HAZE_SPRITE_CUT=1 needs EFFECT_SPRITES=1 and EFFECT_PS2_HAZE=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_HAZE_SPRITE_CUT=1
+endif
 # FOLIAGE_TRIM=<level> (lane mist16 2026-10-16; user: "we should get the fixes from foliage agent in", the Options row is a
 #   fast follow; render only; unset = no code, identical image). The chapter 1 outdoor translucent overdraw is the PS2
 #   world's brush / leaf cards (r100 woods: 3.3 of 3.8 screens), not mist. platform/include/foliage_keys.inc classes the

@@ -55,7 +55,8 @@ step "3 Build-Assets zip"
 BA=$(ls "$PKG"/*-Build-Assets.zip); GD=$(ls "$PKG"/*-GDEMU.zip)
 want=$(sed -n 's/^# assets-zip: //p' "$KF")
 [ "$(basename "$BA")" = "$want" ] || { echo "kit-check: package has $(basename "$BA"), the knob file names $want"; exit 1; }
-$RK zipcheck "$OUTR/candidate.txt" "$BA" --objdir "$OUTR/obj"
+DS=$(sed -n 's/^# disc-sets: //p' "$KF")   # test 15 on: the disc data files carried in re4dc-assets/disc/
+$RK zipcheck "$OUTR/candidate.txt" "$BA" --objdir "$OUTR/obj" ${DS:+--disc-sets "$DS"}
 
 step "4 contributor docs"
 $RK doclint "$KF" "$ROOT/CONTRIBUTING.md" "$PORT/CONTRIBUTING-PORT.md"
@@ -64,6 +65,7 @@ step "5 clean checkout of HEAD ($(git -C "$ROOT" rev-parse --short=8 HEAD)) buil
 [ -z "$(git -C "$ROOT" status --short -- port/dreamcast/build-public.sh port/dreamcast/tools/d367/release-knobs.py "$KF")" ] ||
   { echo "kit-check: commit the kit files first"; exit 1; }
 git -C "$ROOT" worktree add -q --detach "$WORK/clean" HEAD
+git -C "$WORK/clean" submodule update -q --init   # SH4ZAM (port/dreamcast/game/third_party/sh4zam), from its public URL
 trap 'git -C "$ROOT" worktree remove --force "$WORK/clean" 2>/dev/null || true' EXIT
 mkdir -p "$WORK/assets"; python3 -c "import sys,zipfile; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])" "$BA" "$WORK/assets"
 A=$WORK/assets/re4dc-assets

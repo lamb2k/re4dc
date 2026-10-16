@@ -7,6 +7,8 @@ unsigned bounded_profile(const unsigned char* a,unsigned bytes,unsigned rel,cons
     static constexpr Profile profiles[]={
         {61u,131072u,82u,1035392u,0x3766221du,0x13e11ff5u,52u},
         {47u,32768u,69u,384064u,0x5f23565eu,0xddcc1084u,0u},
+        // pl11-hot (castle lane 2026-10-15): pl11-r11f + Ashley's 8 near-enemy clips retained in the body.
+        {47u,32768u,61u,411744u,0x3913017bu,0xeb2fce03u,0u},
     };
     for(const auto& p:profiles) {
         if(bytes!=p.bytes || word(mtc+28)!=p.cap || word(mtc+12)!=p.count || word(mtc+20)!=p.table_crc ||

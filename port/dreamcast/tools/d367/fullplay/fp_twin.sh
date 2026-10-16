@@ -23,9 +23,12 @@ else
   T=$FP_TREES/${SHA:0:12}
   if [ ! -d $T ]; then
     mkdir -p $FP_TREES
+    git -C "$here" worktree prune  # a deleted twin tree (disk hygiene) leaves a stale registration that blocks the add
     git -C "$here" worktree add --detach $T $SHA >/dev/null 2>&1 || { echo "fp_twin: worktree $SHA failed" >&2; exit 2; }
   fi
 fi
+# Submodules (SH4ZAM: game/third_party/sh4zam since t15/int e22bf562): a new worktree has them empty and the build stops.
+git -C $T submodule update --init --recursive >/dev/null 2>&1 || { echo "fp_twin: submodules of $T failed" >&2; exit 2; }
 [ "$(git -C $T rev-parse HEAD)" = "$SHA" ] || { echo "fp_twin: $T is not at $SHA" >&2; exit 2; }
 [ -z "$(git -C $T status --short --untracked-files=no)" ] || { echo "fp_twin: $T has local changes" >&2; exit 2; }
 # The release command line minus nothing: route-build.sh prepends its own defaults, the candidate's later tokens win.

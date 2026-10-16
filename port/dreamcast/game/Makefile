@@ -210,6 +210,33 @@ endif
 override ALIVE_CAP_PARK := 1
 $(OBJDIR)/src/game/stage.o: GAME_CPPFLAGS += -DRE4DC_PS2_CH2_ENEMY=1
 endif
+# PS2_CH3_ENEMY=1 (castle lane 2026-10-15, user 10-15 "the PS2 logic holistically for enemy spawns" per chapter;
+#   CHANGES GAMEPLAY by design; default 0 = off; needs ROUTE_CH31=1): one umbrella for every PS2 enemy-spawn change of
+#   chapter 3 (3-1 .. 3-4: r200 r202 r207 r203 r201 r208 r204 r205 r209 r20a r20b r20c r20f r206 r20d r20e; table in
+#   C:\Game Dev\Emulators\CASTLE-ROUTE-20261015.md) plus the cap on top. It forces PS2_ENEMY_RULES=1; adopts the PS2
+#   emleon02 / emleon03 rows of r201 r203 r207 r208 / r204 r20e (platform/ps2_enemy_ch3.cpp, private table
+#   PS2_ENEMY_CH3_DIR/ps2_enemy_ch3_data.inc from tools/d367/castle/ps2_enemy_ch3.py; every baseline byte checked);
+#   ORs PS2_ENEMY_CASTLE with 0x03 (r208 room code, r20b waves); sets ALIVE_CAP=6 when not given. Chapter 3 rooms
+#   hold only (no ALIVE_CAP_PARK: their code keeps wrap pointers). Not ported on purpose: Easy-only branches; r205
+#   (Normal result identical: the PS2 list holds 0x57 / 0x6D and R205Init sends both); r209 (same as GC).
+PS2_CH3_ENEMY ?= 0
+PS2_ENEMY_CH3_DIR ?=
+ifneq ($(PS2_CH3_ENEMY),0)
+ifneq ($(PS2_CH3_ENEMY)$(ROUTE_CH31),11)
+$(error PS2_CH3_ENEMY must be 0 or 1 and needs ROUTE_CH31=1)
+endif
+ifeq ($(wildcard $(PS2_ENEMY_CH3_DIR)/ps2_enemy_ch3_data.inc),)
+$(error PS2_CH3_ENEMY needs PS2_ENEMY_CH3_DIR/ps2_enemy_ch3_data.inc (tools/d367/castle/ps2_enemy_ch3.py))
+endif
+override PS2_ENEMY_RULES := 1
+override PS2_ENEMY_CASTLE := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_CASTLE),0) | 0x03 )))
+ifeq ($(or $(ALIVE_CAP),0),0)
+override ALIVE_CAP := 6
+endif
+$(OBJDIR)/src/game/stage.o $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_PS2_CH3_ENEMY=1
+$(OBJDIR)/platform/ps2_enemy_ch3.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_CH3_ENEMY=1 -DRE4DC_PS2_ENEMY_RULES=1 -I$(PS2_ENEMY_CH3_DIR)
+$(OBJDIR)/platform/ps2_enemy_ch3.o: $(PS2_ENEMY_CH3_DIR)/ps2_enemy_ch3_data.inc
+endif
 # PS2_ENEMY_RULES=1 (test 9 lane PS2EN, default 0; changes gameplay by design): the PS2 USA enemy rules of the
 # chapter 1 rooms. Enemy list emleon00 gets the PS2 start-alive bits / flags (stage.cpp, at list read); r101 sends
 # its reset waves when fewer than 5 Ganados are alive (GameCube: after 5 / 10 kills) and holds two villagers back
@@ -283,6 +310,28 @@ endif
 # Room modules that call the shared PS2 far delete (include/em_far_delete.h: r301 / r327) see the cap's held
 # entries (RE4DC_ALIVE_CAP_ON; only that header tests it).
 $(OBJDIR)/mod/%.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_ON=1
+endif
+# PS2_ENEMY_CASTLE=<mask> (lane castle 2026-10-15, default 0: no effect; needs PS2_ENEMY_RULES=1; changes gameplay by
+# design): PS2 USA room-code enemy rules for the castle (st2_*.rel, Normal mode, each read from the PS2 disassembly;
+# Easy-only branches are not ported). One bit per room; reserved bits are not implemented yet:
+#   0x01 r208 (st2_0 0x11598 / 0x11ff0 / 0x13e18 / 0x13e58 / 0x14180; needs the PS2 emleon02 rows: PS2_CH3_ENEMY):
+#        R208Init sends 6 (3, 5, 6, 7, 1, 0x11; rank >= 7: 3, 0x5F, 0x60, 7, 0x61, 0x5E) where the GC sends 9 / 11;
+#        group A (areas 6/7) sends its two events + 0xD only while fewer than 4 are alive, 0x3C / 0x3D at exactly
+#        1; group D sends 0x23 / 0x25 (GC also 0x24 / 0x26); area 0x15 opens it below 5 alive (GC <= 5); the
+#        over-the-wall feed after the crank runs while the reset count is < 9 (GC <= 5), every 300 / 190 frames
+#        (GC 590 / 320). Not ported (open, ps2code lane): the PS2's extra virtual call on each fed Ganado and its
+#        wrap bookkeeping of fed Ganados (R208_EmSetEvent / R208_setEm setPtr into W+724).
+#   0x02 r20b: the hall waves never send list row 3 (em[1]); the random wave (Rnd() % 6, same draw) sends one
+#        Ganado in cases 0-2 (0x14 / 0x15 / 0x16) where the GC sends two (st2_1 R20bEmSetMain 0x14618..0x14da8)
+#   0x04 r216: the init sends only the display armor 0xE8 (armor[3]); the GC sends 0xE5..0xE8 (st2_2 R216Init 0x10e58)
+#   0x08 r21a (reserved: alive-gated waves), 0x10 r205 (reserved: +0x57), 0x20 r226 (reserved: PS2-only 0xB3/0xB5
+#        reinforcement block, alive < 11), 0x40 r227 (reserved: PS2-only task, alive < 7 sends 0xF7/0xF5)
+PS2_ENEMY_CASTLE ?= 0
+ifneq ($(PS2_ENEMY_CASTLE),0)
+ifneq ($(PS2_ENEMY_RULES),1)
+$(error PS2_ENEMY_CASTLE needs PS2_ENEMY_RULES=1)
+endif
+$(OBJDIR)/mod/st2_0/src/st2/r208.o $(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
 endif
 # R101_ALIVE_CAP=N (lane crowd12 2026-10-14; CHANGES GAMEPLAY by design; default 0 = off; needs PS2_ENEMY_ROOMS bit 0x02):
 #   at most N Ganados alive at once in the r101 village fight. Start-list Ganados beyond N are held at room entry
@@ -451,6 +500,83 @@ $(OBJDIR)/platform/ps2_enemy_ch23.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH23=1 -
 $(OBJDIR)/platform/ps2_enemy_ch23.o: $(PS2_ENEMY_CH23_DIR)/ps2_enemy_ch23_data.inc
 endif
 endif
+# FOG_OFF_CLEAR=1 (castle lane 2026-10-15, default 0: no effect): while the source fog is off, load an all-clear PVR
+# fog table once (native_static.cpp re4dc_fog_frame), so table-fog actor packets are not drawn with a stale or start-up
+# table (warp into a fog-off castle room: Leon drawn flat grey). Render-only.
+FOG_OFF_CLEAR ?= 0
+ifneq ($(FOG_OFF_CLEAR),0)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_FOG_OFF_CLEAR=1
+endif
+# ROUTE_CH31=1 (castle lane 2026-10-15, default 0: no effect; needs ROUTE_CH23=1 and EM10_SHARED=1): chapter 3-1's
+# remaining code modules (assets.sh discover r201 r204 r208): st2_1 (module 82: r204 r205 r206 r209 r20a..r20f,
+# resident like st2_0 because stage modules survive room changes; its slot-math lint in r206.cpp fixed by --fix) and
+# the castle Ganado RELs em1a (24: r208 r209), em1b (25: r201 r20c) and em14 (35: r204 r20f ...). The three are
+# em10.cpp + em10_tmpl.cpp + their own <em>_set.cpp (value-init lint fixed by --fix), so they join the em10g group
+# (one em10.cpp in the image, as em11 / em13 / em17); one Ganado REL is live per room on the 3-1 route.
+ROUTE_CH31 ?= 0
+ifneq ($(ROUTE_CH31),0)
+ifneq ($(ROUTE_CH31)$(ROUTE_CH23)$(EM10_SHARED),111)
+$(error ROUTE_CH31 must be 0 or 1 and needs ROUTE_CH23=1 EM10_SHARED=1)
+endif
+MODULES += st2_1 em1a em1b em14
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH31=1
+# snd.cpp ch13_bgm1_sub: r202 plays its resident BGM0 track for the BGM1 request (frozen layout, BGM1 = 0 B).
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH31=1
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_WARP_TEXT=4096
+endif
+# ROUTE_CH32=1 (castle lane 2026-10-15, default 0: no effect; needs ROUTE_CH31=1): the enemy modules of chapters 3-2
+# to 3-4 (assets.sh discover r205 r209 r20a r20b r20c r20f r206 r20d r20e): em2d (32: r205 r20a), em25 (10: r20c r20f
+# r20d), em19 (23: r20d; em10.cpp + em10_tmpl.cpp + em19_set.cpp, so it joins the em10g group) and em3c (68: r20e).
+# Lint fixed by assets.sh discover --fix (em2d / em3c slot-math, value-init in all four). em22 (r20b) is ROUTE_CH21's
+# room overlay, em23 (r20a) and em18 (r20b) are already linked.
+ROUTE_CH32 ?= 0
+ifneq ($(ROUTE_CH32),0)
+ifneq ($(ROUTE_CH32)$(ROUTE_CH31),11)
+$(error ROUTE_CH32 must be 0 or 1 and needs ROUTE_CH31=1)
+endif
+# em2d / em25 / em3c are room overlays (as em22 / em3b / em35: no resident image growth, heap 4 couples to image size);
+# em19 shares em10.cpp, so it is resident in the em10g group.
+MODULES += em2d:ovl em25:ovl em3c:ovl em19
+export RE4DC_LINK_OVERLAY += .ovl_em2d .ovl_em25 .ovl_em3c
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH32=1
+# snd.cpp ch13_bgm1_sub: r20a / r20b, the same BGM1 gap.
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH32=1
+endif
+# ROUTE_CH41=1 (castle lane 2026-10-15, default 0: no effect; needs ROUTE_CH32=1 and WORLD_ROOM_MODULES=1, which links
+# st2_2 for r211..r219): chapter 4-1's remaining modules (assets.sh discover r210 r222 r219 r211 r216 r212 r213 r214
+# r217 r218 r215 r229 r221 r22b): em1c (81: r218 Ganados; em10.cpp + em10_tmpl.cpp + em1c_set.cpp, so it joins the
+# em10g group), st2_3 (97: r220..r22c, the 4-1 end rooms r229 / r221 / r22b; resident like st2_0 / st2_1) and em2c
+# (31: the r221 boss, a room overlay). Lint fixed by assets.sh discover --fix (em1c value-init; em2c value-init and
+# four slot-math scans; st2_3 slot-math in r224.cpp / r227.cpp). em14 / em1a / em25 / em2d / em3c / em11 / em18 /
+# em29 are already linked (ROUTE_CH21 / CH31 / CH32 / the route).
+ROUTE_CH41 ?= 0
+ifneq ($(ROUTE_CH41),0)
+ifneq ($(ROUTE_CH41)$(ROUTE_CH32)$(WORLD_ROOM_MODULES),111)
+$(error ROUTE_CH41 must be 0 or 1 and needs ROUTE_CH32=1 WORLD_ROOM_MODULES=1)
+endif
+MODULES += em1c st2_3 em2c:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em2c
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH41=1
+endif
+# ROUTE_BOSS4=1 (lane ch3found16 2026-10-16 for the boss stress test, lane stress16; default 0: no effect; needs
+#   ROUTE_CH32=1, which links em25, and WORLD_ROOM_MODULES=1): the chapter 4 boss modules without the chapter 4
+#   gameplay route: st2_3 (97, r220..r22c incl. r221 / r228), em2c (31, Verdugo, r221, room overlay) and em38 (79,
+#   Salazar + the Queen, r228, room overlay; em25's tentacles come with ROUTE_CH32). With ROUTE_CH41=1 only em38 is
+#   added (CH41 links st2_3 / em2c). Lint (assets.sh discover r228): em38 value-init and its EmMgr slot scan
+#   (em38EmWork: workAt, callers skip unbacked slots), as em2c.
+ROUTE_BOSS4 ?= 0
+ifneq ($(ROUTE_BOSS4),0)
+ifneq ($(ROUTE_BOSS4)$(ROUTE_CH32)$(WORLD_ROOM_MODULES),111)
+$(error ROUTE_BOSS4 must be 0 or 1 and needs ROUTE_CH32=1 WORLD_ROOM_MODULES=1)
+endif
+ifeq ($(ROUTE_CH41),0)
+MODULES += st2_3 em2c:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em2c
+endif
+MODULES += em38:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em38
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_BOSS4=1
+endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
 # wep01 (module 3, Punisher; the merchant's medallion reward), wep07 (54, shotgun; r101 house), wep09 (62, rifle; its
@@ -505,6 +631,13 @@ endif
 PRIM_CAP_R10B ?= 0
 ifneq ($(PRIM_CAP_R10B),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R10B=$(PRIM_CAP_R10B)
+endif
+# PRIM_CAP_R202=<bytes> (castle lane 2026-10-15, default 0: no effect): the same cap for r202 (room value 425,984 B),
+# so em11 (1,323,136 B) fits heap 4 next to the room archive and the PS2 world (short 73,248 B on cx-r202-s31f-01).
+# Value to be set from PRIM_WATER with r202's Ganados on screen.
+PRIM_CAP_R202 ?= 0
+ifneq ($(PRIM_CAP_R202),0)
+$(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R202=$(PRIM_CAP_R202)
 endif
 # PRIM_WATER=1 (test only): per-room peak primitive-buffer bytes per frame ("prim water:" lines, trans.cpp).
 ifeq ($(PRIM_WATER),1)
@@ -564,7 +697,7 @@ ifeq ($(ROUTE_CH21)$(EM10_SHARED)$(WORLD_STAGE_MODULES),110)
 else ifeq ($(ROUTE_CH21),1)
 $(error ROUTE_CH21=1 needs EM10_SHARED=1 (em11 in the em10g group) and WORLD_STAGE_MODULES=0 (pl11 is a CH21 overlay))
 endif
-EM10_GROUP = $(filter em12 em15 em13 em17 em11 em16 $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
+EM10_GROUP = $(filter em12 em15 em13 em17 em11 em16 em1a em1b em14 em19 em1c $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(filter 1,$(EM10_SHARED)),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
 MODULE_OBJS =
 MODULES_MK = $(OBJDIR)/modules.mk
@@ -576,6 +709,9 @@ PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch22.o,$(PLATFORM_OBJ
 endif
 ifneq ($(ROUTE_CH23)$(PS2_CH2_ENEMY),11)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch23.o,$(PLATFORM_OBJS))
+endif
+ifneq ($(PS2_CH3_ENEMY),1)
+PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch3.o,$(PLATFORM_OBJS))
 endif
 # LAKE_RIPPLES (ROUTE_CH13 block above): native_lake.cpp is built only with the knob on (1 or 2).
 ifeq ($(filter 1 2,$(LAKE_RIPPLES)),)
@@ -1378,6 +1514,19 @@ ROUTE_MOVIES ?= 0
 # ROUTE_MOVIE_TEXHASH=1: verification builds log the texture FNV of pictures 0/1/30/300.
 ROUTE_MOVIE_YUV ?= 1
 ROUTE_MOVIE_TEXHASH ?= 0
+# ROUTE_MOVIES_CH3=1 (castle lane 2026-10-15; default 0: no effect; needs ROUTE_MOVIES=1 ROUTE_CH31=1): the chapter 3
+# castle events are presented by their PS2 movies (BIO4MOV.AFS -> tools/convert_route_movies.py, private dc/movie):
+# r201 s00, r203 s00, r204 s00 (3-1 end), r209 s00, r20b s00 (3-2 end), r206 s00 / s10 (3-3 end) / s20 (3-4 end).
+# While a room's movies are on the disc no evd is read and the swap module is read at its own size; every gameplay
+# effect of the callers runs unchanged and a missing movie falls back to the source event (src/st2/*.cpp).
+ROUTE_MOVIES_CH3 ?= 0
+ifneq ($(ROUTE_MOVIES_CH3),0)
+ifneq ($(ROUTE_MOVIES_CH3)$(ROUTE_MOVIES)$(ROUTE_CH31),111)
+$(error ROUTE_MOVIES_CH3 must be 0 or 1 and needs ROUTE_MOVIES=1 ROUTE_CH31=1)
+endif
+ROUTE_MOVIE_GAME_CH3 = $(OBJDIR)/mod/st2_0/src/st2/r201.o $(OBJDIR)/mod/st2_0/src/st2/r203.o     $(OBJDIR)/mod/st2_1/src/st2/r204.o $(OBJDIR)/mod/st2_1/src/st2/r206.o $(OBJDIR)/mod/st2_1/src/st2/r209.o     $(OBJDIR)/mod/st2_1/src/st2/r20b.o
+$(ROUTE_MOVIE_GAME_CH3): GAME_CPPFLAGS += -DRE4DC_ROUTE_MOVIES_CH3=1
+endif
 # ROUTE_MOVIE_DIAG=1: test builds log the movie loop's per-picture timing and the failing step.
 #   2/3/4 are test-only proofs of the route movie VRAM claim (platform/native_ui.cpp; 0 and 1 compile
 #   them out): 2 = the movie claim's normal pass releases nothing, so only its fallback (end this
@@ -1464,7 +1613,7 @@ $(OBJDIR)/route-movies.h: route-movies-force
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 ROUTE_MOVIE_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/pad.o
-ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23)
+ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3)
 $(ROUTE_MOVIE_PLATFORM) $(ROUTE_MOVIE_GAME): $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/route-movies.h
@@ -1772,14 +1921,42 @@ ENEMY_DEMAND ?= 0
 HEAP4_PARTS_RESERVE ?= 0
 HEAP4_PARTS_RESERVE_ROOM ?= 0x100
 HEAP4_PARTS_RESERVE_BYTES ?= 73728
+# STAGE_OVL=1 (lane ch3found16 2026-10-16, default 0: no effect; needs ROUTE_OVL via ROUTE_CH13=1): every linked stage module
+#   (st1_0..st1_3, st2_0..st2_3, st4_0) becomes a room overlay (/cd/dc/<st>.ovl, platform/modules.cpp stage slots): read into
+#   heap 3 beside the room REL when linkRelData links it, kept over stopRelData / restartRelData, dropped with heap 3 at the next relink. Only the
+#   current stage module is resident; the others' bytes leave the image (heap 4 starts above heap 3).
+STAGE_OVL ?= 0
+ifneq ($(STAGE_OVL),0)
+ifneq ($(STAGE_OVL),1)
+$(error STAGE_OVL must be 0 or 1)
+endif
+STAGE_OVL_NAMES := $(sort $(filter st1_0 st1_1 st1_2 st1_3 st2_0 st2_1 st2_2 st2_3 st4_0,$(MODULES)))
+MODULES := $(filter-out $(STAGE_OVL_NAMES),$(MODULES)) $(addsuffix :ovl,$(STAGE_OVL_NAMES))
+export RE4DC_LINK_OVERLAY += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
+export RE4DC_OVL_HELPERS_SAFE += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_STAGE_OVL=1
+# The st1_1 / st1_3 room code keeps its debug-window menu (cDbgWindow, src/Tools/db_toolbase.cpp: only the Sscrn module
+# links a private copy); as a whole kept overlay it now references it, so the image gets the one translation unit.
+GAME_SRCS += $(ROOT)/src/Tools/db_toolbase.cpp
+$(TARGET): $(OBJDIR)/src/Tools/db_toolbase.o
+endif
+STAGE_OVL_AUDITED_MODULES = $(if $(filter 1,$(STAGE_OVL)),st1_0:ovl st1_1:ovl st1_2:ovl st1_3:ovl st2_0:ovl st2_1:ovl st2_2:ovl st2_3:ovl st4_0:ovl)
 # Direct-slot consumers reviewed for this module set. Audit any newly linked
 # module before enabling sparse enemy backing; census/reference remain usable.
 # CH23 em3b/em35: guarded default-initialization and sparse scans reviewed; stage st2_0 already audited.
 CH23_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH23)),em3b:ovl em35:ovl em16)
 # Luis preserves its archive pointers and both manager scans use workAt (CH22 guarded adapter).
 CH22_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH22)),pl14:ovl)
+# CH31 (castle lane): st2_1 / em1a / em1b / em14 pass the discover lint (slot-math in r206.cpp and the em1a / em1b /
+# em14 _set.cpp value-init rewritten by assets.sh discover --fix); no other direct-slot consumer.
+CH31_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH31)),st2_1 em1a em1b em14)
+# CH32 (castle lane): em2d / em25 / em19 / em3c after assets.sh discover --fix (em2d 4 + em3c 3 slot-math sites,
+# value-init in all four); discover reports no other lint for r205 r20a r20c r20f r20d r20e.
+CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3c:ovl)
+CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
+BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif

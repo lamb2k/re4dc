@@ -153,3 +153,42 @@ and w16mmW. Each "o" run used the t15/int data; each "n" run used wt16r101 on th
 - The water16b, radiosub16 and foliage changes landed in between. The data swap does not touch them.
 - The T15_DATA line keeps their vq16w and water16i.
 - Evidence: `C:\Flycast-Evidence\re4-dreamcast\wt16land-20261016` (m-*, strict\, kos\, gdemu\, _tools\).
+
+## Test 16 follow-up: r101 set C16 restores the house-front fence rails (2026-10-16 evening)
+
+**Root cause.** The ladder's per-vertex reduction collapsed the fence rails. They are thin pieces of mesh 0x17, which
+is fused with the house front (x 2.7..11.7 m, z 5.0..13.9 m).
+
+- The piece-thinness guard measures whole connected pieces, and only within --thin-mm of the walk path, so it missed
+  them.
+- Bisect: feeding the ladder's output in directly as variant 5 (no 4 m batch, no strip groups, no 32 m spatial batch)
+  already lost the rails. The bake13 level 0 on the same build draws them.
+- Keeping 0x17 at level 0 alone restores them. The earlier tries (C5..C15) protected meshes on the wrong side of the
+  view.
+- Tools: worldtest16/fence (lane/worldtest16).
+
+**Data.** C16 = C4 + `--protect-bins 0x17`, stored in re4-assets-private/world-r101-wt16c16-20261016 (SHA256SUMS,
+RECIPE.txt; wv5 hash starts d4368ff3). WT16D now points there. The C4 set stays in world-r101-wt16-20261016.
+
+- Kept 0.652 of corners (C4 kept 0.642).
+- MODELLED, not measured: world p90 15.50 ms (+0.39) and worst view 20.49 ms (+0.08).
+
+**Gates.** Build: t15/int e22bf562 + C16 = landA 37bcf721. ELFs: w16crT, w16cmW and w16crP. Each "o" run used the C4
+data and each "n" run used C16, on the same ELF.
+
+| Gate | Result |
+| --- | --- |
+| STRICT + decisions, h2 / bell / door103 | STRICT, MUST-IDENTICAL, 2002 ticks each, drift 0 |
+| TEXCHK / LEON-GC | PASS for o and n |
+| VRAM, r101 | o equals n. At the bell: used 2191832, free 342784, missing 0, rejects 0, no thrash. |
+| KOS squeeze, twin fpw16sq3W | 10/10 PASS. Minimum headroom 14360 B; minimum top block 7520 B. |
+| GDEMU race | 10/10 seeds reach r103, 0 bad reads, WORLDVERT 101 loaded=5 |
+| Code identity | No game, Makefile or source change. The program image of the twin is identical to the release build (IDENTITY OK, beb15f71). |
+| Still pair | `C:\Game Dev\Emulators\worldtest-20261016\TEST16-r101-cross-C16.png` and TEST16-r101-fence-C16.png. The rails, crossbar and plank are all drawn. |
+
+KNOWN_ISSUES: the fence-rail row is now "Fixed in test 16". This change is not part of the 15.1 hotfix.
+
+**fp_twin.sh tool fix.** A new twin worktree now runs `git submodule update --init` (SH4ZAM became a submodule at
+e22bf562 and the twin build stopped). It also prunes stale worktree registrations before the add.
+
+Evidence: `C:\Flycast-Evidence\re4-dreamcast\wt16land-20261016`: c-*, strict-c16\, kosc\ and gdemuc\.

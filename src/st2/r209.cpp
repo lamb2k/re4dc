@@ -266,6 +266,19 @@ extern "C" void r209_BowgunActionSet3(int i, int flag, int pt);
 extern "C" void r209_BowgunActionSet4(int i, int flag, int pt);
 static void r209_BowgunMove();
 static void Evt_R209S00_Func(Event* evt);
+
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH3) && RE4DC_ROUTE_MOVIES_CH3
+// ROUTE_MOVIES_CH3 (castle lane 2026-10-15): r209 s00 (the leader escapes by the lift) is presented by its PS2 movie.
+// While the movie owns the event no evd is read (no DC.setData / ARAM load, the swap module is read at its own
+// size); the handler's begin / end modes run, the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md).
+#include "route_movie.h"
+#include "fade.h"
+#define R209_ROUTE_MOVIES 1
+static int r209MovieOwns;
+#define R209_MOVIES_OWN() (re4dc_movie_available(0x20900))
+#else
+#define R209_ROUTE_MOVIES 0
+#endif
 static void r209_PanelPuzzle();
 extern "C" void r209_PanelRotate(cObj** tbl);
 extern "C" void r209_PanelPazzleEnd();
@@ -308,9 +321,18 @@ void R209Init()
         }
     }
     if (RsfCheck(G_ROOM_ID, 4) == 0) {
+#if R209_ROUTE_MOVIES
+        r209MovieOwns = R209_MOVIES_OWN();
+        if (r209MovieOwns) {
+            EmReadSearch(0x1A, 0, 0);
+        } else {
+#endif
         r209_work.p->evd = DC.setData(EvtMgr.NameChange("evd/r209s00.evd"));
         EmReadSearch(0x1A, 0, r209_work.p->evd->m_size);
         r209_work.p->evd->setCommand(CMND_ARAM_LOAD, 0, 0);
+#if R209_ROUTE_MOVIES
+        }
+#endif
         EvtMgr.SetFunc("evt_r209s00_func", (void*) Evt_R209S00_Func);
         getRoomEtcDoor(4, &r209_work.p->door4, 1);
         SceExec(0x12, (TaskFunc) r209_2ndBattle, 0, 0, SCE_PRIO_DEF_2, 0);
@@ -1047,6 +1069,11 @@ static void r209_2ndBattle()
     SndBgmTblSet(0x209, 1);
     pG->System_flg |= 0x400;
     SubScreenWait(60);
+#if R209_ROUTE_MOVIES
+    if (r209MovieOwns) {
+        RouteMoviePlay(0x20900, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R209S00_Func, 0);
+    } else
+#endif
     if (r209_work.p->evd->waitLoadOk() == 1) {
         MemorySwap(m->pArc, (u32) r209_work.p->evd->m_addr, r209_work.p->evd->m_size);
         EvtMgr.SetEvt(m->pArc, (u32*) 0);

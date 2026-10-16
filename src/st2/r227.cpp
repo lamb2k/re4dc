@@ -188,7 +188,12 @@ u32 r227_checkEmNumOnElv()
     u32 i;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        if (SceAtCheckHitModel(0xE, (cEm*) EmMgr.workAt(i)) == 1) {
+#else
         if (SceAtCheckHitModel(0xE, (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i)) == 1) {
+#endif
             n++;
         }
     }

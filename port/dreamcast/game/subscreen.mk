@@ -141,6 +141,17 @@ $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_RADIO_SUB_RT=1
 endif
 SUBSCREEN_OVL ?= 0
 SS_POOL_HIGH ?= 0
+# SS_POOL_TOP=1 (needs SS_POOL_HIGH=1; lane ch3found16 2026-10-16, default 0): the SS_POOL_HIGH pools (cEspSystem, esp,
+#   Espgen, light works, primitive buffer) take the top end of heap 4's highest free cell instead of the first cell
+#   above the window, so the window's free tail joins the free space above it (r221: em2c's 2.89 MB found 2.49 MB
+#   largest of 3.64 MB free). Same pools and sizes; addresses only.
+SS_POOL_TOP ?= 0
+ifeq ($(SS_POOL_TOP),1)
+ifneq ($(SS_POOL_HIGH),1)
+$(error SS_POOL_TOP=1 needs SS_POOL_HIGH=1)
+endif
+$(OBJDIR)/sscrn_bridge.o $(OBJDIR)/src/game/main_mem.o: GAME_CPPFLAGS += -DRE4DC_SS_POOL_TOP=1
+endif
 # Source-ordered UI/model compositing only while the subscreen area is swapped.
 SS_UI_ORDER ?= 0
 ifeq ($(SS_UI_ORDER),1)
