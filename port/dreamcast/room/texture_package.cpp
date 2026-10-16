@@ -256,17 +256,108 @@ RangeRead read_file_range(const char* path, std::uint32_t offset, void* out, std
     fs_close(f);
     return ok?RangeRead::ok:RangeRead::io_error;
 }
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+// TEX_PACK_WINDOW (texture_package.hpp): one read-ahead window over the pack.
+namespace {
+struct PackWindow {
+    file_t f=FILEHND_INVALID;
+    const char* path=nullptr;
+    std::uint8_t* buf=nullptr;
+    std::uint32_t cap=0,off=0,len=0,total=0;
+    std::uint32_t want_end=0;   // end of the package being read (set at its open)
+    std::uint32_t next=0;       // where the next package starts if the pass reads the pack in order
+    PackWindowStats st{};
+} g_win;
+// [o, o+n) of the pack into the window, one read from the sector holding o (whole sectors into an aligned buffer: one
+// GD command under DISC_READ_FALLBACK=2). A full window only when the pass is reading the pack in order (this read starts
+// where the previous package ended, or a prefetch); otherwise just the rest of the current package, so a picture that
+// sits elsewhere in the pack (loaded first by an earlier room) does not pull in a window of unneeded neighbours.
+bool win_load(std::uint32_t o_req, bool full=false) {
+    const std::uint32_t o=o_req&~2047U;
+    if(o>=g_win.total) return false;
+    std::uint32_t n=g_win.total-o<g_win.cap?g_win.total-o:g_win.cap;
+    if(!full && o_req!=g_win.next) {
+        std::uint32_t need=(g_win.want_end>o_req?g_win.want_end:o_req+1)-o;
+        need=(need+2047U)&~2047U;
+        if(need<n) n=need;
+    }
+    RE4DC_IO_SERIAL_WAIT();
+    g_win.len=0;
+    if(fs_seek(g_win.f,static_cast<off_t>(o),SEEK_SET)!=static_cast<off_t>(o)) return false;
+    std::uint32_t done=0;
+    while(done<n) {
+        const ssize_t got=fs_read(g_win.f,g_win.buf+done,n-done);
+        if(got<=0 || static_cast<std::uint32_t>(got)>n-done) return false;
+        done+=static_cast<std::uint32_t>(got);
+    }
+    g_win.off=o;g_win.len=n;++g_win.st.fills;g_win.st.kb+=n/1024;
+    return true;
+}
+// Copies [o, o+n) of the pack, refilling the window as it goes.
+bool win_copy(std::uint32_t o, void* dst, std::uint32_t n) {
+    auto* out=static_cast<std::uint8_t*>(dst);
+    bool first=true;
+    while(n) {
+        if(!(o>=g_win.off && o<g_win.off+g_win.len)) {
+            if(first) ++g_win.st.misses;
+            if(!win_load(o)) return false;
+        } else if(first) ++g_win.st.hits;
+        first=false;
+        const std::uint32_t a=g_win.off+g_win.len-o, k=n<a?n:a;
+        std::memcpy(out,g_win.buf+(o-g_win.off),k);
+        out+=k;o+=k;n-=k;
+    }
+    return true;
+}
+}  // namespace
+bool pack_window_open(const char* path, void* buffer, std::uint32_t bytes) {
+    pack_window_close();
+    if(!path || !buffer || (reinterpret_cast<std::uintptr_t>(buffer)&31U) || bytes<32U*1024U) return false;
+    RE4DC_IO_SERIAL_WAIT();
+    const file_t f=fs_open(path,O_RDONLY);
+    if(f==FILEHND_INVALID) return false;
+    const ssize_t total=fs_total(f);
+    if(total<=0) { fs_close(f); return false; }
+    g_win.f=f;g_win.path=path;g_win.buf=static_cast<std::uint8_t*>(buffer);g_win.cap=bytes&~2047U;
+    g_win.off=g_win.len=0;g_win.want_end=g_win.next=0;g_win.total=static_cast<std::uint32_t>(total);
+    return true;
+}
+bool pack_window_fill(std::uint32_t offset) {
+    if(g_win.f==FILEHND_INVALID) return false;
+    if(offset>=g_win.off && offset<g_win.off+g_win.len) return true;
+    return win_load(offset,true);
+}
+void pack_window_close() {
+    if(g_win.f!=FILEHND_INVALID) fs_close(g_win.f);
+    g_win.f=FILEHND_INVALID;g_win.path=nullptr;g_win.buf=nullptr;g_win.cap=g_win.off=g_win.len=g_win.total=0;
+}
+bool pack_window_active() { return g_win.f!=FILEHND_INVALID; }
+PackWindowStats pack_window_stats() { return g_win.st; }
+#endif
 bool Package::open_streamed(const char* path) { return open_streamed_impl(path,0,0); }
 bool Package::open_streamed_at(const char* path, std::uint32_t base, std::uint32_t size) {
     return size ? open_streamed_impl(path,base,size) : (close(),error_="empty pack entry",false);
 }
 bool Package::open_streamed_impl(const char* path, std::uint32_t base, std::uint32_t size) {
     close();
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+    // A pack entry while the window is open: no handle of its own, every read goes through the window.
+    if(size && g_win.f!=FILEHND_INVALID && !std::strcmp(path,g_win.path)) {
+        if(std::uint64_t(base)+size>g_win.total) { error_="pack entry outside the pack"; return false; }
+        base_=base;win_path_=g_win.path;g_win.want_end=base+size;
+    } else
+#endif
+    {
     RE4DC_IO_SERIAL_WAIT();
     file_ = fs_open(path,O_RDONLY);
     if(file_ == FILEHND_INVALID) { error_="open failed"; return false; }
     base_=base;
+    }
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+    if(size && file_!=FILEHND_INVALID){
+#else
     if(size){
+#endif
         const ssize_t whole=fs_total(file_);
         if(whole<0 || std::uint64_t(base)+size>std::uint64_t(whole) ||
            fs_seek(file_,static_cast<off_t>(base),SEEK_SET)!=static_cast<off_t>(base)) {
@@ -282,8 +373,13 @@ bool Package::open_streamed(const char* path) {
     if(file_ == FILEHND_INVALID) { error_="open failed"; return false; }
     const ssize_t total=fs_total(file_);
 #endif
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+#define RE4DC_PKG_READ(dst,n,o) (win_path_?win_copy(base_+(o),(dst),(n)):storage::read_exact(file_,(dst),(n)))
+#else
+#define RE4DC_PKG_READ(dst,n,o) storage::read_exact(file_,(dst),(n))
+#endif
     Header h{};
-    if(total < static_cast<ssize_t>(sizeof(h)) || !storage::read_exact(file_,&h,sizeof(h))) {
+    if(total < static_cast<ssize_t>(sizeof(h)) || !RE4DC_PKG_READ(&h,sizeof(h),0)) {
         error_="streamed header read failed";close();return false;
     }
     // Bound metadata before trusting offsets/counts. Prepared native packages
@@ -303,7 +399,7 @@ bool Package::open_streamed(const char* path) {
 #endif
     if(!metadata_) { error_="streamed metadata allocation failed";close();return false; }
     std::memcpy(metadata_,&h,sizeof(h));
-    if(!storage::read_exact(file_,metadata_+sizeof(h),metadata_bytes_-sizeof(h))) {
+    if(!RE4DC_PKG_READ(metadata_+sizeof(h),metadata_bytes_-sizeof(h),sizeof(h))) {
         error_="streamed descriptor read failed";close();return false;
     }
     data_=metadata_;streamed_=true;
@@ -688,6 +784,41 @@ bool Package::upload() {
             return false;
         }
         ++uploaded;
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+        if(streamed_ && win_path_) {
+            // Through the window (opened while it was open). It may have closed since (a load deferred to a later
+            // frame): then this package takes a handle of its own, as without the window.
+            if(g_win.f==FILEHND_INVALID || std::strcmp(win_path_,g_win.path)) {
+                RE4DC_IO_SERIAL_WAIT();
+                file_=fs_open(win_path_,O_RDONLY);win_path_=nullptr;
+                if(file_==FILEHND_INVALID) { error_="streamed texture upload read failed";return false; }
+            } else {
+                auto* target=static_cast<std::uint8_t*>(pvr_textures_[index]);
+                std::uint32_t o=base_+texture.data_offset,n=texture.data_size;
+                bool first=true;
+                while(n) {
+                    if(!(o>=g_win.off && o<g_win.off+g_win.len)) {
+                        if(first) ++g_win.st.misses;
+                        if(!win_load(o)) { error_="streamed texture upload read failed";return false; }
+                    } else if(first) ++g_win.st.hits;
+                    first=false;
+                    // Pieces stay whole 32-byte units (store-queue uploads; upload_native pads a ragged tail with
+                    // zeros), except the payload's own end: a window end inside a unit reloads from that sector.
+                    const std::uint32_t a=g_win.off+g_win.len-o;
+                    std::uint32_t k=n<=a?n:(a&~31U);
+                    if(!k) {
+                        if(!win_load(o)) { error_="streamed texture upload read failed";return false; }
+                        continue;
+                    }
+                    upload_native(g_win.buf+(o-g_win.off),target,k);
+                    target+=k;o+=k;n-=k;
+                }
+                vram_bytes_ += texture.data_size;
+                g_win.next=static_cast<std::uint32_t>((base_+size_+2047U)&~std::size_t(2047));   // packages start on sectors
+                continue;
+            }
+        }
+#endif
         if(streamed_) {
             auto* target=static_cast<std::uint8_t*>(pvr_textures_[index]);
 #if RE4DC_TEX_PACK
@@ -841,6 +972,9 @@ void Package::close() {
     streamed_ = false;
 #if RE4DC_TEX_PACK
     base_ = 0;
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+    win_path_ = nullptr;
+#endif
 #endif
     upload_complete_ = false;
     inject_failure_after_ = 0;

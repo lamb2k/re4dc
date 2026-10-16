@@ -236,6 +236,23 @@ rename them, and don't mix track files of two tests in one folder. `track03.bin`
 zeros, so the zip is not much bigger than before). If your card manager offers **Shrink GDI**, leave it off: an
 unshrunk image is what we test.
 
+**How the game reads it (test 16 and later).** The game keeps the drive's fast streaming reads (KallistiOS
+`cdrom_stream_*`, as in tests 14 and 15) and checks that every read really arrived. The first time a stream or sector read
+fails, times out or comes back without its data, the game switches to plain sector reads (one bounded "read N sectors"
+command per request, the way most discs are read) for the rest of the session and never starts a stream again; the
+read that failed is redone the plain way. Make knobs, all in the release recipe's disc set
+(`tools/d367/test15/t15-build.sh`, `T14_DISC`):
+
+| Knob | What it does |
+| --- | --- |
+| `DISC_COMPAT=1` | the KallistiOS disc fixes (`KOS_DISC_FIX=1`), the Shrink-GDI mount, an on-screen disc log only when a read misbehaves |
+| `DISC_READ_FALLBACK=3` | stream reads, each checked; the first failure switches the session to plain reads (`=2`: a bounded DMA command, then DMA after a bounded drive re-init, then PIO). `=0` is test 14's stream reads, `=2` plain reads from the start |
+| `DISC_LAND_SPIN_MS=20` | plain reads only: wait for a read's DMA by yielding instead of sleeping a whole 10 ms scheduler tick, with a bound that grows with the read's size |
+
+Test only: `DISC_FAIL_TEST=2 DISC_FAIL_AFTER_S=20` makes stream reads fail after 20 s of play, to see the switch.
+Plain reads from the start can also use `STORAGE_BOUNCE_ALIGNED=1` and `TEX_PACK_WINDOW=128` (with `tex.pak` reordered
+by `tools/d367/texpak_order.py`, data set `texord16`); they are not in the recipe.
+
 **How it is checked.** Every release image goes through these checks before it is published (the release packaging
 script, `tools/d367/test16/t16-package.sh`, refuses to package an image that fails the first one):
 

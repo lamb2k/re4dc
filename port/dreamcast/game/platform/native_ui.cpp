@@ -3916,6 +3916,15 @@ void preload_identities(){
     unsigned kept=0,kept_bytes=0;
     for(const auto& e:entries)if(e.valid && e.frame!=frame){++kept;kept_bytes+=e.package.vram_bytes();}
 #endif
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+    // TEX_PACK_WINDOW (game30.mk): this pass reads tex.pak through a read-ahead window (texture_package.hpp), a staging
+    // buffer from the current heap held only for the pass (the same transient staging load() uses). tex.pak is laid
+    // out in each room's preload order, so the room's pictures come in a few large reads. No buffer: as before.
+    void* win_mem=n?re4dc_ui_stage_alloc(RE4DC_TEX_PACK_WINDOW*1024U+32U):nullptr;
+    const auto win0=re4dc::texture::pack_window_stats();
+    const bool win_on=win_mem && re4dc::texture::pack_window_open(texpack::kPath,
+        reinterpret_cast<void*>((reinterpret_cast<std::uintptr_t>(win_mem)+31U)&~std::uintptr_t(31)),RE4DC_TEX_PACK_WINDOW*1024U);
+#endif
     for(unsigned i=0;i<n;++i){
         // The reserve is also kept in the real pool: VQ page placement pads blocks
         // beyond the accounted bytes (r100 ended at 8,936 B free with 182 KB of budget left).
@@ -3933,6 +3942,15 @@ void preload_identities(){
         const Re4dcUiImage image{reinterpret_cast<const void*>(1),nullptr,p.width,p.height,p.format,0xffffffffU,0};
         if(load(image,true,&p.key))++preload_loads;else ++preload_skipped;
     }
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+    if(win_on){
+        re4dc::texture::pack_window_close();
+        const auto w=re4dc::texture::pack_window_stats();
+        re4dc_log("native texture preload: pack window kb=%u fills=%u hits=%u misses=%u read_kb=%u\n",unsigned(RE4DC_TEX_PACK_WINDOW),
+            w.fills-win0.fills,w.hits-win0.hits,w.misses-win0.misses,w.kb-win0.kb);
+    }else if(n)re4dc_log("native texture preload: pack window off (buffer %s)\n",win_mem?"ok, pack open failed":"not allocated");
+    if(win_mem)re4dc_ui_stage_free(win_mem);
+#endif
     if(frame)for(auto& e:entries)if(e.valid && e.frame==frame)e.frame=frame-1;
     re4dc_log("native texture preload: frame=%u picked=%u resident=%u loads=%u skipped=%u full=%d used=%u budget=%u entries=%u us=%u\n",frame,n,resident,preload_loads-loads,
         preload_skipped-skipped,full?1:0,used,budget,kTextureCount,unsigned(timer_us_gettime64()-start));

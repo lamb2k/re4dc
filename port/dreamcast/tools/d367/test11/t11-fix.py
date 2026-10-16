@@ -296,6 +296,12 @@ T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16w,water16i,wt16r101,f
 # 248 records, sha256 de98da1ec2e75532 (resident_keys.py pack r000 r101 r103).
 T15RD = os.environ.get('T15RD', '/root/probe/lanes-20261015/t15k/data/res16')
 DATA['res16'] = {'dc/resident.bin': T15RD + '/resident.bin'}  # order: after res14r3
+# Test 15 per-room large texture reads (lane plainread16, user-approved 10-16; TEX_PACK_WINDOW): texord16 = t13tex's
+# tex-t13v.pak with its packages laid out in the chapter 1 route's preload order (texpak_order.py over the d01..d13 door
+# runs; every key byte-identical, index unchanged but offsets). Must come after every set that replaces dc/tex.pak.
+TEXORD = os.environ.get('TEXORD', '/root/probe/lanes-20261016/prk/data/texord16')
+DATA['texord16'] = {'dc/tex.pak': TEXORD + '/tex.pak'}
+# Not in T15_DATA (option A keeps stream reads; the layout moves load timing). Add it after every tex.pak set with TEX_PACK_WINDOW.
 # Chapter 1 sound completion (lane audio16, 10-16; data only, no knob, no AICA layout change):
 #   st1/r103.dar = objs13d's r103.dar with its ROOM (ambience) and FOOT (footsteps) banks prebuilt into the frozen AICA layout
 #     (aica_banks.py fit --room r103: 16000 / 11025 Hz, the preferred caps; arena 1,004,192 = r103's enemies 668,192 + these

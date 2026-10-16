@@ -72,7 +72,13 @@ T14_15="G1_DIAG_INLINE=1 G1_FP_UNSIGNED=1 G1_PRESORT_LAZY=1"
 T14_NC=${T14_NC-ACTOR_NO_CLEAR=1}
 # T14_DISC="" (env): the variant without the disc items (KOS_DISC_FIX=0), ready in case the console verdict on
 # KOS_DISC_FIX goes against it (LinkOrder2 console halt 10-15, "invalid prepared enemy motion archive", under analysis).
-T14_DISC=${T14_DISC-DISC_COMPAT=1 DISC_READ_FALLBACK=0}
+# Test 15 disc reads (user decision 10-16, "option A"; lane plainread16): stream (fast) reads as before, and on the first
+# stream or sector read that fails, times out or does not land, an automatic switch to plain bounded sector reads for
+# the rest of the session (DISC_READ_FALLBACK=3; DMA, DMA after a bounded drive re-init, then PIO). DISC_LAND_SPIN_MS=20
+# only acts after the switch (yield while a plain read's DMA lands; size-scaled bound). The fast path is STRICT against
+# test 14's T14_DISC="DISC_COMPAT=1 DISC_READ_FALLBACK=0". Plain reads from the start: T14_DISC="DISC_COMPAT=1
+# DISC_LAND_SPIN_MS=20 STORAGE_BOUNCE_ALIGNED=1 TEX_PACK_WINDOW=128" plus data texord16 (lane plainread16 52868e97).
+T14_DISC=${T14_DISC-DISC_COMPAT=1 DISC_READ_FALLBACK=3 DISC_LAND_SPIN_MS=20}
 T14REC="$T14_1 $T14_17 $T14_15 $T14_NC $T14_DISC $T14_18 $T14_RE MEMSET_LEAN=0"
 T14=${T14-$T14REC}
 # Test 15 knobs (TEST15-SCOPE.md rows and merge log). Merged with default 0; in T15REC only once their lane reports gates passed.

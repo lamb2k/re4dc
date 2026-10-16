@@ -32,13 +32,17 @@ mkdir -p "$EV"
   sleep 4
 done
 wait
+# Bad reads. DISCNOTE lines alone are not failures: DISC_READ_FALLBACK=2 builds (test 15 plain sector reads) log every
+# boot-log note, including the info rows (drive init ok, first read ok). Only the trouble rows count: a busy drive, a
+# timeout / abort / reset, a late or missing transfer, a failed method, a re-init or PIO fallback, a bad stream table.
+BADRE='MISSING|DISC READ FAILED|short read|open failed|read failed|BAD-READ|DISCNOTE: (disc: .*(busy|timeout|abort|not accepted|late|did not land|failed|reinit|pio)|snd: stream table (bad|still))'
 fail=0
 echo "seed | result | r103 | bad reads | stop | r101 placed ms | door ms | r103 load s | GDCONSOLE profile"
 for s in "$@"; do
   d="$EV/$TAG-s$s"; o="$d/run-output.txt"
   stop=$(grep -a -m1 -E 'HALT|FAULT|Out of memory' "$o" 2>/dev/null | cut -c1-100)
-  nbad=$(grep -a -c -E 'MISSING|DISC READ FAILED|short read|open failed|read failed|BAD-READ|DISCNOTE' "$o" 2>/dev/null)
-  bad1=$(grep -a -m1 -E 'MISSING|DISC READ FAILED|short read|open failed|read failed|BAD-READ|DISCNOTE' "$o" 2>/dev/null | cut -c1-100)
+  nbad=$(grep -a -c -E "$BADRE" "$o" 2>/dev/null)
+  bad1=$(grep -a -m1 -E "$BADRE" "$o" 2>/dev/null | cut -c1-100)
   r103=$(grep -a -c 'phase=enter room=103' "$o" 2>/dev/null)
   placed=$(grep -a -m1 -o 'warp: placed room=101.*wall_ms=[0-9]*' "$o" 2>/dev/null | grep -o '[0-9]*$')
   lastact=$(grep -a -B200 'warp: room enter 103' "$o" 2>/dev/null | grep -a -o 'warp: act [0-9]* .*wall_ms=[0-9]*' | tail -1 | grep -o '[0-9]*$')

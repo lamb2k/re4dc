@@ -160,6 +160,9 @@ private:
 #if RE4DC_TEX_PACK
     bool open_streamed_impl(const char* path, std::uint32_t base, std::uint32_t size);
     std::uint32_t base_ = 0;   // the package's offset in its file (TEX_PACK; 0 for a .re4tex)
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+    const char* win_path_ = nullptr;   // opened through the pack window (no handle of its own)
+#endif
 #endif
 
     file_t file_ = FILEHND_INVALID;
@@ -197,6 +200,26 @@ private:
 enum class RangeRead { ok, absent, io_error, short_file };
 RangeRead read_file_range(const char* path, std::uint32_t offset, void* out, std::uint32_t bytes,
                           unsigned long long* file_bytes = nullptr);
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+// TEX_PACK_WINDOW (game30.mk; lane plainread16 2026-10-16; needs DISC_READ_FALLBACK=2): a read-ahead window over the
+// pack file. While it is open, Package::open_streamed_at(path, ...) and the package's upload() read the entry from the
+// window; a miss refills it with ONE large read starting at the entry (sector aligned). tex.pak is laid out in each
+// room's load order (tools/d367/texpak_order.py), so a room's preload reads its pictures in a few large commands
+// instead of several per picture. Exact: the same bytes reach the same places. The caller owns the buffer.
+//   pack_window_open   path (the pack, e.g. "/cd/dc/tex.pak"), buffer (32-byte aligned), bytes (>= 32 KiB; rounded
+//                      down to whole sectors). False (and no window) on a bad buffer or when the pack does not open.
+//   pack_window_fill   prefetch: read [offset rounded down to a sector, + window bytes) now, unless already held.
+//                      For the door prefetch (lane doorprefetch16): fill with the room's first pack offset while the
+//                      door sound plays; the preload then starts on a hit.
+//   pack_window_close  closes the handle; the caller frees the buffer after it.
+// One window, one thread: open, fill, the loads and close run on the thread that loads textures.
+bool pack_window_open(const char* path, void* buffer, std::uint32_t bytes);
+bool pack_window_fill(std::uint32_t offset);
+void pack_window_close();
+bool pack_window_active();
+struct PackWindowStats { unsigned fills, hits, misses, kb; };
+PackWindowStats pack_window_stats();
+#endif
 #endif
 
 } // namespace re4dc::texture

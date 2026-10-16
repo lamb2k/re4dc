@@ -45,7 +45,14 @@ struct ReaderGuard {
     ~ReaderGuard() { if(acquired) reader_mutex.unlock(); }
 };
 #endif
+#if defined(RE4DC_STORAGE_BOUNCE_ALIGNED) && RE4DC_STORAGE_BOUNCE_ALIGNED
+// STORAGE_BOUNCE_ALIGNED (Makefile; only with DISC_READ_FALLBACK=2, where KOS cdrom streams are refused anyway):
+// 32-byte aligned, so fs_iso9660 reads each chunk's whole sectors with ONE multi-sector GD command instead of one
+// command per 2048-byte sector through its sector cache (a 16 KiB chunk: 1 command, not 8). Same bytes.
+std::uint8_t* small_file_buffer() { return g_small_file_bounce; }
+#else
 std::uint8_t* small_file_buffer() { return g_small_file_bounce + 16U; }
+#endif
 
 std::size_t align_up(std::size_t value) {
     return (value + (kArenaAlignment - 1U)) & ~(kArenaAlignment - 1U);

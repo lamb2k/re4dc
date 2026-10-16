@@ -2331,6 +2331,24 @@ ifneq ($(TEX_PACK_FAULT),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PACK_FAULT=$(TEX_PACK_FAULT)
 endif
 endif
+# TEX_PACK_WINDOW=KB (lane plainread16 2026-10-16, user-approved "per-room large texture reads"; default 0 = image
+# unchanged; needs TEX_PACK=1, DISC_READ_FALLBACK=2 and TEX_PAYLOAD_CRC=0): each room preload pass reads tex.pak through
+# a KB read-ahead window (room/texture_package.hpp pack_window_*; a transient staging buffer from the current heap, freed
+# at the end of the pass). With tex.pak laid out in the rooms' preload order (tools/d367/texpak_order.py) a room's
+# pictures arrive in a few large reads instead of 2+ commands per picture. Exact: same bytes, same VRAM, same order.
+TEX_PACK_WINDOW ?= 0
+ifneq ($(TEX_PACK_WINDOW),0)
+ifneq ($(TEX_PACK),1)
+$(error TEX_PACK_WINDOW needs TEX_PACK=1)
+endif
+ifeq ($(filter $(DISC_READ_FALLBACK),2 3),)
+$(error TEX_PACK_WINDOW needs DISC_READ_FALLBACK=2 or 3)
+endif
+ifeq ($(TEX_PAYLOAD_CRC),1)
+$(error TEX_PACK_WINDOW does not support TEX_PAYLOAD_CRC=1)
+endif
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PACK_WINDOW=$(TEX_PACK_WINDOW)
+endif
 # TEX_USE_CENSUS=1 (test only, native_ui.cpp, default 0): every 600 frames, the resident textures and how many the
 # last 2 s / 20 s drew ("tex use census"), to size what the room preload loads but nothing draws.
 TEX_USE_CENSUS ?= 0
