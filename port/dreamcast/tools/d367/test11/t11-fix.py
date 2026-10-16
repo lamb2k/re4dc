@@ -340,8 +340,10 @@ DATA['wv32r101'] = {'dc/native/r101/' + _n: WV32D + '/' + _n for _n in (
     'ps2-wv5.re4mesh', 'ps2-wv5.r4sg')}
 # Test 16 r101 world (lane/worldtest16, user plan 10-16: no structural world cuts): wt16r101 = world32 with the landmarks
 # kept at level 0 (stake crossbar + pyre planks via a vertex box, the house fence segments, the well, the low fence); same
-# six files and R4PW tables as wv32r101 (replaces it). re4-assets-private/world-r101-wt16-20261016 (SHA256SUMS, RECIPE.txt).
-WT16D = os.environ.get('WT16D', PRIV + '/world-r101-wt16-20261016')
+# six files and R4PW tables as wv32r101 (replaces it). Since 10-16 evening: set C16 = that set + mesh 0x17 (the house-front
+# fence rails, which the per-vertex reduction collapsed) at level 0, re4-assets-private/world-r101-wt16c16-20261016
+# (SHA256SUMS, RECIPE.txt); the first set (C4, test 16 until then) stays in world-r101-wt16-20261016 (WT16D overrides).
+WT16D = os.environ.get('WT16D', PRIV + '/world-r101-wt16c16-20261016')
 DATA['wt16r101'] = {'dc/native/r101/' + _n: WT16D + '/' + _n for _n in (
     'ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4sg',
     'ps2-wv5.re4mesh', 'ps2-wv5.r4sg')}
