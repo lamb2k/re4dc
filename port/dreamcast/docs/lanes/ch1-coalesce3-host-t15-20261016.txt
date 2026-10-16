@@ -1,0 +1,133 @@
+Bounded spatial32v3 range coalescing, 2026-10-16
+
+Status: host invariants pass; independent review and runtime/model pricing pending.
+Private output: /root/probe/codex-batch-coalesce-t15-20261016/candidate
+Converter: /mnt/c/Game Dev/Emulators/_codex_batch_coalesce_t15_20261016/coalesce_exact.py
+The source assets and runtime were not changed. No build or emulator was run.
+
+Candidate scope
+
+Mesh 206, parts 175+176, placement 110, R4ID 254:
+  meshlets [649,656)+[656,662) => [649,662), B empty
+  clusters [292,299)+[299,305) => [292,305), B empty
+  vertex pools [40041,40105)+[40105,40153), unchanged
+Mesh 208, parts 195+196, placement 112, R4ID 254:
+  meshlets [864,873)+[873,883) => [864,883), B empty
+  clusters [396,405)+[405,415) => [396,415), B empty
+  vertex pools [49431,49511)+[49511,49591), unchanged
+Mesh 209, parts 219+220, placement 113, R4ID 254:
+  meshlets [1026,1027)+[1027,1029) => [1026,1029), B empty
+  clusters [489,490)+[490,492) => [489,492), B empty
+  vertex pools [56425,56441)+[56441,56457), unchanged
+
+No part row is removed or renumbered. Each A receives the combined meshlet_count
+and cluster_count; each B retains its row, first_meshlet, first_cluster and all
+other fields but has both counts set to zero. All other rows stay identical.
+Total part rows remain 342; nonempty ranges go from 238 to 235. Six file sizes,
+allocation offsets and buffer capacities remain unchanged.
+
+Each pair has identical R4PW records: key 6d47e0e6-8454336c, 128x128, opaque
+pass 0, cull 2, texture 85, reserved 0. UV bits are identical:
+00000000000000008000803780008037 (bias 0/0, scale 1.5259021893143654e-05 each).
+Legacy MeshPart.texture differs 1 versus 2; alpha/flags/reserved are 255/0/0.
+MeshPart.source_offset differs and source_size is zero; neither participates in
+the reviewed PS2 world draw path. These legacy fields remain unchanged in both
+rows. No texture atlas is generated or consumed.
+
+Runtime semantics reviewed
+
+Pinned runtime is cxt16baserW at 3e303c5e; native_static.cpp, native_ui.cpp and
+instanced_mesh.hpp match that revision, including the working files (git diff
+3e303c5e -- those paths was empty). Their exact SHA-256 values and the resolved
+knob-file hash are recorded in invariants.json. The parent-provided ELF hash is
+recorded as parent-provided, not a new ELF measurement.
+
+native_static.cpp:4757-4830 (ps2_pass) binds the six-word R4PW key, sets vertex
+alpha from R4PW reserved, and applies the same placement matrix, LOD scale,
+interior-cull state and group table to both adjacent rows. The active runtime
+has PS2_PVS=0 and all R11F/transition/source-owner callbacks disabled. Thus no
+per-part source UV callback or external PVS identity can distinguish B here.
+QUALITY_ASSETS skip_clusters remains default zero on this PS2 path.
+
+native_static.cpp:2080-2240, 2480-2585: MeshDraw reads the existing meshlet pool
+indices, the part's exact UV constants, and unchanged global cluster/level
+records. The combined range preserves global cluster order. All 554 ordered
+cluster instances have the same placement/pass/render state, establishing the
+same geometry traversal for arbitrary per-cluster cull subsets and LOD choices.
+No position, grid, color, UV coordinate, strip, bound, level, error or group
+record is converted. The strip-group coefficient cache depends on the unchanged
+placement matrix and near plane; retaining it through the boundary is valid.
+
+native_static.cpp:873-925: Emitter::bind occurs on the first actual draw and
+reuses its bound state afterward. end_direct ends the store queue only if bound.
+native_ui.cpp:7676 onward: the PS2 texture and header come from that same six-word
+key and frame fog state. No legacy MeshPart.texture index is consulted.
+
+instanced_mesh.hpp:145-237: admission accepts zero meshlet_count and zero
+cluster_count, skipping an empty part in the ascending/disjoint-pool test.
+The candidate's combined A pools are contiguous and remain disjoint from every
+other part. All levels still lie within their new owning range. The parent mesh
+continues to include the empty B row, which is valid.
+
+The empty B row is not free. ps2_pass still increments c.parts, creates
+MeshDraw, sets matrix/key/culling state, calls run/end_direct, and increments
+c.native. run still reads streaming state, sets clip/UV constants, walks its
+zero-length cluster loop and calls model_result before returning 1. It never
+reaches draw or bind, and end_direct has no bound store queue to release.
+Therefore this candidate can remove 0-3 redundant bind/end-direct/cache setups
+when both ranges in each pair actually draw. It does not remove three whole
+part iterations or justify multiplying a full per-part timing coefficient.
+
+Host validation performed
+
+The self-contained Python converter pins all six source hashes. Before writing
+any asset it mirrors active R4IM admission, including range/section constraints,
+prelit encoding, ascending/disjoint pools, indexed corners, strip lengths and
+indices, cluster ownership and finite nondecreasing LOD errors. It validates
+R4PW and R4ID identity and checks every strip-group range/bound against actual
+corners. The source and output each contain 16,757 strips, 67,659 strip corners,
+535 cluster memberships, 707 level memberships and 4,112 nonempty strip groups.
+
+Raw byte-diff allowlists prove only the twelve count words plus mesh CRC change
+in each mesh (16 bytes actually differ). Only the mesh-CRC word changes in each
+group file (four bytes). The sidecar and IDs are byte-identical. The 554 ordered
+cluster instances and their effective state compare equal. All original vertex,
+meshlet, strip, cluster, level, placement and group payload bytes are unchanged.
+
+Sky rows 0-2, every R4ID below 250 and all gate-manifest placements 209-222 are
+protected. None uses a changed mesh. The original gate manifest's sidecar CRC
+predates spatial32; current placement and mesh identities are independently
+checked against the manifest and spatial32 report. Its em field is an object
+kind, not an R4ID byte; gate rows have R4ID 255 but remain protected explicitly.
+
+Both active5 and padded fallbackL0 meshes pass the host admission mirror and
+retain the same topology. Active5 R4SG validates mesh CRC 73277679, bytes 891968,
+unchanged sidecar CRC, and unchanged group-record CRC 9a1754ed. The padded L0
+mesh CRC is bea18c4e and size 1283520. As in the source experiment, L0 R4SG is a
+117152-byte capacity reservation holding a selected5 header and records; its
+size/mesh identity deliberately fail runtime group admission if L5 is absent,
+leaving the existing ungrouped fallback. This behavior is preserved, not newly
+introduced. L0 R4SG must not be described as a valid fallback group package.
+
+All six output file sizes: active5 mesh 891968, fallbackL0 mesh 1283520,
+R4PW 17100, IDs 256, active5 R4SG 71264, reserved fallbackL0 R4SG 117152.
+Selected5 mesh SHA-256:
+43d66e24e5c31cf32178779bde4a2d8348a3204f3bddb1c81d9f0e13d810be38
+All input/output file hashes, byte offsets, protected identities and runtime
+source hashes are in candidate/invariants.json. Re-read after write matches.
+
+Reproduction (new output path required)
+
+python3 /mnt/c/Game\ Dev/Emulators/_codex_batch_coalesce_t15_20261016/coalesce_exact.py \
+  --source /root/probe/codex-ch1-render-20261015/assets/spatial32v3 \
+  --out /root/probe/codex-batch-coalesce-t15-20261016/reproduced \
+  --gate-manifest /mnt/c/Game\ Dev/Emulators/re4-assets-private/crowd12-bake-20261015/r101-t13/append.json \
+  --runtime-tree /root/probe/codex-cpu-t15-20261016/tree \
+  --resolved-knobs /root/probe/codex-cpu-t15-20261016/builds/out-cxt16baserW/resolved-knobs.txt
+
+candidate/fixture.json lists the six opt-in replacements under dc/native/r101.
+Use all six together with the reviewed runtime. No fixture was installed into
+an existing runtime asset directory. Runtime texture/header counters, cache
+lifetime and behavior under allocation/header failure may differ; exact draw
+semantics assume successful resources. No visual equivalence, model/hardware
+time saving, hardware acceptance, default change or publication is claimed.

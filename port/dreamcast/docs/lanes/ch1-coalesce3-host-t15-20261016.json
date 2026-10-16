@@ -1,0 +1,749 @@
+{
+  "status": "HOST_INVARIANTS_PASS_RUNTIME_PRICING_PENDING",
+  "scope": "Three adjacent opaque range pairs; source/runtime untouched; opt-in only",
+  "source": "/root/probe/codex-ch1-render-20261015/assets/spatial32v3",
+  "output": "/root/probe/codex-batch-coalesce-t15-20261016/candidate",
+  "runtime_revision": "3e303c5e",
+  "runtime_build": "cxt16baserW",
+  "runtime_elf_sha256_parent_provided": "1f98fe56859c114ad09a818dd4b6f33658c42c73d11229186ec5ad9428cef8c6",
+  "runtime_source_sha256": {
+    "port/dreamcast/game/platform/native_static.cpp": "8eb55017c0726bf51bd2d9996e8ee3aa8c0905e9cae20f26c3de22ae266a2aa3",
+    "port/dreamcast/game/platform/native_ui.cpp": "f3fec7ba272579a213bcbefc8e5a3b55e62c1f1ea193d21627a4754878fca210",
+    "port/dreamcast/room/instanced_mesh.hpp": "bf43408d054e448ff6052ac9c46ebc00b92a2495979c4555919a663724d2aff3"
+  },
+  "resolved_knobs_sha256": "a64e9dc002f41f0bd9c35fba0c815a9cba4f56e35fe3e24bd1cdca8543336119",
+  "converter_sha256": "de22bd3964992c7e08f0b96be47dd80b64f5026b5b7e31431764a3b6184d17c8",
+  "gate_manifest_sha256": "eebcd745d119a6e0b969c72f15d7d4935ea0da3c7859f321cad940a63514e29a",
+  "gated_placement_ids": [
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222
+  ],
+  "protected_placement_rows": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    209,
+    210,
+    211,
+    212,
+    213,
+    214,
+    215,
+    216,
+    217,
+    218,
+    219,
+    220,
+    221,
+    222
+  ],
+  "protected_meshes": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    190,
+    191,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    199,
+    200,
+    201,
+    202,
+    203
+  ],
+  "gate_manifest_note": "Original gate sidecar CRC predates spatial batching; placement and mesh identities independently checked against current sidecar and spatial report. Manifest em is an object kind, not an R4ID byte; gate rows remain protected even when their ID is 255.",
+  "files": {
+    "ps2-wv5.re4mesh": {
+      "bytes": 891968,
+      "source_sha256": "5dd5e15f8c9826cd7db02a2e2ff3f86488ce8cba7efdba2e4d4cf8194f62e732",
+      "output_sha256": "43d66e24e5c31cf32178779bde4a2d8348a3204f3bddb1c81d9f0e13d810be38",
+      "same_size": true
+    },
+    "ps2-world.re4mesh": {
+      "bytes": 1283520,
+      "source_sha256": "d8a9866e92e0ba0123016e5eca13e526c63526c121310f7423d011a8a6a7e95a",
+      "output_sha256": "70f9320ba10cfadf7e24a419fde775d9609123e280d80689bf78f72cbfbfc8ec",
+      "same_size": true
+    },
+    "ps2-world.r4pw": {
+      "bytes": 17100,
+      "source_sha256": "4d6e573c2e3863e0a62d0de10195b8beb73e5982f89be41f954845559f161d34",
+      "output_sha256": "4d6e573c2e3863e0a62d0de10195b8beb73e5982f89be41f954845559f161d34",
+      "same_size": true
+    },
+    "ps2-world.ids": {
+      "bytes": 256,
+      "source_sha256": "209fb771330bc0740e1d5adb452f07da76f48371e1ffd9ba4b468cd948f89054",
+      "output_sha256": "209fb771330bc0740e1d5adb452f07da76f48371e1ffd9ba4b468cd948f89054",
+      "same_size": true
+    },
+    "ps2-wv5.r4sg": {
+      "bytes": 71264,
+      "source_sha256": "abebbb02fcc447083c30f27c6e39d8a7acace6cc9f70875b1cda64c2607a5fae",
+      "output_sha256": "b19133d9d130e8f02e7ae0403e3d91ad7003535c2b733fbfc070aef3e1e2f027",
+      "same_size": true
+    },
+    "ps2-world.r4sg": {
+      "bytes": 117152,
+      "source_sha256": "d39e5cdb032985f75c82ee4a55056fa108fb25f05c74983926d3769cea31dbe6",
+      "output_sha256": "405d50907989eb0b75a51b4c083752822bec52517b18bd68ef3ea2ec8d335093",
+      "same_size": true
+    }
+  },
+  "before": {
+    "strips": 16757,
+    "strip_corners": 67659,
+    "cluster_memberships": 535,
+    "level_memberships": 707,
+    "nonempty_parts": 238
+  },
+  "after": {
+    "strips": 16757,
+    "strip_corners": 67659,
+    "cluster_memberships": 535,
+    "level_memberships": 707,
+    "nonempty_parts": 235
+  },
+  "groups": {
+    "groups_per_meshlet": 4,
+    "nonempty_groups": 4112,
+    "record_crc": "9a1754ed",
+    "logical_bytes": 71264,
+    "allocated_file_bytes": 71264
+  },
+  "pairs": [
+    {
+      "mesh": 206,
+      "parts": [
+        175,
+        176
+      ],
+      "placements": [
+        110
+      ],
+      "placement_ids": [
+        110
+      ],
+      "object_ids": [
+        254
+      ],
+      "part_records_before": [
+        [
+          224,
+          0,
+          1,
+          255,
+          0,
+          0,
+          649,
+          7,
+          0.0,
+          0.0,
+          1.5259021893143654e-05,
+          1.5259021893143654e-05
+        ],
+        [
+          256,
+          0,
+          2,
+          255,
+          0,
+          0,
+          656,
+          6,
+          0.0,
+          0.0,
+          1.5259021893143654e-05,
+          1.5259021893143654e-05
+        ]
+      ],
+      "part_lods_before": [
+        [
+          292,
+          7
+        ],
+        [
+          299,
+          6
+        ]
+      ],
+      "vertex_pools_before": [
+        [
+          40041,
+          40105
+        ],
+        [
+          40105,
+          40153
+        ]
+      ],
+      "sidecar_record": [
+        1833427174,
+        2220110700,
+        128,
+        128,
+        0,
+        2,
+        85,
+        0
+      ],
+      "uv_bits": "00000000000000008000803780008037"
+    },
+    {
+      "mesh": 208,
+      "parts": [
+        195,
+        196
+      ],
+      "placements": [
+        112
+      ],
+      "placement_ids": [
+        112
+      ],
+      "object_ids": [
+        254
+      ],
+      "part_records_before": [
+        [
+          128,
+          0,
+          1,
+          255,
+          0,
+          0,
+          864,
+          9,
+          0.0,
+          0.0,
+          1.5259021893143654e-05,
+          1.5259021893143654e-05
+        ],
+        [
+          160,
+          0,
+          2,
+          255,
+          0,
+          0,
+          873,
+          10,
+          0.0,
+          0.0,
+          1.5259021893143654e-05,
+          1.5259021893143654e-05
+        ]
+      ],
+      "part_lods_before": [
+        [
+          396,
+          9
+        ],
+        [
+          405,
+          10
+        ]
+      ],
+      "vertex_pools_before": [
+        [
+          49431,
+          49511
+        ],
+        [
+          49511,
+          49591
+        ]
+      ],
+      "sidecar_record": [
+        1833427174,
+        2220110700,
+        128,
+        128,
+        0,
+        2,
+        85,
+        0
+      ],
+      "uv_bits": "00000000000000008000803780008037"
+    },
+    {
+      "mesh": 209,
+      "parts": [
+        219,
+        220
+      ],
+      "placements": [
+        113
+      ],
+      "placement_ids": [
+        113
+      ],
+      "object_ids": [
+        254
+      ],
+      "part_records_before": [
+        [
+          128,
+          0,
+          1,
+          255,
+          0,
+          0,
+          1026,
+          1,
+          0.0,
+          0.0,
+          1.5259021893143654e-05,
+          1.5259021893143654e-05
+        ],
+        [
+          160,
+          0,
+          2,
+          255,
+          0,
+          0,
+          1027,
+          2,
+          0.0,
+          0.0,
+          1.5259021893143654e-05,
+          1.5259021893143654e-05
+        ]
+      ],
+      "part_lods_before": [
+        [
+          489,
+          1
+        ],
+        [
+          490,
+          2
+        ]
+      ],
+      "vertex_pools_before": [
+        [
+          56425,
+          56441
+        ],
+        [
+          56441,
+          56457
+        ]
+      ],
+      "sidecar_record": [
+        1833427174,
+        2220110700,
+        128,
+        128,
+        0,
+        2,
+        85,
+        0
+      ],
+      "uv_bits": "00000000000000008000803780008037"
+    }
+  ],
+  "patches": {
+    "ps2-wv5.re4mesh": {
+      "uint32_patches": [
+        {
+          "offset": 20876,
+          "old": 7,
+          "new": 13
+        },
+        {
+          "offset": 20912,
+          "old": 6,
+          "new": 0
+        },
+        {
+          "offset": 871388,
+          "old": 7,
+          "new": 13
+        },
+        {
+          "offset": 871396,
+          "old": 6,
+          "new": 0
+        },
+        {
+          "offset": 21596,
+          "old": 9,
+          "new": 19
+        },
+        {
+          "offset": 21632,
+          "old": 10,
+          "new": 0
+        },
+        {
+          "offset": 871548,
+          "old": 9,
+          "new": 19
+        },
+        {
+          "offset": 871556,
+          "old": 10,
+          "new": 0
+        },
+        {
+          "offset": 22460,
+          "old": 1,
+          "new": 3
+        },
+        {
+          "offset": 22496,
+          "old": 2,
+          "new": 0
+        },
+        {
+          "offset": 871740,
+          "old": 1,
+          "new": 3
+        },
+        {
+          "offset": 871748,
+          "old": 2,
+          "new": 0
+        }
+      ],
+      "changed_byte_offsets": [
+        12,
+        13,
+        14,
+        15,
+        20876,
+        20912,
+        21596,
+        21632,
+        22460,
+        22496,
+        871388,
+        871396,
+        871548,
+        871556,
+        871740,
+        871748
+      ],
+      "header_crc_before": "050f1128",
+      "header_crc_after": "73277679"
+    },
+    "ps2-world.re4mesh": {
+      "uint32_patches": [
+        {
+          "offset": 20876,
+          "old": 7,
+          "new": 13
+        },
+        {
+          "offset": 20912,
+          "old": 6,
+          "new": 0
+        },
+        {
+          "offset": 871388,
+          "old": 7,
+          "new": 13
+        },
+        {
+          "offset": 871396,
+          "old": 6,
+          "new": 0
+        },
+        {
+          "offset": 21596,
+          "old": 9,
+          "new": 19
+        },
+        {
+          "offset": 21632,
+          "old": 10,
+          "new": 0
+        },
+        {
+          "offset": 871548,
+          "old": 9,
+          "new": 19
+        },
+        {
+          "offset": 871556,
+          "old": 10,
+          "new": 0
+        },
+        {
+          "offset": 22460,
+          "old": 1,
+          "new": 3
+        },
+        {
+          "offset": 22496,
+          "old": 2,
+          "new": 0
+        },
+        {
+          "offset": 871740,
+          "old": 1,
+          "new": 3
+        },
+        {
+          "offset": 871748,
+          "old": 2,
+          "new": 0
+        }
+      ],
+      "changed_byte_offsets": [
+        12,
+        13,
+        14,
+        15,
+        20876,
+        20912,
+        21596,
+        21632,
+        22460,
+        22496,
+        871388,
+        871396,
+        871548,
+        871556,
+        871740,
+        871748
+      ],
+      "header_crc_before": "8f56608a",
+      "header_crc_after": "bea18c4e"
+    }
+  },
+  "traversal_cluster_instances": 554,
+  "unchanged": [
+    "all vertex bytes/colors",
+    "mesh grids/transforms/bounds",
+    "all meshlets/pool indices",
+    "all strip bytes/winding/order",
+    "all clusters/bounds",
+    "all LOD levels/errors",
+    "all sidecar bytes/materials/placements",
+    "all dynamic IDs",
+    "all strip-group records",
+    "all six file capacities and allocation inputs",
+    "ordered cluster instances with per-cluster state"
+  ],
+  "runtime_admission": "Python mirror of active MeshPackage and sidecar/ID/group admission, plus stronger group range/bounds and lineage checks; no compiled/runtime validation",
+  "empty_rows": "Parent mesh ranges and total part rows remain unchanged; c.parts and c.native still increment; MeshDraw setup, run, result and end_direct calls remain. Empty rows never reach draw/bind.",
+  "savings_claim": "0 to 3 redundant binds/end-direct/cache setups potentially removed when both ranges of each pair draw; no timing or full per-part-fee saving claimed",
+  "fallback": "Padded L0 mesh is valid and same topology. Padded L0 R4SG retains selected-L5 identity and deliberate runtime size mismatch, exactly as source fixture; missing L5 uses ungrouped path.",
+  "runtime_constraints": [
+    "Use reviewed cxt16baserW WORLD_VERT_LEVEL=5 runtime and all six assets together",
+    "PS2_PVS=0; external CRC-keyed derived data would need regeneration for other builds",
+    "No transition/R11F/source-owner per-part UV callbacks in reviewed build",
+    "Texture/header counters, cache lifetime, and resource-failure behavior can differ; visual and model checks remain pending"
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "status": "INDEPENDENT_HOST_INVARIANTS_PASS",
+  "mesh_files": {
+    "ps2-wv5.re4mesh": {
+      "bytes": 891968,
+      "sha256": "43d66e24e5c31cf32178779bde4a2d8348a3204f3bddb1c81d9f0e13d810be38",
+      "changed_bytes": 16,
+      "allowed_change_bytes": 52,
+      "before": {
+        "strips": 16757,
+        "corners": 67659,
+        "nonempty_parts": 238
+      },
+      "after": {
+        "strips": 16757,
+        "corners": 67659,
+        "nonempty_parts": 235
+      },
+      "ordered_cluster_instances": 554,
+      "pairs": [
+        {
+          "mesh": 206,
+          "parts": [
+            175,
+            176
+          ],
+          "merged_all_level_strip_corners": 112,
+          "merged_all_level_strips": 28,
+          "merged_meshlets": 13
+        },
+        {
+          "mesh": 208,
+          "parts": [
+            195,
+            196
+          ],
+          "merged_all_level_strip_corners": 160,
+          "merged_all_level_strips": 40,
+          "merged_meshlets": 19
+        },
+        {
+          "mesh": 209,
+          "parts": [
+            219,
+            220
+          ],
+          "merged_all_level_strip_corners": 32,
+          "merged_all_level_strips": 8,
+          "merged_meshlets": 3
+        }
+      ]
+    },
+    "ps2-world.re4mesh": {
+      "bytes": 1283520,
+      "sha256": "70f9320ba10cfadf7e24a419fde775d9609123e280d80689bf78f72cbfbfc8ec",
+      "changed_bytes": 16,
+      "allowed_change_bytes": 52,
+      "before": {
+        "strips": 16757,
+        "corners": 67659,
+        "nonempty_parts": 238
+      },
+      "after": {
+        "strips": 16757,
+        "corners": 67659,
+        "nonempty_parts": 235
+      },
+      "ordered_cluster_instances": 554,
+      "pairs": [
+        {
+          "mesh": 206,
+          "parts": [
+            175,
+            176
+          ],
+          "merged_all_level_strip_corners": 112,
+          "merged_all_level_strips": 28,
+          "merged_meshlets": 13
+        },
+        {
+          "mesh": 208,
+          "parts": [
+            195,
+            196
+          ],
+          "merged_all_level_strip_corners": 160,
+          "merged_all_level_strips": 40,
+          "merged_meshlets": 19
+        },
+        {
+          "mesh": 209,
+          "parts": [
+            219,
+            220
+          ],
+          "merged_all_level_strip_corners": 32,
+          "merged_all_level_strips": 8,
+          "merged_meshlets": 3
+        }
+      ]
+    }
+  },
+  "protected_mesh_count": 103,
+  "shared_sidecar_and_ids_identical": true,
+  "strip_groups": {
+    "ps2-wv5.r4sg": {
+      "bytes": 71264,
+      "sha256": "b19133d9d130e8f02e7ae0403e3d91ad7003535c2b733fbfc070aef3e1e2f027",
+      "records_identical": true,
+      "active_admission": true,
+      "fallback_admission": false
+    },
+    "ps2-world.r4sg": {
+      "bytes": 117152,
+      "sha256": "405d50907989eb0b75a51b4c083752822bec52517b18bd68ef3ea2ec8d335093",
+      "records_identical": true,
+      "active_admission": false,
+      "fallback_admission": false
+    }
+  }
+}

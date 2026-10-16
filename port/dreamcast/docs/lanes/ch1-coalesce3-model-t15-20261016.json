@@ -1,0 +1,417 @@
+{
+  "status": "MEASURED_NOT_ADVANCED_NEGLIGIBLE_CROSS_GAIN",
+  "scope": "Console-fit SH-4 hardware model; r101 burning cross, T15 data, frames500:799 stride10, same exact executable. Not physical-console timing.",
+  "audit": {
+    "scope": "Incremental coalesce3 versus spatial32; same executable and samples; console-fit SH-4 model, not hardware.",
+    "elf_sha256": "1f98fe56859c114ad09a818dd4b6f33658c42c73d11229186ec5ad9428cef8c6",
+    "sample_frames": [
+      500,
+      510,
+      520,
+      530,
+      540,
+      550,
+      560,
+      570,
+      580,
+      590,
+      600,
+      610,
+      620,
+      630,
+      640,
+      650,
+      660,
+      670,
+      680,
+      690,
+      700,
+      710,
+      720,
+      730,
+      740,
+      750,
+      760,
+      770,
+      780,
+      790
+    ],
+    "baseline_ms": 60.69214616666667,
+    "candidate_ms": 60.6888845,
+    "delta_ms": -0.0032616666666669403,
+    "paired_faster": 17,
+    "paired_median_delta_ms": -0.001735000000000042,
+    "paired_range_ms": [
+      -0.03573000000000093,
+      0.024395000000005496
+    ],
+    "changed_payloads": [
+      "dc/native/r101/ps2-world.r4sg",
+      "dc/native/r101/ps2-world.re4mesh",
+      "dc/native/r101/ps2-wv5.r4sg",
+      "dc/native/r101/ps2-wv5.re4mesh"
+    ],
+    "payload_count": 2615,
+    "executable_and_overlays_identical": true,
+    "actor_camera_rows_identical": 11,
+    "heap4_free_by_frame": {
+      "120": 4969504,
+      "240": 728032,
+      "360": 726656,
+      "480": 723808,
+      "600": 723616,
+      "720": 722656
+    },
+    "heap4_delta_bytes": 0,
+    "end_delta_bytes": 0,
+    "world_counter_rows_identical": true,
+    "world_counter_rows": {
+      "baseline": [
+        "PS2MESH frame=240 pass=0 placements=87 culled=55 parts=121 native=121 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=240 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=240 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=240 strips=119189 culled=49213 clipped=3245 vertices=708829 clusters=11762/12540 lod=10941,711,110,0",
+        "PS2MESH frame=360 pass=0 placements=87 culled=55 parts=121 native=121 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=360 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=360 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=360 strips=384020 culled=156603 clipped=9344 vertices=2276067 clusters=37117/40203 lod=34601,2277,239,0",
+        "PS2MESH frame=480 pass=0 placements=87 culled=55 parts=114 native=114 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=480 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=480 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=480 strips=664214 culled=260139 clipped=13903 vertices=3881247 clusters=61983/67482 lod=57976,3768,239,0",
+        "PS2MESH frame=600 pass=0 placements=88 culled=53 parts=118 native=118 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 pass=1 placements=32 culled=23 parts=9 native=9 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 pass=2 placements=18 culled=6 parts=21 native=21 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 strips=956902 culled=364003 clipped=18132 vertices=5537482 clusters=86997/94034 lod=81599,5159,239,0",
+        "PS2MESH frame=720 pass=0 placements=91 culled=55 parts=119 native=119 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=720 pass=1 placements=32 culled=23 parts=9 native=9 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=720 pass=2 placements=18 culled=6 parts=21 native=21 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=720 strips=1269178 culled=478204 clipped=22417 vertices=7331129 clusters=112796/120464 lod=106041,6516,239,0"
+      ],
+      "candidate": [
+        "PS2MESH frame=240 pass=0 placements=87 culled=55 parts=121 native=121 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=240 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=240 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=240 strips=119189 culled=49213 clipped=3245 vertices=708829 clusters=11762/12540 lod=10941,711,110,0",
+        "PS2MESH frame=360 pass=0 placements=87 culled=55 parts=121 native=121 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=360 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=360 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=360 strips=384020 culled=156603 clipped=9344 vertices=2276067 clusters=37117/40203 lod=34601,2277,239,0",
+        "PS2MESH frame=480 pass=0 placements=87 culled=55 parts=114 native=114 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=480 pass=1 placements=32 culled=24 parts=8 native=8 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=480 pass=2 placements=18 culled=7 parts=19 native=19 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=480 strips=664214 culled=260139 clipped=13903 vertices=3881247 clusters=61983/67482 lod=57976,3768,239,0",
+        "PS2MESH frame=600 pass=0 placements=88 culled=53 parts=118 native=118 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 pass=1 placements=32 culled=23 parts=9 native=9 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 pass=2 placements=18 culled=6 parts=21 native=21 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 strips=956902 culled=364003 clipped=18132 vertices=5537482 clusters=86997/94034 lod=81599,5159,239,0",
+        "PS2MESH frame=720 pass=0 placements=91 culled=55 parts=119 native=119 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=720 pass=1 placements=32 culled=23 parts=9 native=9 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=720 pass=2 placements=18 culled=6 parts=21 native=21 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=720 strips=1269178 culled=478204 clipped=22417 vertices=7331129 clusters=112796/120464 lod=106041,6516,239,0"
+      ]
+    },
+    "errors": [],
+    "acceptance": "Host invariants and model-input audit only; no runtime visual/STRICT or physical-console acceptance from this report."
+  },
+  "model": {
+    "baseline": {
+      "name": "cxt16sp32-cross",
+      "ms": 60.69214616666667,
+      "frames": 30,
+      "cycles": 364152877,
+      "instructions_per_frame": 8475492.7,
+      "cache_ms": {
+        "imiss": 10.515375833333211,
+        "dmiss": 9.099564333333548,
+        "pfwait": 0.6449826666666668
+      },
+      "top_self_ms": [
+        [
+          "void re4dc::vp::transform_sched<3u>(re4dc::vp::Vertex12 const*, unsigned int, pvr_vertex*, unsigned char*, re4dc::vp::Constants const&)",
+          3.6659715000000017
+        ],
+        [
+          "re4dc_avk_pos_skin_u16",
+          2.143436333333329
+        ],
+        [
+          "re4dc::vp::walk_lean(unsigned char const*, unsigned char const*, unsigned char const*, pvr_vertex const*, unsigned int, unsigned long*&, unsigned int&, unsigned int&)",
+          2.053008333333334
+        ],
+        [
+          "(anonymous namespace)::MeshDraw::draw(re4dc::room::Meshlet const&, bool)",
+          1.8292256666666673
+        ],
+        [
+          "re4dc::render::visit_draw_locals(re4dc::render::NativeDrawPlan const&, unsigned char const*, bool, void*, void (*)(void*, re4dc::render::LocalBatch const&))",
+          1.4455503333333264
+        ],
+        [
+          "(anonymous namespace)::MeshDraw::run()",
+          1.2184883333333343
+        ],
+        [
+          "re4dc_avk_light_skin_n16",
+          1.1382301666666694
+        ],
+        [
+          "(anonymous namespace)::Part::whole(unsigned char const*, unsigned int, unsigned int)",
+          1.0162688333333332
+        ],
+        [
+          "re4dc_pwc_ftrv_run",
+          0.9854318333333328
+        ],
+        [
+          "L_store_long_loop",
+          0.9050415
+        ],
+        [
+          "(anonymous namespace)::ps2_pass(unsigned int, float)",
+          0.8556416666666635
+        ],
+        [
+          "(anonymous namespace)::lean::sg_select(unsigned short const*, unsigned int, float const*, unsigned int, unsigned short*, unsigned short*, unsigned int&, unsigned int&, unsigned int&)",
+          0.8367178333333333
+        ],
+        [
+          "(anonymous namespace)::lean::box_class(float const*, float const*, float const*, float const*, float, float, float const*)",
+          0.7891950000000001
+        ],
+        [
+          "(anonymous namespace)::one_chunk(Re4dcModelPart&, (anonymous namespace)::OneWindow&) [clone .part.0]",
+          0.7693828333333317
+        ],
+        [
+          "(anonymous namespace)::load(Re4dcUiImage const&, bool, (anonymous namespace)::Key const*)",
+          0.7257878333333332
+        ],
+        [
+          "re4dc_ps2_world_direct_begin",
+          0.6130736666666633
+        ],
+        [
+          "re4dc_line_leaf2",
+          0.6110406666666661
+        ],
+        [
+          "L_movmem_start_even",
+          0.5878391666666667
+        ],
+        [
+          "cEsp::CommonMove()",
+          0.5840734999999998
+        ],
+        [
+          "Ps2fxClass(cEsp*)",
+          0.539484666666666
+        ],
+        [
+          "EspCommonTrans.part.0",
+          0.5221718333333354
+        ],
+        [
+          "(anonymous namespace)::pass_positions((anonymous namespace)::Part&, (anonymous namespace)::Records const&, unsigned int, (anonymous namespace)::PosConst const&, bool, unsigned int&, unsigned int&)",
+          0.49489116666666805
+        ],
+        [
+          "(anonymous namespace)::lean::box_mask(float const*, float const*, float const*, float const*, float, float)",
+          0.47138066666666667
+        ],
+        [
+          "(anonymous namespace)::MeshDraw::strips_lean(unsigned char const*, unsigned char const*, re4dc::room::CompactVertex12 const*, re4dc::room::CompactBatch const&, int&) [clone .constprop.0] [clone .isra.0]",
+          0.4579556666666664
+        ],
+        [
+          "int (anonymous namespace)::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(re4dc::room::CompactVertex12 const*, re4dc::room::CompactBatch const&, unsigned char const*, unsigned int)",
+          0.45598800000000056
+        ]
+      ],
+      "world_functions_ms": {
+        "(anonymous namespace)::ps2_pass(unsigned int, float)": 0.8556416666666635,
+        "(anonymous namespace)::MeshDraw::run()": 1.2184883333333343,
+        "re4dc::vp::walk_lean(unsigned char const*, unsigned char const*, unsigned char const*, pvr_vertex const*, unsigned int, unsigned long*&, unsigned int&, unsigned int&)": 2.053008333333334,
+        "(anonymous namespace)::lean::box_class(float const*, float const*, float const*, float const*, float, float, float const*)": 0.7891950000000001,
+        "(anonymous namespace)::lean::world_out((anonymous namespace)::lean::World const&, float const*, float const*, float const*)": 0.31734966666666575,
+        "(anonymous namespace)::lean::sg_select(unsigned short const*, unsigned int, float const*, unsigned int, unsigned short*, unsigned short*, unsigned int&, unsigned int&, unsigned int&)": 0.8367178333333333,
+        "(anonymous namespace)::MeshDraw::draw(re4dc::room::Meshlet const&, bool)": 1.8292256666666673
+      },
+      "frame600": [
+        "PS2MESH frame=600 pass=0 placements=88 culled=53 parts=118 native=118 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 pass=1 placements=32 culled=23 parts=9 native=9 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 pass=2 placements=18 culled=6 parts=21 native=21 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 strips=956902 culled=364003 clipped=18132 vertices=5537482 clusters=86997/94034 lod=81599,5159,239,0"
+      ],
+      "loads": [
+        "WORLDVERT room=101 want=5 loaded=5",
+        "PS2DYN room=101 ids=ok placements=223 unique=21 heap=3440096",
+        "PS2SG room=101 groups=ok per_meshlet=4 bytes=71264 heap=3322848",
+        "PS2MESH open bytes=1305760 version=3 meshes=212 parts=342 meshlets=1113 vertices=60606 placements=223 heap=4747936->3322848"
+      ],
+      "elf_sha256": "1f98fe56859c114ad09a818dd4b6f33658c42c73d11229186ec5ad9428cef8c6",
+      "errors": []
+    },
+    "candidate": {
+      "name": "cxt16coal3r2-cross",
+      "ms": 60.6888845,
+      "frames": 30,
+      "cycles": 364133307,
+      "instructions_per_frame": 8475484.733333332,
+      "cache_ms": {
+        "imiss": 10.514601999999899,
+        "dmiss": 9.099247333333558,
+        "pfwait": 0.6455330000000001
+      },
+      "top_self_ms": [
+        [
+          "void re4dc::vp::transform_sched<3u>(re4dc::vp::Vertex12 const*, unsigned int, pvr_vertex*, unsigned char*, re4dc::vp::Constants const&)",
+          3.665861166666666
+        ],
+        [
+          "re4dc_avk_pos_skin_u16",
+          2.1434488333333293
+        ],
+        [
+          "re4dc::vp::walk_lean(unsigned char const*, unsigned char const*, unsigned char const*, pvr_vertex const*, unsigned int, unsigned long*&, unsigned int&, unsigned int&)",
+          2.053009333333333
+        ],
+        [
+          "(anonymous namespace)::MeshDraw::draw(re4dc::room::Meshlet const&, bool)",
+          1.8295241666666675
+        ],
+        [
+          "re4dc::render::visit_draw_locals(re4dc::render::NativeDrawPlan const&, unsigned char const*, bool, void*, void (*)(void*, re4dc::render::LocalBatch const&))",
+          1.4455258333333265
+        ],
+        [
+          "(anonymous namespace)::MeshDraw::run()",
+          1.2182958333333345
+        ],
+        [
+          "re4dc_avk_light_skin_n16",
+          1.1376033333333362
+        ],
+        [
+          "(anonymous namespace)::Part::whole(unsigned char const*, unsigned int, unsigned int)",
+          1.016113333333333
+        ],
+        [
+          "re4dc_pwc_ftrv_run",
+          0.9856705
+        ],
+        [
+          "L_store_long_loop",
+          0.9049873333333333
+        ],
+        [
+          "(anonymous namespace)::ps2_pass(unsigned int, float)",
+          0.8553293333333296
+        ],
+        [
+          "(anonymous namespace)::lean::sg_select(unsigned short const*, unsigned int, float const*, unsigned int, unsigned short*, unsigned short*, unsigned int&, unsigned int&, unsigned int&)",
+          0.8377264999999995
+        ],
+        [
+          "(anonymous namespace)::lean::box_class(float const*, float const*, float const*, float const*, float, float, float const*)",
+          0.7883385000000002
+        ],
+        [
+          "(anonymous namespace)::one_chunk(Re4dcModelPart&, (anonymous namespace)::OneWindow&) [clone .part.0]",
+          0.7689973333333322
+        ],
+        [
+          "(anonymous namespace)::load(Re4dcUiImage const&, bool, (anonymous namespace)::Key const*)",
+          0.7258243333333331
+        ],
+        [
+          "re4dc_ps2_world_direct_begin",
+          0.6130018333333298
+        ],
+        [
+          "re4dc_line_leaf2",
+          0.6110204999999995
+        ],
+        [
+          "L_movmem_start_even",
+          0.5878335
+        ],
+        [
+          "cEsp::CommonMove()",
+          0.5840593333333332
+        ],
+        [
+          "Ps2fxClass(cEsp*)",
+          0.5394321666666656
+        ],
+        [
+          "EspCommonTrans.part.0",
+          0.5222623333333357
+        ],
+        [
+          "(anonymous namespace)::pass_positions((anonymous namespace)::Part&, (anonymous namespace)::Records const&, unsigned int, (anonymous namespace)::PosConst const&, bool, unsigned int&, unsigned int&)",
+          0.4947488333333349
+        ],
+        [
+          "(anonymous namespace)::lean::box_mask(float const*, float const*, float const*, float const*, float, float)",
+          0.47072766666666643
+        ],
+        [
+          "(anonymous namespace)::MeshDraw::strips_lean(unsigned char const*, unsigned char const*, re4dc::room::CompactVertex12 const*, re4dc::room::CompactBatch const&, int&) [clone .constprop.0] [clone .isra.0]",
+          0.45800666666666656
+        ],
+        [
+          "int (anonymous namespace)::Emitter::clip_strip<re4dc::room::CompactVertex12, unsigned char>(re4dc::room::CompactVertex12 const*, re4dc::room::CompactBatch const&, unsigned char const*, unsigned int)",
+          0.4559503333333336
+        ]
+      ],
+      "world_functions_ms": {
+        "(anonymous namespace)::ps2_pass(unsigned int, float)": 0.8553293333333296,
+        "(anonymous namespace)::MeshDraw::run()": 1.2182958333333345,
+        "re4dc::vp::walk_lean(unsigned char const*, unsigned char const*, unsigned char const*, pvr_vertex const*, unsigned int, unsigned long*&, unsigned int&, unsigned int&)": 2.053009333333333,
+        "(anonymous namespace)::lean::box_class(float const*, float const*, float const*, float const*, float, float, float const*)": 0.7883385000000002,
+        "(anonymous namespace)::lean::world_out((anonymous namespace)::lean::World const&, float const*, float const*, float const*)": 0.3170868333333326,
+        "(anonymous namespace)::lean::sg_select(unsigned short const*, unsigned int, float const*, unsigned int, unsigned short*, unsigned short*, unsigned int&, unsigned int&, unsigned int&)": 0.8377264999999995,
+        "(anonymous namespace)::MeshDraw::draw(re4dc::room::Meshlet const&, bool)": 1.8295241666666675
+      },
+      "frame600": [
+        "PS2MESH frame=600 pass=0 placements=88 culled=53 parts=118 native=118 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 pass=1 placements=32 culled=23 parts=9 native=9 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 pass=2 placements=18 culled=6 parts=21 native=21 fallback=0 aborts=0 near=100 far=1000000 cull_far=25000",
+        "PS2MESH frame=600 strips=956902 culled=364003 clipped=18132 vertices=5537482 clusters=86997/94034 lod=81599,5159,239,0"
+      ],
+      "loads": [
+        "WORLDVERT room=101 want=5 loaded=5",
+        "PS2DYN room=101 ids=ok placements=223 unique=21 heap=3440096",
+        "PS2SG room=101 groups=ok per_meshlet=4 bytes=71264 heap=3322848",
+        "PS2MESH open bytes=1305760 version=3 meshes=212 parts=342 meshlets=1113 vertices=60606 placements=223 heap=4747936->3322848"
+      ],
+      "elf_sha256": "1f98fe56859c114ad09a818dd4b6f33658c42c73d11229186ec5ad9428cef8c6",
+      "errors": []
+    },
+    "delta_ms": -0.0032616666666669403,
+    "percent_change": -0.005374116541723151,
+    "scope": "Console-fit SH-4 hardware model; r101 burning cross, T15 data, frames500:799 stride10, same exact executable. Not physical-console timing."
+  },
+  "entry_counts": {
+    "cxt16sp32-cross": {
+      "re4dc_model_direct_end": 4144,
+      "re4dc_model_direct_begin_reserved": 251,
+      "re4dc_model_direct_begin": 797,
+      "re4dc_ps2_world_direct_begin": 3347
+    },
+    "cxt16coal3r2-cross": {
+      "re4dc_model_direct_end": 4144,
+      "re4dc_model_direct_begin_reserved": 251,
+      "re4dc_model_direct_begin": 797,
+      "re4dc_ps2_world_direct_begin": 3347
+    }
+  },
+  "decision": "Retain the opt-in experiment and converter; no candidate-stack adoption or further visual/STRICT captures. No bind calls were removed in the sampled cross window and the whole-frame difference is negligible.",
+  "gates": "Independent host invariants and runtime/source review pass; no new runtime visual/STRICT/pressure or physical-console acceptance for coalesce3.",
+  "rejected_attempt": {
+    "name": "hwmodel-cxt16coal3-cross",
+    "reason": "Prelaunch wrapper created the output directory too early. hwproject rejected the existing destination; no emulator or performance evidence. Preserved; fresh r2 name used."
+  },
+  "retained_baseline": "spatial32v3 at 60.69214616666667 console-fit modeled ms; do not add the coalesce3 difference as an accepted gain."
+}
