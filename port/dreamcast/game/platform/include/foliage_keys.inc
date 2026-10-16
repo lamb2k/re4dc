@@ -3,24 +3,18 @@
 // (not drawn at NEAR), 2 near-binary cut-out (punch-through at NEAR), 3 soft, reaching the opaque level (as today).
 {0x01a25ff9U,0xa0231325U,2}, // r107 a0 0.36 hi 0.41 mid 0.23 max 238
 {0x039fb1a4U,0x782728afU,2}, // r100 a0 0.37 hi 0.60 mid 0.03 max 238
-{0x03f61231U,0x510f2257U,2}, // r109 r119 a0 0.00 hi 1.00 mid 0.00 max 238
 {0x0706e364U,0xf4dd3d8dU,2}, // r117 a0 0.80 hi 0.13 mid 0.07 max 238
 {0x0892a2d4U,0x02a99988U,2}, // r101 a0 0.84 hi 0.06 mid 0.10 max 238
-{0x0b5e0b0dU,0xb5099c85U,3}, // r105 a0 0.06 hi 0.00 mid 0.94 max 238
 {0x0bd9194fU,0x8a259ce3U,2}, // r104 a0 0.63 hi 0.22 mid 0.15 max 238
-{0x0da35f1aU,0x8b1fd064U,2}, // r119 a0 0.00 hi 1.00 mid 0.00 max 238
 {0x13b940a2U,0x0d0dec9dU,2}, // r117 a0 0.23 hi 0.72 mid 0.05 max 238
 {0x146f0a91U,0xfa9f1d9aU,2}, // r107 a0 0.67 hi 0.27 mid 0.06 max 238
-{0x1566efceU,0x7e9faafcU,2}, // r117 a0 0.04 hi 0.93 mid 0.03 max 238
 {0x1651dc1fU,0xe2bbdd44U,2}, // r100 a0 0.63 hi 0.23 mid 0.14 max 238
 {0x1a14a083U,0x0c391845U,3}, // r105 a0 0.25 hi 0.23 mid 0.52 max 238
 {0x1d0c05e3U,0x25ccc08eU,2}, // r118 a0 0.51 hi 0.24 mid 0.24 max 238
 {0x209967bdU,0xbcf47ca8U,2}, // r106 a0 0.93 hi 0.02 mid 0.05 max 238
 {0x211f0fd3U,0x6ec6aa59U,2}, // r102 a0 0.50 hi 0.31 mid 0.19 max 238
-{0x21c56570U,0x05fd994aU,2}, // r109 a0 0.00 hi 1.00 mid 0.00 max 238
 {0x28c75945U,0x0f4bfadbU,2}, // r106 a0 0.51 hi 0.27 mid 0.23 max 238
 {0x2ab4985aU,0xbae3e772U,2}, // r108 a0 0.51 hi 0.24 mid 0.24 max 238
-{0x2afd8518U,0xaaa5cc38U,2}, // r109 a0 0.00 hi 1.00 mid 0.00 max 238
 {0x2b171b6bU,0x0e10fae4U,2}, // r102 a0 0.34 hi 0.48 mid 0.18 max 238
 {0x2b2da9dfU,0xe2f9057aU,2}, // r10a a0 0.27 hi 0.58 mid 0.15 max 238
 {0x2d604baeU,0x769b288dU,2}, // r102 a0 0.72 hi 0.20 mid 0.08 max 238
@@ -47,10 +41,8 @@
 {0x5ae5501dU,0x340bd659U,2}, // r105 a0 0.31 hi 0.65 mid 0.04 max 238
 {0x5cef311aU,0xc8764724U,2}, // r117 a0 0.32 hi 0.66 mid 0.03 max 238
 {0x60e5aa72U,0xdd50849dU,2}, // r10b r11a a0 0.38 hi 0.47 mid 0.14 max 238
-{0x6238fc01U,0xc4ce9684U,2}, // r109 a0 0.04 hi 0.93 mid 0.04 max 238
 {0x65fe127fU,0xb1855f55U,3}, // r104 r107 a0 0.33 hi 0.12 mid 0.55 max 238
 {0x68c5e6b9U,0x92201e0bU,2}, // r105 a0 0.46 hi 0.33 mid 0.21 max 238
-{0x70b403aeU,0x2128f480U,2}, // r109 r119 a0 0.00 hi 1.00 mid 0.00 max 238
 {0x72ed36efU,0x62c2a44cU,3}, // r108 r118 a0 0.28 hi 0.36 mid 0.35 max 238
 {0x77f6837fU,0x162f2195U,3}, // r108 r118 a0 0.18 hi 0.51 mid 0.31 max 238
 {0x7bbecdddU,0x66f3a493U,3}, // r11b a0 0.48 hi 0.14 mid 0.39 max 238
@@ -62,17 +54,14 @@
 {0x83ab4090U,0x37c75518U,2}, // r108 r118 a0 0.23 hi 0.73 mid 0.04 max 238
 {0x846bb9e8U,0x507a14e1U,2}, // r117 a0 0.77 hi 0.10 mid 0.14 max 238
 {0x85b93ad9U,0xe80cbb8dU,2}, // r118 a0 0.76 hi 0.16 mid 0.09 max 238
-{0x86c38b30U,0x3363e433U,3}, // r117 a0 0.00 hi 0.54 mid 0.46 max 238
 {0x87120c8aU,0xa250699bU,2}, // r11b a0 0.86 hi 0.09 mid 0.05 max 238
 {0x886b8eefU,0x57903654U,2}, // r105 a0 0.44 hi 0.53 mid 0.03 max 238
 {0x890fe10cU,0xb763e1e2U,2}, // r102 a0 0.71 hi 0.16 mid 0.13 max 238
 {0x896e575bU,0x21986c2cU,2}, // r102 a0 0.44 hi 0.53 mid 0.03 max 238
 {0x8a0f1976U,0x6983d6e7U,3}, // r108 a0 0.50 hi 0.21 mid 0.29 max 238
-{0x8d13ba3dU,0xd84f2f39U,2}, // r109 a0 0.00 hi 0.95 mid 0.04 max 238
 {0x8ebaaa87U,0x08e510a9U,2}, // r108 r118 a0 0.68 hi 0.16 mid 0.15 max 238
 {0x905cac2cU,0x59612515U,3}, // r100 a0 0.19 hi 0.51 mid 0.30 max 238
 {0x9372048cU,0x6b06cd26U,2}, // r101 a0 0.59 hi 0.30 mid 0.12 max 238
-{0x97e21d0bU,0xd42fd4b3U,2}, // r119 a0 0.00 hi 0.95 mid 0.04 max 238
 {0x9887b58aU,0xfcbca5bcU,2}, // r11b a0 0.39 hi 0.47 mid 0.13 max 238
 {0x99133ef8U,0x6dedb9c5U,2}, // r105 a0 0.38 hi 0.48 mid 0.15 max 238
 {0x9e07bdcdU,0xb5474343U,2}, // r104 a0 0.50 hi 0.31 mid 0.19 max 238
@@ -85,7 +74,6 @@
 {0xa5e3ae7dU,0x12ed822fU,2}, // r104 a0 0.12 hi 0.84 mid 0.04 max 238
 {0xa6965475U,0x35742174U,2}, // r100 a0 0.44 hi 0.37 mid 0.19 max 238
 {0xa7f261f5U,0x7cde7913U,2}, // r105 a0 0.34 hi 0.66 mid 0.01 max 238
-{0xa7f40fdfU,0x45d3cc8aU,2}, // r109 r119 a0 0.00 hi 1.00 mid 0.00 max 238
 {0xa8db9c57U,0x46634e5dU,2}, // r117 a0 0.58 hi 0.18 mid 0.23 max 238
 {0xad9e5e25U,0x266c6763U,3}, // r10a a0 0.48 hi 0.13 mid 0.38 max 238
 {0xae11353aU,0x7dcbffbaU,2}, // r100 a0 0.39 hi 0.47 mid 0.14 max 238
@@ -100,8 +88,6 @@
 {0xbc87033eU,0xd42752feU,3}, // r102 a0 0.15 hi 0.55 mid 0.30 max 255
 {0xc4c73d12U,0x2bc95474U,2}, // r104 a0 0.71 hi 0.16 mid 0.13 max 238
 {0xc5e1e7e7U,0x9c87b5deU,2}, // r108 a0 0.36 hi 0.45 mid 0.19 max 238
-{0xc8190583U,0x7e9b768bU,2}, // r119 a0 0.04 hi 0.93 mid 0.04 max 238
-{0xc8361ff5U,0x3a58ad4eU,2}, // r109 r119 a0 0.00 hi 1.00 mid 0.00 max 238
 {0xc8d3b5b8U,0x77491a11U,3}, // r118 a0 0.50 hi 0.21 mid 0.29 max 238
 {0xc9f0f0c9U,0x33ad8b42U,2}, // r106 a0 0.23 hi 0.76 mid 0.01 max 238
 {0xca2aabceU,0x8d4373d1U,2}, // r105 a0 0.47 hi 0.38 mid 0.15 max 238
@@ -112,15 +98,12 @@
 {0xdf28d694U,0x25824ce3U,2}, // r104 a0 0.69 hi 0.17 mid 0.14 max 238
 {0xe0242f7eU,0x29de0b33U,2}, // r10b r11a a0 0.86 hi 0.09 mid 0.05 max 238
 {0xe0c1b87fU,0x5f9c92d2U,2}, // r105 a0 0.24 hi 0.69 mid 0.07 max 238
-{0xe19a5b2cU,0xaa8a4fb7U,3}, // r104 a0 0.06 hi 0.61 mid 0.33 max 238
-{0xe499b203U,0xb8b79d2dU,2}, // r106 a0 0.03 hi 0.84 mid 0.13 max 238
 {0xe4cad1edU,0x432459a1U,2}, // r117 a0 0.83 hi 0.11 mid 0.07 max 238
 {0xe5a77ad7U,0x746f645fU,2}, // r108 a0 0.70 hi 0.17 mid 0.13 max 238
 {0xe6bfea06U,0x54a0c9fbU,2}, // r100 a0 0.82 hi 0.07 mid 0.10 max 238
 {0xe967b886U,0x9bd0a435U,2}, // r10b r11b a0 0.23 hi 0.54 mid 0.23 max 238
 {0xec4d9accU,0xdb114605U,3}, // r105 a0 0.53 hi 0.10 mid 0.36 max 238
 {0xef6cb2c1U,0xabc54f74U,2}, // r106 a0 0.94 hi 0.02 mid 0.05 max 238
-{0xf19405e9U,0xe5ff16dfU,2}, // r109 a0 0.00 hi 1.00 mid 0.00 max 238
 {0xf2f35975U,0x157ef503U,2}, // r108 a0 0.51 hi 0.28 mid 0.21 max 238
 {0xf4757a1dU,0xcf3166ddU,2}, // r118 a0 0.83 hi 0.11 mid 0.07 max 238
 {0xf4973649U,0x6fcfb85fU,2}, // r108 a0 0.77 hi 0.17 mid 0.06 max 238
