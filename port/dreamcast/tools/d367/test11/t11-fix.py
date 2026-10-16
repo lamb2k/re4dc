@@ -290,7 +290,7 @@ DATA['cast15']['tex'] = ['%s/conv-t14/reg-%s/tex' % (C15D, g) if g != '118pc' el
 # on the disc the LOD code never runs (no GANADOLOD log line: the poc101 bench trap).
 GLOD = os.environ.get('GLOD', '/root/probe/lanes-20261015/t15k/data/glod/ganado_lod.re4gl')
 DATA['glod'] = {'dc/native/ganado/ganado_lod.re4gl': GLOD}
-T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16cs'  # res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak
+T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16cs,wv32r101'  # res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak; wv32r101 replaces bake13 and adds variant 5
 # Test 15 HUD fix (t15/hud, CORE_PIN=2): res16 = res14r3 + the two HUD pictures the r101 post-bell radio call's frag window
 # released (test 14's open VRAM item): afa4bc82-306be3e3 (44x44) and bf17fc06-c975b3a7 (48x48), in the core set r000.tsv.
 # 248 records, sha256 de98da1ec2e75532 (resident_keys.py pack r000 r101 r103).
@@ -326,6 +326,12 @@ RS16D = os.environ.get('RS16D', '/root/probe/lanes-20261015/t15k/data')
 RS16L = os.environ.get('RS16L', '/root/probe/lanes-20261016/resident-k/data')
 DATA['res16h'] = {'dc/resident.bin': RS16D + '/res16h/resident.bin'}
 DATA['vq16cs'] = {'dc/tex.pak': RS16D + '/vq16cs/tex-vq16c.pak'}
+# World32 r101: approved L2 look, 32 m opaque static batches; four base files and
+# two variant files must travel together because the R4PW tables are shared.
+WV32D = os.environ.get('WV32D', PRIV + '/world32-r101-20261016')
+DATA['wv32r101'] = {'dc/native/r101/' + _n: WV32D + '/' + _n for _n in (
+    'ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4sg',
+    'ps2-wv5.re4mesh', 'ps2-wv5.r4sg')}
 for _n in ('res16c', 'res16d', 'res16e', 'res16f', 'res16g'):
     DATA[_n] = {'dc/resident.bin': RS16L + '/' + _n + '/resident.bin'}
 for _n in ('vq16c', 'vq16cr'):
