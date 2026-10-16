@@ -488,6 +488,25 @@ MODULES += em1c st2_3 em2c:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em2c
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH41=1
 endif
+# ROUTE_BOSS4=1 (lane ch3found16 2026-10-16 for the boss stress test, lane stress16; default 0: no effect; needs
+#   ROUTE_CH32=1, which links em25, and WORLD_ROOM_MODULES=1): the chapter 4 boss modules without the chapter 4
+#   gameplay route: st2_3 (97, r220..r22c incl. r221 / r228), em2c (31, Verdugo, r221, room overlay) and em38 (79,
+#   Salazar + the Queen, r228, room overlay; em25's tentacles come with ROUTE_CH32). With ROUTE_CH41=1 only em38 is
+#   added (CH41 links st2_3 / em2c). Lint (assets.sh discover r228): em38 value-init and its EmMgr slot scan
+#   (em38EmWork: workAt, callers skip unbacked slots), as em2c.
+ROUTE_BOSS4 ?= 0
+ifneq ($(ROUTE_BOSS4),0)
+ifneq ($(ROUTE_BOSS4)$(ROUTE_CH32)$(WORLD_ROOM_MODULES),111)
+$(error ROUTE_BOSS4 must be 0 or 1 and needs ROUTE_CH32=1 WORLD_ROOM_MODULES=1)
+endif
+ifeq ($(ROUTE_CH41),0)
+MODULES += st2_3 em2c:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em2c
+endif
+MODULES += em38:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em38
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_BOSS4=1
+endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
 # wep01 (module 3, Punisher; the merchant's medallion reward), wep07 (54, shotgun; r101 house), wep09 (62, rifle; its
@@ -1820,8 +1839,9 @@ CH31_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH31)),st2_1 em1a em1b em14)
 # value-init in all four); discover reports no other lint for r205 r20a r20c r20f r20d r20e.
 CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3c:ovl)
 CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
+BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif

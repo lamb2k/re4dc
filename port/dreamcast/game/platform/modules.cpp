@@ -66,6 +66,9 @@ MODULE(em19)
 MODULE(em1c)
 MODULE(st2_3)
 #endif
+#if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && !(defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41)
+MODULE(st2_3)
+#endif
 MODULE(st1_0)
 MODULE(st1_1)
 MODULE(st1_2)
@@ -168,6 +171,13 @@ static const Re4dcModule g_modules[] = {
     MODULE(81, em1c),  // ROUTE_CH41: r218 Ganados (em10g group)
     MODULE(97, st2_3), // ROUTE_CH41: castle chapter 4 (r220..r22c; 4-1 ends in r229 / r221 / r22b)
     {31, "em2c", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH41: r221 boss, room overlay
+#endif
+#if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4
+#if !(defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41)
+    MODULE(97, st2_3), // ROUTE_BOSS4: r221 / r228 room code
+    {31, "em2c", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_BOSS4: r221 Verdugo, room overlay
+#endif
+    {79, "em38", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_BOSS4: r228 Salazar + the Queen, room overlay
 #endif
     MODULE(74, st1_0),
     MODULE(73, st1_1),
@@ -333,7 +343,17 @@ struct RouteOverlayHeader {
 };
 constexpr u32 kRouteOverlayMagic = 0x4F344552;  // "RE4O"
 struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
-#if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+#if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+// ROUTE_BOSS4 (needs ROUTE_CH32): the ROUTE_CH41 twelve (em2c 31 at 11), then em38 (79).
+RouteOverlay g_route_ovl[13];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : (id) == 61 ? 7 : (id) == 32 ? 8 : (id) == 10 ? 9 : (id) == 68 ? 10 : (id) == 31 ? 11 : 12)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 66 || (id) == 63 || (id) == 61 || (id) == 32 || (id) == 10 || (id) == 68 || (id) == 31 || (id) == 79)
+#elif defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4
+// ROUTE_BOSS4 without ROUTE_CH22: the ROUTE_CH41 eleven (em2c 31 at 10), then em38 (79).
+RouteOverlay g_route_ovl[12];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 63 ? 5 : (id) == 61 ? 6 : (id) == 32 ? 7 : (id) == 10 ? 8 : (id) == 68 ? 9 : (id) == 31 ? 10 : 11)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 63 || (id) == 61 || (id) == 32 || (id) == 10 || (id) == 68 || (id) == 31 || (id) == 79)
+#elif defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
 // ROUTE_CH41 (needs ROUTE_CH32): the ROUTE_CH32 eleven, then em2c (31).
 RouteOverlay g_route_ovl[12];
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : (id) == 61 ? 7 : (id) == 32 ? 8 : (id) == 10 ? 9 : (id) == 68 ? 10 : 11)

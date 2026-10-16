@@ -872,8 +872,12 @@ CH23_STREAMS = CH22_STREAMS + [(0, 22), (0, 24), (1, 76)]
 # Chapter 3-1 (castle lane 2026-10-15): ch23 plus r207's radio call voice 1:153 (sbb 0x9ba0000, "not in
 # aica_str.dat, silent" on r207 entry); appended so every earlier entry keeps its data bytes. `--streams ch31`.
 CH31_STREAMS = CH23_STREAMS + [(1, 153)]
+# Chapter 3 foundations (lane ch3found16, 2026-10-16): the ch1 file (test 15, 45 entries, unchanged) plus every ch31
+# stream it lacks (the chapter 2-2 / 2-3 rooms and r207's radio voice 1:153), appended so entries 0..44 and their data
+# bytes stay identical to the ch1 file. `--streams ch3`; the reader needs AICA_STR_ENT_MAX >= len(CH3_STREAMS).
+CH3_STREAMS = CH1_STREAMS + [k for k in CH31_STREAMS if k not in CH1_STREAMS]
 STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch1': CH1_STREAMS,
-                  'ch23': CH23_STREAMS, 'ch31': CH31_STREAMS}
+                  'ch23': CH23_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS}
 
 
 def nibble_to_sample(n):
