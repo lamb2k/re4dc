@@ -83,6 +83,7 @@ extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <arch/timer.h>
 #include <kos/thread.h>
 
@@ -203,7 +204,8 @@ struct Warp {
 #if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
     // saddler <room frame> x y z ang [lod] (STRESS_SADDLER, lane stress16b): Saddler's final form (em31 body + tentacle)
     // created in the first room through EmSetEvent at that frame; lod = the registry level to draw (0 full).
-    bool has_saddler, saddler_done;
+    // `saddler <room frame> rel <distance> [lod]`: <distance> mm straight ahead of Leon, facing him.
+    bool has_saddler, saddler_done, saddler_rel;
     u32 saddler_frame;
     f32 saddler_pos[3], saddler_ang;
     unsigned saddler_lod;
@@ -425,6 +427,12 @@ void load()
             re4dc_ganlit_fill_set(num(tok[1]));   // GANADO_LIT_TOGGLE: the Ganado camera fill, percent (0..100)
 #endif
 #if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+        } else if (!strcmp(k, "saddler") && n >= 4 && !strcmp(tok[2], "rel")) {
+            wp.has_saddler = wp.saddler_rel = true;
+            wp.saddler_frame = num(tok[1]);
+            wp.saddler_pos[0] = (f32) strtod(tok[3], nullptr);
+            wp.saddler_lod = n >= 5 ? num(tok[4]) : 0u;
+            re4dc_nmr_lod_pick = wp.saddler_lod;
         } else if (!strcmp(k, "saddler") && n >= 6) {
             wp.has_saddler = true;
             wp.saddler_frame = num(tok[1]);
@@ -739,6 +747,15 @@ void saddler_poll()
     if (!wp.has_saddler || wp.saddler_done || wp.rooms != 1 || wp.room_frames < wp.saddler_frame || !pPL ||
         (pG->Status_flg[1] & 0x10000000)) return;
     wp.saddler_done = true;
+    if (wp.saddler_rel) {
+        // straight ahead of Leon (his yaw: +z at 0, as the game's sinf / cosf convention), turned to face him
+        const f32 dist = wp.saddler_pos[0], a = pPL->ang.y;
+        wp.saddler_pos[0] = pPL->pos.x + dist * sinf(a);
+        wp.saddler_pos[1] = pPL->pos.y;
+        wp.saddler_pos[2] = pPL->pos.z + dist * cosf(a);
+        wp.saddler_ang = a + 3.1415927f;
+        if (wp.saddler_ang > 3.1415927f) wp.saddler_ang -= 6.2831853f;
+    }
     static EmListData d[2];
     cEm* got[2] = {nullptr, nullptr};
     for (int t = 0; t < 2; ++t) {
