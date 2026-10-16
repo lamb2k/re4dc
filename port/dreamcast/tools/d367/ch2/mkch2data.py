@@ -93,6 +93,15 @@ def main():
                 notes.append('reg-113p: %s differs, the existing copy kept' % k)
             continue
         rep[k] = str(p)
+    # VRAM (coordinator/user rule 10-16: VQ room textures by default when it frees needed capacity, PSNR floor ~29 dB,
+    # UI / text / alpha-critical stay 16-bit): dc/tex.pak = test 15's vq16cs pak + the 89 chapter 2 pictures of
+    # vram/vq16-ch2.txt as full-codebook VQ (vram/vq16c-texpak.sh; LANE/vram/vqch2), and dc/resident.bin = test 15's
+    # chapter 1 lists + the chapter 2 room lists vram/resident/r1xx.tsv / r200.tsv (resident_keys.py pack; LANE/vram/res)
+    for k, f in (('dc/tex.pak', LANE + '/vram/vqch2/tex-vq16c.pak'), ('dc/resident.bin', LANE + '/vram/res/resident.bin')):
+        if os.path.exists(f):
+            rep[k] = f
+        else:
+            notes.append('%s not built (%s): test 15 file stays' % (k, f))
     # em16
     rep['em/em16.drs'] = '%s/snd/em16.drs' % LANE
     for p in sorted(Path('%s/em16/prep-em16/mot' % LANE).glob('*.fcv')):
