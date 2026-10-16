@@ -290,7 +290,7 @@ DATA['cast15']['tex'] = ['%s/conv-t14/reg-%s/tex' % (C15D, g) if g != '118pc' el
 # on the disc the LOD code never runs (no GANADOLOD log line: the poc101 bench trap).
 GLOD = os.environ.get('GLOD', '/root/probe/lanes-20261015/t15k/data/glod/ganado_lod.re4gl')
 DATA['glod'] = {'dc/native/ganado/ganado_lod.re4gl': GLOD}
-T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16cs,wv32r101'  # res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak; wv32r101 replaces bake13 and adds variant 5
+T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16cs,wv32r101' + os.environ.get('T15_W16', ',wv16ch1')  # res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak; wv32r101 replaces bake13 and adds variant 5
 # Test 15 HUD fix (t15/hud, CORE_PIN=2): res16 = res14r3 + the two HUD pictures the r101 post-bell radio call's frag window
 # released (test 14's open VRAM item): afa4bc82-306be3e3 (44x44) and bf17fc06-c975b3a7 (48x48), in the core set r000.tsv.
 # 248 records, sha256 de98da1ec2e75532 (resident_keys.py pack r000 r101 r103).
@@ -332,6 +332,18 @@ WV32D = os.environ.get('WV32D', PRIV + '/world32-r101-20261016')
 DATA['wv32r101'] = {'dc/native/r101/' + _n: WV32D + '/' + _n for _n in (
     'ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4sg',
     'ps2-wv5.re4mesh', 'ps2-wv5.r4sg')}
+# World16 chapter 1 (lane world16, render only, data; user 10-16: one pass over every chapter 1 room's world): the r101
+# L2-fixed recipe (ps2_world_vert_ladder.py --px 96 ..., ps2_world_batch.py --cell-mm 4000 --contiguous, strip groups,
+# ps2_world_spatial_batch.py --cell-mm 32000 where it admits) for every room projected below 30 fps; r10b (~30 fps on the
+# console) exact storage only. Variant 5 files beside the level-0 package (WORLD_VERT=1 WORLD_VERT_LEVEL=5); r100 keeps
+# the movie layout (padded L0 1,537,920 B, R4PW 19,612 B, valid L0 groups, no wv5) and its rebuilt interior cell
+# (PS2_R100_WV16=1). T15_W16="" stages without it. Private: re4-assets-private/world16-ch1-20261016 (SHA256SUMS).
+W16D = os.environ.get('W16D', PRIV + '/world16-ch1-20261016')
+DATA['wv16ch1'] = {'dc/native/r100/' + _n: W16D + '/r100/' + _n for _n in (
+    'ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4sg', 'interior.cell')}
+for _r in ('r102', 'r103', 'r104', 'r105', 'r106', 'r107', 'r108', 'r109', 'r10a', 'r10b'):
+    for _n in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'ps2-world.r4sg', 'ps2-wv5.re4mesh', 'ps2-wv5.r4sg'):
+        DATA['wv16ch1']['dc/native/%s/%s' % (_r, _n)] = '%s/%s/%s' % (W16D, _r, _n)
 for _n in ('res16c', 'res16d', 'res16e', 'res16f', 'res16g'):
     DATA[_n] = {'dc/resident.bin': RS16L + '/' + _n + '/resident.bin'}
 for _n in ('vq16c', 'vq16cr'):

@@ -135,7 +135,11 @@ T15_V=${T15_V-VIEW_DIST_OPTION=1}
 # World32 r101: approved L2 geometry with 32 m static batches (data wv32r101).
 # T15_WV="" keeps the loader disabled for the current-recipe image identity check.
 T15_WV=${T15_WV-WORLD_VERT=1 WORLD_VERT_LEVEL=5}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_WV"
+# World16 chapter 1 (lane world16; render only; data wv16ch1, T15_W16 in t11-fix.py): every chapter 1 room's world rebuilt
+# with the r101 recipe; r100's interior cell rebuilt for its package (PS2_R100_WV16=1). Both or neither:
+# T15_W16="" here AND in the fixture env stages and builds the control.
+T15_W16K=${T15_W16K-PS2_R100_WV16=1}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_WV $T15_W16K"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"

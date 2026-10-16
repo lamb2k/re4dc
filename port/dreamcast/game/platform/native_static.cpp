@@ -1597,8 +1597,18 @@ static volatile unsigned strip_lean_select=1U+RE4DC_MESH_STRIP_LEAN_SELECT;
 namespace pc {
 struct Cell { float lo[3],hi[3]; std::uint16_t first,count; };
 struct Portal { std::uint32_t axis; float plane,u0,u1,v0,v1; }; // u = axis+1, v = axis+2 (mod 3)
+#if defined(RE4DC_PS2_R100_WV16) && RE4DC_PS2_R100_WV16
+// PS2_R100_WV16=1 (lane world16, render only; data wv16ch1): the r100 package rebuilt by the chapter 1 world recipe (L2
+// vertex cut, 4 m contiguous batches, 32 m static batches, padded L0 at the movie layout's 1,537,920 B). Its geometry
+// changed, so the cell was rebuilt from it (build_cell.py prepare/emit + cast_cell.sh --verify): new sub-cells, portals
+// and package identity in ps2_interior_cell_wv16.inc; the disc file is the wv16ch1 interior.cell.
+#include "include/ps2_interior_cell_wv16.inc"
+constexpr unsigned kPcSidecarUse=kPcSidecarCrc,kPcMeshUse=kPcMeshCrc,kPcMeshBytesUse=kPcMeshBytes;
+#else
 #include "include/ps2_interior_cell.inc"
-#if defined(RE4DC_PS2_R100_TR4) && RE4DC_PS2_R100_TR4
+#endif
+#if defined(RE4DC_PS2_R100_WV16) && RE4DC_PS2_R100_WV16
+#elif defined(RE4DC_PS2_R100_TR4) && RE4DC_PS2_R100_TR4
 // PS2_R100_TR4=1 (game30.mk; needs PS2_R100_SMX=1): the SMX package plus --vertex-alpha tr4 (the 155 overlay faces
 // move to the translucent pass; geometry and placements are the same), so the same cell with its CRCs and bytes.
 constexpr unsigned kPcSidecarUse=0x14118acdU,kPcMeshUse=0xfb35ea9cU,kPcMeshBytesUse=1537920U;

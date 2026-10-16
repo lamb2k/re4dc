@@ -2486,6 +2486,19 @@ $(error PS2_R100_TR4=1 needs PS2_R100_SMX=1 and PS2_VERTEX_ALPHA=1 (the package 
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_R100_TR4=1
 endif
+# PS2_R100_WV16=1 (lane world16, render only, default 0: no effect; needs PS2_R100_TR4=1): the interior cell rebuilt for
+# the chapter 1 world16 r100 package (data wv16ch1: re4-assets-private/world16-ch1-20261016/r100, ps2-world.* +
+# interior.cell). Constants: platform/include/ps2_interior_cell_wv16.inc (build_cell.py emit, cast_cell.sh --verify).
+PS2_R100_WV16 ?= 0
+ifneq ($(filter-out 0 1,$(PS2_R100_WV16)),)
+$(error PS2_R100_WV16 must be 0 or 1)
+endif
+ifeq ($(PS2_R100_WV16),1)
+ifneq ($(PS2_R100_TR4),1)
+$(error PS2_R100_WV16=1 needs PS2_R100_TR4=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_R100_WV16=1
+endif
 # Explicit r100 candidate package identity. The offline conversion preserves mesh,
 # placements and PCL cell/portal bytes, but changes the real R4PW body CRC. Zero
 # retains the original selection. Only reviewed candidate CRCs may be selected.
