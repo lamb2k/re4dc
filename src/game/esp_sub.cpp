@@ -1239,6 +1239,26 @@ static void MistCutNote(unsigned cls)
     }
 }
 #endif
+#if defined(RE4DC_HAZE_SPRITE_CUT)
+// HAZE_SPRITE_CUT=1 (hwfog.mk, lane nohaze16 2026-10-16; user "i don't think we need those sprites at all"; render only):
+// no haze / mist sprite is drawn in any room: the camera haze around Leon (Esp15, PS2 recipe rows and every other
+// Esp15), the mist sheets (Esp48) and the PS2 haze additions (r118 / r11c). The distant haze stays as the PVR fog
+// table (HW_FOG_HAZE rows, EFFECT_HAZE_LEAN M3 veil: both are fed before the cut) and every room keeps its own fog.
+// Generators, their Rnd() draws, the effect pool, the PS2 population choice and every motion run as before.
+static u16 s_haze_cut_room = 0xffff;
+static u32 s_haze_cut_n;
+static void HazeCutNote(cEsp* esp)
+{
+    ++s_haze_cut_n;
+    if (esp && s_haze_cut_room != G_ROOM_ID) {   // one line per room (proof the cut is active; counts of the previous room)
+        re4dc_log("haze cut: room=%03x first id=%02x owner=%02x tex=%02x (prev room %03x: %u sprites)\n",
+                  (unsigned) G_ROOM_ID, (unsigned) esp->m_Id, (unsigned) esp->info.owner, (unsigned) esp->m_Tex_id,
+                  (unsigned) s_haze_cut_room, (unsigned) s_haze_cut_n);
+        s_haze_cut_room = G_ROOM_ID;
+        s_haze_cut_n = 0;
+    }
+}
+#endif
 static void EspSpriteEmit(cEsp* esp)
 {
     // GX blend factors 0..7 (ZERO ONE DSTCLR/SRCCLR INVxCLR SRCA INVSRCA DSTA INVDSTA) have the
@@ -1264,6 +1284,13 @@ static void EspSpriteEmit(cEsp* esp)
             MistCutNote(cls);
             return;
         }
+    }
+#endif
+#if defined(RE4DC_HAZE_SPRITE_CUT)
+    // A PS2 recipe haze sprite is declined in its branch below, after HW_FOG_HAZE has seen it.
+    if (esp->m_Id == 0x48 || (esp->m_Id == 0x15 && !Ps2fxHazeFor(esp))) {
+        HazeCutNote(esp);
+        return;
     }
 #endif
     const TEXDescriptor* td = TEXGet(tw->pTpl, RE4DC_FX_FLIP_PTN(esp->m_Ptn_no, tw->pTpl->numDescriptors));   // effects30.mk
@@ -1421,6 +1448,10 @@ static void EspSpriteEmit(cEsp* esp)
             return;
         }
 #endif
+#if defined(RE4DC_HAZE_SPRITE_CUT)
+        HazeCutNote(esp);   // HAZE_SPRITE_CUT: not the near haze either (the fog rows above have seen the sprite)
+        return;
+#endif
 #if defined(RE4DC_EFFECT_HAZE_LEAN) && (RE4DC_EFFECT_HAZE_LEAN & 2)
         if (RE4DC_HZ(2) && Ps2fxEvery2(hz->room)) {
             fa *= 1.5f;   // M3: the sparse subset carries the drifting blotches
@@ -1456,6 +1487,12 @@ static void EspSpriteEmit(cEsp* esp)
         }
 #endif
         re4dc_effect_sprite(&s);
+        return;
+    }
+#endif
+#if defined(RE4DC_HAZE_SPRITE_CUT)
+    if (esp->m_Id == 0x15) {
+        HazeCutNote(esp);
         return;
     }
 #endif
@@ -1635,7 +1672,11 @@ static void Ps2fxAdditionsDraw()
             const Mtx44& projection=pG->Cam.ProjMat;
             const f32 near_d=projection[2][3]/(projection[2][2]-1.0f), far_d=projection[2][3]/projection[2][2];
             if(viewport[2]<=0.0f || viewport[3]<=0.0f || near_d<=0.0f || far_d<=near_d) issues|=0x4000;
+#if defined(RE4DC_HAZE_SPRITE_CUT)
+            else for(unsigned n=0;n<0U;++n) {   // HAZE_SPRITE_CUT: the addition is sampled as before, no quad is submitted
+#else
             else for(unsigned n=0;n<ps2fx::HazeAddition::Count;++n) {
+#endif
                 const ps2fx::HazeParticle& particle=s_fx_addition.particles[n];
                 Vec point={particle.position.x,particle.position.y,particle.position.z}, center;
                 PSMTXMultVec(pG->Cam.v_mat,&point,&center);

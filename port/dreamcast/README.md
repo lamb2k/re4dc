@@ -1,5 +1,11 @@
 # Resident Evil 4 Dreamcast port
 
+> **Current state (October 16, 2026):** the public build is console test 15. The game plays from New Game to
+> the end of chapter two, part one. For what works and what does not, read the
+> [root README](../../README.md) and [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md); to build, read
+> [CONTRIBUTING-PORT.md](CONTRIBUTING-PORT.md); for goals and decisions, read
+> [D367_THIRTY_FPS_ROUTE.md](docs/D367_THIRTY_FPS_ROUTE.md). The rest of this page is the September 2026
+> engineering history (the r100 cutover milestones) and is kept as a record; its "current" wording is out of date.
 
 This directory contains the native SH-4/KallistiOS target. The GameCube build is
 the behavior/state authority; GC and PS2 provide candidate visual inputs. Dreamcast-native data,

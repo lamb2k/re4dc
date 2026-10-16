@@ -30,8 +30,12 @@ newest test release and its Build-Assets zip from GitHub and checks them against
   (`RE4DC_KOS_BASE`) is used as is.
 * `KNOB=value` arguments go to the build, for example `bash port/dreamcast/contrib.sh MY_FEATURE=1`.
 
-The Build-Assets zip holds the generated character data the release program was built with, so your
-program draws the same characters as the release: built from the release's source commit with its
+The Build-Assets zip holds the generated character data the release program was built with
+(`ps2leon/`, `ps2ganado/`, and from test 15 `glod/ganado_lod.re4gl`, the lighter villager meshes named by
+`GANADO_LOD_PACK`), so your program draws the same characters as the release. From test 15 it also carries, under
+`re4dc-assets/disc/<disc path>`, the disc data files that changed in test 15 (the chapter 1 sound files
+`st1/r103.dar` and `bgm/aica_str.dat`, `dc/resident.bin`, `dc/tex.pak` and the village world in `dc/native/r101/`);
+they are on the release disc already, so you need them only for a disc of your own. Built from the release's source commit with its
 Build-Assets zip, the program is byte for byte the release's program (the maintainers check this before
 every release). Downloads are kept, so a second run only rebuilds.
 
@@ -95,7 +99,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test14/release-knobs.txt` (test 14; its header names the source commit). The maintainers write that file from
+`tools/d367/test15/release-knobs.txt` (test 15; its header names the source commit). The maintainers write that file from
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
@@ -107,6 +111,9 @@ different from the release:
   every hand pose).
 * `PS2_GANADO=0 PS2_GANADO_LIT=0`: the male villagers are the GameCube models (the release draws the
   PS2 models with the PS2 lighting).
+* `GANADO_LOD=0`: no lighter villager meshes (they need the PS2 villagers and the zip's `glod/`).
+* `ACTOR_PROBE_LIGHT=1 GANADO_LIT=0`: only Leon is lit by the room-light probe (the release lights the PS2 villagers
+  with it too).
 * El Gigante, Del Lago, the female villagers, the animals, Ashley, the PS2 room objects and the PS2 room
   worlds (with the village's baked doors, windows and racks) come from the disc, so they draw as in the
   release.
@@ -151,10 +158,10 @@ Do not use that disc for normal play: the script presses buttons at fixed times.
 
 ## 5. Speed display
 
-Test builds show their speed on the VMU in controller slot 1: drawn frames per second, game speed,
-CPU percentage and the frame pacing mode. Hold R and press START to cycle the frame pacing
-(Smooth, Fast, Off). Builds that also have the on screen display use R and START to cycle the display
-instead: Off, VMU, Screen, Both. Hold X and press START to switch the look preset.
+The release program starts with the speed display off. Hold R and press START to show it on screen: drawn
+frames per second and game speed (the VMU shows the Leon, Ashley, Hunnigan and Luis pages instead of speed
+numbers). Frame pacing is set in Options (Fast is the default). Hold X and press START to switch the look
+preset. A build with `SPEED_VMU_OFF=0` puts the speed numbers back on the VMU.
 
 The player options are the rows in Options (START): Frame pacing (stored on the VMU), Rendering (Standard or FSAA,
 knob `RENDER_FSAA`) and View distance (Full, Near or Short, knob `VIEW_DIST_OPTION`: the world is drawn to 25, 18.75
@@ -169,7 +176,10 @@ texture is a near-binary cut-out (leaf / brush cards, fence gaps; key table plat
 from an alpha census of the chapter 1 packages) are drawn in the punch-through list up to 12 m at Near, and every listed
 card key (classes 1-4, soft shadow / mist / grass cards included) is left out at Off; surfaces without cut-out holes
 (walls, floors, water), unlisted keys and the vertex-alpha overlays always draw. It is not
-saved either: every boot starts at the recipe's `FOLIAGE_TRIM` level (test 15: Near). Docs: docs/MIST_CUT.md. On a warp test disc (`DBG_WARP=1`) the warp line
+saved either: every boot starts at the recipe's `FOLIAGE_TRIM` level (test 15: Near). From test 15.1 the knob `HAZE_SPRITE_CUT=1`
+(hwfog.mk, recipe group `T15_HZ`; render only) leaves out every haze / mist sprite at every Foliage setting: the camera
+haze around Leon (Esp15), the mist sheets (Esp48) and the r118 / r11c PS2 haze additions; the distant haze stays as the
+fog table (`HW_FOG_HAZE`, `EFFECT_HAZE_LEAN`), which is fed before the cut. Docs: docs/MIST_CUT.md. On a warp test disc (`DBG_WARP=1`) the warp line
 `viewdist 0|1|2` starts the run at Full, Near or Short.
 Far shell (knob `FAR_SHELL`, needs `VIEW_DIST_OPTION`; game/platform/far_shell.inc): in a room that has a
 `dc/native/rXXX/far-shell.fsh` (r100 and r101 in test 15), Short cuts only the world's opaque pass; the fog,
@@ -197,10 +207,25 @@ subtitle page (time since the voice started).
 * Say what the change looks like, with a screenshot pair (knob off, knob on) if it changes the picture.
 * Open a pull request against the `dreamcast-port` branch.
 
-The maintainers then run the gameplay identity gates before a change goes into a test build. They
-replay recorded sessions and compare the game logic tick by tick, so a render change must leave the
-gameplay exactly as it was (STRICT). That harness uses private recordings, so you do not need to
-run it; a change that touches collision, events, game state or AI will not be accepted.
+The maintainers then run these checks before a change goes into a test build. They use private
+recordings and tools, so you do not need to run them, but your patch has to pass them:
+
+* **Gameplay identity (STRICT).** Recorded sessions are replayed and the game logic is compared tick by
+  tick. An exact change must leave the gameplay exactly as it was.
+* **Approximations.** A change that is close but not exact (for example faster maths that rounds a little
+  differently) is welcome. It stays behind its own default-off knob. A render-only
+  approximation is judged by its look (a pair of stills). One that touches game logic must keep the same
+  gameplay: the same kills, triggers, doors, waves, room clears and cutscenes, with no desync or stuck
+  event. Each approximation is reported with its measured gain and its check results.
+* **System memory (KOS squeeze).** The game is run in Flycast with 48 KiB of the console's system memory
+  held back (`tools/d367/fullplay/kos_squeeze.sh`) through the village fight, a radio call and the door to
+  r103; it must not run out. Real consoles have less free system memory than Flycast, so say how much your
+  change adds to the program's static size.
+* **Short runs.** Each emulator check is a scene of a minute or less, started right at the event (a warp,
+  not a long walk). Long play happens once, on the final release candidate.
+
+A change to collision, events, game state or AI that is not one of the approximations above will not be
+accepted.
 
 ## 7. A full disc from your own discs
 
@@ -312,7 +337,7 @@ On every test release, in the same landing as the release recipe, before the rel
 1. Refresh the knob file from the release's play build:
    `python3 port/dreamcast/tools/d367/release-knobs.py write <out-<label>>/candidate.txt
    port/dreamcast/tools/d367/<test>/release-knobs.txt --test N --tag <tag> --source <sha> --recipe <t-build.sh>
-   --image-sha256 <sha256 of sh-elf-objcopy -R .stack -O binary> --assets-zip <name>`.
+   --image-sha256 <sha256 of sh-elf-objcopy -R .stack -O binary> --assets-zip <name> [--disc-sets <t11-fix.py sets>]`.
 2. Point `RELEASE_KNOBS` in `build-public.sh` at it (one line), and update the release names in this page.
 3. Make the Build-Assets zip from the recipe (`release-knobs.py zip <candidate.txt> <zip>`), not by hand.
    The package script (`tools/d367/<test>/t<N>-package.sh`) masters the standard GD-ROM image (section 8) and

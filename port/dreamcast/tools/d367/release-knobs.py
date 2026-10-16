@@ -7,30 +7,37 @@ directories replaced by their place in the Build-Assets zip, is the release's kn
 tools/d367/<test>/release-knobs.txt, and build-public.sh builds from it. Nothing is typed twice.
 
   write  <candidate.txt> <release-knobs.txt> --test N --tag TAG --source SHA --recipe PATH
-         [--image-sha256 HEX] [--assets-zip NAME]
+         [--image-sha256 HEX] [--assets-zip NAME] [--disc-sets NAMES]
          Writes the knob file (one knob per line, after '# key: value' header lines).
   check  <candidate.txt> <release-knobs.txt>
          Exit 1 unless the knob file holds exactly the recipe's knobs (order kept: make takes the last value).
   args   <release-knobs.txt> <assets dir>
          Prints the knobs for build-public.sh, @ASSETS@ replaced by <assets dir>.
-  zip    <candidate.txt> <out zip> [--bundle DIR]
+  zip    <candidate.txt> <out zip> [--bundle DIR] [--disc-sets NAMES]
          Writes the Build-Assets zip from the directories the recipe compiled in (deterministic: fixed dates).
-  zipcheck <candidate.txt> <zip> [--bundle DIR] [--objdir DIR]
+  zipcheck <candidate.txt> <zip> [--bundle DIR] [--objdir DIR] [--disc-sets NAMES]
          Exit 1 unless the zip holds exactly those directories' files, byte for byte, and (with --objdir, the
          release build's objdir) every private file the release build's .d files name.
   doclint <release-knobs.txt> <doc>...
          Exit 1 if a contributor doc names an older test ("test 7", "test-c29c4bf5-...") than the knob file's.
 
 Private directories: the recipe's ASSETS (route-build.sh's play actor bundle, --bundle) -> re4dc-assets/,
-PS2_LEON_DIR -> re4dc-assets/ps2leon/, PS2_GANADO_DIR -> re4dc-assets/ps2ganado/. Any other knob whose value is an
-absolute path outside the tree is an error: a new private input must get a place in the zip (and a line in
+PS2_LEON_DIR -> re4dc-assets/ps2leon/, PS2_GANADO_DIR -> re4dc-assets/ps2ganado/. Private files: GANADO_LOD_PACK
+-> re4dc-assets/glod/<name> (the knob file names it kit-relative, @ASSETS@/glod/<name>). Any other knob whose value is
+an absolute path outside the tree is an error: a new private input must get a place in the zip (and a line in
 build-public.sh's PRIVATE_OFF) before the release can publish.
+Disc data (--disc-sets, test 15 on): the files of the named data sets of test11/t11-fix.py (disc path -> source; a
+later set replaces an earlier one's file at the same disc path, as on the disc) -> re4dc-assets/disc/<disc path>.
+They are on the release disc already; the zip carries them for contributors who build their own disc. The knob file
+records the set list ('# disc-sets:'), and kit-check.sh passes it to zipcheck.
 """
-import argparse, hashlib, re, sys, zipfile
+import argparse, hashlib, importlib.util, re, sys, zipfile
 from pathlib import Path
 
 BUNDLE = '/root/probe/lanes/play-actor-bundle'
 PRIVATE = {'PS2_LEON_DIR': 'ps2leon', 'PS2_GANADO_DIR': 'ps2ganado'}
+PRIVATE_FILES = {'GANADO_LOD_PACK': 'glod'}
+FIX_TOOL = Path(__file__).resolve().parent / 'test11' / 't11-fix.py'
 ZIP_ROOT = 're4dc-assets'
 DATE = (2026, 10, 12, 0, 0, 0)
 
@@ -53,6 +60,8 @@ def sanitize(knobs):
         k, v = kv.split('=', 1)
         if k in PRIVATE:
             out.append('%s=@ASSETS@/%s' % (k, PRIVATE[k]))
+        elif k in PRIVATE_FILES:
+            out.append('%s=@ASSETS@/%s/%s' % (k, PRIVATE_FILES[k], Path(v).name))
         elif v.startswith('/'):
             die('%s names a private path (%s): give it a place in the Build-Assets zip and in build-public.sh' % (k, v))
         else:
@@ -81,13 +90,42 @@ def private_dirs(knobs, bundle):
     return dirs
 
 
-def expected_files(knobs, bundle):
+def disc_files(sets):
+    """{zip name: source} for the named t11-fix.py data sets, in order (a later set's file wins, as on the disc)."""
+    names = [s for s in (sets or '').replace(',', ' ').split() if s]
+    if not names:
+        return {}
+    spec = importlib.util.spec_from_file_location('t11fix', str(FIX_TOOL))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    out = {}
+    for n in names:
+        if n not in mod.DATA:
+            die('disc set %s is not in %s' % (n, FIX_TOOL))
+        for dest, src in mod.DATA[n].items():
+            if dest == 'tex':
+                die('disc set %s stages loose textures (tex): not supported in the Build-Assets zip' % n)
+            out['%s/disc/%s' % (ZIP_ROOT, dest)] = Path(src)
+    for name, f in out.items():
+        if not f.is_file():
+            die('disc data file %s (%s) is missing' % (f, name))
+    return out
+
+
+def expected_files(knobs, bundle, disc_sets=None):
     files = {}
     for pre, d in private_dirs(knobs, bundle):
         if not d.is_dir():
             die('private directory %s is missing' % d)
         for f in sorted(p for p in d.resolve().iterdir() if p.is_file()):
             files['%s/%s' % (pre, f.name)] = f
+    for kv in knobs:
+        k, v = kv.split('=', 1)
+        if k in PRIVATE_FILES:
+            if not Path(v).is_file():
+                die('private file %s=%s is missing' % (k, v))
+            files['%s/%s/%s' % (ZIP_ROOT, PRIVATE_FILES[k], Path(v).name)] = Path(v)
+    files.update(disc_files(disc_sets))
     return files
 
 
@@ -98,6 +136,9 @@ def cmd_write(a):
         head.append(('image-sha256', a.image_sha256))
     if a.assets_zip:
         head.append(('assets-zip', a.assets_zip))
+    if a.disc_sets:
+        disc_files(a.disc_sets)  # every file must exist
+        head.append(('disc-sets', ','.join(a.disc_sets.replace(',', ' ').split())))
     lines = ['# RE4DC release knobs: the make knobs of the test release play program, in the order the recipe passes',
              '# them (make takes the last value). Written by tools/d367/release-knobs.py write from the release build\'s',
              '# out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.',
@@ -125,7 +166,7 @@ def cmd_args(a):
 
 
 def cmd_zip(a):
-    files = expected_files(candidate_knobs(a.candidate), a.bundle)
+    files = expected_files(candidate_knobs(a.candidate), a.bundle, a.disc_sets)
     sums = []
     with zipfile.ZipFile(a.out, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for name, f in files.items():
@@ -142,7 +183,7 @@ def cmd_zip(a):
 
 def cmd_zipcheck(a):
     knobs = candidate_knobs(a.candidate)
-    files = expected_files(knobs, a.bundle)
+    files = expected_files(knobs, a.bundle, a.disc_sets)
     bad = []
     with zipfile.ZipFile(a.zip) as z:
         names = {n for n in z.namelist() if not n.endswith('/')} - {'%s/SHA256SUMS.assets' % ZIP_ROOT}
@@ -201,12 +242,13 @@ def main():
     w = s.add_parser('write'); w.add_argument('candidate'); w.add_argument('out')
     for k in ('--test', '--tag', '--source', '--recipe'):
         w.add_argument(k, required=True)
-    w.add_argument('--image-sha256'); w.add_argument('--assets-zip')
+    w.add_argument('--image-sha256'); w.add_argument('--assets-zip'); w.add_argument('--disc-sets')
     c = s.add_parser('check'); c.add_argument('candidate'); c.add_argument('knobs')
     r = s.add_parser('args'); r.add_argument('knobs'); r.add_argument('assets')
     z = s.add_parser('zip'); z.add_argument('candidate'); z.add_argument('out'); z.add_argument('--bundle', default=BUNDLE)
+    z.add_argument('--disc-sets')
     zc = s.add_parser('zipcheck'); zc.add_argument('candidate'); zc.add_argument('zip')
-    zc.add_argument('--bundle', default=BUNDLE); zc.add_argument('--objdir')
+    zc.add_argument('--bundle', default=BUNDLE); zc.add_argument('--objdir'); zc.add_argument('--disc-sets')
     d = s.add_parser('doclint'); d.add_argument('knobs'); d.add_argument('docs', nargs='+')
     a = p.parse_args()
     {'write': cmd_write, 'check': cmd_check, 'args': cmd_args, 'zip': cmd_zip, 'zipcheck': cmd_zipcheck,
