@@ -431,6 +431,9 @@ endif
 MODULES += em3b:ovl em35:ovl st2_0 em16
 export RE4DC_LINK_OVERLAY += .ovl_em3b .ovl_em35
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH23=1
+# snd.cpp ch13_bgm1_sub (castle lane c304406c; r10f lane r200-17): r200 and r10f play their resident BGM0 track for the
+# BGM1 request (frozen layout, BGM1 = 0 B; bio4midi #5 is 868 KB, too big for AICA_SPILL).
+$(OBJDIR)/src/game/snd.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH23=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH23=1
 ROUTE_CH23_ROOM_OBJS = $(OBJDIR)/mod/st1_3/src/st1/r10f.o $(OBJDIR)/mod/st1_3/src/st1/r11d.o \
     $(OBJDIR)/mod/st1_3/src/st1/r11e.o $(OBJDIR)/mod/st1_3/src/st1/r11f.o $(OBJDIR)/mod/st2_0/src/st2/r200.o

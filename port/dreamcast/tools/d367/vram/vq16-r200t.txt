@@ -1,0 +1,10 @@
+# vq16-r200t.txt (lane ch2code16 / r200-17, 2026-10-16): the five GameCube r200 event-image pictures the 2-3 -> 3-1
+# transition draws through the source-world fallback (PS2SOURCE_DECLINE reason 8: 2 frames before r200s00, 2 after the
+# chapter 2 save). Each draw loaded ~2 MB of 16-bit pictures into a full pool (517 evictions, 60 thrash-guard refusals,
+# 5 nocontig, 49 parts without texture). As full-codebook VQ: 1,966,080 -> 256,000 B. BELOW the ~29 dB floor
+# (26.8-28.5 dB), so this is an approximation item (CLAUDE.md approximation rule), on screen 4 frames per run.
+74d83c35-fbddfdd0	G	r200 gate wall/door 512x512 (27.9 dB)
+4bc5699e-a00e5646	G	r200 512x512 (27.5 dB)
+18a2f60f-1d95523f	G	r200 512x512 (27.7 dB)
+59e49a07-ca6db876	G	r200 stone wall 512x256 (26.8 dB)
+ad7402cc-29fdf156	G	r200 256x256 (28.5 dB)
