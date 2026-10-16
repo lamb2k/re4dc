@@ -528,6 +528,10 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         // NATIVE_MODEL_REGISTRY_LOD: a gameplay level proves its full descriptor's identity by design; the search never
         // binds a level (registry_lod_want chooses between the two), so the pair is not ambiguous.
         if(PKD[b].lod_of==a+1u)continue;
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+        // STRESS_SADDLER (lane stress16b): two levels of one full descriptor (g70, g50) prove the same identity too.
+        if(PKD[a].lod_of && PKD[a].lod_of==PKD[b].lod_of)continue;
+#endif
 #endif
         bool same=true;
         for(unsigned i=0;i<PKD[a].sections && same;++i) {
