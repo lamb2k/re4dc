@@ -50,11 +50,11 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | The item name disappears when its menu opens in the inventory | test 7, test 8 | 🟢 Fixed in test 9 | |
 | The on-screen speed display is cut off by the border on a real console | test 8 | 🟢 Fixed, needs console check | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Leon switches back to the GameCube model after the boat | test 8, test 9, test 9.1 | 🟢 Fixed, needs console check (test 10) | [#26](https://github.com/lamb2k/re4dc/issues/26) |
-| Lake ripples are not visible | test 8 | 🔍 Investigating: they draw in emulators; faint by design in fog | [#26](https://github.com/lamb2k/re4dc/issues/26) |
+| Lake ripples are not visible | test 8 | 🔍 Investigating: they draw in emulators; faint by design in fog. A PS2-style lake surface with its moving noise layer is built and waiting for a look check (off in the test builds for now) | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Curtains in the first house have no texture | test 8 | 🟢 Fixed, needs console check (likely the same memory corruption) | |
 | Some textures are missing or corrupted (same memory corruption as the crashes) | test 7, test 8 | 🟢 Fixed, needs console check | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Leon and most villagers are not lit by the scene's lights | test 8 | 🛠️ In progress: from test 12, Leon is lit by the scene's lights, with a soft fill light that brings him close to the GameCube brightness. The villagers are not done yet | [#26](https://github.com/lamb2k/re4dc/issues/26) |
-| Water and puddles are missing | test 7, test 8 | 🟢 Fixed, needs console check: the lake surface and the wet ground layers draw in test 9.1; mirror-like puddles are not drawn | [#19](https://github.com/lamb2k/re4dc/issues/19) |
+| Water and puddles are missing | test 7, test 8 | 🟢 Fixed, needs console check: the lake surface and the wet ground layers draw in test 9.1; mirror-like puddles are not drawn (the PS2 version has none either). The water in the lakes, the pool and the river is built the PS2 way and waiting for a look check (off in the test builds for now) | [#19](https://github.com/lamb2k/re4dc/issues/19) |
 | Some rooms look almost pitch black: the r11b lake shore (dark dock and ground, near-black sky), r117, r108 | test 12 | 🟢 Fixed in test 12.1: the rooms use the PS2 room lighting, and the r11b / r119 mist is drawn as in test 10 | |
 | Shadows draw incorrectly | test 7 | 🔍 Investigating: the soft shadows are fixed; some fence rails in the valley still draw black | [#20](https://github.com/lamb2k/re4dc/issues/20) |
 | At the village bell the game looks for a 128x128 texture that is not on the disc | test 9, 9.1, 10 | 🟢 Fixed in test 12 | |

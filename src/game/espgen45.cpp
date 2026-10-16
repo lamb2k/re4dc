@@ -619,7 +619,7 @@ struct WaterPs2Row {
 };
 #include "water_ps2_table.inc"
 #ifndef RE4DC_WATER_PS2_FLIP
-#define RE4DC_WATER_PS2_FLIP 4
+#define RE4DC_WATER_PS2_FLIP 8
 #endif
 extern "C" {
 unsigned re4dc_ui_frame(void);
@@ -630,9 +630,28 @@ int re4dc_water42_live(void);   // Espgen42.cpp (WATER_PS2)
 static unsigned s_wps2_frame = ~0U;
 static u8 s_wps2_dummy;
 
-// 1 when the current room has PS2 water rows.
+// WATER_PS2_ROOMS: the rooms drawn, bit 0 r107, 1 r108, 2 r10a, 3 r10b, 4 r11a, 5 r11b (default all). A room left out
+// keeps today's water (r10b: WATER45_NATIVE + LAKE_RIPPLES).
+#ifndef RE4DC_WATER_PS2_ROOMS
+#define RE4DC_WATER_PS2_ROOMS 0x3f
+#endif
+static int WaterPs2RoomOn(u32 room)
+{
+    static const u16 kRooms[6] = {0x107, 0x108, 0x10a, 0x10b, 0x11a, 0x11b};
+    for (u32 i = 0; i < 6; ++i) {
+        if (kRooms[i] == room) {
+            return (RE4DC_WATER_PS2_ROOMS >> i) & 1;
+        }
+    }
+    return 0;
+}
+
+// 1 when the current room has PS2 water rows (and is in WATER_PS2_ROOMS).
 extern "C" int re4dc_water_ps2_rows(void)
 {
+    if (!WaterPs2RoomOn(G_ROOM_ID)) {
+        return 0;
+    }
     for (u32 i = 0; i < sizeof(kWaterPs2) / sizeof(kWaterPs2[0]); ++i) {
         if (kWaterPs2[i].room == G_ROOM_ID) {
             return 1;

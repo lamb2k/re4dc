@@ -138,14 +138,18 @@ endif
 # table src/game/water_ps2_table.inc (tools/d367/water/water_ps2_table.py) as native layers (platform/include/
 # native_water_ps2.inc: eye-centred grids of textured translucent strips, UV repeat, table fog). In r10b it replaces the
 # WATER45_NATIVE multiply and the LAKE_RIPPLES layers. No PS2 record is spawned: effect slots, generators, areas and
-# Rnd() are untouched (logic STRICT). WATER_PS2_FLIP=n: animated layers show every n-th picture (default 4).
+# Rnd() are untouched (logic STRICT). WATER_PS2_FLIP=n: animated layers show every n-th picture (default 8: 8 of the
+# 60 0xfe frames, 17.8 KB of VRAM; 4 doubles it). WATER_PS2_ROOMS: hex mask of the rooms drawn (bit 0 r107, 1 r108,
+# 2 r10a, 3 r10b, 4 r11a, 5 r11b; default 0x3f); 0x15 = the three rooms whose VRAM gates pass today (r107 r10a r11a).
 WATER_PS2 ?= 0
-WATER_PS2_FLIP ?= 4
+WATER_PS2_FLIP ?= 8
+WATER_PS2_ROOMS ?= 0x3f
 ifneq ($(WATER_PS2),0)
 ifneq ($(WATER_PS2)$(WATER45_NATIVE),11)
 $(error WATER_PS2 must be 0 or 1 and needs WATER45_NATIVE=1)
 endif
-$(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2=1 -DRE4DC_WATER_PS2_FLIP=$(WATER_PS2_FLIP)
+$(OBJDIR)/src/game/espgen45.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2=1 -DRE4DC_WATER_PS2_FLIP=$(WATER_PS2_FLIP) \
+  -DRE4DC_WATER_PS2_ROOMS=$(WATER_PS2_ROOMS)
 $(OBJDIR)/src/game/Espgen42.o $(OBJDIR)/src/game/espgen.o: GAME_CPPFLAGS += -DRE4DC_WATER_PS2=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_WATER_PS2=1
 endif
