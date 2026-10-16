@@ -1828,8 +1828,8 @@ HEAP4_PARTS_RESERVE_ROOM ?= 0x100
 HEAP4_PARTS_RESERVE_BYTES ?= 73728
 # STAGE_OVL=1 (lane ch3found16 2026-10-16, default 0: no effect; needs ROUTE_OVL via ROUTE_CH13=1): every linked stage module
 #   (st1_0..st1_3, st2_0..st2_3, st4_0) becomes a room overlay (/cd/dc/<st>.ovl, platform/modules.cpp stage slots): read into
-#   heap 4 when its room links the room REL, kept over stopRelData / restartRelData, freed at the room heap rebuild. Only the
-#   current room's stage code is resident; the others' bytes leave the image (heap 4 pays the image).
+#   heap 3 beside the room REL when linkRelData links it, kept over stopRelData / restartRelData, dropped with heap 3 at the next relink. Only the
+#   current stage module is resident; the others' bytes leave the image (heap 4 starts above heap 3).
 STAGE_OVL ?= 0
 ifneq ($(STAGE_OVL),0)
 ifneq ($(STAGE_OVL),1)

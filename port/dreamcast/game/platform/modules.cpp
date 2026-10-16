@@ -38,7 +38,7 @@ extern "C" {
 void (*re4dc_module_ctors[])(void) = {0};
 void (*re4dc_module_dtors[])(void) = {0};
 // STAGE_OVL=1 (lane ch3found16 2026-10-16, heap 4): every stage module (st1_0..st1_3, st2_0..st2_3, st4_0) is a
-// room overlay (/cd/dc/<st>.ovl), read into heap 4 when its room links it and freed at the room heap rebuild, so
+// room overlay (/cd/dc/<st>.ovl), read into heap 3 beside the room REL when linkRelData links it and dropped with heap 3 at the next relink, so
 // only the current room's stage code is resident. A stopRelData unlink (sub screen, movies) keeps the block, so the
 // relink restarts with the module's state.
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
@@ -454,10 +454,21 @@ static void routeOverlayLoad(unsigned index)
     if (f < 0) re4dc_missing("route overlay missing on the disc");
     const u32 total = u32(fs_total(f));
     const int free_before = re4dc_static_heap_free();
-    u8* block = static_cast<u8*>(mem_alloc(total, "route overlay", 0, 1, 4));
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+    // A stage module is linked by cRoomData::linkRelData into heap 3 (the dll heap, before heap 4 exists); its
+    // overlay shares the REL's heap and lifetime: MemReplaceHeap(2, 3) on the next relink drops both.
+    const int heap = stageSlot(m.id) >= 0 ? 3 : 4;
+#else
+    const int heap = 4;
+#endif
+    u8* block = static_cast<u8*>(mem_alloc(total, "route overlay", 0, 1, heap));
     if (!block) {
         fs_close(f);
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+        re4dc_log("route overlay: %s %lu B does not fit heap %d (heap4 free %d)\n", m.name, total, heap, free_before);
+#else
         re4dc_log("route overlay: %s %lu B does not fit heap 4 (free %d)\n", m.name, total, free_before);
+#endif
         re4dc_missing("route overlay does not fit heap 4");
     }
     u32 got = 0;
@@ -500,8 +511,13 @@ static void routeOverlayLoad(unsigned index)
                          reinterpret_cast<void (*)(void)>(image + h.epilog), reinterpret_cast<char*>(image + h.data),
                          reinterpret_cast<char*>(image + h.data_end), reinterpret_cast<char*>(image + h.bss),
                          reinterpret_cast<char*>(image + h.bss_end), reinterpret_cast<char*>(image + h.pristine));
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+    re4dc_log("route overlay: %s load %u %lu B (%lu relocs) at %08lx heap%d heap4 %d -> %d\n", m.name, o.loads,
+              h.image_bytes, h.relocs, u32(image), heap, free_before, re4dc_static_heap_free());
+#else
     re4dc_log("route overlay: %s load %u %lu B (%lu relocs) at %08lx heap4 %d -> %d\n", m.name, o.loads, h.image_bytes,
               h.relocs, u32(image), free_before, re4dc_static_heap_free());
+#endif
 }
 
 // Unlink or room heap rebuild: fill the code with `trapa #0xFF` (a stale call into it stops loudly
@@ -526,7 +542,12 @@ static void routeOverlayRelease(unsigned index, const char* why)
 // gameRoomMemInit (src/game/game.cpp), before heap 4 is rebuilt.
 extern "C" void re4dc_route_overlay_room_reset()
 {
-    for (unsigned i = 0; i < kModules; ++i) routeOverlayRelease(i, "room reset");
+    for (unsigned i = 0; i < kModules; ++i) {
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+        if (stageSlot(g_modules[i].id) >= 0) continue;  // heap 3 with the room REL: dropped at the relink
+#endif
+        routeOverlayRelease(i, "room reset");
+    }
 }
 #endif
 
@@ -585,6 +606,14 @@ extern "C" int re4dc_module_bind(void* header)
         return 0;
     }
 #if RE4DC_ROUTE_OVL
+#if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+    if (!restart && stageSlot(m->id) >= 0 && g_stage_ovl[stageSlot(m->id)].block) {
+        // MemReplaceHeap(2, 3) rebuilt heap 3 since the last link: the old block is gone with it (no free, no fill).
+        g_stage_ovl[stageSlot(m->id)].block = 0;
+        re4dc_module_overlay(m->id, 0, 0, 0, 0, 0, 0, 0);
+        re4dc_log("route overlay: %s dropped with heap 3 (relink)\n", m->name);
+    }
+#endif
     if (m->prolog == 0 && OVL_ID(m->id)) {
         routeOverlayLoad(unsigned(index));
     }
@@ -665,7 +694,7 @@ extern "C" int re4dc_module_unbind(void* header)
     h[1] = kUnlinkedMark;
 #if RE4DC_ROUTE_OVL
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
-    if (stageSlot(h[0]) < 0)  // a stage overlay stays loaded until the room heap rebuild (stopRelData / restartRelData)
+    if (stageSlot(h[0]) < 0)  // a stage overlay stays in heap 3 with its REL (stopRelData / restartRelData keep it)
 #endif
     routeOverlayRelease(unsigned(index), "unlink");
 #endif

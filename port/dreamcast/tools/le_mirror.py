@@ -2463,7 +2463,7 @@ def static_module_ids(extra=()):
     registry = (root / 'port/dreamcast/game/platform/modules.cpp').read_text()
     # Lines may carry a trailing comment (em2a, e6f65cc). Sscrn (id 71) is the SUBSCREEN-conditional
     # sub screen module, not a Makefile MODULES entry; the old end-of-line match skipped it by accident.
-    bindings = [(i, n) for i, n in re.findall(r'^    MODULE\((\d+), (\w+)\),(?:\s*//.*)?$', registry, re.M)
+    bindings = [(i, n) for i, n in re.findall(r'^    S?MODULE\((\d+), (\w+)\),(?:\s*//.*)?$', registry, re.M)
                 if n != 'Sscrn']
     # The sole new explicit overlay row admitted here is the reviewed em35 id61.
     # Keep all generic MODULE/name/Makefile/config crosschecks below intact.
