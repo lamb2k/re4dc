@@ -60,6 +60,11 @@ extern "C" void re4dc_ps2_interior_movie_restore();   // native_static.cpp: the 
 #else
 static inline void re4dc_ps2_interior_movie_restore() {}
 #endif
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+extern "C" void re4dc_far_shell_movie_restore();   // native_static.cpp far_shell.inc: the shell a movie borrowed
+#else
+static inline void re4dc_far_shell_movie_restore() {}
+#endif
 
 // Event::ExeBeginEvt, lasting part: scenario event nesting, event-running status, begin func.
 static void routeBegin(unsigned flags, RouteEvtFunc func)
@@ -169,6 +174,7 @@ int RouteMoviePlayQte(unsigned id, unsigned flags, RouteEvtFunc func, unsigned q
     const int end = open ? re4dc_movie_end() : st;
     re4dc_weapon_heap4_movie_restore();
     re4dc_ps2_interior_movie_restore();
+    re4dc_far_shell_movie_restore();
     pG->Disp_flg = disp;
 #if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
     if (flags & ROUTE_MOVIE_ACT_COUNT) {
@@ -211,6 +217,7 @@ int RouteMoviePlay(unsigned id, unsigned flags, RouteEvtFunc func, RouteMovieTic
 #endif
     re4dc_weapon_heap4_movie_restore();
     re4dc_ps2_interior_movie_restore();
+    re4dc_far_shell_movie_restore();
     pG->System_flg &= ~0x400;  // Event::Run releases the held picture after frame 0
     pG->Disp_flg = disp;
     if (st == RE4DC_MOVIE_UNHANDLED) {

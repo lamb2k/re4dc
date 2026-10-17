@@ -4137,7 +4137,11 @@ bool ps2_open(){
 #if RE4DC_PS2_WORLD_ROOMS
     if((ps2w.storage || ps2w.attempted) && ps2w.room!=ps2w.want)ps2_free(); // another room's package
 #endif
+#if RE4DC_FAR_SHELL
+    if(ps2w.storage){farshell::sync();return true;}   // FAR_SHELL: read / free the shell as the View distance and heap 4 allow
+#else
     if(ps2w.storage)return true;
+#endif
     if(ps2w.attempted)return false;
     ps2w.attempted=true;
 #if RE4DC_PS2_WORLD_R11F_OWNER
@@ -4397,11 +4401,8 @@ bool ps2_open(){
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
 #if RE4DC_FAR_SHELL
-#if RE4DC_PS2_WORLD_ROOMS
-    farshell::open(ps2w.room);   // FAR_SHELL: the room's far shell, read with its world package
-#else
-    farshell::open(0x101);
-#endif
+    farshell::pol.tried=false;
+    farshell::sync();   // FAR_SHELL: the room's far shell, read with its world package only at View distance Short
 #endif
 #if RE4DC_PS2_VERTEX_ALPHA
     {unsigned marked=0;for(unsigned i=0;i<h.parts;++i)marked+=ps2w.parts[i].reserved&1U;
@@ -5381,7 +5382,7 @@ extern "C" void re4dc_ps2_mesh_retire(){
     gate::retire();
 #endif
 #if RE4DC_FAR_SHELL
-    farshell::close();
+    farshell::close();farshell::pol.tried=false;farshell::pol.movie=false;
 #endif
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);

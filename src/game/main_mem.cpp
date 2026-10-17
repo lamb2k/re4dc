@@ -37,6 +37,9 @@ void* OSAllocFromHeap(int heap, u32 size);
 void OSFreeToHeap(int heap, void* p);
 s32 OSCheckHeap(int heap);
 void OSSetSaveRegion(void* start, void* end);
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+int re4dc_far_shell_shortfall(unsigned need, const char* site);   // port platform/far_shell.inc
+#endif
 extern int __OSCurrHeap;
 int strcmp(const char* a, const char* b);
 char* strcpy(char* dst, const char* src);
@@ -589,8 +592,19 @@ void* mem_alloc(u32 size, const char* file, int line, int flag, int heap)
     size = (size + 0x1F) & ~0x1F;
     if (file == NULL) {
         p = (u8*) OSAllocFromHeap(Heap[heap].handle, size);
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+        // FAR_SHELL (platform/far_shell.inc): heap 4 short, the far shell gives its block back and the request retries.
+        if (p == NULL && heap == 4 && re4dc_far_shell_shortfall(size, "untagged")) {
+            p = (u8*) OSAllocFromHeap(Heap[heap].handle, size);
+        }
+#endif
     } else {
         p = (u8*) OSAllocFromHeap(Heap[heap].handle, size + 0x20);
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+        if (p == NULL && heap == 4 && re4dc_far_shell_shortfall(size + 0x20, file)) {
+            p = (u8*) OSAllocFromHeap(Heap[heap].handle, size + 0x20);
+        }
+#endif
         name = strrchr(file, '/');
         if (name == NULL) {
             name = (char*) file;

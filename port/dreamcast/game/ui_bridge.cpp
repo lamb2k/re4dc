@@ -829,6 +829,27 @@ extern "C" int re4dc_model_return_retained(unsigned* bytes,unsigned* requests){
 extern "C" int re4dc_static_heap_free(){
     return memCheckHeapActive(4)?OSCheckHeap(Heap[4].handle):-1;
 }
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+extern "C" int re4dc_far_shell_shortfall(unsigned need,const char* site);   // platform/far_shell.inc
+// FAR_SHELL: a package refused for the reserve, or not placed, first takes the far shell's heap-4 block back.
+extern "C" void* re4dc_static_alloc(unsigned bytes){
+    int before=re4dc_static_heap_free();
+    const int need=int(bytes+kAllocationOverhead+sizeof(Room4Cell)+kSourceReserve);
+    if(before<need && re4dc_far_shell_shortfall(bytes,"native static package"))before=re4dc_static_heap_free();
+    if(before<need){
+        re4dc_log("native static: reject bytes=%u heap4_free=%d reserve=%u\n",bytes,before,kSourceReserve);
+        return nullptr;
+    }
+#if RE4DC_NATIVE_PKG_HIGH
+    void* p=room_alloc4_high(bytes,"native static package");
+    if(!p && re4dc_far_shell_shortfall(bytes,"native static package"))p=room_alloc4_high(bytes,"native static package");
+#else
+    void* p=room_alloc4(bytes,"native static package",false);
+    if(!p && re4dc_far_shell_shortfall(bytes,"native static package"))p=room_alloc4(bytes,"native static package",false);
+#endif
+    return p;
+}
+#else
 extern "C" void* re4dc_static_alloc(unsigned bytes){
     const int before=re4dc_static_heap_free();
     if(before<int(bytes+kAllocationOverhead+sizeof(Room4Cell)+kSourceReserve)){
@@ -841,6 +862,7 @@ extern "C" void* re4dc_static_alloc(unsigned bytes){
     return room_alloc4(bytes,"native static package",false);
 #endif
 }
+#endif
 extern "C" void re4dc_static_free(void* data){room_free4(data,"native static package");}
 #endif
 
