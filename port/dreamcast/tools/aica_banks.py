@@ -938,8 +938,14 @@ CH3_STREAMS = CH1_STREAMS + [k for k in CH31_STREAMS if k not in CH1_STREAMS] + 
 CH5_STREAMS = ([(0, 0), (0, 29)] + [(1, n) for n in range(0xB4, 0xC3)]
                + [(0, n) for n in (0x14, 0x27, 0x39, 0x34, 0x1A, 0x29, 0x28, 0x03, 0x30, 0x19, 0x2A, 0x2B, 0x2C, 0x2D, 0x3B)]
                + [(1, 159), (1, 230), (1, 233), (1, 234), (1, 238)])
+# Disc 3 with the final boss room (lane final16, 2026-10-16): ch5 plus the streams r332 requested ("stream sbb=62c0000 not
+# in aica_str.dat, silent", Flycast f2mW): 0:54 (the Saddler fight music, bgmtbl 0x332, looping) and the room code's
+# SndStrPlayBlock event / voice streams 1:47 (0x2F), 1:232 (0xE8), 1:237 (0xED); appended so entries 0..36 and their data
+# bytes stay identical to the ch5 file. `--streams ch5f`; 41 entries (AICA_STR_ENT_MAX=56 holds it).
+CH5F_STREAMS = CH5_STREAMS + [(0, 54), (1, 47), (1, 232), (1, 237)]
 STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch1': CH1_STREAMS,
-                  'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS, 'ch5': CH5_STREAMS}
+                  'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS, 'ch5': CH5_STREAMS,
+                  'ch5f': CH5F_STREAMS}
 
 
 def nibble_to_sample(n):

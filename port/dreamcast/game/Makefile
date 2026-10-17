@@ -682,6 +682,21 @@ endif
 #   SADDLER_MASK_OPAQUE=1 (needs ROUTE_FINAL=1; VISIBLE APPROXIMATION, default 0): the registry draws Saddler (0x31) with
 #   no bump stage and its I4-masked parts as opaque PS2 sections (the crow rule; STRESS_SADDLER's material certificate).
 #   Without it the registry plan declines em31 and the GC model path draws him.
+# NMR_PRELOAD_SKIP=1 (lane final16 2026-10-16; render only, default 0; needs NATIVE_MODEL_REGISTRY=1): the room-entry
+#   texture preload (native_ui.cpp preload_identities, TEX_RESIDENT) leaves out an enemy archive's GameCube texture
+#   identities that the room's registry package replaces (its role rows' source texture facts: the textures the PS2
+#   cast's atlases stand in for). The registry draws those actors from its own atlases, so the GC model textures were
+#   pinned in VRAM and never drawn (Saddler: the em31 model TPL, 2 x 512x512 + 5 x 256x256 16-bit = ~1.7 MB). A source
+#   draw that still asks for one (a registry decline) loads it on first sight, as any unlisted key ("NMR preload skip"
+#   counts per pass).
+NMR_PRELOAD_SKIP ?= 0
+ifneq ($(NMR_PRELOAD_SKIP),0)
+ifneq ($(NMR_PRELOAD_SKIP)$(NATIVE_MODEL_REGISTRY),11)
+$(error NMR_PRELOAD_SKIP must be 0 or 1 and needs NATIVE_MODEL_REGISTRY=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_PRELOAD_SKIP=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_NMR_PRELOAD_SKIP=1
+endif
 ROUTE_FINAL ?= 0
 SADDLER_MASK_OPAQUE ?= 0
 ifneq ($(ROUTE_FINAL),0)
