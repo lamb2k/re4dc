@@ -38,5 +38,9 @@ for x in "$@"; do case $x in
   # only. oP = rP with both off: its image must equal test 16.2's (a8cf395d, f214bd94) with its overlays (knob-off
   # identity). Data T163_DATA (motion hot flags zr17m / zr17b, resident.bin res163).
   oP|oT|oW) T15_VP= T15_GD= LP=${LP}o bash $D/../test15/t15-build.sh r${x#o} ;;
+  # test 16.4 (hotfix, 10-17): T15REC adds T15_FN (FOLIAGE_NEAR_FIX=1) and T15_LF (LAKE_FAR=30000 LAKE_FAR_SHORE=45000),
+  # both render only. wP = rP with both off: its image must equal test 16.3's (61df55c6) with its overlays (knob-off
+  # identity); wT is the STRICT reference for rT.
+  wP|wT|wW) T15_FN= T15_LF= LP=${LP}w bash $D/../test15/t15-build.sh r${x#w} ;;
   *)  bash $D/../test15/t15-build.sh $x ;;
 esac; done
