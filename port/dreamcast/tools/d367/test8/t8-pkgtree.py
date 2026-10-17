@@ -34,8 +34,12 @@ def put(rel, src):
         dst.unlink()  # break the hard link
     shutil.copyfile(src, dst)
     changed.append(rel)
-for m in ('pl0f', 'em2f', 'em22', 'em2b', 'pl11', 'sscrn'):
-    put('dc/%s.ovl' % m, O / ('%s.ovl' % m))
+# every overlay the build made goes on the disc, linked against this image (test 17, 10-17: with T15_SO's STAGE_OVL=1
+# the stage modules st1_0..st2_0 are overlays too; the fixed list (pl0f em2f em22 em2b pl11 sscrn) left them off and the
+# disc halted at the first stage load, "route overlay missing on the disc"). The fixture's dc/*.ovl entries follow and
+# must be the same files (texchk/fixture_arm.py retargets them).
+for o in sorted(O.glob('*.ovl')):
+    put('dc/' + o.name, o)
 for rel, src in fix['replace'].items():
     put(rel, src)
 # honour the fixture removals (lane pak17, 10-16: data set pak17 drops the base tree's loose dc/tex files; until then

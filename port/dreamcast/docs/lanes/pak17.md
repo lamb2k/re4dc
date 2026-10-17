@@ -133,6 +133,27 @@ pak17 adds no list and needs no resident.bin of its own (the records carry the s
 | KOS squeeze 48 KiB (fresh-objdir twin fpl17sqW from the clean l17rP) | PASS 10 / 10: fight min 11,016 B, call 28,456 B, door103 17,096 B, 0 Out of memory |
 | STRICT h17rT (t15/int, T15_DATA + ch2 + cast16) vs l17rT (merged, T17_DATA), stop 2000 | h2 STRICT (2,002 ticks, MUST-IDENTICAL), bell STRICT (2,002), door103 STRICT (2,002) |
 
+### Gates on land/t17-pak17-merge (lane/kit17-on-1c013bef fc827b3a merged into t15/int e46c87ac; Flycast)
+
+e46c87ac adds T15_SO (STAGE_OVL=1 SS_POOL_TOP=1) to T15REC: the stage modules st1_0..st1_3 / st2_0 are now overlays.
+`t8-pkgtree.py` put a fixed overlay list (pl0f em2f em22 em2b pl11 sscrn) on the package disc, so a T15REC package disc
+lacked the stage overlays and halted at the first stage load ("route overlay missing on the disc"); the STRICT scenario
+fixtures (t11-fix) lack them too. Fixed here: t8-pkgtree.py puts every overlay the play build made; the STRICT fixtures
+were armed with `texchk/fixture_arm.py <fixture> <out> <label>` (adds the arm's overlays). The audit now also fails on a
+play-build overlay absent from the disc. The shared copy /root/probe/lanes-20261011/test8/t8-pkgtree.py has the same
+edit (backup `.bak-ovl17`).
+
+| Gate | Result |
+|---|---|
+| Identity vs t15/int e46c87ac (no game source differs; fresh objdirs, ch2/ch2-build.sh rP and rT) | rP image d452f0d7, rT image 9311be27: identical, 14 overlays identical, candidate knobs identical |
+| Package audit (PKG_SRC explicit = t15k/pkgsrc-t14cand, 2,561 base files before and after; output a real directory) | PASS: 1,612 files, 0 of 4,393 removed paths present, 4,370 dropped keys all in the pack, 1ST_READ = d452f0d7, 14 overlays = the play build's, 0 absent; disc_lint loader + standard PASS |
+| KOS squeeze 48 KiB (fresh-objdir twin fpg17sqW from the clean g17rP; the twin disc carries all 14 overlays) | PASS 10 / 10: fight min 7,720 B, call 25,160 B, door103 13,800 B, leave100 / leave103 7,720 B, 0 Out of memory |
+| STRICT e17rT (t15/int e46c87ac, T15_DATA + ch2 + cast16) vs g17rT (merge, T17_DATA), stop 2000, RESIDENT_STRICT=1 | h2 STRICT, MUST-IDENTICAL (2,002 ticks); bell STRICT, MUST-IDENTICAL (2,002); door103 STRICT (2,002), decisions differ only in `ep` at tick 1176 (the door load), which also differs between two runs of the same e17rT build (n17b vs n17c: 1238690 / 1238694 vs 1239485 on g), so it is run-to-run, not the merge |
+
+The KOS minimum fell from 11,016 B (land/t17-pak17-motion over f30cd6f9) to 7,720 B, still a pass. The program is
+byte-identical to e46c87ac's and pak17 gave 11,016 B on f30cd6f9, so the drop most likely comes from e46c87ac (cast16 +
+T15_SO's stage overlays); e46c87ac alone was not KOS-gated here.
+
 ## For the test 17 release lane
 
 - Knob file: `--disc-sets snd16,water16i,vq16w,fsh,ch2,cast16,pak17` (pak17 last).
