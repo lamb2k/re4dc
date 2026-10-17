@@ -674,3 +674,11 @@ $(error NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS is qualified only for ROUTE_CH23 r
 endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_IMMUTABLE_ALIAS=1
 endif
+
+# OT_PROF=1 (lane cast16 2026-10-17; diagnostic, default 0): per OT callback CPU time and PVR stream bytes (OTP lines
+#              every 120 UI frames; trans_ot.cpp ExecOt). Knob off: the image is unchanged.
+OT_PROF ?= 0
+ifeq ($(OT_PROF),1)
+GAME_CPPFLAGS += -DRE4DC_OT_PROF=1
+PLATFORM_CPPFLAGS += -DRE4DC_OT_PROF=1
+endif
