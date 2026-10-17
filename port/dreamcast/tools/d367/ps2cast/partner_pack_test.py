@@ -8,7 +8,8 @@ os.makedirs(out, exist_ok=True)
 mat = open(os.path.join(G, 'coarse_actor_material.inc')).read()
 reg = open(os.path.join(G, 'coarse_actor_owner_registry.inc')).read()
 x, y = mat.index('struct Digest'), mat.index('struct SourceBlob'); y = mat.index('\n', y) + 1
-c = reg.index('namespace nmr {'); d = reg.index('constexpr unsigned kRegDescriptors=16'); d = reg.index('\n', d) + 1
+# through the #endif of the capacity block (all its branches: POOL / ROLES5 / default), not just its first line
+c = reg.index('namespace nmr {'); d = reg.index('kRegGeometry=32,'); d = reg.index('#endif', d); d = reg.index('\n', d) + 1
 types = ('#pragma once\n#include <cstdint>\nnamespace re4dc_material {\n' + mat[x:y] + '#include "actor_material_records.inc"\n}\n'
          + reg[c:d])
 s = reg.index('nmr::Chunk registry_geom_view('); e = reg.index('\n}', s) + 2
@@ -17,7 +18,7 @@ open(os.path.join(out, 'pack_test_types.h'), 'w').write(types)
 exe = os.path.join(out, 'ptest')
 cc = ['g++', '-std=c++17', '-O1', '-w', '-DRE4DC_NMR_ASHLEY=2', '-DRE4DC_NMR_SLOTS=1', '-DRE4DC_NMR_MASK=1',
       '-DRE4DC_NMR_DROP_BUMP=1', '-DRE4DC_NMR_BONES=64', '-DRE4DC_NMR_FACTS=72', '-DRE4DC_ACTOR_PL08=1',
-      '-DRE4DC_NMR_PARTNER=1'] + extra + ['-I', out, '-I', G, '-I', os.path.join(G, 'platform', 'include'),
+      ] + ([] if any(f.startswith('-DRE4DC_NMR_PARTNER=') for f in extra) else ['-DRE4DC_NMR_PARTNER=1']) + extra +['-I', out, '-I', G, '-I', os.path.join(G, 'platform', 'include'),
       os.path.join(G, '..', 'tools', 'd367', 'model_registry_pack_test.cpp'), '-o', exe]
 r = subprocess.run(cc, capture_output=True, text=True)
 if r.returncode:

@@ -87,6 +87,12 @@ def main():
     # it pass). r11f keeps the GameCube Ashley until cast16 fixes the package.
     for r in ('r111', 'r112', 'r113', 'r11c'):
         rep['dc/native/%s/partner.re4nmr' % r] = '%s/%s/ashley-pl11/dc/native/%s/partner.re4nmr' % (PL, r, r)
+    # lane ashley17 (10-17, ASHLEY17-20261017.md): the 2-3 follower rooms that still drew the GameCube Ashley (CAST-GC):
+    # r10f, r11d, r11e, r200. ps2cast/ashley_reroom.py make from r111's package (byte-identical rule, `check`). r11c's
+    # partner needs PS2_ASHLEY_ROOMS=2 (32-entry texture table: Luis 11 + Ashley 6).
+    A17 = '/mnt/c/Game Dev/Emulators/re4-assets-private/ashley17-20261017/cast'
+    for r in ('r10f', 'r11d', 'r11e', 'r200'):
+        rep['dc/native/%s/partner.re4nmr' % r] = '%s/%s/ashley-pl11/dc/native/%s/partner.re4nmr' % (A17, r, r)
     R113P = '/root/probe/lanes-20261015/ps2cast/conv-ch2/reg-113p'
     rep['dc/native/r113/registry.re4nmr'] = R113P + '/package/r113/registry.re4nmr'
     for p in sorted(Path(R113P + '/tex').glob('*.re4tex')):
