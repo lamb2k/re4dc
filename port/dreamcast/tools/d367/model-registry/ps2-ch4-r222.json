@@ -1,0 +1,58 @@
+{
+ "registry": "ps2-ch4-r222",
+ "about": "lane cast16 (2026-10-16): chapter 4 room 222 PS2 cast (CH4-FOUNDATIONS-20261016 cast list). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv4/regcast-ch4",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em11-08g",
+   "archive": "em11",
+   "model_id": "0x11",
+   "source_types": [
+    8
+   ],
+   "partial_sections": true,
+   "module": "src/em11/em11_set.cpp Em11Set type 8 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em11-08g-s13",
+    "16": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em11-08g-s16",
+    "20": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em11-08g-s20"
+   }
+  },
+  {
+   "name": "zealot-em11-09g",
+   "archive": "em11",
+   "model_id": "0x11",
+   "source_types": [
+    9
+   ],
+   "partial_sections": true,
+   "module": "src/em11/em11_set.cpp Em11Set type 9 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em11-09g-s13",
+    "16": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em11-09g-s16",
+    "20": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em11-09g-s20"
+   }
+  }
+ ],
+ "room_packages": {
+  "222": {
+   "descriptors": [
+    "zealot-em11-08g",
+    "zealot-em11-09g"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
+  }
+ }
+}

@@ -1,0 +1,66 @@
+{
+ "registry": "ps2-ch4-r225",
+ "about": "lane cast16 (2026-10-16): chapter 4 room 225 PS2 cast (CH4-FOUNDATIONS-20261016 cast list). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv4/regcast-ch4",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "ganado-em13-00g",
+   "archive": "em13",
+   "model_id": "0x13",
+   "source_types": [
+    0
+   ],
+   "partial_sections": true,
+   "module": "src/em13/em13_set.cpp Em13Set type 0 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true
+  },
+  {
+   "name": "ganado-em13-01g",
+   "archive": "em13",
+   "model_id": "0x13",
+   "source_types": [
+    1
+   ],
+   "partial_sections": true,
+   "module": "src/em13/em13_set.cpp Em13Set type 1 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true
+  },
+  {
+   "name": "ganado-em13-03g",
+   "archive": "em13",
+   "model_id": "0x13",
+   "source_types": [
+    3
+   ],
+   "partial_sections": true,
+   "module": "src/em13/em13_set.cpp Em13Set type 3 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true
+  },
+  {
+   "name": "ganado-em13-06g",
+   "archive": "em13",
+   "model_id": "0x13",
+   "source_types": [
+    6
+   ],
+   "partial_sections": true,
+   "module": "src/em13/em13_set.cpp Em13Set type 6 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true
+  }
+ ],
+ "room_packages": {
+  "225": {
+   "descriptors": [
+    "ganado-em13-00g",
+    "ganado-em13-01g",
+    "ganado-em13-03g",
+    "ganado-em13-06g"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
+  }
+ }
+}

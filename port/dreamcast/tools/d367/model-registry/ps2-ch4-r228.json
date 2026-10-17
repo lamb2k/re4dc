@@ -1,0 +1,36 @@
+{
+ "registry": "ps2-ch4-r228",
+ "about": "lane cast16 (2026-10-16): chapter 4 room 228 PS2 cast (CH4-FOUNDATIONS-20261016 cast list). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv4/regcast-ch4",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "armor-em25-00",
+   "archive": "em25",
+   "model_id": "0x25",
+   "source_types": [
+    0,
+    9
+   ],
+   "partial_sections": true,
+   "module": "src/em25/em25.cpp em25_R0_Init modelInit(ARC 4, ARC 5)",
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261016/cast16/conv4/mask-armor-em25-00-s0"
+   }
+  }
+ ],
+ "room_packages": {
+  "228": {
+   "descriptors": [
+    "armor-em25-00"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
+  }
+ }
+}
