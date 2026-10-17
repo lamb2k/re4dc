@@ -8,7 +8,7 @@ drop the loose duplicates, pack the non-16-bit textures as they are, VQ the 16-b
 
 Today a disc carries `dc/tex.pak` plus loose `dc/tex/<c>/<key>.re4tex` files from the package base tree and from the
 data sets. `native_ui.cpp` looks a key up in the pack first (`texpack::find`, then the loose path), so a loose copy of
-a packed key is never read. From test 17 the disc has no loose textures at all.
+a packed key is never read. From test 17 the disc has no loose `dc/tex/<c>/` textures (4 flat-named ch2 copies stay; their keys are packed).
 
 Tool: `tools/d367/vram/disc_pack.py --fixture <package fixture without pak17> --pkg-src <PKG_SRC> --out <dir>`.
 Output (private, `/root/re4data/private/pak17-20261016`, never in Git): `tex.pak`, `loose-keys.txt`, `vq-keys.txt`,
@@ -50,7 +50,7 @@ Evidence `C:\Flycast-Evidence\re4-dreamcast\pak17-20261016` (Flycast numbers). O
 |---|---|
 | Package audit (audit17.py) | PASS: 780 / 780 staged files with the right sha256; 0 of 4,393 removed paths on the disc; 4,370 dropped keys all in the pack; 1ST_READ.BIN = the play build image 582738e9; 9 overlays = the build's; missing.txt empty |
 | disc_lint loader + standard | PASS |
-| Loose dc/tex files left | 4: flat-layout names `dc/tex/<key>.re4tex` from PKG_SRC, never looked up (the game reads `dc/tex/<c>/<key>`) |
+| Loose dc/tex files left | 4 flat-layout names `dc/tex/<key>.re4tex` staged by data set ch2 (3f690586, 4da9c3fa, 61519868, fc75dd46). All 4 keys are in pak17 and the game looks the pack up first, so they are never read |
 | STRICT h2 (stA), stop 2000 | STRICT, MUST-IDENTICAL, 2,002 ticks |
 | STRICT bell (stB), stop 2000 | STRICT, MUST-IDENTICAL, 2,002 ticks |
 | STRICT door103 (stC), stop 2000 | STRICT, MUST-IDENTICAL, 2,002 ticks (round 3 pair cut at ~1,926 by the host capacity guard; rerun stC-o4 / n4) |
@@ -102,8 +102,22 @@ uploaded in both runs (vramdiff 0), one picture lands a frame earlier.
 | r11f | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 178 | 1697920 -> 1697920 | 0 -> 0 | 812160 -> 812160 | 718848 -> 718848 | 0 / 0 | 0 / 0 |
 | r200 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 183 | 2160898 -> 2160898 | 0 -> 0 | 349152 -> 349152 | 256000 -> 256000 | 0 / 0 | 0 / 0 |
 
+## Landing (test 17)
+
+Landed with motion streaming (lane ch5found16 8627a5df, generic part) on branch land/t17-pak17-motion. In the same landing:
+- `tools/d367/test8/t8-pkgtree.py` is now in Git (it was `/root/probe/lanes-20261011/test8/t8-pkgtree.py`, outside Git);
+  `test16/t16-package.sh` calls the in-tree copy. It unlinks the fixture's removed files from the package tree. Older
+  fixtures remove nothing that is in the base tree, so they get the same tree as before.
+- `release-knobs.py` `disc_files`: a DROP_LOOSE set in the list keeps loose `dc/tex/<c>/<key>.re4tex` out of the Build-Assets
+  zip (the disc has none), and the `ovl` entry of data set ch2 (overlay names, built by the recipe) is skipped instead of
+  failing. With `snd16,water16i,vq16w,fsh,ch2,cast16,pak17` the zip's disc part is 402 files (1,801 without pak17).
+- Test 17 knob file: not written yet. `release-knobs.py write` refuses the chapter 2 recipe's private
+  `PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR` (no place in the Build-Assets zip or build-public.sh). When it is
+  written, its `# disc-sets:` line is `snd16,water16i,vq16w,fsh,ch2,cast16,pak17` (test 16: snd16,water16i,vq16w).
+
 ## For the test 17 release lane
 
-- Knob file: add `pak17` last to the `# disc-sets:` line (release-knobs.py write --disc-sets ...,ch2,cast16,pak17).
-- t8-pkgtree.py must be the version that unlinks removed files (backup `.bak-pak17` next to it).
+- Knob file: `--disc-sets snd16,water16i,vq16w,fsh,ch2,cast16,pak17` (pak17 last).
+- Package with the in-tree `tools/d367/test8/t8-pkgtree.py` (t16-package.sh does); the old copy in
+  /root/probe/lanes-20261011/test8 has the same edit (backup `.bak-pak17`).
 - Rebuild pak17 whenever ch2, cast16 or any earlier set changes its pictures (the guard stops the fixture otherwise).
