@@ -238,6 +238,13 @@ bool crow_rows;  // PS2_CROW: compare() is proving a registry crow (model id 0x2
 #if RE4DC_NMR_BOAT
 bool boat_rows;  // PS2_CAST_BOAT: compare() is proving a registry boat (pl0f, model id 0x0f) plan
 #endif
+#if RE4DC_NMR_ROLES5
+// NATIVE_MODEL_REGISTRY_ROLES5 (lane cast16): compare() is proving a registry castle armour plan (em3c 0x3c / em25 0x25),
+// whose descriptors drop "bump" and "alt-specular" (flag 0x80, specularSetup2: GX only on the DC source path, the crow's rule).
+bool armor_rows;
+#else
+constexpr bool armor_rows=false;
+#endif
 #if RE4DC_ACTOR_MATERIAL_RECORD
 // archive=false: a record hit; the archive verdict (TPL and ModelPart header bytes, checked last) is the record's.
 Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic,bool archive) {
@@ -328,17 +335,17 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
         // already matched. Unknown source flag programs remain unsupported.
 #if RE4DC_NMR_CROW && RE4DC_NMR_BOAT
         // PS2_CROW + PS2_CAST_BOAT: the crow's and the boat's flag 0x80, as below.
-        if(f&~((crow_rows || boat_rows)?0x87u:7u))return Error::Material;
+        if(f&~((crow_rows || boat_rows || armor_rows)?0x87u:7u))return Error::Material;
 #elif RE4DC_NMR_CROW
         // PS2_CROW (Phase 2 A3): the crow body's flag 0x80 (specularSetup2) is GX only on the DC source path, so a crow
         // registry plan (crow_rows, set by compare for model id 0x23) drawing none is the source image (model_registry.py
         // source_drops "alt-specular").
-        if(f&~(crow_rows?0x87u:7u))return Error::Material;
+        if(f&~((crow_rows || armor_rows)?0x87u:7u))return Error::Material;
 #elif RE4DC_NMR_BOAT
         // PS2_CAST_BOAT: the boat's flag 0x80 (specularSetup2) is GX only on the DC source path (as the crow's).
-        if(f&~(boat_rows?0x87u:7u))return Error::Material;
+        if(f&~((boat_rows || armor_rows)?0x87u:7u))return Error::Material;
 #else
-        if(f&~7u)return Error::Material;
+        if(f&~(armor_rows?0x87u:7u))return Error::Material;
 #endif
         p+=32+want.bytes;
     }
@@ -391,6 +398,9 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
 #endif
 #if RE4DC_NMR_BOAT
     boat_rows=registry && m->id==0x0f;
+#endif
+#if RE4DC_NMR_ROLES5
+    armor_rows=registry && (m->id==0x3cu || m->id==0x25u);
 #endif
     if(registry ? !re4dc_registry_model(m,p) :
        ((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
@@ -567,6 +577,11 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     // PS2_CAST_BOAT: the lake boat's (pl0f, model 0x0f) source bump setup reaches the same GX stubs as Del Lago's
     // (model_registry.py source_drops "bump", "alt-specular").
     if(registry && m->id==0x0fu)implemented|=Bump;
+#endif
+#if RE4DC_NMR_ROLES5
+    // NATIVE_MODEL_REGISTRY_ROLES5: the castle armour's (em3c 0x3c / em25 0x25) source bump setup reaches the same GX stubs
+    // (model_registry.py source_drops "bump").
+    if(registry && (m->id==0x3cu || m->id==0x25u))implemented|=Bump;
 #endif
 #if RE4DC_NMR_CH1CAST
     // PS2_CAST_CH1: the chapter 1 snake (em24, 0x24) and lake fish (em27, 0x27) source bump setups reach the same GX stubs

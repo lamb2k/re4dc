@@ -4395,6 +4395,10 @@ extern "C" int re4dc_ui_bind_weapon(void* archive,unsigned bytes){
 }
 extern "C" void re4dc_ui_unbind_player(){re4dc_actor_archive_retire(&player_identities);re4dc_model_unbind_draw_owner(&player_identities);player_identities.clear();sources_reset();}
 extern "C" void re4dc_ui_unbind_weapon(){re4dc_actor_archive_retire(&weapon_identities);re4dc_model_unbind_draw_owner(&weapon_identities);weapon_identities.clear();sources_reset();}
+#if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
+extern "C" unsigned re4dc_stream_model_bytes_now(){return stream_model_bytes;}
+extern "C" unsigned long long re4dc_otp_now_us(){return timer_us_gettime64();}
+#endif
 extern "C" int re4dc_ui_bind_enemy(void* archive,unsigned bytes){
     re4dc::texture::SourceIdentityTable table;
     if(!table.adopt(archive,bytes))return 0;
