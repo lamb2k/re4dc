@@ -28,7 +28,7 @@
 // FOG_FAR_CAP (post30.mk, look study 2026-10-10): the PS2 world's 25 m cap follows FOG_FAR.
 #ifdef RE4DC_FAR_CAP
 #define RE4DC_PS2_FAR RE4DC_FAR_CAP
-#elif defined(RE4DC_LAKE_FAR) && RE4DC_LAKE_FAR
+#elif defined(RE4DC_LAKE_FAR_ON)
 extern "C" float re4dc_far_cap(float cap);   // native_static.cpp (LAKE_FAR): the lake rooms' far
 #define RE4DC_PS2_FAR re4dc_far_cap(25000.0f)
 #else

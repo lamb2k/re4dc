@@ -66,10 +66,20 @@ FOG_FAR_CAP ?= 0
 #   the lake rooms r10b / r11a / r11b draw the PS2 world, the coarse view and the fog to this far instead of the 25 m cap
 #   (native_static.cpp re4dc_far_cap); the fog ramp still reaches 100 % fog colour at it. Needs FOG_FAR_CAP=0,
 #   PS2_WORLD_ROOMS (the room of the open PS2 world) and a value above 25000.
+# Per room (user decision 2026-10-17): LAKE_FAR applies to r10b (the boat, Del Lago); LAKE_FAR_SHORE=<mm> to the shore
+#   rooms r11a / r11b and defaults to LAKE_FAR when unset. 0 for a group keeps its 25 m cap. Both 0 (default): no code.
 LAKE_FAR ?= 0
+LAKE_FAR_SHORE ?= $(LAKE_FAR)
+ifneq ($(LAKE_FAR)$(LAKE_FAR_SHORE),00)
 ifneq ($(LAKE_FAR),0)
 ifeq ($(shell test $(LAKE_FAR) -gt 25000 && echo y),)
 $(error LAKE_FAR is 0 or a far in mm above 25000)
+endif
+endif
+ifneq ($(LAKE_FAR_SHORE),0)
+ifeq ($(shell test $(LAKE_FAR_SHORE) -gt 25000 && echo y),)
+$(error LAKE_FAR_SHORE is 0 or a far in mm above 25000)
+endif
 endif
 ifeq ($(FOG_FAR_CAP),1)
 $(error LAKE_FAR needs FOG_FAR_CAP=0)
@@ -158,8 +168,8 @@ endif
 ifeq ($(LOOK_TOGGLE),1)
 	@printf '#define RE4DC_LOOK_TOGGLE 1\n' >> $@.tmp
 endif
-ifneq ($(LAKE_FAR),0)
-	@printf '#define RE4DC_LAKE_FAR %s\n' '$(LAKE_FAR)' >> $@.tmp
+ifneq ($(LAKE_FAR)$(LAKE_FAR_SHORE),00)
+	@printf '#define RE4DC_LAKE_FAR_ON 1\n#define RE4DC_LAKE_FAR %s\n#define RE4DC_LAKE_FAR_SHORE %s\n' '$(LAKE_FAR)' '$(LAKE_FAR_SHORE)' >> $@.tmp
 endif
 ifneq ($(SKY_FAR),0)
 	@printf '#define RE4DC_SKY_FAR %s\n' '$(SKY_FAR)' >> $@.tmp
