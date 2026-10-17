@@ -18,3 +18,12 @@ build2.sh / batch3b.sh / run1t.sh / strict.sh   STRICT pairs (LOGIC_TRACE=1): cx
 disc3.py / disc4.py            per-disc sizes for the three-disc layout from payload manifests
 ident3.sh                      knob-off identity (test 15 rP) for this round
 warps2/                        round 2 warps (cx-<room>-r2, r31d / r327 cap)
+Round 3 (2026-10-16 night):
+vram3.sh / pakadd.py / pairs5.sh   resident lists r329 / r31d / r327 from the round 2 logs; island pak + material pairs
+mkv3.sh                        VRAM fixtures (pak tex-ch5b, resident-ch5b)
+warps2/cx-r327-cap2.txt        r327 cap 6 waves: goto into PS2 area 0x1C at room frame 60
+em36.sh / prepem5.sh           island enemy archives: le_mirror qualification, textures-only prepare (em36 em39 em3a em32 em3d)
+prepem7.sh                     MEASURE ONLY: resident body with all motions streamed (scratch tool copy; not audited)
+motaudit.sh                    motion-consumer survey for the motion-streaming audit
+emx.py / mkfix4.sh / mkem4.sh / mkem5.sh   stage the prepared archives (+ streamed motions) into room fixtures
+loosepack.py                   disc 1 loose -> pack plan: per-key in-pak / same-bytes / VQ candidate, sector bytes
