@@ -287,11 +287,15 @@ def pair_effs(gc_ids, ps2_effs):
 
 # Enemy effect tables (lane vram12, 2026-10-15): each enemy's own EFF in its GameCube em/emXX.drs, paired with the PS2
 # emXX.dat EFF (inputs of the ps2cast lane). Library folder effects-tex/<emXX>.
+# Weapon effect tables (lane r200-17, 2026-10-16): the same for Leon's weapons, GameCube em/wepXX.drs vs PS2 wepXX.dat
+# (BIO4DAT.AFS, extracted into the same inputs folder). Their EFF id 0x22 (frames 3a866b91 / 148d2ff5) is drawn when he
+# fires, so every room loads it. Library folder effects-tex/<wepXX>.
 ENEMY_INPUTS = Path('/root/probe/lanes/ps2cast/inputs')
 
 
 def enemies_available():
-    return sorted(p.stem for p in ENEMY_INPUTS.glob('em*.drs') if (ENEMY_INPUTS / (p.stem + '.dat')).exists())
+    return sorted(p.stem for pat in ('em*.drs', 'wep*.drs') for p in ENEMY_INPUTS.glob(pat)
+                  if (ENEMY_INPUTS / (p.stem + '.dat')).exists())
 
 
 def lib_jobs(rooms, common=True, enemies=()):
