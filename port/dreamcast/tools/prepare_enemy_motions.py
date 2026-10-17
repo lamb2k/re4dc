@@ -123,6 +123,9 @@ MOTION_SMALL+=('em36.drs',)
 # with the knob-conditional module set (ROUTE_OVL_MODULES). The room's heap 4: r119 frees 3,854,656 B in two
 # cells, the largest 2,770,912 B, under the 4,689,664 B rel-stripped body.
 ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11')
+# em2d / em25 / em3c (ROUTE_CH32 room overlays; lane ch3found16 2026-10-17): their static REL is stripped the same way, as on
+# the castle disc's le_mirror build (the code comes from dc/<em>.ovl).
+ROUTE_OVL_MODULES+=('em2d','em25','em3c')
 # pl11 (Ashley; PS2_ASHLEY discs, lane ps2cast 2026-10-14): the route overlay dc/pl11.ovl carries her module, so her
 # archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
@@ -221,7 +224,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     # pl0f: the release disc carries its whole REL too (pl0f is in no static / overlay module list); it moves intact.
     # em24: the release disc carries its whole REL too (le_mirror keeps it: 394,176 B on the disc = the GC file).
     # em2c / em38 (ROUTE_BOSS4 room overlays): le_mirror keeps their whole REL as for pl0f; it moves intact.
-    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs','em3c.drs','em25.drs','em3b.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
+    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em3b.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
     original_size,original_base=struct.unpack_from('>I4xI',original,slot+4)
     codec=mirror.motion_codec();ranges=[];entries=[];files={};oversized=[]
     for off in ([] if keep_motion_resident else sorted(set(offsets))):
