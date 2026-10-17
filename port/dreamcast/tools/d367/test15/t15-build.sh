@@ -171,7 +171,12 @@ T15_RS=${T15_RS-RADIO_SUB_RT=1}
 #      around Leon, the Esp48 mist sheets, the r118 / r11c PS2 haze additions); the distant haze stays as the fog table.
 #      Ships with the Foliage Off fix (85128754). T15_HZ="" builds the control without it. Docs: docs/MIST_CUT.md.
 T15_HZ=${T15_HZ-HAZE_SPRITE_CUT=1}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ"
+#   PB PRIM_BUF_KB=432 (lane cast16, test 17; size only, every room): the room primitive buffer asks at most 432 KB of
+#      heap 4 (GC room values up to 655,360 B in r11f). Worst chapter 1-2 per-frame peak 294,752 B (r11c siege, PRIM_WATER:
+#      r11f 273,312, r11e 284,448, r101 bell 268,768, r100 235,808) x 1.5; overflow 0 in all. r11f then keeps 182,432 B
+#      of heap 4 free with the full PS2 Ashley + g70 Mendez (was: Ashley failed Mendez's parts). T15_PB="" builds the control.
+T15_PB=${T15_PB-PRIM_BUF_KB=432}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"
