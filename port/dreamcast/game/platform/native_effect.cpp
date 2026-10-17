@@ -204,6 +204,16 @@ extern "C" void* re4dc_effect_record_read(void* reference,void* scratch) {
         unsigned len=12;for(unsigned k=0;k<3;++k)len+=4*__builtin_popcount(word(h+off+4*k));
         if(!scratch || !decode(h+off,len,scratch))break;
         ++stats.reads;const auto elapsed=timer_us_gettime64()-started;
+#if defined(RE4DC_EFFECT_STATS_LOG) && RE4DC_EFFECT_STATS_LOG
+        // EFFECT_STATS_LOG=1 (test only, lane ch4found16 2026-10-17): every new worst compact-record decode, and a
+        // summary every 4096 compact reads (decode only; the record's effect work is not timed).
+        if(elapsed>stats.worst_decode_us)
+            re4dc_log("effect decode: worst %u us (reads %u raw %u records %u)\n",unsigned(elapsed),stats.reads,
+                      stats.raw_reads,stats.records);
+        else if(!(stats.reads&4095))
+            re4dc_log("effect decode: reads %u raw %u worst %u us\n",stats.reads,stats.raw_reads,
+                      unsigned(stats.worst_decode_us));
+#endif
         if(elapsed>stats.worst_decode_us)stats.worst_decode_us=elapsed;
         return scratch;
     }
