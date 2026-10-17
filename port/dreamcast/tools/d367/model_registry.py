@@ -569,7 +569,7 @@ def main():
         PACK_CAPACITY.update(tex=32)  # kRegTextures 32 with RE4DC_NMR_ROLES5 (coarse_actor_owner_registry.inc)
         SOURCE_BLOBS = 128  # kBlobMaskBits 128 with RE4DC_NMR_ROLES5 (actor_material_records.inc two-word BlobMask)
         PACK_CAPACITY.update(fmodel=64, fpart=224)  # coarse_actor_registry_pack_check.inc with RE4DC_NMR_ROLES5
-        PACK_MAX_BYTES = 384 * 1024
+        PACK_MAX_BYTES = 416 * 1024  # RE4DC_NMR_PACK_KIB with RE4DC_NMR_ROLES5
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])

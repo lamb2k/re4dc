@@ -407,6 +407,12 @@ PRESETS['zealot-em1a-09p']['rooms'] = PRESETS['zealot-em1a-09p']['rooms'] + ['r2
 # Em1eSet type 6 (r305 / r31d NMRBIN: the robed class-0 type, em10.cpp robe infos): zealot-em14-06p's entries on em1e.
 PRESETS['soldr-em1e-06p'] = dict(PRESETS['zealot-em14-06p'], archive='em1e', rooms=['r305', 'r31d'], model_id=0x1e)
 
+# Type 9 Zealots with em10SetAccesory flag 2 (lane ch4found16 95584fc1, CH4-FOUNDATIONS round 5): BIN 0x211 + subArc TPL
+# 0x220, which the pool presets omit. r211 / r214 / r218 / r227.
+for _n, _q in (('zealot-em14-09p', 'zealot-em14-09q'), ('zealot-em1c-09g', 'zealot-em1c-09h')):
+    PRESETS[_q] = dict(PRESETS[_n], sections=PRESETS[_n]['sections'] + [(0x211, 'acc2-b', 0x220)],
+                       rooms=[r for r in PRESETS[_n]['rooms'] if r in ('r211', 'r214', 'r218', 'r227')])
+
 
 def section_specs(spec):
     """Source BIN/role/TPL selections; old single-TPL presets keep their order."""

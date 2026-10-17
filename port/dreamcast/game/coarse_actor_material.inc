@@ -770,3 +770,16 @@ extern "C" unsigned re4dc_actor_material_diagnose(cModel* m,const Re4dcActorPlan
 #if RE4DC_ACTOR_TEX_PREP
 #include "actor_tex_prep_material.inc"
 #endif
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP && RE4DC_NATIVE_MODEL_REGISTRY_PACK
+// TEX_PKG_SKIP: 1 when (crc, fnv) is a source texture fact of a published room package role row (a GC TPL texture a
+// registry descriptor replaces with its own atlas).
+extern "C" int re4dc_registry_source_key(unsigned crc,unsigned fnv) {
+    if(!(crc|fnv))return 0;
+    const auto& R=re4dc_material::room_rows;
+    for(unsigned k=0;k<R.role_count;++k){
+        const auto& row=R.roles[k];
+        for(unsigned t=0;t<row.texture_count;++t)if(row.textures[t].crc==crc && row.textures[t].fnv==fnv)return 1;
+    }
+    return 0;
+}
+#endif

@@ -682,3 +682,12 @@ ifeq ($(OT_PROF),1)
 GAME_CPPFLAGS += -DRE4DC_OT_PROF=1
 PLATFORM_CPPFLAGS += -DRE4DC_OT_PROF=1
 endif
+# TEX_PKG_SKIP=1 (lane cast16 2026-10-17; render only, default 0; needs NATIVE_MODEL_REGISTRY_PACK): the room-entry
+#              preload (enemy pass and resident list) skips the GC TPL textures that the published room package's role
+#              rows name (its descriptors draw their own atlas); a source-path draw still loads one on first sight.
+#              Logs TEXPKG lines. Knob off: the image is unchanged.
+TEX_PKG_SKIP ?= 0
+ifeq ($(TEX_PKG_SKIP),1)
+GAME_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
+PLATFORM_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
+endif
