@@ -255,6 +255,50 @@ for _a, _types, _rooms in (('em14', (7, 8, 9), ['r20f']), ('em19', (7, 8, 9), ['
 # Em14Set type 6 (r20f; not a Ganado: Ganado stays 0): body mot[1] 0x1E7 / TPL mot[0] 0x1E8, head mot[2..4] 0x1E9 with
 # TPL mot[5] 0x1EA, mot[16] 0x1F0 with mot[17] 0x1F1, right hands mot[6..9] 0x1F4..0x1F7, left mot[11..14] 0x1F8..0x1FB,
 # mot[18..20] 0x1ED..0x1EF.
+# lane cast16 (2026-10-16): the stage-3 soldiers (em1d / em1e / em1f; em10.cpp class 2) as NATIVE_MODEL_REGISTRY_POOL
+# presets: lane ps2cast-st3's per-type (body, head) pairs (95f47e7d) plus every section the source can attach, so a
+# soldier's variable info list binds (ps2cast-st3: "runtime admission needs a variable-info soldier plan"). Em1?Set:
+# body mot[1] / TPL mot[0] (0x22F / 0x230 or 0x247 / 0x248), head mot[2] / TPL mot[5], hit head mot[3] = mot[4] 0x233
+# (TPL mot[5]), right hands mot[6..9] 0x234..0x237, left mot[11..15] 0x238..0x23C (TPL mot[0]).
+def _soldier_pool(archive, body, head, rooms, types):
+    return dict(archive=archive, sections=[(body, 'body'), (head, 'head'), (0x233, 'head-hit'),
+                (0x234, 'right-hand'), (0x235, 'right-open'), (0x236, 'right-point'), (0x237, 'right-grip'),
+                (0x238, 'left-hand'), (0x239, 'left-open'), (0x23a, 'left-point'), (0x23b, 'left-grip'), (0x23c, 'left-grip2')],
+                tpl=body + 1, section_tpls={head: head + 1, 0x233: head + 1}, rooms=rooms, types=types, category='registry',
+                model_id=int(archive[2:], 16), lit=True, subset_bones=True)
+
+
+for _n, _a, _b, _h, _r, _t in (
+        ('em1d-0e', 'em1d', 0x22f, 0x231, ['r300', 'r320', 'r327'], 14), ('em1d-12', 'em1d', 0x247, 0x231, ['r320', 'r327'], 18),
+        ('em1d-0f', 'em1d', 0x22f, 0x249, ['r300', 'r320', 'r327'], 15), ('em1d-13', 'em1d', 0x247, 0x249, ['r320', 'r327'], 19),
+        ('em1d-10', 'em1d', 0x22f, 0x24b, ['r300', 'r320', 'r327'], 16), ('em1d-14', 'em1d', 0x247, 0x24b, ['r320', 'r327'], 20),
+        ('em1d-11', 'em1d', 0x22f, 0x24d, ['r300', 'r320', 'r327'], 17), ('em1d-15', 'em1d', 0x247, 0x24d, ['r320', 'r327'], 21),
+        ('em1e-0e', 'em1e', 0x22f, 0x231, ['r301', 'r305', 'r30e', 'r316', 'r31d'], 14),
+        ('em1e-0f', 'em1e', 0x22f, 0x249, ['r301', 'r30e', 'r316', 'r31d'], 15),
+        ('em1e-17', 'em1e', 0x247, 0x24d, ['r301', 'r305', 'r30e', 'r316'], 23),
+        ('em1e-19', 'em1e', 0x247, 0x24b, ['r301', 'r303', 'r305', 'r30e', 'r316'], 25),
+        ('em1f-0e', 'em1f', 0x22f, 0x231, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r334'], 14),
+        ('em1f-0f', 'em1f', 0x22f, 0x249, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r330', 'r334'], 15),
+        ('em1f-10', 'em1f', 0x22f, 0x24b, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r330', 'r334'], 16),
+        ('em1f-18', 'em1f', 0x247, 0x24d, ['r304', 'r30c', 'r311', 'r330'], 24)):
+    PRESETS['soldr-%sp' % _n] = _soldier_pool(_a, _b, _h, _r, [_t])
+# em1f's 0x247 body rests part 9 (attach 31) elsewhere than hit head 0x233 does: type 24 keeps its own head only.
+# The GC stump 0x233 (em10HeadSet no 1: ModInfoMgr.create(mot[3], mot[5])) indexes textures past these heads' TPLs
+# (model_registry: 'colour texture index outside the TPL'), so the source pair is not identifiable: no stump section.
+for _n in ('em1f-18', 'em1d-11', 'em1d-15', 'em1e-0f'):
+    _s = PRESETS['soldr-%sp' % _n]
+    _s['sections'] = [x for x in _s['sections'] if x[0] != 0x233]; _s['section_tpls'].pop(0x233)
+# em1d rooms r320 / r327 load all eight soldier types (bodies 0x22F / 0x247 x four heads): eight descriptors need 94 role
+# rows (> the 128-bit Info::roles mask with the 62 base rows), so one pool per head carries both bodies (types 14 + 18 ..
+# 17 + 21; 0x247 takes TPL 0x248). The pool binds whichever body the info list holds.
+for _h, _t, _st in ((0x231, (14, 18), True), (0x249, (15, 19), True), (0x24b, (16, 20), True), (0x24d, (17, 21), False)):
+    _s = _soldier_pool('em1d', 0x22f, _h, ['r320', 'r327'], list(_t))
+    _s['sections'].insert(1, (0x247, 'body2')); _s['section_tpls'][0x247] = 0x248
+    if not _st:
+        _s['sections'] = [x for x in _s['sections'] if x[0] != 0x233]; _s['section_tpls'].pop(0x233)
+    PRESETS['soldr-1d-h%02xp' % (_h & 0xff)] = _s
+PRESETS['soldr-em1d-02'] = dict(archive='em1d', sections=[(0x22b, 'body')], tpl=0x22c, rooms=['r300', 'r320', 'r327'],
+                                  types=[2], category='registry', model_id=0x1d, lit=True)
 # em10.cpp: the robe ModInfoMgr.create(mot[16], mot[17]); the second info create(mot[19] or mot[18], mot[17]); the
 # third create(mot[20], mot[0]).
 PRESETS['zealot-em14-06p'] = dict(archive='em14', sections=[

@@ -1,0 +1,69 @@
+{
+ "registry": "ps2-ch5-em1ep",
+ "about": "lane cast16 (2026-10-16): island soldiers em1e as POOL descriptors (variable info lists bind; ps2cast-st3 95f47e7d pairs and rooms). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv5/regcast-st3",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "soldr-em1e-0ep",
+   "archive": "em1e",
+   "model_id": "0x1e",
+   "source_types": [
+    14
+   ],
+   "module": "src/em1e/em1e_set.cpp Em1eSet type 14 (em10.cpp class 2): body 0x22f, head 0x231, head-hit 0x233, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c",
+   "partial_sections": true,
+   "pool": true
+  },
+  {
+   "name": "soldr-em1e-0fp",
+   "archive": "em1e",
+   "model_id": "0x1e",
+   "source_types": [
+    15
+   ],
+   "module": "src/em1e/em1e_set.cpp Em1eSet type 15 (em10.cpp class 2): body 0x22f, head 0x249, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c",
+   "partial_sections": true,
+   "pool": true
+  }
+ ],
+ "room_packages": {
+  "301": {
+   "descriptors": [
+    "soldr-em1e-0ep",
+    "soldr-em1e-0fp"
+   ],
+   "evidence": "ps2cast-st3 ps2-st3-r301.json room set"
+  },
+  "305": {
+   "descriptors": [
+    "soldr-em1e-0ep"
+   ],
+   "evidence": "ps2cast-st3 ps2-st3-r305.json room set"
+  },
+  "30e": {
+   "descriptors": [
+    "soldr-em1e-0ep",
+    "soldr-em1e-0fp"
+   ],
+   "evidence": "ps2cast-st3 ps2-st3-r30e.json room set"
+  },
+  "316": {
+   "descriptors": [
+    "soldr-em1e-0ep",
+    "soldr-em1e-0fp"
+   ],
+   "evidence": "ps2cast-st3 ps2-st3-r316.json room set"
+  },
+  "31d": {
+   "descriptors": [
+    "soldr-em1e-0ep",
+    "soldr-em1e-0fp"
+   ],
+   "evidence": "ps2cast-st3 ps2-st3-r31d.json room set"
+  }
+ }
+}

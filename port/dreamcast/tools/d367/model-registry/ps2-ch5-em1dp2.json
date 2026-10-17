@@ -1,0 +1,79 @@
+{
+ "registry": "ps2-ch5-em1dp2",
+ "about": "lane cast16 (2026-10-16): island soldiers em1d for r320 / r327 (eight types, two bodies): one POOL per head carrying both bodies, so the role rows fit the 128-bit Info::roles mask. Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv5/regcast-st3",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "soldr-1d-h31p",
+   "archive": "em1d",
+   "model_id": "0x1d",
+   "source_types": [
+    14,
+    18
+   ],
+   "pool": true,
+   "partial_sections": true,
+   "module": "src/em1d/em1d_set.cpp Em1dSet types 14 / 18 (em10.cpp class 2): body 0x22f or 0x247, head 0x231, stump 0x233, hands 0x234-0x23c"
+  },
+  {
+   "name": "soldr-1d-h49p",
+   "archive": "em1d",
+   "model_id": "0x1d",
+   "source_types": [
+    15,
+    19
+   ],
+   "pool": true,
+   "partial_sections": true,
+   "module": "src/em1d/em1d_set.cpp Em1dSet types 15 / 19 (em10.cpp class 2): body 0x22f or 0x247, head 0x249, stump 0x233, hands 0x234-0x23c"
+  },
+  {
+   "name": "soldr-1d-h4bp",
+   "archive": "em1d",
+   "model_id": "0x1d",
+   "source_types": [
+    16,
+    20
+   ],
+   "pool": true,
+   "partial_sections": true,
+   "module": "src/em1d/em1d_set.cpp Em1dSet types 16 / 20 (em10.cpp class 2): body 0x22f or 0x247, head 0x24b, stump 0x233, hands 0x234-0x23c"
+  },
+  {
+   "name": "soldr-1d-h4dp",
+   "archive": "em1d",
+   "model_id": "0x1d",
+   "source_types": [
+    17,
+    21
+   ],
+   "pool": true,
+   "partial_sections": true,
+   "module": "src/em1d/em1d_set.cpp Em1dSet types 17 / 21 (em10.cpp class 2): body 0x22f or 0x247, head 0x24d, hands 0x234-0x23c"
+  }
+ ],
+ "room_packages": {
+  "320": {
+   "descriptors": [
+    "soldr-1d-h31p",
+    "soldr-1d-h49p",
+    "soldr-1d-h4bp",
+    "soldr-1d-h4dp"
+   ],
+   "evidence": "ps2cast-st3 ps2-st3-r320.json room set (types 14-21)"
+  },
+  "327": {
+   "descriptors": [
+    "soldr-1d-h31p",
+    "soldr-1d-h49p",
+    "soldr-1d-h4bp",
+    "soldr-1d-h4dp"
+   ],
+   "evidence": "ps2cast-st3 ps2-st3-r327.json room set (types 14-21)"
+  }
+ }
+}
