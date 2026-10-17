@@ -33,7 +33,9 @@ p['bench'] = 'lane actorplan17 console A/B disc: program overlays from %s (%d re
 json.dump(d, open(dst, 'w'), indent=1)
 print('program overlays from the bench build:', n)
 PY
-PKG_K=$D python3 /root/probe/lanes-20261011/test8/t8-pkgtree.py $L $D/pkg.json > $D/pkgtree.txt
+# PKG_SRC explicit (coordinator 10-17: the default PKG_SRC is a symlink to the shared base; an unfixed t8-pkgtree.py wrote
+# into it). The base is the test 14 candidate disc tree; pkg-t16rcrP.json carries the test 16 changes on top of it.
+PKG_SRC=/root/probe/lanes-20261015/t15k/pkgsrc-t14cand PKG_K=$D python3 /root/probe/lanes-20261011/test8/t8-pkgtree.py $L $D/pkg.json > $D/pkgtree.txt
 tail -1 $D/pkgtree.txt | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $D/pkgtree.txt; exit 1; }
 S1=$T/benchpub/scene1-warp.txt
 FARM=$T/actorplan/farm-warp.txt
