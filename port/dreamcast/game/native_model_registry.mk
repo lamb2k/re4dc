@@ -691,3 +691,30 @@ ifeq ($(TEX_PKG_SKIP),1)
 GAME_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
 PLATFORM_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
 endif
+# NATIVE_MODEL_REGISTRY_DYING=1 (lane cast16 2026-10-17; render only, default 0): a registry-planned Ganado-class enemy
+#              (ids 0x10..0x20) keeps its PS2 plan while its whole-model fade runs (death: invisible_factor < 1), drawn
+#              through ACTOR_GANADO_DEATH_FADE's G1 ticket (its source FIFO position, TR list, the source alpha) instead
+#              of declining to the GC path (CAST-GC "semantics"). Compiles the G1 machinery; the reviewed id13 G1
+#              eligibility stays off unless ACTOR_GANADO_DEATH_FADE=1 too. Knob off: the image is unchanged.
+# NATIVE_MODEL_REGISTRY_RUN_SHARE=1 (lane cast16 2026-10-17; render only, default 0): an identical pool mask run drawn by
+#              two sections whose role chunks hold byte-identical arrays shares its immutable proof (the r218 em1c 09h
+#              0x217 colours 0x218 / 0x219; before, the second section declined, semantics 24). Knob off: unchanged.
+NATIVE_MODEL_REGISTRY_RUN_SHARE ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_RUN_SHARE),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_RUN_SHARE=1
+endif
+# NATIVE_MODEL_REGISTRY_BLENDTBL=1 (lane cast16 2026-10-17; render only, default 0): a registry actor whose info holds an
+#              idle texture blend table (flagsDC 4, blendRatio 0, blendType 0: the source draws the base textures) keeps
+#              its plan: the castle Novistador em2d (r213 / r21d declined on semantics 16 every frame). Knob off: unchanged.
+NATIVE_MODEL_REGISTRY_BLENDTBL ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_BLENDTBL),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_BLENDTBL=1
+endif
+NATIVE_MODEL_REGISTRY_DYING ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_DYING),1)
+ifneq ($(NATIVE_MODEL_REGISTRY)$(ACTOR_TRANSACTION)$(D349_RENDERER_STACK)$(PVR_STREAM)$(NATIVE_ACTOR_SKIN_LAZY)$(SKIN_PALETTE_LAZY)$(PS2_GANADO_LIT),1111111)
+$(error NATIVE_MODEL_REGISTRY_DYING requires NATIVE_MODEL_REGISTRY=1 ACTOR_TRANSACTION=1 D349_RENDERER_STACK=1 PVR_STREAM=1 NATIVE_ACTOR_SKIN_LAZY=1 SKIN_PALETTE_LAZY=1 PS2_GANADO_LIT=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_GANADO_DEATH_FADE=1 -DRE4DC_NMR_DYING=1
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_GANADO_DEATH_FADE=1
+endif

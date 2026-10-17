@@ -888,8 +888,21 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             if not any(c['source_info'] == 3 and c.get('mask',{}).get('mask_only') for c in chunks):
                 raise Fail('Luis requires the complete mask-only source hair run')
         materials = sorted({c['texture'] for c in chunks} | {c['mask']['colour_texture'] for c in chunks if 'mask' in c})
-        if len(materials) > ACTOR_MATERIALS:
-            raise Fail(f'{name}: {len(materials)} materials > {ACTOR_MATERIALS}')
+        need_materials = len(materials)
+        if pool:
+            # A pool actor draws one section per source info, and one info is one BIN: sections that share a BIN under
+            # different TPLs (em10SetAccesory's alternative colours, e.g. 0x217 with TPL 0x218 or 0x219) never meet in
+            # one actor. The runtime plan counts materials per actor (coarse_actor_owner_registry.inc kRwPlan), so the
+            # bound is the chunk textures plus, per BIN, its masked sections' colour textures at most one of which an
+            # actor carries. Unchanged for a pool whose BINs are all distinct.
+            per_bin = {}
+            for c in chunks:
+                if 'mask' in c:
+                    per_bin.setdefault(sections[c['source_info']]['bin'], set()).add(c['mask']['colour_texture'])
+            base = {c['texture'] for c in chunks}
+            need_materials = min(need_materials, len(base) + sum(1 for v in per_bin.values() if v - base))
+        if need_materials > ACTOR_MATERIALS:
+            raise Fail(f'{name}: {need_materials} materials > {ACTOR_MATERIALS}')
         entry = dict(name=name, revision=rev, base_revision=base_rev, level=level, archive=arcname,
                      archive_sha256=audit[arcname]['sha256'], model_id=int(d['model_id'], 16), source_types=d['source_types'],
                      bones=draw, parents=parents, bind=bind, sections=sections, chunks=chunks, skin_bytes=skin,
