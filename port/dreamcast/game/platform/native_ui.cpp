@@ -3636,11 +3636,17 @@ unsigned pkg_skips;
 #else
 #define RE4DC_PKG_SKIP(c,f) false
 #endif
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
 void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n,unsigned& resident,unsigned& bytes,unsigned limit,unsigned byte_limit,bool pkg=false){
+#else
+void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n,unsigned& resident,unsigned& bytes,unsigned limit,unsigned byte_limit){
+#endif
     for(unsigned i=0;i<table.count() && n+resident<limit;++i){
         unsigned crc,fnv,width,height,format;
         if(!table.record(i,crc,fnv,width,height,format) || !width || !height || width>1024 || height>1024)continue;
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
         if(pkg && RE4DC_PKG_SKIP(crc,fnv))continue;
+#endif
 #if RE4DC_QUALITY_ASSETS
         if(preload_room_pass && re4dc_std_dropped(crc,fnv))continue;
 #endif
@@ -3695,7 +3701,9 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             if(r.room!=src.room || !r.width || !r.height || r.width>1024 || r.height>1024)continue;
 #endif
             ++resident_listed;
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
             if(RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
+#endif
             const Key key{r.crc,r.fnv};
             bool known=false;
             for(auto& e:entries)if(e.valid && e.key==key){if(e.frame!=frame){e.frame=frame;++resident;bytes+=e.package.vram_bytes();}known=true;break;}
