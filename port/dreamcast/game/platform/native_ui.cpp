@@ -3951,6 +3951,14 @@ void preload_identities(){
     }else if(n)re4dc_log("native texture preload: pack window off (buffer %s)\n",win_mem?"ok, pack open failed":"not allocated");
     if(win_mem)re4dc_ui_stage_free(win_mem);
 #endif
+#if RE4DC_UI_VRAM && RE4DC_VRAM_CENSUS
+    // VRAM_CENSUS (test only): the picks a full pass left for first sight.
+    if(full){unsigned left=0,least=0;for(unsigned k=0;k<n;++k){bool have=false;for(const auto& e:entries)if(e.valid && e.key==preload_picks[k].key){have=true;break;}
+        if(have)continue;++left;least+=preload_least(preload_picks[k].width,preload_picks[k].height);
+        re4dc_log("native texture preload: left %08x-%08x %ux%u fmt=%u\n",unsigned(preload_picks[k].key.crc),unsigned(preload_picks[k].key.fnv),
+            unsigned(preload_picks[k].width),unsigned(preload_picks[k].height),unsigned(preload_picks[k].format));}
+        re4dc_log("native texture preload: full pass left=%u least_bytes=%u\n",left,least);}
+#endif
     if(frame)for(auto& e:entries)if(e.valid && e.frame==frame)e.frame=frame-1;
     re4dc_log("native texture preload: frame=%u picked=%u resident=%u loads=%u skipped=%u full=%d used=%u budget=%u entries=%u us=%u\n",frame,n,resident,preload_loads-loads,
         preload_skipped-skipped,full?1:0,used,budget,kTextureCount,unsigned(timer_us_gettime64()-start));
