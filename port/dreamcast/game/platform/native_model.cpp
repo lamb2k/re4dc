@@ -660,7 +660,50 @@ unsigned leon_hr_parts;  // parts drawn at x0.5 here (log census)
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
 extern "C" void re4dc_callprof_part(const void* model, unsigned path);  // model_bridge.cpp
 #endif
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+// PROP_PROF=1 (lane cast16 2026-10-17; diagnostic, default 0): re4dc_model_submit time and PVR bytes per model
+// (kind / id / type) and route: 1 static package, 2 native actor, 3 prepared draw plan, 4 generic walk, 0 refused.
+// PPF lines every 120 UI frames (top 20 by time).
+extern "C" unsigned re4dc_propprof_key(const void* model);
+extern "C" unsigned re4dc_stream_model_bytes_now();
+extern "C" unsigned long long re4dc_otp_now_us();
+extern "C" unsigned re4dc_ui_frame();
+namespace pprof {
+struct Row { unsigned key, path, n, us, bytes; };
+Row rows[96]; unsigned nrows, over, last;
+unsigned path;
+void add(unsigned key, unsigned pth, unsigned us, unsigned b) {
+    for (unsigned k = 0; k < nrows; ++k) if (rows[k].key == key && rows[k].path == pth) { rows[k].n++; rows[k].us += us; rows[k].bytes += b; return; }
+    if (nrows == 96) { ++over; return; }
+    rows[nrows++] = Row{key, pth, 1, us, b};
+}
+void window() {
+    const unsigned fr = re4dc_ui_frame();
+    if (!last) { last = fr; return; }
+    if (fr - last < 30) return;
+    re4dc_log("PPF f=%u frames=%u rows=%u over=%u\n", fr, fr - last, nrows, over);
+    for (unsigned i = 0; i < 20 && i < nrows; ++i) {
+        unsigned b = i; for (unsigned k = i + 1; k < nrows; ++k) if (rows[k].us > rows[b].us) b = k;
+        Row t = rows[i]; rows[i] = rows[b]; rows[b] = t;
+        re4dc_log("PPF  kind=%u id=%x type=%x path=%u parts=%u us=%u bytes=%u\n", rows[i].key >> 16, (rows[i].key >> 8) & 255, rows[i].key & 255,
+                  rows[i].path, rows[i].n, rows[i].us, rows[i].bytes);
+    }
+    nrows = 0; over = 0; last = fr;
+}
+struct Scope {
+    unsigned key; unsigned long long t0; unsigned b0;
+    explicit Scope(const Re4dcModelPart* p) : key(p ? re4dc_propprof_key(p->model) : 0xffffffu), t0(re4dc_otp_now_us()), b0(re4dc_stream_model_bytes_now()) { path = 0; window(); }
+    ~Scope() { add(key, path, unsigned(re4dc_otp_now_us() - t0), re4dc_stream_model_bytes_now() - b0); }
+};
+}
+#define PP_PATH(x) (pprof::path = (x))
+#else
+#define PP_PATH(x) ((void) 0)
+#endif
 extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+    pprof::Scope pprof_scope(p);
+#endif
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
     re4dc_callprof_part(p ? p->model : nullptr, 2);
 #endif
@@ -699,7 +742,7 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
 #if RE4DC_NATIVE_STATIC
     // A bound scroll part draws its prelit package batches instead (or defers,
     // or is covered by an earlier part with the same material key).
-    if(p && re4dc_static_submit(p))return;
+    if(p && re4dc_static_submit(p)){PP_PATH(1);return;}
     // A fallback part leaves the static identity words behind: they differ per
     // object, and the translucent queue snapshots parts as word differences.
 #if defined(RE4DC_ACTOR_NO_CLEAR) && RE4DC_ACTOR_NO_CLEAR
@@ -717,7 +760,7 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     // preparation (native_actor.cpp). It declines before any side effect and
     // the generic path below then runs unchanged.
 #if RE4DC_MODEL_STREAM_FIX && RE4DC_NATIVE_ACTOR_FAST
-    if(p && (!p->static_geometry || re4dc_actor_stream_encoded(p->stream,p->stream_bytes)) && re4dc_actor_submit(p))return;
+    if(p && (!p->static_geometry || re4dc_actor_stream_encoded(p->stream,p->stream_bytes)) && re4dc_actor_submit(p)){PP_PATH(2);return;}
 #else
     if(p && !p->static_geometry && re4dc_actor_submit(p))return;
 #endif
@@ -747,7 +790,7 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     // has null arrays. Refreshing those arrays makes the packed actor path
     // eligible again; its old GX plan describes bytes that no longer exist.
     if(p && re4dc_actor_stream_encoded(p->stream,p->stream_bytes)){
-        if(re4dc_actor_submit(p))return;
+        if(re4dc_actor_submit(p)){PP_PATH(2);return;}
         // Invalid packed input has no GX fallback. Report the rejected part
         // before any stale index can reach a position/normal/shading cache.
 #if RE4DC_KOS_HEAP_CHECK
@@ -807,7 +850,7 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
     struct PlanLease { const re4dc::render::NativeDrawPlan* p; ~PlanLease(){if(p)re4dc_model_release_draw_plan();} } lease{plan};
     if(invalid){re4dc_model_result(1,0,0);return;}
 #endif
-    if(plan){
+    if(plan){PP_PATH(3);
 #if RE4DC_D349_RENDERER_STACK
         b.bounds=re4dc_model_acquired_bounds();b.locals=re4dc_model_acquired_locals();
         if(b.bounds && !re4dc::render::group_visible(b.bounds->group,p->modelview,p->projection,p->viewport,near,far,0)){
@@ -818,7 +861,7 @@ extern "C" void re4dc_model_submit(const Re4dcModelPart* p){
         if(!ram(p->uv,(plan->max_uv+1)*4) ||
            (((p->alpha_state&256) || (p->lighting && (p->lighting->ambient_vertex || p->lighting->material_vertex))) && !ram(p->colors,(plan->max_color+1)*4))){re4dc_model_result(1,0,0);return;}
     }else {
-        ++work_stats.unprepared_parts;
+        ++work_stats.unprepared_parts;PP_PATH(4);
         if(!b.walk(false)){re4dc_model_result(1,0,0);return;}
     }
 #if RE4DC_D349_RENDERER_STACK

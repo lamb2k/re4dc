@@ -736,3 +736,18 @@ endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_GANADO_DEATH_FADE=1 -DRE4DC_NMR_DYING=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_GANADO_DEATH_FADE=1
 endif
+# PROP_PROF=1 (lane cast16 2026-10-17; diagnostic, default 0): re4dc_model_submit time / bytes per model and route
+#              (PPF lines). Knob off: the image is unchanged.
+PROP_PROF ?= 0
+ifeq ($(PROP_PROF),1)
+GAME_CPPFLAGS += -DRE4DC_PROP_PROF=1
+PLATFORM_CPPFLAGS += -DRE4DC_PROP_PROF=1
+endif
+# PROP_PLAN=1 (lane cast16 2026-10-17; render only, exact, default 0): rigid parts whose model box is wholly outside
+#              one clip plane are not submitted (model_bridge.cpp pplan). Knob off: the image is unchanged.
+PROP_PLAN ?= 0
+ifneq ($(PROP_PLAN),0)
+$(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_PROP_PLAN=$(PROP_PLAN)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PROP_PLAN=$(PROP_PLAN)
+endif
+# PROP_PLAN=2 (diagnostic): submit the parts PROP_PLAN would skip and count any that emit bytes (PPLAN bad=, must be 0).
