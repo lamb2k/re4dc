@@ -650,6 +650,15 @@ void EmSetFromList()
         if (pG->room_no != (d->room & 0xFF)) {
             continue;
         }
+#if defined(RE4DC_ANIMALS_OFF) && RE4DC_ANIMALS_OFF
+        // ANIMALS_OFF (Makefile): the stage 1 ambient animals are not spawned (cows 0x26, chickens 0x28, the set-0 dog
+        // 0x21); the bear-trap dog (set 1) and the El Gigante dog (set 2) are scripted and stay.
+        if (pG->stage_no == 1 && (d->id == 0x26 || d->id == 0x28 || (d->id == 0x21 && d->set == 0))) {
+            d->be_flag &= ~1;
+            OSReport("animals off: r%03x entry 0x%02x id 0x%02x not spawned\n", (unsigned) d->room, (unsigned) i, (unsigned) d->id);
+            continue;
+        }
+#endif
         if (checkListId(i) == 0) {
             continue;
         }

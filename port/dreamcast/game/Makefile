@@ -246,6 +246,25 @@ PS2_ENEMY_RULES ?= 0
 ifneq ($(PS2_ENEMY_RULES),0)
 $(OBJDIR)/src/game/stage.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r107.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_RULES=$(PS2_ENEMY_RULES)
 endif
+# ANIMALS_OFF=1 (user 2026-10-17 "Get rid of them asap"; CHANGES GAMEPLAY by design: no eggs from chickens; default 0 = off;
+#   needs PS2_ENEMY_RULES=1): the ambient animals of the stage 1 enemy lists (emleon00 / emleon01) are not spawned:
+#   every cow (em26) and chicken (em28), and the dog (em21) only when ambient (list set 0: the r103 farm dog 0x56).
+#   The scripted dogs stay: the r100 bear-trap dog (0x09, set 1) and the r119 El Gigante dog (0x29, set 2); crows,
+#   snakes and fish are untouched. Removed rows: r101 0x34 cow, 0x4E / 0x4F chickens; r103 0x50..0x55 cows, 0x56 dog,
+#   0x57 0x58 0x5A..0x5D chickens (0x4E 0x50 0x54 0x55 0x57 0x58 0x5C are already off with PS2_ENEMY_RULES: the PS2 lists
+#   never spawn them). No room code sends, counts or waits on these rows (r101's s21 removal handles a missing 0x34 /
+#   0x4F); their escape alarm (Status_flg[1] bit 29) is read only by other animals and chapter 3+ enemies. Applied at
+#   spawn (EmSetFromList), so a save made with animals loads without them. C:\Game Dev\Emulators\ANIMALSOFF-20261017.md
+ANIMALS_OFF ?= 0
+ifeq ($(filter $(ANIMALS_OFF),0 1),)
+$(error ANIMALS_OFF must be 0 or 1)
+endif
+ifeq ($(ANIMALS_OFF),1)
+ifeq ($(PS2_ENEMY_RULES),0)
+$(error ANIMALS_OFF=1 needs PS2_ENEMY_RULES=1 (PS2_CH1_ENEMY=1 sets it))
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ANIMALS_OFF=1
+endif
 # PS2_ENEMY_ROOMS=<mask> (lane ps2enemy 2026-10-14, default 0: no effect; needs PS2_ENEMY_RULES=1; changes gameplay
 # by design): more PS2 USA room-code enemy rules (st1_0..2.rel, decoded per room), one bit per room:
 #   0x01 r100: the after-state trap 0x7A is not set; list entries 3 / 4 take the PS2 flags (swapped)
