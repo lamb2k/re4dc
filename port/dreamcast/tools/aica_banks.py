@@ -121,7 +121,11 @@ ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r
              # bio4midi entries): r11d #6 (as r11c), r10f / r11f / r200 #8 (740151 GC bytes)
              'r11d': [6], 'r10f': [8], 'r11f': [8], 'r200': [8],
              # chapter 3-1 (castle lane 2026-10-15): r202 plays #8 at entry (740160 GC bytes, as r200)
-             'r202': [8]}
+             'r202': [8],
+             # island (lane ch5found16): bgm/bgmtbl.dat slot-0 track of each room's entry 0 (the runtime's "blk 3"
+             # sizes 637,312 / 476,384 matched): #7 (637,306 GC bytes), r311 #14, r315 #5, r31a / r31b #1
+             'r300': [7], 'r301': [7], 'r30a': [7], 'r31c': [7], 'r31d': [7], 'r320': [7], 'r321': [7], 'r325': [7], 'r327': [7], 'r329': [7],
+             'r311': [14], 'r315': [5], 'r31a': [1], 'r31b': [1]}
 
 # Leon's other stage-1 weapons (--weapons; stage.sh AICA_WEAPONS=1; issue lamb2k/re4dc#1, silent weapons). The GC
 # loads the equipped weapon's SE block (WEP, block 2) on every weapon change (weaponLoad -> its .drs) into the one WEP
@@ -197,6 +201,39 @@ ROOMS = {
     'r300': ['st3/r300.dar', 'em/em1d.drs'],
     'r301': ['st3/r301.dar', 'em/em1e.drs', 'em/em3b.drs'],
     'r303': ['st3/r303.dar', 'em/em1e.drs'],
+    # Island chapters 5-1..5-4 (lane ch5found16, 2026-10-16): room .dar (st3 lane rel33) + the room's enemies from the
+    # PS2 lists (ISLAND-ROUTE-20261016.md) + Ashley (pl11) from her rescue in r30c to r316 and again from r329.
+    'r304': ['st3/r304.dar', 'em/em1f.drs', 'em/em25.drs'],
+    'r305': ['st3/r305.dar', 'em/em1e.drs'],
+    'r306': ['st3/r306.dar'],
+    'r307': ['st3/r307.dar'],
+    'r308': ['st3/r308.dar'],
+    'r30b': ['st3/r30b.dar', 'em/em1f.drs', 'em/pl11.drs'],
+    'r30c': ['st3/r30c.dar', 'em/em1f.drs', 'em/em25.drs', 'em/pl11.drs'],
+    'r30e': ['st3/r30e.dar', 'em/em1e.drs', 'em/pl11.drs'],
+    'r309': ['st3/r309.dar', 'em/pl11.drs'],
+    'r30a': ['st3/r30a.dar', 'em/em18.drs', 'em/em23.drs', 'em/pl11.drs'],
+    'r310': ['st3/r310.dar', 'em/pl11.drs'],
+    'r311': ['st3/r311.dar', 'em/em1f.drs', 'em/pl11.drs'],
+    'r30d': ['st3/r30d.dar', 'em/pl11.drs'],
+    'r312': ['st3/r312.dar', 'em/em18.drs', 'em/pl11.drs'],
+    'r30f': ['st3/r30f.dar', 'em/em1f.drs', 'em/pl11.drs'],
+    'r315': ['st3/r315.dar', 'em/em1e.drs', 'em/pl11.drs'],
+    'r316': ['st3/r316.dar', 'em/em1e.drs', 'em/pl11.drs'],
+    'r317': ['st3/r317.dar'],
+    'r318': ['st3/r318.dar'],
+    'r31a': ['st3/r31a.dar', 'em/em18.drs'],
+    'r31b': ['st3/r31b.dar', 'em/em32.drs'],
+    'r31d': ['st3/r31d.dar', 'em/em1e.drs'],
+    'r31c': ['st3/r31c.dar', 'em/em39.drs', 'em/em3a.drs'],
+    'r320': ['st3/r320.dar', 'em/em1d.drs', 'em/em3d.drs'],
+    'r321': ['st3/r321.dar', 'em/em1f.drs'],
+    'r325': ['st3/r325.dar'],
+    'r326': ['st3/r326.dar'],
+    'r327': ['st3/r327.dar', 'em/em1d.drs'],
+    'r329': ['st3/r329.dar', 'em/em18.drs', 'em/pl11.drs'],
+    'r330': ['st3/r330.dar', 'em/em1f.drs', 'em/pl11.drs'],
+    # not listed yet (no prepared archive the tool can read): em36
     'r111': ['st1/r111.dar', 'em/em17.drs', 'em/em2a.drs', 'em/pl11.drs'],
     'r113': ['st1/r113.dar', 'em/em17.drs', 'em/em2a.drs', 'em/pl11.drs'],
     # r11c (the cabin, chapter 2-2's end): Ashley (pl11, module 3), Luis (pl14, module 4) and the siege Ganados (em13),
@@ -889,8 +926,16 @@ CH31_STREAMS = CH23_STREAMS + [(1, 153)]
 #   r20c, both "not in aica_str.dat, silent"): 0:15 and 0:20 (bio4bgm.sbb; 25e0000 is also 1:49's offset in bio4evt.sbb,
 #   the room BGM block is 0). 55 entries.
 CH3_STREAMS = CH1_STREAMS + [k for k in CH31_STREAMS if k not in CH1_STREAMS] + [(0, 15), (0, 20)]
+# The island disc (lane ch5found16, 2026-10-16; three-disc layout, user decision: disc 3 = island + final chapter).
+# Disc 3 carries its own bgm/aica_str.dat (streams are found by sbb offset, so the order is free): the shared
+# streams (0:0 death / continue, 0:29 results, the merchant's voice lines 1:180..1:194), every room stream the island
+# rooms' bgm/bgmtbl.dat entries name (r300..r330, blk 0) and the event / voice streams the first-pass runs logged as
+# "not in aica_str.dat, silent" (cx5cmW, Flycast). `--streams ch5`; 37 entries, so AICA_STR_ENT_MAX=56 holds it.
+CH5_STREAMS = ([(0, 0), (0, 29)] + [(1, n) for n in range(0xB4, 0xC3)]
+               + [(0, n) for n in (0x14, 0x27, 0x39, 0x34, 0x1A, 0x29, 0x28, 0x03, 0x30, 0x19, 0x2A, 0x2B, 0x2C, 0x2D, 0x3B)]
+               + [(1, 159), (1, 230), (1, 233), (1, 234), (1, 238)])
 STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch1': CH1_STREAMS,
-                  'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS}
+                  'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS, 'ch5': CH5_STREAMS}
 
 
 def nibble_to_sample(n):
