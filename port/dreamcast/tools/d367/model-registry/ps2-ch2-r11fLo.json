@@ -1,0 +1,62 @@
+{
+ "registry": "ps2-ch2-r11fLo",
+ "about": "lane cast16 (2026-10-16): r11f Mendez (CH23 em35 types 0/1/2, ps2-r11f.json) + g70 gameplay levels (NATIVE_MODEL_REGISTRY_LOD; full model while the event flag is set). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv/regcast-r11fL",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "descriptors": [
+  {
+   "name": "m35full-g70",
+   "archive": "em35",
+   "model_id": "0x35",
+   "source_types": [
+    0
+   ],
+   "module": "src/em35/em35.cpp em35_R0_Init type0: BIN4+6/TPL5",
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261016/cast16/conv/m35mask-full-g70"
+   },
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "m35upper-g70",
+   "archive": "em35",
+   "model_id": "0x35",
+   "source_types": [
+    1
+   ],
+   "module": "src/em35/em35.cpp em35_R0_Init type1: BIN7/TPL5",
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261016/cast16/conv/m35mask-upper-g70"
+   },
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "m35legs-g70",
+   "archive": "em35",
+   "model_id": "0x35",
+   "source_types": [
+    2
+   ],
+   "module": "src/em35/em35.cpp em35_R0_Init type2: BIN8/TPL5",
+   "source_drops": [
+    "bump"
+   ]
+  }
+ ],
+ "room_packages": {
+  "11f": {
+   "descriptors": [
+    "m35full-g70",
+    "m35upper-g70",
+    "m35legs-g70"
+   ],
+   "evidence": "PS2 ESL r11f rows0xf8/0xf9/0xfa select em35 types0/1/2; no form or encounter removed."
+  }
+ }
+}

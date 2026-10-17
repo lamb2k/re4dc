@@ -1,0 +1,42 @@
+{
+ "registry": "ps2-ch4-r223",
+ "about": "lane cast16 (2026-10-16): chapter 4 room 223 PS2 cast (CH4-FOUNDATIONS-20261016 cast list). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv4/regcast-ch4",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "ganado-em16-03g",
+   "archive": "em16",
+   "model_id": "0x16",
+   "source_types": [
+    3
+   ],
+   "partial_sections": true,
+   "module": "src/em16/em16_set.cpp Em16Set type 3 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true
+  },
+  {
+   "name": "ganado-em16-04g",
+   "archive": "em16",
+   "model_id": "0x16",
+   "source_types": [
+    4
+   ],
+   "partial_sections": true,
+   "module": "src/em16/em16_set.cpp Em16Set type 4 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true
+  }
+ ],
+ "room_packages": {
+  "223": {
+   "descriptors": [
+    "ganado-em16-03g",
+    "ganado-em16-04g"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
+  }
+ }
+}

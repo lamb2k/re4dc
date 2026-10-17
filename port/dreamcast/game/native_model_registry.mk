@@ -457,6 +457,32 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_DROP_BUMP=1
 GAME_CPPFLAGS += -DRE4DC_ACTOR_MATERIALS=4
 PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_MATERIALS=4
 endif
+# NATIVE_MODEL_REGISTRY_ROLES5=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): wide room packages,
+#              the Info::roles mask takes 5 words (160 role bits, 98 room rows) and the chunk table 96 (package refs) for rooms whose pools load many types
+#              (r227: em14 types 6..9; island r320 / r327). Packages over 66 room rows (model_registry.py --roles5) are
+#              refused whole by an image without it. Knob off: the image is unchanged.
+# NATIVE_BUMP_FLAT=1 (lane cast16 2026-10-16; default 0; render only): every registry plan meets the source bump need
+#              with no bump stage (the DC source path draws none either), for descriptors that declare source_drops
+#              "bump" outside a pool. Knob off: the image is unchanged.
+# NATIVE_MODEL_REGISTRY_BIN_DIAG=1 (lane cast16 2026-10-16; default 0; diagnostic): an info with no live record logs its
+#              source BIN / TPL archive entry numbers (NMRBIN lines, 48 at most). Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_BIN_DIAG ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_BIN_DIAG),1)
+GAME_CPPFLAGS += -DRE4DC_NMR_BIN_DIAG=1
+PLATFORM_CPPFLAGS += -DRE4DC_NMR_BIN_DIAG=1
+endif
+NATIVE_BUMP_FLAT ?= 0
+ifeq ($(NATIVE_BUMP_FLAT),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_BUMP_FLAT=1
+endif
+NATIVE_MODEL_REGISTRY_ROLES5 ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_ROLES5),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_POOL),1)
+$(error NATIVE_MODEL_REGISTRY_ROLES5=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
+PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
+endif
 # NATIVE_MODEL_REGISTRY_FIRST=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): a
 #   Ganado-class actor (id 0x10..0x20) whose id a room package descriptor names tries that package's plan BEFORE the
 #   Ganado cast plan. Without it the Ganado plan claims em16 type 11 (r11d) by its em15-type-11 meshes and then the

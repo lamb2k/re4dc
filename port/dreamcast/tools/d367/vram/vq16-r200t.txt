@@ -3,6 +3,9 @@
 # chapter 2 save). Each draw loaded ~2 MB of 16-bit pictures into a full pool (517 evictions, 60 thrash-guard refusals,
 # 5 nocontig, 49 parts without texture). As full-codebook VQ: 1,966,080 -> 256,000 B. BELOW the ~29 dB floor
 # (26.8-28.5 dB), so this is an approximation item (CLAUDE.md approximation rule), on screen 4 frames per run.
+# LOOK APPROVED (coordinator 10-16, sheet ch2code-20261016/r200t-vq-look.png): a documented exception to the ~29 dB
+# floor for these 5 keys only (the busy stone wall / door textures hide the VQ noise at normal size, including
+# ad7402cc, which also loads in normal chapter 3-1 play).
 74d83c35-fbddfdd0	G	r200 gate wall/door 512x512 (27.9 dB)
 4bc5699e-a00e5646	G	r200 512x512 (27.5 dB)
 18a2f60f-1d95523f	G	r200 512x512 (27.7 dB)

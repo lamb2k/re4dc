@@ -230,6 +230,184 @@ PRESETS = {
 }
 
 
+# lane cast16 (2026-10-16): the castle Zealot modules (em14 / em19 / em1a / em1b: em10.cpp + <em>_set.cpp) use em11's
+# type 7 section layout (the same ARC numbers, own archives). Types 8 / 9 change the TPL / body / head rows, type 10
+# (em1b) is bodyless-head (mot[2..5] = 0). Each is a NATIVE_MODEL_REGISTRY_POOL preset like zealot-em11-07p.
+def _zealot_pool(archive, typ, rooms):
+    base = PRESETS['zealot-em11-07p']
+    body, tpl, head, htpl = {7: (0x1fc, 0x1fd, 0x1fe, 0x201), 8: (0x1fc, 0x21a, 0x21b, 0x21c),
+                             9: (0x21d, 0x21e, 0x21f, 0x201), 10: (0x221, 0x222, None, None)}[typ]
+    secs = [(body, 'body')]
+    if head is not None:
+        secs += [(head, 'head'), (0x1ff, 'head-hit'), (0x200, 'head-hit2')]
+    secs += [x for x in base['sections'] if x[1] not in ('body', 'head', 'head-hit', 'head-hit2')]
+    st = {k: v for k, v in base['section_tpls'].items() if k not in (0x1fe, 0x1ff, 0x200)}
+    if head is not None:
+        st.update({head: htpl, 0x1ff: htpl, 0x200: htpl})
+    return dict(archive=archive, sections=secs, tpl=tpl, section_tpls=st, rooms=rooms, types=[typ],
+                category='registry', model_id=int(archive[2:], 16), lit=True, subset_bones=True)
+
+
+for _a, _types, _rooms in (('em14', (7, 8, 9), ['r20f']), ('em19', (7, 8, 9), ['r20d']),
+                           ('em1a', (7, 8, 9), ['r209']), ('em1b', (7, 8, 10), ['r201', 'r20c'])):
+    for _t in _types:
+        PRESETS[f'zealot-{_a}-{_t:02x}p'] = _zealot_pool(_a, _t, _rooms)
+# Em14Set type 6 (r20f; not a Ganado: Ganado stays 0): body mot[1] 0x1E7 / TPL mot[0] 0x1E8, head mot[2..4] 0x1E9 with
+# TPL mot[5] 0x1EA, mot[16] 0x1F0 with mot[17] 0x1F1, right hands mot[6..9] 0x1F4..0x1F7, left mot[11..14] 0x1F8..0x1FB,
+# mot[18..20] 0x1ED..0x1EF.
+# lane cast16 (2026-10-16): the stage-3 soldiers (em1d / em1e / em1f; em10.cpp class 2) as NATIVE_MODEL_REGISTRY_POOL
+# presets: lane ps2cast-st3's per-type (body, head) pairs (95f47e7d) plus every section the source can attach, so a
+# soldier's variable info list binds (ps2cast-st3: "runtime admission needs a variable-info soldier plan"). Em1?Set:
+# body mot[1] / TPL mot[0] (0x22F / 0x230 or 0x247 / 0x248), head mot[2] / TPL mot[5], hit head mot[3] = mot[4] 0x233
+# (TPL mot[5]), right hands mot[6..9] 0x234..0x237, left mot[11..15] 0x238..0x23C (TPL mot[0]).
+def _soldier_pool(archive, body, head, rooms, types):
+    return dict(archive=archive, sections=[(body, 'body'), (head, 'head'), (0x233, 'head-hit'),
+                (0x234, 'right-hand'), (0x235, 'right-open'), (0x236, 'right-point'), (0x237, 'right-grip'),
+                (0x238, 'left-hand'), (0x239, 'left-open'), (0x23a, 'left-point'), (0x23b, 'left-grip'), (0x23c, 'left-grip2'),
+                # em10.cpp EM10_ACC_PARTS (flag bits, types 14..24): hoods / helmets 0x23D / 0x23F / 0x241 (pHood) and
+                # 0x243 / 0x245 (pAccesory[2]). Their PS2 BINs carry the whole body bone table while the GC sections list
+                # only their parts (ps2_body_table_sections). 0x24F (pAccesory[3]) is a different PS2 mesh: not listed.
+                (0x23d, 'hood-a'), (0x23f, 'hood-b'), (0x241, 'hood-c'), (0x243, 'acc2-a'), (0x245, 'acc2-b')],
+                tpl=body + 1, section_tpls={head: head + 1, 0x233: head + 1, 0x23d: 0x23e, 0x23f: 0x240, 0x241: 0x242,
+                                            0x243: 0x244}, rooms=rooms, types=types, category='registry',
+                model_id=int(archive[2:], 16), lit=True, subset_bones=True, ps2_body_table_sections=True)
+
+
+for _n, _a, _b, _h, _r, _t in (
+        ('em1d-0e', 'em1d', 0x22f, 0x231, ['r300', 'r320', 'r327'], 14), ('em1d-12', 'em1d', 0x247, 0x231, ['r320', 'r327'], 18),
+        ('em1d-0f', 'em1d', 0x22f, 0x249, ['r300', 'r320', 'r327'], 15), ('em1d-13', 'em1d', 0x247, 0x249, ['r320', 'r327'], 19),
+        ('em1d-10', 'em1d', 0x22f, 0x24b, ['r300', 'r320', 'r327'], 16), ('em1d-14', 'em1d', 0x247, 0x24b, ['r320', 'r327'], 20),
+        ('em1d-11', 'em1d', 0x22f, 0x24d, ['r300', 'r320', 'r327'], 17), ('em1d-15', 'em1d', 0x247, 0x24d, ['r320', 'r327'], 21),
+        ('em1e-0e', 'em1e', 0x22f, 0x231, ['r301', 'r305', 'r30e', 'r316', 'r31d'], 14),
+        ('em1e-0f', 'em1e', 0x22f, 0x249, ['r301', 'r30e', 'r316', 'r31d'], 15),
+        ('em1e-17', 'em1e', 0x247, 0x24d, ['r301', 'r305', 'r30e', 'r316'], 23),
+        ('em1e-19', 'em1e', 0x247, 0x24b, ['r301', 'r303', 'r305', 'r30e', 'r316'], 25),
+        ('em1f-0e', 'em1f', 0x22f, 0x231, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r334'], 14),
+        ('em1f-0f', 'em1f', 0x22f, 0x249, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r330', 'r334'], 15),
+        ('em1f-10', 'em1f', 0x22f, 0x24b, ['r304', 'r30b', 'r30c', 'r30f', 'r311', 'r321', 'r330', 'r334'], 16),
+        ('em1f-18', 'em1f', 0x247, 0x24d, ['r304', 'r30c', 'r311', 'r330'], 24)):
+    PRESETS['soldr-%sp' % _n] = _soldier_pool(_a, _b, _h, _r, [_t])
+# em1f's 0x247 body rests part 9 (attach 31) elsewhere than hit head 0x233 does: type 24 keeps its own head only.
+# The GC stump 0x233 (em10HeadSet no 1: ModInfoMgr.create(mot[3], mot[5])) indexes textures past these heads' TPLs
+# (model_registry: 'colour texture index outside the TPL'), so the source pair is not identifiable: no stump section.
+for _n in ('em1f-18', 'em1d-11', 'em1d-15', 'em1e-0f'):
+    _s = PRESETS['soldr-%sp' % _n]
+    _s['sections'] = [x for x in _s['sections'] if x[0] != 0x233]; _s['section_tpls'].pop(0x233)
+# Body 0x247 types: 0x245 under the type's body TPL indexes past it (em1e types 23 / 25), and em1f type 24's hoods /
+# accessories rest elsewhere than its body bones (convert asserts); those sections keep their source path.
+for _n, _drop in (('em1e-17', (0x245,)), ('em1e-19', (0x245,)), ('em1f-18', (0x23d, 0x23f, 0x241, 0x243, 0x245))):
+    _s = PRESETS['soldr-%sp' % _n]
+    _s['sections'] = [x for x in _s['sections'] if x[0] not in _drop]
+    for _b in _drop:
+        _s['section_tpls'].pop(_b, None)
+# em1d rooms r320 / r327 load all eight soldier types (bodies 0x22F / 0x247 x four heads). One pool per body carries the
+# four heads (own TPLs), the stump under each head TPL it fits (not 0x24E), the hands under that body's TPL and the
+# hoods / accessories (NMRBIN, r327: a 0x247 soldier shows hands 0x237 / 0x238 with TPL 0x248, hood 0x23D, 0x243).
+for _body, _types in ((0x22f, (14, 15, 16, 17)), (0x247, (18, 19, 20, 21))):
+    _s = _soldier_pool('em1d', _body, 0x231, ['r320', 'r327'], list(_types))
+    _heads = [(0x249, 'head-b'), (0x24b, 'head-c'), (0x24d, 'head-d')]
+    _s['sections'][2:2] = [(h, r, h + 1) for h, r in _heads] + [(0x233, 'stump-b', 0x24a), (0x233, 'stump-c', 0x24c)]
+    PRESETS['soldr-1d-%xp' % _body] = _s
+PRESETS['soldr-em1d-02'] = dict(archive='em1d', sections=[(0x22b, 'body')], tpl=0x22c, rooms=['r300', 'r320', 'r327'],
+                                  types=[2], category='registry', model_id=0x1d, lit=True)
+# lane cast16 (2026-10-16, chapter 4 castle): pool presets generated from the decompiled <em>_set.cpp motion tables
+# (case labels sharing a block share the table). Sections follow em10.cpp's creates: em10ModelInit body mot[1] / TPL
+# mot[0]; em10HeadSet mot[2] / mot[3] / mot[4] with TPL mot[5]; em10HandSet mot[6..15] with TPL mot[0]; em10SackSet
+# mot[21] / mot[22]; whood mot[23] with mot[24] / mot[25]; em10SetAccesory hoods mot[26] / mot[27] (TPL mot[0]) and
+# accessories (28, 29) (30, 31) (32, 33) (34, 35) (36, 37) (38, 39) (38, 40). subArc entries are not listed (the actor
+# then keeps its source path).
+def _set_tables(archive):
+    import re
+    path = Path(__file__).resolve().parents[3] / 'src' / archive / f'{archive}_set.cpp'
+    out = {}; cur = None
+    for line in path.read_text(encoding='utf-8').splitlines():
+        m = re.match(r'\s*case\s+(0x[0-9a-fA-F]+|\d+)\s*:', line)
+        if m:
+            if cur is not None and cur['done']:
+                cur = None
+            if cur is None:
+                cur = {'mot': {}, 'done': False}
+            out[int(m.group(1), 0)] = cur['mot']
+            continue
+        m = re.search(r'mot\[(\d+)\]\s*=\s*ARC\((0x[0-9A-Fa-f]+)\)', line)
+        if m and cur is not None:
+            cur['mot'][int(m.group(1))] = int(m.group(2), 16)
+        if cur is not None and re.search(r'\bbreak;|\breturn\b', line):
+            cur['done'] = True
+    return {t: m for t, m in out.items() if m}
+
+
+def _set_pool(archive, typ, rooms, drop=()):
+    mot = _set_tables(archive)[typ]; g = mot.get
+    secs, seen = [], set()
+    def add(b, role, t):
+        if b is None or t is None or b in drop or (b, t) in seen:
+            return
+        seen.add((b, t)); secs.append((b, role, t))
+    add(g(1), 'body', g(0))
+    for k, role in ((2, 'head'), (3, 'head-hit'), (4, 'head-hit2')):
+        add(g(k), role, g(5))
+    for k in range(6, 16):
+        add(g(k), 'hand%d' % k, g(0))
+    add(g(21), 'sack', g(22)); add(g(23), 'whood', g(24)); add(g(23), 'whood-b', g(25))
+    add(g(26), 'hood', g(0)); add(g(27), 'hood-up', g(0))
+    # (38, 40), the mot[38] variant with its second TPL, is not listed: its masked texture would make a fifth actor
+    # material (ACTOR_MATERIALS 4); that variant keeps its source path.
+    for b, t in ((28, 29), (30, 31), (32, 33), (34, 35), (36, 37), (38, 39)):
+        add(g(b), 'acc%d' % b, g(t))
+    return dict(archive=archive, sections=secs, tpl=g(0), rooms=rooms, types=[typ], category='registry',
+                model_id=int(archive[2:], 16), lit=True, subset_bones=True)
+
+
+# Sections whose GC part rests elsewhere than the type's body bone (convert asserts): em1c types 10 / 13 (own bodies
+# 0x221 / 0x223): hoods 0x202 / 0x203 and accessories 0x20D..0x217; em13 type 6 (robed): hands 0x1F5 0x1F6 0x1F9..0x1FB.
+# em15 type 11's head rests 2.02 mm off its body bone: convert it with --bone-tol 2.1 (render approximation).
+_SET_POOL_DROPS = {('em1c', 10): (0x202, 0x203, 0x20d, 0x20f, 0x211, 0x213, 0x215, 0x217),
+                   ('em1c', 13): (0x202, 0x203, 0x20d, 0x20f, 0x211, 0x213, 0x215, 0x217),
+                   ('em1b', 10): (0x202, 0x203, 0x20d, 0x20f, 0x211, 0x213, 0x215, 0x217),
+                   ('em13', 6): (0x1f5, 0x1f6, 0x1f9, 0x1fa, 0x1fb)}
+for _a, _types, _rooms, _kind in (('em11', (8, 9), ['r212', 'r217', 'r222', 'r226'], 'zealot'),
+                                  ('em1c', (9, 10, 13), ['r218'], 'zealot'),
+                                  ('em1b', (10,), ['r201', 'r20c'], 'zealot'),
+                                  ('em13', (0, 1, 3, 6), ['r225'], 'ganado'),
+                                  ('em15', (0, 3, 4, 11), ['r21b'], 'ganado'),
+                                  ('em16', (3, 4), ['r223'], 'ganado')):
+    for _t in _types:
+        PRESETS['%s-%s-%02xg' % (_kind, _a, _t)] = _set_pool(_a, _t, _rooms, _SET_POOL_DROPS.get((_a, _t), ()))
+# lane cast16 (2026-10-16, chapter 4 castle): armour and Novistador. em25.cpp em25_R0_Init modelInit(ARC 4, ARC 5) for
+# every type; em3c.cpp em3cModelInit types 0 / 1 body ARC 5 / TPL 6, types 2 / 3 body ARC 9 / TPL 0xA, plus
+# ModInfoMgr.create(ARC 7 or 0xB, ARC 8); em2d.cpp type 4 modelInit(ARC 0xD, ARC 0xE).
+PRESETS['armor-em25-00'] = dict(archive='em25', sections=[(4, 'body')], tpl=5, rooms=['r214', 'r217', 'r228'],
+                                types=[0, 9], category='registry', model_id=0x25, lit=True)
+PRESETS['armor-em3c-00'] = dict(archive='em3c', sections=[(5, 'body'), (7, 'extra', 8)], tpl=6, rooms=['r216'],
+                                types=[0, 1], category='registry', model_id=0x3c, lit=True, subset_bones=True, uv_edge_texels=12)
+PRESETS['armor-em3c-02'] = dict(archive='em3c', sections=[(9, 'body'), (0xb, 'extra', 8)], tpl=0xa, rooms=['r216'],
+                                types=[2, 3], category='registry', model_id=0x3c, lit=True, subset_bones=True, uv_edge_texels=12, shift=3)
+PRESETS['novis-em2d-04'] = dict(archive='em2d', sections=[(0xd, 'body')], tpl=0xe, rooms=['r213', 'r21d'],
+                                types=[4], category='registry', model_id=0x2d, lit=True, ps2_superset_bones=True, shift=3)
+# em10.cpp: the robe ModInfoMgr.create(mot[16], mot[17]); the second info create(mot[19] or mot[18], mot[17]); the
+# third create(mot[20], mot[0]).
+PRESETS['zealot-em14-06p'] = dict(archive='em14', sections=[
+    (0x1e7, 'body'), (0x1e9, 'head'), (0x1f0, 'extra'),
+    (0x1f4, 'right-hand'), (0x1f8, 'left-hand'), (0x1ed, 'acc0'), (0x1ee, 'acc1'), (0x1ef, 'acc2')],
+    tpl=0x1e8, section_tpls={0x1e9: 0x1ea, 0x1f0: 0x1f1, 0x1ed: 0x1f1, 0x1ee: 0x1f1}, rooms=['r20f'], types=[6], category='registry',
+    model_id=0x14, lit=True, subset_bones=True)
+
+
+# lane cast16 (2026-10-16): chapter 4 rooms reuse these existing conversions (CH4-FOUNDATIONS cast list).
+PRESETS['zealot-em11-07p']['rooms'] = PRESETS['zealot-em11-07p']['rooms'] + ['r212', 'r226']
+for _n in ('merchant18-c0', 'merchant18-o0'):
+    PRESETS[_n]['rooms'] = PRESETS[_n]['rooms'] + ['r220', 'r229', 'r22a']
+PRESETS['bat-em29-00']['rooms'] = PRESETS['bat-em29-00']['rooms'] + ['r229']
+for _t in (6, 7, 8, 9):
+    PRESETS['zealot-em14-%02xp' % _t]['rooms'] = PRESETS['zealot-em14-%02xp' % _t]['rooms'] + ['r211', 'r214', 'r227']
+PRESETS['zealot-em1a-09p']['rooms'] = PRESETS['zealot-em1a-09p']['rooms'] + ['r214']
+
+
+# Em1eSet type 6 (r305 / r31d NMRBIN: the robed class-0 type, em10.cpp robe infos): zealot-em14-06p's entries on em1e.
+PRESETS['soldr-em1e-06p'] = dict(PRESETS['zealot-em14-06p'], archive='em1e', rooms=['r305', 'r31d'], model_id=0x1e)
+
+
 def section_specs(spec):
     """Source BIN/role/TPL selections; old single-TPL presets keep their order."""
     overrides = spec.get('section_tpls', {})
@@ -510,7 +688,27 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                 # a section root (parent -1) carries the body bone's rest position (model space)
                 want = b['translation'] if g['parent'] >= 0 else [r[3] for r in b['rest'][:3]]
                 assert g['parent'] in (b['parent'], -1) and max(abs(x - y) for x, y in zip(g['translation'], want)) <= bone_tol,                     (role, 'GC section part', g['id'], 'attach', g['attach'], 'differs from the body bone', g['translation'], want)
-            assert set(pb_['id'] for pb_ in m.bones) <= set(by_attach), (role, 'PS2 bones outside the GC section attach ids')
+            if (spec.get('ps2_body_table_sections') and len(m.bones) >= len(gsk)
+                    and not set(pb_['id'] for pb_ in m.bones) <= set(by_attach)):
+                # lane cast16 (island soldier accessories 0x23D..0x245): the PS2 section carries the whole body bone
+                # table while the GC section lists only the parts it uses. Bind it as a body-table section: PS2 bones
+                # equal the body bones (checked below as a full skeleton), and every PS2-weighted bone must be a part
+                # of the GC section (the runtime section has those parts).
+                weighted = {b for _, cs in pb.triangles(m) for c in cs for b, v in c['w'] if v > 0}
+                assert weighted <= set(by_attach), (role, 'PS2 weights outside the GC section parts', sorted(weighted - set(by_attach)))
+                # the weighted PS2 bones are checked against the body bones of the same id (a PS2 body table may be
+                # longer than this body's: em1e / em1f body 0x247 has 34 bones, the accessory tables 37)
+                assert all(b < len(bones) for b in weighted), (role, 'PS2 weights beyond the body skeleton')
+                pairs = [(pb_, bones[pb_['id']]) for pb_ in m.bones if pb_['id'] in weighted]
+                id_parent = all((pb_['id'], pb_['parent']) == (b['attach'], b['parent']) for pb_, b in pairs)
+                dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], b['translation'])) for pb_, b in pairs)
+                dt_body = 0.0
+                val.setdefault('ps2_body_table_sections', []).append(role)
+                assert id_parent and dt <= bone_tol, (role, id_parent, dt)
+                gsk = bones  # the pairing below then runs on the body table
+                m.bones = [pb_ for pb_ in m.bones if pb_['id'] < len(bones)]
+            else:
+                assert set(pb_['id'] for pb_ in m.bones) <= set(by_attach), (role, 'PS2 bones outside the GC section attach ids')
             # a PS2 bone takes the GC part of its id with the same parent (a repeated hand root: parent -1)
             cands = {}
             for g in gsk:
@@ -522,6 +720,11 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
             dt_body = 0.0
         elif len(m.bones) == len(gsk):
             pairs = list(zip(m.bones, gsk))
+        elif spec.get('ps2_superset_bones') and len(m.bones) > len(gsk):
+            # lane cast16 (em2d type 4): the PS2 skeleton extends the GC one (91 vs 57 bones). The shared ids must be the
+            # GC parts (parent, rest translation); a vertex weighted to a PS2-only bone fails below (id_to_index).
+            pairs = [(pb_, gsk[pb_['id']]) for pb_ in m.bones if pb_['id'] < len(gsk)]
+            val.setdefault('ps2_superset_bones', {})[role] = [len(m.bones), len(gsk)]
         else:
             # a reduced PS2 bone table (lane ps2cast-4: the crow's wing BINs carry only the bones they weight): each
             # PS2 bone is matched to the GC part of the same id (GC attach == index), parent and rest translation
@@ -602,6 +805,8 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
             for c, (raw_u, raw_v) in zip(corners, raw_uvs):
                 if not any(c['n']):  # a zero PS2 normal: the face normal (winding as read)
                     c = dict(c, n=tuple(face)); zero_normals += 1
+                if any(b not in id_to_index for b, v in c['w'] if v > 0):
+                    raise ValueError(f'{s["role"]}: a PS2 vertex weighted to a bone the GC skeleton lacks')
                 w = [(id_to_index[b], float(v)) for b, v in c['w'] if v > 0]
                 if not w:
                     raise ValueError(f'{s["role"]}: an unweighted PS2 vertex')

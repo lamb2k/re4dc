@@ -506,6 +506,25 @@ def texdir(d, r, rec):
     rec.append('texdir %s %d' % (d, n))
 
 
+def resident_gate(v, rec):
+    """Resident-list coverage (lane r200-17, 10-16): the staged dc/resident.bin must carry every key of every
+    tools/d367/vram/resident/r<room>.tsv in this tree. A data set packed from an older tree or a partial list set leaves
+    rooms re-reading their pictures from disc in play (the ch4 lane's resident-ch3.bin: r10f / r112 49 / 65 uploads
+    after the preload). Build the file with vram/resident_keys.py pack over every list (then water/water_resident.py
+    pack) or use data set ch2's. Short lists are printed and recorded in provenance; RE4DC_RESIDENT_STRICT=1 (release
+    fixtures) refuses them."""
+    import glob, importlib.util as iu_
+    here_ = os.path.dirname(os.path.abspath(__file__))
+    s_ = iu_.spec_from_file_location('resident_keys', os.path.join(here_, '..', 'vram', 'resident_keys.py'))
+    m_ = iu_.module_from_spec(s_); s_.loader.exec_module(m_)
+    tsvs = sorted(glob.glob(os.path.join(here_, '..', 'vram', 'resident', 'r*.tsv')))
+    short = m_.coverage(v, tsvs)
+    for room, n, got in short:
+        rec.append('RESIDENT SHORT r%03x %d/%d' % (room, got, n))
+        sys.stderr.write('t11-fix: dc/resident.bin %s carries %d of the %d keys r%03x lists\n' % (v, got, n, room))
+    assert not (short and os.environ.get('RE4DC_RESIDENT_STRICT') == '1'), 'resident gate: %d short lists' % len(short)
+
+
 def lostpart_gate(k, v, rec):
     """Required gate (2026-10-16): a reduced world level file dc/native/<room>/ps2-wv*.re4mesh is staged only with a PASS
     stamp of the lost-part check beside it (tools/d367/lostpart/lostpart_gate.sh writes LOSTPART.txt: verdict +
@@ -578,6 +597,8 @@ def main():
         kept = rm & media_paths()
         if kept:
             rm -= kept; rec.append('scenario fixture: %d MEDIA overlay paths kept off remove' % len(kept))
+    if 'dc/resident.bin' in r:
+        resident_gate(r['dc/resident.bin'], rec)
     rm -= set(r)  # a staged loose picture (data 'tex' dirs, --texdir) wins over the base's removal of the same file
     for k, f in (('--warp', 'dc/warp.txt'), ('--pad', 'dc/padscript.txt'), ('--qtxt', 'dc/quality.txt')):
         if k in opt:
