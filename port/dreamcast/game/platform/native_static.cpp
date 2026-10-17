@@ -187,6 +187,11 @@ static volatile unsigned ps2_mask_select=1U+RE4DC_PS2_PASS_MASK_SELECT;
 #ifndef RE4DC_FOG_FAR
 #define RE4DC_FOG_FAR 0 // >0: DC fog/cull far plane (source units) when shorter than the source's
 #endif
+#if defined(RE4DC_LAKE_FAR) && RE4DC_LAKE_FAR
+// LAKE_FAR (post30.mk, lane lake17): the far (mm) of the lake rooms r10b / r11a / r11b in place of the 25 m cap; the
+// given cap elsewhere. Defined at the end of this file (reads the open PS2 world's room).
+extern "C" float re4dc_far_cap(float cap);
+#endif
 #ifndef RE4DC_FOG_BACKGROUND
 #define RE4DC_FOG_BACKGROUND 1 // background colour follows the fog colour while fog is on
 #endif
@@ -2898,7 +2903,11 @@ extern "C" float re4dc_fog_gate_far(){return fog_now.type?fog_now.far:0.0f;}
 #if RE4DC_SCENERY_GATE
 extern "C" float re4dc_fog_far_for_gate(float far){ // re4dc_fog_note_far's clamp, without noting
 #if RE4DC_FOG_FAR > 0
+#if defined(RE4DC_LAKE_FAR) && RE4DC_LAKE_FAR
+    {const float cap=re4dc_far_cap(float(RE4DC_FOG_FAR));if(!(far<=cap))far=cap;}
+#else
     if(!(far<=float(RE4DC_FOG_FAR)))far=float(RE4DC_FOG_FAR);
+#endif
 #endif
 #if defined(RE4DC_VIEW_DIST_OPTION) && RE4DC_VIEW_DIST_OPTION
 #if RE4DC_FAR_SHELL
@@ -2911,7 +2920,11 @@ extern "C" float re4dc_fog_far_for_gate(float far){ // re4dc_fog_note_far's clam
 #endif
 extern "C" void re4dc_fog_note_far(float far){
 #if RE4DC_FOG_FAR > 0
+#if defined(RE4DC_LAKE_FAR) && RE4DC_LAKE_FAR
+    {const float cap=re4dc_far_cap(float(RE4DC_FOG_FAR));if(!(far<=cap))far=cap;}
+#else
     if(!(far<=float(RE4DC_FOG_FAR)))far=float(RE4DC_FOG_FAR);
+#endif
 #endif
 #if defined(RE4DC_VIEW_DIST_OPTION) && RE4DC_VIEW_DIST_OPTION
 #if RE4DC_FAR_SHELL
@@ -4677,6 +4690,8 @@ int ps2_pass(unsigned pass,float zfar){
     if(zfar>near && zfar<cull_far)cull_far=zfar;
 #ifdef RE4DC_FAR_CAP
     if(cull_far>float(RE4DC_FAR_CAP))cull_far=float(RE4DC_FAR_CAP); // FOG_FAR_CAP (post30.mk): follows FOG_FAR
+#elif defined(RE4DC_LAKE_FAR) && RE4DC_LAKE_FAR
+    {const float cap=re4dc_far_cap(25000.0f);if(cull_far>cap)cull_far=cap;} // LAKE_FAR: the lakes' far
 #else
     if(cull_far>25000.0f)cull_far=25000.0f; // native_ps2_world.cpp's far
 #endif
@@ -5633,4 +5648,14 @@ extern "C" int re4dc_ps2_mesh_failed(unsigned room){
     return ps2w.attempted && !ps2w.storage && ps2w.room==room;
 }
 #endif
+#endif
+#if defined(RE4DC_LAKE_FAR) && RE4DC_LAKE_FAR
+// LAKE_FAR=<mm> (post30.mk, lane lake17 2026-10-17, user option (a)): in the lake rooms (r10b Del Lago, r11a shore, r11b
+// night lake) the world, the coarse view and the fog far reach this distance instead of the 25 m cap. The fog ramp still
+// takes the last 20 % of the far to 100 % fog colour, so the cut is hidden there as at 25 m. Render only.
+extern "C" float re4dc_far_cap(float cap){
+    const unsigned r=ps2w.room;
+    if((r==0x10bU || r==0x11aU || r==0x11bU) && float(RE4DC_LAKE_FAR)>cap)return float(RE4DC_LAKE_FAR);
+    return cap;
+}
 #endif
