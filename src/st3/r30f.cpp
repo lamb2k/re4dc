@@ -269,6 +269,11 @@ void R30fInit()
 #define R30F_PS2_GATES (RE4DC_PS2_ENEMY_ST3 & 1)
 
 // Enemy `no` of the list (entry 0x78 + no); a full room (more than 9 alive) only takes the forced ones.
+// ALIVE_CAP (ch5found16 10-17): a cEmWrap whose send the cap holds reads alive (em_wrap.cpp "held sends are alive") and
+// its getPtr() creates the enemy over the cap. This room's send helper and its every-frame probes (bull targets, area
+// clears, camera framing) only look at enemies: a held one is skipped, as before the held-handle change.
+static inline int r30f_held(cEmWrap* w) { return w->alive == 2; }
+
 cEm* setem(u8 no, int force)
 {
 #if R30F_PS2_GATES
@@ -278,6 +283,9 @@ cEm* setem(u8 no, int force)
     if ((u32) SceCountEmAlive(0x10, 0x20) <= 9 || force == 0) {
 #endif
         r30f_work->em[no].setEm(no + 0x78, 6, 0, 1, 1);
+    }
+    if (r30f_held(&r30f_work->em[no])) {
+        return 0;   // held by the cap: the send waits
     }
     return r30f_work->em[no].getPtr();
 }
@@ -301,7 +309,7 @@ void R30fMain()
 
         for (j = 0; j < 90; j++) {
             for (i = 0; i < 90; i++) {
-                if (r30f_work->em[i].isActive() == 1 && r30f_work->em[i].getPtr()->plDist2 > 4000.0f) {
+                if (r30f_work->em[i].isActive() == 1 && !r30f_held(&r30f_work->em[i]) && r30f_work->em[i].getPtr()->plDist2 > 4000.0f) {
                     Vec p;
 
                     if (pSUB) {
@@ -1290,7 +1298,7 @@ void em_destroy_area(int at)
     u32 i;
 
     for (i = 0; i < 90; i++) {
-        if (r30f_work->em[i].isAlive() == 1 && AreaHitCheck(&w->area, &r30f_work->em[i].getPtr()->pos) != 0) {
+        if (r30f_work->em[i].isAlive() == 1 && !r30f_held(&r30f_work->em[i]) && AreaHitCheck(&w->area, &r30f_work->em[i].getPtr()->pos) != 0) {
             r30f_work->em[i].destroy();
         }
     }
@@ -1593,7 +1601,7 @@ void setLiftMoveAdd(Vec* add)
     }
     addPos(add, SmdGetObjPtr(0x1E));
     for (i = 0; i < 90; i++) {
-        if (r30f_work->em[i].isAlive() == 1 && (r30f_work->em[i].getPtr()->be_flag & 2)) {
+        if (r30f_work->em[i].isAlive() == 1 && !r30f_held(&r30f_work->em[i]) && (r30f_work->em[i].getPtr()->be_flag & 2)) {
             addPos(add, r30f_work->em[i].getPtr());
         }
     }
