@@ -4144,6 +4144,9 @@ bool hidden(unsigned i){
 // freed with it; the movie-arena re-adopt path does no I/O, so after a movie return the policy is idle until the next open.
 } // namespace (re4dc_trans_policy at file scope: dbgwarp_bridge.cpp links to it by its C name)
 extern "C" { volatile unsigned re4dc_trans_policy=RE4DC_TRANS_POLICY; }
+#if RE4DC_TRANS_POLICY_DEBUG
+extern "C" { volatile unsigned re4dc_trans_debug=0; }
+#endif
 namespace {
 namespace trans{
 enum : unsigned { kUnknown=0,kOp=1,kPtBin=2,kOpaqueInTr=3,kFlat=4,kFlatMid=5,kCardNear=6,kCardSoftA=7,kSoft=8,kVa=9,kDrop=10 };
@@ -4194,12 +4197,23 @@ static void mask(const Ps2Part* parts,const Ps2Placement* pl,unsigned n){
 }
 #endif
 // The pass a part draws in under the policy: 0 / 1 / 2, or 3 = not drawn. `now` is the pass after FOLIAGE_TRIM.
+// re4dc_trans_debug (TRANS_POLICY_DEBUG=1 builds, warp line `transdbg 1`; never shipped): FLAT / OPAQUE_IN_TR parts are
+// not drawn at all, so an A-vs-debug still pair gives tr_pixdiff.py --mask-diff the silhouette of the converted class.
 static unsigned pass_of(const Ps2Part& m,unsigned index,unsigned now){
     if(!cls || room!=ps2w.room || index>=nparts || m.pass!=2 || now!=2 || (m.reserved&1U))return now;
     const unsigned c=cls[index],p=re4dc_trans_policy;
+#if RE4DC_TRANS_POLICY_DEBUG
+    if(re4dc_trans_debug && (c==kFlat || c==kOpaqueInTr))return 3;
+#endif
     if((p&kTpDrop) && c==kDrop)return 3;
     if((p&kTpFlat) && (c==kFlat || c==kOpaqueInTr))return 0;
     return now;
+}
+// For the unmasked placement scan of pass 0: a part that FLAT may move there.
+static bool opaque_candidate(unsigned index){
+    if(!cls || room!=ps2w.room || index>=nparts || !(re4dc_trans_policy&kTpFlat))return false;
+    const auto& m=ps2w.parts[index];
+    return m.pass==2 && !(m.reserved&1U) && (cls[index]==kFlat || cls[index]==kOpaqueInTr);
 }
 static void note(unsigned pass,unsigned drawn){
     if(drawn==0 && pass==0)++flat;
@@ -4940,6 +4954,10 @@ int ps2_pass(unsigned pass,float zfar){
         {
         bool any=false;
         for(unsigned k=0;k<mesh.part_count && !any;++k)any=ps2w.parts[mesh.first_part+k].pass==pass;
+#if defined(RE4DC_TRANS_POLICY)
+        // TRANS_POLICY FLAT: a translucent-only placement can hold parts that now draw in pass 0
+        for(unsigned k=0;!pass && k<mesh.part_count && !any;++k)any=trans::opaque_candidate(mesh.first_part+k);
+#endif
         if(!any)continue;
         }
 #if RE4DC_PS2_WORLD_DYNAMIC

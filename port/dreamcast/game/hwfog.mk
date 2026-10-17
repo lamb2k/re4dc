@@ -136,4 +136,11 @@ $(error TRANS_POLICY needs PS2_WORLD_ROOMS (per-room ps2-world.r4tc))
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_TRANS_POLICY=$(TRANS_POLICY)
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_TRANS_POLICY=$(TRANS_POLICY)
+# TRANS_POLICY_DEBUG=1 (test arms only, with DBG_WARP=1): warp line `transdbg 1` stops drawing the FLAT / OPAQUE_IN_TR
+#   parts: the silhouette arm for tr_pixdiff.py --mask-diff.
+TRANS_POLICY_DEBUG ?= 0
+ifeq ($(TRANS_POLICY_DEBUG),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_TRANS_POLICY_DEBUG=1
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_TRANS_POLICY_DEBUG=1
+endif
 endif

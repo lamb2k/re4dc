@@ -75,6 +75,9 @@ extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM
 #endif
 #if defined(RE4DC_TRANS_POLICY)
 extern "C" volatile unsigned re4dc_trans_policy;   // platform/native_static.cpp (TRANS_POLICY sub-switch mask)
+#if defined(RE4DC_TRANS_POLICY_DEBUG) && RE4DC_TRANS_POLICY_DEBUG
+extern "C" volatile unsigned re4dc_trans_debug;    // TRANS_POLICY_DEBUG silhouette arm
+#endif
 #endif
 #include "global.h"
 #include "player.h"
@@ -601,6 +604,11 @@ void load()
             // TRANS_POLICY (hwfog.mk): the runtime sub-switch mask at load (render only; still pairs, tr_pixdiff arms)
             re4dc_trans_policy = (unsigned) num(tok[1]) & 0xffU;
             re4dc_log("warp: trans %u\n", re4dc_trans_policy);
+#if defined(RE4DC_TRANS_POLICY_DEBUG) && RE4DC_TRANS_POLICY_DEBUG
+        } else if (!strcmp(k, "transdbg") && n >= 2) {
+            re4dc_trans_debug = (unsigned) num(tok[1]) ? 1U : 0U;   // silhouette arm (tr_pixdiff --mask-diff)
+            re4dc_log("warp: transdbg %u\n", re4dc_trans_debug);
+#endif
 #endif
 #if defined(RE4DC_CAP_COMPARE)
         } else if (!strcmp(k, "cap") && n >= 2) {
