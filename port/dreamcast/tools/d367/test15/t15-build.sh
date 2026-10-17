@@ -210,7 +210,14 @@ T15_TP=${T15_TP-TEX_PKG_SKIP=1}
 #      the bell gate, and the largest free block >= 20 KB (38,912). Render only. GATLAS17-20261017.md. T15_GD="" builds
 #      without it.
 T15_GD=${T15_GD-GANADO_ATLAS_DROP=3}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP $T15_DY $T15_TP $T15_GD"
+# T15_ST (lane stump17, test 17, coordinator 10-17: no GameCube fallback): ACTOR_GANADO_PS2_STUMP=1, every cast
+#      appearance's lost-head stump (BIN 475 / 447 / 479 / 483 / 460) and the hand poses 449 / 450 / 454 / 455 draw PS2 from
+#      the disc package dc/native/ganado/ganado_var.re4gv (data set stump17, read into a heap-4 room cell when a room first
+#      draws one, freed at room leave, lent to route movies). CAST-GC head-shot rigs r101 / r103 / r200 0 GC; s30 340/340,
+#      heap_before -4,096 B (one ARENA_FIT step); KOS 48 KiB 10/10. docs/lanes/stump17.md. T15_ST="" builds without it.
+STUMP17D=${STUMP17D:-/root/re4data/private/stump17-20261017}
+T15_ST=${T15_ST-ACTOR_GANADO_PS2_STUMP=1 ACTOR_GANADO_PS2_STUMP_DIR=$STUMP17D}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP $T15_DY $T15_TP $T15_GD $T15_ST"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"

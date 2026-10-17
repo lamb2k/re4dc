@@ -535,7 +535,7 @@ PAK_DERIVED = {'v101': V101D + '/pak-derived.json'}   # v101's tex.pak = pak17 +
 # 31db8ccd / d425c598 (64x48): the pictures those rooms loaded in play (GATLAS17-20261017.md). Last: replaces v101's.
 RES17GD = os.environ.get('RES17GD', '/root/re4data/private/gatlas17-20261017')
 DATA['res17g'] = {'dc/resident.bin': RES17GD + '/resident.bin'}
-T17V_DATA = T17ZB_DATA + ',v101,res17g'   # test 17 data: zr17 + zr17b + v101 (tex.pak) + res17g (resident.bin, last)
+T17V_DATA = T17ZB_DATA + ',v101,stump17,res17g'   # test 17 data: zr17 + zr17b + v101 (tex.pak) + res17g (resident.bin, last)
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 

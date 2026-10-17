@@ -34,7 +34,9 @@ The Build-Assets zip holds the generated character data the release program was 
 (`ps2leon/`, `ps2ganado/`, and from test 15 `glod/ganado_lod.re4gl`, the lighter villager meshes named by
 `GANADO_LOD_PACK`), so your program draws the same characters as the release. From test 17 it also holds
 `ps2enemych2/`, the PS2 enemy rows of chapters 2-2 and 2-3 (`PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR`, compiled
-into the program), so your program places the same enemies as the release. From test 15 it also carries, under
+into the program), so your program places the same enemies as the release, and `ps2stump/`, the layout header of
+the PS2 lost-head stump / hand-pose package (`ACTOR_GANADO_PS2_STUMP_DIR`; the package `dc/native/ganado/ganado_var.re4gv`
+is in `disc/`). From test 15 it also carries, under
 `re4dc-assets/disc/<disc path>`, the disc data files that changed in test 15 (the chapter 1 sound files
 `st1/r103.dar` and `bgm/aica_str.dat`, `dc/resident.bin`, `dc/tex.pak` and the village world in `dc/native/r101/`);
 they are on the release disc already, so you need them only for a disc of your own. From test 17 `dc/tex.pak` holds every texture (data set `pak17`): the disc and the zip carry no loose
@@ -125,6 +127,8 @@ chapter 2 enemies, below); it looks different from the release:
 * `PS2_CH2_ENEMY=0` (test 17 on, without the zip's `ps2enemych2/`): chapters 2-2 and 2-3 use the GameCube enemy
   lists and room code instead of the PS2 ones, so the enemies there differ from the release (this one changes
   gameplay in those chapters; chapter 1 is unchanged).
+* `ACTOR_GANADO_PS2_STUMP=0` (test 17 on, without the zip's `ps2stump/`): a villager whose head is shot off, or
+  who raises or points a hand, draws the GameCube model until the pose ends (looks only).
 * The memory card messages show the GameCube wording ("Memory Card in Slot A") instead of the VMU wording.
 
 Either way, measure your change against your own build with the change switched off.
