@@ -2456,6 +2456,12 @@ ifeq ($(KOS_SQUEEZE),1)
 $(OBJDIR)/platform/os.o: PLATFORM_CPPFLAGS += -DRE4DC_KOS_SQUEEZE=1 -DRE4DC_KOS_SQUEEZE_BYTES=$(KOS_SQUEEZE_BYTES) -DRE4DC_KOS_SQUEEZE_FRAG=$(KOS_SQUEEZE_FRAG)
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_KOS_SQUEEZE=1
 endif
+# RESIDENT_SKIP_LOG=1 (lane ch5found16, log only, default 0 = image unchanged): preload_resident logs why each listed key
+# it does not pick was skipped (known / entry / missing / picked / byte limit). Needs VRAM_ROOM_LOG=1.
+RESIDENT_SKIP_LOG ?= 0
+ifneq ($(filter-out 0 1,$(RESIDENT_SKIP_LOG)),)
+$(error RESIDENT_SKIP_LOG must be 0 or 1)
+endif
 VRAM_ROOM_LOG ?= 0
 ifneq ($(filter-out 0 1,$(VRAM_ROOM_LOG)),)
 $(error VRAM_ROOM_LOG must be 0 or 1)
@@ -2579,6 +2585,7 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_VRAM_PAGES %s\n#define RE4DC_VRAM_CENSUS %s\n' '$(VRAM_PAGES)' '$(VRAM_CENSUS)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_PAGES_VQ_ONLY %s\n' '$(VRAM_PAGES_VQ_ONLY)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_ROOM_LOG %s\n' '$(VRAM_ROOM_LOG)' >> $@.tmp
+	@printf '#define RE4DC_RESIDENT_SKIP_LOG %s\n' '$(RESIDENT_SKIP_LOG)' >> $@.tmp
 	@printf '#define RE4DC_TEX_META_EVICT %s\n' '$(TEX_META_EVICT)' >> $@.tmp
 	@printf '#define RE4DC_PRELOAD_LARGE_FIRST %s\n' '$(PRELOAD_LARGE_FIRST)' >> $@.tmp
 	@printf '#define RE4DC_ROOM_RESIDENT %s\n' '$(ROOM_RESIDENT)' >> $@.tmp

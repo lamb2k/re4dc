@@ -3780,6 +3780,17 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             for(const auto& m:missing_keys)if(!known && (m.crc|m.fnv) && m==key)known=true;
             for(unsigned k=0;k<n && !known;++k)if(preload_picks[k].key==key)known=true;
             const unsigned least=preload_least(r.width,r.height);
+#if RE4DC_VRAM_ROOM_LOG && defined(RE4DC_RESIDENT_SKIP_LOG) && RE4DC_RESIDENT_SKIP_LOG
+            // RESIDENT_SKIP_LOG=1 only (compiled out otherwise): why a listed key was not picked (lane ch5found16, r327 1aad1b6c).
+            if(known || bytes+least>byte_limit){
+                bool in_entries=false,in_missing=false,in_picks=false;
+                for(const auto& e:entries)if(e.valid && e.key==key){in_entries=true;break;}
+                for(const auto& m:missing_keys)if((m.crc|m.fnv) && m==key)in_missing=true;
+                for(unsigned k=0;k<n;++k)if(preload_picks[k].key==key){in_picks=true;break;}
+                re4dc_log("native texture preload: resident skip %08x-%08x %ux%u room=%03x known=%d (entry=%d missing=%d picked=%d) bytes=%u+%u limit=%u n=%u resident=%u slots=%u\n",
+                          key.crc,key.fnv,(unsigned)r.width,(unsigned)r.height,src.room,known?1:0,in_entries?1:0,in_missing?1:0,in_picks?1:0,bytes,least,byte_limit,n,resident,limit);
+            }
+#endif
             if(known || bytes+least>byte_limit)continue;
             preload_picks[n++]={key,r.width,r.height,r.format};bytes+=least;++resident_picked;
         }
