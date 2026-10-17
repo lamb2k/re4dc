@@ -161,6 +161,8 @@ int SetShape(cModelInfo* info, ShapeData* data, f32 rate)
 
 #if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
 extern "C" void re4dc_log(const char*, ...);
+void* re4dc_otwc_shape_model;      // trans.cpp commonScreenMatSub: the model whose info is being morphed
+u32 re4dc_otwc_shape_model_id;
 #endif
 // Restore the original vertex positions.
 void ResetShape(cModelInfo* info, void* dst)
@@ -282,6 +284,19 @@ void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
                                       (unsigned) i, (int) num, (int) lo, (int) hi, (unsigned) info->pData->nVtx,
                                       (unsigned) (u32) dst, (unsigned) (u32) info->pPosBuf[0], (unsigned) (u32) info->pPosBuf[1],
                                       (unsigned) (u32) __builtin_return_address(0));
+                            if (reports <= 2) {
+                                const u32* h = (const u32*) info->pData;
+                                const u8* sd = (const u8*) data;
+                                re4dc_log("OTWC   model %08x id %02x pData %08x: %08x %08x %08x %08x | +20 %08x %08x %08x %08x | +30 %08x %08x %08x %08x %08x %08x\n",
+                                          (unsigned) (u32) re4dc_otwc_shape_model, (unsigned) re4dc_otwc_shape_model_id,
+                                          (unsigned) (u32) h, h[0], h[1], h[2], h[3], h[8], h[9], h[10], h[11], h[12], h[13],
+                                          h[14], h[15], h[16], h[17]);
+                                re4dc_log("OTWC   shape table %08x first words %08x %08x %08x %08x %08x %08x; ShapeData nFrame %u num %u idx %u %u %u %u %u %u %u %u\n",
+                                          (unsigned) (u32) tbl, ((const u32*) tbl)[-1], ((const u32*) tbl)[0], ((const u32*) tbl)[1],
+                                          ((const u32*) tbl)[2], ((const u32*) tbl)[3], ((const u32*) tbl)[4],
+                                          (unsigned) (*(const u16*) sd & 0x3FFF), (unsigned) sd[2],
+                                          w->idx[0], w->idx[1], w->idx[2], w->idx[3], w->idx[4], w->idx[5], w->idx[6], w->idx[7]);
+                            }
                         }
                     }
 #endif

@@ -1996,6 +1996,14 @@ int commonScreenMatSub(cModel* m, cModelInfo* info)
             dc_stamp=re4dc_model_source_stamp();
 #endif
             src = info->pPosBuf[pG->vtx_buf_no];
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
+            {
+                extern void* re4dc_otwc_shape_model;
+                extern u32 re4dc_otwc_shape_model_id;
+                re4dc_otwc_shape_model = m;
+                re4dc_otwc_shape_model_id = (u32) m->id;
+            }
+#endif
             for (i = 0; i < 5; i++) {
                 if (i == 0) {
                     ResetShape(info, src);
