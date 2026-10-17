@@ -66,6 +66,16 @@ if grep -qE '(^| )PS2_ENEMY_CH2[23]_DIR=' <<<"$RECIPE" &&
   echo "build-public: no PS2 chapter 2 enemy rows in $ASSETS: PS2_CH2_ENEMY=0 (GameCube enemy lists in 2-2 / 2-3; see CONTRIBUTING-PORT.md)"
 fi
 
+
+# Test 17 on: the PS2 stump / hand-pose layout header is supplied by the Build-Assets zip.
+# The mesh package stays on the release disc; without the header these variant plans use the source path.
+if grep -qE '(^| )ACTOR_GANADO_PS2_STUMP_DIR=' <<<"$RECIPE" &&
+   [ ! -f "$ASSETS/ps2stump/ganado_ps2_stump_runtime.h" ]; then
+  RECIPE=$(tr ' ' '\n' <<<"$RECIPE" | grep -vE '^ACTOR_GANADO_PS2_STUMP_DIR=' | tr '\n' ' ')
+  PRIVATE_OFF="${PRIVATE_OFF:+$PRIVATE_OFF }ACTOR_GANADO_PS2_STUMP=0"
+  echo "build-public: no PS2 stump header in $ASSETS: ACTOR_GANADO_PS2_STUMP=0 (GameCube stump / hand poses; see CONTRIBUTING-PORT.md)"
+fi
+
 # The release builds pin __DATE__ / __TIME__ (the crash screen prints them) to this instant.
 export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-1760000000}
 t0=$(date +%s)
