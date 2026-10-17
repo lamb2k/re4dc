@@ -28,6 +28,9 @@ struct Extent { std::uint32_t off, len; };      // offsets from base, both multi
 Extent free_list[kMaxFree]; unsigned nfree;     // sorted by offset, never adjacent
 Extent alloc_list[kMaxAlloc]; unsigned nalloc;  // sorted by offset
 std::uintptr_t base; std::uint32_t pool, free_bytes;
+#if defined(RE4DC_VRAM_PAGES_VQ_ONLY) && RE4DC_VRAM_PAGES_VQ_ONLY
+bool free_place;   // set only inside re4dc_vram_pages_malloc_any: this request needs no page
+#endif
 unsigned fails, peak_alloc, peak_free;
 #if defined(RE4DC_TEX_CHECK) && RE4DC_TEX_CHECK == 2
 // TEX_CHECK=2 (test only): free texture RAM reads magenta (RGB565 0xF81F), so a draw from never-written or
@@ -58,6 +61,10 @@ unsigned lower_bound(const Extent* list, unsigned n, std::uint32_t off) {
 std::uint32_t place(const Extent& e, std::uint32_t len) {
     const std::uintptr_t abs = base + e.off;
     std::uintptr_t at = abs;
+#if defined(RE4DC_VRAM_PAGES_VQ_ONLY) && RE4DC_VRAM_PAGES_VQ_ONLY
+    if(free_place && len > kPage) {}
+    else
+#endif
     if(len >= kPage) at = (abs + kPage - 1) & ~std::uintptr_t(kPage - 1);
     else if((abs & (kPage - 1)) + len > kPage) at = (abs + kPage - 1) & ~std::uintptr_t(kPage - 1);
     const std::uint32_t off = std::uint32_t(at - base);
@@ -66,6 +73,19 @@ std::uint32_t place(const Extent& e, std::uint32_t len) {
 }
 
 extern "C" {
+#if defined(RE4DC_VRAM_PAGES_VQ_ONLY) && RE4DC_VRAM_PAGES_VQ_ONLY
+// VRAM_PAGES_VQ_ONLY (Makefile): texture_package.cpp allocate_texture allocates a non-VQ texture of more than one
+// page here; it may start anywhere (32-byte granularity). Every other request keeps the page rule. The flag is set
+// and cleared with interrupts off, so no other thread's request can see it.
+pvr_ptr_t pvr_mem_malloc(size_t size);
+pvr_ptr_t re4dc_vram_pages_malloc_any(size_t size) {
+    irq_disable_scoped();
+    free_place = true;
+    pvr_ptr_t p = pvr_mem_malloc(size);
+    free_place = false;
+    return p;
+}
+#endif
 void pvr_mem_initialize(pvr_ptr_t texture_base, size_t available) {
     base = reinterpret_cast<std::uintptr_t>(texture_base);
     pool = std::uint32_t(available) & ~(kGran - 1);

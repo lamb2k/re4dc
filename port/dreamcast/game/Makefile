@@ -2249,6 +2249,23 @@ MOVIE_WINDOW ?= 0
 # census (blocks, free extents, largest, size histogram) every 120 frames and after each preload.
 VRAM_PAGES ?= 0
 VRAM_CENSUS ?= 0
+# VRAM_PAGES_VQ_ONLY=1 (lane vram101 2026-10-17, render only, default 0; needs VRAM_PAGES=1 UI_VRAM=1): the page allocator
+#   (platform/vram_pages.cpp) starts a texture of more than one 2 KiB page on a page boundary only when it is VQ (the
+#   codebook must sit on a page). A larger twiddled / palettised texture needs no page (texture_package.cpp
+#   allocate_texture accepts it anywhere), but was page-aligned anyway: a PAL4 128x128 package is 8,192 texels + its
+#   32-byte palette = 8,224 B, so the next texture of a page or more skipped 2,016 B. r101 holds 118 of them: about
+#   230 KB of 2 KB holes: a preload upload found no contiguous block, the retry evicted 22 pictures, no free block over
+#   10 KB (largest 10,368 B; the bell gate then loaded 7 pictures in play). Placement only: the same textures, bytes and
+#   draws. Doc: VRAM101-20261017.md (lane notes).
+VRAM_PAGES_VQ_ONLY ?= 0
+ifneq ($(filter-out 0 1,$(VRAM_PAGES_VQ_ONLY)),)
+$(error VRAM_PAGES_VQ_ONLY must be 0 or 1)
+endif
+ifeq ($(VRAM_PAGES_VQ_ONLY),1)
+ifneq ($(VRAM_PAGES)$(UI_VRAM),11)
+$(error VRAM_PAGES_VQ_ONLY=1 needs VRAM_PAGES=1 UI_VRAM=1)
+endif
+endif
 # VRAM_ROOM_LOG=1 (lane vram12 D4, render/log only, default 0 = image unchanged; needs UI_VRAM=1 VRAM_PAGES=1): the
 # per-room VRAM report of the CLAUDE.md graphics memory rule (native_ui.cpp: "vram room:" pinned / dynamic / other /
 # free / largest free block, "vram gaps:" refusals, thrash-guard skips, no contiguous block, GameCube effect pictures,
@@ -2407,6 +2424,7 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_PT_BLEND_FIX %s\n' '$(PT_BLEND_FIX)' >> $@.tmp
 	@printf '#define RE4DC_TEX_CHECK %s\n' '$(TEX_CHECK)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_PAGES %s\n#define RE4DC_VRAM_CENSUS %s\n' '$(VRAM_PAGES)' '$(VRAM_CENSUS)' >> $@.tmp
+	@printf '#define RE4DC_VRAM_PAGES_VQ_ONLY %s\n' '$(VRAM_PAGES_VQ_ONLY)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_ROOM_LOG %s\n' '$(VRAM_ROOM_LOG)' >> $@.tmp
 	@printf '#define RE4DC_TEX_META_EVICT %s\n' '$(TEX_META_EVICT)' >> $@.tmp
 	@printf '#define RE4DC_PRELOAD_LARGE_FIRST %s\n' '$(PRELOAD_LARGE_FIRST)' >> $@.tmp
