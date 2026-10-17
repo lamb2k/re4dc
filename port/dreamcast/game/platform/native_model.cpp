@@ -691,9 +691,12 @@ void window() {
     nrows = 0; over = 0; last = fr;
 }
 struct Scope {
-    unsigned key, verts; unsigned long long t0; unsigned b0;
-    explicit Scope(const Re4dcModelPart* p) : key(p ? re4dc_propprof_key(p->model) : 0xffffffu), verts(p ? p->position_count : 0u), t0(re4dc_otp_now_us()), b0(re4dc_stream_model_bytes_now()) { path = 0; window(); }
-    ~Scope() { add(key, path, unsigned(re4dc_otp_now_us() - t0), re4dc_stream_model_bytes_now() - b0, verts); }
+    // verts = the 32-byte TA records this submit wrote (vertices plus strip headers): bytes / 32. It was
+    // Re4dcModelPart::position_count, the info's SHARED position array, summed once per part (Ashley GC: 1,891 x
+    // 3,210 parts = 6.07 M "verts" for ~7k drawn; ID3-INVESTIGATION-20261017.md section 2, lane ashley17).
+    unsigned key; unsigned long long t0; unsigned b0;
+    explicit Scope(const Re4dcModelPart* p) : key(p ? re4dc_propprof_key(p->model) : 0xffffffu), t0(re4dc_otp_now_us()), b0(re4dc_stream_model_bytes_now()) { path = 0; window(); }
+    ~Scope() { const unsigned b = re4dc_stream_model_bytes_now() - b0; add(key, path, unsigned(re4dc_otp_now_us() - t0), b, b / 32u); }
 };
 }
 #define PP_PATH(x) (pprof::path = (x))
