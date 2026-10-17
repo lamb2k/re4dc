@@ -414,7 +414,7 @@ static void r101_capPush(int no)
 // A room-code send: straight in below the cap, else queued (released by R101Main).
 static void r101_capSend(int no)
 {
-    if (SceCountEmAlive(0x10, 0x20) >= RE4DC_R101_ALIVE_CAP) {
+    if (SceCountEmAlive(0x10, 0x20) >= RE4DC_R101_CAP_N) {
         r101_capPush(no);
 #if RE4DC_R101_CAP_LOG
         OSReport("r101cap: queue 0x%02x (alive %d, queued %d)\n", no, SceCountEmAlive(0x10, 0x20), r101CapN);
@@ -432,7 +432,7 @@ static void r101_capInit()
     if (RsfCheck(G_ROOM_ID, 6) || RsfCheck(G_ROOM_ID, 7)) {
         return;
     }
-    for (int k = 0; k < 9 - RE4DC_R101_ALIVE_CAP && k < 9; k++) {
+    for (int k = 0; k < 9 - RE4DC_R101_CAP_N && k < 9; k++) {
         const int no = r101CapHoldOrder[k];
         cEm* e = GetEmPtrFromList(no);
 
@@ -446,7 +446,7 @@ static void r101_capInit()
         }
         r101_capPush(no);
 #if RE4DC_R101_CAP_LOG
-        OSReport("r101cap: hold 0x%02x at entry (cap %d)\n", no, RE4DC_R101_ALIVE_CAP);
+        OSReport("r101cap: hold 0x%02x at entry (cap %d)\n", no, RE4DC_R101_CAP_N);
 #endif
     }
 }
@@ -459,7 +459,7 @@ static void r101_capRelease()
     if (r101CapN == 0 || RsfCheck(G_ROOM_ID, 6) == 0 || RsfCheck(G_ROOM_ID, 7)) {
         return;
     }
-    if (pG->Frame_cnt - r101CapLast < 30 || SceCountEmAlive(0x10, 0x20) >= RE4DC_R101_ALIVE_CAP) {
+    if (pG->Frame_cnt - r101CapLast < 30 || SceCountEmAlive(0x10, 0x20) >= RE4DC_R101_CAP_N) {
         return;
     }
     const int no = r101CapQ[0];
@@ -491,7 +491,7 @@ static void r101_capRelease()
 static int r101WaveQueued;
 static int r101_capWaveSend(cEmWrap* w, int no)
 {
-    if (SceCountEmAlive(0x10, 0x20) >= RE4DC_R101_ALIVE_CAP) {
+    if (SceCountEmAlive(0x10, 0x20) >= RE4DC_R101_CAP_N) {
         r101_capPush(no);
 #if RE4DC_R101_CAP_LOG
         OSReport("r101cap: wave queue 0x%02x (alive %d, queued %d)\n", no, SceCountEmAlive(0x10, 0x20), r101CapN);
@@ -560,7 +560,7 @@ void R101Main()
     if (RsfCheck(G_ROOM_ID, 7) == 0) {
         int inArea = AreaHitCheck(&r101Ps2Area21, &pPL->pos) != 0;
 #if RE4DC_R101_ALIVE_CAP
-        inArea = inArea && SceCountEmAlive(0x10, 0x20) < RE4DC_R101_ALIVE_CAP;   // villagers join below the cap only
+        inArea = inArea && SceCountEmAlive(0x10, 0x20) < RE4DC_R101_CAP_N;   // villagers join below the cap only
 #endif
 
         r101_ps2Villager(12, 0x1B, inArea);

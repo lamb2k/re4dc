@@ -1486,10 +1486,26 @@ pvr_list_t desired_list=PVR_LIST_OP_POLY;
 // switch folds a marker into the list being opened, so order and list membership both count.
 std::uint32_t ta_hash_h[5];
 unsigned ta_hash_words[5];
+#if RE4DC_TA_HASH == 4
+// TA_HASH=4 (lane cap16 2026-10-16, the CAP_COMPARE benchmark's translucency page; count only: no hashing, no per-frame
+// log, the per-vertex hash copies in native_static.cpp / native_actor_fast.cpp are left out): the ISP/TSP parameter bytes
+// each display list wrote, from the TA's own write pointer (TA_ITP_CURRENT, 0x005F8138) read at every list open and at
+// the scene close. Presented scenes add their words per list to re4dc_ta_count[0..4] (0 op, 1 op mod, 2 tr, 3 tr mod,
+// 4 pt) and 1 to [5]; bench.cpp reads them per one-second window. Flycast does not move this register (its KOS stats
+// read 0 there): a console number.
+} // namespace (re4dc_ta_count at file scope: bench.cpp reads it through re4dc_ta_count_ptr)
+extern "C" { unsigned re4dc_ta_count[6]; unsigned* re4dc_ta_count_ptr(void){return re4dc_ta_count;} }
+namespace {
+unsigned ta4_list=5,ta4_pos,ta4_words[5];
+inline unsigned ta4_itp(){return *(volatile std::uint32_t*)0xA05F8138;}
+void ta4_mark(unsigned list){const unsigned p=ta4_itp();if(ta4_list<5 && p>=ta4_pos)ta4_words[ta4_list]+=(p-ta4_pos)/4;ta4_list=list;ta4_pos=p;}
+#endif
 #if RE4DC_TA_HASH == 3
 std::uint32_t ta_hash_pend[5][4];  // TA_HASH=3: a header's words 0..3, hashed once a vertex follows it
 bool ta_hash_pending[5];
 void ta_hash_reset(){for(unsigned i=0;i<5;++i){ta_hash_h[i]=2166136261u;ta_hash_words[i]=0;ta_hash_pending[i]=false;}}
+#elif RE4DC_TA_HASH == 4
+void ta_hash_reset(){for(unsigned i=0;i<5;++i){ta_hash_h[i]=2166136261u;ta_hash_words[i]=0;ta4_words[i]=0;}ta4_list=5;}
 #else
 void ta_hash_reset(){for(unsigned i=0;i<5;++i){ta_hash_h[i]=2166136261u;ta_hash_words[i]=0;}}
 #endif
@@ -2049,6 +2065,8 @@ void stream_close(bool present) {
     (void)ta_faults;
 #if RE4DC_TA_BIN_DIAG
     tabin::scene_end(frame,present);
+#elif RE4DC_TA_HASH == 4
+    ta4_mark(5);if(present){for(unsigned i=0;i<5;++i)re4dc_ta_count[i]+=ta4_words[i];++re4dc_ta_count[5];}
 #elif RE4DC_TA_HASH
     re4dc_log("ta_hash: frame=%u present=%u op=%08x/%u tr=%08x/%u pt=%08x/%u mod=%08x/%u,%08x/%u\n",frame,present?1u:0u,
               ta_hash_h[0],ta_hash_words[0],ta_hash_h[2],ta_hash_words[2],ta_hash_h[4],ta_hash_words[4],
@@ -6152,6 +6170,9 @@ extern "C" int re4dc_model_direct_enabled(){return RE4DC_TA_DIRECT;}
 #if RE4DC_TA_HASH
 extern "C" void re4dc_ta_hash(const void* data,unsigned bytes){
     const unsigned l=(unsigned)stream_list<5?(unsigned)stream_list:2;
+#if RE4DC_TA_HASH == 4
+    {const auto* w4=static_cast<const std::uint32_t*>(data);if(bytes==4 && (w4[0]>>16)==0xF00Du)ta4_mark(w4[0]&0xFFFFu);(void)l;return;}
+#endif
 #if defined(RE4DC_MCHECK_PT) && RE4DC_MCHECK_PT
     pt_audit_feed(unsigned(stream_list),data,bytes,__builtin_return_address(0));
 #endif
