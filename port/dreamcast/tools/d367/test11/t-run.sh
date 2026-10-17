@@ -29,8 +29,8 @@ for try in $(seq 1 30); do   # the runner refuses at its Flycast ceiling (RE4DC_
   sleep 60
 done
 python -c "import json;d=json.load(open('$C/run-result.json'));print(d['status'],d.get('errors'))"
-grep -a -E 'warp:|room |route movie|HALT|RE4DC MISSING|FAULT|LHPACK|LEONGC|texchk|LOG OVERRUN' $C/run-output.txt > $S/route.txt
-echo "$N halt=$(grep -ac HALT $C/run-output.txt) missing=$(grep -ac 'RE4DC MISSING' $C/run-output.txt) fault=$(grep -ac FAULT $C/run-output.txt) leongc=$(grep -ac '^LEONGC f=' $C/run-output.txt) overrun=$(grep -ac 'LOG OVERRUN' $C/run-output.txt)"
+grep -a -E 'warp:|room |route movie|HALT|RE4DC MISSING|FAULT|LHPACK|LEONGC|NMRS|NMRPACK|texchk|LOG OVERRUN' $C/run-output.txt > $S/route.txt
+echo "$N halt=$(grep -ac HALT $C/run-output.txt) missing=$(grep -ac 'RE4DC MISSING' $C/run-output.txt) fault=$(grep -ac FAULT $C/run-output.txt) leongc=$(grep -ac '^LEONGC f=' $C/run-output.txt) castgc=$(grep -acE '^NMRS .* id=(0[1-9a-f]|[1-7][0-9a-f]) .*(declined=[1-9]|absent=[1-9])' $C/run-output.txt) overrun=$(grep -ac 'LOG OVERRUN' $C/run-output.txt)"
 echo "$(echo $D | awk '{print $2}')  disc.bin (deleted after run)" > $S/disc.sha256
 rm -f $C/disc.bin $S/disc/disc.bin
 mkdir -p $E; mv $S $E/$N && mv $S-run-stdout.txt $E/$N/run-stdout.txt && echo "moved to $E/$N"

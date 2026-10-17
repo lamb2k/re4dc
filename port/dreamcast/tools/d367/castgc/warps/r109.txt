@@ -1,0 +1,9 @@
+# lane castgc17 CAST-GC census warp for r109 (<= 60 s): warp.py preset r109-entry; still-capture lines (freeze / viewdist / dump) removed,
+# god added. Census build: NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150.
+name r109-entry
+# r109 from the r108 door (St1, em23)
+room 0x109
+pos 97246 2251 13320
+ang 1.0000
+inv default
+god

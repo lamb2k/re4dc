@@ -3,7 +3,7 @@
 #   recipe (test14/t14-build.sh arm rP, final candidate source ba856017, image eb2bc4e4) + the test 15 knobs ($T15). Every
 #   test 15 knob is default 0 in the Makefiles: with T15="" (arm kP) the play image must be byte-identical to test 14's
 #   (objcopy -R .stack image eb2bc4e4).
-# Arms: rP release play, rW warp, mW warp + MCHECK_LEONGC=1 TEX_CHECK=2, rT trace, kP knob-off play (= test 14 recipe,
+# Arms: rP release play, rW warp, mW warp + MCHECK_LEONGC=1 TEX_CHECK=2 + the CAST-GC census, rT trace, kP knob-off play (= test 14 recipe,
 #       identity vs eb2bc4e4), kW / kT knob-off warp / trace (the STRICT reference for rT).
 # Env: T (tree, default /root/probe/lanes-20261015/t15int), K (logs, default /root/probe/lanes-20261015/t15k), LP (label
 #      prefix, default t15i), T15 (test 15 knobs, default T15REC), XON (extra knobs, test only), PAD_T / PAD_K.
@@ -186,7 +186,10 @@ T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"
-MC="MCHECK_LEONGC=1 TEX_CHECK=2"
+# CAST-GC (lane castgc17, user 10-17 "why do we keep falling back to gamecube models"): the check arm also carries the
+# native census (NATIVE_MODEL_REGISTRY_CENSUS, report every 150 UI frames) that tools/d367/cast_gc.py judges: any
+# character / enemy drawn through the GameCube path fails unless tools/d367/castgc/allow.tsv lists it.
+MC="MCHECK_LEONGC=1 TEX_CHECK=2 NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150"
 TR="DBG_WARP=1 PC_SAMPLER=1 LOGIC_TRACE=1 GAME_DECISION_TRACE=1 PACE_MODE=off TRACE_SS_MASK=1 TRACE_ALLOC=1 CODEC_READY_FIXTURE=1"
 WP="DBG_WARP=1 PC_SAMPLER=1"
 PL="DBG_WARP=0 PC_SAMPLER=0"

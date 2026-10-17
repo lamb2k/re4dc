@@ -1,0 +1,197 @@
+#!/usr/bin/env python3
+"""cast_gc.py: the CAST-GC check (lane castgc17, 2026-10-17; user 10-17 "why do we keep falling back to gamecube models,
+that shouldn't be occurring"). Stdlib only; runs on WSL or Windows Python.
+
+    python3 tools/d367/cast_gc.py <run-output.txt>... [--allow tools/d367/castgc/allow.tsv] [--json OUT] [--rooms r100,r101]
+
+Every character / enemy the run drew through the GameCube path, per room, with the reason, from the native census
+(a build with NATIVE_MODEL_REGISTRY_CENSUS=1, e.g. NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150 for <= 60 s runs; the
+mW check arms carry both):
+  NMRS f= room= id= ot= parts= infos= plan= native= crowd= declined= registry_declined= absent= would=
+      the scene census (coarse_actor_owner_registry.inc): every model whose first OT pass reached the actor
+      transaction, by outcome. native = drawn by a native plan (L Leon / pl08, G the PS2 Ganado cast, R a registry
+      package); crowd = the crowd policy did not draw it this pass; declined / registry_declined / absent = the
+      transaction returned 0 and the SOURCE (GameCube) path drew the model.
+  NMRD f= <descriptor> ... declined= roles= skeleton= layout= semantics= certificate= acquire= skin= plan=
+      per registry descriptor: why its actors declined (the reason of a registry_declined row).
+  NMRU / NMRU2 f= ...    registry actors no descriptor bound (shape / revision / roles / skeleton / finite / none ...).
+  NMRPACK room=XXXX none (path) / NMRPACK refuse room=XXXX why=W   the room has no registry package / refused it.
+Path per (room, model id): PS2 (native only), GC (any declined / registry_declined / absent pass), MIXED (both: some
+passes fell back), or CROWD-SKIP (the crowd policy skipped every pass: not drawn, not GC). Leon (id 00) is LEON-GC's (MCHECK_LEONGC) and is listed, not judged.
+
+Verdict: any GC or MIXED row of a character or enemy (model id 01..7f) that is not in the allowlist FAILS (exit 1). The
+allowlist (tab separated: room or *, model id hex, reason, owner; '#' comments) is short and reviewed: each entry says
+why that model may draw the GameCube path and who owns removing it. No census line at all: exit 2 (not a pass: the
+build lacks NATIVE_MODEL_REGISTRY_CENSUS=1).
+"""
+import argparse, json, re, sys
+from collections import defaultdict
+from pathlib import Path
+
+NMRS = re.compile(r'NMRS f=(\d+) room=([0-9a-f]+) id=([0-9a-f]+) ot=(\d+) parts=(\d+) infos=(\d+) plan=(.) native=(\d+) '
+                  r'crowd=(\d+) declined=(\d+) registry_declined=(\d+) absent=(\d+) would=(\d+)')
+NMRD = re.compile(r'NMRD f=(\d+) (\S+) planned=(\d+) admitted=(\d+) would=(\d+) declined=(\d+) (.*)')
+NMRU = re.compile(r'NMRU2? f=(\d+) (.*)')
+PACK_NONE = re.compile(r'NMRPACK room=([0-9a-f]+) none \(([^)]*)\)')
+PACK_REFUSE = re.compile(r'NMRPACK (?:partner )?refuse room=([0-9a-f]+) why=(\S+)')
+PACK_OPEN = re.compile(r'NMRPACK open room=([0-9a-f]+)')
+ADMIT = re.compile(r'NMRM admit .*?room=([0-9a-f]+) .*?id=([0-9a-f]+) desc=(\S+)')
+KV = re.compile(r'(\w+)=(-?\d+)')
+REASONS = ('roles', 'skeleton', 'layout', 'semantics', 'certificate', 'acquire', 'skin', 'plan', 'shape', 'revision',
+           'finite', 'none')
+PLAN = {'-': 'none', 'L': 'Leon/pl08 plan', 'G': 'PS2 Ganado cast', 'R': 'registry package'}
+# Model ids (cModel::id): 00 Leon, 01..0f the partner / player-class models, 10..7f the em modules (emXX).
+NAMES = {0x00: 'Leon', 0x03: 'Ashley'}  # seen in the census (NMRM admit desc=ashley11); others print emXX / plXX
+
+
+def name_of(i):
+    return NAMES.get(i) or ('em%02x' % i if i >= 0x10 else 'pl%02x' % i)
+
+
+def room3(r):
+    return 'r%03x' % (int(r, 16) & 0xfff)
+
+
+def parse(paths):
+    rows = defaultdict(lambda: defaultdict(int))   # (room, id) -> counters
+    meta = defaultdict(lambda: {'ot': set(), 'plan': set(), 'parts': set()})
+    reasons = defaultdict(lambda: defaultdict(int))  # (room, id) -> reason -> count
+    pack = {}                                        # room -> 'open' / 'none ...' / 'refused: why'
+    admits = defaultdict(set)                        # (room, id) -> descriptor names
+    nlines = 0
+    for p in paths:
+        report = {'nmrd': [], 'nmru': {}}
+        last_f = None
+        pending = []
+        for line in Path(p).read_text(errors='replace').splitlines():
+            m = PACK_OPEN.search(line)
+            if m:
+                pack[room3(m.group(1))] = 'open'
+            m = PACK_NONE.search(line)
+            if m:
+                pack[room3(m.group(1))] = 'none (%s)' % m.group(2)
+            m = PACK_REFUSE.search(line)
+            if m:
+                pack[room3(m.group(1))] = 'refused: %s' % m.group(2)
+            m = ADMIT.search(line)
+            if m:
+                admits[(room3(m.group(1)), int(m.group(2), 16))].add(m.group(3))
+            m = NMRD.search(line)
+            if m:
+                f = int(m.group(1))
+                if f != last_f:
+                    report = {'nmrd': [], 'nmru': {}}; last_f = f
+                if int(m.group(6)):
+                    kv = {k: int(v) for k, v in KV.findall(m.group(7))}
+                    report['nmrd'].append((m.group(2), {k: kv[k] for k in REASONS if kv.get(k)}))
+                continue
+            m = NMRU.search(line)
+            if m:
+                f = int(m.group(1))
+                if f != last_f:
+                    report = {'nmrd': [], 'nmru': {}}; last_f = f
+                for k, v in KV.findall(m.group(2)):
+                    if int(v) and k in REASONS:
+                        report['nmru'][k] = int(v)
+                continue
+            m = NMRS.search(line)
+            if not m:
+                continue
+            nlines += 1
+            f, room, mid = int(m.group(1)), room3(m.group(2)), int(m.group(3), 16)
+            if f != last_f:
+                report = {'nmrd': [], 'nmru': {}}; last_f = f
+            key = (room, mid)
+            c = rows[key]
+            for k, g in (('native', 8), ('crowd', 9), ('declined', 10), ('registry_declined', 11), ('absent', 12)):
+                c[k] += int(m.group(g))
+            meta[key]['ot'].add(int(m.group(4))); meta[key]['plan'].add(m.group(7)); meta[key]['parts'].add(int(m.group(5)))
+            plan = m.group(7)
+            if int(m.group(12)):
+                reasons[key]['no package: no plan for this model id (not Leon, not a Ganado-cast id, no registry descriptor)'] += int(m.group(12))
+            if int(m.group(10)):
+                if mid <= 0x0f:
+                    reasons[key]['Leon/pl08 plan declined'] += int(m.group(10))
+                elif plan == 'G':
+                    # NMRS cannot tell these apart (both log plan G, declined): the PS2 Ganado cast took no plan for the
+                    # model (no bind: info count / revision / appearance, or GANADO_LOD not ready), or its plan failed
+                    # layout / semantics / acquire. ACTOR_TRANSACTION_DIAG=1 names the step.
+                    reasons[key]['Ganado-class id (em10..em20): the PS2 Ganado cast did not draw it (no cast plan, or its '
+                                 'layout / semantics / acquire failed) and no registry descriptor took it'] += int(m.group(10))
+                else:
+                    why = ', '.join('%s %d' % kv for kv in sorted(report['nmru'].items())) or 'no reason line'
+                    reasons[key]['Ganado-class id: no PS2 Ganado cast appearance and no registry descriptor bound (unbound: %s)' % why] += int(m.group(10))
+            if int(m.group(11)):
+                tag = 'em%02x' % mid
+                hits = [(d, r) for d, r in report['nmrd'] if tag in d.lower()] or report['nmrd']
+                if hits:
+                    for d, r in hits:
+                        reasons[key]['registry package declined: %s (%s)' % (d, ', '.join('%s %d' % kv for kv in sorted(r.items())) or '?')] += int(m.group(11))
+                else:
+                    why = ', '.join('%s %d' % kv for kv in sorted(report['nmru'].items())) or 'no reason line'
+                    reasons[key]['registry id, no descriptor bound (unbound: %s)' % why] += int(m.group(11))
+    return rows, meta, reasons, pack, admits, nlines
+
+
+def load_allow(path):
+    out = []
+    if path and Path(path).is_file():
+        for ln in Path(path).read_text().splitlines():
+            if not ln.strip() or ln.lstrip().startswith('#'):
+                continue
+            f = ln.split('\t')
+            if len(f) < 4 or not f[2].strip() or not f[3].strip():
+                sys.exit('cast_gc: allowlist line needs room, id, reason and owner: %r' % ln)
+            out.append((f[0].strip(), int(f[1], 16), f[2].strip(), f[3].strip()))
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
+    ap.add_argument('logs', nargs='+')
+    ap.add_argument('--allow', default=str(Path(__file__).resolve().parent / 'castgc' / 'allow.tsv'))
+    ap.add_argument('--json')
+    ap.add_argument('--rooms', help='comma list: judge only these rooms (default every room in the census)')
+    ap.add_argument('--label', default='', help='a run label printed in the table')
+    a = ap.parse_args()
+    rows, meta, reasons, pack, admits, n = parse(a.logs)
+    if not n:
+        print('CAST-GC: no NMRS census lines in %s: build with NATIVE_MODEL_REGISTRY_CENSUS=1 (not a pass)' % ', '.join(a.logs))
+        sys.exit(2)
+    allow = load_allow(a.allow)
+    only = set(a.rooms.split(',')) if a.rooms else None
+    out, fails = [], 0
+    for (room, mid), c in sorted(rows.items()):
+        if only and room not in only:
+            continue
+        gc = c['declined'] + c['registry_declined'] + c['absent']
+        path = ('MIXED' if c['native'] else 'GC') if gc else ('PS2' if c['native'] else 'CROWD-SKIP')
+        plan = '/'.join(PLAN.get(p, p) for p in sorted(meta[(room, mid)]['plan']))
+        why = '; '.join('%s (%d)' % kv for kv in sorted(reasons[(room, mid)].items(), key=lambda kv: -kv[1]))
+        if gc and room in pack and pack[room] != 'open':
+            why += '; room package %s' % pack[room]
+        verdict = ''
+        if mid == 0:
+            verdict = 'LEON-GC' if gc else ''
+        elif gc and 1 <= mid <= 0x7f:
+            hit = [x for x in allow if x[1] == mid and x[0] in ('*', room)]
+            verdict = 'allowed (%s; owner %s)' % (hit[0][2], hit[0][3]) if hit else 'FAIL'
+            fails += not hit
+        out.append({'room': room, 'id': '%02x' % mid, 'name': name_of(mid), 'path': path, 'plan': plan,
+                    'native': c['native'], 'gc': gc, 'crowd': c['crowd'], 'reason': why,
+                    'descriptors': sorted(admits.get((room, mid), ())), 'verdict': verdict,
+                    'ot': sorted(meta[(room, mid)]['ot']), 'parts': sorted(meta[(room, mid)]['parts'])})
+    w = '%-5s %-3s %-8s %-9s %-7s %-7s %s'
+    print(w % ('room', 'id', 'name', 'path', 'native', 'gc', 'verdict / reason'))
+    for r in out:
+        print(w % (r['room'], r['id'], r['name'], r['path'], r['native'], r['gc'],
+                   (r['verdict'] + ': ' if r['verdict'] else '') + (r['reason'] or r['plan'] + (' ' + ','.join(r['descriptors']) if r['descriptors'] else ''))))
+    print('CAST-GC %s: %d census lines, %d room/model rows, %d GC or MIXED character rows not allowed%s'
+          % (a.label, n, len(out), fails, '' if fails else ' (PASS)'))
+    if a.json:
+        Path(a.json).write_text(json.dumps({'rows': out, 'packages': pack, 'fails': fails}, indent=1))
+    sys.exit(1 if fails else 0)
+
+
+if __name__ == '__main__':
+    main()
