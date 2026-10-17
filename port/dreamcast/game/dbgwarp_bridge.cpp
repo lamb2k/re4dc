@@ -82,7 +82,9 @@ extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM
 #include "em.h"
 #include "em_sub.h"
 #include "em10.h"
-void em10HandSet(cEm10* em, int a);  // src/em10/em10.cpp (rig `handpose` types 2 / 4)
+#include "model.h"
+// cModel::swapModelInfo (main image), as src/em10/em10.cpp declares it: em10HandSet itself lives in the em10 overlay.
+extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info) asm("swapModelInfo__6cModelP9ModelDataP10cModelInfo");
 #include "item.h"
 #include "main_mem.h"
 #include "snd.h"
@@ -199,9 +201,10 @@ struct Warp {
     bool kill_near; // `killnear`: the target is the live enemy nearest Leon (still pairs: the corpse falls in view)
     // `handpose <room frame> <type> <em id>` (lane stump17 still pairs): once at that frame, the live enemy of that id
     // nearest Leon shows a hand pose. Type 1: cEm10::setHand on both hands (BIN 449 / 454), as the event code does.
-    // Type 2: em10HandSet(em, 2), the alert pose (right 450, left 453). Type 4: the same with the left-handed flag
-    // 0x01000000 held for the call (right 448, left 455). For 2 / 4, Hand_type is reset to 0 afterwards, so the routine's
-    // own em10HandSet(em, 0) leaves the pose in place (setHand does not touch Hand_type either).
+    // Type 2: em10HandSet(em, 2)'s alert pose (right mot[8] = 450, left mot[11] = 453). Type 4: its left-handed form
+    // (flag 0x01000000: right mot[6] = 448, left mot[13] = 455). em10HandSet is in the em10 overlay, so the rig swaps
+    // the two infos the same way (ModInfoMgr.create + cModel::swapModelInfo) and leaves Hand_type alone: the routine's
+    // own em10HandSet(em, 0) sees no change and keeps the pose (setHand does not touch Hand_type either).
     bool has_hand, hand_done;
     u32 hand_frame;
     int hand_type, hand_id;
@@ -733,11 +736,15 @@ void kill_poll()
             wp.hand_done = true;
             if (wp.hand_type == 2 || wp.hand_type == 4) {
                 cEm10* em = static_cast<cEm10*>(best);
-                const u32 flag = em->flag;
-                if (wp.hand_type == 4) em->flag |= 0x01000000;
-                em10HandSet(em, 2);
-                em->flag = flag;
-                EM10_WK(em)->Hand_type = 0;
+                Em10Work* w = EM10_WK(em);
+                void* bins[2] = {wp.hand_type == 4 ? w->mot[6] : w->mot[8], wp.hand_type == 4 ? w->mot[13] : w->mot[11]};
+                cModelInfo** slots[2] = {&w->pRHand, &w->pLHand};
+                for (int h = 0; h < 2; ++h) {
+                    cModelInfo* info = *slots[h] ? ModInfoMgr.create(bins[h], w->mot[0]) : nullptr;
+                    if (!info) continue;
+                    cModel_swapModelInfo(em, (*slots[h])->pData, info);
+                    *slots[h] = info;
+                }
             } else {
                 static_cast<cEm10*>(best)->setHand(1, wp.hand_type);
                 static_cast<cEm10*>(best)->setHand(0, wp.hand_type);

@@ -205,7 +205,11 @@ constexpr unsigned kGateApps=kTierApps;
 #define gate_app cast_app
 #define gate_chunk cast_chunk
 #endif
-constexpr unsigned kGatePool = kGateApps * kBones * 2;
+// The pool stays sized for the tier apps with the stump gates: an appearance's near gate takes ~21 + 3 + 2 + 2 = 28..31
+// balls of its kBones * 2 (lane stump17 census: at most 141 of 680 in use), so ten gate apps fit in 340; a full pool
+// leaves that app ungated (gate_build: never culled), it does not fail the plan. Growing it with kGateApps would cost
+// 5,780 B of the character data block (16 KiB steps, char_data_block.ld).
+constexpr unsigned kGatePool = kTierApps * kBones * 2;
 constexpr float kGateQ = 1.0f / 16.0f;  // the chunks' shift 4: a position is its s16 x 2^-4 (Frame::q)
 GateBall gate_ball[kGatePool];
 unsigned char gate_bone[kGatePool];
