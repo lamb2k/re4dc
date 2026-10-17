@@ -13,6 +13,16 @@
 #include "est.h"
 #include "esp.h"
 #include "TexRender.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (ROUTE_CH3, st3 lane 2026-10-15): s00 (Ashley is taken away) presented by the PS2 movies
+// (dc/movie/r325<event>.seq) when the disc carries them, as r316s00: the GC evds are not on the disc-2 image
+// (EvtRead: DC.setData failed, then "mem over", and the event never ran). With a movie no evd is read; the
+// handler's begin / end modes run and the code after the event is unchanged. Without it the source path applies.
+#include "route_movie.h"
+#define R325_ROUTE_MOVIES 1
+#else
+#define R325_ROUTE_MOVIES 0
+#endif
 
 // Room 3-25 (D:/Bio4/Prog/r325.cpp): the s00 event (Ashley taken away) with its two render-to-texture
 // models, the red-eye texture swap and the Leon jacket toggles.
@@ -42,6 +52,9 @@ void R325Init()
     EvtMgr.SetFunc("evt_r325s99_func", (void*) Evt_R325S00_Func);
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtDataSet_exec(3, 0x12, 0, (TaskFunc) R325EventS00, 0, 1);
+#if R325_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x32500))
+#endif
         EvtMgr.EvtReadAram("event/evd/r325s00.evd", 0, 0, 0, 0);
     }
     TexRenderInit(&r325_work->tex[0], 0xE0, 2);
@@ -59,6 +72,11 @@ void R325EventS00()
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         RsfSet(G_ROOM_ID, 0);
         SceAtSetEnable(3, 0);
+#if R325_ROUTE_MOVIES
+        if (re4dc_movie_available(0x32500)) {
+            RouteMoviePlay(0x32500, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R325S00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r325s00.evd", 0, 0);
     }
 }

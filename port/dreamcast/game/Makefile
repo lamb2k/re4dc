@@ -619,7 +619,17 @@ $(OBJDIR)/mod/st3_0/src/st3/r300.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 $(OBJDIR)/mod/st3_2/src/st3/r316.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 $(OBJDIR)/mod/st3_3/src/st3/r329.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 # ROUTE_MOVIE_GAME_ST3 (not _CH3: ROUTE_MOVIES_CH3 owns that name for the castle chapter 3 rooms).
-ROUTE_MOVIE_GAME_ST3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o $(OBJDIR)/mod/st3_2/src/st3/r316.o $(OBJDIR)/mod/st3_3/src/st3/r329.o
+# Round-10 island event hooks (st3 lane, merged by lane ch5found16): r317 (s00-s15, the knife QTE set), r31b s00, r31c
+# s00-s02, r320 s00 / s01, r321 s00, r325 s00, r330 s00 as PS2 route movies when the disc carries them (source path
+# otherwise). r331 / r332 (final chapter) stay with lane stress16b. The objects need RE4DC_ROUTE_CH3 like r316.
+$(OBJDIR)/mod/st3_2/src/st3/r317.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_2/src/st3/r31b.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_2/src/st3/r31c.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r320.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r321.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r325.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r330.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+ROUTE_MOVIE_GAME_ST3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o $(OBJDIR)/mod/st3_2/src/st3/r316.o $(OBJDIR)/mod/st3_3/src/st3/r329.o $(OBJDIR)/mod/st3_2/src/st3/r317.o $(OBJDIR)/mod/st3_2/src/st3/r31b.o $(OBJDIR)/mod/st3_2/src/st3/r31c.o $(OBJDIR)/mod/st3_3/src/st3/r320.o $(OBJDIR)/mod/st3_3/src/st3/r321.o $(OBJDIR)/mod/st3_3/src/st3/r325.o $(OBJDIR)/mod/st3_3/src/st3/r330.o
 # PS2_ENEMY_ST3=<mask> (stage 3 lane, default 0: no effect; changes gameplay by design, PS2 USA = source of truth):
 # the PS2 room-code enemy gates of the island. Bit 0: r30f (setem < 6, the 0xF8 send < 7). Bit 1: r301 (the PS2
 # wave tasks: sends while < 9 / < 8 alive, room-save chaining, far deletes to 7 / 4). Bit 3: clamp the gates to cap 6. Bit 2: r327 (the PS2 camp: first table, late task, appear

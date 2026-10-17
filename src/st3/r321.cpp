@@ -21,6 +21,16 @@
 #include "est.h"
 #include "TexRender.h"
 #include "db_log.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (ROUTE_CH3, st3 lane 2026-10-15): s00 (the helicopter is shot down) presented by the PS2 movies
+// (dc/movie/r321<event>.seq) when the disc carries them, as r316s00: the GC evds are not on the disc-2 image
+// (EvtRead: DC.setData failed, then "mem over", and the event never ran). With a movie no evd is read; the
+// handler's begin / end modes run and the code after the event is unchanged. Without it the source path applies.
+#include "route_movie.h"
+#define R321_ROUTE_MOVIES 1
+#else
+#define R321_ROUTE_MOVIES 0
+#endif
 
 // Room 3-21 (D:/Bio4/Prog/r321.cpp): the yard where the support helicopter is shot down (event
 // r321s00 on area 2, Scenario_flg[1] bit 31): afterwards the wreck model with its smoke and a fire
@@ -71,6 +81,9 @@ void R321Init()
     setTexRender();
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtDataSet_exec(2, 0x12, 0, (TaskFunc) r321_heri_down, 0, 1);
+#if R321_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x32100))
+#endif
         EvtMgr.EvtReadMram("event/evd/r321s00.evd", 0, 0, 0, 0);
     } else {
         SmdSetTrans(0xF, 0);
@@ -90,6 +103,11 @@ static void r321_heri_down()
 {
     RsfSet(G_ROOM_ID, 0);
     pG->Scenario_flg[1] |= 0x80000000;
+#if R321_ROUTE_MOVIES
+    if (re4dc_movie_available(0x32100)) {
+        RouteMoviePlay(0x32100, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R321S00_Func, 0);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r321s00.evd", 0, 0);
     setPosXYZ(pPL, 38020.0f, 13688.0f, -39718.0f);
     setAngY(pPL, 1.663f);

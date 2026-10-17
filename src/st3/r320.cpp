@@ -39,6 +39,16 @@
 #include "model.h"
 #include "vec.h"
 #include "rnd.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (ROUTE_CH3, st3 lane 2026-10-15): s00 / s01 (the helicopter arrives) presented by the PS2 movies
+// (dc/movie/r320<event>.seq) when the disc carries them, as r316s00: the GC evds are not on the disc-2 image
+// (EvtRead: DC.setData failed, then "mem over", and the event never ran). With a movie no evd is read; the
+// handler's begin / end modes run and the code after the event is unchanged. Without it the source path applies.
+#include "route_movie.h"
+#define R320_ROUTE_MOVIES 1
+#else
+#define R320_ROUTE_MOVIES 0
+#endif
 
 // Room 3-20 (D:/Bio4/Prog/r320.cpp): the island landing site with the support helicopter (em3d,
 // list 0x64): the gatling towers and their gunners, the seven enemy appearance areas, the gates, the
@@ -472,6 +482,9 @@ void R320Init()
         PSet((void*&) r320_work->gatling[5], SetObjGatling(ROOM_ARC_PTR(pG->pRoom, 0x22), ROOM_ARC_PTR(pG->pRoom, 0x23), &pos, &rot));
         GatlingSetBreakMode(r320_work->gatling[5], 1);
         r320_work->gatling[5]->setNoSuspend(1);
+#if R320_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x32000))
+#endif
         EvtMgr.EvtReadAram("event/evd/r320s00.evd", 0, 0, 0, 0);
     } else {
         EmReadSearch(0x1D, 0, 0);
@@ -650,8 +663,18 @@ static void r320_heri_event()
 {
     R320_SAVE_FLAGS |= 0x80000000;
     SceSleep(1);
+#if R320_ROUTE_MOVIES
+    if (re4dc_movie_available(0x32000)) {
+        RouteMoviePlay(0x32000, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R320S00_Func, 0);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r320s00.evd", 0, 0);
     if ((pG->Room_flg[0] & 0x20000000) == 0) {
+#if R320_ROUTE_MOVIES
+        if (re4dc_movie_available(0x32001)) {
+            RouteMoviePlay(0x32001, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R320S01_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r320s01.evd", 0, 0);
     } else {
         SndRoomStrStart(1, 0, 1);
@@ -2220,6 +2243,9 @@ static void Evt_R320S00_Func(Event* e)
         void* mod;
 
         if (e->NowCut == 0 && e->NowFrame == 1) {
+#if R320_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x32001))
+#endif
             EvtMgr.EvtReadAram("event/evd/r320s01.evd", 0, 0, 0, 0);
             BitOn(pG->Room_flg[1], 0x8000);
         }
