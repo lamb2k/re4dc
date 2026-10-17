@@ -779,7 +779,14 @@ bool bench_poll()
         if (wp.god && pG) pG->pl_life = pG->pl_life_max;
         return true;
     }
-    re4dc_bench_alive(SceCountEmAlive(0x10, 0x20));
+    {   // Ganados alive now (ids 0x10..0x20 in the enemy manager, alive and hp > 0): SceCountEmAlive also counts the
+        // ALIVE_CAP hold's waiting entries (the rooms' scripts read uncapped), so it would not show the cap reached
+        int live = 0;
+        for (int id = 0x10; id <= 0x20; ++id)
+            for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e))
+                if ((e->be_flag & 1) && e->hp > 0) ++live;
+        re4dc_bench_alive(live);
+    }
     if (!re4dc_bench_tick(wp.room_frames)) return false;
     bench_state_log(wp.room_frames);
     const char* next = re4dc_bench_next_scene();
