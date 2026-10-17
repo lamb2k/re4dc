@@ -1,0 +1,11 @@
+name find-r21d-2d
+# ch4found16: where the em2d of r21d are (kill rig from the Codex walk entry: each kill prints the target position), god
+room 0x21d
+pos -28692 -3843 -39738
+ang 1.3270
+inv default
+god
+alivelog 300
+kill 0x2d 300 0x21d
+killrep 14 60
+dump

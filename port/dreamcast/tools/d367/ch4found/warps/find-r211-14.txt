@@ -1,0 +1,11 @@
+name find-r211-14
+# ch4found16: where the em14 of r211 are (kill rig from the Codex walk entry: each kill prints the target position), god
+room 0x211
+pos 1160 0 19740
+ang 1.6690
+inv default
+god
+alivelog 300
+kill 0x14 300 0x211
+killrep 14 60
+dump

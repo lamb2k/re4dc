@@ -1,0 +1,11 @@
+name find-r229-18
+# ch4found16: where the em18 of r229 are (kill rig from the Codex walk entry: each kill prints the target position), god
+room 0x229
+pos -2290 -15833 15298
+ang 1.8280
+inv default
+god
+alivelog 300
+kill 0x18 300 0x229
+killrep 14 60
+dump

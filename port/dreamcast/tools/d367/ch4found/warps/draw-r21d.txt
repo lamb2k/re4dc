@@ -1,0 +1,9 @@
+name draw-r21d
+# ch4found16 castle PS2 cast draw rig: r21d Novistadors (em2d) come to a standing god Leon (from find-r21d-2d.txt)
+room 0x21d
+pos -28692 -3843 -39738
+ang 1.3270
+inv default
+god
+alivelog 300
+dump

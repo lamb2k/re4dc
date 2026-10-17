@@ -1,0 +1,9 @@
+name draw2-r211
+# ch4found16 castle PS2 cast draw rig 2: Leon beside the em14 the find rig killed (14408,0,30117), facing it, god, no kills
+room 0x211
+pos 11408 0 30117
+ang 1.57
+inv default
+god
+alivelog 300
+dump

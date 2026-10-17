@@ -1,0 +1,11 @@
+name find-r214-25
+# ch4found16: where the em25 of r214 are (kill rig from the Codex walk entry: each kill prints the target position), god
+room 0x214
+pos 8762 1505 39019
+ang -1.5640
+inv default
+god
+alivelog 300
+kill 0x25 300 0x214
+killrep 14 60
+dump
