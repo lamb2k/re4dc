@@ -644,6 +644,13 @@ extern "C" void re4dc_aliveCapMove(int busy)
 #endif
 }
 
+// 1 while the cap is full in a capped room (N Ganados alive): room code that creates Ganados without the list send
+// (EmSetEvent: r208 feeding over the wall) waits instead of going over the cap.
+extern "C" int re4dc_aliveCapFull()
+{
+    return !aliveCapReleasing && aliveCapRoom() && aliveCapLive() >= RE4DC_ALIVE_CAP_N;
+}
+
 // EmSetFromList2: 1 = a room-code send of a Ganado while N are alive, now held (errEm to the caller).
 extern "C" int re4dc_aliveCapDefer(int no, int id)
 {

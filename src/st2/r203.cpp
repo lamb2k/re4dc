@@ -210,7 +210,7 @@ static void r203_GetKeyItem()
     SceAtDataReset(0x8A);
     SceAtExecute(0x8A);
     for (i = 0; i < 9; i++) {
-        if (SceAtCheckHitModel(2, r203_work.p->em[idx[i]].getPtr()) == 1) {
+        if (!EM_WRAP_HELD_NOW(&r203_work.p->em[idx[i]]) && SceAtCheckHitModel(2, r203_work.p->em[idx[i]].getPtr()) == 1) {
             cnt++;
         }
     }

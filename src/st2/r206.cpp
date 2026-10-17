@@ -1040,10 +1040,10 @@ static void chkReaderMove()
         int n = SceCountEmAlive(0x10, 0x20);
 
         if (n == 1) {
-            if (r206_work.p->em[4].isActive() != 0) {
+            if (r206_work.p->em[4].isActive() != 0 && !EM_WRAP_HELD_NOW(&r206_work.p->em[4])) {
                 r206_work.p->em[4].getPtr()->flag |= 0x40;
             }
-            if (r206_work.p->em[6].isActive() != 0) {
+            if (r206_work.p->em[6].isActive() != 0 && !EM_WRAP_HELD_NOW(&r206_work.p->em[6])) {
                 r206_work.p->em[6].getPtr()->flag |= 0x40;
             }
             r206_work.p->em[4].setGoto(&pSUB->pos, 1);
@@ -1052,7 +1052,7 @@ static void chkReaderMove()
         }
         if (n == 2) {
             if (r206_work.p->em[4].isActive() != 0 && r206_work.p->em[6].isActive() != 0) {
-                if (r206_work.p->em[4].isActive() != 0) {
+                if (r206_work.p->em[4].isActive() != 0 && !EM_WRAP_HELD_NOW(&r206_work.p->em[4])) {
                     r206_work.p->em[4].getPtr()->flag |= 0x40;
                 }
                 r206_work.p->em[4].setGoto(&pSUB->pos, 1);

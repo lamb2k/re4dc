@@ -232,7 +232,7 @@ void R207Main()
             if (k == 2) {
                 continue;
             }
-            if (r207_work.p->em[k].em.isActive() && SceAtCheckHitModel(at[i], r207_work.p->em[k].em.getPtr())) {
+            if (r207_work.p->em[k].em.isActive() && !EM_WRAP_HELD_NOW(&r207_work.p->em[k].em) && SceAtCheckHitModel(at[i], r207_work.p->em[k].em.getPtr())) {
                 r207_work.p->area[i].cur |= 1 << (k + 4);
             }
         }
