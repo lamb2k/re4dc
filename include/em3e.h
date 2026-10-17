@@ -71,4 +71,18 @@ int countOldMark(cEmMark* self, int age);
 void R22cHitMark(int type, int a, Vec* pos, int b, int age);
 void R22cHitEffect(int no);
 
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+// ROUTE_GALLERY (Dreamcast): st2_4 (r22c) and em3e are both room overlays, and an overlay may not hold a word that
+// points into another overlay (tools/link.sh, gen_overlay.py), so their direct cross-REL calls (the GameCube's OSLink
+// binds them by module id) go through this image table: R22cInit fills the room's two, em3eInit the target's three.
+struct Re4dcGalleryXrel {
+    void (*hitMark)(int type, int a, Vec* pos, int b, int age);
+    void (*hitEffect)(int no);
+    void (*initData)(cEmMark* m, EmMarkData* d);
+    void (*initInst)(cEmMark* m, u8 type, EmMarkInst* inst, f32 x, f32 y, f32 z);
+    void (*setDown)(cEmMark* m);
+};
+extern "C" Re4dcGalleryXrel re4dc_gallery_xrel;
+#endif
+
 #endif

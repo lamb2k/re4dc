@@ -78,6 +78,9 @@ SMODULE_DECL(st2_3)
 #if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && !(defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41)
 SMODULE_DECL(st2_3)
 #endif
+#if defined(RE4DC_ROUTE_GALLERY) && RE4DC_ROUTE_GALLERY
+SMODULE_DECL(st2_4)
+#endif
 SMODULE_DECL(st1_0)
 SMODULE_DECL(st1_1)
 SMODULE_DECL(st1_2)
@@ -195,6 +198,10 @@ static const Re4dcModule g_modules[] = {
     {31, "em2c", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_BOSS4: r221 Verdugo, room overlay
 #endif
     {79, "em38", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_BOSS4: r228 Salazar + the Queen, room overlay
+#endif
+#if defined(RE4DC_ROUTE_GALLERY) && RE4DC_ROUTE_GALLERY
+    SMODULE(118, st2_4), // ROUTE_GALLERY: r22c, the shooting gallery
+    {94, "em3e", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_GALLERY: r22c targets (cEmMark), room overlay
 #endif
     SMODULE(74, st1_0),
     SMODULE(73, st1_1),
@@ -363,7 +370,12 @@ struct RouteOverlayHeader {
 };
 constexpr u32 kRouteOverlayMagic = 0x4F344552;  // "RE4O"
 struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
-#if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+#if defined(RE4DC_ROUTE_GALLERY) && RE4DC_ROUTE_GALLERY
+// ROUTE_GALLERY (needs ROUTE_BOSS4, ROUTE_CH41, ROUTE_CH22): the ROUTE_BOSS4 thirteen (em38 79 at 12), then em3e (94).
+RouteOverlay g_route_ovl[14];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : (id) == 61 ? 7 : (id) == 32 ? 8 : (id) == 10 ? 9 : (id) == 68 ? 10 : (id) == 31 ? 11 : (id) == 79 ? 12 : 13)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 66 || (id) == 63 || (id) == 61 || (id) == 32 || (id) == 10 || (id) == 68 || (id) == 31 || (id) == 79 || (id) == 94)
+#elif defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
 // ROUTE_BOSS4 (needs ROUTE_CH32): the ROUTE_CH41 twelve (em2c 31 at 11), then em38 (79).
 RouteOverlay g_route_ovl[13];
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : (id) == 61 ? 7 : (id) == 32 ? 8 : (id) == 10 ? 9 : (id) == 68 ? 10 : (id) == 31 ? 11 : 12)
@@ -415,13 +427,20 @@ RouteOverlay g_route_ovl[2];  // 0 = pl0f, 1 = em2f
 #define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39)
 #endif
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+#if defined(RE4DC_ROUTE_GALLERY) && RE4DC_ROUTE_GALLERY
+RouteOverlay g_stage_ovl[10];  // + st2_4 (r22c) at 9
+#else
 RouteOverlay g_stage_ovl[9];
+#endif
 inline int stageSlot(u32 id)
 {
     switch (id) {
     case 74: return 0; case 73: return 1; case 78: return 2; case 86: return 3;   // st1_0 st1_1 st1_2 st1_3
     case 75: return 4; case 82: return 5; case 83: return 6; case 97: return 7;   // st2_0 st2_1 st2_2 st2_3
     case 96: return 8;                                                           // st4_0
+#if defined(RE4DC_ROUTE_GALLERY) && RE4DC_ROUTE_GALLERY
+    case 118: return 9;                                                          // st2_4 (r22c)
+#endif
     }
     return -1;
 }
@@ -714,3 +733,9 @@ extern "C" void re4dc_module_counts(unsigned* fresh, unsigned* restarts, unsigne
     for (const auto& s : g_state) { f += s.fresh_links; r += s.restarts; u += s.unlinks; l += s.header != 0; }
     *fresh = f; *restarts = r; *unlinks = u; *linked = l;
 }
+
+#if defined(RE4DC_ROUTE_GALLERY) && RE4DC_ROUTE_GALLERY
+// The r22c <-> em3e cross-overlay calls (include/em3e.h struct Re4dcGalleryXrel: five function pointers), filled by
+// R22cInit / em3eInit.
+extern "C" { void* re4dc_gallery_xrel[5]; }
+#endif

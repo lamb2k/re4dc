@@ -459,6 +459,10 @@ static inline u32 flagBit(u32 f, u32 bit)
 // task; the bottle caps owned are counted.
 void R22cInit()
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    re4dc_gallery_xrel.hitMark = R22cHitMark;
+    re4dc_gallery_xrel.hitEffect = R22cHitEffect;
+#endif
 #line 1978 "D:/Bio4/Prog/r22c.cpp"
     r22c_work.p = (R22cWork*) MEM_CALLOC(sizeof(R22cWork), 1, 0xd);
     r22c_work.p->result.read();
@@ -1232,7 +1236,11 @@ static void shootMain()
                         if (d->flag != 2) {
                             r22c_work.p->total++;
                         }
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+                        re4dc_gallery_xrel.initData((cEmMark*) EmMgr.create(0x3E), (EmMarkData*) d);
+#else
                         ((cEmMark*) EmMgr.create(0x3E))->init((EmMarkData*) d);
+#endif
                         break;
                     case 0xFE:
                         r22c_work.p->pause = 0x78;
@@ -1433,7 +1441,11 @@ static void funcUfo()
         SceSleep(1);
     }
     m = (cEmMark*) EmMgr.create(0x3E);
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    re4dc_gallery_xrel.initData(m, (EmMarkData*) r22c_d38F0);
+#else
     m->init((EmMarkData*) r22c_d38F0);
+#endif
     se = SndCall(6, 6, &m->pos, 0, 0, 0);
     r22c_work.p->total++;
     while (m->isAlive() && m->type == 3 && m->hp > 0) {
@@ -1457,7 +1469,11 @@ void deleteAllMark()
 
     for (em = EmMgr.pAlive; em; em = (cEm*) em->pNext) {
         if (em->id == 0x3E && em->type <= 9 && em->hp > 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+            re4dc_gallery_xrel.setDown((cEmMark*) em);
+#else
             ((cEmMark*) em)->setDown();
+#endif
         }
     }
 }
@@ -1546,9 +1562,17 @@ static void r22cGateCtrl()
         break;
     }
     up = (cEmMark*) EmMgr.create(0x3E);
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    re4dc_gallery_xrel.initInst(up, type | 1, (EmMarkInst*) &r22c_d3920, 0.0f, 0.0f, 0.0f);
+#else
     up->init(type | 1, (EmMarkInst*) &r22c_d3920, 0.0f, 0.0f, 0.0f);
+#endif
     down = (cEmMark*) EmMgr.create(0x3E);
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    re4dc_gallery_xrel.initInst(down, type, (EmMarkInst*) &r22c_d3920, 0.0f, 0.0f, 0.0f);
+#else
     down->init(type, (EmMarkInst*) &r22c_d3920, 0.0f, 0.0f, 0.0f);
+#endif
     open = 0;
     for (;;) {
         if (pG->Room_flg[0] & 0x10000000) {

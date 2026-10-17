@@ -667,6 +667,19 @@ MODULES += em38:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em38
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_BOSS4=1
 endif
+# ROUTE_GALLERY=1 (lane ch4found16 2026-10-17, default 0: no effect; needs ROUTE_CH22=1 ROUTE_CH41=1 ROUTE_BOSS4=1
+#   STAGE_OVL=1): r22c, the castle shooting gallery, is the only room of stage module st2_4 (118: em_wrap v2, r22c.cpp,
+#   st2.cpp); its targets are em3e (94, emmark.cpp cEmMark, a room overlay). Without them r22c halted at the room load
+#   ("module: id 118 not in the image", main_sub.cpp(1440)). Lint (wiring.lint_module): st2_4 clean, em3e value-init.
+ROUTE_GALLERY ?= 0
+ifneq ($(ROUTE_GALLERY),0)
+ifneq ($(ROUTE_GALLERY)$(ROUTE_CH22)$(ROUTE_CH41)$(ROUTE_BOSS4)$(STAGE_OVL),11111)
+$(error ROUTE_GALLERY must be 0 or 1 and needs ROUTE_CH22=1 ROUTE_CH41=1 ROUTE_BOSS4=1 STAGE_OVL=1)
+endif
+MODULES += st2_4 em3e:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em3e
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_GALLERY=1
+endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
 # wep01 (module 3, Punisher; the merchant's medallion reward), wep07 (54, shotgun; r101 house), wep09 (62, rifle; its
@@ -2094,7 +2107,7 @@ ifneq ($(STAGE_OVL),0)
 ifneq ($(STAGE_OVL),1)
 $(error STAGE_OVL must be 0 or 1)
 endif
-STAGE_OVL_NAMES := $(sort $(filter st1_0 st1_1 st1_2 st1_3 st2_0 st2_1 st2_2 st2_3 st4_0,$(MODULES)))
+STAGE_OVL_NAMES := $(sort $(filter st1_0 st1_1 st1_2 st1_3 st2_0 st2_1 st2_2 st2_3 st2_4 st4_0,$(MODULES)))
 MODULES := $(filter-out $(STAGE_OVL_NAMES),$(MODULES)) $(addsuffix :ovl,$(STAGE_OVL_NAMES))
 export RE4DC_LINK_OVERLAY += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
 export RE4DC_OVL_HELPERS_SAFE += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
@@ -2104,7 +2117,7 @@ $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_STAGE_OVL=1
 GAME_SRCS += $(ROOT)/src/Tools/db_toolbase.cpp
 $(TARGET): $(OBJDIR)/src/Tools/db_toolbase.o
 endif
-STAGE_OVL_AUDITED_MODULES = $(if $(filter 1,$(STAGE_OVL)),st1_0:ovl st1_1:ovl st1_2:ovl st1_3:ovl st2_0:ovl st2_1:ovl st2_2:ovl st2_3:ovl st4_0:ovl)
+STAGE_OVL_AUDITED_MODULES = $(if $(filter 1,$(STAGE_OVL)),st1_0:ovl st1_1:ovl st1_2:ovl st1_3:ovl st2_0:ovl st2_1:ovl st2_2:ovl st2_3:ovl st2_4:ovl st4_0:ovl)
 # Direct-slot consumers reviewed for this module set. Audit any newly linked
 # module before enabling sparse enemy backing; census/reference remain usable.
 # CH23 em3b/em35: guarded default-initialization and sparse scans reviewed; stage st2_0 already audited.
@@ -2119,8 +2132,9 @@ CH31_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH31)),st2_1 em1a em1b em14)
 CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3c:ovl)
 CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
 BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
+GALLERY_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_GALLERY)),em3e:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(GALLERY_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif

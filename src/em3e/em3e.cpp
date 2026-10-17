@@ -25,6 +25,13 @@
 #include "global.h"
 #include "math_sub.h"
 #include "db_log.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+#define R22cHitMark re4dc_gallery_xrel.hitMark
+#define R22cHitEffect re4dc_gallery_xrel.hitEffect
+static void em3eXInitData(cEmMark* m, EmMarkData* d) { m->init(d); }
+static void em3eXInitInst(cEmMark* m, u8 type, EmMarkInst* inst, f32 x, f32 y, f32 z) { m->init(type, inst, x, y, z); }
+static void em3eXSetDown(cEmMark* m) { m->setDown(); }
+#endif
 
 extern "C" void OSReport(const char* fmt, ...);
 extern void (*EmInitFunc)(cEm* em);   // game/em.cpp
@@ -42,7 +49,15 @@ static void emmark_none(cEmMark* em);
 // EmInitFunc: placement-constructs a target in the cEm work.
 void em3eInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEmMark;
+    re4dc_gallery_xrel.initData = em3eXInitData;
+    re4dc_gallery_xrel.initInst = em3eXInitInst;
+    re4dc_gallery_xrel.setDown = em3eXSetDown;
+#else
     new (em) cEmMark();
+#endif
 }
 
 // Constructor: targets cannot be locked on.
