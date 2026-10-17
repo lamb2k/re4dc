@@ -1,6 +1,6 @@
 {
  "registry": "ps2-ch5-em1dp2",
- "about": "lane cast16 (2026-10-16): island soldiers em1d for r320 / r327 (eight types, two bodies): one POOL per head carrying both bodies, so the role rows fit the 128-bit Info::roles mask. Render only.",
+ "about": "lane cast16 (2026-10-16): island soldiers as POOL descriptors (ps2cast-st3 95f47e7d pairs and rooms; bump bodies admitted with NATIVE_BUMP_FLAT). Render only.",
  "cast_dir": "/root/probe/lanes-20261016/cast16/conv5/regcast-st3",
  "revision_overlay": "ps2-overlay",
  "level": "conservative",
@@ -8,72 +8,72 @@
  "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
  "descriptors": [
   {
-   "name": "soldr-1d-h31p",
+   "name": "soldr-1d-22fp",
    "archive": "em1d",
    "model_id": "0x1d",
    "source_types": [
     14,
-    18
-   ],
-   "pool": true,
-   "partial_sections": true,
-   "module": "src/em1d/em1d_set.cpp Em1dSet types 14 / 18 (em10.cpp class 2): body 0x22f or 0x247, head 0x231, stump 0x233, hands 0x234-0x23c"
-  },
-  {
-   "name": "soldr-1d-h49p",
-   "archive": "em1d",
-   "model_id": "0x1d",
-   "source_types": [
     15,
-    19
-   ],
-   "pool": true,
-   "partial_sections": true,
-   "module": "src/em1d/em1d_set.cpp Em1dSet types 15 / 19 (em10.cpp class 2): body 0x22f or 0x247, head 0x249, stump 0x233, hands 0x234-0x23c"
-  },
-  {
-   "name": "soldr-1d-h4bp",
-   "archive": "em1d",
-   "model_id": "0x1d",
-   "source_types": [
     16,
-    20
+    17
    ],
-   "pool": true,
    "partial_sections": true,
-   "module": "src/em1d/em1d_set.cpp Em1dSet types 16 / 20 (em10.cpp class 2): body 0x22f or 0x247, head 0x24b, stump 0x233, hands 0x234-0x23c"
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em1d/em1d_set.cpp Em1dSet types [14, 15, 16, 17] (em10.cpp class 2): body 0x22f, head 0x231, head-b 0x249, head-c 0x24b, head-d 0x24d, stump-b 0x233, stump-c 0x233, head-hit 0x233, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c, hood-a 0x23d, hood-b 0x23f, hood-c 0x241, acc2-a 0x243, acc2-b 0x245",
+   "pool": true
   },
   {
-   "name": "soldr-1d-h4dp",
+   "name": "soldr-1d-247p",
    "archive": "em1d",
    "model_id": "0x1d",
    "source_types": [
-    17,
+    18,
+    19,
+    20,
     21
    ],
-   "pool": true,
    "partial_sections": true,
-   "module": "src/em1d/em1d_set.cpp Em1dSet types 17 / 21 (em10.cpp class 2): body 0x22f or 0x247, head 0x24d, hands 0x234-0x23c"
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em1d/em1d_set.cpp Em1dSet types [18, 19, 20, 21] (em10.cpp class 2): body 0x247, head 0x231, head-b 0x249, head-c 0x24b, head-d 0x24d, stump-b 0x233, stump-c 0x233, head-hit 0x233, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c, hood-a 0x23d, hood-b 0x23f, hood-c 0x241, acc2-a 0x243, acc2-b 0x245",
+   "pool": true
+  },
+  {
+   "name": "soldr-em1d-02",
+   "archive": "em1d",
+   "model_id": "0x1d",
+   "source_types": [
+    2
+   ],
+   "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em1d/em1d_set.cpp Em1dSet types [2] (em10.cpp class 2): body 0x22b",
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261016/cast16/conv5/mask-soldr-em1d-02-s0"
+   }
   }
  ],
  "room_packages": {
   "320": {
    "descriptors": [
-    "soldr-1d-h31p",
-    "soldr-1d-h49p",
-    "soldr-1d-h4bp",
-    "soldr-1d-h4dp"
+    "soldr-1d-22fp",
+    "soldr-1d-247p",
+    "soldr-em1d-02"
    ],
-   "evidence": "ps2cast-st3 ps2-st3-r320.json room set (types 14-21)"
+   "evidence": "ps2cast-st3 ps2-st3-r320.json room set"
   },
   "327": {
    "descriptors": [
-    "soldr-1d-h31p",
-    "soldr-1d-h49p",
-    "soldr-1d-h4bp",
-    "soldr-1d-h4dp"
+    "soldr-1d-22fp",
+    "soldr-1d-247p",
+    "soldr-em1d-02"
    ],
-   "evidence": "ps2cast-st3 ps2-st3-r327.json room set (types 14-21)"
+   "evidence": "ps2cast-st3 ps2-st3-r327.json room set"
   }
  }
 }

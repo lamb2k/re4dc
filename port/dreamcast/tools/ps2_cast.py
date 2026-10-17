@@ -263,9 +263,14 @@ for _a, _types, _rooms in (('em14', (7, 8, 9), ['r20f']), ('em19', (7, 8, 9), ['
 def _soldier_pool(archive, body, head, rooms, types):
     return dict(archive=archive, sections=[(body, 'body'), (head, 'head'), (0x233, 'head-hit'),
                 (0x234, 'right-hand'), (0x235, 'right-open'), (0x236, 'right-point'), (0x237, 'right-grip'),
-                (0x238, 'left-hand'), (0x239, 'left-open'), (0x23a, 'left-point'), (0x23b, 'left-grip'), (0x23c, 'left-grip2')],
-                tpl=body + 1, section_tpls={head: head + 1, 0x233: head + 1}, rooms=rooms, types=types, category='registry',
-                model_id=int(archive[2:], 16), lit=True, subset_bones=True)
+                (0x238, 'left-hand'), (0x239, 'left-open'), (0x23a, 'left-point'), (0x23b, 'left-grip'), (0x23c, 'left-grip2'),
+                # em10.cpp EM10_ACC_PARTS (flag bits, types 14..24): hoods / helmets 0x23D / 0x23F / 0x241 (pHood) and
+                # 0x243 / 0x245 (pAccesory[2]). Their PS2 BINs carry the whole body bone table while the GC sections list
+                # only their parts (ps2_body_table_sections). 0x24F (pAccesory[3]) is a different PS2 mesh: not listed.
+                (0x23d, 'hood-a'), (0x23f, 'hood-b'), (0x241, 'hood-c'), (0x243, 'acc2-a'), (0x245, 'acc2-b')],
+                tpl=body + 1, section_tpls={head: head + 1, 0x233: head + 1, 0x23d: 0x23e, 0x23f: 0x240, 0x241: 0x242,
+                                            0x243: 0x244}, rooms=rooms, types=types, category='registry',
+                model_id=int(archive[2:], 16), lit=True, subset_bones=True, ps2_body_table_sections=True)
 
 
 for _n, _a, _b, _h, _r, _t in (
@@ -288,15 +293,21 @@ for _n, _a, _b, _h, _r, _t in (
 for _n in ('em1f-18', 'em1d-11', 'em1d-15', 'em1e-0f'):
     _s = PRESETS['soldr-%sp' % _n]
     _s['sections'] = [x for x in _s['sections'] if x[0] != 0x233]; _s['section_tpls'].pop(0x233)
-# em1d rooms r320 / r327 load all eight soldier types (bodies 0x22F / 0x247 x four heads): eight descriptors need 94 role
-# rows (> the 128-bit Info::roles mask with the 62 base rows), so one pool per head carries both bodies (types 14 + 18 ..
-# 17 + 21; 0x247 takes TPL 0x248). The pool binds whichever body the info list holds.
-for _h, _t, _st in ((0x231, (14, 18), True), (0x249, (15, 19), True), (0x24b, (16, 20), True), (0x24d, (17, 21), False)):
-    _s = _soldier_pool('em1d', 0x22f, _h, ['r320', 'r327'], list(_t))
-    _s['sections'].insert(1, (0x247, 'body2')); _s['section_tpls'][0x247] = 0x248
-    if not _st:
-        _s['sections'] = [x for x in _s['sections'] if x[0] != 0x233]; _s['section_tpls'].pop(0x233)
-    PRESETS['soldr-1d-h%02xp' % (_h & 0xff)] = _s
+# Body 0x247 types: 0x245 under the type's body TPL indexes past it (em1e types 23 / 25), and em1f type 24's hoods /
+# accessories rest elsewhere than its body bones (convert asserts); those sections keep their source path.
+for _n, _drop in (('em1e-17', (0x245,)), ('em1e-19', (0x245,)), ('em1f-18', (0x23d, 0x23f, 0x241, 0x243, 0x245))):
+    _s = PRESETS['soldr-%sp' % _n]
+    _s['sections'] = [x for x in _s['sections'] if x[0] not in _drop]
+    for _b in _drop:
+        _s['section_tpls'].pop(_b, None)
+# em1d rooms r320 / r327 load all eight soldier types (bodies 0x22F / 0x247 x four heads). One pool per body carries the
+# four heads (own TPLs), the stump under each head TPL it fits (not 0x24E), the hands under that body's TPL and the
+# hoods / accessories (NMRBIN, r327: a 0x247 soldier shows hands 0x237 / 0x238 with TPL 0x248, hood 0x23D, 0x243).
+for _body, _types in ((0x22f, (14, 15, 16, 17)), (0x247, (18, 19, 20, 21))):
+    _s = _soldier_pool('em1d', _body, 0x231, ['r320', 'r327'], list(_types))
+    _heads = [(0x249, 'head-b'), (0x24b, 'head-c'), (0x24d, 'head-d')]
+    _s['sections'][2:2] = [(h, r, h + 1) for h, r in _heads] + [(0x233, 'stump-b', 0x24a), (0x233, 'stump-c', 0x24c)]
+    PRESETS['soldr-1d-%xp' % _body] = _s
 PRESETS['soldr-em1d-02'] = dict(archive='em1d', sections=[(0x22b, 'body')], tpl=0x22c, rooms=['r300', 'r320', 'r327'],
                                   types=[2], category='registry', model_id=0x1d, lit=True)
 # lane cast16 (2026-10-16, chapter 4 castle): pool presets generated from the decompiled <em>_set.cpp motion tables
@@ -391,6 +402,10 @@ PRESETS['bat-em29-00']['rooms'] = PRESETS['bat-em29-00']['rooms'] + ['r229']
 for _t in (6, 7, 8, 9):
     PRESETS['zealot-em14-%02xp' % _t]['rooms'] = PRESETS['zealot-em14-%02xp' % _t]['rooms'] + ['r211', 'r214', 'r227']
 PRESETS['zealot-em1a-09p']['rooms'] = PRESETS['zealot-em1a-09p']['rooms'] + ['r214']
+
+
+# Em1eSet type 6 (r305 / r31d NMRBIN: the robed class-0 type, em10.cpp robe infos): zealot-em14-06p's entries on em1e.
+PRESETS['soldr-em1e-06p'] = dict(PRESETS['zealot-em14-06p'], archive='em1e', rooms=['r305', 'r31d'], model_id=0x1e)
 
 
 def section_specs(spec):
@@ -673,7 +688,27 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                 # a section root (parent -1) carries the body bone's rest position (model space)
                 want = b['translation'] if g['parent'] >= 0 else [r[3] for r in b['rest'][:3]]
                 assert g['parent'] in (b['parent'], -1) and max(abs(x - y) for x, y in zip(g['translation'], want)) <= bone_tol,                     (role, 'GC section part', g['id'], 'attach', g['attach'], 'differs from the body bone', g['translation'], want)
-            assert set(pb_['id'] for pb_ in m.bones) <= set(by_attach), (role, 'PS2 bones outside the GC section attach ids')
+            if (spec.get('ps2_body_table_sections') and len(m.bones) >= len(gsk)
+                    and not set(pb_['id'] for pb_ in m.bones) <= set(by_attach)):
+                # lane cast16 (island soldier accessories 0x23D..0x245): the PS2 section carries the whole body bone
+                # table while the GC section lists only the parts it uses. Bind it as a body-table section: PS2 bones
+                # equal the body bones (checked below as a full skeleton), and every PS2-weighted bone must be a part
+                # of the GC section (the runtime section has those parts).
+                weighted = {b for _, cs in pb.triangles(m) for c in cs for b, v in c['w'] if v > 0}
+                assert weighted <= set(by_attach), (role, 'PS2 weights outside the GC section parts', sorted(weighted - set(by_attach)))
+                # the weighted PS2 bones are checked against the body bones of the same id (a PS2 body table may be
+                # longer than this body's: em1e / em1f body 0x247 has 34 bones, the accessory tables 37)
+                assert all(b < len(bones) for b in weighted), (role, 'PS2 weights beyond the body skeleton')
+                pairs = [(pb_, bones[pb_['id']]) for pb_ in m.bones if pb_['id'] in weighted]
+                id_parent = all((pb_['id'], pb_['parent']) == (b['attach'], b['parent']) for pb_, b in pairs)
+                dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], b['translation'])) for pb_, b in pairs)
+                dt_body = 0.0
+                val.setdefault('ps2_body_table_sections', []).append(role)
+                assert id_parent and dt <= bone_tol, (role, id_parent, dt)
+                gsk = bones  # the pairing below then runs on the body table
+                m.bones = [pb_ for pb_ in m.bones if pb_['id'] < len(bones)]
+            else:
+                assert set(pb_['id'] for pb_ in m.bones) <= set(by_attach), (role, 'PS2 bones outside the GC section attach ids')
             # a PS2 bone takes the GC part of its id with the same parent (a repeated hand root: parent -1)
             cands = {}
             for g in gsk:

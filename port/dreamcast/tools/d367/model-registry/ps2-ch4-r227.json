@@ -27,26 +27,60 @@
    }
   },
   {
-   "name": "zealot-em14-79u",
+   "name": "zealot-em14-07p",
    "archive": "em14",
    "model_id": "0x14",
    "source_types": [
-    7,
-    8,
-    9
+    7
    ],
    "partial_sections": true,
-   "module": "src/em14/em14_set.cpp Em14Set type 121 (em10.cpp creates; ps2_cast.py pool)",
+   "module": "src/em14/em14_set.cpp Em14Set type 7 (em10.cpp creates; ps2_cast.py pool)",
    "pool": true,
    "source_drops": [
     "bump"
    ],
    "mask_runs": {
-    "13": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-79u-s13",
-    "16": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-79u-s16",
-    "20": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-79u-s20",
-    "33": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-79u-s33",
-    "46": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-79u-s46"
+    "13": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-07p-s13",
+    "16": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-07p-s16",
+    "20": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-07p-s20"
+   }
+  },
+  {
+   "name": "zealot-em14-08p",
+   "archive": "em14",
+   "model_id": "0x14",
+   "source_types": [
+    8
+   ],
+   "partial_sections": true,
+   "module": "src/em14/em14_set.cpp Em14Set type 8 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-08p-s13",
+    "16": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-08p-s16",
+    "20": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-08p-s20"
+   }
+  },
+  {
+   "name": "zealot-em14-09p",
+   "archive": "em14",
+   "model_id": "0x14",
+   "source_types": [
+    9
+   ],
+   "partial_sections": true,
+   "module": "src/em14/em14_set.cpp Em14Set type 9 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-09p-s13",
+    "16": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-09p-s16",
+    "20": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-09p-s20"
    }
   }
  ],
@@ -54,7 +88,9 @@
   "227": {
    "descriptors": [
     "zealot-em14-06p",
-    "zealot-em14-79u"
+    "zealot-em14-07p",
+    "zealot-em14-08p",
+    "zealot-em14-09p"
    ],
    "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
   }

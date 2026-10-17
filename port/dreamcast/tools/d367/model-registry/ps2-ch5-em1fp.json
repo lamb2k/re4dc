@@ -1,6 +1,6 @@
 {
  "registry": "ps2-ch5-em1fp",
- "about": "lane cast16 (2026-10-16): island soldiers em1f as POOL descriptors (variable info lists bind; ps2cast-st3 95f47e7d pairs and rooms). Render only.",
+ "about": "lane cast16 (2026-10-16): island soldiers as POOL descriptors (ps2cast-st3 95f47e7d pairs and rooms; bump bodies admitted with NATIVE_BUMP_FLAT). Render only.",
  "cast_dir": "/root/probe/lanes-20261016/cast16/conv5/regcast-st3",
  "revision_overlay": "ps2-overlay",
  "level": "conservative",
@@ -14,8 +14,11 @@
    "source_types": [
     14
    ],
-   "module": "src/em1f/em1f_set.cpp Em1fSet type 14 (em10.cpp class 2): body 0x22f, head 0x231, head-hit 0x233, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c",
    "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet types [14] (em10.cpp class 2): body 0x22f, head 0x231, head-hit 0x233, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c, hood-a 0x23d, hood-b 0x23f, hood-c 0x241, acc2-a 0x243, acc2-b 0x245",
    "pool": true
   },
   {
@@ -25,8 +28,11 @@
    "source_types": [
     15
    ],
-   "module": "src/em1f/em1f_set.cpp Em1fSet type 15 (em10.cpp class 2): body 0x22f, head 0x249, head-hit 0x233, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c",
    "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet types [15] (em10.cpp class 2): body 0x22f, head 0x249, head-hit 0x233, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c, hood-a 0x23d, hood-b 0x23f, hood-c 0x241, acc2-a 0x243, acc2-b 0x245",
    "pool": true
   },
   {
@@ -36,8 +42,25 @@
    "source_types": [
     16
    ],
-   "module": "src/em1f/em1f_set.cpp Em1fSet type 16 (em10.cpp class 2): body 0x22f, head 0x24b, head-hit 0x233, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c",
    "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet types [16] (em10.cpp class 2): body 0x22f, head 0x24b, head-hit 0x233, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c, hood-a 0x23d, hood-b 0x23f, hood-c 0x241, acc2-a 0x243, acc2-b 0x245",
+   "pool": true
+  },
+  {
+   "name": "soldr-em1f-18p",
+   "archive": "em1f",
+   "model_id": "0x1f",
+   "source_types": [
+    24
+   ],
+   "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em1f/em1f_set.cpp Em1fSet types [24] (em10.cpp class 2): body 0x247, head 0x24d, right-hand 0x234, right-open 0x235, right-point 0x236, right-grip 0x237, left-hand 0x238, left-open 0x239, left-point 0x23a, left-grip 0x23b, left-grip2 0x23c",
    "pool": true
   }
  ],
@@ -46,7 +69,8 @@
    "descriptors": [
     "soldr-em1f-0ep",
     "soldr-em1f-0fp",
-    "soldr-em1f-10p"
+    "soldr-em1f-10p",
+    "soldr-em1f-18p"
    ],
    "evidence": "ps2cast-st3 ps2-st3-r304.json room set"
   },
@@ -62,7 +86,8 @@
    "descriptors": [
     "soldr-em1f-0ep",
     "soldr-em1f-0fp",
-    "soldr-em1f-10p"
+    "soldr-em1f-10p",
+    "soldr-em1f-18p"
    ],
    "evidence": "ps2cast-st3 ps2-st3-r30c.json room set"
   },
@@ -78,7 +103,8 @@
    "descriptors": [
     "soldr-em1f-0ep",
     "soldr-em1f-0fp",
-    "soldr-em1f-10p"
+    "soldr-em1f-10p",
+    "soldr-em1f-18p"
    ],
    "evidence": "ps2cast-st3 ps2-st3-r311.json room set"
   },
@@ -93,7 +119,8 @@
   "330": {
    "descriptors": [
     "soldr-em1f-0fp",
-    "soldr-em1f-10p"
+    "soldr-em1f-10p",
+    "soldr-em1f-18p"
    ],
    "evidence": "ps2cast-st3 ps2-st3-r330.json room set"
   },

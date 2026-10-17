@@ -565,6 +565,7 @@ def main():
         if not POOL:
             sys.exit('model_registry: --roles5 needs --pool')
         MATERIAL_ROWS = 160
+        PACK_CAPACITY.update(ref=96)  # RE4DC_NMR_CHUNKS 96 with RE4DC_NMR_ROLES5 (coarse_actor_owner_registry.inc)
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
