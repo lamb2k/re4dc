@@ -196,6 +196,9 @@ void re4dc_log(const char* fmt, ...);
 #endif
 #if defined(RE4DC_GIGANTE_LIGHTS) && RE4DC_GIGANTE_LIGHTS
 extern "C" int re4dc_actor_model_id(const void* model);  // model_bridge.cpp (GIGANTE_LIGHTS)
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS
+extern "C" int re4dc_actor_obj_id(const void* model);  // model_bridge.cpp (STATUE_LIGHTS)
+#endif
 #endif
 #if defined(RE4DC_LEON_LIGHT_TOGGLE) && RE4DC_LEON_LIGHT_TOGGLE
 extern "C" unsigned re4dc_leon_light_mode;  // LEON_LIGHT_TOGGLE (defined below, next to the probe API)
@@ -1636,6 +1639,13 @@ struct Lights {
     float dir[3][4]{};       // normal space, x nq (w = 0)
     alignas(8) float color[16]{};
     const SourceLighting* source = nullptr;
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS && !RE4DC_ACTOR_EXACT_FAST
+#error STATUE_LIGHTS=2 needs ACTOR_EXACT_FAST (the exact evaluator adds the ambient share)
+#endif
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
+    bool exact_ready = false;  // STATUE_LIGHTS=2: build_lights already filled the prepared set (strongest 3)
+    float extra[3]{};          // STATUE_LIGHTS=2: the dropped lights' share, added to the ambient start
+#endif
 #if RE4DC_ACTOR_NO_CLEAR
     // ACTOR_NO_CLEAR: the exact path's prepared lights are not default-initialised (~0.4 KB per Lights): they are
     // read only by pass_lights_exact, after a fold that returned false, and the callers assign them on that return.
@@ -1732,6 +1742,10 @@ unsigned gigante_keep(const Re4dcModelPart& p) {
     // part + ambient, as the PS2 lights its characters per vertex, instead of the exact per-vertex path.
     if (id >= 0x10 && id <= 0x20) return 3U;
 #endif
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS
+    // STATUE_LIGHTS=2: the r226 statue (cObjRobo, object 0x37) takes the exact 3-light evaluator in build_lights.
+    if (id < 0 && re4dc_actor_obj_id(p.model) == 0x37) return 3U;
+#endif
     return 0U;
 }
 #endif
@@ -1810,6 +1824,10 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
 #if RE4DC_GIGANTE_LIGHTS
     float cand_dir[8][4], cand_vd[8], cand_col[8][3], cand_w[8];
     unsigned cands = 0;
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
+    unsigned cand_i[8];
+    const bool statue_exact = keep && re4dc_actor_obj_id(p.model) == 0x37;
+#endif
 #endif
     for (unsigned i = 0; i < 8; ++i) {
         if (!(S.mask & (1U << i))) continue;
@@ -1839,6 +1857,9 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
             cand_vd[cands] = (lx * px + ly * py + lz * pz) * cr;
             cand_col[cands][0] = red; cand_col[cands][1] = green; cand_col[cands][2] = blue;
             cand_w[cands] = std::max(red, std::max(green, blue));
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
+            cand_i[cands] = i;
+#endif
             ++cands;
             continue;
         }
@@ -1854,6 +1875,27 @@ bool build_lights(const Re4dcModelPart& p, const Frame& f, const float center[3]
         ++L.count;
     }
 #if RE4DC_GIGANTE_LIGHTS
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
+    if (statue_exact) {
+        // STATUE_LIGHTS=2: the exact per-vertex evaluator (per-vertex direction and attenuation) on the 3 lights
+        // strongest at the part, the rest as a directionless ambient share (mean clamped Lambert, 1/4).
+        auto& P = RE4DC_PREPARED(L);
+        P.count = 0;
+        bool used[8]{};
+        for (unsigned l = 0; l < cands && l < 3U; ++l) {
+            unsigned best = 8;
+            for (unsigned j = 0; j < cands; ++j)
+                if (!used[j] && (best == 8 || cand_w[j] > cand_w[best])) best = j;
+            used[best] = true;
+            P.lights[P.count++] = S.lights[cand_i[best]];
+        }
+        for (unsigned j = 0; j < cands; ++j)
+            if (!used[j]) for (unsigned c = 0; c < 3; ++c) L.extra[c] += 0.25f * cand_col[j][c];
+        L.exact_ready = true;
+        L.count = 0;
+        return false;
+    }
+#endif
     if (keep) {
         // Strongest first (ties keep the source order); the first `limit` become directions, the rest ambient.
         const unsigned limit = cands > 3 ? keep : 3U;
@@ -3815,6 +3857,9 @@ void pass_lights_exact(Part& e, const Lights& L, const Records& r, unsigned n) {
         const u8* material = S.material_vertex ? color : S.material;
         float out0 = S.enable ? ambient[0] / 255.f : 1.f, out1 = S.enable ? ambient[1] / 255.f : 1.f,
               out2 = S.enable ? ambient[2] / 255.f : 1.f;
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
+        out0 += L.extra[0]; out1 += L.extra[1]; out2 += L.extra[2];
+#endif
         for (unsigned j = 0; j < count; ++j) {
             const FastLight& l = fl[j];
             float lx = l.x - w[0], ly = l.y - w[1], lz = l.z - w[2];
@@ -4984,7 +5029,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 
     Lights lights;
     G1PC_LIGHT(p, f, blob->center);
-    if (!RE4DC_PART_LIGHTS(p, f, blob->center, lights)) RE4DC_PREPARED(lights) = re4dc::render::prepare_actor_lights(*p.lighting);
+    if (!RE4DC_PART_LIGHTS(p, f, blob->center, lights))
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
+        if (!lights.exact_ready)
+#endif
+        RE4DC_PREPARED(lights) = re4dc::render::prepare_actor_lights(*p.lighting);
     lights.source = p.lighting;
     const unsigned tier = crowd_class > 0 ? crowd_tier(p, crowd_class) : kTierFull;
     if (tier >= (kCrowdFlat ? kTierNear : kTierMid) && tier != kTierFull && lights.fast && !lights.constant
@@ -5554,7 +5603,11 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     G1PC_PART(p, true);
     if (!constant_source || !w.lights_ready || w.lights.source != p.lighting) {
         G1PC_LIGHT(p, f, blob->center);
-        if (!RE4DC_PART_LIGHTS(p, f, blob->center, *lp)) RE4DC_PREPARED(*lp) = re4dc::render::prepare_actor_lights(*p.lighting);
+        if (!RE4DC_PART_LIGHTS(p, f, blob->center, *lp))
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS >= 2
+        if (!lp->exact_ready)
+#endif
+        RE4DC_PREPARED(*lp) = re4dc::render::prepare_actor_lights(*p.lighting);
         lp->source = p.lighting;
         w.lights_ready = constant_source;
     }

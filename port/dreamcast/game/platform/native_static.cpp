@@ -4137,7 +4137,11 @@ bool ps2_open(){
 #if RE4DC_PS2_WORLD_ROOMS
     if((ps2w.storage || ps2w.attempted) && ps2w.room!=ps2w.want)ps2_free(); // another room's package
 #endif
+#if RE4DC_FAR_SHELL
+    if(ps2w.storage){farshell::sync();return true;}   // FAR_SHELL: read / free the shell as the View distance and heap 4 allow
+#else
     if(ps2w.storage)return true;
+#endif
     if(ps2w.attempted)return false;
     ps2w.attempted=true;
 #if RE4DC_PS2_WORLD_R11F_OWNER
@@ -4397,11 +4401,8 @@ bool ps2_open(){
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
 #if RE4DC_FAR_SHELL
-#if RE4DC_PS2_WORLD_ROOMS
-    farshell::open(ps2w.room);   // FAR_SHELL: the room's far shell, read with its world package
-#else
-    farshell::open(0x101);
-#endif
+    farshell::pol.tried=false;
+    farshell::sync();   // FAR_SHELL: the room's far shell, read with its world package only at View distance Short
 #endif
 #if RE4DC_PS2_VERTEX_ALPHA
     {unsigned marked=0;for(unsigned i=0;i<h.parts;++i)marked+=ps2w.parts[i].reserved&1U;
@@ -5381,7 +5382,7 @@ extern "C" void re4dc_ps2_mesh_retire(){
     gate::retire();
 #endif
 #if RE4DC_FAR_SHELL
-    farshell::close();
+    farshell::close();farshell::pol.tried=false;farshell::pol.movie=false;
 #endif
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);
@@ -5495,6 +5496,11 @@ extern "C" int re4dc_ps2_world_room(unsigned room){
     const unsigned stage=room>>8,index=room&255U;
 #if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
     if(stage==3)return (kPs2WorldSt3Bits[index>>5]>>(index&31U))&1U;
+#endif
+#if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
+    // ROUTE_CH41 (lane ch4found16): r222 and r22b, whose packages postdate the 10-04 registry (castle lane step 1:
+    // all 42 castle packages match Codex's READY hand-backs); without them both rooms drew the released GC scenery.
+    if(room==0x222 || room==0x22B)return 1;
 #endif
     return stage<6 && ((kPs2WorldRoomBits[stage][index>>5]>>(index&31U))&1U);
 }

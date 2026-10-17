@@ -1,0 +1,11 @@
+# vq16-r200k.txt (lane r200-17, 2026-10-16): the 16-bit pictures of the chapter 2-3 end truck scene in r200 (visit 2,
+# r10f -> truck -> r200s00), as full-codebook VQ (vram/vq16c-texpak.sh, PSNR >= 29 dB). The scene runs at the edge of the
+# texture budget (2.39 of 2.44 MB used at frame 840, largest free block 2-4 KB) and refused 2 effect sprites under eviction
+# pressure in 2 of 3 runs (thrash guard, guard_p). 245,760 -> 40,960 B. Left 16-bit (under 29 dB): 46490715-327b2d12
+# (RGB565, 26.8 dB), f078961b-e7954b5c (RGB565, 27.8 dB). The truck scene's three 512x512 GameCube cast pictures
+# (ebed7ba6, b4f70c44, 65c6fe5a) are already VQ with their mip chain in tex.pak (89,430 B each, CAST_MIPMAP).
+0c59b4bc-59b3e686	G	r200 material pair 256x256 ARGB4444 (53.2 dB; the source-world fallback frames)
+b70cb3fd-7fd01c3f	T	truck scene 128x128 ARGB4444 (46.5 dB)
+7035a62f-479b8168	T	truck scene 128x128 ARGB4444 (45.7 dB)
+3e3b16c1-67fb444f	T	truck scene 128x128 ARGB4444 (46.4 dB)
+ffab7f0f-f087a7ef	G	r200 material pair 64x128 ARGB4444 (30.4 dB)

@@ -2066,6 +2066,48 @@ def fmt_ss_arc(sw, off, size, ctx):
     return fmt_tagged(sw, off, size, ctx)
 
 
+def fmt_ss_call(sw, off, size, ctx):
+    """Codec partner data SS/cmn/ss_ocNNN.dat (Sscrn/ss_term.cpp termMotionSet): a tagged archive whose
+    SS_ARC_PTR 15 (sub-file 11) ShapeData morphs the partner's model info 3, the face BIN at
+    SS_ARC_PTR 9 (sub-file 5; hunniganModelInit). In ss_oc205 / ss_oc206 (retail GC, the 2004.11.25 review
+    disc and the PS2 release alike) that ShapeData has channels for face shapes 9 and 10, but the face has 9
+    shapes (0..8). shape.cpp CalculateShape_new reads entry idx * 8 of the table anyway: the bytes after the
+    table (the first delta list), whose count word is negative in big-endian (-65536 / -458751), so on the
+    GameCube those channels add nothing. Swapped to little-endian the same words read 65535 / 131065 and the
+    loop writes over memory (r229: the castle call corrupted the ordering table). Such a channel is pointed at
+    a face shape with an empty delta list instead (entry 0 of this face: 0 deltas), the GameCube result
+    exactly, in the data and not in the morph loop. A phantom entry that GameCube would apply (count > 0)
+    is an error."""
+    if not looks_like_tagged(sw.data, off, size):
+        raise ValueError('not a codec partner tagged archive')
+    n = struct.unpack_from('>I', sw.data, off)[0]
+    if n >= 12:
+        offs = struct.unpack_from('>%dI' % n, sw.data, off + 0x10)
+        tags = bytes(sw.data[off + 0x10 + 4 * n: off + 0x10 + 8 * n])
+        if tags[5 * 4:5 * 4 + 4] == b'BIN\0' and tags[11 * 4:11 * 4 + 4] == b'FCV\0':
+            face, shape = off + offs[5], off + offs[11]
+            shape_ofs = struct.unpack_from('>I', sw.data, face + 44)[0]
+            if shape_ofs:
+                count = struct.unpack_from('>I', sw.data, face + shape_ofs)[0]
+                table = face + shape_ofs + 4
+                nums = [struct.unpack_from('>i', sw.data, table + 8 * i + 4)[0] for i in range(count)]
+                num = sw.data[shape + 2]
+                idx = shape + 3 + 2 * num
+                for ch in range(num):
+                    k = sw.data[idx + ch]
+                    if k < count:
+                        continue
+                    phantom = struct.unpack_from('>i', sw.data, table + 8 * k + 4)[0]
+                    if phantom > 0 or 0 not in nums:
+                        raise ValueError('shape channel %d: face shape %d of %d (GameCube count %d)' % (ch, k, count, phantom))
+                    sw.data[idx + ch] = nums.index(0)
+                    REPORT.append({'file': sw.label, 'sub': '%s#11' % ctx, 'tag': 'FCV', 'handled': True,
+                                   'complete': True, 'ofs': idx + ch, 'size': 1,
+                                   'format': 'ShapeData channel %d: face shape %d of %d (GameCube count %d, no-op) -> %d'
+                                             % (ch, k, count, phantom, nums.index(0))})
+    return fmt_tagged(sw, off, size, ctx)
+
+
 def guarded(sw, handler, off, size, ctx, entry):
     """Runs a handler confined to [off, off+size); on a layout error that
     region (and only that region) is restored raw and the error recorded, so
@@ -2122,6 +2164,7 @@ FILE_FORMATS = [
     ("ss/item/*.bin", fmt_bin),
     ("ss/cmn/itm*.bin", fmt_bin),
     ("ss/*/ss_pzzl.dat", fmt_ss_arc),
+    ("ss/cmn/ss_oc*.dat", fmt_ss_call),
     ("*.tpl", fmt_tpl),
 ]
 
@@ -2516,6 +2559,13 @@ def static_module_ids(extra=()):
             rows = re.findall(r'^    \{%s, "%s", 0, 0, 0, 0, 0, 0, 0\},  // ROUTE_CH3: .*$' % (ident, name), registry, re.M)
             if len(rows) != 1:
                 raise ValueError(name + ' overlay registry identity changed')
+            bindings.append((ident, name))
+    # ROUTE_CH32 room overlays (lane ch3found16 2026-10-17): em2d id32, em25 id10, em3c id68 have only their overlay row.
+    for name, ident in (('em2d', '32'), ('em25', '10'), ('em3c', '68')):
+        if name in extra:
+            rows = re.findall(r'^    \{%s, "%s", 0, 0, 0, 0, 0, 0, 0\}, // ROUTE_CH32: .*room overlay$' % (ident, name), registry, re.M)
+            if len(rows) != 1:
+                raise ValueError('%s overlay registry identity changed' % name)
             bindings.append((ident, name))
     makefile = (root / 'port/dreamcast/game/Makefile').read_text()
     # Knob-conditional modules (`MODULES += ...` under WORLD_STAGE_MODULES=1, with #if-guarded registry rows) are

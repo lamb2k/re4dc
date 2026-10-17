@@ -1,0 +1,10 @@
+# lane castgc17 CAST-GC census warp for r119 (<= 60 s): tools/d367/ch4found/warps/vq-r119.txt; still-capture lines (freeze / viewdist / dump) removed,
+# god added. Census build: NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150.
+name vq-r119
+# ch4found16 VQ c42 check: r119 (fe3e58ff room / em2b texture)
+room 0x119
+pos 124500 2251 10888
+ang -1.571
+rsf 0x119 0
+inv default
+god

@@ -1,0 +1,10 @@
+# lane castgc17 CAST-GC census warp for r101 (<= 60 s): warp.py preset r101-bell-fight; still-capture lines (freeze / viewdist / dump) removed,
+# god added. Census build: NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150.
+name r101-bell-fight
+# r101 square, fight about to start (flags 6/7 clear, first visit done)
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+find 0x00002000
+inv default
+god

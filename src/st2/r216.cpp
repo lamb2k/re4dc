@@ -356,6 +356,12 @@ static void r216_BattleEndEndProc()
 // Areas 5/6: show (on = 1) / hide the four display armors (draw distance culling by hand).
 static void r216_ArmorDispOnOff(int on)
 {
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x04)
+    // PS2 USA: r216_ArmorDispOnOff is a stub (SceExit only; PS2-ENEMY-CODE-DIFF Follow-up B): with only 0xE8 sent,
+    // nothing is hidden or shown by areas 5 / 6.
+    (void) on;
+    return;
+#endif
     r216_work.p->armor[0].em.setTrans(on);
     r216_work.p->armor[1].em.setTrans(on);
     r216_work.p->armor[2].em.setTrans(on);

@@ -1,0 +1,16 @@
+# vq16-c41 (lane ch4found16 2026-10-16, user rule 10-16: VQ by default when it frees needed capacity, PSNR >= 29 dB,
+# RGB565 only, castle loose keys not in the test 15 pak): event r22bs00 textures; key, size, PSNR dB, rooms (cxc4cmW Flycast loads)
+12ec5e23-c8572f49 128x128 37.9 r22b
+4b99ae25-98b8b018 256x256 42.6 r22b
+4be79d2e-02dfc51d 256x256 43.8 r22b
+69471fa8-766be461 128x256 33.1 r22b
+861d5d7a-169cb23f 512x512 39.1 r22b
+8c89c36b-90c616fc 512x512 33.0 r22b
+c7c617a4-799a5b9c 256x128 35.9 r22b
+c8858f9c-08d4776b 256x256 43.3 r22b
+ed9a45b9-56552f9c 256x128 34.7 r22b
+f0bb7d17-fb2846a1 256x256 47.0 r22b
+fe69373e-2e4c7f12 512x512 33.0 r22b
+455763af-895af36a 216x132 32.5 r22b (chap04 end screen)
+5cb066f3-87c8bbc8 640x360 41.9 r22b (chap04 end screen)
+dbb8d77a-aa29d37e 640x360 35.0 r22b (chap04 end screen)

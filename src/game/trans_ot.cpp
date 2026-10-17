@@ -326,11 +326,153 @@ extern "C" int AddOtDirect(int ot, void* data, void (*func)(), u32 no, u16 flag,
     return no;
 }
 
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
+// OT_WALK_CHECK (lane ch4found16 2026-10-16, debug arm, default 0): before each entry's call, the walk checks the
+// node (4-byte aligned, in main RAM) and its func (2-byte aligned, in main RAM). The first bad node is reported with
+// the entry before it (whose `next` points at it: its owner's func / data / kind and the words around it) and the
+// table's walk stops there instead of faulting (r229: ExecOt node 0x8ce3xxxx odd, callback 0x23708b0d).
+static int re4dc_otwc_reports;
+static bool re4dc_otwc_ok(const void* a, u32 align)
+{
+    const u32 v = (u32) a;
+    return (v & (align - 1)) == 0 && v >= RE4_MEM_LO && v <= RE4_MEM_HI;
+}
+struct Re4dcPrimTag { u32 addr, size, frame, caller; };
+extern "C" { extern Re4dcPrimTag re4dc_prim_tags[2048]; extern u32 re4dc_prim_tag_n; }
+// The newest tags (up to 6) whose slot covers `a`, newest first, and the newest buffer flip before each.
+static void re4dc_otwc_tags(const char* what, u32 a)
+{
+    int shown = 0;
+    const u32 n = re4dc_prim_tag_n;
+    for (u32 k = 0; k < 2048 && k < n && shown < 6; k++) {
+        const Re4dcPrimTag& t = re4dc_prim_tags[(n - 1 - k) & 2047];
+        if (t.size && a >= t.addr && a < t.addr + t.size) {
+            re4dc_log("OTWC   %s %08x in slot %08x+%u frame %u caller %08x (tag -%u)\n", what, (unsigned) a,
+                      (unsigned) t.addr, (unsigned) t.size, (unsigned) t.frame, (unsigned) t.caller, (unsigned) k);
+            ++shown;
+        }
+    }
+    for (u32 k = 0; k < 2048 && k < n; k++) {
+        const Re4dcPrimTag& t = re4dc_prim_tags[(n - 1 - k) & 2047];
+        if (!t.size) {
+            re4dc_log("OTWC   last flip: start %08x frame %u nPrim %u buf %u (tag -%u), now frame %u\n", (unsigned) t.addr,
+                      (unsigned) t.frame, (unsigned) (t.caller & 0x7FFFFFFF), (unsigned) (t.caller >> 31), (unsigned) k,
+                      (unsigned) pG->Frame_cnt);
+            break;
+        }
+    }
+    if (!shown) re4dc_log("OTWC   %s %08x: no GetPrimBuff slot in the last 2048 tags\n", what, (unsigned) a);
+}
+static OtData* re4dc_otwc_cur;
+static int re4dc_otwc_cur_type = -1, re4dc_otwc_cur_n;
+static void re4dc_otwc_report(int type, int count, OtWork* w, OtData* prev, OtData* p);
+// fault.cpp (OT_WALK_CHECK): a fault names the ExecOt entry being called, if any, and the slots that cover it.
+extern "C" void re4dc_otwc_fault()
+{
+    if (g_NowExecOtType == OT_MAX || re4dc_otwc_cur_type < 0) {
+        re4dc_log("OTWC fault: outside ExecOt (last table %d)\n", re4dc_otwc_cur_type);
+        return;
+    }
+    OtData* p = re4dc_otwc_cur;
+    re4dc_log("OTWC fault in ExecOt: table %d entry %d node %08x\n", re4dc_otwc_cur_type, re4dc_otwc_cur_n,
+              (unsigned) (u32) p);
+    if (re4dc_otwc_ok(p, 4)) {
+        re4dc_log("OTWC   node data %08x func %08x next %08x kind %04x\n", (unsigned) (u32) p->data,
+                  (unsigned) (u32) p->func, (unsigned) (u32) p->next, (unsigned) p->kind);
+        const u32* q = (const u32*) p - 8;
+        for (int i = 0; i < 24; i += 8) {
+            re4dc_log("OTWC   %08x: %08x %08x %08x %08x %08x %08x %08x %08x\n", (unsigned) (u32) (q + i), q[i],
+                      q[i + 1], q[i + 2], q[i + 3], q[i + 4], q[i + 5], q[i + 6], q[i + 7]);
+        }
+        re4dc_otwc_tags("node", (u32) p);
+        if (re4dc_otwc_ok((const void*) p->func, 4)) re4dc_otwc_tags("func", (u32) p->func);
+    }
+}
+static void re4dc_otwc_report(int type, int count, OtWork* w, OtData* prev, OtData* p)
+{
+    if (re4dc_otwc_reports++ >= 6) return;
+    re4dc_log("OTWC bad node: table %d entry %d frame %u room %03x node %08x list %08x..%08x max %d\n", type, count,
+              (unsigned) pG->Frame_cnt, (unsigned) pG->room_id, (unsigned) (u32) p, (unsigned) (u32) w->list,
+              (unsigned) (u32) (w->list + w->max), (int) w->max);
+    if (re4dc_otwc_ok(p, 4)) {
+        re4dc_otwc_tags("node", (u32) p);
+        re4dc_log("OTWC   node data %08x func %08x next %08x kind %04x\n", (unsigned) (u32) p->data,
+                  (unsigned) (u32) p->func, (unsigned) (u32) p->next, (unsigned) p->kind);
+    }
+    if (prev && re4dc_otwc_ok(prev, 4)) {
+        const bool head = prev >= w->list && prev < w->list + w->max;
+        re4dc_log("OTWC   prev %08x (%s %d) data %08x func %08x kind %04x\n", (unsigned) (u32) prev,
+                  head ? "bucket" : "entry", head ? (int) (prev - w->list) : -1, (unsigned) (u32) prev->data,
+                  (unsigned) (u32) prev->func, (unsigned) prev->kind);
+        re4dc_otwc_tags("prev", (u32) prev);
+        const u32* q = (const u32*) prev - 8;
+        if (re4dc_otwc_ok(q, 4)) {
+            for (int i = 0; i < 24; i += 8) {
+                re4dc_log("OTWC   %08x: %08x %08x %08x %08x %08x %08x %08x %08x\n", (unsigned) (u32) (q + i), q[i],
+                          q[i + 1], q[i + 2], q[i + 3], q[i + 4], q[i + 5], q[i + 6], q[i + 7]);
+            }
+        }
+    }
+}
+#endif
+
 // Runs table `type` from the farthest bucket to the nearest, calling each entry's func(data)
 // (g_NowExecOtType / prev_kind tell the callbacks their context); alpha compare reset afterwards.
 // Returns the number of entries drawn.
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
+extern "C" void re4dc_otwc_pad_check(u32 where);   // trans.cpp
+#endif
+#if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
+// OT_PROF=1 (lane cast16 2026-10-17; diagnostic, default 0): per OT callback (function + data) CPU time and PVR bytes
+// (native_ui stream_model_bytes delta) over 120-UI-frame windows; the top 24 by time are logged as OTP lines. A data
+// pointer in main RAM also logs its cModel id / type / parts bytes (0x100..0x102; meaningless for non-models).
+extern "C" unsigned re4dc_stream_model_bytes_now();
+extern "C" unsigned long long re4dc_otp_now_us();
+extern "C" unsigned re4dc_ui_frame();
+extern "C" void re4dc_log(const char*, ...);
+namespace {
+struct OtpRow { void* f; void* d; unsigned t, n, us, bytes; };
+OtpRow otp_rows[128];
+unsigned otp_n, otp_over, otp_last, otp_frames_t0;
+void otp_add(void* f, void* d, unsigned t, unsigned us, unsigned bytes)
+{
+    for (unsigned k = 0; k < otp_n; ++k) {
+        OtpRow& r = otp_rows[k];
+        if (r.f == f && r.d == d && r.t == t) { r.n++; r.us += us; r.bytes += bytes; return; }
+    }
+    if (otp_n == 128) { otp_over++; return; }
+    OtpRow& r = otp_rows[otp_n++]; r.f = f; r.d = d; r.t = t; r.n = 1; r.us = us; r.bytes = bytes;
+}
+void otp_window()
+{
+    const unsigned fr = re4dc_ui_frame();
+    if (!otp_last) { otp_last = fr; return; }
+    if (fr - otp_last < 120) return;
+    unsigned tot_us = 0, tot_b = 0;
+    for (unsigned k = 0; k < otp_n; ++k) { tot_us += otp_rows[k].us; tot_b += otp_rows[k].bytes; }
+    re4dc_log("OTP f=%u frames=%u rows=%u over=%u total_us=%u total_bytes=%u\n", fr, fr - otp_last, otp_n, otp_over, tot_us, tot_b);
+    for (unsigned i = 0; i < 24 && i < otp_n; ++i) {
+        unsigned best = i;
+        for (unsigned k = i + 1; k < otp_n; ++k) if (otp_rows[k].us > otp_rows[best].us) best = k;
+        OtpRow tmp = otp_rows[i]; otp_rows[i] = otp_rows[best]; otp_rows[best] = tmp;
+        const OtpRow& r = otp_rows[i];
+        const unsigned a = (unsigned) r.d;
+        unsigned id = 0xFFFF, ty = 0xFFFF, parts = 0xFFFF;
+        if (a >= 0x8C010000u && a < 0x8CFFFE00u) { const u8* m = (const u8*) r.d; id = m[0x100]; ty = m[0x101]; parts = m[0x102]; }
+        re4dc_log("OTP  fn=%p data=%p ot=%u calls=%u us=%u bytes=%u id=%x ty=%x parts=%u\n", r.f, r.d, r.t, r.n, r.us, r.bytes, id, ty, parts);
+    }
+    otp_n = 0; otp_over = 0; otp_last = fr;
+}
+}
+#endif
 int ExecOt(int type)
 {
+#if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
+    if (type == 0) otp_window();
+#endif
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
+    re4dc_otwc_pad_check(0xE0000000u | (u32) type);   // checkpoint "ExecOt(type)"
+#endif
     OtWork* w = &g_OtWork[type];
     OtData* p;
     int count = 0;
@@ -369,14 +511,31 @@ int ExecOt(int type)
 #endif
     p = &w->list[w->max - 1];
     w->prev_kind = 0;
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
+    OtData* otwc_prev = 0;
+#endif
     if (p) {
         for (; p; p = p->next) {
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
+            if (!re4dc_otwc_ok(p, 4) || (p->data && !re4dc_otwc_ok((const void*) p->func, 2))) {
+                re4dc_otwc_report(type, count, w, otwc_prev, p);
+                break;
+            }
+            otwc_prev = p;
+            re4dc_otwc_cur = p; re4dc_otwc_cur_type = type; re4dc_otwc_cur_n = count;
+#endif
             if (p->data) {
                 count++;
 #if RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_PS2_WORLD_TRANSITION_OWNER
                 re4dc_source_world_callback_begin(unsigned(type),p,p->func,p->data,p->kind);
 #endif
+#if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
+                const unsigned long long otp_t0 = re4dc_otp_now_us(); const unsigned otp_b0 = re4dc_stream_model_bytes_now();
+#endif
                 p->func(p->data);
+#if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
+                otp_add((void*) p->func, p->data, (unsigned) type, (unsigned) (re4dc_otp_now_us() - otp_t0), re4dc_stream_model_bytes_now() - otp_b0);
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_PS2_WORLD_TRANSITION_OWNER
                 re4dc_source_world_callback_end();
 #endif

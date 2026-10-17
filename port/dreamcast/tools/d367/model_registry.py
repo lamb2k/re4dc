@@ -559,6 +559,17 @@ def main():
         ACTOR_MATERIALS = 4  # RE4DC_ACTOR_MATERIALS=4 (native_model_registry.mk with the pool): atlas + three mask pairs
         PACK_CAPACITY.update(ref=64, geom=64, fmodel=48, fpart=160, ftex=64)
         PACK_MAX_BYTES = 256 * 1024
+    if '--roles5' in args:
+        # --roles5 (lane cast16 2026-10-16): NATIVE_MODEL_REGISTRY_ROLES5 images (Info::roles 5 words, 160 role bits).
+        args.remove('--roles5')
+        if not POOL:
+            sys.exit('model_registry: --roles5 needs --pool')
+        MATERIAL_ROWS = 160
+        PACK_CAPACITY.update(ref=96)  # RE4DC_NMR_CHUNKS 96 with RE4DC_NMR_ROLES5 (coarse_actor_owner_registry.inc)
+        PACK_CAPACITY.update(tex=32)  # kRegTextures 32 with RE4DC_NMR_ROLES5 (coarse_actor_owner_registry.inc)
+        SOURCE_BLOBS = 128  # kBlobMaskBits 128 with RE4DC_NMR_ROLES5 (actor_material_records.inc two-word BlobMask)
+        PACK_CAPACITY.update(fmodel=64, fpart=224)  # coarse_actor_registry_pack_check.inc with RE4DC_NMR_ROLES5
+        PACK_MAX_BYTES = 384 * 1024
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
@@ -758,7 +769,11 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             sections.append(dict(role=i, kind=b['role'], bin=b['bin'], tpl=b['tpl'], bin_sha256=f['sha256'],
                                  normalized_sha256=f['normalized_sha256'], tpl_sha256=t['sha256'], needs=need_names(n), need_bits=n))
         identity = (arcname, tuple(s['bin'] for s in sections), tuple(s['tpl'] for s in sections))
-        if identity in seen_identity:
+        if d.get('lod_of'):
+            # a gameplay level shares its full descriptor's source identity by design (see lod_of below)
+            if seen_identity.get(identity) != d['lod_of']:
+                raise Fail(f'{name}: lod_of {d["lod_of"]} must be an earlier descriptor with the same source identity')
+        elif identity in seen_identity:
             raise Fail(f'{name}: source identity {identity} is ambiguous with {seen_identity[identity]}')
         seen_identity[identity] = name
         # ---- chunks
@@ -885,6 +900,11 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             entry['source_coverage_manifest_sha256'] = luis['reviewed_manifest_sha256']
         if pool:
             entry['pool'] = True
+        if d.get('lod_of'):
+            # NATIVE_MODEL_REGISTRY_LOD (lane cast16 2026-10-16): a gameplay level of the descriptor named by lod_of (same
+            # archive, BINs, TPLs and skeleton; reduced mesh). Package word 44 bit 25 + bits 16..23 = that descriptor's
+            # package index + 1; the runtime draws it outside in-engine events only.
+            entry['lod_of'] = d['lod_of']
         if draw_slots is not None:
             entry.update(source_bones=bones, slots=list(draw_slots))
         if not 1 <= entry['position_shift'] <= 4:
@@ -954,7 +974,12 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
             names = sel['descriptors']; known = {r['name'] for r in runtime}; rname = 'r%x%02x' % (package_room >> 8, package_room & 255)
             for n in names:
                 if n not in known:
-                    raise Fail(f'room package {rname}: {n} is not a runtime descriptor (contract or unknown)')
+                    cs = [c for c in contracts if c['name'] == n]
+                    why = 'unknown'
+                    if cs:
+                        secs = ', '.join('%s BIN %s %s' % (x['kind'], x['bin'], '/'.join(x['needs'])) for x in cs[0]['sections'])
+                        why = '%s (sections: %s)' % (cs[0]['contract'], secs)
+                    raise Fail(f'room package {rname}: {n} is not a runtime descriptor: {why}')
             pr = [dict(r, appearance=APPEARANCE0 + i) for i, r in enumerate(x for x in runtime if x['name'] in names)]
             for r in pr:
                 if rname not in r['rooms']:
@@ -1149,6 +1174,21 @@ def weights_bytes(rows):
     return b''.join(struct.pack('<3BB3f', bs[0], bs[1], bs[2], n, *v) for bs, n, v in rows)
 
 
+def lod_word(r, runtime):
+    if not r.get('lod_of'):
+        return 0
+    names = [x['name'] for x in runtime]
+    if r['lod_of'] not in names:
+        raise Fail(f'{r["name"]}: lod_of {r["lod_of"]} is not in the room package')
+    full = names.index(r['lod_of'])
+    if full >= names.index(r['name']) or full > 254:
+        raise Fail(f'{r["name"]}: lod_of {r["lod_of"]} must come earlier in the room package')
+    f = runtime[full]
+    if (f['model_id'], f['bones'], len(f['sections'])) != (r['model_id'], r['bones'], len(r['sections'])) or f.get('pool') or r.get('pool'):
+        raise Fail(f'{r["name"]}: a gameplay level needs its full descriptor\'s model id, bones and sections (no pool)')
+    return (1 << 25) | ((full + 1) << 16)
+
+
 def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blobs, immutable_arrays=False):
     if immutable_arrays and room != 0x11f:
         raise Fail("immutable-array alias package is qualified only for room 11f")
@@ -1231,13 +1271,18 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
                                                          (0 if r['position_shift'] == 4 else r['position_shift']) |
                                                          (r['source_bones'] << 8 if r.get('slots') else 0) |
                                                          # word 44 bit 24: a pool descriptor (--pool)
-                                                         (1 << 24 if r.get('pool') else 0)))
+                                                         (1 << 24 if r.get('pool') else 0) |
+                                                         # word 44 bit 25 + bits 16..23: a gameplay level (lod_of) of
+                                                         # package descriptor (bits 16..23) - 1 (NATIVE_MODEL_REGISTRY_LOD)
+                                                         lod_word(r, runtime)))
     # source identity facts, in first-use order
     fmodel, fpart, ftex, fm_index, ft_index, roles = [], [], [], {}, {}, []
     for r in runtime:
         for s in r['sections']:
             mk, tk = (r['archive'], s['bin']), (r['archive'], s['tpl'])
             role_texture_max = 9 if room == 0x11f and PACK_CAPACITY['fpart'] == 128 else 8
+            if POOL:
+                role_texture_max = 17  # RE4DC_NMR_ROLE_TEXTURES 17 in NATIVE_MODEL_REGISTRY_POOL images (pack_check)
             if SLOTS:
                 role_texture_max = 17  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): GC pl11 TPL 5 has 17 images
             if len(tpls[tk]['textures']) > role_texture_max:

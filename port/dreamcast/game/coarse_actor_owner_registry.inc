@@ -57,6 +57,9 @@ struct Descriptor { char name[16]; unsigned appearance, model_id, bones, section
 #if RE4DC_NMR_POOL
     unsigned pool;  // NATIVE_MODEL_REGISTRY_POOL: 1 = the sections are a pool (package descriptor word 44 bit 24)
 #endif
+#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+    unsigned lod_of;  // NATIVE_MODEL_REGISTRY_LOD: 0, or a gameplay level of descriptor lod_of - 1 (word 44 bit 25)
+#endif
 };
 constexpr unsigned appearance_first=0x200u;
 }
@@ -66,14 +69,21 @@ static_assert(sizeof(nmr::Weight)==16,"package weight records");
 #ifndef RE4DC_NMR_BONES
 #define RE4DC_NMR_BONES 48
 #endif
-#if defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL
+#if defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL && defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
+#define RE4DC_NMR_CHUNKS 96  // NATIVE_MODEL_REGISTRY_ROLES5 (lane cast16): room packages of several pools (island soldiers
+                             // with accessories: 65..72 chunk refs; r227 em14 types 6..9: 71)
+#elif defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL
 #define RE4DC_NMR_CHUNKS 64  // NATIVE_MODEL_REGISTRY_POOL: a pool descriptor (one chunk per pool section) + a partner package
 #elif defined(RE4DC_NMR_PARTNER) && RE4DC_NMR_PARTNER
 #define RE4DC_NMR_CHUNKS 48  // PS2_ASHLEY_ROOMS: a room package + Ashley's partner package (r112: 14 + 21 chunks)
 #else
 #define RE4DC_NMR_CHUNKS 32
 #endif
-#if RE4DC_NMR_POOL
+#if RE4DC_NMR_POOL && defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
+// ROLES5: 32 package textures (r227: em14 types 6..9 carry 20 atlas pages).
+constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=64,kRegTextures=32,kRegBones=RE4DC_NMR_BONES;
+constexpr unsigned kRegPoolSections=48;  // a pool descriptor's sections (role rows); a plan still draws <= 8 of them
+#elif RE4DC_NMR_POOL
 constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=64,kRegTextures=16,kRegBones=RE4DC_NMR_BONES;
 constexpr unsigned kRegPoolSections=48;  // a pool descriptor's sections (role rows); a plan still draws <= 8 of them
 #else
@@ -265,6 +275,9 @@ unsigned registry_why;
 // from the descriptor's bind accepted (rotation, translation), the last planned actor's position, and the scene table.
 struct RegistryCount { unsigned planned,admitted,would,declined,why[kRwCount];float bind_rotation,bind_translation,pos[3]; };
 RegistryCount registry_count[kRegDescriptors];
+#if defined(RE4DC_NMR_BIN_DIAG) && RE4DC_NMR_BIN_DIAG
+extern "C" void re4dc_nmr_bin_name(const cModelInfo*,unsigned);  // actor_lifetime.inc (NATIVE_MODEL_REGISTRY_BIN_DIAG)
+#endif
 unsigned registry_unbound_why[kRwCount];  // declines before a descriptor was chosen (shape / roles / skeleton)
 #endif
 #if RE4DC_NATIVE_MODEL_REGISTRY == 2
@@ -436,6 +449,24 @@ bool registry_skeleton(cModel* m,RegistryBinding& b,const nmr::Descriptor& desc)
 #endif
     return true;
 }
+#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+// NATIVE_MODEL_REGISTRY_LOD (lane cast16 2026-10-16; user 10-16: a boss whose room projects < 30 fps draws a reduced
+// gameplay model, the full model in cutscenes): the descriptor to draw for full (or level) descriptor d now. While an
+// in-engine event / cutscene holds the game (Status_flg[1] 0x10000000, as GANADO_LOD) the full one; otherwise its
+// gameplay level when the package has one whose role rows prove this model's infos, else the full one.
+unsigned registry_lod_want(cModel* m,unsigned d,unsigned count) {
+    if(d>=registry.descriptor_count)return d;
+    const unsigned full=registry.descriptors[d].lod_of?registry.descriptors[d].lod_of-1u:d;
+    if(pG && (pG->Status_flg[1]&0x10000000u))return full;
+    for(unsigned l=0;l<registry.descriptor_count;++l) {
+        const auto& ld=registry.descriptors[l];
+        if(ld.lod_of!=full+1u || ld.sections!=count)continue;
+        cModelInfo* probe[8]{};
+        if(re4dc_actor_role_bindings(m,ld.appearance,probe,count))return l;
+    }
+    return full;
+}
+#endif
 // The actor's descriptor from its adopted source infos and skeleton (sets registry_bound / registry_why). The cache
 // only remembers which descriptor's role rows proved the infos (the multi-descriptor search); the role proof itself,
 // the info pointers and the skeleton proof run again on every call.
@@ -454,6 +485,11 @@ bool registry_bind(cModel* m) {
     RegistryBinding* b=nullptr;
     for(auto& e:registry_bindings)
         if(e.owner==m && e.serial==m->serial && e.list==m->pList && e.root==m->pParts && e.revision==revision && e.count==count){b=&e;break;}
+#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+    // NATIVE_MODEL_REGISTRY_LOD: a cached binding to the full model during gameplay, or to a gameplay level while an
+    // in-engine event holds the game, is dropped; the search below binds the descriptor wanted now.
+    if(b && b->descriptor!=registry_lod_want(m,b->descriptor,count)){b->owner=nullptr;b=nullptr;}
+#endif
     cModelInfo* infos[8]{};
 #if RE4DC_NMR_POOL
     unsigned char sec[8]{};
@@ -474,6 +510,9 @@ bool registry_bind(cModel* m) {
         unsigned found=registry.descriptor_count;
         for(unsigned d=0;d<registry.descriptor_count;++d) {
             const auto& desc=registry.descriptors[d];
+#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+            if(desc.lod_of)continue;  // a gameplay level is chosen from its full descriptor (registry_lod_want)
+#endif
 #if RE4DC_NMR_POOL
             // A pool descriptor: count <= its sections, every info proving a distinct pool row (body first).
             if(desc.pool) {
@@ -495,6 +534,9 @@ bool registry_bind(cModel* m) {
             found=d;
         }
         if(found==registry.descriptor_count)return false;
+#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+        found=registry_lod_want(m,found,count);
+#endif
         const auto& desc=registry.descriptors[found];
 #if RE4DC_NMR_POOL
         if(desc.pool) {
@@ -655,6 +697,15 @@ void registry_decline(const cModel* m,const Re4dcActorPlan* p,unsigned why) {
     const auto* desc=p?registry_descriptor(p->appearance):nullptr;
     if(desc) {auto& c=registry_count[desc-registry.descriptors];++c.declined;++c.why[why<kRwCount?why:0];}
     else ++registry_unbound_why[why<kRwCount?why:0];
+#if defined(RE4DC_NMR_BIN_DIAG) && RE4DC_NMR_BIN_DIAG
+    // NATIVE_MODEL_REGISTRY_BIN_DIAG: a registry actor that fails on its role rows names every source info (once per
+    // model, 24 models): NMRBIN lines (archive entry numbers of the BIN / TPL).
+    if(why==kRwRoles && m) {
+        static const cModel* named[24];static unsigned n_named;bool seen=false;
+        for(unsigned k=0;k<n_named;++k)if(named[k]==m)seen=true;
+        if(!seen && n_named<24) {named[n_named++]=m;for(auto* i=m->pModelInfo;i;i=i->pList)re4dc_nmr_bin_name(i,unsigned(m->id));}
+    }
+#endif
 }
 // Scene census: every model whose first OT pass reaches the transaction, by (id, ot_type, parts, infos) and outcome.
 enum SceneClass : unsigned { kScNative,kScCrowd,kScDeclined,kScRegistryDeclined,kScAbsent,kScWould,kScCount };

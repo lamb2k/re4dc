@@ -1,0 +1,35 @@
+{
+ "registry": "ps2-ch4-r21d",
+ "about": "lane cast16 (2026-10-16): chapter 4 room 21d PS2 cast (CH4-FOUNDATIONS-20261016 cast list). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv4/regcast-ch4",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "novis-em2d-04",
+   "archive": "em2d",
+   "model_id": "0x2d",
+   "source_types": [
+    4
+   ],
+   "partial_sections": true,
+   "module": "src/em2d/em2d.cpp type 4 modelInit(ARC 0xD, ARC 0xE); PS2 91-bone skeleton bound on the GC 57 (shift 3)",
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261016/cast16/conv4/mask-novis-em2d-04-s0"
+   }
+  }
+ ],
+ "room_packages": {
+  "21d": {
+   "descriptors": [
+    "novis-em2d-04"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
+  }
+ }
+}

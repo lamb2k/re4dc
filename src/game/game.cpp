@@ -589,6 +589,15 @@ void gameRoomInit()
         pG->nPrim = RE4DC_PRIM_MIN_ST3;
     }
 #endif
+#if defined(RE4DC_PRIM_BUF_KB) && RE4DC_PRIM_BUF_KB
+    // PRIM_BUF_KB (Makefile, lane cast16 2026-10-16; size only, every room): the room's primitive buffer asks at most
+    // this many KB (heap 4). The GC room values (r11f 655,360 B) were sized for the GameCube; the cap is the worst
+    // chapter 1-2 per-frame peak (PRIM_WATER) x 1.5. A primitive that does not fit is skipped (GetPrimBuff's own
+    // OVERFLOW path returns 0; PRIM_WATER counts it) and the native actor tail declines to a smaller size.
+    if (!(pG->System_flg & 0x200000) && pG->nPrim > RE4DC_PRIM_BUF_KB * 1024u) {
+        pG->nPrim = RE4DC_PRIM_BUF_KB * 1024u;
+    }
+#endif
     primInit(); RE4DC_DOORPH("room.prim");
     {
         Vec pos;

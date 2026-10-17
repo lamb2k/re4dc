@@ -66,6 +66,16 @@ SMALL+=('em2d.drs',)
 # 0x25, em3a ARC 4, em32 ARC 8, em3d ARC 4) keep their own textures (top-level TPLs only are selected). Motions stay
 # resident: their FCV consumers are not audited for motion streaming.
 SMALL+=('em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs')
+# em3c (armoured Armaduras, r216 and the castle armour rooms; lane ch3found16 2026-10-17): textures only. Its model TPLs reach
+# modelInit (ARC 5/6, 9/0xA), ModInfoMgr.create (weapons ARC 0xC/0xD, 0xE/0xF) and SetObj16 (core, ARC 0x48/0x49); the
+# source path uploads their colour texels and never reads them on the CPU. Its EFF slot (ARC 4, EspDataLoad) keeps its own
+# textures. Motions stay resident (MotionSetCore / MotSetObj16 and maxFrame reads of resident FCV headers). Without this
+# the disc's em3c took the ordinary-archive path with 0 texture identities, so no package digest matched (r216).
+SMALL+=('em3c.drs',)
+# em25 (r20d, ROUTE_CH32 room overlay) and em3b (r11c / r11d, ROUTE_CH23 room overlay), same check 2026-10-17: textures only.
+# em25's model TPLs reach modelInit (ARC 4/5) and SetObj16 (ARC 0x31/0x32); em3b's reach modelInit (ARC 4/5, 0xB/0xC). Their
+# EFF slots (EspDataLoad ARC 7 / ARC 6) keep their own textures; motions stay resident. Both had 0 texture identities.
+SMALL+=('em25.drs','em3b.drs')
 # pl0f (the lake boat, r10b r11b; lane ps2cast 2026-10-15, PS2_CAST_BOAT discs): textures only (--keep-motion-resident),
 # the em2f contract. Its one model TPL (ARC 6) reaches only modelInit (src/pl0f/pl0f.cpp pl0f_R0_Init, modelInit(ARC 5,
 # ARC 6)); the source path uploads its colour texels and never reads them on the CPU. ARC 8 (Leon's harpoon hand BIN,
@@ -125,13 +135,16 @@ MOTION_SMALL+=('em36.drs',)
 # with the knob-conditional module set (ROUTE_OVL_MODULES). The room's heap 4: r119 frees 3,854,656 B in two
 # cells, the largest 2,770,912 B, under the 4,689,664 B rel-stripped body.
 ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11','em1d','em1e','em1f','em36','em39','em3a','em32','em3d')
+# em2d / em25 / em3c (ROUTE_CH32 room overlays; lane ch3found16 2026-10-17): their static REL is stripped the same way, as on
+# the castle disc's le_mirror build (the code comes from dc/<em>.ovl).
+ROUTE_OVL_MODULES+=('em2d','em25','em3c')
 # pl11 (Ashley; PS2_ASHLEY discs, lane ps2cast 2026-10-14): the route overlay dc/pl11.ovl carries her module, so her
 # archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
 # their own registry row like the room overlays above: em11 (ROUTE_CH21, r117), em18 (ROUTE_CH13, r102: module 22),
 # em16 (ROUTE_CH23, r11d: module 20), and the castle Ganados (ROUTE_CH31 / CH32 / CH41).
 KNOB_STATIC_MODULES=('em11','em18','em16','em1a','em1b','em14','em19','em1c')
-GANADO_OVERSIZED_RESIDENT=('em1b.drs',)  # + ROUTE_CH31's castle Ganado RELs
+GANADO_OVERSIZED_RESIDENT=('em1b.drs','em1c.drs')  # + ROUTE_CH31's castle Ganado RELs; em1c (r218, ROUTE_CH41) the same way (lane ch4found16)
 # Leon's archives, textures-only: pl00 (jacket, costume 0) and pl08 (no jacket, costume 1: title.cpp picks it in
 # every room but r120/r100/r101/r103/r106 once the r106 closet event has run). Same cPlLeon consumers, so pl08
 # takes pl00's reviewed textures-only contract (route lane 2026-10-01, r104).
@@ -223,7 +236,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     # pl0f: the release disc carries its whole REL too (pl0f is in no static / overlay module list); it moves intact.
     # em24: the release disc carries its whole REL too (le_mirror keeps it: 394,176 B on the disc = the GC file).
     # em2c / em38 (ROUTE_BOSS4 room overlays): le_mirror keeps their whole REL as for pl0f; it moves intact.
-    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs','em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
+    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs','em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs','em3b.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
     original_size,original_base=struct.unpack_from('>I4xI',original,slot+4)
     codec=mirror.motion_codec();ranges=[];entries=[];files={};oversized=[]
     for off in ([] if keep_motion_resident else sorted(set(offsets))):

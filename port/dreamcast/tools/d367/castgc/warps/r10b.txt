@@ -1,0 +1,9 @@
+# lane castgc17 CAST-GC census warp for r10b (<= 60 s): stage_route.py door r10a no 1 -> r10b (dstPos / dstAngle); still-capture lines (freeze / viewdist / dump) removed,
+# god added. Census build: NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150.
+name cg-r10b
+room 0x10b
+pos -72513 2890 -23603
+ang 1.604
+inv default
+act 360 fwd 12
+god

@@ -1,0 +1,9 @@
+name vq-r101
+# ch4found16 VQ c42 check: r101 square (bell fight about to start), Ganados em11/em14 textures
+room 0x101
+pos -7914 0 -254
+ang 2.9600
+find 0x00002000
+inv default
+god
+dump

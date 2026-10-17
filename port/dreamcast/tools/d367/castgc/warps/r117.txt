@@ -1,0 +1,9 @@
+# lane castgc17 CAST-GC census warp for r117 (<= 60 s): warp.py preset r117-entry; still-capture lines (freeze / viewdist / dump) removed,
+# god added. Census build: NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150.
+name r117-entry
+# r117 from the r118 door 4 (before Ashley is found)
+room 0x117
+pos 169 -1000 6073
+ang 2.9220
+inv default
+god

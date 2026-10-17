@@ -457,6 +457,68 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_DROP_BUMP=1
 GAME_CPPFLAGS += -DRE4DC_ACTOR_MATERIALS=4
 PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_MATERIALS=4
 endif
+# NATIVE_MODEL_REGISTRY_ROLES5=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): wide room packages,
+#              the Info::roles mask takes 5 words (160 role bits, 98 room rows) and the chunk table 96 (package refs) for rooms whose pools load many types
+#              (r227: em14 types 6..9; island r320 / r327). It also widens the package loader for the wide castle rooms:
+#              32 package textures, a 128-bit asset template mask (two-word BlobMask), 64 source BIN models, 224 part facts
+#              and a 384 KiB package + skin arena (heap 4 takes the actual size; r214 340 KiB, r227 291 KiB, r216 182 KiB).
+#              Packages over 66 room rows (model_registry.py --roles5) are refused whole by an image without it. Knob off:
+#              the image is unchanged.
+# NATIVE_BUMP_FLAT=1 (lane cast16 2026-10-16; default 0; render only): every registry plan meets the source bump need
+#              with no bump stage (the DC source path draws none either), for descriptors that declare source_drops
+#              "bump" outside a pool. Knob off: the image is unchanged.
+# NATIVE_MODEL_REGISTRY_BIN_DIAG=1 (lane cast16 2026-10-16; default 0; diagnostic): an info with no live record logs its
+#              source BIN / TPL archive entry numbers (NMRBIN lines, 48 at most). Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_BIN_DIAG ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_BIN_DIAG),1)
+GAME_CPPFLAGS += -DRE4DC_NMR_BIN_DIAG=1
+PLATFORM_CPPFLAGS += -DRE4DC_NMR_BIN_DIAG=1
+endif
+NATIVE_BUMP_FLAT ?= 0
+ifeq ($(NATIVE_BUMP_FLAT),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_BUMP_FLAT=1
+endif
+NATIVE_MODEL_REGISTRY_ROLES5 ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_ROLES5),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_POOL),1)
+$(error NATIVE_MODEL_REGISTRY_ROLES5=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
+PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
+endif
+# NATIVE_MODEL_REGISTRY_FIRST=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): a
+#   Ganado-class actor (id 0x10..0x20) whose id a room package descriptor names tries that package's plan BEFORE the
+#   Ganado cast plan. Without it the Ganado plan claims em16 type 11 (r11d) by its em15-type-11 meshes and then the
+#   certificate declines it (source_appearance_type: em16 t11 is not an alias, its sack / whood entries are em16's own),
+#   so the actor draws GC every frame and the room's ganado-em16-0bp pool never runs. A registry plan that does not bind
+#   (any other type of that id) falls through to the Ganado plan exactly as before.
+NATIVE_MODEL_REGISTRY_FIRST ?= 0
+ifeq ($(filter $(NATIVE_MODEL_REGISTRY_FIRST),0 1),)
+$(error NATIVE_MODEL_REGISTRY_FIRST must be 0 or 1)
+endif
+ifeq ($(NATIVE_MODEL_REGISTRY_FIRST),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_POOL),1)
+$(error NATIVE_MODEL_REGISTRY_FIRST=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_FIRST=1
+endif
+# NATIVE_MODEL_REGISTRY_LOD=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): boss
+#   gameplay levels. A room package descriptor with word 44 bit 25 is a gameplay level of the earlier descriptor named
+#   by bits 16..23 (model_registry.py spec "lod_of": same source BINs / TPLs / skeleton, a reduced mesh). The search
+#   never binds a level directly; registry_lod_want draws the level outside in-engine events and the full descriptor
+#   while one holds the game (Status_flg[1] 0x10000000, the GANADO_LOD rule: cutscenes keep the full model). User
+#   10-16: a boss whose fight room projects < 30 fps gets a reduced gameplay model. An image without the knob refuses
+#   a package that carries a level (word 44 check), so stage level packages only with it.
+NATIVE_MODEL_REGISTRY_LOD ?= 0
+ifeq ($(filter $(NATIVE_MODEL_REGISTRY_LOD),0 1),)
+$(error NATIVE_MODEL_REGISTRY_LOD must be 0 or 1)
+endif
+ifeq ($(NATIVE_MODEL_REGISTRY_LOD),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_POOL),1)
+$(error NATIVE_MODEL_REGISTRY_LOD=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_LOD=1
+endif
 # PS2_ASHLEY=1|2 (lane ps2cast 2026-10-14; default 0; render only): Ashley (pl11, the partner pSUB, model id 3; r117
 #              first) through the registry owner path with her PS2 mesh (tools/ps2_ashley.py: PS2 geometry / UVs / weights,
 #              the PS2 cloth influences moved onto the GC cloth links the source solver already moves - no second solver,
@@ -611,4 +673,12 @@ ifneq ($(ROUTE_CH23),1)
 $(error NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS is qualified only for ROUTE_CH23 r11f)
 endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_IMMUTABLE_ALIAS=1
+endif
+
+# OT_PROF=1 (lane cast16 2026-10-17; diagnostic, default 0): per OT callback CPU time and PVR stream bytes (OTP lines
+#              every 120 UI frames; trans_ot.cpp ExecOt). Knob off: the image is unchanged.
+OT_PROF ?= 0
+ifeq ($(OT_PROF),1)
+GAME_CPPFLAGS += -DRE4DC_OT_PROF=1
+PLATFORM_CPPFLAGS += -DRE4DC_OT_PROF=1
 endif

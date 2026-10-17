@@ -290,7 +290,7 @@ DATA['cast15']['tex'] = ['%s/conv-t14/reg-%s/tex' % (C15D, g) if g != '118pc' el
 # on the disc the LOD code never runs (no GANADOLOD log line: the poc101 bench trap).
 GLOD = os.environ.get('GLOD', '/root/probe/lanes-20261015/t15k/data/glod/ganado_lod.re4gl')
 DATA['glod'] = {'dc/native/ganado/ganado_lod.re4gl': GLOD}
-T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16w,water16i,wt16r101,fsh'  # vq16w + water16i (lane water16b) replace vq16cs + water16h; fsh (lane farshell16) last: the far shells of r100 / r101; res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak; water16h (lane water16) after res16h: res16h + the WATER_PS2 room water pictures; wv32r101 (world32, ChatGPT) replaces bake13 r101 world files and adds variant 5
+T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16w,water16i,fsh'  # vq16w + water16i (lane water16b) replace vq16cs + water16h; fsh (lane farshell16) last: the far shells of r100 / r101; res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak; water16h (lane water16) after res16h: res16h + the WATER_PS2 room water pictures; wv32r101 (world32, ChatGPT) replaces bake13 r101 world files and adds variant 5
 # Test 15 HUD fix (t15/hud, CORE_PIN=2): res16 = res14r3 + the two HUD pictures the r101 post-bell radio call's frag window
 # released (test 14's open VRAM item): afa4bc82-306be3e3 (44x44) and bf17fc06-c975b3a7 (48x48), in the core set r000.tsv.
 # 248 records, sha256 de98da1ec2e75532 (resident_keys.py pack r000 r101 r103).
@@ -388,6 +388,113 @@ if os.path.exists(CH2D + '/ch2-data.json'):
     # no row for them, so its label swap cannot reach them (a missing overlay halts "route overlay missing on the disc")
     DATA['ch2']['ovl'] = ['em3b', 'em35', 'pl14']
     UNREMOVE['ch2'] = _c2['unremove']
+# cast16 (lane cast16, 10-16; PS2CAST-20261014.md 2026-10-16 section): PS2 cast packages over ch2 (order: after ch2).
+# r11c Luis + merchant13 (reg-11cm), r11d cart + em16 pool (reg-11dp), r11e El Gigante + its g70 gameplay level
+# (reg-11eL), r11f Mendez g70 in every form (reg-11fLo; user 10-16: the cutscenes are movies) + the PS2 Ashley partner,
+# with their textures. Needs NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 (ch2/ch2-build.sh CH2REC) and
+# PRIM_BUF_KB (T15_PB): r11f's heap 4 holds Ashley's 239,688 B cell only with the primitive buffer at 432 KB.
+C16D = os.environ.get('C16D', '/root/re4data/private/cast16data-20261016')
+if os.path.exists(C16D + '/cast16-data.json'):
+    DATA['cast16'] = dict(json.load(open(C16D + '/cast16-data.json'))['replace'])
+# Disc 1 texture packing (lane pak17, 10-16; coordinator round 4 "loose -> pack", test 17): pak17 = dc/tex.pak holding
+# every loose texture of the test 17 disc (T15_DATA + ch2 + cast16 over the package base tree), built by
+# tools/d367/vram/disc_pack.py over ch2's tex.pak (13340bfa, 21:54 data): the 1,250 loose keys the pack already held
+# are dropped (the pack is looked up first, so they were never read), 241 opaque 16-bit pictures >= 16 KiB re-encoded
+# as full-codebook VQ (PSNR >= 29 dB; UI, alpha and small pictures stay 16-bit), the other 1,075 moved in as they are.
+# tex.pak 4,904 -> 6,220 keys, 119,822,336 -> 144,570,368 B (sha256 52d9b0013315c5e9); loose dc/tex 2,566 files /
+# 95,596,544 B -> 0; disc tree 1,064.0 -> 997.9 MB.
+# DROP_LOOSE: with the set staged, every loose dc/tex/<c>/<key>.re4tex of the fixture and every disc path listed in the
+# set's loose-keys.txt (the package base tree's files) is removed from the disc; each must be in the final dc/tex.pak
+# (checked here: a loose key the pack lacks stops the fixture). Staleness (base.json): the pack the earlier sets stage
+# and every loose texture they stage must be the bytes pak17 was built from; when ch2 / cast16 (or any earlier set)
+# changes its pictures, the fixture stops: rebuild pak17 with disc_pack.py --fixture <the fixture without pak17>.
+# Order: after every set that stages loose textures or replaces dc/tex.pak (last). Lives in PAK17D (not in git;
+# release kit: Build-Assets disc set pak17).
+# CAST-GC r108 (lane castgc17, 10-17): r108's registry package with the em17 type 0xc POOL descriptor ganado-em17-0cp
+# (model-registry/ps2-ch1-r108p.json; NATIVE_MODEL_REGISTRY_POOL, in T15REC) instead of the non-pool ganado-em17-0c.
+# r108 spawns em17 0xc holding a weapon (grip hand 0x1c8): the non-pool rows refused it (NMRU roles) and the GameCube
+# model drew on every pass. Its 4 textures are already in pak17's tex.pak (r113p / r118p), so no loose texture.
+R108PD = os.environ.get('R108PD', '/root/re4data/private/castgc17-20261017/r108p')
+DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
+PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261016')
+DATA['pak17'] = {'dc/tex.pak': PAK17D + '/tex.pak'}
+DROP_LOOSE = {'pak17': PAK17D + '/loose-keys.txt'}
+LOOSE = re.compile(r'^dc/tex/[0-9a-f]/([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
+
+
+def pak_keys(path):
+    import struct
+    with open(path, 'rb') as f:
+        h = f.read(2048)
+        magic, ver, count, ioff, doff = struct.unpack_from('<8s4I', h, 0)
+        assert magic == b'RE4PAK1\0' and ver == 1, path
+        f.seek(ioff)
+        ix = f.read(16 * count)
+    return {struct.unpack_from('<2I', ix, 16 * i) for i in range(count)}
+
+
+# The Flycast stager (playability-r11-r1 stage_scenario.py) always stages the MEDIA overlay (movies and 33 loose textures,
+# all in pak17) and refuses a fixture that removes one of its files. A scenario fixture (--warp: never a package) keeps
+# those paths off 'remove'; they stay loose on Flycast discs, where the pack still wins (texpack::find comes first).
+MEDIA_OVERLAY = os.environ.get('MEDIA_OVERLAY', '/mnt/c/Flycast-Evidence/re4-dreamcast/r11-media-overlay-r1/payloads')
+
+
+def media_paths():
+    if not os.path.isdir(MEDIA_OVERLAY):
+        return set()
+    return {os.path.relpath(os.path.join(d, f), MEDIA_OVERLAY).replace(os.sep, '/')
+            for d, _, fs in os.walk(MEDIA_OVERLAY) for f in fs}
+
+
+PREV_PAK = {}   # data set -> the dc/tex.pak staged before it (drop_loose staleness check)
+
+
+def drop_loose(names, r, rm, rec):
+    lists = [DROP_LOOSE[n] for n in names if n in DROP_LOOSE]
+    if not lists:
+        return
+    pak = r.get('dc/tex.pak')
+    assert pak, 'drop-loose: no dc/tex.pak staged'
+    have = pak_keys(pak)
+    paths = {k for k in r if LOOSE.match(k)}
+    for f in lists:
+        paths |= {l.strip() for l in open(f) if l.strip()}
+    # staleness: pak17 was built from one input pack and one set of loose bytes (base.json); another set staging a
+    # newer pack or other loose bytes means the pack holds old pictures (rebuild it: tools/d367/vram/disc_pack.py)
+    for n in names:
+        if n not in DROP_LOOSE:
+            continue
+        bj = os.path.join(os.path.dirname(DROP_LOOSE[n]), 'base.json')
+        b = json.load(open(bj))
+        prev = PREV_PAK.get(n)
+        full = lambda p_: hashlib.sha256(open(p_, 'rb').read()).hexdigest()
+        if prev is None or full(prev) != b['pak']:
+            raise SystemExit('drop-loose: %s was built from another dc/tex.pak than the sets before it stage (%s): '
+                             'rebuild it (tools/d367/vram/disc_pack.py)' % (n, prev))
+        stale = [k for k in paths if k in r and k in b['loose'] and full(r[k]) != b['loose'][k]]
+        new = [k for k in paths if k in r and k not in b['loose']]
+        if stale or new:
+            raise SystemExit('drop-loose: %s is stale: %d loose textures changed, %d new since it was built (first %s): '
+                             'rebuild it (tools/d367/vram/disc_pack.py)' % (n, len(stale), len(new), (stale + new)[:3]))
+        if full(pak) != b['out']:
+            raise SystemExit('drop-loose: the staged dc/tex.pak is not %s\'s pack' % n)
+    lacking = []
+    for k in sorted(paths):
+        m = LOOSE.match(k)
+        assert m, 'drop-loose: not a loose texture path: ' + k
+        if (int(m.group(1), 16), int(m.group(2), 16)) not in have:
+            lacking.append(k)
+        r.pop(k, None); rm.add(k)
+    if lacking:
+        raise SystemExit('drop-loose: %d loose textures are not in %s (first %s): rebuild the pack (vram/disc_pack.py)'
+                         % (len(lacking), pak, lacking[:3]))
+    rec.append('drop-loose %d loose textures (all in %s %s)' % (len(paths), pak, sha(pak)))
+
+
+# Test 17 data line (the chapter 2 recipe ch2/ch2-build.sh CH2REC over T15REC): T15_DATA + ch2 + cast16, then pak17 last
+# (its pack replaces ch2's dc/tex.pak and every loose texture leaves the disc).
+# r108p (castgc17 10-17): the CAST-GC r108 em17 fix, before pak17 (stages no texture).
+T17_DATA = T15_DATA + ',ch2,cast16,r108p,pak17'
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
@@ -404,6 +511,45 @@ def texdir(d, r, rec):
                 raise SystemExit('texture %s staged twice with different bytes: %s / %s' % (k, r[k], p))
             r[k] = str(p); n += 1
     rec.append('texdir %s %d' % (d, n))
+
+
+def resident_gate(v, rec):
+    """Resident-list coverage (lane r200-17, 10-16): the staged dc/resident.bin must carry every key of every
+    tools/d367/vram/resident/r<room>.tsv in this tree. A data set packed from an older tree or a partial list set leaves
+    rooms re-reading their pictures from disc in play (the ch4 lane's resident-ch3.bin: r10f / r112 49 / 65 uploads
+    after the preload). Build the file with vram/resident_keys.py pack over every list (then water/water_resident.py
+    pack) or use data set ch2's. Short lists are printed and recorded in provenance; RE4DC_RESIDENT_STRICT=1 (release
+    fixtures) refuses them."""
+    import glob, importlib.util as iu_
+    here_ = os.path.dirname(os.path.abspath(__file__))
+    s_ = iu_.spec_from_file_location('resident_keys', os.path.join(here_, '..', 'vram', 'resident_keys.py'))
+    m_ = iu_.module_from_spec(s_); s_.loader.exec_module(m_)
+    tsvs = sorted(glob.glob(os.path.join(here_, '..', 'vram', 'resident', 'r*.tsv')))
+    short = m_.coverage(v, tsvs)
+    for room, n, got in short:
+        rec.append('RESIDENT SHORT r%03x %d/%d' % (room, got, n))
+        sys.stderr.write('t11-fix: dc/resident.bin %s carries %d of the %d keys r%03x lists\n' % (v, got, n, room))
+    assert not (short and os.environ.get('RE4DC_RESIDENT_STRICT') == '1'), 'resident gate: %d short lists' % len(short)
+
+
+def lostpart_gate(k, v, rec):
+    """Required gate (2026-10-16): a reduced world level file dc/native/<room>/ps2-wv*.re4mesh is staged only with a PASS
+    stamp of the lost-part check beside it (tools/d367/lostpart/lostpart_gate.sh writes LOSTPART.txt: verdict +
+    reduced-sha256). RE4DC_LOSTPART_WAIVE=1 = A/B comparison fixtures only (recorded in provenance; never a release)."""
+    if not (k.startswith('dc/native/') and os.path.basename(k).startswith('ps2-wv') and k.endswith('.re4mesh')):
+        return
+    if os.environ.get('RE4DC_LOSTPART_WAIVE') == '1':
+        rec.append('LOSTPART WAIVED %s' % k)
+        return
+    st = os.path.join(os.path.dirname(v), 'LOSTPART.txt')
+    assert os.path.exists(st), 'lost-part gate: %s has no LOSTPART.txt (run tools/d367/lostpart/lostpart_gate.sh)' % v
+    t = open(st).read()
+    import hashlib
+    h = hashlib.sha256(open(v, 'rb').read()).hexdigest()
+    first = t.splitlines()[0] if t else ''
+    assert ': PASS (' in first, 'lost-part gate: %s FAILED the check (%s)' % (v, first)
+    assert ('reduced-sha256 %s' % h) in t, 'lost-part gate: %s changed since its LOSTPART.txt stamp' % v
+    rec.append('LOSTPART PASS %s %s' % (k, h[:16]))
 
 
 def main():
@@ -435,20 +581,31 @@ def main():
                     assert os.path.exists(f_), f_
                     r['dc/%s.ovl' % o_] = f_; rm.discard('dc/%s.ovl' % o_); rec.append('%s ovl %s' % (nm, o_))
                 continue
+            if k == 'dc/tex.pak' and nm in DROP_LOOSE:
+                PREV_PAK[nm] = r.get('dc/tex.pak')
             if k == 'tex':
                 for t in (v if isinstance(v, list) else [v]):
                     texdir(t, r, rec)
                 continue
             assert os.path.exists(v), (nm, k, v)
+            lostpart_gate(k, v, rec)
             r[k] = v; rm.discard(k); rec.append('%s %s %s' % (nm, k, sha(v)))
     for kv in opt.get('--set', []):
         k, v = kv.split('=', 1)
         assert os.path.exists(v), v
+        lostpart_gate(k, v, rec)
         r[k] = v; rm.discard(k); rec.append('set %s %s' % (k, sha(v)))
     for k in opt.get('--rm', []):
         r.pop(k, None); rm.add(k); rec.append('rm ' + k)
     for t in opt.get('--texdir', []):
         texdir(t, r, rec)
+    drop_loose(names, r, rm, rec)
+    if '--warp' in opt:
+        kept = rm & media_paths()
+        if kept:
+            rm -= kept; rec.append('scenario fixture: %d MEDIA overlay paths kept off remove' % len(kept))
+    if 'dc/resident.bin' in r:
+        resident_gate(r['dc/resident.bin'], rec)
     rm -= set(r)  # a staged loose picture (data 'tex' dirs, --texdir) wins over the base's removal of the same file
     for k, f in (('--warp', 'dc/warp.txt'), ('--pad', 'dc/padscript.txt'), ('--qtxt', 'dc/quality.txt')):
         if k in opt:

@@ -54,6 +54,17 @@ if [ ! -f "$ASSETS/ps2leon/ps2leon_runtime.h" ] || [ ! -f "$ASSETS/ps2ganado/gan
   PRIVATE_OFF="PS2_LEON=0 LEON_HAND_PACK=0 PS2_GANADO=0 PS2_GANADO_LIT=0 GANADO_LOD=0 ACTOR_PROBE_LIGHT=1 GANADO_LIT=0"
   echo "build-public: no PS2 character data in $ASSETS: $PRIVATE_OFF (GameCube character models; see CONTRIBUTING-PORT.md)"
 fi
+# Test 17 on: the chapter 2-2 / 2-3 PS2 enemy rows (ASSETS/ps2enemych2/ps2_enemy_ch22_data.inc and
+# ps2_enemy_ch23_data.inc, generated from the PS2 disc and compiled into the program; the knob file maps
+# PS2_ENEMY_CH22_DIR / PS2_ENEMY_CH23_DIR to @ASSETS@/ps2enemych2). Without them the knobs are dropped and
+#   PS2_CH2_ENEMY=0                  chapters 2-2 / 2-3 keep the GameCube enemy lists and room code (the release: the
+#                                    PS2 ones, at most 6 Ganados alive), so the enemies there differ from the release.
+if grep -qE '(^| )PS2_ENEMY_CH2[23]_DIR=' <<<"$RECIPE" &&
+   { [ ! -f "$ASSETS/ps2enemych2/ps2_enemy_ch22_data.inc" ] || [ ! -f "$ASSETS/ps2enemych2/ps2_enemy_ch23_data.inc" ]; }; then
+  RECIPE=$(tr ' ' '\n' <<<"$RECIPE" | grep -vE '^PS2_ENEMY_CH2[23]_DIR=' | tr '\n' ' ')
+  PRIVATE_OFF="${PRIVATE_OFF:+$PRIVATE_OFF }PS2_CH2_ENEMY=0"
+  echo "build-public: no PS2 chapter 2 enemy rows in $ASSETS: PS2_CH2_ENEMY=0 (GameCube enemy lists in 2-2 / 2-3; see CONTRIBUTING-PORT.md)"
+fi
 
 # The release builds pin __DATE__ / __TIME__ (the crash screen prints them) to this instant.
 export SOURCE_DATE_EPOCH=${SOURCE_DATE_EPOCH:-1760000000}

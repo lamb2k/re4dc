@@ -8,12 +8,37 @@
 #define RE4DC_ACTOR_WIDE_IDENTITY 1
 #if RE4DC_NMR_POOL
 // NATIVE_MODEL_REGISTRY_POOL: a pool descriptor carries one role row per pool section (the zealot / soldier pools: ~20),
-// beside a partner package's rows; 128 role bits leave 66 room rows.
+// beside a partner package's rows; 128 role bits leave 66 room rows. NATIVE_MODEL_REGISTRY_ROLES5 (lane cast16
+// 2026-10-16): 160 role bits (98 room rows) for the rooms whose pools load many types (r227 em14 x4, island r320).
+#if RE4DC_NMR_ROLES5
+// ROLES5 also widens the asset template mask to 128 source blobs (r214: 31 base + 51 room blobs).
+constexpr unsigned kRoleMaskWords=5,kBlobMaskBits=128;
+#else
 constexpr unsigned kRoleMaskWords=4,kBlobMaskBits=64;
+#endif
 #else
 constexpr unsigned kRoleMaskWords=3,kBlobMaskBits=64;
 #endif
+#if RE4DC_NMR_POOL && RE4DC_NMR_ROLES5
+// Two-word template mask with the operators the lifetime code uses on the u64 one.
+struct BlobMask {
+    std::uint64_t w[2];
+    constexpr BlobMask(unsigned v=0u):w{v,0u}{}
+    friend BlobMask operator<<(BlobMask a,unsigned s){BlobMask r;if(!s)return a;if(s>=64u){r.w[1]=a.w[0]<<(s-64u);return r;}
+        r.w[0]=a.w[0]<<s;r.w[1]=(a.w[1]<<s)|(a.w[0]>>(64u-s));return r;}
+    friend BlobMask operator>>(BlobMask a,unsigned s){BlobMask r;if(!s)return a;if(s>=64u){r.w[0]=a.w[1]>>(s-64u);return r;}
+        r.w[1]=a.w[1]>>s;r.w[0]=(a.w[0]>>s)|(a.w[1]<<(64u-s));return r;}
+    friend BlobMask operator&(BlobMask a,BlobMask b){a.w[0]&=b.w[0];a.w[1]&=b.w[1];return a;}
+    friend BlobMask operator|(BlobMask a,BlobMask b){a.w[0]|=b.w[0];a.w[1]|=b.w[1];return a;}
+    BlobMask operator~()const{BlobMask r;r.w[0]=~w[0];r.w[1]=~w[1];return r;}
+    BlobMask& operator&=(BlobMask b){w[0]&=b.w[0];w[1]&=b.w[1];return *this;}
+    BlobMask& operator|=(BlobMask b){w[0]|=b.w[0];w[1]|=b.w[1];return *this;}
+    explicit operator bool()const{return (w[0]|w[1])!=0u;}
+    explicit operator unsigned()const{return unsigned(w[0]);}
+};
+#else
 using BlobMask=std::uint64_t;
+#endif
 #else
 #define RE4DC_ACTOR_WIDE_IDENTITY 0
 constexpr unsigned kRoleMaskWords=2,kBlobMaskBits=32;

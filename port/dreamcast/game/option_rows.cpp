@@ -63,10 +63,16 @@ float view_room_min()
 }
 }  // namespace
 extern "C" int re4dc_view_dist_get(void) { return view_level; }
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+extern "C" void re4dc_far_shell_view_changed(int level);   // platform/far_shell.inc: the shell is read at Short only
+#endif
 extern "C" void re4dc_view_dist_set(int level, const char* why)
 {
     view_level = level < 0 || level > 2 ? 0 : level;
     re4dc_log("view distance: %s (%s)\n", kViewName[view_level], why);
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+    re4dc_far_shell_view_changed(view_level);
+#endif
 }
 // The far plane to draw with: the given far, or this level's distance (at least the room's minimum) when that is nearer.
 extern "C" float re4dc_view_far(float far)

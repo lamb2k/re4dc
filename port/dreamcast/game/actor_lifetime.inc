@@ -190,6 +190,29 @@ extern "C" void re4dc_crowd_life_report(unsigned frame) {
         crowd_adopt_fail[2],crowd_adopt_fail[3],crowd_archive_full,crowd_archive_unsupported,crowd_revokes,crowd_revoked_infos,crowd_readopt_ok,crowd_readopt_fail);
 }
 #endif
+#if defined(RE4DC_NMR_BIN_DIAG) && RE4DC_NMR_BIN_DIAG
+extern "C" unsigned re4dc_ui_frame();
+extern "C" void re4dc_log(const char*,...);
+// NATIVE_MODEL_REGISTRY_BIN_DIAG (lane cast16 2026-10-16; diagnostic): an info that gets no live record names its source
+// BIN / TPL as archive entry numbers (the ARC numbers of <em>_set.cpp), so a pool's missing sections can be read off a
+// run (NMRBIN f model info bin tpl archive; 96 lines). Called when a registry actor fails on its role rows.
+static void bin_diag(const cModelInfo* info,unsigned why) {
+    using namespace re4dc_material;using namespace life;
+    static unsigned logged;if(logged>=96 || !info)return;++logged;
+    unsigned bin=~0u,tpl=~0u,arc=~0u;const auto* d=reinterpret_cast<const unsigned char*>(info->pData);
+    for(unsigned k=0;k<kArchives;++k) {
+        const auto& o=archives[k];if(!o.key)continue;
+        for(unsigned no=4;no<0x400 && (bin==~0u || tpl==~0u);++no) {
+            const unsigned char* p=nullptr;unsigned n=0;
+            if(bin==~0u && entry(o,no,"BIN",p,n) && d>=p && d<p+n){bin=no;arc=k;}
+            if(tpl==~0u && entry(o,no,"TPL",p,n) && p==info->tpl_addr)tpl=no;
+        }
+    }
+    re4dc_log("NMRBIN f=%u model=%02x info=%p bin=%x tpl=%x archive=%u\n",re4dc_ui_frame(),why,info,bin,tpl,arc);
+}
+// Called by the registry census when a registry actor fails on its role rows: every source info of that model.
+extern "C" void re4dc_nmr_bin_name(const cModelInfo* info,unsigned model) {bin_diag(info,model);}
+#endif
 extern "C" void re4dc_actor_info_adopt(cModelInfo* info) {
     using namespace re4dc_material;using namespace life;
     re4dc_actor_info_retire(info);if(exhausted || !info)return;
@@ -209,7 +232,9 @@ extern "C" void re4dc_actor_info_adopt(cModelInfo* info) {
             // Multiple rows may intentionally share default hand geometry.
             if(found.info && (found.tpl_owner!=k || found.tpl!=p))return;
             found.roles[r/32]|=1u<<(r%32);
-#if RE4DC_ACTOR_WIDE_IDENTITY && RE4DC_NMR_POOL
+#if RE4DC_ACTOR_WIDE_IDENTITY && RE4DC_NMR_POOL && RE4DC_NMR_ROLES5
+            found={info,ai,a.serial,{found.roles[0],found.roles[1],found.roles[2],found.roles[3],found.roles[4]},k,o.revision,p,n};
+#elif RE4DC_ACTOR_WIDE_IDENTITY && RE4DC_NMR_POOL
             found={info,ai,a.serial,{found.roles[0],found.roles[1],found.roles[2],found.roles[3]},k,o.revision,p,n};
 #elif RE4DC_ACTOR_WIDE_IDENTITY
             found={info,ai,a.serial,{found.roles[0],found.roles[1],found.roles[2]},k,o.revision,p,n};

@@ -3,7 +3,7 @@
 #   recipe (test14/t14-build.sh arm rP, final candidate source ba856017, image eb2bc4e4) + the test 15 knobs ($T15). Every
 #   test 15 knob is default 0 in the Makefiles: with T15="" (arm kP) the play image must be byte-identical to test 14's
 #   (objcopy -R .stack image eb2bc4e4).
-# Arms: rP release play, rW warp, mW warp + MCHECK_LEONGC=1 TEX_CHECK=2, rT trace, kP knob-off play (= test 14 recipe,
+# Arms: rP release play, rW warp, mW warp + MCHECK_LEONGC=1 TEX_CHECK=2 + the CAST-GC census, rT trace, kP knob-off play (= test 14 recipe,
 #       identity vs eb2bc4e4), kW / kT knob-off warp / trace (the STRICT reference for rT).
 # Env: T (tree, default /root/probe/lanes-20261015/t15int), K (logs, default /root/probe/lanes-20261015/t15k), LP (label
 #      prefix, default t15i), T15 (test 15 knobs, default T15REC), XON (extra knobs, test only), PAD_T / PAD_K.
@@ -146,10 +146,10 @@ T15_P="SS11_PRELOAD=1"
 #      added 10-16 by lane water16b after the vq16w VQ set). Data: vq16w + water16i in T15_DATA (water pictures preloaded).
 #      Gates in C:/Flycast-Evidence/re4-dreamcast/water-20261016. T15_W="" builds the control without it.
 T15_W=${T15_W-WATER_PS2=1}
-#   WV WORLD_VERT=1 WORLD_VERT_LEVEL=5 (ChatGPT world32, user GO 10-16, -4.16 ms MODELLED at the r101 cross): r101 world
-#      as the approved L2 geometry in 32 m static batches (data wv32r101). Render only. T15_WV="" builds the control.
-#      Gates in C:/Flycast-Evidence/re4-dreamcast/world32-land-20261016.
-T15_WV=${T15_WV-WORLD_VERT=1 WORLD_VERT_LEVEL=5}
+#   WV (removed 10-16, user: "use the previously optimized r101; we will come back to improving the world; we need to
+#      use Blender and more sophistication"): WORLD_VERT is off, r101 draws the test 14 world (bake13, T15_DATA without
+#      wt16r101). The reduced sets lost structure (tools/d367/worldtest16/lostpart: test 15 world32 1657 flagged pieces,
+#      C16 1511). Any reduced world comes back only through the lost-part gate (WORLD-NEXT.md).
 #   T  FOLIAGE_TRIM=1 FOLIAGE_OPTION=1 (lane mist16; user 10-16 "I approve near", "ship with full near and off then log the
 #      issue"; render only): the chapter 1 outdoor brush / leaf cards in the punch-through list to 12 m (Near, the boot
 #      default), Options row "Foliage" Full / Near / Off, this boot only. Off leaves out the listed card keys only (85128754).
@@ -159,7 +159,9 @@ T15_T=${T15_T-FOLIAGE_TRIM=1 FOLIAGE_OPTION=1}
 #      vertices"): at Short (12.5 m) the PS2 world's opaque pass stops at the cut and the room's far shell
 #      (dc/native/rXXX/far-shell.fsh, data fsh in T15_DATA: r100 r101, ~3,000 triangles each) is drawn beyond it with
 #      Full's fog, PT / TR world passes and actors (docs/lanes/farshell16.md). Near and rooms without a shell file keep
-#      the plain cut. T15_FS="" builds the control without it.
+#      the plain cut. T15_FS="" builds the control without it. Residency (lane farshell17, test 17; test 16 shipped
+#      without it): the shell is in heap 4 only at Short, lent to every route movie, and given back when heap 4 runs
+#      short (docs/lanes/farshell17.md).
 T15_FS=${T15_FS-FAR_SHELL=1}
 #   RS RADIO_SUB_RT=1 (lane radiosub16; test 16 scope, after the t15/rc freeze; test 14 console report "the radio call
 #      subtitles are very slow"): the codec call's subtitle pages follow the voice's clock (KOS timer from the moment the
@@ -171,11 +173,23 @@ T15_RS=${T15_RS-RADIO_SUB_RT=1}
 #      around Leon, the Esp48 mist sheets, the r118 / r11c PS2 haze additions); the distant haze stays as the fog table.
 #      Ships with the Foliage Off fix (85128754). T15_HZ="" builds the control without it. Docs: docs/MIST_CUT.md.
 T15_HZ=${T15_HZ-HAZE_SPRITE_CUT=1}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_WV $T15_T $T15_FS $T15_RS $T15_HZ"
+#   PB PRIM_BUF_KB=432 (lane cast16, test 17; size only, every room): the room primitive buffer asks at most 432 KB of
+#      heap 4 (GC room values up to 655,360 B in r11f). Worst chapter 1-2 per-frame peak 294,752 B (r11c siege, PRIM_WATER:
+#      r11f 273,312, r11e 284,448, r101 bell 268,768, r100 235,808) x 1.5; overflow 0 in all. r11f then keeps 182,432 B
+#      of heap 4 free with the full PS2 Ashley + g70 Mendez (was: Ashley failed Mendez's parts). T15_PB="" builds the control.
+T15_PB=${T15_PB-PRIM_BUF_KB=432}
+#   SO STAGE_OVL=1 SS_POOL_TOP=1 (lane ch3found16, test 17; heap only): stage modules load as overlays in heap 3 beside
+#      the room REL, and the sub screen high pools go to the top of heap 4. Restores the 4 spawns h2 lost at tick 658 on
+#      the ch2 recipe (GC and test 16 spawn them all). T15_SO="" builds the control. Docs: CH3-FOUNDATIONS-20261016.md.
+T15_SO=${T15_SO-STAGE_OVL=1 SS_POOL_TOP=1}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"
-MC="MCHECK_LEONGC=1 TEX_CHECK=2"
+# CAST-GC (lane castgc17, user 10-17 "why do we keep falling back to gamecube models"): the check arm also carries the
+# native census (NATIVE_MODEL_REGISTRY_CENSUS, report every 150 UI frames) that tools/d367/cast_gc.py judges: any
+# character / enemy drawn through the GameCube path fails unless tools/d367/castgc/allow.tsv lists it.
+MC="MCHECK_LEONGC=1 TEX_CHECK=2 NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150"
 TR="DBG_WARP=1 PC_SAMPLER=1 LOGIC_TRACE=1 GAME_DECISION_TRACE=1 PACE_MODE=off TRACE_SS_MASK=1 TRACE_ALLOC=1 CODEC_READY_FIXTURE=1"
 WP="DBG_WARP=1 PC_SAMPLER=1"
 PL="DBG_WARP=0 PC_SAMPLER=0"

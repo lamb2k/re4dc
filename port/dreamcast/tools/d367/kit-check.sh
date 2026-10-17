@@ -65,6 +65,7 @@ step "5 clean checkout of HEAD ($(git -C "$ROOT" rev-parse --short=8 HEAD)) buil
 [ -z "$(git -C "$ROOT" status --short -- port/dreamcast/build-public.sh port/dreamcast/tools/d367/release-knobs.py "$KF")" ] ||
   { echo "kit-check: commit the kit files first"; exit 1; }
 git -C "$ROOT" worktree add -q --detach "$WORK/clean" HEAD
+git -C "$WORK/clean" submodule update -q --init   # SH4ZAM (port/dreamcast/game/third_party/sh4zam), from its public URL
 trap 'git -C "$ROOT" worktree remove --force "$WORK/clean" 2>/dev/null || true' EXIT
 mkdir -p "$WORK/assets"; python3 -c "import sys,zipfile; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])" "$BA" "$WORK/assets"
 A=$WORK/assets/re4dc-assets

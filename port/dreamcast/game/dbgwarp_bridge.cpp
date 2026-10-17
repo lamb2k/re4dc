@@ -60,6 +60,8 @@ extern "C" void re4dc_view_dist_set(int level, const char* why);   // option_row
 #endif
 #if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
 extern "C" void re4dc_far_shell_set(int mode, const char* why);   // native_static.cpp far_shell.inc
+extern "C" s32 OSCheckHeap(int heap);
+static u32 farshell_probe_frame;   // warp line farshellprobe (test only)
 #endif
 #if defined(RE4DC_FOLIAGE_OPTION) && RE4DC_FOLIAGE_OPTION
 extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM level; the Options Foliage row)
@@ -500,6 +502,10 @@ void load()
         } else if (!strcmp(k, "farshell") && n >= 2) {
             // FAR_SHELL (far_shell.inc): 0 the View distance cut as before, 1 the far shell, 2 opaque cut only (pricing)
             re4dc_far_shell_set((int) num(tok[1]), "warp");
+        } else if (!strcmp(k, "farshellprobe") && n >= 2) {
+            // `farshellprobe <room frame>` (test only): at that frame of the first room, one heap-4 request of all the free
+            // bytes (it cannot fit: cell headers), so the shell's shortfall path runs; the block is freed if it fit.
+            farshell_probe_frame = (u32) num(tok[1]);
 #endif
 #if defined(RE4DC_FOLIAGE_OPTION) && RE4DC_FOLIAGE_OPTION
         } else if (!strcmp(k, "foliage") && n >= 2) {
@@ -576,6 +582,16 @@ void dump_areas()
 // the hp <= 0 death, the scene links). Ends when its hp is gone or it left the live list.
 void kill_poll()
 {
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+    if (farshell_probe_frame && wp.rooms == 1 && wp.room_frames >= farshell_probe_frame) {
+        farshell_probe_frame = 0;
+        const s32 free_bytes = memCheckHeapActive(4) ? OSCheckHeap(Heap[4].handle) : -1;
+        void* p = free_bytes > 0 ? mem_alloc((u32) free_bytes, "warp farshellprobe", 0, 0, 4) : nullptr;
+        re4dc_log("warp: farshellprobe room frame %u heap4 free=%d request %s, free after=%d\n", (unsigned) wp.room_frames,
+                  (int) free_bytes, p ? "fit" : "short", memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1);
+        if (p) Mem_free_h(p, 4);
+    }
+#endif
     if (wp.alive_period && (wp.room_frames % wp.alive_period) == 0 && wp.room_frames != wp.alive_last) {
         // `alivelog <period>`: Ganados alive (the rooms' own count, ids 0x10..0x20) every period room frames
         wp.alive_last = wp.room_frames;

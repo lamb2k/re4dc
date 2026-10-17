@@ -30,6 +30,19 @@
 #include "rnd.h"
 #include "snd.h"
 #include "sscrn.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH4) && RE4DC_ROUTE_MOVIES_CH4
+// ROUTE_MOVIES_CH4 (lane ch4found16 2026-10-16): r214 s00 is presented by the PS2 movies (BIO4MOV.AFS ->
+// tools/convert_route_movies.py, private dc/movie). While a movie owns the event no evd is read; the handler's
+// begin / end / skip modes run and the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md). A missing movie
+// falls back to the source event.
+#include "route_movie.h"
+#include "game.h"
+#define R214_ROUTE_MOVIES 1
+static int r214MovieOwns;
+#define R214_MOVIES_OWN() (re4dc_movie_available(0x21400))
+#else
+#define R214_ROUTE_MOVIES 0
+#endif
 
 // Room 2-14 (D:/Bio4/Prog/r214.cpp): the three catapults, the patrols, the enemy waves behind the
 // barred gates and the rotating bridge.
@@ -182,6 +195,10 @@ void R214Init()
         u32 i;
 
         if (RsfCheck(G_ROOM_ID, 5) == 0) {
+#if R214_ROUTE_MOVIES
+            r214MovieOwns = R214_MOVIES_OWN();
+            if (!r214MovieOwns)
+#endif
             EvtMgr.EvtReadAram("event/evd/r214s00.evd", (u8) GetEmIdFromListI(0xE4), 0, 0, 0);
             SceAtDataSet_exec(0x12, SCE_LEVEL10, 0, (TaskFunc) r214_execEvent00, 0, 1);
         }
@@ -285,6 +302,11 @@ static void r214_execEvent00()
     RsfSet(G_ROOM_ID, 5);
     OpeSetOpenTerm(0x12, 0.0f, 0.0f, 0.0f, 0.0f);
     SceEventStart(0);
+#if R214_ROUTE_MOVIES
+    if (r214MovieOwns && RouteMoviePlay(0x21400, ROUTE_MOVIE_SND_EVENT | ROUTE_MOVIE_KEEP_POSE,
+                                        (RouteEvtFunc) Evt_R214S00_Func, 0) != RE4DC_MOVIE_UNHANDLED) {
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r214s00.evd", (u8) GetEmIdFromListI(0xE4), 0x20);
     SceEventEnd(0);
 }
