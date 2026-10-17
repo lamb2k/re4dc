@@ -15,8 +15,27 @@
 // the near world, the real world wins the depth test. The game camera, View._zfar and all logic are untouched.
 // Runtime mode (warp line `farshell 0|1|2`): 0 = VIEW_DIST_OPTION as before (every pass and the fog cut), 1 = shell
 // (default), 2 = the opaque cut with Full fog / PT / TR and no shell (the pricing arm that isolates the shell's cost).
+//
+// Residency (lane farshell17, 2026-10-16; test 16 blocker: the shell sat in heap 4 at every View distance and r100's
+// after-ambush Ganados could not get heap 4, "Em set failed, Id = 12" x2). The shell is in heap 4 only while it can be
+// drawn: mode 1, View distance Short, no route movie running, and heap 4 not short.
+// - sync() (every ps2_open, i.e. each world draw and room entry) loads it when it is wanted and not resident, and frees
+//   it when it is not wanted. View distance Full / Near: never read, 0 B. Changing the option to Short reads it at the
+//   next world draw; changing away frees it there.
+// - A route movie borrows it (native_movie.cpp open, as the PCCULL cell): freed before heap_before, read again at the
+//   first world draw after the movie.
+// - Heap 4 short: a failed heap-4 allocation (main_mem.cpp mem_alloc) or a native static package refused for its reserve
+//   (ui_bridge.cpp re4dc_static_alloc) frees the shell and retries once. The room is then marked yielded and the shell
+//   is not read there again (its next entries included) until the View distance option changes; that room shows the
+//   plain Short cut meanwhile. Other homes measured and rejected (docs/lanes/farshell17.md): VRAM (r100 after the ambush
+//   115 KB free, largest 7 KB; r101 largest 10 KB), sound RAM (95 KB free, G2 reads), KOS (the tight one).
 #if RE4DC_FAR_SHELL_PART == 1
+extern "C" int re4dc_view_dist_get(void);   // option_rows.cpp (VIEW_DIST_OPTION)
+#ifndef RE4DC_FAR_SHELL_MODE
+#define RE4DC_FAR_SHELL_MODE 1
+#endif
 namespace farshell {
+int mode = RE4DC_FAR_SHELL_MODE;
 struct Head { char magic[4]; std::uint32_t version, groups, materials, vertices, strip_bytes, crc, room; };
 struct Mat { std::uint32_t crc, fnv; std::uint16_t w, h; std::uint32_t reserved; };
 struct Group { float lo[3], hi[3], origin[3], scale, ub, vb; std::uint32_t first_vertex; std::uint16_t vcount, material;
@@ -31,8 +50,22 @@ struct State {
     const float* tight = nullptr;         // version 2: per group its own vertex box (lo[3], hi[3]); the file box is the cell's
     // per 120 frames
     unsigned frames = 0, shown = 0, groups_drawn = 0, vtx = 0, strip_verts = 0, strips_cut = 0, headers = 0, refused = 0;
+    bool drawing = false;                 // re4dc_far_shell_draw holds pointers into block: a shortfall may not free it
 };
 State st;
+// Residency policy (survives close()).
+struct Policy {
+    unsigned room = ~0U;    // the room sync() last saw
+    bool tried = false;     // this world package: the file was read (or found absent) once; no retry each frame
+    bool movie = false;     // a route movie borrowed the shell (or ran with the option at Short): no read until it ends
+    unsigned yielded[4] = {~0U, ~0U, ~0U, ~0U};   // rooms where heap 4 ran short with the shell resident
+    unsigned loads = 0, frees = 0, lends = 0, yields = 0;
+};
+Policy pol;
+bool yielded(unsigned room) {
+    for (unsigned r : pol.yielded) if (r == room) return true;
+    return false;
+}
 void close() {
     if (st.block) re4dc_static_free(st.block);
     st = State{};
@@ -106,14 +139,27 @@ void open(unsigned room) {
               size, st.h ? unsigned(st.h->groups) : 0U, st.h ? unsigned(st.h->materials) : 0U,
               st.h ? unsigned(st.h->vertices) : 0U, before, re4dc_static_heap_free());
 }
+void release(const char* why) {
+    if (!st.block) return;
+    const unsigned room = st.room, bytes = st.bytes;
+    close();
+    ++pol.frees;
+    re4dc_log("FARSHELL room=%03x freed bytes=%u (%s) heap=%d\n", room, bytes, why, re4dc_static_heap_free());
+}
+// ps2_open (world package open, and every world draw while it is open): the shell resident exactly while it is wanted.
+void sync() {
+    if (pol.room != ps2w.room) { pol.room = ps2w.room; pol.tried = false; pol.movie = false; }   // another room: no movie holds it
+    const bool want = mode == 1 && re4dc_view_dist_get() == 2 && !pol.movie && !yielded(ps2w.room);
+    if (!want) { release(pol.movie ? "movie" : "not Short"); return; }
+    if (st.h || pol.tried) return;
+    pol.tried = true;
+    open(ps2w.room);
+    if (st.h) ++pol.loads;
+}
 }  // namespace farshell
 #elif RE4DC_FAR_SHELL_PART == 2
-extern "C" int re4dc_view_dist_get(void);   // option_rows.cpp (VIEW_DIST_OPTION)
 namespace {
-#ifndef RE4DC_FAR_SHELL_MODE
-#define RE4DC_FAR_SHELL_MODE 1
-#endif
-int far_shell_mode = RE4DC_FAR_SHELL_MODE;
+int& far_shell_mode = farshell::mode;
 float far_shell_noted = 0.0f;
 constexpr float kBias = 0.97f;   // the shell's 1/w scale: 3 % deeper than its surface (the near world wins overlaps)
 // Only at Short (user 10-16: "short shell + half vertices"; Near keeps its plain cut: fog and every pass at 18.75 m) and
@@ -126,7 +172,44 @@ bool far_shell_cut_on() {
 // Warp line `farshell <mode>` (dbgwarp_bridge.cpp) and benchmark rows.
 extern "C" void re4dc_far_shell_set(int mode, const char* why) {
     far_shell_mode = mode < 0 || mode > 2 ? 1 : mode;
+    farshell::pol.tried = false;   // the next sync() reads or frees the shell for the new mode
     re4dc_log("far shell: mode %d (%s)\n", far_shell_mode, why);
+}
+// option_rows.cpp re4dc_view_dist_set (Options View distance, warp line `view`): the next world draw reads the shell
+// (Short) or frees it (Full / Near). A change of the option also forgets the rooms where heap 4 ran short.
+extern "C" void re4dc_far_shell_view_changed(int level) {
+    using namespace farshell;
+    pol.tried = false;
+    for (unsigned& r : pol.yielded) r = ~0U;
+    (void)level;
+}
+// native_movie.cpp open (before heap_before, as the PCCULL cell): a route movie borrows the shell; no read until it ends.
+extern "C" unsigned re4dc_far_shell_movie_release() {
+    using namespace farshell;
+    pol.movie = true;
+    if (!st.block) return 0;
+    const unsigned bytes = st.bytes;
+    release("lent to a movie");
+    ++pol.lends;
+    pol.tried = false;   // read again at the first world draw after the movie
+    return bytes;
+}
+// route_movie_bridge.cpp after the movie (beside re4dc_ps2_interior_movie_restore).
+extern "C" void re4dc_far_shell_movie_restore() { farshell::pol.movie = false; }
+// Heap 4 short (main_mem.cpp mem_alloc after a failed heap-4 allocation, ui_bridge.cpp re4dc_static_alloc before a
+// refusal): free the shell so the caller can retry; the room is marked yielded. 1 when bytes were freed.
+extern "C" int re4dc_far_shell_shortfall(unsigned need, const char* site) {
+    using namespace farshell;
+    if (!st.block || st.drawing) return 0;
+    const unsigned room = st.room;
+    unsigned k = 0;
+    while (k < 3U && pol.yielded[k] != ~0U && pol.yielded[k] != room) ++k;
+    pol.yielded[k] = room;
+    ++pol.yields;
+    re4dc_log("FARSHELL room=%03x yields to heap 4: need=%u at %s heap=%d\n", room, need, site ? site : "-",
+              re4dc_static_heap_free());
+    release("heap 4 short");
+    return 1;
 }
 // native_static.cpp fog: 1 while the shell mode keeps Full's fog (the View distance cut applies to the opaque world only).
 extern "C" int re4dc_far_shell_keeps_fog(void) { return far_shell_cut_on(); }
@@ -161,6 +244,7 @@ extern "C" int re4dc_far_shell_draw(float cut, float full) {
     const float fz0 = az0 < 0 ? -az0 : az0, fz1 = az1 < 0 ? -az1 : az1, fz2 = az2 < 0 ? -az2 : az2;
     const std::uint32_t* const lut = st.lut;
     const float split = .5f * (cut + full);   // fine / coarse level split (version 2 files): 18.75 m at Short
+    struct Busy { Busy() { st.drawing = true; } ~Busy() { st.drawing = false; } } busy;   // no shortfall free mid-draw
     for (unsigned gi = 0; gi < ng; ++gi) {
         const Group& g = st.groups[gi];
         // depth range of the box (view space looks down -z): centre depth +- the half extents on |view z row| (the
@@ -292,8 +376,9 @@ extern "C" void re4dc_far_shell_log(unsigned frame) {
     using namespace farshell;
     if (frame % 120U) return;
     re4dc_log("FARSHELL frame=%u mode=%d view=%d room=%03x loaded=%u shown=%u groups=%u verts=%u strip_verts=%u strips_cut=%u "
-              "headers=%u refused=%u\n", frame, far_shell_mode, re4dc_view_dist_get(), ps2w.room, st.h ? 1U : 0U, st.shown,
-              st.groups_drawn, st.vtx, st.strip_verts, st.strips_cut, st.headers, st.refused);
+              "headers=%u refused=%u bytes=%u loads=%u frees=%u lends=%u yields=%u\n", frame, far_shell_mode,
+              re4dc_view_dist_get(), ps2w.room, st.h ? 1U : 0U, st.shown, st.groups_drawn, st.vtx, st.strip_verts,
+              st.strips_cut, st.headers, st.refused, st.block ? st.bytes : 0U, pol.loads, pol.frees, pol.lends, pol.yields);
     st.shown = st.groups_drawn = st.vtx = st.strip_verts = st.strips_cut = st.headers = st.refused = 0;
 }
 #endif
