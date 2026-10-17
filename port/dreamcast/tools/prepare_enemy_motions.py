@@ -107,7 +107,7 @@ ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11')
 # their own registry row like the room overlays above: em11 (ROUTE_CH21, r117), em18 (ROUTE_CH13, r102: module 22),
 # em16 (ROUTE_CH23, r11d: module 20), and the castle Ganados (ROUTE_CH31 / CH32 / CH41).
 KNOB_STATIC_MODULES=('em11','em18','em16','em1a','em1b','em14','em19','em1c')
-GANADO_OVERSIZED_RESIDENT=('em1b.drs',)  # + ROUTE_CH31's castle Ganado RELs
+GANADO_OVERSIZED_RESIDENT=('em1b.drs','em1c.drs')  # + ROUTE_CH31's castle Ganado RELs; em1c (r218, ROUTE_CH41) the same way (lane ch4found16)
 # Leon's archives, textures-only: pl00 (jacket, costume 0) and pl08 (no jacket, costume 1: title.cpp picks it in
 # every room but r120/r100/r101/r103/r106 once the r106 closet event has run). Same cPlLeon consumers, so pl08
 # takes pl00's reviewed textures-only contract (route lane 2026-10-01, r104).
