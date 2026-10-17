@@ -1,0 +1,11 @@
+name dec-r223
+# ch4found16 decisions: PS2_CH4_ENEMY r223 (start sends + setChange waves), kill rig on em16
+room 0x223
+pos -29407 4126 28370
+ang -1.9930
+inv default
+god
+alivelog 300
+kill 0x16 300 0x223
+killrep 14 90
+dump
