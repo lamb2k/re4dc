@@ -4872,7 +4872,7 @@ static void alphaSetup(cModel* m, ModelPart* part, cModelInfo* info, int thermo)
 #if RE4DC_PRIM_WATER
 // PRIM_WATER (test only): the bytes each frame took from the primitive buffer, peak per room.
 extern "C" void re4dc_log(const char* fmt, ...);
-static u32 primw_room, primw_peak, primw_tail, primw_tail_peak, primw_frames, primw_cap, primw_declined;
+static u32 primw_room, primw_peak, primw_tail, primw_tail_peak, primw_frames, primw_cap, primw_declined, primw_overflow;
 static u8* primw_start;
 static void primWaterFrame()
 {
@@ -4885,11 +4885,11 @@ static void primWaterFrame()
     primw_tail = 0;
     if (primw_room != (u32) pG->room_id || primw_cap != (u32) pG->nPrim || (++primw_frames % 300) == 0) {
         if (primw_room) {
-            re4dc_log("prim water: room %03x cap %u peak %u (actor tail peak %u) frames %u tail declined %u\n", primw_room,
-                      primw_cap, primw_peak, primw_tail_peak, primw_frames, primw_declined);
+            re4dc_log("prim water: room %03x cap %u peak %u (actor tail peak %u) frames %u tail declined %u overflow %u\n",
+                      primw_room, primw_cap, primw_peak, primw_tail_peak, primw_frames, primw_declined, primw_overflow);
         }
         if (primw_room != (u32) pG->room_id || primw_cap != (u32) pG->nPrim) {
-            primw_peak = primw_tail_peak = primw_frames = primw_declined = 0;
+            primw_peak = primw_tail_peak = primw_frames = primw_declined = primw_overflow = 0;
         }
         primw_room = pG->room_id;
         primw_cap = pG->nPrim;
@@ -4943,6 +4943,9 @@ void* GetPrimBuff(int size)
     p = gx->prim;
     next = p + size;
     if (limit < next) {
+#if RE4DC_PRIM_WATER
+        ++primw_overflow;
+#endif
         pLog->err(0, 0, "GetPrimBuff() : OVERFLOW");
         return 0;
     }

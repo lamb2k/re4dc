@@ -128,6 +128,12 @@ bool pack_alias(const PackSpan& a,const PackSpan& b,const unsigned char* geom) {
 #else
 #define RE4DC_NMR_WORD44_BAD(w) (w)
 #endif
+// NATIVE_MODEL_REGISTRY_LOD: word 44 bit 25 = a gameplay level of package descriptor (bits 16..23) - 1.
+#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+#define RE4DC_NMR_LOD_BITS ((1u<<25)|(255u<<16))
+#else
+#define RE4DC_NMR_LOD_BITS 0u
+#endif
 #if RE4DC_NMR_IMMUTABLE_ALIAS
 // Keep validation scratch out of room_enter's live frame during KOS fs_open,
 // whose path normalization already retains two 4096-byte buffers on the task stack.
@@ -290,7 +296,7 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         const unsigned pool=(pu32(r,44)>>24)&1u;
         if(app!=nmr::appearance_first+d || id>255 || !bones || bones>max_bones || !sections || sections>(pool?kRegPoolSections:8u) ||
            (pool && (S || sections<2u)) || first!=refs || pat!=parents_used || bfirst!=binds_used ||
-           RE4DC_NMR_WORD44_BAD(pu32(r,44)&~(1u<<24)) || refs+sections>sec[kRef].count ||
+           RE4DC_NMR_WORD44_BAD(pu32(r,44)&~((1u<<24)|RE4DC_NMR_LOD_BITS)) || refs+sections>sec[kRef].count ||
            (S && S<=bones) || pat+pjoints>sec[kParents].count || bfirst+bjoints>sec[kBind].count)return kPwDescriptor;
 #else
         if(app!=nmr::appearance_first+d || id>255 || !bones || bones>max_bones || !sections || sections>8 || first!=refs ||
@@ -312,7 +318,7 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         const unsigned pool=(pu32(r,44)>>24)&1u;
         if(app!=nmr::appearance_first+d || id>255 || !bones || bones>max_bones || !sections || sections>(pool?kRegPoolSections:8u) ||
            (pool && sections<2u) || first!=refs || pat!=parents_used || bfirst!=binds_used ||
-           RE4DC_NMR_WORD44_BAD(pu32(r,44)&~(1u<<24)) || refs+sections>sec[kRef].count ||
+           RE4DC_NMR_WORD44_BAD(pu32(r,44)&~((1u<<24)|RE4DC_NMR_LOD_BITS)) || refs+sections>sec[kRef].count ||
            pat+bones>sec[kParents].count || bfirst+bones>sec[kBind].count)return kPwDescriptor;
 #else
         if(app!=nmr::appearance_first+d || id>255 || !bones || bones>max_bones || !sections || sections>8 || first!=refs ||
@@ -329,6 +335,24 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         desc.parents=parents+pat;desc.bind=bind+bfirst;
 #if RE4DC_NMR_POOL
         desc.pool=pool;
+#endif
+#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+        {
+            // A gameplay level names an EARLIER full descriptor of the same model id, bones and sections (neither a
+            // pool nor itself a level); a word without bit 25 carries no index.
+            const unsigned w=pu32(r,44),full=(w>>16)&255u;
+            desc.lod_of=0;
+            if(w&(1u<<25)) {
+                if(!full || full-1u>=d)return kPwDescriptor;
+                const auto& f=PKD[full-1u];
+                if(f.model_id!=id || f.bones!=bones || f.sections!=sections || f.lod_of
+#if RE4DC_NMR_POOL
+                   || f.pool || pool
+#endif
+                   )return kPwDescriptor;
+                desc.lod_of=full;
+            } else if(full)return kPwDescriptor;
+        }
 #endif
 #if RE4DC_NMR_SLOTS
         desc.source_bones=S;
@@ -489,6 +513,11 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
     // Two descriptors whose sections prove the same source identity (model + TPL rows) would be ambiguous.
     for(unsigned a=0;a<sec[kDesc].count;++a)for(unsigned b=a+1;b<sec[kDesc].count;++b) {
         if(PKD[a].sections!=PKD[b].sections)continue;
+#if defined(RE4DC_NMR_LOD) && RE4DC_NMR_LOD
+        // NATIVE_MODEL_REGISTRY_LOD: a gameplay level proves its full descriptor's identity by design; the search never
+        // binds a level (registry_lod_want chooses between the two), so the pair is not ambiguous.
+        if(PKD[b].lod_of==a+1u)continue;
+#endif
         bool same=true;
         for(unsigned i=0;i<PKD[a].sections && same;++i) {
             const re4dc_material::Role* x=nullptr;const re4dc_material::Role* y=nullptr;

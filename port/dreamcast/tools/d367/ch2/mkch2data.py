@@ -107,6 +107,18 @@ def main():
             rep[k] = f
         else:
             notes.append('%s not built (%s): test 15 file stays' % (k, f))
+    # r200 2-3 -> 3-1 transition (lane r200-17, coordinator 10-16): on 2 frames before r200s00 and 2 after the chapter 2
+    # save the source-world owner declines (PS2SOURCE_DECLINE reason 8) and r200's GameCube world is drawn. Its three
+    # material pairs (colour+mask composites of st2/r200.arc#4/TPL0, CASTLE-ROUTE-20261015.md "The 3 missing r200 keys",
+    # rebuilt with pairs_from_log.py by the castle lane) were not on the disc: "package rejected: open failed" and 16
+    # model parts without their texture. Shipped until the PS2 world owns that frame (Codex D47).
+    R200P = LANE + '/data/r200pairs'   # copy of the castle lane's pairs-r200-k6-r200.das (SHA256SUMS there)
+    for key in ('ffab7f0f-f087a7ef', '91e5102e-040d2e2a', '0c59b4bc-59b3e686'):
+        p = '%s/%s.re4tex' % (R200P, key)
+        if os.path.exists(p):
+            rep['dc/tex/%s/%s.re4tex' % (key[0], key)] = p
+        else:
+            notes.append('r200 pair %s missing (%s)' % (key, p))
     # em16
     rep['em/em16.drs'] = '%s/snd/em16.drs' % LANE
     for p in sorted(Path('%s/em16/prep-em16/mot' % LANE).glob('*.fcv')):

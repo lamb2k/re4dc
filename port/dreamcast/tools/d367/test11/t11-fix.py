@@ -290,7 +290,7 @@ DATA['cast15']['tex'] = ['%s/conv-t14/reg-%s/tex' % (C15D, g) if g != '118pc' el
 # on the disc the LOD code never runs (no GANADOLOD log line: the poc101 bench trap).
 GLOD = os.environ.get('GLOD', '/root/probe/lanes-20261015/t15k/data/glod/ganado_lod.re4gl')
 DATA['glod'] = {'dc/native/ganado/ganado_lod.re4gl': GLOD}
-T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16w,water16i,wt16r101,fsh'  # vq16w + water16i (lane water16b) replace vq16cs + water16h; fsh (lane farshell16) last: the far shells of r100 / r101; res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak; water16h (lane water16) after res16h: res16h + the WATER_PS2 room water pictures; wv32r101 (world32, ChatGPT) replaces bake13 r101 world files and adds variant 5
+T15_DATA = T14_DATA + ',cast15,glod,res16,snd16,res16h,vq16w,water16i,fsh'  # vq16w + water16i (lane water16b) replace vq16cs + water16h; fsh (lane farshell16) last: the far shells of r100 / r101; res16 after res14r3: the HUD fix core set (CORE_PIN=2); snd16 (lane audio16) after objs13d: replaces st1/r103.dar + bgm/aica_str.dat, needs AICA_STR_ENT_MAX=48; res16h + vq16cs (lane resident16) after res16 / t13tex: chapter 1 resident lists + VQ tex.pak; water16h (lane water16) after res16h: res16h + the WATER_PS2 room water pictures; wv32r101 (world32, ChatGPT) replaces bake13 r101 world files and adds variant 5
 # Test 15 HUD fix (t15/hud, CORE_PIN=2): res16 = res14r3 + the two HUD pictures the r101 post-bell radio call's frag window
 # released (test 14's open VRAM item): afa4bc82-306be3e3 (44x44) and bf17fc06-c975b3a7 (48x48), in the core set r000.tsv.
 # 248 records, sha256 de98da1ec2e75532 (resident_keys.py pack r000 r101 r103).
@@ -388,6 +388,14 @@ if os.path.exists(CH2D + '/ch2-data.json'):
     # no row for them, so its label swap cannot reach them (a missing overlay halts "route overlay missing on the disc")
     DATA['ch2']['ovl'] = ['em3b', 'em35', 'pl14']
     UNREMOVE['ch2'] = _c2['unremove']
+# cast16 (lane cast16, 10-16; PS2CAST-20261014.md 2026-10-16 section): PS2 cast packages over ch2 (order: after ch2).
+# r11c Luis + merchant13 (reg-11cm), r11d cart + em16 pool (reg-11dp), r11e El Gigante + its g70 gameplay level
+# (reg-11eL), r11f Mendez g70 in every form (reg-11fLo; user 10-16: the cutscenes are movies) + the PS2 Ashley partner,
+# with their textures. Needs NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 (ch2/ch2-build.sh CH2REC) and
+# PRIM_BUF_KB (T15_PB): r11f's heap 4 holds Ashley's 239,688 B cell only with the primitive buffer at 432 KB.
+C16D = os.environ.get('C16D', '/root/re4data/private/cast16data-20261016')
+if os.path.exists(C16D + '/cast16-data.json'):
+    DATA['cast16'] = dict(json.load(open(C16D + '/cast16-data.json'))['replace'])
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
@@ -404,6 +412,26 @@ def texdir(d, r, rec):
                 raise SystemExit('texture %s staged twice with different bytes: %s / %s' % (k, r[k], p))
             r[k] = str(p); n += 1
     rec.append('texdir %s %d' % (d, n))
+
+
+def lostpart_gate(k, v, rec):
+    """Required gate (2026-10-16): a reduced world level file dc/native/<room>/ps2-wv*.re4mesh is staged only with a PASS
+    stamp of the lost-part check beside it (tools/d367/lostpart/lostpart_gate.sh writes LOSTPART.txt: verdict +
+    reduced-sha256). RE4DC_LOSTPART_WAIVE=1 = A/B comparison fixtures only (recorded in provenance; never a release)."""
+    if not (k.startswith('dc/native/') and os.path.basename(k).startswith('ps2-wv') and k.endswith('.re4mesh')):
+        return
+    if os.environ.get('RE4DC_LOSTPART_WAIVE') == '1':
+        rec.append('LOSTPART WAIVED %s' % k)
+        return
+    st = os.path.join(os.path.dirname(v), 'LOSTPART.txt')
+    assert os.path.exists(st), 'lost-part gate: %s has no LOSTPART.txt (run tools/d367/lostpart/lostpart_gate.sh)' % v
+    t = open(st).read()
+    import hashlib
+    h = hashlib.sha256(open(v, 'rb').read()).hexdigest()
+    first = t.splitlines()[0] if t else ''
+    assert ': PASS (' in first, 'lost-part gate: %s FAILED the check (%s)' % (v, first)
+    assert ('reduced-sha256 %s' % h) in t, 'lost-part gate: %s changed since its LOSTPART.txt stamp' % v
+    rec.append('LOSTPART PASS %s %s' % (k, h[:16]))
 
 
 def main():
@@ -440,10 +468,12 @@ def main():
                     texdir(t, r, rec)
                 continue
             assert os.path.exists(v), (nm, k, v)
+            lostpart_gate(k, v, rec)
             r[k] = v; rm.discard(k); rec.append('%s %s %s' % (nm, k, sha(v)))
     for kv in opt.get('--set', []):
         k, v = kv.split('=', 1)
         assert os.path.exists(v), v
+        lostpart_gate(k, v, rec)
         r[k] = v; rm.discard(k); rec.append('set %s %s' % (k, sha(v)))
     for k in opt.get('--rm', []):
         r.pop(k, None); rm.add(k); rec.append('rm ' + k)

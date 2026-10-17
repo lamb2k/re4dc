@@ -226,6 +226,20 @@ int ESP_IsActive(cEsp* esp)
     return 1;
 }
 
+#if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
+// ESP_POOL_DIAG (esppool.mk, test only): per room pool size, live-sprite peak, steals (a full pool recycling a
+// Tool_flg 0x40000 sprite) and refusals (the dummy esp handed back).
+extern "C" void re4dc_log(const char* fmt, ...);
+static u32 espd_room = 0xFFFFFFFFu, espd_n, espd_peak, espd_logged, espd_steal, espd_refuse;
+static void espd_report(const char* why)
+{
+    re4dc_log("esp pool: %s room %03x slots %u peak %u steals %u refused %u\n", why, (unsigned) espd_room,
+              (unsigned) espd_n, (unsigned) espd_peak, (unsigned) espd_steal, (unsigned) espd_refuse);
+}
+#define ESPD_STEAL() (++espd_steal)
+#else
+#define ESPD_STEAL() ((void) 0)
+#endif
 // Allocates an effect of id `id`: runs its registered create (operator new picks a free slot),
 // marks it live (m_Be_flg bit0), stores the id and bumps ActiveEspNum. Returns 1 on success;
 // on a bad id or a full pool *out is the dummy esp (pDmyEsp) and 0 is returned.
@@ -257,6 +271,12 @@ int PullEsp(cEsp** out, int id)
 #endif
         ret = 1;
         sys->ActiveEspNum++;
+#if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
+        if ((u32) sys->ActiveEspNum > espd_peak) {
+            espd_peak = sys->ActiveEspNum;
+            if (espd_peak >= espd_logged + 32) { espd_logged = espd_peak; espd_report("peak"); }
+        }
+#endif
         (*out)->m_Id = id;
 #if RE4DC_PACE_TRANS_SKIP
         if (espLogicId(id)) {
@@ -264,6 +284,9 @@ int PullEsp(cEsp** out, int id)
         }
 #endif
     } else {
+#if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
+        if (espd_refuse++ < 4) espd_report("REFUSED");
+#endif
         pLog->warn(6, 0, "ESP : ESP work full!!");
     }
     return ret;
@@ -330,6 +353,7 @@ loop2:
             esp = (cEsp*) (sys->pEspBuf + i * 0x150);
             if ((esp->m_Be_flg & 1) && (esp->m_Tool_flg & 0x40000)) {
                 do { // keeps loop.c from moving this block out of the loop (see above)
+                    ESPD_STEAL();
                     PushEsp(esp);
                     goto found;
                 } while (0);
@@ -342,6 +366,9 @@ loop4:
             esp = (cEsp*) (sys->pEspBuf + ofs);
             if ((esp->m_Be_flg & 1) && (esp->m_Tool_flg & 0x40000)) {
 found:
+#if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
+                if (esp->m_Be_flg & 1) ESPD_STEAL();
+#endif
                 memclr_asm(esp, 0x150);
                 old_hit = i + 1;
                 return esp;
@@ -936,6 +963,19 @@ int EspArrayAlloc(u32 n)
 
     EspArrayFree();
     ESP_OWN_STALE();
+#if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
+    if (espd_room != 0xFFFFFFFFu) espd_report("room end");
+    espd_room = pG ? (u32) pG->room_id : 0; espd_n = n; espd_peak = espd_logged = espd_steal = espd_refuse = 0;
+#endif
+#if defined(RE4DC_ESP_POOL_CAP) && RE4DC_ESP_POOL_CAP
+    // ESP_POOL_CAP (esppool.mk): the room asks for at most this many slots (heap 4; the GC cons values are 1024).
+    if (n > RE4DC_ESP_POOL_CAP) {
+        n = RE4DC_ESP_POOL_CAP;
+    }
+#endif
+#if defined(RE4DC_ESP_POOL_DIAG) && RE4DC_ESP_POOL_DIAG
+    espd_n = n;
+#endif
     if (n == 0) {
         return 0;
     }

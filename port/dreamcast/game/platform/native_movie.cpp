@@ -212,6 +212,9 @@ unsigned loan_test_id;   // test only: the movie that lent the cache at its firs
 #if RE4DC_PS2_INTERIOR_CULL
 extern "C" unsigned re4dc_ps2_interior_movie_release();   // native_static.cpp: the r100 cell block
 #endif
+#if RE4DC_FAR_SHELL
+extern "C" unsigned re4dc_far_shell_movie_release();   // native_static.cpp far_shell.inc: the room's far shell
+#endif
 void* stage_alloc(size_t n){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(movie_world_token)return n<=0xffffffffu?re4dc_ps2_mesh_movie_alloc(movie_world_token,unsigned(n)):nullptr;
@@ -533,6 +536,11 @@ bool open(unsigned id){
     // PS2_INTERIOR_CULL: no world is drawn during a route movie, so it borrows the r100 cell block (read again by
     // route_movie_bridge.cpp after the movie); taken before heap_before so the movie sees the knob-off heap.
     re4dc_ps2_interior_movie_release();
+#endif
+#if RE4DC_FAR_SHELL
+    // FAR_SHELL: the far shell (View distance Short) is lent the same way, read again at the first world draw after
+    // the movie (route_movie_bridge.cpp re4dc_far_shell_movie_restore); before heap_before.
+    re4dc_far_shell_movie_release();
 #endif
 #if RE4DC_MOVIE_BALLAST_TEST
     if(id==0x10030){m.ballast=re4dc_ui_stage_alloc(RE4DC_MOVIE_BALLAST_TEST);

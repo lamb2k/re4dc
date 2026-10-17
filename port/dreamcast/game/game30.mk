@@ -319,7 +319,10 @@ endif
 #   world passes, actors and objects keep Full's far, and the room's far shell (dc/native/rXXX/far-shell.fsh, built by
 #   tools/d367/farshell from the room's PS2 world package; the world's own textures, no new VRAM) is drawn beyond the cut
 #   (platform/far_shell.inc). Near, and Short in a room without a file, keep the plain cut. DBG_WARP builds: warp line `farshell 0|1|2`
-#   (0 the View distance cut as before, 1 shell, 2 opaque cut only, for pricing).
+#   (0 the View distance cut as before, 1 shell, 2 opaque cut only, for pricing), `farshellprobe <room frame>` (one
+#   impossible heap-4 request: runs the shortfall path). Residency (lane farshell17): the shell is read only at View
+#   distance Short (Full / Near: 0 B), lent to every route movie, and freed when a heap-4 allocation fails (main_mem.cpp
+#   mem_alloc, ui_bridge.cpp re4dc_static_alloc retry once); that room then keeps the plain cut until the option changes.
 FAR_SHELL ?= 0
 ifneq ($(filter-out 0 1,$(FAR_SHELL)),)
 $(error FAR_SHELL must be 0 or 1)

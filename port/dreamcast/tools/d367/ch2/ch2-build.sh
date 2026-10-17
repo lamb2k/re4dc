@@ -21,7 +21,10 @@ PE=${PE:-/root/re4data/private/ps2enemy-ch2-20261016}
 #   keeps 48 with snd16, whose 45 entries are this file's first 45 byte for byte).
 #   AICA_SPILL: banks the layout has no room for use idle space: the BGM0 slot tail (r11c Luis, pl14) and the arena
 #   top (r11f Mendez BGM1). CH2-CODE-COMPLETE-20261016.md.
-CH2REC="ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1 PS2_ENEMY_CH22_DIR=$PE PS2_ENEMY_CH23_DIR=$PE MOTION_BOUNDED_R11F=1 NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1 PS2_WORLD_SOURCE_OWNER=1 PS2_WORLD_SOURCE_TEX_PREP=1 AICA_STR_ENT_MAX=56 AICA_SPILL=1"
+# lane cast16 (10-16): NATIVE_MODEL_REGISTRY_FIRST=1 (a Ganado-class actor its room package binds plans through the
+#   registry before the Ganado cast: em16 r11d, merchant13 r11c) and NATIVE_MODEL_REGISTRY_LOD=1 (boss gameplay levels:
+#   El Gigante g70 in r11e, full in its event); both render only, data set cast16 (test11/t11-fix.py).
+CH2REC="ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1 PS2_ENEMY_CH22_DIR=$PE PS2_ENEMY_CH23_DIR=$PE MOTION_BOUNDED_R11F=1 NATIVE_MODEL_REGISTRY_IMMUTABLE_ALIAS=1 PS2_WORLD_SOURCE_OWNER=1 PS2_WORLD_SOURCE_TEX_PREP=1 AICA_STR_ENT_MAX=56 AICA_SPILL=1 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1"
 CH2=${CH2-$CH2REC}
 # T15REC as test15/t15-build.sh defines it (its assignments only, up to the arm table).
 T15REC=$(bash -c "set -u; $(sed -n '/^K=/,/^T15REC=/p' "$T/port/dreamcast/tools/d367/test15/t15-build.sh" | grep -v '^K=\|^T=') ; echo \"\$T15REC\"")

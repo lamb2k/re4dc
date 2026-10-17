@@ -1,0 +1,39 @@
+{
+ "registry": "ps2-ch2-r11eL",
+ "about": "lane cast16 (2026-10-16): chapter 2-3 fork B room 11e = El Gigante (em2b TYPE_C 2: modelInit(ARC 0xB, ARC 0xD) + ModInfoMgr(ARC 0xC, ARC 0xD)), PS2 body + head (ps2_cast.py gigante-em2b-02). Render only. + gig2b02-g70: the gameplay level (lod_of gigante-em2b-02; 70% of its PS2 positions, glod_rung.py --pct 70 --shift 2; same atlas), drawn outside in-engine events with NATIVE_MODEL_REGISTRY_LOD=1 (user 10-16: bosses reduce when their room projects < 30 fps; full model in cutscenes).",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv/regcast-r11eL",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "em2b: the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bit 0, PS2_GIGANTE)",
+ "descriptors": [
+  {
+   "name": "gigante-em2b-02",
+   "archive": "em2b",
+   "model_id": "0x2b",
+   "source_types": [
+    2
+   ],
+   "module": "src/em2b/em2b.cpp type 2 (TYPE_C) modelInit(ARC 0xB, ARC 0xD) + ModInfoMgr.create(ARC 0xC, ARC 0xD)"
+  },
+  {
+   "name": "gig2b02-g70",
+   "archive": "em2b",
+   "model_id": "0x2b",
+   "source_types": [
+    2
+   ],
+   "module": "src/em2b/em2b.cpp type 2 (TYPE_C) modelInit(ARC 0xB, ARC 0xD) + ModInfoMgr.create(ARC 0xC, ARC 0xD)",
+   "lod_of": "gigante-em2b-02"
+  }
+ ],
+ "room_packages": {
+  "11e": {
+   "descriptors": [
+    "gigante-em2b-02",
+    "gig2b02-g70"
+   ],
+   "evidence": "ch2code16 r11e entry: the El Gigante archive binds (em2b.drs 2.26 MB)"
+  }
+ }
+}

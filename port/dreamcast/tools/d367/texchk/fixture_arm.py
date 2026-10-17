@@ -13,6 +13,15 @@ load those modules (h2, square, r103) hide the mismatch.
 
 Every dc/*.ovl entry is rewritten to programs/candidate-route<arm>/<name>.ovl; the script
 refuses if that file does not exist. --warp replaces dc/warp.txt.
+
+Every overlay the candidate holds (dc/<name>.ovl) is also added when the fixture lacks it (ch3found16
+2026-10-16): a STAGE_OVL image needs st1_0..st2_3, a ROUTE_* image its enemy overlays, and a fixture written
+for an older image halted at boot with "route overlay missing on the disc" (cast16 Zealot runs).
+
+--data <fixture.json> (the recipe's data set, e.g. a T15_DATA package fixture) checks every prepared archive
+(em/*.drs) against it: a fixture that pins another lane's prepared archive fails here, loudly, instead of
+halting at boot ("invalid prepared enemy motion archive": k6's pl11.drs from an older motion contract).
+--allow em/<x>.drs accepts a reviewed difference (repeatable).
 """
 import argparse, json, os, re, sys
 
@@ -29,6 +38,8 @@ def main(argv):
     paths = parser.add_mutually_exclusive_group()
     paths.add_argument('--programs-dir', default=HW)
     paths.add_argument('--candidate-dir')
+    parser.add_argument('--data', help='recipe data-set fixture: every em/*.drs must match it')
+    parser.add_argument('--allow', action='append', default=[], help='em/<x>.drs allowed to differ from --data')
     args = parser.parse_args(argv[1:])
     src, dst, arm, warp = args.src, args.dst, args.arm, args.warp
     d = json.load(open(src))
@@ -43,9 +54,26 @@ def main(argv):
             if rep[k] != new:
                 print('fixture_arm: %s %s -> %s' % (k, rep[k], new)); n += 1
             rep[k] = new
+    added = 0
+    if os.path.isdir(cand):
+        for f in sorted(os.listdir(cand)):
+            if f.endswith('.ovl') and 'dc/' + f not in rep:
+                rep['dc/' + f] = os.path.join(cand, f); added += 1
+        if added:
+            print('fixture_arm: added %d candidate overlays' % added)
+        d['remove'] = sorted(set(d.get('remove', [])) - set(rep))
+    if args.data:
+        base = json.load(open(args.data))['replace']
+        bad = [k for k in sorted(rep) if re.fullmatch(r'em/[a-z0-9_]+\.drs', k) and k in base
+               and rep[k] != base[k] and k not in args.allow]
+        for k in bad:
+            print('fixture_arm: PREPARED MISMATCH %s: fixture %s, data set %s' % (k, rep[k], base[k]))
+        if bad:
+            print('fixture_arm: refused (%d prepared archives differ from %s; --allow to accept)' % (len(bad), args.data))
+            return 2
     if warp:
         rep['dc/warp.txt'] = warp
-    d.setdefault('provenance', {})['fixture_arm'] = {'src': src, 'arm': arm, 'ovl_retargeted': n,
+    d.setdefault('provenance', {})['fixture_arm'] = {'src': src, 'arm': arm, 'ovl_retargeted': n, 'ovl_added': added, 'data': args.data,
                                                   'candidate_dir': cand}
     json.dump(d, open(dst, 'w'), indent=1)
     print('fixture_arm: %s retargeted=%d' % (dst, n))
