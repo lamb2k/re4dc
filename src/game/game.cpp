@@ -603,6 +603,12 @@ void gameRoomInit()
         pG->nPrim = RE4DC_PRIM_CAP_R226;
     }
 #endif
+#if defined(RE4DC_PRIM_CAP_R21A) && RE4DC_PRIM_CAP_R21A
+    // PRIM_CAP_R21A (lane ch4found16 2026-10-17, heap 4 for r21a's em2a fight): the same cap for r21a (room value 442,368 B).
+    if (pG->room_id == 0x21a && pG->nPrim > RE4DC_PRIM_CAP_R21A) {
+        pG->nPrim = RE4DC_PRIM_CAP_R21A;
+    }
+#endif
 #if defined(RE4DC_PRIM_BUF_KB) && RE4DC_PRIM_BUF_KB
     // PRIM_BUF_KB (Makefile, lane cast16 2026-10-16; size only, every room): the room's primitive buffer asks at most
     // this many KB (heap 4). The GC room values (r11f 655,360 B) were sized for the GameCube; the cap is the worst
