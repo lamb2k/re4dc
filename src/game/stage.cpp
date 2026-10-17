@@ -32,6 +32,10 @@ extern "C" void re4dc_missing(const char* name);
 #include "ps2_enemy_ch3.h"
 extern "C" void re4dc_missing(const char* name);
 #endif
+#if defined(RE4DC_PS2_CH4_ENEMY) && RE4DC_PS2_CH4_ENEMY
+#include "ps2_enemy_ch4.h"
+extern "C" void re4dc_missing(const char* name);
+#endif
 
 // game/sce_com.cpp: per-scenario free counters (pG + 0x51E8)
 extern "C" int GetFree(int no);
@@ -353,6 +357,10 @@ void readEmList(int mode)
 #if defined(RE4DC_PS2_CH3_ENEMY) && RE4DC_PS2_CH3_ENEMY
             if (re4dc_ps2EnemyListCh3(pG->em_list_no, pG->Em_list, sizeof(pG->Em_list)) < 0)
                 re4dc_missing("required PS2 chapter 3 enemy list did not match its qualified source");
+#endif
+#if defined(RE4DC_PS2_CH4_ENEMY) && RE4DC_PS2_CH4_ENEMY
+            if (re4dc_ps2EnemyListCh4(pG->em_list_no, pG->Em_list, sizeof(pG->Em_list)) < 0)
+                re4dc_missing("required PS2 chapter 4 enemy list did not match its qualified source");
 #endif
         }
     }

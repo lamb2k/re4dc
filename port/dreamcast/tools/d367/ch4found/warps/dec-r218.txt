@@ -1,0 +1,11 @@
+name dec-r218
+# ch4found16 decisions at cap 4: r218 kill rig on em1c (Codex r218 walk entry), god
+room 0x218
+pos -30870 -2105 -3
+ang 1.4900
+inv default
+god
+alivelog 300
+kill 0x1c 300 0x218
+killrep 14 90
+dump

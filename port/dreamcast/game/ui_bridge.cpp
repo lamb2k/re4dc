@@ -826,6 +826,9 @@ extern "C" int re4dc_model_return_retained(unsigned* bytes,unsigned* requests){
 // their owner, which precedes the lazy retained allocation at first draw.
 #if RE4DC_NATIVE_STATIC
 #include "native_static.h"
+#if defined(RE4DC_MOTION_COLD_POOL_CASTLE) && RE4DC_MOTION_COLD_POOL_CASTLE
+extern "C" unsigned re4dc_room_id_now(){return pG?unsigned(pG->room_id):0u;}   // native_motion.cpp
+#endif
 extern "C" int re4dc_static_heap_free(){
     return memCheckHeapActive(4)?OSCheckHeap(Heap[4].handle):-1;
 }

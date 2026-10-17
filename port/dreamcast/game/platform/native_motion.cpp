@@ -19,6 +19,19 @@ extern "C" { unsigned long long re4dc_motion_wait_total_us; }
 #if RE4DC_MOTION_RESERVE_SPILL || RE4DC_MOTION_COLD_POOL
 extern "C" int re4dc_static_heap_free();   // ui_bridge.cpp: heap 4 free bytes (-1 when inactive)
 #endif
+#ifndef RE4DC_MOTION_COLD_POOL_CASTLE
+#define RE4DC_MOTION_COLD_POOL_CASTLE 0
+#endif
+#if RE4DC_MOTION_COLD_POOL_CASTLE
+// MOTION_COLD_POOL_CASTLE=<bytes> (game30.mk, lane ch4found16): the cold pool's heap 4 margin in the castle rooms
+// (r2xx) instead of MOTION_COLD_POOL's.
+extern "C" unsigned re4dc_room_id_now();   // ui_bridge.cpp: pG->room_id (0x226), 0 before the game starts
+static inline unsigned cold_pool_margin() {
+    return (re4dc_room_id_now()>>8)==2?unsigned(RE4DC_MOTION_COLD_POOL_CASTLE):unsigned(RE4DC_MOTION_COLD_POOL);
+}
+#else
+#define cold_pool_margin() unsigned(RE4DC_MOTION_COLD_POOL)
+#endif
 #include <kos.h>
 #include <kos/net.h>
 #include <kos/mutex.h>
@@ -360,7 +373,7 @@ unsigned* load(Binding& b,unsigned i) {
 #if RE4DC_MOTION_BOUNDED_R11F
                     !b.bounded &&
 #endif
-                    re4dc_static_heap_free()>=int(bytes+RE4DC_MOTION_COLD_POOL)) {
+                    re4dc_static_heap_free()>=int(bytes+cold_pool_margin())) {
                     data=static_cast<unsigned char*>(re4dc_motion_alloc(bytes));
                     static unsigned pooled,refused;
                     if(data) {

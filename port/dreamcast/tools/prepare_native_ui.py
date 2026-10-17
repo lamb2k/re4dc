@@ -516,6 +516,30 @@ ROOM_CONTRACTS={
     # the same standard owners, slot counts from the GC disc 1 St2/<room>.das.
     'r221':dict(slots=34,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),  # header flush: + the NTR slot
     'r228':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    # Chapter 4 (lane ch4found16 2026-10-16): the same standard owners (SMD#4 TPL0, EFF#7, ITM#9), slot counts from
+    # the GC disc 1 St2/<room>.das (le_mirror decode); local model BIN/TPL pairs, every FCV/SEQ motion, EMI, the r214
+    # local EFF#30 and UWF#31, collision, AEV and sound slots stay byte-identical. header_grow=32 where the header
+    # ends flush with the first payload (r213 r218 r223 r225 r21b: + the NTR slot). r210 / r219 rows are above.
+    'r222':dict(slots=28,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r211':dict(slots=32,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r216':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r212':dict(slots=37,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r213':dict(slots=30,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
+    'r214':dict(slots=32,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r217':dict(slots=28,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r218':dict(slots=30,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
+    'r215':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r229':dict(slots=28,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r22b':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r220':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r223':dict(slots=34,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
+    'r224':dict(slots=41,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r21d':dict(slots=35,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r225':dict(slots=54,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
+    'r21b':dict(slots=42,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
+    'r226':dict(slots=108,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r227':dict(slots=32,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r22a':dict(slots=33,smd=4,effs=(7,),itm=9,model_slots=()),
     # r40b (St4, st4_0 + em1f; follow-up 7): r40c's 27-slot layout (header ends at 232 of 256: no growth).
     'r40b':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
 }

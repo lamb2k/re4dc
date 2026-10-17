@@ -16,6 +16,19 @@
 #include "act_btn.h"
 #include "shadow.h"
 #include "fade.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH4) && RE4DC_ROUTE_MOVIES_CH4
+// ROUTE_MOVIES_CH4 (lane ch4found16 2026-10-16): r215 s00 (QTE), s01 and s02 are presented by the PS2 movies (BIO4MOV.AFS ->
+// tools/convert_route_movies.py, private dc/movie). While a movie owns the event no evd is read; the handler's
+// begin / end / skip modes run and the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md). A missing movie
+// falls back to the source event.
+#include "route_movie.h"
+#include "game.h"
+#define R215_ROUTE_MOVIES 1
+static int r215MovieOwns;
+#define R215_MOVIES_OWN() (re4dc_movie_available(0x21500))
+#else
+#define R215_ROUTE_MOVIES 0
+#endif
 
 // Room 2-15 (D:/Bio4/Prog/r215.cpp): an event-only room: on the first visit R215_Event plays r215s00
 // (a QTE; success clears Room_flg[0] bit 31), then r215s01 (passed: Leon placed at the exit) or the
@@ -73,6 +86,10 @@ void R215Init()
     EvtMgr.SetFunc("evt_r215s01_func", (void*) Evt_R215S01_Func);
     EvtMgr.SetFunc("evt_r215s02_func", (void*) Evt_R215S02_Func);
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
+#if R215_ROUTE_MOVIES
+        r215MovieOwns = R215_MOVIES_OWN();
+        if (!r215MovieOwns)
+#endif
         EvtMgr.EvtReadMram("event/evd/r215s00.evd", 0, 0, 0, 0);
         SceExec(0x12, (TaskFunc) R215_Event, 0, 0, SCE_PRIO_DEF_2, 0);
     }
@@ -92,8 +109,20 @@ extern "C" void R215_Event()
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         RsfSet(G_ROOM_ID, 0);
         pG->Room_flg[0] |= 0x80000000;
+#if R215_ROUTE_MOVIES
+        // The QTE cut 0xA starts at PS2 picture 708 (cuts 0..9: 140 + 145 + 38 + 130 + 95 + 15 + 30 + 18 + 32 + 65)
+        // and runs 45 game frames (cut 0xA maxFrame 44); r215_succeedAction clears Room_flg[0] bit 31.
+        if (r215MovieOwns) {
+            RouteMoviePlayQte(0x21500, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R215S00_Func, 0xA, 708, 45);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r215s00.evd", 0, 0);
         if ((int) pG->Room_flg[0] >= 0) {
+#if R215_ROUTE_MOVIES
+            if (r215MovieOwns) {
+                RouteMoviePlay(0x21501, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R215S01_Func, 0);
+            } else
+#endif
             EvtMgr.EvtReadExec("event/evd/r215s01.evd", 0, 0);
             {
                 Vec pos = {39050.0f, 3000.0f, 200.0f};
@@ -109,6 +138,13 @@ extern "C" void R215_Event()
                 p->setAng(pa);
             }
         } else {
+#if R215_ROUTE_MOVIES
+            // EvtReadExec flags 2: a died-demo event (Event::Run starts DiedemoExec at its end).
+            if (r215MovieOwns) {
+                RouteMoviePlay(0x21502, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R215S02_Func, 0);
+                DiedemoExec(0, 1);
+            } else
+#endif
             EvtMgr.EvtReadExec("event/evd/r215s02.evd", 0, 2);
             for (;;) {
                 SceSleep(1);

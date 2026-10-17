@@ -36,6 +36,19 @@ class cObjWep;
 #include "est.h"
 #include "math_sub.h"
 #include "pl_npc.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH4) && RE4DC_ROUTE_MOVIES_CH4
+// ROUTE_MOVIES_CH4 (lane ch4found16 2026-10-16): r212 s00 (the roof trap) is presented by the PS2 movies (BIO4MOV.AFS ->
+// tools/convert_route_movies.py, private dc/movie). While a movie owns the event no evd is read; the handler's
+// begin / end / skip modes run and the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md). A missing movie
+// falls back to the source event.
+#include "route_movie.h"
+#include "game.h"
+#define R212_ROUTE_MOVIES 1
+static int r212MovieOwns;
+#define R212_MOVIES_OWN() (re4dc_movie_available(0x21200))
+#else
+#define R212_ROUTE_MOVIES 0
+#endif
 
 // game/quake.cpp keeps QuakeKill static; the REL imports it by name.
 void QuakeKill(u8 id);
@@ -206,8 +219,15 @@ void r212_TrapInit()
     PSetSat(r212_work.p->eat0, e0);
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtDataSet_exec(1, SCE_LEVEL10, 0, (TaskFunc) r212_EventTrap, 0, 1);
+#if R212_ROUTE_MOVIES
+        r212MovieOwns = R212_MOVIES_OWN();
+        if (!r212MovieOwns) {
+#endif
         r212_work.p->evd = DC.setData(EvtMgr.NameChange("evd/r212s00.evd"));
         r212_work.p->evd->setCommand(CMND_ARAM_LOAD, 0, 0);
+#if R212_ROUTE_MOVIES
+        }
+#endif
         EvtMgr.SetFunc("evt_r212s00_func", (void*) Evt_R212S00_Func);
         SceExec(0x12, (TaskFunc) r212_RoofTrapWatcher, 0, 0, SCE_PRIO_DEF_2, 0);
     }
@@ -397,6 +417,11 @@ static void r212_EventTrap()
 
     RsfSet(G_ROOM_ID, 0);
     SceEventStart(0);
+#if R212_ROUTE_MOVIES
+    if (r212MovieOwns) {
+        RouteMoviePlay(0x21200, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R212S00_Func, 0);
+    } else
+#endif
     if (r212_work.p->evd->waitLoadOk() == 1 && m != 0) {
         MemorySwap(m->pArc, (u32) r212_work.p->evd->m_addr, r212_work.p->evd->m_size);
         EvtMgr.SetEvt(m->pArc, 0);

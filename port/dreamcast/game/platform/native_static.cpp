@@ -5489,6 +5489,11 @@ namespace { const std::uint32_t kPs2WorldRoomBits[6][8]={
 }; }
 extern "C" int re4dc_ps2_world_room(unsigned room){
     const unsigned stage=room>>8,index=room&255U;
+#if defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41
+    // ROUTE_CH41 (lane ch4found16): r222 and r22b, whose packages postdate the 10-04 registry (castle lane step 1:
+    // all 42 castle packages match Codex's READY hand-backs); without them both rooms drew the released GC scenery.
+    if(room==0x222 || room==0x22B)return 1;
+#endif
     return stage<6 && ((kPs2WorldRoomBits[stage][index>>5]>>(index&31U))&1U);
 }
 #else
