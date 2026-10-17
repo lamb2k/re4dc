@@ -78,7 +78,31 @@ p1-* / p0-* stills, kon-* KOS, y24-* / z24-* the DYING pair, stills-20261017\*-p
   they are absent.
 - Then remove the r200 `12` row from tools/d367/castgc/allow.tsv.
 
-## Not covered
+## em14 / em16 / em17 pool heads (round 2, 10-17)
 
-- em14 (types 7 / 8 / 9): stump 0x1FF and parasite head 0x200; em16 / em17 type 12 stump 0x1D0 (registry pool path).
-  Neither is in the test 17 route rooms seen so far.
+The "not covered" line above meant the ACTOR_GANADO_PS2_STUMP package, not the registry pools. These models do not
+take that path: their hit-head BINs are sections of the pool descriptors, converted from the PS2 (no GameCube
+fallback):
+
+- em14 types 7 / 8 / 9: stump 0x1FF and parasite head 0x200 are `head-hit` / `head-hit2` sections of
+  zealot-em14-07p / 08p / 09p (ps2_cast.py `_zealot_pool`; package ps2-ch3-em14p.json, rooms r20f, r211, r214, r227).
+  The test 17 recipe has no chapter 3 / 4 rooms or warps, so no head-burst rig runs on it; the ch3 / ch4 lanes' recipes
+  own that gate (CAST-GC kill rig with `killpart 5` in r20f).
+- em17 type 12 / em16 type 12: stump 0x1D0 is `head-hit` of ganado-em17-0cp (r108 / r113 / r118 packages); em16 type 11:
+  0x1CC is `head-hit` of ganado-em16-0bp (r11d).
+
+Gate (lane/stump17b, t15/int 71f81002, census arm s33erW = ch2-build.sh rW with the census at period 30, data T17V_DATA,
+60 s each, evidence castgc17-202610171-*): `castgc/warps/stump-r108 / -r111 / -r113 / -r11d.txt` are the ch2 kill
+rigs plus `killpart 5` (every kill lands on the head). CAST-GC PASS in all four, 0 GC / MIXED rows:
+
+| Room | Kills (60 s) | em rows | Result |
+|---|---|---|---|
+| r108 em17 | first at frame 303 (3 hits) | PS2 19,980, ganado-em17-0cp | PASS |
+| r113 em17 | first at 307 (7 hits), 28 repeats armed | CROWD-SKIP (not GC) | PASS |
+| r111 em17 | armed, no kill in the window (Ganado cast PS2 300 rows) | PS2 | PASS (weak: no kill) |
+| r11d em16 | first at 304 (4 hits) | PS2 405, ganado-em16-0bp | PASS |
+
+A diag build (atx-tpl patch, ACTOR_TRANSACTION_DIAG=1, s33grW) over r108 / r11d: no ATX_INFO decline row after the
+kills. Not proven: a head-burst on an em16 type 12 Ganado (the rig kills the nearest em16, type not logged), r111 /
+r113 kills with the corpse in view (r111 no kill, r113 skipped by the crowd policy). Image and data are unchanged
+(warps and this doc only): knob-off identity, STRICT trio, s30 and KOS are unchanged from the stump17 gates above.
