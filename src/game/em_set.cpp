@@ -331,6 +331,61 @@ static int aliveCapRoom()
     return 1;
 }
 
+// cEmWrap (src/st/em_wrap.cpp; lane ch5found16 10-17, "held sends are alive"): 1 while list entry `no` waits in the
+// hold. A room-script handle whose send the cap held reads alive and active until the entry is released (the handle
+// re-attaches to the enemy) or dropped (dead), as the PS2, where the send was never held, would see it.
+extern "C" int re4dc_aliveCapHeldEntry(int no)
+{
+    int k;
+
+    for (k = 0; k < aliveCapN; k++) {
+        if (aliveCapHeld[k] == (u8) no && aliveCapWaitingK(k)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// cEmWrap needs held entry `no` now: drop = 0 (getPtr: the room code uses the enemy) creates it over the cap, as a
+// release would; drop = 1 (destroy) takes it out of the hold and clears its list alive bit, as a destroy does.
+// Returns the enemy (0 when dropped or not created).
+extern "C" cEm* re4dc_aliveCapTake(int no, int drop)
+{
+    int k, j, sent;
+    cEm* em = 0;
+
+    for (k = 0; k < aliveCapN; k++) {
+        if (aliveCapHeld[k] == (u8) no && aliveCapWaitingK(k)) {
+            break;
+        }
+    }
+    if (k == aliveCapN) {
+        return 0;
+    }
+    sent = aliveCapSent[k];
+    for (j = k + 1; j < aliveCapN; j++) {
+        aliveCapHeld[j - 1] = aliveCapHeld[j];
+        aliveCapSent[j - 1] = aliveCapSent[j];
+    }
+    aliveCapN--;
+    if (drop) {
+        EM_LIST(no)->be_flag &= ~1;
+    } else {
+        aliveCapReleasing = 1;
+        em = EmSetFromList2(no, 1);
+        aliveCapReleasing = 0;
+        if (em && sent) {
+            EmListSetAlive(no, 1);
+        }
+    }
+#if RE4DC_ALIVE_CAP_LOG
+    OSReport("alivecap: %s 0x%02x room %03x frame %u live %d held %d (room handle%s)\n", drop ? "drop" : "take", no,
+             (unsigned) pG->room_id, (unsigned) pG->Frame_cnt, aliveCapLive(), aliveCapN,
+             drop ? " destroy" : em ? " needs the enemy" : " needs the enemy: refused");
+#endif
+    return em;
+}
+
 // Held entries with id in lo..hi (hi -1 = just lo), added to SceCountEmAlive.
 extern "C" int re4dc_aliveCapHeldCount(int lo, int hi)
 {
@@ -450,7 +505,7 @@ static void aliveCapPark(int live)
     f32 bestD = 0.0f;
     u32 i;
 
-    if (live <= RE4DC_ALIVE_CAP || !aliveCapRoom() || !aliveCapParkRoom() || (u32) (pG->Frame_cnt - last) < 30) {
+    if (live <= RE4DC_ALIVE_CAP_N || !aliveCapRoom() || !aliveCapParkRoom() || (u32) (pG->Frame_cnt - last) < 30) {
         return;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
@@ -544,7 +599,7 @@ extern "C" void re4dc_aliveCapMove(int busy)
     if (aliveCapN == 0 || busy || pPL == 0) {
         return;
     }
-    if ((u32) (pG->Frame_cnt - aliveCapLast) < 30 || aliveCapLive() >= RE4DC_ALIVE_CAP) {
+    if ((u32) (pG->Frame_cnt - aliveCapLast) < 30 || aliveCapLive() >= RE4DC_ALIVE_CAP_N) {
         return;
     }
     for (k = 0; k < aliveCapN; k++) {
@@ -597,7 +652,7 @@ extern "C" int re4dc_aliveCapDefer(int no, int id)
     if (aliveCapReleasing || !aliveCapGanado(id) || !aliveCapRoom() || aliveCapKeep(no)) {
         return 0;
     }
-    if (aliveCapLive() < RE4DC_ALIVE_CAP) {
+    if (aliveCapLive() < RE4DC_ALIVE_CAP_N) {
         return 0;
     }
     for (k = 0; k < aliveCapN; k++) {
@@ -659,6 +714,15 @@ void EmSetFromList()
         if (pG->room_no != (d->room & 0xFF)) {
             continue;
         }
+#if defined(RE4DC_ANIMALS_OFF) && RE4DC_ANIMALS_OFF
+        // ANIMALS_OFF (Makefile): the stage 1 ambient animals are not spawned (cows 0x26, chickens 0x28, the set-0 dog
+        // 0x21); the bear-trap dog (set 1) and the El Gigante dog (set 2) are scripted and stay.
+        if (pG->stage_no == 1 && (d->id == 0x26 || d->id == 0x28 || (d->id == 0x21 && d->set == 0))) {
+            d->be_flag &= ~1;
+            OSReport("animals off: r%03x entry 0x%02x id 0x%02x not spawned\n", (unsigned) d->room, (unsigned) i, (unsigned) d->id);
+            continue;
+        }
+#endif
         if (checkListId(i) == 0) {
             continue;
         }
@@ -672,11 +736,11 @@ void EmSetFromList()
         }
 #if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
         if (capLive >= 0 && aliveCapGanado(d->id)) {
-            if (capLive >= RE4DC_ALIVE_CAP && aliveCapN < (int) sizeof(aliveCapHeld)) {
+            if (capLive >= RE4DC_ALIVE_CAP_N && aliveCapN < (int) sizeof(aliveCapHeld)) {
                 aliveCapPush((int) i, 0);
 #if RE4DC_ALIVE_CAP_LOG
                 OSReport("alivecap: hold 0x%02x room %03x (live %d cap %d)\n", (int) i, (unsigned) pG->room_id,
-                         capLive, RE4DC_ALIVE_CAP);
+                         capLive, RE4DC_ALIVE_CAP_N);
 #endif
                 continue;
             }
