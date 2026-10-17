@@ -129,6 +129,14 @@ void emGroupeB2_reset();
 void emGroupeC_reset();
 void emGroupeD_reset();
 cEm* R208_setEm(s16 no);
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+extern "C" int re4dc_aliveCapFull();
+extern "C" void OSReport(const char* fmt, ...);
+static int r208CapOwed;   // wall feeds the base made while the cap was full, not made yet
+#define R208_RESETS (getResetNum() + (u32) r208CapOwed)
+#else
+#define R208_RESETS getResetNum()
+#endif
 cEm* R208_EmSetEvent(EmListData* d);
 u32 getUnderEmNum();
 void addUnderEmCnt();
@@ -262,6 +270,9 @@ void R208Init()
 #line 157 "D:/Bio4/Prog/r208.cpp"
     r208_work.p = (R208Work*) MEM_CALLOC(sizeof(R208Work), 1, 0xd);
     W->gotoWait = 900;
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    r208CapOwed = 0;
+#endif
     EatMgr.registEffInfo(EAT_ET_ROOM0, (AtEffInfo*) &r208_eff_info4);
     EatMgr.registEffInfo(EAT_ET_ROOM1, (AtEffInfo*) &r208_eff_info5);
 #if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x01)
@@ -444,20 +455,25 @@ void R208Main()
     if (RsfCheck(G_ROOM_ID, 4) && RsfCheck(G_ROOM_ID, 6) == 0) {
         if (W->emSetWait == 0) {
 #if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x01)
-            if ((RsfCheck(G_ROOM_ID, 5) == 0 && getResetNum() < 2) || (RsfCheck(G_ROOM_ID, 5) && getResetNum() < 9)) {
+            if ((RsfCheck(G_ROOM_ID, 5) == 0 && R208_RESETS < 2) || (RsfCheck(G_ROOM_ID, 5) && R208_RESETS < 9)) {
                 if (RsfCheck(G_ROOM_ID, 5)) {
                     W->emSetWait = 300;
                 } else {
                     W->emSetWait = 190;
                 }
 #else
-            if ((RsfCheck(G_ROOM_ID, 5) == 0 && getResetNum() <= 1) || (RsfCheck(G_ROOM_ID, 5) && getResetNum() <= 5)) {
+            if ((RsfCheck(G_ROOM_ID, 5) == 0 && R208_RESETS <= 1) || (RsfCheck(G_ROOM_ID, 5) && R208_RESETS <= 5)) {
                 if (RsfCheck(G_ROOM_ID, 5)) {
                     W->emSetWait = 590;
                 } else {
                     W->emSetWait = 320;
                 }
 #endif
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+                if (alive <= 5) {
+                    r208CapOwed++;   // ALIVE_CAP: the base feeds now; this one is owed until the cap has room
+                }
+#else
                 if (alive <= 5) {
                     int no;
 
@@ -492,11 +508,53 @@ void R208Main()
                     ((EmListData*) ((u32) pG + (no << 5) + 0x52E8))->be_flag |= 2; // shift form: add operands pG-first, address not tied to no<<5
                     incResetNum();
                 }
+#endif
             }
         } else {
             W->emSetWait--;
         }
     }
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    // ALIVE_CAP: the wall feed creates through EmSetEvent, which the cap does not see (r208 reached 5 alive at cap 4).
+    // A feed the base makes while the cap is full is owed and made as soon as the cap has room, also after the bridge
+    // is down (Rsf 6 stops new feeds, not owed ones), so the room gets as many feeds as the base.
+    if (RsfCheck(G_ROOM_ID, 4) && r208CapOwed > 0 && !re4dc_aliveCapFull()) {
+        int no;
+
+        if (pPL->pos.z < -30000.0f) {
+            if (getResetNum() == 0) {
+                no = 0x51;
+            } else if (getResetNum() == 3) {
+                no = 0x50;
+            } else if (getResetNum() == 5) {
+                no = 0x51;
+            } else if (W->side19C == 0) {
+                W->side19C = 1;
+                no = 0x41;
+            } else {
+                W->side19C = 0;
+                no = 0x40;
+            }
+        } else {
+            if (getResetNum() == 0) {
+                no = 0x50;
+            } else if (getResetNum() == 5) {
+                no = 0x50;
+            } else if (W->side1A0 == 0) {
+                W->side1A0 = 1;
+                no = 0x28;
+            } else {
+                W->side1A0 = 0;
+                no = 0x14;
+            }
+        }
+        R208_EmSetEvent(EM_LIST(no));
+        ((EmListData*) ((u32) pG + (no << 5) + 0x52E8))->be_flag |= 2;
+        incResetNum();
+        r208CapOwed--;
+        OSReport("alivecap: r208 feed 0x%02x owed %d frame %u\n", no, r208CapOwed, (unsigned) pG->Frame_cnt);
+    }
+#endif
     if (RsfCheck(G_ROOM_ID, 6) == 0 && alive > 5) {
         if (W->gotoWait == 0) {
             cEm* em = getMostFarEm(10000.0f);
@@ -1161,6 +1219,9 @@ static void brige1_down()
     int hard;
     f32 spd;
 
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    OSReport("alivecap: r208 bridge down owed %d frame %u%c", r208CapOwed, (unsigned) pG->Frame_cnt, 10);
+#endif
     SceEventStart(1);
     CamCtrl.CutCall(6);
     SndCall(6, 1, 0, 0, 0, 0);
@@ -1267,6 +1328,9 @@ static void r208_checkCrank()
         SceMesSet(0, 0, 1, 0x64, 0x150 - cMes.getWork()->lineSpace - cMes.getWork()->m_font_h - 1);
         sel = SceMesGetSelection();
     }
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    OSReport("alivecap: r208 crank sel %d owed %d frame %u%c", sel, r208CapOwed, (unsigned) pG->Frame_cnt, 10);
+#endif
     if (sel == 1) {
         SceExec(0x12, (TaskFunc) r208_operateCrank, 0, 0, SCE_PRIO_DEF_2, 0);
     } else if (sel == 2) {

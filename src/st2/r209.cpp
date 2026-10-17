@@ -468,7 +468,7 @@ void R209Main()
             for (j = 0; j < atNum; j++) {
                 u32 bit = j + base8;
                 bit += 8;
-                if (SceAtCheckHitModel(atNo[j], r209_work.p->em[idx].w.getPtr())) {
+                if (!EM_WRAP_HELD_NOW(&r209_work.p->em[idx].w) && SceAtCheckHitModel(atNo[j], r209_work.p->em[idx].w.getPtr())) {
                     // Not R209_BIT_ON: the block's three local qtys (idx, amt/shift, val/or) are
                     // hand-sorted by local-alloc, and with a pointer base the idx pseudo prefers
                     // GENERAL_REGS and takes r0.  An integer (u32) base makes both plus operands
@@ -555,7 +555,7 @@ extern "C" int r209_InPlaceCheck(cModel* m)
 // 1 while the player's laser sight points at the enemy.
 extern "C" int r209_GanadoSnipeCheck(cEmWrap* w)
 {
-    if (w->isActive()) {
+    if (w->isActive() && !EM_WRAP_HELD_NOW(w)) {
         cEm* em = w->getPtr();
 
         if (pPL->Wep->m_pWep->wep.target == em) {
@@ -2106,7 +2106,7 @@ static void r209_RotateDoor(int no)
         SceSleep(1);
     }
     e->w.setGoto(&r209_bowgunStartPos[d], 1);
-    while (SceAtCheckHitModel(atNo[d], e->w.getPtr()) != 0 && e->w.isActive() != 0) {
+    while (!EM_WRAP_HELD_NOW(&e->w) && SceAtCheckHitModel(atNo[d], e->w.getPtr()) != 0 && e->w.isActive() != 0) {
         SceSleep(1);
     }
     r209_work.p->em[em].snipe = 1;

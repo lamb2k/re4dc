@@ -87,6 +87,31 @@ void r204_TanaMove(int opened);
 static void r204_first_cut_exit();
 static void r204_first_cut();
 static void r204_nige_check();
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+static int r204CapChase;   // the chase layout was sent (R204Init)
+// ALIVE_CAP: a chase Ganado the cap held gets its hood (head[i], pArc 8/9 as in R204Init) once released.
+static void r204_capHeads()
+{
+    u32 i;
+
+    if (!r204CapChase) {
+        return;
+    }
+    for (i = 0; i <= 10; i++) {
+        if (i != 7 && r204_work.p->head[i] == 0 && r204_work.p->em[i].isAlive() == 1 &&
+            !EM_WRAP_HELD_NOW(&r204_work.p->em[i])) {
+            Vec ofs = {0.0f, 10.0f, 179.0f};
+            Vec rot = {-0.17453292f, 0.0f, 0.0f};
+
+            r204_work.p->head[i] = SetObj00(ROOM_ARC_PTR(pG->pArc, 8), ROOM_ARC_PTR(pG->pArc, 9), &ofs, &rot);
+            r204_work.p->head[i]->setNoSuspend(1);
+            OyaSetObj00(r204_work.p->head[i], r204_work.p->em[i].getPtr(), 2);
+            r204_work.p->esp[i] = EspPullCoreKind();
+            EstSet((int) r204_work.p->head[i], -1, 0, 0, 1, 0x1F, 0x801, r204_work.p->esp[i], 0, 0);
+        }
+    }
+}
+#endif
 static void door5_close();
 static void r204_EventChandelier1();
 static void r204_EventChandelier2();
@@ -136,6 +161,9 @@ void R204Init()
     wp = &r204_work.p;
 #line 98 "D:/Bio4/Prog/r204.cpp"
     *wp = (R204Work*) MEM_CALLOC(sizeof(R204Work), 1, 0xd);
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    r204CapChase = 0;
+#endif
     EvtMgr.SetFunc("evt_r204s00_func", (void*) Evt_R204S00_Func);
     SceAtDataSet_exec(2, SCE_LEVEL10, 0, (TaskFunc) r204_EventExec, 0, 1);
     if (RsfCheck(G_ROOM_ID, 0) && RsfCheck(G_ROOM_ID, 7) == 0) {
@@ -189,9 +217,19 @@ void R204Init()
         if (!RsfCheck(G_ROOM_ID, 2)) {
             r204_work.p->str = SndStrReq(1, 0x32, 0x80000003, 0, 0, 0.0f);
             SceExec(0x12, (TaskFunc) r204_checkEmDead, 0, 0, SCE_PRIO_DEF_2, 0);
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+            // ALIVE_CAP: the torch Ganado (em[7], 0x51) is sent first so the cap never holds it (the chase starts on its
+            // death and reads its pointer); a held one gets no head here: r204_capHeads gives it its head on release.
+            r204CapChase = 1;
+            for (u32 k = 0; k <= 10; k++) {
+                i = k == 0 ? 7 : (k <= 7 ? k - 1 : k);
+                cEmWrapSetEmI(&r204_work.p->em[i], 0x4A + i, 3, 0, 1, 1);
+                if (r204_work.p->em[i].isAlive() == 1 && !EM_WRAP_HELD_NOW(&r204_work.p->em[i])) {
+#else
             for (i = 0; i <= 10; i++) {
                 cEmWrapSetEmI(&r204_work.p->em[i], 0x4A + i, 3, 0, 1, 1);
                 if (r204_work.p->em[i].isAlive() == 1) {
+#endif
                     Vec ofs = {0.0f, 10.0f, 179.0f};
                     Vec rot = {-0.17453292f, 0.0f, 0.0f};
 
@@ -555,6 +593,9 @@ static void r204_nige_check()
         u32 alive;
 
         alive = SceCountEmAlive(0x10, 0x20);
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+        r204_capHeads();
+#endif
         if (r204_work.p->cnt != 0) {
             if (r204_work.p->cnt == 1) {
                 cEm* em = r204_work.p->em[7].getPtr();
@@ -755,7 +796,7 @@ static void door5_close()
             u32 j;
 
             for (j = 0; j <= 10; j++) {
-                if (r204_work.p->em[j].isAlive() == 1 && AreaHitCheck(&at->area, &r204_work.p->em[j].getPtr()->pos)) {
+                if (r204_work.p->em[j].isAlive() == 1 && !EM_WRAP_HELD_NOW(&r204_work.p->em[j]) && AreaHitCheck(&at->area, &r204_work.p->em[j].getPtr()->pos)) {
                     r204_work.p->em[j].setGoto(&r204_work.p->em[j].getPtr()->pos, 0xA);
                 }
             }

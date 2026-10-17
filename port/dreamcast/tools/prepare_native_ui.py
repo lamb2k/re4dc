@@ -537,7 +537,10 @@ ROOM_CONTRACTS={
     'r21d':dict(slots=35,smd=4,effs=(7,),itm=9,model_slots=()),
     'r225':dict(slots=54,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
     'r21b':dict(slots=42,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
-    'r226':dict(slots=108,smd=4,effs=(7,),itm=9,model_slots=()),
+    # r226 #28 (slot 0x20): the statue's model TPL (11 CMPR images, no palette / mips; lane ch4found16 2026-10-17,
+    # coordinator 10-17). Its only consumer is SetObjRobo -> cObjRobo::modelInit(bin, tpl) (r226.cpp, objRobo.cpp):
+    # upload-only, as r11e / r11f's local model TPLs. 229,888 B of texels leave heap 4 for tex.pak identities.
+    'r226':dict(slots=108,smd=4,effs=(7,),itm=9,model_slots=(28,)),
     'r227':dict(slots=32,smd=4,effs=(7,),itm=9,model_slots=()),
     'r22a':dict(slots=33,smd=4,effs=(7,),itm=9,model_slots=()),
     # r40b (St4, st4_0 + em1f; follow-up 7): r40c's 27-slot layout (header ends at 232 of 256: no growth).

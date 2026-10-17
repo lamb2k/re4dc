@@ -525,7 +525,13 @@ T17ZB_DATA = T17Z_DATA + ',zr17b'   # zr17b last: it replaces acc12 em13 / em17 
 V101D = os.environ.get('V101D', '/root/re4data/private/vram101-20261017')
 DATA['v101'] = {'dc/resident.bin': V101D + '/resident.bin', 'dc/tex.pak': V101D + '/tex.pak'}
 PAK_DERIVED = {'v101': V101D + '/pak-derived.json'}   # v101's tex.pak = pak17 + 8 VQ packages (drop_loose)
-T17V_DATA = T17ZB_DATA + ',v101'   # test 17 data: zr17 + zr17b + v101 (v101 last: replaces pak17's tex.pak and zr17's resident.bin)
+# Lane gatlas17 (10-17, data only): res17g = dc/resident.bin packed again from every list of this tree (vram/resident_keys.py
+# pack vram/resident/*.tsv, then water/water_resident.py pack ... water/resident/*.tsv; 3,996 records, sha256
+# 5cd0e26a2a6c8cde) after r108.tsv gained 6c08f204 (the r108p em17 PS2 atlas, 512x512) and r118.tsv a9d62b83 / 8a4b3f56 /
+# 31db8ccd / d425c598 (64x48): the pictures those rooms loaded in play (GATLAS17-20261017.md). Last: replaces v101's.
+RES17GD = os.environ.get('RES17GD', '/root/re4data/private/gatlas17-20261017')
+DATA['res17g'] = {'dc/resident.bin': RES17GD + '/resident.bin'}
+T17V_DATA = T17ZB_DATA + ',v101,res17g'   # test 17 data: zr17 + zr17b + v101 (tex.pak) + res17g (resident.bin, last)
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 

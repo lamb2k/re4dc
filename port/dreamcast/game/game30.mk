@@ -2387,6 +2387,20 @@ endif
 # TEX_USE_CENSUS=1 (test only, native_ui.cpp, default 0): every 600 frames, the resident textures and how many the
 # last 2 s / 20 s drew ("tex use census"), to size what the room preload loads but nothing draws.
 TEX_USE_CENSUS ?= 0
+# GANADO_ATLAS_DROP=<mask> (native_ui.cpp + room/texture_package.cpp; render only; default 0: nothing changes; lane
+#   gatlas17, user 10-17 "We can lower ganado texture detail if that will make the room work"): in the rooms of
+#   GANADO_ATLAS_DROP_ROOMS (comma list, default 0x101), the PS2 cast's 512x512 Ganado atlases of the mask (bit 0
+#   em15-00, 1 em15-03, 2 em15-04, 3 em15-0b, 4 em12-01) load without their top mip level (256x256 with mips, 65,536 B
+#   less VRAM each). The atlas files are shared, so the cut is made at load time; other rooms load them whole.
+#   Bit 8 (0x100, diagnostic only): every 150 UI frames a per-atlas line ("ganado atlas hits": model-packet binds and
+#   frames since last touched), the large textures touched in the last 150 frames, and a VRAM_ROOM_LOG sample (at=t150).
+#   r101 (cap-4 cross fight, bell gate): the em15 atlases are never touched after the preload; r118 draws em15-00/-03.
+GANADO_ATLAS_DROP ?= 0
+GANADO_ATLAS_DROP_ROOMS ?= 0x101
+ifneq ($(GANADO_ATLAS_DROP),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$(GANADO_ATLAS_DROP) -DRE4DC_GANADO_ATLAS_DROP_ROOMS=$(GANADO_ATLAS_DROP_ROOMS)
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_GANADO_ATLAS_DROP=$(GANADO_ATLAS_DROP)
+endif
 ifneq ($(TEX_USE_CENSUS),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_USE_CENSUS=1
 endif

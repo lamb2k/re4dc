@@ -661,6 +661,43 @@ extern "C" void re4dc_aliveCapMove(int busy)
 #endif
 }
 
+// EM_WRAP_HELD_NOW (include/em_wrap.h): re4dc_aliveCapHeldEntry, and with ALIVE_CAP_LOG the first skips per site
+// are logged ("alivecap: site") so a run shows that each room probe met a held send.
+extern "C" int re4dc_aliveCapHeldSite(int no, const char* file, int line)
+{
+    const int held = re4dc_aliveCapHeldEntry(no);
+#if RE4DC_ALIVE_CAP_LOG
+    static int lines[24], counts[24];
+    if (held) {
+        int k;
+        for (k = 0; k < 24 && lines[k] && lines[k] != line; k++) {
+        }
+        if (k < 24) {
+            lines[k] = line;
+            if (counts[k]++ < 3) {
+                const char* b = file;
+                for (const char* p = file; *p; p++) {
+                    if (*p == '/') b = p + 1;
+                }
+                OSReport("alivecap: site %s:%d skips held 0x%02x room %03x frame %u\n", b, line, no,
+                         (unsigned) pG->room_id, (unsigned) pG->Frame_cnt);
+            }
+        }
+    }
+#else
+    (void) file;
+    (void) line;
+#endif
+    return held;
+}
+
+// 1 while the cap is full in a capped room (N Ganados alive): room code that creates Ganados without the list send
+// (EmSetEvent: r208 feeding over the wall) waits instead of going over the cap.
+extern "C" int re4dc_aliveCapFull()
+{
+    return !aliveCapReleasing && aliveCapRoom() && aliveCapLive() >= RE4DC_ALIVE_CAP_N;
+}
+
 // EmSetFromList2: 1 = a room-code send of a Ganado while N are alive, now held (errEm to the caller).
 extern "C" int re4dc_aliveCapDefer(int no, int id)
 {
@@ -858,6 +895,10 @@ cEm* EmSetEvent(EmListData* d)
     }
     EM_SET_WORK(em, d, 0xFF);
     d->be_flag = 7;
+#if defined(RE4DC_ALIVE_CAP_LOG) && RE4DC_ALIVE_CAP_LOG
+    OSReport("alivecap: event set id 0x%02x room %03x frame %u%c", (unsigned) d->id, (unsigned) pG->room_id,
+             (unsigned) pG->Frame_cnt, 10);
+#endif
     EmSetDist(em);
     em->l_sub = 1.0e16f;
     em->move();
