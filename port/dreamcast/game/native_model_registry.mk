@@ -457,6 +457,18 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_DROP_BUMP=1
 GAME_CPPFLAGS += -DRE4DC_ACTOR_MATERIALS=4
 PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_MATERIALS=4
 endif
+# NATIVE_MODEL_REGISTRY_ROLES5=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1):
+#              the Info::roles mask takes 5 words (160 role bits, 98 room rows) for rooms whose pools load many types
+#              (r227: em14 types 6..9; island r320 / r327). Packages over 66 room rows (model_registry.py --roles5) are
+#              refused whole by an image without it. Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_ROLES5 ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_ROLES5),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_POOL),1)
+$(error NATIVE_MODEL_REGISTRY_ROLES5=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
+PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
+endif
 # NATIVE_MODEL_REGISTRY_FIRST=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): a
 #   Ganado-class actor (id 0x10..0x20) whose id a room package descriptor names tries that package's plan BEFORE the
 #   Ganado cast plan. Without it the Ganado plan claims em16 type 11 (r11d) by its em15-type-11 meshes and then the

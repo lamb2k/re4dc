@@ -1,0 +1,72 @@
+{
+ "registry": "ps2-ch4-r201",
+ "about": "lane cast16 (2026-10-16): chapter 4 room 201 PS2 cast (CH4-FOUNDATIONS-20261016 cast list). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv4/regcast-ch4",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em1b-07p",
+   "archive": "em1b",
+   "model_id": "0x1b",
+   "source_types": [
+    7
+   ],
+   "module": "src/em1b/em1b_set.cpp Em1bSet type 7 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-07-hood",
+    "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-07-acc1",
+    "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-07-acc5"
+   }
+  },
+  {
+   "name": "zealot-em1b-08p",
+   "archive": "em1b",
+   "model_id": "0x1b",
+   "source_types": [
+    8
+   ],
+   "module": "src/em1b/em1b_set.cpp Em1bSet type 8 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-08-hood",
+    "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-08-acc1",
+    "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-08-acc5"
+   }
+  },
+  {
+   "name": "zealot-em1b-0ag",
+   "archive": "em1b",
+   "model_id": "0x1b",
+   "source_types": [
+    10
+   ],
+   "partial_sections": true,
+   "module": "src/em1b/em1b_set.cpp Em1bSet type 10 (em10.cpp creates; ps2_cast.py pool)",
+   "source_drops": [
+    "bump"
+   ]
+  }
+ ],
+ "room_packages": {
+  "201": {
+   "descriptors": [
+    "zealot-em1b-07p",
+    "zealot-em1b-08p",
+    "zealot-em1b-0ag"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
+  }
+ }
+}

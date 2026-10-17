@@ -1,0 +1,42 @@
+{
+ "registry": "ps2-ch4-r220",
+ "about": "lane cast16 (2026-10-16): chapter 4 room 220 PS2 cast (CH4-FOUNDATIONS-20261016 cast list). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv4/regcast-ch4",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "merchant18-c0",
+   "archive": "em18",
+   "model_id": "0x18",
+   "source_types": [],
+   "module": "src/em18/em18.cpp em18_R0_Init: body5/6, robe14/15, head7/8, hands18,19/6, cloth12/15, goods13/6",
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261016/cast16/conv4/mask-merchant18-c0-robe",
+    "5": "/root/probe/lanes-20261016/cast16/conv4/mask-merchant18-c0-cloth"
+   }
+  },
+  {
+   "name": "merchant18-o0",
+   "archive": "em18",
+   "model_id": "0x18",
+   "source_types": [],
+   "module": "src/em18/em18.cpp em18ClothPartsSet(on=1): replaces source cloth info with BIN11/TPL15",
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261016/cast16/conv4/mask-merchant18-o0-robe",
+    "5": "/root/probe/lanes-20261016/cast16/conv4/mask-merchant18-o0-cloth"
+   }
+  }
+ ],
+ "room_packages": {
+  "220": {
+   "descriptors": [
+    "merchant18-c0",
+    "merchant18-o0"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
+  }
+ }
+}

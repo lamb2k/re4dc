@@ -1,0 +1,56 @@
+{
+ "registry": "ps2-ch4-r216",
+ "about": "lane cast16 (2026-10-16): chapter 4 room 216 PS2 cast (CH4-FOUNDATIONS-20261016 cast list). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv4/regcast-ch4",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "armor-em3c-00",
+   "archive": "em3c",
+   "model_id": "0x3c",
+   "source_types": [
+    0,
+    1
+   ],
+   "partial_sections": true,
+   "module": "src/em3c/em3c.cpp em3cModelInit body + ModInfoMgr.create(ARC 7 / 0xB, ARC 8)",
+   "pool": true,
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ],
+   "mask_runs": {}
+  },
+  {
+   "name": "armor-em3c-02",
+   "archive": "em3c",
+   "model_id": "0x3c",
+   "source_types": [
+    2,
+    3
+   ],
+   "partial_sections": true,
+   "module": "src/em3c/em3c.cpp em3cModelInit body + ModInfoMgr.create(ARC 7 / 0xB, ARC 8)",
+   "pool": true,
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ],
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261016/cast16/conv4/mask-armor-em3c-02-s0"
+   }
+  }
+ ],
+ "room_packages": {
+  "216": {
+   "descriptors": [
+    "armor-em3c-00",
+    "armor-em3c-02"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
+  }
+ }
+}

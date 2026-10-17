@@ -8,8 +8,13 @@
 #define RE4DC_ACTOR_WIDE_IDENTITY 1
 #if RE4DC_NMR_POOL
 // NATIVE_MODEL_REGISTRY_POOL: a pool descriptor carries one role row per pool section (the zealot / soldier pools: ~20),
-// beside a partner package's rows; 128 role bits leave 66 room rows.
+// beside a partner package's rows; 128 role bits leave 66 room rows. NATIVE_MODEL_REGISTRY_ROLES5 (lane cast16
+// 2026-10-16): 160 role bits (98 room rows) for the rooms whose pools load many types (r227 em14 x4, island r320).
+#if RE4DC_NMR_ROLES5
+constexpr unsigned kRoleMaskWords=5,kBlobMaskBits=64;
+#else
 constexpr unsigned kRoleMaskWords=4,kBlobMaskBits=64;
+#endif
 #else
 constexpr unsigned kRoleMaskWords=3,kBlobMaskBits=64;
 #endif

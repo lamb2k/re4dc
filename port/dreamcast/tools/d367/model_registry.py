@@ -559,6 +559,12 @@ def main():
         ACTOR_MATERIALS = 4  # RE4DC_ACTOR_MATERIALS=4 (native_model_registry.mk with the pool): atlas + three mask pairs
         PACK_CAPACITY.update(ref=64, geom=64, fmodel=48, fpart=160, ftex=64)
         PACK_MAX_BYTES = 256 * 1024
+    if '--roles5' in args:
+        # --roles5 (lane cast16 2026-10-16): NATIVE_MODEL_REGISTRY_ROLES5 images (Info::roles 5 words, 160 role bits).
+        args.remove('--roles5')
+        if not POOL:
+            sys.exit('model_registry: --roles5 needs --pool')
+        MATERIAL_ROWS = 160
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
