@@ -410,6 +410,12 @@ if os.path.exists(C16D + '/cast16-data.json'):
 # changes its pictures, the fixture stops: rebuild pak17 with disc_pack.py --fixture <the fixture without pak17>.
 # Order: after every set that stages loose textures or replaces dc/tex.pak (last). Lives in PAK17D (not in git;
 # release kit: Build-Assets disc set pak17).
+# CAST-GC r108 (lane castgc17, 10-17): r108's registry package with the em17 type 0xc POOL descriptor ganado-em17-0cp
+# (model-registry/ps2-ch1-r108p.json; NATIVE_MODEL_REGISTRY_POOL, in T15REC) instead of the non-pool ganado-em17-0c.
+# r108 spawns em17 0xc holding a weapon (grip hand 0x1c8): the non-pool rows refused it (NMRU roles) and the GameCube
+# model drew on every pass. Its 4 textures are already in pak17's tex.pak (r113p / r118p), so no loose texture.
+R108PD = os.environ.get('R108PD', '/root/re4data/private/castgc17-20261017/r108p')
+DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
 PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261016')
 DATA['pak17'] = {'dc/tex.pak': PAK17D + '/tex.pak'}
 DROP_LOOSE = {'pak17': PAK17D + '/loose-keys.txt'}
@@ -487,7 +493,8 @@ def drop_loose(names, r, rm, rec):
 
 # Test 17 data line (the chapter 2 recipe ch2/ch2-build.sh CH2REC over T15REC): T15_DATA + ch2 + cast16, then pak17 last
 # (its pack replaces ch2's dc/tex.pak and every loose texture leaves the disc).
-T17_DATA = T15_DATA + ',ch2,cast16,pak17'
+# r108p (castgc17 10-17): the CAST-GC r108 em17 fix, before pak17 (stages no texture).
+T17_DATA = T15_DATA + ',ch2,cast16,r108p,pak17'
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 

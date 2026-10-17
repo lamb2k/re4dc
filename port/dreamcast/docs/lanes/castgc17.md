@@ -47,8 +47,8 @@ silently. CAST-GC makes that a gate failure, like LEON-GC for Leon.
 
 | Room | Character | Test 16 | Test 17 | Reason |
 |---|---|---|---|---|
-| r108 | em17 (Ganado-class, 34 parts, 4 infos) | **GC**, every pass (32,490) | **GC**, every pass (25,290) | No plan: the PS2 Ganado cast does not take r108's em17 and r108 has no registry descriptor for it (ACTOR_TRANSACTION_DIAG: event 4 "no plan" on 120 of 120 passes per report). The same id draws as the PS2 cast in r111. |
-| r200 | em12 (Ganado) | not on the test 16 route | **GC, 3 passes** (the rest crowd-skipped) | In the census window right after the kill rig killed a just-sent Ganado still at 0,0,0: a fresh em12 drew GC for a few passes before the cast took it (transient). |
+| r108 | em17 (Ganado-class, 34 parts, 4 infos) | **GC**, every pass (32,490) | **GC**, every pass (25,290); **PS2 with r108p** (fixed 10-17, below) | No plan: r108 spawns em17 type 0xc holding a weapon (body 0x1cd, head 0x1cf, TPL 0x1ce, hands 0x1c0 + grip 0x1c8). The shipped r108 package has the non-pool descriptor ganado-em17-0c (hands 0x1c0 / 0x1c5 only), so the registry refused it on role rows (NMRU roles) and the GameCube model drew. r111 / r113 draw the same id through the pool descriptor ganado-em17-0cp. |
+| r200 | em12 (Ganado) | not on the test 16 route | **GC, 3 passes** (the rest crowd-skipped); allowlisted | Not a fresh-send transient (corrected 10-17). The model existed from the start of the window (ATX_M f=455); the kill rig killed it in 1 hit and its head info then pointed at BIN 0x1bf (447, ATX_INFO why=2 "no recorded asset"). 447 is the small BIN after appearance 1's head (446): the head-burst stump, the same slot as the reviewed BIN 479 stump of appearance 2 (ps2_ganado_stump.py, ACTOR_GANADO_PS2_STUMP, default off, appearance 2 only). The cast has no stump for appearances 0 / 1 / 3 / 4 (BIN 475 / 447 / 483, em15 460), so a head-burst corpse draws GC until it goes away. The run ended in that window. |
 
 Everything else the census saw drew PS2, in both builds:
 - Ganado cast: r101 em15, r111 em17, r11d em16.
@@ -66,3 +66,36 @@ Coverage limits (60 s runs, about 1,000-1,500 UI frames in a room):
 - r11b: no census line (no actor reached the transaction).
 - r10c and r10e are not on the release disc (no st1/r10c.dar / r10e.dar in the package base tree): not route rooms.
 - r11e: El Gigante was not reached in 60 s.
+
+## 10-17 follow-up
+
+### r108 em17: fixed (data set r108p)
+
+- Package: `model-registry/ps2-ch1-r108p.json` = ps2-ch1-r108 with ganado-em17-0c replaced by the pool descriptor
+  ganado-em17-0cp (as r113p / r118p; NATIVE_MODEL_REGISTRY_POOL=1 is already in the recipe). Built with
+  `model_registry.py ps2-ch1-r108p.json <out> --tree <checkout> --package-room 108 --pool --wide-identity` over the cast
+  dir `regcast-r108p` (the shipped r108 cast dir plus ganado-em17-0cp from regcast-ch2p; the shipped spec over it
+  reproduces the shipped package 6a059ff1 byte for byte). registry.re4nmr 99,872 B (shipped 72,896 B), sha256
+  cd46d46c2d504305...; its 4 textures are already in pak17's tex.pak (no loose texture).
+- Data set `r108p` in t11-fix.py (private data: `/root/re4data/private/castgc17-20261017/r108p`, R108PD), staged before
+  pak17: `T17_DATA = T15_DATA + ',ch2,cast16,r108p,pak17'`. The release `--disc-sets` line becomes
+  `snd16,water16i,vq16w,fsh,ch2,cast16,r108p,pak17`. The only staged difference is `dc/native/r108/registry.re4nmr`.
+- Gates (Flycast, f7782076 + census period 30, 60 s, evidence `castgc17-20261017\p1-*`):
+
+| Run | Fixture | em17 in r108 | Kills |
+|---|---|---|---|
+| p1-p108 | r108 with r108p | CAST-GC PASS, PS2 21,090 rows, 0 GC | - |
+| p1-kp108 | r108 kill rig (`kill 0x17 300 0x108 1`, `killrep 30 90`) with r108p | PASS, PS2 16,830, 0 GC | 9 kills, 18 kill lines |
+| p1-k0108 | the same rig without r108p | GC 16,830 (the old failure) | the same 18 lines: same targets, frames, hits |
+
+- Heap 4 used after the r108 package opens: +27,712 B (7,509,952 vs 7,537,664 free). Other rooms do not read the
+  file, so STRICT outside r108 is untouched; the program image does not change.
+
+### r200 em12: allowlisted (head-burst stump)
+
+- castgc/allow.tsv: `r200  12` with reason and owner castgc17. The same stump GC will show in any room whose run blows a
+  Ganado head (any appearance; appearance 2 too while ACTOR_GANADO_PS2_STUMP is off). The fix is a PS2 stump per
+  appearance (convert BIN 475 / 447 / 479 / 483, em15 460, as ps2_ganado_stump.py did 479) with ACTOR_GANADO_PS2_STUMP
+  on; that is a conversion and review item, not a one-line fix.
+- The diag that found it (ATX_TPL / ATX_TPL_INFO: BIN and TPL entry numbers of each info, inside
+  RE4DC_ACTOR_TRANSACTION_DIAG) is kept as a patch, not landed: `/root/probe/lanes-20261016/castgc/k/atx-tpl-diag-20261017.patch`.
