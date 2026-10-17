@@ -236,6 +236,17 @@ def main():
                 fh.write(side)
         print('%s parts=%d tr=%s sha=%08x' % (room, len(rows), ' '.join('%s:%d' % kv for kv in sorted(cnt.items())),
                                              zlib.crc32(side) & 0xffffffff))
+    # the disc index (dc/native/trclass.idx): rooms that carry a sidecar, so the runtime opens no file elsewhere
+    rooms_hex = sorted({int(r[0][1:], 16) for r in allrows})
+    idx = struct.pack('<4sI', b'R4TI', len(rooms_hex)) + b''.join(struct.pack('<H', r) for r in rooms_hex)
+    ip = os.path.join(a.out, 'trclass.idx')
+    if a.check:
+        same = os.path.exists(ip) and open(ip, 'rb').read() == idx
+        status |= 0 if same else 1
+        print('trclass.idx %s' % ('same' if same else 'DIFFERS'))
+    else:
+        with open(ip, 'wb') as fh:
+            fh.write(idx)
     tsv = 'room\tpart\tkey\tpass\tva\ttex_class\tclass\ttier\tzero\terr\tmid\tbound255\tstrip_bytes_placed\n'
     tsv += ''.join('\t'.join(r) + '\n' for r in allrows)
     tp = os.path.join(a.out, 'TRCLASS.tsv')

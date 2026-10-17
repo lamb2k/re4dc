@@ -4170,8 +4170,29 @@ static std::uint8_t* block=nullptr; static const std::uint8_t* cls=nullptr;
 static unsigned room=~0U,nparts=0,flat=0,carded=0,dropped=0,last_room=~0U; static std::uint32_t last_frame;
 static void close(){ if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
 // After the R4PW sidecar is accepted (room, its body crc, its part count). Reads the class sidecar into heap 4.
+// The disc's sidecar index (dc/native/trclass.idx, tools/d367/tr_classify.py: "R4TI", u32 count, u16 room ids), read
+// once at the first world open, so a room without a sidecar costs no disc access at its entry (a door's wall-timed
+// load would otherwise shift, coordinator 10-17). No index = the policy is idle for the whole session.
+static std::uint16_t idx_rooms[128]; static unsigned idx_n=0; static int idx_state=0; // 0 unread, 1 ok, -1 none
+static bool listed(unsigned r){
+    if(!idx_state){
+        idx_state=-1;
+        const file_t f=fs_open("/cd/dc/native/trclass.idx",O_RDONLY);
+        if(f!=FILEHND_INVALID){
+            unsigned char b[8+2*128];
+            const ssize_t got=fs_read(f,b,sizeof(b));fs_close(f);
+            std::uint32_t n=0;
+            if(got>=8 && !std::memcmp(b,"R4TI",4)){std::memcpy(&n,b+4,4);
+                if(n<=128 && got>=ssize_t(8+2*n)){std::memcpy(idx_rooms,b+8,2*n);idx_n=n;idx_state=1;}}
+        }
+        re4dc_log("trans: index %s rooms=%u\n",idx_state>0?"ok":"absent",idx_n);
+    }
+    for(unsigned i=0;i<idx_n;++i)if(idx_rooms[i]==r)return true;
+    return false;
+}
 static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts){
     close();
+    if(!listed(r)){re4dc_log("trans: room=%03x policy=%u classes=unlisted\n",r,unsigned(re4dc_trans_policy));return;}
     char path[48];snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.r4tc",r);
     const file_t f=fs_open(path,O_RDONLY);
     const char* why=nullptr;
