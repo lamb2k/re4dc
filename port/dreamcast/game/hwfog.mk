@@ -107,3 +107,17 @@ $(error FOLIAGE_TRIM needs PT_BLEND_FIX=1 and PS2_WORLD_MESH=1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_FOLIAGE_TRIM=$(FOLIAGE_TRIM) -DRE4DC_FOLIAGE_NEAR_MM=$(FOLIAGE_NEAR_MM)
 endif
+# FOLIAGE_NEAR_FIX=1 (lane lake17 2026-10-17, tester report "foliage Near and Off look the same"; render only, default 0:
+#   no code): at NEAR the cut-out cards move from pass 2 to the punch-through pass 1, but ps2_pass skipped every
+#   placement without a native pass-1 part before the per-part test, so cards in translucent-only placements were drawn
+#   in neither pass. With the fix, pass 1 at NEAR also visits placements that have pass-2 parts.
+FOLIAGE_NEAR_FIX ?= 0
+ifneq ($(filter-out 0 1,$(FOLIAGE_NEAR_FIX)),)
+$(error FOLIAGE_NEAR_FIX must be 0 or 1)
+endif
+ifeq ($(FOLIAGE_NEAR_FIX),1)
+ifeq ($(FOLIAGE_TRIM),)
+$(error FOLIAGE_NEAR_FIX needs FOLIAGE_TRIM)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_FOLIAGE_NEAR_FIX=1
+endif
