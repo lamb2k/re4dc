@@ -201,8 +201,8 @@ int SceCkFindPL(f32* dist);
 // ALIVE_CAP (castle cap 4, 10-17): 1 while the cap holds this handle's send (alive = 2, no enemy yet). Room loops that
 // probe isActive / isAlive and then use getPtr skip a held handle (getPtr would create it over the cap); it reads as
 // not in the area / not targeted, as an off-screen Ganado would.
-extern "C" int re4dc_aliveCapHeldEntry(int no);
-#define EM_WRAP_HELD_NOW(w) ((w)->alive == 2 && (w)->no >= 0 && re4dc_aliveCapHeldEntry((w)->no))
+extern "C" int re4dc_aliveCapHeldSite(int no, const char* file, int line);
+#define EM_WRAP_HELD_NOW(w) ((w)->alive == 2 && (w)->no >= 0 && re4dc_aliveCapHeldSite((w)->no, __FILE__, __LINE__))
 #else
 #define EM_WRAP_HELD_NOW(w) 0
 #endif
