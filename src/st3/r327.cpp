@@ -136,10 +136,10 @@ static void r327_BoxOpened(u32 id);
 // inactive slots as dead; on the PS2 a held Ganado is alive, so it is not counted (at cap 4 the 5 held first-table
 // sends fired the gatling cut at room entry, and its far delete (keep 8, alive 10) then removed 2 live Ganados).
 #if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
-extern "C" int re4dc_aliveCapIsHeld(int no);
+extern "C" int re4dc_aliveCapHeldEntry(int no);
 extern "C" int re4dc_aliveCapHeldCount(int lo, int hi);
 extern "C" int re4dc_aliveCapFarDrop(int max, int clearAlive);
-static inline int r327_capHeld(int no) { return re4dc_aliveCapIsHeld(no); }
+static inline int r327_capHeld(int no) { return re4dc_aliveCapHeldEntry(no); }
 #else
 static inline int r327_capHeld(int no) { (void) no; return 0; }
 #endif
@@ -256,7 +256,8 @@ static void r327ps2_farDelete(int keep)
             if (i >= 22 && i <= 25) {
                 continue;
             }
-            if (e->em.isActive() != 1 || (em = e->em.getPtr()) == 0) {
+            // A send the cap still holds reads active (cEmWrap, f1c3cc2a); getPtr would create it here: skip it.
+            if (r327_capHeld(e->id) || e->em.isActive() != 1 || (em = e->em.getPtr()) == 0) {
                 continue;
             }
             switch (em->type) {

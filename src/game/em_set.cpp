@@ -340,10 +340,10 @@ static int aliveCapRoom()
     return 1;
 }
 
-// 1 while list entry `no` waits in the hold (a deferred send not set yet). Room code that counts its sent-but-inactive
-// slots as dead (r327's gatling trigger) skips these: on the PS2 they are alive. Island builds only (r327).
-#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
-extern "C" int re4dc_aliveCapIsHeld(int no)
+// cEmWrap (src/st/em_wrap.cpp; lane ch5found16 10-17, "held sends are alive"): 1 while list entry `no` waits in the
+// hold. A room-script handle whose send the cap held reads alive and active until the entry is released (the handle
+// re-attaches to the enemy) or dropped (dead), as the PS2, where the send was never held, would see it.
+extern "C" int re4dc_aliveCapHeldEntry(int no)
 {
     int k;
 
@@ -354,7 +354,46 @@ extern "C" int re4dc_aliveCapIsHeld(int no)
     }
     return 0;
 }
+
+// cEmWrap needs held entry `no` now: drop = 0 (getPtr: the room code uses the enemy) creates it over the cap, as a
+// release would; drop = 1 (destroy) takes it out of the hold and clears its list alive bit, as a destroy does.
+// Returns the enemy (0 when dropped or not created).
+extern "C" cEm* re4dc_aliveCapTake(int no, int drop)
+{
+    int k, j, sent;
+    cEm* em = 0;
+
+    for (k = 0; k < aliveCapN; k++) {
+        if (aliveCapHeld[k] == (u8) no && aliveCapWaitingK(k)) {
+            break;
+        }
+    }
+    if (k == aliveCapN) {
+        return 0;
+    }
+    sent = aliveCapSent[k];
+    for (j = k + 1; j < aliveCapN; j++) {
+        aliveCapHeld[j - 1] = aliveCapHeld[j];
+        aliveCapSent[j - 1] = aliveCapSent[j];
+    }
+    aliveCapN--;
+    if (drop) {
+        EM_LIST(no)->be_flag &= ~1;
+    } else {
+        aliveCapReleasing = 1;
+        em = EmSetFromList2(no, 1);
+        aliveCapReleasing = 0;
+        if (em && sent) {
+            EmListSetAlive(no, 1);
+        }
+    }
+#if RE4DC_ALIVE_CAP_LOG
+    OSReport("alivecap: %s 0x%02x room %03x frame %u live %d held %d (room handle%s)\n", drop ? "drop" : "take", no,
+             (unsigned) pG->room_id, (unsigned) pG->Frame_cnt, aliveCapLive(), aliveCapN,
+             drop ? " destroy" : em ? " needs the enemy" : " needs the enemy: refused");
 #endif
+    return em;
+}
 
 // Held entries with id in lo..hi (hi -1 = just lo), added to SceCountEmAlive.
 extern "C" int re4dc_aliveCapHeldCount(int lo, int hi)
