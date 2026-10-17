@@ -84,6 +84,8 @@ extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM
 #include "snd.h"
 #include "sce.h"
 #include "sce_sys.h"
+#include "etc_model.h"
+#include "emdoor.h"
 #include "sscrn.h"
 #include "re4dc_platform.h"
 #include <string.h>
@@ -186,7 +188,9 @@ struct Warp {
     int kill_cur;   // its enemy id (`kill 0`: the nearest live Ganado, ids 0x10..0x20)
     u32 kill_watch; // after the kill: state lines left
     u32 kill_rep, kill_gap;
-    u32 away_from, away_to; f32 away_pos[3];  // `emaway <from> <to> <x> <y> <z>` (test rigs)  // `killrep <count> <gap>`: kill `count` more, each `gap` room frames after the last
+    u32 away_from, away_to; f32 away_pos[3];
+    u32 atf_frame; int atf_no; bool atf_done;     // `atfunc <frame> <area>` (test rigs)
+    u32 etd_frame; int etd_no; u32 etd_or; bool etd_done;  // `etcdoor <frame> <no> <flag>` (test rigs)  // `emaway <from> <to> <x> <y> <z>` (test rigs)  // `killrep <count> <gap>`: kill `count` more, each `gap` room frames after the last
     u32 alive_period, alive_last;  // `alivelog <period>`
     bool has_drop;  // `drop <item id> [num]` (issue 23): the kill target drops this item instead of its own roll
     u16 drop_id;
@@ -402,6 +406,19 @@ void load()
         } else if (!strcmp(k, "alivelog") && n >= 2) {
             wp.alive_period = num(tok[1]);
             wp.alive_last = ~0u;
+        } else if (!strcmp(k, "atfunc") && n >= 3) {
+            // `atfunc <frame> <area>`: test rigs only: at that room frame run the area's room callback (the function
+            // SceAtDataSet_exec set) as its own task, as if the player had triggered it (r203 key pickup wave)
+            wp.atf_frame = num(tok[1]);
+            wp.atf_no = (int) num(tok[2]);
+            wp.atf_done = false;
+        } else if (!strcmp(k, "etcdoor") && n >= 4) {
+            // `etcdoor <frame> <no> <flag>`: test rigs only: at that room frame room door `no` (getRoomEtcDoor) is set
+            // normal (unlocked) and `flag` is ORed into its flag word (r209 door 4 opened: 0x10000000)
+            wp.etd_frame = num(tok[1]);
+            wp.etd_no = (int) num(tok[2]);
+            wp.etd_or = num(tok[3]);
+            wp.etd_done = false;
         } else if (!strcmp(k, "emaway") && n >= 6) {
             // `emaway <from> <to> <x> <y> <z>`: test rigs only (castle cap-4 r208 crank): between those room frames
             // every live Ganado is moved to x,y,z each frame, so a long player action is not hit
@@ -663,6 +680,23 @@ void kill_poll()
                 e->setPos(&p);
             }
         }
+    }
+    if (wp.atf_frame && !wp.atf_done && wp.room_frames >= wp.atf_frame) {
+        wp.atf_done = true;
+        SceAtWork* w = SceAtPtr(wp.atf_no);
+        re4dc_log("warp: atfunc area %02x func=%08x at room frame %u\n", (unsigned) wp.atf_no,
+                  w ? (unsigned) (uintptr_t) w->func : 0u, (unsigned) wp.room_frames);
+        if (w && w->func) SceExec(0x12, w->func, w->arg, 0, SCE_PRIO_DEF_2, 0);
+    }
+    if (wp.etd_frame && !wp.etd_done && wp.room_frames >= wp.etd_frame) {
+        wp.etd_done = true;
+        cEm* d = nullptr;
+        if (getRoomEtcDoor(wp.etd_no, &d, 1) == 1 && d) {
+            ((cEmDoor*) d)->setNormal();
+            d->flag |= wp.etd_or;
+        }
+        re4dc_log("warp: etcdoor %d %s flag|=%08x at room frame %u\n", wp.etd_no, d ? "set" : "missing",
+                  (unsigned) wp.etd_or, (unsigned) wp.room_frames);
     }
     if (!wp.has_kill || wp.kill_done) return;
     if (wp.kill_room && pG->room_id != wp.kill_room) return;
