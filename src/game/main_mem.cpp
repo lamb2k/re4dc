@@ -573,6 +573,11 @@ void MemClearAllHeap()
 // Allocates size (rounded to 32) from `heap` (MEM_HEAP_CURRENT = current) with a 32-byte "MAD"
 // tag holding "file(line)" after the block; flag 1 logs allocation failures. NULL when size is 0,
 // the heap is suspended or full.
+#if defined(RE4DC_HEAP4_WATER) && RE4DC_HEAP4_WATER
+// Set by re4dc_mem_alloc_top (SS_POOL_TOP) while it holds every other heap-4 free cell: the free list is empty only for
+// that call, so the low-water sample is skipped there (it read free 0 and muted the room's later lines).
+static int re4dc_heap4_water_hold;
+#endif
 void* mem_alloc(u32 size, const char* file, int line, int flag, int heap)
 {
     char str[64] = "";
@@ -719,7 +724,7 @@ void* mem_alloc(u32 size, const char* file, int line, int flag, int heap)
     // Test only (HEAP4_WATER=1): heap 4's low-water mark per room. After every heap-4 allocation, the free list's
     // total and largest cell; a new room minimum at least 8 KB below the last one logged is reported with the
     // allocation that made it (the last line of a room is its low-water mark; a failure always logs).
-    if (heap == 4 && Heap[heap].handle >= 0) {
+    if (heap == 4 && Heap[heap].handle >= 0 && !re4dc_heap4_water_hold) {
         static u32 room, low, logged;
         OSHeapDescriptor* d = HeapHead + Heap[heap].handle;
         u32 free_total = 0, free_max = 0;
@@ -771,7 +776,15 @@ void* re4dc_mem_alloc_top(u32 size, const char* file, int line, int heap)
     }
     void* filler = OSAllocFromHeap(h, (u32) top->size - need - 0x20);
     void* p = NULL;
-    if (filler != NULL && (u8*) filler == (u8*) top + 0x20) p = mem_alloc(size, file, line, 1, heap);
+    if (filler != NULL && (u8*) filler == (u8*) top + 0x20) {
+#if defined(RE4DC_HEAP4_WATER) && RE4DC_HEAP4_WATER
+        re4dc_heap4_water_hold = 1;
+#endif
+        p = mem_alloc(size, file, line, 1, heap);
+#if defined(RE4DC_HEAP4_WATER) && RE4DC_HEAP4_WATER
+        re4dc_heap4_water_hold = 0;
+#endif
+    }
     if (filler != NULL) OSFreeToHeap(h, filler);
     for (unsigned i = 0; i < n; ++i) OSFreeToHeap(h, held[i]);
     if (p != NULL && (u8*) p < (u8*) top) {
