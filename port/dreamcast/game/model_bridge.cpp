@@ -144,6 +144,13 @@ extern "C" int re4dc_actor_model_id(const void* model){
     auto* m=(const cModel*)model;
     return m && m->kindid==0 ? int(m->id) : -1;
 }
+#if defined(RE4DC_STATUE_LIGHTS) && RE4DC_STATUE_LIGHTS
+// STATUE_LIGHTS: the object id of a kindid-1 model (cObj), else -1.
+extern "C" int re4dc_actor_obj_id(const void* model){
+    auto* m=(const cModel*)model;
+    return m && m->kindid==1 ? int(m->id) : -1;
+}
+#endif
 #endif
 #endif
 extern "C" void re4dc_model_material(const void* object,float u,float v,unsigned flags){
