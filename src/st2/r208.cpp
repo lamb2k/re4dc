@@ -129,6 +129,9 @@ void emGroupeB2_reset();
 void emGroupeC_reset();
 void emGroupeD_reset();
 cEm* R208_setEm(s16 no);
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+extern "C" int re4dc_aliveCapFull();
+#endif
 cEm* R208_EmSetEvent(EmListData* d);
 u32 getUnderEmNum();
 void addUnderEmCnt();
@@ -457,6 +460,14 @@ void R208Main()
                 } else {
                     W->emSetWait = 320;
                 }
+#endif
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+                // ALIVE_CAP: the wall feed creates through EmSetEvent, which the cap does not see (r208 reached 5 alive
+                // at cap 4). A full cap holds this feed and retries in 30 frames; the reset count only advances on a
+                // feed, so every PS2 feed still comes, later.
+                if (alive <= 5 && re4dc_aliveCapFull()) {
+                    W->emSetWait = 30;
+                } else
 #endif
                 if (alive <= 5) {
                     int no;

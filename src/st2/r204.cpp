@@ -755,7 +755,7 @@ static void door5_close()
             u32 j;
 
             for (j = 0; j <= 10; j++) {
-                if (r204_work.p->em[j].isAlive() == 1 && AreaHitCheck(&at->area, &r204_work.p->em[j].getPtr()->pos)) {
+                if (r204_work.p->em[j].isAlive() == 1 && !EM_WRAP_HELD_NOW(&r204_work.p->em[j]) && AreaHitCheck(&at->area, &r204_work.p->em[j].getPtr()->pos)) {
                     r204_work.p->em[j].setGoto(&r204_work.p->em[j].getPtr()->pos, 0xA);
                 }
             }
