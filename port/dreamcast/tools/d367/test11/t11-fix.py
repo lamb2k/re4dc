@@ -396,6 +396,98 @@ if os.path.exists(CH2D + '/ch2-data.json'):
 C16D = os.environ.get('C16D', '/root/re4data/private/cast16data-20261016')
 if os.path.exists(C16D + '/cast16-data.json'):
     DATA['cast16'] = dict(json.load(open(C16D + '/cast16-data.json'))['replace'])
+# Disc 1 texture packing (lane pak17, 10-16; coordinator round 4 "loose -> pack", test 17): pak17 = dc/tex.pak holding
+# every loose texture of the test 17 disc (T15_DATA + ch2 + cast16 over the package base tree), built by
+# tools/d367/vram/disc_pack.py over ch2's tex.pak (13340bfa, 21:54 data): the 1,250 loose keys the pack already held
+# are dropped (the pack is looked up first, so they were never read), 241 opaque 16-bit pictures >= 16 KiB re-encoded
+# as full-codebook VQ (PSNR >= 29 dB; UI, alpha and small pictures stay 16-bit), the other 1,075 moved in as they are.
+# tex.pak 4,904 -> 6,220 keys, 119,822,336 -> 144,570,368 B (sha256 52d9b0013315c5e9); loose dc/tex 2,566 files /
+# 95,596,544 B -> 0; disc tree 1,064.0 -> 997.9 MB.
+# DROP_LOOSE: with the set staged, every loose dc/tex/<c>/<key>.re4tex of the fixture and every disc path listed in the
+# set's loose-keys.txt (the package base tree's files) is removed from the disc; each must be in the final dc/tex.pak
+# (checked here: a loose key the pack lacks stops the fixture). Staleness (base.json): the pack the earlier sets stage
+# and every loose texture they stage must be the bytes pak17 was built from; when ch2 / cast16 (or any earlier set)
+# changes its pictures, the fixture stops: rebuild pak17 with disc_pack.py --fixture <the fixture without pak17>.
+# Order: after every set that stages loose textures or replaces dc/tex.pak (last). Lives in PAK17D (not in git;
+# release kit: Build-Assets disc set pak17).
+PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261016')
+DATA['pak17'] = {'dc/tex.pak': PAK17D + '/tex.pak'}
+DROP_LOOSE = {'pak17': PAK17D + '/loose-keys.txt'}
+LOOSE = re.compile(r'^dc/tex/[0-9a-f]/([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
+
+
+def pak_keys(path):
+    import struct
+    with open(path, 'rb') as f:
+        h = f.read(2048)
+        magic, ver, count, ioff, doff = struct.unpack_from('<8s4I', h, 0)
+        assert magic == b'RE4PAK1\0' and ver == 1, path
+        f.seek(ioff)
+        ix = f.read(16 * count)
+    return {struct.unpack_from('<2I', ix, 16 * i) for i in range(count)}
+
+
+# The Flycast stager (playability-r11-r1 stage_scenario.py) always stages the MEDIA overlay (movies and 33 loose textures,
+# all in pak17) and refuses a fixture that removes one of its files. A scenario fixture (--warp: never a package) keeps
+# those paths off 'remove'; they stay loose on Flycast discs, where the pack still wins (texpack::find comes first).
+MEDIA_OVERLAY = os.environ.get('MEDIA_OVERLAY', '/mnt/c/Flycast-Evidence/re4-dreamcast/r11-media-overlay-r1/payloads')
+
+
+def media_paths():
+    if not os.path.isdir(MEDIA_OVERLAY):
+        return set()
+    return {os.path.relpath(os.path.join(d, f), MEDIA_OVERLAY).replace(os.sep, '/')
+            for d, _, fs in os.walk(MEDIA_OVERLAY) for f in fs}
+
+
+PREV_PAK = {}   # data set -> the dc/tex.pak staged before it (drop_loose staleness check)
+
+
+def drop_loose(names, r, rm, rec):
+    lists = [DROP_LOOSE[n] for n in names if n in DROP_LOOSE]
+    if not lists:
+        return
+    pak = r.get('dc/tex.pak')
+    assert pak, 'drop-loose: no dc/tex.pak staged'
+    have = pak_keys(pak)
+    paths = {k for k in r if LOOSE.match(k)}
+    for f in lists:
+        paths |= {l.strip() for l in open(f) if l.strip()}
+    # staleness: pak17 was built from one input pack and one set of loose bytes (base.json); another set staging a
+    # newer pack or other loose bytes means the pack holds old pictures (rebuild it: tools/d367/vram/disc_pack.py)
+    for n in names:
+        if n not in DROP_LOOSE:
+            continue
+        bj = os.path.join(os.path.dirname(DROP_LOOSE[n]), 'base.json')
+        b = json.load(open(bj))
+        prev = PREV_PAK.get(n)
+        full = lambda p_: hashlib.sha256(open(p_, 'rb').read()).hexdigest()
+        if prev is None or full(prev) != b['pak']:
+            raise SystemExit('drop-loose: %s was built from another dc/tex.pak than the sets before it stage (%s): '
+                             'rebuild it (tools/d367/vram/disc_pack.py)' % (n, prev))
+        stale = [k for k in paths if k in r and k in b['loose'] and full(r[k]) != b['loose'][k]]
+        new = [k for k in paths if k in r and k not in b['loose']]
+        if stale or new:
+            raise SystemExit('drop-loose: %s is stale: %d loose textures changed, %d new since it was built (first %s): '
+                             'rebuild it (tools/d367/vram/disc_pack.py)' % (n, len(stale), len(new), (stale + new)[:3]))
+        if full(pak) != b['out']:
+            raise SystemExit('drop-loose: the staged dc/tex.pak is not %s\'s pack' % n)
+    lacking = []
+    for k in sorted(paths):
+        m = LOOSE.match(k)
+        assert m, 'drop-loose: not a loose texture path: ' + k
+        if (int(m.group(1), 16), int(m.group(2), 16)) not in have:
+            lacking.append(k)
+        r.pop(k, None); rm.add(k)
+    if lacking:
+        raise SystemExit('drop-loose: %d loose textures are not in %s (first %s): rebuild the pack (vram/disc_pack.py)'
+                         % (len(lacking), pak, lacking[:3]))
+    rec.append('drop-loose %d loose textures (all in %s %s)' % (len(paths), pak, sha(pak)))
+
+
+# Test 17 data line (the chapter 2 recipe ch2/ch2-build.sh CH2REC over T15REC): T15_DATA + ch2 + cast16, then pak17 last
+# (its pack replaces ch2's dc/tex.pak and every loose texture leaves the disc).
+T17_DATA = T15_DATA + ',ch2,cast16,pak17'
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
@@ -463,6 +555,8 @@ def main():
                     assert os.path.exists(f_), f_
                     r['dc/%s.ovl' % o_] = f_; rm.discard('dc/%s.ovl' % o_); rec.append('%s ovl %s' % (nm, o_))
                 continue
+            if k == 'dc/tex.pak' and nm in DROP_LOOSE:
+                PREV_PAK[nm] = r.get('dc/tex.pak')
             if k == 'tex':
                 for t in (v if isinstance(v, list) else [v]):
                     texdir(t, r, rec)
@@ -479,6 +573,11 @@ def main():
         r.pop(k, None); rm.add(k); rec.append('rm ' + k)
     for t in opt.get('--texdir', []):
         texdir(t, r, rec)
+    drop_loose(names, r, rm, rec)
+    if '--warp' in opt:
+        kept = rm & media_paths()
+        if kept:
+            rm -= kept; rec.append('scenario fixture: %d MEDIA overlay paths kept off remove' % len(kept))
     rm -= set(r)  # a staged loose picture (data 'tex' dirs, --texdir) wins over the base's removal of the same file
     for k, f in (('--warp', 'dc/warp.txt'), ('--pad', 'dc/padscript.txt'), ('--qtxt', 'dc/quality.txt')):
         if k in opt:

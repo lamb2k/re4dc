@@ -1,0 +1,109 @@
+# Lane pak17: disc 1 textures all in the pack (2026-10-16)
+
+Branch `lane/pak17` (from t15/int bd02c79b), worktree `/root/probe/lanes-20261016/pak17/tree`. Coordinator round 4 A:
+drop the loose duplicates, pack the non-16-bit textures as they are, VQ the 16-bit ones (PSNR >= 29, UI / alpha stay
+16-bit). For test 17. Data only: no program change, no knob. The release image is the same with or without it.
+
+## What changes on the disc
+
+Today a disc carries `dc/tex.pak` plus loose `dc/tex/<c>/<key>.re4tex` files from the package base tree and from the
+data sets. `native_ui.cpp` looks a key up in the pack first (`texpack::find`, then the loose path), so a loose copy of
+a packed key is never read. From test 17 the disc has no loose textures at all.
+
+Tool: `tools/d367/vram/disc_pack.py --fixture <package fixture without pak17> --pkg-src <PKG_SRC> --out <dir>`.
+Output (private, `/root/re4data/private/pak17-20261016`, never in Git): `tex.pak`, `loose-keys.txt`, `vq-keys.txt`,
+`base.json`, `report.json`, `SUMMARY.txt`. Data set `pak17` (test11/t11-fix.py) stages the pack last and removes every
+loose texture from the disc (DROP_LOOSE). `T17_DATA = T15_DATA + ',ch2,cast16,pak17'`.
+
+Built on the ch2 data of 10-16 21:54 (input pack sha256 13340bfa..., 4,904 keys, 119,822,336 B):
+
+| Loose keys (2,566, 95,596,544 B on disc) | Keys | Loose bytes | In the pack |
+|---|---|---|---|
+| already in the pack, same bytes (dropped) | 397 | 20,502,528 | 0 |
+| already in the pack, other bytes (dropped; the pack's copy is the one the game reads today) | 853 | 31,692,800 | 0 |
+| not 16-bit twiddled (VQ, palettized, multi-texture): as they are | 563 | 6,967,296 | 6,967,296 |
+| 16-bit, kept 16-bit: alpha 228, under 16 KiB 261, PSNR < 29 dB 23 | 512 | 14,034,944 | 14,034,944 |
+| 16-bit, opaque, >= 16 KiB: VQ (PSNR 29.0..99.0 dB) | 241 | 22,398,976 | 3,725,312 |
+
+The coordinator's estimate (715 / 200 / 338) was made on the test 15 data; ch2 and cast16 added loose textures since.
+
+- New pack: 6,220 keys, 144,570,368 B, sha256 52d9b0013315c5e9... The index keeps the first key of each 2 KiB sector
+  in RAM; 6,220 keys fit the 64-sector cap (8,192 keys).
+- Disc tree 1,064.0 -> 997.9 MB (Flycast package build, standard layout).
+- VQ keys' VRAM when uploaded: 21,905,408 -> 3,231,744 B (sum over all 241; a room loads only its own).
+
+**Staleness guard.** base.json records the input pack's sha256 and every loose source's sha256. When an earlier set
+(ch2, cast16, ...) changes a picture, t11-fix.py stops ("rebuild pak17"). This happened once in this lane: the first
+pak17 was built on older ch2 data and carried 16-bit copies of 4 keys that the new ch2 pack has as VQ (r200 pinned
+VRAM +85,984 B). Rebuild: `python3 tools/d367/vram/disc_pack.py --fixture <fixture of T17_DATA minus pak17> --pkg-src
+/root/probe/lanes-20261015/t15k/pkgsrc-t14cand --out /root/re4data/private/pak17-<date>`.
+
+**Packaging.** test8/t8-pkgtree.py (outside Git) now unlinks the fixture's removed files from the package tree.
+Without that, the loose files of PKG_SRC stay on the disc.
+
+## Gates (Flycast; program out-p17rP / p17rT / p17mW, the test 17 recipe ch2/ch2-build.sh)
+
+Evidence `C:\Flycast-Evidence\re4-dreamcast\pak17-20261016` (Flycast numbers). Old data = T15_DATA + ch2 + cast16
+(test 17 without pak17), new = T17_DATA. Same program in both.
+
+| Gate | Result |
+|---|---|
+| Package audit (audit17.py) | PASS: 780 / 780 staged files with the right sha256; 0 of 4,393 removed paths on the disc; 4,370 dropped keys all in the pack; 1ST_READ.BIN = the play build image 582738e9; 9 overlays = the build's; missing.txt empty |
+| disc_lint loader + standard | PASS |
+| Loose dc/tex files left | 4: flat-layout names `dc/tex/<key>.re4tex` from PKG_SRC, never looked up (the game reads `dc/tex/<c>/<key>`) |
+| STRICT h2 (stA), stop 2000 | STRICT, MUST-IDENTICAL, 2,002 ticks |
+| STRICT bell (stB), stop 2000 | STRICT, MUST-IDENTICAL, 2,002 ticks |
+| STRICT door103 (stC), stop 2000 | STRICT, MUST-IDENTICAL, 2,002 ticks (round 3 pair cut at ~1,926 by the host capacity guard; rerun stC-o4 / n4) |
+| texchk absent, 28 rooms (stage_route.py chapters 1-1 .. 2-3: every room plus r200) | 0 fails, 0 absent, 0 refusals / nocontig in every room |
+| VRAM per room | equal or better in every room at the same sample (table below) |
+| KOS squeeze 48 KiB (10 runs) | PASS: fight min headroom 11,016 B, call 28,456 B, door103 17,096 B, 0 Out of memory |
+| GDEMU race (console, gdemu profile, 10 seeds, r101 + door103) | PASS: 10 / 10 reach r103, 0 bad reads (seed 10 first stopped by the host disk floor, rerun ok) |
+
+Pre-existing in both data sets (not from this lane): r100 7 `allocation failed` / Em set failed (s30 heap 4) and
+thrash guard 12 (old) / 11 (new) by tick 1367; r10c and r10e "qualified native room container missing" HALT
+(no native room is built for them). r120 (intro) plays the 66 s r120s00 movie in a 60 s run: no room textures,
+the same in both data sets. r10e / r120 warp at the room origin (god, freeze): the preload sample does not depend
+on where Leon stands.
+
+## VRAM per room (Flycast, TEXCHK=2 runs; old data = T15_DATA + ch2 + cast16)
+
+Sample = the latest `vram room` line both runs reached (preload = after the room's resident textures; tick = in play).
+Runs are 60 s (r100 150 s); bytes. Rooms where the VQ keys load show the gain: r118 +239,616 free, r11b +294,912,
+r10b +55,296, r106 +38,912, r11e +12,288. r109 shows 2,080 B less free at preload f 291: the same keys and sizes are
+uploaded in both runs (vramdiff 0), one picture lands a frame earlier.
+
+| Room | runs o / n | texchk fails o / n | absent n | refusals / guard / nocontig n | sample (at, f) | pinned o -> n | dynamic o -> n | free o -> n | largest o -> n | halt o / n | alloc fail o / n |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| r100 | o4 / n4 | 0 / 0 | 0 | 0/11/0 | tick 1367 | 1148216 -> 1148760 | 348320 -> 348320 | 1005312 -> 1004768 | 81920 -> 81920 | 0 / 0 | 7 / 7 |
+| r101 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | tick 767 | 952386 -> 952386 | 1363734 -> 1363734 | 218496 -> 218496 | 6144 -> 6144 | 0 / 0 | 0 / 0 |
+| r102 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 180 | 1381152 -> 1381152 | 0 -> 0 | 1128928 -> 1128928 | 1103872 -> 1103872 | 0 / 0 | 0 / 0 |
+| r103 | o4 / n3 | 0 / 0 | 0 | 0/0/0 | preload 1187 | 1555308 -> 1555308 | 0 -> 0 | 921984 -> 921984 | 204544 -> 204544 | 0 / 0 | 0 / 0 |
+| r104 | o3 / n4 | 0 / 0 | 0 | 0/0/0 | preload 179 | 1262850 -> 1262850 | 0 -> 0 | 1247200 -> 1247200 | 1149952 -> 1149952 | 0 / 0 | 0 / 0 |
+| r105 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 181 | 1610848 -> 1610848 | 0 -> 0 | 899232 -> 899232 | 829440 -> 829440 | 0 / 0 | 0 / 0 |
+| r106 | o4 / n4 | 0 / 0 | 0 | 0/0/0 | preload 184 | 1643616 -> 1604704 | 0 -> 0 | 866464 -> 905376 | 819200 -> 858112 | 0 / 0 | 0 / 0 |
+| r107 | o4 / n3 | 0 / 0 | 0 | 0/0/0 | tick 850 | 432736 -> 432736 | 1557762 -> 1557762 | 486784 -> 486784 | 339968 -> 339968 | 0 / 0 | 0 / 0 |
+| r108 | o4 / n3 | 0 / 0 | 0 | 0/0/0 | preload 182 | 1573260 -> 1573260 | 0 -> 0 | 936800 -> 936800 | 843776 -> 843776 | 0 / 0 | 0 / 0 |
+| r109 | o4 / n3 | 0 / 0 | 0 | 0/0/0 | preload 291 | 1176864 -> 1178944 | 2080 -> 2080 | 1298368 -> 1296288 | 811008 -> 811008 | 0 / 0 | 0 / 0 |
+| r10a | o4 / n4 | 0 / 0 | 0 | 0/0/0 | tick 767 | 429376 -> 429376 | 1129984 -> 1129984 | 917952 -> 917952 | 847872 -> 847872 | 0 / 0 | 0 / 0 |
+| r10b | o3 / n4 | 0 / 0 | 0 | 0/0/0 | tick 1367 | 679296 -> 679296 | 1140800 -> 1085504 | 657216 -> 712512 | 610304 -> 665600 | 0 / 0 | 0 / 0 |
+| r10e | o4 / n4 | 0 / 0 | 0 | 0/0/0 | preload 178 | 157216 -> 157216 | 0 -> 0 | 2352864 -> 2352864 | 2347008 -> 2347008 | 1 / 1 | 0 / 0 |
+| r10c | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 178 | 157216 -> 157216 | 0 -> 0 | 2352864 -> 2352864 | 2347008 -> 2347008 | 1 / 1 | 0 / 0 |
+| r117 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 180 | 1466080 -> 1466080 | 0 -> 0 | 1044000 -> 1044000 | 976896 -> 976896 | 0 / 0 | 0 / 0 |
+| r118 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | tick 767 | 239200 -> 239200 | 1949506 -> 1709890 | 288576 -> 528192 | 182272 -> 421888 | 0 / 0 | 0 / 0 |
+| r119 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 500 | 1352864 -> 1352864 | 0 -> 0 | 1124448 -> 1124448 | 1008640 -> 1008640 | 0 / 0 | 0 / 0 |
+| r11b | o3 / n3 | 0 / 0 | 0 | 0/0/0 | tick 767 | 638336 -> 638336 | 1496288 -> 1201376 | 342688 -> 637600 | 288768 -> 583680 | 0 / 0 | 0 / 0 |
+| r112 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | tick 767 | 773600 -> 773600 | 1228384 -> 1228384 | 475328 -> 475328 | 403424 -> 403424 | 0 / 0 | 0 / 0 |
+| r111 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 182 | 2184354 -> 2184354 | 0 -> 0 | 325696 -> 325696 | 153600 -> 153600 | 0 / 0 | 0 / 0 |
+| r113 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 182 | 1861964 -> 1861964 | 0 -> 0 | 648096 -> 648096 | 571392 -> 571392 | 0 / 0 | 0 / 0 |
+| r11c | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 181 | 2186818 -> 2186818 | 0 -> 0 | 323232 -> 323232 | 172032 -> 172032 | 0 / 0 | 0 / 0 |
+| r11d | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 182 | 1638614 -> 1638614 | 0 -> 0 | 871456 -> 871456 | 794624 -> 794624 | 0 / 0 | 0 / 0 |
+| r11e | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 181 | 1646208 -> 1633920 | 0 -> 0 | 863872 -> 876160 | 839680 -> 851968 | 0 / 0 | 0 / 0 |
+| r10f | o4 / n4 | 0 / 0 | 0 | 0/0/0 | preload 181 | 1968864 -> 1968864 | 0 -> 0 | 541216 -> 541216 | 440320 -> 440320 | 0 / 0 | 0 / 0 |
+| r11f | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 178 | 1697920 -> 1697920 | 0 -> 0 | 812160 -> 812160 | 718848 -> 718848 | 0 / 0 | 0 / 0 |
+| r200 | o3 / n3 | 0 / 0 | 0 | 0/0/0 | preload 183 | 2160898 -> 2160898 | 0 -> 0 | 349152 -> 349152 | 256000 -> 256000 | 0 / 0 | 0 / 0 |
+
+## For the test 17 release lane
+
+- Knob file: add `pak17` last to the `# disc-sets:` line (release-knobs.py write --disc-sets ...,ch2,cast16,pak17).
+- t8-pkgtree.py must be the version that unlinks removed files (backup `.bak-pak17` next to it).
+- Rebuild pak17 whenever ch2, cast16 or any earlier set changes its pictures (the guard stops the fixture otherwise).
