@@ -406,6 +406,26 @@ def texdir(d, r, rec):
     rec.append('texdir %s %d' % (d, n))
 
 
+def lostpart_gate(k, v, rec):
+    """Required gate (2026-10-16): a reduced world level file dc/native/<room>/ps2-wv*.re4mesh is staged only with a PASS
+    stamp of the lost-part check beside it (tools/d367/lostpart/lostpart_gate.sh writes LOSTPART.txt: verdict +
+    reduced-sha256). RE4DC_LOSTPART_WAIVE=1 = A/B comparison fixtures only (recorded in provenance; never a release)."""
+    if not (k.startswith('dc/native/') and os.path.basename(k).startswith('ps2-wv') and k.endswith('.re4mesh')):
+        return
+    if os.environ.get('RE4DC_LOSTPART_WAIVE') == '1':
+        rec.append('LOSTPART WAIVED %s' % k)
+        return
+    st = os.path.join(os.path.dirname(v), 'LOSTPART.txt')
+    assert os.path.exists(st), 'lost-part gate: %s has no LOSTPART.txt (run tools/d367/lostpart/lostpart_gate.sh)' % v
+    t = open(st).read()
+    import hashlib
+    h = hashlib.sha256(open(v, 'rb').read()).hexdigest()
+    first = t.splitlines()[0] if t else ''
+    assert ': PASS (' in first, 'lost-part gate: %s FAILED the check (%s)' % (v, first)
+    assert ('reduced-sha256 %s' % h) in t, 'lost-part gate: %s changed since its LOSTPART.txt stamp' % v
+    rec.append('LOSTPART PASS %s %s' % (k, h[:16]))
+
+
 def main():
     a = sys.argv[1:]
     new, out = a[:2]
@@ -440,10 +460,12 @@ def main():
                     texdir(t, r, rec)
                 continue
             assert os.path.exists(v), (nm, k, v)
+            lostpart_gate(k, v, rec)
             r[k] = v; rm.discard(k); rec.append('%s %s %s' % (nm, k, sha(v)))
     for kv in opt.get('--set', []):
         k, v = kv.split('=', 1)
         assert os.path.exists(v), v
+        lostpart_gate(k, v, rec)
         r[k] = v; rm.discard(k); rec.append('set %s %s' % (k, sha(v)))
     for k in opt.get('--rm', []):
         r.pop(k, None); rm.add(k); rec.append('rm ' + k)
