@@ -185,7 +185,8 @@ struct Warp {
     cEm* kill_em;   // the target once found (kept until its hp is gone)
     int kill_cur;   // its enemy id (`kill 0`: the nearest live Ganado, ids 0x10..0x20)
     u32 kill_watch; // after the kill: state lines left
-    u32 kill_rep, kill_gap;  // `killrep <count> <gap>`: kill `count` more, each `gap` room frames after the last
+    u32 kill_rep, kill_gap;
+    u32 away_from, away_to; f32 away_pos[3];  // `emaway <from> <to> <x> <y> <z>` (test rigs)  // `killrep <count> <gap>`: kill `count` more, each `gap` room frames after the last
     u32 alive_period, alive_last;  // `alivelog <period>`
     bool has_drop;  // `drop <item id> [num]` (issue 23): the kill target drops this item instead of its own roll
     u16 drop_id;
@@ -401,6 +402,12 @@ void load()
         } else if (!strcmp(k, "alivelog") && n >= 2) {
             wp.alive_period = num(tok[1]);
             wp.alive_last = ~0u;
+        } else if (!strcmp(k, "emaway") && n >= 6) {
+            // `emaway <from> <to> <x> <y> <z>`: test rigs only (castle cap-4 r208 crank): between those room frames
+            // every live Ganado is moved to x,y,z each frame, so a long player action is not hit
+            wp.away_from = num(tok[1]);
+            wp.away_to = num(tok[2]);
+            for (int i = 0; i < 3; ++i) wp.away_pos[i] = (f32) strtod(tok[3 + i], nullptr);
         } else if (!strcmp(k, "killrep") && n >= 3) {
             wp.kill_rep = num(tok[1]);
             wp.kill_gap = num(tok[2]);
@@ -647,6 +654,15 @@ void kill_poll()
                   live ? (unsigned) em->r_no_1 : 0u, live ? (unsigned) em->r_no_2 : 0u, live ? (int) em->pos.x : 0,
                   live ? (int) em->pos.y : 0, live ? (int) em->pos.z : 0,
                   live && em->pModelInfo ? (unsigned) em->pModelInfo->colorWord : 0u);
+    }
+    if (wp.away_to && pPL && wp.room_frames >= wp.away_from && wp.room_frames < wp.away_to) {
+        for (int id = 0x10; id <= 0x20; ++id) {
+            for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e)) {
+                if ((e->be_flag & 0x21) != 0x21 || e->hp <= 0) continue;
+                Vec p = {wp.away_pos[0], wp.away_pos[1], wp.away_pos[2]};
+                e->setPos(&p);
+            }
+        }
     }
     if (!wp.has_kill || wp.kill_done) return;
     if (wp.kill_room && pG->room_id != wp.kill_room) return;
