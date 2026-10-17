@@ -71,7 +71,7 @@ A clause that depends on game state is read again on every reuse.
 **Not done:**
 - Semantics static memo: about 0.1 ms. Chunk proofs are already cached by ID; what remains is struct compares.
 - One-chunk known skin entry: about 0.06 ms. Not proven safe across the skin cache.
-- Step 3 (fused transform + light + pack): see the report.
+- Step 3 (fused transform + light + pack): priced below ("Step 3"), not built.
 
 ## Results (ms saved)
 
@@ -104,26 +104,74 @@ reserve) or real work (skeleton blend, skinning, lighting, packing).
 | Knob-off identity | `ap17k1rW` == `ap17b0rW` (t15/int b850c47d), image 1ee3a782. `ap17t16K` == test 16 `out-t16rcrP`, image d551dab2. |
 | Still pair at the cross (freeze 400) | Plan on vs plan off in the same image: identical (fb0 and fb1). Knob-off vs plan: fb0 identical; 2 pixels in fb1 differ. The knob-off arm against itself shows the same 2 fb1 pixels (Flycast run-to-run back-buffer noise), so the pair is pixel-identical. |
 | KOS squeeze 48 KiB (twin `fpap17sqW` from `ap17qrP`, release identity OK, mastered on the test 16 disc tree) | **GATE PASS**, 10/10. Min headroom: fight 12,344, call 30,152, door 14,792, leave100 / leave103 12,392 B. 0 OOM lines. |
+| KOS squeeze again after the table move (twin `fpap17srW` from `ap17rrP` at e2d1474a, identity OK 288b6092; evidence `kos2`) | **PASS 10/10**. Min headroom: fight 12,312, call 30,120, door 14,760, leave100 / leave103 12,376 B. 0 OOM lines. The script's own summary said FAIL for door and leave103 (`end_marker=0`): it read those logs before the captures finished. Evaluated again with the script's rules once every capture had its `capture stop` line, every run reached its end marker. |
+| r100 s30 movie gate (H2 through s30, 400 s, stop tick 2500; run-length exception per the coordinator) | **340/340 on both arms** (`s30-plan` `ap17srW`, `s30-off` `ap17s0rW`). Same underruns (1) and silence bytes on both. `heap_before` 117,024 (plan) vs 125,216 (knob-off). |
+| `ACTOR_PLAN=2` compare after the table move (`cmp-c5-cross`, `cmp-c5-farm`) | bad = 0; hit counts identical to c4 |
+| STRICT + decisions after the table move (`ap17zrT` vs the same knob-off references; `st3-*-x`, door rerun `st4-door-x` after a LOG OVERRUN gap in `st3-door-x`) | fight 841, bell 397, door103 1,188 ticks: STRICT, MUST-IDENTICAL |
 | Align logger (hwmodel, 60 s, cross + farm) | 0 MISALIGN, 0 HALT |
 | `_end` / heap 4 | See the next section |
 
 ## Size
 
-| Item | Change |
-|---|---|
-| `.text` | +3,360 B |
-| `.rodata` | +160 B |
-| actor data | +6,080 B (memo tables 6.1 KB) |
-| `.bss` | +96 B |
-| **Static total** | **+9,696 B** |
-| `_end` (rT arms) | +20,000 B (the sections plus 10,304 B of layout padding) |
-| Heap 4 at the r101 entry | −20,480 B (7,556,896 → 7,536,416) |
-| KOS left | +480 B |
+**10-17: the memo tables moved out of the padded block (e2d1474a).** `CHAR_DATA_BLOCK=1` pads the data of
+`coarse_actor.o` to 16 KiB steps. The base had 3,776 B of slack, so 6 KB of memo tables crossed a step and added
+10,304 B of padding. The tables now live in `re4dc_actor_plan_store` (4 KiB, platform `.bss`, `actor_plan.h`
+`RE4DC_PLAN_ARRAY`). They are also smaller: 16 texture memos instead of 32, and role arrays of `kRe4dcActorRoles` (9)
+instead of 16 infos. Hit counts in the `=2` compare did not change.
 
-**Before landing:**
-- Static growth eats heap 4, so the r100 s30 movie gate (H2 through s30, 340/340) must run. That run takes about
-  400 s, past this lane's 1-minute run rule.
-- The memo tables can shrink by about 3 KB: 16 texture entries instead of 32, and role arrays of 9 infos instead of 16.
+| Item | Before the move | After (e2d1474a) |
+|---|---|---|
+| `_end` (rT arms, knob-off vs plan) | +20,000 B | **+7,744 B** (`8c434ff8` → `8c436e38`) |
+| Heap 4 (arena fit, `rW` arms) | −20,480 B | **−8,192 B** (12,005,376 → 11,997,184) |
+| r100 s30 movie, `heap_before` | not run | 125,216 → 117,024 (−8,192), 340/340 on both |
+| KOS squeeze | PASS 10/10 | PASS 10/10 (min headroom 12,312 vs 12,344) |
+
+The disc below was built before the move (tree 4799bc79). Its behaviour is the same; only the layout differs.
+
+## Step 3 (fused transform + light + pack): priced, not built
+
+The coordinator's order applied: first repeated or avoidable work, then batching and data layout, then a fused C kernel,
+and assembly only if the whole-frame gain justifies it.
+
+**Where the time goes.** Leon on Flycast (`ACTOR_PROF`, µs per frame): skin 1,388, light 1,169, pack 751.
+MODELLED `one_chunk` at the cross (`ap17b3`, all characters): 5.76 ms in total.
+
+| Part | MODELLED ms | Notes |
+|---|---|---|
+| `pass_positions` | 2.31 | Kernel `avk_pos_skin_u16` 1.93. Per frame: base 275k cycles, data misses 44k, prefetch wait 30k, I-misses 17k |
+| `pass_lights` | 1.12 | Kernel `avk_light_skin_n16` 1.00. Base 148k cycles, data misses 40k |
+| `Part::whole` (pack) | 0.78 | |
+| `Part::strips` | 0.25 | |
+| `probe_dirs_all` + `probe_lights` | 0.36 | |
+
+The kernels are generated, list-scheduled SH-4 loops (`mkavk.py`, 36.5 model cycles per vertex for the scheduled
+loop). That works out to about 41 base cycles, or 57 cycles all-in, per record.
+
+**Census of repeated work** (`ACTOR_PROF`, `prof-p5-cross`, frames 482..781, per frame):
+
+| | Records | Distinct positions per chunk | Distinct positions per meshlet (sum) | Distinct normals per chunk | Distinct (position, normal, uv) |
+|---|---|---|---|---|---|
+| Leon | 4,545 | 3,115 | 3,724 | 3,209 | 4,345 |
+| Ganados (2.3 drawn) | 2,202 | 1,137 | 1,482 | 1,344 | 2,097 |
+
+**Candidates and their ceilings.** All figures are MODELLED estimates: census counts times measured per-record costs.
+
+| Candidate | What it would take | Ceiling, MODELLED |
+|---|---|---|
+| Within-meshlet duplicate positions (Leon 821 records, Ganados 720), mostly uv seams and hard edges | Offline record reorder plus a "same position as the previous record" flag, and a `pos.tpl` (asm template) change to copy xyz / outcode instead of transforming | ~0.35 ms |
+| Across-meshlet duplicate positions (Leon 609, Ganados 345) | A chunk-wide transformed-position table. Every record then pays a gather of about 15 cycles to save 31% to 48% of the transforms | about zero or negative |
+| Duplicate normals in lighting (Leon 1,336 per chunk) | Per-normal colour memo. A stamp check costs about 6 cycles on every record | ~0.1 ms |
+| Light setup per chunk (`probe_dirs_all` 7 calls per frame) | Already about one rebuild per skeleton per frame; the fold changes when the fill direction changes | <0.1 ms |
+| Fused transform + light + pack in C | The passes already run per meshlet on L1-resident data (`kMaxVertices`), so fusing removes only per-meshlet loop overhead and in-cache copies. Pack expands vertices into strip corners by index, so it cannot be fused away. A C loop gives up the scheduled asm's 36.5 cycles per vertex | negative to ~0.1 ms |
+| Source-data misses (pos 74k + light 40k cycles per frame, about 0.57 ms) | Interleave position and normal per record offline (one stream instead of three) | Layout lever; the hardware-model trust policy says console only. Ceiling about 0.3 ms |
+
+**Verdict.**
+- The total ceiling is about 0.5 ms MODELLED. That is below the coordinator's 1 ms threshold for a console disc, and
+  below the model's ±1-2 ms whole-frame noise.
+- The one candidate with a real ceiling (0.35 ms) needs an assembly template change plus an offline record format. The
+  optimization rule only allows assembly when the whole-frame gain justifies it, and this gain does not.
+- No prototype was built and no disc was made.
+- Backlog, if wanted: the offline interleaved record layout, as a console-only layout A/B.
 
 ## Console A/B disc
 
