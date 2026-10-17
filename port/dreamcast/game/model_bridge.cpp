@@ -792,6 +792,79 @@ extern "C" int re4dc_sob_bake_skip(const void* model){
     return 0;
 }
 #endif
+
+#if defined(RE4DC_PROP_PLAN) && RE4DC_PROP_PLAN
+extern "C" unsigned re4dc_stream_model_bytes_now();
+// PROP_PLAN=1 (lane cast16 2026-10-17; render only, exact, default 0): a rigid part (vtxOrig positions) whose model's
+// local bounding box lies wholly outside one clip plane (a screen edge, near or far) is not submitted: every
+// triangle it holds would be clipped away, so the picture is the same. The box is computed once per ModelData
+// (key: data pointer, vertex array, count, shift and 8 sampled position words) instead of preparing parts that
+// emit nothing every frame (r103 farm scenery: ~111 parts a frame, 0 bytes).
+namespace pplan {
+struct Box { const void* d; const void* v; unsigned n, shift, sig; float lo[3], hi[3]; };
+Box boxes[256];
+unsigned culled, tested, built, bad;
+unsigned sig_of(const short* v, unsigned n) {
+    unsigned h = n * 2654435761u;
+    for (unsigned k = 0; k < 8; ++k) { const unsigned i = (n * k) / 8; h = (h ^ (unsigned) (unsigned short) v[i * 4] ^ ((unsigned) (unsigned short) v[i * 4 + 2] << 16)) * 16777619u; }
+    return h;
+}
+const Box* box_of(const ModelData* d) {
+    const short* v = (const short*) d->vtxOrig; const unsigned n = d->nVtx;
+    if (!v || !n) return nullptr;
+    Box& b = boxes[(((unsigned) d) >> 5) & 255];
+    const unsigned sig = sig_of(v, n);
+    if (b.d == d && b.v == v && b.n == n && b.shift == d->shift && b.sig == sig) return &b;
+    const float sc = 1.0f / (float) (1u << d->shift);
+    float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f};
+    for (unsigned i = 0; i < n; ++i) for (unsigned c = 0; c < 3; ++c) { const float x = v[i * 4 + c] * sc; if (x < lo[c]) lo[c] = x; if (x > hi[c]) hi[c] = x; }
+    b.d = d; b.v = v; b.n = n; b.shift = d->shift; b.sig = sig;
+    for (unsigned c = 0; c < 3; ++c) { b.lo[c] = lo[c]; b.hi[c] = hi[c]; }
+    ++built; return &b;
+}
+// A skinned info: the box of this frame's skinned positions (pPosBuf, stride 6), once per info per frame.
+struct SBox { const void* info; const void* v; unsigned frame, n; Box b; };
+SBox sboxes[64];
+const Box* skinned_box_of(const void* info, const short* v, unsigned n, unsigned shift, unsigned frame) {
+    if (!v || !n) return nullptr;
+    SBox& e = sboxes[(((unsigned) info) >> 4) & 63];
+    if (e.info == info && e.v == v && e.frame == frame && e.n == n) return &e.b;
+    const float sc = 1.0f / (float) (1u << shift);
+    float lo[3] = {1e30f, 1e30f, 1e30f}, hi[3] = {-1e30f, -1e30f, -1e30f};
+    for (unsigned i = 0; i < n; ++i) for (unsigned c = 0; c < 3; ++c) { const float x = v[i * 3 + c] * sc; if (x < lo[c]) lo[c] = x; if (x > hi[c]) hi[c] = x; }
+    e.info = info; e.v = v; e.frame = frame; e.n = n;
+    for (unsigned c = 0; c < 3; ++c) { e.b.lo[c] = lo[c]; e.b.hi[c] = hi[c]; }
+    return &e.b;
+}
+// True when the box is wholly outside one plane of the drawn volume (homogeneous half-space tests, w = -z).
+bool outside(const Box& b, const float mv[3][4], const float* pr, const float* vp) {
+    if (pr[0] != 0 || vp[2] <= 0 || vp[3] <= 0) return false;
+    const float near = pr[6] / (pr[5] - 1), far = pr[6] / pr[5];
+    if (!(near > 0) || !(far > near)) return false;
+    const float xmax = 1.0f - 2.0f * vp[0] / vp[2], xmin = -1.0f - 2.0f * vp[0] / vp[2];
+    const float ymax = 1.0f + 2.0f * vp[1] / vp[3], ymin = 2.0f * vp[1] / vp[3] - 1.0f;
+    const float m = 1.02f;  // margin: only boxes clearly outside
+    unsigned all = 0x3f;
+    for (unsigned k = 0; k < 8; ++k) {
+        const float x = (k & 1) ? b.hi[0] : b.lo[0], y = (k & 2) ? b.hi[1] : b.lo[1], z = (k & 4) ? b.hi[2] : b.lo[2];
+        const float ex = mv[0][0] * x + mv[0][1] * y + mv[0][2] * z + mv[0][3];
+        const float ey = mv[1][0] * x + mv[1][1] * y + mv[1][2] * z + mv[1][3];
+        const float ez = mv[2][0] * x + mv[2][1] * y + mv[2][2] * z + mv[2][3];
+        const float w = -ez, cx = pr[1] * ex + pr[2] * ez, cy = pr[3] * ey + pr[4] * ez;
+        unsigned o = 0;
+        if (cx > xmax * w + (m - 1) * (w < 0 ? -w : w) + 1e-3f) o |= 1;
+        if (cx < xmin * w - (m - 1) * (w < 0 ? -w : w) - 1e-3f) o |= 2;
+        if (cy > ymax * w + (m - 1) * (w < 0 ? -w : w) + 1e-3f) o |= 4;
+        if (cy < ymin * w - (m - 1) * (w < 0 ? -w : w) - 1e-3f) o |= 8;
+        if (w < near * 0.98f) o |= 16;
+        if (w > far * 1.02f) o |= 32;
+        all &= o;
+        if (!all) return false;
+    }
+    return all != 0;
+}
+}
+#endif
 extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
  const void* part_ptr,const float mv[3][4],unsigned pass){
     if(!RE4DC_MODEL_DIAG() || pass)return;
@@ -870,6 +943,19 @@ extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
             re4dc_log("SOB %u %x %x %x %x %x %x %u %u %u %u %x %u %u %x %u\n",pG->Frame_cnt%100000,(unsigned)m&0xffffff,id|(k<<8),(unsigned)info&0xffffff,(unsigned)part&0xffffff,(unsigned)p.image.pixels&0xffffff,(unsigned)p.uv&0xffffff,p.position_count,p.position_stride,p.normal_stride,p.shift,p.flags>>16,p.blend,p.alpha_state,(unsigned)p.colors&0xffffff,p.stream_bytes);
     }
 #endif
+#if defined(RE4DC_PROP_PLAN) && RE4DC_PROP_PLAN
+    {static unsigned seen;if(m->id==2 && m->kindid==1 && seen<6){++seen;re4dc_log("PPLAN id2 rigid=%u be4000=%u wp=%u wext=%u ib2=%u np=%u nvtx=%u shift=%u\n",(unsigned)rigid,(unsigned)((m->be_flag&0x4000)!=0),(unsigned)d->weight_palette_num,(unsigned)d->weight_ext_num,(unsigned)((info->be_flag&2)!=0),(unsigned)d->nParts,(unsigned)d->nVtx,(unsigned)d->shift);}
+     static unsigned pf;if(pG->Frame_cnt/600!=pf){pf=pG->Frame_cnt/600;re4dc_log("PPLAN tested=%u culled=%u built=%u bad=%u\n",pplan::tested,pplan::culled,pplan::built,pplan::bad);}}
+    {++pplan::tested;const auto* bx=rigid?pplan::box_of(d):
+        pplan::skinned_box_of(info,(const short*)p.positions,d->nVtx,d->shift,pG->Frame_cnt);
+#if RE4DC_PROP_PLAN==2
+        if(bx && pplan::outside(*bx,mv,p.projection,p.viewport)){++pplan::culled;const unsigned b0=re4dc_stream_model_bytes_now();
+            re4dc_model_submit(&p);const unsigned db=re4dc_stream_model_bytes_now()-b0;
+            if(db>=96){++pplan::bad;if(pplan::bad<8)re4dc_log("PPLAN BAD kind=%u id=%x rigid=%u bytes=%u\n",(unsigned)m->kindid,(unsigned)m->id,(unsigned)rigid,db);}return;}}
+#else
+        if(bx && pplan::outside(*bx,mv,p.projection,p.viewport)){++pplan::culled;return;}}
+#endif
+#endif
 #if defined(RE4DC_SOB_DUMP) && RE4DC_SOB_DUMP
     sobdump::part(m,info,d,part,p);  // SOB_DUMP (diagnostic): first-draw capture for STATIC_OBJ_BAKE
 #endif
@@ -934,5 +1020,11 @@ extern "C" void re4dc_callprof_part_key(unsigned path,unsigned key);
 extern "C" void re4dc_callprof_part(const void* model,unsigned path){
     const cModel* m=static_cast<const cModel*>(model);
     re4dc_callprof_part_key(path,m?(unsigned(m->kindid)<<8|unsigned(m->id)):0xffffU);
+}
+#endif
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+extern "C" unsigned re4dc_propprof_key(const void* model) {
+    const cModel* m = static_cast<const cModel*>(model);
+    return m ? (unsigned(m->kindid) & 255u) << 16 | (unsigned(m->id) & 255u) << 8 | (unsigned(m->type) & 255u) : 0xffffffu;
 }
 #endif
