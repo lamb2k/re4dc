@@ -1,0 +1,13 @@
+name benchmark-r101-worst
+# benchmark-r101-worst (lane batch17, 2026-10-16): the r101 view with the most on-screen PS2 world vertices of the 816
+# room-budget samples (worldtest16 price2: em28 set position, yaw 135 deg; 23,693 TA vertices against 16,198 at the
+# cross camera, bake13 world). Same rig as benchmark-r101 (crowd alerted at room frame 30, god mode, no pad input:
+# Leon stands still, the camera stays behind him). Measure like the cross (hw window 500..799).
+room 0x101
+pos -10840 0 2660
+ang 2.3562
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150

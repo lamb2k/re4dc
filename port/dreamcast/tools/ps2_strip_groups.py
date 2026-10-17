@@ -133,7 +133,16 @@ def main():
         for k, nk in new_of.items():
             old_of[nk] = k
         if indexed:
-            struct.pack_into('<%dH' % vc, m, fs, *[offs[old_of[nk]] for nk in range(vc)])
+            # Re-pointed offsets can fall below the meshlet's first record when its pool range starts inside a
+            # renumbered non-indexed meshlet (inputs that already carry groups, e.g. coalesced bake13; lane batch17):
+            # rebase the meshlet's first record to the lowest absolute record it reads. Same records, same order.
+            absr = [L['fv'] + offs[old_of[nk]] for nk in range(vc)]
+            nfv = L['fv'] if min(absr) >= L['fv'] and max(absr) - L['fv'] <= 65535 else min(absr)  # earlier inputs: unchanged
+            assert 0 <= nfv and max(absr) - nfv <= 65535, 'indexed meshlet pool range exceeds u16'
+            if nfv != L['fv']:
+                struct.pack_into('<I', m, o_let + 28 * li, nfv); stats['rebased'] = stats.get('rebased', 0) + 1
+                L['fv'] = nfv
+            struct.pack_into('<%dH' % vc, m, fs, *[a - nfv for a in absr])
         else:
             rec = [bytes(m[o_vert + 12 * (L['fv'] + k):o_vert + 12 * (L['fv'] + k) + 12]) for k in range(vc)]
             for nk in range(vc):

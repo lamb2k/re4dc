@@ -103,6 +103,9 @@ const char* re4dc_bench_results(void);
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
 extern "C" void re4dc_ps2_pvs_set(unsigned on);  // native_static.cpp (t2exact.mk PS2_PVS)
 #endif
+#if defined(RE4DC_WORLD_VERT) && RE4DC_WORLD_VERT
+extern "C" void re4dc_world_vert_set(unsigned level);  // native_static.cpp (game30.mk WORLD_VERT; lane batch17)
+#endif
 #if defined(RE4DC_SG_SELECT_LEAN) && RE4DC_SG_SELECT_LEAN
 extern "C" void re4dc_sg_select_lean_set(unsigned on);  // native_static.cpp (t2exact.mk SG_SELECT_LEAN)
 #endif
@@ -479,6 +482,12 @@ void load()
 #if defined(RE4DC_KOS_SQUEEZE) && RE4DC_KOS_SQUEEZE
         } else if (!strcmp(k, "squeeze")) {
             // KOS_SQUEEZE (platform/os.cpp reads this line at OSInit)
+#endif
+#if defined(RE4DC_WORLD_VERT) && RE4DC_WORLD_VERT
+        } else if (!strcmp(k, "wvlevel") && n >= 2) {
+            // WORLD_VERT (lane batch17 A/B disc): `wvlevel <n>` = the world level the next room open reads (0 = level 0)
+            re4dc_world_vert_set(num(tok[1]));
+            re4dc_log("warp: wvlevel %u\n", (unsigned) num(tok[1]));
 #endif
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
         } else if (!strcmp(k, "pvs") && n >= 2) {
