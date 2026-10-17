@@ -174,6 +174,9 @@ struct Warp {
     u32 kill_watch; // after the kill: state lines left
     u32 kill_rep, kill_gap;  // `killrep <count> <gap>`: kill `count` more, each `gap` room frames after the last
     u32 alive_period, alive_last;  // `alivelog <period>`
+    // `emlog <model id> <period>` (lane final16, test only): every live enemy with the id each period room frames
+    // (hp, routine bytes, position) plus the player's damage seen by god mode (hits / hp taken since the last line).
+    int emlog_id; u32 emlog_period, emlog_last, pl_hits, pl_dmg, pl_hits_total, pl_dmg_total;
     bool has_drop;  // `drop <item id> [num]` (issue 23): the kill target drops this item instead of its own roll
     u16 drop_id;
     int drop_num;
@@ -392,6 +395,10 @@ void load()
         } else if (!strcmp(k, "alivelog") && n >= 2) {
             wp.alive_period = num(tok[1]);
             wp.alive_last = ~0u;
+        } else if (!strcmp(k, "emlog") && n >= 3) {
+            wp.emlog_id = (int) num(tok[1]);
+            wp.emlog_period = num(tok[2]);
+            wp.emlog_last = ~0u;
         } else if (!strcmp(k, "killrep") && n >= 3) {
             wp.kill_rep = num(tok[1]);
             wp.kill_gap = num(tok[2]);
@@ -611,6 +618,20 @@ void kill_poll()
         re4dc_log("warp: alive %d room %03x frame %u\n", SceCountEmAlive(0x10, 0x20), (unsigned) pG->room_id,
                   (unsigned) wp.room_frames);
     }
+    if (wp.emlog_period && (wp.room_frames % wp.emlog_period) == 0 && wp.room_frames != wp.emlog_last) {
+        wp.emlog_last = wp.room_frames;
+        for (cEm* e = EmMgr.getEmPtr(wp.emlog_id, 0); e; e = EmMgr.getEmPtr(wp.emlog_id, e)) {
+            re4dc_log("warp: emlog %02x frame %u t=%u type=%u be=%08x hp=%d r=%u/%u/%u/%u pos=%d,%d,%d plhits=%u pldmg=%u\n",
+                      (unsigned) wp.emlog_id, (unsigned) wp.room_frames, (unsigned) pG->Frame_cnt, (unsigned) e->type,
+                      (unsigned) e->be_flag, (int) e->hp, (unsigned) e->r_no_0, (unsigned) e->r_no_1, (unsigned) e->r_no_2,
+                      (unsigned) e->r_no_3, (int) e->pos.x, (int) e->pos.y, (int) e->pos.z, wp.pl_hits, wp.pl_dmg);
+        }
+        re4dc_log("warp: emlog pl frame %u life=%d/%d hits=%u dmg=%u total=%u/%u rsf=%08x room_flg0=%08x scen0=%08x\n",
+                  (unsigned) wp.room_frames, (int) pG->pl_life, (int) pG->pl_life_max, wp.pl_hits, wp.pl_dmg,
+                  wp.pl_hits_total, wp.pl_dmg_total, RoomData.getRoomSavePtr(pG->room_id) ? (unsigned) RsfFlags(pG->room_id)[0] : 0u, (unsigned) pG->Room_flg[0],
+                  (unsigned) pG->Scenario_flg[0]);
+        wp.pl_hits = 0; wp.pl_dmg = 0;
+    }
     if (wp.kill_watch && wp.kill_em && (wp.room_frames % 15) == 0) {
         --wp.kill_watch;
         cEm* em = wp.kill_em;
@@ -779,6 +800,10 @@ void saddler_poll()
 #endif
 void god_alert_poll()
 {
+    if (wp.god && pG && pG->pl_life < pG->pl_life_max) {  // `emlog`: the damage god mode undoes
+        const u32 d = (u32) (pG->pl_life_max - pG->pl_life);
+        ++wp.pl_hits; wp.pl_dmg += d; ++wp.pl_hits_total; wp.pl_dmg_total += d;
+    }
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
     if (!wp.has_alert || wp.alert_done || wp.rooms != wp.alert_entry || wp.room_frames < wp.alert_frame || !pPL ||
         (pG->Status_flg[1] & 0x10000000)) return;

@@ -672,6 +672,39 @@ endif
 # r30a calls EtcModel.cpp's setRoomEtcBreakDisp by its C name (as r200; ROUTE_CH23 sets the same export alias).
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_WORLD_STAGE_MODULES=1
 endif
+# ROUTE_FINAL=1 (lane final16 2026-10-16, default 0: no effect; needs ROUTE_CH3=1 STAGE_OVL=1; not with STRESS_SADDLER):
+#   the final boss room r332 (st3_3) with Saddler's real fight. em31 (module 89, Saddler's final form: body type 0 +
+#   tentacle type 1, r332 list entries 0xA8 / 0xA9) is a room overlay (em31.ovl) running its full routine tables (no
+#   stress loop). r331 / r332 get RE4DC_ROUTE_CH3 so their round-10 event hooks present s00 / s10 (r331) and s00 / s10 /
+#   s20 (r332) as PS2 route movies when the disc carries them (source path otherwise). The registry package ceilings and
+#   part facts for Saddler's PS2 cast (body 83 + head 83 + tentacle 60 parts, ~0.4-0.9 MB) follow STRESS_SADDLER's
+#   (RE4DC_SADDLER_NMR in coarse_actor.cpp); no level pick (the full PS2 mesh always).
+#   SADDLER_MASK_OPAQUE=1 (needs ROUTE_FINAL=1; VISIBLE APPROXIMATION, default 0): the registry draws Saddler (0x31) with
+#   no bump stage and its I4-masked parts as opaque PS2 sections (the crow rule; STRESS_SADDLER's material certificate).
+#   Without it the registry plan declines em31 and the GC model path draws him.
+ROUTE_FINAL ?= 0
+SADDLER_MASK_OPAQUE ?= 0
+ifneq ($(ROUTE_FINAL),0)
+ifneq ($(ROUTE_FINAL)$(ROUTE_CH3)$(STAGE_OVL),111)
+$(error ROUTE_FINAL must be 0 or 1 and needs ROUTE_CH3=1 STAGE_OVL=1)
+endif
+ifneq ($(STRESS_SADDLER),0)
+$(error ROUTE_FINAL and STRESS_SADDLER are exclusive (both link em31.ovl))
+endif
+MODULES += em31:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em31
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_FINAL=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_SADDLER_NMR=1
+$(OBJDIR)/mod/st3_3/src/st3/r331.o $(OBJDIR)/mod/st3_3/src/st3/r332.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+ROUTE_MOVIE_GAME_ST3 += $(OBJDIR)/mod/st3_3/src/st3/r331.o $(OBJDIR)/mod/st3_3/src/st3/r332.o
+ifeq ($(SADDLER_MASK_OPAQUE),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_SADDLER_MASK_OPAQUE=1
+else ifneq ($(SADDLER_MASK_OPAQUE),0)
+$(error SADDLER_MASK_OPAQUE must be 0 or 1)
+endif
+else ifneq ($(SADDLER_MASK_OPAQUE),0)
+$(error SADDLER_MASK_OPAQUE needs ROUTE_FINAL=1)
+endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
 # wep01 (module 3, Punisher; the merchant's medallion reward), wep07 (54, shotgun; r101 house), wep09 (62, rifle; its
@@ -2073,7 +2106,7 @@ CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3
 CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
 BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
 # CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
-CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl)
+CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl $(if $(filter 1,$(ROUTE_FINAL)),em31:ovl))
 ifeq ($(ENEMY_DEMAND),1)
 ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES) $(if $(filter 1,$(STRESS_SADDLER)),em31:ovl),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)

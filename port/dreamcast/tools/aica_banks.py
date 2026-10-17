@@ -233,6 +233,10 @@ ROOMS = {
     'r327': ['st3/r327.dar', 'em/em1d.drs'],
     'r329': ['st3/r329.dar', 'em/em18.drs', 'em/pl11.drs'],
     'r330': ['st3/r330.dar', 'em/em1f.drs', 'em/pl11.drs'],
+    # Final chapter (lane final16, 2026-10-16): r331 (the mine cart; the merchant em18) and r332 (the final boss room:
+    # Saddler em31, its ENEMY0 bank 1,482,528 GC bytes; ROUTE_FINAL).
+    'r331': ['st3/r331.dar', 'em/em18.drs'],
+    'r332': ['st3/r332.dar', 'em/em31.drs'],
     # not listed yet (no prepared archive the tool can read): em36
     'r111': ['st1/r111.dar', 'em/em17.drs', 'em/em2a.drs', 'em/pl11.drs'],
     'r113': ['st1/r113.dar', 'em/em17.drs', 'em/em2a.drs', 'em/pl11.drs'],

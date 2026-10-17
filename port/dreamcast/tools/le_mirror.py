@@ -2517,6 +2517,12 @@ def static_module_ids(extra=()):
             if len(rows) != 1:
                 raise ValueError(name + ' overlay registry identity changed')
             bindings.append((ident, name))
+    # ROUTE_FINAL overlay (lane final16): the reviewed em31 id89 room-overlay row (Saddler, r332).
+    if 'em31' in extra:
+        rows = re.findall(r'^    \{89, "em31", 0, 0, 0, 0, 0, 0, 0\},  // ROUTE_FINAL: .*$', registry, re.M)
+        if len(rows) != 1:
+            raise ValueError('em31 overlay registry identity changed')
+        bindings.append(('89', 'em31'))
     makefile = (root / 'port/dreamcast/game/Makefile').read_text()
     # Knob-conditional modules (`MODULES += ...` under WORLD_STAGE_MODULES=1, with #if-guarded registry rows) are
     # not part of the default image's static set this mirror compacts against.
