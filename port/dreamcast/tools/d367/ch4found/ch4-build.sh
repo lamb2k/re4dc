@@ -1,0 +1,38 @@
+#!/bin/bash
+# ch4-build.sh <arm>...  (WSL; lane ch4found16, 2026-10-17): chapter 4 (castle 4-1..4-4) arms = the test 15 recipe
+#   (test15/t15-build.sh T15REC, read from that script, never retyped) + the castle / chapter 4 knobs ($CH4), as
+#   ch2/ch2-build.sh does for chapter 2. With CH4="" an arm is the test 15 release recipe itself (identity arm xP).
+# Arms (same letters as t15-build.sh): rP play, rW warp, mW warp + MCHECK_LEONGC=1 TEX_CHECK=2, rT trace;
+#   xP / xW / xT = the same with CH4="" (knob-off identity and STRICT references on this tree).
+# Env: T (tree, default this checkout), K (logs, default /root/probe/lanes-20261016/ch4found/k), LP (label prefix,
+#      default c4), CH4 (chapter 4 knobs, default CH4REC below), XON (extra test knobs), PE2 / PE3 / PE4 (private PS2
+#      enemy include dirs for chapters 2 / 3 / 4: generated game data, never committed).
+# Data set: CH4-FOUNDATIONS-20261016.md (ch3found's ch3f-c + fix/ch4-add*.json).
+set -u
+HERE=$(cd "$(dirname "$0")" && pwd)
+export T=${T:-$(cd "$HERE/../../../../.." && pwd)}
+export K=${K:-/root/probe/lanes-20261016/ch4found/k}
+PE2=${PE2:-/root/probe/codex-ch23-20261013/private-include}
+PE3=${PE3:-/root/probe/lanes-20261015/castle/private-include}
+PE4=${PE4:-/root/probe/lanes-20261016/ch4found/private-include}
+# CH4REC: the route to the castle (ROUTE_CH22 / ROUTE_CH23 / EM10_SHARED), chapter 3 (ROUTE_CH31 / ROUTE_CH32, its
+#   movies, PS2_CH3_ENEMY, FOG_OFF_CLEAR, WORLD_ROOM_MODULES, STAGE_OVL, SS_POOL_TOP, ROUTE_BOSS4), chapter 4
+#   (ROUTE_CH41, ROUTE_MOVIES_CH4, PS2_CH4_ENEMY with cap 6, LEON_OT_WATER=2 for r219), the castle disc's single
+#   stream file (CH3 + CH4, 73 entries: AICA_STR_ENT_MAX=80, aica_banks.py --streams castle; coordinator 10-17) and the
+#   castle cold-pool margin MOTION_COLD_POOL_CASTLE=131072 (r226 em11: no slab thrash; coordinator 10-17).
+CH4REC="ROUTE_CH22=1 ROUTE_CH23=1 EM10_SHARED=1 ROUTE_CH31=1 ROUTE_CH32=1 ROUTE_MOVIES=1 ROUTE_MOVIES_CH3=1 LEON_OT_WATER=2 FOG_OFF_CLEAR=1 PS2_CH3_ENEMY=1 WORLD_ROOM_MODULES=1 ROUTE_BOSS4=1 ROUTE_CH41=1 STAGE_OVL=1 SS_POOL_TOP=1 PS2_ENEMY_CH22_DIR=$PE2 PS2_ENEMY_CH23_DIR=$PE2 PS2_ENEMY_CH3_DIR=$PE3 PS2_CH4_ENEMY=1 PS2_ENEMY_CH4_DIR=$PE4 ROUTE_MOVIES_CH4=1 AICA_STR_ENT_MAX=80 MOTION_COLD_POOL_CASTLE=131072"
+CH4=${CH4-$CH4REC}
+# T15REC as test15/t15-build.sh defines it (its assignments only, up to the arm table).
+T15REC=$(bash -c "set -u; $(sed -n '/^K=/,/^T15REC=/p' "$T/port/dreamcast/tools/d367/test15/t15-build.sh" | grep -v '^K=\|^T=') ; echo \"\$T15REC\"")
+[ -n "$T15REC" ] || { echo "ch4-build: T15REC not found"; exit 2; }
+mkdir -p "$K"
+L=${LP:-c4}
+for x in "$@"; do
+  case $x in
+    rP|rW|mW|rT) T15="$T15REC $CH4" LP=$L XON="${XON:-}" bash "$T/port/dreamcast/tools/d367/test15/t15-build.sh" $x ;;
+    xP) T15="$T15REC" LP=${L}x XON="" bash "$T/port/dreamcast/tools/d367/test15/t15-build.sh" rP ;;
+    xW) T15="$T15REC" LP=${L}x XON="${XON:-}" bash "$T/port/dreamcast/tools/d367/test15/t15-build.sh" rW ;;
+    xT) T15="$T15REC" LP=${L}x XON="${XON:-}" bash "$T/port/dreamcast/tools/d367/test15/t15-build.sh" rT ;;
+    *) echo "arm? $x" ;;
+  esac
+done
