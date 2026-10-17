@@ -14,9 +14,15 @@ SRC = Path(_os.environ.get('PKG_SRC', '/root/probe/lanes-20261010/combo/pkgtree'
 lab = sys.argv[1]
 fix = json.load(open(sys.argv[2] if len(sys.argv) > 2 else Path('/root/probe/lanes-20261011/test8/fix') / ('pkg-%s.json' % lab)))
 out = K / 'pkgtree'
+# lane zeroread17 (10-17): the default PKG_SRC (combo/pkgtree) is a symlink to the shared base tree; `cp -al <symlink>`
+# copied the link itself and every put() / removal below wrote INTO the shared base. Copy the resolved directory.
+SRC = SRC.resolve()
+if out.is_symlink():
+    out.unlink()
 if out.exists():
     shutil.rmtree(out)
 os.system('cp -al "%s" "%s"' % (SRC, out))
+assert out.is_dir() and not out.is_symlink(), 'pkgtree must be a hard-link copy, not a link to the base tree'
 O = Path('/root/probe/lanes/route/out-' + lab)
 changed = []
 def put(rel, src):
