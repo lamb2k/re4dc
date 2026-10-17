@@ -1,0 +1,70 @@
+{
+ "registry": "ps2-ch5-boss",
+ "about": "lane cast16 (2026-10-17): island boss PS2 models, r31c gunship em3a and r31b U-3 em32 (emleon07.esl rows). Krauser em39 is not here: its PS2 skeleton differs from GC (body bones 16.7 / 55.7 mm). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv6/regcast-island",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "gunship-em3a-00",
+   "archive": "em3a",
+   "model_id": "0x3a",
+   "source_types": [
+    0,
+    1
+   ],
+   "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em3a/em3a.cpp em3a_R0_Init types 0 / 1 modelInit(ARC 5, ARC 6)"
+  },
+  {
+   "name": "gunship-em3a-02",
+   "archive": "em3a",
+   "model_id": "0x3a",
+   "source_types": [
+    2
+   ],
+   "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em3a/em3a.cpp em3a_R0_Init type 2 modelInit(ARC 0xB, ARC 0xC)"
+  },
+  {
+   "name": "u3-em32-00",
+   "archive": "em32",
+   "model_id": "0x32",
+   "source_types": [
+    0
+   ],
+   "partial_sections": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em32/em32.cpp em32_R0_Init modelInit(ARC 4, ARC 5) + create(ARC 6, ARC 5) + the blended skin create(ARC 7, ARC 5); PS2 98 bones on the GC 97",
+   "pool": true,
+   "mask_runs": {
+    "2": "/root/probe/lanes-20261016/cast16/conv6/mask-u3-em32-00-s2"
+   }
+  }
+ ],
+ "room_packages": {
+  "31b": {
+   "descriptors": [
+    "u3-em32-00"
+   ],
+   "evidence": "emleon07.esl em32 type 0"
+  },
+  "31c": {
+   "descriptors": [
+    "gunship-em3a-00",
+    "gunship-em3a-02"
+   ],
+   "evidence": "emleon07.esl em3a types 0 / 1 / 2"
+  }
+ }
+}

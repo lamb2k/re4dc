@@ -1,0 +1,101 @@
+{
+ "registry": "ps2-ch5-em36",
+ "about": "lane cast16 (2026-10-17): island regenerator / iron maiden em36 PS2 models (emleon07.esl rows: types 0 r306 r307 r308 r30d, 1 r306 r30d, 2 r309 r310, 3 r310, 7 r326). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv6/regcast-boss",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "regen-em36-00",
+   "archive": "em36",
+   "model_id": "0x36",
+   "source_types": [
+    0,
+    7
+   ],
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em36/em36.cpp em36_R0_Init types 0 / 7 (default) modelInit(ARC 4, ARC 0x13) + em36PartsSet limbs 0..6 intact / lost ARC 5..0x12"
+  },
+  {
+   "name": "regen-em36-01",
+   "archive": "em36",
+   "model_id": "0x36",
+   "source_types": [
+    1
+   ],
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em36/em36.cpp em36_R0_Init type 1 modelInit(ARC 4, ARC 0x14) + em36PartsSet limbs 0..6 intact / lost ARC 5..0x12"
+  },
+  {
+   "name": "regen-em36-02",
+   "archive": "em36",
+   "model_id": "0x36",
+   "source_types": [
+    2,
+    3
+   ],
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "module": "src/em36/em36.cpp em36_R0_Init types 2 / 3 modelInit(ARC 0x15, ARC 0x24) + em36PartsSet limbs 0..6 intact / lost ARC 0x16..0x23"
+  }
+ ],
+ "room_packages": {
+  "306": {
+   "descriptors": [
+    "regen-em36-00",
+    "regen-em36-01"
+   ],
+   "evidence": "emleon07.esl em36 rows (cast16 10-17)"
+  },
+  "307": {
+   "descriptors": [
+    "regen-em36-00"
+   ],
+   "evidence": "emleon07.esl em36 rows (cast16 10-17)"
+  },
+  "308": {
+   "descriptors": [
+    "regen-em36-00"
+   ],
+   "evidence": "emleon07.esl em36 rows (cast16 10-17)"
+  },
+  "309": {
+   "descriptors": [
+    "regen-em36-02"
+   ],
+   "evidence": "emleon07.esl em36 rows (cast16 10-17)"
+  },
+  "30d": {
+   "descriptors": [
+    "regen-em36-00",
+    "regen-em36-01"
+   ],
+   "evidence": "emleon07.esl em36 rows (cast16 10-17)"
+  },
+  "310": {
+   "descriptors": [
+    "regen-em36-02"
+   ],
+   "evidence": "emleon07.esl em36 rows (cast16 10-17)"
+  },
+  "326": {
+   "descriptors": [
+    "regen-em36-00"
+   ],
+   "evidence": "emleon07.esl em36 rows (cast16 10-17)"
+  }
+ }
+}

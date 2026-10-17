@@ -14,7 +14,13 @@ using re4dc_material::kRoomRoles;using re4dc_material::kRoomBlobs;
 // NATIVE_MODEL_REGISTRY_POOL: a pool descriptor carries one source BIN model per pool section (the zealot pool: 18) and
 // their TPLs' texture facts, beside Ashley's partner package (10 models, 28 texture facts) in her rooms.
 #define RE4DC_NMR_TEX_FACTS 64u
+#if defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
+// ROLES5 (lane cast16 10-17): the island U-3 (em32 TPL 5) has 19 images in one TPL. A validation bound only: a role's
+// textures are package records (Role::textures / texture_count), never a fixed array.
+#define RE4DC_NMR_ROLE_TEXTURES 19u
+#else
 #define RE4DC_NMR_ROLE_TEXTURES 17u
+#endif
 #if defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
 // NATIVE_MODEL_REGISTRY_ROLES5 (lane cast16): wide castle packages - r227 em14 x4 (291 KiB + skin), r214 (51 BIN models, 340 KiB + skin).
 #define RE4DC_NMR_PACK_KIB 416u  // r214 with zealot-em14-09q: 381,056 + skin 21,960 (cast16 10-17); a ceiling, heap 4 takes the actual size

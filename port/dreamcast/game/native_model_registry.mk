@@ -180,10 +180,17 @@ else
 NATIVE_MODEL_REGISTRY_BONES ?= 64
 endif
 NATIVE_MODEL_REGISTRY_SHIFT ?= 1
+ifneq ($(filter 1,$(ROUTE_CH23) $(ROUTE_CH3)),)
+# Mendez has 83 bones (ROUTE_CH23); the island U-3 (em32, ROUTE_CH3 disc 2) has 97 (lane cast16 10-17). A larger
+# existing registry capacity still admits the 64-bone Gigante. ROUTE_CH3 keeps 64 unless the recipe asks for more.
 ifeq ($(ROUTE_CH23),1)
-# Mendez has 83 bones. A larger existing registry capacity still admits the 64-bone Gigante.
 ifeq ($(filter $(NATIVE_MODEL_REGISTRY_BONES),96 128),)
 $(error PS2_GIGANTE=1 with ROUTE_CH23=1 needs registry capacity 96 or 128 for Mendez)
+endif
+else
+ifeq ($(filter $(NATIVE_MODEL_REGISTRY_BONES),64 96 128),)
+$(error PS2_GIGANTE=1 with ROUTE_CH3=1 needs registry capacity 64, 96 or 128)
+endif
 endif
 ifneq ($(NATIVE_MODEL_REGISTRY_SHIFT),1)
 $(error PS2_GIGANTE=1 needs NATIVE_MODEL_REGISTRY_SHIFT=1)

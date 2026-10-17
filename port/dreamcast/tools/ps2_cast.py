@@ -417,6 +417,44 @@ for _n, _q in (('zealot-em14-09p', 'zealot-em14-09q'), ('zealot-em1c-09g', 'zeal
 # count; an actor carries one of the two 0x217 colours, so its own count stays within ACTOR_MATERIALS 4 (model_registry.py
 # counts a pool per actor). Added to zealot-em1c-09h only (the em14 / em1a / em11 type 9 pools have not shown it).
 PRESETS['zealot-em1c-09h']['sections'] = PRESETS['zealot-em1c-09h']['sections'] + [(0x217, 'acc38-b', 0x219)]
+# lane cast16 (2026-10-17): r315's one enemy row (emleon07.esl row 11) is em1e type 6.
+PRESETS['soldr-em1e-06p']['rooms'] = PRESETS['soldr-em1e-06p']['rooms'] + ['r315']
+# lane cast16 (2026-10-17, island bosses): em36.cpp em36_R0_Init types 0 / 1 (and the default, type 7 in r326)
+# modelInit(ARC 4, ARC 0x13 / 0x14), types 2 / 3 modelInit(ARC 0x15, ARC 0x24); em36PartsSet attaches limbs 0..6
+# (torso, head, arms, legs, the death variant), each intact (`on` 0) or lost (`on` 1): types 0 / 1 ARC 5..0x12,
+# types 2 / 3 ARC 0x16..0x23, every one with the type's TPL (ModInfoMgr.create(bin, tpl)).
+def _em36(body, limb, tpl, types, rooms):
+    secs = [(body, 'body')]
+    for k in range(7):
+        secs += [(limb + 2 * k, 'limb%d' % k), (limb + 2 * k + 1, 'limb%d-b' % k)]
+    return dict(archive='em36', sections=secs, tpl=tpl, rooms=rooms, types=types, category='registry', model_id=0x36, lit=True, shift=2)
+PRESETS['regen-em36-00'] = _em36(4, 5, 0x13, [0, 7], ['r306', 'r307', 'r308', 'r30d', 'r326'])
+PRESETS['regen-em36-01'] = _em36(4, 5, 0x14, [1], ['r306', 'r30d'])
+PRESETS['regen-em36-02'] = dict(_em36(0x15, 0x16, 0x24, [2, 3], ['r309', 'r310']), subset_bones=True, ps2_body_table_sections=True)  # limb0-b: GC 59 parts, PS2 the 60-bone body table
+# em39.cpp (Krauser, r31c) type 1 modelInit(ARC 0x15, ARC 0x17) + ModInfoMgr.create (5, 0x10), (6, 0x18), (7, 0x12), the knife
+# (9, 0x10), em39HandSet right hands 0xA..0xD and left hands 0xE / 0xF (TPL 0x14), em39DieModelSet (0x21, 0x22); type 2
+# modelInit(ARC 0x1A, ARC 0x1D) + (5, 0x10), (6, 0x1E), (0x1B, 0x1F), (0x1C, 0x20), the knife, right hands only.
+# NOT CONVERTED (cast16 10-17): `convert` refuses both Krauser presets - the PS2 em39 skeleton is not the GC one (body
+# bone positions differ by up to 16.7 mm for type 1, 55.7 mm for type 2), so the PS2 mesh needs a retarget (a look decision).
+_EM39_HANDS = [(0xa, 'right-hand', 0x14), (0xb, 'right-hand-b', 0x14), (0xc, 'right-hand-c', 0x14), (0xd, 'right-hand-d', 0x14)]
+PRESETS['krauser-em39-01'] = dict(archive='em39', sections=[(0x15, 'body'), (5, 'acc0', 0x10), (6, 'acc1', 0x18), (7, 'acc2', 0x12),
+                                  (9, 'knife', 0x10)] + _EM39_HANDS + [(0xe, 'left-hand', 0x14), (0xf, 'left-hand-b', 0x14),
+                                  (0x21, 'death', 0x22)], tpl=0x17, rooms=['r31c'], types=[1], category='registry', model_id=0x39, lit=True)
+PRESETS['krauser-em39-02'] = dict(archive='em39', sections=[(0x1a, 'body'), (5, 'acc0', 0x10), (6, 'acc1', 0x1e), (0x1b, 'acc2', 0x1f),
+                                  (0x1c, 'acc3', 0x20), (9, 'knife', 0x10)] + _EM39_HANDS + [(0x21, 'death', 0x22)],
+                                  tpl=0x1d, rooms=['r31c'], types=[2], category='registry', model_id=0x39, lit=True)
+# em3a.cpp (the r31c gunship) types 0 / 1 modelInit(ARC 5, ARC 6), type 2 modelInit(ARC 0xB, ARC 0xC).
+PRESETS['gunship-em3a-00'] = dict(archive='em3a', sections=[(5, 'body')], tpl=6, rooms=['r31c'], types=[0, 1], category='registry',
+                                  model_id=0x3a, lit=True)
+PRESETS['gunship-em3a-02'] = dict(archive='em3a', sections=[(0xb, 'body')], tpl=0xc, rooms=['r31c'], types=[2], category='registry',
+                                  model_id=0x3a, lit=True)
+# em32.cpp (U-3, r31b) modelInit(ARC 4, ARC 5) + ModInfoMgr.create(ARC 6, ARC 5) and the texture-blended skin (ARC 7, ARC 5).
+PRESETS['u3-em32-00'] = dict(archive='em32', sections=[(4, 'body'), (6, 'extra'), (7, 'skin')], tpl=5, rooms=['r31b'], types=[0],
+                             category='registry', model_id=0x32, lit=True, ps2_superset_bones=True, shift=2)
+# em3d.cpp (r320) modelInit(ARC 5, ARC 6). Converts (shift 1), but no room package yet: its body has three GC masked materials
+# (colours 1 / 3 / 20, masks 2 / 4 / 21); ps2_mask_runs.py handles one, and the "mask" drop is a look decision.
+PRESETS['heli-em3d-00'] = dict(archive='em3d', sections=[(5, 'body')], tpl=6, rooms=['r320'], types=[0], category='registry',
+                               model_id=0x3d, lit=True, shift=1)
 
 
 def section_specs(spec):

@@ -85,6 +85,7 @@ SLOTS = False               # --slots: draw-slot descriptors (source.json draw_s
 WIDE_IDENTITY = False       # --wide-identity: 64 / 96 and the pl08 base rows (RE4DC_ACTOR_WIDE_IDENTITY)
 ACTOR_MATERIALS = 3         # actor_native_owner.h kRe4dcActorMaterials
 ACTOR_CHUNKS = 8            # Re4dcActorPlan info[8]
+ROLE_TEXTURES5 = False      # --roles5: a role's TPL may have 19 images (RE4DC_NMR_ROLE_TEXTURES 19)
 POOL = False                # --pool: pool descriptors (spec "pool": true), package only (NATIVE_MODEL_REGISTRY_POOL images)
 POOL_SECTIONS = 48          # coarse_actor_owner_registry.inc kRegPoolSections
 APPEARANCE0 = 0x200         # registry appearances 0x200 + descriptor index (Ganado 0..4, Leon 0x100)
@@ -541,7 +542,7 @@ def main():
     source_normal_length = '--source-normal-length' in args
     if source_normal_length:
         args.remove('--source-normal-length')
-    global MATERIAL_ROWS, SOURCE_BLOBS, WIDE_IDENTITY
+    global MATERIAL_ROWS, SOURCE_BLOBS, WIDE_IDENTITY, ROLE_TEXTURES5
     if '--wide-identity' in args:
         args.remove('--wide-identity')
         WIDE_IDENTITY = True; MATERIAL_ROWS = 96; SOURCE_BLOBS = 64   # RE4DC_ACTOR_WIDE_IDENTITY
@@ -570,6 +571,7 @@ def main():
         SOURCE_BLOBS = 128  # kBlobMaskBits 128 with RE4DC_NMR_ROLES5 (actor_material_records.inc two-word BlobMask)
         PACK_CAPACITY.update(fmodel=64, fpart=224)  # coarse_actor_registry_pack_check.inc with RE4DC_NMR_ROLES5
         PACK_MAX_BYTES = 416 * 1024  # RE4DC_NMR_PACK_KIB with RE4DC_NMR_ROLES5
+        ROLE_TEXTURES5 = True  # RE4DC_NMR_ROLE_TEXTURES 19 with RE4DC_NMR_ROLES5 (coarse_actor_registry_pack_check.inc)
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
@@ -1296,6 +1298,8 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
             role_texture_max = 9 if room == 0x11f and PACK_CAPACITY['fpart'] == 128 else 8
             if POOL:
                 role_texture_max = 17  # RE4DC_NMR_ROLE_TEXTURES 17 in NATIVE_MODEL_REGISTRY_POOL images (pack_check)
+                if ROLE_TEXTURES5:
+                    role_texture_max = 19  # RE4DC_NMR_ROLE_TEXTURES 19 with RE4DC_NMR_ROLES5 (the island U-3 em32 TPL 5)
             if SLOTS:
                 role_texture_max = 17  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): GC pl11 TPL 5 has 17 images
             if len(tpls[tk]['textures']) > role_texture_max:
