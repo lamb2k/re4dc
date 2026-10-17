@@ -20,7 +20,12 @@ PE4=${PE4:-/root/probe/lanes-20261016/ch4found/private-include}
 #   (ROUTE_CH41, ROUTE_MOVIES_CH4, PS2_CH4_ENEMY with cap 6, LEON_OT_WATER=2 for r219), the castle disc's single
 #   stream file (CH3 + CH4, 73 entries: AICA_STR_ENT_MAX=80, aica_banks.py --streams castle; coordinator 10-17) and the
 #   castle cold-pool margin MOTION_COLD_POOL_CASTLE=131072 (r226 em11: no slab thrash; coordinator 10-17).
-CH4REC="ROUTE_CH22=1 ROUTE_CH23=1 EM10_SHARED=1 ROUTE_CH31=1 ROUTE_CH32=1 ROUTE_MOVIES=1 ROUTE_MOVIES_CH3=1 LEON_OT_WATER=2 FOG_OFF_CLEAR=1 PS2_CH3_ENEMY=1 WORLD_ROOM_MODULES=1 ROUTE_BOSS4=1 ROUTE_CH41=1 STAGE_OVL=1 SS_POOL_TOP=1 PS2_ENEMY_CH22_DIR=$PE2 PS2_ENEMY_CH23_DIR=$PE2 PS2_ENEMY_CH3_DIR=$PE3 PS2_CH4_ENEMY=1 PS2_ENEMY_CH4_DIR=$PE4 ROUTE_MOVIES_CH4=1 AICA_STR_ENT_MAX=80 MOTION_COLD_POOL_CASTLE=131072"
+#   Castle cast (lane cast16, coordinator 10-17): NATIVE_MODEL_REGISTRY_DYING=1 (a dying registry-planned enemy keeps
+#   its PS2 model through the death fade instead of the GameCube model: r218 em1c 5,073 GC frames -> 0, r227 / r21b
+#   0), NATIVE_MODEL_REGISTRY_RUN_SHARE=1 (a pool mask run shared by two sections with byte-identical roles shares
+#   its chunk proof: em1c 09h acc38-b), NATIVE_MODEL_REGISTRY_BLENDTBL=1 (em2d Novistador camouflage idle blend
+#   table: r213 / r21d native). Render only; STRICT r218 / r227 / r213; kills identical.
+CH4REC="ROUTE_CH22=1 ROUTE_CH23=1 EM10_SHARED=1 ROUTE_CH31=1 ROUTE_CH32=1 ROUTE_MOVIES=1 ROUTE_MOVIES_CH3=1 LEON_OT_WATER=2 FOG_OFF_CLEAR=1 PS2_CH3_ENEMY=1 WORLD_ROOM_MODULES=1 ROUTE_BOSS4=1 ROUTE_CH41=1 STAGE_OVL=1 SS_POOL_TOP=1 PS2_ENEMY_CH22_DIR=$PE2 PS2_ENEMY_CH23_DIR=$PE2 PS2_ENEMY_CH3_DIR=$PE3 PS2_CH4_ENEMY=1 PS2_ENEMY_CH4_DIR=$PE4 ROUTE_MOVIES_CH4=1 AICA_STR_ENT_MAX=80 MOTION_COLD_POOL_CASTLE=131072 NATIVE_MODEL_REGISTRY_DYING=1 NATIVE_MODEL_REGISTRY_RUN_SHARE=1 NATIVE_MODEL_REGISTRY_BLENDTBL=1"
 CH4=${CH4-$CH4REC}
 # T15REC as test15/t15-build.sh defines it (its assignments only, up to the arm table).
 T15REC=$(bash -c "set -u; $(sed -n '/^K=/,/^T15REC=/p' "$T/port/dreamcast/tools/d367/test15/t15-build.sh" | grep -v '^K=\|^T=') ; echo \"\$T15REC\"")
