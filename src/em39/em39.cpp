@@ -5834,7 +5834,11 @@ static void plem39_CliffAtk(cPlayer* pl)
         em39CliffObj.p = ObjMgr.create(0xB);
         if (em39CliffObj.p) {
             em39CliffObj.p->modelInit(PL_ARC_PTR(pl->subArc, 0x129), PL_ARC_PTR(pl->subArc, 0x128));
+#if defined(__DREAMCAST__)
+            AtariOff(&em39CliffObj.p->atari, 0xFCFF);  // RE4DC_AT_FLAG16 is not a u16 lvalue
+#else
             AtariOffR(em39CliffObj.p->atari.m_flag, 0xFCFF);
+#endif
             em39CliffObj.p->pParts->pParent = pPL->getPartsPtr(0xA);
             em39CliffObj.p->LightInfo.init2(1, 1, &((Vec) { 0.0f, 0.0f, 0.0f }), &((Vec) { 500.0f, 0.0f, 0.0f }), 1);
             em39CliffObj.p->wep.parent = pPL;

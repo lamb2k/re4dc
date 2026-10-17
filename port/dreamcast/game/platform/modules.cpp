@@ -221,6 +221,10 @@ static const Re4dcModule g_modules[] = {
     {10, "em25", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r304 (room entry), room overlay (ROUTE_CH32 has the same row)
 #endif
     {85, "em36", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r306..r310 / r326, room overlay
+    {64, "em39", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: Krauser (r31c / r329), room overlay
+    {95, "em3a", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: Krauser's arm (r329), room overlay
+    {77, "em32", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: U-3 (r31b), room overlay
+    {80, "em3d", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: drones (r31c / r320), room overlay
 #if !(defined(RE4DC_WORLD_ROOM_MODULES) && RE4DC_WORLD_ROOM_MODULES)
     {109, "em1f", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH3: island Ganados (r304 r30b r30c r30f r311 r321 r330), room overlay
 #endif
@@ -407,8 +411,9 @@ constexpr u32 kRouteOverlayMagic = 0x4F344552;  // "RE4O"
 struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
 #if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
 // ROUTE_CH3: one slot per overlay id (any knob combination); ids not in the table are never bound. Holds every id of
-// the per-knob tables below (ROUTE_CH21..CH41, ROUTE_BOSS4) plus the island's em1d (90), em1e (92), em36 (85), em1f (109).
-constexpr u32 kRouteOvlIds[] = {43, 39, 5, 30, 47, 66, 63, 61, 32, 10, 68, 31, 79, 90, 92, 85, 109};
+// the per-knob tables below (ROUTE_CH21..CH41, ROUTE_BOSS4) plus the island's em1d (90), em1e (92), em36 (85), em1f (109),
+// em39 (64), em3a (95), em32 (77), em3d (80).
+constexpr u32 kRouteOvlIds[] = {43, 39, 5, 30, 47, 66, 63, 61, 32, 10, 68, 31, 79, 90, 92, 85, 109, 64, 95, 77, 80};
 RouteOverlay g_route_ovl[sizeof(kRouteOvlIds) / sizeof(kRouteOvlIds[0])];
 int routeOvlSlot(u32 id)
 {

@@ -58,6 +58,14 @@ SMALL+=('em2c.drs','em38.drs')
 # only modelInit (em2d R0 init, modelInit(bin, tpl)); its EFF slot (ARC 4, EspDataLoad) keeps its own textures. The GC
 # body (3,700,672 B) did not fit r205's heap 4 (largest 2,334,560 B, cx-r205-h1-01 Flycast).
 SMALL+=('em2d.drs',)
+# Island enemies (lane ch5found16 2026-10-16, ROUTE_CH3 room overlays): textures only (--keep-motion-resident), the em2d
+# contract. Their model TPLs reach only modelInit / ModInfoMgr.create / SetObj16 (src/em36/em36.cpp em36 R0 init ARC 0x13
+# 0x14 0x24, the tentacle SetObj16 ARC 0x8E / 0x8F; src/em39/em39.cpp ARC 0x17 0x10 0x18 0x12 0x1D 0x1E 0x22 and the
+# knife-fight hand on Leon's subArc; src/em3a/em3a.cpp ARC 6 / 0xC; src/em32/em32.cpp ARC 5; src/em3d/em3d.cpp ARC 6);
+# the source path uploads their colour texels and never reads them on the CPU. Their EFF slots (EspDataLoad: em36 ARC
+# 0x25, em3a ARC 4, em32 ARC 8, em3d ARC 4) keep their own textures (top-level TPLs only are selected). Motions stay
+# resident: their FCV consumers are not audited for motion streaming.
+SMALL+=('em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs')
 # pl0f (the lake boat, r10b r11b; lane ps2cast 2026-10-15, PS2_CAST_BOAT discs): textures only (--keep-motion-resident),
 # the em2f contract. Its one model TPL (ARC 6) reaches only modelInit (src/pl0f/pl0f.cpp pl0f_R0_Init, modelInit(ARC 5,
 # ARC 6)); the source path uploads its colour texels and never reads them on the CPU. ARC 8 (Leon's harpoon hand BIN,
@@ -104,7 +112,7 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 # SetRock; its EFF slot keeps its own textures. em2b is a ROUTE_OVL room overlay, so its static REL is stripped
 # with the knob-conditional module set (ROUTE_OVL_MODULES). The room's heap 4: r119 frees 3,854,656 B in two
 # cells, the largest 2,770,912 B, under the 4,689,664 B rel-stripped body.
-ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11','em1d','em1e','em1f')
+ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11','em1d','em1e','em1f','em36','em39','em3a','em32','em3d')
 # pl11 (Ashley; PS2_ASHLEY discs, lane ps2cast 2026-10-14): the route overlay dc/pl11.ovl carries her module, so her
 # archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
@@ -203,7 +211,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     # pl0f: the release disc carries its whole REL too (pl0f is in no static / overlay module list); it moves intact.
     # em24: the release disc carries its whole REL too (le_mirror keeps it: 394,176 B on the disc = the GC file).
     # em2c / em38 (ROUTE_BOSS4 room overlays): le_mirror keeps their whole REL as for pl0f; it moves intact.
-    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
+    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs','em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
     original_size,original_base=struct.unpack_from('>I4xI',original,slot+4)
     codec=mirror.motion_codec();ranges=[];entries=[];files={};oversized=[]
     for off in ([] if keep_motion_resident else sorted(set(offsets))):

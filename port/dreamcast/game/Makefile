@@ -599,6 +599,10 @@ endif
 # em36 (85: r306..r310, r326) and em1f (109: r304 / r30b / r30c / r30f / r311 / r321 / r330 Ganados) room overlays.
 MODULES += em36:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em36
+# Krauser em39 (64: r31c, r329 knife fight / fight) with his arm em3a (95), U-3 em32 (77: r31b), em3d (80: r320 / r31c
+# drones): room overlays, so the island rooms load complete GC enemy archives (round 3; PS2 models come from the cast lane).
+MODULES += em39:ovl em3a:ovl em32:ovl em3d:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em39 .ovl_em3a .ovl_em32 .ovl_em3d
 # em1f: WORLD_ROOM_MODULES links it resident (the St4 Ganados); otherwise a room overlay.
 ifneq ($(WORLD_ROOM_MODULES),1)
 MODULES += em1f:ovl
@@ -2046,7 +2050,7 @@ CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3
 CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
 BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
 # CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
-CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl)
+CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl)
 ifeq ($(ENEMY_DEMAND),1)
 ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
