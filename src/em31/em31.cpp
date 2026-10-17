@@ -285,7 +285,12 @@ static inline cObj* em31ObjWork(u32 no)
 // Enemy manager work `no` the same way (em31SearchBody).
 static inline cEm31* em31EmWork(u32 no)
 {
+#if !defined(__PPC__)
+    // Unbacked sparse enemy slots read as absent (em38's scan); the caller skips 0.
+    return (cEm31*) EmMgr.workAt(no);
+#else
     return (cEm31*) ((u8*) EmMgr.pArray + EmMgr.size * no);
+#endif
 }
 
 extern "C" void _prolog()
@@ -306,7 +311,12 @@ extern "C" void _unresolved()
 // em31_R0_Init does the per-type setup on the first move.
 void Em31Init(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc; em2c / em38 lint).
+    new (em) cEm31;
+#else
     new (em) cEm31();
+#endif
 }
 
 // Starts the bridge fight (the plain byte stores share the zero of the pillar count).
@@ -536,6 +546,55 @@ void em31DmCkT(cEm31* em)
     em31TBloodSet(em);
 }
 
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+// STRESS_SADDLER (lane stress16b 2026-10-16; the model-only stress disc, never a play image): no boss logic after the
+// init routine. The body loops its idle (Wait, ARC 0xA) for 120 frames and then one head attack (HeadAtk, ARC 0x1D +
+// 0x1E); the tentacle follows the body (em31SearchBody / em31TenMatCalc) and loops its idle (T_Wait, ARC 0x44) and one
+// attack (T_Atk, ARC 0x47 + 0x48). No RNG, no damage, no player reaction: every arm runs the same frames. The rest of
+// move() (parts, cloth, collision, route, effects, sounds) runs as in the fight.
+void em31SearchBody(cEm31* em);
+static u32 em31StressT[2];
+static u8 em31StressPhase[2];
+static void em31StressMove(cEm31* em)
+{
+    const int t = em->type ? 1 : 0;
+
+    if (t) {
+        em31SearchBody(em);
+    }
+    if (em->r_no_1 != 0x40) {
+        // first stress frame of this part (the init routine left r_no_1 0 / 0x11): a fresh loop each scene
+        em->r_no_1 = 0x40;
+        em31StressPhase[t] = 0;
+        em31StressT[t] = 0;
+    }
+    if (em31StressPhase[t] == 0 && em31StressT[t] == 0) {
+        if (t) {
+            MotionSetCore(em, MOTION(em), ARC(0x44), 0, 10, 5, 0);
+        } else {
+            MotionSetCore(em, MOTION(em), ARC(0xA), 0, 30, 5, 0);
+        }
+    }
+    if (em31StressPhase[t] == 0) {
+        MotionMoveF(em, 0);
+        if (++em31StressT[t] >= 120) {
+            em31StressPhase[t] = 1;
+            em31StressT[t] = 0;
+            if (t) {
+                MotionSetCore(em, MOTION(em), ARC(0x47), (int) ARC(0x48), 10, 1, 0);
+            } else {
+                MotionSetCore(em, MOTION(em), ARC(0x1D), (int) ARC(0x1E), 30, 1, 0);
+            }
+        }
+        return;
+    }
+    if (MotionMoveF(em, 0) || ++em31StressT[t] >= 600) {
+        em31StressPhase[t] = 0;
+        em31StressT[t] = 0;
+    }
+}
+#endif
+
 // Per-frame update from the enemy manager. Order: the type's damage check, clear the per-frame
 // flags, tick the attack waits, the berserk cooldown (paused while berserk) and the flash timer (a
 // dead player holds the attack wait at 60), route, the routine table (r_no_0 0xFF = model load
@@ -575,7 +634,15 @@ void cEm31::move()
         w->Flash_timer--;
     }
     em31RouteCk(this);
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    if (r_no_0 != 0 && r_no_0 != 0xFF) {
+        em31StressMove(this);
+    } else {
+        Em31_R0_move_tbl[r_no_0](this);
+    }
+#else
     Em31_R0_move_tbl[r_no_0](this);
+#endif
     if (r_no_0 == 0xFF) {
         EmMgr.destroy(this);
         return;
@@ -3629,6 +3696,9 @@ void em31SearchBody(cEm31* em)
     for (i = 0; i < EmMgr.nArray; i++) {
         cEm31* p = em31EmWork(i);
 
+#if !defined(__PPC__)
+        if (!p) continue;
+#endif
         if ((p->be_flag & 0x201) == 1 && p->id == 0x31 && p != em && p->type == 0) {
             w->pBody = p;
             EM31_WK(p)->pTen = em;

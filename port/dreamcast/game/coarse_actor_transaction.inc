@@ -776,7 +776,18 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
         // NATIVE_MODEL_REGISTRY: the generic descriptors plan after Leon and the Ganado cast. NMR_CENSUS: census builds
         // only (NATIVE_MODEL_REGISTRY_CENSUS=1) count every outcome of an actor's first pass in the scene census
         // (coarse_actor_owner_registry.inc); a production / cost build compiles none of it.
+#if RE4DC_NMR_FIRST
+        // NATIVE_MODEL_REGISTRY_FIRST: a Ganado-class actor that a room descriptor binds (registry_bind: its id, infos and
+        // role rows) plans through that descriptor before the Ganado cast; any other actor plans as without the knob.
 #if RE4DC_ACTOR_PL08
+        const bool leon_plan=re4dc_actor_plan_leon(m,&p) || re4dc_actor_plan_pl08(m,&p);
+#else
+        const bool leon_plan=re4dc_actor_plan_leon(m,&p);
+#endif
+        const bool registry_first=!leon_plan && m->id>=0x10 && m->id<=0x20 && registry_id(m->id) && registry_bind(m);
+        const unsigned plan_kind=leon_plan?1u:(registry_first && re4dc_actor_plan_registry(m,&p))?3u:
+            re4dc_actor_plan_ganado(m,&p)?2u:(!registry_first && re4dc_actor_plan_registry(m,&p))?3u:0u;
+#elif RE4DC_ACTOR_PL08
         const unsigned plan_kind=(re4dc_actor_plan_leon(m,&p) || re4dc_actor_plan_pl08(m,&p))?1u:re4dc_actor_plan_ganado(m,&p)?2u:re4dc_actor_plan_registry(m,&p)?3u:0u;
 #else
         const unsigned plan_kind=re4dc_actor_plan_leon(m,&p)?1u:re4dc_actor_plan_ganado(m,&p)?2u:re4dc_actor_plan_registry(m,&p)?3u:0u;

@@ -1,0 +1,71 @@
+{
+ "registry": "ps2-ch2-r11cm",
+ "about": "Luis character TPL orientation correction, unchanged source geometry, weights and motion ownership + lane cast16 (2026-10-16): merchant13-c0 / -o0 (em13 type 6, the robed merchant: r11c census 10-16 drew him GC every frame), descriptors as ps2-ch1-r104 / ps2-r10f.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv/regcast-r11cm",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "descriptors": [
+  {
+   "name": "luis-actor",
+   "archive": "pl14",
+   "model_id": "0x04",
+   "source_types": [
+    0
+   ],
+   "source_drops": [
+    "bump"
+   ],
+   "source_coverage_manifest": "/root/probe/codex-luis-orientation-20261013/models/luis-actor-v2/coverage-manifest.json",
+   "mask_runs": {
+    "3": "/root/probe/codex-luis-orientation-20261013/models/luis-actor-v2/diffuse-alpha-v2"
+   }
+  },
+  {
+   "name": "luis-gun",
+   "archive": "pl14",
+   "model_id": "0x0b",
+   "source_types": [
+    0
+   ],
+   "module": "src/pl14/pl14.cpp cSubLuis::equipWeapon createsBack(0x0b), GC ARC0xe/TPL0xf, parent owner part10"
+  },
+  {
+   "name": "merchant13-c0",
+   "archive": "em13",
+   "model_id": "0x13",
+   "source_types": [
+    6
+   ],
+   "module": "src/em13/em13_set.cpp Em13Set type6 + src/em10/em10.cpp em10ModelInit; closed cloth BIN0x1ee/TPL0x1f1",
+   "mask_runs": {
+    "1": "/root/probe/codex-ch23-enemies-20261013/models/merchant13-c0-mask-robe",
+    "2": "/root/probe/codex-ch23-enemies-20261013/models/merchant13-c0-mask-cloth"
+   }
+  },
+  {
+   "name": "merchant13-o0",
+   "archive": "em13",
+   "model_id": "0x13",
+   "source_types": [
+    6
+   ],
+   "module": "src/em10/em10.cpp em10_R1_Trade and em10ClothPartsSet: open cloth BIN0x1ed/TPL0x1f1",
+   "mask_runs": {
+    "1": "/root/probe/codex-ch23-enemies-20261013/models/merchant13-o0-mask-robe",
+    "2": "/root/probe/codex-ch23-enemies-20261013/models/merchant13-o0-mask-cloth"
+   }
+  }
+ ],
+ "room_packages": {
+  "11c": {
+   "descriptors": [
+    "luis-actor",
+    "luis-gun",
+    "merchant13-c0",
+    "merchant13-o0"
+   ],
+   "evidence": "Full4197PS2body+857gun triangles; six GC body infos retained, head/face shared draw; source diffuse-alpha format reference and measured ARGB4444 conversion. Runtime/visual pending."
+  }
+ }
+}

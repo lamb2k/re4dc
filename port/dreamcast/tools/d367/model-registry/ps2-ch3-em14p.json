@@ -1,0 +1,38 @@
+{
+ "registry": "ps2-ch3-em14p",
+ "about": "lane cast16 (2026-10-16): castle Zealot em14 types [6] as POOL descriptors (zealot-em11-07p layout, own archive). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv3/regcast-em14",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit preset (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em14-06p",
+   "archive": "em14",
+   "model_id": "0x14",
+   "source_types": [
+    6
+   ],
+   "module": "src/em14/em14_set.cpp Em14Set type 6 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "2": "/root/probe/lanes-20261016/cast16/conv3/mask-em14-06-extra",
+    "5": "/root/probe/lanes-20261016/cast16/conv3/mask-em14-06-s5",
+    "6": "/root/probe/lanes-20261016/cast16/conv3/mask-em14-06-s6"
+   }
+  }
+ ],
+ "room_packages": {
+  "20f": {
+   "descriptors": [
+    "zealot-em14-06p"
+   ],
+   "evidence": "ch3found16 census: r20f em14 plan G declined (GC)"
+  }
+ }
+}

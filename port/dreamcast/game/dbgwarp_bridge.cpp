@@ -95,6 +95,7 @@ void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture an
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name);  // bench.cpp (bench.mk BENCHMARK)
 int re4dc_bench_tick(unsigned room_frame);
 const char* re4dc_bench_next_scene(void);
+const char* re4dc_bench_first_scene(void);
 int re4dc_bench_scene_no(void);
 const char* re4dc_bench_results(void);
 #endif
@@ -130,6 +131,9 @@ extern "C" void re4dc_leon_lod_set(unsigned level);  // coarse_actor_leon_lod.in
 extern "C" void re4dc_ganado_lod_set(unsigned level);  // coarse_ganado_lod.inc (ps2leon.mk GANADO_LOD)
 #endif
 
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+extern "C" { unsigned re4dc_nmr_lod_pick; }  // read by coarse_actor_owner_registry.inc (STRESS_SADDLER): 0 full, k = k-th level
+#endif
 namespace {
 struct Act { u32 frame; u16 buttons; s8 stick; u16 hold; u8 entry; bool ev; s8 stickx; };
 struct Rsf { u16 room; u8 bit; };
@@ -197,6 +201,15 @@ struct Warp {
     struct LookStep { u32 frame; bool done; } lookstep[16];  // lookstep <room frame> (LOOK_TOGGLE)
     unsigned n_lookstep;
 #endif
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    // saddler <room frame> x y z ang [lod] (STRESS_SADDLER, lane stress16b): Saddler's final form (em31 body + tentacle)
+    // created in the first room through EmSetEvent at that frame; lod = the registry level to draw (0 full).
+    // `saddler <room frame> rel <distance> [lod]`: <distance> mm straight ahead of Leon, facing him.
+    bool has_saddler, saddler_done, saddler_rel;
+    u32 saddler_frame;
+    f32 saddler_pos[3], saddler_ang;
+    unsigned saddler_lod;
+#endif
     bool act_source_clock;  // opt-in fixture holds count source pad ticks, not wall-time stalls
     u8 parse_entry, max_entry;  // `entry <n>`: the room entry later act / goto lines belong to (1 = first room)
 #if RE4DC_WARP_JUMP
@@ -246,7 +259,7 @@ u32 num(const char* s) { return (u32) strtoul(s, nullptr, 0); }
 // BENCHMARK=1 (bench.mk, bench.cpp): the scene fixture to arm at the next soft reset, and the reset is pending.
 const char* bench_next;
 bool bench_pending;
-void load(const char* path = "/cd/dc/warp.txt")
+void load(const char* path = nullptr)
 #else
 void load()
 #endif
@@ -255,6 +268,7 @@ void load()
     wp.parse_entry = wp.max_entry = 1;
     static char text[4096];
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+    if (!path) path = re4dc_bench_first_scene();   // scene 1, or the start screen's single scene
     const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
     re4dc_log("warp: bench fixture %s (%d bytes)\n", path, len);
 #else
@@ -412,6 +426,21 @@ void load()
             re4dc_ganlit_set(num(tok[1]));   // GANADO_LIT_TOGGLE: the Ganado lighting mode at load (0..9)
         } else if (!strcmp(k, "ganfill") && n >= 2) {
             re4dc_ganlit_fill_set(num(tok[1]));   // GANADO_LIT_TOGGLE: the Ganado camera fill, percent (0..100)
+#endif
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+        } else if (!strcmp(k, "saddler") && n >= 4 && !strcmp(tok[2], "rel")) {
+            wp.has_saddler = wp.saddler_rel = true;
+            wp.saddler_frame = num(tok[1]);
+            wp.saddler_pos[0] = (f32) strtod(tok[3], nullptr);
+            wp.saddler_lod = n >= 5 ? num(tok[4]) : 0u;
+            re4dc_nmr_lod_pick = wp.saddler_lod;
+        } else if (!strcmp(k, "saddler") && n >= 6) {
+            wp.has_saddler = true;
+            wp.saddler_frame = num(tok[1]);
+            for (int i = 0; i < 3; ++i) wp.saddler_pos[i] = (f32) strtod(tok[2 + i], nullptr);
+            wp.saddler_ang = (f32) strtod(tok[5], nullptr);
+            wp.saddler_lod = n >= 7 ? num(tok[6]) : 0u;
+            re4dc_nmr_lod_pick = wp.saddler_lod;
 #endif
         } else if (!strcmp(k, "dump")) {
             wp.dump = true;
@@ -711,6 +740,43 @@ void goto_poll()
     }
 }
 // `god` / `alert` (benchmark fixtures, the hwcal disc's invuln / alert): every frame / once at the room frame.
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+// STRESS_SADDLER: the body (type 0) and the tentacle (type 1) from two free-standing list records (EmSetEvent: no list
+// index, no room code); em31's own init loads em/em31.drs + em31.ovl (EmCreate -> EmReadSearch) and builds both models.
+void saddler_poll()
+{
+    if (!wp.has_saddler || wp.saddler_done || wp.rooms != 1 || wp.room_frames < wp.saddler_frame || !pPL ||
+        (pG->Status_flg[1] & 0x10000000)) return;
+    wp.saddler_done = true;
+    if (wp.saddler_rel) {
+        // straight ahead of Leon (his yaw: +z at 0, as the game's sinf / cosf convention), turned to face him
+        const f32 dist = wp.saddler_pos[0], a = pPL->ang.y;
+        wp.saddler_pos[0] = pPL->pos.x + dist * __builtin_sinf(a);
+        wp.saddler_pos[1] = pPL->pos.y;
+        wp.saddler_pos[2] = pPL->pos.z + dist * __builtin_cosf(a);
+        wp.saddler_ang = a + 3.1415927f;
+        if (wp.saddler_ang > 3.1415927f) wp.saddler_ang -= 6.2831853f;
+    }
+    static EmListData d[2];
+    cEm* got[2] = {nullptr, nullptr};
+    for (int t = 0; t < 2; ++t) {
+        memset(&d[t], 0, sizeof(d[t]));
+        d[t].id = 0x31;
+        d[t].type = (u8) t;
+        d[t].hp = 30000;
+        for (int i = 0; i < 3; ++i) d[t].pos[i] = (s16) (wp.saddler_pos[i] / 10.0f);
+        d[t].rot[1] = (s16) (wp.saddler_ang * 16384.0f / 3.1415927f);
+        d[t].room = (u16) pG->room_id;
+        cEm* em = EmSetEvent(&d[t]);
+        got[t] = em == errEm ? nullptr : em;
+    }
+    char what[160];
+    snprintf(what, sizeof(what), "saddler set at room frame %u body=%08x tentacle=%08x pos=%d,%d,%d lod=%u",
+             (unsigned) wp.room_frames, (unsigned) (uintptr_t) got[0], (unsigned) (uintptr_t) got[1],
+             (int) wp.saddler_pos[0], (int) wp.saddler_pos[1], (int) wp.saddler_pos[2], wp.saddler_lod);
+    stamp(what);
+}
+#endif
 void god_alert_poll()
 {
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
@@ -960,6 +1026,9 @@ void re4dc_warp_poll(void)
     if (wp.rooms == 1 && bench_poll()) return;
 #endif
     god_alert_poll();
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    if (wp.rooms == 1) saddler_poll();
+#endif
     kill_poll();
 #if RE4DC_WARP_JUMP
     jump_poll();
