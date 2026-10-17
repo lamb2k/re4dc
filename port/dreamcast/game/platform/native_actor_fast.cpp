@@ -4611,6 +4611,17 @@ extern "C" const float* re4dc_actor_skin_palette(const void* info, const void* p
     return e->palette;
 }
 
+#if defined(RE4DC_PROP_GATE) && RE4DC_PROP_GATE
+// PROP_GATE (trans.cpp propGate): 1 when an info without arrays has its lazily skinned palette registered and not
+// materialized, so its parts can only draw through the skinned frame (lazy_skin / prepare_frame kSkin) and its gate.
+extern "C" int re4dc_actor_skin_lazy_known(const void* info) {
+    const SkinEntry* e = find_skin(info, nullptr);
+    return e && !e->materialized && e->palette && e->entries;
+}
+#if RE4DC_PROP_GATE == 2
+extern "C" { unsigned re4dc_pg_expect, re4dc_pg_fogged; }  // =2 check: parts of a gated model culled at the fog gate
+#endif
+#endif
 extern "C" void re4dc_actor_materialize(const Re4dcModelPart* p) {
     if (!p) return;
     SkinEntry* e = find_skin(p->info, p->positions);
@@ -4757,8 +4768,51 @@ void light(const Re4dcModelPart& p, const Frame& f, const float c[3]) {
 #define G1PC_PART(p, chunk) do { } while (0)
 #define G1PC_LIGHT(p, f, c) do { } while (0)
 #endif
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+// PROP_PROF (diagnostic): where re4dc_actor_submit leaves for each model key (kind/id/type), with the time from entry
+// to the exit, and the meshlet census (tested / all-culled). PXF lines every 120 UI frames.
+extern "C" unsigned re4dc_propprof_key(const void* model);
+extern "C" unsigned long long re4dc_otp_now_us();
+extern "C" unsigned re4dc_ui_frame();
+namespace pxf {
+enum { kDecl, kCull3, kDefer, kFog, kSphere, kRes, kDraw, kN };
+struct Row { unsigned key, n[kN], us[kN], ml, mlc, lit_us, pos_us, q_us, cls_us, def_us; };
+Row rows[24]; unsigned nrows, last;
+unsigned cur_key; unsigned long long t0;
+Row* row() {
+    for (unsigned k = 0; k < nrows; ++k) if (rows[k].key == cur_key) return &rows[k];
+    if (nrows == 24) return nullptr;
+    Row& r = rows[nrows++]; std::memset(&r, 0, sizeof r); r.key = cur_key; return &r;
+}
+void begin(const Re4dcModelPart* p) {
+    const unsigned fr = re4dc_ui_frame();
+    if (!last) last = fr;
+    if (fr - last >= 120) {
+        re4dc_log("PXF f=%u frames=%u\n", fr, fr - last);
+        for (unsigned k = 0; k < nrows; ++k) {
+            const Row& r = rows[k];
+            re4dc_log("PXF  kind=%u id=%x type=%x decl=%u/%u cull3=%u/%u defer=%u/%u fog=%u/%u sphere=%u/%u res=%u/%u draw=%u/%u ml=%u mlcull=%u frame_us=%u lit_us=%u q_us=%u cls_us=%u def_us=%u\n",
+                      r.key >> 16, (r.key >> 8) & 255, r.key & 255, r.n[0], r.us[0], r.n[1], r.us[1], r.n[2], r.us[2], r.n[3], r.us[3],
+                      r.n[4], r.us[4], r.n[5], r.us[5], r.n[6], r.us[6], r.ml, r.mlc, r.pos_us, r.lit_us, r.q_us, r.cls_us, r.def_us);
+        }
+        nrows = 0; last = fr;
+    }
+    cur_key = p ? re4dc_propprof_key(p->model) : 0xffffffu; t0 = re4dc_otp_now_us();
+}
+void span(unsigned Row::*fld, unsigned long long& t) { const unsigned long long n = re4dc_otp_now_us(); if (Row* r = row()) r->*fld += unsigned(n - t); t = n; }
+void exit_(unsigned e) { if (Row* r = row()) { r->n[e]++; r->us[e] += unsigned(re4dc_otp_now_us() - t0); } }
+}
+#define PXF_BEGIN(p) pxf::begin(p)
+#define PXF_EXIT(e) pxf::exit_(pxf::e)
+#define PXF_SPAN(fld, t) pxf::span(&pxf::Row::fld, t)
+#else
+#define PXF_SPAN(fld, t) do { } while (0)
+#define PXF_BEGIN(p) do { } while (0)
+#define PXF_EXIT(e) do { } while (0)
+#endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     ++stats.parts;
+    PXF_BEGIN(part);
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
     re4dc_callprof_part(part ? part->model : nullptr, 0);
 #endif
@@ -4788,28 +4842,42 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     if (part && re4dc_actor_census_key(part->model) == 0x00010000U) { re4dc_model_result(0, 0, 0); return 1; }
 #endif
 #endif
-    if (!part || !qualifies(*part)) { ++stats.declined; RE4DC_CENSUS_DEC(part); return 0; }
+    if (!part || !qualifies(*part)) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const Re4dcModelPart& p = *part;
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+    unsigned long long pxt = pxf::t0;
+    PXF_SPAN(q_us, pxt);
+#endif
     G1PC_PART(p, false);
     const float near_distance = p.projection[6] / (p.projection[5] - 1.0f);
     const float far_distance = p.projection[6] / p.projection[5];
     if (!re4dc::render::is_finite(near_distance) || !re4dc::render::is_finite(far_distance) ||
-        near_distance <= 0.0f || far_distance <= near_distance) { ++stats.declined; RE4DC_CENSUS_DEC(part); return 0; }
+        near_distance <= 0.0f || far_distance <= near_distance) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const unsigned mark = workspace_top;
     struct Release { unsigned mark; ~Release() { workspace_top = mark; } } release{mark};
     const BlobHeader* blob = blob_of(p);
     int crowd_class = 0;
     if constexpr (kCrowd) crowd_class = re4dc_actor_model_class(p.model, p.info);
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+    PXF_SPAN(cls_us, pxt);
+#endif
     if (kLodBuild && blob && (blob->flags & kLodPending)) relod(p, crowd_class > 0);
-    if (!blob && !(blob = convert(p))) { ++stats.declined; RE4DC_CENSUS_DEC(part); return 0; }
+    if (!blob && !(blob = convert(p))) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const u8* base = reinterpret_cast<const u8*>(blob);
     ++stats.handled;
-    if (p.cull == 3) { re4dc_model_result(0, 0, 0); return 1; }
+    if (p.cull == 3) { re4dc_model_result(0, 0, 0); PXF_EXIT(kCull3); return 1; }
     // Translucent parts keep the existing bounded drain; its replay re-enters
     // re4dc_model_submit and lands here again with draining set.
-    if (re4dc_model_defer_part(&p)) { ++stats.deferred; return 1; }
+    if (re4dc_model_defer_part(&p)) { ++stats.deferred; PXF_EXIT(kDefer); return 1; }
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+    PXF_SPAN(def_us, pxt);
+#endif
 
     Frame& f = *prepare_frame(p, near_distance, far_distance);
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+    PXF_SPAN(pos_us, pxt);
+    if (pxf::Row* pr = pxf::row()) pr->ml += f.mode == kSkin ? 1000000u : 0u;
+#endif
 #if RE4DC_ACTOR_FOG_GATE
     if (blob->radius > 0.0f || blob->center[0] != 0.0f || blob->center[1] != 0.0f || blob->center[2] != 0.0f) {
         const float cull_far = fog_gate_depth(near_distance, far_distance);
@@ -4979,7 +5047,12 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             re4dc_log("native actor fog gate: frame=%u tests=%u culled=%u far=%.0f\n", frame_serial, fog_gate_tests,
                       fog_gate_culled, cull_far);
         }
-        if (depth > cull_far) { ++fog_gate_culled; re4dc_model_result(0, 0, 0); return 1; }
+        if (depth > cull_far) {
+#if defined(RE4DC_PROP_GATE) && RE4DC_PROP_GATE == 2
+            if (re4dc_pg_expect) ++re4dc_pg_fogged;
+#endif
+            ++fog_gate_culled; re4dc_model_result(0, 0, 0); PXF_EXIT(kFog); return 1;
+        }
     }
 #endif
     if (f.mode == kRigid && blob->radius > 0.0f) {
@@ -4987,13 +5060,13 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         const float* m = p.modelview; const float* c = blob->center;
         const float z = m[8] * c[0] + m[9] * c[1] + m[10] * c[2] + m[11];
         if (-z + blob->radius < near_distance || -z - blob->radius > far_distance) {
-            ++stats.culled_parts; re4dc_model_result(0, 0, 0); return 1;
+            ++stats.culled_parts; re4dc_model_result(0, 0, 0); PXF_EXIT(kSphere); return 1;
         }
     }
     Part e{p, f, {p.projection, p.viewport}, {near_distance, far_distance, RE4DC_SCREEN_WF, RE4DC_SCREEN_HF, project, nullptr}};
     e.clip.context = &e.projection;
     e.streaming = re4dc_model_packet_streaming() != 0;
-    if (!re4dc_model_packet_reserve(&p, &e.packet)) { RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); return 1; }
+    if (!re4dc_model_packet_reserve(&p, &e.packet)) { RE4DC_DROP_ACTOR(&p, 0, 0); re4dc_model_result(2, 0, 0); PXF_EXIT(kRes); return 1; }
 #if RE4DC_ACTOR_UV16
     // Consumed by the begin call below (direct or packet), whatever its result.
     e.uv16 = uv16_safe(p, *blob);
@@ -5027,6 +5100,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     }
     e.cache.oc = reinterpret_cast<u8*>(e.cache.v + kMaxVertices);
 
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+    const unsigned long long pxf_l0 = re4dc_otp_now_us();
+#endif
     Lights lights;
     G1PC_LIGHT(p, f, blob->center);
     if (!RE4DC_PART_LIGHTS(p, f, blob->center, lights))
@@ -5035,6 +5111,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
         RE4DC_PREPARED(lights) = re4dc::render::prepare_actor_lights(*p.lighting);
     lights.source = p.lighting;
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+    if (pxf::Row* r = pxf::row()) r->lit_us += unsigned(re4dc_otp_now_us() - pxf_l0);
+#endif
     const unsigned tier = crowd_class > 0 ? crowd_tier(p, crowd_class) : kTierFull;
     if (tier >= (kCrowdFlat ? kTierNear : kTierMid) && tier != kTierFull && lights.fast && !lights.constant
 #if RE4DC_ACTOR_PROBE_LIGHT
@@ -5095,6 +5174,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
         unsigned all, any;
         pass_positions(e, r, nv, k, s16_uv, all, any);
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+        if (pxf::Row* pr = pxf::row()) { pr->ml++; if (all & kOcCull) pr->mlc++; }
+#endif
         if (all & kOcCull) {
 #if RE4DC_ACTOR_CENSUS
             if (census_cur) census_cur->culled += nv;
@@ -5154,6 +5236,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (!ok) re4dc_model_packet_abort();
         re4dc_model_direct_end(e.slots);
         re4dc_model_result(ok ? 0 : 3, e.input, ok ? e.output : 0);
+        PXF_EXIT(kDraw);
         return 1;
     }
 #endif
@@ -5164,6 +5247,7 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     }
     re4dc_model_packet_commit(e.used);
     re4dc_model_result(0, e.input, e.output);
+    PXF_EXIT(kDraw);
     return 1;
 }
 

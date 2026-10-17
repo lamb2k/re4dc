@@ -751,3 +751,19 @@ $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_PROP_PLAN=$(PROP_PLAN)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PROP_PLAN=$(PROP_PLAN)
 endif
 # PROP_PLAN=2 (diagnostic): submit the parts PROP_PLAN would skip and count any that emit bytes (PPLAN bad=, must be 0).
+# PROP_GATE=1 (lane farmprop17 2026-10-17; render only, exact, default 0; needs SCENERY_GATE, FRONT_LEAN (FRONT_NATIVE),
+#              SKIN_PALETTE_LAZY, NATIVE_ACTOR_SKIN_LAZY and ACTOR_FOG_GATE): a lazily skinned room object (cObj kind 1;
+#              the r103 farm props) whose whole bound lies beyond the native actor fog gate's cull depth skips its part
+#              walk (trans.cpp propGate) instead of preparing every part's skinned frame only to cull it. Logs PGATE lines.
+#              =2 (check build): the walk runs anyway; PGATE bad= counts parts of gated models not culled by the fog gate
+#              (must be 0). Knob off: the image is unchanged.
+PROP_GATE ?= 0
+ifneq ($(PROP_GATE),0)
+ifneq ($(PROP_GATE),1)
+ifneq ($(PROP_GATE),2)
+$(error PROP_GATE must be 0, 1 or 2)
+endif
+endif
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PROP_GATE=$(PROP_GATE)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_PROP_GATE=$(PROP_GATE)
+endif
