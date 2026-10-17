@@ -1,0 +1,13 @@
+name ce-r20d
+# ch4found16 effect-compaction gate: r20d kill rig on em19 (cap 4, god), stills at room frames 310 / 330 (held 16 s for the 15 s shot period)
+room 0x20d
+pos -26803 0 164
+ang 1.8380
+inv default
+god
+alivelog 150
+kill 0x19 300 0x20d
+killrep 14 90
+still 310 16000
+still 330 16000
+dump

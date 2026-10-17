@@ -1,0 +1,19 @@
+name cen-r226
+# ch4found16 decisions: PS2_CH4_ENEMY r226, rsf 9, Leon dropped into PS2 AEV 0x28 (flag 71) from y 12000 (y 5000 is under the floor there), kills from frame 120
+room 0x226
+pos -3507 5000 21665
+ang 3.0630
+inv default
+rsf 0x226 9
+god
+alivelog 150
+goto 100 0 12000 -1000
+kill 0x11 120 0x226
+killrep 12 30
+dump
+census 400
+census 800
+census 1200
+census 1600
+census 2000
+census 2400

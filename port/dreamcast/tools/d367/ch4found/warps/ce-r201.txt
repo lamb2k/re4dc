@@ -1,0 +1,13 @@
+name ce-r201
+# ch4found16 effect-compaction gate: r201 kill rig on em1b (cap 4, god), stills at room frames 310 / 330 (held 16 s for the 15 s shot period)
+room 0x201
+pos -126 0 1786
+ang 2.9900
+inv default
+god
+alivelog 150
+kill 0x1b 300 0x201
+killrep 14 90
+still 310 16000
+still 330 16000
+dump
