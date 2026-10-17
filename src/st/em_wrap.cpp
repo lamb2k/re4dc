@@ -145,7 +145,7 @@ void cEmControl::EndControl()
 
         em.setGoto(&pPL->pos, 0);
         em.setCharacter(0);
-        p = em.getPtr();
+        p = EM_WRAP_HELD(&em) ? 0 : em.getPtr();   // ALIVE_CAP: a held enemy starts with its normal think routine
         if (p != 0) {
             p->r_no_0 = 1;
             p->r_no_1 = 0;
@@ -404,6 +404,11 @@ cEm* setEm(s16 no, s8 list, int errOn, int chkDead, int setAlive)
     cEmWrap em;
 
     if (em.setEm(no, list, errOn, chkDead, setAlive) == 1) {
+        // ALIVE_CAP: a send the cap holds stays held (no enemy, 0) as before the held-handle change; this is a plain
+        // send, not a handle the room keeps, so creating the enemy here would bypass the cap for every such send.
+        if (EM_WRAP_HELD(&em)) {
+            return 0;
+        }
         return em.getPtr();
     }
     return 0;
