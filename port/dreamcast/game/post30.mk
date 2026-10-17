@@ -62,6 +62,19 @@ FOG_CURVE ?= 0
 FOG_CAP ?= 100
 FOG_RGB_PCT ?= 0
 FOG_FAR_CAP ?= 0
+# LAKE_FAR=<mm> (lane lake17 2026-10-17, user option (a) after the tester's lake report; render only, default 0: no code):
+#   the lake rooms r10b / r11a / r11b draw the PS2 world, the coarse view and the fog to this far instead of the 25 m cap
+#   (native_static.cpp re4dc_far_cap); the fog ramp still reaches 100 % fog colour at it. Needs FOG_FAR_CAP=0,
+#   PS2_WORLD_ROOMS (the room of the open PS2 world) and a value above 25000.
+LAKE_FAR ?= 0
+ifneq ($(LAKE_FAR),0)
+ifeq ($(shell test $(LAKE_FAR) -gt 25000 && echo y),)
+$(error LAKE_FAR is 0 or a far in mm above 25000)
+endif
+ifeq ($(FOG_FAR_CAP),1)
+$(error LAKE_FAR needs FOG_FAR_CAP=0)
+endif
+endif
 SKY_FAR ?= 0
 ifneq ($(filter-out 0 1 2,$(FOG_CURVE))$(filter-out 0 1,$(FOG_FAR_CAP))$(filter-out 0 1 2,$(SKY_FAR)),)
 $(error FOG_CURVE / SKY_FAR are 0..2, FOG_FAR_CAP 0 or 1)
@@ -144,6 +157,9 @@ ifeq ($(FOG_FAR_CAP),1)
 endif
 ifeq ($(LOOK_TOGGLE),1)
 	@printf '#define RE4DC_LOOK_TOGGLE 1\n' >> $@.tmp
+endif
+ifneq ($(LAKE_FAR),0)
+	@printf '#define RE4DC_LAKE_FAR %s\n' '$(LAKE_FAR)' >> $@.tmp
 endif
 ifneq ($(SKY_FAR),0)
 	@printf '#define RE4DC_SKY_FAR %s\n' '$(SKY_FAR)' >> $@.tmp
