@@ -129,6 +129,19 @@ $(error MOTION_COLD_POOL needs MOTION_PRESSURE_BYTES)
 endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_COLD_POOL=$(MOTION_COLD_POOL)
 endif
+# MOTION_COLD_POOL_CASTLE=<bytes> (lane ch4found16 2026-10-17; needs MOTION_COLD_POOL; render and I/O only, default 0 =
+# image unchanged): the cold pool's heap 4 margin in the castle rooms (room 0x2xx) instead of MOTION_COLD_POOL's.
+# Why: r226's six em11 Zealots (GC-prepared archive, all keys cold) need ~130 KB of keys at once; with the test 15
+# margin (262144) the pool stops at heap 4 272 KB free and the keys cycle through the two slabs: 3 disc reads + CRC
+# per frame, ~0.9 s frames from the first death (Flycast). 131072 keeps the pool going (B3/B5 sends reached in 60 s).
+MOTION_COLD_POOL_CASTLE ?= 0
+ifneq ($(MOTION_COLD_POOL_CASTLE),0)
+ifeq ($(MOTION_COLD_POOL),0)
+$(error MOTION_COLD_POOL_CASTLE needs MOTION_COLD_POOL)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_COLD_POOL_CASTLE=$(MOTION_COLD_POOL_CASTLE)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_COLD_POOL_CASTLE=$(MOTION_COLD_POOL_CASTLE)
+endif
 ifneq ($(MOTION_PRESSURE_GROW),0)
 ifeq ($(MOTION_PRESSURE_BYTES),0)
 $(error MOTION_PRESSURE_GROW needs MOTION_PRESSURE_BYTES)
@@ -920,11 +933,12 @@ GAME_OT_MASK ?= 0
 # OT_WALK_CHECK=1 (lane ch4found16 2026-10-16; debug arm, default 0): ExecOt checks each node and its func before the
 # call (node and func pointers; data is opaque), reports the first bad one with the entry that links to it ("OTWC" log
 # lines) and the GetPrimBuff slots that cover them (trans.cpp tags each slot: frame, caller) and stops that table's
-# walk (src/game/trans_ot.cpp); a fault names the entry being called (fault.cpp). For the r229 ExecOt fault; never in
-# a release recipe.
+# walk (src/game/trans_ot.cpp); a fault names the entry being called (fault.cpp). =2 also keeps the first 4 KB of each
+# frame's primitive buffer as a pattern-filled guard pad, checked at every GetPrimBuff call and ExecOt start ("OTWC pad
+# write": the words, between which two checkpoints). For the r229 ExecOt fault; never in a release recipe.
 OT_WALK_CHECK ?= 0
 ifneq ($(OT_WALK_CHECK),0)
-$(OBJDIR)/src/game/trans_ot.o $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_OT_WALK_CHECK=$(OT_WALK_CHECK)
+$(OBJDIR)/src/game/trans_ot.o $(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/shape.o: GAME_CPPFLAGS += -DRE4DC_OT_WALK_CHECK=$(OT_WALK_CHECK)
 $(OBJDIR)/platform/fault.o: PLATFORM_CPPFLAGS += -DRE4DC_OT_WALK_CHECK=$(OT_WALK_CHECK)
 endif
 # OT_PRIM_BUFFERS=2 (lane ch4found16 2026-10-16; experiment, default 1 = image unchanged): the GameCube's two primitive

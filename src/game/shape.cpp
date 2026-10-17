@@ -159,6 +159,9 @@ int SetShape(cModelInfo* info, ShapeData* data, f32 rate)
     return (f32) n < rate;
 }
 
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
+extern "C" void re4dc_log(const char*, ...);
+#endif
 // Restore the original vertex positions.
 void ResetShape(cModelInfo* info, void* dst)
 {
@@ -267,6 +270,21 @@ void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)
                     s32 num = e->num;
                     s32 n;
 
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
+                    {
+                        static u32 reports;
+                        s32 lo = 0x7fffffff, hi = -0x7fffffff - 1;
+                        const s16* q = src;
+                        for (n = 0; n < num; n++, q += 4) { if (*q < lo) lo = *q; if (*q > hi) hi = *q; }
+                        if (num > 0 && (lo < 0 || hi >= (s32) info->pData->nVtx) && reports++ < 8) {
+                            re4dc_log("OTWC shape out of range: info %08x data %08x channel %u entries %d index %d..%d nVtx %u "
+                                      "dst %08x pPosBuf %08x/%08x caller %08x\n", (unsigned) (u32) info, (unsigned) (u32) data,
+                                      (unsigned) i, (int) num, (int) lo, (int) hi, (unsigned) info->pData->nVtx,
+                                      (unsigned) (u32) dst, (unsigned) (u32) info->pPosBuf[0], (unsigned) (u32) info->pPosBuf[1],
+                                      (unsigned) (u32) __builtin_return_address(0));
+                        }
+                    }
+#endif
                     for (n = 0; n < num; n++) {
                         s16* vtx = (s16*) (dst + *src++ * 8);
                         PSQ_ST_S16(PSQ_L_S16(src++) * v, tmp);

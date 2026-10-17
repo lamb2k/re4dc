@@ -419,8 +419,14 @@ static void re4dc_otwc_report(int type, int count, OtWork* w, OtData* prev, OtDa
 // Runs table `type` from the farthest bucket to the nearest, calling each entry's func(data)
 // (g_NowExecOtType / prev_kind tell the callbacks their context); alpha compare reset afterwards.
 // Returns the number of entries drawn.
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
+extern "C" void re4dc_otwc_pad_check(u32 where);   // trans.cpp
+#endif
 int ExecOt(int type)
 {
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
+    re4dc_otwc_pad_check(0xE0000000u | (u32) type);   // checkpoint "ExecOt(type)"
+#endif
     OtWork* w = &g_OtWork[type];
     OtData* p;
     int count = 0;
