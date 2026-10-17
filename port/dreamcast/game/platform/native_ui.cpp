@@ -311,6 +311,15 @@ Entry entries[kTextureCount]; Source sources[kSourceCount]; unsigned nsource;
 #define RE4DC_COVER_W(pkg,iw) (iw)
 #define RE4DC_COVER_H(pkg,ih) (ih)
 #endif
+#if defined(RE4DC_GANADO_ATLAS_DROP) && RE4DC_GANADO_ATLAS_DROP
+// GANADO_ATLAS_DROP (game30.mk): a texture whose top mip level was left out at load (kTopDrop) keeps its logical size in
+// the descriptor (UV scales and size checks); its TSP size is the uploaded half.
+#define RE4DC_TSP_W(t) (((t).flags&re4dc::texture::kTopDrop)?(t).width>>1:(t).width)
+#define RE4DC_TSP_H(t) (((t).flags&re4dc::texture::kTopDrop)?(t).height>>1:(t).height)
+#else
+#define RE4DC_TSP_W(t) ((t).width)
+#define RE4DC_TSP_H(t) ((t).height)
+#endif
 #if defined(RE4DC_FX_TEX_POOL) && RE4DC_FX_TEX_POOL
 // FX_TEX_POOL=<KB> (effects30.mk, test 12 fx lane; render only): a resident effect texture pool. An effect sprite's
 // texture (re4dc_effect_sprite) is pinned while the pool's bytes stay under the budget, so the room's effect set (the
@@ -3006,6 +3015,9 @@ void vram_room_frame(){
     vram_room_track();
     if(frame%30==0){unsigned largest,alloc;vram_room_largest(largest,alloc);if(largest<vroom.min_largest)vroom.min_largest=largest;}
     if(frame!=vroom.since && (frame-vroom.since)%600==0)vram_room_sample("tick");
+#if defined(RE4DC_GANADO_ATLAS_DROP) && (RE4DC_GANADO_ATLAS_DROP & 0x100)
+    else if(frame!=vroom.since && (frame-vroom.since)%150==0)vram_room_sample("t150");   // GANADO_ATLAS_DROP bit 8 (diagnostic)
+#endif
 }
 #endif
 void close_entry(Entry& entry) {
@@ -3039,6 +3051,58 @@ void close_entry(Entry& entry) {
     entry.ui_header_key=~0U; // a new upload gets its own texture address
 #endif
 }
+#if defined(RE4DC_GANADO_ATLAS_DROP) && RE4DC_GANADO_ATLAS_DROP
+// GANADO_ATLAS_DROP=<mask> (game30.mk; render only; lane gatlas17, user 10-17: "We can lower ganado texture detail if
+// that will make the room work"): in the rooms of GANADO_ATLAS_DROP_ROOMS (default r101), the PS2 cast's 512x512
+// Ganado atlases of the mask (bit 0 em15-00 ebed7ba6, 1 em15-03 65c6fe5a, 2 em15-04 b4f70c44, 3 em15-0b df13f362,
+// 4 em12-01 bbde9497) load without their top mip level: 256x256 with their mips, 23,894 B instead of 89,430 B in VRAM.
+// The atlas files are shared by every room; the cut is made at load time, so other rooms load them whole. An entry
+// in the wrong state for the room (kept from the previous room) closes at the room-entry preload and loads again.
+// Bit 8 (diagnostic): every 150 UI frames the atlases' model-packet binds and ages, the large textures drawn, and a
+// VRAM_ROOM_LOG sample (at=t150).
+const Key kGadKeys[5]={{0xebed7ba6u,0x2ca7490fu},{0x65c6fe5au,0x2593694eu},{0xb4f70c44u,0x1e5fd331u},
+                       {0xdf13f362u,0x0ed8fbddu},{0xbbde9497u,0x188ca895u}};
+const unsigned kGadRooms[]={RE4DC_GANADO_ATLAS_DROP_ROOMS};
+unsigned gad_hits[5],gad_drops,gad_closes;
+int gad_index(const Key& k){for(unsigned i=0;i<5;++i)if(kGadKeys[i]==k)return int(i);return -1;}
+bool gad_wanted(const Key& k){
+    const int i=gad_index(k);
+    if(i<0 || !((unsigned(RE4DC_GANADO_ATLAS_DROP)>>i)&1U))return false;
+    re4dc::profile::Source s{};
+#if defined(__sh__)
+    re4dc_profile_source(&s);
+#endif
+    for(const unsigned r:kGadRooms)if(r==s.room)return true;
+    return false;
+}
+bool gad_apply(re4dc::texture::Package& p,const Key& k){
+    if(gad_wanted(k) && p.drop_top_level()){
+        ++gad_drops;
+        re4dc_log("ganado atlas drop: %08x-%08x top level left out: %u B (drops=%u)\n",k.crc,k.fnv,(unsigned)p.textures()[0].data_size,gad_drops);
+    }
+    return true;
+}
+// At a room-entry preload: close an atlas whose top-level state is not this room's (the fences are done, as for the
+// room change evict's closes). A pinned entry stays as it is and is logged.
+void gad_room_states(){
+    for(auto& e:entries){
+        if(!e.valid || gad_index(e.key)<0 || !e.package.upload_complete())continue;
+        const bool dropped=(e.package.textures()[0].flags&re4dc::texture::kTopDrop)!=0;
+        if(dropped==gad_wanted(e.key))continue;
+        if(RE4DC_ENTRY_PINNED(e)){re4dc_log("ganado atlas state: %08x-%08x pinned, kept dropped=%d\n",e.key.crc,e.key.fnv,dropped?1:0);continue;}
+        ++gad_closes;
+        re4dc_log("ganado atlas state: %08x-%08x closed for this room (dropped=%d closes=%u)\n",e.key.crc,e.key.fnv,dropped?1:0,gad_closes);
+        close_entry(e);
+    }
+}
+#if RE4DC_GANADO_ATLAS_DROP & 0x100
+#define RE4DC_GAD_HIT(k) do{const int gi_=gad_index(k);if(gi_>=0)++gad_hits[gi_];}while(0)
+#else
+#define RE4DC_GAD_HIT(k) do{}while(0)
+#endif
+#else
+#define RE4DC_GAD_HIT(k) do{}while(0)
+#endif
 #if RE4DC_TEX_CHECK
 __attribute__((noinline))   // TEX_CHECK: texchk::site is this function's caller
 #endif
@@ -3083,11 +3147,11 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     const unsigned hint=(key.crc^(key.crc>>7)^key.fnv)&127U;
     if(const unsigned h=entry_hint[hint]){
         Entry& e=entries[h-1];
-        if(e.valid && e.key==key){RE4DC_TOUCH(e);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
+        if(e.valid && e.key==key){RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
     }
-    for(auto& e:entries) if(e.valid && e.key==key) {entry_hint[hint]=EntryHint(&e-entries+1);RE4DC_TOUCH(e);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
+    for(auto& e:entries) if(e.valid && e.key==key) {entry_hint[hint]=EntryHint(&e-entries+1);RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
 #else
-    for(auto& e:entries) if(e.valid && e.key==key) {RE4DC_TOUCH(e);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
+    for(auto& e:entries) if(e.valid && e.key==key) {RE4DC_TOUCH(e);RE4DC_GAD_HIT(e.key);RE4DC_PROFILE_COUNT(TextureHits,1);RE4DC_TEXCHK_BIND(e);return &e;}
 #endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     if(fx_resident_only){++fx_resident_skips;
@@ -3166,9 +3230,14 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     const unsigned kos_before=kos_headroom();   // the KOS heap one load takes (bounded upload line)
 #endif
 #if RE4DC_TEX_PACK
-#define RE4DC_OPEN_PACKAGE() (in_pack?slot->package.open_streamed_at(texpack::kPath,pack_offset,pack_size):slot->package.open_streamed(path))
+#define RE4DC_OPEN_PACKAGE_RAW() (in_pack?slot->package.open_streamed_at(texpack::kPath,pack_offset,pack_size):slot->package.open_streamed(path))
 #else
-#define RE4DC_OPEN_PACKAGE() slot->package.open_streamed(path)
+#define RE4DC_OPEN_PACKAGE_RAW() slot->package.open_streamed(path)
+#endif
+#if defined(RE4DC_GANADO_ATLAS_DROP) && RE4DC_GANADO_ATLAS_DROP
+#define RE4DC_OPEN_PACKAGE() (RE4DC_OPEN_PACKAGE_RAW() && gad_apply(slot->package,key))
+#else
+#define RE4DC_OPEN_PACKAGE() RE4DC_OPEN_PACKAGE_RAW()
 #endif
     bool ok=RE4DC_OPEN_PACKAGE();
     if(!ok) {RE4DC_PROFILE_COUNT(TextureOpenFailures,1);re4dc_log("native UI: package rejected: %s\n",slot->package.error());}
@@ -3394,6 +3463,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     return slot;
 }
 #undef RE4DC_OPEN_PACKAGE
+#undef RE4DC_OPEN_PACKAGE_RAW
 #if RE4DC_UI_HANDLES
 // Direct texture handles. The first draw of a source image (with its alpha
 // mask for masked model parts) takes the full path: image_key() (source scan,
@@ -3700,6 +3770,9 @@ bool ensure_model_storage();   // below: the native model slab (64 KiB of KOS he
 #endif
 void preload_identities(){
     preload_pending=false;++preload_runs;
+#if defined(RE4DC_GANADO_ATLAS_DROP) && RE4DC_GANADO_ATLAS_DROP
+    gad_room_states();
+#endif
 #if RE4DC_TEX_META_EVICT
     // The native model slab first: the slab is allocated at the first native model draw and kept from then on, which
     // came after the room-entry preload, so a preload that filled the KOS heap with texture descriptors took its
@@ -5325,7 +5398,7 @@ static void ui_draw_quad(unsigned i){
         else {
 #endif
         unsigned fmt=re4dc::texture::pvr_format(t);
-        pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,fmt,t.width,t.height,
+        pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                             handles[i]->package.pvr_texture(0),PVR_FILTER_BILINEAR);
         c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_ALWAYS;c.depth.write=PVR_DEPTHWRITE_DISABLE;
         const pvr_blend_mode_t src[]={PVR_BLEND_SRCALPHA,PVR_BLEND_SRCALPHA,PVR_BLEND_ONE,PVR_BLEND_DESTCOLOR,PVR_BLEND_DESTCOLOR};
@@ -5415,7 +5488,7 @@ extern "C" void re4dc_ui_present(){
         else {
 #endif
         unsigned fmt=re4dc::texture::pvr_format(t);
-        pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,fmt,t.width,t.height,
+        pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                             handles[i]->package.pvr_texture(0),PVR_FILTER_BILINEAR);
         c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_ALWAYS;c.depth.write=PVR_DEPTHWRITE_DISABLE;
         const pvr_blend_mode_t src[]={PVR_BLEND_SRCALPHA,PVR_BLEND_SRCALPHA,PVR_BLEND_ONE,PVR_BLEND_DESTCOLOR,PVR_BLEND_DESTCOLOR};
@@ -5539,6 +5612,18 @@ extern "C" void re4dc_ui_present(){
     if(frame%120==0 && model_diagnostic==1)re4dc_log("native model alpha: material=%u vertex=%u faded=%u masks=unsupported\n",model_alpha_material,model_alpha_vertex,model_alpha_faded);
 #if defined(RE4DC_MODEL_DROP_LOG) && RE4DC_MODEL_DROP_LOG
     if(frame%600==0)re4dc_model_drop_summary();
+#endif
+#if defined(RE4DC_GANADO_ATLAS_DROP) && (RE4DC_GANADO_ATLAS_DROP & 0x100)
+    if(frame%150==0){
+        // the frames since each atlas entry was last touched (drawn, leased or pinned by a preload), -1 = not resident
+        unsigned age[5];for(unsigned i=0;i<5;++i){age[i]=~0U;for(const auto& e:entries)if(e.valid && e.key==kGadKeys[i])age[i]=frame-e.frame;}
+        re4dc_log("ganado atlas hits: frame=%u em15-00=%u/%d em15-03=%u/%d em15-04=%u/%d em15-0b=%u/%d em12-01=%u/%d drops=%u closes=%u\n",frame,
+                  gad_hits[0],int(age[0]),gad_hits[1],int(age[1]),gad_hits[2],int(age[2]),gad_hits[3],int(age[3]),gad_hits[4],int(age[4]),gad_drops,gad_closes);
+        // diagnostic: every 256+ texture touched in the last 150 frames
+        for(const auto& e:entries)if(e.valid && e.package.upload_complete() && e.package.textures()[0].width>=256 && frame-e.frame<150)
+            re4dc_log("ganado atlas diag: touched %08x-%08x %ux%u age=%u bytes=%u\n",e.key.crc,e.key.fnv,e.package.textures()[0].width,
+                      e.package.textures()[0].height,frame-e.frame,(unsigned)e.package.vram_bytes());
+    }
 #endif
     if(frame%120==0) re4dc_log("native UI: frame=%u quads=%u drawn=%u missing=%u unsupported=%u drops=%u vram=%u peak=%u staging=%u loads=%u freed=%u culled=%u fb=%08x,%08x black=%d\n",frame,nquad,drawn,missing,unsupported,dropped,used,peak,staging_peak,loads,reclaimed,culled,(unsigned)pvr_get_front_buffer(),(unsigned)pvr_get_back_buffer(),re4dc_vi_black());
 #if RE4DC_UI_VRAM
@@ -5886,7 +5971,7 @@ extern "C" int re4dc_model_header_preview(const Re4dcModelPart* p,void* out){
     unsigned fmt=re4dc::texture::pvr_format(t);
     const pvr_list_t list=select_model_pass(p);
     pvr_poly_hdr_t header;
-    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,fmt,t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     const pvr_cull_mode_t cull[]={PVR_CULLING_NONE,PVR_CULLING_CCW,PVR_CULLING_CW};
     c.gen.culling=cull[p->cull];
     c.depth.comparison=p->depth_mode==2?PVR_DEPTHCMP_ALWAYS:PVR_DEPTHCMP_GEQUAL;
@@ -6039,7 +6124,7 @@ if(!handle){
     if(handle->model_header_key==header_key){header=handle->model_header;++model_header_hits;}
     else {
 #endif
-    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,fmt,t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
 #if RE4DC_D349_RENDERER_STACK
     // Same mapping as D349 room_strip_headers; p.cull already includes the
     // recovered game's corrected facing. Clipped fallback retains its winding.
@@ -6088,6 +6173,7 @@ if(!handle){
     // bit on this part's slab copy only (the cached header stays generic).
     if(re4dc_mv_receiver && list==PVR_LIST_OP_POLY){model_packets[model_used].flags|=PVR_TA_CMD_MODIFIER;++mv_receivers;}
 #endif
+    RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
 #if RE4DC_MESH_TEXTURES
@@ -6361,6 +6447,7 @@ extern "C" std::uint32_t* re4dc_leon_direct_switch(const Re4dcModelPart* p,const
     re4dc_front_header_built(&header,p->alpha_state);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
+    RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
     if(h->scale_rebuild)++model_scale_rebuilds;
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
@@ -6524,7 +6611,7 @@ extern "C" std::uint32_t* re4dc_coarse_begin_mode(unsigned crc,unsigned fnv,unsi
     Entry* handle=load(image,false,&key);if(!handle){++model_texture_rejects;return nullptr;}
     handle->frame=frame; // the header goes to the TA now: pinned for this scene
     const auto& t=handle->package.textures()[0];
-    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_OP_POLY,re4dc::texture::pvr_format(t),t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_OP_POLY,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_ENABLE;
     c.txr.env=PVR_TXRENV_MODULATE;c.txr.uv_clamp=(mode&2)?PVR_UVCLAMP_NONE:PVR_UVCLAMP_UV;
     if(mode&4)c.gen.specular=PVR_SPECULAR_ENABLE;
@@ -6588,7 +6675,7 @@ extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,uns
     Entry* handle=load(image,false,&key);if(!handle){++model_texture_rejects;return 0;}
     const auto& t=handle->package.textures()[0];
     stream_select(PVR_LIST_PT_POLY);
-    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_PT_POLY,re4dc::texture::pvr_format(t),t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_PT_POLY,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     c.gen.culling=PVR_CULLING_NONE;c.depth.comparison=PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_ENABLE;
     c.blend.src=RE4DC_PT_BLEND_FIX?PVR_BLEND_SRCALPHA:PVR_BLEND_ONE;
     c.blend.dst=RE4DC_PT_BLEND_FIX?PVR_BLEND_INVSRCALPHA:PVR_BLEND_ZERO;
@@ -6605,6 +6692,7 @@ extern "C" int re4dc_model_pt_begin(unsigned crc,unsigned fnv,unsigned width,uns
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
+    RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=1.0f;out->v_scale=1.0f;
@@ -6817,7 +6905,7 @@ DeferredLighting* const kOctTag=reinterpret_cast<DeferredLighting*>(7); // uniqu
 constexpr unsigned kOctPacket=sizeof(pvr_poly_hdr_t)+8*sizeof(pvr_vertex_t);
 void oct_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     const auto& t=e->package.textures()[0];
-    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,re4dc::texture::pvr_format(t),t.width,t.height,
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                                       const_cast<void*>(e->package.pvr_texture(0)),PVR_FILTER_BILINEAR);
     c.gen.culling=PVR_CULLING_NONE;
     c.depth.comparison=PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_DISABLE;
@@ -6862,7 +6950,7 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
     const unsigned fmt=re4dc::texture::pvr_format(t);const void* txr=e->package.pvr_texture(0);
     if(fx_hdr_key.fmt!=fmt || fx_hdr_key.w!=t.width || fx_hdr_key.h!=t.height || fx_hdr_key.txr!=txr ||
        fx_hdr_key.src!=s.src || fx_hdr_key.dst!=s.dst || fx_hdr_key.screen!=s.screen){
-        pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,fmt,t.width,t.height,
+        pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                                               const_cast<void*>(txr),PVR_FILTER_BILINEAR);
         c.gen.culling=PVR_CULLING_NONE;
         c.depth.comparison=s.screen?PVR_DEPTHCMP_ALWAYS:PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_DISABLE;
@@ -6872,11 +6960,11 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
         c.gen.fog_type=s.screen?PVR_FOG_DISABLE:PVR_FOG_TABLE; // table: native_static.cpp re4dc_fog_frame
 #endif
         pvr_sprite_compile(&fx_hdr_cache,&c);
-        fx_hdr_key=FxHeaderKey{fmt,t.width,t.height,txr,(unsigned char)s.src,(unsigned char)s.dst,(unsigned char)s.screen};
+        fx_hdr_key=FxHeaderKey{fmt,RE4DC_TSP_W(t),RE4DC_TSP_H(t),txr,(unsigned char)s.src,(unsigned char)s.dst,(unsigned char)s.screen};
     }
     *h=fx_hdr_cache;h->argb=s.color;h->oargb=0;
 #else
-    pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,re4dc::texture::pvr_format(t),t.width,t.height,
+    pvr_sprite_cxt_t c;pvr_sprite_cxt_txr(&c,PVR_LIST_TR_POLY,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),
                                           e->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     c.gen.culling=PVR_CULLING_NONE;
     c.depth.comparison=s.screen?PVR_DEPTHCMP_ALWAYS:PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_DISABLE;
@@ -7573,7 +7661,7 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
     world_sort_begin();
 #endif
     if(stream_aborted)return 0;
-    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     c.gen.culling=PVR_CULLING_NONE; // authored cull already applied after clipping
     c.depth.comparison=PVR_DEPTHCMP_GEQUAL;
     c.depth.write=pass==2?PVR_DEPTHWRITE_DISABLE:PVR_DEPTHWRITE_ENABLE;
@@ -7593,6 +7681,7 @@ extern "C" int re4dc_ps2_world_packet(unsigned crc,unsigned fnv,unsigned width,u
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
+    RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
@@ -7621,7 +7710,7 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
     world_sort_begin();
 #endif
     if(stream_aborted)return 0;
-    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     // PS2_WORLD_KERNEL=4 strips: the authored cull (0 drops screen area >= 0, i.e. clockwise with y down).
     c.gen.culling=cull==0?PVR_CULLING_CW:cull==1?PVR_CULLING_CCW:PVR_CULLING_NONE;
     c.depth.comparison=PVR_DEPTHCMP_GEQUAL;
@@ -7642,6 +7731,7 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
+    RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
     out->vertices=model_packets+model_pending;out->capacity=kModelPacketBytes/32-model_pending;
     out->u_scale=out->v_scale=1;
@@ -7803,7 +7893,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
             bool bad=ref_handle!=handle;
             if(!bad){
                 const auto& t=ref_handle->package.textures()[0];
-                pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),t.width,t.height,ref_handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
+                pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),ref_handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
                 const pvr_cull_mode_t cull[]={PVR_CULLING_NONE,PVR_CULLING_CCW,PVR_CULLING_CW};
                 c.gen.culling=cull[k[5]];
                 c.depth.comparison=PVR_DEPTHCMP_GEQUAL;
@@ -7844,7 +7934,8 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         ui_order_polygon_header(header);
 #endif
         std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
-        model_pending=model_used+count;model_handle=handle;
+        RE4DC_GAD_HIT(handle->key);
+    model_pending=model_used+count;model_handle=handle;
         if(!stream_scene)stream_open();
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return 0;}
@@ -7900,7 +7991,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     world_sort_begin();
 #endif
     if(stream_aborted){RE4DC_WHD(8);return 0;}
-    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),t.width,t.height,handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
+    pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,re4dc::texture::pvr_format(t),RE4DC_TSP_W(t),RE4DC_TSP_H(t),handle->package.pvr_texture(0),PVR_FILTER_BILINEAR);
     const pvr_cull_mode_t cull[]={PVR_CULLING_NONE,PVR_CULLING_CCW,PVR_CULLING_CW};
     c.gen.culling=cull[k[5]];
     c.depth.comparison=PVR_DEPTHCMP_GEQUAL;
@@ -7946,6 +8037,7 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
     ui_order_polygon_header(header);
 #endif
     std::uint32_t count;re4dc::render::begin_pvr_packet(model_packets+model_used,count,header);
+    RE4DC_GAD_HIT(handle->key);
     model_pending=model_used+count;model_handle=handle;
     if(!stream_scene)stream_open();
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER

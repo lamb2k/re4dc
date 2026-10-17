@@ -178,7 +178,16 @@ T15_HZ=${T15_HZ-HAZE_SPRITE_CUT=1}
 #      PS2_CH1_ENEMY's default 6 and R101_ALIVE_CAP must equal it. T15_AC="" builds test 16 (cap 6, animals).
 #      ANIMALSOFF-20261017.md.
 T15_AC=${T15_AC-ANIMALS_OFF=1 ALIVE_CAP=4 R101_ALIVE_CAP=4}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_WV $T15_T $T15_FS $T15_RS $T15_HZ $T15_AC"
+# Test 16.3 (hotfix, 10-17), the farm / village fight fixes (render only, knob off = test 16.2's image):
+# T15_VP (lane vram101): VRAM_PAGES_VQ_ONLY=1, only VQ textures start on a 2 KiB page (r101 preload 22 evictions -> 0,
+#      largest free block 10 KB -> 58 KB in its test 17 arm). T15_VP="" builds without it.
+T15_VP=${T15_VP-VRAM_PAGES_VQ_ONLY=1}
+# T15_GD (lane gatlas17; user: "We can lower ganado texture detail if that will make the room work"): GANADO_ATLAS_DROP=3,
+#      in r101 only the PS2 cast's em15-00 and em15-03 512x512 Ganado atlases load without their top mip level (256x256
+#      with mips, 2 x 65,536 B of VRAM), so all of r101's preload picks stay resident. GATLAS17-20261017.md. T15_GD=""
+#      builds without it.
+T15_GD=${T15_GD-GANADO_ATLAS_DROP=3}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_WV $T15_T $T15_FS $T15_RS $T15_HZ $T15_AC $T15_VP $T15_GD"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"
