@@ -589,6 +589,13 @@ void gameRoomInit()
         pG->nPrim = RE4DC_PRIM_MIN_ST3;
     }
 #endif
+#if defined(RE4DC_PRIM_CAP_R320) && RE4DC_PRIM_CAP_R320
+    // PRIM_CAP_R320 (lane ch5found16 2026-10-17, heap 4 for r320's gatling fight with the PS2 soldier cast): after
+    // PRIM_MIN_ST3, r320 asks 442,368 B; PRIM_WATER peak 288,928 B (actor tail 250,560), overflow 0, cast on.
+    if (pG->room_id == 0x320 && !(pG->System_flg & 0x200000) && pG->nPrim > RE4DC_PRIM_CAP_R320) {
+        pG->nPrim = RE4DC_PRIM_CAP_R320;
+    }
+#endif
 #if defined(RE4DC_PRIM_BUF_KB) && RE4DC_PRIM_BUF_KB
     // PRIM_BUF_KB (Makefile, lane cast16 2026-10-16; size only, every room): the room's primitive buffer asks at most
     // this many KB (heap 4). The GC room values (r11f 655,360 B) were sized for the GameCube; the cap is the worst

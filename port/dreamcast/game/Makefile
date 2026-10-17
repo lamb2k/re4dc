@@ -809,6 +809,12 @@ PRIM_MIN_ST3 ?= 0
 ifneq ($(PRIM_MIN_ST3),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_MIN_ST3=$(PRIM_MIN_ST3)
 endif
+# PRIM_CAP_R320=<bytes> (lane ch5found16 2026-10-17, default 0: no effect): caps r320's primitive buffer (442,368 B after
+# PRIM_MIN_ST3) for heap 4 in its gatling fight with the PS2 soldier cast; PRIM_WATER peak 288,928 B, overflow 0.
+PRIM_CAP_R320 ?= 0
+ifneq ($(PRIM_CAP_R320),0)
+$(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R320=$(PRIM_CAP_R320)
+endif
 # PRIM_BUF_KB=<KB> (lane cast16 2026-10-16; default 0: no effect; size only): every room's primitive buffer asks at most
 # this many KB of heap 4 (GC room values: r11f 655,360 B). Set it to the worst chapter 1-2 per-frame peak (PRIM_WATER,
 # primitives + native actor tail) x 1.5. A primitive that does not fit is skipped (GetPrimBuff returns 0; the sub screen
