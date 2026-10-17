@@ -222,7 +222,8 @@ bool load() {
     }
     const file_t f=fs_open("/cd/dc/native/ganado/ganado_var.re4gv",O_RDONLY);
     if(f==FILEHND_INVALID)return fail(2,0);
-    if(unsigned(fs_total(f))!=g::file_bytes){fs_close(f);return fail(3,unsigned(fs_total(f)));}
+    const unsigned total=unsigned(fs_total(f));
+    if(total!=g::file_bytes){fs_close(f);return fail(3,total);}
     cell=static_cast<unsigned char*>(re4dc_static_alloc(g::file_bytes+g::skin_total+32u));
     if(!cell){fs_close(f);return fail(4,g::file_bytes+g::skin_total);}
     unsigned char* base=reinterpret_cast<unsigned char*>((reinterpret_cast<std::uintptr_t>(cell)+31u)&~std::uintptr_t(31u));

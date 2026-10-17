@@ -95,9 +95,10 @@ extern "C" re4dc_source::BlobError re4dc_actor_immutable_chunk_proof(
     if(entry.error==BlobError::None)output=entry.proof;
     return entry.error;
 }
-#if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
+#if (defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD) || RE4DC_ACTOR_GANADO_PS2_STUMP
 // GANADO_LOD (coarse_ganado_lod.inc): a level load rebinds the body / head IDs to the new bytes; called only from the
-// actor retirement (no owned record holds a proof) or before any owner plan.
+// actor retirement (no owned record holds a proof) or before any owner plan. ACTOR_GANADO_PS2_STUMP: the variant
+// package's IDs at each (re)load and release (coarse_actor_owner_ganado.inc ganado_var::forget).
 extern "C" void re4dc_actor_immutable_chunk_reset(unsigned asset_id) {
     if(asset_id && asset_id<=RE4DC_IMMUTABLE_CHUNK_COUNT)actor_immutable_chunks[asset_id-1]={};
 }
