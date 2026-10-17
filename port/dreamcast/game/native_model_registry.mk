@@ -691,7 +691,7 @@ ifeq ($(TEX_PKG_SKIP),1)
 GAME_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
 PLATFORM_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
 endif
-# NATIVE_MODEL_REGISTRY_DYING=1 (lane cast16 2026-10-17; render only, default 0): a registry-planned Ganado-class enemy
+# NATIVE_MODEL_REGISTRY_DYING=1 (lane cast16 2026-10-17; render only, default 0): a Ganado-class enemy (Ganado cast or registry plan)
 #              (ids 0x10..0x20) keeps its PS2 plan while its whole-model fade runs (death: invisible_factor < 1), drawn
 #              through ACTOR_GANADO_DEATH_FADE's G1 ticket (its source FIFO position, TR list, the source alpha) instead
 #              of declining to the GC path (CAST-GC "semantics"). Compiles the G1 machinery; the reviewed id13 G1

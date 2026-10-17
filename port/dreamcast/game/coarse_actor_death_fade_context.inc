@@ -36,11 +36,12 @@ bool actor_fade_eligible_g1(cModel* m,const Re4dcActorPlan& p) {
 }
 bool actor_fade_eligible(cModel* m,const Re4dcActorPlan& p) {
 #if RE4DC_NMR_DYING
-    // NATIVE_MODEL_REGISTRY_DYING (native_model_registry.mk): a registry-planned Ganado-class enemy (em10.cpp family,
-    // ids 0x10..0x20, one source pass) while its whole-model fade runs (death: invisible_factor -0.1 per frame; the source
-    // skips the model at 0, trans.cpp) keeps its native plan: the G1 ticket draws it at its source FIFO position in the
-    // TR list with the source's alpha. Before, actor_semantics declined it and its last frames drew GC (CAST-GC).
-    if(m && m->kindid==0 && m->id>=0x10 && m->id<=0x20 && p.appearance>=nmr::appearance_first && !m->ot_type &&
+    // NATIVE_MODEL_REGISTRY_DYING (native_model_registry.mk): a Ganado-class enemy (em10.cpp family, ids 0x10..0x20,
+    // one source pass) planned by the PS2 Ganado cast or a registry descriptor, while its whole-model fade runs (death:
+    // invisible_factor -0.1 per frame; the source skips the model at 0, trans.cpp), keeps its native plan: the G1 ticket
+    // draws it at its source FIFO position in the TR list with the source's alpha. Before, actor_semantics declined it
+    // and its last frames drew GC (CAST-GC).
+    if(m && m->kindid==0 && m->id>=0x10 && m->id<=0x20 && !m->ot_type &&
        m->invisible_factor>0.0f && m->invisible_factor<1.0f && m->invisible_factor2==1.0f && m->alpha_omit==255)return true;
 #endif
     return actor_fade_eligible_g1(m,p);
