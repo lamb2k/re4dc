@@ -111,9 +111,13 @@ Landed with motion streaming (lane ch5found16 8627a5df, generic part) on branch 
 - `release-knobs.py` `disc_files`: a DROP_LOOSE set in the list keeps loose `dc/tex/<c>/<key>.re4tex` out of the Build-Assets
   zip (the disc has none), and the `ovl` entry of data set ch2 (overlay names, built by the recipe) is skipped instead of
   failing. With `snd16,water16i,vq16w,fsh,ch2,cast16,pak17` the zip's disc part is 402 files (1,801 without pak17).
-- Test 17 knob file: not written yet. `release-knobs.py write` refuses the chapter 2 recipe's private
-  `PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR` (no place in the Build-Assets zip or build-public.sh). When it is
-  written, its `# disc-sets:` line is `snd16,water16i,vq16w,fsh,ch2,cast16,pak17` (test 16: snd16,water16i,vq16w).
+- Test 17 knob file: `release-knobs.py write` refused the chapter 2 recipe's private `PS2_ENEMY_CH22_DIR` /
+  `PS2_ENEMY_CH23_DIR`. Fixed on lane/kit17 (ed993d11): both map to the Build-Assets zip's `re4dc-assets/ps2enemych2/`
+  (`@ASSETS@/ps2enemych2` in the knob file), and build-public.sh drops them with `PS2_CH2_ENEMY=0` when the zip is absent.
+  Proof on ed993d11 (clean checkout, kit-check steps 2 / 3 / 5): write + check 193 knobs; zip 421 files, zipcheck PASS
+  (the release build read 6 private files, all in the zip); the kit build's image 582738e9 = the private ch2-build.sh rP
+  build k17rP, 9 overlays identical; the no-assets build builds with PS2_CH2_ENEMY=0. Its `# disc-sets:` line is
+  `snd16,water16i,vq16w,fsh,ch2,cast16,pak17` (test 16: snd16,water16i,vq16w).
 
 ### Gates on the merged tree (land/t17-pak17-motion over t15/int f30cd6f9; Flycast)
 
