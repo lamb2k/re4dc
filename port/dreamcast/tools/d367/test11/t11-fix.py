@@ -499,6 +499,11 @@ T17_DATA = T15_DATA + ',ch2,cast16,pak17'
 ZR17D = os.environ.get('ZR17D', '/root/re4data/private/zeroread17-20261017')
 DATA['zr17'] = {'em/em15.drs': ZR17D + '/em15.drs', 'em/em12.drs': ZR17D + '/em12.drs', 'dc/resident.bin': ZR17D + '/resident.bin'}
 T17Z_DATA = T17_DATA + ',zr17'   # zr17 last: it replaces acc12's em15 / em12 and ch2's resident.bin
+# Lane vram101 (10-17, data only): zr17's dc/resident.bin plus r101's last first-sight key (076e860e, 16x24; vram/resident/
+# r101.tsv). With VRAM_PAGES_VQ_ONLY=1, r101 then has 0 uploads in play (cross fight, bell gate). sha256 5d92e631.
+V101D = os.environ.get('V101D', '/root/re4data/private/vram101-20261017')
+DATA['v101'] = {'dc/resident.bin': V101D + '/resident.bin'}
+T17V_DATA = T17Z_DATA + ',v101'   # v101 after zr17: replaces its resident.bin
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
