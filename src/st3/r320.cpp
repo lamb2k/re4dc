@@ -1066,6 +1066,11 @@ void R320Main()
         SceAtSetEnable(0x36, 0);
     }
 }
+// ALIVE_CAP (ch5found16 10-17): a cEmWrap whose send the cap holds reads active (em_wrap.cpp "held sends are alive")
+// and its getPtr() creates the enemy over the cap. The target scan only looks at enemies, so held slots are skipped
+// (before the held-handle change they read inactive here too).
+static inline int r320_held(cEmWrap* w) { return w->alive == 2; }
+
 // The helicopter's rocket target: the active enemy farthest from the player, re-picked every 140
 // frames or when the current one is gone.
 void SetHeriTargetEm()
@@ -1073,7 +1078,7 @@ void SetHeriTargetEm()
     int chg = 0;
 
     if (r320_work->target != -1) {
-        if (r320_work->em[r320_work->target].isActive() == 1) {
+        if (r320_work->em[r320_work->target].isActive() == 1 && !r320_held(&r320_work->em[r320_work->target])) {
             cEm3d* heri = (cEm3d*) r320_work->heri.getPtr();
 
             if (heri) {
@@ -1094,7 +1099,7 @@ void SetHeriTargetEm()
             if (i == 0x20 || i == 0x1B || i == 0x25 || i == 0 || i == 0x12 || i == 0x1A) {
                 continue;
             }
-            if (r320_work->em[i].isActive() == 1) {
+            if (r320_work->em[i].isActive() == 1 && !r320_held(&r320_work->em[i])) {
                 if (r320_work->em[i].getPtr()->plDist2 > dist) {
                     best = i;
                     dist = r320_work->em[i].getPtr()->plDist2;
@@ -1376,7 +1381,7 @@ static void appear_f()
     }
     at = SceAtPtr(0x13);
     for (i = 0; i <= 0x38; i++) {
-        if (r320_work->em[i].isAlive() == 1) {
+        if (r320_work->em[i].isAlive() == 1 && !r320_held(&r320_work->em[i])) {   // ALIVE_CAP: held = no enemy here
             if (AreaHitCheck(&at->area, &r320_work->em[i].getPtr()->pos)) {
                 r320_work->em[i].destroy();
             }
@@ -2492,12 +2497,33 @@ static void Evt_R320S01_Func(Event* e)
 }
 
 // Destroys the active enemies farthest from the player until `keep` are left.
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+extern "C" int re4dc_aliveCapHeldCount(int lo, int hi);
+extern "C" int re4dc_aliveCapFarDrop(int max, int clearAlive);
+#endif
+
 void deleteFarEm(int keep)
 {
     U32Set(r320_work->emAlive, SceCountEmAlive(0x10, 0x20));
     if (r320_work->emAlive > keep) {
         int cnt = r320_work->emAlive - keep;
         int k;
+
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+        // ALIVE_CAP (ch5found16 10-17): the count includes the cap's held sends (alive on the PS2). Over `keep` the
+        // held ones go first (never on screen; wrap delete: entry kept), then the farthest live ones as before; the
+        // scan below skips held slots, whose getPtr() would create the enemy over the cap only to delete it.
+        {
+            int held = re4dc_aliveCapHeldCount(0x10, 0x20);
+
+            if (held > cnt) {
+                held = cnt;
+            }
+            if (held > 0) {
+                cnt -= re4dc_aliveCapFarDrop(held, 0);
+            }
+        }
+#endif
 
         for (k = 0; k < cnt; k++) {
             f32 far = 0.0f;
@@ -2508,7 +2534,7 @@ void deleteFarEm(int keep)
                 if (i == 0x20 || i == 0x1B || i == 0x25 || i == 0 || i == 0x12 || i == 0x1A) {
                     continue;
                 }
-                if (r320_work->em[i].isActive() == 1) {
+                if (r320_work->em[i].isActive() == 1 && !r320_held(&r320_work->em[i])) {
                     f32 d = (r320_work->em[i].getPtr()->pos.x - pPL->pos.x) * (r320_work->em[i].getPtr()->pos.x - pPL->pos.x)
                             + (r320_work->em[i].getPtr()->pos.y - pPL->pos.y) * (r320_work->em[i].getPtr()->pos.y - pPL->pos.y)
                             + (r320_work->em[i].getPtr()->pos.z - pPL->pos.z) * (r320_work->em[i].getPtr()->pos.z - pPL->pos.z);
