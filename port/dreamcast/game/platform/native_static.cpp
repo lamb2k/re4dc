@@ -4934,9 +4934,22 @@ int ps2_pass(unsigned pass,float zfar){
             if(any!=(((ps2w.pass_mask[i]>>pass)&1U)!=0))++ps2_mask_stats[1];
         }
 #endif
+#if defined(RE4DC_FOLIAGE_TRIM) && RE4DC_FOLIAGE_NEAR_FIX
+        // FOLIAGE_NEAR_FIX (hwfog.mk, lane lake17): at NEAR the cut-out cards of pass 2 draw in pass 1, so a placement
+        // whose cards are its only pass-1 candidates must not be skipped by the pass scan below (without this, NEAR drew
+        // no card that sits in a translucent-only placement: Near looked like Off). The per-part pass_of test decides.
+        const unsigned pass_bits=(1U<<pass)|((pass==1 && re4dc_foliage==1U)?4U:0U);
+#define RE4DC_PASS_HIT(p) (((pass_bits>>(p))&1U)!=0)
+#else
+#define RE4DC_PASS_HIT(p) ((p)==pass)
+#endif
 #if RE4DC_PS2_PASS_MASK
         const bool masked=ps2w.masked && RE4DC_PS2_MASK_ON;
+#if defined(RE4DC_FOLIAGE_TRIM) && RE4DC_FOLIAGE_NEAR_FIX
+        if(masked && !(ps2w.pass_mask[i]&pass_bits))continue;
+#else
         if(masked && !((ps2w.pass_mask[i]>>pass)&1U))continue;
+#endif
 #endif
         const auto& pl=ps2w.placements[i];const auto& mesh=pk.meshes()[pl.mesh];
 #if RE4DC_PS2_PVS
@@ -4953,13 +4966,14 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
         {
         bool any=false;
-        for(unsigned k=0;k<mesh.part_count && !any;++k)any=ps2w.parts[mesh.first_part+k].pass==pass;
+        for(unsigned k=0;k<mesh.part_count && !any;++k)any=RE4DC_PASS_HIT(ps2w.parts[mesh.first_part+k].pass);
 #if defined(RE4DC_TRANS_POLICY)
         // TRANS_POLICY FLAT: a translucent-only placement can hold parts that now draw in pass 0
         for(unsigned k=0;!pass && k<mesh.part_count && !any;++k)any=trans::opaque_candidate(mesh.first_part+k);
 #endif
         if(!any)continue;
         }
+#undef RE4DC_PASS_HIT
 #if RE4DC_PS2_WORLD_DYNAMIC
         const float* affine=pl.affine;float moved_affine[12];
         // The r11f owner admits only the whole immutable authored group.
