@@ -69,7 +69,8 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | In the village (r101) the burning stake has lost its crossbar and a plank of the pyre (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | In the village (r101) the fence by the house on the right of the square shows only its posts, without its rails (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | The item menu's confirm popup does not look as it did in test 13 | test 14, 15 | ⏸️ Open | |
-| In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 15: 4 refused; test 14: 76) | test 14, 15 | ⏸️ Open: fix planned for a later test (the room's pictures are loaded again in one pass after a save is loaded) | [#33](https://github.com/lamb2k/re4dc/issues/33) |
+| In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 16.3 and 16.4: 5 refused; test 15: 4; test 14: 76) | test 14 to 16.4 | ⏸️ Open: fix planned for a later test (the room's pictures are loaded again in one pass after a save is loaded) | [#33](https://github.com/lamb2k/re4dc/issues/33) |
+| A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3, 16.4 | ⏸️ Open: the rooms' resident picture lists miss these pictures; fix planned for a later test | |
 
 ## Sound
 
