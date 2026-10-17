@@ -1,0 +1,13 @@
+name ce-r223
+# ch4found16 effect-compaction gate: r223 kill rig on em16 (cap 4, god), stills at room frames 310 / 330 (held 16 s for the 15 s shot period)
+room 0x223
+pos -29407 4126 28370
+ang -1.9930
+inv default
+god
+alivelog 150
+kill 0x16 300 0x223
+killrep 14 90
+still 310 16000
+still 330 16000
+dump

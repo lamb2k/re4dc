@@ -1,0 +1,13 @@
+name ce-r205
+# ch4found16 effect-compaction gate: r205 kill rig on em2d (cap 4, god), stills at room frames 310 / 330 (held 16 s for the 15 s shot period)
+room 0x205
+pos -1022 3996 700
+ang 1.3600
+inv default
+god
+alivelog 150
+kill 0x2d 300 0x205
+killrep 14 90
+still 310 16000
+still 330 16000
+dump

@@ -1,0 +1,13 @@
+name ce-r209
+# ch4found16 effect-compaction gate: r209 kill rig on em1a (cap 4, god), stills at room frames 310 / 330 (held 16 s for the 15 s shot period)
+room 0x209
+pos 574 0 120
+ang -1.3820
+inv default
+god
+alivelog 150
+kill 0x1a 300 0x209
+killrep 14 90
+still 310 16000
+still 330 16000
+dump
