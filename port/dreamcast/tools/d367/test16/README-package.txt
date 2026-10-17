@@ -55,6 +55,13 @@ New in test 16:
 * The village (r101) is back to its full-detail world: the burning
   stake, the pyre and the fence by the house are complete again.
 
+From test 16.4:
+* Foliage Near draws the near brush and leaf cards again (before, Near
+  looked the same as Off).
+* The lake is drawn farther before it fades into the fog: 30 m out on
+  the boat (Del Lago), 45 m from the shore (day and night), instead of
+  25 m.
+
 From test 15.1 (hotfix):
 * The see-through haze and mist sprites around Leon are no longer drawn,
   in any room and at every Foliage setting. The distant haze is still

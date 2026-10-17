@@ -176,7 +176,13 @@ texture is a near-binary cut-out (leaf / brush cards, fence gaps; key table plat
 from an alpha census of the chapter 1 packages) are drawn in the punch-through list up to 12 m at Near, and every listed
 card key (classes 1-4, soft shadow / mist / grass cards included) is left out at Off; surfaces without cut-out holes
 (walls, floors, water), unlisted keys and the vertex-alpha overlays always draw. It is not
-saved either: every boot starts at the recipe's `FOLIAGE_TRIM` level (Near in the release). The knob `HAZE_SPRITE_CUT=1`
+saved either: every boot starts at the recipe's `FOLIAGE_TRIM` level (Near in the release). `FOLIAGE_NEAR_FIX=1`
+(hwfog.mk, recipe group `T15_FN`; render only) makes Near's punch-through pass also visit placements that only have
+translucent parts, so their cut-out cards draw at Near (without it they were drawn in neither pass). Lake far
+(post30.mk, recipe group `T15_LF`; render only): `LAKE_FAR=<mm>` draws r10b (the Del Lago boat) and
+`LAKE_FAR_SHORE=<mm>` (default `LAKE_FAR`) draws r11a / r11b (the shore, day and night) to that far instead of the
+25 m cap, for the PS2 world, the coarse view and the fog; the fog ramp still takes the last 20 %. 0 keeps 25 m; values
+must be above 25000 and need `FOG_FAR_CAP=0`. The release uses 30000 / 45000. The knob `HAZE_SPRITE_CUT=1`
 (hwfog.mk, recipe group `T15_HZ`; render only) leaves out every haze / mist sprite at every Foliage setting: the camera
 haze around Leon (Esp15), the mist sheets (Esp48) and the r118 / r11c PS2 haze additions; the distant haze stays as the
 fog table (`HW_FOG_HAZE`, `EFFECT_HAZE_LEAN`), which is fed before the cut. Docs: docs/MIST_CUT.md. On a warp test disc (`DBG_WARP=1`) the warp line
