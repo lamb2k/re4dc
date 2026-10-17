@@ -182,7 +182,7 @@ translucent parts, so their cut-out cards draw at Near (without it they were dra
 (post30.mk, recipe group `T15_LF`; render only): `LAKE_FAR=<mm>` draws r10b (the Del Lago boat) and
 `LAKE_FAR_SHORE=<mm>` (default `LAKE_FAR`) draws r11a / r11b (the shore, day and night) to that far instead of the
 25 m cap, for the PS2 world, the coarse view and the fog; the fog ramp still takes the last 20 %. 0 keeps 25 m; values
-must be above 25000 and need `FOG_FAR_CAP=0`. The release uses 30000 / 45000. The knob `HAZE_SPRITE_CUT=1`
+must be above 25000 and need `FOG_FAR_CAP=0`. The release uses 45000 / 45000. The knob `HAZE_SPRITE_CUT=1`
 (hwfog.mk, recipe group `T15_HZ`; render only) leaves out every haze / mist sprite at every Foliage setting: the camera
 haze around Leon (Esp15), the mist sheets (Esp48) and the r118 / r11c PS2 haze additions; the distant haze stays as the
 fog table (`HW_FOG_HAZE`, `EFFECT_HAZE_LEAN`), which is fed before the cut. Docs: docs/MIST_CUT.md. On a warp test disc (`DBG_WARP=1`) the warp line

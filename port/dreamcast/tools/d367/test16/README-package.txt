@@ -58,8 +58,8 @@ New in test 16:
 From test 16.4:
 * Foliage Near draws the near brush and leaf cards again (before, Near
   looked the same as Off).
-* The lake is drawn farther before it fades into the fog: 30 m out on
-  the boat (Del Lago), 45 m from the shore (day and night), instead of
+* The lake is drawn farther before it fades into the fog: 45 m out on
+  the boat (Del Lago) and from the shore (day and night), instead of
   25 m.
 
 From test 15.1 (hotfix):

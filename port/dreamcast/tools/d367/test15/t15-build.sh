@@ -191,9 +191,10 @@ T15_GD=${T15_GD-GANADO_ATLAS_DROP=3}
 #      of translucent-only placements again (the pass-1 placement scan skipped them). Render only; needs T15_T. Evidence
 #      C:/Flycast-Evidence/re4-dreamcast/lake17-20261017 (stills/fr100-sheet.png). T15_FN="" builds without it.
 T15_FN=${T15_FN-FOLIAGE_NEAR_FIX=1}
-# T15_LF (lane lake17, 10-17; user option (a) after the tester's lake report, per room): LAKE_FAR=30000 for r10b (boat),
-#      LAKE_FAR_SHORE=45000 for r11a / r11b; fog ramp unchanged (last 20 %). Render only. T15_LF="" builds without it.
-T15_LF=${T15_LF-LAKE_FAR=30000 LAKE_FAR_SHORE=45000}
+# T15_LF (lane lake17, 10-17; user option (a) after the tester's lake report, per room): LAKE_FAR=45000 for r10b (boat;
+#      user 10-17: the boat goes to 45 m too, modelled ~+3.8 hw ms accepted), LAKE_FAR_SHORE=45000 for r11a / r11b; fog ramp
+#      unchanged (last 20 %). Render only. T15_LF="" builds without it.
+T15_LF=${T15_LF-LAKE_FAR=45000 LAKE_FAR_SHORE=45000}
 T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_WV $T15_T $T15_FS $T15_RS $T15_HZ $T15_AC $T15_VP $T15_GD $T15_FN $T15_LF"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
