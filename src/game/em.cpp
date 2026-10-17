@@ -413,6 +413,50 @@ void cEm::setNoItem()
     itemFlag = 0;
 }
 
+#if defined(RE4DC_ANIMAL_FAR_RATE) && RE4DC_ANIMAL_FAR_RATE > 1
+#include "dmg.h"
+// ANIMAL_FAR_RATE=N (Makefile; lane animfar17 2026-10-17, coordinator round 5 B; an APPROXIMATION, default 0 = off):
+// the farm animals (cow em26 and chicken em28 anywhere, the dog em21 in r103 only: the r100 trap dog and the r11e
+// El Gigante dog keep every tick) run their whole frame step (move, skeleton, old position) only every Nth tick while
+// they are far from Leon (> ANIMAL_FAR_DIST, plDist2) or off-screen (more than 60 degrees off the camera axis and
+// > 5 m away). Never skipped: the creation tick, a tick with a hit pending (dmg.m_Flag: weapon hits wait for it, they
+// are not lost), a tick inside an explosion / fire volume (DmgMgr.hitCheck, the same query their damage checks make),
+// and any animal near and on screen. So they stay shootable and killable at once; a death, its item drop and the
+// chickens' eggs run in their own move as before. What changes: far / off-screen animals idle, walk and lay eggs at 1/N
+// the rate (their motions play slower where the player cannot see them), and the global Rnd() stream differs from the
+// knob-off game (their calls are fewer), so this is gameplay-equivalent, not STRICT. Updates are staggered by serial.
+static int re4dc_animal_far_skip(cEm* em)
+{
+    if (em->id != 0x26 && em->id != 0x28 && !(em->id == 0x21 && pG->room_id == 0x103)) {
+        return 0;
+    }
+    if (em->r_no_0 == 0 || em->dmg.m_Flag) {
+        return 0;
+    }
+    if ((((u32) pG->Frame_cnt + (u32) em->serial) % RE4DC_ANIMAL_FAR_RATE) == 0) {
+        return 0;
+    }
+    if (DmgMgr.hitCheck(&em->pos, 0)) {
+        return 0;
+    }
+    if (em->plDist2 <= (f32) RE4DC_ANIMAL_FAR_DIST * (f32) RE4DC_ANIMAL_FAR_DIST) {
+        // near: skip only when off-screen (behind the camera, or more than 60 degrees off its axis) and over 5 m away
+        const Camera* cam = &pG->Cam;
+        const f32 vx = em->pos.x - cam->param.pos.x;
+        const f32 vy = em->pos.y - cam->param.pos.y;
+        const f32 vz = em->pos.z - cam->param.pos.z;
+        const f32 f = -(vx * cam->Look.x + vy * cam->Look.y + vz * cam->Look.z);   // Look = pos - at: forward is -Look
+        if (em->plDist2 <= 25000000.0f) {
+            return 0;
+        }
+        if (f > 0.0f && f * f >= 0.25f * (vx * vx + vy * vy + vz * vz)) {
+            return 0;
+        }
+    }
+    return 1;
+}
+#endif
+
 // Per-character frame step for every work but the player: skips hidden works during an event
 // pause (Status_flg[1] 0x10000000 unless be_flag 0x800) and the frozen partner; caches the
 // squared distance to the player (plDist2), ticks the damage info, runs the virtual move(), then
@@ -441,6 +485,11 @@ void emMove(cEm* em)
     dx = pPL->pos.x - em->pos.x;
     em->plDist2 = dx * dx + dz * dz;
     em->l_sub = 1e16f;
+#if defined(RE4DC_ANIMAL_FAR_RATE) && RE4DC_ANIMAL_FAR_RATE > 1
+    if (re4dc_animal_far_skip(em)) {
+        return;
+    }
+#endif
     em->dmg.move();
 #if defined(RE4DC_EL_CENSUS) && RE4DC_EL_CENSUS
     re4dc_elc_em = em;

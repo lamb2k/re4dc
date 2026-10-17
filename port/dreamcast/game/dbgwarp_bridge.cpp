@@ -623,6 +623,29 @@ void kill_poll()
         wp.alive_last = wp.room_frames;
         re4dc_log("warp: alive %d room %03x frame %u\n", SceCountEmAlive(0x10, 0x20), (unsigned) pG->room_id,
                   (unsigned) wp.room_frames);
+        // lane animfar17: the live farm animals (hp > 0) with the alive line
+        int an[3] = {0, 0, 0};
+        static const int aid[3] = {0x26, 0x28, 0x21};
+        for (int k = 0; k < 3; ++k)
+            for (cEm* e = EmMgr.getEmPtr(aid[k], 0); e; e = EmMgr.getEmPtr(aid[k], e))
+                if ((e->be_flag & 1) && e->hp > 0) ++an[k];
+        re4dc_log("warp: animals cow %d chicken %d dog %d room %03x frame %u\n", an[0], an[1], an[2],
+                  (unsigned) pG->room_id, (unsigned) wp.room_frames);
+    }
+    if (wp.alive_period) {
+        // lane animfar17 (with `alivelog`): each pickup item area (type 3: eggs 8 / 9 / 0xA, drops) once, when it appears
+        static u32 item_seen[8];
+        u32 item_now[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+        SceAtWork* a = sceAtSetOtStart();
+        while ((a = sceAtGetOtAddr(a)) != 0) {
+            if (a->type != 3) continue;
+            item_now[a->no >> 5] |= 1u << (a->no & 31);
+            if (!(item_seen[a->no >> 5] & (1u << (a->no & 31))))
+                re4dc_log("warp: item new no=%u id=%02x num=%u pos=%d,%d,%d room %03x frame %u\n", (unsigned) a->no,
+                          (unsigned) a->item.id, (unsigned) a->item.num, (int) a->item.pos.x, (int) a->item.pos.y,
+                          (int) a->item.pos.z, (unsigned) pG->room_id, (unsigned) wp.room_frames);
+        }
+        memcpy(item_seen, item_now, sizeof(item_seen));
     }
     if (wp.kill_watch && wp.kill_em && (wp.room_frames % 15) == 0) {
         --wp.kill_watch;

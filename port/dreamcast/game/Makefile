@@ -295,6 +295,18 @@ endif
 #   r11c r11d).
 ALIVE_CAP ?= 0
 ALIVE_CAP_LOG ?= 0
+# ANIMAL_FAR_RATE=N (lane animfar17 2026-10-17; an APPROXIMATION, default 0 = off; 2..4): far or off-screen farm animals
+#   (cows em26, chickens em28, the r103 dog em21) run their frame step every Nth tick only (src/game/em.cpp emMove,
+#   re4dc_animal_far_skip: never with a hit pending, inside an explosion volume, or near and on screen). Far =
+#   ANIMAL_FAR_DIST units (default 15000 = 15 m) from Leon. Gameplay-equivalent, not STRICT (fewer Rnd() calls).
+ANIMAL_FAR_RATE ?= 0
+ANIMAL_FAR_DIST ?= 15000
+ifneq ($(ANIMAL_FAR_RATE),0)
+ifneq ($(filter $(ANIMAL_FAR_RATE),2 3 4),$(ANIMAL_FAR_RATE))
+$(error ANIMAL_FAR_RATE must be 0 or 2..4 (got $(ANIMAL_FAR_RATE)))
+endif
+$(OBJDIR)/src/game/em.o: GAME_CPPFLAGS += -DRE4DC_ANIMAL_FAR_RATE=$(ANIMAL_FAR_RATE) -DRE4DC_ANIMAL_FAR_DIST=$(ANIMAL_FAR_DIST)
+endif
 # CAP_COMPARE=1 (below): the cap values the sources compare with (the constants, or the runtime re4dc_cap_rt)
 CAP_COMPARE ?= 0
 ALIVE_CAP_N = $(if $(filter 1,$(CAP_COMPARE)),re4dc_cap_rt,$(ALIVE_CAP))
