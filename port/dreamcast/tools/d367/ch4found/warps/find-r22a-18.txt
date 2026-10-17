@@ -1,0 +1,11 @@
+name find-r22a-18
+# ch4found16: where the em18 of r22a are (kill rig from the Codex walk entry: each kill prints the target position), god
+room 0x22a
+pos -52 51500 -18263
+ang 3.0130
+inv default
+god
+alivelog 300
+kill 0x18 300 0x22a
+killrep 14 60
+dump
