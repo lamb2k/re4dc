@@ -551,7 +551,20 @@ extern "C" int re4dc_source_world_prepare(unsigned native,unsigned* generation) 
     RE4DC_SOURCE_DIAG_STAGE("walk");
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(f.role && (!re4dc_ps2_source_legacy_clean(native) || !re4dc_source_world_op_window() || !re4dc_ps2_source_group_package(&pg,1) ||
-       !re4dc_r200_scroll_group() || !re4dc_r200_scroll_pointers(f.group,kSourceWorldCallbacks))){sourceWorldFail(14);return 0;}
+       !re4dc_r200_scroll_group() || !re4dc_r200_scroll_pointers(f.group,kSourceWorldCallbacks))){
+#if RE4DC_TRANSITION_GATE_DIAG
+        // TRANSITION_GATE_DIAG (test only): which of the five pre-walk checks refused (reason 14), with the r200 package
+        // and scroll pins against the live data (tools/d367/srcworld/r200_profile.py regenerates the pins).
+        static unsigned tgd_lines;
+        if(tgd_lines<6){
+            ++tgd_lines;unsigned pg2=0;
+            re4dc_log("TGD f=%u legacy=%d opwin=%d package=%d scroll_group=%d scroll_ptrs=%d\n",re4dc_ui_frame(),
+                re4dc_ps2_source_legacy_clean(native),re4dc_source_world_op_window(),re4dc_ps2_source_group_package(&pg2,1),
+                re4dc_r200_scroll_group(),re4dc_r200_scroll_pointers(f.group,kSourceWorldCallbacks));
+            re4dc_ps2_source_group_package_diag();re4dc_r200_scroll_diag();
+        }
+#endif
+        sourceWorldFail(14);return 0;}
 #endif
     if(!sourceWorldWalk(true))return 0;
     f.active=f.count!=0;

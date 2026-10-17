@@ -2526,6 +2526,10 @@ extern "C" void re4dc_ps2_fx_stage1_render(int coarse,int skipping);
 
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
 #include "ps2_source_world.h"
+#if RE4DC_TRANSITION_GATE_DIAG
+extern "C" void re4dc_ps2_source_group_package_diag(); // native_source_world.inc
+extern "C" void re4dc_r200_scroll_diag();               // source_world_scroll.inc
+#endif
 #include "source_world_frame.inc"
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
