@@ -1448,6 +1448,44 @@ void* GetDataExt(void* arc, const char* tag, int no)
 
 asm(".section .bss; .balign 32");
 
+#if RE4DC_EVENT_SWAP_RELOAD
+// EVENT_SWAP_RELOAD: the disc file readEmData loaded into this enemy archive (same table choice and DRS name), or
+// NULL when `pointer` is not a loaded enemy archive of at least `bytes` bytes.
+extern "C" const char* re4dc_em_arc_file(const void* pointer, unsigned bytes)
+{
+    for (int i = 0; i < 4; ++i) {
+        ReadModule* m = &EmReadModule[i];
+        if (m->pArc == NULL || m->pArc != pointer || !bytes || bytes > m->size) continue;
+        ReadFile* e;
+        switch (pG->pl_type) {
+        case 0:
+        case 1:
+        default:
+            e = &EmFileTbl[m->id];
+            break;
+        case 3:
+        case 5:
+            e = &EmFileTbl_Wesker[m->id];
+            break;
+        case 2:
+            e = &EmFileTbl_Ada[m->id];
+            break;
+        case 4:
+            e = &EmFileTbl_Klauser[m->id];
+            break;
+        }
+        if (e->file == 0) return NULL;
+        char* name = (char*) FileTbl[e->file].name;
+        if (e->dll != 0) {
+            SET_DRS_NAME(name);
+            name = (char*) FileTbl[e->file].name;
+        }
+        return name;
+    }
+    return NULL;
+}
+#endif
+
 #if RE4DC_CABIN_SOURCE
 extern "C" const void* re4dc_cabin_source_module(const void* pointer,unsigned bytes){
     // Both original r11c swaps borrow the already-loaded module 0x13.

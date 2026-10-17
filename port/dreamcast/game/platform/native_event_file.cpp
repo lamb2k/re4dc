@@ -103,6 +103,151 @@ extern "C" int re4dc_event_file_reference(const char* n,unsigned b,unsigned cert
 extern "C" int re4dc_event_file_install(const char* n,unsigned b,void* dst) { return dst?run(n,b,dst):0; }
 extern "C" void re4dc_event_file_moved() { ++stats.moves; }
 extern "C" const Re4dcEventFileStats* re4dc_event_file_stats() { return &stats; }
+#if RE4DC_EVENT_SWAP_RELOAD
+// EVENT_SWAP_RELOAD (lane ch5found16): see dvd.cpp re4dc_event_swap_reload. Runs: {u32 offset, u32 length, data
+// padded to 4}; nearby differences (gap <= 8) share a run.
+namespace {
+file_t swap_open(const char* name,unsigned* total){
+    char path[96];
+    if(!name || !re4dc_dvd_native_path(name,path,sizeof(path)))return -1;
+    file_t f=fs_open(path,O_RDONLY);
+    if(f>=0)*total=unsigned(fs_total(f));
+    return f;
+}
+struct RunWriter {
+    unsigned char* out; unsigned cap,used; const unsigned char* mram; unsigned start,end; bool open,full;
+    void close(){
+        if(!open)return;
+        open=false;
+        const unsigned n=end-start, need=8+((n+3)&~3U);
+        if(used+need>cap){full=true;return;}
+        std::memcpy(out+used,&start,4);std::memcpy(out+used+4,&n,4);
+        std::memcpy(out+used+8,mram+start,n);
+        used+=need;
+    }
+    void diff(unsigned at){
+        if(open && at-end<=8){end=at+1;return;}
+        close();
+        open=true;start=at;end=at+1;
+    }
+};
+}
+extern "C" unsigned long long re4dc_swap_reload_now_us(void){ return timer_us_gettime64(); }
+extern "C" int re4dc_event_file_install_direct(const char* name,unsigned bytes,void* dst){
+    const auto start=timer_us_gettime64();
+    bool ok=false;
+    do{
+        if(!re4dc_event_file_name(name) || !bytes || bytes>max_bytes || (bytes&31) || !dst)break;
+        Re4dcIoScope io;
+        char path[96],sidecar[104];
+        if(!re4dc_dvd_native_path(name,path,sizeof(path)))break;
+        snprintf(sidecar,sizeof(sidecar),"%s.evq",path);
+        file_t q=fs_open(sidecar,O_RDONLY);if(q<0)break;
+        unsigned char table[32+4*(max_bytes/chunk_bytes)];
+        const unsigned count=(bytes+chunk_bytes-1)/chunk_bytes, length=32+4*count;
+        const bool have=fs_total(q)==static_cast<ssize_t>(length) && exact(q,table,length);
+        fs_close(q);
+        if(!have || std::memcmp(table,"R4EVDREF",8) || word(table+8)!=1 || word(table+12)!=bytes ||
+           word(table+16)!=chunk_bytes || word(table+20)!=count ||
+           word(table+24)!=net_crc32le(reinterpret_cast<const unsigned char*>(name),std::strlen(name)) ||
+           word(table+28)!=net_crc32le(table+32,4*count))break;
+        stats.metadata_bytes_read+=length;
+        file_t f=fs_open(path,O_RDONLY);if(f<0)break;
+        bool r=fs_total(f)==static_cast<ssize_t>(bytes);
+        auto* p=static_cast<unsigned char*>(dst);
+        for(unsigned i=0;r && i<count;++i){
+            const unsigned at=i*chunk_bytes, n=bytes-at<chunk_bytes?bytes-at:chunk_bytes;
+            r=exact(f,p+at,n) && net_crc32le(p+at,n)==word(table+32+4*i);
+            if(r)stats.bytes_read+=n;
+        }
+        fs_close(f);
+        ok=r;
+    }while(0);
+    const auto elapsed=timer_us_gettime64()-start;
+    const unsigned us=elapsed>0xffffffffULL?0xffffffffU:unsigned(elapsed);
+    if(us>stats.worst_wait_us)stats.worst_wait_us=us;
+    if(ok)++stats.installed;else ++stats.failures;
+    re4dc_log("event file: install-direct %s bytes=%u wait_us=%u success=%u\n",name,bytes,us,ok);
+    return ok;
+}
+// The archive is the DRS file's top-level type-0 parts, each 32-byte aligned, in order (dvd.cpp cDvdQueue mode 0x8000:
+// DvdHeader {type, size, dest, ofs, ...} 0x20-byte entries from file offset 0x20 to type -1). Segments map archive
+// offsets to file offsets; bytes outside every segment (alignment padding) are kept as runs.
+struct SwapSeg { unsigned mem,file,len; };
+static int swap_segments(file_t f,unsigned total,SwapSeg* segs,int max){
+    unsigned char e[32];unsigned mem=0;int n=0;
+    for(unsigned at=0x20;at+32<=total && at<0x20+64*32;at+=32){
+        if(fs_seek(f,at,SEEK_SET)!=static_cast<off_t>(at) || !exact(f,e,32))return -1;
+        const unsigned type=word(e),size=word(e+4),ofs=word(e+12);
+        if(type==0xffffffffU)return n;
+        if(type!=0)continue;
+        if(n==max || ofs>total || size>total-ofs)return -1;
+        segs[n++]=SwapSeg{mem,ofs,size};
+        mem+=(size+31)&~31U;
+    }
+    return -1;
+}
+extern "C" int re4dc_swap_reload_record(const char* file,const void* mram,unsigned bytes,void* bounce,unsigned bounce_bytes,
+                                        void* runs,unsigned cap,unsigned* crc){
+    unsigned total=0;
+    Re4dcIoScope io;
+    file_t f=swap_open(file,&total);
+    if(f<0)return -1;
+    SwapSeg segs[8];
+    const int nseg=swap_segments(f,total,segs,8);
+    RunWriter w{static_cast<unsigned char*>(runs),cap,0,static_cast<const unsigned char*>(mram),0,0,false,false};
+    const auto* m=static_cast<const unsigned char*>(mram);
+    const auto* b=static_cast<const unsigned char*>(bounce);
+    bool ok=nseg>0;
+    unsigned differing=0,covered=0;
+    // walk the region in archive order: segment bytes are compared with the file, the rest are differences
+    unsigned pos=0;
+    for(int s=0;ok && s<nseg && pos<bytes;++s){
+        for(;pos<segs[s].mem && pos<bytes;++pos){++differing;if(!w.full)w.diff(pos);}
+        const unsigned end=segs[s].mem+segs[s].len<bytes?segs[s].mem+segs[s].len:bytes;
+        if(pos>=end)continue;
+        ok=fs_seek(f,segs[s].file+(pos-segs[s].mem),SEEK_SET)==static_cast<off_t>(segs[s].file+(pos-segs[s].mem));
+        while(ok && pos<end){
+            const unsigned n=end-pos<bounce_bytes?end-pos:bounce_bytes;
+            ok=exact(f,bounce,n);
+            for(unsigned i=0;ok && i<n;++i)if(m[pos+i]!=b[i]){++differing;if(!w.full)w.diff(pos+i);}
+            pos+=n;covered+=n;
+        }
+    }
+    fs_close(f);
+    for(;ok && pos<bytes;++pos){++differing;if(!w.full)w.diff(pos);}
+    w.close();
+    re4dc_log("event swap reload: compare %s file=%u parts=%d region=%u covered=%u differing=%u used=%u full=%d ok=%d\n",
+              file,total,nseg,bytes,covered,differing,w.used,w.full,ok);
+    if(!ok || w.full)return -1;
+    *crc=net_crc32le(m,bytes);
+    return int(w.used);
+}
+extern "C" int re4dc_swap_reload_restore(const char* file,void* mram,unsigned bytes,const void* runs,unsigned used,unsigned crc){
+    unsigned total=0;
+    Re4dcIoScope io;
+    file_t f=swap_open(file,&total);
+    if(f<0)return 0;
+    SwapSeg segs[8];
+    const int nseg=swap_segments(f,total,segs,8);
+    auto* m=static_cast<unsigned char*>(mram);
+    bool ok=nseg>0;
+    for(int s=0;ok && s<nseg;++s){
+        if(segs[s].mem>=bytes)break;
+        const unsigned n=segs[s].mem+segs[s].len<bytes?segs[s].len:bytes-segs[s].mem;
+        ok=fs_seek(f,segs[s].file,SEEK_SET)==static_cast<off_t>(segs[s].file) && exact(f,m+segs[s].mem,n);
+    }
+    fs_close(f);
+    const auto* r=static_cast<const unsigned char*>(runs);
+    for(unsigned at=0;ok && at+8<=used;){
+        unsigned o,n;std::memcpy(&o,r+at,4);std::memcpy(&n,r+at+4,4);
+        if(o>bytes || n>bytes-o || at+8+n>used){ok=false;break;}
+        std::memcpy(m+o,r+at+8,n);
+        at+=8+((n+3)&~3U);
+    }
+    return ok && net_crc32le(m,bytes)==crc;
+}
+#endif
 extern "C" void re4dc_event_file_reject_swap() {
     ++stats.failures;
     re4dc_missing("MemorySwap: immutable EVD requires mutable snapshot backing");

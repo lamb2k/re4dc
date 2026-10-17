@@ -1645,6 +1645,18 @@ endif
 # Default zero preserves prior objects/assets; exact carrier staging is a separate reviewed gate.
 CABIN_SOURCE ?= 0
 CABIN_HANDOFF_DIAG ?= 0
+# EVENT_SWAP_RELOAD (lane ch5found16, 10-17; default 0): MemorySwap of an enemy archive against an immutable event file
+# (EVENT_FILES=1) reloads the archive region from its disc file afterwards instead of needing a mutable ARAM copy
+# (r310 r310s00 with em36). The in-place binds are kept as byte runs and the region's CRC is checked on the way back.
+EVENT_SWAP_RELOAD ?= 0
+ifneq ($(filter-out 0 1,$(EVENT_SWAP_RELOAD)),)
+$(error EVENT_SWAP_RELOAD must be 0 or 1)
+endif
+ifeq ($(EVENT_SWAP_RELOAD),1)
+ifneq ($(EVENT_FILES),1)
+$(error EVENT_SWAP_RELOAD needs EVENT_FILES=1)
+endif
+endif
 CABIN_COMPLETE_HANDOFF ?= 0
 ifneq ($(filter-out 0 1,$(CABIN_COMPLETE_HANDOFF)),)
 $(error CABIN_COMPLETE_HANDOFF must be 0 or 1)
@@ -1675,7 +1687,7 @@ endif
 .PHONY: cabin-source-force
 $(OBJDIR)/cabin-source.h: cabin-source-force
 	@mkdir -p $(dir $@)
-	@printf '#define RE4DC_CABIN_SOURCE %s\n#define RE4DC_CABIN_HANDOFF_DIAG %s\n#define RE4DC_CABIN_COMPLETE_HANDOFF %s\n' '$(CABIN_SOURCE)' '$(CABIN_HANDOFF_DIAG)' '$(CABIN_COMPLETE_HANDOFF)' > $@.tmp
+	@printf '#define RE4DC_CABIN_SOURCE %s\n#define RE4DC_CABIN_HANDOFF_DIAG %s\n#define RE4DC_CABIN_COMPLETE_HANDOFF %s\n#define RE4DC_EVENT_SWAP_RELOAD %s\n' '$(CABIN_SOURCE)' '$(CABIN_HANDOFF_DIAG)' '$(CABIN_COMPLETE_HANDOFF)' '$(EVENT_SWAP_RELOAD)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 CABIN_SOURCE_PLATFORM = $(OBJDIR)/platform/native_event_file.o $(OBJDIR)/platform/native_cabin.o $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/audio_aica.o
