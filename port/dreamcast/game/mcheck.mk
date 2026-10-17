@@ -74,3 +74,17 @@ ifneq ($(SS_CLOSE_POISON),0)
 $(OBJDIR)/sscrn_bridge.o: GAME_CPPFLAGS += -DRE4DC_SS_CLOSE_POISON=$(SS_CLOSE_POISON)
 $(OBJDIR)/platform/subscreen_backing.o: PLATFORM_CPPFLAGS += -DRE4DC_SS_CLOSE_POISON=$(SS_CLOSE_POISON)
 endif
+# SS_CLOSE_HOLD=1 (test only, default 0; lane land17 2026-10-17): equalised sub screen close for STRICT pairs. The close
+# lands on wall/thread timing (radio voice end, sub screen threads), so a render-cost change can move it by a tick (h2,
+# FOLIAGE_NEAR_FIX). A "sshold <frame>..." line in the w11.txt fixture slot (one source frame per close) holds SubScreenExit before
+# SubScreenExitCore until that frame on both arms; logs "sshold:" lines. Trace discs only (DBG_WARP fixture reader).
+SS_CLOSE_HOLD ?= 0
+ifneq ($(filter $(SS_CLOSE_HOLD),0 1),$(SS_CLOSE_HOLD))
+$(error SS_CLOSE_HOLD must be 0 or 1)
+endif
+ifeq ($(SS_CLOSE_HOLD),1)
+ifneq ($(DBG_WARP),1)
+$(error SS_CLOSE_HOLD=1 needs DBG_WARP=1)
+endif
+$(OBJDIR)/sscrn_bridge.o $(OBJDIR)/src/game/sscrn.o: GAME_CPPFLAGS += -DRE4DC_SS_CLOSE_HOLD=1
+endif

@@ -723,6 +723,15 @@ void SubScreenExit()
             }
             break;
         case 2:
+#if defined(RE4DC_SS_CLOSE_HOLD) && RE4DC_SS_CLOSE_HOLD
+            // Test-only equalised close (SS_CLOSE_HOLD): wait for the fixture's source frame for this close.
+            {
+                extern int re4dc_ss_close_hold(void);
+                if (re4dc_ss_close_hold()) {
+                    break;
+                }
+            }
+#endif
             SubScreenExitCore(wk);
             cnt = 0;
             step = 3;

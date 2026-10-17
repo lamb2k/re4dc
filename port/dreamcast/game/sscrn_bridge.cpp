@@ -561,6 +561,42 @@ extern "C" void re4dc_subscreen_swap_open(SubScreenWork* wk)
 #endif
 }
 
+#if defined(RE4DC_SS_CLOSE_HOLD) && RE4DC_SS_CLOSE_HOLD
+// Test-only equalised sub screen close (SS_CLOSE_HOLD=1, default 0; like the door hold dvdhold). The close is reached
+// on wall/thread timing (radio voice end, sub screen threads), so a render-cost change can move it by a tick.
+// A line "sshold <frame> <frame> ..." in the /cd/dc/w11.txt fixture slot (fp_run --w11) gives one source frame per
+// close, in order: SubScreenExit waits before SubScreenExitCore until that frame, so both arms of a STRICT pair close
+// on the same tick. No line: no hold. (Trace arms are not W11_FIXTURE twins, so nothing else reads that slot.)
+#include <stdlib.h>
+#include <string.h>
+extern "C" unsigned re4dc_fixture_source_frame(void);
+extern "C" int re4dc_fixture_read(const char* path, char* buffer, unsigned size);
+int re4dc_ss_close_hold(void)
+{
+    static bool loaded, logged;
+    static unsigned n, idx, tgt[64];
+    if (!loaded) {
+        loaded = true;
+        static char t[1024];
+        const int got = re4dc_fixture_read("/cd/dc/w11.txt", t, sizeof(t) - 1);
+        char* p = got > 0 ? (t[got] = 0, strstr(t, "sshold")) : nullptr;
+        if (p) {
+            for (p += 6; *p && *p != '\n' && n < 64;) {
+                while (*p == ' ' || *p == '\r' || *p == '\t') ++p;
+                if (*p < '0' || *p > '9') break;
+                tgt[n++] = (unsigned) strtoul(p, &p, 10);
+            }
+        }
+        re4dc_log("sshold: %u targets\n", n);
+    }
+    const unsigned f = re4dc_fixture_source_frame();
+    if (!logged) { logged = true; re4dc_log("sshold: close=%u reached frame=%u target=%u\n", idx, f, idx < n ? tgt[idx] : 0); }
+    if (idx < n && f < tgt[idx]) return 1;
+    re4dc_log("sshold: close=%u release frame=%u\n", idx, f);
+    ++idx; logged = false;
+    return 0;
+}
+#endif
 #if defined(RE4DC_SS_CLOSE_POISON) && RE4DC_SS_CLOSE_POISON >= 2
 extern "C" void re4dc_poison_dead_stack(const char*);  // platform/subscreen_backing.cpp
 #endif
