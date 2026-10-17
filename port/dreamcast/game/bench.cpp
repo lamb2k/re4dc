@@ -48,8 +48,24 @@ unsigned __real_re4dc_ui_frame(void);
 
 namespace {
 // ---------------------------------------------------------------- scenes
-constexpr int kScenes = 2;
-const char* const kScenePath[kScenes] = {"/cd/dc/warp.txt", "/cd/dc/bench2.txt"};
+// RE4DC_BENCH_SCENES (default 2; STRESS_SADDLER's stress disc: 4 = full, g70, g50, full again): scene k > 1 is
+// /cd/dc/bench<k>.txt. RE4DC_BENCH_NAME: the disc's name on the start / results screens and the banner.
+#ifndef RE4DC_BENCH_SCENES
+#define RE4DC_BENCH_SCENES 2
+#endif
+#ifndef RE4DC_BENCH_MENU
+#define RE4DC_BENCH_MENU "X: SCENE 1 ONLY  Y: SCENE 2  B: SCENE 3"
+#endif
+#ifndef RE4DC_BENCH_NAME
+#define RE4DC_BENCH_NAME "BENCHMARK DISC"
+#endif
+constexpr int kScenes = RE4DC_BENCH_SCENES;
+static_assert(kScenes >= 2 && kScenes <= 4, "RE4DC_BENCH_SCENES 2..4");
+constexpr bool kTight = kScenes > 2;   // more result rows: smaller rows, no photo note
+const char* const kScenePath[4] = {"/cd/dc/warp.txt", "/cd/dc/bench2.txt", "/cd/dc/bench3.txt", "/cd/dc/bench4.txt"};
+// The start screen's choice on a disc of more than two scenes (the Saddler stress disc: START all, X / Y / B one scene):
+// -1 = every scene in order, k = scene k + 1 alone (then the results screen).
+int g_only = -1;
 struct Scene {
     char name[24];
     unsigned begin, end;          // measured room frames [begin, end)
@@ -190,36 +206,41 @@ void make_code(char* out, unsigned size) {
         snprintf(part[k], sizeof(part[k]), "%c%u.%u.%u.%u.%u.%u.%u", 'A' + k, fps10(s), s.windows ? s.min_fps10 : 0,
                  cpu10(s), gpu10(s), reads_ps10(s), wait_ms(s), kos_kb(s));
     }
-    char body[128];
-    snprintf(body, sizeof(body), "%s %s %s", RE4DC_BENCH_ID, part[0], part[1]);
+    char body[256], parts[224] = "";
+    for (int k = 0; k < kScenes; ++k) {
+        if (k) strncat(parts, " ", sizeof(parts) - strlen(parts) - 1);
+        strncat(parts, part[k], sizeof(parts) - strlen(parts) - 1);
+    }
+    snprintf(body, sizeof(body), "%s %s", RE4DC_BENCH_ID, parts);
     unsigned ck = 0;
     for (const char* p = body; *p; ++p) ck = (ck * 31 + (unsigned char) *p) % 251;
-    snprintf(out, size, "%s %s %02X", part[0], part[1], ck);
+    snprintf(out, size, "%s %02X", parts, ck);
 }
 
 void draw_results(const Fb& fb) {
-    char a[12], b[12], c[12], d[12], e[12], line[96], code[96];
+    char a[12], b[12], c[12], d[12], e[12], line[96], code[256];
+    const int rs = kTight ? 2 : 3, rh = kTight ? 20 : 28;
     fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
     int y = 30;
     fb_fill(fb, 30, y - 4, 580, 30, 0x900000);
-    fb_center(fb, y, 2, 3, kWhite, "BENCHMARK DISC - NOT THE GAME"); y += 34;
+    fb_center(fb, y, 2, 3, kWhite, RE4DC_BENCH_NAME " - NOT THE GAME"); y += 34;
     fb_center(fb, y, 2, 3, kYellow, "RE4 DREAMCAST BENCHMARK RESULTS"); y += 30;
     snprintf(line, sizeof(line), "BUILD %s   RUN %u", RE4DC_BENCH_ID, g_run);
     fb_center(fb, y, 2, 2, kGrey, line); y += 26;
     fb_text(fb, 36, y, 2, 2, kCyan, "SCENE         FPS MIN1S   CPU   GPU SPD%"); y += 22;
     for (int k = 0; k < kScenes; ++k) {
         const Scene& s = g_scene[k];
-        if (!s.windows) { snprintf(line, sizeof(line), "%d %-10s  NOT MEASURED", k + 1, s.name); fb_text(fb, 36, y, 2, 3, kRed, line); y += 28; continue; }
+        if (!s.windows) { snprintf(line, sizeof(line), "%d %-10s  NOT MEASURED", k + 1, s.name); fb_text(fb, 36, y, 2, rs, kRed, line); y += rh; continue; }
         snprintf(line, sizeof(line), "%d %-10s%5s %5s %5s %5s %4u", k + 1, s.name, d1(fps10(s), a), d1(s.min_fps10, b),
                  d1(cpu10(s), c), d1(gpu10(s), d), speed_pct(s));
-        fb_text(fb, 36, y, 2, 3, kWhite, line); y += 28;
+        fb_text(fb, 36, y, 2, rs, kWhite, line); y += rh;
     }
     y += 4;
     fb_text(fb, 36, y, 2, 2, kCyan, "SCENE        READS/S WAIT MS/S KOS MIN KB"); y += 22;
     for (int k = 0; k < kScenes; ++k) {
         const Scene& s = g_scene[k];
         snprintf(line, sizeof(line), "%d %-10s %7s %9u %8u", k + 1, s.name, d1(reads_ps10(s), e), wait_ms(s), kos_kb(s));
-        fb_text(fb, 36, y, 2, 3, kWhite, line); y += 28;
+        fb_text(fb, 36, y, 2, rs, kWhite, line); y += rh;
     }
     y += 2;
     fb_text(fb, 36, y, 1, 2, kGrey, "FPS: DRAWN FRAMES PER SECOND (AVERAGE)  MIN1S: LOWEST ONE-SECOND WINDOW"); y += 16;
@@ -230,13 +251,15 @@ void draw_results(const Fb& fb) {
     if (text_w(code, 2) <= fb.w - 32) fb_text(fb, 16, y, 2, 3, kGreen, code);
     else fb_text(fb, 16, y, 1, 3, kGreen, code);   // a long code still fits on one line
     y += 32;
-    fb_text(fb, 36, y, 2, 2, kWhite, "PHOTOGRAPH THIS SCREEN. POST IT WITH YOUR"); y += 20;
-    fb_text(fb, 36, y, 2, 2, kWhite, "CONSOLE REGION AND GDEMU / ODE / BURNED DISC."); y += 26;
+    if (!kTight) {
+        fb_text(fb, 36, y, 2, 2, kWhite, "PHOTOGRAPH THIS SCREEN. POST IT WITH YOUR"); y += 20;
+        fb_text(fb, 36, y, 2, 2, kWhite, "CONSOLE REGION AND GDEMU / ODE / BURNED DISC."); y += 26;
+    }
     fb_text(fb, 36, y, 2, 3, kCyan, "PRESS A TO RUN AGAIN");
 }
 
 void log_results() {
-    char code[96];
+    char code[256];
     make_code(code, sizeof(code));
     for (int k = 0; k < kScenes; ++k) {
         const Scene& s = g_scene[k];
@@ -294,8 +317,11 @@ int re4dc_bench_tick(unsigned room_frame)
 // After a scene ended: the fixture of the next scene, or nullptr after the last one (then the results screen).
 const char* re4dc_bench_next_scene(void)
 {
+    if (g_only >= 0) return nullptr;
     return g_cur + 1 < kScenes ? kScenePath[g_cur + 1] : nullptr;
 }
+// The first scene's fixture (the warp rig's first load): scene 1, or the start screen's single scene.
+const char* re4dc_bench_first_scene(void) { return kScenePath[g_only >= 0 ? g_only : 0]; }
 int re4dc_bench_scene_no(void) { return g_cur + 1; }
 
 // Results screen (the warp rig's poll, the frame loop stopped there): returns when A was pressed and released; the
@@ -319,7 +345,7 @@ const char* re4dc_bench_results(void)
     ++g_run;
     re4dc_log("bench: A pressed: run %u\n", g_run);
     g_cur = 0;
-    return kScenePath[0];
+    return kScenePath[g_only >= 0 ? g_only : 0];
 }
 
 // ---------------------------------------------------------------- measurement hooks
@@ -359,7 +385,7 @@ void re4dc_bench_disc(unsigned reads, unsigned long long block_us, unsigned long
 }
 
 // ---------------------------------------------------------------- banner (native_ui.cpp, every presented frame)
-const char* re4dc_bench_banner(void) { return "BENCHMARK DISC - NOT THE GAME"; }
+const char* re4dc_bench_banner(void) { return RE4DC_BENCH_NAME " - NOT THE GAME"; }
 
 // ---------------------------------------------------------------- wraps
 extern "C" void* __wrap_maple_dev_status(maple_device_t* dev)
@@ -407,7 +433,7 @@ extern "C" void __wrap_OSInit(void)
             fb_fill(fb, 0, 0, 640, 480, 0x000000);
             int y = 30;
             fb_fill(fb, 30, y - 6, 580, 76, 0x900000);
-            fb_center(fb, y, 3, 4, kWhite, "BENCHMARK DISC"); y += 36;
+            fb_center(fb, y, 3, 4, kWhite, RE4DC_BENCH_NAME); y += 36;
             fb_center(fb, y, 3, 4, kWhite, "THIS IS NOT THE GAME"); y += 50;
             fb_center(fb, y, 2, 3, kYellow, "RE4 DREAMCAST PORT - PERFORMANCE TEST"); y += 36;
             const char* body[] = {"THIS DISC ONLY MEASURES PERFORMANCE.",
@@ -415,10 +441,16 @@ extern "C" void __wrap_OSInit(void)
                                   "TO PLAY, USE THE CURRENT TEST RELEASE:",
                                   "GITHUB.COM/LAMB2K/RE4DC - RELEASES",
                                   "",
-                                  "IT RUNS TWO SCRIPTED SCENES BY ITSELF",
-                                  "(ABOUT 4 MINUTES), THEN SHOWS RESULTS.",
+                                  kTight ? "IT RUNS FOUR SCRIPTED SCENES BY ITSELF" : "IT RUNS TWO SCRIPTED SCENES BY ITSELF",
+                                  kTight ? "(ABOUT 6 MINUTES), THEN SHOWS RESULTS." : "(ABOUT 4 MINUTES), THEN SHOWS RESULTS.",
                                   "AFTER START DO NOT TOUCH THE CONTROLLER.",
                                   "PHOTOGRAPH THE RESULTS SCREEN."};
+            if (kTight) {
+                // the scene menu (a disc of more than two scenes)
+                const char* menu[] = {"START: ALL SCENES IN ORDER", RE4DC_BENCH_MENU};
+                fb_text(fb, 60, 418, 2, 2, kYellow, menu[0]);
+                fb_text(fb, 60, 440, 2, 2, kYellow, menu[1]);
+            }
             for (const char* s : body) { fb_text(fb, 60, y, 2, 2, s[0] == 'G' ? kGreen : kWhite, s); y += 22; }
             y += 8;
             char msg[64];
@@ -429,14 +461,26 @@ extern "C" void __wrap_OSInit(void)
         }
         const unsigned btn = pad_buttons();
         if (btn & CONT_START) pressed = true;
+        if (kTight && !pressed) {
+            // X / Y / B: one scene alone (the stress disc's arm menu); released like START
+            static unsigned held;
+            const unsigned pick = btn & (CONT_X | CONT_Y | CONT_B);
+            if (pick) held = pick;
+            else if (held) {
+                g_only = (held & CONT_X) ? 0 : (held & CONT_Y) ? 1 : 2;
+                pressed = true;
+                break;
+            }
+        }
         if ((pressed && !(btn & CONT_START)) || el >= kAuto) break;   // START released, or timeout
         thd_sleep(20);
     }
     fb_fill(fb, 0, 0, 640, 480, 0x000000);
-    fb_center(fb, 200, 3, 4, kWhite, "BENCHMARK DISC - NOT THE GAME");
+    fb_center(fb, 200, 3, 4, kWhite, RE4DC_BENCH_NAME " - NOT THE GAME");
     fb_center(fb, 250, 2, 3, kCyan, "STARTING - HANDS OFF THE CONTROLLER");
     g_masked = true;
-    re4dc_log("bench: start (%s) build %s\n", pressed ? "START" : "auto", RE4DC_BENCH_ID);
+    re4dc_log("bench: start (%s) build %s scene %s\n", pressed ? "START" : "auto", RE4DC_BENCH_ID,
+              g_only >= 0 ? kScenePath[g_only] : "all");
 }
 
 }  // extern "C"

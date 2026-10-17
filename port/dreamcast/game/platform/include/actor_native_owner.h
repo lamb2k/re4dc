@@ -74,6 +74,12 @@ int re4dc_actor_preflight_owned_runs(Re4dcModelPart*,const Re4dcActorDrawRun*,un
     const Re4dcActorOwnedMaterial*,unsigned,const Re4dcActorWorkspaceLease*,const Re4dcActorSkinLease*,const Re4dcActorTextureLease*);
 int re4dc_actor_submit_owned_runs(Re4dcModelPart*,const Re4dcActorDrawRun*,unsigned,
     const Re4dcActorOwnedMaterial*,unsigned,const Re4dcActorWorkspaceLease*,const Re4dcActorSkinLease*,const Re4dcActorTextureLease*);
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+// ACTOR_PLAN: only for the runs of the transaction call that acquired the actor and preflighted all its runs, while
+// ACTOR_PROOF_LEAN's lifetime token holds (native_actor_owner_runs.inc).
+int re4dc_actor_submit_preflighted_runs(Re4dcModelPart*,const Re4dcActorDrawRun*,unsigned,
+    const Re4dcActorOwnedMaterial*,unsigned,const Re4dcActorWorkspaceLease*,const Re4dcActorSkinLease*,const Re4dcActorTextureLease*);
+#endif
 int re4dc_actor_preflight_owned(Re4dcModelPart*,const Re4dcActorChunk*,unsigned,
     const Re4dcActorWorkspaceLease*,const Re4dcActorSkinLease*,const Re4dcActorTextureLease*);
 // 0 is decline before any owned call, 1 complete synchronously, -1 frame failed.

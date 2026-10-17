@@ -3,6 +3,7 @@
 #include "coarse_actor_transaction.h"
 #include "actor_lifetime.h"
 #include "ganado_source_extras.h"
+#include "actor_plan.h"  // ACTOR_PLAN (actorplan.mk): RE4DC_PLAN_ON is 0 otherwise
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
 #include "coarse_actor_geometry_once.h"
 #endif
@@ -73,6 +74,16 @@ bool owner_ganado_bind(cModel* m) {
     // Current source pointers/owner revisions are checked even on a binding hit.
     for(unsigned r=0;r<count;++r)
         if(re4dc_actor_role_source_bin(m,infos[r],bound->appearance,r)!=owner_source_bin[slot][r])return false;
+#if RE4DC_ACTOR_PLAN
+    if(RE4DC_PLAN_ON) {
+        // ACTOR_PLAN: the same finite test as one exponent-field OR per word (re4dc_plan_all_finite).
+        bool fine=true;
+        for(unsigned i=0;i<kBones && fine;++i)
+            fine=re4dc_plan_all_finite(&bound->parts[i]->lt_inv_mat[0][0],12) && re4dc_plan_all_finite(&bound->parts[i]->mat[0][0],12);
+        if(!fine)return false;
+        owner_current_slot=slot;return true;
+    }
+#endif
     for(unsigned i=0;i<kBones;++i)for(unsigned j=0;j<12;++j)
         if(!coarse_finite((&bound->parts[i]->lt_inv_mat[0][0])[j]) ||
            !coarse_finite((&bound->parts[i]->mat[0][0])[j]))return false;
@@ -207,6 +218,9 @@ int owner_ganado_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output
             const unsigned palettes=ganado_ps2_stump::head.palette_count;
             if(p.input[i].palette_count!=palettes)return 0;
             re4dc_coarse_skin_groups(owner_stump_groups,owner_stump_group_count,&bone_T[0][0],output[i],palettes);
+#if RE4DC_ACTOR_PLAN
+            if(RE4DC_PLAN_ON){if(!re4dc_plan_all_finite(output[i],palettes*12))return 0;continue;}
+#endif
             for(unsigned j=0;j<palettes*12;++j)if(!coarse_finite(output[i][j]))return 0;
             continue;
         }
@@ -216,6 +230,9 @@ int owner_ganado_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output
         if(p.input[i].palette_count!=palettes)return 0;
         if(source)re4dc_coarse_skin_groups(source->groups,source->group_count,&bone_T[0][0],output[i],palettes);
         else re4dc_coarse_skin_groups(skin_stream+skin_first[ta][i],skin_groups[ta][i],&bone_T[0][0],output[i],palettes);
+#if RE4DC_ACTOR_PLAN
+        if(RE4DC_PLAN_ON){if(!re4dc_plan_all_finite(output[i],palettes*12))return 0;continue;}
+#endif
         for(unsigned j=0;j<palettes*12;++j)if(!coarse_finite(output[i][j]))return 0;
     }
     return 1;
