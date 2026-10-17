@@ -159,7 +159,9 @@ T15_T=${T15_T-FOLIAGE_TRIM=1 FOLIAGE_OPTION=1}
 #      vertices"): at Short (12.5 m) the PS2 world's opaque pass stops at the cut and the room's far shell
 #      (dc/native/rXXX/far-shell.fsh, data fsh in T15_DATA: r100 r101, ~3,000 triangles each) is drawn beyond it with
 #      Full's fog, PT / TR world passes and actors (docs/lanes/farshell16.md). Near and rooms without a shell file keep
-#      the plain cut. T15_FS="" builds the control without it.
+#      the plain cut. T15_FS="" builds the control without it. Residency (lane farshell17, test 17; test 16 shipped
+#      without it): the shell is in heap 4 only at Short, lent to every route movie, and given back when heap 4 runs
+#      short (docs/lanes/farshell17.md).
 T15_FS=${T15_FS-FAR_SHELL=1}
 #   RS RADIO_SUB_RT=1 (lane radiosub16; test 16 scope, after the t15/rc freeze; test 14 console report "the radio call
 #      subtitles are very slow"): the codec call's subtitle pages follow the voice's clock (KOS timer from the moment the

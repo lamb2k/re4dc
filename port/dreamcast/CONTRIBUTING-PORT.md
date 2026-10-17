@@ -188,6 +188,11 @@ simplified copy of the far world, about 3,000 triangles textured with the world'
 memory) is drawn beyond the cut, so landmarks stay visible. Build a shell with tools/d367/farshell (README there;
 Windows Python and Blender 5.2) from the room's PS2 world package. Near, and rooms without a file, keep the plain cut. Warp line
 `farshell 0|1|2` (0 = plain cut, 1 = shell, 2 = opaque cut without the shell, for pricing).
+The shell lives in heap 4 only while it can be drawn (docs/lanes/farshell17.md): it is read at Short only (Full and
+Near never read it), lent to every route movie and read again after it, and freed when a heap-4 allocation fails
+(`mem_alloc` and `re4dc_static_alloc` then retry once); that room keeps the plain cut until the option changes. Any
+new heap-4 user near the r100 cliff movie still runs the s30 gate (h2 through s30 at Full and Short). Warp line
+`farshellprobe <room frame>` makes one impossible heap-4 request to test the give-back path.
 Radio call subtitles (knob `RADIO_SUB_RT`, game/subscreen.mk; src/Sscrn/ss_term.cpp): the GameCube steps a call's
 subtitle sequence once per 30 Hz sub screen frame, while the voice plays from the AICA in real time. With the knob
 each call frame runs the steps owed since the voice began to sound (KOS timer, platform/audio_aica.cpp

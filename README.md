@@ -65,7 +65,7 @@ Standard (the default, the full 640x480 picture) or FSAA, which smooths edges by
 slower in busy scenes. View distance is how far the scenery is drawn: Full (the default, as on the PS2), Near or
 Short. Near and Short fade the distant scenery into the fog sooner, which makes busy outdoor scenes faster; the
 game plays the same. Inside a house the room around you stays clear, and only what you see through the doors and
-windows fades. In the first area and the village, Short draws a simplified copy of the distant scenery
+windows fades. In the first area and the village, Short draws a simplified copy of the distant scenery (in the first area after the ambush at the first house it fades instead, keeping the memory for the villagers)
 instead, so houses, trees and the hills stay in view. The lake always shows its full horizon. Foliage is how the see-through brush and leaf cards outdoors
 are drawn: Near (the default) draws the leaf and brush cards with sharp edges and only up to about 12 m, where the
 fog hides them anyway, which makes the woods faster; Full draws all of them blended, as on the PS2; Off leaves them
