@@ -748,6 +748,12 @@ PRIM_CAP_R226 ?= 0
 ifneq ($(PRIM_CAP_R226),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R226=$(PRIM_CAP_R226)
 endif
+# PRIM_CAP_R21A=<bytes> (lane ch4found16 2026-10-17, default 0: no effect): the same cap for r21a (room value 442,368 B).
+# Gate: PRIM_WATER overflow 0.
+PRIM_CAP_R21A ?= 0
+ifneq ($(PRIM_CAP_R21A),0)
+$(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R21A=$(PRIM_CAP_R21A)
+endif
 # PRIM_BUF_KB=<KB> (lane cast16 2026-10-16; default 0: no effect; size only): every room's primitive buffer asks at most
 # this many KB of heap 4 (GC room values: r11f 655,360 B). Set it to the worst chapter 1-2 per-frame peak (PRIM_WATER,
 # primitives + native actor tail) x 1.5. A primitive that does not fit is skipped (GetPrimBuff returns 0; the sub screen

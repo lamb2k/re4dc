@@ -1,0 +1,11 @@
+name ce-r21a
+# ch4found16 heap-4 gate: r21a kill rig on the em15 Ganados (cap 4, god): the 4 held sends must be released
+room 0x21a
+pos -23502 -5470 -44653
+ang -1.8230
+inv default
+god
+alivelog 60
+kill 0x15 300 0x21a
+killrep 12 90
+dump

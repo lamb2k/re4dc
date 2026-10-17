@@ -543,6 +543,9 @@ ROOM_CONTRACTS={
     'r226':dict(slots=108,smd=4,effs=(7,),itm=9,model_slots=(28,)),
     'r227':dict(slots=32,smd=4,effs=(7,),itm=9,model_slots=()),
     'r22a':dict(slots=33,smd=4,effs=(7,),itm=9,model_slots=()),
+    # r21a (lane ch4found16 2026-10-17, coordinator: heap 4): the standard 27-slot layout (SMD#4, EFF#7, ITM#9; no local
+    # model BIN/TPL pair), slot count from the GC disc 1 St2/r21a.das.
+    'r21a':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
     # r40b (St4, st4_0 + em1f; follow-up 7): r40c's 27-slot layout (header ends at 232 of 256: no growth).
     'r40b':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
 }
