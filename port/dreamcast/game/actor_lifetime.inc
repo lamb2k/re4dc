@@ -391,6 +391,52 @@ static unsigned registry_role_next(const re4dc_material::life::Info& i,unsigned 
     return n;
 }
 #endif
+#if RE4DC_ACTOR_PLAN
+#include "actor_plan.h"
+// ACTOR_PLAN (actorplan.mk): actor_current_role's answer for (model, info, appearance, role) is kept while the lifetime
+// serial stands. Every write to the lifetime tables (archives, assets, infos_live, bindings, room rows, the swap park)
+// takes next() (adopt / retire / revoke / forget / room rows / park: changed(); stream pending: a.pending=next(); a
+// pending clear only follows a set), so with the serial unchanged find_info returns the same record and only the live
+// clauses can differ: the info's membership in m's list (game state) and info_current's per-info clauses (the asset's
+// section pointers, info->pData, info->tpl_addr). Those are read again on every reuse; info_current(record, the found
+// row) true means every per-info clause holds, so each row's info_current is what it was and the unique-row scan
+// returns the same row. Only found rows are kept (a miss runs the scan).
+namespace re4dc_material { namespace life {
+struct RowMemo { cModel* m;cModelInfo* info;unsigned app,role,serial;unsigned short slot,row; };
+constexpr unsigned kRowMemos=24;
+RowMemo row_memo[kRowMemos];unsigned row_memo_next;
+} }
+static const re4dc_material::Role* actor_current_role_full(cModel*,cModelInfo*,unsigned,unsigned);
+static const re4dc_material::Role* actor_current_role(cModel* m,cModelInfo* info,unsigned app,unsigned role) {
+    using namespace re4dc_material;using namespace life;
+    if(RE4DC_PLAN_ON && m && !exhausted) {
+        for(const auto& e:row_memo) {
+            if(e.info!=info || e.m!=m || e.app!=app || e.role!=role || e.serial!=serial)continue;
+            unsigned n=0;bool member=false;
+            for(auto* p=m->pModelInfo;p && n<kRe4dcActorRoles+1;p=p->pList,++n)if(p==info)member=true;
+            const bool hit=member && n<=kRe4dcActorRoles && infos_live[e.slot].info==info && info_current(infos_live[e.slot],e.row);
+#if RE4DC_ACTOR_PLAN == 2
+            const Role* full=actor_current_role_full(m,info,app,role);
+            re4dc_actor_plan_note(APLAN_ROW,hit,hit && full!=&RE4DC_ROLE(e.row));
+            return full;
+#else
+            re4dc_actor_plan_note(APLAN_ROW,hit,0);
+            if(hit)return &RE4DC_ROLE(e.row);
+            break;
+#endif
+        }
+    }
+    const Role* found=actor_current_role_full(m,info,app,role);
+    if(found && RE4DC_PLAN_ON && m && !exhausted) {
+        const Info* i=find_info(info);unsigned r=0;
+        while(r<RE4DC_ROLE_COUNT && &RE4DC_ROLE(r)!=found)++r;
+        if(i && r<RE4DC_ROLE_COUNT && r<=0xffffu)
+            row_memo[row_memo_next++%kRowMemos]={m,info,app,role,serial,(unsigned short)(i-infos_live),(unsigned short)r};
+    }
+    return found;
+}
+#define actor_current_role actor_current_role_full
+#endif
 // Returns the unique currently-owned material row, never a pointer-only match.
 // Multiple rows can share geometry but must resolve one exact TPL owner.
 static const re4dc_material::Role* actor_current_role(cModel* m,cModelInfo* info,unsigned app,unsigned role) {
@@ -427,6 +473,9 @@ static const re4dc_material::Role* actor_current_role(cModel* m,cModelInfo* info
         }
     return found;
 }
+#if RE4DC_ACTOR_PLAN
+#undef actor_current_role
+#endif
 extern "C" unsigned re4dc_actor_role_source_bin(cModel* m,cModelInfo* info,unsigned app,unsigned role) {
     const auto* r=actor_current_role(m,info,app,role);return r?r->source_bin:0;
 }
@@ -485,7 +534,86 @@ bool adopt_memo(const cModelInfo* p,bool note) {
 }
 } }
 #endif
+#if RE4DC_ACTOR_PLAN
+// ACTOR_PLAN: a successful re4dc_actor_role_bindings result for (model, appearance, count) is kept while the lifetime
+// serial stands (see RowMemo: the tables are unchanged). A reuse walks the model's info list again (the same infos in
+// the same order), and per info checks what the scan read live: the player's hand role (LEON_HAND_POSES: pPL's
+// pRight / pLeft) and, for every other info, its record still names it with info_current(record, a row it matched)
+// true, so every row's info_current is unchanged and the role scan gives the same unique role. Hand infos never needed
+// a record. Failures are not kept; nothing else is skipped.
+namespace re4dc_material { namespace life {
+constexpr unsigned kRoleMemoInfos=16,kRoleMemos=12;
+struct RoleMemo {
+    cModel* m;unsigned appearance,count,serial;
+    cModelInfo* chain[kRoleMemoInfos];cModelInfo* out[kRoleMemoInfos];
+    unsigned short slot[kRoleMemoInfos],row[kRoleMemoInfos];unsigned char hand[kRoleMemoInfos];
+};
+RoleMemo role_memo[kRoleMemos];unsigned role_memo_next;
+} }
+static int role_bindings_full(cModel* m,unsigned appearance,cModelInfo** out,unsigned count);
 extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInfo** out,unsigned count) {
+    using namespace re4dc_material;using namespace life;
+    if(RE4DC_PLAN_ON && m && out && !exhausted && count<=kRoleMemoInfos) {
+        for(const auto& e:role_memo) {
+            if(e.m!=m || e.appearance!=appearance || e.count!=count || e.serial!=serial)continue;
+            unsigned n=0;bool hit=true;
+            for(auto* p=m->pModelInfo;p && hit;p=p->pList,++n) {
+                if(n==count || p!=e.chain[n]){hit=false;break;}
+#if RE4DC_LEON_HAND_POSES
+                const unsigned hand=re4dc_leon_hand_role(m,p);
+                if(hand!=e.hand[n]){hit=false;break;}
+                if(hand)continue;
+#endif
+                hit=infos_live[e.slot[n]].info==p && info_current(infos_live[e.slot[n]],e.row[n]);
+            }
+            hit=hit && n==count;
+#if RE4DC_ACTOR_PLAN == 2
+            cModelInfo* full_out[kRoleMemoInfos]{};
+            const int full=role_bindings_full(m,appearance,full_out,count);
+            bool same=full!=0;for(unsigned k=0;k<count && same;++k)same=full_out[k]==e.out[k];
+            re4dc_actor_plan_note(APLAN_ROLES,hit,hit && !same);
+            for(unsigned k=0;k<count;++k)out[k]=full_out[k];
+            return full;
+#else
+            re4dc_actor_plan_note(APLAN_ROLES,hit,0);
+            if(hit){for(unsigned k=0;k<count;++k)out[k]=e.out[k];return 1;}
+            break;
+#endif
+        }
+    }
+    const int ok=role_bindings_full(m,appearance,out,count);
+    if(ok && RE4DC_PLAN_ON && !exhausted && count<=kRoleMemoInfos) {
+        RoleMemo e{};e.m=m;e.appearance=appearance;e.count=count;e.serial=serial;
+        unsigned n=0;bool keep=true;
+        for(auto* p=m->pModelInfo;p && keep;p=p->pList,++n) {
+            if(n==count){keep=false;break;}
+            e.chain[n]=p;
+#if RE4DC_CROWD_READOPT
+            // An info the full proof would try to adopt again (no record, readopt applies) is never replayed: the
+            // adoption could succeed later without a serial change having been seen here.
+            if(!find_info(p) && (RE4DC_CROWD_READOPT==2 || appearance!=256)){keep=false;break;}
+#endif
+#if RE4DC_LEON_HAND_POSES
+            e.hand[n]=(unsigned char)re4dc_leon_hand_role(m,p);
+            if(e.hand[n])continue;
+#endif
+            const Info* i=find_info(p);
+            unsigned r=0;
+            if(i)while(r<RE4DC_ROLE_COUNT && !(RE4DC_ROLE(r).appearance==appearance && info_current(*i,r)))++r;
+            if(!i || r>=RE4DC_ROLE_COUNT || r>0xffffu){keep=false;break;}
+            e.slot[n]=(unsigned short)(i-infos_live);e.row[n]=(unsigned short)r;
+        }
+        if(keep && n==count) {
+            for(unsigned k=0;k<count;++k)e.out[k]=out[k];
+            role_memo[role_memo_next++%kRoleMemos]=e;
+        }
+    }
+    return ok;
+}
+static int role_bindings_full(cModel* m,unsigned appearance,cModelInfo** out,unsigned count) {
+#else
+extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInfo** out,unsigned count) {
+#endif
     using namespace re4dc_material;using namespace life;
 #if RE4DC_NATIVE_MODEL_REGISTRY
     // A registry appearance has exactly its descriptor's sections, in source info order.

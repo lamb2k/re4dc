@@ -36,6 +36,8 @@
 #endif
 #if RE4DC_ACTOR_TRANSACTION
 #include "actor_native_owner.h"
+#include "actor_prof.h"
+#include "actor_plan.h"
 #endif
 #if defined(RE4DC_ACTOR_PROBE_LIGHT) && RE4DC_ACTOR_PROBE_LIGHT
 #include "actor_light_probe.h"
@@ -5308,6 +5310,8 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
 #else
 int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     if (p.positions) return -1;
+    APROF_SPAN(aprof_chunk, APROF_CHUNK);
+    APROF_COUNT(APROF_N_CHUNKS, 1);
     ++stats.parts;
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
     re4dc_callprof_part(p.model, 1);
@@ -5548,6 +5552,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     }
     e.cache.oc = reinterpret_cast<u8*>(e.cache.v + kMaxVertices);
 
+    APROF_SPAN(aprof_lit0, APROF_LIT);
     const SourceLighting& S = *p.lighting;
     const bool constant_source = !S.enable && !S.ambient_vertex && !S.material_vertex;
     Lights* lp = constant_source ? &w.lights : &w.lit;
@@ -5591,6 +5596,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
         }
     }
+    APROF_STOP(aprof_lit0);
     const bool s16_uv = (p.flags & 0x80000000U) != 0;
     const float uv_scale = s16_uv ? 1.0f / 256.0f : 1.0f / 32768.0f;
     const PosConst k{0.0f, uv_scale * e.packet.u_scale, p.uv_offset[0] * e.packet.u_scale,
@@ -5622,13 +5628,17 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         ++stats.meshlets; stats.vertices += nv; stats.corners += ni; stats.triangles += nt;
         if (kCrowd) stats.crowd_triangles[tier] += nt;
         unsigned all, any;
+        APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);
+        APROF_SPAN(aprof_pos, APROF_POS);
         pass_positions(e, r, nv, k, s16_uv, all, any);
+        APROF_STOP(aprof_pos);
         if (all & kOcCull) {
             ++stats.meshlets_culled;
             e.input += nt;
             continue;
         }
         e.prime(nv);
+        APROF_SPAN(aprof_lit, APROF_LIT);
         if (lights.constant) {
 #if RE4DC_AVK
             if (!e.colors) {
@@ -5666,10 +5676,13 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                 e.cache.v[i].argb = (c & 0xFF000000U) | ((c >> 1) & 0x007F7F7FU);
             }
 #endif
+        APROF_STOP(aprof_lit);
         if (bake == kBakeNone) stats.normals_lit += nv;
         if (any & kOcNear) ++stats.meshlets_clipped;
+        APROF_SPAN(aprof_pack, APROF_PACK);
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
         else ok = e.strips(r, index, ni);
+        APROF_STOP(aprof_pack);
     }
     if (e.direct) {
         w.sq = e.sq; w.slots += e.slots; w.primed = e.primed;
@@ -5838,5 +5851,79 @@ extern "C" void re4dc_actor_test_meshlet_stats(unsigned out[8]) {
     out[4] = test_blob_bytes; out[5] = test_lod_bytes;
     out[6] = unsigned(test_convert_us); out[7] = unsigned(test_lod_us);
     std::printf("converter host time: total %.0f us (LOD %.0f us), max part %.0f us\n", test_convert_us, test_lod_us, test_convert_max_us);
+}
+#endif
+
+#if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
+// ACTOR_PROF (actorplan.mk; diagnostic only): actor_prof.h. Cycle sums per class x phase since the last report.
+#include <arch/timer.h>
+#include <stdio.h>
+extern "C" void re4dc_log(const char*, ...);
+namespace {
+const char* const kAprofNames[APROF_PHASES] = {"TX", "PLAN", "SEM1", "CROWD", "ACQ", "PAL", "PRE1", "PASS", "SUB",
+                                               "PRE2", "WFL", "CHUNK", "POS", "LIT", "PACK"};
+const char* const kAprofClass[4] = {"leon", "ganado", "other", "free"};
+unsigned long long aprof_sum[4][APROF_PHASES];
+unsigned aprof_n[4][APROF_COUNTS];
+unsigned aprof_first, aprof_last, aprof_frames;
+}  // namespace
+extern "C" {
+unsigned re4dc_aprof_cls = 3;
+unsigned re4dc_aprof_wfl_cycles;
+// TMU2 nanoseconds (timer_ns_gettime64; Flycast does not count PRFC0) as 200 MHz cycles: 1 cycle = 5 ns.
+unsigned re4dc_aprof_now(void) { return unsigned(timer_ns_gettime64() / 5u); }
+void re4dc_aprof_add(unsigned phase, unsigned cycles) {
+    if (phase < APROF_PHASES) aprof_sum[re4dc_aprof_cls & 3][phase] += cycles;
+}
+void re4dc_aprof_count(unsigned what, unsigned n) {
+    if (what < APROF_COUNTS) aprof_n[re4dc_aprof_cls & 3][what] += n;
+}
+// Called with the source frame at each transaction: a report every 300 distinct frames (per-frame means, cycles at
+// 200 MHz printed as microseconds x10 = 0.1 us units / 2 ... printed directly as us with one decimal).
+void re4dc_aprof_frame(unsigned frame) {
+    if (frame == aprof_last) return;
+    if (!aprof_frames) aprof_first = frame;
+    aprof_last = frame; ++aprof_frames;
+    if (aprof_frames <= 300) return;
+    const unsigned frames = aprof_frames - 1;  // the frames fully summed before this one
+    for (unsigned c = 0; c < 4; ++c) {
+        if (!aprof_n[c][APROF_N_CALLS] && !aprof_n[c][APROF_N_CHUNKS]) continue;
+        char line[512]; int at = snprintf(line, sizeof line, "APROF f=%u..%u frames=%u cls=%s calls10=%u chunks10=%u verts=%u "
+            "meshlets10=%u hits10=%u", aprof_first, frame - 1, frames, kAprofClass[c], aprof_n[c][0] * 10 / frames,
+            aprof_n[c][1] * 10 / frames, aprof_n[c][2] / frames, aprof_n[c][3] * 10 / frames, aprof_n[c][4] * 10 / frames);
+        for (unsigned p = 0; p < APROF_PHASES && at > 0 && at < int(sizeof line); ++p) {
+            // us per frame with one decimal: cycles / frames / 200 MHz
+            const unsigned long long us10 = aprof_sum[c][p] / frames / 20;
+            at += snprintf(line + at, sizeof line - at, " %s=%llu.%llu", kAprofNames[p], us10 / 10, us10 % 10);
+        }
+        re4dc_log("%s us/frame\n", line);
+    }
+    std::memset(aprof_sum, 0, sizeof aprof_sum); std::memset(aprof_n, 0, sizeof aprof_n);
+    aprof_frames = 1; aprof_first = frame;
+}
+}
+#endif
+
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+// ACTOR_PLAN (actorplan.mk, actor_plan.h): the runtime switch and the compare counters.
+#include <stdio.h>
+extern "C" void re4dc_log(const char*, ...);
+namespace {
+const char* const kAplanNames[APLAN_KINDS] = {"bind", "pre", "roles", "row", "hand", "sem", "mat"};
+unsigned aplan_checks[APLAN_KINDS], aplan_hits[APLAN_KINDS], aplan_bad[APLAN_KINDS], aplan_log_frame;
+}  // namespace
+extern "C" {
+unsigned re4dc_actor_plan_on = 1;
+void re4dc_actor_plan_note(unsigned kind, int hit, int bad) {
+    if (kind >= APLAN_KINDS) return;
+    ++aplan_checks[kind]; aplan_hits[kind] += hit != 0; aplan_bad[kind] += bad != 0;
+    if (frame_serial - aplan_log_frame < 600U) return;
+    aplan_log_frame = frame_serial;
+    char line[400]; int at = snprintf(line, sizeof line, "APLAN f=%u on=%u", frame_serial, re4dc_actor_plan_on);
+    for (unsigned k = 0; k < APLAN_KINDS && at > 0 && at < int(sizeof line); ++k)
+        at += snprintf(line + at, sizeof line - at, " %s=%u/%u/%u", kAplanNames[k], aplan_checks[k], aplan_hits[k],
+                       aplan_bad[k]);
+    re4dc_log("%s (checks/hits/bad)\n", line);
+}
 }
 #endif

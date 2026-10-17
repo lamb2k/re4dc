@@ -132,7 +132,64 @@ inline unsigned source_model_tev_group(const cModel* m,bool leon,bool registry) 
     return registry && m && m==(const cModel*)pSubEm && m->id==3 ? 1u : (leon?1u:0u);
 }
 #endif
+#if RE4DC_ACTOR_PLAN
+} // re4dc_material
+#include "actor_plan.h"
+namespace re4dc_material {
+namespace life { extern unsigned serial; extern bool exhausted; }  // actor_lifetime.inc
+// ACTOR_PLAN (actorplan.mk): texture()'s verdict is a function of the row entry e and the bytes it reads: the
+// descriptor's two words, the 36 header bytes at h and the 32 R4NREF bytes at n (a palette-less row). A None verdict is
+// kept with a copy of those bytes, keyed on the descriptor, the row entry and the lifetime serial (room rows are
+// republished only through a serial move); a reuse compares the 19 words again and returns None only when every one is
+// equal, so the same verdict follows. Palette rows (a digest of the CLUT), the key-0 bump rows and unaligned headers
+// are never kept. The hand TPL textures of Leon's pose infos are checked this way every pass (re4dc_material::hand_info).
+struct TexMemo { const void* descriptor;const Texture* e;unsigned serial;unsigned words[19]; };
+constexpr unsigned kTexMemos=32;
+TexMemo tex_memo[kTexMemos];unsigned tex_memo_next;
+Error texture_full(const void* descriptor,const Texture& e);
+inline bool tex_words(const void* descriptor,unsigned* w) {
+    if(!readable(descriptor,8) || (reinterpret_cast<std::uintptr_t>(descriptor)&3u))return false;
+    const unsigned* d=static_cast<const unsigned*>(descriptor);
+    const void* h=reinterpret_cast<const void*>(std::uintptr_t(d[0]));
+    if(d[1] || !readable(h,36) || (reinterpret_cast<std::uintptr_t>(h)&3u))return false;
+    const unsigned* hw=static_cast<const unsigned*>(h);
+    const void* n=reinterpret_cast<const void*>(std::uintptr_t(hw[2]));
+    if(!readable(n,32) || (reinterpret_cast<std::uintptr_t>(n)&3u))return false;
+    const unsigned* nw=static_cast<const unsigned*>(n);
+    w[0]=d[0];w[1]=d[1];
+    for(unsigned k=0;k<9;++k)w[2+k]=hw[k];
+    for(unsigned k=0;k<8;++k)w[11+k]=nw[k];
+    return true;
+}
 Error texture(const void* descriptor,const Texture& e) {
+    const bool plan=RE4DC_PLAN_ON && !life::exhausted && !e.palette.bytes && (e.crc || e.fnv);
+    if(plan) {
+        for(const auto& t:tex_memo) {
+            if(t.descriptor!=descriptor || t.e!=&e || t.serial!=life::serial)continue;
+            unsigned w[19];
+            const bool hit=tex_words(descriptor,w) && !std::memcmp(w,t.words,sizeof(w));
+#if RE4DC_ACTOR_PLAN == 2
+            const Error full=texture_full(descriptor,e);
+            re4dc_actor_plan_note(APLAN_HAND,hit,hit && full!=Error::None);
+            return full;
+#else
+            re4dc_actor_plan_note(APLAN_HAND,hit,0);
+            if(hit)return Error::None;
+            break;
+#endif
+        }
+    }
+    const Error r=texture_full(descriptor,e);
+    if(plan && r==Error::None) {
+        TexMemo t{descriptor,&e,life::serial,{}};
+        if(tex_words(descriptor,t.words))tex_memo[tex_memo_next++%kTexMemos]=t;
+    }
+    return r;
+}
+Error texture_full(const void* descriptor,const Texture& e) {
+#else
+Error texture(const void* descriptor,const Texture& e) {
+#endif
     if(!readable(descriptor,8))return Error::BadRange;
     const void* h=ptrat(descriptor,0);const void* clut=ptrat(descriptor,4);
     if(!readable(h,36))return Error::BadRange;

@@ -97,8 +97,12 @@ void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture an
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name);  // bench.cpp (bench.mk BENCHMARK)
 int re4dc_bench_tick(unsigned room_frame);
 const char* re4dc_bench_next_scene(void);
+const char* re4dc_bench_first_scene(void);
 int re4dc_bench_scene_no(void);
 const char* re4dc_bench_results(void);
+#endif
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+extern "C" unsigned re4dc_actor_plan_on;  // platform/native_actor_fast.cpp (actorplan.mk ACTOR_PLAN)
 #endif
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
 extern "C" void re4dc_ps2_pvs_set(unsigned on);  // native_static.cpp (t2exact.mk PS2_PVS)
@@ -248,7 +252,7 @@ u32 num(const char* s) { return (u32) strtoul(s, nullptr, 0); }
 // BENCHMARK=1 (bench.mk, bench.cpp): the scene fixture to arm at the next soft reset, and the reset is pending.
 const char* bench_next;
 bool bench_pending;
-void load(const char* path = "/cd/dc/warp.txt")
+void load(const char* path = nullptr)
 #else
 void load()
 #endif
@@ -257,6 +261,7 @@ void load()
     wp.parse_entry = wp.max_entry = 1;
     static char text[4096];
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+    if (!path) path = re4dc_bench_first_scene();   // scene 1, or the start screen's single scene
     const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
     re4dc_log("warp: bench fixture %s (%d bytes)\n", path, len);
 #else
@@ -479,6 +484,13 @@ void load()
 #if defined(RE4DC_KOS_SQUEEZE) && RE4DC_KOS_SQUEEZE
         } else if (!strcmp(k, "squeeze")) {
             // KOS_SQUEEZE (platform/os.cpp reads this line at OSInit)
+#endif
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+        } else if (!strcmp(k, "actorplan") && n >= 2) {
+            // ACTOR_PLAN (actorplan.mk; lane actorplan17 A/B disc): `actorplan 0|1` turns the character draw plan's
+            // reuses off / on at run time (re4dc_actor_plan_on; same image). Render only: the same pictures either way.
+            re4dc_actor_plan_on = num(tok[1]) != 0;
+            re4dc_log("warp: actorplan %u\n", re4dc_actor_plan_on);
 #endif
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
         } else if (!strcmp(k, "pvs") && n >= 2) {
