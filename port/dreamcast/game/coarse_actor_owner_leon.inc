@@ -131,8 +131,9 @@ unsigned owner_binding_revision;
 // ACTOR_PLAN: a single-use token of the bind re4dc_actor_plan_leon made in this transaction call (first proved by lane
 // codex-actor-t15, 168042a3): owner_leon_palettes, later in the same call, replays it instead of binding again. It
 // names the model, the call, the source frame, the lifetime serial right after the bind and the binding revision;
-// between the two only native code runs (layout, semantics, crowd policy, the leases: the ACTOR_PROOF_LEAN audit). The
-// finite scan of the bone matrices still runs, so a pose that went non-finite since declines as the full bind would.
+// between the two only native code runs (layout, semantics, crowd policy, the leases: the ACTOR_PROOF_LEAN audit: none
+// writes cModel / cParts), so the bone matrices the bind's finite scan passed are the same words: the replay does not
+// scan them again (hw model ap17b2: the scan is 0.136 ms of memory reads per pass, the same with the word-OR form).
 struct LeonPlanBind { cModel* model;unsigned tx,frame,life,revision; } leon_plan_bind{};
 // The bind's finite test of Leon's 119 bones as one exponent-field OR (coarse_finite is the exponent test: bit 31 of
 // (exponent field + 0x00800000) is set iff the field is all ones): the same verdict, branch-free per word.
@@ -208,7 +209,7 @@ bool owner_leon_bind_planned(cModel* m) {
     return full;
 #else
     re4dc_actor_plan_note(APLAN_BIND,reuse,0);
-    return reuse?leon_bones_finite(parts):owner_leon_bind(m);
+    return reuse || owner_leon_bind(m);
 #endif
 }
 #endif
