@@ -15,7 +15,7 @@ key	width	height	fmt	runs
 9d10cae4-346ca7ad	48	32	8	1
 aec76ad4-9640dcbe	64	64	14	1
 afa4bc82-306be3e3	44	44	8	1
-cf2208cd-a6bfb2ef	128	16	8	1
+cf2208cd-a6bfb2ef	128	16	8	2
 d1af2bb4-6b55a719	96	96	1	1
 d793866b-ee0d9294	64	64	14	1
 dfed82d2-58b23aa1	32	32	0	1

@@ -1,0 +1,21 @@
+# vq16-c5 (lane ch5found16 2026-10-17, coordinator 10-16: VQ by default; PSNR >= 29 dB, RGB565 only): the island
+# rooms over their texture budget (r310 3.70 MB, r307 2.69 MB, r327 2.34 MB working sets, room_census.py on cx76mW p76
+# runs), picked by vq_plan.py 1900000 with non-RGB565 keys excluded. 196d7189-3e8f4f08 (r327, ARGB4444) left out: 25.1 dB.
+# 5430b7b8-d495a677 was a loose file (st3 r327 ancillary): packed first (pakbase.py). key, size, PSNR dB, rooms
+1aad1b6c-e247646e 256x256 39.16 r327
+42075fc7-69879718 256x256 32.88 r307 r310
+4d5e379b-08b1b43d 256x256 32.98 r307 r310
+5430b7b8-d495a677 128x128 36.15 r327
+55f0d4e8-b27beaec 256x256 35.45 r307 r310
+5bde298e-c48154cf 128x128 35.96 r327
+5dd9e696-c82bbc75 256x256 35.09 r307 r310
+5facc252-7701d063 256x256 37.12 r307 r310
+639dbead-0f2a3662 256x256 35.33 r307 r310
+6c7b69e7-5ee8ee0b 512x512 37.4 r310
+6cbbdcdb-c8b621f1 128x64 42.05 r327
+92c9c103-2945fe0d 256x256 32.06 r327
+9f6577ea-48edf7c5 256x256 34.1 r307
+b5ac0a55-56e5e8c4 256x256 32.79 r310
+b6682c36-f56ee02f 256x256 34.47 r310
+dec22ae8-7b78418e 512x512 38.18 r310
+fca9dae6-ebae6cca 128x64 34.09 r327
