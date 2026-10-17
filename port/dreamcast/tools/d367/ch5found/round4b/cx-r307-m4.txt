@@ -1,0 +1,11 @@
+name cx-r307-m4
+# ch5found16 round 4 B: r307 em36 acting (regenerators): r2 entry + kill rig on em36 (handgun hits, routine log)
+room 0x307
+pos 1104 0 4015
+ang -1.8780
+inv default
+act 360 fwd 12
+god
+alivelog 60
+kill 0x36 60
+killrep 1 60

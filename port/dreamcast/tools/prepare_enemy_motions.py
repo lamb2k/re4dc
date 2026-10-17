@@ -103,6 +103,18 @@ SMALL+=('em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs')
 # frame count from the FCV header (*(u16*)ARC(0xB)), which stays resident, and lends its subArc
 # to the player's trap motions (same leased evaluator). Their textures are not audited: motion only.
 MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
+# Motion streaming for room-overlay enemies whose resident body does not fit their rooms' heap 4 (lane ch5found16
+# 2026-10-16; generic: an enemy joins with an audit comment here, a hot set from tools/d367/motion/motion_hot.py and the
+# prepare call in tools/d367/motion/README.txt). Every streamed entry is an FCV; SEQ key tables, PTH paths, BINs, TPLs,
+# EFF and FCV headers stay resident (prepare() retains them), so only MotionSetCore's `data` argument can be cold.
+# em36 (regenerator / iron maiden, r306..r310 r326; ARC(n) = archive slot n-4): every FCV it names goes to MotionSetCore:
+# directly (em36.cpp, 86 calls), through the m0 / m1 pairs of its act table (em36.cpp 2879-2938: m0 = ARC(0x4A 0x4B 0x4C
+# 0x4E 0x58 0x59 0x5B 0x5C), all FCV; m1 = ARC(0x4D 0x4F 0x5A 0x5D) is MotionSetCore's `seq` (a u16* key table: slots
+# 0x49 0x4B 0x56 0x59 are SEQ entries, resident), MotSetObj00 (obj00.cpp: MotionSetCore on the weak-point object, ARC(0x83)
+# = FCV slot 0x7F) and MotSetObj16 (the tentacles, ARC(0x8F) = FCV slot 0x8B). It reads no FCV header field itself (no
+# maxFrame reads); MotionMove / MotionMoveF take the work, not ARC. SetObj00(ARC(0x81), ARC(0x82)) is BIN + TPL, ARC(5..8)
+# BINs. Heap 4: the textures-only body (3,517,280 B) did not fit r307 (largest block 3,218,496) or r310 (3,083,744).
+MOTION_SMALL+=('em36.drs',)
 # em2b (El Gigante, r119; route lane r119 2026-10-10): every FCV it names goes to MotionSetCore, directly or through
 # em2bBlendMotSet (two MotionSetCore calls; the blend work is evaluated by MotionMoveCore), MotSetObj16 (the
 # parasite head and the tentacles: MotionSetCore) and plBlendMotSet / MotionSetCore on the player while it lends

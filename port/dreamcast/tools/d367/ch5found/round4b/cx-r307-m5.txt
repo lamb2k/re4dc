@@ -1,0 +1,12 @@
+name cx-r307-m5
+# ch5found16 round 4 B: r307 em36 acting: goto beside the regenerator (kill-rig position -8906,1005,-4882) at room
+# frame 60, ~10 s of em36 play (god), then the kill rig on em36 at room frame 400
+room 0x307
+pos 1104 0 4015
+ang -1.8780
+inv default
+god
+alivelog 120
+goto 60 -7300 1005 -4300
+kill 0x36 400
+killrep 1 60
