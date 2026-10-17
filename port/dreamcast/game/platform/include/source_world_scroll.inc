@@ -308,8 +308,15 @@ extern "C" int re4dc_r200_scroll_storage_current() {
            !r200Range(data->pHead,sizeof(ModelDataHead)) || !data->displist_num || data->displist_num>1024 ||
            !r200Range(data->pParts,data->displist_num*sizeof(ModelPart),alignof(ModelPart)))return 0;
         unsigned ignored=2166136261U;
-        for(unsigned j=0;j<data->displist_num;++j)
-            if(!r200MaterialTexture(w.info,data->pParts[j].texId,ignored))return 0;
+        // ModelPart records are variable length (sizeof(ModelPart)+size), walked as r200ScrollFingerprint does;
+        // indexing pParts[j] read work 6's later records at the wrong address (lane ch3found16 2026-10-17).
+        const ModelPart* material=data->pParts;
+        for(unsigned j=0;j<data->displist_num;++j){
+            if(!r200Range(material,sizeof(ModelPart),alignof(ModelPart)) || material->size>r200p::smd_bytes ||
+               !r200Range(material,sizeof(ModelPart)+material->size,alignof(ModelPart)) ||
+               !r200MaterialTexture(w.info,material->texId,ignored))return 0;
+            material=reinterpret_cast<const ModelPart*>(reinterpret_cast<unsigned long>(material)+sizeof(ModelPart)+material->size);
+        }
     }
     return 1;
 }
