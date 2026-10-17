@@ -45,6 +45,9 @@
 //   goto <frame> x y z [ang] | dump | name <preset> | late <mask> [tick] [room] (warp_late.h) | entry <n> |
 //   radio <frame> <call no 0..23> (source radio replay, resource-lifetime test only)
 //   god (Leon's life refilled every frame) | alert <frame> (the crowd hunts Leon from that frame of its entry)
+//   face <target|corpse> (still pairs: Leon, and so the camera behind him, turns every frame toward the `kill`
+//   target (target: alive or dying; stump / blood stills) or toward the most recent kill still in the enemy list
+//   (corpse: the death fade); with `freeze <tick>` the frame then holds the subject in view in both arms)
 //   fxmode <flags> (EFFECT_PS2_TOGGLE builds: the effect look at load; 1 fade clamp, 2 PS2 haze, 4 PS2 streak)
 //   charbake <variant> [room frame] (CHARBAKE_TOGGLE builds: the character texture variant at load, or switched at
 //   that frame of the first room, as the look toggle switches it at run time; up to 8 timed lines)
@@ -55,6 +58,7 @@
 //    belongs to the first room, as before. A fixture with entries also logs Leon's placement in those rooms.
 #if RE4DC_DBG_WARP
 #include "types.h"
+#include <math.h>
 #if defined(RE4DC_VIEW_DIST_OPTION) && RE4DC_VIEW_DIST_OPTION
 extern "C" void re4dc_view_dist_set(int level, const char* why);   // option_rows.cpp (Options View distance)
 #endif
@@ -234,6 +238,11 @@ struct Warp {
     // god: Leon's life refilled every frame (benchmark fixtures; hwcal's invuln). alert <frame>: the room-forced
     // alert + the "Ganado hurt" alarm at Leon once at that room frame of its entry (hwcal's alert): the crowd hunts him.
     bool god, has_alert, alert_done;
+    // face <target|corpse>: 1 = the current kill target, 2 = the newest kill still listed (ring of the last 8 kills)
+    u8 face_mode;
+    u8 face_n;
+    cEm* face_ring[8];
+    u8 face_id[8];
     u32 alert_frame;
     u8 alert_entry;
     // freeze <tick>: the game thread stops at the top of that global tick (look checks: the last presented image
@@ -429,6 +438,9 @@ void load()
 #endif
         } else if (!strcmp(k, "dump")) {
             wp.dump = true;
+        } else if (!strcmp(k, "face") && n >= 2) {
+            wp.face_mode = !strcmp(tok[1], "corpse") ? 2 : 1;
+            re4dc_log("warp: face %s\n", wp.face_mode == 2 ? "corpse" : "target");
         } else if (!strcmp(k, "god")) {
             wp.god = true;
             re4dc_log("warp: god (Leon's life refilled every frame)\n");
@@ -675,6 +687,11 @@ void kill_poll()
                       (int) at.y, (int) at.z, no);
         }
         wp.kill_done = true;
+        if (wp.face_mode) {  // `face corpse`: the newest kill first
+            wp.face_ring[wp.face_n & 7] = em;
+            wp.face_id[wp.face_n & 7] = (u8) em->id;
+            ++wp.face_n;
+        }
         wp.kill_watch = 40;  // then its state every 15 room frames, 40 times (death motion, fade, removal)
         snprintf(what, sizeof(what), "kill 0x%02x hp<=0 at room frame %u after %u hits", (unsigned) wp.kill_cur,
                  (unsigned) wp.room_frames, (unsigned) wp.kill_hits);
@@ -764,6 +781,31 @@ void goto_poll()
         // padscript presses can wait for the move ("goto=<n>", n = goto index + 1; c13 door walks)
         re4dc_fixture_state("goto", int(i + 1), -1);
     }
+}
+// `face <target|corpse>`: Leon (and the camera that follows him) turns toward the subject every frame. A pointer
+// is used only while the enemy manager still lists it under its id (a removed enemy's object may be reused).
+static bool face_listed(cEm* em, int id)
+{
+    for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e))
+        if (e == em) return true;
+    return false;
+}
+void face_poll()
+{
+    if (!wp.face_mode || !pPL || (pG->Status_flg[1] & 0x10000000)) return;
+    cEm* em = nullptr;
+    if (wp.face_mode == 1) {
+        if (wp.kill_em && face_listed(wp.kill_em, wp.kill_cur)) em = wp.kill_em;
+    } else {
+        for (unsigned k = 0; k < 8 && k < wp.face_n && !em; ++k) {
+            const unsigned i = (wp.face_n - 1 - k) & 7;
+            if (face_listed(wp.face_ring[i], wp.face_id[i])) em = wp.face_ring[i];
+        }
+    }
+    if (!em) return;
+    const f32 dx = em->pos.x - pPL->pos.x, dz = em->pos.z - pPL->pos.z;
+    if (dx * dx + dz * dz < 1.0f) return;
+    pPL->ang.y = atan2f(dx, dz);
 }
 // `god` / `alert` (benchmark fixtures, the hwcal disc's invuln / alert): every frame / once at the room frame.
 void god_alert_poll()
@@ -1024,6 +1066,7 @@ void re4dc_warp_poll(void)
 #endif
     god_alert_poll();
     kill_poll();
+    face_poll();
 #if RE4DC_WARP_JUMP
     jump_poll();
 #endif

@@ -1,0 +1,14 @@
+# lane cast16 (10-17) CAST-GC near-kill rig: the r101 cross view, crowd alerted; each kill takes the live Ganado nearest
+# Leon (kill 0, body hits); face corpse keeps the newest corpse in view (still pairs, cast16 10-17).
+name still-fade-r101
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+kill 0 150 0x101 1
+killrep 10 60
+face corpse
+freeze 801

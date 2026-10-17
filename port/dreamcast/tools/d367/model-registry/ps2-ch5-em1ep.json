@@ -117,6 +117,12 @@
    ],
    "evidence": "ps2cast-st3 ps2-st3-r30e.json room set"
   },
+  "315": {
+   "descriptors": [
+    "soldr-em1e-06p"
+   ],
+   "evidence": "cast16 10-17: r315 ESL row 11 (emleon07) = em1e type 6 (parts 61 / 7 infos); island CAST-GC p67 r315 FAIL (GC 3808)"
+  },
   "316": {
    "descriptors": [
     "soldr-em1e-0ep",
