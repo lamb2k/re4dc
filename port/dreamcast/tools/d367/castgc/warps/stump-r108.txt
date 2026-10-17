@@ -1,0 +1,15 @@
+# lane stump17b (10-17) CAST-GC head-burst gate: the r108 kill rig plus killpart 5, so every kill loses the head
+# (em10LostHead -> em10HeadSet mot[3], the pool's head-hit section). <= 60 s. Census build: period 30.
+name wt-r108-c1-stump
+room 0x108
+pos -43905 -38 -14737
+ang 1.963
+inv default
+god
+census 300
+kill 0x17 300 0x108 1
+killrep 30 90
+census 300
+kill 0x17 300 0x108 1
+killrep 30 90
+killpart 5

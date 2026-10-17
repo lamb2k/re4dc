@@ -362,6 +362,9 @@ void io_cycle_frame(unsigned frames_in_room){
 #if RE4DC_NATIVE_MODEL_REGISTRY_PACK
 extern "C" void re4dc_registry_room_enter(unsigned room);   // coarse_actor_registry_pack.inc
 extern "C" void re4dc_registry_room_leave();
+#if defined(RE4DC_GANADO_VAR) && RE4DC_GANADO_VAR
+extern "C" void re4dc_ganado_var_room_leave();         // coarse_actor_owner_ganado.inc (ACTOR_GANADO_PS2_STUMP)
+#endif
 #endif
 #if RE4DC_ACTOR_PL08_PACK
 extern "C" void re4dc_pl08_pack_room_enter();               // coarse_actor_pl08_pack.inc
@@ -401,6 +404,9 @@ extern "C" void re4dc_room_leave(){
 #endif
 #if RE4DC_ACTOR_PL08_PACK
     re4dc_pl08_pack_room_leave();                        // the pl08 costume package cell (coarse_actor_pl08_pack.inc)
+#endif
+#if defined(RE4DC_GANADO_VAR) && RE4DC_GANADO_VAR
+    re4dc_ganado_var_room_leave();                       // ACTOR_GANADO_PS2_STUMP variant cell (coarse_actor_owner_ganado.inc)
 #endif
 #if defined(RE4DC_STATIC_OBJ_BATCH) && RE4DC_STATIC_OBJ_BATCH
     re4dc_sob_room_leave();                              // merged static-object lists (heap-4 cells)

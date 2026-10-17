@@ -3,4 +3,3 @@
 # reason and an owner (the lane that removes it), and an entry is added only with the coordinator's review.
 # Columns (tab separated): room (rXXX or *), model id (hex, as NMRS id=), reason, owner.
 # Leon (id 00) is not judged here: LEON-GC (MCHECK_LEONGC) covers him.
-r200	12	head-burst stump: a killed Ganado whose head info switches to the stump BIN (447 for appearance 1) has no PS2 cast row and draws GC until it goes away (castgc17 10-17, ATX_INFO why=2 detail=21bf); remove when the PS2 stump covers every appearance (ACTOR_GANADO_PS2_STUMP)	castgc17

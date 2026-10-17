@@ -42,6 +42,9 @@
 //   room 0x100 | jp 0 | pos x y z | dir 0x8000 | ang <rad> | rsf <room> <bit>... |
 //   scenario <0|1> <hex> | find <hex> | unlock <0|1> <hex> | status <0..3> <hex> | dead <no>... | inv default | area <no> [dx dz] |
 //   act <frame> <a|b|x|y|start|fwd|back|none|0xMASK> <hold> | arm <frame> <item id> | trg <no> <frame> [room] | kill <id> <frame> [room [kind]] |
+//   killrep <count> <gap> | killpart <partsNo> (every kill hit on that hit box; 5 = the head, so the kill loses it) |
+//   killnear (each kill target is the live enemy nearest Leon) | handpose <frame> <type> <id> (cEm10::setHand, both hands) |
+//   bring <distance> [side] (the handpose / kill target moved that far in front of Leon, side to his right: still pairs) |
 //   goto <frame> x y z [ang] | dump | name <preset> | late <mask> [tick] [room] (warp_late.h) | entry <n> |
 //   radio <frame> <call no 0..23> (source radio replay, resource-lifetime test only)
 //   god (Leon's life refilled every frame) | alert <frame> (the crowd hunts Leon from that frame of its entry)
@@ -79,11 +82,17 @@ extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM
 #include "em_set.h"
 #include "em.h"
 #include "em_sub.h"
+#include "em10.h"
+#include "model.h"
+// cModel::swapModelInfo (main image), as src/em10/em10.cpp declares it: em10HandSet itself lives in the em10 overlay.
+extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info) asm("swapModelInfo__6cModelP9ModelDataP10cModelInfo");
 #include "item.h"
 #include "main_mem.h"
 #include "snd.h"
 #include "sce.h"
 #include "sce_sys.h"
+#include "etc_model.h"
+#include "emdoor.h"
 #include "sscrn.h"
 #include "re4dc_platform.h"
 #include <string.h>
@@ -185,7 +194,23 @@ struct Warp {
     cEm* kill_em;   // the target once found (kept until its hp is gone)
     int kill_cur;   // its enemy id (`kill 0`: the nearest live Ganado, ids 0x10..0x20)
     u32 kill_watch; // after the kill: state lines left
+    u32 away_from, away_to; f32 away_pos[3];
+    u32 atf_frame; int atf_no; bool atf_done;     // `atfunc <frame> <area>` (test rigs)
+    u32 etd_frame; int etd_no; u32 etd_or; bool etd_done;  // `etcdoor <frame> <no> <flag>` (test rigs)  // `emaway <from> <to> <x> <y> <z>` (test rigs)
     u32 kill_rep, kill_gap;  // `killrep <count> <gap>`: kill `count` more, each `gap` room frames after the last
+    s16 kill_part;  // `killpart <partsNo>`: every hit on that hit box (5: the head; lane stump17 10-17)
+    bool kill_near; // `killnear`: the target is the live enemy nearest Leon (still pairs: the corpse falls in view)
+    // `handpose <room frame> <type> <em id>` (lane stump17 still pairs): once at that frame, the live enemy of that id
+    // nearest Leon shows a hand pose. Type 1: cEm10::setHand on both hands (BIN 449 / 454), as the event code does.
+    // Type 2: em10HandSet(em, 2)'s alert pose (right mot[8] = 450, left mot[11] = 453). Type 4: its left-handed form
+    // (flag 0x01000000: right mot[6] = 448, left mot[13] = 455). em10HandSet is in the em10 overlay, so the rig swaps
+    // the two infos the same way (ModInfoMgr.create + cModel::swapModelInfo) and leaves Hand_type alone: the routine's
+    // own em10HandSet(em, 0) sees no change and keeps the pose (setHand does not touch Hand_type either).
+    bool has_hand, hand_done;
+    u32 bring;  // `bring <distance> [side]` (still pairs): the handpose / kill target is moved this far in front of Leon
+    s32 bring_side;  // (and `side` to his right), facing him
+    u32 hand_frame;
+    int hand_type, hand_id;
     u32 alive_period, alive_last;  // `alivelog <period>`
     bool has_drop;  // `drop <item id> [num]` (issue 23): the kill target drops this item instead of its own roll
     u16 drop_id;
@@ -401,6 +426,37 @@ void load()
         } else if (!strcmp(k, "alivelog") && n >= 2) {
             wp.alive_period = num(tok[1]);
             wp.alive_last = ~0u;
+        } else if (!strcmp(k, "atfunc") && n >= 3) {
+            // `atfunc <frame> <area>`: test rigs only: at that room frame run the area's room callback (the function
+            // SceAtDataSet_exec set) as its own task, as if the player had triggered it (r203 key pickup wave)
+            wp.atf_frame = num(tok[1]);
+            wp.atf_no = (int) num(tok[2]);
+            wp.atf_done = false;
+        } else if (!strcmp(k, "etcdoor") && n >= 4) {
+            // `etcdoor <frame> <no> <flag>`: test rigs only: at that room frame room door `no` (getRoomEtcDoor) is set
+            // normal (unlocked) and `flag` is ORed into its flag word (r209 door 4 opened: 0x10000000)
+            wp.etd_frame = num(tok[1]);
+            wp.etd_no = (int) num(tok[2]);
+            wp.etd_or = num(tok[3]);
+            wp.etd_done = false;
+        } else if (!strcmp(k, "emaway") && n >= 6) {
+            // `emaway <from> <to> <x> <y> <z>`: test rigs only (castle cap-4 r208 crank): between those room frames
+            // every live Ganado is moved to x,y,z each frame, so a long player action is not hit
+            wp.away_from = num(tok[1]);
+            wp.away_to = num(tok[2]);
+            for (int i = 0; i < 3; ++i) wp.away_pos[i] = (f32) strtod(tok[3 + i], nullptr);
+        } else if (!strcmp(k, "handpose") && n >= 4) {
+            wp.has_hand = true;
+            wp.hand_frame = num(tok[1]);
+            wp.hand_type = (int) num(tok[2]);
+            wp.hand_id = (int) num(tok[3]);
+        } else if (!strcmp(k, "bring") && n >= 2) {
+            wp.bring = num(tok[1]);
+            wp.bring_side = n >= 3 ? (s32) strtol(tok[2], nullptr, 0) : 0;
+        } else if (!strcmp(k, "killnear")) {
+            wp.kill_near = true;
+        } else if (!strcmp(k, "killpart") && n >= 2) {
+            wp.kill_part = (s16) num(tok[1]);
         } else if (!strcmp(k, "killrep") && n >= 3) {
             wp.kill_rep = num(tok[1]);
             wp.kill_gap = num(tok[2]);
@@ -648,6 +704,69 @@ void kill_poll()
                   live ? (int) em->pos.y : 0, live ? (int) em->pos.z : 0,
                   live && em->pModelInfo ? (unsigned) em->pModelInfo->colorWord : 0u);
     }
+    if (wp.away_to && pPL && wp.room_frames >= wp.away_from && wp.room_frames < wp.away_to) {
+        for (int id = 0x10; id <= 0x20; ++id) {
+            for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e)) {
+                if ((e->be_flag & 0x21) != 0x21 || e->hp <= 0) continue;
+                Vec p = {wp.away_pos[0], wp.away_pos[1], wp.away_pos[2]};
+                e->setPos(&p);
+            }
+        }
+    }
+    if (wp.atf_frame && !wp.atf_done && wp.room_frames >= wp.atf_frame) {
+        wp.atf_done = true;
+        SceAtWork* w = SceAtPtr(wp.atf_no);
+        re4dc_log("warp: atfunc area %02x func=%08x at room frame %u\n", (unsigned) wp.atf_no,
+                  w ? (unsigned) (uintptr_t) w->func : 0u, (unsigned) wp.room_frames);
+        if (w && w->func) SceExec(0x12, w->func, w->arg, 0, SCE_PRIO_DEF_2, 0);
+    }
+    if (wp.etd_frame && !wp.etd_done && wp.room_frames >= wp.etd_frame) {
+        wp.etd_done = true;
+        cEm* d = nullptr;
+        if (getRoomEtcDoor(wp.etd_no, &d, 1) == 1 && d) {
+            ((cEmDoor*) d)->setNormal();
+            d->flag |= wp.etd_or;
+        }
+        re4dc_log("warp: etcdoor %d %s flag|=%08x at room frame %u\n", wp.etd_no, d ? "set" : "missing",
+                  (unsigned) wp.etd_or, (unsigned) wp.room_frames);
+    }
+    if (wp.has_hand && !wp.hand_done && wp.room_frames >= wp.hand_frame && pPL) {
+        auto bring = [](cEm* e) {
+            if (!wp.bring || !pPL) return;
+            const f32 a = pPL->ang.y, d = (f32) wp.bring;
+            e->pos.x = pPL->pos.x + __builtin_sinf(a) * d - __builtin_cosf(a) * (f32) wp.bring_side;
+            e->pos.z = pPL->pos.z + __builtin_cosf(a) * d + __builtin_sinf(a) * (f32) wp.bring_side;
+            e->ang.y = a + 3.14159265f;
+        };
+        cEm* best = nullptr;
+        f32 best_d = 1e30f;
+        for (cEm* e = EmMgr.getEmPtr(wp.hand_id, 0); e; e = EmMgr.getEmPtr(wp.hand_id, e)) {
+            if ((e->be_flag & 0x21) != 0x21 || e->hp <= 0) continue;
+            const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+            if (d < best_d) { best_d = d; best = e; }
+        }
+        if (best) {
+            wp.hand_done = true;
+            bring(best);
+            if (wp.hand_type == 2 || wp.hand_type == 4) {
+                cEm10* em = static_cast<cEm10*>(best);
+                Em10Work* w = EM10_WK(em);
+                void* bins[2] = {wp.hand_type == 4 ? w->mot[6] : w->mot[8], wp.hand_type == 4 ? w->mot[13] : w->mot[11]};
+                cModelInfo** slots[2] = {&w->pRHand, &w->pLHand};
+                for (int h = 0; h < 2; ++h) {
+                    cModelInfo* info = *slots[h] ? ModInfoMgr.create(bins[h], w->mot[0]) : nullptr;
+                    if (!info) continue;
+                    cModel_swapModelInfo(em, (*slots[h])->pData, info);
+                    *slots[h] = info;
+                }
+            } else {
+                static_cast<cEm10*>(best)->setHand(1, wp.hand_type);
+                static_cast<cEm10*>(best)->setHand(0, wp.hand_type);
+            }
+            re4dc_log("warp: handpose %d on m=%08x at room frame %u pos=%d,%d,%d\n", wp.hand_type, (unsigned) (uintptr_t) best,
+                      (unsigned) wp.room_frames, (int) best->pos.x, (int) best->pos.y, (int) best->pos.z);
+        }
+    }
     if (!wp.has_kill || wp.kill_done) return;
     if (wp.kill_room && pG->room_id != wp.kill_room) return;
     if (wp.room_frames < wp.kill_frame) return;
@@ -665,13 +784,25 @@ void kill_poll()
                 }
             }
         } else {
+            cEm* best = nullptr;
+            f32 best_d = 1e30f;
             for (em = EmMgr.getEmPtr(wp.kill_id, 0); em; em = EmMgr.getEmPtr(wp.kill_id, em)) {
-                if ((em->be_flag & 0x21) == 0x21 && em->hp > 0) break;
+                if ((em->be_flag & 0x21) != 0x21 || em->hp <= 0) continue;
+                if (!wp.kill_near || !pPL) break;
+                const f32 dx = em->pos.x - pPL->pos.x, dz = em->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+                if (d < best_d) { best_d = d; best = em; }
             }
+            if (wp.kill_near && pPL) em = best;
         }
         if (!em) return;  // not placed yet: keep looking
         wp.kill_cur = em->id;
         wp.kill_em = em;
+        if (wp.bring && pPL) {
+            const f32 a = pPL->ang.y, d = (f32) wp.bring;
+            em->pos.x = pPL->pos.x + __builtin_sinf(a) * d - __builtin_cosf(a) * (f32) wp.bring_side;
+            em->pos.z = pPL->pos.z + __builtin_cosf(a) * d + __builtin_sinf(a) * (f32) wp.bring_side;
+            em->ang.y = a + 3.14159265f;
+        }
         snprintf(what, sizeof(what), "kill 0x%02x fired in %03x at room frame %u hp=%d", (unsigned) wp.kill_cur,
                  (unsigned) pG->room_id, (unsigned) wp.room_frames, (int) em->hp);
         stamp(what);
@@ -712,6 +843,11 @@ void kill_poll()
     Vec c = em->pos;
     YARARE_INFO* part = emSphereAtCk(em, &c, &c, 5000.0f, 1, 5000.0f);
     if (!part) part = &em->hitInfo;
+    // `killpart <n>`: aim at the hit box of that parts number instead (5 = the head: em10's damage check then loses
+    // the head on the killing hit, em10LostHead -> em10HeadSet mot[3], the stump; CAST-GC stump gate, lane stump17).
+    if (wp.kill_part)
+        for (YARARE_INFO* q = &em->hitInfo; q; q = q->next)
+            if ((q->flags & 1) && q->partsNo == wp.kill_part) { part = q; break; }
     Vec from = pPL ? pPL->pos : em->pos;
     em->dmg.set(0, 10, wp.kill_kind, &from, part->rad, part);
     ++wp.kill_hits;

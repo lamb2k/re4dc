@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <iterator>
@@ -114,12 +115,26 @@ extern "C" void re4dc_coarse_skin_groups(const void* stream,unsigned groups,cons
 #include "actor_lifetime.h"
 #include "ganado_cast_runtime.h"
 #include "ganado_ps2_stump_runtime.h"
+// Host seams of the variant package loader: heap 4 (malloc, counted), the transaction (no owned records live here).
+const char* host_package;
+static unsigned host_allocs,host_frees;
+extern "C" void* re4dc_static_alloc(unsigned n){++host_allocs;return std::malloc(n);}
+extern "C" void re4dc_static_free(void* p){++host_frees;std::free(p);}
+extern "C" int re4dc_static_heap_free(){return 1<<20;}
+extern "C" void re4dc_actor_transaction_retire(){}
+extern "C" int re4dc_actor_owned_live(){return 0;}
+extern "C" unsigned re4dc_ui_frame(){return 1;}
 #if RE4DC_CROWD_FAR
 #include "ganado_far_runtime.h"
 static bool far_request;
 extern "C" int re4dc_crowd_far(cModel*){return far_request;}
 #endif
 extern "C" {unsigned re4dc_actor_tx_serial=1;}
+// Host seams for consumers that moved on after 10-13 (lane stump17 10-17): the render matrix concat, GANADO_LOD
+// (off: always ready) and the em3c / em25 armour material rows (off).
+#define RE4DC_RENDER_MTXConcat PSMTXConcat
+#define RE4DC_GANADO_LOD_READY() true
+namespace re4dc_material { constexpr bool armor_rows=false; }
 // INSERT ACTUAL CONSUMERS HERE
 
 static unsigned word(unsigned at) {unsigned x;std::memcpy(&x,arena.data()+at,4);return x;}
@@ -130,7 +145,7 @@ static void setup(const char* fixture,unsigned id=0x13) {
     re4dc_actor_forget_all();
     std::ifstream f(fixture,std::ios::binary);arena.assign(std::istreambuf_iterator<char>(f),{});check(!arena.empty());
     re4dc_actor_archive_adopt(arena.data(),arena.data(),unsigned(arena.size()),2);
-    for(unsigned no:{448u,453u,476u,478u,479u})for(unsigned field:{0u,12u,16u,20u,28u,48u,52u}) {
+    for(unsigned no:{448u,450u,453u,454u,476u,478u,479u})for(unsigned field:{0u,12u,16u,20u,28u,48u,52u}) {
         const unsigned at=offset(no)+field;word(at,offset(no)+word(at));
     }
     model={};model.id=id;model.pList=model.pParts=parts;model.pModelInfo=infos;
@@ -149,10 +164,11 @@ static void setup(const char* fixture,unsigned id=0x13) {
     check(re4dc_material::source_appearance_type(2,id,3));
     check(re4dc_actor_role_source_bin(&model,&infos[1],2,1)==478);
 }
-static void swap_head(unsigned bin) {
-    re4dc_actor_info_retire(&infos[1]);re4dc_actor_model_changed(&model);
-    infos[1].pData=data(bin);re4dc_actor_info_adopt(&infos[1]);++re4dc_actor_tx_serial;
+static void swap_info(unsigned k,unsigned bin) {
+    re4dc_actor_info_retire(&infos[k]);re4dc_actor_model_changed(&model);
+    infos[k].pData=data(bin);re4dc_actor_info_adopt(&infos[k]);++re4dc_actor_tx_serial;
 }
+static void swap_head(unsigned bin) {swap_info(1,bin);}
 static re4dc_material::Error live_head() {
     auto* row=actor_current_role(&model,&infos[1],2,1);check(row);
     re4dc_material::Result r{};return re4dc_material::info(&infos[1],*row,r,false);
@@ -162,7 +178,7 @@ static float* output[4]={storage[0],storage[1],storage[2],storage[3]};
 static Re4dcActorPlan plan() {Re4dcActorPlan p;check(re4dc_actor_plan_ganado(&model,&p));return p;}
 static void skin_check(const Re4dcActorPlan& p) {
     check(owner_ganado_palettes(&model,p,output));
-    const auto& c=ganado_ps2_stump::head;Mtx inv;check(PSMTXInverse(parts[0].mat,inv));
+    const auto& c=ganado_var::chunk[2];Mtx inv;check(PSMTXInverse(parts[0].mat,inv));
     for(unsigned v=0;v<c.position_count;++v) {
         short s[4];std::memcpy(s,c.positions+v*8,8);const auto& w=c.weights[unsigned(s[3])];
         double expected[3]={};float x[3]={s[0]/16.0f,s[1]/16.0f,s[2]/16.0f};
@@ -195,14 +211,14 @@ static void skin_check(const Re4dcActorPlan& p) {
     check(triangles==90);output_triangles+=triangles;
 }
 static void cull_check() {
-    check(gate_init(kStumpGateApp));check(gate_count[kStumpGateApp][1]==3);
-    const auto& c=ganado_ps2_stump::head;
+    check(gate_init((kStumpGateApp+2)));check(gate_count[(kStumpGateApp+2)][1]==3);
+    const auto& c=ganado_var::chunk[2];
     for(unsigned v=0;v<c.position_count;++v) {
         short s[4];std::memcpy(s,c.positions+v*8,8);const auto& w=c.weights[unsigned(s[3])];float x[3]={s[0]/16.0f,s[1]/16.0f,s[2]/16.0f};
         for(unsigned k=0;k<w.count;++k)if(w.value[k]>0) {
             bool found=false;
-            for(unsigned j=0;j<gate_count[kStumpGateApp][1];++j) {
-                const unsigned n=gate_first[kStumpGateApp][1]+j;if(gate_bone[n]!=w.bone[k])continue;
+            for(unsigned j=0;j<gate_count[(kStumpGateApp+2)][1];++j) {
+                const unsigned n=gate_first[(kStumpGateApp+2)][1]+j;if(gate_bone[n]!=w.bone[k])continue;
                 float q[3];gate_local(gc::bind[2][w.bone[k]],x,q);double d2=0;
                 for(unsigned a=0;a<3;++a)d2+=(q[a]-gate_ball[n].c[a])*(q[a]-gate_ball[n].c[a]);
                 check(d2<=double(gate_ball[n].r+0.001f)*(gate_ball[n].r+0.001f));found=true;
@@ -214,7 +230,7 @@ static void cull_check() {
     Mtx inv,mv[4];check(PSMTXInverse(parts[0].mat,inv));
     for(float x:{0.0f,8000.0f,-8000.0f})for(float y:{-1600.0f,8000.0f,-8000.0f})for(float z:{-6000.0f,-20000.0f}) {
         global.Cam.v_mat[0][3]=x;global.Cam.v_mat[1][3]=y;global.Cam.v_mat[2][3]=z;
-        const unsigned skip=gate_cull_checked(&model,kStumpGateApp,iv,pv,inv,mv);
+        const unsigned skip=gate_cull_checked(&model,(kStumpGateApp+2),iv,pv,inv,mv);
         bool any=false;
         for(unsigned v=0;v<c.position_count;++v) {
             short s[4];std::memcpy(s,c.positions+v*8,8);const float* p=output[1]+unsigned(s[3])*12;
@@ -226,21 +242,51 @@ static void cull_check() {
         if(any)check(!(skip&2));++cull_cases;
     }
     check(!g1_mask_mismatch && !g1_visible_mismatch && !g1_mv_mismatch && !g1_g_mismatch && !g1_scale_mismatch);
-    infos[1].be_flag=1;check(!visible(&infos[1]));gate_cull_checked(&model,kStumpGateApp,iv,pv,inv,mv);check(!(gate_visible&2));
+    infos[1].be_flag=1;check(!visible(&infos[1]));gate_cull_checked(&model,(kStumpGateApp+2),iv,pv,inv,mv);check(!(gate_visible&2));
     infos[1].be_flag=9;
+}
+// Hand poses: em10HandSet / cEm10::setHand swap role 2 (448 -> 450) and role 3 (453 -> 454) in place.
+static void hand_check() {
+    swap_info(2,450);swap_info(3,454);
+    check(re4dc_actor_role_source_bin(&model,&infos[2],2,2)==450 && re4dc_actor_role_source_bin(&model,&infos[3],2,3)==454);
+    auto hands=plan();
+    check(hands.immutable_asset_id[2]==kRe4dcGanadoStumpAsset+6 && hands.immutable_asset_id[3]==kRe4dcGanadoStumpAsset+7);
+    check(hands.input[2].triangles==97 && hands.input[3].triangles==97 && hands.input[2].stream.data==ganado_var::input[6].stream.data);
+    check(owner_ganado_palettes(&model,hands,output));
+    for(unsigned r=2;r<4;++r)for(unsigned i=0;i<hands.input[r].palette_count*12;++i)check(std::isfinite(output[r][i]));
+    swap_info(2,448);swap_info(3,453);
+}
+// Package refusals, room leave and the movie loan (the plan declines while the cell is gone, reads it again after).
+extern "C" void re4dc_ganado_var_room_leave();
+extern "C" unsigned re4dc_ganado_var_lend();
+extern "C" void re4dc_ganado_var_return();
+static void package_check(const char* good,const char* bad) {
+    Re4dcActorPlan declined{};
+    re4dc_ganado_var_room_leave();check(!ganado_var::cell);
+    const unsigned fails=ganado_var::fails;
+    host_package=bad;check(!re4dc_actor_plan_ganado(&model,&declined));check(ganado_var::fails==fails+1 && !ganado_var::cell);
+    host_package="/nonexistent/ganado_var.re4gv";check(!re4dc_actor_plan_ganado(&model,&declined));check(ganado_var::fails==fails+2);
+    re4dc_ganado_var_room_leave();check(!ganado_var::fails);  // room leave clears the refusal count
+    host_package=good;const unsigned loads=ganado_var::loads;check(re4dc_actor_plan_ganado(&model,&declined));
+    check(ganado_var::cell && ganado_var::loads==loads+1);
+    check(re4dc_ganado_var_lend()==ganado_ps2_stump::file_bytes+ganado_ps2_stump::skin_total+32u && !ganado_var::cell);
+    check(!re4dc_actor_plan_ganado(&model,&declined));check(!ganado_var::cell);  // lent: no read during the movie
+    re4dc_ganado_var_return();check(re4dc_actor_plan_ganado(&model,&declined) && ganado_var::cell);
+    check(host_allocs==host_frees+1);
 }
 static void run(const char* file,unsigned id) {
     setup(file,id);auto normal=plan();check(normal.immutable_asset_id[1]==18);check(normal.input[1].triangles==gc::chunks[2][1].triangles);
     check(owner_ganado_palettes(&model,normal,output));float original[4][256*12];std::memcpy(original,storage,sizeof(storage));
     Mtx original_pose[34];for(unsigned b=0;b<34;++b)std::memcpy(original_pose[b],parts[b].mat,sizeof(Mtx));
     swap_head(479);check(re4dc_actor_role_source_bin(&model,&infos[1],2,1)==479);auto stump=plan();
-    check(stump.immutable_asset_id[1]==kRe4dcGanadoStumpAsset && stump.immutable_asset_id[0]==17);
+    check(stump.immutable_asset_id[1]==(kRe4dcGanadoStumpAsset+2) && stump.immutable_asset_id[0]==17);
     check(stump.input[1].triangles==90 && stump.input[1].palette_count==6 && stump.material_count==1 && stump.runs[1].material==0);
-    check(stump.input[1].uv.data==ganado_ps2_stump::head_uv && owner_plan_app==kStumpGateApp);
+    check(ganado_var::cell && stump.input[1].uv.data==ganado_var::input[2].uv.data && owner_plan_app==(kStumpGateApp+2));
     check(stump.crc==0x65c6fe5a && stump.fnv==0x2593694e);check(live_head()==re4dc_material::Error::None);
+    hand_check();
     check(!re4dc_ganado_early_ready(&model));check(!owner_ganado_palettes(&model,normal,output));
 #if RE4DC_CROWD_FAR
-    far_request=true;auto distant=plan();check(distant.immutable_asset_id[0]==17 && distant.immutable_asset_id[1]==kRe4dcGanadoStumpAsset);far_request=false;
+    far_request=true;auto distant=plan();check(distant.immutable_asset_id[0]==17 && distant.immutable_asset_id[1]==(kRe4dcGanadoStumpAsset+2));far_request=false;
 #endif
     for(unsigned pose=0;pose<4;++pose) {
         for(unsigned b=2;b<=4;++b){parts[b].mat[0][3]+=float(pose*13*b);parts[b].mat[1][3]-=float(pose*7);parts[b].mat[2][3]+=float(pose*11);}
@@ -267,7 +313,8 @@ static void run(const char* file,unsigned id) {
     bool admitted=false;for(const auto& a:re4dc_material::life::assets)admitted|=a.data==data(479);check(!admitted);
 }
 int main(int argc,char** argv) {
-    check(argc==3);run(argv[1],0x13);run(argv[2],0x15);
+    check(argc==5);host_package=argv[3];run(argv[1],0x13);run(argv[2],0x15);
+    setup(argv[2],0x15);swap_head(479);package_check(argv[3],argv[4]);
 #if RE4DC_ACTOR_BIND_REUSE == 2
     check(abr_calls && abr_hits && !abr_bad);
 #endif

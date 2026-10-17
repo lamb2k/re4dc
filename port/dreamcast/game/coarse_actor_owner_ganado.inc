@@ -5,8 +5,20 @@
 #include "ganado_source_extras.h"
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
 #include "coarse_actor_geometry_once.h"
+#include <kos/fs.h>
+#include <fcntl.h>
+extern "C" void* re4dc_static_alloc(unsigned);
+extern "C" void re4dc_static_free(void*);
+extern "C" int re4dc_static_heap_free();
+extern "C" void re4dc_actor_transaction_retire();
+extern "C" int re4dc_actor_owned_live();               // coarse_actor_transaction.inc
+extern "C" unsigned re4dc_ui_frame();
+extern "C" void re4dc_actor_immutable_chunk_reset(unsigned asset_id);  // coarse_actor_geometry_once.inc
 #endif
 namespace {
+#if RE4DC_ACTOR_GANADO_PS2_STUMP
+namespace ganado_var { int find(unsigned app,unsigned role,unsigned bin); }  // below: the package variant of a source BIN
+#endif
 unsigned owner_binding_revision[32]{};
 unsigned char owner_info_count[32]{};
 unsigned short owner_source_bin[32][5]{};
@@ -61,7 +73,13 @@ bool owner_ganado_bind(cModel* m) {
             const unsigned bin=re4dc_actor_role_source_bin(m,infos[r],app,r);
             if(!bin || bin>65535)return false;
             // A reviewed body/head and exact source-selected hand/attachment.
-            if((r==2 && bin!=448 && bin!=451) || (r==3 && bin!=453 && bin!=456) ||
+#if RE4DC_ACTOR_GANADO_PS2_STUMP
+            // ACTOR_GANADO_PS2_STUMP: em10HandSet's other poses (449 / 450, 454 / 455) are package variants.
+            const bool variant=(r==2 || r==3) && ganado_var::find(app,r,bin)>=0;
+#else
+            const bool variant=false;
+#endif
+            if((r==2 && bin!=448 && bin!=451 && !variant) || (r==3 && bin!=453 && bin!=456 && !variant) ||
                (r==4 && bin!=467 && bin!=484))return false;
             owner_source_bin[slot][r]=(unsigned short)bin;
         }
@@ -146,31 +164,113 @@ const ganado_extra::Chunk* owner_original_chunk(unsigned role) {
     return nullptr;
 }
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-// em10HeadSet selects this exact source BIN when the type-3 head is lost.
-// Role binding proves BIN479 / TPL477 and the current source lifetime first.
-bool owner_ps2_stump_selected() {
-    return bound->appearance==2 && owner_source_bin[owner_current_slot][1]==479;
+// ACTOR_GANADO_PS2_STUMP (actor_ganado_ps2_stump.mk; lane stump17 10-17): the infos em10 swaps in during play that
+// the five-appearance cast has no row for draw their exact PS2 conversion instead of sending the whole Ganado to the
+// GameCube path: em10HeadSet's lost-head stump (mot[3], role 1; BIN 475 / 447 / 479 / 483 / 460 by appearance) and
+// em10HandSet's hand poses (role 2: 449 type 1, 450 type 2; role 3: 454, 455). Role binding proves the source BIN /
+// appearance TPL first (actor_material_records.inc rows); the variant then uses the appearance's own atlas.
+// The meshes are not in the image (lane stump17: only code and digests are static): one heap-4 room cell holds
+// dc/native/ganado/ganado_var.re4gv (tools/d367/ps2_ganado_stump.py; 18,368 B) and the variants' FTRV skin groups
+// (1,248 B), read at the first owner plan of a room that selects a variant. Room leave frees it. A route movie whose
+// heap-4 staging does not fit borrows it (re4dc_ganado_var_lend, native_movie.cpp); the first plan that selects a
+// variant after the movie retires reads it again. Not loaded (no file, a failed read / layout / digest / proof /
+// group build, three failures in the room, or lent): the plan declines and the Ganado keeps the source path.
+namespace ganado_var {
+namespace g=ganado_ps2_stump;
+re4dc_source::ChunkInput input[g::count];
+const unsigned char* groups[g::count];
+unsigned group_count[g::count];
+unsigned char* cell;
+bool lent;
+unsigned fails,loads,lends,releases,first_mask;  // first_mask: geometries planned since the load (one log line each)
+int find(unsigned a,unsigned role,unsigned bin) {
+    if(a>=g::apps)return -1;
+    for(unsigned k=0;k<g::count;++k)if(g::role[k]==role && g::bin[k]==bin && ((g::app_mask[k]>>a)&1u))return int(k);
+    return -1;
 }
-alignas(32) unsigned char owner_stump_groups[ganado_ps2_stump::skin_stream_bytes];
-unsigned owner_stump_group_count,owner_stump_state;
-bool owner_ps2_stump_ready() {
-    if(owner_stump_state)return owner_stump_state==1;
-    owner_stump_state=2;
-    const auto& s=ganado_ps2_stump::head;
-    const auto& t=gc::textures[gc::appearance_texture[2]];
-    if(std::strcmp(gc::appearance_names[2],"ganado-em15-03") ||
-       t.crc!=ganado_ps2_stump::atlas_crc || t.fnv!=ganado_ps2_stump::atlas_fnv || t.width!=512 || t.height!=512 ||
-       std::memcmp(gc::bind[2],ganado_ps2_stump::bind,sizeof(gc::bind[2])) ||
-       std::memcmp(gc::parents,ganado_ps2_stump::parents,sizeof(gc::parents)) ||
-       s.source_info!=1 || s.triangles!=90 || s.palette_count!=6)return false;
-    re4dc_source::ChunkProof proof{};
-    const auto input=RE4DC_OWNER_INPUT(ganado_ps2_stump,head,ganado_ps2_stump::head,34);
-    if(re4dc_actor_immutable_chunk_proof(kRe4dcGanadoStumpAsset,input,proof)!=re4dc_source::BlobError::None)return false;
-    unsigned char used[kBones]{};
-    if(coarse_group_build(s.weights,s.palette_count,owner_stump_groups,sizeof(owner_stump_groups),
-                          &owner_stump_group_count,used)!=sizeof(owner_stump_groups))return false;
-    owner_stump_state=1;return true;
+unsigned fnv(const unsigned char* d,unsigned n,unsigned h) {for(unsigned i=0;i<n;++i)h=(h^d[i])*0x01000193u;return h;}
+// Everything built from the old bytes is rebuilt from the next ones (immutable proofs, the stump gates' balls).
+void forget() {
+    for(unsigned k=0;k<g::count;++k) {
+        re4dc_actor_immutable_chunk_reset(kRe4dcGanadoStumpAsset+k);
+        chunk[k]=gc::Chunk{};input[k]=re4dc_source::ChunkInput{};groups[k]=nullptr;group_count[k]=0;
+    }
+#if RE4DC_COARSE_PREGATE
+    for(auto& s:gate_state)s=0;
+    gate_next=0;
+#endif
 }
+void release(const char* why) {
+    if(!cell)return;
+    if(re4dc_actor_owned_live())re4dc_actor_transaction_retire();  // no owned record may name the bytes
+    forget();re4dc_static_free(cell);cell=nullptr;++releases;
+    re4dc_log("GANADOVAR release %s heap4_free=%d releases=%u\n",why,re4dc_static_heap_free(),releases);
+}
+bool fail(unsigned why,unsigned detail) {
+    ++fails;
+    re4dc_log("GANADOVAR refuse why=%u detail=%u fails=%u heap4_free=%d: variant Ganados keep the source path\n",why,detail,
+        fails,re4dc_static_heap_free());
+    if(cell){forget();re4dc_static_free(cell);cell=nullptr;}
+    return false;
+}
+#pragma GCC push_options
+#pragma GCC optimize("Os")  // cold loader
+bool load() {
+    for(unsigned a=0;a<g::apps;++a) {  // the package was made for this image's cast (names and atlas keys)
+        const auto& t=gc::textures[gc::appearance_texture[a]];
+        if(std::strcmp(gc::appearance_names[a],g::names[a]) || t.crc!=g::atlas_crc[a] || t.fnv!=g::atlas_fnv[a])return fail(1,a);
+    }
+    const file_t f=fs_open("/cd/dc/native/ganado/ganado_var.re4gv",O_RDONLY);
+    if(f==FILEHND_INVALID)return fail(2,0);
+    const unsigned total=unsigned(fs_total(f));
+    if(total!=g::file_bytes){fs_close(f);return fail(3,total);}
+    cell=static_cast<unsigned char*>(re4dc_static_alloc(g::file_bytes+g::skin_total+32u));
+    if(!cell){fs_close(f);return fail(4,g::file_bytes+g::skin_total);}
+    unsigned char* base=reinterpret_cast<unsigned char*>((reinterpret_cast<std::uintptr_t>(cell)+31u)&~std::uintptr_t(31u));
+    const bool read=fs_read(f,base,g::file_bytes)==ssize_t(g::file_bytes);
+    fs_close(f);
+    if(!read)return fail(5,0);
+    const unsigned* h=reinterpret_cast<const unsigned*>(base);
+    if(h[0]!=g::magic || h[1]!=g::version || h[2]!=g::count || h[3]!=g::file_bytes || h[4]!=g::data_off)return fail(6,0);
+    unsigned char* skin=base+((g::file_bytes+31u)&~31u);
+    for(unsigned k=0;k<g::count;++k) {
+        const unsigned* r=h+16u*(k+1u);
+        if(r[0]!=g::role[k] || r[1]!=g::positions[k] || r[2]!=g::normals[k] || r[3]!=g::palettes[k] || r[4]!=g::triangles[k] ||
+           r[5]!=g::stream_bytes[k])return fail(7,k);
+        const unsigned char* a[5];unsigned d=0x811c9dc5u;
+        for(unsigned i=0;i<5;++i) {
+            if(r[6+i]!=g::offset[k][i] || r[11+i]!=g::size[k][i] || (r[6+i]&31u) || r[6+i]+r[11+i]>g::file_bytes)return fail(7,k);
+            a[i]=base+r[6+i];d=fnv(a[i],r[11+i],d);
+        }
+        if(d!=g::digest[k])return fail(8,k);
+        chunk[k]=gc::Chunk{g::role[k],g::positions[k],g::normals[k],g::palettes[k],g::triangles[k],g::stream_bytes[k],a[0],a[1],
+            a[2],const_cast<unsigned char*>(a[3]),reinterpret_cast<const gc::Weight*>(a[4])};
+        input[k]=re4dc_source::ChunkInput{{a[0],g::size[k][0]},{a[1],g::size[k][1]},{a[2],g::size[k][2]},{a[3],g::size[k][3]},
+            {a[4],g::size[k][4]},g::positions[k],g::normals[k],g::palettes[k],g::triangles[k],34u};
+        re4dc_source::ChunkProof proof{};
+        if(re4dc_actor_immutable_chunk_proof(kRe4dcGanadoStumpAsset+k,input[k],proof)!=re4dc_source::BlobError::None)return fail(9,k);
+        unsigned char used[kBones]{};unsigned n=0;
+        if(coarse_group_build(chunk[k].weights,g::palettes[k],skin,g::skin_bytes[k],&n,used)!=g::skin_bytes[k])return fail(10,k);
+        groups[k]=skin;group_count[k]=n;skin+=(g::skin_bytes[k]+31u)&~31u;
+    }
+    ++loads;first_mask=0;
+    re4dc_log("GANADOVAR load geometries=%u bytes=%u skin=%u heap4_free=%d loads=%u\n",g::count,g::file_bytes,g::skin_total,
+        re4dc_static_heap_free(),loads);
+    return true;
+}
+#pragma GCC pop_options
+bool ready() {
+    if(cell)return true;
+    if(lent || fails>=3)return false;
+    return load();
+}
+}
+// The package geometry the bound actor's source BIN of `role` selects (role 1 stump, 2 / 3 hand pose), or -1.
+int owner_variant(unsigned role) {
+    if(role<1 || role>3 || role>=owner_info_count[owner_current_slot])return -1;
+    return ganado_var::find(bound->appearance,role,owner_source_bin[owner_current_slot][role]);
+}
+bool owner_any_variant() {return owner_variant(1)>=0 || owner_variant(2)>=0 || owner_variant(3)>=0;}
 #endif
 int owner_ganado_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) {
 #if RE4DC_ACTOR_BIND_REUSE
@@ -180,9 +280,14 @@ int owner_ganado_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output
 #endif
        bound->appearance!=p.appearance || p.count!=owner_info_count[owner_current_slot] || !skin_init(owner_tier_app(p)))return 0;
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-    const bool stump=owner_ps2_stump_selected();
-    if(stump!=(p.immutable_asset_id[1]==kRe4dcGanadoStumpAsset) ||
-       (stump && (owner_tier_app(p)!=2 || !owner_ps2_stump_ready())))return 0;
+    int var[4]={-1,-1,-1,-1};bool any=false;
+    for(unsigned r=1;r<4 && r<p.count;++r) {  // each variant role was planned from its package geometry, and only those
+        var[r]=owner_variant(r);any|=var[r]>=0;
+        const unsigned id=p.immutable_asset_id[r];
+        const bool planned=id>=kRe4dcGanadoStumpAsset && id<kRe4dcGanadoStumpAsset+ganado_ps2_stump::count;
+        if(planned!=(var[r]>=0) || (planned && id!=kRe4dcGanadoStumpAsset+unsigned(var[r])))return 0;
+    }
+    if(any && (owner_tier_app(p)!=p.appearance || !ganado_var::cell))return 0;
 #endif
     for(unsigned i=0;i<p.count;++i)
         if(p.info[i]!=(i<4?bound->infos[i]:owner_extra_info[owner_current_slot]) || !output[i])return 0;
@@ -193,7 +298,7 @@ int owner_ganado_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output
     // Only those actors evaluate all34 matrices; default actors retain the set.
     bool extra=false;for(unsigned i=2;i<p.count;++i)extra|=owner_original_chunk(i)!=nullptr;
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-    extra|=stump;
+    extra|=any;
 #endif
     const unsigned used=extra?kBones:skin_used[ta];
     for(unsigned u=0;u<used;++u) {
@@ -203,10 +308,10 @@ int owner_ganado_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output
     re4dc_coarse_skin_bones(invx,skin_jobs,used);
     for(unsigned i=0;i<p.count;++i) {
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-        if(stump && i==1) {
-            const unsigned palettes=ganado_ps2_stump::head.palette_count;
+        if(i<4 && var[i]>=0) {
+            const unsigned k=unsigned(var[i]),palettes=ganado_ps2_stump::palettes[k];
             if(p.input[i].palette_count!=palettes)return 0;
-            re4dc_coarse_skin_groups(owner_stump_groups,owner_stump_group_count,&bone_T[0][0],output[i],palettes);
+            re4dc_coarse_skin_groups(ganado_var::groups[k],ganado_var::group_count[k],&bone_T[0][0],output[i],palettes);
             for(unsigned j=0;j<palettes*12;++j)if(!coarse_finite(output[i][j]))return 0;
             continue;
         }
@@ -237,7 +342,7 @@ extern "C" int re4dc_ganado_early_ready(cModel* m) {
     if(!owner_ganado_bind(m) || owner_info_count[owner_current_slot]!=4 || !m->pParts ||
        !skin_init(bound->appearance))return 0;
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-    if(owner_ps2_stump_selected())return 0;
+    if(owner_any_variant())return 0;
 #endif
     for(unsigned role=0;role<4;++role) {
         if(owner_original_chunk(role) || gc::chunks[bound->appearance][role].palette_count>256)return 0;
@@ -351,11 +456,18 @@ void invis_note_owner(cModel* m) {
     if (!r || !invis_same(*r, m)) return;
     r->outcome = 1; r->app = owner_plan_app;
     r->cullable = owner_info_count[owner_current_slot] == 4 && !owner_original_chunk(2) && !owner_original_chunk(3);
+#if RE4DC_ACTOR_GANADO_PS2_STUMP
+    r->cullable = r->cullable && owner_variant(2) < 0 && owner_variant(3) < 0;  // a hand pose has no pregate balls
+#endif
     for (unsigned k = 0; k < 4; ++k) r->role[k] = bound->infos[k];
 #if RE4DC_PS2_INTERIOR_OWNER
     r->pc_cast = 0;  // the roles drawn from the cast chunks (no original source chunk): the pregate balls bound them
     for (unsigned k = 0; k < 4 && k < owner_info_count[owner_current_slot]; ++k)
+#if RE4DC_ACTOR_GANADO_PS2_STUMP
+        if (!owner_original_chunk(k) && (k == 1 || owner_variant(k) < 0)) r->pc_cast |= (unsigned char)(1u << k);
+#else
         if (!owner_original_chunk(k)) r->pc_cast |= (unsigned char)(1u << k);
+#endif
 #endif
 }
 // Source-mesh bound: per drawn info's ModelData and the skeleton's bind matrices, a ball per bone in the bone's bind
@@ -1010,6 +1122,9 @@ extern "C" int re4dc_crowd_offscreen(cModel* m) {
 #if RE4DC_CROWD_CULL
     if(!bound || bound->owner!=m || owner_info_count[owner_current_slot]!=4)return 0;
     for(unsigned role=2;role<4;++role)if(owner_original_chunk(role))return 0;
+#if RE4DC_ACTOR_GANADO_PS2_STUMP
+    for(unsigned role=2;role<4;++role)if(owner_variant(role)>=0)return 0;  // a hand pose has no pregate balls
+#endif
     Mtx inv;if(!PSMTXInverse(m->pParts->mat,inv))return 0;
     float P[7];GXGetProjectionv(P);
     const float pnear=P[6]/(P[5]-1.0f),pfar=P[6]/P[5],view_far=re4dc_fog_gate_far();
@@ -1034,8 +1149,9 @@ extern "C" int re4dc_actor_plan_ganado(cModel* m,Re4dcActorPlan* out) {
     if(!RE4DC_GANADO_LOD_READY())return 0;  // GANADO_LOD: no level loaded (the source path draws)
     Re4dcActorPlan p{};const unsigned a=bound->appearance,t=gc::appearance_texture[a];
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-    const bool stump=owner_ps2_stump_selected();
-    if(stump && !owner_ps2_stump_ready())return 0;
+    int var[4]={-1,-1,-1,-1};bool any=false;
+    for(unsigned r=1;r<4;++r){var[r]=owner_variant(r);any|=var[r]>=0;}
+    if(any && !ganado_var::ready())return 0;   // the first variant of the room reads the package
 #endif
     p.count=owner_info_count[owner_current_slot];p.appearance=a;p.image=image_of(t);p.crc=RE4DC_GC_KEYS[t].crc;p.fnv=RE4DC_GC_KEYS[t].fnv;p.palettes=owner_ganado_palettes;
 #define RE4DC_GANADO_ROLE(app,role,prefix) re4dc_actor::plan_chunk(p,role,bound->infos[role],gc::chunks[app][role],RE4DC_OWNER_INPUT(ganadocast,prefix,gc::chunks[app][role],34))
@@ -1054,7 +1170,7 @@ extern "C" int re4dc_actor_plan_ganado(cModel* m,Re4dcActorPlan* out) {
 #if RE4DC_CROWD_FAR
     if(
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-       !stump &&
+       !any &&
 #endif
        re4dc_crowd_far(m) && skin_init(a+kApps)) {
 #define RE4DC_GANADO_FAR_ROLE(app,role,prefix) re4dc_actor::plan_chunk(p,role,bound->infos[role],gc::far::chunks[app][role],RE4DC_OWNER_INPUT(ganadocast::far,prefix,gc::far::chunks[app][role],34))
@@ -1079,12 +1195,17 @@ extern "C" int re4dc_actor_plan_ganado(cModel* m,Re4dcActorPlan* out) {
     p.material_count=1;p.materials[0].image=p.image;p.materials[0].crc=p.crc;p.materials[0].fnv=p.fnv;
     for(unsigned role=0;role<p.count;++role) {
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-        if(stump && role==1) {
+        if(role<4 && var[role]>=0) {
+            const unsigned k=unsigned(var[role]);
             p.palette_bytes-=(p.input[role].palette_count*48u+31u)&~31u;
-            re4dc_actor::plan_chunk(p,role,bound->infos[role],ganado_ps2_stump::head,
-                                   RE4DC_OWNER_INPUT(ganado_ps2_stump,head,ganado_ps2_stump::head,34));
-            p.immutable_asset_id[role]=kRe4dcGanadoStumpAsset;
-            owner_plan_app=kTierApps;  // kStumpGateApp when pregating is enabled
+            re4dc_actor::plan_chunk(p,role,bound->infos[role],ganado_var::chunk[k],ganado_var::input[k]);
+            p.immutable_asset_id[role]=kRe4dcGanadoStumpAsset+k;
+            if(role==1)owner_plan_app=kStumpGateApp+a;  // the appearance's stump gate (coarse_ganado_cast.cpp)
+            if(!(ganado_var::first_mask&(1u<<k))) {
+                ganado_var::first_mask|=1u<<k;
+                re4dc_log("GANADOVAR first k=%u bin=%u app=%u role=%u m=%p f=%u\n",k,unsigned(ganado_ps2_stump::bin[k]),a,role,
+                    static_cast<void*>(m),re4dc_ui_frame());
+            }
         }
 #endif
         if(const auto* source=owner_original_chunk(role)) {
@@ -1104,4 +1225,21 @@ extern "C" int re4dc_actor_plan_ganado(cModel* m,Re4dcActorPlan* out) {
 #endif
     *out=p;return 1;
 }
+#if RE4DC_ACTOR_GANADO_PS2_STUMP
+// ui_bridge.cpp re4dc_room_leave: the cell is room storage.
+extern "C" void re4dc_ganado_var_room_leave() {
+    ganado_var::release("room-leave");ganado_var::lent=false;ganado_var::fails=0;
+}
+// native_movie.cpp: a route movie whose heap-4 staging does not fit borrows the cell (bytes freed, 0 when none).
+extern "C" unsigned re4dc_ganado_var_lend() {
+    if(!ganado_var::cell)return 0;
+    ganado_var::release("movie-lend");ganado_var::lent=true;++ganado_var::lends;
+    return ganado_var::g::file_bytes+ganado_var::g::skin_total+32u;
+}
+// native_movie.cpp, the movie retired: the next plan that selects a variant reads the package again.
+extern "C" void re4dc_ganado_var_return() {
+    if(ganado_var::lent)re4dc_log("GANADOVAR returned (lends=%u): read again at the next variant plan\n",ganado_var::lends);
+    ganado_var::lent=false;
+}
+#endif
 #endif

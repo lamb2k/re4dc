@@ -59,6 +59,13 @@ def _ganado(archive, base, rooms, types, hands=(0x1c0, 0x1c5)):
                 tpl=base + 1, rooms=rooms, types=types, category='human')
 
 
+def _ganado_stump(archive, base, rooms, types):
+    """em10HeadSet's lost-head variant of a _ganado appearance: the head section is mot[3] = base + 3 (the stump)."""
+    d = _ganado(archive, base, rooms, types)
+    d['sections'][1] = (base + 3, 'head')
+    return d
+
+
 # arc numbers (PL_ARC = entry index + 4), from the source's Em15Set / Em12Set tables (cast recover_cast.py)
 PRESETS = {
     'ganado-em15-00': _ganado('em15', 0x1bc, ['r101'], [0x00]),
@@ -77,6 +84,28 @@ PRESETS = {
     'ganado-em13-03-stump': dict(archive='em13',
         sections=[(476, 'body'), (479, 'head'), (448, 'right-hand'), (453, 'left-hand')],
         tpl=477, rooms=['r11c'], types=[3], category='human'),
+    # lane stump17 (10-17, CAST-GC): the same lost-head variant (mot[3] = the head BIN + 1, em12/13/15/16/17 _set.cpp) of
+    # the other four cast appearances, so ACTOR_GANADO_PS2_STUMP covers every appearance. The stump BINs are identical
+    # in every archive that carries them (castgc17 stump_facts: 475 em12/13/17, 447 em12/13/15/17, 483 em12/13/15/16,
+    # 460 em15/16); the body / hands keep each appearance's normal sections, so the atlas is the appearance's own.
+    'ganado-em12-01-stump': dict(archive='em12', sections=[(0x1d8, 'body'), (0x1db, 'head'), (0x1c0, 'right-hand'), (0x1c5, 'left-hand')],
+                                 tpl=0x1d9, rooms=['r100', 'r103'], types=[1], category='human', subset_bones=True),
+    'ganado-em15-00-stump': _ganado_stump('em15', 0x1bc, ['r101'], [0x00]),
+    'ganado-em15-04-stump': _ganado_stump('em15', 0x1e0, ['r101'], [0x04]),
+    'ganado-em15-0b-stump': _ganado_stump('em15', 0x1c9, ['r101'], [0x0b]),
+    # lane stump17 (10-17, CAST-GC): the other hand poses em10HandSet selects (mot[7] / mot[12] = 0x1c1 / 0x1c6, type 1:
+    # the back-hold / bomb-hold grabs; mot[8] / mot[13] = 0x1c2 / 0x1c7, type 2: the alert routine), converted per
+    # appearance with that appearance's body / head, so each lands in the appearance's normal atlas.
+    'ganado-em12-01-h1': dict(archive='em12', sections=[(0x1d8, 'body'), (0x1da, 'head'), (0x1c1, 'right-hand'), (0x1c6, 'left-hand')], tpl=0x1d9, rooms=['r100', 'r103'], types=[1], category='human'),
+    'ganado-em12-01-h2': dict(archive='em12', sections=[(0x1d8, 'body'), (0x1da, 'head'), (0x1c2, 'right-hand'), (0x1c7, 'left-hand')], tpl=0x1d9, rooms=['r100', 'r103'], types=[1], category='human'),
+    'ganado-em15-00-h1': _ganado('em15', 0x1bc, ['r101'], [0x00], hands=(0x1c1, 0x1c6)),
+    'ganado-em15-00-h2': _ganado('em15', 0x1bc, ['r101'], [0x00], hands=(0x1c2, 0x1c7)),
+    'ganado-em15-03-h1': _ganado('em15', 0x1dc, ['r101'], [0x03], hands=(0x1c1, 0x1c6)),
+    'ganado-em15-03-h2': _ganado('em15', 0x1dc, ['r101'], [0x03], hands=(0x1c2, 0x1c7)),
+    'ganado-em15-04-h1': _ganado('em15', 0x1e0, ['r101'], [0x04], hands=(0x1c1, 0x1c6)),
+    'ganado-em15-04-h2': _ganado('em15', 0x1e0, ['r101'], [0x04], hands=(0x1c2, 0x1c7)),
+    'ganado-em15-0b-h1': _ganado('em15', 0x1c9, ['r101'], [0x0b], hands=(0x1c1, 0x1c6)),
+    'ganado-em15-0b-h2': _ganado('em15', 0x1c9, ['r101'], [0x0b], hands=(0x1c2, 0x1c7)),
     # non-Ganado models for NATIVE_MODEL_REGISTRY packs (ps2_cast.py regcast; lane ps2cast-all): src/em2b em2b.cpp
     # type 0 (TYPE_A) modelInit(ARC 5, ARC 7) + ModInfoMgr.create(ARC 6, ARC 7): body + head, one 64-bone skeleton
     'gigante-em2b-00': dict(archive='em2b', sections=[(5, 'body'), (6, 'head')], tpl=7, rooms=['r119'], types=[0],

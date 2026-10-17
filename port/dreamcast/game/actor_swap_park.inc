@@ -22,7 +22,14 @@
 // never copied back wholesale.
 extern "C" void re4dc_log(const char*,...);
 namespace re4dc_material { namespace life {
+#if RE4DC_ACTOR_GANADO_PS2_STUMP
+// ACTOR_GANADO_PS2_STUMP (lane stump17): a Ganado archive also admits its stump / hand-pose BINs (up to 8 more assets:
+// r100's em12 archive 12 -> 20), so the park keeps the room for one such archive. At 16 the r100 s20 movie window
+// revoked it and its Ganados drew the source path for the rest of the room (h2: 2,753 GC rows).
+constexpr unsigned kParkArchives=4,kParkAssets=24,kParkInfos=32,kParkNone=~0u;
+#else
 constexpr unsigned kParkArchives=4,kParkAssets=16,kParkInfos=32,kParkNone=~0u;
+#endif
 struct ParkArchive { Archive o;unsigned slot,hash; };                         // slot: archives[] index at open
 #if RE4DC_NMR_PARK_UNRELOCATED
 // PS2_CAST_* (native_model_registry.mk, lane ps2cast2): was_current = the asset's current() at open. An archive BIN that

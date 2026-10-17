@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 """Private-input tests of the actual lifetime, owner, palette and cull consumers.
 
+Appearance 2 (the em13 / em15 fixture) of the v3 variant package (lane stump17 10-17): --stump-dir is
+ps2_ganado_stump.py --out (ganado_ps2_stump_runtime.h + ganado_var.re4gv). The loader reads the package through a
+host fs seam (kos/fs.h shim) into a host "heap 4" cell. Covered: the stump (BIN 479) and the hand poses 450 (role 2)
+and 454 (role 3) through bind, plan, palettes and the stump gate; package refusals (missing file, one flipped byte),
+room leave and the movie lend / return. The other appearances share every consumer; the game gate covers them.
+
 The fixture uses normalized pinned GC BIN bytes before actual archive adoption.
 Only 32-bit pointer encoding, SDK matrices and SH4 assembly have host adapters;
 production role lookup, digest, live info check, owner plan, immutable proof,
@@ -22,6 +28,9 @@ from ps2_ganado_stump import PINS
 from test_actor_ganado_app0_grip import function
 
 
+BINS = (448, 450, 453, 454, 476, 478, 479)
+
+
 def fixtures(inputs, out):
     archive, parse_tpl, le_mirror = mr.archive_facts(str(ROOT))
     result = {}
@@ -38,7 +47,7 @@ def fixtures(inputs, out):
         for i in range(count):
             no = i + 4
             struct.pack_into('<I', data, 16 + i * 4, len(data))
-            if no in (448, 453, 476, 478, 479):
+            if no in BINS:
                 b = bytearray(arc.entry(i).data)
                 swap = le_mirror.Swapper(b, name)
                 with swap.bounded(0, len(b)):
@@ -104,14 +113,35 @@ def main():
     a = p.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     fs = fixtures(a.inputs, a.out)
+    bad = bytearray((a.stump_dir / 'ganado_var.re4gv').read_bytes())
+    bad[4512 + 100] ^= 1  # one byte of geometry 2 (the 479 stump): digest refusal
+    (a.out / 'bad.re4gv').write_bytes(bad)
     source = a.out / 'consumer.cpp'
+    shim = a.out / 'hostinc' / 'kos'
+    shim.mkdir(parents=True, exist_ok=True)
+    # The package loader's only platform calls: KOS file reads, served from --stump-dir.
+    (shim / 'fs.h').write_text('''#pragma once
+#include <cstdio>
+#include <cstring>
+#include <sys/types.h>
+typedef std::FILE* file_t;
+#define FILEHND_INVALID nullptr
+extern const char* host_package;
+static unsigned host_opens;
+inline file_t fs_open(const char* p,int) {
+    ++host_opens;return std::strcmp(p,"/cd/dc/native/ganado/ganado_var.re4gv")?nullptr:std::fopen(host_package,"rb");
+}
+inline ssize_t fs_total(file_t f) {const long at=std::ftell(f);std::fseek(f,0,SEEK_END);const long n=std::ftell(f);std::fseek(f,at,SEEK_SET);return n;}
+inline ssize_t fs_read(file_t f,void* b,size_t n) {return ssize_t(std::fread(b,1,n,f));}
+inline int fs_close(file_t f) {return std::fclose(f);}
+''')
     source.write_text(harness())
     result = []
     for far, reuse in ((0, 0), (1, 0), (1, 1), (1, 2)):
         binary = a.out / f'consumer-far{far}-reuse{reuse}'
         command = ['g++', '-std=c++17', '-O2', '-g', '-Wall', '-Wextra', '-Wno-unused-variable', '-Wno-unused-function',
                    '-Wno-misleading-indentation', '-DRE4DC_CROWD_FAR=' + str(far), '-DRE4DC_ACTOR_BIND_REUSE=' + str(reuse),
-                   '-I' + str(GAME), '-I' + str(GAME / 'platform/include'), '-I' + str(a.cast_dir),
+                   '-I' + str(a.out / 'hostinc'), '-I' + str(GAME), '-I' + str(GAME / 'platform/include'), '-I' + str(a.cast_dir),
                    '-I' + str(a.stump_dir), '-I' + str(a.extras_dir), '-I' + str(a.far_dir), str(source), '-o', str(binary)]
         if a.sanitize:
             command += ['-O1', '-fsanitize=address,undefined', '-fno-omit-frame-pointer', '-fno-pie', '-no-pie']
@@ -119,7 +149,8 @@ def main():
         (binary.with_suffix('.build.log')).write_text(build.stdout + build.stderr)
         if build.returncode:
             print(build.stderr[-14000:]); raise SystemExit(build.returncode)
-        run = subprocess.run([str(binary), fs['em13']['path'], fs['em15']['path']], text=True, capture_output=True)
+        run = subprocess.run([str(binary), fs['em13']['path'], fs['em15']['path'], str(a.stump_dir / 'ganado_var.re4gv'),
+                              str(a.out / 'bad.re4gv')], text=True, capture_output=True)
         (binary.with_suffix('.run.log')).write_text(run.stdout + run.stderr)
         print(run.stdout + run.stderr, end='')
         assert run.returncode == 0, (far, reuse, run.returncode)

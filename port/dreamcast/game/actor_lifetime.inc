@@ -19,11 +19,19 @@ unsigned crowd_adopt_calls,crowd_adopt_ok,crowd_adopt_fail[4],crowd_archive_full
 #define CROWD_LIFE(stmt)
 #endif
 namespace re4dc_material { namespace life {
+// ACTOR_GANADO_PS2_STUMP (lane stump17): each Ganado archive also admits up to 8 stump / hand-pose assets (em12 / em13 /
+// em15: 8). r100 after the ambush uses 26 of 48 without the knob; 16 more covers two Ganado archives' variants beside
+// that (24 would cross the 16 KiB character data block step on the warp image, char_data_block.ld).
+#if RE4DC_ACTOR_GANADO_PS2_STUMP
+#define RE4DC_LIFE_VARIANT_ASSETS 16
+#else
+#define RE4DC_LIFE_VARIANT_ASSETS 0
+#endif
 #if RE4DC_NATIVE_MODEL_REGISTRY
 // Registry descriptors adopt their source infos too: room for them beside a full Ganado crowd.
-constexpr unsigned kArchives=8,kAssets=48,kInfos=192,kModels=40;
+constexpr unsigned kArchives=8,kAssets=48+RE4DC_LIFE_VARIANT_ASSETS,kInfos=192,kModels=40;
 #else
-constexpr unsigned kArchives=8,kAssets=40,kInfos=160,kModels=40;
+constexpr unsigned kArchives=8,kAssets=40+RE4DC_LIFE_VARIANT_ASSETS,kInfos=160,kModels=40;
 #endif
 struct Archive { const void* key;const unsigned char* base;unsigned bytes,revision,family; };
 struct Asset {
@@ -232,11 +240,14 @@ extern "C" void re4dc_actor_info_adopt(cModelInfo* info) {
             // Multiple rows may intentionally share default hand geometry.
             if(found.info && (found.tpl_owner!=k || found.tpl!=p))return;
             found.roles[r/32]|=1u<<(r%32);
-#if RE4DC_ACTOR_WIDE_IDENTITY && RE4DC_NMR_POOL && RE4DC_NMR_ROLES5
+#if RE4DC_ACTOR_WIDE_IDENTITY && RE4DC_NMR_POOL && RE4DC_NMR_ROLES5 && RE4DC_ACTOR_GANADO_PS2_STUMP
+            found={info,ai,a.serial,{found.roles[0],found.roles[1],found.roles[2],found.roles[3],found.roles[4],found.roles[5]},k,o.revision,
+                p,n};
+#elif RE4DC_ACTOR_WIDE_IDENTITY && RE4DC_ACTOR_WIDE_BLOBS
             found={info,ai,a.serial,{found.roles[0],found.roles[1],found.roles[2],found.roles[3],found.roles[4]},k,o.revision,p,n};
 #elif RE4DC_ACTOR_WIDE_IDENTITY && RE4DC_NMR_POOL
             found={info,ai,a.serial,{found.roles[0],found.roles[1],found.roles[2],found.roles[3]},k,o.revision,p,n};
-#elif RE4DC_ACTOR_WIDE_IDENTITY
+#elif RE4DC_ACTOR_WIDE_IDENTITY || RE4DC_ACTOR_GANADO_PS2_STUMP
             found={info,ai,a.serial,{found.roles[0],found.roles[1],found.roles[2]},k,o.revision,p,n};
 #else
             found={info,ai,a.serial,{found.roles[0],found.roles[1]},k,o.revision,p,n};
