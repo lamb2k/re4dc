@@ -1,0 +1,11 @@
+name trig-r213
+# ch4found16 CAST-GC draw rig: r213 with Rsf bit 0 set (the s00 event seen), so R213Init runs R213EmSet (sends C2..CA:
+# the Novistadors / statue Zealots); god Leon stands at area 09 (-1,-72,-31320) facing the statue side (-z), no kills
+room 0x213
+pos -1 -72 -31320
+ang 3.1400
+inv default
+rsf 0x213 0
+god
+alivelog 300
+dump
