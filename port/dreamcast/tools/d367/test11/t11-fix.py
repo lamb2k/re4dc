@@ -361,6 +361,13 @@ for _n in ('vq16c', 'vq16cr'):
 FSH = os.environ.get('FSH', PRIV + '/farshell-20261016/fsh6')
 DATA['fsh'] = {'dc/native/%s/far-shell.fsh' % r: FSH + '/%s/far-shell.fsh' % r for r in ('r100', 'r101')}
 DATA['fsh1'] = DATA['fsh']   # the lane's fixture name
+# Lane batch17 (2026-10-16, LOSSLESS world batching, not in any release data set): bat17r101 = the unreduced bake13 r101
+# world with its meshlets merged (4 m cells, <= 256 corners, 4 strip groups; tools/d367/batch17/batch17_world.sh) as
+# WORLD_VERT level 5 beside the unchanged bake13 level 0 (same R4PW / ids). Needs WORLD_VERT=1 WORLD_VERT_LEVEL=5. Every
+# strip identical (verify_groups.py), lost-part PASS 0 of 4494; meshlets 1830 -> 1424. MODELLED -0.12 ms at the cross:
+# below the lane's 1.5 ms bar, so it ships nowhere (C:\Game Dev\Emulators\BATCH17-20261016.md).
+BAT17 = os.environ.get('BAT17', PRIV + '/batch17-r101-20261016/b17v4')
+DATA['bat17r101'] = {'dc/native/r101/' + _n: BAT17 + '/' + _n for _n in ('ps2-wv5.re4mesh', 'ps2-wv5.r4sg')}
 # Lane water16 (WATER_PS2=1, test 15, user option A 10-16): water16h = res16h + the WATER_PS2 pictures of the rooms
 # drawn (tools/d367/water/resident/r107 r108 r10a r11a .tsv; regenerate with: water_resident.py pack
 # $RS16D/res16h/resident.bin <out> r107.tsv r108.tsv r10a.tsv r11a.tsv). Replaces dc/resident.bin: order after res16h.
