@@ -22,12 +22,16 @@ tools/d367/<test>/release-knobs.txt, and build-public.sh builds from it. Nothing
          Exit 1 if a contributor doc names an older test ("test 7", "test-c29c4bf5-...") than the knob file's.
 
 Private directories: the recipe's ASSETS (route-build.sh's play actor bundle, --bundle) -> re4dc-assets/,
-PS2_LEON_DIR -> re4dc-assets/ps2leon/, PS2_GANADO_DIR -> re4dc-assets/ps2ganado/. Private files: GANADO_LOD_PACK
+PS2_LEON_DIR -> re4dc-assets/ps2leon/, PS2_GANADO_DIR -> re4dc-assets/ps2ganado/, PS2_ENEMY_CH22_DIR and
+PS2_ENEMY_CH23_DIR (test 17 on: the chapter 2-2 / 2-3 PS2 enemy rows, ps2_enemy_ch22_data.inc /
+ps2_enemy_ch23_data.inc, compiled into the program) -> re4dc-assets/ps2enemych2/ (both knobs name one directory; two
+different directories for one zip place are an error). Private files: GANADO_LOD_PACK
 -> re4dc-assets/glod/<name> (the knob file names it kit-relative, @ASSETS@/glod/<name>). Any other knob whose value is
 an absolute path outside the tree is an error: a new private input must get a place in the zip (and a line in
 build-public.sh's PRIVATE_OFF) before the release can publish.
 Disc data (--disc-sets, test 15 on): the files of the named data sets of test11/t11-fix.py (disc path -> source; a
 later set replaces an earlier one's file at the same disc path, as on the disc) -> re4dc-assets/disc/<disc path>.
+With a DROP_LOOSE set (pak17, test 17 on) no loose dc/tex/<c>/<key>.re4tex is on the disc, so none goes in the zip.
 They are on the release disc already; the zip carries them for contributors who build their own disc. The knob file
 records the set list ('# disc-sets:'), and kit-check.sh passes it to zipcheck.
 """
@@ -35,7 +39,8 @@ import argparse, hashlib, importlib.util, re, sys, zipfile
 from pathlib import Path
 
 BUNDLE = '/root/probe/lanes/play-actor-bundle'
-PRIVATE = {'PS2_LEON_DIR': 'ps2leon', 'PS2_GANADO_DIR': 'ps2ganado'}
+PRIVATE = {'PS2_LEON_DIR': 'ps2leon', 'PS2_GANADO_DIR': 'ps2ganado',
+           'PS2_ENEMY_CH22_DIR': 'ps2enemych2', 'PS2_ENEMY_CH23_DIR': 'ps2enemych2'}
 PRIVATE_FILES = {'GANADO_LOD_PACK': 'glod'}
 FIX_TOOL = Path(__file__).resolve().parent / 'test11' / 't11-fix.py'
 ZIP_ROOT = 're4dc-assets'
@@ -82,11 +87,17 @@ def read_file(path):
 
 def private_dirs(knobs, bundle):
     dirs = [(ZIP_ROOT, Path(bundle))]
+    seen = {}
     for kv in knobs:
         k, v = kv.split('=', 1)
         if k in PRIVATE:
-            dirs = [d for d in dirs if d[0] != '%s/%s' % (ZIP_ROOT, PRIVATE[k])]
-            dirs.append(('%s/%s' % (ZIP_ROOT, PRIVATE[k]), Path(v)))
+            pre = '%s/%s' % (ZIP_ROOT, PRIVATE[k])
+            seen[pre] = seen.get(pre, set()) | {(k, Path(v).resolve())}
+            dirs = [d for d in dirs if d[0] != pre]
+            dirs.append((pre, Path(v)))
+    for pre, kd in seen.items():
+        if len({d for _, d in kd}) > 1:  # PS2_ENEMY_CH22_DIR / _CH23_DIR share ps2enemych2/: one directory only
+            die('%s would hold two directories: %s' % (pre, ', '.join('%s=%s' % x for x in sorted(kd))))
     return dirs
 
 
@@ -105,7 +116,14 @@ def disc_files(sets):
         for dest, src in mod.DATA[n].items():
             if dest == 'tex':
                 die('disc set %s stages loose textures (tex): not supported in the Build-Assets zip' % n)
+            if dest == 'ovl':
+                continue  # overlay names (ch2: em3b em35 pl14): built by the recipe, not data; the program zip has them
             out['%s/disc/%s' % (ZIP_ROOT, dest)] = Path(src)
+    # a set with DROP_LOOSE (pak17, test 17 on) leaves no loose dc/tex/<c>/<key>.re4tex on the disc (the pack holds
+    # them all): the zip carries what the disc carries, so the earlier sets' loose textures stay out
+    if any(n in getattr(mod, 'DROP_LOOSE', {}) for n in names):
+        pre = '%s/disc/' % ZIP_ROOT
+        out = {k: v for k, v in out.items() if not mod.LOOSE.match(k[len(pre):])}
     for name, f in out.items():
         if not f.is_file():
             die('disc data file %s (%s) is missing' % (f, name))

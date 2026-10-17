@@ -36,7 +36,7 @@ if [ ! -s $R/fix/pkg-$L.json ]; then
   D=$(python3 -c "import importlib.util as u;s=u.spec_from_file_location('t','$T/test11/t11-fix.py');m=u.module_from_spec(s);s.loader.exec_module(m);print(getattr(m, '$DATA_SET'))")
   python3 $T/test11/t11-fix.py $L $R/fix/pkg-$L.json --data $D
 fi
-PKG_K=$R python3 /root/probe/lanes-20261011/test8/t8-pkgtree.py $L $R/fix/pkg-$L.json | tee $R/logs/pkgtree-$L.txt | tail -1 | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $R/logs/pkgtree-$L.txt; exit 1; }
+PKG_K=$R python3 $T/test8/t8-pkgtree.py $L $R/fix/pkg-$L.json | tee $R/logs/pkgtree-$L.txt | tail -1 | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $R/logs/pkgtree-$L.txt; exit 1; }
 rm -rf $R/gdemu
 (cd $T && LAYOUT=standard bash mkgdi.sh $O/re4dc-game.elf $R/pkgtree $R/gdemu | tail -1)
 # disc gates: both disc_lint profiles, and the boot file is this build's program

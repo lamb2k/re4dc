@@ -1,0 +1,75 @@
+{
+ "source_complete": false,
+ "profile": "run-derived hot set: r307 MOTION_MISS_LOG runs (spawn, release walk, hit reactions, death; ch5found16 m4c..m8c, Flycast)",
+ "union": {
+  "source_arc_indices": [
+   39,
+   53,
+   76,
+   91,
+   94,
+   98,
+   118,
+   131,
+   136
+  ]
+ },
+ "runs": [
+  "cx-r307-walk-m4c/capture/run-output.txt",
+  "cx-r307-walk-m5c/capture/run-output.txt",
+  "cx-r307-walk-m6c/capture/run-output.txt",
+  "cx-r307-walk-m7c/capture/run-output.txt",
+  "cx-r307-walk-m8c/capture/run-output.txt"
+ ],
+ "contract": "em36-source-motion-cache-v2",
+ "source_sha256": "fb582c206acbb378591b4fc02f007ff2ce7e0a188f4b03c7717d53041d54096f",
+ "clips": {
+  "39": {
+   "entry": 0,
+   "bytes": 26624,
+   "misses": 3
+  },
+  "53": {
+   "entry": 7,
+   "bytes": 20544,
+   "misses": 1
+  },
+  "76": {
+   "entry": 21,
+   "bytes": 12832,
+   "misses": 5
+  },
+  "91": {
+   "entry": 28,
+   "bytes": 10976,
+   "misses": 3
+  },
+  "94": {
+   "entry": 30,
+   "bytes": 10912,
+   "misses": 5
+  },
+  "98": {
+   "entry": 32,
+   "bytes": 2496,
+   "misses": 3
+  },
+  "118": {
+   "entry": 43,
+   "bytes": 15328,
+   "misses": 2
+  },
+  "131": {
+   "entry": 53,
+   "bytes": 16640,
+   "misses": 5
+  },
+  "136": {
+   "entry": 54,
+   "bytes": 3424,
+   "misses": 5
+  }
+ },
+ "hot_payload_bytes": 119776,
+ "cold_clips": 63
+}

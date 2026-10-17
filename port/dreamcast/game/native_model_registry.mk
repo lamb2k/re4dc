@@ -459,8 +459,11 @@ PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_MATERIALS=4
 endif
 # NATIVE_MODEL_REGISTRY_ROLES5=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): wide room packages,
 #              the Info::roles mask takes 5 words (160 role bits, 98 room rows) and the chunk table 96 (package refs) for rooms whose pools load many types
-#              (r227: em14 types 6..9; island r320 / r327). Packages over 66 room rows (model_registry.py --roles5) are
-#              refused whole by an image without it. Knob off: the image is unchanged.
+#              (r227: em14 types 6..9; island r320 / r327). It also widens the package loader for the wide castle rooms:
+#              32 package textures, a 128-bit asset template mask (two-word BlobMask), 64 source BIN models, 224 part facts
+#              and a 384 KiB package + skin arena (heap 4 takes the actual size; r214 340 KiB, r227 291 KiB, r216 182 KiB).
+#              Packages over 66 room rows (model_registry.py --roles5) are refused whole by an image without it. Knob off:
+#              the image is unchanged.
 # NATIVE_BUMP_FLAT=1 (lane cast16 2026-10-16; default 0; render only): every registry plan meets the source bump need
 #              with no bump stage (the DC source path draws none either), for descriptors that declare source_drops
 #              "bump" outside a pool. Knob off: the image is unchanged.
