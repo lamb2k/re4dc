@@ -1,0 +1,12 @@
+name fx-r332-m1
+# final16: r332 from the r331 door with the s00 PS2 movie on the disc (RouteMoviePlay 0x33200); START at room frame 90
+# (pressed during the event) to skip it; god; em31 state every 60 room frames; handgun kill rig from frame 900
+room 0x332
+pos -42267 15811 46777
+ang 1.3520
+inv default
+god
+emlog 0x31 60
+act 90 start 6 ev
+act 150 start 6 ev
+kill 0x31 900
