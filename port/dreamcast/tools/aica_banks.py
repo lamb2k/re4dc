@@ -121,7 +121,12 @@ ROOM_BGM0 = {'r102': [1], 'r104': [9], 'r107': [9], 'r108': [5], 'r109': [3], 'r
              # bio4midi entries): r11d #6 (as r11c), r10f / r11f / r200 #8 (740151 GC bytes)
              'r11d': [6], 'r10f': [8], 'r11f': [8], 'r200': [8],
              # chapter 3-1 (castle lane 2026-10-15): r202 plays #8 at entry (740160 GC bytes, as r200)
-             'r202': [8]}
+             'r202': [8],
+             # chapter 4 (lane ch4found16): bgm/bgmtbl.dat entry 0 slot-0 track (low byte), matched to the runtime's
+             # "blk 3 (637,312 / 476,384 GC bytes) does not fit": #7 (r211 r213 r214 r226 r227 r22a), #14 (r210 r222
+             # r224); r219 / r225 #5 and r21d / r229 #1 are already prebuilt (r108 / r102).
+             'r211': [7], 'r213': [7], 'r214': [7], 'r226': [7], 'r227': [7], 'r22a': [7],
+             'r210': [14], 'r222': [14], 'r224': [14], 'r219': [5], 'r225': [5], 'r21d': [1], 'r229': [1]}
 
 # Leon's other stage-1 weapons (--weapons; stage.sh AICA_WEAPONS=1; issue lamb2k/re4dc#1, silent weapons). The GC
 # loads the equipped weapon's SE block (WEP, block 2) on every weapon change (weaponLoad -> its .drs) into the one WEP
@@ -158,12 +163,13 @@ ROOMS = {
     # r11b (chapter 2-1's start, the lake shore): pl0f (the boat, entry), em22 (the shore wolves, script spawn), em27
     # (the fish, entry). bgmtbl: both slots bio4midi #10 (as r10c / r11a), stream 0:17 (the battle stream).
     'r11b': ['st1/r11b.dar', 'em/pl0f.drs', 'em/em22.drs', 'em/em27.drs'],
-    # r210 (St2, world coverage lane): no enemy archive (assets.sh discover r210: lists emleon03/04, no entries)
-    'r210': ['st2/r210.dar'],
+    # r210 (St2, world coverage lane): no enemy archive (assets.sh discover r210: lists emleon03/04, no entries).
+    # Ashley (pl11) is beside Leon here (lane ch4found16: cxc4cmW loads em/pl11.drs at entry).
+    'r210': ['st2/r210.dar', 'em/pl11.drs'],
     # r40c (St4, world coverage lane): no enemy archive (discover r40c: omake00.esl, no entries)
     'r40c': ['st4/r40c.dar'],
-    # r219 (St2, world coverage lane): no enemy archive (discover r219: emleon04.esl, no entries)
-    'r219': ['st2/r219.dar'],
+    # r219 (St2, world coverage lane): no enemy archive (discover r219: emleon04.esl, no entries); Ashley (pl11) as r210
+    'r219': ['st2/r219.dar', 'em/pl11.drs'],
     # r40a (St4, world coverage lane): the em1f island soldiers (discover r40a: omake00.esl, 11 entries, script load)
     'r40a': ['st4/r40a.dar', 'em/em1f.drs'],
     # Follow-up 7 (world coverage lane, St1; assets.sh discover: the rooms' ESL / script enemies)
@@ -227,6 +233,29 @@ ROOMS = {
     'r206': ['st2/r206.dar', 'em/pl11.drs', 'em/em11.drs'],
     'r20d': ['st2/r20d.dar', 'em/em11.drs', 'em/em19.drs', 'em/em25.drs'],
     'r20e': ['st2/r20e.dar', 'em/em3c.drs'],
+    # Chapter 4-1..4-4 (lane ch4found16, 2026-10-16): room .dar (lane rel31) + the room's enemies from the PS2 lists
+    # (CH4-FOUNDATIONS-20261016.md cast list) + Ashley (pl11) where the runs load her (r210 r212 r219). The boss rooms
+    # r221 (Verdugo, em2c) and r228 (Salazar, em38) are left to their owners (ch3found16 / cast16).
+    'r211': ['st2/r211.dar', 'em/em14.drs'],
+    'r212': ['st2/r212.dar', 'em/em11.drs', 'em/pl11.drs'],
+    'r213': ['st2/r213.dar', 'em/em2d.drs'],
+    'r214': ['st2/r214.dar', 'em/em14.drs', 'em/em1a.drs', 'em/em25.drs'],
+    'r215': ['st2/r215.dar'],
+    'r216': ['st2/r216.dar', 'em/em3c.drs'],
+    'r217': ['st2/r217.dar', 'em/em11.drs', 'em/em25.drs'],
+    'r218': ['st2/r218.dar', 'em/em1c.drs'],
+    'r21b': ['st2/r21b.dar', 'em/em15.drs'],
+    'r21d': ['st2/r21d.dar', 'em/em2d.drs'],
+    'r220': ['st2/r220.dar', 'em/em18.drs'],
+    'r222': ['st2/r222.dar', 'em/em11.drs'],
+    'r223': ['st2/r223.dar', 'em/em16.drs'],
+    'r224': ['st2/r224.dar', 'em/em2b.drs'],
+    'r225': ['st2/r225.dar', 'em/em13.drs'],
+    'r226': ['st2/r226.dar', 'em/em11.drs'],
+    'r227': ['st2/r227.dar', 'em/em14.drs'],
+    'r229': ['st2/r229.dar', 'em/em29.drs', 'em/em18.drs'],
+    'r22a': ['st2/r22a.dar', 'em/em18.drs'],
+    'r22b': ['st2/r22b.dar'],
     # r40b (St4, follow-up 7): em1f (bringup inventory: em1f/em1f, st4_0)
     'r40b': ['st4/r40b.dar', 'em/em1f.drs'],
 }
@@ -883,8 +912,18 @@ CH31_STREAMS = CH23_STREAMS + [(1, 153)]
 #   r20c, both "not in aica_str.dat, silent"): 0:15 and 0:20 (bio4bgm.sbb; 25e0000 is also 1:49's offset in bio4evt.sbb,
 #   the room BGM block is 0). 55 entries.
 CH3_STREAMS = CH1_STREAMS + [k for k in CH31_STREAMS if k not in CH1_STREAMS] + [(0, 15), (0, 20)]
+# Chapter 4 (lane ch4found16, 2026-10-16): CH3_STREAMS (55) + chapter 4 would pass the 63-entry header, so chapter 4
+# gets its own file, as the island disc does (ch5): the shared streams (0:0 death / continue, 0:29 results, the
+# merchant's voice lines 1:180..1:194), every stream the chapter 4 rooms' bgm/bgmtbl.dat entries name (r210..r22b, all
+# entries, blk 0) and the streams the first-pass runs logged as "not in aica_str.dat, silent" (cxc4cmW, Flycast):
+# r218 0:31 (sbb 36f8000), r222 0:46 (5890000), r227 1:95 (5690000), r22b 1:135 (8f80000), r229 1:157 (a0e8000).
+# `--streams ch4`; 39 entries (AICA_STR_ENT_MAX=56 holds it). Which disc carries it is the disc layout's call.
+CH4_STREAMS = ([(0, 0), (0, 29)] + [(1, n) for n in range(0xB4, 0xC3)]
+               + [(0, n) for n in (5, 13, 15, 16, 22, 25, 27, 31, 32, 33, 34, 35, 36, 37, 38, 47, 53, 56, 46)]
+               + [(1, 95), (1, 135), (1, 157)])
 STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch1': CH1_STREAMS,
-                  'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS}
+                  'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS,
+                  'ch4': CH4_STREAMS}
 
 
 def nibble_to_sample(n):
