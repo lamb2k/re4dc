@@ -37,7 +37,7 @@
 #         proj/projection.txt (the printed tables)
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
-HWM_BIN=${HWM_BIN:-/mnt/d/Flycast-Evidence/re4-dreamcast/hwmodel-bin}
+HWM_BIN=${HWM_BIN:-/mnt/c/Flycast-Evidence/re4-dreamcast/hwmodel-bin}   # on C: since 10-17 (D: copy lost; restored from the t164 lane's _hwbin, flycast.exe sha 0f6e1797)
 HWM_EVROOT=${HWM_EVROOT:-/mnt/c/Flycast-Evidence/re4-dreamcast}   # new evidence on C: (user 10-15); the inputs may stay on D:
 # disc images are staged outside evidence dirs (and off the trace drive), deleted after the run
 HWM_DISCS=${HWM_DISCS:-/mnt/c/Flycast-Evidence/re4-dreamcast/_hwmodel-discs}

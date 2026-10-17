@@ -45,8 +45,8 @@ Environment variables and their defaults:
 
 | variable | default | meaning |
 |---|---|---|
-| `HWM_BIN` | `/mnt/d/Flycast-Evidence/re4-dreamcast/hwmodel-bin` | hwtrace `flycast.exe` + harness scripts + `emu.cfg` with `Dynarec.Enabled = no` |
-| `HWM_EVROOT` | `/mnt/d/Flycast-Evidence/re4-dreamcast` | where new `hwmodel-<name>` dirs go (keep it off C:) |
+| `HWM_BIN` | `/mnt/c/Flycast-Evidence/re4-dreamcast/hwmodel-bin` | hwtrace `flycast.exe` + harness scripts + `emu.cfg` with `Dynarec.Enabled = no` (on C: since 2026-10-17) |
+| `HWM_EVROOT` | `/mnt/c/Flycast-Evidence/re4-dreamcast` | where new `hwmodel-<name>` dirs go (on C:, user 2026-10-15) |
 | `HWM_DISCS` | `/mnt/c/Flycast-Evidence/re4-dreamcast/_hwmodel-discs` | disc staging, outside evidence dirs; deleted after the run, sha256 kept in `disc-output/` |
 | `HWM_MINFREE_MB` | `10000` | refuse to start a trace run that would leave less than this free on the trace drive |
 | `HWM_REF` | `$HWM_EVROOT/hwmodel-ld2/proj` | reference projection for the delta table |
