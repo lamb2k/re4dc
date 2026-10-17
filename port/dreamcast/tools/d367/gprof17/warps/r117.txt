@@ -1,0 +1,11 @@
+name gp-r117
+# lane gprof17 (10-17): gameplay profile scene r117 = castgc/warps/r117.txt (warp.py preset r117-entry, from the r118
+# door 4, before Ashley is found) + alert at room frame 30, god, no input.
+# bench-window 600 1500
+room 0x117
+pos 169 -1000 6073
+ang 2.9220
+inv default
+god
+alert 30
+alivelog 150

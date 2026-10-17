@@ -1,0 +1,12 @@
+name gp-r101
+# lane gprof17 (10-17): gameplay profile scene r101 = benchmark-r101 (burning cross, crowd alerted at room frame 30,
+# god, no input) on a cap-4 recipe arm (ALIVE cap 4 is in the build recipe, not here). Settle 0..299, window 300..1199.
+# bench-window 300 1200
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150

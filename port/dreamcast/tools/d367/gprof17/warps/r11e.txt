@@ -1,0 +1,14 @@
+name gp-r11e
+# lane gprof17 (10-17): gameplay profile scene r11e = castgc/warps/r11e.txt (ch2/warps/e-r11e.txt: Codex cx-r11e
+# arrival, Ashley found + following, god, short walk forward) + alert at room frame 30.
+# bench-window 600 1500
+room 0x11e
+pos 63262 -26 28662
+ang -1.1310
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+alert 30
+alivelog 150
+act 360 fwd 12

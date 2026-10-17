@@ -1,0 +1,11 @@
+name gp-r103
+# lane gprof17 (10-17): gameplay profile scene r103 = castgc/warps/r103.txt (warp.py preset r103-entry: 5 Ganados,
+# corpses, cows, chickens, dog) + alert at room frame 30 so the enemies engage, god, no input.
+# bench-window 600 1500
+room 0x103
+pos -47609 12 7084
+ang 1.8890
+inv default
+god
+alert 30
+alivelog 150

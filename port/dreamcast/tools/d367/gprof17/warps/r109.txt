@@ -1,0 +1,11 @@
+name gp-r109
+# lane gprof17 (10-17): gameplay profile scene r109 = castgc/warps/r109.txt (warp.py preset r109-entry, from the r108
+# door, St1, em23) + alert at room frame 30, god, no input.
+# bench-window 600 1500
+room 0x109
+pos 97246 2251 13320
+ang 1.0000
+inv default
+god
+alert 30
+alivelog 150
