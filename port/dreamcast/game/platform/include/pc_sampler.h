@@ -32,11 +32,19 @@ enum Re4dcPcsState { RE4DC_PCS_IDLE = 0, RE4DC_PCS_RUNNING = 1, RE4DC_PCS_STOPPE
 //   flags: bit28 pc outside RAM, bit29 pr outside RAM, bit30 late, bit31 frame marker
 // Marker record: w0 = frame number, w1 = 0x80000000 | tid.
 // stage = native_render_profile Stage while its frame is active, 31 otherwise.
+// With PC_SAMPLER_PHASE=1 (header STAGE_SOURCE = 2) stage = id of the last game-phase marker
+// (debug.cpp ProcessTickGet / ProcessTickInit; ids from the "PCSPH id=N no=K name=..." log
+// lines, 30 = ids exhausted, 31 = no marker yet). A sample tagged P ran after marker P.
 #define RE4DC_PCS_F_PC_FOREIGN 0x10000000u
 #define RE4DC_PCS_F_PR_FOREIGN 0x20000000u
 #define RE4DC_PCS_F_LATE       0x40000000u
 #define RE4DC_PCS_F_MARKER     0x80000000u
 #define RE4DC_PCS_STAGE_NONE   31u
+#define RE4DC_PCS_PHASE_OTHER  30u
+#define RE4DC_PCS_STAGE_SRC_PHASE 2u
+#ifndef RE4DC_PC_SAMPLER_PHASE
+#define RE4DC_PC_SAMPLER_PHASE 0
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -45,6 +53,9 @@ extern "C" {
 void re4dc_pcs_start(void);                 // idempotent; logs and refuses if TMU1 is in use
 void re4dc_pcs_stop(void);                  // stops TMU1 and restores KOS's default handler
 void re4dc_pcs_frame(unsigned frame);       // optional frame-boundary marker (thread context)
+#if RE4DC_PC_SAMPLER_PHASE
+void re4dc_pcs_phase_mark(int no, const char* name);  // debug.cpp phase marker (game thread)
+#endif
 #else
 static inline void re4dc_pcs_start(void) {}
 static inline void re4dc_pcs_stop(void) {}

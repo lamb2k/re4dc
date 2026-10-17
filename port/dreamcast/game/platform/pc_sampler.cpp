@@ -61,6 +61,16 @@ static uint32_t g_base;           // nominal period in 80 ns ticks
 static uint32_t g_jitter;         // 2^n-1 <= period/16: breaks phase lock with periodic work
 static uint32_t g_rng = 0x2545f491u;
 static irq_cb_t g_previous;       // KOS default (irq_def_timer), restored by stop
+#if RE4DC_PC_SAMPLER_PHASE
+#if RE4DC_NATIVE_RENDER_PROFILE
+#error "PC_SAMPLER_PHASE and NATIVE_RENDER_PROFILE both use the sample stage field"
+#endif
+// PC_SAMPLER_PHASE=1: id of the last game-phase marker, read by the ISR. Markers are keyed by
+// their name pointer (string literals at the ProcessTickGet call sites); ids 0..29.
+static volatile uint32_t g_phase = RE4DC_PCS_STAGE_NONE;
+static const char* g_phase_names[RE4DC_PCS_PHASE_OTHER];
+static uint32_t g_phase_count;
+#endif
 
 static inline uint32_t currentTid(void)
 {
@@ -96,6 +106,9 @@ static void pcsIrq(irq_t code, irq_context_t* ctx, void* data)
     // Stage of the one native render thread; host filters by tid when needed.
     if (re4dc::profile::state.active) stage = re4dc::profile::state.stage & 31u;
 #endif
+#if RE4DC_PC_SAMPLER_PHASE
+    stage = g_phase & 31u;
+#endif
     const uint32_t head = h[RE4DC_PCS_H_HEAD];
     uint32_t* r = re4dc_pcs.rec + 2 * (head & (kRecords - 1));
     r[0] = currentTid() << 23 | (pc & 0xffffffu) >> 1;
@@ -127,7 +140,7 @@ void re4dc_pcs_start(void)
     h[RE4DC_PCS_H_HEADER_WORDS] = RE4DC_PCS_HEADER_WORDS;
     h[RE4DC_PCS_H_CAPACITY] = kRecords;
     h[RE4DC_PCS_H_HZ] = RE4DC_PC_SAMPLER_HZ;
-    h[RE4DC_PCS_H_STAGE_SOURCE] = RE4DC_NATIVE_RENDER_PROFILE;
+    h[RE4DC_PCS_H_STAGE_SOURCE] = RE4DC_PC_SAMPLER_PHASE ? RE4DC_PCS_STAGE_SRC_PHASE : RE4DC_NATIVE_RENDER_PROFILE;
     g_previous = irq_get_handler(EXC_TMU1_TUNI1);
     irq_set_handler(EXC_TMU1_TUNI1, pcsIrq, nullptr);
     timer_prime(TMU1, RE4DC_PC_SAMPLER_HZ, 1);  // Pck/4 (80 ns ticks), UNIE, IPR priority 15
@@ -177,6 +190,23 @@ void re4dc_pcs_frame(unsigned frame)
     h[RE4DC_PCS_H_HEAD] = head + 1;
     irq_restore(old);
 }
+
+#if RE4DC_PC_SAMPLER_PHASE
+void re4dc_pcs_phase_mark(int no, const char* name)
+{
+    uint32_t id = 0;
+    while (id < g_phase_count && g_phase_names[id] != name) ++id;
+    if (id == g_phase_count) {
+        if (g_phase_count < RE4DC_PCS_PHASE_OTHER) {
+            g_phase_names[g_phase_count++] = name;
+            re4dc_log("PCSPH id=%lu no=%d name=%s\n", (unsigned long) id, no, name ? name : "(null)");
+        } else {
+            id = RE4DC_PCS_PHASE_OTHER;
+        }
+    }
+    g_phase = id;  // one aligned word store: the ISR sees the old or the new id
+}
+#endif
 
 }  // extern "C"
 #endif

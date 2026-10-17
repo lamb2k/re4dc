@@ -308,8 +308,17 @@ void processBarDisp()
 // Both arms store proc_tick first: the two independent `stwx` have equal priority and sched1 issues
 // the one with more dying registers first -- the LAST store in RTL order owns the index register's
 // death, so the target's `stwx name` before `stwx tick` means the tick store came first in source.
+#if defined(RE4DC_PC_SAMPLER_PHASE) && RE4DC_PC_SAMPLER_PHASE
+// PC_SAMPLER_PHASE=1 (profiler builds only): tags PC samples with the last game-phase marker
+// (port/dreamcast/game/platform/pc_sampler.cpp). Profiler-only state; game state is untouched.
+extern "C" void re4dc_pcs_phase_mark(int no, const char* name);
+#endif
+
 void ProcessTickGet(int no, const char* name)
 {
+#if defined(RE4DC_PC_SAMPLER_PHASE) && RE4DC_PC_SAMPLER_PHASE
+    re4dc_pcs_phase_mark(no, name);
+#endif
     if ((u32) no <= 4) {
         proc_tick[no] = OSGetTick() - zero_tick;
         proc_name[no] = name;
@@ -333,6 +342,9 @@ extern "C" void ProcessTickLog()  // C linkage like ProcessTickGet (main.cpp dec
 // Frame start: resets the process tick list (called before the game loop).
 void ProcessTickInit()
 {
+#if defined(RE4DC_PC_SAMPLER_PHASE) && RE4DC_PC_SAMPLER_PHASE
+    re4dc_pcs_phase_mark(-1, "FRAME START");
+#endif
     zero_tick = OSGetTick();
     proc_tick_idx_bak = proc_tick_idx;
     proc_tick_idx = 0;

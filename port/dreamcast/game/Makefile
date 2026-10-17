@@ -2681,12 +2681,27 @@ PC_SAMPLER_KOS_BYTES = $(if $(filter 1,$(PC_SAMPLER)),$(shell expr $(PC_SAMPLER_
 .PHONY: pc-sampler-force
 $(OBJDIR)/pc-sampler.h: pc-sampler-force
 	@mkdir -p $(dir $@)
-	@printf '#define RE4DC_PC_SAMPLER %s\n#define RE4DC_PC_SAMPLER_HZ %s\n#define RE4DC_PC_SAMPLER_BYTES %s\n' '$(PC_SAMPLER)' '$(PC_SAMPLER_HZ)' '$(PC_SAMPLER_BYTES)' > $@.tmp
+	@printf '#define RE4DC_PC_SAMPLER %s\n#define RE4DC_PC_SAMPLER_HZ %s\n#define RE4DC_PC_SAMPLER_BYTES %s\n#define RE4DC_PC_SAMPLER_PHASE %s\n' '$(PC_SAMPLER)' '$(PC_SAMPLER_HZ)' '$(PC_SAMPLER_BYTES)' '$(PC_SAMPLER_PHASE)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 PC_SAMPLER_OBJS = $(OBJDIR)/platform/pc_sampler.o $(OBJDIR)/platform/os.o $(OBJDIR)/platform/native_ui.o
 $(PC_SAMPLER_OBJS): $(OBJDIR)/pc-sampler.h platform/include/pc_sampler.h
 $(PC_SAMPLER_OBJS): PLATFORM_CPPFLAGS += -include $(OBJDIR)/pc-sampler.h
+# PC_SAMPLER_PHASE=1 (lane gprof17, 2026-10-17; default 0, needs PC_SAMPLER=1, profiler builds only): debug.cpp
+# ProcessTickGet / ProcessTickInit report each game-phase marker to the sampler, which stores the id of the last
+# marker in each sample's stage field (unused without NATIVE_RENDER_PROFILE) and logs "PCSPH id=N no=K name=..."
+# once per marker. Host side: tools/d367/gprof17/gprof.py. At 0 debug.o gets no flag and the image is unchanged.
+# The -D flag is untracked: use a fresh OBJDIR when switching it.
+PC_SAMPLER_PHASE ?= 0
+ifeq ($(PC_SAMPLER_PHASE),1)
+ifneq ($(PC_SAMPLER),1)
+$(error PC_SAMPLER_PHASE=1 needs PC_SAMPLER=1)
+endif
+ifeq ($(NATIVE_RENDER_PROFILE),1)
+$(error PC_SAMPLER_PHASE=1 and NATIVE_RENDER_PROFILE=1 both use the sample stage field)
+endif
+$(OBJDIR)/src/game/debug.o: GAME_CPPFLAGS += -DRE4DC_PC_SAMPLER_PHASE=1
+endif
 # With NATIVE_RENDER_PROFILE=1 each sample also carries the active render stage.
 $(OBJDIR)/platform/pc_sampler.o: $(OBJDIR)/native-profile.h
 $(OBJDIR)/platform/pc_sampler.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/native-profile.h
