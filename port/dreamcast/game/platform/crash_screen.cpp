@@ -481,6 +481,16 @@ void* watchdog(void*)
         }
         if (++still == 30) {
             re4dc_log("CRASH_SCREEN: no new frame for 30 s (ui frame %u)\n", ui);
+#if RE4DC_TRANSITION_GATE_DIAG
+            // Test only: every thread's saved PC / PR, sampled 8 times (addr2line them against the ELF).
+            for (int k = 0; k < 8; ++k) {
+                thd_each([](kthread_t* t, void*) -> int {
+                    re4dc_log("TGD hang tid=%d pc=%08lx pr=%08lx r14=%08lx\n", int(t->tid),
+                        (unsigned long)t->context.pc, (unsigned long)t->context.pr, (unsigned long)t->context.r[14]);
+                    return 0; }, nullptr);
+                thd_sleep(50);
+            }
+#endif
             show(g_missing.valid ? "MISSING" : "HANG",
                  g_missing.valid ? g_missing.reason : "no new frame for 30 s", false);
         }
