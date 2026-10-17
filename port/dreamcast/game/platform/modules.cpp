@@ -475,14 +475,20 @@ RouteOverlay g_route_ovl[2];  // 0 = pl0f, 1 = em2f
 #define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39)
 #endif
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
 RouteOverlay g_stage_ovl[13];
+#else
+RouteOverlay g_stage_ovl[9];
+#endif
 inline int stageSlot(u32 id)
 {
     switch (id) {
     case 74: return 0; case 73: return 1; case 78: return 2; case 86: return 3;   // st1_0 st1_1 st1_2 st1_3
     case 75: return 4; case 82: return 5; case 83: return 6; case 97: return 7;   // st2_0 st2_1 st2_2 st2_3
     case 96: return 8;                                                           // st4_0
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
     case 76: return 9; case 87: return 10; case 88: return 11; case 101: return 12; // st3_0 st3_1 st3_2 st3_3 (ROUTE_CH3)
+#endif
     }
     return -1;
 }
@@ -527,7 +533,11 @@ static void routeOverlayLoad(unsigned index)
     // At a stage relink heap 4 is not rebuilt yet: its old cells can lie under the grown heap 3 (st3_1 61 KB ->
     // st3_0 84 KB), and walking them logged "OSCheckHeap: Failed cell->next ..." (lane ch5found16, cx-r303-sj-j1).
     // A heap 3 load does not query heap 4 (logged as -1).
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
     const int free_before = heap == 3 ? -1 : re4dc_static_heap_free();
+#else
+    const int free_before = re4dc_static_heap_free();  // knob-off image unchanged
+#endif
 #else
     const int heap = 4;
     const int free_before = re4dc_static_heap_free();
@@ -584,7 +594,11 @@ static void routeOverlayLoad(unsigned index)
                          reinterpret_cast<char*>(image + h.bss_end), reinterpret_cast<char*>(image + h.pristine));
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
     re4dc_log("route overlay: %s load %u %lu B (%lu relocs) at %08lx heap%d heap4 %d -> %d\n", m.name, o.loads,
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
               h.image_bytes, h.relocs, u32(image), heap, free_before, heap == 3 ? -1 : re4dc_static_heap_free());
+#else
+              h.image_bytes, h.relocs, u32(image), heap, free_before, re4dc_static_heap_free());
+#endif
 #else
     re4dc_log("route overlay: %s load %u %lu B (%lu relocs) at %08lx heap4 %d -> %d\n", m.name, o.loads, h.image_bytes,
               h.relocs, u32(image), free_before, re4dc_static_heap_free());
