@@ -1,0 +1,13 @@
+name fp17-r103-after
+# lane farmprop17: the r103 farm after the fight. Leon near the r106 door looking back over the farm (actorplan17
+# farm-warp view); the Ganados are killed by the rig early (kill + killrep), then the farm scenery is measured with
+# no enemy alive. God, no pad input.
+room 0x103
+pos 7500 38 -400
+ang -2.30
+inv default
+god
+alert 30
+alivelog 150
+kill 0x12 60 0x103
+killrep 12 20

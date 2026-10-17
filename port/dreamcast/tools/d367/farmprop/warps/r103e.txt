@@ -1,0 +1,9 @@
+name fp17-r103-enemies
+# lane farmprop17: the r103 farm with Ganados on screen (actorplan17 farm-warp: Leon near the r106 door looking back
+# over the farm; Ganados not alerted). God, no pad input.
+room 0x103
+pos 7500 38 -400
+ang -2.30
+inv default
+god
+alivelog 150

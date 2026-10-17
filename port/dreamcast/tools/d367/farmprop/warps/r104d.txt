@@ -1,0 +1,13 @@
+name fp17-r104d
+# lane farmprop17: r104 fight (zeroread17b ac-r104d): arrival event done, crowd alerted, kill rig.
+room 0x104
+pos -3443 0 12338
+ang -1.5810
+rsf 0x104 1
+inv default
+god
+alert 30
+alivelog 150
+area 0xE
+kill 0x13 200 0x104
+killrep 30 90
