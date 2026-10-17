@@ -1,4 +1,4 @@
-RE4 Dreamcast test 16.2 (second hotfix of test 16), source SHA_PLACEHOLDER
+RE4 Dreamcast test 16.3 (third hotfix of test 16), source SHA_PLACEHOLDER
 
 See Known Issues: https://github.com/lamb2k/re4dc/blob/dreamcast-port/port/dreamcast/docs/KNOWN_ISSUES.md
 
@@ -6,6 +6,18 @@ Extract the gdemu folder and copy its four disc files into a new numbered
 folder on your GDEMU SD card. Flycast can open gdemu/disc.gdi directly (if
 menu or popup text looks broken in Flycast, use its per-pixel renderer
 setting).
+
+New in test 16.3 (hotfix), for the village and farm fights:
+* Fewer disc reads during fights: the Ganado animations the fights in the
+  village (r101), the farm (r103), r104, r108 and r118 use are loaded
+  when you enter the room instead of from the disc in the middle of a
+  fight.
+* The village (r101) keeps all of its pictures in video memory: two
+  Ganado texture sheets there load at half resolution (a small loss of
+  detail on the villagers up close), and pictures pack more tightly.
+  r103, r104, r108 and r118 also load their pictures when you enter.
+The disc data is test 16.2's with new Ganado animation tables and a new
+room picture list; the program changed.
 
 New in test 16.2 (hotfix):
 * Fixed: in 16.1, a fifth Ganado could appear for a moment in some village

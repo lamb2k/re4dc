@@ -99,7 +99,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test16/release-knobs.txt` (test 16.2, the second hotfix of test 16: the test 16 recipe plus `ANIMALS_OFF=1 ALIVE_CAP=4 R101_ALIVE_CAP=4`, and the disc data set r108p; its header names the source commit). The maintainers write that file from
+`tools/d367/test16/release-knobs.txt` (test 16.3, the third hotfix of test 16: the test 16 recipe plus `ANIMALS_OFF=1 ALIVE_CAP=4 R101_ALIVE_CAP=4 VRAM_PAGES_VQ_ONLY=1 GANADO_ATLAS_DROP=3`, and the disc data sets r108p, zr17m, zr17b and res163; its header names the source commit). The maintainers write that file from
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 

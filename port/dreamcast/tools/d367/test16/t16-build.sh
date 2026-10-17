@@ -34,5 +34,9 @@ for x in "$@"; do case $x in
   # test 16.1 (hotfix, 10-17): sP / sT / sW = test 16 exactly (T15_AC="": cap 6, animals). sP's image must equal test
   # 16's d551dab2 with its overlays (knob-off identity of ANIMALS_OFF + cap 4); sT is the STRICT reference for rT.
   sP|sT|sW) T15_AC= LP=${LP}s bash $D/../test15/t15-build.sh r${x#s} ;;
+  # test 16.3 (hotfix, 10-17): T15REC adds T15_VP (VRAM_PAGES_VQ_ONLY=1) and T15_GD (GANADO_ATLAS_DROP=3), both render
+  # only. oP = rP with both off: its image must equal test 16.2's (a8cf395d, f214bd94) with its overlays (knob-off
+  # identity). Data T163_DATA (motion hot flags zr17m / zr17b, resident.bin res163).
+  oP|oT|oW) T15_VP= T15_GD= LP=${LP}o bash $D/../test15/t15-build.sh r${x#o} ;;
   *)  bash $D/../test15/t15-build.sh $x ;;
 esac; done

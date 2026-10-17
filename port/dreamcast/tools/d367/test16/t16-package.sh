@@ -20,7 +20,7 @@
 # Env: L (play label, default t16rcrP), R (work dir), P (output, /mnt/c path), SRC_SHA (default the build's stack.txt),
 #      NOZIP=1 (gdemu folder only; dry runs), MKDCDISC (mkgdi.sh), PKG_SRC.
 set -e
-DATA_SET=${DATA_SET:-T162_DATA}   # test 16.2: T16_DATA + r108p   # the data set name in test11/t11-fix.py (T16_DATA once the test 16 recipe defines it)
+DATA_SET=${DATA_SET:-T163_DATA}   # test 16.3: T162_DATA + zr17m + zr17b + res163 (test 16.2: T16_DATA + r108p)   # the data set name in test11/t11-fix.py (T16_DATA once the test 16 recipe defines it)
 R=${R:-/root/probe/lanes-20261016/t16rc}
 L=${L:-t16rcrP}
 O=/root/probe/lanes/route/out-$L
