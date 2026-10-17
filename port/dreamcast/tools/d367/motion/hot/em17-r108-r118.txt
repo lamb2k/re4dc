@@ -1,0 +1,11 @@
+# lane zeroread17b 2026-10-17: em17 (r108, r118) hot clips = the clips r108 (start fight, kill rig, alert) and r118
+# (all-cold probe) use in play. 9 clips, 124,736 B (48% of 262144). acc12 marked 75 clips / 952,768 B hot.
+0
+3
+5
+23
+36
+47
+55
+88
+89
