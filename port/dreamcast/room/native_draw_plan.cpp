@@ -88,6 +88,15 @@ struct SpanChannel {
     struct Identity { std::uint16_t index,other,color; } ids[kLocalSlots];
     unsigned low=65536,high=0,unique=0;
     bool in_range=true,functional=true;
+    // ids is kLocalSlots wide but only [0, unique) is ever read: construct without clearing it and copy only the
+    // live entries (visit_draw_locals copies spans once or twice per primitive).
+    SpanChannel(){}
+    SpanChannel(const SpanChannel& o){*this=o;}
+    SpanChannel& operator=(const SpanChannel& o){
+        low=o.low;high=o.high;unique=o.unique;in_range=o.in_range;functional=o.functional;
+        std::copy(o.ids,o.ids+o.unique,ids);
+        return *this;
+    }
     void add(unsigned index,unsigned other,unsigned color) {
         if(!in_range)return;
         low=std::min(low,index);high=std::max(high,index);
