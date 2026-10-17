@@ -389,6 +389,23 @@ DATA['water16h'] = {'dc/resident.bin': RS16D + '/water16h/resident.bin'}
 # the room preloads (user rule 10-16: VQ by default when it frees needed capacity). Replaces vq16cs. sha256 ae84c909afea8f4a.
 DATA['water16i'] = {'dc/resident.bin': RS16D + '/water16i/resident.bin'}
 DATA['vq16w'] = {'dc/tex.pak': RS16D + '/vq16w/tex-vq16c.pak'}
+# Test 16.3 (hotfix, coordinator 10-17): T162_DATA + the farm / village fight fixes, nothing else from test 17.
+#   zr17m = lane zeroread17's em/em15.drs + em/em12.drs only (the acc12 archives, the same bytes test 16.2 stages, with
+#     their motion hot flags set to the clips the r101 / r103 fights use: motion/hot/em15-r101.txt, em12-r103.txt;
+#     tools/d367/motion/motion_flags.py: MTC flag words + table CRC only). zr17's own dc/resident.bin was packed from the
+#     test 17 lists, so it is not used here.
+#   zr17b = lane zeroread17b: em13 (r104), em17 (r108 / r118) and em12 (r100 + r103 + r11a) hot flags (order: after zr17m,
+#     its em12 replaces zr17m's).
+#   res163 = dc/resident.bin of this tree: resident_keys.py pack of vram/resident/*.tsv (test 16.2's lists + zr17's r101 /
+#     r103 fight keys + vram101's r101 key 076e860e + res17g's r108 6c08f204 and r118 list), then water_resident.py pack of
+#     water/resident/*.tsv (the water16i method). Order: last (replaces water16i's resident.bin).
+ZR17D = os.environ.get('ZR17D', '/root/re4data/private/zeroread17-20261017')
+DATA['zr17m'] = {'em/em15.drs': ZR17D + '/em15.drs', 'em/em12.drs': ZR17D + '/em12.drs'}
+ZR17BD = os.environ.get('ZR17BD', '/root/re4data/private/zeroread17b-20261017')
+DATA['zr17b'] = {'em/em13.drs': ZR17BD + '/em13.drs', 'em/em17.drs': ZR17BD + '/em17.drs', 'em/em12.drs': ZR17BD + '/em12.drs'}
+T163D = os.environ.get('T163D', '/root/re4data/private/t163-20261017')
+DATA['res163'] = {'dc/resident.bin': T163D + '/resident.bin'}
+T163_DATA = T162_DATA + ',zr17m,zr17b,res163'
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 

@@ -1033,6 +1033,16 @@ $(error MOTION_STATS_LOG=1 needs DISC_READ_METER=1)
 endif
 $(OBJDIR)/platform/dvd_read_safe.o $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_STATS_LOG=1
 endif
+# DISC_READ_LOG=1 (lane zeroread17 2026-10-17; diagnostic, log only, default 0; needs DISC_READ_METER=1): one "DRL:" line
+# per drive call that moves data (a sector read: S, a stream start: T) with its first sector, its size and the calling
+# thread, so in-play reads map to disc files through the ISO listing (isoinfo -l extents of track03).
+DISC_READ_LOG ?= 0
+ifneq ($(DISC_READ_LOG),0)
+ifneq ($(DISC_READ_METER),1)
+$(error DISC_READ_LOG=1 needs DISC_READ_METER=1)
+endif
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_READ_LOG=1
+endif
 # DISC_COMPAT=1 (test 14 items 11/12, lane discread 2026-10-15, default 0): the disc-read compatibility set for GDEMU
 # units and clones, ODEs and loaders (RE4DC-DISC-COMPAT-RESEARCH-20261015.md section 6), one knob:
 # - DISC_READ_FALLBACK=2: plain sector reads only (no cdrom_stream start / cancel per read, so no stream is ever
