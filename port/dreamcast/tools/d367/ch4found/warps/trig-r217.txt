@@ -1,0 +1,11 @@
+name trig-r217
+# ch4found16 CAST-GC draw rig: r217 after the drop (Scenario_flg[0] 0x40000000), so R217Init sends r217_emTbl[0..2]
+# and arms area 9; Codex walk entry, god, no kills
+room 0x217
+pos 5134 8021 -1024
+ang -1.7800
+inv default
+scenario 0 0x40000000
+god
+alivelog 300
+dump

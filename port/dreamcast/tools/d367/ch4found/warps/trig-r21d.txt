@@ -1,0 +1,10 @@
+name trig-r21d
+# ch4found16 CAST-GC draw rig: r21d, Leon placed in area 0x0D (trig 0x81, no button: r21d_setEm2 sends the
+# Novistadors), god, no kills
+room 0x21d
+pos 4313 3650 -10806
+ang 0.0000
+inv default
+god
+alivelog 300
+dump
