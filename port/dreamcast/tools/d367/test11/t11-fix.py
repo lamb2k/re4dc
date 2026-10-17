@@ -499,6 +499,13 @@ T17_DATA = T15_DATA + ',ch2,cast16,pak17'
 ZR17D = os.environ.get('ZR17D', '/root/re4data/private/zeroread17-20261017')
 DATA['zr17'] = {'em/em15.drs': ZR17D + '/em15.drs', 'em/em12.drs': ZR17D + '/em12.drs', 'dc/resident.bin': ZR17D + '/resident.bin'}
 T17Z_DATA = T17_DATA + ',zr17'   # zr17 last: it replaces acc12's em15 / em12 and ch2's resident.bin
+
+# lane zeroread17b (2026-10-17): em13 (r104), em17 (r108 / r118) and em12 (r100 + r103 + r11a, shared) motion hot flags =
+# the clips those rooms use in play (MOTION_USAGE_LOG + all-cold probe runs; motion/hot/em13-r104.txt,
+# em17-r108-r118.txt, em12-r100-r103-r11a.txt; tools/d367/motion/motion_flags.py: MTC flags + table CRC only).
+ZR17BD = os.environ.get('ZR17BD', '/root/re4data/private/zeroread17b-20261017')
+DATA['zr17b'] = {'em/em13.drs': ZR17BD + '/em13.drs', 'em/em17.drs': ZR17BD + '/em17.drs', 'em/em12.drs': ZR17BD + '/em12.drs'}
+T17ZB_DATA = T17Z_DATA + ',zr17b'   # zr17b last: it replaces acc12 em13 / em17 and zr17 em12
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
