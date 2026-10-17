@@ -580,6 +580,13 @@ void gameRoomInit()
         pG->nPrim = RE4DC_PRIM_CAP_R202;
     }
 #endif
+#if defined(RE4DC_PRIM_CAP_R226) && RE4DC_PRIM_CAP_R226
+    // PRIM_CAP_R226 (lane ch4found16 2026-10-17, heap 4 for r226's statue fight): room value 442,368 B; PRIM_WATER
+    // peak 291,360 B per frame with the PS2 cast on, 282,816 B off (actor tail 255,584 / 245,728), overflow 0.
+    if (pG->room_id == 0x226 && pG->nPrim > RE4DC_PRIM_CAP_R226) {
+        pG->nPrim = RE4DC_PRIM_CAP_R226;
+    }
+#endif
 #if defined(RE4DC_PRIM_BUF_KB) && RE4DC_PRIM_BUF_KB
     // PRIM_BUF_KB (Makefile, lane cast16 2026-10-16; size only, every room): the room's primitive buffer asks at most
     // this many KB (heap 4). The GC room values (r11f 655,360 B) were sized for the GameCube; the cap is the worst
