@@ -572,15 +572,19 @@ PS2_ASHLEY ?= 0
 #              view; two heap-4 cells, the room cell holding both skin arenas). A room without registry.re4nmr publishes
 #              the partner alone; a refused partner leaves the room package published. Chunk capacity 48 (r112: 14 + 21).
 #              Without the knob a partner.re4nmr on the disc is never opened.
+#              =2 (lane ashley17 2026-10-17): =1 with a 32-entry registry texture table (was 16). r11c's Luis package has
+#              11 textures and Ashley's partner 6: 17 > 16 refused her ("NMRPACK partner refuse room=011c why=table
+#              detail=4", rsweep17 x-r11c), so she fell back to the GC path. Cost: 16 more pack_tex (16 B) and
+#              registry_tokens (4 B) entries, 320 B bss. =1 is unchanged.
 PS2_ASHLEY_ROOMS ?= 0
-ifeq ($(filter $(PS2_ASHLEY_ROOMS),0 1),)
-$(error PS2_ASHLEY_ROOMS must be 0 or 1)
+ifeq ($(filter $(PS2_ASHLEY_ROOMS),0 1 2),)
+$(error PS2_ASHLEY_ROOMS must be 0, 1 or 2)
 endif
-ifeq ($(PS2_ASHLEY_ROOMS),1)
+ifneq ($(PS2_ASHLEY_ROOMS),0)
 ifeq ($(PS2_ASHLEY),0)
-$(error PS2_ASHLEY_ROOMS=1 needs PS2_ASHLEY=1 or 2)
+$(error PS2_ASHLEY_ROOMS=$(PS2_ASHLEY_ROOMS) needs PS2_ASHLEY=1 or 2)
 endif
-$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_PARTNER=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_PARTNER=$(PS2_ASHLEY_ROOMS)
 endif
 ifeq ($(filter $(PS2_ASHLEY),0 1 2),)
 $(error PS2_ASHLEY must be 0, 1 or 2)

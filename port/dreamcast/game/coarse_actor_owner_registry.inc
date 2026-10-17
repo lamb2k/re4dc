@@ -79,15 +79,22 @@ static_assert(sizeof(nmr::Weight)==16,"package weight records");
 #else
 #define RE4DC_NMR_CHUNKS 32
 #endif
+// PS2_ASHLEY_ROOMS=2 (RE4DC_NMR_PARTNER=2, lane ashley17): room package + partner share a 32-entry texture table
+// (r11c: Luis 11 + Ashley 6 = 17 refused the partner at 16).
+#if defined(RE4DC_NMR_PARTNER) && RE4DC_NMR_PARTNER>=2
+#define RE4DC_NMR_REG_TEXTURES 32
+#else
+#define RE4DC_NMR_REG_TEXTURES 16
+#endif
 #if RE4DC_NMR_POOL && defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
 // ROLES5: 32 package textures (r227: em14 types 6..9 carry 20 atlas pages).
 constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=64,kRegTextures=32,kRegBones=RE4DC_NMR_BONES;
 constexpr unsigned kRegPoolSections=48;  // a pool descriptor's sections (role rows); a plan still draws <= 8 of them
 #elif RE4DC_NMR_POOL
-constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=64,kRegTextures=16,kRegBones=RE4DC_NMR_BONES;
+constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=64,kRegTextures=RE4DC_NMR_REG_TEXTURES,kRegBones=RE4DC_NMR_BONES;
 constexpr unsigned kRegPoolSections=48;  // a pool descriptor's sections (role rows); a plan still draws <= 8 of them
 #else
-constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=32,kRegTextures=16,kRegBones=RE4DC_NMR_BONES;
+constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=32,kRegTextures=RE4DC_NMR_REG_TEXTURES,kRegBones=RE4DC_NMR_BONES;
 #endif
 #if RE4DC_NMR_SLOTS
 // A draw-slot descriptor's source skeleton (parents are u8 with 0xff = root, so at most 255 joints): the draw-slot
