@@ -1,0 +1,11 @@
+name cx-r312-r2
+# ch5found16 round 2: r312 base cx-r312-walk.txt; god, alivelog 60
+# r312 from r30d AEV door 0x1c, destination part 0; fresh source extraction
+room 0x312
+pos -5478 0 26604
+ang -1.6550
+inv default
+act 360 fwd 12
+dump
+god
+alivelog 60

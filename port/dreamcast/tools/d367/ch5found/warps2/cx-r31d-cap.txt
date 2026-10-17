@@ -1,0 +1,12 @@
+name cx-r31d-cap
+# ch5found16 cap-6 check: r31d entry over the cap (hold/park), then kill 0x1e one every 12 room frames (waves release, finish)
+room 0x31d
+pos 32114 -12920 -45946
+ang 0.7990
+inv default
+act 360 fwd 12
+dump
+god
+alivelog 30
+kill 0x1e 30
+killrep 11 12

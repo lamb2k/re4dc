@@ -1,0 +1,11 @@
+name cx-r327-r2
+# ch5found16 round 2: r327 base cx-r327-fight1.txt; god, alivelog 60, kill rig 0x1d x34 gap 40
+# r327 camp, <= 60 s: soldiers killed one by one (EnemySet refills < 9, late task < 8 in PS2 area 0x1C, gatling after 5 dead)
+room 0x327
+pos -6631 5259 25380
+ang -0.1080
+inv default
+god
+alivelog 60
+kill 0x1d 200
+killrep 33 40
