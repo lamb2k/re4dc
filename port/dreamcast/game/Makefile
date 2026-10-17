@@ -295,6 +295,10 @@ endif
 #   r11c r11d).
 ALIVE_CAP ?= 0
 ALIVE_CAP_LOG ?= 0
+# CAP_COMPARE=1 (below): the cap values the sources compare with (the constants, or the runtime re4dc_cap_rt)
+CAP_COMPARE ?= 0
+ALIVE_CAP_N = $(if $(filter 1,$(CAP_COMPARE)),re4dc_cap_rt,$(ALIVE_CAP))
+R101_CAP_N = $(if $(filter 1,$(CAP_COMPARE)),re4dc_cap_rt,$(R101_ALIVE_CAP))
 ifneq ($(ALIVE_CAP),0)
 ALIVE_CAP_R101 := $(shell [ $$(( ($(PS2_ENEMY_ROOMS)) & 2 )) -ne 0 ] && echo 1 || echo 0)
 ifneq ($(filter-out 0 $(ALIVE_CAP),$(R101_ALIVE_CAP)),)
@@ -304,6 +308,7 @@ ifeq ($(ALIVE_CAP_R101),1)
 R101_ALIVE_CAP := $(ALIVE_CAP)
 endif
 $(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/sce_com.o $(OBJDIR)/src/game/sce_sys.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP=$(ALIVE_CAP) -DRE4DC_ALIVE_CAP_R101=$(ALIVE_CAP_R101) -DRE4DC_ALIVE_CAP_LOG=$(ALIVE_CAP_LOG)
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_N=$(ALIVE_CAP_N)
 ifneq ($(or $(ALIVE_CAP_PARK),0),0)
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_PARK=1
 endif
@@ -344,7 +349,29 @@ endif
 R101_ALIVE_CAP ?= 0
 R101_CAP_LOG ?= 0
 ifneq ($(R101_ALIVE_CAP)$(R101_CAP_LOG),00)
-$(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -DRE4DC_R101_ALIVE_CAP=$(R101_ALIVE_CAP) -DRE4DC_R101_CAP_LOG=$(R101_CAP_LOG)
+$(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -DRE4DC_R101_ALIVE_CAP=$(R101_ALIVE_CAP) -DRE4DC_R101_CAP_LOG=$(R101_CAP_LOG) -DRE4DC_R101_CAP_N=$(R101_CAP_N)
+endif
+# CAP_COMPARE=1 (lane cap16 2026-10-16, user "can we do a comparison of 3 vs 5 or 6 simultaneous zombies"; STRESS / TEST ONLY,
+#   default 0; needs DBG_WARP=1 and ALIVE_CAP (PS2_CH1_ENEMY=1 sets it)): the alive cap becomes a runtime value
+#   (re4dc_cap_rt, default ALIVE_CAP) set by a `cap <N>` warp line, read by the r101 cap (R101_ALIVE_CAP code) and the
+#   generic ALIVE_CAP hold; the same disc then runs every cap. With BENCHMARK=1 it builds the cap comparison disc
+#   "RE4DC Cap Compare (NOT THE GAME)": 8 scenes (r101 cross at cap 3 / 4 / 5 / 6, r103 farm at cap 3 / 6 with and without
+#   the animals), the start screen picks one with X / Y / A / B (r101) or the d-pad (farm), and the results screen adds the
+#   Ganados alive, drawn / skipped ticks, ms per picture and the logic split. Knob off: the sources compare with the
+#   constants exactly as before (RE4DC_ALIVE_CAP_N / RE4DC_R101_CAP_N = ALIVE_CAP / R101_ALIVE_CAP).
+ifneq ($(CAP_COMPARE),0)
+ifneq ($(CAP_COMPARE)$(DBG_WARP),11)
+$(error CAP_COMPARE must be 0 or 1 and needs DBG_WARP=1 (stress / test builds only))
+endif
+ifeq ($(or $(ALIVE_CAP),0),0)
+$(error CAP_COMPARE=1 needs ALIVE_CAP (PS2_CH1_ENEMY=1))
+endif
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_CAP_COMPARE=$(ALIVE_CAP)
+$(OBJDIR)/src/game/em_set.o $(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -include $(CURDIR)/cap_compare.h
+ifeq ($(BENCHMARK),1)
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=8 -DRE4DC_BENCH_CAPCMP=1 '-DRE4DC_BENCH_NAME="CAP COMPARE"' \
+  '-DRE4DC_BENCH_MENU="X/Y/A/B: R101 CAP 3/4/5/6 ONLY"' '-DRE4DC_BENCH_MENU2="DPAD UP/DN: FARM CAP 3 +/-ANIMALS, LT/RT: CAP 6"'
+endif
 endif
 # R101_CAP_WAVES=1 (lane alivecap 2026-10-15, set by PS2_CH1_ENEMY; default 0; needs R101_ALIVE_CAP): the reset waves go
 #   through the cap as well (queued beyond it; the wave's emNum += 5 counts the ones sent, each queued one adds its 1
