@@ -470,8 +470,12 @@ def drop_loose(names, r, rm, rec):
         if stale or new:
             raise SystemExit('drop-loose: %s is stale: %d loose textures changed, %d new since it was built (first %s): '
                              'rebuild it (tools/d367/vram/disc_pack.py)' % (n, len(stale), len(new), (stale + new)[:3]))
-        if full(pak) != b['out']:
-            raise SystemExit('drop-loose: the staged dc/tex.pak is not %s\'s pack' % n)
+        # PAK_DERIVED (lane vram101 10-17): a later set may stage a pack made from this one with some packages
+        # re-encoded (same keys; its sidecar JSON names the base pack's and its own sha256).
+        ok = {b['out']} | {d_['out'] for d_ in (json.load(open(PAK_DERIVED[m_])) for m_ in names if m_ in PAK_DERIVED)
+                           if d_['base'] == b['out']}
+        if full(pak) not in ok:
+            raise SystemExit('drop-loose: the staged dc/tex.pak is not %s\'s pack (or a pack derived from it)' % n)
     lacking = []
     for k in sorted(paths):
         m = LOOSE.match(k)
@@ -506,6 +510,15 @@ T17Z_DATA = T17_DATA + ',zr17'   # zr17 last: it replaces acc12's em15 / em12 an
 ZR17BD = os.environ.get('ZR17BD', '/root/re4data/private/zeroread17b-20261017')
 DATA['zr17b'] = {'em/em13.drs': ZR17BD + '/em13.drs', 'em/em17.drs': ZR17BD + '/em17.drs', 'em/em12.drs': ZR17BD + '/em12.drs'}
 T17ZB_DATA = T17Z_DATA + ',zr17b'   # zr17b last: it replaces acc12 em13 / em17 and zr17 em12
+# Lane vram101 (10-17, data only; merged in land/t17-zr17v): v101 = dc/resident.bin packed from every list of this tree
+# (vram/resident_keys.py pack vram/resident/*.tsv, then water/water_resident.py pack ... water/resident/*.tsv; 3991
+# records, sha256 77a7853ef743a557; r101.tsv carries 076e860e, r101's last first-sight picture) + dc/tex.pak = pak17 with
+# the 8 r101 16-bit pictures that reach >= 29 dB as full-codebook VQ (vram/vq17-r101.txt, 40,960 B less VRAM; coordinator
+# 10-17). Goes with VRAM_PAGES_VQ_ONLY=1 (T15_VP in T15REC). Rebuild resident.bin when a list changes.
+V101D = os.environ.get('V101D', '/root/re4data/private/vram101-20261017')
+DATA['v101'] = {'dc/resident.bin': V101D + '/resident.bin', 'dc/tex.pak': V101D + '/tex.pak'}
+PAK_DERIVED = {'v101': V101D + '/pak-derived.json'}   # v101's tex.pak = pak17 + 8 VQ packages (drop_loose)
+T17V_DATA = T17ZB_DATA + ',v101'   # test 17 data: zr17 + zr17b + v101 (v101 last: replaces pak17's tex.pak and zr17's resident.bin)
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 

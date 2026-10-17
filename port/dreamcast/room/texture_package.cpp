@@ -82,9 +82,18 @@ void upload_native(const std::uint8_t* src, void* destination, std::size_t bytes
 // not correctness). pvr_textures_ then holds count sampled pointers followed
 // by count allocation bases (what pvr_mem_free() must receive); the class
 // layout is unchanged, so translation units built without the knob agree.
+#if defined(RE4DC_VRAM_PAGES_VQ_ONLY) && RE4DC_VRAM_PAGES_VQ_ONLY
+extern "C" pvr_ptr_t re4dc_vram_pages_malloc_any(std::size_t size);   // platform/vram_pages.cpp
+#endif
 pvr_ptr_t allocate_texture(std::size_t bytes, bool vq, pvr_ptr_t& base) {
     constexpr std::uintptr_t kPage = 2048;
+#if defined(RE4DC_VRAM_PAGES_VQ_ONLY) && RE4DC_VRAM_PAGES_VQ_ONLY
+    // VRAM_PAGES_VQ_ONLY: a non-VQ texture of more than a page has no page rule (`placed` below), so the page
+    // allocator places it anywhere instead of on the next page (a PAL4 package's 32-byte palette tail cost 2,016 B).
+    base = !vq && bytes > kPage ? re4dc_vram_pages_malloc_any(bytes) : pvr_mem_malloc(bytes);
+#else
     base = pvr_mem_malloc(bytes);
+#endif
     if(base == nullptr) return nullptr;
     const std::uintptr_t start = reinterpret_cast<std::uintptr_t>(base);
     const bool placed = vq ? (start & (kPage - 1U)) == 0 :
