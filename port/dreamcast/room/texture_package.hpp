@@ -31,6 +31,11 @@ inline constexpr std::uint32_t kBinaryAlpha = 1U << 1U;
 // (codebook, then the index bytes of every level from 1x1 up), sampled with
 // the TCW mipmap bit. Square textures only; other builds reject the flag.
 inline constexpr std::uint32_t kMipmap = 1U << 2U;
+// Game GANADO_ATLAS_DROP only, never on disc: set at load time on a mipmapped VQ
+// descriptor whose top level was left out (Package::drop_top_level). The
+// descriptor keeps its logical size (UV scales and size checks are unchanged);
+// the texture itself, and so its TSP size, is half that in each direction.
+inline constexpr std::uint32_t kTopDrop = 1U << 30U;
 // Linear 16-bit payloads use the existing upload-time twiddler. Twiddled and
 // full-codebook VQ payloads are copied unchanged and sampled in their native
 // format. Indexed formats have the explicit layouts described above; PAL8 and
@@ -141,6 +146,14 @@ public:
     std::size_t released_bytes() const { return released_bytes_; }
     std::size_t metadata_bytes() const { return metadata_bytes_; }
     void close();
+#if defined(RE4DC_GANADO_ATLAS_DROP) && RE4DC_GANADO_ATLAS_DROP
+    // GANADO_ATLAS_DROP (game30.mk): before upload(), leave out the top level of
+    // a single square mipmapped VQ texture. The PVR chain is the codebook, then
+    // the index bytes from 1x1 up to the base, so the half-size texture is a
+    // prefix of the same payload: data_size shrinks by (w/2)*(h/2) and only the
+    // prefix is read and uploaded. False (nothing changed) for any other package.
+    bool drop_top_level();
+#endif
 
     const Header& header() const { return *header_; }
     const Texture* textures() const;

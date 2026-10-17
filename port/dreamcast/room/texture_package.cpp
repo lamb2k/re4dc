@@ -923,6 +923,25 @@ bool Package::release_payload() {
     return true;
 }
 
+#if defined(RE4DC_GANADO_ATLAS_DROP) && RE4DC_GANADO_ATLAS_DROP
+bool Package::drop_top_level() {
+    if(header_ == nullptr || !streamed_ || upload_complete_ || pvr_textures_ != nullptr ||
+       header_->texture_count != 1 || data_ != metadata_ || metadata_ == nullptr)
+        return false;
+    Texture& texture = const_cast<Texture&>(textures()[0]);
+    if(!(texture.flags & kMipmap) || (texture.flags & kTopDrop) || texture.payload != kPayloadVq ||
+       texture.width != texture.height || texture.width < 16U)
+        return false;
+    const std::uint32_t top = (texture.width / 2U) * (texture.height / 2U);
+    if(texture.data_size <= 2048U + top || header_->data_size < top)
+        return false;
+    texture.data_size -= top;
+    texture.flags |= kTopDrop;
+    const_cast<Header*>(header_)->data_size -= top;
+    return true;
+}
+#endif
+
 void Package::close() {
 #if RE4DC_TREE_IMPOSTOR && !RE4DC_TEX_PAL4_ALPHA
     // Before the fence: the next kPal4 upload fences before it rewrites a bank.
