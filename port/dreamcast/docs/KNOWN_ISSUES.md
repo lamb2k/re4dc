@@ -68,6 +68,7 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | Foliage: Off removes walls and floor in r109 (the cabin); use Near or Full there | test 15 | 🟢 Fixed in test 15.1: Off now leaves out only the see-through brush, leaf and shadow cards; the cabin keeps its walls and floor | |
 | In the village (r101) the burning stake has lost its crossbar and a plank of the pyre (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16: the village draws its full scenery again (the test 14 world); the simplified scenery of test 15 is no longer used | |
 | In the village (r101) the fence by the house on the right of the square shows only its posts, without its rails (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16: the village draws its full scenery again (the test 14 world); the simplified scenery of test 15 is no longer used | |
+| A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3, 16.4 | ⏸️ Open: the rooms' resident picture lists miss these pictures; fix planned for a later test | |
 
 ## Sound
 
@@ -90,6 +91,8 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | The farm after the village (r103) re-reads villager animations from the disc during play (about 38 reads a second on a console) and loads textures while playing; after a radio call in the village the on-screen display reloads its pictures | test 12, 13 | 🟢 Fixed in test 14, needs a console check: the animations stay in memory, and r103's and r101's textures are loaded when the room starts. The on-screen display still reloads its pictures after the village radio call (4 small pictures); that part waits for a later test | |
 | FSAA (Options, Rendering) is slower than Standard in busy scenes such as the village fight: it draws twice the pixels | test 12 | ⏸️ Open: by design; Standard is the default | |
 | View distance Near or Short (Options) shows less of the distant outdoor scenery: it fades into the fog sooner (houses inside stay clear, the lake keeps its full horizon). At Short, in the first area and the village (from test 17), a simplified far view keeps the landmarks, but thin things in the distance (fence slats, wires, bare branches, small props) are missing there. In the first area after the ambush at the first house, Short shows the plain fade instead: the far view gives its memory to the villagers there (test 16 left it out because it kept that memory at every View distance and two villagers did not appear) | test 15 | ⏸️ Open: by design; Full is the default and every boot starts in Full | |
+| Foliage Near and Off look the same: no near brush or leaf cards at Near | test 16 | 🟢 Fixed in test 16.4 (FOLIAGE_NEAR_FIX), needs console check | |
+| The lake fades into the fog at 25 m, closer than on PS2 | test 16 | 🟢 Fixed in test 16.4 (LAKE_FAR / LAKE_FAR_SHORE), needs console check: 45 m on the boat (Del Lago) and from the shore by day and at night | |
 | FSAA: busiest scenes have less geometry headroom (FSAA borrows 225 KB of the 1.95 MB per-frame geometry buffer; measured peak use 82% in the busiest test scene, El Gigante) | test 12 | ⏸️ Open: by design; Standard keeps the full buffer | |
 
 ## Console checklist for test 13
