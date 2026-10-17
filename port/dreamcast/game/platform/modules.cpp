@@ -526,6 +526,9 @@ static void routeOverlayLoad(unsigned index)
     file_t f = fs_open(path, O_RDONLY);
     if (f < 0) re4dc_missing("route overlay missing on the disc");
     const u32 total = u32(fs_total(f));
+#if !(defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3)
+    const int free_before = re4dc_static_heap_free();  // knob-off image unchanged
+#endif
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
     // A stage module is linked by cRoomData::linkRelData into heap 3 (the dll heap, before heap 4 exists); its
     // overlay shares the REL's heap and lifetime: MemReplaceHeap(2, 3) on the next relink drops both.
@@ -535,12 +538,12 @@ static void routeOverlayLoad(unsigned index)
     // A heap 3 load does not query heap 4 (logged as -1).
 #if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
     const int free_before = heap == 3 ? -1 : re4dc_static_heap_free();
-#else
-    const int free_before = re4dc_static_heap_free();  // knob-off image unchanged
 #endif
 #else
     const int heap = 4;
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
     const int free_before = re4dc_static_heap_free();
+#endif
 #endif
     u8* block = static_cast<u8*>(mem_alloc(total, "route overlay", 0, 1, heap));
     if (!block) {
