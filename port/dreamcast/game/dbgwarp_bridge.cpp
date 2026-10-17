@@ -75,6 +75,7 @@ extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM
 #endif
 #if defined(RE4DC_TRANS_POLICY)
 extern "C" volatile unsigned re4dc_trans_policy;   // platform/native_static.cpp (TRANS_POLICY sub-switch mask)
+extern "C" volatile unsigned re4dc_trans_far_pct;  // TRANS_POLICY FAR thresholds (low byte moved cards, next the rest)
 #if defined(RE4DC_TRANS_POLICY_DEBUG) && RE4DC_TRANS_POLICY_DEBUG
 extern "C" volatile unsigned re4dc_trans_debug;    // TRANS_POLICY_DEBUG silhouette arm
 #endif
@@ -604,9 +605,13 @@ void load()
             // TRANS_POLICY (hwfog.mk): the runtime sub-switch mask at load (render only; still pairs, tr_pixdiff arms)
             re4dc_trans_policy = (unsigned) num(tok[1]) & 0xffU;
             re4dc_log("warp: trans %u\n", re4dc_trans_policy);
+        } else if (!strcmp(k, "transfar") && n >= 3) {
+            // TRANS_POLICY FAR thresholds (percent fog): moved cards, everything else in passes 1-2
+            re4dc_trans_far_pct = ((unsigned) num(tok[1]) & 0xffU) | (((unsigned) num(tok[2]) & 0xffU) << 8);
+            re4dc_log("warp: transfar %u %u\n", re4dc_trans_far_pct & 0xffU, re4dc_trans_far_pct >> 8);
 #if defined(RE4DC_TRANS_POLICY_DEBUG) && RE4DC_TRANS_POLICY_DEBUG
         } else if (!strcmp(k, "transdbg") && n >= 2) {
-            re4dc_trans_debug = (unsigned) num(tok[1]) ? 1U : 0U;   // silhouette arm (tr_pixdiff --mask-diff)
+            re4dc_trans_debug = (unsigned) num(tok[1]);   // class mask not drawn (1 = FLAT): silhouette arm (tr_pixdiff --mask-diff)
             re4dc_log("warp: transdbg %u\n", re4dc_trans_debug);
 #endif
 #endif

@@ -2997,6 +2997,11 @@ static int ss_bg_hidden;
 static float ss_bg_rgb[3];
 static int ss_bg_rgb_set;
 #endif
+#if defined(RE4DC_TRANS_POLICY)
+// TRANS_POLICY FAR: a copy of the PVR fog table this frame loaded (entry j <-> eye depth tfar/v(j)), so ps2_pass can
+// turn "fog amount >= threshold" into a depth with the room's real fog (curve, far ramp, hwfog veil, haze).
+namespace { float trans_fog_table[129]; float trans_fog_tfar; }
+#endif
 extern "C" void re4dc_fog_frame(){
 #if defined(RE4DC_SS_BG_BLACK) && RE4DC_SS_BG_BLACK
     {const int hidden=re4dc_ss_scene_hidden();
@@ -3105,6 +3110,9 @@ extern "C" void re4dc_fog_frame(){
     pvr_fog_table_color(1.0f,r,g,b);
     pvr_fog_far_depth(tfar);
     pvr_fog_table_custom(table);
+#if defined(RE4DC_TRANS_POLICY)
+    std::memcpy(trans_fog_table,table,sizeof(table));trans_fog_tfar=tfar;
+#endif
 #else
     if(!fog_now.type)return;
 #if defined(RE4DC_HW_FOG_HAZE) && RE4DC_HW_FOG_HAZE
@@ -3162,6 +3170,9 @@ extern "C" void re4dc_fog_frame(){
     pvr_fog_table_color(1.0f,r,g,b);
     pvr_fog_far_depth(far);
     pvr_fog_table_custom(table);
+#if defined(RE4DC_TRANS_POLICY)
+    std::memcpy(trans_fog_table,table,sizeof(table));trans_fog_tfar=far;
+#endif
 #endif
 #if RE4DC_FOG_BACKGROUND
 #if defined(RE4DC_SS_BG_BLACK) && RE4DC_SS_BG_BLACK
@@ -4139,22 +4150,24 @@ bool hidden(unsigned i){
 //   1 FLAT  FLAT (uniform 14/15 alpha, r109 / r119 cabin walls and floor) and OPAQUE_IN_TR parts of the TR pass
 //           draw in the opaque list (Tier 2: bounded 17/255 per channel, automated diff tools/d367/tr_pixdiff.py);
 //   128 DROP a TR part whose shipped texture is alpha 0 in every texel is not drawn (Tier 1: draws nothing).
-// Vertex-alpha parts (R4PW reserved bit 0) are never moved. Bits 2 CARD, 4 SOFTA, 8 FAR, 16 VA, 32 FX, 64 WATER are
+//   2 CARD / 4 SOFTA  CARD_NEAR / CARD_SOFTA parts draw punch-through (alpha test at PT_ALPHA_REF; Tier 2 or 3 by diff);
+//   8 FAR  passes 1-2 stop at the depth where this frame's fog table reaches re4dc_trans_far_pct (see far_of).
+// Vertex-alpha parts (R4PW reserved bit 0) are never moved. Bits 16 VA, 32 FX, 64 WATER are
 // reserved (hwfog.mk refuses them until each is built and gated). The table lives in heap 4 beside the world and is
 // freed with it; the movie-arena re-adopt path does no I/O, so after a movie return the policy is idle until the next open.
 } // namespace (re4dc_trans_policy at file scope: dbgwarp_bridge.cpp links to it by its C name)
-extern "C" { volatile unsigned re4dc_trans_policy=RE4DC_TRANS_POLICY; }
+extern "C" { volatile unsigned re4dc_trans_policy=RE4DC_TRANS_POLICY; volatile unsigned re4dc_trans_far_pct=70U|(90U<<8); }
 #if RE4DC_TRANS_POLICY_DEBUG
 extern "C" { volatile unsigned re4dc_trans_debug=0; }
 #endif
 namespace {
 namespace trans{
 enum : unsigned { kUnknown=0,kOp=1,kPtBin=2,kOpaqueInTr=3,kFlat=4,kFlatMid=5,kCardNear=6,kCardSoftA=7,kSoft=8,kVa=9,kDrop=10 };
-enum : unsigned { kTpFlat=1U,kTpDrop=128U };
+enum : unsigned { kTpFlat=1U,kTpCard=2U,kTpSofta=4U,kTpFar=8U,kTpDrop=128U };
 struct Head { char magic[4]; std::uint32_t version,classifier,parts,r4pw_crc,body_crc; };
 static_assert(sizeof(Head)==24);
 static std::uint8_t* block=nullptr; static const std::uint8_t* cls=nullptr;
-static unsigned room=~0U,nparts=0,flat=0,dropped=0,last_room=~0U; static std::uint32_t last_frame;
+static unsigned room=~0U,nparts=0,flat=0,carded=0,dropped=0,last_room=~0U; static std::uint32_t last_frame;
 static void close(){ if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
 // After the R4PW sidecar is accepted (room, its body crc, its part count). Reads the class sidecar into heap 4.
 static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts){
@@ -4182,47 +4195,96 @@ static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts){
     re4dc_log("trans: room=%03x policy=%u classes=%s parts=%u heap=%d\n",r,unsigned(re4dc_trans_policy),why?why:"ok",parts,
               re4dc_static_heap_free());
 }
+// The pass a translucent (pass 2, no vertex alpha) part of class c moves to under policy word p; 2 = stays.
+static unsigned target(unsigned c,unsigned p){
+    if((p&kTpFlat) && (c==kFlat || c==kOpaqueInTr))return 0;
+    if((p&kTpCard) && c==kCardNear)return 1;
+    if((p&kTpSofta) && c==kCardSoftA)return 1;
+    return 2;
+}
 #if RE4DC_PS2_PASS_MASK
-// The pass mask (one byte per placement) must list the pass a moved part can draw in (FLAT -> 0), or ps2_pass would skip
-// the placement before reaching the part. Set for every movable part whatever the runtime bits: an extra bit is a scan.
+// The pass mask (one byte per placement) must list the pass a moved part can draw in (FLAT -> 0, CARD / SOFTA -> 1), or
+// ps2_pass would skip the placement before reaching the part. Set for every movable part whatever the runtime bits: an
+// extra bit costs a scan, never a draw.
 static void mask(const Ps2Part* parts,const Ps2Placement* pl,unsigned n){
     if(!cls || !ps2w.masked)return;
     for(unsigned i=0;i<n;++i){
         const auto& mesh=ps2w.package.meshes()[pl[i].mesh];
         for(unsigned k=0;k<mesh.part_count;++k){
             const unsigned p=mesh.first_part+k;
-            if(p<nparts && parts[p].pass==2 && !(parts[p].reserved&1U) && (cls[p]==kFlat || cls[p]==kOpaqueInTr))ps2w.pass_mask[i]|=1U;
+            if(p>=nparts || parts[p].pass!=2 || (parts[p].reserved&1U))continue;
+            const unsigned t=target(cls[p],kTpFlat|kTpCard|kTpSofta);
+            if(t<2)ps2w.pass_mask[i]|=std::uint8_t(1U<<t);
         }
     }
 }
 #endif
 // The pass a part draws in under the policy: 0 / 1 / 2, or 3 = not drawn. `now` is the pass after FOLIAGE_TRIM.
-// re4dc_trans_debug (TRANS_POLICY_DEBUG=1 builds, warp line `transdbg 1`; never shipped): FLAT / OPAQUE_IN_TR parts are
-// not drawn at all, so an A-vs-debug still pair gives tr_pixdiff.py --mask-diff the silhouette of the converted class.
+// re4dc_trans_debug (TRANS_POLICY_DEBUG=1 builds, warp line `transdbg <mask>`; never shipped): parts of the classes in
+// the mask (bit = class number; 1 = FLAT and OPAQUE_IN_TR) are not drawn at all, so an A-vs-debug still pair gives
+// tr_pixdiff.py --mask-diff the silhouette of the converted class.
 static unsigned pass_of(const Ps2Part& m,unsigned index,unsigned now){
-    if(!cls || room!=ps2w.room || index>=nparts || m.pass!=2 || now!=2 || (m.reserved&1U))return now;
-    const unsigned c=cls[index],p=re4dc_trans_policy;
+    if(!cls || room!=ps2w.room || index>=nparts)return now;
 #if RE4DC_TRANS_POLICY_DEBUG
-    if(re4dc_trans_debug && (c==kFlat || c==kOpaqueInTr))return 3;
+    {const unsigned dm=re4dc_trans_debug==1U?((1U<<kFlat)|(1U<<kOpaqueInTr)):re4dc_trans_debug;
+     if((dm>>cls[index])&1U)return 3;}   // any pass, vertex alpha included (class VA = bit 9)
 #endif
+    if(m.pass!=2 || now!=2 || (m.reserved&1U))return now;
+    const unsigned c=cls[index],p=re4dc_trans_policy;
     if((p&kTpDrop) && c==kDrop)return 3;
-    if((p&kTpFlat) && (c==kFlat || c==kOpaqueInTr))return 0;
-    return now;
+    const unsigned t=target(c,p);
+    return t<2?t:now;
 }
-// For the unmasked placement scan of pass 0: a part that FLAT may move there.
-static bool opaque_candidate(unsigned index){
-    if(!cls || room!=ps2w.room || index>=nparts || !(re4dc_trans_policy&kTpFlat))return false;
+// For the unmasked placement scan: a part that the policy may move into `pass`.
+static bool candidate(unsigned index,unsigned pass){
+    if(!cls || room!=ps2w.room || index>=nparts || pass>1)return false;
     const auto& m=ps2w.parts[index];
-    return m.pass==2 && !(m.reserved&1U) && (cls[index]==kFlat || cls[index]==kOpaqueInTr);
+    return m.pass==2 && !(m.reserved&1U) && target(cls[index],re4dc_trans_policy)==pass;
 }
+#if RE4DC_NATIVE_FOG
+// FAR (bit 8): the depth beyond which the PVR fog table this frame is at or above a threshold everywhere, from the
+// loaded table itself (trans_fog_table, entry 0 = the far plane). 0 = no such depth (fog off, or never that thick).
+// Thresholds (percent): re4dc_trans_far_pct low byte = cards moved to punch-through (CARD / SOFTA / FOLIAGE Near),
+// next byte = everything else drawn in passes 1-2 (native punch-through cutouts, soft cards, glass, unmoved cards).
+// Vertex-alpha overlays are TP_VA's (not built), opaque parts are never touched. Warp line `transfar <low> <high>`.
+static float cut_low,cut_high;
+static float depth_at(float t){
+    if(fog_loaded.type<=0 || !(trans_fog_tfar>0))return 0.0f;
+    unsigned j=0;
+    while(j<129 && trans_fog_table[j]>=t)++j;
+    if(!j)return 0.0f;
+    --j;
+    const float v=j<128?float((j&15U)+16U)/16.0f*float(1U<<(j>>4)):256.0f;
+    return trans_fog_tfar/v;
+}
+static void frame_cuts(){
+    if(!(re4dc_trans_policy&kTpFar)){cut_low=cut_high=0.0f;return;}
+    const unsigned w=re4dc_trans_far_pct;
+    cut_low=depth_at(float(w&255U)/100.0f);cut_high=depth_at(float((w>>8)&255U)/100.0f);
+}
+// The far cut for a part drawn in pass `drawn` (1 or 2), 0 = none.
+static float far_of(const Ps2Part& m,unsigned index,unsigned drawn){
+    if(!(re4dc_trans_policy&kTpFar) || !drawn || drawn>2 || (m.reserved&1U))return 0.0f;
+    if(drawn==1 && m.pass==2)return cut_low;          // a card moved to punch-through
+    if(!cls || room!=ps2w.room || index>=nparts)return cut_high;
+    const unsigned c=cls[index];
+    return (c==kFlat || c==kOpaqueInTr || c==kOp)?0.0f:cut_high;
+}
+#endif
 static void note(unsigned pass,unsigned drawn){
     if(drawn==0 && pass==0)++flat;
+    if(drawn==1 && pass==1)++carded;
     if(drawn==3 && pass==2)++dropped;
     const std::uint32_t f=re4dc_vi_retrace_count();
     if(last_room!=ps2w.room || f-last_frame>=1200U){
-        re4dc_log("trans: policy=%u room=%03x table=%u flat=%u dropped=%u\n",unsigned(re4dc_trans_policy),unsigned(ps2w.room),
-                  cls?1U:0U,flat,dropped);
-        last_room=ps2w.room;last_frame=f;flat=dropped=0;
+#if RE4DC_NATIVE_FOG
+        re4dc_log("trans: policy=%u room=%03x table=%u flat=%u card=%u dropped=%u far=%u/%u mm\n",unsigned(re4dc_trans_policy),
+                  unsigned(ps2w.room),cls?1U:0U,flat,carded,dropped,unsigned(cut_low),unsigned(cut_high));
+#else
+        re4dc_log("trans: policy=%u room=%03x table=%u flat=%u card=%u dropped=%u\n",unsigned(re4dc_trans_policy),
+                  unsigned(ps2w.room),cls?1U:0U,flat,carded,dropped);
+#endif
+        last_room=ps2w.room;last_frame=f;flat=carded=dropped=0;
     }
 }
 } // namespace trans
@@ -4796,6 +4858,9 @@ int ps2_pass(unsigned pass,float zfar){
     if(pass){const float f=foliage_far;if(f>near && f<cull_far)cull_far=f;}
 #endif
     c.near=near;c.far=far;c.cull_far=cull_far;
+#if defined(RE4DC_TRANS_POLICY) && RE4DC_NATIVE_FOG
+    if(pass)trans::frame_cuts();
+#endif
 #if RE4DC_SKY_ANY
     const float pass_cull_far=cull_far;
 #endif
@@ -4968,8 +5033,8 @@ int ps2_pass(unsigned pass,float zfar){
         bool any=false;
         for(unsigned k=0;k<mesh.part_count && !any;++k)any=RE4DC_PASS_HIT(ps2w.parts[mesh.first_part+k].pass);
 #if defined(RE4DC_TRANS_POLICY)
-        // TRANS_POLICY FLAT: a translucent-only placement can hold parts that now draw in pass 0
-        for(unsigned k=0;!pass && k<mesh.part_count && !any;++k)any=trans::opaque_candidate(mesh.first_part+k);
+        // TRANS_POLICY FLAT / CARD / SOFTA: a translucent-only placement can hold parts that now draw in pass 0 or 1
+        for(unsigned k=0;pass<2 && k<mesh.part_count && !any;++k)any=trans::candidate(mesh.first_part+k,pass);
 #endif
         if(!any)continue;
         }
@@ -5140,6 +5205,17 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_WORLD_LEAN
                 d.lean_inside=false;
 #endif
+            }
+#endif
+#if defined(RE4DC_TRANS_POLICY) && RE4DC_NATIVE_FOG
+            {   // TRANS_POLICY FAR: clusters past the room fog's threshold depth for this part's class are not drawn
+                const float tf=trans::far_of(meta,index,trans_pass);
+                if(tf>near && tf<d.cull_far){
+                    d.cull_far=tf;
+#if RE4DC_PS2_WORLD_LEAN
+                    d.lean_inside=false;
+#endif
+                }
             }
 #endif
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
