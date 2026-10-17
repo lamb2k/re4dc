@@ -90,6 +90,14 @@ extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM
 
 extern "C" {
 u32 re4dc_vi_retrace_count(void);
+#if defined(RE4DC_CAP_COMPARE)
+// CAP_COMPARE=1 (Makefile; lane cap16 2026-10-16): the runtime alive cap, default the build's ALIVE_CAP; a `cap <N>` warp
+// line sets it. em_set.cpp (RE4DC_ALIVE_CAP_N) and r101.cpp (RE4DC_R101_CAP_N) read it in place of the constant.
+int re4dc_cap_rt = RE4DC_CAP_COMPARE;
+#if defined(RE4DC_CAP_MISTCUT) && RE4DC_CAP_MISTCUT
+extern unsigned re4dc_mist_cut;   // esp_sub.cpp (hwfog.mk MIST_CUT): the runtime mask of the translucency arms
+#endif
+#endif
 
 int re4dc_fixture_read(const char* path, char* buffer, unsigned size);
 void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture anchors (overlay)
@@ -97,6 +105,8 @@ void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture an
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name);  // bench.cpp (bench.mk BENCHMARK)
 int re4dc_bench_tick(unsigned room_frame);
 const char* re4dc_bench_next_scene(void);
+const char* re4dc_bench_first_scene(void);
+void re4dc_bench_alive(int n);
 int re4dc_bench_scene_no(void);
 const char* re4dc_bench_results(void);
 #endif
@@ -169,6 +179,7 @@ struct Warp {
     u16 kill_room;  // 0: any room
     u8 kill_kind;   // cDmgInfo kind of each hit (1: handgun)
     cEm* kill_em;   // the target once found (kept until its hp is gone)
+    int kill_cur;   // its enemy id (`kill 0`: the nearest live Ganado, ids 0x10..0x20)
     u32 kill_watch; // after the kill: state lines left
     u32 kill_rep, kill_gap;  // `killrep <count> <gap>`: kill `count` more, each `gap` room frames after the last
     u32 alive_period, alive_last;  // `alivelog <period>`
@@ -248,7 +259,7 @@ u32 num(const char* s) { return (u32) strtoul(s, nullptr, 0); }
 // BENCHMARK=1 (bench.mk, bench.cpp): the scene fixture to arm at the next soft reset, and the reset is pending.
 const char* bench_next;
 bool bench_pending;
-void load(const char* path = "/cd/dc/warp.txt")
+void load(const char* path = nullptr)
 #else
 void load()
 #endif
@@ -257,6 +268,7 @@ void load()
     wp.parse_entry = wp.max_entry = 1;
     static char text[4096];
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+    if (!path) path = re4dc_bench_first_scene();   // scene 1, or the start screen's single scene
     const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
     re4dc_log("warp: bench fixture %s (%d bytes)\n", path, len);
 #else
@@ -513,6 +525,20 @@ void load()
             re4dc_foliage = (unsigned) num(tok[1]) > 2U ? 0U : (unsigned) num(tok[1]);
             re4dc_log("warp: foliage %u\n", re4dc_foliage);
 #endif
+#if defined(RE4DC_CAP_COMPARE)
+        } else if (!strcmp(k, "cap") && n >= 2) {
+            // CAP_COMPARE (lane cap16, stress / test builds only): `cap <N>` = at most N Ganados alive at once, read by the
+            // r101 cap (R101_ALIVE_CAP code) and the generic ALIVE_CAP hold from the next room entry on
+            re4dc_cap_rt = (int) num(tok[1]);
+            re4dc_log("warp: cap %d (CAP_COMPARE runtime alive cap)\n", re4dc_cap_rt);
+#if defined(RE4DC_CAP_MISTCUT) && RE4DC_CAP_MISTCUT
+        } else if (!strcmp(k, "mistcut") && n >= 2) {
+            // CAP_COMPARE + MIST_CUT: `mistcut <mask>` = the translucent draws left out (docs/MIST_CUT.md: 16 the world's
+            // translucent pass, 237 every effect sprite class, 255 both; 0 as shipped). Draw-time only.
+            re4dc_mist_cut = num(tok[1]);
+            re4dc_log("warp: mistcut %u (CAP_COMPARE translucency arm)\n", re4dc_mist_cut);
+#endif
+#endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
         } else if (!strcmp(k, "bench") && n >= 5) {
             // BENCHMARK: `bench <scene no> <begin room frame> <end room frame> <name...>` (bench.cpp measures [begin, end))
@@ -602,7 +628,7 @@ void kill_poll()
         --wp.kill_watch;
         cEm* em = wp.kill_em;
         bool live = false;  // still in the enemy manager's list (else the object may be gone / reused)
-        for (cEm* e = EmMgr.getEmPtr(wp.kill_id, 0); e; e = EmMgr.getEmPtr(wp.kill_id, e)) live |= e == em;
+        for (cEm* e = EmMgr.getEmPtr(wp.kill_cur, 0); e; e = EmMgr.getEmPtr(wp.kill_cur, e)) live |= e == em;
         re4dc_log("warp: kill watch frame %u t=%u m=%08x listed=%d be_flag=%08x hp=%d r=%u/%u/%u pos=%d,%d,%d color=%08x\n",
                   (unsigned) wp.room_frames, (unsigned) pG->Frame_cnt, (unsigned) (uintptr_t) em, (int) live,
                   live ? (unsigned) em->be_flag : 0u, live ? (int) em->hp : 0, live ? (unsigned) em->r_no_0 : 0u,
@@ -616,12 +642,25 @@ void kill_poll()
     cEm* em = wp.kill_em;
     char what[64];
     if (!em) {
-        for (em = EmMgr.getEmPtr(wp.kill_id, 0); em; em = EmMgr.getEmPtr(wp.kill_id, em)) {
-            if ((em->be_flag & 0x21) == 0x21 && em->hp > 0) break;
+        if (wp.kill_id == 0) {
+            // `kill 0`: the nearest live Ganado to Leon (on screen in the benchmark fights: hurt / death / blood there)
+            f32 best = 1e30f;
+            for (int id = 0x10; id <= 0x20 && pPL; ++id) {
+                for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e)) {
+                    if ((e->be_flag & 0x21) != 0x21 || e->hp <= 0) continue;
+                    const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d2 = dx * dx + dz * dz;
+                    if (d2 < best) { best = d2; em = e; }
+                }
+            }
+        } else {
+            for (em = EmMgr.getEmPtr(wp.kill_id, 0); em; em = EmMgr.getEmPtr(wp.kill_id, em)) {
+                if ((em->be_flag & 0x21) == 0x21 && em->hp > 0) break;
+            }
         }
         if (!em) return;  // not placed yet: keep looking
+        wp.kill_cur = em->id;
         wp.kill_em = em;
-        snprintf(what, sizeof(what), "kill 0x%02x fired in %03x at room frame %u hp=%d", (unsigned) wp.kill_id,
+        snprintf(what, sizeof(what), "kill 0x%02x fired in %03x at room frame %u hp=%d", (unsigned) wp.kill_cur,
                  (unsigned) pG->room_id, (unsigned) wp.room_frames, (int) em->hp);
         stamp(what);
         re4dc_log("warp: kill target m=%08x pos=%d,%d,%d t=%u\n", (unsigned) (uintptr_t) em, (int) em->pos.x, (int) em->pos.y,
@@ -637,7 +676,7 @@ void kill_poll()
         }
         wp.kill_done = true;
         wp.kill_watch = 40;  // then its state every 15 room frames, 40 times (death motion, fade, removal)
-        snprintf(what, sizeof(what), "kill 0x%02x hp<=0 at room frame %u after %u hits", (unsigned) wp.kill_id,
+        snprintf(what, sizeof(what), "kill 0x%02x hp<=0 at room frame %u after %u hits", (unsigned) wp.kill_cur,
                  (unsigned) wp.room_frames, (unsigned) wp.kill_hits);
         stamp(what);
         if (wp.kill_rep) {  // `killrep <count> <gap>`: the next live one, gap room frames later
@@ -775,6 +814,14 @@ bool bench_poll()
     if (bench_pending) {
         if (wp.god && pG) pG->pl_life = pG->pl_life_max;
         return true;
+    }
+    {   // Ganados alive now (ids 0x10..0x20 in the enemy manager, alive and hp > 0): SceCountEmAlive also counts the
+        // ALIVE_CAP hold's waiting entries (the rooms' scripts read uncapped), so it would not show the cap reached
+        int live = 0;
+        for (int id = 0x10; id <= 0x20; ++id)
+            for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e))
+                if ((e->be_flag & 1) && e->hp > 0) ++live;
+        re4dc_bench_alive(live);
     }
     if (!re4dc_bench_tick(wp.room_frames)) return false;
     bench_state_log(wp.room_frames);

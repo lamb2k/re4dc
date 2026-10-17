@@ -275,6 +275,25 @@ PS2_ENEMY_RULES ?= 0
 ifneq ($(PS2_ENEMY_RULES),0)
 $(OBJDIR)/src/game/stage.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r107.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_RULES=$(PS2_ENEMY_RULES)
 endif
+# ANIMALS_OFF=1 (user 2026-10-17 "Get rid of them asap"; CHANGES GAMEPLAY by design: no eggs from chickens; default 0 = off;
+#   needs PS2_ENEMY_RULES=1): the ambient animals of the stage 1 enemy lists (emleon00 / emleon01) are not spawned:
+#   every cow (em26) and chicken (em28), and the dog (em21) only when ambient (list set 0: the r103 farm dog 0x56).
+#   The scripted dogs stay: the r100 bear-trap dog (0x09, set 1) and the r119 El Gigante dog (0x29, set 2); crows,
+#   snakes and fish are untouched. Removed rows: r101 0x34 cow, 0x4E / 0x4F chickens; r103 0x50..0x55 cows, 0x56 dog,
+#   0x57 0x58 0x5A..0x5D chickens (0x4E 0x50 0x54 0x55 0x57 0x58 0x5C are already off with PS2_ENEMY_RULES: the PS2 lists
+#   never spawn them). No room code sends, counts or waits on these rows (r101's s21 removal handles a missing 0x34 /
+#   0x4F); their escape alarm (Status_flg[1] bit 29) is read only by other animals and chapter 3+ enemies. Applied at
+#   spawn (EmSetFromList), so a save made with animals loads without them. C:\Game Dev\Emulators\ANIMALSOFF-20261017.md
+ANIMALS_OFF ?= 0
+ifeq ($(filter $(ANIMALS_OFF),0 1),)
+$(error ANIMALS_OFF must be 0 or 1)
+endif
+ifeq ($(ANIMALS_OFF),1)
+ifeq ($(PS2_ENEMY_RULES),0)
+$(error ANIMALS_OFF=1 needs PS2_ENEMY_RULES=1 (PS2_CH1_ENEMY=1 sets it))
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ANIMALS_OFF=1
+endif
 # PS2_ENEMY_ROOMS=<mask> (lane ps2enemy 2026-10-14, default 0: no effect; needs PS2_ENEMY_RULES=1; changes gameplay
 # by design): more PS2 USA room-code enemy rules (st1_0..2.rel, decoded per room), one bit per room:
 #   0x01 r100: the after-state trap 0x7A is not set; list entries 3 / 4 take the PS2 flags (swapped)
@@ -324,6 +343,10 @@ endif
 #   r11c r11d).
 ALIVE_CAP ?= 0
 ALIVE_CAP_LOG ?= 0
+# CAP_COMPARE=1 (below): the cap values the sources compare with (the constants, or the runtime re4dc_cap_rt)
+CAP_COMPARE ?= 0
+ALIVE_CAP_N = $(if $(filter 1,$(CAP_COMPARE)),re4dc_cap_rt,$(ALIVE_CAP))
+R101_CAP_N = $(if $(filter 1,$(CAP_COMPARE)),re4dc_cap_rt,$(R101_ALIVE_CAP))
 ifneq ($(ALIVE_CAP),0)
 ALIVE_CAP_R101 := $(shell [ $$(( ($(PS2_ENEMY_ROOMS)) & 2 )) -ne 0 ] && echo 1 || echo 0)
 ifneq ($(filter-out 0 $(ALIVE_CAP),$(R101_ALIVE_CAP)),)
@@ -333,6 +356,7 @@ ifeq ($(ALIVE_CAP_R101),1)
 R101_ALIVE_CAP := $(ALIVE_CAP)
 endif
 $(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/sce_com.o $(OBJDIR)/src/game/sce_sys.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP=$(ALIVE_CAP) -DRE4DC_ALIVE_CAP_R101=$(ALIVE_CAP_R101) -DRE4DC_ALIVE_CAP_LOG=$(ALIVE_CAP_LOG)
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_N=$(ALIVE_CAP_N)
 ifneq ($(or $(ALIVE_CAP_PARK),0),0)
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_PARK=1
 endif
@@ -380,7 +404,33 @@ endif
 R101_ALIVE_CAP ?= 0
 R101_CAP_LOG ?= 0
 ifneq ($(R101_ALIVE_CAP)$(R101_CAP_LOG),00)
-$(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -DRE4DC_R101_ALIVE_CAP=$(R101_ALIVE_CAP) -DRE4DC_R101_CAP_LOG=$(R101_CAP_LOG)
+$(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -DRE4DC_R101_ALIVE_CAP=$(R101_ALIVE_CAP) -DRE4DC_R101_CAP_LOG=$(R101_CAP_LOG) -DRE4DC_R101_CAP_N=$(R101_CAP_N)
+endif
+# CAP_COMPARE=1 (lane cap16 2026-10-16, user "can we do a comparison of 3 vs 5 or 6 simultaneous zombies"; STRESS / TEST ONLY,
+#   default 0; needs DBG_WARP=1 and ALIVE_CAP (PS2_CH1_ENEMY=1 sets it)): the alive cap becomes a runtime value
+#   (re4dc_cap_rt, default ALIVE_CAP) set by a `cap <N>` warp line, read by the r101 cap (R101_ALIVE_CAP code) and the
+#   generic ALIVE_CAP hold; the same disc then runs every cap. With BENCHMARK=1 it builds the cap comparison disc
+#   "RE4DC Cap Compare (NOT THE GAME)": 8 scenes (r101 cross at cap 3 / 4 / 5 / 6, r103 farm at cap 3 / 6 with and without
+#   the animals), the start screen picks one with X / Y / A / B (r101) or the d-pad (farm), and the results screen adds the
+#   Ganados alive, drawn / skipped ticks, ms per picture and the logic split. Knob off: the sources compare with the
+#   constants exactly as before (RE4DC_ALIVE_CAP_N / RE4DC_R101_CAP_N = ALIVE_CAP / R101_ALIVE_CAP).
+ifneq ($(CAP_COMPARE),0)
+ifneq ($(CAP_COMPARE)$(DBG_WARP),11)
+$(error CAP_COMPARE must be 0 or 1 and needs DBG_WARP=1 (stress / test builds only))
+endif
+ifeq ($(or $(ALIVE_CAP),0),0)
+$(error CAP_COMPARE=1 needs ALIVE_CAP (PS2_CH1_ENEMY=1))
+endif
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_CAP_COMPARE=$(ALIVE_CAP)
+# with MIST_CUT=<mask> (hwfog.mk; the disc builds it with a mask and every scene sets its own): the `mistcut` warp line
+ifneq ($(MIST_CUT),)
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_CAP_MISTCUT=1
+endif
+$(OBJDIR)/src/game/em_set.o $(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -include $(CURDIR)/cap_compare.h
+ifeq ($(BENCHMARK),1)
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=14 -DRE4DC_BENCH_CAPCMP=1 '-DRE4DC_BENCH_NAME="CAP COMPARE"' \
+  '-DRE4DC_BENCH_MENU="X/Y/A/B: R101 CAP 3/4/5/6"' '-DRE4DC_BENCH_MENU2="UP/DN: FARM C3 +/-ANIMALS, LT/RT: C6"'   '-DRE4DC_BENCH_MENU3="UP+X/Y/A: R101 T1/T2/T3, DN+X/Y/A: FARM"'
+endif
 endif
 # R101_CAP_WAVES=1 (lane alivecap 2026-10-15, set by PS2_CH1_ENEMY; default 0; needs R101_ALIVE_CAP): the reset waves go
 #   through the cap as well (queued beyond it; the wave's emNum += 5 counts the ones sent, each queued one adds its 1
@@ -1369,6 +1419,16 @@ $(error MOTION_STATS_LOG=1 needs DISC_READ_METER=1)
 endif
 $(OBJDIR)/platform/dvd_read_safe.o $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_STATS_LOG=1
 endif
+# DISC_READ_LOG=1 (lane zeroread17 2026-10-17; diagnostic, log only, default 0; needs DISC_READ_METER=1): one "DRL:" line
+# per drive call that moves data (a sector read: S, a stream start: T) with its first sector, its size and the calling
+# thread, so in-play reads map to disc files through the ISO listing (isoinfo -l extents of track03).
+DISC_READ_LOG ?= 0
+ifneq ($(DISC_READ_LOG),0)
+ifneq ($(DISC_READ_METER),1)
+$(error DISC_READ_LOG=1 needs DISC_READ_METER=1)
+endif
+$(OBJDIR)/platform/dvd_read_safe.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_READ_LOG=1
+endif
 # DISC_COMPAT=1 (test 14 items 11/12, lane discread 2026-10-15, default 0): the disc-read compatibility set for GDEMU
 # units and clones, ODEs and loaders (RE4DC-DISC-COMPAT-RESEARCH-20261015.md section 6), one knob:
 # - DISC_READ_FALLBACK=2: plain sector reads only (no cdrom_stream start / cancel per read, so no stream is ever
@@ -2323,6 +2383,23 @@ MOVIE_WINDOW ?= 0
 # census (blocks, free extents, largest, size histogram) every 120 frames and after each preload.
 VRAM_PAGES ?= 0
 VRAM_CENSUS ?= 0
+# VRAM_PAGES_VQ_ONLY=1 (lane vram101 2026-10-17, render only, default 0; needs VRAM_PAGES=1 UI_VRAM=1): the page allocator
+#   (platform/vram_pages.cpp) starts a texture of more than one 2 KiB page on a page boundary only when it is VQ (the
+#   codebook must sit on a page). A larger twiddled / palettised texture needs no page (texture_package.cpp
+#   allocate_texture accepts it anywhere), but was page-aligned anyway: a PAL4 128x128 package is 8,192 texels + its
+#   32-byte palette = 8,224 B, so the next texture of a page or more skipped 2,016 B. r101 holds 118 of them: about
+#   230 KB of 2 KB holes: a preload upload found no contiguous block, the retry evicted 22 pictures, no free block over
+#   10 KB (largest 10,368 B; the bell gate then loaded 7 pictures in play). Placement only: the same textures, bytes and
+#   draws. Doc: VRAM101-20261017.md (lane notes).
+VRAM_PAGES_VQ_ONLY ?= 0
+ifneq ($(filter-out 0 1,$(VRAM_PAGES_VQ_ONLY)),)
+$(error VRAM_PAGES_VQ_ONLY must be 0 or 1)
+endif
+ifeq ($(VRAM_PAGES_VQ_ONLY),1)
+ifneq ($(VRAM_PAGES)$(UI_VRAM),11)
+$(error VRAM_PAGES_VQ_ONLY=1 needs VRAM_PAGES=1 UI_VRAM=1)
+endif
+endif
 # VRAM_ROOM_LOG=1 (lane vram12 D4, render/log only, default 0 = image unchanged; needs UI_VRAM=1 VRAM_PAGES=1): the
 # per-room VRAM report of the CLAUDE.md graphics memory rule (native_ui.cpp: "vram room:" pinned / dynamic / other /
 # free / largest free block, "vram gaps:" refusals, thrash-guard skips, no contiguous block, GameCube effect pictures,
@@ -2481,6 +2558,7 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_PT_BLEND_FIX %s\n' '$(PT_BLEND_FIX)' >> $@.tmp
 	@printf '#define RE4DC_TEX_CHECK %s\n' '$(TEX_CHECK)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_PAGES %s\n#define RE4DC_VRAM_CENSUS %s\n' '$(VRAM_PAGES)' '$(VRAM_CENSUS)' >> $@.tmp
+	@printf '#define RE4DC_VRAM_PAGES_VQ_ONLY %s\n' '$(VRAM_PAGES_VQ_ONLY)' >> $@.tmp
 	@printf '#define RE4DC_VRAM_ROOM_LOG %s\n' '$(VRAM_ROOM_LOG)' >> $@.tmp
 	@printf '#define RE4DC_TEX_META_EVICT %s\n' '$(TEX_META_EVICT)' >> $@.tmp
 	@printf '#define RE4DC_PRELOAD_LARGE_FIRST %s\n' '$(PRELOAD_LARGE_FIRST)' >> $@.tmp

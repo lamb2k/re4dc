@@ -1,0 +1,24 @@
+# lane zeroread17b 2026-10-17: em12 (shared by r100, r103, r106, r107, r10a, r11a) hot clips. The union of the clips
+# r103 (zeroread17 list), r100 (house + s20 ambush, h2 to s30) and r11a use in play is 24 clips / 285,824 B, over
+# MOTION_PRESSURE_BYTES 262144; the four r11a-only clips 25 49 50 114 (60,640 B) stay cold. r106 / r107 / r10a use
+# nothing outside this set except 44 / 45 (cold). 20 clips, 225,184 B (86% of 262144).
+0
+2
+3
+6
+23
+31
+36
+47
+54
+55
+60
+88
+92
+99
+101
+106
+107
+108
+112
+113

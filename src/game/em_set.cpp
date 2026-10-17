@@ -522,7 +522,7 @@ static void aliveCapPark(int live)
     f32 bestD = 0.0f;
     u32 i;
 
-    if (live <= RE4DC_ALIVE_CAP || !aliveCapRoom() || !aliveCapParkRoom() || (u32) (pG->Frame_cnt - last) < 30) {
+    if (live <= RE4DC_ALIVE_CAP_N || !aliveCapRoom() || !aliveCapParkRoom() || (u32) (pG->Frame_cnt - last) < 30) {
         return;
     }
     for (i = 0; i < EmMgr.nArray; i++) {
@@ -616,7 +616,7 @@ extern "C" void re4dc_aliveCapMove(int busy)
     if (aliveCapN == 0 || busy || pPL == 0) {
         return;
     }
-    if ((u32) (pG->Frame_cnt - aliveCapLast) < 30 || aliveCapLive() >= RE4DC_ALIVE_CAP) {
+    if ((u32) (pG->Frame_cnt - aliveCapLast) < 30 || aliveCapLive() >= RE4DC_ALIVE_CAP_N) {
         return;
     }
     for (k = 0; k < aliveCapN; k++) {
@@ -669,7 +669,7 @@ extern "C" int re4dc_aliveCapDefer(int no, int id)
     if (aliveCapReleasing || !aliveCapGanado(id) || !aliveCapRoom() || aliveCapKeep(no)) {
         return 0;
     }
-    if (aliveCapLive() < RE4DC_ALIVE_CAP) {
+    if (aliveCapLive() < RE4DC_ALIVE_CAP_N) {
         return 0;
     }
     for (k = 0; k < aliveCapN; k++) {
@@ -731,6 +731,15 @@ void EmSetFromList()
         if (pG->room_no != (d->room & 0xFF)) {
             continue;
         }
+#if defined(RE4DC_ANIMALS_OFF) && RE4DC_ANIMALS_OFF
+        // ANIMALS_OFF (Makefile): the stage 1 ambient animals are not spawned (cows 0x26, chickens 0x28, the set-0 dog
+        // 0x21); the bear-trap dog (set 1) and the El Gigante dog (set 2) are scripted and stay.
+        if (pG->stage_no == 1 && (d->id == 0x26 || d->id == 0x28 || (d->id == 0x21 && d->set == 0))) {
+            d->be_flag &= ~1;
+            OSReport("animals off: r%03x entry 0x%02x id 0x%02x not spawned\n", (unsigned) d->room, (unsigned) i, (unsigned) d->id);
+            continue;
+        }
+#endif
         if (checkListId(i) == 0) {
             continue;
         }
@@ -744,11 +753,11 @@ void EmSetFromList()
         }
 #if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
         if (capLive >= 0 && aliveCapGanado(d->id)) {
-            if (capLive >= RE4DC_ALIVE_CAP && aliveCapN < (int) sizeof(aliveCapHeld)) {
+            if (capLive >= RE4DC_ALIVE_CAP_N && aliveCapN < (int) sizeof(aliveCapHeld)) {
                 aliveCapPush((int) i, 0);
 #if RE4DC_ALIVE_CAP_LOG
                 OSReport("alivecap: hold 0x%02x room %03x (live %d cap %d)\n", (int) i, (unsigned) pG->room_id,
-                         capLive, RE4DC_ALIVE_CAP);
+                         capLive, RE4DC_ALIVE_CAP_N);
 #endif
                 continue;
             }
