@@ -99,7 +99,11 @@ def main():
     # VRAM (coordinator/user rule 10-16: VQ room textures by default when it frees needed capacity, PSNR floor ~29 dB,
     # UI / text / alpha-critical stay 16-bit): dc/tex.pak = T15_DATA's pak (vq16w) + the pictures of vram/vq16-ch2.txt and
     # the castle lane's vram/vq16-c31.txt that this disc carries as 16-bit twiddled packages (192 at t15/int 4d85debc,
-    # PSNR >= 29.0) as full-codebook VQ (vram/vq16c-texpak.sh with a fixture built without this pak; LANE/vram/vqch2);
+    # PSNR >= 29.0) as full-codebook VQ (vram/vq16c-texpak.sh with a fixture built without this pak; LANE/vram/vqch2),
+    # then vram/vq16-r200t.txt (lane r200-17: the r200 source-world fallback pictures, approximation item) and
+    # vram/vq16-r200k.txt (the 2-3 end truck scene's 16-bit pictures), each vq16c-texpak.sh on the previous pak, then the
+    # ps2lib weapon effect pictures (test12fx/fx_ps2_pack.py pack --rooms wep01,wep09,wep10,wep13,wep14: EFF 0x22,
+    # 3a866b91 / 148d2ff5, PS2 wepXX.dat);
     # dc/resident.bin = resident_keys.py pack of every vram/resident/*.tsv, then water/water_resident.py pack of
     # water/resident/*.tsv (the water16i method; LANE/vram/res). Both are supersets of T15_DATA's, as ch2 comes last.
     for k, f in (('dc/tex.pak', LANE + '/vram/vqch2/tex-vq16c.pak'), ('dc/resident.bin', LANE + '/vram/res/resident.bin')):

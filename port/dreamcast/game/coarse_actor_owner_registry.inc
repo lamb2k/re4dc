@@ -69,7 +69,10 @@ static_assert(sizeof(nmr::Weight)==16,"package weight records");
 #ifndef RE4DC_NMR_BONES
 #define RE4DC_NMR_BONES 48
 #endif
-#if defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL
+#if defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL && defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
+#define RE4DC_NMR_CHUNKS 96  // NATIVE_MODEL_REGISTRY_ROLES5 (lane cast16): room packages of several pools (island soldiers
+                             // with accessories: 65..72 chunk refs; r227 em14 types 6..9: 71)
+#elif defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL
 #define RE4DC_NMR_CHUNKS 64  // NATIVE_MODEL_REGISTRY_POOL: a pool descriptor (one chunk per pool section) + a partner package
 #elif defined(RE4DC_NMR_PARTNER) && RE4DC_NMR_PARTNER
 #define RE4DC_NMR_CHUNKS 48  // PS2_ASHLEY_ROOMS: a room package + Ashley's partner package (r112: 14 + 21 chunks)
@@ -268,6 +271,9 @@ unsigned registry_why;
 // from the descriptor's bind accepted (rotation, translation), the last planned actor's position, and the scene table.
 struct RegistryCount { unsigned planned,admitted,would,declined,why[kRwCount];float bind_rotation,bind_translation,pos[3]; };
 RegistryCount registry_count[kRegDescriptors];
+#if defined(RE4DC_NMR_BIN_DIAG) && RE4DC_NMR_BIN_DIAG
+extern "C" void re4dc_nmr_bin_name(const cModelInfo*,unsigned);  // actor_lifetime.inc (NATIVE_MODEL_REGISTRY_BIN_DIAG)
+#endif
 unsigned registry_unbound_why[kRwCount];  // declines before a descriptor was chosen (shape / roles / skeleton)
 #endif
 #if RE4DC_NATIVE_MODEL_REGISTRY == 2
@@ -687,6 +693,15 @@ void registry_decline(const cModel* m,const Re4dcActorPlan* p,unsigned why) {
     const auto* desc=p?registry_descriptor(p->appearance):nullptr;
     if(desc) {auto& c=registry_count[desc-registry.descriptors];++c.declined;++c.why[why<kRwCount?why:0];}
     else ++registry_unbound_why[why<kRwCount?why:0];
+#if defined(RE4DC_NMR_BIN_DIAG) && RE4DC_NMR_BIN_DIAG
+    // NATIVE_MODEL_REGISTRY_BIN_DIAG: a registry actor that fails on its role rows names every source info (once per
+    // model, 24 models): NMRBIN lines (archive entry numbers of the BIN / TPL).
+    if(why==kRwRoles && m) {
+        static const cModel* named[24];static unsigned n_named;bool seen=false;
+        for(unsigned k=0;k<n_named;++k)if(named[k]==m)seen=true;
+        if(!seen && n_named<24) {named[n_named++]=m;for(auto* i=m->pModelInfo;i;i=i->pList)re4dc_nmr_bin_name(i,unsigned(m->id));}
+    }
+#endif
 }
 // Scene census: every model whose first OT pass reaches the transaction, by (id, ot_type, parts, infos) and outcome.
 enum SceneClass : unsigned { kScNative,kScCrowd,kScDeclined,kScRegistryDeclined,kScAbsent,kScWould,kScCount };

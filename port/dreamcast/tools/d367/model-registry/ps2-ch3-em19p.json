@@ -1,0 +1,78 @@
+{
+ "registry": "ps2-ch3-em19p",
+ "about": "lane cast16 (2026-10-16): castle Zealot em19 types [7, 8, 9] as POOL descriptors (zealot-em11-07p layout, own archive). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv3/regcast-em19",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit preset (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em19-07p",
+   "archive": "em19",
+   "model_id": "0x19",
+   "source_types": [
+    7
+   ],
+   "module": "src/em19/em19_set.cpp Em19Set type 7 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-07-hood",
+    "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-07-acc1",
+    "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-07-acc5"
+   }
+  },
+  {
+   "name": "zealot-em19-08p",
+   "archive": "em19",
+   "model_id": "0x19",
+   "source_types": [
+    8
+   ],
+   "module": "src/em19/em19_set.cpp Em19Set type 8 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-08-hood",
+    "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-08-acc1",
+    "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-08-acc5"
+   }
+  },
+  {
+   "name": "zealot-em19-09p",
+   "archive": "em19",
+   "model_id": "0x19",
+   "source_types": [
+    9
+   ],
+   "module": "src/em19/em19_set.cpp Em19Set type 9 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-09-hood",
+    "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-09-acc1",
+    "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-09-acc5"
+   }
+  }
+ ],
+ "room_packages": {
+  "20d": {
+   "descriptors": [
+    "zealot-em19-07p",
+    "zealot-em19-08p",
+    "zealot-em19-09p"
+   ],
+   "evidence": "ch3found16 census: r20d em19 plan G declined (GC)"
+  }
+ }
+}

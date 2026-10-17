@@ -599,6 +599,13 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     // as Del Lago's (model_registry.py source_drops "bump").
     if(registry && p->pool)implemented|=Bump;
 #endif
+#if defined(RE4DC_NMR_BUMP_FLAT) && RE4DC_NMR_BUMP_FLAT
+    // NATIVE_BUMP_FLAT (lane cast16 2026-10-16, coordinator decision): every registry plan meets the bump need without a
+    // bump stage. The source path draws none either (trans.cpp bumpSetup only reaches the GX stubs; model_bridge binds
+    // the colour texture alone), and model_registry.py admits a bump-material descriptor only with source_drops "bump".
+    // Covers the single-section castle / island descriptors (em1b / em1c type 10, em25, em2d, soldier bodies).
+    if(registry)implemented|=Bump;
+#endif
 #if RE4DC_NMR_CROW
     // PS2_CROW (Phase 2 A3, user decision 2026-10-11): a registry crow (em23, 0x23) draws no bump stage (as the source
     // path: bumpSetup only reaches the GX stubs) and its folded wing as the solid PS2 wing (the GC I4 mask pass and its

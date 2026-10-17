@@ -14,6 +14,10 @@
       dc/resident.bin: 16-byte records (u16 room, width, height, format; u32 crc, fnv), little endian, sorted by
       room then key, padded with room-0 records to whole 512-byte pieces (native_ui.cpp preload_resident reads
       32 records at a time). The room is the list's file name: r101.tsv -> 0x101.
+  resident_keys.py check <resident.bin> <list.tsv>...
+      Which listed rooms the packed file does not fully cover (lane r200-17, 10-16): a data set built from an older
+      tree or a partial list set (the ch4 lane's resident-ch3.bin listed 6 of r10f's 153 keys and missed r112's set,
+      so their r10f / r112 runs re-read 49 / 65 pictures from disc). Prints one line per short room; exit 1 if any.
 
 The lists are data: tools/d367/vram/resident/r<room>.tsv, checked in, regenerated from the benchmark and play
 logs of a room when its texture set changes. The runtime loads a listed key only while the preload's slot and byte
@@ -116,5 +120,31 @@ def cmd_pack(a):
     print('%s: %d records, %d bytes' % (out, len(recs), len(b)))
 
 
+def coverage(bin_path, tsvs):
+    """[(room, listed, packed_of_listed)] for every list whose keys the packed file does not all carry."""
+    b = Path(bin_path).read_bytes()
+    have = set()
+    for o in range(0, len(b) - 15, 16):
+        r, w, h, f, c, v = struct.unpack_from('<4H2I', b, o)
+        if r or w:   # room 0 with a size = a core key (CORE_PIN); room 0 without = padding
+            have.add((r, c, v))
+    short = []
+    for t in tsvs:
+        room = int(re.match(r'r([0-9a-f]+)', Path(t).stem).group(1), 16)
+        keys = [ln.split('\t')[0] for ln in Path(t).read_text().splitlines()[1:] if ln.strip()]
+        got = sum(1 for k in keys if (room, *(int(x, 16) for x in k.split('-'))) in have)
+        if got < len(keys):
+            short.append((room, len(keys), got))
+    return short
+
+
+def cmd_check(a):
+    short = coverage(a[0], a[1:])
+    for room, n, got in short:
+        print('resident check: r%03x lists %d keys, %s carries %d' % (room, n, a[0], got))
+    print('resident check: %d of %d lists short' % (len(short), len(a) - 1))
+    sys.exit(1 if short else 0)
+
+
 if __name__ == '__main__':
-    {'list': cmd_list, 'pack': cmd_pack}[sys.argv[1]](sys.argv[2:])
+    {'list': cmd_list, 'pack': cmd_pack, 'check': cmd_check}[sys.argv[1]](sys.argv[2:])
