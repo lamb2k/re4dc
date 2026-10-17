@@ -33,6 +33,27 @@
 #include "sscrn.h"
 #include "fade.h"
 #include "cSceObj.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH4) && RE4DC_ROUTE_MOVIES_CH4
+// ROUTE_MOVIES_CH4 (lane ch4found16 2026-10-16): the r227 entrance event s00 (QTE), s01 and s02 are (on the GameCube path their three evd files take
+// 2.5 MB of heap 4 at room entry) presented by the PS2 movies (BIO4MOV.AFS ->
+// tools/convert_route_movies.py, private dc/movie). While a movie owns the event no evd is read; the handler's
+// begin / end / skip modes run and the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md). A missing movie
+// falls back to the source event.
+#include "route_movie.h"
+#include "game.h"
+#define R227_ROUTE_MOVIES 1
+static int r227MovieOwns;
+#define R227_MOVIES_OWN() (re4dc_movie_available(0x22700))
+#else
+#define R227_ROUTE_MOVIES 0
+#endif
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x40)
+// PS2 USA r227 AEV 0x15 (absent from the GameCube AEV): type 4 event flag 64, trigger 2, the area that stops
+// r227_ps2SendTask's sends (Room_flg[2] bit 31). tools/d367/ps2ref/ps2roomdiff.py aev r227.
+#include "ps2_flag_area.h"
+static const AreaData r227Ps2Area15 =
+    {1, AREA_TYPE_XZ4, 0, {{62.50030517578125f, 12200.0f, 750.0f, {{-17054.796875f, -14550.2490234375f}, {17625.845703125f, -17427.841796875f}, {13212.7392578125f, 17864.34375f}, {-17192.916015625f, 17449.181640625f}}}}};
+#endif
 
 // Room 2-27 (D:/Bio4/Prog/r227.cpp): the entrance event, the cargo lift with its enemy waves and
 // falling crates, the gondola and the shelf items.
@@ -110,6 +131,9 @@ void R227Init()
 #line 57 "D:/Bio4/Prog/r227.cpp"
     R227Work*& wp = r227_work.p;
     wp = (R227Work*) MEM_CALLOC(sizeof(R227Work), 1, 0xD);
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x40)
+    re4dc_ps2FlagArea(&r227Ps2Area15, 64, 2, "r227 PS2 AEV 0x15");
+#endif
     if (pG->JumpPoint == 2) {
         RsfSet(G_ROOM_ID, 0);
         EmReadSearch(0x14, 0, 0);
@@ -132,12 +156,19 @@ void R227Init()
         EvtMgr.SetFunc("evt_r227s00_func", (void*) Evt_R227S00_Func);
         EvtMgr.SetFunc("evt_r227s01_func", (void*) Evt_R227S01_Func);
         EvtMgr.SetFunc("evt_r227s02_func", (void*) Evt_R227S02_Func);
+#if R227_ROUTE_MOVIES
+        r227MovieOwns = R227_MOVIES_OWN();
+        if (!r227MovieOwns) {
+#endif
         r227_work.p->evd[0] = DC.setData(EvtMgr.NameChange("evd/r227s00.evd"));
         r227_work.p->evd[0]->setCommand(CMND_MRAM_LOAD, 0, 0);
         r227_work.p->evd[1] = DC.setData(EvtMgr.NameChange("evd/r227s01.evd"));
         r227_work.p->evd[1]->setCommand(CMND_ARAM_LOAD, 0, 0);
         r227_work.p->evd[2] = DC.setData(EvtMgr.NameChange("evd/r227s02.evd"));
         r227_work.p->evd[2]->setCommand(CMND_ARAM_LOAD, 0, 0);
+#if R227_ROUTE_MOVIES
+        }
+#endif
     } else {
         r227_setEm1();
         if (RsfCheck(G_ROOM_ID, 6) == 0) {
@@ -600,9 +631,16 @@ static void r227_ps2SendTask()
     cEmWrap e5;
     cEmWrap e6;
     int step = 0;
+    int held = 0;
 
+    OSReport("ps2en: r227 send task start (alive %d)\n", SceCountEmAlive(0x10, 0x20));
     for (;;) {
+        if ((u32) SceCountEmAlive(0x10, 0x20) < 7 && (pG->Room_flg[2] & 0x80000000) && !held) {
+            held = 1;
+            OSReport("ps2en: r227 send held: player in area flag 64 (alive %d)\n", SceCountEmAlive(0x10, 0x20));
+        }
         if ((u32) SceCountEmAlive(0x10, 0x20) < 7 && !(pG->Room_flg[2] & 0x80000000)) {
+            OSReport("ps2en: r227 send 0x%02x (alive %d)\n", step == 0 ? 0xF7 : 0xF5, SceCountEmAlive(0x10, 0x20));
             if (step == 0) {
                 e5.setEm(0xF7, -1, 0, 1, 1);
                 if (e5.isAlive()) {
@@ -974,6 +1012,23 @@ static void r227_execEvent00()
     if (SmdGetObjPtr(0x9B)) {
         SmdGetObjPtr(0x9B)->be_flag &= ~2;
     }
+#if R227_ROUTE_MOVIES
+    // The QTE cut 0xB starts at PS2 picture 1220 and runs 55 game frames (cut 0xB maxFrame 54); the evd's
+    // StatusFlag 0x800 keeps the pose; r227_succeedAction sets Room_flg[0] bit 31 (pass -> s01, else s02).
+    if (r227MovieOwns) {
+        RouteMoviePlayQte(0x22700, ROUTE_MOVIE_SND_EVENT | ROUTE_MOVIE_KEEP_POSE, (RouteEvtFunc) Evt_R227S00_Func,
+                          0xB, 1220, 55);
+        pG->System_flg |= 0x400;
+        if ((int) pG->Room_flg[0] < 0) {
+            RouteMoviePlay(0x22701, ROUTE_MOVIE_SND_EVENT | ROUTE_MOVIE_KEEP_POSE, (RouteEvtFunc) Evt_R227S01_Func, 0);
+        } else {
+            // StatusFlag 0x100000 | 0x200 (EvtReadExec flags 2): the died demo at the end.
+            RouteMoviePlay(0x22702, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R227S02_Func, 0);
+            DiedemoExec(0, 1);
+            SceExit();
+        }
+    } else
+#endif
     if (r227_work.p->evd[0]->waitLoadOk() != 0) {
         u32 key0;
 
@@ -1013,8 +1068,14 @@ static void r227_execEvent00()
         SmdGetObjPtr(0x9B)->be_flag |= 2;
     }
     pG->System_flg &= ~0x400;
+#if R227_ROUTE_MOVIES
+    if (!r227MovieOwns) {
+#endif
     r227_work.p->evd[1]->setCommand(CMND_DEL_DATA, 0, 0);
     r227_work.p->evd[2]->setCommand(CMND_DEL_DATA, 0, 0);
+#if R227_ROUTE_MOVIES
+    }
+#endif
     SceEventEnd(0);
     r227_setEm1();
     SndBgmTblSet(0x227, 1);

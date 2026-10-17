@@ -157,6 +157,7 @@ void R223Init()
     r223_work.p->em[8].setEm(0xD3, 5, 1, 1, 1);
     r223_work.p->em[4].setEm(0xD7, 5, 1, 1, 1);
     r223_work.p->em[22].setEm(0xE1, -1, 1, 1, 1);
+    OSReport("ps2en: r223 start D4 D9 DB DA D2 D3 D7 E1 (alive %d)\n", SceCountEmAlive(0x10, 0x20));
 #else
     r223_work.p->em[0].setEm(0xD4, 5, 0, 1, 1);
     r223_work.p->em[2].setEm(0xD9, 5, 1, 1, 1);

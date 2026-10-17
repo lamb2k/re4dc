@@ -914,6 +914,13 @@ endif
 #                table's clear (trans_ot.cpp); ExecOt returns at once for an empty table and the model-asset
 #                walk (model_asset_bridge.cpp) skips tables without models. =2: both ways, compared ("OTM").
 GAME_OT_MASK ?= 0
+# OT_WALK_CHECK=1 (lane ch4found16 2026-10-16; debug arm, default 0): ExecOt checks each node and its func before the
+# call, reports the first bad one with the entry that links to it ("OTWC" log lines) and stops that table's walk
+# (src/game/trans_ot.cpp). For the r229 ExecOt fault; never in a release recipe.
+OT_WALK_CHECK ?= 0
+ifneq ($(OT_WALK_CHECK),0)
+$(OBJDIR)/src/game/trans_ot.o: GAME_CPPFLAGS += -DRE4DC_OT_WALK_CHECK=$(OT_WALK_CHECK)
+endif
 ifneq ($(GAME_OT_MASK),0)
 GAME_CPPFLAGS += -DRE4DC_OT_MASK=$(GAME_OT_MASK)
 PLATFORM_CPPFLAGS += -DRE4DC_OT_MASK=$(GAME_OT_MASK)

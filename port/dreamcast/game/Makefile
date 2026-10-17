@@ -1567,6 +1567,20 @@ endif
 ROUTE_MOVIE_GAME_CH3 = $(OBJDIR)/mod/st2_0/src/st2/r201.o $(OBJDIR)/mod/st2_0/src/st2/r203.o     $(OBJDIR)/mod/st2_1/src/st2/r204.o $(OBJDIR)/mod/st2_1/src/st2/r206.o $(OBJDIR)/mod/st2_1/src/st2/r209.o     $(OBJDIR)/mod/st2_1/src/st2/r20b.o
 $(ROUTE_MOVIE_GAME_CH3): GAME_CPPFLAGS += -DRE4DC_ROUTE_MOVIES_CH3=1
 endif
+# ROUTE_MOVIES_CH4=1 (lane ch4found16 2026-10-16; default 0: no effect; needs ROUTE_MOVIES=1 ROUTE_CH41=1): the chapter 4
+# castle events are presented by their PS2 movies (BIO4MOV.AFS -> tools/convert_route_movies.py, private dc/movie):
+# r212 s00, r214 s00, r215 s00 (QTE cut 0xA, cancel clip s00c) / s01 / s02 (died demo), r227 s00 (QTE cut 0xB, cancel
+# clip s00c) / s01 / s02 (died demo), r228 s00 / s01 / s02. The GameCube r227 entrance events took 2.5 MB of heap 4 at
+# room entry; r212s00 r214s00 r215s00..02 r227s02 r228s02 do not pass the event texture converter. Every gameplay effect
+# of the callers runs unchanged and a missing movie falls back to the source event (src/st2/*.cpp).
+ROUTE_MOVIES_CH4 ?= 0
+ifneq ($(ROUTE_MOVIES_CH4),0)
+ifneq ($(ROUTE_MOVIES_CH4)$(ROUTE_MOVIES)$(ROUTE_CH41),111)
+$(error ROUTE_MOVIES_CH4 must be 0 or 1 and needs ROUTE_MOVIES=1 ROUTE_CH41=1)
+endif
+ROUTE_MOVIE_GAME_CH4 = $(OBJDIR)/mod/st2_2/src/st2/r212.o $(OBJDIR)/mod/st2_2/src/st2/r214.o $(OBJDIR)/mod/st2_2/src/st2/r215.o     $(OBJDIR)/mod/st2_3/src/st2/r227.o $(OBJDIR)/mod/st2_3/src/st2/r228.o
+$(ROUTE_MOVIE_GAME_CH4): GAME_CPPFLAGS += -DRE4DC_ROUTE_MOVIES_CH4=1
+endif
 # ROUTE_MOVIE_DIAG=1: test builds log the movie loop's per-picture timing and the failing step.
 #   2/3/4 are test-only proofs of the route movie VRAM claim (platform/native_ui.cpp; 0 and 1 compile
 #   them out): 2 = the movie claim's normal pass releases nothing, so only its fallback (end this
@@ -1653,7 +1667,7 @@ $(OBJDIR)/route-movies.h: route-movies-force
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 ROUTE_MOVIE_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/pad.o
-ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3)
+ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3) $(ROUTE_MOVIE_GAME_CH4)
 $(ROUTE_MOVIE_PLATFORM) $(ROUTE_MOVIE_GAME): $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/route-movies.h
