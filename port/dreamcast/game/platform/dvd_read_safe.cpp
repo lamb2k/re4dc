@@ -981,6 +981,9 @@ extern "C" int __wrap_cdrom_read_sectors_ex(void* buffer, uint32_t sector, size_
 #if RE4DC_DISC_READ_METER
     DiscMeterScope meter(cnt * 2048, true);
 #endif
+#if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG
+    re4dc_log("DRL: S sec=%u n=%u thr=%s\n", (unsigned) sector, (unsigned) cnt, thd_current ? thd_current->label : "-");
+#endif
 #if RE4DC_DISC_READ_FALLBACK == 2
     return v2::read(buffer, sector, cnt, dma);
 #endif
@@ -1070,6 +1073,9 @@ extern "C" int __wrap_cdrom_stream_start(int sector, int cnt, bool dma)
 {
 #if RE4DC_DISC_READ_METER
     DiscMeterScope meter(0, false);
+#endif
+#if defined(RE4DC_DISC_READ_LOG) && RE4DC_DISC_READ_LOG
+    re4dc_log("DRL: T sec=%d n=%d thr=%s\n", sector, cnt, thd_current ? thd_current->label : "-");
 #endif
 #if RE4DC_DVD_STUCK_TEST
     stuck_test();

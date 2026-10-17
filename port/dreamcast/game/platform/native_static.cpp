@@ -2329,7 +2329,7 @@ struct MeshDraw : Emitter {
             const std::uint8_t* const mark=s;std::uint32_t* q=sq;const std::uint32_t* const qmark=q;
             unsigned culled=0,emitted=0;
             s=re4dc::vp::walk_lean(s,end,outcodes,cache,limit,q,culled,emitted);
-#if defined(RE4DC_TA_HASH) && RE4DC_TA_HASH
+#if defined(RE4DC_TA_HASH) && RE4DC_TA_HASH && RE4DC_TA_HASH != 4
             // TA_HASH (test builds): walk_lean writes the store queues itself, so the run is walked again here
             // and every emitted strip's words are hashed as emit_sq() hashes them (EOL in the last flags word).
             // Every strip in [mark, s) was culled or emitted (walk_lean stops before a clip strip).
