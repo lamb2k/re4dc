@@ -97,6 +97,11 @@ namespace {
 constexpr float kNear = 40.0f;         // clip plane, mm in front of the eye
 #ifdef RE4DC_FAR_CAP
 constexpr float kFar = float(RE4DC_FAR_CAP); // FOG_FAR_CAP (post30.mk, look study): follows FOG_FAR
+#elif defined(RE4DC_LAKE_FAR) && RE4DC_LAKE_FAR
+}  // namespace
+extern "C" float re4dc_far_cap(float cap);   // platform/native_static.cpp (LAKE_FAR): the lake rooms' far
+namespace {
+#define kFar re4dc_far_cap(25000.0f)
 #else
 constexpr float kFar = 25000.0f;       // block cull distance (FOG_FAR: opaque fog there)
 #endif
