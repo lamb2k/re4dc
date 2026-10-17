@@ -4896,6 +4896,18 @@ static void primWaterFrame()
     }
 }
 #endif
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
+// OT_WALK_CHECK (lane ch4found16, debug arm): every GetPrimBuff slot is tagged (address, size, frame, caller) in a
+// 2048-entry ring, and every buffer flip (SetPrimBuffPtr) too (size 0, caller = the new start), so the ExecOt check
+// can name the allocations that cover a bad node (trans_ot.cpp re4dc_otwc_report).
+struct Re4dcPrimTag { u32 addr, size, frame, caller; };
+extern "C" { Re4dcPrimTag re4dc_prim_tags[2048]; u32 re4dc_prim_tag_n; }
+static inline void re4dc_prim_tag(const void* a, u32 size, u32 caller)
+{
+    Re4dcPrimTag& t = re4dc_prim_tags[re4dc_prim_tag_n++ & 2047];
+    t.addr = (u32) a; t.size = size; t.frame = pG->Frame_cnt; t.caller = caller;
+}
+#endif
 void SetPrimBuffPtr()
 {
 #if RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER
@@ -4922,6 +4934,9 @@ void SetPrimBuffPtr()
     gx->prim = (u8*) pG->prim_cnt + pG->nPrim * pG->vtx_buf_no;
 #if RE4DC_PRIM_WATER
     primw_start = gx->prim;
+#endif
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
+    re4dc_prim_tag(gx->prim, 0, pG->nPrim | (u32) pG->vtx_buf_no << 31);
 #endif
 }
 
@@ -4950,6 +4965,9 @@ void* GetPrimBuff(int size)
         return 0;
     }
     gx->prim = next;
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
+    re4dc_prim_tag(p, (u32) size, (u32) __builtin_return_address(0));
+#endif
     return p;
 }
 

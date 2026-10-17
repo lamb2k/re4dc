@@ -918,11 +918,22 @@ endif
 #                walk (model_asset_bridge.cpp) skips tables without models. =2: both ways, compared ("OTM").
 GAME_OT_MASK ?= 0
 # OT_WALK_CHECK=1 (lane ch4found16 2026-10-16; debug arm, default 0): ExecOt checks each node and its func before the
-# call, reports the first bad one with the entry that links to it ("OTWC" log lines) and stops that table's walk
-# (src/game/trans_ot.cpp). For the r229 ExecOt fault; never in a release recipe.
+# call (node and func pointers; data is opaque), reports the first bad one with the entry that links to it ("OTWC" log
+# lines) and the GetPrimBuff slots that cover them (trans.cpp tags each slot: frame, caller) and stops that table's
+# walk (src/game/trans_ot.cpp); a fault names the entry being called (fault.cpp). For the r229 ExecOt fault; never in
+# a release recipe.
 OT_WALK_CHECK ?= 0
 ifneq ($(OT_WALK_CHECK),0)
-$(OBJDIR)/src/game/trans_ot.o: GAME_CPPFLAGS += -DRE4DC_OT_WALK_CHECK=$(OT_WALK_CHECK)
+$(OBJDIR)/src/game/trans_ot.o $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_OT_WALK_CHECK=$(OT_WALK_CHECK)
+$(OBJDIR)/platform/fault.o: PLATFORM_CPPFLAGS += -DRE4DC_OT_WALK_CHECK=$(OT_WALK_CHECK)
+endif
+# OT_PRIM_BUFFERS=2 (lane ch4found16 2026-10-16; experiment, default 1 = image unchanged): the GameCube's two primitive
+# buffers (one per frame, flipped by SetPrimBuffPtr) instead of the port's one (native_primitive.h). Twice the room's
+# primitive buffer in heap 4. A discriminator for the r229 OT corruption: a writer through a previous frame's
+# primitive pointer hits this frame's OT nodes with one buffer, the idle half with two.
+OT_PRIM_BUFFERS ?= 1
+ifneq ($(OT_PRIM_BUFFERS),1)
+$(OBJDIR)/src/game/game.o $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PRIMITIVE_BUFFERS=$(OT_PRIM_BUFFERS)
 endif
 ifneq ($(GAME_OT_MASK),0)
 GAME_CPPFLAGS += -DRE4DC_OT_MASK=$(GAME_OT_MASK)
