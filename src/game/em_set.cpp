@@ -841,6 +841,10 @@ cEm* EmSetEvent(EmListData* d)
     }
     EM_SET_WORK(em, d, 0xFF);
     d->be_flag = 7;
+#if defined(RE4DC_ALIVE_CAP_LOG) && RE4DC_ALIVE_CAP_LOG
+    OSReport("alivecap: event set id 0x%02x room %03x frame %u%c", (unsigned) d->id, (unsigned) pG->room_id,
+             (unsigned) pG->Frame_cnt, 10);
+#endif
     EmSetDist(em);
     em->l_sub = 1.0e16f;
     em->move();
