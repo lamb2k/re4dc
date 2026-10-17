@@ -182,7 +182,14 @@ T15_PB=${T15_PB-PRIM_BUF_KB=432}
 #      the room REL, and the sub screen high pools go to the top of heap 4. Restores the 4 spawns h2 lost at tick 658 on
 #      the ch2 recipe (GC and test 16 spawn them all). T15_SO="" builds the control. Docs: CH3-FOUNDATIONS-20261016.md.
 T15_SO=${T15_SO-STAGE_OVL=1 SS_POOL_TOP=1}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO"
+#   AC ANIMALS_OFF=1 + cap 4 (test 16.1 hotfix and test 17, user 10-17: "Get rid of them asap" (the ambient farm animals: cows,
+#      chickens, the r103 farm dog; no eggs from chickens) and "lets do cap 4 for the zombies": at most 4 Ganados alive
+#      at once in every room, more arrive as they die; the documented cap exceptions stay). CHANGES GAMEPLAY by design,
+#      gated by gameplay equivalence (doors, kills, waves, triggers, room clears), not STRICT. ALIVE_CAP=4 replaces
+#      PS2_CH1_ENEMY's default 6 and R101_ALIVE_CAP must equal it. T15_AC="" builds test 16 (cap 6, animals).
+#      ANIMALSOFF-20261017.md.
+T15_AC=${T15_AC-ANIMALS_OFF=1 ALIVE_CAP=4 R101_ALIVE_CAP=4}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"
