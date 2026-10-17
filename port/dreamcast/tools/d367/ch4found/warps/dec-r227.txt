@@ -1,0 +1,13 @@
+name dec-r227
+# ch4found16 decisions: PS2_CH4_ENEMY r227 send task, held inside PS2 AEV 0x15 (flag 64), then Leon outside
+room 0x227
+pos 11655 63 -103
+ang -1.7210
+inv default
+rsf 0x227 0 8
+god
+alivelog 300
+kill 0x14 300 0x227
+killrep 14 90
+goto 1200 16500 63 -103
+dump

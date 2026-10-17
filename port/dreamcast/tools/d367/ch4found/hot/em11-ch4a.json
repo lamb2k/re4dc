@@ -1,0 +1,61 @@
+{
+ "source_complete": false,
+ "profile": "run-derived hot set: chapter 4 em11 (r226 dec3 kill rig + B3/B5, r222 / r212 kill rigs; ch4found16 z1, Flycast, MOTION_COLD_POOL_CASTLE=131072); trimmed to clips that missed >= 2 times (the slab-cycling set)",
+ "union": {
+  "source_arc_indices": [
+   5,
+   57,
+   61,
+   103,
+   115,
+   215,
+   216
+  ]
+ },
+ "runs": [
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/ch4found-20261016/h-cxc4zmW/scenarios/cx-r226-walk-z1/capture/run-output.txt",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/ch4found-20261016/h-cxc4zmW/scenarios/cx-r222-walk-z1/capture/run-output.txt",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/ch4found-20261016/h-cxc4zmW/scenarios/cx-r212-walk-z1/capture/run-output.txt"
+ ],
+ "contract": "em11-source-motion-cache-v2",
+ "source_sha256": "116f3dbaf83f29d068db2b90a83959ba352c5ce8ed0127ba909972d74a025429",
+ "clips": {
+  "5": {
+   "entry": 0,
+   "bytes": 22400,
+   "misses": 3
+  },
+  "57": {
+   "entry": 23,
+   "bytes": 13216,
+   "misses": 2
+  },
+  "61": {
+   "entry": 25,
+   "bytes": 10016,
+   "misses": 7
+  },
+  "103": {
+   "entry": 47,
+   "bytes": 19648,
+   "misses": 2
+  },
+  "115": {
+   "entry": 54,
+   "bytes": 17696,
+   "misses": 2
+  },
+  "215": {
+   "entry": 89,
+   "bytes": 14528,
+   "misses": 7
+  },
+  "216": {
+   "entry": 90,
+   "bytes": 16160,
+   "misses": 6
+  }
+ },
+ "hot_payload_bytes": 113664,
+ "cold_clips": 144
+}

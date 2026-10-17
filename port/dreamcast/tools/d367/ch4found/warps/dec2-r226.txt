@@ -1,0 +1,13 @@
+name dec2-r226
+# ch4found16 decisions: PS2_CH4_ENEMY r226, rsf 9, Leon moved into PS2 AEV 0x28 (flag 71) early, kills from frame 120
+room 0x226
+pos -3507 5000 21665
+ang 3.0630
+inv default
+rsf 0x226 9
+god
+alivelog 150
+goto 100 0 5000 -1000
+kill 0x11 120 0x226
+killrep 12 30
+dump

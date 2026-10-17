@@ -430,6 +430,15 @@ static int aliveCapParkRoom()
     case 0x208: case 0x209: case 0x20A: case 0x20B: case 0x20C: case 0x20D: case 0x20E: case 0x20F:
         return 0;
 #endif
+#if defined(RE4DC_PS2_CH4_ENEMY) && RE4DC_PS2_CH4_ENEMY
+    // PS2_CH4_ENEMY: the castle chapter 4 rooms (r210..r22b, r201 / r206 revisits are chapter 3 cases above) keep
+    // cEmWrap pointers of their sends (r216 armors, r223 em[], r226 em[], r227 elevator / far-side wraps): hold only.
+    case 0x210: case 0x211: case 0x212: case 0x213: case 0x214: case 0x215: case 0x216: case 0x217:
+    case 0x218: case 0x219: case 0x21A: case 0x21B: case 0x21C: case 0x21D: case 0x21E: case 0x21F:
+    case 0x220: case 0x221: case 0x222: case 0x223: case 0x224: case 0x225: case 0x226: case 0x227:
+    case 0x228: case 0x229: case 0x22A: case 0x22B: case 0x22C:
+        return 0;
+#endif
     }
     return 1;
 }

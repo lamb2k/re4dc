@@ -110,15 +110,17 @@ endif
 #              (the water ordering table) every frame, so before this Leon went to the GameCube body for the whole
 #              room (cx32c r205: LEONGC why=4, NMRS id=00 ot=5 declined 1199/1200). The native path draws its own TA
 #              lists, so ot 5 is drawn as the ot 0 ride case already is: one pass, every part.
+#   =2 (lane ch4found16 2026-10-16): also ot_type 1, which R219Init sets for the player for the whole room (cxc4amW
+#              r219: LEONGC why=4, NMRS id=00 ot=1 declined 600/600); =1 images are unchanged.
 LEON_OT_WATER ?= 0
-ifeq ($(filter $(LEON_OT_WATER),0 1),)
-$(error LEON_OT_WATER must be 0 or 1)
+ifeq ($(filter $(LEON_OT_WATER),0 1 2),)
+$(error LEON_OT_WATER must be 0, 1 or 2)
 endif
-ifeq ($(LEON_OT_WATER),1)
+ifneq ($(LEON_OT_WATER),0)
 ifneq ($(LEON_HAND_POSES),1)
 $(error LEON_OT_WATER needs LEON_HAND_POSES=1)
 endif
-$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_OT_WATER=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_OT_WATER=$(LEON_OT_WATER)
 endif
 # LEON_HAND_PACK=1 (issue #26 follow-up, 2026-10-13; default 0: no effect; render only; needs LEON_HAND_POSES=1, PS2_LEON=1,
 #              ACTOR_PL08=1, no LEON_HAND_DIR): the hands with no image growth. Every hand pose of the outfit, the

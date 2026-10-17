@@ -1,0 +1,11 @@
+name dec-r21b
+# ch4found16 decisions at cap 4: r21b kill rig on em15 (Codex r21b walk entry), god
+room 0x21b
+pos -231777 -4282 -43995
+ang 1.3660
+inv default
+god
+alivelog 300
+kill 0x15 300 0x21b
+killrep 14 90
+dump

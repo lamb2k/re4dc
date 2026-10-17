@@ -1,0 +1,9 @@
+name vq-r104
+# ch4found16 VQ c42 check: r104 (registry lists em13/em14 keys)
+room 0x104
+pos 27604 -72 -27727
+ang 2.0026
+inv default
+god
+act 30 fwd 20
+dump

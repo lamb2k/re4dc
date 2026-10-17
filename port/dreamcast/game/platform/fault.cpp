@@ -44,6 +44,9 @@ extern "C" void re4dc_crash_screen_halt(const char* file, int line);
 extern "C" void re4dc_crash_screen_context(const irq_context_t* ctx);
 #endif
 #endif
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
+extern "C" void re4dc_otwc_fault();
+#endif
 static void onFault(irq_t code, irq_context_t* ctx, void* data)
 {
     (void) data;
@@ -61,6 +64,9 @@ static void onFault(irq_t code, irq_context_t* ctx, void* data)
                   (unsigned long) ctx->r[i + 1], i + 2, (unsigned long) ctx->r[i + 2], i + 3,
                   (unsigned long) ctx->r[i + 3]);
     }
+#if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK
+    re4dc_otwc_fault();  // trans_ot.cpp: the ExecOt entry being called, if any
+#endif
     re4dc_set_stage(0xDEAD0000ul | (unsigned long) code);
 #if RE4DC_VMU_DEBUG_SLOT
     re4dc_dbgslot_ring(3, (unsigned) ctx->pc, (unsigned) ctx->pr);  // kept in RAM for the next debug save

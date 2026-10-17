@@ -39,6 +39,15 @@ class cObjWep;
 #include "math_sub.h"
 #include "motion.h"
 #include "eprintf.h"
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x20)
+// PS2 USA r226 AEV 0x28 / 0x29 (absent from the GameCube AEV): type 4 event flags 71 / 72, the two places R226Main's
+// PS2 reinforcement block tests (Room_flg[2] 0x01000000 / 0x00800000). tools/d367/ps2ref/ps2roomdiff.py aev r226.
+#include "ps2_flag_area.h"
+static const AreaData r226Ps2Area[2] = {
+    {1, AREA_TYPE_XZ4, 0, {{4241.625f, 8453.5244140625f, 750.0f, {{-8605.07421875f, -7034.826171875f}, {8689.6650390625f, -7201.412109375f}, {7795.22900390625f, 4543.69677734375f}, {-8257.4501953125f, 5554.0966796875f}}}}},
+    {1, AREA_TYPE_XZ4, 0, {{3974.9169921875f, 9116.7734375f, 750.0f, {{-7966.78564453125f, -37051.73828125f}, {8962.16796875f, -37038.078125f}, {8992.24609375f, -25312.625f}, {-7736.45263671875f, -25386.51953125f}}}}},
+};
+#endif
 #include "db_log.h"
 
 // Room 2-26 (D:/Bio4/Prog/r226.cpp): the giant statue (cObjRobo) chase - the passage switches, the
@@ -242,6 +251,10 @@ void R226Init()
 #line 99 "D:/Bio4/Prog/r226.cpp"
     wp = (R226Work*) MEM_CALLOC(sizeof(R226Work), 1, 0xd);
     PSetRobo(wp->robo, NULL);
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x20)
+    re4dc_ps2FlagArea(&r226Ps2Area[0], 71, 1, "r226 PS2 AEV 0x28");
+    re4dc_ps2FlagArea(&r226Ps2Area[1], 72, 1, "r226 PS2 AEV 0x29");
+#endif
     if (pG->JumpPoint == 1) {
         int n;
 
@@ -443,6 +456,27 @@ void R226Main()
         pG->Room_flg[1] |= 0x20000000;
         playerRunDieSet(0, 1);
     }
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x20)
+    // PS2 USA R226Main (st2_3 0x1a07c..0x1a200; runs when neither die branch above fired): after the statue is
+    // awake (Rsf 9), while the player is in area flag 71 or 72 (Room_flg[2] 0x01000000 / 0x00800000, per frame)
+    // and fewer than 11 are alive, the chase Ganados 0xB3 (em[3]) and then 0xB5 (em[5]) are sent once more (each
+    // only if dead-checked clear), latched by the PS2-only Rsf bits 18 / 19 and closed by Rsf 20. GameCube: none.
+    else if (RsfCheck(G_ROOM_ID, 20) == 0 && RsfCheck(G_ROOM_ID, 9) != 0 &&
+             (pG->Room_flg[2] & 0x01800000) != 0 && SceCountEmAlive(0x10, 0x20) < 11) {
+        if (RsfCheck(G_ROOM_ID, 18) == 0) {
+            cEmWrapSetEmI(&r226_work.p->em[3], 0xB3, -1, 0, 1, 1);
+            r226_work.p->em[3].setNoSuspend(0);
+            RsfSet(G_ROOM_ID, 18);
+            OSReport("ps2en: r226 send 0xb3 (alive %d, area flags %08x)\n", SceCountEmAlive(0x10, 0x20), pG->Room_flg[2]);
+        } else if (RsfCheck(G_ROOM_ID, 19) == 0) {
+            cEmWrapSetEmI(&r226_work.p->em[5], 0xB5, -1, 0, 1, 1);
+            r226_work.p->em[5].setNoSuspend(0);
+            RsfSet(G_ROOM_ID, 19);
+            RsfSet(G_ROOM_ID, 20);
+            OSReport("ps2en: r226 send 0xb5 (alive %d, area flags %08x)\n", SceCountEmAlive(0x10, 0x20), pG->Room_flg[2]);
+        }
+    }
+#endif
 }
 
 // One frame in: set the 13 chase enemies from the list.

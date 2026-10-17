@@ -27,6 +27,19 @@
 #include "fade.h"
 #include "TexRender.h"
 #include "db_log.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && defined(RE4DC_ROUTE_MOVIES_CH4) && RE4DC_ROUTE_MOVIES_CH4
+// ROUTE_MOVIES_CH4 (lane ch4found16 2026-10-16): r228 s00, s01 and s02 are presented by the PS2 movies (BIO4MOV.AFS ->
+// tools/convert_route_movies.py, private dc/movie). While a movie owns the event no evd is read; the handler's
+// begin / end / skip modes run and the rest of the source is unchanged (docs/ROUTE_CUTSCENES.md). A missing movie
+// falls back to the source event.
+#include "route_movie.h"
+#include "game.h"
+#define R228_ROUTE_MOVIES 1
+static int r228MovieOwns;
+#define R228_MOVIES_OWN() (re4dc_movie_available(0x22800))
+#else
+#define R228_ROUTE_MOVIES 0
+#endif
 
 // Room 2-28 (D:/Bio4/Prog/r228.cpp): Salazar's throne room; the s00/s01/s02 event chain, the
 // boss fight and the render-to-texture setup.
@@ -242,6 +255,18 @@ static void r228_execEvent00()
 
     RsfSet(G_ROOM_ID, 0);
     SceEventStart(0);
+#if R228_ROUTE_MOVIES
+    // A skip (mode 3) sets Room_flg[0] bit 31, which ends the chain as on the source path.
+    if (r228MovieOwns) {
+        RouteMoviePlay(0x22800, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R228S00_Func, 0);
+        if ((int) pG->Room_flg[0] >= 0) {
+            RouteMoviePlay(0x22801, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R228S01_Func, 0);
+            if ((int) pG->Room_flg[0] >= 0) {
+                RouteMoviePlay(0x22802, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R228S02_Func, 0);
+            }
+        }
+    } else {
+#endif
     EvtMgr.EvtReadExec("event/evd/r228s00.evd", 0, 0);
     if ((int) pG->Room_flg[0] >= 0) {
         EvtMgr.EvtReadExec("event/evd/r228s01.evd", 0, 0);
@@ -249,6 +274,9 @@ static void r228_execEvent00()
             EvtMgr.EvtReadExec("event/evd/r228s02.evd", 0, 0);
         }
     }
+#if R228_ROUTE_MOVIES
+    }
+#endif
     SceEventEnd(0);
     EstSet(0, -1, 0, 0, 1, 2, 0x801, (u8) r228_work.p->eff2, (u32) zero, zero);
     SceAtSetEnable(8, 1);
@@ -295,6 +323,10 @@ void r228_initEvent00()
     r228_work.p->obj77 = SmdGetObjPtr(0x77);
     PSet(r228_work.p->obj79, SmdGetObjPtr(0x79));
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
+#if R228_ROUTE_MOVIES
+        r228MovieOwns = R228_MOVIES_OWN();
+        if (!r228MovieOwns)
+#endif
         EvtMgr.EvtReadMram("event/evd/r228s00.evd", 0, 0, 0, 0);
         SceAtDataSet_exec(7, SCE_LEVEL10, 0, (TaskFunc) r228_execEvent00, 0, 1);
         SceAtSetEnable(8, 0);
