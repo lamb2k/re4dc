@@ -121,6 +121,9 @@ extern "C" unsigned re4dc_coarse_world_room();   // coarse.cpp: coarse_world.h k
 // WORLD_VERT (lane worldvert): the wanted wholesale world level (0 = the source package), set by WORLD_VERT_LEVEL or at
 // open time. This POC does not expose the unqualified in-place runtime swap.
 static unsigned world_vert_level=RE4DC_WORLD_VERT_LEVEL;
+// lane batch17 (console A/B disc, DBG_WARP builds): the warp line `wvlevel <n>` sets the level read at the NEXT world open
+// (a scene armed from a soft reset opens the room's package again). No in-place swap of a resident package.
+extern "C" void re4dc_world_vert_set(unsigned level){world_vert_level=level;}
 #endif
 static constexpr unsigned kClipOnce=16; // MESH_CLIP_LEAN: longer clipped strips take the per-triangle path
 #if defined(RE4DC_MESH_CLIP_ACCEPT) && RE4DC_MESH_CLIP_ACCEPT==2

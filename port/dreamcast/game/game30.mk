@@ -2891,6 +2891,8 @@ ifneq ($(WORLD_VERT),1)
 $(error WORLD_VERT must be 0 or 1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_VERT=1 -DRE4DC_WORLD_VERT_LEVEL=$(WORLD_VERT_LEVEL)
+# lane batch17: DBG_WARP builds read a `wvlevel <n>` warp line (the level of the next world open; console A/B disc).
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_WORLD_VERT=1
 endif
 
 # PS2_STRIP_GROUPS=1 (native_static.cpp, render only, default 0; lane objs 2026-10-15): reads dc/native/rNNN/
