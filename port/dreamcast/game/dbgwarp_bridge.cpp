@@ -44,6 +44,7 @@
 //   act <frame> <a|b|x|y|start|fwd|back|none|0xMASK> <hold> | arm <frame> <item id> | trg <no> <frame> [room] | kill <id> <frame> [room [kind]] |
 //   killrep <count> <gap> | killpart <partsNo> (every kill hit on that hit box; 5 = the head, so the kill loses it) |
 //   killnear (each kill target is the live enemy nearest Leon) | handpose <frame> <type> <id> (cEm10::setHand, both hands) |
+//   bring <distance> [side] (the handpose / kill target moved that far in front of Leon, side to his right: still pairs) |
 //   goto <frame> x y z [ang] | dump | name <preset> | late <mask> [tick] [room] (warp_late.h) | entry <n> |
 //   radio <frame> <call no 0..23> (source radio replay, resource-lifetime test only)
 //   god (Leon's life refilled every frame) | alert <frame> (the crowd hunts Leon from that frame of its entry)
@@ -201,6 +202,8 @@ struct Warp {
     // the two infos the same way (ModInfoMgr.create + cModel::swapModelInfo) and leaves Hand_type alone: the routine's
     // own em10HandSet(em, 0) sees no change and keeps the pose (setHand does not touch Hand_type either).
     bool has_hand, hand_done;
+    u32 bring;  // `bring <distance> [side]` (still pairs): the handpose / kill target is moved this far in front of Leon
+    s32 bring_side;  // (and `side` to his right), facing him
     u32 hand_frame;
     int hand_type, hand_id;
     u32 alive_period, alive_last;  // `alivelog <period>`
@@ -423,6 +426,9 @@ void load()
             wp.hand_frame = num(tok[1]);
             wp.hand_type = (int) num(tok[2]);
             wp.hand_id = (int) num(tok[3]);
+        } else if (!strcmp(k, "bring") && n >= 2) {
+            wp.bring = num(tok[1]);
+            wp.bring_side = n >= 3 ? (s32) strtol(tok[2], nullptr, 0) : 0;
         } else if (!strcmp(k, "killnear")) {
             wp.kill_near = true;
         } else if (!strcmp(k, "killpart") && n >= 2) {
@@ -675,6 +681,13 @@ void kill_poll()
                   live && em->pModelInfo ? (unsigned) em->pModelInfo->colorWord : 0u);
     }
     if (wp.has_hand && !wp.hand_done && wp.room_frames >= wp.hand_frame && pPL) {
+        auto bring = [](cEm* e) {
+            if (!wp.bring || !pPL) return;
+            const f32 a = pPL->ang.y, d = (f32) wp.bring;
+            e->pos.x = pPL->pos.x + __builtin_sinf(a) * d - __builtin_cosf(a) * (f32) wp.bring_side;
+            e->pos.z = pPL->pos.z + __builtin_cosf(a) * d + __builtin_sinf(a) * (f32) wp.bring_side;
+            e->ang.y = a + 3.14159265f;
+        };
         cEm* best = nullptr;
         f32 best_d = 1e30f;
         for (cEm* e = EmMgr.getEmPtr(wp.hand_id, 0); e; e = EmMgr.getEmPtr(wp.hand_id, e)) {
@@ -684,6 +697,7 @@ void kill_poll()
         }
         if (best) {
             wp.hand_done = true;
+            bring(best);
             if (wp.hand_type == 2 || wp.hand_type == 4) {
                 cEm10* em = static_cast<cEm10*>(best);
                 Em10Work* w = EM10_WK(em);
@@ -733,6 +747,12 @@ void kill_poll()
         if (!em) return;  // not placed yet: keep looking
         wp.kill_cur = em->id;
         wp.kill_em = em;
+        if (wp.bring && pPL) {
+            const f32 a = pPL->ang.y, d = (f32) wp.bring;
+            em->pos.x = pPL->pos.x + __builtin_sinf(a) * d - __builtin_cosf(a) * (f32) wp.bring_side;
+            em->pos.z = pPL->pos.z + __builtin_cosf(a) * d + __builtin_sinf(a) * (f32) wp.bring_side;
+            em->ang.y = a + 3.14159265f;
+        }
         snprintf(what, sizeof(what), "kill 0x%02x fired in %03x at room frame %u hp=%d", (unsigned) wp.kill_cur,
                  (unsigned) pG->room_id, (unsigned) wp.room_frames, (int) em->hp);
         stamp(what);
