@@ -20,7 +20,7 @@ struct SourceWorldFrame {
     bool active=false,ready=false,started=false,failed=false;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     unsigned role=0,system=0,stop=0,disp=0,used=0,consumed=0,member_reason=0;
-    bool coarse=false,withheld=false,committed=false,guarded=false;
+    bool coarse=false,withheld=false,committed=false,guarded=false,sealed=false;
     unsigned proven=0; // TRANSITION_OWNER: native frame whose first owned callback passed the full revalidation
     unsigned sample=~0U,anchor=~0U;bool uv_valid[2]{};float uv[2][2]{};
     cModel* group[kSourceWorldCallbacks]{};
@@ -581,7 +581,7 @@ extern "C" int re4dc_source_world_prepare(unsigned native,unsigned* generation) 
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     // Never revive or replace a provisional same-image transaction.
     if(f.role && f.native==native && (f.guarded || f.started || f.withheld || f.failed))return 0;
-    f.guarded=false;f.role=0;f.consumed=0;f.member_reason=0;f.withheld=false;f.committed=false;f.proven=0;re4dc_r200_set_light(0);
+    f.guarded=false;f.role=0;f.consumed=0;f.member_reason=0;f.withheld=false;f.committed=false;f.sealed=false;f.proven=0;re4dc_r200_set_light(0);
     f.sample=f.anchor=~0U;f.uv_valid[0]=f.uv_valid[1]=false;
     for(auto& pair:f.uv)for(auto& value:pair)value=0.f;
     for(auto& pointer:f.group)pointer=nullptr;
@@ -724,6 +724,7 @@ extern "C" int re4dc_source_world_preflight_current(unsigned native,unsigned gen
     const auto& f=sourceWorldFrame;
     return !f.role || sourceWorldIdentity(native,generation);
 }
+extern "C" int re4dc_source_world_sealed(){return sourceWorldFrame.role && sourceWorldFrame.sealed;}
 extern "C" int re4dc_source_world_binding_valid(){
     if(!re4dc_source_world_group_claimed())return 1;
     const auto& f=sourceWorldFrame;
@@ -754,13 +755,18 @@ extern "C" int re4dc_source_world_legacy_allowed(unsigned native) {
         if(f.started || f.withheld || f.failed){sourceWorldAbort(17);return 0;}
         return 1;
     }
-    if((f.started || f.withheld) && !f.failed && !sourceWorldIdentity(native,f.package_generation))sourceWorldAbort(17);
+    if((f.started || f.withheld) && !f.failed && !f.sealed && !sourceWorldIdentity(native,f.package_generation))sourceWorldAbort(17);
     return !(f.active || f.started || f.withheld || f.failed);
 }
 extern "C" int re4dc_source_world_callback_continue() {
     auto& f=sourceWorldFrame;
     if(!f.role)return 1;
+    // Sealed: every owned callback drew under a valid proof and the checks passed after the last one.
+    // Later epoch changes (e.g. SetPrimBuffPtr at DOORDEMO START) cannot invalidate draws already made.
+    if(f.sealed)return 1;
     if(f.guarded && !sourceWorldCapturedStorageCurrent()){
+        re4dc_log("PS2TRANSITION_ABORT19 f=%u case=%s consumed=%u callbacks=%u\n",f.native,
+            f.consumed==f.count?"during-last":(f.consumed?"between":"before"),f.consumed,f.count);
         // Admission failure must not disable traversal safety. This runs before
         // the first node and again before reading the current node's next link.
         f.withheld=true;sourceWorldAbort(19);return 0;
@@ -774,7 +780,13 @@ extern "C" int re4dc_source_world_callback_continue() {
          re4dc_log("TGD continue19 f=%u identity=%d walk=%d consumed=%u prim=%lx begin=%lx end=%lx bytes=%u\n",f.native,int(id),
             int(id && sourceWorldWalk(false)),f.consumed,reinterpret_cast<unsigned long>(GXWORK()->prim),f.begin,f.end,f.bytes);}}
 #endif
+        re4dc_log("PS2TRANSITION_ABORT19 f=%u case=%s consumed=%u callbacks=%u\n",f.native,
+            f.consumed==f.count?"during-last":(f.consumed?"between":"before"),f.consumed,f.count);
         sourceWorldAbort(19);return 0;
+    }
+    if(f.started && f.count && f.consumed==f.count){
+        f.sealed=true;
+        re4dc_log("PS2TRANSITION_SEALED f=%u callbacks=%u\n",f.native,f.count);
     }
     return 1;
 }
@@ -787,8 +799,8 @@ extern "C" int re4dc_source_world_present(unsigned native,int source_finished,in
     }
     if(f.failed)return 0;
     if(!f.started && !f.withheld)return 1;
-    if(stream_aborted || !source_finished || !sourceWorldIdentity(native,f.package_generation) ||
-       !sourceWorldWalk(false) || f.consumed!=f.count ||
+    if(stream_aborted || !source_finished || f.consumed!=f.count ||
+       (!f.sealed && (!sourceWorldIdentity(native,f.package_generation) || !sourceWorldWalk(false))) ||
        !re4dc_ps2_source_receipt_complete(native,f.package_generation)){
         sourceWorldAbort(18);return 0;
     }

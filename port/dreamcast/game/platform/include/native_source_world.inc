@@ -132,7 +132,9 @@ extern "C" int re4dc_ps2_source_receipt_complete(unsigned native,unsigned genera
 extern "C" int re4dc_ps2_source_draw(unsigned generation) {
     unsigned current=0;const unsigned frame=re4dc_ui_frame();
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
-    if(re4dc_source_world_group_claimed() && !re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
+    // A sealed group already drew this frame's image under a valid proof; a later query only reads the cached result.
+    if(re4dc_source_world_group_claimed() && !(re4dc_source_world_sealed() && sourceWorldImageFrame==frame) &&
+       !re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();return -1;}
 #endif
     if(!re4dc_ps2_source_package(&current) || current!=generation)return 0;
     if(sourceWorldImageFrame==frame)return sourceWorldImageGeneration==generation?sourceWorldImageResult:0;

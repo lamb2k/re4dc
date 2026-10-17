@@ -35,6 +35,7 @@ int re4dc_source_world_preflight_current(unsigned native,unsigned generation);
 int re4dc_source_world_binding_valid();
 void re4dc_source_world_binding_failed();
 int re4dc_source_world_group_claimed();
+int re4dc_source_world_sealed();
 int re4dc_r200_part_delta(unsigned work,float* out); // source_world_scroll.inc (TRANSITION_OWNER)
 int re4dc_source_world_op_window();
 int re4dc_source_world_uv(unsigned placement,unsigned mesh,unsigned part,unsigned pass,float* uv);
