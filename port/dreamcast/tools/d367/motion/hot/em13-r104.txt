@@ -1,0 +1,19 @@
+# lane zeroread17b 2026-10-17: em13 (r104) hot clips = the clips r104 uses in play (MOTION_USAGE_LOG runs r104 area 0xE
+# kill rig, with and without alert, plus an all-cold probe run: every in-play use is a miss). 16 clips, 198,944 B
+# (76% of MOTION_PRESSURE_BYTES 262144). acc12 marked 81 clips / 996,352 B hot: the bind read ~1 MB and evicted most.
+0
+2
+3
+6
+9
+23
+36
+44
+45
+47
+55
+59
+88
+98
+99
+101
