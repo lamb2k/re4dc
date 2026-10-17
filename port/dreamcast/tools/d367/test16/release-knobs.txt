@@ -2,13 +2,13 @@
 # them (make takes the last value). Written by tools/d367/release-knobs.py write from the release build's
 # out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.
 # @ASSETS@ = the unpacked Build-Assets zip (re4dc-assets/).
-# test: 16.2
-# tag: test-a8cf395d-20261017-hotfix2
-# source: a8cf395d
+# test: 16.3
+# tag: test-03776737-20261017-hotfix3
+# source: 03776737
 # recipe: port/dreamcast/tools/d367/test16/t16-build.sh
-# image-sha256: f214bd940410d4a1b6d5b8140542dd9afcab42bacd5c7d0c6a73c7401e2d1899
-# assets-zip: RE4DC-Test16.2-a8cf395d-Build-Assets.zip
-# disc-sets: snd16,water16i,vq16w,r108p
+# image-sha256: 61df55c65c22ad083d671934764bf7f7d3da37ea1c68b4dbcaca668d31ac7a7d
+# assets-zip: RE4DC-Test16.3-03776737-Build-Assets.zip
+# disc-sets: snd16,water16i,vq16w,r108p,zr17m,zr17b,res163
 LOGIC_TRACE=0
 GAME_DECISION_TRACE=0
 ACTOR_TRANSACTION_DIAG=0
@@ -187,6 +187,8 @@ HAZE_SPRITE_CUT=1
 ANIMALS_OFF=1
 ALIVE_CAP=4
 R101_ALIVE_CAP=4
+VRAM_PAGES_VQ_ONLY=1
+GANADO_ATLAS_DROP=3
 IMAGE_PAD_BYTES=0
 DBG_WARP=0
 PC_SAMPLER=0
