@@ -893,6 +893,24 @@ ifneq ($(GIGANTE_LIGHTS),0)
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_GIGANTE_LIGHTS=$(GIGANTE_LIGHTS) -DRE4DC_GIGANTE_LIGHTS_TREES=$(GIGANTE_LIGHTS_TREES)
 $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_GIGANTE_LIGHTS=$(GIGANTE_LIGHTS)
 endif
+# STATUE_LIGHTS=2 (lane cast16 2026-10-17; render only, approximation, default 0; needs GIGANTE_LIGHTS and
+#              ACTOR_EXACT_FAST): the r226 Salazar statue (cObjRobo, kindid 1, id 0x37) is lit by 8 attenuated lights, so
+#              each part fell to the exact per-vertex evaluator over all 8 (59.7 of its 68.9 ms/frame submit, Flycast).
+#              =2 keeps the exact evaluator (per-vertex direction and attenuation) on the 3 lights strongest at the part and
+#              adds the dropped lights as a directionless 1/4 ambient share. r226 frozen tick 400 (Flycast): whole frame
+#              ~114 -> ~91 ms; look APPROVED (coordinator 10-17: slightly brighter left mass); STRICT 400 frames.
+#              Static +640 B with the knob on. Castle recipe only. Knob off: the image is unchanged.
+STATUE_LIGHTS ?= 0
+ifneq ($(STATUE_LIGHTS),0)
+ifneq ($(STATUE_LIGHTS),2)
+$(error STATUE_LIGHTS must be 0 or 2)
+endif
+ifeq ($(GIGANTE_LIGHTS),0)
+$(error STATUE_LIGHTS=2 needs GIGANTE_LIGHTS)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_STATUE_LIGHTS=$(STATUE_LIGHTS)
+$(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_STATUE_LIGHTS=$(STATUE_LIGHTS)
+endif
 ifeq ($(NATIVE_ACTOR)$(NATIVE_ACTOR_FAST),11)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/native_actor.o,$(PLATFORM_OBJS))
 else
@@ -1754,6 +1772,13 @@ include game30.mk
 
 # D44 diagnostic only: one four-frame window after an observed r200 card exit.
 # Keep the flag local to the three instrumented translation units.
+# TRANSITION_GATE_DIAG (test only, lane ch3found16 2026-10-17, never in a recipe): logs which of the five pre-walk checks of
+# PS2_WORLD_TRANSITION_OWNER refused (PS2SOURCE_DECLINE reason 14) and the r200 package / scroll pins against the live data.
+TRANSITION_GATE_DIAG ?= 0
+ifeq ($(TRANSITION_GATE_DIAG),1)
+$(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/scroll.o: GAME_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1
+endif
 PS2_WORLD_PREFLIGHT_DIAG ?= 0
 ifneq ($(filter-out 0 1,$(PS2_WORLD_PREFLIGHT_DIAG)),)
 $(error PS2_WORLD_PREFLIGHT_DIAG must be 0 or 1)

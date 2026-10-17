@@ -422,8 +422,54 @@ static void re4dc_otwc_report(int type, int count, OtWork* w, OtData* prev, OtDa
 #if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
 extern "C" void re4dc_otwc_pad_check(u32 where);   // trans.cpp
 #endif
+#if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
+// OT_PROF=1 (lane cast16 2026-10-17; diagnostic, default 0): per OT callback (function + data) CPU time and PVR bytes
+// (native_ui stream_model_bytes delta) over 120-UI-frame windows; the top 24 by time are logged as OTP lines. A data
+// pointer in main RAM also logs its cModel id / type / parts bytes (0x100..0x102; meaningless for non-models).
+extern "C" unsigned re4dc_stream_model_bytes_now();
+extern "C" unsigned long long re4dc_otp_now_us();
+extern "C" unsigned re4dc_ui_frame();
+extern "C" void re4dc_log(const char*, ...);
+namespace {
+struct OtpRow { void* f; void* d; unsigned t, n, us, bytes; };
+OtpRow otp_rows[128];
+unsigned otp_n, otp_over, otp_last, otp_frames_t0;
+void otp_add(void* f, void* d, unsigned t, unsigned us, unsigned bytes)
+{
+    for (unsigned k = 0; k < otp_n; ++k) {
+        OtpRow& r = otp_rows[k];
+        if (r.f == f && r.d == d && r.t == t) { r.n++; r.us += us; r.bytes += bytes; return; }
+    }
+    if (otp_n == 128) { otp_over++; return; }
+    OtpRow& r = otp_rows[otp_n++]; r.f = f; r.d = d; r.t = t; r.n = 1; r.us = us; r.bytes = bytes;
+}
+void otp_window()
+{
+    const unsigned fr = re4dc_ui_frame();
+    if (!otp_last) { otp_last = fr; return; }
+    if (fr - otp_last < 120) return;
+    unsigned tot_us = 0, tot_b = 0;
+    for (unsigned k = 0; k < otp_n; ++k) { tot_us += otp_rows[k].us; tot_b += otp_rows[k].bytes; }
+    re4dc_log("OTP f=%u frames=%u rows=%u over=%u total_us=%u total_bytes=%u\n", fr, fr - otp_last, otp_n, otp_over, tot_us, tot_b);
+    for (unsigned i = 0; i < 24 && i < otp_n; ++i) {
+        unsigned best = i;
+        for (unsigned k = i + 1; k < otp_n; ++k) if (otp_rows[k].us > otp_rows[best].us) best = k;
+        OtpRow tmp = otp_rows[i]; otp_rows[i] = otp_rows[best]; otp_rows[best] = tmp;
+        const OtpRow& r = otp_rows[i];
+        const unsigned a = (unsigned) r.d;
+        unsigned id = 0xFFFF, ty = 0xFFFF, parts = 0xFFFF;
+        if (a >= 0x8C010000u && a < 0x8CFFFE00u) { const u8* m = (const u8*) r.d; id = m[0x100]; ty = m[0x101]; parts = m[0x102]; }
+        re4dc_log("OTP  fn=%p data=%p ot=%u calls=%u us=%u bytes=%u id=%x ty=%x parts=%u\n", r.f, r.d, r.t, r.n, r.us, r.bytes, id, ty, parts);
+    }
+    otp_n = 0; otp_over = 0; otp_last = fr;
+}
+}
+#endif
 int ExecOt(int type)
 {
+#if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
+    if (type == 0) otp_window();
+#endif
 #if defined(RE4DC_OT_WALK_CHECK) && RE4DC_OT_WALK_CHECK >= 2
     re4dc_otwc_pad_check(0xE0000000u | (u32) type);   // checkpoint "ExecOt(type)"
 #endif
@@ -483,7 +529,13 @@ int ExecOt(int type)
 #if RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_PS2_WORLD_TRANSITION_OWNER
                 re4dc_source_world_callback_begin(unsigned(type),p,p->func,p->data,p->kind);
 #endif
+#if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
+                const unsigned long long otp_t0 = re4dc_otp_now_us(); const unsigned otp_b0 = re4dc_stream_model_bytes_now();
+#endif
                 p->func(p->data);
+#if defined(RE4DC_OT_PROF) && RE4DC_OT_PROF
+                otp_add((void*) p->func, p->data, (unsigned) type, (unsigned) (re4dc_otp_now_us() - otp_t0), re4dc_stream_model_bytes_now() - otp_b0);
+#endif
 #if RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_PS2_WORLD_TRANSITION_OWNER
                 re4dc_source_world_callback_end();
 #endif

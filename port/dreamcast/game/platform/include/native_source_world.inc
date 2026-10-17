@@ -57,6 +57,29 @@ extern "C" int re4dc_ps2_source_group_package(unsigned* generation,int deep){
        sourceWorldNativeHash(dyn::block,128)!=0x4251c1d6U))return 0;
     *generation=sourceWorldPackageGeneration;return 1;
 }
+#if RE4DC_TRANSITION_GATE_DIAG
+extern "C" void re4dc_ps2_source_group_package_diag(){
+    namespace profile=source_world_r200_profile;
+    constexpr unsigned mbytes=(profile::mesh_bytes+31U)&~31U,pbytes=(profile::side_bytes+31U)&~31U;
+    constexpr unsigned bytes=mbytes+pbytes+kLutBytes+kGatherBytes;
+    unsigned room=0,c,b,stale,refused;const int rs=re4dc_room4_state(&room,&c,&b,&stale,&refused);
+    re4dc_log("TGD package gen=%u room=%03x want=%03x bytes=%u/%u nplacements=%u/%u side_crc=%08x/%08x room4=%d cell=%d dyncell=%d nids=%u\n",
+        sourceWorldPackageGeneration,ps2w.room,ps2w.want,ps2w.bytes,bytes,ps2w.nplacements,profile::placements,
+        sourceWorldSidecarCrc,profile::side_crc,rs,rs?re4dc_source_world_native_cell(ps2w.storage,bytes,room):-1,
+        rs?re4dc_source_world_native_cell(dyn::block,128,room):-1,dyn::nids);
+    if(!ps2w.storage)return;
+    const auto& h=ps2w.package.header();
+    re4dc_log("TGD package header version=%u bytes=%u/%u crc=%08x/%08x meshes=%u/%u parts=%u/%u mesh_off=%u part_off=%u\n",
+        h.version,h.bytes,profile::mesh_bytes,h.crc,profile::mesh_crc,h.mesh_count,profile::meshes,h.part_count,profile::parts,
+        h.mesh_offset,h.part_offset);
+    re4dc_log("TGD package hashes mh=%08x hdr=%08x meshes=%08x parts=%08x side=%08x dyn=%08x (pins 052ae0d3 052ae0d3 9e2658b1 ea1e94a6 590ce75b 4251c1d6)\n",
+        sourceWorldNativeHash(ps2w.storage,sizeof(re4dc::room::MeshHeader)),sourceWorldNativeHash(&h,sizeof(h)),
+        h.mesh_count==profile::meshes?sourceWorldNativeHash(ps2w.package.meshes(),profile::meshes*sizeof(re4dc::room::MeshRecord)):0U,
+        h.part_count==profile::parts?sourceWorldNativeHash(ps2w.package.parts(),profile::parts*sizeof(re4dc::room::MeshPart)):0U,
+        ps2w.bytes>=mbytes+profile::side_bytes?sourceWorldNativeHash(ps2w.storage+mbytes,profile::side_bytes):0U,
+        dyn::block?sourceWorldNativeHash(dyn::block,128):0U);
+}
+#endif
 #endif
 
 namespace {
