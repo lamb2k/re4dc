@@ -15,7 +15,9 @@ enum {
     APROF_TX = 0, APROF_PLAN, APROF_SEM1, APROF_CROWD, APROF_ACQ, APROF_PAL, APROF_PRE1, APROF_PASS, APROF_SUB,
     APROF_PRE2, APROF_WFL, APROF_CHUNK, APROF_POS, APROF_LIT, APROF_PACK, APROF_PHASES
 };
-enum { APROF_N_CALLS = 0, APROF_N_CHUNKS, APROF_N_VERTS, APROF_N_MESHLETS, APROF_N_HITS, APROF_COUNTS };
+// N_UVI / N_UNI: distinct position / normal indices per chunk (the records drawn repeat them across meshlets and seams)
+enum { APROF_N_CALLS = 0, APROF_N_CHUNKS, APROF_N_VERTS, APROF_N_MESHLETS, APROF_N_HITS, APROF_N_UVI, APROF_N_UNI,
+       APROF_COUNTS };
 extern unsigned re4dc_aprof_cls;
 extern unsigned re4dc_aprof_wfl_cycles;  // WFL cycles so far (TX / SUB subtract their share)
 unsigned re4dc_aprof_now(void);

@@ -144,8 +144,8 @@ namespace life { extern unsigned serial; extern bool exhausted; }  // actor_life
 // equal, so the same verdict follows. Palette rows (a digest of the CLUT), the key-0 bump rows and unaligned headers
 // are never kept. The hand TPL textures of Leon's pose infos are checked this way every pass (re4dc_material::hand_info).
 struct TexMemo { const void* descriptor;const Texture* e;unsigned serial;unsigned words[19]; };
-constexpr unsigned kTexMemos=32;
-TexMemo tex_memo[kTexMemos];unsigned tex_memo_next;
+constexpr unsigned kTexMemos=16;  // Leon's two pose hands (a few textures each) and the Ganado source materials
+RE4DC_PLAN_ARRAY(TexMemo,tex_memo,kTexMemos,kRe4dcPlanTexOff);unsigned tex_memo_next;
 Error texture_full(const void* descriptor,const Texture& e);
 inline bool tex_words(const void* descriptor,unsigned* w) {
     if(!readable(descriptor,8) || (reinterpret_cast<std::uintptr_t>(descriptor)&3u))return false;

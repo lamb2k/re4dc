@@ -404,7 +404,7 @@ static unsigned registry_role_next(const re4dc_material::life::Info& i,unsigned 
 namespace re4dc_material { namespace life {
 struct RowMemo { cModel* m;cModelInfo* info;unsigned app,role,serial;unsigned short slot,row; };
 constexpr unsigned kRowMemos=24;
-RowMemo row_memo[kRowMemos];unsigned row_memo_next;
+RE4DC_PLAN_ARRAY(RowMemo,row_memo,kRowMemos,kRe4dcPlanRowOff);unsigned row_memo_next;
 } }
 static const re4dc_material::Role* actor_current_role_full(cModel*,cModelInfo*,unsigned,unsigned);
 static const re4dc_material::Role* actor_current_role(cModel* m,cModelInfo* info,unsigned app,unsigned role) {
@@ -542,13 +542,13 @@ bool adopt_memo(const cModelInfo* p,bool note) {
 // true, so every row's info_current is unchanged and the role scan gives the same unique role. Hand infos never needed
 // a record. Failures are not kept; nothing else is skipped.
 namespace re4dc_material { namespace life {
-constexpr unsigned kRoleMemoInfos=16,kRoleMemos=12;
+constexpr unsigned kRoleMemoInfos=kRe4dcActorRoles,kRoleMemos=12;
 struct RoleMemo {
     cModel* m;unsigned appearance,count,serial;
     cModelInfo* chain[kRoleMemoInfos];cModelInfo* out[kRoleMemoInfos];
     unsigned short slot[kRoleMemoInfos],row[kRoleMemoInfos];unsigned char hand[kRoleMemoInfos];
 };
-RoleMemo role_memo[kRoleMemos];unsigned role_memo_next;
+RE4DC_PLAN_ARRAY(RoleMemo,role_memo,kRoleMemos,kRe4dcPlanRoleOff);unsigned role_memo_next;
 } }
 static int role_bindings_full(cModel* m,unsigned appearance,cModelInfo** out,unsigned count);
 extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInfo** out,unsigned count) {

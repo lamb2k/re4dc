@@ -5618,6 +5618,23 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
     bool ok = true;
+#if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
+    {   // census only: distinct position / normal indices of the records this chunk draws at its level
+        static u16 seen_v[16384], seen_n[16384]; static u16 stamp;
+        if (++stamp == 0) { std::memset(seen_v, 0, sizeof seen_v); std::memset(seen_n, 0, sizeof seen_n); stamp = 1; }
+        unsigned uv = 0, un = 0;
+        for (unsigned mi = 0; mi < blob->meshlets; ++mi) {
+            const Counts c = lt ? lt[mi].n : table[mi].n;
+            const Records rr{reinterpret_cast<const u16*>(records) + table[mi].first * rs, rs, color_index, (blob->flags & kHasCi) != 0};
+            for (unsigned i = 0, nv = c.indices() ? c.vertices() : 0; i < nv; ++i) {
+                const unsigned vi = rr.vi(i) & 16383u, ni = rr.ni(i) & 16383u;
+                if (seen_v[vi] != stamp) { seen_v[vi] = stamp; ++uv; }
+                if (seen_n[ni] != stamp) { seen_n[ni] = stamp; ++un; }
+            }
+        }
+        APROF_COUNT(APROF_N_UVI, uv); APROF_COUNT(APROF_N_UNI, un);
+    }
+#endif
     for (unsigned mi = 0; ok && mi < blob->meshlets; ++mi) {
         const MeshletInfo& m = table[mi];
         const Counts c = lt ? lt[mi].n : m.n;
@@ -5889,8 +5906,9 @@ void re4dc_aprof_frame(unsigned frame) {
     for (unsigned c = 0; c < 4; ++c) {
         if (!aprof_n[c][APROF_N_CALLS] && !aprof_n[c][APROF_N_CHUNKS]) continue;
         char line[512]; int at = snprintf(line, sizeof line, "APROF f=%u..%u frames=%u cls=%s calls10=%u chunks10=%u verts=%u "
-            "meshlets10=%u hits10=%u", aprof_first, frame - 1, frames, kAprofClass[c], aprof_n[c][0] * 10 / frames,
-            aprof_n[c][1] * 10 / frames, aprof_n[c][2] / frames, aprof_n[c][3] * 10 / frames, aprof_n[c][4] * 10 / frames);
+            "meshlets10=%u hits10=%u uvi=%u uni=%u", aprof_first, frame - 1, frames, kAprofClass[c], aprof_n[c][0] * 10 / frames,
+            aprof_n[c][1] * 10 / frames, aprof_n[c][2] / frames, aprof_n[c][3] * 10 / frames, aprof_n[c][4] * 10 / frames,
+            aprof_n[c][APROF_N_UVI] / frames, aprof_n[c][APROF_N_UNI] / frames);
         for (unsigned p = 0; p < APROF_PHASES && at > 0 && at < int(sizeof line); ++p) {
             // us per frame with one decimal: cycles / frames / 200 MHz
             const unsigned long long us10 = aprof_sum[c][p] / frames / 20;
@@ -5914,6 +5932,7 @@ unsigned aplan_checks[APLAN_KINDS], aplan_hits[APLAN_KINDS], aplan_bad[APLAN_KIN
 }  // namespace
 extern "C" {
 unsigned re4dc_actor_plan_on = 1;
+alignas(32) unsigned char re4dc_actor_plan_store[RE4DC_ACTOR_PLAN_STORE];
 void re4dc_actor_plan_note(unsigned kind, int hit, int bad) {
     if (kind >= APLAN_KINDS) return;
     ++aplan_checks[kind]; aplan_hits[kind] += hit != 0; aplan_bad[kind] += bad != 0;
