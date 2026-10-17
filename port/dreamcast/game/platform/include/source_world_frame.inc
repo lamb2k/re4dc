@@ -443,6 +443,15 @@ int sourceWorldDraw(cModel* model) {
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(f.role){
         auto* entry=sourceWorldCaptured(model);float uv[2]{};
+#if RE4DC_TRANSITION_GATE_DIAG
+        if(f.consumed>=20){
+            re4dc_log("TGD step captured=%d work=%u consumed=%d\n",entry?1:0,entry?entry->work:~0U,entry?int(entry->consumed):-1);
+            re4dc_log("TGD step identity=%d\n",sourceWorldIdentity(f.native,f.package_generation));
+            re4dc_log("TGD step walk=%d\n",int(sourceWorldWalk(false)));
+            if(entry)re4dc_log("TGD step member=%d\n",re4dc_r200_scroll_member(model,entry->serial,entry->work,uv));
+            re4dc_log("TGD step opwin=%d started=%d\n",re4dc_source_world_op_window(),int(f.started));
+        }
+#endif
         if(!entry || entry->consumed || !sourceWorldIdentity(f.native,f.package_generation) ||
            !sourceWorldWalk(false) || !re4dc_r200_scroll_member(model,entry->serial,entry->work,uv) ||
            (!f.started && !re4dc_source_world_op_window())){
@@ -452,6 +461,9 @@ int sourceWorldDraw(cModel* model) {
         // The first withheld callback claims the whole source group. Any later
         // invalidity aborts the image; no source/dyn fallback may resume.
         f.withheld=true;entry->consumed=true;++f.consumed;
+#if RE4DC_TRANSITION_GATE_DIAG
+        {static unsigned dl;if(dl<200){++dl;re4dc_log("TGD own f=%u work=%u consumed=%u\n",f.native,entry->work,f.consumed);}}
+#endif
         if(entry->work==16){f.uv[1][0]=uv[0];f.uv[1][1]=uv[1];f.uv_valid[1]=true;}
         if(entry->work==10){
             if(!f.uv_valid[1] || f.started){sourceWorldAbort(21);return -1;}
@@ -459,7 +471,13 @@ int sourceWorldDraw(cModel* model) {
             // Mark started before the yielding draw so its claim remains
             // latched even if the native/source identity changes inside bind.
             f.started=true;
+#if RE4DC_TRANSITION_GATE_DIAG
+            re4dc_log("TGD draw begin f=%u\n",f.native);
+            {const int dr=re4dc_ps2_source_draw(f.package_generation);re4dc_log("TGD draw end f=%u result=%d\n",f.native,dr);
+             if(dr!=1){sourceWorldAbort(6);return -1;}}
+#else
             if(re4dc_ps2_source_draw(f.package_generation)!=1){sourceWorldAbort(6);return -1;}
+#endif
         }
         return 1;
     }
@@ -597,6 +615,15 @@ extern "C" int re4dc_source_world_current(unsigned native,unsigned generation) {
 extern "C" void re4dc_source_world_prepared(unsigned native,unsigned generation,int ready) {
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(sourceWorldFrame.guarded && !sourceWorldCapturedStorageCurrent()){
+#if RE4DC_TRANSITION_GATE_DIAG
+        {const auto& f=sourceWorldFrame;unsigned rg=0,c,b,st,rf,pg=0;const int r4=re4dc_room4_state(&rg,&c,&b,&st,&rf);
+         re4dc_log("TGD storage f=%u prim=%d ot=%d objects=%d pools=%d primalloc=%d room4=%d/%d pkg=%d scroll=%d\n",native,
+            int(sourceWorldPrimGeneration==f.prim_generation),int(re4dc_source_world_ot_epoch()==f.ot_epoch),
+            int(re4dc_alive_gen[2]==f.objects),int(re4dc_alive_gen[0]==f.pools),
+            int(sourceWorldAllocated(reinterpret_cast<const void*>(f.prim),f.bytes*RE4DC_PRIMITIVE_BUFFERS,true)),
+            r4,int(rg==f.room_generation),int(re4dc_ps2_source_group_package(&pg,0) && pg==f.package_generation),
+            re4dc_r200_scroll_storage_current());}
+#endif
         sourceWorldFrame.withheld=true;sourceWorldAbort(8);return;
     }
 #endif

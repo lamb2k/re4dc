@@ -162,6 +162,12 @@ void sourceWorldTexturePrepare() {
         entry->package.upload_complete() && entry->package.header().texture_count==1 &&
         entry->package.pvr_texture(0) && entry->package.vram_bytes()==pick.bytes &&
         entry->package.textures()[0].width==pick.width && entry->package.textures()[0].height==pick.height;
+#if RE4DC_TRANSITION_GATE_DIAG
+    if(!valid){static unsigned vl;if(vl<8){++vl;re4dc_log("TGD texprep f=%u entry=%d valid=%d keyok=%d frame=%u/%u upload=%d count=%u pvr=%d vram=%u/%u size=%ux%u\n",frame,entry?1:0,
+        entry?int(entry->valid):-1,entry?int(entry->key==key):-1,entry?entry->frame:0U,frame,entry?int(entry->package.upload_complete()):-1,
+        entry?unsigned(entry->package.header().texture_count):0U,entry?int(entry->package.pvr_texture(0)!=nullptr):-1,
+        entry?unsigned(entry->package.vram_bytes()):0U,pick.bytes,entry?unsigned(entry->package.textures()[0].width):0U,entry?unsigned(entry->package.textures()[0].height):0U);}}
+#endif
     re4dc_source_world_prepared(frame,generation,valid);
     const bool ready=valid && re4dc_source_world_current(frame,generation);
     if(ready){sourceWorldPreparedFrame=frame;sourceWorldPreparedKey=key;}

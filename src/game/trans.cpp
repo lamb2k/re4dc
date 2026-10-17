@@ -2924,7 +2924,14 @@ void commonModelTrans(cModel* m, cModelInfo* info, Mtx viewMat, int flag)
     matSet = 0;
 #if RE4DC_PS2_WORLD_SOURCE_OWNER && RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(!flag){
+#if RE4DC_TRANSITION_GATE_DIAG
+        static unsigned tgd_calls;const bool tgd_log=re4dc_ui_frame()>=3400 && tgd_calls<400;
+        if(tgd_log){++tgd_calls;re4dc_log("TGD mr in f=%u m=%p ot=%u\n",re4dc_ui_frame(),(void*)m,unsigned(m->ot_type));}
+#endif
         const int owned=sourceWorldDraw(m);
+#if RE4DC_TRANSITION_GATE_DIAG
+        if(tgd_log)re4dc_log("TGD mr out owned=%d\n",owned);
+#endif
         if(owned<0)return; // caller restores render state without reading a retired model
         if(owned>0)info=nullptr; // successful source postludes still execute
     }

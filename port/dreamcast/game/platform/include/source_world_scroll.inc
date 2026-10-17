@@ -211,6 +211,27 @@ unsigned r200FpFail;
 #define R200_FAIL return false
 #define R200_GROUP(n) ((void)0)
 #endif
+void r200Concat(const float* a,const float* b,float* out){
+    for(unsigned r=0;r<3;++r)for(unsigned c=0;c<4;++c)
+        out[4*r+c]=a[4*r]*b[c]+a[4*r+1]*b[4+c]+a[4*r+2]*b[8+c]+(c==3?a[4*r+3]:0.0f);
+}
+bool r200Inverse(const float* m,float* out){
+    const float a=m[0],b=m[1],c=m[2],d=m[4],e=m[5],f=m[6],g=m[8],h=m[9],i=m[10];
+    const float A=e*i-f*h,B=f*g-d*i,C=d*h-e*g,det=a*A+b*B+c*C;
+    if(!(det==det) || (det<1e-12f && det>-1e-12f))return false;
+    const float s=1.0f/det;
+    const float r[9]={A*s,(c*h-b*i)*s,(b*f-c*e)*s,B*s,(a*i-c*g)*s,(c*d-a*f)*s,C*s,(b*g-a*h)*s,(a*e-b*d)*s};
+    for(unsigned row=0;row<3;++row){
+        out[4*row]=r[3*row];out[4*row+1]=r[3*row+1];out[4*row+2]=r[3*row+2];
+        out[4*row+3]=-(r[3*row]*m[3]+r[3*row+1]*m[7]+r[3*row+2]*m[11]);
+    }
+    return true;
+}
+// The part's world matrix with ang 0 (scale 1, checked): model mat * T(part pos).
+void r200PartRest(const cModel* model,const cParts* part,float* rest){
+    const float t[12]={1,0,0,part->pos.x, 0,1,0,part->pos.y, 0,0,1,part->pos.z};
+    r200Concat(&model->mat[0][0],t,rest);
+}
 bool r200ScrollFingerprint(unsigned work,cModel* model,unsigned& hash) {
     if(work>=r200p::works || !re4dc_source_world_pool(model,0))R200_FAIL;
     const auto& w=pSmd->work[work];const auto& witness=r200ScrollWitness[work];
@@ -235,7 +256,7 @@ bool r200ScrollFingerprint(unsigned work,cModel* model,unsigned& hash) {
        !r200Range(data,sizeof(ModelData),alignof(ModelData)) || data->shapeOfs || data->nParts!=1 ||
        !data->displist_num || data->displist_num>1024 || !r200Range(data->pHead,sizeof(ModelDataHead)) ||
        (part->be_flag&0x201)!=1 || part->pList || part->pParent!=model || data->pHead->parentNo!=0xff ||
-       !r200Vec(part->pos,data->pHead->center) || part->ang.x!=0.f || part->ang.y!=0.f || part->ang.z!=0.f ||
+       !r200Vec(part->pos,data->pHead->center) || !r200Phase(part->ang.x) || part->ang.y!=0.f || part->ang.z!=0.f ||
        part->scale.x!=1.f || part->scale.y!=1.f || part->scale.z!=1.f)R200_FAIL;
     // Authored OT role, blend, depth/cull, material and bind matrices must remain.
     // UV phases alone are live and are sampled from ids16/10 at their exact color callbacks.
@@ -246,13 +267,21 @@ bool r200ScrollFingerprint(unsigned work,cModel* model,unsigned& hash) {
 #else
 #define R200_HASH(value) r200HashValue(hash,value)
 #endif
-    R200_GROUP(0);R200_HASH(model->be_flag);R200_HASH(info->be_flag);
+    R200_GROUP(0);
+    // Only the checked flag bits: a swinging part's model sets other be_flag bits as it moves (r200 works 8 / 9).
+    {const unsigned mb=unsigned(model->be_flag)&0x207U,ib=unsigned(info->be_flag)&0x20bU;R200_HASH(mb);R200_HASH(ib);}
+#if RE4DC_TRANSITION_GATE_DIAG
+    if(work==8 || work==9 || work==0){static unsigned bl;if(bl<12){++bl;re4dc_log("TGD flags work=%u model=%x info=%x\n",work,unsigned(model->be_flag),unsigned(info->be_flag));}}
+#endif
     R200_GROUP(1);R200_HASH(model->pParent);R200_HASH(model->mat);R200_HASH(model->l_mat);
     R200_GROUP(2);R200_HASH(model->ot_type);R200_HASH(model->z_mode);R200_HASH(model->CullMode);
     R200_HASH(model->alpha_omit);R200_HASH(model->TevScaleGroup);
     R200_GROUP(3);R200_HASH(model->AddAmb_r);R200_HASH(model->AddAmb_g);R200_HASH(model->AddAmb_b);
-    R200_HASH(model->LightInfo.SelectMask);R200_GROUP(4);R200_HASH(part->mat);R200_HASH(part->l_mat);
-    R200_HASH(part->lt_inv_mat);R200_HASH(part->addRot);R200_HASH(part->motParts.flags);
+    R200_HASH(model->LightInfo.SelectMask);R200_GROUP(4);
+    // A part may swing about X (r200 works 8 / 9, the pair opened on the 2-3 -> 3-1 frame; GC draws it rotated):
+    // its live mat / l_mat / lt_inv_mat follow ang.x, so the authored rest pose (model mat * T(part pos)) is hashed.
+    {float rest[12];r200PartRest(model,part,rest);R200_HASH(rest);}
+    R200_HASH(part->addRot);R200_HASH(part->motParts.flags);
     R200_GROUP(5);R200_HASH(info->tpl_addr);R200_HASH(info->pAddTpl);R200_HASH(info->nAddTex);
     R200_GROUP(6);R200_HASH(info->mat);R200_GROUP(7);R200_HASH(info->color);R200_HASH(info->color2);
     R200_GROUP(8);R200_HASH(info->blend_mode);R200_HASH(info->blendRatio);R200_HASH(info->blendType);
@@ -292,24 +321,36 @@ void sourceWorldR200ScrollPublish() {
     r200ScrollPublished=true;
 }
 }
+#if RE4DC_TRANSITION_GATE_DIAG
+#define R200_SFAIL(code) do{static unsigned sl;if(sl<8){++sl;re4dc_log("TGD scroll_storage fail=%d\n",int(code));}}while(0)
+#else
+#define R200_SFAIL(code) ((void)0)
+#endif
 extern "C" int re4dc_r200_scroll_storage_current() {
     // Address/owner proof survives a safe admission decline. Do not require
     // pose/material equality: ordinary live source rendering may still proceed.
     if(!r200ScrollPublished || !r200ScrollBase(false) ||
        !r200Range(pSmd,r200p::smd_bytes,alignof(cSmd)) ||
-       !r200Range(pSmx,r200p::smx_bytes,alignof(cSmx)))return 0;
+       !r200Range(pSmx,r200p::smx_bytes,alignof(cSmx))){R200_SFAIL(1000+int(r200ScrollPublished)*100+int(r200ScrollBase(false))*10);return 0;}
     for(unsigned i=0;i<r200p::works;++i){
         const auto& w=r200ScrollWitness[i];
         if(scrTbl[i]!=w.model || !re4dc_source_world_pool(w.model,0) ||
            w.model->serial!=w.serial || w.model->pModelInfo!=w.info || w.model->pList!=w.part ||
-           !re4dc_source_world_pool(w.info,2) || !re4dc_source_world_pool(w.part,3))return 0;
+           !re4dc_source_world_pool(w.info,2) || !re4dc_source_world_pool(w.part,3)){R200_SFAIL(2000+int(i));return 0;}
         const auto* data=w.info->pData;
         if(w.info->pList || w.part->pList || !r200Range(data,sizeof(ModelData),alignof(ModelData)) ||
            !r200Range(data->pHead,sizeof(ModelDataHead)) || !data->displist_num || data->displist_num>1024 ||
-           !r200Range(data->pParts,data->displist_num*sizeof(ModelPart),alignof(ModelPart)))return 0;
+           !r200Range(data->pParts,data->displist_num*sizeof(ModelPart),alignof(ModelPart))){R200_SFAIL(3000+int(i));return 0;}
         unsigned ignored=2166136261U;
-        for(unsigned j=0;j<data->displist_num;++j)
-            if(!r200MaterialTexture(w.info,data->pParts[j].texId,ignored))return 0;
+        // ModelPart records are variable length (sizeof(ModelPart)+size), walked as r200ScrollFingerprint does;
+        // indexing pParts[j] read work 6's later records at the wrong address (lane ch3found16 2026-10-17).
+        const ModelPart* material=data->pParts;
+        for(unsigned j=0;j<data->displist_num;++j){
+            if(!r200Range(material,sizeof(ModelPart),alignof(ModelPart)) || material->size>r200p::smd_bytes ||
+               !r200Range(material,sizeof(ModelPart)+material->size,alignof(ModelPart)) ||
+               !r200MaterialTexture(w.info,material->texId,ignored)){R200_SFAIL(4000+int(i));return 0;}
+            material=reinterpret_cast<const ModelPart*>(reinterpret_cast<unsigned long>(material)+sizeof(ModelPart)+material->size);
+        }
     }
     return 1;
 }
@@ -365,6 +406,26 @@ extern "C" void re4dc_r200_scroll_diag() {
         pSmd?r200Hash(pSmd->work,r200p::works*sizeof(SmdWork)):0U,r200p::works_fnv);
 }
 #endif
+// World-space delta of a published work whose part swings about X (live part mat * inverse(rest)); 0 = draw baked.
+extern "C" int re4dc_r200_part_delta(unsigned work,float* out) {
+#ifdef RE4DC_TGD_NO_DELTA
+    return 0;
+#endif
+    if(!out || !r200ScrollPublished || work>=r200p::works || !r200ScrollBase(false))return 0;
+    cModel* model=r200ScrollWitness[work].model;
+    if(!model || scrTbl[work]!=model || model->serial!=r200ScrollWitness[work].serial)return 0;
+    const cParts* part=model->pList;
+    if(!part || part!=r200ScrollWitness[work].part || part->ang.x==0.f || !r200Phase(part->ang.x))return 0;
+    float rest[12],inv[12];r200PartRest(model,part,rest);
+    if(!r200Inverse(rest,inv))return 0;
+    r200Concat(&part->mat[0][0],inv,out);
+#if RE4DC_TRANSITION_GATE_DIAG
+    static unsigned lines;
+    if(lines<4){++lines;re4dc_log("TGD delta work=%u ang=%d model_t=%d,%d,%d delta_r1=%d,%d,%d,%d\n",work,int(part->ang.x*1000),
+        int(model->mat[0][3]),int(model->mat[1][3]),int(model->mat[2][3]),int(out[4]*1000),int(out[5]*1000),int(out[6]*1000),int(out[7]));}
+#endif
+    return 1;
+}
 extern "C" int re4dc_r200_scroll_member(cModel* model,unsigned serial,unsigned work,float* uv) {
     if(!r200ScrollPublished || !r200ScrollBase(false) || work>=r200p::works ||
        r200ScrollWitness[work].serial!=serial)return 0;

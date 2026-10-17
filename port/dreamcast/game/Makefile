@@ -1701,8 +1701,8 @@ include game30.mk
 # PS2_WORLD_TRANSITION_OWNER refused (PS2SOURCE_DECLINE reason 14) and the r200 package / scroll pins against the live data.
 TRANSITION_GATE_DIAG ?= 0
 ifeq ($(TRANSITION_GATE_DIAG),1)
-$(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/scroll.o: GAME_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1
-$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1
+$(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/scroll.o: GAME_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1 $(if $(TGD_NO_DELTA),-DRE4DC_TGD_NO_DELTA=1)
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1
 endif
 PS2_WORLD_PREFLIGHT_DIAG ?= 0
 ifneq ($(filter-out 0 1,$(PS2_WORLD_PREFLIGHT_DIAG)),)

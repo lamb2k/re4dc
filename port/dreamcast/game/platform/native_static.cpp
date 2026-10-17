@@ -4854,6 +4854,13 @@ int ps2_pass(unsigned pass,float zfar){
         const float* affine=pl.affine;float moved_affine[12];
         // The r11f owner admits only the whole immutable authored group.
         // Its baked placements need no dynamic slot or source-pointer reads.
+#if RE4DC_PS2_WORLD_TRANSITION_OWNER
+        // The claimed r200 group draws its baked placements; a work whose part swings (8 / 9 on the transition frame)
+        // takes the live rotation (placement index = scroll work, sealed r200 profile).
+        if(re4dc_source_world_group_claimed() && re4dc_r200_part_delta(pl.placement,moved_affine)){
+            float d[12];std::memcpy(d,moved_affine,sizeof(d));concat(d,pl.affine,moved_affine);affine=moved_affine;
+        }
+#endif
         if(
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
            !re4dc_source_world_group_claimed() &&
