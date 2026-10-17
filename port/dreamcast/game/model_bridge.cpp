@@ -865,9 +865,19 @@ bool outside(const Box& b, const float mv[3][4], const float* pr, const float* v
 }
 }
 #endif
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, unsigned b);  // native_model.cpp
+extern "C" unsigned re4dc_stream_model_bytes_now();
+extern "C" unsigned long long re4dc_otp_now_us();
+#endif
 extern "C" void re4dc_draw_model_part(const void* model,const void* info_ptr,
  const void* part_ptr,const float mv[3][4],unsigned pass){
     if(!RE4DC_MODEL_DIAG() || pass)return;
+#if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
+    struct BridgeProf { const void* m; unsigned long long t0; unsigned b0;
+        ~BridgeProf(){re4dc_pprof_add(m,9,unsigned(re4dc_otp_now_us()-t0),re4dc_stream_model_bytes_now()-b0);} }
+      bridge_prof{model,re4dc_otp_now_us(),re4dc_stream_model_bytes_now()};
+#endif
 #if defined(RE4DC_GCOBJ_SKIP) && (RE4DC_GCOBJ_SKIP == 3 || RE4DC_GCOBJ_SKIP == 4)
     if(re4dc_gcobj_class(((const cModel*)model)->kindid,((const cModel*)model)->id,RE4DC_GCOBJ_SKIP==4))return;
 #endif

@@ -3707,6 +3707,304 @@ static int sceneryGate(cModel* m)
     return 1;
 }
 #endif
+#if defined(RE4DC_PROP_GATE) && RE4DC_PROP_GATE
+// PROP_GATE (lane farmprop17 2026-10-17; render only, default 0): a lazily skinned room object (the r103 farm's cObj
+// id 2 props: 10 models, 111 parts a frame) whose every drawn part lies beyond the native actor fog gate's cull depth
+// draws nothing, yet each frame re4dc_actor_submit qualified every part, built its info's frame (the weight palette:
+// calcWeightMat + MakeWeightPalette at the first render read, SKIN_PALETTE_LAZY) and ran the palette depth bound only
+// to cull it (Flycast PROP_PROF: ~29 us a part in the native path + ~8 us in the bridge + the per-info walk here).
+// This gate decides for the whole model before any of that, from data the frame build reads anyway:
+//   - every palette entry is a convex blend (u8 percents, the last = 1 - the others, checked once per weight table) of
+//     the parts matrices calcWeightMat builds (inverse root x parts mat x bind mat), so the entry's translation depth is
+//     >= the least over all parts and its largest column norm <= the largest over all parts;
+//   - every part's stream is a converted blob (only re4dc_actor_submit draws it) with the bind ball the actor gate uses
+//     (|centre| + radius);
+//   - the info is lazily skinned and registered (no arrays: only the skinned frame can draw it).
+// So the actor gate's own depth for every part is >= this model bound; the model is skipped only when the bound is
+// beyond the same cull depth (projection far, or the fogged View far) with a margin (0.1 % + 10 units) for rounding.
+// The state the part walk leaves for later models is kept as sceneryGate keeps it (material colour, TPL cache /
+// texture objects with cTexChg swaps, shadow manager, colour-stage scale); LightSetModel still runs. =2 (check build):
+// the walk runs anyway and every part of a gated model must leave the native path at the fog gate ("PGATE ... bad=0").
+#if !RE4DC_SCENERY_GATE || !RE4DC_FRONT_LEAN || !RE4DC_SKIN_PALETTE_LAZY || !RE4DC_NATIVE_ACTOR_SKIN_LAZY
+#error "PROP_GATE needs SCENERY_GATE=1 FRONT_LEAN=1 SKIN_PALETTE_LAZY=1 NATIVE_ACTOR_SKIN_LAZY=1"
+#endif
+extern "C" unsigned re4dc_fog_enabled();
+extern "C" void re4dc_fog_note_far(float far) __attribute__((weak));  // native_static.cpp (NATIVE_FOG builds)
+extern "C" int re4dc_actor_skin_lazy_known(const void* info);        // native_actor_fast.cpp (PROP_GATE)
+extern "C" void re4dc_log(const char* fmt, ...);
+#if RE4DC_PROP_GATE == 2
+extern "C" unsigned re4dc_pg_expect, re4dc_pg_fogged;  // native_actor_fast.cpp: parts that left at the fog gate
+#endif
+namespace {
+const u32 kPgParts = 64;  // parts matrices bounded per model (a model with more is not gated)
+struct PgStats {
+    u32 tests, culled, kept, why[10], log;
+#if RE4DC_PROP_GATE == 2
+    u32 chk_models, chk_parts, chk_fogged;
+#endif
+} g_pg;
+const void* g_pgWeights[32];  // weight tables already found convex with ids below their model's parts count
+u32 g_pgWeightParts[32], g_pgWeightsNum;
+}
+static int propGateNo(int why)
+{
+    g_pg.why[why]++;
+    return 0;
+}
+// 1 when every entry of weight table w blends parts below `parts` with weights >= 0 that sum to 1: the last weight is
+// 1 - the others (MakeWeightPalette), so the other percents may not exceed 100.
+static int propGateWeights(const Weight* w, u32 n, u32 parts)
+{
+    for (u32 k = 0; k < g_pgWeightsNum && k < 32; k++) {
+        if (g_pgWeights[k] == w && g_pgWeightParts[k] == parts) {
+            return 1;
+        }
+    }
+    if (PTR_INVALID(w) || !n) {
+        return 0;
+    }
+    for (u32 i = 0; i < n; i++) {
+        const u32 num = w[i].num;
+        u32 sum = 0;
+        if (num < 1 || num > 3) {
+            return 0;
+        }
+        for (u32 j = 0; j < num; j++) {
+            if (w[i].id[j] >= parts) {
+                return 0;
+            }
+            if (j + 1 < num) {
+                sum += w[i].wht[j];
+            }
+        }
+        if (sum > 100) {
+            return 0;
+        }
+    }
+    g_pgWeights[g_pgWeightsNum & 31] = w;
+    g_pgWeightParts[g_pgWeightsNum & 31] = parts;
+    g_pgWeightsNum++;
+    return 1;
+}
+static int propGate(cModel* m, Mtx viewMat)
+{
+    if (pG->Frame_cnt - g_pg.log >= 600) {
+        g_pg.log = pG->Frame_cnt;
+        re4dc_log("PGATE frame=%u tests=%u culled=%u kept=%u why=%u,%u,%u,%u,%u,%u,%u,%u,%u,%u"
+#if RE4DC_PROP_GATE == 2
+                  " check models=%u parts=%u fogged=%u bad=%u"
+#endif
+                  "\n", pG->Frame_cnt, g_pg.tests, g_pg.culled, g_pg.kept, g_pg.why[0], g_pg.why[1], g_pg.why[2],
+                  g_pg.why[3], g_pg.why[4], g_pg.why[5], g_pg.why[6], g_pg.why[7], g_pg.why[8], g_pg.why[9]
+#if RE4DC_PROP_GATE == 2
+                  , g_pg.chk_models, g_pg.chk_parts, g_pg.chk_fogged, g_pg.chk_parts - g_pg.chk_fogged
+#endif
+        );
+    }
+    g_pg.tests++;
+    if (m->kindid != 1 || m->ot_type == 7 || (MODEL_EXT(m)->pFootShadowTbl != 0 && (m->be_flag & 0x10)) ||
+        (m->be_flag & 0x4000) || m->invisible_factor * m->invisible_factor2 != 1.0f || PTR_INVALID(m->pParts)) {
+        return propGateNo(0);
+    }
+    f32 projection[7];
+    GXGetProjectionv(projection);
+    if (projection[0] != 0) {
+        return propGateNo(1);
+    }
+    const f32 nearZ = projection[6] / (projection[5] - 1), farZ = projection[6] / projection[5];
+    if (!(nearZ > 0) || !(farZ > nearZ) || !(farZ < 1.0e30f)) {
+        return propGateNo(1);
+    }
+    f32 cullFar = farZ;
+    if (re4dc_fog_enabled()) {
+        const f32 v = re4dc_fog_far_for_gate(View._zfar);
+        if (v > nearZ && v < farZ) {
+            cullFar = v;
+        }
+    }
+    const f32 limit = cullFar * 1.001f + 10.0f;
+    // The parts matrices exactly as calcWeightMat builds them: translations and the largest column norm.
+    f32 t[kPgParts][3];
+    f32 s2 = 0.0f;
+    u32 np = 0;
+    Mtx inv;
+    Mtx tmp;
+    Mtx pal;
+    RE4DC_RENDER_MTXInverse(m->pParts->mat, inv);
+    for (cPartsWk* p = (cPartsWk*) m->pParts; p != 0; p = p->next) {
+        if (np == kPgParts) {
+            return propGateNo(2);
+        }
+        RE4DC_RENDER_MTXConcat(inv, ((cModel*) p)->mat, tmp);
+        RE4DC_RENDER_MTXConcat(tmp, p->bindMat, pal);
+        for (u32 c = 0; c < 3; c++) {
+            const f32 n2 = pal[0][c] * pal[0][c] + pal[1][c] * pal[1][c] + pal[2][c] * pal[2][c];
+            if (!(n2 <= s2)) {
+                s2 = n2;  // NaN propagates: the bound below fails
+            }
+        }
+        t[np][0] = pal[0][3];
+        t[np][1] = pal[1][3];
+        t[np][2] = pal[2][3];
+        np++;
+    }
+    if (!np || !(s2 < 1.0e30f)) {
+        return propGateNo(2);
+    }
+    const f32 smax = __builtin_sqrtf(s2);
+    int drawn = 0;
+    for (cModelInfo* info = m->pModelInfo; info != 0; info = info->pList) {
+        if (PTR_INVALID(info)) {
+            return propGateNo(3);
+        }
+        if (!(info->be_flag & 8)) {
+            continue;
+        }
+        ModelData* d = info->pData;
+        if (PTR_INVALID(d) || (info->be_flag & 2) || d->weight_ext_num > 0xFF || d->shapeOfs ||
+            (d->weight_palette_num <= 1 && d->nParts == 1) || info->invisible_factor != 1.0f || d->nTex > 0xF7) {
+            return propGateNo(4);
+        }
+        if (info->pPosBuf[pG->vtx_buf_no] != 0 || !re4dc_actor_skin_lazy_known(info)) {
+            return propGateNo(5);
+        }
+        if (!propGateWeights((const Weight*) d->pWeight, d->weight_palette_num, np)) {
+            return propGateNo(6);
+        }
+        // The bind ball of every part: the converted blob's header (BlobHeader: centre at +16, radius at +28).
+        f32 R = 0.0f;
+        ModelPart* part = d->pParts;
+        for (u32 i = 0; i < d->displist_num; i++) {
+            const u8* s = (const u8*) part + 0x20;
+            if (part->size < 32 || s[0] != 0xFE || s[1] != 3) {
+                return propGateNo(7);
+            }
+            f32 c[4];
+            memcpy(c, s + 16, sizeof(c));
+            if (!(c[3] > 0.0f) && c[0] == 0.0f && c[1] == 0.0f && c[2] == 0.0f) {
+                return propGateNo(7);  // the actor gate skips a part without bounds
+            }
+            const f32 rr = __builtin_sqrtf(c[0] * c[0] + c[1] * c[1] + c[2] * c[2]) + c[3];
+            if (!(rr >= 0.0f) || !(rr < 1.0e30f)) {
+                return propGateNo(7);
+            }
+            if (rr > R) {
+                R = rr;
+            }
+            part = (ModelPart*) (s + part->size);
+        }
+        // The info's modelview, as frontNativeModelTrans builds it for a skinned info.
+        Mtx pm;
+        Mtx mv;
+        RE4DC_RENDER_MTXConcat(m->pParts->mat, (f32(*)[4]) &info->x5C, pm);
+        RE4DC_RENDER_MTXConcat(viewMat, pm, mv);
+        const f32 mz = __builtin_sqrtf(mv[2][0] * mv[2][0] + mv[2][1] * mv[2][1] + mv[2][2] * mv[2][2]);
+        f32 T = 3.0e38f;
+        for (u32 j = 0; j < np; j++) {
+            const f32 dz = -(mv[2][0] * t[j][0] + mv[2][1] * t[j][1] + mv[2][2] * t[j][2] + mv[2][3]);
+            if (!(dz >= T)) {
+                T = dz;
+            }
+        }
+        const f32 depth = T - mz * smax * R;
+        if (!(depth > limit)) {
+            g_pg.kept++;
+            return 0;
+        }
+        drawn = 1;
+    }
+    if (!drawn) {
+        return propGateNo(8);
+    }
+#if RE4DC_PROP_GATE == 2
+    // Check build: draw it anyway; every part of the model must leave re4dc_actor_submit at the fog gate.
+    {
+        u32 parts = 0;
+        for (cModelInfo* info = m->pModelInfo; info != 0; info = info->pList) {
+            if (info->be_flag & 8) {
+                parts += info->pData->displist_num;
+            }
+        }
+        const u32 f0 = re4dc_pg_fogged;
+        re4dc_pg_expect = 1;
+        frontNativeModelTrans(m, viewMat, 0);
+        re4dc_pg_expect = 0;
+        g_pg.chk_models++;
+        g_pg.chk_parts += parts;
+        g_pg.chk_fogged += re4dc_pg_fogged - f0;
+        g_pg.culled++;
+        return 1;
+    }
+#else
+    // Skipped: keep what the part walk leaves for later models (sceneryGate's list).
+    GxWork* gx = GXWORK();
+    int matSet = 0;
+    int parts = 0;
+    PSet(g_pShdMng, 0);
+    for (cModelInfo* info = m->pModelInfo; info != 0; info = info->pList) {
+        if (info->be_flag & 0x20) {
+            GXSetChanMatColor(4, *(GXColor*) info->color);
+            matSet = 1;
+        } else if (matSet == 1) {
+            GXSetChanMatColor(4, *(GXColor*) m->pModelInfo->color);
+        }
+        if (!(info->be_flag & 8)) {
+            continue;
+        }
+        parts += info->pData->displist_num;
+        ModelData* id = info->pData;
+        if (g_prev_tpl_addr != info->tpl_addr || g_prev_add_tpl_addr != info->pAddTpl) {
+#if RE4DC_FRONT_TEXOBJ
+            if (!frontTexInit(m, info, id))
+#endif
+            {
+                for (u32 i = 0; i < ((TEXPalette*) info->tpl_addr)->numDescriptors + info->nAddTex; i++) {
+                    TEXPalette* tpl = (TEXPalette*) info->tpl_addr;
+                    TEXDescriptor* td;
+                    if (tpl->numDescriptors == 0) {
+                        td = TEXGet(info->pAddTpl, i);
+                    } else if (i < tpl->numDescriptors) {
+                        td = TEXGet(tpl, i);
+                    } else {
+                        td = TEXGet(info->pAddTpl, i - tpl->numDescriptors);
+                    }
+                    if ((s32) id->flags < 0) {
+                        TEXHeader* wh = td->textureHeader;
+                        wh->wrapT = 1;
+                        wh->wrapS = 1;
+                    }
+                    GXInitTexObj(&gx->texObj[i], td->textureHeader->data, td->textureHeader->width, td->textureHeader->height,
+                                 td->textureHeader->format, td->textureHeader->wrapS, td->textureHeader->wrapT,
+                                 td->textureHeader->minLOD == td->textureHeader->maxLOD ? 0 : 1);
+                }
+                if (MODEL_EXT(m)->pTexChg != 0) {
+                    MODEL_EXT(m)->pTexChg->move(gx->texObj);
+                }
+            }
+        }
+        PSet(g_prev_tpl_addr, info->tpl_addr);
+        PSet(g_prev_add_tpl_addr, info->pAddTpl);
+    }
+    if (parts) {
+        int scale = 0;
+        const int group = m->TevScaleGroup;
+        if (group == 0 || group == 1) {
+            scale = gxCsScale[group] == 1 ? 1 : gxCsScale[group] == 2 ? 2 : 0;
+        } else if (group == 5) {
+            scale = 1;
+        } else if (group == 6) {
+            scale = 2;
+        }
+        GXSetTevColorOp(0, 0, 0, scale, 1, 0);
+    }
+    if (re4dc_fog_note_far) {
+        re4dc_fog_note_far(View._zfar);  // the bridge notes the source View far at every part
+    }
+    g_pg.culled++;
+    return 1;
+#endif
+}
+#endif
 static void frontNativeRender(cModel* m, int dry)
 {
     CameraCurrentProjection();
@@ -3727,6 +4025,9 @@ static void frontNativeRender(cModel* m, int dry)
     }
 #endif
     LightSetModel(m);
+#if defined(RE4DC_PROP_GATE) && RE4DC_PROP_GATE
+    if (dry || !propGate(m, pG->Cam.v_mat))  // PROP_GATE: a skinned room object wholly beyond the actor fog gate
+#endif
     frontNativeModelTrans(m, pG->Cam.v_mat, dry);
 #if RE4DC_FRONT_LEAN
     g_leanRender = 0;

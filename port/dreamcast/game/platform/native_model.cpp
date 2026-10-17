@@ -696,6 +696,10 @@ struct Scope {
     ~Scope() { add(key, path, unsigned(re4dc_otp_now_us() - t0), re4dc_stream_model_bytes_now() - b0); }
 };
 }
+// The bridge's whole re4dc_draw_model_part (path 9) and other callers' spans.
+extern "C" void re4dc_pprof_add(const void* model, unsigned pth, unsigned us, unsigned b) {
+    pprof::add(model ? re4dc_propprof_key(model) : 0xffffffu, pth, us, b);
+}
 #define PP_PATH(x) (pprof::path = (x))
 #else
 #define PP_PATH(x) ((void) 0)
