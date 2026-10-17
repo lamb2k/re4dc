@@ -729,6 +729,12 @@ PRIM_CAP_R202 ?= 0
 ifneq ($(PRIM_CAP_R202),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R202=$(PRIM_CAP_R202)
 endif
+# PRIM_CAP_R226=<bytes> (lane ch4found16 2026-10-17, default 0: no effect): the same cap for r226 (room value 442,368 B;
+# PRIM_WATER peak 291,360 B cast on / 282,816 B cast off over the 150 s kill rig). Gate: PRIM_WATER overflow 0.
+PRIM_CAP_R226 ?= 0
+ifneq ($(PRIM_CAP_R226),0)
+$(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R226=$(PRIM_CAP_R226)
+endif
 # PRIM_BUF_KB=<KB> (lane cast16 2026-10-16; default 0: no effect; size only): every room's primitive buffer asks at most
 # this many KB of heap 4 (GC room values: r11f 655,360 B). Set it to the worst chapter 1-2 per-frame peak (PRIM_WATER,
 # primitives + native actor tail) x 1.5. A primitive that does not fit is skipped (GetPrimBuff returns 0; the sub screen
@@ -1464,6 +1470,13 @@ EFFECT_BIND_DIAG ?= 0
 ifeq ($(EFFECT_BIND_DIAG),1)
 $(OBJDIR)/platform/native_effect.o: PLATFORM_CPPFLAGS += -DRE4DC_EFFECT_BIND_DIAG=1
 $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_BIND_DIAG=1
+endif
+# EFFECT_STATS_LOG=1 (test only, lane ch4found16 2026-10-17; default 0 = image unchanged): logs each new worst decode
+# time of a compacted effect record (prepare_enemy_motions.py --compact-effects archives) and a summary every 4096
+# compact reads ("effect decode:" lines, native_effect.cpp).
+EFFECT_STATS_LOG ?= 0
+ifeq ($(EFFECT_STATS_LOG),1)
+$(OBJDIR)/platform/native_effect.o: PLATFORM_CPPFLAGS += -DRE4DC_EFFECT_STATS_LOG=1
 endif
 # DISC_POLL_SPIN_MS=N (with DISC_READ_FALLBACK=2, default 0): a sector read polls its GD command with thd_pass for N ms
 # before it sleeps (a KOS sleep ends at the next 10 ms scheduler tick). Lane discread load-time experiment.
