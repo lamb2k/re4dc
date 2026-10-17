@@ -802,7 +802,6 @@ PRIM_CAP_R202 ?= 0
 ifneq ($(PRIM_CAP_R202),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R202=$(PRIM_CAP_R202)
 endif
-<<<<<<< HEAD
 # PRIM_MIN_ST3=<bytes> (default 0: no effect; st3 lane 2026-10-15): the island rooms (r300..r33f) get a primitive buffer
 # of at least this many bytes (room values 262,144 .. 655,360). The buffer's tail funds the native actor palette bank
 # (64 KiB); r31b's 262,144 B left Leon on the GameCube path at its entry frame (LEONGC acq=10). Costs heap 4.
@@ -815,13 +814,12 @@ endif
 PRIM_CAP_R320 ?= 0
 ifneq ($(PRIM_CAP_R320),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R320=$(PRIM_CAP_R320)
-=======
+endif
 # PRIM_CAP_R226=<bytes> (lane ch4found16 2026-10-17, default 0: no effect): the same cap for r226 (room value 442,368 B;
 # PRIM_WATER peak 291,360 B cast on / 282,816 B cast off over the 150 s kill rig). Gate: PRIM_WATER overflow 0.
 PRIM_CAP_R226 ?= 0
 ifneq ($(PRIM_CAP_R226),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R226=$(PRIM_CAP_R226)
->>>>>>> origin/t15/int
 endif
 # PRIM_BUF_KB=<KB> (lane cast16 2026-10-16; default 0: no effect; size only): every room's primitive buffer asks at most
 # this many KB of heap 4 (GC room values: r11f 655,360 B). Set it to the worst chapter 1-2 per-frame peak (PRIM_WATER,

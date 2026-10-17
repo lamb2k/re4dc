@@ -580,7 +580,6 @@ void gameRoomInit()
         pG->nPrim = RE4DC_PRIM_CAP_R202;
     }
 #endif
-<<<<<<< HEAD
 #if defined(RE4DC_PRIM_MIN_ST3) && RE4DC_PRIM_MIN_ST3
     // PRIM_MIN_ST3 (st3 lane, issue: GC Leon at r31b entry): the island rooms' room values range 262,144 (r31b) ..
     // 655,360 (r303). The prim buffer's tail also funds the native actor palette bank (64 KiB) and workspace; at
@@ -595,13 +594,13 @@ void gameRoomInit()
     // PRIM_MIN_ST3, r320 asks 442,368 B; PRIM_WATER peak 288,928 B (actor tail 250,560), overflow 0, cast on.
     if (pG->room_id == 0x320 && !(pG->System_flg & 0x200000) && pG->nPrim > RE4DC_PRIM_CAP_R320) {
         pG->nPrim = RE4DC_PRIM_CAP_R320;
-=======
+    }
+#endif
 #if defined(RE4DC_PRIM_CAP_R226) && RE4DC_PRIM_CAP_R226
     // PRIM_CAP_R226 (lane ch4found16 2026-10-17, heap 4 for r226's statue fight): room value 442,368 B; PRIM_WATER
     // peak 291,360 B per frame with the PS2 cast on, 282,816 B off (actor tail 255,584 / 245,728), overflow 0.
     if (pG->room_id == 0x226 && pG->nPrim > RE4DC_PRIM_CAP_R226) {
         pG->nPrim = RE4DC_PRIM_CAP_R226;
->>>>>>> origin/t15/int
     }
 #endif
 #if defined(RE4DC_PRIM_BUF_KB) && RE4DC_PRIM_BUF_KB
