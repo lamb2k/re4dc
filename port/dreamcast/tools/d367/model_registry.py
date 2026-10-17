@@ -566,6 +566,10 @@ def main():
             sys.exit('model_registry: --roles5 needs --pool')
         MATERIAL_ROWS = 160
         PACK_CAPACITY.update(ref=96)  # RE4DC_NMR_CHUNKS 96 with RE4DC_NMR_ROLES5 (coarse_actor_owner_registry.inc)
+        PACK_CAPACITY.update(tex=32)  # kRegTextures 32 with RE4DC_NMR_ROLES5 (coarse_actor_owner_registry.inc)
+        SOURCE_BLOBS = 128  # kBlobMaskBits 128 with RE4DC_NMR_ROLES5 (actor_material_records.inc two-word BlobMask)
+        PACK_CAPACITY.update(fmodel=64, fpart=224)  # coarse_actor_registry_pack_check.inc with RE4DC_NMR_ROLES5
+        PACK_MAX_BYTES = 384 * 1024
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
@@ -1277,6 +1281,8 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
         for s in r['sections']:
             mk, tk = (r['archive'], s['bin']), (r['archive'], s['tpl'])
             role_texture_max = 9 if room == 0x11f and PACK_CAPACITY['fpart'] == 128 else 8
+            if POOL:
+                role_texture_max = 17  # RE4DC_NMR_ROLE_TEXTURES 17 in NATIVE_MODEL_REGISTRY_POOL images (pack_check)
             if SLOTS:
                 role_texture_max = 17  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): GC pl11 TPL 5 has 17 images
             if len(tpls[tk]['textures']) > role_texture_max:

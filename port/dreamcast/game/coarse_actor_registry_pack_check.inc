@@ -15,8 +15,14 @@ using re4dc_material::kRoomRoles;using re4dc_material::kRoomBlobs;
 // their TPLs' texture facts, beside Ashley's partner package (10 models, 28 texture facts) in her rooms.
 #define RE4DC_NMR_TEX_FACTS 64u
 #define RE4DC_NMR_ROLE_TEXTURES 17u
+#if defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
+// NATIVE_MODEL_REGISTRY_ROLES5 (lane cast16): wide castle packages - r227 em14 x4 (291 KiB + skin), r214 (51 BIN models, 340 KiB + skin).
+#define RE4DC_NMR_PACK_KIB 384u
+#define RE4DC_NMR_PACK_MODELS 64u
+#else
 #define RE4DC_NMR_PACK_KIB 256u
 #define RE4DC_NMR_PACK_MODELS 48u
+#endif
 #define RE4DC_NMR_ROLE_TN_BAD(tn,room) ((tn)>pack_role_texture_max(room))
 #elif defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY
 #define RE4DC_NMR_TEX_FACTS 32u
@@ -53,7 +59,12 @@ constexpr unsigned kPackRecord[kPackKinds]={48,16,64,1,16,1,48,96,32,68,32,32};
 // need 124. Facts stay in the validated room package; no added static arena.
 #if defined(RE4DC_NMR_POOL) && RE4DC_NMR_POOL
 // NATIVE_MODEL_REGISTRY_POOL: the pool sections' source part facts (each package its own; Luis 83, a pool ~60).
+#if defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
+// ROLES5: r216 armour em3c x2 = 201 part facts.
+constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=224,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
+#else
 constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=160,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
+#endif
 #elif defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
 constexpr unsigned kPackModels=RE4DC_NMR_PACK_MODELS,kPackParts=128,kPackTexFacts=RE4DC_NMR_TEX_FACTS;
 #elif RE4DC_ROUTE_CH22
