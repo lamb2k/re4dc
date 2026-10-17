@@ -32,10 +32,13 @@ newest test release and its Build-Assets zip from GitHub and checks them against
 
 The Build-Assets zip holds the generated character data the release program was built with
 (`ps2leon/`, `ps2ganado/`, and from test 15 `glod/ganado_lod.re4gl`, the lighter villager meshes named by
-`GANADO_LOD_PACK`), so your program draws the same characters as the release. From test 15 it also carries, under
+`GANADO_LOD_PACK`), so your program draws the same characters as the release. From test 17 it also holds
+`ps2enemych2/`, the PS2 enemy rows of chapters 2-2 and 2-3 (`PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR`, compiled
+into the program), so your program places the same enemies as the release. From test 15 it also carries, under
 `re4dc-assets/disc/<disc path>`, the disc data files that changed in test 15 (the chapter 1 sound files
 `st1/r103.dar` and `bgm/aica_str.dat`, `dc/resident.bin`, `dc/tex.pak` and the village world in `dc/native/r101/`);
-they are on the release disc already, so you need them only for a disc of your own. Built from the release's source commit with its
+they are on the release disc already, so you need them only for a disc of your own. From test 17 `dc/tex.pak` holds every texture (data set `pak17`): the disc and the zip carry no loose
+`dc/tex/<c>/` textures. Built from the release's source commit with its
 Build-Assets zip, the program is byte for byte the release's program (the maintainers check this before
 every release). Downloads are kept, so a second run only rebuilds.
 
@@ -104,8 +107,8 @@ the release build itself, so it is the exact knob list of the published program.
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
 Without `ASSETS` the build uses `game/public-assets`, neutral stand ins that carry no game data, and
-switches these release knobs off (`PRIVATE_OFF` in `build-public.sh`). The game plays the same; it looks
-different from the release:
+switches these release knobs off (`PRIVATE_OFF` in `build-public.sh`). The game plays the same (except the
+chapter 2 enemies, below); it looks different from the release:
 
 * `PS2_LEON=0 LEON_HAND_PACK=0`: Leon is the GameCube model (the release draws the PS2 Leon, also in
   every hand pose).
@@ -119,6 +122,9 @@ different from the release:
   release.
 * Leon and the villagers draw from the original GameCube models on the disc instead of the converted
   meshes. They cost more time to draw, so do not compare speed with the release.
+* `PS2_CH2_ENEMY=0` (test 17 on, without the zip's `ps2enemych2/`): chapters 2-2 and 2-3 use the GameCube enemy
+  lists and room code instead of the PS2 ones, so the enemies there differ from the release (this one changes
+  gameplay in those chapters; chapter 1 is unchanged).
 * The memory card messages show the GameCube wording ("Memory Card in Slot A") instead of the VMU wording.
 
 Either way, measure your change against your own build with the change switched off.
@@ -244,7 +250,7 @@ maintainers keep outside the repository.
 | GameCube Resident Evil 4 debug disc 1 (G4BE08, extracted file tree) | base disc tree: rooms, enemies, sound banks, menus | mostly (`tools/le_mirror.py`, `tools/d367/stage.sh`, `tools/aica_banks.py disc`) |
 | same | Dreamcast room meshes (`dc/native/rXXX/MAINSCENARIO.re4mesh`) | yes, per room (`tools/convert_room_bins.py`) |
 | same | room archives with Dreamcast audio (`st1/rXXX.dar`) | per room steps, not one command |
-| same plus game run logs | texture package `dc/tex.pak` (VQ textures) | no: the VQ selection comes from logs of test runs |
+| same plus game run logs | texture package `dc/tex.pak`: from test 17 every texture of the disc (no loose `dc/tex/` files), 16-bit pictures VQ by default | partly: `tools/d367/vram/disc_pack.py` packs a disc's loose textures (opaque 16-bit pictures of 16 KiB or more as VQ when PSNR >= 29 dB; UI, alpha and small pictures stay 16-bit), but the earlier VQ selections come from logs of test runs |
 | none (the lists are in the repository, made from game run logs) | per-room resident texture lists `dc/resident.bin` (ROOM_RESIDENT) | yes (`tools/d367/vram/resident_keys.py pack` of `tools/d367/vram/resident/r*.tsv`) |
 | PS2 Resident Evil 4, USA (SLUS 21134), `BIO4MOV.AFS` | cutscene movies `dc/movie/*.seq` | yes (`tools/convert_route_movies.py`, needs ffmpeg) |
 | PS2 USA, `BIO4DAT.AFS` rooms (plus two JADERLINK unpack tools) | PS2 room worlds `dc/native/rXXX/ps2-world.*` | converters exist; the released set is a reviewed frozen output |
