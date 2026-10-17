@@ -217,7 +217,12 @@ T15_GD=${T15_GD-GANADO_ATLAS_DROP=3}
 #      heap_before -4,096 B (one ARENA_FIT step); KOS 48 KiB 10/10. docs/lanes/stump17.md. T15_ST="" builds without it.
 STUMP17D=${STUMP17D:-/root/re4data/private/stump17-20261017}
 T15_ST=${T15_ST-ACTOR_GANADO_PS2_STUMP=1 ACTOR_GANADO_PS2_STUMP_DIR=$STUMP17D}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP $T15_DY $T15_TP $T15_GD $T15_ST"
+# T15_PG (lane farmprop17, test 17, coordinator 10-17: on game-wide): PROP_GATE=1, a lazily skinned room object (cObj)
+#      wholly beyond the native actor fog gate's cull depth skips its part walk instead of preparing each part's skinned
+#      frame only to cull it (trans.cpp propGate; r103 farm props ~3 ms/picture Flycast). Render only, exact (=2 check:
+#      every part of a gated model is culled by the fog gate). T15_PG="" builds without it.
+T15_PG=${T15_PG-PROP_GATE=1}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP $T15_DY $T15_TP $T15_GD $T15_ST $T15_PG"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"
