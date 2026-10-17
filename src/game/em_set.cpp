@@ -340,6 +340,22 @@ static int aliveCapRoom()
     return 1;
 }
 
+// 1 while list entry `no` waits in the hold (a deferred send not set yet). Room code that counts its sent-but-inactive
+// slots as dead (r327's gatling trigger) skips these: on the PS2 they are alive. Island builds only (r327).
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+extern "C" int re4dc_aliveCapIsHeld(int no)
+{
+    int k;
+
+    for (k = 0; k < aliveCapN; k++) {
+        if (aliveCapHeld[k] == (u8) no && aliveCapWaitingK(k)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+#endif
+
 // Held entries with id in lo..hi (hi -1 = just lo), added to SceCountEmAlive.
 extern "C" int re4dc_aliveCapHeldCount(int lo, int hi)
 {

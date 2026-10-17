@@ -131,6 +131,18 @@ static void r327_BoxOpened(u32 id);
 // (0x113d8) runs EmFarDelete(5, any view), always opens with side 0 (0x94 0x96 0x99 0x9A), then sends side 1
 // (0x92 0x91 0x98 0x97) from index (alive - 1) on. The gatling cut (0x10dd8) runs the room-local r327EmFarDelete(8)
 // (0x12f20). EnemySet2nd (0x12b30) sends 0x83 / 0x84 once, only while alive(0x1D) < 8. Default 0: GameCube code.
+
+// ALIVE_CAP (ch5found16 10-17): a send the cap holds is set here but not active yet. The gatling trigger counts set and
+// inactive slots as dead; on the PS2 a held Ganado is alive, so it is not counted (at cap 4 the 5 held first-table
+// sends fired the gatling cut at room entry, and its far delete (keep 8, alive 10) then removed 2 live Ganados).
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+extern "C" int re4dc_aliveCapIsHeld(int no);
+extern "C" int re4dc_aliveCapHeldCount(int lo, int hi);
+extern "C" int re4dc_aliveCapFarDrop(int max, int clearAlive);
+static inline int r327_capHeld(int no) { return re4dc_aliveCapIsHeld(no); }
+#else
+static inline int r327_capHeld(int no) { (void) no; return 0; }
+#endif
 #define R327_PS2 (RE4DC_PS2_ENEMY_ST3 & 4)
 #if R327_PS2
 #include "em_far_delete.h"
@@ -216,6 +228,21 @@ static void r327ps2_farDelete(int keep)
     int k;
 
     OSReport("[r327-ps2] room far delete keep=%d alive=%d\n", keep, SceCountEmAlive(0x10, 0x20));
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    // ALIVE_CAP (ch5found16 10-17): the count includes the cap's held sends (alive on the PS2). Over `keep`, the held
+    // ones go first (latest held first, off screen, as em_far_delete.h does), so no live Ganado vanishes in front of
+    // the player while sends wait in the hold; then the farthest live ones as before. Same number removed as the PS2.
+    if (n > 0) {
+        int held = re4dc_aliveCapHeldCount(0x10, 0x20);
+
+        if (held > n) {
+            held = n;
+        }
+        if (held > 0) {
+            n -= re4dc_aliveCapFarDrop(held, 0);
+        }
+    }
+#endif
     for (k = 0; k < n; k++) {
         int best = -1;
         f32 bestD = 0.0f;
@@ -331,7 +358,7 @@ static void r327ps2_GatlingGanadoSet()
         for (i = 0; i < 32; i++) {
             R327Em* e = &r327_work.p->em[i];
 
-            if (e->set != 0 && !e->em.isActive()) {
+            if (e->set != 0 && !e->em.isActive() && !r327_capHeld(e->id)) {
                 n++;
             }
         }
@@ -642,7 +669,7 @@ static void r327_GatlingGanadoSet()
         for (i = 0; i < 32; i++) {
             R327Em* e = &r327_work.p->em[i];
 
-            if (e->set != 0 && !e->em.isActive()) {
+            if (e->set != 0 && !e->em.isActive() && !r327_capHeld(e->id)) {
                 n++;
             }
         }
