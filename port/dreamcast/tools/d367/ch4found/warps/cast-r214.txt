@@ -1,0 +1,12 @@
+name cast-r214
+# ch4found16 castle PS2 cast gate: r214 kill rig on em14 (Codex r214 walk entry), god, cap 4
+room 0x214
+pos 8762 1505 39019
+ang -1.5640
+inv default
+god
+alivelog 300
+kill 0x14 300 0x214
+killrep 14 90
+act 360 fwd 12
+dump

@@ -1,0 +1,9 @@
+name draw-r201
+# ch4found16 castle PS2 cast draw rig: r201 enemies come to Leon (god, no kills, Leon stands; from cast-r201.txt)
+room 0x201
+pos -126 0 1786
+ang 2.9900
+inv default
+god
+alivelog 300
+dump

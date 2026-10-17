@@ -1,0 +1,9 @@
+name draw-r211
+# ch4found16 castle PS2 cast draw rig: r211 enemies come to Leon (god, no kills, Leon stands; from cast-r211.txt)
+room 0x211
+pos 1160 0 19740
+ang 1.6690
+inv default
+god
+alivelog 300
+dump

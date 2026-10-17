@@ -1,0 +1,12 @@
+name cast-r201
+# ch4found16 castle PS2 cast gate: r201 kill rig on em1b (Codex r201 walk entry), god, cap 4
+room 0x201
+pos -126 0 1786
+ang 2.9900
+inv default
+god
+alivelog 300
+kill 0x1b 300 0x201
+killrep 14 90
+act 360 fwd 12
+dump

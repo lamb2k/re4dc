@@ -1,0 +1,9 @@
+name draw-r21b
+# ch4found16 castle PS2 cast draw rig: r21b enemies come to Leon (god, no kills, Leon stands; from dec-r21b.txt)
+room 0x21b
+pos -231777 -4282 -43995
+ang 1.3660
+inv default
+god
+alivelog 300
+dump
