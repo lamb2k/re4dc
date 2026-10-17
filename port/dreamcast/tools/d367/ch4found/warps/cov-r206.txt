@@ -1,0 +1,9 @@
+name cov-r206
+# ch4found16 coverage walk: r206 after Luis' death and the reunion (rsf 0 4 9), no entry movie
+room 0x206
+pos 10008 8000 -4221
+ang -1.7520
+inv default
+rsf 0x206 0 4 9
+act 360 fwd 12
+dump
