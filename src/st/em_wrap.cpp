@@ -27,6 +27,45 @@ struct EmListView {
 // .rodata (string) order. st2_4/st4_0 were built without the cEmControl/cEmPatrol/cEmGuard part
 // (src/st/em_wrap_v2.cpp defines EM_WRAP_NO_CONTROL and includes this file).
 
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+// ALIVE_CAP (lane ch5found16 10-17, "held sends are alive"): when the cap holds a room's send, setEm gets no enemy.
+// The handle then keeps alive = 2 (held): isAlive / isActive answer 1, as on the PS2 where the Ganado exists, so a
+// room's "dead" test (inactive slot, wave counts, "wait until it dies") does not fire for a Ganado that was never
+// spawned. On release the handle re-attaches to the enemy; if the hold drops the entry it reads dead. Members that use
+// the enemy do nothing while it is held (patrol loops wait for it); getPtr creates it over the cap (the caller uses
+// the pointer), destroy drops it. alive is 0 or 1 whenever nothing is held, so cap builds without holds run as before.
+extern "C" int re4dc_aliveCapHeldEntry(int no);
+extern "C" cEm* re4dc_aliveCapTake(int no, int drop);
+static int emWrapHeld(cEmWrap* w)
+{
+    if (w->alive != 2) {
+        return 0;
+    }
+    if (w->no >= 0 && re4dc_aliveCapHeldEntry(w->no)) {
+        return 1;
+    }
+    w->pEm = (w->no >= 0 && (((EmListView*) pG)->emlist[w->no].be_flag & 2)) ? GetEmPtrFromList(w->no) : 0;
+    w->alive = w->pEm != 0;
+    return 0;
+}
+#define EM_WRAP_HELD(w) emWrapHeld(w)
+#else
+#define EM_WRAP_HELD(w) 0
+#endif
+
+// The handle's enemy is set and alive (be_flag 1 without the 0x200 kill bit); a held handle is not (no enemy yet).
+static int emWrapLive(cEmWrap* w)
+{
+    (void) EM_WRAP_HELD(w);
+    if (w->alive != 1) {
+        return 0;
+    }
+    if (w->pEm == 0) {
+        return 0;
+    }
+    return (w->pEm->be_flag & 0x201) == 1;
+}
+
 #ifndef EM_WRAP_NO_CONTROL
 // Bind the controller to enemy list entry `no` (setPtr: existing enemy or spawn it) and load an
 // n-point position route (max 15). Returns 0 (logging "SetPatrol" when errOn) if the enemy is missing.
@@ -343,6 +382,12 @@ int cEmWrap::setEm(s16 no, s8 list, int errOn, int chkDead, int setAlive)
         pEm = EmSetFromList2(no, chkDead == 1);
     }
     if (pEm == 0) {
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+        if (re4dc_aliveCapHeldEntry(no)) {
+            alive = 2;   // held by the cap: alive to the room; the release sets the list alive bit
+            return 1;
+        }
+#endif
         err("EM_SET_NO(%d) cEmWrap::setEm failed", this->no);
         return 0;
     }
@@ -404,7 +449,13 @@ int cEmWrap::setPtr(cEm* em, int errOn)
 // The enemy pointer, or 0 (with an error log) once it has died.
 cEm* cEmWrap::getPtr()
 {
-    if (isAlive() == 1) {
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    if (emWrapHeld(this)) {
+        pEm = re4dc_aliveCapTake(no, 0);
+        alive = pEm != 0;
+    }
+#endif
+    if (emWrapLive(this) == 1) {
         return pEm;
     }
     err("EM_SET_NO(%d) cEmWrap::getPtr error", no);
@@ -414,19 +465,19 @@ cEm* cEmWrap::getPtr()
 // 1 while the handle was set and the enemy still has be_flag alive (1) without the 0x200 kill bit.
 int cEmWrap::isAlive()
 {
-    if (alive != 1) {
-        return 0;
+    if (EM_WRAP_HELD(this)) {
+        return 1;
     }
-    if (pEm == 0) {
-        return 0;
-    }
-    return (pEm->be_flag & 0x201) == 1;
+    return emWrapLive(this);
 }
 
 // 1 when alive and the enemy reports EM_STATUS_ACTIVE (not suspended / not dead).
 int cEmWrap::isActive()
 {
-    if (isAlive() == 1 && pEm->checkStatus(EM_STATUS_ACTIVE) == 1) {
+    if (EM_WRAP_HELD(this)) {
+        return 1;
+    }
+    if (emWrapLive(this) == 1 && pEm->checkStatus(EM_STATUS_ACTIVE) == 1) {
         return 1;
     }
     return 0;
@@ -435,7 +486,14 @@ int cEmWrap::isActive()
 // Kill the enemy through EmMgr and clear its ESL entry's be_flag bit 1 (so it is not re-spawned), then reset the handle.
 void cEmWrap::destroy()
 {
-    if (isAlive() == 1) {
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    if (emWrapHeld(this)) {
+        (void) re4dc_aliveCapTake(no, 1);
+        initWork();
+        return;
+    }
+#endif
+    if (emWrapLive(this) == 1) {
         EmListData* d = GetListPtrFromEm(pEm);
 
         if (d != 0) {
@@ -451,7 +509,7 @@ void cEmWrap::destroy()
 // be_flag bit 2 (0x2): 1 = the enemy is not drawn (transparent), 0 = visible.
 void cEmWrap::setTrans(int on)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         cEm* p = pEm;
 
         if (on == 1) {
@@ -467,7 +525,7 @@ void cEmWrap::setTrans(int on)
 // 1 when be_flag bit 0x2 (not drawn) is set.
 int cEmWrap::isTrans()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return (pEm->be_flag & 2) != 0;
     }
     err("EM_SET_NO(%d) cEmWrap::isTrans error", no);
@@ -477,7 +535,7 @@ int cEmWrap::isTrans()
 // be_flag bit 0x4: 1 = the enemy's move routine is skipped (frozen in place), 0 = normal.
 void cEmWrap::setMove(int on)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         cEm* p = pEm;
 
         if (on == 1) {
@@ -493,7 +551,7 @@ void cEmWrap::setMove(int on)
 // 1 when be_flag bit 0x4 (move suppressed) is set.
 int cEmWrap::isMove()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return (pEm->be_flag & 4) != 0;
     }
     err("EM_SET_NO(%d) cEmWrap::isMove error", no);
@@ -503,7 +561,7 @@ int cEmWrap::isMove()
 // Set (on = 1) or clear an arbitrary be_flag bit mask on the enemy.
 void cEmWrap::setBeFlag(u32 bit, int on)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (on == 1) {
             pEm->be_flag |= bit;
         } else {
@@ -517,7 +575,7 @@ void cEmWrap::setBeFlag(u32 bit, int on)
 // 1 when any of the be_flag bits in `bit` is set.
 int cEmWrap::isBeFlag(u32 bit)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return (pEm->be_flag & bit) != 0;
     }
     err("EM_SET_NO(%d) cEmWrap::isBeFlag error", no);
@@ -527,7 +585,7 @@ int cEmWrap::isBeFlag(u32 bit)
 // Non-zero when the enemy is in a damage reaction (EM_STATUS_LOCKOFF: not lockable by the aim).
 int cEmWrap::isDamage()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->checkStatus(EM_STATUS_LOCKOFF);
     }
     err("EM_SET_NO(%d) cEmWrap::isDamage error", no);
@@ -537,7 +595,7 @@ int cEmWrap::isDamage()
 // Forward cEm::setNoSuspend: keep the enemy updating when it is off-screen / far away.
 void cEmWrap::setNoSuspend(int on)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->setNoSuspend(on);
     } else {
         err("EM_SET_NO(%d) cEmWrap::setNoSuspend error", no);
@@ -547,7 +605,7 @@ void cEmWrap::setNoSuspend(int on)
 // 1 when be_flag bit 0x400 (no suspend) is set.
 int cEmWrap::isNoSuspend()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return (pEm->be_flag & 0x400) != 0;
     }
     err("EM_SET_NO(%d) cEmWrap::isNoSuspend error", no);
@@ -557,7 +615,7 @@ int cEmWrap::isNoSuspend()
 // Force the enemy's routine numbers r_no_0 / r_no_1 (its state machine: Rno0 = routine, Rno1 = sub-step).
 void cEmWrap::setRno(u8 r0, u8 r1)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->r_no_0 = r0;
         pEm->r_no_1 = r1;
     } else {
@@ -568,7 +626,7 @@ void cEmWrap::setRno(u8 r0, u8 r1)
 // 1 when the enemy is currently in routine r0 / sub-step r1.
 int cEmWrap::ckRno01(int r0, int r1)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         cEm* p = pEm;
 
         if (p->r_no_0 == r0 && p->r_no_1 == r1) {
@@ -583,7 +641,7 @@ int cEmWrap::ckRno01(int r0, int r1)
 // Overwrite the enemy's current hp.
 void cEmWrap::setHp(s16 hp)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->hp = hp;
     } else {
         err("EM_SET_NO(%d) cEmWrap::setHp error", no);
@@ -593,7 +651,7 @@ void cEmWrap::setHp(s16 hp)
 // Current hp (0 with an error log if the enemy is gone).
 s16 cEmWrap::getHp()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->hp;
     }
     err("EM_SET_NO(%d) cEmWrap::getHp error", no);
@@ -603,7 +661,7 @@ s16 cEmWrap::getHp()
 // The enemy's hp_max from its parameter table.
 s16 cEmWrap::getHpMax()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->hp_max;
     }
     err("EM_SET_NO(%d) cEmWrap::getHpMax error", no);
@@ -613,7 +671,7 @@ s16 cEmWrap::getHpMax()
 // The Ganado Character byte (aggressiveness class: 0 = hostile / chase, 1 = passive / guard walk).
 u8 cEmWrap::Character()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->Character;
     }
     err("EM_SET_NO(%d) cEmWrap::Character error", no);
@@ -623,7 +681,7 @@ u8 cEmWrap::Character()
 // Set the Character byte (see Character()).
 void cEmWrap::setCharacter(u8 c)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->Character = c;
     } else {
         err("EM_SET_NO(%d) cEmWrap::setCharacter error", no);
@@ -633,7 +691,7 @@ void cEmWrap::setCharacter(u8 c)
 // The enemy's Guard_r: the radius (game units) inside which it notices the player.
 f32 cEmWrap::getGuard_r()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->Guard_r;
     }
     err("EM_SET_NO(%d) cEmWrap::Guard_r error", no);
@@ -643,7 +701,7 @@ f32 cEmWrap::getGuard_r()
 // Set Guard_r (cEmGuard uses 100 while posted so the guard ignores the player until check() fails).
 void cEmWrap::setGuard_r(f32 r)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->Guard_r = r;
     } else {
         err("EM_SET_NO(%d) cEmWrap::setGuard_r error", no);
@@ -653,7 +711,7 @@ void cEmWrap::setGuard_r(f32 r)
 // 1 when cEm::checkStatus(stat) reports the EM_STATUS bit set.
 int cEmWrap::checkStatus(int stat)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->checkStatus(stat) != 0 ? 1 : 0;
     }
     err("EM_SET_NO(%d) cEmWrap::checkStatus error", no);
@@ -663,7 +721,7 @@ int cEmWrap::checkStatus(int stat)
 // Teleport the enemy (cEm::setPos also refreshes its old position / matrix).
 void cEmWrap::setPos(Vec* pos)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->setPos(pos);
     } else {
         err("EM_SET_NO(%d) cEmWrap::setPos error", no);
@@ -673,7 +731,7 @@ void cEmWrap::setPos(Vec* pos)
 // Set the enemy's rotation (radians).
 void cEmWrap::setAng(Vec* ang)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->setAng(ang);
     } else {
         err("EM_SET_NO(%d) cEmWrap::setAng error", no);
@@ -683,7 +741,7 @@ void cEmWrap::setAng(Vec* ang)
 // Set the enemy's model scale.
 void cEmWrap::setSca(Vec* sca)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->scale = *sca;
     } else {
         err("EM_SET_NO(%d) cEmWrap::setSca error", no);
@@ -693,7 +751,7 @@ void cEmWrap::setSca(Vec* sca)
 // OR bits into the enemy's `flag` word (the per-enemy behaviour flags the ESL sets).
 void cEmWrap::setFlag(u32 bit)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->flag |= bit;
     } else {
         err("EM_SET_NO(%d) cEmWrap::setFlag error", no);
@@ -703,7 +761,7 @@ void cEmWrap::setFlag(u32 bit)
 // 1 when the enemy's `flag` word has any of `bit` set (logs with the setFlag text: vendor copy-paste).
 int cEmWrap::ckFlag(u32 bit)
 {
-    if (isAlive() != 1) {
+    if (emWrapLive(this) != 1) {
         err("EM_SET_NO(%d) cEmWrap::setFlag error", no);
     } else if (pEm->flag & bit) {
         return 1;
@@ -714,7 +772,7 @@ int cEmWrap::ckFlag(u32 bit)
 // Copy the enemy position out; zero vector (and error log) if it is gone.
 void cEmWrap::getPos(Vec* pos)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         *pos = pEm->pos;
     } else {
         err("EM_SET_NO(%d) cEmWrap::getPos error", no);
@@ -727,7 +785,7 @@ void cEmWrap::getPos(Vec* pos)
 // pos.x, or 0 if the enemy is gone.
 f32 cEmWrap::getPosX()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->pos.x;
     }
     err("EM_SET_NO(%d) cEmWrap::getPosX error", no);
@@ -737,7 +795,7 @@ f32 cEmWrap::getPosX()
 // pos.y, or 0 if the enemy is gone.
 f32 cEmWrap::getPosY()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->pos.y;
     }
     err("EM_SET_NO(%d) cEmWrap::getPosY error", no);
@@ -747,7 +805,7 @@ f32 cEmWrap::getPosY()
 // pos.z, or 0 if the enemy is gone.
 f32 cEmWrap::getPosZ()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->pos.z;
     }
     err("EM_SET_NO(%d) cEmWrap::getPosZ error", no);
@@ -757,7 +815,7 @@ f32 cEmWrap::getPosZ()
 // Copy the enemy rotation out; zero vector if it is gone.
 void cEmWrap::getAng(Vec* ang)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         *ang = pEm->ang;
     } else {
         err("EM_SET_NO(%d) cEmWrap::getAng error", no);
@@ -770,7 +828,7 @@ void cEmWrap::getAng(Vec* ang)
 // ang.x, or 0 if the enemy is gone.
 f32 cEmWrap::getAngX()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->ang.x;
     }
     err("EM_SET_NO(%d) cEmWrap::getAngX error", no);
@@ -780,7 +838,7 @@ f32 cEmWrap::getAngX()
 // ang.y (facing, radians), or 0 if the enemy is gone.
 f32 cEmWrap::getAngY()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->ang.y;
     }
     err("EM_SET_NO(%d) cEmWrap::getAngY error", no);
@@ -790,7 +848,7 @@ f32 cEmWrap::getAngY()
 // ang.z, or 0 if the enemy is gone.
 f32 cEmWrap::getAngZ()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         return pEm->ang.z;
     }
     err("EM_SET_NO(%d) cEmWrap::getAngZ error", no);
@@ -800,7 +858,7 @@ f32 cEmWrap::getAngZ()
 // Forward cEm::motionSet (motion data, id, frame, blend, flags): rooms that script an enemy's animation.
 void cEmWrap::motionSet(void* data, int a, int b, int c, int d)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->motionSet(data, a, b, c, d);
     } else {
         err("EM_SET_NO(%d) cEmWrap::motionSet error", no);
@@ -810,7 +868,7 @@ void cEmWrap::motionSet(void* data, int a, int b, int c, int d)
 // Forward cEm::motionMove: advance the enemy's motion one frame (rooms that drive a paused enemy by hand).
 void cEmWrap::motionMove()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->motionMove();
     } else {
         err("EM_SET_NO(%d) cEmWrap::motionMove error", no);
@@ -820,7 +878,7 @@ void cEmWrap::motionMove()
 // be_flag bit 0x40: 1 = the enemy's motion is frozen, 0 = plays.
 void cEmWrap::motionPause(int on)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         cEm* p = pEm;
 
         if (on == 1) {
@@ -836,7 +894,7 @@ void cEmWrap::motionPause(int on)
 // Attach an extra model (cModelInfo) to the enemy.
 void cEmWrap::addModel(cModelInfo* info)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->addModel(info);
     } else {
         err("EM_SET_NO(%d) cEmWrap::addModel error", no);
@@ -846,7 +904,7 @@ void cEmWrap::addModel(cModelInfo* info)
 // Set pParent: the enemy's matrix is then relative to this model (riding a vehicle, held object).
 void cEmWrap::setParent(cModel* parent)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->pParent = parent;
     } else {
         err("EM_SET_NO(%d) cEmWrap::setParent error", no);
@@ -856,7 +914,7 @@ void cEmWrap::setParent(cModel* parent)
 // Forward cEm::beginEvent: put the enemy into event mode (AI off, event motions).
 void cEmWrap::beginEvent()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->beginEvent();
     } else {
         err("EM_SET_NO(%d) cEmWrap::beginEvent error", no);
@@ -866,7 +924,7 @@ void cEmWrap::beginEvent()
 // Forward cEm::endEvent: leave event mode.
 void cEmWrap::endEvent()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->endEvent();
     } else {
         err("EM_SET_NO(%d) cEmWrap::endEvent error", no);
@@ -876,7 +934,7 @@ void cEmWrap::endEvent()
 // Rebuild the enemy's model matrix now (after setPos/setAng outside the normal update).
 void cEmWrap::matCalc()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         pEm->matUpdate();
     } else {
         err("EM_SET_NO(%d) cEmWrap::matCalc error", no);
@@ -887,7 +945,7 @@ void cEmWrap::matCalc()
 // the goto/findPL virtuals. All the *Goto/*FindPL/*Reset members below require this.
 int cEmWrap::isNormalGanade()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         u8 id = pEm->id;
 
         if (id > 0xF) {
@@ -905,7 +963,7 @@ int cEmWrap::isNormalGanade()
 // Ganado only: walk to `pos` and operate switch object `sw` on arrival (mode as setGoto).
 void cEmWrap::setGotoSwitch(Vec* pos, int mode, void* sw)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             ((cEmGanado*) pEm)->setGotoSwitch(pos, mode, sw);
         } else {
@@ -920,7 +978,7 @@ void cEmWrap::setGotoSwitch(Vec* pos, int mode, void* sw)
 // 0xB = stop; the room scripts also pass the modes directly.
 void cEmWrap::setGoto(Vec* pos, int mode)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             ((cEmGanado*) pEm)->setGoto(pos, mode);
         } else {
@@ -934,7 +992,7 @@ void cEmWrap::setGoto(Vec* pos, int mode)
 // Ganado only: the mode of the goto order still in progress (0 when it has arrived / has none).
 int cEmWrap::ckGoto()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             return ((cEmGanado*) pEm)->ckGoto();
         }
@@ -949,7 +1007,7 @@ int cEmWrap::ckGoto()
 // it is off-screen and idle.
 int cEmWrap::ckResetEnable()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             return ((cEmGanado*) pEm)->ckResetEnable();
         } else {
@@ -969,7 +1027,7 @@ int cEmWrap::ckResetEnable()
 // Ganado only: reset the enemy to its list position (used by rooms that recycle enemies out of view).
 void cEmWrap::setReset()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             ((cEmGanado*) pEm)->setReset();
         } else {
@@ -983,7 +1041,7 @@ void cEmWrap::setReset()
 // Dog (0x2D) only: cEmDog::setReset(a, b).
 void cEmWrap::setReset(int a, int b)
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         u8 id = pEm->id;
 
         if (id == 0x2D) {
@@ -999,7 +1057,7 @@ void cEmWrap::setReset(int a, int b)
 // Ganado, dog (0x2D) or em36: 1 when the enemy has found/noticed the player.
 int cEmWrap::ckFindPL()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             return ((cEmGanado*) pEm)->ckFindPL();
         } else {
@@ -1022,7 +1080,7 @@ int cEmWrap::ckFindPL()
 // Ganado or em36: force "player found" (the enemy turns hostile at once).
 void cEmWrap::setFindPL()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             ((cEmGanado*) pEm)->setFindPL();
         } else {
@@ -1042,7 +1100,7 @@ void cEmWrap::setFindPL()
 // Ganado only: distance-to-player value; -1.0 when unavailable. Dead in every module (see note).
 f32 cEmWrap::get_l_pl()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             return pEm->Guard_r;   // dead in every module: the field is a guess (only the strings and the -1.0 pool survive)
         }
@@ -1056,7 +1114,7 @@ f32 cEmWrap::get_l_pl()
 // Ganado only: forget the player (back to idle / patrol behaviour).
 void cEmWrap::clearFindPL()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             ((cEmGanado*) pEm)->clearFindPL();
         } else {
@@ -1070,7 +1128,7 @@ void cEmWrap::clearFindPL()
 // Ganado only: 1 when a crossbow Ganado is in its firing state (rooms wait for the shot before an event).
 int cEmWrap::ckBowgunFire()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             return ((cEmGanado*) pEm)->ckBowgunFire();
         }
@@ -1084,7 +1142,7 @@ int cEmWrap::ckBowgunFire()
 // Ganado only: 1 when the Plaga has burst out of this Ganado's head.
 int cEmWrap::ckParasite()
 {
-    if (isAlive() == 1) {
+    if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             return ((cEmGanado*) pEm)->ckParasite();
         }
