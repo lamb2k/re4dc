@@ -488,6 +488,17 @@ def drop_loose(names, r, rm, rec):
 # Test 17 data line (the chapter 2 recipe ch2/ch2-build.sh CH2REC over T15REC): T15_DATA + ch2 + cast16, then pak17 last
 # (its pack replaces ch2's dc/tex.pak and every loose texture leaves the disc).
 T17_DATA = T15_DATA + ',ch2,cast16,pak17'
+# Lane zeroread17 (coordinator 10-17, "zero disc reads in the r101 fight at cap 6 and in r103"; data only, no knob):
+#   em/em15.drs, em/em12.drs = the acc12 archives with their motion hot flags set to the clips the r101 / r103 fights use
+#     (tools/d367/motion/motion_flags.py set, lists motion/hot/em15-r101.txt 20 clips 242,176 B and em12-r103.txt 11 clips
+#     130,336 B). Before: 79 / 75 clips (991,488 / 952,768 B) flagged hot under the 262,144 B MOTION_PRESSURE_BYTES cap, so
+#     each room entry read ~1 MB of keys and evicted 3/4 of them again, and the fight's clips then missed (cold reads).
+#   dc/resident.bin = the ch2 method (resident_keys.py pack of vram/resident/*.tsv, then water_resident.py pack) with
+#     r101.tsv / r103.tsv extended by the fights' first-sight keys (resident_keys.py list of the lane's runs).
+#   Only the flag words and table CRCs change in the archives (same clip payloads, same sizes): residency, not logic.
+ZR17D = os.environ.get('ZR17D', '/root/re4data/private/zeroread17-20261017')
+DATA['zr17'] = {'em/em15.drs': ZR17D + '/em15.drs', 'em/em12.drs': ZR17D + '/em12.drs', 'dc/resident.bin': ZR17D + '/resident.bin'}
+T17Z_DATA = T17_DATA + ',zr17'   # zr17 last: it replaces acc12's em15 / em12 and ch2's resident.bin
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
