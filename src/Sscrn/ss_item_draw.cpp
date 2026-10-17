@@ -70,6 +70,11 @@ static void ss_Draw_tile3d_trans(SsTilePrim* p);
 void ss_Draw_tpl(void* tpl, u32 id, int x, int y, int w, int h, int ot, int prio)
 {
     SsTplPrim* p = (SsTplPrim*) GetPrimBuff(sizeof(SsTplPrim));
+#if defined(RE4DC_PRIM_BUF_KB) && RE4DC_PRIM_BUF_KB
+    if (p == 0) {
+        return;   // PRIM_BUF_KB: a full buffer skips the prim (GetPrimBuff counted it)
+    }
+#endif
 
     p->tpl = tpl;
     p->id = id;
@@ -148,6 +153,11 @@ void ss_Draw_tpl_local(TEXPalette* tpl, u32 id, int x, int y, int w, int h)
 void ss_Draw_line3d(Vec* a, Vec* b, u32 color, int width, int blend, int zupd, int ot, int prio)
 {
     SsLinePrim* p = (SsLinePrim*) GetPrimBuff(sizeof(SsLinePrim));
+#if defined(RE4DC_PRIM_BUF_KB) && RE4DC_PRIM_BUF_KB
+    if (p == 0) {
+        return;   // PRIM_BUF_KB: a full buffer skips the prim (GetPrimBuff counted it)
+    }
+#endif
 
     p->a = *a;
     p->b = *b;
@@ -244,6 +254,11 @@ void ss_Draw_line3d_local(Vec* a, Vec* b, Mtx mtx, u32 color, u32 blend, int zup
 void ss_Draw_tile3d(Vec* a, Vec* b, Vec* c, Vec* d, u32 color, int x34, int blend, int ot, u16 prio)
 {
     SsTilePrim* p = (SsTilePrim*) GetPrimBuff(sizeof(SsTilePrim));
+#if defined(RE4DC_PRIM_BUF_KB) && RE4DC_PRIM_BUF_KB
+    if (p == 0) {
+        return;   // PRIM_BUF_KB: a full buffer skips the prim (GetPrimBuff counted it)
+    }
+#endif
 
     p->a = *a;
     p->b = *b;
