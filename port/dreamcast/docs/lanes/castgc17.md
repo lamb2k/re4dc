@@ -97,5 +97,7 @@ Coverage limits (60 s runs, about 1,000-1,500 UI frames in a room):
   Ganado head (any appearance; appearance 2 too while ACTOR_GANADO_PS2_STUMP is off). The fix is a PS2 stump per
   appearance (convert BIN 475 / 447 / 479 / 483, em15 460, as ps2_ganado_stump.py did 479) with ACTOR_GANADO_PS2_STUMP
   on; that is a conversion and review item, not a one-line fix.
+- 10-17 later: lane stump17 (docs/lanes/stump17.md) converts every appearance's stump and hand poses 449 / 450 / 454 /
+  455 into a loaded package; with ACTOR_GANADO_PS2_STUMP=1 in the recipe this row is removed.
 - The diag that found it (ATX_TPL / ATX_TPL_INFO: BIN and TPL entry numbers of each info, inside
   RE4DC_ACTOR_TRANSACTION_DIAG) is kept as a patch, not landed: `/root/probe/lanes-20261016/castgc/k/atx-tpl-diag-20261017.patch`.
