@@ -493,6 +493,17 @@ endif
 GAME_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
 PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
 endif
+# NATIVE_MODEL_REGISTRY_ROLE_TEX23=1 (lane geodrop17 2026-10-17; default 0; render only; needs NATIVE_MODEL_REGISTRY_ROLES5=1):
+#   a role's source TPL may have 23 images (the r320 helicopter em3d TPL 6; ROLES5 allows 19). A package validation bound
+#   only (model_registry.py --role-tex23). Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_ROLE_TEX23 ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_ROLE_TEX23),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_ROLES5),1)
+$(error NATIVE_MODEL_REGISTRY_ROLE_TEX23=1 needs NATIVE_MODEL_REGISTRY_ROLES5=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX23=1
+PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX23=1
+endif
 # NATIVE_MODEL_REGISTRY_FIRST=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): a
 #   Ganado-class actor (id 0x10..0x20) whose id a room package descriptor names tries that package's plan BEFORE the
 #   Ganado cast plan. Without it the Ganado plan claims em16 type 11 (r11d) by its em15-type-11 meshes and then the

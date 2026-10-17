@@ -452,7 +452,8 @@ PRESETS['gunship-em3a-02'] = dict(archive='em3a', sections=[(0xb, 'body')], tpl=
 PRESETS['u3-em32-00'] = dict(archive='em32', sections=[(4, 'body'), (6, 'extra'), (7, 'skin')], tpl=5, rooms=['r31b'], types=[0],
                              category='registry', model_id=0x32, lit=True, ps2_superset_bones=True, shift=2)
 # em3d.cpp (r320) modelInit(ARC 5, ARC 6). Converts (shift 1), but no room package yet: its body has three GC masked materials
-# (colours 1 / 3 / 20, masks 2 / 4 / 21); ps2_mask_runs.py handles one, and the "mask" drop is a look decision.
+# (colours 1 / 3 / 20, masks 2 / 4 / 21): ps2_mask_runs.py --multi-mask bakes all three into one mask run (lane geodrop17;
+# r320 package spec model-registry/ps2-ch5-r320.json, model_registry.py --roles5 --role-tex23: its TPL 6 has 23 images).
 PRESETS['heli-em3d-00'] = dict(archive='em3d', sections=[(5, 'body')], tpl=6, rooms=['r320'], types=[0], category='registry',
                                model_id=0x3d, lit=True, shift=1)
 

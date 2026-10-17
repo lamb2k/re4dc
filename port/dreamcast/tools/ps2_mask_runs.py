@@ -31,6 +31,9 @@ Output (<out>/): mask-runs.json (section, triangles per run, keys, coincidence r
 hair.uv (u16 pairs / 32768), colour.png, mask.png, pair.png, <pair key>.re4tex.
 Usage (Windows Python, numpy + PIL):
   python ps2_mask_runs.py <cast dir> <gc em.drs> <gc bin arc> <gc tpl arc> <section> <out> [--size 64x128] [--max-mm 8]
+  --multi-mask (lane geodrop17, 2026-10-17): a GC section with several masked materials (the r320 helicopter em3d body:
+  colours 1 / 3 / 20, masks 2 / 4 / 21) bakes them all into the one pair texture (needs --size); each texel samples the
+  colour + mask images of the masked GC triangle it projects to. The runtime still sees one mask run per section.
 """
 import argparse, hashlib, importlib.util, json, os, struct, sys, tempfile, zlib
 from pathlib import Path
@@ -100,6 +103,7 @@ def main():
         ap.add_argument(k)
     ap.add_argument('--size'); ap.add_argument('--max-mm', type=float, default=8.0); ap.add_argument('--ss', type=int, default=2)
     ap.add_argument('--atlas-rgba')
+    ap.add_argument('--multi-mask', action='store_true', help='bake every masked GC material of the section into one pair')
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     cast = Path(a.cast); sec = int(a.section)
@@ -127,7 +131,14 @@ def main():
             raise SystemExit('--atlas-rgba needs --size')
         ci = mi = -1
     elif len(colour_ids) != 1 or len(mask_ids) != 1:
-        raise SystemExit(f'one masked GC material expected: colour {colour_ids} mask {mask_ids}')
+        # several masked GC materials (lane geodrop17, the em3d helicopter: colours 1 / 3 / 20, masks 2 / 4 / 21): one hair
+        # run and one pair texture for all of them; each texel samples the colour + mask images of the masked GC triangle
+        # it projects to (its own material), so the runtime's single mask pair per section is unchanged
+        if not a.multi_mask:
+            raise SystemExit(f'one masked GC material expected: colour {colour_ids} mask {mask_ids} (--multi-mask bakes all)')
+        if not a.size:
+            raise SystemExit('--multi-mask needs --size')
+        ci = mi = -1
     else:
         ci, mi = colour_ids[0], mask_ids[0]
     W, H = (map(int, a.size.split('x')) if a.size else (tims[ci].width, tims[ci].height))
@@ -228,8 +239,15 @@ def main():
         else:
             dd, tt, bb_ = closest(p, masked)
             guv = (bb_[:, :, None] * S['uv'][tt]).sum(1)
-            col = bk.sample(imgs[ci], guv); al = bk.sample(imgs[mi], guv)
-            alv = al[:, 3] if (imgs[mi][..., 3] < 255).any() else al[:, :3].mean(1)
+            if ci >= 0:
+                col = bk.sample(imgs[ci], guv); al = bk.sample(imgs[mi], guv)
+                alv = al[:, 3] if (imgs[mi][..., 3] < 255).any() else al[:, :3].mean(1)
+            else:
+                col = np.zeros((len(p), 4)); alv = np.zeros(len(p))
+                for c_, m_ in sorted(set(zip(S['mat'][tt].tolist(), S['alpha'][tt].tolist()))):
+                    sel = (S['mat'][tt] == c_) & (S['alpha'][tt] == m_)
+                    col[sel] = bk.sample(imgs[c_], guv[sel]); al = bk.sample(imgs[m_], guv[sel])
+                    alv[sel] = al[:, 3] if (imgs[m_][..., 3] < 255).any() else al[:, :3].mean(1)
         tx = (q[:, 0] // a.ss).astype(int); ty = (q[:, 1] // a.ss).astype(int)
         np.add.at(acc, (ty, tx), col[:, :3]); np.add.at(msk, (ty, tx), alv); np.add.at(cnt, (ty, tx), 1)
     cov = cnt > 0
@@ -274,6 +292,8 @@ def main():
                **({'mask_only': True} if not O_tris else {}),
                source='atlas-rgba ' + sha(Path(a.atlas_rgba).read_bytes()) if atlas is not None else 'gc-bake',
                gc=dict(drs_sha256=sha(db), bin=a.bin, tpl=a.tpl, colour_image=ci, mask_image=mi,
+                       **({'masked_materials': [list(x) for x in sorted(set(zip(S['mat'][masked].tolist(), S['alpha'][masked].tolist())))]}
+                          if ci < 0 and atlas is None else {}),
                        masked_triangles=int(masked.sum()), triangles=len(S['v'])),
                triangles=dict(chunk=len(tris), opaque=len(O_tris), hair=len(H_tris)), max_mm=a.max_mm,
                hair_distance_mm=dict(median=float(np.median(d[hair])), max=float(d[hair].max())),
