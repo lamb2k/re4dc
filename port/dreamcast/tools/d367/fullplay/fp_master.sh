@@ -29,7 +29,7 @@ FINAL=
 if [ "${RE4DC_STAGE_EXT4:-1}" = 1 ]; then
   FINAL=$OUT; OUT=$WORK/out; mkdir -p "$OUT"
   DC=$here/../stage_ext4/disccache.py
-  KEY=$( { echo "kind=${TW:+twin}"; sha256sum "$0" "$MAN" "$IP"; [ -z "$TW" ] || { $TOOL/sh-elf-objcopy -R .stack -O binary $TW/re4dc-game.elf $WORK/k.bin; sha256sum $WORK/k.bin; for o in $TREE/dc/*.ovl; do sha256sum $TW/$(basename $o); done; }; } | sed 's#  .*/#  #' | sha256sum | cut -c1-64)
+  KEY=$( { echo "kind=${TW:+twin}"; sha256sum "$0" "$MAN" "$IP"; [ -z "$TW" ] || { $TOOL/sh-elf-objcopy -R .stack -O binary $TW/re4dc-game.elf $WORK/k.bin; sha256sum $WORK/k.bin; for o in $TREE/dc/*.ovl; do sha256sum $TW/$(basename $o); done; for o in $TW/*.ovl; do sha256sum $o; done; }; } | sed 's#  .*/#  #' | sha256sum | cut -c1-64)
   IDX=${RE4DC_STAGE_ROOT:-/root/stage}/fpimages/$KEY
   if [ -s $IDX/track03.sha256 ] && C3=$(python3 $DC link "$(cat $IDX/track03.sha256)" track03.iso "$FINAL/track03.iso" 2>/dev/null); then
     for f in track01-template.iso track02.raw base.json base-manifest.json base-diff.txt track03.sha256; do cp $IDX/$f "$FINAL/$f"; done
@@ -52,6 +52,12 @@ if [ -n "$TW" ]; then
     n=$(basename $o)
     [ -s $TW/$n ] || { echo "fp_master: twin build lacks overlay $n" >&2; exit 1; }
     rm -f $WORK/cdroot/dc/$n; cp $TW/$n $WORK/cdroot/dc/$n
+  done
+  # Overlays the twin build has and the release lacks (a knob under test, e.g. STAGE_OVL's st1_0..st1_3: ch3found16
+  # 2026-10-16, whose KOS twin halted at boot with "route overlay missing on the disc") are staged too.
+  for o in $TW/*.ovl; do
+    n=$(basename $o)
+    [ -e $WORK/cdroot/dc/$n ] || cp $o $WORK/cdroot/dc/$n
   done
   ALLOW+=(--allow '1ST_READ\.BIN' --allow 'dc/[^/]*\.ovl')
 fi
