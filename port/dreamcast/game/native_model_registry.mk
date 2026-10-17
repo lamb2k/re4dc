@@ -180,10 +180,17 @@ else
 NATIVE_MODEL_REGISTRY_BONES ?= 64
 endif
 NATIVE_MODEL_REGISTRY_SHIFT ?= 1
+ifneq ($(filter 1,$(ROUTE_CH23) $(ROUTE_CH3)),)
+# Mendez has 83 bones (ROUTE_CH23); the island U-3 (em32, ROUTE_CH3 disc 2) has 97 (lane cast16 10-17). A larger
+# existing registry capacity still admits the 64-bone Gigante. ROUTE_CH3 keeps 64 unless the recipe asks for more.
 ifeq ($(ROUTE_CH23),1)
-# Mendez has 83 bones. A larger existing registry capacity still admits the 64-bone Gigante.
 ifeq ($(filter $(NATIVE_MODEL_REGISTRY_BONES),96 128),)
 $(error PS2_GIGANTE=1 with ROUTE_CH23=1 needs registry capacity 96 or 128 for Mendez)
+endif
+else
+ifeq ($(filter $(NATIVE_MODEL_REGISTRY_BONES),64 96 128),)
+$(error PS2_GIGANTE=1 with ROUTE_CH3=1 needs registry capacity 64, 96 or 128)
+endif
 endif
 ifneq ($(NATIVE_MODEL_REGISTRY_SHIFT),1)
 $(error PS2_GIGANTE=1 needs NATIVE_MODEL_REGISTRY_SHIFT=1)
@@ -485,6 +492,17 @@ $(error NATIVE_MODEL_REGISTRY_ROLES5=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
 endif
 GAME_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
 PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
+endif
+# NATIVE_MODEL_REGISTRY_ROLE_TEX23=1 (lane geodrop17 2026-10-17; default 0; render only; needs NATIVE_MODEL_REGISTRY_ROLES5=1):
+#   a role's source TPL may have 23 images (the r320 helicopter em3d TPL 6; ROLES5 allows 19). A package validation bound
+#   only (model_registry.py --role-tex23). Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_ROLE_TEX23 ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_ROLE_TEX23),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_ROLES5),1)
+$(error NATIVE_MODEL_REGISTRY_ROLE_TEX23=1 needs NATIVE_MODEL_REGISTRY_ROLES5=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX23=1
+PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX23=1
 endif
 # NATIVE_MODEL_REGISTRY_FIRST=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): a
 #   Ganado-class actor (id 0x10..0x20) whose id a room package descriptor names tries that package's plan BEFORE the

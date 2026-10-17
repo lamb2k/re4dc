@@ -45,7 +45,8 @@ echo "host check $H/check-$STAMP (tree $(git -C "$T" rev-parse --short HEAD), wo
 "$H/check-$STAMP" "$N" > "$N/host-check.txt"
 cat "$N/host-check.txt"
 rm -rf "$O/fitted" "$O/runtime"; mkdir -p "$O/fitted" "$O/runtime"
-python3 "$F/build_blob.py" "$N" "$O/fitted" --report "$O/fit-report.json" --look 8 > "$O/fit.log"
+# strip64_build_blob.py: build_blob.py with the runtime 64-corner strip limit (bytes unchanged when no strip is longer)
+python3 "$T/port/dreamcast/tools/strip64_build_blob.py" "$F" "$N" "$O/fitted" --report "$O/fit-report.json" --look 8 > "$O/fit.log"
 python3 "$F/verify_blob.py" "$N" "$O/fitted" > "$O/verify.log"; cat "$O/verify.log"
 python3 "$F/patch_header.py" "$N/castmodel_native.h" "$O/fitted" "$O/runtime/castmodel_runtime.h" > "$O/header.log"; cat "$O/header.log"
 # texture
