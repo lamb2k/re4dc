@@ -4130,6 +4130,89 @@ bool hidden(unsigned i){
 #include "far_shell.inc"
 #undef RE4DC_FAR_SHELL_PART
 #endif
+#if defined(RE4DC_TRANS_POLICY)
+// TRANS_POLICY=<mask> (hwfog.mk, lane trans17 2026-10-17, TRANSPARENCY-PLAN-20261017.md sections 4-6; render only;
+// unset = no code, image byte-identical). One offline class per R4PW part (tools/d367/tr_classify.py) in the room's
+// sidecar ps2-world.r4tc ("R4TC" v1: the classifier version, the part count and the R4PW body crc it was made from,
+// the crc32 of the class bytes, then one byte per part). A room without the file, or with a file made for another R4PW,
+// draws exactly as today and logs why. Runtime word re4dc_trans_policy (.data), one bit per sub-switch:
+//   1 FLAT  FLAT (uniform 14/15 alpha, r109 / r119 cabin walls and floor) and OPAQUE_IN_TR parts of the TR pass
+//           draw in the opaque list (Tier 2: bounded 17/255 per channel, automated diff tools/d367/tr_pixdiff.py);
+//   128 DROP a TR part whose shipped texture is alpha 0 in every texel is not drawn (Tier 1: draws nothing).
+// Vertex-alpha parts (R4PW reserved bit 0) are never moved. Bits 2 CARD, 4 SOFTA, 8 FAR, 16 VA, 32 FX, 64 WATER are
+// reserved (hwfog.mk refuses them until each is built and gated). The table lives in heap 4 beside the world and is
+// freed with it; the movie-arena re-adopt path does no I/O, so after a movie return the policy is idle until the next open.
+} // namespace (re4dc_trans_policy at file scope: dbgwarp_bridge.cpp links to it by its C name)
+extern "C" { volatile unsigned re4dc_trans_policy=RE4DC_TRANS_POLICY; }
+namespace {
+namespace trans{
+enum : unsigned { kUnknown=0,kOp=1,kPtBin=2,kOpaqueInTr=3,kFlat=4,kFlatMid=5,kCardNear=6,kCardSoftA=7,kSoft=8,kVa=9,kDrop=10 };
+enum : unsigned { kTpFlat=1U,kTpDrop=128U };
+struct Head { char magic[4]; std::uint32_t version,classifier,parts,r4pw_crc,body_crc; };
+static_assert(sizeof(Head)==24);
+static std::uint8_t* block=nullptr; static const std::uint8_t* cls=nullptr;
+static unsigned room=~0U,nparts=0,flat=0,dropped=0,last_room=~0U; static std::uint32_t last_frame;
+static void close(){ if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
+// After the R4PW sidecar is accepted (room, its body crc, its part count). Reads the class sidecar into heap 4.
+static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts){
+    close();
+    char path[48];snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.r4tc",r);
+    const file_t f=fs_open(path,O_RDONLY);
+    const char* why=nullptr;
+    if(f==FILEHND_INVALID)why="no file";
+    else{
+        const unsigned size=unsigned(fs_total(f));
+        Head h{};
+        if(size!=sizeof(Head)+((parts+3U)&~3U))why="size";
+        else if(!(block=static_cast<std::uint8_t*>(re4dc_static_alloc(size))))why="heap";
+        else if(fs_read(f,block,size)!=ssize_t(size))why="read";
+        else{
+            std::memcpy(&h,block,sizeof(h));
+            if(std::memcmp(h.magic,"R4TC",4) || h.version!=1 || h.parts!=parts)why="header";
+            else if(h.r4pw_crc!=r4pw_crc)why="other r4pw";
+            else if(ps2_crc32(block+sizeof(Head),parts)!=h.body_crc)why="crc";
+        }
+        fs_close(f);
+        if(!why){cls=block+sizeof(Head);room=r;nparts=parts;}
+        else if(block){re4dc_static_free(block);block=nullptr;}
+    }
+    re4dc_log("trans: room=%03x policy=%u classes=%s parts=%u heap=%d\n",r,unsigned(re4dc_trans_policy),why?why:"ok",parts,
+              re4dc_static_heap_free());
+}
+#if RE4DC_PS2_PASS_MASK
+// The pass mask (one byte per placement) must list the pass a moved part can draw in (FLAT -> 0), or ps2_pass would skip
+// the placement before reaching the part. Set for every movable part whatever the runtime bits: an extra bit is a scan.
+static void mask(const Ps2Part* parts,const Ps2Placement* pl,unsigned n){
+    if(!cls || !ps2w.masked)return;
+    for(unsigned i=0;i<n;++i){
+        const auto& mesh=ps2w.package.meshes()[pl[i].mesh];
+        for(unsigned k=0;k<mesh.part_count;++k){
+            const unsigned p=mesh.first_part+k;
+            if(p<nparts && parts[p].pass==2 && !(parts[p].reserved&1U) && (cls[p]==kFlat || cls[p]==kOpaqueInTr))ps2w.pass_mask[i]|=1U;
+        }
+    }
+}
+#endif
+// The pass a part draws in under the policy: 0 / 1 / 2, or 3 = not drawn. `now` is the pass after FOLIAGE_TRIM.
+static unsigned pass_of(const Ps2Part& m,unsigned index,unsigned now){
+    if(!cls || room!=ps2w.room || index>=nparts || m.pass!=2 || now!=2 || (m.reserved&1U))return now;
+    const unsigned c=cls[index],p=re4dc_trans_policy;
+    if((p&kTpDrop) && c==kDrop)return 3;
+    if((p&kTpFlat) && (c==kFlat || c==kOpaqueInTr))return 0;
+    return now;
+}
+static void note(unsigned pass,unsigned drawn){
+    if(drawn==0 && pass==0)++flat;
+    if(drawn==3 && pass==2)++dropped;
+    const std::uint32_t f=re4dc_vi_retrace_count();
+    if(last_room!=ps2w.room || f-last_frame>=1200U){
+        re4dc_log("trans: policy=%u room=%03x table=%u flat=%u dropped=%u\n",unsigned(re4dc_trans_policy),unsigned(ps2w.room),
+                  cls?1U:0U,flat,dropped);
+        last_room=ps2w.room;last_frame=f;flat=dropped=0;
+    }
+}
+} // namespace trans
+#endif
 bool ps2_open(){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return false; // BEFORE storage/room-mismatch paths
@@ -4322,6 +4405,12 @@ bool ps2_open(){
         ps2w.pass_mask[i]=std::uint8_t(m);
     }
 #endif
+#if defined(RE4DC_TRANS_POLICY)
+    trans::open(ps2w.room,h.crc,h.parts);
+#if RE4DC_PS2_PASS_MASK
+    trans::mask(ps2w.parts,ps2w.placements,h.placements);
+#endif
+#endif
 #if RE4DC_PS2_PVS
     pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc);
 #endif
@@ -4463,6 +4552,9 @@ bool ps2_movie_reload(){
         for(unsigned k=0;k<mesh.part_count;++k)mask|=1u<<parts[mesh.first_part+k].pass;
         ps2w.pass_mask[i]=std::uint8_t(mask);
     }
+#endif
+#if defined(RE4DC_TRANS_POLICY)
+    trans::close(); // no I/O here: the policy idles until the next ps2_open (logged by trans::note as table=0)
 #endif
 #if RE4DC_MESH_FASTPATH
     auto* lut=reinterpret_cast<std::uint32_t*>(data+mb+pb);re4dc::vp::build_lut(lut);ps2w.lut=lut;
@@ -4963,7 +5055,17 @@ int ps2_pass(unsigned pass,float zfar){
 #if defined(RE4DC_FOLIAGE_TRIM)
             const unsigned foliage_pass=foliage::pass_of(meta);
             if(foliage_pass!=meta.pass && (pass==1 || pass==2))foliage::note(pass,foliage_pass);
+#if defined(RE4DC_TRANS_POLICY)
+            const unsigned trans_pass=trans::pass_of(meta,index,foliage_pass);
+            if(trans_pass!=foliage_pass)trans::note(pass,trans_pass);
+            if(trans_pass!=pass)continue;
+#else
             if(foliage_pass!=pass)continue;
+#endif
+#elif defined(RE4DC_TRANS_POLICY)
+            const unsigned trans_pass=trans::pass_of(meta,index,meta.pass);
+            if(trans_pass!=meta.pass)trans::note(pass,trans_pass);
+            if(trans_pass!=pass)continue;
 #else
             if(meta.pass!=pass)continue;
 #endif
@@ -5383,6 +5485,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
 #endif
 #if RE4DC_FAR_SHELL
     farshell::close();farshell::pol.tried=false;farshell::pol.movie=false;
+#endif
+#if defined(RE4DC_TRANS_POLICY)
+    trans::close();
 #endif
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);

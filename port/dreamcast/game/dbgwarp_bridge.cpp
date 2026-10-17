@@ -73,6 +73,9 @@ static u32 farshell_probe_frame;   // warp line farshellprobe (test only)
 #if defined(RE4DC_FOLIAGE_OPTION) && RE4DC_FOLIAGE_OPTION
 extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM level; the Options Foliage row)
 #endif
+#if defined(RE4DC_TRANS_POLICY)
+extern "C" volatile unsigned re4dc_trans_policy;   // platform/native_static.cpp (TRANS_POLICY sub-switch mask)
+#endif
 #include "global.h"
 #include "player.h"
 #include "room_data.h"
@@ -592,6 +595,12 @@ void load()
             // FOLIAGE_OPTION: the Options Foliage level at load, 0 full / 1 near / 2 off (render only; stills)
             re4dc_foliage = (unsigned) num(tok[1]) > 2U ? 0U : (unsigned) num(tok[1]);
             re4dc_log("warp: foliage %u\n", re4dc_foliage);
+#endif
+#if defined(RE4DC_TRANS_POLICY)
+        } else if (!strcmp(k, "trans") && n >= 2) {
+            // TRANS_POLICY (hwfog.mk): the runtime sub-switch mask at load (render only; still pairs, tr_pixdiff arms)
+            re4dc_trans_policy = (unsigned) num(tok[1]) & 0xffU;
+            re4dc_log("warp: trans %u\n", re4dc_trans_policy);
 #endif
 #if defined(RE4DC_CAP_COMPARE)
         } else if (!strcmp(k, "cap") && n >= 2) {

@@ -107,3 +107,33 @@ $(error FOLIAGE_TRIM needs PT_BLEND_FIX=1 and PS2_WORLD_MESH=1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_FOLIAGE_TRIM=$(FOLIAGE_TRIM) -DRE4DC_FOLIAGE_NEAR_MM=$(FOLIAGE_NEAR_MM)
 endif
+# TRANS_POLICY=<mask> (lane trans17 2026-10-17, Test 17; C:\Game Dev\Emulators\TRANSPARENCY-PLAN-20261017.md; render only;
+#   unset or 0 = no code, identical image; test arms until each bit is gated). The game-wide transparency master knob:
+#   one offline class per PS2 world part (tools/d367/tr_classify.py -> per room ps2-world.r4tc beside the unchanged
+#   R4PW, bound to its crc; no package changes), read by native_static.cpp's trans:: and the runtime word
+#   re4dc_trans_policy. Built bits: 1 FLAT (uniform 14/15-alpha surfaces, the r109 / r119 cabin walls and floor, and any
+#   fully opaque texture in the TR pass, drawn opaque; Tier 2: tools/d367/tr_pixdiff.py must pass), 128 DROP (TR parts
+#   whose shipped texture is alpha 0 everywhere are not drawn; Tier 1). Reserved, refused until built and gated:
+#   2 CARD, 4 SOFTA, 8 FAR, 16 VA, 32 FX, 64 WATER. Aliases (the existing knobs keep their own code and images; the
+#   policy bit is their game-wide successor and is never combined with them silently):
+#     FOLIAGE_TRIM=1 (Near) ~ CARD|FAR (ch1 keys only)  FOLIAGE_TRIM=2 (Off) ~ DROP of the listed card keys
+#     PS2_FOLIAGE_FAR ~ FAR      MIST_CUT bit 2 ~ DROP ("PS2 removed it", Tier 3)      FX_LEVEL / FX_SPRITE_TRIM /
+#     HAZE_SPRITE_CUT / MIST_CUT bits 1,4,8,32,64 ~ FX      WATER_PS2 dial ~ WATER      PS2_VERTEX_ALPHA fade ~ VA
+#   FOLIAGE_TRIM's pass wins: the policy only acts on a part FOLIAGE_TRIM left in the TR pass. Log: `trans:` lines.
+TRANS_POLICY ?=
+ifneq ($(filter-out 0,$(TRANS_POLICY)),)
+ifeq ($(filter $(TRANS_POLICY),$(shell seq 1 255)),)
+$(error TRANS_POLICY is a mask 1..255)
+endif
+ifneq ($(shell echo $$(( $(TRANS_POLICY) & 126 ))),0)
+$(error TRANS_POLICY bits 2 CARD, 4 SOFTA, 8 FAR, 16 VA, 32 FX, 64 WATER are not built yet (lane trans17); built: 1 FLAT, 128 DROP)
+endif
+ifneq ($(PS2_WORLD_MESH),1)
+$(error TRANS_POLICY needs PS2_WORLD_MESH=1)
+endif
+ifeq ($(filter-out 0,$(PS2_WORLD_ROOMS)),)
+$(error TRANS_POLICY needs PS2_WORLD_ROOMS (per-room ps2-world.r4tc))
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_TRANS_POLICY=$(TRANS_POLICY)
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_TRANS_POLICY=$(TRANS_POLICY)
+endif
