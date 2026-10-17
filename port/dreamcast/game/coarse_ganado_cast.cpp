@@ -188,12 +188,17 @@ extern "C" unsigned re4dc_model_output_count();
 // add 0 to the frame owner's emitted-triangle count (model_output): "COARSE_PREGATE" lines.
 struct GateBall { float c[3], r; };
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-// One additional near gate uses the actual stump positions/weights. Its body
-// and hands retain app2's chunks. Stump actors never choose the far head.
-constexpr unsigned kStumpGateApp=kTierApps,kGateApps=kTierApps+1u;
-inline unsigned gate_app(unsigned a) {return a==kStumpGateApp?2u:cast_app(a);}
+// The variant package's published descriptors (coarse_actor_owner_ganado.inc ganado_var; zero while not loaded).
+// Package geometries 0..4 are the stumps of appearances 0..4.
+namespace ganado_var { gc::Chunk chunk[ganado_ps2_stump::count]; }
+// One additional near gate per cast appearance uses its stump's positions / weights (gate app kStumpGateApp + a).
+// Its body and hands keep the appearance's near chunks. Stump actors never choose the far tier.
+static_assert(ganado_ps2_stump::apps==kApps,"ganado_ps2_stump_runtime.h: one stump per cast appearance");
+constexpr unsigned kStumpGateApp=kTierApps,kGateApps=kTierApps+ganado_ps2_stump::apps;
+inline unsigned gate_app(unsigned a) {return a>=kStumpGateApp?a-kStumpGateApp:cast_app(a);}
 inline const gc::Chunk& gate_chunk(unsigned a,unsigned role) {
-    return a==kStumpGateApp?(role==1?ganado_ps2_stump::head:gc::chunks[2][role]):cast_chunk(a,role);
+    if(a>=kStumpGateApp){const unsigned s=a-kStumpGateApp;return role==1?ganado_var::chunk[s]:gc::chunks[s][role];}
+    return cast_chunk(a,role);
 }
 #else
 constexpr unsigned kGateApps=kTierApps;

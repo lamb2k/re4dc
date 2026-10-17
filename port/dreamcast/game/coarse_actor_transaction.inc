@@ -666,6 +666,11 @@ extern "C" int re4dc_crowd_far(cModel* m) {
 #if defined(RE4DC_GANADO_LOD) && RE4DC_GANADO_LOD
 extern "C" void re4dc_ganado_lod_retired();  // coarse_ganado_lod.inc (coarse_ganado_cast.cpp)
 #endif
+#if RE4DC_ACTOR_GANADO_PS2_STUMP
+// ACTOR_GANADO_PS2_STUMP: the variant cell (coarse_actor_owner_ganado.inc, another unit) revokes owned records before
+// it frees the bytes they may name.
+extern "C" int re4dc_actor_owned_live() {return actor_owned_live?1:0;}
+#endif
 extern "C" void re4dc_actor_transaction_retire() {
     // Revoke exported owners without traversing old primitive storage. This is
     // called BEFORE FrameLedger retirement and SetPrimBuffPtr storage reuse.

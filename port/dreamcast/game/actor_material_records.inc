@@ -387,7 +387,31 @@ static const Role roles[] = {
 #include "actor_material_records_app0_grip.inc"
 #endif
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-{2u,1u,479u,477u,&m_ps2_stump_479,t_em15_477,3u},
+{0u,1u,475u,473u,&m_ps2_var_475,t_em12_473,3u},
+{1u,1u,447u,445u,&m_ps2_var_447,t_em15_445,3u},
+{2u,1u,479u,477u,&m_ps2_var_479,t_em15_477,3u},
+{3u,1u,483u,481u,&m_ps2_var_483,t_em15_481,3u},
+{4u,1u,460u,458u,&m_ps2_var_460,t_em15_458,3u},
+{0u,2u,449u,473u,&m_ps2_var_449,t_em12_473,3u},
+{0u,2u,450u,473u,&m_ps2_var_450,t_em12_473,3u},
+{0u,3u,454u,473u,&m_ps2_var_454,t_em12_473,3u},
+{0u,3u,455u,473u,&m_ps2_var_455,t_em12_473,3u},
+{1u,2u,449u,445u,&m_ps2_var_449,t_em15_445,3u},
+{1u,2u,450u,445u,&m_ps2_var_450,t_em15_445,3u},
+{1u,3u,454u,445u,&m_ps2_var_454,t_em15_445,3u},
+{1u,3u,455u,445u,&m_ps2_var_455,t_em15_445,3u},
+{2u,2u,449u,477u,&m_ps2_var_449,t_em15_477,3u},
+{2u,2u,450u,477u,&m_ps2_var_450,t_em15_477,3u},
+{2u,3u,454u,477u,&m_ps2_var_454,t_em15_477,3u},
+{2u,3u,455u,477u,&m_ps2_var_455,t_em15_477,3u},
+{3u,2u,449u,481u,&m_ps2_var_449,t_em15_481,3u},
+{3u,2u,450u,481u,&m_ps2_var_450,t_em15_481,3u},
+{3u,3u,454u,481u,&m_ps2_var_454,t_em15_481,3u},
+{3u,3u,455u,481u,&m_ps2_var_455,t_em15_481,3u},
+{4u,2u,449u,458u,&m_ps2_var_449,t_em15_458,3u},
+{4u,2u,450u,458u,&m_ps2_var_450,t_em15_458,3u},
+{4u,3u,454u,458u,&m_ps2_var_454,t_em15_458,3u},
+{4u,3u,455u,458u,&m_ps2_var_455,t_em15_458,3u},
 #endif
 #if RE4DC_NATIVE_MODEL_REGISTRY && !RE4DC_NATIVE_MODEL_REGISTRY_PACK
 #include "native_model_registry_roles.inc"
@@ -421,7 +445,15 @@ static const SourceBlob source_blobs[] = {
 {&m_extra_467,2u,467u,{4256u,3007827131u,2804973797u}},
 {&m_extra_484,2u,484u,{6528u,1573052172u,1172918242u}},
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
-{&m_ps2_stump_479,2u,479u,{2976u,1450011754u,3920562518u}},
+{&m_ps2_var_475,2u,475u,{3200u,1128395770u,2403039293u}},
+{&m_ps2_var_447,2u,447u,{2944u,1978383310u,1061756992u}},
+{&m_ps2_var_479,2u,479u,{2976u,1450011754u,3920562518u}},
+{&m_ps2_var_483,2u,483u,{2912u,1990468374u,1286629251u}},
+{&m_ps2_var_460,2u,460u,{3040u,1374730771u,2938463957u}},
+{&m_ps2_var_449,2u,449u,{5888u,2529276789u,3486964274u}},
+{&m_ps2_var_450,2u,450u,{5888u,3608060527u,2496883440u}},
+{&m_ps2_var_454,2u,454u,{5952u,1963098602u,1580596659u}},
+{&m_ps2_var_455,2u,455u,{5952u,4022166836u,2700100576u}},
 #endif
 #if RE4DC_ACTOR_PL08
 #include "actor_material_records_pl08_blobs.inc"

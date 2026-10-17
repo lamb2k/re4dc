@@ -1,0 +1,12 @@
+# lane stump17 (10-17) hand-pose still pair: the r101 cross view, the crowd alerted; at room frame 150 the em15 nearest
+# Leon shows hand pose 4 (em10HandSet alert pose, left-handed flag: right 448, left BIN 455); frozen at tick 400.
+name hand4-still-r101
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+handpose 150 4 0x15
+freeze 400

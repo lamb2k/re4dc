@@ -203,6 +203,11 @@ extern "C" unsigned re4dc_heap_largest_current(unsigned* free_bytes);   // sscrn
 extern "C" unsigned re4dc_heap_largest_current(unsigned*) __attribute__((weak));
 extern "C" void re4dc_heap4_free_map() __attribute__((weak));   // ui_bridge.cpp (diagnostic)
 extern "C" unsigned re4dc_model_release_retained() __attribute__((weak));   // ui_bridge.cpp
+#if defined(RE4DC_GANADO_VAR) && RE4DC_GANADO_VAR
+// ACTOR_GANADO_PS2_STUMP (coarse_actor_owner_ganado.inc): the Ganado variant cell is lent after the model cache.
+extern "C" unsigned re4dc_ganado_var_lend();
+extern "C" void re4dc_ganado_var_return();
+#endif
 // ui_bridge.cpp owns the loan: 1 when this movie had it (bytes restored, model draws that asked during the loan).
 extern "C" int re4dc_model_return_retained(unsigned* bytes,unsigned* requests) __attribute__((weak));
 #if defined(RE4DC_MOVIE_LOAN_TEST) && RE4DC_MOVIE_LOAN_TEST
@@ -232,6 +237,12 @@ void* stage_alloc(size_t n){
                 lent=re4dc_model_release_retained();
                 if(lent)largest=re4dc_heap_largest_current(&free_bytes);
             }
+#if defined(RE4DC_GANADO_VAR) && RE4DC_GANADO_VAR
+            if(largest<want){
+                const unsigned v=re4dc_ganado_var_lend();
+                if(v){lent+=v;largest=re4dc_heap_largest_current(&free_bytes);}
+            }
+#endif
             while(largest<want){
                 const unsigned f=re4dc_motion_evict_one();
                 if(!f)break;
@@ -268,6 +279,15 @@ void* stage_alloc(size_t n){
             re4dc_log("route movie heap: need=%u model preparation cache lent (%u B) %s\n",(unsigned)n,lent,p?"ok":"short");
         }
     }
+#if defined(RE4DC_GANADO_VAR) && RE4DC_GANADO_VAR
+    if(!p){
+        const unsigned v=re4dc_ganado_var_lend();
+        if(v){
+            p=re4dc_ui_stage_alloc((unsigned)n);
+            re4dc_log("route movie heap: need=%u ganado variants lent (%u B) %s\n",(unsigned)n,v,p?"ok":"short");
+        }
+    }
+#endif
     if(!p){
         unsigned evicted=0,freed=0;
         while(!p){
@@ -505,6 +525,9 @@ int finish(int status){
     if(m.ballast){re4dc_ui_stage_free(m.ballast);m.ballast=nullptr;}
 #endif
 #if RE4DC_MOVIE_HEAP_EVICT
+#if defined(RE4DC_GANADO_VAR) && RE4DC_GANADO_VAR
+    re4dc_ganado_var_return();   // the variant cell is read again at the next plan that selects a variant
+#endif
     // After the staging is freed: ui_bridge ends the loan and allocates the cache again (the next draw attaches it).
     {unsigned bytes=0,requests=0;
      if(re4dc_model_return_retained && re4dc_model_return_retained(&bytes,&requests)){

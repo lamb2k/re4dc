@@ -42,6 +42,8 @@
 //   room 0x100 | jp 0 | pos x y z | dir 0x8000 | ang <rad> | rsf <room> <bit>... |
 //   scenario <0|1> <hex> | find <hex> | unlock <0|1> <hex> | status <0..3> <hex> | dead <no>... | inv default | area <no> [dx dz] |
 //   act <frame> <a|b|x|y|start|fwd|back|none|0xMASK> <hold> | arm <frame> <item id> | trg <no> <frame> [room] | kill <id> <frame> [room [kind]] |
+//   killrep <count> <gap> | killpart <partsNo> (every kill hit on that hit box; 5 = the head, so the kill loses it) |
+//   killnear (each kill target is the live enemy nearest Leon) | handpose <frame> <type> <id> (cEm10::setHand, both hands) |
 //   goto <frame> x y z [ang] | dump | name <preset> | late <mask> [tick] [room] (warp_late.h) | entry <n> |
 //   radio <frame> <call no 0..23> (source radio replay, resource-lifetime test only)
 //   god (Leon's life refilled every frame) | alert <frame> (the crowd hunts Leon from that frame of its entry)
@@ -79,6 +81,8 @@ extern "C" unsigned re4dc_foliage;   // platform/native_static.cpp (FOLIAGE_TRIM
 #include "em_set.h"
 #include "em.h"
 #include "em_sub.h"
+#include "em10.h"
+void em10HandSet(cEm10* em, int a);  // src/em10/em10.cpp (rig `handpose` types 2 / 4)
 #include "item.h"
 #include "main_mem.h"
 #include "snd.h"
@@ -186,6 +190,16 @@ struct Warp {
     int kill_cur;   // its enemy id (`kill 0`: the nearest live Ganado, ids 0x10..0x20)
     u32 kill_watch; // after the kill: state lines left
     u32 kill_rep, kill_gap;  // `killrep <count> <gap>`: kill `count` more, each `gap` room frames after the last
+    s16 kill_part;  // `killpart <partsNo>`: every hit on that hit box (5: the head; lane stump17 10-17)
+    bool kill_near; // `killnear`: the target is the live enemy nearest Leon (still pairs: the corpse falls in view)
+    // `handpose <room frame> <type> <em id>` (lane stump17 still pairs): once at that frame, the live enemy of that id
+    // nearest Leon shows a hand pose. Type 1: cEm10::setHand on both hands (BIN 449 / 454), as the event code does.
+    // Type 2: em10HandSet(em, 2), the alert pose (right 450, left 453). Type 4: the same with the left-handed flag
+    // 0x01000000 held for the call (right 448, left 455). For 2 / 4, Hand_type is reset to 0 afterwards, so the routine's
+    // own em10HandSet(em, 0) leaves the pose in place (setHand does not touch Hand_type either).
+    bool has_hand, hand_done;
+    u32 hand_frame;
+    int hand_type, hand_id;
     u32 alive_period, alive_last;  // `alivelog <period>`
     bool has_drop;  // `drop <item id> [num]` (issue 23): the kill target drops this item instead of its own roll
     u16 drop_id;
@@ -401,6 +415,15 @@ void load()
         } else if (!strcmp(k, "alivelog") && n >= 2) {
             wp.alive_period = num(tok[1]);
             wp.alive_last = ~0u;
+        } else if (!strcmp(k, "handpose") && n >= 4) {
+            wp.has_hand = true;
+            wp.hand_frame = num(tok[1]);
+            wp.hand_type = (int) num(tok[2]);
+            wp.hand_id = (int) num(tok[3]);
+        } else if (!strcmp(k, "killnear")) {
+            wp.kill_near = true;
+        } else if (!strcmp(k, "killpart") && n >= 2) {
+            wp.kill_part = (s16) num(tok[1]);
         } else if (!strcmp(k, "killrep") && n >= 3) {
             wp.kill_rep = num(tok[1]);
             wp.kill_gap = num(tok[2]);
@@ -648,6 +671,31 @@ void kill_poll()
                   live ? (int) em->pos.y : 0, live ? (int) em->pos.z : 0,
                   live && em->pModelInfo ? (unsigned) em->pModelInfo->colorWord : 0u);
     }
+    if (wp.has_hand && !wp.hand_done && wp.room_frames >= wp.hand_frame && pPL) {
+        cEm* best = nullptr;
+        f32 best_d = 1e30f;
+        for (cEm* e = EmMgr.getEmPtr(wp.hand_id, 0); e; e = EmMgr.getEmPtr(wp.hand_id, e)) {
+            if ((e->be_flag & 0x21) != 0x21 || e->hp <= 0) continue;
+            const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+            if (d < best_d) { best_d = d; best = e; }
+        }
+        if (best) {
+            wp.hand_done = true;
+            if (wp.hand_type == 2 || wp.hand_type == 4) {
+                cEm10* em = static_cast<cEm10*>(best);
+                const u32 flag = em->flag;
+                if (wp.hand_type == 4) em->flag |= 0x01000000;
+                em10HandSet(em, 2);
+                em->flag = flag;
+                EM10_WK(em)->Hand_type = 0;
+            } else {
+                static_cast<cEm10*>(best)->setHand(1, wp.hand_type);
+                static_cast<cEm10*>(best)->setHand(0, wp.hand_type);
+            }
+            re4dc_log("warp: handpose %d on m=%08x at room frame %u pos=%d,%d,%d\n", wp.hand_type, (unsigned) (uintptr_t) best,
+                      (unsigned) wp.room_frames, (int) best->pos.x, (int) best->pos.y, (int) best->pos.z);
+        }
+    }
     if (!wp.has_kill || wp.kill_done) return;
     if (wp.kill_room && pG->room_id != wp.kill_room) return;
     if (wp.room_frames < wp.kill_frame) return;
@@ -665,9 +713,15 @@ void kill_poll()
                 }
             }
         } else {
+            cEm* best = nullptr;
+            f32 best_d = 1e30f;
             for (em = EmMgr.getEmPtr(wp.kill_id, 0); em; em = EmMgr.getEmPtr(wp.kill_id, em)) {
-                if ((em->be_flag & 0x21) == 0x21 && em->hp > 0) break;
+                if ((em->be_flag & 0x21) != 0x21 || em->hp <= 0) continue;
+                if (!wp.kill_near || !pPL) break;
+                const f32 dx = em->pos.x - pPL->pos.x, dz = em->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+                if (d < best_d) { best_d = d; best = em; }
             }
+            if (wp.kill_near && pPL) em = best;
         }
         if (!em) return;  // not placed yet: keep looking
         wp.kill_cur = em->id;
@@ -712,6 +766,11 @@ void kill_poll()
     Vec c = em->pos;
     YARARE_INFO* part = emSphereAtCk(em, &c, &c, 5000.0f, 1, 5000.0f);
     if (!part) part = &em->hitInfo;
+    // `killpart <n>`: aim at the hit box of that parts number instead (5 = the head: em10's damage check then loses
+    // the head on the killing hit, em10LostHead -> em10HeadSet mot[3], the stump; CAST-GC stump gate, lane stump17).
+    if (wp.kill_part)
+        for (YARARE_INFO* q = &em->hitInfo; q; q = q->next)
+            if ((q->flags & 1) && q->partsNo == wp.kill_part) { part = q; break; }
     Vec from = pPL ? pPL->pos : em->pos;
     em->dmg.set(0, 10, wp.kill_kind, &from, part->rad, part);
     ++wp.kill_hits;
