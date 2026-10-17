@@ -51,7 +51,9 @@ O = opaque world cut only (Full fog / PT / TR / actors, no shell); X3 = O + far 
 | r10b | 195,702 | 650 / 35 / 11,134 / 6,000 | 197,856 B (3,822,272 -> 3,624,416) | 0 |
 
 The file is read at room entry with the PS2 world package (static heap, +2 KiB colour table) and freed with it, also
-when the option is at Full, so switching to Short never reads the disc mid-room. VRAM room log (VRAM_ROOM_LOG) is
+when the option is at Full, so switching to Short never reads the disc mid-room. (Superseded by lane farshell17: that
+heap-4 block at every View distance starved r100 after the ambush and pulled the shell from test 16; the shell is now
+read at Short only, lent to movies and given back when heap 4 runs short, docs/lanes/farshell17.md.) VRAM room log (VRAM_ROOM_LOG) is
 identical in F / S / X runs: r101 pinned 2,313,784 free 196,256 largest 12,288; r100 pinned 1,281,760 free 1,228,320
 largest 1,187,840; r10b pinned 2,210,336 free 299,744 largest 284,672; refusals 0, nocontig 0 in every run.
 Reclaim check (fs_vram.py, coordinator 10-16): textures only ever seen beyond 12.5 m from any reachable eye are
