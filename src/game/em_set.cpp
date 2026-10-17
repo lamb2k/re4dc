@@ -204,6 +204,10 @@ static const u32 aliveCapKeepTbl[] = {
     // Island (stage 3 lane census 2026-10-15): r300 the gate event Ganado 0x4B (setEvtMotion on getPtr()),
     // r303 entry 0x24 (em->flag / EstSet on the return).
     0x3004B, 0x30324,
+    // r327 (ch5found16 switch run 10-17): the Ganado that disables the lamp switch, 0x9E (r327_SetSwitchDisable
+    // em2.setEm inside the disable cut), and the gatling Ganado 0x7C (r327_GatlingGanadoSet em[3], hp 5000, its own cut).
+    // Both are sent during their events; held by the cap they were dropped by the appear cut's far delete.
+    0x3279E, 0x3277C,
 #endif
 };
 static int aliveCapKeep(int no)

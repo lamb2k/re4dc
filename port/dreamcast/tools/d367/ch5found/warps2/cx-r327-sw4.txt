@@ -1,0 +1,17 @@
+name cx-r327-sw4
+# ch5found16 r327 switch / refill chain: Leon on lamp switch area 4 (AEV no 4, A button), inside refill area 0xC.
+# First pull (room flags 12/13 clear) = r327_SetSwitchDisable (em 0x9E cut) -> GanadoAppearCut -> r327_EnemySet refills
+# (tables B/C/D while alive(0x1D) drops and Leon is in area 0xC). Kill rig as cx-r327-cap2 so the alive count drops.
+room 0x327
+pos -23880 9074 48680
+ang 3.1416
+inv default
+god
+alivelog 30
+act 90 a 4
+act 150 a 4
+act 210 a 4
+act 300 a 4
+act 420 a 4
+kill 0x1d 30
+killrep 33 12
