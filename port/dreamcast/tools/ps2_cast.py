@@ -381,7 +381,7 @@ PRESETS['armor-em25-00'] = dict(archive='em25', sections=[(4, 'body')], tpl=5, r
                                 types=[0, 9], category='registry', model_id=0x25, lit=True)
 PRESETS['armor-em3c-00'] = dict(archive='em3c', sections=[(5, 'body'), (7, 'extra', 8)], tpl=6, rooms=['r216'],
                                 types=[0, 1], category='registry', model_id=0x3c, lit=True, subset_bones=True, uv_edge_texels=12)
-PRESETS['armor-em3c-02'] = dict(archive='em3c', sections=[(9, 'body'), (0xb, 'extra', 8)], tpl=0xa, rooms=['r216'],
+PRESETS['armor-em3c-02'] = dict(archive='em3c', sections=[(9, 'body'), (0xb, 'extra', 8), (0xc, 'weapon', 0xd), (0xe, 'weapon2', 0xf)], tpl=0xa, rooms=['r216'],
                                 types=[2, 3], category='registry', model_id=0x3c, lit=True, subset_bones=True, uv_edge_texels=12, shift=3)
 PRESETS['novis-em2d-04'] = dict(archive='em2d', sections=[(0xd, 'body')], tpl=0xe, rooms=['r213', 'r21d'],
                                 types=[4], category='registry', model_id=0x2d, lit=True, ps2_superset_bones=True, shift=3)
