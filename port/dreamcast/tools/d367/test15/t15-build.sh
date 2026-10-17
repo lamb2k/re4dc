@@ -146,10 +146,10 @@ T15_P="SS11_PRELOAD=1"
 #      added 10-16 by lane water16b after the vq16w VQ set). Data: vq16w + water16i in T15_DATA (water pictures preloaded).
 #      Gates in C:/Flycast-Evidence/re4-dreamcast/water-20261016. T15_W="" builds the control without it.
 T15_W=${T15_W-WATER_PS2=1}
-#   WV WORLD_VERT=1 WORLD_VERT_LEVEL=5 (ChatGPT world32, user GO 10-16, -4.16 ms MODELLED at the r101 cross): r101 world
-#      as the approved L2 geometry in 32 m static batches (data wv32r101). Render only. T15_WV="" builds the control.
-#      Gates in C:/Flycast-Evidence/re4-dreamcast/world32-land-20261016.
-T15_WV=${T15_WV-WORLD_VERT=1 WORLD_VERT_LEVEL=5}
+#   WV (removed 10-16, user: "use the previously optimized r101; we will come back to improving the world; we need to
+#      use Blender and more sophistication"): WORLD_VERT is off, r101 draws the test 14 world (bake13, T15_DATA without
+#      wt16r101). The reduced sets lost structure (tools/d367/worldtest16/lostpart: test 15 world32 1657 flagged pieces,
+#      C16 1511). Any reduced world comes back only through the lost-part gate (WORLD-NEXT.md).
 #   T  FOLIAGE_TRIM=1 FOLIAGE_OPTION=1 (lane mist16; user 10-16 "I approve near", "ship with full near and off then log the
 #      issue"; render only): the chapter 1 outdoor brush / leaf cards in the punch-through list to 12 m (Near, the boot
 #      default), Options row "Foliage" Full / Near / Off, this boot only. Off leaves out the listed card keys only (85128754).
@@ -171,7 +171,7 @@ T15_RS=${T15_RS-RADIO_SUB_RT=1}
 #      around Leon, the Esp48 mist sheets, the r118 / r11c PS2 haze additions); the distant haze stays as the fog table.
 #      Ships with the Foliage Off fix (85128754). T15_HZ="" builds the control without it. Docs: docs/MIST_CUT.md.
 T15_HZ=${T15_HZ-HAZE_SPRITE_CUT=1}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_WV $T15_T $T15_FS $T15_RS $T15_HZ"
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"
