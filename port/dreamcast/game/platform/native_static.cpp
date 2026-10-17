@@ -3010,6 +3010,11 @@ static int ss_bg_hidden;
 static float ss_bg_rgb[3];
 static int ss_bg_rgb_set;
 #endif
+#if defined(RE4DC_TRANS_POLICY)
+// TRANS_POLICY FAR: a copy of the PVR fog table this frame loaded (entry j <-> eye depth tfar/v(j)), so ps2_pass can
+// turn "fog amount >= threshold" into a depth with the room's real fog (curve, far ramp, hwfog veil, haze).
+namespace { float trans_fog_table[129]; float trans_fog_tfar; }
+#endif
 extern "C" void re4dc_fog_frame(){
 #if defined(RE4DC_SS_BG_BLACK) && RE4DC_SS_BG_BLACK
     {const int hidden=re4dc_ss_scene_hidden();
@@ -3100,6 +3105,9 @@ extern "C" void re4dc_fog_frame(){
     pvr_fog_table_color(1.0f,r,g,b);
     pvr_fog_far_depth(tfar);
     pvr_fog_table_custom(table);
+#if defined(RE4DC_TRANS_POLICY)
+    std::memcpy(trans_fog_table,table,sizeof(table));trans_fog_tfar=tfar;
+#endif
 #else
     if(!fog_now.type)return;
 #if defined(RE4DC_HW_FOG_HAZE) && RE4DC_HW_FOG_HAZE
@@ -3157,6 +3165,9 @@ extern "C" void re4dc_fog_frame(){
     pvr_fog_table_color(1.0f,r,g,b);
     pvr_fog_far_depth(far);
     pvr_fog_table_custom(table);
+#if defined(RE4DC_TRANS_POLICY)
+    std::memcpy(trans_fog_table,table,sizeof(table));trans_fog_tfar=far;
+#endif
 #endif
 #if RE4DC_FOG_BACKGROUND
 #if defined(RE4DC_SS_BG_BLACK) && RE4DC_SS_BG_BLACK
@@ -4125,6 +4136,175 @@ bool hidden(unsigned i){
 #include "far_shell.inc"
 #undef RE4DC_FAR_SHELL_PART
 #endif
+#if defined(RE4DC_TRANS_POLICY)
+// TRANS_POLICY=<mask> (hwfog.mk, lane trans17 2026-10-17, TRANSPARENCY-PLAN-20261017.md sections 4-6; render only;
+// unset = no code, image byte-identical). One offline class per R4PW part (tools/d367/tr_classify.py) in the room's
+// sidecar ps2-world.r4tc ("R4TC" v1: the classifier version, the part count and the R4PW body crc it was made from,
+// the crc32 of the class bytes, then one byte per part). A room without the file, or with a file made for another R4PW,
+// draws exactly as today and logs why. Runtime word re4dc_trans_policy (.data), one bit per sub-switch:
+//   1 FLAT  FLAT (uniform 14/15 alpha, r109 / r119 cabin walls and floor) and OPAQUE_IN_TR parts of the TR pass
+//           draw in the opaque list (Tier 2: bounded 17/255 per channel, automated diff tools/d367/tr_pixdiff.py);
+//   128 DROP a TR part whose shipped texture is alpha 0 in every texel is not drawn (Tier 1: draws nothing).
+//   2 CARD / 4 SOFTA  CARD_NEAR / CARD_SOFTA parts draw punch-through (alpha test at PT_ALPHA_REF; Tier 2 or 3 by diff);
+//   8 FAR  passes 1-2 stop at the depth where this frame's fog table reaches re4dc_trans_far_pct (see far_of).
+// Vertex-alpha parts (R4PW reserved bit 0) are never moved. Bits 16 VA, 32 FX, 64 WATER are
+// reserved (hwfog.mk refuses them until each is built and gated). The table lives in heap 4 beside the world and is
+// freed with it; the movie-arena re-adopt path does no I/O, so after a movie return the policy is idle until the next open.
+} // namespace (re4dc_trans_policy at file scope: dbgwarp_bridge.cpp links to it by its C name)
+extern "C" { volatile unsigned re4dc_trans_policy=RE4DC_TRANS_POLICY; volatile unsigned re4dc_trans_far_pct=70U|(90U<<8); }
+#if RE4DC_TRANS_POLICY_DEBUG
+extern "C" { volatile unsigned re4dc_trans_debug=0; }
+#endif
+namespace {
+namespace trans{
+enum : unsigned { kUnknown=0,kOp=1,kPtBin=2,kOpaqueInTr=3,kFlat=4,kFlatMid=5,kCardNear=6,kCardSoftA=7,kSoft=8,kVa=9,kDrop=10 };
+enum : unsigned { kTpFlat=1U,kTpCard=2U,kTpSofta=4U,kTpFar=8U,kTpDrop=128U };
+struct Head { char magic[4]; std::uint32_t version,classifier,parts,r4pw_crc,body_crc; };
+static_assert(sizeof(Head)==24);
+static std::uint8_t* block=nullptr; static const std::uint8_t* cls=nullptr;
+static unsigned room=~0U,nparts=0,flat=0,carded=0,dropped=0,last_room=~0U; static std::uint32_t last_frame;
+static void close(){ if(block)re4dc_static_free(block); block=nullptr;cls=nullptr;room=~0U;nparts=0; }
+// After the R4PW sidecar is accepted (room, its body crc, its part count). Reads the class sidecar into heap 4.
+// The disc's sidecar index (dc/native/trclass.idx, tools/d367/tr_classify.py: "R4TI", u32 count, u16 room ids), read
+// once at the first world open, so a room without a sidecar costs no disc access at its entry (a door's wall-timed
+// load would otherwise shift, coordinator 10-17). No index = the policy is idle for the whole session.
+static std::uint16_t idx_rooms[128]; static unsigned idx_n=0; static int idx_state=0; // 0 unread, 1 ok, -1 none
+static bool listed(unsigned r){
+    if(!idx_state){
+        idx_state=-1;
+        const file_t f=fs_open("/cd/dc/native/trclass.idx",O_RDONLY);
+        if(f!=FILEHND_INVALID){
+            unsigned char b[8+2*128];
+            const ssize_t got=fs_read(f,b,sizeof(b));fs_close(f);
+            std::uint32_t n=0;
+            if(got>=8 && !std::memcmp(b,"R4TI",4)){std::memcpy(&n,b+4,4);
+                if(n<=128 && got>=ssize_t(8+2*n)){std::memcpy(idx_rooms,b+8,2*n);idx_n=n;idx_state=1;}}
+        }
+        re4dc_log("trans: index %s rooms=%u\n",idx_state>0?"ok":"absent",idx_n);
+    }
+    for(unsigned i=0;i<idx_n;++i)if(idx_rooms[i]==r)return true;
+    return false;
+}
+static void open(unsigned r,std::uint32_t r4pw_crc,unsigned parts){
+    close();
+    if(!listed(r)){re4dc_log("trans: room=%03x policy=%u classes=unlisted\n",r,unsigned(re4dc_trans_policy));return;}
+    char path[48];snprintf(path,sizeof(path),"/cd/dc/native/r%03x/ps2-world.r4tc",r);
+    const file_t f=fs_open(path,O_RDONLY);
+    const char* why=nullptr;
+    if(f==FILEHND_INVALID)why="no file";
+    else{
+        const unsigned size=unsigned(fs_total(f));
+        Head h{};
+        if(size!=sizeof(Head)+((parts+3U)&~3U))why="size";
+        else if(!(block=static_cast<std::uint8_t*>(re4dc_static_alloc(size))))why="heap";
+        else if(fs_read(f,block,size)!=ssize_t(size))why="read";
+        else{
+            std::memcpy(&h,block,sizeof(h));
+            if(std::memcmp(h.magic,"R4TC",4) || h.version!=1 || h.parts!=parts)why="header";
+            else if(h.r4pw_crc!=r4pw_crc)why="other r4pw";
+            else if(ps2_crc32(block+sizeof(Head),parts)!=h.body_crc)why="crc";
+        }
+        fs_close(f);
+        if(!why){cls=block+sizeof(Head);room=r;nparts=parts;}
+        else if(block){re4dc_static_free(block);block=nullptr;}
+    }
+    re4dc_log("trans: room=%03x policy=%u classes=%s parts=%u heap=%d\n",r,unsigned(re4dc_trans_policy),why?why:"ok",parts,
+              re4dc_static_heap_free());
+}
+// The pass a translucent (pass 2, no vertex alpha) part of class c moves to under policy word p; 2 = stays.
+static unsigned target(unsigned c,unsigned p){
+    if((p&kTpFlat) && (c==kFlat || c==kOpaqueInTr))return 0;
+    if((p&kTpCard) && c==kCardNear)return 1;
+    if((p&kTpSofta) && c==kCardSoftA)return 1;
+    return 2;
+}
+#if RE4DC_PS2_PASS_MASK
+// The pass mask (one byte per placement) must list the pass a moved part can draw in (FLAT -> 0, CARD / SOFTA -> 1), or
+// ps2_pass would skip the placement before reaching the part. Set for every movable part whatever the runtime bits: an
+// extra bit costs a scan, never a draw.
+static void mask(const Ps2Part* parts,const Ps2Placement* pl,unsigned n){
+    if(!cls || !ps2w.masked)return;
+    for(unsigned i=0;i<n;++i){
+        const auto& mesh=ps2w.package.meshes()[pl[i].mesh];
+        for(unsigned k=0;k<mesh.part_count;++k){
+            const unsigned p=mesh.first_part+k;
+            if(p>=nparts || parts[p].pass!=2 || (parts[p].reserved&1U))continue;
+            const unsigned t=target(cls[p],kTpFlat|kTpCard|kTpSofta);
+            if(t<2)ps2w.pass_mask[i]|=std::uint8_t(1U<<t);
+        }
+    }
+}
+#endif
+// The pass a part draws in under the policy: 0 / 1 / 2, or 3 = not drawn. `now` is the pass after FOLIAGE_TRIM.
+// re4dc_trans_debug (TRANS_POLICY_DEBUG=1 builds, warp line `transdbg <mask>`; never shipped): parts of the classes in
+// the mask (bit = class number; 1 = FLAT and OPAQUE_IN_TR) are not drawn at all, so an A-vs-debug still pair gives
+// tr_pixdiff.py --mask-diff the silhouette of the converted class.
+static unsigned pass_of(const Ps2Part& m,unsigned index,unsigned now){
+    if(!cls || room!=ps2w.room || index>=nparts)return now;
+#if RE4DC_TRANS_POLICY_DEBUG
+    {const unsigned dm=re4dc_trans_debug==1U?((1U<<kFlat)|(1U<<kOpaqueInTr)):re4dc_trans_debug;
+     if((dm>>cls[index])&1U)return 3;}   // any pass, vertex alpha included (class VA = bit 9)
+#endif
+    if(m.pass!=2 || now!=2 || (m.reserved&1U))return now;
+    const unsigned c=cls[index],p=re4dc_trans_policy;
+    if((p&kTpDrop) && c==kDrop)return 3;
+    const unsigned t=target(c,p);
+    return t<2?t:now;
+}
+// For the unmasked placement scan: a part that the policy may move into `pass`.
+static bool candidate(unsigned index,unsigned pass){
+    if(!cls || room!=ps2w.room || index>=nparts || pass>1)return false;
+    const auto& m=ps2w.parts[index];
+    return m.pass==2 && !(m.reserved&1U) && target(cls[index],re4dc_trans_policy)==pass;
+}
+#if RE4DC_NATIVE_FOG
+// FAR (bit 8): the depth beyond which the PVR fog table this frame is at or above a threshold everywhere, from the
+// loaded table itself (trans_fog_table, entry 0 = the far plane). 0 = no such depth (fog off, or never that thick).
+// Thresholds (percent): re4dc_trans_far_pct low byte = cards moved to punch-through (CARD / SOFTA / FOLIAGE Near),
+// next byte = everything else drawn in passes 1-2 (native punch-through cutouts, soft cards, glass, unmoved cards).
+// Vertex-alpha overlays are TP_VA's (not built), opaque parts are never touched. Warp line `transfar <low> <high>`.
+static float cut_low,cut_high;
+static float depth_at(float t){
+    if(fog_loaded.type<=0 || !(trans_fog_tfar>0))return 0.0f;
+    unsigned j=0;
+    while(j<129 && trans_fog_table[j]>=t)++j;
+    if(!j)return 0.0f;
+    --j;
+    const float v=j<128?float((j&15U)+16U)/16.0f*float(1U<<(j>>4)):256.0f;
+    return trans_fog_tfar/v;
+}
+static void frame_cuts(){
+    if(!(re4dc_trans_policy&kTpFar)){cut_low=cut_high=0.0f;return;}
+    const unsigned w=re4dc_trans_far_pct;
+    cut_low=depth_at(float(w&255U)/100.0f);cut_high=depth_at(float((w>>8)&255U)/100.0f);
+}
+// The far cut for a part drawn in pass `drawn` (1 or 2), 0 = none.
+static float far_of(const Ps2Part& m,unsigned index,unsigned drawn){
+    if(!(re4dc_trans_policy&kTpFar) || !drawn || drawn>2 || (m.reserved&1U))return 0.0f;
+    if(drawn==1 && m.pass==2)return cut_low;          // a card moved to punch-through
+    if(!cls || room!=ps2w.room || index>=nparts)return cut_high;
+    const unsigned c=cls[index];
+    return (c==kFlat || c==kOpaqueInTr || c==kOp)?0.0f:cut_high;
+}
+#endif
+static void note(unsigned pass,unsigned drawn){
+    if(drawn==0 && pass==0)++flat;
+    if(drawn==1 && pass==1)++carded;
+    if(drawn==3 && pass==2)++dropped;
+    const std::uint32_t f=re4dc_vi_retrace_count();
+    if(last_room!=ps2w.room || f-last_frame>=1200U){
+#if RE4DC_NATIVE_FOG
+        re4dc_log("trans: policy=%u room=%03x table=%u flat=%u card=%u dropped=%u far=%u/%u mm\n",unsigned(re4dc_trans_policy),
+                  unsigned(ps2w.room),cls?1U:0U,flat,carded,dropped,unsigned(cut_low),unsigned(cut_high));
+#else
+        re4dc_log("trans: policy=%u room=%03x table=%u flat=%u card=%u dropped=%u\n",unsigned(re4dc_trans_policy),
+                  unsigned(ps2w.room),cls?1U:0U,flat,carded,dropped);
+#endif
+        last_room=ps2w.room;last_frame=f;flat=carded=dropped=0;
+    }
+}
+} // namespace trans
+#endif
 bool ps2_open(){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return false; // BEFORE storage/room-mismatch paths
@@ -4313,6 +4493,12 @@ bool ps2_open(){
         ps2w.pass_mask[i]=std::uint8_t(m);
     }
 #endif
+#if defined(RE4DC_TRANS_POLICY)
+    trans::open(ps2w.room,h.crc,h.parts);
+#if RE4DC_PS2_PASS_MASK
+    trans::mask(ps2w.parts,ps2w.placements,h.placements);
+#endif
+#endif
 #if RE4DC_PS2_PVS
     pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc);
 #endif
@@ -4457,6 +4643,9 @@ bool ps2_movie_reload(){
         for(unsigned k=0;k<mesh.part_count;++k)mask|=1u<<parts[mesh.first_part+k].pass;
         ps2w.pass_mask[i]=std::uint8_t(mask);
     }
+#endif
+#if defined(RE4DC_TRANS_POLICY)
+    trans::close(); // no I/O here: the policy idles until the next ps2_open (logged by trans::note as table=0)
 #endif
 #if RE4DC_MESH_FASTPATH
     auto* lut=reinterpret_cast<std::uint32_t*>(data+mb+pb);re4dc::vp::build_lut(lut);ps2w.lut=lut;
@@ -4686,6 +4875,9 @@ int ps2_pass(unsigned pass,float zfar){
     if(pass){const float f=foliage_far;if(f>near && f<cull_far)cull_far=f;}
 #endif
     c.near=near;c.far=far;c.cull_far=cull_far;
+#if defined(RE4DC_TRANS_POLICY) && RE4DC_NATIVE_FOG
+    if(pass)trans::frame_cuts();
+#endif
 #if RE4DC_SKY_ANY
     const float pass_cull_far=cull_far;
 #endif
@@ -4857,6 +5049,10 @@ int ps2_pass(unsigned pass,float zfar){
         {
         bool any=false;
         for(unsigned k=0;k<mesh.part_count && !any;++k)any=RE4DC_PASS_HIT(ps2w.parts[mesh.first_part+k].pass);
+#if defined(RE4DC_TRANS_POLICY)
+        // TRANS_POLICY FLAT / CARD / SOFTA: a translucent-only placement can hold parts that now draw in pass 0 or 1
+        for(unsigned k=0;pass<2 && k<mesh.part_count && !any;++k)any=trans::candidate(mesh.first_part+k,pass);
+#endif
         if(!any)continue;
         }
 #undef RE4DC_PASS_HIT
@@ -4973,7 +5169,17 @@ int ps2_pass(unsigned pass,float zfar){
 #if defined(RE4DC_FOLIAGE_TRIM)
             const unsigned foliage_pass=foliage::pass_of(meta);
             if(foliage_pass!=meta.pass && (pass==1 || pass==2))foliage::note(pass,foliage_pass);
+#if defined(RE4DC_TRANS_POLICY)
+            const unsigned trans_pass=trans::pass_of(meta,index,foliage_pass);
+            if(trans_pass!=foliage_pass)trans::note(pass,trans_pass);
+            if(trans_pass!=pass)continue;
+#else
             if(foliage_pass!=pass)continue;
+#endif
+#elif defined(RE4DC_TRANS_POLICY)
+            const unsigned trans_pass=trans::pass_of(meta,index,meta.pass);
+            if(trans_pass!=meta.pass)trans::note(pass,trans_pass);
+            if(trans_pass!=pass)continue;
 #else
             if(meta.pass!=pass)continue;
 #endif
@@ -5016,6 +5222,17 @@ int ps2_pass(unsigned pass,float zfar){
 #if RE4DC_PS2_WORLD_LEAN
                 d.lean_inside=false;
 #endif
+            }
+#endif
+#if defined(RE4DC_TRANS_POLICY) && RE4DC_NATIVE_FOG
+            {   // TRANS_POLICY FAR: clusters past the room fog's threshold depth for this part's class are not drawn
+                const float tf=trans::far_of(meta,index,trans_pass);
+                if(tf>near && tf<d.cull_far){
+                    d.cull_far=tf;
+#if RE4DC_PS2_WORLD_LEAN
+                    d.lean_inside=false;
+#endif
+                }
             }
 #endif
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
@@ -5393,6 +5610,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
 #endif
 #if RE4DC_FAR_SHELL
     farshell::close();
+#endif
+#if defined(RE4DC_TRANS_POLICY)
+    trans::close();
 #endif
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);
