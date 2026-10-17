@@ -192,7 +192,18 @@ T15_AC=${T15_AC-ANIMALS_OFF=1 ALIVE_CAP=4 R101_ALIVE_CAP=4}
 # T15_VP (lane vram101, test 17, 10-17): VRAM_PAGES_VQ_ONLY=1, only VQ textures start on a 2 KiB page (render only;
 #      r101 preload 22 evictions -> 0, largest free block 10 KB -> 58 KB). Data T17V_DATA. T15_VP="" builds without it.
 T15_VP=${T15_VP-VRAM_PAGES_VQ_ONLY=1}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP"
+# T15_DY (lane cast16, test 17, coordinator 10-17): NATIVE_MODEL_REGISTRY_DYING=1, a dying Ganado-class enemy keeps its PS2 /
+#      registry model through the death fade (G1 ticket: source FIFO position, TR list, source alpha) instead of the
+#      GameCube model (r101 near-kill rig: 14 GC fade frames -> 0, 14 native fades). Render only: STRICT h2 / bell60 /
+#      door103 / r101 near-kill vs knobs off, KOS squeeze 10/10, s30 heap_before 1,065,248 (-4,096 B). T15_DY="" builds
+#      without it. Release check: a near-fade still pair (TEST17-SCOPE.md).
+T15_DY=${T15_DY-NATIVE_MODEL_REGISTRY_DYING=1}
+# T15_TP (lane cast16, test 17): TEX_PKG_SKIP=1, the room preload skips the GameCube TPLs that a room package's role rows
+#      replace with their own atlas (a source draw still loads one on first sight). VRAM only: r11f free / largest
+#      382,080 / 331,776 -> 543,872 / 497,664 (47 skips), r101 near-kill 137,376 / 18,432 -> 155,808 / 36,864, r103 no-op;
+#      CAST-GC / TEXCHK / LEON-GC unchanged. T15_TP="" builds without it.
+T15_TP=${T15_TP-TEX_PKG_SKIP=1}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP $T15_DY $T15_TP"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"

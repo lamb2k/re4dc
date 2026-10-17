@@ -128,6 +128,15 @@ bool actor_plan_layout(Re4dcActorPlan& p) {
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
 #include "coarse_actor_death_fade_context.inc"
 #endif
+#if RE4DC_NMR_BLENDTBL
+// NATIVE_MODEL_REGISTRY_BLENDTBL (native_model_registry.mk): a registry actor's info with a texture blend table installed
+// but idle (cModelInfo::setTexBlendTbl sets flagsDC 4; blendRatio 0 and blendType 0: trans.cpp TextureBlend adds no
+// stage, the base textures show) draws as the base: the Novistador (em2d) keeps its table for the whole fight and
+// blends only while its camouflage changes (em2dCamouflageMove).
+#define RE4DC_NMR_BLEND_IDLE(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl &&     !(info)->blendRatio && !(info)->blendType)
+#else
+#define RE4DC_NMR_BLEND_IDLE(info,app) false
+#endif
 bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
     if(!m->pParts || !p.count || p.count>kRe4dcActorRoles || !p.palettes ||
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
@@ -149,8 +158,8 @@ bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
         // Hidden infos were still prepared and animated by the source callback.
         // They participate in the certificate and lease proof too.
         if(!info || !info->pData || info->invisible_factor!=1.0f || info->blend_mode ||
-           info->colorWord!=0xffffffffu || info->flagsDC || info->pAddTpl || info->nAddTex ||
-           info->texBlendTbl || info->pTexAnim || info->uvU || info->uvV || info->uvScrollU || info->uvScrollV ||
+           info->colorWord!=0xffffffffu || (info->flagsDC && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pAddTpl || info->nAddTex ||
+           (info->texBlendTbl && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pTexAnim || info->uvU || info->uvV || info->uvScrollU || info->uvScrollV ||
            ((info->be_flag&2) && !RE4DC_ACTOR_SHAPE_ROLE(p,i)))return false;
         re4dc_source::ChunkProof proof{};
         if(re4dc_actor_immutable_chunk_proof(p.immutable_asset_id[i],p.input[i],proof)!=re4dc_source::BlobError::None)return false;
@@ -218,9 +227,9 @@ unsigned actor_semantics_why(cModel* m,const Re4dcActorPlan& p,unsigned* detail)
         if(info->invisible_factor!=1.0f)return 13;
         if(info->blend_mode){*detail=i<<16|info->blend_mode;return 14;}
         if(info->colorWord!=0xffffffffu){*detail=info->colorWord;return 15;}
-        if(info->flagsDC){*detail=i<<16|info->flagsDC;return 16;}
+        if(info->flagsDC && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)){*detail=i<<16|info->flagsDC;return 16;}
         if(info->pAddTpl || info->nAddTex)return 17;
-        if(info->texBlendTbl || info->pTexAnim)return 18;
+        if((info->texBlendTbl && !RE4DC_NMR_BLEND_IDLE(info,p.appearance)) || info->pTexAnim)return 18;
         if(info->uvU || info->uvV || info->uvScrollU || info->uvScrollV)return 19;
         if((info->be_flag&2) && !RE4DC_ACTOR_SHAPE_ROLE(p,i))return 20;
         re4dc_source::ChunkProof proof{};
@@ -403,7 +412,11 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
 #endif
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
     if(captured) {
-        b.alpha_state=captured->alpha;b.source_key[2]=captured->fog;r->lit=captured->lit;b.lighting=&r->lit;
+        b.alpha_state=captured->alpha;b.source_key[2]=captured->fog;
+#if RE4DC_NMR_DYING
+        if(captured->own_lit)
+#endif
+        {r->lit=captured->lit;b.lighting=&r->lit;}
     } else if(actor_fade_eligible(m,p)) {
         b.alpha_state=re4dc_fade::alpha(m->invisible_factor,m->invisible_factor2,1.0f,255);
         b.source_key[2]=re4dc_fog_enabled();
@@ -864,7 +877,7 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
         if(crowd_ganado(m)) {
             crowd_would=crowd_policy(m);
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
-            if(crowd_would && actor_fade_eligible(m,p))return 0;
+            if(crowd_would && actor_fade_eligible_g1(m,p))return 0;
 #endif
 #if defined(RE4DC_ENCV) && RE4DC_ENCV
             re4dc_encv_crowd=crowd_would;  // ENC_CENSUS=2 (coarse.cpp)
@@ -892,7 +905,18 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
         }
 #endif
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
+#if RE4DC_NMR_DYING && RE4DC_NATIVE_MODEL_REGISTRY_CENSUS
+        if(actor_fade_eligible(m,p)) {
+            // The census counts a queued fade as a native draw; a refused one (0) keeps the source path.
+            const int faded=actor_fade_enqueue(m,p,frame,model);
+            if(faded==1 && plan_kind==3){++registry_count[p.appearance-nmr::appearance_first].admitted;registry_note_admit(m,p.appearance);}
+            if(faded==0 && plan_kind==3)registry_decline(m,&p,kRwAcquire);
+            if(faded>=0)scene_note(m,plan_kind,faded==1?kScNative:plan_kind==3?kScRegistryDeclined:kScDeclined);
+            return faded;
+        }
+#else
         if(actor_fade_eligible(m,p))return actor_fade_enqueue(m,p,frame,model);
+#endif
 #endif
         bool failed=false;r=actor_acquire(m,p,frame,model,failed);
         if(failed){actor_fail();return -1;}
