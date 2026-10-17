@@ -461,6 +461,13 @@ endif
 #              the Info::roles mask takes 5 words (160 role bits, 98 room rows) for rooms whose pools load many types
 #              (r227: em14 types 6..9; island r320 / r327). Packages over 66 room rows (model_registry.py --roles5) are
 #              refused whole by an image without it. Knob off: the image is unchanged.
+# NATIVE_BUMP_FLAT=1 (lane cast16 2026-10-16; default 0; render only): every registry plan meets the source bump need
+#              with no bump stage (the DC source path draws none either), for descriptors that declare source_drops
+#              "bump" outside a pool. Knob off: the image is unchanged.
+NATIVE_BUMP_FLAT ?= 0
+ifeq ($(NATIVE_BUMP_FLAT),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_BUMP_FLAT=1
+endif
 NATIVE_MODEL_REGISTRY_ROLES5 ?= 0
 ifeq ($(NATIVE_MODEL_REGISTRY_ROLES5),1)
 ifneq ($(NATIVE_MODEL_REGISTRY_POOL),1)
