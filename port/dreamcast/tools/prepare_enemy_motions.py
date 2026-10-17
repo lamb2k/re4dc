@@ -125,6 +125,20 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 # maxFrame reads); MotionMove / MotionMoveF take the work, not ARC. SetObj00(ARC(0x81), ARC(0x82)) is BIN + TPL, ARC(5..8)
 # BINs. Heap 4: the textures-only body (3,517,280 B) did not fit r307 (largest block 3,218,496) or r310 (3,083,744).
 MOTION_SMALL+=('em36.drs',)
+# em39 (Krauser, r31c r325 r326 r329; lane ch5found16 2026-10-17; tools/d367/motion/arcaudit.py over src/em39/em39.cpp):
+# MotionSetCore `data` takes 144 ARC FCVs directly and em39BlendMotSet's m0 / m1 / m2 (ARC 0x7C..0x81, 0xC6..0xC8; three
+# MotionSetCore calls, its a / b / c are int seq values); `seq` takes 94 ARC SEQ key tables (resident). The work-held
+# clips go there too: bowMot0..2 = ARC(0xC9..0xD0) -> em39BlendMotSet; `mot = ARC(0xE7 / 0xFF..0x107)` -> MotionSetCore
+# (Arm_mot). setGrenadeThrow (emwep.cpp) lends ARC(0x10B / 0x10D / 0x111) to the player's MotionSetCore (Mot_escape /
+# motBackjump / motFront; the leased evaluator, as em2b's grab) and ARC(0x10C) as its seq. FCV header reads only (resident):
+# maxFrame of ARC(0x83 0x88 0x92 0xC4 0xE7 0x10A). The grabs lend the archive to the player (pl->subArc = em->subArc,
+# em39.cpp 1161..5159): PL_ARC_PTR(pl->subArc, 0x10E..0x130) and PLEM39_BACKJUMP_INIT's motA (0x12B 0x12C) -> the player's
+# MotionSetCore `data`; 0x10F 0x12E its `seq`; 0x128 0x129 the cliff object's modelInit. No variable index into the
+# archive anywhere in src; event.cpp never reads subArc. FCV slots ARC(0x36 0x39 0x3A 0x7B 0x82 0x87 0x9D 0xCD 0xD3
+# 0x112) are named nowhere (never played). Everything else is BIN / TPL / EFF: modelInit (0x15 0x17 0x1A 0x1D),
+# ModInfoMgr.create, SetWeapon (0x25..0x38), SetObj10 (0x2D 0x2E), SetObj12 (0x16 0x19), EspDataLoad (4), bin = ARC(0xA..0xF).
+# Heap 4: the textures-only body (3,244,800 B) did not fit r31c (2,084,288 B free at the em39 read).
+MOTION_SMALL+=('em39.drs',)
 # em2b (El Gigante, r119; route lane r119 2026-10-10): every FCV it names goes to MotionSetCore, directly or through
 # em2bBlendMotSet (two MotionSetCore calls; the blend work is evaluated by MotionMoveCore), MotSetObj16 (the
 # parasite head and the tentacles: MotionSetCore) and plBlendMotSet / MotionSetCore on the player while it lends

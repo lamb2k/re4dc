@@ -186,7 +186,12 @@ void cEm3a::setNoSuspend(int on)
 // EmInitFunc: placement-constructs the helicopter in the cEm work.
 void Em3aInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the subArc cEmMgr::construct set (modelInit: bin_addr == NULL), as em3d / em36.
+    new (em) cEm3a;
+#else
     new (em) cEm3a();
+#endif
 }
 
 // Damage of the frame (cEm::dmHit): type 2 while hidden dies at once from anything but a distant

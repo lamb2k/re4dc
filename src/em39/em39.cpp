@@ -207,7 +207,12 @@ extern "C" void _unresolved()
 // sets it up on the first move.
 void Em39Init(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the subArc cEmMgr::construct set (modelInit: bin_addr == NULL), as em3d / em36.
+    new (em) cEm39;
+#else
     new (em) cEm39();
+#endif
 }
 
 // Destroys the held weapon enemies (knife, machine gun, bow, thrown knife) and the cap object that
