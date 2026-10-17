@@ -1,0 +1,98 @@
+{
+ "registry": "ps2-ch4f-r227",
+ "about": "lane ch4found16 (2026-10-17): room 227 = cast16's ps2-ch4-r227 with the type 9 Zealot pool taking em10SetAccesory's flag-2 accessory (BIN 0x211 with subArc TPL 0x220: presets zealot-em14-09q / zealot-em1c-09h, proposed to cast16 for ps2_cast.py; converted here with /mnt/c/tmp/ch4/cast/c4q.py). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/ch4found/cast/regcast-ch4f",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em14-06p",
+   "archive": "em14",
+   "model_id": "0x14",
+   "source_types": [
+    6
+   ],
+   "module": "src/em14/em14_set.cpp Em14Set type 6 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "partial_sections": true,
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "2": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-06p-s2",
+    "5": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-06p-s5",
+    "6": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-06p-s6"
+   }
+  },
+  {
+   "name": "zealot-em14-07p",
+   "archive": "em14",
+   "model_id": "0x14",
+   "source_types": [
+    7
+   ],
+   "partial_sections": true,
+   "module": "src/em14/em14_set.cpp Em14Set type 7 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-07p-s13",
+    "16": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-07p-s16",
+    "20": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-07p-s20"
+   }
+  },
+  {
+   "name": "zealot-em14-08p",
+   "archive": "em14",
+   "model_id": "0x14",
+   "source_types": [
+    8
+   ],
+   "partial_sections": true,
+   "module": "src/em14/em14_set.cpp Em14Set type 8 (em10.cpp creates; ps2_cast.py pool)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-08p-s13",
+    "16": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-08p-s16",
+    "20": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-08p-s20"
+   }
+  },
+  {
+   "name": "zealot-em14-09q",
+   "archive": "em14",
+   "model_id": "0x14",
+   "source_types": [
+    9
+   ],
+   "partial_sections": true,
+   "module": "src/em14/em14_set.cpp Em14Set type 9 (em10.cpp creates; ps2_cast.py pool) + flag-2 accessory 0x211 / TPL 0x220 (ch4found16)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/ch4found/cast/conv/mask-zealot-em14-09q-s13",
+    "16": "/root/probe/lanes-20261016/ch4found/cast/conv/mask-zealot-em14-09q-s16",
+    "20": "/root/probe/lanes-20261016/ch4found/cast/conv/mask-zealot-em14-09q-s20"
+   }
+  }
+ ],
+ "room_packages": {
+  "227": {
+   "descriptors": [
+    "zealot-em14-06p",
+    "zealot-em14-07p",
+    "zealot-em14-08p",
+    "zealot-em14-09q"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW); ch4found16 NMRBIN 211/220 (cxd4imW draw rigs)"
+  }
+ }
+}

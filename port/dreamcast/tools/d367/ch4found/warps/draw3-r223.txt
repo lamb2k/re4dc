@@ -1,0 +1,9 @@
+name draw3-r223
+# ch4found16 castle PS2 cast draw rig 3: Leon beside the first em16 the kill rig found (-34922,4094,6766), facing it, god, no kills
+room 0x223
+pos -31000 4094 6766
+ang -1.57
+inv default
+god
+alivelog 300
+dump

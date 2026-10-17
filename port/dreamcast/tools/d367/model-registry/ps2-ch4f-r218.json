@@ -1,0 +1,66 @@
+{
+ "registry": "ps2-ch4f-r218",
+ "about": "lane ch4found16 (2026-10-17): room 218 = cast16's ps2-ch4-r218 with the type 9 Zealot pool taking em10SetAccesory's flag-2 accessory (BIN 0x211 with subArc TPL 0x220: presets zealot-em14-09q / zealot-em1c-09h, proposed to cast16 for ps2_cast.py; converted here with /mnt/c/tmp/ch4/cast/c4q.py). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/ch4found/cast/regcast-ch4f",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "zealot-em1c-09h",
+   "archive": "em1c",
+   "model_id": "0x1c",
+   "source_types": [
+    9
+   ],
+   "partial_sections": true,
+   "module": "src/em1c/em1c_set.cpp Em1cSet type 9 (em10.cpp creates; ps2_cast.py pool) + flag-2 accessory 0x211 / TPL 0x220 (ch4found16)",
+   "pool": true,
+   "source_drops": [
+    "bump"
+   ],
+   "mask_runs": {
+    "13": "/root/probe/lanes-20261016/ch4found/cast/conv/mask-zealot-em1c-09h-s13",
+    "16": "/root/probe/lanes-20261016/ch4found/cast/conv/mask-zealot-em1c-09h-s16",
+    "20": "/root/probe/lanes-20261016/ch4found/cast/conv/mask-zealot-em1c-09h-s20"
+   }
+  },
+  {
+   "name": "zealot-em1c-0ag",
+   "archive": "em1c",
+   "model_id": "0x1c",
+   "source_types": [
+    10
+   ],
+   "partial_sections": true,
+   "module": "src/em1c/em1c_set.cpp Em1cSet type 10 (em10.cpp creates; ps2_cast.py pool)",
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "zealot-em1c-0dg",
+   "archive": "em1c",
+   "model_id": "0x1c",
+   "source_types": [
+    13
+   ],
+   "partial_sections": true,
+   "module": "src/em1c/em1c_set.cpp Em1cSet type 13 (em10.cpp creates; ps2_cast.py pool)",
+   "source_drops": [
+    "bump"
+   ]
+  }
+ ],
+ "room_packages": {
+  "218": {
+   "descriptors": [
+    "zealot-em1c-09h",
+    "zealot-em1c-0ag",
+    "zealot-em1c-0dg"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW); ch4found16 NMRBIN 211/220 (cxd4imW draw rigs)"
+  }
+ }
+}

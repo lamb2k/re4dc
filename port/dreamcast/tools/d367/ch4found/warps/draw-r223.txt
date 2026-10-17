@@ -1,0 +1,9 @@
+name draw-r223
+# ch4found16 castle PS2 cast draw rig: r223 enemies come to Leon (god, no kills, Leon stands; from dec-r223.txt)
+room 0x223
+pos -29407 4126 28370
+ang -1.9930
+inv default
+god
+alivelog 300
+dump
