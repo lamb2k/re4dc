@@ -115,6 +115,20 @@ Landed with motion streaming (lane ch5found16 8627a5df, generic part) on branch 
   `PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR` (no place in the Build-Assets zip or build-public.sh). When it is
   written, its `# disc-sets:` line is `snd16,water16i,vq16w,fsh,ch2,cast16,pak17` (test 16: snd16,water16i,vq16w).
 
+### Gates on the merged tree (land/t17-pak17-motion over t15/int f30cd6f9; Flycast)
+
+Resident-list gate (f30cd6f9 `resident_keys.py check`, t11-fix `RE4DC_RESIDENT_STRICT=1`): every fixture below was
+made with it on. `resident_keys.py pack` over all 41 `vram/resident/r*.tsv` lists, then `water_resident.py pack` over
+the 6 water lists, gives 3,328 + 50 records, byte for byte data set ch2's `dc/resident.bin` (cfcc77d6): 0 short lists.
+pak17 adds no list and needs no resident.bin of its own (the records carry the source format, which VQ keeps).
+
+| Gate | Result |
+|---|---|
+| Knob-off identity vs t15/int f30cd6f9 (fresh objdirs, ch2/ch2-build.sh rP and rT) | rP image 582738e9, rT image a1ffdda3: identical, 9 overlays identical, candidate knobs identical |
+| Package audit (T17_DATA, in-tree t8-pkgtree.py: removed 1,253) | PASS: 780 / 780 staged, 0 of 4,393 removed paths present, 4,370 dropped keys all in the pack, 1ST_READ = 582738e9; disc_lint loader + standard PASS |
+| KOS squeeze 48 KiB (fresh-objdir twin fpl17sqW from the clean l17rP) | PASS 10 / 10: fight min 11,016 B, call 28,456 B, door103 17,096 B, 0 Out of memory |
+| STRICT h17rT (t15/int, T15_DATA + ch2 + cast16) vs l17rT (merged, T17_DATA), stop 2000 | h2 STRICT (2,002 ticks, MUST-IDENTICAL), bell STRICT (2,002), door103 STRICT (2,002) |
+
 ## For the test 17 release lane
 
 - Knob file: `--disc-sets snd16,water16i,vq16w,fsh,ch2,cast16,pak17` (pak17 last).
