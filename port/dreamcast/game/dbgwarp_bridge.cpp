@@ -94,6 +94,9 @@ u32 re4dc_vi_retrace_count(void);
 // CAP_COMPARE=1 (Makefile; lane cap16 2026-10-16): the runtime alive cap, default the build's ALIVE_CAP; a `cap <N>` warp
 // line sets it. em_set.cpp (RE4DC_ALIVE_CAP_N) and r101.cpp (RE4DC_R101_CAP_N) read it in place of the constant.
 int re4dc_cap_rt = RE4DC_CAP_COMPARE;
+#if defined(RE4DC_CAP_MISTCUT) && RE4DC_CAP_MISTCUT
+extern unsigned re4dc_mist_cut;   // esp_sub.cpp (hwfog.mk MIST_CUT): the runtime mask of the translucency arms
+#endif
 #endif
 
 int re4dc_fixture_read(const char* path, char* buffer, unsigned size);
@@ -528,6 +531,13 @@ void load()
             // r101 cap (R101_ALIVE_CAP code) and the generic ALIVE_CAP hold from the next room entry on
             re4dc_cap_rt = (int) num(tok[1]);
             re4dc_log("warp: cap %d (CAP_COMPARE runtime alive cap)\n", re4dc_cap_rt);
+#if defined(RE4DC_CAP_MISTCUT) && RE4DC_CAP_MISTCUT
+        } else if (!strcmp(k, "mistcut") && n >= 2) {
+            // CAP_COMPARE + MIST_CUT: `mistcut <mask>` = the translucent draws left out (docs/MIST_CUT.md: 16 the world's
+            // translucent pass, 237 every effect sprite class, 255 both; 0 as shipped). Draw-time only.
+            re4dc_mist_cut = num(tok[1]);
+            re4dc_log("warp: mistcut %u (CAP_COMPARE translucency arm)\n", re4dc_mist_cut);
+#endif
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
         } else if (!strcmp(k, "bench") && n >= 5) {

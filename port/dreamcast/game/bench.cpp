@@ -53,7 +53,10 @@ namespace {
 // is /cd/dc/bench<k>.txt. RE4DC_BENCH_NAME: the disc's name on the start / results screens and the banner.
 // RE4DC_BENCH_CAPCMP (CAP_COMPARE=1, lane cap16 2026-10-16): the results screen adds the Ganados alive (avg / min / max,
 // one digit per second), drawn vs skipped ticks, ms per picture and the logic split (EmMgr.move = enemies and animals,
-// Player = Leon) from the tick log; the start screen picks one scene with X / Y / A / B (r101) or the d-pad (farm).
+// Player = Leon) from the tick log; the start screen picks one scene with X / Y / A / B (r101) or the d-pad (farm), and
+// scenes 9..14 (the translucency arms, coordinator 10-16) with a d-pad + face combo. With TA_HASH=4 (count only) a second
+// results page (Y) shows the TA input per display list per presented frame (OP / PT / TR / modifier KB) beside the GPU
+// render time, for the translucency arms (world translucent pass off, effect sprites off, both).
 #ifndef RE4DC_BENCH_SCENES
 #define RE4DC_BENCH_SCENES 2
 #endif
@@ -64,16 +67,21 @@ namespace {
 #define RE4DC_BENCH_NAME "BENCHMARK DISC"
 #endif
 constexpr int kScenes = RE4DC_BENCH_SCENES;
-static_assert(kScenes >= 2 && kScenes <= 8, "RE4DC_BENCH_SCENES 2..8");
+static_assert(kScenes >= 2 && kScenes <= 16, "RE4DC_BENCH_SCENES 2..16");
 #ifndef RE4DC_BENCH_CAPCMP
 #define RE4DC_BENCH_CAPCMP 0
 #endif
 #ifndef RE4DC_BENCH_MENU2
 #define RE4DC_BENCH_MENU2 ""
 #endif
+#ifndef RE4DC_BENCH_MENU3
+#define RE4DC_BENCH_MENU3 ""
+#endif
 constexpr bool kTight = kScenes > 2;   // more result rows: smaller rows, no photo note
-const char* const kScenePath[8] = {"/cd/dc/warp.txt", "/cd/dc/bench2.txt", "/cd/dc/bench3.txt", "/cd/dc/bench4.txt",
-                                   "/cd/dc/bench5.txt", "/cd/dc/bench6.txt", "/cd/dc/bench7.txt", "/cd/dc/bench8.txt"};
+const char* const kScenePath[16] = {"/cd/dc/warp.txt", "/cd/dc/bench2.txt", "/cd/dc/bench3.txt", "/cd/dc/bench4.txt",
+                                    "/cd/dc/bench5.txt", "/cd/dc/bench6.txt", "/cd/dc/bench7.txt", "/cd/dc/bench8.txt",
+                                    "/cd/dc/bench9.txt", "/cd/dc/bench10.txt", "/cd/dc/bench11.txt", "/cd/dc/bench12.txt",
+                                    "/cd/dc/bench13.txt", "/cd/dc/bench14.txt", "/cd/dc/bench15.txt", "/cd/dc/bench16.txt"};
 // The start screen's choice on a disc of more than two scenes (the Saddler stress disc: START all, X / Y / B one scene):
 // -1 = every scene in order, k = scene k + 1 alone (then the results screen).
 int g_only = -1;
@@ -100,6 +108,10 @@ struct Scene {
     unsigned long long ph_sum[24];
     unsigned ph_n[24];
     unsigned cpu_max_us;          // the worst tick-log window's slowest tick (cpu marker max)
+    // TA input per display list (TA_HASH=4 count-only: native_ui.cpp re4dc_ta_count): 32-bit words summed over the
+    // presented scenes of the measured windows (0 op, 1 op modifier, 2 tr, 3 tr modifier, 4 pt), and those scenes
+    unsigned long long ta_words[5];
+    unsigned ta_scenes;
 };
 Scene g_scene[kScenes];
 int g_cur;                        // scene being run
@@ -109,6 +121,13 @@ bool g_prev_include, g_last_include;
 unsigned g_tick_seq;
 int g_alive_now;                  // re4dc_bench_alive, this tick
 const char* g_ph_name[24];        // tick log marker names (string literals of the game: stable pointers)
+unsigned g_ta_prev[6];            // re4dc_ta_count at the previous window close
+int g_page;                       // results page (Y switches; CAP_COMPARE with more than 8 scenes)
+}  // namespace
+// TA_HASH=4 (count only; native_ui.cpp): words per list of the presented scenes so far ([0..4]) and those scenes ([5]);
+// weak: absent without TA_HASH=4.
+extern "C" unsigned* re4dc_ta_count_ptr(void) __attribute__((weak));
+namespace {
 
 // ---------------------------------------------------------------- framebuffer text (hwcal r21v)
 const uint8_t* glyph(char c) {
@@ -229,6 +248,9 @@ unsigned ms10(unsigned us) { return (us + 50) / 100; }
 unsigned em10(const Scene& s) { return ms10(ph_us(s, "EmMgr.move")); }
 unsigned pl10(const Scene& s) { return ms10(ph_us(s, "Player")); }
 unsigned fx10(const Scene& s) { return ms10(ph_us(s, "EspMove") + ph_us(s, "EspTrans")); }
+unsigned takb10(const Scene& s, int l) {   // KB of TA input per presented frame in list l, x10
+    return s.ta_scenes ? (unsigned) ((s.ta_words[l] * 4 * 10 / 1024 + s.ta_scenes / 2) / s.ta_scenes) : 0;
+}
 const char* d1(unsigned v10, char* buf) { snprintf(buf, 12, "%u.%u", v10 / 10, v10 % 10); return buf; }
 
 // The code testers type: per scene A/B fps*10.min1s*10.cpu*10.gpu*10.reads/s*10.wait ms/s.kos KB, then a check value over
@@ -255,17 +277,29 @@ void make_code(char* out, unsigned size) {
     snprintf(out, size, "%s %02X", parts, ck);
 }
 
-// CAP_COMPARE results: up to 8 scenes on one 640x480 screen (no footnotes; the log has every number).
-void draw_results_capcmp(const Fb& fb) {
-    char a[12], b[12], c[12], d[12], e[12], f[12], line[128];
+// CAP_COMPARE results: 8 scenes per 640x480 page (no footnotes; the log has every number). Page 0: scenes 1..8 (the
+// caps and the farm animals); page 1 (more than 8 scenes): the translucency arms beside their as-shipped scenes.
+int page_scenes(int page, int* idx) {
+    if (page == 0 || kScenes <= 8) { int n = 0; for (int k = 0; k < kScenes && k < 8; ++k) idx[n++] = k; return n; }
+    static const int kT[8] = {3, 8, 9, 10, 6, 11, 12, 13};   // r101 cap 6 T0..T3, farm cap 6 T0..T3
+    int n = 0;
+    for (int k : kT) if (k < kScenes) idx[n++] = k;
+    return n;
+}
+void draw_results_capcmp(const Fb& fb, int page) {
+    char a[12], b[12], c[12], d[12], e[12], f[12], line[160];
+    int idx[8];
+    const int ns = page_scenes(page, idx);
     fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
     int y = 8;
     fb_fill(fb, 30, y - 4, 580, 29, 0x900000);
     fb_center(fb, y, 2, 3, kWhite, RE4DC_BENCH_NAME " - NOT THE GAME"); y += 26;
-    snprintf(line, sizeof(line), "BUILD %s   RUN %u   R101 CROSS + R103 FARM, GANADO CAP   PRESS A TO RUN AGAIN", RE4DC_BENCH_ID, g_run);
+    snprintf(line, sizeof(line), "BUILD %s  RUN %u  PAGE %d/%d %s  A: RUN AGAIN%s", RE4DC_BENCH_ID, g_run, page + 1,
+             kScenes > 8 ? 2 : 1, page ? "TRANSLUCENCY (CAP 6)" : "GANADO CAP + FARM ANIMALS", kScenes > 8 ? "  Y: NEXT PAGE" : "");
     fb_center(fb, y, 1, 2, kGrey, line); y += 18;
     fb_text(fb, 20, y, 2, 2, kCyan, "SCENE            FPS  MIN MS/PIC CPU/T   GPU SPD%"); y += 18;
-    for (int k = 0; k < kScenes; ++k) {
+    for (int q = 0; q < ns; ++q) {
+        const int k = idx[q];
         const Scene& s = g_scene[k];
         if (!s.windows) { snprintf(line, sizeof(line), "%d %-14s NOT MEASURED", k + 1, s.name); fb_text(fb, 20, y, 2, 2, kRed, line); y += 16; continue; }
         snprintf(line, sizeof(line), "%d %-14s%5s%5s%7s%6s%6s%5u", k + 1, s.name, d1(fps10(s), a), d1(s.min_fps10, b),
@@ -273,8 +307,27 @@ void draw_results_capcmp(const Fb& fb) {
         fb_text(fb, 20, y, 2, 2, kWhite, line); y += 16;
     }
     y += 4;
+    if (page) {
+        // TA input per presented frame by display list (TA_HASH=4), the render time and the effect / logic phases
+        fb_text(fb, 20, y, 1, 2, kCyan, "SCENE           TA KB PER FRAME:   OP    PT    TR  TRMOD  OPMOD   RENDER MS  FX MS/TICK  ALIVE"); y += 16;
+        for (int q = 0; q < ns; ++q) {
+            const int k = idx[q];
+            const Scene& s = g_scene[k];
+            char g[12], h[12], i2[12];
+            snprintf(line, sizeof(line), "%2d %-14s %20s %5s %5s %6s %6s %11s %11s %6s", k + 1, s.name, d1(takb10(s, 0), a),
+                     d1(takb10(s, 4), b), d1(takb10(s, 2), c), d1(takb10(s, 3), d), d1(takb10(s, 1), e), d1(gpu10(s), f),
+                     d1(fx10(s), g), d1(alive10(s), h));
+            (void) i2;
+            fb_text(fb, 20, y, 1, 2, kWhite, line); y += 14;
+        }
+        y += 6;
+        fb_text(fb, 20, y, 1, 2, kGrey, "T0 AS SHIPPED  T1 NO WORLD TRANSLUCENT PASS  T2 NO EFFECT SPRITES  T3 BOTH (NO ALPHA)"); y += 14;
+        fb_text(fb, 20, y, 1, 2, kGrey, "RENDER MS = PVR RENDER TIME PER PICTURE (ISP/TSP); TA KB = TA INPUT PER PRESENTED FRAME"); y += 14;
+        return;
+    }
     fb_text(fb, 20, y, 1, 2, kCyan, "SCENE          ALIVE AVG MIN MAX  TICKS DRAWN SKIP  MS/TICK ENEMY LEON  FX WORST  READS/S WAIT KOS"); y += 16;
-    for (int k = 0; k < kScenes; ++k) {
+    for (int q = 0; q < ns; ++q) {
+        const int k = idx[q];
         const Scene& s = g_scene[k];
         char g[12], h[12];
         snprintf(line, sizeof(line), "%d %-14s %9s %3u %3u  %11u %4u  %13s %4s %3s %5s  %7s %4u %3u", k + 1, s.name,
@@ -284,7 +337,8 @@ void draw_results_capcmp(const Fb& fb) {
     }
     y += 4;
     fb_text(fb, 20, y, 1, 2, kCyan, "GANADOS ALIVE, ONE DIGIT PER SECOND OF THE MEASURED WINDOW"); y += 16;
-    for (int k = 0; k < kScenes; ++k) {
+    for (int q = 0; q < ns; ++q) {
+        const int k = idx[q];
         const Scene& s = g_scene[k];
         char digits[49];
         unsigned n = s.n_sec < 48 ? s.n_sec : 48;
@@ -296,7 +350,7 @@ void draw_results_capcmp(const Fb& fb) {
 }
 
 void draw_results(const Fb& fb) {
-    if (RE4DC_BENCH_CAPCMP) { draw_results_capcmp(fb); return; }
+    if (RE4DC_BENCH_CAPCMP) { draw_results_capcmp(fb, g_page); return; }
     char a[12], b[12], c[12], d[12], e[12], line[96], code[256];
     const int rs = kTight ? 2 : 3, rh = kTight ? 20 : 28;
     fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
@@ -349,6 +403,10 @@ void log_results() {
         re4dc_log("bench: result2 run %u scene %d %s mspic10=%u skipped=%u alive10=%u alive_min=%u alive_max=%u alive_n=%u "
                   "cpu_max_us=%u secs=%u \n", g_run, k + 1, s.name, mspic10(s), skipped(s), alive10(s),
                   s.alive_n ? s.alive_min : 0, s.alive_max, s.alive_n, s.cpu_max_us, s.n_sec);
+        re4dc_log("bench: ta run %u scene %d scenes=%u op_b=%u opm_b=%u tr_b=%u trm_b=%u pt_b=%u (bytes per presented frame)\n",
+                  g_run, k + 1, s.ta_scenes, s.ta_scenes ? (unsigned) (s.ta_words[0] * 4 / s.ta_scenes) : 0,
+                  s.ta_scenes ? (unsigned) (s.ta_words[1] * 4 / s.ta_scenes) : 0, s.ta_scenes ? (unsigned) (s.ta_words[2] * 4 / s.ta_scenes) : 0,
+                  s.ta_scenes ? (unsigned) (s.ta_words[3] * 4 / s.ta_scenes) : 0, s.ta_scenes ? (unsigned) (s.ta_words[4] * 4 / s.ta_scenes) : 0);
         // every tick log phase, us per tick (lines of at most ~6 phases: re4dc_log truncates at 256 bytes)
         char ph[200];
         int len = 0;
@@ -434,9 +492,17 @@ const char* re4dc_bench_results(void)
               (unsigned long) *(volatile uint32_t*) 0xA05F8044);
     uint32_t last_sof = ~0u;
     bool up = false, down = false;   // A must be up first (a held A does not restart), then pressed and released
+    bool ydown = false;              // Y pressed and released: the next results page (CAP_COMPARE, more than 8 scenes)
+    g_page = 0;
     for (;;) {
         const uint32_t sof = *(volatile uint32_t*) 0xA05F8050;
         if (sof != last_sof) { last_sof = sof; draw_results(fb_displayed()); }
+        const bool yb = (pad_buttons() & CONT_Y) != 0;
+        if (yb) ydown = true;
+        else if (ydown) {
+            ydown = false;
+            if (RE4DC_BENCH_CAPCMP && kScenes > 8) { g_page ^= 1; draw_results(fb_displayed()); }
+        }
         const bool a = (pad_buttons() & CONT_A) != 0;
         if (!a) { if (down) break; up = true; }
         else if (up) down = true;
@@ -459,8 +525,15 @@ void re4dc_bench_window(unsigned drawn, unsigned ticks, unsigned vblanks, unsign
     const bool include = now && g_prev_include;
     g_prev_include = now;
     g_last_include = include;
+    unsigned ta_d[6] = {};
+    if (re4dc_ta_count_ptr) {
+        const unsigned* tc = re4dc_ta_count_ptr();
+        for (int l = 0; l < 6; ++l) { ta_d[l] = tc[l] - g_ta_prev[l]; g_ta_prev[l] = tc[l]; }
+    }
     if (!include || !vblanks) return;
     ++s.windows;
+    for (int l = 0; l < 5; ++l) s.ta_words[l] += ta_d[l];
+    s.ta_scenes += ta_d[5];
     s.drawn += drawn; s.ticks += ticks; s.vblanks += vblanks;
     s.rnd_sum_ns += rnd_sum_ns; s.rnd_n += rnd_n;
     const unsigned f10 = (unsigned) ((unsigned long long) drawn * 59940ULL / 100 / vblanks);
@@ -548,23 +621,31 @@ extern "C" void __wrap_OSInit(void)
             fb_center(fb, y, 3, 4, kWhite, RE4DC_BENCH_NAME); y += 36;
             fb_center(fb, y, 3, 4, kWhite, "THIS IS NOT THE GAME"); y += 50;
             fb_center(fb, y, 2, 3, kYellow, "RE4 DREAMCAST PORT - PERFORMANCE TEST"); y += 36;
-            const char* body[] = {"THIS DISC ONLY MEASURES PERFORMANCE.",
+            const char* body_std[] = {"THIS DISC ONLY MEASURES PERFORMANCE.",
                                   "IT CANNOT BE PLAYED AND SAVES NOTHING.",
                                   "TO PLAY, USE THE CURRENT TEST RELEASE:",
                                   "GITHUB.COM/LAMB2K/RE4DC - RELEASES",
                                   "",
-                                  kScenes == 8 ? "IT RUNS EIGHT SCRIPTED SCENES BY ITSELF" : kTight ? "IT RUNS FOUR SCRIPTED SCENES BY ITSELF" : "IT RUNS TWO SCRIPTED SCENES BY ITSELF",
-                                  kScenes == 8 ? "(ABOUT 7 MINUTES), THEN SHOWS RESULTS." : kTight ? "(ABOUT 6 MINUTES), THEN SHOWS RESULTS." : "(ABOUT 4 MINUTES), THEN SHOWS RESULTS.",
+                                  kTight ? "IT RUNS FOUR SCRIPTED SCENES BY ITSELF" : "IT RUNS TWO SCRIPTED SCENES BY ITSELF",
+                                  kTight ? "(ABOUT 6 MINUTES), THEN SHOWS RESULTS." : "(ABOUT 4 MINUTES), THEN SHOWS RESULTS.",
                                   "AFTER START DO NOT TOUCH THE CONTROLLER.",
                                   "PHOTOGRAPH THE RESULTS SCREEN."};
+            // CAP_COMPARE: a shorter body, room for the scene menu (14 scenes)
+            char run_line[64];
+            snprintf(run_line, sizeof(run_line), "START RUNS ALL %d SCENES (ABOUT %d MIN),", kScenes, kScenes + 1);
+            const char* body_cmp[] = {"THIS DISC ONLY MEASURES PERFORMANCE.", "IT CANNOT BE PLAYED AND SAVES NOTHING.", "",
+                                      run_line, "THEN THE RESULTS (Y: NEXT PAGE).", "AFTER START DO NOT TOUCH THE CONTROLLER.",
+                                      "PHOTOGRAPH EVERY RESULTS PAGE."};
+            const char* const* body = RE4DC_BENCH_CAPCMP ? body_cmp : body_std;
+            const int nbody = RE4DC_BENCH_CAPCMP ? 7 : 9;
             if (kTight) {
                 // the scene menu (a disc of more than two scenes)
-                const char* menu[] = {"START: ALL SCENES IN ORDER", RE4DC_BENCH_MENU, RE4DC_BENCH_MENU2};
-                fb_text(fb, 60, 414, 2, 2, kYellow, menu[0]);
-                fb_text(fb, 60, 434, 2, 2, kYellow, menu[1]);
-                if (menu[2][0]) fb_text(fb, 60, 454, 2, 2, kYellow, menu[2]);
+                const char* menu[] = {"START: ALL SCENES IN ORDER", RE4DC_BENCH_MENU, RE4DC_BENCH_MENU2, RE4DC_BENCH_MENU3};
+                const int my = RE4DC_BENCH_CAPCMP ? 370 : 414;
+                for (int m = 0; m < 4; ++m)
+                    if (menu[m][0]) fb_text(fb, 60, my + 20 * m, 2, 2, kYellow, menu[m]);
             }
-            for (const char* s : body) { fb_text(fb, 60, y, 2, 2, s[0] == 'G' ? kGreen : kWhite, s); y += 22; }
+            for (int bi = 0; bi < nbody; ++bi) { const char* s = body[bi]; fb_text(fb, 60, y, 2, 2, s[0] == 'G' ? kGreen : kWhite, s); y += 22; }
             y += 8;
             char msg[64];
             snprintf(msg, sizeof(msg), "BUILD %s", RE4DC_BENCH_ID);
@@ -577,16 +658,22 @@ extern "C" void __wrap_OSInit(void)
         if (kTight && !pressed) {
             // X / Y / B: one scene alone (the stress disc's arm menu); released like START
             static unsigned held;
-            // CAP_COMPARE: X / Y / A / B = scenes 1..4 (r101 cap 3 / 4 / 5 / 6), d-pad up / down / left / right = 5..8
-            const unsigned keys[8] = {CONT_X, CONT_Y, RE4DC_BENCH_CAPCMP ? CONT_A : CONT_B, RE4DC_BENCH_CAPCMP ? CONT_B : 0,
-                                      CONT_DPAD_UP, CONT_DPAD_DOWN, CONT_DPAD_LEFT, CONT_DPAD_RIGHT};
+            // CAP_COMPARE: X / Y / A / B = scenes 1..4 (r101 cap 3 / 4 / 5 / 6), d-pad up / down / left / right = 5..8, and
+            // the combos (held together, then released) UP + X / Y / A = 9..11 (r101 T1..T3), DOWN + X / Y / A = 12..14 (farm)
+            const unsigned U = CONT_DPAD_UP, D = CONT_DPAD_DOWN;
+            const unsigned keys[16] = {CONT_X, CONT_Y, RE4DC_BENCH_CAPCMP ? CONT_A : CONT_B, RE4DC_BENCH_CAPCMP ? CONT_B : 0,
+                                       U, D, CONT_DPAD_LEFT, CONT_DPAD_RIGHT,
+                                       U | CONT_X, U | CONT_Y, U | CONT_A, D | CONT_X, D | CONT_Y, D | CONT_A, 0, 0};
             unsigned mask = 0;
-            for (int k = 0; k < kScenes && k < 8; ++k) mask |= keys[k];
+            for (int k = 0; k < kScenes && k < 16; ++k) mask |= keys[k];
             const unsigned pick = btn & mask;
-            if (pick) held = pick;
+            if (pick) held |= pick;
             else if (held) {
-                for (int k = 0; k < kScenes && k < 8; ++k)
-                    if (held & keys[k]) { g_only = k; break; }
+                for (int k = 0; k < kScenes && k < 16; ++k)
+                    if (keys[k] == held) { g_only = k; break; }
+                if (g_only < 0)   // not a listed combo: the first single key of it
+                    for (int k = 0; k < kScenes && k < 8; ++k)
+                        if (held & keys[k]) { g_only = k; break; }
                 pressed = true;
                 break;
             }
