@@ -12,7 +12,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / 'vram'))
-import vram_gate  # noqa: E402  (vram/vram_gate.py: the VRAM gaps of the CLAUDE.md graphics memory rule)
+import vram_gate  # noqa: E402
+sys.path.insert(0, str(HERE.parent))
+import cast_gc  # noqa: E402  (tools/d367/cast_gc.py: CAST-GC, GameCube character / enemy draws)  (vram/vram_gate.py: the VRAM gaps of the CLAUDE.md graphics memory rule)
 _VRAM_INDEX = []
 
 def vram_index():
@@ -278,6 +280,22 @@ def check_segment(evdir, seg, known):
             skipped.add(ms.group(1))
         if ln.startswith('native UI: load '):
             last_load, load_k = ln.strip(), None
+    # CAST-GC (lane castgc17): a census build (NATIVE_MODEL_REGISTRY_CENSUS=1, the mW check arms) lists every model the
+    # GameCube path drew; a character / enemy that castgc/allow.tsv does not list fails (Leon: LEONGC above).
+    cg_rows, cg_meta, cg_why, cg_pack, _, cg_n = cast_gc.parse([str(out)])
+    if not cg_n:
+        res['notes'].append('CAST-GC not judged: no NMRS census lines (build without NATIVE_MODEL_REGISTRY_CENSUS=1)')
+    cg_allow = cast_gc.load_allow(str(HERE.parent / 'castgc' / 'allow.tsv'))
+    for (room, mid), c in sorted(cg_rows.items()):
+        if not (1 <= mid <= 0x7f) or not (c['declined'] + c['registry_declined'] + c['absent']):
+            continue
+        if any(x[1] == mid and x[0] in ('*', room) for x in cg_allow):
+            continue
+        why = '; '.join(sorted(cg_why[(room, mid)]))
+        ln = 'CAST-GC %s %s (%02x) drawn by the GameCube path: %s' % (room, cast_gc.name_of(mid), mid, why)
+        item = dict(cat='gc-fallback', what='CAST-GC: character / enemy drawn by the GameCube path', line=ln[:220])
+        k = known_for(known, 'gc-fallback', seg['name'], ln)
+        (res['known'] if k else res['failures']).append(dict(item, why=k) if k else item)
     res['counts'] = {'%s/%s%s' % (k[0], k[1], ' (known)' if k[2] else ''): n for k, n in seen.items()}
     if reset_drops:
         res['notes'].append('%d module free(s) dropped inside a soft reset (destroyed heaps; by design since RESET_HEAP_FIX)' % reset_drops)

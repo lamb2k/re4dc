@@ -1,0 +1,8 @@
+# lane castgc17 CAST-GC census warp for r102 (<= 60 s): tools/d367/worldtest16/warps/r102-c1.txt; still-capture lines (freeze / viewdist / dump) removed,
+# god added. Census build: NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150.
+name wt-r102-c1
+room 0x102
+pos -19691 0 -19088
+ang 0.785
+inv default
+god

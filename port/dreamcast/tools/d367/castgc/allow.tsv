@@ -1,0 +1,5 @@
+# CAST-GC allowlist (tools/d367/cast_gc.py; lane castgc17, 2026-10-17). A character / enemy listed here may draw
+# through the GameCube path in that room without failing CAST-GC. Keep it short and reviewed: every line needs a
+# reason and an owner (the lane that removes it), and an entry is added only with the coordinator's review.
+# Columns (tab separated): room (rXXX or *), model id (hex, as NMRS id=), reason, owner.
+# Leon (id 00) is not judged here: LEON-GC (MCHECK_LEONGC) covers him.
