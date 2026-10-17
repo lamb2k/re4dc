@@ -16,8 +16,10 @@ enum {
     APROF_PRE2, APROF_WFL, APROF_CHUNK, APROF_POS, APROF_LIT, APROF_PACK, APROF_PHASES
 };
 // N_UVI / N_UNI: distinct position / normal indices per chunk (the records drawn repeat them across meshlets and seams)
+// N_UTR: distinct (position, normal, uv) records per chunk (approximate: the last triple seen per position);
+// N_UVM: distinct positions per meshlet, summed (what a per-meshlet cache could share)
 enum { APROF_N_CALLS = 0, APROF_N_CHUNKS, APROF_N_VERTS, APROF_N_MESHLETS, APROF_N_HITS, APROF_N_UVI, APROF_N_UNI,
-       APROF_COUNTS };
+       APROF_N_UTR, APROF_N_UVM, APROF_COUNTS };
 extern unsigned re4dc_aprof_cls;
 extern unsigned re4dc_aprof_wfl_cycles;  // WFL cycles so far (TX / SUB subtract their share)
 unsigned re4dc_aprof_now(void);

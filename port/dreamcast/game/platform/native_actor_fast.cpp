@@ -5620,19 +5620,22 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     bool ok = true;
 #if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
     {   // census only: distinct position / normal indices of the records this chunk draws at its level
-        static u16 seen_v[16384], seen_n[16384]; static u16 stamp;
+        static u16 seen_v[16384], seen_n[16384], seen_m[16384], last_n[16384], last_t[16384]; static u16 stamp, mstamp;
         if (++stamp == 0) { std::memset(seen_v, 0, sizeof seen_v); std::memset(seen_n, 0, sizeof seen_n); stamp = 1; }
-        unsigned uv = 0, un = 0;
+        unsigned uv = 0, un = 0, ut = 0, um = 0;
         for (unsigned mi = 0; mi < blob->meshlets; ++mi) {
             const Counts c = lt ? lt[mi].n : table[mi].n;
             const Records rr{reinterpret_cast<const u16*>(records) + table[mi].first * rs, rs, color_index, (blob->flags & kHasCi) != 0};
+            if (++mstamp == 0) { std::memset(seen_m, 0, sizeof seen_m); mstamp = 1; }
             for (unsigned i = 0, nv = c.indices() ? c.vertices() : 0; i < nv; ++i) {
-                const unsigned vi = rr.vi(i) & 16383u, ni = rr.ni(i) & 16383u;
-                if (seen_v[vi] != stamp) { seen_v[vi] = stamp; ++uv; }
+                const unsigned vi = rr.vi(i) & 16383u, ni = rr.ni(i) & 16383u, ti = rr.ti(i);
+                if (seen_v[vi] != stamp) { seen_v[vi] = stamp; ++uv; ++ut; last_n[vi] = u16(ni); last_t[vi] = u16(ti); }
+                else if (last_n[vi] != ni || last_t[vi] != ti) { ++ut; last_n[vi] = u16(ni); last_t[vi] = u16(ti); }
                 if (seen_n[ni] != stamp) { seen_n[ni] = stamp; ++un; }
+                if (seen_m[vi] != mstamp) { seen_m[vi] = mstamp; ++um; }
             }
         }
-        APROF_COUNT(APROF_N_UVI, uv); APROF_COUNT(APROF_N_UNI, un);
+        APROF_COUNT(APROF_N_UVI, uv); APROF_COUNT(APROF_N_UNI, un); APROF_COUNT(APROF_N_UTR, ut); APROF_COUNT(APROF_N_UVM, um);
     }
 #endif
     for (unsigned mi = 0; ok && mi < blob->meshlets; ++mi) {
@@ -5906,9 +5909,10 @@ void re4dc_aprof_frame(unsigned frame) {
     for (unsigned c = 0; c < 4; ++c) {
         if (!aprof_n[c][APROF_N_CALLS] && !aprof_n[c][APROF_N_CHUNKS]) continue;
         char line[512]; int at = snprintf(line, sizeof line, "APROF f=%u..%u frames=%u cls=%s calls10=%u chunks10=%u verts=%u "
-            "meshlets10=%u hits10=%u uvi=%u uni=%u", aprof_first, frame - 1, frames, kAprofClass[c], aprof_n[c][0] * 10 / frames,
-            aprof_n[c][1] * 10 / frames, aprof_n[c][2] / frames, aprof_n[c][3] * 10 / frames, aprof_n[c][4] * 10 / frames,
-            aprof_n[c][APROF_N_UVI] / frames, aprof_n[c][APROF_N_UNI] / frames);
+            "meshlets10=%u hits10=%u uvi=%u uni=%u utr=%u uvm=%u", aprof_first, frame - 1, frames, kAprofClass[c],
+            aprof_n[c][0] * 10 / frames, aprof_n[c][1] * 10 / frames, aprof_n[c][2] / frames, aprof_n[c][3] * 10 / frames,
+            aprof_n[c][4] * 10 / frames, aprof_n[c][APROF_N_UVI] / frames, aprof_n[c][APROF_N_UNI] / frames,
+            aprof_n[c][APROF_N_UTR] / frames, aprof_n[c][APROF_N_UVM] / frames);
         for (unsigned p = 0; p < APROF_PHASES && at > 0 && at < int(sizeof line); ++p) {
             // us per frame with one decimal: cycles / frames / 200 MHz
             const unsigned long long us10 = aprof_sum[c][p] / frames / 20;
