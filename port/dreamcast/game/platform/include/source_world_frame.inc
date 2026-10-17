@@ -10,7 +10,7 @@ namespace {
 constexpr unsigned kSourceWorldCallbacks=90;
 struct SourceWorldEntry { cModel* model;unsigned serial,work;
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
-    const void* node=nullptr;unsigned table=0,kind=0;bool consumed=false;
+    const void* node=nullptr;const void* next=nullptr;unsigned table=0,kind=0;bool consumed=false;
 #endif
 };
 struct SourceWorldFrame {
@@ -21,6 +21,7 @@ struct SourceWorldFrame {
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     unsigned role=0,system=0,stop=0,disp=0,used=0,consumed=0,member_reason=0;
     bool coarse=false,withheld=false,committed=false,guarded=false;
+    unsigned proven=0; // TRANSITION_OWNER: native frame whose first owned callback passed the full revalidation
     unsigned sample=~0U,anchor=~0U;bool uv_valid[2]{};float uv[2][2]{};
     cModel* group[kSourceWorldCallbacks]{};
 #endif
@@ -165,7 +166,41 @@ void sourceWorldAbort(unsigned reason) {
     sourceWorldFrame.failed=true;sourceWorldFail(reason);re4dc_model_packet_abort();
 }
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
+bool sourceWorldCapturedStorageCurrentFull();
+// After the frame's first owned callback passed the full proof (f.proven), the captured storage is proven by its
+// epochs plus the light (walk-free) member storage check; TRANSITION_XCHECK compares it with the full check.
 bool sourceWorldCapturedStorageCurrent() {
+#if RE4DC_ATCHK_LIST
+    const auto& f=sourceWorldFrame;unsigned rg=0,c,b,stale,refused,pg=0;
+    if(f.guarded && f.proven==f.native){
+        const bool light=sourceWorldPrimGeneration==f.prim_generation && re4dc_source_world_ot_epoch()==f.ot_epoch &&
+            re4dc_alive_gen[2]==f.objects && re4dc_alive_gen[0]==f.pools &&
+            re4dc_room4_state(&rg,&c,&b,&stale,&refused) && rg==f.room_generation &&
+            re4dc_ps2_source_group_package(&pg,0) && pg==f.package_generation && re4dc_r200_scroll_storage_current_light();
+#if RE4DC_TRANSITION_GATE_DIAG
+        if(!light){static unsigned ll;if(ll<6){++ll;unsigned g2=0,pg2=0,c2,b2,s2,r2;
+            re4dc_log("TGD light f=%u prim=%d ot=%d obj=%d pools=%d room=%d pkg=%d storage=%d consumed=%u\n",f.native,
+              int(sourceWorldPrimGeneration==f.prim_generation),int(re4dc_source_world_ot_epoch()==f.ot_epoch),
+              int(re4dc_alive_gen[2]==f.objects),int(re4dc_alive_gen[0]==f.pools),
+              int(re4dc_room4_state(&g2,&c2,&b2,&s2,&r2) && g2==f.room_generation),
+              int(re4dc_ps2_source_group_package(&pg2,0) && pg2==f.package_generation),re4dc_r200_scroll_storage_current_light(),f.consumed);}}
+#endif
+#if RE4DC_TRANSITION_XCHECK
+        static unsigned xs,xsbad;++xs;
+        auto& fm=sourceWorldFrame;const unsigned pv=fm.proven;fm.proven=0;re4dc_r200_set_light(0);
+        const bool full=sourceWorldCapturedStorageCurrentFull();
+        fm.proven=pv;re4dc_r200_set_light(1);
+        if(full!=light){++xsbad;re4dc_log("XCHK storage bad f=%u light=%d full=%d\n",f.native,int(light),int(full));}
+        if(!(xs%64))re4dc_log("XCHK storage f=%u checks=%u bad=%u\n",f.native,xs,xsbad);
+        return light && full;
+#else
+        return light;
+#endif
+    }
+#endif
+    return sourceWorldCapturedStorageCurrentFull();
+}
+bool sourceWorldCapturedStorageCurrentFull() {
     const auto& f=sourceWorldFrame;unsigned rg=0,c,b,stale,refused,pg=0;
     if(!f.guarded)return true;
     if(sourceWorldPrimGeneration!=f.prim_generation || re4dc_source_world_ot_epoch()!=f.ot_epoch ||
@@ -186,6 +221,9 @@ bool sourceWorldCapturedStorageCurrent() {
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
 bool sourceWorldIdentity(unsigned native,unsigned generation,bool deep=true) {
+#if RE4DC_ATCHK_LIST
+    if(sourceWorldFrame.proven==sourceWorldFrame.native && sourceWorldFrame.proven)deep=false;
+#endif
 #else
 bool sourceWorldIdentity(unsigned native,unsigned generation) {
 #endif
@@ -203,7 +241,7 @@ bool sourceWorldIdentity(unsigned native,unsigned generation) {
         RE4DC_SOURCE_DIAG_TEST(sourceWorldPrimGeneration==f.prim_generation,27) &&
         RE4DC_SOURCE_DIAG_TEST(re4dc_source_world_ot_epoch()==f.ot_epoch,28) &&
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
-        (!f.role || sourceWorldAllocated(reinterpret_cast<const void*>(f.prim),f.bytes*RE4DC_PRIMITIVE_BUFFERS,true)) &&
+        (!f.role || (f.proven==f.native && f.proven) || sourceWorldAllocated(reinterpret_cast<const void*>(f.prim),f.bytes*RE4DC_PRIMITIVE_BUFFERS,true)) &&
 #endif
         RE4DC_SOURCE_DIAG_TEST(reinterpret_cast<unsigned long>(GXWORK()->prim)>=f.end,29) &&
         RE4DC_SOURCE_DIAG_TEST(reinterpret_cast<unsigned long>(GXWORK()->prim)-f.begin<=f.bytes,30) &&
@@ -307,7 +345,7 @@ bool sourceWorldWalk(bool publish) {
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             if(f.role){
                 auto& entry=f.entries[count];
-                if(publish){entry.node=node;entry.table=table;entry.kind=node->kind;entry.consumed=false;}
+                if(publish){entry.node=node;entry.next=node->next;entry.table=table;entry.kind=node->kind;entry.consumed=false;}
                 else if(entry.node!=node || entry.table!=table || entry.kind!=node->kind){sourceWorldFail(15);return false;}
             }
 #endif
@@ -372,7 +410,7 @@ bool sourceWorldModelBlocked(cModel* model) {
         sourceWorldFail(16);return true;
     }
     if(!sourceWorldGroupPointer(model))return false;
-    if(f.active && (!re4dc_source_world_pool(model,0) ||
+    if(f.active && !(f.proven==f.native && f.proven) && (!re4dc_source_world_pool(model,0) ||
        !re4dc_source_world_pool(model->pModelInfo,2) || !re4dc_source_world_pool(model->pList,3))){
         // A captured source payload whose owner retired is unsafe even before
         // the first native draw. Refusing the ticket cannot dereference it via GC.
@@ -443,18 +481,41 @@ int sourceWorldDraw(cModel* model) {
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     if(f.role){
         auto* entry=sourceWorldCaptured(model);float uv[2]{};
-#if RE4DC_TRANSITION_GATE_DIAG
-        if(f.consumed>=20){
-            re4dc_log("TGD step captured=%d work=%u consumed=%d\n",entry?1:0,entry?entry->work:~0U,entry?int(entry->consumed):-1);
-            re4dc_log("TGD step identity=%d\n",sourceWorldIdentity(f.native,f.package_generation));
-            re4dc_log("TGD step walk=%d\n",int(sourceWorldWalk(false)));
-            if(entry)re4dc_log("TGD step member=%d\n",re4dc_r200_scroll_member(model,entry->serial,entry->work,uv));
-            re4dc_log("TGD step opwin=%d started=%d\n",re4dc_source_world_op_window(),int(f.started));
+        // Full revalidation (identity incl. the deep package hashes, the whole OT walk, this member) on the frame's
+        // first owned callback only. Later callbacks prove their own entry (OT node + next link, member fingerprint)
+        // and that nothing frame-wide moved: the O(1) epochs in identity (alive_gen[0]/[2], OT epoch, prim
+        // generation and cursor, room4 / package generation; GAME_ATCHK_LIST bumps alive_gen). The full walk per
+        // callback cost ~78 x 78 pool walks and stalled the 2-3 -> 3-1 frame past the 30 s watchdog.
+        // TRANSITION_XCHECK=1 (test only) also runs the full check on every callback and logs disagreements.
+        const auto fullCheck=[&]()->bool{
+            return entry && !entry->consumed && sourceWorldIdentity(f.native,f.package_generation) &&
+                sourceWorldWalk(false) && re4dc_r200_scroll_member(model,entry->serial,entry->work,uv);
+        };
+#if RE4DC_ATCHK_LIST
+        const auto fastCheck=[&]()->bool{
+            const auto* node=entry?static_cast<const OtData*>(entry->node):nullptr;
+            return entry && !entry->consumed && node && node->data==model && node->next==entry->next &&
+                node->func==(void (*)(void*))ModelRender && sourceWorldIdentity(f.native,f.package_generation,false) &&
+                re4dc_r200_scroll_member_light(model,entry->serial,entry->work,uv);
+        };
+        const bool fast=f.proven==f.native;
+        bool valid=fast?fastCheck():fullCheck();
+#if RE4DC_TRANSITION_XCHECK
+        if(fast){
+            static unsigned xchecks,xbad;++xchecks;
+            auto& fm=sourceWorldFrame;const unsigned pv=fm.proven;fm.proven=0;re4dc_r200_set_light(0);
+            const bool full=fullCheck();
+            fm.proven=pv;re4dc_r200_set_light(1);
+            if(full!=valid){++xbad;re4dc_log("XCHK bad f=%u work=%u fast=%d full=%d\n",f.native,entry?entry->work:~0U,int(valid),int(full));}
+            if(!(xchecks%64))re4dc_log("XCHK f=%u checks=%u bad=%u\n",f.native,xchecks,xbad);
+            valid=valid && full;
         }
 #endif
-        if(!entry || entry->consumed || !sourceWorldIdentity(f.native,f.package_generation) ||
-           !sourceWorldWalk(false) || !re4dc_r200_scroll_member(model,entry->serial,entry->work,uv) ||
-           (!f.started && !re4dc_source_world_op_window())){
+        if(valid && !fast){f.proven=f.native;re4dc_r200_set_light(1);}
+#else
+        const bool valid=fullCheck();
+#endif
+        if(!valid || (!f.started && !re4dc_source_world_op_window())){
             if(f.withheld || f.started){sourceWorldAbort(21);return -1;}
             sourceWorldFail(21);return 0;
         }
@@ -520,7 +581,7 @@ extern "C" int re4dc_source_world_prepare(unsigned native,unsigned* generation) 
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     // Never revive or replace a provisional same-image transaction.
     if(f.role && f.native==native && (f.guarded || f.started || f.withheld || f.failed))return 0;
-    f.guarded=false;f.role=0;f.consumed=0;f.member_reason=0;f.withheld=false;f.committed=false;
+    f.guarded=false;f.role=0;f.consumed=0;f.member_reason=0;f.withheld=false;f.committed=false;f.proven=0;re4dc_r200_set_light(0);
     f.sample=f.anchor=~0U;f.uv_valid[0]=f.uv_valid[1]=false;
     for(auto& pair:f.uv)for(auto& value:pair)value=0.f;
     for(auto& pointer:f.group)pointer=nullptr;
@@ -708,6 +769,11 @@ extern "C" int re4dc_source_world_callback_continue() {
     // After revocation, even the next OT link may point into retired memory.
     if(f.failed)return 0;
     if(!sourceWorldIdentity(f.native,f.package_generation) || !sourceWorldWalk(false)){
+#if RE4DC_TRANSITION_GATE_DIAG
+        {static unsigned cl;if(cl<6){++cl;const bool id=sourceWorldIdentity(f.native,f.package_generation);
+         re4dc_log("TGD continue19 f=%u identity=%d walk=%d consumed=%u prim=%lx begin=%lx end=%lx bytes=%u\n",f.native,int(id),
+            int(id && sourceWorldWalk(false)),f.consumed,reinterpret_cast<unsigned long>(GXWORK()->prim),f.begin,f.end,f.bytes);}}
+#endif
         sourceWorldAbort(19);return 0;
     }
     return 1;

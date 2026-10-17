@@ -1700,6 +1700,12 @@ include game30.mk
 # TRANSITION_GATE_DIAG (test only, lane ch3found16 2026-10-17, never in a recipe): logs which of the five pre-walk checks of
 # PS2_WORLD_TRANSITION_OWNER refused (PS2SOURCE_DECLINE reason 14) and the r200 package / scroll pins against the live data.
 TRANSITION_GATE_DIAG ?= 0
+# TRANSITION_XCHECK (test only, lane ch3found16 2026-10-17): PS2_WORLD_TRANSITION_OWNER's per-callback epoch check also runs
+# the old full revalidation and logs XCHK disagreements (must be bad=0).
+TRANSITION_XCHECK ?= 0
+ifeq ($(TRANSITION_XCHECK),1)
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_TRANSITION_XCHECK=1
+endif
 ifeq ($(TRANSITION_GATE_DIAG),1)
 $(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/scroll.o: GAME_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1 $(if $(TGD_NO_DELTA),-DRE4DC_TGD_NO_DELTA=1)
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1

@@ -140,10 +140,15 @@ extern "C" int re4dc_model_owned_source(const void*,unsigned);
 unsigned r200RoomGeneration() {
     unsigned g=0,c,b,s,r;return re4dc_room4_state(&g,&c,&b,&s,&r)?g:0;
 }
+// Light member proof (TRANSITION_OWNER, later callbacks of a frame whose first owned callback passed the full
+// proof): the ownership walks (model_owned_source, heap cells, pool slots) are skipped. The proven memory cannot be
+// released inside the frame without an epoch the caller rechecks (alive_gen[0]/[2], room4 / package generation).
+bool r200Light=false,r200LightFrame=false;
 bool r200Range(const void* p,unsigned bytes,unsigned alignment=4) {
     return p && bytes && reinterpret_cast<unsigned long>(p)%alignment==0 &&
-        re4dc_model_owned_source(p,bytes)!=0;
+        (r200Light || r200LightFrame || re4dc_model_owned_source(p,bytes)!=0);
 }
+inline bool r200Pool(const void* p,unsigned type){return (r200Light || r200LightFrame)?p!=nullptr:re4dc_source_world_pool(p,type)!=0;}
 unsigned r200Hash(const void* ptr,unsigned bytes,unsigned h=2166136261U) {
     const auto* p=static_cast<const unsigned char*>(ptr);
     while(bytes--)h=(h^*p++)*16777619U;
@@ -176,7 +181,7 @@ bool r200ScrollBase(bool deep) {
         r200Range(pSmd,0x10+r200p::works*sizeof(SmdWork),alignof(cSmd)) &&
         pSmd->Version==0x40 && !pSmd->Flag && pSmd->nModel==r200p::works &&
         r200Hash(pSmd,16)==r200SmdHeaderHash &&
-        sourceWorldAllocated(scrTbl,r200p::works*sizeof(cObj*),true) &&
+        (r200Light || r200LightFrame || sourceWorldAllocated(scrTbl,r200p::works*sizeof(cObj*),true)) &&
         (!deep || (r200Range(pSmx,r200p::smx_bytes,alignof(cSmx)) &&
           r200Hash(pSmx,r200p::smx_bytes)==r200p::smx_fnv &&
           r200Hash(pSmd->work,r200p::works*sizeof(SmdWork))==r200p::works_fnv));
@@ -233,7 +238,7 @@ void r200PartRest(const cModel* model,const cParts* part,float* rest){
     r200Concat(&model->mat[0][0],t,rest);
 }
 bool r200ScrollFingerprint(unsigned work,cModel* model,unsigned& hash) {
-    if(work>=r200p::works || !re4dc_source_world_pool(model,0))R200_FAIL;
+    if(work>=r200p::works || !r200Pool(model,0))R200_FAIL;
     const auto& w=pSmd->work[work];const auto& witness=r200ScrollWitness[work];
     if(w.id==0xff || w.binNo==0xff || (w.flags&0x10) || w.motNo!=0xff ||
        witness.model!=model || scrTbl[work]!=model || !witness.serial || model->serial!=witness.serial ||
@@ -247,8 +252,8 @@ bool r200ScrollFingerprint(unsigned work,cModel* model,unsigned& hash) {
     if(!r200Range(table,(unsigned(w.binNo)+1U)*sizeof(u32)) || table[w.binNo]>r200p::smd_bytes)R200_FAIL;
     const auto* data=reinterpret_cast<const ModelData*>(reinterpret_cast<unsigned long>(table)+table[w.binNo]);
     const auto* info=model->pModelInfo;const auto* part=model->pList;
-    if(info!=witness.info || part!=witness.part || !re4dc_source_world_pool(info,2) ||
-       !re4dc_source_world_pool(part,3) || (info->be_flag&0x201)!=1 || !(info->be_flag&8) ||
+    if(info!=witness.info || part!=witness.part || !r200Pool(info,2) ||
+       !r200Pool(part,3) || (info->be_flag&0x201)!=1 || !(info->be_flag&8) ||
        (info->be_flag&2) || info->pData!=data || info->pList || info->pShape ||
        info->invisible_factor!=1.f || info->color[3]!=255 || info->pTexAnim || info->texBlendTbl ||
        info->flagsDC!=((work==10 || work==16)?1:0) || !r200Phase(info->uvU) || !r200Phase(info->uvV) ||
@@ -334,9 +339,9 @@ extern "C" int re4dc_r200_scroll_storage_current() {
        !r200Range(pSmx,r200p::smx_bytes,alignof(cSmx))){R200_SFAIL(1000+int(r200ScrollPublished)*100+int(r200ScrollBase(false))*10);return 0;}
     for(unsigned i=0;i<r200p::works;++i){
         const auto& w=r200ScrollWitness[i];
-        if(scrTbl[i]!=w.model || !re4dc_source_world_pool(w.model,0) ||
+        if(scrTbl[i]!=w.model || !r200Pool(w.model,0) ||
            w.model->serial!=w.serial || w.model->pModelInfo!=w.info || w.model->pList!=w.part ||
-           !re4dc_source_world_pool(w.info,2) || !re4dc_source_world_pool(w.part,3)){R200_SFAIL(2000+int(i));return 0;}
+           !r200Pool(w.info,2) || !r200Pool(w.part,3)){R200_SFAIL(2000+int(i));return 0;}
         const auto* data=w.info->pData;
         if(w.info->pList || w.part->pList || !r200Range(data,sizeof(ModelData),alignof(ModelData)) ||
            !r200Range(data->pHead,sizeof(ModelDataHead)) || !data->displist_num || data->displist_num>1024 ||
@@ -433,6 +438,13 @@ extern "C" int re4dc_r200_scroll_member(cModel* model,unsigned serial,unsigned w
     if(uv){uv[0]=model->pModelInfo->uvU;uv[1]=model->pModelInfo->uvV;}
     return 1;
 }
+extern "C" void re4dc_r200_set_light(int on){r200LightFrame=on!=0;}
+extern "C" int re4dc_r200_scroll_storage_current_light() {
+    r200Light=true;const int r=re4dc_r200_scroll_storage_current();r200Light=false;return r;
+}
+extern "C" int re4dc_r200_scroll_member_light(cModel* model,unsigned serial,unsigned work,float* uv) {
+    r200Light=true;const int r=re4dc_r200_scroll_member(model,serial,work,uv);r200Light=false;return r;
+}
 extern "C" int re4dc_r200_scroll_probe(cModel* model,unsigned* serial,unsigned* work) {
     if(!serial || !work || !r200ScrollPublished || !r200ScrollBase(false))return -1;
     // Pointer comparison first; other model payloads require a live pool slot.
@@ -440,7 +452,7 @@ extern "C" int re4dc_r200_scroll_probe(cModel* model,unsigned* serial,unsigned* 
         *work=i;*serial=r200ScrollWitness[i].serial;
         return re4dc_r200_scroll_member(model,*serial,i,nullptr)?1:-1;
     }
-    if(!re4dc_source_world_pool(model,0) && !re4dc_source_world_pool(model,1))return -1;
+    if(!r200Pool(model,0) && !r200Pool(model,1))return -1;
     return (model->be_flag&0x207)!=7 || model->kindid==2?-1:0;
 }
 extern "C" int re4dc_r200_scroll_pointers(cModel** out,unsigned count) {
