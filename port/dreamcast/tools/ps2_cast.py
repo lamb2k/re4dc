@@ -81,6 +81,14 @@ PRESETS = {
     # type 0 (TYPE_A) modelInit(ARC 5, ARC 7) + ModInfoMgr.create(ARC 6, ARC 7): body + head, one 64-bone skeleton
     'gigante-em2b-00': dict(archive='em2b', sections=[(5, 'body'), (6, 'head')], tpl=7, rooms=['r119'], types=[0],
                             category='boss', model_id=0x2b, shift=2),
+    # lane cast16 (2026-10-16): em2b's other model types (em2b.cpp em2bModelInit): TYPE_B 1 = BIN 8 + head 9, TPL 0xA;
+    # TYPE_C 2 = BIN 0xB + head 0xC, TPL 0xD (the r11e giant, chapter 2-3 fork B); type 3 = BIN 0xE + head 0xF, TPL 0x10.
+    'gigante-em2b-01': dict(archive='em2b', sections=[(8, 'body'), (9, 'head')], tpl=0xa, rooms=[], types=[1],
+                            category='boss', model_id=0x2b, shift=2),
+    'gigante-em2b-02': dict(archive='em2b', sections=[(0xb, 'body'), (0xc, 'head')], tpl=0xd, rooms=['r11e'], types=[2],
+                            category='boss', model_id=0x2b, shift=2),
+    'gigante-em2b-03': dict(archive='em2b', sections=[(0xe, 'body'), (0xf, 'head')], tpl=0x10, rooms=[], types=[3],
+                            category='boss', model_id=0x2b, shift=2),
     # src/em2f em2f.cpp type 0 (the r10b Del Lago fight): modelInit(ARC 4, ARC 5); type 1 (ARC 6 / 7) is the same
     # model on GC and PS2 (no geometry change), so only type 0 converts (lane ps2cast-2)
     'dellago-em2f-00': dict(archive='em2f', sections=[(4, 'body')], tpl=5, rooms=['r10b'], types=[0],
@@ -195,6 +203,16 @@ PRESETS = {
         (0x1d3, 'whood', 0x1d4), (0x1d3, 'whood-b', 0x1d5)],
         tpl=0x1ce, rooms=['r108', 'r113', 'r118'], types=[12], category='registry', model_id=0x17, lit=True,
         subset_bones=True),
+    # NATIVE_MODEL_REGISTRY_POOL (lane cast16 2026-10-16): Em16Set type 11 (r11d). Its body / head / hands / TPL equal
+    # em15 type 11 (native_appearance_alias.py: 13 entries identical), but its em10SackSet sack (mot[21] 0x1D1 with TPL
+    # mot[22] 0x1D2) and whood (mot[23] 0x1D3 with TPL mot[24] 0x1D4 / mot[25] 0x1D5) are em16's own entries, so the
+    # alias table holds it out ('accessory-differs') and the actor drew GC. As a pool it binds every section it shows.
+    'ganado-em16-0bp': dict(archive='em16', sections=[
+        (0x1c9, 'body'), (0x1cb, 'head'), (0x1cc, 'head-hit'),
+        (0x1c0, 'right-hand'), (0x1c1, 'right-open'), (0x1c2, 'right-point'), (0x1c3, 'right-grip'), (0x1c4, 'right-scythe'),
+        (0x1c5, 'left-hand'), (0x1c6, 'left-open'), (0x1c7, 'left-point'), (0x1c8, 'left-grip'),
+        (0x1d1, 'sack', 0x1d2), (0x1d3, 'whood', 0x1d4), (0x1d3, 'whood-b', 0x1d5)],
+        tpl=0x1ca, rooms=['r11d'], types=[11], category='registry', model_id=0x16, lit=True, subset_bones=True),
     # NATIVE_MODEL_REGISTRY_POOL (lane ps2cast 2026-10-15): the type 7 zealot's whole section pool, so every spawn's
     # source infos bind (em10ModelInit order: body, em10HeadSet head mot[2] / hit heads mot[3] / mot[4] with TPL mot[5];
     # em10HandSet right mot[6..9] and left mot[11..15], TPL mot[0]; em10SetAccesory hoods mot[26] / mot[27] with TPL

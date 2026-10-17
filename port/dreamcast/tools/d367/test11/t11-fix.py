@@ -388,6 +388,14 @@ if os.path.exists(CH2D + '/ch2-data.json'):
     # no row for them, so its label swap cannot reach them (a missing overlay halts "route overlay missing on the disc")
     DATA['ch2']['ovl'] = ['em3b', 'em35', 'pl14']
     UNREMOVE['ch2'] = _c2['unremove']
+# cast16 (lane cast16, 10-16; PS2CAST-20261014.md 2026-10-16 section): PS2 cast packages over ch2 (order: after ch2).
+# r11c Luis + merchant13 (reg-11cm), r11d cart + em16 pool (reg-11dp), r11e El Gigante + its g70 gameplay level
+# (reg-11eL), r11f Mendez g70 in every form (reg-11fLo; user 10-16: the cutscenes are movies) + the PS2 Ashley partner,
+# with their textures. Needs NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 (ch2/ch2-build.sh CH2REC) and
+# PRIM_BUF_KB (T15_PB): r11f's heap 4 holds Ashley's 239,688 B cell only with the primitive buffer at 432 KB.
+C16D = os.environ.get('C16D', '/root/re4data/private/cast16data-20261016')
+if os.path.exists(C16D + '/cast16-data.json'):
+    DATA['cast16'] = dict(json.load(open(C16D + '/cast16-data.json'))['replace'])
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 

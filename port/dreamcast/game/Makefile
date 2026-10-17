@@ -639,6 +639,15 @@ PRIM_CAP_R202 ?= 0
 ifneq ($(PRIM_CAP_R202),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R202=$(PRIM_CAP_R202)
 endif
+# PRIM_BUF_KB=<KB> (lane cast16 2026-10-16; default 0: no effect; size only): every room's primitive buffer asks at most
+# this many KB of heap 4 (GC room values: r11f 655,360 B). Set it to the worst chapter 1-2 per-frame peak (PRIM_WATER,
+# primitives + native actor tail) x 1.5. A primitive that does not fit is skipped (GetPrimBuff returns 0; the sub screen
+# item prims check it under this knob) and PRIM_WATER counts it ("overflow"); the gate is overflow 0. The address
+# rule (SS_POOL_HIGH / SS_POOL_TOP placement) is unchanged: only the size.
+PRIM_BUF_KB ?= 0
+ifneq ($(PRIM_BUF_KB),0)
+$(OBJDIR)/src/game/game.o $(OBJDIR)/src/Sscrn/ss_item_draw.o: GAME_CPPFLAGS += -DRE4DC_PRIM_BUF_KB=$(PRIM_BUF_KB)
+endif
 # PRIM_WATER=1 (test only): per-room peak primitive-buffer bytes per frame ("prim water:" lines, trans.cpp).
 ifeq ($(PRIM_WATER),1)
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PRIM_WATER=1
@@ -2589,6 +2598,7 @@ include vmu_context.mk
 include t2exact.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
 include knobs.mk
+include esppool.mk
 
 # Validate after all knob defaults and included recipes are available.
 ifneq ($(MOVIE_WORLD_ARENA_S30),0)

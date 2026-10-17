@@ -67,6 +67,9 @@ def main():
     ap.add_argument('--pct', type=float, default=100.0); ap.add_argument('--apps', default=','.join(APPS))
     ap.add_argument('--spec'); ap.add_argument('--repack-only', action='store_true')
     ap.add_argument('--head-pow', type=float, default=1.0)
+    # --shift N (lane cast16 2026-10-16, boss levels): the preset's position shift (El Gigante / Mendez 2): positions are
+    # packed / 2^(4 - N) as ps2_cast.py convert does (mesh.json keeps millimetres; the descriptor carries the shift)
+    ap.add_argument('--shift', type=int, default=4)
     a = ap.parse_args()
     spec = dict(BASE_SPEC)
     if a.spec:
@@ -107,7 +110,13 @@ def main():
             if best[1] != got:
                 got = reduce(s / 'mesh.json', o / 'mesh.json', spec, o, best[0], a.head_pow); ratio = best[0]
         native = o / 'native'
-        pk.pack(o / 'mesh.json', o / 'source.json', native, 'castmodel')
+        mp = o / 'mesh.json'
+        if a.shift != 4:
+            pm = json.loads(mp.read_text())
+            pm['positions_mm'] = [[x / (1 << (4 - a.shift)) for x in q] for q in pm['positions_mm']]
+            mp = o / 'mesh-pack.json'
+            mp.write_text(json.dumps(pm))
+        pk.pack(mp, o / 'source.json', native, 'castmodel')
         pc.host_fixture(native, json.loads((o / 'source.json').read_text()))
         rep = json.loads((native / 'native-report.json').read_text())
         summary[app] = dict(positions=[p0, got], pct=round(100.0 * got / p0, 1), ratio=round(ratio, 4),

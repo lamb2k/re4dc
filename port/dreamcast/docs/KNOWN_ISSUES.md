@@ -16,7 +16,7 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 10 |
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 | Fixed and checked in our tests; the problem was not console-only | 24 |
 | 🛠️ In progress | Being fixed now | 0 |
-| 🔍 Investigating | Being reproduced or traced | 4 |
+| 🔍 Investigating | Being reproduced or traced | 5 |
 | ⏸️ Open | Known, not yet worked on | 11 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
@@ -45,6 +45,7 @@ Test 8 (`d4bc5f45`) was withdrawn.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| In the Mendez fight (chapter 2-3 barn, r11f) the room's effect pool fills (1,024 of 1,024 sprites) and a few fire / smoke effects are skipped; the same happens with the GameCube's own pool size | test 17 | 🔍 Investigating, not blocking: found by our effect-pool count (ESP_POOL_DIAG), no gameplay effect seen | |
 | Leaves, fences and tree branch tips draw as solid shapes on a real console (fine in emulators) | test 8 | 🟢 Fixed, needs console check | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Blank screen on door transitions | test 7, test 8 | 🟢 Fixed in test 9 | |
 | The item name disappears when its menu opens in the inventory | test 7, test 8 | 🟢 Fixed in test 9 | |

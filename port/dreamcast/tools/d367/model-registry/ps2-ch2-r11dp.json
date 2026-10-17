@@ -1,0 +1,43 @@
+{
+ "registry": "ps2-ch2-r11dp",
+ "about": "CH23 em3b type2 cart: original seven-bone skeleton and all 2328 PS2 triangles. Only complete triangles using repeated negative U coordinates are shifted by a whole source texture period. lane cast16 (2026-10-16): + ganado-em16-0bp, Em16Set type 11 as a section pool (NATIVE_MODEL_REGISTRY_POOL; --pool).",
+ "cast_dir": "/root/probe/lanes-20261016/cast16/conv/regcast-r11dp",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "descriptors": [
+  {
+   "name": "cart-em3b-02",
+   "archive": "em3b",
+   "model_id": "0x3b",
+   "source_types": [
+    2
+   ],
+   "module": "src/em3b/em3b.cpp em3b_R0_Init: modelInit ARC0xb / TPL0xc"
+  },
+  {
+   "name": "ganado-em16-0bp",
+   "archive": "em16",
+   "model_id": "0x16",
+   "source_types": [
+    11
+   ],
+   "module": "src/em16/em16_set.cpp Em16Set type 11 + em10HeadSet / em10HandSet / em10SackSet / em10SetAccesory (whood)",
+   "pool": true,
+   "partial_sections": true,
+   "mask_runs": {
+    "12": "/root/probe/lanes-20261016/cast16/conv/e16p-mask-sack"
+   }
+  }
+ ],
+ "room_packages": {
+  "11d": {
+   "descriptors": [
+    "cart-em3b-02",
+    "ganado-em16-0bp"
+   ],
+   "evidence": "Source type2 cart BIN0xb/TPL0xc; seven identical PS2/GC bones."
+  }
+ },
+ "lighting": " em16: the source GX lighting record, as em17 type 0xc."
+}
