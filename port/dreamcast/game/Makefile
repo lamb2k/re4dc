@@ -427,7 +427,9 @@ MODULES += pl11:ovl em11
 # AICA_STR_ENT_MAX (lane audio16, 10-16; default 32 = image unchanged): the reader's stream table size. The chapter 1
 # stream file (aica_banks.py --streams ch1, data set snd16: 45 entries with the merchant's 15 voice streams) needs 48;
 # a file with more entries than the table is refused whole ("header invalid", every disc stream silent), so snd16 and
-# AICA_STR_ENT_MAX=48 ship together. 32 bytes of .bss per entry (48: +512 B). The 2 KB header holds up to 63.
+# AICA_STR_ENT_MAX=48 ship together. 32 bytes of .bss per entry (48: +512 B). The 2 KB header holds up to 63; above
+# 63 (lane ch4found16: the castle disc's ch3 + ch4 file, 73 entries, AICA_STR_ENT_MAX=80) the header is whole 2 KB
+# sectors and the reader reads the rest once at boot (the 8 KB stream cache holds up to 255 entries).
 AICA_STR_ENT_MAX ?= 32
 $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_STR_ENT_MAX=$(AICA_STR_ENT_MAX)
 # AICA_SPILL (lane ch2code16, 10-16; default 0 = image unchanged): banks the frozen layout has no room for use space

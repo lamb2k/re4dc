@@ -921,9 +921,14 @@ CH3_STREAMS = CH1_STREAMS + [k for k in CH31_STREAMS if k not in CH1_STREAMS] + 
 CH4_STREAMS = ([(0, 0), (0, 29)] + [(1, n) for n in range(0xB4, 0xC3)]
                + [(0, n) for n in (5, 13, 15, 16, 22, 25, 27, 31, 32, 33, 34, 35, 36, 37, 38, 47, 53, 56, 46)]
                + [(1, 95), (1, 135), (1, 157)])
+# The castle disc (three-disc layout: disc 2 = chapters 3 and 4; coordinator 10-16): one file, CH3_STREAMS (entries
+# 0..54 in their order) + the chapter 4 streams it lacks (18). 73 entries: a two-sector header, AICA_STR_ENT_MAX >= 73
+# (80). `--streams castle`. Measured against swapping a ch3 and a ch4 file at the chapter 4 save: 100,765,696 B on
+# disc vs 114,851,840 B (the shared streams twice), +768 B of .bss (56 -> 80 entries) and one 2 KB read at boot.
+CASTLE_STREAMS = CH3_STREAMS + [k for k in CH4_STREAMS if k not in CH3_STREAMS]
 STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch1': CH1_STREAMS,
                   'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS,
-                  'ch4': CH4_STREAMS}
+                  'ch4': CH4_STREAMS, 'castle': CASTLE_STREAMS}
 
 
 def nibble_to_sample(n):
@@ -1022,7 +1027,9 @@ def build_streams(mirror, out, keys):
     shds = stream_headers(mirror)
     sbbs = {}
     ents, blobs, report = [], [], []
-    pos = 2048   # header sector
+    # header: 16 + 32 x count bytes in whole 2 KB sectors (one sector up to 63 entries; more need AICA_STR_ENT_MAX > 63)
+    hsz = max(STR_BLOCK, (16 + STR_ENT.size * len(keys) + STR_BLOCK - 1) // STR_BLOCK * STR_BLOCK)
+    pos = hsz
     for key in keys:
         shd = shds[key]
         if key[0] not in sbbs:
@@ -1066,11 +1073,11 @@ def build_streams(mirror, out, keys):
               ('loop from %.2f s' % (ls / shd['rate'])) if loops else 'one-shot', len(a_data) + len(b_data),
               '; '.join(seam)))
     hdr = struct.pack('<4I', STR_MAGIC, len(ents), 0, 0) + b''.join(ents)
-    assert len(hdr) <= 2048
+    assert len(hdr) <= hsz
     dst = os.path.join(out, 'bgm', 'aica_str.dat')
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     with open(dst, 'wb') as f:
-        f.write(hdr + bytes(2048 - len(hdr)))
+        f.write(hdr + bytes(hsz - len(hdr)))
         for b in blobs:
             f.write(b)
     return report

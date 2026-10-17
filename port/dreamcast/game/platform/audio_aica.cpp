@@ -1536,6 +1536,20 @@ bool str_index_load()
         g_strFile = -1;
         return false;
     }
+#if RE4DC_STR_ENT_MAX > 63
+    // A file with more than 63 entries has a header of whole 2 KB sectors (16 + 32 x count bytes, aica_banks.py
+    // build_streams; lane ch4found16: the castle disc's ch3 + ch4 file, 73 entries); the rest is read once, here.
+    static_assert(RE4DC_STR_ENT_MAX <= 255, "the stream header must fit the 8 KB stream cache");
+    if (h[1] > 63) {
+        const u32 hdr = (16 + h[1] * (u32) sizeof(StrEnt) + 2047) / 2048 * 2048;
+        if (fs_read(g_strFile, g_strCache + 2048, hdr - 2048) != (ssize_t) (hdr - 2048)) {
+            re4dc_log("aica: bgm/aica_str.dat header (%u entries) short, disc streams stay silent\n", (unsigned) h[1]);
+            fs_close(g_strFile);
+            g_strFile = -1;
+            return false;
+        }
+    }
+#endif
     g_strEntN = h[1];
     memcpy(g_strEnt, h + 4, g_strEntN * sizeof(StrEnt));
     for (u32 i = 0; i < g_strEntN; i++) {
