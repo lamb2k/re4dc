@@ -3,11 +3,11 @@
 # out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.
 # @ASSETS@ = the unpacked Build-Assets zip (re4dc-assets/).
 # test: 16.4
-# tag: test-14e69c99-20261017-hotfix4
-# source: 14e69c99
+# tag: test-9e8a3780-20261017-hotfix4
+# source: 9e8a3780
 # recipe: port/dreamcast/tools/d367/test16/t16-build.sh
-# image-sha256: 7035fd3076025a774be0d7b8b956a54ba3d98985194dd2d459c738c1f8c5a4e7
-# assets-zip: RE4DC-Test16.4-14e69c99-Build-Assets.zip
+# image-sha256: 79dd47b20930cacd95ba21ecd66abe615fc4d9637ba9edb31bcd92257b2f8c22
+# assets-zip: RE4DC-Test16.4-9e8a3780-Build-Assets.zip
 # disc-sets: snd16,water16i,vq16w,r108p,zr17m,zr17b,res163
 LOGIC_TRACE=0
 GAME_DECISION_TRACE=0
@@ -190,7 +190,7 @@ R101_ALIVE_CAP=4
 VRAM_PAGES_VQ_ONLY=1
 GANADO_ATLAS_DROP=3
 FOLIAGE_NEAR_FIX=1
-LAKE_FAR=30000
+LAKE_FAR=45000
 LAKE_FAR_SHORE=45000
 IMAGE_PAD_BYTES=0
 DBG_WARP=0
