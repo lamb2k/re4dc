@@ -202,19 +202,28 @@ bool r200MaterialTexture(const cModelInfo* info,unsigned id,unsigned& hash) {
     id-=palette->numDescriptors;
     return id<info->nAddTex && r200Texture(info->pAddTpl,id,hash);
 }
+#if RE4DC_TRANSITION_GATE_DIAG
+unsigned r200FpGroupPub[r200p::works][10],r200FpGroupCur[10],r200FpGroup;
+#define R200_GROUP(n) (r200FpGroup=(n))
+unsigned r200FpFail;
+#define R200_FAIL do{r200FpFail=__LINE__;return false;}while(0)
+#else
+#define R200_FAIL return false
+#define R200_GROUP(n) ((void)0)
+#endif
 bool r200ScrollFingerprint(unsigned work,cModel* model,unsigned& hash) {
-    if(work>=r200p::works || !re4dc_source_world_pool(model,0))return false;
+    if(work>=r200p::works || !re4dc_source_world_pool(model,0))R200_FAIL;
     const auto& w=pSmd->work[work];const auto& witness=r200ScrollWitness[work];
     if(w.id==0xff || w.binNo==0xff || (w.flags&0x10) || w.motNo!=0xff ||
        witness.model!=model || scrTbl[work]!=model || !witness.serial || model->serial!=witness.serial ||
        model->kindid!=2 || model->type || (model->be_flag&0x207)!=7 ||
        static_cast<cObj*>(model)->blk!=-1 || model->invisible_factor!=1.f || model->invisible_factor2!=1.f ||
        model->pMotion || model->pTexChg || model->Shader_type || model->nParts!=1 ||
-       !r200Vec(model->pos,w.pos) || !r200Vec(model->ang,w.rot) || !r200Vec(model->scale,w.scale))return false;
+       !r200Vec(model->pos,w.pos) || !r200Vec(model->ang,w.rot) || !r200Vec(model->scale,w.scale))R200_FAIL;
     if(pSmd->BinTblOfs>r200p::smd_bytes ||
-       (unsigned(w.binNo)+1U)*sizeof(u32)>r200p::smd_bytes-pSmd->BinTblOfs)return false;
+       (unsigned(w.binNo)+1U)*sizeof(u32)>r200p::smd_bytes-pSmd->BinTblOfs)R200_FAIL;
     const auto* table=reinterpret_cast<const u32*>(reinterpret_cast<unsigned long>(pSmd)+pSmd->BinTblOfs);
-    if(!r200Range(table,(unsigned(w.binNo)+1U)*sizeof(u32)) || table[w.binNo]>r200p::smd_bytes)return false;
+    if(!r200Range(table,(unsigned(w.binNo)+1U)*sizeof(u32)) || table[w.binNo]>r200p::smd_bytes)R200_FAIL;
     const auto* data=reinterpret_cast<const ModelData*>(reinterpret_cast<unsigned long>(table)+table[w.binNo]);
     const auto* info=model->pModelInfo;const auto* part=model->pList;
     if(info!=witness.info || part!=witness.part || !re4dc_source_world_pool(info,2) ||
@@ -227,33 +236,38 @@ bool r200ScrollFingerprint(unsigned work,cModel* model,unsigned& hash) {
        !data->displist_num || data->displist_num>1024 || !r200Range(data->pHead,sizeof(ModelDataHead)) ||
        (part->be_flag&0x201)!=1 || part->pList || part->pParent!=model || data->pHead->parentNo!=0xff ||
        !r200Vec(part->pos,data->pHead->center) || part->ang.x!=0.f || part->ang.y!=0.f || part->ang.z!=0.f ||
-       part->scale.x!=1.f || part->scale.y!=1.f || part->scale.z!=1.f)return false;
+       part->scale.x!=1.f || part->scale.y!=1.f || part->scale.z!=1.f)R200_FAIL;
     // Authored OT role, blend, depth/cull, material and bind matrices must remain.
     // UV phases alone are live and are sampled from ids16/10 at their exact color callbacks.
     hash=2166136261U;
+#if RE4DC_TRANSITION_GATE_DIAG
+    for(auto& g:r200FpGroupCur)g=2166136261U;
+#define R200_HASH(value) (r200HashValue(hash,value),r200HashValue(r200FpGroupCur[r200FpGroup],value))
+#else
 #define R200_HASH(value) r200HashValue(hash,value)
-    R200_HASH(model->be_flag);R200_HASH(info->be_flag);
-    R200_HASH(model->pParent);R200_HASH(model->mat);R200_HASH(model->l_mat);
-    R200_HASH(model->ot_type);R200_HASH(model->z_mode);R200_HASH(model->CullMode);
+#endif
+    R200_GROUP(0);R200_HASH(model->be_flag);R200_HASH(info->be_flag);
+    R200_GROUP(1);R200_HASH(model->pParent);R200_HASH(model->mat);R200_HASH(model->l_mat);
+    R200_GROUP(2);R200_HASH(model->ot_type);R200_HASH(model->z_mode);R200_HASH(model->CullMode);
     R200_HASH(model->alpha_omit);R200_HASH(model->TevScaleGroup);
-    R200_HASH(model->AddAmb_r);R200_HASH(model->AddAmb_g);R200_HASH(model->AddAmb_b);
-    R200_HASH(model->LightInfo.SelectMask);R200_HASH(part->mat);R200_HASH(part->l_mat);
+    R200_GROUP(3);R200_HASH(model->AddAmb_r);R200_HASH(model->AddAmb_g);R200_HASH(model->AddAmb_b);
+    R200_HASH(model->LightInfo.SelectMask);R200_GROUP(4);R200_HASH(part->mat);R200_HASH(part->l_mat);
     R200_HASH(part->lt_inv_mat);R200_HASH(part->addRot);R200_HASH(part->motParts.flags);
-    R200_HASH(info->tpl_addr);R200_HASH(info->pAddTpl);R200_HASH(info->nAddTex);
-    R200_HASH(info->mat);R200_HASH(info->color);R200_HASH(info->color2);
-    R200_HASH(info->blend_mode);R200_HASH(info->blendRatio);R200_HASH(info->blendType);
+    R200_GROUP(5);R200_HASH(info->tpl_addr);R200_HASH(info->pAddTpl);R200_HASH(info->nAddTex);
+    R200_GROUP(6);R200_HASH(info->mat);R200_GROUP(7);R200_HASH(info->color);R200_HASH(info->color2);
+    R200_GROUP(8);R200_HASH(info->blend_mode);R200_HASH(info->blendRatio);R200_HASH(info->blendType);
     R200_HASH(info->anm_no);R200_HASH(info->uvScrollU);R200_HASH(info->uvScrollV);
-    R200_HASH(*data);R200_HASH(*data->pHead);
+    R200_GROUP(9);R200_HASH(*data);R200_HASH(*data->pHead);
     const ModelPart* material=data->pParts;
     for(unsigned i=0;i<data->displist_num;++i) {
         if(!r200Range(material,sizeof(ModelPart),alignof(ModelPart)) ||
            material->size>r200p::smd_bytes ||
-           !r200Range(material,sizeof(ModelPart)+material->size,alignof(ModelPart)))return false;
+           !r200Range(material,sizeof(ModelPart)+material->size,alignof(ModelPart)))R200_FAIL;
         R200_HASH(*material);
         if(!r200MaterialTexture(info,material->texId,hash) ||
            ((material->flags&1) && !r200MaterialTexture(info,material->bumpTex,hash)) ||
            ((material->flags&4) && !r200MaterialTexture(info,material->alphaTex,hash)) ||
-           ((material->flags&16) && !r200MaterialTexture(info,material->specTexOrg,hash)))return false;
+           ((material->flags&16) && !r200MaterialTexture(info,material->specTexOrg,hash)))R200_FAIL;
         material=reinterpret_cast<const ModelPart*>(reinterpret_cast<unsigned long>(material)+sizeof(ModelPart)+material->size);
     }
 #undef R200_HASH
@@ -271,6 +285,9 @@ void sourceWorldR200ScrollPublish() {
         for(unsigned j=0;j<i;++j)if(scrTbl[i]==scrTbl[j])return;
         unsigned hash=0;if(!r200ScrollFingerprint(i,scrTbl[i],hash))return;
         r200ScrollWitness[i].hash=hash;
+#if RE4DC_TRANSITION_GATE_DIAG
+        for(unsigned g=0;g<10;++g)r200FpGroupPub[i][g]=r200FpGroupCur[g];
+#endif
     }
     r200ScrollPublished=true;
 }
@@ -304,6 +321,50 @@ extern "C" int re4dc_r200_scroll_group() {
     }
     return 1;
 }
+#if RE4DC_TRANSITION_GATE_DIAG
+extern "C" void re4dc_r200_scroll_diag() {
+    unsigned bad=0,first=~0U;
+    if(r200ScrollPublished && r200ScrollBase(true))for(unsigned i=0;i<r200p::works;++i){
+        unsigned hash=0;const bool ok=r200ScrollFingerprint(i,scrTbl[i],hash);
+        if(!ok || hash!=r200ScrollWitness[i].hash){
+            ++bad;if(first==~0U)first=i;
+            unsigned groups=0;if(ok)for(unsigned g=0;g<10;++g)if(r200FpGroupCur[g]!=r200FpGroupPub[i][g])groups|=1U<<g;
+            // groups: 0 be_flag 1 model mat/l_mat/parent 2 ot/z/cull/alpha/tev 3 AddAmb/light mask 4 part mats/addRot
+            // 5 tpl 6 info->mat 7 info->color/color2 8 blend/anm/uv-scroll 9 data/head/materials/textures
+            if(!ok){
+                if(0){cModel* m=scrTbl[i];const auto& w=pSmd->work[i];
+                const cModelInfo* in=m?m->pModelInfo:nullptr;
+                re4dc_log("TGD scroll work=%u model=%p wit=%p serial=%u/%u kind=%u type=%u be=%x blk=%d inv=%d,%d mot=%p texchg=%p shader=%u nparts=%u pos=%d ang=%d scale=%d wflags=%x id=%u bin=%u mot=%u info=%p/%p ibe=%x iinv=%d alpha=%u dc=%u uv=%d,%d texanim=%p blendtbl=%p\n",
+                    i,(void*)m,(void*)r200ScrollWitness[i].model,m?m->serial:0U,r200ScrollWitness[i].serial,m?unsigned(m->kindid):0U,m?unsigned(m->type):0U,
+                    m?unsigned(m->be_flag):0U,m?int(static_cast<cObj*>(m)->blk):0,m?int(m->invisible_factor*1000):0,m?int(m->invisible_factor2*1000):0,
+                    m?(void*)m->pMotion:nullptr,m?(void*)m->pTexChg:nullptr,m?unsigned(m->Shader_type):0U,m?unsigned(m->nParts):0U,
+                    m?int(r200Vec(m->pos,w.pos)):-1,m?int(r200Vec(m->ang,w.rot)):-1,m?int(r200Vec(m->scale,w.scale)):-1,
+                    unsigned(w.flags),unsigned(w.id),unsigned(w.binNo),unsigned(w.motNo),(void*)in,(void*)r200ScrollWitness[i].info,
+                    in?unsigned(in->be_flag):0U,in?int(in->invisible_factor*1000):0,in?unsigned(in->color[3]):0U,in?unsigned(in->flagsDC):0U,
+                    in?int(in->uvU*1000):0,in?int(in->uvV*1000):0,in?(void*)in->pTexAnim:nullptr,in?(void*)in->texBlendTbl:nullptr);}
+            }
+            if(!ok && r200FpFail>=225){
+                cModel* m=scrTbl[i];const auto& w=pSmd->work[i];
+                const auto* table=reinterpret_cast<const u32*>(reinterpret_cast<unsigned long>(pSmd)+pSmd->BinTblOfs);
+                const auto* data=reinterpret_cast<const ModelData*>(reinterpret_cast<unsigned long>(table)+table[w.binNo]);
+                const cModelInfo* in=m->pModelInfo;const cParts* pa=m->pList;
+                re4dc_log("TGD part work=%u ipool=%d ppool=%d pdata=%d ilist=%p ishape=%p texanim=%p blendtbl=%p\n",i,
+                    re4dc_source_world_pool((void*)in,2),re4dc_source_world_pool((void*)pa,3),int(in->pData==data),(void*)in->pList,(void*)in->pShape,(void*)in->pTexAnim,(void*)in->texBlendTbl);
+                re4dc_log("TGD part2 work=%u shape=%u nparts=%u displist=%u pbe=%x plist=%p par=%d hparent=%u center=%d ang=%d,%d,%d scale=%d,%d,%d\n",i,
+                    unsigned(data->shapeOfs),unsigned(data->nParts),unsigned(data->displist_num),unsigned(pa->be_flag),(void*)pa->pList,int(pa->pParent==m),
+                    unsigned(data->pHead->parentNo),int(r200Vec(pa->pos,data->pHead->center)),int(pa->ang.x*1000),int(pa->ang.y*1000),int(pa->ang.z*1000),
+                    int(pa->scale.x*1000),int(pa->scale.y*1000),int(pa->scale.z*1000));
+            }
+            re4dc_log("TGD scroll work=%u fail_line=%u ok=%d groups=%03x\n",i,r200FpFail,ok,groups);
+        }
+    }
+    const bool smd=pSmd && r200Range(pSmd,r200p::smd_bytes,alignof(cSmd)),smx=pSmx && r200Range(pSmx,r200p::smx_bytes,alignof(cSmx));
+    re4dc_log("TGD scroll raw=%d published=%d base=%d deep=%d works=%d/%u fp_bad=%u first=%d smd=%08x/%08x smx=%08x/%08x works_fnv=%08x/%08x\n",
+        r200RawQualified,r200ScrollPublished,r200ScrollBase(false),r200ScrollBase(true),nScrWork,r200p::works,bad,int(first),
+        smd?r200Hash(pSmd,r200p::smd_bytes):0U,r200p::smd_fnv,smx?r200Hash(pSmx,r200p::smx_bytes):0U,r200p::smx_fnv,
+        pSmd?r200Hash(pSmd->work,r200p::works*sizeof(SmdWork)):0U,r200p::works_fnv);
+}
+#endif
 extern "C" int re4dc_r200_scroll_member(cModel* model,unsigned serial,unsigned work,float* uv) {
     if(!r200ScrollPublished || !r200ScrollBase(false) || work>=r200p::works ||
        r200ScrollWitness[work].serial!=serial)return 0;

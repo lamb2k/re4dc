@@ -1697,6 +1697,13 @@ include game30.mk
 
 # D44 diagnostic only: one four-frame window after an observed r200 card exit.
 # Keep the flag local to the three instrumented translation units.
+# TRANSITION_GATE_DIAG (test only, lane ch3found16 2026-10-17, never in a recipe): logs which of the five pre-walk checks of
+# PS2_WORLD_TRANSITION_OWNER refused (PS2SOURCE_DECLINE reason 14) and the r200 package / scroll pins against the live data.
+TRANSITION_GATE_DIAG ?= 0
+ifeq ($(TRANSITION_GATE_DIAG),1)
+$(OBJDIR)/src/game/trans.o $(OBJDIR)/src/game/scroll.o: GAME_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_TRANSITION_GATE_DIAG=1
+endif
 PS2_WORLD_PREFLIGHT_DIAG ?= 0
 ifneq ($(filter-out 0 1,$(PS2_WORLD_PREFLIGHT_DIAG)),)
 $(error PS2_WORLD_PREFLIGHT_DIAG must be 0 or 1)
