@@ -285,10 +285,14 @@ ifeq ($(or $(ALIVE_CAP),0),0)
 $(error CAP_COMPARE=1 needs ALIVE_CAP (PS2_CH1_ENEMY=1))
 endif
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_CAP_COMPARE=$(ALIVE_CAP)
+# with MIST_CUT=<mask> (hwfog.mk; the disc builds it with a mask and every scene sets its own): the `mistcut` warp line
+ifneq ($(MIST_CUT),)
+$(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_CAP_MISTCUT=1
+endif
 $(OBJDIR)/src/game/em_set.o $(OBJDIR)/mod/st1_1/src/st1/r101.o: GAME_CPPFLAGS += -include $(CURDIR)/cap_compare.h
 ifeq ($(BENCHMARK),1)
-$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=8 -DRE4DC_BENCH_CAPCMP=1 '-DRE4DC_BENCH_NAME="CAP COMPARE"' \
-  '-DRE4DC_BENCH_MENU="X/Y/A/B: R101 CAP 3/4/5/6 ONLY"' '-DRE4DC_BENCH_MENU2="DPAD UP/DN: FARM CAP 3 +/-ANIMALS, LT/RT: CAP 6"'
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=14 -DRE4DC_BENCH_CAPCMP=1 '-DRE4DC_BENCH_NAME="CAP COMPARE"' \
+  '-DRE4DC_BENCH_MENU="X/Y/A/B: R101 CAP 3/4/5/6"' '-DRE4DC_BENCH_MENU2="UP/DN: FARM C3 +/-ANIMALS, LT/RT: C6"'   '-DRE4DC_BENCH_MENU3="UP+X/Y/A: R101 T1/T2/T3, DN+X/Y/A: FARM"'
 endif
 endif
 # R101_CAP_WAVES=1 (lane alivecap 2026-10-15, set by PS2_CH1_ENEMY; default 0; needs R101_ALIVE_CAP): the reset waves go
