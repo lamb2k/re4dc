@@ -7,7 +7,7 @@ HERE=Path('/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/con
 BASE=Path('/root/probe/d367-resume-20260927/integration-01/disc-ig27rc1-kite7/disc.bin')
 # 2026-10-03: the base image was rebuilt from its original inputs after an accidental delete (disc-ig27rc1-kite7/
 # RESTORED-20261003.txt): identical payload manifest, new genisoimage metadata. Original sha ad795a67...6e2a.
-BASE_SHA='c2237d1a08e14c5a9dc67d178f631f5b905b50b9f4744012326ea97db40dca56'
+BASE_SHA=open('/root/probe/d367-resume-20260927/integration-01/disc-ig27rc1-kite7/disc.sha256').read().split()[0]
 utility=ROOT/'renderer/inventory-uiorder-r1/stage-iso.py';text=utility.read_text()
 assert hashlib.sha256(text.encode()).hexdigest()=='f95bfad4b2d1a1be0dfbb3bf99331841ddaeaa739435f3f89df614a10d50d9d6'
 ns=dict(Path=Path,hashlib=hashlib,io=io,pycdlib=pycdlib)

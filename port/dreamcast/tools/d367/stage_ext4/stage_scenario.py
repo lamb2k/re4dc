@@ -121,7 +121,11 @@ def cas_text(src):
 
 # ---- stage-scenario.py (DERIVED_SHA), inputs through cas(), image on ext4 ----
 BASE = Path('/root/probe/d367-resume-20260927/integration-01/disc-ig27rc1-kite7/disc.bin')
-BASE_SHA = 'c2237d1a08e14c5a9dc67d178f631f5b905b50b9f4744012326ea97db40dca56'
+# the image sha comes from the disc.sha256 next to it (rewritten whenever the base is rebuilt), else the 10-03 image
+try:
+    BASE_SHA = (BASE.parent / 'disc.sha256').read_text().split()[0]
+except Exception:
+    BASE_SHA = 'c2237d1a08e14c5a9dc67d178f631f5b905b50b9f4744012326ea97db40dca56'
 utility = ROOT / 'renderer/inventory-uiorder-r1/stage-iso.py'; text = cas_text(utility)
 assert hashlib.sha256(text.encode()).hexdigest() == 'f95bfad4b2d1a1be0dfbb3bf99331841ddaeaa739435f3f89df614a10d50d9d6'
 ns = dict(Path=Path, hashlib=hashlib, io=io, pycdlib=pycdlib)
