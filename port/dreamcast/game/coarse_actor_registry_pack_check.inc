@@ -17,7 +17,7 @@ using re4dc_material::kRoomRoles;using re4dc_material::kRoomBlobs;
 #define RE4DC_NMR_ROLE_TEXTURES 17u
 #if defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
 // NATIVE_MODEL_REGISTRY_ROLES5 (lane cast16): wide castle packages - r227 em14 x4 (291 KiB + skin), r214 (51 BIN models, 340 KiB + skin).
-#define RE4DC_NMR_PACK_KIB 384u
+#define RE4DC_NMR_PACK_KIB 416u  // r214 with zealot-em14-09q: 381,056 + skin 21,960 (cast16 10-17); a ceiling, heap 4 takes the actual size
 #define RE4DC_NMR_PACK_MODELS 64u
 #else
 #define RE4DC_NMR_PACK_KIB 256u

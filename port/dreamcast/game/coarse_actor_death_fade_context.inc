@@ -7,6 +7,9 @@ struct ActorFadeContext {
     float mv[kRe4dcActorRoles][12]{},projection[7]{},viewport[6]{};
     re4dc::render::SourceLighting lit{};
     unsigned count=0,alpha=255,fog=0,factor[2]{},hash=0;
+#if RE4DC_NMR_DYING
+    unsigned own_lit=0;  // the record lit itself (r.lit); 0: the drain keeps the plan's constant / probe record
+#endif
 };
 struct ActorFadePending {
     ActorFadePending* next=nullptr;
@@ -21,10 +24,27 @@ static_assert(sizeof(ActorFadePending)<=sizeof(ActorOwnedRecord),"G1 pending sto
 ActorFadePending* actor_fade_head;
 unsigned actor_fade_sequence,actor_fade_pending;
 
-bool actor_fade_eligible(cModel* m,const Re4dcActorPlan& p) {
+bool actor_fade_eligible_g1(cModel* m,const Re4dcActorPlan& p) {
+#if RE4DC_NMR_DYING && !defined(RE4DC_AGDF_G1)
+    // NATIVE_MODEL_REGISTRY_DYING without ACTOR_GANADO_DEATH_FADE: the reviewed id13 candidate stays off.
+    (void)m;(void)p;return false;
+#else
     // hp belongs to the actual recovered cEm. Do not read it for other types.
     if(!m || m->kindid!=0 || m->id!=0x13)return false;
     return re4dc_fade::state_allows(*m,p.appearance,static_cast<cEm*>(m)->hp);
+#endif
+}
+bool actor_fade_eligible(cModel* m,const Re4dcActorPlan& p) {
+#if RE4DC_NMR_DYING
+    // NATIVE_MODEL_REGISTRY_DYING (native_model_registry.mk): a Ganado-class enemy (em10.cpp family, ids 0x10..0x20,
+    // one source pass) planned by the PS2 Ganado cast or a registry descriptor, while its whole-model fade runs (death:
+    // invisible_factor -0.1 per frame; the source skips the model at 0, trans.cpp), keeps its native plan: the G1 ticket
+    // draws it at its source FIFO position in the TR list with the source's alpha. Before, actor_semantics declined it
+    // and its last frames drew GC (CAST-GC).
+    if(m && m->kindid==0 && m->id>=0x10 && m->id<=0x20 && !m->ot_type &&
+       m->invisible_factor>0.0f && m->invisible_factor<1.0f && m->invisible_factor2==1.0f && m->alpha_omit==255)return true;
+#endif
+    return actor_fade_eligible_g1(m,p);
 }
 unsigned actor_fade_hash(const ActorFadeContext& c) {
     unsigned hash=2166136261u;
@@ -40,6 +60,9 @@ unsigned actor_fade_hash(const ActorFadeContext& c) {
 ActorFadeContext actor_fade_capture(cModel* m,const ActorOwnedRecord& r) {
     ActorFadeContext c{};c.count=r.count;c.alpha=r.base.alpha_state;c.fog=r.base.source_key[2];c.lit=r.lit;
     c.factor[0]=re4dc_fade::bits(m->invisible_factor);c.factor[1]=re4dc_fade::bits(m->invisible_factor2);
+#if RE4DC_NMR_DYING
+    c.own_lit=r.base.lighting==&r.lit;
+#endif
     std::memcpy(c.projection,r.base.projection,sizeof(c.projection));std::memcpy(c.viewport,r.base.viewport,sizeof(c.viewport));
     for(unsigned i=0;i<r.count;++i){c.info[i]=r.part[i].info;c.flags[i]=r.part[i].flags;c.role[i]=r.part[i].role;std::memcpy(c.mv[i],r.part[i].mv,sizeof(c.mv[i]));}
     c.hash=actor_fade_hash(c);return c;

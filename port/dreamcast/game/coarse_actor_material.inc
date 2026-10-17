@@ -280,8 +280,8 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
     if((i->be_flag&~8u)!=expected)return Error::PassGroup;
     if(i->invisible_factor!=1.0f || i->blend_mode || i->colorWord!=0xffffffffu ||
        i->color2[0] || i->color2[1] || i->color2[2] || i->color2[3] ||
-       i->flagsDC || i->pAddTpl || i->nAddTex || i->blendRatio || i->blendType ||
-       i->texBlendTbl || i->pTexAnim || i->uvU || i->uvV || i->uvScrollU || i->uvScrollV)return Error::LiveModifier;
+       (i->flagsDC && !RE4DC_NMR_BLEND_IDLE(i,row.appearance)) || i->pAddTpl || i->nAddTex || i->blendRatio || i->blendType ||
+       (i->texBlendTbl && !RE4DC_NMR_BLEND_IDLE(i,row.appearance)) || i->pTexAnim || i->uvU || i->uvV || i->uvScrollU || i->uvScrollV)return Error::LiveModifier;
     if(i->be_flag&2) {
         // shape.cpp writes the prepared destination buffer, not vtxOrig.
         // Native-look explicitly retains the reviewed bone-driven Leon face.
@@ -769,4 +769,17 @@ extern "C" unsigned re4dc_actor_material_diagnose(cModel* m,const Re4dcActorPlan
 }
 #if RE4DC_ACTOR_TEX_PREP
 #include "actor_tex_prep_material.inc"
+#endif
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP && RE4DC_NATIVE_MODEL_REGISTRY_PACK
+// TEX_PKG_SKIP: 1 when (crc, fnv) is a source texture fact of a published room package role row (a GC TPL texture a
+// registry descriptor replaces with its own atlas).
+extern "C" int re4dc_registry_source_key(unsigned crc,unsigned fnv) {
+    if(!(crc|fnv))return 0;
+    const auto& R=re4dc_material::room_rows;
+    for(unsigned k=0;k<R.role_count;++k){
+        const auto& row=R.roles[k];
+        for(unsigned t=0;t<row.texture_count;++t)if(row.textures[t].crc==crc && row.textures[t].fnv==fnv)return 1;
+    }
+    return 0;
+}
 #endif

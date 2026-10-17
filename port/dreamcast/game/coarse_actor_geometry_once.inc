@@ -53,6 +53,17 @@ bool actor_same_chunk(const re4dc_source::ChunkInput& a,
         a.position_count==b.position_count && a.normal_count==b.normal_count &&
         a.palette_count==b.palette_count && a.triangles==b.triangles && a.bones==b.bones;
 }
+#if RE4DC_NMR_RUN_SHARE
+bool actor_same_bytes(const re4dc_source::ByteSpan& a,const re4dc_source::ByteSpan& b) {
+    return a.size==b.size && (a.data==b.data || (a.data && b.data && !__builtin_memcmp(a.data,b.data,a.size)));
+}
+bool actor_same_run_content(const re4dc_source::ChunkInput& a,const re4dc_source::ChunkInput& b) {
+    return actor_same_span(a.uv,b.uv) && actor_same_span(a.stream,b.stream) &&
+        a.position_count==b.position_count && a.normal_count==b.normal_count &&
+        a.palette_count==b.palette_count && a.triangles==b.triangles && a.bones==b.bones &&
+        actor_same_bytes(a.positions,b.positions) && actor_same_bytes(a.normals,b.normals) && actor_same_bytes(a.weights,b.weights);
+}
+#endif
 }
 
 extern "C" re4dc_source::BlobError re4dc_actor_immutable_chunk_proof(
@@ -72,7 +83,15 @@ extern "C" re4dc_source::BlobError re4dc_actor_immutable_chunk_proof(
     }
     // An ID cannot be rebound, including after a failed first qualification.
     // New compile-time asset variants require their own ID/table revision.
+#if RE4DC_NMR_RUN_SHARE
+    // NATIVE_MODEL_REGISTRY_RUN_SHARE (native_model_registry.mk): a pool package stores an identical mask (pair) run
+    // once (the pack check refuses a geometry stored twice), and two sections of one BIN under two TPLs (zealot-em1c-09h
+    // 0x217 with TPL 0x218 / 0x219) both draw it; a run is proved with its role chunk's arrays, which are separate but
+    // byte-identical copies. The same run (uv / stream spans) over equal arrays shares the bound proof.
+    if(entry.state!=2 || (!actor_same_chunk(entry.input,input) && !actor_same_run_content(entry.input,input)))return BlobError::Array;
+#else
     if(entry.state!=2 || !actor_same_chunk(entry.input,input))return BlobError::Array;
+#endif
     if(entry.error==BlobError::None)output=entry.proof;
     return entry.error;
 }

@@ -3626,10 +3626,27 @@ constexpr unsigned kWorldNewKeys=16,kWorldNewBytes=84448;
 unsigned world_new_n,world_new_bytes;
 std::uint64_t world_new_mask,world_seen_mask,world_capped_mask;
 #endif
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
+// TEX_PKG_SKIP (native_model_registry.mk): a source texture of the room package's role rows (the GC TPLs its
+// descriptors replace) is not uploaded at room entry; the package draws its own atlas. A source draw (fallback)
+// still loads it on first sight.
+extern "C" int re4dc_registry_source_key(unsigned crc,unsigned fnv);
+unsigned pkg_skips;
+#define RE4DC_PKG_SKIP(c,f) (re4dc_registry_source_key((c),(f))?(++pkg_skips,true):false)
+#else
+#define RE4DC_PKG_SKIP(c,f) false
+#endif
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
+void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n,unsigned& resident,unsigned& bytes,unsigned limit,unsigned byte_limit,bool pkg=false){
+#else
 void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n,unsigned& resident,unsigned& bytes,unsigned limit,unsigned byte_limit){
+#endif
     for(unsigned i=0;i<table.count() && n+resident<limit;++i){
         unsigned crc,fnv,width,height,format;
         if(!table.record(i,crc,fnv,width,height,format) || !width || !height || width>1024 || height>1024)continue;
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
+        if(pkg && RE4DC_PKG_SKIP(crc,fnv))continue;
+#endif
 #if RE4DC_QUALITY_ASSETS
         if(preload_room_pass && re4dc_std_dropped(crc,fnv))continue;
 #endif
@@ -3684,6 +3701,9 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             if(r.room!=src.room || !r.width || !r.height || r.width>1024 || r.height>1024)continue;
 #endif
             ++resident_listed;
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
+            if(RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
+#endif
             const Key key{r.crc,r.fnv};
             bool known=false;
             for(auto& e:entries)if(e.valid && e.key==key){if(e.frame!=frame){e.frame=frame;++resident;bytes+=e.package.vram_bytes();}known=true;break;}
@@ -3792,7 +3812,13 @@ void preload_identities(){
 #if RE4DC_PS2_PRELOAD_LEAN
     }
 #endif
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
+    {const unsigned s0=pkg_skips;
+     for(auto& e:enemy_identities)if(e.archive)preload_select(e.table,n,resident,bytes,limit,byte_limit,true);
+     re4dc_log("TEXPKG preload enemy skips=%u total=%u\n",pkg_skips-s0,pkg_skips);}
+#else
     for(auto& e:enemy_identities)if(e.archive)preload_select(e.table,n,resident,bytes,limit,byte_limit);
+#endif
     preload_select(player_identities,n,resident,bytes,limit,byte_limit);preload_select(weapon_identities,n,resident,bytes,limit,byte_limit);
 #if RE4DC_COARSE_WORLD & 64
     // COARSE_WORLD R3 (renderer-contract.md 5, Revision 2): in the world data's room, its texture list (kWorldTex,
