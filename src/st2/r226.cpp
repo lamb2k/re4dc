@@ -443,6 +443,25 @@ void R226Main()
         pG->Room_flg[1] |= 0x20000000;
         playerRunDieSet(0, 1);
     }
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x20)
+    // PS2 USA R226Main (st2_3 0x1a07c..0x1a200; runs when neither die branch above fired): after the statue is
+    // awake (Rsf 9), while the player is in area flag 71 or 72 (Room_flg[2] 0x01000000 / 0x00800000, per frame)
+    // and fewer than 11 are alive, the chase Ganados 0xB3 (em[3]) and then 0xB5 (em[5]) are sent once more (each
+    // only if dead-checked clear), latched by the PS2-only Rsf bits 18 / 19 and closed by Rsf 20. GameCube: none.
+    else if (RsfCheck(G_ROOM_ID, 20) == 0 && RsfCheck(G_ROOM_ID, 9) != 0 &&
+             (pG->Room_flg[2] & 0x01800000) != 0 && SceCountEmAlive(0x10, 0x20) < 11) {
+        if (RsfCheck(G_ROOM_ID, 18) == 0) {
+            cEmWrapSetEmI(&r226_work.p->em[3], 0xB3, -1, 0, 1, 1);
+            r226_work.p->em[3].setNoSuspend(0);
+            RsfSet(G_ROOM_ID, 18);
+        } else if (RsfCheck(G_ROOM_ID, 19) == 0) {
+            cEmWrapSetEmI(&r226_work.p->em[5], 0xB5, -1, 0, 1, 1);
+            r226_work.p->em[5].setNoSuspend(0);
+            RsfSet(G_ROOM_ID, 19);
+            RsfSet(G_ROOM_ID, 20);
+        }
+    }
+#endif
 }
 
 // One frame in: set the 13 chase enemies from the list.

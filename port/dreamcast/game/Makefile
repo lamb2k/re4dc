@@ -237,6 +237,35 @@ $(OBJDIR)/src/game/stage.o $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC
 $(OBJDIR)/platform/ps2_enemy_ch3.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_CH3_ENEMY=1 -DRE4DC_PS2_ENEMY_RULES=1 -I$(PS2_ENEMY_CH3_DIR)
 $(OBJDIR)/platform/ps2_enemy_ch3.o: $(PS2_ENEMY_CH3_DIR)/ps2_enemy_ch3_data.inc
 endif
+# PS2_CH4_ENEMY=1 (lane ch4found16 2026-10-16, user 10-15 "the PS2 logic holistically for enemy spawns" per chapter;
+#   CHANGES GAMEPLAY by design; default 0 = off; needs ROUTE_CH41=1): one umbrella for every PS2 enemy-spawn change of
+#   chapter 4 (4-1 .. 4-4: r206 r210 r222 r201 r219 r211 r216 r212 r213 r214 r217 r218 r215 r229 r221 r22b r220 r223
+#   r224 r21d r225 r21b r226 r227 r228 r22a; table in C:\Game Dev\Emulators\CH4-FOUNDATIONS-20261016.md) plus the cap on
+#   top. It forces PS2_ENEMY_RULES=1; adopts the PS2 emleon04 / emleon05 rows of r211..r222 / r21b..r22a
+#   (platform/ps2_enemy_ch4.cpp, private table PS2_ENEMY_CH4_DIR/ps2_enemy_ch4_data.inc from
+#   tools/d367/castle/ps2_enemy_ch4.py; every baseline byte checked); ORs PS2_ENEMY_CASTLE with 0xE4 (r216 one display
+#   armor + its area stub, r226 reinforcement block, r227 far-side task, r223 Normal init sends); sets ALIVE_CAP=6 when
+#   not given. Chapter 4 rooms hold only (no ALIVE_CAP_PARK there: their code keeps cEmWrap pointers of its sends).
+#   Not ported on purpose: Easy-only / Pro-only branches; r21a (optional room: its reworked list and wave code, bit
+#   0x08); r214's PS2 enemy pool 60 -> 70 (a CNS memory setting, not a spawn rule).
+PS2_CH4_ENEMY ?= 0
+PS2_ENEMY_CH4_DIR ?=
+ifneq ($(PS2_CH4_ENEMY),0)
+ifneq ($(PS2_CH4_ENEMY)$(ROUTE_CH41),11)
+$(error PS2_CH4_ENEMY must be 0 or 1 and needs ROUTE_CH41=1)
+endif
+ifeq ($(wildcard $(PS2_ENEMY_CH4_DIR)/ps2_enemy_ch4_data.inc),)
+$(error PS2_CH4_ENEMY needs PS2_ENEMY_CH4_DIR/ps2_enemy_ch4_data.inc (tools/d367/castle/ps2_enemy_ch4.py))
+endif
+override PS2_ENEMY_RULES := 1
+override PS2_ENEMY_CASTLE := $(shell printf '0x%x' $$(( $(or $(PS2_ENEMY_CASTLE),0) | 0xE4 )))
+ifeq ($(or $(ALIVE_CAP),0),0)
+override ALIVE_CAP := 6
+endif
+$(OBJDIR)/src/game/stage.o $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_PS2_CH4_ENEMY=1
+$(OBJDIR)/platform/ps2_enemy_ch4.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_CH4_ENEMY=1 -DRE4DC_PS2_ENEMY_RULES=1 -I$(PS2_ENEMY_CH4_DIR)
+$(OBJDIR)/platform/ps2_enemy_ch4.o: $(PS2_ENEMY_CH4_DIR)/ps2_enemy_ch4_data.inc
+endif
 # PS2_ENEMY_RULES=1 (test 9 lane PS2EN, default 0; changes gameplay by design): the PS2 USA enemy rules of the
 # chapter 1 rooms. Enemy list emleon00 gets the PS2 start-alive bits / flags (stage.cpp, at list read); r101 sends
 # its reset waves when fewer than 5 Ganados are alive (GameCube: after 5 / 10 kills) and holds two villagers back
@@ -324,14 +353,21 @@ endif
 #   0x02 r20b: the hall waves never send list row 3 (em[1]); the random wave (Rnd() % 6, same draw) sends one
 #        Ganado in cases 0-2 (0x14 / 0x15 / 0x16) where the GC sends two (st2_1 R20bEmSetMain 0x14618..0x14da8)
 #   0x04 r216: the init sends only the display armor 0xE8 (armor[3]); the GC sends 0xE5..0xE8 (st2_2 R216Init 0x10e58)
-#   0x08 r21a (reserved: alive-gated waves), 0x10 r205 (reserved: +0x57), 0x20 r226 (reserved: PS2-only 0xB3/0xB5
-#        reinforcement block, alive < 11), 0x40 r227 (reserved: PS2-only task, alive < 7 sends 0xF7/0xF5)
+#   0x08 r21a (reserved: alive-gated waves), 0x10 r205 (reserved: +0x57)
+#   0x20 r226 (lane ch4found16; st2_3 R226Main 0x1a07c): after the statue wakes (Rsf 9), in area flag 71 / 72 and
+#        below 11 alive, 0xB3 then 0xB5 are sent once more (PS2-only Rsf 18 / 19 / 20 latches); GC: none
+#   0x40 r227 (lane ch4found16; st2_3 task 0x1eaf8, started by both far-side setups 0x201a8 / 0x20348): 0xF7 then
+#        0xF5 come one per frame while fewer than 7 are alive and area flag 64 is clear; the setups take the other
+#        five only (GC sends all seven and walks 0xF7 / 0xF5 in 900 / 1350 frames later)
+#   0x80 r223 (lane ch4found16; st2_3 R223Init 0x11fe0): Normal sends 0xD2 0xD3 0xD7 (after 0xDA) and 0xE1 (list -1);
+#        needs the PS2 emleon05 rows (PS2_CH4_ENEMY), which clear the start-alive bit of those four
+#   With 0x04 the r216 areas 5 / 6 armor show / hide is a stub, as on the PS2.
 PS2_ENEMY_CASTLE ?= 0
 ifneq ($(PS2_ENEMY_CASTLE),0)
 ifneq ($(PS2_ENEMY_RULES),1)
 $(error PS2_ENEMY_CASTLE needs PS2_ENEMY_RULES=1)
 endif
-$(OBJDIR)/mod/st2_0/src/st2/r208.o $(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
+$(OBJDIR)/mod/st2_0/src/st2/r208.o $(OBJDIR)/mod/st2_1/src/st2/r20b.o $(OBJDIR)/mod/st2_2/src/st2/r216.o $(OBJDIR)/mod/st2_3/src/st2/r223.o $(OBJDIR)/mod/st2_3/src/st2/r226.o $(OBJDIR)/mod/st2_3/src/st2/r227.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_CASTLE=$(PS2_ENEMY_CASTLE)
 endif
 # R101_ALIVE_CAP=N (lane crowd12 2026-10-14; CHANGES GAMEPLAY by design; default 0 = off; needs PS2_ENEMY_ROOMS bit 0x02):
 #   at most N Ganados alive at once in the r101 village fight. Start-list Ganados beyond N are held at room entry
@@ -556,6 +592,8 @@ endif
 MODULES += em1c st2_3 em2c:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em2c
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH41=1
+# The PS2 world registry predates the r222 / r22b packages: ROUTE_CH41 lists both (native_static.cpp).
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH41=1
 endif
 # ROUTE_BOSS4=1 (lane ch3found16 2026-10-16 for the boss stress test, lane stress16; default 0: no effect; needs
 #   ROUTE_CH32=1, which links em25, and WORLD_ROOM_MODULES=1): the chapter 4 boss modules without the chapter 4
@@ -711,6 +749,9 @@ PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch23.o,$(PLATFORM_OBJ
 endif
 ifneq ($(PS2_CH3_ENEMY),1)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch3.o,$(PLATFORM_OBJS))
+endif
+ifneq ($(PS2_CH4_ENEMY),1)
+PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/ps2_enemy_ch4.o,$(PLATFORM_OBJS))
 endif
 # LAKE_RIPPLES (ROUTE_CH13 block above): native_lake.cpp is built only with the knob on (1 or 2).
 ifeq ($(filter 1 2,$(LAKE_RIPPLES)),)

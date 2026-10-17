@@ -144,6 +144,20 @@ void R223Init()
     if (ItemGetBinTplAddr(0x8D, &bin, &tpl)) {
         r223_work.p->dai = SetObjSmd(bin, tpl, &pos, &rot, 0x10, 1);
     }
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x80)
+    // PS2 USA R223Init (st2_3 0x11fe0..0x120f0): 0xD4 0xD9 0xDB 0xDA, then (Normal / Pro; the Easy branch skips
+    // them and is not ported) 0xD2 0xD3 0xD7 and 0xE1 (list -1). The PS2 emleon05 clears the start-alive bit of
+    // 0xD2 0xD3 0xD7 0xE1 (PS2_CH4_ENEMY rows), so these sends place them; 0xE1 is in the room from the start as
+    // on the GameCube (where its list row starts it), and the later lift-group setEm attaches to it.
+    r223_work.p->em[0].setEm(0xD4, 5, 0, 1, 1);
+    r223_work.p->em[2].setEm(0xD9, 5, 1, 1, 1);
+    r223_work.p->em[3].setEm(0xDB, 5, 1, 1, 1);
+    r223_work.p->em[5].setEm(0xDA, 5, 1, 1, 1);
+    r223_work.p->em[7].setEm(0xD2, 5, 1, 1, 1);
+    r223_work.p->em[8].setEm(0xD3, 5, 1, 1, 1);
+    r223_work.p->em[4].setEm(0xD7, 5, 1, 1, 1);
+    r223_work.p->em[22].setEm(0xE1, -1, 1, 1, 1);
+#else
     r223_work.p->em[0].setEm(0xD4, 5, 0, 1, 1);
     r223_work.p->em[2].setEm(0xD9, 5, 1, 1, 1);
     r223_work.p->em[3].setEm(0xDB, 5, 1, 1, 1);
@@ -151,6 +165,7 @@ void R223Init()
     r223_work.p->em[5].setEm(0xDA, 5, 1, 1, 1);
     r223_work.p->em[7].setEm(0xD2, 5, 1, 1, 1);
     r223_work.p->em[8].setEm(0xD3, 5, 1, 1, 1);
+#endif
     if (setChange(1, 4, 3, 0x10, 0xCF) == 1) {
         AreaGetCenterPos(&pos, &SceAtPtr(0xB)->area);
         r223_work.p->em[16].setGoto(&pos, 7);

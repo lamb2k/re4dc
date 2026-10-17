@@ -590,10 +590,72 @@ void r227_initCargoElv()
     }
 }
 
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x40)
+// PS2 USA PS2-only task (st2_3 0x1eaf8, started first by both far-side setups): the far side's last two
+// Ganados 0xF7 and 0xF5 come one per frame, each only while fewer than 7 are alive and the per-frame room
+// event flag 64 (Room_flg[2] bit 31; PS2 pG+464) is clear; each one that is alive is sent at the player
+// (setGoto 0xB, setCharacter 2). The GameCube sends them with the rest and walks them in 900 / 1350 frames later.
+static void r227_ps2SendTask()
+{
+    cEmWrap e5;
+    cEmWrap e6;
+    int step = 0;
+
+    for (;;) {
+        if ((u32) SceCountEmAlive(0x10, 0x20) < 7 && !(pG->Room_flg[2] & 0x80000000)) {
+            if (step == 0) {
+                e5.setEm(0xF7, -1, 0, 1, 1);
+                if (e5.isAlive()) {
+                    e5.setGoto(&pPL->pos, 0xB);
+                    e5.setCharacter(2);
+                }
+                step++;
+            } else {
+                e6.setEm(0xF5, -1, 0, 1, 1);
+                if (e6.isAlive()) {
+                    e6.setGoto(&pPL->pos, 0xB);
+                    e6.setCharacter(2);
+                }
+                break;
+            }
+        }
+        SceSleep(1);
+    }
+    SceExit();
+}
+#endif
+
 // The enemies of the far side when the room is re-entered after their event.
 static void r227_setEm3_after()
 {
     SceSleep(1);
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x40)
+    {
+        // PS2 USA (st2_3 0x201a8): the task sends 0xF7 / 0xF5; this setup takes the other five only.
+        SceExec(0x12, (TaskFunc) r227_ps2SendTask, 0, 0, SCE_PRIO_DEF_2, 0);
+        cEmWrap e0;
+        cEmWrap e1;
+        cEmWrap e2;
+        cEmWrap e3;
+        cEmWrap e4;
+        e0.setPtr(0xF0, -1, 0);
+        e1.setPtr(0xF1, -1, 0);
+        e2.setPtr(0xF2, -1, 0);
+        e3.setPtr(0xF8, -1, 0);
+        e4.setPtr(0xF9, -1, 0);
+        e0.setGoto(&pPL->pos, 0xB);
+        e0.setCharacter(2);
+        e1.setGoto(&pPL->pos, 0xB);
+        e1.setCharacter(2);
+        e2.setGoto(&pPL->pos, 0xB);
+        e2.setCharacter(2);
+        e3.setGoto(&pPL->pos, 0xB);
+        e3.setCharacter(2);
+        e4.setGoto(&pPL->pos, 0xB);
+        e4.setCharacter(2);
+        return;
+    }
+#endif
     cEmWrap e0;
     cEmWrap e1;
     cEmWrap e2;
@@ -628,6 +690,58 @@ static void r227_setEm3_after()
 static void r227_setEm3()
 {
     RsfSet(G_ROOM_ID, 8);
+#if defined(RE4DC_PS2_ENEMY_CASTLE) && (RE4DC_PS2_ENEMY_CASTLE & 0x40)
+    {
+        // PS2 USA (st2_3 0x20348): the task sends 0xF7 / 0xF5; the event takes the other five, and the two
+        // late walk-ins of 0xF7 / 0xF5 are gone (the sleeps stay).
+        SceExec(0x12, (TaskFunc) r227_ps2SendTask, 0, 0, SCE_PRIO_DEF_2, 0);
+        cEmWrap e0;
+        cEmWrap e1;
+        cEmWrap e2;
+        cEmWrap e3;
+        cEmWrap e4;
+        e0.setEm(0xF0, -1, 0, 1, 1);
+        e1.setEm(0xF1, -1, 0, 1, 1);
+        e2.setEm(0xF2, -1, 0, 1, 1);
+        e3.setEm(0xF8, -1, 0, 1, 1);
+        e4.setEm(0xF9, -1, 0, 1, 1);
+        e1.setGoto(&pPL->pos, 0xB);
+        e1.setCharacter(2);
+        e2.setGoto(&pPL->pos, 0xB);
+        e2.setCharacter(2);
+        SceEventStart(1);
+        e0.setNoSuspend(1);
+        e1.setNoSuspend(1);
+        e2.setNoSuspend(1);
+        e3.setNoSuspend(1);
+        e4.setNoSuspend(1);
+        CamCtrl.CutCall(5);
+        while (CamCtrl.IsMotionEnd() == 0) {
+            if (Key.trg & 0x20000000ULL) {
+                FadeSetW(0x80000000, 10, 0, 0);
+                SubScreenWait(20);
+                break;
+            }
+            SceSleep(1);
+        }
+        CamCtrl.Comeback(0);
+        e0.setNoSuspend(0);
+        e1.setNoSuspend(0);
+        e2.setNoSuspend(0);
+        e3.setNoSuspend(0);
+        e4.setNoSuspend(0);
+        SceEventEnd(0);
+        SceSleep(450);
+        e3.setGoto(&pPL->pos, 0xB);
+        e3.setCharacter(2);
+        e4.setGoto(&pPL->pos, 0xB);
+        e4.setCharacter(2);
+        SceSleep(450);
+        SceSleep(450);
+        SceSleep(450);
+        return;
+    }
+#endif
     cEmWrap e0;
     cEmWrap e1;
     cEmWrap e2;
