@@ -1,0 +1,15 @@
+# lane stump17 (10-17) stump still pair: the r101 cross view (viewdist still2-cross-0), the crowd alerted; the rig kills
+# the Ganado nearest Leon with head hits (killnear, killpart 5) so the corpse loses its head in view; frozen at tick 420.
+name stump-still-r101
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+kill 0x15 150 0x101 1
+killrep 6 30
+killpart 5
+killnear
+freeze 420

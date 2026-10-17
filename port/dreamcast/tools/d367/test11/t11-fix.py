@@ -416,6 +416,10 @@ if os.path.exists(C16D + '/cast16-data.json'):
 # model drew on every pass. Its 4 textures are already in pak17's tex.pak (r113p / r118p), so no loose texture.
 R108PD = os.environ.get('R108PD', '/root/re4data/private/castgc17-20261017/r108p')
 DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
+# lane stump17 (10-17): ACTOR_GANADO_PS2_STUMP's variant package (the exact PS2 lost-head stumps of the five cast
+# appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
+STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')
+DATA['stump17'] = {'dc/native/ganado/ganado_var.re4gv': STUMP17D + '/ganado_var.re4gv'}
 PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261016')
 DATA['pak17'] = {'dc/tex.pak': PAK17D + '/tex.pak'}
 DROP_LOOSE = {'pak17': PAK17D + '/loose-keys.txt'}

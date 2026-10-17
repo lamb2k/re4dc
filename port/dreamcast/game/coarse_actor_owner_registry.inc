@@ -113,9 +113,9 @@ extern "C" unsigned re4dc_ui_frame();
 namespace {
 // Immutable asset IDs after the transaction's fixed table (coarse_actor_geometry_once.inc).
 #if RE4DC_CROWD_FAR
-constexpr unsigned kRegistryAsset0=66u+1u+RE4DC_ACTOR_GANADO_PS2_STUMP;
+constexpr unsigned kRegistryAsset0=66u+1u+RE4DC_GANADO_STUMP_IDS;
 #else
-constexpr unsigned kRegistryAsset0=46u+1u+RE4DC_ACTOR_GANADO_PS2_STUMP;
+constexpr unsigned kRegistryAsset0=46u+1u+RE4DC_GANADO_STUMP_IDS;
 #endif
 constexpr unsigned kRegistryAssetEnd=kRegistryAsset0+kRegGeometry;  // one past the last ID (one per unique geometry)
 // The registry as the owner path reads it: the compiled bundle, or the published room package.

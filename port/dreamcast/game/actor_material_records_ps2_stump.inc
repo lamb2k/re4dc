@@ -1,6 +1,40 @@
-// Exact original GC em13/em15 BIN479 facts, derived by ps2_ganado_stump.py.
-// Mesh bytes remain private; this table only certifies the source-selected head.
-static const Part p_ps2_stump_479[] = {
+// Exact original GC BIN facts of the source-selected Ganado variants (em10HeadSet mot[3] lost-head stumps,
+// em10HandSet hand poses 449 / 450 / 454 / 455), derived by tools/d367/ps2_ganado_stump.py. Mesh bytes remain
+// private; this table only certifies the source-selected infos (one Part / Model per BIN; each BIN is identical
+// in every archive carrying it).
+static const Part p_ps2_var_475[] = {
 {{0u,0u,255u,255u,255u,0u,0u,0u,0u,0u,0u,0u,255u},1216u,90u,2547107957u,2929956944u},
 };
-static const Model m_ps2_stump_479 = {{2684354560u,4u,34u,52u,52u,3u,7u,7u,1u,536938497u},{416u,1731146468u,2778518444u},{208u,2871405324u,2663012294u},{56u,2622483144u,3885395824u},{360u,1464001380u,3084075392u},p_ps2_stump_479};
+static const Model m_ps2_var_475 = {{2147483648u,4u,36u,52u,52u,3u,7u,7u,1u,536938497u},{416u,2613763704u,570617356u},{416u,2811432778u,3064145328u},{56u,2622483144u,3885395824u},{360u,1464001380u,3084075392u},p_ps2_var_475};
+static const Part p_ps2_var_447[] = {
+{{0u,0u,255u,255u,255u,0u,0u,0u,0u,0u,0u,0u,255u},1216u,88u,1504507036u,3040972881u},
+};
+static const Model m_ps2_var_447 = {{2684354560u,4u,34u,50u,50u,3u,7u,7u,1u,536938497u},{400u,861296857u,4194482135u},{200u,3009632247u,3606777650u},{56u,2622483144u,3885395824u},{352u,703091947u,596749299u},p_ps2_var_447};
+static const Part p_ps2_var_479[] = {
+{{0u,0u,255u,255u,255u,0u,0u,0u,0u,0u,0u,0u,255u},1216u,90u,2547107957u,2929956944u},
+};
+static const Model m_ps2_var_479 = {{2684354560u,4u,34u,52u,52u,3u,7u,7u,1u,536938497u},{416u,1731146468u,2778518444u},{208u,2871405324u,2663012294u},{56u,2622483144u,3885395824u},{360u,1464001380u,3084075392u},p_ps2_var_479};
+static const Part p_ps2_var_483[] = {
+{{0u,0u,255u,255u,255u,0u,0u,0u,0u,0u,0u,0u,255u},1216u,88u,319775234u,539992568u},
+};
+static const Model m_ps2_var_483 = {{2684354560u,4u,34u,50u,50u,3u,2u,2u,1u,536938497u},{400u,2014590274u,3828477105u},{200u,4110636462u,3072137485u},{16u,1342537626u,3770307925u},{348u,3188760939u,3348473350u},p_ps2_var_483};
+static const Part p_ps2_var_460[] = {
+{{0u,0u,255u,255u,255u,0u,0u,0u,0u,0u,0u,0u,255u},1216u,88u,1504507036u,3040972881u},
+};
+static const Model m_ps2_var_460 = {{2684355328u,4u,34u,50u,50u,3u,1u,1u,1u,537069592u},{400u,1794561806u,2954713278u},{200u,622092743u,3760284038u},{8u,2921566704u,3570650560u},{352u,703091947u,596749299u},p_ps2_var_460};
+static const Part p_ps2_var_449[] = {
+{{0u,2u,255u,255u,255u,0u,0u,0u,0u,0u,0u,0u,255u},2496u,217u,634125105u,556828952u},
+};
+static const Model m_ps2_var_449 = {{2147484416u,4u,34u,114u,114u,3u,2u,2u,1u,537069592u},{912u,1682775273u,2836891658u},{912u,2711109255u,1150857196u},{16u,564339596u,1966452497u},{700u,641173998u,1167924792u},p_ps2_var_449};
+static const Part p_ps2_var_450[] = {
+{{0u,2u,255u,255u,255u,0u,0u,0u,0u,0u,0u,0u,255u},2496u,217u,3641054988u,1534844006u},
+};
+static const Model m_ps2_var_450 = {{2147484416u,4u,34u,114u,114u,3u,2u,2u,1u,537069592u},{912u,635950898u,349531360u},{912u,2887085193u,1625809384u},{16u,564339596u,1966452497u},{700u,1604073923u,272925336u},p_ps2_var_450};
+static const Part p_ps2_var_454[] = {
+{{0u,2u,255u,255u,255u,0u,0u,0u,0u,0u,0u,0u,255u},2560u,217u,1767087690u,3637799140u},
+};
+static const Model m_ps2_var_454 = {{2147484416u,4u,34u,114u,114u,3u,2u,2u,1u,537069592u},{912u,4155845366u,2270685229u},{912u,3241174007u,164718273u},{16u,922119481u,609657675u},{700u,901021376u,1894476040u},p_ps2_var_454};
+static const Part p_ps2_var_455[] = {
+{{0u,2u,255u,255u,255u,0u,0u,0u,0u,0u,0u,0u,255u},2560u,217u,1767087690u,3637799140u},
+};
+static const Model m_ps2_var_455 = {{2147484416u,4u,34u,114u,114u,3u,2u,2u,1u,537069592u},{912u,3097585244u,3303742161u},{912u,2013683620u,468085544u},{16u,922119481u,609657675u},{700u,901021376u,1894476040u},p_ps2_var_455};

@@ -1,0 +1,16 @@
+# lane stump17 (10-17) CAST-GC stump gate: every rig kill hits the head hit box (killpart 5), so each kill loses the head
+# (em10LostHead -> em10HeadSet mot[3]) and the corpse draws its stump. <= 60 s. Census build: period 30.
+name ch2-cap6-r200-stump
+room 0x200
+pos -94 9 -196
+ang 1.4270
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+alivelog 60
+census 300
+act 360 fwd 12
+kill 0x12 200 0x200 1
+killrep 30 45
+killpart 5

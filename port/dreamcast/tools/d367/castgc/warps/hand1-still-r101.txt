@@ -1,0 +1,12 @@
+# lane stump17 (10-17) hand-pose still pair: the r101 cross view, the crowd alerted; at room frame 150 the em15 nearest
+# Leon shows hand pose 1 on both hands (cEm10::setHand: BIN 449 right, 454 left); frozen at tick 400.
+name hand1-still-r101
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+handpose 150 1 0x15
+freeze 400

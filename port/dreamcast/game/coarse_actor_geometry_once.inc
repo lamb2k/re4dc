@@ -16,9 +16,9 @@ struct ActorImmutableChunk {
 constexpr unsigned kActorImmutableChunks=kRegistryAssetEnd-1u;
 #elif RE4DC_CROWD_FAR
 // Lane crowd far tier: IDs 47..66 are the far bundle's chunks (coarse_actor_owner_ganado.inc kOwnerFarAsset+a*4+role).
-constexpr unsigned kActorImmutableChunks=66+RE4DC_ACTOR_GANADO_PS2_STUMP;
+constexpr unsigned kActorImmutableChunks=66+RE4DC_GANADO_STUMP_IDS;
 #else
-constexpr unsigned kActorImmutableChunks=46+RE4DC_ACTOR_GANADO_PS2_STUMP;
+constexpr unsigned kActorImmutableChunks=46+RE4DC_GANADO_STUMP_IDS;
 #endif
 #if RE4DC_ACTOR_PL08
 // ACTOR_PL08: the three pl08-only chunks (roles 0, 1, 8) follow every fixed ID. Its other roles and the 14 hair runs
