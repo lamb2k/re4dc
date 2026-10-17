@@ -2577,7 +2577,7 @@ constexpr bool avk_emit_ref = false;
 #endif
 template <bool SQ>
 inline void* emit_meshlet(void* dst, const pvr_vertex_t* cache, const u8* index, unsigned n) {
-#if RE4DC_TA_HASH
+#if RE4DC_TA_HASH && RE4DC_TA_HASH != 4
     // TA_HASH (test builds): a store-queue meshlet's words as every copy below sends them: the cache entry with its
     // flags word from index bit 7 (EOL ends a strip). Whole meshlets (Part::whole, the common direct case and the
     // ONE_SUBMIT window) were the actor fast path's unhashed writer (review 2026-10-04).
@@ -2713,7 +2713,7 @@ inline void* emit_meshlet(void* dst, const pvr_vertex_t* cache, const u8* index,
 // EOL goes into the last vertex before its burst leaves.
 inline std::uint32_t* emit_sq(std::uint32_t* sq, const pvr_vertex_t* cache, const u8* index, unsigned n) {
     const std::uint32_t eol = PVR_CMD_VERTEX_EOL;
-#if RE4DC_TA_HASH
+#if RE4DC_TA_HASH && RE4DC_TA_HASH != 4
     // TA_HASH (test builds): the words this strip sends (EOL in the last flags word), as re4dc_ta_put hashes its own.
     for (unsigned k = 0; k < n; ++k) {
         std::uint32_t w[8];

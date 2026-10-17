@@ -1,0 +1,10 @@
+# r101 16-bit pictures re-encoded as full-codebook VQ at PSNR >= 29 dB (lane vram101 10-17; data set v101). Below the
+# floor and kept 16-bit: 8fb3f08f (26.5 dB), 9fccb559 (25.7), ded04d98 (25.3).
+5d59dae9-d24e5062
+6596bca3-f2f292f2
+6da8c35b-a936da0c
+7f76faec-d6d4ccc3
+d6a5de24-f5e97f84
+e224e969-04254881
+f52df17e-83f5bb15
+f9829cd1-2d3fae29
