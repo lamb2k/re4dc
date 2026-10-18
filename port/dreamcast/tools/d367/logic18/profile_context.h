@@ -116,6 +116,8 @@ static void l18_before(uint32_t pc,uint16_t op) {
             if(l18_depth>=256) l18_die("call depth overflow");
             unsigned n=l18_new(l18_stack[l18_depth-1],entry,L18_CALL,p.ret);
             l18_stack[l18_depth++]=n;
+        } else if((p.action==L18_DO_JUMP || p.action==L18_DO_COND) && entry && l18_symbols[entry].barrier) {
+            l18_abandon(L18_THREAD);
         } else if(p.action==L18_DO_JUMP || p.action==L18_DO_COND) {
             L18Node *active=&l18_nodes[l18_stack[l18_depth-1]];
             unsigned symbol=active->symbol;
