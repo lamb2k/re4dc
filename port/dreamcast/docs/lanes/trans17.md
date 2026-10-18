@@ -38,10 +38,12 @@ Coordinator decisions (10-17):
   - door103: STRICT; decisions differ only at ep@1176, which land17 shows between two knob-off runs (run noise).
 - **Look** (frozen frames, A = trans 0, silhouette = transdbg):
   - FLAT: r109 tier 3 (28 % changed, max 107); r119 tier 3 (2.4 %, max 82). Stills are in flat\.
-  - CARD: r100 / r101 0 px changed; r109 tier 3 (0.10 %, max 33, 4 px outside the mask); r119 under its frozen-frame
-    noise (r119 A vs A repeats differ, so its numbers are not usable).
-  - SOFTA: r100 / r101 / r109 0 px changed (FOLIAGE Near already moves the near ch1 cards).
-  - FAR: r100 / r101 / r109 0 px at 70/90; r100 0.002 % (max 8) at 50/70: tier 2. The cuts land at 23.5 / 25.0 m
+  These numbers use each run's first stable shot: later shots are the 30 s HANG screen that freeze triggers. A
+  repeated A run in r119 is pixel-identical, so the frozen frames are deterministic. Pngs and json are in census2\.
+  - CARD: r100 / r101 0 px changed; r109 tier 3 (0.10 %, max 33, 4 px outside the mask); r119 tier 3 (0.014 %, max 36,
+    3 px outside). Both just miss the thresholds.
+  - SOFTA: 0 px changed in r100 / r101 / r109 / r119 (FOLIAGE Near already moves the near ch1 cards).
+  - FAR: 0 px in all four rooms at 70/90; r100 0.002 % (max 8) at 50/70: tier 2. The cuts land at 23.5 / 25.0 m
     (70/90) or 22.2 / 23.5 m (50/70) against the 25 m fog far, so FAR removes almost nothing.
 - **Flycast ms:**
   - FLAT: r109 CPU 47.4 ms in both arms, r119 41.0 ms in both.
