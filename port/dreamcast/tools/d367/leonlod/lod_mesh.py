@@ -20,7 +20,8 @@ Rules (per role; roles share no vertices):
   (|w_u - w_v|_1 x edge length)^2 x area. Rejected: flips (normal turns > ~70 deg), link-condition breaks, slivers.
 
 spec.json: {"targets": {"<role>": {"<region>|*": triangles}}, "keep_roles": [5, 6], "allow_border": [7],
-            "max_error_mm": null | {"<role>": {"<region>|*": mm}}, "w_bone": 1.0}
+            "max_error_mm": null | {"<role>": {"<region>|*": mm}}, "w_bone": 1.0, "locked_vertices": []}
+locked_vertices lists immutable source vertex indices (for example, all corners of a boss hand or weak point).
 A region target counts the triangles whose part (largest summed bone weight over the corners, leon_sources
 bone_regions) is that region; u may collapse while its own part's target is not yet met.
 """
@@ -349,7 +350,10 @@ def main():
     for t in mesh['triangles']:
         csize[find(t['corners'][0]['vertex'])] += 1
     lcb = spec.get('lock_components_below', 0)
-    locked_v = set()
+    explicit_locks = spec.get('locked_vertices', [])
+    if not isinstance(explicit_locks, list) or any(type(v) is not int or not 0 <= v < len(P) for v in explicit_locks):
+        raise ValueError('locked_vertices must be a list of source vertex indices within the mesh')
+    locked_v = set(explicit_locks)
     for t in mesh['triangles']:
         lim = lcb.get(str(t['source_info']), 0) if isinstance(lcb, dict) else lcb
         for c in t['corners']:
@@ -358,6 +362,8 @@ def main():
     before = {}
     out_tris = {}
     report = dict(roles={}, spec=spec)
+    if explicit_locks:
+        report['explicit_locked_vertices'] = len(set(explicit_locks))
     for r in sorted(by_role):
         R = Role(r, by_role[r], P, W, reg, junction[r], r in allow_roles, locked_v)
         R.sliver = float(spec.get('sliver', 25.0))
