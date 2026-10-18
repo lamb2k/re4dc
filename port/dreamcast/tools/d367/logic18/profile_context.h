@@ -70,6 +70,17 @@ static void l18_abandon(unsigned kind) {
     l18_depth=1; l18_stack[0]=l18_new(0,0,kind,0);
     l18_pending.action=L18_NONE;
 }
+static void l18_tail(unsigned target_entry) {
+    unsigned old=l18_stack[l18_depth-1];
+    l18_nodes[old].invalid=1;
+    if(l18_depth<=1) { l18_abandon(L18_TAIL); return; }
+    /* Keep proven caller ancestry, but never claim this tail's function identity.
+     * Only its observed eventual return address can validate rejoining callers. */
+    unsigned n=l18_new(l18_stack[l18_depth-2],0,L18_TAIL,l18_nodes[old].ret);
+    if(!l18_irqdepth && target_entry && l18_symbols[target_entry].owner)
+        l18_nodes[n].owner=l18_symbols[target_entry].owner;
+    l18_stack[l18_depth-1]=n;
+}
 static int l18_irq_entry(uint32_t pc) {
     return l18_vbr && (pc==l18_vbr+0x100 || pc==l18_vbr+0x400 || pc==l18_vbr+0x600);
 }
@@ -111,7 +122,7 @@ static void l18_before(uint32_t pc,uint16_t op) {
             int inside=symbol && pc>=l18_symbols[symbol].start && pc<l18_symbols[symbol].end;
             /* A same-entry unconditional transfer may be tail recursion. */
             if(active->kind==L18_CALL && (!inside || (p.action==L18_DO_JUMP && entry)))
-                l18_abandon(L18_TAIL);
+                l18_tail(entry);
         }
     } else if(l18_pending.action && l18_pending.slots) --l18_pending.slots;
     l18_current=l18_stack[l18_depth-1];

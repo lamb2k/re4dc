@@ -72,13 +72,31 @@ static void no_nearest_symbol_guess(void) {
     assert(l18_entry(0x200)==2 && l18_function(0x200)==0);
     l18_symbols[2].end=saved;
 }
+static void tail_preserves_only_proven_callers(void) {
+    setup(); unsigned a=call(0x80,0x100), b=call(0x102,0x200);
+    execute(0x202,0x402b); execute(0x204,0x0009); execute(0x334,0x0009);
+    unsigned tail=l18_current;
+    assert(l18_nodes[b].invalid && !l18_nodes[a].invalid);
+    assert(l18_nodes[tail].kind==L18_TAIL && l18_nodes[tail].symbol==0);
+    assert(l18_nodes[tail].owner==1 && l18_nodes[tail].parent==a);
+    ret(0x340,0x106); assert(l18_current==a);
+    ret(0x110,0x84); assert(l18_nodes[a].complete && !l18_nodes[a].invalid);
+    setup(); b=call(0x80,0x200);
+    execute(0x202,0xa000); execute(0x204,0x0009); execute(0x100,0x0009);
+    tail=l18_current;
+    assert(l18_nodes[tail].symbol==0 && l18_nodes[tail].owner==1);
+    ret(0x110,0x84); assert(l18_nodes[tail].complete && !l18_nodes[tail].invalid);
+    setup(); a=call(0x80,0x100); b=call(0x102,0x200);
+    execute(0x202,0xa000); execute(0x204,0x0009); execute(0x300,0x0009);
+    ret(0x310,0x555); assert(l18_nodes[a].invalid && !l18_nodes[l18_current].owner);
+}
 static void conservative_jumps(void) {
     uint32_t targets[]={0x234,0x500,0x100};
     for(unsigned i=0;i<3;i++) {
         setup(); unsigned a=call(0x80,0x100);
         execute(0x102,0x402b); execute(0x104,0x0009); execute(targets[i],0x0009);
         assert(l18_nodes[a].invalid && !l18_nodes[a].complete);
-        assert(l18_nodes[l18_current].kind==L18_TAIL && !l18_nodes[l18_current].owner);
+        assert(l18_nodes[l18_current].kind==L18_TAIL && l18_nodes[l18_current].owner==(targets[i]==0x100 ? 1U : 0U));
     }
     setup(); unsigned a=call(0x80,0x100);
     execute(0x102,0xa000); execute(0x104,0x0009); execute(0x120,0x0009);
@@ -92,7 +110,7 @@ static void conservative_jumps(void) {
     execute(0x500,0x0009); assert(l18_nodes[a].invalid);
 }
 int main(void) {
-    nested_and_delayed(); conservative_jumps(); recursive(); tail_and_sparse_cut(); interrupt_and_thread(); no_nearest_symbol_guess();
+    nested_and_delayed(); tail_preserves_only_proven_callers(); conservative_jumps(); recursive(); tail_and_sparse_cut(); interrupt_and_thread(); no_nearest_symbol_guess();
     puts("PASS nested recursive tail delay-slot deferred-charge IRQ context-switch sparse-cut exact-range conservation");
     return 0;
 }

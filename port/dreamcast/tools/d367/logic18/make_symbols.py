@@ -10,7 +10,7 @@ import subprocess
 OWNERS = {
     'cPlayer::move()': 1,
     'cEm10::move()': 2,
-    'ObjMove': 3,
+    'cObjMgr::move()': 3,
     'EspMove': 4,
 }
 BARRIERS = {'arch_switch_to', 'thd_switch', 'irq_set_context', 'arch_irq_set_context'}
