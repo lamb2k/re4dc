@@ -8,6 +8,8 @@ section's PS2 bone table must equal the GC BIN's (bone id == GC part attach id, 
 within --bone-tol mm); PS2 weight bone ids are then GC part indices (identity map, checked per bone). The
 appearance's signatures stay the GC source infos' (the runtime identifies the game's loaded GC model by them
 and draws the converted mesh in its place).
+Selected presets can instead declare source-pinned same-id/parent inverse-bind offsets: the authored PS2 vertices
+and original GC skeleton stay unchanged, while the retarget's actual animated look remains a review requirement.
 
 Stage 1, `convert` (Windows Python: numpy, PIL):
   inputs/        emXX.dat from the PS2 disc (ISO9660 -> BIO4DAT.AFS) and emXX.drs from the GC debug disc,
@@ -487,6 +489,30 @@ PRESETS['gunship-em3a-02'] = dict(archive='em3a', sections=[(0xb, 'body')], tpl=
 # em32.cpp (U-3, r31b) modelInit(ARC 4, ARC 5) + ModInfoMgr.create(ARC 6, ARC 5) and the texture-blended skin (ARC 7, ARC 5).
 PRESETS['u3-em32-00'] = dict(archive='em32', sections=[(4, 'body'), (6, 'extra'), (7, 'skin')], tpl=5, rooms=['r31b'], types=[0],
                              category='registry', model_id=0x32, lit=True, ps2_superset_bones=True, shift=2)
+# boss18 r228 (2026-10-18): original em38_R0_Init roles and weak obj00 attachment.
+# The body adds BIN9/TPL10. Types1/2 share BIN5; type4 is the static roots.
+# All keep source raw UVs with verified sampler gutters and the original GC skeleton.
+PRESETS['queen-em38-00'] = dict(archive='em38', sections=[(4, 'body'), (9, 'eye')], tpl=8, section_tpls={9: 10},
+    rooms=['r228'], types=[0], category='boss', model_id=0x38, shift=1, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+PRESETS['tentacle-em38-01'] = dict(archive='em38', sections=[(5, 'body')], tpl=8,
+    rooms=['r228'], types=[1, 2], category='boss', model_id=0x38, shift=0, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+PRESETS['roots-em38-04'] = dict(archive='em38', sections=[(7, 'body')], tpl=8,
+    rooms=['r228'], types=[4], category='boss', model_id=0x38, shift=0, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+PRESETS['weak-em38-obj00'] = dict(archive='em38', sections=[(0x51, 'body')], tpl=0x52,
+    rooms=['r228'], types=[], category='registry', model_id=0, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+# Upper type3 has matching21 ids/parents but different rest translations. This is
+# a declared inverse-bind retarget for review, not a wider --bone-tol. Its used
+# TPL8 image26 needs the existing character-specific odd-interlace transpose.
+PRESETS['salazar-em38-03'] = dict(archive='em38', sections=[(6, 'body')], tpl=8,
+    rooms=['r228'], types=[3], category='boss', model_id=0x38, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True, character_tpl_orientation=True,
+    source_bind_offsets={6: dict(kind='same-id-parent-gc-inverse-bind',
+        ps2_sha256='3e4f8cd94fd8969b80853ef42a58ed17eb0c7c801a6a0c5e9ecbcf021c0da9f6',
+        gc_sha256='ac402a6b47c45d3247fbf898a1c4536adf9b6bb985ee2665fae6394f2e97fdc6')})
 # em3d.cpp (r320) modelInit(ARC 5, ARC 6). Converts (shift 1), but no room package yet: its body has three GC masked materials
 # (colours 1 / 3 / 20, masks 2 / 4 / 21): ps2_mask_runs.py --multi-mask bakes all three into one mask run (lane geodrop17;
 # r320 package spec model-registry/ps2-ch5-r320.json, model_registry.py --roles5 --role-tex23: its TPL 6 has 23 images).
@@ -723,6 +749,44 @@ def winding_agreement(verts, tris, corner_normals):
 # ------------------------------------------------------------------------------------------ convert
 
 
+def source_bind_offsets(pbin, gbin, ps2_bones, gc_bones, contract):
+    """Prove a declared same-id/parent virtual-root bind mapping, not identity.
+
+    The PS2 vertices stay at their authored positions. G_world * G_rest^-1
+    binds them through the original GC skeleton. A virtual PS2 root offset
+    G_rest^-1 * P_rest represents that mapping exactly; animated look still
+    needs source-pose and user review. Source byte identities pin this policy.
+    """
+    if set(contract) != {'kind', 'ps2_sha256', 'gc_sha256'} or contract['kind'] != 'same-id-parent-gc-inverse-bind':
+        raise ValueError('unsupported explicit bind-offset contract')
+    if contract['ps2_sha256'] != sha(pbin) or contract['gc_sha256'] != sha(gbin):
+        raise ValueError('bind-offset source BIN identity changed')
+    if not ps2_bones or len(ps2_bones) != len(gc_bones):
+        raise ValueError('bind-offset source skeleton cardinality changed')
+    rests, offsets = {}, []
+    for i, (p, g) in enumerate(zip(ps2_bones, gc_bones)):
+        if (p['id'], p['parent']) != (g['attach'], g['parent']) or p['id'] != i or g['id'] != i:
+            raise ValueError('bind-offset mapping requires the complete same-id/parent tables')
+        if len(p['pos']) != 3 or not all(math.isfinite(x) for x in p['pos']):
+            raise ValueError('invalid PS2 bind translation')
+        rest = np.eye(4)
+        rest[:3, 3] = p['pos']
+        if p['parent'] >= 0:
+            if p['parent'] not in rests:
+                raise ValueError('bind-offset PS2 parent must precede its child')
+            rest = rests[p['parent']] @ rest
+        rests[i] = rest
+        gc_rest = np.asarray(g['rest'])
+        if gc_rest.shape != (4, 4) or not np.isfinite(gc_rest).all():
+            raise ValueError('invalid GC bind matrix')
+        offset = np.linalg.inv(gc_rest) @ rest
+        offsets.append(dict(id=i, parent=p['parent'], gc_to_ps2_virtual_rest_offset=offset.tolist(),
+                            offset_length_mm=float(np.linalg.norm(offset[:3, 3]))))
+    return dict(contract=contract, offsets=offsets,
+                maximum_virtual_world_offset_mm=max(x['offset_length_mm'] for x in offsets),
+                animation_evidence='NONE: source inverse-bind correspondence only; actual poses and look pending')
+
+
 def gutter_texture(rgba, width, height, uv_bounds, wrap):
     """Extend source texels for unchanged raw UVs in an atlas (optional).
 
@@ -774,9 +838,17 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
         tpl_records.append(dict(arc=hex(tpl_arc), bytes=len(tpl), sha256=sha(tpl)))
         for h in tp['entries']:
             w, ht, rgba, st = ptd.decode(tpl, h)
+            orientation = {}
+            if spec.get('character_tpl_orientation'):
+                from ps2_luis import character_image
+                image = character_image(Image.frombytes('RGBA', (w, ht), bytes(rgba)), h['interlace'])
+                orientation = dict(storage_size=[w, ht], interlace=h['interlace'],
+                                   character_orientation='transpose' if h['interlace'] & 1 else 'identity',
+                                   decoded_rgba_sha256=sha(bytes(rgba)), oriented_rgba_sha256=sha(image.tobytes()))
+                w, ht, rgba = *image.size, image.tobytes()
             images.append(dict(index=len(images), width=w, height=ht, rgba=bytes(rgba), format=ptd.describe(h)['format'],
-                               alpha_raw=sorted(st['alpha_raw_hist'])))
-    sections, used = [], []
+                               alpha_raw=sorted(st['alpha_raw_hist']), **orientation))
+    sections, used, bind_offsets = [], [], {}
     for si, (arc, role, tpl_arc) in enumerate(selections):
         assert spec['category'] != 'human' or role == ROLES[si]
         pbin = ps2_entry(ps2, arc, 'BIN')
@@ -845,7 +917,13 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
             id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in pairs)
             dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], g['translation'])) for pb_, g in pairs)
             dt_body = max(max(abs(x - y) for x, y in zip(g['translation'], b['translation'])) for g, b in zip(gsk, bones))
-        assert id_parent and dt <= bone_tol, (role, id_parent, dt)
+        assert id_parent, (role, 'source skeleton identity/parent mismatch')
+        contract = spec.get('source_bind_offsets', {}).get(arc)
+        if contract is not None:
+            assert len(gsk) == len(bones), 'bind offsets require a complete body-table section'
+            bind_offsets[si] = source_bind_offsets(pbin, gbin, m.bones, gsk, contract)
+        else:
+            assert dt <= bone_tol, (role, id_parent, dt)
         tris = pb.triangles(m)
         for mat in m.materials:
             image_index = tpl_bases[tpl_arc] + mat['diffuse']
@@ -1000,12 +1078,25 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                   source_archive_sha256=rec['gc']['sha256'], ps2_archive_sha256=rec['ps2']['sha256'],
                   bones=[dict(id=b['id'], parent=b['parent'], address=f'{spec["archive"]}:part:{b["id"]}', rest=b['rest'], capture=b['capture'])
                          for b in bones], infos=infos, category=spec['category'], rooms=spec['rooms'], types=spec['types'])
+    if bind_offsets:
+        from ps2_luis import bind_pose_proof
+        for si, proof in bind_offsets.items():
+            ts = [t for t in triangles if t['source_info'] == si]
+            vids = sorted({c['vertex'] for t in ts for c in t['corners']})
+            proof['algebra'] = bind_pose_proof(sections[si]['bin'].bones, bones, {i: i for i in range(len(bones))},
+                                              [positions[v] for v in vids], [weights[v] for v in vids])
+        source['source_bind_offsets'] = bind_offsets
+        val['source_bind_offsets'] = bind_offsets
     sp = out / 'source.json'
     sp.write_text(json.dumps(source))
     mesh = dict(schema='re4dc-approved-render-mesh-1', source_sha256=sha(sp.read_bytes()), mesh=preset.replace('-', '_') + '_ps2',
                 positions_mm=positions, weights=weights, bones=source['bones'], triangles=triangles,
                 policy='PS2 source geometry, normals, UVs (atlas cells) and skin weights, bound to the GC skeleton '
                        '(identical bone table); no reduction or refit.')
+    if bind_offsets:
+        mesh['policy'] = ('Authored PS2 geometry, normals, UVs and weights on the original GC skeleton; '
+                          'explicit source-pinned same-id/parent inverse-bind offsets, not identical rest tables. '
+                          'No geometry refit/reduction; actual animated look requires review.')
     mp = out / 'mesh.json'
     mp.write_text(json.dumps(mesh))
     # skin checks: weights, rest and posed surface distance to the GC mesh
@@ -1218,6 +1309,9 @@ def finish(out):
                levels=dict(conservative=level, lean=level),
                texture_package=dict(package='texture/' + tex['key'] + '.re4tex', package_sha256=tex['package_sha256'], key=tex['key'],
                                     width=tex['width'], height=tex['height'], format=tex['format'], vram_bytes=tex['vram_bytes']))
+    if val.get('source_bind_offsets'):
+        man['source_bind_offsets'] = val['source_bind_offsets']
+        man['status'] = 'PS2 geometry on declared GC inverse-bind offsets; source animation/look review pending'
     (out / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps(level, indent=1))
 
