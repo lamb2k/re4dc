@@ -34,6 +34,7 @@ def main():
     for row in data['clusters']:
         me=bpy.data.meshes.new('source-%04d'%row['cluster']);me.from_pydata(row['positions'],[],row['faces']);me.update()
         src=bpy.data.objects.new(me.name,me);bpy.context.collection.objects.link(src)
+        src.location=row['origin']
         src['part']=row['part'];src['cluster']=row['cluster'];src['bin']=row['bin'];src['protected_surface']=True
         ca=me.color_attributes.new(name='BakedLighting',type='FLOAT_COLOR',domain='CORNER')
         uv=me.uv_layers.new(name='SourceUV')
@@ -61,6 +62,7 @@ def main():
             # Store evaluated native Blender output plus the original corner IDs.
             target_mesh=bpy.data.meshes.new('dissolve-%04d'%row['cluster']);bm.to_mesh(target_mesh);target_mesh.update()
             target=bpy.data.objects.new(target_mesh.name,target_mesh);bpy.context.collection.objects.link(target)
+            target.location=row['origin']
             mod=target.modifiers.new('Restore baked lighting','DATA_TRANSFER');mod.object=src
             mod.use_loop_data=True;mod.data_types_loops={'COLOR_CORNER'};mod.loop_mapping='POLYINTERP_NEAREST'
             bpy.context.view_layer.objects.active=target;target.select_set(True)

@@ -40,7 +40,9 @@ def main():
         ts=triangles(p,p['levels'][p['clusters'][ci][6]])
         if not ts:continue
         keys=list(dict.fromkeys(v for t in ts for v in t));ix={v:i for i,v in enumerate(keys)}
-        q=np.array([v[:3] for v in keys],float);positions=q*np.array(m[11:14])+np.array(m[8:11])
+        # Blender float32 vertices stay relative to the mesh grid origin, so
+        # large world offsets cannot erase sub-millimetre quantized positions.
+        q=np.array([v[:3] for v in keys],float);positions=q*np.array(m[11:14])
         far=True;distance=1e30
         for pl in placements[mi]:
             if pl['placement'] in dynamic:far=False
@@ -63,7 +65,8 @@ def main():
         rows.append(dict(mesh=mi,part=pi,cluster=ci,bin=m[0],keys=keys,positions=positions.tolist(),
                          faces=[[ix[v] for v in t] for t in ts],far=far,eligible=eligible,
                          walk_lower_bound_mm=distance,uv_error=uverror,planarity=planar,
-                         constant_lighting=constant,material=pkg.pmeta[pi]))
+                         constant_lighting=constant,material=pkg.pmeta[pi],origin=m[8:11],step=m[11:14],uv_bias=p['parts'][pi][8:10],uv_scale=p['parts'][pi][10:12],
+                         levels=[dict(error=p['levels'][li][2],triangles=triangles(p,p['levels'][li])) for li in range(p['clusters'][ci][6],p['clusters'][ci][6]+p['clusters'][ci][7])]))
     out=dict(source_sha256=hashlib.sha256(blob).hexdigest(),roundtrip_byte_identical=True,
              protection='all static placements; 12m walk band plus conservative sampling guard; dynamic protected',clusters=rows)
     (d/'blender-input.json').write_text(json.dumps(out,separators=(',',':')))
