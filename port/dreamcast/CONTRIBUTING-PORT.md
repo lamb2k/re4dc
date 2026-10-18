@@ -1,8 +1,15 @@
 # Contributing to the Dreamcast port
 
-This page gets you from a fresh clone on Linux (or WSL) to your own build of the game running in
-Flycast or on a Dreamcast with GDEMU. You build only the program. The game data comes from a
-published test release, so you never need the original discs.
+**From a fresh clone on Linux (or WSL) to your own build of the game, in Flycast or on a Dreamcast with GDEMU.**
+You build only the program. The game data comes from a published test release, so you never need the original discs.
+
+**Build your own program, in short:**
+
+1. Install the host packages (below).
+2. Clone with `--recurse-submodules`.
+3. Run `bash port/dreamcast/contrib.sh`.
+4. Open the printed `disc.gdi` in Flycast, or copy its four files to a GDEMU SD card folder.
+5. Put your change behind a default-off knob and open a pull request (section 6).
 
 ## Quick start: one command
 
@@ -19,10 +26,14 @@ Clone with the submodules (SH4ZAM is one, see section 1):
 
     bash port/dreamcast/contrib.sh
 
-It builds the toolchain the first time (about 11 minutes, into `~/re4dc-toolchain`), downloads the
-newest test release and its Build-Assets zip from GitHub and checks them against the release's
-`SHA256SUMS.txt`, builds the program, puts it on the release disc and prints the path of
-`disc.gdi` (under `port/dreamcast/out-contrib/disc`). Options:
+What it does:
+
+* **Toolchain:** builds it the first time (about 11 minutes, into `~/re4dc-toolchain`).
+* **Downloads:** the newest test release and its Build-Assets zip, checked against the release's `SHA256SUMS.txt`.
+* **Build and swap:** builds the program, puts it on the release disc and prints the path of `disc.gdi`
+  (under `port/dreamcast/out-contrib/disc`).
+
+Options:
 
 * `--release <tag>` picks a release by its tag (`test-<source commit>-<date>`, as on the releases page).
   An older release needs the `build-public.sh` of its own source commit (see "Which recipe" below).
@@ -30,19 +41,16 @@ newest test release and its Build-Assets zip from GitHub and checks them against
   (`RE4DC_KOS_BASE`) is used as is.
 * `KNOB=value` arguments go to the build, for example `bash port/dreamcast/contrib.sh MY_FEATURE=1`.
 
-The Build-Assets zip holds the generated character data the release program was built with
-(`ps2leon/`, `ps2ganado/`, and from test 15 `glod/ganado_lod.re4gl`, the lighter villager meshes named by
-`GANADO_LOD_PACK`), so your program draws the same characters as the release. From test 17 it also holds
-`ps2enemych2/`, the PS2 enemy rows of chapters 2-2 and 2-3 (`PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR`, compiled
-into the program), so your program places the same enemies as the release, and `ps2stump/`, the layout header of
-the PS2 lost-head stump / hand-pose package (`ACTOR_GANADO_PS2_STUMP_DIR`; the package `dc/native/ganado/ganado_var.re4gv`
-is in `disc/`). From test 15 it also carries, under
-`re4dc-assets/disc/<disc path>`, the disc data files that changed in test 15 (the chapter 1 sound files
-`st1/r103.dar` and `bgm/aica_str.dat`, `dc/resident.bin`, `dc/tex.pak` and the village world in `dc/native/r101/`);
-they are on the release disc already, so you need them only for a disc of your own. From test 17 `dc/tex.pak` holds every texture (data set `pak17`): the disc and the zip carry no loose
-`dc/tex/<c>/` textures. Built from the release's source commit with its
-Build-Assets zip, the program is byte for byte the release's program (the maintainers check this before
-every release). Downloads are kept, so a second run only rebuilds.
+**The Build-Assets zip:**
+
+* **Character data** the release program was built with: `ps2leon/`, `ps2ganado/`, and `glod/ganado_lod.re4gl`
+  (the lighter villager meshes named by `GANADO_LOD_PACK`). Your program draws the same characters as the release.
+* **Newer disc data files,** under `re4dc-assets/disc/<disc path>`: the chapter 1 sound files `st1/r103.dar` and
+  `bgm/aica_str.dat`, `dc/resident.bin` and `dc/tex.pak`. They are on the release disc already; you need them only
+  for a disc of your own.
+* **Byte for byte:** built from the release's source commit with its zip, the program is the release's program.
+  The maintainers check this before every release.
+* Downloads are kept, so a second run only rebuilds.
 
 ## Where to read next
 
@@ -173,54 +181,69 @@ frames per second and game speed (the VMU shows the Leon, Ashley, Hunnigan and L
 numbers). Frame pacing is set in Options (Fast is the default). Hold X and press START to switch the look
 preset. A build with `SPEED_VMU_OFF=0` puts the speed numbers back on the VMU.
 
-The player options are the rows in Options (START): Frame pacing (stored on the VMU), Rendering (Standard or FSAA,
-knob `RENDER_FSAA`) and View distance (Full, Near or Short, knob `VIEW_DIST_OPTION`: the world is drawn to 25, 18.75
-or 12.5 m and the fog reaches full strength there; drawing only, the game logic is unchanged). Two rules refine it
-(game/option_rows.cpp): a per-room minimum far table, `kViewRoomMin`, keeps rooms that need their horizon at Full (the
-lakes r10b, r11a and r11b); and while the player stands in one of the room's indoor effect areas (the game's
-weather-off areas, `Status_flg[1]` 0x02000000) the fog ramp starts behind that area, so a house interior is not
-fogged while the scenery seen through its doors and windows still fades out before the cut. Rendering and View
-distance are not saved: every boot starts in Standard and Full. Foliage (Full, Near or Off, knobs `FOLIAGE_TRIM`
-(the level word and the boot level, hwfog.mk) and `FOLIAGE_OPTION` (the row)): the translucent PS2 world parts whose
-texture is a near-binary cut-out (leaf / brush cards, fence gaps; key table platform/include/foliage_keys.inc, built
-from an alpha census of the chapter 1 packages) are drawn in the punch-through list up to 12 m at Near, and every listed
-card key (classes 1-4, soft shadow / mist / grass cards included) is left out at Off; surfaces without cut-out holes
-(walls, floors, water), unlisted keys and the vertex-alpha overlays always draw. It is not
-saved either: every boot starts at the recipe's `FOLIAGE_TRIM` level (Near in the release). `FOLIAGE_NEAR_FIX=1`
-(hwfog.mk, recipe group `T15_FN`; render only) makes Near's punch-through pass also visit placements that only have
-translucent parts, so their cut-out cards draw at Near (without it they were drawn in neither pass). Lake far
-(post30.mk, recipe group `T15_LF`; render only): `LAKE_FAR=<mm>` draws r10b (the Del Lago boat) and
-`LAKE_FAR_SHORE=<mm>` (default `LAKE_FAR`) draws r11a / r11b (the shore, day and night) to that far instead of the
-25 m cap, for the PS2 world, the coarse view and the fog; the fog ramp still takes the last 20 %. 0 keeps 25 m; values
-must be above 25000 and need `FOG_FAR_CAP=0`. The release uses 45000 / 45000. Transparency policy (hwfog.mk, recipe
-group `T15_TR`; render only): `TRANS_POLICY=<mask>` reads each room's class sidecar `dc/native/rXXX/ps2-world.r4tc` and
-the index `dc/native/trclass.idx` (disc data set trans17, written by `tools/d367/tr_classify.py`); 1 FLAT draws parts
-whose pictures are uniform 14/15 alpha or fully opaque as solid, 2 CARD draws near-binary cut-out cards as punch-through.
-The release uses 3; a room missing from the index draws as before. `LAKE_NIGHT_FX=1` (effects30.mk, group `T15_LN`)
-draws the night lake's torch flames; their picture is in r11b's resident list (data set res165). The knob `HAZE_SPRITE_CUT=1`
-(hwfog.mk, recipe group `T15_HZ`; render only) leaves out every haze / mist sprite at every Foliage setting: the camera
-haze around Leon (Esp15), the mist sheets (Esp48) and the r118 / r11c PS2 haze additions; the distant haze stays as the
-fog table (`HW_FOG_HAZE`, `EFFECT_HAZE_LEAN`), which is fed before the cut. Docs: docs/MIST_CUT.md. On a warp test disc (`DBG_WARP=1`) the warp line
-`viewdist 0|1|2` starts the run at Full, Near or Short.
-Far shell (knob `FAR_SHELL`, needs `VIEW_DIST_OPTION`; game/platform/far_shell.inc): in a room that has a
-`dc/native/rXXX/far-shell.fsh` (built for r100 and r101; not in the release yet: it loads at room entry at every View
-distance, and r100's 122 KB shell starves heap 4 at the s30 movie, so it waits for a load-at-Short version), Short cuts only the world's opaque pass; the fog,
-the cut-out and see-through world surfaces, characters and objects keep Full's distance, and the room's far shell (a
-simplified copy of the far world, about 3,000 triangles textured with the world's own textures, so no extra graphics
-memory) is drawn beyond the cut, so landmarks stay visible. Build a shell with tools/d367/farshell (README there;
-Windows Python and Blender 5.2) from the room's PS2 world package. Near, and rooms without a file, keep the plain cut. Warp line
-`farshell 0|1|2` (0 = plain cut, 1 = shell, 2 = opaque cut without the shell, for pricing).
-The shell lives in heap 4 only while it can be drawn (docs/lanes/farshell17.md): it is read at Short only (Full and
-Near never read it), lent to every route movie and read again after it, and freed when a heap-4 allocation fails
-(`mem_alloc` and `re4dc_static_alloc` then retry once); that room keeps the plain cut until the option changes. Any
-new heap-4 user near the r100 cliff movie still runs the s30 gate (h2 through s30 at Full and Short). Warp line
-`farshellprobe <room frame>` makes one impossible heap-4 request to test the give-back path.
-Radio call subtitles (knob `RADIO_SUB_RT`, game/subscreen.mk; src/Sscrn/ss_term.cpp): the GameCube steps a call's
-subtitle sequence once per 30 Hz sub screen frame, while the voice plays from the AICA in real time. With the knob
-each call frame runs the steps owed since the voice began to sound (KOS timer, platform/audio_aica.cpp
-`re4dc_aica_stream_started`), so the pages stay with the voice when a call frame takes longer than 1/30 s. The game
-is stopped under the sub screen, so logic is unchanged. Test builds can add `RADIO_SUB_LOG=1` for one log line per
-subtitle page (time since the voice started).
+The player options are the rows in Options (START), and the knobs behind them:
+
+* **Frame pacing:** stored on the VMU.
+* **Rendering:** Standard or FSAA, knob `RENDER_FSAA`. Not saved; every boot starts in Standard.
+* **View distance:** Full, Near or Short, knob `VIEW_DIST_OPTION`. The world is drawn to 25, 18.75 or 12.5 m and the
+  fog reaches full strength there. Drawing only; the game logic is unchanged. Not saved; every boot starts in Full.
+  Two rules refine it (game/option_rows.cpp):
+  * a per-room minimum far table, `kViewRoomMin`, keeps rooms that need their horizon at Full (the lakes r10b, r11a
+    and r11b);
+  * while the player stands in one of the room's indoor effect areas (the game's weather-off areas, `Status_flg[1]`
+    0x02000000), the fog ramp starts behind that area. A house interior is not fogged, while the scenery seen through
+    its doors and windows still fades out before the cut.
+* **Foliage:** Full, Near or Off, knobs `FOLIAGE_TRIM` (the level word and the boot level, hwfog.mk) and
+  `FOLIAGE_OPTION` (the row).
+  * Near draws the translucent PS2 world parts whose texture is a near-binary cut-out (leaf / brush cards, fence gaps)
+    in the punch-through list up to 12 m. The key table is platform/include/foliage_keys.inc, built from an alpha
+    census of the chapter 1 packages.
+  * Off leaves out every listed card key (classes 1-4, soft shadow / mist / grass cards included).
+  * Surfaces without cut-out holes (walls, floors, water), unlisted keys and the vertex-alpha overlays always draw.
+  * Not saved: every boot starts at the recipe's `FOLIAGE_TRIM` level (Near in the release).
+  * `FOLIAGE_NEAR_FIX=1` (hwfog.mk, recipe group `T15_FN`; render only) makes Near's punch-through pass also visit
+    placements that only have translucent parts, so their cut-out cards draw at Near (without it they were drawn in
+    neither pass).
+
+Render knobs in the release recipe:
+
+* **Lake far** (post30.mk, recipe group `T15_LF`; render only): `LAKE_FAR=<mm>` draws r10b (the Del Lago boat) and
+  `LAKE_FAR_SHORE=<mm>` (default `LAKE_FAR`) draws r11a / r11b (the shore, day and night) to that far instead of the
+  25 m cap, for the PS2 world, the coarse view and the fog. The fog ramp still takes the last 20 %. 0 keeps 25 m;
+  values must be above 25000 and need `FOG_FAR_CAP=0`. The release uses 45000 / 45000.
+* **Transparency policy** (hwfog.mk, recipe group `T15_TR`; render only): `TRANS_POLICY=<mask>` reads each room's class
+  sidecar `dc/native/rXXX/ps2-world.r4tc` and the index `dc/native/trclass.idx` (disc data set trans17, written by
+  `tools/d367/tr_classify.py`). 1 FLAT draws parts whose pictures are uniform 14/15 alpha or fully opaque as solid;
+  2 CARD draws near-binary cut-out cards as punch-through. The release uses 3. A room missing from the index draws as before.
+* **Night lake torches:** `LAKE_NIGHT_FX=1` (effects30.mk, group `T15_LN`) draws the night lake's torch flames. Their
+  picture is in r11b's resident list (data set res165).
+* **Haze cut:** `HAZE_SPRITE_CUT=1` (hwfog.mk, recipe group `T15_HZ`; render only) leaves out every haze / mist sprite
+  at every Foliage setting: the camera haze around Leon (Esp15), the mist sheets (Esp48) and the r118 / r11c PS2 haze
+  additions. The distant haze stays as the fog table (`HW_FOG_HAZE`, `EFFECT_HAZE_LEAN`), which is fed before the cut.
+  Docs: docs/MIST_CUT.md.
+* **Warp discs:** on a warp test disc (`DBG_WARP=1`) the warp line `viewdist 0|1|2` starts the run at Full, Near or Short.
+
+Not in the release yet:
+
+* **Far shell** (knob `FAR_SHELL`, needs `VIEW_DIST_OPTION`; game/platform/far_shell.inc). Built for r100 and r101 as
+  `dc/native/rXXX/far-shell.fsh`. It waits for a load-at-Short version: today it loads at room entry at every View
+  distance, and r100's 122 KB shell starves heap 4 at the s30 movie.
+  * In a room with a shell, Short cuts only the world's opaque pass. The fog, the cut-out and see-through world
+    surfaces, characters and objects keep Full's distance.
+  * The shell (a simplified copy of the far world, about 3,000 triangles textured with the world's own textures, so
+    no extra graphics memory) is drawn beyond the cut, so landmarks stay visible.
+  * Build a shell with tools/d367/farshell (README there; Windows Python and Blender 5.2) from the room's PS2 world
+    package. Near, and rooms without a file, keep the plain cut.
+  * Warp line `farshell 0|1|2` (0 = plain cut, 1 = shell, 2 = opaque cut without the shell, for pricing).
+
+Radio call subtitles (knob `RADIO_SUB_RT`, game/subscreen.mk; src/Sscrn/ss_term.cpp):
+
+* **The problem:** the GameCube steps a call's subtitle sequence once per 30 Hz sub screen frame, while the voice plays
+  from the AICA in real time.
+* **The fix:** each call frame runs the steps owed since the voice began to sound (KOS timer, platform/audio_aica.cpp
+  `re4dc_aica_stream_started`), so the pages stay with the voice when a call frame takes longer than 1/30 s.
+* **Logic unchanged:** the game is stopped under the sub screen.
+* **Logging:** test builds can add `RADIO_SUB_LOG=1` for one log line per subtitle page (time since the voice started).
 
 ## 6. Send a patch
 
