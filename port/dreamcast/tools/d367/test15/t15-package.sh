@@ -17,7 +17,9 @@ R=${R:-/root/probe/lanes-20261016/t15rc}
 L=${L:-t15rcrP}
 O=/root/probe/lanes/route/out-$L
 T=$(cd "$(dirname "$0")/.." && pwd)
-export PKG_SRC=${PKG_SRC:-/root/probe/lanes-20261015/t15k/pkgsrc-t14cand}
+# payload root (lane payroot18, 10-18): RE4DC_PAYLOAD_ROOT/tree replaces the lost pkgsrc-t14cand (fullplay/fp_iso.py extract)
+export RE4DC_PAYLOAD_ROOT=${RE4DC_PAYLOAD_ROOT:-/root/re4payload/t164-20261018}
+export PKG_SRC=${PKG_SRC:-$RE4DC_PAYLOAD_ROOT/tree}
 KF=$T/test15/release-knobs.txt
 SHA=${SRC_SHA:-$(head -1 $O/stack.txt | cut -c1-8)}
 DATE=$(date +%Y%m%d)
@@ -33,7 +35,7 @@ if [ ! -s $R/fix/pkg-$L.json ]; then
   D=$(python3 -c "import importlib.util as u;s=u.spec_from_file_location('t','$T/test11/t11-fix.py');m=u.module_from_spec(s);s.loader.exec_module(m);print(m.T15_DATA)")
   python3 $T/test11/t11-fix.py $L $R/fix/pkg-$L.json --data $D
 fi
-PKG_K=$R python3 /root/probe/lanes-20261011/test8/t8-pkgtree.py $L $R/fix/pkg-$L.json | tee $R/logs/pkgtree-$L.txt | tail -1 | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $R/logs/pkgtree-$L.txt; exit 1; }
+PKG_K=$R python3 $T/test8/t8-pkgtree.py $L $R/fix/pkg-$L.json | tee $R/logs/pkgtree-$L.txt | tail -1 | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $R/logs/pkgtree-$L.txt; exit 1; }
 rm -rf $R/gdemu
 (cd $T && bash mkgdi.sh $O/re4dc-game.elf $R/pkgtree $R/gdemu | tail -1)
 (cd $R/gdemu && sha256sum disc.gdi track01.bin track02.raw track03.bin) > $R/gdemu-sha256.txt

@@ -22,6 +22,11 @@ R=${R:-/root/probe/lanes-20261016/t16rc}
 L=${L:-t16rcrP}
 O=/root/probe/lanes/route/out-$L
 T=$R/tree/port/dreamcast/tools/d367
+[ -d "$T" ] || T=$(cd "$(dirname "$0")/.." && pwd)   # no source tree under $R: this script's own tools
+# payload root (lane payroot18, 10-18): the package base tree is RE4DC_PAYLOAD_ROOT/tree (the live release disc's files)
+export RE4DC_PAYLOAD_ROOT=${RE4DC_PAYLOAD_ROOT:-/root/re4payload/t164-20261018}
+export PKG_SRC=${PKG_SRC:-$RE4DC_PAYLOAD_ROOT/tree}
+[ -d "$PKG_SRC" ] || { echo "PKG_SRC $PKG_SRC is missing"; exit 1; }
 SHA=${SRC_SHA:-$(head -1 $O/stack.txt | cut -c1-8)}
 DATE=$(date +%Y%m%d)
 P=${P:-"/mnt/c/Game Dev/Emulators/RE4DC-Test16-Candidate"}
@@ -29,8 +34,11 @@ Z=RE4DC-Console-Test-$SHA-$DATE-GDEMU.zip
 A=RE4DC-Test16-$SHA-Build-Assets.zip
 [ "${LAYOUT:-standard}" = standard ] || { echo "t16-package: the release disc is the standard layout (LAYOUT=$LAYOUT refused)"; exit 1; }
 [ $(wc -l < $O/stack.txt) -le 1 ] || { echo "out-$L was built from a dirty tree"; cat $O/stack.txt; exit 1; }
-python3 $T/release-knobs.py check $O/candidate.txt $T/test16/release-knobs.txt || { echo "test16/release-knobs.txt does not match out-$L (rewrite it: release-knobs.py write)"; exit 1; }
-grep -q RELEASE_NOTES_PLACEHOLDER $T/test16/README-package.txt && { echo "test16/README-package.txt still has its release-notes placeholder"; exit 1; }
+# KD (lane payroot18, 10-18): the release's knob file + README directory; default this tree's test16/. Repackaging an
+# earlier release (e.g. 16.4 from its own branch's test16/) passes that tree's directory.
+KD=${PKG_KIT_DIR:-$T/test16}
+python3 $T/release-knobs.py check $O/candidate.txt $KD/release-knobs.txt || { echo "$KD/release-knobs.txt does not match out-$L (rewrite it: release-knobs.py write)"; exit 1; }
+grep -q RELEASE_NOTES_PLACEHOLDER $KD/README-package.txt && { echo "test16/README-package.txt still has its release-notes placeholder"; exit 1; }
 mkdir -p "$P" $R/logs $R/fix
 if [ ! -s $R/fix/pkg-$L.json ]; then
   D=$(python3 -c "import importlib.util as u;s=u.spec_from_file_location('t','$T/test11/t11-fix.py');m=u.module_from_spec(s);s.loader.exec_module(m);print(getattr(m, '$DATA_SET'))")
@@ -54,7 +62,7 @@ echo "boot file = out-$L program ${want:0:8}"
 (cd $R/gdemu && sha256sum disc.gdi track01.bin track02.raw track03.bin) > $R/gdemu-sha256.txt
 rm -rf "$P/gdemu"; mkdir -p "$P/gdemu"
 for f in disc.gdi track01.bin track02.raw track03.bin; do cp $R/gdemu/$f "$P/gdemu/"; done
-tr -d '\r' < $T/test16/README-package.txt | sed "s/SHA_PLACEHOLDER/$SHA/g" | sed 's/$/\r/' > "$P/README.txt"
+tr -d '\r' < $KD/README-package.txt | sed "s/SHA_PLACEHOLDER/$SHA/g" | sed 's/$/\r/' > "$P/README.txt"
 (cd "$P/gdemu" && sha256sum disc.gdi track01.bin track02.raw track03.bin | sed 's#  #  gdemu/#') > $R/SHA256SUMS-inner.txt
 cmp <(cut -c1-64 $R/SHA256SUMS-inner.txt) <(cut -c1-64 $R/gdemu-sha256.txt) && echo tracks-match-ext4-build
 if [ "${NOZIP:-0}" != 1 ]; then

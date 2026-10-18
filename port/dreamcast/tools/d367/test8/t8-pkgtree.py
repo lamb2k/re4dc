@@ -10,7 +10,10 @@ import filecmp, json, os, shutil, sys
 from pathlib import Path
 import os as _os
 K = Path(_os.environ.get('PKG_K', '/root/probe/lanes-20261011/test8'))
-SRC = Path(_os.environ.get('PKG_SRC', '/root/probe/lanes-20261010/combo/pkgtree'))
+# PKG_SRC default (lane payroot18, 2026-10-18): the payload root's tree/ (RE4DC_PAYLOAD_ROOT: the live release disc's files
+# minus 1ST_READ.BIN, fp_iso.py extract). The old defaults (combo/pkgtree, t15k/pkgsrc-t14cand) went in the 10-17 /root wipe.
+SRC = Path(_os.environ.get('PKG_SRC') or
+           (_os.environ.get('RE4DC_PAYLOAD_ROOT', '/root/re4payload/t164-20261018') + '/tree'))
 lab = sys.argv[1]
 fix = json.load(open(sys.argv[2] if len(sys.argv) > 2 else Path('/root/probe/lanes-20261011/test8/fix') / ('pkg-%s.json' % lab)))
 out = K / 'pkgtree'
