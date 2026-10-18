@@ -800,3 +800,19 @@ $(error RESIDENT_SHARED_R327 needs ROUTE_CH3=1 ROOM_RESIDENT=1 TEX_PKG_SKIP=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_RESIDENT_SHARED_R327=1
 endif
+
+# ACTOR_R300_FULL_SOURCE(default0): source-prepared r300 movie/load/radio-opening transition actors use the same validated
+# native transaction. Full source world and callback order remain unchanged; no coarse image is forced.
+ACTOR_R300_FULL_SOURCE ?= 0
+ifneq ($(filter $(ACTOR_R300_FULL_SOURCE),0 1),$(ACTOR_R300_FULL_SOURCE))
+$(error ACTOR_R300_FULL_SOURCE must be 0 or 1)
+endif
+ifeq ($(ACTOR_R300_FULL_SOURCE),1)
+ifneq ($(ROUTE_CH3)$(PS2_LEON)$(ACTOR_TRANSACTION)$(COARSE_SOURCE_ACTORS),1111)
+$(error ACTOR_R300_FULL_SOURCE needs ROUTE_CH3=1 PS2_LEON=1 ACTOR_TRANSACTION=1 COARSE_SOURCE_ACTORS=1)
+endif
+ifneq ($(ACTOR_EARLY_COARSE)$(ACTOR_SKIN_RESERVE)$(PACE_CHECK),000)
+$(error ACTOR_R300_FULL_SOURCE needs ACTOR_EARLY_COARSE=0 ACTOR_SKIN_RESERVE=0 PACE_CHECK=0)
+endif
+$(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_R300_FULL_SOURCE=1
+endif

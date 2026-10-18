@@ -732,6 +732,9 @@ re4dc_source::FrameLedger sourceActorLedger;
 unsigned sourceActorEpoch,sourceActorFailures,sourceActorCount;
 unsigned sourceActorPrimBase,sourceActorPrimBytes,sourceActorPrimBuffer;
 bool sourceActorActive;
+#if RE4DC_ACTOR_R300_FULL_SOURCE
+bool sourceActorFullPass;
+#endif
 #if RE4DC_ACTOR_TRANSACTION
 // re4dc_coarse_image is a consumed Trans-to-Render handoff, not a callback
 // lifetime. Only this scope grants ownership at original Render OT callbacks.
@@ -765,6 +768,9 @@ void sourceActorFailure(unsigned reason) {
             unsigned(pG->Frame_cnt),reason,sourceActorFailures);
 }
 void sourceActorRetire() {
+#if RE4DC_ACTOR_R300_FULL_SOURCE
+    sourceActorFullPass=false;
+#endif
 #if RE4DC_ACTOR_TRANSACTION
     sourceActorRenderActive=false;
     re4dc_actor_transaction_retire();
@@ -967,6 +973,9 @@ bool sourceActorPrepare() {
     if(!sourceActorLedger.ready(now)){sourceActorFailure(14);return false;}
     return true;
 }
+#if RE4DC_ACTOR_R300_FULL_SOURCE
+#include "source_actor_full_transition.inc"
+#endif
 }
 extern "C" int re4dc_coarse_source_actors_ready() {
     FrameIdentity now{};
@@ -1144,12 +1153,22 @@ void Trans()
     re4dc_actor_transaction_retire();
 #endif
     sourceActorLedger.retire();sourceActorActive=false;
+#if RE4DC_ACTOR_R300_FULL_SOURCE
+    sourceActorFullPass=false;
+#endif
     if(coarseTick && !re4dc_pace_drop_models) {
         // Full/check source path wins before any PTS presentation stage is skipped.
         const int plan=RE4DC_PACE_CHECK?0:sourceActorPlan();
         if(plan<=0) {coarseTick=0;re4dc_coarse_image=0;}
         if(plan<0){OTHER_PHASE(4);return;} // explicit malformed-list failure; never rewalk a cycle
     }
+#if RE4DC_ACTOR_R300_FULL_SOURCE
+    else if(sourceActorFullEligible(coarseTick,roomSwapped)) {
+        const int plan=sourceActorPlan();
+        if(plan<0){OTHER_PHASE(4);return;} // same malformed-list stop, no unsafe original rewalk
+        sourceActorFullPass=plan>0;
+    }
+#endif
     OTHER_PHASE(4);
 #endif
 #endif
@@ -1275,8 +1294,14 @@ void Trans()
     for (u = EmMgr.pAlive; u != 0;) {
         cUnit* cur = u;
         u = u->pNext;
+#if RE4DC_ACTOR_R300_FULL_SOURCE
+        SourceActorFullPreparation sourceActorFullPreparation((cModel*)cur);
+#endif
         func((cModel*) cur);
     }
+#if RE4DC_ACTOR_R300_FULL_SOURCE
+    sourceActorFullFinish();
+#endif
     }
 #if RE4DC_PACE_CATCHUP >= 2
     }
@@ -2567,7 +2592,11 @@ void Render()
     re4dc_coarse_image = 0;
 #if RE4DC_ACTOR_TRANSACTION
     // RAII clears/restores the gate on normal completion and every early return.
+#if RE4DC_ACTOR_R300_FULL_SOURCE
+    SourceActorRenderScope sourceActorRenderScope(coarse!=0 || sourceActorFullReady());
+#else
     SourceActorRenderScope sourceActorRenderScope(coarse!=0);
+#endif
 #endif
 #endif
 #if RE4DC_PS2_FX_COMMON_HAZE && RE4DC_PACE_CATCHUP
