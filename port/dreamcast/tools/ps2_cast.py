@@ -10,6 +10,8 @@ appearance's signatures stay the GC source infos' (the runtime identifies the ga
 and draws the converted mesh in its place).
 Selected presets can instead declare source-pinned same-id/parent inverse-bind offsets: the authored PS2 vertices
 and original GC skeleton stay unchanged, while the retarget's actual animated look remains a review requirement.
+Declared source-pinned addModel attachments may use modelInit's existing body owner part table; their complete
+unused section rest metadata is retained in the proof, including duplicate IDs. No runtime skeleton is replaced.
 
 Stage 1, `convert` (Windows Python: numpy, PIL):
   inputs/        emXX.dat from the PS2 disc (ISO9660 -> BIO4DAT.AFS) and emXX.drs from the GC debug disc,
@@ -513,6 +515,28 @@ PRESETS['salazar-em38-03'] = dict(archive='em38', sections=[(6, 'body')], tpl=8,
     source_bind_offsets={6: dict(kind='same-id-parent-gc-inverse-bind',
         ps2_sha256='3e4f8cd94fd8969b80853ef42a58ed17eb0c7c801a6a0c5e9ecbcf021c0da9f6',
         gc_sha256='ac402a6b47c45d3247fbf898a1c4536adf9b6bb985ee2665fae6394f2e97fdc6')})
+# boss18 Saddler em31.cpp625/630: only BIN4 modelInit constructs83 parts;
+# BIN5 addModel appends model info and uses those parts (model.cpp220/1256/2005).
+# Its143 duplicate-ID PS2 rest records remain in the explicit source proof.
+PRESETS['saddler-em31-00'] = dict(archive='em31', sections=[(4, 'body'), (5, 'head')], tpl=7,
+    rooms=['r332'], types=[0], category='boss', model_id=0x31, shift=2, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True,
+    attachment_owner_skeletons={5: dict(kind='source-pinned-body-owner-attachment',
+        ps2_sha256='e459365a50b540b6cb0c7d579dafddcc167d7bf49b6091edbbc0a0158c357829',
+        gc_sha256='9451e8b6032cac7912cad1be9bd55d996b4aaec8be0e2a335ef44b93569ba67c',
+        owner_ps2_sha256='a0ff107371276123cdae181cbec91a71cd20fab02fa60e95d4ec05b27029604e',
+        owner_gc_sha256='7ac118f5847d2f3bfe27a1f6f8b782ce6dd2d38953719d9096615e653d702713')})
+PRESETS['saddler-tentacle-em31-01'] = dict(archive='em31', sections=[(8, 'body')], tpl=7,
+    rooms=['r332'], types=[1], category='boss', model_id=0x31, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+PRESETS['saddler-weak-obj00'] = dict(archive='em31', sections=[(6, 'body')], tpl=7,
+    rooms=['r332'], types=[], category='registry', model_id=0, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+# Four independent source SetObj16 tail objects attach to bodyparts74..77;
+# each retains its own nine-part skeleton and original motion/attack behavior.
+PRESETS['saddler-tail-obj16'] = dict(archive='em31', sections=[(0x76, 'body')], tpl=0x77,
+    rooms=['r332'], types=[], category='registry', model_id=0x16, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
 # em3d.cpp (r320) modelInit(ARC 5, ARC 6). Converts (shift 1), but no room package yet: its body has three GC masked materials
 # (colours 1 / 3 / 20, masks 2 / 4 / 21): ps2_mask_runs.py --multi-mask bakes all three into one mask run (lane geodrop17;
 # r320 package spec model-registry/ps2-ch5-r320.json, model_registry.py --roles5 --role-tex23: its TPL 6 has 23 images).
@@ -787,6 +811,48 @@ def source_bind_offsets(pbin, gbin, ps2_bones, gc_bones, contract):
                 animation_evidence='NONE: source inverse-bind correspondence only; actual poses and look pending')
 
 
+def source_attachment_owner_skeleton(pbin, gbin, owner_pbin, owner_gbin, source_bones, owner_ps2,
+                                     section_gc, owner_gc, weighted, contract, bone_tol):
+    """An explicitly proved addModel attachment uses modelInit's existing owner parts.
+
+    Its unused BIN rest table is retained verbatim in the proof, including duplicate
+    IDs. It does not replace the owner skeleton. No position, normal, UV, weight,
+    source archive or runtime bone is changed. Only declared four-source identities
+    may use this contract; ordinary section skeleton validation remains the default.
+    """
+    if contract.get('kind') != 'source-pinned-body-owner-attachment':
+        raise ValueError('unknown attachment owner skeleton contract')
+    payloads = dict(ps2_sha256=pbin, gc_sha256=gbin,
+                    owner_ps2_sha256=owner_pbin, owner_gc_sha256=owner_gbin)
+    if any(sha(data) != contract.get(key) for key, data in payloads.items()):
+        raise ValueError('attachment/owner source BIN identity changed')
+    n = len(owner_gc)
+    if not n or len(owner_ps2) != n or len(section_gc) != n:
+        raise ValueError('attachment needs the complete existing owner part table')
+    for i, (p, g, q) in enumerate(zip(owner_ps2, owner_gc, section_gc)):
+        if not all(len(x)==3 and np.isfinite(x).all() for x in (p['pos'],g['translation'],q['translation'])):
+            raise ValueError('attachment GC/PS2 owner rest is not finite xyz')
+        if (p['id'], p['parent']) != (i, g['parent']) or (g['id'], g['attach']) != (i, i) or \
+                (q['id'], q['attach'], q['parent']) != (g['id'], i, g['parent']):
+            raise ValueError('attachment GC/PS2 owner hierarchy differs')
+        if max(abs(x-y) for x,y in zip(p['pos'],g['translation'])) > bone_tol or \
+                max(abs(x-y) for x,y in zip(q['translation'],g['translation'])) > bone_tol:
+            raise ValueError('attachment GC/PS2 owner rest differs')
+    if not source_bones or {p['id'] for p in source_bones} != set(range(n)) or any(
+            p['parent'] not in range(-1,n) or not np.isfinite(p['pos']).all() for p in source_bones):
+        raise ValueError('attachment original rest table does not name the owner IDs')
+    if not weighted or not set(weighted) <= set(range(n)):
+        raise ValueError('attachment weights reference a bone outside the owner')
+    return [dict(p) for p in owner_ps2], dict(kind=contract['kind'],
+        source_BIN_sha256={key:sha(data) for key,data in payloads.items()},
+        original_PS2_rest_records=[dict(p) for p in source_bones],
+        original_PS2_rest_record_count=len(source_bones), owner_parts=n,
+        weighted_ids=sorted(weighted), bone_tolerance_mm=bone_tol,
+        binding='Declared addModel attachment; original modelInit body owns every animated part. '
+                'The section rest table is retained as unused source metadata, not an animation skeleton.',
+        look='Original animated attachment/cloth poses and user look remain unverified')
+
+
 def gutter_texture(rgba, width, height, uv_bounds, wrap):
     """Extend source texels for unchanged raw UVs in an atlas (optional).
 
@@ -855,6 +921,15 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
         gbin = gc_entry(gc, arc, 'BIN')
         m = pb.parse_bin(pbin)
         gsk = gc_skeleton(gbin)
+        owner_contract = spec.get('attachment_owner_skeletons', {}).get(arc)
+        if owner_contract is not None:
+            if si == 0 or not sections:
+                raise ValueError('an attachment owner contract cannot replace modelInit body parts')
+            weighted = {b for _, cs in pb.triangles(m) for c in cs for b, w in c['w'] if w > 0}
+            m.bones, proof = source_attachment_owner_skeleton(pbin, gbin,
+                ps2_entry(ps2, selections[0][0], 'BIN'), sections[0]['gbin'], m.bones,
+                sections[0]['bin'].bones, gsk, bones, weighted, owner_contract, bone_tol)
+            val.setdefault('attachment_owner_skeletons', {})[si] = proof
         # skeleton identity: PS2 (id, parent, translation) == GC (attach, parent, translation)
         if len(gsk) != len(bones):
             # a partial GC section skeleton (stage-3 soldier head / hands: the parts they weight, by attach id):
@@ -1078,6 +1153,8 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                   source_archive_sha256=rec['gc']['sha256'], ps2_archive_sha256=rec['ps2']['sha256'],
                   bones=[dict(id=b['id'], parent=b['parent'], address=f'{spec["archive"]}:part:{b["id"]}', rest=b['rest'], capture=b['capture'])
                          for b in bones], infos=infos, category=spec['category'], rooms=spec['rooms'], types=spec['types'])
+    if val.get('attachment_owner_skeletons'):
+        source['attachment_owner_skeletons'] = val['attachment_owner_skeletons']
     if bind_offsets:
         from ps2_luis import bind_pose_proof
         for si, proof in bind_offsets.items():
