@@ -4295,6 +4295,10 @@ static void frame_cuts(){
     if(!(re4dc_trans_policy&kTpFar)){cut_low=cut_high=0.0f;return;}
     const unsigned w=re4dc_trans_far_pct;
     cut_low=depth_at(float(w&255U)/100.0f);cut_high=depth_at(float((w>>8)&255U)/100.0f);
+    static unsigned logged=~0U;const unsigned f=re4dc_ui_frame();
+    if(f-logged>=600U){logged=f;
+        re4dc_log("trans: far room=%03x fog=%d tfar=%u cut=%u/%u mm (%u/%u %%)\n",unsigned(ps2w.room),fog_loaded.type,
+                  unsigned(trans_fog_tfar),unsigned(cut_low),unsigned(cut_high),w&255U,(w>>8)&255U);}
 }
 // The far cut for a part drawn in pass `drawn` (1 or 2), 0 = none.
 static float far_of(const Ps2Part& m,unsigned index,unsigned drawn){
