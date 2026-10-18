@@ -195,7 +195,9 @@ def not_drawn(a, rows):
     drawn = {k for k in rows}
     out, fails = [], 0
     for (room, mid), (samples, cnt, near) in sorted(alive.items()):
-        if (only and room not in only) or mid < 0x10:
+        if (only and room not in only) or mid < 0x10 or mid > a.max_id:
+            continue
+        if a.near and (near is None or near > a.near):
             continue
         ok = (room, mid) in drawn
         verdict = 'drawn'
@@ -226,6 +228,10 @@ def main():
     ap.add_argument('--not-drawn', action='store_true', help='also run the NOT-DRAWN check (alive in logic, no draw row)')
     ap.add_argument('--notdrawn-allow', default=str(Path(__file__).resolve().parent / 'castgc' / 'notdrawn-allow.tsv'))
     ap.add_argument('--min-samples', type=int, default=2, help='NOT-DRAWN: alive samples needed to judge an id (default 2)')
+    # Scoping (rel17b 10-18, open for the coordinator's review): the literal rule also flags core-program objects with no
+    # cast model (em41 / em43 / em48 / em4a in most rooms), traps (em2a) and enemies alive far off screen.
+    ap.add_argument('--near', type=int, default=0, help='NOT-DRAWN: judge only ids that came within this many units of Leon (0 = all)')
+    ap.add_argument('--max-id', type=lambda s: int(s, 0), default=0xff, help='NOT-DRAWN: judge only ids up to this one (e.g. 0x3f)')
     a = ap.parse_args()
     rows, meta, reasons, pack, admits, n, partner_refused = parse(a.logs)
     if not n:
