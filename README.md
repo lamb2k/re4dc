@@ -2,42 +2,60 @@
 
 # RE4 Dreamcast
 
-**Resident Evil 4 runs on the Sega Dreamcast, from New Game to the end of chapter 2-1.**
+**Resident Evil 4 runs on the Sega Dreamcast, from New Game to the end of chapter 2-3 at the castle gate.**
 
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 16.5](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 17](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
 
-## What's new in 16.5
+## What's new in Test 17
 
-A small hotfix for chapters 1 and 2-1. Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+Chapters 2-2 and 2-3 are playable, up to the castle gate. Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
 
-- **Torch flames are back at the night lake** ([#30](https://github.com/lamb2k/re4dc/issues/30)). The rain is still missing.
+- **Chapters 2-2 and 2-3.** The cabin siege with Luis, Mendez, the second El Gigante and the truck ride to the
+  castle gate (r200), with the PS2 enemy lists. At most 4 Ganados at once, as in chapter 1.
 
-  ![Night lake torches, before (left) and after (right)](docs/images/releases/test-16.5/lake-torches.jpg)
-  <br>Night lake torches, before and after. Flycast capture, test 16.5.
+  ![The cabin siege (r11c)](docs/images/releases/test-17/chapter2-siege.jpg)
+  <br>The cabin siege. Flycast capture, test 17.
 
-- **Solid scenery draws solid.** See-through parts whose pictures are really solid now draw as solid, and near-hard
-  cut-out cards as cut-outs, in every chapter 1 and 2-1 room. It is cheaper for the graphics chip. Most rooms look
-  the same; the cabin (r109) changes slightly.
+- **PS2 Ashley** in every room she follows Leon.
 
-  ![The cabin (r109), before (left) and after (right)](docs/images/releases/test-16.5/cabin-flat-card.jpg)
-  <br>The cabin (r109), before and after. Flycast capture, test 16.5.
+  ![Leon and Ashley (r11e)](docs/images/releases/test-17/ashley.jpg)
+  <br>Leon and Ashley. Flycast capture, test 17.
 
-- **Smaller room-entry hitch.** Contributed by Bruceleeto.
+- **Mendez and El Gigante as lighter PS2 models** in their fights.
 
-## Coming soon: Test 17
+  ![El Gigante (r11e)](docs/images/releases/test-17/el-gigante.jpg)
+  <br>El Gigante. Flycast capture, test 17.
 
-Test 17 is being built now. Planned, with no date yet:
+- **Rain at the night lake** ([#30](https://github.com/lamb2k/re4dc/issues/30)): 320 falling streaks, drawn the
+  Dreamcast way. It is cheaper than the old faint lines.
 
-- **Chapters 2-2 and 2-3** playable, up to the castle gate (r200).
-- **Full PS2 Ashley.**
-- **Mendez and El Gigante** as lighter PS2 models.
-- **A new Dreamcast rain** at the night lake.
-- **Flat and card scenery** (the 16.5 change) in every room of the new chapters.
-- **Fewer disc reads** during fights.
+  ![Rain at the night lake (r11b)](docs/images/releases/test-17/night-rain.jpg)
+  <br>Rain at the night lake. Flycast capture, test 17.
+
+- **The castle gate (r200)** is the end of this test.
+
+  ![The castle gate (r200)](docs/images/releases/test-17/castle-gate-r200.jpg)
+  <br>The castle gate. Flycast capture, test 17.
+
+- **Solid scenery draws solid** in every chapter 2 room too (the 16.5 change). The new rooms look the same.
+- **Fewer pauses in fights.** The Ganado animations the fights use load with the room, and Ganados that lose their
+  head keep their PS2 model.
+- **Short view distance** draws a simplified far view in the first area and the village.
+
+## Coming soon: Test 18
+
+Planned, with no date yet:
+
+- **Chapter 3-1 playable:** the castle's first part, past the gate.
+- **Fixes:** a few effect pictures missing in r102 right after loading a save
+  ([#33](https://github.com/lamb2k/re4dc/issues/33)); the small missing picture in r118
+  ([#37](https://github.com/lamb2k/re4dc/issues/37)); pictures still loaded from the disc during the first house
+  fight (r100) and at the night lake shore (r11b).
+- **Work continues** on cheaper enemies and cheaper scenery.
 
 Screenshots come with the release.
 

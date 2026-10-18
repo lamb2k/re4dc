@@ -15,7 +15,8 @@
 # README.txt, SHA256SUMS.txt. Not published: the gates run on this package first. $R/logs/manifest-$L.json lists every
 # file of the disc (fp_iso.py manifest) for identity checks against other builds.
 # Env: L (play label, default t16rcrP), R (work dir), P (output, /mnt/c path), SRC_SHA (default the build's stack.txt),
-#      NOZIP=1 (gdemu folder only; dry runs), MKDCDISC (mkgdi.sh).
+#      NOZIP=1 (gdemu folder only; dry runs), MKDCDISC (mkgdi.sh), TN (zip test name), KSETS (the knob file's disc-sets
+#      line for the Build-Assets zip; rel17b 10-18), PKG_KIT_DIR (knob file + README directory, e.g. test17).
 set -e
 DATA_SET=${DATA_SET:-T16_DATA}   # the data set name in test11/t11-fix.py (T16_DATA once the test 16 recipe defines it)
 R=${R:-/root/probe/lanes-20261016/t16rc}
@@ -31,7 +32,8 @@ SHA=${SRC_SHA:-$(head -1 $O/stack.txt | cut -c1-8)}
 DATE=$(date +%Y%m%d)
 P=${P:-"/mnt/c/Game Dev/Emulators/RE4DC-Test16-Candidate"}
 Z=RE4DC-Console-Test-$SHA-$DATE-GDEMU.zip
-A=RE4DC-Test16-$SHA-Build-Assets.zip
+TN=${TN:-16}   # test name in the Build-Assets zip name (rel17b: TN=17)
+A=RE4DC-Test$TN-$SHA-Build-Assets.zip
 [ "${LAYOUT:-standard}" = standard ] || { echo "t16-package: the release disc is the standard layout (LAYOUT=$LAYOUT refused)"; exit 1; }
 [ $(wc -l < $O/stack.txt) -le 1 ] || { echo "out-$L was built from a dirty tree"; cat $O/stack.txt; exit 1; }
 # KD (lane payroot18, 10-18): the release's knob file + README directory; default this tree's test16/. Repackaging an
@@ -67,7 +69,7 @@ tr -d '\r' < $KD/README-package.txt | sed "s/SHA_PLACEHOLDER/$SHA/g" | sed 's/$/
 cmp <(cut -c1-64 $R/SHA256SUMS-inner.txt) <(cut -c1-64 $R/gdemu-sha256.txt) && echo tracks-match-ext4-build
 if [ "${NOZIP:-0}" != 1 ]; then
   cd "$P"
-  rm -f RE4DC-Console-Test-*-GDEMU.zip RE4DC-Test16-*-Build-Assets.zip
+  rm -f RE4DC-Console-Test-*-GDEMU.zip RE4DC-Test$TN-*-Build-Assets.zip
   python3 - "$P" "$Z" "$R/SHA256SUMS-inner.txt" <<'E'
 import sys, zipfile, os
 p, z, sums = sys.argv[1:4]
@@ -78,8 +80,8 @@ with zipfile.ZipFile(os.path.join(p, z), 'w', zipfile.ZIP_DEFLATED, compressleve
     zf.write(sums, 'SHA256SUMS.txt')
 print('zip ok')
 E
-  python3 $T/release-knobs.py zip $O/candidate.txt $R/$A
-  python3 $T/release-knobs.py zipcheck $O/candidate.txt $R/$A --objdir $O/obj
+  python3 $T/release-knobs.py zip $O/candidate.txt $R/$A ${KSETS:+--disc-sets $KSETS}
+  python3 $T/release-knobs.py zipcheck $O/candidate.txt $R/$A ${KSETS:+--disc-sets $KSETS} --objdir $O/obj
   cp $R/$A "$P/$A" && rm -f $R/$A
   sha256sum $Z $A > SHA256SUMS.txt
   cat SHA256SUMS.txt

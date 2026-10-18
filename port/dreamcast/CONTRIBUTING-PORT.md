@@ -45,9 +45,13 @@ Options:
 
 * **Character data** the release program was built with: `ps2leon/`, `ps2ganado/`, and `glod/ganado_lod.re4gl`
   (the lighter villager meshes named by `GANADO_LOD_PACK`). Your program draws the same characters as the release.
-* **Newer disc data files,** under `re4dc-assets/disc/<disc path>`: the chapter 1 sound files `st1/r103.dar` and
-  `bgm/aica_str.dat`, `dc/resident.bin` and `dc/tex.pak`. They are on the release disc already; you need them only
-  for a disc of your own.
+* **Chapter 2 enemy rows** (from test 17): `ps2enemych2/`, the PS2 enemy rows of chapters 2-2 and 2-3
+  (`PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR`, compiled into the program), so your program places the same enemies.
+  Also `ps2stump/`, the layout header of the PS2 lost-head stump and hand-pose package (`ACTOR_GANADO_PS2_STUMP_DIR`).
+* **Newer disc data files,** under `re4dc-assets/disc/<disc path>`: the knob file's disc sets (its `disc-sets` line),
+  among them the chapter 2 rooms, the far shells, `dc/resident.bin` and `dc/tex.pak`. From test 17 `dc/tex.pak`
+  holds every texture, so the disc and the zip carry no loose `dc/tex/<c>/` textures. They are on the release disc
+  already; you need them only for a disc of your own.
 * **Byte for byte:** built from the release's source commit with its zip, the program is the release's program.
   The maintainers check this before every release.
 * Downloads are kept, so a second run only rebuilds.
@@ -112,7 +116,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test16/release-knobs.txt` (test 16.5, the fifth hotfix of test 16: the test 16 recipe plus `ANIMALS_OFF=1 ALIVE_CAP=4 R101_ALIVE_CAP=4 VRAM_PAGES_VQ_ONLY=1 GANADO_ATLAS_DROP=3` (16.1 to 16.3), `FOLIAGE_NEAR_FIX=1 LAKE_FAR=45000 LAKE_FAR_SHORE=45000` (16.4), `TRANS_POLICY=3 LAKE_NIGHT_FX=1` (16.5), and the disc data sets snd16, vq16w, r108p, zr17m, zr17b, trans17 and res165; its header names the source commit). The maintainers write that file from
+`tools/d367/test17/release-knobs.txt` (test 17: the test 16.5 recipe plus the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` (`ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1`, El Gigante and Mendez at their lighter level `NATIVE_MODEL_REGISTRY_LOD=1`), `FAR_SHELL=1`, `STAGE_OVL=1 SS_POOL_TOP=1`, `PRIM_BUF_KB=432`, `NATIVE_MODEL_REGISTRY_DYING=1 TEX_PKG_SKIP=1`, `ACTOR_GANADO_PS2_STUMP=1`, `PROP_GATE=1`, `PS2_ASHLEY_ROOMS=2` and `RAIN_DC=1 RAIN_DC_N=320`; the disc data sets are on its `disc-sets` line; its header names the source commit). The maintainers write that file from
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
@@ -216,18 +220,22 @@ Render knobs in the release recipe:
   `tools/d367/tr_classify.py`). 1 FLAT draws parts whose pictures are uniform 14/15 alpha or fully opaque as solid;
   2 CARD draws near-binary cut-out cards as punch-through. The release uses 3. A room missing from the index draws as before.
 * **Night lake torches:** `LAKE_NIGHT_FX=1` (effects30.mk, group `T15_LN`) draws the night lake's torch flames. Their
-  picture is in r11b's resident list (data set res165).
+  picture is in r11b's resident list (data set res17b, the resident file packed from every list).
+* **Night lake rain:** `RAIN_DC=1 RAIN_DC_N=320` (effects30.mk, group `T15_RD`; render only, an approximation of the
+  PS2's full-screen rain sheet) draws 320 short screen-space streaks with a view depth, one untextured strip each, from
+  a private random generator (the game's own random numbers are untouched). It needs `RAIN_PS2=1`'s hook; with it on,
+  the old faint `RAIN_PS2` lines stop. `RAIN_PS2_SHEET_REF` is a reference arm for comparisons, never in a recipe.
 * **Haze cut:** `HAZE_SPRITE_CUT=1` (hwfog.mk, recipe group `T15_HZ`; render only) leaves out every haze / mist sprite
   at every Foliage setting: the camera haze around Leon (Esp15), the mist sheets (Esp48) and the r118 / r11c PS2 haze
   additions. The distant haze stays as the fog table (`HW_FOG_HAZE`, `EFFECT_HAZE_LEAN`), which is fed before the cut.
   Docs: docs/MIST_CUT.md.
 * **Warp discs:** on a warp test disc (`DBG_WARP=1`) the warp line `viewdist 0|1|2` starts the run at Full, Near or Short.
 
-Not in the release yet:
+In the release from test 17:
 
-* **Far shell** (knob `FAR_SHELL`, needs `VIEW_DIST_OPTION`; game/platform/far_shell.inc). Built for r100 and r101 as
-  `dc/native/rXXX/far-shell.fsh`. It waits for a load-at-Short version: today it loads at room entry at every View
-  distance, and r100's 122 KB shell starves heap 4 at the s30 movie.
+* **Far shell** (knob `FAR_SHELL`, needs `VIEW_DIST_OPTION`, recipe group `T15_FS`; game/platform/far_shell.inc).
+  Built for r100 and r101 as `dc/native/rXXX/far-shell.fsh` (disc data set fsh). It is read at Short only (Full and
+  Near never read it), lent to every route movie and read again after it, and freed when a heap-4 allocation fails.
   * In a room with a shell, Short cuts only the world's opaque pass. The fog, the cut-out and see-through world
     surfaces, characters and objects keep Full's distance.
   * The shell (a simplified copy of the far world, about 3,000 triangles textured with the world's own textures, so

@@ -6,12 +6,13 @@ please name the build, real console or emulator, and where in the game it happen
 
 **Last updated:** October 18, 2026.
 
-**Current build: Test 16.5** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)), the fifth hotfix of
-test 16: the night lake's torch flames, solid see-through scenery drawn solid in every chapter 1 and 2-1 room (the
-cabin, r109, included), and a smaller room-entry hitch.
+**Current build: Test 17** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): chapters 2-2 and 2-3
+up to the castle gate (r200), PS2 Ashley, Mendez and El Gigante as lighter PS2 models, rain at the night lake, solid
+see-through scenery drawn solid in every chapter 2 room too, and fewer disc reads in fights.
 
 **Earlier builds** (newest first):
 
+- **Test 16.5:** the night lake's torch flames, solid see-through scenery drawn solid in every chapter 1 and 2-1 room (the cabin, r109, included), and a smaller room-entry hitch.
 - **Test 16.4:** Foliage Near shows its near brush and leaf cards again; the lake draws to 45 m.
 - **Test 16.3:** the village and farm fights load their Ganado animations at room entry; the village keeps all its pictures in video memory (two Ganado texture sheets at half resolution).
 - **Test 16.2:** no fifth Ganado for a moment in some village areas; the r108 Ganados with a weapon use their PS2 model.
@@ -82,14 +83,14 @@ cabin, r109, included), and a smaller room-entry hitch.
 | Broken boxes and barrels leave dark debris in the rooms after the village (r103, r104, r106, r107, r108, r10a, r10b, r117, r118, r11a, r11b) | test 8 to test 12.2 | 🟢 Fixed in test 13: breakable boxes and barrels use the GameCube models in every room, so they break into the GameCube splinters; the other room objects use their PS2 models | |
 | Right after the door from the village into r103, some effect pictures can be missing for a moment and more textures load from the disc during play | test 12, 12.1, 12.2 | 🟢 Fixed in test 13: the village's leftover textures are cleared at the door, so r103 (and r100 when you go back) loads its textures when the room starts | |
 | The night lake (start of chapter 2-1): the torches have no flames | test 10 to 16.4 | 🟢 Fixed in test 16.5 (LAKE_NIGHT_FX), needs console check | [#30](https://github.com/lamb2k/re4dc/issues/30) |
-| The night lake (start of chapter 2-1): the rain is missing | test 10 and later | ⏸️ Open in test 16.5: a new Dreamcast rain (320 falling streaks, cheaper than the old faint lines) is planned for test 17 | [#30](https://github.com/lamb2k/re4dc/issues/30) |
-| Ashley shows a resting face: her facial expressions are not shown | test 13 | ⏸️ Open: Ashley now uses her PS2 model; the expressions come later | |
+| The night lake (start of chapter 2-1): the rain is missing | test 10 to 16.5 | 🟢 Fixed in test 17 (RAIN_DC), needs console check: 320 falling streaks drawn the Dreamcast way, cheaper than the old faint lines | [#30](https://github.com/lamb2k/re4dc/issues/30) |
+| Ashley shows a resting face: her facial expressions are not shown | test 13 | ⏸️ Open: Ashley uses her PS2 model (from test 17 in every room she follows Leon, r10f to r200 included); the expressions come later | |
 | Foliage: Off removes walls and floor in r109 (the cabin); use Near or Full there | test 15 | 🟢 Fixed in test 15.1: Off now leaves out only the see-through brush, leaf and shadow cards; the cabin keeps its walls and floor | |
 | In the village (r101) the burning stake has lost its crossbar and a plank of the pyre (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | In the village (r101) the fence by the house on the right of the square shows only its posts, without its rails (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | The item menu's confirm popup does not look as it did in test 13 | test 14, 15 | ⏸️ Open | |
 | In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 16.5: 4 refused; test 16.3 and 16.4: 5; test 15: 4; test 14: 76) | test 14 to 16.5 | ⏸️ Open: fix planned for a later test (the room's pictures are loaded again in one pass after a save is loaded) | [#33](https://github.com/lamb2k/re4dc/issues/33) |
-| A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3, 16.4 | ⏸️ Open: the rooms' resident picture lists miss these pictures; fix planned for a later test | |
+| A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3 to 17 | ⏸️ Open: the rooms' resident picture lists miss these pictures; fix planned for a later test | |
 | In r118 one small picture (64x64) is not on the disc, so it is not drawn | test 16.4, 16.5 | ⏸️ Open: found by our texture check; fix planned for a later test | [#37](https://github.com/lamb2k/re4dc/issues/37) |
 
 ## Sound
@@ -117,7 +118,7 @@ cabin, r109, included), and a smaller room-entry hitch.
 | The frame rate drops for a few seconds and then recovers, with no clear reason (for example outdoors in the woods, r100) | test 9.1 and later | 🔍 Investigating. Test 15.1 no longer draws the see-through haze and mist sprites around Leon, in any room and at every Foliage setting (the distant haze is still drawn as fog), and Foliage Off now leaves out every see-through brush, leaf, shadow and mist card. Together with Foliage these were most of the see-through layers outdoors. Please tell us whether the drops remain on test 15.1 or 16 | [#29](https://github.com/lamb2k/re4dc/issues/29) |
 | The farm after the village (r103) re-reads villager animations from the disc during play (about 38 reads a second on a console) and loads textures while playing; after a radio call in the village the on-screen display reloads its pictures | test 12, 13 | 🟢 Fixed in test 14, needs a console check: the animations stay in memory, and r103's and r101's textures are loaded when the room starts. From test 15 the on-screen display also keeps its pictures through the village radio call | |
 | FSAA (Options, Rendering) is slower than Standard in busy scenes such as the village fight: it draws twice the pixels | test 12 | ⏸️ Open: by design; Standard is the default | |
-| View distance Near or Short (Options) shows less of the distant outdoor scenery: it fades into the fog sooner (houses inside stay clear, the lake keeps its full horizon). A simplified far view for Short (the distant houses, trees and hills kept beyond the cut) comes in test 17 | test 15 | ⏸️ Open: by design; Full is the default and every boot starts in Full | |
+| View distance Near or Short (Options) shows less of the distant outdoor scenery: it fades into the fog sooner (houses inside stay clear, the lake keeps its full horizon). From test 17, Short draws a simplified far view in the first area and the village (the distant houses, trees and hills kept beyond the cut) | test 15 | ⏸️ Open: by design; Full is the default and every boot starts in Full | |
 | Foliage Near and Off look the same: no near brush or leaf cards at Near | test 16 | 🟢 Fixed in test 16.4 (FOLIAGE_NEAR_FIX), needs console check | |
 | The lake fades into the fog at 25 m, closer than on PS2 | test 16 | 🟢 Fixed in test 16.4 (LAKE_FAR / LAKE_FAR_SHORE), needs console check: 45 m on the boat (Del Lago) and from the shore by day and at night | |
 | The contributor kit's knob file (`tools/d367/test16/release-knobs.txt`) at the test 16.4 tag described an earlier candidate (LAKE_FAR=30000), so a kit build did not match the 16.4 program | test 16.4 | 🟢 Fixed in test 16.5: the knob file is written from the release build and committed on the tagged commit itself | [#34](https://github.com/lamb2k/re4dc/issues/34) |
