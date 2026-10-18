@@ -734,11 +734,12 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
     // Only ordinary village/farm Ganado walk/dash. Root motion, blend clocks,
     // sequence events, per-actor transforms and IK remain outside this service.
     if ((pG->room_id == 0x101 || pG->room_id == 0x103) && m->kindid == 0 &&
-        m->id == 0x10 && m->r_no_0 == 1 && (m->r_no_1 == 0x10 || m->r_no_1 == 0x11)) {
+        m->id >= 0x10 && m->id <= 0x20 && m->r_no_0 == 1 &&
+        (m->r_no_1 == 0x10 || m->r_no_1 == 0x11)) {
         sharedPose = locomotionPoseCache.begin(pG->Frame_cnt, pG->room_id, pG->pRoom,
                                                w->pMot, native_keys, prm, n);
         static u32 reportTick = ~0u;
-        if (pG->Frame_cnt % 120 == 0 && reportTick != pG->Frame_cnt) {
+        if (reportTick == ~0u || pG->Frame_cnt - reportTick >= 120) {
             reportTick = pG->Frame_cnt;
             re4dc_log("LPOSE mode=%u room=%x tick=%u bytes=%u hit=%u miss=%u bypass=%u mismatch=%u\n",
                       (u32)RE4DC_LOCOMOTION_POSE, (u32)pG->room_id, pG->Frame_cnt,
