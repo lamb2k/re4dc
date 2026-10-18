@@ -188,6 +188,9 @@ extern "C" void re4dc_rain_flush()
         return;
     }
     s_rain_pending = 0;
+#if defined(RE4DC_RAIN_DC) && RE4DC_RAIN_DC
+    return;   // RAIN_DC draws the rain: the PS2 lines (1 px, alpha 2-15 %, invisible on the PVR) are not drawn
+#endif
     const f32* V = s_rain_viewport;
     if (V[2] <= 0.0f || V[3] <= 0.0f || !flt06.p) {
         return;
