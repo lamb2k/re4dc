@@ -30,4 +30,11 @@ re4-assets-private\ch5regen-20261018 (files/<disc path>, MANIFEST.tsv).
   PS2 worlds r331 / r332 (c5r-ps2w.sh r331 r332, then c5r-vq3132.sh); 2 (38679b3b 32x256, 9c7695f7 64x128) are pairs2
   pair textures added raw by addss.py (below its VQ size rule) and VQ'd by vqroom pass 2 (c5r-vqpair.sh, pairs-e1 /
   pairs-e2 sources). The 3 unresolved logged pairs (2c69ded3, 32bf9191, e7e9019c) are not targets.
+- Gates: c5r_gatefix.py + c5r-gatefix.sh (per island room, a fixture whose staged payload equals the recorded run's
+  payload-manifest over the stager base, now Test 16.3 a61dfc16: regenerated files, recorded paths still holding the
+  sha, harvested loose files and harvested disc members extracted by sha, committed warps; where a run's own sha is not
+  recoverable the chosen target sha of that path is used and listed in the fixture provenance), c5r-hsetup.sh /
+  c5r-hfix.sh (lane-private copy of the unchanged harness stager via RE4DC_HARNESS, recorded arms cx76mW / cx80mW /
+  cx79mW from the ch5found16 harness clones), c5r-stage1.sh + c5r-gate1.sh + c5r-gates.sh (stage, 60 s Flycast, TEX_CHECK
+  + cast_gc.py + HALT/FAULT/MISSING summary, disc deleted), c5r-recsum.sh (same summary over the recorded runs).
 - c5r-copyout.sh: ext4 stage, one bulk copy to re4-assets-private\ch5regen-20261018, sha check there.
