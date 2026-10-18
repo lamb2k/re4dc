@@ -15,6 +15,46 @@ BASE = '/root/probe/lanes-20261014/t10s/fix/pkg-t10stP.json'
 BASE_LABEL = 't10stP'
 PRIV = '/mnt/c/Game Dev/Emulators/re4-assets-private'
 T11D = '/root/probe/lanes-20261014/t11/data'
+# Payload root (lane payroot18, 2026-10-18): the 10-17 /root wipe removed BASE and most data-set sources. One payload root,
+# extracted from the live release disc (fp_iso.py extract; tree/ = every disc file but 1ST_READ.BIN, MANIFEST-disc.json),
+# replaces them: --base payload (or a missing BASE) builds the base fixture from it. It already carries the release's
+# data sets (16.4 = T16_DATA), so release-equivalent fixtures pass no --data; a named set whose source is gone still fails.
+PAYLOAD_ROOT = os.environ.get('RE4DC_PAYLOAD_ROOT', '/root/re4payload/t164-20261018')
+HARNESS = os.environ.get('RE4DC_HARNESS', '/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/'
+                         'continuation-20260927/playability-r11-r1')
+STAGE_BASE = os.environ.get('RE4DC_STAGE_BASE', '/root/probe/d367-resume-20260927/integration-01/disc-ig27rc1-kite7')
+
+
+def payload_base(label):
+    """Base fixture from the payload root: every payload file whose sha256 differs from the stager's base disc
+    (STAGE_BASE/payload-manifest.json; all files when it is unreadable), the label's route overlays from the harness
+    program dir (candidate-route<label>/, as older fixtures staged them), no 1ST_READ.BIN (the stager adds the arm's)."""
+    man = json.load(open(os.path.join(PAYLOAD_ROOT, 'MANIFEST-disc.json')))
+    try:
+        sb = json.load(open(os.path.join(STAGE_BASE, 'payload-manifest.json')))
+    except (OSError, ValueError):
+        sb = {}
+    sb_sha = {v['sha256'] for v in sb.values()}
+    r, kept, renamed = {}, 0, []
+    prog = os.path.join(HARNESS, 'programs', 'candidate-route' + label)
+    for k, v in sorted(man.items()):
+        if k == '1ST_READ.BIN':
+            continue
+        if k.endswith('.ovl') and k.startswith('dc/') and os.path.exists(os.path.join(prog, k[3:])):
+            r[k] = os.path.join(prog, k[3:])
+            continue
+        if k in sb and sb[k]['sha256'] == v['sha256']:
+            kept += 1
+            continue
+        if k not in sb and not k.isascii() and v['sha256'] in sb_sha:
+            renamed.append(k)  # the Shift-JIS item list name: same bytes on the base under its decoded name
+            continue
+        src = os.path.join(PAYLOAD_ROOT, 'tree', k)
+        assert os.path.isfile(src) and os.path.getsize(src) == v['size'], src
+        r[k] = src
+    rm = sorted(x for x in sb if x not in man and x.isascii())
+    return dict(replace=r, remove=rm, provenance=dict(payload=dict(root=PAYLOAD_ROOT, stage_base=STAGE_BASE, label=label,
+                same_as_base=kept, staged=len(r), non_ascii_same_bytes=len(renamed))))
 # Named data sets: disc path -> source (a directory value under 'tex' = loose textures). Filled in as each is proven.
 DATA = {
     # A1 r119 dark block: the r119 objects package with only the BIN 0x22 pair (docs/lanes/look.md section 2)
@@ -433,7 +473,11 @@ def main():
         opt.setdefault(k, []).append(v)
     base = opt.get('--base', [BASE])[0]
     old = opt.get('--base-label', [BASE_LABEL])[0]
-    d = json.load(open(base))
+    if base == 'payload' or (base == BASE and not os.path.exists(BASE)):
+        base, old = 'payload:' + PAYLOAD_ROOT, new
+        d = payload_base(new)
+    else:
+        d = json.load(open(base))
     s = json.dumps(d).replace('candidate-route' + old + '/', 'candidate-route' + new + '/')
     d = json.loads(s)
     r = d['replace']
