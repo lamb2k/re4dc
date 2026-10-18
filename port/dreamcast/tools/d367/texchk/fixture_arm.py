@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Retarget a route fixture's REL overlays (dc/*.ovl) to the arm under test.
+"""Retarget a route fixture's explicit boot image and REL overlays to the arm under test.
 
 Usage: fixture_arm.py <in.json> <out.json> <arm-label> [--warp <warp.txt>]
                       [--programs-dir <programs> | --candidate-dir <candidate>]
@@ -10,6 +10,11 @@ that module against the wrong symbol table: the room boots, and the first call i
 module jumps to a stale address (lakerig 2026-10-13: st-lake FAULT in the em2f thread at
 pc=00121e40 and in EspTrans after pl0f; texchk N-lake / L-lake / L-lake2). Rooms that never
 load those modules (h2, square, r103) hide the mismatch.
+
+An explicit 1ST_READ.BIN replacement is retargeted to the candidate too. Without this,
+the fixture could silently overwrite the selected arm with another image while its
+overlays and capture symbols belong to the candidate. Fixtures without a boot-image
+replacement keep using the staging program selection as before.
 
 Every dc/*.ovl entry is rewritten to programs/candidate-route<arm>/<name>.ovl; the script
 refuses if that file does not exist. --warp replaces dc/warp.txt.
@@ -46,6 +51,11 @@ def main(argv):
     rep = d['replace']
     cand = args.candidate_dir or os.path.join(args.programs_dir, 'candidate-route' + arm)
     n = 0
+    if '1ST_READ.BIN' in rep:
+        boot = os.path.join(cand, '1ST_READ.BIN')
+        if not os.path.isfile(boot):
+            print('fixture_arm: missing %s' % boot); return 1
+        rep['1ST_READ.BIN'] = boot
     for k in sorted(rep):
         if re.fullmatch(r'dc/[a-z0-9_]+\.ovl', k):
             new = os.path.join(cand, os.path.basename(k))
