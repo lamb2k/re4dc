@@ -2,6 +2,22 @@
 
 Owner: main Codex lane (/root), codex/logic18. Status: implementation plan; no replacement or speedup measured yet.
 
+## Dreamcast-specific design contract
+
+The target is the Dreamcast SH4 and PowerVR, not a portable modern-PC engine. Use a small sequential runtime with compact hot loops, bounded working sets and layouts chosen for the actual SH4 memory access pattern. Separate arrays are a candidate, not a universal rule: compare them with compact interleaved records where adjacent fields are consumed together. Avoid a worker-thread framework, PC SIMD assumptions, GPU skinning assumptions and oversized caches.
+
+Stream joints/vertices in predictable blocks; minimize instruction/data-cache churn, matrix reloads and passes over main RAM. Prefer preprocessing animation and mesh layout offline over rebuilding metadata during play. Existing SH4 matrix and vertex kernels are reusable implementation assets. Keep PowerVR submission through the existing ownership path; any store-queue change must honor alignment and SQ/DMA synchronization. Account for all new main-RAM workspaces and VRAM residency separately. The proposed 32 KiB pose allocation ceiling is not a claim that this much data fits in CPU cache.
+
+Select changes using whole-path SH4 timings and memory behavior, then physical Dreamcast acceptance in r101/r103. Host benchmark speed and instruction count alone do not establish a gain. Prioritize removing work and improving layout before adding assembly. Existing optimized kernels remain until a measured replacement wins.
+
+### SH4ZAM policy
+
+Use SH4ZAM where it is advantageous. Current source pins submodule 33fa4850cacb30dd0ad35485ef035526ec4ce782 and already enables GAME_SH4ZAM with GAME_SH4ZAM_RENDER_ONLY. Audit the actual call path before claiming a new integration.
+
+The first opportunities to evaluate are batched matrix/vector work that keeps the appropriate matrix resident in XMTRX, and normalization/trigonometry in measured expensive enemy services. Direct one-call wrappers are already present in platform/sh4zam_direct.c; batching and data-layout changes must provide value beyond those wrappers and existing FTRV skin kernels. Preserve matrix convention, aliasing, FPSCR and XMTRX ownership across helpers and callbacks.
+
+Numerical approximations are permitted candidates under the user's combat-quality standard. Establish input domains and stable exceptional/near-zero behavior, then check action timing, hit/contact behavior and longer encounters. A changed float or STRICT trace is diagnostic, not automatic rejection. Do not blanket-rebind every gameplay math function or change random-number generation without evaluating consequences. Compare the old and proposed complete enemy path, including data conversion, register loads, copies and cache traffic; keep the change only when it improves that path. A dependency bump needs a specific useful feature and its own verification, not just a newer version.
+
 ## Objective
 
 Make additional active, visible enemies substantially cheaper in r101 and r103 while retaining RE4 combat quality. Scope: decisions, movement, collision, animation, bones, hit attachments, skinning, lighting and submission. The user authorizes a simpler custom Dreamcast implementation and bounded approximations. Identical numerical results and RNG sequences are not mandatory acceptance criteria.
@@ -69,5 +85,7 @@ Check control response, attacks/damage, head/weapon/hand alignment, slopes/doorw
 - [ozz runtime layout and sampling](https://guillaumeblanc.github.io/ozz-animation/documentation/animation_runtime/).
 - [Epic state/pose sharing](https://dev.epicgames.com/documentation/unreal-engine/animation-sharing-plugin-in-unreal-engine).
 - [DetourCrowd neighbor/path separation](https://github.com/recastnavigation/recastnavigation/blob/main/DetourCrowd/Source/DetourCrowd.cpp).
+- [SH4ZAM matrix API](https://sh4zam.com/api/xmtrx/) and the pinned local headers/wrappers.
+- [KallistiOS store queues](https://kos-docs.dreamcast.wiki/group__store__queues.html).
 
 These are design precedents, not Dreamcast speed evidence or a proposal to import an entire modern engine.
