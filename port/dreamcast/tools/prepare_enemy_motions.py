@@ -125,6 +125,15 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 # maxFrame reads); MotionMove / MotionMoveF take the work, not ARC. SetObj00(ARC(0x81), ARC(0x82)) is BIN + TPL, ARC(5..8)
 # BINs. Heap 4: the textures-only body (3,517,280 B) did not fit r307 (largest block 3,218,496) or r310 (3,083,744).
 MOTION_SMALL+=('em36.drs',)
+# em2d (normal Novistadors, castle r205/r20a; castle18, 2026-10-18): all 105 direct FCV references and
+# EM2D_DM_FALL's constant A/B pair reach MotionSetCore. Its SEQ argument remains resident. Player grabs
+# lend subArc to MotionSetCore via PL_ARC(0x5F..0x64, 0x66); cEm2d::setMotion uses the same evaluator
+# with ARC 0x67. The other archive reads are BIN/TPL (modelInit and the grabbed player's head 0x6D/0x6E)
+# and EFF slot4 (EspDataLoad), all resident. No direct FCV key-table reader or frame-count dereference.
+# Standard v2/32KiB policy: five oversized clips stay resident; no clip-limit/runtime change. The
+# texture-only 2,542,976-byte body left 136,960 B in r205, then source model/camouflage allocations failed.
+MOTION_SMALL+=('em2d.drs',)
+
 # em39 (Krauser, r31c r325 r326 r329; lane ch5found16 2026-10-17; tools/d367/motion/arcaudit.py over src/em39/em39.cpp):
 # MotionSetCore `data` takes 144 ARC FCVs directly and em39BlendMotSet's m0 / m1 / m2 (ARC 0x7C..0x81, 0xC6..0xC8; three
 # MotionSetCore calls, its a / b / c are int seq values); `seq` takes 94 ARC SEQ key tables (resident). The work-held
