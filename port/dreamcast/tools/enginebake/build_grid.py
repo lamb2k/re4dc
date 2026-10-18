@@ -7,6 +7,8 @@ convert_sat.parse_sat. Output (private dir, never git): grid.bin + report.json +
 Grid (cell = CELL mm, x/z):
   cell u8 floor   index into the floor-plane table (floor + slope triangles), 0xFF = no floor
   cell u8 nwall   wall segments touching the cell (expanded by the body radius)
+  cell u8 nbr     8-neighbour passability bits (E, NE, N, NW, W, SW, S, SE; +x = E, +z = N)
+  cell u8 pad
   cell u16 wofs   offset into the u16 wall-index list
   plane  f32 a, c, d   y = a*x + c*z + d   (exact triangle plane: foot height is exact, not sampled)
   segment s16 x0, z0, x1, z1, ymin, ymax  (cm): the wall triangle's XZ footprint (longest edge)
@@ -30,6 +32,7 @@ import pathlib  # noqa: E402
 BODY_R = 300.0
 STEP = 300.0
 HEIGHT = 1600.0
+MAX_STEP = 450.0
 
 
 def tri_xz_contains(a, b, c, x, z):
@@ -146,13 +149,48 @@ def main():
                         cell_walls[cx + cz * W].append(wi)
     if len(floors) > 255:
         raise SystemExit('more than 255 floor planes: widen the cell floor field')
+    # 8-neighbour passability (the flow field's graph): both cells have a floor, the floor heights at
+    # the centres differ by < MAX_STEP, and the centre-to-centre line crosses no wall segment whose
+    # y range overlaps the body band above either floor
+    def cross(p1, p2, s):
+        def o(a, b, c):
+            return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+        q1, q2 = (s[0], s[1]), (s[2], s[3])
+        return (o(p1, p2, q1) * o(p1, p2, q2) < 0) and (o(q1, q2, p1) * o(q1, q2, p2) < 0)
+    DIRS = ((1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1))
+    def fy(ci, x, z):
+        pl = floors[cell_floor[ci]][3]
+        return pl[0] * x + pl[1] * z + pl[2]
+    nbr = [0] * (W * H)
+    for cz in range(H):
+        for cx in range(W):
+            ci = cx + cz * W
+            if cell_floor[ci] == 0xFF:
+                continue
+            pa = (x0 + (cx + 0.5) * C, z0 + (cz + 0.5) * C)
+            ya = fy(ci, *pa)
+            for k, (dx, dz) in enumerate(DIRS):
+                nx, nz = cx + dx, cz + dz
+                if not (0 <= nx < W and 0 <= nz < H):
+                    continue
+                ni = nx + nz * W
+                if cell_floor[ni] == 0xFF:
+                    continue
+                pb = (x0 + (nx + 0.5) * C, z0 + (nz + 0.5) * C)
+                yb = fy(ni, *pb)
+                if abs(ya - yb) > MAX_STEP * (1.4142 if dx and dz else 1.0):
+                    continue
+                lo, hi = min(ya, yb) + STEP, max(ya, yb) + HEIGHT
+                if any(cross(pa, pb, walls[w]) and not (walls[w][5] < lo or walls[w][4] > hi) for w in set(cell_walls[ci]) | set(cell_walls[ni])):
+                    continue
+                nbr[ci] |= 1 << k
     # encode
     wl = []
     cells = bytearray()
     for i in range(W * H):
         if len(cell_walls[i]) > 255:
             raise SystemExit('cell wall list > 255')
-        cells += struct.pack('<BBH', cell_floor[i], len(cell_walls[i]), len(wl))
+        cells += struct.pack('<BBBBH', cell_floor[i], len(cell_walls[i]), nbr[i], 0, len(wl))
         wl += cell_walls[i]
     if len(wl) > 65535:
         raise SystemExit('wall list > 65535')
