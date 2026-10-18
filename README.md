@@ -49,16 +49,15 @@ Chapters 2-2 and 2-3 are playable, up to the castle gate. Full details are in th
 
 ## Coming soon: Test 18
 
-Planned, with no date yet:
+Planned, with no date yet. Ticked items have passed our checks and will be in Test 18.
 
-- **Chapter 3-1 playable:** the castle's first part, past the gate.
-- **A lighter El Gigante** in both fights.
-- **Fixes:** a few effect pictures missing in r102 right after loading a save
-  ([#33](https://github.com/lamb2k/re4dc/issues/33));
-  pictures still loaded from the disc during the first house
-  fight (r100) and at the night lake shore (r11b); the Mendez cutscene that ends a little early; effect
-  sprites missing on the way to the castle gate.
-- **Work continues** on cheaper enemies and cheaper scenery.
+- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
+- [ ] **A lighter El Gigante** in both fights.
+- [ ] **Fix:** a few effect pictures missing in r102 right after loading a save ([#33](https://github.com/lamb2k/re4dc/issues/33)).
+- [ ] **Fix:** pictures still loaded from the disc during the first house fight (r100) and at the night lake shore (r11b).
+- [x] **Fix:** a short gap in the sound in cutscenes ([#38](https://github.com/lamb2k/re4dc/issues/38)). The Mendez cutscene that ends as soon as you pass its button prompt does the same in the original game.
+- [ ] **Fix:** effect sprites missing on the way to the castle gate ([#39](https://github.com/lamb2k/re4dc/issues/39)).
+- [ ] **Work continues** on cheaper enemies and cheaper scenery.
 
 Screenshots come with the release.
 
