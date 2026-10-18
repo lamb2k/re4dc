@@ -578,6 +578,17 @@ def main():
         if not ROLE_TEXTURES5:
             sys.exit('model_registry: --role-tex23 needs --roles5')
         ROLE_TEX23 = True
+    if '--stress-saddler' in args:
+        # --stress-saddler (lane stress16b 2026-10-16; the model-only Saddler stress disc, STRESS_SADDLER images only:
+        # coarse_actor_registry_pack_check.inc): Saddler full + two gameplay levels in one room package: 256 part facts
+        # (body 83 + head 83 + tentacle 60), a 1 MiB package + skin ceiling. Needs --pool.
+        args.remove('--stress-saddler')
+        if not POOL:
+            sys.exit('model_registry: --stress-saddler needs --pool')
+        PACK_CAPACITY['fpart'] = 256
+        PACK_MAX_BYTES = 1024 * 1024
+        global STRESS_SADDLER
+        STRESS_SADDLER = True
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
@@ -783,7 +794,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                 raise Fail(f'{name}: lod_of {d["lod_of"]} must be an earlier descriptor with the same source identity')
         elif identity in seen_identity:
             raise Fail(f'{name}: source identity {identity} is ambiguous with {seen_identity[identity]}')
-        seen_identity[identity] = name
+        if not d.get('lod_of'):
+            seen_identity[identity] = name  # a level keeps the full descriptor's name here (lane stress16b: two levels of one)
         # ---- chunks
         chunks, hbones = parse_header(hdr)
         if hbones != draw:
@@ -1180,6 +1192,7 @@ PACK_MAX_BYTES = 192 * 1024  # coarse_actor_registry_pack_check.inc kPackMaxByte
 # source blobs are bounded by the lifetime masks (MATERIAL_ROWS / SOURCE_BLOBS minus the reviewed rows, checked above).
 PACK_BONES = 48
 PACK_CAPACITY = dict(desc=16, ref=32, geom=32, tex=16, fmodel=8, fpart=32, ftex=16)
+STRESS_SADDLER = False  # --stress-saddler (lane stress16b)
 
 
 def align32(n):
@@ -1310,6 +1323,8 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
                     role_texture_max = 23  # RE4DC_NMR_ROLE_TEX23 (the r320 helicopter em3d TPL 6)
             if SLOTS:
                 role_texture_max = 17  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): GC pl11 TPL 5 has 17 images
+            if STRESS_SADDLER:
+                role_texture_max = 17  # the POOL image's RE4DC_NMR_ROLE_TEXTURES (em31 TPL 7 has 11 images)
             if len(tpls[tk]['textures']) > role_texture_max:
                 raise Fail(f'package {r["name"]}: source TPL has {len(tpls[tk]["textures"])} images > {role_texture_max}')
             if mk not in fm_index:

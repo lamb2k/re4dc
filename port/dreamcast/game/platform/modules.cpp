@@ -272,6 +272,9 @@ static const Re4dcModule g_modules[] = {
     {5, "em22", 0, 0, 0, 0, 0, 0, 0},   // ROUTE_CH21: r11b: script-spawn (the shore wolves); overlay em22.ovl
     {30, "em2b", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH21: r119: enabled-later,script-spawn (El Gigante); overlay em2b.ovl
     {47, "pl11", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH21: r117 on: Ashley (enemy module 3, cSubAshley); overlay pl11.ovl
+#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+    {89, "em31", 0, 0, 0, 0, 0, 0, 0},  // STRESS_SADDLER: Saddler's final form (stress disc only); overlay em31.ovl
+#endif
 #else
     MODULE(5, em22),   // ROUTE_CH21: r11b: script-spawn (the shore wolves)
     MODULE(30, em2b),  // ROUTE_CH21: r119: enabled-later,script-spawn (El Gigante)
@@ -465,6 +468,11 @@ RouteOverlay g_route_ovl[7];  // retain the old five slots, then em3b and em35
 RouteOverlay g_route_ovl[6];  // old five, then pl14
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : 5)
 #define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 66)
+#elif defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21 && defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
+// STRESS_SADDLER (stress disc only): the five CH21 slots, then em31 (89).
+RouteOverlay g_route_ovl[6];
+#define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : 5)
+#define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39 || (id) == 5 || (id) == 30 || (id) == 47 || (id) == 89)
 #elif defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
 RouteOverlay g_route_ovl[5];  // 0 = pl0f, 1 = em2f, 2 = em22 (ROUTE_CH21: r11b), 3 = em2b (r119), 4 = pl11 (r117 on)
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : 4)
