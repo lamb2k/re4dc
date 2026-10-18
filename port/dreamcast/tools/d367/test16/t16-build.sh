@@ -42,5 +42,9 @@ for x in "$@"; do case $x in
   # both render only. wP = rP with both off: its image must equal test 16.3's (61df55c6) with its overlays (knob-off
   # identity); wT is the STRICT reference for rT.
   wP|wT|wW) T15_FN= T15_LF= LP=${LP}w bash $D/../test15/t15-build.sh r${x#w} ;;
+  # test 16.5 (hotfix, 10-18): T15REC adds T15_TR (TRANS_POLICY=3), render only; the SpanChannel fix is code (no knob).
+  # vP = rP with T15_TR off: its image must equal 16.4's tree + the SpanChannel commit alone (66502265) rP; vT is the
+  # STRICT reference for rT.
+  vP|vT|vW) T15_TR= LP=${LP}v bash $D/../test15/t15-build.sh r${x#v} ;;
   *)  bash $D/../test15/t15-build.sh $x ;;
 esac; done

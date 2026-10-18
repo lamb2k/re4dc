@@ -446,6 +446,19 @@ DATA['zr17b'] = {'em/em13.drs': ZR17BD + '/em13.drs', 'em/em17.drs': ZR17BD + '/
 T163D = os.environ.get('T163D', '/root/re4data/private/t163-20261017')
 DATA['res163'] = {'dc/resident.bin': T163D + '/resident.bin'}
 T163_DATA = T162_DATA + ',zr17m,zr17b,res163'
+# Test 16.5 (release lane rel17, 10-18; user scope "the flat and card change"): trans17 = TRANS_POLICY's sidecars
+# (tools/d367/tr_classify.py over the 16.4 disc's PS2 worlds and tex.pak, payload root t164-20261018): one
+# dc/native/rXXX/ps2-world.r4tc per classified 16.4 room (bound to that room's R4PW crc; a mismatched pair draws today's
+# path) and the disc index dc/native/trclass.idx (R4TI: only rooms that passed the tr_pixdiff look gate; a room left out
+# of the index draws as today). Stages no texture and no world file. Only with T15_TR (TRANS_POLICY) on. The 16.4 disc
+# data come from the payload base (t11-fix.py --base payload), so a 16.5 fixture passes --data trans17 only.
+TRANS17D = os.environ.get('TRANS17D', '/root/re4data/private/trans17-20261018/t165')
+DATA['trans17'] = {'dc/native/trclass.idx': TRANS17D + '/trclass.idx'}
+if os.path.isdir(TRANS17D):
+    for _r in sorted(os.listdir(TRANS17D)):
+        if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS17D, _r)):
+            DATA['trans17']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS17D, _r)
+T165_DATA = T163_DATA + ',trans17'
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
