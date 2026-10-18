@@ -739,6 +739,7 @@ $(OBJDIR)/mod/st3_3/src/st3/r327.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2
 endif
 # r30a calls EtcModel.cpp's setRoomEtcBreakDisp by its C name (as r200; ROUTE_CH23 sets the same export alias).
 $(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_WORLD_STAGE_MODULES=1
+endif
 # ROUTE_GALLERY=1 (lane ch4found16 2026-10-17, default 0: no effect; needs ROUTE_CH22=1 ROUTE_CH41=1 ROUTE_BOSS4=1
 #   STAGE_OVL=1): r22c, the castle shooting gallery, is the only room of stage module st2_4 (118: em_wrap v2, r22c.cpp,
 #   st2.cpp); its targets are em3e (94, emmark.cpp cEmMark, a room overlay). Without them r22c halted at the room load
