@@ -24,6 +24,9 @@ from prepare_native_ui import image_identity, select_upload_only, compact_spans,
 # em11/em12/em13/em15/em17 (config/G4BE08/modules.py). Only its top-level model
 # TPLs are selected here; its EFF family is deliberately retained in full.
 MODEL_TPL_ARCS = {
+    # em3c.cpp em3cModelInit:1867-1914 body, chainmail and attached weapons.
+    # Parasite TPL0x4C/0x57 and EFF stay resident and byte exact.
+    "em3c.drs": (6, 8, 0xA, 0xD, 0xF),
     "em18.drs": (6, 8, 0xF), "em3b.drs": (5, 0xC),
     "em35.drs": (5, 0x9C),
     # pl14.cpp modelSet:203-215 and equipWeapon:1465 (body/head/gun).
