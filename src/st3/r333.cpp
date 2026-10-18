@@ -41,6 +41,13 @@
 #include "est.h"
 #include "esp.h"
 #include "db_log.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+#include "route_movie.h"
+#define R333_ROUTE_MOVIES 1
+extern "C" void re4dc_log(const char* fmt, ...);
+#else
+#define R333_ROUTE_MOVIES 0
+#endif
 
 // Room 3-33 (D:/Bio4/Prog/r333.cpp): the jet ski escape: the ride start (s00), the collapsing cave
 // (fall_a..d), the escape event (s10) with the screen capture filter, and the game result screen.
@@ -74,6 +81,7 @@ void R333EventS00();
 void R333EventS10();
 extern "C" void Evt_R333S00_Func(Event* e);
 extern "C" void Evt_R333S10_Func(Event* e);
+
 static void setTexRender();
 static void exec_no_ret_exit();
 static void exec_no_ret();
@@ -101,6 +109,45 @@ int st3_getCountDownTimer();
 void st3_startCountDown();
 void st3_checkCountDown();
 void st3_endCountDown();
+
+#if R333_ROUTE_MOVIES
+// R333_MOVIE_ADAPTER_BEGIN
+// Every PS2/GC S00 camera-cut length matches:35,124,117,38,21,95.
+// The bridge supplies a zeroed Event. Preserve the source430-frame timer
+// subtraction and the last presented cut's lasting flags, including START.
+static unsigned r333MovieS00Picture;
+static void r333MovieS00Tick(unsigned picture)
+{
+    r333MovieS00Picture = picture;
+}
+
+static void r333MovieS00(Event* e)
+{
+    if (e->funcMode == 0) {
+        r333MovieS00Picture = ~0u;
+    }
+    e->MaxTotalFrame = 430;
+    if (e->funcMode == 2 && r333MovieS00Picture != ~0u) {
+        // Event::RunEvtCancel suppresses mode1 while fast-forwarding: a
+        // skip keeps its current cut state instead of forcing the last cut.
+        if (r333MovieS00Picture < 159) {
+            BitOn(pG->Status_flg[1], 0x800);
+            BitOff(pG->Stop_flg, 0x00040000);
+            BitOff(pG->Disp_flg, 0x01000000);
+        } else {
+            BitOn(pG->Stop_flg, 0x00040000);
+            BitOn(pG->Disp_flg, 0x01000000);
+            BitOff(pG->Status_flg[1], 0x800);
+        }
+    }
+    Evt_R333S00_Func(e);
+    if (e->funcMode == 2) {
+        re4dc_log("r333 movie s00: saved=%d subtract=%d remaining=%d picture=%u\n",
+                  r333_work->timer, e->MaxTotalFrame, st3_getCountDownTimer(), r333MovieS00Picture);
+    }
+}
+// R333_MOVIE_ADAPTER_END
+#endif
 
 // 1 while the event is being skipped (EVT status bit 30).
 static inline int r333_evtSkip(Event* e)
@@ -148,6 +195,9 @@ void R333Init()
     SceExec(0x12, (TaskFunc) kazekiri_task, 0, 0, 2, 0);
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtDataSet_exec(1, 0x12, 0, (TaskFunc) R333EventS00, 0, 1);
+#if R333_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x33300))
+#endif
         EvtMgr.EvtReadAram("event/evd/r333s00.evd", 0, 0, 0, 0);
     }
     if (RsfCheck(G_ROOM_ID, 1) == 0) {
@@ -244,6 +294,16 @@ void R333EventS00()
             boat = (cPl0e*) r333_work->em.getPtr();
             boat->stopEngine();
             SndRoomStrVolSet(10, 600);
+#if R333_ROUTE_MOVIES
+            if (re4dc_movie_available(0x33300)) {
+                const int terminal = RouteMoviePlay(0x33300, ROUTE_MOVIE_SND_EVENT,
+                                                  (RouteEvtFunc) r333MovieS00, r333MovieS00Tick);
+                if (terminal != RE4DC_MOVIE_EOF && terminal != RE4DC_MOVIE_SKIP) {
+                    re4dc_log("r333 movie s00 failed: terminal=%d progression=blocked\n", terminal);
+                    return;  // no invented second rail or EVD retry after partial playback
+                }
+            } else
+#endif
             EvtMgr.EvtReadExec("event/evd/r333s00.evd", 0, 0);
             SndRoomStrVolReset(200);
             boat->set2ndRail();
