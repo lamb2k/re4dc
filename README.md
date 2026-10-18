@@ -17,8 +17,8 @@ Chapters 2-2 and 2-3 are playable, up to the castle gate. Full details are in th
 - **Chapters 2-2 and 2-3.** The cabin siege with Luis, Mendez, the second El Gigante and the truck ride to the
   castle gate (r200), with the PS2 enemy lists. At most 4 Ganados at once, as in chapter 1.
 
-  ![The cabin siege (r11c)](docs/images/releases/test-17/chapter2-siege.jpg)
-  <br>The cabin siege. Flycast capture, test 17.
+  ![Leon in the cabin (r11c)](docs/images/releases/test-17/chapter2-siege.jpg)
+  <br>In the cabin, chapter 2-2. Flycast capture, test 17.
 
 - **PS2 Ashley** in every room she follows Leon.
 
@@ -38,8 +38,8 @@ Chapters 2-2 and 2-3 are playable, up to the castle gate. Full details are in th
 
 - **The castle gate (r200)** is the end of this test.
 
-  ![The castle gate (r200)](docs/images/releases/test-17/castle-gate-r200.jpg)
-  <br>The castle gate. Flycast capture, test 17.
+  ![Outside the castle (r200)](docs/images/releases/test-17/castle-gate-r200.jpg)
+  <br>Outside the castle, where this test ends. Flycast capture, test 17.
 
 - **Solid scenery draws solid** in every chapter 2 room too (the 16.5 change). The new rooms look the same.
 - **Fewer pauses in fights.** The Ganado animations the fights use load with the room, and Ganados that lose their
@@ -51,10 +51,12 @@ Chapters 2-2 and 2-3 are playable, up to the castle gate. Full details are in th
 Planned, with no date yet:
 
 - **Chapter 3-1 playable:** the castle's first part, past the gate.
+- **A lighter El Gigante** in both fights.
 - **Fixes:** a few effect pictures missing in r102 right after loading a save
   ([#33](https://github.com/lamb2k/re4dc/issues/33)); the small missing picture in r118
   ([#37](https://github.com/lamb2k/re4dc/issues/37)); pictures still loaded from the disc during the first house
-  fight (r100) and at the night lake shore (r11b).
+  fight (r100) and at the night lake shore (r11b); the Mendez cutscene that ends a little early; effect
+  sprites missing on the way to the castle gate.
 - **Work continues** on cheaper enemies and cheaper scenery.
 
 Screenshots come with the release.
