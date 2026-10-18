@@ -4,8 +4,8 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-Last updated: October 17, 2026. The current public build is console test 16.3 (the newest release on the
-[releases page](https://github.com/lamb2k/re4dc/releases/latest)), a third hotfix of test 16 for the village and farm fights: the Ganado animations those fights use are loaded when you enter the room instead of from the disc during the fight, and the village keeps all of its pictures in video memory (two Ganado texture sheets there load at half resolution). Test 16.2 was a second hotfix of test 16: a fifth Ganado no longer appears for a moment in some village areas, and the r108 Ganados holding a weapon use their PS2 model. Test 16.1 was the first hotfix of test 16 for speed: at most 4 Ganados at once (was 6), and no ambient farm animals. Test 16 follows test 15.1, a hotfix of test 15 (no haze or mist sprites around Leon, and Foliage Off leaves out every see-through card). Test 15 follows test 14. Test 11 was not released; its changes are in test 12. Test 12.1 is test 12 with a room lighting fix; test 12.2 is test 12.1 with a memory fix for leaving the village; test 13 follows test 12.2.
+Last updated: October 18, 2026. The current public build is console test 16.4 (the newest release on the
+[releases page](https://github.com/lamb2k/re4dc/releases/latest)), a fourth hotfix of test 16: Foliage Near draws the near brush and leaf cards again, and the lake is drawn to 45 m before it fades into the fog. Test 16.3 was a third hotfix of test 16 for the village and farm fights: the Ganado animations those fights use are loaded when you enter the room instead of from the disc during the fight, and the village keeps all of its pictures in video memory (two Ganado texture sheets there load at half resolution). Test 16.2 was a second hotfix of test 16: a fifth Ganado no longer appears for a moment in some village areas, and the r108 Ganados holding a weapon use their PS2 model. Test 16.1 was the first hotfix of test 16 for speed: at most 4 Ganados at once (was 6), and no ambient farm animals. Test 16 follows test 15.1, a hotfix of test 15 (no haze or mist sprites around Leon, and Foliage Off leaves out every see-through card). Test 15 follows test 14. Test 11 was not released; its changes are in test 12. Test 12.1 is test 12 with a room lighting fix; test 12.2 is test 12.1 with a memory fix for leaving the village; test 13 follows test 12.2.
 Test 8 (`d4bc5f45`) was withdrawn.
 
 ## Status at a glance
@@ -17,7 +17,7 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 | Fixed and checked in our tests; the problem was not console-only | 28 |
 | 🛠️ In progress | Being fixed now | 0 |
 | 🔍 Investigating | Being reproduced or traced | 2 |
-| ⏸️ Open | Known, not yet worked on | 15 |
+| ⏸️ Open | Known, not yet worked on | 16 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Stability
@@ -100,6 +100,7 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | View distance Near or Short (Options) shows less of the distant outdoor scenery: it fades into the fog sooner (houses inside stay clear, the lake keeps its full horizon). A simplified far view for Short (the distant houses, trees and hills kept beyond the cut) comes in test 17 | test 15 | ⏸️ Open: by design; Full is the default and every boot starts in Full | |
 | Foliage Near and Off look the same: no near brush or leaf cards at Near | test 16 | 🟢 Fixed in test 16.4 (FOLIAGE_NEAR_FIX), needs console check | |
 | The lake fades into the fog at 25 m, closer than on PS2 | test 16 | 🟢 Fixed in test 16.4 (LAKE_FAR / LAKE_FAR_SHORE), needs console check: 45 m on the boat (Del Lago) and from the shore by day and at night | |
+| Building test 16.4 from its tagged source commit (`9e8a3780`) gives the lake on the boat (r10b) the old 30 m fog distance: that commit's `tools/d367/test16/release-knobs.txt` says `LAKE_FAR=30000`, while the released program uses 45000. Building from the current `dreamcast-port` is not affected | test 16.4 (contributor kit) | ⏸️ Open, not blocking: if you build from the tag, set `LAKE_FAR=45000` in that file. From test 17 the knob file is committed before the release is tagged | [#34](https://github.com/lamb2k/re4dc/issues/34) |
 | FSAA: busiest scenes have less geometry headroom (FSAA borrows 225 KB of the 1.95 MB per-frame geometry buffer; measured peak use 82% in the busiest test scene, El Gigante) | test 12 | ⏸️ Open: by design; Standard keeps the full buffer | |
 
 ## Console checklist for test 16
