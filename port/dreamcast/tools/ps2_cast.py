@@ -485,6 +485,13 @@ PRESETS['u3-em32-00'] = dict(archive='em32', sections=[(4, 'body'), (6, 'extra')
 # r320 package spec model-registry/ps2-ch5-r320.json, model_registry.py --roles5 --role-tex23: its TPL 6 has 23 images).
 PRESETS['heli-em3d-00'] = dict(archive='em3d', sections=[(5, 'body')], tpl=6, rooms=['r320'], types=[0], category='registry',
                                model_id=0x3d, lit=True, shift=1)
+# The chapter 3 Zealots carry it too (lane ch4found16 2026-10-17, NMRBIN r209 em1a / r20d em19: 1fc|1fd 1fe|201 208|1fd
+# 202|1fd 217|219 207|1fd, every role proved but 0x217 under TPL 0x219, so the pool never bound: r209 1,164 / r20d 3,116
+# GC frames in the castle route pass). em10.cpp: flag 0x200000 -> (mot[38], mot[39]) = (0x217, 0x218); flag 0x4000 without
+# that accessory -> (mot[38], mot[40]) = (0x217, 0x219).
+for _a in ('em1a', 'em19'):
+    for _t in (7, 8, 9):
+        PRESETS[f'zealot-{_a}-{_t:02x}p']['sections'] = PRESETS[f'zealot-{_a}-{_t:02x}p']['sections'] + [(0x217, 'acc38-b', 0x219)]
 
 
 def section_specs(spec):

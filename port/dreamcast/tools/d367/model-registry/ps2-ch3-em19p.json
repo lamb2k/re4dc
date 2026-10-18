@@ -1,7 +1,7 @@
 {
  "registry": "ps2-ch3-em19p",
- "about": "lane cast16 (2026-10-16): castle Zealot em19 types [7, 8, 9] as POOL descriptors (zealot-em11-07p layout, own archive). Render only.",
- "cast_dir": "/root/probe/lanes-20261016/cast16/conv3/regcast-em19",
+ "about": "lane cast16 (2026-10-16): castle Zealot em19 types [7, 8, 9] as POOL descriptors (zealot-em11-07p layout, own archive). Render only; acc38-b (BIN 0x217 under TPL 0x219) added by lane ch4found16 (2026-10-17).",
+ "cast_dir": "/root/probe/lanes-20261016/ch4found/cast/conv5/regcast-em19",
  "revision_overlay": "ps2-overlay",
  "level": "conservative",
  "archive_audit": "source/archive-audit.json",
@@ -14,16 +14,17 @@
    "source_types": [
     7
    ],
-   "module": "src/em19/em19_set.cpp Em19Set type 7 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "module": "src/em19/em19_set.cpp Em19Set type 7 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory + mot[38] / TPL 0x219 (acc38-b, ch4found16 NMRBIN r209 / r20d)",
    "partial_sections": true,
    "pool": true,
    "source_drops": [
     "bump"
    ],
    "mask_runs": {
-    "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-07-hood",
-    "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-07-acc1",
-    "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-07-acc5"
+    "13": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-07p-s13",
+    "16": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-07p-s16",
+    "20": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-07p-s20",
+    "21": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-07p-s21"
    }
   },
   {
@@ -33,16 +34,17 @@
    "source_types": [
     8
    ],
-   "module": "src/em19/em19_set.cpp Em19Set type 8 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "module": "src/em19/em19_set.cpp Em19Set type 8 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory + mot[38] / TPL 0x219 (acc38-b, ch4found16 NMRBIN r209 / r20d)",
    "partial_sections": true,
    "pool": true,
    "source_drops": [
     "bump"
    ],
    "mask_runs": {
-    "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-08-hood",
-    "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-08-acc1",
-    "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-08-acc5"
+    "13": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-08p-s13",
+    "16": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-08p-s16",
+    "20": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-08p-s20",
+    "21": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-08p-s21"
    }
   },
   {
@@ -52,16 +54,17 @@
    "source_types": [
     9
    ],
-   "module": "src/em19/em19_set.cpp Em19Set type 9 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+   "module": "src/em19/em19_set.cpp Em19Set type 9 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory + mot[38] / TPL 0x219 (acc38-b, ch4found16 NMRBIN r209 / r20d)",
    "partial_sections": true,
    "pool": true,
    "source_drops": [
     "bump"
    ],
    "mask_runs": {
-    "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-09-hood",
-    "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-09-acc1",
-    "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em19-09-acc5"
+    "13": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-09p-s13",
+    "16": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-09p-s16",
+    "20": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-09p-s20",
+    "21": "/root/probe/lanes-20261016/ch4found/cast/conv5/mask-zealot-em19-09p-s21"
    }
   }
  ],
