@@ -219,7 +219,23 @@ unsigned actor_semantics_why(cModel* m,const Re4dcActorPlan& p,unsigned* detail)
     if(!p.material_count || p.material_count>kRe4dcActorMaterials || !p.run_count || p.run_count>kRe4dcActorRuns)return 9;
     if(pG->Status_flg[1]&0x100)return 10;
     if((pG->Status_flg[2]&0x00100000) && (m->be_flag&0x02000000) &&
-       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200))return 11;
+       !(pG->Disp_flg&0x00040000) && (pG->Status_flg[1]&0x200)){
+        // Diagnostic only: source GetCastShadowMngPtr has manager allocation/registration side effects.
+        // Count its read-only pre-frustum candidates instead; admission is unchanged. detail high16=array size,
+        // low16=active selected type4 candidates before checkKind/frustum. Zero proves no source cast receive pass.
+        unsigned candidates=0;
+        for(unsigned i=0;i<LightMgr.nArray;++i){
+            auto* light=(cLight*)((u8*)LightMgr.pArray+LightMgr.size*i);
+            if((light->be_flag&3)!=3 || light->Type!=4 || light->xD!=2 ||
+               !(light->xF&m->LightInfo.EnableMask) ||
+               (i<32 && !(m->LightInfo.SelectMask&(1u<<i))))continue;
+            const auto* work=(const ShadowLightWork*)light->work;
+            if(work->mode<1 || work->mode>4)continue;
+            ++candidates;
+        }
+        *detail=(LightMgr.nArray<<16)|(candidates&0xffffu);
+        return 11;
+    }
     unsigned palette_bytes=0,workspace_bytes=0;
     for(unsigned i=0;i<p.count;++i) {
         auto* info=p.info[i];*detail=i;

@@ -3,6 +3,10 @@
 // native actor representation; no source game data is overwritten.
 #include "global.h"
 #include "model.h"
+#if RE4DC_ACTOR_TRANSACTION_DIAG
+#include "light.h"
+#include "shadow.h"
+#endif
 #include "native_actor.hpp"
 #if RE4DC_PS2_LEON
 // ps2leon.mk PS2_LEON=1 / 2: the test arm's Leon (A: the PS2 Leon, B: the PS2 budget redistributed from the GameCube
