@@ -78,6 +78,23 @@ Initial host verification: 2,554 differential comparisons against the source-ext
 
 Deliver a default-off native locomotion pose arm in r101/r103, retaining original actor updates and rendering. Its first result is a measured whole-enemy improvement or a documented rejection and next ranked slice. Service boundaries and bounded memory are part of that deliverable.
 
+### First pilot result: do not enable exact-phase channel caching
+
+The corrected variant filter is in 9e48f45e (Ganado construction temporarily maps IDs to 0x10, then restores the actual 0x10..0x20 ID). Builds l18q0rW/off and l18q1rW/on use the same cap4/animals-off recipe, CAP_COMPARE/ALIVE_CAP_LOG/R101_CAP_LOG diagnostics, original r101 fixture and data. All 11 off program files remain identical to l18s1rW. Both captures contain 16 full traces at global frames480..525, stride3; actual Flycast runs were bounded to60s. These are diagnostic MODELLED results, not a console measurement or an accepted matched-gameplay performance gate.
+
+| r101 pilot | Off l18q0rW | On l18q1rW |
+|---|---:|---:|
+| Nominal whole frame, ms | 65.868 | 67.711 |
+| Pacing/retrace function self time, ms | 18.7212 | 18.6100 |
+| Remaining model charge, ms | 47.1463 | 49.1010 |
+| MotionMoveCore self time, ms | 0.0965 | 0.1983 |
+
+The raw difference is +1.843 ms, unfavorable. The pacing/retrace row is a separate function attribution, not an exact isolation of every wait instruction. Differences elsewhere in the frame must not all be attributed to the sampler; no repeated A/A or complete state/decision acceptance was performed. The logged village prefix through tick435 contains 1,012 cache misses, 92 unsupported-layout bypasses and zero hits, in both use and check arms. This does not describe every later frame. A zero mismatch count with zero hits does not prove target hit equivalence. The check arm l18q2rW produced only10 complete traces, so it is excluded from the 16-frame timing comparison. Initial l18p2 runs lacked established admission and are also excluded.
+
+The farm is a distinct coverage finding: l18r2rW's bounded admission diagnostic at source ticks240/241 shows the four Ganados in routines0/7/8 (idle/bucket/farm work), not walk/dash. Two routine8 actors share the same phase in that small observation. The existing farm fixture therefore cannot certify a walk/dash service or be described as a proven active fight. Its earlier four enemy-update counts remain valid; their behavior was insufficiently qualified. Keep this farm workload as an acceptance case in its own right, and add normal-input combat coverage without forced game-state edits.
+
+Disposition: keep this experiment off and stop tuning this exact-phase channel-only cache. The next implementation must cover a useful fraction of whole-enemy work: compact sampled poses plus local/hierarchy transforms, including idle/work cycles, with bounded nearby-phase reuse where quality permits. Action clocks/events, root movement and required combat contacts remain individual. Audit the matrix consumers before replacing them; the plan's already identified IK intermediate passes remain necessary until proven otherwise. A larger cache or another assembly-only Hermite variant is not justified by this result. The shared contact and skin/light tasks remain in scope. Evidence is under the private logic18-20261018 directory, runs hwmodel-r101-l18q{0,1,2}rW-a and hwmodel-r103-l18r2rW-a; build proofs and full ELF mirrors are in pose-prototype.
+
 Run existing cap-4 fight controls immediately. Add matched 1/2/3/4 count arms with verified visibility, then an isolated 10-enemy stress case. Record clip/phase/weapon/distance diversity because it determines sharing opportunities. Held entries and invisible actors are not performance credit.
 
 Check control response, attacks/damage, head/weapon/hand alignment, slopes/doorways, crowd separation/surround pressure, hit reactions/deaths, waves/exits, repeated entry/retirement, memory squeeze and gameplay I/O. Exact comparisons apply where exactness is promised; approximation is judged on behavior and appearance. Longer encounters test drift consequences. A changed trace alone is not failure. No speedup is promised in advance.

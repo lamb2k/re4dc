@@ -731,6 +731,15 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
     }
 #if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_LOCOMOTION_POSE
     LocomotionPoseCache::Pose* sharedPose = 0;
+#if RE4DC_LOCOMOTION_POSE == 2
+    static u32 contextReports;
+    if (contextReports < 24 && pG->Frame_cnt >= 240) {
+        ++contextReports;
+        re4dc_log("LPOSECTX room=%x tick=%u id=%x kind=%u r=%u/%u joints=%u phase=%f max=%f\n",
+                  (u32)pG->room_id, pG->Frame_cnt, (u32)m->id, (u32)m->kindid,
+                  (u32)m->r_no_0, (u32)m->r_no_1, (u32)n, (double)prm.frame, (double)prm.maxFrame);
+    }
+#endif
     // Only ordinary village/farm Ganado walk/dash. Root motion, blend clocks,
     // sequence events, per-actor transforms and IK remain outside this service.
     if ((pG->room_id == 0x101 || pG->room_id == 0x103) && m->kindid == 0 &&
