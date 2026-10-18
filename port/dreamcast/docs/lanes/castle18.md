@@ -58,3 +58,60 @@ Matched chapter 2 runtime/STRICT and castle KOS48KiB remain pending. KOS twin
 c18sqW ELF330ab465dcc98d2b is built but ungated. Full castle route, waves, bosses,
 cast, residency and visual acceptance remain open. No console acceptance,
 integration merge or release is implied.
+## Resumed gates, 2026-10-18
+
+The unchanged chapter-2 archive remains the common Ashley input. Frozen
+7d7c05ab chapter-2 trace c18cbrT and current 11c4ff24 c18ccrT have identical
+loadable bytes (`00c764415217c475cf077728ee9721e6817ac4b46538dec7e83c057db7d196fc`)
+and all 14 overlays. Both link without missing symbols, ending at 8c41f098.
+Fresh matched fixtures pass STRICT/decisions in r11c (370 global ticks), r11e
+(652), and r200 (652 STRICT / 651 decisions), with no log overrun. The r11c
+55-second window ends before its original room-frame-360 walk action; it
+establishes matched source gameplay/partner state, not an active walk or siege.
+The other two reach the requested trace stop. These are bounded regression
+windows, not chapter completion. `ch2-program-identity.json`, `ch2-gate-inputs.json`
+and `ch2-strict/` under the evidence root retain the proofs.
+
+The exact castle c18amW recipe's KOS twin c18sqW passes all six 48 KiB
+allocation gates (55-second Flycast windows, one block / 4 KiB pieces):
+
+| Room | Minimum headroom, block / pieces | Result |
+|---|---:|---|
+| r224 | 52,312 / 52,224 B | PASS |
+| r226 | 39,192 / 39,104 B | PASS |
+| r227 | 31,416 / 31,328 B | PASS |
+
+Each log confirms held=49152, live room activity, no OOM/HALT/FAULT/MISSING,
+and headroom above 4 KiB. CAST, textures, audio and route acceptance are separate.
+`kos-castle-summary.json` and `h-c18kos/scenarios/` retain the results. Canonical
+CH4REC now includes the same existing cast16 FIRST/LOD/ROLES5/BUMP_FLAT and
+approved STATUE_LIGHTS=2 flags previously supplied through XON. c18fmW's actual
+boot image and every overlay equal c18amW (`canonical-castle-identity.json`).
+HEAP4_WATER remains a diagnostic extra. T15REC and CH2REC are unchanged.
+
+### Remaining room work
+
+- r205's full PS2 conversion stays unchanged. Producer commit 45fe6728 audits
+  em2d for the existing version-2 32 KiB motion transport. Its diagnostic body
+  falls from 2,542,976 to 1,699,136 B. All 66 FCVs match the resident archive by
+  ordinal; 61 streamed clips pass three rounds through each native host storage
+  path, with no leak. Five oversized clips stay resident. This is not a hot-set
+  residency or route qualification. The private data is mirrored as
+  `castle18-em2d-motion-20261018`, with `SHA256SUMS` and host/mirror proofs.
+- All 20 missing r205 texture pairs exist in the recovered ch3found data;
+  restored fixture selection reuses their exact bytes. No texture regeneration.
+- Existing res17b resident file `98c23bc3e40e1658e05fc9a952f453b04e0fbcd695a7e47354bf12d0cb849eb8`
+  covers all 116 current room lists (zero short). It preserves the core/water
+  records and can replace the incomplete recovered file. No new resident file.
+- r203/r206 em11 and r208/r209 em1a packages reuse sealed recovered geometry,
+  source bindings, masks and runtime headers. Only audited source-type selection,
+  room eligibility metadata and packaging change. All four pass the actual host
+  package validator, and are mirrored as `castle18-cast-rooms-20261018`.
+  Actual enemy drawing and progression remain required.
+- r227's existing 329,920-byte package admits on the current ROLES5 arm. r216
+  still needs its actual room gate. The `jump` parser already exists but is
+  diagnostic WARP_JUMP=0 by default; c18jmW enables it for the r20d/r206 rig.
+  A diagnostic room jump will not qualify natural door progression.
+- Boss models are exclusively boss18 under I-005. The prepared r228 fixture
+  uses existing full models and the exact emleon05 a506e148 archive; it is a
+  diagnostic input, not a completed boss-room gate.
