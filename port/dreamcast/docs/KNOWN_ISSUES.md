@@ -16,7 +16,7 @@ cabin, r109, included), and a smaller room-entry hitch.
 - **Test 16.3:** the village and farm fights load their Ganado animations at room entry; the village keeps all its pictures in video memory (two Ganado texture sheets at half resolution).
 - **Test 16.2:** no fifth Ganado for a moment in some village areas; the r108 Ganados with a weapon use their PS2 model.
 - **Test 16.1:** at most 4 Ganados at once (was 6); no ambient farm animals.
-- **Test 16:** follows test 15.1.
+- **Test 16:** a standard GD-ROM disc image (for the GDEMU freezes), plain disc reads when a fast read fails, radio call subtitles that keep up with the voice, PS2 water out on the lake, and the village (r101) back to its full-detail world.
 - **Test 15.1:** hotfix of test 15: no haze or mist sprites around Leon; Foliage Off leaves out every see-through card.
 - **Test 15:** follows test 14.
 - **Test 13:** follows test 12.2.
