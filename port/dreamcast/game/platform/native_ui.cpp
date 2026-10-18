@@ -4077,6 +4077,28 @@ void preload_identities(){
         re4dc_log("native texture preload: full pass left=%u least_bytes=%u\n",left,least);}
 #endif
     if(frame)for(auto& e:entries)if(e.valid && e.frame==frame)e.frame=frame-1;
+#if defined(RE4DC_ROOM_LEFTOVER_FIT) && RE4DC_ROOM_LEFTOVER_FIT
+    {
+        // ROOM_LEFTOVER_FIT (Makefile; render only; lane fix18, #39): ROOM_CHANGE_EVICT keeps what the old room drew in
+        // its last frames. Through a door that shows the old room to the end (r10f -> r200: 54 r10f world pictures,
+        // 611 KB) the leftovers sat beside r200's large set: 72 KB free, 8 KB largest block, every later load evicted,
+        // the EFFECT_ROOM guard refused 20 effect loads (366 sprites dropped) and the PS2 world prep of fa6fe38c found
+        // no block. After each preload pass, while the budget has less than kLeftoverHeadroom free, close the previous
+        // room's leftovers (last drawn at or before the room change, not pinned, leased or core), oldest first. A room
+        // with room to spare keeps them as before (the common set the old room drew to the end).
+        constexpr unsigned kLeftoverHeadroom=512U*1024U;
+        unsigned lclosed=0,lbytes=0;
+        while(used+kLeftoverHeadroom>budget){
+            Entry* victim=nullptr;
+            for(auto& e:entries)if(e.valid && e.frame<=rce_retire_frame && !RE4DC_ENTRY_PINNED(e) && !RE4DC_CORE_PINNED(e) &&
+                                   (!victim || e.frame<victim->frame))victim=&e;
+            if(!victim)break;
+            lbytes+=victim->package.vram_bytes();++lclosed;close_entry(*victim);
+        }
+        if(lclosed)re4dc_log("native UI: room leftover fit: closed=%u kb=%u used=%u budget=%u free=%u\n",lclosed,lbytes/1024,used,budget,
+                             (unsigned)pvr_mem_available());
+    }
+#endif
     re4dc_log("native texture preload: frame=%u picked=%u resident=%u loads=%u skipped=%u full=%d used=%u budget=%u entries=%u us=%u\n",frame,n,resident,preload_loads-loads,
         preload_skipped-skipped,full?1:0,used,budget,kTextureCount,unsigned(timer_us_gettime64()-start));
 #if RE4DC_TEX_PACK

@@ -559,6 +559,16 @@ endif
 ifeq ($(MOVIE_POLL_SETTLE),1)
 $(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_POLL_SETTLE=1
 endif
+# MOVIE_AUDIO_PRIME=1 (lane fix18, #38): the KOS stream prefill asks for 2 x 32 KiB before a route movie's clock
+# starts; the 48 KiB PCM cap left the second request 18,556 B short (1 underrun + ~145 ms silence in every movie).
+# The prefill callback now tops the PCM up from the file first (no new memory). Default 0 keeps the image identical.
+MOVIE_AUDIO_PRIME ?= 0
+ifeq ($(filter $(MOVIE_AUDIO_PRIME),0 1),)
+$(error MOVIE_AUDIO_PRIME must be 0 or 1)
+endif
+ifeq ($(MOVIE_AUDIO_PRIME),1)
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_AUDIO_PRIME=1
+endif
 ifneq ($(ROUTE_CH23),0)
 ifneq ($(ROUTE_CH23)$(ROUTE_CH21)$(ROUTE_OVL),111)
 $(error ROUTE_CH23 must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1)
@@ -2509,6 +2519,21 @@ ifneq ($(TEX_KEEP),1)
 $(error ROOM_CHANGE_EVICT needs TEX_KEEP=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOM_CHANGE_EVICT=$(ROOM_CHANGE_EVICT)U
+endif
+# ROOM_LEFTOVER_FIT=1 (lane fix18 #39, render only, default 0 = image unchanged; needs ROOM_CHANGE_EVICT): after each
+# preload pass, while the texture budget has less than 512 KB free, close the previous room's leftovers (last drawn at or
+# before the room change; not pinned, leased or core), oldest first. r10f -> r200 kept 54 r10f world pictures (611 KB)
+# beside r200's set: 72 KB free, 20 thrash-guard refusals, 366 effect sprites dropped, fa6fe38c without a block.
+# Logs "native UI: room leftover fit:".
+ROOM_LEFTOVER_FIT ?= 0
+ifneq ($(filter-out 0 1,$(ROOM_LEFTOVER_FIT)),)
+$(error ROOM_LEFTOVER_FIT must be 0 or 1)
+endif
+ifeq ($(ROOM_LEFTOVER_FIT),1)
+ifeq ($(ROOM_CHANGE_EVICT),0)
+$(error ROOM_LEFTOVER_FIT needs ROOM_CHANGE_EVICT)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOM_LEFTOVER_FIT=1
 endif
 # ROOM_REENTRY_EVICT=1 (test 14 RC, render only, default 0 = image unchanged; needs ROOM_CHANGE_EVICT): when the room
 # entered is the room just left (Continue after a death, r101 -> r101), the room-change evict closes every kept entry
