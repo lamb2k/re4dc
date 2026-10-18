@@ -165,7 +165,7 @@ was needed.
 The r205 raw sound bank is now prebuilt through the existing frozen-layout
 fitter. All non-sound bytes, including the prepared motion body and FCVs, are
 identical. The current guest loads bank 8 with zero bank fit failures and zero
-texture failures; the missing SBB 2408000 voice stream remains separate.
+texture failures; the missing SBB 2408000 stream remains separate. Its exact original header identifies stream 0:19, a looping 32 kHz stereo music track, not a voice clip.
 Mirror `castle18-audio-fit-20261018` has manifest 8280ebf7 and archive f0522287.
 Active Novistador camouflage remains refused: changing blend ratio/type and
 Shader_type 1/refraction require a separate renderer contract review. The type-4
