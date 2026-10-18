@@ -282,7 +282,7 @@ def check_segment(evdir, seg, known):
             last_load, load_k = ln.strip(), None
     # CAST-GC (lane castgc17): a census build (NATIVE_MODEL_REGISTRY_CENSUS=1, the mW check arms) lists every model the
     # GameCube path drew; a character / enemy that castgc/allow.tsv does not list fails (Leon: LEONGC above).
-    cg_rows, cg_meta, cg_why, cg_pack, _, cg_n = cast_gc.parse([str(out)])
+    cg_rows, cg_meta, cg_why, cg_pack, _, cg_n = cast_gc.parse([str(out)])[:6]
     if not cg_n:
         res['notes'].append('CAST-GC not judged: no NMRS census lines (build without NATIVE_MODEL_REGISTRY_CENSUS=1)')
     cg_allow = cast_gc.load_allow(str(HERE.parent / 'castgc' / 'allow.tsv'))

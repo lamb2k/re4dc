@@ -2,52 +2,94 @@
 
 # RE4 Dreamcast
 
-**An experimental Resident Evil 4 port for the Sega Dreamcast.**
+**Resident Evil 4 runs on the Sega Dreamcast, from New Game to the end of chapter 2-3 at the castle gate.**
 
-The recovered GameCube code runs the gameplay, collision and enemy AI. A native PowerVR renderer,
-lighter PS2 room assets, streamed movies and VMU saves adapt it to Dreamcast hardware.
+It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
+This is an experimental fan test build, not the complete game.
 
-**[Download the latest GDEMU test build](https://github.com/lamb2k/re4dc/releases/latest)** ·
-[Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) · [Roadmap](port/dreamcast/docs/D367_THIRTY_FPS_ROUTE.md) ·
+**[Download Test 17](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
 
-## Contributing
+## What's new in Test 17
 
-Clone with `git clone --recurse-submodules https://github.com/lamb2k/re4dc.git` (the SH4ZAM maths library is a git
-submodule). One command then builds your own program and puts it on the latest test disc: `bash port/dreamcast/contrib.sh`.
-See [CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md); contributors and their coding agents should then read
-[CLAUDE.md](CLAUDE.md) or [AGENTS.md](AGENTS.md) (section "Outside contributors start here").
+Chapters 2-2 and 2-3 are playable, up to the castle gate. Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
 
-## Playing
+- **Chapters 2-2 and 2-3.** The cabin siege with Luis, Mendez, the second El Gigante and the truck ride to the
+  castle gate (r200), with the PS2 enemy lists. At most 4 Ganados at once, as in chapter 1.
 
-The latest build is console test 15.1, a hotfix of test 15: the see-through haze and mist sprites around Leon are gone (the distant haze stays as fog) and Foliage Off now leaves out every see-through card while the r109 cabin keeps its walls. Test 15 is test 14 plus the r100 cliff cutscene, the missing chapter 1 sounds and music, villagers lit by the room, PS2 models for the last GameCube enemies and the boat, PS2 water, every chapter 1 room's textures kept in graphics memory, and two new Options rows: View distance and Foliage. Desktop packages will return with a later test build;
-until then, play the console test in Flycast. Extract the complete package:
+  ![Leon in the cabin (r11c)](docs/images/releases/test-17/chapter2-siege.jpg)
+  <br>In the cabin, chapter 2-2. Flycast capture, test 17.
 
-| System | Download | Launch |
-| --- | --- | --- |
-| Dreamcast / GDEMU | Console test ZIP (`RE4DC-Console-Test-...-GDEMU.zip`) on the [latest release](https://github.com/lamb2k/re4dc/releases/latest) | Copy the four files inside `gdemu` into a new numbered SD card folder. |
+- **PS2 Ashley** in every room she follows Leon.
 
-The release page also has the test build checksums (`SHA256SUMS.txt`), the test notes, the Build-Assets zip for
-contributors (see Contributing).
+  ![Leon and Ashley (r11e)](docs/images/releases/test-17/ashley.jpg)
+  <br>Leon and Ashley. Flycast capture, test 17.
 
-### Benchmark disc (not the game)
+- **Mendez and El Gigante as lighter PS2 models** in their fights.
 
-`RE4DC-Benchmark-NOT-THE-GAME-...-GDEMU.zip` is a separate disc that only measures speed on a real console. It is
-not on the test 15 release; a new benchmark disc will come with a later test build. It cannot be played: no title menu, no New Game, no saves, and it does not touch your VMU. A red
-"BENCHMARK DISC - NOT THE GAME" banner stays on screen, and the GDEMU menu lists it as
-"RE4DC BENCHMARK (NOT THE GAME)". It runs two scripted scenes by itself (the village by the burning cross, then the
-first house at its back window) and ends on a results screen; a full run takes about 4 minutes.
+  ![El Gigante (r11e)](docs/images/releases/test-17/el-gigante.jpg)
+  <br>El Gigante. Flycast capture, test 17.
 
-To report, open a new issue titled "Benchmark results" with a sharp photo of the results screen, the CODE line typed
-out, your console region, how you ran it (GDEMU, another drive emulator, or a burned disc) and your video cable.
-The README inside the zip explains each number. Flycast runs it too, but emulator numbers are not console numbers.
+- **Rain at the night lake** ([#30](https://github.com/lamb2k/re4dc/issues/30)): 320 falling streaks, drawn the
+  Dreamcast way. It is cheaper than the old faint lines.
 
-Already have Flycast? Open `gdemu/disc.gdi` from the console test ZIP, keeping all track files beside it.
-For GDEMU, keep filenames unchanged and save any card-manager changes before ejecting the card.
-Disc format: from test 16 the disc is a standard GD-ROM image (the layout of pressed GD-ROMs, as the mkdcdisc tool
-writes it; `track03.bin` is about 1.2 GB), which fixes the GDEMU-only freezes of earlier tests; leave "Shrink GDI" off.
-See [section 8 of CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md#8-disc-image-and-compatibility).
-No BIOS or personal VMU saves are included; keep your existing saves separately.
+  ![Rain at the night lake (r11b)](docs/images/releases/test-17/night-rain.jpg)
+  <br>Rain at the night lake. Flycast capture, test 17.
+
+- **The castle gate (r200)** is the end of this test.
+
+  ![Outside the castle (r200)](docs/images/releases/test-17/castle-gate-r200.jpg)
+  <br>Outside the castle, where this test ends. Flycast capture, test 17.
+
+- **Solid scenery draws solid** in every chapter 2 room too (the 16.5 change). The new rooms look the same.
+- **Fewer pauses in fights.** The Ganado animations the fights use load with the room, and Ganados that lose their
+  head keep their PS2 model.
+- **Short view distance** draws a simplified far view in the first area and the village.
+
+## Coming soon: Test 18
+
+Planned, with no date yet:
+
+- **Chapter 3-1 playable:** the castle's first part, past the gate.
+- **A lighter El Gigante** in both fights.
+- **Fixes:** a few effect pictures missing in r102 right after loading a save
+  ([#33](https://github.com/lamb2k/re4dc/issues/33)); the small missing picture in r118
+  ([#37](https://github.com/lamb2k/re4dc/issues/37)); pictures still loaded from the disc during the first house
+  fight (r100) and at the night lake shore (r11b); the Mendez cutscene that ends a little early; effect
+  sprites missing on the way to the castle gate.
+- **Work continues** on cheaper enemies and cheaper scenery.
+
+Screenshots come with the release.
+
+## Play it
+
+One download plays on a real Dreamcast with GDEMU, or in Flycast. No BIOS or VMU saves are included.
+
+| File on the release page | What it is |
+| --- | --- |
+| `RE4DC-Console-Test-...-GDEMU.zip` | The game disc. This is the one to download. |
+| `SHA256SUMS.txt` | Checksums for the zips. |
+| `RE4DC-Test16.5-...-Build-Assets.zip` | Only for building the program from source. Not needed to play. |
+
+**On a Dreamcast with GDEMU:**
+
+1. Extract the zip.
+2. Copy the four files inside `gdemu` into a new numbered folder on the SD card. Keep the file names.
+3. Replace any older test folder. Do not mix track files from two tests.
+4. If your card manager offers "Shrink GDI", leave it off.
+
+**In Flycast:**
+
+1. Extract the zip. Do not open the zip itself.
+2. Open `gdemu/disc.gdi` from the extracted folder, with the track files beside it.
+
+**Flycast tips** (from [#35](https://github.com/lamb2k/re4dc/issues/35), seen in Flycast 2.7):
+
+- **Turn off Widescreen, Widescreen Game Cheats and Super Widescreen.** The game draws 4:3; widescreen shows undrawn side areas.
+- **Broken menu or popup text?** Use Flycast's per-pixel renderer setting.
+
+The disc is a standard GD-ROM image, laid out like a pressed disc
+([section 8 of CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md#8-disc-image-and-compatibility)).
 
 | Action | Dreamcast pad |
 | --- | --- |
@@ -58,98 +100,59 @@ No BIOS or personal VMU saves are included; keep your existing saves separately.
 | Knife | L |
 | Inventory | Y |
 | Pause / options | START |
-| Speed display: Off → On screen | Hold R, press START |
+| Speed display on / off | Hold R, press START |
 
-Options has the Frame pacing row (Fast is the default), the Rendering row, the View distance row and the Foliage row. Rendering is
-Standard (the default, the full 640x480 picture) or FSAA, which smooths edges by drawing twice the pixels and is
-slower in busy scenes. View distance is how far the scenery is drawn: Full (the default, as on the PS2), Near or
-Short. Near and Short fade the distant scenery into the fog sooner, which makes busy outdoor scenes faster; the
-game plays the same. Inside a house the room around you stays clear, and only what you see through the doors and
-windows fades. In the first area and the village, Short draws a simplified copy of the distant scenery (in the first area after the ambush at the first house it fades instead, keeping the memory for the villagers)
-instead, so houses, trees and the hills stay in view. The lake always shows its full horizon. Foliage is how the see-through brush and leaf cards outdoors
-are drawn: Near (the default) draws the leaf and brush cards with sharp edges and only up to about 12 m, where the
-fog hides them anyway, which makes the woods faster; Full draws all of them blended, as on the PS2; Off leaves them
-out, with the soft shadow and grass cards (fastest; walls, floors and water are always drawn). FSAA, View distance
-and Foliage last until the console is switched off; every boot starts in Standard, Full and Near.
-The speed display shows the frame rate and game speed on screen; it is off unless you switch it on.
+**Options:**
+
+- **Frame pacing:** Fast is the default. Saved on the VMU.
+- **Rendering:** Standard (default) or FSAA, which smooths edges but is slower in busy scenes.
+- **View distance:** Full (default, as on the PS2), Near or Short. Near and Short fade distant scenery sooner and run faster.
+- **Foliage:** Near (default), Full or Off. Off is fastest; walls, floors and water always draw.
+- Rendering, View distance and Foliage reset at every boot.
+
 The VMU in controller slot 1 shows Leon, Ashley, Hunnigan and Luis pages.
 
-## Status and limitations
+## Known issues
 
-**Console test 15, October 16, 2026:** the game plays to the end of chapter two, part one
-(the lake and the boat ride, the wolves, the El Gigante fight, finding Ashley and the chapter results),
-up to a **Coming Soon** screen. This is a prerelease, not the complete game.
+The full, current list is [KNOWN_ISSUES.md](port/dreamcast/docs/KNOWN_ISSUES.md). The top open items:
 
-Recent progress:
+- **No rain at the night lake** (start of chapter 2-1). A new Dreamcast rain is planned for Test 17.
+- **Missing effect pictures in r102** right after loading a save ([#33](https://github.com/lamb2k/re4dc/issues/33)).
+- **Pauses when entering rooms.**
 
-* Test 15.1 (hotfix): no haze or mist sprites around Leon in any room (the distant haze stays as fog); Foliage Off leaves out every see-through brush, leaf, shadow and mist card, and the r109 cabin keeps its walls and floor.
-* Test 15: the r100 cliff cutscene plays again; footsteps and ambience in the farm, the missing room music, the merchant's voice and other chapter 1 sounds; the villagers and the merchant are lit by the room's lights; PS2 models for the traps, bats, snake, fish, the boat and the r104 / r117 / r118 enemies; the pool, river and lake from the shore draw their water the PS2 way; every chapter 1 room keeps its textures in graphics memory; Options rows View distance and Foliage (both reset at each boot).
-* Test 14: a disc read fix for the GDEMU freezes and crashes ([#27](https://github.com/lamb2k/re4dc/issues/27); please confirm on a console); the village keeps all its textures in graphics memory; the farm (r103) reads the disc far less; less work per frame.
-* Test 13: the PS2 enemy rules in every chapter 1 room, with at most 6 villagers active at once; PS2 room
-  objects from r102 to r11b with the GameCube breakable boxes (no more dark debris); the PS2 Ashley; less work per
-  frame in the village; fewer disc reads in r103 and r100 after the village.
-* Test 12: PS2 models for the room objects in the first two villages, the items you pick up, the villagers' caps
-  and the merchant; a brighter Leon; at most 6 villagers attack at once; the radio call crash is fixed
-  (confirmed on a real console).
-* Fixes for the random console crashes and broken textures of test 7 and test 8 (please confirm on a console).
-* Doors hold the last picture and fade to black, with the PS2 Loading banner.
-* The village fight follows the PS2 rules: fewer villagers at once, new waves when fewer than 5 are left.
-* VMU pages for Leon, Ashley, Hunnigan and Luis; the speed display setting is saved.
-* PS2 models for Leon in both outfits, the villagers, the animals, El Gigante and the lake monster.
-* The bridge door freeze is fixed, confirmed on a real console.
+## Help out
 
-Known issues (full list: [KNOWN_ISSUES.md](port/dreamcast/docs/KNOWN_ISSUES.md)):
+**Testers:** use the [Game bug form](https://github.com/lamb2k/re4dc/issues/new/choose).
 
-* **Stability:** random crashes and freezes on GDEMU while a room loads: one cause is fixed since test 14 (the
-  Dreamcast system library could take an old "disc read finished" signal and use half-read data; needs a console
-  check, [#27](https://github.com/lamb2k/re4dc/issues/27)), and a standard disc layout comes in test 16. The memory corruption crashes of tests 7
-  and 8 were fixed in test 9 (needs a console check). A few menu actions can stop the game.
-* **Picture:** some textures are missing; the ripples out on the lake are incomplete; the night lake has no torch
-  flames or rain; in the village (r101) the burning stake misses its crossbar and a pyre plank, and the fence by the
-  house misses its rails; the item menu's confirm popup differs from test 13.
-* **Sound:** the rifle sound is lower quality; radio call subtitles fall behind the voice.
-* **Loading:** pauses when entering rooms.
+- **Say** the build, the room or chapter, the steps, and Flycast or Dreamcast (with your loader).
+- **Attach** a screenshot or video. For a console crash, a clear photo of the whole diagnostic screen.
+- **One bug per issue.**
 
-## Development
+**Contributors:**
 
-The GameCube C/C++ builds for SH-4 with KallistiOS. Dreamcast code replaces graphics, audio, disc and
-memory-card services; offline tools convert room worlds, characters and textures from original data.
-Game data is not committed. Rendering changes must preserve gameplay, checked with matching logic traces.
+- **Clone with submodules:** `git clone --recurse-submodules https://github.com/lamb2k/re4dc.git` (SH4ZAM is a submodule).
+- **Build and swap in one command:** `bash port/dreamcast/contrib.sh` builds your program and puts it on the latest test disc.
+- **Read first:** [CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md), then [CLAUDE.md](CLAUDE.md) or
+  [AGENTS.md](AGENTS.md) ("Outside contributors start here").
+- **Branch from `dreamcast-port`:** one change per PR, behind a default-off knob, no game data.
+
+## How it works
+
+The original game logic, with a Dreamcast-native picture.
+
+- **Recovered GameCube code** runs the gameplay, collision and enemy AI, built for the SH-4 with KallistiOS.
+- **A native PowerVR renderer** replaces the GameCube graphics.
+- **PS2 room and character assets,** converted offline, are lighter for the Dreamcast.
+- **VMU saves** stand in for the memory card, and **cutscene movies stream** from the disc.
 
 <p>
-<img src="docs/images/dev/ganado-ps2-look.jpg" width="49%" alt="Ganado model from the PS2 version, prepared for the Dreamcast">
-<img src="docs/images/dev/r104-world-sheet.jpg" width="49%" alt="r104 world rebuilt from PS2 room data, review sheet">
-</p>
-<p>
-<img src="docs/images/dev/prompt-glyphs.jpg" width="49%" alt="The game's button-prompt glyphs, extracted for the native UI renderer">
-<img src="docs/images/dev/manual-vq.jpg" width="49%" alt="Player's Manual page: original texture against PowerVR VQ">
+<img src="docs/images/04-village.jpg" width="32%"> <img src="docs/images/05-farm.jpg" width="32%"> <img src="docs/images/10-mendez.jpg" width="32%">
 </p>
 
-Asset work: a PS2 Ganado, the r104 world, button glyphs and a Player's Manual texture before/after VQ compression.
+More in the [port notes](port/dreamcast/README.md), the [build recipes](port/dreamcast/tools/d367/README.md),
+[engine overview](docs/overview.md).
 
-Start with the [build recipes](port/dreamcast/tools/d367/README.md),
-[room coverage](port/dreamcast/docs/R4_FIRST_STAGE_GAP_AUDIT.md) and [engine overview](docs/overview.md).
-Contributions branch from `dreamcast-port`: one change per PR, relevant before/after checks, no game data.
-
-## Pictures
-
-Captured in Flycast from the play builds.
-
-<p>
-<img src="docs/images/01-intro.jpg" width="32%"> <img src="docs/images/02-radio.jpg" width="32%"> <img src="docs/images/03-forest.jpg" width="32%">
-<img src="docs/images/04-village.jpg" width="32%"> <img src="docs/images/05-farm.jpg" width="32%"> <img src="docs/images/06-woods.jpg" width="32%">
-<img src="docs/images/07-cutscene.jpg" width="32%"> <img src="docs/images/08-vmu-save.jpg" width="32%"> <img src="docs/images/09-r104.jpg" width="32%">
-<img src="docs/images/10-mendez.jpg" width="32%"> <img src="docs/images/11-chapter-end.jpg" width="32%">
-</p>
-
-## Reporting bugs
-
-[Open a Game bug issue](https://github.com/lamb2k/re4dc/issues/new/choose) with the build, room/chapter,
-steps to reproduce, system (Flycast or Dreamcast), and a screenshot or video. On Windows, attach the
-newest game log from `logs/`. For a console crash, include the Frame pacing setting and a clear photo
-of the complete diagnostic screen. One bug per issue.
-
-## Credits
+## Credits and legal
 
 Built on the [RE4 GameCube decompilation](docs/DECOMPILATION.md),
 [KallistiOS](https://github.com/KallistiOS/KallistiOS) and [Flycast](https://github.com/flyinghead/flycast).

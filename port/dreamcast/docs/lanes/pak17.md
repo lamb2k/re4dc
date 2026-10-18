@@ -150,9 +150,17 @@ edit (backup `.bak-ovl17`).
 | KOS squeeze 48 KiB (fresh-objdir twin fpg17sqW from the clean g17rP; the twin disc carries all 14 overlays) | PASS 10 / 10: fight min 7,720 B, call 25,160 B, door103 13,800 B, leave100 / leave103 7,720 B, 0 Out of memory |
 | STRICT e17rT (t15/int e46c87ac, T15_DATA + ch2 + cast16) vs g17rT (merge, T17_DATA), stop 2000, RESIDENT_STRICT=1 | h2 STRICT, MUST-IDENTICAL (2,002 ticks); bell STRICT, MUST-IDENTICAL (2,002); door103 STRICT (2,002), decisions differ only in `ep` at tick 1176 (the door load), which also differs between two runs of the same e17rT build (n17b vs n17c: 1238690 / 1238694 vs 1239485 on g), so it is run-to-run, not the merge |
 
-The KOS minimum fell from 11,016 B (land/t17-pak17-motion over f30cd6f9) to 7,720 B, still a pass. The program is
-byte-identical to e46c87ac's and pak17 gave 11,016 B on f30cd6f9, so the drop most likely comes from e46c87ac (cast16 +
-T15_SO's stage overlays); e46c87ac alone was not KOS-gated here.
+The KOS minimum fell from 11,016 B (land/t17-pak17-motion over f30cd6f9) to 7,720 B, still a pass. Cause (measured
+10-17): **not pak17, and not KOS use**. ARENA_FIT gives the game arena everything above
+`ARENA_FIT_KOS_BYTES + 64` in 4 KiB steps, so KOS keeps that floor plus a 0..4,095 B rounding residue that depends on
+the program's `_end`. On f30cd6f9 the residue was 3,384 B ("arena fit ... 200,056 left to KOS"); on e46c87ac's image
+(d452f0d7) it is 88 B (196,760 left). 3,296 B of difference, the whole drop: the KOS headroom is already 3,296 B lower at
+frame 86, before any texture loads. Minus the residue, the fight minimum is 7,720 B on both.
+Control (Flycast, same program d452f0d7, KOS twin fpe17sqW): the release data without pak17 (T15_DATA + ch2 + cast16:
+the older 4,904-key pack + 2,570 loose textures; legacy layout, as that data does not fit a standard disc) gives the
+same 10 numbers to the byte (fight 7,808 / 7,720, call 25,248 / 25,160, door 13,888 / 13,800). The pack's index is
+static (64 first-keys + one 2 KiB sector), so 6,220 keys cost no KOS heap. To make the minimum independent of `_end`,
+ARENA_FIT_KOS_BYTES could rise by 4 KiB (heap 4 gives 4 KiB); not done here.
 
 ## For the test 17 release lane
 

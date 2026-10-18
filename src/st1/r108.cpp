@@ -239,6 +239,9 @@ extern "C" void r108_checkEmReset()
     }
 }
 
+#if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
+extern "C" int re4dc_bell108_req;   // dbgwarp_bridge.cpp: the warp rig `bell108` requests
+#endif
 // The church bell: a hit enemy on the scroll object; shots ring it.
 static void r108_initChurchBell()
 {
@@ -257,6 +260,14 @@ static void r108_initChurchBell()
         YarareInitCube(hit, x, x, z, w, h, w, 0, 1);
     }
     for (;;) {
+#if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
+        {   // warp rig `bell108` (dbgwarp_bridge.cpp): one bell-shot handler call per request (the rig can't aim)
+            if (re4dc_bell108_req > 0) {
+                --re4dc_bell108_req;
+                r108_checkEmReset();
+            }
+        }
+#endif
         if (hit->ckStatus() == 1) {
             switch (hit->dmg.m_Wep) {
             case 0xD:
