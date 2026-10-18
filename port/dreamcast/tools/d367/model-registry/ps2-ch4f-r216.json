@@ -1,0 +1,56 @@
+{
+ "registry": "ps2-ch4f-r216",
+ "about": "lane ch4found16 (2026-10-17): room 216 = cast16 ps2-ch4-r216 with em3c's third info. em3cModelInit makes three infos per spawn (body, chainmail ARC 7/8 or 0xB/8, hand weapon ARC 0xC/0xD or 0xE/0xF); armor-em3c-00 / -02 carried two sections (the descriptor/info count mismatch). Presets armor-em3c-00w / -02w add the weapon models as pool sections (converted with /mnt/c/tmp/ch4/cast/c4w.py). Render only.",
+ "cast_dir": "/root/probe/lanes-20261016/ch4found/cast/regcast-em3c",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+ "descriptors": [
+  {
+   "name": "armor-em3c-00w",
+   "archive": "em3c",
+   "model_id": "0x3c",
+   "source_types": [
+    0,
+    1
+   ],
+   "partial_sections": true,
+   "module": "src/em3c/em3c.cpp em3cModelInit body + ModInfoMgr.create(ARC 7 / 0xB, ARC 8)",
+   "pool": true,
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ],
+   "mask_runs": {}
+  },
+  {
+   "name": "armor-em3c-02w",
+   "archive": "em3c",
+   "model_id": "0x3c",
+   "source_types": [
+    2,
+    3
+   ],
+   "partial_sections": true,
+   "module": "src/em3c/em3c.cpp em3cModelInit body + ModInfoMgr.create(ARC 7 / 0xB, ARC 8)",
+   "pool": true,
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ],
+   "mask_runs": {
+    "0": "/root/probe/lanes-20261016/ch4found/cast/conv/mask-armor-em3c-02w-s0"
+   }
+  }
+ ],
+ "room_packages": {
+  "216": {
+   "descriptors": [
+    "armor-em3c-00w",
+    "armor-em3c-02w"
+   ],
+   "evidence": "ch4found16 cast list + Flycast census (cxc4cmW)"
+  }
+ }
+}
