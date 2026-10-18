@@ -81,10 +81,100 @@ static Mtx s_rain_view;
 static Mtx44 s_rain_proj;
 static f32 s_rain_viewport[6];
 static u32 s_rain_drawn, s_rain_frames;
+#if defined(RE4DC_RAIN_DC) && RE4DC_RAIN_DC
+// RAIN_DC (effects30.mk; render only, an approximation of the PS2 rain; lane rain17 2026-10-18). The PS2 draws the
+// night-lake rain as ONE full-screen Esp08 sheet (r11b SST set 3 / r11a set 5, owner 0xD0: tex 0xC5, 700x540 of
+// 512x448, rgb 180 a 100, 3x1 tiles scrolled 0.09 tile a frame), a whole translucent screen of fill a frame. Here: a
+// pool of short vertical gouraud streaks in screen space (the sheet's look: thin, faint, fast, glued to the view),
+// each with a depth so walls and characters in front hide it, sent as one TR header plus one strip per streak
+// (re4dc_rain_dc_streaks). Private xorshift generator: no Rnd(), no game state; the pool advances by the game frames
+// elapsed (pG->Frame_cnt, read only). Shown while the game's own Filter06 rain is queued (r11a / r11b, not indoors),
+// its alpha eased in with the rain's (flt06.cur[3]).
+#ifndef RE4DC_RAIN_DC_N
+#define RE4DC_RAIN_DC_N 160
+#endif
+struct RainDcDrop {
+    f32 x, y, d, len, w, a;
+};
+static RainDcDrop s_raindc[RE4DC_RAIN_DC_N];
+static Re4dcRainStreak s_raindc_out[RE4DC_RAIN_DC_N];
+static u32 s_raindc_seed = 0x2545F491U, s_raindc_frame, s_raindc_pending, s_raindc_ready, s_raindc_alpha;
+static u32 s_raindc_frames, s_raindc_sent;
+static f32 RainDcUnit()
+{
+    u32 x = s_raindc_seed;
+    x ^= x << 13;
+    x ^= x >> 17;
+    x ^= x << 5;
+    s_raindc_seed = x;
+    return (f32) (x >> 8) * (1.0f / 16777216.0f);
+}
+static void RainDcSpawn(RainDcDrop* p, int top)
+{
+    const f32 u = RainDcUnit();
+    p->d = 700.0f + 5300.0f * u;                    // view depth, mm
+    p->len = 40000.0f / p->d;                       // 57 px near .. 12 px far (the PS2 sheet's streaks: 30-60 px)
+    if (p->len < 12.0f) {
+        p->len = 12.0f;
+    }
+    p->w = p->d < 1500.0f ? 1.5f : 1.0f;
+    p->a = 110.0f - 60.0f * u;                      // near streaks brighter
+    p->x = RainDcUnit() * 640.0f;
+    p->y = top ? -p->len - RainDcUnit() * 60.0f : RainDcUnit() * (480.0f + p->len) - p->len;
+}
+static void RainDcFlush()
+{
+    if (!s_raindc_pending) {
+        return;
+    }
+    s_raindc_pending = 0;
+    u32 now = pG->Frame_cnt, dt = now - s_raindc_frame;
+    s_raindc_frame = now;
+    if (!s_raindc_ready) {
+        for (u32 i = 0; i < RE4DC_RAIN_DC_N; ++i) {
+            RainDcSpawn(&s_raindc[i], 0);
+        }
+        s_raindc_ready = 1;
+        dt = 0;
+    }
+    if (dt > 4) {
+        dt = 4;
+    }
+    const f32 fade = (f32) (s_raindc_alpha > 60 ? 60 : s_raindc_alpha) * (1.0f / 60.0f);
+    u32 n = 0;
+    for (u32 i = 0; i < RE4DC_RAIN_DC_N; ++i) {
+        RainDcDrop* p = &s_raindc[i];
+        p->y += p->len * 1.1f * (f32) dt;          // about 50 px a frame near, as the PS2 sheet's scroll
+        if (p->y > 480.0f) {
+            RainDcSpawn(p, 1);
+        }
+        const u32 a = (u32) (p->a * fade);
+        if (a == 0) {
+            continue;
+        }
+        Re4dcRainStreak* s = &s_raindc_out[n++];
+        s->x = p->x;
+        s->y0 = p->y;
+        s->y1 = p->y + p->len;
+        s->z = 1.0f / p->d;
+        s->w = p->w;
+        s->tail = ((a >> 2) << 24) | 0xB4B4B4U;     // PS2 sheet colour 180
+        s->head = (a << 24) | 0xB4B4B4U;
+    }
+    s_raindc_sent += re4dc_rain_dc_streaks(s_raindc_out, n);
+    if (++s_raindc_frames % 120 == 1) {
+        re4dc_log("rain dc: frame=%u room=%x streaks=%u sent=%u alpha=%u\n", (unsigned) pG->Frame_cnt,
+                  (unsigned) pG->room_id, (unsigned) n, (unsigned) s_raindc_sent, (unsigned) s_raindc_alpha);
+    }
+}
+#endif
 // gx_stub.cpp GXSetDrawSync(0xADEB): after native_ui drained the deferred translucent queue, so each line goes
 // straight to the open TR list (re4dc_effect_line: no frame storage). Depth tested, blended as GXSetBlendMode(1, 4, 5).
 extern "C" void re4dc_rain_flush()
 {
+#if defined(RE4DC_RAIN_DC) && RE4DC_RAIN_DC
+    RainDcFlush();
+#endif
     if (!s_rain_pending) {
         return;
     }
@@ -369,6 +459,12 @@ void Filter06Render()
         GXGetViewportv(s_rain_viewport);
         s_rain_pending = 1;
     }
+#if defined(RE4DC_RAIN_DC) && RE4DC_RAIN_DC
+    if ((pG->room_id == 0x11A || pG->room_id == 0x11B) && flt06.num != 0 && flt06.cur[3] != 0) {
+        s_raindc_pending = 1;
+        s_raindc_alpha = flt06.cur[3];
+    }
+#endif
 #endif
     GXSetBlendMode(1, 4, 5, 0);
     CameraCurrentProjection();

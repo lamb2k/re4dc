@@ -47,6 +47,13 @@ struct Re4dcEffectSprite {
 };
 // Esp19's two final source endpoints, projected and depth-clipped by its owner.
 // One pixel GX line, with the source endpoint colours and blend/depth state.
+// RAIN_DC (filter06.cpp): one vertical rain streak, x / y0 (tail) / y1 (head) in 640x480, z = 1/depth, width in
+// pixels, tail and head ARGB (gouraud).
+struct Re4dcRainStreak {
+    float x, y0, y1, z, w;
+    unsigned tail, head;
+};
+extern "C" unsigned re4dc_rain_dc_streaks(const Re4dcRainStreak*, unsigned);
 struct Re4dcEffectLine {
     float x[2], y[2], z[2];
     unsigned color[2];
