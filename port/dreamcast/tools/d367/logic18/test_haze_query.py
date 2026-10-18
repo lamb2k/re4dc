@@ -10,7 +10,7 @@ head='''#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-using u16=uint16_t; using u8=uint8_t; using f32=float;
+using u32=uint32_t; using u16=uint16_t; using u8=uint8_t; using f32=float;
 struct cEsp { int m_Id; struct { int owner; } info; u8 m_Col_start_r,m_Col_start_g,m_Col_start_b; };
 static u16 G_ROOM_ID; static int re4dc_ps2fx=1;
 #define PS2FX_HAZE 1
@@ -48,5 +48,5 @@ int main() {
 head='#include <initializer_list>\n'+head
 tmp=tempfile.TemporaryDirectory(prefix='logic18-haze-');out=Path(tmp.name)/'query.cpp';out.write_text(head+'\n#define RE4DC_FX_HAZE_INDEX 0\nnamespace Ref {\n'+body+'\n}\n#undef RE4DC_FX_HAZE_INDEX\n#define RE4DC_FX_HAZE_INDEX 1\nnamespace Opt {\n'+body+'\n}\n'+tail)
 exe=Path(tmp.name)/"query"
-subprocess.run(["g++","-O2","-std=c++11",str(out),"-o",str(exe)],check=True)
+subprocess.run(["g++","-O2","-std=c++20",str(out),"-o",str(exe)],check=True)
 subprocess.run([str(exe)],check=True)
