@@ -131,6 +131,8 @@ chapter 2 enemies, below); it looks different from the release:
 * `GANADO_LOD=0`: no lighter villager meshes (they need the PS2 villagers and the zip's `glod/`).
 * `ACTOR_PROBE_LIGHT=1 GANADO_LIT=0`: only Leon is lit by the room-light probe (the release lights the PS2 villagers
   with it too).
+* `NATIVE_MODEL_REGISTRY_DYING=0`: a dying villager fades on the GameCube model (the release keeps the PS2 model
+  through the fade, which needs the PS2 villagers).
 * El Gigante, Del Lago, the female villagers, the animals, Ashley, the PS2 room objects and the PS2 room
   worlds (with the village's baked doors, windows and racks) come from the disc, so they draw as in the
   release.
