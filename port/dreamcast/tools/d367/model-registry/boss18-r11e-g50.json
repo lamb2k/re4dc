@@ -1,0 +1,39 @@
+{
+ "registry": "boss18-r11e-g50",
+ "about": "User-approved I-005 Test18-only: r11e full PS2 El Gigante plus protected g50 gameplay mesh; full in source events.",
+ "cast_dir": "/root/re4data/private/boss18-gigante-20261018/combined/r11e-g50",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "Existing PS2_GIGANTE source-light contract; same source atlas for full and gameplay level.",
+ "descriptors": [
+  {
+   "name": "gigante-em2b-02",
+   "archive": "em2b",
+   "model_id": "0x2b",
+   "source_types": [
+    2
+   ],
+   "module": "src/em2b/em2b.cpp em2bModelInit type2; own source body/head/TPL"
+  },
+  {
+   "name": "gig2b02-g50",
+   "archive": "em2b",
+   "model_id": "0x2b",
+   "source_types": [
+    2
+   ],
+   "module": "src/em2b/em2b.cpp em2bModelInit type2; own source body/head/TPL",
+   "lod_of": "gigante-em2b-02"
+  }
+ ],
+ "room_packages": {
+  "11e": {
+   "descriptors": [
+    "gigante-em2b-02",
+    "gig2b02-g50"
+   ],
+   "evidence": "I-005 user approved g50 for Test18; H-002 same-source STRICT/decisions, CAST-GC0, KOS49152, memory and source-hold sheets; full event/grab selection retained"
+  }
+ }
+}

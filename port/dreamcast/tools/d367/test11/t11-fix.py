@@ -445,6 +445,13 @@ if os.path.exists(CH2D + '/ch2-data.json'):
 C16D = os.environ.get('C16D', '/root/re4data/private/cast16data-20261016')
 if os.path.exists(C16D + '/cast16-data.json'):
     DATA['cast16'] = dict(json.load(open(C16D + '/cast16-data.json'))['replace'])
+# Boss18 I-005 (10-18): explicit Test18-only El Gigante g50 gameplay data.
+# CH2REC already enables FIRST/LOD; the existing selector retains full for events/grabs.
+# Never add this to T15_DATA/T17_DATA. ch2/ch2-gigante-g50.sh applies it explicitly.
+B18G50D = os.environ.get('B18G50D', '/root/re4data/private/boss18-gigante-g50-t18-20261018')
+DATA['boss18g50'] = {'dc/native/r119/registry.re4nmr': B18G50D + '/native/r119/registry.re4nmr',
+                     'dc/native/r11e/registry.re4nmr': B18G50D + '/native/r11e/registry.re4nmr',
+                     'tex': B18G50D + '/tex'}
 # Disc 1 texture packing (lane pak17, 10-16; coordinator round 4 "loose -> pack", test 17): pak17 = dc/tex.pak holding
 # every loose texture of the test 17 disc (T15_DATA + ch2 + cast16 over the package base tree), built by
 # tools/d367/vram/disc_pack.py over ch2's tex.pak (13340bfa, 21:54 data): the 1,250 loose keys the pack already held

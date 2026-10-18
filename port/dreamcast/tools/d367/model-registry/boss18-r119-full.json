@@ -1,0 +1,28 @@
+{
+ "registry": "boss18-r119-full",
+ "about": "Boss18 review candidate: r119 full PS2 El Gigante; full reference arm.",
+ "cast_dir": "/root/re4data/private/boss18-gigante-20261018/cast/r119-full",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "Existing PS2_GIGANTE source-light contract; same source atlas for full and gameplay level.",
+ "descriptors": [
+  {
+   "name": "gigante-em2b-00",
+   "archive": "em2b",
+   "model_id": "0x2b",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2b/em2b.cpp em2bModelInit type0; own source body/head/TPL"
+  }
+ ],
+ "room_packages": {
+  "119": {
+   "descriptors": [
+    "gigante-em2b-00"
+   ],
+   "evidence": "BOSS17 full source reuse; boss18 protected-region and native host checks; current fight validation pending"
+  }
+ }
+}
