@@ -1,6 +1,6 @@
-# Resident Evil 4 (GameCube) — decompilation
+# Resident Evil 4 (GameCube): decompilation
 
-A complete, byte-identical decompilation of *Resident Evil 4* for the Nintendo GameCube: the
+**A complete, byte-identical decompilation of *Resident Evil 4* for the Nintendo GameCube:** the
 `G4BE08` **debug build** (the "Nov 25 2004" prototype, both discs), whose `Bio4.sym` files name every
 function. Building the repository reproduces `main.dol` and all 114 REL overlays exactly
 (`config/G4BE08/build.sha1`, checked on every build).
@@ -9,7 +9,7 @@ function. Building the repository reproduces `main.dol` and all 114 REL overlays
 |---|---|
 | Objects | 1083 (675 in the DOL, 408 across the 114 RELs), all byte-identical; 15641 functions |
 | Source | ~555k lines of C/C++ (`src/`), ~33k lines of headers (`include/`); no assembly files |
-| Game code | SN Systems ProDG 3.9.3 — GCC 2.95.3 "SN BUILD v1.79", built natively from SN's GPL source drop |
+| Game code | SN Systems ProDG 3.9.3, GCC 2.95.3 "SN BUILD v1.79", built natively from SN's GPL source drop |
 | CRI middleware (`src/lib/adx_*`, `sfd_*`, `mpv_*`, …) | Metrowerks CodeWarrior 2.4.7 (GC/2.7), the compiler CRI shipped the libraries with |
 | Nintendo SDK (`src/lib/OS*`, `GX*`, …) | Metrowerks CodeWarrior GC/1.2.5n, sources from [dolsdk2004](https://github.com/doldecomp/dolsdk2004) |
 
@@ -39,20 +39,20 @@ the original word by word and `python3 tools/fdiff.py game/foo <symbol>` shows o
 
 ## Layout
 
-- `src/game/` — the game (C++; a few newlib C units). `src/em*/` enemies, `src/wep*/` weapons,
+- `src/game/`: the game (C++; a few newlib C units). `src/em*/` enemies, `src/wep*/` weapons,
   `src/pl*/` player characters, `src/st*/` rooms (one REL per room), `src/t_*/`, `src/Tools/`,
   `src/tools/` the in-game debug editors, `src/Sscrn/` the sub-screens, `src/lib/` SDK, CRI and runtime.
-- `include/` — headers, including the reconstructed struct layouts.
-- `config/G4BE08/` — unit lists (`objects.py`, `modules.py`), `symbols.txt`, `splits.txt`, linker
+- `include/`: headers, including the reconstructed struct layouts.
+- `config/G4BE08/`: unit lists (`objects.py`, `modules.py`), `symbols.txt`, `splits.txt`, linker
   scripts, per-module REL data (`modules/<mod>/`), `build.sha1`.
-- `tools/` — build generator (`project.py`), the ProDG driver (`ngccc.py`), REL rebuild (`make_rel.py`,
+- `tools/`: build generator (`project.py`), the ProDG driver (`ngccc.py`), REL rebuild (`make_rel.py`,
   `link_rel.py`), the compare tools, `sn-gcc/` (native compiler build), `research/` (compiler-analysis kit),
   `motion_export.py` + `motion/` (animation export to glTF/BVH, evaluated with the game's own code and
   verified against the game running in Dolphin).
-- `docs/overview.md` — how the engine is put together: a reading guide to `src/` by subsystem.
-- `docs/matching.md` — how the matching was done: compiler provenance, the catalogue of compiler
+- `docs/overview.md`: how the engine is put together: a reading guide to `src/` by subsystem.
+- `docs/matching.md`: how the matching was done: compiler provenance, the catalogue of compiler
   mechanisms and the source shapes that reproduce them, rules of thumb for both compilers.
-  `docs/unit-notes.md` — per-unit notes. `docs/research/` — the pass-by-pass research log.
+  `docs/unit-notes.md`: per-unit notes. `docs/research/`: the pass-by-pass research log.
 
 ## What "matching" means here
 
@@ -61,7 +61,7 @@ particular source shape to reproduce a register choice or a schedule and no natu
 found, the construct is marked with a `// COMPILER-DIFF:` comment (644 of them: dead tests, empty
 `asm("")` launders and anchors, `register T x asm("rN")` pins, padding statements). None of them
 emits an instruction: `python3 tools/asmcheck.py --all` compiles every GCC unit with its asm templates
-marked and lists the instructions that came from a template — the only hits are the hardware kernels
+marked and lists the instructions that came from a template; the only hits are the hardware kernels
 below (TOTAL 231; the eight asm-bodied units are reported on their own line and kept out of that
 number). An earlier state of this tree had ~100 hand-placed instructions (`asm("li %0,0")`,
 `asm("lis/addi")`, `asm("mr")`) in the game code and ~100 register-pinning `asm { }` blocks in the CRI

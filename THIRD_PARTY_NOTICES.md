@@ -1,10 +1,15 @@
 # Third-party notices
 
-## SH4ZAM
+The project's own tools and documents are [CC0](LICENSE). The Dreamcast program also contains code from these
+projects, each under its own licence. Their licence texts stay with the code, unchanged.
 
-The Dreamcast port uses SH4ZAM (https://github.com/gyrovorbis/sh4zam), the SH4 maths library by Falco Girgis and
-SH4ZAM contributors, as the git submodule `port/dreamcast/game/third_party/sh4zam`, pinned to the upstream commit this
-repository records for it (`git submodule status`); its files are not copied into this repository. Thanks to Bruceleeto, who measured the first SH4ZAM gains on his fork and brought it to the port.
+| Project | What the port uses | Licence | Where |
+| --- | --- | --- | --- |
+| [KallistiOS](https://github.com/KallistiOS/KallistiOS) (commit 804b3195, plus the port's patches) | the Dreamcast system library the program is linked with | KOS licence (new BSD style) | `port/dreamcast/patches/LICENSE.KOS`, `port/dreamcast/toolchain.lock` |
+| [pl_mpeg](https://github.com/phoboslab/pl_mpeg) (commit c871f2be) | MPEG-1 video decoding for the cutscene movies | MIT | licence at the top of `port/dreamcast/game/third_party/pl_mpeg.h`; pin in `PL_MPEG_PIN.md` beside it |
+| [SH4ZAM](https://github.com/gyrovorbis/sh4zam) (v0.9.1, commit 33fa4850) by Falco Girgis and SH4ZAM contributors; thanks to Bruceleeto, who measured the first SH4ZAM gains on his fork and brought it to the port | SH-4 matrix and trigonometry routines used by the renderer (GAME_SH4ZAM_RENDER_ONLY) | MIT (text below) | git submodule `port/dreamcast/game/third_party/sh4zam`, pinned to the upstream commit this repository records for it (`git submodule status`); its files are not copied into this repository |
+
+## SH4ZAM licence
 
     MIT License
 

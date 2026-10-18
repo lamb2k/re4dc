@@ -417,6 +417,9 @@ void cEsp08::move()
     }
 }
 
+#if defined(RE4DC_RAIN_PS2_SHEET_REF) && RE4DC_RAIN_PS2_SHEET_REF
+extern "C" int re4dc_ps2_rain_sheet(cEsp* esp);
+#endif
 // EspTransTbl[0x08]: sprite matrix (screen ortho / camera-facing / rotated), texture (+ optional
 // mask on stage 1), then the ESP08_TILES grid: the wrapping corner tile, the wrapping column and
 // row, and the full grid of Div_x x Div_y quads with the scroll offset applied to the texture
@@ -463,6 +466,11 @@ void Esp08_Trans(cEsp08* esp)
     u32 j;
     int ind = 0;
 
+#if defined(RE4DC_RAIN_PS2_SHEET_REF) && RE4DC_RAIN_PS2_SHEET_REF
+    if (re4dc_ps2_rain_sheet(esp)) {   // esp_sub.cpp: the PS2 rain sheet, reference arm only
+        return;
+    }
+#endif
     if (esp->m_Shimmer_type != 0) {
         Esp08_TransShimmer(esp, esp->m_Shimmer_pow);
         return;
