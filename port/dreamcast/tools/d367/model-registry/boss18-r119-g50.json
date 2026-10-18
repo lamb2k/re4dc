@@ -1,0 +1,39 @@
+{
+ "registry": "boss18-r119-g50",
+ "about": "Boss18 review candidate: r119 full PS2 El Gigante plus protected g50 gameplay mesh; full in source events.",
+ "cast_dir": "/root/re4data/private/boss18-gigante-20261018/combined/r119-g50",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "Existing PS2_GIGANTE source-light contract; same source atlas for full and gameplay level.",
+ "descriptors": [
+  {
+   "name": "gigante-em2b-00",
+   "archive": "em2b",
+   "model_id": "0x2b",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2b/em2b.cpp em2bModelInit type0; own source body/head/TPL"
+  },
+  {
+   "name": "gig2b00-g50",
+   "archive": "em2b",
+   "model_id": "0x2b",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2b/em2b.cpp em2bModelInit type0; own source body/head/TPL",
+   "lod_of": "gigante-em2b-00"
+  }
+ ],
+ "room_packages": {
+  "119": {
+   "descriptors": [
+    "gigante-em2b-00",
+    "gig2b00-g50"
+   ],
+   "evidence": "BOSS17 full source reuse; boss18 protected-region and native host checks; current fight validation pending"
+  }
+ }
+}
