@@ -383,7 +383,30 @@ static const Ps2fxHaze* Ps2fxHazeFor(cEsp* esp)
         return NULL;
     }
     const u16 room = G_ROOM_ID;
+#if RE4DC_FX_HAZE_INDEX
+    // The table is immutable. Cache only its room bounds, never a particle's
+    // answer: range/owner/colour/frame checks below still run in original order.
+    // This renderer query does not yield and is not called from an IRQ.
+    static u16 indexed_room = 0xffff;
+    static int room_first = 0;
+    static int room_end = 0;
+    if (indexed_room != room) {
+        int first = PS2FX_HAZE_ROOMS;
+        int end = 0;
+        for (int i = 0; i < PS2FX_HAZE_ROOMS; ++i) {
+            if (kPs2Haze[i].room == room) {
+                if (first == PS2FX_HAZE_ROOMS) first = i;
+                end = i + 1;
+            }
+        }
+        room_first = first;
+        room_end = end;
+        indexed_room = room;
+    }
+    for (int i = room_first; i < room_end; ++i) {
+#else
     for (int i = 0; i < PS2FX_HAZE_ROOMS; ++i) {
+#endif
         if (kPs2Haze[i].room == room) {
 #if RE4DC_PS2_FX_ROOMS
             if (kPs2Haze[i].gc_range != 0.0f) {

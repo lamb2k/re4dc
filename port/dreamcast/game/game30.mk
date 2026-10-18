@@ -863,6 +863,13 @@ endif
 #                the same operands in the same order, fewer address adds. A header knob (esp.h). =2: the
 #                source runs live and the new code on a copy of the effect, compared field for field
 #                ("FXM" / "FX48" lines; FX48 also counts sinf argument repeats).
+# Exact immutable haze-table room bounds; particle checks retain source order.
+# Research knob: off preserves the original image and loop.
+FX_HAZE_INDEX ?= 0
+ifneq ($(FX_HAZE_INDEX),0)
+GAME_CPPFLAGS += -DRE4DC_FX_HAZE_INDEX=$(FX_HAZE_INDEX)
+endif
+
 GAME_FX_MOVE ?= 0
 ifneq ($(GAME_FX_MOVE),0)
 GAME_CPPFLAGS += -DRE4DC_FX_MOVE=$(GAME_FX_MOVE)
