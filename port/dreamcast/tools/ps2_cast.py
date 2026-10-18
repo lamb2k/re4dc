@@ -453,6 +453,22 @@ for _n, _q in (('zealot-em14-09p', 'zealot-em14-09q'), ('zealot-em1c-09g', 'zeal
 # count; an actor carries one of the two 0x217 colours, so its own count stays within ACTOR_MATERIALS 4 (model_registry.py
 # counts a pool per actor). Added to zealot-em1c-09h only (the em14 / em1a / em11 type 9 pools have not shown it).
 PRESETS['zealot-em1c-09h']['sections'] = PRESETS['zealot-em1c-09h']['sections'] + [(0x217, 'acc38-b', 0x219)]
+# castle18 (2026-10-18): source type 8 alternate accessory selections observed in r208/r209 and r226.
+# em10SetAccesory flag 2 selects BIN mot[32] with subArc TPL 0x220; flag 0x4000 selects mot[38]/mot[40].
+# Keep both original selections and the complete source section pool. The registry already counts alternative
+# TPLs of one BIN once, since the source attaches only one accessory for each slot; no material limit changes.
+PRESETS['zealot-em1a-08q'] = dict(PRESETS['zealot-em1a-08p'],
+    sections=PRESETS['zealot-em1a-08p']['sections'] + [(0x211, 'acc2-b', 0x220), (0x217, 'acc5-b', 0x219)],
+    rooms=['r208', 'r209'])
+PRESETS['zealot-em11-08h'] = dict(PRESETS['zealot-em11-08g'],
+    sections=PRESETS['zealot-em11-08g']['sections'] + [(0x211, 'acc32-b', 0x220)], rooms=['r226'])
+# em3cModelInit attaches a weapon after body and chainmail: C/D for types 0/2, E/F for types 1/3.
+# Separate complete descriptors preserve those original BIN/TPL identities and the game's unchanged 1.2 scale.
+for _typ, _body, _weapon in ((0, '00', 0xc), (1, '00', 0xe), (2, '02', 0xc), (3, '02', 0xe)):
+    _base = PRESETS['armor-em3c-' + _body]
+    PRESETS['armor-em3c-%02xw' % _typ] = dict(_base,
+        sections=_base['sections'] + [(_weapon, 'weapon', _weapon + 1)], types=[_typ])
+
 # lane cast16 (2026-10-17): r315's one enemy row (emleon07.esl row 11) is em1e type 6.
 PRESETS['soldr-em1e-06p']['rooms'] = PRESETS['soldr-em1e-06p']['rooms'] + ['r315']
 # lane cast16 (2026-10-17, island bosses): em36.cpp em36_R0_Init types 0 / 1 (and the default, type 7 in r326)
