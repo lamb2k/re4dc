@@ -3,7 +3,7 @@
 # out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.
 # @ASSETS@ = the unpacked Build-Assets zip (re4dc-assets/).
 # test: 16.5
-# tag: test-<tagged commit>-20261018-hotfix5
+# tag: test-a8e325d6-20261018-hotfix5
 # source: 07b4a3a4
 # recipe: port/dreamcast/tools/d367/test16/t16-build.sh
 # image-sha256: 247df7a62ca3f1fef7abb857b87f12cb49cfe97dc5b0becb9e7026c303f0590e

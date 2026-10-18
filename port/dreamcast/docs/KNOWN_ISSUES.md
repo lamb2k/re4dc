@@ -17,7 +17,7 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 | Fixed and checked in our tests; the problem was not console-only | 31 |
 | 🛠️ In progress | Being fixed now | 0 |
 | 🔍 Investigating | Being reproduced or traced | 2 |
-| ⏸️ Open | Known, not yet worked on | 15 |
+| ⏸️ Open | Known, not yet worked on | 16 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Stability
@@ -64,14 +64,15 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | Broken boxes and barrels leave dark debris in the rooms after the village (r103, r104, r106, r107, r108, r10a, r10b, r117, r118, r11a, r11b) | test 8 to test 12.2 | 🟢 Fixed in test 13: breakable boxes and barrels use the GameCube models in every room, so they break into the GameCube splinters; the other room objects use their PS2 models | |
 | Right after the door from the village into r103, some effect pictures can be missing for a moment and more textures load from the disc during play | test 12, 12.1, 12.2 | 🟢 Fixed in test 13: the village's leftover textures are cleared at the door, so r103 (and r100 when you go back) loads its textures when the room starts | |
 | The night lake (start of chapter 2-1): the torches have no flames | test 10 to 16.4 | 🟢 Fixed in test 16.5 (LAKE_NIGHT_FX), needs console check | [#30](https://github.com/lamb2k/re4dc/issues/30) |
-| The night lake (start of chapter 2-1): the rain is missing | test 10 and later | ⏸️ Open: rain lines too faint on Dreamcast; PS2 rain layer being tested | [#30](https://github.com/lamb2k/re4dc/issues/30) |
+| The night lake (start of chapter 2-1): the rain is missing | test 10 and later | ⏸️ Open in test 16.5: a new Dreamcast rain (320 falling streaks, cheaper than the old faint lines) is planned for test 17 | [#30](https://github.com/lamb2k/re4dc/issues/30) |
 | Ashley shows a resting face: her facial expressions are not shown | test 13 | ⏸️ Open: Ashley now uses her PS2 model; the expressions come later | |
 | Foliage: Off removes walls and floor in r109 (the cabin); use Near or Full there | test 15 | 🟢 Fixed in test 15.1: Off now leaves out only the see-through brush, leaf and shadow cards; the cabin keeps its walls and floor | |
 | In the village (r101) the burning stake has lost its crossbar and a plank of the pyre (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | In the village (r101) the fence by the house on the right of the square shows only its posts, without its rails (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | The item menu's confirm popup does not look as it did in test 13 | test 14, 15 | ⏸️ Open | |
-| In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 16.3 and 16.4: 5 refused; test 15: 4; test 14: 76) | test 14 to 16.4 | ⏸️ Open: fix planned for a later test (the room's pictures are loaded again in one pass after a save is loaded) | [#33](https://github.com/lamb2k/re4dc/issues/33) |
+| In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 16.5: 4 refused; test 16.3 and 16.4: 5; test 15: 4; test 14: 76) | test 14 to 16.5 | ⏸️ Open: fix planned for a later test (the room's pictures are loaded again in one pass after a save is loaded) | [#33](https://github.com/lamb2k/re4dc/issues/33) |
 | A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3, 16.4 | ⏸️ Open: the rooms' resident picture lists miss these pictures; fix planned for a later test | |
+| In r118 one small picture (64x64) is not on the disc, so it is not drawn | test 16.4, 16.5 | ⏸️ Open: found by our texture check; fix planned for a later test | [#37](https://github.com/lamb2k/re4dc/issues/37) |
 
 ## Sound
 
