@@ -11,3 +11,4 @@ inv default
 act 30 fwd 150
 kill 0x12 400 0x100
 god
+alivelog 150

@@ -1,4 +1,4 @@
-RE4 Dreamcast test 15, source SHA_PLACEHOLDER (2026 10 16)
+RE4 Dreamcast test 15.1 (hotfix), source SHA_PLACEHOLDER (2026 10 16)
 
 See Known Issues: https://github.com/lamb2k/re4dc/blob/dreamcast-port/port/dreamcast/docs/KNOWN_ISSUES.md
 
@@ -6,6 +6,14 @@ Extract the gdemu folder and use its four disc files with your usual GDEMU setup
 Flycast can open gdemu/disc.gdi directly (if menu or popup text looks broken
 in Flycast, use its per-pixel renderer setting). This build follows test 14
 and plays to the end of chapter two, part one.
+
+Test 15.1 is test 15 with two changes:
+* The see-through haze and mist sprites around Leon are no longer drawn,
+  in any room and at every Foliage setting. The distant haze is still
+  drawn as fog.
+* Foliage Off now really is off: it leaves out every see-through brush,
+  leaf, shadow and mist card, and the r109 cabin keeps its walls and
+  floor.
 
 New in test 15:
 * The cutscene at the r100 cliff (after the first house) plays again.

@@ -328,6 +328,43 @@ endif
 $(OBJDIR)/src/game/filter06.o: GAME_CPPFLAGS += -DRE4DC_RAIN_PS2=1
 $(OBJDIR)/platform/gx_stub.o: PLATFORM_CPPFLAGS += -DRE4DC_RAIN_PS2=1
 endif
+# RAIN_DC=1 (lane rain17 2026-10-18, user 10-18 "reimplement the rain as a cheaper dreamcast native solution"; needs
+#                    RAIN_PS2=1 (its draw-sync hook); render only, an APPROXIMATION, default 0): the night lake's rain as
+#                    RAIN_DC_N (default 160) short vertical gouraud streaks in screen space with a view depth (hidden
+#                    by nearer scenery), one untextured TR header + one strip each, no texture, no frame storage. Look
+#                    reference: the PS2's full-screen Esp08 sheet (r11b SST set 3 / r11a set 5, tex 0xC5, a 100), which
+#                    costs a whole translucent screen a frame; the streaks cover ~0.02 screens. Private xorshift
+#                    generator (no Rnd()); shown while the game's Filter06 rain is queued in r11a / r11b. Log "rain dc:".
+# RAIN_PS2_SHEET_REF=1 (lane rain17 2026-10-18; REFERENCE arm for the look and cost of the PS2 rain, NEVER in a recipe;
+#                    needs EFFECT_SPRITES=1): r11a / r11b's rain set drawn as the PS2 draws it, one
+#                    full-screen Esp08 sheet (PS2 r11b.dat EFF#7 SST3 rec 67: tex 0xC5, 700x540 of 512x448, rgb 180 a 100,
+#                    3x1 tiles scrolled (-0.003, -0.090) a frame), as up to 8 native effect sprites (esp_sub.cpp). Log "ps2 sheet:".
+RAIN_PS2_SHEET_REF ?= 0
+ifneq ($(RAIN_PS2_SHEET_REF),0)
+ifneq ($(RAIN_PS2_SHEET_REF)$(EFFECT_SPRITES),11)
+$(error RAIN_PS2_SHEET_REF must be 0 or 1 and needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp08.o: GAME_CPPFLAGS += -DRE4DC_RAIN_PS2_SHEET_REF=1
+endif
+RAIN_DC ?= 0
+ifneq ($(RAIN_DC),0)
+ifneq ($(RAIN_DC)$(RAIN_PS2),11)
+$(error RAIN_DC must be 0 or 1 and needs RAIN_PS2=1)
+endif
+RAIN_DC_N ?= 160
+$(OBJDIR)/src/game/filter06.o: GAME_CPPFLAGS += -DRE4DC_RAIN_DC=1 -DRE4DC_RAIN_DC_N=$(RAIN_DC_N)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_RAIN_DC=1
+endif
+# LAKE_NIGHT_FX=1 (issue #30, lane lakefx165 2026-10-18; needs EFFECT_SPRITES=1 ESP_SPRITE_FAST=1; render only, default
+#                    0): the night lake's torch flames. In r11a / r11b every sprite of the torch owner 0x68 (et14, cEmTorch)
+#                    is drawn as a native sprite, not only its Esp0e glow (EFFECT_TORCH). Log "lake fx:" every 1024 checks.
+LAKE_NIGHT_FX ?= 0
+ifneq ($(LAKE_NIGHT_FX),0)
+ifneq ($(LAKE_NIGHT_FX)$(EFFECT_SPRITES)$(ESP_SPRITE_FAST),111)
+$(error LAKE_NIGHT_FX must be 0 or 1 and needs EFFECT_SPRITES=1 ESP_SPRITE_FAST=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_LAKE_NIGHT_FX=1
+endif
 EFFECT_HAZE_LEAN ?= 0
 EFFECT_HAZE_LEAN_TOGGLE ?= 0
 EFFECT_PS2_HAZE ?= 0

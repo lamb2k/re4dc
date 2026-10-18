@@ -1,8 +1,15 @@
 # Contributing to the Dreamcast port
 
-This page gets you from a fresh clone on Linux (or WSL) to your own build of the game running in
-Flycast or on a Dreamcast with GDEMU. You build only the program. The game data comes from a
-published test release, so you never need the original discs.
+**From a fresh clone on Linux (or WSL) to your own build of the game, in Flycast or on a Dreamcast with GDEMU.**
+You build only the program. The game data comes from a published test release, so you never need the original discs.
+
+**Build your own program, in short:**
+
+1. Install the host packages (below).
+2. Clone with `--recurse-submodules`.
+3. Run `bash port/dreamcast/contrib.sh`.
+4. Open the printed `disc.gdi` in Flycast, or copy its four files to a GDEMU SD card folder.
+5. Put your change behind a default-off knob and open a pull request (section 6).
 
 ## Quick start: one command
 
@@ -19,10 +26,14 @@ Clone with the submodules (SH4ZAM is one, see section 1):
 
     bash port/dreamcast/contrib.sh
 
-It builds the toolchain the first time (about 11 minutes, into `~/re4dc-toolchain`), downloads the
-newest test release and its Build-Assets zip from GitHub and checks them against the release's
-`SHA256SUMS.txt`, builds the program, puts it on the release disc and prints the path of
-`disc.gdi` (under `port/dreamcast/out-contrib/disc`). Options:
+What it does:
+
+* **Toolchain:** builds it the first time (about 11 minutes, into `~/re4dc-toolchain`).
+* **Downloads:** the newest test release and its Build-Assets zip, checked against the release's `SHA256SUMS.txt`.
+* **Build and swap:** builds the program, puts it on the release disc and prints the path of `disc.gdi`
+  (under `port/dreamcast/out-contrib/disc`).
+
+Options:
 
 * `--release <tag>` picks a release by its tag (`test-<source commit>-<date>`, as on the releases page).
   An older release needs the `build-public.sh` of its own source commit (see "Which recipe" below).
@@ -30,19 +41,20 @@ newest test release and its Build-Assets zip from GitHub and checks them against
   (`RE4DC_KOS_BASE`) is used as is.
 * `KNOB=value` arguments go to the build, for example `bash port/dreamcast/contrib.sh MY_FEATURE=1`.
 
-The Build-Assets zip holds the generated character data the release program was built with
-(`ps2leon/`, `ps2ganado/`, and from test 15 `glod/ganado_lod.re4gl`, the lighter villager meshes named by
-`GANADO_LOD_PACK`), so your program draws the same characters as the release. From test 17 it also holds
-`ps2enemych2/`, the PS2 enemy rows of chapters 2-2 and 2-3 (`PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR`, compiled
-into the program), so your program places the same enemies as the release, and `ps2stump/`, the layout header of
-the PS2 lost-head stump / hand-pose package (`ACTOR_GANADO_PS2_STUMP_DIR`; the package `dc/native/ganado/ganado_var.re4gv`
-is in `disc/`). From test 15 it also carries, under
-`re4dc-assets/disc/<disc path>`, the disc data files that changed in test 15 (the chapter 1 sound files
-`st1/r103.dar` and `bgm/aica_str.dat`, `dc/resident.bin`, `dc/tex.pak` and the village world in `dc/native/r101/`);
-they are on the release disc already, so you need them only for a disc of your own. From test 17 `dc/tex.pak` holds every texture (data set `pak17`): the disc and the zip carry no loose
-`dc/tex/<c>/` textures. Built from the release's source commit with its
-Build-Assets zip, the program is byte for byte the release's program (the maintainers check this before
-every release). Downloads are kept, so a second run only rebuilds.
+**The Build-Assets zip:**
+
+* **Character data** the release program was built with: `ps2leon/`, `ps2ganado/`, and `glod/ganado_lod.re4gl`
+  (the lighter villager meshes named by `GANADO_LOD_PACK`). Your program draws the same characters as the release.
+* **Chapter 2 enemy rows** (from test 17): `ps2enemych2/`, the PS2 enemy rows of chapters 2-2 and 2-3
+  (`PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR`, compiled into the program), so your program places the same enemies.
+  Also `ps2stump/`, the layout header of the PS2 lost-head stump and hand-pose package (`ACTOR_GANADO_PS2_STUMP_DIR`).
+* **Newer disc data files,** under `re4dc-assets/disc/<disc path>`: the knob file's disc sets (its `disc-sets` line),
+  among them the chapter 2 rooms, the far shells, `dc/resident.bin` and `dc/tex.pak`. From test 17 `dc/tex.pak`
+  holds every texture, so the disc and the zip carry no loose `dc/tex/<c>/` textures. They are on the release disc
+  already; you need them only for a disc of your own.
+* **Byte for byte:** built from the release's source commit with its zip, the program is the release's program.
+  The maintainers check this before every release.
+* Downloads are kept, so a second run only rebuilds.
 
 ## Where to read next
 
@@ -104,7 +116,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test15/release-knobs.txt` (test 15; its header names the source commit). The maintainers write that file from
+`tools/d367/test17/release-knobs.txt` (test 17: the previous release recipe plus the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` (`ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1`, El Gigante and Mendez at their lighter level `NATIVE_MODEL_REGISTRY_LOD=1`), `FAR_SHELL=1`, `STAGE_OVL=1 SS_POOL_TOP=1`, `PRIM_BUF_KB=432`, `NATIVE_MODEL_REGISTRY_DYING=1 TEX_PKG_SKIP=1`, `ACTOR_GANADO_PS2_STUMP=1`, `PROP_GATE=1`, `PS2_ASHLEY_ROOMS=2` and `RAIN_DC=1 RAIN_DC_N=320`; the disc data sets are on its `disc-sets` line; its header names the source commit). The maintainers write that file from
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
@@ -119,6 +131,8 @@ chapter 2 enemies, below); it looks different from the release:
 * `GANADO_LOD=0`: no lighter villager meshes (they need the PS2 villagers and the zip's `glod/`).
 * `ACTOR_PROBE_LIGHT=1 GANADO_LIT=0`: only Leon is lit by the room-light probe (the release lights the PS2 villagers
   with it too).
+* `NATIVE_MODEL_REGISTRY_DYING=0`: a dying villager fades on the GameCube model (the release keeps the PS2 model
+  through the fade, which needs the PS2 villagers).
 * El Gigante, Del Lago, the female villagers, the animals, Ashley, the PS2 room objects and the PS2 room
   worlds (with the village's baked doors, windows and racks) come from the disc, so they draw as in the
   release.
@@ -142,7 +156,7 @@ Either way, measure your change against your own build with the change switched 
 your overlays in place. Everything else on the disc is unchanged. Use a release made from the same or a
 close source revision; a program much newer than the release may need data files the release lacks.
 
-From test 16 on the release disc is a standard GD-ROM image (section 8), and `swap-program.py` keeps it one
+The release disc is a standard GD-ROM image (section 8), and `swap-program.py` keeps it one
 (on an older release disc it appends a longer file after the end of track 3 instead): your
 `1ST_READ.BIN` stays the last file and ends where the release's did; if it is longer, the files it would
 cover move into the free space in front of the first file, and a file that no longer fits its old place
@@ -173,49 +187,73 @@ frames per second and game speed (the VMU shows the Leon, Ashley, Hunnigan and L
 numbers). Frame pacing is set in Options (Fast is the default). Hold X and press START to switch the look
 preset. A build with `SPEED_VMU_OFF=0` puts the speed numbers back on the VMU.
 
-The player options are the rows in Options (START): Frame pacing (stored on the VMU), Rendering (Standard or FSAA,
-knob `RENDER_FSAA`) and View distance (Full, Near or Short, knob `VIEW_DIST_OPTION`: the world is drawn to 25, 18.75
-or 12.5 m and the fog reaches full strength there; drawing only, the game logic is unchanged). Two rules refine it
-(game/option_rows.cpp): a per-room minimum far table, `kViewRoomMin`, keeps rooms that need their horizon at Full (the
-lakes r10b, r11a and r11b); and while the player stands in one of the room's indoor effect areas (the game's
-weather-off areas, `Status_flg[1]` 0x02000000) the fog ramp starts behind that area, so a house interior is not
-fogged while the scenery seen through its doors and windows still fades out before the cut. Rendering and View
-distance are not saved: every boot starts in Standard and Full. Foliage (Full, Near or Off, knobs `FOLIAGE_TRIM`
-(the level word and the boot level, hwfog.mk) and `FOLIAGE_OPTION` (the row)): the translucent PS2 world parts whose
-texture is a near-binary cut-out (leaf / brush cards, fence gaps; key table platform/include/foliage_keys.inc, built
-from an alpha census of the chapter 1 packages) are drawn in the punch-through list up to 12 m at Near, and every listed
-card key (classes 1-4, soft shadow / mist / grass cards included) is left out at Off; surfaces without cut-out holes
-(walls, floors, water), unlisted keys and the vertex-alpha overlays always draw. It is not
-saved either: every boot starts at the recipe's `FOLIAGE_TRIM` level (test 15: Near). `FOLIAGE_NEAR_FIX=1`
-(hwfog.mk, recipe group `T15_FN`; render only) makes Near's punch-through pass also visit placements that only have
-translucent parts, so their cut-out cards draw at Near (without it they were drawn in neither pass). Lake far
-(post30.mk, recipe group `T15_LF`; render only): `LAKE_FAR=<mm>` draws r10b (the Del Lago boat) and
-`LAKE_FAR_SHORE=<mm>` (default `LAKE_FAR`) draws r11a / r11b (the shore, day and night) to that far instead of the
-25 m cap, for the PS2 world, the coarse view and the fog; the fog ramp still takes the last 20 %. 0 keeps 25 m; values
-must be above 25000 and need `FOG_FAR_CAP=0`. The release uses 45000 / 45000. 
-From test 15.1 the knob `HAZE_SPRITE_CUT=1`
-(hwfog.mk, recipe group `T15_HZ`; render only) leaves out every haze / mist sprite at every Foliage setting: the camera
-haze around Leon (Esp15), the mist sheets (Esp48) and the r118 / r11c PS2 haze additions; the distant haze stays as the
-fog table (`HW_FOG_HAZE`, `EFFECT_HAZE_LEAN`), which is fed before the cut. Docs: docs/MIST_CUT.md. On a warp test disc (`DBG_WARP=1`) the warp line
-`viewdist 0|1|2` starts the run at Full, Near or Short.
-Far shell (knob `FAR_SHELL`, needs `VIEW_DIST_OPTION`; game/platform/far_shell.inc): in a room that has a
-`dc/native/rXXX/far-shell.fsh` (r100 and r101 in test 15), Short cuts only the world's opaque pass; the fog,
-the cut-out and see-through world surfaces, characters and objects keep Full's distance, and the room's far shell (a
-simplified copy of the far world, about 3,000 triangles textured with the world's own textures, so no extra graphics
-memory) is drawn beyond the cut, so landmarks stay visible. Build a shell with tools/d367/farshell (README there;
-Windows Python and Blender 5.2) from the room's PS2 world package. Near, and rooms without a file, keep the plain cut. Warp line
-`farshell 0|1|2` (0 = plain cut, 1 = shell, 2 = opaque cut without the shell, for pricing).
-The shell lives in heap 4 only while it can be drawn (docs/lanes/farshell17.md): it is read at Short only (Full and
-Near never read it), lent to every route movie and read again after it, and freed when a heap-4 allocation fails
-(`mem_alloc` and `re4dc_static_alloc` then retry once); that room keeps the plain cut until the option changes. Any
-new heap-4 user near the r100 cliff movie still runs the s30 gate (h2 through s30 at Full and Short). Warp line
-`farshellprobe <room frame>` makes one impossible heap-4 request to test the give-back path.
-Radio call subtitles (knob `RADIO_SUB_RT`, game/subscreen.mk; src/Sscrn/ss_term.cpp): the GameCube steps a call's
-subtitle sequence once per 30 Hz sub screen frame, while the voice plays from the AICA in real time. With the knob
-each call frame runs the steps owed since the voice began to sound (KOS timer, platform/audio_aica.cpp
-`re4dc_aica_stream_started`), so the pages stay with the voice when a call frame takes longer than 1/30 s. The game
-is stopped under the sub screen, so logic is unchanged. Test builds can add `RADIO_SUB_LOG=1` for one log line per
-subtitle page (time since the voice started).
+The player options are the rows in Options (START), and the knobs behind them:
+
+* **Frame pacing:** stored on the VMU.
+* **Rendering:** Standard or FSAA, knob `RENDER_FSAA`. Not saved; every boot starts in Standard.
+* **View distance:** Full, Near or Short, knob `VIEW_DIST_OPTION`. The world is drawn to 25, 18.75 or 12.5 m and the
+  fog reaches full strength there. Drawing only; the game logic is unchanged. Not saved; every boot starts in Full.
+  Two rules refine it (game/option_rows.cpp):
+  * a per-room minimum far table, `kViewRoomMin`, keeps rooms that need their horizon at Full (the lakes r10b, r11a
+    and r11b);
+  * while the player stands in one of the room's indoor effect areas (the game's weather-off areas, `Status_flg[1]`
+    0x02000000), the fog ramp starts behind that area. A house interior is not fogged, while the scenery seen through
+    its doors and windows still fades out before the cut.
+* **Foliage:** Full, Near or Off, knobs `FOLIAGE_TRIM` (the level word and the boot level, hwfog.mk) and
+  `FOLIAGE_OPTION` (the row).
+  * Near draws the translucent PS2 world parts whose texture is a near-binary cut-out (leaf / brush cards, fence gaps)
+    in the punch-through list up to 12 m. The key table is platform/include/foliage_keys.inc, built from an alpha
+    census of the chapter 1 packages.
+  * Off leaves out every listed card key (classes 1-4, soft shadow / mist / grass cards included).
+  * Surfaces without cut-out holes (walls, floors, water), unlisted keys and the vertex-alpha overlays always draw.
+  * Not saved: every boot starts at the recipe's `FOLIAGE_TRIM` level (Near in the release).
+  * `FOLIAGE_NEAR_FIX=1` (hwfog.mk, recipe group `T15_FN`; render only) makes Near's punch-through pass also visit
+    placements that only have translucent parts, so their cut-out cards draw at Near (without it they were drawn in
+    neither pass).
+
+Render knobs in the release recipe:
+
+* **Lake far** (post30.mk, recipe group `T15_LF`; render only): `LAKE_FAR=<mm>` draws r10b (the Del Lago boat) and
+  `LAKE_FAR_SHORE=<mm>` (default `LAKE_FAR`) draws r11a / r11b (the shore, day and night) to that far instead of the
+  25 m cap, for the PS2 world, the coarse view and the fog. The fog ramp still takes the last 20 %. 0 keeps 25 m;
+  values must be above 25000 and need `FOG_FAR_CAP=0`. The release uses 45000 / 45000.
+* **Transparency policy** (hwfog.mk, recipe group `T15_TR`; render only): `TRANS_POLICY=<mask>` reads each room's class
+  sidecar `dc/native/rXXX/ps2-world.r4tc` and the index `dc/native/trclass.idx` (disc data set trans17, written by
+  `tools/d367/tr_classify.py`). 1 FLAT draws parts whose pictures are uniform 14/15 alpha or fully opaque as solid;
+  2 CARD draws near-binary cut-out cards as punch-through. The release uses 3. A room missing from the index draws as before.
+* **Night lake torches:** `LAKE_NIGHT_FX=1` (effects30.mk, group `T15_LN`) draws the night lake's torch flames. Their
+  picture is in r11b's resident list (data set res17b, the resident file packed from every list).
+* **Night lake rain:** `RAIN_DC=1 RAIN_DC_N=320` (effects30.mk, group `T15_RD`; render only, an approximation of the
+  PS2's full-screen rain sheet) draws 320 short screen-space streaks with a view depth, one untextured strip each, from
+  a private random generator (the game's own random numbers are untouched). It needs `RAIN_PS2=1`'s hook; with it on,
+  the old faint `RAIN_PS2` lines stop. `RAIN_PS2_SHEET_REF` is a reference arm for comparisons, never in a recipe.
+* **Haze cut:** `HAZE_SPRITE_CUT=1` (hwfog.mk, recipe group `T15_HZ`; render only) leaves out every haze / mist sprite
+  at every Foliage setting: the camera haze around Leon (Esp15), the mist sheets (Esp48) and the r118 / r11c PS2 haze
+  additions. The distant haze stays as the fog table (`HW_FOG_HAZE`, `EFFECT_HAZE_LEAN`), which is fed before the cut.
+  Docs: docs/MIST_CUT.md.
+* **Warp discs:** on a warp test disc (`DBG_WARP=1`) the warp line `viewdist 0|1|2` starts the run at Full, Near or Short.
+
+In the release from test 17:
+
+* **Far shell** (knob `FAR_SHELL`, needs `VIEW_DIST_OPTION`, recipe group `T15_FS`; game/platform/far_shell.inc).
+  Built for r100 and r101 as `dc/native/rXXX/far-shell.fsh` (disc data set fsh). It is read at Short only (Full and
+  Near never read it), lent to every route movie and read again after it, and freed when a heap-4 allocation fails.
+  * In a room with a shell, Short cuts only the world's opaque pass. The fog, the cut-out and see-through world
+    surfaces, characters and objects keep Full's distance.
+  * The shell (a simplified copy of the far world, about 3,000 triangles textured with the world's own textures, so
+    no extra graphics memory) is drawn beyond the cut, so landmarks stay visible.
+  * Build a shell with tools/d367/farshell (README there; Windows Python and Blender 5.2) from the room's PS2 world
+    package. Near, and rooms without a file, keep the plain cut.
+  * Warp line `farshell 0|1|2` (0 = plain cut, 1 = shell, 2 = opaque cut without the shell, for pricing).
+
+Radio call subtitles (knob `RADIO_SUB_RT`, game/subscreen.mk; src/Sscrn/ss_term.cpp):
+
+* **The problem:** the GameCube steps a call's subtitle sequence once per 30 Hz sub screen frame, while the voice plays
+  from the AICA in real time.
+* **The fix:** each call frame runs the steps owed since the voice began to sound (KOS timer, platform/audio_aica.cpp
+  `re4dc_aica_stream_started`), so the pages stay with the voice when a call frame takes longer than 1/30 s.
+* **Logic unchanged:** the game is stopped under the sub screen.
+* **Logging:** test builds can add `RADIO_SUB_LOG=1` for one log line per subtitle page (time since the voice started).
 
 ## 6. Send a patch
 
@@ -273,7 +311,7 @@ the decompilation build.
 
 ## 8. Disc image and compatibility
 
-The release disc format from test 16 on (decided 2026-10-16; test 15 still ships the old layout). Users had reported freezes and crashes on GDEMU
+The release disc format since 2026-10-16 (decided that day; earlier tests shipped the old layout). Users had reported freezes and crashes on GDEMU
 with this game only ([#27](https://github.com/lamb2k/re4dc/issues/27), "LinkOrder"); the image then was laid out by
 our own script and differed from a pressed GD-ROM in several ways (no table of contents in IP.BIN, a data track
 that ended with its last file, the program first instead of last, a non-standard low-density track). The same game
@@ -295,17 +333,17 @@ rename them, and don't mix track files of two tests in one folder. `track03.bin`
 zeros, so the zip is not much bigger than before). If your card manager offers **Shrink GDI**, leave it off: an
 unshrunk image is what we test.
 
-**How the game reads it (test 16 and later).** The game keeps the drive's fast streaming reads (KallistiOS
+**How the game reads it.** The game keeps the drive's fast streaming reads (KallistiOS
 `cdrom_stream_*`, as in tests 14 and 15) and checks that every read really arrived. The first time a stream or sector read
 fails, times out or comes back without its data, the game switches to plain sector reads (one bounded "read N sectors"
 command per request, the way most discs are read) for the rest of the session and never starts a stream again; the
 read that failed is redone the plain way. Make knobs, all in the release recipe's disc set
-(`tools/d367/test15/t15-build.sh`, `T14_DISC`):
+(`tools/d367/test16/t16-build.sh`, group `T14_DISC`):
 
 | Knob | What it does |
 | --- | --- |
 | `DISC_COMPAT=1` | the KallistiOS disc fixes (`KOS_DISC_FIX=1`), the Shrink-GDI mount, an on-screen disc log only when a read misbehaves |
-| `DISC_READ_FALLBACK=3` | stream reads, each checked; the first failure switches the session to plain reads (`=2`: a bounded DMA command, then DMA after a bounded drive re-init, then PIO). `=0` is test 14's stream reads, `=2` plain reads from the start |
+| `DISC_READ_FALLBACK=3` | stream reads, each checked; the first failure switches the session to plain reads (`=2`: a bounded DMA command, then DMA after a bounded drive re-init, then PIO). `=0` is the earlier stream reads with no fallback, `=2` plain reads from the start |
 | `DISC_LAND_SPIN_MS=20` | plain reads only: wait for a read's DMA by yielding instead of sleeping a whole 10 ms scheduler tick, with a bound that grows with the read's size |
 
 Test only: `DISC_FAIL_TEST=2 DISC_FAIL_AFTER_S=20` makes stream reads fail after 20 s of play, to see the switch.
@@ -361,7 +399,8 @@ On every test release, in the same landing as the release recipe, before the rel
    port/dreamcast/tools/d367/<test>/release-knobs.txt --test N --tag <tag> --source <sha> --recipe <t-build.sh>
    --image-sha256 <sha256 of sh-elf-objcopy -R .stack -O binary> --assets-zip <name> [--disc-sets <t11-fix.py sets>]`.
 2. Point `RELEASE_KNOBS` in `build-public.sh` at it (one line), and update the release names in this page.
-3. Make the Build-Assets zip from the recipe (`release-knobs.py zip <candidate.txt> <zip>`), not by hand.
+3. Make the Build-Assets zip from the recipe (`release-knobs.py zip <candidate.txt> <zip> --disc-sets <the knob
+   file's disc-sets line>`, or the test's package script), not by hand.
    The package script (`tools/d367/<test>/t<N>-package.sh`) masters the standard GD-ROM image (section 8) and
    runs `disc_lint.py` on it, loader and standard profiles.
 4. Run `RACE_FIXTURE=<door103 fixture> tools/d367/kit-check.sh <knob file> <out-<label>> <package dir>` (knob
