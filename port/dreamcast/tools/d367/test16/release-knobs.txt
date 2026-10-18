@@ -2,13 +2,13 @@
 # them (make takes the last value). Written by tools/d367/release-knobs.py write from the release build's
 # out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.
 # @ASSETS@ = the unpacked Build-Assets zip (re4dc-assets/).
-# test: 16.4
-# tag: test-14e69c99-20261017-hotfix4
-# source: 14e69c99
+# test: 16.5
+# tag: test-<tagged commit>-20261018-hotfix5
+# source: 440a6dc2
 # recipe: port/dreamcast/tools/d367/test16/t16-build.sh
-# image-sha256: 7035fd3076025a774be0d7b8b956a54ba3d98985194dd2d459c738c1f8c5a4e7
-# assets-zip: RE4DC-Test16.4-14e69c99-Build-Assets.zip
-# disc-sets: snd16,water16i,vq16w,r108p,zr17m,zr17b,res163
+# image-sha256: 247df7a62ca3f1fef7abb857b87f12cb49cfe97dc5b0becb9e7026c303f0590e
+# assets-zip: RE4DC-Test16.5-440a6dc2-Build-Assets.zip
+# disc-sets: snd16,vq16w,r108p,zr17m,zr17b,trans17,res165
 LOGIC_TRACE=0
 GAME_DECISION_TRACE=0
 ACTOR_TRANSACTION_DIAG=0
@@ -190,8 +190,10 @@ R101_ALIVE_CAP=4
 VRAM_PAGES_VQ_ONLY=1
 GANADO_ATLAS_DROP=3
 FOLIAGE_NEAR_FIX=1
-LAKE_FAR=30000
+LAKE_FAR=45000
 LAKE_FAR_SHORE=45000
+TRANS_POLICY=3
+LAKE_NIGHT_FX=1
 IMAGE_PAD_BYTES=0
 DBG_WARP=0
 PC_SAMPLER=0
