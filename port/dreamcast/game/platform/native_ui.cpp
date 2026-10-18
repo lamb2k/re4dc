@@ -2887,6 +2887,34 @@ void whfix_drop(unsigned required){
     ++whfix_parts;whfix_bytes+=required;
 }
 #endif
+#if defined(RE4DC_FRAME_QUEUE_DIAG) && RE4DC_FRAME_QUEUE_DIAG
+// FRAME_QUEUE_DIAG=1 (Makefile; log only; lane fix18 #39): per frame with frame-queue drops (translucent model parts and
+// effect sprites refused because frame_storage + the deferred spill were full), one FQDIAG line: what was dropped
+// (count, bytes asked for), what the queue held (deferred parts, UI quads, sprites queued, spill used / capacity).
+// The peak "need" is the bytes the drops asked for beyond the spill: the size a larger spill must add.
+unsigned fq_frame=~0U,fq_parts,fq_part_bytes,fq_sprites,fq_sprite_bytes,fq_frames,fq_peak,fq_q[5];
+void fq_flush(){
+    if(fq_frame==~0U || !(fq_parts|fq_sprites))return;
+    ++fq_frames;const unsigned need=fq_part_bytes+fq_sprite_bytes;if(need>fq_peak)fq_peak=need;
+    if(fq_frames<=96 || !(fq_frame%120))
+        re4dc_log("FQDIAG frame=%u parts=%u part_bytes=%u sprites=%u sprite_bytes=%u need=%u peak=%u queued=%u quads=%u fx=%u spill=%u/%u frames=%u\n",
+            fq_frame,fq_parts,fq_part_bytes,fq_sprites,fq_sprite_bytes,need,fq_peak,fq_q[0],fq_q[1],fq_q[2],fq_q[3],fq_q[4],fq_frames);
+    fq_parts=fq_part_bytes=fq_sprites=fq_sprite_bytes=0;
+}
+void fq_drop(bool sprite,unsigned required){
+    if(fq_frame!=frame){fq_flush();fq_frame=frame;}
+    if(sprite){++fq_sprites;fq_sprite_bytes+=required;}else{++fq_parts;fq_part_bytes+=required;}
+    // the queue at this frame's latest drop
+    fq_q[0]=deferred_count;fq_q[1]=nquad;
+#if RE4DC_EFFECT_SPRITES
+    fq_q[2]=fx_count;
+#endif
+    fq_q[3]=deferred_spill_capacity-deferred_spill_top;fq_q[4]=deferred_spill_capacity;
+}
+#define RE4DC_FQ_DROP(sprite,required) fq_drop((sprite),(required))
+#else
+#define RE4DC_FQ_DROP(sprite,required) ((void)0)
+#endif
 #if RE4DC_VRAM_ROOM_LOG
 // VRAM_ROOM_LOG=1 (Makefile; render/log only, needs UI_VRAM=1 VRAM_PAGES=1): the per-room VRAM report of the CLAUDE.md
 // graphics memory rule (lane vram12 D4). Two lines per sample, at the room-entry preload ("preload"), every 600 frames
@@ -6815,7 +6843,7 @@ int defer_part(const Re4dcModelPart* p,const SourceLighting* source){
             // WORLD_HOLE_FIX (worldhole.mk): the queue is full: drop this translucent part only. Nothing of it was
             // queued or sent, so the frame stays whole (aborting it hid the whole frame and refused every later
             // PS2 world PT / TR part: r117 entry, the r119 El Gigante fight).
-            ++deferred_drops;++frame_queue_drops;whfix_drop(required);re4dc_model_result(3,0,0);return 1;
+            ++deferred_drops;++frame_queue_drops;whfix_drop(required);RE4DC_FQ_DROP(false,required);re4dc_model_result(3,0,0);return 1;
 #else
             ++deferred_drops;++frame_queue_drops;stream_aborted=true;re4dc_model_result(3,0,0);return 1;
 #endif
@@ -6895,7 +6923,7 @@ extern "C" int re4dc_model_defer_part(const Re4dcModelPart* p){
             // WORLD_HOLE_FIX (worldhole.mk): the queue is full: drop this translucent part only. Nothing of it was
             // queued or sent, so the frame stays whole (aborting it hid the whole frame and refused every later
             // PS2 world PT / TR part: r117 entry, the r119 El Gigante fight).
-            ++deferred_drops;++frame_queue_drops;whfix_drop(required);re4dc_model_result(3,0,0);return 1;
+            ++deferred_drops;++frame_queue_drops;whfix_drop(required);RE4DC_FQ_DROP(false,required);re4dc_model_result(3,0,0);return 1;
 #else
             ++deferred_drops;++frame_queue_drops;stream_aborted=true;re4dc_model_result(3,0,0);return 1;
 #endif
@@ -7171,7 +7199,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
         unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
         if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
             if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
-            if(!deferred_spill || required>deferred_spill_top){++fx_dropped;return 0;}
+            if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
             storage=deferred_spill;top=&deferred_spill_top;
         }
         *top-=required;
@@ -7212,7 +7240,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
         unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
         if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
             if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
-            if(!deferred_spill || required>deferred_spill_top){++fx_dropped;return 0;}
+            if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
             storage=deferred_spill;top=&deferred_spill_top;
         }
         *top-=required;
@@ -7238,7 +7266,7 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
         // The spill tail holds only model snapshots and sprites (no UI lane): no margin.
-        if(!deferred_spill || required>deferred_spill_top){++fx_dropped;return 0;}
+        if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
         storage=deferred_spill;top=&deferred_spill_top;
     }
     *top-=required;
@@ -7301,7 +7329,7 @@ extern "C" int re4dc_effect_line(const Re4dcEffectLine* s){
     unsigned char* storage=frame_storage;unsigned* top=&deferred_top;
     if(required+margin>deferred_top || deferred_top-required-margin<std::max(8192U,nquad*unsigned(sizeof(Re4dcUiQuad)))){
         if(!deferred_spill){deferred_spill=static_cast<unsigned char*>(re4dc_model_deferred_storage(&deferred_spill_capacity));deferred_spill_top=deferred_spill_capacity;}
-        if(!deferred_spill || required>deferred_spill_top){++fx_dropped;return 0;}
+        if(!deferred_spill || required>deferred_spill_top){++fx_dropped;RE4DC_FQ_DROP(true,required);return 0;}
         storage=deferred_spill;top=&deferred_spill_top;
     }
     *top-=required;auto* node=new(storage+*top) DeferredPart{};node->lighting=kLineTag;

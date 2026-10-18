@@ -2520,6 +2520,15 @@ $(error ROOM_CHANGE_EVICT needs TEX_KEEP=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOM_CHANGE_EVICT=$(ROOM_CHANGE_EVICT)U
 endif
+# FRAME_QUEUE_DIAG=1 (lane fix18 #39, log only, default 0 = image unchanged): one FQDIAG line per frame whose frame
+# queue refused translucent parts or effect sprites: counts, bytes asked for, the peak, and the queue at the drop.
+FRAME_QUEUE_DIAG ?= 0
+ifneq ($(filter-out 0 1,$(FRAME_QUEUE_DIAG)),)
+$(error FRAME_QUEUE_DIAG must be 0 or 1)
+endif
+ifeq ($(FRAME_QUEUE_DIAG),1)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FRAME_QUEUE_DIAG=1
+endif
 # ROOM_LEFTOVER_FIT=1 (lane fix18 #39, render only, default 0 = image unchanged; needs ROOM_CHANGE_EVICT): after each
 # preload pass, while the texture budget has less than 512 KB free, close the previous room's leftovers (last drawn at or
 # before the room change; not pinned, leased or core), oldest first. r10f -> r200 kept 54 r10f world pictures (611 KB)
