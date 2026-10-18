@@ -1,0 +1,12 @@
+name cx-r204-mov
+# castle lane: r204 event trigger area (area02), ROUTE_MOVIES_CH3 check
+# ch3gate 2026-10-18: verbatim from castle mkwarp.sh (transcripts 2026-10-15T12:50:50)
+room 0x204
+pos -989 -77 -41378
+ang 0.0
+inv default
+act 300 a 4
+act 390 a 4
+act 480 a 4
+act 570 a 4
+dump

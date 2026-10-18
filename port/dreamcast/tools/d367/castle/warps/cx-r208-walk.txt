@@ -1,0 +1,8 @@
+name cx-r208-walk
+# ch3gate 2026-10-18: RECONSTRUCTED from the logged warp: start line (ch3found h-cxc3fmW cx-r208-h3-01; body also recorded 2026-10-17T11:41:14 without comment); Codex walk format, comment lost
+room 0x208
+pos 0 4000 -1185
+ang 2.9090
+inv default
+act 360 fwd 12
+dump

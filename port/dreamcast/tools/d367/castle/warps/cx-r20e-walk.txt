@@ -1,0 +1,8 @@
+name cx-r20e-walk
+# ch3gate 2026-10-18: RECONSTRUCTED from the logged warp: start line (ch3found h-cxc3fmW cx-r20e-h2-02); Codex walk format, comment lost
+room 0x20e
+pos 15739 0 30395
+ang 1.9060
+inv default
+act 360 fwd 12
+dump

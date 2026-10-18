@@ -1,0 +1,10 @@
+name cx-r20d-s20
+# castle lane: r20d, then a jump through door 0x10 into r206 (room_id_prev 0x20D, rsf[206] 0 = snipe done) -> s20
+# ch3gate 2026-10-18: verbatim (ch3regen c3r-warps.sh, castle mk32g.sh)
+room 0x20d
+pos -22062 7999 17122
+ang 0.0
+inv default
+rsf 0x206 0 5
+jump 200 0x20d 0x206 10007 7999 -4221 -1.75
+dump

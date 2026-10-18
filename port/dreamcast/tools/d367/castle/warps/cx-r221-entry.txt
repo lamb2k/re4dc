@@ -1,0 +1,7 @@
+name cx-r221-entry
+# ch3gate 2026-10-18: RECONSTRUCTED from the logged warp: start line (ch3found h-cxc3umW cx-r221-u2-01); Codex entry format, comment lost
+room 0x221
+pos 5069 837 3542
+ang -2.1950
+inv default
+dump

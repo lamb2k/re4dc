@@ -1,0 +1,8 @@
+name cx-r228-entry
+# r228 from r227 AEV door 0x07, destination part 0; fresh source extraction
+# ch3gate 2026-10-18: verbatim (transcripts 2026-10-16T19:27:48)
+room 0x228
+pos -15 4125 15668
+ang 3.0130
+inv default
+dump

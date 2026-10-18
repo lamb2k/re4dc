@@ -1,0 +1,9 @@
+name cx-r206-s10
+# castle lane: r206 with the three restraints shot (rsf 1 2 3) and Luis' event done (rsf 5): the snipe task ends -> s10
+# ch3gate 2026-10-18: verbatim (transcripts 2026-10-15T13:13:55)
+room 0x206
+pos 10008 8000 -4221
+ang -1.7520
+inv default
+rsf 0x206 1 2 3 5
+dump
