@@ -52,6 +52,12 @@ def payload_base(label):
         src = os.path.join(PAYLOAD_ROOT, 'tree', k)
         assert os.path.isfile(src) and os.path.getsize(src) == v['size'], src
         r[k] = src
+    # rel17b (10-18): every route overlay of the arm under test, also those the payload's release did not have (Test 17's
+    # STAGE_OVL stage overlays st1_0..st2_0: without them the disc halts "route overlay missing on the disc").
+    if os.path.isdir(prog):
+        for o_ in sorted(os.listdir(prog)):
+            if o_.endswith('.ovl') and 'dc/' + o_ not in r:
+                r['dc/' + o_] = os.path.join(prog, o_)
     rm = sorted(x for x in sb if x not in man and x.isascii())
     return dict(replace=r, remove=rm, provenance=dict(payload=dict(root=PAYLOAD_ROOT, stage_base=STAGE_BASE, label=label,
                 same_as_base=kept, staged=len(r), non_ascii_same_bytes=len(renamed))))
