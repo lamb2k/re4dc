@@ -33,7 +33,11 @@ NMRS = re.compile(r'NMRS f=(\d+) room=([0-9a-f]+) id=([0-9a-f]+) ot=(\d+) parts=
 NMRD = re.compile(r'NMRD f=(\d+) (\S+) planned=(\d+) admitted=(\d+) would=(\d+) declined=(\d+) (.*)')
 NMRU = re.compile(r'NMRU2? f=(\d+) (.*)')
 PACK_NONE = re.compile(r'NMRPACK room=([0-9a-f]+) none \(([^)]*)\)')
-PACK_REFUSE = re.compile(r'NMRPACK (?:partner )?refuse room=([0-9a-f]+) why=(\S+)')
+PACK_REFUSE = re.compile(r'NMRPACK refuse room=([0-9a-f]+) why=(\S+)')
+# PS2_ASHLEY_ROOMS (lane ashley17, 10-17): a refused partner package (Ashley, id 03) leaves her on the GameCube source
+# path, outside the NMRS census (r11c at =1: "NMRPACK partner refuse room=011c why=table detail=4"). It FAILS here.
+PARTNER_REFUSE = re.compile(r'NMRPACK partner refuse room=([0-9a-f]+) why=(\S+)(?: detail=(\S+?):?)?(?:\s|$)')
+PARTNER_ID = 0x03
 PACK_OPEN = re.compile(r'NMRPACK open room=([0-9a-f]+)')
 ADMIT = re.compile(r'NMRM admit .*?room=([0-9a-f]+) .*?id=([0-9a-f]+) desc=(\S+)')
 KV = re.compile(r'(\w+)=(-?\d+)')
@@ -58,6 +62,7 @@ def parse(paths):
     reasons = defaultdict(lambda: defaultdict(int))  # (room, id) -> reason -> count
     pack = {}                                        # room -> 'open' / 'none ...' / 'refused: why'
     admits = defaultdict(set)                        # (room, id) -> descriptor names
+    partner_refused = {}                             # room -> why (NMRPACK partner refuse)
     nlines = 0
     for p in paths:
         report = {'nmrd': [], 'nmru': {}}
@@ -73,6 +78,9 @@ def parse(paths):
             m = PACK_REFUSE.search(line)
             if m:
                 pack[room3(m.group(1))] = 'refused: %s' % m.group(2)
+            m = PARTNER_REFUSE.search(line)
+            if m:
+                partner_refused[room3(m.group(1))] = 'why=%s detail=%s' % (m.group(2), m.group(3) or '?')
             m = ADMIT.search(line)
             if m:
                 admits[(room3(m.group(1)), int(m.group(2), 16))].add(m.group(3))
@@ -130,7 +138,7 @@ def parse(paths):
                 else:
                     why = ', '.join('%s %d' % kv for kv in sorted(report['nmru'].items())) or 'no reason line'
                     reasons[key]['registry id, no descriptor bound (unbound: %s)' % why] += int(m.group(11))
-    return rows, meta, reasons, pack, admits, nlines
+    return rows, meta, reasons, pack, admits, nlines, partner_refused
 
 
 def load_allow(path):
@@ -154,7 +162,7 @@ def main():
     ap.add_argument('--rooms', help='comma list: judge only these rooms (default every room in the census)')
     ap.add_argument('--label', default='', help='a run label printed in the table')
     a = ap.parse_args()
-    rows, meta, reasons, pack, admits, n = parse(a.logs)
+    rows, meta, reasons, pack, admits, n, partner_refused = parse(a.logs)
     if not n:
         print('CAST-GC: no NMRS census lines in %s: build with NATIVE_MODEL_REGISTRY_CENSUS=1 (not a pass)' % ', '.join(a.logs))
         sys.exit(2)
@@ -181,6 +189,15 @@ def main():
                     'native': c['native'], 'gc': gc, 'crowd': c['crowd'], 'reason': why,
                     'descriptors': sorted(admits.get((room, mid), ())), 'verdict': verdict,
                     'ot': sorted(meta[(room, mid)]['ot']), 'parts': sorted(meta[(room, mid)]['parts'])})
+    for room, why in sorted(partner_refused.items()):
+        if only and room not in only:
+            continue
+        hit = [x for x in allow if x[1] == PARTNER_ID and x[0] in ('*', room)]
+        verdict = 'allowed (%s; owner %s)' % (hit[0][2], hit[0][3]) if hit else 'FAIL'
+        fails += not hit
+        out.append({'room': room, 'id': '%02x' % PARTNER_ID, 'name': name_of(PARTNER_ID), 'path': 'GC', 'plan': 'partner package',
+                    'native': 0, 'gc': 1, 'crowd': 0, 'reason': 'partner package refused (%s): Ashley keeps the GameCube source path' % why,
+                    'descriptors': [], 'verdict': verdict, 'ot': [], 'parts': []})
     w = '%-5s %-3s %-8s %-9s %-7s %-7s %s'
     print(w % ('room', 'id', 'name', 'path', 'native', 'gc', 'verdict / reason'))
     for r in out:
