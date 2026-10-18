@@ -13,9 +13,9 @@ New in test 16.5 (hotfix):
   Dreamcast; the PS2 rain layer is being tested).
 * See-through scenery parts whose pictures are really solid now draw as
   solid, and near-hard cut-out cards draw as cut-outs, in every chapter 1
-  and 2-1 room where our picture check showed no visible change (r109,
-  the cabin, keeps the old drawing for now). Less work for the graphics
-  chip; please tell us if anything looks different.
+  and 2-1 room. Most rooms look the same; in the cabin (r109) some window
+  and wall pictures look slightly different. Less work for the graphics
+  chip; please tell us if anything looks wrong.
 * A short hitch when entering a room is smaller (contributed by
   Bruceleeto).
 * The contributor kit's knob file now matches the release program (#34).
