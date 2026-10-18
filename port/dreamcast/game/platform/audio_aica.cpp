@@ -514,21 +514,56 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
     if (!blk_wavetable(t, smp, adpcm, n)) return false;
     u32 total = 0;
     for (u32 i = 0; i < n; i++) total += sample_bytes(smp[i], sample_shift(smp[i], h.cap_hz));
+#if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
+    // A bio4midi member can serve either source BGM channel. Keep its checked
+    // prebuilt image when BGM1 shares BGM0's bank and the frozen layout has no
+    // BGM1 slot; the existing high arena block owns its lifetime.
+    const bool shared_bgm1 = t == 4 && h.slot == 3 && h.slot_bytes[4] == 0;
+#endif
     const char* bad = h.version != 1 ? "version" : h.nsamples != n ? "sample count"
                     : fnv1a((const u8*) smp, n * sizeof(WTSAMPLE)) != h.fnv ? "wavetable hash"
                     : ((h.gc_size + 31) & ~31u) != UseAramSize[t] ? "part size"
-                    : total != h.total ? "image size" : h.slot != slot_of(t) ? "slot" : nullptr;
+                    : total != h.total ? "image size" : h.slot != slot_of(t)
+#if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
+                    && !shared_bgm1
+#endif
+                    ? "slot" : nullptr;
     if (bad) {
         re4dc_log("aica: blk %d converted bank rejected (%s), block silent\n", t, bad);
         ++S.blocks_skipped;
         return false;
     }
     if (!layout_init(h)) { ++S.blocks_skipped; return false; }
+#if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
+    if (shared_bgm1 && g_slot[4].size) {
+        re4dc_log("aica: blk %d shared bank requires the frozen zero BGM1 slot, block silent\n", t);
+        ++S.blocks_skipped;
+        return false;
+    }
+#endif
     blk_prepare(t, dst);
     if (g_mapUsed + n > kMapMax) { re4dc_log("aica: map pool full\n"); return false; }
     Slot& sl = g_slot[h.slot];
     u32 base;
 #if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
+    if (shared_bgm1) {
+        const u32 need = (total + 31) & ~31u;
+        const Slot& arena = g_slot[8];
+        if (!need || need < total || !arena.base || g_highBlk >= 0 ||
+            g_arenaNext > arena.size || need > arena.size - g_arenaNext) {
+            re4dc_log("aica: blk %d shared bank (%u bytes) does not fit the arena top (%u of %u used), block silent\n",
+                      t, (unsigned) total, (unsigned) g_arenaNext, (unsigned) arena.size);
+            ++S.blocks_skipped;
+            return false;
+        }
+        g_arenaTop = arena.size - need;
+        g_highBlk = t;
+        base = arena.base + g_arenaTop;
+        re4dc_log("aica: blk %d shared prebuilt bank (%u bytes at %u Hz) goes to the arena top at %06x "
+                  "(arena %u of %u used)\n", t, (unsigned) total, (unsigned) h.cap_hz, (unsigned) base,
+                  (unsigned) g_arenaNext, (unsigned) arena.size);
+        goto placed;
+    }
     // A BGM0 bank about to overwrite a room-arena bank spilled into its slot's tail silences that bank first.
     if (h.slot == 3 && g_spillBlk >= 0 && g_blk[g_spillBlk].valid
         && g_slot[3].base + ((total + 31) & ~31u) > g_blk[g_spillBlk].aica) {
