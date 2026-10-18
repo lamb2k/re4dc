@@ -1431,6 +1431,15 @@ endif
 #                    axes unchanged. =2: check build, the original runs first on a copy of the history and
 #                    every output word, history slot and return value is compared ("HERMF" log line).
 GAME_HERMITE_FAST ?= 0
+# Whole-enemy redesign pilot: share pure local walk/dash channel samples among
+# Ganados in r101/r103 for one source tick. 1 = use hits; 2 = target differential
+# check of every hit, serving the reference. No phase quantization or scheduler
+# change. Four bounded poses, <=32 KiB static storage, no allocation or I/O.
+GAME_LOCOMOTION_POSE ?= 0
+ifneq ($(GAME_LOCOMOTION_POSE),0)
+$(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_LOCOMOTION_POSE=$(GAME_LOCOMOTION_POSE)
+$(OBJDIR)/src/game/motion.o: $(ROOT)/src/game/locomotion_pose_cache.h
+endif
 ifneq ($(GAME_HERMITE_FAST),0)
 $(OBJDIR)/src/game/motion.o: GAME_CPPFLAGS += -DRE4DC_HERMITE_FAST=$(GAME_HERMITE_FAST)
 endif
