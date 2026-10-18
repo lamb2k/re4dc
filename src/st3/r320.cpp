@@ -39,6 +39,16 @@
 #include "model.h"
 #include "vec.h"
 #include "rnd.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (ROUTE_CH3, st3 lane 2026-10-15): s00 / s01 (the helicopter arrives) presented by the PS2 movies
+// (dc/movie/r320<event>.seq) when the disc carries them, as r316s00: the GC evds are not on the disc-2 image
+// (EvtRead: DC.setData failed, then "mem over", and the event never ran). With a movie no evd is read; the
+// handler's begin / end modes run and the code after the event is unchanged. Without it the source path applies.
+#include "route_movie.h"
+#define R320_ROUTE_MOVIES 1
+#else
+#define R320_ROUTE_MOVIES 0
+#endif
 
 // Room 3-20 (D:/Bio4/Prog/r320.cpp): the island landing site with the support helicopter (em3d,
 // list 0x64): the gatling towers and their gunners, the seven enemy appearance areas, the gates, the
@@ -472,6 +482,9 @@ void R320Init()
         PSet((void*&) r320_work->gatling[5], SetObjGatling(ROOM_ARC_PTR(pG->pRoom, 0x22), ROOM_ARC_PTR(pG->pRoom, 0x23), &pos, &rot));
         GatlingSetBreakMode(r320_work->gatling[5], 1);
         r320_work->gatling[5]->setNoSuspend(1);
+#if R320_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x32000))
+#endif
         EvtMgr.EvtReadAram("event/evd/r320s00.evd", 0, 0, 0, 0);
     } else {
         EmReadSearch(0x1D, 0, 0);
@@ -650,8 +663,18 @@ static void r320_heri_event()
 {
     R320_SAVE_FLAGS |= 0x80000000;
     SceSleep(1);
+#if R320_ROUTE_MOVIES
+    if (re4dc_movie_available(0x32000)) {
+        RouteMoviePlay(0x32000, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R320S00_Func, 0);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r320s00.evd", 0, 0);
     if ((pG->Room_flg[0] & 0x20000000) == 0) {
+#if R320_ROUTE_MOVIES
+        if (re4dc_movie_available(0x32001)) {
+            RouteMoviePlay(0x32001, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R320S01_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r320s01.evd", 0, 0);
     } else {
         SndRoomStrStart(1, 0, 1);
@@ -1043,6 +1066,11 @@ void R320Main()
         SceAtSetEnable(0x36, 0);
     }
 }
+// ALIVE_CAP (ch5found16 10-17): a cEmWrap whose send the cap holds reads active (em_wrap.cpp "held sends are alive")
+// and its getPtr() creates the enemy over the cap. The target scan only looks at enemies, so held slots are skipped
+// (before the held-handle change they read inactive here too).
+static inline int r320_held(cEmWrap* w) { return w->alive == 2; }
+
 // The helicopter's rocket target: the active enemy farthest from the player, re-picked every 140
 // frames or when the current one is gone.
 void SetHeriTargetEm()
@@ -1050,7 +1078,7 @@ void SetHeriTargetEm()
     int chg = 0;
 
     if (r320_work->target != -1) {
-        if (r320_work->em[r320_work->target].isActive() == 1) {
+        if (r320_work->em[r320_work->target].isActive() == 1 && !r320_held(&r320_work->em[r320_work->target])) {
             cEm3d* heri = (cEm3d*) r320_work->heri.getPtr();
 
             if (heri) {
@@ -1071,7 +1099,7 @@ void SetHeriTargetEm()
             if (i == 0x20 || i == 0x1B || i == 0x25 || i == 0 || i == 0x12 || i == 0x1A) {
                 continue;
             }
-            if (r320_work->em[i].isActive() == 1) {
+            if (r320_work->em[i].isActive() == 1 && !r320_held(&r320_work->em[i])) {
                 if (r320_work->em[i].getPtr()->plDist2 > dist) {
                     best = i;
                     dist = r320_work->em[i].getPtr()->plDist2;
@@ -1353,7 +1381,7 @@ static void appear_f()
     }
     at = SceAtPtr(0x13);
     for (i = 0; i <= 0x38; i++) {
-        if (r320_work->em[i].isAlive() == 1) {
+        if (r320_work->em[i].isAlive() == 1 && !r320_held(&r320_work->em[i])) {   // ALIVE_CAP: held = no enemy here
             if (AreaHitCheck(&at->area, &r320_work->em[i].getPtr()->pos)) {
                 r320_work->em[i].destroy();
             }
@@ -2220,6 +2248,9 @@ static void Evt_R320S00_Func(Event* e)
         void* mod;
 
         if (e->NowCut == 0 && e->NowFrame == 1) {
+#if R320_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x32001))
+#endif
             EvtMgr.EvtReadAram("event/evd/r320s01.evd", 0, 0, 0, 0);
             BitOn(pG->Room_flg[1], 0x8000);
         }
@@ -2466,12 +2497,33 @@ static void Evt_R320S01_Func(Event* e)
 }
 
 // Destroys the active enemies farthest from the player until `keep` are left.
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+extern "C" int re4dc_aliveCapHeldCount(int lo, int hi);
+extern "C" int re4dc_aliveCapFarDrop(int max, int clearAlive);
+#endif
+
 void deleteFarEm(int keep)
 {
     U32Set(r320_work->emAlive, SceCountEmAlive(0x10, 0x20));
     if (r320_work->emAlive > keep) {
         int cnt = r320_work->emAlive - keep;
         int k;
+
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+        // ALIVE_CAP (ch5found16 10-17): the count includes the cap's held sends (alive on the PS2). Over `keep` the
+        // held ones go first (never on screen; wrap delete: entry kept), then the farthest live ones as before; the
+        // scan below skips held slots, whose getPtr() would create the enemy over the cap only to delete it.
+        {
+            int held = re4dc_aliveCapHeldCount(0x10, 0x20);
+
+            if (held > cnt) {
+                held = cnt;
+            }
+            if (held > 0) {
+                cnt -= re4dc_aliveCapFarDrop(held, 0);
+            }
+        }
+#endif
 
         for (k = 0; k < cnt; k++) {
             f32 far = 0.0f;
@@ -2482,7 +2534,7 @@ void deleteFarEm(int keep)
                 if (i == 0x20 || i == 0x1B || i == 0x25 || i == 0 || i == 0x12 || i == 0x1A) {
                     continue;
                 }
-                if (r320_work->em[i].isActive() == 1) {
+                if (r320_work->em[i].isActive() == 1 && !r320_held(&r320_work->em[i])) {
                     f32 d = (r320_work->em[i].getPtr()->pos.x - pPL->pos.x) * (r320_work->em[i].getPtr()->pos.x - pPL->pos.x)
                             + (r320_work->em[i].getPtr()->pos.y - pPL->pos.y) * (r320_work->em[i].getPtr()->pos.y - pPL->pos.y)
                             + (r320_work->em[i].getPtr()->pos.z - pPL->pos.z) * (r320_work->em[i].getPtr()->pos.z - pPL->pos.z);

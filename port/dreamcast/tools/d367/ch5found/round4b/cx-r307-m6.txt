@@ -1,0 +1,16 @@
+name cx-r307-m6
+# ch5found16 round 4 B: r307 regenerator release by the room's own script: take the terminal item (area 4, A facing
+# angle 0), answer the item prompts, step into area 1 (the release), then ~15 s of em36 play (god); kill rig at 1000
+room 0x307
+pos 1104 0 4015
+ang -1.8780
+inv default
+god
+alivelog 120
+goto 60 8198 0 -1807 0.0
+act 100 a 4
+act 250 a 4 ev
+act 330 a 4 ev
+act 410 a 4 ev
+goto 520 5694 -27 -4927
+kill 0x36 1000

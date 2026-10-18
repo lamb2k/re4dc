@@ -1,0 +1,62 @@
+{
+ "source_complete": false,
+ "profile": "run-derived hot set (MOTION_MISS_LOG): clips played in 4 run(s)",
+ "union": {
+  "source_arc_indices": [
+   39,
+   60,
+   62,
+   64,
+   86,
+   88,
+   155
+  ]
+ },
+ "runs": [
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/ch5found-20261016/h-cx68mW/scenarios/cx-r31c-walk-p69/capture/run-output.txt",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/ch5found-20261016/h-cx68mW/scenarios/cx-r31c-walk-q300/capture/run-output.txt",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/ch5found-20261016/h-cx68mW/scenarios/cx-r31c-walk-q600/capture/run-output.txt",
+  "/mnt/c/Flycast-Evidence/re4-dreamcast/ch5found-20261016/h-cx68mW/scenarios/cx-r31c-walk-q0/capture/run-output.txt"
+ ],
+ "contract": "em39-source-motion-cache-v2",
+ "source_sha256": "b71ccd178fb3a7d1f7fd6994feccf6916afb4efdf6a393cd38d91ee02a6159be",
+ "clips": {
+  "39": {
+   "entry": 0,
+   "bytes": 288,
+   "misses": 4
+  },
+  "60": {
+   "entry": 13,
+   "bytes": 11136,
+   "misses": 3
+  },
+  "62": {
+   "entry": 14,
+   "bytes": 6560,
+   "misses": 3
+  },
+  "64": {
+   "entry": 15,
+   "bytes": 6496,
+   "misses": 2
+  },
+  "86": {
+   "entry": 26,
+   "bytes": 11840,
+   "misses": 2
+  },
+  "88": {
+   "entry": 27,
+   "bytes": 15936,
+   "misses": 3
+  },
+  "155": {
+   "entry": 65,
+   "bytes": 15456,
+   "misses": 3
+  }
+ },
+ "hot_payload_bytes": 67712,
+ "cold_clips": 147
+}

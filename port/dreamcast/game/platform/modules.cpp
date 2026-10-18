@@ -78,13 +78,24 @@ SMODULE_DECL(st2_3)
 #if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && !(defined(RE4DC_ROUTE_CH41) && RE4DC_ROUTE_CH41)
 SMODULE_DECL(st2_3)
 #endif
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+SMODULE_DECL(st3_0)
+SMODULE_DECL(st3_1)
+SMODULE_DECL(st3_2)
+SMODULE_DECL(st3_3)
+#endif
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
 SMODULE_DECL(st1_0)
 SMODULE_DECL(st1_1)
 SMODULE_DECL(st1_2)
 SMODULE_DECL(st1_3)
+#endif
 MODULE(wep02)
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
 MODULE(em12)
+#endif
 MODULE(em23)
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
 MODULE(em15)
 MODULE(em26)
 MODULE(em28)
@@ -94,8 +105,10 @@ MODULE(em29)
 MODULE(em2e)
 MODULE(em13)
 MODULE(em27)
+#endif
 #if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
 MODULE(em18)
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
 MODULE(em17)
 MODULE(em24)
 #if defined(RE4DC_ROUTE_CH21) && RE4DC_ROUTE_CH21
@@ -103,6 +116,7 @@ MODULE(em11)
 #endif
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
 MODULE(em16)
+#endif
 #endif
 #if !RE4DC_ROUTE_OVL
 MODULE(pl0f)
@@ -196,13 +210,40 @@ static const Re4dcModule g_modules[] = {
 #endif
     {79, "em38", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_BOSS4: r228 Salazar + the Queen, room overlay
 #endif
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+    SMODULE(76, st3_0),  // ROUTE_CH3: r300..r30c, r30e (island, disc 2)
+    SMODULE(87, st3_1),  // ROUTE_CH3: r30d, r30f, r310..r312
+    SMODULE(88, st3_2),  // ROUTE_CH3: r315..r31d
+    SMODULE(101, st3_3), // ROUTE_CH3: r320..r333
+    {90, "em1d", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r300 soldiers, room overlay
+    {92, "em1e", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r301 / r303 / r305 soldiers, room overlay
+#if !(defined(RE4DC_ROUTE_CH32) && RE4DC_ROUTE_CH32)
+    {10, "em25", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r304 (room entry), room overlay (ROUTE_CH32 has the same row)
+#endif
+    {85, "em36", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r306..r310 / r326, room overlay
+    {64, "em39", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: Krauser (r31c / r329), room overlay
+    {95, "em3a", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: Krauser's arm (r329), room overlay
+    {77, "em32", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: U-3 (r31b), room overlay
+    {80, "em3d", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: drones (r31c / r320), room overlay
+#if !(defined(RE4DC_WORLD_ROOM_MODULES) && RE4DC_WORLD_ROOM_MODULES)
+    {109, "em1f", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH3: island Ganados (r304 r30b r30c r30f r311 r321 r330), room overlay
+#endif
+#if !(defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23)
+    {63, "em3b", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH3: r301 vehicles, room overlay
+#endif
+#endif
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     SMODULE(74, st1_0),
     SMODULE(73, st1_1),
     SMODULE(78, st1_2),
     SMODULE(86, st1_3),
+#endif
     MODULE(4, wep02),
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(18, em12),
+#endif
     MODULE(7, em23),
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(19, em15),
     MODULE(14, em26),
     MODULE(17, em28),
@@ -212,10 +253,13 @@ static const Re4dcModule g_modules[] = {
     MODULE(38, em2e),  // r106: script-load
     MODULE(34, em13),  // r104: enabled-later
     MODULE(16, em27),  // r107: entry
+#endif
 #if defined(RE4DC_ROUTE_CH13) && RE4DC_ROUTE_CH13
     MODULE(22, em18),  // ROUTE_CH13: r102 (the merchant): enabled-later,script-load
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(21, em17),  // ROUTE_CH13: r108: enabled-later,entry,script-load
     MODULE(8, em24),   // ROUTE_CH13: r108 (room entry) / r10a: entry
+#endif
 #if RE4DC_ROUTE_OVL
     {43, "pl0f", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH13: r10b: entry (Leon's boat); overlay pl0f.ovl
     {39, "em2f", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_CH13: r10b: enabled-later,script-load (Del Lago); overlay em2f.ovl
@@ -233,7 +277,9 @@ static const Re4dcModule g_modules[] = {
     MODULE(30, em2b),  // ROUTE_CH21: r119: enabled-later,script-spawn (El Gigante)
     MODULE(47, pl11),  // ROUTE_CH21: r117 on: Ashley (enemy module 3, cSubAshley)
 #endif
+#if !(defined(RE4DC_DISC2) && RE4DC_DISC2)
     MODULE(13, em11),  // ROUTE_CH21: r117: enabled-later (the Ganados of a later visit; em10g group)
+#endif
 #endif
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
     MODULE(20, em16),  // ROUTE_CH23: r11d: enabled-later,entry (the night village Ganados + Bella sisters; em10g group)
@@ -363,7 +409,21 @@ struct RouteOverlayHeader {
 };
 constexpr u32 kRouteOverlayMagic = 0x4F344552;  // "RE4O"
 struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
-#if defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+// ROUTE_CH3: one slot per overlay id (any knob combination); ids not in the table are never bound. Holds every id of
+// the per-knob tables below (ROUTE_CH21..CH41, ROUTE_BOSS4) plus the island's em1d (90), em1e (92), em36 (85), em1f (109),
+// em39 (64), em3a (95), em32 (77), em3d (80).
+constexpr u32 kRouteOvlIds[] = {43, 39, 5, 30, 47, 66, 63, 61, 32, 10, 68, 31, 79, 90, 92, 85, 109, 64, 95, 77, 80};
+RouteOverlay g_route_ovl[sizeof(kRouteOvlIds) / sizeof(kRouteOvlIds[0])];
+int routeOvlSlot(u32 id)
+{
+    for (unsigned i = 0; i < sizeof(kRouteOvlIds) / sizeof(kRouteOvlIds[0]); ++i)
+        if (kRouteOvlIds[i] == id) return int(i);
+    return -1;
+}
+#define ROUTE_OVL_SLOT(id) routeOvlSlot(id)
+#define ROUTE_OVL_ID(id) (routeOvlSlot(id) >= 0)
+#elif defined(RE4DC_ROUTE_BOSS4) && RE4DC_ROUTE_BOSS4 && defined(RE4DC_ROUTE_CH22) && RE4DC_ROUTE_CH22
 // ROUTE_BOSS4 (needs ROUTE_CH32): the ROUTE_CH41 twelve (em2c 31 at 11), then em38 (79).
 RouteOverlay g_route_ovl[13];
 #define ROUTE_OVL_SLOT(id) ((id) == 43 ? 0 : (id) == 39 ? 1 : (id) == 5 ? 2 : (id) == 30 ? 3 : (id) == 47 ? 4 : (id) == 66 ? 5 : (id) == 63 ? 6 : (id) == 61 ? 7 : (id) == 32 ? 8 : (id) == 10 ? 9 : (id) == 68 ? 10 : (id) == 31 ? 11 : 12)
@@ -415,13 +475,14 @@ RouteOverlay g_route_ovl[2];  // 0 = pl0f, 1 = em2f
 #define ROUTE_OVL_ID(id) ((id) == 43 || (id) == 39)
 #endif
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
-RouteOverlay g_stage_ovl[9];
+RouteOverlay g_stage_ovl[13];
 inline int stageSlot(u32 id)
 {
     switch (id) {
     case 74: return 0; case 73: return 1; case 78: return 2; case 86: return 3;   // st1_0 st1_1 st1_2 st1_3
     case 75: return 4; case 82: return 5; case 83: return 6; case 97: return 7;   // st2_0 st2_1 st2_2 st2_3
     case 96: return 8;                                                           // st4_0
+    case 76: return 9; case 87: return 10; case 88: return 11; case 101: return 12; // st3_0 st3_1 st3_2 st3_3 (ROUTE_CH3)
     }
     return -1;
 }
@@ -459,13 +520,17 @@ static void routeOverlayLoad(unsigned index)
     file_t f = fs_open(path, O_RDONLY);
     if (f < 0) re4dc_missing("route overlay missing on the disc");
     const u32 total = u32(fs_total(f));
-    const int free_before = re4dc_static_heap_free();
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
     // A stage module is linked by cRoomData::linkRelData into heap 3 (the dll heap, before heap 4 exists); its
     // overlay shares the REL's heap and lifetime: MemReplaceHeap(2, 3) on the next relink drops both.
     const int heap = stageSlot(m.id) >= 0 ? 3 : 4;
+    // At a stage relink heap 4 is not rebuilt yet: its old cells can lie under the grown heap 3 (st3_1 61 KB ->
+    // st3_0 84 KB), and walking them logged "OSCheckHeap: Failed cell->next ..." (lane ch5found16, cx-r303-sj-j1).
+    // A heap 3 load does not query heap 4 (logged as -1).
+    const int free_before = heap == 3 ? -1 : re4dc_static_heap_free();
 #else
     const int heap = 4;
+    const int free_before = re4dc_static_heap_free();
 #endif
     u8* block = static_cast<u8*>(mem_alloc(total, "route overlay", 0, 1, heap));
     if (!block) {
@@ -519,7 +584,7 @@ static void routeOverlayLoad(unsigned index)
                          reinterpret_cast<char*>(image + h.bss_end), reinterpret_cast<char*>(image + h.pristine));
 #if defined(RE4DC_STAGE_OVL) && RE4DC_STAGE_OVL
     re4dc_log("route overlay: %s load %u %lu B (%lu relocs) at %08lx heap%d heap4 %d -> %d\n", m.name, o.loads,
-              h.image_bytes, h.relocs, u32(image), heap, free_before, re4dc_static_heap_free());
+              h.image_bytes, h.relocs, u32(image), heap, free_before, heap == 3 ? -1 : re4dc_static_heap_free());
 #else
     re4dc_log("route overlay: %s load %u %lu B (%lu relocs) at %08lx heap4 %d -> %d\n", m.name, o.loads, h.image_bytes,
               h.relocs, u32(image), free_before, re4dc_static_heap_free());

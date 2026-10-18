@@ -667,6 +667,79 @@ MODULES += em38:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em38
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_BOSS4=1
 endif
+# ROUTE_CH3=1 (stage 3 / GC Disc 2 first pass, default 0: no effect; needs ROUTE_CH21=1 ROUTE_OVL=1): the island
+# stage modules st3_0 (module 76: r300..r30c, r30e), st3_1 (87: r30d, r30f, r310..r312), st3_2 (88: r315..r31d) and
+# st3_3 (101: r320..r333) are linked resident, as st2_0 for ROUTE_CH23 (a stage REL stays linked across the rooms of
+# its section, cRoomData::checkRelRead, while route overlays are released on every room reset). The first-pass
+# rooms' enemy modules are room overlays: em1d (90, r300's soldiers), em1e (92, r301 / r303 / r305 soldiers), em25
+# (10, r304 entry) and,
+# unless ROUTE_CH23=1 already adds it, em3b (63, r301's vehicles). Lint: assets.sh discover --fix (value-init /
+# slot-math, PPC line under #else). Stage-3 rooms run from a separate disc-2 test image (GD full at chapter 1-3).
+ROUTE_CH3 ?= 0
+ifneq ($(ROUTE_CH3),0)
+ifneq ($(ROUTE_CH3)$(ROUTE_CH21)$(ROUTE_OVL),111)
+$(error ROUTE_CH3 must be 0 or 1 and needs ROUTE_CH21=1 ROUTE_OVL=1)
+endif
+MODULES += st3_0 st3_1 st3_2 st3_3 em1d:ovl em1e:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em1d .ovl_em1e
+# em25 (r304): ROUTE_CH32 already links the same room overlay.
+ifneq ($(ROUTE_CH32),1)
+MODULES += em25:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em25
+endif
+# em36 (85: r306..r310, r326) and em1f (109: r304 / r30b / r30c / r30f / r311 / r321 / r330 Ganados) room overlays.
+MODULES += em36:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em36
+# Krauser em39 (64: r31c, r329 knife fight / fight) with his arm em3a (95), U-3 em32 (77: r31b), em3d (80: r320 / r31c
+# drones): room overlays, so the island rooms load complete GC enemy archives (round 3; PS2 models come from the cast lane).
+MODULES += em39:ovl em3a:ovl em32:ovl em3d:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em39 .ovl_em3a .ovl_em32 .ovl_em3d
+# em1f: WORLD_ROOM_MODULES links it resident (the St4 Ganados); otherwise a room overlay.
+ifneq ($(WORLD_ROOM_MODULES),1)
+MODULES += em1f:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em1f
+endif
+ifneq ($(ROUTE_CH23),1)
+MODULES += em3b:ovl
+export RE4DC_LINK_OVERLAY += .ovl_em3b
+endif
+$(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+# The stage-3 PS2 world packages (native_static.cpp re4dc_ps2_world_room, PS2_WORLD_REGISTRY rooms).
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+# The island rows of the generic alive cap (em_set.cpp aliveCapKeepTbl / aliveCapParkRoom; no code without ALIVE_CAP).
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+# r300's s00 (the island landing) is presented by its PS2 movie (src/st3/r300.cpp, ROUTE_MOVIES).
+$(OBJDIR)/mod/st3_0/src/st3/r300.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+# r316s00 / r329s00 (Ashley taken / the reunion) likewise (st3 lane 2026-10-15: their GC evds are not on disc 2).
+$(OBJDIR)/mod/st3_2/src/st3/r316.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r329.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+# ROUTE_MOVIE_GAME_ST3 (not _CH3: ROUTE_MOVIES_CH3 owns that name for the castle chapter 3 rooms).
+# Round-10 island event hooks (st3 lane, merged by lane ch5found16): r317 (s00-s15, the knife QTE set), r31b s00, r31c
+# s00-s02, r320 s00 / s01, r321 s00, r325 s00, r330 s00 as PS2 route movies when the disc carries them (source path
+# otherwise). r331 / r332 (final chapter) stay with lane stress16b. The objects need RE4DC_ROUTE_CH3 like r316.
+$(OBJDIR)/mod/st3_2/src/st3/r317.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_2/src/st3/r31b.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_2/src/st3/r31c.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r320.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r321.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r325.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+$(OBJDIR)/mod/st3_3/src/st3/r330.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
+ROUTE_MOVIE_GAME_ST3 = $(OBJDIR)/mod/st3_0/src/st3/r300.o $(OBJDIR)/mod/st3_2/src/st3/r316.o $(OBJDIR)/mod/st3_3/src/st3/r329.o $(OBJDIR)/mod/st3_2/src/st3/r317.o $(OBJDIR)/mod/st3_2/src/st3/r31b.o $(OBJDIR)/mod/st3_2/src/st3/r31c.o $(OBJDIR)/mod/st3_3/src/st3/r320.o $(OBJDIR)/mod/st3_3/src/st3/r321.o $(OBJDIR)/mod/st3_3/src/st3/r325.o $(OBJDIR)/mod/st3_3/src/st3/r330.o
+# PS2_ENEMY_ST3=<mask> (stage 3 lane, default 0: no effect; changes gameplay by design, PS2 USA = source of truth):
+# the PS2 room-code enemy gates of the island. Bit 0: r30f (setem < 6, the 0xF8 send < 7). Bit 1: r301 (the PS2
+# wave tasks: sends while < 9 / < 8 alive, room-save chaining, far deletes to 7 / 4). Bit 3: clamp the gates to cap 6. Bit 2: r327 (the PS2 camp: first table, late task, appear
+# cut, far deletes, < 9 / < 8 gates). Bit 4: r311 skip path
+# despawns Zealots 0xF0..0xF2 (PS2).
+PS2_ENEMY_ST3 ?= 0
+ifneq ($(PS2_ENEMY_ST3),0)
+$(OBJDIR)/mod/st3_1/src/st3/r30f.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2_ENEMY_ST3)
+$(OBJDIR)/mod/st3_0/src/st3/r301.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2_ENEMY_ST3)
+$(OBJDIR)/mod/st3_1/src/st3/r311.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2_ENEMY_ST3)
+$(OBJDIR)/mod/st3_3/src/st3/r327.o: GAME_CPPFLAGS += -DRE4DC_PS2_ENEMY_ST3=$(PS2_ENEMY_ST3)
+endif
+# r30a calls EtcModel.cpp's setRoomEtcBreakDisp by its C name (as r200; ROUTE_CH23 sets the same export alias).
+$(OBJDIR)/src/game/EtcModel.o: GAME_CPPFLAGS += -DRE4DC_WORLD_STAGE_MODULES=1
+endif
 # WEAPON_MODULES=1 (issue #1 2026-10-05, default 0: no effect): Leon's other stage-1 weapons, so equipping one in the
 # inventory (SubScreenExit -> ReadWepData -> DLL_Link) finds its module instead of halting "DLL link/unlink failed":
 # wep01 (module 3, Punisher; the merchant's medallion reward), wep07 (54, shotgun; r101 house), wep09 (62, rifle; its
@@ -728,6 +801,13 @@ endif
 PRIM_CAP_R202 ?= 0
 ifneq ($(PRIM_CAP_R202),0)
 $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_CAP_R202=$(PRIM_CAP_R202)
+endif
+# PRIM_MIN_ST3=<bytes> (default 0: no effect; st3 lane 2026-10-15): the island rooms (r300..r33f) get a primitive buffer
+# of at least this many bytes (room values 262,144 .. 655,360). The buffer's tail funds the native actor palette bank
+# (64 KiB); r31b's 262,144 B left Leon on the GameCube path at its entry frame (LEONGC acq=10). Costs heap 4.
+PRIM_MIN_ST3 ?= 0
+ifneq ($(PRIM_MIN_ST3),0)
+$(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PRIM_MIN_ST3=$(PRIM_MIN_ST3)
 endif
 # PRIM_BUF_KB=<KB> (lane cast16 2026-10-16; default 0: no effect; size only): every room's primitive buffer asks at most
 # this many KB of heap 4 (GC room values: r11f 655,360 B). Set it to the worst chapter 1-2 per-frame peak (PRIM_WATER,
@@ -796,8 +876,23 @@ ifeq ($(ROUTE_CH21)$(EM10_SHARED)$(WORLD_STAGE_MODULES),110)
 else ifeq ($(ROUTE_CH21),1)
 $(error ROUTE_CH21=1 needs EM10_SHARED=1 (em11 in the em10g group) and WORLD_STAGE_MODULES=0 (pl11 is a CH21 overlay))
 endif
+# DISC2=1 (stage 3 lane, default 0: no effect; needs ROUTE_CH3=1): the disc-2 (island) image. The island never links
+# a stage-1 room or Ganado REL, so the image drops the resident stage-1 modules st1_0..st1_3 and the stage-1 enemy
+# RELs (em12 em15 em13 em17 em11 = the em10g group, em21 em24 em26 em27 em28 em29 em2a em2e): their bytes return to
+# heap 4. wep02 (Red9), em18 (the merchant: r30a / r312 / r31a / r329 / r331) and em23 (r30a) stay. Route overlays
+# cost no image bytes and stay linked (their .ovl files are simply not staged on disc 2). A disc-2 room that links a
+# dropped module halts at OSLink "module: id N not in the image" (the existing ROUTE check), never a silent stub.
+DISC2 ?= 0
+ifneq ($(DISC2),0)
+ifneq ($(DISC2)$(ROUTE_CH3),11)
+$(error DISC2 must be 0 or 1 and needs ROUTE_CH3=1)
+endif
+DISC2_DROPPED = st1_0 st1_1 st1_2 st1_3 em12 em15 em13 em17 em11 em21 em24 em26 em27 em28 em29 em2a em2e
+MODULES := $(filter-out $(DISC2_DROPPED),$(MODULES))
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2=1
+endif
 EM10_GROUP = $(filter em12 em15 em13 em17 em11 em16 em1a em1b em14 em19 em1c $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
-MODULE_ARGS = $(if $(filter 1,$(EM10_SHARED)),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
+MODULE_ARGS = $(if $(and $(filter 1,$(EM10_SHARED)),$(strip $(EM10_GROUP))),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
 MODULE_OBJS =
 MODULES_MK = $(OBJDIR)/modules.mk
 GAME_OBJS = $(patsubst $(ROOT)/%.cpp,$(OBJDIR)/%.o,$(GAME_SRCS))
@@ -1695,6 +1790,18 @@ endif
 # Default zero preserves prior objects/assets; exact carrier staging is a separate reviewed gate.
 CABIN_SOURCE ?= 0
 CABIN_HANDOFF_DIAG ?= 0
+# EVENT_SWAP_RELOAD (lane ch5found16, 10-17; default 0): MemorySwap of an enemy archive against an immutable event file
+# (EVENT_FILES=1) reloads the archive region from its disc file afterwards instead of needing a mutable ARAM copy
+# (r310 r310s00 with em36). The in-place binds are kept as byte runs and the region's CRC is checked on the way back.
+EVENT_SWAP_RELOAD ?= 0
+ifneq ($(filter-out 0 1,$(EVENT_SWAP_RELOAD)),)
+$(error EVENT_SWAP_RELOAD must be 0 or 1)
+endif
+ifeq ($(EVENT_SWAP_RELOAD),1)
+ifneq ($(EVENT_FILES),1)
+$(error EVENT_SWAP_RELOAD needs EVENT_FILES=1)
+endif
+endif
 CABIN_COMPLETE_HANDOFF ?= 0
 ifneq ($(filter-out 0 1,$(CABIN_COMPLETE_HANDOFF)),)
 $(error CABIN_COMPLETE_HANDOFF must be 0 or 1)
@@ -1725,7 +1832,7 @@ endif
 .PHONY: cabin-source-force
 $(OBJDIR)/cabin-source.h: cabin-source-force
 	@mkdir -p $(dir $@)
-	@printf '#define RE4DC_CABIN_SOURCE %s\n#define RE4DC_CABIN_HANDOFF_DIAG %s\n#define RE4DC_CABIN_COMPLETE_HANDOFF %s\n' '$(CABIN_SOURCE)' '$(CABIN_HANDOFF_DIAG)' '$(CABIN_COMPLETE_HANDOFF)' > $@.tmp
+	@printf '#define RE4DC_CABIN_SOURCE %s\n#define RE4DC_CABIN_HANDOFF_DIAG %s\n#define RE4DC_CABIN_COMPLETE_HANDOFF %s\n#define RE4DC_EVENT_SWAP_RELOAD %s\n' '$(CABIN_SOURCE)' '$(CABIN_HANDOFF_DIAG)' '$(CABIN_COMPLETE_HANDOFF)' '$(EVENT_SWAP_RELOAD)' > $@.tmp
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 CABIN_SOURCE_PLATFORM = $(OBJDIR)/platform/native_event_file.o $(OBJDIR)/platform/native_cabin.o $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/audio_aica.o
@@ -1757,7 +1864,7 @@ $(OBJDIR)/route-movies.h: route-movies-force
 	@cmp -s $@.tmp $@ || mv $@.tmp $@
 	@rm -f $@.tmp
 ROUTE_MOVIE_PLATFORM = $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/pad.o
-ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3) $(ROUTE_MOVIE_GAME_CH4)
+ROUTE_MOVIE_GAME = $(OBJDIR)/src/game/game.o $(OBJDIR)/mod/st1_0/src/st1/r100.o $(OBJDIR)/mod/st1_1/src/st1/r101.o $(OBJDIR)/mod/st1_1/src/st1/r102.o $(OBJDIR)/mod/st1_1/src/st1/r104.o $(OBJDIR)/mod/st1_1/src/st1/r105.o $(OBJDIR)/mod/st1_1/src/st1/r106.o $(OBJDIR)/mod/st1_1/src/st1/r10b.o $(OBJDIR)/route_movie_bridge.o $(ROUTE_MOVIE_GAME_CH21) $(ROUTE_MOVIE_GAME_CH22) $(ROUTE_MOVIE_GAME_CH23) $(ROUTE_MOVIE_GAME_CH3) $(ROUTE_MOVIE_GAME_ST3) $(ROUTE_MOVIE_GAME_CH4)
 $(ROUTE_MOVIE_PLATFORM) $(ROUTE_MOVIE_GAME): $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_PLATFORM): PLATFORM_CPPFLAGS += -include $(OBJDIR)/route-movies.h
 $(ROUTE_MOVIE_GAME): GAME_CPPFLAGS += -include $(OBJDIR)/route-movies.h
@@ -2081,7 +2188,7 @@ ifneq ($(STAGE_OVL),0)
 ifneq ($(STAGE_OVL),1)
 $(error STAGE_OVL must be 0 or 1)
 endif
-STAGE_OVL_NAMES := $(sort $(filter st1_0 st1_1 st1_2 st1_3 st2_0 st2_1 st2_2 st2_3 st4_0,$(MODULES)))
+STAGE_OVL_NAMES := $(sort $(filter st1_0 st1_1 st1_2 st1_3 st2_0 st2_1 st2_2 st2_3 st4_0 st3_0 st3_1 st3_2 st3_3,$(MODULES)))
 MODULES := $(filter-out $(STAGE_OVL_NAMES),$(MODULES)) $(addsuffix :ovl,$(STAGE_OVL_NAMES))
 export RE4DC_LINK_OVERLAY += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
 export RE4DC_OVL_HELPERS_SAFE += $(addprefix .ovl_,$(STAGE_OVL_NAMES))
@@ -2106,8 +2213,10 @@ CH31_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH31)),st2_1 em1a em1b em14)
 CH32_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH32)),em2d:ovl em25:ovl em19 em3c:ovl)
 CH41_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH41)),em1c st2_3 em2c:ovl)
 BOSS4_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_BOSS4)),$(if $(filter 1,$(ROUTE_CH41)),,st2_3 em2c:ovl) em38:ovl)
+# CH3 st3_0..st3_3 / em1d / em1e: discover --fix value-init and slot-math traps rewritten; em3b as CH23.
+CH3_AUDITED_MODULES = $(if $(filter 1,$(ROUTE_CH3)),$(if $(filter 1,$(STAGE_OVL)),st3_0:ovl st3_1:ovl st3_2:ovl st3_3:ovl,st3_0 st3_1 st3_2 st3_3) em1d:ovl em1e:ovl em25:ovl em3b:ovl em36:ovl em1f:ovl em39:ovl em3a:ovl em32:ovl em3d:ovl)
 ifeq ($(ENEMY_DEMAND),1)
-ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES),$(MODULES)),)
+ifneq ($(filter-out st1_0 st1_1 st1_2 st1_3 wep02 em12 em23 em15 em26 em28 em21 em2a em29 em2e em13 em27 st2_0 st4_0 pl11 st2_2 em1f em18 em17 em24 pl0f em2f pl0f:ovl em2f:ovl em22:ovl em2b:ovl pl11:ovl em11 wep01 wep07 wep09 wep11 wep13 wep19 $(CH23_AUDITED_MODULES) $(CH22_AUDITED_MODULES) $(CH31_AUDITED_MODULES) $(CH32_AUDITED_MODULES) $(CH41_AUDITED_MODULES) $(BOSS4_AUDITED_MODULES) $(STAGE_OVL_AUDITED_MODULES) $(CH3_AUDITED_MODULES),$(MODULES)),)
 $(error ENEMY_DEMAND requires a direct-slot consumer audit for the selected MODULES)
 endif
 endif

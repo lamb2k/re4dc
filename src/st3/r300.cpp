@@ -160,6 +160,17 @@ static void setTexRender();
 }
 static void R300_Event();
 static void Evt_R300S00_Func(Event* e);
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscene (ROUTE_CH3, the island landing): s00 is presented by its PS2 movie (dc/movie/r300s00.seq,
+// docs/ROUTE_CUTSCENES.md) when the disc carries it. The 2.72 MB evd does not fit the r300 event buffer on the
+// disc-2 image (EventMgr::EvtRead: event size too large), so with the movie no evd is read (no ARAM pre-load, no
+// em1d search); the handler's begin / end modes run and the code after the event (fade, the player on the beach,
+// camera, BGM) is unchanged. Without the movie the source event path applies.
+#include "route_movie.h"
+#define R300_ROUTE_MOVIES 1
+#else
+#define R300_ROUTE_MOVIES 0
+#endif
 static void r300_em_reset_task();
 static void r300_find_camera_event_exit();
 static void r300_find_camera_event();
@@ -752,11 +763,20 @@ static void R300_Event()
     SceEventStart(0);
     pG->System_flg |= 0x400;
     SceSleep(1);
+#if R300_ROUTE_MOVIES
+    if (re4dc_movie_available(0x30000)) {
+        pG->Status_flg[1] |= 0x800;
+        RouteMoviePlay(0x30000, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R300S00_Func, 0);
+    } else {
+#endif
     EvtMgr.EvtReadAram("event/evd/r300s00.evd", 0x1D, 0, 0, 0);
     pG->Status_flg[1] |= 0x800;
     SceSleep(1);
     SceSleep(1);
     EvtMgr.EvtReadExec("event/evd/r300s00.evd", 0x1D, 0);
+#if R300_ROUTE_MOVIES
+    }
+#endif
     {
         FadeColorPair col;
 

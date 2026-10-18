@@ -45,6 +45,18 @@
 #include "scheduler.h"
 #include "room_data.h"
 #include "eprintf.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (ROUTE_CH3, st3 lane 2026-10-15): s00 (Krauser appears) and s02 (he takes the crest) are presented
+// by their PS2 movies when the disc carries them, as r316s00 (the GC evds are not on the disc-2 image). s01, the
+// knife fight, is the r104 QTE pattern: the movie to cut 0xB (picture 955, the PS2 evd camera sum), then cut 0xB as
+// 130 game frames of Evt_R31CS01_Func mode 1 over the stepped picture: its own action button at frames 0x66..0x78
+// (Room_flg[0] 0x10000000 on a hit, then CancelSet). A skip before the cut runs mode 3 and the r31cs01c cancel clip.
+// r31cEventS01EndProc reads the outcome as the source does. Without the movies the source path applies.
+#include "route_movie.h"
+#define R31C_ROUTE_MOVIES 1
+#else
+#define R31C_ROUTE_MOVIES 0
+#endif
 
 // Room 3-1c (D:/Bio4/Prog/r31c.cpp): the ruins with the three crest doors, Krauser's two
 // battles, the timer doors and the tower that explodes.
@@ -372,14 +384,23 @@ void R31cInit()
     EvtMgr.SetFunc("evt_r31cs02_func", (void*) Evt_R31CS02_Func);
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         SceAtDataSet_exec(7, 0x12, 0, (TaskFunc) r31cEventS00, 0, 1);
+#if R31C_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x31C00))
+#endif
         EvtMgr.EvtReadAram("event/evd/r31cs00.evd", (u8) GetEmIdFromListI(0x19), 0, 0, 0);
         SceExec(0x12, (TaskFunc) r31c_TimerDoorCancelCheck, 0, 0, 2, 0);
     } else if (RsfCheck(G_ROOM_ID, 2) == 0) {
         SceAtDataSet_exec(0x14, 0x12, 0, (TaskFunc) r31cEventS02, 0, 1);
+#if R31C_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x31C02))
+#endif
         EvtMgr.EvtReadAram("event/evd/r31cs02.evd", (u8) GetEmIdFromListI(0x19), 0, 0, 0);
         SndRoomStrStart(1, 0, 1);
     } else if (RsfCheck(G_ROOM_ID, 1) == 0) {
         SceAtDataSet_exec(0x81, 0x12, 0, (TaskFunc) r31cEventS01, 0, 1);
+#if R31C_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x31C01))
+#endif
         EvtMgr.EvtReadAram("event/evd/r31cs01.evd", (u8) GetEmIdFromListI(0x19), 0, 0, 0);
         SndRoomStrStart(1, 0, 1);
     }
@@ -1566,8 +1587,16 @@ static void r31cEventS00()
     int i;
 
     RsfSet(G_ROOM_ID, 0);
+#if R31C_ROUTE_MOVIES
+    if (re4dc_movie_available(0x31C00)) {
+        RouteMoviePlay(0x31C00, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R31CS00_Func, 0);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r31cs00.evd", (u8) GetEmIdFromListI(0x19), 0);
     SceAtDataSet_exec(0x14, 0x12, 0, (TaskFunc) r31cEventS02, 0, 1);
+#if R31C_ROUTE_MOVIES
+    if (!re4dc_movie_available(0x31C02))
+#endif
     EvtMgr.EvtReadAram("event/evd/r31cs02.evd", (u8) GetEmIdFromListI(0x19), 0, 0, 0);
     SetPosAngY(pPL, 3805.0f, 0.0f, 10095.0f, -2.49f);
     SndBgmTblSet(0x31C, 1);
@@ -1610,6 +1639,11 @@ static void r31cEventS01()
     }
     SceEventEnd(0);
     BitOff(pG->Room_flg[0], 0x80000000);
+#if R31C_ROUTE_MOVIES
+    if (re4dc_movie_available(0x31C01)) {
+        RouteMoviePlayQte(0x31C01, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R31CS01_Func, 0xB, 955, 130);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r31cs01.evd", (u8) GetEmIdFromListI(0x19), 0);
     SndBgmTblSet(0x31C, 0);
     SndRoomStrStart(1, 0, 1);
@@ -1648,6 +1682,11 @@ static void r31cEventS02()
     RsfSet(G_ROOM_ID, 2);
     BitOff(pG->Room_flg[0], 0x80000000);
     SndRoomStrStop(1);
+#if R31C_ROUTE_MOVIES
+    if (re4dc_movie_available(0x31C02)) {
+        RouteMoviePlay(0x31C02, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R31CS02_Func, 0);
+    } else
+#endif
     EvtMgr.EvtReadExec("event/evd/r31cs02.evd", (u8) GetEmIdFromListI(0x19), 0);
     SceEventStart(1);
     if ((int) pG->Room_flg[0] < 0) {
@@ -1689,6 +1728,9 @@ static void r31cEventS02EndProc()
     ((cEm39*) r31c_work.p->krauser.getPtr())->set2ndBattle();
     SceExec(0x12, (TaskFunc) r31c_Krauser2ndBattle, 0, 0, 2, 0);
     SceAtDataSet_exec(0x81, 0x12, 0, (TaskFunc) r31cEventS01, 0, 1);
+#if R31C_ROUTE_MOVIES
+    if (!re4dc_movie_available(0x31C01))
+#endif
     EvtMgr.EvtReadAram("event/evd/r31cs01.evd", 0, 0, 0, 0);
     SndRoomStrStart(1, 0, 0);
 }

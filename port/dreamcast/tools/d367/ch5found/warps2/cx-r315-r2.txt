@@ -1,0 +1,13 @@
+name cx-r315-r2
+# ch5found16 round 2: r315 base cx-r315-walk.txt; god, alivelog 60, kill rig 0x1e x2 gap 40
+# r315 from r30f AEV door 0x00, destination part 0; fresh source extraction
+room 0x315
+pos 8011 0 -4538
+ang -0.4400
+inv default
+act 360 fwd 12
+dump
+god
+alivelog 60
+kill 0x1e 200
+killrep 1 40

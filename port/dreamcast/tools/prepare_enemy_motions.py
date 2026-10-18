@@ -28,6 +28,9 @@ MAX_CLIP=32768
 # em11 (r117's later-visit Ganados, ESL 0x50/0x51, chapter 2-1; route lane r117 2026-10-10): em11/em10.cpp,
 # em10_tmpl.cpp, em11_set.cpp, the same three units; its 5.8 MB GC archive did not fit r117's heap 4 (largest cell
 # 3.1 MB: DVD: Memory allocate failed, readEmData em/em11.drs).
+# em1d / em1e / em1f (ROUTE_CH3, the island soldiers and Ganados of r300 / r301 r303 r305; stage 3 lane 2026-10-14): em1d/em10.cpp,
+# em10_tmpl.cpp, em1d_set.cpp (em1e the same), the em11 contract. Their GC archives (4,634,272 / 4,502,752 B bodies)
+# did not fit r300's heap 4 on the disc-2 image (4,042,976 B free: DVD: Memory allocate failed, Em set failed Id=1d).
 # em16 (r11d's chapter 2-3 night-village Ganados and the Bella sisters, chainsaw types 3 / 4; lane ch2code16 2026-10-16):
 # em16/em10.cpp, em10_tmpl.cpp, em16_set.cpp, the same three units (ROUTE_CH23 links it in the em10g group); its 4,246,528 B
 # GC body never fit r11d's heap 4 next to the room, Ashley and em3b (CH22-ROUTE-20261014 blocker 1).
@@ -36,7 +39,8 @@ MAX_CLIP=32768
 # in r208 / r201 / r204 next to the room and its PS2 world (cx-r20x-t12-01: readEmData error).
 # em19 (r20d Ganados, ROUTE_CH32; same em10.cpp / em10_tmpl.cpp / em19_set.cpp units, 4,293,760 B GC body).
 # em1c (r218 Ganados, ROUTE_CH41; em10.cpp / em10_tmpl.cpp / em1c_set.cpp, 4,988,480 B GC body).
-GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em16.drs','em1a.drs','em1b.drs','em14.drs','em19.drs','em1c.drs')
+GANADO=('em12.drs','em15.drs','em13.drs','em17.drs','em11.drs','em16.drs','em1a.drs','em1b.drs','em14.drs','em19.drs','em1c.drs',
+        'em1d.drs','em1e.drs','em1f.drs')
 SMALL=('em26.drs','em28.drs','em21.drs','em2b.drs','em2f.drs','em22.drs','em23.drs','em18.drs','pl11.drs','pl0f.drs')
 # em2a / em24 / em27 / em29 / em2e (the chapter 1 traps, snake, fish, bat and wall crawler; lane ps2cast 2026-10-15,
 # registry room packages of the released chapter 1-1..2-1 rooms): textures only (--keep-motion-resident). Each module's
@@ -54,6 +58,14 @@ SMALL+=('em2c.drs','em38.drs')
 # only modelInit (em2d R0 init, modelInit(bin, tpl)); its EFF slot (ARC 4, EspDataLoad) keeps its own textures. The GC
 # body (3,700,672 B) did not fit r205's heap 4 (largest 2,334,560 B, cx-r205-h1-01 Flycast).
 SMALL+=('em2d.drs',)
+# Island enemies (lane ch5found16 2026-10-16, ROUTE_CH3 room overlays): textures only (--keep-motion-resident), the em2d
+# contract. Their model TPLs reach only modelInit / ModInfoMgr.create / SetObj16 (src/em36/em36.cpp em36 R0 init ARC 0x13
+# 0x14 0x24, the tentacle SetObj16 ARC 0x8E / 0x8F; src/em39/em39.cpp ARC 0x17 0x10 0x18 0x12 0x1D 0x1E 0x22 and the
+# knife-fight hand on Leon's subArc; src/em3a/em3a.cpp ARC 6 / 0xC; src/em32/em32.cpp ARC 5; src/em3d/em3d.cpp ARC 6);
+# the source path uploads their colour texels and never reads them on the CPU. Their EFF slots (EspDataLoad: em36 ARC
+# 0x25, em3a ARC 4, em32 ARC 8, em3d ARC 4) keep their own textures (top-level TPLs only are selected). Motions stay
+# resident: their FCV consumers are not audited for motion streaming.
+SMALL+=('em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs')
 # em3c (armoured Armaduras, r216 and the castle armour rooms; lane ch3found16 2026-10-17): textures only. Its model TPLs reach
 # modelInit (ARC 5/6, 9/0xA), ModInfoMgr.create (weapons ARC 0xC/0xD, 0xE/0xF) and SetObj16 (core, ARC 0x48/0x49); the
 # source path uploads their colour texels and never reads them on the CPU. Its EFF slot (ARC 4, EspDataLoad) keeps its own
@@ -113,6 +125,20 @@ MOTION_SMALL=('em21.drs','em23.drs','em2a.drs','em2b.drs')
 # maxFrame reads); MotionMove / MotionMoveF take the work, not ARC. SetObj00(ARC(0x81), ARC(0x82)) is BIN + TPL, ARC(5..8)
 # BINs. Heap 4: the textures-only body (3,517,280 B) did not fit r307 (largest block 3,218,496) or r310 (3,083,744).
 MOTION_SMALL+=('em36.drs',)
+# em39 (Krauser, r31c r325 r326 r329; lane ch5found16 2026-10-17; tools/d367/motion/arcaudit.py over src/em39/em39.cpp):
+# MotionSetCore `data` takes 144 ARC FCVs directly and em39BlendMotSet's m0 / m1 / m2 (ARC 0x7C..0x81, 0xC6..0xC8; three
+# MotionSetCore calls, its a / b / c are int seq values); `seq` takes 94 ARC SEQ key tables (resident). The work-held
+# clips go there too: bowMot0..2 = ARC(0xC9..0xD0) -> em39BlendMotSet; `mot = ARC(0xE7 / 0xFF..0x107)` -> MotionSetCore
+# (Arm_mot). setGrenadeThrow (emwep.cpp) lends ARC(0x10B / 0x10D / 0x111) to the player's MotionSetCore (Mot_escape /
+# motBackjump / motFront; the leased evaluator, as em2b's grab) and ARC(0x10C) as its seq. FCV header reads only (resident):
+# maxFrame of ARC(0x83 0x88 0x92 0xC4 0xE7 0x10A). The grabs lend the archive to the player (pl->subArc = em->subArc,
+# em39.cpp 1161..5159): PL_ARC_PTR(pl->subArc, 0x10E..0x130) and PLEM39_BACKJUMP_INIT's motA (0x12B 0x12C) -> the player's
+# MotionSetCore `data`; 0x10F 0x12E its `seq`; 0x128 0x129 the cliff object's modelInit. No variable index into the
+# archive anywhere in src; event.cpp never reads subArc. FCV slots ARC(0x36 0x39 0x3A 0x7B 0x82 0x87 0x9D 0xCD 0xD3
+# 0x112) are named nowhere (never played). Everything else is BIN / TPL / EFF: modelInit (0x15 0x17 0x1A 0x1D),
+# ModInfoMgr.create, SetWeapon (0x25..0x38), SetObj10 (0x2D 0x2E), SetObj12 (0x16 0x19), EspDataLoad (4), bin = ARC(0xA..0xF).
+# Heap 4: the textures-only body (3,244,800 B) did not fit r31c (2,084,288 B free at the em39 read).
+MOTION_SMALL+=('em39.drs',)
 # em2b (El Gigante, r119; route lane r119 2026-10-10): every FCV it names goes to MotionSetCore, directly or through
 # em2bBlendMotSet (two MotionSetCore calls; the blend work is evaluated by MotionMoveCore), MotSetObj16 (the
 # parasite head and the tentacles: MotionSetCore) and plBlendMotSet / MotionSetCore on the player while it lends
@@ -122,7 +148,7 @@ MOTION_SMALL+=('em36.drs',)
 # SetRock; its EFF slot keeps its own textures. em2b is a ROUTE_OVL room overlay, so its static REL is stripped
 # with the knob-conditional module set (ROUTE_OVL_MODULES). The room's heap 4: r119 frees 3,854,656 B in two
 # cells, the largest 2,770,912 B, under the 4,689,664 B rel-stripped body.
-ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11')
+ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11','em1d','em1e','em1f','em36','em39','em3a','em32','em3d')
 # em2d / em25 / em3c (ROUTE_CH32 room overlays; lane ch3found16 2026-10-17): their static REL is stripped the same way, as on
 # the castle disc's le_mirror build (the code comes from dc/<em>.ovl).
 ROUTE_OVL_MODULES+=('em2d','em25','em3c')
@@ -224,7 +250,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     # pl0f: the release disc carries its whole REL too (pl0f is in no static / overlay module list); it moves intact.
     # em24: the release disc carries its whole REL too (le_mirror keeps it: 394,176 B on the disc = the GC file).
     # em2c / em38 (ROUTE_BOSS4 room overlays): le_mirror keeps their whole REL as for pl0f; it moves intact.
-    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em3b.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
+    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs','em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs','em3b.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
     original_size,original_base=struct.unpack_from('>I4xI',original,slot+4)
     codec=mirror.motion_codec();ranges=[];entries=[];files={};oversized=[]
     for off in ([] if keep_motion_resident else sorted(set(offsets))):

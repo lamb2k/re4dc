@@ -440,6 +440,78 @@ int DvdReadN(const char* name, void* dst, int a, int b, int c, int mode, const c
     return Dvd.ReadReq();
 }
 
+#if defined(RE4DC_GAME) && RE4DC_EVENT_SWAP_RELOAD
+// EVENT_SWAP_RELOAD (lane ch5found16, 10-17; default 0). The GC exchanges an enemy archive's first `size` bytes with
+// an event read to ARAM (event.cpp readEvent / EvtFree: the event plays from the archive's memory while the enemy
+// waits, then the archive comes back). Here the event side is an immutable EVD reference with no mutable ARAM copy, so:
+// swap-in records the archive region's differences from its disc file (readEmData's in-place binds) and its CRC, then
+// installs the event file into the region; swap-back re-reads the region from the disc file, puts the runs back and
+// requires the same CRC (else MISSING: never a silently different archive). The event's own bytes are not kept: the
+// unit is cleared right after the swap-back, as on GC. Cost: two disc reads of the region (one at each end).
+extern "C" const char* re4dc_event_file_unit(unsigned address, unsigned bytes);
+extern "C" unsigned long long re4dc_swap_reload_now_us(void);   // native_event_file.cpp (KOS timer)
+extern "C" int re4dc_event_file_install_direct(const char* name, unsigned bytes, void* destination);
+extern "C" const char* re4dc_em_arc_file(const void* pointer, unsigned bytes);
+extern "C" int re4dc_swap_reload_record(const char*, const void*, unsigned, void*, unsigned, void*, unsigned, unsigned*);
+extern "C" int re4dc_swap_reload_restore(const char*, void*, unsigned, const void*, unsigned, unsigned);
+namespace {
+struct SwapReload { void* mram; u32 aram, size; const char* file; void* runs; u32 used, crc; };
+SwapReload swap_reload[2];
+const u32 kSwapRunsCap = 0x10000;
+}
+static int re4dc_event_swap_reload(void* mram, u32 aram, u32 size)
+{
+    if (Dvd.pCur_queue) {
+        while (Dvd.pCur_queue->chk(0x20)) {
+            Dvd.pCur_queue->Read();
+        }
+    }
+    const unsigned long long t0 = re4dc_swap_reload_now_us();
+    for (auto& s : swap_reload) {
+        if (s.mram != mram || s.aram != aram || s.size != size) continue;
+        const int ok = re4dc_swap_reload_restore(s.file, mram, size, s.runs, s.used, s.crc);
+        re4dc_log("event swap reload: restore %s bytes=%u runs=%u crc=%08x ok=%d wait_us=%u\n", s.file, (unsigned) size,
+                  (unsigned) s.used, (unsigned) s.crc, ok, (unsigned) (re4dc_swap_reload_now_us() - t0));
+        Mem_free(s.runs);
+        s = SwapReload{};
+        return ok ? 1 : -1;
+    }
+    const char* evd = re4dc_event_file_unit(aram, size);
+    const char* em = re4dc_em_arc_file(mram, size);
+    SwapReload* s = 0;
+    for (auto& e : swap_reload) {
+        if (!e.mram) { s = &e; break; }
+    }
+    if (!evd || !em || !s) {
+        re4dc_log("event swap reload: refused mram=%08x aram=%08x size=%u evd=%s em=%s slot=%d\n", (unsigned) (u32) mram,
+                  (unsigned) aram, (unsigned) size, evd ? evd : "-", em ? em : "-", s != 0);
+        return 0;
+    }
+    void* runs = MEM_ALLOC(kSwapRunsCap, 1, 0xD);
+    if (!runs) return -1;
+    u32 crc = 0;
+    const int used = re4dc_swap_reload_record(em, mram, size, DVD_BUFF, 0x10000, runs, kSwapRunsCap, &crc);
+    if (used < 0) {
+        re4dc_log("event swap reload: record %s bytes=%u failed (runs over %u B or read error)\n", em, (unsigned) size,
+                  (unsigned) kSwapRunsCap);
+        Mem_free(runs);
+        return -1;
+    }
+    const unsigned long long t1 = re4dc_swap_reload_now_us();
+    if (!re4dc_event_file_install_direct(evd, size, mram)) {
+        // a failed install may have written part of the region: put the archive back before refusing
+        const int back = re4dc_swap_reload_restore(em, mram, size, runs, (u32) used, crc);
+        re4dc_log("event swap reload: install %s failed, archive restored=%d\n", evd, back);
+        Mem_free(runs);
+        return -1;
+    }
+    *s = SwapReload{mram, aram, size, em, runs, (u32) used, crc};
+    re4dc_log("event swap reload: swap-in %s -> %s bytes=%u runs=%u crc=%08x record_us=%u install_us=%u\n", evd, em,
+              (unsigned) size, (unsigned) used, (unsigned) crc, (unsigned) (t1 - t0), (unsigned) (re4dc_swap_reload_now_us() - t1));
+    return 1;
+}
+#endif
+
 // Exchanges `size` bytes between MRAM and ARAM in 64 KB pieces through the DVD scratch buffers
 // (synchronous DMAs), after letting a running read finish its current piece.
 void MemorySwap(void* mram, u32 aram, u32 size)
@@ -448,6 +520,18 @@ void MemorySwap(void* mram, u32 aram, u32 size)
     const int cabin_swap = re4dc_cabin_carrier_swap_begin(mram, aram, size);
     if(cabin_swap<0){re4dc_missing("cabin mutable exchange admission");return;}
     Re4dcDvdBorrowScope cabin_dvd_borrow;
+#endif
+#if defined(RE4DC_GAME) && RE4DC_EVENT_SWAP_RELOAD
+    if (size <= 0xffffffe0U &&
+#if RE4DC_CABIN_SOURCE
+        !cabin_swap &&
+#endif
+        re4dc_event_file_range(aram, ALIGN32(size))) {
+        if (re4dc_event_swap_reload(mram, aram, size) > 0) {
+            return;
+        }
+        re4dc_event_file_reject_swap();
+    }
 #endif
 #if defined(RE4DC_GAME)
     // Immutable EVD backing cannot receive the modified MRAM half. Reject

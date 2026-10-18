@@ -1,0 +1,9 @@
+name cx-r303-stagejump
+# ch5found16: STAGE_OVL stage change st3_0 -> st3_1 -> st3_0 (WARP_JUMP diagnostic room changes, not a source route)
+room 0x303
+pos -23763 0 -21925
+ang 1.3830
+inv default
+jump 240 0x303 0x30d 9472 0 24719 -1.5840
+jump 240 0x30d 0x303 -23763 0 -21925 1.3830
+dump

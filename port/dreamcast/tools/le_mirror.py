@@ -794,6 +794,14 @@ def fmt_itm(sw, off, size, ctx):
     oi, ob, ot = (sw.offset32(off + 4*i, off) for i in range(1,4))
     if version != 3:
         raise ValueError('unsupported item model pack version')
+    if ob == 0 and ot == 0 and oi >= 16 and oi + 4 <= size:
+        # Empty pack (island r322/r323/r324/r328/r333): id table count 0 and null model/texture
+        # tables. cItmSys::DataLoad reads only idTbl->num, so nothing else is dereferenced.
+        if sw.u32(off + oi) != 0:
+            raise ValueError('item model pack has ids but no model tables')
+        if any(sw.data[off + 16:off + oi]) or any(sw.data[off + oi + 4:off + size]):
+            raise ValueError('empty item model pack has nonzero padding')
+        return
     bases = [off + v for v in (oi, ob, ot)]
     if len(set(bases)) != 3 or min(bases) < off + 16:
         raise ValueError('invalid item model tables')
@@ -1033,7 +1041,14 @@ def fmt_sce_at(sw, off, size, ctx):
         if kind in (0, 2, 6, 7, 20):
             # Normal hit-model list or source-installed callback, never an
             # executable pointer copied from the GameCube data file.
-            if any(sw.data[d:d + 64]):
+            if kind == 2 and ctx.startswith('st3/'):
+                # st3 lane: type 2 (sceAtFunc_exec) reads only the header's func / arg / prio / execFlag / otNo,
+                # never the 0x5C union; hitModel is filled only by the type 0/6/7/0xC/0x14 handler, and no
+                # SceAtCheckHitModel call targets an island exec area (r327 0xD-0xF and r31c 0x12 are not type 2).
+                # The PS2 AEV keeps these authoring bytes unswapped (r317 #6/#7, r318 #1, r31a #0: byte-identical
+                # big-endian floats), so they are unread there too. Preserve them as opaque bytes.
+                pass
+            elif any(sw.data[d:d + 64]):
                 raw.append('scenario%d runtime work is nonzero' % i)
         elif kind == 1:  # SceAtDoor
             sw.f32s(d, 4)
@@ -1907,13 +1922,35 @@ def fmt_smx(sw, off, size, ctx):
             # work (its SmdGetObjPtr uses are 0x10 / 0x11 / 0x32-0x35 / 0x3F: ang, be_flag, pos) and installs no
             # callback. Preserve the opaque type-0 bytes unswapped, as r10c's.
             pass
+        elif kind == 0 and ((ctx.startswith('st3/r300.arc#') and sw.data[p] == 0x00) or
+                            (ctx.startswith('st3/r303.arc#') and sw.data[p] == 0x0B)):
+            # st3 lane: r300 object 0x00 (r300.cpp only sets SmdGetObjPtr(0)->type = 0) and r303 object 0x0B (the
+            # door: setPos / setAng / type = 0 / its pos for SndCall) are never read through cObj::work, and the
+            # only SetCallBack in the source is r318's. Preserve these opaque type-0 authoring bytes, as r10c's.
+            pass
         elif any(sw.data[work:work + 116]):
             # Type zero's normal mover ignores work, but room callbacks may
             # consume it. Do not guess its scalar layout from nonzero bytes.
             raw.append('SMX%d type%d callback work' % (i, kind))
     return raw
 
+def fmt_pth(sw, off, size, ctx):
+    """PTH path table (r333 jet-ski course, em36): u16 count, two u8 fields, then `count` 40-byte records of
+    seven f32 (x, y, z, 0, 1.0, 0, run length) and three opaque byte words. Layout from the PS2 r333.dat copy
+    of the same table: the u16 count and the seven floats are byte-reversed there, while header bytes 2..3 and
+    record words 7..9 are byte-identical in the PS2 and GC copies, so those are bytes. The 0xCD tail pads to 32."""
+    count = sw.u16(off)
+    if count == 0 or 4 + count * 40 > size or size - (4 + count * 40) >= 32:
+        raise ValueError('PTH size does not match its record count')
+    for r in range(count):
+        p = off + 4 + r * 40
+        for w in range(7):
+            sw.u32(p + w * 4)
+
+
 TAG_FORMATS = {
+    # Path table (r333 jet-ski course; em36 PTH entries): see fmt_pth.
+    b"PTH\0": fmt_pth,
     b"OSD\0": fmt_osd,
     b"EVS\0": fmt_empty_evs,
     b"AEV\0": fmt_sce_at,
@@ -2514,6 +2551,15 @@ def static_module_ids(extra=()):
         rows=re.findall(r'^    \{61, \"em35\", 0, 0, 0, 0, 0, 0, 0\}, // Mendez, room overlay$',registry,re.M)
         if len(rows)!=1:raise ValueError('em35 overlay registry identity changed')
         bindings.append(('61','em35'))
+    # ROUTE_CH3 overlays (stage 3 lane): the reviewed em1d id90 / em1e id92 room-overlay rows; the island
+    # enemies em36 / em39 / em3a / em32 / em3d (lane ch5found16).
+    for ident, name in (('90', 'em1d'), ('92', 'em1e'), ('85', 'em36'), ('64', 'em39'), ('95', 'em3a'),
+                        ('77', 'em32'), ('80', 'em3d')):
+        if name in extra:
+            rows = re.findall(r'^    \{%s, "%s", 0, 0, 0, 0, 0, 0, 0\},  // ROUTE_CH3: .*$' % (ident, name), registry, re.M)
+            if len(rows) != 1:
+                raise ValueError(name + ' overlay registry identity changed')
+            bindings.append((ident, name))
     # ROUTE_CH32 room overlays (lane ch3found16 2026-10-17): em2d id32, em25 id10, em3c id68 have only their overlay row.
     for name, ident in (('em2d', '32'), ('em25', '10'), ('em3c', '68')):
         if name in extra:

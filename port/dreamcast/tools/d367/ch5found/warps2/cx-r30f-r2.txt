@@ -1,0 +1,15 @@
+name cx-r30f-r2
+# ch5found16 round 2: r30f base cx-r30f-fight1.txt; god, alivelog 60, kill rig 0x1f x40 gap 40
+# r30f bulldozer ride (area 2: A facing angle 0), <= 60 s
+room 0x30f
+pos -57068 -34520 109157
+ang 1.4710
+inv default
+goto 60 -49868 -34876 108637 0
+act 90 a 6
+act 120 a 6
+act 160 a 6
+god
+alivelog 60
+kill 0x1f 200
+killrep 39 40

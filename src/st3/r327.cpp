@@ -121,6 +121,299 @@ static void r327_StrCheck();
 static void r327_BoxOpen(u32 id);
 static void r327_BoxOpened(u32 id);
 
+#if !defined(RE4DC_PS2_ENEMY_ST3)
+#define RE4DC_PS2_ENEMY_ST3 0
+#endif
+// PS2_ENEMY_ST3 bit 2 (stage 3 lane, PS2-ENEMY-CODE-DIFF-20261015): the PS2 USA r327 camp (st3_3). R327Init sends
+// 9 of the 11 first Ganados (0x7B / 0x93 held); a PS2-only task (0x107c0) sends 0x8F, 0x93, 0x7B one by one while
+// fewer than 8 are alive and Leon is inside the PS2 flag area 0x1C (r327.dat AEV, Room_flg[2] bit 31). EnemySetSub
+// (0x10908) sends its second table only while alive(0x1D) < 9 and alerts both (setFindPL). GanadoAppearCut
+// (0x113d8) runs EmFarDelete(5, any view), always opens with side 0 (0x94 0x96 0x99 0x9A), then sends side 1
+// (0x92 0x91 0x98 0x97) from index (alive - 1) on. The gatling cut (0x10dd8) runs the room-local r327EmFarDelete(8)
+// (0x12f20). EnemySet2nd (0x12b30) sends 0x83 / 0x84 once, only while alive(0x1D) < 8. Default 0: GameCube code.
+
+// ALIVE_CAP (ch5found16 10-17): a send the cap holds is set here but not active yet. The gatling trigger counts set and
+// inactive slots as dead; on the PS2 a held Ganado is alive, so it is not counted (at cap 4 the 5 held first-table
+// sends fired the gatling cut at room entry, and its far delete (keep 8, alive 10) then removed 2 live Ganados).
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+extern "C" int re4dc_aliveCapHeldEntry(int no);
+extern "C" int re4dc_aliveCapHeldCount(int lo, int hi);
+extern "C" int re4dc_aliveCapFarDrop(int max, int clearAlive);
+static inline int r327_capHeld(int no) { return re4dc_aliveCapHeldEntry(no); }
+#else
+static inline int r327_capHeld(int no) { (void) no; return 0; }
+#endif
+#define R327_PS2 (RE4DC_PS2_ENEMY_ST3 & 4)
+#if R327_PS2
+#include "em_far_delete.h"
+#include "area.h"
+
+// PS2 r327.dat AEV 0x1C (type 4 flag area, payload flag 0x4000: Room_flg[2] bit 31 while Leon is inside).
+static AreaData r327Ps2Area1C = {1, AREA_TYPE_XZ4, 0, {{6073.498f, 1000.0f, 750.0f,
+    {{-29959.08f, 17694.914f}, {-5803.9912f, 18114.957f}, {-6132.836f, 50690.387f}, {-31227.494f, 50795.023f}}}}};
+static const R327EmTbl r327ps2_firstTbl[9] = {
+    {0, 0x79}, {1, 0x7A}, {4, 0x7D}, {5, 0x81}, {6, 0x82}, {7, 0x85}, {8, 0x86}, {9, 0x8E}, {30, 0x9C},
+};
+// PS2 slots 0x13 / 0xA / 2 (0x8F takes the GameCube work's free slot 20).
+static const R327EmTbl r327ps2_lateTbl[3] = {{20, 0x8F}, {10, 0x93}, {2, 0x7B}};
+static const R327EmTbl r327ps2_appearTbl[2][4] = {
+    {{22, 0x94}, {23, 0x96}, {24, 0x99}, {25, 0x9A}},
+    {{26, 0x92}, {27, 0x91}, {28, 0x98}, {29, 0x97}},
+};
+static int r327ps2_cnt;   // PS2 work +0x4DF0: alive(0x1D) after the appear cut's far delete, minus 1
+
+static void r327ps2_send(const R327EmTbl* t, int noSuspend)
+{
+    R327Em* e = &r327_work.p->em[t->idx];
+
+    OSReport("[r327-ps2] send id=%x alive=%d alive1d=%d\n", t->id, SceCountEmAlive(0x10, 0x20), SceCountEmAlive(0x1D, -1));
+    cEmWrapSetEmI(&e->em, t->id, 7, 0, 1, 1);
+    e->set = 1;
+    e->id = t->id;
+    if (noSuspend >= 0) {
+        e->em.setNoSuspend(noSuspend);
+    }
+}
+
+// PS2-only task (0x107c0).
+static void r327ps2_lateSet()
+{
+    u32 i = 0;
+
+    SceSleep(1);
+    while (i < 3) {
+        if (SceCountEmAlive(0x10, 0x20) < 8 && AreaHitCheck(&r327Ps2Area1C, &pPL->pos)) {
+            OSReport("[r327-ps2] late send id=%x alive=%d gate=8\n", r327ps2_lateTbl[i].id, SceCountEmAlive(0x10, 0x20));
+            cEmWrapSetEmI(&r327_work.p->em[r327ps2_lateTbl[i].idx].em, r327ps2_lateTbl[i].id, -1, 0, 1, 1);
+            i++;
+        }
+        SceSleep(1);
+    }
+}
+
+static int r327ps2_EnemySetSub(R327EmTbl* a, u32 na, R327EmTbl* b, u32 nb)
+{
+    int ret = 0;
+    u32 i;
+
+    if (r327_work.p->first == 0) {
+        return 0;
+    }
+    for (i = 0; i < na; i++) {
+        if (r327_work.p->em[a[i].idx].set == 0) {
+            r327ps2_send(&a[i], -1);
+            r327_work.p->em[a[i].idx].em.setFindPL();
+            ret = 1;
+            break;
+        }
+    }
+    if ((u32) SceCountEmAlive(0x1D, -1) < 9) {
+        for (i = 0; i < nb; i++) {
+            if (r327_work.p->em[b[i].idx].set == 0) {
+                r327ps2_send(&b[i], -1);
+                r327_work.p->em[b[i].idx].em.setFindPL();
+                ret = 1;
+                break;
+            }
+        }
+    }
+    return ret;
+}
+
+// Room-local r327EmFarDelete(keep, 33) (0x12f20): any view, over the room's wraps; the side-0 appear Ganados and
+// types 0x16 / 2 / 5 / 6 / 0xA / 0xD / 0xB / 0x1A are kept; farthest (d2 > 3000) first; wrap destroy only.
+static void r327ps2_farDelete(int keep)
+{
+    int n = SceCountEmAlive(0x10, 0x20) - keep;
+    int k;
+
+    OSReport("[r327-ps2] room far delete keep=%d alive=%d\n", keep, SceCountEmAlive(0x10, 0x20));
+#if defined(RE4DC_ALIVE_CAP_ON) && RE4DC_ALIVE_CAP_ON
+    // ALIVE_CAP (ch5found16 10-17): the count includes the cap's held sends (alive on the PS2). Over `keep`, the held
+    // ones go first (latest held first, off screen, as em_far_delete.h does), so no live Ganado vanishes in front of
+    // the player while sends wait in the hold; then the farthest live ones as before. Same number removed as the PS2.
+    if (n > 0) {
+        int held = re4dc_aliveCapHeldCount(0x10, 0x20);
+
+        if (held > n) {
+            held = n;
+        }
+        if (held > 0) {
+            n -= re4dc_aliveCapFarDrop(held, 0);
+        }
+    }
+#endif
+    for (k = 0; k < n; k++) {
+        int best = -1;
+        f32 bestD = 0.0f;
+        int i;
+
+        for (i = 0; i < 32; i++) {
+            R327Em* e = &r327_work.p->em[i];
+            cEm* em;
+            f32 dx, dy, dz, d2;
+
+            if (i >= 22 && i <= 25) {
+                continue;
+            }
+            // A send the cap still holds reads active (cEmWrap, f1c3cc2a); getPtr would create it here: skip it.
+            if (r327_capHeld(e->id) || e->em.isActive() != 1 || (em = e->em.getPtr()) == 0) {
+                continue;
+            }
+            switch (em->type) {
+            case 0x16: case 2: case 5: case 6: case 0xA: case 0xD: case 0xB: case 0x1A:
+                continue;
+            }
+            dx = em->pos.x - pPL->pos.x;
+            dy = em->pos.y - pPL->pos.y;
+            dz = em->pos.z - pPL->pos.z;
+            d2 = dx * dx + dy * dy + dz * dz;
+            if (!(d2 > 3000.0f) || !(d2 > bestD)) {
+                continue;
+            }
+            bestD = d2;
+            best = i;
+        }
+        if (best != -1) {
+            OSReport("[r327-ps2] room far delete slot=%d id=%x\n", best, r327_work.p->em[best].id);
+            r327_work.p->em[best].em.destroy();
+        }
+    }
+}
+
+static void r327ps2_GanadoAppearCutEndProc(int side)
+{
+    int i;
+
+    (void) side;
+    for (i = 0; i < 4; i++) {
+        const R327EmTbl* t = &r327ps2_appearTbl[0][i];
+
+        if (r327_work.p->em[t->idx].set == 0) {
+            r327ps2_send(t, -1);
+        }
+        r327_work.p->em[t->idx].em.setNoSuspend(0);
+        r327_work.p->em[t->idx].em.setFindPL();
+    }
+    for (i = r327ps2_cnt; i < 4; i++) {
+        const R327EmTbl* t = &r327ps2_appearTbl[1][i];
+
+        if (r327_work.p->em[t->idx].set == 0) {
+            r327ps2_send(t, -1);
+        }
+        r327_work.p->em[t->idx].em.setNoSuspend(0);
+        r327_work.p->em[t->idx].em.setFindPL();
+    }
+    CamCtrl.Comeback(0);
+    SceEventEnd(0);
+    SceExec(0x12, (TaskFunc) r327_EnemySet, 0, 0, 2, 0);
+}
+
+static void r327ps2_GanadoAppearCut()
+{
+    int i;
+    int n;
+
+    if (r327_work.p->first == 0) {
+        SceExit();
+    }
+    n = re4dc_EmFarDelete(5, 0);
+    r327ps2_cnt = SceCountEmAlive(0x1D, -1);
+    OSReport("[r327-ps2] appear cut far delete keep=5 deleted=%d alive1d=%d\n", n, r327ps2_cnt);
+    SceEventStart(1);
+    for (i = 0; i < 4; i++) {
+        r327ps2_send(&r327ps2_appearTbl[0][i], 1);
+    }
+    CamCtrl.CutCall(0x10);
+    if (r327ps2_cnt != 0) {
+        r327ps2_cnt--;
+    }
+    pG->Room_flg[0] &= ~0x80000000;
+    SceSetEventCancel(1, (TaskFunc) r327ps2_GanadoAppearCutEndProc, 0, 0, 1);
+    while (!CamCtrl.IsMotionEnd()) {
+        SceSleep(1);
+    }
+    pG->Room_flg[0] |= 0x40000000;
+    for (i = r327ps2_cnt; i < 4; i++) {
+        r327ps2_send(&r327ps2_appearTbl[1][i], 1);
+    }
+    CamCtrl.CutCall(8);
+    while (!CamCtrl.IsMotionEnd()) {
+        SceSleep(1);
+    }
+    SceSetEventCancel(0, 0, 0, -1, 1);
+    r327ps2_GanadoAppearCutEndProc(1);
+}
+
+static void r327ps2_GatlingGanadoSet()
+{
+    int idx;
+
+    if (r327_work.p->first == 0) {
+        SceExit();
+    }
+    for (;;) {
+        u32 n = 0;
+        int i;
+
+        for (i = 0; i < 32; i++) {
+            R327Em* e = &r327_work.p->em[i];
+
+            if (e->set != 0 && !e->em.isActive() && !r327_capHeld(e->id)) {
+                n++;
+            }
+        }
+        if (n > 4) {
+            break;
+        }
+        SceSleep(1);
+    }
+    RsfSet(G_ROOM_ID, 2);
+    SceEventStart(1);
+    if (SceAtHitCheck(0xB)) {
+        r327_work.p->em[31].em.setEm(0x9D, 7, 0, 1, 1);
+        idx = 31;
+        r327_work.p->em[31].id = 0x9D;
+        CamCtrl.CutCall(7);
+    } else {
+        r327_work.p->em[3].em.setEm(0x7C, 7, 0, 1, 1);
+        idx = 3;
+        r327_work.p->em[3].id = 0x7C;
+        CamCtrl.CutCall(5);
+    }
+    r327ps2_farDelete(8);
+    r327_work.p->em[idx].em.setNoSuspend(1);
+    r327_work.p->em[idx].em.setFindPL();
+    pG->Room_flg[0] &= ~0x80000000;
+    SceSetEventCancel(1, (TaskFunc) r327_GatlingGanadoSetEndProc, idx, 0, 1);
+    while (!CamCtrl.IsMotionEnd()) {
+        SceSleep(1);
+    }
+    SceSetEventCancel(0, 0, 0, -1, 1);
+    r327_GatlingGanadoSetEndProc(idx);
+}
+
+static void r327ps2_EnemySet2nd()
+{
+    if (RsfCheck(G_ROOM_ID, 16) == 0) {
+        cEm* door;
+
+        getRoomEtcDoor(1, &door, 1);
+        if (door != 0) {
+            while ((door->flag & 0x10000000) == 0) {
+                SceSleep(1);
+            }
+            RsfSet(G_ROOM_ID, 16);
+            OSReport("[r327-ps2] 2nd alive1d=%d gate=8\n", SceCountEmAlive(0x1D, -1));
+            if ((u32) SceCountEmAlive(0x1D, -1) < 8) {
+                setEm(0x83, 7, 0, 1, 1);
+                setEm(0x84, 7, 0, 1, 1);
+            }
+        }
+    }
+}
+#endif
+
 // Room init (the Ganado camp): on a return after Scenario_flg[1] 0x40000000 the room's 0x1D enemies are
 // dropped from the list, else the first-visit tables set the eleven camp Ganados; the two lamp switches
 // (areas 4/3 until Room_flg bits 0/1, both -> the gate open), area 6 = the door check, the card reader
@@ -145,6 +438,14 @@ void R327Init()
         r327_work.p->first = 0;
     }
     if (r327_work.p->first != 0) {
+#if R327_PS2
+        for (i = 0; i < 9; i++) {
+            r327ps2_send(&r327ps2_firstTbl[i], -1);
+        }
+        SceExec(0x12, (TaskFunc) r327ps2_lateSet, 0, 0, 2, 0);
+    }
+    if (0) {
+#endif
         for (i = 0; i < 11; i++) {
             cEmWrapSetEmI(&r327_work.p->em[r327_firstTbl[i].idx].em, r327_firstTbl[i].id, 7, 0, 1, 1);
             r327_work.p->em[r327_firstTbl[i].idx].set = 1;
@@ -231,6 +532,9 @@ void R327Main()
 // Sets the first free enemy of table `a`, then of table `b`; 1 when one was set.
 int r327_EnemySetSub(R327EmTbl* a, u32 na, R327EmTbl* b, u32 nb)
 {
+#if R327_PS2
+    return r327ps2_EnemySetSub(a, na, b, nb);
+#endif
     int ret = 0;
     u32 i;
 
@@ -350,6 +654,10 @@ static void r327_EnemySet()
 // Once five of the first enemies are dead: the gatling ganado appears (camera cut 5 or 7 by the player's side).
 static void r327_GatlingGanadoSet()
 {
+#if R327_PS2
+    r327ps2_GatlingGanadoSet();
+    return;
+#endif
     int idx;
 
     if (r327_work.p->first == 0) {
@@ -362,7 +670,7 @@ static void r327_GatlingGanadoSet()
         for (i = 0; i < 32; i++) {
             R327Em* e = &r327_work.p->em[i];
 
-            if (e->set != 0 && !e->em.isActive()) {
+            if (e->set != 0 && !e->em.isActive() && !r327_capHeld(e->id)) {
                 n++;
             }
         }
@@ -463,6 +771,10 @@ void r327_LampSetEndProc()
 // After the switch was disabled: a group of four appears at one side (both sides when few are left).
 static void r327_GanadoAppearCut()
 {
+#if R327_PS2
+    r327ps2_GanadoAppearCut();
+    return;
+#endif
     u32 side = Rnd() & 1;
     int both = 0;
     int i;
@@ -514,6 +826,10 @@ static void r327_GanadoAppearCut()
 // r327_appearTbl if not yet, released and alerted; camera back, SceEventEnd.
 static void r327_GanadoAppearCutEndProc(int side)
 {
+#if R327_PS2
+    r327ps2_GanadoAppearCutEndProc(side);
+    return;
+#endif
     // The table pointer is a two-set variable (the dead `t = t2` below): its first value is not folded
     // into the loop's giv init (`lis/addi r9; mr r31,r9`) and the hoisted `set = 1` constant is a loop
     // movable ranking below the end pointer (r27 after r28). The second table keeps its copy through
@@ -834,6 +1150,10 @@ static void r327_SetSwitchDisableEndProc()
 // Two more enemies once door 1 has been opened.
 static void r327_EnemySet2nd()
 {
+#if R327_PS2
+    r327ps2_EnemySet2nd();
+    return;
+#endif
     if (RsfCheck(G_ROOM_ID, 16) == 0) {
         cEm* door;
 

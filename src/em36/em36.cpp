@@ -270,7 +270,12 @@ extern "C" void _unresolved()
 // sets it up on the first move.
 void Em36Init(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEm36;
+#else
     new (em) cEm36();
+#endif
 }
 
 // A lost limb whose hit box took the damage (em36DmCk): the routine is set straight from the loop (one
@@ -4312,7 +4317,13 @@ void em36DoorOpenCk(cEm36* em)
     u32 r;
 
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEmDoor* e = (cEmDoor*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEmDoor* e = (cEmDoor*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
         EmDoorWork* dw;
         f32 ang;
 

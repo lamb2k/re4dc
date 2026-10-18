@@ -1,0 +1,14 @@
+name cx-r300-door
+# ch5found16: r300 at the r301 door-0 arrival (AEV), s00 / radio flags set (no movie), quick turn, walk into door 0 (to r301)
+room 0x300
+pos -6094 -13000 8709
+ang 1.4030
+rsf 0x300 0 1
+inv default
+act 120 b+back 2
+act 150 fwd 90
+act 160 a 2
+act 190 a 2
+act 220 a 2
+act 250 a 2
+dump

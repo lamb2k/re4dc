@@ -368,7 +368,12 @@ extern "C" void _unresolved()
 // sets it up on the first move.
 void Em32Init(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the subArc cEmMgr::construct set (modelInit: bin_addr == NULL), as em3d / em36.
+    new (em) cEm32;
+#else
     new (em) cEm32();
+#endif
 }
 
 // Per-frame damage reaction, from move(). First the area damage (DmgMgr: the container falls /

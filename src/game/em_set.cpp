@@ -200,6 +200,15 @@ static int aliveCapReleasing;
 static const u32 aliveCapKeepTbl[] = {
     0x10003, 0x10004, 0x10005, 0x10006, 0x10007, 0x10008, 0x10025,
     0x10C02, 0x10C06, 0x10C07, 0x10C08, 0x10C09, 0x10C0A, 0x10C0B, 0x10C0C,
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+    // Island (stage 3 lane census 2026-10-15): r300 the gate event Ganado 0x4B (setEvtMotion on getPtr()),
+    // r303 entry 0x24 (em->flag / EstSet on the return).
+    0x3004B, 0x30324,
+    // r327 (ch5found16 switch run 10-17): the Ganado that disables the lamp switch, 0x9E (r327_SetSwitchDisable
+    // em2.setEm inside the disable cut), and the gatling Ganado 0x7C (r327_GatlingGanadoSet em[3], hp 5000, its own cut).
+    // Both are sent during their events; held by the cap they were dropped by the appear cut's far delete.
+    0x3279E, 0x3277C,
+#endif
 };
 static int aliveCapKeep(int no)
 {
@@ -483,6 +492,14 @@ static int aliveCapParkRoom()
     // r20d send nothing that matters, kept out too): hold only, no parking.
     case 0x200: case 0x201: case 0x202: case 0x203: case 0x204: case 0x205: case 0x206: case 0x207:
     case 0x208: case 0x209: case 0x20A: case 0x20B: case 0x20C: case 0x20D: case 0x20E: case 0x20F:
+        return 0;
+#endif
+#if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
+    // Island rooms whose code keeps cEmWrap / enemy pointers of its sends (stage 3 lane census 2026-10-15): the cap
+    // holds their sends at send time, nothing is parked. r303 r30e r316 r31d r321 (no wrappers) park as usual.
+    case 0x300: case 0x301: case 0x304: case 0x305: case 0x306: case 0x307: case 0x308: case 0x309:
+    case 0x30B: case 0x30C: case 0x30D: case 0x30F: case 0x310: case 0x311: case 0x31B: case 0x31C:
+    case 0x320: case 0x327: case 0x332: case 0x333:
         return 0;
 #endif
 #if defined(RE4DC_PS2_CH4_ENEMY) && RE4DC_PS2_CH4_ENEMY

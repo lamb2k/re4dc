@@ -1,0 +1,11 @@
+name cx-r308-r2
+# ch5found16 round 2: r308 base cx-r308-walk.txt; god, alivelog 60
+# r308 from r306 AEV door 0x04, destination part 0; fresh source extraction
+room 0x308
+pos -1912 0 3777
+ang 2.9620
+inv default
+act 360 fwd 12
+dump
+god
+alivelog 60

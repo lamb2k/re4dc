@@ -68,6 +68,19 @@ extern "C" int re4dc_event_file_range(unsigned address, unsigned bytes)
     }
     return 0;
 }
+#if RE4DC_EVENT_SWAP_RELOAD
+// EVENT_SWAP_RELOAD: the prepared (condition 4, never installed) event-file unit whose range is exactly
+// [address, address + bytes): MemorySwap's ARAM side. Its name is the file the swap installs.
+extern "C" const char* re4dc_event_file_unit(unsigned address, unsigned bytes)
+{
+    for (int i = 0; i < 32; ++i) {
+        const cDataUnit& u = DC.m_DataUnit[i];
+        if ((u.m_be_flag & (1 | RE4DC_EVENT_FILE_FLAG)) != (1 | RE4DC_EVENT_FILE_FLAG) || u.m_condition != 4) continue;
+        if ((unsigned) (u32) u.m_addr == address && u.m_size == bytes) return u.m_name;
+    }
+    return 0;
+}
+#endif
 #endif
 
 // Stores the unit's file name (at most 31 chars; longer is a fatal error), "" for NULL.

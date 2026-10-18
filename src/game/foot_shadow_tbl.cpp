@@ -70,5 +70,10 @@ FootShadowTbl pl_fs_tbl = {6, pl_fsd_dat};
 FootShadowTbl Em10_fs_tbl = {6, Em10_fsd_dat};
 FootShadowTbl Em2b_fs_tbl = {6, Em2b_fsd_dat};
 FootShadowTbl Em2c_fs_tbl = {6, Em2c_fsd_dat};
+#if defined(__DREAMCAST__)
+// The em32 module (U-3, ROUTE_CH3 room overlay) names it (src/em32/em32.cpp); the GC REL bound the local directly.
+FootShadowTbl Em32_fs_tbl = {18, Em32_fsd_dat};
+#else
 static FootShadowTbl Em32_fs_tbl = {18, Em32_fsd_dat};
+#endif
 FootShadowTbl Em39_fs_tbl = {6, pl_fsd_dat};

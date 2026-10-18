@@ -30,6 +30,19 @@
 #include "shadow.h"
 #include "room_data.h"
 #include "eprintf.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (ROUTE_CH3, st3 lane 2026-10-15): the knife fight's events are presented by their PS2 movies when
+// the disc carries them (the GC evds are not on the disc-2 image). Each button cut is the r104 QTE pattern: the movie
+// to the cut (PS2 evd camera sum), then the cut as game frames of the event's own handler (mode 1) over the stepped
+// picture, so KnifeActBtn and the s13 mash count run as in the source; a window that spans the cut and the
+// next (last) one runs as one cut with both cuts' frames (the handler tests NowFrame > n only). Hard mode s13
+// opens at cut 0xA (its cut 9 tail, 20 frames, is not offered). A miss leaves the source missed bit, so the source
+// chain picks the died-demo event (flags 2: DiedemoExec after its movie). Without the movies the source applies.
+#include "route_movie.h"
+#define R317_ROUTE_MOVIES 1
+#else
+#define R317_ROUTE_MOVIES 0
+#endif
 
 // Room 3-17 (D:/Bio4/Prog/r317.cpp): the Krauser knife fight cut scenes (s00..s14 chained with
 // action-button reactions), the two-gear elevator (SceElevator2) and the continue point.
@@ -191,10 +204,19 @@ void R317Init()
     if (RsfCheck(G_ROOM_ID, 0) == 0) {
         if (RsfCheck(G_ROOM_ID, 2) == 0) {
             SceAtDataSet_exec(8, 0x12, 0, (TaskFunc) R317EventS00, 0, 1);
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31700))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s00.evd", 0, 0, 0, 0);
         } else {
             SceExec(0x12, (TaskFunc) R317EventS00, 0, 0, 2, 0);
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31713))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s13.evd", 0, 0, 0, 0);
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31703))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s03.evd", 0, 0, 0, 0);
         }
     }
@@ -208,6 +230,28 @@ void R317Init()
 void R317Main()
 {
 }
+
+#if R317_ROUTE_MOVIES
+// A knife-fight event by its PS2 movie: the button cut runs as game frames (normal / hard window). 0: no movie.
+static int r317_movie(unsigned id, RouteEvtFunc func, int cut, int picture, int frames, int hcut, int hpicture,
+                      int hframes)
+{
+    if (!re4dc_movie_available(id)) {
+        return 0;
+    }
+    if (r317_work.p->hardMode != 0) {
+        cut = hcut;
+        picture = hpicture;
+        frames = hframes;
+    }
+    if (cut < 0) {
+        RouteMoviePlay(id, ROUTE_MOVIE_SND_EVENT, func, 0);
+    } else {
+        RouteMoviePlayQte(id, ROUTE_MOVIE_SND_EVENT, func, cut, picture, frames);
+    }
+    return 1;
+}
+#endif
 
 // Area 9 once (Room_flg bit 1): area off and a checkpoint save (GameSaveSave2).
 static void R317ContinuePointSet()
@@ -227,50 +271,110 @@ void R317EventS00()
         SceAtSetEnable(8, 0);
         SceEventStart(0);
         if (RsfCheck(G_ROOM_ID, 2) == 0) {
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31708))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s08.evd", 0, 0, 0, 0);
+#if R317_ROUTE_MOVIES
+            if (!r317_movie(0x31700, (RouteEvtFunc) Evt_R317S00_Func, 5, 405, 19, 4, 390, 34))
+#endif
             EvtMgr.EvtReadExec("event/evd/r317s00.evd", 0, 0);
             if (pG->Room_flg[0] & 0x80000000) {
                 EvtMgr.EvtFree("event/evd/r317s07.evd");
+#if R317_ROUTE_MOVIES
+                if (re4dc_movie_available(0x31708)) {
+                    RouteMoviePlay(0x31708, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R317S08_Func, 0);
+                    DiedemoExec(0, 1);  // EvtReadExec flags 2: the died demo at the event end
+                } else
+#endif
                 EvtMgr.EvtReadExec("event/evd/r317s08.evd", 0, 2);
                 for (;;) {
                     SceSleep(1);
                 }
             }
             EvtMgr.EvtFree("event/evd/r317s08.evd");
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31710))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s10.evd", 0, 0, 0, 0);
+#if R317_ROUTE_MOVIES
+            if (!r317_movie(0x31707, (RouteEvtFunc) Evt_R317S07_Func, 7, 752, 96, 7, 752, 96))
+#endif
             EvtMgr.EvtReadExec("event/evd/r317s07.evd", 0, 0);
             if (pG->Room_flg[0] & 0x40000000) {
                 EvtMgr.EvtFree("event/evd/r317s09.evd");
+#if R317_ROUTE_MOVIES
+                if (re4dc_movie_available(0x31710)) {
+                    RouteMoviePlay(0x31710, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R317S10_Func, 0);
+                    DiedemoExec(0, 1);  // EvtReadExec flags 2: the died demo at the event end
+                } else
+#endif
                 EvtMgr.EvtReadExec("event/evd/r317s10.evd", 0, 2);
                 for (;;) {
                     SceSleep(1);
                 }
             }
             EvtMgr.EvtFree("event/evd/r317s10.evd");
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31712))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s12.evd", 0, 0, 0, 0);
+#if R317_ROUTE_MOVIES
+            if (!r317_movie(0x31709, (RouteEvtFunc) Evt_R317S09_Func, 8, 241, 35, 8, 241, 35))
+#endif
             EvtMgr.EvtReadExec("event/evd/r317s09.evd", 0, 0);
             if (pG->Room_flg[0] & 0x20000000) {
                 EvtMgr.EvtFree("event/evd/r317s11.evd");
+#if R317_ROUTE_MOVIES
+                if (re4dc_movie_available(0x31712)) {
+                    RouteMoviePlay(0x31712, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R317S12_Func, 0);
+                    DiedemoExec(0, 1);  // EvtReadExec flags 2: the died demo at the event end
+                } else
+#endif
                 EvtMgr.EvtReadExec("event/evd/r317s12.evd", 0, 2);
                 for (;;) {
                     SceSleep(1);
                 }
             }
             EvtMgr.EvtFree("event/evd/r317s12.evd");
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31702))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s02.evd", 0, 0, 0, 0);
+#if R317_ROUTE_MOVIES
+            if (!r317_movie(0x31711, (RouteEvtFunc) Evt_R317S11_Func, 2, 71, 93, 2, 71, 93))
+#endif
             EvtMgr.EvtReadExec("event/evd/r317s11.evd", 0, 0);
             if (pG->Room_flg[0] & 0x10000000) {
                 EvtMgr.EvtFree("event/evd/r317s01.evd");
+#if R317_ROUTE_MOVIES
+                if (re4dc_movie_available(0x31702)) {
+                    RouteMoviePlay(0x31702, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R317S02_Func, 0);
+                    DiedemoExec(0, 1);  // EvtReadExec flags 2: the died demo at the event end
+                } else
+#endif
                 EvtMgr.EvtReadExec("event/evd/r317s02.evd", 0, 2);
                 for (;;) {
                     SceSleep(1);
                 }
             }
             EvtMgr.EvtFree("event/evd/r317s02.evd");
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31704))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s04.evd", 0, 0, 0, 0);
+#if R317_ROUTE_MOVIES
+            if (!r317_movie(0x31701, (RouteEvtFunc) Evt_R317S01_Func, 6, 309, 26, 6, 309, 26))
+#endif
             EvtMgr.EvtReadExec("event/evd/r317s01.evd", 0, 0);
             if (pG->Room_flg[0] & 0x08000000) {
                 EvtMgr.EvtFree("event/evd/r317s03.evd");
+#if R317_ROUTE_MOVIES
+                if (re4dc_movie_available(0x31704)) {
+                    RouteMoviePlay(0x31704, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R317S04_Func, 0);
+                    DiedemoExec(0, 1);  // EvtReadExec flags 2: the died demo at the event end
+                } else
+#endif
                 EvtMgr.EvtReadExec("event/evd/r317s04.evd", 0, 2);
                 for (;;) {
                     SceSleep(1);
@@ -278,26 +382,50 @@ void R317EventS00()
             }
             EvtMgr.EvtFree("event/evd/r317s04.evd");
         }
+#if R317_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x31714))
+#endif
         EvtMgr.EvtReadAram("event/evd/r317s14.evd", 0, 0, 0, 0);
+#if R317_ROUTE_MOVIES
+        if (!r317_movie(0x31703, (RouteEvtFunc) Evt_R317S03_Func, 20, 769, 43, 20, 769, 43))
+#endif
         EvtMgr.EvtReadExec("event/evd/r317s03.evd", 0, 0);
         RsfSet(G_ROOM_ID, 2);
         GameSaveSave2(&GameSave, pSaveData, -1);
         if (pG->Room_flg[0] & 0x04000000) {
             EvtMgr.EvtFree("event/evd/r317s13.evd");
+#if R317_ROUTE_MOVIES
+            if (re4dc_movie_available(0x31714)) {
+                RouteMoviePlay(0x31714, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R317S14_Func, 0);
+                DiedemoExec(0, 1);  // EvtReadExec flags 2: the died demo at the event end
+            } else
+#endif
             EvtMgr.EvtReadExec("event/evd/r317s14.evd", 0, 2);
             for (;;) {
                 SceSleep(1);
             }
         }
         EvtMgr.EvtFree("event/evd/r317s14.evd");
+#if R317_ROUTE_MOVIES
+        if (!r317_movie(0x31713, (RouteEvtFunc) Evt_R317S13_Func, 10, 604, 103, 10, 604, 103))
+#endif
         EvtMgr.EvtReadExec("event/evd/r317s13.evd", 0, 0);
         if (pG->Room_flg[0] & 0x02000000) {
             EvtMgr.EvtFree("event/evd/r317s05.evd");
+#if R317_ROUTE_MOVIES
+            if (re4dc_movie_available(0x31706)) {
+                RouteMoviePlay(0x31706, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R317S06_Func, 0);
+                DiedemoExec(0, 1);  // EvtReadExec flags 2: the died demo at the event end
+            } else
+#endif
             EvtMgr.EvtReadExec("event/evd/r317s06.evd", 0, 2);
             for (;;) {
                 SceSleep(1);
             }
         }
+#if R317_ROUTE_MOVIES
+        if (!r317_movie(0x31705, (RouteEvtFunc) Evt_R317S05_Func, -1, 0, 0, -1, 0, 0))
+#endif
         EvtMgr.EvtReadExec("event/evd/r317s05.evd", 0, 0);
         SceEventEnd(0);
         void* zero = 0;
@@ -684,6 +812,9 @@ void Evt_R317S00_Func(Event* e)
             }
         }
         if (e->NowCut == 0 && e->NowFrame == 1) {
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31707))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s07.evd", 0, 0, 0, 0);
         }
         if (e->NowCut == 0) {
@@ -778,6 +909,9 @@ void Evt_R317S01_Func(Event* e)
             }
         }
         if (e->NowCut == 0 && e->NowFrame == 1) {
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31703))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s03.evd", 0, 0, 0, 0);
         }
         if (r317_work.p->hardMode == 0) {
@@ -915,6 +1049,9 @@ void Evt_R317S03_Func(Event* e)
             SmdSetTrans(0x25, 0);
         }
         if (e->NowCut == 0 && e->NowFrame == 1) {
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31713))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s13.evd", 0, 0, 0, 0);
         }
         {
@@ -1189,6 +1326,9 @@ void Evt_R317S07_Func(Event* e)
             break;
         }
         if (e->NowCut == 0 && e->NowFrame == 1) {
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31709))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s09.evd", 0, 0, 0, 0);
         }
         if (r317_work.p->hardMode == 0) {
@@ -1299,6 +1439,9 @@ void Evt_R317S09_Func(Event* e)
             SmdSetTrans(0x21, 0);
         }
         if (e->NowCut == 0 && e->NowFrame == 1) {
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31711))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s11.evd", 0, 0, 0, 0);
         }
         if (r317_work.p->hardMode == 0) {
@@ -1391,6 +1534,9 @@ void Evt_R317S11_Func(Event* e)
             SmdSetTrans(0x29, 0);
         }
         if (e->NowCut == 0 && e->NowFrame == 1) {
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31701))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s01.evd", 0, 0, 0, 0);
         }
         if (r317_work.p->hardMode == 0) {
@@ -1506,6 +1652,9 @@ void Evt_R317S13_Func(Event* e)
             break;
         }
         if (e->NowCut == 0 && e->NowFrame == 1) {
+#if R317_ROUTE_MOVIES
+            if (!re4dc_movie_available(0x31705))
+#endif
             EvtMgr.EvtReadAram("event/evd/r317s05.evd", 0, 0, 0, 0);
         }
         if (r317_work.p->hardMode == 0) {

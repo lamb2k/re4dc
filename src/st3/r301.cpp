@@ -73,6 +73,279 @@ static void r301_openShelf(int no);
 static void r301_openedShelf(int no);
 static void setTexRender();
 
+#if !defined(RE4DC_PS2_ENEMY_ST3)
+#define RE4DC_PS2_ENEMY_ST3 0
+#endif
+// PS2_ENEMY_ST3 bit 1 (stage 3 lane, PS2-ENEMY-CODE-DIFF-20261015): the PS2 USA r301 wave tasks (st3_0
+// setEmBowgun2 0xc108, checkEmReset1 0xc5c0 + its Ganado-0x18 watcher 0xc4f0, checkEmReset2 0xca00, checkEmReset3
+// 0xccb0, setEmBowgun 0xcf78). The PS2 reworked the GameCube timers: every send waits for fewer than 9 alive
+// Ganados (setEmBowgun2: fewer than 8), the follow-up sends are chained on room-save flags 6/7/8 instead of
+// 200/300-frame sleeps, and the waves start with an off-screen far delete down to 7 (wave 1) and 4 (setEmBowgun).
+// Bit 3 clamps these gates to the cap-6 rule (send only while fewer than 6 are alive). Default 0: GameCube code.
+#define R301_PS2 (RE4DC_PS2_ENEMY_ST3 & 2)
+#if R301_PS2
+#include "em_far_delete.h"
+#define R301_GATE(n) (((RE4DC_PS2_ENEMY_ST3 & 8) && (n) > 6) ? 6 : (n))
+static inline int r301ps2_alive() { return SceCountEmAlive(0x10, 0x20); }
+// One line per PS2-gated send (the decisions check reads them: alive count at the send against the gate).
+#define R301_LOG(what, id, n) OSReport("[r301-ps2] %s id=%x alive=%d gate=%d\n", (what), (id), r301ps2_alive(), R301_GATE(n))
+static inline void r301ps2_wait_alive(int n)
+{
+    while (r301ps2_alive() >= R301_GATE(n)) {
+        SceSleep(1);
+    }
+}
+// PS2 EmFarDeleteNoWrap(keep, 1) (st3_0 0x2de8; PS2-ENEMY-CODE-DIFF Follow-up D) through the shared helper
+// (include/em_far_delete.h, lane alivecap 15f1310e): the farthest off-screen Ganados go until `keep` are left.
+static void r301ps2_farDelete(int keep)
+{
+    int before = r301ps2_alive();
+    int n = re4dc_EmFarDeleteNoWrap(keep, 1);
+
+    OSReport("[r301-ps2] far delete keep=%d alive=%d deleted=%d\n", keep, before, n);
+}
+#define R301_FAR_DELETE(keep) r301ps2_farDelete(keep)
+
+static void r301ps2_setEmBowgun2()
+{
+    cEmWrap em0;
+    cEmWrap em1;
+    cEmWrap em2;
+    Vec pos;
+    int f1 = 0;
+    int f2 = 0;
+
+    em0.setPtr(0x12, -1, 0);
+    em0.setFindPL();
+    SceSleep(180);
+    r301ps2_wait_alive(8);
+    R301_LOG("bowgun2", 0x22, 8);
+    em1.setPtr(0x22, -1, 0);
+    em1.setFindPL();
+    em2.setPtr(0xF, -1, 0);
+    em2.setFindPL();
+    AreaGetCenterPos(&pos, &SceAtPtr(6)->area);
+    em1.setGoto(&pos, 0xB);
+    AreaGetCenterPos(&pos, &SceAtPtr(8)->area);
+    em2.setGoto(&pos, 0xB);
+    RsfSet(G_ROOM_ID, 8);
+    for (;;) {
+        if (f1 == 0 && em1.ckGoto() == 0) {
+            em1.setFindPL();
+            f1 = 1;
+        }
+        if (f2 == 0 && em2.ckGoto() == 0) {
+            em2.setFindPL();
+            f2 = 1;
+        }
+        if (f1 == 1 && f2 == 1) {
+            break;
+        }
+        SceSleep(1);
+    }
+}
+
+// PS2-only task: Ganado 0x18 of the pier heads for the player once he drops below y -5000; room-save flag 7
+// marks him gone (it releases wave 2's second send).
+static void r301ps2_watchEm18()
+{
+    cEmWrap em;
+
+    em.setPtr(0x18, -1, 0);
+    while (em.isActive()) {
+        if (em.getPosY() < -5000.0f) {
+            em.setGoto(&pPL->pos, 0xB);
+            break;
+        }
+        SceSleep(1);
+    }
+    for (;;) {
+        if (em.isActive() == 0) {
+            RsfSet(G_ROOM_ID, 7);
+        }
+        SceSleep(1);
+    }
+}
+
+static void r301ps2_checkEmReset1()
+{
+    cEmWrap em0;
+    cEmWrap em1;
+    cEmWrap em2;
+    cEmWrap em3;
+    cEmWrap em4;
+    cEmWrap em5;
+    Vec pos;
+    static const int ids[4] = {0x1A, 0x1B, 0x1E, 0x1F};
+    int f0 = 0;
+    int f1 = 0;
+    int f2 = 0;
+    int f3 = 0;
+
+    R301_FAR_DELETE(7);
+    em0.setPtr(0x17, -1, 0);
+    em1.setPtr(0x18, -1, 0);
+    em0.setFlag(1);
+    em1.setFlag(1);
+    SceSleep(10);
+    AreaGetCenterPos(&pos, &SceAtPtr(0xB)->area);
+    em0.setGoto(&pos, 1);
+    AreaGetCenterPos(&pos, &SceAtPtr(7)->area);
+    em1.setGoto(&pos, 0xB);
+    SceExec(0x12, (TaskFunc) r301ps2_watchEm18, 0, 0, 2, 0);
+    for (;;) {
+        if ((em0.isActive() == 0 && em1.isActive() == 0) || SceAtHitCheck(0xD) == 1) {
+            break;
+        }
+        SceSleep(1);
+    }
+    pG->Room_flg[0] |= 0x80000000;
+    for (;;) {
+        if (f0 == 0 && em0.isActive() == 0 && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[0], 9);
+            em2.setEm(ids[0], -1, 0, 1, 1);
+            em2.setFlag(1);
+            em2.setGoto(&pPL->pos, 0xB);
+            f0 = 1;
+            SceSleep(1);
+        }
+        if (f0 == 1 && f1 == 0 && em2.isActive() == 0 && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[1], 9);
+            em3.setEm(ids[1], -1, 0, 1, 1);
+            em3.setFlag(1);
+            em3.setGoto(&pPL->pos, 0xB);
+            f1 = 1;
+            SceSleep(1);
+        }
+        if (f2 == 0 && RsfCheck(G_ROOM_ID, 6) && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[2], 9);
+            em4.setEm(ids[2], -1, 0, 1, 1);
+            em4.setFlag(1);
+            em4.setGoto(&pPL->pos, 0xB);
+            f2 = 1;
+            SceSleep(1);
+        }
+        if (f1 == 1 && f3 == 0 && em3.isActive() == 0 && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[3], 9);
+            em5.setEm(ids[3], -1, 0, 1, 1);
+            em5.setFlag(1);
+            em5.setGoto(&pPL->pos, 0xB);
+            f3 = 1;
+            SceSleep(1);
+        }
+        if (f0 == 1 && f1 == 1 && f2 == 1 && f3 == 1) {
+            break;
+        }
+        SceSleep(1);
+    }
+}
+
+static void r301ps2_checkEmReset2()
+{
+    cEmWrap em0;
+    cEmWrap em1;
+    cEmWrap em2;
+    cEmWrap em3;
+    cEmWrap em4;
+    static const int ids[3] = {0x13, 0x1C, 0x1D};
+    int f0 = 0;
+    int f1 = 0;
+
+    while ((int) pG->Room_flg[0] >= 0) {
+        SceSleep(1);
+    }
+    r301ps2_wait_alive(9);
+    em0.setPtr(0x11, -1, 0);
+    em1.setPtr(0x12, -1, 0);
+    SceSleep(1);
+    for (;;) {
+        if (f0 == 0 && em0.isActive() == 0 && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[0], 9);
+            em2.setEm(ids[0], -1, 0, 1, 1);
+            em2.setGoto(&pPL->pos, 0xB);
+            f0 = 1;
+            SceSleep(1);
+        }
+        if (f1 == 0 && em1.isActive() == 0 && RsfCheck(G_ROOM_ID, 7) && r301ps2_alive() < R301_GATE(9)) {
+            R301_LOG("send", ids[1], 9);
+            em3.setEm(ids[1], -1, 0, 1, 1);
+            em3.setGoto(&pPL->pos, 0xB);
+            SceSleep(300);
+            r301ps2_wait_alive(9);
+            R301_LOG("send", ids[2], 9);
+            em4.setEm(ids[2], -1, 0, 1, 1);
+            em4.setGoto(&pPL->pos, 0xB);
+            f1 = 1;
+        }
+        if (f1 == 1 && (em3.isActive() == 0 || em4.isActive() == 0)) {
+            RsfSet(G_ROOM_ID, 6);
+        }
+        SceSleep(1);
+    }
+}
+
+static void r301ps2_checkEmReset3()
+{
+    cEmWrap em0;
+    cEmWrap em1;
+    cEmWrap em2;
+    Vec pos;
+    static const int ids[2] = {0x10, 0x15};
+    int f = 0;
+    int f1 = 0;
+    int f2 = 0;
+
+    while ((int) pG->Room_flg[0] >= 0) {
+        SceSleep(1);
+    }
+    while (RsfCheck(G_ROOM_ID, 8) == 0) {
+        SceSleep(1);
+    }
+    em0.setPtr(0xF, -1, 0);
+    SceSleep(1);
+    for (;;) {
+        if (f == 0 && em0.isActive() == 0) {
+            SceSleep(300);
+            AreaGetCenterPos(&pos, &SceAtPtr(0xC)->area);
+            while (SceAtHitCheck(0x13) == 1) {
+                SceSleep(1);
+            }
+            r301ps2_wait_alive(9);
+            R301_LOG("send", ids[0], 9);
+            em1.setEm(ids[0], -1, 0, 1, 1);
+            em1.setGoto(&pos, 0xB);
+            SceSleep(30);
+            while (SceAtHitCheck(0x13) == 1) {
+                SceSleep(1);
+            }
+            r301ps2_wait_alive(9);
+            R301_LOG("send", ids[1], 9);
+            em2.setEm(ids[1], -1, 0, 1, 1);
+            em2.setGoto(&pos, 0xB);
+            f = 1;
+        }
+        if (f == 1) {
+            break;
+        }
+        SceSleep(1);
+    }
+    for (;;) {
+        if (f1 == 0 && em1.ckGoto() == 0) {
+            em1.setGoto(&pPL->pos, 0xB);
+            f1 = 1;
+        }
+        if (f2 == 0 && em2.ckGoto() == 0) {
+            em2.setGoto(&pPL->pos, 0xB);
+            f2 = 1;
+        }
+        if (f1 == 1 && f2 == 1) {
+            break;
+        }
+        SceSleep(1);
+    }
+}
+#endif
+
 // Room init (the beach): Debug_flg[1] 0x40000, water hit effects, the first-Ganado watcher; area 3 = the
 // bowgun Ganados until Room_flg bit 1, area 5 = the rocket launcher Ganado until bit 3; the water render
 // target, the player's room motions (the rock climb); the rock wall until bit 0; the continue-point rock;
@@ -277,6 +550,10 @@ static void r301_setRocketLauncher()
 // and turn hostile on arrival.
 static void r301_setEmBowgun2()
 {
+#if R301_PS2
+    r301ps2_setEmBowgun2();
+    return;
+#endif
     cEmWrap em0;
     cEmWrap em1;
     cEmWrap em2;
@@ -367,6 +644,10 @@ skip:
 // Replacements for the two Ganados of the pier once they are gone.
 static void r301_checkEmReset1()
 {
+#if R301_PS2
+    r301ps2_checkEmReset1();
+    return;
+#endif
     cEmWrap em0;
     cEmWrap em1;
     cEmWrap em2;
@@ -436,6 +717,10 @@ static void r301_checkEmReset1()
 // 0x1D walk in (goto 0xB) to their posts and then after the player.
 static void r301_checkEmReset2()
 {
+#if R301_PS2
+    r301ps2_checkEmReset2();
+    return;
+#endif
     while ((int) pG->Room_flg[0] >= 0) {
         SceSleep(1);
     }
@@ -487,6 +772,10 @@ static void r301_checkEmReset2()
 // Reset wave 3 (after Room_flg[0] bit 31): when Ganado 0xF dies, 5 seconds later 0x10 / 0x15 walk in to its post.
 static void r301_checkEmReset3()
 {
+#if R301_PS2
+    r301ps2_checkEmReset3();
+    return;
+#endif
     while ((int) pG->Room_flg[0] >= 0) {
         SceSleep(1);
     }
@@ -557,6 +846,9 @@ static void r301_checkEmReset3()
 static void r301_setEmBowgun()
 {
     RsfSet(G_ROOM_ID, 1);
+#if R301_PS2
+    R301_FAR_DELETE(4);
+#endif
     {
     cEmWrap em0;
     cEmWrap em1;
@@ -582,7 +874,13 @@ static void r301_setEmBowgun()
     em3.setFindPL();
     em4.setFindPL();
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* em = (cEm*) EmMgr.workAt(i);
+        if (!em) continue;
+#else
         cEm* em = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
 
         if (em->id == 0x20 && em0.getPtr() != em && em1.getPtr() != em && em2.getPtr() != em && em->type != 6) {
             cEmWrap w;

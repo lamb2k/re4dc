@@ -38,6 +38,16 @@
 #include "rnd.h"
 #include "game.h"
 #include "room_data.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ROUTE_MOVIES && RE4DC_ROUTE_CH3
+// Route cutscenes (ROUTE_CH3, st3 lane 2026-10-15): s00 (the U-3 breaks in) presented by the PS2 movies
+// (dc/movie/r31b<event>.seq) when the disc carries them, as r316s00: the GC evds are not on the disc-2 image
+// (EvtRead: DC.setData failed, then "mem over", and the event never ran). With a movie no evd is read; the
+// handler's begin / end modes run and the code after the event is unchanged. Without it the source path applies.
+#include "route_movie.h"
+#define R31B_ROUTE_MOVIES 1
+#else
+#define R31B_ROUTE_MOVIES 0
+#endif
 
 // Room 3-1b (D:/Bio4/Prog/r31b.cpp): the U-3 ("It") cage corridor: three rooms with shutter
 // pairs opened by switch pairs, a death timer, the cages that fall, and the gondola.
@@ -413,6 +423,9 @@ void R31bInit()
     }
     if (RsfCheck(G_ROOM_ID, 0xC) == 0) {
         SceAtDataSet_exec(4, 0x12, 0, (TaskFunc) R31bExecEventS00, 0, 1);
+#if R31B_ROUTE_MOVIES
+        if (!re4dc_movie_available(0x31B00))
+#endif
         EvtMgr.EvtReadAram("event/evd/r31bs00.evd", (u8) GetEmIdFromListI(0x14), 0, 0, 0);
     } else {
         SceExec(0x12, (TaskFunc) R31bEmSetMain, 0, 0, 2, 0);
@@ -509,6 +522,11 @@ static void R31bExecEventS00()
         RsfSet(G_ROOM_ID, 0xC);
         SceAtSetEnable(4, 0);
         SceEventStart(0);
+#if R31B_ROUTE_MOVIES
+        if (re4dc_movie_available(0x31B00)) {
+            RouteMoviePlay(0x31B00, ROUTE_MOVIE_SND_EVENT, (RouteEvtFunc) Evt_R31BS00_Func, 0);
+        } else
+#endif
         EvtMgr.EvtReadExec("event/evd/r31bs00.evd", (u8) GetEmIdFromListI(0x14), 0);
         R31bLight(1);
         {

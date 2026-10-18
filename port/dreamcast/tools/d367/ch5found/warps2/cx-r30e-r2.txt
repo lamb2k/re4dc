@@ -1,0 +1,13 @@
+name cx-r30e-r2
+# ch5found16 round 2: r30e base cx-r30e-walk.txt; god, alivelog 60, kill rig 0x1e x12 gap 40
+# r30e from r309 AEV door 0x00, destination part 0; fresh source extraction
+room 0x30e
+pos -1006 -2173 14349
+ang -1.6580
+inv default
+act 360 fwd 12
+dump
+god
+alivelog 60
+kill 0x1e 200
+killrep 11 40

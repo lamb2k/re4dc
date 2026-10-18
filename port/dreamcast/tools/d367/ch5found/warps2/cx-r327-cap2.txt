@@ -1,0 +1,11 @@
+name cx-r327-cap2
+# ch5found16 r327 waves: cap run + goto into the camp (PS2 area 0x1C, y >= 6073) at room frame 60
+room 0x327
+pos -6631 5259 25380
+ang -0.1080
+inv default
+goto 60 -18744 6100 39972
+god
+alivelog 30
+kill 0x1d 30
+killrep 33 12

@@ -160,7 +160,12 @@ void cEm3d::setNoSuspend(int on)
 // EmInitFunc: placement-constructs the helicopter in the cEm work.
 void Em3dInit(cEm* em)
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+    // Value-initialisation would zero the fields cEmMgr::construct set (e6f65cc).
+    new (em) cEm3d;
+#else
     new (em) cEm3d();
+#endif
 }
 
 // A weapon hit on the helicopter (cEm::dmHit, no damage taken): when no radio line is running the
@@ -830,7 +835,13 @@ int em3dGetTargetEm(cEm3d* em)
     a = em->pos;
     w->pTargetEm = 0;
     for (i = 0; i < EmMgr.nArray; i++) {
+#if !defined(__PPC__)
+        // Unbacked sparse enemy slots read as absent (as em21's scans).
+        cEm* e = (cEm*) EmMgr.workAt(i);
+        if (!e) continue;
+#else
         cEm* e = (cEm*) ((u8*) EmMgr.pArray + EmMgr.size * i);
+#endif
         int dead = !(e->be_flag & 1);
 
         if (dead) {
