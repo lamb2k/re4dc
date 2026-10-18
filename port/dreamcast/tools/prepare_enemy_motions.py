@@ -144,6 +144,17 @@ MOTION_SMALL+=('em36.drs',)
 # ModInfoMgr.create, SetWeapon (0x25..0x38), SetObj10 (0x2D 0x2E), SetObj12 (0x16 0x19), EspDataLoad (4), bin = ARC(0xA..0xF).
 # Heap 4: the textures-only body (3,244,800 B) did not fit r31c (2,084,288 B free at the em39 read).
 MOTION_SMALL+=('em39.drs',)
+# em32 (U-3, r31b; island18 2026-10-18): every FCV reaches MotionSetCore. Direct body calls include the second
+# pMot work (ARC 0xAD). em32BlendMotSet (em32.cpp 3891..3916) sends work-held blendM0 / M1 / M2 to MotionSetCore's
+# data argument; blendM3 is its seq argument (SEQ tables stay resident). Those work pointers are not dereferenced.
+# MotSetObj00 (obj00.cpp 121..131) routes the divided-player FCVs ARC 0x9C / 0x9D / 0xA1 / 0xA2 through MotionSetCore;
+# its retained w->pMot has no other reader. All player loans (em32.cpp PL_ARC 0x87..0x94 / 0x9E..0xA0) likewise go to
+# MotionSetCore; 0x93 is seq. cEm32::appear also passes PL_ARC_PTR(subArc, 0x11) to MotionSetCore. No FCV payload or
+# header is read elsewhere in em32. Variable ARC(bin1/bin2) in EM32_DIVIDE_MODELS are BINs (0x95 / 0x9B / 0xAE..0xB1);
+# ARC 4 / 6 / 7 and 0x96..0x9A are model BINs, ARC 5 / 0xAB TPLs, ARC 8 EFF (kept resident); PL_ARC 0xAC is a BIN.
+# The native-textures-only resident body is 4,693,536 B, above r31b's measured entry free heap; reuse the audited
+# motion evaluator/cache and discover a phase-specific hot set from MOTION_MISS_LOG runs before promotion.
+MOTION_SMALL+=('em32.drs',)
 # em31 (Saddler's final form, r332, ROUTE_FINAL room overlay; lane final16 2026-10-16; ARC(n) = archive slot n-4): every
 # FCV it names reaches MotionSetCore. (1) Its own body / tentacle: MotionSetCore directly (em31.cpp, 106 calls), including
 # the m0 / m1 act pairs (1576 / 1764 / 2355: m1 = ARC(0x26 0x28 0x24 0x48 0x4A 0x4C) is MotionSetCore's `seq`) and the
