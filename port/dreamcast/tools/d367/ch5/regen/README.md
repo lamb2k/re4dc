@@ -25,4 +25,9 @@ re4-assets-private\ch5regen-20261018 (files/<disc path>, MANIFEST.tsv).
   regcast copy), c5r-c16reg.sh + c5r-c16r31b.sh (model_registry flag sets: c5pk 64 --roles5; k9pk 96; k10reg 96;
   r31b 128; r320 96 --role-tex23).
 - c5r-res.sh: dc/resident.bin (gatlas17 res17g) = resident_keys.py pack + water_resident.py pack at 0cb61387.
+- st3-pak-loose last 13 (VQ bytes of the st3 lane's tex-st3vq4 chain; none are in tex-gcatlas.pak = Test 10 release
+  tex.pak 7137e9e5, checked with c5r_rawpak.py, nor in any harvested pak, c5r_pakscan.py): 11 are vqroom.py VQ of the
+  PS2 worlds r331 / r332 (c5r-ps2w.sh r331 r332, then c5r-vq3132.sh); 2 (38679b3b 32x256, 9c7695f7 64x128) are pairs2
+  pair textures added raw by addss.py (below its VQ size rule) and VQ'd by vqroom pass 2 (c5r-vqpair.sh, pairs-e1 /
+  pairs-e2 sources). The 3 unresolved logged pairs (2c69ded3, 32bf9191, e7e9019c) are not targets.
 - c5r-copyout.sh: ext4 stage, one bulk copy to re4-assets-private\ch5regen-20261018, sha check there.
