@@ -73,5 +73,9 @@
       "--vertex-alpha",
       "tr4"
     ]
+  },
+  "gc_source_disc2": {
+    "bytes": 1459978240,
+    "sha256": "118640eb02953d5a8234d3f9e27ea535e75b0346b9cf22aa764b65c3d76f1b12"
   }
 }

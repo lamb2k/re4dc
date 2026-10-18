@@ -114,10 +114,19 @@ def extract(room, iso_f, index, work, inputs, dat_exe=DAT_EXE, smd_exe=SMD_EXE):
                     obj_group_kinds={}, bins=0, files={}, status='no scenario SMD in the dat')
     if not smxs:
         raise SystemExit('%s: no SMX in the dat (%s)' % (room, names))
-    if smds[0] != room + '_004.SMD' or smxs[0] != room + '_005.SMX':
-        raise SystemExit('%s: scenario SMD/SMX are %s/%s, not _004/_005 (converter names)' % (room, smds[0], smxs[0]))
     sub = work / room
-    run_tool(smd_exe, [smds[0]], sub, work / 'smd.log')
+    renamed = None
+    if smds[0] != room + '_004.SMD' or smxs[0] != room + '_005.SMX':
+        # Located by type, not index (st3 lane): a dat that starts with cutscene members (r30f, r334: BIN/TPL/FCV/SEQ
+        # _000.._036) has its scenario pair later. Require the same shape as _004/_005 (the SMX right after the SMD)
+        # and present them to the SMD tool and the converter under the fixed names; _004/_005 rooms never reach here.
+        si, xi = names.index(smds[0]), names.index(smxs[0])
+        if xi != si + 1 or (sub / (room + '_004.SMD')).exists() or (sub / (room + '_005.SMX')).exists():
+            raise SystemExit('%s: scenario SMD/SMX are %s/%s, not an adjacent pair (converter names)' % (room, smds[0], smxs[0]))
+        shutil.copy2(sub / smds[0], sub / (room + '_004.SMD'))
+        shutil.copy2(sub / smxs[0], sub / (room + '_005.SMX'))
+        renamed = dict(smd=smds[0], smx=smxs[0])
+    run_tool(smd_exe, [room + '_004.SMD'], sub, work / 'smd.log')
     stem = room + '_004'
     if inputs.exists():
         shutil.rmtree(inputs)
@@ -139,7 +148,8 @@ def extract(room, iso_f, index, work, inputs, dat_exe=DAT_EXE, smd_exe=SMD_EXE):
     for g in re.findall(r'^g (\S+)', obj, re.M):
         k = 'NORMAL' if 'NORMAL' in g.upper() else ('COLOR' if 'COLOR' in g.upper() else 'OTHER')
         kinds[k] = kinds.get(k, 0) + 1
-    return dict(room=room, member=member, dat_entries=names, scenario_smd=smds[0], smx=smxs[0],
+    extra = dict(scenario_renamed_from=renamed) if renamed else {}
+    return dict(room=room, member=member, dat_entries=names, scenario_smd=smds[0], smx=smxs[0], **extra,
                 other_smds=smds[1:], obj_group_kinds=kinds,
                 bins=len(list((inputs / (stem + '_BIN')).glob('*.BIN'))), files=tree_hashes(inputs),
                 aux=tree_hashes(aux))

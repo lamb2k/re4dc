@@ -409,6 +409,31 @@ def _compact_upload_only(decoded, references, palettes, textures, allowed, effec
 # RTP, MDT, CNS, scripts, sound) stays byte-identical; only upload-only images move
 # to the existing native packages.
 ROOM_CONTRACTS={
+    # Stage 3 (st3 lane, ROUTE_CH3 first pass; slot tags of the review Disc 2 St3/<room>.das):
+    # r303: r107's 27-slot layout. r301: 34 slots, SMD#4, EFF#7 room effects, EFF#29 local effects, ITM#9, no
+    # BIN/TPL (FCV/SEQ #27-28 / #30-33 byte-identical); header flush with the first payload (288 B): header_grow=32.
+    # r300: 49 slots, SMD#4, EFF#7, ITM#9, model TPLs #30 / #39 / #42 (after BIN #29 / #38 / #41; TPL#43 follows a TPL, so it stays byte-identical); FCV/SEQ
+    # byte-identical; 8 B between header and first payload: header_grow=32.
+    'r303':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    # r304 / r305 / r306: r107's 27-slot layout as well.
+    'r304':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r305':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r306':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r307':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r308':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r309':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r30a':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r30e':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    # stage 3 lane: model TPLs that follow a BIN; header within 32 B of the first payload (header_grow=32).
+    'r30b':dict(slots=38,smd=4,effs=(7,),itm=9,model_slots=(28,),header_grow=32),
+    'r30c':dict(slots=35,smd=4,effs=(7,),itm=9,model_slots=(30,),header_grow=32),
+    'r30d':dict(slots=44,smd=4,effs=(7,),itm=9,model_slots=(28, 36),header_grow=32),
+    'r30f':dict(slots=64,smd=4,effs=(7,),itm=9,model_slots=(28, 45),header_grow=32),
+    'r310':dict(slots=33,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
+    'r311':dict(slots=42,smd=4,effs=(7,),itm=9,model_slots=(28, 32),header_grow=32),
+    'r312':dict(slots=44,smd=4,effs=(7,),itm=9,model_slots=(28, 36),header_grow=32),
+    'r301':dict(slots=34,smd=4,effs=(7,29),itm=9,model_slots=(),header_grow=32),
+    'r300':dict(slots=49,smd=4,effs=(7,),itm=9,model_slots=(30,39,42),header_grow=32),
     'r100':dict(slots=51,smd=5,effs=(8,),itm=10,model_slots=(26,28,33,36,38,46)),
     # r101 (frontier W4): 37 slots; SMD#4 scenery TPL0, EFF#7 room effects,
     # EFF#35 local effects, ITM#9, model TPLs #27/#29/#34 (after BIN #26/#28/#33).

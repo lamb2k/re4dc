@@ -1923,6 +1923,12 @@ def fmt_smx(sw, off, size, ctx):
             # on the wheel objects 6 / 8 / 0xA / 0x33 (R10cRotWork), and the only SetCallBack in the source is
             # r318's. Preserve these opaque type-0 authoring bytes unswapped, as r120's.
             pass
+        elif kind == 0 and ((ctx.startswith('st3/r300.arc#') and sw.data[p] == 0x00) or
+                            (ctx.startswith('st3/r303.arc#') and sw.data[p] == 0x0B)):
+            # st3 lane: r300 object 0x00 (r300.cpp only sets SmdGetObjPtr(0)->type = 0) and r303 object 0x0B (the
+            # door: setPos / setAng / type = 0 / its pos for SndCall) are never read through cObj::work, and the
+            # only SetCallBack in the source is r318's. Preserve these opaque type-0 authoring bytes, as r10c's.
+            pass
         elif any(sw.data[work:work + 116]):
             # Type zero's normal mover ignores work, but room callbacks may
             # consume it. Do not guess its scalar layout from nonzero bytes.
