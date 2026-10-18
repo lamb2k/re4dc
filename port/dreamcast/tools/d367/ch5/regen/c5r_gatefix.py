@@ -132,7 +132,18 @@ for arg in sys.argv[3:]:
                 how['harvest'] = how.get('harvest', 0) + 1
         if src is None and s in committed:
             src = committed[s]; how['committed'] = how.get('committed', 0) + 1
-        if src is None and path in chosen and chosen[path] != s:
+        if src is None and path == 'dc/warp.txt':
+            import re as _re
+            m = _re.search(rb'warp: /cd/dc/warp.txt (\S+)', open(sd + '/capture/run-output.txt', 'rb').read())
+            wn = m.group(1).decode() if m else None
+            for d in ('/mnt/c/Flycast-Evidence/re4-dreamcast/st3-20261014/fixtures/' + room, '/mnt/c/tmp/ch5b', '/mnt/c/tmp/ch5/w', '/mnt/c/tmp/ch5'):
+                if wn and os.path.isfile('%s/%s.txt' % (d, wn)):
+                    src = '%s/%s.txt' % (d, wn); subs.append((path, s[:8], 'by name ' + src)); how['warp-name'] = 1; break
+        if src is None and path == 'dc/warp.txt':
+            for n in ('warps2/cx-%s-r2.txt' % room, 'warps/cx-%s-door.txt' % room, 'warps/cx-%s-stagejump.txt' % room):
+                if os.path.isfile(os.path.join(G, n)):
+                    src = os.path.join(G, n); subs.append((path, s[:8], 'committed ' + n)); how['warp-committed'] = 1; break
+        if src is None and path in chosen and chosen[path] != s and path != 'dc/warp.txt':
             c = chosen[path]
             src = regen.get(c) or harvested(c) or committed.get(c)
             if src:
