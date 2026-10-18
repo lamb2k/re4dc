@@ -211,9 +211,12 @@ BOUNDED_PROFILES={
         retain=(0x40,0x43,18,19,21,24,36,68,108,109)),
 }
 
-def prepare(source, destination, hot_slots=(), textures=None, keep_motion_resident=False, compact_effects=False, bounded_profile=None):
+def prepare(source, destination, hot_slots=(), textures=None, keep_motion_resident=False, compact_effects=False, bounded_profile=None, clip_limit=MAX_CLIP):
     source,destination=map(Path,(source,destination))
     name=source.name.lower();file='em/'+name
+    if clip_limit not in (MAX_CLIP,131072):raise ValueError('clip limit must be 32768 or 131072')
+    if clip_limit!=MAX_CLIP and (name!='em32.drs' or hot_slots or bounded_profile or keep_motion_resident or compact_effects or textures is None):
+        raise ValueError('large clips are audited only for all-cold em32 streamed top-level-texture preparation')
     profile=BOUNDED_PROFILES.get(bounded_profile) if bounded_profile else None
     if bounded_profile and (profile is None or name!=profile['name']):raise ValueError('bounded profile/source mismatch')
     if profile and (hot_slots or keep_motion_resident or compact_effects or textures is None):
@@ -226,6 +229,8 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     if destination.exists():raise FileExistsError(destination)
     hot_slots=set(hot_slots)
     original=source.read_bytes();converted=bytearray(original);refs=[];palettes=[];sequences=[]
+    if clip_limit!=MAX_CLIP and hashlib.sha256(original).hexdigest()!='dc3a8d49179d2235d32f3fb7662be1d40ea69b3ab7046709aa8f0ffc10f01530':
+        raise ValueError('large em32 source identity is not audited')
     if profile and hashlib.sha256(original).hexdigest()!=profile['source']:raise ValueError('unqualified bounded source identity')
     old=mirror.OFFSET_OBSERVER;old_tpl=mirror.TPL_OBSERVER;old_seq=mirror.SEQUENCE_OBSERVER;start=len(mirror.REPORT)
     mirror.OFFSET_OBSERVER=lambda file,field,base,value:refs.append((field,base,value))
@@ -298,7 +303,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
         native=codec.serialise(parsed,'<')
         if native!=body[off:end]:raise ValueError('native FCV differs from qualified archive')
         if not parsed.joints:continue # empty motion is already 32 bytes; keep ordinary
-        if len(native)>(profile['cap'] if profile else MAX_CLIP):
+        if len(native)>(profile['cap'] if profile else clip_limit):
             # em21: a clip over the runtime's slot limit stays resident (ordinary FCV, exact bytes);
             # the Ganado contract keeps refusing, as before.
             # em1b (castle lane 2026-10-15): one Ganado clip over the slot limit stays resident the same way (exact bytes,
@@ -344,7 +349,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
         tables+=native_identity_index(selected,mapped,len(body),final_bytes)
     if entries:
         new_tags.append(b'MTC\0');new_offsets.append(new_rel+len(tables))
-        header=struct.pack('<8s6I',MAGIC,3 if profile else 2,len(entries),STRIDE,zlib.crc32(table)&0xffffffff,final_bytes,profile['cap'] if profile else MAX_CLIP)
+        header=struct.pack('<8s6I',MAGIC,3 if profile else 2,len(entries),STRIDE,zlib.crc32(table)&0xffffffff,final_bytes,profile['cap'] if profile else clip_limit)
         tables+=header+table+bytes(table_bytes-32-len(table))
     out=out[:new_rel]+tables+out[new_rel:]
     struct.pack_into('<2I',out,0,count+extra_slots,new_rel+len(tables) if rel else 0)
@@ -362,7 +367,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
             'original_static_body_bytes':size,'resident_body_bytes':len(out),
             'archive_recovery_bytes':size-len(out),'index_bytes':table_bytes,'header_growth_bytes':header_growth,
             'motion_source_bytes':sum(e['bytes'] for e in entries),'motion_header_bytes':sum(e['resident_bytes'] for e in entries),
-            'motions_resident':keep_motion_resident,
+            'motions_resident':keep_motion_resident,'clip_limit':clip_limit,
             'effects':{'entries':effect_entries,'index_bytes':effect_index_bytes,
                 'recovery_bytes':sum(b-a-len(v) for a,b,v in effect_ranges)-effect_index_bytes,
                 'policy':'all records resident; exact native word reconstruction, stable retained generator references'},
@@ -399,12 +404,13 @@ if __name__=='__main__':
     p.add_argument('--keep-motion-resident',action='store_true',help='Texture-only selection retains every FCV payload; no motion cache')
     p.add_argument('--compact-effects',action='store_true',help='Selectable lossless resident em12 EST records; original heads and all effect behavior retained')
     p.add_argument('--bounded-profile',choices=sorted(BOUNDED_PROFILES),help='Exact-source r11f version3 reserve-only profile')
+    p.add_argument('--clip-limit',type=int,choices=(32768,131072),default=MAX_CLIP,help='Audited em32 large-clip diagnostic (requires MOTION_LARGE_CLIPS=1)')
     a=p.parse_args()
     if not a.keep_motion_resident and not a.hot_audit:p.error('--hot-audit is required for motion residency')
     audit=json.loads(a.hot_audit.read_text()) if a.hot_audit else {}
     if not a.keep_motion_resident and not audit.get('source_complete') and not a.diagnostic_incomplete_prefetch:
         p.error('prefetch/concurrency audit is incomplete; explicit diagnostic selection required')
-    r=prepare(a.source,a.output,audit.get('union',{}).get('source_arc_indices',()),a.textures,a.keep_motion_resident,a.compact_effects,a.bounded_profile)
+    r=prepare(a.source,a.output,audit.get('union',{}).get('source_arc_indices',()),a.textures,a.keep_motion_resident,a.compact_effects,a.bounded_profile,a.clip_limit)
     report_path=a.output/'motion-residency-report.json'
     r['prefetch_audit']=audit
     r['runtime_qualified']=False

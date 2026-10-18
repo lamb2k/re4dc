@@ -3300,6 +3300,19 @@ ifeq ($(TEX_PAL4_ALPHA),1)
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL4_ALPHA=1
 endif
 
+# MOTION_LARGE_CLIPS=1 (island18): sealed em32 all-cold v2 body only, clips up to 128 KiB.
+# Existing two slabs scale to the largest actual clip (102336 B); all other v2/v3 admission stays unchanged.
+MOTION_LARGE_CLIPS ?= 0
+ifeq ($(filter $(MOTION_LARGE_CLIPS),0 1),)
+$(error MOTION_LARGE_CLIPS must be 0 or 1)
+endif
+ifeq ($(MOTION_LARGE_CLIPS),1)
+ifneq ($(ROUTE_CH3)$(MOTION_RESERVE),11)
+$(error MOTION_LARGE_CLIPS needs ROUTE_CH3=1 MOTION_RESERVE=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_LARGE_CLIPS=1
+endif
+
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.
 # Two owned slabs per binding, existing global pressure cap, no spill for these profiles.
 MOTION_BOUNDED_R11F ?= 0
