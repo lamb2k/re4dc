@@ -379,7 +379,10 @@ DATA['vq16w'] = {'dc/tex.pak': RS16D + '/vq16w/tex-vq16c.pak'}
 # mkch2data.py: route-v7's 2-2 / 2-3 rooms over test 15's data, r11d / r11e released rooms, em16 prepared, the 53-entry
 # chapter 1+2 stream file). Order: last (after T15_DATA). Needs the game's chapter 2 knobs (ch2/ch2-build.sh CH2REC,
 # AICA_STR_ENT_MAX >= 53). 'unremove': base-disc pictures the 2-2 / 2-3 rooms read stay on the disc.
-CH2D = os.environ.get('CH2D', '/root/re4data/private/ch2data-20261016')
+# ch2data-20261018 (lane ashley17) = ch2data-20261016 + Ashley's partner packages for r10f / r11d / r11e / r200 (the
+# entries mkch2data.py adds; route-v7 and the ch2 lane inputs mkch2data.py reads were lost 10-17, so the 10-16 set was
+# copied and the four added; provenance in its ch2-data.json).
+CH2D = os.environ.get('CH2D', '/root/re4data/private/ch2data-20261018')
 UNREMOVE = {}
 if os.path.exists(CH2D + '/ch2-data.json'):
     _c2 = json.load(open(CH2D + '/ch2-data.json'))

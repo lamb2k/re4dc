@@ -231,7 +231,14 @@ T15_FN=${T15_FN-FOLIAGE_NEAR_FIX=1}
 #      r11a / r11b shore day and night) draws to 45 m instead of the 25 m cap (PS2 world, coarse view, fog; fog ramp the
 #      last 20 %). Render only; modelled ~+3.8 hw ms at the boat, accepted. T15_LF="" builds without it.
 T15_LF=${T15_LF-LAKE_FAR=45000 LAKE_FAR_SHORE=45000}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP $T15_DY $T15_TP $T15_GD $T15_ST $T15_PG $T15_FN $T15_LF"
+# T15_AS (lane ashley17, test 17, 10-18; rule 7 no GameCube character fallback): PS2_ASHLEY_ROOMS=2, Ashley's partner
+#      package shares a 32-entry registry texture table with the room package (r11c: Luis 11 + Ashley 6 refused her at
+#      16, so she drew the GameCube model). Placed last: it overrides T13R's PS2_ASHLEY_ROOMS=1. Data: ch2 adds her
+#      partner packages for r10f / r11d / r11e / r200. Render only; STRICT r11c / r11e / r200; release image _end
+#      unchanged (s30 340/340 heap_before 187,840 both; KOS squeeze 48 KiB PASS). ASHLEY17-20261017.md.
+#      T15_AS="" builds without it.
+T15_AS=${T15_AS-PS2_ASHLEY_ROOMS=2}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP $T15_DY $T15_TP $T15_GD $T15_ST $T15_PG $T15_FN $T15_LF $T15_AS"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"
