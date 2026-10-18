@@ -1,0 +1,10 @@
+name fx-r332-a1
+# final16: r332 from the r331 door (r331 AEV door 0x01); no s00 movie on the disc (source evd path), Saddler set by
+# R332EventS00; god (damage counted by emlog); em31 state every 60 room frames; handgun kill rig on em31 from frame 900
+room 0x332
+pos -42267 15811 46777
+ang 1.3520
+inv default
+god
+emlog 0x31 60
+kill 0x31 900

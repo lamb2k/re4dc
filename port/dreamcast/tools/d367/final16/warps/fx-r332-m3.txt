@@ -1,0 +1,16 @@
+name fx-r332-m3
+# final16: r332 from the r331 door; s00 PS2 movie skipped by the padscript (START while movie=1); A presses (during the
+# event too) dismiss the up-cut hint SceUpCut(2, 6, 8) that R332EventS00End waits on; then the fight with Leon standing
+# (god: damage counted by emlog); em31 state every 30 room frames; handgun kill rig on em31 from frame 600
+room 0x332
+pos -42267 15811 46777
+ang 1.3520
+inv default
+god
+emlog 0x31 30
+act 40 a 4 ev
+act 80 a 4 ev
+act 120 a 4 ev
+act 160 a 4 ev
+act 200 a 4 ev
+kill 0x31 600

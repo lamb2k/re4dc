@@ -1,0 +1,15 @@
+name fx-r332-c1
+# final16 CONTROL (no Saddler): r332 from the r331 door with rsf 0x332 bit 0 set, so R332EventS00 returns before the
+# s00 event and setEm (no em31 load, no fight); same A presses and god as m3; Leon stands at the door arrival
+room 0x332
+pos -42267 15811 46777
+ang 1.3520
+inv default
+rsf 0x332 0
+god
+emlog 0x31 30
+act 40 a 4 ev
+act 80 a 4 ev
+act 120 a 4 ev
+act 160 a 4 ev
+act 200 a 4 ev

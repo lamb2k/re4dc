@@ -144,6 +144,20 @@ MOTION_SMALL+=('em36.drs',)
 # ModInfoMgr.create, SetWeapon (0x25..0x38), SetObj10 (0x2D 0x2E), SetObj12 (0x16 0x19), EspDataLoad (4), bin = ARC(0xA..0xF).
 # Heap 4: the textures-only body (3,244,800 B) did not fit r31c (2,084,288 B free at the em39 read).
 MOTION_SMALL+=('em39.drs',)
+# em31 (Saddler's final form, r332, ROUTE_FINAL room overlay; lane final16 2026-10-16; ARC(n) = archive slot n-4): every
+# FCV it names reaches MotionSetCore. (1) Its own body / tentacle: MotionSetCore directly (em31.cpp, 106 calls), including
+# the m0 / m1 act pairs (1576 / 1764 / 2355: m1 = ARC(0x26 0x28 0x24 0x48 0x4A 0x4C) is MotionSetCore's `seq`) and the
+# `mot` locals (ARC(0x44 0x45 0x6A 0x66 0x67), 2221 / 2272). (2) The tail objects: SetObj16(ARC(0x76) BIN, ARC(0x77) TPL)
+# + MotSetObj16(ARC(0x78) / ARC(0x79)) = MotionSetCore on the cObj16; em31 reads the FCV header maxFrame of 0x78 / 0x79
+# (*(u16*) & 0x3FFF, 4319 / 4330 / 4778): headers stay resident. (3) The pillar (src/game/objPillar.cpp): SetPillar(ARC(0x7A)
+# BIN, ARC(0x7B) TPL); setThrow(ARC(0x7C), ARC(0x7D), ARC(0x7E), ARC(0x75)), setFall(ARC(0x7D), ARC(0x7F)), setBreak(ARC(0x6D),
+# seq ARC(0x6E)) only store the pointers; objPillar plays each through MotionSetCore (on the pillar: 164 / 232 / 259 / 360 /
+# 390 / 402; on the player: 577 / 579 / 680) and reads motBreak's header maxFrame (163, resident). (4) The player while em31
+# lends Leon its subArc (pl->subArc = PL_EM(pl)->subArc, the em2b grab pattern; 1643 / 1916 / 3124 / 3622): PL_ARC(0x6D / 0x6E
+# / 0x6B / 0x73 / 0x82 / 0x83 / 0x84) and the macro's PL_ARC_PTR(subArc, mot) go to MotionSetCore on the player.
+# BIN / TPL / EFF slots: ARC(4 5 6 7 8 9) (modelInit, ModInfoMgr.create, SetObj00, EspDataLoad), PL_ARC(0x86 / 0x85) (the
+# catch object's model). r332.cpp names only room-archive motions (ROOM_ARC_PTR). No FCV is passed anywhere else.
+MOTION_SMALL+=('em31.drs',)
 # em2b (El Gigante, r119; route lane r119 2026-10-10): every FCV it names goes to MotionSetCore, directly or through
 # em2bBlendMotSet (two MotionSetCore calls; the blend work is evaluated by MotionMoveCore), MotSetObj16 (the
 # parasite head and the tentacles: MotionSetCore) and plBlendMotSet / MotionSetCore on the player while it lends
@@ -157,6 +171,8 @@ ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11','em1d','em1e','em1f','em36','em39
 # em2d / em25 / em3c (ROUTE_CH32 room overlays; lane ch3found16 2026-10-17): their static REL is stripped the same way, as on
 # the castle disc's le_mirror build (the code comes from dc/<em>.ovl).
 ROUTE_OVL_MODULES+=('em2d','em25','em3c')
+# em31 uses the ROUTE_FINAL overlay's retained descriptor.
+ROUTE_OVL_MODULES+=('em31',)
 # pl11 (Ashley; PS2_ASHLEY discs, lane ps2cast 2026-10-14): the route overlay dc/pl11.ovl carries her module, so her
 # archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against

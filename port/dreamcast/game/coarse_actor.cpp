@@ -477,3 +477,20 @@ extern "C" const char* re4dc_charbake_label(void){return re4dc_charbake::variant
 #if RE4DC_ACTOR_TEX_PREP_LEON
 #include "actor_tex_prep_leon_pick.inc"
 #endif
+
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+// NMR_PRELOAD_SKIP (Makefile; lane final16): whether the open room package's role rows name this GameCube texture
+// identity as one of the source textures a registry descriptor replaces (native_ui.cpp preload_identities' enemy pass).
+extern "C" int re4dc_registry_replaces_key(unsigned crc,unsigned fnv) {
+#if RE4DC_NATIVE_MODEL_REGISTRY_PACK
+    const auto& rr=re4dc_material::room_rows;
+    for(unsigned r=0;r<rr.role_count;++r) {
+        const auto& ro=rr.roles[r];
+        for(unsigned t=0;t<ro.texture_count;++t)if(ro.textures[t].crc==crc && ro.textures[t].fnv==fnv)return 1;
+    }
+#else
+    (void)crc;(void)fnv;
+#endif
+    return 0;
+}
+#endif

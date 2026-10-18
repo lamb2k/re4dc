@@ -3696,6 +3696,11 @@ constexpr unsigned kWorldNewKeys=16,kWorldNewBytes=84448;
 unsigned world_new_n,world_new_bytes;
 std::uint64_t world_new_mask,world_seen_mask,world_capped_mask;
 #endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+// NMR_PRELOAD_SKIP (Makefile): the enemy pass leaves out the GC identities the room's registry package replaces.
+extern "C" int re4dc_registry_replaces_key(unsigned crc,unsigned fnv);  // coarse_actor.cpp
+bool preload_enemy_pass; unsigned preload_nmr_skipped,preload_nmr_skipped_bytes;
+#endif
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
 // TEX_PKG_SKIP (native_model_registry.mk): a source texture of the room package's role rows (the GC TPLs its
 // descriptors replace) is not uploaded at room entry; the package draws its own atlas. A source draw (fallback)
@@ -3716,6 +3721,11 @@ void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n
         if(!table.record(i,crc,fnv,width,height,format) || !width || !height || width>1024 || height>1024)continue;
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
         if(pkg && RE4DC_PKG_SKIP(crc,fnv))continue;
+#endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+        if(preload_enemy_pass && re4dc_registry_replaces_key(crc,fnv)) {
+            ++preload_nmr_skipped;preload_nmr_skipped_bytes+=preload_least(width,height);continue;
+        }
 #endif
 #if RE4DC_QUALITY_ASSETS
         if(preload_room_pass && re4dc_std_dropped(crc,fnv))continue;
@@ -3885,12 +3895,22 @@ void preload_identities(){
 #if RE4DC_PS2_PRELOAD_LEAN
     }
 #endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+    const unsigned nmr_skipped0=preload_nmr_skipped,nmr_bytes0=preload_nmr_skipped_bytes;
+    preload_enemy_pass=true;
+#endif
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
     {const unsigned s0=pkg_skips;
      for(auto& e:enemy_identities)if(e.archive)preload_select(e.table,n,resident,bytes,limit,byte_limit,true);
      re4dc_log("TEXPKG preload enemy skips=%u total=%u\n",pkg_skips-s0,pkg_skips);}
 #else
     for(auto& e:enemy_identities)if(e.archive)preload_select(e.table,n,resident,bytes,limit,byte_limit);
+#endif
+#if defined(RE4DC_NMR_PRELOAD_SKIP) && RE4DC_NMR_PRELOAD_SKIP
+    preload_enemy_pass=false;
+    if(preload_nmr_skipped!=nmr_skipped0)
+        re4dc_log("NMR preload skip: run=%u keys=%u bytes=%u (registry-replaced GC enemy textures; total %u)\n",preload_runs,
+                  preload_nmr_skipped-nmr_skipped0,preload_nmr_skipped_bytes-nmr_bytes0,preload_nmr_skipped);
 #endif
     preload_select(player_identities,n,resident,bytes,limit,byte_limit);preload_select(weapon_identities,n,resident,bytes,limit,byte_limit);
 #if RE4DC_COARSE_WORLD & 64

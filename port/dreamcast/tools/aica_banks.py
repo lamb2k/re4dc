@@ -239,6 +239,10 @@ ROOMS = {
     'r327': ['st3/r327.dar', 'em/em1d.drs'],
     'r329': ['st3/r329.dar', 'em/em18.drs', 'em/pl11.drs'],
     'r330': ['st3/r330.dar', 'em/em1f.drs', 'em/pl11.drs'],
+    # Final chapter (lane final16, 2026-10-16): r331 (the mine cart; the merchant em18) and r332 (the final boss room:
+    # Saddler em31, its ENEMY0 bank 1,482,528 GC bytes; ROUTE_FINAL).
+    'r331': ['st3/r331.dar', 'em/em18.drs'],
+    'r332': ['st3/r332.dar', 'em/em31.drs'],
     # not listed yet (no prepared archive the tool can read): em36
     'r111': ['st1/r111.dar', 'em/em17.drs', 'em/em2a.drs', 'em/pl11.drs'],
     'r113': ['st1/r113.dar', 'em/em17.drs', 'em/em2a.drs', 'em/pl11.drs'],
@@ -977,9 +981,14 @@ CH4_STREAMS = ([(0, 0), (0, 29)] + [(1, n) for n in range(0xB4, 0xC3)]
 # (80). `--streams castle`. Measured against swapping a ch3 and a ch4 file at the chapter 4 save: 100,765,696 B on
 # disc vs 114,851,840 B (the shared streams twice), +768 B of .bss (56 -> 80 entries) and one 2 KB read at boot.
 CASTLE_STREAMS = CH3_STREAMS + [k for k in CH4_STREAMS if k not in CH3_STREAMS]
+# Disc 3 with the final boss room (lane final16, 2026-10-16): ch5 plus the streams r332 requested ("stream sbb=62c0000 not
+# in aica_str.dat, silent", Flycast f2mW): 0:54 (the Saddler fight music, bgmtbl 0x332, looping) and the room code's
+# SndStrPlayBlock event / voice streams 1:47 (0x2F), 1:232 (0xE8), 1:237 (0xED); appended so entries 0..36 and their data
+# bytes stay identical to the ch5 file. `--streams ch5f`; 41 entries (AICA_STR_ENT_MAX=56 holds it).
+CH5F_STREAMS = CH5_STREAMS + [(0, 54), (1, 47), (1, 232), (1, 237)]
 STREAM_PRESETS = {'ch21': CH21_STREAMS, 'ch21r': CH21R_STREAMS, 'ch22': CH22_STREAMS, 'ch1': CH1_STREAMS,
                   'ch23': CH23_STREAMS, 'ch2': CH2_STREAMS, 'ch31': CH31_STREAMS, 'ch3': CH3_STREAMS,
-                  'ch4': CH4_STREAMS, 'castle': CASTLE_STREAMS, 'ch5': CH5_STREAMS}
+                  'ch4': CH4_STREAMS, 'castle': CASTLE_STREAMS, 'ch5': CH5_STREAMS, 'ch5f': CH5F_STREAMS}
 
 
 def nibble_to_sample(n):

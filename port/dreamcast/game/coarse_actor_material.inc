@@ -627,8 +627,9 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     // second pass are replaced, an accepted visible approximation): model_registry.py source_drops "bump", "mask".
     if(registry && m->id==0x23)implemented|=Bump|Mask|SourcePass;
 #endif
-#if defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER
-    // STRESS_SADDLER (lane stress16b, the model-only stress disc, NOT a play image): Saddler (em31, 0x31) draws no bump
+#if (defined(RE4DC_STRESS_SADDLER) && RE4DC_STRESS_SADDLER) || (defined(RE4DC_SADDLER_MASK_OPAQUE) && RE4DC_SADDLER_MASK_OPAQUE)
+    // STRESS_SADDLER (lane stress16b, the model-only stress disc, NOT a play image) / SADDLER_MASK_OPAQUE (ROUTE_FINAL,
+    // visible approximation, default off): Saddler (em31, 0x31) draws no bump
     // stage (as the source path: bumpSetup reaches only the GX stubs) and its I4-masked parts as the opaque PS2 sections
     // (the crow rule; a visible approximation on a measurement disc): model_registry.py source_drops "bump", "mask".
     if(registry && m->id==0x31)implemented|=Bump|Mask|SourcePass;
