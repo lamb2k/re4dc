@@ -458,7 +458,12 @@ if os.path.isdir(TRANS17D):
     for _r in sorted(os.listdir(TRANS17D)):
         if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS17D, _r)):
             DATA['trans17']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS17D, _r)
-T165_DATA = T163_DATA + ',trans17'
+# res165 (rel17, 10-18): dc/resident.bin = 16.4's (res163 method, reproduced byte-exact from this tree's lists: 41db03b5)
+# with vram/resident/r11b.tsv gaining d0f964ff-c7f73ac7 (64x96 fmt 8), LAKE_NIGHT_FX's torch flame picture, which
+# EFFECT_ROOM skipped 3 times (fx-resident-only) at r11b room entry. Order: last (replaces res163's resident.bin).
+RES165D = os.environ.get('RES165D', '/root/re4data/private/res165-20261018')
+DATA['res165'] = {'dc/resident.bin': RES165D + '/resident.bin'}
+T165_DATA = T163_DATA + ',trans17,res165'
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
