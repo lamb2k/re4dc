@@ -1975,8 +1975,112 @@ extern "C" void re4dc_ps2_fx_stage1_render(int coarse,int skipping)
 // it in a drawn coarse image's logic-only pass; coarse.cpp then draws no marker for it). Esp0b (the room
 // fires' particles) is EspCommonTrans after an optional camera jitter; esp.cpp queues its common body.
 extern EspTransFunc EspTransTbl[0xFF];
+#endif
+#if defined(RE4DC_RAIN_PS2_SHEET_REF) && RE4DC_RAIN_PS2_SHEET_REF
+// RAIN_PS2_SHEET_REF (effects30.mk; a REFERENCE arm for look and cost only, never in a recipe; lane rain17 2026-10-18):
+// the night lake's rain drawn the PS2's way. PS2 r11b.dat EFF#7 SST set 3 rec 67 (r11a set 5): one Esp08 screen sheet,
+// tex 0xC5, 700x540 of the 512x448 screen centred, rgb 180, a 100, 3x1 tiles scrolled (-0.003, -0.090) a frame. The
+// game's (GameCube) set 3 instances are reused as the anchor: its first sheet (550 base) draws with the PS2 recipe, its
+// second (1385 base) is not drawn (the PS2 merged the two). Each wrapped tile is one native effect sprite (<= 8).
+// The scroll comes from pG->Frame_cnt (read only). Log "ps2 sheet:" every 120 drawn images.
+static u32 s_ps2_sheet_frames;
+static f32 Ps2SheetFrac(f32 v)
+{
+    return v - (f32) (int) v + (v < (f32) (int) v ? 1.0f : 0.0f);
+}
+extern "C" int re4dc_ps2_rain_sheet(cEsp* esp)
+{
+    if (!(G_ROOM_ID == 0x11A || G_ROOM_ID == 0x11B) || esp->m_Id != 0x08 || esp->info.owner != 0xD0 ||
+        esp->m_Tex_id != 0xC5 || !((s8) esp->m_Parts_no >= -8 && (s8) esp->m_Parts_no <= -3)) {
+        return 0;
+    }
+    if (esp->m_Size_base_x > 1000.0f) {
+        return 1;
+    }
+    EspTexWk* tw = &g_pEspSys->Esp_tex_tbl[0xC5];
+    if (!tw->pTpl || tw->pTpl->numDescriptors == 0) {
+        return 1;
+    }
+    const TEXDescriptor* td = TEXGet(tw->pTpl, 0);
+    const TEXHeader* th = td->textureHeader;
+    Re4dcEffectSprite s;
+    s.image.pixels = th->data;
+    s.image.palette = NULL;
+    s.image.width = th->width;
+    s.image.height = th->height;
+    s.image.format = th->format;
+    s.image.palette_format = 0xffffffffU;
+    s.image.palette_bytes = 0;
+    if (td->CLUTHeader) {
+        s.image.palette = td->CLUTHeader->data;
+        s.image.palette_format = td->CLUTHeader->format;
+        s.image.palette_bytes = td->CLUTHeader->numEntries * 2;
+    }
+    const f32 fade = esp->m_Col_start_a ? esp->m_Col_a / (f32) esp->m_Col_start_a : 1.0f;
+    const f32 fa = 100.0f * (fade > 1.0f ? 1.0f : fade);
+    if (fa < 1.0f) {
+        return 1;
+    }
+    s.color = ((u32) fa << 24) | 0xB4B4B4U;
+    s.src = esp->xA5 & 7;
+    s.dst = esp->xA6 & 7;
+    s.screen = 1;
+    s.pad = 0;
+    const f32 X0 = (256.0f - 350.0f) * 1.25f, W = 700.0f * 1.25f;
+    const f32 Y0 = (224.0f - 270.0f) * (480.0f / 448.0f), H = 540.0f * (480.0f / 448.0f);
+    const f32 tileW = W / 3.0f, tileH = H;
+    const f32 f = (f32) (pG->Frame_cnt % 100000U);
+    const f32 su = Ps2SheetFrac(-0.003f * f), sv = Ps2SheetFrac(-0.090f * f);
+    // texture coordinate u runs su .. su + 3 across, v runs sv .. sv + 1 down; cut at the integer wraps
+    f32 ucut[6], vcut[3];
+    u32 nu = 0, nv = 0;
+    ucut[nu++] = su;
+    for (int k = 1; k <= 3; ++k) {
+        ucut[nu++] = (f32) k;
+    }
+    ucut[nu++] = su + 3.0f;
+    vcut[nv++] = sv;
+    vcut[nv++] = 1.0f;
+    vcut[nv++] = sv + 1.0f;
+    u32 drawn = 0;
+    for (u32 j = 0; j + 1 < nv; ++j) {
+        const f32 va = vcut[j], vb = vcut[j + 1];
+        if (vb - va < 1e-4f) {
+            continue;
+        }
+        const f32 vfl = (f32) (int) va;
+        const f32 ya = Y0 + (va - sv) * tileH, yb = Y0 + (vb - sv) * tileH;
+        for (u32 i = 0; i + 1 < nu; ++i) {
+            const f32 ua = ucut[i], ub = ucut[i + 1];
+            if (ub - ua < 1e-4f) {
+                continue;
+            }
+            const f32 ufl = (f32) (int) ua;
+            const f32 xa = X0 + (ua - su) * tileW, xb = X0 + (ub - su) * tileW;
+            s.x[0] = xa; s.y[0] = ya; s.u[0] = ua - ufl; s.v[0] = va - vfl;
+            s.x[1] = xb; s.y[1] = ya; s.u[1] = ub - ufl; s.v[1] = va - vfl;
+            s.x[2] = xb; s.y[2] = yb; s.u[2] = ub - ufl; s.v[2] = vb - vfl;
+            s.x[3] = xa; s.y[3] = yb; s.u[3] = ua - ufl; s.v[3] = vb - vfl;
+            for (int c = 0; c < 4; ++c) {
+                s.z[c] = 1.0f;
+            }
+            drawn += re4dc_effect_sprite(&s) ? 1 : 0;
+        }
+    }
+    if (++s_ps2_sheet_frames % 120 == 1) {
+        re4dc_log("ps2 sheet: frame=%u room=%x tiles=%u argb=%08x su=%d sv=%d\n", (unsigned) pG->Frame_cnt,
+                  (unsigned) G_ROOM_ID, (unsigned) drawn, (unsigned) s.color, (int) (su * 1000), (int) (sv * 1000));
+    }
+    return 1;
+}
+#endif
+#if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES
 extern "C" int re4dc_esp_sprite_class(cEsp* esp)
 {
+#if defined(RE4DC_RAIN_PS2_SHEET_REF) && RE4DC_RAIN_PS2_SHEET_REF
+    if (esp->m_Id == 0x08 && esp->info.owner == 0xD0 && esp->m_Tex_id == 0xC5 &&
+        (G_ROOM_ID == 0x11A || G_ROOM_ID == 0x11B)) return 1;
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
     if (esp->m_Id == 0x19) return 1;
 #endif

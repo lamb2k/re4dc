@@ -335,6 +335,17 @@ endif
 #                    reference: the PS2's full-screen Esp08 sheet (r11b SST set 3 / r11a set 5, tex 0xC5, a 100), which
 #                    costs a whole translucent screen a frame; the streaks cover ~0.02 screens. Private xorshift
 #                    generator (no Rnd()); shown while the game's Filter06 rain is queued in r11a / r11b. Log "rain dc:".
+# RAIN_PS2_SHEET_REF=1 (lane rain17 2026-10-18; REFERENCE arm for the look and cost of the PS2 rain, NEVER in a recipe;
+#                    needs EFFECT_SPRITES=1): r11a / r11b's rain set drawn as the PS2 draws it, one
+#                    full-screen Esp08 sheet (PS2 r11b.dat EFF#7 SST3 rec 67: tex 0xC5, 700x540 of 512x448, rgb 180 a 100,
+#                    3x1 tiles scrolled (-0.003, -0.090) a frame), as up to 8 native effect sprites (esp_sub.cpp). Log "ps2 sheet:".
+RAIN_PS2_SHEET_REF ?= 0
+ifneq ($(RAIN_PS2_SHEET_REF),0)
+ifneq ($(RAIN_PS2_SHEET_REF)$(EFFECT_SPRITES),11)
+$(error RAIN_PS2_SHEET_REF must be 0 or 1 and needs EFFECT_SPRITES=1)
+endif
+$(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp08.o: GAME_CPPFLAGS += -DRE4DC_RAIN_PS2_SHEET_REF=1
+endif
 RAIN_DC ?= 0
 ifneq ($(RAIN_DC),0)
 ifneq ($(RAIN_DC)$(RAIN_PS2),11)
