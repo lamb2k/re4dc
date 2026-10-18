@@ -100,6 +100,7 @@ static RainDcDrop s_raindc[RE4DC_RAIN_DC_N];
 static Re4dcRainStreak s_raindc_out[RE4DC_RAIN_DC_N];
 static u32 s_raindc_seed = 0x2545F491U, s_raindc_frame, s_raindc_pending, s_raindc_ready, s_raindc_alpha;
 static u32 s_raindc_frames, s_raindc_sent;
+static f32 s_raindc_area;
 static f32 RainDcUnit()
 {
     u32 x = s_raindc_seed;
@@ -142,6 +143,7 @@ static void RainDcFlush()
     }
     const f32 fade = (f32) (s_raindc_alpha > 60 ? 60 : s_raindc_alpha) * (1.0f / 60.0f);
     u32 n = 0;
+    f32 area = 0.0f;
     for (u32 i = 0; i < RE4DC_RAIN_DC_N; ++i) {
         RainDcDrop* p = &s_raindc[i];
         p->y += p->len * 1.1f * (f32) dt;          // about 50 px a frame near, as the PS2 sheet's scroll
@@ -160,11 +162,18 @@ static void RainDcFlush()
         s->w = p->w;
         s->tail = ((a >> 2) << 24) | 0xB4B4B4U;     // PS2 sheet colour 180
         s->head = (a << 24) | 0xB4B4B4U;
+        const f32 t = s->y0 > 0.0f ? s->y0 : 0.0f, b = s->y1 < 480.0f ? s->y1 : 480.0f;
+        if (b > t) {
+            area += (b - t) * s->w;                     // screen area submitted (before depth rejection)
+        }
     }
     s_raindc_sent += re4dc_rain_dc_streaks(s_raindc_out, n);
+    s_raindc_area += area;
     if (++s_raindc_frames % 120 == 1) {
-        re4dc_log("rain dc: frame=%u room=%x streaks=%u sent=%u alpha=%u\n", (unsigned) pG->Frame_cnt,
-                  (unsigned) pG->room_id, (unsigned) n, (unsigned) s_raindc_sent, (unsigned) s_raindc_alpha);
+        re4dc_log("rain dc: frame=%u room=%x streaks=%u sent=%u alpha=%u area_px=%u mean_screens_x1e4=%u\n",
+                  (unsigned) pG->Frame_cnt, (unsigned) pG->room_id, (unsigned) n, (unsigned) s_raindc_sent,
+                  (unsigned) s_raindc_alpha, (unsigned) area,
+                  (unsigned) (s_raindc_area / (f32) s_raindc_frames * (10000.0f / 307200.0f)));
     }
 }
 #endif
