@@ -1,41 +1,56 @@
 # Lane trans17: the game-wide transparency policy (Test 17)
 
-Design: `C:\Game Dev\Emulators\TRANSPARENCY-PLAN-20261017.md`. Branch `lane/trans17` (base origin/t15/int cbdde6de).
-Coordinator decisions (10-17): the class table lives in a separate sidecar (ps2-world.r4tc), with no package or image
-change. Tier 2 thresholds: <= 1.0 % of pixels changed, nothing changed outside a 2-px dilation of the converted
-geometry's silhouette, and a max delta of 24/255 inside it. Tier 3 items wait for the user: flat walls over the
-threshold, extending foliage Near beyond ch1, and the island. Equal-header merges stay out (they would change packages).
+Design: `C:\Game Dev\Emulators\TRANSPARENCY-PLAN-20261017.md`. Branch `lane/trans17`, rebased onto t15/int b5537823
+(FOLIAGE_NEAR_FIX now comes from t15/int). Evidence: C:\Flycast-Evidence\re4-dreamcast\trans17-20261017.
+Coordinator decisions (10-17):
+- The class table is a separate sidecar; no package or image change.
+- Tier 2 thresholds: <= 1.0 % of pixels changed, nothing changed outside a 2-px dilation of the silhouette, max delta
+  24/255 inside it.
+- Tier 3 items go to the user. Equal-header merges stay out.
+- Use a per-disc index, not a sidecar in every room.
 
-## Built (phase 1, b197ea77)
+## Built
 
-- `TRANS_POLICY=<mask>` (game/hwfog.mk). Unset or 0 = no code, identical image. Built bits:
-  - 1 FLAT: uniform 14/15-alpha parts and fully opaque textures in the translucent pass draw opaque (Tier 2);
-  - 128 DROP: translucent parts whose texture has alpha 0 everywhere are not drawn (Tier 1; no such part exists in
-    the 66 packaged rooms, so it is a guard for future rooms).
-  Bits 2/4/8/16/32/64 make the build stop with an error until they are built. The old knobs keep their code, and the
-  alias table is in hwfog.mk.
-- Runtime (`platform/native_static.cpp` `trans::`): reads `/cd/dc/native/rXXX/ps2-world.r4tc` (R4TC v1, bound to
-  the R4PW body crc). It adds the opaque-pass bit to the PS2_PASS_MASK byte of placements holding a moved part. The
-  runtime word is `re4dc_trans_policy`, the warp line is `trans <mask>`, and the log lines start `trans:`.
-  Vertex-alpha parts never move, and FOLIAGE_TRIM's choice wins. After a movie-arena re-adopt the policy is idle
-  (no I/O is allowed on that path).
-- `tools/d367/tr_classify.py`: the class of every part, written as sidecars plus TRCLASS.tsv. It is deterministic
-  (`--check`) and has a coverage gate (`--strict`).
-- `tools/d367/tr_pixdiff.py`: the Tier 2 gate with the thresholds above. Pure Python: PNG/PPM input, JSON output,
-  heat PNG.
+- **`TRANS_POLICY=<mask>`** (game/hwfog.mk). Unset = no code, identical image. The runtime word is
+  `re4dc_trans_policy`; warp lines `trans <mask>` and `transfar <low%> <high%>`.
+  - 1 FLAT: uniform 14/15 alpha parts and fully opaque translucent-pass textures draw opaque.
+  - 2 CARD: CARD_NEAR parts (texel alpha error <= 0.08) draw punch-through.
+  - 4 SOFTA: CARD_SOFTA parts (error 0.08-0.15) draw punch-through.
+  - 8 FAR: passes 1-2 stop where this frame's loaded PVR fog table reaches `re4dc_trans_far_pct` (default 70 % for
+    cards moved to punch-through, 90 % for the rest; vertex-alpha and opaque parts are untouched).
+  - 128 DROP: parts whose texture is alpha 0 everywhere are not drawn (none in any packaged room).
+  - 16 VA, 32 FX, 64 WATER: refused until built.
+- **`TRANS_POLICY_DEBUG=1`** (test arms only): `transdbg <class mask>` drops those classes in any pass. A still taken
+  with it is the silhouette input for `tr_pixdiff.py --mask-diff`.
+- **Sidecars:** `dc/native/rXXX/ps2-world.r4tc` (R4TC v1, bound to the R4PW crc) plus the disc index
+  `dc/native/trclass.idx` (R4TI). The index is read once, so a room without a sidecar costs no file open.
+- **Tools:** `tools/d367/tr_classify.py` (deterministic; `--check`, `--strict`; writes the sidecars, TRCLASS.tsv and
+  trclass.idx) and `tools/d367/tr_pixdiff.py` (the Tier 2 gate; pure Python).
 
-## Evidence
+## Gates (10-17)
 
-- Knob-off identity with T15_ST="": the rP image 52f7b2d14ea1d221 and the rW image 643ed2357201c228 are identical
-  between base cbdde6de and the lane. The TRANS_POLICY=129 rW arm links with missing=0 and _end +1,376 B.
-  Logs: /root/probe/trans17/k.
-- Classification: C:\Flycast-Evidence\re4-dreamcast\trans17-20261017\classify (66 rooms). It is deterministic, and
-  all 2,634 translucent texture classes agree with the plan's census. FLAT is r109 769 KB and r119 791 KB.
-- Foliage pass-mask question (10-17): with PS2_PASS_MASK=1, Near cards in placements whose only parts are
-  translucent are drawn in no pass. This is fixed by FOLIAGE_NEAR_FIX (lake17, 2f26b834/49f205f2), which is ON in
-  16.4 but NOT in t15/int: t15/int needs it merged before Test 17.
+- **Knob-off identity, T15_ST="":**
+  - cbdde6de: rP 52f7b2d1 / rW 643ed235, identical between base and lane;
+  - 509076dc: rP 5be87ce8 / rW 5b949dd0, identical between base and lane.
+  - b5537823 changes hwmodel tools only.
+- **STRICT trio** (TRANS_POLICY=15 on, sidecars and index on the base, SS_CLOSE_HOLD with `sshold 1232` on h2):
+  - h2 and bell: MUST-IDENTICAL.
+  - door103: STRICT; decisions differ only at ep@1176, which land17 shows between two knob-off runs (run noise).
+- **Look** (frozen frames, A = trans 0, silhouette = transdbg):
+  - FLAT: r109 tier 3 (28 % changed, max 107); r119 tier 3 (2.4 %, max 82). Stills are in flat\.
+  - CARD: r100 / r101 0 px changed; r109 tier 3 (0.10 %, max 33, 4 px outside the mask); r119 under its frozen-frame
+    noise (r119 A vs A repeats differ, so its numbers are not usable).
+  - SOFTA: r100 / r101 / r109 0 px changed (FOLIAGE Near already moves the near ch1 cards).
+  - FAR: r100 / r101 / r109 0 px at 70/90; r100 0.002 % (max 8) at 50/70: tier 2. The cuts land at 23.5 / 25.0 m
+    (70/90) or 22.2 / 23.5 m (50/70) against the 25 m fog far, so FAR removes almost nothing.
+- **Flycast ms:**
+  - FLAT: r109 CPU 47.4 ms in both arms, r119 41.0 ms in both.
+  - CARD / SOFTA / FAR: same draw count in passes 1-2 or fewer clusters only at 22-25 m. No CPU change is expected;
+    the gain is GPU fill and console-only.
 
-## Next (phase 2)
+## Open
 
-Stage the r109/r119 sidecars, run TRANS_POLICY=1 against 0 and judge each with tr_pixdiff, Flycast ms (labelled
-Flycast), the STRICT trio, then Part B census rooms r100 / r101 / r109 / r119 / r11e / r200.
+- FLAT and CARD (r109) are tier 3, so the decision is the user's.
+- Every class is GPU-only: it needs a console benchmark disc with `trans` warp arms.
+- r119 frozen-frame noise needs a deterministic view.
+- r11e / r200 are not on the 16.3 base.
