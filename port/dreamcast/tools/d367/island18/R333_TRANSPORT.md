@@ -28,3 +28,16 @@ r333/ski2 (59.14s) adds the18 absent standalone source keys. Entry/world/no_fata
 At tick767: VRAM315168 pinned/1846304 dynamic/315840 free/288768 largest,152 loads stable after startup,0eviction/retry/refusal. Heap4 minimum/largest2467168; actual49152B KOS held, minimum total KOS43656/top42784. These are sampled entry figures, not ride residency proof.
 
 Evidence root C:/Flycast-Evidence/re4-dreamcast/island18-20261018: h-i18f3/scenarios/cx-r333-walk-ski{1,2}; identity/r333-module-off-identity.json; r333-module-matrix.json; r333-source-event-durations.json; r333-original-trigger-areas.json. Source draft pins in r333-module-draft. Per-disc packaging and boss models remain separate owners.
+
+
+## Real boarding exposed a constructor trap (H-013)
+
+Source area0xE interior plus ordinary A input opens the key screen, uses the source-granted key and calls ride(). Static entry did not exercise this path. On i18f3mW ride1 (59.25s), this produced NULL motion/effect owners, no-parts warnings and a model.cpp1907 alignment HALT at frame368. Exact target compilation shows implicit derived value-initialisation emitted memset(em,0,3552) before cEm's constructor, erasing EmMgr's already-assigned subArc/id. The existing pl0f route fix uses default-initialisation on Dreamcast; pl0e now uses the same guarded pattern. PPC construction remains unchanged. No controls, clocks, rail, collision, crash or motion logic changed.
+
+Exact before/after SH4 assembly in C evidence pl0e-constructor-draft confirms the3552-byte memset is removed while the base constructor and vtable installation remain. Fresh target i18f4mW ELF3114395e23b6bf1d3d49e4a415d4d02e2427120c7e62d78bf8d29429dea1d2ee, _end8c3cfcb8/missing0. Fresh T15REC i18d10rP program+10overlays remain byte-identical7d7c05ab, evidence identity/pl0e-constructor-off-identity.json.
+
+Same physical key-use rig ride2 (59.03s) now has no HALT/FAULT/MISSING, no NULL-motion/no-parts/PL0E-owner warnings. Ski class0e identity/hp1000 survives; source routine1/0 waiting ->1/1 boarding ->1/2 rail run. Position moves from(-674136,-26663,-551098) to(-517234,-26663,-607975), then ordinary forward input hits a wall and source routine1/4 sets player life0. That crash is preserved, not bypassed. Boarding+rail progress is observed; ride completion is not.
+
+Whole room FAIL: missing material pair263e8f16-1edc3127 (source ski color e8820dbc-32602af6 +mask4302026e-320c9985,256x128),23texture evictions by frame960; no ski/borrowed-rider PS2 contract acceptance. Tick767 VRAM1489568 pinned/946464 dynamic/41280free/6080largest; minfree33120/minlargest3072. Heap4minimum2433792; KOSminimum41496. These are diagnostic pressure figures, not stable-play residency.
+
+New source ride/failure streams1:116/56/57/114 were absent from retained containers. The45-entry private island18-r333-streams-20261018 reuses all41 previous final records exactly, adds4 using the unchanged converter and verified GC stream headers, and remains under the existing56-entry cap. Mirrored SHA256SUMS8e2933290e00384db59b83758274bdc0c92f0248f8322fce06dab16a614dfa2e,68634624bytes. Actual ride2 starts1:116 and crash1:56 without bank refusal. Initial room stream0:49/offset5b18000 is another newly exposed missing profile entry; not a clean-audio gate. No shared packaging or movie hook added.
