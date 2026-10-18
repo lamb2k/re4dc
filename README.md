@@ -45,6 +45,7 @@ Chapters 2-2 and 2-3 are playable, up to the castle gate. Full details are in th
 - **Fewer pauses in fights.** The Ganado animations the fights use load with the room, and Ganados that lose their
   head keep their PS2 model.
 - **Short view distance** draws a simplified far view in the first area and the village.
+- **The small picture missing in r118 is back** ([#37](https://github.com/lamb2k/re4dc/issues/37)).
 
 ## Coming soon: Test 18
 
@@ -53,8 +54,8 @@ Planned, with no date yet:
 - **Chapter 3-1 playable:** the castle's first part, past the gate.
 - **A lighter El Gigante** in both fights.
 - **Fixes:** a few effect pictures missing in r102 right after loading a save
-  ([#33](https://github.com/lamb2k/re4dc/issues/33)); the small missing picture in r118
-  ([#37](https://github.com/lamb2k/re4dc/issues/37)); pictures still loaded from the disc during the first house
+  ([#33](https://github.com/lamb2k/re4dc/issues/33));
+  pictures still loaded from the disc during the first house
   fight (r100) and at the night lake shore (r11b); the Mendez cutscene that ends a little early; effect
   sprites missing on the way to the castle gate.
 - **Work continues** on cheaper enemies and cheaper scenery.
