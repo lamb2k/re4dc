@@ -234,6 +234,18 @@ static inline int aliveCapGanado(int id)
     return id >= 0x10 && id <= 0x20;
 }
 
+// I-006 (user 2026-10-18): castle Novistadors share the Ganado budget.
+// Reuse the held ESL queue, never park an existing Novistador: castle room
+// scripts retain wrappers/pointers and parking would retire their work.
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+static inline int aliveCapEnemy(int id)
+{
+    return aliveCapGanado(id) || (pG->stage_no == 2 && id == 0x2D);
+}
+#else
+#define aliveCapEnemy aliveCapGanado
+#endif
+
 // A held entry still waiting: not set, of the current room, and (start-list holds) still alive in the list.
 static int aliveCapWaitingK(int k)
 {
@@ -281,7 +293,7 @@ static void aliveCapNoteFresh(cEm* em, int no)
     int k, slot = 0;
     u32 oldest = 0;
 
-    if (em == 0 || em == errEm || !aliveCapGanado(em->id) || !aliveCapRoom()) {
+    if (em == 0 || em == errEm || !aliveCapEnemy(em->id) || !aliveCapRoom()) {
         return;
     }
     for (k = 0; k < ALIVE_CAP_FRESH; k++) {
@@ -310,7 +322,7 @@ static int aliveCapLive()
     for (i = 0; i < EmMgr.nArray; i++) {
         cEm* em = emSetWork(i);
         if (!em) continue;
-        if (aliveCapGanado(em->id) && em->isAlive() && em->checkStatus(EM_STATUS_ACTIVE) != 0) {
+        if (aliveCapEnemy(em->id) && em->isAlive() && em->checkStatus(EM_STATUS_ACTIVE) != 0) {
             cnt++;
         }
     }
@@ -320,7 +332,7 @@ static int aliveCapLive()
         if (em == 0) {
             continue;
         }
-        if ((u32) (pG->Frame_cnt - aliveCapFreshF[k]) >= 600 || !em->isAlive() || !aliveCapGanado(em->id) ||
+        if ((u32) (pG->Frame_cnt - aliveCapFreshF[k]) >= 600 || !em->isAlive() || !aliveCapEnemy(em->id) ||
             em->emset_no != aliveCapFreshNo[k] || em->checkStatus(EM_STATUS_ACTIVE) != 0) {
             aliveCapFreshEm[k] = 0;   // active (counted above), gone, reused or old
             continue;
@@ -604,7 +616,11 @@ extern "C" void re4dc_aliveCapMove(int busy)
         if (live > pk) {
             pk = live;
             OSReport("alivecap: peak %d room %03x frame %u held %d\n", live, (unsigned) pG->room_id,
-                     (unsigned) pG->Frame_cnt, re4dc_aliveCapHeldCount(0x10, 0x20));
+                     (unsigned) pG->Frame_cnt, re4dc_aliveCapHeldCount(0x10, 0x20)
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+                     + (pG->stage_no == 2 ? re4dc_aliveCapHeldCount(0x2D, -1) : 0)
+#endif
+                     );
         }
     }
 #endif
@@ -703,7 +719,7 @@ extern "C" int re4dc_aliveCapDefer(int no, int id)
 {
     int k;
 
-    if (aliveCapReleasing || !aliveCapGanado(id) || !aliveCapRoom() || aliveCapKeep(no)) {
+    if (aliveCapReleasing || !aliveCapEnemy(id) || !aliveCapRoom() || aliveCapKeep(no)) {
         return 0;
     }
     if (aliveCapLive() < RE4DC_ALIVE_CAP_N) {
@@ -789,7 +805,7 @@ void EmSetFromList()
             continue;
         }
 #if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
-        if (capLive >= 0 && aliveCapGanado(d->id)) {
+        if (capLive >= 0 && aliveCapEnemy(d->id)) {
             if (capLive >= RE4DC_ALIVE_CAP_N && aliveCapN < (int) sizeof(aliveCapHeld)) {
                 aliveCapPush((int) i, 0);
 #if RE4DC_ALIVE_CAP_LOG
