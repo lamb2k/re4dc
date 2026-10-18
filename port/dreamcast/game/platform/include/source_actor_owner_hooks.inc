@@ -6,9 +6,10 @@ extern "C" int re4dc_actor_transaction_identity(cModel* m,re4dc_source::FrameIde
         static unsigned inactive_leon_notes;
         if(m==(cModel*)pPL && inactive_leon_notes<8){
             ++inactive_leon_notes;
-            re4dc_log("SOURCE_ACTOR_INACTIVE t=%u room=%02x%02x active=%u render=%u count=%u epoch=%u status=%08x/%08x display=%08x\n",
+            re4dc_log("SOURCE_ACTOR_INACTIVE t=%u room=%02x%02x active=%u render=%u count=%u epoch=%u rno=%u system=%08x status=%08x/%08x display=%08x\n",
                 unsigned(pG->Frame_cnt),unsigned(pG->stage_no),unsigned(pG->room_no),
                 unsigned(sourceActorActive),unsigned(sourceActorRenderActive),sourceActorCount,sourceActorEpoch,
+                unsigned(pG->Rno0),unsigned(pG->System_flg),
                 unsigned(pG->Status_flg[1]),unsigned(pG->Status_flg[2]),unsigned(pG->Disp_flg));
         }
 #endif
