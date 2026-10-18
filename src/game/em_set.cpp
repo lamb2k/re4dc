@@ -9,6 +9,9 @@
 #include "em_set.h"
 #include "global.h"
 #include "db_log.h"
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+#include "flag_rsf.h"
+#endif
 
 extern cEm* pPL;   // game/em.cpp
 
@@ -244,6 +247,29 @@ static inline int aliveCapEnemy(int id)
 }
 #else
 #define aliveCapEnemy aliveCapGanado
+#endif
+
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+// r213's statue callback acts on every wrapper, including held sends. Restore
+// its persistent source state on later admission, after the original first
+// move: C5/C8 must die through their own routine, never vanish from the queue.
+static void aliveCapRestoreNovisRoom(cEm* em, int no)
+{
+    if (!aliveCapReleasing || !em || em == errEm || em->id != 0x2D) {
+        return;
+    }
+    // r205_Em88Appear sets this alert flag immediately after its send.
+    if (pG->room_id == 0x205 && no == 0x58 && RsfCheck(0x205, 8)) {
+        em->flag |= 1;
+    }
+    if (pG->room_id != 0x213 || no < 0xC2 || no > 0xCA || !RsfCheck(0x213, 2)) {
+        return;
+    }
+    em->flag |= 0x20000000;
+    if (no == 0xC5 || no == 0xC8) {
+        em->hp = 0;
+    }
+}
 #endif
 
 // A held entry still waiting: not set, of the current room, and (start-list holds) still alive in the list.
@@ -892,6 +918,9 @@ cEm* EmSetFromList2(int no, int chkDead)
     em->move();
 #if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
     aliveCapNoteFresh(em, no);
+#if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
+    aliveCapRestoreNovisRoom(em, no);
+#endif
 #endif
     return em;
 }

@@ -362,7 +362,7 @@ endif
 $(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/sce_com.o $(OBJDIR)/src/game/sce_sys.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP=$(ALIVE_CAP) -DRE4DC_ALIVE_CAP_R101=$(ALIVE_CAP_R101) -DRE4DC_ALIVE_CAP_LOG=$(ALIVE_CAP_LOG)
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_N=$(ALIVE_CAP_N)
 ifneq ($(ALIVE_CAP_NOVIS),0)
-$(OBJDIR)/src/game/em_set.o $(OBJDIR)/mod/st2_3/src/st2/r21d.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_NOVIS=$(ALIVE_CAP_NOVIS)
+$(OBJDIR)/src/game/em_set.o $(OBJDIR)/mod/st2_1/src/st2/r205.o $(OBJDIR)/mod/st2_3/src/st2/r21d.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_NOVIS=$(ALIVE_CAP_NOVIS)
 endif
 ifneq ($(or $(ALIVE_CAP_PARK),0),0)
 $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_PARK=1
