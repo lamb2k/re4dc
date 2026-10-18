@@ -457,15 +457,21 @@ if os.path.exists(C16D + '/cast16-data.json'):
 # (model-registry/ps2-ch1-r108p.json; NATIVE_MODEL_REGISTRY_POOL, in T15REC) instead of the non-pool ganado-em17-0c.
 # r108 spawns em17 0xc holding a weapon (grip hand 0x1c8): the non-pool rows refused it (NMRU roles) and the GameCube
 # model drew on every pass. Its 4 textures are already in pak17's tex.pak (r113p / r118p), so no loose texture.
-R108PD = os.environ.get('R108PD', '/root/re4data/private/castgc17-20261017/r108p')
+# Data defaults (release lane rel17b, 10-18): the sets recovered after the 10-17 wipe (lane data17,
+# TEST17-DATA-20261018.md; C: twins re4-assets-private/<set>-20261018 with SHA256SUMS): r108p, pak17, zr17, zr17b, v101,
+# res17g. The old -20261016 / -20261017 dirs are gone.
+R108PD = os.environ.get('R108PD', '/root/re4data/private/r108p-20261018')
 DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
 # lane stump17 (10-17): ACTOR_GANADO_PS2_STUMP's variant package (the exact PS2 lost-head stumps of the five cast
 # appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
 STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')
 DATA['stump17'] = {'dc/native/ganado/ganado_var.re4gv': STUMP17D + '/ganado_var.re4gv'}
-PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261016')
+PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261018')
 DATA['pak17'] = {'dc/tex.pak': PAK17D + '/tex.pak'}
-DROP_LOOSE = {'pak17': PAK17D + '/loose-keys.txt'}
+# pak17-20261018: tex.pak is verified (52d9b001); loose-keys.txt and base.json were regenerated (no recorded sha) and
+# sit in regen/ until promoted. The drop-loose staleness check below is what accepts them.
+_PAK17L = PAK17D + '/loose-keys.txt'
+DROP_LOOSE = {'pak17': _PAK17L if os.path.exists(_PAK17L) else PAK17D + '/regen/loose-keys.txt'}
 LOOSE = re.compile(r'^dc/tex/[0-9a-f]/([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
@@ -554,14 +560,17 @@ T17_DATA = T15_DATA + ',ch2,cast16,r108p,pak17'
 #   dc/resident.bin = the ch2 method (resident_keys.py pack of vram/resident/*.tsv, then water_resident.py pack) with
 #     r101.tsv / r103.tsv extended by the fights' first-sight keys (resident_keys.py list of the lane's runs).
 #   Only the flag words and table CRCs change in the archives (same clip payloads, same sizes): residency, not logic.
-ZR17D = os.environ.get('ZR17D', '/root/re4data/private/zeroread17-20261017')
+ZR17D = os.environ.get('ZR17D', '/root/re4data/private/zr17-20261018')
 DATA['zr17'] = {'em/em15.drs': ZR17D + '/em15.drs', 'em/em12.drs': ZR17D + '/em12.drs', 'dc/resident.bin': ZR17D + '/resident.bin'}
+# zr17-20261018 (recovered 10-18) has only em15.drs: its em12.drs (zr17b's replaces it) and resident.bin (v101's /
+# res17g's replace it) were lost and never reach a T17V_DATA disc. Stage only the files the set has.
+DATA['zr17'] = {k: v for k, v in DATA['zr17'].items() if k == 'em/em15.drs' or os.path.exists(v)}
 T17Z_DATA = T17_DATA + ',zr17'   # zr17 last: it replaces acc12's em15 / em12 and ch2's resident.bin
 
 # lane zeroread17b (2026-10-17): em13 (r104), em17 (r108 / r118) and em12 (r100 + r103 + r11a, shared) motion hot flags =
 # the clips those rooms use in play (MOTION_USAGE_LOG + all-cold probe runs; motion/hot/em13-r104.txt,
 # em17-r108-r118.txt, em12-r100-r103-r11a.txt; tools/d367/motion/motion_flags.py: MTC flags + table CRC only).
-ZR17BD = os.environ.get('ZR17BD', '/root/re4data/private/zeroread17b-20261017')
+ZR17BD = os.environ.get('ZR17BD', '/root/re4data/private/zr17b-20261018')
 DATA['zr17b'] = {'em/em13.drs': ZR17BD + '/em13.drs', 'em/em17.drs': ZR17BD + '/em17.drs', 'em/em12.drs': ZR17BD + '/em12.drs'}
 T17ZB_DATA = T17Z_DATA + ',zr17b'   # zr17b last: it replaces acc12 em13 / em17 and zr17 em12
 # Lane vram101 (10-17, data only; merged in land/t17-zr17v): v101 = dc/resident.bin packed from every list of this tree
@@ -569,14 +578,14 @@ T17ZB_DATA = T17Z_DATA + ',zr17b'   # zr17b last: it replaces acc12 em13 / em17 
 # records, sha256 77a7853ef743a557; r101.tsv carries 076e860e, r101's last first-sight picture) + dc/tex.pak = pak17 with
 # the 8 r101 16-bit pictures that reach >= 29 dB as full-codebook VQ (vram/vq17-r101.txt, 40,960 B less VRAM; coordinator
 # 10-17). Goes with VRAM_PAGES_VQ_ONLY=1 (T15_VP in T15REC). Rebuild resident.bin when a list changes.
-V101D = os.environ.get('V101D', '/root/re4data/private/vram101-20261017')
+V101D = os.environ.get('V101D', '/root/re4data/private/v101-20261018')
 DATA['v101'] = {'dc/resident.bin': V101D + '/resident.bin', 'dc/tex.pak': V101D + '/tex.pak'}
 PAK_DERIVED = {'v101': V101D + '/pak-derived.json'}   # v101's tex.pak = pak17 + 8 VQ packages (drop_loose)
 # Lane gatlas17 (10-17, data only): res17g = dc/resident.bin packed again from every list of this tree (vram/resident_keys.py
 # pack vram/resident/*.tsv, then water/water_resident.py pack ... water/resident/*.tsv; 3,996 records, sha256
 # 5cd0e26a2a6c8cde) after r108.tsv gained 6c08f204 (the r108p em17 PS2 atlas, 512x512) and r118.tsv a9d62b83 / 8a4b3f56 /
 # 31db8ccd / d425c598 (64x48): the pictures those rooms loaded in play (GATLAS17-20261017.md). Last: replaces v101's.
-RES17GD = os.environ.get('RES17GD', '/root/re4data/private/gatlas17-20261017')
+RES17GD = os.environ.get('RES17GD', '/root/re4data/private/res17g-20261018')
 DATA['res17g'] = {'dc/resident.bin': RES17GD + '/resident.bin'}
 T17V_DATA = T17ZB_DATA + ',v101,stump17,res17g'   # test 17 data: zr17 + zr17b + v101 (tex.pak) + res17g (resident.bin, last)
 # Lane trans17 / release lane rel17 (10-18, user "With trans17"): trans17 = TRANS_POLICY's sidecars (tools/d367/tr_classify.py
