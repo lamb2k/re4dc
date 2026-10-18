@@ -115,3 +115,77 @@ HEAP4_WATER remains a diagnostic extra. T15REC and CH2REC are unchanged.
 - Boss models are exclusively boss18 under I-005. The prepared r228 fixture
   uses existing full models and the exact emleon05 a506e148 archive; it is a
   diagnostic input, not a completed boss-room gate.
+
+## Current integration and room recovery, 2026-10-18
+
+Merged `origin/t15/int` 293aefcd without conflicts at ba10899e. The current
+T15REC off build c18y1rP has the exact frozen integration boot image
+`a64f194480afa44a19ea7d8d9960e2593b1e21a38bc4773b64bfa31888396e0e`
+and all ten overlays match the independent i18b3rP control. Both have `_end`
+8c4061d8 and no unresolved symbols. Historical identity against 7d7c05ab is
+retained separately. Evidence: `disc1-current293-identity.json` under the C:
+Castle evidence root. Current canonical castle c18y1mW is ELF 7ba732d8,
+`_end` 8c465598, with no unresolved symbols. Private drivers only redirect
+output/registry paths and refuse existing outputs; recipe assignments remain
+literal copies of current source.
+
+The additional unchanged-chapter-2 r11c early walking pair passes STRICT and
+decisions for 366 ticks, with three fired inputs and 1,053.449 source units of
+maximum horizontal displacement after the first input. The initial warp is
+excluded. All four matched chapter-2 pairs stage 4,158 identical files. This
+closes the targeted regression scope; it does not prove full chapter play.
+
+Current Flycast room windows, each requested 55 seconds:
+
+| Room | Observed result | Remaining limit |
+| --- | --- | --- |
+| r203 | Normal native movie START at picture 16, terminal 2; then PS2 zealot draw, zero declines/TEX/Leon fallback and one completed source kill | Full waves, clear and doors unproven |
+| r201 | PS2 em1b draw, zero character fallback/TEX/Leon fallback | Route and combat completion unproven |
+| r218 | PS2 em1c 09h/0ag/0dg draws, zero character fallback/TEX/Leon fallback | Room/FOOT/enemy sound fitting and full route remain |
+| r214 | PS2 em14 draw and zero texture failures with existing res17b | Sound and full route remain |
+| r226 | Nine completed source kills; one em11 eight-info class still declines 48 times | No cast or room acceptance |
+| r22b | All eleven event VQ keys load; TEX 0, no VRAM rejection/retry/eviction, free 531,456 bytes at frame 720 | Character census and full event/route unproven |
+
+The first r203 current attempt reopened the normal Retry/Load menu through an
+inherited post-movie START action; it is not combat proof. The corrected cur2
+fixture removes that obsolete action. Raw NOT-DRAWN output also reports IDs
+41/43 in several rooms; no allowlist was changed and no full-room pass follows
+from the character-only census rows.
+
+`castle18-r22b-event-vq-20261018` regenerates ten missing historical VQ outputs
+and reuses the first new candidate. The verified native input winners and
+pvrtex 95a71290 are pinned; alpha is exact and the historical RGBA PSNR metric
+matches within 0.055 dB. The old output hashes were lost: these are regenerated
+outputs, not byte-verified recovery. The 47-file WSL/C mirror manifest is
+`63ce5d178471b7b59befeb8cdcb5574f20788c75b4a46003eff84af7936aaa7e`.
+A source/VQ/difference sheet is retained for look review. Existing res17b
+98c23bc3 still covers all 116 current resident lists; no resident regeneration
+was needed.
+
+The r205 raw sound bank is now prebuilt through the existing frozen-layout
+fitter. All non-sound bytes, including the prepared motion body and FCVs, are
+identical. The current guest loads bank 8 with zero bank fit failures and zero
+texture failures; the missing SBB 2408000 voice stream remains separate.
+Mirror `castle18-audio-fit-20261018` has manifest 8280ebf7 and archive f0522287.
+Active Novistador camouflage remains refused: changing blend ratio/type and
+Shader_type 1/refraction require a separate renderer contract review. The type-4
+idle result is not generalized. No enemy-drawing or full-audio pass is claimed.
+
+The r214 private sound-only candidate deduplicates one exact source sound ID
+in the host budget: em14/em1a have identical nested MRAM and ARAM banks with
+sndType 8/sndArg 0x11. dvd.cpp calls SndEmDataReadCheck, and snd.cpp skips an
+already loaded ID. All archive files remain staged. The unchanged fitter then
+fits ROOM 100,844 bytes at 16 kHz and FOOT 69,348 at 11,025 Hz into the frozen
+arena, leaving 20,224 bytes. Only those two sound ranges change. Mirror
+`castle18-r214-audio-fit-20261018` has manifest 3178c9ea; runtime gate is pending.
+The separate raw BGM0 and rejected BGM1 are not fixed by this candidate, and
+AICA_SPILL was not enabled without a complete fit.
+
+Higher-thinking model work is queued through the parent for em1a type 08's
+alternate accessories and em3c's source weapon attachments. The r216 package
+itself admits, but its live type-2 weapon BIN 0xC/TPL 0xD is omitted by the
+existing descriptor; source types 1/3 use BIN 0xE/TPL 0xF. No skeleton tolerance,
+role or material admission was relaxed. Existing WARP_JUMP already reaches
+r206 through SceAtExecRoomJump and the 470-picture s20 completes; that is a
+diagnostic transition, not proof of the natural door route. Current integration
+KOS pressure gates are queued separately because its static image grew.
