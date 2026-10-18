@@ -116,7 +116,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test17/release-knobs.txt` (test 17: the test 16.5 recipe plus the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` (`ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1`, El Gigante and Mendez at their lighter level `NATIVE_MODEL_REGISTRY_LOD=1`), `FAR_SHELL=1`, `STAGE_OVL=1 SS_POOL_TOP=1`, `PRIM_BUF_KB=432`, `NATIVE_MODEL_REGISTRY_DYING=1 TEX_PKG_SKIP=1`, `ACTOR_GANADO_PS2_STUMP=1`, `PROP_GATE=1`, `PS2_ASHLEY_ROOMS=2` and `RAIN_DC=1 RAIN_DC_N=320`; the disc data sets are on its `disc-sets` line; its header names the source commit). The maintainers write that file from
+`tools/d367/test17/release-knobs.txt` (test 17: the previous release recipe plus the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` (`ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1`, El Gigante and Mendez at their lighter level `NATIVE_MODEL_REGISTRY_LOD=1`), `FAR_SHELL=1`, `STAGE_OVL=1 SS_POOL_TOP=1`, `PRIM_BUF_KB=432`, `NATIVE_MODEL_REGISTRY_DYING=1 TEX_PKG_SKIP=1`, `ACTOR_GANADO_PS2_STUMP=1`, `PROP_GATE=1`, `PS2_ASHLEY_ROOMS=2` and `RAIN_DC=1 RAIN_DC_N=320`; the disc data sets are on its `disc-sets` line; its header names the source commit). The maintainers write that file from
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
@@ -154,7 +154,7 @@ Either way, measure your change against your own build with the change switched 
 your overlays in place. Everything else on the disc is unchanged. Use a release made from the same or a
 close source revision; a program much newer than the release may need data files the release lacks.
 
-From test 16 on the release disc is a standard GD-ROM image (section 8), and `swap-program.py` keeps it one
+The release disc is a standard GD-ROM image (section 8), and `swap-program.py` keeps it one
 (on an older release disc it appends a longer file after the end of track 3 instead): your
 `1ST_READ.BIN` stays the last file and ends where the release's did; if it is longer, the files it would
 cover move into the free space in front of the first file, and a file that no longer fits its old place
@@ -309,7 +309,7 @@ the decompilation build.
 
 ## 8. Disc image and compatibility
 
-The release disc format from test 16 on (decided 2026-10-16; earlier tests shipped the old layout). Users had reported freezes and crashes on GDEMU
+The release disc format since 2026-10-16 (decided that day; earlier tests shipped the old layout). Users had reported freezes and crashes on GDEMU
 with this game only ([#27](https://github.com/lamb2k/re4dc/issues/27), "LinkOrder"); the image then was laid out by
 our own script and differed from a pressed GD-ROM in several ways (no table of contents in IP.BIN, a data track
 that ended with its last file, the program first instead of last, a non-standard low-density track). The same game
@@ -331,7 +331,7 @@ rename them, and don't mix track files of two tests in one folder. `track03.bin`
 zeros, so the zip is not much bigger than before). If your card manager offers **Shrink GDI**, leave it off: an
 unshrunk image is what we test.
 
-**How the game reads it (test 16 and later).** The game keeps the drive's fast streaming reads (KallistiOS
+**How the game reads it.** The game keeps the drive's fast streaming reads (KallistiOS
 `cdrom_stream_*`, as in tests 14 and 15) and checks that every read really arrived. The first time a stream or sector read
 fails, times out or comes back without its data, the game switches to plain sector reads (one bounded "read N sectors"
 command per request, the way most discs are read) for the rest of the session and never starts a stream again; the
