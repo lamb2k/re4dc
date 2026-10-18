@@ -1125,6 +1125,16 @@ void Trans()
 #endif
 #if RE4DC_COARSE
     coarseTick = re4dc_coarse_tick(re4dc_pace_drop_models);
+#if defined(RE4DC_MCHECK_LEONGC) && RE4DC_MCHECK_LEONGC
+    static unsigned actor_transition_notes;
+    if(pG->stage_no==3 && (!coarseTick || roomSwapped) && actor_transition_notes<8){
+        ++actor_transition_notes;
+        re4dc_log("SOURCE_ACTOR_TRANSITION t=%u room=%02x%02x coarse=%u swapped=%u drop=%u rno=%u system=%08x status2=%08x\n",
+            unsigned(pG->Frame_cnt),unsigned(pG->stage_no),unsigned(pG->room_no),unsigned(coarseTick),
+            unsigned(roomSwapped),unsigned(re4dc_pace_drop_models),unsigned(pG->Rno0),
+            unsigned(pG->System_flg),unsigned(pG->Status_flg[2]));
+    }
+#endif
     // No coarse image of a swapped room: its plan walks EmMgr too (sourceActorPlan).
     if (roomSwapped) {coarseTick = 0;re4dc_coarse_image = 0;}
 #if RE4DC_COARSE_SOURCE_ACTORS
