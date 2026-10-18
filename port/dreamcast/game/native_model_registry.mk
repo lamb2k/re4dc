@@ -787,3 +787,16 @@ $(error ACTOR_CAST_SHADOW_EMPTY needs PS2_LEON=1 ACTOR_TRANSACTION=1 ROUTE_CH3=1
 endif
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_CAST_SHADOW_EMPTY=1
 endif
+
+# RESIDENT_SHARED_R327 (island18, default0): preserve the one audited explicit resident source key that
+# r327 still draws despite its appearance202 registry role fact. No general package-skip policy change.
+RESIDENT_SHARED_R327 ?= 0
+ifneq ($(filter $(RESIDENT_SHARED_R327),0 1),$(RESIDENT_SHARED_R327))
+$(error RESIDENT_SHARED_R327 must be 0 or 1)
+endif
+ifeq ($(RESIDENT_SHARED_R327),1)
+ifneq ($(ROUTE_CH3)$(ROOM_RESIDENT)$(TEX_PKG_SKIP),111)
+$(error RESIDENT_SHARED_R327 needs ROUTE_CH3=1 ROOM_RESIDENT=1 TEX_PKG_SKIP=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_RESIDENT_SHARED_R327=1
+endif

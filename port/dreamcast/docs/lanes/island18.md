@@ -81,3 +81,15 @@ Fresh Flycast i18s2mW (ELF4d033dba3d6c03c4f030e61955d49a4cd75f1816e5e1045b226c21
 r317/skip3 uses ordinary START/chord/mash inputs, passes six chord windows and clears the17-press mash failure bit, then ends final s05 and schedules radio. The resulting wound adds GC ARC0xE/0xF as a tenth info; pl08 expects9 and missing32x16 key8f359de1-44158660 is observed. CAST/TEX/LEON fail; elevated asset/contract investigation is requested through the parent. Skipped movie cancellation lacks most source cancel clips, so this is route-input progress and not visible QTE acceptance.
 
 r327/busy1 with current resident union enters and passes drawn CAST/TEX/LEON checks, but late18,432B key1aad1b6c-e247646e still loads after preload. Existing-knob ownership-skip diagnostic is pending. I-006 adds an explicit alive-vs-drawn enemy gate: recovered r31c CAST pass cannot qualify invisible em39; boss18 owns that model, island18 still owns motion/room progress.
+
+## r327 explicit shared resident key (2026-10-18)
+
+RESIDENT_SHARED_R327(default0, now in island-only recipe) preserves exactly the explicit r327 record1aad1b6c-e247646e/256x256/fmt14 from TEX_PKG_SKIP. It does not disable inferred enemy preloads or any other role-key exclusion. Registry68d1d0e2a5a621d names it as appearance202/bodyrole0/BIN22b/TPL22c/ftex25, but current play still needs the source key.
+
+Fresh Flycast i18s5mW f4ae39095879c2451f87c6aa62c2eff9171d7d47bff7dc3a1f7f31c2f6ea4815, r327/res3, original49,152B KOS held, own staged boot/alloverlays verified: key loads during preload178; total280 loads by180 remain280 through840. No fatal/CAST/TEX/LEON/audio checks pass. Tick767 pinned1,139,040/dynamic767,296/free570,976/largest471,040; peakpinned1,906,336; evictions/retries0/0. No fullroute, all-actors visibility or model-source acceptance. Source8a67905f plus pinned exact override draft; later4ad2113a changes only MCHECK context logging.
+
+Current T15REC off i18d5rP has identical program9dbb2434 and all10 overlay names/sizes/bytes to frozen7d7c05ab. Evidence identity/shared-resident-off-identity.json. Actual extracted source/replaces-key predicates pass1,625 queries on this package. All nonzero identities agree. Null ftex26(0/0,128x128/fmt3) is explicitly rejected by source_key and matched by replaces_key; that pre-existing distinction is retained. Evidence registry-predicate-equivalence.cpp/json.
+
+## Krauser actual-event diagnostic (2026-10-18)
+
+Recovered r2 entry/pressure run ksq1 fits but does not trigger first appearance. Fresh actual source area7/movie rig kev1 uses emlog39: live hp10,000/type1/be03002077 moves and changes routines, with no id39 NMRS draw rows. It is an invisible-enemy FAIL even though drawn CAST/TEX/LEON checks pass. Existing1,423,712B/154clip archive hot67,712B thrashes432+ misses/429+evictions (repeated4/48/50 and4/6/83, one145,657us wait); texture evictions67/retry1. This event window is not a residency or play pass. Hotset/peak-budget audit is next; boss18 owns model visibility.

@@ -3782,7 +3782,17 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
 #endif
             ++resident_listed;
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
+#if defined(RE4DC_RESIDENT_SHARED_R327) && RE4DC_RESIDENT_SHARED_R327
+            // r327 registry appearance202 body BIN22b/TPL22c lists this source key, but live play
+            // still uses it. The explicit resident list is authoritative for this one audited record.
+            // Keep other role-package skips and inferred enemy preloads intact (island18 res2).
+            const bool shared_r327=src.room==0x327u && r.room==0x327u &&
+                r.width==256u && r.height==256u && r.format==14u &&
+                r.crc==0x1aad1b6cu && r.fnv==0xe247646eu;
+            if(!shared_r327 && RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
+#else
             if(RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
+#endif
 #endif
             const Key key{r.crc,r.fnv};
             bool known=false;
