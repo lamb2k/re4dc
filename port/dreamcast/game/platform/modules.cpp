@@ -229,6 +229,7 @@ static const Re4dcModule g_modules[] = {
     {109, "em1f", 0, 0, 0, 0, 0, 0, 0}, // ROUTE_CH3: island Ganados (r304 r30b r30c r30f r311 r321 r330), room overlay
 #endif
 #if defined(RE4DC_ROUTE_FINAL) && RE4DC_ROUTE_FINAL
+    {57, "pl0e", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_FINAL: jet ski (r333), room overlay
     {89, "em31", 0, 0, 0, 0, 0, 0, 0},  // ROUTE_FINAL: Saddler's final form (r332, list 0xA8 / 0xA9), room overlay
 #endif
 #if !(defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23)
@@ -421,7 +422,7 @@ struct RouteOverlay { u8* block; u32 image_bytes; unsigned loads; };
 // em39 (64), em3a (95), em32 (77), em3d (80).
 constexpr u32 kRouteOvlIds[] = {43, 39, 5, 30, 47, 66, 63, 61, 32, 10, 68, 31, 79, 90, 92, 85, 109, 64, 95, 77, 80
 #if defined(RE4DC_ROUTE_FINAL) && RE4DC_ROUTE_FINAL
-    , 89  // ROUTE_FINAL: em31 (Saddler, r332)
+    , 89, 57  // ROUTE_FINAL: em31 (Saddler, r332), pl0e (jet ski, r333)
 #endif
 };
 RouteOverlay g_route_ovl[sizeof(kRouteOvlIds) / sizeof(kRouteOvlIds[0])];

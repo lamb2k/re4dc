@@ -183,7 +183,12 @@ ROUTE_OVL_MODULES=('em2b','em2f','em22','pl11','em1d','em1e','em1f','em36','em39
 # the castle disc's le_mirror build (the code comes from dc/<em>.ovl).
 ROUTE_OVL_MODULES+=('em2d','em25','em3c')
 # em31 uses the ROUTE_FINAL overlay's retained descriptor.
-ROUTE_OVL_MODULES+=('em31',)
+ROUTE_OVL_MODULES+=('em31','pl0e')
+# pl0e (r333 jet ski, module57): texture-only qualification. Top-level TPLs
+# feed modelInit ARC5/6; ARC4 EFF retains its own texture bytes. All FCVs stay
+# resident: ski ARC8..20, player ARC22..35 and Ashley ARC37..49 are borrowed
+# simultaneously through subArc in pl0e.cpp; no streaming/prefetch contract.
+SMALL+=('pl0e.drs',)
 # pl11 (Ashley; PS2_ASHLEY discs, lane ps2cast 2026-10-14): the route overlay dc/pl11.ovl carries her module, so her
 # archive's static REL is stripped against it like the room overlays above.
 # Knob-conditional static modules (Makefile `MODULES +=` under a route knob) whose archives are compacted against
@@ -287,7 +292,7 @@ def prepare(source, destination, hot_slots=(), textures=None, keep_motion_reside
     # pl0f: the release disc carries its whole REL too (pl0f is in no static / overlay module list); it moves intact.
     # em24: the release disc carries its whole REL too (le_mirror keeps it: 394,176 B on the disc = the GC file).
     # em2c / em38 (ROUTE_BOSS4 room overlays): le_mirror keeps their whole REL as for pl0f; it moves intact.
-    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs','em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs','em3b.drs','em31.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
+    if rel and rel+64!=len(body) and name not in ('em2f.drs','pl0f.drs','em24.drs','em2c.drs','em38.drs','em2d.drs','em36.drs','em39.drs','em3a.drs','em32.drs','em3d.drs','em3b.drs','em31.drs','pl0e.drs'):raise ValueError('expected retained 64-byte static REL descriptor')
     original_size,original_base=struct.unpack_from('>I4xI',original,slot+4)
     codec=mirror.motion_codec();ranges=[];entries=[];files={};oversized=[]
     for off in ([] if keep_motion_resident else sorted(set(offsets))):
