@@ -600,6 +600,17 @@ if os.path.isdir(TRANS17D):
         if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS17D, _r)):
             DATA['trans17']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS17D, _r)
 T17T_DATA = T17V_DATA + ',trans17'
+# Release lane rel17b (10-18): res17b = dc/resident.bin packed from every list of lane/rel17b (the res17g method): res17g
+# + r11b d0f964ff (16.5's res165 key, LAKE_NIGHT_FX's torch flame) + the island lists r300..r333 that t15/int carries
+# (RE4DC_RESIDENT_STRICT=1 refused res17g for them); 5,368 records, sha256 98c23bc3. Last: replaces res17g's.
+# The Test 17 release line T17R_DATA; release fixtures stage it over the payload base (--base payload --data T17R_PAYLOAD).
+RES17BD = os.environ.get('RES17BD', '/root/re4data/private/res17b-20261018')
+DATA['res17b'] = {'dc/resident.bin': RES17BD + '/resident.bin'}
+T17R_DATA = T17T_DATA + ',res17b'
+# Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
+# shipped without FAR_SHELL): fsh + every set after T15_DATA.
+T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
+assert T17R_DATA.startswith(T15_DATA + ',')
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
