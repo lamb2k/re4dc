@@ -15,6 +15,52 @@ BASE = '/root/probe/lanes-20261014/t10s/fix/pkg-t10stP.json'
 BASE_LABEL = 't10stP'
 PRIV = '/mnt/c/Game Dev/Emulators/re4-assets-private'
 T11D = '/root/probe/lanes-20261014/t11/data'
+# Payload root (lane payroot18, 2026-10-18): the 10-17 /root wipe removed BASE and most data-set sources. One payload root,
+# extracted from the live release disc (fp_iso.py extract; tree/ = every disc file but 1ST_READ.BIN, MANIFEST-disc.json),
+# replaces them: --base payload (or a missing BASE) builds the base fixture from it. It already carries the release's
+# data sets (16.4 = T16_DATA), so release-equivalent fixtures pass no --data; a named set whose source is gone still fails.
+PAYLOAD_ROOT = os.environ.get('RE4DC_PAYLOAD_ROOT', '/root/re4payload/t164-20261018')
+HARNESS = os.environ.get('RE4DC_HARNESS', '/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/'
+                         'continuation-20260927/playability-r11-r1')
+STAGE_BASE = os.environ.get('RE4DC_STAGE_BASE', '/root/probe/d367-resume-20260927/integration-01/disc-ig27rc1-kite7')
+
+
+def payload_base(label):
+    """Base fixture from the payload root: every payload file whose sha256 differs from the stager's base disc
+    (STAGE_BASE/payload-manifest.json; all files when it is unreadable), the label's route overlays from the harness
+    program dir (candidate-route<label>/, as older fixtures staged them), no 1ST_READ.BIN (the stager adds the arm's)."""
+    man = json.load(open(os.path.join(PAYLOAD_ROOT, 'MANIFEST-disc.json')))
+    try:
+        sb = json.load(open(os.path.join(STAGE_BASE, 'payload-manifest.json')))
+    except (OSError, ValueError):
+        sb = {}
+    sb_sha = {v['sha256'] for v in sb.values()}
+    r, kept, renamed = {}, 0, []
+    prog = os.path.join(HARNESS, 'programs', 'candidate-route' + label)
+    for k, v in sorted(man.items()):
+        if k == '1ST_READ.BIN':
+            continue
+        if k.endswith('.ovl') and k.startswith('dc/') and os.path.exists(os.path.join(prog, k[3:])):
+            r[k] = os.path.join(prog, k[3:])
+            continue
+        if k in sb and sb[k]['sha256'] == v['sha256']:
+            kept += 1
+            continue
+        if k not in sb and not k.isascii() and v['sha256'] in sb_sha:
+            renamed.append(k)  # the Shift-JIS item list name: same bytes on the base under its decoded name
+            continue
+        src = os.path.join(PAYLOAD_ROOT, 'tree', k)
+        assert os.path.isfile(src) and os.path.getsize(src) == v['size'], src
+        r[k] = src
+    # rel17b (10-18): every route overlay of the arm under test, also those the payload's release did not have (Test 17's
+    # STAGE_OVL stage overlays st1_0..st2_0: without them the disc halts "route overlay missing on the disc").
+    if os.path.isdir(prog):
+        for o_ in sorted(os.listdir(prog)):
+            if o_.endswith('.ovl') and 'dc/' + o_ not in r:
+                r['dc/' + o_] = os.path.join(prog, o_)
+    rm = sorted(x for x in sb if x not in man and x.isascii())
+    return dict(replace=r, remove=rm, provenance=dict(payload=dict(root=PAYLOAD_ROOT, stage_base=STAGE_BASE, label=label,
+                same_as_base=kept, staged=len(r), non_ascii_same_bytes=len(renamed))))
 # Named data sets: disc path -> source (a directory value under 'tex' = loose textures). Filled in as each is proven.
 DATA = {
     # A1 r119 dark block: the r119 objects package with only the BIN 0x22 pair (docs/lanes/look.md section 2)
@@ -417,15 +463,21 @@ if os.path.exists(C16D + '/cast16-data.json'):
 # (model-registry/ps2-ch1-r108p.json; NATIVE_MODEL_REGISTRY_POOL, in T15REC) instead of the non-pool ganado-em17-0c.
 # r108 spawns em17 0xc holding a weapon (grip hand 0x1c8): the non-pool rows refused it (NMRU roles) and the GameCube
 # model drew on every pass. Its 4 textures are already in pak17's tex.pak (r113p / r118p), so no loose texture.
-R108PD = os.environ.get('R108PD', '/root/re4data/private/castgc17-20261017/r108p')
+# Data defaults (release lane rel17b, 10-18): the sets recovered after the 10-17 wipe (lane data17,
+# TEST17-DATA-20261018.md; C: twins re4-assets-private/<set>-20261018 with SHA256SUMS): r108p, pak17, zr17, zr17b, v101,
+# res17g. The old -20261016 / -20261017 dirs are gone.
+R108PD = os.environ.get('R108PD', '/root/re4data/private/r108p-20261018')
 DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
 # lane stump17 (10-17): ACTOR_GANADO_PS2_STUMP's variant package (the exact PS2 lost-head stumps of the five cast
 # appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
 STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')
 DATA['stump17'] = {'dc/native/ganado/ganado_var.re4gv': STUMP17D + '/ganado_var.re4gv'}
-PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261016')
+PAK17D = os.environ.get('PAK17D', '/root/re4data/private/pak17-20261018')
 DATA['pak17'] = {'dc/tex.pak': PAK17D + '/tex.pak'}
-DROP_LOOSE = {'pak17': PAK17D + '/loose-keys.txt'}
+# pak17-20261018: tex.pak is verified (52d9b001); loose-keys.txt and base.json were regenerated (no recorded sha) and
+# sit in regen/ until promoted. The drop-loose staleness check below is what accepts them.
+_PAK17L = PAK17D + '/loose-keys.txt'
+DROP_LOOSE = {'pak17': _PAK17L if os.path.exists(_PAK17L) else PAK17D + '/regen/loose-keys.txt'}
 LOOSE = re.compile(r'^dc/tex/[0-9a-f]/([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
@@ -514,14 +566,17 @@ T17_DATA = T15_DATA + ',ch2,cast16,r108p,pak17'
 #   dc/resident.bin = the ch2 method (resident_keys.py pack of vram/resident/*.tsv, then water_resident.py pack) with
 #     r101.tsv / r103.tsv extended by the fights' first-sight keys (resident_keys.py list of the lane's runs).
 #   Only the flag words and table CRCs change in the archives (same clip payloads, same sizes): residency, not logic.
-ZR17D = os.environ.get('ZR17D', '/root/re4data/private/zeroread17-20261017')
+ZR17D = os.environ.get('ZR17D', '/root/re4data/private/zr17-20261018')
 DATA['zr17'] = {'em/em15.drs': ZR17D + '/em15.drs', 'em/em12.drs': ZR17D + '/em12.drs', 'dc/resident.bin': ZR17D + '/resident.bin'}
+# zr17-20261018 (recovered 10-18) has only em15.drs: its em12.drs (zr17b's replaces it) and resident.bin (v101's /
+# res17g's replace it) were lost and never reach a T17V_DATA disc. Stage only the files the set has.
+DATA['zr17'] = {k: v for k, v in DATA['zr17'].items() if k == 'em/em15.drs' or os.path.exists(v)}
 T17Z_DATA = T17_DATA + ',zr17'   # zr17 last: it replaces acc12's em15 / em12 and ch2's resident.bin
 
 # lane zeroread17b (2026-10-17): em13 (r104), em17 (r108 / r118) and em12 (r100 + r103 + r11a, shared) motion hot flags =
 # the clips those rooms use in play (MOTION_USAGE_LOG + all-cold probe runs; motion/hot/em13-r104.txt,
 # em17-r108-r118.txt, em12-r100-r103-r11a.txt; tools/d367/motion/motion_flags.py: MTC flags + table CRC only).
-ZR17BD = os.environ.get('ZR17BD', '/root/re4data/private/zeroread17b-20261017')
+ZR17BD = os.environ.get('ZR17BD', '/root/re4data/private/zr17b-20261018')
 DATA['zr17b'] = {'em/em13.drs': ZR17BD + '/em13.drs', 'em/em17.drs': ZR17BD + '/em17.drs', 'em/em12.drs': ZR17BD + '/em12.drs'}
 T17ZB_DATA = T17Z_DATA + ',zr17b'   # zr17b last: it replaces acc12 em13 / em17 and zr17 em12
 # Lane vram101 (10-17, data only; merged in land/t17-zr17v): v101 = dc/resident.bin packed from every list of this tree
@@ -529,16 +584,39 @@ T17ZB_DATA = T17Z_DATA + ',zr17b'   # zr17b last: it replaces acc12 em13 / em17 
 # records, sha256 77a7853ef743a557; r101.tsv carries 076e860e, r101's last first-sight picture) + dc/tex.pak = pak17 with
 # the 8 r101 16-bit pictures that reach >= 29 dB as full-codebook VQ (vram/vq17-r101.txt, 40,960 B less VRAM; coordinator
 # 10-17). Goes with VRAM_PAGES_VQ_ONLY=1 (T15_VP in T15REC). Rebuild resident.bin when a list changes.
-V101D = os.environ.get('V101D', '/root/re4data/private/vram101-20261017')
+V101D = os.environ.get('V101D', '/root/re4data/private/v101-20261018')
 DATA['v101'] = {'dc/resident.bin': V101D + '/resident.bin', 'dc/tex.pak': V101D + '/tex.pak'}
 PAK_DERIVED = {'v101': V101D + '/pak-derived.json'}   # v101's tex.pak = pak17 + 8 VQ packages (drop_loose)
 # Lane gatlas17 (10-17, data only): res17g = dc/resident.bin packed again from every list of this tree (vram/resident_keys.py
 # pack vram/resident/*.tsv, then water/water_resident.py pack ... water/resident/*.tsv; 3,996 records, sha256
 # 5cd0e26a2a6c8cde) after r108.tsv gained 6c08f204 (the r108p em17 PS2 atlas, 512x512) and r118.tsv a9d62b83 / 8a4b3f56 /
 # 31db8ccd / d425c598 (64x48): the pictures those rooms loaded in play (GATLAS17-20261017.md). Last: replaces v101's.
-RES17GD = os.environ.get('RES17GD', '/root/re4data/private/gatlas17-20261017')
+RES17GD = os.environ.get('RES17GD', '/root/re4data/private/res17g-20261018')
 DATA['res17g'] = {'dc/resident.bin': RES17GD + '/resident.bin'}
 T17V_DATA = T17ZB_DATA + ',v101,stump17,res17g'   # test 17 data: zr17 + zr17b + v101 (tex.pak) + res17g (resident.bin, last)
+# Lane trans17 / release lane rel17 (10-18, user "With trans17"): trans17 = TRANS_POLICY's sidecars (tools/d367/tr_classify.py
+# over the PS2 worlds Test 17 ships): dc/native/rXXX/ps2-world.r4tc per classified room (bound to that room's R4PW crc; a
+# mismatched pair draws today's path) and the disc index dc/native/trclass.idx (R4TI: only rooms that passed the look gate;
+# a room left out of the index draws as today). Stages no texture and no world file. Only with T15_TR (TRANS_POLICY) on.
+# T17T_DATA = T17V_DATA + trans17; every other line is unchanged.
+TRANS17D = os.environ.get('TRANS17D', '/root/re4data/private/trans17-20261018')
+DATA['trans17'] = {'dc/native/trclass.idx': TRANS17D + '/trclass.idx'}
+if os.path.isdir(TRANS17D):
+    for _r in sorted(os.listdir(TRANS17D)):
+        if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS17D, _r)):
+            DATA['trans17']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS17D, _r)
+T17T_DATA = T17V_DATA + ',trans17'
+# Release lane rel17b (10-18): res17b = dc/resident.bin packed from every list of lane/rel17b (the res17g method): res17g
+# + r11b d0f964ff (16.5's res165 key, LAKE_NIGHT_FX's torch flame) + the island lists r300..r333 that t15/int carries
+# (RE4DC_RESIDENT_STRICT=1 refused res17g for them); 5,368 records, sha256 98c23bc3. Last: replaces res17g's.
+# The Test 17 release line T17R_DATA; release fixtures stage it over the payload base (--base payload --data T17R_PAYLOAD).
+RES17BD = os.environ.get('RES17BD', '/root/re4data/private/res17b-20261018')
+DATA['res17b'] = {'dc/resident.bin': RES17BD + '/resident.bin'}
+T17R_DATA = T17T_DATA + ',res17b'
+# Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
+# shipped without FAR_SHELL): fsh + every set after T15_DATA.
+T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
+assert T17R_DATA.startswith(T15_DATA + ',')
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
@@ -605,7 +683,11 @@ def main():
         opt.setdefault(k, []).append(v)
     base = opt.get('--base', [BASE])[0]
     old = opt.get('--base-label', [BASE_LABEL])[0]
-    d = json.load(open(base))
+    if base == 'payload' or (base == BASE and not os.path.exists(BASE)):
+        base, old = 'payload:' + PAYLOAD_ROOT, new
+        d = payload_base(new)
+    else:
+        d = json.load(open(base))
     s = json.dumps(d).replace('candidate-route' + old + '/', 'candidate-route' + new + '/')
     d = json.loads(s)
     r = d['replace']

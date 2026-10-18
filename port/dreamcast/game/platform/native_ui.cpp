@@ -7292,6 +7292,41 @@ extern "C" int re4dc_effect_line(const Re4dcEffectLine* s){
     return 1;
 }
 #endif
+#if defined(RE4DC_RAIN_DC) && RE4DC_RAIN_DC
+// RAIN_DC (effects30.mk, filter06.cpp): the Dreamcast rain streaks. One untextured gouraud TR header, then one
+// 4-vertex strip per streak, straight into the open TR list; only once the source draws finished (gx_stub.cpp
+// GXSetDrawSync 0xADEB), else nothing. Depth tested (GEQUAL on 1/w), no depth write, alpha blended, fog table as
+// the scene. No texture, no frame storage. Returns the streaks sent.
+extern "C" unsigned re4dc_rain_dc_streaks(const Re4dcRainStreak* s,unsigned n){
+    if(!s || !n || !frame_ready || stream_aborted || draining_parts || !source_draws_finished)return 0;
+    alignas(32) pvr_poly_hdr_t hdr;
+    pvr_poly_cxt_t c;pvr_poly_cxt_col(&c,PVR_LIST_TR_POLY);
+    c.gen.culling=PVR_CULLING_NONE;c.gen.shading=PVR_SHADE_GOURAUD;
+    c.depth.comparison=PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_DISABLE;
+    c.blend.src=PVR_BLEND_SRCALPHA;c.blend.dst=PVR_BLEND_INVSRCALPHA;
+#if RE4DC_NATIVE_FOG
+    c.gen.fog_type=re4dc_fog_enabled()?PVR_FOG_TABLE:PVR_FOG_DISABLE;
+#endif
+    pvr_poly_compile(&hdr,&c);
+    stream_select(PVR_LIST_TR_POLY);stream_send(&hdr,sizeof hdr);
+    float sx=1.0f,sy=1.0f;
+#if RE4DC_RES_MODES
+    sx=re4dc_ui_sx;sy=re4dc_ui_sy;
+#endif
+    alignas(32) pvr_vertex_t v[32];unsigned k=0;
+    for(unsigned i=0;i<n;++i){
+        const Re4dcRainStreak& r=s[i];
+        const float hw=r.w*0.5f*sx,x=r.x*sx,y0=r.y0*sy,y1=r.y1*sy;
+        v[k++]={PVR_CMD_VERTEX,x-hw,y0,r.z,0,0,r.tail,0};
+        v[k++]={PVR_CMD_VERTEX,x+hw,y0,r.z,0,0,r.tail,0};
+        v[k++]={PVR_CMD_VERTEX,x-hw,y1,r.z,0,0,r.head,0};
+        v[k++]={PVR_CMD_VERTEX_EOL,x+hw,y1,r.z,0,0,r.head,0};
+        if(k==32){stream_send(v,sizeof v);k=0;}
+    }
+    if(k)stream_send(v,k*sizeof(pvr_vertex_t));
+    return n;
+}
+#endif
 #endif
 #if RE4DC_SUBSCREEN && RE4DC_D349_RENDERER_STACK && RE4DC_PVR_STREAM
 #include "include/subscreen_quad_geometry.hpp"

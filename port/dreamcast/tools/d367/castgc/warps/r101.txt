@@ -8,3 +8,4 @@ ang 2.9600
 find 0x00002000
 inv default
 god
+alivelog 150

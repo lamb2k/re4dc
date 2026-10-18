@@ -11,19 +11,23 @@
 # Output: $P (default C:\Game Dev\Emulators\RE4DC-Test15-Candidate): gdemu\, the GDEMU zip, the Build-Assets zip,
 # README.txt, SHA256SUMS.txt. Not published: the gates run on this package first.
 # Env: L (play label, default t15rcrP), R (work dir), P (output, /mnt/c path), SRC_SHA (default the build's stack.txt),
-#      NOZIP=1 (gdemu folder only; dry runs), PKG_SRC.
+#      NOZIP=1 (gdemu folder only; dry runs), PKG_SRC, TN (test name in the folder and the assets zip, default 15;
+#      test 15.1 hotfix: TN=15.1 L=t151rP R=/root/probe/lanes-20261016/nohaze/k).
 set -e
 R=${R:-/root/probe/lanes-20261016/t15rc}
 L=${L:-t15rcrP}
 O=/root/probe/lanes/route/out-$L
 T=$(cd "$(dirname "$0")/.." && pwd)
-export PKG_SRC=${PKG_SRC:-/root/probe/lanes-20261015/t15k/pkgsrc-t14cand}
+# payload root (lane payroot18, 10-18): RE4DC_PAYLOAD_ROOT/tree replaces the lost pkgsrc-t14cand (fullplay/fp_iso.py extract)
+export RE4DC_PAYLOAD_ROOT=${RE4DC_PAYLOAD_ROOT:-/root/re4payload/t164-20261018}
+export PKG_SRC=${PKG_SRC:-$RE4DC_PAYLOAD_ROOT/tree}
 KF=$T/test15/release-knobs.txt
 SHA=${SRC_SHA:-$(head -1 $O/stack.txt | cut -c1-8)}
 DATE=$(date +%Y%m%d)
-P=${P:-"/mnt/c/Game Dev/Emulators/RE4DC-Test15-Candidate"}
+TN=${TN:-15}
+P=${P:-"/mnt/c/Game Dev/Emulators/RE4DC-Test$TN-Candidate"}
 Z=RE4DC-Console-Test-$SHA-$DATE-GDEMU.zip
-A=RE4DC-Test15-$SHA-Build-Assets.zip
+A=RE4DC-Test$TN-$SHA-Build-Assets.zip
 [ $(wc -l < $O/stack.txt) -le 1 ] || { echo "out-$L was built from a dirty tree"; cat $O/stack.txt; exit 1; }
 [ -d "$PKG_SRC" ] || { echo "PKG_SRC $PKG_SRC is missing"; exit 1; }
 python3 $T/release-knobs.py check $O/candidate.txt $KF || { echo "test15/release-knobs.txt does not match out-$L (rewrite it: release-knobs.py write)"; exit 1; }
@@ -33,7 +37,7 @@ if [ ! -s $R/fix/pkg-$L.json ]; then
   D=$(python3 -c "import importlib.util as u;s=u.spec_from_file_location('t','$T/test11/t11-fix.py');m=u.module_from_spec(s);s.loader.exec_module(m);print(m.T15_DATA)")
   python3 $T/test11/t11-fix.py $L $R/fix/pkg-$L.json --data $D
 fi
-PKG_K=$R python3 /root/probe/lanes-20261011/test8/t8-pkgtree.py $L $R/fix/pkg-$L.json | tee $R/logs/pkgtree-$L.txt | tail -1 | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $R/logs/pkgtree-$L.txt; exit 1; }
+PKG_K=$R python3 $T/test8/t8-pkgtree.py $L $R/fix/pkg-$L.json | tee $R/logs/pkgtree-$L.txt | tail -1 | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $R/logs/pkgtree-$L.txt; exit 1; }
 rm -rf $R/gdemu
 (cd $T && bash mkgdi.sh $O/re4dc-game.elf $R/pkgtree $R/gdemu | tail -1)
 (cd $R/gdemu && sha256sum disc.gdi track01.bin track02.raw track03.bin) > $R/gdemu-sha256.txt
@@ -44,7 +48,7 @@ tr -d '\r' < $T/test15/README-package.txt | sed "s/SHA_PLACEHOLDER/$SHA/g" | sed
 cmp <(cut -c1-64 $R/SHA256SUMS-inner.txt) <(cut -c1-64 $R/gdemu-sha256.txt) && echo tracks-match-ext4-build
 if [ "${NOZIP:-0}" != 1 ]; then
   cd "$P"
-  rm -f RE4DC-Console-Test-*-GDEMU.zip RE4DC-Test15-*-Build-Assets.zip
+  rm -f RE4DC-Console-Test-*-GDEMU.zip RE4DC-Test$TN-*-Build-Assets.zip
   python3 - "$P" "$Z" "$R/SHA256SUMS-inner.txt" <<'E'
 import sys, zipfile, os
 p, z, sums = sys.argv[1:4]

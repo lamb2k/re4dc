@@ -39,7 +39,17 @@ db351823,40fb4deb,135fde2b,a93e8be0,bd57e195 | texture | ch21 | fbec854a-b7656a0
 
 # --- Test 15 release check (t15rel.conf, 2026-10-16) ---
 # The comingsoon segment exists to show the Coming Soon hold on the release build: its Coming Soon line is the goal.
-6b5bc9b0 | route | comingsoon | Coming Soon | t15rel.conf comingsoon: the deliberate door to a room not on the disc (DISC1_ROUTE.md: the game ends at Coming Soon after chapter 2-1)
-# Test 15 release check reset segment (user 10-16: publish; non-blocking): KNOWN_ISSUES r102 row (#33) and the reset row.
-6b5bc9b0,e2048df6 | vram | reset | r102: \d+ thrash-guard refusal | KNOWN_ISSUES "In r102, right after loading a save, a few effect pictures are not drawn" (#33; test 14: 76, test 15: 4)
-6b5bc9b0,e2048df6 | reset-memory | reset | . | KNOWN_ISSUES "After loading a save and resetting, the first room starts with less free memory" (#26; 61,312 B as since test 9)
+6b5bc9b0,0a4ef1b4 | route | comingsoon | Coming Soon | t15rel.conf comingsoon: the deliberate door to a room not on the disc (DISC1_ROUTE.md: the game ends at Coming Soon after chapter 2-1)
+# Test 15 / 15.1 (0a4ef1b4, the same 4 refusals and 61,312 B) release check reset segment (user 10-16: publish; non-blocking): KNOWN_ISSUES r102 row (#33) and the reset row.
+6b5bc9b0,0a4ef1b4,e2048df6 | vram | reset | r102: \d+ thrash-guard refusal | KNOWN_ISSUES "In r102, right after loading a save, a few effect pictures are not drawn" (#33; test 14: 76, test 15: 4)
+6b5bc9b0,0a4ef1b4,e2048df6 | reset-memory | reset | . | KNOWN_ISSUES "After loading a save and resetting, the first room starts with less free memory" (#26; 61,312 B as since test 9)
+# Test 16.4 (release tree 9e8a3780, 10-17): the same three rows; its release check showed them identically on 16.3 (t164-20261017\t163base).
+9e8a3780 | route | comingsoon | Coming Soon | t15rel.conf comingsoon: the deliberate door to a room not on the disc (DISC1_ROUTE.md: the game ends at Coming Soon after chapter 2-1)
+9e8a3780 | vram | reset | r102: \d+ thrash-guard refusal | KNOWN_ISSUES "In r102, right after loading a save, a few effect pictures are not drawn" (#33; 16.3 and 16.4: 5)
+9e8a3780 | reset-memory | reset | . | KNOWN_ISSUES "After loading a save and resetting, the first room starts with less free memory" (#26; 61,312 B as since test 9)
+
+# --- Test 16 release check (t16rel.conf, 2026-10-16): the same three rows for the test 16 programs (9d4a5655, 5339313b, 72871476) and test 16.1 (ad3ea515): the
+# deliberate Coming Soon hold, and the reset segment's r102 (#33) and reset-memory (#26) rows, which test 16 does not change. Test 16.2: program a8cf395d, its release build tree 968c7bd8 (the 16.2 data prep; same program image f214bd94). Test 16.3: program and release build tree 03776737.
+9d4a5655,5339313b,72871476,ad3ea515,d9bec1cc,a8cf395d,968c7bd8,03776737 | route | comingsoon | Coming Soon | t15rel.conf comingsoon: the deliberate door to a room not on the disc (DISC1_ROUTE.md: the game ends at Coming Soon after chapter 2-1)
+9d4a5655,5339313b,72871476,ad3ea515,d9bec1cc,a8cf395d,968c7bd8,03776737 | vram | reset | r102: \d+ thrash-guard refusal | KNOWN_ISSUES "In r102, right after loading a save, a few effect pictures are not drawn" (#33; test 14: 76, test 15: 4)
+9d4a5655,5339313b,72871476,ad3ea515,d9bec1cc,a8cf395d,968c7bd8,03776737 | reset-memory | reset | . | KNOWN_ISSUES "After loading a save and resetting, the first room starts with less free memory" (#26; 61,312 B as since test 9)

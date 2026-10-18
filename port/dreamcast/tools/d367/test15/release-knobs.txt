@@ -2,12 +2,12 @@
 # them (make takes the last value). Written by tools/d367/release-knobs.py write from the release build's
 # out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.
 # @ASSETS@ = the unpacked Build-Assets zip (re4dc-assets/).
-# test: 15
-# tag: test-6b5bc9b0-20261016
-# source: 6b5bc9b0
+# test: 15.1
+# tag: test-0a4ef1b4-20261016-hotfix1
+# source: 0a4ef1b4
 # recipe: port/dreamcast/tools/d367/test15/t15-build.sh
-# image-sha256: d61a9289b39eb90a54efe3514cff3465515bc07bb463fd48e13fa5cdfe0c6a27
-# assets-zip: RE4DC-Test15-6b5bc9b0-Build-Assets.zip
+# image-sha256: d0d6364ae66fdf7fa4582644747410661c5d13d36c66348326f6ccb17eedaa50
+# assets-zip: RE4DC-Test15.1-0a4ef1b4-Build-Assets.zip
 # disc-sets: snd16,res16h,vq16cs,water16h,wv32r101
 LOGIC_TRACE=0
 GAME_DECISION_TRACE=0
@@ -183,6 +183,7 @@ WORLD_VERT=1
 WORLD_VERT_LEVEL=5
 FOLIAGE_TRIM=1
 FOLIAGE_OPTION=1
+HAZE_SPRITE_CUT=1
 IMAGE_PAD_BYTES=0
 DBG_WARP=0
 PC_SAMPLER=0
