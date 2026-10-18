@@ -398,8 +398,14 @@ def main():
             index.append((e.index, len(blob)))
             blob += enc
             print(f"{arc.name}:{e.index} f={info['frames']} {len(e.data)}->{len(enc)} keyang={info['err']['key_ang'][0]:.3f} halfpos={info['err']['half_pos'][0]:.2f}", flush=True)
+        # EDCL v1 file: 'EDCL' u16 version u16 count, count x {u16 entry, u16 frames, u32 offset}, then the
+        # clips (offsets from the file start; each clip 4-byte aligned)
+        head = struct.pack('<4sHH', b'EDCL', 1, len(index))
+        table_size = len(head) + 8 * len(index)
+        body = bytes(blob[8:])
+        table = b''.join(struct.pack('<HHI', ent, clips[k]['frames'], table_size + ofs - 8) for k, (ent, ofs) in enumerate(index))
         with open(os.path.join(a.out, arc.name.replace('.drs', '.edcl')), 'wb') as f:
-            f.write(blob)
+            f.write(head + table + body)
         report['archives'][arc.name] = dict(
             skeleton_entry=int(a.skeleton), bones=model.n_parts, blend_joints=len(model.blend_table or []),
             clips=len(clips), skipped=skipped, fcv_src_bytes=sum(c['src_bytes'] for c in clips),
