@@ -54,3 +54,20 @@ Private verified sets, Windows mirrors under `C:\Game Dev\Emulators\re4-assets-p
 | island18-u3sound-20261018 | e28590f10a07a5d06d5b05ad0a0c9af0a955a1ece3a9e9e6297bf6d5f3fae32a | sound-only derivative, em32 DRS SHA97315b825f1600e82f2f9152b96fbbade04732f22cad9520d509cb1dfdc36035 |
 
 Evidence: `C:\Flycast-Evidence\re4-dreamcast\island18-20261018\h-i18u2\scenarios\cx-r31b-walk-u3s1` and preceding `u3e3` semantic control. Frozen Disc1 T15REC rP post-large program and ten overlays remain byte-identical to 7d7c05ab; `identity/postlarge-identity.json` records actual bytes. Chapter diagnostic recipe is isolated in `tools/d367/island18/recipe.sh`, never T15REC.
+
+## Island residency recovery and first QTE, 2026-10-18
+
+Recovered `resident.bin` SHA5cd0e26a carried zero of the existing nonempty island TSV lists, although entry-only gates passed. The private derivative preserves all 3,996 base/core records and restores 1,371 records from the current 40 tracked island lists. It changes no program or texture bytes. Host coverage of every island list passes. Blob86,016B SHA865aa5cf29fbdd816ef95338d1d3268257281aa8e7989790367cea19700c8088; Windows mirrored set `island18-resident-20261018`, SHA256SUMS6584d997142da2cd0c4d21fd05421ca38254083d2e2d017c3e5b05b35ce1784e.
+
+Fresh Flycast i18u2mW (same ELF16e28e8bad4d61bd) 60-second configured runs, actual staged boot/all overlays checked:
+
+| Scenario | Current result | VRAM tick767 pinned/dynamic/free/largest bytes | Limit |
+|---|---|---|---|
+| cx-r310-walk-res1 | entry/no fatal/CAST/TEX/LEON/short walk PASS; sound refusal0; swap/restore CRC27fd456f | 637024 / 1561632 / 278656 / 251904 | loads160 by final preload181 remain160 through840, eviction/retry0 (previous partial list51/1). Full route/model provenance still unproven. |
+| cx-r30f-walk-res1 | entry/no fatal/CAST/TEX/LEON PASS; sound refusal0; 8 kills and actual cap peak4 with held sends released | 494848 / 780064 / 1202400 / 1163264 | loads172 by final preload181 remain172 through960, eviction/retry0. SceCountEmAlive counts held sends by PS2 design, so its6 is not six active enemies. Full bulldozer completion unproven. |
+
+Sound-only derivatives use the existing frozen arena and preserve every byte outside sound payloads. Set `island18-room-sound-20261018` is mirrored, SHA256SUMSd77eda23649bd7cb18aadfdf0bb1477dbf077738e52db6672cb53ce98e6157f0. em36 EM0 at11,025Hz362,788B/SNR20.3dB leaves234,880B with actual r310 room/Ashley banks. r30f ROOM11,025Hz294,356B/SNR22.0dB and FOOT8,000Hz50,872B/SNR20.2dB leave45,632B with soldier/Ashley. Sound load/play verified; audible quality not user acceptance.
+
+No recovered r317 movie sequences existed. Unchanged converter and existing288x192 full-range policy produced all15 PS2 SFDs s00–s14,42,500,860 seq bytes; s15 is EVD-only (no SFD in source AFS). All transport sizes/frame counts/bounds/source-member hashes verified and immediately Windows mirrored: `island18-r317-movies-20261018`, SHA256SUMSe99170475fe39bdd8c97d544fb0717942e1dc73149b1402c8e64012db0c4c882. Companion PS2 EVDs are retained as analysis, not substituted for GC EVD execution.
+
+Fresh r317/qte1 plays s00 and the s08 failure branch, with failed actual A+X input. qte2 uses actual source L+R/A+B exclusive chord inputs: s00 passes1/19, s07 passes82/96, s09 starts before the capture ends. No state-bit clearing, forced success or validation change. Entry/no fatal/CAST/TEX/LEON pass; complete QTE chain remains open. New room/foot prebuilt set `island18-r317-sound-20261018`, SHA256SUMSb2318c23e6ed8bdedcf4faf43b6549d9fdc0177e542996a95f6375b817628be5, removes both sound refusals in qte2. Movie KOS minima3,192–3,832B remain too low for the required48KiB squeeze. Diagnostic KOS partition twins are next; no recipe change accepted yet.
