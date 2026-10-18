@@ -7,10 +7,14 @@ Door-entry warps (r10b / r10e / r11b) read /tmp/sr1.json (stage_route.py --stage
 import json, os, re, subprocess, sys
 from pathlib import Path
 
-TREE = Path('/root/probe/lanes-20261016/castgc17/port/dreamcast/tools/d367')
-T16 = Path('/root/probe/lanes-20261016/t16src/port/dreamcast/tools/d367')
+TREE = Path(__file__).resolve().parent.parent   # was /root/probe/lanes-20261016/castgc17/... (lost 10-17)
+T16 = Path(os.environ.get('CASTGC_T16', '/root/probe/lanes-20261016/t16src/port/dreamcast/tools/d367'))
 OUT = TREE / 'castgc' / 'warps'
-FIX = Path('/root/probe/lanes-20261016/castgc/k/fix')
+FIX = Path(os.environ.get('CASTGC_FIX', '/root/probe/lanes-20261016/castgc/k/fix'))
+# payload root (lane payroot18, 10-18): RE4DC_PAYLOAD_ROOT (default /root/re4payload/t164-20261018) = the live release disc.
+# With the test 16 source tree gone (T16 missing), the g16 arm's fixtures come from it (t11-fix.py --base payload, no
+# --data: the release disc already carries its data sets).
+PAYLOAD_ROOT = os.environ.get('RE4DC_PAYLOAD_ROOT', '/root/re4payload/t164-20261018')
 OUT.mkdir(parents=True, exist_ok=True); FIX.mkdir(parents=True, exist_ok=True)
 
 # room -> source: ('preset', name) | ('file', path in tools/d367) | ('door', None)
@@ -66,16 +70,17 @@ def data_line(tools, name):
                           check=True, capture_output=True, text=True).stdout.strip()
 
 
-env = dict(os.environ, PKG_SRC='/root/probe/lanes-20261015/t15k/pkgsrc-t14cand')  # warn mode: the 22 short lists are chapter 4 (ch4found), outside this census
-arms = [('g16rW', T16, data_line(T16, 'T16_DATA'), CH1), ('g17rW', TREE, data_line(TREE, 'T17_DATA'), {**CH1, **CH2})]
+env = dict(os.environ, PKG_SRC=os.environ.get('PKG_SRC', PAYLOAD_ROOT + '/tree'),
+           RE4DC_PAYLOAD_ROOT=PAYLOAD_ROOT)  # warn mode: the 22 short lists are chapter 4 (ch4found), outside this census
+g16 = ('g16rW', T16, data_line(T16, 'T16_DATA'), CH1) if T16.is_dir() else ('g16rW', TREE, 'payload', CH1)
+arms = [g16, ('g17rW', TREE, data_line(TREE, 'T17_DATA'), {**CH1, **CH2})]
 for lab, tools, data, rooms in arms:
     print(lab, data)
     for room in rooms:
         e = dict(env)
-        if lab == 'g16rW':
-            pass
+        src = ['--base', 'payload'] if data == 'payload' else ['--data', data]
         r = subprocess.run([sys.executable, str(tools / 'test11' / 't11-fix.py'), lab, str(FIX / ('%s-%s.json' % (room, lab))),
-                            '--data', data, '--warp', str(OUT / (room + '.txt'))], env=e, capture_output=True, text=True)
+                            *src, '--warp', str(OUT / (room + '.txt'))], env=e, capture_output=True, text=True)
         if r.returncode == 0:  # STAGE_OVL images (t15/int f7782076 T15_SO) need st1_x / st2_0 / sscrn: every candidate overlay
             fx = str(FIX / ('%s-%s.json' % (room, lab)))
             r = subprocess.run([sys.executable, str(TREE / 'texchk' / 'fixture_arm.py'), fx, fx + '.tmp', lab],

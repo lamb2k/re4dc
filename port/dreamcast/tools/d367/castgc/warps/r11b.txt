@@ -7,3 +7,4 @@ ang 1.503
 inv default
 act 360 fwd 12
 god
+alivelog 150

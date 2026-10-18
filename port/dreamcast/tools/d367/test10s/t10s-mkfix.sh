@@ -1,11 +1,17 @@
 #!/bin/bash
 # test 10 (small) run fixtures, all from the 9.1 release fixture pkg-r91tP.json
 set -eu
-K=/root/probe/lanes-20261014/t10s
+K=${T10S_K:-/root/probe/lanes-20261014/t10s}
+D=$(cd "$(dirname "$0")" && pwd)
 mkdir -p $K/fix
-cp /mnt/c/Users/lambd/.claude/jobs/1e668c67/tmp/t10s-fix.py $K/t10s-fix.py
-cp /mnt/c/Users/lambd/.claude/jobs/1e668c67/tmp/pakdiff.py /mnt/c/Users/lambd/.claude/jobs/1e668c67/tmp/elfdiff.py $K/
+cp $D/t10s-fix.py $D/pakdiff.py $D/elfdiff.py $K/   # in Git (the job tmp copies are gone)
 P=/root/probe/lanes-20261013/rel91/fix/pkg-r91tP.json
+# payload root (lane payroot18, 10-18): the 9.1 fixture went in the 10-17 /root wipe; without it the base is the payload
+# root's fixture (RE4DC_PAYLOAD_ROOT, t11-fix.py --base payload), which already carries the release data.
+if [ ! -f $P ]; then
+  python3 $D/../test11/t11-fix.py r91tP $K/fix/payload-base-r91tP.json --base payload
+  P=$K/fix/payload-base-r91tP.json
+fi
 FX="python3 $K/t10s-fix.py $P r91tP"
 H2W=/root/probe/impl-20261003/fixtures/h2-late-00-warp.txt
 H2P="/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/continuation-20260927/playability-r11-r1/tour/padscript.txt"

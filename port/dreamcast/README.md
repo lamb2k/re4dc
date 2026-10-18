@@ -1,11 +1,72 @@
 # Resident Evil 4 Dreamcast port
 
-> **Current state (October 16, 2026):** the public build is console test 15. The game plays from New Game to
-> the end of chapter two, part one. For what works and what does not, read the
-> [root README](../../README.md) and [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md); to build, read
-> [CONTRIBUTING-PORT.md](CONTRIBUTING-PORT.md); for goals and decisions, read
-> [D367_THIRTY_FPS_ROUTE.md](docs/D367_THIRTY_FPS_ROUTE.md). The rest of this page is the September 2026
-> engineering history (the r100 cutover milestones) and is kept as a record; its "current" wording is out of date.
+**This folder is the native SH-4 / KallistiOS target: the recovered GameCube game, built for the Dreamcast.**
+
+## At a glance
+
+For players. The full player guide is the [root README](../../README.md).
+
+- **Current build:** Test 17, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest).
+- **Playable:** New Game to the end of chapter 2-3, at the castle gate (r200).
+- **Next:** Test 18, see [Coming soon: Test 18](../../README.md#coming-soon-test-18).
+- **Runs on:** a real Dreamcast with GDEMU, or Flycast.
+- **Problems:** see [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md), and report new ones with the
+  [Game bug form](https://github.com/lamb2k/re4dc/issues/new/choose).
+
+## How the port works
+
+- **Gameplay is the GameCube's.** The recovered game code runs collision, events, game state and AI unchanged.
+  Rendering changes must keep the logic trace identical.
+- **Dreamcast services replace the GameCube's.** Native code handles graphics (PowerVR), audio (AICA), disc reads
+  and VMU saves.
+- **Assets are converted offline.** Room worlds, characters and textures come from the GameCube and PS2 data in
+  Dreamcast formats (VQ, PAL4, PAL8). No game data is committed.
+
+## Build it
+
+1. **Clone with submodules:** `git clone --recurse-submodules https://github.com/lamb2k/re4dc.git`.
+2. **One command:** `bash port/dreamcast/contrib.sh` builds the toolchain once, builds the program and puts it on
+   the latest test disc.
+3. **By hand:** follow [CONTRIBUTING-PORT.md](CONTRIBUTING-PORT.md) (toolchain, `build-public.sh`,
+   `tools/swap-program.py`, disc format).
+
+## Where things are
+
+| Path | What it holds |
+| --- | --- |
+| `game/` | The recovered game build for the Dreamcast and its make knobs |
+| `tools/d367/` | Release recipes, test harness, disc and texture tools ([README](tools/d367/README.md)) |
+| `tools/` | Converters for rooms, characters, textures, audio and movies |
+| `docs/` | Plans, checkpoints and [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md) |
+| `tests/` | Tool unit tests (`python3 -m unittest` in that folder) |
+| `room/`, `motion/`, `kos/` | Early native demos and smoke tests (history below) |
+
+## Developer reading list
+
+- **Goals and decisions:** [D367_THIRTY_FPS_ROUTE.md](docs/D367_THIRTY_FPS_ROUTE.md).
+- **Build recipes and knobs:** [tools/d367/README.md](tools/d367/README.md).
+- **What goes into a test build:** [D367_PLAY_BUILD_CHECKLIST.md](docs/D367_PLAY_BUILD_CHECKLIST.md).
+- **Working rules:** the root [CLAUDE.md](../../CLAUDE.md) and [AGENTS.md](../../AGENTS.md).
+- **Release history:** the [releases page](https://github.com/lamb2k/re4dc/releases) and the "Earlier builds" list in
+  [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md).
+
+## First checks on the host
+
+```sh
+make -C port/dreamcast -f Makefile.host test
+```
+
+This builds a host ABI probe, runs the port-blocker inventory and the tool tests. It does not test the Dreamcast
+runtime. The toolchain bootstrap used by the early milestones is `port/dreamcast/tools/bootstrap_kos.sh --build`
+(details in the history below).
+
+## Engineering history (September 2026)
+
+The notes below are the September 2026 record of the r100 cutover milestones, kept for their measurements and
+commands. Their "current" wording is out of date: the game has moved on to the D367 route and the test releases.
+
+<details>
+<summary>Show the September 2026 engineering history</summary>
 
 This directory contains the native SH-4/KallistiOS target. The GameCube build is
 the behavior/state authority; GC and PS2 provide candidate visual inputs. Dreamcast-native data,
@@ -614,3 +675,5 @@ It verifies the three revisions in `toolchain.lock`, builds only the required
 SH-4 toolchain, builds KOS, and then builds the platform and motion smoke
 executables. The optional ARM toolchain is intentionally excluded until custom
 AICA firmware is needed.
+
+</details>
