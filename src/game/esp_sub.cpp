@@ -1988,8 +1988,16 @@ static f32 Ps2SheetFrac(f32 v)
 {
     return v - (f32) (int) v + (v < (f32) (int) v ? 1.0f : 0.0f);
 }
+static u32 s_ps2_sheet_seen, s_ps2_sheet_notpl, s_ps2_sheet_fade, s_ps2_sheet_tiles, s_ps2_sheet_calls;
 extern "C" int re4dc_ps2_rain_sheet(cEsp* esp)
 {
+    if (esp->m_Id == 0x08 && (s_ps2_sheet_seen++ & 0x3F) == 0) {
+        re4dc_log("ps2 sheet seen: frame=%u n=%u owner=%x tex=%x parts=%d base=%d col_a=%d start_a=%u calls=%u notpl=%u fade=%u tiles=%u\n",
+                  (unsigned) pG->Frame_cnt, (unsigned) s_ps2_sheet_seen, (unsigned) esp->info.owner,
+                  (unsigned) esp->m_Tex_id, (int) (s8) esp->m_Parts_no, (int) esp->m_Size_base_x, (int) esp->m_Col_a,
+                  (unsigned) esp->m_Col_start_a, (unsigned) s_ps2_sheet_calls, (unsigned) s_ps2_sheet_notpl,
+                  (unsigned) s_ps2_sheet_fade, (unsigned) s_ps2_sheet_tiles);
+    }
     if (!(G_ROOM_ID == 0x11A || G_ROOM_ID == 0x11B) || esp->m_Id != 0x08 || esp->info.owner != 0xD0 ||
         esp->m_Tex_id != 0xC5 || !((s8) esp->m_Parts_no >= -8 && (s8) esp->m_Parts_no <= -3)) {
         return 0;
@@ -1998,7 +2006,9 @@ extern "C" int re4dc_ps2_rain_sheet(cEsp* esp)
         return 1;
     }
     EspTexWk* tw = &g_pEspSys->Esp_tex_tbl[0xC5];
+    ++s_ps2_sheet_calls;
     if (!tw->pTpl || tw->pTpl->numDescriptors == 0) {
+        ++s_ps2_sheet_notpl;
         return 1;
     }
     const TEXDescriptor* td = TEXGet(tw->pTpl, 0);
@@ -2019,6 +2029,7 @@ extern "C" int re4dc_ps2_rain_sheet(cEsp* esp)
     const f32 fade = esp->m_Col_start_a ? esp->m_Col_a / (f32) esp->m_Col_start_a : 1.0f;
     const f32 fa = 100.0f * (fade > 1.0f ? 1.0f : fade);
     if (fa < 1.0f) {
+        ++s_ps2_sheet_fade;
         return 1;
     }
     s.color = ((u32) fa << 24) | 0xB4B4B4U;
@@ -2067,6 +2078,7 @@ extern "C" int re4dc_ps2_rain_sheet(cEsp* esp)
             drawn += re4dc_effect_sprite(&s) ? 1 : 0;
         }
     }
+    s_ps2_sheet_tiles += drawn;
     if (++s_ps2_sheet_frames % 120 == 1) {
         re4dc_log("ps2 sheet: frame=%u room=%x tiles=%u argb=%08x su=%d sv=%d\n", (unsigned) pG->Frame_cnt,
                   (unsigned) G_ROOM_ID, (unsigned) drawn, (unsigned) s.color, (int) (su * 1000), (int) (sv * 1000));
