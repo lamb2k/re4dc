@@ -773,3 +773,17 @@ endif
 $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PROP_GATE=$(PROP_GATE)
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_PROP_GATE=$(PROP_GATE)
 endif
+
+# ACTOR_CAST_SHADOW_EMPTY (island18, default0): PS2 Leon can retain his native plan when the source cast-shadow
+# receive predicate is set but no active selected Type4 light can reach the source's frustum test. Any candidate
+# or invalid manager still declines; no projected-light rendering is approximated or dropped.
+ACTOR_CAST_SHADOW_EMPTY ?= 0
+ifneq ($(filter $(ACTOR_CAST_SHADOW_EMPTY),0 1),$(ACTOR_CAST_SHADOW_EMPTY))
+$(error ACTOR_CAST_SHADOW_EMPTY must be 0 or 1)
+endif
+ifeq ($(ACTOR_CAST_SHADOW_EMPTY),1)
+ifneq ($(PS2_LEON)$(ACTOR_TRANSACTION)$(ROUTE_CH3),111)
+$(error ACTOR_CAST_SHADOW_EMPTY needs PS2_LEON=1 ACTOR_TRANSACTION=1 ROUTE_CH3=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_CAST_SHADOW_EMPTY=1
+endif

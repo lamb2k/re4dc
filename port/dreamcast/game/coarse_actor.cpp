@@ -3,7 +3,7 @@
 // native actor representation; no source game data is overwritten.
 #include "global.h"
 #include "model.h"
-#if RE4DC_ACTOR_TRANSACTION_DIAG
+#if RE4DC_ACTOR_TRANSACTION_DIAG || RE4DC_ACTOR_CAST_SHADOW_EMPTY
 #include "light.h"
 #include "shadow.h"
 #endif
