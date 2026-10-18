@@ -24,7 +24,8 @@ gives the PS2 section the GC look for those cards without changing its geometry:
 --atlas-rgba <png> (lane ps2cast 2026-10-14, Ashley): the PS2 texture's own alpha instead of the GC bake. The cast's atlas
 with the PS2 alpha (ps2_ashley.py atlas-rgba.png: PS2 alpha 0x80 = 255) decides and paints the run: a triangle is a hair
 triangle when the atlas alpha under it (corners, edge midpoints, centroid) falls below 128 anywhere, and the pair texture
-samples the atlas colour + alpha at each texel's original UV. Used where the PS2 moved alpha cards into a section whose
+samples the atlas colour + alpha at each texel's original UV. --atlas-alpha-threshold 255 also preserves
+partially transparent PS2 surfaces (default 128 retains the existing hair-card classification). Used where the PS2 moved alpha cards into a section whose
 GC source has several masked materials (Ashley's PS2 hair in GC extra 9). The GC arguments are still read for the record.
 
 Output (<out>/): mask-runs.json (section, triangles per run, keys, coincidence report, inputs), opaque.blob, hair.blob,
@@ -103,8 +104,14 @@ def main():
         ap.add_argument(k)
     ap.add_argument('--size'); ap.add_argument('--max-mm', type=float, default=8.0); ap.add_argument('--ss', type=int, default=2)
     ap.add_argument('--atlas-rgba')
+    ap.add_argument('--atlas-alpha-threshold', type=int, default=128,
+                    help='classify atlas triangles below this alpha (default 128; 255 also preserves partial alpha)')
     ap.add_argument('--multi-mask', action='store_true', help='bake every masked GC material of the section into one pair')
     a = ap.parse_args()
+    if not 1 <= a.atlas_alpha_threshold <= 255:
+        ap.error('--atlas-alpha-threshold must be in 1..255')
+    if a.atlas_alpha_threshold != 128 and not a.atlas_rgba:
+        ap.error('--atlas-alpha-threshold needs --atlas-rgba')
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     cast = Path(a.cast); sec = int(a.section)
     man = json.loads((cast / 'manifest.json').read_text())
@@ -161,7 +168,7 @@ def main():
     if atlas is not None:
         # the PS2 alpha under the triangle: corners, edge midpoints and centroid of its atlas UVs
         wts = np.asarray([[1, 0, 0], [0, 1, 0], [0, 0, 1], [.5, .5, 0], [0, .5, .5], [.5, 0, .5], [1 / 3, 1 / 3, 1 / 3]])
-        hair = np.asarray([bk.sample(atlas, wts @ UV[[k[2] for k in t]])[:, 3].min() < 128 for t in tris])
+        hair = np.asarray([bk.sample(atlas, wts @ UV[[k[2] for k in t]])[:, 3].min() < a.atlas_alpha_threshold for t in tris])
         d = np.zeros(len(tris))
     H_tris = [t for t, h in zip(tris, hair) if h]; O_tris = [t for t, h in zip(tris, hair) if not h]
     if not H_tris:
@@ -305,6 +312,8 @@ def main():
                          hair=dict(triangles=len(H_tris), bytes=len(hblob), sha256=sha(hblob), uv_bytes=len(uvb), **hst)),
                coincident=dict(groups=len(co), cross_material=len(cross), cross_examples=cross[:8]),
                fastpath_sha256=sha(FASTPATH.read_bytes()))
+    if atlas is not None and a.atlas_alpha_threshold != 128:
+        rep['atlas_alpha_threshold'] = a.atlas_alpha_threshold
     (out / 'mask-runs.json').write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps({k: rep[k] for k in ('triangles', 'hair_distance_mm', 'texture', 'keys', 'coincident')}, indent=1))
 

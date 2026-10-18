@@ -412,6 +412,13 @@ PRESETS['armor-em3c-00'] = dict(archive='em3c', sections=[(5, 'body'), (7, 'extr
                                 types=[0, 1], category='registry', model_id=0x3c, lit=True, subset_bones=True, uv_edge_texels=12)
 PRESETS['armor-em3c-02'] = dict(archive='em3c', sections=[(9, 'body'), (0xb, 'extra', 8)], tpl=0xa, rooms=['r216'],
                                 types=[2, 3], category='registry', model_id=0x3c, lit=True, subset_bones=True, uv_edge_texels=12, shift=3)
+# castle18 r205 (2026-10-18): em2d_R0_Init selects each type's own body/TPL. Type 0 has an identical
+# 91-part PS2/GC skeleton; type 2 has 91 PS2 bones / 57 GC parts, with every weighted bone in the shared set.
+# The existing converter checks every shared parent/rest translation and rejects any PS2-only weight.
+PRESETS['novis-em2d-00'] = dict(archive='em2d', sections=[(5, 'body')], tpl=6, rooms=['r205'],
+                                types=[0], category='registry', model_id=0x2d, lit=True, shift=3)
+PRESETS['novis-em2d-02'] = dict(archive='em2d', sections=[(9, 'body')], tpl=0xa, rooms=['r205'],
+                                types=[2], category='registry', model_id=0x2d, lit=True, ps2_superset_bones=True, shift=3)
 PRESETS['novis-em2d-04'] = dict(archive='em2d', sections=[(0xd, 'body')], tpl=0xe, rooms=['r213', 'r21d'],
                                 types=[4], category='registry', model_id=0x2d, lit=True, ps2_superset_bones=True, shift=3)
 # em10.cpp: the robe ModInfoMgr.create(mot[16], mot[17]); the second info create(mot[19] or mot[18], mot[17]); the
@@ -841,6 +848,9 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
     opaque = all(a >= 128 for im in images for a in im['alpha_raw'] if im['index'] in used)
     atlas_rgb = atlas.convert('RGB').convert('RGBA')  # opaque: PS2 alpha 0x80 = 1.0; RGB565 VQ has no alpha
     atlas_rgb.save(out / 'atlas.png')
+    if not opaque:
+        # Preserve authored PS2 partial alpha for the existing mask-run converter.
+        atlas.save(out / 'atlas-rgba.png')
     val['texture'] = dict(tpl_arc=tpl_records[0]['arc'], tpl_bytes=tpl_records[0]['bytes'], tpl_sha256=tpl_records[0]['sha256'],
                           images=[{k: v for k, v in im.items() if k != 'rgba'} for im in images], used=used,
                           atlas=[aw, ah], cells={str(k): v for k, v in cells.items()}, opaque=opaque,
