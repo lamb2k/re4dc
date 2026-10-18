@@ -247,3 +247,74 @@ refraction/blend semantics and BGM1 sample-memory ownership need separate
 review. Full Castle route/doors/waves/clear/residency remains unfinished. All
 original and current ELF/knob/program evidence is mirrored on C; completed own
 objdirs were removed only after exact path, mirror and idle-build guards.
+
+
+## Castle accessory/weapon milestone (2026-10-18, current293)
+
+The requested model variants now pass observed native admission in all four
+rooms. Source commits 9b177f06, 5d333551 and 7824ae04 are pushed to
+`codex/castle18`. The full Castle route remains open.
+
+Seven presets preserve the original PS2 geometry, skeletons, attachment weights,
+source BIN/TPL pairs and complete role pools: em1a types7/8 add 211/220 and
+217/219; em11 type8 adds 211/220 while retaining 213/214; em3c types0/2 add
+weapon C/D and types1/3 add E/F. All127 prior presets are unchanged. The existing
+0.001mm skeleton tolerance, material/role caps and mask limits are unchanged.
+No active attachment was omitted, no admission exception was added, and active
+Novistador camouflage remains refused.
+
+All7 native96KiB/three-pose checks and exact oriented-triangle checks pass. The
+independent raw PS2 audit covers80 source infos: positions/weights/source UV and
+normal order match before existing runtime quantization. The inherited armor
+body edge treatment remains recorded; every new weapon/accessory has zero
+clamped UV corners and zero substituted normals. Seven inspected source/full
+rest-pose sheets are retained; no model reduction or performance claim is made.
+
+r216 also required the existing exact actor-texture preparation. Only the audited
+em3c model TPL ordinals6/8/A/D/F were added to prepare_actor_texture_fixture.py.
+The complete normalized original body matched the previously staged body before
+conversion. All BIN/FCV/SEQ/EFF, parasite TPL4C/57, embedded REL and nested audio
+bytes remain exact. Resident body size changes1558880->1413824 bytes. Output
+em3c.drs is e8b7effe4878d1ecd4b1c108bdb2312501d70c47ac080776564a84296d54da38;
+the18 original source textures use the existing R4NREF/NTR path. The original
+raw-pixel fixture and its strict TPL-ownership refusal are preserved as evidence.
+
+All following gates use unchanged c18y1mW ELF
+7ba732d8476103057b244dbd1ab4bb665b814755437245625cd9364a0bc73685.
+Actual staged boot, every selected overlay, room package and all new atlas keys
+were independently hash checked. Each capture is below60s; no new runtime build.
+
+| Room / scenario | Observed model result | Completed source kills | Limits |
+|---|---|---|---|
+| r208 / cx-r208-walk-var2 | em1a07q450 and08q150 admissions; all refusal reasons0 | 0 | short walk/full clear unproven |
+| r209 / cx-r209-walk-varnear | em1a07q/08q native; all refusal reasons0 | 2 | camera starts near sampled source actors; not an entry route proof |
+| r216 / cx-r216-walk-vartex | armor02w750 and03w446 admissions; all refusal reasons0 | 0 | statue draws; active fight/death/parasite and types0/1 not observed |
+| r226 / cx-r226-walk-var2 | em11 eight-info08h48 admissions; all refusal reasons0 | 10 | complete clear/door unproven |
+
+Observed CAST-GC reports zero unlisted character fallback rows; TEX/Leon/entry/
+no-fatal pass in all4. Native census counts are cumulative per logged class and
+must not be interpreted as actor counts. Sampled living zealots peak at4 in
+r208/r209/r226. The unfiltered NOT-DRAWN result retains7 flagged room/id rows;
+each is source-classified as41door,43box or48barrel at src/game/em.cpp127/133/145.
+There are zero unmatched enemy IDs or unknown high IDs in these samples; no
+checker/allowlist was edited. r216 has no living-enemy sample, so no fight claim.
+
+Last logged pinned/dynamic/free/largest bytes are r2081872160/0/637920/609280
+(preload), r209934816/1272736/269760/233344 (tick), r216704896/193568/1578848/
+1552384 (tick), r2261755808/0/754272/722944 (preload). These are observations,
+not whole-room residency passes. r216 retains2 known AICA bank-fit failures;
+r226 retains its BGM1 converted-slot rejection. Generic firstpass provenance
+still says UNPROVEN; the independent package/texture/program hash proof is
+variants-summary.json, not a fabricated generic overall PASS.
+
+Private data: /root/re4data/private/castle18-cast-variants-20261018 and the same
+set under C:/Game Dev/Emulators/re4-assets-private, sealed with SHA256SUMS.
+Final packages are reg-r208-v2, reg-r209-v2, reg-r216 and reg-r226. r216 additionally
+requires em3c-texture-prepared/em3c.drs plus its textures. Exact fixtures are in
+C:/Flycast-Evidence/re4-dreamcast/castle18-20261018/variants-fixtures; summary,
+CAST report, source/full look sheets and actual staged manifests are alongside.
+
+I-006 is acknowledged: Novistadors share the combined cap4 and extra actors must
+re-queue. r205 cap work and decisions/progress proof remain with the full lane.
+This milestone does not close route/doors/waves/clear, residency, camouflage,
+audio or physical-console acceptance. No knob, T15REC, runtime or release change.
