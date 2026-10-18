@@ -189,3 +189,61 @@ role or material admission was relaxed. Existing WARP_JUMP already reaches
 r206 through SceAtExecRoomJump and the 470-picture s20 completes; that is a
 diagnostic transition, not proof of the natural door route. Current integration
 KOS pressure gates are queued separately because its static image grew.
+
+## Final current-base data and memory checkpoint
+
+All six current293 c18y3mW allocation gates now pass with an actual 49,152-byte
+KOS hold and no OOM/fatal. Minimum total headroom, normal / fragmented: r224
+50,648 / 50,560 bytes; r226 37,528 / 37,440; r227 35,568 / 35,480. These are
+Flycast memory gates, separate from character, audio and route acceptance.
+
+The actual recovered Castle stream winner contained only CH3's 55 entries.
+`castle18-stream-union-20261018` restores the missing eighteen CH4-profile keys
+and observed looping music 0:19: 74 entries, 103,989,248 bytes, within cap80.
+All 55 existing encoded intro/loop images are unchanged; only nineteen absent
+keys were converted with the existing codec. All descriptor rate/channel/length/
+loop fields match the original HED; fixed-point loop seams are recorded. The
+WSL/C mirror manifest is
+`32ee8ed66d032746863d9fdd6400ab8c052503baaed9dd885c1781d3ce8cf371`.
+Fresh r205 starts 0:19 with zero observed underruns. The r203 missing SBB
+1638000 is 0:13, already restored by this same union. Its new cap1 window
+actually plays that music and completes six source kills, with sampled Ganado
+count4 and zero character fallback/TEX/Leon fallback. No full clear or door
+route is claimed.
+
+`castle18-task8-audio-20261018` restores em1c's existing matching AICA bank
+through aica_bank_copy (entire MRAM also matches), and fits r218/r226 ROOM/FOOT
+through the unchanged frozen-layout fitter. Every non-sound byte remains exact.
+Its mirrored manifest is
+`7140eaa1dad357a0966ab68a279a2ddfe62eb961b849ebf1fa4c3f685faf5937`.
+Fresh r218 has zero bank fit/rejection/missing-stream errors, actual music0:31
+with zero observed underruns, three completed source kills, and no character
+fallback through the observed death fades. Fresh r226 completes ten source
+kills and has zero bank fit failures; its previously identified eight-info
+character refusal and BGM1 slot rejection remain. Reusing the already checked
+Island MIDI member7 fixes BGM0 in r214/r226; BGM1 still rejects. No runtime,
+layout enlargement, material limit or AICA_SPILL enable was introduced.
+
+The unfiltered NOT-DRAWN report is retained. Source em.cpp127/133/145 constructs
+41/43/48 as doors/boxes/barrels. The existing character/enemy diagnostic with
+max-id0x3f therefore has no unknown high IDs hidden and reports zero alive
+but never drawn IDs across thirty alive-list samples. CAST-GC still correctly
+fails r205/r209/r226. In particular, GC fallback is not accepted as a PS2 result.
+The r205 samples include five Novistadors: a general cap4 gate or exception is
+not claimed; coordinator scope review is required. Ganado samples in the named
+current rooms peak at4; complete chapter progression remains unproved.
+
+Both r221 and r228 now freshly stage and guest-read exact prepared emleon05
+`a506e148c5ce57b5640f8068299cf1c127422254ff67b26cfdec86143327c6dd`,
+enter without fatal, and pass observed TEX/Leon checks on c18y1mW. Their census
+covers Leon only. Boss activation, drawing and fights remain unproven. r221
+still has three raw sound-bank fit failures; r228 has one raw ROOM-bank failure
+and eighteen missing effect sprite observations. These are recorded, not room
+acceptance. New boss models remain Boss18-owned.
+
+Higher-thinking model handoff is prepared for the em1a alternate accessories,
+em3c weapon attachments and em11 alternate accessory variant. Active Novistador
+refraction/blend semantics and BGM1 sample-memory ownership need separate
+review. Full Castle route/doors/waves/clear/residency remains unfinished. All
+original and current ELF/knob/program evidence is mirrored on C; completed own
+objdirs were removed only after exact path, mirror and idle-build guards.
