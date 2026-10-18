@@ -32,10 +32,10 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | --- | --- | --- |
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 13 |
-| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 | Fixed and checked in our tests; the problem was not console-only | 31 |
+| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 | Fixed and checked in our tests; the problem was not console-only | 32 |
 | 🛠️ In progress | Being fixed now | 0 |
 | 🔍 Investigating | Being reproduced or traced | 2 |
-| ⏸️ Open | Known, not yet worked on | 19 |
+| ⏸️ Open | Known, not yet worked on | 18 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Stability
@@ -91,7 +91,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | The item menu's confirm popup does not look as it did in test 13 | test 14, 15 | ⏸️ Open | |
 | In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 16.5: 4 refused; test 16.3 and 16.4: 5; test 15: 4; test 14: 76) | test 14 to 16.5 | ⏸️ Open: fix planned for a later test (the room's pictures are loaded again in one pass after a save is loaded) | [#33](https://github.com/lamb2k/re4dc/issues/33) |
 | A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3 to 17 | ⏸️ Open: the rooms' resident picture lists miss these pictures; fix planned for a later test | |
-| In r118 one small picture (64x64) is not on the disc, so it is not drawn | test 16.4, 16.5 | ⏸️ Open: found by our texture check; fix planned for a later test | [#37](https://github.com/lamb2k/re4dc/issues/37) |
+| In r118 one small picture (64x64) is not on the disc, so it is not drawn | test 16.4, 16.5 | 🟢 Fixed in test 17: the picture is in the disc's texture package, and our texture check passes in r118 | [#37](https://github.com/lamb2k/re4dc/issues/37) |
 | On the way from r10f to the castle gate (r200), some effect sprites are not drawn for a while because video memory is full, and one world picture fails our texture check. Play continues: the truck, the chapter 2-3 end, the results and the save all work | test 17 | ⏸️ Open: found by our full-play check; fix planned for test 18 | [#39](https://github.com/lamb2k/re4dc/issues/39) |
 | In r106 the four Ganados waiting behind the closed gate are not drawn until they come through it (they are out of view behind the gate) | test 17 | ⏸️ Open: by design for now; found by our new not-drawn check | |
 
@@ -100,7 +100,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
 | The rifle sound is lower quality | all | ⏸️ Open (memory limit) | |
-| The end of a Mendez cutscene (r11f) can cut about 0.1 s early with a short sound gap; play continues | test 17 | ⏸️ Open: fix planned for test 18 | [#38](https://github.com/lamb2k/re4dc/issues/38) |
+| Cutscenes have a short gap in the sound (about 0.15 s). The Mendez cutscene (r11f) ends as soon as you pass its button prompt, as in the original game | test 17 and earlier | ⏸️ Open: fixed for test 18 (the cutscene sound is fully loaded before it starts) | [#38](https://github.com/lamb2k/re4dc/issues/38) |
 | Radio call subtitles lag behind the voice: they fall further behind as the call goes on and end well after it (real console) | test 14 and earlier | 🟢 Fixed in test 16, needs console check: the subtitles counted one GameCube 30 Hz step per drawn frame of the call, while the voice plays in real time, so every call frame slower than 1/30 s put them further behind. They now follow the voice's own clock from the moment it starts sounding. With the call slowed to 15 frames a second on an emulator (a model, not a console measurement): 27 s behind at the end of the first call before, within 0.06 s of the voice through the whole call after (Flycast at full speed: 0.32 s before, 0.03 s after) | |
 | The chapter results music is silent on the third results screen | test 7 and earlier | 🟢 Fixed in test 8: the music that plays after each chapter's results (chapters 1-1, 1-2 and 1-3, on the save screen) is on the disc. The results table itself has no music, as in the original game: the chapter end stops the room music and starts none | |
 | Footsteps and room ambience are silent in r103 (the farm) | test 13, 14 | 🟢 Fixed in test 15: r103's footstep and ambience sounds are converted for the Dreamcast again (ambience 16 kHz, footsteps 11 kHz, the same rates as the other rooms). The later chapter 1 rooms already had theirs | |
