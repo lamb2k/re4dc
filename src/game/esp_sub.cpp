@@ -184,11 +184,35 @@ static int EspOwnerAdmitted(u32 owner)
                                                owner == 0x5E);
 }
 #endif
+#if defined(RE4DC_LAKE_NIGHT_FX) && RE4DC_LAKE_NIGHT_FX
+// LAKE_NIGHT_FX (effects30.mk, issue #30): the night lake's torch flames. r11a / r11b's cEmTorch (et14, owner 0x68)
+// draws its flame / smoke sprites through EspCommonTrans; only their Esp0e glow was eligible (EFFECT_TORCH), so the
+// flames themselves were never drawn. In those two rooms every owner-0x68 sprite is admitted (the mask / render-target /
+// blend checks still apply). Draw time only: no effect state, spawn or Rnd() change.
+extern "C" u32 re4dc_lake_fx_seen;
+u32 re4dc_lake_fx_seen;
+extern "C" void re4dc_log(const char* fmt, ...);
+#define re4dc_lake_fx_log re4dc_log
+static int EspLakeNightOwner(u32 owner)
+{
+    return owner == 0x68 && (G_ROOM_ID == 0x11A || G_ROOM_ID == 0x11B);
+}
+#endif
 static int EspSpriteEligible(cEsp* esp)
 {
     // Et0a hanging lamps use 0x5e for their source flame/smoke sprites, including
     // the impact fire. Keep the existing class, mask and blend restrictions.
     const u32 owner = esp->info.owner;
+#if defined(RE4DC_LAKE_NIGHT_FX) && RE4DC_LAKE_NIGHT_FX
+    if (EspLakeNightOwner(owner)) {
+        const int ok = !((esp->m_Tool_flg & (0x4000 | 0x10000)) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+        if ((re4dc_lake_fx_seen++ & 0x3FF) == 0) {
+            re4dc_lake_fx_log("lake fx: frame=%u room=%x seen=%u id=%x ok=%d\n", (unsigned) pG->Frame_cnt,
+                              (unsigned) G_ROOM_ID, (unsigned) re4dc_lake_fx_seen, (unsigned) esp->m_Id, ok);
+        }
+        return ok;
+    }
+#endif
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
     // EFFECT_ROOM (bit mask, effects30.mk): plus the room's own effects. 1: est sets of the room owner
     // (0x01; r101's pyre); 2: the room effect sets SstSet starts at room init (0xd0; glows, light
