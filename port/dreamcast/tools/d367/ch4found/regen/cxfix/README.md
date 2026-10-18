@@ -7,3 +7,14 @@ targets). Published read-only at /root/re4data/private/cxfix-replay-20261018 (+ 
 - cxrun.py = cx_room_fixtures.prepare_room up to the texture step; cxdeps.sh = cx_room_dependencies.py (rebuilt from
   the 16:57Z here-string). cxbuild.py/psapply.py rebuild cx_room_fixtures.py from the rollout patches (+ the 16:59:20Z
   Substring fix found only in the raw jsonl, not in transcripts.db).
+
+## Missing step in cxbuild.py (found 10-18)
+
+Patch 55 leaves cx_room_fixtures.py broken (one Replace matched twice). Codex repaired it at
+16:59:20Z with a Substring call that shows up only in the raw rollout jsonl, not in transcripts.db.
+Apply it after patch 55 and before patch 60: replace the text from
+`                    texture_report = read` up to (not including)
+`                        blockers.append('prepare_native_ui` with
+`                    if room not in ROOM_CONTRACTS:\n`.
+The cx_room_fixtures.py copy in /root/re4data/private/cxfix-replay-20261018 does not have this fix.
+The data in that folder was produced with the fixed copy and is sha-verified (2753/2753).
