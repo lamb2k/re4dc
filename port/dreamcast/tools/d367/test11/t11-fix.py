@@ -539,6 +539,18 @@ PAK_DERIVED = {'v101': V101D + '/pak-derived.json'}   # v101's tex.pak = pak17 +
 RES17GD = os.environ.get('RES17GD', '/root/re4data/private/gatlas17-20261017')
 DATA['res17g'] = {'dc/resident.bin': RES17GD + '/resident.bin'}
 T17V_DATA = T17ZB_DATA + ',v101,stump17,res17g'   # test 17 data: zr17 + zr17b + v101 (tex.pak) + res17g (resident.bin, last)
+# Lane trans17 / release lane rel17 (10-18, user "With trans17"): trans17 = TRANS_POLICY's sidecars (tools/d367/tr_classify.py
+# over the PS2 worlds Test 17 ships): dc/native/rXXX/ps2-world.r4tc per classified room (bound to that room's R4PW crc; a
+# mismatched pair draws today's path) and the disc index dc/native/trclass.idx (R4TI: only rooms that passed the look gate;
+# a room left out of the index draws as today). Stages no texture and no world file. Only with T15_TR (TRANS_POLICY) on.
+# T17T_DATA = T17V_DATA + trans17; every other line is unchanged.
+TRANS17D = os.environ.get('TRANS17D', '/root/re4data/private/trans17-20261018')
+DATA['trans17'] = {'dc/native/trclass.idx': TRANS17D + '/trclass.idx'}
+if os.path.isdir(TRANS17D):
+    for _r in sorted(os.listdir(TRANS17D)):
+        if re.match(r'^r[0-9a-f]{3}$', _r) and os.path.exists('%s/%s/ps2-world.r4tc' % (TRANS17D, _r)):
+            DATA['trans17']['dc/native/%s/ps2-world.r4tc' % _r] = '%s/%s/ps2-world.r4tc' % (TRANS17D, _r)
+T17T_DATA = T17V_DATA + ',trans17'
 NAME = re.compile(r'^([0-9a-f]{8})-([0-9a-f]{8})\.re4tex$')
 
 
