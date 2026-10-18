@@ -1088,7 +1088,7 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
         mpk.write_text(json.dumps(pm))
         mp = mpk
     pk.pack(mp, sp, native, 'castmodel')
-    host_fixture(native, source)
+    host_fixture(native, source, ordered=spec.get('host_ordered_strips', False))
     report = json.loads((native / 'native-report.json').read_text())
     val['native'] = {k: v for k, v in report.items() if k != 'chunks'}
     val['native']['chunks'] = [{k: v for k, v in c.items() if k != 'palette_weights'} for c in report['chunks']]
@@ -1143,20 +1143,30 @@ def pack_atlas(items):
     raise ValueError('atlas does not fit 2048')
 
 
-def host_fixture(n, source):
+def host_fixture(n, source, ordered=False):
     """prepare_dynamic_native_check.py's host-fixture.bin (the cast agent's check-dynamic input)."""
     rest = np.asarray([b['rest'] for b in source['bones']]); cap = np.asarray([b['capture'] for b in source['bones']])
     sk = cap @ np.linalg.inv(rest); sk[:, :3, 3] += rest[0, :3, 3] - cap[0, :3, 3]
     r = json.loads((n / 'native-report.json').read_text())
     buf = bytearray(struct.pack('<I', len(r['chunks'])))
+    strip_proofs = []
     for c in r['chunks']:
         i = c['info']
         parts = [(n / f'info{i}.{ext}').read_bytes() for ext in ['pos', 'nrm', 'uv', 'gx']]
+        if ordered:
+            from ps2_cast_host_strips import ordered_gx
+            parts[3], proof = ordered_gx(parts[3], (c['positions'], c['normals'], len(parts[2]) // 4))
+            strip_proofs.append(dict(info=i, source_array_counts=[c['positions'], c['normals'], len(parts[2]) // 4], **proof))
         poses = np.asarray([sum(w * sk[b] for b, w in ws)[:3, :4].T.flatten() for ws in c['palette_weights']], dtype='<f4').tobytes()
         buf.extend(struct.pack('<10I', i, c['positions'], c['normals'], c['palettes'], c['triangles'], *[len(x) for x in parts], len(poses)))
         for p in parts + [poses]:
             buf.extend(p)
     (n / 'host-fixture.bin').write_bytes(buf)
+    if ordered:
+        (n / 'host-fixture-input.json').write_text(json.dumps(dict(ordered_host_input=strip_proofs,
+            source_gx_files_unchanged=True, workspace_limit_changed=False), indent=2) + '\n')
+    else:
+        (n / 'host-fixture-input.json').unlink(missing_ok=True)
 
 
 def texture_key(png):
