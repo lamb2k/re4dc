@@ -7,3 +7,4 @@ pos 29683 -13 -28512
 ang 2.2860
 inv default
 god
+alivelog 150

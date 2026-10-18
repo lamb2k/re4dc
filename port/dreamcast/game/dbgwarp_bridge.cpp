@@ -719,6 +719,29 @@ void kill_poll()
         wp.alive_last = wp.room_frames;
         re4dc_log("warp: alive %d room %03x frame %u\n", SceCountEmAlive(0x10, 0x20), (unsigned) pG->room_id,
                   (unsigned) wp.room_frames);
+        // NOT-DRAWN gate (release lane rel17b, 10-18; warp builds only): every enemy id alive in logic (SceCheckEmAlive,
+        // as SceCountEmAlive counts), as id x count @ nearest distance to Leon. tools/d367/cast_gc.py --not-drawn
+        // fails a room where an id is alive here but has no NMRS census draw row (Krauser r31c, 10-18).
+        unsigned char cnt[256] = {};
+        int nearest[256];
+        for (u32 i = 0; i < EmMgr.nArray; i++) {
+            cEm* em = (cEm*) EmMgr.workAt(i);
+            if (!em || SceCheckEmAlive(em) != 1) continue;
+            const unsigned id = (unsigned) em->id & 0xff;
+            int d = -1;
+            if (pPL) {
+                const float dx = em->pos.x - pPL->pos.x, dz = em->pos.z - pPL->pos.z;
+                d = (int) sqrtf(dx * dx + dz * dz);
+            }
+            if (!cnt[id] || (d >= 0 && d < nearest[id])) nearest[id] = d;
+            if (cnt[id] < 255) ++cnt[id];
+        }
+        char line[192];
+        int len = 0;
+        for (unsigned id = 0; id < 256 && len < (int) sizeof(line) - 24; ++id)
+            if (cnt[id]) len += snprintf(line + len, sizeof(line) - len, " %02x*%u@%d", id, (unsigned) cnt[id], nearest[id]);
+        line[len] = 0;
+        re4dc_log("warp: alivelist room %03x frame %u ids%s\n", (unsigned) pG->room_id, (unsigned) wp.room_frames, line);
     }
     if (wp.kill_watch && wp.kill_em && (wp.room_frames % 15) == 0) {
         --wp.kill_watch;

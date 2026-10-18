@@ -8,3 +8,4 @@ ang -1.5810
 rsf 0x104 1
 inv default
 god
+alivelog 150

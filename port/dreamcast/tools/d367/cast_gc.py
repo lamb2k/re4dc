@@ -23,6 +23,16 @@ Verdict: any GC or MIXED row of a character or enemy (model id 01..7f) that is n
 allowlist (tab separated: room or *, model id hex, reason, owner; '#' comments) is short and reviewed: each entry says
 why that model may draw the GameCube path and who owns removing it. No census line at all: exit 2 (not a pass: the
 build lacks NATIVE_MODEL_REGISTRY_CENSUS=1).
+
+NOT-DRAWN (--not-drawn; release lane rel17b, 2026-10-18; TEST17-SCOPE "NOT-DRAWN check"): CAST-GC sees only models that
+reached the draw path, so an enemy alive in logic but never drawn passed it (Krauser in r31c, 10-18: alive, attacking,
+no NMRS row). The warp builds' `alivelog <period>` also logs
+  warp: alivelist room XXX frame N ids II*count@nearest ...
+      every enemy id alive in logic (SceCheckEmAlive, as SceCountEmAlive counts) with its count and the nearest
+      distance to Leon (dbgwarp_bridge.cpp kill_poll; warp builds only, never the release image).
+A room FAILS when an id (10..ff) is alive in at least --min-samples samples there but has no NMRS row of that id in that
+room (no draw pass of any outcome: native, crowd, GameCube). Reviewed exceptions: castgc/notdrawn-allow.tsv (room or *,
+id hex, reason, owner). With --not-drawn and no alivelist line at all: exit 2 (not a pass: the warp lacks alivelog).
 """
 import argparse, json, re, sys
 from collections import defaultdict
@@ -41,6 +51,8 @@ PARTNER_ID = 0x03
 PACK_OPEN = re.compile(r'NMRPACK open room=([0-9a-f]+)')
 ADMIT = re.compile(r'NMRM admit .*?room=([0-9a-f]+) .*?id=([0-9a-f]+) desc=(\S+)')
 KV = re.compile(r'(\w+)=(-?\d+)')
+ALIVELIST = re.compile(r'warp: alivelist room ([0-9a-f]+) frame (\d+) ids((?: [0-9a-f]{2}\*\d+@-?\d+)*)')
+ALIVE_ID = re.compile(r'([0-9a-f]{2})\*(\d+)@(-?\d+)')
 REASONS = ('roles', 'skeleton', 'layout', 'semantics', 'certificate', 'acquire', 'skin', 'plan', 'shape', 'revision',
            'finite', 'none')
 PLAN = {'-': 'none', 'L': 'Leon/pl08 plan', 'G': 'PS2 Ganado cast', 'R': 'registry package'}
@@ -154,6 +166,56 @@ def load_allow(path):
     return out
 
 
+def parse_alive(paths):
+    """(room, id) -> [samples, max count, nearest distance]; and the number of alivelist lines."""
+    alive, n = {}, 0
+    for p in paths:
+        for line in Path(p).read_text(errors='replace').splitlines():
+            m = ALIVELIST.search(line)
+            if not m:
+                continue
+            n += 1
+            room = room3(m.group(1))
+            for i, c, d in ALIVE_ID.findall(m.group(3)):
+                s = alive.setdefault((room, int(i, 16)), [0, 0, None])
+                s[0] += 1
+                s[1] = max(s[1], int(c))
+                if int(d) >= 0 and (s[2] is None or int(d) < s[2]):
+                    s[2] = int(d)
+    return alive, n
+
+
+def not_drawn(a, rows):
+    alive, n = parse_alive(a.logs)
+    if not n:
+        print('NOT-DRAWN %s: no "warp: alivelist" lines in %s: run a warp build with alivelog (not a pass)' % (a.label, ', '.join(a.logs)))
+        return 2, []
+    allow = load_allow(a.notdrawn_allow)
+    only = set(a.rooms.split(',')) if a.rooms else None
+    drawn = {k for k in rows}
+    out, fails = [], 0
+    for (room, mid), (samples, cnt, near) in sorted(alive.items()):
+        if (only and room not in only) or mid < 0x10:
+            continue
+        ok = (room, mid) in drawn
+        verdict = 'drawn'
+        if not ok and samples >= a.min_samples:
+            hit = [x for x in allow if x[1] == mid and x[0] in ('*', room)]
+            verdict = 'allowed (%s; owner %s)' % (hit[0][2], hit[0][3]) if hit else 'FAIL'
+            fails += not hit
+        elif not ok:
+            verdict = 'not drawn, %d sample(s) < %d (not judged)' % (samples, a.min_samples)
+        out.append({'room': room, 'id': '%02x' % mid, 'name': name_of(mid), 'samples': samples, 'max_alive': cnt,
+                    'nearest': near, 'verdict': verdict})
+    w = '%-5s %-3s %-6s %-7s %-5s %-8s %s'
+    print(w % ('room', 'id', 'name', 'samples', 'max', 'nearest', 'verdict'))
+    for r in out:
+        print(w % (r['room'], r['id'], r['name'], r['samples'], r['max_alive'], r['nearest'], r['verdict']))
+    print('NOT-DRAWN %s: %d alivelist lines, %d room/id rows, %d alive but never drawn%s'
+          % (a.label, n, len(out), fails, '' if fails else ' (PASS)'))
+    return (1 if fails else 0), out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('logs', nargs='+')
@@ -161,11 +223,15 @@ def main():
     ap.add_argument('--json')
     ap.add_argument('--rooms', help='comma list: judge only these rooms (default every room in the census)')
     ap.add_argument('--label', default='', help='a run label printed in the table')
+    ap.add_argument('--not-drawn', action='store_true', help='also run the NOT-DRAWN check (alive in logic, no draw row)')
+    ap.add_argument('--notdrawn-allow', default=str(Path(__file__).resolve().parent / 'castgc' / 'notdrawn-allow.tsv'))
+    ap.add_argument('--min-samples', type=int, default=2, help='NOT-DRAWN: alive samples needed to judge an id (default 2)')
     a = ap.parse_args()
     rows, meta, reasons, pack, admits, n, partner_refused = parse(a.logs)
     if not n:
         print('CAST-GC: no NMRS census lines in %s: build with NATIVE_MODEL_REGISTRY_CENSUS=1 (not a pass)' % ', '.join(a.logs))
         sys.exit(2)
+    nd_rc, nd_rows = (not_drawn(a, rows) if a.not_drawn else (0, []))
     allow = load_allow(a.allow)
     only = set(a.rooms.split(',')) if a.rooms else None
     out, fails = [], 0
@@ -206,8 +272,8 @@ def main():
     print('CAST-GC %s: %d census lines, %d room/model rows, %d GC or MIXED character rows not allowed%s'
           % (a.label, n, len(out), fails, '' if fails else ' (PASS)'))
     if a.json:
-        Path(a.json).write_text(json.dumps({'rows': out, 'packages': pack, 'fails': fails}, indent=1))
-    sys.exit(1 if fails else 0)
+        Path(a.json).write_text(json.dumps({'rows': out, 'packages': pack, 'fails': fails, 'not_drawn': nd_rows}, indent=1))
+    sys.exit(1 if fails else nd_rc)
 
 
 if __name__ == '__main__':
