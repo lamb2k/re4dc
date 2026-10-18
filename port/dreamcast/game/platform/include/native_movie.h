@@ -24,6 +24,13 @@ int re4dc_movie_available(unsigned id);
 // sees each presented picture index, for source per-cut hooks. Skip: `mask` in
 // GameCube PAD bits (START 0x1000 = the source event cancel key, Key bit 29).
 int re4dc_movie_play(unsigned id, unsigned mask, RouteMoviePictureTick tick);
+#if RE4DC_MOVIE_SOURCE_CURSOR
+// Optional source clock: called before cancel on each playback iteration,
+// including dropped/undisplayed pictures. Existing presented-picture tick stays
+// unchanged. Available only in ROUTE_FINAL builds, currently used by r333 S00.
+int re4dc_movie_play_source(unsigned id, unsigned mask, RouteMoviePictureTick tick,
+                           RouteMoviePictureTick source_tick);
+#endif
 int re4dc_movie_cancel(void);
 // Route QTE cuts (r104s00, the PS2 pattern): play up to picture `stop_at` movie-owned, then hand
 // the open movie to the caller's game frames: re4dc_movie_step once per frame (the frame draws the

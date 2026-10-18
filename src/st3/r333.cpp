@@ -114,7 +114,7 @@ void st3_endCountDown();
 // R333_MOVIE_ADAPTER_BEGIN
 // Every PS2/GC S00 camera-cut length matches:35,124,117,38,21,95.
 // The bridge supplies a zeroed Event. Preserve the source430-frame timer
-// subtraction and the last presented cut's lasting flags, including START.
+// subtraction and the logical media cut's lasting flags, including START.
 static unsigned r333MovieS00Picture;
 static void r333MovieS00Tick(unsigned picture)
 {
@@ -142,7 +142,7 @@ static void r333MovieS00(Event* e)
     }
     Evt_R333S00_Func(e);
     if (e->funcMode == 2) {
-        re4dc_log("r333 movie s00: saved=%d subtract=%d remaining=%d picture=%u\n",
+        re4dc_log("r333 movie s00: saved=%d subtract=%d remaining=%d logical_picture=%u\n",
                   r333_work->timer, e->MaxTotalFrame, st3_getCountDownTimer(), r333MovieS00Picture);
     }
 }
@@ -296,7 +296,7 @@ void R333EventS00()
             SndRoomStrVolSet(10, 600);
 #if R333_ROUTE_MOVIES
             if (re4dc_movie_available(0x33300)) {
-                const int terminal = RouteMoviePlay(0x33300, ROUTE_MOVIE_SND_EVENT,
+                const int terminal = RouteMoviePlay(0x33300, ROUTE_MOVIE_SND_EVENT | ROUTE_MOVIE_SOURCE_CLOCK,
                                                   (RouteEvtFunc) r333MovieS00, r333MovieS00Tick);
                 if (terminal != RE4DC_MOVIE_EOF && terminal != RE4DC_MOVIE_SKIP) {
                     re4dc_log("r333 movie s00 failed: terminal=%d progression=blocked\n", terminal);

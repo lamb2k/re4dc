@@ -211,7 +211,13 @@ int RouteMoviePlay(unsigned id, unsigned flags, RouteEvtFunc func, RouteMovieTic
 #if RE4DC_MOVIE_WORLD_ARENA
     re4dc_movie_world_scope(id);
 #endif
+#if RE4DC_MOVIE_SOURCE_CURSOR
+    int st = (flags & ROUTE_MOVIE_SOURCE_CLOCK)
+        ? re4dc_movie_play_source(id, 0x1000, nullptr, tick)
+        : re4dc_movie_play(id, 0x1000, tick);
+#else
     int st = re4dc_movie_play(id, 0x1000, tick);
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     re4dc_movie_world_scope(0);
 #endif

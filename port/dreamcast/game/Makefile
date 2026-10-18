@@ -801,6 +801,9 @@ MODULES += em31:ovl pl0e:ovl
 export RE4DC_LINK_OVERLAY += .ovl_em31 .ovl_pl0e
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_ROUTE_FINAL=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_SADDLER_NMR=1
+# S00 source effects follow the movie clock, including dropped pictures.
+$(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_SOURCE_CURSOR=1
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOVIE_SOURCE_CURSOR=1
 $(OBJDIR)/mod/st3_3/src/st3/r331.o $(OBJDIR)/mod/st3_3/src/st3/r332.o $(OBJDIR)/mod/st3_3/src/st3/r333.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH3=1
 ROUTE_MOVIE_GAME_ST3 += $(OBJDIR)/mod/st3_3/src/st3/r331.o $(OBJDIR)/mod/st3_3/src/st3/r332.o $(OBJDIR)/mod/st3_3/src/st3/r333.o
 ifeq ($(SADDLER_MASK_OPAQUE),1)

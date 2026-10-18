@@ -57,6 +57,26 @@ void st3_setCountDownTimer(int n){++writes;timer=n;}
 void st3_startCountDown(){++starts;running=1;}
 void re4dc_log(const char*,...){}
 '''
+    native = (ROOT / 'port/dreamcast/game/platform/native_movie.cpp').read_text()
+    prefix = native[native.index('int iterate(RouteMoviePictureTick tick,bool stepped){'):].split('#if RE4DC_ROUTE_MOVIE_DIAG', 1)[0]
+    prefix = prefix.replace('int iterate(RouteMoviePictureTick tick,bool stepped){', 'int iterate_prefix(bool stepped){')
+    prefix += 'return 0; }\n'
+    clock = (ROOT / 'port/dreamcast/game/platform/include/movie_source_cursor.h').read_text().replace('#pragma once', '')
+    probe = r'''
+#define RE4DC_MOVIE_SOURCE_CURSOR 1
+#define RE4DC_MOVIE_SKIP 2
+struct MovieStub {unsigned held=0,mask=0x1000,v0=100,expected_frames=430,id=0x33300,k=0;bool armed=true;unsigned long long entered=0;};
+static MovieStub m;
+using RouteMoviePictureTick=void(*)(unsigned);
+static RouteMoviePictureTick source_picture_tick;
+static unsigned retrace,pad,consumed;static bool saw_source,require_source;
+unsigned re4dc_vi_retrace_count(){return retrace;}
+unsigned re4dc_pad_movie_buttons(){assert(!require_source||saw_source);return pad;}
+void re4dc_pad_consume_movie_skip(unsigned v){consumed=v;}
+unsigned long long timer_us_gettime64(){return 0;}
+int finish(int status){return status;}
+static void logical_tick(unsigned picture){saw_source=true;r333MovieS00Tick(picture);}
+'''
     driver = r'''
 struct State {Global g;Work w;int timer,running,smd3,writes,starts;};
 static void reset(unsigned seed,int value){
@@ -91,26 +111,56 @@ int main(){
    assert(timer==value-430&&smd3==1&&starts==1&&writes==1);
    ++comparisons;
   }
-  // No picture means no source mode1 state invented (e.g. early media failure).
+  // A failed start never enters iterate: no Run or accepted START occurred.
   reset(seed,value);Event original;original.MaxTotalFrame=430;
   Evt_R333S00_Func(&original);original.funcMode=2;Evt_R333S00_Func(&original);
   const State expected=state();reset(seed,value);Event movie;r333MovieS00(&movie);
   movie.funcMode=2;r333MovieS00(&movie);same(expected,state());++comparisons;
  }
- std::printf("R333_CALLBACK_PASS comparisons=%u all430pictures natural/cancel dropped/no-picture\n",comparisons);
+
+ // Independent source oracle: EventMgr calls Run(mode1) before cancellation.
+ // expected is the media-clock cut, regardless of shown/decode indices.
+ struct Case {unsigned now,v0,expected,shown,decoded;};
+ const Case cases[]={
+  {0,100,0,0,1},{99,100,0,0,1},{100,100,0,0,1},{101,100,0,1,2},
+  {416,100,158,158,159},{418,100,159,158,160},{420,100,160,158,161},
+  {958,100,429,428,430},{1000,100,429,429,430},{0,0xfffffffeu,1,0,2}
+ };
+ for(const auto& c:cases)for(unsigned seed=0;seed<8;++seed)for(int value:{300,430,3600,7200}){
+  reset(seed,value);Event original;original.MaxTotalFrame=430;Evt_R333S00_Func(&original);
+  original.funcMode=1;original.NowCut=cut(c.expected);original.NowFrame=1;Evt_R333S00_Func(&original);
+  original.funcMode=3;Evt_R333S00_Func(&original);original.funcMode=2;Evt_R333S00_Func(&original);
+  const State expected=state();
+  reset(seed,value);Event movie;r333MovieS00(&movie);
+  m={};m.v0=c.v0;m.k=c.decoded;retrace=c.now;pad=0x1000;consumed=0;
+  saw_source=false;require_source=true;source_picture_tick=logical_tick;
+  assert(iterate_prefix(false)==2&&saw_source&&consumed==0x1000);
+  assert(r333MovieS00Picture==c.expected); // c.shown intentionally never supplies the clock.
+  movie.funcMode=3;r333MovieS00(&movie);movie.funcMode=2;r333MovieS00(&movie);
+  same(expected,state());++comparisons;
+ }
+ // Existing clients (no source clock) and stepped QTEs retain their input order.
+ m={};source_picture_tick=nullptr;require_source=false;saw_source=false;pad=0x1000;
+ assert(iterate_prefix(false)==2&&!saw_source);
+ m={};source_picture_tick=logical_tick;require_source=false;saw_source=false;pad=0x1000;
+ assert(iterate_prefix(true)==0&&!saw_source);
+ // Boundaries include a forced final picture and retrace-counter wrap.
+ assert(re4dc_movie_source_picture(1000,100,430)==429);
+ assert(re4dc_movie_source_picture(1000,100,0)==0);
+ std::printf("R333_CALLBACK_PASS comparisons=%u all430pictures natural/cancel; actualiterate earlySTART/drop158-160/final429/wrap\\n",comparisons);
 }
 '''
     common += '#include <initializer_list>\n'
     with tempfile.TemporaryDirectory(prefix='r333-callback-') as directory:
         cpp = Path(directory) / 'test.cpp'
         exe = Path(directory) / 'test'
-        cpp.write_text(common + source + '\n' + adapter + '\n' + driver)
+        cpp.write_text(common + source + '\n' + adapter + '\n' + clock + '\n' + probe + '\n' + prefix + '\n' + driver)
         subprocess.run(['g++', '-std=c++17', '-O1', '-g', '-Wall', '-Wextra', '-Werror',
                         '-fsanitize=address,undefined', str(cpp), '-o', str(exe)], check=True)
         result = subprocess.run([str(exe)], text=True, capture_output=True, check=True)
     print(result.stdout, end='')
-    report = dict(status='PASS', comparisons=27552, pictures=430,
-                  scope='Source-extracted S00 lasting callback state/timer; host only. No movie decode, SH4 or gameplay proof.')
+    report = dict(status='PASS', comparisons=27872, pictures=430,
+                  scope='Actual source callback and iterate cancel-prefix, VI-clock helper; independent Run-before-cancel oracle including zero-shown START and dropped158/159/160. Host only; no movie decode, SH4 or gameplay proof.')
     if args.output:
         assert not args.output.exists()
         args.output.write_text(json.dumps(report, indent=2) + '\n')

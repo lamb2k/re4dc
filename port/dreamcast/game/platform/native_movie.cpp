@@ -818,6 +818,10 @@ extern "C" unsigned re4dc_movie_picture(){return m.shown?m.shown-1:0;}
 // every picture held exactly two fields. Decode of k+1 overlaps the display
 // of k; a picture two fields late is dropped (never shown late) so audio and
 // picture stay on one clock.
+#if RE4DC_MOVIE_SOURCE_CURSOR
+#include "include/movie_source_cursor.h"
+namespace { RouteMoviePictureTick source_picture_tick = nullptr; }
+#endif
 namespace {
 // Opens the movie and primes audio + picture 0; the picture clock starts here.
 int start(unsigned id,unsigned mask){
@@ -851,6 +855,12 @@ int start(unsigned id,unsigned mask){
 // frame draws the picture behind its UI (re4dc_ui_movie_background); no skip key (the source
 // event's cancel cut is not cancellable); the end holds the last picture until re4dc_movie_end.
 int iterate(RouteMoviePictureTick tick,bool stepped){
+#if RE4DC_MOVIE_SOURCE_CURSOR
+    // Source EventMgr runs mode1 before testing cancel. This clock is not m.k
+    // (decode may lag) or m.shown (late pictures can be dropped).
+    if(source_picture_tick && !stepped)
+        source_picture_tick(re4dc_movie_source_picture(re4dc_vi_retrace_count(),m.v0,m.expected_frames));
+#endif
     if(!stepped){
         const unsigned b=re4dc_pad_movie_buttons(),pressed=b&~m.held;m.held=b;
         if(!(b&m.mask))m.armed=true;
@@ -1197,6 +1207,16 @@ extern "C" int re4dc_movie_play(unsigned id,unsigned mask,RouteMoviePictureTick 
     return re4dc_movie_play_until(id,mask,tick,~0u);
 #endif
 }
+#if RE4DC_MOVIE_SOURCE_CURSOR
+extern "C" int re4dc_movie_play_source(unsigned id,unsigned mask,RouteMoviePictureTick tick,
+                                      RouteMoviePictureTick source_tick){
+    if(source_picture_tick || m.entered)return RE4DC_MOVIE_ERROR;
+    source_picture_tick=source_tick;
+    const int result=re4dc_movie_play(id,mask,tick);
+    source_picture_tick=nullptr;
+    return result;
+}
+#endif
 // As re4dc_movie_play up to picture `stop_at` (not shown): RE4DC_MOVIE_RUNNING leaves the
 // movie open, its sound playing, for re4dc_movie_step / re4dc_movie_end (route lane: r104s00's
 // QTE cut runs as game frames over the rest of the movie, the PS2 pattern).
