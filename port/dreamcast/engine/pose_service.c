@@ -34,12 +34,13 @@ int re4ps_validate_skeleton(const re4ps_skeleton *s)
 }
 
 static int parse_clip(re4ps_clip *out, re4ps_track *tracks, const uint8_t *p,
-                      size_t bytes, const re4ps_skeleton *s)
+                      size_t bytes, const re4ps_skeleton *s, unsigned version)
 {
     size_t at=4;
     uint32_t i, nf;
     re4ps_clip result;
-    if (bytes<4 || !u16(p) || p[2]!=s->bone_count || p[3]) return RE4PS_FORMAT;
+    if (bytes<4 || !u16(p) || p[2]!=s->bone_count ||
+        p[3]!=(version==1?RE4PS_DEMO_FINAL:RE4PS_SOURCE_LOCAL)) return RE4PS_FORMAT;
     nf=u16(p);
     for (i=0; i<s->bone_count; ++i) {
         re4ps_track t;
@@ -83,6 +84,7 @@ static int parse_clip(re4ps_clip *out, re4ps_track *tracks, const uint8_t *p,
     result.root_track=p+at;
     if (!take(&at,12u*nf,bytes)) return RE4PS_FORMAT;
     result.bone_count=s->bone_count; result.frames=nf; result.tracks=tracks;
+    result.pose_stage=p[3];
     *out=result;
     return RE4PS_OK;
 }
@@ -92,14 +94,16 @@ int re4ps_open_edcl(re4ps_clip *out,re4ps_track *tracks,size_t capacity,
 {
     const uint8_t *p=(const uint8_t *)data;
     size_t first, selected=0, end=bytes;
-    uint32_t count, i, prev=0;
+    uint32_t count, i, prev=0, version;
     int found=0, result;
     if (!out || !tracks || !p) return RE4PS_ARGUMENT;
     memset(out,0,sizeof(*out));
     result=re4ps_validate_skeleton(s);
     if (result) return result;
     if (capacity<s->bone_count) return RE4PS_CAPACITY;
-    if (bytes<8 || memcmp(p,"EDCL",4) || u16(p+4)!=1) return RE4PS_FORMAT;
+    if (bytes<8 || memcmp(p,"EDCL",4)) return RE4PS_FORMAT;
+    version=u16(p+4);
+    if (version!=1 && version!=2) return RE4PS_FORMAT;
     count=u16(p+6); first=8u+8u*count;
     if (!count || first>bytes) return RE4PS_FORMAT;
     for (i=0;i<count;++i) {
@@ -116,7 +120,7 @@ int re4ps_open_edcl(re4ps_clip *out,re4ps_track *tracks,size_t capacity,
     }
     if (!found) return RE4PS_FORMAT;
     if (!end) end=bytes;
-    return parse_clip(out,tracks,p+selected,end-selected,s);
+    return parse_clip(out,tracks,p+selected,end-selected,s,version);
 }
 
 int re4ps_required(const re4ps_skeleton *s,const uint8_t *requested,
@@ -209,7 +213,10 @@ static int sample_arguments(const re4ps_skeleton *s,const re4ps_clip *c,float f,
     if (!s || !c || !out || !s->bone_count || !s->rest_translation || !c->tracks ||
         s->bone_count!=c->bone_count || !c->frames) return RE4PS_ARGUMENT;
     if (cap<s->bone_count) return RE4PS_CAPACITY;
-    return isfinite(f)?RE4PS_OK:RE4PS_NUMERIC;
+    if (!isfinite(f)) return RE4PS_NUMERIC;
+    f=fmaxf(0,fminf(f,(float)c->frames-1));
+    if (c->pose_stage==RE4PS_SOURCE_LOCAL && f!=floorf(f)) return RE4PS_SOURCE_FALLBACK;
+    return RE4PS_OK;
 }
 int re4ps_sample(const re4ps_skeleton *s,const re4ps_clip *c,float f,
                  const uint8_t *required,re4ps_local *out,size_t cap)

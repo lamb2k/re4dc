@@ -35,7 +35,8 @@ class Skeleton(C.Structure):
                 ('rest_translation', C.POINTER(C.c_float))]
 class Clip(C.Structure):
     _fields_ = [('bone_count', C.c_uint32), ('frames', C.c_uint32),
-                ('tracks', C.POINTER(Track)), ('root_track', C.c_void_p), ('root_scale', C.c_float)]
+                ('tracks', C.POINTER(Track)), ('root_track', C.c_void_p), ('root_scale', C.c_float),
+                ('pose_stage', C.c_uint8)]
 class Dependency(C.Structure):
     _fields_ = [('destination', C.c_uint32), ('source', C.c_uint32)]
 class Layer(C.Structure):
@@ -119,6 +120,25 @@ def main():
                         str(ROOT/'port/dreamcast/engine/pose_service.c'),'-lm','-o',str(bounds)],check=True)
         subprocess.run([str(bounds),str(fixture)],check=True)
         assert lib.re4ps_open_edcl(C.byref(clip),tracks,3,buf,len(data),11,C.byref(s))==0
+        assert clip.pose_stage==0
+        version2=bytearray(data); version2[4]=2; version2[19]=1
+        v2buf=C.create_string_buffer(bytes(version2))
+        assert lib.re4ps_open_edcl(C.byref(clip),tracks,3,v2buf,len(data),11,C.byref(s))==0
+        assert clip.pose_stage==1
+        unchanged=(Local*3)(); C.memset(unchanged,0x3d,C.sizeof(unchanged)); saved=bytes(unchanged)
+        assert lib.re4ps_sample(C.byref(s),C.byref(clip),.5,None,unchanged,3)==-6
+        assert bytes(unchanged)==saved
+        bad_layers=(Layer*2)(Layer(C.pointer(clip),0,1,None),Layer(C.pointer(clip),.5,.5,None))
+        assert lib.re4ps_layers(C.byref(s),bad_layers,2,None,unchanged,3)==-6
+        assert bytes(unchanged)==saved
+        assert lib.re4ps_sample(C.byref(s),C.byref(clip),2,None,unchanged,3)==0
+        for version,stage in ((1,1),(2,0),(2,2),(3,1)):
+            invalid_stage=bytearray(data); invalid_stage[4]=version; invalid_stage[19]=stage
+            badbuf=C.create_string_buffer(bytes(invalid_stage))
+            assert lib.re4ps_open_edcl(C.byref(clip),tracks,3,badbuf,len(data),11,C.byref(s))==-2
+            assert clip.frames==0
+        assert lib.re4ps_open_edcl(C.byref(clip),tracks,3,buf,len(data),11,C.byref(s))==0
+        checks+=13
         # Every truncation refuses. Output clip is not published after failure.
         for size in range(len(data)):
             bad=Clip()
@@ -163,6 +183,12 @@ def main():
                 # Endpoints, fractional positions, shortened final segments and clamp behavior.
                 for f in sorted(set([-1.,0.,.5,1.,nf/3,nf-1.5,float(nf-1),float(nf+1)])):
                     f=C.c_float(f).value
+                    if clip.pose_stage==1 and 0<f<nf-1 and f!=math.floor(f):
+                        before=bytes(out)
+                        assert lib.re4ps_sample(C.byref(s),C.byref(clip),f,None,out,n)==-6
+                        assert bytes(out)==before
+                        checks+=1
+                        continue
                     assert lib.re4ps_sample(C.byref(s),C.byref(clip),f,None,out,n)==0
                     expected=oracle(rec,list(s.rest_translation[:3*n]),f)
                     for i,(q,t,scale) in enumerate(expected):

@@ -19,6 +19,12 @@ Errors are measured against the evaluator: at every key (quantization) and at ev
 hierarchy composed from the baked locals), as max / mean rotation angle (deg) and position (mm).
 
 Outputs go to a private directory (never git): bake.bin per archive + report.json.
+
+Phase 1B: --pose-stage source-local disables offline IK and the blend table and
+writes stage-tagged EDCL v2. Its current live-sampler contract accepts integer
+source frames only; fractional source phases need the original evaluator, not
+rounded clocks. Reports retain fractional errors, including excluded source
+jumps, for diagnosis. Default demo-final EDCL v1 encoding is unchanged.
 """
 import argparse
 import hashlib
@@ -29,10 +35,10 @@ import struct
 import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
-# EDEMO_MOTION_ROOT: a tree whose tools/motion/host helper builds (the helper's function extractor
-# does not parse today's model.cpp; d3e82e8b's src/ + tools/ is the last tree it was maintained for,
-# and the motion / IK evaluation semantics are unchanged since: later edits are exact speed variants).
-sys.path.insert(0, os.path.join(os.environ.get('EDEMO_MOTION_ROOT', ROOT), 'tools'))
+# Explicit historical evaluator roots remain available for reproducing old demo
+# bytes. Phase 1B normally uses this tree's repaired current-source host helper.
+MOTION_ROOT = os.path.abspath(os.environ.get('EDEMO_MOTION_ROOT', ROOT))
+sys.path.insert(0, os.path.join(MOTION_ROOT, 'tools'))
 from motion import archive, evalhost, fcv, modelbin  # noqa: E402
 
 GAMEPLAY_PARTS = (0, 1, 2, 3, 4, 9, 10, 13, 16)   # em10.cpp getPartsPtr(<const>) users, < 34
@@ -134,9 +140,19 @@ def sample(player, n_parts, f):
     return pose
 
 
-def bake_clip(model, mot, rest, depth_parent):
+def bake_clip(model, mot, rest, depth_parent, pose_stage='demo-final',
+              rot_tol=ROT_TOL, pos_tol=POS_TOL, max_shift=MAX_SHIFT):
     n = model.n_parts
-    player = evalhost.Player(model, mot, loop=False, ik=True)
+    if pose_stage not in ('demo-final', 'source-local'):
+        raise ValueError('unknown pose stage')
+    if not (math.isfinite(rot_tol) and math.isfinite(pos_tol) and
+            rot_tol >= 0 and pos_tol >= 0 and 0 <= max_shift <= 3):
+        raise ValueError('invalid local tolerances or key shift')
+    source_local = pose_stage == 'source-local'
+    # Live IK and the model's blend table must run exactly once, in the game.
+    # Legacy demo output deliberately retains its post-IK/blend behavior.
+    player = evalhost.Player(model, mot, loop=False, ik=not source_local,
+                             blend_table=[] if source_local else None)
     nf = mot.max_frame + 1
     keys = []
     for f in range(nf):
@@ -167,7 +183,7 @@ def bake_clip(model, mot, rest, depth_parent):
     # Encode: header + per part flags; tracks. Animated tracks pick the largest key stride
     # (shift 0..MAX_SHIFT: keys every 1/2/4/8 frames) whose runtime interpolation stays within
     # ROT_TOL deg / POS_TOL mm of the evaluator at every integer frame (local space).
-    enc = bytearray(struct.pack('<HBB', nf, n, 0))
+    enc = bytearray(struct.pack('<HBB', nf, n, int(source_local)))
     rot_tracks = [None] * n   # (shift, [decoded quats])
     tr_tracks = [None] * n    # (shift, [decoded vecs])
     shifts = []
@@ -205,11 +221,11 @@ def bake_clip(model, mot, rest, depth_parent):
             rbytes = b
             rshift = 0
         else:
-            for s in range(MAX_SHIFT, -1, -1):
+            for s in range(max_shift, -1, -1):
                 nk = ((nf - 1) + (1 << s) - 1 >> s) + 1
                 bs = [q48(qs[kidx(k, s)]) for k in range(nk)]
                 tr = (s, [dq48(b) for b in bs])
-                if s == 0 or all(qangle(rot_at(tr, f), qs[f]) <= ROT_TOL for f in range(nf)):
+                if s == 0 or all(qangle(rot_at(tr, f), qs[f]) <= rot_tol for f in range(nf)):
                     break
             rot_tracks[i] = tr
             rbytes = b''.join(bs)
@@ -228,11 +244,11 @@ def bake_clip(model, mot, rest, depth_parent):
                 tbytes = struct.pack('<f3h', sc, *iv)
                 tshift = 0
             else:
-                for s in range(MAX_SHIFT, -1, -1):
+                for s in range(max_shift, -1, -1):
                     nk = ((nf - 1) + (1 << s) - 1 >> s) + 1
                     ivs = [qvec(ts[kidx(k, s)], sc) for k in range(nk)]
                     tr = (s, [tuple(v * sc for v in iv) for iv in ivs])
-                    if s == 0 or all(math.dist(vec_at(tr, f), ts[f]) <= POS_TOL for f in range(nf)):
+                    if s == 0 or all(math.dist(vec_at(tr, f), ts[f]) <= pos_tol for f in range(nf)):
                         break
                 tr_tracks[i] = tr
                 tbytes = struct.pack('<f', sc) + b''.join(struct.pack('<3h', *iv) for iv in ivs)
@@ -269,7 +285,7 @@ def bake_clip(model, mot, rest, depth_parent):
     for g in gp:
         ps = [(keys[f][1][g][3], keys[f][1][g][7], keys[f][1][g][11]) for f in range(nf)]
         qs = [mat_quat(keys[f][1][g])[0] for f in range(nf)]
-        for s in range(MAX_SHIFT, -1, -1):
+        for s in range(max_shift, -1, -1):
             nk = ((nf - 1) + (1 << s) - 1 >> s) + 1
             pt = (s, [tuple(v * 0.125 for v in qvec(ps[kidx(k, s)], 0.125)) for k in range(nk)])
             qt = (s, [dq48(q48(qs[kidx(k, s)])) for k in range(nk)])
@@ -334,7 +350,7 @@ def bake_clip(model, mot, rest, depth_parent):
             hist[f'rot_s{rsh}'] = hist.get(f'rot_s{rsh}', 0) + 1
     return bytes(enc), dict(frames=nf, parts=n, pose_bytes=pose_bytes, root_bytes=root_bytes,
                             gameplay_bytes=gp_bytes, static_rot_parts=static_rot, shift_hist=hist, src_half_jumps=jumps, gameplay_err_max=[max(e[0] for e in gp_err), max(e[1] for e in gp_err)],
-                            scaled_parts=scaled, err=stats, raw_err=err)
+                            scaled_parts=scaled, pose_stage=pose_stage, err=stats, raw_err=err)
 
 
 def main():
@@ -343,9 +359,29 @@ def main():
     ap.add_argument('--skeleton', default='440', help='BIN entry index of the Ganado body skeleton')
     ap.add_argument('--out', required=True)
     ap.add_argument('--limit', type=int, default=0)
+    ap.add_argument('--pose-stage', choices=('demo-final', 'source-local'), default='demo-final',
+                    help='source-local disables offline IK/blend and writes tagged EDCL v2; default retains v1')
+    ap.add_argument('--entry', type=int, action='append', help='only these source FCV entry indices (repeatable)')
+    ap.add_argument('--rotation-tolerance', type=float, default=ROT_TOL, help='local integer-key angular tolerance in degrees')
+    ap.add_argument('--position-tolerance', type=float, default=POS_TOL, help='local integer-key translation tolerance in mm')
+    ap.add_argument('--max-shift', type=int, choices=range(4), default=MAX_SHIFT)
     a = ap.parse_args()
+    if not (math.isfinite(a.rotation_tolerance) and math.isfinite(a.position_tolerance) and
+            a.rotation_tolerance >= 0 and a.position_tolerance >= 0):
+        ap.error('local tolerances must be finite and nonnegative')
     os.makedirs(a.out, exist_ok=True)
-    report = {'archives': {}, 'gameplay_parts': GAMEPLAY_PARTS}
+    helper = evalhost.build('plain')
+    source_files = ('src/game/motion.cpp', 'src/game/ik.cpp', 'src/game/model.cpp',
+                    'src/game/math_sub.cpp', 'tools/motion/host/prepare.py',
+                    'tools/motion/host/motion_host.cpp', 'tools/motion/host/stub/re4_host_stub.h')
+    report = {'archives': {}, 'gameplay_parts': GAMEPLAY_PARTS, 'pose_stage': a.pose_stage,
+              'rotation_tolerance_degrees': a.rotation_tolerance,
+              'position_tolerance_mm': a.position_tolerance, 'max_shift': a.max_shift,
+              'evaluator_root': MOTION_ROOT,
+              'host_variant': 'plain, fno-fast-math, ffp-contract=off; no floor collision',
+              'host_library_sha256': hashlib.sha256(open(helper, 'rb').read()).hexdigest(),
+              'evaluator_sha256': {name: hashlib.sha256(open(os.path.join(MOTION_ROOT, name), 'rb').read()).hexdigest()
+                                   for name in source_files}}
     seen = {}
     union_bytes = 0
     union_src = 0
@@ -370,6 +406,8 @@ def main():
                 events += sum(1 for k in range(cnt) if e.data[4 + 4 * k + 2] != 0)
         n = 0
         for e in arc.entries('FCV'):
+            if a.entry and e.index not in a.entry:
+                continue
             if a.limit and n >= a.limit:
                 break
             mot = fcv.parse(e.data)
@@ -378,7 +416,9 @@ def main():
                 continue
             h = hashlib.sha256(e.data).hexdigest()
             try:
-                enc, info = bake_clip(model, mot, rest, None)
+                enc, info = bake_clip(model, mot, rest, None, pose_stage=a.pose_stage,
+                                      rot_tol=a.rotation_tolerance, pos_tol=a.position_tolerance,
+                                      max_shift=a.max_shift)
             except Exception as x:   # evaluator log errors etc.
                 skipped.append(e.index)
                 print(f'skip {arc.name}:{e.index}: {x}', file=sys.stderr)
@@ -400,13 +440,17 @@ def main():
             print(f"{arc.name}:{e.index} f={info['frames']} {len(e.data)}->{len(enc)} keyang={info['err']['key_ang'][0]:.3f} halfpos={info['err']['half_pos'][0]:.2f}", flush=True)
         # EDCL v1 file: 'EDCL' u16 version u16 count, count x {u16 entry, u16 frames, u32 offset}, then the
         # clips (offsets from the file start; each clip 4-byte aligned)
-        head = struct.pack('<4sHH', b'EDCL', 1, len(index))
+        # Distinct version as well as a per-clip stage: a live adapter must never
+        # mistake the legacy demo's already-solved pose for source-local input.
+        head = struct.pack('<4sHH', b'EDCL', 1 if a.pose_stage == 'demo-final' else 2, len(index))
         table_size = len(head) + 8 * len(index)
         body = bytes(blob[8:])
         table = b''.join(struct.pack('<HHI', ent, clips[k]['frames'], table_size + ofs - 8) for k, (ent, ofs) in enumerate(index))
         with open(os.path.join(a.out, arc.name.replace('.drs', '.edcl')), 'wb') as f:
             f.write(head + table + body)
         report['archives'][arc.name] = dict(
+            source_archive_sha256=hashlib.sha256(open(path, 'rb').read()).hexdigest(),
+            skeleton_sha256=hashlib.sha256(arc.entry(int(a.skeleton)).data).hexdigest(),
             skeleton_entry=int(a.skeleton), bones=model.n_parts, blend_joints=len(model.blend_table or []),
             clips=len(clips), skipped=skipped, fcv_src_bytes=sum(c['src_bytes'] for c in clips),
             baked_bytes=sum(c['bytes'] for c in clips),

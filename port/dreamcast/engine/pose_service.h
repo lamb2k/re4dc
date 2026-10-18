@@ -28,6 +28,7 @@ typedef struct {
     const re4ps_track *tracks; /* caller-owned, immutable after open */
     const uint8_t *root_track;
     float root_scale;
+    uint8_t pose_stage;
 } re4ps_clip;
 typedef struct {
     const re4ps_clip *clip;
@@ -39,12 +40,16 @@ typedef struct {
 } re4ps_dependency; /* requested destination also requires source (IK/blends etc.) */
 
 enum { RE4PS_OK = 0, RE4PS_ARGUMENT = -1, RE4PS_FORMAT = -2,
-       RE4PS_CAPACITY = -3, RE4PS_HIERARCHY = -4, RE4PS_NUMERIC = -5 };
+       RE4PS_CAPACITY = -3, RE4PS_HIERARCHY = -4, RE4PS_NUMERIC = -5,
+       RE4PS_SOURCE_FALLBACK = -6 };
+enum { RE4PS_DEMO_FINAL = 0, RE4PS_SOURCE_LOCAL = 1 };
 
 int re4ps_validate_skeleton(const re4ps_skeleton *skeleton);
 /* Validate the whole EDCL table, locate a clip, then build bounded track views.
  * No game asset bytes are copied. Input and track storage outlive the clip.
- * v1's 8-bit on-disc count is a format limit, not a service/actor limit. */
+ * v1 is the demo's post-IK/blend pose; v2 explicitly tags source-local poses.
+ * A pre-IK adapter must require RE4PS_SOURCE_LOCAL, never silently accept v1.
+ * The 8-bit on-disc count is a format limit, not a service/actor limit. */
 int re4ps_open_edcl(re4ps_clip *out, re4ps_track *tracks, size_t capacity,
                    const void *data, size_t bytes, uint16_t entry,
                    const re4ps_skeleton *skeleton);
@@ -54,7 +59,11 @@ int re4ps_required(const re4ps_skeleton *skeleton, const uint8_t *requested,
                    const re4ps_dependency *dependencies, size_t dependency_count,
                    uint8_t *required, size_t capacity);
 /* Sample required locals only. Other output elements are untouched. No clocks,
- * root movement, events, floor IK or source blend tables are executed here. */
+ * root movement, events, floor IK or source blend tables are executed here.
+ * Source-local v2 currently supports integer source frames only; a fractional
+ * phase returns SOURCE_FALLBACK without writing output. Never round the actor
+ * clock to make it eligible. Source Hermite/Euler cut behavior is not generally
+ * reproduced by interpolation between the demo's 30 Hz quaternion keys. */
 int re4ps_sample(const re4ps_skeleton *skeleton, const re4ps_clip *clip, float frame,
                  const uint8_t *required, re4ps_local *out, size_t capacity);
 /* Ordered masked override layers. Additive/source-specific blends remain with
