@@ -4,8 +4,8 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-Last updated: October 17, 2026. The current public build is console test 16.3 (the newest release on the
-[releases page](https://github.com/lamb2k/re4dc/releases/latest)), a third hotfix of test 16 for the village and farm fights: the Ganado animations those fights use are loaded when you enter the room instead of from the disc during the fight, and the village keeps all of its pictures in video memory (two Ganado texture sheets there load at half resolution). Test 16.2 was a second hotfix of test 16: a fifth Ganado no longer appears for a moment in some village areas, and the r108 Ganados holding a weapon use their PS2 model. Test 16.1 was the first hotfix of test 16 for speed: at most 4 Ganados at once (was 6), and no ambient farm animals. Test 16 follows test 15.1, a hotfix of test 15 (no haze or mist sprites around Leon, and Foliage Off leaves out every see-through card). Test 15 follows test 14. Test 11 was not released; its changes are in test 12. Test 12.1 is test 12 with a room lighting fix; test 12.2 is test 12.1 with a memory fix for leaving the village; test 13 follows test 12.2.
+Last updated: October 18, 2026. The current public build is console test 16.5 (the newest release on the
+[releases page](https://github.com/lamb2k/re4dc/releases/latest)), a fifth hotfix of test 16: the night lake's torches have their flames again, see-through scenery parts that are really solid draw as solid (and near-binary cut-out cards as cut-outs) in the rooms where that looks the same, and a short hitch when entering a room is smaller. Test 16.4 was a fourth hotfix: Foliage Near shows its near brush and leaf cards again and the lake draws to 45 m. Test 16.3 was a third hotfix of test 16 for the village and farm fights: the Ganado animations those fights use are loaded when you enter the room instead of from the disc during the fight, and the village keeps all of its pictures in video memory (two Ganado texture sheets there load at half resolution). Test 16.2 was a second hotfix of test 16: a fifth Ganado no longer appears for a moment in some village areas, and the r108 Ganados holding a weapon use their PS2 model. Test 16.1 was the first hotfix of test 16 for speed: at most 4 Ganados at once (was 6), and no ambient farm animals. Test 16 follows test 15.1, a hotfix of test 15 (no haze or mist sprites around Leon, and Foliage Off leaves out every see-through card). Test 15 follows test 14. Test 11 was not released; its changes are in test 12. Test 12.1 is test 12 with a room lighting fix; test 12.2 is test 12.1 with a memory fix for leaving the village; test 13 follows test 12.2.
 Test 8 (`d4bc5f45`) was withdrawn.
 
 ## Status at a glance
@@ -13,8 +13,8 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | Status | Meaning | Count |
 | --- | --- | --- |
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
-| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 12 |
-| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 | Fixed and checked in our tests; the problem was not console-only | 28 |
+| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 13 |
+| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 | Fixed and checked in our tests; the problem was not console-only | 31 |
 | 🛠️ In progress | Being fixed now | 0 |
 | 🔍 Investigating | Being reproduced or traced | 2 |
 | ⏸️ Open | Known, not yet worked on | 15 |
@@ -63,7 +63,8 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | The merchant is not lit by the scene's lights: his robe reads brown-black instead of the PS2's blue-black | test 12 | 🟢 Fixed in test 15: lit by the room lights | |
 | Broken boxes and barrels leave dark debris in the rooms after the village (r103, r104, r106, r107, r108, r10a, r10b, r117, r118, r11a, r11b) | test 8 to test 12.2 | 🟢 Fixed in test 13: breakable boxes and barrels use the GameCube models in every room, so they break into the GameCube splinters; the other room objects use their PS2 models | |
 | Right after the door from the village into r103, some effect pictures can be missing for a moment and more textures load from the disc during play | test 12, 12.1, 12.2 | 🟢 Fixed in test 13: the village's leftover textures are cleared at the door, so r103 (and r100 when you go back) loads its textures when the room starts | |
-| The night lake (start of chapter 2-1): the torches have no flames and the rain is missing | test 10 and later | ⏸️ Open: they use drawing paths not yet converted; planned with the PS2 amounts (about 100 rain streaks) | [#30](https://github.com/lamb2k/re4dc/issues/30) |
+| The night lake (start of chapter 2-1): the torches have no flames | test 10 to 16.4 | 🟢 Fixed in test 16.5 (LAKE_NIGHT_FX), needs console check | [#30](https://github.com/lamb2k/re4dc/issues/30) |
+| The night lake (start of chapter 2-1): the rain is missing | test 10 and later | ⏸️ Open: rain lines too faint on Dreamcast; PS2 rain layer being tested | [#30](https://github.com/lamb2k/re4dc/issues/30) |
 | Ashley shows a resting face: her facial expressions are not shown | test 13 | ⏸️ Open: Ashley now uses her PS2 model; the expressions come later | |
 | Foliage: Off removes walls and floor in r109 (the cabin); use Near or Full there | test 15 | 🟢 Fixed in test 15.1: Off now leaves out only the see-through brush, leaf and shadow cards; the cabin keeps its walls and floor | |
 | In the village (r101) the burning stake has lost its crossbar and a plank of the pyre (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
@@ -100,6 +101,9 @@ Test 8 (`d4bc5f45`) was withdrawn.
 | View distance Near or Short (Options) shows less of the distant outdoor scenery: it fades into the fog sooner (houses inside stay clear, the lake keeps its full horizon). A simplified far view for Short (the distant houses, trees and hills kept beyond the cut) comes in test 17 | test 15 | ⏸️ Open: by design; Full is the default and every boot starts in Full | |
 | Foliage Near and Off look the same: no near brush or leaf cards at Near | test 16 | 🟢 Fixed in test 16.4 (FOLIAGE_NEAR_FIX), needs console check | |
 | The lake fades into the fog at 25 m, closer than on PS2 | test 16 | 🟢 Fixed in test 16.4 (LAKE_FAR / LAKE_FAR_SHORE), needs console check: 45 m on the boat (Del Lago) and from the shore by day and at night | |
+| The contributor kit's knob file (`tools/d367/test16/release-knobs.txt`) at the test 16.4 tag described an earlier candidate (LAKE_FAR=30000), so a kit build did not match the 16.4 program | test 16.4 | 🟢 Fixed in test 16.5: the knob file is written from the release build and committed on the tagged commit itself | [#34](https://github.com/lamb2k/re4dc/issues/34) |
+| Entering a room could hitch briefly while the room's draw plan was built | test 16.4 and earlier | 🟢 Fixed in test 16.5 (contributed by Bruceleeto): the plan copies only the parts it uses | |
+| See-through scenery parts whose pictures are really solid, or whose edges are almost hard cut-outs, used the slower see-through drawing | test 16.4 and earlier | 🟢 Changed in test 16.5 (TRANS_POLICY, FLAT + CARD) in every chapter 1 and 2-1 room where our picture check showed no visible change; r109 (the cabin) keeps the old drawing until a look check | |
 | FSAA: busiest scenes have less geometry headroom (FSAA borrows 225 KB of the 1.95 MB per-frame geometry buffer; measured peak use 82% in the busiest test scene, El Gigante) | test 12 | ⏸️ Open: by design; Standard keeps the full buffer | |
 
 ## Console checklist for test 16
