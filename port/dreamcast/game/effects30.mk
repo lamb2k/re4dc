@@ -328,6 +328,16 @@ endif
 $(OBJDIR)/src/game/filter06.o: GAME_CPPFLAGS += -DRE4DC_RAIN_PS2=1
 $(OBJDIR)/platform/gx_stub.o: PLATFORM_CPPFLAGS += -DRE4DC_RAIN_PS2=1
 endif
+# LAKE_NIGHT_FX=1 (issue #30, lane lakefx165 2026-10-18; needs EFFECT_SPRITES=1 ESP_SPRITE_FAST=1; render only, default
+#                    0): the night lake's torch flames. In r11a / r11b every sprite of the torch owner 0x68 (et14, cEmTorch)
+#                    is drawn as a native sprite, not only its Esp0e glow (EFFECT_TORCH). Log "lake fx:" every 1024 checks.
+LAKE_NIGHT_FX ?= 0
+ifneq ($(LAKE_NIGHT_FX),0)
+ifneq ($(LAKE_NIGHT_FX)$(EFFECT_SPRITES)$(ESP_SPRITE_FAST),111)
+$(error LAKE_NIGHT_FX must be 0 or 1 and needs EFFECT_SPRITES=1 ESP_SPRITE_FAST=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_LAKE_NIGHT_FX=1
+endif
 EFFECT_HAZE_LEAN ?= 0
 EFFECT_HAZE_LEAN_TOGGLE ?= 0
 EFFECT_PS2_HAZE ?= 0
