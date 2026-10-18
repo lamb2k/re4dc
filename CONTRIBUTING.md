@@ -1,19 +1,22 @@
 # Contributing
 
-This page covers the GameCube decompilation. To build and test the Dreamcast port, see
-[port/dreamcast/CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md) (clone with `--recurse-submodules`: the port's
-SH4ZAM maths library is a git submodule). From test 16 on, the Dreamcast test
-releases ship a standard GD-ROM image (the layout mkdcdisc writes); its section 8 describes the format, and
-`port/dreamcast/tools/swap-program.py` puts your own program on it.
+**This page covers the GameCube decompilation. The one rule: the bytes do not change.**
 
-The tree is complete: every unit compiles to the original bytes. Work now is on readability (names,
-comments, notes) and on tooling. The one rule that covers everything: the bytes do not change.
+- **Working on the Dreamcast port?** Read [port/dreamcast/CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md)
+  instead. Clone with `--recurse-submodules` (the port's SH4ZAM maths library is a submodule).
+- **Your own program on a test disc:** test releases ship a standard GD-ROM image (section 8 of that page), and
+  `port/dreamcast/tools/swap-program.py` puts your program on it.
+- **State of the tree:** complete. Every unit compiles to the original bytes. Work now is readability (names,
+  comments, notes) and tooling.
 
 ## Build
 
-Follow "Building" in `README.md`. You need the native SN GCC (built once from SN's GPL source drop)
-and your own images of the debug discs in `orig/G4BE08/`. `python3 configure.py && ninja` builds and
-verifies. After that, run `ninja` only; it reruns `configure.py` itself when a config file changes.
+Follow "Building" in [docs/DECOMPILATION.md](docs/DECOMPILATION.md#building).
+
+- **You need** the native SN GCC (built once from SN's GPL source drop) and your own images of the debug discs in
+  `orig/G4BE08/`.
+- **First build:** `python3 configure.py && ninja` builds and verifies.
+- **After that:** run `ninja` only. It reruns `configure.py` itself when a config file changes.
 
 ## Verify
 
@@ -36,19 +39,21 @@ Three checks. A change is done when all three pass on a clean rebuild.
    side-by-side for one function when it does not.
 
 3. No instruction from an asm template: `python3 tools/asmcheck.py --all` must report the same total and
-   the same per-unit hits as before your change (the hardware kernels listed at the end of `README.md`,
-   "What matching means here"). A single unit: `python3 tools/asmcheck.py <mod>/<unit>`.
+   the same per-unit hits as before your change (the hardware kernels listed in
+   [docs/DECOMPILATION.md](docs/DECOMPILATION.md#what-matching-means-here), "What matching means here"). A single unit: `python3 tools/asmcheck.py <mod>/<unit>`.
 
 ## Working on a unit
 
-`docs/matching.md` has the workflow: "Workflow for one unit (`game/foo`)" for the DOL, "Workflow for one
-module unit" under "REL modules" for a REL, and "Conventions" for the rules the tree follows. The
-"Lever catalogue" maps a byte difference to the compiler mechanism behind it and to the source shape
-that reproduces it. Read it before changing a function's body; most differences you can produce by
+**Read `docs/matching.md` before changing a function's body.** Most differences you can produce by
 reformulating C have a known cause and a known non-asm fix.
 
-`tools/research/kit/variant.sh <unit> <variant-src> [FUNC]` compiles a variant of one unit and judges it
-without touching `build/` (about a second per variant).
+- **DOL units:** "Workflow for one unit (`game/foo`)".
+- **REL units:** "Workflow for one module unit" under "REL modules".
+- **Rules the tree follows:** "Conventions".
+- **Lever catalogue:** maps a byte difference to the compiler mechanism behind it and the source shape that
+  reproduces it.
+- **Try a variant fast:** `tools/research/kit/variant.sh <unit> <variant-src> [FUNC]` compiles a variant of one
+  unit and judges it without touching `build/` (about a second per variant).
 
 ## Rules
 

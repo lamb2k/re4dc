@@ -4,9 +4,26 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-Last updated: October 18, 2026. The current public build is console test 16.5 (the newest release on the
-[releases page](https://github.com/lamb2k/re4dc/releases/latest)), a fifth hotfix of test 16: the night lake's torches have their flames again, see-through scenery parts that are really solid draw as solid (and near-binary cut-out cards as cut-outs) in every chapter 1 and 2-1 room, the cabin (r109) included, and a short hitch when entering a room is smaller. Test 16.4 was a fourth hotfix: Foliage Near shows its near brush and leaf cards again and the lake draws to 45 m. Test 16.3 was a third hotfix of test 16 for the village and farm fights: the Ganado animations those fights use are loaded when you enter the room instead of from the disc during the fight, and the village keeps all of its pictures in video memory (two Ganado texture sheets there load at half resolution). Test 16.2 was a second hotfix of test 16: a fifth Ganado no longer appears for a moment in some village areas, and the r108 Ganados holding a weapon use their PS2 model. Test 16.1 was the first hotfix of test 16 for speed: at most 4 Ganados at once (was 6), and no ambient farm animals. Test 16 follows test 15.1, a hotfix of test 15 (no haze or mist sprites around Leon, and Foliage Off leaves out every see-through card). Test 15 follows test 14. Test 11 was not released; its changes are in test 12. Test 12.1 is test 12 with a room lighting fix; test 12.2 is test 12.1 with a memory fix for leaving the village; test 13 follows test 12.2.
-Test 8 (`d4bc5f45`) was withdrawn.
+**Last updated:** October 18, 2026.
+
+**Current build: Test 16.5** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)), the fifth hotfix of
+test 16: the night lake's torch flames, solid see-through scenery drawn solid in every chapter 1 and 2-1 room (the
+cabin, r109, included), and a smaller room-entry hitch.
+
+**Earlier builds** (newest first):
+
+- **Test 16.4:** Foliage Near shows its near brush and leaf cards again; the lake draws to 45 m.
+- **Test 16.3:** the village and farm fights load their Ganado animations at room entry; the village keeps all its pictures in video memory (two Ganado texture sheets at half resolution).
+- **Test 16.2:** no fifth Ganado for a moment in some village areas; the r108 Ganados with a weapon use their PS2 model.
+- **Test 16.1:** at most 4 Ganados at once (was 6); no ambient farm animals.
+- **Test 16:** follows test 15.1.
+- **Test 15.1:** hotfix of test 15: no haze or mist sprites around Leon; Foliage Off leaves out every see-through card.
+- **Test 15:** follows test 14.
+- **Test 13:** follows test 12.2.
+- **Test 12.2:** test 12.1 with a memory fix for leaving the village.
+- **Test 12.1:** test 12 with a room lighting fix.
+- **Test 11:** not released; its changes are in test 12.
+- **Test 8** (`d4bc5f45`): withdrawn.
 
 ## Status at a glance
 
