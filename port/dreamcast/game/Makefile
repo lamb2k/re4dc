@@ -2529,6 +2529,12 @@ endif
 ifeq ($(FRAME_QUEUE_DIAG),1)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FRAME_QUEUE_DIAG=1
 endif
+# FRAME_QUEUE_SPILL_KB=<n> (lane fix18 #39, render only, default 0 = image unchanged = 8 KiB): the frame queue's deferred
+# spill (carved from the model slab, which grows by n-8 KiB of KOS heap). r200 f1104-1135 needs 11,264 B past 8 KiB: 20.
+FRAME_QUEUE_SPILL_KB ?= 0
+ifneq ($(FRAME_QUEUE_SPILL_KB),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_FRAME_QUEUE_SPILL_KB=$(FRAME_QUEUE_SPILL_KB)
+endif
 # ROOM_LEFTOVER_FIT=1 (lane fix18 #39, render only, default 0 = image unchanged; needs ROOM_CHANGE_EVICT): after each
 # preload pass, while the texture budget has less than 512 KB free, close the previous room's leftovers (last drawn at or
 # before the room change; not pinned, leased or core), oldest first. r10f -> r200 kept 54 r10f world pictures (611 KB)

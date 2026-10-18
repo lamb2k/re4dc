@@ -727,13 +727,21 @@ void movie_draw();
 #endif
 // Diagnostic only: 64 KiB of copied native packets, allocated on first model.
 // Roll back an entire part on overflow. No deferred source/primitive pointers.
+#if defined(RE4DC_FRAME_QUEUE_SPILL_KB) && RE4DC_FRAME_QUEUE_SPILL_KB
+// FRAME_QUEUE_SPILL_KB=<n> (Makefile; render only; lane fix18 #39): the frame queue's deferred spill is <n> KiB instead
+// of 8 KiB; the model slab grows by the difference (packet / preparation / metadata areas unchanged).
+static_assert(RE4DC_FRAME_QUEUE_SPILL_KB>=8,"FRAME_QUEUE_SPILL_KB is at least the 8 KiB it replaces");
+constexpr unsigned kModelSlabBytes=64*1024+(RE4DC_FRAME_QUEUE_SPILL_KB-8)*1024;
+constexpr unsigned kModelDeferredSpillBytes=RE4DC_D349_RENDERER_STACK?RE4DC_FRAME_QUEUE_SPILL_KB*1024:0;
+#else
 constexpr unsigned kModelSlabBytes=64*1024;
+constexpr unsigned kModelDeferredSpillBytes=RE4DC_D349_RENDERER_STACK?8192:0;
+#endif
 constexpr unsigned kModelMetadataBytes=RE4DC_MODEL_DRAW_PLANS?32*1024:0;
 // Whole-stack bisection: two static-cache contexts yielded ~1 hit/frame while
 // late UI collided with source snapshots. Reassign those same 8 KiB to bounded
 // frame ownership; evaluate unchanged source lighting without that tiny cache.
 constexpr unsigned kModelStaticLightBytes=0;
-constexpr unsigned kModelDeferredSpillBytes=RE4DC_D349_RENDERER_STACK?8192:0;
 constexpr unsigned kModelPreparationBytes=RE4DC_D349_RENDERER_STACK?12288:0;
 constexpr unsigned kModelPacketBytes=kModelSlabBytes-kModelMetadataBytes-kModelStaticLightBytes-kModelDeferredSpillBytes-kModelPreparationBytes;
 pvr_vertex_t* model_packets; unsigned model_used,model_pending; Entry* model_handle;
