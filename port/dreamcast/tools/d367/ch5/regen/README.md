@@ -15,4 +15,14 @@ re4-assets-private\ch5regen-20261018 (files/<disc path>, MANIFEST.tsv).
 - c5r_run_rooms_st3.py + c5r-ps2w.sh: the st3 lane's run_rooms_st3.py (surviving copy in
   .claude\jobs\1e668c67\tmp\st3) with only ROOT/GC2 paths changed: PS2 worlds (.assets/rooms-rXXX), byte-exact.
 - c5r_verify.py / c5r_cover.py: sha match against the missing list; coverage by recorded source.
+- Island cast (cast16data-ch5 / ch5b / ch5c / ch5d, geodrop17-r320h), byte-exact:
+  c5r-c16in.sh (lane-local ps2_cast inputs: em1d/em1e/em1f/em36/em32/em3a/em3d .drs from the review Disc 2 .gcm; em1d
+  sha e8e974fb = the recorded cache), c5r-c16wt.sh (worktrees t5 = 04ef5558, t6 = df054fec, ch5t = d334422c +
+  2f4a731e, c5m = 0d64dbf6 + merge 865c67d7), c5r-c16gd.sh (gd = 7f13fa14), c5r-c16conv.sh (Windows python convert
+  --bone-tol 0.05), c5r-c16nat*.sh (ps2_cast_native.sh, workspace 512 KB), c5r-c16fin.sh (finish + regcast-st3 /
+  regcast-boss / regcast-island), c5r_mask.py (recorded c4mask2.py logic: em1d-02 s0, em1e-06p s2/s5/s6, u3 s2) + heli
+  --multi-mask --size 128x128 with the 7f13fa14 ps2_mask_runs.py, c5r_k9edit.py (k9cast + k9cat r315 room edits on a
+  regcast copy), c5r-c16reg.sh + c5r-c16r31b.sh (model_registry flag sets: c5pk 64 --roles5; k9pk 96; k10reg 96;
+  r31b 128; r320 96 --role-tex23).
+- c5r-res.sh: dc/resident.bin (gatlas17 res17g) = resident_keys.py pack + water_resident.py pack at 0cb61387.
 - c5r-copyout.sh: ext4 stage, one bulk copy to re4-assets-private\ch5regen-20261018, sha check there.
