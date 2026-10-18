@@ -5637,6 +5637,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
 #if defined(RE4DC_TRANS_POLICY)
     trans::close();
 #endif
+#if defined(RE4DC_TRANS_POLICY)
+    trans::close();
+#endif
     ps2w.package.close();
     if(ps2w.storage)re4dc_static_free(ps2w.storage);
     ps2w.storage=nullptr;ps2w.bytes=0;ps2w.parts=nullptr;ps2w.placements=nullptr;ps2w.nplacements=0;

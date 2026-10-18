@@ -241,10 +241,17 @@ T15_AS=${T15_AS-PS2_ASHLEY_ROOMS=2}
 # T15_LN (lane lakefx165, test 16.5, issue #30): LAKE_NIGHT_FX=1 = the night lake's torch flames (r11a / r11b owner 0x68
 #      sprites drawn natively, not only their glow). Render only. T15_LN="" builds without it.
 T15_LN=${T15_LN-LAKE_NIGHT_FX=1}
-# T15_RD (lane rain17, 2026-10-18): RAIN_DC=1 = the night lake's Dreamcast rain streaks (an approximation of the PS2
-#      Esp08 rain sheet; render only). NOT in the recipe until the user approves the look: T15_RD="RAIN_DC=1" adds it.
-T15_RD=${T15_RD-}
-T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP $T15_DY $T15_TP $T15_GD $T15_ST $T15_PG $T15_FN $T15_LF $T15_AS $T15_LN${T15_RD:+ $T15_RD}"
+# T15_TR (lane trans17, test 16.5 / 17, user 10-18 "With trans17"): TRANS_POLICY=3 = FLAT (1: uniform 14/15 alpha parts
+#      and fully opaque translucent-pass textures draw opaque) + CARD (2: CARD_NEAR parts draw punch-through). SOFTA, FAR
+#      and DROP stay off. Reads data set trans17 (dc/native/rXXX/ps2-world.r4tc + dc/native/trclass.idx); a room not in
+#      the index draws as today. Render only. docs/lanes/trans17.md. T15_TR="" builds without it.
+T15_TR=${T15_TR-TRANS_POLICY=3}
+# T15_RD (lane rain17, 2026-10-18; user 10-18 "320 Dreamcast way"): RAIN_DC=1 RAIN_DC_N=320 = the night lake's
+#      Dreamcast rain, 320 screen-space streaks (an approximation of the PS2 Esp08 rain sheet; render only, private RNG;
+#      needs RAIN_PS2=1's hook, which stays on in T11REC). With RAIN_DC on the old RAIN_PS2 lines stop. RAIN_PS2_SHEET_REF
+#      is a reference arm and never in a recipe. T15_RD="" builds without it.
+T15_RD=${T15_RD-RAIN_DC=1 RAIN_DC_N=320}
+T15REC="$T15_2 $T15_7 $T15_R $T15_4 $T15_F $T15_H $T15_10 $T15_O $T15_L $T15_S $T15_M $T15_D $T15_G $T15_V $T15_P $T15_W $T15_T $T15_FS $T15_RS $T15_HZ $T15_PB $T15_SO $T15_AC $T15_VP $T15_DY $T15_TP $T15_GD $T15_ST $T15_PG $T15_FN $T15_LF $T15_AS $T15_LN${T15_TR:+ $T15_TR}${T15_RD:+ $T15_RD}"
 T15=${T15-$T15REC}
 ON="$T9K PVR_LATCH=2 PVR_RECOVER=1 TA_HEADROOM=1 CRASH_TASK_DETAIL=1 $PS2 $P2 $HANDS"
 BASE="$ON $T11REC $T12REC $T122"

@@ -25,6 +25,8 @@ else
     mkdir -p $FP_TREES
     git -C "$here" worktree prune  # a deleted twin tree (disk hygiene) leaves a stale registration that blocks the add
     git -C "$here" worktree add --detach $T $SHA >/dev/null 2>&1 || { echo "fp_twin: worktree $SHA failed" >&2; exit 2; }
+    # test 16 on: SH4ZAM is a git submodule (game/third_party/sh4zam); trees before it have none
+    [ ! -f $T/.gitmodules ] || git -C $T submodule update -q --init || { echo "fp_twin: submodule init in $T failed" >&2; exit 2; }
   fi
 fi
 # Submodules (SH4ZAM: game/third_party/sh4zam since t15/int e22bf562): a new worktree has them empty and the build stops.

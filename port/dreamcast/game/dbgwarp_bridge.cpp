@@ -276,6 +276,8 @@ struct Warp {
     cEm* face_ring[8];
     u8 face_id[8];
     u32 alert_frame;
+    // bell108 <room frame> [count] [gap] (test 16.1 cap 4 gate): r108's bell-shot handler, count times, gap frames apart
+    u32 b108_frame, b108_n, b108_gap;
     u8 alert_entry;
     // freeze <tick>: the game thread stops at the top of that global tick (look checks: the last presented image
     // stays on screen, the same image in two arms whose logic is STRICT).
@@ -507,6 +509,10 @@ void load()
         } else if (!strcmp(k, "god")) {
             wp.god = true;
             re4dc_log("warp: god (Leon's life refilled every frame)\n");
+        } else if (!strcmp(k, "bell108") && n >= 2) {
+            wp.b108_frame = num(tok[1]);
+            wp.b108_n = n >= 3 ? num(tok[2]) : 1;
+            wp.b108_gap = n >= 4 ? num(tok[3]) : 60;
         } else if (!strcmp(k, "alert") && n >= 2) {
             wp.has_alert = true;
             wp.alert_frame = num(tok[1]);
@@ -966,9 +972,22 @@ void face_poll()
     pPL->ang.y = atan2f(dx, dz);
 }
 // `god` / `alert` (benchmark fixtures, the hwcal disc's invuln / alert): every frame / once at the room frame.
+}   // namespace (closed for the C symbol below)
+// bell108: requests for r108's bell task (src/st1/r108.cpp r108_initChurchBell, DBG_WARP builds), one per shot
+extern "C" { int re4dc_bell108_req = 0; }
+namespace {
 void god_alert_poll()
 {
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
+    if (wp.b108_n && pG && pG->room_id == 0x108 && wp.room_frames >= wp.b108_frame) {
+        char what[64];
+        snprintf(what, sizeof(what), "bell108 shot at room frame %u (alive %d)", (unsigned) wp.room_frames,
+                 SceCountEmAlive(0x10, 0x20));
+        stamp(what);
+        ++re4dc_bell108_req;
+        --wp.b108_n;
+        wp.b108_frame = wp.room_frames + wp.b108_gap;
+    }
     if (!wp.has_alert || wp.alert_done || wp.rooms != wp.alert_entry || wp.room_frames < wp.alert_frame || !pPL ||
         (pG->Status_flg[1] & 0x10000000)) return;
     wp.alert_done = true;

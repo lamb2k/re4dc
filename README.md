@@ -20,7 +20,7 @@ See [CONTRIBUTING-PORT.md](port/dreamcast/CONTRIBUTING-PORT.md); contributors an
 
 ## Playing
 
-The latest build is console test 15.1, a hotfix of test 15: the see-through haze and mist sprites around Leon are gone (the distant haze stays as fog) and Foliage Off now leaves out every see-through card while the r109 cabin keeps its walls. Test 15 is test 14 plus the r100 cliff cutscene, the missing chapter 1 sounds and music, villagers lit by the room, PS2 models for the last GameCube enemies and the boat, PS2 water, every chapter 1 room's textures kept in graphics memory, and two new Options rows: View distance and Foliage. Desktop packages will return with a later test build;
+The latest build is console test 16 (test 15.1 on a standard GD-ROM disc image for the GDEMU freezes, radio call subtitles that keep up with the voice, PS2 water out on the lake, the village (r101) back to its full-detail world, and an automatic switch to plain disc reads when a fast read fails). Desktop packages will return with a later test build;
 until then, play the console test in Flycast. Extract the complete package:
 
 | System | Download | Launch |
@@ -33,7 +33,7 @@ contributors (see Contributing).
 ### Benchmark disc (not the game)
 
 `RE4DC-Benchmark-NOT-THE-GAME-...-GDEMU.zip` is a separate disc that only measures speed on a real console. It is
-not on the test 15 release; a new benchmark disc will come with a later test build. It cannot be played: no title menu, no New Game, no saves, and it does not touch your VMU. A red
+not on the test 16 release; a new benchmark disc will come with a later test build. It cannot be played: no title menu, no New Game, no saves, and it does not touch your VMU. A red
 "BENCHMARK DISC - NOT THE GAME" banner stays on screen, and the GDEMU menu lists it as
 "RE4DC BENCHMARK (NOT THE GAME)". It runs two scripted scenes by itself (the village by the burning cross, then the
 first house at its back window) and ends on a results screen; a full run takes about 4 minutes.
@@ -76,12 +76,13 @@ The VMU in controller slot 1 shows Leon, Ashley, Hunnigan and Luis pages.
 
 ## Status and limitations
 
-**Console test 15, October 16, 2026:** the game plays to the end of chapter two, part one
+**Console test 16, October 16, 2026:** the game plays to the end of chapter two, part one
 (the lake and the boat ride, the wolves, the El Gigante fight, finding Ashley and the chapter results),
 up to a **Coming Soon** screen. This is a prerelease, not the complete game.
 
 Recent progress:
 
+* Test 16: the disc is a standard GD-ROM image, laid out like a pressed GD-ROM, for the GDEMU-only freezes ([#27](https://github.com/lamb2k/re4dc/issues/27); please confirm on a console); when a fast disc read fails, the game switches to plain sector reads for the rest of the session ([#28](https://github.com/lamb2k/re4dc/issues/28)); radio call subtitles follow the voice; the lake (the Del Lago boat fight and the night shore) draws its water the PS2 way; the village (r101) uses its full-detail world again (the burning stake, the pyre and the fence by the house are complete).
 * Test 15.1 (hotfix): no haze or mist sprites around Leon in any room (the distant haze stays as fog); Foliage Off leaves out every see-through brush, leaf, shadow and mist card, and the r109 cabin keeps its walls and floor.
 * Test 15: the r100 cliff cutscene plays again; footsteps and ambience in the farm, the missing room music, the merchant's voice and other chapter 1 sounds; the villagers and the merchant are lit by the room's lights; PS2 models for the traps, bats, snake, fish, the boat and the r104 / r117 / r118 enemies; the pool, river and lake from the shore draw their water the PS2 way; every chapter 1 room keeps its textures in graphics memory; Options rows View distance and Foliage (both reset at each boot).
 * Test 14: a disc read fix for the GDEMU freezes and crashes ([#27](https://github.com/lamb2k/re4dc/issues/27); please confirm on a console); the village keeps all its textures in graphics memory; the farm (r103) reads the disc far less; less work per frame.
@@ -102,12 +103,11 @@ Known issues (full list: [KNOWN_ISSUES.md](port/dreamcast/docs/KNOWN_ISSUES.md))
 
 * **Stability:** random crashes and freezes on GDEMU while a room loads: one cause is fixed since test 14 (the
   Dreamcast system library could take an old "disc read finished" signal and use half-read data; needs a console
-  check, [#27](https://github.com/lamb2k/re4dc/issues/27)), and a standard disc layout comes in test 16. The memory corruption crashes of tests 7
+  check, [#27](https://github.com/lamb2k/re4dc/issues/27)), and from test 16 the disc is a standard GD-ROM image (needs a console check). The memory corruption crashes of tests 7
   and 8 were fixed in test 9 (needs a console check). A few menu actions can stop the game.
-* **Picture:** some textures are missing; the ripples out on the lake are incomplete; the night lake has no torch
-  flames or rain; in the village (r101) the burning stake misses its crossbar and a pyre plank, and the fence by the
-  house misses its rails; the item menu's confirm popup differs from test 13.
-* **Sound:** the rifle sound is lower quality; radio call subtitles fall behind the voice.
+* **Picture:** some textures are missing; the night lake has no torch flames or rain; the item menu's confirm popup differs
+  from test 13.
+* **Sound:** the rifle sound is lower quality.
 * **Loading:** pauses when entering rooms.
 
 ## Development

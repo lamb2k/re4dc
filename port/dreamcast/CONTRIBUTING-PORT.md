@@ -104,7 +104,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test15/release-knobs.txt` (test 15; its header names the source commit). The maintainers write that file from
+`tools/d367/test16/release-knobs.txt` (test 16.5, the fifth hotfix of test 16: the test 16 recipe plus `ANIMALS_OFF=1 ALIVE_CAP=4 R101_ALIVE_CAP=4 VRAM_PAGES_VQ_ONLY=1 GANADO_ATLAS_DROP=3` (16.1 to 16.3), `FOLIAGE_NEAR_FIX=1 LAKE_FAR=45000 LAKE_FAR_SHORE=45000` (16.4), `TRANS_POLICY=3 LAKE_NIGHT_FX=1` (16.5), and the disc data sets snd16, vq16w, r108p, zr17m, zr17b, trans17 and res165; its header names the source commit). The maintainers write that file from
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
@@ -186,20 +186,25 @@ texture is a near-binary cut-out (leaf / brush cards, fence gaps; key table plat
 from an alpha census of the chapter 1 packages) are drawn in the punch-through list up to 12 m at Near, and every listed
 card key (classes 1-4, soft shadow / mist / grass cards included) is left out at Off; surfaces without cut-out holes
 (walls, floors, water), unlisted keys and the vertex-alpha overlays always draw. It is not
-saved either: every boot starts at the recipe's `FOLIAGE_TRIM` level (test 15: Near). `FOLIAGE_NEAR_FIX=1`
+saved either: every boot starts at the recipe's `FOLIAGE_TRIM` level (Near in the release). `FOLIAGE_NEAR_FIX=1`
 (hwfog.mk, recipe group `T15_FN`; render only) makes Near's punch-through pass also visit placements that only have
 translucent parts, so their cut-out cards draw at Near (without it they were drawn in neither pass). Lake far
 (post30.mk, recipe group `T15_LF`; render only): `LAKE_FAR=<mm>` draws r10b (the Del Lago boat) and
 `LAKE_FAR_SHORE=<mm>` (default `LAKE_FAR`) draws r11a / r11b (the shore, day and night) to that far instead of the
 25 m cap, for the PS2 world, the coarse view and the fog; the fog ramp still takes the last 20 %. 0 keeps 25 m; values
-must be above 25000 and need `FOG_FAR_CAP=0`. The release uses 45000 / 45000. 
-From test 15.1 the knob `HAZE_SPRITE_CUT=1`
+must be above 25000 and need `FOG_FAR_CAP=0`. The release uses 45000 / 45000. Transparency policy (hwfog.mk, recipe
+group `T15_TR`; render only): `TRANS_POLICY=<mask>` reads each room's class sidecar `dc/native/rXXX/ps2-world.r4tc` and
+the index `dc/native/trclass.idx` (disc data set trans17, written by `tools/d367/tr_classify.py`); 1 FLAT draws parts
+whose pictures are uniform 14/15 alpha or fully opaque as solid, 2 CARD draws near-binary cut-out cards as punch-through.
+The release uses 3; a room missing from the index draws as before. `LAKE_NIGHT_FX=1` (effects30.mk, group `T15_LN`)
+draws the night lake's torch flames; their picture is in r11b's resident list (data set res165). The knob `HAZE_SPRITE_CUT=1`
 (hwfog.mk, recipe group `T15_HZ`; render only) leaves out every haze / mist sprite at every Foliage setting: the camera
 haze around Leon (Esp15), the mist sheets (Esp48) and the r118 / r11c PS2 haze additions; the distant haze stays as the
 fog table (`HW_FOG_HAZE`, `EFFECT_HAZE_LEAN`), which is fed before the cut. Docs: docs/MIST_CUT.md. On a warp test disc (`DBG_WARP=1`) the warp line
 `viewdist 0|1|2` starts the run at Full, Near or Short.
 Far shell (knob `FAR_SHELL`, needs `VIEW_DIST_OPTION`; game/platform/far_shell.inc): in a room that has a
-`dc/native/rXXX/far-shell.fsh` (r100 and r101 in test 15), Short cuts only the world's opaque pass; the fog,
+`dc/native/rXXX/far-shell.fsh` (built for r100 and r101; not in the release yet: it loads at room entry at every View
+distance, and r100's 122 KB shell starves heap 4 at the s30 movie, so it waits for a load-at-Short version), Short cuts only the world's opaque pass; the fog,
 the cut-out and see-through world surfaces, characters and objects keep Full's distance, and the room's far shell (a
 simplified copy of the far world, about 3,000 triangles textured with the world's own textures, so no extra graphics
 memory) is drawn beyond the cut, so landmarks stay visible. Build a shell with tools/d367/farshell (README there;
@@ -273,7 +278,7 @@ the decompilation build.
 
 ## 8. Disc image and compatibility
 
-The release disc format from test 16 on (decided 2026-10-16; test 15 still ships the old layout). Users had reported freezes and crashes on GDEMU
+The release disc format from test 16 on (decided 2026-10-16; earlier tests shipped the old layout). Users had reported freezes and crashes on GDEMU
 with this game only ([#27](https://github.com/lamb2k/re4dc/issues/27), "LinkOrder"); the image then was laid out by
 our own script and differed from a pressed GD-ROM in several ways (no table of contents in IP.BIN, a data track
 that ended with its last file, the program first instead of last, a non-standard low-density track). The same game
@@ -300,12 +305,12 @@ unshrunk image is what we test.
 fails, times out or comes back without its data, the game switches to plain sector reads (one bounded "read N sectors"
 command per request, the way most discs are read) for the rest of the session and never starts a stream again; the
 read that failed is redone the plain way. Make knobs, all in the release recipe's disc set
-(`tools/d367/test15/t15-build.sh`, `T14_DISC`):
+(`tools/d367/test16/t16-build.sh`, group `T14_DISC`):
 
 | Knob | What it does |
 | --- | --- |
 | `DISC_COMPAT=1` | the KallistiOS disc fixes (`KOS_DISC_FIX=1`), the Shrink-GDI mount, an on-screen disc log only when a read misbehaves |
-| `DISC_READ_FALLBACK=3` | stream reads, each checked; the first failure switches the session to plain reads (`=2`: a bounded DMA command, then DMA after a bounded drive re-init, then PIO). `=0` is test 14's stream reads, `=2` plain reads from the start |
+| `DISC_READ_FALLBACK=3` | stream reads, each checked; the first failure switches the session to plain reads (`=2`: a bounded DMA command, then DMA after a bounded drive re-init, then PIO). `=0` is the earlier stream reads with no fallback, `=2` plain reads from the start |
 | `DISC_LAND_SPIN_MS=20` | plain reads only: wait for a read's DMA by yielding instead of sleeping a whole 10 ms scheduler tick, with a bound that grows with the read's size |
 
 Test only: `DISC_FAIL_TEST=2 DISC_FAIL_AFTER_S=20` makes stream reads fail after 20 s of play, to see the switch.
@@ -361,7 +366,8 @@ On every test release, in the same landing as the release recipe, before the rel
    port/dreamcast/tools/d367/<test>/release-knobs.txt --test N --tag <tag> --source <sha> --recipe <t-build.sh>
    --image-sha256 <sha256 of sh-elf-objcopy -R .stack -O binary> --assets-zip <name> [--disc-sets <t11-fix.py sets>]`.
 2. Point `RELEASE_KNOBS` in `build-public.sh` at it (one line), and update the release names in this page.
-3. Make the Build-Assets zip from the recipe (`release-knobs.py zip <candidate.txt> <zip>`), not by hand.
+3. Make the Build-Assets zip from the recipe (`release-knobs.py zip <candidate.txt> <zip> --disc-sets <the knob
+   file's disc-sets line>`, or the test's package script), not by hand.
    The package script (`tools/d367/<test>/t<N>-package.sh`) masters the standard GD-ROM image (section 8) and
    runs `disc_lint.py` on it, loader and standard profiles.
 4. Run `RACE_FIXTURE=<door103 fixture> tools/d367/kit-check.sh <knob file> <out-<label>> <package dir>` (knob

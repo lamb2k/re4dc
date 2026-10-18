@@ -1,6 +1,6 @@
 # Resident Evil 4 Dreamcast port
 
-> **Current state (October 16, 2026):** the public build is console test 15. The game plays from New Game to
+> **Current state (October 16, 2026):** the public build is console test 16. The game plays from New Game to
 > the end of chapter two, part one. For what works and what does not, read the
 > [root README](../../README.md) and [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md); to build, read
 > [CONTRIBUTING-PORT.md](CONTRIBUTING-PORT.md); for goals and decisions, read
