@@ -1,6 +1,6 @@
 # boss18 El Gigante model work, 2026-10-18
 
-r119 g50 is a data-only candidate for user look approval. The final source-matched calibration saves **1.447 ms per drawn frame (MODELLED)**; the new r119 g70 candidate saves 0.106 ms and is skipped under the user's approximately 1 ms threshold. No gameplay default, runtime C++, release image, or room script changed. r11e calibration/gates are in progress; this is not the boss18 completion handback.
+r119 g50 is a data-only candidate for user look approval. The final source-matched calibration saves **1.447 ms per drawn frame (MODELLED)**; the new r119 g70 candidate saves 0.106 ms and is skipped under the user's approximately 1 ms threshold. No gameplay default, runtime C++, release image, or room script changed. r11e g50 saves **1.577 ms per drawn frame (MODELLED)**. Both forms now have reviewed source-held sheets; the user still chooses each level. This is the El Gigante milestone, not the boss18 completion handback.
 
 ## Final r119 evidence
 
@@ -31,13 +31,46 @@ Fresh Flycast sampler runs of this same diagnostic build/window record full **55
 
 Death evidence: `h-b18s/scenarios/cx-r119-death-g50a`. This proves that memory transition, not every r119 movie/QTE/route. User look approval and coordinator room/audio acceptance remain outstanding.
 
+## Final r11e evidence
+
+The same **b18srT** ELF and diagnostic controls are used. The ordinary source appearance event receives START after registration; its original callback spawns the giant. Free-fight hardware samples are UI ticks 290/295/300/305, counted window 290..309. The first event-bound trial and early pictures are excluded.
+
+| r11e level | Source positions | Triangles | Strip vertices | MODELLED SH4 ms/frame | Saving |
+|---|---:|---:|---:|---:|---:|
+| full | 2202 | 4296 | 6328 | 71.502 | baseline |
+| shipped g70 | existing fallback | 2982 | 4528 | 70.844 | 0.658 ms: do not add a new rung |
+| g50 | 1086 (49.32%) | 2064 | 3202 | 69.925 | 1.577 ms: review |
+
+The shipped, already approved g70 package remains available unchanged; the threshold does not remove that fallback. Exact source vsync waits contribute approximately 0.00005 ms/frame to each arm. The g50 delta is about 0.504 ms per 1000 omitted strip vertices in this scene. Together with r119's 0.467, this calibrates these two scenes only. `r11e-calibration-deterministic.json` and `hwmodel-b18-r11e-deterministic-{full,g70,g50}a` retain raw evidence.
+
+Fresh 1000 Hz Flycast sampling records full **57.4**, g50 **56.0 ms/frame** for the same 20 complete frames 290..309 (1150/1123 kept samples, zero host gaps/lost/late records). Actual sampled-run source trace and decisions match 20/20 ticks. These sampled diagnostic costs are not console timing or host FPS; hardware traces remain the primary calibration.
+
+| Gate | r11e evidence |
+|---|---|
+| Full A/A | STRICT 889 ticks; decisions identical for the 888 complete decision records |
+| Full vs shipped g70 / g50 | STRICT + MUST-IDENTICAL, 601 room ticks 0..600, no gaps, masks, allocation failures or drift; 116325 em-em, 10673 line queries, 6834 damage tests |
+| Timing control +3000 us | Same 601 room ticks STRICT + decisions identical, b18drT ELF1967f9d0 |
+| Hardware window | Both reduced arms STRICT + decisions identical, all 20 actual trace-run ticks 290..309 |
+| CAST-GC / presence | Source boss id2b admitted and native-drawn. g50 report: Leon1300 / Ashley805 / em2b1496 native rows, all GC0. No native decline; Ganado-only alivelog is not used as boss presence evidence. |
+| TEX / memory / KOS | TEXCHK fails0; actual KOS hold49152. Lowest observed heap4 free/largest: full444576/444256, g70376704/376384, g50393856/393536. g50 tick600 VRAM pinned873024 / dynamic724576 / other90112 / free879712 / largest856064 B; refusals, no-contiguous, evictions and retries0. Later preload discoveries are not a blanket no-disc-read proof. |
+| Source grab | Separate close fixture, source hold500 / LT499; full vs both reduced settings STRICT + decisions identical for all500 ticks. Both reduced arms reselect original full `gigante-em2b-02` at source event tick386; all three grab pictures are pixel-identical. |
+| Knob-off identity | Same fresh b18irP T15REC control, 1ST_READ plus10 overlays byte-identical; source changes contain no runtime behaviour edits. |
+
+Review `el-gigante-r11e-sheet.png` with source/rest comparison `el-gigante-r11e-rest-sheet.png`. Each picture's JSON proves the source freeze sentinel and completed LT tick before and after the read-only VRAM capture. Free fight is hold330, grab hold500. Full/g70/g50 source trace + decisions match330 ticks at the body still, and500 at the grab. g50 loses mouth detail in the rest view. Full source collision, original skeleton/attachments and source event policy remain unchanged. r11e g50 sampled surface p95/max error is56.245/182.082 mm forward and33.677/127.620 mm reverse; this is not a continuous Hausdorff guarantee.
+
+`r11e-model-gates.json`, `r11e-{strict,decisions}-*.json`, `r11e-{lookheld,grabheld}-*.json`, the sampler reports and per-capture `source-hold-proof.json` retain evidence. Entry/fight/grab checks do not establish doors, full chapter route or all r11e movies.
+
+## Review capture correction
+
+The original 24-second screenshots preceded the requested hold (r119 LT281..284, r11e LT258..259). Their earlier same-pose caption was incorrect; that image is preserved only as `el-gigante-r119-early-unmatched-WITHDRAWN.png` and is excluded from review. The current r119 sheet was replaced with all three source hold330 captures, each proving completed LT329 before/after capture and330/330 STRICT plus identical decisions. Timing and long behaviour evidence were independent and remain unchanged. The current r11e sheet uses the same verified capture method. No pixels were retouched.
+
 ## Geometry and identities
 
 Existing boss17 full conversions were reused after all 131 inventory hashes passed. r119 and r11e are separate em2b types 0 and 2, with original 64-bone GC runtime skeletons. The reducer preserves the exact source skeleton, weights on surviving corners, parasite part63 and terminal finger-tip triangles: 594 source faces / 345 locked vertices. Collision and attachment source code is unchanged; em2b uses Yarare boxes/bone attachments, including parasite hit[9] on part63, rather than render triangles. Existing registry LOD policy selects full during source events (Status_flg[1] bit10000000), including grabs.
 
 The first whole-head/whole-hands g50 probe retained 96.4% positions and was rejected. Final candidates use the 80 mm local collapse cap, with exact native triangle and protected-face proofs. Sampled bidirectional surface checks are not continuous Hausdorff proofs: r119 g50 full-to-candidate p95/max54.161/182.082 mm, reverse33.765/127.620 mm. The rest sheet exposes lost mouth detail; user approval is required. A no-reduction repack control reproduces all native input arrays byte-for-byte (report metadata differs only).
 
-Review sheet: `el-gigante-r119-sheet.png`, actual deterministic held tick330 plus labelled offline face/hand crops. Full rest/source sheet: `el-gigante-r119-rest-sheet.png`. These private screenshots are not committed.
+Review sheet: `el-gigante-r119-sheet.png`, corrected source-verified hold330 / LT329 plus labelled offline face/hand crops. Full rest/source sheet: `el-gigante-r119-rest-sheet.png`. These private screenshots are not committed.
 
 ## Private data / source changes
 
