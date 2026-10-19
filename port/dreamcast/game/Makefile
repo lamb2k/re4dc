@@ -1965,6 +1965,8 @@ SDK_CFLAGS += -fno-unwind-tables -fno-asynchronous-unwind-tables
 endif
 # Opt-in game-side CPU knobs and the determinism trace (default off: no effect).
 include game30.mk
+# behave18 native actor runtime preview (ENGINE_PREVIEW; default off: nothing built).
+include engine_preview.mk
 
 # D44 diagnostic only: one four-frame window after an observed r200 card exit.
 # Keep the flag local to the three instrumented translation units.
@@ -2885,8 +2887,6 @@ include subscreen.mk
 include vmusave.mk
 # D367 test warp rig (DBG_WARP; default off: no effect).
 include dbgwarp.mk
-# behave18 native actor runtime preview (ENGINE_PREVIEW; default off: nothing built).
-include engine_preview.mk
 # D367 safe cuts (FX_LEAN; default off: no effect).
 include safecuts.mk
 # D367 effects30 (EFFECT_LEAN, EFFECT_SPRITES; default off: no effect).

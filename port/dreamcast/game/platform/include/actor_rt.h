@@ -25,7 +25,7 @@ int re4dc_rt_steer(float x, float z, float* gx, float* gz);
 int re4dc_rt_collide(float* x, float* y, float* z, float ox, float oz);
 /* counters for the preview log line */
 void re4dc_rt_count(int owned, int fallback);
-void re4dc_rt_log(unsigned frame);
+void re4dc_rt_log(unsigned frame, int leon_life);
 
 #ifdef __cplusplus
 }
