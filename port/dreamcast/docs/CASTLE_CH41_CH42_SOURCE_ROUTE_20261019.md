@@ -246,8 +246,26 @@ manifest SHA
 `deb8ef63b858be3b0b111ed334b7c057ad635c4f22172ee6f373b2ce360e87ff`.
 The 5,713-record resident SHA is
 `902a55450efcbae7be9fdbf6f4cfae986da77e350c08577bc09f31c795b7e2f4`.
-Matched runtime qualification is pending. Compose the three records into
-newer unions; never discard another worker's additions.
+The matched near-enemy check `cx-r222-walk-residentkos03` passes the bounded
+residency gate. It completed 56.28 seconds and held the exact 49,152-byte
+reserve, with minimum KOS watch headroom 49,272 bytes. Across 7,048 staged
+payloads, only `dc/resident.bin` changes; all 23 program files, room data,
+models, textures, audio, warp and input remain exact. Late gameplay uploads
+fall from three to zero. The two nearby type 9 monks retain actual native
+admissions and 3,000 native census samples, with zero GameCube fallback.
+Texture errors, audio-fit failures, refusals, evictions and retries are zero.
+
+The gameplay VRAM row at frame 767 reports 594,624 pinned, 471,712 dynamic,
+1,410,976 free and 1,390,592 largest-free-block bytes. Later native stream
+receipts through frame 1080 retain 124 loads. The 45-second still remains
+obstructed; appearance, the distant type 8, combat, dragon targets, ornament
+pickup and the original chapter route are not qualified. Compose the three
+records into newer unions; never discard another worker's additions.
+
+Matched proof: `r222-residency-matched-proof.json`. Candidate log SHA:
+`f5240741df4474da097f7d20cf29812f4694d005baec3c46558b165522141cf4`.
+Candidate disc SHA:
+`841f861a1ab308d268427ee9e6f4ed3ac47ec99c0188aebf0d91aff6d8a86680`.
 
 Evidence: `r222-neararea10kos02-gate.json`,
 `r222-source-first-sight-winners.json`, `r222-source-trigger-geometry.json`
