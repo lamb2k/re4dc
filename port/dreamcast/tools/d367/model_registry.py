@@ -95,6 +95,7 @@ ACTOR_MATERIALS = 3         # actor_native_owner.h kRe4dcActorMaterials
 ACTOR_CHUNKS = 8            # Re4dcActorPlan info[8]
 ROLE_TEXTURES5 = False      # --roles5: a role's TPL may have 19 images (RE4DC_NMR_ROLE_TEXTURES 19)
 ROLE_TEX23 = False          # --role-tex23: 23 images (NATIVE_MODEL_REGISTRY_ROLE_TEX23, the r320 helicopter em3d TPL 6)
+ROLE_TEX34 = False          # --role-tex34: the r228 Salazar TPL 8, exactly 34 images (NATIVE_MODEL_REGISTRY_ROLE_TEX34)
 POOL = False                # --pool: pool descriptors (spec "pool": true), package only (NATIVE_MODEL_REGISTRY_POOL images)
 POOL_SECTIONS = 48          # coarse_actor_owner_registry.inc kRegPoolSections
 APPEARANCE0 = 0x200         # registry appearances 0x200 + descriptor index (Ganado 0..4, Leon 0x100)
@@ -586,6 +587,14 @@ def main():
         if not ROLE_TEXTURES5:
             sys.exit('model_registry: --role-tex23 needs --roles5')
         ROLE_TEX23 = True
+    global ROLE_TEX34
+    if '--role-tex34' in args:
+        # --role-tex34 (lane castlerender19 2026-10-19): typed source-role admission of the r228 Salazar's original
+        # TPL 8 (34 images; GC source, no subset) for NATIVE_MODEL_REGISTRY_ROLE_TEX34 images. Room 0x228 only.
+        args.remove('--role-tex34')
+        if not ROLE_TEX23 or package_room != 0x228:
+            sys.exit('model_registry: --role-tex34 needs --role-tex23 and --package-room 228')
+        ROLE_TEX34 = True
     if len(args) != 2:
         sys.exit(__doc__)
     spec_path, out = os.path.abspath(args[0]), os.path.abspath(args[1])
@@ -1347,7 +1356,12 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
                     role_texture_max = 23  # RE4DC_NMR_ROLE_TEX23 (the r320 helicopter em3d TPL 6)
             if SLOTS:
                 role_texture_max = 17  # the PS2_ASHLEY image (RE4DC_NMR_ASHLEY): GC pl11 TPL 5 has 17 images
-            if len(tpls[tk]['textures']) > role_texture_max:
+            n_tex = len(tpls[tk]['textures'])
+            if ROLE_TEX34 and n_tex > role_texture_max and room == 0x228 and n_tex == 34:
+                # --role-tex34 (NATIVE_MODEL_REGISTRY_ROLE_TEX34): the r228 Salazar's whole source TPL 8 (34 images),
+                # exactly that count in that room; every other role keeps the bound above.
+                pass
+            elif n_tex > role_texture_max:
                 raise Fail(f'package {r["name"]}: source TPL has {len(tpls[tk]["textures"])} images > {role_texture_max}')
             if mk not in fm_index:
                 m = bins[mk]; fm_index[mk] = len(fmodel)
