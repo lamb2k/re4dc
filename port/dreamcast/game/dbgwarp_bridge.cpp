@@ -16,6 +16,9 @@
 //    and they keep counting inside the sub screen (inventory, files), whose loop pauses the game
 //    loop, so `act 300 y 3` + `act 600 b 3` opens and closes the inventory. Every room entry and
 //    action is logged with vblank and wall time.
+//  - Observe: alivelog <period> without a room directive keeps the original title,
+//    CardLoad and gameplay path. After native room entry it only reports alive
+//    enemies/in-view counts; placement, flags, input and damage actions stay off.
 //  - Boot: the VMU_SAVE card screen (card=8/1) is answered Up+A, so a warp disc needs no padscript.
 //  - Debug trigger: `trg <no> <room frame> [room]` makes the source's developer shortcut
 //    DebugTrg(no) (retail stub: always 0) return 1 once, at or after that frame of the current room
@@ -300,6 +303,10 @@ struct Warp {
     // soft reset, then warps from the title shown after it (the s30 heap gate after load -> reset -> New Game).
     bool after_reset;
 #endif
+    // Observation only, when alivelog is present without any room directive.
+    // Kept at the end so existing warp field offsets remain unchanged.
+    bool observe_ready;
+    u16 observe_room;
 };
 Warp wp;
 
@@ -754,21 +761,25 @@ static void kill_phase_poll()
 }
 #endif
 
-void kill_poll()
+// With no room directive the title/card-load path remains untouched. Only the
+// existing alive/frustum report is requested; none of the warp actions can run.
+bool native_alive_observe_enabled()
 {
-#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
-    kill_phase_poll();
-#endif
-#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
-    if (farshell_probe_frame && wp.rooms == 1 && wp.room_frames >= farshell_probe_frame) {
-        farshell_probe_frame = 0;
-        const s32 free_bytes = memCheckHeapActive(4) ? OSCheckHeap(Heap[4].handle) : -1;
-        void* p = free_bytes > 0 ? mem_alloc((u32) free_bytes, "warp farshellprobe", 0, 0, 4) : nullptr;
-        re4dc_log("warp: farshellprobe room frame %u heap4 free=%d request %s, free after=%d\n", (unsigned) wp.room_frames,
-                  (int) free_bytes, p ? "fit" : "short", memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1);
-        if (p) Mem_free_h(p, 4);
-    }
-#endif
+    return !wp.active && !wp.room && wp.alive_period;
+}
+
+void native_alive_room_enter()
+{
+    if (!native_alive_observe_enabled() || !pG) return;
+    wp.observe_ready = true;
+    wp.observe_room = pG->room_id;
+    wp.room_frames = 0;
+    wp.alive_last = ~0u;
+    re4dc_log("warp: observe room enter %03x (native load, no room override)\n", (unsigned) pG->room_id);
+}
+
+void alive_log_poll()
+{
     if (wp.alive_period && (wp.room_frames % wp.alive_period) == 0 && wp.room_frames != wp.alive_last) {
         // `alivelog <period>`: Ganados alive (the rooms' own count, ids 0x10..0x20) every period room frames
         wp.alive_last = wp.room_frames;
@@ -811,6 +822,34 @@ void kill_poll()
         line[len] = 0;
         re4dc_log("warp: alivelist room %03x frame %u ids%s\n", (unsigned) pG->room_id, (unsigned) wp.room_frames, line);
     }
+}
+
+void native_alive_poll()
+{
+    // Never inspect EmMgr while the title, load, room jump or teardown owns it.
+    // A new room must reach the normal entry hook before it can be observed.
+    if (!native_alive_observe_enabled() || !wp.observe_ready || !pG || !pPL ||
+        pG->room_id != wp.observe_room || pG->Rno0 != 3 || pG->Rno1 != 0) return;
+    ++wp.room_frames;
+    alive_log_poll();
+}
+
+void kill_poll()
+{
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+    kill_phase_poll();
+#endif
+#if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
+    if (farshell_probe_frame && wp.rooms == 1 && wp.room_frames >= farshell_probe_frame) {
+        farshell_probe_frame = 0;
+        const s32 free_bytes = memCheckHeapActive(4) ? OSCheckHeap(Heap[4].handle) : -1;
+        void* p = free_bytes > 0 ? mem_alloc((u32) free_bytes, "warp farshellprobe", 0, 0, 4) : nullptr;
+        re4dc_log("warp: farshellprobe room frame %u heap4 free=%d request %s, free after=%d\n", (unsigned) wp.room_frames,
+                  (int) free_bytes, p ? "fit" : "short", memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1);
+        if (p) Mem_free_h(p, 4);
+    }
+#endif
+    alive_log_poll();
     if (wp.kill_watch && wp.kill_em && (wp.room_frames % 15) == 0) {
         --wp.kill_watch;
         cEm* em = wp.kill_em;
@@ -1264,7 +1303,10 @@ void re4dc_warp_next_pos(void)
 // ui_bridge.cpp re4dc_room_enter (every room entry).
 void re4dc_warp_room_enter(void)
 {
-    if (!wp.active) return;
+    if (!wp.active) {
+        native_alive_room_enter();
+        return;
+    }
     ++wp.rooms;
     wp.room_frames = 0;
 #if RE4DC_WARP_JUMP
@@ -1309,7 +1351,10 @@ void re4dc_warp_room_enter(void)
 // ui_bridge.cpp re4dc_room_cycle_poll (top of gameMainLoop, game thread).
 void re4dc_warp_poll(void)
 {
-    if (!wp.active) return;
+    if (!wp.active) {
+        native_alive_poll();
+        return;
+    }
     // `still` counts this room's poll frames (wp.room_frames, the clock the act lines share in the first room).
     if (wp.still_next < wp.n_still && pG && wp.rooms == 1 && wp.room_frames >= wp.still_tick[wp.still_next]) {
         const unsigned i = wp.still_next++;
