@@ -82,3 +82,37 @@ Under `C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\workers\ch34`:
 Original source files supporting the chapter boundary and item obligations:
 `src/st2/r201.cpp`, `r211.cpp`, `r216.cpp`, `r221.cpp`, `r22b.cpp`, and
 `r21d.cpp`; record layouts are in `include/sce_at.h`.
+
+## r210 audio preparation and first current check
+
+The actual current r210 fixture still carries raw GameCube ROOM and FOOT
+banks. The existing `aica_banks.fit` prebuilds those banks into the frozen
+arena alongside the unchanged player bank. The preferred caps remain
+16,000 Hz for ROOM and 11,025 Hz for FOOT; no further rate reduction or
+layout change is needed. All non-audio archive bytes and source wavetable
+bytes are identical. The two banks use 175,552 aligned bytes, leaving
+760,576 arena bytes after the player bank.
+
+Current-program `cx-r210-walk-audiokos01` ran 56.39 seconds with exact
+`held=49152 requested=49152`, minimum KOS watch headroom 48,376 bytes,
+native Leon and no texture errors. The two ROOM/FOOT failures are gone.
+BGM0 still reports one allocation failure. There is no partner or complete
+chapter proof. The final Flycast window also shows registration time near
+208 ms with no active enemies; this is an unexplained emulator observation,
+not a hardware measurement or a diagnosed cause.
+
+The remaining BGM0 failure is container entry 14. Its recovered chapter 3,
+chapter 4 and Castle copies are byte-identical to the current raw bank.
+The existing builder prebuilds only its ARAM slice, preserving every other
+container byte, all source wavetable bytes and the frozen layout. Its eight
+samples use 208,416 bytes inside the 264,576-byte BGM0 slot at the unchanged
+32,000 Hz preferred cap. The existing ADPCM checker reports 24.0 dB SNR.
+A matched current-program emulator check is pending.
+
+Private ROOM/FOOT set: `castle18-ch41-r210-audio-20261019`, manifest
+`a717f403f01ac9f1f23c87751950142172fffeed91406c742465eaa8a0ef1034`.
+Private BGM14 set: `castle18-ch41-bgm14-20261019`, manifest
+`996b005042e7f03898c7527be2513e47219a24b356c36da868ec7de41459b349`.
+Both are mirrored on C:. The additive fixture is
+`tools/d367/castle18/ch41-r210-audio-20261019.json`; compose only its checked
+BGM slice into any newer container rather than replacing other bank edits.

@@ -1,0 +1,17 @@
+{
+  "replace": {
+    "st2/r210.dar": "/root/re4data/private/castle18-ch41-r210-audio-20261019/st2/r210.dar",
+    "bgm/bio4midi.dat": "/root/re4data/private/castle18-ch41-bgm14-20261019/bgm/bio4midi.dat"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Existing audio prebuild only: r210 ROOM/FOOT and BGM0 container bank14. No program, model, texture, motion or layout change.",
+    "room_sha256": "8ee36dbc1d5ae82ba05b6eb2311762a0e5aa7bf41c00c44aec281fe419919250",
+    "bgm_source_sha256": "379e415a30f536d193d6cd5ba49f214f2d7cb606b61595644333e354d5ef612e",
+    "bgm_candidate_sha256": "293df040f919e5bb9ad410e4404ed01b72aaedcdc4f41738de10199c29774ba0",
+    "bgm_aram_offset": 8677280,
+    "bgm_aram_length": 476379,
+    "integration": "All bytes outside the original bank14 ARAM slice are exact. If another worker has updated the container, validate and compose this slice; do not replace their other banks.",
+    "runtime_status": "r210 ROOM/FOOT failures eliminated in current-program 48 KiB entry. Bank14 host preparation passes; matched emulator gate pending. No chapter acceptance."
+  }
+}
