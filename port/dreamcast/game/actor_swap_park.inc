@@ -22,7 +22,12 @@
 // never copied back wholesale.
 extern "C" void re4dc_log(const char*,...);
 namespace re4dc_material { namespace life {
-#if RE4DC_ACTOR_GANADO_PS2_STUMP
+#if RE4DC_SS_CERT_PARTNER_CAPACITY
+// SS_CERT_PARTNER_CAPACITY (Castle, 2026-10-19): r207's source radio opens with 22 em11 assets plus
+// 10 pl11 assets. The old 24-record park revoked the entire partner archive. This changes storage
+// capacity only; every saved-byte, pending-conversion, owner, row-generation and restore check remains.
+constexpr unsigned kParkArchives=4,kParkAssets=32,kParkInfos=32,kParkNone=~0u;
+#elif RE4DC_ACTOR_GANADO_PS2_STUMP
 // ACTOR_GANADO_PS2_STUMP (lane stump17): a Ganado archive also admits its stump / hand-pose BINs (up to 8 more assets:
 // r100's em12 archive 12 -> 20), so the park keeps the room for one such archive. At 16 the r100 s20 movie window
 // revoked it and its Ganados drew the source path for the rest of the room (h2: 2,753 GC rows).

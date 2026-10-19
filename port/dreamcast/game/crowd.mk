@@ -272,6 +272,21 @@ endif
 $(OBJDIR)/coarse_actor.o $(OBJDIR)/sscrn_bridge.o: GAME_CPPFLAGS += -DRE4DC_SS_CERT=1
 $(OBJDIR)/coarse_actor.o: actor_swap_park.inc
 endif
+# SS_CERT_PARTNER_CAPACITY=1: 32 parked source assets for a full Castle monk archive plus Ashley.
+# Default off; only storage grows, with all SS_CERT ownership and restore checks unchanged.
+SS_CERT_PARTNER_CAPACITY ?= 0
+ifneq ($(words $(SS_CERT_PARTNER_CAPACITY)),1)
+$(error SS_CERT_PARTNER_CAPACITY must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(SS_CERT_PARTNER_CAPACITY)),)
+$(error SS_CERT_PARTNER_CAPACITY must be 0 or 1)
+endif
+ifeq ($(SS_CERT_PARTNER_CAPACITY),1)
+ifneq ($(SS_CERT),1)
+$(error SS_CERT_PARTNER_CAPACITY=1 needs SS_CERT=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_SS_CERT_PARTNER_CAPACITY=1
+endif
 CROWD_CULL ?= 0
 CROWD_CENSUS ?= 0
 CROWD_CENSUS_FROM ?= 900
