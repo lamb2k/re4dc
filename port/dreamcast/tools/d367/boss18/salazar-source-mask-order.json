@@ -1,0 +1,52 @@
+{
+  "schema": "boss18-salazar-mask-order-1",
+  "source_set_seal": "54322aabdac761e233bf5b99a1ae0d67cc6db1c3307860759edefd5d59f27b6f",
+  "inputs": {
+    "SHA256SUMS": "54322aabdac761e233bf5b99a1ae0d67cc6db1c3307860759edefd5d59f27b6f",
+    "full-pot/queen-em38-00/atlas-rgba.png": "0628c53d1b23e06f5c97c176812ec37f3881b01556f4c4825a7a2b36fe4ab73f",
+    "full-pot/queen-em38-00/native/info0.gx": "a198f13ea8bbcebe860d58086c4eedba77f5f7db2822c7bc5e2ad109f4db9270",
+    "full-pot/queen-em38-00/native/info0.nrm": "f17c814eb385daad843fa782dc1c1180ff8fd8163a0e3317e261278d009403fb",
+    "full-pot/queen-em38-00/native/info0.pos": "7b291d734e4b4812b2583c3a4aea5c6d556c8c6834d8853f1e8f7a45c89e92b2",
+    "full-pot/queen-em38-00/native/info0.uv": "1fcceb7cad6e9e3fc6c7ab764c585f29ed20a6a4b6780265b88d1cc4897685f7",
+    "full-pot/queen-em38-00/runtime/castmodel_runtime.h": "c68265fa2bad49d78a3de6c591aaf4b38bab4757d98230ec40d17d8a317a497a",
+    "full-pot/salazar-em38-03/atlas-rgba.png": "2289df48bca7b8f9eadf0b42e20423bb1c83ffdf6e0dd40ff7690caeb3373f3b",
+    "full-pot/salazar-em38-03/native/info0.gx": "b5e9bbf9658ece8ca49fcb84fe0c2ae6ffbb5cbff797dc60bf01b08282641886",
+    "full-pot/salazar-em38-03/native/info0.nrm": "d474713628b37123f3c5b27f29e5e3ccedcd333da8c5c0b2fef02fdec91582aa",
+    "full-pot/salazar-em38-03/native/info0.pos": "66e58766f1827e2fbac42f5f1c27ef8fe2ae64540fe7a6c5299ac8f85c73583e",
+    "full-pot/salazar-em38-03/native/info0.uv": "09f16b0d8425d8ae0fc459f224877899dd95ec035a102a60ac02179e261fc1b7",
+    "full-pot/salazar-em38-03/runtime/castmodel_runtime.h": "788e2d6dd8f2d66fe5a70987fc4996df07a77a4e36a956393eccd38eefda3d8b",
+    "masks/body/1d49c8d1-af4f1568.re4tex": "7914fe1789a6fe04e23b605aba5c4a7dbae8a3bf048dddd9d4db92cb44ca589a",
+    "masks/body/colour.png": "26ea9101cbfe4a816e13306904d07807344ff282c5868444ded1a74b34c3378c",
+    "masks/body/hair.blob": "a1879f0b4cc0ce7d4930be97245538283972427449a8776fd9cf83df1a21eb12",
+    "masks/body/hair.uv": "028db6977562796363bd01425cc6d184906075ffebd5e9e9637c9a17edc7876f",
+    "masks/body/mask-runs.json": "1dea9b7c80251d54dd1513ce79852bd3eb5eae182ea02e240946fce35582bcec",
+    "masks/body/mask.png": "58c41bee1ebfcbd504b77d3a9d07ba1802a60d0a81c5897bf10b65ab1c1b557b",
+    "masks/body/opaque.blob": "0b81603cabea73a3999b3d2ee1eae8277f03f05a9761efeb37efe69cbbb8f426",
+    "masks/body/pair.png": "d927a3af4731183a5f80fe3653eff3c1c449b093e6e4a865a349251be1c6d085",
+    "masks/upper/927b1e1f-6c321464.re4tex": "fe02b1590923b0464304411a3c54aa5a61300c5ede2196dbb633cc78fdf7110d",
+    "masks/upper/colour.png": "26e19dda7c55eaae84ae275d60ab907574241ce9540862d9abb416e13cac059d",
+    "masks/upper/hair.blob": "74034b6084edc589666811e6025edd1183862f5c01359db6fb43922c2776a64d",
+    "masks/upper/hair.uv": "a81c20360429292bf4f70324a815850fead57b47d317d1484996a8e81af0ddcd",
+    "masks/upper/mask-runs.json": "0642376db97cc20afb070b13cbedfe11a0b9d3fec24a437277b3fa90348681e4",
+    "masks/upper/mask.png": "240e56b49665825a447746416ffa9dec380a04772b6a73e8686f0cd8092efbea",
+    "masks/upper/opaque.blob": "5898269512c47e509b3b6fcd63c4b13aa53cb8a43ffa7160eb3410d937005ad6",
+    "masks/upper/pair.png": "aad5e94160d8658e681903c1f338f796b2f1393890e57dee76d0fac90fd921c1"
+  },
+  "models": [
+    {
+      "name": "body",
+      "model": "full-pot/queen-em38-00",
+      "mask": "masks/body",
+      "bones": 59,
+      "alpha_triangles": 508
+    },
+    {
+      "name": "upper",
+      "model": "full-pot/salazar-em38-03",
+      "mask": "masks/upper",
+      "bones": 21,
+      "alpha_triangles": 213
+    }
+  ],
+  "scope": "Pinned original source candidate alpha membership and encoded textures only. Source-GX index order restored; no source alpha classification/material, GS blend, animated look, complete registry or fight admission."
+}
