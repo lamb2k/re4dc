@@ -1,0 +1,19 @@
+{
+  "schema": "boss18-u3-source-mask-order-1",
+  "inputs": {
+    "inputs/em32.dat": "3d92aba3beb5c4869e957ea4ab4339be9a685b07294251e5e4aae8a746d8bc0b",
+    "inputs/em32.drs": "dc3a8d49179d2235d32f3fb7662be1d40ea69b3ab7046709aa8f0ffc10f01530",
+    "reused-source/u3-em32-00/mesh.json": "3b6cf35b33b094bb99f14a9bf6cc170ca8925b3790751a34ed88abd652f46f7d",
+    "reused-source/u3-em32-00/source.json": "185b735c079b2205a31cae359566846e54d5ae9a26f0e2dd704ad08fd524d129",
+    "full-source/u3-em32-00/runtime/castmodel_runtime.h": "3e83905c03ef38e8174635c32999167b9cf0061cb276f698e50472d616a0a1c8",
+    "source-alpha/atlas-rgba.png": "25fb893fec558d416582fc0a4e6b70920ae7766db140245f8fdb33cb4d8cf4f5",
+    "mask-u3-em32-00-ps2-s2/hair.blob": "d0989ca6f1fd963323da9efcd52125ab29e5861140bcd22520b5489c9e481943",
+    "mask-u3-em32-00-ps2-s2/hair.uv": "ef7a62fda4021312bfa6562ce569c62881204f1e01cd1edd287127d5232fc96c",
+    "mask-u3-em32-00-ps2-s2/opaque.blob": "6d931cfce67fad9f0929a4c082afa31b1faedbb32366dbd6fef48a5e515e565d",
+    "mask-u3-em32-00-ps2-s2/mask-runs.json": "6bdaaaf2bdf72fd05a4fadae195a322614184ec616734ba223c2baae8e707381",
+    "mask-u3-em32-00-ps2-s2/d137090f-5eeab1c8.re4tex": "75ce427da731280a48f760c9636b6daac702308035057bb9f7c8cc9e5f87162c"
+  },
+  "header": "full-source/u3-em32-00/runtime/castmodel_runtime.h",
+  "mask": "mask-u3-em32-00-ps2-s2",
+  "output": "mask-u3-em32-00-ps2-ordered-s2"
+}
