@@ -347,6 +347,18 @@ ALIVE_CAP_LOG ?= 0
 # the existing ALIVE_CAP budget with Ganados. Creation/send holds and fresh
 # accounting only; castle pointer-owner rooms remain excluded from parking.
 ALIVE_CAP_NOVIS ?= 0
+# PARTS_LINKED_FLAG: preserve the source indexing promise on linked fallback.
+# Demand-backed parts can reuse a model after a prior contiguous joint.
+PARTS_LINKED_FLAG ?= 0
+ifneq ($(words $(PARTS_LINKED_FLAG)),1)
+$(error PARTS_LINKED_FLAG must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(PARTS_LINKED_FLAG)),)
+$(error PARTS_LINKED_FLAG must be 0 or 1)
+endif
+ifeq ($(PARTS_LINKED_FLAG),1)
+$(OBJDIR)/src/game/model.o: GAME_CPPFLAGS += -DRE4DC_PARTS_LINKED_FLAG=1
+endif
 # ALIVE_CAP_R202_GATE_BEGIN: default-off original gate/operator initial admission.
 # The normal r202 camera event needs operator2E's rock. At cap4, visit its
 # original ESL record before operator21; all eligibility/held/death guards remain.
