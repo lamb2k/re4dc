@@ -53,7 +53,7 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [x] **Faster character drawing:** a new path for Leon and the enemies.
 - [x] **New Options defaults:** foliage starts Off and view distance starts at Near. The lake keeps its long view. You can still change both.
 - [ ] **Enemies hidden behind walls are no longer drawn.**
-- [ ] **Quick weapon select:** hold X and press the D-pad to swap weapons, like the RE4 remake.
+- [x] **Quick weapon select:** hold X and press the D-pad to swap weapons, like the RE4 remake.
 - [ ] **Work continues** on cheaper enemies and cheaper scenery.
 
 Screenshots come with the release.
