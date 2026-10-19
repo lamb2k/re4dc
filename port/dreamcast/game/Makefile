@@ -347,6 +347,23 @@ ALIVE_CAP_LOG ?= 0
 # the existing ALIVE_CAP budget with Ganados. Creation/send holds and fresh
 # accounting only; castle pointer-owner rooms remain excluded from parking.
 ALIVE_CAP_NOVIS ?= 0
+# ALIVE_CAP_R202_GATE_BEGIN: default-off original gate/operator initial admission.
+# The normal r202 camera event needs operator2E's rock. At cap4, visit its
+# original ESL record before operator21; all eligibility/held/death guards remain.
+ALIVE_CAP_R202_GATE ?= 0
+ifneq ($(words $(ALIVE_CAP_R202_GATE)),1)
+$(error ALIVE_CAP_R202_GATE must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ALIVE_CAP_R202_GATE)),)
+$(error ALIVE_CAP_R202_GATE must be 0 or 1)
+endif
+ifeq ($(ALIVE_CAP_R202_GATE),1)
+ifneq ($(ALIVE_CAP),4)
+$(error ALIVE_CAP_R202_GATE=1 requires ALIVE_CAP=4)
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_R202_GATE=1
+endif
+# ALIVE_CAP_R202_GATE_END
 # CAP_COMPARE=1 (below): the cap values the sources compare with (the constants, or the runtime re4dc_cap_rt)
 CAP_COMPARE ?= 0
 ALIVE_CAP_N = $(if $(filter 1,$(CAP_COMPARE)),re4dc_cap_rt,$(ALIVE_CAP))

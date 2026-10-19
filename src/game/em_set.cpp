@@ -7,6 +7,9 @@
 #include "atari.h"
 #include "light.h"
 #include "em_set.h"
+#if defined(RE4DC_ALIVE_CAP_R202_GATE) && RE4DC_ALIVE_CAP_R202_GATE
+#include "alive_cap_r202_gate.h"
+#endif
 #include "global.h"
 #include "db_log.h"
 #if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
@@ -791,7 +794,14 @@ void EmSetFromList()
     }
 #endif
 
+#if defined(RE4DC_ALIVE_CAP_R202_GATE) && RE4DC_ALIVE_CAP_R202_GATE
+    // Keep the original list filters and creation body. The permutation puts the
+    // gate's operator in the fourth-slot budget before an unrelated catapult.
+    for (u32 order = 0; order < 256; order++) {
+        i = re4dc_r202_gate::entry((unsigned) pG->room_id, order);
+#else
     for (i = 0; i < 256; i++) {
+#endif
         EmListData* d = EM_LIST(i);
         cEm* em;
 
