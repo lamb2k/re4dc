@@ -1,0 +1,12 @@
+name bench-r103-farm
+# Benchmark disc (BENCHMARK=1, bench.mk), scene 4 = /cd/dc/bench4.txt: the r103 farm, wide outdoor exploration view
+# (lane crowd12 2026-10-15, view "A230"): Leon near the r106 door looking back over the farm (barn, windmill, fences,
+# fog); the room's Ganados (5 alive) are not alerted and mostly out of view. God, no pad input. The room is entered
+# through the game's room change (DISCRD "from=door"). Settle room frames 0..299 (10 s), measure 300..1199 (30 s).
+room 0x103
+pos 7500 38 -400
+ang -2.30
+inv default
+god
+alivelog 150
+bench 4 300 1200 R103 FARM
