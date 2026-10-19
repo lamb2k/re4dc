@@ -570,6 +570,42 @@ castle18-ch41-r219-partner-20261019. Package SHA:
 `2f25149420bb81e14ec3a546c5efe3b52513ca6a66149857eaf1026ad799ba5f`.
 Manifest SHA: `b245d5bb1e1172ed2d4423d635d414feb75ea4fceaf1c6a07df913db92f1e756`.
 Source fragment: tools/d367/castle18/ch41-r219-partner-20261019.json.
-Runtime acquisition/native drawing, visible cloth, cart transitions,
-residency and48KiB KOS remain pending. No native-Ashley pass is inferred
-from the successful offline reuse. Proof: r219-partner-host-proof.json.
+Runtime acquisition and submitted native drawing now pass for the bounded
+original cart flow. The 55.95-second initial capture and unchanged56.12-second
+continuation share exact disc/program/state bytes and801 identical log lines.
+Both Ashley and Leon have4,395 summed native census counts and zero GC counts;
+these are cumulative census samples, not distinct frames. Declined, registry
+declined and absent remain zero. All seven live Ashley infos have original
+archive assets and current adoption certificates in both final saved states.
+The self-room transition retires generation1 with zero live owners/row users
+and opens generation2 cleanly. Original cart end positions, phase3/Stop0,
+Leon1440 and Ashley600 remain. The saved-state thumbnails were inspected:
+the full partner is visible at arrival, including hair/skirt and torso.
+This bounded view does not qualify every cloth pose, room route or chapter.
+
+Exact reserve49,152 holds; periodic KOS headroom minimum48,312. Texture-check,
+audio-fit, fatal, refusal, guard, eviction and retry failures are zero.
+Four native atlas/mask keys still upload after each room preload. Their
+correction preserves every one of Worker A V17's5,768 records, adds four
+r219 entries and leaves all other rooms exact. Eleven additional source
+first sightings belong to the original door-loading phase and remain in
+the evidence ledger rather than being treated as native room-game uploads.
+
+Private set: castle18-ch41-r219-native-resident-20261019, mirrored on C:.
+Resident SHA: e776711c58b93c7affcea345df37cab41bdb8ddbd4f0f300f351c42b9dd80259.
+Manifest SHA: e1609e574348241f6934000a499a89d00c67d148ecf75434429054d3bc059cb7.
+Source fragment: tools/d367/castle18/ch41-r219-native-resident-20261019.json.
+The corrected native-partner residency runtime is pending.
+
+Native-control disc SHA:
+504c4709c5f3bac7b74577e4d2ff4c9e96b65e05fdfd06665b12cc8c34d9d5a0.
+Joined log SHA:
+f8f2091386ae4d486b0ba2d476309367be0f264190629ea5ee37642dc8afeb47.
+Final tail state SHA:
+08fba9314535e4e41665f291b86f9b4bc23c50ca640980b89ce73f6aa168640b.
+Late zero-enemy Flycast registration remains about190ms and2.8 FPS.
+The performance problem is open; no console timing or speed gain is claimed.
+Proofs: r219-partner-host-proof.json, r219-partner-final-saved-state-audit.json,
+r219-partner-cart-continuation-provenance.json and the native source/resident
+ledgers. Finished control disc links were retired after sealing the evidence;
+states, logs, stills, program bytes and source data remain.
