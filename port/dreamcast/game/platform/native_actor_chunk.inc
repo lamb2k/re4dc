@@ -91,9 +91,68 @@ void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, b
             }
         }
         checked += n;
-        if (frame_serial % 300U == 0U)
+        if ((checked & ~16383U) != ((checked - n) & ~16383U))
             printf("CCHK frame=%u checked=%u x=%u y=%u z=%u u=%u v=%u oc=%u\n", frame_serial, checked, mis[0], mis[1],
                       mis[2], mis[3], mis[4], mis[5]);
+    }
+#endif
+}
+
+// Light once per distinct normal: pass_lights (fast fold) over the chunk's distinct normal indices into a side
+// cache, then each record takes its normal's colour word. A record's lit colour is a function of its normal (and
+// the normal's palette entry) and the part's alpha only, unless the part has per-vertex alpha (e.colors), which
+// keeps today's pass.
+u8 chunk_nsrc[kMaxVertices];
+u16 chunk_nkey[256];   // open-address table: normal index + 1 (0 = empty)
+u8 chunk_nval[256];
+struct ChunkLightStats { unsigned records, normals; } chunk_light_stats;
+void chunk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
+    if (e.colors || !n) { pass_lights(e, L, r, n); return; }
+    std::memset(chunk_nkey, 0, sizeof chunk_nkey);
+    unsigned u = 0;
+    for (unsigned i = 0; i < n; ++i) {
+        const unsigned ni = r.ni(i);
+        unsigned h = (ni * 2654435761U) >> 24;
+        while (chunk_nkey[h] && chunk_nkey[h] != ni + 1U) h = (h + 1U) & 255U;
+        if (!chunk_nkey[h]) {
+            chunk_nkey[h] = u16(ni + 1U); chunk_nval[h] = u8(u);
+            u16* d = chunk_rec + u * 3U;
+            d[0] = u16(r.vi(i)); d[1] = u16(ni); d[2] = u16(r.ti(i));
+            ++u;
+        }
+        chunk_nsrc[i] = chunk_nval[h];
+    }
+    chunk_light_stats.records += n; chunk_light_stats.normals += u;
+    if (u == n) { pass_lights(e, L, r, n); return; }
+    for (unsigned j = 0; j < kChunkRecPad * 3U; ++j) chunk_rec[u * 3U + j] = chunk_rec[(u - 1U) * 3U + j % 3U];
+    const Records c{chunk_rec, 3U, r.color, false};
+    // Side cache from the frame workspace (per submit scratch, released here): no static buffer, KOS untouched.
+    const unsigned mark = workspace_top;
+    pvr_vertex_t* const lit = static_cast<pvr_vertex_t*>(scratch((u + 4U) * unsigned(sizeof(pvr_vertex_t))));
+    if (!lit) { pass_lights(e, L, r, n); return; }
+    pvr_vertex_t* const keep = e.cache.v;
+    e.cache.v = lit;
+    pass_lights(e, L, c, u);
+    e.cache.v = keep;
+    for (unsigned i = 0; i < n; ++i) keep[i].argb = lit[chunk_nsrc[i]].argb;
+    workspace_top = mark;
+#if RE4DC_CHAR_CHUNK == 2
+    {
+        alignas(32) static pvr_vertex_t ref_v[kMaxVertices + 4];
+        static unsigned bad, checked, logged;
+        e.cache.v = ref_v;
+        pass_lights(e, L, r, n);
+        e.cache.v = keep;
+        for (unsigned i = 0; i < n; ++i)
+            if (ref_v[i].argb != keep[i].argb && ++bad && logged < 20) {
+                ++logged;
+                printf("LCHK i=%u n=%u ni=%u got=%08x want=%08x\n", i, n, r.ni(i), unsigned(keep[i].argb),
+                       unsigned(ref_v[i].argb));
+            }
+        checked += n;
+        if ((checked & ~16383U) != ((checked - n) & ~16383U))
+            printf("LCHK checked=%u bad=%u normals=%u/%u\n", checked, bad, chunk_light_stats.normals,
+                   chunk_light_stats.records);
     }
 #endif
 }

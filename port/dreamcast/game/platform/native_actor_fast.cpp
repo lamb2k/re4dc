@@ -4814,6 +4814,11 @@ void exit_(unsigned e) { if (Row* r = row()) { r->n[e]++; r->us[e] += unsigned(r
 #define PXF_BEGIN(p) do { } while (0)
 #define PXF_EXIT(e) do { } while (0)
 #endif
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+namespace {
+#include "native_actor_chunk.inc"
+}  // namespace
+#endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     ++stats.parts;
     PXF_BEGIN(part);
@@ -5177,7 +5182,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (census_cur) { census_cur->nv += nv; census_cur->nt += nt; census_cur->lvl += level; }
 #endif
         unsigned all, any;
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+        chunk_positions(e, r, nv, k, s16_uv, all, any);
+#else
         pass_positions(e, r, nv, k, s16_uv, all, any);
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
         if (pxf::Row* pr = pxf::row()) { pr->ml++; if (all & kOcCull) pr->mlc++; }
 #endif
@@ -5210,7 +5219,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         } else if (bake != kBakeNone) {
             pass_baked(e, r, nv, bake == kBakeScaled ? bake_scale : nullptr);
         } else if (lights.fast) {
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+            chunk_lights(e, lights, r, nv);
+#else
             pass_lights(e, lights, r, nv);
+#endif
         } else {
             pass_lights_exact(e, lights, r, nv);
         }
@@ -5232,8 +5245,17 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
         if (bake == kBakeNone) stats.normals_lit += nv;
         if (any & kOcNear) ++stats.meshlets_clipped;
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+        {
+            ChunkSink sink;
+            chunk_sink_begin(sink, e);
+            ok = chunk_sink_strips(sink, r, index, ni, nt, any);
+            chunk_sink_end(sink);
+        }
+#else
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
         else ok = e.strips(r, index, ni);
+#endif
     }
 #if RE4DC_ACTOR_DIRECT
     if (e.direct) {
@@ -5283,9 +5305,6 @@ extern "C" void re4dc_log(const char* fmt, ...);
 // native_ui.cpp (COARSE_ONE_SUBMIT): re4dc_model_direct_begin for a part the caller has just reserved.
 extern "C" int re4dc_model_direct_begin_reserved(const Re4dcModelPart*, const Re4dcModelPacket*, Re4dcModelDirect*);
 namespace {
-#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
-#include "native_actor_chunk.inc"
-#endif
 // qualifies() for a part without arrays (positions == nullptr: its array term is lazy_skin()), keeping
 // lazy_skin()'s registry entry and source for one_frame().
 bool one_qualifies(const Re4dcModelPart& p, const SkinEntry*& se, Re4dcActorSource& src) {
@@ -5822,7 +5841,11 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         } else if (bake != kBakeNone) {
             pass_baked(e, r, nv, bake == kBakeScaled ? bake_scale : nullptr);
         } else if (lights.fast) {
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+            chunk_lights(e, lights, r, nv);
+#else
             pass_lights(e, lights, r, nv);
+#endif
         } else {
             pass_lights_exact(e, lights, r, nv);
         }
