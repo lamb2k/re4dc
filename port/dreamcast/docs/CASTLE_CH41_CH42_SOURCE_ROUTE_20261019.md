@@ -218,3 +218,143 @@ Private set `castle18-ch41-r219-audio-20261019` is mirrored on C:, manifest
 `6cf68a625106b7630762dbfdb7eb4b2920971f234007c980a0f67fd45b858d7b`.
 Additive fixture: `tools/d367/castle18/ch41-r219-audio-20261019.json`.
 Evidence: `r219-entry-preparation.json` and `r219-audio-fit-proof.json`.
+
+The selected 76-stream file lacks both original cart streams, 1:E4 and
+1:E5. A header inventory of 30 retained containers found neither. The
+existing converter prepares those two original 32 kHz stereo sounds;
+their encoded lengths are 131,072 and 180,224 bytes. The additive 78-entry
+union preserves every previous descriptor, offset and encoded payload.
+All 78 source descriptors match the original stream headers. The current
+c18oimW resolved capacity is 80, so no program or capacity change is needed.
+
+Private set `castle18-ch41-r219-streams-20261019` is mirrored on C:, manifest
+`5e95da70d4ac1b3e4a5bbad01ec70f3087af6b779a5568a825788aa1635c3a37`.
+Output SHA:
+`208dcd229c1cd985b6165fdff31d9f30116f723af970003ebe5c4de389bc0143`.
+The source fragment is `tools/d367/castle18/ch41-r219-streams-20261019.json`.
+Compose only these two additions into newer stream unions. These are host
+checks; actual playback and both original cart events remain unqualified.
+
+The current-program entry `cx-r219-walk-entrykos01` completed 56.39 seconds,
+held the exact 49,152-byte reserve and left minimum KOS watch headroom of
+48,752 bytes. All 23 program payloads remain unchanged. Texture errors,
+audio-fit failures, fatal stops and VRAM refusals are zero. Leon has 450
+native census samples with zero fallback. The program loads both added
+32 kHz stereo stream-index entries; neither cart event plays in this entry
+check. There is no Ashley model census, so her HUD does not prove her model.
+
+The last official VRAM row is only the frame-182 preload: 907,488 pinned,
+zero dynamic, 1,602,592 free and 1,571,840 largest-free-block bytes. Later
+stream receipts through frame 480 retain 143 loads, but complete room
+residency is not qualified. The 45-second still shows the near cart platform
+and Leon. Late Flycast registration reaches about 190-196 ms at global ticks
+649-661, with no active enemies, similar to the unresolved r210 observation.
+This is not hardware timing or an attributed cause. The original cart
+sequence, partner, audio playback and chapter traversal remain open.
+
+Evidence: `r219-entry-proof.json`. Log SHA:
+`b48f5da19094c9739f378f81b30aa900c5e47a60842c813ea0d727b721644378`.
+Disc SHA:
+`a0a9df001abbda5f204db141a129cc54ebe93af0c6f18de60e5c60b31a076edc`.
+The finished disc was retired after sealing; logs, stills and results remain.
+
+## r211 cup-route entry preparation
+
+The diagnostic fixture uses the original r219 area-1 destination, retains
+the 23 current program payloads and adds 137 recovered room files. The
+original statue tasks require cup 6E from r216 and cup 6F from r212, then
+the original grate event before the r213 exit. Entry cannot qualify them.
+
+The unchanged frozen-layout fitter prepares ROOM/FOOT alongside the
+682,208-byte aligned em14 bank. It selects 11,025/8,000 Hz under its existing
+policy and uses 201,056 aligned bytes, leaving 120,928 arena bytes. All
+non-audio archive bytes and original wavetable bytes remain exact. This is
+host preparation; runtime and preceding partner-state overlap remain open.
+
+Private set `castle18-ch41-r211-audio-20261019` is mirrored on C:, manifest
+`b400c71aa8b2394c99f231ed9602eb6781cb544c7f2a25cb34af0481c3b1fda2`.
+Archive SHA:
+`fb19ffd6e2afef92bfc8ffddc6b48ea65264149f223aae2ad503c524de37f4eb`.
+Source fragment: `tools/d367/castle18/ch41-r211-audio-20261019.json`.
+
+The current container still has raw BGM7. An inventory of 18 retained
+containers found the exact prepared source bank in the island lane's
+`island18-r300-sound-20261018` data. Its original wavetable, sample count,
+source identity and frozen layout match. Reuse copies only its 637,306-byte
+ARAM range at offset 4,498,016; the actual encoded sound image is 165,916
+bytes at 32 kHz, inside the unchanged 264,576-byte BGM0 slot. All other bytes,
+including the checked BGM14 and original MRAM, remain exact. No codec or
+audio quality setting changes.
+
+Private set `castle18-ch41-bgm7-20261019` is mirrored on C:, manifest
+`25bbfb7d63dd820eb2bfa8196ccf4c17286fd21237cf1b02d814cfff437fce86`.
+Output SHA:
+`d413a6ee6f894baa0d83bd8326ca763822522c78522c7b4fa97b97b40c385413`.
+Source fragment: `tools/d367/castle18/ch41-bgm7-20261019.json`.
+Apply only that checked slice to newer containers. Actual r211 playback
+and room checks remain pending.
+
+## Supplemental first-pass checker recovery
+
+The worker wrapper inherited a checker path into a deleted October 13
+checkout. Its private invocation now points to the selected worker tree's
+existing checker, with no changed gate criteria. That checker was run
+against the six retained r20e, r210, r222 and r219 logs. Entry, fatal-stop,
+warp-directive, PS2 world, source-fallback and texture checks pass. Overall
+results remain `UNPROVEN`, because these stationary diagnostics do not
+establish a short walk and the checker requires a separate asset-provenance
+audit. The explicit reserve, residency and actual-admission audits above
+are independent and remain unchanged. No room or chapter pass is inferred.
+
+## r222 near-enemy diagnostic and residency correction
+
+`cx-r222-walk-neararea10kos02` starts at the original area 10 centre,
+100 mm above its trigger floor, facing original enemy-list row 23. It
+changes no room flags. It completed 56.53 seconds, with the exact 49,152-byte
+reserve held and minimum KOS watch headroom 49,272 bytes. The two nearby
+type 9 monks now have actual `NMRM admit` receipts and positive native
+draw counters: 3,000 cumulative census samples, zero GameCube fallback.
+Leon has 1,500 native samples, zero fallback. Texture and audio-fit errors
+are zero. This does not cover the distant type 8 dragon operator. The
+46-second camera is obstructed by scenery, so visible appearance is still
+unqualified despite the actual draw receipts.
+
+The near diagnostic exposes three late texture uploads, so residency
+fails. All three actual package winners and source dimensions/formats were
+audited: `f96f7e1f-7f97a831` (1024x512, format 6),
+`ac23b5fe-01af40e8` (64x64, format 6), and
+`ec7b1745-32ce202e` (64x128, format 6). Their pixels, models and runtime
+programs are unchanged. The additive candidate preserves all 5,710 newest
+Worker A V12 records and every other room, adding only these three r222
+records. Its prior r222 entries exactly match the control's entries.
+
+Private set `castle18-ch41-r222-resident-20261019` is mirrored on C:,
+manifest SHA
+`deb8ef63b858be3b0b111ed334b7c057ad635c4f22172ee6f373b2ce360e87ff`.
+The 5,713-record resident SHA is
+`902a55450efcbae7be9fdbf6f4cfae986da77e350c08577bc09f31c795b7e2f4`.
+The matched near-enemy check `cx-r222-walk-residentkos03` passes the bounded
+residency gate. It completed 56.28 seconds and held the exact 49,152-byte
+reserve, with minimum KOS watch headroom 49,272 bytes. Across 7,048 staged
+payloads, only `dc/resident.bin` changes; all 23 program files, room data,
+models, textures, audio, warp and input remain exact. Late gameplay uploads
+fall from three to zero. The two nearby type 9 monks retain actual native
+admissions and 3,000 native census samples, with zero GameCube fallback.
+Texture errors, audio-fit failures, refusals, evictions and retries are zero.
+
+The gameplay VRAM row at frame 767 reports 594,624 pinned, 471,712 dynamic,
+1,410,976 free and 1,390,592 largest-free-block bytes. Later native stream
+receipts through frame 1080 retain 124 loads. The 45-second still remains
+obstructed; appearance, the distant type 8, combat, dragon targets, ornament
+pickup and the original chapter route are not qualified. Compose the three
+records into newer unions; never discard another worker's additions.
+
+Matched proof: `r222-residency-matched-proof.json`. Candidate log SHA:
+`f5240741df4474da097f7d20cf29812f4694d005baec3c46558b165522141cf4`.
+Candidate disc SHA:
+`841f861a1ab308d268427ee9e6f4ed3ac47ec99c0188aebf0d91aff6d8a86680`.
+
+Evidence: `r222-neararea10kos02-gate.json`,
+`r222-source-first-sight-winners.json`, `r222-source-trigger-geometry.json`
+and `r222-resident-host-proof.json`. Near diagnostic log SHA:
+`aec010314a3c2df5a3d0789f876a32b1bc6815f7db39056e8f570959a2dcbeef`.
