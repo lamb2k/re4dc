@@ -1,0 +1,79 @@
+{
+  "source_commit": "89e5d4cc45e20c3ce036973cac455178e0cc9fa1",
+  "source_inputs": {
+    "ps2-r226-arc1f.bin": "72ef8816697e2ecec9481f1da5cfd691ddc7a4e86079c1176675ab1c90f5238c",
+    "gc-r226-arc1f.bin": "0bc3b7e1716426368905c6eedd6e29dd753039a9c52a1daa25208a02e282200a",
+    "ps2-r226-arc20.tpl": "da331fe5505fda9941a38cec809e8e95a94dd43ea0e5f8ed8d6bda3b9fd38600"
+  },
+  "identity": {
+    "manager": "ObjMgr",
+    "class_name": "cObjRobo",
+    "kindid": 1,
+    "id": 55,
+    "type": 0,
+    "parts": 23,
+    "model_infos": 1,
+    "OT": 0,
+    "room": "r226",
+    "BIN": 31,
+    "TPL": 32
+  },
+  "source_triangles": 12631,
+  "raw_strip_vertices": 17573,
+  "source_files_sha256": {
+    "src/game/objRobo.cpp": "f0c84407b83589449c6380f0211c5ae05ced6765b559ae6a79aec7e501ce0c3c",
+    "src/game/obj.cpp": "c206b0b247c06029ee44051deb0db24ccea702ae9534fdaa41dcfc6d0479c601",
+    "src/game/model.cpp": "f4000ce8a535aea988ceb2d77418a4048abf1e116b2a9c35e5d0a68129daa69d",
+    "src/game/trans.cpp": "fa3cef834c530398ca92cb8faf040b6090f5e75ec394f3816a5cbb03a9bc8831",
+    "src/st2/r226.cpp": "c8fec564dc23899144f46450ba9a3a14dad8d6fbf9f4e4f4dd2b54d0434290b6",
+    "port/dreamcast/game/platform/include/source_actor_owner_hooks.inc": "6f806cfd3256449ddad6cfb52dfac0a8a67f2aa2040b55e336592ed9ff36af94",
+    "port/dreamcast/game/coarse_actor_owner_registry.inc": "2ac508cb7e5941b0b989d0e8622339036982bfa8070d36d12f83019a55e0becb",
+    "port/dreamcast/tools/ps2_cast.py": "30bb6e5c864699202fbaf0f1e73bf20959ca8a2681dd242c9ffbaca94164b5b3",
+    "port/dreamcast/tools/d367/model_registry.py": "43a187b7f6ed703d6ff207be92ae7a1378069fcf942fb536ff34087e4f763b80"
+  },
+  "first_runtime_boundary": {
+    "file": "port/dreamcast/game/platform/include/source_actor_owner_hooks.inc",
+    "lines": [
+      14,
+      22,
+      53,
+      66
+    ],
+    "reason": "ObjMgr statue not in source EmMgr ledger or existing separate object kinds. Registry id/part nomination is not ownership. No hidden allowlist row added.",
+    "separate_EmMgr_ledger": {
+      "file": "src/game/trans.cpp",
+      "lines": [
+        890,
+        937
+      ]
+    }
+  },
+  "converter_boundary": {
+    "file": "port/dreamcast/tools/ps2_cast.py",
+    "reason": "Current input reader hardcodes em/<archive>.drs and labels it accordingly. Statue source is a room-owned r226 archive; do not spoof it as an enemy em37 or copy bytes into a misleading cached em path.",
+    "original_PS2_entry": "BIO4DAT.AFS:r226.dat",
+    "original_GC_file": "St2/r226.das -> decoded original archive",
+    "required": "Explicit original room input and full archive/BIN/TPL lifetime/facts through existing data/generator ownership, when coordinated; no new room format."
+  },
+  "owner": "Coordinator routes existing character renderer/registry owner in Performance P2 for source ObjMgr identity, lifetime, source texture prep, native skin lease and pass equivalence. Boss18 retains full source and can convert once ownership/input contract is concrete.",
+  "not_proved": [
+    "Native model package/arena admission",
+    "Current runtime first draw or source->native selector",
+    "Source GS/render material equivalence",
+    "Animated hand/foot/chase poses",
+    "Complete source fight/frame budget",
+    "Whole-room residency/VRAM/48KiBKOS/STRICT/route/off-image"
+  ],
+  "private_receipt": {
+    "set": "boss18-statue-admission-20261019",
+    "files": 6,
+    "bytes": 85005,
+    "sha256sums_sha256": "4c281573aca08b1ac1f72dc7ab2cdd827779bfc37e60b4fe92462290bf9c0552",
+    "mirror_verified": true,
+    "no_new_model_or_reduction": true,
+    "no_runtime_edit": true,
+    "no_build_Flycast": true,
+    "first_owner": "Existing character renderer/registry owner under Performance P2, routed by coordinator; no boss18 engine work"
+  },
+  "source_image_alpha": "All11 original decoded images alpha255;12 material records flag0, no opacity/bump/spec texture indices. This is source feasibility, not final rendered material equivalence."
+}
