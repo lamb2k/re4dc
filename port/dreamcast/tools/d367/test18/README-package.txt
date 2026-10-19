@@ -9,6 +9,8 @@ gdemu/disc.gdi directly (if menu or popup text looks broken in Flycast,
 use its per-pixel renderer setting).
 
 New in test 18 (still up to the castle gate, r200):
+* Fix: chapter 2-1 can now be finished (#40). The Insignia Key for the
+  church is given at the gate to the dam, which isn't in the game yet.
 * A lighter El Gigante in both fights.
 * Leon and El Gigante keep their PS2 models for the whole first El
   Gigante fight (r119).
@@ -25,7 +27,7 @@ New in test 18 (still up to the castle gate, r200):
 * No sound gap in cutscenes (#38).
 * The world picture and effect pictures on the way to the castle gate
   are back (#39). For about a second in r200 some effect sprites can
-  still be skipped.
+  still be skipped (#41).
 
 From test 17.1 (hotfix):
 * Coming Soon returns you to the room, so you can take the other exit.

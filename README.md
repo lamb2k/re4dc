@@ -14,6 +14,8 @@ This is an experimental fan test build, not the complete game.
 
 Fixes and a little more speed, still up to the castle gate. Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
 
+- **Fix: chapter 2-1 can now be finished** ([#40](https://github.com/lamb2k/re4dc/issues/40)). The Insignia Key for
+  the church is given at the gate to the dam, which isn't in the game yet.
 - **A lighter El Gigante** in both fights.
 
   ![El Gigante (r119)](docs/images/releases/test-18/el-gigante-g50.jpg)
@@ -41,7 +43,7 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 - **No sound gap in cutscenes** ([#38](https://github.com/lamb2k/re4dc/issues/38)). The Mendez cutscene still ends as
   soon as you pass its button prompt, as in the original game.
 - **The world picture and the effect pictures on the way to the castle gate are back** ([#39](https://github.com/lamb2k/re4dc/issues/39)).
-  For about a second in r200, some effect sprites can still be skipped; that stays a known issue.
+  For about a second in r200, some effect sprites can still be skipped ([#41](https://github.com/lamb2k/re4dc/issues/41)).
 
 ## Coming soon: Test 19
 
@@ -156,7 +158,7 @@ The VMU in controller slot 1 shows Leon, Ashley, Hunnigan and Luis pages.
 
 The full, current list is [KNOWN_ISSUES.md](port/dreamcast/docs/KNOWN_ISSUES.md). The top open items:
 
-- **Some effect sprites skipped for about a second** in r200, at the castle gate ([#39](https://github.com/lamb2k/re4dc/issues/39)).
+- **Some effect sprites skipped for about a second** in r200, at the castle gate ([#41](https://github.com/lamb2k/re4dc/issues/41)).
 - **Pauses when entering rooms.**
 
 ## Help out
