@@ -1,8 +1,9 @@
 # World18 scenery experiments
 
-Private branch `codex/world18`, based on `t15/int` 7d7c05ab. This lane owns
-released-route scenery only. Assets and camera logs remain private; no release
-recipe or runtime switch is changed by these host tools.
+Private branch `codex/world18`, initially based on `t15/int` 7d7c05ab and merged
+through cd2d6558 for the compiled-plan trial. This lane owns released-route
+scenery only. Assets and camera logs remain private. Historical host experiments
+and the later default-off runtime trial are separated below.
 
 `cone_ceiling.py` measures existing meshlet/strip-group back-face rejection on
 logged PS2CAM windows. It checks transform counts against the existing sgprice
@@ -65,3 +66,51 @@ Private data and both Blender scenes are mirrored under
 `world18-r101-20261018` with SHA256SUMS. Reports and the rejection sheet are under
 `C:\Flycast-Evidence\re4-dreamcast\world18-20261018`. M1 is complete; a useful
 M2 still needs targeted room/material work that passes every look and runtime gate.
+
+## Compiled room-plan trial (I-005, 2026-10-19): STOP
+
+`compiled_plan.py` writes R4SG v2 in the existing strip-group allocation. It
+preserves the exact mesh/R4PW bytes and reconstructs every original group list;
+small source-referencing descriptors and conservative cells reuse bounds,
+ordered pass membership and exact-affine matrices. Source-owned moving/sky
+placements retain their original path. Runtime integration is c90c8b91, reader
+and host checks 79dabd7c, inventory 687bf92e. WORLD_PLAN defaults to 0 and is not
+part of T15REC. No release has adopted it.
+
+The final layered r101 input has 1,830 meshlets, 223 placements (202 immutable),
+342 parts, 43 affine keys and 16 full-coverage conservative cells. Metadata is
+117,152 B before/after; 117,052 B is used, including 6,528 B scratch. Host checks
+cover 26,328 visibility combinations, four exact-key invalidations, thirteen
+malformed/bounds cases and all 1,830 exact group sequences.
+
+Same-executable w18p1rW v1-control/v2-candidate, r101 cross live cap4,
+Fast/cap1, global frames480..525 stride3 (16 drawn one-tick samples): nominal
+MODELLED work proxy **49.001081 -> 49.546355 ms**, a **0.545273 ms regression**.
+Work proxy subtracts flat-self re4dc_pace_end and re4dc_vi_retrace_count from
+the full trace. Both replay/symbol parity checks pass. The minimum required
+gain was1.5 ms: stop before r103/r119; do not promote this path or infer a
+console speedup. Affine concat saves0.102596 ms, but draw self adds0.365531 ms
+and fine visibility call counts are essentially unchanged.
+
+Partial qualification only: disabled diagnostic boot+14 overlays match the
+original-source diagnostic reference; T15REC rP release identity was not run.
+Geometry lostpart0/4494 over393 cameras. Frozen tick700 Off diagnostics have
+fb0 pixel-identical and fb1 seven differing pixels. KOS48KiB fight2/10 cases
+only, minimum free5688/5600 B. Both control and candidate show an unresolved
+alive-id41/no-NMRS baseline finding. STRICT/decisions, complete residency,
+remaining squeeze cases and console acceptance are not established.
+
+Private evidence: C:\\Flycast-Evidence\\re4-dreamcast\\world18-20261018\\compiled-plan.
+Private datasets worldplan18-input-20261018 and worldplan18-20261018 are
+mirrored under re4-assets-private with SHA256SUMS. The final candidate metadata
+SHA256 is c92f5f000fdae1c4cf7659fa774b8266c2f1e17323b848cca5a58d4be109f9b0.
+The full result is WORLD18-COMPILED-PLAN-20261019.md in the workspace.
+
+I-006/I-007's shared room-file design is in the world18 section of
+ACTOR-RUNTIME-INTERFACE-20261018.md: one deterministic offline compile, a
+versioned R4RC section container, shared base lattice and one room budget.
+It is a design, not an implemented or accepted converter. Adding the current
+80,272 B collision grid to a 100 B reserve fails zero-growth; r100s30 and
+r101 need independent replacement-allocation proof. The unchanged performance
+stop rule means the new drawing priority does not authorize rank2/farm work
+after this failed trial.
