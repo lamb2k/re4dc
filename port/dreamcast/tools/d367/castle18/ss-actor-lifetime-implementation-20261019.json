@@ -1,0 +1,43 @@
+{
+  "status": "DEFAULT_OFF_IMPLEMENTATION_HOST_PROOF_REVIEW_PENDING",
+  "baseline": "27db38be01708a40ec86c3a15b7a564700951949",
+  "upstream": "e86bf58e",
+  "knob": "SS_ACTOR_LIFETIME=0 by default; enabling requires SUBSCREEN=1",
+  "source_files": {
+    "port/dreamcast/game/sscrn_bridge.cpp": "dd8e8cae2e51ea5e5f6189b51119eaea8f89fbfc4901dc6be8814fa44a366510",
+    "port/dreamcast/game/subscreen.mk": "46d6db7be4427b72448956365e54ff8141b0c2068f4a0705d7843e701b1b1c06",
+    "src/Sscrn/ss_pzzl.cpp": "3406574af27b575bfcb5c830fa8a0f2a686454a7cfa7a75b34fca97df5b3a405",
+    "src/game/cockpit.cpp": "a28ba1c82db629b34ed64d1b63bbad9155702f7e8414f2bea65bf39cff69c604",
+    "src/game/pl_npc.cpp": "8aa0ab1945eb5dbbf6bdc0aae5f1331d30adc16b779df626dcd2238cafd25881",
+    "include/re4dc_subscreen_actor.h": "b1311e73a95f1e1ea174827e416be032ace6d7ecc616920ef7c7a6b839efa2a8"
+  },
+  "host_test_sha256": "af18830da2a3d1aa10fbb263f2c2437e41f58a22a556145eed6e80aabf1e973a",
+  "lifecycle_proof_sha256": "b62b4277f23d2f47a9d45a9cd2536e0f76641ad60f97a4de20d774572311068b",
+  "lifecycle_output": "frozen_condition_cases=1572864 lifecycle_cases=24 actual_source_use_healing_reset=PASS identity_reset_hash_order=PASS",
+  "preprocessing_proof_sha256": "81321c046f26a567092b9b32d4acdbbeb77e9ab7ef2959834348038d80fd44cc",
+  "actual_compiler_rows": 8,
+  "make_cases": 8,
+  "raw_preprocessed_identity_rows": 8,
+  "token_identity_rows": 8,
+  "phase_order": [
+    "capture after successful backing save and restored SS_PACK scratch, before actor bytes cleared",
+    "successful original Use changes live global health/item data and queues target bit only",
+    "existing room backing restore and hash-failure fatal remain unchanged",
+    "after successful hash and exact identities, clear metadata then call original player reset followed by original partner reset",
+    "return to unchanged room/model-manager restart and eventual original task resume"
+  ],
+  "limits": [
+    "No candidate object, ELF, linked-memory size or guest gate exists yet. No recipe enable.",
+    "Mocked host actor layout and backing transport, real extracted helper/condition/reset/healing/ItemMgr.use/WHO decision bodies.",
+    "Cancel source branch and system-reset/core-exit ordering checked from actual unchanged source; not a guest cancellation or system-reset test.",
+    "Hash failure modeled with throwing host fatal; original strong SH-4 nonreturning fatal was independently proved in the existing baseline receipt.",
+    "New upstream083 was intentionally not merged into this sealed e86 pair.",
+    "Runtime Ashley-target injury/heal, repeated/cancel/failed Use, close/reopen and reset order remain required."
+  ],
+  "invalid_attempts": [
+    "lifecycle-test-01: initial extraction selected an earlier nested case; assertion stopped before compile",
+    "lifecycle-test-02: host wrapper returned int around original void early-return; compile stopped before execution",
+    "lifecycle-test-03: source tests passed before added yellow-max-life/source-reset-order coverage",
+    "preprocessing first dry-run: existing object paths were up-to-date; added diagnostic .PHONY printing without compiling or rewriting any object"
+  ]
+}

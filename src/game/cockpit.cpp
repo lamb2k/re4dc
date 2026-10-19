@@ -4,6 +4,9 @@
 // through id sprites (IdSys); the cockpit only updates their textures, colours and rotations.
 // Original source: D:/Bio4/Prog/cockpit.cpp.
 #include "types.h"
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+#include "re4dc_subscreen_actor.h"
+#endif
 #include "global.h"
 #include "atari.h"
 #include "map_obj.h"
@@ -199,7 +202,11 @@ void LifeMeter::move()
     f32 rate;
     int i;
 
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+    if (re4dc_ss_actor_is_ashley()) {
+#else
     if (pSUB && pSUB->id == 3) {
+#endif
         IdUnit* p = IdSys.unitPtr(1, ID_LIFE);
         p->be_flag |= 8;
         p = IdSys.unitPtr(3, ID_LIFE);
@@ -383,13 +390,21 @@ void LifeMeter::move()
         u4->be_flag |= 8;
     }
 
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+    if (re4dc_ss_actor_has_partner()) {
+#else
     if (pSUB) {
+#endif
         IdSys.unitPtr(0x1A, ID_LIFE)->be_flag &= ~8;
         IdSys.unitPtr(0x1B, ID_LIFE)->be_flag &= ~8;
         IdSys.unitPtr(0x1C, ID_LIFE)->be_flag &= ~8;
         IdSys.unitPtr(0x1D, ID_LIFE)->be_flag &= ~8;
         IdSys.unitPtr(0x1E, ID_LIFE)->be_flag &= ~8;
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+        if (re4dc_ss_actor_is_ashley()) {
+#else
         if (pSUB->id == 3) {
+#endif
             u32 cond = SubCharGetCondition();
             if (cond & 8) {
                 IdSys.unitPtr(0x1C, ID_LIFE)->be_flag |= 8;
@@ -635,7 +650,11 @@ static int dispBulletDigit(u8 no)
     if (pG->pl_type == 1) {
         return 0;
     }
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+    if ((re4dc_ss_actor_player_stat() & 0xFFFF0000) == 0x000F0000) {
+#else
     if ((pPL->stat & 0xFFFF0000) == 0x000F0000) {
+#endif
         return 0;
     }
     switch (no) {
@@ -676,7 +695,11 @@ u8 dispBulletIconMarkNo(u8 no)
     if (pG->pl_type == 1) {
         return 0xFF;
     }
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+    if ((re4dc_ss_actor_player_stat() & 0xFFFF0000) == 0x000F0000) {
+#else
     if ((pPL->stat & 0xFFFF0000) == 0x000F0000) {
+#endif
         if (pG->room_id == 0x333) {
             return 0xFF;
         }
