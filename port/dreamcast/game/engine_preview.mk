@@ -5,13 +5,51 @@
 #   and foot IK floor queries; the source (SatMgr) decides wherever the grid cannot. The grid is room data in heap 4,
 #   not in the program. A logic approximation: its own gameplay-equivalence gate, not STRICT.
 ENGINE_PREVIEW ?= 0
+# ENGINE_VIS_LOG=1 (diagnostic, test arms only; engine19 Task 2): an EVIS log line per Ganado per tick (em10.cpp).
+ENGINE_VIS_LOG ?= 0
+ifeq ($(ENGINE_VIS_LOG),1)
+$(OBJDIR)/mod/em10g/shared/src/em10/em10.o: GAME_CPPFLAGS += -DRE4DC_ENGINE_VIS_LOG=1
+endif
+# ENEMY_VIS_CULL=1 (lane engine19, the wall check; render only; default 0 = nothing built): a Ganado the room's PS2
+#   world hides from the camera (the room data file's VIS section, tools/enginebake/room_compile.py --world) takes
+#   CROWD_INVIS_SKIP's skip paths, as PS2_INTERIOR_ACTORS's house test does (platform/room_vis.c). Independent of
+#   ENGINE_PREVIEW. No room file / no VIS / the world not as compiled (re4dc_ps2_world_intact): no culling.
+ENEMY_VIS_CULL ?= 0
+ROOMFILE_SECTIONS :=
 ifeq ($(ENGINE_PREVIEW),1)
 $(OBJDIR)/mod/em10g/shared/src/em10/em10.o $(OBJDIR)/src/game/ik.o: GAME_CPPFLAGS += -DRE4DC_ENGINE_PREVIEW=1 -Iplatform/include
-$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ENGINE_PREVIEW=1 -Iplatform/include
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ENGINE_PREVIEW=1
 PLATFORM_OBJS += $(OBJDIR)/platform/actor_rt.o
-$(OBJDIR)/platform/actor_rt.o: platform/actor_rt.c platform/include/actor_rt.h
+$(OBJDIR)/platform/actor_rt.o: platform/actor_rt.c platform/include/actor_rt.h platform/include/room_file.h
 	@mkdir -p $(dir $@)
 	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include -c $< -o $@
+ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_GRID=1
 else ifneq ($(ENGINE_PREVIEW),0)
 $(error ENGINE_PREVIEW is 0 or 1)
+endif
+ifeq ($(ENEMY_VIS_CULL),1)
+ifneq ($(CROWD_INVIS_SKIP),1)
+$(error ENEMY_VIS_CULL=1 needs CROWD_INVIS_SKIP=1)
+endif
+ifneq ($(PS2_INTERIOR_ACTORS),2)
+$(error ENEMY_VIS_CULL=1 needs PS2_INTERIOR_ACTORS=2)
+endif
+$(OBJDIR)/ui_bridge.o $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_ENEMY_VIS_CULL=1
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ENEMY_VIS_CULL=1
+$(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -Iplatform/include
+$(OBJDIR)/coarse_ganado.o: platform/include/room_vis.h
+PLATFORM_OBJS += $(OBJDIR)/platform/room_vis.o
+$(OBJDIR)/platform/room_vis.o: platform/room_vis.c platform/include/room_vis.h platform/include/room_file.h
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include -c $< -o $@
+ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_VIS=1
+else ifneq ($(ENEMY_VIS_CULL),0)
+$(error ENEMY_VIS_CULL is 0 or 1)
+endif
+ifneq ($(strip $(ROOMFILE_SECTIONS)),)
+$(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ROOM_FILE=1 -Iplatform/include
+PLATFORM_OBJS += $(OBJDIR)/platform/room_file.o
+$(OBJDIR)/platform/room_file.o: platform/room_file.c platform/include/room_file.h
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include $(ROOMFILE_SECTIONS) -c $< -o $@
 endif

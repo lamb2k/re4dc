@@ -2536,6 +2536,14 @@ void em10KickHitMark(cEm10* em)
 #if defined(RE4DC_SKEL_FTRV) && RE4DC_SKEL_FTRV
 extern "C" int re4dc_skel_scope;
 #endif
+#if defined(RE4DC_ENGINE_VIS_LOG) && RE4DC_ENGINE_VIS_LOG
+extern "C" unsigned re4dc_ui_frame();
+extern "C" void re4dc_log(const char* fmt, ...);
+static void re4dc_vis_log(unsigned e, int x, int y, int z, int hp)
+{
+    re4dc_log("EVIS f=%u e=%x p=%d,%d,%d hp=%d d=1\n", re4dc_ui_frame(), e, x, y, z, hp);
+}
+#endif
 #if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
 // ENGINE_PREVIEW=1 (lane behave18, engine_preview.mk; viewing only): the original brain with a new body. cEm10's own
 // AI (routines, route, decisions, attacks, damage, deaths) runs unchanged; in a room with a grid the native actor
@@ -2673,6 +2681,11 @@ void cEm10::move()
     if (re4dc_rt_room((unsigned(pG->stage_no) << 8) | pG->room_no)) {
         re4dc_rt_state(this, stat, hp, (unsigned) pG->Frame_cnt, pos.x, pos.z);
     }
+#endif
+#if defined(RE4DC_ENGINE_VIS_LOG) && RE4DC_ENGINE_VIS_LOG
+    // ENGINE_VIS_LOG (engine19 Task 2 measurement, diagnostic only): each Ganado's feet position per tick, keyed by the
+    // picture counter the PS2CAM line uses (engine19 vis_enemy.py)
+    re4dc_vis_log((unsigned) (unsigned long) this, (int) pos.x, (int) pos.y, (int) pos.z, (int) hp);
 #endif
     if (seFlags28B & 0x80) {
         w->flags |= 0x10;

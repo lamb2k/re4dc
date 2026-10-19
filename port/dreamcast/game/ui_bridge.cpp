@@ -240,8 +240,14 @@ extern "C" void re4dc_module_counts(unsigned* fresh,unsigned* restarts,unsigned*
 extern "C" void re4dc_os_thread_stats(unsigned* registered,unsigned* reaped,unsigned* pending);
 extern "C" void re4dc_room4_open();
 extern "C" void re4dc_room4_close();
+#if defined(RE4DC_ROOM_FILE) && RE4DC_ROOM_FILE
+#include "room_file.h"  // ENGINE_PREVIEW / ENEMY_VIS_CULL (engine_preview.mk): the room data file's lifecycle
+#endif
 #if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
-#include "actor_rt.h"   // ENGINE_PREVIEW (engine_preview.mk): the room data file's lifecycle
+#include "actor_rt.h"
+#endif
+#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+#include "room_vis.h"
 #endif
 #if defined(RE4DC_KOS_CENSUS) && RE4DC_KOS_CENSUS
 extern "C" void re4dc_kos_census_log(const char* phase,unsigned room);  // platform/kos_census.cpp
@@ -419,7 +425,13 @@ extern "C" void re4dc_room_leave(){
 #endif
     re4dc_ui_retire_room();
 #if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
-    re4dc_rt_room_leave();                               // the room data file's heap-4 cell (platform/actor_rt.c)
+    re4dc_rt_room_leave();
+#endif
+#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+    re4dc_room_vis_leave();
+#endif
+#if defined(RE4DC_ROOM_FILE) && RE4DC_ROOM_FILE
+    re4dc_room_file_leave();                             // the room data file's heap-4 block (platform/room_file.c)
 #endif
     re4dc_room4_close();
     audit(2);
@@ -462,8 +474,14 @@ extern "C" void re4dc_room_enter(){
     re4dc_warp_room_enter();                            // test warp rig: flags at the first entry
 #endif
     re4dc_room4_open();
+#if defined(RE4DC_ROOM_FILE) && RE4DC_ROOM_FILE
+    re4dc_room_file_enter((unsigned(pG->stage_no)<<8)|pG->room_no);  // room data file into heap 4; absent = source path
+#endif
 #if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
-    re4dc_rt_room_enter((unsigned(pG->stage_no)<<8)|pG->room_no);   // room data file (GRID) into heap 4; absent = source
+    re4dc_rt_room_enter((unsigned(pG->stage_no)<<8)|pG->room_no);
+#endif
+#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+    re4dc_room_vis_enter((unsigned(pG->stage_no)<<8)|pG->room_no);
 #endif
 #if RE4DC_NATIVE_MODEL_REGISTRY_PACK
     re4dc_registry_room_enter((unsigned(pG->stage_no)<<8)|pG->room_no); // before the room's archives load and adopt

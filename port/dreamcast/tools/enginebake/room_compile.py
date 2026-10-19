@@ -41,6 +41,7 @@ import math
 import os
 import struct
 import sys
+import subprocess
 import tempfile
 import zlib
 import pathlib
@@ -122,6 +123,7 @@ def build_cells(sat_bytes):
 
     cell_floor = [None] * (W * H)   # None = no floor
     cell_walls = [[] for _ in range(W * H)]
+    cell_yr = [None] * (W * H)
     multi = 0
     for cz in range(H):
         for cx in range(W):
@@ -133,6 +135,16 @@ def build_cells(sat_bytes):
                 r = floor_at(xa + sx * C, za + sz * C, fc)
                 if r:
                     hits[r[0]] = hits.get(r[0], 0) + (3 if sx == 0.5 else 1)
+            # every floor height under the 9 points of the cell (all levels): the VIS section's y ranges
+            yall = []
+            for sx in (0.0, 0.5, 1.0):
+                for sz in (0.0, 0.5, 1.0):
+                    px, pz = xa + sx * C, za + sz * C
+                    for fi in fc:
+                        v0, v1, v2, pl = floors[fi]
+                        if tri_xz_contains(v0, v1, v2, px, pz):
+                            yall.append(pl[0] * px + pl[1] * pz + pl[2])
+            cell_yr[ci] = (min(yall), max(yall)) if yall else None
             if hits:
                 cell_floor[ci] = max(hits, key=hits.get)
                 ys = sorted(set(round(floors[k][3][0] * (xa + C / 2) + floors[k][3][1] * (za + C / 2) + floors[k][3][2]) for k in hits))
@@ -156,7 +168,7 @@ def build_cells(sat_bytes):
                 planes=[floors[f][3] for f in used_f], segs=[walls[w] for w in used_w],
                 cells=[(None if cell_floor[i] is None else fmap[cell_floor[i]], tuple(wmap[w] for w in cell_walls[i]))
                        for i in range(W * H)],
-                floors_total=len(floors), walls_total=len(walls))
+                floors_total=len(floors), walls_total=len(walls), yr=cell_yr)
 
 
 def encode_grid(g):
@@ -227,10 +239,114 @@ def container(room_id, g, sections, flags):
     return hdr + payload
 
 
+VIS_DIV = 4            # VIS cell = 4 x the 1 m lattice
+VIS_RANGE = 24000.0    # pairs farther apart than this (cell Chebyshev distance x cell) are written visible
+SHELL_RANGE = {0x100: 18750, 0x101: 18750}   # rooms with a far shell (FAR_SHELL): beyond this the world is the shell
+VIS_MARGIN = 500.0     # eye and target sample areas extend this far past their cell
+VIS_SAMPLES = 5        # per axis
+VIS_EYE_N, VIS_TGT_N = 5, 4
+EYE_LO, EYE_HI = 300.0, 4500.0       # eye y range over a cell's floors
+TGT_LO, TGT_HI = -500.0, 3000.0      # enemy boxes over a cell's floors
+BAND_STEP, BAND_SPAN = 1000.0, 3500.0  # target height bands: start every STEP, SPAN tall (a box <= 2.5 m fits one)
+LEVELS = 3             # world LOD levels 0..2: a pair is hidden only when hidden at every level
+
+
+def vis_tool():
+    src = os.path.join(HERE, 'vis_pvs.c')
+    exe = os.path.join(tempfile.gettempdir(), 'vis_pvs-%s' % hashlib.sha256(open(src, 'rb').read()).hexdigest()[:12])
+    if not os.path.exists(exe):
+        subprocess.check_call(['cc', '-O2', '-pthread', '-o', exe, src, '-lm'])
+    return exe
+
+
+def q10(v, up):
+    v = math.ceil(v / 10) if up else math.floor(v / 10)
+    return max(-32768, min(32767, int(v)))
+
+
+def build_vis(g, worlddir, threads, room_id):
+    """VIS v1 (header 32 B: the 16 B below, u32 R4PW sidecar crc the occluders came from, 12 B zero): camera cell -> target volume visibility over VIS_DIV x VIS_DIV blocks of the grid lattice (vis_pvs.c).
+    header 16 B: u16 vw, u16 vh, u16 div, u16 nrow, u16 rowbytes, u16 ntgt, u16 range_m10 (range, 10 cm... see below),
+                 u16 band_step_cm, (range_mm = u16 at 12 x 10 mm; band span = u16 at 14 is BAND_SPAN in cm)
+      exact: u16 vw, vh, div, nrow, rowbytes, ntgt, u16 range_cm, u16 span_cm; the band step is 100 cm (BAND_STEP)
+    cells[vw*vh] 12 B: s16 eye_lo, s16 eye_hi (cm; lo > hi = no culling from this cell), s16 band0 (cm), u8 nband,
+                       u8 0, u16 row (0xFFFF: none), u16 first target volume (band k of the cell = first + k)
+    rows[nrow][rowbytes]: bit t set = target volume t possibly visible (deduplicated rows).
+    A box is hidden from an eye in cell A when it fits one band (band0 + k*step <= lo, hi <= that + span) of every
+    cell it overlaps, all those bits are clear, and its farthest corner is within range."""
+    import world_tris
+    assert BAND_STEP == 1000.0
+    W, H, C = g['W'], g['H'], CELL
+    vw, vh = (W + VIS_DIV - 1) // VIS_DIV, (H + VIS_DIV - 1) // VIS_DIV
+    rng = min(VIS_RANGE, SHELL_RANGE.get(room_id, VIS_RANGE))
+    cr, tg, cinfo = [], [], []
+    for vz in range(vh):
+        for vx in range(vw):
+            c = vx + vz * vw
+            ys = [g['yr'][x + z * W] for z in range(vz * VIS_DIV, min(H, vz * VIS_DIV + VIS_DIV))
+                  for x in range(vx * VIS_DIV, min(W, vx * VIS_DIV + VIS_DIV)) if g['yr'][x + z * W]]
+            if ys:
+                lo, hi = min(y[0] for y in ys), max(y[1] for y in ys)
+                elo, ehi = q10(lo + EYE_LO, False) * 10, q10(hi + EYE_HI, True) * 10
+                cr.append((elo, ehi, 0.0, 0.0))
+                b0 = q10(lo + TGT_LO, False) * 10
+                nb = max(1, int(math.ceil((hi + TGT_HI - BAND_SPAN - b0) / BAND_STEP)) + 1)
+                nb = min(nb, 255)
+                cinfo.append((elo, ehi, b0, nb, len(tg)))
+                for k in range(nb):
+                    tg.append((c, b0 + k * BAND_STEP, b0 + k * BAND_STEP + BAND_SPAN))
+            else:
+                cr.append((1.0, -1.0, 0.0, 0.0))
+                cinfo.append(None)
+    pkg = world_tris.Pkg(worlddir)
+    exe = vis_tool()
+    rowb = (len(tg) + 7) // 8
+    acc = bytearray(rowb * vw * vh)
+    ntris = []
+    with tempfile.TemporaryDirectory() as td:
+        for lv in range(LEVELS):
+            tris = pkg.occluders(lv)
+            ntris.append(len(tris))
+            fi, fo = os.path.join(td, 'in%d' % lv), os.path.join(td, 'out%d' % lv)
+            with open(fi, 'wb') as f:
+                f.write(b'PVSI' + struct.pack('<3I5f5I', len(tris), vw, vh, g['x0'], g['z0'], C * VIS_DIV, VIS_MARGIN,
+                                               rng + C * VIS_DIV * 2, VIS_SAMPLES, VIS_EYE_N, VIS_TGT_N, 1, threads))
+                f.write(b''.join(struct.pack('<4f', *c) for c in cr))
+                f.write(struct.pack('<I', len(tg)) + b''.join(struct.pack('<Iff', *t) for t in tg))
+                f.write(b''.join(struct.pack('<10f', *t) for t in tris))
+            subprocess.check_call([exe, fi, fo])
+            out = open(fo, 'rb').read()
+            for i in range(len(acc)):
+                acc[i] |= out[i]
+    rows, ridx, cells = [], {}, b''
+    hidden = 0
+    for c in range(vw * vh):
+        ci = cinfo[c]
+        if ci is None:
+            cells += struct.pack('<3hBBHH', 1, -1, 0, 0, 0, 0xFFFF, 0)
+            continue
+        row = bytes(acc[c * rowb:(c + 1) * rowb])
+        if row not in ridx:
+            ridx[row] = len(rows)
+            rows.append(row)
+        hidden += sum(1 for t in range(len(tg)) if not (row[t >> 3] >> (t & 7)) & 1)
+        cells += struct.pack('<3hBBHH', ci[0] // 10, ci[1] // 10, ci[2] // 10, ci[3], 0, ridx[row], ci[4])
+    if len(rows) >= 0xFFFF or len(tg) >= 0xFFFF:
+        raise SystemExit('too many VIS rows / targets')
+    data = struct.pack('<8HI12x', vw, vh, VIS_DIV, len(rows), rowb, len(tg), int(rng) // 10, int(BAND_SPAN) // 10,
+                       pkg.sidecar_crc)
+    data += cells + b''.join(rows)
+    return data, dict(vw=vw, vh=vh, rows=len(rows), rowbytes=rowb, targets=len(tg), hidden_pairs=hidden,
+                      occluder_tris=ntris, range_mm=rng, bytes=len(data))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--iso', required=True)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--world', help='native package root: <world>/<room>/ps2-world.{re4mesh,r4pw,ids} (adds VIS)')
+    ap.add_argument('--no-grid', action='store_true', help='leave the GRID section out')
+    ap.add_argument('--threads', type=int, default=4)
     ap.add_argument('rooms', nargs='+')
     a = ap.parse_args()
     rows = []
@@ -244,9 +360,24 @@ def main():
         grid, gb = encode_grid(g)
         static = len(sats) == 1
         srcb = b''.join(struct.pack('<4sI32s', b'SAT\0', len(s), hashlib.sha256(s).digest()) for _, s in sats)
+        nsrc = len(sats)
         rid = int(room[1:], 16)
-        blob = container(rid, g, [(b'SRCB', 1, 0, srcb, len(sats), 40),
-                                  (b'GRID', 1, 1 | (2 if static else 0), grid, g['W'] * g['H'], 0)], 0)
+        secs = []
+        if not a.no_grid:
+            secs.append((b'GRID', 1, 1 | (2 if static else 0), grid, g['W'] * g['H'], 0))
+        vb = None
+        wd = os.path.join(a.world, room) if a.world else None
+        if wd and os.path.exists(os.path.join(wd, 'ps2-world.re4mesh')):
+            for fn in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids'):
+                p = os.path.join(wd, fn)
+                if os.path.exists(p):
+                    b = open(p, 'rb').read()
+                    srcb += struct.pack('<4sI32s', {'ps2-world.re4mesh': b'R4IM', 'ps2-world.r4pw': b'R4PW',
+                                                    'ps2-world.ids': b'R4ID'}[fn], len(b), hashlib.sha256(b).digest())
+                    nsrc += 1
+            vis, vb = build_vis(g, wd, a.threads, rid)
+            secs.append((b'VIS\0', 1, 0, vis, vb['vw'] * vb['vh'], 12))
+        blob = container(rid, g, [(b'SRCB', 1, 0, srcb, nsrc, 40)] + secs, 0)
         od = os.path.join(a.out, room)
         os.makedirs(od, exist_ok=True)
         with open(os.path.join(od, 'room.r4rc'), 'wb') as f:
@@ -256,13 +387,13 @@ def main():
                    grid=gb, w=g['W'], h=g['H'], origin_mm=[g['x0'], g['z0']], cell_mm=CELL, static=static,
                    sat_members=[[i, len(s), hashlib.sha256(s).hexdigest()] for i, s in sats],
                    multi_level_cells=g['multi'], floor_planes_used=len(g['planes']), floors_total=g['floors_total'],
-                   walls_used=len(g['segs']), walls_total=g['walls_total'])
+                   walls_used=len(g['segs']), walls_total=g['walls_total'], vis=vb)
         with open(os.path.join(od, 'report.json'), 'w') as f:
             json.dump(rep, f, indent=1)
         rows.append((room, len(blob), sha, len(grid), int(static)))
-        print('%s %6d B grid %6d (cells %d combos %d planes %d segs %d wl %d) static=%d multi=%d' % (
+        print('%s %6d B grid %6d (cells %d combos %d planes %d segs %d wl %d) static=%d multi=%d vis=%s' % (
             room, len(blob), len(grid), gb['cells'], gb['combos'], gb['planes'], gb['segments'], gb['wall_list'],
-            static, g['multi']), flush=True)
+            static, g['multi'], vb and {k: vb[k] for k in ('bytes', 'rows', 'hidden_pairs')}), flush=True)
     with open(os.path.join(a.out, 'MANIFEST.tsv'), 'w') as f:
         f.write('room\tbytes\tsha256\tgrid_bytes\tstatic\tcompiler\n')
         for r in rows:

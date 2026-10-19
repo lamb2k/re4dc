@@ -869,12 +869,32 @@ extern "C" int re4dc_ps2_interior_trans_active();  // native_static.cpp
 #if RE4DC_PS2_INTERIOR_OWNER
 extern "C" int re4dc_ps2_interior_owner_hidden(const float lo[3], const float hi[3]);  // native_static.cpp
 #endif
+#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+// ENEMY_VIS_CULL (engine_preview.mk; lane engine19; render only): the same two skips for a Ganado whose box the room
+// data file's VIS section says the room's PS2 world hides from the Trans camera (platform/room_vis.c).
+#include "room_vis.h"
+static inline bool invis_trans_active() {
+    return re4dc_room_vis_active()
+#if defined(RE4DC_OWNER_SETUP_LEAN) && RE4DC_OWNER_SETUP_LEAN
+        || re4dc_ps2_interior_trans_active()
+#endif
+        ;
+}
+static inline bool invis_wall_hidden(const float lo[3], const float hi[3]) {
+    return re4dc_room_vis_hidden(&pG->Cam.v_mat[0][0], lo, hi) != 0;
+}
+#elif defined(RE4DC_OWNER_SETUP_LEAN) && RE4DC_OWNER_SETUP_LEAN
+static inline bool invis_trans_active() { return re4dc_ps2_interior_trans_active() != 0; }
+static inline bool invis_wall_hidden(const float*, const float*) { return false; }
+#else
+static inline bool invis_wall_hidden(const float*, const float*) { return false; }
+#endif
 static inline void invis_acc(float* lo, float* hi, const float* w, float rho) {
     for (unsigned a = 0; a < 3; ++a) { if (w[a] - rho < lo[a]) lo[a] = w[a] - rho; if (w[a] + rho > hi[a]) hi[a] = w[a] + rho; }
 }
 static bool invis_interior(cModel* m, const InvisRec& r) {
-#if defined(RE4DC_OWNER_SETUP_LEAN) && RE4DC_OWNER_SETUP_LEAN
-    if (!re4dc_ps2_interior_trans_active()) return false;  // OWNER_SETUP_LEAN: the hidden test would return 0
+#if (defined(RE4DC_OWNER_SETUP_LEAN) && RE4DC_OWNER_SETUP_LEAN) || (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL)
+    if (!invis_trans_active()) return false;  // OWNER_SETUP_LEAN: the hidden tests would return 0
 #endif
     if (!r.bindkey) return false;
     cParts* parts[64];
@@ -929,7 +949,7 @@ static bool invis_interior(cModel* m, const InvisRec& r) {
     if (!any) return false;
     for (unsigned a = 0; a < 3; ++a) if (!coarse_finite(lo[a]) || !coarse_finite(hi[a])) return false;
     ++invis_pc_tests;
-    if (!re4dc_ps2_interior_actor_hidden(lo, hi)) return false;
+    if (!re4dc_ps2_interior_actor_hidden(lo, hi) && !invis_wall_hidden(lo, hi)) return false;
     ++invis_pc_hidden;
     return true;
 }
@@ -947,8 +967,8 @@ static bool invis_interior(cModel* m, const InvisRec& r) {
 // each of its runs reaches crowd_tier, and the world box of all the balls lies wholly outside the house box and the
 // Trans-time cell hides it.
 static bool invis_owner_interior(cModel* m, const InvisRec& r) {
-#if defined(RE4DC_OWNER_SETUP_LEAN) && RE4DC_OWNER_SETUP_LEAN
-    if (!re4dc_ps2_interior_trans_active()) return false;  // OWNER_SETUP_LEAN: the hidden test would return 0
+#if (defined(RE4DC_OWNER_SETUP_LEAN) && RE4DC_OWNER_SETUP_LEAN) || (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL)
+    if (!invis_trans_active()) return false;  // OWNER_SETUP_LEAN: the hidden tests would return 0
 #endif
     const InvisView& iv = invis_view;
     if (iv.fog < 0.0f) { ++invis_pco_why[5]; return false; }
@@ -1037,7 +1057,7 @@ static bool invis_owner_interior(cModel* m, const InvisRec& r) {
     }
     if (!any) return false;
     for (unsigned a = 0; a < 3; ++a) if (!coarse_finite(lo[a]) || !coarse_finite(hi[a])) { ++invis_pco_why[3]; return false; }
-    if (re4dc_ps2_interior_owner_hidden(lo, hi)) return true;
+    if (re4dc_ps2_interior_owner_hidden(lo, hi) || invis_wall_hidden(lo, hi)) return true;
     ++invis_pco_why[4];
     return false;
 }

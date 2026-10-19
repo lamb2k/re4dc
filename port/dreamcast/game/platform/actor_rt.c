@@ -1,7 +1,7 @@
 /* actor_rt.c: the native actor runtime's shared room services (ENGINE_PREVIEW=1; lanes behave18 -> engine19).
  *
  * The room grid comes from the room's data file (tools/enginebake/room_compile.py, R4RC v1, section GRID v1), read at
- * room entry into room memory (heap 4, re4dc_static_alloc: the native package reserve rules apply) and freed at room
+ * room entry into room memory by platform/room_file.c (heap 4, the native package reserve rules) and freed at room
  * leave. No file, a refused allocation, a bad file, or a room whose collision has object SAT members (GRID flag bit1
  * clear): the room runs the source path (SatMgr) exactly as without the switch. Nothing of the grid is in the program.
  * Grid semantics are the behave18 preview's (EDGR v1 cells, planes, walls; the flow field the preview never used is
@@ -12,11 +12,9 @@
 #include <math.h>
 #include <kos/fs.h>
 #include "actor_rt.h"
+#include "room_file.h"
 
 extern void re4dc_log(const char* fmt, ...);
-extern void* re4dc_static_alloc(unsigned bytes);
-extern void re4dc_static_free(void* data);
-extern int re4dc_static_heap_free(void);
 
 #define BODY_R 300.0f
 
@@ -34,8 +32,7 @@ typedef struct {
 } rt_grid;
 
 static rt_grid g_grid;
-static void* g_block;
-static unsigned g_bytes, c_loads, c_absent, c_refused;
+static unsigned g_bytes, c_loads, c_refused;
 static unsigned c_owned, c_fallback, c_collide, c_nogrid;
 
 static inline uint16_t rd16(const uint8_t* p) { return (uint16_t) (p[0] | (p[1] << 8)); }
@@ -80,69 +77,35 @@ static const char* adopt_grid(const uint8_t* s, uint32_t n, uint16_t w, uint16_t
     return 0;
 }
 
-/* Room entry (ui_bridge.cpp re4dc_room_enter, heap 4 just rebuilt): read /cd/dc/native/rXXX/room.r4rc. */
+/* Room entry (ui_bridge.cpp re4dc_room_enter, after re4dc_room_file_enter read the room data file's GRID section). */
 void re4dc_rt_room_enter(unsigned room)
 {
     room &= 0xFFF;
     memset(&g_grid, 0, sizeof(g_grid));
-    g_block = 0; g_bytes = 0;   /* the previous room's cell was freed at re4dc_rt_room_leave */
-    char path[40];
-    snprintf(path, sizeof(path), "/cd/dc/native/r%03x/room.r4rc", room);
-    file_t fd = fs_open(path, O_RDONLY);
-    if (fd == FILEHND_INVALID) { c_absent++; re4dc_log("ROOMFILE r%03x absent: source path\n", room); return; }
-    const unsigned size = (unsigned) fs_total(fd);
-    const int before = re4dc_static_heap_free();
-    uint8_t* b = (size >= 64 && size <= 262144u && !(size & 15u)) ? (uint8_t*) re4dc_static_alloc(size) : 0;
-    const char* why = b ? 0 : "size or heap4";
-    if (b && fs_read(fd, b, size) != (ssize_t) size) why = "read";
-    fs_close(fd);
-    if (!why) {
-        why = "header";
-        if (!memcmp(b, "R4RC", 4) && rd16(b + 4) == 1 && rd16(b + 6) == 64 && rd32(b + 8) == room && rd32(b + 16) == size) {
-            const unsigned nsec = rd32(b + 12);
-            const uint16_t w = rd16(b + 24), h = rd16(b + 26);
-            const uint32_t cell_mm = rd32(b + 28);
-            unsigned flags = 0;
-            const char* grid_why = "no GRID";
-            why = nsec && nsec < 64 && 64u + 32u * nsec <= size ? 0 : "directory";
-            for (unsigned i = 0; !why && i < nsec; i++) {
-                const uint8_t* d = b + 64 + 32 * i;
-                const uint32_t off = rd32(d + 8), len = rd32(d + 12);
-                if ((off & 15u) || off < 64u + 32u * nsec || off > size || len > size - off) { why = "section extent"; break; }
-                if (!memcmp(d, "GRID", 4)) {
-                    if (rd16(d + 4) != 1) { grid_why = "GRID version"; continue; }
-                    flags = rd16(d + 6);
-                    grid_why = adopt_grid(b + off, len, w, h, cell_mm);
-                } else if ((rd16(d + 6) & 1) && memcmp(d, "SRCB", 4)) {
-                    why = "unknown required section";
-                }
-            }
-            if (!why) why = grid_why;
-            if (!why && !(flags & 2)) why = "object collision (GRID not static)";
-            if (!why) {
-                g_grid.x0 = (float) (int32_t) rd32(b + 32);
-                g_grid.z0 = (float) (int32_t) rd32(b + 36);
-            }
-        }
-    }
+    g_bytes = 0;
+    unsigned len = 0, ver = 0, flags = 0;
+    const re4dc_room_header* h = 0;
+    const uint8_t* s = (const uint8_t*) re4dc_room_section("GRID", &len, &ver, &flags, &h);
+    const char* why = !s ? "no GRID" : ver != 1 ? "GRID version" : !(flags & 2) ? "object collision (GRID not static)"
+                    : adopt_grid(s, len, h->w, h->h, h->cell_mm);
     if (why) {
-        if (b) re4dc_static_free(b);
         memset(&g_grid, 0, sizeof(g_grid));
         c_refused++;
-        re4dc_log("ROOMFILE r%03x %s: source path (bytes=%u heap4=%d)\n", room, why, size, before);
+        re4dc_log("ENGINE r%03x %s: source path
+", room, why);
         return;
     }
-    g_block = b; g_bytes = size; g_grid.ok = 1; g_grid.room = room;
+    g_grid.x0 = h->x0; g_grid.z0 = h->z0;
+    g_bytes = len; g_grid.ok = 1; g_grid.room = room;
     c_loads++;
-    re4dc_log("ROOMFILE r%03x loaded bytes=%u grid=%ux%u cell=%d heap4=%d->%d loads=%u\n", room, size,
-              g_grid.w, g_grid.h, (int) g_grid.cell, before, re4dc_static_heap_free(), c_loads);
+    re4dc_log("ENGINE r%03x grid=%ux%u cell=%d bytes=%u loads=%u
+", room, g_grid.w, g_grid.h, (int) g_grid.cell, len, c_loads);
 }
 
-/* Room leave (ui_bridge.cpp re4dc_room_leave, before heap 4 is replaced). */
+/* Room leave (ui_bridge.cpp re4dc_room_leave; the block is room_file.c's). */
 void re4dc_rt_room_leave(void)
 {
-    if (g_block) re4dc_static_free(g_block);
-    g_block = 0; g_bytes = 0;
+    g_bytes = 0;
     memset(&g_grid, 0, sizeof(g_grid));
 }
 
