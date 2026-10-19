@@ -1,0 +1,10 @@
+{
+  "replace": {
+    "dc/native/r206/registry.re4nmr": "/root/re4data/private/castle18-cast-rooms-20261018/reg-r206/package/r206/registry.re4nmr"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Existing original r206 em11-07p/08g package98d513a7. All42source roles/22preparedBINs and10native texture tokens verified against current inputs. Original ESL lacks alternateacc32b requirement. No source/model/runtime changes.",
+    "warning": "Actual current room actors, dynamic source changes, original movie/end save and chapter route untested."
+  }
+}
