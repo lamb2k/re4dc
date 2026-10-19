@@ -56,3 +56,13 @@ AtCB the original four loaded type7 monks are source entries44/45/46/47, eachHP1
 The prison key, further waves, locked door, Garrador route and chapter-end save remain open. Original r203 GetKeyItem sends4B..4F and immediately callssetGoto, another potential held-command consumer; actual activation/release evidence is still needed and the new default-off fix remains explicitly r207-only. No room-general guarantee is claimed.
 
 Current source is separately refreshed through upstreame86bf58e and WorkerA'sa996608e control document in48def0f3. Frozen I014 a808/25d default-off identity and inventory target-upload gates remain bound to their exact recorded controls; later upstream is not covered by that identity comparison.
+
+## H027 continuing: original r203 Prison Key and source queue
+
+The same immutable historical 746 program and 60aa disc continue from the native chapter 6 route. Both metal doors open through normal A input, and ordinary movement follows the original stairs to the upper chest. The normal chest action completes its original callback in CL: the area 7 item-event entry is removed, source Rsf4 is set, and gameplay resumes. CM then uses normal A to take the revealed Prison Key. At source frame 33098, the original ItemMgr contains active item A7 with quantity 1; phase is 3, Stop is 0, and Leon/Ashley remain 1440/360. There are no inventory, health, actor, flag or snapshot writes.
+
+The exact CM state is 5c224652c3ea026f72e5469ae3cf760d4770b83ab12f79594ec94ecf743b201c. Four independent unchanged ELF anchors bind the read-only audit to this program. The owned pickup capture exits after 7.62 seconds with no capture errors. Evidence is `r203-native-CM-original-prison-key-snapshot-20261019.json` and the controller receipt under `h-c18oimW-r200l/scenarios/cx-r200-walk-resevtcm` in the Castle evidence root.
+
+The original GetKeyItem callback adds source entries 4B/4C/4D/4E to the held queue. Its first nine byte entries are now 48/37/39/3A/3B/4B/4C/4D/4E; the same four original type7 enemies 44/45/46/47 remain loaded at HP1000. This proves the pickup's source send behavior and retention, not later releases, movement, wave clear or room acceptance. The immediate source setGoto calls remain a separate r203 consumer to qualify; the new movement fix is deliberately limited to r207.
+
+The route next returns through the same corridors to the original locked prison door and uses the actual key. Garrador, the remaining chapter rooms, current-source replay, residency and the chapter-end save remain open.
