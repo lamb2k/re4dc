@@ -145,7 +145,9 @@ T15_G="ACTOR_PROBE_LIGHT=2 GANADO_LIT=1 GANADO_LIT_NEAREST=0"
 #      Test 19 on (lane manual19, issue #44): MANUAL_PACK_PROBE=1, the manual page checks look in dc/tex.pak first, so the
 #      Dreamcast controller pages show instead of the GameCube ones (render only).
 #      Test 19 on (lane scenery19, P2 stage 1): SCENERY_CHUNK=1, the PS2 world pass selects then emits (exact, render only).
-T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1 MANUAL_PACK_PROBE=1 SCENERY_CHUNK=1}
+#      Test 19 on (lane scenery19): SG_SELECT_LEAN=1 with SCENERY_CHUNK=1 (exact; STRICT bell/door103, KOS, stills x4;
+#      r101 scenery 11.09 -> 10.76 ms MODELLED).
+T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1 MANUAL_PACK_PROBE=1 SCENERY_CHUNK=1 SG_SELECT_LEAN=1}
 # lane resident16 (10-16): the room preload runs again when SS heap 11 closes (chapter title / results / save screens), so
 #   r105 after the chapter 1-2 save screen loads its set back in one pass instead of 81 disc reads in play. Render only.
 T15_P="SS11_PRELOAD=1"
