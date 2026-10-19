@@ -1,0 +1,76 @@
+{
+  "scope": "Hash-only original clip/packing evidence, not actual native animation/look/fight qualification.",
+  "receipt": {
+    "status": "ORIGINAL_CLIP_POSES_EVALUATED_PACKING_MEASURED_RENDER_UNQUALIFIED",
+    "source_commit": "581bfccb227a50273870515c42b0be0ce13c96e0",
+    "host_only_commits": [
+      "01d845047480cefba056076ab53c8bab48774374",
+      "581bfccb227a50273870515c42b0be0ce13c96e0"
+    ],
+    "original_GC_parts": 21,
+    "original_PS2_triangles": 4143,
+    "original_FCVs": 5,
+    "FCV_byte_exact_roundtrips": 5,
+    "host_source_poses": 25,
+    "corner_pose_checks": 310725,
+    "asset_free_extractor_guards": 6,
+    "previously_extractable_functions_byte_exact": 3,
+    "source_unaligned_halfword_ASan_UBSan": "PASS",
+    "retained_upper_H029_input_pins_unchanged": 5,
+    "retained_header_sha256": "788e2d6dd8f2d66fe5a70987fc4996df07a77a4e36a956393eccd38eefda3d8b",
+    "static_position_error_mm": 0.0,
+    "max_pose_position_error_mm": 5.976572751718855e-05,
+    "virtual_rest_algebra_max_mm": 2.2737367544323206e-13,
+    "posed_normal_vector_max_error": 5.0844179802407185e-05,
+    "native_weight_max_abs_difference": 5.960464477539063e-08,
+    "native_numeric_weights_bit_exact": false,
+    "weight_different_repeated_corners": 3155,
+    "bone_ids_exact": true,
+    "failed_strict_weight_assumption_retained": true,
+    "failed_normalization_hypothesis_retained": true,
+    "source_effects_not_covered": [
+      "Original root placement/transition blend",
+      "em38UpperOnBody body-part4 parent transform",
+      "Live procedural/camera/lighting/material/GS code",
+      "Actual native owner/render/residency/fight"
+    ],
+    "no_game_runtime_or_model_or_recipe_change": true,
+    "no_Flycast": true,
+    "no_LOD_decision": true,
+    "scope": "Existing source motion helper and retained full model only. Host plain float/no floor, fixed-root selected original clips; numeric output measurement is not animated look or recovered-game pose parity."
+  },
+  "private_set": {
+    "set": "boss18-salazar-upper-poses-20261019",
+    "files": 80,
+    "bytes": 3608888,
+    "sha256sums_sha256": "1d142f24ef3e9baa442a8b1c37529237a6ef14455494919e461aac7211b8b6d1",
+    "mirror_verified": true,
+    "source_pose_packing_only": true
+  },
+  "proofs": [
+    {
+      "file": "original-upper-poses.json",
+      "sha256": "6f71e4a716cfb1f14cbc8e7fdfb49d560a55b48b3efc81c3b44e460fbb4b2278"
+    },
+    {
+      "file": "original-pose-packed-corner-proof.json",
+      "sha256": "3806791d6d242537d682b5bd9139cb8305c06841e58a20161e7c48c2bd950c9a"
+    },
+    {
+      "file": "original-native-weight-counterexample.json",
+      "sha256": "900e7621dfb80f0287a77f793e2598cda697f7bb16deec014a430c520584f45c"
+    },
+    {
+      "file": "weight-packing-and-input-identity.json",
+      "sha256": "5b083b24dff3dbc4ed35c8ecf66f3c8325760322f0f4f0a18fe1618418feb81a"
+    },
+    {
+      "file": "host/extractor-fixed-proof.json",
+      "sha256": "74ecdd336fc2af099bf1c7a4ecd6b03dd72963e800c7b499e4ab4d64d59693ca"
+    },
+    {
+      "file": "host/source-type-control.json",
+      "sha256": "322da4bcaa36244837764e9ae044b0b08bb09a99d73716ff1cde446e4c1d43c4"
+    }
+  ]
+}
