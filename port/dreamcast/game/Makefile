@@ -3003,6 +3003,8 @@ include actor_ganado_ps2_stump.mk
 include native_model_registry.mk
 # Lane actorplan17: ACTOR_PLAN (character draw plan) and ACTOR_PROF (diagnostic profiler); default off: no effect.
 include actorplan.mk
+# Lane qws19: QUICK_WEAPON (X + D-pad weapon shortcuts; default off: no effect).
+include quickweapon.mk
 # D367 charbake (CHARBAKE_HAIR, CHARBAKE_TOGGLE; default off: no effect).
 include charbake.mk
 # D367 ps2leon (PS2_LEON test arms; default off: no effect).

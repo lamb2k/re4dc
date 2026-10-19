@@ -1161,6 +1161,30 @@ void cItemMgr::gameInit()
             type = 0;
         }
         set_game(0);
+#if RE4DC_QUICK_WEAPON_POC_KIT
+        // QUICK_WEAPON_POC_KIT=1 (lane qws19, POC test discs only, never a release): Leon starts with one weapon
+        // per quick-weapon direction (the large case, shotgun, rifle, TMP, 3 hand grenades) and ammo for each.
+        if (pG->pl_type == 0) {
+            int i;
+            dump(0x7C);
+            dump(0x7D);
+            dump(0x7E);
+            dump(0x7F);
+            get(0x7E, 0);
+            ItemSet tbl[] = {{0x2C, 1}, {0x2E, 1}, {0x30, 1}, {0x01, 1}, {0x04, 50}, {0x07, 10}, {0x18, 10}, {0x20, 100}};
+            PUT_TABLE(tbl, 2);
+            if (ItemWork* g = search(0x01)) {
+                g->num = 3;
+            }
+            static const u16 qwKit[] = {0x2C, 0x2E, 0x30};
+            for (i = 0; i < 3; i++) {
+                if (ItemWork* w = search(qwKit[i])) {
+                    CHARGE(w);
+                }
+            }
+            arm(search(0x23));
+        }
+#endif
         pG->peseta_bak = 0;
         pG->peseta = 0;
         get(0xAC, 1);

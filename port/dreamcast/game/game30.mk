@@ -994,6 +994,13 @@ endif
 # must be object-compared before promotion. Manual art is separately gated.
 PAD_PROMPTS ?= 0
 PAD_PROMPT_MANUAL_ART ?= 0
+# MANUAL_PACK_PROBE=1 (lane manual19, 2026-10-19; render only, needs PAD_PROMPT_MANUAL_ART=1 + TEX_PACK=1): the
+# Dreamcast companion manual page (and generic file picture) existence probe also looks in dc/tex.pak. Off, the probe
+# opens only the loose dc/tex/<n>/ file, which a packed disc no longer has, so the GameCube page was always chosen.
+MANUAL_PACK_PROBE ?= 0
+ifneq ($(MANUAL_PACK_PROBE),0)
+PLATFORM_CPPFLAGS += -DRE4DC_MANUAL_PACK_PROBE=1
+endif
 ifneq ($(PAD_PROMPTS),0)
 GAME_CPPFLAGS += -DRE4DC_PAD_PROMPTS=1
 PLATFORM_CPPFLAGS += -DRE4DC_PAD_PROMPTS=1

@@ -216,6 +216,18 @@ The player options are the rows in Options (START), and the knobs behind them:
     placements that only have translucent parts, so their cut-out cards draw at Near (without it they were drawn in
     neither pass).
 
+Control knob in the release recipe:
+
+* **Quick weapon** (quickweapon.mk, recipe group `T15_V`; from Test 19): `QUICK_WEAPON=1`. Hold X and press the D-pad
+  to equip a weapon by kind: up handguns, right shotguns, down grenades, left rifles, the TMP, then launchers. Pressing
+  the same direction again picks the next weapon of that kind in the case.
+  * The equip is the case's own: `cItemMgr::arm`, then the weapon reload of `SubScreenExit`. The game pauses for a few
+    frames while the weapon's module reads from the disc.
+  * A swap is ignored where the case could not open, and while shooting, reloading or carrying Ashley.
+  * With X released the D-pad works as before (camera look, a tap down for the map). Nothing changes until the chord is
+    pressed, so the logic trace stays STRICT.
+  * `QUICK_WEAPON_POC_KIT=1` (a starting weapon kit) is for test discs only and never goes in a recipe.
+
 Render knobs in the release recipe:
 
 * **Lake far** (post30.mk, recipe group `T15_LF`; render only): `LAKE_FAR=<mm>` draws r10b (the Del Lago boat) and
