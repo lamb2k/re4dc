@@ -191,3 +191,37 @@ inventory and weapon changes arrived during the frozen builds and are not
 claimed by this comparison. Integrated current programs, exact staged payload
 checks and actual r207 full-cap/event/death/Continue validation remain pending.
 The chapter recipe keeps the new Goto switch disabled until that gate passes.
+
+## Current upstream integrated candidate
+
+The current main `25d66518` control incorporates upstream a808, including
+ACTOR_PLAN, quick weapon/manual changes and TEX_PKG_SKIP_LISTED. Worker
+`c2dfc30f1` has identical runtime/build source, differing only in this document.
+Main's fresh literal-current Disc1 off identity proof is preserved as
+`I014-current/current-off-identity-and-chapter-build-proof.json`, SHA256
+`1e1ac03444eb587975ccbf245a6750188b1d19ef6f694bfcb528ee792674b5e5`.
+Its CH4 Goto-disabled arm is reused; no duplicate control was built.
+
+The matching enabled arm `c32giumW` completed in one serial `-j4` slot with no
+missing symbols. ELF `e445ed8db922490cfb14253cc8990302b71c675069a63a1dd287bd4409f2923a`,
+raw `f1e6053b8a48c471210a5fe9fc24d660459c95c76f032b9e7f59b864672758c6`,
+end `8c472278`. The reused control ELF is
+`23a6d5b59b99cc4a2554312e2639b69f09042aa8dc1bf87288381426541d2245`,
+end `8c471878`. The increase remains 2,560 bytes; the actual linked command
+buffer is 1,536 bytes.
+
+All 45 generated headers, including the three nested model headers, match
+exactly. Actual commands for em_set, eight stage wrappers and r207 verify the
+new definition only in the enabled arm, with deferred flags present in both.
+The only scalar setting difference is the new Goto switch. Output/check-out
+path differences are normalized explicitly and derived settings are retained.
+`workers/ch32/deferred-goto/current-integrated-build-proof.json` holds the full
+receipt. Its first sealing attempt assumed an absent `obj/generated` layout;
+the final inventory uses the actual 42 root and three nested headers. No game
+source or binary was altered to repair that evidence script.
+
+The earlier frozen inventory was also supplemented with those three nested
+headers: `frozen-all45-header-proof.json` confirms all 45 match for both off
+pairs and the CH4 enabled arm. This closes the inventory gap without another
+build. Runtime command delivery, full-cap event, death and Continue acceptance
+remain pending; the recipe still leaves Goto disabled.
