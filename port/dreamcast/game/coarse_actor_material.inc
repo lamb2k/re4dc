@@ -340,7 +340,16 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
 #if RE4DC_NATIVE_MODEL_REGISTRY && defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY >= 2
     // PS2_ASHLEY=2: Ashley's head (role 1) keeps the source shape bit; the owner path draws its PS2 rest face (the
     // source shapes still run on the GC buffer; user look decision pending).
+#if defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+    // NATIVE_MODEL_REGISTRY_PL_ASHLEY: playable Ashley's face (role 1, BIN 7 / TPL 9) keeps the shape bit as the
+    // partner's head does; her skirt (role 3, BIN 8 / TPL 5) keeps be_flag 0x40 (cPlAshley::setModel), which the
+    // transaction draws in the ot_type 7 second pass as the source does. Any other bit or ordinal still declines.
+    const int pl_ashley=re4dc_registry_player_ashley_role(row.appearance,row.role,row.source_bin,row.source_tpl);
+    const bool ashley_face=re4dc_registry_ashley_face(row.appearance,row.role)!=0 || pl_ashley==1;
+    if(pl_ashley==2)expected|=0x40u;
+#else
     const bool ashley_face=re4dc_registry_ashley_face(row.appearance,row.role)!=0;
+#endif
     if(ashley_face)expected|=2;
 #endif
     if((i->be_flag&~8u)!=expected)return Error::PassGroup;
