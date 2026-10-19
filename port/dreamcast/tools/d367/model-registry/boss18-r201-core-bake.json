@@ -1,0 +1,85 @@
+{
+  "registry": "boss18-r201-core-bake-I009",
+  "about": "I009 user-look candidate. Original full whole-body/ordinary cast unchanged; original full14-part core geometry, texture key changed by explicit static orange-red highlight bake. AUX_OBJ_NATIVE stays0 in recipes pending look.",
+  "cast_dir": "/root/re4data/private/boss18-garrador-material-20261019/cast",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+  "descriptors": [
+    {
+      "name": "zealot-em1b-07p",
+      "archive": "em1b",
+      "model_id": "0x1b",
+      "source_types": [
+        7
+      ],
+      "module": "src/em1b/em1b_set.cpp Em1bSet type 7 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+      "partial_sections": true,
+      "pool": true,
+      "source_drops": [
+        "bump"
+      ],
+      "mask_runs": {
+        "13": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-em1b-07-hood",
+        "16": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-em1b-07-acc1",
+        "20": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-em1b-07-acc5"
+      }
+    },
+    {
+      "name": "zealot-em1b-08p",
+      "archive": "em1b",
+      "model_id": "0x1b",
+      "source_types": [
+        8
+      ],
+      "module": "src/em1b/em1b_set.cpp Em1bSet type 8 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+      "partial_sections": true,
+      "pool": true,
+      "source_drops": [
+        "bump"
+      ],
+      "mask_runs": {
+        "13": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-em1b-08-hood",
+        "16": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-em1b-08-acc1",
+        "20": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-em1b-08-acc5"
+      }
+    },
+    {
+      "name": "zealot-em1b-0ag",
+      "archive": "em1b",
+      "model_id": "0x1b",
+      "source_types": [
+        10
+      ],
+      "partial_sections": true,
+      "module": "src/em1b/em1b_set.cpp Em1bSet type 10 (em10.cpp creates; ps2_cast.py pool)",
+      "source_drops": [
+        "bump"
+      ]
+    },
+    {
+      "name": "garr-core-em1b",
+      "archive": "em1b",
+      "model_id": "0x16",
+      "source_types": [
+        4
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "em10 typeA/D original SetObj16 BIN227/TPL228, attachbody36;14originalparts/motion229/22A whole unchanged. Weak collider37 is separate source data."
+    }
+  ],
+  "room_packages": {
+    "201": {
+      "descriptors": [
+        "zealot-em1b-07p",
+        "zealot-em1b-08p",
+        "zealot-em1b-0ag",
+        "garr-core-em1b"
+      ],
+      "evidence": "Original source construction and current383 b18abrT body alive/native diagnostic; complete core admission/animated draw and room gates remain pending."
+    }
+  }
+}
