@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch32-r20b-coldload-resident-v14-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "r20b +16 exact source-observed cold-load resident keys; all 5713 latest union records unchanged.",
+    "base_resident_sha256": "902a55450efcbae7be9fdbf6f4cfae986da77e350c08577bc09f31c795b7e2f4",
+    "resident_sha256": "8a26f3661131756d65d8d7fc9fa5fc18e41c161bb662fea3216d0882b1eb9017",
+    "warning": "Compose the r20b records into any newer resident union; never overwrite later room additions."
+  }
+}
