@@ -34,7 +34,9 @@ In-view rule (lane fix18, 10-18; replaces the 12 m --near scoping): newer warps 
 enemies inside the camera's view frustum at the sample (body sphere y+900 r1200). An id is judged only when it was in view
 in at least --min-samples samples; an enemy that stays out of view (held behind a gate, waiting for its wave) is listed
 "out of view (not judged)" and needs no allowlist row. Logs without "/v" fall back to judging every id (older warps).
-A room FAILS when a judged id (10..ff) has no NMRS row of that id in that
+Scope (coordinator 10-19, lane garr18): characters only, ids 10..3f by default (--max-id 0x3f, the Test 17 scope); em40+ are
+core-program props (em41 cEmDoor, em43 cEmBox, em48 cEmBarrel, em4a cEmRock) with no cast model. --max-id 0xff: every id.
+A room FAILS when a judged id (10..max-id) has no NMRS row of that id in that
 room (no draw pass of any outcome: native, crowd, GameCube). Reviewed exceptions: castgc/notdrawn-allow.tsv (room or *,
 id hex, reason, owner). With --not-drawn and no alivelist line at all: exit 2 (not a pass: the warp lacks alivelog).
 """
@@ -240,7 +242,7 @@ def main():
     # Scoping (rel17b 10-18, open for the coordinator's review): the literal rule also flags core-program objects with no
     # cast model (em41 / em43 / em48 / em4a in most rooms), traps (em2a) and enemies alive far off screen.
     ap.add_argument('--near', type=int, default=0, help='NOT-DRAWN: also skip ids never within this many units of Leon (0 = off; the in-view rule replaces it)')
-    ap.add_argument('--max-id', type=lambda s: int(s, 0), default=0xff, help='NOT-DRAWN: judge only ids up to this one (e.g. 0x3f)')
+    ap.add_argument('--max-id', type=lambda s: int(s, 0), default=0x3f, help='NOT-DRAWN: judge only ids up to this one (default 0x3f: characters; props em40+ are not judged)')
     a = ap.parse_args()
     rows, meta, reasons, pack, admits, n, partner_refused = parse(a.logs)
     if not n:
