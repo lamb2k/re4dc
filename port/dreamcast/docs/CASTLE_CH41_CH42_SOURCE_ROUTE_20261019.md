@@ -390,8 +390,26 @@ Manifest SHA:
 The 5,738-record resident SHA is
 `faf18768a268d1f2b3b465a8eee21ed7bd943828586f18c26b6ea78fc7049b12`.
 Source fragment: `tools/d367/castle18/ch41-r211-resident-20261019.json`.
-Compose only the r211 additions into newer unions. The matched rerun is
-pending; no residency, cup ambush, partner or chapter pass is claimed.
+Compose only the r211 additions into newer unions. The matched rerun
+`cx-r211-walk-residentkos02` passes bounded residency: nine late uploads
+fall to zero. It completed 56.06 seconds, holding the same exact 49,152-byte
+reserve with the same 39,832-byte minimum KOS headroom. Across 7,275 staged
+payloads only `dc/resident.bin` changes. All program, room, model, texture,
+audio and controller-input bytes remain exact. Both runs record the same
+868.6-unit walk and 1,500 native Leon census samples with no GC fallback.
+
+The gameplay frame-767 VRAM row reports 654,048 pinned, 772,736 dynamic,
+1,050,528 free and 1,007,616 largest-free-block bytes. Later frame-840
+receipts keep 183 total loads. No texture, audio-fit, fatal, eviction,
+retry or refusal errors appear. The final still was inspected. The partner,
+cup pickups, six-enemy ambush, gate, original exit and full no-warp chapter
+remain unqualified.
+
+Matched proof: `r211-residency-matched-proof.json`. Candidate log SHA:
+`a75accc2e6af743bf15ce4ebd8715844c71b4d236a5f6071fb126dc0c92122ae`.
+Candidate disc SHA:
+`d11a6c3d1544e701f66a50d316893328c215e1368e070c38424c71258a7d10f2`.
+The finished candidate disc was also retired after sealing its proof.
 
 Evidence: `r211-entry-proof.json`, `r211-source-first-sight-winners.json`,
 `r211-resident-host-proof.json`, and the original capture/checker reports.
