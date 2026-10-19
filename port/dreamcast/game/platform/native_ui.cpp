@@ -3738,6 +3738,9 @@ std::uint64_t world_new_mask,world_seen_mask,world_capped_mask;
 // still loads it on first sight.
 extern "C" int re4dc_registry_source_key(unsigned crc,unsigned fnv);
 unsigned pkg_skips;
+#if defined(RE4DC_TEX_PKG_SKIP_LISTED) && RE4DC_TEX_PKG_SKIP_LISTED
+unsigned pkg_listed_kept;   // TEX_PKG_SKIP_LISTED: room-list keys kept in the pass although a role row names them
+#endif
 #define RE4DC_PKG_SKIP(c,f) (re4dc_registry_source_key((c),(f))?(++pkg_skips,true):false)
 #else
 #define RE4DC_PKG_SKIP(c,f) false
@@ -3808,7 +3811,16 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
 #endif
             ++resident_listed;
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP
+#if defined(RE4DC_TEX_PKG_SKIP_LISTED) && RE4DC_TEX_PKG_SKIP_LISTED
+            // TEX_PKG_SKIP_LISTED (native_model_registry.mk): a key of this room's own list (a texture its scenes loaded
+            // on first sight) stays in the pass even when a package role row names it: registry actors still draw it
+            // from the source path on some frames (r207: the inventory open draws the zealot / Ashley roles' source
+            // TPLs, 16 uploads in play). Core keys (room 0) keep the skip.
+            if(!r.room && RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
+            if(r.room && re4dc_registry_source_key(r.crc,r.fnv))++pkg_listed_kept;
+#else
             if(RE4DC_PKG_SKIP(r.crc,r.fnv))continue;
+#endif
 #endif
             const Key key{r.crc,r.fnv};
             bool known=false;
@@ -3822,6 +3834,10 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
     }
     if(pieces)re4dc_log("native texture preload: resident list room=%03x pieces=%u listed=%u picked=%u\n",src.room,pieces,
                         resident_listed,resident_picked);
+#if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP && defined(RE4DC_TEX_PKG_SKIP_LISTED) && RE4DC_TEX_PKG_SKIP_LISTED
+    if(pieces)re4dc_log("TEXPKG listed kept=%u\n",pkg_listed_kept);
+    pkg_listed_kept=0;
+#endif
 #if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN
 #if RE4DC_CORE_PIN==2
     // CORE_PIN=2: the core keys are pinned only where the room has its own list (r101: the post-bell radio call's frag

@@ -713,6 +713,19 @@ ifeq ($(TEX_PKG_SKIP),1)
 GAME_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
 PLATFORM_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
 endif
+# TEX_PKG_SKIP_LISTED=1 (lane castlerender19 2026-10-19; render only, default 0; needs TEX_PKG_SKIP=1): VRAM rule. A key of
+#              the room's own resident list (dc/resident.bin, room != 0: a texture the room's scenes loaded on first
+#              sight) is preloaded at room entry even when a package role row names it. Registry actors still draw
+#              those source textures on some frames (r207: the inventory open drew 16 zealot / Ashley role TPLs from
+#              disc in play). The enemy pass and core keys keep TEX_PKG_SKIP. Logs "TEXPKG listed kept=". Knob off:
+#              the image is unchanged.
+TEX_PKG_SKIP_LISTED ?= 0
+ifeq ($(TEX_PKG_SKIP_LISTED),1)
+ifneq ($(TEX_PKG_SKIP),1)
+$(error TEX_PKG_SKIP_LISTED=1 needs TEX_PKG_SKIP=1)
+endif
+PLATFORM_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP_LISTED=1
+endif
 # NATIVE_MODEL_REGISTRY_DYING=1 (lane cast16 2026-10-17; render only, default 0): a Ganado-class enemy (Ganado cast or registry plan)
 #              (ids 0x10..0x20) keeps its PS2 plan while its whole-model fade runs (death: invisible_factor < 1), drawn
 #              through ACTOR_GANADO_DEATH_FADE's G1 ticket (its source FIFO position, TR list, the source alpha) instead
