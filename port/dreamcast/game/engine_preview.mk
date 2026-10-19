@@ -11,7 +11,7 @@ ifeq ($(ENGINE_PREVIEW),1)
 ifeq ($(wildcard $(ENGINE_PREVIEW_GRID)),)
 $(error ENGINE_PREVIEW=1: no grid file $(ENGINE_PREVIEW_GRID))
 endif
-$(OBJDIR)/mod/em10g/shared/src/em10/em10.o: GAME_CPPFLAGS += -DRE4DC_ENGINE_PREVIEW=1 -Iplatform/include
+$(OBJDIR)/mod/em10g/shared/src/em10/em10.o $(OBJDIR)/src/game/ik.o: GAME_CPPFLAGS += -DRE4DC_ENGINE_PREVIEW=1 -Iplatform/include
 PLATFORM_OBJS += $(OBJDIR)/platform/actor_rt.o $(OBJDIR)/platform/actor_rt_grid.o
 $(OBJDIR)/platform/actor_rt.o: platform/actor_rt.c platform/include/actor_rt.h
 	@mkdir -p $(dir $@)
