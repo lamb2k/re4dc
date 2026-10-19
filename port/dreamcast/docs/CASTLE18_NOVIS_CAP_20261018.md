@@ -2,6 +2,51 @@
 
 Current runtime source: codex/castle18 30234c765c38e2992c135dd71988ce042d90aa0e, including integration3830a335. Source commits402116c9/30234c76 are pushed. Earlier293/267 runtime results below are historical; current qualification is recorded first. Full Castle is incomplete. Island remains paused under I-007; boss modeling belongs Boss18. Final seven accessory/weapon variants and 1650-file data seal are reused unchanged.
 
+## Final cap-only recipe and exact r20a data, current383
+
+Branch source3f413152 includes CH4REC selection df60467e and the new r20a registry spec. No runtime code changed after30234c76. EVENT_SWAP_RELOAD remains off in CH4REC; the private source-event tests below do not enable it.
+
+Literal final CH4REC builds (no phase/jump/reload extras in these arms), SOURCE_DATE_EPOCH1760000000, JOBS4 under the shared build guard:
+
+| Arm | Full ELF SHA256 | _end | Result |
+|---|---|---|---|
+| c18nerP | ddda161825800e75cee37e06c0bdfebe9e04148dff500900a5241d8d6480869e | 8c456238 | missing0, actual cap1/reload0 |
+| c18nfmW | 3c5afed6e761a538 (full SHA in cap-final383-builds/proof.json) | 8c464f18 | missing0, cap1/reload0, 48KiB memory twin |
+
+The fresh canonical cap-only memory twin passes all six actual49152-byte holds; this supersedes the private cap+reload memory numbers as the final recipe gate. Every55s run exits under60s. No OOM/HALT/FAULT/MISSING, and all room activity/completion checks pass. Full room CAST/audio failures remain separate.
+
+| Room | Normal headroom / top B | Fragmented headroom / top B |
+|---|---|---|
+| r224 | 50008 /49056 | 49920 /36992 |
+| r226 | 37368 /36448 | 37272 /35872 |
+| r227 | 34928 /33792 | 34840 /33152 |
+
+Evidence: cap-final383-builds/proof.json and full ELFs/knobs/generated headers/build logs, cap-final383-kos-fixtures, cap-final383-kos-runs, h-c18nf-kos, kos-cap-final383-summary.json. Existing current383 knob-off Disc1 gate still matches independent frozen383 boot+10overlays11/11; subsequent source changes are recipe/spec/data/documentation only and leave T15REC unchanged.
+
+### Missing r20a package repaired by exact reuse
+
+3f413152 adds ps2-ch4-r20a.json. The effective chapter3 and chapter4 r20a ESLs each contain two type0 Novistadors. The existing full PS2 type0 conversion is reused without modeling. Seven arrays (positions, normals, UV, stream, weights, parents, bind) and the PS2 atlas match the sealed r205 model byte for byte. The new room-owned package is62560B, arena66656B. All model headers, source types, joints, attachments, collision, material and animation contracts are unchanged. Only two copied source/catalog metadata room lists add the source-verified r20a declaration. The original r205 data is immutable. The first package attempt correctly refused the missing room declaration; no checker or converter was changed to bypass it. Type4 r213/r21d are explicitly excluded from this reuse.
+
+Data castle18-novis-r20a-20261018:48files, SHA256SUMS181faf73d225950296af3121cfa8cc25c7a661c35f97fba16488dd93a1ea2069, verified immediate C mirror. Evidence r20a-native-package-reuse-proof.json. Runtime r20ap now draws172 native rows (absent0), replacing the former missing-package gap. Active OT5/refraction and other source semantic refusals remain and keep full CAST FAIL.
+
+### Exact palette path replaces the optional lossy experiment
+
+Nine additional textures have lossless PAL4 representations: all73216 decoded16-bit pixels, including alpha, equal their original Morton-order words. This saves109536B. Combined with the earlier three exact maps, this is12maps/267824pixels and404352B saved, without changing a source texel. No geometry, atlas, material, source CRC identity or runtime code changes. Data castle18-r20a-more-exact-pal4-20261018 SHA256SUMS0ce6ef03908f3e3a57c59cb7bfbf21f972fadc80e97865e5f34975298269a866, immediate verified C mirror.
+
+In actual c18narT r20ax (full native type0 package +12exact PAL4 +additive resident list, NO four-body lossy VQ), TEX0 through480, the same two source kills at103/156 after23hits each, and native172rows/absent0. Last UI free308192B versus148448B and TEX1 in r20ap with only3exact maps. At preload249, pinned2279776/dynamic0/other65536/free222112/largest20448B; later used2193696/free308192B. Logged evictions/retries remain: this is a bounded texture/admission improvement, not full traversal/no-reread/residency acceptance.
+
+The earlier four-body VQ option remains UNADOPTED and is unnecessary for this exact solution. Its original no-native-package r20av result was TEX0, but adding the actual native package in r20aw exposes one different texture allocation failure (a757473f). Do not extrapolate the old trial to the final data. The optional user look question was withdrawn; no visible approximation was adopted.
+
+### Exactness qualification and the released effect trace
+
+Legacy c18narT r20ap vs r20ax passes STRICT435ticks with zero actor/player drift (3022enemy samples), but the standard decisions checker retains MUST-DIFFER at one global tick284: ep9d99ab72/145742 vs a96f7629/145742. No difference is hidden or tolerated. The old trace had LOGIC_TRACE_OWNERSHIP=0 and read an effect backing during room replacement.
+
+A fresh matched pair uses EXISTING LOGIC_TRACE_OWNERSHIP=1 with its required TRACE_SS_MASK=0, with no source/checker edits. c18nhrT ELF e5c17ec4a0e1699fac96410e531f2fdefc89459e6557f3c59895c12b636ea499, end8c464398, missing0. Both logs show LO release at282(site2) and284(site3), ow00 through293, then original source publications for all five domains at294. Tick284 is explicitly unavailable, rather than read from released memory. The standard tools then pass STRICT477 aligned owned ticks and MUST-IDENTICAL476decision ticks,3332enemy samples, zero drift, all must rows equal. The generic frame-gap warning is retained: both logs have the same source-declared unowned intervals, not an undisclosed masking or tolerance change. This is an owned-state comparison, not every loading tick. Both runs retain the same source kills, with exact12 TEX0 and exact3 TEX1.
+
+Evidence: owner383h-build/proof.json and full ELF/knobs/log; h-c18nhrT-r20ao/h-c18nhrT-r20az; current383-r20a-owned-exact12-vs3-{strict,decisions}.json. The initial c18ng attempt stopped at the existing build guard because TRACE_SS_MASK=1 cannot combine with ownership; preserved as setup failure before compilation. Fresh h used the allowed flag combination.
+
+Full Castle remains WORKING. Active camouflage/refraction stays refused pending a separate renderer review, BGM1 fit and full doors/route are open. r203 source key-wave diagnostics continue on the canonical c18nfmW; nine initial source kills are proved, key callback/door acceptance is not yet proved. Boss18 supplies boss model/auxiliary source data; Castle retains room staging and route work.
+
 ## Current383 completed cap, source-event and memory gates
 
 The CH4REC now selects existing ALIVE_CAP_NOVIS=1, as required by I-006. It does not change T15REC or enable EVENT_SWAP_RELOAD. The latter remains a private, separately qualified source-event option. New runtime knobs still default off. This source recipe update follows these matched current383 progress tests; the fresh literal recipe build is recorded separately after packaging.
