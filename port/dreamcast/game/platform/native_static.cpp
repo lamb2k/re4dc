@@ -53,6 +53,12 @@
 #include "../../room/room_package.hpp"
 #include "../../room/static_room_prepare.hpp"
 #include "../../room/pvr_geometry.hpp"
+#ifndef RE4DC_WORLD_PLAN
+#define RE4DC_WORLD_PLAN 0
+#endif
+#if RE4DC_WORLD_PLAN
+#include "../../room/world_plan.hpp"
+#endif
 
 #ifndef RE4DC_NATIVE_STATIC
 #define RE4DC_NATIVE_STATIC 0
@@ -2101,6 +2107,9 @@ struct MeshDraw : Emitter {
     const float* lean_am=nullptr; // bit 2: |mvq| 3x3 (lean::abs9), set by ps2_pass
 #if RE4DC_PS2_STRIP_GROUPS
     const std::uint8_t* sg=nullptr; unsigned sg_groups=0; // PS2_STRIP_GROUPS: the package's group records (ps2_pass)
+#if RE4DC_WORLD_PLAN
+    const re4dc::worldplan::View* plan=nullptr;bool plan_cached=false;
+#endif
     bool sg_whole=false; // this meshlet's cluster / placement is inside every plane: no group tests
     unsigned sg_mask=0;  // the planes the meshlet's box crosses (lean::box_mask)
     bool sg_coef_ok=false; float sg_coef[40] __attribute__((aligned(8))); // lean::sg_coef for this part's mvq
@@ -2208,19 +2217,33 @@ struct MeshDraw : Emitter {
         // than near: every strip of the group would be culled after the transform), transforms only the corner
         // range of the groups left and walks only their strips (in stored order). All groups left: the whole path.
         if(sg && !sg_whole && checks==vp::kChecksAll && sq && lean_am){
+#if RE4DC_WORLD_PLAN
+            const unsigned let_index=unsigned(&l-package.meshlets());
+            unsigned group_count=sg_groups;
+            const auto* g=plan?plan->groups(let_index,group_count):reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*let_index);
+#define RE4DC_SG_COUNT group_count
+#else
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*unsigned(&l-package.meshlets()));
+#define RE4DC_SG_COUNT sg_groups
+#endif
             unsigned lo,hi,culled;std::uint16_t r0[8],r1[8];
+#if RE4DC_WORLD_PLAN
+            auto* plan_cache=plan && plan_cached?&plan->meshlet(let_index):nullptr;
+            unsigned plan_nr;
+            if(plan_cache && (*plan_cache&128U))plan_nr=re4dc::worldplan::View::select(g,group_count,*plan_cache>>8,r0,r1,lo,hi,culled);
+            else {
+#endif
 #if RE4DC_SG_SELECT_LEAN
             unsigned nr;
             if(re4dc_sg_lean_on){
                 if(!sg_lp_ok){lean::sg_coef_lean(mvq,near,sg_lp);sg_lp_ok=true;}
-                nr=lean::sg_select_lean(g,sg_groups,sg_lp,sg_mask,r0,r1,lo,hi,culled);
+                nr=lean::sg_select_lean(g,RE4DC_SG_COUNT,sg_lp,sg_mask,r0,r1,lo,hi,culled);
                 ++lean::lst.calls;
 #if RE4DC_SG_SELECT_LEAN==2
                 // the check build: the original functions on the same input must agree in every output
                 if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
                 unsigned lo2,hi2,culled2;std::uint16_t q0[8],q1[8];
-                const unsigned nr2=lean::sg_select(g,sg_groups,sg_coef,sg_mask,q0,q1,lo2,hi2,culled2);
+                const unsigned nr2=lean::sg_select(g,RE4DC_SG_COUNT,sg_coef,sg_mask,q0,q1,lo2,hi2,culled2);
                 bool bad=nr2!=nr || culled2!=culled || (nr && (lo2!=lo || hi2!=hi));
                 for(unsigned i=0;i<nr && i<nr2;++i)if(q0[i]!=r0[i] || q1[i]!=r1[i])bad=true;
                 if(bad && ++lean::lst.sel_bad<=8)
@@ -2229,11 +2252,18 @@ struct MeshDraw : Emitter {
 #endif
             }else{
                 if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
-                nr=lean::sg_select(g,sg_groups,sg_coef,sg_mask,r0,r1,lo,hi,culled);
+                nr=lean::sg_select(g,RE4DC_SG_COUNT,sg_coef,sg_mask,r0,r1,lo,hi,culled);
             }
 #else
             if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
-            const unsigned nr=lean::sg_select(g,sg_groups,sg_coef,sg_mask,r0,r1,lo,hi,culled);
+            const unsigned nr=lean::sg_select(g,RE4DC_SG_COUNT,sg_coef,sg_mask,r0,r1,lo,hi,culled);
+#endif
+#undef RE4DC_SG_COUNT
+#if RE4DC_WORLD_PLAN
+                plan_nr=nr;
+                if(plan_cache)*plan_cache=(*plan_cache&127U)|128U|(re4dc::worldplan::View::selected(g,group_count,r1,nr)<<8);
+            }
+            const unsigned nr=plan_nr;
 #endif
             ++lean::st.sg_tests;
             if(culled){
@@ -2425,6 +2455,12 @@ struct MeshDraw : Emitter {
         if(sg && lean_am){
             const float blo[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
             const float bhi[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
+#if RE4DC_WORLD_PLAN
+            auto* plan_cache=plan && plan_cached?&plan->meshlet(unsigned(&l-package.meshlets())):nullptr;
+            int plan_mk;
+            if(plan_cache && (*plan_cache&127U))plan_mk=int(*plan_cache&127U)-2;
+            else {
+#endif
 #if RE4DC_SG_SELECT_LEAN
             int mk;
             if(re4dc_sg_lean_on){
@@ -2441,6 +2477,11 @@ struct MeshDraw : Emitter {
             }else mk=lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
 #else
             const int mk=lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
+#endif
+#if RE4DC_WORLD_PLAN
+                plan_mk=mk;if(plan_cache)*plan_cache=(*plan_cache&~127U)|unsigned(mk+2);
+            }
+            const int mk=plan_mk;
 #endif
             if(mk<0){++stats.groups_culled;return 1;}
             sg_mask=unsigned(mk);
@@ -2508,8 +2549,15 @@ struct MeshDraw : Emitter {
             if(lean_inside){
                 cin=2;++lean::st.skipped;
                 if((lean::kMode&8U) && !re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0))++lean::st.check_bad;
-            }else if((lean::kMode&2U) && lean_am)cin=lean::box_class(lo,hi,mvq,lean_am,near,cull_far,nullptr);
+            }
+#if RE4DC_WORLD_PLAN
+            else if(plan && plan_cached && plan->cluster(c))cin=plan->cluster(c)-1;
+#endif
+            else if((lean::kMode&2U) && lean_am)cin=lean::box_class(lo,hi,mvq,lean_am,near,cull_far,nullptr);
             else cin=re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)?1U:0U;
+#if RE4DC_WORLD_PLAN
+            if(plan && plan_cached)plan->cluster(c)=cin+1;
+#endif
             if(!cin){++stats.clusters_culled;continue;}
             if(cin==2)++lean::st.cl_inside;
 #else
@@ -3745,6 +3793,9 @@ struct Ps2World {
 #endif
 #if RE4DC_PS2_STRIP_GROUPS
     unsigned char* sg_block=nullptr; const std::uint8_t* sg=nullptr; unsigned sg_groups=0; // ps2-world.r4sg (heap 4)
+#if RE4DC_WORLD_PLAN
+    re4dc::worldplan::View plan;
+#endif
 #endif
 #if RE4DC_WORLD_VERT
     unsigned vert_loaded=0; // WORLD_VERT: the level resident in storage
@@ -4588,6 +4639,18 @@ bool ps2_open(){
         std::uint32_t w[8]={};
         if(!gwhy){
             std::memcpy(w,gb,32);
+#if RE4DC_WORLD_PLAN
+            if(w[1]==2U){
+                unsigned clusters=0;std::memcpy(&clusters,ps2w.storage+80,4);
+                const unsigned ids_crc=dyn::block?ps2_crc32(dyn::block,(16U+h.placements+31U)&~31U):0;
+                unsigned class_crc=0;
+#if defined(RE4DC_TRANS_POLICY)
+                if(trans::block)class_crc=ps2_crc32(trans::block,24U+((h.parts+3U)&~3U));
+#endif
+                if(gsize<128U || ps2_crc32(gb+128,gsize-128U)!=w[7] ||
+                   !ps2w.plan.adopt(gb,gsize,mh.meshlet_count,clusters,h.placements,h.parts,mh.crc,mh.bytes,h.crc,ids_crc,class_crc))gwhy="plan header";
+            }else
+#endif
             if(std::memcmp(gb,"R4SG",4) || w[1]!=1U || w[2]!=mh.meshlet_count || !w[3] || w[3]>8U || w[4]!=mh.crc ||
                w[5]!=mh.bytes || w[6]!=h.crc || gsize!=32U+16U*w[2]*w[3] || ps2_crc32(gb+32,gsize-32U)!=w[7])gwhy="header";
         }
@@ -4599,6 +4662,10 @@ bool ps2_open(){
         }
         re4dc_log("PS2SG room=%03x groups=%s per_meshlet=%u bytes=%u heap=%d\n",ps2w.room,gwhy?gwhy:"ok",unsigned(w[3]),gsize,
                   re4dc_static_heap_free());
+#if RE4DC_WORLD_PLAN
+        re4dc_log("WORLDPLAN room=%03x version=%u active=%u crc=%08x mesh=%08x sidecar=%08x bytes=%u\n",
+                  ps2w.room,w[1],unsigned(ps2w.plan.data!=nullptr),w[7],mh.crc,h.crc,gsize);
+#endif
     }
 #endif
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
@@ -5025,7 +5092,16 @@ int ps2_pass(unsigned pass,float zfar){
     const float lod_px=float(RE4DC_MESH_LOD_PX);
 #endif
     const auto& pk=ps2w.package;
+#if RE4DC_WORLD_PLAN
+    const auto* wp=ps2w.plan.data?&ps2w.plan:nullptr;
+    if(wp && !pass)wp->frame(ps2w.view,P,ps2w.viewport,cull_far);
+    const auto* wp_candidates=wp?wp->at<std::uint16_t>(18):nullptr;
+    const unsigned wp_count=wp?wp_candidates[pass+1]-wp_candidates[pass]:ps2w.nplacements;
+    for(unsigned wp_i=0;wp_i<wp_count;++wp_i){
+        const unsigned i=wp?wp_candidates[4+wp_candidates[pass]+wp_i]:wp_i;
+#else
     for(unsigned i=0;i<ps2w.nplacements;++i){
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
         if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
 #endif
@@ -5123,8 +5199,31 @@ int ps2_pass(unsigned pass,float zfar){
 #else
         constexpr bool lean_sky=false;
 #endif
+#if RE4DC_WORLD_PLAN
+        const auto* wp_place=wp?wp->at<re4dc::worldplan::Placement>(16)+i:nullptr;
+        const bool wp_static=wp_place && !pass && (wp_place->flags&1U) && !lean_sky && RE4DC_PS2_AFFINE==pl.affine;
+        if(wp_static && lw_on){
+            const unsigned cell=wp_place->flags>>3;
+            auto& state=wp->at<std::uint8_t>(29)[108+cell];
+            if(!state){
+                const auto& cb=wp->at<re4dc::worldplan::Cell>(20)[cell];
+                static constexpr float identity[12]={1,0,0,0,0,1,0,0,0,0,1,0};
+                state=lean::world_out(lw,identity,cb.lo,cb.hi)?2:1;
+            }
+            if(state==2){++c.culled;++lean::st.pre_culled;continue;}
+        }
+#endif
         if(lw_on && !lean_sky && lean::world_out(lw,RE4DC_PS2_AFFINE,mesh.bounds_min,mesh.bounds_max)){++c.culled;++lean::st.pre_culled;continue;}
-        float mv[12];lean::concat_u(ps2w.view,RE4DC_PS2_AFFINE,mv);
+        float mv[12];
+#if RE4DC_WORLD_PLAN
+        if(wp_static){
+            const unsigned key=wp_place->affine;
+            auto* cached=wp->at<float>(27)+12*key;auto& valid=wp->at<std::uint8_t>(28)[key];
+            if(!valid){lean::concat_u(ps2w.view,RE4DC_PS2_AFFINE,cached);valid=1;}
+            std::memcpy(mv,cached,sizeof(mv));
+        }else
+#endif
+        lean::concat_u(ps2w.view,RE4DC_PS2_AFFINE,mv);
         if(lean::kMode&8U){float r[12];concat(ps2w.view,RE4DC_PS2_AFFINE,r);if(std::memcmp(r,mv,sizeof(r)))++lean::st.check_bad;}
 #endif
         const re4dc::render::DrawBounds bounds{{mesh.bounds_min[0],mesh.bounds_min[1],mesh.bounds_min[2]},
@@ -5257,6 +5356,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
                 }
             }
+#endif
+#if RE4DC_WORLD_PLAN
+            d.plan=wp;d.plan_cached=wp_static && (wp_place->flags&2U) && meta.pass==0 && d.cull_far==cull_far;
 #endif
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
             const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
@@ -5650,6 +5752,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
 #if RE4DC_PS2_STRIP_GROUPS
     if(ps2w.sg_block)re4dc_static_free(ps2w.sg_block);
     ps2w.sg_block=nullptr;ps2w.sg=nullptr;ps2w.sg_groups=0;
+#if RE4DC_WORLD_PLAN
+    ps2w.plan.data=nullptr;
+#endif
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC
     dyn::reset();

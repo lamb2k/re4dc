@@ -2964,6 +2964,22 @@ endif
 # walked: those strips were culled after the transform before. Rooms without the file: unchanged. Needs
 # PS2_WORLD_LEAN with bit 2 (the per-pass planes and |mvq|) and MESH_STRIP_LEAN=1.
 PS2_STRIP_GROUPS ?= 0
+WORLD_PLAN ?= 0
+ifneq ($(WORLD_PLAN),0)
+ifneq ($(WORLD_PLAN),1)
+$(error WORLD_PLAN must be 0 or 1)
+endif
+ifneq ($(PS2_STRIP_GROUPS),1)
+$(error WORLD_PLAN needs PS2_STRIP_GROUPS=1)
+endif
+ifneq ($(PS2_WORLD_DYNAMIC),1)
+$(error WORLD_PLAN needs PS2_WORLD_DYNAMIC=1)
+endif
+ifneq ($(WORLD_VERT),0)
+$(error WORLD_PLAN currently needs WORLD_VERT=0)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_PLAN=1
+endif
 ifneq ($(PS2_STRIP_GROUPS),0)
 ifneq ($(PS2_STRIP_GROUPS),1)
 $(error PS2_STRIP_GROUPS must be 0 or 1)
