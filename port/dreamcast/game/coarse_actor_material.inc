@@ -88,6 +88,9 @@ inline bool source_appearance_type(unsigned appearance,unsigned id,unsigned type
 #if RE4DC_ACTOR_PL08
     // pl08 is the same player cModel (id 0, type 0); its costume is proved by the 0x108 role rows, not by type.
     if(appearance==0x108)return id==0 && type==0;
+#if RE4DC_LEON_HEADLESS
+    if(appearance==0x109)return id==0 && type==0;  // LEON_HEADLESS: pl08 after setHead(0), proved by the 0x109 rows
+#endif
 #endif
     static const unsigned char types[5]={1,0,3,4,11};
 #if RE4DC_ACTOR_APPEARANCE_ALIAS
@@ -263,7 +266,12 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
     // These are exact infos including their hidden state and second-pass bit.
     // Source visibility bit8 can vary; all other unproved bits decline.
     unsigned expected=1;
+#if RE4DC_LEON_HEADLESS
+    // LEON_HEADLESS: 0x109's role 3 is the neck (setHead(0) adds it plain: no shape bit).
+    if(RE4DC_LEON_LIKE(row.appearance) && row.role==3 && row.appearance!=0x109u)expected|=2;
+#else
     if(RE4DC_LEON_LIKE(row.appearance) && row.role==3)expected|=2;
+#endif
     if(RE4DC_LEON_LIKE(row.appearance) && row.role==7)expected|=0x40;
 #if RE4DC_NATIVE_MODEL_REGISTRY && (RE4DC_ROUTE_CH22 || RE4DC_ROUTE_CH23 || RE4DC_NMR_MERCHANT)
     // The source merchant explicitly gives its robe and selected coat their own material color.
@@ -403,7 +411,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     armor_rows=registry && (m->id==0x3cu || m->id==0x25u);
 #endif
     if(registry ? !re4dc_registry_model(m,p) :
-       ((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
+       ((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
         (!leon && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type)))) {
         out.error=Error::UnknownAppearance;return out;
     }
@@ -422,7 +430,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
        !room_colour_scale(gxCsScale[m->TevScaleGroup],!leon || RE4DC_ACTOR_LEON_NATIVE_LOOK) ||
        m->AddAmb_r || m->AddAmb_g || m->AddAmb_b) {out.error=Error::LiveModifier;return out;}
 #else
-    if((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
+    if((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
        (!leon && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type))) {
         out.error=Error::UnknownAppearance;return out;
     }

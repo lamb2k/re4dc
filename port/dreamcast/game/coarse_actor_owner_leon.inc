@@ -295,6 +295,19 @@ extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p
     // The hair runs of the included header: 14 (leon_hair_runs.h), 2 with CHARBAKE_HAIR (leon_hair_runs_g2.h), the
     // arm's with PS2_LEON (ps2leon_hair_runs.h: 1 for A, 2 for B).
     constexpr unsigned kHair=leon_hair_runs::run_count;
+#if RE4DC_LEON_HEADLESS
+    // LEON_HEADLESS (0x109, Leon after setHead(0)): seven roles, one whole-chunk run each in role order, no hair runs
+    // (the hair info is gone), the one atlas material.
+    if(p && p->appearance==0x109) {
+        if(p->count!=7 || p->run_count!=7 || p->material_count!=1)return 0;
+        for(unsigned i=0;i<7;++i) {
+            const auto& r=p->runs[i];
+            if(r.role!=i || r.material || !p->info[i] || r.triangles!=p->input[i].triangles ||
+               r.stream.data!=p->input[i].stream.data || r.uv.data!=p->input[i].uv.data)return 0;
+        }
+        return 3u|(RE4DC_ACTOR_LEON_NATIVE_LOOK?4u:0u);
+    }
+#endif
 #if RE4DC_ACTOR_PL08
     // pl08 (0x108): nine roles; the same hair (role 7, pl00's runs 7..20) and one role-8 run last, its whole chunk.
     const bool pl08=p && p->appearance==0x108;
