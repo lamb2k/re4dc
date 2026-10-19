@@ -1,6 +1,14 @@
-# Boss price table — 2026-10-19 (I-013 / H-032)
+# Boss price table — 2026-10-19 (I-013 / H-044; original H-032)
 
 **The retained whole-fight evidence does not yet justify an additional reduced level.** This table covers the entire boss queue, including the settled choices and the historical census entries. Missing complete-fight frame terms are technical dependencies, not zero costs. No new conversion, reduction, game build, Flycast run or look sheet was made for pricing. Existing candidates remain preserved; I-013 replaces the older speculative level sets.
+
+## Current review
+
+H-044 rechecks all 41 original model-input pins, recounts all 40 native stream inventories and rehashes the six retained attribution receipts plus both console/model notes. Every hash and count is unchanged. H-040 full lit Verdugo body/tail headers also recheck 17902/4594 indices, and H-036 original statue header rechecks 18667. These later source preparations do not supply a live-frame or whole-fight profile; none of the price decisions below changes. The exact current header hashes are included in the public input reference. No new capture or model level was created.
+
+H-033's source/BIO4MOV classification is already sealed in `BOSS18_EVENT_MOVIES_20261019.md`: 25 distinct referenced event names have same-named original SFD entries; movie-backed QTE callbacks remain required, but movie pictures need no extra boss model. Actual Verdugo appearance, statue chase, r11e/r224 and combat grabs remain live. Catalogue presence alone is not staged movie playback. Source full geometry is retained only where live rendering requires it; no story-only model set is queued.
+
+This is the single all-queue table requested by I-013. Missing whole-fight costs remain a technical dependency for a new lighter build, while data/material qualification continues separately. Source-only H-036..H-040 preparations and the r20f accessory dependency introduce no new timing receipt. Current LEON_SKIN_SLOTS2, runtime owner and shipping-level gates remain required.
 
 ## Basis and limits
 
@@ -47,3 +55,5 @@ Continue independent source/route preparation now: check each source event again
 ## Reproducible receipt
 
 `tools/d367/boss18/boss-price-inputs-20261019.json` contains only source hashes/paths and receipt references. Private set `boss18-price-table-20261019`: 13 files/182401B; SHA256SUMS `25e53b8f9ae60e4383222e87f625f9efa2de1e35f3e3da63106c450465ac420e`; immediate byte-verified C mirror under `re4-assets-private`. It retains 40 complete native-header inventories, original statue count, original legacy per-BIN census references and six exact historical attribution receipts. Evidence: `C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/price-table-20261019/`. Header payloads remain in their original immutable private sets, not copied to Git. No runtime/converter/registry selection/recipe/gate changes.
+
+H-044 revalidation private set: `boss18-price-review-20261019`, 15 files / 210199 bytes, SHA256SUMS `3d57501b9cc6b47a8db607cc32ff1b387863b47929d9a0432d21ba54a56b5058`; immediate C mirror verified. `revalidation.json` SHA256 `6d8d03bee8245d89ef7c8b15a78f6fe48f116dde26a7b22a6b436ba5b2dc9ab3`. The original H-032 receipt remains unchanged. Evidence seal: `C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/price-review-seal-20261019.json`.

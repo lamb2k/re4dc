@@ -307,5 +307,65 @@
     "eligible_new_LOD_decisions": 0,
     "technical_dependency": "Qualified complete-frame original fight windows on today path, with actual boss form/info/attachment visibility, exact program/data, exclusive source ownership, and disjoint remaining-frame cost. No room-entry or non-drawn baseline substituted."
   },
-  "scope": "Hash-only inventory/profile references. Not game/model payload; no current performance, complete fight or new level acceptance."
+  "scope": "Hash-only inventory/profile references. Not game/model payload; no current performance, complete fight or new level acceptance.",
+  "review_20261019_H044": {
+    "source_commit": "fc84dbe62a9a5cc2946f9d8c2657cdc034c49b77",
+    "private_set": {
+      "set": "boss18-price-review-20261019",
+      "files": 15,
+      "bytes": 210199,
+      "sha256sums_sha256": "3d57501b9cc6b47a8db607cc32ff1b387863b47929d9a0432d21ba54a56b5058",
+      "mirror_verified": true,
+      "original_pinned_model_inputs": 41,
+      "native_header_counts_rechecked": 40,
+      "retained_profile_and_console_inputs": 8,
+      "new_source_preparation_headers_checked": 3,
+      "revalidation_sha256": "6d8d03bee8245d89ef7c8b15a78f6fe48f116dde26a7b22a6b436ba5b2dc9ab3"
+    },
+    "source_preparation_headers": [
+      {
+        "name": "verdugo-body-H040",
+        "path": "/root/re4data/private/boss18-verdugo-source-poses-20261019/retained-full/verdugo-em2c-00/runtime/castmodel_runtime.h",
+        "sha256": "6b768b2c339fb38ac121b2fc7f340c97c1af1948aa66967b7e110c1f76b47f5a",
+        "total": {
+          "records": 9159,
+          "indices": 17902,
+          "triangles": 12346,
+          "strips": 2778,
+          "meshlets": 72,
+          "bytes": 73472
+        },
+        "today_vertex_proxy_ms": 12.5314
+      },
+      {
+        "name": "verdugo-tail-H040",
+        "path": "/root/re4data/private/boss18-verdugo-source-poses-20261019/retained-full/verdugo-tail-01/runtime/castmodel_runtime.h",
+        "sha256": "15fc6e67903d89ee5edbca7ffc4de34ccc67518f0d9585496086aebe3c2baecc",
+        "total": {
+          "records": 2525,
+          "indices": 4594,
+          "triangles": 3002,
+          "strips": 796,
+          "meshlets": 20,
+          "bytes": 19968
+        },
+        "today_vertex_proxy_ms": 3.2157999999999998
+      },
+      {
+        "name": "statue-native-H036",
+        "path": "/root/re4data/private/boss18-statue-full-20261019/full-source-shift0/statue-r226-37/runtime/castmodel_runtime.h",
+        "sha256": "919a1d8c532cca74e4e5fc4d42859c83bdb31d99632c4e49b042b6e222313acf",
+        "total": {
+          "records": 11532,
+          "indices": 18667,
+          "triangles": 12631,
+          "strips": 3018,
+          "meshlets": 91,
+          "bytes": 88640
+        },
+        "today_vertex_proxy_ms": 13.0669
+      }
+    ],
+    "no_new_performance_or_lod_acceptance": true
+  }
 }
