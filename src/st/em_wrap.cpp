@@ -39,6 +39,10 @@ extern "C" cEm* re4dc_aliveCapTake(int no, int drop);
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
 extern "C" int re4dc_aliveCapSetFlag(int no, u32 bits);
 #endif
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+extern "C" int re4dc_aliveCapSetGotoR207(int no, const Vec* pos, int mode);
+extern "C" int re4dc_aliveCapGetGotoR207(int no, int* mode);
+#endif
 static int emWrapHeld(cEmWrap* w)
 {
     if (w->alive != 2) {
@@ -995,6 +999,9 @@ void cEmWrap::setGotoSwitch(Vec* pos, int mode, void* sw)
 // 0xB = stop; the room scripts also pass the modes directly.
 void cEmWrap::setGoto(Vec* pos, int mode)
 {
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+    if (pG->room_id == 0x207 && EM_WRAP_HELD(this) && re4dc_aliveCapSetGotoR207(no, pos, mode)) return;
+#endif
     if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             ((cEmGanado*) pEm)->setGoto(pos, mode);
@@ -1009,6 +1016,12 @@ void cEmWrap::setGoto(Vec* pos, int mode)
 // Ganado only: the mode of the goto order still in progress (0 when it has arrived / has none).
 int cEmWrap::ckGoto()
 {
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+    if (pG->room_id == 0x207 && EM_WRAP_HELD(this)) {
+        int mode;
+        if (re4dc_aliveCapGetGotoR207(no, &mode)) return mode;
+    }
+#endif
     if (emWrapLive(this) == 1) {
         if (isNormalGanade() == 1) {
             return ((cEmGanado*) pEm)->ckGoto();

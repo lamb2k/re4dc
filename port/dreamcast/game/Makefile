@@ -360,6 +360,26 @@ $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1
 $(OBJDIR)/mod/%.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1
 endif
 # ALIVE_CAP_DEFER_FLAGS_END
+# ALIVE_CAP_DEFER_GOTO_R207_BEGIN: source-proven r207 queued movement only.
+# Other rooms, including unresolved r214 event capacity, keep their old behavior.
+ALIVE_CAP_DEFER_GOTO_R207 ?= 0
+ifneq ($(words $(ALIVE_CAP_DEFER_GOTO_R207)),1)
+$(error ALIVE_CAP_DEFER_GOTO_R207 must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ALIVE_CAP_DEFER_GOTO_R207)),)
+$(error ALIVE_CAP_DEFER_GOTO_R207 must be 0 or 1)
+endif
+ifeq ($(ALIVE_CAP_DEFER_GOTO_R207),1)
+ifeq ($(ALIVE_CAP),0)
+$(error ALIVE_CAP_DEFER_GOTO_R207=1 requires ALIVE_CAP)
+endif
+ifneq ($(ALIVE_CAP_DEFER_FLAGS),1)
+$(error ALIVE_CAP_DEFER_GOTO_R207=1 requires ALIVE_CAP_DEFER_FLAGS=1)
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_GOTO_R207=1
+$(OBJDIR)/mod/%.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_GOTO_R207=1
+endif
+# ALIVE_CAP_DEFER_GOTO_R207_END
 # ALIVE_CAP_NOVIS=1 (I-006, default off): stage-2 Novistadors (id2D) share
 # the existing ALIVE_CAP budget with Ganados. Creation/send holds and fresh
 # accounting only; castle pointer-owner rooms remain excluded from parking.

@@ -35,6 +35,9 @@ asm(".section .rodata\n\t.balign 8\n\t.text");
 #include "esp.h"
 #include "est.h"
 #include "db_log.h"
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+extern "C" int re4dc_aliveCapFull();
+#endif
 
 // Room 2-07 (D:/Bio4/Prog/r207.cpp): the two swords on the wall, the enemies patrolling between
 // the four areas of the hall and the wall that slides open once both swords are swapped.
@@ -346,6 +349,11 @@ int r207_CkDist()
         if (k == 2) {
             continue;
         }
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+        // A held source actor has no position to compare. Its alive/wave count
+        // remains unchanged; choose a real idle actor for this movement task.
+        if (EM_WRAP_HELD_NOW(&r207_work.p->em[k].em)) continue;
+#endif
         if (r207_work.p->em[k].em.isActive() && r207_work.p->em[k].moving == 0) {
             Vec pos;
             f32 d;
@@ -480,6 +488,12 @@ static void r207_EnemySet()
     }
     RoomSeCall(1, &sePos, 0, 0, 0);
     SceSleep(50);
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+    // The original event waits for D3's movement. Wait in normal gameplay for
+    // its one slot before setting the event busy bit; no yield occurs between
+    // this check and the original first send. D4/D5 may still queue normally.
+    while (re4dc_aliveCapFull()) SceSleep(1);
+#endif
     RoomSeCall(2, &sePos, 0, 0, 0);
     RsfSet(G_ROOM_ID, 11);
     SceEventStart(1);

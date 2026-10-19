@@ -7,6 +7,9 @@
 #include "atari.h"
 #include "light.h"
 #include "em_set.h"
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+#include "em_wrap.h"  // original typed Ganado virtual setter
+#endif
 #if defined(RE4DC_ALIVE_CAP_R202_GATE) && RE4DC_ALIVE_CAP_R202_GATE
 #include "alive_cap_r202_gate.h"
 #endif
@@ -204,6 +207,13 @@ static int aliveCapReleasing;
 // Keep cEmWrap's original 12-byte ABI; 64 masks cost 256 bytes only when enabled.
 static u32 aliveCapPendingFlags[64];
 #endif
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+// Bounded r207 pilot only: copy the command, never borrow a caller Vec or grow
+// cEmWrap. Valid is separate from mode (mode 0 is a real source command).
+struct AliveCapPendingGoto { Vec pos; int mode; u32 valid, firstFlags; };
+static_assert(sizeof(AliveCapPendingGoto) == 24, "deferred Goto record");
+static AliveCapPendingGoto aliveCapPendingGoto[64];
+#endif
 
 // Sends never deferred: the room code dereferences the returned enemy without a check (census 2026-10-15).
 // r100 ambush 03-05 (ems[0..2]), fire trio 06-08 (event motion), house Ganado 0x25; r10c entry 02 and the ambush
@@ -309,13 +319,68 @@ extern "C" int re4dc_aliveCapSetFlag(int no, u32 bits)
     return 0;
 }
 
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+static int aliveCapGotoR207Eligible(int no, int id)
+{
+    return pG->room_id == 0x207 && no >= 0 && no < 256 &&
+           EM_LIST(no)->room == 0x207 && EM_LIST(no)->id == id &&
+           id >= 0x10 && id <= 0x20 && id != 0x18;
+}
+
+extern "C" int re4dc_aliveCapSetGotoR207(int no, const Vec* pos, int mode)
+{
+    if (!pos || no < 0 || no >= 256 || !aliveCapGotoR207Eligible(no, EM_LIST(no)->id)) return 0;
+    for (int k = 0; k < aliveCapN; k++) {
+        if (aliveCapHeld[k] == no && aliveCapWaitingK(k)) {
+            AliveCapPendingGoto& command = aliveCapPendingGoto[k];
+            if (!command.valid) command.firstFlags = aliveCapPendingFlags[k];
+            command.pos = *pos;
+            command.mode = mode;
+            command.valid = 1;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+extern "C" int re4dc_aliveCapGetGotoR207(int no, int* mode)
+{
+    if (!mode || no < 0 || no >= 256 || !aliveCapGotoR207Eligible(no, EM_LIST(no)->id)) return 0;
+    for (int k = 0; k < aliveCapN; k++) {
+        if (aliveCapHeld[k] == no && aliveCapWaitingK(k) && aliveCapPendingGoto[k].valid) {
+            *mode = aliveCapPendingGoto[k].mode;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// Original first AI init already ran. The first Goto's OR snapshot preserves
+// setGoto's sticky work-flag 0x100 effect; applying the final OR mask first would
+// lose it. Only the latest copied target/mode is needed. Do not cast Novistadors.
+static void aliveCapDeliverGotoR207(cEm* em, int no, u32 bits, const AliveCapPendingGoto& command)
+{
+    if (command.valid && aliveCapGotoR207Eligible(no, em->id)) {
+        em->flag |= command.firstFlags;
+        Vec pos = command.pos;
+        ((cEmGanado*) em)->setGoto(&pos, command.mode);
+    }
+    em->flag |= bits;
+}
+#endif
+
 // A direct repeat send or room-start creation can consume a held entry without
 // Take/Move removing it first. Deliver only after the original first AI move.
 static void aliveCapApplyPending(cEm* em, int no)
 {
     for (int k = 0; k < aliveCapN; k++) {
         if (aliveCapHeld[k] == no) {
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+            aliveCapDeliverGotoR207(em, no, aliveCapPendingFlags[k], aliveCapPendingGoto[k]);
+            aliveCapPendingGoto[k] = {};
+#else
             em->flag |= aliveCapPendingFlags[k];
+#endif
             aliveCapPendingFlags[k] = 0;
             return;
         }
@@ -325,7 +390,11 @@ static void aliveCapApplyPending(cEm* em, int no)
 // Allocation refusal must not consume a queued command or its original order.
 // A failed creator has not run first AI initialization, so it cannot insert a
 // new hold. Explicit death/room invalidation still discards the old command.
-static void aliveCapRestorePending(int slot, int no, int sent, u32 bits)
+static void aliveCapRestorePending(int slot, int no, int sent, u32 bits
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+                                   , const AliveCapPendingGoto& command
+#endif
+                                   )
 {
     EmListData* d = EM_LIST(no);
     if (EmSetDieCk(no) || (d->be_flag & 2) || (!sent && !(d->be_flag & 1)) ||
@@ -336,10 +405,16 @@ static void aliveCapRestorePending(int slot, int no, int sent, u32 bits)
         aliveCapHeld[j] = aliveCapHeld[j - 1];
         aliveCapSent[j] = aliveCapSent[j - 1];
         aliveCapPendingFlags[j] = aliveCapPendingFlags[j - 1];
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+        aliveCapPendingGoto[j] = aliveCapPendingGoto[j - 1];
+#endif
     }
     aliveCapHeld[slot] = (u8) no;
     aliveCapSent[slot] = (u8) sent;
     aliveCapPendingFlags[slot] = bits;
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+    aliveCapPendingGoto[slot] = command;
+#endif
     aliveCapN++;
 }
 #endif
@@ -357,6 +432,9 @@ static void aliveCapPush(int no, int sent)
     if (aliveCapN < (int) sizeof(aliveCapHeld)) {
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
         aliveCapPendingFlags[aliveCapN] = 0;
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+        aliveCapPendingGoto[aliveCapN] = {};
+#endif
 #endif
         aliveCapSent[aliveCapN] = (u8) sent;
         aliveCapHeld[aliveCapN++] = (u8) no;
@@ -472,12 +550,18 @@ extern "C" cEm* re4dc_aliveCapTake(int no, int drop)
     sent = aliveCapSent[k];
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
     const u32 pending = aliveCapPendingFlags[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+    const AliveCapPendingGoto pendingGoto = aliveCapPendingGoto[k];
+#endif
 #endif
     for (j = k + 1; j < aliveCapN; j++) {
         aliveCapHeld[j - 1] = aliveCapHeld[j];
         aliveCapSent[j - 1] = aliveCapSent[j];
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
         aliveCapPendingFlags[j - 1] = aliveCapPendingFlags[j];
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+        aliveCapPendingGoto[j - 1] = aliveCapPendingGoto[j];
+#endif
 #endif
     }
     aliveCapN--;
@@ -489,10 +573,18 @@ extern "C" cEm* re4dc_aliveCapTake(int no, int drop)
         aliveCapReleasing = 0;
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
         if (em && em != errEm) {
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+            aliveCapDeliverGotoR207(em, no, pending, pendingGoto);
+#else
             em->flag |= pending;
+#endif
         } else {
             em = 0;
-            aliveCapRestorePending(k, no, sent, pending);
+            aliveCapRestorePending(k, no, sent, pending
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+                                   , pendingGoto
+#endif
+                                   );
         }
 #endif
         if (em && sent) {
@@ -547,6 +639,9 @@ extern "C" void re4dc_aliveCapDestroy(int lo, int hi)
         aliveCapSent[n] = aliveCapSent[k];
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
         aliveCapPendingFlags[n] = aliveCapPendingFlags[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+        aliveCapPendingGoto[n] = aliveCapPendingGoto[k];
+#endif
 #endif
         aliveCapHeld[n++] = (u8) no;
     }
@@ -582,6 +677,9 @@ extern "C" int re4dc_aliveCapFarDrop(int max, int clearAlive)
             aliveCapSent[j - 1] = aliveCapSent[j];
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
             aliveCapPendingFlags[j - 1] = aliveCapPendingFlags[j];
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+            aliveCapPendingGoto[j - 1] = aliveCapPendingGoto[j];
+#endif
 #endif
         }
         aliveCapN--;
@@ -753,6 +851,9 @@ extern "C" void re4dc_aliveCapMove(int busy)
         aliveCapSent[n] = aliveCapSent[k];
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
         aliveCapPendingFlags[n] = aliveCapPendingFlags[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+        aliveCapPendingGoto[n] = aliveCapPendingGoto[k];
+#endif
 #endif
         aliveCapHeld[n++] = (u8) no;
         if (dist > bestD) {
@@ -768,12 +869,18 @@ extern "C" void re4dc_aliveCapMove(int busy)
     const int sent = aliveCapSent[best];
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
     const u32 pending = aliveCapPendingFlags[best];
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+    const AliveCapPendingGoto pendingGoto = aliveCapPendingGoto[best];
+#endif
 #endif
     for (k = best + 1; k < aliveCapN; k++) {
         aliveCapHeld[k - 1] = aliveCapHeld[k];
         aliveCapSent[k - 1] = aliveCapSent[k];
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
         aliveCapPendingFlags[k - 1] = aliveCapPendingFlags[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+        aliveCapPendingGoto[k - 1] = aliveCapPendingGoto[k];
+#endif
 #endif
     }
     aliveCapN--;
@@ -783,10 +890,18 @@ extern "C" void re4dc_aliveCapMove(int busy)
     aliveCapReleasing = 0;
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
     if (em && em != errEm) {
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+        aliveCapDeliverGotoR207(em, no, pending, pendingGoto);
+#else
         em->flag |= pending;
+#endif
     } else {
         em = 0;
-        aliveCapRestorePending(best, no, sent, pending);
+        aliveCapRestorePending(best, no, sent, pending
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+                                   , pendingGoto
+#endif
+                                   );
     }
 #endif
     if (em && sent) {
@@ -881,6 +996,9 @@ void EmSetFromList()
             aliveCapSent[n] = aliveCapSent[k];
 #if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
             aliveCapPendingFlags[n] = aliveCapPendingFlags[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+            aliveCapPendingGoto[n] = aliveCapPendingGoto[k];
+#endif
 #endif
             aliveCapHeld[n++] = aliveCapHeld[k];
         }
@@ -1217,6 +1335,9 @@ void EmSetRoomInit()
     // Continue and a replaced ESL list. Old commands must not follow reused IDs.
     for (i = 0; i < 64; i++) {
         aliveCapPendingFlags[i] = 0;
+#if defined(RE4DC_ALIVE_CAP_DEFER_GOTO_R207) && RE4DC_ALIVE_CAP_DEFER_GOTO_R207
+        aliveCapPendingGoto[i] = {};
+#endif
     }
 #endif
 
