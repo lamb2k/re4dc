@@ -2100,7 +2100,7 @@ std::uint8_t* src=nullptr;        // per repeat: its first copy's corner
 void* block=nullptr; unsigned nlets=0,nsrc=0,bytes=0;
 // cache[u..n) from their first copies (cache[src[..]]), in[u..n) u, v, colour; oc likewise.
 __attribute__((noinline)) void fill(const re4dc::vp::Vertex12* in,pvr_vertex_t* cache,std::uint8_t* oc,unsigned u,
-                                    unsigned n,const std::uint8_t* s,const re4dc::vp::Constants& k){
+                                    unsigned n,const std::uint8_t* s,const re4dc::vp::Constants& k,unsigned clo=0,unsigned chi=255){
     const float au=k.f.au,bu=k.f.bu,av=k.f.av,bv=k.f.bv;
     const std::uint32_t* lut=k.lut;const std::uint32_t andm=k.and_mask,orb=k.or_bits;
     for(unsigned j=u;j<n;++j){
@@ -2123,6 +2123,7 @@ __attribute__((noinline)) void fill(const re4dc::vp::Vertex12* in,pvr_vertex_t* 
         std::uint32_t wa[6],wb[6];
         std::memcpy(wa,&t[0].x,24);std::memcpy(wb,&d.x,24);
         ++checked;
+        if(q<clo || q>chi){--checked;continue;}   // its first copy was not transformed: the repeat is not drawn
         if(std::memcmp(wa,wb,24) || ((to[0]^oc[j])&0x3fU)){
             if(++bad<=16)re4dc_log("SCNDEDUP CHECK bad j=%u q=%u n=%u ref %08x %08x %08x %08x %08x %08x oc %02x got %08x %08x %08x %08x %08x %08x oc %02x\n",
                 j,q,n,wa[0],wa[1],wa[2],wa[3],wa[4],wa[5],to[0],wb[0],wb[1],wb[2],wb[3],wb[4],wb[5],oc[j]);
@@ -2304,7 +2305,7 @@ struct MeshDraw : Emitter {
                 vp::transform_sched<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
 #if RE4DC_SCENERY_DEDUP
                 if(const std::uint32_t dw=dd_word(l);dw>>24)
-                    dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k);
+                    dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k,lo,hi);
 #endif
 #else
                 vp::transform<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
@@ -2764,7 +2765,7 @@ struct MeshDraw : Emitter {
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
 #if RE4DC_SCENERY_DEDUP
             if(const std::uint32_t dw=dd_word(l);dw>>24)
-                dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k);
+                dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k,pk.lo,pk.hi);
 #endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
             unsigned prev=0;
@@ -4669,15 +4670,32 @@ const std::uint8_t* mask=nullptr;
 // The section against this package, before anything is changed: extents, counts, and every repeat's first copy is an
 // earlier non-repeat corner at the same grid position (a missed repeat only costs a transform; a wrong one would not
 // be exact, so it refuses the whole section).
-bool check(const re4dc::room::MeshPackage& pk,unsigned len){
+// scratch: the gather buffer (kGatherBytes), used for the indexed meshlets' pool ranges.
+bool check(const re4dc::room::MeshPackage& pk,unsigned len,void* scratch){
     const auto* all=pk.meshlets();const unsigned nl=pk.header().meshlet_count;
     const std::uint8_t* m=mask;const std::uint8_t* const mend=reinterpret_cast<const std::uint8_t*>(lets)-16U+len;
     unsigned total=0;std::uint8_t pos[256],ipos[256];
+    // A plain meshlet's corners are reordered in place in the vertex array, which indexed meshlets address through
+    // their part pools: no pool may reach into a plain meshlet that has repeats (scdd_compile.py leaves those out).
+    auto* pool=static_cast<std::uint32_t*>(scratch);unsigned npool=0;
+    const unsigned maxpool=unsigned(sizeof(re4dc::room::CompactVertex12))*256U/8U;
+    for(unsigned j=0;j<nl;++j){
+        const auto& x=all[j];
+        if(!pk.indexed(x) || !x.vertex_count)continue;
+        if(npool>=maxpool)return false;
+        const std::uint16_t* o=pk.pool_offsets(x);unsigned lo=0xffffU,hi=0;
+        for(unsigned t=0;t<x.vertex_count;++t){if(o[t]<lo)lo=o[t];if(o[t]>hi)hi=o[t];}
+        pool[2*npool]=x.first_vertex+lo;pool[2*npool+1]=x.first_vertex+hi+1U;++npool;
+    }
     for(unsigned i=0;i<nl;++i){
         const unsigned rep=lets[i]>>24;
         if(!rep)continue;
         const auto& l=all[i];const unsigned n=l.vertex_count;
         if(n<2U || n>256U || rep>=n || (lets[i]&0xffffffU)!=total || m+((n+7U)>>3)>mend)return false;
+        if(!pk.indexed(l)){
+            const unsigned a=l.first_vertex,b=a+n;
+            for(unsigned j=0;j<npool;++j)if(pool[2*j]<b && pool[2*j+1]>a)return false;
+        }
         const unsigned u0=n-rep;unsigned u=0,d=u0;
         for(unsigned k=0;k<n;++k){pos[k]=std::uint8_t(m[k>>3]>>(k&7U)&1U?d++:u++);ipos[pos[k]]=std::uint8_t(k);}
         if(u!=u0 || d!=n)return false;
@@ -4781,7 +4799,7 @@ void dedup_open(){
             dedup::lets=reinterpret_cast<std::uint32_t*>(const_cast<std::uint8_t*>(sec)+16);
             dedup::src=const_cast<std::uint8_t*>(sec)+16+4U*nl;dedup::mask=dedup::src+nrep;
             dedup::nlets=nl;dedup::nsrc=nrep;
-            if(!dedup::check(pk,len)){why="check";dedup_free();}
+            if(!ps2w.gather || !dedup::check(pk,len,ps2w.gather)){why="check";dedup_free();}
         }
     }
     if(!why){

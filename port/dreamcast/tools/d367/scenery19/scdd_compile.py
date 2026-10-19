@@ -44,12 +44,34 @@ def scdd(pkg_dir):
     p = _Pkg(pkg_dir / 'ps2-world.re4mesh')
     lets, src, mask = [], bytearray(), bytearray()
     corners_total = 0
+    # A plain (non-indexed) meshlet's corners are reordered in place in the vertex array; indexed meshlets (part pools)
+    # address that array by offset, so a plain meshlet whose range overlaps any pool is left as is (lets 0).
+    pools = []
+    for li in range(p.nlet):
+        fv, fs, _, vc, sc = struct.unpack_from('<IIIHH', p.m, p.o_let + 28 * li)
+        if sc & 0x8000 and vc:
+            off = struct.unpack_from('<%dH' % vc, p.m, p.o_strip + fs)
+            pools.append((fv + min(off), fv + max(off) + 1))
+    pools = sorted(set(pools))
+    import bisect
+    starts = [a for a, _ in pools]
+    maxend, m_ = [], 0
+    for _, b in pools:
+        m_ = max(m_, b); maxend.append(m_)
+
+    def overlaps(a, b):
+        i = bisect.bisect_left(starts, b) - 1   # pools starting before b
+        return i >= 0 and maxend[i] > a
+    skipped = 0
     for li in range(p.nlet):
         corners = p.corners(li)
         n = len(corners)
         corners_total += n
         if n < 2 or n > 256:
             lets.append(0); continue
+        fv, _, _, _, sc = struct.unpack_from('<IIIHH', p.m, p.o_let + 28 * li)
+        if not sc & 0x8000 and overlaps(fv, fv + n):
+            lets.append(0); skipped += 1; continue
         seen, first = {}, []
         for k in range(n):
             key = tuple(int(v) for v in corners[k])
@@ -72,7 +94,7 @@ def scdd(pkg_dir):
     body = struct.pack('<4I', p.mesh_crc, p.mesh_bytes, p.nlet, len(src)) + struct.pack('<%dI' % len(lets), *lets)
     body += bytes(src) + bytes(mask)
     body += bytes(-len(body) % 16)
-    return body, dict(meshlets=p.nlet, corners=corners_total, repeats=len(src))
+    return body, dict(meshlets=p.nlet, corners=corners_total, repeats=len(src), skipped=skipped)
 
 
 def read_rc(b):

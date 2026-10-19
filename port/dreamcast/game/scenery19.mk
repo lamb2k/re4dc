@@ -21,8 +21,11 @@ SCENERY_DEDUP ?= 0
 # rc19s = rc19 + SCDD): no load-time hashing and no allocation of its own (the room file block, r101 43.9 KB). A room
 # without the section, or a section that does not match the package, draws as knob off (SCNDEDUP log line says why).
 ifneq ($(SCENERY_DEDUP),0)
-ifeq ($(filter 1 2,$(SCENERY_DEDUP)),)
-$(error SCENERY_DEDUP must be 0, 1 or 2)
+ifeq ($(SCENERY_DEDUP),1)
+$(error SCENERY_DEDUP=1 is retired: its load-time reorder moved plain meshlets that pool-indexed meshlets address; use 2)
+endif
+ifneq ($(SCENERY_DEDUP),2)
+$(error SCENERY_DEDUP must be 0 or 2)
 endif
 ifeq ($(SCENERY_CHUNK),0)
 $(error SCENERY_DEDUP needs SCENERY_CHUNK)
