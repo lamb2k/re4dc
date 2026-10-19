@@ -29,6 +29,11 @@ constexpr unsigned kActorPl08Asset0=kActorImmutableChunks+1u;
 constexpr unsigned kLeonHandAsset0=kActorImmutableChunks+4u;
 ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks+3u+leon_hands::count];
 #define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+3u+leon_hands::count)
+#elif RE4DC_LEON_HEADLESS
+// LEON_HEADLESS: the PS2 neck chunk (appearance 0x109 role 3, ps2leon_neck.h) follows the three pl08 IDs.
+constexpr unsigned kLeonNeckAsset=kActorImmutableChunks+4u;
+ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks+4u];
+#define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+4u)
 #else
 ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks+3u];
 #define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+3u)
