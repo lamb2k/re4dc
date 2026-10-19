@@ -1,14 +1,63 @@
 # Castle I-006 cap progress, 2026-10-18
 
-Current source: codex/castle18 ea31a7a5b8c6162366adc78d9fab2a05a64db7dc (pushed). Runtime validation of this follow-up is underway. Full Castle is incomplete. Island remains paused under I-007; boss modeling belongs Boss18. Final seven accessory/weapon variants and 1650-file data seal are reused unchanged.
+Current runtime source: codex/castle18 30234c765c38e2992c135dd71988ce042d90aa0e, including integration3830a335. Source commits402116c9/30234c76 are pushed. Earlier293/267 runtime results below are historical; current qualification is recorded first. Full Castle is incomplete. Island remains paused under I-007; boss modeling belongs Boss18. Final seven accessory/weapon variants and 1650-file data seal are reused unchanged.
+
+## Current383 hive gate and provenance
+
+402116c9 merged31 incoming paths from integration3830a335. The only conflict was the r205 registry JSON: incoming partial_sections=true for both descriptors was obsolete. Retained the already qualified full Castle descriptors; all other JSON fields were identical. Atlas sampler4/locked-vertex3 host tests pass. All seven Castle variant presets/data remain unchanged.
+
+30234c76 changes only knob-on r213 send order and adds the correct st2_2/r213 object macro. C5/C8 initialize against intact source hive collision before the regular seven; four real slots are used and five regular sends are held. The original R213SuBreakModel and enemy AI remain unchanged. With the knob off the original nine-send order is preserved; when Rsf2 is already set the original seven-only branch is preserved. The source-extracted regression compiles actual R213EmSet and SuBreakModel in both modes and reproduces missing critical pointers against the pre-fix negative control.
+
+The prior cap1 phase guest gate is a real rejected candidate: C5/C8 had hp0 but remained alive in routines1/28 and1/2 through room2580. The read-only owned-process observer and source em2d set4 branch establish the collision-dependent initialization cause. No generic hp/death/routine injection was added.
+
+Current383 programs, SOURCE_DATE_EPOCH1760000000, JOBS4 under the shared build guard:
+
+| Arm | ELF SHA256 prefix | _end | Purpose |
+|---|---|---|---|
+| c18b383arP | c641e2ae47e1ff39 | 8c4061d8 | independent detached frozen383 T15REC control |
+| c18n9rP | a824f1a9ca0d5821 | 8c4061d8 | own knob-off T15REC |
+| c18n9rT | f10014474ca8af93 | 8c463d98 | current CH4, cap off, common phase/jump rig |
+| c18narT | d190417995f8b19f | 8c463f78 | matched cap on |
+| c18nbrT | 1056b075c71cee0f | 8c465198 | cap on plus existing EVENT_SWAP_RELOAD=1, private S00 trial |
+
+All missing0. Actual scrambled Disc1 boot a64f194480afa44a19ea7d8d9960e2593b1e21a38bc4773b64bfa31888396e0e and all10overlays equal frozen383 (11/11). ELF debug/path differences are not payload differences. Compile command checks prove the cap flag on all four intended objects; cabin-source.h and actual dvd.o strings prove reload code only in nb. Full ELFs, resolved knobs, generated headers, compressed build logs and private enemy include hashes are mirrored on C. The initial frozen control build stopped before compilation because its new worktree lacked the pinned submodule; it is retained as a setup failure, not a runtime gate.
+
+Current r213 isolated post-s00 hive gate (same sealed input/data, source damage calls only):
+
+| Metric | c18n9rT cap off | c18narT cap on |
+|---|---|---|
+| Sampled combined peak | 9 | 4 |
+| Hive 4D6000hp death | room151 after71 normal damage updates | room151 after71 normal damage updates |
+| Original SuBreak persistent state | a0000000 (initial bit0 plus actual bit2) | same |
+| Ordinary Novistador kills | 7 | 7 |
+| Critical pair | original callback; both gone | original callback; both gone |
+| Held sends / successful releases | 0/0 | 5/5 |
+| Empty enemy census | room1020 | room1140 |
+| take/drop/park logs | 0 | 0 |
+
+Warm actual45.11/45.01s and exact production snapshot continuations50.69/51.08s. Each process exits under60s via owned-PID close and trace_lock. No input/RAM/instruction/state patch, no actor deleted to enforce cap. Source order/timing/population changes are intentional cap policy; this is a matched progress/pointer gate, not a MUST-IDENTICAL full-trace claim. Snapshot history repeats: unique kill frames plus fresh tails are used. Teardown head0 is not evidence of guest failure or a complete no-fatal gate.
+
+Scope: this closes the isolated source hive-break/capped-clear regression. It is NOT full r213 route acceptance. Active Novistador camouflage remains refused, original S00/source door/bridge progress remains open, and the recipe still does not enable ALIVE_CAP_NOVIS. Current r205 all-wave, r21d combined switches/reset and r20a active2+recovered texture gates continue.
+
+Original r213 S00 on current na still halts at immutable-EVD MemorySwap. Separate existing reload option nb reaches exact1661728-byte archive-prefix compare, all covered/differing0/runs0, and installs EVD with CRC f22e3ef9. Playback, exact restore CRC and event completion are not yet proved; do not enable from swap-in alone. No new event code or assets were generated.
+
+C evidence root: C:/Flycast-Evidence/re4-dreamcast/castle18-20261018.
+- current383-build-proof.json, current383-actual-object-proof.json, current383-builds/provenance.json.
+- current383-cap-fixtures/fixture-proof.json:11 immutable fixtures, all off/on nonprogram/input hashes equal.
+- h-c18n9rT-r213p and h-c18narT-r213p, scenarios warm + resevta; state-seed/before-a bind exact disc/program/exe/input.
+- current383-cap-progress.json: explicit source kill events, sampled populations, original flags and queue logs.
+- h-c18narT-r213e (expected immutable backing refusal), h-c18nbrT-r213e (private reload trial).
+- bgm1-source-duplicate-audit.json and bgm1-exact-sample-audit.json reject unsafe BGM0/BGM1 alias: source members3/7 share wavetable metadata but all eight decoded PCM sample images differ. Prior fixed-layout budget blocker remains.
+
+## Historical293/267 source and runtime evidence
 
 ## Source changes
 
 b5869b45 adds default-off ALIVE_CAP_NOVIS. With ALIVE_CAP enabled, stage2 id2D uses the same budget as Ganados10..20 for initial creation, deferred sends and fresh-not-yet-active work. Existing held ESL entries still count in SceCountEmAlive. Existing Castle no-parking exclusions and Ganado-only park selector remain intact: no live Novistador is destroyed to enforce this cap. Existing raw-pointer take exceptions remain visible. r21d's original delayed reset task waits while the combined cap is full; its setReset sets ACTIVE synchronously before another reset task can run.
 
-ea31a7a5 adds narrow source-room repairs behind the same knob. r205 sends69/6F wait for a slot before committing their source wave flag and immediately using the real actor position to open a door. Its actor-hit-list probe skips held wrappers rather than materializing a getPtr exception; a held actor cannot be in that hit list. r213's original statue-broken persistent Rsf2 state is restored after actual release initialization: all C2..CA receive flag20000000; C5/C8 receive hp0 and run their original death routine. They are never silently dropped from the queue. r205 held58 also receives its original alert flag1 on release. There is no generic wrapper change, new queue layout, ESL mutation, renderer exception or new model work.
+ea31a7a5 adds narrow source-room repairs behind the same knob. r205 sends69/6F wait for a slot before committing their source wave flag and immediately using the real actor position to open a door. Its actor-hit-list probe skips held wrappers rather than materializing a getPtr exception; a held actor cannot be in that hit list. r213's original statue-broken persistent Rsf2 state is restored after actual release initialization: all C2..CA receive flag20000000; C5/C8 received raw hp0. The actual hive-break gate later proved that this alone is insufficient after the hive SAT is removed; 30234c76 fixes their initialization order (see current section). They are never silently dropped from the queue. r205 held58 also receives its original alert flag1 on release. There is no generic wrapper change, new queue layout, ESL mutation, renderer exception or new model work.
 
-Source-extracted host tests compile old and combined modes. They exercise all256IDs in stages1..4, mixed4 fresh admissions, duplicate-held sends, held-alive counts, paused/full release guards and release order. Real r205 wave functions keep the door send owed while full and issue it once free; held zone wrappers never call getPtr. The actual source-room restore helper changes only the selected source context and leaves forced-death actors alive/ACTIVE until the original death routine processes hp0.
+Source-extracted host tests compile old and combined modes. They exercise all256IDs in stages1..4, mixed4 fresh admissions, duplicate-held sends, held-alive counts, paused/full release guards and release order. Real r205 wave functions keep the door send owed while full and issue it once free; held zone wrappers never call getPtr. The actual source-room restore helper changes only the selected source context and checks raw hp/flag writes only. That host model did not prove the actual late-initialized enemy AI enters a death routine; the failing guest hive gate exposed this limitation.
 
 ## Initial b5869b45 runtime evidence
 
