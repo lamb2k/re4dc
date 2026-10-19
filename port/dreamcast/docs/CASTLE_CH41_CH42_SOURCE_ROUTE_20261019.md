@@ -484,3 +484,128 @@ Source fragment: `tools/d367/castle18/ch41-r216-audio-20261019.json`.
 Evidence: `r216-entry-preparation.json`, `r216-audio-fit-proof.json` and
 `r216-source-stream-and-wave-audit.json`. Runtime audio, actual armour draw,
 cup pickup, both waves, door release and the original route remain open.
+
+## r219 original cart flow and bounded residency correction
+
+The original A-button cart event runs from diagnostic near-platform placement:
+E4 departure, original self-room part1 transition, E5 arrival, actor placement,
+and resumed gameplay. The 55.86-second initial run and unchanged 56.12-second
+tail share all disc/program bytes and an exact saved state; their log histories
+overlap by 818 lines. All 23 boot/overlay payloads remain c18oimW / ELF746a2a5f.
+The exact 49,152-byte KOS reserve holds, with 45,912 bytes minimum headroom.
+TEX, audio-fit, fatal, VRAM refusal, retry and eviction errors are zero.
+
+Read-only decompression of both original states uses five independent exact
+ELF anchors. Both states prove r219, gameplay phase3 and Stop0. Leon is within
+five units of the original (-78700,0,-351315) endpoint. Ashley has 600 HP and
+starts exactly at the original (-79287,0,-351366) endpoint before ordinary
+follow motion. Original Flycast state thumbnails and both framebuffer views
+show the far hall. An earlier suspected image/log mismatch was an incorrect
+inference from the missing partner census row, not a demonstrated capture bug.
+
+Native Ashley remains unqualified: runtime actor id03 has141 parts and seven
+live infos, but all seven lack current asset/adoption certificates in both
+states. The joined census contains Leon only. Archive pl11 is actor03; absent
+census is not evidence of an absent partner. This needs independent admission
+work, not a visual-only pass or an invented solo-cart claim.
+
+E5 records one audio underrun. Late Flycast registration time is about207ms
+with zero hostile enemies; its cause remains open and it is not hardware
+performance evidence. The final room generation has eight late uploads.
+Across departure and arrival there are ten distinct missing source keys;
+the other two appear only during departure. Their source dimensions/formats
+and actual loose/package winners were read back and hashed unchanged.
+
+The additive correction preserves all5,755 Worker A V16 records and adds
+those ten r219 keys, producing5,765 records. Every other room is byte-exact.
+Private set: `castle18-ch41-r219-resident-20261019`, mirrored on C:.
+Resident SHA: `0f24b9b6ab80f6ee2be86c840c63f731bf1675802d6f3f104b99736cbe0ad99b`.
+Manifest SHA: `5164760ea78d7c53720321c0973f016587bc435e1281f5d1818896d8e82dc5d7`.
+Source fragment: `tools/d367/castle18/ch41-r219-resident-20261019.json`.
+Matched runtime residency now passes: eight late uploads fall to zero,
+with all ten departure/arrival source keys covered. Only dc/resident.bin
+changes across 7138 payloads. The 55.66-second initial run and unchanged
+55.91-second tail overlap by816 exact log lines. Exact KOS reserve remains
+49,152 bytes, minimum headroom45,592. Gameplay frame767 has622,272 pinned,
+377,472 dynamic,1,477,568 free and1,437,696 largest-free-block bytes. Later
+frame840/960 receipts keep288 loads. Original cart flow and Ashley600 HP
+remain, with no texture/fit/fatal/refusal/eviction/retry errors. One stream
+underrun and about207ms late Flycast registration remain; no speed gain is
+claimed. Native partner and full chapter gates remain open.
+
+Matched proof: r219-residency-matched-proof.json. Joined log SHA:
+`f7a3ab13c58fb6b9abd81ed0875f9d4e0fc71b53d0efbd77a5dfab3f1b890b55`.
+Matched disc SHA: `b52bfbde48f5d5da46ea44f323d2691d90aeda3ba38eeef48349614af8c403bf`.
+Compose only the r219 additions into newer unions.
+
+Evidence: `r219-cart-flow-proof.json`, `r219-saved-state-audit.json`,
+`r219-cart-continuation-provenance.json`, `r219-source-first-sight-winners.json`
+and `r219-resident-host-proof.json`. Joined log SHA:
+`e968cc919d2b4e34d57a48a3dd642cdfba1441b27c541338e4322d820c152b12`.
+Disc SHA: `56d40692fbb0cf19596e4556f811a266ff74272aa94dfed3a432027eb2c15430`.
+
+## r219 missing native partner package
+
+The joined runtime log explicitly reports both r219 registry.re4nmr and
+partner.re4nmr absent at both loads. The source fixture contains the exact
+existing prepared pl11 archive but no partner package for this room.
+
+Data-only preparation reuses the validated r207 full Ashley partner:
+ashley11, ashley11-h1 and ashley11-h3, covering21 original source roles.
+Only the room header and header checksum change; every payload byte,
+geometry array, skin, source role, material, parent and bind remains exact.
+The229,952-byte pack needs no new model conversion or runtime capability.
+
+All original BIN/part facts are independently re-derived. Texture facts
+match the existing generator's source-proven bump-only key rule for TPL5
+indices4/6/12; their header/sampler facts remain exact. This preserves an
+existing admitted capability and introduces no new drops. Six atlas/pair
+tokens resolve to the already-staged packages, including derived colour-mask
+pairs. The prepared pl11 archive remains SHA
+`ecf3098097fcb2b2c86d632b62fd3d9112e61f5e39b56819db6a2e277fffcfa2`.
+
+The actual host loader accepts the partner in219 with an empty primary,
+and refuses the identical package in218. Private set:
+castle18-ch41-r219-partner-20261019. Package SHA:
+`2f25149420bb81e14ec3a546c5efe3b52513ca6a66149857eaf1026ad799ba5f`.
+Manifest SHA: `b245d5bb1e1172ed2d4423d635d414feb75ea4fceaf1c6a07df913db92f1e756`.
+Source fragment: tools/d367/castle18/ch41-r219-partner-20261019.json.
+Runtime acquisition and submitted native drawing now pass for the bounded
+original cart flow. The 55.95-second initial capture and unchanged56.12-second
+continuation share exact disc/program/state bytes and801 identical log lines.
+Both Ashley and Leon have4,395 summed native census counts and zero GC counts;
+these are cumulative census samples, not distinct frames. Declined, registry
+declined and absent remain zero. All seven live Ashley infos have original
+archive assets and current adoption certificates in both final saved states.
+The self-room transition retires generation1 with zero live owners/row users
+and opens generation2 cleanly. Original cart end positions, phase3/Stop0,
+Leon1440 and Ashley600 remain. The saved-state thumbnails were inspected:
+the full partner is visible at arrival, including hair/skirt and torso.
+This bounded view does not qualify every cloth pose, room route or chapter.
+
+Exact reserve49,152 holds; periodic KOS headroom minimum48,312. Texture-check,
+audio-fit, fatal, refusal, guard, eviction and retry failures are zero.
+Four native atlas/mask keys still upload after each room preload. Their
+correction preserves every one of Worker A V17's5,768 records, adds four
+r219 entries and leaves all other rooms exact. Eleven additional source
+first sightings belong to the original door-loading phase and remain in
+the evidence ledger rather than being treated as native room-game uploads.
+
+Private set: castle18-ch41-r219-native-resident-20261019, mirrored on C:.
+Resident SHA: e776711c58b93c7affcea345df37cab41bdb8ddbd4f0f300f351c42b9dd80259.
+Manifest SHA: e1609e574348241f6934000a499a89d00c67d148ecf75434429054d3bc059cb7.
+Source fragment: tools/d367/castle18/ch41-r219-native-resident-20261019.json.
+The corrected native-partner residency runtime is pending.
+
+Native-control disc SHA:
+504c4709c5f3bac7b74577e4d2ff4c9e96b65e05fdfd06665b12cc8c34d9d5a0.
+Joined log SHA:
+f8f2091386ae4d486b0ba2d476309367be0f264190629ea5ee37642dc8afeb47.
+Final tail state SHA:
+08fba9314535e4e41665f291b86f9b4bc23c50ca640980b89ce73f6aa168640b.
+Late zero-enemy Flycast registration remains about190ms and2.8 FPS.
+The performance problem is open; no console timing or speed gain is claimed.
+Proofs: r219-partner-host-proof.json, r219-partner-final-saved-state-audit.json,
+r219-partner-cart-continuation-provenance.json and the native source/resident
+ledgers. Finished control disc links were retired after sealing the evidence;
+states, logs, stills, program bytes and source data remain.
