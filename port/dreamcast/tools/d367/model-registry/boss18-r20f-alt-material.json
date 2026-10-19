@@ -1,0 +1,79 @@
+{
+  "registry": "boss18-r20f-alt-material",
+  "about": "Original r20f types6/7/8 with one additive BIN217/TPL219 role; all existing data winners retained",
+  "cast_dir": "/root/re4data/private/boss18-r20f-alt-material-20261019/additive/cast",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+  "descriptors": [
+    {
+      "name": "zealot-em14-06p",
+      "archive": "em14",
+      "model_id": "0x14",
+      "source_types": [
+        6
+      ],
+      "module": "src/em14/em14_set.cpp Em14Set type 6 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+      "partial_sections": true,
+      "pool": true,
+      "source_drops": [
+        "bump"
+      ],
+      "mask_runs": {
+        "2": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-06p-s2",
+        "5": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-06p-s5",
+        "6": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-06p-s6"
+      }
+    },
+    {
+      "name": "zealot-em14-07p",
+      "archive": "em14",
+      "model_id": "0x14",
+      "source_types": [
+        7
+      ],
+      "partial_sections": true,
+      "module": "src/em14/em14_set.cpp Em14Set type 7 (em10.cpp creates; ps2_cast.py pool)",
+      "pool": true,
+      "source_drops": [
+        "bump"
+      ],
+      "mask_runs": {
+        "13": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-07p-s13",
+        "16": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-07p-s16",
+        "20": "/root/probe/lanes-20261016/cast16/conv4/mask-zealot-em14-07p-s20"
+      }
+    },
+    {
+      "name": "zealot-em14-08p",
+      "archive": "em14",
+      "model_id": "0x14",
+      "source_types": [
+        8
+      ],
+      "partial_sections": true,
+      "module": "src/em14/em14_set.cpp Em14Set type 8 (em10.cpp creates; ps2_cast.py pool)",
+      "pool": true,
+      "source_drops": [
+        "bump"
+      ],
+      "mask_runs": {
+        "13": "/root/re4data/private/boss18-r20f-alt-material-20261019/additive/masks/s13",
+        "16": "/root/re4data/private/boss18-r20f-alt-material-20261019/additive/masks/s16",
+        "20": "/root/re4data/private/boss18-r20f-alt-material-20261019/additive/masks/s20",
+        "21": "/root/re4data/private/boss18-r20f-alt-material-20261019/additive/masks/s21"
+      }
+    }
+  ],
+  "room_packages": {
+    "20f": {
+      "descriptors": [
+        "zealot-em14-06p",
+        "zealot-em14-07p",
+        "zealot-em14-08p"
+      ],
+      "evidence": "Original chapter3 ESL source types6/7/8; source attachments audited."
+    }
+  }
+}
