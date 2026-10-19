@@ -504,19 +504,6 @@ endif
 GAME_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX23=1
 PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX23=1
 endif
-# NATIVE_MODEL_REGISTRY_ROLE_TEX34=1 (lane castlerender19 2026-10-19; default 0; render only; needs ROLE_TEX23=1): typed
-#   source-role admission of the r228 Salazar's original TPL 8 (34 images, no subset): the package check accepts exactly
-#   34 role images in room 0x228 only (model_registry.py --role-tex34 --package-room 228). Every other role keeps the
-#   23 bound. Role::textures is a pointer/count and the package holds 64 texture facts, so nothing is resized.
-#   Knob off: the image is unchanged.
-NATIVE_MODEL_REGISTRY_ROLE_TEX34 ?= 0
-ifeq ($(NATIVE_MODEL_REGISTRY_ROLE_TEX34),1)
-ifneq ($(NATIVE_MODEL_REGISTRY_ROLE_TEX23),1)
-$(error NATIVE_MODEL_REGISTRY_ROLE_TEX34=1 needs NATIVE_MODEL_REGISTRY_ROLE_TEX23=1)
-endif
-GAME_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX34=1
-PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLE_TEX34=1
-endif
 # NATIVE_MODEL_REGISTRY_FIRST=1 (lane cast16 2026-10-16; default 0; render only; needs NATIVE_MODEL_REGISTRY_POOL=1): a
 #   Ganado-class actor (id 0x10..0x20) whose id a room package descriptor names tries that package's plan BEFORE the
 #   Ganado cast plan. Without it the Ganado plan claims em16 type 11 (r11d) by its em15-type-11 meshes and then the

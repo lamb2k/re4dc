@@ -33,15 +33,7 @@ using re4dc_material::kRoomRoles;using re4dc_material::kRoomBlobs;
 #define RE4DC_NMR_PACK_KIB 256u
 #define RE4DC_NMR_PACK_MODELS 48u
 #endif
-#if defined(RE4DC_NMR_ROLE_TEX34) && RE4DC_NMR_ROLE_TEX34
-// NATIVE_MODEL_REGISTRY_ROLE_TEX34 (lane castlerender19 10-19): typed source-role admission of the r228 Salazar's whole
-// original TPL 8, exactly 34 images in room 0x228 (model_registry.py --role-tex34). Every other role keeps the bound;
-// 33 / 35 images, or 34 in another room, still refuse.
-#define RE4DC_NMR_TEX34_OK(tn,room) ((room)==0x228u && (tn)==34u)
-#define RE4DC_NMR_ROLE_TN_BAD(tn,room) ((tn)>pack_role_texture_max(room) && !RE4DC_NMR_TEX34_OK(tn,room))
-#else
 #define RE4DC_NMR_ROLE_TN_BAD(tn,room) ((tn)>pack_role_texture_max(room))
-#endif
 #elif defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY
 #define RE4DC_NMR_TEX_FACTS 32u
 #define RE4DC_NMR_ROLE_TEXTURES 17u
@@ -530,12 +522,7 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         const unsigned app=pu32(r,0),role=pu32(r,4),bin=pu32(r,8),tpl=pu32(r,12),fm=pu32(r,16),tf=pu32(r,20),tn=pu32(r,24);
         if(app<nmr::appearance_first || app-nmr::appearance_first>=sec[kDesc].count ||
 #if defined(RE4DC_ROUTE_CH23) && RE4DC_ROUTE_CH23
-           role>=PKD[app-nmr::appearance_first].sections || fm>=sec[kFModel].count || !tn ||
-#if defined(RE4DC_NMR_TEX34_OK)
-           (tn>pack_role_texture_max(room) && !RE4DC_NMR_TEX34_OK(tn,room)) ||
-#else
-           tn>pack_role_texture_max(room) ||
-#endif
+           role>=PKD[app-nmr::appearance_first].sections || fm>=sec[kFModel].count || !tn || tn>pack_role_texture_max(room) ||
 #else
            role>=PKD[app-nmr::appearance_first].sections || fm>=sec[kFModel].count || !tn || RE4DC_NMR_ROLE_TN_BAD(tn,room) ||
 #endif
