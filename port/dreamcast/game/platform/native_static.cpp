@@ -2115,6 +2115,20 @@ __attribute__((noinline)) void fill(const re4dc::vp::Vertex12* in,pvr_vertex_t* 
         d.u=ru;d.v=rv;
         const unsigned c=v.color;
         d.argb=((lut[c>>8]|lut[256U+(c&255U)])&andm)|orb;
+#if defined(RE4DC_SCENERY_DEDUP_CHECK) && RE4DC_SCENERY_DEDUP_CHECK
+        // check build: the knob-off kernel on this corner, word for word (outcode screen/depth bits only)
+        static unsigned checked=0,bad=0;
+        alignas(32) pvr_vertex_t t[2];std::uint8_t to[8];
+        re4dc::vp::transform_sched<re4dc::vp::kChecksAll>(&v,1,t,to,k);
+        std::uint32_t wa[6],wb[6];
+        std::memcpy(wa,&t[0].x,24);std::memcpy(wb,&d.x,24);
+        ++checked;
+        if(std::memcmp(wa,wb,24) || ((to[0]^oc[j])&0x3fU)){
+            if(++bad<=16)re4dc_log("SCNDEDUP CHECK bad j=%u q=%u n=%u ref %08x %08x %08x %08x %08x %08x oc %02x got %08x %08x %08x %08x %08x %08x oc %02x\n",
+                j,q,n,wa[0],wa[1],wa[2],wa[3],wa[4],wa[5],to[0],wb[0],wb[1],wb[2],wb[3],wb[4],wb[5],oc[j]);
+        }
+        if(!(checked&0x3ffffU) || bad==1)re4dc_log("SCNDEDUP CHECK checked=%u bad=%u\n",checked,bad);
+#endif
     }
 }
 }
