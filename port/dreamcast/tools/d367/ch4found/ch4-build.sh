@@ -17,7 +17,7 @@ PE3=${PE3:-/root/probe/lanes-20261015/castle/private-include}
 PE4=${PE4:-/root/probe/lanes-20261016/ch4found/private-include}
 # CH4REC: the route to the castle (ROUTE_CH22 / ROUTE_CH23 / EM10_SHARED), chapter 3 (ROUTE_CH31 / ROUTE_CH32, its
 #   movies, PS2_CH3_ENEMY, FOG_OFF_CLEAR, WORLD_ROOM_MODULES, STAGE_OVL, SS_POOL_TOP, ROUTE_BOSS4), chapter 4
-#   (ROUTE_CH41, ROUTE_MOVIES_CH4, PS2_CH4_ENEMY with cap 6, LEON_OT_WATER=2 for r219), the castle disc's single
+#   (ROUTE_CH41, ROUTE_MOVIES_CH4, PS2_CH4_ENEMY with the shared cap 4, LEON_OT_WATER=2 for r219), the castle disc's single
 #   stream file (CH3 + CH4, 73 entries: AICA_STR_ENT_MAX=80, aica_banks.py --streams castle; coordinator 10-17) and the
 #   castle cold-pool margin MOTION_COLD_POOL_CASTLE=131072 (r226 em11: no slab thrash; coordinator 10-17).
 #   Castle cast (lane cast16, coordinator 10-17): NATIVE_MODEL_REGISTRY_DYING=1 (a dying registry-planned enemy keeps
@@ -34,7 +34,10 @@ PE4=${PE4:-/root/probe/lanes-20261016/ch4found/private-include}
 # Ashley uses the chapter 2 bounded v3 archive unchanged throughout the castle.
 # The exact-source v3 admission remains behind its existing default-off knob;
 # without it, the castle runtime rejects the same archive chapter 2 accepts.
-CH4REC="ROUTE_CH22=1 ROUTE_CH23=1 MOTION_BOUNDED_R11F=1 EM10_SHARED=1 ROUTE_CH31=1 ROUTE_CH32=1 ROUTE_MOVIES=1 ROUTE_MOVIES_CH3=1 LEON_OT_WATER=2 FOG_OFF_CLEAR=1 PS2_CH3_ENEMY=1 WORLD_ROOM_MODULES=1 ROUTE_BOSS4=1 ROUTE_CH41=1 STAGE_OVL=1 SS_POOL_TOP=1 PS2_ENEMY_CH22_DIR=$PE2 PS2_ENEMY_CH23_DIR=$PE2 PS2_ENEMY_CH3_DIR=$PE3 PS2_CH4_ENEMY=1 PS2_ENEMY_CH4_DIR=$PE4 ROUTE_MOVIES_CH4=1 AICA_STR_ENT_MAX=80 MOTION_COLD_POOL_CASTLE=131072 NATIVE_MODEL_REGISTRY_DYING=1 NATIVE_MODEL_REGISTRY_RUN_SHARE=1 NATIVE_MODEL_REGISTRY_BLENDTBL=1 PRIM_CAP_R226=327680 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 NATIVE_MODEL_REGISTRY_ROLES5=1 NATIVE_BUMP_FLAT=1 STATUE_LIGHTS=2"
+# I-006: Novistadors share the existing four Ganado slots. All four effective Novis rooms
+# pass matched source progress/pointer gates; extras remain queued, never deleted.
+# EVENT_SWAP_RELOAD remains separate pending the full event route gate.
+CH4REC="ROUTE_CH22=1 ROUTE_CH23=1 MOTION_BOUNDED_R11F=1 EM10_SHARED=1 ROUTE_CH31=1 ROUTE_CH32=1 ROUTE_MOVIES=1 ROUTE_MOVIES_CH3=1 LEON_OT_WATER=2 FOG_OFF_CLEAR=1 PS2_CH3_ENEMY=1 WORLD_ROOM_MODULES=1 ROUTE_BOSS4=1 ROUTE_CH41=1 STAGE_OVL=1 SS_POOL_TOP=1 PS2_ENEMY_CH22_DIR=$PE2 PS2_ENEMY_CH23_DIR=$PE2 PS2_ENEMY_CH3_DIR=$PE3 PS2_CH4_ENEMY=1 PS2_ENEMY_CH4_DIR=$PE4 ROUTE_MOVIES_CH4=1 AICA_STR_ENT_MAX=80 MOTION_COLD_POOL_CASTLE=131072 NATIVE_MODEL_REGISTRY_DYING=1 NATIVE_MODEL_REGISTRY_RUN_SHARE=1 NATIVE_MODEL_REGISTRY_BLENDTBL=1 PRIM_CAP_R226=327680 NATIVE_MODEL_REGISTRY_FIRST=1 NATIVE_MODEL_REGISTRY_LOD=1 NATIVE_MODEL_REGISTRY_ROLES5=1 NATIVE_BUMP_FLAT=1 STATUE_LIGHTS=2 ALIVE_CAP_NOVIS=1"
 CH4=${CH4-$CH4REC}
 # T15REC as test15/t15-build.sh defines it (its assignments only, up to the arm table).
 T15REC=$(bash -c "set -u; $(sed -n '/^K=/,/^T15REC=/p' "$T/port/dreamcast/tools/d367/test15/t15-build.sh" | grep -v '^K=\|^T=') ; echo \"\$T15REC\"")

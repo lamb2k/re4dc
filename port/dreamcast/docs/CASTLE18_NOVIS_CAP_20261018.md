@@ -2,6 +2,61 @@
 
 Current runtime source: codex/castle18 30234c765c38e2992c135dd71988ce042d90aa0e, including integration3830a335. Source commits402116c9/30234c76 are pushed. Earlier293/267 runtime results below are historical; current qualification is recorded first. Full Castle is incomplete. Island remains paused under I-007; boss modeling belongs Boss18. Final seven accessory/weapon variants and 1650-file data seal are reused unchanged.
 
+## Current383 completed cap, source-event and memory gates
+
+The CH4REC now selects existing ALIVE_CAP_NOVIS=1, as required by I-006. It does not change T15REC or enable EVENT_SWAP_RELOAD. The latter remains a private, separately qualified source-event option. New runtime knobs still default off. This source recipe update follows these matched current383 progress tests; the fresh literal recipe build is recorded separately after packaging.
+
+| Room / fixture | Reference sampled peak | Capped sampled peak | Source progress, both modes | Queue / clear evidence |
+|---|---:|---:|---|---|
+| r205q, original appearance + drain + source areas | 5 | 4 | 12 source kills; all tested wave flags fbc00000 | 1 held/1 released; no take/drop/park; enemy-empty through3120/3180 |
+| r20ar, chapter4 list via diagnostic jump | 2 | 2 | 2 source kills; STRICT and MUST-IDENTICAL506ticks, room anchors281/281, 3513 enemy samples, zero drift | below cap; empty300..480; no hold required |
+| r213p, isolated hive break | 9 | 4 | original hive6000hp/71hits/death151, same a0000000; 7 ordinary kills + original critical pair cleanup | 5 held/5 released; empty1020/1140; no take/drop/park |
+| r21da, D + both switches + final/reset waves | 10 | 4 | 25 source kills; same final07800000 | 8 held/8 released; empty through4320/4440 beyond reset delay; no take/drop/park |
+
+The effective selected chapter ESL audit finds only these four stage2 Novistador rooms. No effective Novistador/Ganado co-rows were found; mixed-ID shared-cap behavior is covered by the actual source-extracted host test. These are progress/pointer and below-cap exactness gates, not a claim that all room traces are identical under intentional population/order changes. Diagnostic initial positions, source-area gotos and normal source damage calls are explicit; this is not a natural door-route proof. Every original actor is accounted for. All processes ran under60s through trace_lock with owned-PID production snapshot continuation; repeated snapshot history is deduplicated by kill frame/hit count. Models, source callbacks, ESL and door task bodies were not bypassed.
+
+The old r205y fixture missed the post-drain C area and reached only10kills/f9400000. It is retained as partial evidence. Fresh r205q revisits original areaC at1600 then special58 area1B at2500, reaching the12 intended source actors and fbc00000 in both modes. The earlier r21d expected27 count was an audit error: D's four sends are inside the initial15 budget, followed by10 final/reset kills, hence25. Neither discarded interpretation is accepted as a route pass.
+
+### Existing r213 source-event reload, private only
+
+Current na/reload0 reproduces the immutable-EVD MemorySwap refusal. Existing EVENT_SWAP_RELOAD=1 in nb and matched cap-off nd reads the unchanged original EVD and proves both normal end and ordinary START skip through the original callbacks. The1661728-byte em2d prefix is fully covered, differing0/runs0; swap-in and restore CRC f22e3ef9 match, restore ok1. Normal end uses no action/kill/prefilledRsf0; original source event ends and sets80000000 in both modes. Ordinary START90 separately restores the same CRC, resumes gameplay, releases all5held actors and clears all9 source Novistadors by1800. No movie cursor, event-code/data or RAM patch was made. This is original EVD playback, not an SFD/SEQ picture-clock acceptance claim. Source EVD SHA9b181d4c34e1dfd6b704441c310ad15f32febd0d9007b659996618bd25eff47f and EVQ31476190198c70978a393452c877fc7c4d2cc0e23f9589a7215312ba30015780 remain unchanged.
+
+| Additional arm | ELF SHA256 | _end | Purpose |
+|---|---|---|---|
+| c18ndrT | 862904ee2964a150452b0689f03b9c1f302b431a7578c91a81e0ffb30d5bcfd7 | 8c464fd8 | cap-off + existing reload1, matched normal source event |
+| c18ncmW | afc152599b543accbf4d3210344e8765a45b9957b1c8257b017018d1e6beddda | 8c466138 | private cap1+reload1 48KiB memory twin, no phase/jump extras |
+
+Both missing0. Full ELFs/knobs/generated headers/compressed build logs are mirrored under current383-builds; provenance-reload-kos-supplement.json adds them without modifying the first provenance seal. Runtime source remains30234c76;43893be8 only changed documentation.
+
+### KOS 48KiB: all six current383 allocation gates PASS
+
+c18ncmW actually holds49152bytes in all6tests, with0OOM/HALT/FAULT/MISSING and continuing room activity. r226 uses the completed8-info variant data. Full room CAST/audio acceptance is separate.
+
+| Room | Normal min headroom / top bytes | Fragmented min headroom / top bytes |
+|---|---|---|
+| r224 | 53560 /52608 | 53472 /40544 |
+| r226 | 40920 /40000 | 40824 /39424 |
+| r227 | 38480 /37408 | 38392 /36704 |
+
+Each requested55s and exited under60s. Evidence: kos-current383-summary.json, current383-kos-fixtures/current383-kos-runs and h-c18nc-kos. The runner's other full-room failures are retained; they are not allocation failures.
+
+### r20a texture residency and private look option
+
+b383e110 adds10 measured source keys/dimensions/formats to the room resident list. Its commit title called these world textures; inspection proves the recovered images are Novistador body/detail maps. This correction does not change their exact source identities. The additive resident union preserves every other packed room record and covers all37 current Castle lists; no all116-room claim is made because newer outside-Castle lists differ.
+
+Three I4 textures have exact PAL4 derivatives: independent decoding compares all19660816-bit source words exactly, saving294816bytes with unchanged alpha. PAL4 alone plus the completed resident list still produces3TEX failures in both r20ar runs. Nine raw texture inputs were recovered byte-exact from the verified existing ch3 set, not regenerated.
+
+Private r20av additionally stages four historical c42 body/detail keys 1cd605d4/2bf09d1d/99ce795e/f911150f with existing VQ codec derivatives. These save450560bytes, preserve alpha/dimensions/names/format, and actual decoded RGBA PSNR is33.27/37.23/32.69/33.97dB. This matches rounded historical quality figures, not lost-output byte identity. Both55.88s current383 runs have TEX0/no allocation failure through480, versus TEX3 on exact PAL4+resident. Both still kill the same2enemies; STRICT/MUST-IDENTICAL512ticks,3569enemy samples, zero drift. Their remaining native model absence/camouflage failures are retained. The variants' model geometry, native atlas/material and source refraction contracts are unchanged. The four compressed body textures are NOT adopted pending the user's still-pair choice; two other generated maps in the sheet were not staged. No new3D modeling was performed.
+
+Evidence/data seals:
+- current383-r20a-texture-codec-benefit.json, current383-r20ar-{strict,decisions}.json and current383-r20av-{strict,decisions}.json.
+- r20a exact PAL4 SHA256SUMS8c0df865daef03003a6d444c45171f6f33bb27bae87d20e3d529304501a1d90e.
+- r20a additive resident SHA256SUMS53c2bb6893e64c081e1228badf2902dff34e7c764a238053226d8f82c83636e2.
+- r20a private VQ SHA256SUMSe46e1a06fd035183de55059781bac2693028af2e9f16300c10bc99699de21429.
+- All three sets verified under C:/Game Dev/Emulators/re4-assets-private and /root/re4data/private, with dated Castle names. Look sheet: castle18-r20a-vq-candidate-20261018/r20a-vq-look-sheet.png.
+
+Full Castle remains incomplete: active Novistador camouflage/refraction remains refused, r20a native absence is not repaired by texture compression, BGM1 fixed-slot fit remains open, and full wave/door/event/cast/residency route acceptance continues. No release/hardware claim is made.
+
 ## Current383 hive gate and provenance
 
 402116c9 merged31 incoming paths from integration3830a335. The only conflict was the r205 registry JSON: incoming partial_sections=true for both descriptors was obsolete. Retained the already qualified full Castle descriptors; all other JSON fields were identical. Atlas sampler4/locked-vertex3 host tests pass. All seven Castle variant presets/data remain unchanged.
@@ -37,9 +92,9 @@ Current r213 isolated post-s00 hive gate (same sealed input/data, source damage 
 
 Warm actual45.11/45.01s and exact production snapshot continuations50.69/51.08s. Each process exits under60s via owned-PID close and trace_lock. No input/RAM/instruction/state patch, no actor deleted to enforce cap. Source order/timing/population changes are intentional cap policy; this is a matched progress/pointer gate, not a MUST-IDENTICAL full-trace claim. Snapshot history repeats: unique kill frames plus fresh tails are used. Teardown head0 is not evidence of guest failure or a complete no-fatal gate.
 
-Scope: this closes the isolated source hive-break/capped-clear regression. It is NOT full r213 route acceptance. Active Novistador camouflage remains refused, original S00/source door/bridge progress remains open, and the recipe still does not enable ALIVE_CAP_NOVIS. Current r205 all-wave, r21d combined switches/reset and r20a active2+recovered texture gates continue.
+Historical note at43893be8: this closed the isolated source hive-break/capped-clear regression. It is NOT full r213 route acceptance. Active Novistador camouflage remains refused, original S00/source door/bridge progress remains open, and the recipe still does not enable ALIVE_CAP_NOVIS. Current r205 all-wave, r21d combined switches/reset and r20a active2+recovered texture gates continue.
 
-Original r213 S00 on current na still halts at immutable-EVD MemorySwap. Separate existing reload option nb reaches exact1661728-byte archive-prefix compare, all covered/differing0/runs0, and installs EVD with CRC f22e3ef9. Playback, exact restore CRC and event completion are not yet proved; do not enable from swap-in alone. No new event code or assets were generated.
+Historical swap-in-only checkpoint at43893be8: original r213 S00 on na still halts at immutable-EVD MemorySwap. Separate existing reload option nb reaches exact1661728-byte archive-prefix compare, all covered/differing0/runs0, and installs EVD with CRC f22e3ef9. Playback, exact restore CRC and event completion are not yet proved; do not enable from swap-in alone. No new event code or assets were generated.
 
 C evidence root: C:/Flycast-Evidence/re4-dreamcast/castle18-20261018.
 - current383-build-proof.json, current383-actual-object-proof.json, current383-builds/provenance.json.
