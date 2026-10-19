@@ -1,0 +1,55 @@
+{
+  "schema": "boss18-source-presets-1",
+  "scope": "Full original animated Garrador back-parasite cObj16 source configuration; no runtime/default/production selection. Body and separate core retain original independent GC skeleton/motion/attachment/collision.",
+  "inputs": {
+    "em1b.dat": "d8907b9f7251ac2224f88f6b7d0ed5958477bb5d68474b27d3cebaba7857829b",
+    "em1b.drs": "4edc6d1f53f050973942f89974aa5c8907e35e3f5957f5ccabe3bdd74a6e25f0",
+    "em1c.drs": "24fafac3950fdd35abaa1b471466907d44b53942732eaf544d0f1de4462faaeb",
+    "em1c.dat": "63f3eca038b33e60d30a90c6e90c13849ed6222c2cfa0ccea504eabc54a07fa4"
+  },
+  "presets": {
+    "garr-core-em1b": {
+      "archive": "em1b",
+      "sections": [
+        [
+          551,
+          "body"
+        ]
+      ],
+      "tpl": 552,
+      "rooms": [
+        "r201",
+        "r20c"
+      ],
+      "types": [
+        4
+      ],
+      "category": "registry",
+      "model_id": 22,
+      "lit": true,
+      "atlas_wrap_gutters": true,
+      "host_ordered_strips": true
+    },
+    "garr-core-em1c": {
+      "archive": "em1c",
+      "sections": [
+        [
+          551,
+          "body"
+        ]
+      ],
+      "tpl": 552,
+      "rooms": [
+        "r218"
+      ],
+      "types": [
+        4
+      ],
+      "category": "registry",
+      "model_id": 22,
+      "lit": true,
+      "atlas_wrap_gutters": true,
+      "host_ordered_strips": true
+    }
+  }
+}
