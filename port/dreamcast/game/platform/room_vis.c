@@ -26,7 +26,9 @@ static struct {
     float x0, z0, cs, inv_cs, range2, span;
     uint32_t crc;           /* R4PW sidecar crc the occluders came from */
     const uint8_t* cells;   /* 12 B */
+    const uint8_t* camrow;  /* u16 per camera volume */
     const uint8_t* rows;
+    float estep, espan;
 } v;
 static unsigned c_tests, c_hidden, c_noteye, c_notintact, c_box, c_vis, c_far, c_logged;
 static unsigned intact_frame = ~0u;
@@ -45,25 +47,32 @@ void re4dc_room_vis_enter(unsigned room)
     const uint8_t* s = (const uint8_t*) re4dc_room_section("VIS\0", &len, &ver, &flags, &h);
     const char* why = 0;
     if (!s) why = "no VIS";
-    else if (ver != 1 || len < 16) why = "VIS version";
+    else if (ver != 2 || len < 32) why = "VIS version";
     else {
         const unsigned vw = rd16(s), vh = rd16(s + 2), div = rd16(s + 4), nrow = rd16(s + 6), rowb = rd16(s + 8),
-                       ntgt = rd16(s + 10), range_cm = rd16(s + 12), span_cm = rd16(s + 14);
-        if (len < 32 || !div || vw != (h->w + div - 1) / div || vh != (h->h + div - 1) / div || rowb != (ntgt + 7) / 8 ||
-            len != 32 + 12 * vw * vh + nrow * rowb)
+                       ntgt = rd16(s + 10), range_cm = rd16(s + 12), span_cm = rd16(s + 14), ncam = rd16(s + 20),
+                       estep = rd16(s + 22), espan = rd16(s + 24);
+        const unsigned camb = (2 * ncam + 3) & ~3u;
+        if (!div || !estep || espan < estep || vw != (h->w + div - 1) / div || vh != (h->h + div - 1) / div ||
+            rowb != (ntgt + 7) / 8 || len != 32 + 12 * vw * vh + camb + nrow * rowb)
             why = "VIS size";
+        const uint8_t* cr = s + 32 + 12 * vw * vh;
         for (unsigned c = 0; !why && c < vw * vh; c++) {
             const uint8_t* e = s + 32 + 12 * c;
-            const unsigned row = rd16(e + 8), first = rd16(e + 10), nb = e[6];
-            if (row != 0xFFFF && (row >= nrow || first + nb > ntgt)) why = "VIS cell";
+            const unsigned fc = rd16(e + 6), ne = e[2], nb = e[3], ft = rd16(e + 8);
+            if (fc != 0xFFFF && (!ne || fc + ne > ncam || ft + nb > ntgt)) why = "VIS cell";
         }
+        for (unsigned a = 0; !why && a < ncam; a++)
+            if (rd16(cr + 2 * a) >= nrow) why = "VIS camera row";
         if (!why) {
+            v.camrow = cr; v.estep = estep * 10.0f; v.espan = espan * 10.0f;
+            v.rows = cr + camb;
             v.vw = (uint16_t) vw; v.vh = (uint16_t) vh; v.nrow = (uint16_t) nrow; v.rowb = (uint16_t) rowb;
             v.ntgt = (uint16_t) ntgt;
             v.x0 = h->x0; v.z0 = h->z0; v.cs = (float) (h->cell_mm * div); v.inv_cs = 1.0f / v.cs;
             v.range2 = (range_cm * 10.0f) * (range_cm * 10.0f); v.span = span_cm * 10.0f;
             v.crc = (uint32_t) rd16(s + 16) | ((uint32_t) rd16(s + 18) << 16);
-            v.cells = s + 32; v.rows = s + 32 + 12 * vw * vh;
+            v.cells = s + 32;
             v.ok = 1; v.room = room;
         }
     }
@@ -97,8 +106,14 @@ int re4dc_room_vis_hidden(const float* view, const float lo[3], const float hi[3
     int ex, ez;
     if (!cell_of(e0, e2, &ex, &ez)) { ++c_noteye; return 0; }
     const uint8_t* ec = v.cells + 12 * (ex + ez * v.vw);
-    const unsigned row = rd16(ec + 8);
-    if (row == 0xFFFF || !(e1 >= rs16(ec) * 10.0f && e1 <= rs16(ec + 2) * 10.0f)) { ++c_noteye; return 0; }
+    const unsigned fc = rd16(ec + 6), ne = ec[2];
+    if (fc == 0xFFFF) { ++c_noteye; return 0; }
+    const float ef = (e1 - rs16(ec) * 10.0f) / v.estep;
+    if (!(ef >= 0.0f)) { ++c_noteye; return 0; }
+    unsigned j = (unsigned) ef;
+    if (j >= ne) j = ne - 1;
+    if (!(e1 <= rs16(ec) * 10.0f + j * v.estep + v.espan)) { ++c_noteye; return 0; }
+    const unsigned row = rd16(v.camrow + 2 * (fc + j));
     /* farthest box corner within range */
     float d2 = 0.0f;
     const float e[3] = {e0, e1, e2};
@@ -114,14 +129,14 @@ int re4dc_room_vis_hidden(const float* view, const float lo[3], const float hi[3
     for (int z = z0; z <= z1; z++)
         for (int x = x0; x <= x1; x++) {
             const uint8_t* tc = v.cells + 12 * (x + z * v.vw);
-            const unsigned nb = tc[6];
-            if (!nb) { ++c_box; return 0; }
+            const unsigned nb = tc[3];
+            if (!nb || rd16(tc + 6) == 0xFFFF) { ++c_box; return 0; }
             const float b0 = rs16(tc + 4) * 10.0f;
             const float kf = (lo[1] - b0) * 0.001f;   /* band step 1 m */
             if (!(kf >= 0.0f)) { ++c_box; return 0; }
             const unsigned k = (unsigned) kf;
             if (k >= nb || !(hi[1] <= b0 + k * 1000.0f + v.span)) { ++c_box; return 0; }
-            const unsigned t = rd16(tc + 10) + k;
+            const unsigned t = rd16(tc + 8) + k;
             if ((bits[t >> 3] >> (t & 7)) & 1) {
 #if defined(RE4DC_ENEMY_VIS_DEBUG) && RE4DC_ENEMY_VIS_DEBUG
                 if (!(c_vis & 255))

@@ -244,8 +244,9 @@ VIS_RANGE = 24000.0    # pairs farther apart than this (cell Chebyshev distance 
 SHELL_RANGE = {0x100: 18750, 0x101: 18750}   # rooms with a far shell (FAR_SHELL): beyond this the world is the shell
 VIS_MARGIN = 500.0     # eye and target sample areas extend this far past their cell
 VIS_SAMPLES = 5        # per axis
-VIS_EYE_N, VIS_TGT_N = 5, 4
+VIS_EYE_N, VIS_TGT_N = 3, 4
 EYE_LO, EYE_HI = 300.0, 4500.0       # eye y range over a cell's floors
+EYE_STEP, EYE_SPAN = 1000.0, 1500.0  # eye height bands: start every STEP, SPAN tall (one row each)
 TGT_LO, TGT_HI = -500.0, 3000.0      # enemy boxes over a cell's floors
 BAND_STEP, BAND_SPAN = 1000.0, 3500.0  # target height bands: start every STEP, SPAN tall (a box <= 2.5 m fits one)
 LEVELS = 3             # world LOD levels 0..2: a pair is hidden only when hidden at every level
@@ -265,7 +266,13 @@ def q10(v, up):
 
 
 def build_vis(g, worlddir, threads, room_id):
-    """VIS v1 (header 32 B: the 16 B below, u32 R4PW sidecar crc the occluders came from, 12 B zero): camera cell -> target volume visibility over VIS_DIV x VIS_DIV blocks of the grid lattice (vis_pvs.c).
+    """VIS v2 (supersedes the v1 layout described below; eye height bands):
+    header 32 B: u16 vw, vh, div, nrow, rowbytes, ntgt, range_cm, span_cm; u32 R4PW sidecar crc the occluders came
+                 from; u16 ncam, eye_step_cm, eye_span_cm; 6 B zero
+    cells[vw*vh] 12 B: s16 eye0 (cm), u8 neye, u8 nband, s16 band0 (cm), u16 first camera volume (0xFFFF none),
+                 u16 first target volume, u16 0; eye band j = [eye0 + j*step, + span] -> camrow[first_cam + j]
+    camrow u16[ncam] (padded to 4 B), rows[nrow][rowbytes].
+    v1 text: camera cell -> target volume visibility over VIS_DIV x VIS_DIV blocks of the grid lattice (vis_pvs.c).
     header 16 B: u16 vw, u16 vh, u16 div, u16 nrow, u16 rowbytes, u16 ntgt, u16 range_m10 (range, 10 cm... see below),
                  u16 band_step_cm, (range_mm = u16 at 12 x 10 mm; band span = u16 at 14 is BAND_SPAN in cm)
       exact: u16 vw, vh, div, nrow, rowbytes, ntgt, u16 range_cm, u16 span_cm; the band step is 100 cm (BAND_STEP)
@@ -279,7 +286,7 @@ def build_vis(g, worlddir, threads, room_id):
     W, H, C = g['W'], g['H'], CELL
     vw, vh = (W + VIS_DIV - 1) // VIS_DIV, (H + VIS_DIV - 1) // VIS_DIV
     rng = min(VIS_RANGE, SHELL_RANGE.get(room_id, VIS_RANGE))
-    cr, tg, cinfo = [], [], []
+    cams, tg, cinfo = [], [], []
     for vz in range(vh):
         for vx in range(vw):
             c = vx + vz * vw
@@ -287,21 +294,23 @@ def build_vis(g, worlddir, threads, room_id):
                   for x in range(vx * VIS_DIV, min(W, vx * VIS_DIV + VIS_DIV)) if g['yr'][x + z * W]]
             if ys:
                 lo, hi = min(y[0] for y in ys), max(y[1] for y in ys)
-                elo, ehi = q10(lo + EYE_LO, False) * 10, q10(hi + EYE_HI, True) * 10
-                cr.append((elo, ehi, 0.0, 0.0))
+                e0 = q10(lo + EYE_LO, False) * 10
+                ne = max(1, int(math.ceil((hi + EYE_HI - EYE_SPAN - e0) / EYE_STEP)) + 1)
+                ne = min(ne, 255)
                 b0 = q10(lo + TGT_LO, False) * 10
                 nb = max(1, int(math.ceil((hi + TGT_HI - BAND_SPAN - b0) / BAND_STEP)) + 1)
                 nb = min(nb, 255)
-                cinfo.append((elo, ehi, b0, nb, len(tg)))
+                cinfo.append((e0, ne, b0, nb, len(cams), len(tg)))
+                for j in range(ne):
+                    cams.append((c, e0 + j * EYE_STEP, e0 + j * EYE_STEP + EYE_SPAN))
                 for k in range(nb):
                     tg.append((c, b0 + k * BAND_STEP, b0 + k * BAND_STEP + BAND_SPAN))
             else:
-                cr.append((1.0, -1.0, 0.0, 0.0))
                 cinfo.append(None)
     pkg = world_tris.Pkg(worlddir)
     exe = vis_tool()
     rowb = (len(tg) + 7) // 8
-    acc = bytearray(rowb * vw * vh)
+    acc = bytearray(rowb * len(cams))
     ntris = []
     with tempfile.TemporaryDirectory() as td:
         for lv in range(LEVELS):
@@ -311,32 +320,37 @@ def build_vis(g, worlddir, threads, room_id):
             with open(fi, 'wb') as f:
                 f.write(b'PVSI' + struct.pack('<3I5f5I', len(tris), vw, vh, g['x0'], g['z0'], C * VIS_DIV, VIS_MARGIN,
                                                rng + C * VIS_DIV * 2, VIS_SAMPLES, VIS_EYE_N, VIS_TGT_N, 1, threads))
-                f.write(b''.join(struct.pack('<4f', *c) for c in cr))
+                f.write(struct.pack('<I', len(cams)) + b''.join(struct.pack('<Iff', *c) for c in cams))
                 f.write(struct.pack('<I', len(tg)) + b''.join(struct.pack('<Iff', *t) for t in tg))
                 f.write(b''.join(struct.pack('<10f', *t) for t in tris))
             subprocess.check_call([exe, fi, fo])
             out = open(fo, 'rb').read()
             for i in range(len(acc)):
                 acc[i] |= out[i]
-    rows, ridx, cells = [], {}, b''
+    rows, ridx, cells, camrow = [], {}, b'', []
     hidden = 0
-    for c in range(vw * vh):
-        ci = cinfo[c]
-        if ci is None:
-            cells += struct.pack('<3hBBHH', 1, -1, 0, 0, 0, 0xFFFF, 0)
-            continue
-        row = bytes(acc[c * rowb:(c + 1) * rowb])
+    for a in range(len(cams)):
+        row = bytes(acc[a * rowb:(a + 1) * rowb])
         if row not in ridx:
             ridx[row] = len(rows)
             rows.append(row)
+        camrow.append(ridx[row])
         hidden += sum(1 for t in range(len(tg)) if not (row[t >> 3] >> (t & 7)) & 1)
-        cells += struct.pack('<3hBBHH', ci[0] // 10, ci[1] // 10, ci[2] // 10, ci[3], 0, ridx[row], ci[4])
-    if len(rows) >= 0xFFFF or len(tg) >= 0xFFFF:
-        raise SystemExit('too many VIS rows / targets')
-    data = struct.pack('<8HI12x', vw, vh, VIS_DIV, len(rows), rowb, len(tg), int(rng) // 10, int(BAND_SPAN) // 10,
-                       pkg.sidecar_crc)
-    data += cells + b''.join(rows)
-    return data, dict(vw=vw, vh=vh, rows=len(rows), rowbytes=rowb, targets=len(tg), hidden_pairs=hidden,
+    for c in range(vw * vh):
+        ci = cinfo[c]
+        if ci is None:
+            cells += struct.pack('<hBBhHHH', 0, 0, 0, 0, 0xFFFF, 0, 0)
+            continue
+        cells += struct.pack('<hBBhHHH', ci[0] // 10, ci[1], ci[3], ci[2] // 10, ci[4], ci[5], 0)
+    if len(rows) >= 0xFFFF or len(tg) >= 0xFFFF or len(cams) >= 0xFFFF:
+        raise SystemExit('too many VIS rows / targets / cameras')
+    camb = struct.pack('<%dH' % len(camrow), *camrow)
+    if len(camrow) & 1:
+        camb += b'\0\0'
+    data = struct.pack('<8HIHHH6x', vw, vh, VIS_DIV, len(rows), rowb, len(tg), int(rng) // 10, int(BAND_SPAN) // 10,
+                       pkg.sidecar_crc, len(cams), int(EYE_STEP) // 10, int(EYE_SPAN) // 10)
+    data += cells + camb + b''.join(rows)
+    return data, dict(vw=vw, vh=vh, rows=len(rows), rowbytes=rowb, targets=len(tg), cameras=len(cams), hidden_pairs=hidden,
                       occluder_tris=ntris, range_mm=rng, bytes=len(data))
 
 
@@ -376,7 +390,7 @@ def main():
                                                     'ps2-world.ids': b'R4ID'}[fn], len(b), hashlib.sha256(b).digest())
                     nsrc += 1
             vis, vb = build_vis(g, wd, a.threads, rid)
-            secs.append((b'VIS\0', 1, 0, vis, vb['vw'] * vb['vh'], 12))
+            secs.append((b'VIS\0', 2, 0, vis, vb['vw'] * vb['vh'], 12))
         blob = container(rid, g, [(b'SRCB', 1, 0, srcb, nsrc, 40)] + secs, 0)
         od = os.path.join(a.out, room)
         os.makedirs(od, exist_ok=True)

@@ -8,10 +8,10 @@
  *
  * input  (binary, little-endian): "PVSI", u32 ntri, u32 w, u32 h, f32 x0, f32 z0, f32 cell, f32 margin, f32 range,
  *        u32 samples (per axis), u32 eye_n, u32 tgt_n, u32 near_cells, u32 threads,
- *        f32 cellrange[w*h][4] (eye_lo, eye_hi, unused, unused; eye_lo > eye_hi = no range),
+ *        u32 ncam, then ncam x {u32 cell, f32 ylo, f32 yhi} (camera volumes: a cell's eye height band),
  *        u32 ntgt, then ntgt x {u32 cell, f32 ylo, f32 yhi} (target volumes: a cell's height band),
  *        f32 tri[ntri][10] (3 corners, then 1.0 for a back-culled part's triangle, 0.0 two-sided)
- * output: w*h rows of ceil(ntgt/8) bytes, bit (b & 7) of byte (b >> 3) set = target volume b possibly visible.
+ * output: ncam rows of ceil(ntgt/8) bytes, bit (b & 7) of byte (b >> 3) set = target volume b possibly visible.
  * usage: vis_pvs <in> <out>     build: cc -O2 -pthread -o vis_pvs vis_pvs.c -lm
  */
 #include <math.h>
@@ -26,12 +26,13 @@ typedef struct { float v0[3], e1[3], e2[3], ylo, yhi; int cull; } Tri;
 static Tri* T;
 static uint32_t NT, W, H, SN, EN, TN, NEARC, NTH;
 static float X0, Z0, CELL, MARGIN, RANGE;
-static float (*CR)[4];
 static uint8_t* OUT;
 static uint32_t ROWB;
 typedef struct { uint32_t cell; float ylo, yhi; } Tgt;
 static Tgt* TG;
 static uint32_t NTG;
+static Tgt* CAM;
+static uint32_t NCAM;
 /* triangle buckets */
 #define BK 2000.0f
 static uint32_t BW, BH;
@@ -90,9 +91,10 @@ static int seg_hits(const float* o, const float* p, uint32_t* mark, uint32_t sta
 
 static void samples(uint32_t c, int eye, float (*out)[3], uint32_t* n)
 {
-    /* eye: c = camera cell (y range CR[c][0..1]); target: c = target volume index (TG) */
-    float lo = eye ? CR[c][0] : TG[c].ylo, hi = eye ? CR[c][1] : TG[c].yhi;
-    if (!eye) c = TG[c].cell;
+    /* c = camera volume index (CAM) or target volume index (TG) */
+    const Tgt* v = eye ? &CAM[c] : &TG[c];
+    float lo = v->ylo, hi = v->yhi;
+    c = v->cell;
     uint32_t cx = c % W, cz = c / W;
     uint32_t hn = eye ? EN : TN;
     *n = 0;
@@ -123,16 +125,17 @@ static void* worker(void* arg)
         pthread_mutex_lock(&mu);
         uint32_t a = next_row++;
         pthread_mutex_unlock(&mu);
-        if (a >= W * H) break;
+        if (a >= NCAM) break;
         uint8_t* row = OUT + (size_t) a * ROWB;
-        int ae = CR[a][0] <= CR[a][1];
+        int ae = CAM[a].ylo <= CAM[a].yhi;
+        const uint32_t ac = CAM[a].cell;
         uint32_t ne = 0;
         if (ae) samples(a, 1, es, &ne);
         for (uint32_t b = 0; b < NTG; b++) {
             int vis = 1;
             int bt = TG[b].ylo <= TG[b].yhi;
             uint32_t bc = TG[b].cell;
-            int dx = abs((int) (a % W) - (int) (bc % W)), dz = abs((int) (a / W) - (int) (bc / W));
+            int dx = abs((int) (ac % W) - (int) (bc % W)), dz = abs((int) (ac / W) - (int) (bc / W));
             float dist = (dx > dz ? dx : dz) * CELL;
             if (ae && bt && (uint32_t) (dx > dz ? dx : dz) >= NEARC && dist <= RANGE) {
                 uint32_t nt = 0;
@@ -165,8 +168,10 @@ int main(int argc, char** argv)
     NT = u[0]; W = u[1]; H = u[2];
     X0 = fl[0]; Z0 = fl[1]; CELL = fl[2]; MARGIN = fl[3]; RANGE = fl[4];
     SN = u2[0]; EN = u2[1]; TN = u2[2]; NEARC = u2[3]; NTH = u2[4] ? u2[4] : 1;
-    CR = malloc(sizeof(float) * 4 * W * H);
-    if (fread(CR, 16, W * H, f) != W * H) return 1;
+    if (fread(&NCAM, 4, 1, f) != 1) return 1;
+    CAM = malloc(sizeof(Tgt) * (NCAM ? NCAM : 1));
+    for (uint32_t i = 0; i < NCAM; i++)
+        if (fread(&CAM[i].cell, 4, 1, f) != 1 || fread(&CAM[i].ylo, 4, 1, f) != 1 || fread(&CAM[i].yhi, 4, 1, f) != 1) return 1;
     if (fread(&NTG, 4, 1, f) != 1) return 1;
     TG = malloc(sizeof(Tgt) * (NTG ? NTG : 1));
     for (uint32_t i = 0; i < NTG; i++)
@@ -207,13 +212,13 @@ int main(int argc, char** argv)
         }
     }
     ROWB = (NTG + 7) / 8;
-    OUT = calloc((size_t) ROWB * W * H, 1);
+    OUT = calloc((size_t) ROWB * (NCAM ? NCAM : 1), 1);
     pthread_t th[64];
     if (NTH > 64) NTH = 64;
     for (uint32_t i = 0; i < NTH; i++) pthread_create(&th[i], 0, worker, 0);
     for (uint32_t i = 0; i < NTH; i++) pthread_join(th[i], 0);
     FILE* o = fopen(argv[2], "wb");
-    fwrite(OUT, ROWB, W * H, o);
+    fwrite(OUT, ROWB, NCAM, o);
     fclose(o);
     return 0;
 }
