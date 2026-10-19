@@ -307,6 +307,19 @@ extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan* p
         }
         return 3u|(RE4DC_ACTOR_LEON_NATIVE_LOOK?4u:0u);
     }
+    // LEON_HEADLESS v2 (0x10A, the flying head): one role, a face run on the atlas (material 0, the chunk's UVs) then a
+    // hair run on hair material 1 (its own UVs), together the role's triangles; the atlas and hair pair 1 materials.
+    if(p && p->appearance==0x10A) {
+        if(p->count!=1 || p->run_count!=2 || p->material_count!=2 || !p->info[0])return 0;
+        const auto& f=p->runs[0];const auto& h=p->runs[1];
+        if(f.role || f.material || h.role || h.material!=1 || f.triangles+h.triangles!=p->input[0].triangles ||
+           f.uv.data!=p->input[0].uv.data || f.uv.size!=p->input[0].uv.size)return 0;
+        const auto& m=p->materials[1];
+        if(m.image.pixels!=hair_colours[0].pixels || m.mask.pixels!=hair_mask.pixels || m.crc!=hair_pair_crc[0] || m.fnv!=hair_pair_fnv[0] ||
+           m.material_flags!=4 || m.blend || m.depth_mode!=(RE4DC_ACTOR_LEON_NATIVE_LOOK?1u:0u) || m.mask_ref || m.mask_same_uv!=1 ||
+           m.wrap_s!=1 || m.wrap_t!=1)return 0;
+        return 3u|(RE4DC_ACTOR_LEON_NATIVE_LOOK?4u:0u);
+    }
 #endif
 #if RE4DC_ACTOR_PL08
     // pl08 (0x108): nine roles; the same hair (role 7, pl00's runs 7..20) and one role-8 run last, its whole chunk.

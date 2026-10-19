@@ -155,11 +155,128 @@ int pl08_headless_plan(cModel* m,Re4dcActorPlan* out) {
         unsigned(pG->Frame_cnt),p.palette_bytes,p.workspace_bytes,leon_neck::chunk.triangles);}
     *out=p;return 1;
 }
+#if defined(RE4DC_LEON_HEAD_IDS)
+// LEON_HEADLESS v2: the flying head (SetObj01(player arc 0xC, TPL 7) in the head-loss deaths), appearance 0x10A. The
+// player archives of the v2 data set hold, at arc 0xC, a stub the source loads and never draws (no display list
+// bytes) followed by the PS2 head (build_head.py): one rigid role (one palette) drawn as a face run on Leon's atlas and
+// a hair run on hair material 1. The payload is located and proved here (re4dc_stub_payload: magic, size inside the
+// arc, CRC once per address); any failure leaves the head on the source path, which draws nothing from a stub and
+// the original GameCube head from an unchanged archive.
+struct LeonHead {
+    const void* data=nullptr;  // the arc 0xC ModelData the payload was proved for
+    bool ok=false;
+    leon4k::Chunk chunk{};
+    re4dc_source::ChunkInput input{};
+    re4dc_source::ByteSpan face{},huv{},hair{};
+    unsigned face_tris=0,hair_tris=0;
+    alignas(32) unsigned char skin[128];
+    unsigned groups=0;
+    alignas(32) float T[1][12];
+};
+LeonHead leon_head;
+unsigned leon_head_fail;
+// Generic locator: a native payload after a stubbed source BIN, 32-aligned after its last header table, that must end
+// inside the BIN's archive entry [d, end). Words: magic, version 1, total bytes, CRC-32 of the bytes after the header.
+const unsigned* re4dc_stub_payload(const ModelData* d,const unsigned char* end,unsigned magic,unsigned header_words) {
+    const unsigned char* base=reinterpret_cast<const unsigned char*>(d);
+    if(!d || (int)(uintptr_t)d->pClr>=0 || !d->pParts)return nullptr;  // relocated (calcModelAddr) headers only
+    uintptr_t at=reinterpret_cast<uintptr_t>(d->pParts)+uintptr_t(d->displist_num)*0x20u;
+    if(d->flipTbl && d->flipTbl+0x20u>at)at=d->flipTbl+0x20u;
+    at=(at+31u)&~uintptr_t(31);
+    const unsigned* w=reinterpret_cast<const unsigned*>(at);
+    if(at<=uintptr_t(base) || at+header_words*4u>uintptr_t(end) || w[0]!=magic || w[1]!=1u || w[2]<header_words*4u ||
+       at+w[2]>uintptr_t(end))return nullptr;
+    unsigned crc=0xffffffffu;
+    for(const unsigned char* q=reinterpret_cast<const unsigned char*>(at)+header_words*4u;q<reinterpret_cast<const unsigned char*>(at)+w[2];++q) {
+        crc^=*q;for(unsigned k=0;k<8;++k)crc=(crc>>1)^(0xedb88320u&(0u-(crc&1u)));
+    }
+    return (crc^0xffffffffu)==w[3]?w:nullptr;
+}
+bool leon_head_object(const cModel* m) {
+    if(!m || m->id!=1 || m->nParts!=1 || !m->pModelInfo || m->pModelInfo->pList || !m->pList || !m->pParts || !pG->pPlayer)return false;
+    return m->pModelInfo->pData==static_cast<const ModelData*>(PL_ARC_PTR(pG->pPlayer,0xC));
+}
+bool leon_head_refuse(unsigned why) {
+    if(leon_head_fail++<4)re4dc_log("LEON_HEAD payload refused why=%u f=%u\n",why,unsigned(pG->Frame_cnt));
+    return false;
+}
+bool leon_head_load(const cModel* m) {
+    const ModelData* d=m->pModelInfo->pData;
+    if(leon_head.data==d)return leon_head.ok;
+    leon_head=LeonHead{};leon_head.data=d;actor_immutable_reset_head();
+    const auto* end=static_cast<const unsigned char*>(PL_ARC_PTR(pG->pPlayer,0xD));
+    const unsigned* w=re4dc_stub_payload(d,end,0x48344552u,32u);
+    if(!w || w[4]!=7u || w[7]!=1u || w[8]!=w[22]+w[27] || w[28]!=1u)return leon_head_refuse(w?1u:0u);
+    const unsigned char* b=reinterpret_cast<const unsigned char*>(w);
+    static const unsigned char kSpanWords[8]={10,12,14,16,18,20,23,25};  // offset words, each followed by its size
+    for(unsigned k:kSpanWords)if((w[k]&31u) || w[k]+w[k+1]>w[2])return leon_head_refuse(2);
+    auto& c=leon_head.chunk;
+    c={w[4],w[5],w[6],w[7],w[8],w[9],b+w[10],b+w[12],b+w[14],b+w[16],reinterpret_cast<const leon4k::Weight*>(b+w[18])};
+    if(w[17]!=w[9] || w[19]!=16u)return leon_head_refuse(3);
+    leon_head.input={{b+w[10],w[11]},{b+w[12],w[13]},{b+w[14],w[15]},{b+w[16],w[17]},{b+w[18],w[19]},
+        c.position_count,c.normal_count,c.palette_count,c.triangles,119u};
+    leon_head.face={b+w[20],w[21]};leon_head.face_tris=w[22];
+    leon_head.huv={b+w[23],w[24]};leon_head.hair={b+w[25],w[26]};leon_head.hair_tris=w[27];
+    unsigned char used[119]={};
+    if(!coarse_group_build(c.weights,1,leon_head.skin,sizeof(leon_head.skin),&leon_head.groups,used) || !used[0])return leon_head_refuse(4);
+    re4dc_log("LEON_HEAD payload f=%u tris=%u face=%u hair=%u bytes=%u\n",unsigned(pG->Frame_cnt),c.triangles,w[22],w[27],w[2]);
+    return leon_head.ok=true;
+}
+int leon_head_palettes(cModel* m,const Re4dcActorPlan& p,float* const* output) {
+    if(!leon_head_object(m) || !leon_head_load(m) || p.info[0]!=m->pModelInfo || !output[0])return 0;
+    Mtx inv;if(!PSMTXInverse(m->pParts->mat,inv))return 0;
+    alignas(32) float invx[16];coarse_inv_xmtrx(inv,invx);
+    CoarseBoneJob job={&m->pList->mat[0][0],&m->pList->lt_inv_mat[0][0],leon_head.T[0]};
+    re4dc_coarse_skin_bones(invx,&job,1);
+    re4dc_coarse_skin_groups(leon_head.skin,leon_head.groups,&leon_head.T[0][0],output[0],1);
+    for(unsigned j=0;j<12;++j)if(!coarse_finite(output[0][j]))return 0;
+    return 1;
+}
+int leon_head_plan(cModel* m,Re4dcActorPlan* out) {
+#if defined(RE4DC_LEON_HEAD_FORCE_DECLINE) && RE4DC_LEON_HEAD_FORCE_DECLINE
+    return 0;  // LEON_HEAD_FORCE_DECLINE (test only): the source path must draw nothing from the stub and not crash
+#endif
+    if(!out || m->ot_type || !leon_head_load(m))return 0;  // an ordinary object model (OT 0), never the player's OT 7
+    cModelInfo* info[1]{};
+    if(!re4dc_actor_role_bindings(m,0x10A,info,1))return leon_head_refuse(5);
+    if(!re4dc_actor::exact_infos(m->pModelInfo,info,1))return leon_head_refuse(6);
+#if RE4DC_ACTOR_PL08_PACK
+    const bool pl08=pl08_pack.published;
+#else
+    const bool pl08=true;
+#endif
+    Re4dcActorPlan p{};p.count=1;p.appearance=0x10A;p.palettes=leon_head_palettes;
+    p.image=pl08?pl08_image:image;p.crc=pl08?pl08_crc:crc;p.fnv=pl08?pl08_fnv:fnv;
+    const auto& c=leon_head.chunk;
+    re4dc_actor::plan_chunk(p,0,info[0],c,leon_head.input);
+    p.immutable_asset_id[0]=kLeonHeadAsset;
+    p.material_count=2;
+    p.materials[0].image=p.image;p.materials[0].crc=p.crc;p.materials[0].fnv=p.fnv;
+    {
+        auto& mat=p.materials[1];mat.image=hair_colours[0];mat.mask=hair_mask;mat.crc=hair_pair_crc[0];mat.fnv=hair_pair_fnv[0];
+        mat.material_flags=4;mat.blend=0;mat.depth_mode=RE4DC_ACTOR_LEON_NATIVE_LOOK?1u:0u;
+        mat.mask_ref=0;mat.mask_same_uv=1;mat.wrap_s=mat.wrap_t=1;
+    }
+    {auto& r=p.runs[p.run_count++];r.role=0;r.material=0;r.immutable_asset_id=kLeonHeadAsset+1u;r.triangles=leon_head.face_tris;
+        r.uv=p.input[0].uv;r.stream=leon_head.face;}
+    {auto& r=p.runs[p.run_count++];r.role=0;r.material=1;r.immutable_asset_id=kLeonHeadAsset+2u;r.triangles=leon_head.hair_tris;
+        r.uv=leon_head.huv;r.stream=leon_head.hair;}
+    if(!p.palette_bytes || !p.workspace_bytes)return leon_head_refuse(7);
+    if((re4dc_actor_material_runs_capability(&p)&3u)!=3u)return leon_head_refuse(8);
+    static unsigned logs;if(logs<4){++logs;re4dc_log("LEON_HEAD plan f=%u palette=%u workspace=%u tris=%u pl08=%u\n",
+        unsigned(pG->Frame_cnt),p.palette_bytes,p.workspace_bytes,c.triangles,unsigned(pl08));}
+    *out=p;return 1;
+}
+#endif
 #endif
 }
 extern "C" int re4dc_actor_plan_pl08(cModel* m,Re4dcActorPlan* out) {
 #if defined(RE4DC_DBG_WARP) && RE4DC_DBG_WARP
     if(RE4DC_WARP_LATE(RE4DC_LATE_LEON_SOURCE))return 0; // test-only old-path arm (warp_late.h 0x10), as the pl00 owner
+#endif
+#if defined(RE4DC_LEON_HEAD_IDS)
+    // LEON_HEADLESS v2: the flying head (cObj01 of the player archive's arc 0xC) plans as 0x10A.
+    if(m && m!=(cModel*)pPL && leon_head_object(m))return leon_head_plan(m,out);
 #endif
 #if RE4DC_LEON_HEADLESS
     // LEON_HEADLESS: once setHead(0) has run (cPlBody::pShape cleared), the player plans as 0x109.
