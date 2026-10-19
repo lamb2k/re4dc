@@ -1,0 +1,141 @@
+{
+  "source_commit": "4d418ef822a3f3e8f8fef11a672fb40ab2f75ca7",
+  "catalogue_AFS": {
+    "absolute_offset": 2451812352,
+    "bytes": 1963034624,
+    "directory_entries": 515,
+    "live_named_entries": 287,
+    "table_sha256": "8a56be0181b034282d723130a899c1ad439c38e01efc61dd8532ee4e37ac5576",
+    "names_offset": 1963008000,
+    "names_bytes": 24720,
+    "names_sha256": "1601f9d90890b6302a6a590278bf555e331a49ceb68ae454b9bcfba2487ddf5a"
+  },
+  "private_receipt": {
+    "set": "boss18-event-movies-20261019",
+    "files": 39,
+    "bytes": 618545,
+    "sha256sums_sha256": "0fdffd7b827eae0e6379de2de4a640270ba745ba03ba34512093faf2065bd8e7",
+    "mirror_verified": true,
+    "original_named_entries": 287,
+    "source_rooms": 14,
+    "source_EVD_names_with_matching_SFD": 25,
+    "no_movie_payload_copied_or_converted": true,
+    "no_render_model_change": true,
+    "new_game_builds_Flycast": 0
+  },
+  "source_files": [
+    {
+      "path": "src/st1/r10b.cpp",
+      "sha256": "2617923c06686d83c687fbc2472e9a098c465cc09167a81a6eca04d90ec43e95"
+    },
+    {
+      "path": "src/st1/r119.cpp",
+      "sha256": "4b3ac60857061f0ac047009e7a93eaea246c5f3604410a801885478f1ef31070"
+    },
+    {
+      "path": "src/st1/r11e.cpp",
+      "sha256": "c4a539fe28d968904805458d7c6f50d6c977661f61ff79847ebc57369f7a1f94"
+    },
+    {
+      "path": "src/st1/r11f.cpp",
+      "sha256": "c898c2fb18e3e252859705f0d3a6175bd1f2f6aa59570cd50dcbf16e7ed02e4d"
+    },
+    {
+      "path": "src/st2/r201.cpp",
+      "sha256": "13265eb6c38e8b248c2109637ee263f4df4aa2cd34813d008404a35c16b0e67a"
+    },
+    {
+      "path": "src/st2/r20c.cpp",
+      "sha256": "36cd0d59c05838b6aef316d34b8f02a7f762b4ad42af251a688e2933aa07e1ad"
+    },
+    {
+      "path": "src/st2/r218.cpp",
+      "sha256": "a4d762f6512b6667d1f74e0bbe5bedb391204a673fff5641a330c6bac6e6c1e6"
+    },
+    {
+      "path": "src/st2/r221.cpp",
+      "sha256": "9ff2a39859b07fd8bbb08624ed4b915d66d695198190fcb5f28d89244f8a3cd8"
+    },
+    {
+      "path": "src/st2/r224.cpp",
+      "sha256": "86ff7b573fffe488be30c3d6aab8155545ebdb2e71fc36278c93317ab839ac16"
+    },
+    {
+      "path": "src/st2/r226.cpp",
+      "sha256": "c8fec564dc23899144f46450ba9a3a14dad8d6fbf9f4e4f4dd2b54d0434290b6"
+    },
+    {
+      "path": "src/st2/r228.cpp",
+      "sha256": "0b6c241c190e1eacea7feb5cef9df35dcb08f32bcf06595c3e29cdd5742ac0ef"
+    },
+    {
+      "path": "src/st3/r31b.cpp",
+      "sha256": "e1d59c572b8dacc6f4e60cd01827d0f8276b5453bcb503bfe9920a4818006d73"
+    },
+    {
+      "path": "src/st3/r31c.cpp",
+      "sha256": "405c6a88a50a41e71d11e0800a8970cc01e697a91fe466038004d71e4fb3e8b4"
+    },
+    {
+      "path": "src/st3/r332.cpp",
+      "sha256": "432dd637aee5a0a083fefadbe3104d02f3a5c53e4e96ea67006467e8bc9b7761"
+    },
+    {
+      "path": "src/em2b/em2b.cpp",
+      "sha256": "248179ca7012cdc83babfbfef7ce79c602085a92173d54b2b616430be4b9c5e8"
+    },
+    {
+      "path": "src/em2c/em2c.cpp",
+      "sha256": "72e67b56bc958456decee97fd2f723ae9a8a602d3a21104013429ab2ddd93987"
+    },
+    {
+      "path": "src/em38/em38.cpp",
+      "sha256": "a1dbe3b42e5715783bd717dc9fda82aa33d5d93b710bc5609762c079c95826b9"
+    },
+    {
+      "path": "src/em32/em32.cpp",
+      "sha256": "1906120c43ce96dde32f9847d3cc99fc5145ba317580cda9da348f9787a70376"
+    },
+    {
+      "path": "src/em39/em39.cpp",
+      "sha256": "1fbadfad916f83395371cb3164040b1f38c235878a9035c11b284e359609f907"
+    },
+    {
+      "path": "src/em31/em31.cpp",
+      "sha256": "4d82e0e447302d5ce07af2b066aeb072aa9766eafe60aa5a71c1c34c6d7146d2"
+    },
+    {
+      "path": "src/em2f/em2f.cpp",
+      "sha256": "0a0000a6fcab526e145ef40f83b1a3da481b85cdd1d196eb6c689939cae40595"
+    },
+    {
+      "path": "src/em35/em35.cpp",
+      "sha256": "7d9aa5190a54632bf42e9984ec21b79ffd95eec74d51c9dd2175df0f8729c1d4"
+    },
+    {
+      "path": "src/em30/em30.cpp",
+      "sha256": "0323bd03ace537109d2dea79bb43ee524a211d2e60fe36ec725e988a9617789c"
+    },
+    {
+      "path": "src/em34/em34.cpp",
+      "sha256": "48894f762f680674561931a73e32f0fb6d2070f1b8bddc68d433eaa61e093cf2"
+    },
+    {
+      "path": "src/em1b/em1b_set.cpp",
+      "sha256": "df88d4a9e2b6695091ecd9782f01bd38f971de53be10a216dca08bd7b18370bf"
+    },
+    {
+      "path": "src/em1c/em1c_set.cpp",
+      "sha256": "2bbceaaa8d5bccba640fd3114d4d7ca72ec41a55ea59eb511de922f954edb521"
+    },
+    {
+      "path": "port/dreamcast/game/route_movie_bridge.cpp",
+      "sha256": "b280c3a298d4ef74bec807b2f22c25f2ada96105df1b926a2433f30120de833e"
+    },
+    {
+      "path": "src/game/sofdec.cpp",
+      "sha256": "7bb6e379b9b304388be4d999a38541f6d630241b7d218d17d97c1892760768be"
+    }
+  ],
+  "scope": "Hash-only source/catalogue references. Catalogue presence is not dynamic movie ownership or current staged playback; live mechanics remain separately required. No model, source movie or media payload."
+}
