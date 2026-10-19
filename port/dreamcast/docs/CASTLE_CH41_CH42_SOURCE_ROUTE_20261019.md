@@ -595,7 +595,21 @@ Private set: castle18-ch41-r219-native-resident-20261019, mirrored on C:.
 Resident SHA: e776711c58b93c7affcea345df37cab41bdb8ddbd4f0f300f351c42b9dd80259.
 Manifest SHA: e1609e574348241f6934000a499a89d00c67d148ecf75434429054d3bc059cb7.
 Source fragment: tools/d367/castle18/ch41-r219-native-resident-20261019.json.
-The corrected native-partner residency runtime is pending.
+The matched native-partner residency now passes: four late uploads fall
+to zero. Only dc/resident.bin changes among7,139 payloads; all23 programs,
+native packages and other assets remain exact. The newer resident union
+also carries Worker A's already-admitted three r20c entries. Initial55.89s
+and unchanged tail55.83s overlap by800 exact log lines. KOS reserve49,152
+and periodic minimum48,312 remain; later840/960/1080/1200 receipts hold265
+loads. Native Ashley/Leon stay4,395 cumulative census counts each, GC0;
+all seven Ashley infos remain owned/adopted and the cart completes normally.
+No texture, fit, fatal or VRAM failures occur. This run reports zero stream
+underruns; earlier-control underruns are retained, so no universal claim.
+Final gameplay VRAM has597,696 pinned,340,608 dynamic,1,539,008 free and
+1,507,328 largest-block bytes. Late registration remains around190ms.
+Proof: r219-native-residency-matched-proof.json.
+Matched disc SHA: f1c2c96736290b14c41521bea7db41068fa266e38ef224626efdc3d4b6ec11ae.
+Joined log SHA: ddee26f91b8f3c13607808b3ff32c06b23f5d18c1bf7c286521e2c9cd87544a3.
 
 Native-control disc SHA:
 504c4709c5f3bac7b74577e4d2ff4c9e96b65e05fdfd06665b12cc8c34d9d5a0.
@@ -609,3 +623,23 @@ Proofs: r219-partner-host-proof.json, r219-partner-final-saved-state-audit.json,
 r219-partner-cart-continuation-provenance.json and the native source/resident
 ledgers. Finished control disc links were retired after sealing the evidence;
 states, logs, stills, program bytes and source data remain.
+
+
+## r212 full partner input prepared
+
+The original unsolved-room R212TrapInit creates Ashley and selects chase.
+The existing fixture had her exact prepared pl11 archive and the113,760-byte
+primary enemy registry, but no native partner package. Reuse of the validated
+full partner changes only its room header/checksum to212; all21 original
+source roles, geometry, skins, materials, bindings and texture winners remain
+exact. The actual current host loader accepts primary plus229,952-byte partner
+together, and refuses the partner at wrong room211. This tests shared record
+capacity; it does not qualify target heap residency or puzzle gameplay.
+
+Private set: castle18-ch41-r212-partner-20261019, mirrored on C:.
+Package SHA: 8a0224900426aead056b038147f18870983f2725ed54b429f4001587640e9998.
+Manifest SHA: f5159079589894dd73647c7206e05d904cbcff96dfaf5854b055ff6399a57923.
+Source fragment: tools/d367/castle18/ch41-r212-partner-20261019.json.
+Runtime native/cloth, 48KiB reserve, plate/ceiling/drill/cup events and chapter
+acceptance remain open. Proof: r212-partner-host-proof.json. Source-created
+Ashley is retained; the entry fixture adds no partner flag or puzzle bypass.
