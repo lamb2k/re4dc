@@ -610,6 +610,24 @@ endif
 ifeq ($(filter $(PS2_ASHLEY),0 1 2),)
 $(error PS2_ASHLEY must be 0, 1 or 2)
 endif
+# NATIVE_MODEL_REGISTRY_PL_ASHLEY=1 (lane castlerender19 2026-10-19, castle item 4; default 0; render only; needs
+#   PS2_ASHLEY=2): the typed contract for PLAYABLE Ashley (chapter 3-4: cPlAshley, the player pPL, model id 0, ot_type 7)
+#   on the registry owner path. A draw-slot descriptor of model 0 over her complete 141-joint source owner (the cloth
+#   owner is kept: no skeleton replacement, no link folding is implied here) with seven sections admits:
+#   - the face, role 1 = BIN 7 / TPL 9 (Body->pShape, be_flag 2), as PS2_ASHLEY=2 admits the partner's head: drawn at
+#     the package's rest face while the source ShapeMove still runs (playable setFace is a no-op in the source);
+#   - the skirt, role 3 = BIN 8 / TPL 5, with its source be_flag 0x40 (cPlAshley::setModel): the transaction draws it in
+#     the ot_type 7 second pass (m->be_flag 0x08000000), as trans.cpp does.
+#   Every other role keeps the plain certificate; a 0x40 or shape bit on any other role or ordinal still declines.
+#   Leon (model 0, 119 joints) never matches the descriptor. No package exists yet (castle18 owns the pl01 conversion):
+#   without one the knob changes nothing at runtime. Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_PL_ASHLEY ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_PL_ASHLEY),1)
+ifneq ($(PS2_ASHLEY),2)
+$(error NATIVE_MODEL_REGISTRY_PL_ASHLEY=1 needs PS2_ASHLEY=2)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_PL_ASHLEY=1
+endif
 ifneq ($(PS2_ASHLEY),0)
 ifneq ($(NATIVE_MODEL_REGISTRY_PACK)$(NATIVE_MODEL_REGISTRY_MASK),11)
 $(error PS2_ASHLEY needs NATIVE_MODEL_REGISTRY_PACK=1 and NATIVE_MODEL_REGISTRY_MASK=1)
