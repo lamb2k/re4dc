@@ -218,3 +218,38 @@ Private set `castle18-ch41-r219-audio-20261019` is mirrored on C:, manifest
 `6cf68a625106b7630762dbfdb7eb4b2920971f234007c980a0f67fd45b858d7b`.
 Additive fixture: `tools/d367/castle18/ch41-r219-audio-20261019.json`.
 Evidence: `r219-entry-preparation.json` and `r219-audio-fit-proof.json`.
+
+## r222 near-enemy diagnostic and residency correction
+
+`cx-r222-walk-neararea10kos02` starts at the original area 10 centre,
+100 mm above its trigger floor, facing original enemy-list row 23. It
+changes no room flags. It completed 56.53 seconds, with the exact 49,152-byte
+reserve held and minimum KOS watch headroom 49,272 bytes. The two nearby
+type 9 monks now have actual `NMRM admit` receipts and positive native
+draw counters: 3,000 cumulative census samples, zero GameCube fallback.
+Leon has 1,500 native samples, zero fallback. Texture and audio-fit errors
+are zero. This does not cover the distant type 8 dragon operator. The
+46-second camera is obstructed by scenery, so visible appearance is still
+unqualified despite the actual draw receipts.
+
+The near diagnostic exposes three late texture uploads, so residency
+fails. All three actual package winners and source dimensions/formats were
+audited: `f96f7e1f-7f97a831` (1024x512, format 6),
+`ac23b5fe-01af40e8` (64x64, format 6), and
+`ec7b1745-32ce202e` (64x128, format 6). Their pixels, models and runtime
+programs are unchanged. The additive candidate preserves all 5,710 newest
+Worker A V12 records and every other room, adding only these three r222
+records. Its prior r222 entries exactly match the control's entries.
+
+Private set `castle18-ch41-r222-resident-20261019` is mirrored on C:,
+manifest SHA
+`deb8ef63b858be3b0b111ed334b7c057ad635c4f22172ee6f373b2ce360e87ff`.
+The 5,713-record resident SHA is
+`902a55450efcbae7be9fdbf6f4cfae986da77e350c08577bc09f31c795b7e2f4`.
+Matched runtime qualification is pending. Compose the three records into
+newer unions; never discard another worker's additions.
+
+Evidence: `r222-neararea10kos02-gate.json`,
+`r222-source-first-sight-winners.json`, `r222-source-trigger-geometry.json`
+and `r222-resident-host-proof.json`. Near diagnostic log SHA:
+`aec010314a3c2df5a3d0789f876a32b1bc6815f7db39056e8f570959a2dcbeef`.
