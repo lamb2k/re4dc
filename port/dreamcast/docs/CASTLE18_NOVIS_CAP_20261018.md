@@ -11,7 +11,7 @@ Literal final CH4REC builds (no phase/jump/reload extras in these arms), SOURCE_
 | Arm | Full ELF SHA256 | _end | Result |
 |---|---|---|---|
 | c18nerP | ddda161825800e75cee37e06c0bdfebe9e04148dff500900a5241d8d6480869e | 8c456238 | missing0, actual cap1/reload0 |
-| c18nfmW | 3c5afed6e761a538 (full SHA in cap-final383-builds/proof.json) | 8c464f18 | missing0, cap1/reload0, 48KiB memory twin |
+| c18nfmW | 3c5afed6e761a5388f5b16095ebe2aa57ff15cfd183b2b0e8ad8fe3956e303ba | 8c464f18 | missing0, cap1/reload0, 48KiB memory twin |
 
 The fresh canonical cap-only memory twin passes all six actual49152-byte holds; this supersedes the private cap+reload memory numbers as the final recipe gate. Every55s run exits under60s. No OOM/HALT/FAULT/MISSING, and all room activity/completion checks pass. Full room CAST/audio failures remain separate.
 
@@ -31,7 +31,7 @@ Data castle18-novis-r20a-20261018:48files, SHA256SUMS181faf73d225950296af3121cfa
 
 ### Exact palette path replaces the optional lossy experiment
 
-Nine additional textures have lossless PAL4 representations: all73216 decoded16-bit pixels, including alpha, equal their original Morton-order words. This saves109536B. Combined with the earlier three exact maps, this is12maps/267824pixels and404352B saved, without changing a source texel. No geometry, atlas, material, source CRC identity or runtime code changes. Data castle18-r20a-more-exact-pal4-20261018 SHA256SUMS0ce6ef03908f3e3a57c59cb7bfbf21f972fadc80e97865e5f34975298269a866, immediate verified C mirror.
+Nine additional textures have lossless PAL4 representations: all73216 decoded16-bit pixels, including alpha, equal their original Morton-order words. This saves109536B. Combined with the earlier three exact maps, this is12maps/269824pixels and404352B saved, without changing a source texel. No geometry, atlas, material, source CRC identity or runtime code changes. Data castle18-r20a-more-exact-pal4-20261018 SHA256SUMS0ce6ef03908f3e3a57c59cb7bfbf21f972fadc80e97865e5f34975298269a866, immediate verified C mirror.
 
 In actual c18narT r20ax (full native type0 package +12exact PAL4 +additive resident list, NO four-body lossy VQ), TEX0 through480, the same two source kills at103/156 after23hits each, and native172rows/absent0. Last UI free308192B versus148448B and TEX1 in r20ap with only3exact maps. At preload249, pinned2279776/dynamic0/other65536/free222112/largest20448B; later used2193696/free308192B. Logged evictions/retries remain: this is a bounded texture/admission improvement, not full traversal/no-reread/residency acceptance.
 
