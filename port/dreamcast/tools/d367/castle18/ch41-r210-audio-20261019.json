@@ -12,6 +12,8 @@
     "bgm_aram_offset": 8677280,
     "bgm_aram_length": 476379,
     "integration": "All bytes outside the original bank14 ARAM slice are exact. If another worker has updated the container, validate and compose this slice; do not replace their other banks.",
-    "runtime_status": "r210 ROOM/FOOT failures eliminated in current-program 48 KiB entry. Bank14 host preparation passes; matched emulator gate pending. No chapter acceptance."
+    "runtime_status": "Current-program matched r210 entry: ROOM/FOOT and BGM14 audio-fit failures zero, exact 49152-byte reserve held, all 23 program payloads unchanged. Only BGM data differs across 7032 staged payloads versus the ROOM/FOOT-only control. Complete room residency, partner and chapter traversal remain unqualified; late registration slowdown persists in both runs.",
+    "runtime_log_sha256": "f8144f92a30173314e3b1018311dd72825410dc1f55d8578a5ec0d5d9bb2e305",
+    "runtime_disc_sha256": "2e5dffb688da8b50c19095c3fc7f3fef6642e7c09ad4d3b66a4d39de48df0745"
   }
 }

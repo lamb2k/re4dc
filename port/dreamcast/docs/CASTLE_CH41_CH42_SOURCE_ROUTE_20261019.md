@@ -107,7 +107,7 @@ The existing builder prebuilds only its ARAM slice, preserving every other
 container byte, all source wavetable bytes and the frozen layout. Its eight
 samples use 208,416 bytes inside the 264,576-byte BGM0 slot at the unchanged
 32,000 Hz preferred cap. The existing ADPCM checker reports 24.0 dB SNR.
-A matched current-program emulator check is pending.
+A matched current-program emulator check is recorded below.
 
 Private ROOM/FOOT set: `castle18-ch41-r210-audio-20261019`, manifest
 `a717f403f01ac9f1f23c87751950142172fffeed91406c742465eaa8a0ef1034`.
@@ -116,3 +116,32 @@ Private BGM14 set: `castle18-ch41-bgm14-20261019`, manifest
 Both are mirrored on C:. The additive fixture is
 `tools/d367/castle18/ch41-r210-audio-20261019.json`; compose only its checked
 BGM slice into any newer container rather than replacing other bank edits.
+
+## r210 matched audio check
+
+`cx-r210-walk-fullaudiokos02` completed 56.30 seconds and exited its owned
+emulator. All 7,032 staged payload names match the ROOM/FOOT-only control;
+only `bgm/bio4midi.dat` has changed contents. All 23 boot/overlay payloads
+remain exact. The allocator reports `held=49152 requested=49152`, with
+49,552 bytes minimum remaining KOS watch headroom. There are no audio-fit
+failures, texture errors, VRAM refusals, evictions, retries or fatal rows.
+Leon draws natively (450 census samples, zero GameCube samples).
+
+The last official VRAM row is a preload summary at frame 181. Later native
+stream receipts through frame 480 retain 138 loads; they show no growth in
+that observed interval, but do not certify residency through the whole
+room or chapter. No partner or active enemies are present. The 46-second
+still was inspected. These are diagnostic entry gates, not a complete
+chapter, combat, cap-four progress or Ashley acceptance.
+
+Late Flycast registration time still reaches approximately 208 ms with no
+active enemies in both matched runs. The audio correction does not resolve
+that slowdown; its cause remains open. No hardware performance claim is
+made.
+
+Evidence in the worker folder: `r210-fullaudiokos02-gate.json`,
+`r210-fullaudiokos02-vram.json`, `r210-fullaudiokos02-characters.json` and
+`r210-fullaudio-matched-proof.json`. The capture log SHA is
+`f8144f92a30173314e3b1018311dd72825410dc1f55d8578a5ec0d5d9bb2e305`;
+the staged disc SHA is
+`2e5dffb688da8b50c19095c3fc7f3fef6642e7c09ad4d3b66a4d39de48df0745`.
