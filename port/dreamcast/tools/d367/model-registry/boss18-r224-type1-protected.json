@@ -1,0 +1,58 @@
+{
+  "registry": "boss18-r224-type1-protected",
+  "about": "Unapproved r224 type1 protected50.9 render level only; original type3/full event geometry retained. Current b18adrT slots2 body comparison STRICT601/20trace-source and exact full-backing identity qualified. No source chain/auxiliary/wholefight/route or look acceptance and no production selection.",
+  "cast_dir": "/root/re4data/private/boss18-twins-lod-20261019/combined/full-low",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "em2b: the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bit 0, PS2_GIGANTE)",
+  "descriptors": [
+    {
+      "name": "gigante-em2b-01",
+      "archive": "em2b",
+      "model_id": "0x2b",
+      "source_types": [
+        1
+      ],
+      "module": "src/em2b/em2b.cpp type 1 modelInit(ARC 8, ARC 0xA) + ModInfoMgr.create(ARC 9, ARC 0xA)",
+      "source_drops": [
+        "bump"
+      ]
+    },
+    {
+      "name": "gigante-em2b-03",
+      "archive": "em2b",
+      "model_id": "0x2b",
+      "source_types": [
+        3
+      ],
+      "module": "src/em2b/em2b.cpp type 3 modelInit(ARC 0xE, ARC 0x10) + ModInfoMgr.create(ARC 0xF, ARC 0x10)",
+      "source_drops": [
+        "bump"
+      ]
+    },
+    {
+      "name": "gig2b01-p51",
+      "archive": "em2b",
+      "model_id": "0x2b",
+      "source_types": [
+        1
+      ],
+      "module": "src/em2b/em2b.cpp type 1 modelInit(ARC 8, ARC 0xA) + ModInfoMgr.create(ARC 9, ARC 0xA)",
+      "source_drops": [
+        "bump"
+      ],
+      "lod_of": "gigante-em2b-01"
+    }
+  ],
+  "room_packages": {
+    "224": {
+      "descriptors": [
+        "gigante-em2b-01",
+        "gigante-em2b-03",
+        "gig2b01-p51"
+      ],
+      "evidence": "BOSS18_TWINS_LOD_20261019.md: type1-only work gain1.633 MODELLED ms/tick after verified source-spin exclusion, body gain1.499 on1of4 complete joint samples; type3 reduction skipped. Current gate/still/cost proof sealed28ceaa35; original package/full parent retention byte-exact."
+    }
+  }
+}

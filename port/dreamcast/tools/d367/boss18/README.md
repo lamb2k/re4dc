@@ -8,7 +8,7 @@ cost by actor count.
 
 Prerequisites: exact profiled ELF and final pre-strip overlay symbols, verified
 relocated runtime image, original loader log, ordered complete traces, and an
-unchanged-timing logic18 profile. Use the adjacent logic18 documentation to build
+unchanged-timing logic18 profile. Use the byte-matched logic18 exporter documentation to build
 and verify that profile. Its output directory needs `runtime.elf`, `runtime.json`,
 `runtime-symbols.{json,tsv}` and `simulator/`.
 
@@ -21,7 +21,7 @@ L18_SYMBOLS="$PROFILE/runtime-symbols.tsv" \
 B18_MODEL_WITNESS="$WITNESS/model-witnesses.tsv" \
   "$WITNESS/hwsim" --elf "$PROFILE/runtime.elf" --out "$WITNESS/nominal" \
   "$TRACE_340" "$TRACE_345" "$TRACE_350" "$TRACE_355"
-python3 ../logic18/verify_profile.py --original "$PROFILE/original/nominal" \
+python3 "$LOGIC18_TOOLS/verify_profile.py" --original "$PROFILE/original/nominal" \
   --profile "$WITNESS/nominal" --out "$WITNESS/validation.json"
 python3 summarize_model_draw.py --profile "$PROFILE" --witness-dir "$WITNESS" \
   --ticks 340,345,350,355 --out "$WITNESS/boss-exclusive-draw.json"
