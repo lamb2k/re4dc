@@ -3168,6 +3168,15 @@ LOGIC_WASTE_MASK ?= 0
 #                gated by gameplay equivalence): 0x01 Leon's jacket cloth constraints at half rate, 0x02 sound surround /
 #                occlusion slots at half rate (interleaved).
 LOGIC_APPROX_MASK ?= 0
+# LEON_CLOTH_DRAWN=1 (lane cloth18, user 10-18 "go for it"; approximation, default 0 = image unchanged): Leon's cloth
+#                (jacket, holster, hair) is simulated only on ticks whose image is drawn; a dropped tick keeps the wind's
+#                shared-random draw and the next drawn tick carries both ticks' body motion (pl_cloth.cpp PlClothMoveLeon,
+#                pace.cpp re4dc_pace_image_dropped: that tick's v2 drop is decided at the cloth, not after TaskScheduler).
+#                Runtime word re4dc_leon_cloth_drawn (.data, 1). Needs PACE_CATCHUP=2 to save anything.
+LEON_CLOTH_DRAWN ?= 0
+ifneq ($(LEON_CLOTH_DRAWN),0)
+GAME_CPPFLAGS += -DRE4DC_LEON_CLOTH_DRAWN=$(LEON_CLOTH_DRAWN)
+endif
 ifneq ($(LOGIC_WASTE),0)
 GAME_CPPFLAGS += -DRE4DC_LOGIC_WASTE=$(LOGIC_WASTE) -DRE4DC_LOGIC_WASTE_MASK=$(LOGIC_WASTE_MASK) -DRE4DC_LOGIC_APPROX_MASK=$(LOGIC_APPROX_MASK)
 endif
