@@ -191,6 +191,21 @@ PLATFORM_CPPFLAGS += -DRE4DC_LEON_HEADLESS=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -I$(LEON_HEADLESS_DIR)
 $(OBJDIR)/coarse_actor.o: $(LEON_HEADLESS_DIR)/ps2leon_neck.h actor_material_records_leon_neck.inc actor_material_records_leon_headless_roles.inc
 endif
+# AUX_OBJ_NATIVE=1 (lane garr18, 2026-10-19; default 0: no effect; render only; needs ACTOR_TRANSACTION=1): allowlisted
+#              ObjMgr objects that are character parts (first row: the Garrador core, em10SetParasite cObj16, id 0x16
+#              type 4, 14 parts) take the ordinary actor transaction through their own small per-frame presentation
+#              table (platform/include/source_actor_owner_hooks.inc kAuxKinds, 4 entries) instead of the GameCube path.
+#              The EmMgr ledger, its counts and the native reserve are unchanged (coordinator 10-19).
+AUX_OBJ_NATIVE ?= 0
+ifeq ($(filter $(AUX_OBJ_NATIVE),0 1),)
+$(error AUX_OBJ_NATIVE must be 0 or 1)
+endif
+ifeq ($(AUX_OBJ_NATIVE),1)
+ifneq ($(ACTOR_TRANSACTION),1)
+$(error AUX_OBJ_NATIVE acts on the ACTOR_TRANSACTION owner path (ACTOR_TRANSACTION=1))
+endif
+GAME_CPPFLAGS += -DRE4DC_AUX_OBJ_NATIVE=1
+endif
 ifeq ($(filter $(ACTOR_PL08),0 1),)
 $(error ACTOR_PL08 must be 0 or 1)
 endif
