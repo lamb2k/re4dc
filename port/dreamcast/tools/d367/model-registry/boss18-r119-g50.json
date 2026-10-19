@@ -1,6 +1,6 @@
 {
  "registry": "boss18-r119-g50",
- "about": "Boss18 review candidate: r119 full PS2 El Gigante plus protected g50 gameplay mesh; full in source events.",
+ "about": "User-approved I-005 Test18-only: r119 full PS2 El Gigante plus protected g50 gameplay mesh; full in source events.",
  "cast_dir": "/root/re4data/private/boss18-gigante-20261018/combined/r119-g50",
  "revision_overlay": "ps2-overlay",
  "level": "conservative",
@@ -33,7 +33,7 @@
     "gigante-em2b-00",
     "gig2b00-g50"
    ],
-   "evidence": "BOSS17 full source reuse; boss18 protected-region and native host checks; current fight validation pending"
+   "evidence": "I-005 user approved g50 for Test18; H-002 same-source STRICT/decisions, CAST-GC0, KOS49152, memory and source-hold sheets; full event/grab selection retained"
   }
  }
 }

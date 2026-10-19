@@ -445,6 +445,13 @@ if os.path.exists(CH2D + '/ch2-data.json'):
 C16D = os.environ.get('C16D', '/root/re4data/private/cast16data-20261016')
 if os.path.exists(C16D + '/cast16-data.json'):
     DATA['cast16'] = dict(json.load(open(C16D + '/cast16-data.json'))['replace'])
+# Boss18 I-005 (10-18): explicit Test18-only El Gigante g50 gameplay data.
+# CH2REC already enables FIRST/LOD; the existing selector retains full for events/grabs.
+# Never add this to T15_DATA/T17_DATA. ch2/ch2-gigante-g50.sh applies it explicitly.
+B18G50D = os.environ.get('B18G50D', '/root/re4data/private/boss18-gigante-g50-t18-20261018')
+DATA['boss18g50'] = {'dc/native/r119/registry.re4nmr': B18G50D + '/native/r119/registry.re4nmr',
+                     'dc/native/r11e/registry.re4nmr': B18G50D + '/native/r11e/registry.re4nmr',
+                     'tex': B18G50D + '/tex'}
 # Disc 1 texture packing (lane pak17, 10-16; coordinator round 4 "loose -> pack", test 17): pak17 = dc/tex.pak holding
 # every loose texture of the test 17 disc (T15_DATA + ch2 + cast16 over the package base tree), built by
 # tools/d367/vram/disc_pack.py over ch2's tex.pak (13340bfa, 21:54 data): the 1,250 loose keys the pack already held
@@ -613,6 +620,12 @@ T17T_DATA = T17V_DATA + ',trans17'
 RES17BD = os.environ.get('RES17BD', '/root/re4data/private/res17b-20261018')
 DATA['res17b'] = {'dc/resident.bin': RES17BD + '/resident.bin'}
 T17R_DATA = T17T_DATA + ',res17b'
+# Lane fix18 (10-18, Test 18 items 2 and 4; data only, no knob): res18f = dc/resident.bin packed by the res17b method from
+# lane/fix18's lists, which add the Test 17 first-sight pictures of r102 (+14, the save-load effect pictures, #33), r100
+# (+14, the house fight: 3 Ganado atlases + effects) and r11b (+10, the night lake shore). Strict superset of res17b
+# (a9dca43b; only those three rooms differ). Goes last, after res17b, on the Test 18 data line (not T17R_DATA).
+RES18FD = os.environ.get('RES18FD', '/root/re4data/private/fix18-20261018')
+DATA['res18f'] = {'dc/resident.bin': RES18FD + '/resident.bin'}
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]

@@ -363,6 +363,9 @@ void release_reserved(unsigned bytes){
 }
 #endif
 unsigned little(const unsigned char* p){return p[0]|p[1]<<8|p[2]<<16|p[3]<<24;}
+#if defined(RE4DC_MOVIE_AUDIO_PRIME) && RE4DC_MOVIE_AUDIO_PRIME
+bool feed();
+#endif
 void* audio(snd_stream_hnd_t,int requested,int* received){
     // The pinned snd_stream.c passes a byte count.
     unsigned bytes=(unsigned)requested;
@@ -370,6 +373,19 @@ void* audio(snd_stream_hnd_t,int requested,int* received){
         if(!m.failed)re4dc_log("route movie audio request %u exceeds %u\n",bytes,CallbackCap);
         m.failed=true;*received=0;return nullptr;
     }
+#if defined(RE4DC_MOVIE_AUDIO_PRIME) && RE4DC_MOVIE_AUDIO_PRIME
+    // MOVIE_AUDIO_PRIME (lane fix18, #38): snd_stream_start prefills BOTH ring halves (two requests of CallbackCap =
+    // 64 KiB interleaved) before the clock starts, but AudioCap (48 KiB) primes ~47 KB: the second prefill request
+    // came up 18,556 B short in every movie (one underrun, ~145 ms of silence spliced into the ring; the Mendez s00c
+    // clip's "underruns=1 silence_bytes=18556" at any heap). During the prefill only (not started, same thread, the
+    // stream lock not held yet), top the PCM up from the file first. No new memory; feed stops at the video cap.
+    if(!m.started)
+        while(m.pcm_used<bytes&&m.audio_left&&!m.failed){
+            const unsigned before=m.pcm_used;
+            if(!feed()){m.failed=true;break;}
+            if(m.pcm_used==before)break;  // video full: the rest stays silence, as before
+        }
+#endif
     unsigned take=bytes<m.pcm_used?bytes:m.pcm_used;
     std::memcpy(m.callback,m.pcm,take);std::memmove(m.pcm,m.pcm+take,m.pcm_used-take);m.pcm_used-=take;
     if(take<bytes){std::memset(m.callback+take,0,bytes-take);if(m.audio_left){++m.underruns;m.silence_bytes+=bytes-take;}}

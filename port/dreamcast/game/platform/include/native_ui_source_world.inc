@@ -89,6 +89,13 @@ void sourceWorldTextureAcquired(const Key& key) {
     re4dc_log("PS2SOURCE_TEX_ACQUIRE f=%u key=%08x-%08x\n",frame,key.crc,key.fnv);
 }
 #endif
+#if defined(RE4DC_PS2_WORLD_SOURCE_TEX_VQ) && RE4DC_PS2_WORLD_SOURCE_TEX_VQ
+// PS2_WORLD_SOURCE_TEX_VQ (game30.mk; lane fix18 #39): the descriptor's 16-bit size, or the same picture as
+// full-codebook VQ (the disc's package since vq16w / pak17: 18,432 B for 256x256).
+#define RE4DC_SOURCE_TEX_BYTES_OK(v,p) ((v)==(p).bytes || (v)==2048U+(p).width*(p).height/4U)
+#else
+#define RE4DC_SOURCE_TEX_BYTES_OK(v,p) ((v)==(p).bytes)
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_PIN
 void sourceWorldTransitionPin() {
     if(!frame_ready || stream_scene || stream_retire || stream_aborted || direct_open || vram_claims)return;
@@ -102,7 +109,7 @@ void sourceWorldTransitionPin() {
     for(auto& e:entries)if(e.valid && e.key==key){if(selected)return;selected=&e;}
     if(!selected || !selected->package.upload_complete() ||
        selected->package.header().texture_count!=1 || !selected->package.pvr_texture(0) ||
-       selected->package.vram_bytes()!=pick.bytes ||
+       !RE4DC_SOURCE_TEX_BYTES_OK(selected->package.vram_bytes(),pick) ||
        selected->package.textures()[0].width!=pick.width || selected->package.textures()[0].height!=pick.height)return;
     unsigned current=0;
     if(!re4dc_ps2_source_package(&current) || current!=generation || !re4dc_source_world_transition(frame,current))return;
@@ -160,7 +167,7 @@ void sourceWorldTexturePrepare() {
     const bool valid=re4dc_ps2_source_package(&current) && current==generation &&
         entry && entry->valid && entry->key==key && entry->frame==frame &&
         entry->package.upload_complete() && entry->package.header().texture_count==1 &&
-        entry->package.pvr_texture(0) && entry->package.vram_bytes()==pick.bytes &&
+        entry->package.pvr_texture(0) && RE4DC_SOURCE_TEX_BYTES_OK(entry->package.vram_bytes(),pick) &&
         entry->package.textures()[0].width==pick.width && entry->package.textures()[0].height==pick.height;
     re4dc_source_world_prepared(frame,generation,valid);
     const bool ready=valid && re4dc_source_world_current(frame,generation);
