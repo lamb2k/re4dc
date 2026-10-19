@@ -34,8 +34,54 @@ def motion(src, dst):
         f.write(host_text(open(src).read()))
 
 
+def function_end(lines, start, label):
+    """Match all conditional arms, retaining the original preprocessor text.
+
+    Alternative arms may each open the same block that closes after #endif.
+    Their depths must agree; selecting a guessed macro configuration would
+    hide malformed or incomplete source. Comments and quoted braces are not
+    C++ blocks. This changes extraction boundaries only, never source text.
+    """
+    tokens = re.compile(r'//[^\n]*|/\*[\s\S]*?\*/|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'')
+    clean = tokens.sub(lambda m: '\n' * m.group().count('\n'), '\n'.join(lines)).split('\n')
+    depth, opened, branches = 0, False, []
+    for i in range(start, len(lines)):
+        text = clean[i]
+        directive = re.match(r'^\s*#\s*(if|ifdef|ifndef|elif|else|endif)\b', text)
+        if directive:
+            kind = directive.group(1)
+            if kind in ('if', 'ifdef', 'ifndef'):
+                branches.append([depth, [], False])
+            elif not branches:
+                raise ValueError(f'{label}: unmatched #{kind} at line {i + 1}')
+            elif kind in ('else', 'elif'):
+                branch = branches[-1]
+                if branch[2]:
+                    raise ValueError(f'{label}: #{kind} after #else at line {i + 1}')
+                branch[1].append(depth)
+                depth = branch[0]
+                branch[2] = kind == 'else'
+            else:
+                entry, ends, had_else = branches.pop()
+                ends.append(depth)
+                if not had_else:
+                    ends.append(entry)
+                if len(set(ends)) != 1:
+                    raise ValueError(f'{label}: conditional brace depths disagree at line {i + 1}')
+                depth = ends[0]
+        else:
+            opened |= '{' in text
+            depth += text.count('{') - text.count('}')
+            if depth < 0:
+                raise ValueError(f'{label}: unmatched closing brace at line {i + 1}')
+        if opened and depth == 0 and not branches:
+            return i
+    raise ValueError(f'{label}: incomplete function or conditional block')
+
+
 def extract(src, dst, names):
-    lines = open(src).read().split('\n')
+    with open(src, encoding='utf-8') as source:
+        lines = source.read().split('\n')
     out = [f'#include "re4_host_stub.h"', '']
     for name in names:
         start = None
@@ -45,13 +91,7 @@ def extract(src, dst, names):
                 break
         if start is None:
             sys.exit(f'{src}: function {name} not found')
-        depth = 0
-        end = None
-        for i in range(start, len(lines)):
-            depth += lines[i].count('{') - lines[i].count('}')
-            if depth == 0 and '{' in ''.join(lines[start:i + 1]):
-                end = i
-                break
+        end = function_end(lines, start, f'{src}: function {name}')
         out.append(f'#line {start + 1} "{src}"')
         body = lines[start:end + 1]
         body[0] = re.sub(r'^inline ', '', body[0])   # defined in one TU, called from others
