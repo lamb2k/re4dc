@@ -21,7 +21,7 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
   <br>The key, given at the dam gate. Flycast capture, test 18.
 - **A lighter El Gigante** in both fights.
 
-  ![El Gigante (r119)](docs/images/releases/test-18/el-gigante-g50.jpg)
+  ![El Gigante (r11e)](docs/images/releases/test-18/el-gigante-g50.jpg)
   <br>The lighter El Gigante. Flycast capture, test 18.
 
 - **Leon and El Gigante keep their PS2 models** for the whole first El Gigante fight (r119). Before, both switched to
