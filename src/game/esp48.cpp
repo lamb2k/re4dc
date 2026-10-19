@@ -15,6 +15,9 @@ struct Esp48Work {
     f32 time_z;   // 0x14
     f32 timer;    // 0x18
     Vec add_ang;   // 0x1C rotation added this frame
+#if defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2
+    u32 dormant;   // 0x28 FX_MIST_PS2: a GC-only sheet kept in its slot, never moved (esp_sub.cpp EspSeqSet)
+#endif
 };
 
 // Effect whose rotation swings on a sine wave around the base rotation.
@@ -34,6 +37,24 @@ cEsp* Esp48_Create()
 {
     return new cEsp48;
 }
+#if defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2
+static_assert(sizeof(cEsp48) <= 0x150, "cEsp48 fits a pool slot");
+// FX_MIST_PS2 (hwfog.mk): PullEsp zeroes a slot, so a new sheet starts awake.
+extern "C" void re4dc_esp48_dormant(cEsp* esp)
+{
+    static_cast<cEsp48*>(esp)->m_Free.dormant = 1;
+}
+extern "C" int re4dc_esp48_is_dormant(const cEsp* esp)
+{
+    return static_cast<const cEsp48*>(esp)->m_Free.dormant != 0;
+}
+#define FX48_DORMANT_RETURN() \
+    if (m_Free.dormant) {     \
+        return;               \
+    }
+#else
+#define FX48_DORMANT_RETURN()
+#endif
 
 // Removes last frame's swing from m_Ang, runs the base update, advances the timer by 0.01 and adds
 // the new per-axis sine offsets. Released when the animation ends.
@@ -137,6 +158,7 @@ static inline int fx48Tiny1(f32 a)
 #endif
 void cEsp48::move()
 {
+    FX48_DORMANT_RETURN();
 #if RE4DC_FX_MOVE == 2
     // The source move runs live and the kernel on a copy; the copy must match while the effect
     // lives, and die when it dies. A census of the swing parameters rides along.
@@ -193,6 +215,9 @@ void cEsp48::move()
 {
     Esp48Work* w = &m_Free;
 
+#if !(defined(RE4DC_FX_MOVE) && RE4DC_FX_MOVE == 2)
+    FX48_DORMANT_RETURN();
+#endif
     PSVECSubtract(&m_Ang, &w->add_ang, &m_Ang);
     if (CommonMove()) {
         w->timer += 0.01f;

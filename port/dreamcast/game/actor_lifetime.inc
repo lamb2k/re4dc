@@ -234,7 +234,8 @@ extern "C" void re4dc_actor_info_adopt(cModelInfo* info) {
             if((a.templates&(BlobMask(1u)<<t)) && RE4DC_BLOB(t).model==row.model)match=true;
         if(!match)continue;
         for(unsigned k=0;k<kArchives;++k) {
-            const auto& o=archives[k];if(o.family!=(RE4DC_LEON_LIKE(row.appearance)?1u:2u))continue;
+            // LEON_HEADLESS v2: the flying head's rows (0x10A) name the player archive (family 1) like Leon's.
+            const auto& o=archives[k];if(o.family!=((RE4DC_LEON_LIKE(row.appearance) || RE4DC_HEAD_APP(row.appearance))?1u:2u))continue;
             const unsigned char* p=nullptr;unsigned n=0;
             if(!entry(o,row.source_tpl,"TPL",p,n) || p!=info->tpl_addr || !tpl_owned(o,p,n,row))continue;
             // Multiple rows may intentionally share default hand geometry.
@@ -527,9 +528,9 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
     // A registry appearance has exactly its descriptor's sections, in source info order.
     const unsigned registry_sections=re4dc_registry_sections(appearance);
     if(!m || !out || (registry_sections?count!=registry_sections:
-       (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(count<4u || count>5u || (appearance==0 && count!=4u)))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
+       (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(count<4u || count>5u || (appearance==0 && count!=4u)))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
 #else
-    if(!m || !out || (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(count<4u || count>5u || (appearance==0 && count!=4u))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
+    if(!m || !out || (appearance==256?count!=8u:(RE4DC_ACTOR_PL08 && appearance==264)?count!=9u:(RE4DC_LEON_HEADLESS && appearance==265)?count!=7u:(RE4DC_LEON_HEADLESS && appearance==266)?count!=1u:(count<4u || count>5u || (appearance==0 && count!=4u))) || exhausted){ATD(m,30,appearance,exhausted);return 0;}
 #endif
     unsigned seen=0,n=0;for(unsigned k=0;k<count;++k)out[k]=nullptr;
 #if RE4DC_ACTOR_PL08
@@ -557,7 +558,10 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
         // LEON_HAND_POSES (crowd.mk): the player's current right / left hand infos (cPlBody pRight / pLeft) are roles
         // 5 / 6 whatever pose data they show (weapon grips, the empty hand, the boat hand); the plan draws the PS2
         // hand for that pose (re4dc_leon_hand_chunk). Every other info still needs its exact record.
-        if(const unsigned hand=re4dc_leon_hand_role(m,p)) {
+        if(unsigned hand=re4dc_leon_hand_role(m,p)) {
+#if RE4DC_LEON_HEADLESS
+            if(appearance==265)--hand;  // LEON_HEADLESS: 0x109's compact roles 4 / 5 are the right / left hands
+#endif
             if(hand>=count || (seen&(1u<<hand))){ATD(m,23,appearance,(n-1)*256+hand);return 0;}
             out[hand]=p;seen|=1u<<hand;continue;
         }
@@ -595,7 +599,7 @@ extern "C" int re4dc_actor_role_bindings(cModel* m,unsigned appearance,cModelInf
 #endif
 #if RE4DC_LEON_HAND_POSES
         // LEON_HAND_POSES: Leon's roles may appear in any source order (a hand swap re-appends its info at the end).
-        const bool order_ok=(appearance==256 || appearance==264) || role==expected;
+        const bool order_ok=(appearance==256 || appearance==264 || (RE4DC_LEON_HEADLESS && appearance==265)) || role==expected;
 #else
         const bool order_ok=role==expected;
 #endif

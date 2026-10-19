@@ -762,6 +762,50 @@ static int Ps2fxExtCut(cEsp* esp)
     return kind != 0;
 }
 #endif
+#if defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2
+#if !RE4DC_PS2_FX_STAGE1 || !(defined(RE4DC_PS2_FX_ROOMS_EXT) && RE4DC_PS2_FX_ROOMS_EXT) || !defined(RE4DC_HAZE_SPRITE_CUT)
+#error FX_MIST_PS2 needs PS2_FX_STAGE1=1, PS2_FX_ROOMS_EXT=1 and HAZE_SPRITE_CUT=1
+#endif
+// FX_MIST_PS2 (hwfog.mk, lane fx19): 1 for a mist sheet (Esp48) the PS2 release does not have, by the qualified PS2
+// tables above: the room-table sheets of r101..r10b / r117..r11b (Ps2fxExtCut kind 1), kPs2SheetCut's room / texture
+// rows, and r100's GameCube sheet textures (EFFECT_HAZE_LEAN M1's list; the PS2 keeps r100's d9 sparks). Independent
+// of the runtime PS2 look toggle: HAZE_SPRITE_CUT draws no mist sheet in any case.
+extern "C" void re4dc_esp48_dormant(cEsp* esp);      // esp48.cpp
+extern "C" int re4dc_esp48_is_dormant(const cEsp* esp);
+static u32 s_mist_ps2_n, s_mist_ps2_room = 0xffff;
+static int Ps2fxMistGcOnly(const cEsp* esp)
+{
+    const u16 room = G_ROOM_ID;
+    const u32 owner = esp->info.owner, tex = esp->m_Tex_id;
+    int cut = 0;    if ((owner == 0xD0 || owner == 0x01) && ((room >= 0x101 && room <= 0x10b) || (room >= 0x117 && room <= 0x11b))) {
+        cut = 1;
+    } else if (room == 0x100 && owner == 0xD0 &&
+               (tex == 0xf6 || tex == 0xcb || tex == 0xd0 || tex == 0xf3 || tex == 0x33)) {
+        cut = 1;
+    } else {
+        for (unsigned i = 0; i < sizeof(kPs2SheetCut) / sizeof(kPs2SheetCut[0]); ++i) {
+            if (room == kPs2SheetCut[i].room && tex == kPs2SheetCut[i].tex &&
+                owner == (kPs2SheetCut[i].owner ? kPs2SheetCut[i].owner : 0xD0u)) {
+                cut = 1;
+                break;
+            }
+        }
+    }
+    if (cut) {
+        if (s_mist_ps2_room != room) {   // one line per room: the previous room's count
+            re4dc_log("mist ps2: room=%03x first tex=%02x owner=%02x (prev room %03x: %u sheets not made)\n",
+                      (unsigned) room, (unsigned) tex, (unsigned) owner, (unsigned) s_mist_ps2_room, (unsigned) s_mist_ps2_n);
+            s_mist_ps2_room = room;
+            s_mist_ps2_n = 0;
+        }
+        if ((++s_mist_ps2_n & 0xFF) == 0) {
+            re4dc_log("mist ps2: room=%03x frame=%u %u sheets not made\n", (unsigned) room, (unsigned) pG->Frame_cnt,
+                      (unsigned) s_mist_ps2_n);
+        }
+    }
+    return cut;
+}
+#endif
 #if defined(RE4DC_PS2_FX_GEN) && RE4DC_PS2_FX_GEN
 #if !RE4DC_PS2_FX_ROOMS
 #error PS2_FX_GEN needs PS2_FX_ROOMS=1
@@ -2122,6 +2166,11 @@ extern "C" void re4dc_esp_sprite_pass_begin()
 #endif
 extern "C" int re4dc_esp_coarse_sprite_visible(cEsp* esp)
 {
+#if defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2
+    if (esp->m_Id == 0x48 && re4dc_esp48_is_dormant(esp)) {
+        return 0;   // FX_MIST_PS2: a dormant GC-only mist sheet (never drawn: HAZE_SPRITE_CUT)
+    }
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
     // A beam can cross the view while either endpoint is outside it. Esp19
     // retains source OT checks; its own line adapter clips the full segment.
@@ -4141,6 +4190,14 @@ int EspSeqSet(EspGenWork* rec, EspInfo* info, u32* seed, cModel* model, Mtx* mtx
         }
         return 0;
     }
+#if defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2
+    if (e.p->m_Id == 0x48 && (e.p->m_Be_flg & 1) && Ps2fxMistGcOnly(e.p)) {
+        // FX_MIST_PS2 (hwfog.mk): a GC-only mist sheet. Every seed draw above was made and the sheet keeps its pool
+        // slot (the pool, its scan order and every other effect stay as before), but it is dormant: no move, no anim,
+        // not offered to the sprite pass (esp48.cpp).
+        re4dc_esp48_dormant(e.p);
+    }
+#endif
     *out = e.p;
     return ret;
 }

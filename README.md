@@ -7,8 +7,21 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 17](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 17.1](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 17.1
+
+A hotfix of Test 17. Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **Coming Soon no longer traps you.** Chapter 2-1 has two ways forward and this test carries one. A door off the
+  test's path shows Coming Soon, then returns you to the room so you can take the other exit.
+
+  ![Coming Soon (r11b to r10c)](docs/images/releases/test-17.1/flycast-coming-soon-r11b-r10c.png)
+  <br>The Coming Soon screen. Flycast capture, test 17.1.
+
+  ![Back in r11b after Coming Soon](docs/images/releases/test-17.1/flycast-back-in-r11b-after-coming-soon.png)
+  <br>Back on the lake shore after Coming Soon. Flycast capture, test 17.1.
 
 ## What's new in Test 17
 
@@ -54,10 +67,12 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
 - [x] **A lighter El Gigante** in both fights.
 - [x] **A little faster in play:** Leon's jacket movement is now worked out only for the pictures that are shown.
+- [x] **A little faster in the village and at the farm:** mist sheets the PS2 version never shows are no longer moved, and more scenery stays ready in memory.
 - [x] **Fix:** a few effect pictures missing in r102 right after loading a save ([#33](https://github.com/lamb2k/re4dc/issues/33)).
 - [x] **Fix:** pictures still loaded from the disc during the first house fight (r100).
 - [x] **Fix:** pictures still loaded from the disc at the night lake shore (r11b).
 - [x] **Fix:** Leon and El Gigante drawn with their GameCube models for a moment in the first El Gigante fight (r119).
+- [x] **Fix:** after a chainsaw kill, Leon no longer switches to his GameCube model for the death scene.
 - [x] **Fix:** a short gap in the sound in cutscenes ([#38](https://github.com/lamb2k/re4dc/issues/38)). The Mendez cutscene that ends as soon as you pass its button prompt does the same in the original game.
 - [x] **Fix:** a world picture and some effect pictures missing on the way to the castle gate ([#39](https://github.com/lamb2k/re4dc/issues/39)). For about a second in r200, some effect sprites can still be skipped; that part stays a known issue.
 - [ ] **Work continues** on cheaper enemies and cheaper scenery.

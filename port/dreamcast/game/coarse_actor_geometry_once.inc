@@ -29,6 +29,16 @@ constexpr unsigned kActorPl08Asset0=kActorImmutableChunks+1u;
 constexpr unsigned kLeonHandAsset0=kActorImmutableChunks+4u;
 ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks+3u+leon_hands::count];
 #define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+3u+leon_hands::count)
+#elif RE4DC_LEON_HEADLESS
+// LEON_HEADLESS: the PS2 neck chunk (appearance 0x109 role 3, ps2leon_neck.h) follows the three pl08 IDs.
+constexpr unsigned kLeonNeckAsset=kActorImmutableChunks+4u;
+// LEON_HEADLESS v2: the flying head's chunk, face run and hair run (the payload inside the player archive's stubbed
+// arc 0xC, build_head.py). Their bytes live in the archive: a new payload address resets the three IDs
+// (actor_immutable_reset_head) before any plan names them.
+constexpr unsigned kLeonHeadAsset=kActorImmutableChunks+5u;
+ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks+7u];
+#define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+7u)
+#define RE4DC_LEON_HEAD_IDS 1
 #else
 ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks+3u];
 #define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+3u)
@@ -101,6 +111,13 @@ extern "C" re4dc_source::BlobError re4dc_actor_immutable_chunk_proof(
 // package's IDs at each (re)load and release (coarse_actor_owner_ganado.inc ganado_var::forget).
 extern "C" void re4dc_actor_immutable_chunk_reset(unsigned asset_id) {
     if(asset_id && asset_id<=RE4DC_IMMUTABLE_CHUNK_COUNT)actor_immutable_chunks[asset_id-1]={};
+}
+#endif
+#if defined(RE4DC_LEON_HEAD_IDS)
+namespace {
+void actor_immutable_reset_head() {
+    for(unsigned id=kLeonHeadAsset;id<kLeonHeadAsset+3u;++id)actor_immutable_chunks[id-1]={};
+}
 }
 #endif
 #if RE4DC_ACTOR_PL08_PACK

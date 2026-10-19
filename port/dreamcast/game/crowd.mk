@@ -166,6 +166,58 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1 -I$(OBJDIR)/
 $(OBJDIR)/src/game/read.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1
 $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1
 endif
+# LEON_HEADLESS=1 (lane garr18, 2026-10-19; default 0: no effect; render only; needs ACTOR_PL08=1 PS2_LEON=1
+#              LEON_HAND_POSES=1 and LEON_HEADLESS_DIR, a space-free private dir holding ps2leon_neck.h from
+#              tools/d367/ps2leon/build_neck.py): Leon after his head comes off (cPlLeon::setHead(0): chainsaw / claw /
+#              scythe / parasite kills, overseas regions) draws natively. setHead(0) deletes the head shape, hair and eye
+#              infos and appends the neck (player arc 0xB, TPL 7): 7 infos, which the 9-role pl08 plan declined, so the
+#              whole Leon went to the GameCube path for the death (rule 7). The pl08 owner plans appearance 0x109 instead
+#              (actor_material_records_leon_headless_roles.inc: pl08's roles 0..2 / 8, the two hand rows and the neck,
+#              GC identity rows from gen_neck_records.py); the neck geometry is the PS2 disc's pl00 arc 0xB (37 triangles,
+#              964 B) in arm A's atlas tile of the head.
+#              v2 (data set garr18-head-20261019): the flying head the deaths throw (SetObj01(player arc 0xC, TPL 7),
+#              cObj01) draws natively as appearance 0x10A. The data set's pl00.drs / pl08.drs (build_head.py) replace arc
+#              0xC (55,232 B) by a stub the source loads and never draws plus the PS2 head (1,727 triangles: a face run on
+#              Leon's atlas and a hair run on hair material 1) inside the same archive entry (46,720 B: the archive heap
+#              shrinks 8,512 B; no static image growth). The aux allowlist row (source_actor_owner_hooks.inc) nominates
+#              it; re4dc_stub_payload proves magic / size / CRC. Without the v2 archives the head stays the GC original.
+# LEON_HEAD_FORCE_DECLINE=1 (test only, never in a recipe): the head plan always declines (the source path must draw
+#              nothing from the stub, and not crash).
+LEON_HEADLESS ?= 0
+LEON_HEAD_FORCE_DECLINE ?= 0
+ifeq ($(LEON_HEAD_FORCE_DECLINE),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_HEAD_FORCE_DECLINE=1
+endif
+ifeq ($(filter $(LEON_HEADLESS),0 1),)
+$(error LEON_HEADLESS must be 0 or 1)
+endif
+ifeq ($(LEON_HEADLESS),1)
+ifneq ($(LEON_HAND_POSES)$(PS2_LEON)$(ACTOR_PL08),111)
+$(error LEON_HEADLESS needs LEON_HAND_POSES=1 PS2_LEON=1 ACTOR_PL08=1)
+endif
+ifndef LEON_HEADLESS_DIR
+$(error LEON_HEADLESS=1 needs LEON_HEADLESS_DIR (the private dir with ps2leon_neck.h))
+endif
+GAME_CPPFLAGS += -DRE4DC_LEON_HEADLESS=1
+PLATFORM_CPPFLAGS += -DRE4DC_LEON_HEADLESS=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -I$(LEON_HEADLESS_DIR)
+$(OBJDIR)/coarse_actor.o: $(LEON_HEADLESS_DIR)/ps2leon_neck.h actor_material_records_leon_neck.inc actor_material_records_leon_headless_roles.inc actor_material_records_leon_head.inc
+endif
+# AUX_OBJ_NATIVE=1 (lane garr18, 2026-10-19; default 0: no effect; render only; needs ACTOR_TRANSACTION=1): allowlisted
+#              ObjMgr objects that are character parts (first row: the Garrador core, em10SetParasite cObj16, id 0x16
+#              type 4, 14 parts) take the ordinary actor transaction through their own small per-frame presentation
+#              table (platform/include/source_actor_owner_hooks.inc kAuxKinds, 4 entries) instead of the GameCube path.
+#              The EmMgr ledger, its counts and the native reserve are unchanged (coordinator 10-19).
+AUX_OBJ_NATIVE ?= 0
+ifeq ($(filter $(AUX_OBJ_NATIVE),0 1),)
+$(error AUX_OBJ_NATIVE must be 0 or 1)
+endif
+ifeq ($(AUX_OBJ_NATIVE),1)
+ifneq ($(ACTOR_TRANSACTION),1)
+$(error AUX_OBJ_NATIVE acts on the ACTOR_TRANSACTION owner path (ACTOR_TRANSACTION=1))
+endif
+GAME_CPPFLAGS += -DRE4DC_AUX_OBJ_NATIVE=1
+endif
 ifeq ($(filter $(ACTOR_PL08),0 1),)
 $(error ACTOR_PL08 must be 0 or 1)
 endif
