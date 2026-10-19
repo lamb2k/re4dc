@@ -245,3 +245,12 @@ Original radio, normal stairs and the original upper event complete. D4/D5 retai
 This contrasts with the disabled control's seven post-init D4 observations retaining mode0/zero destination. It proves the narrow delivery fix, not frame-identical gameplay or a performance gain. The fresh room-entry/Ashley-init/source chapter0 precondition and compiled default inventory remain disclosed; no kill rig or guest health/ammo/flags/position writes are used.
 
 Private proof: `workers/ch32/deferred-goto/current-r207-on-release-proof.json`, SHA2567625f9dec3d7741ce6d87840b35f1a63267ed1fc8b834b1bbe29c438e9c594af. Public compact receipt: `tools/d367/castle18/r207-current-goto-on-release-20261019.json`. Joined ten-run logs retain exact49152 reserve/min31080 and aggregate native Leon8651/Ashley5269/em114786, all GC0. Specific released-D4 native rendering still needs its unchanged-disc tail. Official room residency still fails one late load in this covered window; do not compare it as an improvement against the longer off-arm29. Death/Continue, the pre-event cap-full wait branch, whole fight and no-warp chapter acceptance remain open. The switch stays default-off and no chapter recipe is enabled here.
+
+
+### Native follow-through and the second release
+
+The unchanged on10 tail now proves both original queued actors complete their movement to the upper floor and naturally clear mode13 to0, retaining the typed destination. Exact immutable-state native counters record D4:114 admitted frames,2970–3196,declines0; D5:59 admitted frames,3008–3124,declines0. These are per-source-actor pointer/appearance records after native acquisition and transaction selection, not aggregate or crowd-skip rows. Both remain HP1000; Leon/Ashley1440/600.
+
+The second slot is separately accounted: D9 is inactive status0x108 at saved frame3000, while HP0 D8 remains ACTIVE status0x28 and still consumes a slot. Original D8 death advances the kill counter1→2 at3006; D5 releases3007 and admits natively3008. At3198 both original dead actors are inactive0x108 and exactly D3/D4/D5/DA are active. Thus the second release follows a second source death, not parking. No cap policy or source script changed.
+
+Private follow-through proof SHA256c2904a0fe3bc902f2663bd3f1660c3b32b5417087d5ae0a8254dcb821b2fb4eb. The original native-state receipt4ba8cd18 remains byte-exact alongside the extended status-field receipt966bda22. Death/Continue and the pre-event cap-full waiter branch still remain open.

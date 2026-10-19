@@ -37,10 +37,38 @@
   "scope": "Fresh frozen a808-integrated on/off comparison, original radio/event/normal controls and real source kill. Diagnostic room-entry/Ashley-init/source chapter0 precondition disclosed. No kill rig, guest state/health/ammo/position edits. Specific released-actor native drawing, death/Continue, pre-event cap-full waiter branch, whole fight and no-warp chapter acceptance remain separate. Newer upstream is not this frozen program.",
   "limits": [
     "First allocation frame routine0 intentionally precedes original init and command delivery.",
-    "Specific released actor native draw pending.",
     "Death/Continue and pre-event cap-full wait branch pending.",
     "Whole fight and no-warp chapter acceptance pending.",
     "Official residency has one late load in this shorter on-arm window; no comparison of counts against longer off window.",
     "No hardware timing or frame-identical gameplay claim."
-  ]
+  ],
+  "native_followthrough": {
+    "private_proof_sha256": "c2904a0fe3bc902f2663bd3f1660c3b32b5417087d5ae0a8254dcb821b2fb4eb",
+    "D4_native_frames": 114,
+    "D4_native_first_last": [
+      2970,
+      3196
+    ],
+    "D5_native_frames": 59,
+    "D5_native_first_last": [
+      3008,
+      3124
+    ],
+    "declines": 0,
+    "D5_release_frame": 3007,
+    "second_kill_counter_frame": 3006,
+    "original_source_dead_rows": [
+      "D9",
+      "D8"
+    ],
+    "cap_active_before_after": [
+      4,
+      4
+    ],
+    "both_original_Goto_commands_finished": true,
+    "health": [
+      1440,
+      600
+    ]
+  }
 }
