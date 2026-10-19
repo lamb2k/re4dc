@@ -359,14 +359,14 @@ def build_occl(g, worlddir, room_id):
     import occl
     import world_tris
     pkg = world_tris.Pkg(worlddir)
-    levels = [pkg.occluders(lv, exclude_dynamic=False) for lv in range(LEVELS)]   # runtime world_intact guards bound objects
+    levels = [pkg.occluders(lv, exclude_dynamic=False, with_field=True) for lv in range(LEVELS)]   # runtime world_intact guards bound objects
     ws, conf = occl.winding_sign(levels[0])
     occ, ngroups = occl.extract(levels, ws)
     rng = min(VIS_RANGE, SHELL_RANGE.get(room_id, VIS_RANGE))
     data, info = occl.encode(occ, g, VIS_DIV, CELL, EYE_LO, EYE_HI, rng, pkg.sidecar_crc)
     info.update(winding=ws, winding_evidence={m: [w, round(c, 3)] for m, (w, c) in conf.items()}, plane_groups=ngroups, range_mm=rng,
                 tris=[len(t) for t in levels], occluder_area_m2=round(sum(
-                    math.dist(c[0], c[1]) * math.dist(c[0], c[3]) for c, _, _ in occ) / 1e6, 1))
+                    math.dist(c[0], c[1]) * math.dist(c[0], c[3]) for c, _, _, _ in occ) / 1e6, 1))
     return data, info, occ
 
 
@@ -411,10 +411,10 @@ def main():
                 secs.append((b'VIS\0', 2, 0, vis, vb['vw'] * vb['vh'], 12))
             else:
                 oc, vb, occ = build_occl(g, wd, rid)
-                secs.append((b'OCCL', 1, 0, oc, vb['occluders'], 56))
+                secs.append((b'OCCL', 2, 0, oc, vb['occluders'], 56))
                 os.makedirs(os.path.join(a.out, room), exist_ok=True)
                 with open(os.path.join(a.out, room, 'occl.json'), 'w') as f:
-                    json.dump([[list(map(list, c)), h, s] for c, h, s in occ], f)
+                    json.dump([[list(map(list, c)), h, s, list(p)] for c, h, s, p in occ], f)
         blob = container(rid, g, [(b'SRCB', 1, 0, srcb, nsrc, 40)] + secs, 0)
         od = os.path.join(a.out, room)
         os.makedirs(od, exist_ok=True)

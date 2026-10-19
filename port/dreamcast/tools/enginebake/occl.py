@@ -134,7 +134,7 @@ def _basis(n):
 def _cover(tris2, x0, y0, nx, ny, side):
     """lattice point coverage (nx+1 x ny+1) by the projected triangles drawn toward `side` (or two-sided)."""
     pts = [bytearray(nx + 1) for _ in range(ny + 1)]
-    for (a, b, c, f) in tris2:
+    for (a, b, c, f, _fld) in tris2:
         if f != 0 and f != side:
             continue
         lo_x = max(0, int(math.ceil((min(a[0], b[0], c[0]) - x0) / SPACING - 1e-6)))
@@ -203,7 +203,7 @@ def extract(levels, ws):
                 continue
             cn, _ = _canon(nn)
             key = (round(cn[0] * N_BIN), round(cn[1] * N_BIN), round(cn[2] * N_BIN))
-            pl.setdefault(key, []).append((a, b, c, nn, t[9]))
+            pl.setdefault(key, []).append((a, b, c, nn, t[9], t[10]))
         pre.append(pl)
     span = int(math.ceil(N_BIN * 2 * math.sin(math.acos(N_COS)))) + 1
     out = []
@@ -220,7 +220,7 @@ def extract(levels, ws):
         per_level = []
         for pl in pre:
             sel = []
-            for a, b, c, nn, cull in (t for k in keys if k in pl for t in pl[k]):
+            for a, b, c, nn, cull, fld in (t for k in keys if k in pl for t in pl[k]):
                 dn = _dot(nn, n)
                 if abs(dn) < N_COS:
                     continue
@@ -233,7 +233,7 @@ def extract(levels, ws):
                     if w is None:
                         continue
                     f = (1 if dn > 0 else -1) * w
-                sel.append(((_dot(a, u), _dot(a, v)), (_dot(b, u), _dot(b, v)), (_dot(c, u), _dot(c, v)), f))
+                sel.append(((_dot(a, u), _dot(a, v)), (_dot(b, u), _dot(b, v)), (_dot(c, u), _dot(c, v)), f, fld))
             per_level.append(sel)
         if not per_level[0]:
             continue
@@ -263,7 +263,15 @@ def extract(levels, ws):
                 corners = [tuple(n[k] * d0 + u[k] * uu + v[k] * vv for k in range(3))
                            for uu, vv in ((ua, va), (ub, va), (ub, vb), (ua, vb))]
                 # (c1-c0) x (c3-c0) is along u x v = n
-                out.append((corners, HALF, side))
+                # the placements whose triangles lie over the rectangle at any level: the runtime draws the
+                # occluder only while each of them is drawn at rest
+                srcs = set()
+                for sl in per_level:
+                    for t in sl:
+                        if (min(t[0][0], t[1][0], t[2][0]) <= ub and max(t[0][0], t[1][0], t[2][0]) >= ua and
+                                min(t[0][1], t[1][1], t[2][1]) <= vb and max(t[0][1], t[1][1], t[2][1]) >= va):
+                            srcs.add(t[4])
+                out.append((corners, HALF, side, tuple(sorted(srcs))))
     return _dedupe(out), len(slabs)
 
 
@@ -271,7 +279,7 @@ def _dedupe(occ):
     """overlapping slabs give near copies of one wall: keep the largest of each (same side, normal within 6
     degrees, centres within 1 m along the plane and HALF across it)."""
     info = []
-    for c, half, side in occ:
+    for c, half, side, _s in occ:
         n = _norm(_cross(_sub(c[1], c[0]), _sub(c[3], c[0])))
         a = _cross(_sub(c[1], c[0]), _sub(c[3], c[0]))
         info.append((n, tuple(sum(p[k] for p in c) / 4 for k in range(3)), math.sqrt(_dot(a, a))))
@@ -351,7 +359,7 @@ def _rank(occ, g, vis_div, cell, rng, cap):
         fi, fo = os.path.join(td, 'in'), os.path.join(td, 'out')
         with open(fi, 'wb') as f:
             f.write(b'OCRI' + struct.pack('<5If', len(occ), len(eyes), len(tg), cap, os.cpu_count() or 4, rng))
-            for c, half, side in occ:
+            for c, half, side, _s in occ:
                 f.write(struct.pack('<13fi', *[v for p in c for v in p], half, side))
             for e in eyes:
                 f.write(struct.pack('<3fI', *e))
@@ -371,10 +379,10 @@ def encode(occ, g, vis_div, cell, eye_lo, eye_hi, rng, crc, cap=CAP):
     W, H = g['W'], g['H']
     vw, vh = (W + vis_div - 1) // vis_div, (H + vis_div - 1) // vis_div
     planes = []
-    for corners, half, side in occ:
+    for corners, half, side, _s in occ:
         n = _norm(_cross(_sub(corners[1], corners[0]), _sub(corners[3], corners[0])))
         planes.append((n, _dot(n, corners[0])))
-    centres = [tuple(sum(p[k] for p in c) / 4 for k in range(3)) for c, _, _ in occ]
+    centres = [tuple(sum(p[k] for p in c) / 4 for k in range(3)) for c, _, _, _ in occ]
     cs = cell * vis_div
     picks = _rank(occ, g, vis_div, cell, rng, cap)
     keep = sorted({i for l in picks for i in l})   # only occluders some list uses are stored
@@ -396,14 +404,22 @@ def encode(occ, g, vis_div, cell, eye_lo, eye_hi, rng, crc, cap=CAP):
     flat = [i for l in lists for i in l]
     if len(flat) >= 0xFFFF or len(occ) >= 0xFFFF:
         raise SystemExit('OCCL too large')
-    data = struct.pack('<6HIHHH10x', vw, vh, vis_div, len(occ), len(flat), int(rng) // 10, crc, cap, int(SPACING),
-                       int(INSET))
-    for corners, half, side in occ:
-        data += struct.pack('<13fb3x', *[c for p in corners for c in p], half, side)
+    data = struct.pack('<6HIHHHH8x', vw, vh, vis_div, len(occ), len(flat), int(rng) // 10, crc, cap, int(SPACING),
+                       int(INSET), sum(len(o[3]) for o in occ))
+    pool = []
+    for corners, half, side, srcs in occ:
+        if len(srcs) > 255 or len(pool) + len(srcs) >= 0xFFFF:
+            raise SystemExit('OCCL source placements overflow')
+        data += struct.pack('<13fbBH', *[c for p in corners for c in p], half, side, len(srcs), len(pool))
+        pool += list(srcs)
     data += cells
     lb = struct.pack('<%dH' % len(flat), *flat)
     if len(flat) & 1:
         lb += b'\0\0'
     data += lb
+    pb = struct.pack('<%dH' % len(pool), *pool)
+    if len(pool) & 1:
+        pb += b'\0\0'
+    data += pb
     return data, dict(occluders=len(occ), lists=len(lists), list_entries=len(flat), cells_with_list=used,
                       bytes=len(data))

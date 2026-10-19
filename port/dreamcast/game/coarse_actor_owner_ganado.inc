@@ -893,6 +893,14 @@ static inline bool invis_trans_active() {
 }
 static inline bool invis_wall_hidden(const float lo[3], const float hi[3]) {
     const InvisView& iv = invis_view;
+#if defined(RE4DC_ENEMY_VIS_DEBUG) && RE4DC_ENEMY_VIS_DEBUG
+    static unsigned dbg_n;
+    if (++dbg_n <= 8)
+        re4dc_log("ENEMYVIS call ok=%d fog=%g near=%g far=%g pl=%d sub=%d lo=%d,%d,%d hi=%d,%d,%d\n", int(iv.ok), iv.fog,
+                  iv.near, iv.far_owner, int(invis_near_actor(re4dc_vis_pl, lo, hi)),
+                  int(invis_near_actor(re4dc_vis_sub, lo, hi)), int(lo[0]), int(lo[1]), int(lo[2]), int(hi[0]),
+                  int(hi[1]), int(hi[2]));
+#endif
     if (!iv.ok || iv.fog < 0.0f) return false;
     if (invis_near_actor(re4dc_vis_pl, lo, hi) || invis_near_actor(re4dc_vis_sub, lo, hi)) return false;
     const float far = iv.far_owner < 25000.0f ? iv.far_owner : 25000.0f;   // native_ps2_world.cpp's far cap

@@ -20,6 +20,7 @@
 extern void re4dc_log(const char* fmt, ...);
 extern unsigned re4dc_ui_frame(void);
 extern int re4dc_ps2_world_intact(unsigned room, uint32_t crc);   /* native_static.cpp (ENEMY_VIS_CULL) */
+extern int re4dc_ps2_placements_intact(unsigned room, const unsigned char* fields, unsigned n);
 
 #define OCC_STRIDE 56
 static struct {
@@ -31,6 +32,7 @@ static struct {
     const uint8_t* occ;     /* 56 B: f32 c[4][3], f32 half, s8 side */
     const uint8_t* cells;   /* 4 B */
     const uint8_t* lists;   /* u16 */
+    const uint8_t* pool;    /* u16 source placement fields; occluder i: r[53] of them from rd16(r + 54) */
 } o;
 static unsigned c_tests, c_hidden, c_noeye, c_notintact, c_visible, c_logged;
 static unsigned intact_frame = ~0u;
@@ -48,13 +50,13 @@ void re4dc_room_vis_enter(unsigned room)
     const uint8_t* s = (const uint8_t*) re4dc_room_section("OCCL", &len, &ver, &flags, &h);
     const char* why = 0;
     if (!s) why = "no OCCL";
-    else if (ver != 1 || len < 32) why = "OCCL version";
+    else if (ver != 2 || len < 32) why = "OCCL version";
     else {
         const unsigned vw = rd16(s), vh = rd16(s + 2), div = rd16(s + 4), nocc = rd16(s + 6), nlist = rd16(s + 8),
-                       range_cm = rd16(s + 10);
-        const unsigned lb = (2 * nlist + 3) & ~3u;
+                       range_cm = rd16(s + 10), npool = rd16(s + 22);
+        const unsigned lb = (2 * nlist + 3) & ~3u, pb = (2 * npool + 3) & ~3u;
         if (!div || vw != (h->w + div - 1) / div || vh != (h->h + div - 1) / div ||
-            len != 32 + OCC_STRIDE * nocc + 4 * vw * vh + lb)
+            len != 32 + OCC_STRIDE * nocc + 4 * vw * vh + lb + pb)
             why = "OCCL size";
         const uint8_t* cells = s + 32 + OCC_STRIDE * nocc;
         const uint8_t* lists = cells + 4 * vw * vh;
@@ -63,9 +65,12 @@ void re4dc_room_vis_enter(unsigned room)
         for (unsigned i = 0; !why && i < nlist; i++)
             if (rd16(lists + 2 * i) >= nocc) why = "OCCL list";
         for (unsigned i = 0; !why && i < nocc; i++) {
-            const int8_t side = (int8_t) s[32 + OCC_STRIDE * i + 52];
+            const uint8_t* r = s + 32 + OCC_STRIDE * i;
+            const int8_t side = (int8_t) r[52];
             if (side != 1 && side != -1) why = "OCCL side";
+            else if (!r[53] || rd16(r + 54) + r[53] > npool) why = "OCCL sources";
         }
+        o.pool = lists + lb;
         if (!why) {
             o.vw = (uint16_t) vw; o.vh = (uint16_t) vh; o.nocc = (uint16_t) nocc; o.nlist = (uint16_t) nlist;
             o.x0 = h->x0; o.z0 = h->z0; o.inv_cs = 1.0f / (float) (h->cell_mm * div);
@@ -143,7 +148,7 @@ int re4dc_room_vis_hidden(const float* view, float near, float far, const float 
 {
     if (!o.ok) return 0;
     ++c_tests;
-    if (!(c_tests & 1023) && c_logged < 400) {
+    if (!(c_tests & 255) && c_logged < 400) {
         ++c_logged;
         re4dc_log("ENEMYVIS r%03x tests=%u hidden=%u noeye=%u notintact=%u visible=%u\n", o.room, c_tests, c_hidden,
                   c_noeye, c_notintact, c_visible);
@@ -163,14 +168,25 @@ int re4dc_room_vis_hidden(const float* view, float near, float far, const float 
     float lo[3], hi[3], bx[8][3];
     for (int k = 0; k < 3; k++) { lo[k] = lo_in[k] - 50.0f; hi[k] = hi_in[k] + 50.0f; }
     for (int j = 0; j < 8; j++) { bx[j][0] = (j & 1) ? hi[0] : lo[0]; bx[j][1] = (j & 2) ? hi[1] : lo[1]; bx[j][2] = (j & 4) ? hi[2] : lo[2]; }
-    int hit = 0;
-    for (unsigned i = 0; i < count && !hit; i++)
-        hit = occluder_hides(o.occ + OCC_STRIDE * rd16(o.lists + 2 * (first + i)), view, e, near, far,
-                             (const float (*)[3]) bx);
-    if (!hit) { ++c_visible; return 0; }
     const unsigned f = re4dc_ui_frame();
     if (f != intact_frame) { intact_frame = f; intact = re4dc_ps2_world_intact(o.room, o.crc); }
     if (!intact) { ++c_notintact; return 0; }
+    int hit = 0, moved = 0;
+    unsigned which = 0;
+    for (unsigned i = 0; i < count && !hit; i++) {
+        which = rd16(o.lists + 2 * (first + i));
+        const uint8_t* r = o.occ + OCC_STRIDE * which;
+        if (!occluder_hides(r, view, e, near, far, (const float (*)[3]) bx)) continue;
+        /* its source placements drawn at rest now */
+        if (re4dc_ps2_placements_intact(o.room, o.pool + 2 * rd16(r + 54), r[53])) hit = 1;
+        else moved = 1;
+    }
+    if (!hit) { if (moved) ++c_notintact; else ++c_visible; return 0; }
     ++c_hidden;
+#if defined(RE4DC_ENEMY_VIS_DEBUG) && RE4DC_ENEMY_VIS_DEBUG
+    /* every cull, for the offline oracle (occ_eval-style check of the runtime decisions) */
+    re4dc_log("ENEMYVIS hide f=%u occ=%u eye=%d,%d,%d lo=%d,%d,%d hi=%d,%d,%d\n", f, which, (int) e[0], (int) e[1],
+              (int) e[2], (int) lo_in[0], (int) lo_in[1], (int) lo_in[2], (int) hi_in[0], (int) hi_in[1], (int) hi_in[2]);
+#endif
     return 1;
 }

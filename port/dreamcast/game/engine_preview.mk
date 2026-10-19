@@ -39,12 +39,16 @@ $(OBJDIR)/ui_bridge.o $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_ENEMY_
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ENEMY_VIS_CULL=1
 $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -Iplatform/include
 $(OBJDIR)/coarse_ganado.o: platform/include/room_vis.h
+ENEMY_VIS_DEBUG ?= 0
+ifeq ($(ENEMY_VIS_DEBUG),1)
+$(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_ENEMY_VIS_DEBUG=1
+endif
 ifeq ($(ENEMY_VIS_CULL),1)
 # =1 (option C, the one to ship): OCCL slab occluders tested from the real eye (platform/room_occl.c)
 PLATFORM_OBJS += $(OBJDIR)/platform/room_occl.o
 $(OBJDIR)/platform/room_occl.o: platform/room_occl.c platform/include/room_vis.h platform/include/room_file.h
 	@mkdir -p $(dir $@)
-	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include -c $< -o $@
+	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include -DRE4DC_ENEMY_VIS_DEBUG=$(ENEMY_VIS_DEBUG) -c $< -o $@
 ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_OCCL=1
 else
 # =2 (VIS v2, cell-to-cell; reference only, not shipped: it hid 0 enemies in the measured scenes)

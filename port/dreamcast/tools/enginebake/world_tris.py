@@ -70,7 +70,7 @@ class Pkg:
                 tris.append((a, b, c) if k % 2 == 0 else (c, b, a))
         return corners, tris
 
-    def occluders(self, level, exclude_dynamic=False):
+    def occluders(self, level, exclude_dynamic=False, with_field=False):
         dynamic = set()
         if exclude_dynamic and self.ids is not None:
             cnt = {}
@@ -101,5 +101,5 @@ class Pkg:
                         w = [[M[r][0] * x + M[r][1] * y + M[r][2] * z + M[r][3] for r in range(3)] for x, y, z in corners]
                         for a, b, cc2 in tris:
                             out.append(tuple(w[a]) + tuple(w[b]) + tuple(w[cc2]) +
-                                       (float(cull) if det > 0 or not cull else -1.0,))
+                                       (float(cull) if det > 0 or not cull else -1.0,) + ((field,) if with_field else ()))
         return out
