@@ -20,8 +20,8 @@ $(OBJDIR)/src/game/sscrn.o: GAME_CPPFLAGS += -DRE4DC_QUICK_WEAPON=1
 ifeq ($(QUICK_WEAPON_POC_KIT),1)
 $(OBJDIR)/src/game/item.o: GAME_CPPFLAGS += -DRE4DC_QUICK_WEAPON_POC_KIT=1
 endif
-ifeq ($(DISC_READ_METER),1)
-# Test builds with the disc meter: each swap also logs its weapon read (calls, bytes, drive time).
+ifeq ($(DISC_READ_METER)$(DOOR_PROBE),11)
+# Test builds with the disc meter and DOOR_PROBE=1 (re4dc_disc_meter_totals is built only then): each swap also logs its weapon read.
 $(OBJDIR)/src/game/sscrn.o: GAME_CPPFLAGS += -DRE4DC_QW_METER=1
 endif
 endif
