@@ -4,14 +4,16 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** October 18, 2026.
+**Last updated:** October 19, 2026.
 
-**Current build: Test 17** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): chapters 2-2 and 2-3
-up to the castle gate (r200), PS2 Ashley, Mendez and El Gigante as lighter PS2 models, rain at the night lake, solid
-see-through scenery drawn solid in every chapter 2 room too, and fewer disc reads in fights.
+**Current build: Test 17.1** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)), a hotfix of Test 17:
+the Coming Soon screen now returns you to the room.
 
 **Earlier builds** (newest first):
 
+- **Test 17:** chapters 2-2 and 2-3
+up to the castle gate (r200), PS2 Ashley, Mendez and El Gigante as lighter PS2 models, rain at the night lake, solid
+see-through scenery drawn solid in every chapter 2 room too, and fewer disc reads in fights.
 - **Test 16.5:** the night lake's torch flames, solid see-through scenery drawn solid in every chapter 1 and 2-1 room (the cabin, r109, included), and a smaller room-entry hitch.
 - **Test 16.4:** Foliage Near shows its near brush and leaf cards again; the lake draws to 45 m.
 - **Test 16.3:** the village and farm fights load their Ganado animations at room entry; the village keeps all its pictures in video memory (two Ganado texture sheets at half resolution).
@@ -57,6 +59,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | A small menu texture does not fit in memory as the r100 cliff movie starts | test 9, 9.1, 10 | ⏸️ Open (found by the full-play check) | |
 | The cutscene at the r100 cliff (after the first house) is skipped; the game goes on normally after it | test 12, 12.1, 12.2, 13, 14 | 🟢 Fixed in test 15: while the movie plays it borrows the memory of the room's scenery, which is read back from the disc and checked when the movie ends | |
 | Possible out-of-memory crash on a real console when leaving the village (r101) after a long fight, at the next room's start | test 12, 12.1 | 🟢 Fixed in test 12.2, needs console check: found by our memory checks, not reported by anyone yet; the village's leftover texture records are freed when the room changes, and our console-memory test (Flycast with 48 KiB of the console's system memory held back) now leaves the village to r100 and r103 without running out | |
+| Chapter 2-1 has two ways forward and the test carries one. Main path: the lake shore, r11a, r119, r118, r117. Doors that show Coming Soon: on the lake shore the second exit and the ladder (r11b to r10c / r10d); in the El Gigante area by day or night, the side path (r119 / r109 to r10e). Until 17.1 the game stayed on the Coming Soon screen | test 17 and earlier | 🟢 Fixed in test 17.1: the screen now returns you to the room, so you can take the other exit | |
 | A crash screen (`MISSING sub screen pool freeze allocation`) when a radio call opens on a real console | test 11 (not released), test 12 preview | ✅ Confirmed fixed on a real Dreamcast (test 12 preview): the call screen now keeps its copies in memory set aside for it | |
 
 ## Picture
@@ -93,6 +96,8 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3 to 17 | ⏸️ Open: the rooms' resident picture lists miss these pictures; fix planned for a later test | |
 | In r118 one small picture (64x64) is not on the disc, so it is not drawn | test 16.4, 16.5 | 🟢 Fixed in test 17: the picture is in the disc's texture package, and our texture check passes in r118 | [#37](https://github.com/lamb2k/re4dc/issues/37) |
 | On the way from r10f to the castle gate (r200), some effect sprites are not drawn for a while, and one world picture fails our texture check. Play continues: the truck, the chapter 2-3 end, the results and the save all work | test 17 | ⏸️ Open: the world picture and the effect pictures refused for lack of video memory are fixed for test 18. For about a second in r200 some effect sprites are still skipped because the per-frame list of see-through parts is full; making it bigger does not fit in memory yet | [#39](https://github.com/lamb2k/re4dc/issues/39) |
+| After a chainsaw kill, Leon is drawn with his GameCube model for the death scene | test 17 and earlier | ⏸️ Open: fixed for test 18 (Leon keeps his PS2 model, his head included) | |
+| Some players report very dark night rooms on a console | test 17 | 🔍 Investigating: our Flycast captures match the GameCube's brightness; we're looking into it | |
 | In r106 the four Ganados waiting behind the closed gate are not drawn until they come through it (they are out of view behind the gate) | test 17 | ⏸️ Open: by design for now; found by our new not-drawn check | |
 
 ## Sound
@@ -150,6 +155,3 @@ If you play test 16 on a console, please report on any of these in a bug report:
 8. **Radio call subtitles** (test 16). In a radio call, do the subtitles keep up with the voice and end with it?
 
 An item moves to ✅ Confirmed fixed after a console report.
-
-The game currently ends at a **Coming Soon** screen after chapter 2-1. See the
-[disc 1 route](DISC1_ROUTE.md) for the rooms still to come.

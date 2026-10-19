@@ -1009,6 +1009,18 @@ int CheckDoorJumpWithAshley()
 #if RE4DC_ROUTE_CH13
 extern "C" int re4dc_route_room_built(u16 room);
 extern "C" void re4dc_route_coming_soon(u16 room);
+#if RE4DC_ROUTE_SOON_RETURN
+// ROUTE_SOON_RETURN=1: show "Coming Soon", then cancel the door as sceInLock does (lane route19).
+extern "C" void re4dc_route_coming_soon_show(u16 room);
+static void sceSoonReturn(SceAtWork* w)
+{
+    re4dc_route_coming_soon_show((u16) ((w->dstStage << 8) | (w->dstRoom & 0xFF)));
+    SceAtStopSemiautoCheck();
+    pG->Stop_flg = pS->x94;
+    w->flag |= 1;
+    TaskExit();
+}
+#endif
 #endif
 static int sceAtFunc_door(SceAtWork* w, cModel* m)
 {
@@ -1038,7 +1050,11 @@ static int sceAtFunc_door(SceAtWork* w, cModel* m)
     // Play disc end (route_end.cpp): a door into a room this disc does not carry shows "Coming Soon" and holds;
     // the door's stop state stays set and no room change starts.
     if (!re4dc_route_room_built((u16) ((w->dstStage << 8) | (w->dstRoom & 0xFF)))) {
+#if RE4DC_ROUTE_SOON_RETURN
+        TaskExec(1, (TaskFunc) sceSoonReturn, (int) w);
+#else
         re4dc_route_coming_soon((u16) ((w->dstStage << 8) | (w->dstRoom & 0xFF)));
+#endif
         w->flag &= ~1;
         return 1;
     }

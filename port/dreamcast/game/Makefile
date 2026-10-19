@@ -450,6 +450,12 @@ endif
 $(OBJDIR)/mod/em27/src/em27/em27.o: GAME_CPPFLAGS += -DRE4DC_EM27_SLOT_FIX=1
 # A door into a room the disc does not carry shows "Coming Soon" and holds (route_end.cpp, src/game/sce_at.cpp).
 $(OBJDIR)/src/game/sce_at.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH13=1
+# ROUTE_SOON_RETURN=1 (lane route19, default 0: hold as above): Coming Soon shows, fades back and cancels the door like a
+# locked one, so the player stays in the room and can take another exit (Test 17 r11b -> r10c soft-lock).
+ifneq ($(or $(ROUTE_SOON_RETURN),0),0)
+$(OBJDIR)/src/game/sce_at.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_SOON_RETURN=1
+$(OBJDIR)/route_end.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_SOON_RETURN=1
+endif
 # ROUTE_CH21=1 (route lane r11b, default 0: no effect; needs ROUTE_CH13=1 and ROUTE_OVL=1): chapter 2-1 starts in
 # r11b (the lake shore, entered through r10b door 6 after the chapter 1-3 save). em22 (module 5, the wolves of the
 # shore ambush) is a third room overlay (em22.ovl, linked after pl0f / em2f so theirs are unchanged), and r11b's

@@ -90,6 +90,7 @@ inline bool source_appearance_type(unsigned appearance,unsigned id,unsigned type
     if(appearance==0x108)return id==0 && type==0;
 #if RE4DC_LEON_HEADLESS
     if(appearance==0x109)return id==0 && type==0;  // LEON_HEADLESS: pl08 after setHead(0), proved by the 0x109 rows
+    if(appearance==0x10A)return id==1;  // LEON_HEADLESS v2: the flying head cObj01 (ObjMgr id 1), proved by the 0x10A row
 #endif
 #endif
     static const unsigned char types[5]={1,0,3,4,11};
@@ -412,7 +413,8 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
 #endif
     if(registry ? !re4dc_registry_model(m,p) :
        ((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
-        (!leon && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type)))) {
+        (!leon && !RE4DC_HEAD_APP(p->appearance) && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type)) ||
+        (RE4DC_HEAD_APP(p->appearance) && (p->count!=1 || m->id!=1 || m->nParts!=1 || m->ot_type)))) {
         out.error=Error::UnknownAppearance;return out;
     }
     if(m->pTexChg || m->Shader_type || m->CullMode ||
@@ -431,7 +433,8 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
        m->AddAmb_r || m->AddAmb_g || m->AddAmb_b) {out.error=Error::LiveModifier;return out;}
 #else
     if((leon && (p->count!=(RE4DC_ACTOR_PL08 && p->appearance==0x108u?9u:RE4DC_LEON_HEADLESS && p->appearance==0x109u?7u:8u) || m!=(cModel*)pPL || m->id || RE4DC_LEON_OT_BAD(m))) ||
-       (!leon && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type))) {
+       (!leon && !RE4DC_HEAD_APP(p->appearance) && (p->appearance>=5 || p->count<4 || p->count>5 || m->id<0x10 || m->id>0x20 || m->ot_type)) ||
+       (RE4DC_HEAD_APP(p->appearance) && (p->count!=1 || m->id!=1 || m->nParts!=1 || m->ot_type))) {
         out.error=Error::UnknownAppearance;return out;
     }
     if(m->pTexChg || m->Shader_type || m->CullMode ||
@@ -519,7 +522,9 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
         if(!re4dc_registry_runs_match(p)){out.error=Error::Material;return out;}
     } else
 #endif
-    if(!leon) {
+    // LEON_HEADLESS v2: the flying head (0x10A) is certified like Leon's roles: its runs are proved by
+    // re4dc_actor_material_runs_capability (atlas + hair pair 1, ordered, TR no-depth-write hair).
+    if(!leon && !RE4DC_HEAD_APP(p->appearance)) {
         unsigned source_material_seen=1;
         for(unsigned j=0;j<p->run_count;++j) {
             const auto& run=p->runs[j];const unsigned role=run.role;
@@ -641,7 +646,7 @@ Result compare(cModel* m,const Re4dcActorPlan* p,bool diagnostic) {
     // re4dc_registry_runs_match above proved every run, material and pair key.
     if(registry && re4dc_registry_masked(p))implemented|=Mask|SourcePass;
 #endif
-    if(leon) {
+    if(leon || RE4DC_HEAD_APP(p->appearance)) {
         implemented=Diffuse; // source-exact mode has no proven shader substitute
 #if RE4DC_ACTOR_LEON_NATIVE_LOOK
         const unsigned runs=re4dc_actor_material_runs_capability(p);
