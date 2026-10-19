@@ -88,3 +88,88 @@ Check the real Leon-to-Ashley transition, her source model/motion/cloth/hands,
 lantern and crank interactions, r20e puzzle and armour encounters, return to
 Leon, inventory transfer, and original chapter save/reload. Native model,
 residency, audio, KOS 48 KiB and complete no-warp progress all remain open.
+
+## r20e armour package
+
+The old r20e fixture lacks a native armour package. Its original emleon03
+entries 178 and 187 through 194 select em3c types 0, 1 and 2. The source
+`r20e_startArmor` task uses these list indices directly. Existing r216 full
+models `armor-em3c-00w` through `03w` cover the same source family, including
+their original weapons and chainmail.
+
+The current package producer first reproduced the qualified r216 package
+byte for byte. A private copy of its input metadata then added r20e as a
+room, with every other cast input preserved. The producer generated a proper
+r20e package from that copy; the entire payload after its 64-byte header is
+identical to r216. Only the room byte and header CRC differ. Package size:
+350,368 bytes. SHA256:
+`45e6e57c9b32b410bf85513fc5bcd7a7070896fc06c0575988b43d1d7f48b098`.
+
+The actual current target package checker, compiled on the host with
+address/undefined-behaviour sanitizers, accepts it for r20e and rejects it for
+r216. The data fragment also stages the existing prepared em3c archive
+(`e8b7effe`) and its 18 original texture packages plus the existing atlases.
+No mesh, motion, weight, image or material policy changes.
+
+Private data is C-mirrored under
+`re4-assets-private/castle18-ch34-armor-20261019`; `reuse-proof.json` and
+`package-qualification.json` record the producer replay and loader checks.
+Its manifest SHA256 is
+`b03a56bade4364f7705db8e6cdcf6475b6d7321e48f6a14d9bd9a2da932239d6`.
+The initial emulator test deliberately uses Leon and a focused camera to
+check armour asset admission. It cannot qualify Ashley gameplay, armour
+combat, cap-four progress, or the chapter route.
+
+### First current-runtime check and preload correction
+
+The 55.97-second `cx-r20e-walk-armor01` diagnostic uses the current c18oimW
+program (ELF SHA `746a2a5feb7cf6293ea31c2738c815a3f6ce305a29c8af82b482ca8758b2136e`)
+and checks all 23 boot/overlay payload hashes. Armour types 0, 1 and 2 draw
+natively with no GameCube fallback, no texture errors and no audio failures.
+These are dormant statues with Leon: no active-enemy or Ashley claim follows.
+The first capture held no memory squeeze, so it is not a KOS 48 KiB gate.
+
+Its ten late uploads are original source texture keys absent from the r20e
+resident list. Their actual loose/package winners were read back and hashed.
+The correction adds only those ten original width/height/format tuples,
+preserving all 5,591 prior resident records and every other room. No texture,
+model, animation, audio or program bytes change. The source r20e TSV records
+the additions; `castle18/ch34-r20e-resident-20261019.json` is the private data
+fragment. Compose these entries into any newer resident union, preserving
+other workers' additions.
+
+Candidate resident SHA:
+`a1233414e1c35d43dd50f59c00ee1c73d86dbd7c678c21d881e8fdeba82d3686`.
+Private data: `castle18-ch34-r20e-resident-20261019`; manifest SHA:
+`4d71fffffdeb65e114a11ce55eac07f998bb76f7e4a4761000a370a9246e05fd`.
+A new fixture adds `squeeze 49152 0` explicitly. The fresh corrected gate
+passes as detailed below. It is not a strict identical-input comparison
+with the unsqueezed first capture. Neither establishes chapter completion.
+
+### Corrected reserve-qualified check
+
+`cx-r20e-walk-armorkos02` completed 55.88 seconds in Flycast. The exact
+allocator receipt is `kos squeeze: held=49152 requested=49152`; minimum
+KOS watch headroom is 44,392 bytes while that reserve is held. The official
+VRAM gate passes with zero gameplay uploads, evictions, retries or refusals.
+Minimum VRAM free is 1,392,800 bytes; largest block is 1,333,248 bytes.
+
+CAST-GC passes: armour types 00w, 01w and 02w and Leon draw natively with no
+GC draws. The cumulative census sums (armour 9,000; Leon 1,500) are not actor
+counts. Dormant statues mean the alive list is zero. Texture errors, audio
+fit failures and fatal rows are all zero. The final still was inspected.
+All 23 staged boot/overlay payloads match the current c18oimW program.
+
+Evidence folder:
+`C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\workers\ch34`.
+`r20e-armorkos02-gate.json`, `r20e-armorkos02-vram.json` and
+`r20e-armorkos02-characters.json` preserve the separate checks. Raw-log SHA:
+`618bec4e7832a58280f7d3c02a2d3a565e9e1e6c940f0fa0cec2824155779080`.
+Disc SHA:
+`00369b068dfe33b37d899fdc15348ee1de0cf8eaa0b92dcc6b0ca2284920a14b`.
+The finished generated disc may be retired by the guarded worker pruner;
+logs, results, program hashes, snapshots, stills and rebuild inputs stay.
+
+No hardware performance saving is claimed. Ashley's native face, cloth and
+special hand, active armour combat, cap-four progress, original chapter
+save/reload and complete no-warp walkthrough remain unqualified.
