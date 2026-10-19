@@ -358,3 +358,129 @@ Evidence: `r222-neararea10kos02-gate.json`,
 `r222-source-first-sight-winners.json`, `r222-source-trigger-geometry.json`
 and `r222-resident-host-proof.json`. Near diagnostic log SHA:
 `aec010314a3c2df5a3d0789f876a32b1bc6815f7db39056e8f570959a2dcbeef`.
+
+## r211 original-entry short walk and preload correction
+
+`cx-r211-walk-audiokos01` completed 56.48 seconds in Flycast using the
+unchanged c18oimW program and all 23 exact boot/overlay payloads. The
+allocator held exactly 49,152 bytes; minimum KOS watch headroom was 39,832
+bytes. The original r219-to-r211 entry and one normal 16-tick forward input
+produce 868.6 world units of horizontal displacement. This is diagnostic
+setup, not original chapter traversal. Leon has 1,500 cumulative native
+census samples and zero GC fallback; no Ashley or enemy coverage follows.
+
+ROOM/FOOT and the recovered BGM7 load prebuilt. BGM7 is actually requested
+and copied: 165,916 bytes, eight samples, original 32 kHz. Texture errors,
+audio-fit errors, fatal rows, VRAM refusals, evictions and retries are zero.
+The 45-second still shows Leon and the picture gallery clearly.
+
+The official residency check fails on nine late uploads. At gameplay frame
+767, VRAM reports 654,048 pinned, 772,736 dynamic, 1,050,528 free and
+1,011,648 largest-free-block bytes. Stream receipts through frame 840 keep
+183 loads. All nine actual source keys, dimensions/formats and selected
+loose/package bytes were read back and hashed; no texture or model is
+changed. The additive correction preserves all 5,729 Worker A V14 records,
+including its new r20b cold-load additions, and adds only these nine r211
+records. Every other room remains exact. The previous r211 entries equal
+the control's entries.
+
+Private set `castle18-ch41-r211-resident-20261019` is mirrored on C:.
+Manifest SHA:
+`0de2206ff97b266c8538fd8368dd7113e308730d79e895ae887e3e47b0977daf`.
+The 5,738-record resident SHA is
+`faf18768a268d1f2b3b465a8eee21ed7bd943828586f18c26b6ea78fc7049b12`.
+Source fragment: `tools/d367/castle18/ch41-r211-resident-20261019.json`.
+Compose only the r211 additions into newer unions. The matched rerun
+`cx-r211-walk-residentkos02` passes bounded residency: nine late uploads
+fall to zero. It completed 56.06 seconds, holding the same exact 49,152-byte
+reserve with the same 39,832-byte minimum KOS headroom. Across 7,275 staged
+payloads only `dc/resident.bin` changes. All program, room, model, texture,
+audio and controller-input bytes remain exact. Both runs record the same
+868.6-unit walk and 1,500 native Leon census samples with no GC fallback.
+
+The gameplay frame-767 VRAM row reports 654,048 pinned, 772,736 dynamic,
+1,050,528 free and 1,007,616 largest-free-block bytes. Later frame-840
+receipts keep 183 total loads. No texture, audio-fit, fatal, eviction,
+retry or refusal errors appear. The final still was inspected. The partner,
+cup pickups, six-enemy ambush, gate, original exit and full no-warp chapter
+remain unqualified.
+
+Matched proof: `r211-residency-matched-proof.json`. Candidate log SHA:
+`a75accc2e6af743bf15ce4ebd8715844c71b4d236a5f6071fb126dc0c92122ae`.
+Candidate disc SHA:
+`d11a6c3d1544e701f66a50d316893328c215e1368e070c38424c71258a7d10f2`.
+The finished candidate disc was also retired after sealing its proof.
+
+Evidence: `r211-entry-proof.json`, `r211-source-first-sight-winners.json`,
+`r211-resident-host-proof.json`, and the original capture/checker reports.
+Control log SHA:
+`ee359317c7bd2b418a6ee6c562d7f3267e273ab9a5e97f8e49b914373a9ccaca`.
+Control disc SHA:
+`5599fe324677f69c178c81be759eb603718b474fa0ddf02066a5db463e55d49d`.
+The finished disc was retired using the guarded worker pruner; all logs,
+stills, results, program hashes and rebuild inputs remain.
+
+## r212 original-entry audio and event preparation
+
+The diagnostic fixture starts at the original r211 area-1 destination:
+(4060, 0, 1980), facing -pi/2. It preserves all 23 current program payloads
+and adds 144 recovered room files. Its unsolved puzzle source can create
+Ashley through its original SubCharInit/CHASE call; the fixture adds no
+partner flags, progress flags, health changes or enemy substitutions.
+
+The existing frozen-layout audio fitter includes both the original em11
+and Ashley banks, 750,272 aligned bytes together. It prepares ROOM/FOOT at
+the existing 11,025/8,000 Hz policy, using 232,064 aligned bytes and leaving
+21,856 bytes in the 1,004,192-byte arena. All original non-audio and wavetable
+bytes remain exact. This is host preparation, not a runtime memory pass.
+
+Private set `castle18-ch41-r212-audio-20261019` is mirrored on C:.
+Manifest SHA:
+`852c6fc551698bf8d0c071f785daa1c9039fccff12d4a778a63fb6e45502310d`.
+Archive SHA:
+`87be8ff30a4d300ee48c20ce2f4d848727949ab9f05153b7f31d7cc647d29f02`.
+Source fragment: `tools/d367/castle18/ch41-r212-audio-20261019.json`.
+
+The actual staged base BGM table has no sequence-bank request for r212.
+Its two original stream choices, 0:32 and 0:33, both already have prepared
+32 kHz entries in the selected 78-entry stream file. The recovered roof
+movie `dc/movie/r212s00.seq` is present (4,434,758 bytes), SHA:
+`70a6f8f5b0a7c4b124e323b047c0b110a9773b04bb9ee7a1e8c0d2fc6388fb12`.
+These are file/table checks, not movie playback or audible acceptance.
+
+Source progression still requires all four plates occupied by Leon,
+Ashley and the two racks, the area-1 roof movie and shootable catches,
+Ashley's area-13 live drill trigger, both retained drill Ganados' deaths,
+the cup 6F pickup and original return. The room tasks retain enemy-list
+rows D7/D8, so later cap handling must preserve those references. No room
+or chapter completion is inferred. Evidence: `r212-entry-preparation.json`,
+`r212-audio-fit-proof.json`, and `r212-source-events-audit.json`.
+
+## r216 original cup and armour-wave preparation
+
+The next diagnostic starts at the original r211 area-3 destination. It
+adds seven recovered room files, retains the current 23 program payloads,
+and uses the existing native armour family already source-audited for
+r20e/r216. The original source cup pickup invokes area 0x80, waits for the
+real item flag, closes the door and starts the first three armours. Three
+source deaths release the next three; six open the exit. The room retains
+enemy handles, so a cap implementation must preserve those references.
+Current c18oimW has PS2_ENEMY_CASTLE=0xe7, including mask 0x04; its original
+PS2 display rule sends only display armour E8. No flags or actors were
+edited in the fixture, and no live wave is qualified yet.
+
+The existing fitter keeps the preferred ROOM/FOOT rates at 16,000/11,025 Hz,
+using 163,136 aligned bytes beside the 204,864-byte em3c bank. It leaves
+636,192 bytes in the unchanged sound arena. All non-audio and original
+wavetable bytes remain exact. The staged original BGM table has no r216
+entry; this is not a claim about actual runtime sound or silence.
+
+Private set `castle18-ch41-r216-audio-20261019` is mirrored on C:.
+Manifest SHA:
+`19b3ecc065ff65e2390df61ae78fcf4c9d1f8b9232eb36d54efb726b92804e3a`.
+Archive SHA:
+`4ee89dc7f321564f951a959416dba9bfaa9b22bac2b94b9e4c36818fee5bb06a`.
+Source fragment: `tools/d367/castle18/ch41-r216-audio-20261019.json`.
+Evidence: `r216-entry-preparation.json`, `r216-audio-fit-proof.json` and
+`r216-source-stream-and-wave-audit.json`. Runtime audio, actual armour draw,
+cup pickup, both waves, door release and the original route remain open.
