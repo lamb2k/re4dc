@@ -1,0 +1,62 @@
+{
+  "scope": "Hash-only original full-source pose/slot evidence; no actual native/look/fight acceptance.",
+  "receipt": {
+    "status": "ORIGINAL_FULL_SOURCE_POSES_CHECKED_RUNTIME_UNADMITTED",
+    "source_commit": "e6ff3c1f9b7bafc86ca889ac7f914c18bc77632c",
+    "original_clips": 8,
+    "byte_exact_FCV_roundtrips": 8,
+    "source_poses": 40,
+    "corner_pose_checks": 1061040,
+    "body_original_parts": 201,
+    "body_render_slots": 70,
+    "tail_original_parts_and_slots": 20,
+    "original_source_slot_mapping_exact": true,
+    "all_original_joint_matrices_retained": true,
+    "body_max_position_error_mm": 0.00021181369693526,
+    "tail_max_position_error_mm": 0.0,
+    "body_native_weight_max_delta": 8.940696716308594e-08,
+    "body_weight_different_corners": 874,
+    "tail_native_weights_exact": true,
+    "static_position_errors_mm": [
+      0.0,
+      0.0
+    ],
+    "body_existing_zero_area_omissions": 4,
+    "tail_BIN_identity": "Source ARC(134): decimal134/hex0x86, not0x134",
+    "rejected_tail_clip": "0x8A targets part21 outside20; correct original tail routine FCVs87/8C/8E",
+    "retained_full_input_pins_unchanged": 20,
+    "no_new_model_or_candidate_or_tool_or_runtime_change": true,
+    "no_game_build_or_Flycast": true,
+    "scope": "Numeric unchanged full model/slot packing on selected original host clips. No live root/ceiling/world/procedural cloth/neck/transition blend, floor, ice, OT5/native owner, look or complete fight acceptance."
+  },
+  "private_set": {
+    "set": "boss18-verdugo-source-poses-20261019",
+    "files": 75,
+    "bytes": 14335946,
+    "sha256sums_sha256": "ba110d3bc02da105a470785ade39da0b5d0f9d6572fbf4c69325ecc584e5c7d8",
+    "mirror_verified": true,
+    "source_pose_packing_only": true
+  },
+  "proofs": [
+    {
+      "file": "original-verdugo-poses.json",
+      "sha256": "9a4a097112a8433b33eddc8adbe3e62e0a004dc57949669d42813c3eba37e162"
+    },
+    {
+      "file": "source-pose-packed-slot-proof.json",
+      "sha256": "548837627ff58031765e35458d439e4b2ae3b458df6f7fbc0b64f602b00b8826"
+    },
+    {
+      "file": "retained-full-input-identity.json",
+      "sha256": "545608f194c0902d3d1737b0b4a510483392a992f233ab058c924a13c2c3fc5c"
+    },
+    {
+      "file": "initial-tail-arc-refusal.json",
+      "sha256": "64cbb3766293311ba5eafbf2f478589b531d11497a398b41d1f28365aab4239c"
+    },
+    {
+      "file": "rejected-tail-clip8a.json",
+      "sha256": "983c65d842e5a99b1d8c86ff2c9b09bd9a8f80540fa3e5e1d2167f69ee60c477"
+    }
+  ]
+}
