@@ -1,0 +1,162 @@
+{
+  "registry": "boss18-r31c-shared-full",
+  "about": "Complete original human+arm hand/death pools and all supports/em3a; common original TPL cell relocation only, no geometry reduction. Original RGB/gutters and raw materialUV preserved; runtime/look admission still unqualified.",
+  "cast_dir": "/root/re4data/private/boss18-krauser-20261018/cast-shared-full-v2",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "Original lit normals and established bump-drop contract; no alpha flattening",
+  "descriptors": [
+    {
+      "name": "krauser-em39-01",
+      "archive": "em39",
+      "model_id": "0x39",
+      "source_types": [
+        1
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending",
+      "pool": true,
+      "source_owner_contract": {
+        "path": "/root/re4data/private/boss18-krauser-20261018/registry-shared-owner-contracts/krauser-em39-01.json",
+        "sha256": "0e3178c29b557d4fcfc1fd26b6bccc73a26c316cb1029429cad7fdfeb9305b7f"
+      }
+    },
+    {
+      "name": "krauser-em39-02",
+      "archive": "em39",
+      "model_id": "0x39",
+      "source_types": [
+        2
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending",
+      "pool": true,
+      "source_owner_contract": {
+        "path": "/root/re4data/private/boss18-krauser-20261018/registry-shared-owner-contracts/krauser-em39-02.json",
+        "sha256": "c90d887bd82824df0d89e51d24b001ec7e29cddefbf98a752cf9200ea29792ba"
+      }
+    },
+    {
+      "name": "kr-cap-obj12",
+      "archive": "em39",
+      "model_id": "0x12",
+      "source_types": [
+        0
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending"
+    },
+    {
+      "name": "kr-knife-wep42",
+      "archive": "em39",
+      "model_id": "0x42",
+      "source_types": [
+        0
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending"
+    },
+    {
+      "name": "kr-gun-wep42",
+      "archive": "em39",
+      "model_id": "0x42",
+      "source_types": [
+        0
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending"
+    },
+    {
+      "name": "kr-bow-wep42",
+      "archive": "em39",
+      "model_id": "0x42",
+      "source_types": [
+        0
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending"
+    },
+    {
+      "name": "kr-arr-wep42",
+      "archive": "em39",
+      "model_id": "0x42",
+      "source_types": [
+        0
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending"
+    },
+    {
+      "name": "gunship-em3a-00",
+      "archive": "em3a",
+      "model_id": "0x3a",
+      "source_types": [
+        0,
+        1
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending",
+      "partial_sections": true
+    },
+    {
+      "name": "gunship-em3a-02",
+      "archive": "em3a",
+      "model_id": "0x3a",
+      "source_types": [
+        2
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending",
+      "partial_sections": true
+    },
+    {
+      "name": "kr-miss-obj38",
+      "archive": "em3a",
+      "model_id": "0x38",
+      "source_types": [
+        1
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Full original source model info/hand/death pool or independent source cap/weapon/em3a; source callbacks/skeleton/motion/collision unchanged; complete admission/visibility pending",
+      "partial_sections": true
+    }
+  ],
+  "room_packages": {
+    "31c": {
+      "descriptors": [
+        "krauser-em39-01",
+        "krauser-em39-02",
+        "kr-cap-obj12",
+        "kr-knife-wep42",
+        "kr-gun-wep42",
+        "kr-bow-wep42",
+        "kr-arr-wep42",
+        "gunship-em3a-00",
+        "gunship-em3a-02",
+        "kr-miss-obj38"
+      ],
+      "evidence": "Complete original human+arm hand/death pools and all supports/em3a; common original TPL cell relocation only, no geometry reduction. Original RGB/gutters and raw materialUV preserved; runtime/look admission still unqualified."
+    }
+  }
+}

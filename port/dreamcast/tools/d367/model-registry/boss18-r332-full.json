@@ -1,0 +1,69 @@
+{
+  "registry": "boss18-r332-full",
+  "about": "Full source Saddler body/head +tentacle +whole weak and tail objects; source alpha visual candidate, no runtime or look acceptance",
+  "cast_dir": "/root/re4data/private/boss18-saddler-20261018/cast-full",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "Existing source lit/bump-drop contract, original GC body owner and original motion/cloth/weak/tail behavior",
+  "descriptors": [
+    {
+      "name": "saddler-em31-00",
+      "archive": "em31",
+      "model_id": "0x31",
+      "source_types": [
+        0
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Source em31 modelInit/addModel, weakobj00 or independent tailobj16; body owner proof832bdb41; actual draw gates pending",
+      "mask_runs": {
+        "0": "/root/re4data/private/boss18-saddler-20261018/masks/body-source64"
+      }
+    },
+    {
+      "name": "saddler-em31-01",
+      "archive": "em31",
+      "model_id": "0x31",
+      "source_types": [
+        1
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Source em31 modelInit/addModel, weakobj00 or independent tailobj16; body owner proof832bdb41; actual draw gates pending"
+    },
+    {
+      "name": "weak-em31-obj00",
+      "archive": "em31",
+      "model_id": "0x0",
+      "source_types": [],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Source em31 modelInit/addModel, weakobj00 or independent tailobj16; body owner proof832bdb41; actual draw gates pending"
+    },
+    {
+      "name": "tail-em31-obj16",
+      "archive": "em31",
+      "model_id": "0x16",
+      "source_types": [],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Source em31 modelInit/addModel, weakobj00 or independent tailobj16; body owner proof832bdb41; actual draw gates pending"
+    }
+  ],
+  "room_packages": {
+    "332": {
+      "descriptors": [
+        "saddler-em31-00",
+        "saddler-em31-01",
+        "weak-em31-obj00",
+        "tail-em31-obj16"
+      ],
+      "evidence": "Source em31.cpp625/630/640/5209/5221/4716; Island types0/1 live handoff; actual PS2 native draw proof pending"
+    }
+  }
+}

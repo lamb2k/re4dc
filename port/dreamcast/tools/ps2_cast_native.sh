@@ -28,6 +28,14 @@ if [ "$KB" != 96 ]; then
   sed "s#workspace(96\*1024)#workspace($KB*1024)#" "$CT/test_cast_dynamic.cpp" > "$TEST"
   grep -q "workspace($KB\*1024)" "$TEST" || { echo "host workspace patch failed"; exit 1; }
 fi
+# Optional ordered host-fixture GX strips preserve the source corner sequence and
+# leave native/*.gx unchanged for the original fit/verify tools. Extend only the
+# host test's reference reader; every runtime/workspace/output assertion stays.
+if [ -f "$N/host-fixture-input.json" ]; then
+  ORDERED_TEST="$H/test_cast_dynamic-ordered-ws$KB.cpp"
+  python3 "$T/port/dreamcast/tools/ps2_cast_host_strips.py" host-test "$TEST" "$ORDERED_TEST"
+  TEST="$ORDERED_TEST"
+fi
 # the check binary is rebuilt whenever the runtime sources or the test change (stamp = their sha256)
 STAMP=$(cat "$T/port/dreamcast/game/platform/native_actor_fast.cpp" "$T/port/dreamcast/room/pvr_geometry.cpp" \
         "$T/port/dreamcast/room/source_lighting.cpp" "$TEST" | sha256sum | cut -c1-16)

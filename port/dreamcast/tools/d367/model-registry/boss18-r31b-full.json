@@ -1,0 +1,36 @@
+{
+  "registry": "boss18-r31b-full",
+  "about": "Isolated unselected U3 original full PS2 geometry with original97GC runtime owner; rawPS298th bone97 is unweighted. Original source skin alpha candidate uses PS2 pixels, not GC-colour rebake. Active source info2 texBlendTbl/ratio255/type2 remains unsupported at runtime; no engine/gate exception, actual fight/LOD/look unqualified. Six original PS2 alpha triangles restored to exact source order; all corner/skin/UV/encoded texture bytes unchanged.",
+  "cast_dir": "/root/re4data/private/boss18-u3-20261018/cast-full",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+  "descriptors": [
+    {
+      "name": "u3-em32-00",
+      "archive": "em32",
+      "model_id": "0x32",
+      "source_types": [
+        0
+      ],
+      "partial_sections": true,
+      "source_drops": [
+        "bump"
+      ],
+      "module": "src/em32/em32.cpp em32_R0_Init modelInit(ARC 4, ARC 5) + create(ARC 6, ARC 5) + the blended skin create(ARC 7, ARC 5); PS2 98 bones on the GC 97",
+      "pool": true,
+      "mask_runs": {
+        "2": "/root/re4data/private/boss18-u3-20261018/mask-u3-em32-00-ps2-ordered-s2"
+      }
+    }
+  ],
+  "room_packages": {
+    "31b": {
+      "descriptors": [
+        "u3-em32-00"
+      ],
+      "evidence": "emleon07.esl em32 type 0"
+    }
+  }
+}

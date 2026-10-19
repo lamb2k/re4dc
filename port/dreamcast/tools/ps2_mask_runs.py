@@ -163,13 +163,16 @@ def main():
             best_d[better] = d[better]; best_t[better] = ti[better]; best_b[better] = b[better]
         return best_d, best_t, best_b
     tc = np.asarray([P[[k[0] for k in t]].mean(0) for t in tris])
-    d, ti, _ = closest(tc)
-    hair = masked[ti] & (d <= a.max_mm)
     if atlas is not None:
         # the PS2 alpha under the triangle: corners, edge midpoints and centroid of its atlas UVs
         wts = np.asarray([[1, 0, 0], [0, 1, 0], [0, 0, 1], [.5, .5, 0], [0, .5, .5], [.5, 0, .5], [1 / 3, 1 / 3, 1 / 3]])
         hair = np.asarray([bk.sample(atlas, wts @ UV[[k[2] for k in t]])[:, 3].min() < a.atlas_alpha_threshold for t in tris])
         d = np.zeros(len(tris))
+    else:
+        # The GC projection is unused by --atlas-rgba, whose source alpha
+        # completely determines the run. Avoid its quadratic scratch there.
+        d, ti, _ = closest(tc)
+        hair = masked[ti] & (d <= a.max_mm)
     H_tris = [t for t, h in zip(tris, hair) if h]; O_tris = [t for t, h in zip(tris, hair) if not h]
     if not H_tris:
         raise SystemExit('no PS2 triangle lies on a masked GC material')

@@ -1,0 +1,80 @@
+{
+  "registry": "boss18-r218-whole-full",
+  "about": "Original full Garrador whole body plus full separate back-parasite; existing ordinary Zealot source pools/masks retained. No room/source behavior change or production/LOD/look acceptance.",
+  "cast_dir": "/root/re4data/private/boss18-garrador-20261018/cast-whole-full",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+  "descriptors": [
+    {
+      "name": "zealot-em1c-09h",
+      "archive": "em1c",
+      "model_id": "0x1c",
+      "source_types": [
+        9
+      ],
+      "partial_sections": true,
+      "module": "src/em1c/em1c_set.cpp Em1cSet type 9 (em10.cpp creates; ps2_cast.py pool) + flag-2 accessory 0x211 / TPL 0x220 (ch4found16 95584fc1) + mot[38] / TPL 0x219 (acc38-b, cast16 r218 kill rig) + mot[38] / TPL 0x219 (acc38-b, cast16 r218 kill rig) + mot[38] / TPL 0x219 (acc38-b, cast16 r218 kill rig)",
+      "pool": true,
+      "source_drops": [
+        "bump"
+      ],
+      "mask_runs": {
+        "13": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-zealot-em1c-09h-s13",
+        "16": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-zealot-em1c-09h-s16",
+        "20": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-zealot-em1c-09h-s20",
+        "22": "/root/re4data/private/boss18-garrador-20261018/reused-masks/mask-zealot-em1c-09h-s22"
+      }
+    },
+    {
+      "name": "zealot-em1c-0ag",
+      "archive": "em1c",
+      "model_id": "0x1c",
+      "source_types": [
+        10
+      ],
+      "partial_sections": true,
+      "module": "src/em1c/em1c_set.cpp Em1cSet type 10 (em10.cpp creates; ps2_cast.py pool)",
+      "source_drops": [
+        "bump"
+      ]
+    },
+    {
+      "name": "zealot-em1c-0dg",
+      "archive": "em1c",
+      "model_id": "0x1c",
+      "source_types": [
+        13
+      ],
+      "partial_sections": true,
+      "module": "src/em1c/em1c_set.cpp Em1cSet type 13 (em10.cpp creates; ps2_cast.py pool)",
+      "source_drops": [
+        "bump"
+      ]
+    },
+    {
+      "name": "garr-core-em1c",
+      "archive": "em1c",
+      "model_id": "0x16",
+      "source_types": [
+        4
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "em10 typeA/D original SetObj16 BIN227/TPL228, attachbody36;14originalparts/motion229/22A whole unchanged. Weak collider37 is separate source data."
+    }
+  ],
+  "room_packages": {
+    "218": {
+      "descriptors": [
+        "zealot-em1c-09h",
+        "zealot-em1c-0ag",
+        "zealot-em1c-0dg",
+        "garr-core-em1c"
+      ],
+      "evidence": "Original source construction and current383 b18abrT body alive/native diagnostic; complete core admission/animated draw and room gates remain pending."
+    }
+  }
+}

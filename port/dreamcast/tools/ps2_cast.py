@@ -8,6 +8,12 @@ section's PS2 bone table must equal the GC BIN's (bone id == GC part attach id, 
 within --bone-tol mm); PS2 weight bone ids are then GC part indices (identity map, checked per bone). The
 appearance's signatures stay the GC source infos' (the runtime identifies the game's loaded GC model by them
 and draws the converted mesh in its place).
+Selected presets can instead declare source-pinned same-id/parent inverse-bind offsets: the authored PS2 vertices
+and original GC skeleton stay unchanged, while the retarget's actual animated look remains a review requirement.
+Declared source-pinned addModel attachments may use modelInit's existing body owner part table; their complete
+unused section rest metadata is retained in the proof, including duplicate IDs. No runtime skeleton is replaced.
+Optional source_draw_slots presets use the existing registry slot format: all original source joints remain in
+source.json and runtime proof; only referenced render-weight IDs receive a reversible slot index.
 
 Stage 1, `convert` (Windows Python: numpy, PIL):
   inputs/        emXX.dat from the PS2 disc (ISO9660 -> BIO4DAT.AFS) and emXX.drs from the GC debug disc,
@@ -470,8 +476,8 @@ PRESETS['regen-em36-02'] = dict(_em36(0x15, 0x16, 0x24, [2, 3], ['r309', 'r310']
 # em39.cpp (Krauser, r31c) type 1 modelInit(ARC 0x15, ARC 0x17) + ModInfoMgr.create (5, 0x10), (6, 0x18), (7, 0x12), the knife
 # (9, 0x10), em39HandSet right hands 0xA..0xD and left hands 0xE / 0xF (TPL 0x14), em39DieModelSet (0x21, 0x22); type 2
 # modelInit(ARC 0x1A, ARC 0x1D) + (5, 0x10), (6, 0x1E), (0x1B, 0x1F), (0x1C, 0x20), the knife, right hands only.
-# NOT CONVERTED (cast16 10-17): `convert` refuses both Krauser presets - the PS2 em39 skeleton is not the GC one (body
-# bone positions differ by up to 16.7 mm for type 1, 55.7 mm for type 2), so the PS2 mesh needs a retarget (a look decision).
+# Source-pinned body inverse-bind retarget (boss18): original127 GC parts and authored PS2 geometry stay intact.
+# Partial/duplicate attachment rest tables remain source evidence; addModel uses the body owner. Animated look is unqualified.
 _EM39_HANDS = [(0xa, 'right-hand', 0x14), (0xb, 'right-hand-b', 0x14), (0xc, 'right-hand-c', 0x14), (0xd, 'right-hand-d', 0x14)]
 PRESETS['krauser-em39-01'] = dict(archive='em39', sections=[(0x15, 'body'), (5, 'acc0', 0x10), (6, 'acc1', 0x18), (7, 'acc2', 0x12),
                                   (9, 'knife', 0x10)] + _EM39_HANDS + [(0xe, 'left-hand', 0x14), (0xf, 'left-hand-b', 0x14),
@@ -479,6 +485,36 @@ PRESETS['krauser-em39-01'] = dict(archive='em39', sections=[(0x15, 'body'), (5, 
 PRESETS['krauser-em39-02'] = dict(archive='em39', sections=[(0x1a, 'body'), (5, 'acc0', 0x10), (6, 'acc1', 0x1e), (0x1b, 'acc2', 0x1f),
                                   (0x1c, 'acc3', 0x20), (9, 'knife', 0x10)] + _EM39_HANDS + [(0x21, 'death', 0x22)],
                                   tpl=0x1d, rooms=['r31c'], types=[2], category='registry', model_id=0x39, lit=True)
+# Exact original BIN identities for the optional source-owner retarget. No runtime admission.
+_EM39_SOURCE_HASHES = {
+    0x5: ('bddb27c0d2be42488970e90a4c84fd7d5cdbee24746700ad777e8d8f4cf25887', 'db697d772b5822df3a46ac0052344b4ac0014569d503571890fe2352ec24353d'),
+    0x6: ('2e57e09329a28c2078d81ae608d9862b2e6276dd199cf0a3d939523123c6cfe1', '53a3d416cf082c518c4de56b8ab6ab249a98794c5a4085ddf52ebb9676efa6a2'),
+    0x7: ('667f1f97cbccd0803d36ec794c35dbcccf4e358d0ad25df417883fba12fec189', '8a10e98d091b070ed4a8dd4e18add0eb50540dbb25046b7030089b322133b4a0'),
+    0x9: ('5e47bd2aeca8452a7bef840c77957a2b35951f2578fa43eaf48722cdf84a2841', '4d5f7bd3096695cab885628b1dee4a374df93093009808cc0c564ba64786eb45'),
+    0xa: ('0e6a922f1b9ab893857548bfcb51d098f4157c96e462ba69ba4a53cbdd656856', '1f2378161b0118149270e459eb24b04368ac4cf9fe77a6f46a7544df76454b17'),
+    0xb: ('8ac4f08fb63fac932879e2227d71099facb38901d75f4646ea0b605e502b0d13', '99fa506e3b53c0b521facbdcfdea9540e060d36cb12021ad061919041cbb97c3'),
+    0xc: ('8ac4f08fb63fac932879e2227d71099facb38901d75f4646ea0b605e502b0d13', 'f671c8c0983c401a692d26867b3962e43d47f4d37ccbcccb0c715a665b12628f'),
+    0xd: ('8ac4f08fb63fac932879e2227d71099facb38901d75f4646ea0b605e502b0d13', '4d5349ac332ae260a838d0bd2a1512e43218614225f1a19cd89b974956b5c7ed'),
+    0xe: ('ee4395d1c08d1fb6dcc664fa22e29338c18612cbbd9625716684a23bfa669517', '9996dcc175e108d720d8a33c60dbfecbdd69bb38f2bd29d6aaf381d59a5c7efa'),
+    0xf: ('52fdcaaaa8d75d84ea04664aeee848b85fc137f686ed168b0ff3f33e995bf644', '6d320410f74783204859c43f003b669299114147bf03195cc3a728310add4817'),
+    0x15: ('a89a73b441b29e74c259e436da2fd383df075287e0648250618333b12d3d18bb', '2428aec9e76184dae0a381e44eef4862c2a89e601ffa16bd89c7195f909fbbe7'),
+    0x1a: ('8c8fb758f313bd533d35b41a074c56d16489c4b45808fc3b5eb647b0ad8541c1', 'bbd93400eafbdc5013cbc382dfdbdf01eb9eb4c4e872efba64dbfd5669ae986d'),
+    0x1b: ('d072d48ae8ecfe4ca84ecb9631b202370e3b571d1f2b5811af710920dcce2d65', '1f17b7628a54f09c54ce019205d28f668cea32e4160f83ee0c49a1dec9ae514d'),
+    0x1c: ('fcec1b92f520bff89f6f259fa109e0776ec4e1ba10a423fe51e97f8f46957817', '5e0a49ecb231350b98e86f15e7e174e00a45a612c417400a9b28d4965ff6e823'),
+    0x21: ('1da7d604d7b1acc87abcbd7fcfa25cf174d1c3a268fbaf1b082cb3c2336140b9', '0ffbd44a8875fa0353b78c10b8b74822cc71ebe5f87ceef8ed309d4e09726d33'),
+}
+for _em39_app in ('krauser-em39-01', 'krauser-em39-02'):
+    _em39_spec = PRESETS[_em39_app]
+    _em39_body = _em39_spec['sections'][0][0]
+    _em39_ps2, _em39_gc = _EM39_SOURCE_HASHES[_em39_body]
+    _em39_bind = dict(kind='same-id-parent-gc-inverse-bind', ps2_sha256=_em39_ps2, gc_sha256=_em39_gc)
+    _em39_spec.update(source_bind_offsets={_em39_body: _em39_bind},
+        host_ordered_strips=True, atlas_wrap_gutters=True,
+        attachment_owner_skeletons={arc: dict(kind='source-pinned-retarget-owner-attachment',
+            ps2_sha256=_EM39_SOURCE_HASHES[arc][0], gc_sha256=_EM39_SOURCE_HASHES[arc][1],
+            owner_ps2_sha256=_em39_ps2, owner_gc_sha256=_em39_gc, owner_bind_contract=_em39_bind)
+            for arc, *_ in _em39_spec['sections'][1:]})
+
 # em3a.cpp (the r31c gunship) types 0 / 1 modelInit(ARC 5, ARC 6), type 2 modelInit(ARC 0xB, ARC 0xC).
 PRESETS['gunship-em3a-00'] = dict(archive='em3a', sections=[(5, 'body')], tpl=6, rooms=['r31c'], types=[0, 1], category='registry',
                                   model_id=0x3a, lit=True)
@@ -487,6 +523,62 @@ PRESETS['gunship-em3a-02'] = dict(archive='em3a', sections=[(0xb, 'body')], tpl=
 # em32.cpp (U-3, r31b) modelInit(ARC 4, ARC 5) + ModInfoMgr.create(ARC 6, ARC 5) and the texture-blended skin (ARC 7, ARC 5).
 PRESETS['u3-em32-00'] = dict(archive='em32', sections=[(4, 'body'), (6, 'extra'), (7, 'skin')], tpl=5, rooms=['r31b'], types=[0],
                              category='registry', model_id=0x32, lit=True, ps2_superset_bones=True, shift=2)
+# boss18 r228 (2026-10-18): original em38_R0_Init roles and weak obj00 attachment.
+# The body adds BIN9/TPL10. Types1/2 share BIN5; type4 is the static roots.
+# All keep source raw UVs with verified sampler gutters and the original GC skeleton.
+PRESETS['queen-em38-00'] = dict(archive='em38', sections=[(4, 'body'), (9, 'eye')], tpl=8, section_tpls={9: 10},
+    rooms=['r228'], types=[0], category='boss', model_id=0x38, shift=1, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+PRESETS['tentacle-em38-01'] = dict(archive='em38', sections=[(5, 'body')], tpl=8,
+    rooms=['r228'], types=[1, 2], category='boss', model_id=0x38, shift=0, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+PRESETS['roots-em38-04'] = dict(archive='em38', sections=[(7, 'body')], tpl=8,
+    rooms=['r228'], types=[4], category='boss', model_id=0x38, shift=0, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+PRESETS['weak-em38-obj00'] = dict(archive='em38', sections=[(0x51, 'body')], tpl=0x52,
+    rooms=['r228'], types=[], category='registry', model_id=0, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+# Upper type3 has matching21 ids/parents but different rest translations. This is
+# a declared inverse-bind retarget for review, not a wider --bone-tol. Its used
+# TPL8 image26 needs the existing character-specific odd-interlace transpose.
+PRESETS['salazar-em38-03'] = dict(archive='em38', sections=[(6, 'body')], tpl=8,
+    rooms=['r228'], types=[3], category='boss', model_id=0x38, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True, character_tpl_orientation=True,
+    source_bind_offsets={6: dict(kind='same-id-parent-gc-inverse-bind',
+        ps2_sha256='3e4f8cd94fd8969b80853ef42a58ed17eb0c7c801a6a0c5e9ecbcf021c0da9f6',
+        gc_sha256='ac402a6b47c45d3247fbf898a1c4536adf9b6bb985ee2665fae6394f2e97fdc6')})
+# boss18 Saddler em31.cpp625/630: only BIN4 modelInit constructs83 parts;
+# BIN5 addModel appends model info and uses those parts (model.cpp220/1256/2005).
+# Its143 duplicate-ID PS2 rest records remain in the explicit source proof.
+PRESETS['saddler-em31-00'] = dict(archive='em31', sections=[(4, 'body'), (5, 'head')], tpl=7,
+    rooms=['r332'], types=[0], category='boss', model_id=0x31, shift=2, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True,
+    attachment_owner_skeletons={5: dict(kind='source-pinned-body-owner-attachment',
+        ps2_sha256='e459365a50b540b6cb0c7d579dafddcc167d7bf49b6091edbbc0a0158c357829',
+        gc_sha256='9451e8b6032cac7912cad1be9bd55d996b4aaec8be0e2a335ef44b93569ba67c',
+        owner_ps2_sha256='a0ff107371276123cdae181cbec91a71cd20fab02fa60e95d4ec05b27029604e',
+        owner_gc_sha256='7ac118f5847d2f3bfe27a1f6f8b782ce6dd2d38953719d9096615e653d702713')})
+PRESETS['saddler-tentacle-em31-01'] = dict(archive='em31', sections=[(8, 'body')], tpl=7,
+    rooms=['r332'], types=[1], category='boss', model_id=0x31, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+PRESETS['saddler-weak-obj00'] = dict(archive='em31', sections=[(6, 'body')], tpl=7,
+    rooms=['r332'], types=[], category='registry', model_id=0, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+# Four independent source SetObj16 tail objects attach to bodyparts74..77;
+# each retains its own nine-part skeleton and original motion/attack behavior.
+PRESETS['saddler-tail-obj16'] = dict(archive='em31', sections=[(0x76, 'body')], tpl=0x77,
+    rooms=['r332'], types=[], category='registry', model_id=0x16, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
+# em2c.cpp1148/1155: body BIN5 has201 unchanged source joints, but only70
+# are weighted. The existing --slots registry proves all201, then binds70 draw
+# joints. BIN134 is the independent20-part tail. Frozen Ctrl12 texrender/blend
+# remains an unqualified source system; no material/runtime exception here.
+PRESETS['verdugo-em2c-00'] = dict(archive='em2c', sections=[(5, 'body')], tpl=6,
+    rooms=['r221'], types=[0], category='boss', model_id=0x2c, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True, source_draw_slots=96)
+PRESETS['verdugo-tail-01'] = dict(archive='em2c', sections=[(134, 'body')], tpl=6,
+    rooms=['r221'], types=[1], category='boss', model_id=0x2c, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
 # em3d.cpp (r320) modelInit(ARC 5, ARC 6). Converts (shift 1), but no room package yet: its body has three GC masked materials
 # (colours 1 / 3 / 20, masks 2 / 4 / 21): ps2_mask_runs.py --multi-mask bakes all three into one mask run (lane geodrop17;
 # r320 package spec model-registry/ps2-ch5-r320.json, model_registry.py --roles5 --role-tex23: its TPL 6 has 23 images).
@@ -723,6 +815,160 @@ def winding_agreement(verts, tris, corner_normals):
 # ------------------------------------------------------------------------------------------ convert
 
 
+def source_bind_offsets(pbin, gbin, ps2_bones, gc_bones, contract):
+    """Prove a declared same-id/parent virtual-root bind mapping, not identity.
+
+    The PS2 vertices stay at their authored positions. G_world * G_rest^-1
+    binds them through the original GC skeleton. A virtual PS2 root offset
+    G_rest^-1 * P_rest represents that mapping exactly; animated look still
+    needs source-pose and user review. Source byte identities pin this policy.
+    """
+    if set(contract) != {'kind', 'ps2_sha256', 'gc_sha256'} or contract['kind'] != 'same-id-parent-gc-inverse-bind':
+        raise ValueError('unsupported explicit bind-offset contract')
+    if contract['ps2_sha256'] != sha(pbin) or contract['gc_sha256'] != sha(gbin):
+        raise ValueError('bind-offset source BIN identity changed')
+    if not ps2_bones or len(ps2_bones) != len(gc_bones):
+        raise ValueError('bind-offset source skeleton cardinality changed')
+    rests, offsets = {}, []
+    for i, (p, g) in enumerate(zip(ps2_bones, gc_bones)):
+        if (p['id'], p['parent']) != (g['attach'], g['parent']) or p['id'] != i or g['id'] != i:
+            raise ValueError('bind-offset mapping requires the complete same-id/parent tables')
+        if len(p['pos']) != 3 or not all(math.isfinite(x) for x in p['pos']):
+            raise ValueError('invalid PS2 bind translation')
+        rest = np.eye(4)
+        rest[:3, 3] = p['pos']
+        if p['parent'] >= 0:
+            if p['parent'] not in rests:
+                raise ValueError('bind-offset PS2 parent must precede its child')
+            rest = rests[p['parent']] @ rest
+        rests[i] = rest
+        gc_rest = np.asarray(g['rest'])
+        if gc_rest.shape != (4, 4) or not np.isfinite(gc_rest).all():
+            raise ValueError('invalid GC bind matrix')
+        offset = np.linalg.inv(gc_rest) @ rest
+        offsets.append(dict(id=i, parent=p['parent'], gc_to_ps2_virtual_rest_offset=offset.tolist(),
+                            offset_length_mm=float(np.linalg.norm(offset[:3, 3]))))
+    return dict(contract=contract, offsets=offsets,
+                maximum_virtual_world_offset_mm=max(x['offset_length_mm'] for x in offsets),
+                animation_evidence='NONE: source inverse-bind correspondence only; actual poses and look pending')
+
+
+def source_retarget_owner_attachment(pbin, gbin, owner_pbin, owner_gbin, source_bones, owner_ps2,
+                                     section_gc, owner_gc, weighted, contract, bone_tol):
+    """Prove an addModel section on an explicitly retargeted, unchanged body owner.
+
+    Only modelInit supplies cParts and their bind matrices. The attachment BIN's
+    complete partial/duplicate rest records remain source evidence, not a new
+    skeleton. Every weighted ID must exist in that BIN, its GC section and the
+    original body. Geometry and numeric weights are never remapped here.
+    """
+    keys = {'kind', 'ps2_sha256', 'gc_sha256', 'owner_ps2_sha256', 'owner_gc_sha256', 'owner_bind_contract'}
+    if set(contract) != keys or contract['kind'] != 'source-pinned-retarget-owner-attachment':
+        raise ValueError('unknown retarget attachment owner contract')
+    payloads = dict(ps2_sha256=pbin, gc_sha256=gbin,
+                    owner_ps2_sha256=owner_pbin, owner_gc_sha256=owner_gbin)
+    if any(sha(data) != contract[key] for key, data in payloads.items()):
+        raise ValueError('retarget attachment/owner source BIN identity changed')
+    n = len(owner_gc)
+    if not 1 <= n <= 255 or len(owner_ps2) != n:
+        raise ValueError('retarget attachment needs the complete original body owner')
+    offsets = source_bind_offsets(owner_pbin, owner_gbin, owner_ps2, owner_gc,
+                                  contract['owner_bind_contract'])
+    def index(v):
+        return isinstance(v, int) and not isinstance(v, bool)
+    def xyz(v):
+        return isinstance(v, (tuple, list)) and len(v) == 3 and all(
+            isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x) for x in v)
+    for i, (p, g) in enumerate(zip(owner_ps2, owner_gc)):
+        if any(not index(v) for v in (p.get('id'), p.get('parent'), g.get('id'), g.get('attach'), g.get('parent'))) or \
+                not xyz(p.get('pos')) or not xyz(g.get('translation')):
+            raise ValueError('invalid original body owner index/translation')
+    original, seen = {}, set()
+    for q in source_bones:
+        i, parent = q.get('id'), q.get('parent')
+        if not index(i) or not 0 <= i < n or not index(parent) or not -1 <= parent < n or not xyz(q.get('pos')):
+            raise ValueError('invalid original attachment rest record')
+        value = (parent, tuple(q['pos']))
+        if i in original and original[i] != value:
+            raise ValueError('conflicting original attachment duplicate rest records')
+        if parent >= 0 and parent not in seen:
+            raise ValueError('original attachment parent must precede its child')
+        original[i] = value; seen.add(i)
+    if not original:
+        raise ValueError('missing original attachment rest records')
+    attachments = set()
+    for k, g in enumerate(section_gc):
+        i, parent = g.get('attach'), g.get('parent')
+        if not index(g.get('id')) or g.get('id') != k or not index(i) or not 0 <= i < n or i in attachments or not index(parent) or \
+                not -1 <= parent < n or not xyz(g.get('translation')):
+            raise ValueError('attachment GC section does not reference the original owner hierarchy')
+        # Unused section heads can have a different parent (Krauser head120/121).
+        # addModel never installs them as cParts; preserve them, validate their
+        # references, and require every PS2-weighted section ID to name the owner.
+        if i in weighted and parent not in (-1, owner_gc[i]['parent']):
+            raise ValueError('weighted attachment GC hierarchy differs from original owner')
+        rest = np.asarray(g.get('rest'))
+        if rest.shape != (4, 4) or not np.isfinite(rest).all():
+            raise ValueError('invalid original GC attachment rest matrix')
+        attachments.add(i)
+    if not weighted or any(not index(i) for i in weighted) or not set(weighted) <= (set(original) & attachments):
+        raise ValueError('attachment weights escape original source/section/body owner')
+    return [dict(p) for p in owner_ps2], dict(kind=contract['kind'],
+        source_BIN_sha256={key:sha(data) for key, data in payloads.items()},
+        original_PS2_rest_records=[dict(p) for p in source_bones],
+        original_GC_rest_records=[dict(g) for g in section_gc],
+        original_PS2_rest_record_count=len(source_bones), original_GC_rest_record_count=len(section_gc),
+        owner_parts=n, weighted_ids=sorted(weighted), owner_bind_offsets=offsets,
+        binding='Source modelInit body owns every animated part and inverse bind; addModel only links infos. '
+                'All original partial/duplicate section rest metadata is retained, not substituted runtime parts.',
+        bone_tolerance_mm=bone_tol, animation_evidence='NONE: inverse-bind algebra only; actual poses/look pending')
+
+
+def source_attachment_owner_skeleton(pbin, gbin, owner_pbin, owner_gbin, source_bones, owner_ps2,
+                                     section_gc, owner_gc, weighted, contract, bone_tol):
+    """An explicitly proved addModel attachment uses modelInit's existing owner parts.
+
+    Its unused BIN rest table is retained verbatim in the proof, including duplicate
+    IDs. It does not replace the owner skeleton. No position, normal, UV, weight,
+    source archive or runtime bone is changed. Only declared four-source identities
+    may use this contract; ordinary section skeleton validation remains the default.
+    """
+    if contract.get('kind') == 'source-pinned-retarget-owner-attachment':
+        return source_retarget_owner_attachment(pbin, gbin, owner_pbin, owner_gbin, source_bones,
+            owner_ps2, section_gc, owner_gc, weighted, contract, bone_tol)
+    if contract.get('kind') != 'source-pinned-body-owner-attachment':
+        raise ValueError('unknown attachment owner skeleton contract')
+    payloads = dict(ps2_sha256=pbin, gc_sha256=gbin,
+                    owner_ps2_sha256=owner_pbin, owner_gc_sha256=owner_gbin)
+    if any(sha(data) != contract.get(key) for key, data in payloads.items()):
+        raise ValueError('attachment/owner source BIN identity changed')
+    n = len(owner_gc)
+    if not n or len(owner_ps2) != n or len(section_gc) != n:
+        raise ValueError('attachment needs the complete existing owner part table')
+    for i, (p, g, q) in enumerate(zip(owner_ps2, owner_gc, section_gc)):
+        if not all(len(x)==3 and np.isfinite(x).all() for x in (p['pos'],g['translation'],q['translation'])):
+            raise ValueError('attachment GC/PS2 owner rest is not finite xyz')
+        if (p['id'], p['parent']) != (i, g['parent']) or (g['id'], g['attach']) != (i, i) or \
+                (q['id'], q['attach'], q['parent']) != (g['id'], i, g['parent']):
+            raise ValueError('attachment GC/PS2 owner hierarchy differs')
+        if max(abs(x-y) for x,y in zip(p['pos'],g['translation'])) > bone_tol or \
+                max(abs(x-y) for x,y in zip(q['translation'],g['translation'])) > bone_tol:
+            raise ValueError('attachment GC/PS2 owner rest differs')
+    if not source_bones or {p['id'] for p in source_bones} != set(range(n)) or any(
+            p['parent'] not in range(-1,n) or not np.isfinite(p['pos']).all() for p in source_bones):
+        raise ValueError('attachment original rest table does not name the owner IDs')
+    if not weighted or not set(weighted) <= set(range(n)):
+        raise ValueError('attachment weights reference a bone outside the owner')
+    return [dict(p) for p in owner_ps2], dict(kind=contract['kind'],
+        source_BIN_sha256={key:sha(data) for key,data in payloads.items()},
+        original_PS2_rest_records=[dict(p) for p in source_bones],
+        original_PS2_rest_record_count=len(source_bones), owner_parts=n,
+        weighted_ids=sorted(weighted), bone_tolerance_mm=bone_tol,
+        binding='Declared addModel attachment; original modelInit body owns every animated part. '
+                'The section rest table is retained as unused source metadata, not an animation skeleton.',
+        look='Original animated attachment/cloth poses and user look remain unverified')
+
+
 def gutter_texture(rgba, width, height, uv_bounds, wrap):
     """Extend source texels for unchanged raw UVs in an atlas (optional).
 
@@ -745,6 +991,54 @@ def gutter_texture(rgba, width, height, uv_bounds, wrap):
     image = np.pad(image, ((top, bottom), (0, 0), (0, 0)), mode='wrap' if wrap[1] else 'edge')
     image = np.pad(image, ((0, 0), (left, right), (0, 0)), mode='wrap' if wrap[0] else 'edge')
     return image.tobytes(), (left, top, right, bottom)
+
+
+def lossless_draw_slots(mesh, source, max_slots):
+    """Use the existing registry slot format, keeping every source joint/proof.
+
+    This is a bijective relabeling of referenced skin joints, not skeleton or
+    geometry reduction. The runtime still proves every source parent/rest bind.
+    Existing exports never enter this path unless the preset opts in.
+    """
+    if type(max_slots) is not int or max_slots not in (48, 64, 80, 96, 128):
+        raise ValueError('draw-slot capacity must name an existing registry capacity')
+    bones = source.get('bones', [])
+    if source.get('draw_slots') is not None or not 1 <= len(bones) <= 255:
+        raise ValueError('draw slots require an original source skeleton of1..255joints')
+    for i, b in enumerate(bones):
+        if type(b.get('id')) is not int or b['id'] != i or type(b.get('parent')) is not int or not -1 <= b['parent'] < i:
+            raise ValueError('draw-slot source hierarchy must be an index-ordered forest')
+        for field in ('rest', 'capture'):
+            m = b.get(field, [])
+            if len(m) != 4 or any(len(row) != 4 or any(not isinstance(x, (int, float)) or
+                    not math.isfinite(x) for x in row) for row in m):
+                raise ValueError('draw-slot source rest/capture must be complete and finite')
+    if mesh.get('bones') != bones or len(mesh.get('weights', [])) != len(mesh.get('positions_mm', [])):
+        raise ValueError('draw-slot mesh must retain the complete source skeleton and weights')
+    weights = mesh['weights']
+    if not weights or any(not ws or any(type(b) is not int or not 0 <= b < len(bones) or
+            not isinstance(w, (int, float)) or not math.isfinite(w) or w < 0 for b, w in ws) for ws in weights):
+        raise ValueError('draw-slot weights must reference finite original source joints')
+    slots = sorted({b for ws in weights for b, _ in ws})
+    if len(slots) > max_slots:
+        raise ValueError('referenced draw slots exceed the unchanged registry capacity')
+    if len(slots) >= len(bones):
+        raise ValueError('draw slots need a strict subset; retain the ordinary source representation')
+    slot_of = {b: k for k, b in enumerate(slots)}
+    mapped = [[[slot_of[b], w] for b, w in ws] for ws in weights]
+    if [[[slots[b], w] for b, w in ws] for ws in mapped] != weights:
+        raise ValueError('draw-slot mapping changed original source weight records')
+    selected = [dict(bones[b], id=k, parent=-1, source_joint=b) for k, b in enumerate(slots)]
+    src = dict(source, draw_slots=slots)
+    out = dict(mesh, bones=selected, weights=mapped)
+    out['policy'] = mesh.get('policy', '') + (' Existing registry draw slots relabel referenced joints only; '
+                    'the complete source skeleton, geometry and weight values stay unchanged.')
+    proof = dict(kind='existing-lossless-source-draw-slots', source_joints=len(bones), draw_slots=slots,
+                 max_draw_slots=max_slots, source_bones_sha256=sha(json.dumps(bones, sort_keys=True).encode()),
+                 source_skeleton_preserved=True, original_weight_records_recover_exactly=True,
+                 geometry_normals_uv_material_roles_preserved=True,
+                 runtime='Existing registry_skeleton_slots proves every source parent/rest inverse before binding slots')
+    return out, src, proof
 
 
 def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.001):
@@ -774,15 +1068,37 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
         tpl_records.append(dict(arc=hex(tpl_arc), bytes=len(tpl), sha256=sha(tpl)))
         for h in tp['entries']:
             w, ht, rgba, st = ptd.decode(tpl, h)
+            orientation = {}
+            if spec.get('character_tpl_orientation'):
+                from ps2_luis import character_image
+                image = character_image(Image.frombytes('RGBA', (w, ht), bytes(rgba)), h['interlace'])
+                orientation = dict(storage_size=[w, ht], interlace=h['interlace'],
+                                   character_orientation='transpose' if h['interlace'] & 1 else 'identity',
+                                   decoded_rgba_sha256=sha(bytes(rgba)), oriented_rgba_sha256=sha(image.tobytes()))
+                w, ht, rgba = *image.size, image.tobytes()
             images.append(dict(index=len(images), width=w, height=ht, rgba=bytes(rgba), format=ptd.describe(h)['format'],
-                               alpha_raw=sorted(st['alpha_raw_hist'])))
-    sections, used = [], []
+                               alpha_raw=sorted(st['alpha_raw_hist']), **orientation))
+    sections, used, bind_offsets = [], [], {}
     for si, (arc, role, tpl_arc) in enumerate(selections):
         assert spec['category'] != 'human' or role == ROLES[si]
         pbin = ps2_entry(ps2, arc, 'BIN')
         gbin = gc_entry(gc, arc, 'BIN')
         m = pb.parse_bin(pbin)
         gsk = gc_skeleton(gbin)
+        owner_contract = spec.get('attachment_owner_skeletons', {}).get(arc)
+        if owner_contract is not None:
+            if si == 0 or not sections:
+                raise ValueError('an attachment owner contract cannot replace modelInit body parts')
+            weighted = {b for _, cs in pb.triangles(m) for c in cs for b, w in c['w'] if w > 0}
+            m.bones, proof = source_attachment_owner_skeleton(pbin, gbin,
+                ps2_entry(ps2, selections[0][0], 'BIN'), sections[0]['gbin'], m.bones,
+                sections[0]['bin'].bones, gsk, bones, weighted, owner_contract, bone_tol)
+            val.setdefault('attachment_owner_skeletons', {})[si] = proof
+            if proof['kind'] == 'source-pinned-retarget-owner-attachment':
+                # calcWeightMat uses modelInit's original cParts bindMat across all infos.
+                # The raw attachment table remains verbatim in proof; source BIN/TPL facts stay raw.
+                gsk = bones
+                bind_offsets[si] = proof['owner_bind_offsets']
         # skeleton identity: PS2 (id, parent, translation) == GC (attach, parent, translation)
         if len(gsk) != len(bones):
             # a partial GC section skeleton (stage-3 soldier head / hands: the parts they weight, by attach id):
@@ -845,7 +1161,13 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
             id_parent = all((pb_['id'], pb_['parent']) == (g['attach'], g['parent']) for pb_, g in pairs)
             dt = max(max(abs(x - y) for x, y in zip(pb_['pos'], g['translation'])) for pb_, g in pairs)
             dt_body = max(max(abs(x - y) for x, y in zip(g['translation'], b['translation'])) for g, b in zip(gsk, bones))
-        assert id_parent and dt <= bone_tol, (role, id_parent, dt)
+        assert id_parent, (role, 'source skeleton identity/parent mismatch')
+        contract = spec.get('source_bind_offsets', {}).get(arc)
+        if contract is not None:
+            assert len(gsk) == len(bones), 'bind offsets require a complete body-table section'
+            bind_offsets[si] = source_bind_offsets(pbin, gbin, m.bones, gsk, contract)
+        elif si not in bind_offsets:
+            assert dt <= bone_tol, (role, id_parent, dt)
         tris = pb.triangles(m)
         for mat in m.materials:
             image_index = tpl_bases[tpl_arc] + mat['diffuse']
@@ -863,6 +1185,9 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                                         ps2_materials=[dict(flag=x['flag'], diffuse=x['diffuse'], opacity=x['opacity']) for x in m.materials],
                                         ps2_triangles=len(tris), ps2_strip_vertices=sum(len(s['verts']) for n in m.nodes for s in n['segments']),
                                         ps2_segments=sum(len(n['segments']) for n in m.nodes))))
+        if owner_contract is not None and owner_contract.get('kind') == 'source-pinned-retarget-owner-attachment':
+            sections[-1]['check']['skeleton_checked'] = ('Original modelInit owner and declared inverse-bind offsets; '
+                'unused original PS2/GC attachment rest tables retained in attachment_owner_skeletons proof.')
     used.sort()
     gutters = {}
     if spec.get('atlas_wrap_gutters'):
@@ -1000,12 +1325,27 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                   source_archive_sha256=rec['gc']['sha256'], ps2_archive_sha256=rec['ps2']['sha256'],
                   bones=[dict(id=b['id'], parent=b['parent'], address=f'{spec["archive"]}:part:{b["id"]}', rest=b['rest'], capture=b['capture'])
                          for b in bones], infos=infos, category=spec['category'], rooms=spec['rooms'], types=spec['types'])
+    if val.get('attachment_owner_skeletons'):
+        source['attachment_owner_skeletons'] = val['attachment_owner_skeletons']
+    if bind_offsets:
+        from ps2_luis import bind_pose_proof
+        for si, proof in bind_offsets.items():
+            ts = [t for t in triangles if t['source_info'] == si]
+            vids = sorted({c['vertex'] for t in ts for c in t['corners']})
+            proof['algebra'] = bind_pose_proof(sections[si]['bin'].bones, bones, {i: i for i in range(len(bones))},
+                                              [positions[v] for v in vids], [weights[v] for v in vids])
+        source['source_bind_offsets'] = bind_offsets
+        val['source_bind_offsets'] = bind_offsets
     sp = out / 'source.json'
     sp.write_text(json.dumps(source))
     mesh = dict(schema='re4dc-approved-render-mesh-1', source_sha256=sha(sp.read_bytes()), mesh=preset.replace('-', '_') + '_ps2',
                 positions_mm=positions, weights=weights, bones=source['bones'], triangles=triangles,
                 policy='PS2 source geometry, normals, UVs (atlas cells) and skin weights, bound to the GC skeleton '
                        '(identical bone table); no reduction or refit.')
+    if bind_offsets:
+        mesh['policy'] = ('Authored PS2 geometry, normals, UVs and weights on the original GC skeleton; '
+                          'explicit source-pinned same-id/parent inverse-bind offsets, not identical rest tables. '
+                          'No geometry refit/reduction; actual animated look requires review.')
     mp = out / 'mesh.json'
     mp.write_text(json.dumps(mesh))
     # skin checks: weights, rest and posed surface distance to the GC mesh
@@ -1056,6 +1396,16 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                                                           p95_max=max(w[0] for w in worst), max=max(w[1] for w in worst),
                                                           p95_median=float(np.median([w[0] for w in worst])))
     val['sections'] = [s['check'] for s in sections]
+    if spec.get('source_draw_slots'):
+        mesh, source, proof = lossless_draw_slots(mesh, source, spec['source_draw_slots'])
+        sp.write_text(json.dumps(source))
+        mesh['source_sha256'] = sha(sp.read_bytes())
+        mp.write_text(json.dumps(mesh))
+        val['source_draw_slots'] = proof
+        for section in val['sections']:
+            section['source_bones'] = section['bones']
+            section['bones'] = len(proof['draw_slots'])
+        (out / 'source-draw-slots.json').write_text(json.dumps(proof, indent=2) + '\n')
     # pack (the cast's packer, unchanged) + host fixture
     pk = load_module('pack_coarse_actor', PROTO / 'tools/pack_coarse_actor.py')
     native = out / 'native'
@@ -1088,7 +1438,7 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
         mpk.write_text(json.dumps(pm))
         mp = mpk
     pk.pack(mp, sp, native, 'castmodel')
-    host_fixture(native, source)
+    host_fixture(native, source, ordered=spec.get('host_ordered_strips', False))
     report = json.loads((native / 'native-report.json').read_text())
     val['native'] = {k: v for k, v in report.items() if k != 'chunks'}
     val['native']['chunks'] = [{k: v for k, v in c.items() if k != 'palette_weights'} for c in report['chunks']]
@@ -1143,20 +1493,42 @@ def pack_atlas(items):
     raise ValueError('atlas does not fit 2048')
 
 
-def host_fixture(n, source):
+def host_fixture(n, source, ordered=False):
     """prepare_dynamic_native_check.py's host-fixture.bin (the cast agent's check-dynamic input)."""
     rest = np.asarray([b['rest'] for b in source['bones']]); cap = np.asarray([b['capture'] for b in source['bones']])
     sk = cap @ np.linalg.inv(rest); sk[:, :3, 3] += rest[0, :3, 3] - cap[0, :3, 3]
+    slots = source.get('draw_slots')
+    if slots is not None:
+        if not slots or any(type(k) is not int or k < 0 for k in slots) or slots != sorted(set(slots)):
+            raise ValueError('host fixture requires increasing original source draw slots')
+        # Full source.json (also used by glod_rung) retains the original root's
+        # capture compensation. Ashley's established explicit slot-bone fixture
+        # already selected these matrices; preserve that legacy input unchanged.
+        selected = len(source['bones']) == len(slots) and [b.get('source_joint') for b in source['bones']] == slots
+        if not selected:
+            if slots[-1] >= len(sk):
+                raise ValueError('host fixture draw slot outside complete source skeleton')
+            sk = sk[slots]
     r = json.loads((n / 'native-report.json').read_text())
     buf = bytearray(struct.pack('<I', len(r['chunks'])))
+    strip_proofs = []
     for c in r['chunks']:
         i = c['info']
         parts = [(n / f'info{i}.{ext}').read_bytes() for ext in ['pos', 'nrm', 'uv', 'gx']]
+        if ordered:
+            from ps2_cast_host_strips import ordered_gx
+            parts[3], proof = ordered_gx(parts[3], (c['positions'], c['normals'], len(parts[2]) // 4))
+            strip_proofs.append(dict(info=i, source_array_counts=[c['positions'], c['normals'], len(parts[2]) // 4], **proof))
         poses = np.asarray([sum(w * sk[b] for b, w in ws)[:3, :4].T.flatten() for ws in c['palette_weights']], dtype='<f4').tobytes()
         buf.extend(struct.pack('<10I', i, c['positions'], c['normals'], c['palettes'], c['triangles'], *[len(x) for x in parts], len(poses)))
         for p in parts + [poses]:
             buf.extend(p)
     (n / 'host-fixture.bin').write_bytes(buf)
+    if ordered:
+        (n / 'host-fixture-input.json').write_text(json.dumps(dict(ordered_host_input=strip_proofs,
+            source_gx_files_unchanged=True, workspace_limit_changed=False), indent=2) + '\n')
+    else:
+        (n / 'host-fixture-input.json').unlink(missing_ok=True)
 
 
 def texture_key(png):
@@ -1208,6 +1580,9 @@ def finish(out):
                levels=dict(conservative=level, lean=level),
                texture_package=dict(package='texture/' + tex['key'] + '.re4tex', package_sha256=tex['package_sha256'], key=tex['key'],
                                     width=tex['width'], height=tex['height'], format=tex['format'], vram_bytes=tex['vram_bytes']))
+    if val.get('source_bind_offsets'):
+        man['source_bind_offsets'] = val['source_bind_offsets']
+        man['status'] = 'PS2 geometry on declared GC inverse-bind offsets; source animation/look review pending'
     (out / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps(level, indent=1))
 
