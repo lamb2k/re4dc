@@ -199,6 +199,11 @@ static u8 aliveCapSent[64];   // 1: a deferred room-code send (its list alive bi
 static int aliveCapN;
 static u32 aliveCapLast;
 static int aliveCapReleasing;
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+// OR commands belong to the queued ESL entry, shared by every room handle.
+// Keep cEmWrap's original 12-byte ABI; 64 masks cost 256 bytes only when enabled.
+static u32 aliveCapPendingFlags[64];
+#endif
 
 // Sends never deferred: the room code dereferences the returned enemy without a check (census 2026-10-15).
 // r100 ambush 03-05 (ems[0..2]), fire trio 06-08 (event motion), house Ganado 0x25; r10c entry 02 and the ambush
@@ -290,6 +295,55 @@ static int aliveCapWaitingK(int k)
     return pG->stage_no == d->room >> 8 && pG->room_no == (d->room & 0xFF);
 }
 
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+// Preserve source setFlag calls while no actor exists. Do not change the ESL
+// record or create/activate an actor merely to deliver a command.
+extern "C" int re4dc_aliveCapSetFlag(int no, u32 bits)
+{
+    for (int k = 0; k < aliveCapN; k++) {
+        if (aliveCapHeld[k] == no && aliveCapWaitingK(k)) {
+            aliveCapPendingFlags[k] |= bits;
+            return 1;
+        }
+    }
+    return 0;
+}
+
+// A direct repeat send or room-start creation can consume a held entry without
+// Take/Move removing it first. Deliver only after the original first AI move.
+static void aliveCapApplyPending(cEm* em, int no)
+{
+    for (int k = 0; k < aliveCapN; k++) {
+        if (aliveCapHeld[k] == no) {
+            em->flag |= aliveCapPendingFlags[k];
+            aliveCapPendingFlags[k] = 0;
+            return;
+        }
+    }
+}
+
+// Allocation refusal must not consume a queued command or its original order.
+// A failed creator has not run first AI initialization, so it cannot insert a
+// new hold. Explicit death/room invalidation still discards the old command.
+static void aliveCapRestorePending(int slot, int no, int sent, u32 bits)
+{
+    EmListData* d = EM_LIST(no);
+    if (EmSetDieCk(no) || (d->be_flag & 2) || (!sent && !(d->be_flag & 1)) ||
+        pG->stage_no != d->room >> 8 || pG->room_no != (d->room & 0xFF)) {
+        return;
+    }
+    for (int j = aliveCapN; j > slot; j--) {
+        aliveCapHeld[j] = aliveCapHeld[j - 1];
+        aliveCapSent[j] = aliveCapSent[j - 1];
+        aliveCapPendingFlags[j] = aliveCapPendingFlags[j - 1];
+    }
+    aliveCapHeld[slot] = (u8) no;
+    aliveCapSent[slot] = (u8) sent;
+    aliveCapPendingFlags[slot] = bits;
+    aliveCapN++;
+}
+#endif
+
 // Adds entry `no` to the hold unless it is there already (a deferred init send the start list meets again).
 static void aliveCapPush(int no, int sent)
 {
@@ -301,6 +355,9 @@ static void aliveCapPush(int no, int sent)
         }
     }
     if (aliveCapN < (int) sizeof(aliveCapHeld)) {
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+        aliveCapPendingFlags[aliveCapN] = 0;
+#endif
         aliveCapSent[aliveCapN] = (u8) sent;
         aliveCapHeld[aliveCapN++] = (u8) no;
     }
@@ -413,9 +470,15 @@ extern "C" cEm* re4dc_aliveCapTake(int no, int drop)
         return 0;
     }
     sent = aliveCapSent[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+    const u32 pending = aliveCapPendingFlags[k];
+#endif
     for (j = k + 1; j < aliveCapN; j++) {
         aliveCapHeld[j - 1] = aliveCapHeld[j];
         aliveCapSent[j - 1] = aliveCapSent[j];
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+        aliveCapPendingFlags[j - 1] = aliveCapPendingFlags[j];
+#endif
     }
     aliveCapN--;
     if (drop) {
@@ -424,6 +487,14 @@ extern "C" cEm* re4dc_aliveCapTake(int no, int drop)
         aliveCapReleasing = 1;
         em = EmSetFromList2(no, 1);
         aliveCapReleasing = 0;
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+        if (em && em != errEm) {
+            em->flag |= pending;
+        } else {
+            em = 0;
+            aliveCapRestorePending(k, no, sent, pending);
+        }
+#endif
         if (em && sent) {
             EmListSetAlive(no, 1);
         }
@@ -474,6 +545,9 @@ extern "C" void re4dc_aliveCapDestroy(int lo, int hi)
             continue;
         }
         aliveCapSent[n] = aliveCapSent[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+        aliveCapPendingFlags[n] = aliveCapPendingFlags[k];
+#endif
         aliveCapHeld[n++] = (u8) no;
     }
     aliveCapN = n;
@@ -506,6 +580,9 @@ extern "C" int re4dc_aliveCapFarDrop(int max, int clearAlive)
         for (j = k + 1; j < aliveCapN; j++) {
             aliveCapHeld[j - 1] = aliveCapHeld[j];
             aliveCapSent[j - 1] = aliveCapSent[j];
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+            aliveCapPendingFlags[j - 1] = aliveCapPendingFlags[j];
+#endif
         }
         aliveCapN--;
         dropped++;
@@ -674,6 +751,9 @@ extern "C" void re4dc_aliveCapMove(int busy)
         const f32 dz = (f32) d->pos[2] * 10.0f - pPL->pos.z;
         const f32 dist = dx * dx + dz * dz;
         aliveCapSent[n] = aliveCapSent[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+        aliveCapPendingFlags[n] = aliveCapPendingFlags[k];
+#endif
         aliveCapHeld[n++] = (u8) no;
         if (dist > bestD) {
             bestD = dist;
@@ -686,15 +766,29 @@ extern "C" void re4dc_aliveCapMove(int busy)
     }
     const int no = aliveCapHeld[best];
     const int sent = aliveCapSent[best];
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+    const u32 pending = aliveCapPendingFlags[best];
+#endif
     for (k = best + 1; k < aliveCapN; k++) {
         aliveCapHeld[k - 1] = aliveCapHeld[k];
         aliveCapSent[k - 1] = aliveCapSent[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+        aliveCapPendingFlags[k - 1] = aliveCapPendingFlags[k];
+#endif
     }
     aliveCapN--;
     aliveCapLast = pG->Frame_cnt;
     aliveCapReleasing = 1;
     cEm* em = EmSetFromList2(no, 1);
     aliveCapReleasing = 0;
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+    if (em && em != errEm) {
+        em->flag |= pending;
+    } else {
+        em = 0;
+        aliveCapRestorePending(best, no, sent, pending);
+    }
+#endif
     if (em && sent) {
         EmListSetAlive(no, 1);   // as the deferred setEm(..., setAlive 1) would have
     }
@@ -785,6 +879,9 @@ void EmSetFromList()
     for (k = 0; k < aliveCapN; k++) {   // keep this room's waiting entries (sends deferred by its init function)
         if (aliveCapWaitingK(k)) {
             aliveCapSent[n] = aliveCapSent[k];
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+            aliveCapPendingFlags[n] = aliveCapPendingFlags[k];
+#endif
             aliveCapHeld[n++] = aliveCapHeld[k];
         }
     }
@@ -871,6 +968,9 @@ void EmSetFromList()
         em->move();
 #if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
         aliveCapNoteFresh(em, (int) i);
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+        aliveCapApplyPending(em, (int) i);
+#endif
 #endif
     }
 }
@@ -930,6 +1030,9 @@ cEm* EmSetFromList2(int no, int chkDead)
     aliveCapNoteFresh(em, no);
 #if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
     aliveCapRestoreNovisRoom(em, no);
+#endif
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+    aliveCapApplyPending(em, no);
 #endif
 #endif
     return em;
@@ -1108,6 +1211,14 @@ void EmSetDieCnt()
 void EmSetRoomInit()
 {
     int i;
+
+#if defined(RE4DC_ALIVE_CAP_DEFER_FLAGS) && RE4DC_ALIVE_CAP_DEFER_FLAGS
+    // This reset precedes the new room's init scripts, including same-room
+    // Continue and a replaced ESL list. Old commands must not follow reused IDs.
+    for (i = 0; i < 64; i++) {
+        aliveCapPendingFlags[i] = 0;
+    }
+#endif
 
     for (i = 0; i < 256; i++) {
         EmListData* d = EM_LIST(i);
