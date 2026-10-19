@@ -142,7 +142,9 @@ T15_G="ACTOR_PROBE_LIGHT=2 GANADO_LIT=1 GANADO_LIT_NEAREST=0"
 #      Test 19 on (lane qws19, user 10-19 "I also want to integrate the weapon switch"): QUICK_WEAPON=1, hold X + D-pad to
 #      equip a weapon by kind (quickweapon.mk). Logic only when the chord is pressed; QUICK_WEAPON_POC_KIT never goes here.
 #      Also ACTOR_PLAN=1 (lane actorplan19, character setup memoised, render only, approved for Test 19).
-T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1}
+#      Test 19 on (lane manual19, issue #44): MANUAL_PACK_PROBE=1, the manual page checks look in dc/tex.pak first, so the
+#      Dreamcast controller pages show instead of the GameCube ones (render only).
+T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1 MANUAL_PACK_PROBE=1}
 # lane resident16 (10-16): the room preload runs again when SS heap 11 closes (chapter title / results / save screens), so
 #   r105 after the chapter 1-2 save screen loads its set back in one pass instead of 81 disc reads in play. Render only.
 T15_P="SS11_PRELOAD=1"
