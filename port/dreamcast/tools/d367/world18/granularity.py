@@ -49,8 +49,10 @@ def main():
         streams=[[[local[parsed[i][0][k]] for k in st] for st in group] for i in ids for group in groups[i]]
         merged=[sum(streams[j:j+a.factor],[]) for j in range(0,len(streams),a.factor)] if oldsg else streams
         if oldsg:assert len(merged)<=4
-        if len(out['strip'])&1:out['strip'].append(0)
-        fs=len(out['strip']);out['strip'].extend(struct.pack('<%dH'%len(corners),*[v-fv for v in corners]))
+        indexed=corners!=list(range(fv,fv+len(corners)))
+        if indexed and len(out['strip'])&1:out['strip'].append(0)
+        fs=len(out['strip'])
+        if indexed:out['strip'].extend(struct.pack('<%dH'%len(corners),*[v-fv for v in corners]))
         s0=len(out['strip']);sc=0;records=[]
         for group in merged:
             ks=[k for st in group for k in st]
@@ -66,7 +68,7 @@ def main():
             sgbytes.extend(b''.join(struct.pack('<8H',*r) for r in records))
         lo=[min(p['lets'][i][5+j] for i in ids) for j in range(3)]
         hi=[max(p['lets'][i][8+j] for i in ids) for j in range(3)]
-        out['lets'].append([fv,fs,sb,len(corners),sc|INDEXED,*lo,*hi])
+        out['lets'].append([fv,fs,sb,len(corners),sc|(INDEXED if indexed else 0),*lo,*hi])
         mapping.append(ids);hist[len(ids)]+=1;covered.extend(ids)
     for pi,part in enumerate(p['parts']):
         first=len(out['lets']);fc,cc=p['plods'][pi]
