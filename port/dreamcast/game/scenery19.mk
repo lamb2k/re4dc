@@ -28,6 +28,10 @@ ifeq ($(SCENERY_CHUNK),0)
 $(error SCENERY_DEDUP needs SCENERY_CHUNK)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP=$(SCENERY_DEDUP)
+# SCENERY_DEDUP_LOADONLY=1 (test arm only): with =2, the section is loaded but not applied (equalises heap 4).
+ifeq ($(SCENERY_DEDUP_LOADONLY),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP_LOADONLY=1
+endif
 endif
 # CHUNK_SUBMIT=1: the shared chunk-submit back end (platform/chunk_submit.h / .cpp) for user lanes
 # (character-draw-path, rigid models). Default 0: not built.
