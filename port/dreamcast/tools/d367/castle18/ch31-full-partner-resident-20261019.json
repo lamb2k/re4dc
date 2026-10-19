@@ -1,0 +1,229 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch31-full-partner-resident-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Four unchanged full-partner package keys in each missing chapter3-1 consumer; expected package-derived residency only. Runtime gates pending.",
+    "input_records": 5842,
+    "output_records": 5858,
+    "all_prior_records_exact": true,
+    "every_other_room_exact": true,
+    "base": "/root/re4data/private/castle18-ch33-r20f-resident-20261019/files/dc/resident.bin",
+    "base_sha256": "49a48c29eabdc24bd69070e6fb241002b70acb077814599ed00ca6c698d7017b",
+    "resident_sha256": "adf26c24a1efa9c550996ab92c78ae2025cf40506416bf64ec7cabf61d94e844",
+    "sources": [
+      {
+        "room": "r201",
+        "key": "2353f21e-bfc44079",
+        "source_whf": [
+          512,
+          512,
+          6
+        ],
+        "package_sha256": "b2d617321db01949b7fbc6c5c750366a489a5828c4e3780cf9721f063c836480",
+        "bytes": 67728,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r201",
+        "key": "bc5bb46e-c514110b",
+        "source_whf": [
+          64,
+          64,
+          6
+        ],
+        "package_sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19",
+        "bytes": 8336,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r201",
+        "key": "56d70169-8a2e5214",
+        "source_whf": [
+          64,
+          64,
+          6
+        ],
+        "package_sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb",
+        "bytes": 8336,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r201",
+        "key": "2c9c252a-51c59944",
+        "source_whf": [
+          128,
+          128,
+          6
+        ],
+        "package_sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce",
+        "bytes": 6288,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r203",
+        "key": "2353f21e-bfc44079",
+        "source_whf": [
+          512,
+          512,
+          6
+        ],
+        "package_sha256": "b2d617321db01949b7fbc6c5c750366a489a5828c4e3780cf9721f063c836480",
+        "bytes": 67728,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r203",
+        "key": "bc5bb46e-c514110b",
+        "source_whf": [
+          64,
+          64,
+          6
+        ],
+        "package_sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19",
+        "bytes": 8336,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r203",
+        "key": "56d70169-8a2e5214",
+        "source_whf": [
+          64,
+          64,
+          6
+        ],
+        "package_sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb",
+        "bytes": 8336,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r203",
+        "key": "2c9c252a-51c59944",
+        "source_whf": [
+          128,
+          128,
+          6
+        ],
+        "package_sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce",
+        "bytes": 6288,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r208",
+        "key": "2353f21e-bfc44079",
+        "source_whf": [
+          512,
+          512,
+          6
+        ],
+        "package_sha256": "b2d617321db01949b7fbc6c5c750366a489a5828c4e3780cf9721f063c836480",
+        "bytes": 67728,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r208",
+        "key": "bc5bb46e-c514110b",
+        "source_whf": [
+          64,
+          64,
+          6
+        ],
+        "package_sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19",
+        "bytes": 8336,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r208",
+        "key": "56d70169-8a2e5214",
+        "source_whf": [
+          64,
+          64,
+          6
+        ],
+        "package_sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb",
+        "bytes": 8336,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r208",
+        "key": "2c9c252a-51c59944",
+        "source_whf": [
+          128,
+          128,
+          6
+        ],
+        "package_sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce",
+        "bytes": 6288,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r204",
+        "key": "2353f21e-bfc44079",
+        "source_whf": [
+          512,
+          512,
+          6
+        ],
+        "package_sha256": "b2d617321db01949b7fbc6c5c750366a489a5828c4e3780cf9721f063c836480",
+        "bytes": 67728,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r204",
+        "key": "bc5bb46e-c514110b",
+        "source_whf": [
+          64,
+          64,
+          6
+        ],
+        "package_sha256": "52add231469cc7ac4f1486bdfd4fe947cde26323fbe076cda6998c550a098c19",
+        "bytes": 8336,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r204",
+        "key": "56d70169-8a2e5214",
+        "source_whf": [
+          64,
+          64,
+          6
+        ],
+        "package_sha256": "a9bb6897ef8dd521a03e1ea485d59bdf17fb052e8ff58ca04d302d65f54ee1cb",
+        "bytes": 8336,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      },
+      {
+        "room": "r204",
+        "key": "2c9c252a-51c59944",
+        "source_whf": [
+          128,
+          128,
+          6
+        ],
+        "package_sha256": "32025a792ec1bfb45b334db19f923c2a45e0188a00d55312043fb6fe6577b3ce",
+        "bytes": 6288,
+        "winner": "pak",
+        "scope": "Expected identical partner package keys; package-derived, not target-room gameplay observation."
+      }
+    ],
+    "source_observation_receipt": "workers/ch34/r219-native-source-first-sight-winners.json",
+    "prepared_partner_receipt": "ch31-remaining-partners-host-proof-20261019.json",
+    "manifest_sha256": "2adc9652ef5cd8f3f17ac3b1580126b64f201512cbf22645145755c939853299"
+  }
+}
