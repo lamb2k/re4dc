@@ -12,6 +12,11 @@ endif
 ifneq ($(QUICK_WEAPON),0)
 $(OBJDIR)/platform/pad.o: PLATFORM_CPPFLAGS += -DRE4DC_QUICK_WEAPON=1
 $(OBJDIR)/src/game/sscrn.o: GAME_CPPFLAGS += -DRE4DC_QUICK_WEAPON=1
+# QUICK_WEAPON_POC_KIT=1 (POC test discs only, never in a release recipe): a new game starts with the large case, a
+# shotgun, rifle, TMP, 3 hand grenades and ammo for each (item.cpp cItemMgr::gameInit), so the chord can be tried at once.
+ifeq ($(QUICK_WEAPON_POC_KIT),1)
+$(OBJDIR)/src/game/item.o: GAME_CPPFLAGS += -DRE4DC_QUICK_WEAPON_POC_KIT=1
+endif
 ifeq ($(DISC_READ_METER),1)
 # Test builds with the disc meter: each swap also logs its weapon read (calls, bytes, drive time).
 $(OBJDIR)/src/game/sscrn.o: GAME_CPPFLAGS += -DRE4DC_QW_METER=1
