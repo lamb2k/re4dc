@@ -239,16 +239,16 @@ def container(room_id, g, sections, flags):
     return hdr + payload
 
 
-VIS_DIV = 4            # VIS cell = 4 x the 1 m lattice
+VIS_DIV = int(os.environ.get("RC_VIS_DIV", 4))            # VIS cell = 4 x the 1 m lattice
 VIS_RANGE = 24000.0    # pairs farther apart than this (cell Chebyshev distance x cell) are written visible
 SHELL_RANGE = {0x100: 18750, 0x101: 18750}   # rooms with a far shell (FAR_SHELL): beyond this the world is the shell
-VIS_MARGIN = 500.0     # eye and target sample areas extend this far past their cell
-VIS_SAMPLES = 5        # per axis
+VIS_MARGIN = float(os.environ.get("RC_VIS_MARGIN", 500))     # eye and target sample areas extend this far past their cell
+VIS_SAMPLES = int(os.environ.get("RC_VIS_SAMPLES", 5))        # per axis
 VIS_EYE_N, VIS_TGT_N = 3, 4
 EYE_LO, EYE_HI = 300.0, 4500.0       # eye y range over a cell's floors
 EYE_STEP, EYE_SPAN = 1000.0, 1500.0  # eye height bands: start every STEP, SPAN tall (one row each)
 TGT_LO, TGT_HI = -500.0, 3000.0      # enemy boxes over a cell's floors
-BAND_STEP, BAND_SPAN = 1000.0, 3500.0  # target height bands: start every STEP, SPAN tall (a box <= 2.5 m fits one)
+BAND_STEP, BAND_SPAN = 1000.0, float(os.environ.get("RC_BAND_SPAN", 3500))  # target height bands: start every STEP, SPAN tall (a box <= 2.5 m fits one)
 LEVELS = 3             # world LOD levels 0..2: a pair is hidden only when hidden at every level
 
 
