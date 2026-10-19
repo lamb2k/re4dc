@@ -56,10 +56,18 @@ int  re4dc_chunk_header(re4dc_chunk_sink* s, const re4dc_chunk_header_t* h);
 /* Points into the sink's cache (index 0..n-1). Grid form: mv is grid->view 3x4 row major. */
 int  re4dc_chunk_points_grid(re4dc_chunk_sink* s, const float mv[12], const uint16_t* xyz, unsigned n);
 int  re4dc_chunk_points_view(re4dc_chunk_sink* s, const float* view_xyz, unsigned n);
+/* Screen-space points passed through as-is (skinned characters project themselves): n x {x, y, 1/w} floats and one
+ * outcode byte each, in mesh_fastpath.hpp's kChecksAll layout (bits 5..2 screen x<0, x>W, y<0, y>H; bit 1 w<near;
+ * bit 0 w>far). */
+int  re4dc_chunk_points_screen(re4dc_chunk_sink* s, const float* xy_invw, const uint8_t* outcodes, unsigned n);
 /* Corners: point index, final u/v float words, 32-bit ARGB (offset colour 0). */
 int  re4dc_chunk_corners(re4dc_chunk_sink* s, const uint16_t* point, const float* uv, const uint32_t* argb, unsigned n);
-/* Strips: R4IM bytes (u8 n, then n u8 corner indices). */
-int  re4dc_chunk_strips(re4dc_chunk_sink* s, const uint8_t* strips, unsigned strip_bytes);
+/* Strips, in one of two byte forms:
+ *   RE4DC_CHUNK_STRIPS_R4IM:  u8 n, then n u8 corner indices (scenery);
+ *   RE4DC_CHUNK_STRIPS_ACTOR: u8 corner indices, bit 7 set on a strip's last index (corners < 128 per batch).
+ * Conversion: an R4IM strip "n i0 .. i(n-1)" is the actor form "i0 .. i(n-2) (i(n-1)|0x80)" when every index < 128. */
+enum { RE4DC_CHUNK_STRIPS_R4IM = 0, RE4DC_CHUNK_STRIPS_ACTOR = 1 };
+int  re4dc_chunk_strips(re4dc_chunk_sink* s, const uint8_t* strips, unsigned strip_bytes, unsigned form);
 void re4dc_chunk_window_end(re4dc_chunk_sink* s);
 
 #ifdef __cplusplus
