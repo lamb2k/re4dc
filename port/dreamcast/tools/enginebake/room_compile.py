@@ -354,6 +354,22 @@ def build_vis(g, worlddir, threads, room_id):
                       occluder_tris=ntris, range_mm=rng, bytes=len(data))
 
 
+def build_occl(g, worlddir, room_id):
+    """OCCL v1 (occl.py): large opaque occluders + per-camera-cell candidate lists."""
+    import occl
+    import world_tris
+    pkg = world_tris.Pkg(worlddir)
+    levels = [pkg.occluders(lv, exclude_dynamic=False) for lv in range(LEVELS)]   # runtime world_intact guards bound objects
+    ws, conf = occl.winding_sign(levels[0])
+    occ, ngroups = occl.extract(levels, ws)
+    rng = min(VIS_RANGE, SHELL_RANGE.get(room_id, VIS_RANGE))
+    data, info = occl.encode(occ, g, VIS_DIV, CELL, EYE_LO, EYE_HI, rng, pkg.sidecar_crc)
+    info.update(winding=ws, winding_evidence={m: [w, round(c, 3)] for m, (w, c) in conf.items()}, plane_groups=ngroups, range_mm=rng,
+                tris=[len(t) for t in levels], occluder_area_m2=round(sum(
+                    math.dist(c[0], c[1]) * math.dist(c[0], c[3]) for c, _, _ in occ) / 1e6, 1))
+    return data, info, occ
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--iso', required=True)
@@ -361,6 +377,7 @@ def main():
     ap.add_argument('--world', help='native package root: <world>/<room>/ps2-world.{re4mesh,r4pw,ids} (adds VIS)')
     ap.add_argument('--no-grid', action='store_true', help='leave the GRID section out')
     ap.add_argument('--threads', type=int, default=4)
+    ap.add_argument('--vis', action='store_true', help='VIS v2 (cell-to-cell) instead of OCCL (default) with --world')
     ap.add_argument('rooms', nargs='+')
     a = ap.parse_args()
     rows = []
@@ -389,8 +406,15 @@ def main():
                     srcb += struct.pack('<4sI32s', {'ps2-world.re4mesh': b'R4IM', 'ps2-world.r4pw': b'R4PW',
                                                     'ps2-world.ids': b'R4ID'}[fn], len(b), hashlib.sha256(b).digest())
                     nsrc += 1
-            vis, vb = build_vis(g, wd, a.threads, rid)
-            secs.append((b'VIS\0', 2, 0, vis, vb['vw'] * vb['vh'], 12))
+            if a.vis:
+                vis, vb = build_vis(g, wd, a.threads, rid)
+                secs.append((b'VIS\0', 2, 0, vis, vb['vw'] * vb['vh'], 12))
+            else:
+                oc, vb, occ = build_occl(g, wd, rid)
+                secs.append((b'OCCL', 1, 0, oc, vb['occluders'], 56))
+                os.makedirs(os.path.join(a.out, room), exist_ok=True)
+                with open(os.path.join(a.out, room, 'occl.json'), 'w') as f:
+                    json.dump([[list(map(list, c)), h, s] for c, h, s in occ], f)
         blob = container(rid, g, [(b'SRCB', 1, 0, srcb, nsrc, 40)] + secs, 0)
         od = os.path.join(a.out, room)
         os.makedirs(od, exist_ok=True)
@@ -407,7 +431,7 @@ def main():
         rows.append((room, len(blob), sha, len(grid), int(static)))
         print('%s %6d B grid %6d (cells %d combos %d planes %d segs %d wl %d) static=%d multi=%d vis=%s' % (
             room, len(blob), len(grid), gb['cells'], gb['combos'], gb['planes'], gb['segments'], gb['wall_list'],
-            static, g['multi'], vb and {k: vb[k] for k in ('bytes', 'rows', 'hidden_pairs')}), flush=True)
+            static, g['multi'], vb and {k: vb.get(k) for k in ('bytes', 'rows', 'hidden_pairs', 'occluders', 'list_entries')}), flush=True)
     with open(os.path.join(a.out, 'MANIFEST.tsv'), 'w') as f:
         f.write('room\tbytes\tsha256\tgrid_bytes\tstatic\tcompiler\n')
         for r in rows:

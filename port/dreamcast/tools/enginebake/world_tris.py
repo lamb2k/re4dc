@@ -3,7 +3,8 @@ pure Python (no numpy). Layout as native_static.cpp ps2_open reads it (port of t
 
 occluders(dir, level) -> [(x0,y0,z0, x1,y1,z1, x2,y2,z2, cull)] world mm: opaque (pass 0) parts only, each cluster at
 LOD level min(level, its last); every placement (the runtime re4dc_ps2_world_intact refuses a frame where any is
-hidden, moved or gated). cull = 1.0 for a back-culled part (R4PW cull != 0), 0.0 two-sided.
+hidden, moved or gated). cull = the part's R4PW cull (0 two-sided, 1 CCW, 2 CW); -1.0 for a culled part of a mirrored
+placement (negative determinant: its drawn face is not known here).
 """
 import struct
 from pathlib import Path
@@ -69,13 +70,23 @@ class Pkg:
                 tris.append((a, b, c) if k % 2 == 0 else (c, b, a))
         return corners, tris
 
-    def occluders(self, level):
+    def occluders(self, level, exclude_dynamic=False):
+        dynamic = set()
+        if exclude_dynamic and self.ids is not None:
+            cnt = {}
+            for v in self.ids:
+                cnt[v] = cnt.get(v, 0) + 1
+            dynamic = {i for i, v in enumerate(self.ids) if v != 0xFF and cnt[v] == 1}
         out = []
         for mi, field, A in self.placements:
+            if field in dynamic:
+                continue
             mesh = self.meshes[mi]
             G = [[mesh['step'][0], 0, 0, mesh['origin'][0]], [0, mesh['step'][1], 0, mesh['origin'][1]],
                  [0, 0, mesh['step'][2], mesh['origin'][2]]]
             M = _mul(A, G)
+            det = (M[0][0] * (M[1][1] * M[2][2] - M[1][2] * M[2][1]) - M[0][1] * (M[1][0] * M[2][2] - M[1][2] * M[2][0])
+                   + M[0][2] * (M[1][0] * M[2][1] - M[1][1] * M[2][0]))
             for k in range(mesh['part_count']):
                 part = mesh['first_part'] + k
                 ps, cull = self.pmeta[part]
@@ -89,5 +100,6 @@ class Pkg:
                         corners, tris = self.let_tris(li)
                         w = [[M[r][0] * x + M[r][1] * y + M[r][2] * z + M[r][3] for r in range(3)] for x, y, z in corners]
                         for a, b, cc2 in tris:
-                            out.append(tuple(w[a]) + tuple(w[b]) + tuple(w[cc2]) + (1.0 if cull else 0.0,))
+                            out.append(tuple(w[a]) + tuple(w[b]) + tuple(w[cc2]) +
+                                       (float(cull) if det > 0 or not cull else -1.0,))
         return out
