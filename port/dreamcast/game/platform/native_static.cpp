@@ -2563,63 +2563,37 @@ struct MeshDraw : Emitter {
       RE4DC_MESH_VP_SCHED==1 && RE4DC_MESH_STRIP_LEAN==1 && RE4DC_HW_LEAN && !RE4DC_MESH_CLASSIFY)
 #error SCENERY_CHUNK needs the Test 18 world recipe (MESH_LOD, MESH_FASTPATH, MESH_DIRECT, PS2_WORLD_LEAN, MESH_PRIME_LAZY, MESH_VP_SCHED=1, MESH_STRIP_LEAN=1, HW_LEAN)
 #endif
-    // SCENERY_CHUNK: run() for a PS2 world part as two phases over a short list of meshlets ("picks"). Selection runs
-    // every cluster / LOD / meshlet / strip-group decision of draw_clusters() + draw() + meshlet() with the same functions
-    // and expressions, in the same order; emission then binds, transforms and walks each picked meshlet in that order.
-    // The same strips reach the TA in the same order with the same words; the selection code and the emission code
-    // each stay in the instruction cache for a burst instead of alternating per meshlet. The caller uses it only when
-    // no PVS set, interior cull, Standard impostor skip or check mode (lean bit 8) applies.
+    // SCENERY_CHUNK: a PS2 world part drawn in two phases. chunk_select() runs every cluster / LOD / meshlet /
+    // strip-group decision of draw_clusters() + draw() + meshlet() with the same functions and expressions, in the same
+    // order, and records each meshlet to draw as a pick; ps2_pass selects a run of parts, then chunk_emit() binds,
+    // transforms and walks each part's picks in the same order. The same strips reach the TA in the same order with
+    // the same words; the selection code and the emission code each stay in the instruction cache for a burst instead
+    // of alternating per meshlet. Used only when no PVS set, interior cull, Standard impostor skip or check mode
+    // (lean bit 8) applies (chunk_ok()).
     struct Pick {
-        const re4dc::room::Meshlet* l;
-        std::uint16_t nr,lo,hi,pad; // nr 0xffff: the whole meshlet; else the strip groups left (nr may be 0)
-        std::uint16_t r0[8],r1[8];
+        std::uint16_t let;            // meshlet index in the package
+        std::uint8_t nr,gmask,lo,hi;  // nr 0xff: the whole meshlet; else the strip groups left (gmask: group bits)
+        std::uint8_t pad[2];
     };
-    static constexpr unsigned kPicks=32;
-    int emit_pick(const Pick& pk){
-        namespace vp=re4dc::vp;
-        ++stats.groups_visible;
-        if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
-        ++stats.batches;
-        if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
-        if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
-        const auto& l=*pk.l;
-        const auto* base=corners(l);
-        const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
-        if(l.vertex_count>primed){vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
-            if(lean_part){lean::prime_at=cache;lean::primed=primed;}
-        }
-        if(pk.nr!=0xffffU){
-            if(!pk.nr)return 1;
-            const unsigned vn=pk.hi-pk.lo+1U;
-            vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
-            const std::uint8_t* const sb=package.strip_begin(l);
-            for(unsigned i=0;i<pk.nr;++i){
-                int result=1;
-                strips_lean(sb+pk.r0[i],sb+pk.r1[i],base,batch,result);
-                if(result<=0)return result;
-            }
-            return 1;
-        }
-        vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
-        const std::uint8_t* s=package.strip_begin(l);
-        int result=1;
-        s=strips_lean(s,s+l.strip_bytes,base,batch,result);
-        return s?1:result;
+    bool chunk_ok()const{
+        return package.lod() && !(lean::kMode&8U) && sg_groups<=8U
+#if RE4DC_PS2_PVS
+            && !pvs_set
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+            && !pc_mode
+#endif
+#if RE4DC_QUALITY_ASSETS
+            && !skip_clusters
+#endif
+            ;
     }
-    __attribute__((noinline)) int emit_picks(const Pick* pk,unsigned n){
-        for(unsigned i=0;i<n;++i){const int r=emit_pick(pk[i]);if(r<=0)return r;}
-        return 1;
-    }
-    __attribute__((noinline)) int run_chunk(){
-        streaming=re4dc_model_packet_streaming()!=0;
-        set_clip();
-        palette=nullptr;
-        batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
-        batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
+    // Picks appended at out (room for part.meshlet_count); returns how many.
+    __attribute__((noinline)) unsigned chunk_select(Pick* out){
         const auto& lod=package.part_lods()[part_index];
-        const auto* clusters=package.clusters();const auto* levels=package.levels();
+        const auto* clusters=package.clusters();const auto* levels=package.levels();const auto* all=package.meshlets();
         const bool groups=sg && lean_am;
-        Pick picks[kPicks];unsigned np=0;
+        unsigned np=0;
         for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
             const auto& cl=clusters[c];
             float lo[3],hi[3];
@@ -2645,9 +2619,9 @@ struct MeshDraw : Emitter {
             while(level && levels[cl.first_level+level].error*lod_scale>depth)--level;
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
-            const auto* lets=package.meshlets()+lv.first_meshlet;
             for(unsigned i=0;i<lv.meshlet_count;++i){
-                const auto& l=lets[i];
+                const unsigned li=lv.first_meshlet+i;
+                const auto& l=all[li];
                 unsigned mask=0;
                 if(cin==2)++lean::st.skipped;
                 else if(groups){
@@ -2667,57 +2641,94 @@ struct MeshDraw : Emitter {
                         {float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])}};
                     if(!re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)){++stats.groups_culled;continue;}
                 }
-                Pick& pk=picks[np];
-                pk.l=&l;pk.nr=0xffffU;
+                Pick& pk=out[np++];
+                pk.let=std::uint16_t(li);pk.nr=0xffU;
                 if(groups && mask){
-                    const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*unsigned(&l-package.meshlets()));
-                    unsigned glo,ghi,culled,nr;
+                    const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*li);
+                    unsigned glo,ghi,culled,nr;std::uint16_t r0[8],r1[8];
 #if RE4DC_SG_SELECT_LEAN
                     if(re4dc_sg_lean_on){
                         if(!sg_lp_ok){lean::sg_coef_lean(mvq,near,sg_lp);sg_lp_ok=true;}
-                        nr=lean::sg_select_lean(g,sg_groups,sg_lp,mask,pk.r0,pk.r1,glo,ghi,culled);
+                        nr=lean::sg_select_lean(g,sg_groups,sg_lp,mask,r0,r1,glo,ghi,culled);
                         ++lean::lst.calls;
                     }else{
                         if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
-                        nr=lean::sg_select(g,sg_groups,sg_coef,mask,pk.r0,pk.r1,glo,ghi,culled);
+                        nr=lean::sg_select(g,sg_groups,sg_coef,mask,r0,r1,glo,ghi,culled);
                     }
 #else
                     if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
-                    nr=lean::sg_select(g,sg_groups,sg_coef,mask,pk.r0,pk.r1,glo,ghi,culled);
+                    nr=lean::sg_select(g,sg_groups,sg_coef,mask,r0,r1,glo,ghi,culled);
 #endif
                     ++lean::st.sg_tests;
                     if(culled){
                         lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
-                        pk.nr=std::uint16_t(nr);pk.lo=std::uint16_t(glo);pk.hi=std::uint16_t(ghi);
                         lean::st.sg_vskip+=nr?l.vertex_count-(ghi-glo+1U):l.vertex_count;
+                        // the visible groups as bits: group k (a record whose strip end moves) is kept when its range
+                        // is the next one sg_select returned
+                        unsigned bits=0,prev=0,j=0;
+                        for(unsigned k=0;k<sg_groups && j<nr;++k){
+                            const unsigned gend=g[8*k+6];
+                            if(gend==prev)continue;
+                            if(r0[j]==prev && r1[j]==gend){bits|=1U<<k;++j;}
+                            prev=gend;
+                        }
+                        pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(bits);pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
                     }
                 }
-                if(++np==kPicks){const int r=emit_picks(picks,np);np=0;if(r<=0)return r;}
             }
         }
-        if(np){const int r=emit_picks(picks,np);if(r<=0)return r;}
+        return np;
+    }
+    int emit_pick(const Pick& pk){
+        namespace vp=re4dc::vp;
+        ++stats.groups_visible;
+        if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
+        ++stats.batches;
+        if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
+        if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
+        const auto& l=package.meshlets()[pk.let];
+        const auto* base=corners(l);
+        const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
+        if(l.vertex_count>primed){vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
+            if(lean_part){lean::prime_at=cache;lean::primed=primed;}
+        }
+        const std::uint8_t* const sb=package.strip_begin(l);
+        if(pk.nr!=0xffU){
+            if(!pk.nr)return 1;
+            const unsigned vn=pk.hi-pk.lo+1U;
+            vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
+            const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
+            unsigned prev=0;
+            for(unsigned q=0;q<sg_groups;++q){
+                const unsigned gend=g[8*q+6];
+                if(gend==prev)continue;
+                if((pk.gmask>>q)&1U){
+                    int result=1;
+                    strips_lean(sb+prev,sb+gend,base,batch,result);
+                    if(result<=0)return result;
+                }
+                prev=gend;
+            }
+            return 1;
+        }
+        vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
+        int result=1;
+        strips_lean(sb,sb+l.strip_bytes,base,batch,result);
+        return result;
+    }
+    __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
+        streaming=re4dc_model_packet_streaming()!=0;
+        set_clip();
+        palette=nullptr;
+        batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
+        batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
+        for(unsigned i=0;i<n;++i){const int r=emit_pick(pk[i]);if(r<=0)return r;}
         if(used)re4dc_model_packet_commit(used);
         re4dc_model_result(0,input,output);
         return 1;
     }
-    bool chunk_ok()const{
-        return package.lod() && !(lean::kMode&8U)
-#if RE4DC_PS2_PVS
-            && !pvs_set
-#endif
-#if RE4DC_PS2_INTERIOR_CULL
-            && !pc_mode
-#endif
-#if RE4DC_QUALITY_ASSETS
-            && !skip_clusters
-#endif
-            ;
-    }
 #endif
     int run(){
-#if RE4DC_SCENERY_CHUNK
-        if(ps2 && chunk_ok())return run_chunk();
-#endif
 #if RE4DC_PS2_WORLD_MESH
         // A PS2 part has no source image to reserve against; its direct bind checks the frame state.
         if(!ps2 && !re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
@@ -5185,6 +5196,51 @@ int ps2_pass(unsigned pass,float zfar){
     Re4dcModelPart part{};
     std::memcpy(part.projection,P,sizeof(part.projection));std::memcpy(part.viewport,ps2w.viewport,sizeof(part.viewport));
     part.alpha_state=255;part.source_key[2]=1;
+#if RE4DC_SCENERY_CHUNK
+    // SCENERY_CHUNK: the selected parts of this run (ChunkPart) and their picks, emitted in order by chunk_flush()
+    // before any part that takes the ordinary path, when either list is full, and at the end of the pass.
+    struct ChunkPart { float mvq[12]; unsigned key[6]; float cull_far,lod_scale; unsigned index,first,count;
+                       std::uint8_t cull; bool marked; std::uint8_t sky; };
+    static constexpr unsigned kChunkParts=48,kChunkPicks=320;
+    ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
+    const auto& cpkg=ps2w.package;
+    auto chunk_flush=[&]()->int{
+#if RE4DC_SKY_ANY
+        const unsigned sky_now=re4dc_ps2_sky_header; // the placement being selected keeps its own after the run
+#endif
+        for(unsigned j=0;j<nctx;++j){
+            const ChunkPart& x=cctx[j];
+            part.cull=x.cull;
+#if RE4DC_SKY_ANY
+            re4dc_ps2_sky_header=x.sky;
+#endif
+#if RE4DC_PS2_VERTEX_ALPHA
+            MeshDraw e{{part,{},near,far},cpkg,cpkg.parts()[x.index],x.marked&&ps2w.lut?ps2_vertex_alpha_lut():ps2w.lut,ps2w.gather};
+            e.alpha=0xff000000U;e.vertex_alpha=x.marked;e.c4444=x.marked;e.cull_far=x.cull_far;e.direct=true;
+#else
+            MeshDraw e{{part,{},near,far},cpkg,cpkg.parts()[x.index],ps2w.lut,ps2w.gather};
+            e.alpha=0xff000000U;e.vertex_alpha=false;e.cull_far=x.cull_far;e.direct=true;
+#endif
+            e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
+            e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
+            std::memcpy(e.mvq,x.mvq,sizeof(x.mvq));std::memcpy(e.mv,x.mvq,sizeof(x.mvq));e.ps2=x.key;
+            const int result=e.chunk_emit(cpk+x.first,x.count);
+            e.end_direct();
+            if(result>0)++c.native;
+            else if(result<0){re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;}
+#if RE4DC_WORLD_HOLE_DIAG
+            else {++c.fallback;whd::note(pass,x.key);}
+#else
+            else ++c.fallback;
+#endif
+        }
+        nctx=npk=0;
+#if RE4DC_SKY_ANY
+        re4dc_ps2_sky_header=sky_now;
+#endif
+        return 1;
+    };
+#endif
     const float px_x=RE4DC_SCREEN_HALF_WF*std::fabs(P[1]),px_y=RE4DC_SCREEN_HALF_HF*std::fabs(P[3]);
     const float px=px_x>px_y?px_x:px_y;
 #if RE4DC_QUALITY
@@ -5433,6 +5489,24 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
 #if RE4DC_PS2_INTERIOR_CULL
             d.pc_mode=pc_state?1U:0U;d.pc_wq=pc_wq;
+#endif
+#if RE4DC_SCENERY_CHUNK
+            // SCENERY_CHUNK: select now, emit with the run (chunk_flush), in order.
+            if(d.chunk_ok() && d.part.meshlet_count<=kChunkPicks){
+                if(nctx==kChunkParts || npk+d.part.meshlet_count>kChunkPicks){if(chunk_flush()<0)return -1;}
+                ChunkPart& x=cctx[nctx++];
+                std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
+                x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
+                x.marked=d.vertex_alpha;x.first=npk;
+#if RE4DC_SKY_ANY
+                x.sky=std::uint8_t(re4dc_ps2_sky_header);
+#endif
+                x.count=d.chunk_select(cpk+npk);npk+=x.count;
+                continue;
+            }
+            if(chunk_flush()<0)return -1;
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
 #if RE4DC_PS2_INTERIOR_CULL==2
             if(pc_state==2)d.pc_mode=0;
             const int result=pc_state==2?1:d.run(); // =2: the hidden placement is drawn by the check run only
@@ -5479,6 +5553,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
         }
     }
+#if RE4DC_SCENERY_CHUNK
+    if(chunk_flush()<0)return -1;
+#endif
 #if RE4DC_PS2_INTERIOR_ACTORS && RE4DC_PS2_INTERIOR_CULL==2
     if(!pass && pcact::nbox && pcact::have_key){
         // The actor check: each queued box (an actor the cell would have skipped) as six opaque magenta quads.
