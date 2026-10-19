@@ -343,6 +343,23 @@ endif
 #   r11c r11d).
 ALIVE_CAP ?= 0
 ALIVE_CAP_LOG ?= 0
+# ALIVE_CAP_DEFER_FLAGS_BEGIN: preserve original setFlag commands on held handles.
+# Default off; apply after original first AI initialization, never force admission.
+ALIVE_CAP_DEFER_FLAGS ?= 0
+ifneq ($(words $(ALIVE_CAP_DEFER_FLAGS)),1)
+$(error ALIVE_CAP_DEFER_FLAGS must be 0 or 1)
+endif
+ifneq ($(filter-out 0 1,$(ALIVE_CAP_DEFER_FLAGS)),)
+$(error ALIVE_CAP_DEFER_FLAGS must be 0 or 1)
+endif
+ifeq ($(ALIVE_CAP_DEFER_FLAGS),1)
+ifeq ($(ALIVE_CAP),0)
+$(error ALIVE_CAP_DEFER_FLAGS=1 requires ALIVE_CAP)
+endif
+$(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1
+$(OBJDIR)/mod/%.o: GAME_CPPFLAGS += -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1
+endif
+# ALIVE_CAP_DEFER_FLAGS_END
 # ALIVE_CAP_NOVIS=1 (I-006, default off): stage-2 Novistadors (id2D) share
 # the existing ALIVE_CAP budget with Ganados. Creation/send holds and fresh
 # accounting only; castle pointer-owner rooms remain excluded from parking.
