@@ -4219,6 +4219,57 @@ unsigned query(unsigned id){
 }
 }
 #endif
+#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+// ENEMY_VIS_CULL (engine_preview.mk; lane engine19; read only). re4dc_ps2_world_intact: 1 when the PS2 world drawn
+// this frame is the package the room data file's OCCL section was compiled from (room and sidecar crc).
+// re4dc_ps2_placements_intact: 1 when every listed placement (an occluder's sources, u16 LE fields) is drawn at its
+// baked rest pose now (PS2_WORLD_DYNAMIC: a bound object not hidden, at rest, not on the source hierarchy;
+// PS2_PLACE_GATE: not an owned placement the world skips; PS2_AREA_HIDE: not in a hidden group). Mirrors dyn::query /
+// gate::skip / area::hide without touching their per-frame state.
+std::uint32_t enemyVisSidecarCrc=0;
+extern "C" int re4dc_ps2_world_intact(unsigned room,std::uint32_t crc){
+#if RE4DC_PS2_WORLD_ROOMS
+    if(ps2w.room!=room)return 0;
+#endif
+    return (ps2w.storage && ps2w.parts && crc && enemyVisSidecarCrc==crc)?1:0;
+}
+extern "C" int re4dc_ps2_placements_intact(unsigned room,const unsigned char* fields,unsigned n){
+    (void)room;
+    for(unsigned i=0;i<n;++i){
+        const unsigned p=unsigned(fields[2*i])|(unsigned(fields[2*i+1])<<8);
+        (void)p;
+#if RE4DC_PS2_WORLD_DYNAMIC
+        if(dyn::ids && dyn::slots && p<dyn::nids){
+            const unsigned id=dyn::ids[p];
+            if(id<dyn::kIds && dyn::slot_of[id]!=dyn::kNone){
+                const dyn::Slot& s=dyn::slots[dyn::slot_of[id]];
+                if(s.obj){
+                    std::uint32_t flag=0,serial=0;
+                    std::memcpy(&flag,s.obj+dyn::off_flag,4);std::memcpy(&serial,s.obj+dyn::off_serial,4);
+                    if((flag&1U) && serial==s.serial){   // query(): otherwise drawn baked
+                        if(!(flag&2U))return 0;
+#if RE4DC_PS2_WORLD_PARTS
+                        if(s.source)return 0;
+                        for(unsigned k=0;k<s.nparts;++k)
+                            if(std::memcmp(s.parts[k].part+s.pose_offset,s.parts[k].pose,sizeof(s.parts[k].pose)))return 0;
+#endif
+                        if(std::memcmp(s.obj+dyn::off_mat,s.rest,sizeof(s.rest)))return 0;
+                    }
+                }
+            }
+        }
+#endif
+#if RE4DC_PS2_PLACE_GATE
+        if(gate::room==room && p<gate::kMax && ((gate::owned[p>>5]>>(p&31U))&1U) &&
+           !(((gate::cur[p>>5]&gate::want[p>>5])>>(p&31U))&1U))return 0;
+#endif
+#if RE4DC_PS2_AREA_HIDE
+        if(area::cur && area::hide(p))return 0;
+#endif
+    }
+    return 1;
+}
+#endif
 std::uint32_t ps2_crc32(const unsigned char* p,unsigned n){
     std::uint32_t c=~0U;
     for(unsigned i=0;i<n;++i){c^=p[i];for(unsigned b=0;b<8;++b)c=(c>>1)^(0xedb88320U&(0U-(c&1U)));}
@@ -4641,6 +4692,9 @@ bool ps2_open(){
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
     sourceWorldSidecarCrc=h.crc;
+#endif
+#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+    enemyVisSidecarCrc=h.crc;
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC && RE4DC_PS2_WORLD_ROOMS
     {
@@ -5872,6 +5926,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
     sourceWorldSidecarCrc=0;
+#endif
+#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+    enemyVisSidecarCrc=0;
 #endif
 #if RE4DC_PS2_PLACE_GATE
     gate::retire();

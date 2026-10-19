@@ -1,0 +1,78 @@
+{
+  "scope": "Isolated fresh e86/27db full-partner r201 entry admission and observed 48KiB reserve only; original entry position/partner-init precondition. No current083, full-room residency, source movie, boss fight or chapter acceptance.",
+  "status": "ASHLEY_NATIVE_ENTRY_PASS_FULL_ROOM_OPEN",
+  "program": "aba62141866a24763657bfe11a07ab1a369b6e32f6bd94989e1d389817470394",
+  "disc": "38822043a8675fc57c1670791feae09c978877808d7970048a408226a8fef131",
+  "run": {
+    "owned_exit": true,
+    "seconds": 55.86,
+    "errors": []
+  },
+  "actual_Ashley_native_rows": [
+    "NMRS f=331 room=0201 id=03 ot=0 parts=141 infos=7 plan=R native=150 crowd=0 declined=0 registry_declined=0 absent=0 would=0"
+  ],
+  "kos": {
+    "receipts": [
+      {
+        "held": 49152,
+        "requested": 49152,
+        "frag": 0,
+        "pieces": 1,
+        "receipt": "kos squeeze: held=49152 requested=49152 frag=0 pieces=1 headroom 196752 -> 147592 (free 4240 -> 136, break 192512 -> 147456)"
+      }
+    ],
+    "minimum_logged_headroom": 27856,
+    "required_reserve": 49152,
+    "required_minimum": 4096,
+    "scope": "Exact guest reserve and logged headroom only; identity, scene coverage and progression require separate gates."
+  },
+  "vram_preload_only": {
+    "room": "201",
+    "start": 167,
+    "samples": 4,
+    "closed": false,
+    "min_free": 975104,
+    "min_largest": 925696,
+    "peak_pinned": 1534976,
+    "last": {
+      "pinned": 1534976,
+      "dynamic": 0,
+      "other": 57344,
+      "free": 975104,
+      "largest": 925696,
+      "min_free": 975104,
+      "min_largest": 925696,
+      "peak_pinned": 1534976,
+      "loads": 231,
+      "evicted": 0,
+      "retries": 0,
+      "at": "preload",
+      "f": 181
+    },
+    "gaps": {
+      "refusals": 0,
+      "guard": 0,
+      "guard_p": 0,
+      "nocontig": 0,
+      "latched": 0,
+      "absent": 0,
+      "gc_fx": 0,
+      "dropped": 0,
+      "fx_dropped": 0,
+      "tex_rej": 0,
+      "snd_fail": 0,
+      "meta": 0
+    },
+    "snd_used": 1804992,
+    "loads": 231,
+    "evicted": 0,
+    "retries": 0,
+    "min_kos": 29456,
+    "menu_loads": 0,
+    "play_loads": 0,
+    "play_evicted": 0
+  },
+  "full_room_residency_accepted": false,
+  "proof_sha256": "e64c3bf89547e9c3d5a0eeeb969013937606b3d1c3c7c8939d718a93e38af1f3",
+  "evidence_path": "C:/Flycast-Evidence/re4-dreamcast/castle18-20261018/r201-e86-full-partner-native-entry-proof-20261019.json"
+}

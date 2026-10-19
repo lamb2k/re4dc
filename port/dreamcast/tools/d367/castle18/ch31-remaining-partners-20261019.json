@@ -1,0 +1,18 @@
+{
+  "replace": {
+    "dc/native/r203/partner.re4nmr": "/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r203/partner.re4nmr",
+    "dc/native/r208/partner.re4nmr": "/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r208/partner.re4nmr",
+    "dc/native/r204/partner.re4nmr": "/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r204/partner.re4nmr"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Data-only source-exact existing full pl11 partner addition for missing chapter3-1 room consumers; host checks only, runtime and chapter acceptance pending.",
+    "manifest_sha256": "1baf29e0ecf4975a0d783348e61fb66b5d0b03810352f11f6efedffa9cce3abf",
+    "room_partner_sha256": {
+      "r203": "cf3a4a4eeb4cdb9ad160218596f0ef6ca3b02e36cfccb7b8b17b07172435e1b5",
+      "r208": "84d4709144ec07a3b37ad6910d0a77fe4c0f16496c43c58b152c3ddea10a0561",
+      "r204": "0cd634b4864624d9991ed4442a63d564f8fcf32e2a59802656b7294c439bbc68"
+    },
+    "prepared_archive_sha256": "ecf3098097fcb2b2c86d632b62fd3d9112e61f5e39b56819db6a2e277fffcfa2"
+  }
+}
