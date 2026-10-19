@@ -69,3 +69,8 @@ $(OBJDIR)/platform/room_file.o: platform/room_file.c platform/include/room_file.
 	@mkdir -p $(dir $@)
 	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include $(ROOMFILE_SECTIONS) -c $< -o $@
 endif
+# BENCH_SCENES=<n> (engine19 2026-10-19, bench discs only; default empty: nothing changes): RE4DC_BENCH_SCENES for a
+#   BENCHMARK=1 disc that runs /cd/dc/bench3.txt, bench4.txt ... (bench.cpp defaults to 2 scenes).
+ifneq ($(strip $(BENCH_SCENES)),)
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENES=$(BENCH_SCENES)
+endif
