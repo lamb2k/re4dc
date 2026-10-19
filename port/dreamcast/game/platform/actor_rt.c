@@ -170,6 +170,21 @@ int re4dc_rt_collide(float* x, float* y, float* z, float ox, float oz)
     return 1;
 }
 
+void* re4dc_rt_ik_actor;
+static unsigned c_ik, c_ikpass;
+
+float re4dc_rt_floor(float x, float y, float z)
+{
+    const rt_grid* g = &g_grid;
+    int c = g->ok ? cell_of(g, x, z) : -1;
+    if (c < 0 || g->cells[6 * c] == 0xFF) { c_ikpass++; return -100000.0f; }
+    const float* pl = g->planes + 3 * g->cells[6 * c];
+    float fy = pl[0] * x + pl[1] * z + pl[2];
+    if (fy > y + 500.0f || fy < y - 1500.0f) { c_ikpass++; return -100000.0f; }  /* not this level: SatMgr decides */
+    c_ik++;
+    return fy;
+}
+
 void re4dc_rt_count(int owned, int fallback)
 {
     c_owned += owned;
@@ -181,8 +196,8 @@ void re4dc_rt_log(unsigned frame, int leon_life)
     static unsigned last;
     if (frame - last < 60 && frame >= last) return;
     last = frame;
-    re4dc_log("engine preview: f=%u life=%d owned=%u fallback=%u flows=%u steer=%u gridmove=%u gridpass=%u\n", frame, leon_life, c_owned,
-              c_fallback, c_flows, c_steer, c_collide, c_nogrid);
+    re4dc_log("engine preview: f=%u life=%d owned=%u fallback=%u gridmove=%u gridpass=%u ik=%u ikpass=%u\n", frame,
+              leon_life, c_owned, c_fallback, c_collide, c_nogrid, c_ik, c_ikpass);
 }
 
 /* routine transitions of the Ganados in a grid room (r_no_0 / r_no_1 from the cModel status word): one line per change */

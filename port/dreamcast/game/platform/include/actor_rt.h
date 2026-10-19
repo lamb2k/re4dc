@@ -23,6 +23,10 @@ int re4dc_rt_steer(float x, float z, float* gx, float* gz);
 /* grid collision for an actor moved to (*x, *y, *z) from (ox, oz): wall push-out + floor height. Returns 0 when the
  * grid cannot decide (outside, no floor, a floor more than 400 mm from y: multi-level cells), and leaves x/y/z as is. */
 int re4dc_rt_collide(float* x, float* y, float* z, float ox, float oz);
+/* foot IK floor query for the actor in re4dc_rt_ik_actor (set by cEm10::move for the actor the runtime owns, else 0):
+ * the grid floor under (x, z) near y, or -100000 when the grid cannot decide (the caller then asks SatMgr). */
+extern void* re4dc_rt_ik_actor;
+float re4dc_rt_floor(float x, float y, float z);
 /* counters for the preview log line */
 void re4dc_rt_count(int owned, int fallback);
 void re4dc_rt_log(unsigned frame, int leon_life);

@@ -2537,86 +2537,18 @@ void em10KickHitMark(cEm10* em)
 extern "C" int re4dc_skel_scope;
 #endif
 #if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
-// ENGINE_PREVIEW=1 (lane behave18, engine_preview.mk; viewing only). The native actor runtime owns an ordinary chasing
-// Ganado in a room with a grid: the shared flow field steers it (Go_pos), its chase machine (walk / dash by distance,
-// the game's attack routines through em10AtkRtnCk and its Ctrl12 attack slots) replaces Walk / Dash, and grid
-// collision replaces the polygon world check where the grid can decide. cEm10 stays the facade: damage, deaths,
-// the attacks themselves, events, scripted gotos, ladders / doors (the branch checks still run) are the game's.
+// ENGINE_PREVIEW=1 (lane behave18, engine_preview.mk; viewing only): the original brain with a new body. cEm10's own
+// AI (routines, route, decisions, attacks, damage, deaths) runs unchanged; in a room with a grid the native actor
+// runtime (platform/actor_rt.c) takes over the body work it calls: movement collision (SatMgr.check -> the grid) and
+// the foot IK floor query (ik.cpp SatMgr.getFloor -> the grid, through re4dc_rt_ik_actor). Bullets and hits stay
+// polygon-exact (EmAtCheck). Each service falls back to the source where the grid cannot decide.
 #include "actor_rt.h"
 static int em10RtOwns(cEm10* em)
 {
     Em10Work* w = EM10_WK(em);
-    if (em->hp <= 0 || em->r_no_0 != 1 || (em->r_no_1 != 0x10 && em->r_no_1 != 0x11)) return 0;
-    if (w->Goto_mode != 0 || (w->flags & 0x400000) || (em->flag & 0x400) || w->pShield || w->pParasite) return 0;
-    if (!re4dc_rt_room((unsigned(pG->stage_no) << 8) | pG->room_no)) return 0;
-    return 1;
-}
-static void em10RtSteer(cEm10* em)
-{
-    Em10Work* w = EM10_WK(em);
-    f32 gx, gz;
-    re4dc_rt_tick((unsigned) pG->Frame_cnt, pPL->pos.x, pPL->pos.z);
-    if (em->plDist2 > 2500.0f * 2500.0f && re4dc_rt_steer(em->pos.x, em->pos.z, &gx, &gz)) {
-        w->Go_pos.x = gx;
-        w->Go_pos.y = em->pos.y;
-        w->Go_pos.z = gz;
-    } else {
-        w->Go_pos = pPL->pos;   // close in: straight at Leon (the game's attack checks take over)
-    }
-    w->Go_dir = Muku(&em->pos, &w->Go_pos, em->ang.y, PI);
-    w->Go_rot = fabsf(w->Go_dir);
-}
-// The chase machine (r_no_1 0x10 walk / 0x11 dash): r_no_2 0 = pick the gait, 1 = move.
-static void em10RtChase(cEm10* em)
-{
-    Em10Work* w = EM10_WK(em);
-    int end;
-    if (em->r_no_2 == 0) {
-        const int dash = em->plDist2 > 7000.0f * 7000.0f && w->Dash_wait == 0 && w->Wep_type != 4;
-        em->r_no_1 = dash ? 0x11 : 0x10;
-        if (dash) {
-            em->flag &= ~0x80;
-            em10SetDashMotion(em);
-            w->Dash_wait = (int) Rnd() % 450 + 150;
-        } else {
-            em10MouthPartsReset(em);
-            em10SetWalkMotion(em, 7);
-        }
-        em->r_no_2 = 1;
-    }
-    if (em->r_no_1 == 0x11) {
-        w->flags |= 0x40;
-        em->ang.y += Muku(&em->pos, &w->Go_pos, em->ang.y, 0.19634955f);
-    } else {
-        em->ang.y += Muku2(0.0f, Muku(&em->pos, &w->Go_pos, em->ang.y, PI) * 0.3f, 0.15707964f);
-    }
-    em->ang.y = LIMIT_ANGLE(em->ang.y);
-    end = MotionMoveF(em, 0);
-    if (em->pos.y < -99000.0f) {
-        em->hp = 0;
-    }
-    if (em->hp <= 0) {
-        if (end) {
-            EmRoutineSet(em, 2, 9, 0, 0);
-        }
-        return;
-    }
-    if ((s16) pG->pl_life <= 0 || (pSUB && (s16) pG->ashley_life <= 0)) {
-        EmRoutineSet(em, 1, 0x1B, 0, 0);
-        return;
-    }
-    if (em10AtkRtnCk(em, 0)) {
-        return;
-    }
-    if (end) {
-        // gait change at a step boundary: dash when far, walk when near
-        if ((em->r_no_1 == 0x10 && em->plDist2 > 9000.0f * 9000.0f && w->Dash_wait == 0) ||
-            (em->r_no_1 == 0x11 && em->plDist2 < 3000.0f * 3000.0f)) {
-            em->r_no_2 = 0;
-        }
-    }
-    em10BreathSe(em);
-    em10HandSet(em, 0);
+    if (em->hp <= 0 || em->r_no_0 != 1) return 0;
+    if ((w->flags & 0x400000) || (em->flag & 0x400)) return 0;
+    return re4dc_rt_room((unsigned(pG->stage_no) << 8) | pG->room_no);
 }
 #endif
 
@@ -2646,9 +2578,7 @@ void cEm10::move()
     em10RouteCk(this);
 #if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
     int rt = em10RtOwns(this);
-    if (rt) {
-        em10RtSteer(this);
-    }
+    re4dc_rt_ik_actor = rt ? (void*) this : 0;
 #endif
     {
         u32 lost = w->flags & 0x800000;
@@ -2734,18 +2664,6 @@ void cEm10::move()
         w->x648--;
     }
     w->Atk_trg = 0;
-#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
-    if (rt) {
-        // the branch checks first (doors, ladders, gotos, windows): they may hand the Ganado back to the game
-        Em10_R1_move_tbl[r_no_1 * 2](this);
-        if (r_no_0 == 1 && (r_no_1 == 0x10 || r_no_1 == 0x11)) {
-            em10RtChase(this);
-        } else {
-            rt = 0;
-            Em10_R1_move_tbl[r_no_1 * 2 + 1](this);
-        }
-    } else
-#endif
     Em10_R0_move_tbl[r_no_0](this);
     if (r_no_0 == 0xFF) {
         EmMgr.destroy(this);
