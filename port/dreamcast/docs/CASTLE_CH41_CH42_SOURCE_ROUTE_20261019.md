@@ -643,3 +643,22 @@ Source fragment: tools/d367/castle18/ch41-r212-partner-20261019.json.
 Runtime native/cloth, 48KiB reserve, plate/ceiling/drill/cup events and chapter
 acceptance remain open. Proof: r212-partner-host-proof.json. Source-created
 Ashley is retained; the entry fixture adds no partner flag or puzzle bypass.
+
+
+## r212 package-derived partner preload
+
+The four full-Ashley atlas/mask keys qualified by the r219 cart run are
+also missing from r212's resident list. They are added before its first
+native gate, with each actual r212 texture winner checked byte-exact.
+These are package-derived expected inputs, not r212 runtime observations.
+The data preserves all5,772 current union records and every other room,
+adding four r212 keys for5,776 total. The loader/source dimensions and
+formats remain unchanged. Actual guest residency and memory remain pending.
+
+Private set: castle18-ch41-r212-partner-resident-20261019, mirrored on C:.
+Resident SHA: 2d5d4613b96af8bc70daaafee0dce6203077097dcc37e7293d4c49d14fa9569e.
+Manifest SHA: ff1ec70e8f9ff7c23c57325fecefa240017c9521c988c680cd90dc0570926760.
+Source fragment: tools/d367/castle18/ch41-r212-partner-resident-20261019.json.
+Proofs: r212-partner-package-texture-ledger.json and
+r212-partner-resident-host-proof.json. Compose only the four r212 keys
+into newer resident unions.
