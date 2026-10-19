@@ -46,3 +46,9 @@ Off captures56.38+56.09seconds; enabled56.05+56.38seconds. Exact reserve receipt
 The unattended enabled enemy kills Leon (observerHP0firstat1886); retained stills show critical health then the original death transition. This demonstrates activation and native drawing, not survival, a completed fight, all queued releases, cleared doors or a no-warp chapter. The one-part id01 planL draw after death is not playable/partner Ashley evidence. No hardware timing or speed claim is made.
 
 Private paired proof: `workers/ch32/deferred-flags/r20c-paired-runtime-proof.json`, arm logs and `r20c-{off,on}-runtime.json`. Off disc80fda0ec0d8724641affe4ca0e5a8a74f58f1d93477b028fc3ef35c414088723; enabled62b0fbec63df69f479ffd7ca2fda202758e4cf15e5a135d5eb23f45df4637539. Exact combined logs f75e9bbb0f196a4aa1efd1da364238d03b15b93563b6718b3a6b35cc41192f98 and b310b6017517d816fcf80cbada27a140231761e2a362fb0bf0b683df5f796032. Source/build file claims are released; data follow-up is separate.
+
+## Enabled gameplay residency candidate
+
+The separate V18 additive candidate preserves all5,776 records from the latest r212/219 union and adds15 source-observed r20c gameplay keys (5,791total). Dimensions/formats use actual source upload metadata, including non-power-of-two source sizes; selected package winners and every image byte stay unchanged. The three later death-text keys remain outside the room list, retained in the complete ledger for source ownership review. Fresh matched enabled-program validation is pending.
+
+Private dataset `castle18-ch32-r20c-active-resident-v18-20261019` is mirrored to C:. Resident SHA fbc6957986724720d9127021a6bfda8d2fce66dac8a988a121c5bd103dd25568; manifest d730b723f64db27c2a65c5997833ea94863e2125cf8a04e32e5fe5d3141c718a. Source fragment `port/dreamcast/tools/d367/castle18/ch32-r20c-active-resident-v18-20261019.json`.

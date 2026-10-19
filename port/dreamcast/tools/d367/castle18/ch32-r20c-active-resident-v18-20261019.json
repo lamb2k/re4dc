@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch32-r20c-active-resident-v18-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "r20c +15 exact source-observed activated-cage gameplay resident keys; all 5776 latest union records unchanged.",
+    "base_resident_sha256": "2d5d4613b96af8bc70daaafee0dce6203077097dcc37e7293d4c49d14fa9569e",
+    "resident_sha256": "fbc6957986724720d9127021a6bfda8d2fce66dac8a988a121c5bd103dd25568",
+    "warning": "Compose the r20c records into any newer resident union; never overwrite later room additions."
+  }
+}
