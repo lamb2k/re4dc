@@ -662,3 +662,34 @@ Source fragment: tools/d367/castle18/ch41-r212-partner-resident-20261019.json.
 Proofs: r212-partner-package-texture-ledger.json and
 r212-partner-resident-host-proof.json. Compose only the four r212 keys
 into newer resident unions.
+
+
+## r212 original-door entry with full partner
+
+The55.89-second frozen c18oimW diagnostic completes without fatal, texture,
+audio-fit or VRAM failure. Original R212TrapInit creates Ashley; her seven
+live infos have original asset/adoption certificates, and both Ashley and
+Leon have900 cumulative native census counts/GC0. The room needs no fixture
+partner flag. Both source drill Ganados are alive but outside the camera at
+25,337 source units, so this does not qualify their native drawing or combat.
+
+Exact held/requested reserve49,152; periodic minimum KOS headroom34,472.
+The last VRAM summary is preload-only:1,503,936 pinned,1,006,144 free,
+954,368 largest block,202 loads. Actual later frames184/185/240/360/480/600
+hold202 loads, so no post-preload growth is observed in this entry window.
+No whole-room residency or puzzle result is inferred. The saved-state image
+was inspected: the camera is close behind Leon and Ashley is offscreen,
+so full partner appearance remains a later normal-input check.
+
+Disc SHA: c9d12b8cd7c7b98d7849246f91ef4485201bbdf7d52871837ef65ed31f83a3a2.
+Log SHA: 8343e55b331849b940f531b2de15832fde4bba064f57699822af8b1d8ce01e40.
+Saved state SHA: 15c517e0689aa2d41f6a8b4f5529992b54cbd4b0cae882a1f3aa843d77f558f2.
+All23 program payloads are exact. Source now includes I-013's f2555097 via
+mergef2bd243fb, while this diagnostic's immutable ELF746a2a5f remains the
+older snapshot. New chapter acceptance must use the current recipe with
+ACTOR_PLAN=1; ENEMY_VIS_CULL stays0 pending its landing.
+
+Late Flycast registration again rises to188-191ms/2.8FPS. No hardware timing
+or speed gain is claimed. Next: normal plate/rack inputs, original roof and
+drill events, native visible enemies, cup6f and no-warp chapter progression.
+Proof: r212-entry-runtime-proof.json and r212-entry-saved-state-audit.json.
