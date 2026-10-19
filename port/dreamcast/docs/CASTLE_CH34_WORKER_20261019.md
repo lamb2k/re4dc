@@ -88,3 +88,60 @@ Check the real Leon-to-Ashley transition, her source model/motion/cloth/hands,
 lantern and crank interactions, r20e puzzle and armour encounters, return to
 Leon, inventory transfer, and original chapter save/reload. Native model,
 residency, audio, KOS 48 KiB and complete no-warp progress all remain open.
+
+## r20e armour package
+
+The old r20e fixture lacks a native armour package. Its original emleon03
+entries 178 and 187 through 194 select em3c types 0, 1 and 2. The source
+`r20e_startArmor` task uses these list indices directly. Existing r216 full
+models `armor-em3c-00w` through `03w` cover the same source family, including
+their original weapons and chainmail.
+
+The current package producer first reproduced the qualified r216 package
+byte for byte. A private copy of its input metadata then added r20e as a
+room, with every other cast input preserved. The producer generated a proper
+r20e package from that copy; the entire payload after its 64-byte header is
+identical to r216. Only the room byte and header CRC differ. Package size:
+350,368 bytes. SHA256:
+`45e6e57c9b32b410bf85513fc5bcd7a7070896fc06c0575988b43d1d7f48b098`.
+
+The actual current target package checker, compiled on the host with
+address/undefined-behaviour sanitizers, accepts it for r20e and rejects it for
+r216. The data fragment also stages the existing prepared em3c archive
+(`e8b7effe`) and its 18 original texture packages plus the existing atlases.
+No mesh, motion, weight, image or material policy changes.
+
+Private data is C-mirrored under
+`re4-assets-private/castle18-ch34-armor-20261019`; `reuse-proof.json` and
+`package-qualification.json` record the producer replay and loader checks.
+Its manifest SHA256 is
+`b03a56bade4364f7705db8e6cdcf6475b6d7321e48f6a14d9bd9a2da932239d6`.
+The initial emulator test deliberately uses Leon and a focused camera to
+check armour asset admission. It cannot qualify Ashley gameplay, armour
+combat, cap-four progress, or the chapter route.
+
+### First current-runtime check and preload correction
+
+The 55.97-second `cx-r20e-walk-armor01` diagnostic uses the current c18oimW
+program (ELF SHA `746a2a5feb7cf6293ea31c2738c815a3f6ce305a29c8af82b482ca8758b2136e`)
+and checks all 23 boot/overlay payload hashes. Armour types 0, 1 and 2 draw
+natively with no GameCube fallback, no texture errors and no audio failures.
+These are dormant statues with Leon: no active-enemy or Ashley claim follows.
+The first capture held no memory squeeze, so it is not a KOS 48 KiB gate.
+
+Its ten late uploads are original source texture keys absent from the r20e
+resident list. Their actual loose/package winners were read back and hashed.
+The correction adds only those ten original width/height/format tuples,
+preserving all 5,591 prior resident records and every other room. No texture,
+model, animation, audio or program bytes change. The source r20e TSV records
+the additions; `castle18/ch34-r20e-resident-20261019.json` is the private data
+fragment. Compose these entries into any newer resident union, preserving
+other workers' additions.
+
+Candidate resident SHA:
+`a1233414e1c35d43dd50f59c00ee1c73d86dbd7c678c21d881e8fdeba82d3686`.
+Private data: `castle18-ch34-r20e-resident-20261019`; manifest SHA:
+`4d71fffffdeb65e114a11ce55eac07f998bb76f7e4a4761000a370a9246e05fd`.
+A new fixture adds `squeeze 49152 0` explicitly. The fresh corrected gate is
+pending; it is not a strict identical-input comparison with the unsqueezed
+first capture. Neither capture can establish chapter completion.
