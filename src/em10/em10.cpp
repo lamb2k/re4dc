@@ -2805,7 +2805,7 @@ void cEm10::move()
                 SatMgr.check(this, 0);
             }
 #if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
-            if (rt) re4dc_rt_log((unsigned) pG->Frame_cnt);
+            if (rt) re4dc_rt_log((unsigned) pG->Frame_cnt, (s16) pG->pl_life);
 #endif
             atari.m_flag = atFlags;
             moved = SQRTF((pos.x - pos_old.x) * (pos.x - pos_old.x) + (pos.z - pos_old.z) * (pos.z - pos_old.z));

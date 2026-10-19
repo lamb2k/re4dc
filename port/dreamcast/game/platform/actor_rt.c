@@ -176,11 +176,11 @@ void re4dc_rt_count(int owned, int fallback)
     c_fallback += fallback;
 }
 
-void re4dc_rt_log(unsigned frame)
+void re4dc_rt_log(unsigned frame, int leon_life)
 {
     static unsigned last;
     if (frame - last < 300 && frame >= last) return;
     last = frame;
-    re4dc_log("engine preview: f=%u owned=%u fallback=%u flows=%u steer=%u gridmove=%u gridpass=%u\n", frame, c_owned,
+    re4dc_log("engine preview: f=%u life=%d owned=%u fallback=%u flows=%u steer=%u gridmove=%u gridpass=%u\n", frame, leon_life, c_owned,
               c_fallback, c_flows, c_steer, c_collide, c_nogrid);
 }
