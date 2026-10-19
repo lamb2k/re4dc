@@ -1,0 +1,26 @@
+{
+  "status": "FRESH_CURRENT_BASELINES_AND_SOURCE_RESET_VIEW_PROOF",
+  "source_head": "d0d91273b1cb72dfbb7923f6606dc39b2d22b07f",
+  "runtime_source_exact_to": "27db38be01708a40ec86c3a15b7a564700951949",
+  "baselines": {
+    "c32hbrP": {
+      "elf_sha256": "1aac9f7587f92fa536354cb4ef63d1b9bd8299450dcf56405a8f551c26aafb87",
+      "program_payloads": 11,
+      "baseline_proof_sha256": "b4b98f40b537154ad3794b75e0770ca55e94cf5af67f9e4ef82017e7d5ca3b4f",
+      "resolved_knobs_sha256": "07764fd4b30ba647bb6d7e973f01d60378692e9147ac8a62f8538a9cccaf0dd4",
+      "generated_headers": 45
+    },
+    "c32hbmW": {
+      "elf_sha256": "aba62141866a24763657bfe11a07ab1a369b6e32f6bd94989e1d389817470394",
+      "program_payloads": 23,
+      "baseline_proof_sha256": "5d6a8ad7a943da958d0d7129255544853cc6ffbb4e10d88801aa8f2d73e2bbbc",
+      "resolved_knobs_sha256": "7e457dda7a7baccdac35d0332ccbb4303b68048282b50c1405af80dc998da65c",
+      "generated_headers": 45
+    }
+  },
+  "reset_view_proof_sha256": "86c0eb3970c77eb70ef5f7640e38e389dd20154236cca73f5acd0dcf701f6157",
+  "restore_fatal_binding_sha256": "d8e4b18b1a72e8c9f89b188aa2da55b52d8b2d7d6963e67cfa7cd7acae694ba8",
+  "current_fixture_proof_sha256": "69445157b8df2c10d9b8ae3b9ea5831876d4ae55e0a0083a8868419a76935662",
+  "current_stage_proof_sha256": "18e50cb3bcfe74bf07c92cd6b51bda3d10859ec0e2f328b4d647985eb6d897de",
+  "scope": "No implementation. Fresh control run/reproduction in progress; not healing or gameplay acceptance."
+}
