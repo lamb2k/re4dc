@@ -1,4 +1,4 @@
-RE4 Dreamcast test 17, source SHA_PLACEHOLDER
+RE4 Dreamcast test 17.1 (hotfix), source SHA_PLACEHOLDER
 
 See Known Issues: https://github.com/lamb2k/re4dc/blob/dreamcast-port/port/dreamcast/docs/KNOWN_ISSUES.md
 
@@ -7,7 +7,13 @@ folder on your GDEMU SD card. Flycast can open gdemu/disc.gdi directly (if
 menu or popup text looks broken in Flycast, use its per-pixel renderer
 setting).
 
-New in test 17:
+New in test 17.1 (hotfix):
+* Coming Soon no longer traps you. A door off the test's path (the
+  lake shore's second exit and ladder, the side path by El Gigante)
+  shows Coming Soon and returns you to the room, so you can take the
+  other exit. The disc data is test 17's; only the program changed.
+
+From test 17:
 * Chapters 2-2 and 2-3 are playable, up to the castle gate (r200): the
   cabin siege with Luis, Mendez, the second El Gigante and the truck ride,
   with the PS2 enemy lists. At most 4 Ganados at once.

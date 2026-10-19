@@ -2,12 +2,12 @@
 # them (make takes the last value). Written by tools/d367/release-knobs.py write from the release build's
 # out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.
 # @ASSETS@ = the unpacked Build-Assets zip (re4dc-assets/).
-# test: 17
-# tag: test-0c450dbe-20261018
-# source: 0c450dbe
+# test: 17.1
+# tag: test-8777b612-20261019-hotfix1
+# source: 8777b612
 # recipe: port/dreamcast/tools/d367/ch2/ch2-build.sh
-# image-sha256: a4c9d1d54f9f241f73badd1d1acfaaebd70825d3968480da70fcc401a4983ccc
-# assets-zip: RE4DC-Test17-0c450dbe-Build-Assets.zip
+# image-sha256: 2998f8f0c3ba9a003d2c3dec4b178b9018879b78305fa288041a4872e30597cf
+# assets-zip: RE4DC-Test17.1-8777b612-Build-Assets.zip
 # disc-sets: snd16,water16i,vq16w,fsh,ch2,cast16,r108p,pak17,zr17,zr17b,v101,stump17,res17b,trans17
 LOGIC_TRACE=0
 GAME_DECISION_TRACE=0
@@ -219,6 +219,7 @@ AICA_STR_ENT_MAX=56
 AICA_SPILL=1
 NATIVE_MODEL_REGISTRY_FIRST=1
 NATIVE_MODEL_REGISTRY_LOD=1
+ROUTE_SOON_RETURN=1
 IMAGE_PAD_BYTES=0
 DBG_WARP=0
 PC_SAMPLER=0

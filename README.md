@@ -7,8 +7,21 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 17](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 17.1](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 17.1
+
+A hotfix of Test 17. Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **Coming Soon no longer traps you.** Chapter 2-1 has two ways forward and this test carries one. A door off the
+  test's path shows Coming Soon, then returns you to the room so you can take the other exit.
+
+  ![Coming Soon (r11b to r10c)](docs/images/releases/test-17.1/flycast-coming-soon-r11b-r10c.png)
+  <br>The Coming Soon screen. Flycast capture, test 17.1.
+
+  ![Back in r11b after Coming Soon](docs/images/releases/test-17.1/flycast-back-in-r11b-after-coming-soon.png)
+  <br>Back on the lake shore after Coming Soon. Flycast capture, test 17.1.
 
 ## What's new in Test 17
 
