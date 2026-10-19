@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "st2/r219.dar": "/root/re4data/private/castle18-ch41-r219-audio-20261019/st2/r219.dar"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Existing frozen-layout ROOM/FOOT preparation only. All non-audio archive bytes, source wavetable bytes, program files and Ashley's voice bank are unchanged.",
+    "room_sha256": "57bd15a1f575d0c79cc19eaffad6db57d7fe68efabca2ac8992d8c67d31b6718",
+    "private_manifest_sha256": "6cf68a625106b7630762dbfdb7eb4b2920971f234007c980a0f67fd45b858d7b",
+    "runtime_status": "Host preparation verified and mirrored; emulator qualification pending. The original cart departure, self-room arrival, Ashley and chapter progression remain unqualified."
+  }
+}

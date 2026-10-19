@@ -145,3 +145,76 @@ Evidence in the worker folder: `r210-fullaudiokos02-gate.json`,
 `f8144f92a30173314e3b1018311dd72825410dc1f55d8578a5ec0d5d9bb2e305`;
 the staged disc SHA is
 `2e5dffb688da8b50c19095c3fc7f3fef6642e7c09ad4d3b66a4d39de48df0745`.
+
+## r222 audio preparation
+
+The selected r222 archive also carries raw ROOM/FOOT banks. Its existing
+em11 voice bank is already prepared and remains byte-identical. The normal
+frozen-layout fitter selects 11,025 Hz for room ambience and 8,000 Hz for
+footsteps, using 220,096 aligned bytes. Enemy voices retain their existing
+8,000 Hz cap and 682,208 aligned bytes; 101,888 arena bytes remain. The
+footstep image size is unchanged from its preferred-cap size. This uses the
+existing fitter policy, not a new audio layout or enemy voice reduction.
+All archive bytes outside the two audio ranges and all original wavetable
+bytes are preserved. BGM14 reuses the r210-checked conversion; its source
+container hash is verified before substitution.
+
+Private set `castle18-ch41-r222-audio-20261019` is mirrored on C: with
+manifest SHA
+`741491b9ad4d30f3262753c3071b63d8279adcd7efc79f2bd5d67a0d7971b1e4`.
+The additive fixture is `tools/d367/castle18/ch41-r222-audio-20261019.json`.
+The current-program entry `cx-r222-walk-audiokos01` completed 56.66 seconds,
+with its owned emulator exited. The exact reserve is
+`held=49152 requested=49152`; minimum KOS watch headroom is 49,752 bytes.
+All 23 program payloads remain identical. Audio-fit failures, texture
+errors, refusals, evictions, retries and late gameplay texture uploads are
+zero. The actual gameplay VRAM summary at frame 767 has 421,536 pinned,
+487,104 dynamic, 1,568,672 free and 1,550,336 largest-free-block bytes;
+native stream receipts through frame 1200 retain 121 loads.
+
+Enemy draw acceptance is explicitly withheld. Three em11 actors are alive
+at approximately 45 metres, but every recorded em11 draw pass is skipped:
+`native=0`, positive `crowd`, and `NMRD admitted=0`. The stock CAST-GC and
+NOT-DRAWN checks pass because the actors have census rows, even when those
+rows report only skips. That is not evidence of a rendered native enemy.
+Leon has 1,500 native census samples and no fallback. The 45-second still
+was inspected. A nearer diagnostic must prove actual admission and drawing
+before the enemy models can pass. No checker or runtime rule was relaxed.
+
+The original dragon targets, combat, moving scenery, ornament pickup and
+return to r210 still need progression checks; entry alone cannot qualify
+them. `r222-source-trigger-geometry.json` records original trigger volumes
+and effective enemy placements for the next diagnostic without fabricated
+room flags. The original area 6 controls the side-dragon appearance; area
+10 is the second treasure-box trigger near the active source monks.
+
+Evidence: `r222-audiokos01-gate.json`, `r222-audiokos01-vram.json` and
+`r222-audiokos01-characters.json`. Capture log SHA:
+`f3c10d1e5358b410c7bccbe08e506c93e32dd040603176a14e81d395b2050863`.
+Disc SHA:
+`268ebbed9c8167369c55ee918ffaeec03416fef26ff5483015fb71cab58d50a6`.
+
+## r219 cart route and audio preparation
+
+The original r201 door area 0x21 enters r219 at its near platform. This is
+more than a simple r201-to-r211 corridor: original r219 areas 2 and 3 run
+`toroko_go`, then reload r219 with part 1 or 2 so `toroko_ret` can perform
+the arrival. Both events check `CheckDoorJumpWithAshley`, position both
+characters on the cart, use the room's original character/cart motions and
+restore the hands and weapons. Departure requests stream 1:0xe4; arrival
+requests 1:0xe5. Final route qualification must cover those events with
+Ashley, including their audio, before the ordinary r211 exit.
+
+The diagnostic entry fixture preserves the current 23 program files and
+uses that original r201 door destination. It does not establish the
+preceding chapter's partner state. The existing frozen-layout fitter
+prepares the raw ROOM/FOOT banks at their unchanged preferred caps of
+16,000/11,025 Hz: 135,648 aligned bytes alongside the unchanged 68,064-byte
+Ashley bank, leaving 800,480 arena bytes. All non-audio archive bytes and
+source wavetable bytes remain exact. This is host preparation, not an
+emulator or event-audio pass.
+
+Private set `castle18-ch41-r219-audio-20261019` is mirrored on C:, manifest
+`6cf68a625106b7630762dbfdb7eb4b2920971f234007c980a0f67fd45b858d7b`.
+Additive fixture: `tools/d367/castle18/ch41-r219-audio-20261019.json`.
+Evidence: `r219-entry-preparation.json` and `r219-audio-fit-proof.json`.
