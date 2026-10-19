@@ -189,38 +189,23 @@ int chunk_clip(void* ctx, const uint8_t* idx, unsigned n, unsigned form) {
     *re4dc_chunk_sq(c.s) = e.sq;
     return ok ? 1 : -1;
 }
-// One meshlet through the back end: points = the records' screen words (already skinned once per distinct point),
-// corners = the records (u, v, colour), strips = the meshlet's actor-form index list. false: not taken (caller
-// falls back to the adapter, nothing sent).
+// One meshlet through the back end (v1.1 direct vertices): the corners are the window cache's finished PVR vertices
+// (skinned once per distinct point, lit, flags PVR_CMD_VERTEX, offset colour 0), used in place; only the outcodes are
+// translated to the back end's bits. Strips = the meshlet's actor-form index list. false: not taken (caller falls
+// back to the adapter, nothing sent).
 bool chunk_backend(Part& e, const Records& r, const u8* index, unsigned nv, unsigned ni, unsigned nt, bool& ok) {
-    if (!e.direct || nv > RE4DC_CHUNK_MAX_POINTS || e.slots + 6U * nt > 32767U) return false;
-    const unsigned mark = workspace_top;
-    u8* const work = static_cast<u8*>(scratch(RE4DC_CHUNK_CACHE_BYTES + nv * 28U + 64U));
-    if (!work) { ++chunk_backend_fallbacks; return false; }
-    float* const xyz = reinterpret_cast<float*>(work + RE4DC_CHUNK_CACHE_BYTES);
-    float* const uv = xyz + 3U * nv;
-    u32* const argb = reinterpret_cast<u32*>(uv + 2U * nv);
-    u8* const codes = reinterpret_cast<u8*>(argb + nv);
-    u8* const point = codes + nv;
-    for (unsigned i = 0; i < nv; ++i) {
-        const pvr_vertex_t& v = e.cache.v[i];
-        xyz[3 * i] = v.x; xyz[3 * i + 1] = v.y; xyz[3 * i + 2] = v.z;
-        uv[2 * i] = v.u; uv[2 * i + 1] = v.v; argb[i] = v.argb;
-        codes[i] = chunk_code(e.cache.oc[i]); point[i] = u8(i);
-    }
+    if (!e.direct || nv > RE4DC_CHUNK_MAX_CORNERS || e.slots + 6U * nt > 32767U) return false;
+    u8 codes[RE4DC_CHUNK_MAX_CORNERS];
+    for (unsigned i = 0; i < nv; ++i) codes[i] = chunk_code(e.cache.oc[i]);
     re4dc_chunk_sink s;
     ChunkClip cc{&e, &r, &s};
-    re4dc_chunk_window_begin(&s, e.sq, work, 255U, chunk_clip, &cc);
-    re4dc_chunk_points_screen(&s, xyz, codes, nv);
-    re4dc_chunk_corners(&s, point, uv, argb, nv);
-    const unsigned out0 = e.output, slots0 = e.slots;
+    re4dc_chunk_window_begin(&s, e.sq, nullptr, 255U, chunk_clip, &cc);
+    re4dc_chunk_vertices_direct(&s, e.cache.v, codes, nv);
     const int res = re4dc_chunk_strips(&s, index, ni, RE4DC_CHUNK_STRIPS_ACTOR);
     e.sq = re4dc_chunk_window_end(&s);
     // the callback's own sends are already in e.slots / e.output; add the back end's direct strips
     e.slots += s.slots; e.output += s.slots - 2U * s.strips;
-    (void)out0; (void)slots0;
     e.input += nt;
-    workspace_top = mark;
     ++chunk_backend_meshlets;
     ok = res > 0;
     return true;
