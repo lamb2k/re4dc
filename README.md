@@ -37,9 +37,6 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 
 - **Effect pictures are there right after loading a save** in r102 ([#33](https://github.com/lamb2k/re4dc/issues/33)).
 
-  ![r102 after loading a save](docs/images/releases/test-18/r102-after-load.jpg)
-  <br>r102 just after loading a save. Flycast capture, test 18.
-
 - **A little faster in play.** Leon's jacket movement is worked out only for pictures that are shown.
 - **A little faster in the village and at the farm.** Mist sheets the PS2 version never shows are no longer moved, and more scenery stays ready in memory.
 - **No more disc reads for pictures** during the first house fight (r100) and at the night lake shore (r11b).
