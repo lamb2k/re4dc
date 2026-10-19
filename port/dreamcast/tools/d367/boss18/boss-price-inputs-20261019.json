@@ -1,0 +1,311 @@
+{
+  "source_commit": "2ca70cbf956d5849eba3c0631a972358d0579802",
+  "source_sets": [
+    "boss18-dellago-20261018",
+    "boss18-garrador-material-20261019",
+    "boss18-gigante-20261018",
+    "boss18-krauser-20261018",
+    "boss18-saddler-20261018",
+    "boss18-salazar-20261018",
+    "boss18-twins-20261018",
+    "boss18-twins-approved-20261019",
+    "boss18-u3-20261018",
+    "boss18-verdugo-20261018"
+  ],
+  "native_header_hashes": [
+    {
+      "name": "gigante-r119-full",
+      "source_set": "boss18-gigante-20261018",
+      "path": "full/gigante-em2b-00/runtime/castmodel_runtime.h",
+      "sha256": "1d32d983688711496c845ea2fa5a9127d384b08bf217251f74c639424f502746"
+    },
+    {
+      "name": "gigante-r119-g50",
+      "source_set": "boss18-gigante-20261018",
+      "path": "cast/r119-g50/gig2b00-g50/ps2-v1/castmodel_runtime.h",
+      "sha256": "2cb6ecee776398bc844e8407c9a91da2fddf42de2ec4f6f18f01e8a3db6c000a"
+    },
+    {
+      "name": "gigante-r11e-full",
+      "source_set": "boss18-gigante-20261018",
+      "path": "full/gigante-em2b-02/runtime/castmodel_runtime.h",
+      "sha256": "599bfb0a05c36ae8fb599e06011a52f218387683cedc3ec60d6ccc5524725e26"
+    },
+    {
+      "name": "gigante-r11e-g50",
+      "source_set": "boss18-gigante-20261018",
+      "path": "cast/r11e-g50/gig2b02-g50/ps2-v1/castmodel_runtime.h",
+      "sha256": "f6fc825dbfe8f1791a92e3bf8a2f12a93c9ff7452ffdcb8cc5dda3ecd6848a56"
+    },
+    {
+      "name": "dellago-full",
+      "source_set": "boss18-dellago-20261018",
+      "path": "full/dellago-em2f-00/runtime/castmodel_runtime.h",
+      "sha256": "e815474e313abe83d86dbdbaa48a260ec4199893c1288ae336143967bc845c6b"
+    },
+    {
+      "name": "dellago-boat",
+      "source_set": "boss18-dellago-20261018",
+      "path": "support/boat-pl0f-00/runtime/castmodel_runtime.h",
+      "sha256": "efe945f811c7251b399d8e892e120a7dea50fd31d13777f89d9a5826acbcfd2b"
+    },
+    {
+      "name": "verdugo-body",
+      "source_set": "boss18-verdugo-20261018",
+      "path": "full-source/verdugo-em2c-00/runtime/castmodel_runtime.h",
+      "sha256": "84a71fb309ca71a21a147c8e5925049f574a1371f8f5e9d57e1b3eea8a5df2c9"
+    },
+    {
+      "name": "verdugo-tail",
+      "source_set": "boss18-verdugo-20261018",
+      "path": "full-source/verdugo-tail-01/runtime/castmodel_runtime.h",
+      "sha256": "15fc6e67903d89ee5edbca7ffc4de34ccc67518f0d9585496086aebe3c2baecc"
+    },
+    {
+      "name": "garrador-em1b10",
+      "source_set": "boss18-garrador-material-20261019",
+      "path": "cast/zealot-em1b-0ag/ps2-v1/castmodel_runtime.h",
+      "sha256": "48436293250b3aea8f933bf478d47438e3260bd90e1a3c43dd2f4e39aaddae20"
+    },
+    {
+      "name": "garrador-em1c10",
+      "source_set": "boss18-garrador-material-20261019",
+      "path": "cast/zealot-em1c-0ag/ps2-v1/castmodel_runtime.h",
+      "sha256": "48436293250b3aea8f933bf478d47438e3260bd90e1a3c43dd2f4e39aaddae20"
+    },
+    {
+      "name": "garrador-em1c13",
+      "source_set": "boss18-garrador-material-20261019",
+      "path": "cast/zealot-em1c-0dg/ps2-v1/castmodel_runtime.h",
+      "sha256": "6dad8702d51d92a59189c7ced00c6a5f1bdd69842a66a7399b1bd4ba651003e6"
+    },
+    {
+      "name": "garrador-core",
+      "source_set": "boss18-garrador-material-20261019",
+      "path": "cast/garr-core-em1b/ps2-v1/castmodel_runtime.h",
+      "sha256": "62259e67fedad1fec412600e3fbd035248aa1fa78ea2bb54d36497992f4906fe"
+    },
+    {
+      "name": "queen-body-eye",
+      "source_set": "boss18-salazar-20261018",
+      "path": "full-pot/queen-em38-00/runtime/castmodel_runtime.h",
+      "sha256": "c68265fa2bad49d78a3de6c591aaf4b38bab4757d98230ec40d17d8a317a497a"
+    },
+    {
+      "name": "salazar-tentacle",
+      "source_set": "boss18-salazar-20261018",
+      "path": "full-pot/tentacle-em38-01/runtime/castmodel_runtime.h",
+      "sha256": "a4d5da178bc258d19f519279372cf7d8a6f7da58da06b233b8d6dea38efcc77b"
+    },
+    {
+      "name": "salazar-upper",
+      "source_set": "boss18-salazar-20261018",
+      "path": "full-pot/salazar-em38-03/runtime/castmodel_runtime.h",
+      "sha256": "788e2d6dd8f2d66fe5a70987fc4996df07a77a4e36a956393eccd38eefda3d8b"
+    },
+    {
+      "name": "salazar-roots",
+      "source_set": "boss18-salazar-20261018",
+      "path": "full-pot/roots-em38-04/runtime/castmodel_runtime.h",
+      "sha256": "ffa5ab128494b9a15a3e4c8cce248053b91015b29e4435b428a574afaa91c4b4"
+    },
+    {
+      "name": "salazar-weak",
+      "source_set": "boss18-salazar-20261018",
+      "path": "full-pot/weak-em38-obj00/runtime/castmodel_runtime.h",
+      "sha256": "efe707cc95635b6f75f0b1c9e52c078457d4d84b92f3237078fd0980d8ffd6a7"
+    },
+    {
+      "name": "giant-twin1-full",
+      "source_set": "boss18-twins-approved-20261019",
+      "path": "generated/inputs/cast/gigante-em2b-01/ps2-v1/castmodel_runtime.h",
+      "sha256": "59d23536e1e5ffa05b8b8f06707ce412c1a089e81dae5623c2770775fd4c9327"
+    },
+    {
+      "name": "giant-twin1-approved",
+      "source_set": "boss18-twins-approved-20261019",
+      "path": "generated/inputs/cast/gig2b01-p51/ps2-v1/castmodel_runtime.h",
+      "sha256": "751944a8613d91a6393c422f08b4664d58b1437f0332a08bd7635926c615fdad"
+    },
+    {
+      "name": "giant-twin3-full",
+      "source_set": "boss18-twins-approved-20261019",
+      "path": "generated/inputs/cast/gigante-em2b-03/ps2-v1/castmodel_runtime.h",
+      "sha256": "f1cfe7fb87895959d8061f47efdc72dc42464a18a294ed8c2ad341cf3296f419"
+    },
+    {
+      "name": "u3-full",
+      "source_set": "boss18-u3-20261018",
+      "path": "full-source/u3-em32-00/runtime/castmodel_runtime.h",
+      "sha256": "3e83905c03ef38e8174635c32999167b9cf0061cb276f698e50472d616a0a1c8"
+    },
+    {
+      "name": "krauser-human",
+      "source_set": "boss18-krauser-20261018",
+      "path": "full-source/krauser-em39-01/runtime/castmodel_runtime.h",
+      "sha256": "37984186d76abb9d37c75fbf623dca36851e4b31ba303d77c9c0a6cda1f69ad4"
+    },
+    {
+      "name": "krauser-arm",
+      "source_set": "boss18-krauser-20261018",
+      "path": "full-source/krauser-em39-02/runtime/castmodel_runtime.h",
+      "sha256": "a735f9e7e0a3a048022abfcb0872aa46621115bc0d81b3b15faa9877f465701f"
+    },
+    {
+      "name": "saddler-body-head",
+      "source_set": "boss18-saddler-20261018",
+      "path": "registry-inputs/saddler-em31-00/runtime/castmodel_runtime.h",
+      "sha256": "3d6091f862373d453d16a4c087478408c0494c7a54eea75728449d9bf7d3997c"
+    },
+    {
+      "name": "saddler-tentacle",
+      "source_set": "boss18-saddler-20261018",
+      "path": "registry-inputs/saddler-em31-01/runtime/castmodel_runtime.h",
+      "sha256": "23032c5197e57159ab9e162df60a7a9b101b065121483b24a13f446da978addd"
+    },
+    {
+      "name": "saddler-tail",
+      "source_set": "boss18-saddler-20261018",
+      "path": "registry-inputs/tail-em31-obj16/runtime/castmodel_runtime.h",
+      "sha256": "1081d1aa337d8761ebbf9298c5435757496ae9d5f056dd62c8c7cbd93652e6df"
+    },
+    {
+      "name": "saddler-weak",
+      "source_set": "boss18-saddler-20261018",
+      "path": "registry-inputs/weak-em31-obj00/runtime/castmodel_runtime.h",
+      "sha256": "551c09fcf7ca2f0e2e44842173f97b8fcbede6044673ed4855eeeff63089ae88"
+    },
+    {
+      "name": "kr-arr-wep42",
+      "source_set": "boss18-krauser-20261018",
+      "path": "full-support/kr-arr-wep42/runtime/castmodel_runtime.h",
+      "sha256": "9198de50703ac9bbf676905e8201fce2e0fe66c8f55b159aa30c842afd821676"
+    },
+    {
+      "name": "kr-bow-wep42",
+      "source_set": "boss18-krauser-20261018",
+      "path": "full-support/kr-bow-wep42/runtime/castmodel_runtime.h",
+      "sha256": "bc8acd16571e84481c05dd8cc096da2ceba949747367af0efd4680342f9ab543"
+    },
+    {
+      "name": "kr-cap-obj12",
+      "source_set": "boss18-krauser-20261018",
+      "path": "full-support/kr-cap-obj12/runtime/castmodel_runtime.h",
+      "sha256": "94986e628749efa8123acfc1a06b45e8f2b453ad6d08e221ed03fba147a88304"
+    },
+    {
+      "name": "kr-gun-wep42",
+      "source_set": "boss18-krauser-20261018",
+      "path": "full-support/kr-gun-wep42/runtime/castmodel_runtime.h",
+      "sha256": "c1d8cc3bb694b3c5329cc6c1e746edb4bfcec2c97558158e30e41ff28175e885"
+    },
+    {
+      "name": "kr-knife-wep42",
+      "source_set": "boss18-krauser-20261018",
+      "path": "full-support/kr-knife-wep42/runtime/castmodel_runtime.h",
+      "sha256": "441ef7be0d501919c8780f2b1ea378ad90e2586cec95954a677e9d2d5178606a"
+    },
+    {
+      "name": "kr-miss-obj38",
+      "source_set": "boss18-krauser-20261018",
+      "path": "full-support/kr-miss-obj38/runtime/castmodel_runtime.h",
+      "sha256": "e97968820d5945ea8a776282111f3b94111b83df6f0b94a00af7cd3d2199a361"
+    },
+    {
+      "name": "gunship-em3a-00",
+      "source_set": "boss18-krauser-20261018",
+      "path": "packages/r31c-shared-full/inputs/cast/gunship-em3a-00/ps2-v1/castmodel_runtime.h",
+      "sha256": "6ef5d9c3b15655977b56770d7341f446582a8dca3759c5296f2288886b0c5436"
+    },
+    {
+      "name": "gunship-em3a-02",
+      "source_set": "boss18-krauser-20261018",
+      "path": "packages/r31c-shared-full/inputs/cast/gunship-em3a-02/ps2-v1/castmodel_runtime.h",
+      "sha256": "9c291828517226e460a713e17b1bc9bf0776e3a5636011f5a95b86c95a4050f2"
+    },
+    {
+      "name": "statue-raw-PS2",
+      "source_set": null,
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\re4data\\private\\boss18-statue-source-20261019\\original-models\\ps2-r226-arc1f.bin",
+      "sha256": "72ef8816697e2ecec9481f1da5cfd691ddc7a4e86079c1176675ab1c90f5238c"
+    },
+    {
+      "name": "twins-support-tw-chain-q2o",
+      "source_set": "boss18-twins-20261018",
+      "path": "full-support/tw-chain-q2o/runtime/castmodel_runtime.h",
+      "sha256": "a5a1ce2fe248d1b12829745f76f9d03a4ac9197880a42b3c345b2eb6f9d5561e"
+    },
+    {
+      "name": "twins-support-tw-ten",
+      "source_set": "boss18-twins-20261018",
+      "path": "full-support/tw-ten/runtime/castmodel_runtime.h",
+      "sha256": "10e569a292593060c36ea54a2dafcef179d1eeed1aa2689aa04943208171d46d"
+    },
+    {
+      "name": "twins-support-tw-parasite",
+      "source_set": "boss18-twins-20261018",
+      "path": "full-support/tw-parasite/runtime/castmodel_runtime.h",
+      "sha256": "f01c6515eb2a16264cc94f78705e9906046b68b162370e53a825448a7866e05c"
+    },
+    {
+      "name": "twins-support-tw-parasite-o",
+      "source_set": "boss18-twins-20261018",
+      "path": "full-support/tw-parasite-o/runtime/castmodel_runtime.h",
+      "sha256": "f01c6515eb2a16264cc94f78705e9906046b68b162370e53a825448a7866e05c"
+    },
+    {
+      "name": "twins-support-tw-ten-o",
+      "source_set": "boss18-twins-20261018",
+      "path": "full-support/tw-ten-o/runtime/castmodel_runtime.h",
+      "sha256": "7fef4e341643c2fbd5ac18bfaaa907c26f865b4bf59785e6bd1b62b79a7cac91"
+    }
+  ],
+  "retained_cost_profiles": [
+    {
+      "path": "C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/r119-exclusive-draw-attribution-20261019.json",
+      "sha256": "361d67dbcc96515f44f3d15f5d333e4fabad81cb49f99ed16ffbd4fdd4261902"
+    },
+    {
+      "path": "C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/r11e-exclusive-draw-attribution-20261019.json",
+      "sha256": "7cc429c20846589242c77dc1014f1c8f4c3c071eb3ef0d2bb9998a063b2d767a"
+    },
+    {
+      "path": "C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/dellago-exclusive-draw-attribution-20261019.json",
+      "sha256": "c8677dc80627233946f3130408b5d70bd9a932ea86ef18aba69080779c220002"
+    },
+    {
+      "path": "C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/garrador-current343-protected-cost-20261019.json",
+      "sha256": "8bddeb4db5a6f03d5d8483ab21691bc28312e2882c9e36cca87372b4e6812354"
+    },
+    {
+      "path": "C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/twins-current-threeway-cost-20261019.json",
+      "sha256": "aba1152151717186341a6f8056319c67a8a04362ccdecebd8870c5da95541410"
+    },
+    {
+      "path": "C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/twins-current-spin-excluded-cost-20261019.json",
+      "sha256": "4083bedbb94a75095ce35d079cc32fda6ad42a0e1a8918c2e1d64ce5a72abac5"
+    },
+    {
+      "path": "C:/Game Dev/Emulators/EDEMO18-CONSOLE-20261019.md",
+      "sha256": "15fac42d935cf58eb19fbf639c1f6afc3853acf3f7091ae91b5ae634168ba65e"
+    },
+    {
+      "path": "C:/Game Dev/Emulators/ENEMY-ENGINE-CONTRARIAN-20261018.md",
+      "sha256": "64edfe54ab3523d1bf13057898dbd1a375ea89be3f47c45e1658b1d9b74e8da4"
+    }
+  ],
+  "private_receipt": {
+    "set": "boss18-price-table-20261019",
+    "files": 13,
+    "bytes": 182401,
+    "sha256sums_sha256": "25e53b8f9ae60e4383222e87f625f9efa2de1e35f3e3da63106c450465ac420e",
+    "mirror_verified": true,
+    "native_inventory_headers": 40,
+    "source_raw_statue": true,
+    "all_queue_entries_covered": true,
+    "new_models_builds_Flycast_runs": 0,
+    "eligible_new_LOD_decisions": 0,
+    "technical_dependency": "Qualified complete-frame original fight windows on today path, with actual boss form/info/attachment visibility, exact program/data, exclusive source ownership, and disjoint remaining-frame cost. No room-entry or non-drawn baseline substituted."
+  },
+  "scope": "Hash-only inventory/profile references. Not game/model payload; no current performance, complete fight or new level acceptance."
+}
