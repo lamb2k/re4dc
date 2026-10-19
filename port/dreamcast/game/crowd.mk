@@ -175,7 +175,19 @@ endif
 #              (actor_material_records_leon_headless_roles.inc: pl08's roles 0..2 / 8, the two hand rows and the neck,
 #              GC identity rows from gen_neck_records.py); the neck geometry is the PS2 disc's pl00 arc 0xB (37 triangles,
 #              964 B) in arm A's atlas tile of the head.
+#              v2 (data set garr18-head-20261019): the flying head the deaths throw (SetObj01(player arc 0xC, TPL 7),
+#              cObj01) draws natively as appearance 0x10A. The data set's pl00.drs / pl08.drs (build_head.py) replace arc
+#              0xC (55,232 B) by a stub the source loads and never draws plus the PS2 head (1,727 triangles: a face run on
+#              Leon's atlas and a hair run on hair material 1) inside the same archive entry (46,720 B: the archive heap
+#              shrinks 8,512 B; no static image growth). The aux allowlist row (source_actor_owner_hooks.inc) nominates
+#              it; re4dc_stub_payload proves magic / size / CRC. Without the v2 archives the head stays the GC original.
+# LEON_HEAD_FORCE_DECLINE=1 (test only, never in a recipe): the head plan always declines (the source path must draw
+#              nothing from the stub, and not crash).
 LEON_HEADLESS ?= 0
+LEON_HEAD_FORCE_DECLINE ?= 0
+ifeq ($(LEON_HEAD_FORCE_DECLINE),1)
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_HEAD_FORCE_DECLINE=1
+endif
 ifeq ($(filter $(LEON_HEADLESS),0 1),)
 $(error LEON_HEADLESS must be 0 or 1)
 endif
@@ -189,7 +201,7 @@ endif
 GAME_CPPFLAGS += -DRE4DC_LEON_HEADLESS=1
 PLATFORM_CPPFLAGS += -DRE4DC_LEON_HEADLESS=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -I$(LEON_HEADLESS_DIR)
-$(OBJDIR)/coarse_actor.o: $(LEON_HEADLESS_DIR)/ps2leon_neck.h actor_material_records_leon_neck.inc actor_material_records_leon_headless_roles.inc
+$(OBJDIR)/coarse_actor.o: $(LEON_HEADLESS_DIR)/ps2leon_neck.h actor_material_records_leon_neck.inc actor_material_records_leon_headless_roles.inc actor_material_records_leon_head.inc
 endif
 # AUX_OBJ_NATIVE=1 (lane garr18, 2026-10-19; default 0: no effect; render only; needs ACTOR_TRANSACTION=1): allowlisted
 #              ObjMgr objects that are character parts (first row: the Garrador core, em10SetParasite cObj16, id 0x16
