@@ -42,6 +42,7 @@
 //   room 0x100 | jp 0 | pos x y z | dir 0x8000 | ang <rad> | rsf <room> <bit>... |
 //   scenario <0|1> <hex> | find <hex> | unlock <0|1> <hex> | status <0..3> <hex> | dead <no>... | inv default | area <no> [dx dz] |
 //   act <frame> <a|b|x|y|start|fwd|back|none|0xMASK> <hold> | arm <frame> <item id> | trg <no> <frame> [room] | kill <id> <frame> [room [kind]] |
+//   killnext <id> <frame> <room> <kind> <repeat> <gap> (WARP_KILL_PHASE=1 only): one next target after death/event.
 //   killrep <count> <gap> | killpart <partsNo> (every kill hit on that hit box; 5 = the head, so the kill loses it) |
 //   killnear (each kill target is the live enemy nearest Leon) | handpose <frame> <type> <id> (cEm10::setHand, both hands) |
 //   bring <distance> [side] (the handpose / kill target moved that far in front of Leon, side to his right: still pairs) |
@@ -193,6 +194,10 @@ struct Warp {
     int trg_no;
     u32 trg_frame;
     u16 trg_room;  // 0: any room
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+    bool kill_next_pending;
+    u32 kill_next_id, kill_next_frame, kill_next_room, kill_next_kind, kill_next_rep, kill_next_gap;
+#endif
     bool has_kill, kill_done;
     int kill_id;
     u32 kill_frame, kill_hits;
@@ -295,6 +300,14 @@ struct Warp {
 #endif
 };
 Warp wp;
+
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+static bool kill_phase_args_valid(u32 id, u32 frame, u32 room, u32 kind, u32 repeat, u32 gap)
+{
+    return id <= 0x5F && frame > 0 && frame <= 0x7FFFFFFF && room > 0 && room <= 0x3FF &&
+           kind <= 0xFF && repeat <= 255 && gap > 0 && gap <= 60000;
+}
+#endif
 
 u32 num(const char* s) { return (u32) strtoul(s, nullptr, 0); }
 
@@ -432,6 +445,20 @@ void load()
             wp.kill_frame = num(tok[2]);
             wp.kill_room = n >= 4 ? (u16) num(tok[3]) : 0;
             wp.kill_kind = n >= 5 ? (u8) num(tok[4]) : 1;
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+        } else if (!strcmp(k, "killnext")) {
+            // One later source-damage target; no direct HP, room flag or event edits.
+            if (n != 7 || wp.kill_next_pending ||
+                !kill_phase_args_valid(num(tok[1]), num(tok[2]), num(tok[3]), num(tok[4]), num(tok[5]), num(tok[6]))) {
+                wp.kill_next_pending = false;
+                re4dc_missing("warp killnext requires id frame room kind repeat gap (one phase)");
+            } else {
+                wp.kill_next_id = num(tok[1]); wp.kill_next_frame = num(tok[2]);
+                wp.kill_next_room = num(tok[3]); wp.kill_next_kind = num(tok[4]);
+                wp.kill_next_rep = num(tok[5]); wp.kill_next_gap = num(tok[6]);
+                wp.kill_next_pending = true;
+            }
+#endif
         } else if (!strcmp(k, "alivelog") && n >= 2) {
             wp.alive_period = num(tok[1]);
             wp.alive_last = ~0u;
@@ -702,8 +729,34 @@ void dump_areas()
 // hit (kind 1) whenever none is pending, registered as PlWepHitCheck3 does (cDmgInfo::set on the
 // hit box emSphereAtCk picks around the enemy); its own damage check applies it (LifeDownSet2,
 // the hp <= 0 death, the scene links). Ends when its hp is gone or it left the live list.
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+static void kill_phase_poll()
+{
+    if (!wp.kill_next_pending || !wp.has_kill || !wp.kill_done || !pG ||
+        pG->room_id != wp.kill_next_room || wp.room_frames < wp.kill_next_frame ||
+        (pG->Status_flg[1] & 0x10000000) || SceSys.event_start_cnt) return;
+    wp.kill_next_pending = false;
+    wp.kill_id = (int) wp.kill_next_id;
+    wp.kill_frame = wp.kill_next_frame;
+    wp.kill_room = (u16) wp.kill_next_room;
+    wp.kill_kind = (u8) wp.kill_next_kind;
+    wp.kill_rep = wp.kill_next_rep;
+    wp.kill_gap = wp.kill_next_gap;
+    wp.kill_done = false;
+    wp.kill_em = nullptr;
+    wp.kill_hits = wp.kill_watch = 0;
+    wp.kill_part = 0;
+    wp.kill_near = false;
+    re4dc_log("warp: killnext 0x%02x activated in %03x at room frame %u after original death/event\n",
+              (unsigned) wp.kill_id, (unsigned) pG->room_id, (unsigned) wp.room_frames);
+}
+#endif
+
 void kill_poll()
 {
+#if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
+    kill_phase_poll();
+#endif
 #if defined(RE4DC_FAR_SHELL) && RE4DC_FAR_SHELL
     if (farshell_probe_frame && wp.rooms == 1 && wp.room_frames >= farshell_probe_frame) {
         farshell_probe_frame = 0;
