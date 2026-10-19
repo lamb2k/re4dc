@@ -1,0 +1,95 @@
+{
+  "scope": "Hash-only complete original role requirements, no payload or native/fight acceptance.",
+  "receipt": {
+    "status": "COMPLETE_SOURCE_REQUIREMENTS_SEALED_RUNTIME_UNADMITTED",
+    "source_commit": "269a23fec4d5d6647399b98e955ac7a8b796d916",
+    "source_roles": 6,
+    "source_BINs": 6,
+    "source_TPLs": 3,
+    "complete_source_texture_facts": 37,
+    "source_TPL8_images": 34,
+    "source_part_facts": 156,
+    "original_texture_facts_independent_checks": 37,
+    "incomplete_or_changed_source_negatives": 7,
+    "current_generator_probes": [
+      {
+        "name": "queen-em38-00",
+        "exit": 1,
+        "package_emitted": false,
+        "log_sha256": "0ad8514d27914672314983ee50cfc7f824c41ab28fe300b8c5fa70a82aa84d46",
+        "first_refusal": "Original mask/alpha source pass needs renderer material contract; no mask substitute supplied"
+      },
+      {
+        "name": "tentacle-em38-01",
+        "exit": 1,
+        "package_emitted": false,
+        "log_sha256": "7755a1d77f46fd8ac76d83decd16bf6a8e1858c3445bbe94dd6ca0869d5139c6",
+        "first_refusal": "position_shift 0 outside 1..4"
+      },
+      {
+        "name": "salazar-em38-03",
+        "exit": 1,
+        "package_emitted": false,
+        "log_sha256": "f5bcc1796213a9e1e2e68c2b19402f72b5c669bb8c97b8eb65147ac429a5ebce",
+        "first_refusal": "Original mask/alpha source pass needs renderer material contract; no mask substitute supplied"
+      },
+      {
+        "name": "roots-em38-04",
+        "exit": 1,
+        "package_emitted": false,
+        "log_sha256": "ff0dccb70984c8f9d835d4e4fcb0aed2f2edb6216ac49e89e9446452f3c54f03",
+        "first_refusal": "position_shift 0 outside 1..4"
+      },
+      {
+        "name": "weak-em38-obj00",
+        "exit": 0,
+        "package_emitted": true,
+        "log_sha256": "fdeb490f1e3f3079a2a8fef5791f583b15bfa7c3c0429b1ce48f8f6a5579da04",
+        "package_sha256": "b5e1df28ab0983d9ac7116a0a65e020620d85fbd5e3c1f46663b1df202d6058c",
+        "package_bytes": 2720,
+        "qualification": "Full weak-object data only; typed ObjMgr owner and actual source drawing remain unadmitted"
+      }
+    ],
+    "weak_target_sanitizer_controls": 8,
+    "geometry_plus_skin_lower_bound": 443584,
+    "unchanged_package_plus_skin_ceiling": 425984,
+    "whole_fight_projection": null,
+    "requirements": [
+      "Complete 34-image role facts, preserving all 37 unique original TPL facts and source material records",
+      "Authored native position shift 0 for retained tentacle and roots; legacy low0=4 compatibility",
+      "Original diffuse-alpha/opacity and GS ALPHA/TEST/material behavior, including eye mask-only",
+      "Full source backing cannot fit unchanged v1 ceiling; metadata and final alpha storage increase the recorded lower bound",
+      "Typed ObjMgr weak object00 with original parent part0x3a, source scale1.3/light/visibility/lifetime"
+    ],
+    "no_new_model_or_lighter_level": true,
+    "no_converter_or_runtime_or_guard_change": true,
+    "no_game_build_or_Flycast": true,
+    "scope": "Source and offline package/checker inventory only. Weak-only package is not a complete r228 cast package and has no typed runtime ownership. All real rendering/material/animation/residency/fight/route gates remain open."
+  },
+  "private_set": {
+    "set": "boss18-salazar-role-contract-20261019",
+    "files": 106,
+    "bytes": 9097852,
+    "sha256sums_sha256": "1e3c63d9694d6ff457f79b212e911d438f2da15b3c6977a6892dfc0a270d6809",
+    "mirror_verified": true,
+    "prepared_requirements_only": true
+  },
+  "proofs": [
+    {
+      "file": "complete-role-contract.json",
+      "sha256": "5c05324e7daff096110b739343ed11345a1b56ca53f691944bc5255e66b5fca4"
+    },
+    {
+      "file": "CURRENT_FULL_SOURCE_ADMISSION.json",
+      "sha256": "3fc8bbaa97f4ec9d112b35ae941e85ac4e58eaf662874d6d7e92c9e0648da0e4"
+    },
+    {
+      "file": "independent-facts-and-backing-proof.json",
+      "sha256": "00209e7f7b186c47ac43a7c7ae92f2aaed33273cd32c49b691382862789d39f0"
+    },
+    {
+      "file": "weak-target-host/results.json",
+      "sha256": "47144812c4ab9bc131dbf2b405208de143769059e8cb53c77dbf2a361d6b6772"
+    }
+  ]
+}
