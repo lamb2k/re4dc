@@ -193,3 +193,28 @@ Evidence: `r222-audiokos01-gate.json`, `r222-audiokos01-vram.json` and
 `f3c10d1e5358b410c7bccbe08e506c93e32dd040603176a14e81d395b2050863`.
 Disc SHA:
 `268ebbed9c8167369c55ee918ffaeec03416fef26ff5483015fb71cab58d50a6`.
+
+## r219 cart route and audio preparation
+
+The original r201 door area 0x21 enters r219 at its near platform. This is
+more than a simple r201-to-r211 corridor: original r219 areas 2 and 3 run
+`toroko_go`, then reload r219 with part 1 or 2 so `toroko_ret` can perform
+the arrival. Both events check `CheckDoorJumpWithAshley`, position both
+characters on the cart, use the room's original character/cart motions and
+restore the hands and weapons. Departure requests stream 1:0xe4; arrival
+requests 1:0xe5. Final route qualification must cover those events with
+Ashley, including their audio, before the ordinary r211 exit.
+
+The diagnostic entry fixture preserves the current 23 program files and
+uses that original r201 door destination. It does not establish the
+preceding chapter's partner state. The existing frozen-layout fitter
+prepares the raw ROOM/FOOT banks at their unchanged preferred caps of
+16,000/11,025 Hz: 135,648 aligned bytes alongside the unchanged 68,064-byte
+Ashley bank, leaving 800,480 arena bytes. All non-audio archive bytes and
+source wavetable bytes remain exact. This is host preparation, not an
+emulator or event-audio pass.
+
+Private set `castle18-ch41-r219-audio-20261019` is mirrored on C:, manifest
+`6cf68a625106b7630762dbfdb7eb4b2920971f234007c980a0f67fd45b858d7b`.
+Additive fixture: `tools/d367/castle18/ch41-r219-audio-20261019.json`.
+Evidence: `r219-entry-preparation.json` and `r219-audio-fit-proof.json`.
