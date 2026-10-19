@@ -12,6 +12,10 @@
 #include "fade.h"
 #include "dolphin/dvd.h"
 #include "scheduler.h"
+#if RE4DC_ROUTE_SOON_KEY
+#include "item.h"
+#include "snd.h"
+#endif
 #include <stddef.h>
 
 extern "C" void re4dc_log(const char* fmt, ...);
@@ -107,6 +111,30 @@ extern "C" void re4dc_route_coming_soon_show(u16 room)
         pvr_set_bg_color(0.0f, 0.0f, 0.0f);
         TaskSleep(1);
     }
+#if RE4DC_ROUTE_SOON_KEY
+    // ROUTE_SOON_KEY=1 (lane route20, user 2026-10-19 "give him the key"): r10c (the dam) is not on the disc but holds
+    // the chapter 2-1 church key (item 0x3C, r10c_ItemGet; r118_checkDoor117 needs it). Its gate gives the key once,
+    // with the flags r10c sets for it: ITEM_SET item_flags[0] 0x00400000 (the key taken, saved) and Item_find_flg
+    // 0x100 (R10cMain's mirror). The ITEM_SET flag keeps repeat visits and loaded saves from giving it again.
+    if (room == 0x10c && !(pG->item_flags[0] & 0x00400000)) {
+        const int put = ItemMgr.get(0x3C, 1);
+        pG->item_flags[0] |= 0x00400000;
+        pG->Item_find_flg |= 0x100;
+        build("You found the Insignia Key");
+        MesData.ptr[4] = (u8*) &table;
+        cMes.Delete(0);
+        cMes.setLayout(0, LAYOUT_SYSTEM);
+        cMes.MesSet(0, 0, 0, kAttr, 0, 0, 4);
+        SndCall(0, 0, 0, 0, 0, 0);   // the key-item pickup sound (sceAtGetItem, item type 7)
+        re4dc_log("route soon key: item 3c given put=%d num=%d\n", put, ItemMgr.num(0x3C));
+        for (int i = 0; i < kShowFrames; ++i) {
+            pvr_set_bg_color(0.0f, 0.0f, 0.0f);
+            TaskSleep(1);
+        }
+    } else if (room == 0x10c) {
+        re4dc_log("route soon key: already taken num=%d\n", ItemMgr.num(0x3C));
+    }
+#endif
     cMes.Delete(0);
     pG->System_flg &= ~0x100000;
     FadeSet(1, &black, &clear, kFadeFrames, 0, 0);
