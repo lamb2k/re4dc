@@ -1,0 +1,15 @@
+{
+  "replace": {
+    "dc/tex/a/a7ed275f-c2425e1d.re4tex": "/root/re4data/private/castle18-ch31-source-pairs-20261019/textures/a7ed275f-c2425e1d.re4tex"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "I009 exact original r201 ROOM alpha pair; not a character model substitution",
+    "source": "r201.das original GC room ARC entry9 TPL2 colour284d87de-1cc4a313 plus TPL3 mask86ac6830-98755031",
+    "source_archive_sha256": "57009ea20c309a9eac3de0eaf3333cd1a761011af7c689eba112242e771ff587",
+    "package_bytes": 8336,
+    "package_sha256": "1c2743e6dd88bf83ae490404b2f7ee803e431df8bef50df32ab65bc91de44b60",
+    "proof": "boss18-20261018/garrador-black-polygons-roompair-proof-20261019.png; exact program/body, hold500/LT499, 320ticks STRICT and decisions, TEX598 to0",
+    "conversion": "Existing prepare_native_ui.prepare_model_pairs output from Castle; source alpha exact, existing ARGB4444 RGB quantization max14. Reuse existing private bytes."
+  }
+}
