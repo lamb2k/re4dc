@@ -1,0 +1,66 @@
+{
+  "tw-chain-q2o": {
+    "archive": "em2b",
+    "sections": [
+      [
+        19,
+        "body"
+      ]
+    ],
+    "tpl": 20,
+    "rooms": [
+      "r224"
+    ],
+    "types": [
+      0
+    ],
+    "category": "registry",
+    "model_id": 29,
+    "lit": true,
+    "host_ordered_strips": true,
+    "shift": 2,
+    "character_tpl_orientation": true
+  },
+  "tw-parasite-o": {
+    "archive": "em2b",
+    "sections": [
+      [
+        214,
+        "body"
+      ]
+    ],
+    "tpl": 215,
+    "rooms": [
+      "r224"
+    ],
+    "types": [
+      8
+    ],
+    "category": "registry",
+    "model_id": 22,
+    "lit": true,
+    "host_ordered_strips": true,
+    "character_tpl_orientation": true
+  },
+  "tw-ten-o": {
+    "archive": "em2b",
+    "sections": [
+      [
+        224,
+        "body"
+      ]
+    ],
+    "tpl": 225,
+    "rooms": [
+      "r224"
+    ],
+    "types": [
+      9
+    ],
+    "category": "registry",
+    "model_id": 22,
+    "lit": true,
+    "host_ordered_strips": true,
+    "character_tpl_orientation": true
+  }
+}
