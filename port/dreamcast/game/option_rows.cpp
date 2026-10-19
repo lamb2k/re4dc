@@ -42,7 +42,10 @@ extern "C" int re4dc_res_vga(void);                                // res_mode.c
 #include "area.h"
 #include "player.h"
 namespace {
-int view_level;   // 0 full, 1 near, 2 short; this boot only (never stored: every boot starts at Full)
+#ifndef RE4DC_VIEW_DIST_BOOT
+#define RE4DC_VIEW_DIST_BOOT 0   // VIEW_DIST_BOOT (game30.mk): the level every boot starts at (0 = Full)
+#endif
+int view_level = RE4DC_VIEW_DIST_BOOT;   // 0 full, 1 near, 2 short; this boot only (never stored)
 const float kViewFar[3] = {0.0f, 18750.0f, 12500.0f};
 const char* const kViewName[3] = {"FULL", "NEAR", "SHORT"};
 // Per-room minimum far (mm) at Near / Short; kNoCut = the room is never cut (Full in every level).

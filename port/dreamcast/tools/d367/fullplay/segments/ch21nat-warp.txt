@@ -1,0 +1,45 @@
+name ch21-natural
+# Release check ch21-natural (lane rel18 / release-test18, 10-19): chapter 2-1 through its own doors to r117.
+# Start: the chapter 2-1 start state in r11b, where the lake segment (Del Lago, chapter 1-3 end, save) arrives
+# (the rig has one kill line, so the lake fight and the El Gigante fight cannot share one run). After the start no
+# room warps and no flag edits: the dam gate (Coming Soon gives the Insignia Key, ROUTE_SOON_KEY) -> r11a -> r119
+# (El Gigante: the g3 rig trigger + kill) -> r118 -> the church door (the key is used) -> r117.
+room 0x11b
+pos 125762 -175 171957
+ang 1.503
+inv default
+god
+rsf 0x11b 0
+goto 150 153721 67 178075 0.5206
+act 170 fwd 20
+act 200 a 4
+act 230 fwd 10
+goto 700 -72783 2966 -23493 -1.3806
+act 760 a 4
+act 840 a 4
+act 920 a 4
+act 1000 a 4
+act 1100 fwd 30
+entry 2
+goto 200 -60241 7140 69673
+act 300 a 10
+act 400 a 10
+act 500 a 10
+entry 3
+trg 0 1600 0x119
+kill 0x2b 2200 0x119 0xd
+goto 3400 96500 2251 13045 3.14
+act 3500 a 10
+act 3600 a 10
+act 3700 a 10
+entry 4
+goto 200 24700 11781 -27100 2.2
+act 240 a 4 ev
+act 320 a 4 ev
+act 380 a 4 ev
+act 440 a 4 ev
+act 500 a 4 ev
+act 540 a 4 ev
+act 580 a 4 ev
+act 620 a 4 ev
+act 670 a 4
