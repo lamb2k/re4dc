@@ -2885,6 +2885,8 @@ include subscreen.mk
 include vmusave.mk
 # D367 test warp rig (DBG_WARP; default off: no effect).
 include dbgwarp.mk
+# behave18 native actor runtime preview (ENGINE_PREVIEW; default off: nothing built).
+include engine_preview.mk
 # D367 safe cuts (FX_LEAN; default off: no effect).
 include safecuts.mk
 # D367 effects30 (EFFECT_LEAN, EFFECT_SPRITES; default off: no effect).
