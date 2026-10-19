@@ -358,3 +358,46 @@ Evidence: `r222-neararea10kos02-gate.json`,
 `r222-source-first-sight-winners.json`, `r222-source-trigger-geometry.json`
 and `r222-resident-host-proof.json`. Near diagnostic log SHA:
 `aec010314a3c2df5a3d0789f876a32b1bc6815f7db39056e8f570959a2dcbeef`.
+
+## r211 original-entry short walk and preload correction
+
+`cx-r211-walk-audiokos01` completed 56.48 seconds in Flycast using the
+unchanged c18oimW program and all 23 exact boot/overlay payloads. The
+allocator held exactly 49,152 bytes; minimum KOS watch headroom was 39,832
+bytes. The original r219-to-r211 entry and one normal 16-tick forward input
+produce 868.6 world units of horizontal displacement. This is diagnostic
+setup, not original chapter traversal. Leon has 1,500 cumulative native
+census samples and zero GC fallback; no Ashley or enemy coverage follows.
+
+ROOM/FOOT and the recovered BGM7 load prebuilt. BGM7 is actually requested
+and copied: 165,916 bytes, eight samples, original 32 kHz. Texture errors,
+audio-fit errors, fatal rows, VRAM refusals, evictions and retries are zero.
+The 45-second still shows Leon and the picture gallery clearly.
+
+The official residency check fails on nine late uploads. At gameplay frame
+767, VRAM reports 654,048 pinned, 772,736 dynamic, 1,050,528 free and
+1,011,648 largest-free-block bytes. Stream receipts through frame 840 keep
+183 loads. All nine actual source keys, dimensions/formats and selected
+loose/package bytes were read back and hashed; no texture or model is
+changed. The additive correction preserves all 5,729 Worker A V14 records,
+including its new r20b cold-load additions, and adds only these nine r211
+records. Every other room remains exact. The previous r211 entries equal
+the control's entries.
+
+Private set `castle18-ch41-r211-resident-20261019` is mirrored on C:.
+Manifest SHA:
+`0de2206ff97b266c8538fd8368dd7113e308730d79e895ae887e3e47b0977daf`.
+The 5,738-record resident SHA is
+`faf18768a268d1f2b3b465a8eee21ed7bd943828586f18c26b6ea78fc7049b12`.
+Source fragment: `tools/d367/castle18/ch41-r211-resident-20261019.json`.
+Compose only the r211 additions into newer unions. The matched rerun is
+pending; no residency, cup ambush, partner or chapter pass is claimed.
+
+Evidence: `r211-entry-proof.json`, `r211-source-first-sight-winners.json`,
+`r211-resident-host-proof.json`, and the original capture/checker reports.
+Control log SHA:
+`ee359317c7bd2b418a6ee6c562d7f3267e273ab9a5e97f8e49b914373a9ccaca`.
+Control disc SHA:
+`5599fe324677f69c178c81be759eb603718b474fa0ddf02066a5db463e55d49d`.
+The finished disc was retired using the guarded worker pruner; all logs,
+stills, results, program hashes and rebuild inputs remain.
