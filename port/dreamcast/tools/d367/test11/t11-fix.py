@@ -627,9 +627,10 @@ T17R_DATA = T17T_DATA + ',res17b'
 RES18FD = os.environ.get('RES18FD', '/root/re4data/private/fix18-20261018')
 DATA['res18f'] = {'dc/resident.bin': RES18FD + '/resident.bin'}
 # Lane engine19 (10-19; ENGINE_PREVIEW, the enemy logic engine): rc19 = one room data file per room,
-# dc/native/<room>/room.r4rc (tools/enginebake/room_compile.py, R4RC v1 GRID; MANIFEST.tsv beside them). Read only by an
-# ENGINE_PREVIEW=1 program; knob-off programs never open it. Private store copy: re4-assets-private/rc19-20261019.
-RC19D = os.environ.get('RC19D', '/root/re4data/private/rc19-20261019')
+# dc/native/<room>/room.r4rc (tools/enginebake/room_compile.py, R4RC v1 GRID + OCCL v2 wall-check occluders; MANIFEST.tsv
+# beside them). Read only by an ENGINE_PREVIEW=1 or ENEMY_VIS_CULL program; knob-off programs never open it. Private store
+# copy: re4-assets-private/rc19o2-20261019 (70 rooms r1xx/r2xx; the GRID-only set rc19-20261019 is superseded).
+RC19D = os.environ.get('RC19D', '/root/re4data/private/rc19o2-20261019')
 if os.path.isdir(RC19D):
     DATA['rc19'] = {'dc/native/%s/room.r4rc' % r: '%s/%s/room.r4rc' % (RC19D, r)
                     for r in sorted(os.listdir(RC19D)) if os.path.isfile('%s/%s/room.r4rc' % (RC19D, r))}
