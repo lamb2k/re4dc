@@ -9,8 +9,8 @@ extern void re4dc_log(const char* fmt, ...);
 extern const uint8_t re4dc_rt_grid101[];      /* actor_rt_grid.S: EDGR v1 r101 grid (private data, incbin) */
 extern const uint32_t re4dc_rt_grid101_size;
 
-#define GW_MAX 128
-#define GH_MAX 128
+#define GW_MAX 100
+#define GH_MAX 88
 #define FLOW_R 24
 #define BODY_R 300.0f
 
@@ -179,8 +179,28 @@ void re4dc_rt_count(int owned, int fallback)
 void re4dc_rt_log(unsigned frame, int leon_life)
 {
     static unsigned last;
-    if (frame - last < 300 && frame >= last) return;
+    if (frame - last < 60 && frame >= last) return;
     last = frame;
     re4dc_log("engine preview: f=%u life=%d owned=%u fallback=%u flows=%u steer=%u gridmove=%u gridpass=%u\n", frame, leon_life, c_owned,
               c_fallback, c_flows, c_steer, c_collide, c_nogrid);
+}
+
+/* routine transitions of the Ganados in a grid room (r_no_0 / r_no_1 from the cModel status word): one line per change */
+void re4dc_rt_state(const void* em, unsigned stat, int hp, unsigned frame, float x, float z)
+{
+    static const void* who[16];
+    static uint16_t was[16];
+    int k, fr = -1;
+    uint16_t now = (uint16_t) (stat & 0xFFFF);
+    for (k = 0; k < 16; k++) {
+        if (who[k] == em) break;
+        if (fr < 0 && !who[k]) fr = k;
+    }
+    if (k == 16) {
+        if (fr < 0) return;
+        k = fr; who[k] = em; was[k] = 0xFFFF;
+    }
+    if (was[k] == now) return;
+    was[k] = now;
+    re4dc_log("engine preview: em%d f=%u r0=%u r1=%02x hp=%d at %d,%d\n", k, frame, now & 0xFF, now >> 8, hp, (int) x, (int) z);
 }

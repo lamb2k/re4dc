@@ -2751,6 +2751,11 @@ void cEm10::move()
         EmMgr.destroy(this);
         return;
     }
+#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
+    if (re4dc_rt_room((unsigned(pG->stage_no) << 8) | pG->room_no)) {
+        re4dc_rt_state(this, stat, hp, (unsigned) pG->Frame_cnt, pos.x, pos.z);
+    }
+#endif
     if (seFlags28B & 0x80) {
         w->flags |= 0x10;
         w->flags |= 0x01000000;
