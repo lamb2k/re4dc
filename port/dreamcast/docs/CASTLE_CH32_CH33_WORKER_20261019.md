@@ -93,3 +93,9 @@ The next candidate adds those three source-observed rows to the newest main V11 
 ## r20c current source-door entry
 
 The current746 original-door diagnostic ran56.50seconds with the explicit49152-byte reserve and minimum KOS44680bytes. Leon3150native/GC0, TEX, world and official residency pass, including an actual post-preload tick atframe767. No enemies activate at that doorway, so this is entry/data coverage only. The original cage-trigger preparation retains unmodified source camera, actor waves and player movement; its focused runtime check is next. No chapter progress or parasite-model acceptance is claimed.
+
+## r20b V12 matched observed residency result
+
+The fresh `merchantv12` run completed56.34seconds, followed by56.22seconds from its exact unmodified saved state. The histories share682 exact lines. Only `dc/resident.bin` differs from `castres03`; program, input, model, texture and audio payloads are exact. Actual post-preload summaries throughframe1967 now have0late uploads, versus3 in that control, with guard0 and no official VRAM failures. FreeVRAM1267744/largest1196032 and minimum KOS33480bytes are unchanged; the exact49152-byte reserve passes. The final frame2222 census retains wolf1061, closed Merchant1445 and Leon1800 native submissions with zero declines. Source-only effect exceptions remain explicit.
+
+The unattended original wolves kill Leon, and both tail stills show the original Continue menu. This qualifies the observed encounter/death-path residency and actual native submissions only; it is not a visual Merchant shop review, survival, wave clear, door, save or chapter acceptance. No god mode, kills, injected flags or extra input were used. `r20b-v12-current-proof.json` seals the payload-only comparison and exact history. Joined log SHA256 is `6a3c562d355097807dd5a3515c84cb6444e1604b79cb8813bebad7d8a4414ca6`.
