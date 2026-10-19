@@ -55,3 +55,49 @@ Data /root/re4data/private/boss18-dellago-20261018 and immediate C mirror C:/Gam
 Allocator cell overhead is32 B. Source geometry and textures remain private; no game bytes or media are in Git.
 
 Evidence root C:/Flycast-Evidence/re4-dreamcast/boss18-20261018. Inspected del-lago-sheet.png has actual body hold697/LT696, proven before/after read-only VRAM capture for every arm; full/candidate source traces and decisions match697/697 ticks. Offline source/full/reduced matched cameras and lighting are in del-lago-rest-sheet.png. The body still fixture and earlier timing fixture are explicitly distinct. No look choice is required for skipped rungs; retain full. Main reports: r10b-calibration-fast.json, r10b-model-gates.json, r10b-{shots,hw,pcs,held}*-{strict,decisions}.json, dellago-esl-audit.json and per-capture source-hold-proof.json.
+
+## I008 retained boss-only draw attribution (2026-10-19)
+
+This read-only audit uses the exact historical b18srT/daac42cf/slots1
+390/395/400/405 traces and complete20-count390:409 window. No new runtime,
+current slots2, performance or console acceptance is claimed. Existing full
+selection, sourceHP1000→900, source/HW/on-off checks and whole-frame savings
+remain pinned to their original captures.
+
+NMRM admits Del Lago model8caae120 at tick333, id2f/35 parts; it is stable
+through390:409. Exact kind0 getter bytes, model+0x100 field loads and native
+descriptor identify its commonModelTrans. Disjoint exclusive self charges
+below that root exclude IRQ. Leon, boat0f, five small fish27 and all other actors
+are excluded, not divided out of an aggregate.
+
+| Level | Requested / observed roots / complete non-invalid | Qualified ticks |
+|---|---|---|
+| Full | 4 /4 /3 | 390,395,400 |
+| Protected min78.4% | 4 /3 /3 | 390,400,405 |
+| Near-g70 67.7% | 4 /4 /4 | 390,395,400,405 |
+
+The all-three complete common cohort is390/400 only (2of4 samples).
+Native Del Lago presentation is2.809175ms full,2.388475ms min and2.119395ms
+near-g70, MODELLED per drawn logic tick. Matched savings are0.420700 and
+0.689780ms versus full; min→near-g70 adds0.269080ms. All remain below the
+about1ms skip threshold. Original whole-frame savings0.182/0.320ms and
+accepted full-model choice do not change. Do not add body and whole-frame gains
+or extrapolate two qualified ticks to all20 counts. There is one picture per
+logic tick; no steady30fps drawn-only multiplier.
+
+Original/profile/model-witness timing output bytes and disjoint charge
+conservation pass all three arms. Caller contexts, function frames and context
+audits are byte-identical. All invalid/incomplete calls and0/2/0 unresolved
+witnesses (full/min/g70) remain explicit. Original boot-only replay reproduces
+all old per-trace cycles exactly. Verified observed overlay-byte augmentation
+changes mean -0.002710/-0.00272125/-0.0027375ms (full/min/g70); this input
+difference is recorded, not claimed as identical old output. The timing model
+and game code are unchanged.
+
+Boss logic remains unpriced without exact final pre-strip overlay symbols.
+Source room/boat helpers, harpoon, weak points and full masks are not modified.
+Exact evidence:
+C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/dellago-exclusive-draw-attribution-20261019.json
+and hwmodel-b18-r10b-fast-{full,min,g70}a/attribution-I008-20261019.
+The verified source-retirement guard d57c4d08 is reused unchanged. No new
+private game assets, recipe, registry, engine or gate change.
