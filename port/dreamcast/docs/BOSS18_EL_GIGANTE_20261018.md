@@ -85,3 +85,55 @@ Dataset `/root/re4data/private/boss18-gigante-20261018`, immediate C mirror `C:\
 | r11e g50 | c99cd11a2938494476a78453bdaa06d03ef05cd1230145611b88c6312b3065e8 |
 
 r119 full/g70/g50 logical arenas 91208/160352/143104 B (runtime allocator cell adds32 B); r11e full/g50 90544/141248 B. Packages retain full + selected rung and share textures. Actual target host checker passes all five packages and refuses each wrong-room/hash/bone negative control (20 cases). Native host512KiB and exact triangle checks pass. Source commits add only optional explicit locked source vertices (default empty, three actual reducer tests) and five isolated data-selection specs. No new runtime knobs, gate changes, or allowlist entries.
+## I008 retained r119 native presentation attribution (2026-10-19)
+
+This is a read-only audit of the original b18srT/ELFdaac42cf calibration
+captures. Those captures used skin slots1. This is not a fresh slots2/current
+program qualification, new emulator test, current boss logic price or console
+measurement. Earlier complete-frame calibration and the user's g50 approval
+remain unchanged.
+
+The exact original230/235/240/245 traces and complete20-count230:249 window
+are retained under hwmodel-b18-r119-deterministic-{full,g70,g50}a.
+Each private attribution-I008-20261019 copy uses byte-bound relocated overlay
+instruction images, exact boot function extents, and the existing model-id
+witness exporter. No pre-strip overlay symbols were retained for this old arm,
+so boss move/AI cost remains unpriced; no overlay symbol identity is guessed.
+
+Stable NMRM admits source model8ca43b20 at tick179 as gigante-em2b-00,
+gig2b00-g70 or gig2b00-g50 respectively. The source getter's exact36 bytes,
+kind0 guard, model+0x100 byte load and witnessed commonModelTrans/transaction
+ancestry are checked. Disjoint exclusive self charges below each witnessed root
+exclude IRQ. Nothing is divided by an actor count. Separate work outside that
+root is not included.
+
+| Level | Requested / observed roots / complete non-invalid | Qualified ticks and native presentation MODELLED ms |
+|---|---|---|
+| Full | 4 /4 /1 | 245:4.483500 |
+| g70 | 4 /3 /3 | 235:3.672255;240:3.671705;245:3.661795 |
+| g50 | 4 /4 /2 | 235:2.988135;240:2.961195 |
+
+There is **no complete common full/g50 tick**, and no all-three cohort.
+A full-to-g50 exclusive draw saving is therefore unpriced. Do not subtract
+per-arm qualified averages. The matched comparisons are full/g70 at245 only:
+4.483500→3.661795 (-0.821705ms); and g70/g50 at235/240 only:
+3.671980→2.974665 (-0.697315ms). These two deltas must not be added because
+their cohorts differ. They do not change the g70 skip or g50 choice based on
+the earlier whole-frame result. All incomplete/invalid calls and unresolved
+field witnesses remain in the reports (6/4/2 unresolved full/g70/g50).
+
+The original, profile and model-witness replays have byte-identical timing
+outputs and disjoint charge conservation for all three levels. Replaying the
+original boot-only ELF reproduces every old per-trace cycle total exactly.
+Adding verified observed overlay bytes changes each arm's mean by only
+-0.000395/-0.00039625/-0.0003975ms (full/g70/g50); this input distinction is
+recorded, not silently presented as the old identical report. No timing-model
+or runtime rule was edited. There is one picture per logic tick in this
+calibration; no steady30fps drawn-only multiplier is applied.
+
+Exact final report:
+C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/r119-exclusive-draw-attribution-20261019.json.
+It includes hashes, source witnesses, complete per-tick coverage, pairwise
+cohorts and parity outputs. Earlier quick notes mistakenly treated per-arm
+qualified averages as the same tick and quoted full→g50 1.508835ms; that
+claim was explicitly withdrawn. Only the qualified cohorts above are final.
