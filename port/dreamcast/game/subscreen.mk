@@ -48,6 +48,17 @@
 #                  and the port showed a full tan (r100 fog) frame before each call / inventory, held on
 #                  screen through the backing save. Render only. =2: no change, logs what =1 would do.
 SUBSCREEN ?= 0
+# Typed original slot-1 completion and answer fields for the port ABI.
+SS_MSG_FIELDS ?= 0
+ifeq ($(filter $(SS_MSG_FIELDS),0 1),)
+$(error SS_MSG_FIELDS must be 0 or 1)
+endif
+ifeq ($(SS_MSG_FIELDS),1)
+ifneq ($(SUBSCREEN),1)
+$(error SS_MSG_FIELDS=1 requires SUBSCREEN=1)
+endif
+$(OBJDIR)/mod/Sscrn/src/Sscrn/ss_pzzl.o: GAME_CPPFLAGS += -DRE4DC_SS_MSG_FIELDS=1
+endif
 # Preserve original actor inputs while the inventory backing owns their memory.
 # Original successful-Use motion resets run only after the checked restore.
 SS_ACTOR_LIFETIME ?= 0

@@ -1,0 +1,443 @@
+{
+  "status": "CURRENT083_MESSAGE_BUILD_AND_OFF_IDENTITY_PASS",
+  "source": "1441f7af80b815cadaf4671416a04f393ef5b6ba",
+  "disabled_identity": {
+    "private_receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/message-fields/off-program-identity-proof.json",
+    "sha256": "6e3c14c671670218ad08c3d7cde051ba6d0b0702d57a5c7ba715bf4564e602af",
+    "Disc1_programs": 11,
+    "CH4_programs": 23,
+    "raw_and_allocated_sections_exact": true,
+    "generated_headers_each": 45,
+    "whole_ELFs_differ_only_outside_allocated_sections": true,
+    "all_added_zero_knobs_and_input_paths_explicitly_audited": true
+  },
+  "builds": [
+    {
+      "label": "c32msorP",
+      "elf": "ce2a90fada64e005311eab813d7ad504ef7bec84bc1d7726dfc59ba007428d91",
+      "end": "8c40a618",
+      "arm": {
+        "chapter": false,
+        "SS_ACTOR_LIFETIME": 0,
+        "SS_MSG_FIELDS": 0
+      },
+      "programs": {
+        "1ST_READ.BIN": {
+          "bytes": 3235540,
+          "sha256": "d71b8c835d2781d595cabc019d2599021a7e2230553953d076b99d7dea7a1f7e"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "76d0caa9312966629cee22ece0c9cb8b7c7716bf218a17d9cf3adfd8bfbaa858"
+        },
+        "em2b.ovl": {
+          "bytes": 68140,
+          "sha256": "b08e19ef7acccc8f6535e9555b78d1fb312e86a2279d4155bb5c4d85c09847ad"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "a9494ce206b950cf3b1b3b8b6321f4565f0bda5a6009ec5a1bf88411228b3cba"
+        },
+        "pl0f.ovl": {
+          "bytes": 45576,
+          "sha256": "a57fbe2f088ffb199d4008e21366a62b1fd541bdb6b2cc90d988ba4f26676f94"
+        },
+        "pl11.ovl": {
+          "bytes": 38384,
+          "sha256": "a8aa12f66310bf7be3ca6c4c500115db34fa25b2f23d32941dc81c74145d78f9"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "788510361025f4a7c341e4b0cb9f796350a32690e887d29d089c4fb1fa34e572"
+        },
+        "st1_0.ovl": {
+          "bytes": 36240,
+          "sha256": "97d67489ceb59014b4b61634ecd28df08776c1043b3c67d19353e32f8b2a4904"
+        },
+        "st1_1.ovl": {
+          "bytes": 83832,
+          "sha256": "489ab2fb0d33844bd176a2a3d2b946e4ace471bf864abc40c16da8da4580667b"
+        },
+        "st1_2.ovl": {
+          "bytes": 49800,
+          "sha256": "7ed6ab76e95a4653972bf1c3b5f65e50531a7bb99ff8bf6952caec33d2a11138"
+        },
+        "st1_3.ovl": {
+          "bytes": 78892,
+          "sha256": "e1c6e5d780f8076b57e0680a32f5857467bc99289bd6dbc6afc76e43da7137e0"
+        },
+        "syms.txt": {
+          "bytes": 27,
+          "sha256": "65eb22121323e423ad5ee2d57e1c2fa4680f2c349b1a940419fffbf89fc4b1eb"
+        }
+      },
+      "actual_actor_command_count": 0,
+      "actual_message_commands": [],
+      "private_receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/message-fields/builds/c32msorP/build-proof.json",
+      "receipt_sha256": "10896f61004be0256894075b23cdb9778d2797cb625c02443c7ec6578d07a31f"
+    },
+    {
+      "label": "c32msomW",
+      "elf": "eb33dac70a7b15d98749f2c3fde08ee49cdefe928373bfe794d5360624b60285",
+      "end": "8c473778",
+      "arm": {
+        "chapter": true,
+        "SS_ACTOR_LIFETIME": 0,
+        "SS_MSG_FIELDS": 0
+      },
+      "programs": {
+        "1ST_READ.BIN": {
+          "bytes": 3622228,
+          "sha256": "d1700e380c8f9dd778c470eab7a66f18fffb0ef51957c5c53fb4ff3647b462e1"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "682e0a2adc36a28d36b7f594ca9c8e4e79ac92956143b4f66e48db8d027bee88"
+        },
+        "em25.ovl": {
+          "bytes": 17128,
+          "sha256": "9c5e30373cacf6b80a99853447c34ae094462e20f743d782fb6132ff531cce08"
+        },
+        "em2b.ovl": {
+          "bytes": 67932,
+          "sha256": "4d14a3491badd6facb6e0d2943795ac91b524fb07eda7d0b7404c2180311bb1f"
+        },
+        "em2c.ovl": {
+          "bytes": 66176,
+          "sha256": "2cdeb4f8a7d43f55e3df2aa2697de9fca0b8546b634104c87949371185e824f8"
+        },
+        "em2d.ovl": {
+          "bytes": 68628,
+          "sha256": "3f6f8e3c8e105cefe3e1b5f0a3c431063be59ac95db4f032f8de1447e340811b"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "bc351587b3a4fd72ad282f41ded520298da30ddfb3c9e59d4e4345ebe82dc2d7"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "1ffc25e6a0904133f6d19156b973a4f97b0e04554b14a157feeaf80307333191"
+        },
+        "em38.ovl": {
+          "bytes": 27332,
+          "sha256": "11269d4da0d9f1d8b96cb873d58d287e79929bd12fcfcfe4fdd66b73d743efed"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "3358da6cdc8294f03833cf3ce92c49d43644847927c3809b18f420a04981b5c9"
+        },
+        "em3c.ovl": {
+          "bytes": 24432,
+          "sha256": "ec9dfbe9eb87b896f0770655fe8ab80145eeb9bfc807ad3d19e0c9b379b4d1cb"
+        },
+        "pl0f.ovl": {
+          "bytes": 45440,
+          "sha256": "411325cd079748c80480295298201575485868b5a9f4f276f967deb49b773503"
+        },
+        "pl11.ovl": {
+          "bytes": 35504,
+          "sha256": "e17d0f6b27281abe9ebc77c0674e00c6348cb7b722069791a534331ca7277f5b"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "498908ff683053300449c783866ea80b7e0ffe0a3ba0ec5ae15df87fb9823f48"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "b6f7c602247be80102b93e0f27d2a7c6743ddc7cb90e0cf70e8bf0cbd0cdb8de"
+        },
+        "st1_0.ovl": {
+          "bytes": 35768,
+          "sha256": "e8d199fef96a79ae5813cb52bc0cb768d7135548a63ae67a425e3ff174f5fd0b"
+        },
+        "st1_1.ovl": {
+          "bytes": 80432,
+          "sha256": "62c1635f1b0bfcf4004d2d846471b3be9cbbcfe96bb1ef02444d639ffdb448b1"
+        },
+        "st1_2.ovl": {
+          "bytes": 49476,
+          "sha256": "54624cbc59ee8f51fe6b26a1ea550b2050525df6aa296d7070aefe24266ec8c2"
+        },
+        "st1_3.ovl": {
+          "bytes": 80604,
+          "sha256": "647934d0d8da74d617403a41fff57ed80831e9866f4ff16c9f48ef331d6b0c6c"
+        },
+        "st2_0.ovl": {
+          "bytes": 94372,
+          "sha256": "d8185dacdbf4c314d357dd236dab7ba9f47bffecfba92c635f6745bc6c63c196"
+        },
+        "st2_1.ovl": {
+          "bytes": 116100,
+          "sha256": "3c3c821f3262c79e3c2c2eaa9ea43a2851bd23ec1df62da693449e477f445645"
+        },
+        "st2_2.ovl": {
+          "bytes": 67408,
+          "sha256": "64a1f9903302453f8b1a88cff7e6ef6c81bc0b4a1f28ba8ccd21746abecb1be6"
+        },
+        "st2_3.ovl": {
+          "bytes": 129028,
+          "sha256": "62f7b8b3953b24c6a42507460e606e5ad4d600a4c1cefe2dffbd5762825ae77e"
+        },
+        "syms.txt": {
+          "bytes": 27,
+          "sha256": "0c5300d5bf82f89ee27b1f15436ee994f16f3cff71dadd6e5082081a24965df6"
+        }
+      },
+      "actual_actor_command_count": 0,
+      "actual_message_commands": [],
+      "private_receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/message-fields/builds/c32msomW/build-proof.json",
+      "receipt_sha256": "4087a5c5509e4959c02fc1b3a1e9a717518eb0e979013ceb526b3803a857cd03"
+    },
+    {
+      "label": "c32mshmW",
+      "elf": "61afeac7e555b13eb90c80a991fee7c0e3589fbeb2de088a0b83859e76deb10e",
+      "end": "8c473bb8",
+      "arm": {
+        "chapter": true,
+        "SS_ACTOR_LIFETIME": 1,
+        "SS_MSG_FIELDS": 0
+      },
+      "programs": {
+        "1ST_READ.BIN": {
+          "bytes": 3623252,
+          "sha256": "5b2071b68b0022b71150496a1dfff5aaf2b55e5c2dfdd03347d44b8ea3dbb6ce"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "09bffd2591be25a970843a85bda462101b4a9ef47763aa0a2e2b645d138c4f0c"
+        },
+        "em25.ovl": {
+          "bytes": 17128,
+          "sha256": "e61755f0fdabd405eed17a5b9f1ee76dc42cacb936f57d3938ff8f33d07745fe"
+        },
+        "em2b.ovl": {
+          "bytes": 67932,
+          "sha256": "19e2d16428c8108836d55eb0189d47248a5c70864367ead355c40b1bee665496"
+        },
+        "em2c.ovl": {
+          "bytes": 66176,
+          "sha256": "52222dccf5411fb66c64b56d522f17cb1662f7266aa9d7f355d587efdd8d91b4"
+        },
+        "em2d.ovl": {
+          "bytes": 68628,
+          "sha256": "c2a78118edb6db92c3d7e7ca38ab56aae8c14cfb682385eb3639f61c1ebcbf3a"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "b1691a525ad5cae73d7f15a3b6d5362eedb1414ac5961111286a6fe4bd90e64f"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "735563514cef6b4c7df2776fb10016a6ba8cecef8ecdc0cbc6d6f0544f6abef3"
+        },
+        "em38.ovl": {
+          "bytes": 27332,
+          "sha256": "7f35c2569992cfafb1cdc8fc34a6ea540d074d0991fc163845b8c38fc8127a41"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "2154ce86b74bf5f59b68aad0b21db31660ced60bd68e873beb6a68b6304d4a55"
+        },
+        "em3c.ovl": {
+          "bytes": 24432,
+          "sha256": "d21dfe96ac3a802a1dfca31d69c5c308d8e800d05bffba0f5a6d4d5212193c52"
+        },
+        "pl0f.ovl": {
+          "bytes": 45440,
+          "sha256": "8776acef57f0aac559d37e4b6000aa5048bdd962086882f9c9e0f6addf2a0cf6"
+        },
+        "pl11.ovl": {
+          "bytes": 35504,
+          "sha256": "cf43a49ba4c00dcef52d06111d6ca314df411c29f92075a0a02b39d928ad25f4"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "25057df1eacabd3d6afe9245ec8e00ecf4b9747cc180691236d3eaa27a904a6f"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "e3297efad422d7fa661346148996fab860cf2fb10c1c1488ad9dd2440b776a44"
+        },
+        "st1_0.ovl": {
+          "bytes": 35768,
+          "sha256": "ad2e79af4e5d67fbefe49839b7a98037962a8dce9ac51909feafcfc85952830a"
+        },
+        "st1_1.ovl": {
+          "bytes": 80432,
+          "sha256": "d347679af42bf2dc9753c2ce8d9dd0538d28aa33158ea9a486ab57e4b2ffebd9"
+        },
+        "st1_2.ovl": {
+          "bytes": 49476,
+          "sha256": "1065e8a7f98a73112b07311c7809178b763e6ca3618aac5aed3bccb79b77b46b"
+        },
+        "st1_3.ovl": {
+          "bytes": 80604,
+          "sha256": "1a7aac61fab82cb8dbe6ec104cda0fe6356e39a611fb1a4ee41c94310f1aa84c"
+        },
+        "st2_0.ovl": {
+          "bytes": 94372,
+          "sha256": "3283f463dc168e37bbac73371889ec201c07963a02150e7cccc674ec057f02b9"
+        },
+        "st2_1.ovl": {
+          "bytes": 116100,
+          "sha256": "a2903e54c7eba568f942dbdc6bad5a9678dd49a47de849dc1507878484765b44"
+        },
+        "st2_2.ovl": {
+          "bytes": 67408,
+          "sha256": "007e8f50109c169b61ffe3544c032719b03c5e746d695732fdbf075aceb6957e"
+        },
+        "st2_3.ovl": {
+          "bytes": 129028,
+          "sha256": "2a88f7b3a82145ebe5e9c31d5ac90f6c6a1f21ba109dcaca29eb88727317bc39"
+        },
+        "syms.txt": {
+          "bytes": 27,
+          "sha256": "678096603005c991129c3686d50bb5065282fb2337006e3e8f0b77e8f35840cc"
+        }
+      },
+      "actual_actor_command_count": 4,
+      "actual_message_commands": [],
+      "private_receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/message-fields/builds/c32mshmW/build-proof.json",
+      "receipt_sha256": "57b03336bf07319c205981b59b89f2d4dd4b1f58e005986c640f9e7c32fa887d"
+    },
+    {
+      "label": "c32msnmW",
+      "elf": "5ecf33fbd8403caf0a5a0ae3f1ddc0a84b25c3b78d2f6875b976d76e1e9c134d",
+      "end": "8c473bb8",
+      "arm": {
+        "chapter": true,
+        "SS_ACTOR_LIFETIME": 1,
+        "SS_MSG_FIELDS": 1
+      },
+      "programs": {
+        "1ST_READ.BIN": {
+          "bytes": 3623252,
+          "sha256": "5b2071b68b0022b71150496a1dfff5aaf2b55e5c2dfdd03347d44b8ea3dbb6ce"
+        },
+        "em22.ovl": {
+          "bytes": 27236,
+          "sha256": "09bffd2591be25a970843a85bda462101b4a9ef47763aa0a2e2b645d138c4f0c"
+        },
+        "em25.ovl": {
+          "bytes": 17128,
+          "sha256": "e61755f0fdabd405eed17a5b9f1ee76dc42cacb936f57d3938ff8f33d07745fe"
+        },
+        "em2b.ovl": {
+          "bytes": 67932,
+          "sha256": "19e2d16428c8108836d55eb0189d47248a5c70864367ead355c40b1bee665496"
+        },
+        "em2c.ovl": {
+          "bytes": 66176,
+          "sha256": "52222dccf5411fb66c64b56d522f17cb1662f7266aa9d7f355d587efdd8d91b4"
+        },
+        "em2d.ovl": {
+          "bytes": 68628,
+          "sha256": "c2a78118edb6db92c3d7e7ca38ab56aae8c14cfb682385eb3639f61c1ebcbf3a"
+        },
+        "em2f.ovl": {
+          "bytes": 16800,
+          "sha256": "b1691a525ad5cae73d7f15a3b6d5362eedb1414ac5961111286a6fe4bd90e64f"
+        },
+        "em35.ovl": {
+          "bytes": 52392,
+          "sha256": "735563514cef6b4c7df2776fb10016a6ba8cecef8ecdc0cbc6d6f0544f6abef3"
+        },
+        "em38.ovl": {
+          "bytes": 27332,
+          "sha256": "7f35c2569992cfafb1cdc8fc34a6ea540d074d0991fc163845b8c38fc8127a41"
+        },
+        "em3b.ovl": {
+          "bytes": 7568,
+          "sha256": "2154ce86b74bf5f59b68aad0b21db31660ced60bd68e873beb6a68b6304d4a55"
+        },
+        "em3c.ovl": {
+          "bytes": 24432,
+          "sha256": "d21dfe96ac3a802a1dfca31d69c5c308d8e800d05bffba0f5a6d4d5212193c52"
+        },
+        "pl0f.ovl": {
+          "bytes": 45440,
+          "sha256": "8776acef57f0aac559d37e4b6000aa5048bdd962086882f9c9e0f6addf2a0cf6"
+        },
+        "pl11.ovl": {
+          "bytes": 35504,
+          "sha256": "cf43a49ba4c00dcef52d06111d6ca314df411c29f92075a0a02b39d928ad25f4"
+        },
+        "pl14.ovl": {
+          "bytes": 18832,
+          "sha256": "25057df1eacabd3d6afe9245ec8e00ecf4b9747cc180691236d3eaa27a904a6f"
+        },
+        "sscrn.ovl": {
+          "bytes": 134372,
+          "sha256": "97ad7848063ea3b6408c0f1e45db4300afbc2c0f7ee72145c5345e37138b9401"
+        },
+        "st1_0.ovl": {
+          "bytes": 35768,
+          "sha256": "ad2e79af4e5d67fbefe49839b7a98037962a8dce9ac51909feafcfc85952830a"
+        },
+        "st1_1.ovl": {
+          "bytes": 80432,
+          "sha256": "d347679af42bf2dc9753c2ce8d9dd0538d28aa33158ea9a486ab57e4b2ffebd9"
+        },
+        "st1_2.ovl": {
+          "bytes": 49476,
+          "sha256": "1065e8a7f98a73112b07311c7809178b763e6ca3618aac5aed3bccb79b77b46b"
+        },
+        "st1_3.ovl": {
+          "bytes": 80604,
+          "sha256": "1a7aac61fab82cb8dbe6ec104cda0fe6356e39a611fb1a4ee41c94310f1aa84c"
+        },
+        "st2_0.ovl": {
+          "bytes": 94372,
+          "sha256": "3283f463dc168e37bbac73371889ec201c07963a02150e7cccc674ec057f02b9"
+        },
+        "st2_1.ovl": {
+          "bytes": 116100,
+          "sha256": "a2903e54c7eba568f942dbdc6bad5a9678dd49a47de849dc1507878484765b44"
+        },
+        "st2_2.ovl": {
+          "bytes": 67408,
+          "sha256": "007e8f50109c169b61ffe3544c032719b03c5e746d695732fdbf075aceb6957e"
+        },
+        "st2_3.ovl": {
+          "bytes": 129028,
+          "sha256": "2a88f7b3a82145ebe5e9c31d5ac90f6c6a1f21ba109dcaca29eb88727317bc39"
+        },
+        "syms.txt": {
+          "bytes": 27,
+          "sha256": "678096603005c991129c3686d50bb5065282fb2337006e3e8f0b77e8f35840cc"
+        }
+      },
+      "actual_actor_command_count": 4,
+      "actual_message_commands": [
+        "kos-c++ -O2 -fno-PIC -fno-PIE -fomit-frame-pointer -m4-single -ml -mfsrra -mfsca -ffunction-sections -fdata-sections -matomic-model=soft-gusa -ftls-model=local-exec -D__DREAMCAST__  -isystem /root/work/kos-re4dc-d367/include -isystem /root/work/kos-re4dc-d367/kernel/arch/dreamcast/include -isystem /root/work/kos-re4dc-d367/addons/include/ -isystem /root/work/kos-ports/include -D_arch_dreamcast=1 -D_arch_sub_pristine=1 -Wall -g -std=gnu++20 -fpermissive -w -O1 -include platform/include/re4dc_prelude.h -I../../../include -I../../../src -Iplatform/include -DRE4DC_GAME -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -fno-threadsafe-statics -DRE4DC_RENDER_FSAA=1 -DRE4DC_RENDER_OPTION=1 -DRE4DC_VIEW_DIST_OPTION=1 -DRE4DC_VIEW_DIST_BOOT=1 -DRE4DC_FAR_SHELL=1 -DRE4DC_FOLIAGE_OPTION=1 -DRE4DC_RES_MODES=9 -DRE4DC_RES_MODE=0 -DRE4DC_RES_CYCLE_FRAMES=0 -DRE4DC_ATCHK_LIST=1 -DRE4DC_ATCHK_CACHE=1 -DRE4DC_WORKAT_INLINE=1 -DRE4DC_ESP_OWNER=1 -DRE4DC_FX_SCAN=1 -DRE4DC_FX_MOVE=1 -DRE4DC_OT_MASK=1 -DRE4DC_PAD_PROMPTS=1 -DRE4DC_PAD_PROMPT_MANUAL_ART=1 -DRE4DC_SKEL_FTRV=1 -DRE4DC_VEC_INLINE=1 -ffp-contract=off -Os -fwrapv -fno-strict-aliasing -fno-delete-null-pointer-checks -fno-isolate-erroneous-paths-dereference -DRE4DC_LEON_CLOTH_DRAWN=1 -DRE4DC_LOGIC_WASTE=1 -DRE4DC_LOGIC_WASTE_MASK=0x02 -DRE4DC_LOGIC_APPROX_MASK=0 -DRE4DC_RESET_HEAP_FIX=1 -DRE4DC_SH4ZAM_RENDER=1 -DRE4DC_ACTOR_TRANSACTION=1 -DRE4DC_ACTOR_LEON_NATIVE_LOOK=1 -DRE4DC_VMU_DIALOG=1 -I/root/probe/lanes/play-actor-bundle -DRE4DC_LEON_HEADLESS=1 -DRE4DC_ACTOR_PL08=1 -DRE4DC_ACTOR_PL08_PACK=1 -DRE4DC_ACTOR_LIGHT_PROBE_API=1 -DRE4DC_NMR_POOL=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_NMR_ROLES5=1 -DRE4DC_NMR_R202_CAST_CAPACITY=1 -DRE4DC_NMR_LOD=1 -DRE4DC_ACTOR_MATERIALS=4 -DRE4DC_TEX_PKG_SKIP=1 -DRE4DC_GC_CENSUS_TRIM=1 -DRE4DC_GXF_JITTER=1 -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1 -DRE4DC_ALIVE_CAP_ON=1 -DRE4DC_ALIVE_CAP_DEFER_FLAGS=1 -DRE4DC_ALIVE_CAP_ON=1 -DRE4DC_SS_MSG_FIELDS=1 -DRE4DC_SS_ACTOR_LIFETIME=1 -DRE4DC_SS_MENU_ANIM_RT=1 -D_prolog=Sscrn_prolog -D_epilog=Sscrn_epilog -D_unresolved=Sscrn_unresolved -D_ctors=re4dc_mod_Sscrn_ctors -D_dtors=re4dc_mod_Sscrn_dtors -MMD -MP -c ../../../src/Sscrn/ss_pzzl.cpp -o /root/probe/lanes/route/out-c32msnmW/obj/mod/Sscrn/src/Sscrn/ss_pzzl.o"
+      ],
+      "private_receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/message-fields/builds/c32msnmW/build-proof.json",
+      "receipt_sha256": "94110f8d3b4a83749849ebbfb643860308e0d588caf0b2927cf222f80a9da888"
+    }
+  ],
+  "message_pair": {
+    "control": "c32mshmW",
+    "candidate": "c32msnmW",
+    "changed_program_payloads": [
+      "sscrn.ovl"
+    ],
+    "resident_raw_exact": true,
+    "same_end": "8c473bb8",
+    "headers_exact": 45,
+    "healing_definition_count_each": 4,
+    "message_target_definition_count": [
+      0,
+      1
+    ],
+    "other_resolved_knobs_exact_after_output_root_normalization": true,
+    "resolved_message_delta": {
+      "SS_MSG_FIELDS": [
+        "0",
+        "1"
+      ]
+    },
+    "actual_command_receipts_retained": true
+  },
+  "runtime": "pending fresh current original refusal/answer/cancel checks; no old-program snapshot retarget",
+  "recipe_enabled": false
+}

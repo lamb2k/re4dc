@@ -198,8 +198,14 @@ public:
 };
 #define cMesS (*(MessageControlS*) &cMes)
 
+#if defined(RE4DC_SS_MSG_FIELDS) && RE4DC_SS_MSG_FIELDS && !defined(__PPC__)
+// The port compiler places virtual pointers before the original message fields.
+#define CMES_FLAGS (cMes.getMes(1)->flags2)
+#define CMES_RESULT (cMes.getMes(1)->m_sel)
+#else
 #define CMES_FLAGS (*(u32*) ((u8*) &cMes + 0xFC))
 #define CMES_RESULT (*(s8*) ((u8*) &cMes + 0x1D1))
+#endif
 
 // Queues clearZbuffer into OT 0xF before the case/piece models (they draw over the 2D background).
 void pzzlClearZ(SUB_SCREEN* wk)
