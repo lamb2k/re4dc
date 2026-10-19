@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch32-r20b-merchant-resident-v12-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "r20b +3 exact source-observed Merchant resident keys; all 5707 V11 records unchanged.",
+    "base_resident_sha256": "70042ab3a47d383570b99f6db2c240011d69f083224a52d3ca46d3caafe9c272",
+    "resident_sha256": "07c984d704b079d0dcf179c939cd1f4bfd1c32fd2ac6a021ab4d5b3879396c40",
+    "warning": "Compose the r20b records into any newer resident union; never overwrite later room additions."
+  }
+}
