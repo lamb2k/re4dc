@@ -67,6 +67,7 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
 - [x] **A lighter El Gigante** in both fights.
 - [x] **A little faster in play:** Leon's jacket movement is now worked out only for the pictures that are shown.
+- [x] **A little faster in the village and at the farm:** mist sheets the PS2 version never shows are no longer moved, and more scenery stays ready in memory.
 - [x] **Fix:** a few effect pictures missing in r102 right after loading a save ([#33](https://github.com/lamb2k/re4dc/issues/33)).
 - [x] **Fix:** pictures still loaded from the disc during the first house fight (r100).
 - [x] **Fix:** pictures still loaded from the disc at the night lake shore (r11b).
