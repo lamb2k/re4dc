@@ -1,0 +1,199 @@
+{
+  "status": "CURRENT_SOURCE_WHO_PREDICATE_FAILURE_REPRODUCED",
+  "source_runtime": "27db38be01708a40ec86c3a15b7a564700951949",
+  "elf_sha256": "aba62141866a24763657bfe11a07ab1a369b6e32f6bd94989e1d389817470394",
+  "disc_sha256": "662818ca6a000ea0c6f41113ac90bdc34b4ef588fddf7f52113b5530e8e3313a",
+  "diagnostic_origin": "Original r207 doorway/partner-init precondition; unskipped radio, original Wait/Follow, normal stairs/event/return. All injury from original attacks, no HP/item/room flag writes. Not a no-warp chapter pass.",
+  "before_open": {
+    "frame": 3269,
+    "sub_pointer": "0x8cb28a20",
+    "sub_id": 3,
+    "partner_pos": [
+      2178.141357421875,
+      126.744140625,
+      -2609.3857421875
+    ],
+    "player_pos": [
+      3064.051025390625,
+      126.7420654296875,
+      -2297.335205078125
+    ],
+    "distance3d": 939.261133825443,
+    "source_health": [
+      720,
+      1440,
+      600,
+      600
+    ],
+    "source_routines": [
+      0,
+      0,
+      2,
+      0
+    ],
+    "player_routines": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "player_pointer": "0x8c9a6ca0",
+    "partner_flags": 64
+  },
+  "before_Use": {
+    "frame": 3291,
+    "sub_pointer": "0x8cb28a20",
+    "sub_id_byte_in_swapped_window": 0,
+    "healing": 1,
+    "Ashley": 600,
+    "spray_count": 1
+  },
+  "after_Use": {
+    "frame": 3329,
+    "source_global_health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "m_to_whom": 0,
+    "menu_no": 1,
+    "cursor_mode": 1,
+    "source_note": "Only normal A on original Use command. No recipient or health writes."
+  },
+  "only_item_change": "Original First Aid Spray05 count1 removed; every other item raw byte, including pistol10 rounds, exact.",
+  "normal_inputs": {
+    "inventory_pulses": 1,
+    "A_pulses": 2,
+    "A_meaning": [
+      "Open original selected item context",
+      "Use"
+    ],
+    "WHO_recipient_confirmation": false
+  },
+  "original_close": {
+    "frame": 3662,
+    "sub": "0x8cb28a20",
+    "sub_id": 3,
+    "sub_pos": [
+      2178.141357421875,
+      126.74365234375,
+      -2609.3857421875
+    ],
+    "pl_pos": [
+      3064.19140625,
+      126.7415771484375,
+      -2297.24462890625
+    ],
+    "life": 1440,
+    "Ashley": 600,
+    "Stop": "0x0",
+    "phase": [
+      3,
+      0
+    ],
+    "pl_routines": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "sub_routines": [
+      0,
+      0,
+      2,
+      0
+    ]
+  },
+  "restore_receipt": "subscreen backing: close area=8c89ea60 restored=3145728 restore_us=365048 hash=82c602f6 ok pool_free=79392",
+  "source_decision": "ss_pzzl.cpp case4 offers WHO solely for pSUB && id3; full Ashley is not a reason to skip WHO. wk.healing1 is later recipient eligibility.",
+  "limits": [
+    "Current predicate and original close reproduced; no healing implementation or enabled candidate.",
+    "Ashley remains full; successful candidate Ashley-heal still requires genuine injury.",
+    "Original reset body is source-audited; post-close routine samples do not establish the exact transient reset call outcome.",
+    "Prior08 repeated-open input and07 menu-loading guard retained separately, not silently discarded.",
+    "No performance, complete residency, whole-fight or chapter acceptance claim."
+  ],
+  "lineage": [
+    {
+      "scenario": "cx-r207-walk-healcontrol01",
+      "elapsed_s": 56.2,
+      "result_sha256": "f2e1b4187c0959317562c9734cdac9210631c29853cb0ca03034fafddc7d8244",
+      "saved_state_sha256": "e50f43ce340557c648101d9f6d2345bd41ec002d6dfd2942f5c6a2144c8a6ca7",
+      "seed_sha256": null
+    },
+    {
+      "scenario": "cx-r207-walk-healcontrol02",
+      "elapsed_s": 10.17,
+      "result_sha256": "fa13e2fda798c44b336d4ba86daceb6257d583ad505a1d361873d772009433e6",
+      "saved_state_sha256": "8b0d2356a520fed3788c9168ee41e0ed27313631fedcb88d3dec34594919bb07",
+      "seed_sha256": "8f9ee2cd107880131932783f52cd3833f3f72bc0210f95fa3eeb24c08f76a096"
+    },
+    {
+      "scenario": "cx-r207-walk-healcontrol03",
+      "elapsed_s": 15.2,
+      "result_sha256": "763dadc813eb2b2ca0ebb93b625a19ee25faf756eb54a92b938722dd589e2542",
+      "saved_state_sha256": "32f46a1505be9411ea959aab88620a5f355f3eb84d9d40f25d048113da0fbcd8",
+      "seed_sha256": "342ea0d058570f392ca947fbdd9b2089d4f1a2f1022cfe1aa40b7b68303fdcf6"
+    },
+    {
+      "scenario": "cx-r207-walk-healcontrol04",
+      "elapsed_s": 52.49,
+      "result_sha256": "07b070df99fa8829790d089cc0baeb873adaaea25c38777fe11e8a331803d282",
+      "saved_state_sha256": "9b1e27eb2d3c5c1c1944b2fa4ec568d5c7b62e6e30227027ad0fd4ab87942c99",
+      "seed_sha256": "a0902365a8ff0b0221d9e2792dc136ed61e1425fd10506b8488ba114ce2d12d4"
+    },
+    {
+      "scenario": "cx-r207-walk-healcontrol05",
+      "elapsed_s": 17.2,
+      "result_sha256": "7463cfe42a7ac11469feb3e35f3e8ed6b280b2dc3eadebb948f9319bae0d8325",
+      "saved_state_sha256": "60f2e82a1ff9a86d0fbebba6e63ba1c8a83151014d1bd61b94a74f821b85e651",
+      "seed_sha256": "2c43a50613612c7a3d519f38139dee98bd8073e201e05858a40b64c0a466bb70"
+    },
+    {
+      "scenario": "cx-r207-walk-healcontrol06",
+      "elapsed_s": 52.47,
+      "result_sha256": "029bed311515462c02f5618beff40af47a433e642b233a20efd9757b15b5da43",
+      "saved_state_sha256": "19ff13a05719666c2bd389ef8b2b7c4bd6f4f5a5df6779f9497e5c38436a83de",
+      "seed_sha256": "b87da076545cc178db6fb29e915ee53573badf33aa87be1e825bcff0a1c8eb58"
+    },
+    {
+      "scenario": "cx-r207-walk-healcontrol07",
+      "elapsed_s": 8.66,
+      "result_sha256": "8e4d8db0ebbfc81bf1d8c70fc792a4ead634b0245ffb047555c806a786f6c0df",
+      "saved_state_sha256": "9404b63f8a96951704d214ea0049c662ef17d2838bde098e1f4f3ece8bbeedda",
+      "seed_sha256": "709259babd37e1fcc388525ec0b419732dc78a3d041df586c59daea6a9e9f340"
+    },
+    {
+      "scenario": "cx-r207-walk-healcontrol08",
+      "elapsed_s": 26.55,
+      "result_sha256": "f0bcec4b5ca53225f6b0a5d232568092a5c013c0cdca52065d9bc775a7e90730",
+      "saved_state_sha256": "2c5076f354b3ba5f9082d900d68c08f06052ff13cefeb0ba8973c72fd6f7633f",
+      "seed_sha256": "709259babd37e1fcc388525ec0b419732dc78a3d041df586c59daea6a9e9f340"
+    },
+    {
+      "scenario": "cx-r207-walk-healcontrol09",
+      "elapsed_s": 26.03,
+      "result_sha256": "ce2f5d40ff2068b5e152df75bb923dfcd9310a70c4702f5c28c958c3fc93711a",
+      "saved_state_sha256": "d293ba3eaf445b9ea2bd65c6cfe2d4ffcd72141a6999d4b59047b22509ea7e49",
+      "seed_sha256": "709259babd37e1fcc388525ec0b419732dc78a3d041df586c59daea6a9e9f340"
+    },
+    {
+      "scenario": "cx-r207-walk-healcontrol10",
+      "elapsed_s": 5.14,
+      "result_sha256": "6654b2d8f9a49047f9c1fb714ba1b6ded534199ffe7cbbb2e1647f8b4836eb5a",
+      "saved_state_sha256": "b97c7c830771f4641013b4be6642fd1b516ab21c4c7ea9f9afa638147d4e53c3",
+      "seed_sha256": "94ec0592149e9ac6467fa1fc2577ca0d6be2e7abe7cadcd624f9e5865cfe85ee"
+    }
+  ],
+  "receipts": {
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32hbmW-r207heal/scenarios/cx-r207-walk-healcontrol09/owned-window-native-r207-original-Ashley-Use-observe.json": "06ea1cd793132c55d07341737819eca2825ec649fd29a017b6e2b476dd80e4d1",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32hbmW-r207heal/scenarios/cx-r207-walk-healcontrol09/state-seed.json": "709259babd37e1fcc388525ec0b419732dc78a3d041df586c59daea6a9e9f340",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32hbmW-r207heal/scenarios/cx-r207-walk-healcontrol10/owned-window-native-r207-original-inventory-close.json": "1e84e113cc07a62a9645bb18a23edb1143b5221de4493c3623a96c6fc75a28a4",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32hbmW-r207heal/scenarios/cx-r207-walk-healcontrol10/close-log-ring.bin": "e52b0dcc7c01d1a82918f2cbbbb6789408e5c52a108f1d73d23b021847a9a363",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32hbmW-r207heal/scenarios/cx-r207-walk-healcontrol10/close-log-ring.json": "a29809ee0eaa030ab9b92c36944febf33c4c689228caba614c9eff4f6a8313b2",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32hbmW-r207heal/scenarios/cx-r207-walk-healcontrol09/capture/shots/t0020/frames/fb0.png": "fadceb87954ae7244cc60c07e6a336b8b865809390bd569c729f9122accbaca7",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/workers/ch32/healing-original-Ashley-Use-observe-v3.py": "1af01cb34555338114bcdaecf3b3434b624947979c05e6d0c40358d82f01d70b",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/workers/ch32/healing-original-inventory-close.py": "6120be43671a787abf18ab909b7ec800dad8369b70ce0269e1e7078718ac1e1c"
+  }
+}
