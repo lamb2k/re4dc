@@ -12,6 +12,8 @@ Selected presets can instead declare source-pinned same-id/parent inverse-bind o
 and original GC skeleton stay unchanged, while the retarget's actual animated look remains a review requirement.
 Declared source-pinned addModel attachments may use modelInit's existing body owner part table; their complete
 unused section rest metadata is retained in the proof, including duplicate IDs. No runtime skeleton is replaced.
+Optional source_draw_slots presets use the existing registry slot format: all original source joints remain in
+source.json and runtime proof; only referenced render-weight IDs receive a reversible slot index.
 
 Stage 1, `convert` (Windows Python: numpy, PIL):
   inputs/        emXX.dat from the PS2 disc (ISO9660 -> BIO4DAT.AFS) and emXX.drs from the GC debug disc,
@@ -537,6 +539,16 @@ PRESETS['saddler-weak-obj00'] = dict(archive='em31', sections=[(6, 'body')], tpl
 PRESETS['saddler-tail-obj16'] = dict(archive='em31', sections=[(0x76, 'body')], tpl=0x77,
     rooms=['r332'], types=[], category='registry', model_id=0x16, shift=3, lit=True,
     atlas_wrap_gutters=True, host_ordered_strips=True)
+# em2c.cpp1148/1155: body BIN5 has201 unchanged source joints, but only70
+# are weighted. The existing --slots registry proves all201, then binds70 draw
+# joints. BIN134 is the independent20-part tail. Frozen Ctrl12 texrender/blend
+# remains an unqualified source system; no material/runtime exception here.
+PRESETS['verdugo-em2c-00'] = dict(archive='em2c', sections=[(5, 'body')], tpl=6,
+    rooms=['r221'], types=[0], category='boss', model_id=0x2c, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True, source_draw_slots=96)
+PRESETS['verdugo-tail-01'] = dict(archive='em2c', sections=[(134, 'body')], tpl=6,
+    rooms=['r221'], types=[1], category='boss', model_id=0x2c, shift=3, lit=True,
+    atlas_wrap_gutters=True, host_ordered_strips=True)
 # em3d.cpp (r320) modelInit(ARC 5, ARC 6). Converts (shift 1), but no room package yet: its body has three GC masked materials
 # (colours 1 / 3 / 20, masks 2 / 4 / 21): ps2_mask_runs.py --multi-mask bakes all three into one mask run (lane geodrop17;
 # r320 package spec model-registry/ps2-ch5-r320.json, model_registry.py --roles5 --role-tex23: its TPL 6 has 23 images).
@@ -875,6 +887,54 @@ def gutter_texture(rgba, width, height, uv_bounds, wrap):
     image = np.pad(image, ((top, bottom), (0, 0), (0, 0)), mode='wrap' if wrap[1] else 'edge')
     image = np.pad(image, ((0, 0), (left, right), (0, 0)), mode='wrap' if wrap[0] else 'edge')
     return image.tobytes(), (left, top, right, bottom)
+
+
+def lossless_draw_slots(mesh, source, max_slots):
+    """Use the existing registry slot format, keeping every source joint/proof.
+
+    This is a bijective relabeling of referenced skin joints, not skeleton or
+    geometry reduction. The runtime still proves every source parent/rest bind.
+    Existing exports never enter this path unless the preset opts in.
+    """
+    if type(max_slots) is not int or max_slots not in (48, 64, 80, 96, 128):
+        raise ValueError('draw-slot capacity must name an existing registry capacity')
+    bones = source.get('bones', [])
+    if source.get('draw_slots') is not None or not 1 <= len(bones) <= 255:
+        raise ValueError('draw slots require an original source skeleton of1..255joints')
+    for i, b in enumerate(bones):
+        if type(b.get('id')) is not int or b['id'] != i or type(b.get('parent')) is not int or not -1 <= b['parent'] < i:
+            raise ValueError('draw-slot source hierarchy must be an index-ordered forest')
+        for field in ('rest', 'capture'):
+            m = b.get(field, [])
+            if len(m) != 4 or any(len(row) != 4 or any(not isinstance(x, (int, float)) or
+                    not math.isfinite(x) for x in row) for row in m):
+                raise ValueError('draw-slot source rest/capture must be complete and finite')
+    if mesh.get('bones') != bones or len(mesh.get('weights', [])) != len(mesh.get('positions_mm', [])):
+        raise ValueError('draw-slot mesh must retain the complete source skeleton and weights')
+    weights = mesh['weights']
+    if not weights or any(not ws or any(type(b) is not int or not 0 <= b < len(bones) or
+            not isinstance(w, (int, float)) or not math.isfinite(w) or w < 0 for b, w in ws) for ws in weights):
+        raise ValueError('draw-slot weights must reference finite original source joints')
+    slots = sorted({b for ws in weights for b, _ in ws})
+    if len(slots) > max_slots:
+        raise ValueError('referenced draw slots exceed the unchanged registry capacity')
+    if len(slots) >= len(bones):
+        raise ValueError('draw slots need a strict subset; retain the ordinary source representation')
+    slot_of = {b: k for k, b in enumerate(slots)}
+    mapped = [[[slot_of[b], w] for b, w in ws] for ws in weights]
+    if [[[slots[b], w] for b, w in ws] for ws in mapped] != weights:
+        raise ValueError('draw-slot mapping changed original source weight records')
+    selected = [dict(bones[b], id=k, parent=-1, source_joint=b) for k, b in enumerate(slots)]
+    src = dict(source, draw_slots=slots)
+    out = dict(mesh, bones=selected, weights=mapped)
+    out['policy'] = mesh.get('policy', '') + (' Existing registry draw slots relabel referenced joints only; '
+                    'the complete source skeleton, geometry and weight values stay unchanged.')
+    proof = dict(kind='existing-lossless-source-draw-slots', source_joints=len(bones), draw_slots=slots,
+                 max_draw_slots=max_slots, source_bones_sha256=sha(json.dumps(bones, sort_keys=True).encode()),
+                 source_skeleton_preserved=True, original_weight_records_recover_exactly=True,
+                 geometry_normals_uv_material_roles_preserved=True,
+                 runtime='Existing registry_skeleton_slots proves every source parent/rest inverse before binding slots')
+    return out, src, proof
 
 
 def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.001):
@@ -1224,6 +1284,16 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                                                           p95_max=max(w[0] for w in worst), max=max(w[1] for w in worst),
                                                           p95_median=float(np.median([w[0] for w in worst])))
     val['sections'] = [s['check'] for s in sections]
+    if spec.get('source_draw_slots'):
+        mesh, source, proof = lossless_draw_slots(mesh, source, spec['source_draw_slots'])
+        sp.write_text(json.dumps(source))
+        mesh['source_sha256'] = sha(sp.read_bytes())
+        mp.write_text(json.dumps(mesh))
+        val['source_draw_slots'] = proof
+        for section in val['sections']:
+            section['source_bones'] = section['bones']
+            section['bones'] = len(proof['draw_slots'])
+        (out / 'source-draw-slots.json').write_text(json.dumps(proof, indent=2) + '\n')
     # pack (the cast's packer, unchanged) + host fixture
     pk = load_module('pack_coarse_actor', PROTO / 'tools/pack_coarse_actor.py')
     native = out / 'native'
@@ -1315,6 +1385,18 @@ def host_fixture(n, source, ordered=False):
     """prepare_dynamic_native_check.py's host-fixture.bin (the cast agent's check-dynamic input)."""
     rest = np.asarray([b['rest'] for b in source['bones']]); cap = np.asarray([b['capture'] for b in source['bones']])
     sk = cap @ np.linalg.inv(rest); sk[:, :3, 3] += rest[0, :3, 3] - cap[0, :3, 3]
+    slots = source.get('draw_slots')
+    if slots is not None:
+        if not slots or any(type(k) is not int or k < 0 for k in slots) or slots != sorted(set(slots)):
+            raise ValueError('host fixture requires increasing original source draw slots')
+        # Full source.json (also used by glod_rung) retains the original root's
+        # capture compensation. Ashley's established explicit slot-bone fixture
+        # already selected these matrices; preserve that legacy input unchanged.
+        selected = len(source['bones']) == len(slots) and [b.get('source_joint') for b in source['bones']] == slots
+        if not selected:
+            if slots[-1] >= len(sk):
+                raise ValueError('host fixture draw slot outside complete source skeleton')
+            sk = sk[slots]
     r = json.loads((n / 'native-report.json').read_text())
     buf = bytearray(struct.pack('<I', len(r['chunks'])))
     strip_proofs = []

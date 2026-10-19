@@ -1,0 +1,44 @@
+{
+  "registry": "boss18-r221-full",
+  "about": "Full source Verdugo body+independent tail, source201/render70 existing slots format. No frozen-ice material/actual-draw/look/timing acceptance.",
+  "cast_dir": "/root/re4data/private/boss18-verdugo-20261018/cast-canonical-full",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "Existing source lit/bump-drop candidate contract; dynamic Ctrl12 ice blend remains source and unqualified.",
+  "descriptors": [
+    {
+      "name": "verdugo-em2c-00",
+      "archive": "em2c",
+      "model_id": "0x2c",
+      "source_types": [
+        0
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Original em2c.cpp1148 BIN5 body or1155 BIN134 independent tail; full geometry/GC skeleton/motion/cloth/collision retained, existing slot proof for source201/render70. Active frozen ice remains unqualified."
+    },
+    {
+      "name": "verdugo-tail-01",
+      "archive": "em2c",
+      "model_id": "0x2c",
+      "source_types": [
+        1
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Original em2c.cpp1148 BIN5 body or1155 BIN134 independent tail; full geometry/GC skeleton/motion/cloth/collision retained, existing slot proof for source201/render70. Active frozen ice remains unqualified."
+    }
+  ],
+  "room_packages": {
+    "221": {
+      "descriptors": [
+        "verdugo-em2c-00",
+        "verdugo-tail-01"
+      ],
+      "evidence": "Exact source identity/hierarchy/rest, unmodified native3poses+GXVERIFY, lossless existing slots source201/render70; target and active room gates pending"
+    }
+  }
+}
