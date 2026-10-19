@@ -16,6 +16,9 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 
 - **Fix: chapter 2-1 can now be finished** ([#40](https://github.com/lamb2k/re4dc/issues/40)). The Insignia Key for
   the church is given at the gate to the dam, which isn't in the game yet.
+
+  ![The Insignia Key at the dam gate (r11b)](docs/images/releases/test-18/key-at-dam-gate.jpg)
+  <br>The key, given at the dam gate. Flycast capture, test 18.
 - **A lighter El Gigante** in both fights.
 
   ![El Gigante (r119)](docs/images/releases/test-18/el-gigante-g50.jpg)
@@ -30,7 +33,7 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 - **Leon keeps his PS2 model after a chainsaw kill**, for the whole death scene.
 
   ![Leon after a chainsaw kill](docs/images/releases/test-18/leon-chainsaw.jpg)
-  <br>Leon's death scene on the PS2 model. Flycast capture, test 18.
+  <br>Leon's death scene, PS2 head. Flycast capture of the test 18 program in a castle test room.
 
 - **Effect pictures are there right after loading a save** in r102 ([#33](https://github.com/lamb2k/re4dc/issues/33)).
 
