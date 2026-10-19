@@ -41,10 +41,56 @@ extern "C" int re4dc_actor_preflight_owned_runs(Re4dcModelPart* part,const Re4dc
     }
     return 1;
 }
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+// ACTOR_PLAN (actorplan.mk): re4dc_actor_submit_preflighted_runs is the first submission of the transaction call that
+// acquired the actor (coarse_actor_transaction.inc, ACTOR_PROOF_LEAN's lifetime token held): actor_acquire's preflight
+// proved every run of BOTH pass groups on this part with these leases, and since then only the transaction's own
+// checks ran (no emission, packet reservation, upload, lease or lifetime change). The resource validations below stay;
+// the run walk (one_qualifies, blob, texture material, finite modelviews, packet reserve) is that preflight's verdict.
+// Lane codex-actor-t15 (168042a3) first proved this reuse; =2 runs the walk and counts disagreements ("pre" in APLAN).
+static int owned_submit_runs(Re4dcModelPart* part,const Re4dcActorDrawRun* runs,unsigned n,
+    const Re4dcActorOwnedMaterial* materials,unsigned nm,const Re4dcActorWorkspaceLease* workspace_lease,
+    const Re4dcActorSkinLease* skin_lease,const Re4dcActorTextureLease* textures,bool prepared);
+extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart* p,const Re4dcActorDrawRun* r,unsigned n,
+    const Re4dcActorOwnedMaterial* m,unsigned nm,const Re4dcActorWorkspaceLease* w,
+    const Re4dcActorSkinLease* s,const Re4dcActorTextureLease* t) {
+    return owned_submit_runs(p,r,n,m,nm,w,s,t,false);
+}
+extern "C" int re4dc_actor_submit_preflighted_runs(Re4dcModelPart* p,const Re4dcActorDrawRun* r,unsigned n,
+    const Re4dcActorOwnedMaterial* m,unsigned nm,const Re4dcActorWorkspaceLease* w,
+    const Re4dcActorSkinLease* s,const Re4dcActorTextureLease* t) {
+    return owned_submit_runs(p,r,n,m,nm,w,s,t,true);
+}
+static int owned_submit_runs(Re4dcModelPart* part,const Re4dcActorDrawRun* runs,unsigned n,
+    const Re4dcActorOwnedMaterial* materials,unsigned nm,const Re4dcActorWorkspaceLease* workspace_lease,
+    const Re4dcActorSkinLease* skin_lease,const Re4dcActorTextureLease* textures,bool prepared) {
+#else
 extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart* part,const Re4dcActorDrawRun* runs,unsigned n,
     const Re4dcActorOwnedMaterial* materials,unsigned nm,const Re4dcActorWorkspaceLease* workspace_lease,
     const Re4dcActorSkinLease* skin_lease,const Re4dcActorTextureLease* textures) {
+#endif
+#if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
+    // ACTOR_PROF: SUB = this call minus the PS2 world flushes it triggers (WFL).
+    struct SubSpan { unsigned t,w; SubSpan():t(re4dc_aprof_now()),w(re4dc_aprof_wfl_cycles){}
+        ~SubSpan(){re4dc_aprof_add(APROF_SUB,re4dc_aprof_now()-t-(re4dc_aprof_wfl_cycles-w));} } aprof_sub;
+#endif
+    APROF_SPAN(aprof_pre2,APROF_PRE2);
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+    if(prepared && RE4DC_PLAN_ON) {
+        const bool held=part && runs && materials && n && n<=kRe4dcActorRuns && !owned_submission &&
+            re4dc_actor_workspace_validate(workspace_lease) && re4dc_actor_skin_validate(skin_lease) && owned_all_textures(textures,nm);
+#if RE4DC_ACTOR_PLAN == 2
+        const bool full=re4dc_actor_preflight_owned_runs(part,runs,n,materials,nm,workspace_lease,skin_lease,textures)!=0;
+        re4dc_actor_plan_note(APLAN_PRE,held,held!=full);
+        if(!full)return 0;
+#else
+        re4dc_actor_plan_note(APLAN_PRE,held,0);
+        if(!held)return 0;
+#endif
+    } else
+#endif
     if(!re4dc_actor_preflight_owned_runs(part,runs,n,materials,nm,workspace_lease,skin_lease,textures))return 0;
+    APROF_STOP(aprof_pre2);
     Re4dcActorStreamState before{};if(!re4dc_actor_stream_state(&before))return 0;
     // Commit ALL texture scene pins before any first-pass emission. Release of
     // an actor lease later cannot evict an already-submitted GPU texture.
@@ -60,7 +106,16 @@ extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart* part,const Re4dcAct
 #if defined(RE4DC_PS2_WORLD_DRAW) && RE4DC_PS2_WORLD_DRAW
         // No live SQ window, packet reserve or resolved texture handle here.
         // Every actor material already has a scene pin from the commit above.
+#if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
+        if(changed) {
+            const unsigned aprof_w0=re4dc_aprof_now();
+            const int flushed=re4dc_ps2_world_before_owned_tr(part);
+            const unsigned aprof_dw=re4dc_aprof_now()-aprof_w0;re4dc_aprof_wfl_cycles+=aprof_dw;re4dc_aprof_add(APROF_WFL,aprof_dw);
+            if(!flushed){okay=false;break;}
+        }
+#else
         if(changed && !re4dc_ps2_world_before_owned_tr(part)){okay=false;break;}
+#endif
 #endif
         okay=one_chunk(*part,window)==1;
         Re4dcActorStreamState after{};

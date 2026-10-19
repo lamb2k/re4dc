@@ -132,6 +132,9 @@ void re4dc_bench_alive(int n);
 int re4dc_bench_scene_no(void);
 const char* re4dc_bench_results(void);
 #endif
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+extern "C" unsigned re4dc_actor_plan_on;  // platform/native_actor_fast.cpp (actorplan.mk ACTOR_PLAN)
+#endif
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
 extern "C" void re4dc_ps2_pvs_set(unsigned on);  // native_static.cpp (t2exact.mk PS2_PVS)
 #endif
@@ -574,6 +577,12 @@ void load()
 #if defined(RE4DC_KOS_SQUEEZE) && RE4DC_KOS_SQUEEZE
         } else if (!strcmp(k, "squeeze")) {
             // KOS_SQUEEZE (platform/os.cpp reads this line at OSInit)
+#endif
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+        } else if (!strcmp(k, "actorplan") && n >= 2) {
+            // ACTOR_PLAN (actorplan.mk): `actorplan 0|1` turns the plan's reuses off / on at run time (same image).
+            re4dc_actor_plan_on = num(tok[1]) != 0;
+            re4dc_log("warp: actorplan %u\n", re4dc_actor_plan_on);
 #endif
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
         } else if (!strcmp(k, "pvs") && n >= 2) {
