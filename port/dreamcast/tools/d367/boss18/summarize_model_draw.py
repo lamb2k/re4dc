@@ -70,7 +70,7 @@ def summarize(profile, witness_dir, ticks):
                 if names[symbol] != 'commonModelTrans':
                     raise ValueError('Witness root is not source model presentation')
                 model,tx = roots[key]
-                found[key] = dict(sample=sample,tick=ticks[sample],node=node,model=model,transaction_node=tx,complete=complete,invalid=invalid,inclusive16=inc16)
+                found[key] = dict(sample=sample,tick=ticks[sample],node=node,model=model,transaction_node=tx,root_owner=owner,complete=complete,invalid=invalid,inclusive16=inc16)
             if root >= 0:
                 key = sample,root
                 if owner == 5:
@@ -95,15 +95,17 @@ def summarize(profile, witness_dir, ticks):
         for r in rows:
             by_sample[r['sample']].append(r)
         unresolved_samples = {int(r['sample']) for r in unresolved if r['model'] == model}
+        # A normal draw inherited as IRQ ancestry is unresolved coverage, not
+        # a free draw after IRQ subtraction. Proven roots may contain real IRQs.
         qualified = {i:sum(r['exclusive_draw_without_IRQ_ms'] for r in v) for i,v in by_sample.items()
-                     if i not in unresolved_samples and all(r['complete'] and not r['invalid'] for r in v)}
+                     if i not in unresolved_samples and all(r['complete'] and not r['invalid'] and r['root_owner'] != 5 for r in v)}
         all_qualified.append(qualified)
-        results[model] = dict(descriptor=name,observed_invocations=len(rows),complete_noninvalid_invocations=sum(bool(r['complete'] and not r['invalid']) for r in rows),rows=rows,qualified_samples=qualified,unresolved_ancestry_samples=sorted(unresolved_samples))
+        results[model] = dict(descriptor=name,observed_invocations=len(rows),complete_noninvalid_invocations=sum(bool(r['complete'] and not r['invalid']) for r in rows),rows=rows,qualified_samples=qualified,unresolved_ancestry_samples=sorted(unresolved_samples),excluded_irq_root_samples=sorted({r['sample'] for r in rows if r['root_owner'] == 5}))
     common = sorted(set.intersection(*(set(q) for q in all_qualified)))
     for result,qualified in zip(results.values(),all_qualified):
         values = [qualified[i] for i in common]
         result['jointly_complete_ms_per_sample'] = sum(values)/len(values) if values else None
-    return dict(scope='MODELLED disjoint exclusive self charges below exact model-witnessed commonModelTrans roots; IRQ excluded. Native presentation only. Separate auxiliary actors, preparation and logic outside these roots unpriced. No aggregate cost divided by actors.',ticks=ticks,samples=len(ticks),source_witnesses=total_witnesses,unresolved_witnesses=unresolved,jointly_complete_samples=common,jointly_complete_ticks=[ticks[i] for i in common],results=results,input_sha256={str(p):sha(p) for p in (witness_dir/'build-proof.json',witness_dir/'model-witnesses.tsv',witness_dir/'nominal.contexts.tsv',witness_dir/'validation.json')},schedule='Costs are per captured sample; a separate exact-build schedule proof is required to label them per logic tick or picture. At steady30 every tick is drawn.')
+    return dict(scope='MODELLED disjoint exclusive self charges below exact model-witnessed commonModelTrans roots; Nested IRQ charges excluded; draw roots inherited as IRQ ownership are unqualified. Native presentation only. Separate auxiliary actors, preparation and logic outside these roots unpriced. No aggregate cost divided by actors.',ticks=ticks,samples=len(ticks),source_witnesses=total_witnesses,unresolved_witnesses=unresolved,jointly_complete_samples=common,jointly_complete_ticks=[ticks[i] for i in common],results=results,input_sha256={str(p):sha(p) for p in (witness_dir/'build-proof.json',witness_dir/'model-witnesses.tsv',witness_dir/'nominal.contexts.tsv',witness_dir/'validation.json')},schedule='Costs are per captured sample; a separate exact-build schedule proof is required to label them per logic tick or picture. At steady30 every tick is drawn.')
 
 
 if __name__ == '__main__':
