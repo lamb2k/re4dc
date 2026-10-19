@@ -150,7 +150,9 @@ T15_G="ACTOR_PROBE_LIGHT=2 GANADO_LIT=1 GANADO_LIT_NEAREST=0"
 #      Test 19 on (lane chardraw19, P2): CHAR_CHUNK=1, every skinned model on the new draw path (exact: the
 #      CHAR_CHUNK=2 word compare had 0 mismatches for Leon, Ganado, corpse, Ashley, Luis, merchant, riders and
 #      three bosses; KOS 48 KiB 10/10, fight headroom 6,104 B).
-T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1 MANUAL_PACK_PROBE=1 SCENERY_CHUNK=1 SG_SELECT_LEAN=1 CHAR_CHUNK=1}
+#      Test 19 on (user pull-in 10-19, lane engine19): ENEMY_VIS_CULL=1, the wall check (a villager fully hidden
+#      behind a wall is not drawn; logic, sound and collision unchanged).
+T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1 MANUAL_PACK_PROBE=1 SCENERY_CHUNK=1 SG_SELECT_LEAN=1 CHAR_CHUNK=1 ENEMY_VIS_CULL=1}
 # lane resident16 (10-16): the room preload runs again when SS heap 11 closes (chapter title / results / save screens), so
 #   r105 after the chapter 1-2 save screen loads its set back in one pass instead of 81 disc reads in play. Render only.
 T15_P="SS11_PRELOAD=1"
