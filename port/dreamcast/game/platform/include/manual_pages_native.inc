@@ -8,14 +8,13 @@ static int manual_pack_size(const Key& key){
     unsigned offset=0,size=0;
     return texpack::find(key,offset,size,frame)==texpack::kFound ? int(size) : -1;
 }
-#define RE4DC_MANUAL_PACK_SIZE(key) manual_pack_size(key)
-#else
-#define RE4DC_MANUAL_PACK_SIZE(key) (-1)
 #endif
 extern "C" int re4dc_ui_manual_page_available(unsigned row){
     if(row>=RE4DC_MANUAL_PAGE_COUNT || !manual_pages[row].context.companion_path)return 0;
-    const int packed=RE4DC_MANUAL_PACK_SIZE(manual_pages[row].keys[1]);
+#if defined(RE4DC_MANUAL_PACK_PROBE) && RE4DC_MANUAL_PACK_PROBE && RE4DC_TEX_PACK
+    const int packed=manual_pack_size(manual_pages[row].keys[1]);
     if(packed>=0)return packed==RE4DC_MANUAL_PACKAGE_BYTES || packed==RE4DC_MANUAL_VQ_PACKAGE_BYTES;
+#endif
     // One authority for resident/sharded versus flat package paths.
     char path[96];RE4DC_TEX_PATH(path,manual_pages[row].keys[1]);
     const file_t f=fs_open(path,O_RDONLY);if(f==FILEHND_INVALID)return 0;
@@ -63,11 +62,17 @@ extern "C" int re4dc_ui_manual_generic_identify(const Re4dcUiImage* image){
     const unsigned metadata[]={640,360,14,0xffffffffU,0};
     Key key{0xffffffffU,2166136261U};hash_bytes(key,metadata,sizeof(metadata));
     hash_bytes(key,image->pixels,115200U);key.crc=~key.crc;
-    if(RE4DC_MANUAL_PACK_SIZE(key)<0){
+#if defined(RE4DC_MANUAL_PACK_PROBE) && RE4DC_MANUAL_PACK_PROBE && RE4DC_TEX_PACK
+    if(manual_pack_size(key)<0){
+        char path[96];RE4DC_TEX_PATH(path,key);
+        const file_t f=fs_open(path,O_RDONLY);if(f==FILEHND_INVALID)return 0;
+        fs_close(f);
+    }
+#else
     char path[96];RE4DC_TEX_PATH(path,key);
     const file_t f=fs_open(path,O_RDONLY);if(f==FILEHND_INVALID)return 0;
     fs_close(f);
-    }
+#endif
     if(!(key==manual_generic_key))manual_generic_failed=false;
     manual_generic_key=key;return 1;
 }
