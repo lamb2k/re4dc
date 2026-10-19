@@ -341,6 +341,9 @@ static const Texture t_extra_486[] = {
 #if RE4DC_ACTOR_PL08
 #include "actor_material_records_pl08.inc"
 #endif
+#if RE4DC_LEON_HEADLESS
+#include "actor_material_records_leon_neck.inc"
+#endif
 #if RE4DC_NATIVE_MODEL_REGISTRY && !RE4DC_NATIVE_MODEL_REGISTRY_PACK
 #include "native_model_registry_facts.inc" // private registry bundle (tools/d367/model_registry.py)
 #endif
@@ -399,6 +402,9 @@ static const Role roles[] = {
 {4u,4u,484u,486u,&m_extra_484,t_extra_486,1u},
 #if RE4DC_ACTOR_PL08
 #include "actor_material_records_pl08_roles.inc"
+#endif
+#if RE4DC_LEON_HEADLESS
+#include "actor_material_records_leon_headless_roles.inc"
 #endif
 #if RE4DC_ACTOR_GANADO_APP0_GRIP
 #include "actor_material_records_app0_grip.inc"
@@ -474,6 +480,9 @@ static const SourceBlob source_blobs[] = {
 #endif
 #if RE4DC_ACTOR_PL08
 #include "actor_material_records_pl08_blobs.inc"
+#endif
+#if RE4DC_LEON_HEADLESS
+RE4DC_LEON_NECK_BLOB,
 #endif
 #if RE4DC_NATIVE_MODEL_REGISTRY && !RE4DC_NATIVE_MODEL_REGISTRY_PACK
 #include "native_model_registry_blobs.inc"
