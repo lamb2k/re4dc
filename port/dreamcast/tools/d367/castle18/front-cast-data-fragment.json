@@ -31,6 +31,16 @@
         "r207.tsv": "5ca57b2cb0268c47451a601b0e2f59098cf788666da0cafc945517a8913bff80",
         "resident.bin": "aae5327b43ac999eec9a49127417216f6680bb77522065e17ece42188c3bd4ed"
       }
+    },
+    "castle18-front-resident-v7-20261019": {
+      "manifest_sha256": "c60d6a9d008e89025d48a3654f797bde0eb36123156cf28dcb37dacb1d3662f1",
+      "files": {
+        "PROVENANCE.json": "8b25a74b70fd0e7f4daf036208f85550883ef055adf328fc94ce392f813ece5f",
+        "r200.tsv": "ba073f737624f8819734d795308766ad71df1c96e752e4562b73edf4cb4a122a",
+        "r202.tsv": "9c32d279edd5cc8fb62c54a116f590727c5d53ef5b6f11158e8896290e24fb9d",
+        "resident.bin": "e78c49c491f9baa3898124108584061d5793891226193ded32f727d629e1020a"
+      },
+      "scope": "Source-scoped additivepreload only; model/image/audio bytes unchanged. All5493 priorrecords and otherrooms exact. r200+9native stairs/fullNMR; r202+29original gate/effect sourcekeys. Does not include23door-onlysourceimage keys."
     }
   },
   "resident_records": {
@@ -41,5 +51,72 @@
   "guest_gate_keys": [
     "r202l",
     "r202m"
-  ]
+  ],
+  "active_resident_set": "castle18-front-resident-v7-20261019",
+  "source_scoped_v7_records": {
+    "old": 5493,
+    "new": 5531,
+    "other_rooms_unchanged": true,
+    "changes": {
+      "r200": {
+        "old": 146,
+        "new": 155,
+        "added": [
+          "2353f21e-bfc44079",
+          "2c9c252a-51c59944",
+          "3f690586-7edb7c3e",
+          "4da9c3fa-98934ea1",
+          "56d70169-8a2e5214",
+          "61519868-9ee3f93f",
+          "bc5bb46e-c514110b",
+          "d17e9c56-fa23c229",
+          "fc75dd46-779f14bd"
+        ],
+        "sha256": "ba073f737624f8819734d795308766ad71df1c96e752e4562b73edf4cb4a122a"
+      },
+      "r202": {
+        "old": 43,
+        "new": 72,
+        "added": [
+          "0abd2390-95dce97d",
+          "0f3f1a67-43b12240",
+          "0f9b23b9-d2e55597",
+          "1bc4a837-34489f42",
+          "1f345b42-c96806b3",
+          "29558ab4-8b936f66",
+          "2ea4d2ec-3aa8d8ec",
+          "39dc0071-ac271140",
+          "408416ee-1e6d9ee2",
+          "4baef399-a2536869",
+          "4d428897-c2770dd7",
+          "578ccd57-b8f703e9",
+          "5869dc01-fd601af6",
+          "5889803d-d2ef2224",
+          "62989b27-9b5c857e",
+          "68676842-54104b8e",
+          "74d04f5b-5fd982cc",
+          "78953033-8317bf6c",
+          "b53328fc-e5cea343",
+          "bc930bd3-a9375b1a",
+          "be8e3da7-f5fa9ccf",
+          "c1c251b6-870ae2be",
+          "cff9a619-9dd23a52",
+          "d1af2bb4-6b55a719",
+          "d49e7b7e-111658a3",
+          "d711e53e-c458d101",
+          "d8c50026-72c6729c",
+          "eb576189-4016b3b9",
+          "f04e8004-448f44d2"
+        ],
+        "sha256": "9c32d279edd5cc8fb62c54a116f590727c5d53ef5b6f11158e8896290e24fb9d"
+      }
+    },
+    "known_source_image_contract": "17 existing PS2effect packages: source96x96fmt1/8, physical64x64PAL4. Source dimensions retained."
+  },
+  "v7_gates": {
+    "r202s": "Exact original gate/event standard0late, CAST/NOTDRAWN/TEX/KOS PASS",
+    "r202x": "Originalcrank/cannon cap4 vs nonbinding16: standard0late/evict/retry/refusal/sndfail, character0GC/NOTDRAWN/TEX PASS; sourceflagsC0000000/heldempty/Merchant30created. No Merchantdraw/Trade claim.",
+    "r101o": "Actual cap4 gateprogram,49152held/minKOS5032",
+    "native_r200j": "Actualb1e VMU originalstairs/A-door202; zero stair-play uploads, fullstandard FAIL23door-source-image uploads aftergame->boot. Native route continues."
+  }
 }
