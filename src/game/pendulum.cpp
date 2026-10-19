@@ -1623,6 +1623,21 @@ void penClothAtCkParallel(Vec* pos, Vec* up, PenAtWork* wk)
 }
 
 // Put every link back to its rest pose (the model was warped: be_flag 0x00200000).
+#if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
+// LEON_CLOTH_DRAWN (pl_cloth.cpp PlClothMoveLeon): a tick whose image is dropped runs only the step's draw from the
+// shared random stream (the wind phase, as PenClothMove / PenClothMove3 do first), so every later fRand caller sees
+// the same sequence. Leon's chains use Flag 0x100 (no floor), so the floor checks never draw.
+void PenClothSkipTick(PenCloth* c)
+{
+    if (c->Num == 0) {
+        return;
+    }
+    if (!(c->Flag & 0x40)) {
+        c->WindSin += fRand0_1() * GlobalWindAdd;
+        c->WindSin = LIMIT_ANGLE(c->WindSin);
+    }
+}
+#endif
 static void PenClothReset(cModel* m, PenCloth* c)
 {
     cModel* parts;
