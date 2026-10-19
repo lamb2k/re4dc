@@ -7153,7 +7153,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #endif
     if(!frame_ready || stream_aborted || draining_parts)return 0;
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
-    if(rtt::capture_slot>=0 && rtt::wanted(rtt::capture_slot))return rtt::capture(s);   // PVR_RTT: a render-target sprite (pvr_rtt.inc)
+    // PVR_RTT: inside a target's bracket a sprite belongs to the target (pvr_rtt.inc), never to the screen: a target no
+    // model shows (e.g. the r221 128x128 slot 0) drops its sprites, as the GC copies them only into its buffer.
+    if(rtt::capture_slot>=0)return rtt::wanted(rtt::capture_slot)?rtt::capture(s):0;
 #endif
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreBeginFxFrame();
