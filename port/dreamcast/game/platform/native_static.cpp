@@ -4755,7 +4755,7 @@ void dedup_open(){
     const char* why=nullptr;unsigned nrep=0;
     if(!sec)why="no section";
 #if defined(RE4DC_SCENERY_DEDUP_LOADONLY) && RE4DC_SCENERY_DEDUP_LOADONLY
-    else why="load only (test arm)";   // SCENERY_DEDUP_LOADONLY=1: the section is read (heap 4 as =2), draws as knob off
+    else if(sec)why="load only (test arm)";   // SCENERY_DEDUP_LOADONLY=1: the section is read (heap 4 as =2), draws as knob off
 #endif
     else if(re4dc_room_file_room()!=ps2w.room)why="room";
     else if(ver!=1 || len<16U+4U*nl)why="size";
