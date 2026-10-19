@@ -2558,7 +2558,166 @@ struct MeshDraw : Emitter {
         return 1;
     }
 #endif
+#if RE4DC_SCENERY_CHUNK
+#if !(RE4DC_MESH_LOD && RE4DC_MESH_FASTPATH && RE4DC_MESH_DIRECT && RE4DC_PS2_WORLD_LEAN && RE4DC_MESH_PRIME_LAZY && \
+      RE4DC_MESH_VP_SCHED==1 && RE4DC_MESH_STRIP_LEAN==1 && RE4DC_HW_LEAN && !RE4DC_MESH_CLASSIFY)
+#error SCENERY_CHUNK needs the Test 18 world recipe (MESH_LOD, MESH_FASTPATH, MESH_DIRECT, PS2_WORLD_LEAN, MESH_PRIME_LAZY, MESH_VP_SCHED=1, MESH_STRIP_LEAN=1, HW_LEAN)
+#endif
+    // SCENERY_CHUNK: run() for a PS2 world part as two phases over a short list of meshlets ("picks"). Selection runs
+    // every cluster / LOD / meshlet / strip-group decision of draw_clusters() + draw() + meshlet() with the same functions
+    // and expressions, in the same order; emission then binds, transforms and walks each picked meshlet in that order.
+    // The same strips reach the TA in the same order with the same words; the selection code and the emission code
+    // each stay in the instruction cache for a burst instead of alternating per meshlet. The caller uses it only when
+    // no PVS set, interior cull, Standard impostor skip or check mode (lean bit 8) applies.
+    struct Pick {
+        const re4dc::room::Meshlet* l;
+        std::uint16_t nr,lo,hi,pad; // nr 0xffff: the whole meshlet; else the strip groups left (nr may be 0)
+        std::uint16_t r0[8],r1[8];
+    };
+    static constexpr unsigned kPicks=32;
+    int emit_pick(const Pick& pk){
+        namespace vp=re4dc::vp;
+        ++stats.groups_visible;
+        if(!bind()){++stats.bind_rejects;return submitted?-1:0;}
+        ++stats.batches;
+        if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
+        if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
+        const auto& l=*pk.l;
+        const auto* base=corners(l);
+        const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
+        if(l.vertex_count>primed){vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
+            if(lean_part){lean::prime_at=cache;lean::primed=primed;}
+        }
+        if(pk.nr!=0xffffU){
+            if(!pk.nr)return 1;
+            const unsigned vn=pk.hi-pk.lo+1U;
+            vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
+            const std::uint8_t* const sb=package.strip_begin(l);
+            for(unsigned i=0;i<pk.nr;++i){
+                int result=1;
+                strips_lean(sb+pk.r0[i],sb+pk.r1[i],base,batch,result);
+                if(result<=0)return result;
+            }
+            return 1;
+        }
+        vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
+        const std::uint8_t* s=package.strip_begin(l);
+        int result=1;
+        s=strips_lean(s,s+l.strip_bytes,base,batch,result);
+        return s?1:result;
+    }
+    __attribute__((noinline)) int emit_picks(const Pick* pk,unsigned n){
+        for(unsigned i=0;i<n;++i){const int r=emit_pick(pk[i]);if(r<=0)return r;}
+        return 1;
+    }
+    __attribute__((noinline)) int run_chunk(){
+        streaming=re4dc_model_packet_streaming()!=0;
+        set_clip();
+        palette=nullptr;
+        batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
+        batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
+        const auto& lod=package.part_lods()[part_index];
+        const auto* clusters=package.clusters();const auto* levels=package.levels();
+        const bool groups=sg && lean_am;
+        Pick picks[kPicks];unsigned np=0;
+        for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
+            const auto& cl=clusters[c];
+            float lo[3],hi[3];
+            for(unsigned a=0;a<3;++a){lo[a]=float(cl.bounds_min[a]);hi[a]=float(cl.bounds_max[a]);}
+            unsigned cin;
+            if(lean_inside){cin=2;++lean::st.skipped;}
+            else if((lean::kMode&2U) && lean_am)cin=lean::box_class(lo,hi,mvq,lean_am,near,cull_far,nullptr);
+            else {
+                const re4dc::render::DrawBounds bounds{{lo[0],lo[1],lo[2]},{hi[0],hi[1],hi[2]}};
+                cin=re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)?1U:0U;
+            }
+            if(!cin){++stats.clusters_culled;continue;}
+            if(cin==2)++lean::st.cl_inside;
+            ++stats.clusters_visible;
+            float depth=-mvq[11],radius=0;
+            for(unsigned a=0;a<3;++a){
+                depth-=mvq[8+a]*(lo[a]+hi[a])*0.5f;
+                radius+=std::fabs(mvq[8+a])*(hi[a]-lo[a])*0.5f;
+            }
+            depth-=radius;
+            if(depth<near)depth=near;
+            unsigned level=cl.level_count-1;
+            while(level && levels[cl.first_level+level].error*lod_scale>depth)--level;
+            ++stats.lod_draws[level<3?level:3];
+            const auto& lv=levels[cl.first_level+level];
+            const auto* lets=package.meshlets()+lv.first_meshlet;
+            for(unsigned i=0;i<lv.meshlet_count;++i){
+                const auto& l=lets[i];
+                unsigned mask=0;
+                if(cin==2)++lean::st.skipped;
+                else if(groups){
+                    const float blo[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
+                    const float bhi[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
+#if RE4DC_SG_SELECT_LEAN
+                    const int mk=re4dc_sg_lean_on?lean::box_mask_lean(blo,bhi,mvq,lean_am,near,cull_far)
+                                                 :lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
+#else
+                    const int mk=lean::box_mask(blo,bhi,mvq,lean_am,near,cull_far);
+#endif
+                    if(mk<0){++stats.groups_culled;continue;}
+                    mask=unsigned(mk);
+                }else{
+                    const re4dc::render::DrawBounds bounds{
+                        {float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])},
+                        {float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])}};
+                    if(!re4dc::render::group_visible(bounds,mvq,p.projection,p.viewport,near,cull_far,0)){++stats.groups_culled;continue;}
+                }
+                Pick& pk=picks[np];
+                pk.l=&l;pk.nr=0xffffU;
+                if(groups && mask){
+                    const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*unsigned(&l-package.meshlets()));
+                    unsigned glo,ghi,culled,nr;
+#if RE4DC_SG_SELECT_LEAN
+                    if(re4dc_sg_lean_on){
+                        if(!sg_lp_ok){lean::sg_coef_lean(mvq,near,sg_lp);sg_lp_ok=true;}
+                        nr=lean::sg_select_lean(g,sg_groups,sg_lp,mask,pk.r0,pk.r1,glo,ghi,culled);
+                        ++lean::lst.calls;
+                    }else{
+                        if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
+                        nr=lean::sg_select(g,sg_groups,sg_coef,mask,pk.r0,pk.r1,glo,ghi,culled);
+                    }
+#else
+                    if(!sg_coef_ok){lean::sg_coef(mvq,near,sg_coef);sg_coef_ok=true;}
+                    nr=lean::sg_select(g,sg_groups,sg_coef,mask,pk.r0,pk.r1,glo,ghi,culled);
+#endif
+                    ++lean::st.sg_tests;
+                    if(culled){
+                        lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
+                        pk.nr=std::uint16_t(nr);pk.lo=std::uint16_t(glo);pk.hi=std::uint16_t(ghi);
+                        lean::st.sg_vskip+=nr?l.vertex_count-(ghi-glo+1U):l.vertex_count;
+                    }
+                }
+                if(++np==kPicks){const int r=emit_picks(picks,np);np=0;if(r<=0)return r;}
+            }
+        }
+        if(np){const int r=emit_picks(picks,np);if(r<=0)return r;}
+        if(used)re4dc_model_packet_commit(used);
+        re4dc_model_result(0,input,output);
+        return 1;
+    }
+    bool chunk_ok()const{
+        return package.lod() && !(lean::kMode&8U)
+#if RE4DC_PS2_PVS
+            && !pvs_set
+#endif
+#if RE4DC_PS2_INTERIOR_CULL
+            && !pc_mode
+#endif
+#if RE4DC_QUALITY_ASSETS
+            && !skip_clusters
+#endif
+            ;
+    }
+#endif
     int run(){
+#if RE4DC_SCENERY_CHUNK
+        if(ps2 && chunk_ok())return run_chunk();
+#endif
 #if RE4DC_PS2_WORLD_MESH
         // A PS2 part has no source image to reserve against; its direct bind checks the frame state.
         if(!ps2 && !re4dc_model_packet_reserve(&p,&packet)){++stats.reserve_rejects;return 0;}
