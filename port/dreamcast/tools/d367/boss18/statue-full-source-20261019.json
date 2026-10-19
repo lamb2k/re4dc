@@ -1,0 +1,65 @@
+{
+  "scope": "Hash-only full source data preparation reference; no native/runtime/fight acceptance or game/media payload.",
+  "receipt": {
+    "status": "FULL_SOURCE_DATA_PREPARED_NATIVE_UNADMITTED",
+    "source_commit": "5647fc9c0bb9bd0840a5c92ccdcaeb50d034cd87",
+    "runtime_header_sha256": "919a1d8c532cca74e4e5fc4d42859c83bdb31d99632c4e49b042b6e222313acf",
+    "texture_package_sha256": "27da88d61a94668788e77910540ce3eff99cf73c5b083c88d86b7973cadfedbf",
+    "source_shift": 0,
+    "triangles": 12631,
+    "submitted_index_inventory": 18667,
+    "transformed_records": 11532,
+    "source_parts": 23,
+    "infos": 1,
+    "palettes": 54,
+    "skin_stream_bytes": 1904,
+    "atlas": [
+      1024,
+      1024
+    ],
+    "VQ_VRAM_bytes": 264192,
+    "source_opaque_images": 11,
+    "asset_free_guards": 13,
+    "current_generator_negative_controls": 3,
+    "current_target_ASan_UBSan_controls": 5,
+    "synthetic_host_frames": 3,
+    "source_position_and_UV_and_numeric_weight_error": 0,
+    "normal_max_component_quantization_error": 3.0512131454996094e-05,
+    "whole_fight_cost": null,
+    "current_registry": "EXPECTED REFUSAL: position_shift0 outside1..4; no package emitted",
+    "runtime_owner": "ObjMgr cObjRobo37/type0/23 not admitted; existing P2 owner handoff",
+    "no_reduced_level_or_runtime_change": true,
+    "no_game_build_or_Flycast": true
+  },
+  "private_set": {
+    "set": "boss18-statue-full-20261019",
+    "files": 160,
+    "bytes": 53982168,
+    "sha256sums_sha256": "1df895179db17b9a327904b777b5a27d7b7972ad29a6d3c07a411950ab3247a2",
+    "mirror_verified": true,
+    "prepared_native_unadmitted": true
+  },
+  "source_input_proofs": [
+    {
+      "file": "original-room-decode-proof.json",
+      "sha256": "1b52e71a0e6cc344322accaec76377d96c220b645f386798a4df55bbf0637954"
+    },
+    {
+      "file": "original-full-source-proof.json",
+      "sha256": "eda70001e2e9d8aa10e9bc5ded61c4cc24f5d537a5fd066571853b0b2405d3a3"
+    },
+    {
+      "file": "native-full-source-corner-proof.json",
+      "sha256": "8be85ea444e8dd009b0e0b2320be7dced5a25b590594730e9d11a90836480757"
+    },
+    {
+      "file": "CURRENT_REGISTRY_REFUSAL.json",
+      "sha256": "4f4a0df4e4b0e00301eaecf2aac2d5b4e130fe6a37692a999ca0a33c74495f50"
+    },
+    {
+      "file": "default-enemy-control.json",
+      "sha256": "4bce6af653904c5841a09477383876af35484d9e2cf2a67c656e47c4a4070f15"
+    }
+  ],
+  "runtime_changes": []
+}
