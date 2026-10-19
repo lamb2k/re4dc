@@ -2941,6 +2941,8 @@ include vmu_context.mk
 include t2exact.mk
 # Lane scenery19 (SCENERY_CHUNK; default off: no effect).
 include scenery19.mk
+# Lane chardraw19 (CHAR_CHUNK; default off: no effect).
+include chardraw19.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
 include knobs.mk
 include esppool.mk
