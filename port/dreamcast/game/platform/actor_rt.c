@@ -1,134 +1,167 @@
-/* actor_rt.c: the native actor runtime's shared room services, in-game preview (ENGINE_PREVIEW=1, lane behave18).
- * Grid layout and the flow / wall code follow port/dreamcast/engine/edemo_engine.c (edemo18, phase 0). */
+/* actor_rt.c: the native actor runtime's shared room services (ENGINE_PREVIEW=1; lanes behave18 -> engine19).
+ *
+ * The room grid comes from the room's data file (tools/enginebake/room_compile.py, R4RC v1, section GRID v1), read at
+ * room entry into room memory (heap 4, re4dc_static_alloc: the native package reserve rules apply) and freed at room
+ * leave. No file, a refused allocation, a bad file, or a room whose collision has object SAT members (GRID flag bit1
+ * clear): the room runs the source path (SatMgr) exactly as without the switch. Nothing of the grid is in the program.
+ * Grid semantics are the behave18 preview's (EDGR v1 cells, planes, walls; the flow field the preview never used is
+ * gone). Queries do no allocation, no file access and no FPSCR changes. */
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <kos/fs.h>
 #include "actor_rt.h"
 
 extern void re4dc_log(const char* fmt, ...);
-extern const uint8_t re4dc_rt_grid101[];      /* actor_rt_grid.S: EDGR v1 r101 grid (private data, incbin) */
-extern const uint32_t re4dc_rt_grid101_size;
+extern void* re4dc_static_alloc(unsigned bytes);
+extern void re4dc_static_free(void* data);
+extern int re4dc_static_heap_free(void);
 
-#define GW_MAX 100
-#define GH_MAX 88
-#define FLOW_R 24
 #define BODY_R 300.0f
 
 typedef struct {
     int ok;
-    uint16_t w, h;
+    unsigned room;
+    uint16_t w, h, bw, bh;
     float x0, z0, cell, inv_cell;
-    uint16_t nplane, nseg;
-    const uint8_t* cells;   /* 6 B: floor plane (0xFF none), nwall, nbr bits, pad, u16 wall list offset */
+    const uint16_t* btab;   /* [bw*bh] 0xFFFF = empty block */
+    const uint16_t* bcell;  /* [nblock][64] */
+    const uint8_t* combos;  /* 6 B: u16 plane, u16 wl first, u8 nwall, u8 pad */
     const float* planes;    /* y = a x + c z + d */
     const int16_t* segs;    /* x0 z0 x1 z1 ymin ymax, cm */
     const uint16_t* wl;
 } rt_grid;
 
 static rt_grid g_grid;
-static int g_parsed;
-static uint8_t flow_dir[GW_MAX * GH_MAX];
-static uint8_t flow_stamp[GW_MAX * GH_MAX];
-static uint8_t flow_gen;
-static int flow_cell = -1;
-static unsigned flow_frame = ~0u;
-static uint16_t flow_q[(2 * FLOW_R + 1) * (2 * FLOW_R + 1)];
-static unsigned c_owned, c_fallback, c_flows, c_steer, c_collide, c_nogrid;
-
-static const int8_t DX[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
-static const int8_t DZ[8] = { 0, 1, 1, 1, 0, -1, -1, -1 };
+static void* g_block;
+static unsigned g_bytes, c_loads, c_absent, c_refused;
+static unsigned c_owned, c_fallback, c_collide, c_nogrid;
 
 static inline uint16_t rd16(const uint8_t* p) { return (uint16_t) (p[0] | (p[1] << 8)); }
-static inline float rdf(const uint8_t* p) { float v; memcpy(&v, p, 4); return v; }
+static inline uint32_t rd32(const uint8_t* p) { return (uint32_t) (p[0] | (p[1] << 8) | (p[2] << 16) | ((uint32_t) p[3] << 24)); }
 
-static void parse(void)
+/* Checks every table of a GRID v1 section against its length and every index against its table. */
+static const char* adopt_grid(const uint8_t* s, uint32_t n, uint16_t w, uint16_t h, uint32_t cell_mm)
 {
-    const uint8_t* s = re4dc_rt_grid101;
-    g_parsed = 1;
-    if (re4dc_rt_grid101_size < 24 || memcmp(s, "EDGR", 4)) { re4dc_log("engine preview: no r101 grid\n"); return; }
     rt_grid* g = &g_grid;
-    g->w = rd16(s + 4); g->h = rd16(s + 6);
-    g->x0 = rdf(s + 8); g->z0 = rdf(s + 12);
-    g->cell = rd16(s + 16); g->inv_cell = 1.0f / g->cell;
-    g->nplane = rd16(s + 18); g->nseg = rd16(s + 20);
-    if (g->w > GW_MAX || g->h > GH_MAX) { re4dc_log("engine preview: grid %ux%u too large\n", g->w, g->h); return; }
-    g->cells = s + 24;
-    g->planes = (const float*) (s + 24 + 6 * g->w * g->h);   /* 4-aligned: 6*w*h is even, w*h*6 % 4 checked below */
-    g->segs = (const int16_t*) ((const uint8_t*) g->planes + 12 * g->nplane);
-    g->wl = (const uint16_t*) ((const uint8_t*) g->segs + 12 * g->nseg);
-    if (((uintptr_t) g->planes & 3) || ((uintptr_t) g->segs & 1)) { re4dc_log("engine preview: grid misaligned\n"); return; }
-    g->ok = 1;
-    re4dc_log("engine preview: r101 grid %ux%u cell %d mm, %u planes, %u walls, %u bytes\n", g->w, g->h, (int) g->cell,
-              g->nplane, g->nseg, (unsigned) re4dc_rt_grid101_size);
+    if (n < 16 || ((uintptr_t) s & 3)) return "grid header";
+    unsigned npl = rd16(s), nseg = rd16(s + 2), nco = rd16(s + 4), nwl = rd16(s + 6);
+    unsigned bw = rd16(s + 8), bh = rd16(s + 10), nb = rd16(s + 12);
+    if (!w || !h || bw != (w + 7u) / 8u || bh != (h + 7u) / 8u || cell_mm < 100) return "grid size";
+    uint32_t p = 16 + 2u * bw * bh;
+    p = (p + 3u) & ~3u;
+    const uint32_t bd = p;
+    p += 128u * nb;
+    const uint32_t co = p;
+    p += 6u * nco;
+    p = (p + 3u) & ~3u;
+    const uint32_t pl = p;
+    p += 12u * npl;
+    const uint32_t sg = p;
+    p += 12u * nseg;
+    const uint32_t wo = p;
+    p += 2u * nwl;
+    if (p != n) return "grid length";
+    const uint16_t* btab = (const uint16_t*) (s + 16);
+    for (unsigned i = 0; i < bw * bh; i++) if (btab[i] != 0xFFFF && btab[i] >= nb) return "grid block";
+    const uint16_t* bc = (const uint16_t*) (s + bd);
+    for (unsigned i = 0; i < 64u * nb; i++) if (bc[i] != 0xFFFF && bc[i] >= nco) return "grid cell";
+    for (unsigned i = 0; i < nco; i++) {
+        const uint8_t* c = s + co + 6u * i;
+        if (rd16(c) >= npl || (unsigned) rd16(c + 2) + c[4] > nwl) return "grid combo";
+    }
+    const uint16_t* wl = (const uint16_t*) (s + wo);
+    for (unsigned i = 0; i < nwl; i++) if (wl[i] >= nseg) return "grid wall list";
+    g->w = w; g->h = h; g->bw = (uint16_t) bw; g->bh = (uint16_t) bh;
+    g->cell = (float) cell_mm; g->inv_cell = 1.0f / g->cell;
+    g->btab = btab; g->bcell = bc; g->combos = s + co;
+    g->planes = (const float*) (s + pl); g->segs = (const int16_t*) (s + sg); g->wl = wl;
+    return 0;
+}
+
+/* Room entry (ui_bridge.cpp re4dc_room_enter, heap 4 just rebuilt): read /cd/dc/native/rXXX/room.r4rc. */
+void re4dc_rt_room_enter(unsigned room)
+{
+    room &= 0xFFF;
+    memset(&g_grid, 0, sizeof(g_grid));
+    g_block = 0; g_bytes = 0;   /* the previous room's cell was freed at re4dc_rt_room_leave */
+    char path[40];
+    snprintf(path, sizeof(path), "/cd/dc/native/r%03x/room.r4rc", room);
+    file_t fd = fs_open(path, O_RDONLY);
+    if (fd == FILEHND_INVALID) { c_absent++; re4dc_log("ROOMFILE r%03x absent: source path\n", room); return; }
+    const unsigned size = (unsigned) fs_total(fd);
+    const int before = re4dc_static_heap_free();
+    uint8_t* b = (size >= 64 && size <= 262144u && !(size & 15u)) ? (uint8_t*) re4dc_static_alloc(size) : 0;
+    const char* why = b ? 0 : "size or heap4";
+    if (b && fs_read(fd, b, size) != (ssize_t) size) why = "read";
+    fs_close(fd);
+    if (!why) {
+        why = "header";
+        if (!memcmp(b, "R4RC", 4) && rd16(b + 4) == 1 && rd16(b + 6) == 64 && rd32(b + 8) == room && rd32(b + 16) == size) {
+            const unsigned nsec = rd32(b + 12);
+            const uint16_t w = rd16(b + 24), h = rd16(b + 26);
+            const uint32_t cell_mm = rd32(b + 28);
+            unsigned flags = 0;
+            const char* grid_why = "no GRID";
+            why = nsec && nsec < 64 && 64u + 32u * nsec <= size ? 0 : "directory";
+            for (unsigned i = 0; !why && i < nsec; i++) {
+                const uint8_t* d = b + 64 + 32 * i;
+                const uint32_t off = rd32(d + 8), len = rd32(d + 12);
+                if ((off & 15u) || off < 64u + 32u * nsec || off > size || len > size - off) { why = "section extent"; break; }
+                if (!memcmp(d, "GRID", 4)) {
+                    if (rd16(d + 4) != 1) { grid_why = "GRID version"; continue; }
+                    flags = rd16(d + 6);
+                    grid_why = adopt_grid(b + off, len, w, h, cell_mm);
+                } else if ((rd16(d + 6) & 1) && memcmp(d, "SRCB", 4)) {
+                    why = "unknown required section";
+                }
+            }
+            if (!why) why = grid_why;
+            if (!why && !(flags & 2)) why = "object collision (GRID not static)";
+            if (!why) {
+                g_grid.x0 = (float) (int32_t) rd32(b + 32);
+                g_grid.z0 = (float) (int32_t) rd32(b + 36);
+            }
+        }
+    }
+    if (why) {
+        if (b) re4dc_static_free(b);
+        memset(&g_grid, 0, sizeof(g_grid));
+        c_refused++;
+        re4dc_log("ROOMFILE r%03x %s: source path (bytes=%u heap4=%d)\n", room, why, size, before);
+        return;
+    }
+    g_block = b; g_bytes = size; g_grid.ok = 1; g_grid.room = room;
+    c_loads++;
+    re4dc_log("ROOMFILE r%03x loaded bytes=%u grid=%ux%u cell=%d heap4=%d->%d loads=%u\n", room, size,
+              g_grid.w, g_grid.h, (int) g_grid.cell, before, re4dc_static_heap_free(), c_loads);
+}
+
+/* Room leave (ui_bridge.cpp re4dc_room_leave, before heap 4 is replaced). */
+void re4dc_rt_room_leave(void)
+{
+    if (g_block) re4dc_static_free(g_block);
+    g_block = 0; g_bytes = 0;
+    memset(&g_grid, 0, sizeof(g_grid));
 }
 
 int re4dc_rt_room(unsigned room)
 {
-    if (room != 0x101) return 0;
-    if (!g_parsed) parse();
-    return g_grid.ok;
+    return g_grid.ok && g_grid.room == (room & 0xFFF);
 }
 
-static inline int cell_of(const rt_grid* g, float x, float z)
+/* combo of the cell under (x, z), or 0 when outside the grid or no floor */
+static inline const uint8_t* combo_at(const rt_grid* g, float x, float z)
 {
     float fx = (x - g->x0) * g->inv_cell, fz = (z - g->z0) * g->inv_cell;
-    if (fx < 0 || fz < 0) return -1;
+    if (fx < 0 || fz < 0) return 0;
     int cx = (int) fx, cz = (int) fz;
-    if (cx >= g->w || cz >= g->h) return -1;
-    return cx + cz * g->w;
-}
-
-void re4dc_rt_tick(unsigned frame, float lx, float lz)
-{
-    const rt_grid* g = &g_grid;
-    if (frame == flow_frame || !g->ok) return;
-    flow_frame = frame;
-    int c0 = cell_of(g, lx, lz);
-    if (c0 < 0 || c0 == flow_cell) return;
-    flow_cell = c0;
-    c_flows++;
-    if (++flow_gen == 0) { memset(flow_stamp, 0, sizeof(flow_stamp)); flow_gen = 1; }
-    int cx0 = c0 % g->w, cz0 = c0 / g->w;
-    int head = 0, tail = 0;
-    flow_q[tail++] = (uint16_t) c0;
-    flow_stamp[c0] = flow_gen;
-    flow_dir[c0] = 0xFF;
-    while (head < tail) {
-        int c = flow_q[head++];
-        int cx = c % g->w, cz = c / g->w;
-        uint8_t nb = g->cells[6 * c + 2];
-        for (int k = 0; k < 8; k++) {
-            if (!(nb & (1 << k))) continue;
-            int nx = cx + DX[k], nz = cz + DZ[k];
-            if (nx < cx0 - FLOW_R || nx > cx0 + FLOW_R || nz < cz0 - FLOW_R || nz > cz0 + FLOW_R) continue;
-            int n = nx + nz * g->w;
-            if (flow_stamp[n] == flow_gen) continue;
-            flow_stamp[n] = flow_gen;
-            flow_dir[n] = (uint8_t) ((k + 4) & 7);   /* from n back toward c */
-            flow_q[tail++] = (uint16_t) n;
-        }
-    }
-}
-
-int re4dc_rt_steer(float x, float z, float* gx, float* gz)
-{
-    const rt_grid* g = &g_grid;
-    if (!g->ok || flow_cell < 0) return 0;
-    int c = cell_of(g, x, z);
-    if (c < 0 || flow_stamp[c] != flow_gen || flow_dir[c] == 0xFF) return 0;
-    /* follow the field two cells: the goal is the centre of the second cell (smooths the 8-way steps) */
-    int n = c;
-    for (int s = 0; s < 2; s++) {
-        if (flow_stamp[n] != flow_gen || flow_dir[n] == 0xFF) break;
-        int k = flow_dir[n];
-        int nx = n % g->w + DX[k], nz = n / g->w + DZ[k];
-        if (nx < 0 || nz < 0 || nx >= g->w || nz >= g->h) break;
-        n = nx + nz * g->w;
-    }
-    *gx = g->x0 + ((n % g->w) + 0.5f) * g->cell;
-    *gz = g->z0 + ((n / g->w) + 0.5f) * g->cell;
-    c_steer++;
-    return 1;
+    if (cx >= g->w || cz >= g->h) return 0;
+    uint16_t b = g->btab[(cx >> 3) + (cz >> 3) * g->bw];
+    if (b == 0xFFFF) return 0;
+    uint16_t c = g->bcell[64u * b + (cx & 7) + 8 * (cz & 7)];
+    return c == 0xFFFF ? 0 : g->combos + 6u * c;
 }
 
 int re4dc_rt_collide(float* x, float* y, float* z, float ox, float oz)
@@ -136,12 +169,11 @@ int re4dc_rt_collide(float* x, float* y, float* z, float ox, float oz)
     const rt_grid* g = &g_grid;
     if (!g->ok) return 0;
     float nx = *x, nz = *z, ny = *y;
-    int c = cell_of(g, nx, nz);
-    if (c < 0 || g->cells[6 * c] == 0xFF) { c_nogrid++; return 0; }
+    const uint8_t* cb = combo_at(g, nx, nz);
+    if (!cb) { c_nogrid++; return 0; }
     /* walls of this cell (the grid lists every wall within body radius of the cell) */
-    const uint8_t* cl = g->cells + 6 * c;
-    int nw = cl[1];
-    const uint16_t* wl = g->wl + rd16(cl + 4);
+    int nw = cb[4];
+    const uint16_t* wl = g->wl + rd16(cb + 2);
     for (int k = 0; k < nw; k++) {
         const int16_t* s = g->segs + 6 * wl[k];
         float ymin = s[4] * 10.0f, ymax = s[5] * 10.0f;
@@ -160,9 +192,9 @@ int re4dc_rt_collide(float* x, float* y, float* z, float ox, float oz)
             nz += pz * push;
         }
     }
-    c = cell_of(g, nx, nz);
-    if (c < 0 || g->cells[6 * c] == 0xFF) { nx = ox; nz = oz; c = cell_of(g, nx, nz); if (c < 0 || g->cells[6 * c] == 0xFF) { c_nogrid++; return 0; } }
-    const float* pl = g->planes + 3 * g->cells[6 * c];
+    cb = combo_at(g, nx, nz);
+    if (!cb) { nx = ox; nz = oz; cb = combo_at(g, nx, nz); if (!cb) { c_nogrid++; return 0; } }
+    const float* pl = g->planes + 3 * rd16(cb);
     float fy = pl[0] * nx + pl[1] * nz + pl[2];
     if (fabsf(fy - ny) > 400.0f) { c_nogrid++; return 0; }   /* another level (stairs, upper floors): the game decides */
     *x = nx; *z = nz; *y = fy;
@@ -176,9 +208,9 @@ static unsigned c_ik, c_ikpass;
 float re4dc_rt_floor(float x, float y, float z)
 {
     const rt_grid* g = &g_grid;
-    int c = g->ok ? cell_of(g, x, z) : -1;
-    if (c < 0 || g->cells[6 * c] == 0xFF) { c_ikpass++; return -100000.0f; }
-    const float* pl = g->planes + 3 * g->cells[6 * c];
+    const uint8_t* cb = g->ok ? combo_at(g, x, z) : 0;
+    if (!cb) { c_ikpass++; return -100000.0f; }
+    const float* pl = g->planes + 3 * rd16(cb);
     float fy = pl[0] * x + pl[1] * z + pl[2];
     if (fy > y + 500.0f || fy < y - 1500.0f) { c_ikpass++; return -100000.0f; }  /* not this level: SatMgr decides */
     c_ik++;
@@ -196,8 +228,8 @@ void re4dc_rt_log(unsigned frame, int leon_life)
     static unsigned last;
     if (frame - last < 60 && frame >= last) return;
     last = frame;
-    re4dc_log("engine preview: f=%u life=%d owned=%u fallback=%u gridmove=%u gridpass=%u ik=%u ikpass=%u\n", frame,
-              leon_life, c_owned, c_fallback, c_collide, c_nogrid, c_ik, c_ikpass);
+    re4dc_log("engine preview: f=%u life=%d owned=%u fallback=%u gridmove=%u gridpass=%u ik=%u ikpass=%u room=%03x bytes=%u\n",
+              frame, leon_life, c_owned, c_fallback, c_collide, c_nogrid, c_ik, c_ikpass, g_grid.room, g_bytes);
 }
 
 /* routine transitions of the Ganados in a grid room (r_no_0 / r_no_1 from the cModel status word): one line per change */
