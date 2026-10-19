@@ -85,3 +85,32 @@ extern "C" void re4dc_route_coming_soon(u16 room)
 {
     TaskExec(1, (TaskFunc) coming_soon_task, (int) room);
 }
+
+#if RE4DC_ROUTE_SOON_RETURN
+// ROUTE_SOON_RETURN=1 (lane route19, 2026-10-19): the same fade and "Coming Soon" message, but called from the door's
+// own task (sce_at.cpp sceSoonReturn), it then fades back in and returns; the caller cancels the door like a locked
+// one (Stop_flg restored, the area re-armed), so the player stays in the room and can take another exit.
+constexpr int kShowFrames = 150;
+extern "C" void re4dc_route_coming_soon_show(u16 room)
+{
+    GXColor clear = {0, 0, 0, 0}, black = {0, 0, 0, 0xFF};
+    FadeSet(1, &clear, &black, kFadeFrames, 0, 0);
+    TaskSleep(kFadeFrames + 2);
+    pG->System_flg |= 0x100000;
+    build("Coming Soon");
+    MesData.ptr[4] = (u8*) &table;
+    cMes.Delete(0);
+    cMes.setLayout(0, LAYOUT_SYSTEM);
+    cMes.MesSet(0, 0, 0, kAttr, 0, 0, 4);
+    re4dc_log("route end: door to r%03x (not on this disc): Coming Soon, returning\n", (unsigned) room);
+    for (int i = 0; i < kShowFrames; ++i) {
+        pvr_set_bg_color(0.0f, 0.0f, 0.0f);
+        TaskSleep(1);
+    }
+    cMes.Delete(0);
+    pG->System_flg &= ~0x100000;
+    FadeSet(1, &black, &clear, kFadeFrames, 0, 0);
+    TaskSleep(kFadeFrames + 2);
+    re4dc_log("route end: back in the room\n");
+}
+#endif

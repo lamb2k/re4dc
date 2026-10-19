@@ -2511,6 +2511,12 @@ ifeq ($(PS2_WORLD_HDR_CACHE),3)
 PS2_WORLD_HDR_CACHE_SELECT ?= 0
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_HDR_CACHE_SELECT=$(PS2_WORLD_HDR_CACHE_SELECT)
 endif
+# PS2_HDR_SETS=N (lane fx19 2026-10-19; exact, render only; unset = 32 sets, identical image): the table's set count
+# (power of two, 4 ways, 40 B a slot). r101's cross refilled ~29 headers a picture at 32 sets, each refill paying
+# load()'s TEX_SLOTS scan and a header compile.
+ifneq ($(PS2_HDR_SETS),)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_HDR_SETS=$(PS2_HDR_SETS)
+endif
 endif
 # PS2_PASS_MASK=1 (native_static.cpp, render only, exact, default 0; needs PS2_WORLD_MESH=1): ps2_pass skips a
 # placement without a part in the pass on a per-placement pass-bit byte (2 KiB table, built when the package opens)

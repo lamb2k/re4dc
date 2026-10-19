@@ -69,12 +69,21 @@ int re4dc_actor_transaction_candidate(cModel*);
 // The player owners: pl00 (appearance 0x100, eight infos) and, under ACTOR_PL08=1, the no-jacket pl08 (0x108, nine
 // infos, the same 119-bone skeleton). Both keep the Leon-only semantics: role 3 is the bone-driven face (shape bit),
 // role 7 the second-pass hair, the player's own lighting path. Off: exactly the former 0x100 tests.
-#if RE4DC_ACTOR_PL08
+#if RE4DC_ACTOR_PL08 && RE4DC_LEON_HEADLESS
+// LEON_HEADLESS (crowd.mk): 0x109 is pl08 after setHead(0) (seven infos, no face role: the neck has no shape).
+#define RE4DC_LEON_LIKE(app) ((app)==0x100u || (app)==0x108u || (app)==0x109u)
+// LEON_HEADLESS v2: 0x10A is the flying head (cObj01 of player arc 0xC): its own class, never the player.
+#define RE4DC_HEAD_APP(app) ((app)==0x10Au)
+#define RE4DC_LEON_FACE_ROLE(p,i) (((p).count==8 || (p).appearance==0x108u) && (i)==3)
+#elif RE4DC_ACTOR_PL08
 #define RE4DC_LEON_LIKE(app) ((app)==0x100u || (app)==0x108u)
 #define RE4DC_LEON_FACE_ROLE(p,i) (((p).count==8 || (p).appearance==0x108u) && (i)==3)
 #else
 #define RE4DC_LEON_LIKE(app) ((app)==0x100u)
 #define RE4DC_LEON_FACE_ROLE(p,i) ((p).count==8 && (i)==3)
+#endif
+#ifndef RE4DC_HEAD_APP
+#define RE4DC_HEAD_APP(app) false
 #endif
 // A role whose info may carry the shape bit (be_flag 2) on the owner path: Leon's bone-driven face and, under
 // PS2_ASHLEY=2 (native_model_registry.mk; user look decision pending), Ashley's head drawn at its PS2 rest face

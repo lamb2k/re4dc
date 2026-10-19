@@ -341,6 +341,10 @@ static const Texture t_extra_486[] = {
 #if RE4DC_ACTOR_PL08
 #include "actor_material_records_pl08.inc"
 #endif
+#if RE4DC_LEON_HEADLESS
+#include "actor_material_records_leon_neck.inc"
+#include "actor_material_records_leon_head.inc"
+#endif
 #if RE4DC_NATIVE_MODEL_REGISTRY && !RE4DC_NATIVE_MODEL_REGISTRY_PACK
 #include "native_model_registry_facts.inc" // private registry bundle (tools/d367/model_registry.py)
 #endif
@@ -399,6 +403,11 @@ static const Role roles[] = {
 {4u,4u,484u,486u,&m_extra_484,t_extra_486,1u},
 #if RE4DC_ACTOR_PL08
 #include "actor_material_records_pl08_roles.inc"
+#endif
+#if RE4DC_LEON_HEADLESS
+#include "actor_material_records_leon_headless_roles.inc"
+// LEON_HEADLESS v2: appearance 0x10A = the flying head (cObj01 of player arc 0xC / TPL 7, the stub of build_head.py).
+{266u,0u,12u,7u,&m_pl00_12,t_pl00_7,5u},  // pl00/12 (pl08's arc 0xC is byte-identical)
 #endif
 #if RE4DC_ACTOR_GANADO_APP0_GRIP
 #include "actor_material_records_app0_grip.inc"
@@ -474,6 +483,10 @@ static const SourceBlob source_blobs[] = {
 #endif
 #if RE4DC_ACTOR_PL08
 #include "actor_material_records_pl08_blobs.inc"
+#endif
+#if RE4DC_LEON_HEADLESS
+RE4DC_LEON_NECK_BLOB,
+RE4DC_LEON_HEAD_BLOB,
 #endif
 #if RE4DC_NATIVE_MODEL_REGISTRY && !RE4DC_NATIVE_MODEL_REGISTRY_PACK
 #include "native_model_registry_blobs.inc"

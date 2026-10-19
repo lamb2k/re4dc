@@ -7894,7 +7894,12 @@ extern "C" int re4dc_ps2_world_packet_cull(unsigned crc,unsigned fnv,unsigned wi
 // the stack held there (the PVR ignores them for these packed-colour, non-modifier headers); with this knob both
 // paths send zeros. 32 sets of 4 slots; a miss refills the set's slots in turn.
 namespace {
-constexpr unsigned kPs2HdrSets=32,kPs2HdrWays=4;
+// PS2_HDR_SETS=N (game30.mk, lane fx19; exact): N sets instead of 32 (r101 thrashed the 128 slots: ~29 refills a picture).
+#ifndef RE4DC_PS2_HDR_SETS
+#define RE4DC_PS2_HDR_SETS 32
+#endif
+constexpr unsigned kPs2HdrSets=RE4DC_PS2_HDR_SETS,kPs2HdrWays=4;
+static_assert((kPs2HdrSets&(kPs2HdrSets-1U))==0,"PS2_HDR_SETS is a power of two");
 struct Ps2HdrSlot { unsigned crc,fnv,size,mode; Entry* entry; pvr_ptr_t texture; std::uint32_t words[4]; };
 static_assert(sizeof(pvr_poly_hdr_t)==32);
 Ps2HdrSlot ps2_hdr[kPs2HdrSets][kPs2HdrWays];
