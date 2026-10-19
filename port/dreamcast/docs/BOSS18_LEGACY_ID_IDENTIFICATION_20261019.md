@@ -25,7 +25,7 @@ The checked Ada table has the same four mappings. `em33.dat/.drs` and `em37.dat/
 
 | Source family | modelInit owner | Additional model infos / material source | Bones / parts; infos | Special systems retained if ever admitted |
 |---|---|---|---|---|
-| em30, type0/other | BIN4 / TPL5 | BIN6+8/TPL7; BIN9, A(type0) or B(other), C, D/TPL5 | body143/143; seven source infos; C/D section metadata147 | target player/partner; procedural neck3; two cloth chains; source hearing/damage/collision/death; flag-negative mode hides infos6/8 and creates three26-part head objects, each with four10-part parasites; player damage motion20 |
+| em30, type0/other | BIN4 / TPL5 | BIN6+8/TPL7; BIN9, A(type0) or B(other), C, D/TPL5 | body143/143; seven source infos; C/D section metadata147 | target player/partner; procedural neck3; two cloth chains; source damage/collision/death; flag-negative mode hides infos6/8 and creates three26-part head objects, each with four10-part parasites; player damage motion20 |
 | em34 type0 | BIN4 / TPL8 | BIN5 shoulder,6 head,7 hand / TPL8 |161/161; four infos | two cloth chains, neck tracking, source collision/hit parts/lock-on2, phase/death/motion handoff |
 | em34 type1 (Em37 helpers) | BIN9 / TPLB | BINA / TPLB |111/111; two infos | hair/coat cloth, source bite/contact/motions13..16, target player/partner, neck/hit/collision/death |
 | em34 type2/3 (Em33 helpers) | BINC / TPLE(type2) or F(type3) | BIND / same TPL |201/201; two infos | two cloth chains, source bit24, hit/neck/collision/motion/death behavior; same geometry with source texture alternatives |
