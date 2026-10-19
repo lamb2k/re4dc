@@ -81,3 +81,20 @@ not linked in this chapter control. This does not certify enabling the new
 knob for those recipes. No chapter recipe will enable it until the complete
 current consumer contract, off identity, and matched release/movement gate
 pass. A delayed command under cap4 is not proof of identical uncapped timing.
+
+## Ordering proof and r214 follow-up
+
+`test_original_goto_order.py` extracts the original cEm10 setter unchanged
+and checks 8,192 sequences under ASan/UBSan. All first-Goto reductions agree;
+using the last-Goto flag snapshot instead produces 160 counterexamples.
+This validates the proposed ordering reduction, not an unwritten queue.
+Run `python3 port/dreamcast/tools/d367/castle18/test_original_goto_order.py`.
+
+The r214 review confirms that EndControl does not destroy EC/ED. The source
+catapult scene creates E0 plus E9/EA/EB while original E4/EC/ED/EE/EF may
+remain alive. A wait-only preflight therefore cannot guarantee four slots.
+Held getHp also returns zero and can incorrectly select the both-dead branch.
+Treat this as an explicit source capacity/ownership requirement; do not
+force admission, fabricate health/positions, or add a pending getter that
+can deadlock the original event. Main/parent are reviewing the complete
+contract before runtime edits. No new room file is claimed at this checkpoint.
