@@ -2085,6 +2085,40 @@ extern "C" { volatile unsigned re4dc_sg_lean_on=1; void re4dc_sg_select_lean_set
 #if RE4DC_PS2_PVS
 namespace pvs { unsigned cl_tested=0,cl_skipped=0; } // PS2_PVS cluster counters (the rest of namespace pvs is at ps2_open)
 #endif
+#if RE4DC_SCENERY_DEDUP
+// SCENERY_DEDUP (scenery19.mk; exact, render only): at room load (ps2_open, and again after a movie reload) every PS2
+// world meshlet's corners are reordered in place: the corners whose grid position is new first (in their order), the
+// repeats after them. Strip indices, v3 pool offsets and each strip group's corner range (now the first copies the
+// group reads) follow, so the triangles, their order and the clipper's inputs are unchanged. A draw transforms only the
+// first copies and builds each repeat from its first copy's x, y, 1/w and outcode plus its own u, v (the transform's
+// fmac) and colour (the same LUT words): every vertex word is the knob-off word. One word per meshlet (repeat offset |
+// repeat count << 24) and one byte per repeat (its first copy), in heap 4 beside the strip groups.
+namespace dedup {
+const void* pkg=nullptr;          // the package the tables belong to (ps2w.package once applied)
+std::uint32_t* lets=nullptr;      // per meshlet: offset into src | repeats << 24
+std::uint8_t* src=nullptr;        // per repeat: its first copy's corner
+void* block=nullptr; unsigned nlets=0,nsrc=0,bytes=0;
+// cache[u..n) from their first copies (cache[src[..]]), in[u..n) u, v, colour; oc likewise.
+__attribute__((noinline)) void fill(const re4dc::vp::Vertex12* in,pvr_vertex_t* cache,std::uint8_t* oc,unsigned u,
+                                    unsigned n,const std::uint8_t* s,const re4dc::vp::Constants& k){
+    const float au=k.f.au,bu=k.f.bu,av=k.f.av,bv=k.f.bv;
+    const std::uint32_t* lut=k.lut;const std::uint32_t andm=k.and_mask,orb=k.or_bits;
+    for(unsigned j=u;j<n;++j){
+        const unsigned q=*s++;
+        const pvr_vertex_t& a=cache[q];pvr_vertex_t& d=cache[j];
+        d.x=a.x;d.y=a.y;d.z=a.z;oc[j]=oc[q];
+        const auto& v=in[j];
+        float fu=float(v.u),fv=float(v.v),ru=bu,rv=bv;
+        // the transform's u = fmac(float(u), au, bu), v = fmac(float(v), av, bv)
+        __asm__("fmac fr0,%1,%0" : "+f"(ru) : "f"(au),"w"(fu));
+        __asm__("fmac fr0,%1,%0" : "+f"(rv) : "f"(av),"w"(fv));
+        d.u=ru;d.v=rv;
+        const unsigned c=v.color;
+        d.argb=((lut[c>>8]|lut[256U+(c&255U)])&andm)|orb;
+    }
+}
+}
+#endif
 #if RE4DC_SCENERY_CHUNK
 // SCENERY_CHUNK (scenery19.mk): the per-part / per-meshlet walk at -O2 (this unit is -Os). The same expressions, so the
 // same decisions and vertex words (FP contraction is the same at -Os and -O2).
@@ -2153,6 +2187,12 @@ struct MeshDraw : Emitter {
         }
         return gathered;
     }
+#if RE4DC_SCENERY_DEDUP
+    // SCENERY_DEDUP: the meshlet's repeat word (src offset | repeats << 24); 0 for other packages
+    std::uint32_t dd_word(const re4dc::room::Meshlet& l)const{
+        return dedup::pkg==static_cast<const void*>(&package)?dedup::lets[&l-package.meshlets()]:0U;
+    }
+#endif
 #if RE4DC_MESH_FASTPATH
     // Transform-once state: the cache borrows the last kCacheSlots slots of
     // the bound packet range (never sent: strips stop at 'limit').
@@ -2248,6 +2288,10 @@ struct MeshDraw : Emitter {
                 const unsigned vn=hi-lo+1U;lean::st.sg_vskip+=l.vertex_count-vn;
 #if RE4DC_MESH_VP_SCHED==1
                 vp::transform_sched<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
+#if RE4DC_SCENERY_DEDUP
+                if(const std::uint32_t dw=dd_word(l);dw>>24)
+                    dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k);
+#endif
 #else
                 vp::transform<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
 #endif
@@ -2263,7 +2307,14 @@ struct MeshDraw : Emitter {
 #endif
         if(checks==vp::kChecksNone)vp::transform<vp::kChecksNone>(in,l.vertex_count,cache,outcodes,k);
         else if(checks==vp::kChecksScreen)vp::transform<vp::kChecksScreen>(in,l.vertex_count,cache,outcodes,k);
-#if RE4DC_MESH_VP_SCHED==1
+#if RE4DC_MESH_VP_SCHED==1 && RE4DC_SCENERY_DEDUP
+        else if(const std::uint32_t dw=dd_word(l);dw>>24){
+            const unsigned u=l.vertex_count-(dw>>24);
+            vp::transform_sched<vp::kChecksAll>(in,u,cache,outcodes,k);
+            dedup::fill(in,cache,outcodes,u,l.vertex_count,dedup::src+(dw&0xffffffU),k);
+        }
+        else vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
+#elif RE4DC_MESH_VP_SCHED==1
         else vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
 #elif RE4DC_MESH_VP_SCHED==3
         else if(vp_sched_select==2U)vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
@@ -2697,6 +2748,10 @@ struct MeshDraw : Emitter {
             if(!pk.nr)return 1;
             const unsigned vn=pk.hi-pk.lo+1U;
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
+#if RE4DC_SCENERY_DEDUP
+            if(const std::uint32_t dw=dd_word(l);dw>>24)
+                dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k);
+#endif
             const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*pk.let);
             unsigned prev=0;
             for(unsigned q=0;q<sg_groups;++q){
@@ -2711,6 +2766,13 @@ struct MeshDraw : Emitter {
             }
             return 1;
         }
+#if RE4DC_SCENERY_DEDUP
+        if(const std::uint32_t dw=dd_word(l);dw>>24){
+            const unsigned u=l.vertex_count-(dw>>24);
+            vp::transform_sched<vp::kChecksAll>(in,u,cache,outcodes,k);
+            dedup::fill(in,cache,outcodes,u,l.vertex_count,dedup::src+(dw&0xffffffU),k);
+        }else
+#endif
         vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
         int result=1;
         strips_lean(sb,sb+l.strip_bytes,base,batch,result);
@@ -3967,6 +4029,9 @@ void ps2_movie_unpublish(){
 #if RE4DC_PS2_PASS_MASK
     ps2w.masked=false;
 #endif
+#if RE4DC_SCENERY_DEDUP
+    dedup::pkg=nullptr; // until ps2_movie_reload reorders the package again
+#endif
 }
 #endif
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
@@ -4506,6 +4571,97 @@ static void note(unsigned pass,unsigned drawn){
 }
 } // namespace trans
 #endif
+#if RE4DC_SCENERY_DEDUP
+namespace dedup {
+inline const re4dc::room::CompactVertex12& rec(const re4dc::room::MeshPackage& pk,const re4dc::room::Meshlet& l,unsigned k){
+    const auto* v=pk.vertices()+l.first_vertex;
+    return pk.indexed(l)?v[pk.pool_offsets(l)[k]]:v[k];
+}
+// first[k]: the first corner of the meshlet with corner k's grid position (k itself when new). Returns the repeats.
+unsigned firsts(const re4dc::room::MeshPackage& pk,const re4dc::room::Meshlet& l,std::uint8_t* first){
+    std::uint16_t table[512];std::memset(table,0,sizeof(table));
+    unsigned rep=0;
+    for(unsigned k=0;k<l.vertex_count;++k){
+        const auto& a=rec(pk,l,k);
+        for(unsigned h=(a.x*73856093U^a.y*19349663U^a.z*83492791U)&511U;;h=(h+1U)&511U){
+            if(!table[h]){table[h]=std::uint16_t(k+1U);first[k]=std::uint8_t(k);break;}
+            const auto& b=rec(pk,l,table[h]-1U);
+            if(b.x==a.x && b.y==a.y && b.z==a.z){first[k]=std::uint8_t(table[h]-1U);++rep;break;}
+        }
+    }
+    return rep;
+}
+// mode 0: count the repeats (no change). 1: reorder every meshlet, fill lets / src, rewrite the strip groups' corner
+// ranges (sg: the records, groups per meshlet). 2: reorder and fill only (movie reload: the records stay rewritten).
+// scratch: 256 corners (the package's gather buffer).
+unsigned run(re4dc::room::MeshPackage& pk,std::uint8_t* sg,unsigned groups,void* scratch,int mode){
+    const auto* all=pk.meshlets();
+    unsigned total=0;
+    std::uint8_t first[256],pos[256];
+    for(unsigned i=0;i<pk.header().meshlet_count;++i){
+        const auto& l=all[i];const unsigned n=l.vertex_count;
+        if(mode)lets[i]=0;
+        if(n<2U || n>256U)continue;
+        const unsigned rep=firsts(pk,l,first);
+        if(!rep)continue;
+        if(!mode){total+=rep;continue;}
+        const unsigned u0=n-rep;
+        unsigned u=0,d=u0;
+        for(unsigned k=0;k<n;++k)pos[k]=std::uint8_t(first[k]==k?u++:d++);
+        std::uint8_t* s=src+total;
+        for(unsigned k=0;k<n;++k)if(first[k]!=k)s[pos[k]-u0]=pos[first[k]];
+        lets[i]=total|(rep<<24);total+=rep;
+        if(pk.indexed(l)){
+            auto* off=const_cast<std::uint16_t*>(pk.pool_offsets(l));auto* t=static_cast<std::uint16_t*>(scratch);
+            for(unsigned k=0;k<n;++k)t[pos[k]]=off[k];
+            std::memcpy(off,t,2U*n);
+        }else{
+            auto* v=const_cast<re4dc::room::CompactVertex12*>(pk.vertices()+l.first_vertex);
+            auto* t=static_cast<re4dc::room::CompactVertex12*>(scratch);
+            for(unsigned k=0;k<n;++k)t[pos[k]]=v[k];
+            std::memcpy(static_cast<void*>(v),t,sizeof(*v)*n);
+        }
+        auto* sb=const_cast<std::uint8_t*>(pk.strip_begin(l));const std::uint8_t* const end=sb+l.strip_bytes;
+        for(std::uint8_t* p=sb;p<end;){const unsigned m=*p++;for(unsigned j=0;j<m;++j)p[j]=pos[p[j]];p+=m;}
+        if(mode==1 && sg){
+            auto* g=reinterpret_cast<std::uint16_t*>(sg+16U*groups*i);unsigned prev=0;
+            for(unsigned q=0;q<groups;++q,g+=8){
+                const unsigned gend=g[6];
+                if(gend==prev)continue;
+                unsigned lo=255,hi=0;
+                for(const std::uint8_t* p=sb+prev;p<sb+gend;){
+                    const unsigned m=*p++;
+                    for(unsigned j=0;j<m;++j){unsigned c=p[j];if(c>=u0)c=s[c-u0];if(c<lo)lo=c;if(c>hi)hi=c;}
+                    p+=m;
+                }
+                g[7]=std::uint16_t(lo|(hi<<8));prev=gend;
+            }
+        }
+    }
+    return total;
+}
+}
+void dedup_free(){
+    if(dedup::block)re4dc_static_free(dedup::block);
+    dedup::block=nullptr;dedup::pkg=nullptr;dedup::lets=nullptr;dedup::src=nullptr;dedup::nlets=dedup::nsrc=dedup::bytes=0;
+}
+void dedup_open(){
+    dedup_free();
+    auto& pk=ps2w.package;const unsigned nl=pk.header().meshlet_count;
+    const std::uint64_t t0=timer_us_gettime64();
+    const unsigned nrep=dedup::run(pk,nullptr,0,ps2w.gather,0);
+    const unsigned b=(4U*nl+nrep+31U)&~31U;
+    void* blk=nrep && nrep<(1U<<24)?re4dc_static_alloc(b):nullptr;
+    if(blk){
+        dedup::block=blk;dedup::bytes=b;dedup::lets=static_cast<std::uint32_t*>(blk);
+        dedup::src=static_cast<std::uint8_t*>(blk)+4U*nl;dedup::nlets=nl;dedup::nsrc=nrep;
+        dedup::run(pk,ps2w.sg_block?ps2w.sg_block+32:nullptr,ps2w.sg_groups,ps2w.gather,1);
+        dedup::pkg=&pk;
+    }
+    re4dc_log("SCNDEDUP room=%03x meshlets=%u repeats=%u bytes=%u %s load_us=%u heap=%d\n",ps2w.room,nl,nrep,b,
+              blk?"applied":"off",unsigned(timer_us_gettime64()-t0),re4dc_static_heap_free());
+}
+#endif
 bool ps2_open(){
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return false; // BEFORE storage/room-mismatch paths
@@ -4780,6 +4936,9 @@ bool ps2_open(){
                   re4dc_static_heap_free());
     }
 #endif
+#if RE4DC_SCENERY_DEDUP
+    dedup_open();
+#endif
     re4dc_log("PS2MESH open bytes=%u version=%u meshes=%u parts=%u meshlets=%u vertices=%u placements=%u heap=%d->%d\n",
         total,mh.version,mh.mesh_count,mh.part_count,mh.meshlet_count,mh.vertex_count,h.placements,before,re4dc_static_heap_free());
 #if RE4DC_FAR_SHELL
@@ -4853,6 +5012,10 @@ bool ps2_movie_reload(){
     auto* lut=reinterpret_cast<std::uint32_t*>(data+mb+pb);re4dc::vp::build_lut(lut);ps2w.lut=lut;
 #endif
     ps2w.gather=reinterpret_cast<re4dc::room::CompactVertex12*>(data+mb+pb+kLutBytes);
+#if RE4DC_SCENERY_DEDUP
+    // the package was read again in its stored order: reorder it as at open (the strip groups stay rewritten)
+    if(dedup::block){dedup::run(ps2w.package,nullptr,0,ps2w.gather,2);dedup::pkg=&ps2w.package;}
+#endif
     ps2w.camera=false; // next source/coarse draw supplies the current camera
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fSidecarCrc=h.crc;
@@ -4870,6 +5033,9 @@ bool ps2_movie_dyn_valid(){
 #endif
 #if RE4DC_PS2_STRIP_GROUPS
     if(ps2w.sg_block && !re4dc_room4_cell_valid(ps2w.sg_block,0,ps2_movie.generation))return false;
+#endif
+#if RE4DC_SCENERY_DEDUP
+    if(dedup::block && !re4dc_room4_cell_valid(dedup::block,0,ps2_movie.generation))return false;
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC
     if(dyn::block && !re4dc_room4_cell_valid(dyn::block,0,ps2_movie.generation))return false;
@@ -5895,6 +6061,9 @@ extern "C" void re4dc_ps2_mesh_retire(){
 #if RE4DC_PS2_STRIP_GROUPS
     if(ps2w.sg_block)re4dc_static_free(ps2w.sg_block);
     ps2w.sg_block=nullptr;ps2w.sg=nullptr;ps2w.sg_groups=0;
+#endif
+#if RE4DC_SCENERY_DEDUP
+    dedup_free();
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC
     dyn::reset();

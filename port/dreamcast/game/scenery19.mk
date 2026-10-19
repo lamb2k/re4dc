@@ -13,6 +13,16 @@ $(error SCENERY_CHUNK needs PS2_STRIP_GROUPS=1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_CHUNK=$(SCENERY_CHUNK)
 endif
+# SCENERY_DEDUP=1 (exact, render only; needs SCENERY_CHUNK, MESH_VP_SCHED=1, HW_LEAN): each PS2 world meshlet's corners
+# are reordered at room load (repeated grid positions last), and a draw transforms each position once and builds the
+# repeats from it. Heap 4: 4 bytes per meshlet + 1 per repeat (r101 ~33 KB), freed with the room's world.
+SCENERY_DEDUP ?= 0
+ifneq ($(SCENERY_DEDUP),0)
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_DEDUP needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP=1
+endif
 # CHUNK_SUBMIT=1: the shared chunk-submit back end (platform/chunk_submit.h / .cpp) for user lanes
 # (character-draw-path, rigid models). Default 0: not built.
 CHUNK_SUBMIT ?= 0
