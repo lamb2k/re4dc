@@ -155,3 +155,39 @@ remain required before this switch can be enabled in a chapter recipe.
 Private receipts: `deferred-goto/r207-source-tests.json` and
 `deferred-goto/r207-off-preprocessing.json`. No candidate game build or
 runtime acceptance is claimed at this checkpoint.
+
+## Frozen candidate compiled identity
+
+Reviewed source `8bab3d5b9` was built cleanly in one serial `-j4` slot,
+with the existing source date epoch and exact frozen `2c0e3dc0` controls.
+All three builds have no missing symbols. The disabled T15 arm matches
+all 11 boot/overlay payloads and the raw program byte for byte. The disabled
+CH4 arm matches all 23 payloads and the raw program byte for byte.
+All allocated ELF sections, their addresses, sizes, alignment and content,
+and every generated header are exact in both comparisons. Whole ELFs differ
+in nonallocated debug sections only; this is not whole-ELF identity.
+
+| Arm | ELF SHA-256 | Raw SHA-256 | End |
+| --- | --- | --- | --- |
+| T15 disabled | 0d35819e3eeaa385560df080567aba1fe44545fdefbbc4f11ef17a27c41cf825 | 2d02cc44e3056769c89ac309193df1e9f64456a333c3a4c7506d5bd2e2aa4376 | 8c4061d8 |
+| CH4 disabled | acad2ab2b128db0356970f77e32224fa36b10666e984339b611a5fc0d5ec9059 | 0b16b889c1cd7d2fa4b71952cea0319397c6186da2fe08952ded6eabb79e29d2 | 8c4710d8 |
+| CH4 enabled | 21f3ca1551db719fa1f36853431697057b9e267937ac73d0d5f009afd0f41b46 | 65c8ea449317bfe5192513a9bb01f9f4069d8f3984ebd2e2b0d960e479428051 | 8c471ad8 |
+
+The enabled image adds 2,560 bytes overall. Its held-command buffer is exactly
+1,536 bytes. Actual compiler commands verify the enabled definition in all
+eight linked stage wrappers, `em_set` and `r207`; controls omit it. The only
+scalar resolved setting difference between the CH4 arms is
+`ALIVE_CAP_DEFER_GOTO_R207=0/1`. Build-path substitutions and derived Make
+variables are retained separately rather than mistaken for knob changes.
+The first proof-script attempt rejected build-directory differences in those
+derived variables; normalizing only the two exact output roots resolved that
+harness assertion without any game source or binary change.
+
+Private proof is `workers/ch32/deferred-goto/build-proof.json` and
+`r207-build-details.json`, beside the sealed ELFs, logs, symbols, programs,
+headers and resolved settings. The full source/test receipts remain adjacent.
+These are isolated f255-era patch/control results. New upstream a737/a808
+inventory and weapon changes arrived during the frozen builds and are not
+claimed by this comparison. Integrated current programs, exact staged payload
+checks and actual r207 full-cap/event/death/Continue validation remain pending.
+The chapter recipe keeps the new Goto switch disabled until that gate passes.
