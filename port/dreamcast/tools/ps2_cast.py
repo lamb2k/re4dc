@@ -589,7 +589,7 @@ PRESETS['heli-em3d-00'] = dict(archive='em3d', sections=[(5, 'body')], tpl=6, ro
 # Full source cObjRobo. Actual ObjMgr native ownership is a separate renderer
 # contract; this only enables explicit original room-data preparation.
 PRESETS['statue-r226-37'] = dict(archive='r226', sections=[(0x1f, 'body')], tpl=0x20,
-    rooms=['r226'], types=[0], category='registry', model_id=0x37, lit=True, shift=2,
+    rooms=['r226'], types=[0], category='registry', model_id=0x37, lit=True, shift=0,
     atlas_wrap_gutters=True, character_tpl_orientation=True, host_ordered_strips=True,
     room_source=dict(ps2_sha256='1fd7de5d860f57f3de2b85f44c7dbaa0dfe89c595e6dab489047c74f0af7d276',
         gc_container_sha256='e7be1402082e013ba7f81023a3ebfe8fb3c57021279f8bf1cbf36bc73875e4b2',
@@ -1065,6 +1065,8 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
     val = dict(preset=preset, inputs=rec, sections=[])
     # GC skeleton from the body BIN; every section (PS2 and GC) must carry the same one
     gbody = gc_entry(gc, spec['sections'][0][0], 'BIN')
+    if spec.get('room_source') and spec.get('shift', 4) != gc_signature(gbody)['shift']:
+        raise ValueError('room model position shift differs from the original source BIN')
     bones = gc_skeleton(gbody)
     assert all(b['attach'] == b['id'] for b in bones), 'GC body parts with attach != index'
     id_to_index = {b['attach']: b['id'] for b in bones}

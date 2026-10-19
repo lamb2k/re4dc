@@ -1,0 +1,28 @@
+{
+  "registry": "boss18-r226-statue-full",
+  "about": "DATA PREPARATION ONLY: original cObjRobo from roomr226 BIN1F/TPL20, full23-part source. Original position_shift0 and ObjMgr native ownership are NOT admitted by the current runtime; no shipping selection or room recipe.",
+  "cast_dir": "/root/re4data/private/boss18-statue-full-20261019/cast-full",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "descriptors": [
+    {
+      "name": "statue-r226-37",
+      "archive": "r226",
+      "model_id": "0x37",
+      "source_types": [
+        0
+      ],
+      "module": "src/st2/r226.cpp307 SetObjRobo roomBIN1F/TPL20; src/game/objRobo.cpp94 ObjMgr.create0x37; original23-part/type0/OT0/shift0",
+      "source_drops": []
+    }
+  ],
+  "room_packages": {
+    "226": {
+      "descriptors": [
+        "statue-r226-37"
+      ],
+      "evidence": "Source-only full data spec; must not replace the room complete cast package. Existing position_shift1..4 generator refusal and missing typed ObjMgr ownership remain required boundaries."
+    }
+  }
+}
