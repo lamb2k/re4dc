@@ -3,11 +3,11 @@
 # out-<label>/candidate.txt; checked by tools/d367/kit-check.sh; read by build-public.sh. Do not edit.
 # @ASSETS@ = the unpacked Build-Assets zip (re4dc-assets/).
 # test: 18
-# tag: test-7ed4a44c-20261019
-# source: 7ed4a44c
+# tag: test-f1d7fcec-20261019
+# source: f1d7fcec
 # recipe: port/dreamcast/tools/d367/ch2/ch2-build.sh
-# image-sha256: 05c15c108a3d802705b5936cbadba8d4c5be4c1b34e1584cc6f7062b9333c44c
-# assets-zip: RE4DC-Test18-7ed4a44c-Build-Assets.zip
+# image-sha256: f6aeef9fb74a4e5ca8d70ba0121e80af15beb9ce8555b59d2513a2d2f3d5587c
+# assets-zip: RE4DC-Test18-f1d7fcec-Build-Assets.zip
 # disc-sets: snd16,water16i,vq16w,fsh,ch2,cast16,r108p,pak17,zr17,zr17b,v101,stump17,res17b,trans17,res18f,boss18g50r,garr18h
 LOGIC_TRACE=0
 GAME_DECISION_TRACE=0
@@ -230,6 +230,7 @@ LEON_CLOTH_DRAWN=1
 HAZE_SPRITE_CUT=1
 FX_MIST_PS2=1
 PS2_HDR_SETS=128
+ROUTE_SOON_KEY=1
 IMAGE_PAD_BYTES=0
 DBG_WARP=0
 PC_SAMPLER=0
