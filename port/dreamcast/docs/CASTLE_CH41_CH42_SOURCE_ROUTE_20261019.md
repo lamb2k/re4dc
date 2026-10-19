@@ -277,6 +277,35 @@ Archive SHA:
 `fb19ffd6e2afef92bfc8ffddc6b48ea65264149f223aae2ad503c524de37f4eb`.
 Source fragment: `tools/d367/castle18/ch41-r211-audio-20261019.json`.
 
+The current container still has raw BGM7. An inventory of 18 retained
+containers found the exact prepared source bank in the island lane's
+`island18-r300-sound-20261018` data. Its original wavetable, sample count,
+source identity and frozen layout match. Reuse copies only its 637,306-byte
+ARAM range at offset 4,498,016; the actual encoded sound image is 165,916
+bytes at 32 kHz, inside the unchanged 264,576-byte BGM0 slot. All other bytes,
+including the checked BGM14 and original MRAM, remain exact. No codec or
+audio quality setting changes.
+
+Private set `castle18-ch41-bgm7-20261019` is mirrored on C:, manifest
+`25bbfb7d63dd820eb2bfa8196ccf4c17286fd21237cf1b02d814cfff437fce86`.
+Output SHA:
+`d413a6ee6f894baa0d83bd8326ca763822522c78522c7b4fa97b97b40c385413`.
+Source fragment: `tools/d367/castle18/ch41-bgm7-20261019.json`.
+Apply only that checked slice to newer containers. Actual r211 playback
+and room checks remain pending.
+
+## Supplemental first-pass checker recovery
+
+The worker wrapper inherited a checker path into a deleted October 13
+checkout. Its private invocation now points to the selected worker tree's
+existing checker, with no changed gate criteria. That checker was run
+against the six retained r20e, r210, r222 and r219 logs. Entry, fatal-stop,
+warp-directive, PS2 world, source-fallback and texture checks pass. Overall
+results remain `UNPROVEN`, because these stationary diagnostics do not
+establish a short walk and the checker requires a separate asset-provenance
+audit. The explicit reserve, residency and actual-admission audits above
+are independent and remain unchanged. No room or chapter pass is inferred.
+
 ## r222 near-enemy diagnostic and residency correction
 
 `cx-r222-walk-neararea10kos02` starts at the original area 10 centre,
