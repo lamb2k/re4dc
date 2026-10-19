@@ -733,3 +733,20 @@ Final state d6b3b85bb70251f9abfd38b5289182c90f9a8224bf6030c4701ca3cd66377b8b;
 combined log4473d5a10477f639eabf9684e9fdf75392574fb1e49b8ab5ccc76ac77ab796fb.
 Roof/drill/cup and return remain open. This is not current-recipe chapter
 acceptance, hardware timing, whole-room appearance or a frame-rate gain.
+
+
+## r212 original roof trigger and full movie
+
+Sequential normal16 calls Ashley Follow and walks into the original roof
+area. Movie21200 presents all627/627 frames with dropped0/late0,20.984s
+wall time. It restores the original gameplay pose near(-508,2,-2166),
+closes the first door and begins the falling roof at source frame2751.
+Leon1440/Ashley600 are unchanged; the saved original thumbnail was viewed.
+There is one audio underrun/76 silence bytes, so audio-perfect playback
+is not claimed. Roof shooting, drill fight, cup and chapter remain open.
+
+The17-capture chain ec3488178ad9d94c946f1aac200965f54453ac0c8e783660dd00533205cb5150
+retains the same disc/programs without state retargeting or guest writes.
+Final state ab408676a54a3f2491d6fc4ced7b32042965144fe81e4f1dd8c5f74f74e733b4.
+Private proof: r212-original-roof-movie-proof.json. This is frozen746
+Flycast diagnostic progression, not current-recipe chapter/hardware acceptance.
