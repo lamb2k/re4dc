@@ -455,3 +455,32 @@ the cup 6F pickup and original return. The room tasks retain enemy-list
 rows D7/D8, so later cap handling must preserve those references. No room
 or chapter completion is inferred. Evidence: `r212-entry-preparation.json`,
 `r212-audio-fit-proof.json`, and `r212-source-events-audit.json`.
+
+## r216 original cup and armour-wave preparation
+
+The next diagnostic starts at the original r211 area-3 destination. It
+adds seven recovered room files, retains the current 23 program payloads,
+and uses the existing native armour family already source-audited for
+r20e/r216. The original source cup pickup invokes area 0x80, waits for the
+real item flag, closes the door and starts the first three armours. Three
+source deaths release the next three; six open the exit. The room retains
+enemy handles, so a cap implementation must preserve those references.
+Current c18oimW has PS2_ENEMY_CASTLE=0xe7, including mask 0x04; its original
+PS2 display rule sends only display armour E8. No flags or actors were
+edited in the fixture, and no live wave is qualified yet.
+
+The existing fitter keeps the preferred ROOM/FOOT rates at 16,000/11,025 Hz,
+using 163,136 aligned bytes beside the 204,864-byte em3c bank. It leaves
+636,192 bytes in the unchanged sound arena. All non-audio and original
+wavetable bytes remain exact. The staged original BGM table has no r216
+entry; this is not a claim about actual runtime sound or silence.
+
+Private set `castle18-ch41-r216-audio-20261019` is mirrored on C:.
+Manifest SHA:
+`19b3ecc065ff65e2390df61ae78fcf4c9d1f8b9232eb36d54efb726b92804e3a`.
+Archive SHA:
+`4ee89dc7f321564f951a959416dba9bfaa9b22bac2b94b9e4c36818fee5bb06a`.
+Source fragment: `tools/d367/castle18/ch41-r216-audio-20261019.json`.
+Evidence: `r216-entry-preparation.json`, `r216-audio-fit-proof.json` and
+`r216-source-stream-and-wave-audit.json`. Runtime audio, actual armour draw,
+cup pickup, both waves, door release and the original route remain open.

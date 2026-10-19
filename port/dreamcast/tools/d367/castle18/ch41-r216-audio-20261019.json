@@ -1,0 +1,11 @@
+{
+  "replace": {
+    "st2/r216.dar": "/root/re4data/private/castle18-ch41-r216-audio-20261019/st2/r216.dar"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Existing frozen-layout ROOM/FOOT prebuild; no new audio policy, no BGM/shared program/model/texture changes.",
+    "candidate_sha256": "4ee89dc7f321564f951a959416dba9bfaa9b22bac2b94b9e4c36818fee5bb06a",
+    "runtime_qualification": false
+  }
+}
