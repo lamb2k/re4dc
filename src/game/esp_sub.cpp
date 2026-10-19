@@ -2122,6 +2122,13 @@ extern "C" void re4dc_esp_sprite_pass_begin()
 #endif
 extern "C" int re4dc_esp_coarse_sprite_visible(cEsp* esp)
 {
+#if defined(RE4DC_FX_MIST_SKIP) && RE4DC_FX_MIST_SKIP && defined(RE4DC_HAZE_SPRITE_CUT)
+    // FX_MIST_SKIP (hwfog.mk): EspCommonTrans would end at HAZE_SPRITE_CUT's EspSpriteEmit test (or earlier) for it.
+    if (esp->m_Id == 0x48 && esp->m_Shimmer_type == 0 && !(esp->m_Tool_flg & 0x2000)) {
+        HazeCutNote(esp);
+        return 0;
+    }
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
     // A beam can cross the view while either endpoint is outside it. Esp19
     // retains source OT checks; its own line adapter clips the full segment.

@@ -86,6 +86,20 @@ $(error HAZE_SPRITE_CUT=1 needs EFFECT_SPRITES=1 and EFFECT_PS2_HAZE=1)
 endif
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_HAZE_SPRITE_CUT=1
 endif
+# FX_MIST_SKIP=1 (lane fx19 2026-10-19; exact, render only; default 0 = no code, identical image): with HAZE_SPRITE_CUT=1
+#   a mist sheet (Esp48, no shimmer / nega body) draws nothing, so the coarse sprite pass does not queue it
+#   (re4dc_esp_coarse_sprite_visible returns 0 first, as for a sheet outside the view): no Ps2fxClass, view test,
+#   OT entry or EspCommonTrans body for it. Its move, generators and Rnd() draws are untouched.
+FX_MIST_SKIP ?= 0
+ifneq ($(filter-out 0 1,$(FX_MIST_SKIP)),)
+$(error FX_MIST_SKIP is 0 or 1)
+endif
+ifeq ($(FX_MIST_SKIP),1)
+ifneq ($(HAZE_SPRITE_CUT),1)
+$(error FX_MIST_SKIP=1 needs HAZE_SPRITE_CUT=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FX_MIST_SKIP=1
+endif
 # FOLIAGE_TRIM=<level> (lane mist16 2026-10-16; user: "we should get the fixes from foliage agent in", the Options row is a
 #   fast follow; render only; unset = no code, identical image). The chapter 1 outdoor translucent overdraw is the PS2
 #   world's brush / leaf cards (r100 woods: 3.3 of 3.8 screens), not mist. platform/include/foliage_keys.inc classes the
