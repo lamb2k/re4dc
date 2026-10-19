@@ -192,7 +192,8 @@ The player options are the rows in Options (START), and the knobs behind them:
 * **Frame pacing:** stored on the VMU.
 * **Rendering:** Standard or FSAA, knob `RENDER_FSAA`. Not saved; every boot starts in Standard.
 * **View distance:** Full, Near or Short, knob `VIEW_DIST_OPTION`. The world is drawn to 25, 18.75 or 12.5 m and the
-  fog reaches full strength there. Drawing only; the game logic is unchanged. Not saved; every boot starts in Full.
+  fog reaches full strength there. Drawing only; the game logic is unchanged. Not saved; every boot starts at the
+  `VIEW_DIST_BOOT` level (0 Full, the knob default; the release recipe uses 1, Near, from Test 19).
   Two rules refine it (game/option_rows.cpp):
   * a per-room minimum far table, `kViewRoomMin`, keeps rooms that need their horizon at Full (the lakes r10b, r11a
     and r11b);
@@ -200,7 +201,7 @@ The player options are the rows in Options (START), and the knobs behind them:
     0x02000000), the fog ramp starts behind that area. A house interior is not fogged, while the scenery seen through
     its doors and windows still fades out before the cut.
 * **Foliage:** Full, Near or Off, knobs `FOLIAGE_TRIM` (the level word and the boot level, hwfog.mk) and
-  `FOLIAGE_OPTION` (the row).
+  `FOLIAGE_OPTION` (the row). The release recipe boots at Off (`FOLIAGE_TRIM=2`) from Test 19; Near before.
   * Near draws the translucent PS2 world parts whose texture is a near-binary cut-out (leaf / brush cards, fence gaps)
     in the punch-through list up to 12 m. The key table is platform/include/foliage_keys.inc, built from an alpha
     census of the chapter 1 packages.

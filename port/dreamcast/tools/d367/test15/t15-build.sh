@@ -137,7 +137,9 @@ T15_G="ACTOR_PROBE_LIGHT=2 GANADO_LIT=1 GANADO_LIT_NEAREST=0"
 #      console -3.9 / -7.9 ms CPU at the cross), fog to 100 % at the cut, this boot only; no fog inside houses (indoor
 #      effect areas), r10b / r11a / r11b never cut (kViewRoomMin). Gates in C:/Flycast-Evidence/re4-dreamcast/viewdist-20261016.
 #      T15_V="" builds the control without it.
-T15_V=${T15_V-VIEW_DIST_OPTION=1}
+#      Test 19 on (lane bootdef19, user 10-19 "a middle ground for draw distance"): VIEW_DIST_BOOT=1, every boot starts
+#      at Near (18.75 m); the lakes stay uncut (kViewRoomMin), so LAKE_FAR's 45 m lake view is unchanged.
+T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1}
 # lane resident16 (10-16): the room preload runs again when SS heap 11 closes (chapter title / results / save screens), so
 #   r105 after the chapter 1-2 save screen loads its set back in one pass instead of 81 disc reads in play. Render only.
 T15_P="SS11_PRELOAD=1"
@@ -154,7 +156,9 @@ T15_W=${T15_W-WATER_PS2=1}
 #      issue"; render only): the chapter 1 outdoor brush / leaf cards in the punch-through list to 12 m (Near, the boot
 #      default), Options row "Foliage" Full / Near / Off, this boot only. Off leaves out the listed card keys only (85128754).
 #      Gates in C:\Flycast-Evidence\re4-dreamcast\mist-20261016. T15_T="" builds the control without it.
-T15_T=${T15_T-FOLIAGE_TRIM=1 FOLIAGE_OPTION=1}
+#      Test 19 on (lane bootdef19, user 10-19 "default foliage to off"): FOLIAGE_TRIM=2, every boot starts at Off; the
+#      Options row still offers Full and Near.
+T15_T=${T15_T-FOLIAGE_TRIM=2 FOLIAGE_OPTION=1}
 #   FS FAR_SHELL=1 (lane farshell16; render only, needs T15_V; user 10-16 "short + far shell looks good", "short shell + half
 #      vertices"): at Short (12.5 m) the PS2 world's opaque pass stops at the cut and the room's far shell
 #      (dc/native/rXXX/far-shell.fsh, data fsh in T15_DATA: r100 r101, ~3,000 triangles each) is drawn beyond it with
