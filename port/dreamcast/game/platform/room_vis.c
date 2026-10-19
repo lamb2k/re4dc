@@ -122,7 +122,15 @@ int re4dc_room_vis_hidden(const float* view, const float lo[3], const float hi[3
             const unsigned k = (unsigned) kf;
             if (k >= nb || !(hi[1] <= b0 + k * 1000.0f + v.span)) { ++c_box; return 0; }
             const unsigned t = rd16(tc + 10) + k;
-            if ((bits[t >> 3] >> (t & 7)) & 1) { ++c_vis; return 0; }
+            if ((bits[t >> 3] >> (t & 7)) & 1) {
+#if defined(RE4DC_ENEMY_VIS_DEBUG) && RE4DC_ENEMY_VIS_DEBUG
+                if (!(c_vis & 255))
+                    re4dc_log("ENEMYVIS dbg eye=%d,%d,%d cell=%d,%d row=%u lo=%d,%d,%d hi=%d,%d,%d tcell=%d,%d k=%u t=%u\n",
+                              (int) e0, (int) e1, (int) e2, ex, ez, row, (int) lo[0], (int) lo[1], (int) lo[2], (int) hi[0],
+                              (int) hi[1], (int) hi[2], x, z, k, t);
+#endif
+                ++c_vis; return 0;
+            }
         }
     const unsigned f = re4dc_ui_frame();
     if (f != intact_frame) { intact_frame = f; intact = re4dc_ps2_world_intact(v.room, v.crc); }

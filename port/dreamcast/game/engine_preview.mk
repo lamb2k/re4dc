@@ -39,9 +39,10 @@ $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_ENEMY_VIS_CULL=
 $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -Iplatform/include
 $(OBJDIR)/coarse_ganado.o: platform/include/room_vis.h
 PLATFORM_OBJS += $(OBJDIR)/platform/room_vis.o
+ENEMY_VIS_DEBUG ?= 0
 $(OBJDIR)/platform/room_vis.o: platform/room_vis.c platform/include/room_vis.h platform/include/room_file.h
 	@mkdir -p $(dir $@)
-	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include -c $< -o $@
+	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include -DRE4DC_ENEMY_VIS_DEBUG=$(ENEMY_VIS_DEBUG) -c $< -o $@
 ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_VIS=1
 else ifneq ($(ENEMY_VIS_CULL),0)
 $(error ENEMY_VIS_CULL is 0 or 1)
