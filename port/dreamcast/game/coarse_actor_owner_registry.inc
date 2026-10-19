@@ -465,6 +465,11 @@ unsigned registry_lod_want(cModel* m,unsigned d,unsigned count) {
     if(d>=registry.descriptor_count)return d;
     const unsigned full=registry.descriptors[d].lod_of?registry.descriptors[d].lod_of-1u:d;
     if(pG && (pG->Status_flg[1]&0x10000000u))return full;
+#if defined(RE4DC_NMR_GRAB_FULL) && RE4DC_NMR_GRAB_FULL
+    // NATIVE_MODEL_REGISTRY_GRAB_FULL: the player's custom damage routine (SetPlDamage: routine 4) that this actor
+    // started (dmgType holds the enemy) is a close-up: the full model, as in an event.
+    if(pPL && pPL->r_no_0==4 && pPL->dmgType==(int)(intptr_t)m)return full;
+#endif
     for(unsigned l=0;l<registry.descriptor_count;++l) {
         const auto& ld=registry.descriptors[l];
         if(ld.lod_of!=full+1u || ld.sections!=count)continue;
@@ -1039,9 +1044,16 @@ extern "C" int re4dc_registry_merchant_robe(unsigned appearance,unsigned role,un
 #if RE4DC_NMR_CH1CAST
 // PS2_CAST_CH1: the r106 bats (em29, model 0x29) are ot_type 1 (ModelTrans: OT 0x11, AddOtWorldPosRadius, the same
 // ModelRender callback as ot_type 0 in a later group); the owner path draws inside that callback, so the order is kept.
-#define RE4DC_REGISTRY_OT_OK(m,desc) (!(m)->ot_type || ((m)->ot_type==1 && (desc)->model_id==0x29u))
+#define RE4DC_REGISTRY_OT_BASE(m,desc) (!(m)->ot_type || ((m)->ot_type==1 && (desc)->model_id==0x29u))
 #else
-#define RE4DC_REGISTRY_OT_OK(m,desc) (!(m)->ot_type)
+#define RE4DC_REGISTRY_OT_BASE(m,desc) (!(m)->ot_type)
+#endif
+#if defined(RE4DC_NMR_OT5) && RE4DC_NMR_OT5
+// NATIVE_MODEL_REGISTRY_OT5: the Verdugo (em2c, model 0x2c) is ot_type 5 (ModelTrans: AddOtDirect(0x10, ModelRender,
+// 0, 2), one source call per frame); the owner path draws inside that callback, so the order is kept.
+#define RE4DC_REGISTRY_OT_OK(m,desc) (RE4DC_REGISTRY_OT_BASE(m,desc) || ((m)->ot_type==5 && (desc)->model_id==0x2cu))
+#else
+#define RE4DC_REGISTRY_OT_OK(m,desc) RE4DC_REGISTRY_OT_BASE(m,desc)
 #endif
 extern "C" int re4dc_registry_model(const cModel* m,const Re4dcActorPlan* p) {
     const auto* desc=p?registry_descriptor(p->appearance):nullptr;
