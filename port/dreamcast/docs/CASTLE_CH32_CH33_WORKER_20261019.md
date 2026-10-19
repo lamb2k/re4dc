@@ -226,3 +226,12 @@ lines; the original state is unchanged. The old default first-pass checker
 path was missing; the current source checker was run explicitly and retains
 walk/provenance scope as unproven. Finished disc links/cache were hash-checked,
 journaled and retired; all logs, states, stills, programs and source inputs stay.
+
+
+## r20f matched residency gate, 2026-10-19
+
+The registry-only accessory correction now also passes the matched room-residency gate. Only `dc/resident.bin` changes across all 6,602 staged payloads; the exact 6f081 program, original E0 BIN217/TPL219 role21 and DF TPL218 role20 remain unchanged. The source-observed 41 additions preserve all 5,801 prior records, giving 5,842 records.
+
+The original entry and unchanged-disc continuation exited after 55.81 and 56.16 seconds. Their exact saved-state lineage joins 713 equal log lines. Official frame767/1367 samples retain preload201 loads: 41 late gameplay uploads fall to zero, with no guard/refusal/eviction/retry/TEX/audio-fit failure. Minimum free VRAM is981,664 bytes, largest contiguous946,176 bytes; the exact49,152-byte KOS reservation holds with36,424 minimum logged headroom. The draw census contains30,892 native em14 counts and6,750 native Leon counts, both GC0; these are cumulative diagnostic counts, not performance measurements. Original E0 role21 and DF role20 are independently verified in the saved state, and the visible em14 alivelist maximum remains4.
+
+This is a matched asset/residency diagnostic on the frozen program, not close-up appearance, whole-fight, no-warp chapter or current-upstream acceptance. The no-input short-walk check remains unproven, and the generic provenance checker remains unproven; the separate source/package identity receipts are retained. Runtime proof: `workers/ch32/r20f-resident5842-complete-runtime.json`, SHA256 e1ad055d7cab7afaddbd2b8cee56b784f055a7136e8d85ce03c13b9a9eb19c2c. Combined log SHA2568064c856c200fa0b57aaf52c1a049dc3750c7ce9a21cd4d4fd9baf3c022e97f3. Both owned capture processes exited; finished disc retirement retains all logs, states, images, program and source receipts.
