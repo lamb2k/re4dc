@@ -673,11 +673,28 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
         arcname = d['archive']
         if arcname not in audit or src.get('source_archive_sha256', audit[arcname]['sha256']) != audit[arcname]['sha256']:
             raise Fail(f'{name}: archive {arcname} not in archive-audit.json or source.json names another archive')
+        kind = audit[arcname].get('source_archive_kind')
+        if kind is not None:
+            from source_room_archive import TaggedRoomArchive, room_origin, prove_room_decoding
+            try:
+                room, original_container = room_origin(audit[arcname], src, arcname)
+            except ValueError as exc:
+                raise Fail(f'{name}: {exc}') from exc
+        elif src.get('source_archive_kind') is not None:
+            raise Fail(f'{name}: explicit room source missing from archive audit')
         if arcname not in arcs:
             p = audit[arcname]['source']
             if sha(open(p, 'rb').read()) != audit[arcname]['sha256']:
                 raise Fail(f'{p}: sha256 differs from archive-audit.json')
-            arcs[arcname] = archive.Archive(p)
+            if kind is not None:
+                original = inputs.take(original_container['cache'], f'archive/{arcname}-original.das')
+                try:
+                    prove_room_decoding(original, p, original_container)
+                    arcs[arcname] = TaggedRoomArchive(p, room)
+                except (ValueError, IndexError, struct.error) as exc:
+                    raise Fail(f'{name}: original tagged room archive: {exc}') from exc
+            else:
+                arcs[arcname] = archive.Archive(p)
         arc = arcs[arcname]
         luis = luis_coverage(inputs, d, src, binds, arc, arcname)
         if luis and L['header_sha256'] != LUIS_COVERAGE_HEADERS[luis['reviewed_manifest_sha256']]:

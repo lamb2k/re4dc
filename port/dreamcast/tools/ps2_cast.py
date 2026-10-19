@@ -586,6 +586,16 @@ PRESETS['heli-em3d-00'] = dict(archive='em3d', sections=[(5, 'body')], tpl=6, ro
                                model_id=0x3d, lit=True, shift=1)
 
 
+# Full source cObjRobo. Actual ObjMgr native ownership is a separate renderer
+# contract; this only enables explicit original room-data preparation.
+PRESETS['statue-r226-37'] = dict(archive='r226', sections=[(0x1f, 'body')], tpl=0x20,
+    rooms=['r226'], types=[0], category='registry', model_id=0x37, lit=True, shift=2,
+    atlas_wrap_gutters=True, character_tpl_orientation=True, host_ordered_strips=True,
+    room_source=dict(ps2_sha256='1fd7de5d860f57f3de2b85f44c7dbaa0dfe89c595e6dab489047c74f0af7d276',
+        gc_container_sha256='e7be1402082e013ba7f81023a3ebfe8fb3c57021279f8bf1cbf36bc73875e4b2',
+        gc_archive_sha256='01d1810bb660e764366813e396a9d13e572808deb21ba106ef7fe95377455a87'))
+
+
 def section_specs(spec):
     """Source BIN/role/TPL selections; old single-TPL presets keep their order."""
     overrides = spec.get('section_tpls', {})
@@ -1046,7 +1056,11 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
     if spec.get('converter'):
         raise SystemExit(f'{preset} is converted by {spec["converter"]}, not ps2_cast.py convert')
     out.mkdir(parents=True, exist_ok=True)
-    ps2, gc, rec = inputs(spec['archive'], out, ps2_iso, gc_iso)
+    if spec.get('room_source'):
+        from source_room_archive import room_inputs
+        ps2, gc, rec = room_inputs(spec['archive'], INPUTS, ps2_iso, gc_iso, spec['room_source'])
+    else:
+        ps2, gc, rec = inputs(spec['archive'], out, ps2_iso, gc_iso)
     ptd = load_module('ps2_tpl_decode', WA / 'from-main/ps2-trees/tools/ps2_tpl_decode.py')
     val = dict(preset=preset, inputs=rec, sections=[])
     # GC skeleton from the body BIN; every section (PS2 and GC) must carry the same one
@@ -1336,6 +1350,10 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                                               [positions[v] for v in vids], [weights[v] for v in vids])
         source['source_bind_offsets'] = bind_offsets
         val['source_bind_offsets'] = bind_offsets
+    if spec.get('room_source'):
+        source['source_archive_kind'] = rec['gc']['source_archive_kind']
+        source['source_room'] = rec['gc']['source_room']
+        source['source_container'] = rec['gc']['container']
     sp = out / 'source.json'
     sp.write_text(json.dumps(source))
     mesh = dict(schema='re4dc-approved-render-mesh-1', source_sha256=sha(sp.read_bytes()), mesh=preset.replace('-', '_') + '_ps2',
@@ -1681,10 +1699,16 @@ def regcast(cast, overlay, outs):
         shutil.copy2(o / 'source-bindings.json', d / 'source-bindings.json')
         src = json.loads((o / 'source.json').read_text())
         src['source_model_id'] = spec['model_id']
+        if spec.get('room_source'):
+            src['source_container']['cache'] = to_wsl(src['source_container']['cache'])
         (d / 'source.json').write_text(json.dumps(src))
         gin = val['inputs']['gc']
         assert sha(Path(gin['cache']).read_bytes()) == gin['sha256'], 'GC archive cache changed'
         audit[spec['archive']] = dict(source=to_wsl(gin['cache']), sha256=gin['sha256'])
+        if spec.get('room_source'):
+            audit[spec['archive']].update(source_archive_kind=gin['source_archive_kind'],
+                                         source_room=gin['source_room'], source_container=dict(
+                                             gin['container'], cache=to_wsl(gin['container']['cache'])))
         revs[name] = dict(revision='ps2-v1', reason='PS2 conversion (ps2_cast.py)')
     (ib / 'catalog.json').write_text(json.dumps(catalog, indent=1))
     (cast / 'source' / 'candidate-revisions.json').write_text(json.dumps(revs, indent=1))
