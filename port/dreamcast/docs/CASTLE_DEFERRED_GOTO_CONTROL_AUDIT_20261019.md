@@ -225,3 +225,12 @@ headers: `frozen-all45-header-proof.json` confirms all 45 match for both off
 pairs and the CH4 enabled arm. This closes the inventory gap without another
 build. Runtime command delivery, full-cap event, death and Continue acceptance
 remain pending; the recipe still leaves Goto disabled.
+
+
+## Fresh current off-arm original release proof, 2026-10-19
+
+The current a808-integrated Goto-off program `23a6d5b59b99cc4a2554312e2639b69f09042aa8dc1bf87288381426541d2245` now reproduces the lost movement command after ordinary gameplay. Seven bounded captures retain the same disc `21aa5e8b32822f51cfd2db2acfbb520c3fb4eb16899e7c7137b21012007f26d0`, all selected payloads and exact saved-state lineage. This is a disclosed fresh room-entry diagnostic with the Ashley-init precondition and source chapter0; it is not the original no-warp chapter6 save path.
+
+The full original radio and upper-floor enemy event run unskipped. Normal Wait and the original stairs place Leon upstairs; the event admits D3 and queues D4/D5 behind four live enemies. Ordinary handgun fire and a normal reload kill original DA, confirmed by HP0, the source death bit and chapter kill counter0→1. D4 releases at frame4301, leaving only D5 held. Seven actual read-only samples through frame4330 show D4 `Goto_mode=0`, `Goto_pos=(0,0,0)`, despite the original mode13 argument `(-1834,4149,-11795)` at r207_EnemySet. The original typed setter's floor adjustment is separate from that authored input. Leon1440/Ashley600 remain unchanged; no health, ammunition, position, source flag, process or save edits are used.
+
+The private proof is `workers/ch32/deferred-goto/current-r207-off-release-proof.json`, SHA25652fd3b7df907e323e84faa1979dca84654376d21554d5a5fb736a1a1062554ff. Private observer/controller failures before useful input and the normal process-exit guard are retained in `current-controller-invalid-attempts.json`; they are not guest failures. The first enabled-arm gameplay comparison, original death/Continue and whole-room progression are still pending. The switch stays default-off and is not enabled in a chapter recipe by this control proof.
