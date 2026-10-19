@@ -124,8 +124,8 @@ The disc is a standard GD-ROM image, laid out like a pressed disc
 
 - **Frame pacing:** Fast is the default. Saved on the VMU.
 - **Rendering:** Standard (default) or FSAA, which smooths edges but is slower in busy scenes.
-- **View distance:** Full (default, as on the PS2), Near or Short. Near and Short fade distant scenery sooner and run faster.
-- **Foliage:** Near (default), Full or Off. Off is fastest; walls, floors and water always draw.
+- **View distance:** Full (as on the PS2), Near or Short. Near and Short fade distant scenery sooner and run faster. From Test 19 every boot starts at Near; the lake always keeps its full view.
+- **Foliage:** Full, Near or Off. Off is fastest; walls, floors and water always draw. From Test 19 every boot starts at Off (Near before).
 - Rendering, View distance and Foliage reset at every boot.
 
 The VMU in controller slot 1 shows Leon, Ashley, Hunnigan and Luis pages.

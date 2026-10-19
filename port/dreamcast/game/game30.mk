@@ -327,6 +327,21 @@ ifeq ($(VIEW_DIST_OPTION),1)
 GAME_CPPFLAGS += -DRE4DC_VIEW_DIST_OPTION=1
 PLATFORM_CPPFLAGS += -DRE4DC_VIEW_DIST_OPTION=1
 endif
+# VIEW_DIST_BOOT=<0|1|2> (lane bootdef19, user 10-19 "a middle ground for draw distance in builds going forward"; render
+#   only; default 0 = Full, today's image, no flag): the View distance level every boot starts at, 1 = Near (18.75 m),
+#   2 = Short. The player can still pick any level in Options (this boot only, as before). The lake rooms r10b / r11a /
+#   r11b are never cut at any level (option_rows.cpp kViewRoomMin), so LAKE_FAR's 45 m lake view is kept. Needs
+#   VIEW_DIST_OPTION=1. Test 19 recipe: VIEW_DIST_BOOT=1 (test15/t15-build.sh T15_V).
+VIEW_DIST_BOOT ?= 0
+ifneq ($(filter-out 0 1 2,$(VIEW_DIST_BOOT)),)
+$(error VIEW_DIST_BOOT must be 0, 1 or 2)
+endif
+ifneq ($(VIEW_DIST_BOOT),0)
+ifneq ($(VIEW_DIST_OPTION),1)
+$(error VIEW_DIST_BOOT needs VIEW_DIST_OPTION=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_VIEW_DIST_BOOT=$(VIEW_DIST_BOOT)
+endif
 # FAR_SHELL=1 (lane farshell16, proof of concept 2026-10-16; default 0 = no code; render only; needs VIEW_DIST_OPTION=1 and
 #   PS2_WORLD_MESH): at View distance Short the PS2 world's opaque pass stops at the cut, but the fog, the PT / TR
 #   world passes, actors and objects keep Full's far, and the room's far shell (dc/native/rXXX/far-shell.fsh, built by
