@@ -50,8 +50,10 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 Planned, with no date yet. Ticked items have passed our checks and will be in Test 19.
 
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
-- [ ] **Faster character drawing:** a new path for Leon and the enemies.
+- [x] **Faster character drawing:** a new path for Leon and the enemies.
+- [x] **New Options defaults:** foliage starts Off and view distance starts at Near. The lake keeps its long view. You can still change both.
 - [ ] **Enemies hidden behind walls are no longer drawn.**
+- [ ] **Quick weapon select:** hold X and press the D-pad to swap weapons, like the RE4 remake.
 - [ ] **Work continues** on cheaper enemies and cheaper scenery.
 
 Screenshots come with the release.
