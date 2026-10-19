@@ -1,0 +1,11 @@
+{
+  "replace": {
+    "dc/native/r219/partner.re4nmr": "/root/re4data/private/castle18-ch41-r219-partner-20261019/files/dc/native/r219/partner.re4nmr"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Data-only admission of the existing full partner in r219. Original source facts, prepared archive, geometry, materials, roles and texture winners unchanged. Runtime native/look/residency pending.",
+    "partner_sha256": "2f25149420bb81e14ec3a546c5efe3b52513ca6a66149857eaf1026ad799ba5f",
+    "donor_sha256": "fc30ba308f2c6b7c1ac2403d29d771a0d43d313a2fa99312460c2d0cdc2fb6f9"
+  }
+}

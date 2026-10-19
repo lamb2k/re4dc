@@ -522,11 +522,54 @@ Private set: `castle18-ch41-r219-resident-20261019`, mirrored on C:.
 Resident SHA: `0f24b9b6ab80f6ee2be86c840c63f731bf1675802d6f3f104b99736cbe0ad99b`.
 Manifest SHA: `5164760ea78d7c53720321c0973f016587bc435e1281f5d1818896d8e82dc5d7`.
 Source fragment: `tools/d367/castle18/ch41-r219-resident-20261019.json`.
-Matched runtime residency is pending; compose only these r219 additions into
-newer unions. No chapter-ready, native-partner, full audio or console pass.
+Matched runtime residency now passes: eight late uploads fall to zero,
+with all ten departure/arrival source keys covered. Only dc/resident.bin
+changes across 7138 payloads. The 55.66-second initial run and unchanged
+55.91-second tail overlap by816 exact log lines. Exact KOS reserve remains
+49,152 bytes, minimum headroom45,592. Gameplay frame767 has622,272 pinned,
+377,472 dynamic,1,477,568 free and1,437,696 largest-free-block bytes. Later
+frame840/960 receipts keep288 loads. Original cart flow and Ashley600 HP
+remain, with no texture/fit/fatal/refusal/eviction/retry errors. One stream
+underrun and about207ms late Flycast registration remain; no speed gain is
+claimed. Native partner and full chapter gates remain open.
+
+Matched proof: r219-residency-matched-proof.json. Joined log SHA:
+`f7a3ab13c58fb6b9abd81ed0875f9d4e0fc71b53d0efbd77a5dfab3f1b890b55`.
+Matched disc SHA: `b52bfbde48f5d5da46ea44f323d2691d90aeda3ba38eeef48349614af8c403bf`.
+Compose only the r219 additions into newer unions.
 
 Evidence: `r219-cart-flow-proof.json`, `r219-saved-state-audit.json`,
 `r219-cart-continuation-provenance.json`, `r219-source-first-sight-winners.json`
 and `r219-resident-host-proof.json`. Joined log SHA:
 `e968cc919d2b4e34d57a48a3dd642cdfba1441b27c541338e4322d820c152b12`.
 Disc SHA: `56d40692fbb0cf19596e4556f811a266ff74272aa94dfed3a432027eb2c15430`.
+
+## r219 missing native partner package
+
+The joined runtime log explicitly reports both r219 registry.re4nmr and
+partner.re4nmr absent at both loads. The source fixture contains the exact
+existing prepared pl11 archive but no partner package for this room.
+
+Data-only preparation reuses the validated r207 full Ashley partner:
+ashley11, ashley11-h1 and ashley11-h3, covering21 original source roles.
+Only the room header and header checksum change; every payload byte,
+geometry array, skin, source role, material, parent and bind remains exact.
+The229,952-byte pack needs no new model conversion or runtime capability.
+
+All original BIN/part facts are independently re-derived. Texture facts
+match the existing generator's source-proven bump-only key rule for TPL5
+indices4/6/12; their header/sampler facts remain exact. This preserves an
+existing admitted capability and introduces no new drops. Six atlas/pair
+tokens resolve to the already-staged packages, including derived colour-mask
+pairs. The prepared pl11 archive remains SHA
+`ecf3098097fcb2b2c86d632b62fd3d9112e61f5e39b56819db6a2e277fffcfa2`.
+
+The actual host loader accepts the partner in219 with an empty primary,
+and refuses the identical package in218. Private set:
+castle18-ch41-r219-partner-20261019. Package SHA:
+`2f25149420bb81e14ec3a546c5efe3b52513ca6a66149857eaf1026ad799ba5f`.
+Manifest SHA: `b245d5bb1e1172ed2d4423d635d414feb75ea4fceaf1c6a07df913db92f1e756`.
+Source fragment: tools/d367/castle18/ch41-r219-partner-20261019.json.
+Runtime acquisition/native drawing, visible cloth, cart transitions,
+residency and48KiB KOS remain pending. No native-Ashley pass is inferred
+from the successful offline reuse. Proof: r219-partner-host-proof.json.
