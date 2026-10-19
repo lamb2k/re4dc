@@ -32,6 +32,9 @@
 #include "dbmodule.h"
 #include "main_mem.h"
 #include "atari_init.h"
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+#include "re4dc_subscreen_actor.h"
+#endif
 
 extern "C" {
 double atan2(double y, double x);
@@ -3950,6 +3953,18 @@ void cSubChar::inSat()
 // to a point, 0x10 waiting at a ladder / window.
 u32 SubCharGetCondition()
 {
+#if defined(RE4DC_SS_ACTOR_LIFETIME) && RE4DC_SS_ACTOR_LIFETIME
+    Re4dcSsActorView view;
+    if (re4dc_ss_actor_view(&view)) {
+        if (!view.partner_present) return 0;
+        u32 ret = view.partner_wait || (view.partner_stat & 0xFFFF0000) == 0x00100000 ? 2 : 1;
+        if (pG->Status_flg[1] & 0x10000) return ret | 8;
+        if (view.partner_move) return ret | 0x20;
+        if (view.partner_routine0 != 0) return ret;
+        if ((u8) (view.partner_routine1 - 0x13) > 1) return ret;
+        return ret | 0x10;
+    }
+#endif
     cSubChar* sub = pSUB;
     u32 ret;
 
