@@ -30,6 +30,44 @@ def elf_bytes(data, address, length):
     raise ValueError('Accessor is outside verified loaded bytes')
 
 
+def source_models_in_window(text, descriptors, window):
+    """Consume the source logger's actual admit and room-less retire records."""
+    lo, hi = window
+    active, events = {}, []
+    for line in text.splitlines():
+        admit = re.search(r'NMRM admit t=(\d+) room=([0-9a-f]+) m=([0-9a-f]+)(.*)', line)
+        retire = re.search(r'NMRM retire t=(\d+)(?: room=([0-9a-f]+))? m=([0-9a-f]+)(?:\s|$)', line)
+        if admit:
+            tick, room, model, rest = admit.groups()
+            name = re.search(r'\bdesc=([\w-]+)', rest)
+            if not name:
+                raise ValueError('Source admit lacks descriptor identity')
+            kind, name = 'admit', name[1]
+        elif retire:
+            tick, room, model = retire.groups()
+            kind, name = 'retire', None
+        elif 'NMRM admit ' in line or 'NMRM retire ' in line:
+            raise ValueError('Malformed source model ownership record')
+        else:
+            continue
+        tick = int(tick)
+        if tick < lo:
+            if kind == 'admit':
+                active[model] = dict(model=model,name=name,room=room,admitted_tick=tick)
+            else:
+                if room and model in active and active[model]['room'] != room:
+                    raise ValueError('Source retirement room differs')
+                active.pop(model, None)
+        elif tick <= hi:
+            events.append((model, name))
+    selected = {m:r for m,r in active.items() if r['name'] in descriptors}
+    if not selected or {r['name'] for r in selected.values()} != set(descriptors):
+        raise ValueError('Selected descriptors lack stable admitted models before interval')
+    if any(m in selected or n in descriptors for m,n in events):
+        raise ValueError('Selected source ownership changes inside interval')
+    return selected
+
+
 def prepare(profile, boot, output, descriptors, window):
     lo, hi = window
     if lo > hi or output.exists():
@@ -53,27 +91,7 @@ def prepare(profile, boot, output, descriptors, window):
         raise ValueError('Source getter instruction/field contract differs; audit first')
     raw = boot.read_bytes()
     text = raw.decode('utf-16' if raw[:2] in (b'\xff\xfe',b'\xfe\xff') else 'utf-8')
-    active = {}
-    events = []
-    for line in text.splitlines():
-        m = re.search(r'NMRM (admit|retire) t=(\d+) room=([0-9a-f]+) m=([0-9a-f]+)(.*)', line)
-        if not m:
-            continue
-        kind, tick, room, model, rest = m.groups()
-        tick = int(tick)
-        name = re.search(r'\bdesc=([\w-]+)', rest)
-        if tick < lo:
-            if kind == 'admit' and name:
-                active[model] = dict(model=model,name=name[1],room=room,admitted_tick=tick)
-            elif kind == 'retire':
-                active.pop(model, None)
-        elif tick <= hi:
-            events.append((model, name[1] if name else None))
-    selected = {m:r for m,r in active.items() if r['name'] in descriptors}
-    if not selected or {r['name'] for r in selected.values()} != set(descriptors):
-        raise ValueError('Selected descriptors lack stable admitted models before interval')
-    if any(m in selected or n in descriptors for m,n in events):
-        raise ValueError('Selected source ownership changes inside interval')
+    selected = source_models_in_window(text, descriptors, window)
     pc = getter['start']+18
     cases = ''.join(f'        if(a==0x{int(m,16)+0x100:08x}U)m=0x{m}U;\n' for m in selected)
     extra = r'''

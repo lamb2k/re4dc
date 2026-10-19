@@ -50,3 +50,11 @@ are priced. Seven actual-input controls cover changed boot identity, unsupported
 getter code, wrong descriptor, interval ownership change, pre-existing output,
 incomplete/unresolved coverage exclusion, and wrong field address. No guard,
 capacity or material contract was relaxed.
+The ownership parser also consumes the source logger's room-less retirement
+records (NMRM retire t=... m=...). An actor retired before the interval cannot
+remain selected; a selected actor retiring or changing inside the interval is
+refused. The retained r11e replacement at tick231 is the regression fixture.
+Six lifetime controls pass. Actual r119 full/g70/g50 and current twins
+full/type1 controls produce byte-identical witness C/header/proof files.
+Malformed retirement records are refused rather than silently ignored.
+This is host-only proof handling; runtime ownership and timing are unchanged.
