@@ -1,0 +1,11 @@
+{
+  "replace": {
+    "dc/native/r20f/registry.re4nmr": "/root/re4data/private/castle18-ch32-r20f-em14-v2-20261019/files/dc/native/r20f/registry.re4nmr"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Unchanged existing full em14 types6/7/8 for source r20f; existing type9 omitted, all sections byte-exact control prefixes. No model/converter/runtime changes.",
+    "warning": "PENDING actual r20f actors/materials/alpha/residency. Separate em25parasites, waves, keys, room and chapter route remain unqualified.",
+    "current_images": "Preserve current nativeL/Shop Merchant winners. Type6 original alias/UV proven, but same-key compressed legacy pixels differ; actual room look gate required."
+  }
+}
