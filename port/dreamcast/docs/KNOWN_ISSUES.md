@@ -40,7 +40,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 8 |
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 | Fixed and checked in our tests; the problem was not console-only | 45 |
 | 🛠️ In progress | Being fixed now | 0 |
-| 🔍 Investigating | Being reproduced or traced | 3 |
+| 🔍 Investigating | Being reproduced or traced | 4 |
 | ⏸️ Open | Known, not yet worked on | 14 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
@@ -114,6 +114,7 @@ Not bugs: work that goes on from test to test.
 | In r118 one small picture (64x64) is not on the disc, so it is not drawn | test 16.4, 16.5 | 🟢 Fixed in test 17: the picture is in the disc's texture package, and our texture check passes in r118 | [#37](https://github.com/lamb2k/re4dc/issues/37) |
 | In r200, at the castle gate, some effect sprites are skipped for about a second: the per-frame list of see-through parts is full. Play continues | test 17 to 18 | ⏸️ Open: making the list bigger does not fit in memory yet. Test 18 fixed the rest of [#39](https://github.com/lamb2k/re4dc/issues/39) (the world picture and the effect pictures on the way from r10f) | [#41](https://github.com/lamb2k/re4dc/issues/41) |
 | After a chainsaw kill, Leon is drawn with his GameCube model for the death scene | test 17.1 and earlier | 🟢 Fixed in test 18: Leon keeps his PS2 model, his head included | |
+| Our not-drawn check finds enemies in view that are not drawn for a while: four Ganados in r111 and seven of the enemies in r113 (model em2a). Play is not affected | test 17.1, 18 | 🔍 Investigating, not blocking: found by our in-view not-drawn check in the test 18 checks; test 17.1 does the same | |
 | In r106 the four Ganados waiting behind the closed gate are not drawn until they come through it (they are out of view behind the gate) | test 17 | ⏸️ Open: by design for now; found by our new not-drawn check | |
 
 ## Sound
