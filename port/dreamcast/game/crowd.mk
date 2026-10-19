@@ -136,12 +136,15 @@ endif
 # (platform/native_actor_fast.cpp kSkins) holds 80 entries instead of 64 (+960 B). r119, the first frame after movie
 # 11900: 64 skins were registered before Leon's transaction asked for its 9, the lease declined and Leon went to the
 # GameCube path (MCHECK_LEONGC: acq=14 / SKINACQ why=4). Knob-off and pack-off arms showed the same.
+# LEON_SKIN_SLOTS=2 (lane fix18 item 9, 2026-10-18; render only): kSkins sized to the measured r119 peak plus a margin
+# (see native_actor_fast.cpp). r119 frames 945-1011 of the fight filled all 80 (SKINACQ why=4) and Leon + El Gigante
+# went MIXED (GC) for 66 frames.
 LEON_SKIN_SLOTS ?= 0
-ifeq ($(filter $(LEON_SKIN_SLOTS),0 1),)
-$(error LEON_SKIN_SLOTS must be 0 or 1)
+ifeq ($(filter $(LEON_SKIN_SLOTS),0 1 2),)
+$(error LEON_SKIN_SLOTS must be 0, 1 or 2)
 endif
-ifeq ($(LEON_SKIN_SLOTS),1)
-$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_SKIN_SLOTS=1
+ifneq ($(LEON_SKIN_SLOTS),0)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_SKIN_SLOTS=$(LEON_SKIN_SLOTS)
 endif
 LEON_HAND_PACK ?= 0
 ifeq ($(filter $(LEON_HAND_PACK),0 1),)
