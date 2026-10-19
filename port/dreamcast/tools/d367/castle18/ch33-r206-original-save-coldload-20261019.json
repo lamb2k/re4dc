@@ -1,0 +1,358 @@
+{
+  "scope": "Diagnostic-origin r206 original Luis S00, chapter3-3 empty-slot CardSave, and genuine cold title/CardLoad into chapter3-4. Not a no-warp chapter pass, whole fight, emulator timing/hardware acceptance or unseen cast qualification.",
+  "source_upstream": "083c09d17531dc0fc465f9e2541f7c21ea5e1993",
+  "baseline_source": "9b53329f5b40b48c245f40b1d42f659e2cb3cec3",
+  "elf_sha256": "9ea2e107ce39ad02c82fbb27ef99472854a84e88ebea56376d925431f890565a",
+  "data_resident_records": 5858,
+  "discs": {
+    "original_event": "4883a96f5a5b5c97bd9880561dab1c0d0fe9d9dca139c0bba2cf75f40a7d5971",
+    "coldload": "955e0ee0bf03a488c5448e82b9c8414477b98ace543ab894e607b14040c56aee"
+  },
+  "movie_save_captures": [
+    {
+      "scenario": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32msbmW-r206death/scenarios/cx-r206-walk-current083a",
+      "seconds": 56.17,
+      "log_sha256": "27ed7d9bf606a46669a637b6a44f020a633bd367e8ae2a7598b4790218811c5a",
+      "state_sha256": "7cdc3a2d9f584ea62c2bb4ea2da9b009ed3c6df0e7e1736357472df991d8f21f"
+    },
+    {
+      "scenario": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32msbmW-r206death/scenarios/cx-r206-walk-current083b",
+      "seconds": 56.08,
+      "log_sha256": "cd954a63694284385a4a1bdfdded1431a39185a101a5fc91a31b6ce18e0747ee",
+      "state_sha256": "440e9f91f7e98a7c19c29aa32c644a905d68602502364ce1295090cf18535d2f",
+      "exact_overlap": 812,
+      "leading_partial_lines": 1
+    },
+    {
+      "scenario": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32msbmW-r206death/scenarios/cx-r206-walk-current083c",
+      "seconds": 56.08,
+      "log_sha256": "52abc2a2abc6a8154d7de9085dc21fcc65dc4e85ecdf9e30db7d68b7c57bdab3",
+      "state_sha256": "5a626c191f14ae15ee7a47a6b3cabda6db33aeb116b9c714d6722cbf6941e5ea",
+      "exact_overlap": 809,
+      "leading_partial_lines": 1
+    },
+    {
+      "scenario": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32msbmW-r206death/scenarios/cx-r206-walk-current083save01",
+      "seconds": 11.17,
+      "log_sha256": "1114d95f26c9eb42552dcd6b947fde2600ef61eb2e59f9713cacf139f78622ef",
+      "state_sha256": "1fed6bf77d3d4ce3895f609c81fcee1d9649d990bbcab471323f6fc8bd5f97b1",
+      "exact_overlap": 650,
+      "leading_partial_lines": 1
+    }
+  ],
+  "coldload_captures": [
+    {
+      "scenario": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32msbmW-r206coldload/scenarios/cx-r206-walk-current083cold01",
+      "seconds": 56.11,
+      "log_sha256": "75bbe7d1d3c19a3eb73a66f0933b933b3c6ecb922a5790ee61ae480ddef08d1f",
+      "state_sha256": "25c91779676f7fafc068d9cbc0684fd55e1b34ea7797b4167f4555c3b7dd2669"
+    },
+    {
+      "scenario": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32msbmW-r206coldload/scenarios/cx-r206-walk-current083cold02",
+      "seconds": 55.72,
+      "log_sha256": "d58b4112529f4e308b6289166fcd631d7022ec4b6cffed63fb49c7caab17ecde",
+      "state_sha256": "624d2cd823680740d0b512cc313fb08ebe9db1c2a31b322fbbe0c43a9c195ecd",
+      "exact_overlap": 802,
+      "leading_partial_lines": 1
+    }
+  ],
+  "logs": {
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/r206-current083/movie-save.log": "b9fb7aa13e1f52c48714807a00d98c4d34ead6bc720d6287ed1007a6e0827d53",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/r206-current083/coldload.log": "878115bf72634b13a1779c949425058836feced525fb519b66959c77a136b9fb"
+  },
+  "original_movie": [
+    "route movie terminal=1 id=20600 frames=3030/3030 uploaded=3030 presented=3030 wall_us=101350646 media_us=101101000 underruns=3 silence_bytes=4428 heap_before=2206560 heap_active=1842368 staged=363328",
+    "route movie cadence id=20600 shown=3030 dropped=0 late=0 two_field=3027 other=2 max_gap_fields=3 (29.97 fps = one picture per 2 fields)",
+    "route cutscene: id=20600 terminal=1 skip_func=0 end_func=1 pose=zero-parts scenario0=00840000 system=00000840"
+  ],
+  "save_receipts": [
+    "card-vmu: save digest file=0 b16663c0",
+    "card-vmu: save file=0 name=RE4DCS01A comp=5732 blocks=14 free=186 inplace=0 rc=0"
+  ],
+  "coldload_receipts": [
+    "card-vmu: load file=0  blocks=14 ok=1",
+    "card-vmu: load digest file=0 b16663c0"
+  ],
+  "production_vmu": {
+    "harness": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/h-c32msbmW-r206coldload",
+    "scope": "Genuine cold title/CardLoad of the original r206 CHAPTER_3_3 end save. No initial emulator snapshot. Squeeze-only warp has no room/position/flag/inventory/kill directives. Ordinary source pad script selects FILE01. Save was produced after all3030 original S00 pictures with ordinary empty-slot CardSave; diagnostic-origin event, not whole-chapter route acceptance.",
+    "fixture_sha256": "26e04cb19cf36cd324dfec39b4b4055807ec36f3a28c37a99eb9f355ae441533",
+    "all23_program_bytes_unchanged": true,
+    "save": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/source-saves/r206-ch33-end-original-card-vmu-A1.bin",
+    "save_sha256": "6d2d286f05150f68c4ba8c3b7eee61c362aaf96368ebd74247d520e81e9ac3e3",
+    "before_sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+    "warp_sha256": "ab4b802997842bb5d3ed79fb7347f00553018ae68963180a4dd70b59e07fdc9b",
+    "pad_sha256": "bdc39dda948b1dbb422b64d9dce32abfa31b8524a3feff1a2bb1661a4ed88deb",
+    "selected_file": 0
+  },
+  "final_loaded_state": {
+    "scope": "Read-only exact current083 saved-state inspection using three independent unique ELF code anchors.",
+    "elf": "9ea2e107ce39ad02c82fbb27ef99472854a84e88ebea56376d925431f890565a",
+    "state": "624d2cd823680740d0b512cc313fb08ebe9db1c2a31b322fbbe0c43a9c195ecd",
+    "anchors": [
+      11697873,
+      11697873,
+      11697873
+    ],
+    "symbols": {
+      "_pG": "0x8c2e3d1c",
+      "_pPL": "0x8c397f20",
+      "__ZL5pCard": "0x8c391264"
+    },
+    "frame": 3201,
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "chapter": 9,
+    "room": "0x206",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "player_pos": [
+      -10708.67578125,
+      8000.00390625,
+      -4148.56689453125
+    ],
+    "card": "0x0"
+  },
+  "KOS": {
+    "movie_save": {
+      "status": "PASS",
+      "receipts": [
+        {
+          "held": 49152,
+          "requested": 49152,
+          "frag": 0,
+          "pieces": 1,
+          "receipt": "kos squeeze: held=49152 requested=49152 frag=0 pieces=1 headroom 198896 -> 149736 (free 2288 -> 2280, break 196608 -> 147456)"
+        }
+      ],
+      "minimum_logged_headroom": 37008,
+      "required_reserve": 49152,
+      "required_minimum": 4096,
+      "scope": "Exact guest reserve and logged headroom only; identity, scene coverage and progression require separate gates."
+    },
+    "coldload": {
+      "status": "PASS",
+      "receipts": [
+        {
+          "held": 49152,
+          "requested": 49152,
+          "frag": 0,
+          "pieces": 1,
+          "receipt": "kos squeeze: held=49152 requested=49152 frag=0 pieces=1 headroom 198896 -> 149736 (free 2288 -> 2280, break 196608 -> 147456)"
+        }
+      ],
+      "minimum_logged_headroom": 36720,
+      "required_reserve": 49152,
+      "required_minimum": 4096,
+      "scope": "Exact guest reserve and logged headroom only; identity, scene coverage and progression require separate gates."
+    }
+  },
+  "VRAM": {
+    "movie_save": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/r206-current083/movie_save-vram.json",
+      "sha256": "eac81eba5f338eba32d4d56a256c28290731b109c51b026f3e33567475579764",
+      "failures": [],
+      "rooms": [
+        {
+          "room": "120",
+          "start": 87,
+          "samples": 1,
+          "closed": true,
+          "min_free": 2510080,
+          "min_largest": 2508800,
+          "peak_pinned": 0,
+          "last": {},
+          "gaps": {
+            "refusals": 0,
+            "guard": 0,
+            "guard_p": 0,
+            "nocontig": 0,
+            "latched": 0,
+            "absent": 0,
+            "gc_fx": 0,
+            "dropped": 0,
+            "fx_dropped": 0,
+            "tex_rej": 0,
+            "snd_fail": 0,
+            "meta": 0
+          },
+          "snd_used": 1804992,
+          "loads": 0,
+          "evicted": 0,
+          "retries": 0,
+          "min_kos": 139792,
+          "menu_loads": 0,
+          "play_loads": null,
+          "play_evicted": null
+        },
+        {
+          "room": "206",
+          "start": 167,
+          "samples": 6,
+          "closed": false,
+          "min_free": 1347584,
+          "min_largest": 1314816,
+          "peak_pinned": 1090816,
+          "last": {
+            "pinned": 1090816,
+            "dynamic": 38912,
+            "other": 90112,
+            "free": 1347584,
+            "largest": 1314816,
+            "min_free": 1347584,
+            "min_largest": 1314816,
+            "peak_pinned": 1090816,
+            "loads": 153,
+            "evicted": 0,
+            "retries": 0,
+            "at": "preload",
+            "f": 1511
+          },
+          "gaps": {
+            "refusals": 0,
+            "guard": 0,
+            "guard_p": 0,
+            "nocontig": 0,
+            "latched": 0,
+            "absent": 0,
+            "gc_fx": 2,
+            "dropped": 0,
+            "fx_dropped": 0,
+            "tex_rej": 0,
+            "snd_fail": 0,
+            "meta": 0
+          },
+          "snd_used": 1804992,
+          "loads": 153,
+          "evicted": 0,
+          "retries": 0,
+          "min_kos": 43584,
+          "menu_loads": 52,
+          "play_loads": 0,
+          "play_evicted": 0
+        }
+      ]
+    },
+    "coldload": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/r206-current083/coldload-vram.json",
+      "sha256": "9c3abec1627c8be037817ce4c4ccb32631f54a3d6f4f3e150b6a3cd3f9d55754",
+      "failures": [
+        {
+          "cat": "vram",
+          "what": "r206: 53 upload(s) after the room-entry preload in a room with a resident list (disc re-reads: add the keys to vram/resident/r206.tsv, resident_keys.py list)",
+          "line": "line 2571: vram gaps: r=206 at=tick f=1633 refusals=0 guard=40 guard_p=0 nocontig=0 latched=0 absent=0 gc_fx=9 dropped=0 fx_dropped=0 tex_rej=0 snd_fail=0 snd_used=1804992 meta=0 kos=36920"
+        }
+      ],
+      "rooms": [
+        {
+          "room": "120",
+          "start": 92,
+          "samples": 2,
+          "closed": true,
+          "min_free": 1131648,
+          "min_largest": 1129472,
+          "peak_pinned": 195136,
+          "last": {
+            "pinned": 195136,
+            "dynamic": 262144,
+            "other": 57344,
+            "free": 2052800,
+            "largest": 2052064,
+            "min_free": 2052800,
+            "min_largest": 2052064,
+            "peak_pinned": 195136,
+            "loads": 18,
+            "evicted": 0,
+            "retries": 0,
+            "at": "tick",
+            "f": 692
+          },
+          "gaps": {
+            "refusals": 0,
+            "guard": 0,
+            "guard_p": 0,
+            "nocontig": 0,
+            "latched": 0,
+            "absent": 0,
+            "gc_fx": 0,
+            "dropped": 0,
+            "fx_dropped": 0,
+            "tex_rej": 0,
+            "snd_fail": 0,
+            "meta": 0
+          },
+          "snd_used": 1804992,
+          "loads": 77,
+          "evicted": 0,
+          "retries": 0,
+          "min_kos": 127960,
+          "menu_loads": 38,
+          "play_loads": null,
+          "play_evicted": null
+        },
+        {
+          "room": "206",
+          "start": 1033,
+          "samples": 5,
+          "closed": false,
+          "min_free": 914080,
+          "min_largest": 905216,
+          "peak_pinned": 936832,
+          "last": {
+            "pinned": 936832,
+            "dynamic": 328288,
+            "other": 90112,
+            "free": 1212192,
+            "largest": 905216,
+            "min_free": 914080,
+            "min_largest": 905216,
+            "peak_pinned": 936832,
+            "loads": 188,
+            "evicted": 0,
+            "retries": 0,
+            "at": "tick",
+            "f": 1633
+          },
+          "gaps": {
+            "refusals": 0,
+            "guard": 40,
+            "guard_p": 0,
+            "nocontig": 0,
+            "latched": 0,
+            "absent": 0,
+            "gc_fx": 9,
+            "dropped": 0,
+            "fx_dropped": 0,
+            "tex_rej": 0,
+            "snd_fail": 0,
+            "meta": 0
+          },
+          "snd_used": 1804992,
+          "loads": 188,
+          "evicted": 0,
+          "retries": 0,
+          "min_kos": 36920,
+          "menu_loads": 0,
+          "play_loads": 53,
+          "play_evicted": 0
+        }
+      ]
+    }
+  },
+  "open_limits": [
+    "Movie reports three underruns and4428 silence bytes. All3030 frames shown, zero drops/late; audio is not accepted.",
+    "Room/VRAM/native results are reported separately below; save success does not imply whole-room acceptance.",
+    "Entry source partner-init/cap waves and unseen enemy variants are not qualified by the movie save.",
+    "Original diagnostic default inventory/source entry is retained; chapter3-1 and3-2 no-warp chain remains pending."
+  ],
+  "private_proof": "/mnt/c/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/r206-current083/original-save-coldload-proof.json",
+  "private_proof_sha256": "e8369b2675cdbabc096a5454efd17a0a4743b1136950080caa23e670378e5770",
+  "native_actor_qualification": "UNPROVEN: squeeze-only cold-load fixture intentionally has no native census; do not infer zero declines or unseen enemy coverage."
+}
