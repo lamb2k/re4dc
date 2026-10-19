@@ -770,6 +770,8 @@ static int Ps2fxExtCut(cEsp* esp)
 // tables above: the room-table sheets of r101..r10b / r117..r11b (Ps2fxExtCut kind 1), kPs2SheetCut's room / texture
 // rows, and r100's GameCube sheet textures (EFFECT_HAZE_LEAN M1's list; the PS2 keeps r100's d9 sparks). Independent
 // of the runtime PS2 look toggle: HAZE_SPRITE_CUT draws no mist sheet in any case.
+extern "C" void re4dc_esp48_dormant(cEsp* esp);      // esp48.cpp
+extern "C" int re4dc_esp48_is_dormant(const cEsp* esp);
 static u32 s_mist_ps2_n, s_mist_ps2_room = 0xffff;
 static int Ps2fxMistGcOnly(const cEsp* esp)
 {
@@ -2164,6 +2166,11 @@ extern "C" void re4dc_esp_sprite_pass_begin()
 #endif
 extern "C" int re4dc_esp_coarse_sprite_visible(cEsp* esp)
 {
+#if defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2
+    if (esp->m_Id == 0x48 && re4dc_esp48_is_dormant(esp)) {
+        return 0;   // FX_MIST_PS2: a dormant GC-only mist sheet (never drawn: HAZE_SPRITE_CUT)
+    }
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
     // A beam can cross the view while either endpoint is outside it. Esp19
     // retains source OT checks; its own line adapter clips the full segment.
@@ -4185,9 +4192,10 @@ int EspSeqSet(EspGenWork* rec, EspInfo* info, u32* seed, cModel* model, Mtx* mtx
     }
 #if defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2
     if (e.p->m_Id == 0x48 && (e.p->m_Be_flg & 1) && Ps2fxMistGcOnly(e.p)) {
-        // FX_MIST_PS2 (hwfog.mk): a GC-only mist sheet. Every seed draw above was made; the slot goes back to the
-        // pool now (the caller's follow-up writes land in the freed slot, which PullEsp zeroes before any reuse).
-        PushEsp(e.p);
+        // FX_MIST_PS2 (hwfog.mk): a GC-only mist sheet. Every seed draw above was made and the sheet keeps its pool
+        // slot (the pool, its scan order and every other effect stay as before), but it is dormant: no move, no anim,
+        // not offered to the sprite pass (esp48.cpp).
+        re4dc_esp48_dormant(e.p);
     }
 #endif
     *out = e.p;
