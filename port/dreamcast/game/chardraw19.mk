@@ -4,8 +4,8 @@
 # chunk is sent through the chunk-sink adapter (today's store-queue window until chunk_submit.h v1 lands).
 CHAR_CHUNK ?= 0
 ifneq ($(CHAR_CHUNK),0)
-ifeq ($(filter 1,$(CHAR_CHUNK)),)
-$(error CHAR_CHUNK must be 0 or 1)
+ifeq ($(filter 1 2,$(CHAR_CHUNK)),)
+$(error CHAR_CHUNK must be 0, 1 or 2 (2 = check build))
 endif
 ifneq ($(COARSE_ONE_SUBMIT),1)
 $(error CHAR_CHUNK needs COARSE_ONE_SUBMIT=1)

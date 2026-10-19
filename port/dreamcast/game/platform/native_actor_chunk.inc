@@ -67,6 +67,35 @@ void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, b
         else chunk_uv(to, e.p.uv, r.ti(i), s16_uv, k);
         oc[i] = oc[s];
     }
+#if RE4DC_CHAR_CHUNK == 2
+    // Check build: the knob-off pass into a side cache, compared word for word (x, y, z, u, v, outcode).
+    {
+        alignas(32) static pvr_vertex_t ref_v[kMaxVertices + 4];
+        alignas(32) static u8 ref_oc[kMaxVertices + 32];
+        static unsigned mis[6], checked, logged;
+        const Cache keep = e.cache;
+        e.cache.v = ref_v; e.cache.oc = ref_oc;
+        unsigned a2 = ~0U, o2 = 0;
+        pass_positions(e, r, n, k, s16_uv, a2, o2);
+        e.cache = keep;
+        for (unsigned i = 0; i < n; ++i) {
+            const u32* x = reinterpret_cast<const u32*>(&v[i]); const u32* y = reinterpret_cast<const u32*>(&ref_v[i]);
+            const unsigned bad = (x[1] != y[1]) | ((x[2] != y[2]) << 1) | ((x[3] != y[3]) << 2) | ((x[4] != y[4]) << 3) |
+                                 ((x[5] != y[5]) << 4) | ((oc[i] != ref_oc[i]) << 5);
+            for (unsigned b = 0; b < 6; ++b) mis[b] += (bad >> b) & 1U;
+            if (bad && logged < 40) {
+                ++logged;
+                printf("CCHK bad=%x i=%u n=%u u=%u src=%u vi=%u ti=%u srcti=%u U=%08x/%08x V=%08x/%08x X=%08x/%08x\n", bad,
+                          i, n, u, chunk_src[i], r.vi(i), r.ti(i), chunk_rec[chunk_src[i] * 3U + 2U], x[4], y[4], x[5], y[5],
+                          x[1], y[1]);
+            }
+        }
+        checked += n;
+        if (frame_serial % 300U == 0U)
+            printf("CCHK frame=%u checked=%u x=%u y=%u z=%u u=%u v=%u oc=%u\n", frame_serial, checked, mis[0], mis[1],
+                      mis[2], mis[3], mis[4], mis[5]);
+    }
+#endif
 }
 
 // The chunk sink adapter (chunk_submit.h shape over today's window).
