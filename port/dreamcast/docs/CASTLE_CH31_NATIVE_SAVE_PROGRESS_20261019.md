@@ -1,0 +1,17 @@
+# Castle chapter 3-1 native-save progress, 2026-10-19
+
+This is incomplete Flycast progression evidence. The chapter is not ready.
+
+The c18oimW program (ELF `746a2a5feb7cf6293ea31c2738c815a3f6ce305a29c8af82b482ca8758b2136e`) loads the native chapter-6 start save through the original title/card flow. Its VMU is `b1e234c8527c1d76e5a59f970dfdd66a1e28ba2a0ec0385928a41a767c06f4eb`. The preceding chapter was not played; its end event created this start save with disclosed inventory/Ashley preconditions. Subsequent runs continue exact production snapshots of disc `60aa53ee11ce24e79630447aa302899bac322c5a8b0eb98a2b35097b3e8684c1`. There are no room/position/flag/inventory/god/kill directives after native load. All inputs are ordinary controller messages to the verified owned emulator window; snapshots and guest memory are never edited.
+
+The original r200 door leads to r202. The crank and cannon run through their original A callbacks. Post-cannon frame 7964 has source Rsf `e3000000`, no live em11, an empty held queue, and the original Merchant entry 0x30 created as em18/type7. Leon has 1440 health and Ashley 600. This is the original cannon purge, not deletion added by the cap implementation.
+
+The normal Follow command reunites Ashley. Original Merchant Trade opens the shop; ordinary B returns to gameplay, restores one archive/eight assets/eighteen infos without exhaustion, and preserves 1440/600 health. Temporary shop views are not interpreted as gameplay health or actor pointers.
+
+The original door changes r202 to r207 at frame 12527. Its radio finishes naturally. The source return restores two archives, all 32 assets and 32 infos. Read-only exact-ELF state inspection proves all seven Ashley infos retain the current archive owner revision, material templates and adopted roles with pending=0. This confirms the earlier default-off partner-capacity fix on the ordinary-door route. A normal Wait command leaves Ashley safely at the entrance while Leon reaches the lower sword prompt. The pickup, puzzle, waves and onward door remain open.
+
+Evidence is under `C:/Flycast-Evidence/re4-dreamcast/castle18-20261018`: `H023-native-cannon-shop-door207-progress-proof-20261019.json`, the two `I009-native-r202-*-proof-20261019.json` source-state proofs, and `r207-I009-natural-door-radio-Ashley-certificates-20261019.json`. Runs j/k/m/o/r/s/t/u/v are individually bounded below 60 seconds and bind the exact program, disc and state hashes in H023. Earlier controller aborts p/q and no-pickup attempt v are retained and do not count as requested-action coverage.
+
+The immutable route disc still uses V8 data and has real late texture uploads/evictions. V9/V10 inputs qualify separate room gates and must not retarget these snapshots. A fresh integrated data/controls run through the actual chapter-end save is still required. The r207 source-role texture preparation gap and Verdugo order-type gap remain coordinator dependencies. AUX_OBJ_NATIVE stays 0; no renderer admission or source scripting was changed here.
+
+Worker A's first six captures were unsqueezed (`held=0 requested=0`), so their earlier 48 KiB claims are withdrawn; texture/draw observations remain separately labelled. Use `tools/d367/castle18/verify_kos_reserve.py` to require complete exact reserve receipts. Actual qualified main r201n, r101q, r207j warm and native-route warm receipts are sealed separately. Native progression alone is not memory/residency acceptance.
