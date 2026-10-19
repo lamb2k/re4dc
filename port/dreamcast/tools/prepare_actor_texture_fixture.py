@@ -24,6 +24,9 @@ from prepare_native_ui import image_identity, select_upload_only, compact_spans,
 # em11/em12/em13/em15/em17 (config/G4BE08/modules.py). Only its top-level model
 # TPLs are selected here; its EFF family is deliberately retained in full.
 MODEL_TPL_ARCS = {
+    # pl_ashley.cpp setModel / setRightHand / setLeftHand: playable Ashley,
+    # including the distinct r20e right hand. Partner pl11 is a separate actor.
+    "pl01.drs": (5, 9, 0xB, 0xA8),
     # em3c.cpp em3cModelInit:1867-1914 body, chainmail and attached weapons.
     # Parasite TPL0x4C/0x57 and EFF stay resident and byte exact.
     "em3c.drs": (6, 8, 0xA, 0xD, 0xF),
