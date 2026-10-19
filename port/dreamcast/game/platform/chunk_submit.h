@@ -1,5 +1,5 @@
 /* chunk_submit.h: the shared chunk-submit back end (lane scenery19, SCENERY19-STATUS.md "Back-end interface").
- * v1 (10-19), implemented in platform/chunk_submit.cpp (scenery19.mk: CHUNK_SUBMIT=1, implied by SCENERY_CHUNK).
+ * v1.1 (10-19: + re4dc_chunk_vertices_direct), implemented in platform/chunk_submit.cpp (scenery19.mk: CHUNK_SUBMIT=1, implied by SCENERY_CHUNK).
  * Users: PS2 world scenery, rigid objects (one object matrix per drawn tick), skinned characters
  * (lane character-draw-path).
  *
@@ -49,6 +49,8 @@ typedef struct re4dc_chunk_sink {
     unsigned limit;             /* longest strip sent directly (longer ones go to the clipper) */
     unsigned points, corners;   /* current batch sizes */
     unsigned slots, strips, culled, clipped; /* since window_begin: vertices sent, strips sent / culled / clipped */
+    const void* vsrc;           /* v1.1: the corners re4dc_chunk_strips reads (the lent cache, or the caller's) */
+    const uint8_t* csrc;        /* v1.1: their outcodes */
 } re4dc_chunk_sink;
 
 void      re4dc_chunk_window_begin(re4dc_chunk_sink* s, uint32_t* sq, void* cache, unsigned limit,
@@ -62,6 +64,11 @@ void      re4dc_chunk_points_screen(re4dc_chunk_sink* s, const float* xy_invw, c
 /* Corners: n x point index, n x {u, v} float words, n x ARGB. */
 void      re4dc_chunk_corners(re4dc_chunk_sink* s, const uint8_t* point, const float* uv, const uint32_t* argb,
                               unsigned n);
+/* v1.1 direct corners (character-draw-path ask, 10-19): the caller's finished PVR vertices are the corners, used in
+ * place (no copy): n x 32-byte pvr_vertex_t, 8-byte aligned, flags word PVR_CMD_VERTEX (sent as is; the last vertex of
+ * each strip gets EOL), and n outcodes (the bits above). Valid until the next corners call or window end; the caller
+ * keeps both arrays unchanged meanwhile. Words sent = the caller's words. */
+void      re4dc_chunk_vertices_direct(re4dc_chunk_sink* s, const void* vertices, const uint8_t* outcodes, unsigned n);
 const void*    re4dc_chunk_vertices(const re4dc_chunk_sink* s); /* the corners as 32-byte PVR vertices */
 const uint8_t* re4dc_chunk_outcodes(const re4dc_chunk_sink* s);
 uint32_t**     re4dc_chunk_sq(re4dc_chunk_sink* s);
