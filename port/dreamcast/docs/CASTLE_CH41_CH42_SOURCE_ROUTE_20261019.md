@@ -750,3 +750,49 @@ retains the same disc/programs without state retargeting or guest writes.
 Final state ab408676a54a3f2491d6fc4ced7b32042965144fe81e4f1dd8c5f74f74e733b4.
 Private proof: r212-original-roof-movie-proof.json. This is frozen746
 Flycast diagnostic progression, not current-recipe chapter/hardware acceptance.
+
+
+## r212 matched gameplay residency correction
+
+The bounded first-plate walk, normal Ashley Wait command, rack6 approach
+and stationary enemy view pass the matched preload gate. Nine gameplay
+first-sight keys in the control become zero in the candidate. Each arm
+starts from its own fresh original-door diagnostic and keeps its own
+unmodified state chain; input helpers and goals are identical by phase.
+This is not an exact-state comparison, whole-room/chapter acceptance or a
+performance result. The programs are the frozen746 diagnostic snapshot.
+
+All7,420 payload names agree and only dc/resident.bin changes. All23
+program payloads are exact. The5,800-record candidate preserves all5,791
+V18 records and other rooms, adding only the nine observed r212 keys.
+Candidate disc3550ac08 and control c9d12b8c remain separately identified.
+
+Both arms draw native Leon, Ashley and em11 with GC0. Their summed census
+counts are3150/2818/527 in the control and2250/2143/252 in the candidate;
+the different windows are not a performance comparison. Both hold the
+exact49,152-byte reserve with minimum KOS headroom32,832. Candidate VRAM
+has769,504 bytes free,714,752 largest block,211 stable loads, zero evictions
+and retries; refusal/guard/absent/drop, texture, audio-fit and fatal errors
+are zero. Leon1440/Ashley600 remain unchanged throughout the input samples.
+
+The shared first-sight parser also reports cf2208cd-a6bfb2ef in both logs.
+It occurs exactly once at line595, before the first room preload, and is
+retained separately in the proof. It is not a post-preload gameplay load.
+The control's last periodic summary sees eight late uploads, and the later
+native stream and actual loader keys establish the ninth. The candidate
+has none in either source. No shared parser or game code was changed.
+
+Candidate heading phase03 stopped on the controller's camera-settling
+guard. That attempt and its unchanged state are preserved. The identical
+phase04 stationary rule completes both arms and observes native em11.
+There was no guest write, hidden failed attempt or runtime crash.
+
+Private proof r212-resident-matched-runtime-proof.json:
+bc6355ffb3b4e794a502dc6fd46719fd40d65c166e245aae80aa1b91fcc9a6bd.
+Lineage r212-resident-match-lineage.json:
+8c2263d3eca91e12a3f825e01224b22f41b62206d24e22f1ecb3b65f750a7db8.
+Private set castle18-ch41-r212-gameplay-resident-20261019:
+resident b93f1fdd53a413dc351667c9521d413567152e355dfdaf3f2137152a81e8e73b;
+manifest1969d7cf38e0b834d42b2235b240946481dad8f754b0c8fc055355522f6ecf40.
+The original normal16 roof state remains available for normal shooting,
+drill combat, cup collection and return; those events are still open.
