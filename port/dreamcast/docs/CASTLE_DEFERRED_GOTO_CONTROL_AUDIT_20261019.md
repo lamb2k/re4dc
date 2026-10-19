@@ -98,3 +98,60 @@ Treat this as an explicit source capacity/ownership requirement; do not
 force admission, fabricate health/positions, or add a pending getter that
 can deadlock the original event. Main/parent are reviewing the complete
 contract before runtime edits. No new room file is claimed at this checkpoint.
+
+## Reviewed r207-only implementation checkpoint
+
+The integration and parent reviews deliberately reduced scope to
+`ALIVE_CAP_DEFER_GOTO_R207=0` by default. The only runtime/build files are
+`src/game/em_set.cpp`, `src/st/em_wrap.cpp`, `src/st2/r207.cpp` and the game
+Makefile. The switch requires the existing alive cap and DEFER_FLAGS=1.
+Capture, pending-mode reads and delivery each require exact room207 and a
+normal Ganado ID (10..20 except18); Novistadors are never cast as Ganados.
+Other rooms keep their previous movement behavior. In particular, r214 is
+an unresolved capacity/ownership exception and has no edits.
+
+The enabled queue uses 64 records of 24 bytes (1,536 bytes), retaining the
+original 12-byte wrapper ABI. Each record owns a copied Vec, latest mode,
+separate validity and the first Goto's pending-OR snapshot. Mode0 is valid.
+All original slot creation, compaction, Take, automatic release, retries,
+drop and room-reset paths carry or discard the matching metadata. Failed
+creation retains order and commands. Delivery follows successful original
+first AI initialization: first snapshot OR, original typed virtual setter,
+then final OR mask. It never writes work offsets directly or admits an
+actor merely to deliver a command. The actual original setter still owns
+floor adjustment, protected-work refusal and motion flags.
+
+R207's distance selector skips held handles before reading position, while
+source alive/wave counts remain unchanged. Its leader event waits for one
+free slot in ordinary gameplay, immediately before RoomSeCall2/Rsf11/event
+start. There is no new yield between that check and original D3 send. D4/D5
+still follow normal admission and may remain held. No busy override, cap
+exception, fabricated position, forced kill or new recovery shortcut exists.
+
+`test_deferred_goto_r207.py` extracts the actual queue, four creators,
+wrapper members and original cEm10 setter. Both feature states pass under
+ASan/UBSan:128 creation/order/floor/protected-work cases per state, shared
+handles, copied target lifetime, valid0, repeated commands, null and nonnull
+failed creation, full64 middle retry, every compaction/drop/reset path,
+already-live exact setter, and other-room/ID invariance. The unchanged flag
+suite still passes both states. The separate exhaustive original-setter
+suite passes8,192 sequences and retains160 wrong-last-snapshot negatives.
+
+`test_r207_goto_event_guards.py` compiles the actual distance/event functions
+against bounded scheduler/cap stand-ins: held positions are not read; a
+full cap waits before flags/busy/sends; D3 receives the first free slot;
+D4/D5 remain queued; missing leader keeps original behavior; interruption
+before busy leaves no new persistent state. Nine actual Makefile cases
+cover default/off/on, invalid values, prerequisites and room/wrapper object
+definitions. These are host checks, not guest progression or Continue proof.
+
+The15 actual compiler commands from the frozen current T15/CH4 controls
+produce identical C++ preprocessing tokens for baseline/default/explicit0.
+Fourteen are byte-identical too; the CH4 em_set output differs only in line
+whitespace around the conditional parameter/calls. That difference is
+recorded, not described as byte identity. Compiled boot/overlay/allocated
+ELF identity and a fresh current AP1 r207 full-cap/event/death/Continue gate
+remain required before this switch can be enabled in a chapter recipe.
+Private receipts: `deferred-goto/r207-source-tests.json` and
+`deferred-goto/r207-off-preprocessing.json`. No candidate game build or
+runtime acceptance is claimed at this checkpoint.
