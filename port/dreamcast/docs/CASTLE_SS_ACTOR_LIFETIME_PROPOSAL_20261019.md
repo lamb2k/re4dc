@@ -78,3 +78,10 @@ Each of the three original successful-Use reset sites requests only its actual s
 Disabled preprocessing uses all eight actual compiler command lists and generated headers retained from c32hbrP/c32hbmW. Baseline, default and explicit0 have identical C++ tokens for all four consumers in both recipes. The enabled preprocessing differs in each consumer. Eight complete-subscreen.mk dry-run cases verify default/off/on definitions on the four exact linked object paths and rejection of missing SUBSCREEN or invalid knob values. No object was compiled by that check.
 
 This is a review checkpoint. Fresh disabled program identity, strong linked APIs/storage placement, successful genuine Ashley healing and menu/reset lifecycle runtime gates remain required before adoption. The enabled candidate has not been built or run.
+
+
+## Fresh matched build gates
+
+Reviewed clean source a414bdee produced serial guarded -j4 builds against the frozen e86 controls. Off Disc1 c32hfrP matches all11 program payloads, raw image, allocated sections and45 generated headers of c32hbrP. Off CH4 c32hfmW likewise matches all23 payloads/allocated sections/raw/45 headers of c32hbmW. Whole ELFs differ in nonallocated debug metadata; this distinction is retained. Resolved values are exact after removing only the new explicit0 and replacing each exact named output root in build-path variables. The first identity checker stopped on those output paths; both successful builds were retained, and no binary was rebuilt or waived.
+
+Enabled c32hnmW has ELF c9f614ea31c94dc0c17b3bad7d5cf4903f97079df747ceab472312727defbb24, resident end8c473418 (+1088B). Its actual four compiler commands carry SS_ACTOR_LIFETIME=1. All five APIs link strong in resident text; the backing metadata is a48-byte resident BSS object at8c468990, outside the inventory window. The actual Sscrn module imports the two WHO/reset APIs and their resolved resident addresses occur in the staged overlay payload. Missing-symbol list is empty. No recipe is enabled; fresh actual menu/healing gates remain pending.
