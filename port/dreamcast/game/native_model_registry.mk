@@ -493,6 +493,21 @@ endif
 GAME_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
 PLATFORM_CPPFLAGS += -DRE4DC_NMR_ROLES5=1
 endif
+# NMR_R202_CAST_CAPACITY=1 (castle18, default 0): retain the complete original r202 source cast:
+# em11 type7/8 pools, both Merchant18 appearances, and all three Ashley hand appearances.
+# Their unchanged packages need 69 unique geometries. Eight additional static records are reserved;
+# validation permits at most 69 in r202, keeps 64 elsewhere, and preserves every other bound/proof.
+NMR_R202_CAST_CAPACITY ?= 0
+ifeq ($(filter $(NMR_R202_CAST_CAPACITY),0 1),)
+$(error NMR_R202_CAST_CAPACITY must be 0 or 1)
+endif
+ifeq ($(NMR_R202_CAST_CAPACITY),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_PACK)$(NATIVE_MODEL_REGISTRY_POOL)$(NATIVE_MODEL_REGISTRY_ROLES5),111)
+$(error NMR_R202_CAST_CAPACITY=1 needs NATIVE_MODEL_REGISTRY_PACK=1 NATIVE_MODEL_REGISTRY_POOL=1 NATIVE_MODEL_REGISTRY_ROLES5=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_R202_CAST_CAPACITY=1
+PLATFORM_CPPFLAGS += -DRE4DC_NMR_R202_CAST_CAPACITY=1
+endif
 # NATIVE_MODEL_REGISTRY_ROLE_TEX23=1 (lane geodrop17 2026-10-17; default 0; render only; needs NATIVE_MODEL_REGISTRY_ROLES5=1):
 #   a role's source TPL may have 23 images (the r320 helicopter em3d TPL 6; ROLES5 allows 19). A package validation bound
 #   only (model_registry.py --role-tex23). Knob off: the image is unchanged.

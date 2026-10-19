@@ -88,7 +88,14 @@ static_assert(sizeof(nmr::Weight)==16,"package weight records");
 #endif
 #if RE4DC_NMR_POOL && defined(RE4DC_NMR_ROLES5) && RE4DC_NMR_ROLES5
 // ROLES5: 32 package textures (r227: em14 types 6..9 carry 20 atlas pages).
-constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=64,kRegTextures=32,kRegBones=RE4DC_NMR_BONES;
+// r202's original monks, closed/open Merchant and full Ashley partner need 69 unique geometries.
+// Reserve eight additional records only in the explicit recipe; the loader admits >64 only in r202.
+#if defined(RE4DC_NMR_R202_CAST_CAPACITY) && RE4DC_NMR_R202_CAST_CAPACITY
+#define RE4DC_NMR_ROLES5_GEOMETRY 72
+#else
+#define RE4DC_NMR_ROLES5_GEOMETRY 64
+#endif
+constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=RE4DC_NMR_ROLES5_GEOMETRY,kRegTextures=32,kRegBones=RE4DC_NMR_BONES;
 constexpr unsigned kRegPoolSections=48;  // a pool descriptor's sections (role rows); a plan still draws <= 8 of them
 #elif RE4DC_NMR_POOL
 constexpr unsigned kRegDescriptors=16,kRegChunks=RE4DC_NMR_CHUNKS,kRegGeometry=64,kRegTextures=RE4DC_NMR_REG_TEXTURES,kRegBones=RE4DC_NMR_BONES;

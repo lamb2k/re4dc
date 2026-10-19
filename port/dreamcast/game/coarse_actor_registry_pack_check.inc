@@ -231,6 +231,10 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         detail=k;
         if(kind!=k+1 || off%32u || off<end || off>size || bytes>size-off || !count || count+RE4DC_PBK(k)>kPackCapacity[k] ||
            bytes!=count*kPackRecord[k])return kPwTable;
+#if defined(RE4DC_NMR_R202_CAST_CAPACITY) && RE4DC_NMR_R202_CAST_CAPACITY
+        // The r202 source cast is exactly 53 primary + 16 partner geometries. All other rooms retain 64.
+        if(k==kGeom && count+RE4DC_PBK(k)>(room==0x202u?69u:64u))return kPwTable;
+#endif
 #if RE4DC_ROUTE_CH22 && !RE4DC_ROUTE_CH23 && !RE4DC_NMR_POOL
         if(k==kFPart && room!=0x11cu && count>32u)return kPwTable;
 #endif
