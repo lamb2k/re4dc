@@ -1,0 +1,10 @@
+name sc19-still-r100-house
+# r100 first house interior (bench scene 2's spot), no combat: Leon at the back window, frozen at tick 700
+room 0x100
+pos -82910 860 -38480
+ang -0.1293
+rsf 0x100 13
+scenario 0 0x00000010
+inv default
+god
+freeze 700

@@ -40,3 +40,29 @@ Private evidence is under castle18-20261018/h-c18oimW-r200l/scenarios: resevtam 
 A missing warm-disc hardlink caused one pre-guest staging failure, resevtao. It is explicitly invalid as a runtime gate. Existing identical disc bytes were still present through78 other hardlinks. The missing link was restored only after its complete SHA256 matched60aa53ee11ce24e79630447aa302899bac322c5a8b0eb98a2b35097b3e8684c1; no image, program, fixture or snapshot was regenerated or retargeted. The exact repair journal is retained. The cause of that missing link is unassigned.
 
 Worker source/data integration is separate from this immutable route. Source6ee01aa1 includes upstream7adb8d22 and the original chapter3-2 movie/save/cold-load proof, bounded r20c source queue evidence, and r211's matched9-to0 residency correction. Chapter3-2's end save is diagnostic-origin; it is not a replacement for playing from chapter3-1's end save. Fresh upstream Disc1 knob-off identity is assigned to Worker A. ACTOR_PLAN and ENEMY_VIS_CULL remain subject to the coordinator's landing notice. No chapter-ready claim is made.
+
+## H027 continuing: original r203 reunion and internal door
+
+The route still uses the immutable historical746 program and60aa disc, with the same native chapter6 origin and unedited production-state lineage. New I014 build and inventory checks are separate; their current ACTOR_PLAN1 program is not substituted into this route.
+
+Ordinary Follow and the original upstairs exit change r207 to r203 in runBY at frame27335. The initial r203 saved-room flags are0, and crossing the original reunion area starts20300. The existing native pad script presses normal START at picture16; the original skip callback completes and sets source Rsf3. This is source-event progression, not full unskipped movie coverage:17 of1595 pictures are uploaded,16 presented, with one audio underrun retained. The exact initial-versus-current saved-room proof is `r203-native-initial-vs-current-saved-room-flags-20261019.json`.
+
+The next ordinary corridor segment, CB, reaches(-34928,4156,-9780) in8.20seconds. CC stops on the original metal-door collision at(-37005,4156,-10063), with the actual A OPEN prompt visible; its52.77second owned run is not a route failure. CD uses only the original A action, then observes90 source ticks. The viewed still shows the door open and gameplay remains inr203. The original `emDoorAction` dispatches through `plemDoorOpen`; no door state, actor or source-script bytes are changed by the controller. CD owned-exits in7.02seconds.
+
+All these endpoints retain Leon1440/Ashley360, phase3/Stop0 and chapter6. CB state is12525b14abd44f6f78b7ba0e524e7d2a4bcd906e4a073bf63da5f40a2259c997; CC isd7516372a7d064e1e89454008de33acfc14e58c24ea009f289150c802778ef9c; CD is6bfc35e1c549ad13f247f2e49f1943f41ec73257a976b773b2c236f03f38adaa. Exact four-code-anchor read-only audits and owned controller/run receipts are preserved under `castle18-20261018`, with scenario suffixes resevtcb/cc/cd.
+
+AtCB the original four loaded type7 monks are source entries44/45/46/47, eachHP1000, and the five held byte-list entries remain48/37/39/3A/3B. This is an admission/navigation observation, not a wave-clear or release proof. The initial private audit's wrong word-width queue decode is retained as invalid; the verified artifact uses the symbol-proven64-byte Held array and only its firstN bytes.
+
+The prison key, further waves, locked door, Garrador route and chapter-end save remain open. Original r203 GetKeyItem sends4B..4F and immediately callssetGoto, another potential held-command consumer; actual activation/release evidence is still needed and the new default-off fix remains explicitly r207-only. No room-general guarantee is claimed.
+
+Current source is separately refreshed through upstreame86bf58e and WorkerA'sa996608e control document in48def0f3. Frozen I014 a808/25d default-off identity and inventory target-upload gates remain bound to their exact recorded controls; later upstream is not covered by that identity comparison.
+
+## H027 continuing: original r203 Prison Key and source queue
+
+The same immutable historical 746 program and 60aa disc continue from the native chapter 6 route. Both metal doors open through normal A input, and ordinary movement follows the original stairs to the upper chest. The normal chest action completes its original callback in CL: the area 7 item-event entry is removed, source Rsf4 is set, and gameplay resumes. CM then uses normal A to take the revealed Prison Key. At source frame 33098, the original ItemMgr contains active item A7 with quantity 1; phase is 3, Stop is 0, and Leon/Ashley remain 1440/360. There are no inventory, health, actor, flag or snapshot writes.
+
+The exact CM state is 5c224652c3ea026f72e5469ae3cf760d4770b83ab12f79594ec94ecf743b201c. Four independent unchanged ELF anchors bind the read-only audit to this program. The owned pickup capture exits after 7.62 seconds with no capture errors. Evidence is `r203-native-CM-original-prison-key-snapshot-20261019.json` and the controller receipt under `h-c18oimW-r200l/scenarios/cx-r200-walk-resevtcm` in the Castle evidence root.
+
+The original GetKeyItem callback adds source entries 4B/4C/4D/4E to the held queue. Its first nine byte entries are now 48/37/39/3A/3B/4B/4C/4D/4E; the same four original type7 enemies 44/45/46/47 remain loaded at HP1000. This proves the pickup's source send behavior and retention, not later releases, movement, wave clear or room acceptance. The immediate source setGoto calls remain a separate r203 consumer to qualify; the new movement fix is deliberately limited to r207.
+
+The route next returns through the same corridors to the original locked prison door and uses the actual key. Garrador, the remaining chapter rooms, current-source replay, residency and the chapter-end save remain open.

@@ -552,6 +552,27 @@ $(error NATIVE_MODEL_REGISTRY_LOD=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
 endif
 GAME_CPPFLAGS += -DRE4DC_NMR_LOD=1
 endif
+# NATIVE_MODEL_REGISTRY_GRAB_FULL=1 (lane castlerender19 2026-10-19; default 0; render only; needs
+#   NATIVE_MODEL_REGISTRY_LOD=1): registry_lod_want also draws the full descriptor while the player runs the custom
+#   damage routine this actor started (pl_sub.cpp SetPlDamage: routine 0 == 4, dmgType = the enemy). r221 Verdugo's
+#   grab, kick, tail and critical hit (em2c.cpp 4601 / 5040 / 5083 / 5100) never set the event bit
+#   Status_flg[1] 0x10000000, so they drew the gameplay level. Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_GRAB_FULL ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_GRAB_FULL),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_LOD),1)
+$(error NATIVE_MODEL_REGISTRY_GRAB_FULL=1 needs NATIVE_MODEL_REGISTRY_LOD=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_GRAB_FULL=1
+endif
+# NATIVE_MODEL_REGISTRY_OT5=1 (lane castlerender19 2026-10-19; default 0; render only): the registry certificate also
+#   admits ot_type 5 for the r221 Verdugo (em2c, model 0x2c; em2c.cpp 1144). trans.cpp ModelTrans case 5 registers the
+#   same ModelRender callback once, AddOtDirect(0x10, m, ModelRender, 0, 2): one source call per frame at OT 0x10,
+#   like ot_type 0 / 1, and the owner path draws inside that callback, so the source order is kept. Other models keep
+#   the ot_type 5 refusal. Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_OT5 ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_OT5),1)
+GAME_CPPFLAGS += -DRE4DC_NMR_OT5=1
+endif
 # PS2_ASHLEY=1|2 (lane ps2cast 2026-10-14; default 0; render only): Ashley (pl11, the partner pSUB, model id 3; r117
 #              first) through the registry owner path with her PS2 mesh (tools/ps2_ashley.py: PS2 geometry / UVs / weights,
 #              the PS2 cloth influences moved onto the GC cloth links the source solver already moves - no second solver,
