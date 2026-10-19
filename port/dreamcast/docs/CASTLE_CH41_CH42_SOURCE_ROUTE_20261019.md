@@ -733,3 +733,100 @@ Final state d6b3b85bb70251f9abfd38b5289182c90f9a8224bf6030c4701ca3cd66377b8b;
 combined log4473d5a10477f639eabf9684e9fdf75392574fb1e49b8ab5ccc76ac77ab796fb.
 Roof/drill/cup and return remain open. This is not current-recipe chapter
 acceptance, hardware timing, whole-room appearance or a frame-rate gain.
+
+
+## r212 original roof trigger and full movie
+
+Sequential normal16 calls Ashley Follow and walks into the original roof
+area. Movie21200 presents all627/627 frames with dropped0/late0,20.984s
+wall time. It restores the original gameplay pose near(-508,2,-2166),
+closes the first door and begins the falling roof at source frame2751.
+Leon1440/Ashley600 are unchanged; the saved original thumbnail was viewed.
+There is one audio underrun/76 silence bytes, so audio-perfect playback
+is not claimed. Roof shooting, drill fight, cup and chapter remain open.
+
+The17-capture chain ec3488178ad9d94c946f1aac200965f54453ac0c8e783660dd00533205cb5150
+retains the same disc/programs without state retargeting or guest writes.
+Final state ab408676a54a3f2491d6fc4ced7b32042965144fe81e4f1dd8c5f74f74e733b4.
+Private proof: r212-original-roof-movie-proof.json. This is frozen746
+Flycast diagnostic progression, not current-recipe chapter/hardware acceptance.
+
+
+## r212 matched gameplay residency correction
+
+The bounded first-plate walk, normal Ashley Wait command, rack6 approach
+and stationary enemy view pass the matched preload gate. Nine gameplay
+first-sight keys in the control become zero in the candidate. Each arm
+starts from its own fresh original-door diagnostic and keeps its own
+unmodified state chain; input helpers and goals are identical by phase.
+This is not an exact-state comparison, whole-room/chapter acceptance or a
+performance result. The programs are the frozen746 diagnostic snapshot.
+
+All7,420 payload names agree and only dc/resident.bin changes. All23
+program payloads are exact. The5,800-record candidate preserves all5,791
+V18 records and other rooms, adding only the nine observed r212 keys.
+Candidate disc3550ac08 and control c9d12b8c remain separately identified.
+
+Both arms draw native Leon, Ashley and em11 with GC0. Their summed census
+counts are3150/2818/527 in the control and2250/2143/252 in the candidate;
+the different windows are not a performance comparison. Both hold the
+exact49,152-byte reserve with minimum KOS headroom32,832. Candidate VRAM
+has769,504 bytes free,714,752 largest block,211 stable loads, zero evictions
+and retries; refusal/guard/absent/drop, texture, audio-fit and fatal errors
+are zero. Leon1440/Ashley600 remain unchanged throughout the input samples.
+
+The shared first-sight parser also reports cf2208cd-a6bfb2ef in both logs.
+It occurs exactly once at line595, before the first room preload, and is
+retained separately in the proof. It is not a post-preload gameplay load.
+The control's last periodic summary sees eight late uploads, and the later
+native stream and actual loader keys establish the ninth. The candidate
+has none in either source. No shared parser or game code was changed.
+
+Candidate heading phase03 stopped on the controller's camera-settling
+guard. That attempt and its unchanged state are preserved. The identical
+phase04 stationary rule completes both arms and observes native em11.
+There was no guest write, hidden failed attempt or runtime crash.
+
+Private proof r212-resident-matched-runtime-proof.json:
+bc6355ffb3b4e794a502dc6fd46719fd40d65c166e245aae80aa1b91fcc9a6bd.
+Lineage r212-resident-match-lineage.json:
+8c2263d3eca91e12a3f825e01224b22f41b62206d24e22f1ecb3b65f750a7db8.
+Private set castle18-ch41-r212-gameplay-resident-20261019:
+resident b93f1fdd53a413dc351667c9521d413567152e355dfdaf3f2137152a81e8e73b;
+manifest1969d7cf38e0b834d42b2235b240946481dad8f754b0c8fc055355522f6ecf40.
+The original normal16 roof state remains available for normal shooting,
+drill combat, cup collection and return; those events are still open.
+
+
+## r212 original ceiling trap completed with normal shots
+
+The original roof watcher completes at source frame3878: room flags3f000000
+contain all four hit bits and the completion bit, with the exit door open.
+Five normal handgun shots consume magazine10 to5; Leon1440/Ashley600 stay
+unchanged. The original saved thumbnail was inspected. All controller
+feedback is read-only; ordinary owned-window ready, aim and fire inputs
+cause the original collision, damage, flags and door changes.
+
+The22-capture chain retains exact successive states, original discc9d12b8c,
+ELF746a2a5f and all23 programs. Normal17's350tick aim guard and normal19's
+transient-hit-observation guard are retained. The controller now reads the
+original first child muzzle matrix and latched source hit flags. No game
+code, health, ammunition, transform or flag was edited.
+
+Exact49,152 reserve remains, minimum KOS headroom29,272. Native census
+totals Leon22,264, Ashley21,436 and em11 7,564 have GC0. Texture, audio-fit,
+fatal and VRAM refusal/guard/absent/drop errors remain zero. The movie's
+earlier one underrun/76silence bytes remains recorded.
+
+Whole-room residency is still open. Sixteen further selected loader keys
+are now observed beyond the earlier nine; all selected bytes are sealed
+in r212-roof-first-sight-winners.json. The last native-stream load count226
+precedes another observed upload and is not a final count. The earlier
+bounded nine-to-zero matched result remains valid, but does not cover
+these roof, weapon and effect exposures. No new resident-list edit yet.
+
+Proof r212-original-roof-trap-proof.json: e763465fa285c75b1af1b4c9a1abbc5ac7e01fe4f721b017ab29ef66337d07f6.
+State aabf466d7964c98fcb76a00eb7b29bc3b4d7009762f840e1417704aced580ff3;
+chain8f83bea2b570bdb710f2037284f250fb39c9313290dc54c637cbad9c118b2013.
+The original drill fight, cup6f, return and current-recipe chapter gate
+remain open. This is frozen diagnostic progression, not console timing.
