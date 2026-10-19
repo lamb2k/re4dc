@@ -83,6 +83,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| The Player's Manual pages 1-3 (aim, knife, action) and file 3 show the GameCube controller instead of the Dreamcast one. The Dreamcast pages are on the disc, but the game looks for them outside the texture pack | test 8 to 18 | ✅ Fixed in test 19 | [#44](https://github.com/lamb2k/re4dc/issues/44) |
 | In the Mendez fight (chapter 2-3 barn, r11f) the room's effect pool fills (1,024 of 1,024 sprites) and a few fire / smoke effects are skipped; the same happens with the GameCube's own pool size | test 17 | 🔍 Investigating, not blocking: found by our effect-pool count (ESP_POOL_DIAG), no gameplay effect seen | |
 | Leaves, fences and tree branch tips draw as solid shapes on a real console (fine in emulators) | test 8 | 🟢 Fixed, needs console check | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Blank screen on door transitions | test 7, test 8 | 🟢 Fixed in test 9 | |
