@@ -1,0 +1,45 @@
+{
+  "scope": "Existing full source-compatible front cast; no mesh conversion. Runtime capacity requires NMR_R202_CAST_CAPACITY=1 in CH4 only. Full route not accepted.",
+  "source": "4f835fb9",
+  "integration": "343fe694",
+  "sets": {
+    "castle18-ch31-front-cast-v2-20261019": {
+      "manifest_sha256": "25dd80b9c88653666eb351d2f2e331c7d35176f7ca2b40bbce4899420a18fd42",
+      "files": {
+        "PROVENANCE.json": "8820801fe8c165fe1d2ebff38790dec1fd46bf7cb2ff61f4302b9f744957afc8",
+        "files/dc/native/r202/partner.re4nmr": "59ef39c4a0c7241f4f698fd291817e24cd8c1f8ed757a3e56c2d0d47f067d249",
+        "files/dc/native/r202/registry.re4nmr": "ea9c09c0afebfe43fe507b4a18d952e24d6f739adfde51eff4e6d1d43aae357c",
+        "files/dc/native/r207/partner.re4nmr": "fc30ba308f2c6b7c1ac2403d29d771a0d43d313a2fa99312460c2d0cdc2fb6f9",
+        "files/dc/native/r207/registry.re4nmr": "726803f8744d8f8189a3c70295747757de97de29f1a87d963f395c0773eed2b2",
+        "files/dc/tex/1/116049de-1e9a8d70.re4tex": "9c6ca52ff8d95b9da77cacf5e537e6e3ab3891c4717c3198b63c50a31bab49a3",
+        "files/dc/tex/3/36645e3b-0143beda.re4tex": "490e7e0b757e9ca915c6b57e38b21d540966ed8b7a89159a8b94b069d312ad33",
+        "files/dc/tex/3/3f690586-7edb7c3e.re4tex": "042777630c021a28003aa78f0e60e1b248b17dc4f66fae7e2f2637bd2b2d99a4",
+        "files/dc/tex/4/47ff9b56-9acf69c5.re4tex": "c777daaa4d7ab8e9957be40dce3037d852f3bde1bd2688c586fe275e2974e707",
+        "files/dc/tex/4/4da9c3fa-98934ea1.re4tex": "46069427ff6d5e4ec918d6116b273fb71ff6dd00a01b6a0fd0d9a69b5d768338",
+        "files/dc/tex/6/61519868-9ee3f93f.re4tex": "2af4bac78227dc4008ffc79c86877a0d62cd56b24aed05b45cdbf8ec247bb3a4",
+        "files/dc/tex/a/ac23b5fe-01af40e8.re4tex": "6dd9cde5a7b2290bb081a77d41cb066de1511f443c3e9596eebe62864ac84413",
+        "files/dc/tex/b/bc1a9802-181dea09.re4tex": "ea6a070b999e366918c4990205ac87674bdd959c7a53ff75d699f57af7afad0e",
+        "files/dc/tex/e/ec7b1745-32ce202e.re4tex": "69eedf487f22e086e69e7db1a5db733ef57b700fb136bd266d3621c195bf50b3",
+        "files/dc/tex/f/fc75dd46-779f14bd.re4tex": "152341d2825a854211824523035ce5849ace4fe2a86ea3947c16f41d97083385"
+      }
+    },
+    "castle18-front-cast-resident-v4-20261019": {
+      "manifest_sha256": "4361d1d97b486f4876d43715feb7446504a3f027b99d06f59b37711a994b0a55",
+      "files": {
+        "PROVENANCE.json": "1a09564459438a1d01fa6730461e3cf23bb96083f8b4d59cc019d539eb044c11",
+        "r202.tsv": "52256e556379c59eefe4e5f79b1ccfbfb6b1c894f05f02da345b959bd82197a0",
+        "r207.tsv": "5ca57b2cb0268c47451a601b0e2f59098cf788666da0cafc945517a8913bff80",
+        "resident.bin": "aae5327b43ac999eec9a49127417216f6680bb77522065e17ece42188c3bd4ed"
+      }
+    }
+  },
+  "resident_records": {
+    "old": 5468,
+    "new": 5493,
+    "other_rooms_unchanged": true
+  },
+  "guest_gate_keys": [
+    "r202l",
+    "r202m"
+  ]
+}
