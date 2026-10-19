@@ -1,0 +1,72 @@
+{
+  "registry": "castle18-ch32-r20c-em1b",
+  "about": "Original r20c em1b types7/10 using exactly retained r201 full package data. Type8 retained unchanged in package. Source em25 parasites remain separate actors. No geometry or material changes.",
+  "cast_dir": "/root/re4data/private/castle18-ch32-r20c-em1b-v2-20261019/cast",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "lit presets (normals kept); the runtime decides flat vs source lighting",
+  "descriptors": [
+    {
+      "name": "zealot-em1b-07p",
+      "archive": "em1b",
+      "model_id": "0x1b",
+      "source_types": [
+        7
+      ],
+      "module": "src/em1b/em1b_set.cpp Em1bSet type 7 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+      "partial_sections": true,
+      "pool": true,
+      "source_drops": [
+        "bump"
+      ],
+      "mask_runs": {
+        "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-07-hood",
+        "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-07-acc1",
+        "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-07-acc5"
+      }
+    },
+    {
+      "name": "zealot-em1b-08p",
+      "archive": "em1b",
+      "model_id": "0x1b",
+      "source_types": [
+        8
+      ],
+      "module": "src/em1b/em1b_set.cpp Em1bSet type 8 + em10ModelInit / em10HeadSet / em10HandSet / em10SetAccesory",
+      "partial_sections": true,
+      "pool": true,
+      "source_drops": [
+        "bump"
+      ],
+      "mask_runs": {
+        "13": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-08-hood",
+        "16": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-08-acc1",
+        "20": "/root/probe/lanes-20261016/cast16/conv3/mask-em1b-08-acc5"
+      }
+    },
+    {
+      "name": "zealot-em1b-0ag",
+      "archive": "em1b",
+      "model_id": "0x1b",
+      "source_types": [
+        10
+      ],
+      "partial_sections": true,
+      "module": "src/em1b/em1b_set.cpp Em1bSet type 10 (em10.cpp creates; ps2_cast.py pool)",
+      "source_drops": [
+        "bump"
+      ]
+    }
+  ],
+  "room_packages": {
+    "20c": {
+      "descriptors": [
+        "zealot-em1b-07p",
+        "zealot-em1b-08p",
+        "zealot-em1b-0ag"
+      ],
+      "evidence": "Prepared original chapter3 ESL requires em1b7/10; source Em1bSet uses same archive body, attachment and material identities in every room."
+    }
+  }
+}
