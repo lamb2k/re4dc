@@ -235,6 +235,48 @@ The source fragment is `tools/d367/castle18/ch41-r219-streams-20261019.json`.
 Compose only these two additions into newer stream unions. These are host
 checks; actual playback and both original cart events remain unqualified.
 
+The current-program entry `cx-r219-walk-entrykos01` completed 56.39 seconds,
+held the exact 49,152-byte reserve and left minimum KOS watch headroom of
+48,752 bytes. All 23 program payloads remain unchanged. Texture errors,
+audio-fit failures, fatal stops and VRAM refusals are zero. Leon has 450
+native census samples with zero fallback. The program loads both added
+32 kHz stereo stream-index entries; neither cart event plays in this entry
+check. There is no Ashley model census, so her HUD does not prove her model.
+
+The last official VRAM row is only the frame-182 preload: 907,488 pinned,
+zero dynamic, 1,602,592 free and 1,571,840 largest-free-block bytes. Later
+stream receipts through frame 480 retain 143 loads, but complete room
+residency is not qualified. The 45-second still shows the near cart platform
+and Leon. Late Flycast registration reaches about 190-196 ms at global ticks
+649-661, with no active enemies, similar to the unresolved r210 observation.
+This is not hardware timing or an attributed cause. The original cart
+sequence, partner, audio playback and chapter traversal remain open.
+
+Evidence: `r219-entry-proof.json`. Log SHA:
+`b48f5da19094c9739f378f81b30aa900c5e47a60842c813ea0d727b721644378`.
+Disc SHA:
+`a0a9df001abbda5f204db141a129cc54ebe93af0c6f18de60e5c60b31a076edc`.
+The finished disc was retired after sealing; logs, stills and results remain.
+
+## r211 cup-route entry preparation
+
+The diagnostic fixture uses the original r219 area-1 destination, retains
+the 23 current program payloads and adds 137 recovered room files. The
+original statue tasks require cup 6E from r216 and cup 6F from r212, then
+the original grate event before the r213 exit. Entry cannot qualify them.
+
+The unchanged frozen-layout fitter prepares ROOM/FOOT alongside the
+682,208-byte aligned em14 bank. It selects 11,025/8,000 Hz under its existing
+policy and uses 201,056 aligned bytes, leaving 120,928 arena bytes. All
+non-audio archive bytes and original wavetable bytes remain exact. This is
+host preparation; runtime and preceding partner-state overlap remain open.
+
+Private set `castle18-ch41-r211-audio-20261019` is mirrored on C:, manifest
+`b400c71aa8b2394c99f231ed9602eb6781cb544c7f2a25cb34af0481c3b1fda2`.
+Archive SHA:
+`fb19ffd6e2afef92bfc8ffddc6b48ea65264149f223aae2ad503c524de37f4eb`.
+Source fragment: `tools/d367/castle18/ch41-r211-audio-20261019.json`.
+
 ## r222 near-enemy diagnostic and residency correction
 
 `cx-r222-walk-neararea10kos02` starts at the original area 10 centre,
