@@ -401,3 +401,39 @@ Control disc SHA:
 `5599fe324677f69c178c81be759eb603718b474fa0ddf02066a5db463e55d49d`.
 The finished disc was retired using the guarded worker pruner; all logs,
 stills, results, program hashes and rebuild inputs remain.
+
+## r212 original-entry audio and event preparation
+
+The diagnostic fixture starts at the original r211 area-1 destination:
+(4060, 0, 1980), facing -pi/2. It preserves all 23 current program payloads
+and adds 144 recovered room files. Its unsolved puzzle source can create
+Ashley through its original SubCharInit/CHASE call; the fixture adds no
+partner flags, progress flags, health changes or enemy substitutions.
+
+The existing frozen-layout audio fitter includes both the original em11
+and Ashley banks, 750,272 aligned bytes together. It prepares ROOM/FOOT at
+the existing 11,025/8,000 Hz policy, using 232,064 aligned bytes and leaving
+21,856 bytes in the 1,004,192-byte arena. All original non-audio and wavetable
+bytes remain exact. This is host preparation, not a runtime memory pass.
+
+Private set `castle18-ch41-r212-audio-20261019` is mirrored on C:.
+Manifest SHA:
+`852c6fc551698bf8d0c071f785daa1c9039fccff12d4a778a63fb6e45502310d`.
+Archive SHA:
+`87be8ff30a4d300ee48c20ce2f4d848727949ab9f05153b7f31d7cc647d29f02`.
+Source fragment: `tools/d367/castle18/ch41-r212-audio-20261019.json`.
+
+The actual staged base BGM table has no sequence-bank request for r212.
+Its two original stream choices, 0:32 and 0:33, both already have prepared
+32 kHz entries in the selected 78-entry stream file. The recovered roof
+movie `dc/movie/r212s00.seq` is present (4,434,758 bytes), SHA:
+`70a6f8f5b0a7c4b124e323b047c0b110a9773b04bb9ee7a1e8c0d2fc6388fb12`.
+These are file/table checks, not movie playback or audible acceptance.
+
+Source progression still requires all four plates occupied by Leon,
+Ashley and the two racks, the area-1 roof movie and shootable catches,
+Ashley's area-13 live drill trigger, both retained drill Ganados' deaths,
+the cup 6F pickup and original return. The room tasks retain enemy-list
+rows D7/D8, so later cap handling must preserve those references. No room
+or chapter completion is inferred. Evidence: `r212-entry-preparation.json`,
+`r212-audio-fit-proof.json`, and `r212-source-events-audit.json`.
