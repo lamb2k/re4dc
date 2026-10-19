@@ -1,6 +1,6 @@
 # Deferred room-wrapper flag commands, 2026-10-19
 
-Status: default-off candidate; actual-source host checks pass. Fresh Disc 1 off identity passes; enabled guest validation is pending. Do not add this switch to a chapter/release recipe yet.
+Status: default-off candidate. Fresh Disc1 off identity and isolated paired source activation/native-draw checks pass. Enabled room residency still fails; do not add this switch to a chapter/release recipe yet.
 
 ## Observed failure
 
@@ -34,3 +34,15 @@ Both candidate builds use reviewed/pushed db9438195, frozen clean source, the sa
 CH4 enabled c32dfnmW ELF0838b83195467bf8efe577ddd762a9610b37520161e65bc0b90242aedc3adb63, raw93e3b263642ce90da3e21e9b638ad3e9d6f0fc89ef19c4a412134446cd1b421a, end8c46f1d8 (+1088B total versus fresh CH4 baseline). The pending-mask symbol is exactly256B. All eight actually linked base wrapper compilations plus em_set carry RE4DC_ALIVE_CAP_DEFER_FLAGS=1; controls omit it. V2/v3 remain supplemental include-variant coverage, not linked runtime evidence. ACTOR_PLAN remains0 in every arm. Cap-off SH-4 preprocessing also matches the untouched source for em_set and the wrapper; no separate cap-off guest run is claimed.
 
 Fresh paired cage fixtures select each new build's exact boot/all22 overlays and the same V17 data. They start from the original warp/source trigger and damage fixture, with no historical746 snapshot retarget. Independent ELF-keyed read-only observers use each build's actual symbol addresses. Guest admission, appearance, memory and progression remain pending.
+
+## Fresh paired release result
+
+The fresh 7adb off/on pair uses identical nonprogram payloads, the same V17 resident union and the same original cage plus bounded kill/killrep diagnostic. Both boot and every staged overlay are checked against their selected fresh programs. Each arm has an initial capture and its own unchanged-disc saved-state tail, all under60 seconds, with owned emulator exit and no capture errors. Neither historical746 nor the later f255 upstream is represented as this pair.
+
+D6 leaves the queue at observer frame1571 in both arms. Off remains flag0 and routine1/4/1 through frame2583, with no actual 0ag native admission. On preserves the original pending bit, applies flag1 after first AI initialization, advances to routine1/27/1 and the source floor, and records771 actual claw-body native submissions with zero declines, fallback or semantic refusals. Its first sample observes the middle of initialization (flag0), not an ordering violation. The read-only observer posts no input and writes no guest memory. Counted Ganado census never exceeds4; raw alive totals also include other source objects.
+
+Off captures56.38+56.09seconds; enabled56.05+56.38seconds. Exact reserve receipts hold/request49152 bytes; minimum logged headroom is38080 off and38208 enabled. Off residency passes zero late uploads. Enabled official final room tick fails15 late uploads, with guard/refusal/retry/eviction/TEX/audio failure counts zero. Full first-sight audit finds three more death-text uploads after that tick (18new keys total), so the result remains a residency failure pending an additive preload correction. The three later text keys remain in the complete raw ledger but are held separately for source menu-ownership review; only the15 gameplay keys are authorized for the room list. No paused-menu filter is relaxed. Source image/format winners are retained.
+
+The unattended enabled enemy kills Leon (observerHP0firstat1886); retained stills show critical health then the original death transition. This demonstrates activation and native drawing, not survival, a completed fight, all queued releases, cleared doors or a no-warp chapter. The one-part id01 planL draw after death is not playable/partner Ashley evidence. No hardware timing or speed claim is made.
+
+Private paired proof: `workers/ch32/deferred-flags/r20c-paired-runtime-proof.json`, arm logs and `r20c-{off,on}-runtime.json`. Off disc80fda0ec0d8724641affe4ca0e5a8a74f58f1d93477b028fc3ef35c414088723; enabled62b0fbec63df69f479ffd7ca2fda202758e4cf15e5a135d5eb23f45df4637539. Exact combined logs f75e9bbb0f196a4aa1efd1da364238d03b15b93563b6718b3a6b35cc41192f98 and b310b6017517d816fcf80cbada27a140231761e2a362fb0bf0b683df5f796032. Source/build file claims are released; data follow-up is separate.
