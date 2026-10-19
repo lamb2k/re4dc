@@ -2763,6 +2763,21 @@ $(OBJDIR)/parts_bridge.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_OWNER=1
 $(OBJDIR)/src/game/main_mem.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_OWNER=1
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_ps2_world.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_OWNER=1 -DRE4DC_PS2_WORLD_SOURCE_TEX_PREP=$(PS2_WORLD_SOURCE_TEX_PREP)
 endif
+# PS2_WORLD_SOURCE_TEX_VQ=1 (lane fix18 #39, render only, default 0 = image unchanged; needs SOURCE_TEX_PREP=1): the r200
+# late-pass descriptor fa6fe38c-1a02365f is a full-codebook VQ package on the Test 17 disc (18,432 B: the vq16w / pak17
+# conversion), but the prep compared its VRAM size with the 16-bit 131,072 B it was proven with, so every prep after the
+# r200 s00 movie failed (texchk FAIL source-world-prep-descriptor). With it the prep also accepts the same 256x256 picture
+# as full-codebook VQ (2048 + w*h/4 B); identity (key, size, one texture, upload complete) is checked as before.
+PS2_WORLD_SOURCE_TEX_VQ ?= 0
+ifneq ($(filter-out 0 1,$(PS2_WORLD_SOURCE_TEX_VQ)),)
+$(error PS2_WORLD_SOURCE_TEX_VQ must be 0 or 1)
+endif
+ifeq ($(PS2_WORLD_SOURCE_TEX_VQ),1)
+ifneq ($(PS2_WORLD_SOURCE_TEX_PREP),1)
+$(error PS2_WORLD_SOURCE_TEX_VQ needs PS2_WORLD_SOURCE_TEX_PREP=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_SOURCE_TEX_VQ=1
+endif
 # Original r11f authored-group owner. Host qualification precedes runtime use.
 PS2_WORLD_R11F_OWNER ?= 0
 ifneq ($(filter-out 0 1,$(PS2_WORLD_R11F_OWNER)),)

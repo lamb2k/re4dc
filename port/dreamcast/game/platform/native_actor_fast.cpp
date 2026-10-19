@@ -1364,7 +1364,9 @@ struct SkinEntry { const void* info; const void* positions; const float* palette
 #if defined(RE4DC_LEON_SKIN_SLOTS) && RE4DC_LEON_SKIN_SLOTS
 // LEON_SKIN_SLOTS=1 (crowd.mk): r119 after movie 11900 registers 64 skins before Leon's transaction asks for its 9
 // (MCHECK_LEONGC: SKINACQ why=4, registry full), which left Leon to the GameCube path.
-constexpr unsigned kSkins = 80;
+// LEON_SKIN_SLOTS=2 (lane fix18 item 9): 112. Measured peak 105 live skins in the r119 fight (frames 946-1138, then
+// back to ~20: transient, no leak; g3 through 11900 / 11910 / 11930 / 11920 peaks at 73), plus a margin of 7.
+constexpr unsigned kSkins = RE4DC_LEON_SKIN_SLOTS == 2 ? 112 : 80;
 #else
 constexpr unsigned kSkins = 64;
 #endif
