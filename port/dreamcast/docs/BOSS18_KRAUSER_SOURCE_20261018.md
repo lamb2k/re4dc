@@ -32,3 +32,40 @@ Historical Island i18s4 kev1/kev2 shows source-live Krauser type1 at10000HP and 
 Complete cap/weapon/gunship source coverage, full actor registry/target admission, actual retarget/hand/clothing/arm/death poses, current native drawing, full/g50/g33 packages, source STRICT/decisions, complete residency/heap4/VRAM/KOS, exact ordered attributed MODELLED/Flycast and same-frame PS2/full/reduced sheets remain pending. No exclusive cost, saving, user choice or physical-console acceptance is claimed. I-006 reserves engine services to the engine lanes; these changes are offline converter proofs only.
 
 Private boss18-krauser-20261018 currently has316files/43083705B, SHA256SUMScd27fb84126c00a11aa6bc69f0530cdc24569e6bbff3c6e6acfc301739b423d4, immediate C:/Game Dev/Emulators/re4-assets-private mirror verified. Earlier3/4file source snapshots remain under C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/source-snapshots. KRAUSER_PROGRESS.json separates pending gates. Evidence root contains krauser-full-source-identity-proof.json, owner-bind audit, full conversion/native and default-control logs. No model/media bytes are committed, chapter recipe/default selection or runtime format changed.
+
+
+## Whole support and original-owner registry proof milestone
+
+The source set now includes every independent cap/held-weapon model and the original helicopter missile, plus reused em3a body variants. All six new supports pass unchanged 512 KiB native checks at three poses, original-GX VERIFY and VQ packaging. Independent original PS2 oriented corner sequence, weights, normals, material/TPL UV mapping and original GC hierarchy/rest pass for each. Existing em3a conversions are reused from ch5regen/c16 with matching original archive hashes; rerunning the native checks reproduces both retained runtime headers byte for byte. No source archive or model role is removed.
+
+| Separate source model | BIN / TPL | GC bones/parts | Full triangles / strip corners | Source system |
+|---|---|---|---|---|
+| cap obj12 |em39 0x16 /0x19|1/1|261/355|source SetObj12, parent head4, original local offset|
+| knife enemy42 |em39 0x26 /0x25|2/2|334/558|parent0xA, original motion ARC0x27|
+| gun enemy42 |em39 0x2C /0x2B|6/6|664/1118|parent0xA, original trans-mode state|
+| bow enemy42 |em39 0x32 /0x31|5/5|1152/1776|parent0x10, original trans-mode state|
+| arrow enemy42 |em39 0x37 /0x38|3/3|210/310|parent0xA, original projectile be_flag0x4000|
+| helicopter missile obj38/type1 |em3a 0x9 /0xA|1/1|150/190|parent9, original shootable hit box/fire/explosion|
+| em3a types0/1 |em3a 0x5 /0x6|13/13|1474/2178|original parts/patrol/wobble/weak spot/missile pod|
+| em3a type2 |em3a 0xB /0xC|11/11|1925/2815|original source logic and parts|
+
+Shared player grenade/flash source models remain the original PL_ARC0x6A/0x6B and0x6A/0x6F; they are not silently reauthored. All draw/logic MODELLED costs remain unpriced. No actual animation, source-system or full-fight result follows from these offline checks.
+
+The six explicit source configurations are saved in tools/d367/boss18/krauser-support-presets.json. They are an offline configuration rather than a production room selection: verify the four original archive SHA256s, load only the `presets` mapping into ps2_cast.PRESETS, then run the existing convert/native/finish steps. No new ps2_cast default or chapter selection is introduced.
+
+The optional model_registry source_owner_contract consumes a manifest with an explicit SHA256 selection. It pins canonical source.json/source-bindings.json, the exact native header, original PS2 DAT and GC archive, and original first modelInit BIN. The helper independently rereads every original BIN, PS2 bone record including duplicates, GC part record and actual PS2 weighted ID. It requires the unchanged original GC body hierarchy/rest, exact original source metadata, consistent duplicate records, finite values, source-owner BIN identities and valid weighted references in all original tables. Different unused attachment metadata remains verbatim; it never becomes runtime cParts. Header weights cannot escape the original section's source weights. This proof cannot combine with another skeleton projection. All raw material/BIN/part facts and existing target skeleton/certificate/capacity checks remain unchanged.
+
+Thirteen owner-contract controls pass, including four BIN identities, manifest/source/header/archive pins, duplicate/finite/weighted/parent references. With this option absent, the full Verdugo source package remains byte-identical, SHA25698a65dff72b6e2a794d1f57c1e6e49b8135028543ebd033b195c713e4fc98d59. The initial ordinary whole-pool exporter refusal and subsequent full-set capacity refusals are retained as evidence, not accepted packages.
+
+| Selection | File bytes | Skin bytes | Arena / existing capacity | Result |
+|---|---|---|---|---|
+| both original Krauser forms + five supports + both em3a |440224|24600|464824 /425984|REFUSED|
+| complete set above + original helicopter missile |443808|24640|468448 /425984|REFUSED by42464B|
+| human-only diagnostic + all supports/em3a |287488|12168|299656 /425984|target host checks only|
+| arm-only diagnostic + all supports/em3a |285600|14176|299776 /425984|target host checks only|
+
+Each phase diagnostic keeps all original hand/death alternatives for its own body form. The other body form is explicitly absent from that one-phase fixture. Neither is a complete room/fight/cutscene/handoff production candidate. Human package SHA256fba36df3ad9b463100aa83680590be91c17bf6520af18b66af3cadc8a38820a1; arm4965db26ceef9eefc768b36e2c5e5324b7ddfb018db76cf7c2555f03424b3145. Twelve checks against the actual target pack checker pass: both good packages plus wrong-room, corrupted hash, out-of-owner weight, invalid unused original parent and nonfinite owner bind refusals. These retain all127 body-owner joints; no skeleton or limit is reduced/raised.
+
+Remaining source/runtime boundaries are explicit. A pool's first live info must prove section0, so the original death body swap to the retained nonzero death row is not yet admitted. The arrow's source be_flag0x4000 is refused by unchanged registry_bind. Separate cap/weapon object ownership remains unqualified in game. Existing pool descriptors cannot carry lod_of. No engine or admission exception is added for any of these. The complete native room set still refuses the original arena ceiling. Current-program original-input human visibility, source hand/event/death/arm retarget animation, complete materials/residency/heap4/VRAM/KOS, STRICT/decisions, cost attribution and look sheets remain open.
+
+This milestone's private boss18-krauser-20261018 has945files/87228288B, SHA256SUMSebd24f884fe15f2585de706070eff31403f1799b82d6471751d9fe44cd1335d2, with immediate verified C mirror. The earlier316file info-pool seal above is historical. REGISTRY_PROGRESS.json, support-source-identity-proof.json, support-native-summary.json and package-host/results.json preserve the source/target evidence. Source-snapshots/krauser5 preserves the prior seal. No game/model/media bytes are committed; no production chapter recipe, format, runtime gate or capacity changes.

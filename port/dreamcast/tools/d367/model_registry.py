@@ -36,6 +36,14 @@ and the base rows counted against them include the pl08 rows (actor_material_rec
 as the runtime's kBaseBlobs / kBaseRoles do. The runtime pack check (coarse_actor_registry_pack_check.inc) still
 bounds a room package by kRoomBlobs / kRoomRoles of the image it loads into.
 
+Descriptor source_owner_contract (optional, default unchanged): {"path": <manifest>, "sha256": <pin>}.
+The re4dc-source-body-owner-1 manifest pins canonical source.json / source-bindings.json, the exact native header,
+the original PS2 DAT and GC archive, and the first modelInit BIN. model_registry_owner.py independently re-reads
+all original BINs, every partial/duplicate metadata record, actual PS2 weighted ids and the unchanged GC owner's
+hierarchy/rest. Only proved addModel sections use that owner. Raw source part/material facts and every runtime
+skeleton/certificate/capacity check remain unchanged. Cannot combine with another skeleton projection. This is
+an offline ownership proof, not animated retarget or complete death/body-swap admission.
+
 --source-normal-length (2026-10-04, default off: the output is byte-identical to before): every cast normal keeps
 its direction and takes the length of its SOURCE BIN's normals. GX transforms normals without renormalising and
 lights with n.l, and its normal fraction is fixed by the type (s8: 6 bits, s16: 14 bits), so the source's stored
@@ -674,6 +682,16 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
         luis = luis_coverage(inputs, d, src, binds, arc, arcname)
         if luis and L['header_sha256'] != LUIS_COVERAGE_HEADERS[luis['reviewed_manifest_sha256']]:
             raise Fail('Luis native header differs from the proved complete source triangle set')
+        source_owner = None
+        if d.get('source_owner_contract'):
+            if luis or d.get('partial_sections') or src.get('draw_slots') is not None:
+                raise Fail(f'{name}: source owner contract cannot combine with another skeleton projection')
+            from model_registry_owner import prove as prove_source_owner
+            try:
+                owner_chunks, _ = parse_header(hdr)
+                source_owner = prove_source_owner(inputs, d, src, binds, arc, audit[arcname]['sha256'], hdr, owner_chunks)
+            except (ValueError, KeyError, IndexError, TypeError) as exc:
+                raise Fail(f'{name}: source owner contract: {exc}') from exc
         # ---- skeleton (one per model; every section's bone table agrees)
         pb = binds[0]['part_bindings']
         bones = len(pb)
@@ -691,7 +709,7 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
         # partial_sections (descriptor opt-in; lane ps2cast-st3, the stage-3 soldiers): a head / hand BIN may carry
         # only the parts it weights (or repeat a hand root by attach id: em11 type 7), each attached to the body part of its attach id (GC calcWeightMat); its parents
         # name body parts (a section root: -1). The registry skins every section from the body's parts either way.
-        partial = set()
+        partial = set(range(1, len(binds))) if source_owner else set()
         if d.get('partial_sections'):
             for k, b in enumerate(binds[1:], 1):
                 q = b['part_bindings']
@@ -919,6 +937,8 @@ def generate(spec_path, out, tree, package_room=None, source_normal_length=False
                      position_shift=int(e.get('position_shift', 4)))
         if luis:
             entry['source_coverage_manifest_sha256'] = luis['reviewed_manifest_sha256']
+        if source_owner:
+            entry['source_owner_contract'] = source_owner
         if pool:
             entry['pool'] = True
         if d.get('lod_of'):
