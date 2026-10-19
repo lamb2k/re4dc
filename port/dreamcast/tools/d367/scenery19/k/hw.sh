@@ -11,9 +11,10 @@ B=/root/probe/lanes/route/out-$L
 K=/root/work/lanes/scenery19-scratch/k
 W=${FXWARP:-$K/hwcross-warp.txt}
 LOG=$K/hwstage; mkdir -p $LOG/fix "$EV" "$DD"
-D=$(python3 -c "import importlib.util as u;s=u.spec_from_file_location('f','$T11/t11-fix.py');m=u.module_from_spec(s);s.loader.exec_module(m);print(m.T17R_PAYLOAD+',res18f,boss18g50')")
-FIX=$LOG/fix/hw-$N.json
-python3 $T11/t11-fix.py $L $FIX --base payload --data $D --warp $W > $LOG/fix-hw-$N.txt
+# fixture: payload data (T17R_PAYLOAD + res18f), then boss18g50 on top (k/fix.sh; one t11-fix call with both fails
+# pak17's drop-loose check)
+bash $TREE/port/dreamcast/tools/d367/scenery19/k/fix.sh $L hw-$N $W > $LOG/fix-hw-$N.txt 2>&1
+FIX=$K/fix/hw-$N.json
 E=$EV/hwmodel-$N
 [ ! -e "$E" ] || { echo "$E exists"; exit 1; }
 cd "$HW"
