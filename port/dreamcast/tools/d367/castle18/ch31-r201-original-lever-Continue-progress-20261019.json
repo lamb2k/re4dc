@@ -1,0 +1,94 @@
+{
+  "scope": "Historical unchanged746/60aa native-route source progression, normal controller input and exact code-anchored saved-state audits. Current-source chapter acceptance remains pending.",
+  "original_lever": {
+    "scope": "Read-only exact746 four-code-anchor original etc table; table symbol from same ELF symbols.txt",
+    "frame": 48768,
+    "rows": [
+      {
+        "no": "0x10",
+        "source_data": "0x8ca01590",
+        "model": "0x8cacb3e0",
+        "id_type": [
+          78,
+          1
+        ],
+        "position": [
+          41310.328125,
+          4300.0,
+          -49305.93359375
+        ],
+        "yaw": 0.0,
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "no": "0x1c",
+        "source_data": "0x8ca01720",
+        "model": "0x8cad9c20",
+        "id_type": [
+          75,
+          0
+        ],
+        "position": [
+          34738.12109375,
+          -500.0,
+          -40000.0
+        ],
+        "yaw": -1.5707499980926514,
+        "routines": [
+          1,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "source_Room_flg0": "0x58000000",
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      360,
+      600
+    ],
+    "saved_r201": [
+      {
+        "address": "0x8c885268",
+        "Rsf": "0x6c400000",
+        "source_switch_bit5": true,
+        "source_claw_dead_bit0": false
+      }
+    ]
+  },
+  "original_continue": {
+    "state_sha256": "86dd5ba1a0612977bc36bbfa521f00cba6f3114591aa5208c1d5122686690178",
+    "frame": 47585,
+    "health": [
+      1440,
+      1440,
+      360,
+      600
+    ],
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "door_unlock0": "0x28000",
+    "C3_inventory": [],
+    "death_flag": false
+  },
+  "attempt_limits": [
+    "EI took genuine Garrador damage1440->864->608; health guard closed.",
+    "EJ reached loading inventory at352 and stopped on an uninitialized board; no Use occurred.",
+    "EK controller started before a valid pG existed and sent no input; retained as host-only invalid attempt.",
+    "EL verified sourceHP0/death; no heal claim. EL is the guarded retry from exactEJ paused seed; EK contains no gameplay input and is not spliced into the accepted route lineage.",
+    "EM original Continue restored game-created dungeon-key checkpoint, not an external earlier snapshot.",
+    "EP normal run and A invokes original lever callback; first controller read temporary Room_flg rather than savedRsf, so its unconfirmed label is superseded only by authoritative savedRsf5 and actual gate rise.",
+    "Garrador remains4000HP in EP; fight/death/exit/waves/chapter-end are open."
+  ]
+}
