@@ -142,6 +142,34 @@ Candidate resident SHA:
 `a1233414e1c35d43dd50f59c00ee1c73d86dbd7c678c21d881e8fdeba82d3686`.
 Private data: `castle18-ch34-r20e-resident-20261019`; manifest SHA:
 `4d71fffffdeb65e114a11ce55eac07f998bb76f7e4a4761000a370a9246e05fd`.
-A new fixture adds `squeeze 49152 0` explicitly. The fresh corrected gate is
-pending; it is not a strict identical-input comparison with the unsqueezed
-first capture. Neither capture can establish chapter completion.
+A new fixture adds `squeeze 49152 0` explicitly. The fresh corrected gate
+passes as detailed below. It is not a strict identical-input comparison
+with the unsqueezed first capture. Neither establishes chapter completion.
+
+### Corrected reserve-qualified check
+
+`cx-r20e-walk-armorkos02` completed 55.88 seconds in Flycast. The exact
+allocator receipt is `kos squeeze: held=49152 requested=49152`; minimum
+KOS watch headroom is 44,392 bytes while that reserve is held. The official
+VRAM gate passes with zero gameplay uploads, evictions, retries or refusals.
+Minimum VRAM free is 1,392,800 bytes; largest block is 1,333,248 bytes.
+
+CAST-GC passes: armour types 00w, 01w and 02w and Leon draw natively with no
+GC draws. The cumulative census sums (armour 9,000; Leon 1,500) are not actor
+counts. Dormant statues mean the alive list is zero. Texture errors, audio
+fit failures and fatal rows are all zero. The final still was inspected.
+All 23 staged boot/overlay payloads match the current c18oimW program.
+
+Evidence folder:
+`C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\workers\ch34`.
+`r20e-armorkos02-gate.json`, `r20e-armorkos02-vram.json` and
+`r20e-armorkos02-characters.json` preserve the separate checks. Raw-log SHA:
+`618bec4e7832a58280f7d3c02a2d3a565e9e1e6c940f0fa0cec2824155779080`.
+Disc SHA:
+`00369b068dfe33b37d899fdc15348ee1de0cf8eaa0b92dcc6b0ca2284920a14b`.
+The finished generated disc may be retired by the guarded worker pruner;
+logs, results, program hashes, snapshots, stills and rebuild inputs stay.
+
+No hardware performance saving is claimed. Ashley's native face, cloth and
+special hand, active armour combat, cap-four progress, original chapter
+save/reload and complete no-warp walkthrough remain unqualified.
