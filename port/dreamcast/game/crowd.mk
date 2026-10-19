@@ -166,6 +166,31 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1 -I$(OBJDIR)/
 $(OBJDIR)/src/game/read.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1
 $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1
 endif
+# LEON_HEADLESS=1 (lane garr18, 2026-10-19; default 0: no effect; render only; needs ACTOR_PL08=1 PS2_LEON=1
+#              LEON_HAND_POSES=1 and LEON_HEADLESS_DIR, a space-free private dir holding ps2leon_neck.h from
+#              tools/d367/ps2leon/build_neck.py): Leon after his head comes off (cPlLeon::setHead(0): chainsaw / claw /
+#              scythe / parasite kills, overseas regions) draws natively. setHead(0) deletes the head shape, hair and eye
+#              infos and appends the neck (player arc 0xB, TPL 7): 7 infos, which the 9-role pl08 plan declined, so the
+#              whole Leon went to the GameCube path for the death (rule 7). The pl08 owner plans appearance 0x109 instead
+#              (actor_material_records_leon_headless_roles.inc: pl08's roles 0..2 / 8, the two hand rows and the neck,
+#              GC identity rows from gen_neck_records.py); the neck geometry is the PS2 disc's pl00 arc 0xB (37 triangles,
+#              964 B) in arm A's atlas tile of the head.
+LEON_HEADLESS ?= 0
+ifeq ($(filter $(LEON_HEADLESS),0 1),)
+$(error LEON_HEADLESS must be 0 or 1)
+endif
+ifeq ($(LEON_HEADLESS),1)
+ifneq ($(LEON_HAND_POSES)$(PS2_LEON)$(ACTOR_PL08),111)
+$(error LEON_HEADLESS needs LEON_HAND_POSES=1 PS2_LEON=1 ACTOR_PL08=1)
+endif
+ifndef LEON_HEADLESS_DIR
+$(error LEON_HEADLESS=1 needs LEON_HEADLESS_DIR (the private dir with ps2leon_neck.h))
+endif
+GAME_CPPFLAGS += -DRE4DC_LEON_HEADLESS=1
+PLATFORM_CPPFLAGS += -DRE4DC_LEON_HEADLESS=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -I$(LEON_HEADLESS_DIR)
+$(OBJDIR)/coarse_actor.o: $(LEON_HEADLESS_DIR)/ps2leon_neck.h actor_material_records_leon_neck.inc actor_material_records_leon_headless_roles.inc
+endif
 ifeq ($(filter $(ACTOR_PL08),0 1),)
 $(error ACTOR_PL08 must be 0 or 1)
 endif
