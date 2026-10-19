@@ -20,7 +20,7 @@ set -euo pipefail
 PORT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # The current test release. At each test release, point this at the new test's knob file (one line).
-RELEASE_KNOBS=${RELEASE_KNOBS:-$PORT/tools/d367/test17/release-knobs.txt}
+RELEASE_KNOBS=${RELEASE_KNOBS:-$PORT/tools/d367/test18/release-knobs.txt}
 
 OUT=${OUT:-$PORT/out-public}
 OBJDIR=${OBJDIR:-$OUT/obj}
@@ -52,8 +52,8 @@ RECIPE=$(python3 "$PORT/tools/d367/release-knobs.py" args "$RELEASE_KNOBS" "$ASS
 # Del Lago, the female villagers, animals) and the PS2 world are disc data, so they stay on and draw as in the release.
 PRIVATE_OFF=
 if [ ! -f "$ASSETS/ps2leon/ps2leon_runtime.h" ] || [ ! -f "$ASSETS/ps2ganado/ganado_cast_runtime.h" ]; then
-  RECIPE=$(tr ' ' '\n' <<<"$RECIPE" | grep -vE '^(PS2_(LEON|GANADO)_DIR|GANADO_LOD_PACK)=' | tr '\n' ' ')
-  PRIVATE_OFF="PS2_LEON=0 LEON_HAND_PACK=0 PS2_GANADO=0 PS2_GANADO_LIT=0 GANADO_LOD=0 ACTOR_PROBE_LIGHT=1 GANADO_LIT=0 NATIVE_MODEL_REGISTRY_DYING=0"
+  RECIPE=$(tr ' ' '\n' <<<"$RECIPE" | grep -vE '^(PS2_(LEON|GANADO)_DIR|GANADO_LOD_PACK|LEON_HEADLESS_DIR)=' | tr '\n' ' ')
+  PRIVATE_OFF="PS2_LEON=0 LEON_HAND_PACK=0 PS2_GANADO=0 PS2_GANADO_LIT=0 GANADO_LOD=0 ACTOR_PROBE_LIGHT=1 GANADO_LIT=0 NATIVE_MODEL_REGISTRY_DYING=0 LEON_HEADLESS=0"
   echo "build-public: no PS2 character data in $ASSETS: $PRIVATE_OFF (GameCube character models; see CONTRIBUTING-PORT.md)"
 fi
 # Test 17 on: the chapter 2-2 / 2-3 PS2 enemy rows (ASSETS/ps2enemych2/ps2_enemy_ch22_data.inc and
@@ -76,6 +76,15 @@ if grep -qE '(^| )ACTOR_GANADO_PS2_STUMP_DIR=' <<<"$RECIPE" &&
   RECIPE=$(tr ' ' '\n' <<<"$RECIPE" | grep -vE '^ACTOR_GANADO_PS2_STUMP_DIR=' | tr '\n' ' ')
   PRIVATE_OFF="${PRIVATE_OFF:+$PRIVATE_OFF }ACTOR_GANADO_PS2_STUMP=0"
   echo "build-public: no PS2 stump header in $ASSETS: ACTOR_GANADO_PS2_STUMP=0 (GameCube stump / hand poses; see CONTRIBUTING-PORT.md)"
+fi
+
+# Test 18 on: Leon after his head comes off (LEON_HEADLESS) compiles in the PS2 neck header ASSETS/ps2leonhead/ps2leon_neck.h
+# (the knob file maps LEON_HEADLESS_DIR to @ASSETS@/ps2leonhead). The head archives em/pl00.drs / em/pl08.drs are disc data
+# (set garr18h). Without the header: LEON_HEADLESS=0 (that death draws Leon on the GameCube path, as in Test 17).
+if grep -qE '(^| )LEON_HEADLESS_DIR=' <<<"$RECIPE" && [ ! -f "$ASSETS/ps2leonhead/ps2leon_neck.h" ]; then
+  RECIPE=$(tr ' ' '\n' <<<"$RECIPE" | grep -vE '^LEON_HEADLESS_DIR=' | tr '\n' ' ')
+  PRIVATE_OFF="${PRIVATE_OFF:+$PRIVATE_OFF }LEON_HEADLESS=0"
+  echo "build-public: no PS2 neck header in $ASSETS: LEON_HEADLESS=0 (see CONTRIBUTING-PORT.md)"
 fi
 
 # The release builds pin __DATE__ / __TIME__ (the crash screen prints them) to this instant.
