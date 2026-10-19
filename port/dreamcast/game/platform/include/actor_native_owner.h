@@ -21,6 +21,9 @@ struct Re4dcActorSkinBackup {
 #ifndef RE4DC_ACTOR_PL08
 #define RE4DC_ACTOR_PL08 0
 #endif
+#ifndef RE4DC_LEON_HEADLESS
+#define RE4DC_LEON_HEADLESS 0  // LEON_HEADLESS (crowd.mk): appearance 0x109, Leon after setHead(0)
+#endif
 #ifndef RE4DC_ACTOR_SKIN_RESERVE
 #define RE4DC_ACTOR_SKIN_RESERVE 0
 #endif
