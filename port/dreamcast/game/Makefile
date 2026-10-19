@@ -2900,6 +2900,8 @@ include dbgwarp.mk
 include safecuts.mk
 # D367 effects30 (EFFECT_LEAN, EFFECT_SPRITES; default off: no effect).
 include effects30.mk
+# PVR_RTT (lane castlerender19 2026-10-19): PVR render-to-texture for TexRenderMng targets (default off: no effect).
+include pvr_rtt.mk
 # HW_FOG_HAZE (lane hwfog 2026-10-14): the distant camera haze as PVR table fog
 include hwfog.mk
 # D367 scenery30 (PLAN_ADMIT_LEAN, SCENERY_GATE, MODEL_SLAB_LATCH; default off: no effect).

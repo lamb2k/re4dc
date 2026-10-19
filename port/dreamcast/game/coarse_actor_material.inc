@@ -346,7 +346,8 @@ Error info(cModelInfo* i,const Role& row,Result& out,bool diagnostic) {
     if((i->be_flag&~8u)!=expected)return Error::PassGroup;
     if(i->invisible_factor!=1.0f || i->blend_mode || i->colorWord!=0xffffffffu ||
        i->color2[0] || i->color2[1] || i->color2[2] || i->color2[3] ||
-       (i->flagsDC && !RE4DC_NMR_BLEND_IDLE(i,row.appearance)) || i->pAddTpl || i->nAddTex || i->blendRatio || i->blendType ||
+       (i->flagsDC && !RE4DC_NMR_BLEND_IDLE(i,row.appearance)) || i->pAddTpl || i->nAddTex ||
+       ((i->blendRatio || i->blendType) && !RE4DC_NMR_BLEND_ICE(i,row.appearance)) ||
        (i->texBlendTbl && !RE4DC_NMR_BLEND_IDLE(i,row.appearance)) || i->pTexAnim || i->uvU || i->uvV || i->uvScrollU || i->uvScrollV)return Error::LiveModifier;
     if(i->be_flag&2) {
         // shape.cpp writes the prepared destination buffer, not vtxOrig.
