@@ -1,0 +1,7 @@
+{
+  "replace": {
+    "dc/native/r20b/registry.re4nmr": "/root/re4data/private/castle18-ch32-r20b-wolf-merchant-20261019/files/dc/native/r20b/registry.re4nmr"
+  },
+  "remove": [],
+  "provenance": "Existing full r20b wolf plus unchanged closed/open Merchant18; selected current nativeL/Shop texture winners retained byte-for-byte. Fourteen original Merchant source roles and actual loader pass. Current746 wave continuation draws wolf and closed Merchant natively without declines; Shop opening and full route untested. This fragment changes only registry.re4nmr; compose newest resident data separately."
+}
