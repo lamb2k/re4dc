@@ -1,6 +1,6 @@
 # Deferred room-wrapper flag commands, 2026-10-19
 
-Status: default-off candidate; actual-source host checks pass. Fresh Disc 1 off identity and enabled guest validation are pending. Do not add this switch to a chapter/release recipe yet.
+Status: default-off candidate; actual-source host checks pass. Fresh Disc 1 off identity passes; enabled guest validation is pending. Do not add this switch to a chapter/release recipe yet.
 
 ## Observed failure
 
@@ -26,3 +26,11 @@ Default is0. Make rejects invalid values and enabled use without ALIVE_CAP. Only
 - Historical746 is retained only as the original route snapshot; it is not relabeled as the fresh7adb control. ACTOR_PLAN resolves0 in both fresh controls.
 
 Private evidence: `C:/Flycast-Evidence/re4-dreamcast/castle18-20261018/workers/ch32/deferred-flags/`; source failure detail is `r20c-deferred-activation-reproduction.json` in the worker root. The V17 residency union separately preserves all5765 prior records and adds only three observed death/release keys (5768total); corrected-program runtime coverage remains pending.
+
+## Fresh candidate build receipts
+
+Both candidate builds use reviewed/pushed db9438195, frozen clean source, the same input recipe/headers, SOURCE_DATE_EPOCH1760000000 and a single serial -j4 slot. No missing symbols. Disc1 c32dforP boot plus all10 overlays and raw program match the fresh c32dfbrP control byte for byte. Every allocated ELF section matches, including addresses, sizes and contents. The full ELF differs only in nonallocated `.debug_info`, `.debug_abbrev`, `.debug_line` and `.debug_line_str`; it is not described as whole-ELF identity. Candidate ELF9751d917754f01da75879fe5a7e6de13676c6c1511a30d3cf0000d7b6f4639de, raw3afe9d759b86afeb93f3998563ae0058ea7b41cbcdf3538eaf9f69bdd4aabe1e, end8c4061d8.
+
+CH4 enabled c32dfnmW ELF0838b83195467bf8efe577ddd762a9610b37520161e65bc0b90242aedc3adb63, raw93e3b263642ce90da3e21e9b638ad3e9d6f0fc89ef19c4a412134446cd1b421a, end8c46f1d8 (+1088B total versus fresh CH4 baseline). The pending-mask symbol is exactly256B. All eight actually linked base wrapper compilations plus em_set carry RE4DC_ALIVE_CAP_DEFER_FLAGS=1; controls omit it. V2/v3 remain supplemental include-variant coverage, not linked runtime evidence. ACTOR_PLAN remains0 in every arm. Cap-off SH-4 preprocessing also matches the untouched source for em_set and the wrapper; no separate cap-off guest run is claimed.
+
+Fresh paired cage fixtures select each new build's exact boot/all22 overlays and the same V17 data. They start from the original warp/source trigger and damage fixture, with no historical746 snapshot retarget. Independent ELF-keyed read-only observers use each build's actual symbol addresses. Guest admission, appearance, memory and progression remain pending.
