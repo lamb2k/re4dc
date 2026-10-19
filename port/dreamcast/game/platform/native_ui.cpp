@@ -225,6 +225,10 @@ extern "C" {
 #include "ta_material_diag.h"
 #endif
 #include "native_ui.h"
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+extern "C" void re4dc_rtt_render_pending();   // pvr_rtt.inc (pvr_rtt.mk)
+extern "C" void* re4dc_rtt_override_texture(unsigned* w,unsigned* h);
+#endif
 #include "hud_source_mask.h"
 #include "native_model.h"
 #include "native_static.h"
@@ -1888,6 +1892,9 @@ void stream_open() {
     re4dc_fog_frame(); // fog registers: the previous scene no longer renders
 #endif
 #endif
+#endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    re4dc_rtt_render_pending();   // PVR_RTT: last frame's wanted render targets, before this scene
 #endif
     pvr_scene_begin();
 #if RE4DC_PS2_WORLD_DRAW
@@ -6237,6 +6244,25 @@ if(!handle){
 #endif
 #endif
     pvr_poly_hdr_t header;std::uint32_t count;
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    // PVR_RTT: the ice pass (coarse_actor_transaction.inc) draws the part again with the render target's texture,
+    // UV0 in the target's repeat space, blended by the target's alpha (trans.cpp TextureBlend3, blend type 2).
+    unsigned rtt_w=0,rtt_h=0;void* const rtt_tex=re4dc_rtt_override_texture(&rtt_w,&rtt_h);
+    const bool rtt_pass=rtt_tex!=nullptr;
+    if(rtt_pass){
+        pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,list,PVR_TXRFMT_ARGB4444|PVR_TXRFMT_NONTWIDDLED,rtt_w,rtt_h,rtt_tex,PVR_FILTER_BILINEAR);
+        const pvr_cull_mode_t cull[]={PVR_CULLING_NONE,PVR_CULLING_CCW,PVR_CULLING_CW};
+        c.gen.culling=cull[p->cull];
+        c.depth.comparison=PVR_DEPTHCMP_GEQUAL;c.depth.write=PVR_DEPTHWRITE_DISABLE;
+        c.blend.src=PVR_BLEND_SRCALPHA;c.blend.dst=PVR_BLEND_INVSRCALPHA;c.txr.env=PVR_TXRENV_MODULATEALPHA;
+        c.txr.alpha=PVR_TXRALPHA_ENABLE;c.txr.uv_clamp=PVR_UVCLAMP_NONE;
+#if RE4DC_NATIVE_FOG
+        c.gen.fog_type=p->source_key[2]?PVR_FOG_TABLE:PVR_FOG_DISABLE;
+#endif
+        pvr_poly_compile(&header,&c);
+    } else
+#endif
+    {
 #if RE4DC_D349_RENDERER_STACK
     const unsigned header_key=list|(p->blend<<3)|(p->depth_mode<<6)|(p->wrap_s<<8)|(p->wrap_t<<10)|((p->material_flags&4)<<12)|(p->cull<<16)
 #if RE4DC_NATIVE_FOG
@@ -6276,6 +6302,7 @@ if(!handle){
         handle->model_header=header;handle->model_header_key=header_key;
     }
 #endif
+    }
 #if RE4DC_D349_RENDERER_STACK
     if(p->cull){
         if(list==PVR_LIST_OP_POLY)RE4DC_PROFILE_COUNT(HardwareCullOP,1);
@@ -6314,6 +6341,9 @@ if(!handle){
 #endif
 #if RE4DC_MESH_TEXTURES
     }
+#endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    if(rtt_pass){out->u_scale=1.0f;out->v_scale=1.0f;}
 #endif
     if(p->alpha_state&256)++model_alpha_vertex;else ++model_alpha_material;
     if(!(p->alpha_state&256) && (p->alpha_state&255)<255)++model_alpha_faded;
@@ -7112,6 +7142,9 @@ void fx_packet(const Re4dcEffectSprite& s,Entry* e,unsigned char* out){
 #if defined(RE4DC_EFFECT_ROOM) && RE4DC_EFFECT_ROOM
 extern "C" float re4dc_fog_gate_far() __attribute__((weak)); // ACTOR_FOG_GATE builds (native_static.cpp)
 #endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+#include "include/pvr_rtt.inc"   // pvr_rtt.mk
+#endif
 // EFFECT_SPRITES (effects30.mk): one effect sprite from EspCommonTrans. Never aborts the
 // frame: without texture, over the per-frame cap or without queue room the sprite is dropped.
 extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
@@ -7119,6 +7152,11 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
     tamat::Scope source_scope(4);
 #endif
     if(!frame_ready || stream_aborted || draining_parts)return 0;
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    // PVR_RTT: inside a target's bracket a sprite belongs to the target (pvr_rtt.inc), never to the screen: a target no
+    // model shows (e.g. the r221 128x128 slot 0) drops its sprites, as the GC copies them only into its buffer.
+    if(rtt::capture_slot>=0)return rtt::wanted(rtt::capture_slot)?rtt::capture(s):0;
+#endif
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreBeginFxFrame();
 #else

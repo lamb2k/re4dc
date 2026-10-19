@@ -198,8 +198,18 @@ static int EspLakeNightOwner(u32 owner)
     return owner == 0x68 && (G_ROOM_ID == 0x11A || G_ROOM_ID == 0x11B);
 }
 #endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+extern "C" int re4dc_rtt_capturing();
+#endif
 static int EspSpriteEligible(cEsp* esp)
 {
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    // PVR_RTT (pvr_rtt.mk): inside a render target's OT bracket its effects draw into the target, whatever the owner.
+    // Outside the bracket they never reach the screen: the GC draws them only into the target's EFB area.
+    if (esp->m_Tool_flg & 0x10000) {
+        return re4dc_rtt_capturing() && !((esp->m_Tool_flg & 0x4000) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+    }
+#endif
     // Et0a hanging lamps use 0x5e for their source flame/smoke sprites, including
     // the impact fire. Keep the existing class, mask and blend restrictions.
     const u32 owner = esp->info.owner;
@@ -2131,8 +2141,19 @@ extern "C" int re4dc_ps2_rain_sheet(cEsp* esp)
 }
 #endif
 #if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+extern "C" int re4dc_rtt_core_wanted(u32 core_flg);
+#endif
 extern "C" int re4dc_esp_sprite_class(cEsp* esp)
 {
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    // PVR_RTT (pvr_rtt.mk): a render target's common sprites while a model shows that target (the coarse pass then
+    // queues them in the target's OT, where EspSpriteEligible admits them into the capture).
+    if (esp->m_Tool_flg & 0x10000) {
+        return EspTransTbl[esp->m_Id] == EspCommonTrans && re4dc_rtt_core_wanted(esp->info.Core_flg) &&
+               !((esp->m_Tool_flg & 0x4000) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+    }
+#endif
 #if defined(RE4DC_RAIN_PS2_SHEET_REF) && RE4DC_RAIN_PS2_SHEET_REF
     if (esp->m_Id == 0x08 && esp->info.owner == 0xD0 && esp->m_Tex_id == 0xC5 &&
         (G_ROOM_ID == 0x11A || G_ROOM_ID == 0x11B)) return 1;
