@@ -484,3 +484,49 @@ Source fragment: `tools/d367/castle18/ch41-r216-audio-20261019.json`.
 Evidence: `r216-entry-preparation.json`, `r216-audio-fit-proof.json` and
 `r216-source-stream-and-wave-audit.json`. Runtime audio, actual armour draw,
 cup pickup, both waves, door release and the original route remain open.
+
+## r219 original cart flow and bounded residency correction
+
+The original A-button cart event runs from diagnostic near-platform placement:
+E4 departure, original self-room part1 transition, E5 arrival, actor placement,
+and resumed gameplay. The 55.86-second initial run and unchanged 56.12-second
+tail share all disc/program bytes and an exact saved state; their log histories
+overlap by 818 lines. All 23 boot/overlay payloads remain c18oimW / ELF746a2a5f.
+The exact 49,152-byte KOS reserve holds, with 45,912 bytes minimum headroom.
+TEX, audio-fit, fatal, VRAM refusal, retry and eviction errors are zero.
+
+Read-only decompression of both original states uses five independent exact
+ELF anchors. Both states prove r219, gameplay phase3 and Stop0. Leon is within
+five units of the original (-78700,0,-351315) endpoint. Ashley has 600 HP and
+starts exactly at the original (-79287,0,-351366) endpoint before ordinary
+follow motion. Original Flycast state thumbnails and both framebuffer views
+show the far hall. An earlier suspected image/log mismatch was an incorrect
+inference from the missing partner census row, not a demonstrated capture bug.
+
+Native Ashley remains unqualified: runtime actor id03 has141 parts and seven
+live infos, but all seven lack current asset/adoption certificates in both
+states. The joined census contains Leon only. Archive pl11 is actor03; absent
+census is not evidence of an absent partner. This needs independent admission
+work, not a visual-only pass or an invented solo-cart claim.
+
+E5 records one audio underrun. Late Flycast registration time is about207ms
+with zero hostile enemies; its cause remains open and it is not hardware
+performance evidence. The final room generation has eight late uploads.
+Across departure and arrival there are ten distinct missing source keys;
+the other two appear only during departure. Their source dimensions/formats
+and actual loose/package winners were read back and hashed unchanged.
+
+The additive correction preserves all5,755 Worker A V16 records and adds
+those ten r219 keys, producing5,765 records. Every other room is byte-exact.
+Private set: `castle18-ch41-r219-resident-20261019`, mirrored on C:.
+Resident SHA: `0f24b9b6ab80f6ee2be86c840c63f731bf1675802d6f3f104b99736cbe0ad99b`.
+Manifest SHA: `5164760ea78d7c53720321c0973f016587bc435e1281f5d1818896d8e82dc5d7`.
+Source fragment: `tools/d367/castle18/ch41-r219-resident-20261019.json`.
+Matched runtime residency is pending; compose only these r219 additions into
+newer unions. No chapter-ready, native-partner, full audio or console pass.
+
+Evidence: `r219-cart-flow-proof.json`, `r219-saved-state-audit.json`,
+`r219-cart-continuation-provenance.json`, `r219-source-first-sight-winners.json`
+and `r219-resident-host-proof.json`. Joined log SHA:
+`e968cc919d2b4e34d57a48a3dd642cdfba1441b27c541338e4322d820c152b12`.
+Disc SHA: `56d40692fbb0cf19596e4556f811a266ff74272aa94dfed3a432027eb2c15430`.

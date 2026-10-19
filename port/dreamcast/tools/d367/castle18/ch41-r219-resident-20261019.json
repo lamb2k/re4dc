@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch41-r219-resident-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Ten source-observed keys across original departure and arrival only; source dimensions/format and actual package winners retained.",
+    "base_resident_sha256": "2ccc55c0776a061af8d33dd1316d054f997368417f7dba1a8a4fccd87426aaa2",
+    "resident_sha256": "0f24b9b6ab80f6ee2be86c840c63f731bf1675802d6f3f104b99736cbe0ad99b",
+    "integration": "Preserves all5755 current V16 records. Compose only these r219 additions into any newer union."
+  }
+}
