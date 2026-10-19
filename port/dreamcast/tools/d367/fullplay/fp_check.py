@@ -230,6 +230,7 @@ def check_segment(evdir, seg, known):
     last_load, load_k = '', None
     handoff = set()
     skipped = set()
+    qte_passed = set()
     for i, ln in enumerate(lines, 1):
         if DELIBERATE_FREEZE.search(ln):
             froze = True
@@ -253,6 +254,8 @@ def check_segment(evdir, seg, known):
                 if cat == 'movie':  # a QTE movie handed to the game's frames is cancelled at its end (terminal 4)
                     mm = re.search(r'terminal=4 id=([0-9a-f]+) frames=(\d+)/(\d+)', ln)
                     if mm and mm.group(1) in handoff and mm.group(2) == mm.group(3):
+                        continue
+                    if mm and mm.group(1) in qte_passed:
                         continue
                     # a movie the player skipped (the skip key logged for it first) ends with terminal 2 by design
                     mm = re.search(r'terminal=2 id=([0-9a-f]+) ', ln)
@@ -278,6 +281,12 @@ def check_segment(evdir, seg, known):
         ms = re.search(r'route movie skip: id=([0-9a-f]+) ', ln)
         if ms:
             skipped.add(ms.group(1))
+        # lane fix18 (#38): a passed QTE ends its cut at once (the source handler's CancelSet, r11f s00 cut 0x11:
+        # the press sets Room_flg 0x80000000), so the cut's PS2 clip (id | 0x1000000, "c" file) open over the cut's
+        # game frames is cancelled there (terminal 4), before its last picture: by design, not an early end.
+        mq = re.search(r'route QTE: id=([0-9a-f]+) cut=\S+ frames=\d+/\d+ passed=1 .*picture=movie', ln)
+        if mq:
+            qte_passed.add('%x' % (int(mq.group(1), 16) | 0x1000000))
         if ln.startswith('native UI: load '):
             last_load, load_k = ln.strip(), None
     # CAST-GC (lane castgc17): a census build (NATIVE_MODEL_REGISTRY_CENSUS=1, the mW check arms) lists every model the

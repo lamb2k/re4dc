@@ -562,6 +562,9 @@ extern "C" int re4dc_speed_screen(unsigned v[3])
 }
 #endif
 
+#if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
+static int image_decided;   // LEON_CLOTH_DRAWN: this tick's image was decided early (re4dc_pace_image_dropped)
+#endif
 extern "C" void re4dc_pace_reset(void)
 {
     active = false; ok_now = false; run = 0; drop_next = false;
@@ -617,12 +620,18 @@ extern "C" void re4dc_pace_begin(void)
     run = skip ? run + 1 : 0;
     re4dc_pace_skipping = skip;
     re4dc_pace_drop_models = 0;
+#if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
+    image_decided = 0;
+#endif
 }
 
 // v2: before Trans() of tick k, decides whether image k (drawn by iteration k+1) is dropped.
 extern "C" void re4dc_pace_decide_image(void)
 {
 #if RE4DC_PACE_CATCHUP >= 2
+#if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
+    if (image_decided) { image_decided = 0; return; }   // keep the decision Leon's cloth already followed
+#endif
     const unsigned long long us = timer_us_gettime64();
     decide_us = us;
     int drop = 0;
@@ -641,6 +650,21 @@ extern "C" void re4dc_pace_decide_image(void)
     re4dc_pace_drop_models = drop;
 #endif
 }
+
+#if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
+// LEON_CLOTH_DRAWN (game30.mk; approximation, default off): asked from inside TaskScheduler (Leon's cloth) whether
+// this tick's image will be dropped. The first ask makes the v2 decision now (earlier than main.cpp's call, which then
+// keeps it), so a cloth step skipped here always belongs to an image nobody sees. Pacing off / context / v1: 0.
+extern "C" int re4dc_pace_image_dropped(void)
+{
+#if RE4DC_PACE_CATCHUP >= 2
+    if (!image_decided) { re4dc_pace_decide_image(); image_decided = 1; }
+    return re4dc_pace_drop_models;
+#else
+    return 0;
+#endif
+}
+#endif
 
 // iTaskScheduler policy: drawn iterations run it as today; skipped ones do not (its time up to
 // the vblank would be paid in game speed) unless it has not run for 4 iterations. FORCE: always.
