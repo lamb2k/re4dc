@@ -285,10 +285,135 @@ void SubScreenWait(int frames)
 // state allows (subScrCheck), the inventory key (0x100000) or map key (0x200000, unless the map is
 // disabled by Status_flg[2] 0x00200000) opens it; an opened screen starts the SubScreenExec task
 // in slot 1 (or is cancelled when the slot is busy).
+#if RE4DC_QUICK_WEAPON
+// QUICK_WEAPON (lane qws19, default off; not in the original game): X + D-pad picks a weapon by kind, as
+// the 2023 remake's D-pad shortcuts. platform/pad.cpp posts the slot; re4dc_qw_frame (game loop, from
+// SubScreenCall) checks the case's own gate (subScrCheck and SubScreenCall's conditions, plus not
+// shooting / reloading, not carrying Ashley, no KeyStop), equips the next owned weapon of the slot's
+// list with cItemMgr::arm, freezes the game as the case does, and runs qwTask in the sub screen's task
+// slot: the weapon part of SubScreenExit step 4 (weaponRelease / weaponLoad / weaponInit; weaponLoad
+// reads the weapon module from disc, so the task waits on it). No slot press = no change at all.
+int re4dc_qw_slot;  // pad.cpp: 1 up, 2 right, 3 down, 4 left (0 none)
+static const u16 qwList[4][10] = {
+    {0x23, 0x25, 0x21, 0x27, 0x03, 0x29, 0x2A, 0x37, 0},  // up: handguns
+    {0x2C, 0x2D, 0x47, 0x94, 0},                          // right: shotguns
+    {0x01, 0x02, 0x0E, 0x08, 0x09, 0x0A, 0},              // down: grenades / eggs
+    {0x10, 0x2E, 0x2F, 0x30, 0x34, 0x53, 0x35, 0x6D, 0x36, 0},  // left: rifles, TMP, then launchers
+};
+static u32 qwStopBak;
+static unsigned long long qwT0;
+extern "C" unsigned long long timer_us_gettime64(void);  // KOS timer
+
+static void qwTask()
+{
+    cPlayer* pl = pPL;
+    const int wepNo = WeaponId2WeaponNo(ItemMgr.m_wep_id);
+    const int wepType = WeaponId2WeaponType(ItemMgr.m_wep_id);
+    int wepLv = ItemMgr.pArm ? ItemMgr.pArm->bullet >> 13 : 0;
+    unsigned long long t1 = 0, t2 = 0, t3 = 0;
+
+    if (pG->weapon_no != wepNo || pG->weapon_type != wepType || pG->bullet_type != wepLv) {
+        SndBlkStop(2);
+        pl->weaponRelease();
+        t1 = timer_us_gettime64();
+        pl->weaponLoad(wepNo, wepType);
+        t2 = timer_us_gettime64();
+#if RE4DC_WEAPON_HEAP4
+        {
+            extern int re4dc_wep_reverted;
+            if (re4dc_wep_reverted) {
+                wepLv = pG->bullet_type;
+            }
+        }
+#endif
+        pG->bullet_type = wepLv;
+        pl->weaponInit();
+        SubScreenWk.scope_flag = 0;
+        SubScreenWk.noBullet = 0;
+        for (u32 i = 0; i < 10; i++) {
+            if (pl->Wep->m_pWep) {
+                pl->Wep->m_pWep->move();
+            }
+        }
+        t3 = timer_us_gettime64();
+    }
+    {
+        const unsigned long long t4 = timer_us_gettime64();
+        OSReport("quick weapon: %04x no %x type %x lv %d bullets %d total %u us release %u load %u init %u\n",
+                 ItemMgr.m_wep_id, pG->weapon_no, pG->weapon_type, pG->bullet_type,
+                 ItemMgr.pArm ? (int) ItemMgr.pArm->num : -1, (unsigned) (t4 - qwT0),
+                 t1 ? (unsigned) (t1 - qwT0) : 0u, t1 ? (unsigned) (t2 - t1) : 0u, t1 ? (unsigned) (t3 - t2) : 0u);
+    }
+    pG->Stop_flg = qwStopBak;
+    BitOn(pG->Status_flg[0], 0x02000000);
+    BitOff(pG->Status_flg[2], 0x04000000);
+    TaskExit();
+}
+
+static void re4dc_qw_frame()
+{
+    const int slot = re4dc_qw_slot;
+    re4dc_qw_slot = 0;
+    if (slot < 1 || slot > 4 || pPL == 0 || pG->pl_type != 0) {
+        return;
+    }
+    if ((s16) pG->pl_life <= 0 || (pSUB && pSUB->id == 3 && (s16) pG->ashley_life <= 0)) {
+        return;
+    }
+    if (!(pG->Status_flg[0] & 0x02000000) || (pG->Status_flg[2] & 0x04000000) || (pG->Status_flg[1] & 0x00200000)) {
+        return;
+    }
+    if ((pG->Stop_flg & 0x80000000) || pPL->subScrCheck() != 1 || pPL->r_no_2 == 2 || pPL->r_no_2 == 4) {
+        return;
+    }
+    const u16* list = qwList[slot - 1];
+    int n = 0;
+    int cur = -1;
+    while (list[n]) {
+        if (ItemMgr.pArm && ItemMgr.pArm->id == list[n]) {
+            cur = n;
+        }
+        n++;
+    }
+    ItemWork* pick = 0;
+    for (int k = 1; k <= n; k++) {
+        ItemWork* p = ItemMgr.search(list[(cur + k + n) % n]);
+        if (p && p->num) {
+            pick = p;
+            break;
+        }
+    }
+    if (pick == 0 || pick == ItemMgr.pArm) {
+        return;
+    }
+    ItemWork* old = ItemMgr.pArm;
+    if (!ItemMgr.arm(pick)) {
+        return;
+    }
+    qwT0 = timer_us_gettime64();
+    BitOn(pG->Status_flg[2], 0x04000000);  // no case open while the swap runs
+    pG->Status_flg[0] &= ~0x02000000;
+    qwStopBak = pG->Stop_flg;
+    pG->Stop_flg = 0xFFFFFFFF;
+    pG->Stop_flg &= ~0x40;
+    if (TaskExec(1, (TaskFunc) qwTask, 0) == 0) {
+        ItemMgr.arm(old);
+        pG->Stop_flg = qwStopBak;
+        pG->Status_flg[0] |= 0x02000000;
+        BitOff(pG->Status_flg[2], 0x04000000);
+        return;
+    }
+    SndCall(0, 6, 0, 0, 0, 0);
+}
+#endif
+
 void SubScreenCall()
 {
     SubScreenWork* wk = &SubScreenWk;
 
+#if RE4DC_QUICK_WEAPON
+    re4dc_qw_frame();
+#endif
     if ((s16) pG->pl_life <= 0) {
         return;
     }

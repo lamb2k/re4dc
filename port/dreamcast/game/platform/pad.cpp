@@ -500,6 +500,28 @@ u32 PADRead(PADStatus* status)
         int capsDual = dev && (cont_has_capabilities(dev, CONT_CAPABILITIES_SECONDARY_ANALOG) ||
                                cont_has_capabilities(dev, CONT_CAPABILITY_C) || cont_has_capabilities(dev, CONT_CAPABILITY_Z));
         Re4dcPadIn in = {(u32) st->buttons, st->ltrig, st->rtrig, st->joyx, st->joyy, st->joy2x, st->joy2y};
+#if RE4DC_QUICK_WEAPON
+        // QUICK_WEAPON (lane qws19): X held (START up) + a D-pad press posts a quick weapon slot
+        // (1 up, 2 right, 3 down, 4 left) for sscrn.cpp re4dc_qw_frame; while X is held the D-pad
+        // is taken from the game (no look, no map tap). X has no game function. Without X the
+        // D-pad is mapped exactly as before. Real bits of pad 0 only; fixture bits never reach here.
+        if (i == 0) {
+            static u32 qwLast;
+            const u32 qwDirs = CONT_DPAD_UP | CONT_DPAD_DOWN | CONT_DPAD_LEFT | CONT_DPAD_RIGHT;
+            if ((in.buttons & CONT_X) && !(in.buttons & CONT_START)) {
+                const u32 press = in.buttons & qwDirs & ~qwLast;
+                extern int re4dc_qw_slot;
+                if (press & CONT_DPAD_UP) re4dc_qw_slot = 1;
+                else if (press & CONT_DPAD_RIGHT) re4dc_qw_slot = 2;
+                else if (press & CONT_DPAD_DOWN) re4dc_qw_slot = 3;
+                else if (press & CONT_DPAD_LEFT) re4dc_qw_slot = 4;
+                qwLast = in.buttons & qwDirs;
+                in.buttons &= ~qwDirs;
+            } else {
+                qwLast = in.buttons & qwDirs;
+            }
+        }
+#endif
         PADStatus mapped;
         u8 wasDual = maps[i].dual;
         re4dcMapPad(&in, i == 0 ? ctx0 : RE4DC_PAD_CTX_NATIVE, capsDual, &maps[i], &mapped);
