@@ -41,6 +41,15 @@
         "resident.bin": "e78c49c491f9baa3898124108584061d5793891226193ded32f727d629e1020a"
       },
       "scope": "Source-scoped additivepreload only; model/image/audio bytes unchanged. All5493 priorrecords and otherrooms exact. r200+9native stairs/fullNMR; r202+29original gate/effect sourcekeys. Does not include23door-onlysourceimage keys."
+    },
+    "castle18-front-resident-v8-20261019": {
+      "manifest_sha256": "6e8f422d7e363fa717e16fee6e061184f54eabafdb09c56ac09f5bf962f676a3",
+      "files": {
+        "PROVENANCE.json": "5cd04d2457d32984ce7c4db25c349323430f93eab5b803f41ac5a4d3c692f077",
+        "r200.tsv": "ba073f737624f8819734d795308766ad71df1c96e752e4562b73edf4cb4a122a",
+        "r202.tsv": "0dac1d6d23be7d9f4450bac957edf0f14e3f0511471238dd9b475daa403c10bd",
+        "resident.bin": "06c3c0336c6b00ae75334d18376c7dbbda8190c5a39b9c14e640c5d9d96f02b2"
+      }
     }
   },
   "resident_records": {
@@ -52,7 +61,7 @@
     "r202l",
     "r202m"
   ],
-  "active_resident_set": "castle18-front-resident-v7-20261019",
+  "active_resident_set": "castle18-front-resident-v8-20261019",
   "source_scoped_v7_records": {
     "old": 5493,
     "new": 5531,
@@ -118,5 +127,16 @@
     "r202x": "Originalcrank/cannon cap4 vs nonbinding16: standard0late/evict/retry/refusal/sndfail, character0GC/NOTDRAWN/TEX PASS; sourceflagsC0000000/heldempty/Merchant30created. No Merchantdraw/Trade claim.",
     "r101o": "Actual cap4 gateprogram,49152held/minKOS5032",
     "native_r200j": "Actualb1e VMU originalstairs/A-door202; zero stair-play uploads, fullstandard FAIL23door-source-image uploads aftergame->boot. Native route continues."
+  },
+  "wave_v8_records": {
+    "old": 5531,
+    "new": 5562,
+    "all_old_records_exact": true,
+    "other_rooms_unchanged": true,
+    "r202_old": 72,
+    "r202_new": 103,
+    "package_bytes_unchanged": true,
+    "qualification_sha256": "b83169e626bbbc6004e9ce6a9a724c242e3054db898c58ef9d2a6a3bd977a8f7",
+    "scope": "Exact current same-program V7/V8 AEV23/source-damage diagnostic, zero late uploads. Not full route/native follower acceptance."
   }
 }

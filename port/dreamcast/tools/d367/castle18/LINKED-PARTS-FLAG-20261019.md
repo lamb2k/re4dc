@@ -21,8 +21,18 @@ HP, events, renderer and model data are unchanged. It is not a NaN bypass.
 The host test extracts the actual allocation and lookup functions. It reproduces
 old stale-flag indexing, verifies linked lookup with the fix, and checks later
 contiguous reuse plus existing partial-allocation failure cleanup.
-A fresh program/native route gate is still required; no old snapshot may be
-retargeted to a changed executable. CH4 recipe does not yet select this knob.
+CH4 now selects the knob after fresh executable gates. Candidate c18oemW
+(ELF0efeb8dc03901b648bb865f7c6482e70b82d37388965464a6307eb4d2b115eac,
+_end8c46af18) adds32 bytes. A literal T15 off build retains the exact boot and
+ten overlays of the frozen current343 control. Busy-r101 with48KiB held passes
+CAST/NOT-DRAWN/TEX/residency and retains5000B KOS free (>4096B floor).
+
+The fresh original chapter3-1 VMU route (nativeK, never a retargeted snapshot)
+passes the original r200 door and r202 gate. A later actual source ESL21
+allocation has37 linked parts,26 noncontiguous, be_flag0x2010077 (0x2000 clear),
+and all37 matrices finite. Normal movement crosses the former tunnel failure;
+no collision/NaN bypass is added. These are source-contract gates, not a full
+chapter/route claim. Native follower/crank/cannon/doors remain open.
 
 Private evidence under the Castle18 evidence root:
 r202-native-tunnel-freeze-snapshot-registers-v2-20261019.json,
