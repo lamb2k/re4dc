@@ -1,0 +1,64 @@
+{
+  "schema": "boss18-r224-approved-selection-1",
+  "decision": "I-012, user: Lighter bodies are fine, 2026-10-19",
+  "canonical_spec": "model-registry/ps2-ch4-r224.json",
+  "canonical_spec_sha256": "0dfd34748bbf82e3a9b22970982ecfd9bd43cd9c54ba9ce373a374bb6040ba2f",
+  "explicit_spec": "model-registry/boss18-r224-type1-protected.json",
+  "explicit_spec_sha256": "5649376b3024630a8ad5b416ce9c69a9d81107038ef22350a08a89a6c09c14c1",
+  "selected_descriptors": [
+    {
+      "name": "gigante-em2b-01",
+      "source_types": [
+        1
+      ],
+      "lod_of": null
+    },
+    {
+      "name": "gigante-em2b-03",
+      "source_types": [
+        3
+      ],
+      "lod_of": null
+    },
+    {
+      "name": "gig2b01-p51",
+      "source_types": [
+        1
+      ],
+      "lod_of": "gigante-em2b-01"
+    }
+  ],
+  "type1_positions_percent": 50.92514718250631,
+  "type3": "full; no type3 lod descriptor",
+  "full_source_parents_retained": true,
+  "full_grab_and_cutscene_policy": "Required. Complete full source parents retained; existing source event selector unchanged. Actual late grab/cutscene transitions still require whole-fight qualification.",
+  "expected_package": {
+    "disc_path": "dc/native/r224/registry.re4nmr",
+    "sha256": "70a81b2638e9283f023958061490b55b61f03a609be312aff135fd5e75cdec03",
+    "bytes": 235776,
+    "arena_bytes": 263488,
+    "arena_limit_bytes": 425984
+  },
+  "expected_textures": [
+    {
+      "key": "11addb6d-6ee67128",
+      "bytes": 133264,
+      "sha256": "a45dd4e4444744e9db48678960273ca13d37f3ce4a7a8c2e2f93e9bf6624ce8c"
+    },
+    {
+      "key": "2ad4e60d-eb4a394e",
+      "bytes": 133264,
+      "sha256": "65a0f8285c1d31d815d8bd906225337e52fcec8b3ca1107f2150dccc044a8982"
+    }
+  ],
+  "source_set_seals": {
+    "boss18-twins-20261018": "bb7a71a2ef08a89d175f89af41a1802d48633d38b82bb6f7c4b7d3f9e7088859",
+    "boss18-twins-lod-20261019": "0a2da2aaf2ac2873246b6c226cb5767150547e7afc467283973ff2bb5574d344",
+    "boss18-twins-type1-20261019": "296f64732d0448aac0503a46259e693a04383347c027d6a490f8e00aa6ad9fc2",
+    "boss18-twins-qualification-20261019": "28ceaa35545465e44a96993d2fa93b1ddd20e236752fb14b0c8781a69fc73b3f"
+  },
+  "source_drops": "Existing declared bump flattening unchanged; no new material or source geometry drop.",
+  "runtime_flags": "Existing CH4 recipe prerequisites, including registry LOD and LEON_SKIN_SLOTS2. No recipe/runtime/default change here.",
+  "gate_status": "Retained H020 body/opening diagnostic only. Whole-fight chain/auxiliary/material/audio/residency, full grabs/death/cart/lava/clear/movies and fresh release gates remain open.",
+  "scope": "Approved production data selection for coordinator/Castle integration; no release promotion or complete fight acceptance."
+}

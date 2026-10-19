@@ -1,44 +1,58 @@
 {
- "registry": "ps2-ch4-r224",
- "about": "lane cast16 (2026-10-16): chapter 4 room 224, two El Gigantes (em2b type 3 chained + type 1, PS2 r224 table rows 200/201), PS2 body + head (ps2_cast.py gigante-em2b-01 / -03). Render only; the runtime side is PS2_GIGANTE.",
- "cast_dir": "/root/probe/lanes-20261016/cast16/conv/regcast-gig13",
- "revision_overlay": "ps2-overlay",
- "level": "conservative",
- "archive_audit": "source/archive-audit.json",
- "lighting": "em2b: the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bit 0, PS2_GIGANTE)",
- "descriptors": [
-  {
-   "name": "gigante-em2b-01",
-   "archive": "em2b",
-   "model_id": "0x2b",
-   "source_types": [
-    1
-   ],
-   "module": "src/em2b/em2b.cpp type 1 modelInit(ARC 8, ARC 0xA) + ModInfoMgr.create(ARC 9, ARC 0xA)",
-   "source_drops": [
-    "bump"
-   ]
-  },
-  {
-   "name": "gigante-em2b-03",
-   "archive": "em2b",
-   "model_id": "0x2b",
-   "source_types": [
-    3
-   ],
-   "module": "src/em2b/em2b.cpp type 3 modelInit(ARC 0xE, ARC 0x10) + ModInfoMgr.create(ARC 0xF, ARC 0x10)",
-   "source_drops": [
-    "bump"
-   ]
+  "registry": "ps2-ch4-r224",
+  "about": "User-approved I-012 r224 production body selection: protected type1 at50.9251% positions and type3 full. Both original full parents remain for full grabs/cutscenes under the existing selector. No new material drop. Whole-fight source chain/auxiliary/material/audio/residency and actual full-grab gates remain required; approval is not whole-fight qualification.",
+  "cast_dir": "/root/re4data/private/boss18-twins-lod-20261019/combined/full-low",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "em2b: the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bit 0, PS2_GIGANTE)",
+  "descriptors": [
+    {
+      "name": "gigante-em2b-01",
+      "archive": "em2b",
+      "model_id": "0x2b",
+      "source_types": [
+        1
+      ],
+      "module": "src/em2b/em2b.cpp type 1 modelInit(ARC 8, ARC 0xA) + ModInfoMgr.create(ARC 9, ARC 0xA)",
+      "source_drops": [
+        "bump"
+      ]
+    },
+    {
+      "name": "gigante-em2b-03",
+      "archive": "em2b",
+      "model_id": "0x2b",
+      "source_types": [
+        3
+      ],
+      "module": "src/em2b/em2b.cpp type 3 modelInit(ARC 0xE, ARC 0x10) + ModInfoMgr.create(ARC 0xF, ARC 0x10)",
+      "source_drops": [
+        "bump"
+      ]
+    },
+    {
+      "name": "gig2b01-p51",
+      "archive": "em2b",
+      "model_id": "0x2b",
+      "source_types": [
+        1
+      ],
+      "module": "src/em2b/em2b.cpp type 1 modelInit(ARC 8, ARC 0xA) + ModInfoMgr.create(ARC 9, ARC 0xA)",
+      "source_drops": [
+        "bump"
+      ],
+      "lod_of": "gigante-em2b-01"
+    }
+  ],
+  "room_packages": {
+    "224": {
+      "descriptors": [
+        "gigante-em2b-01",
+        "gigante-em2b-03",
+        "gig2b01-p51"
+      ],
+      "evidence": "I-012 user approval, 2026-10-19: protected type1 only, type3 full. H020 retained current b18adrT/LEON_SKIN_SLOTS2/Test18 extras STRICT601, decisions,48KiB hold/body/TEX/VRAM and same-frame still evidence; not complete auxiliary material/audio/residency/grab/cart/lava/clear or release qualification. BOSS18_TWINS_APPROVED_20261019.md."
+    }
   }
- ],
- "room_packages": {
-  "224": {
-   "descriptors": [
-    "gigante-em2b-01",
-    "gigante-em2b-03"
-   ],
-   "evidence": "ps2_enemy_ch4 r224 rows 200 (type 3) / 201 (type 1)"
-  }
- }
 }

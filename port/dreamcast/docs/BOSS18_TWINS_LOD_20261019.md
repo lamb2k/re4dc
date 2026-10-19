@@ -1,6 +1,6 @@
 # r224 twins: protected type1, original full type3
 
-The current body comparison supports offering type1 at50.9% of its source positions and keeping type3 full. On exact b18adrT the type1-only package saves1.633 MODELLED ms per logic tick after excluding only verified original vsync-loop instructions. Its type1 native presentation costs4.588→3.089ms on the one jointly complete attributed tick. The user has not approved this new r224 form. No production recipe, runtime code, gate or new engine changed.
+The current body comparison supports offering type1 at50.9% of its source positions and keeping type3 full. On exact b18adrT the type1-only package saves1.633 MODELLED ms per logic tick after excluding only verified original vsync-loop instructions. Its type1 native presentation costs4.588→3.089ms on the one jointly complete attributed tick. I-012 (2026-10-19) now approves this type1-only choice. The canonical r224 data spec selects it; runtime code, chapter recipes, gates and the engine are unchanged. See BOSS18_TWINS_APPROVED_20261019.md for the current receipt and remaining fight gates.
 
 The alternative reducing both forms saves2.344ms in the same four-sample work comparison. Reducing type3 therefore adds only0.711ms beyond type1-only, with visible mouth-detail loss, and is skipped under the approximately1ms rule. This does not change the already-approved r119/r11e g50 choices: r224 uses different type1/type3 source models.
 
@@ -69,7 +69,7 @@ Flycast shared-host1000Hz sampling over the same20source ticks330:349 gives53.3m
 
 Evidence root C:/Flycast-Evidence/re4-dreamcast/boss18-20261018 contains el-gigante-twins-type1-sheet-20261019.png, twins-type1-rest-source-full-protected-20261019.png and the rejected type3 rest sheet. Every final image was inspected. Runtime pairs prove freeze330/LT329 before/after read-only VRAM capture. The original close runtime camera shows lower bodies; separate offline face/hand images use identical rest cameras/light. Original PS2 geometry/atlas is an offline reference, not a PS2-console capture.
 
-Offer the type1-only sheet: protected50.9% type1 with full type3, or retain both full. Type3's extra reduction is skipped for0.711ms incremental work gain and visible mouth loss. No candidate is approved, selected in a chapter recipe or promoted here.
+I-012 approves the type1-only sheet: protected50.9% type1 with full type3. Type3's extra reduction is skipped for0.711ms incremental work gain and visible mouth loss. The canonical r224 data spec now selects the approved variant. No chapter recipe or release is changed; complete fight gates remain required.
 
 The separate9part PS2 chain retains materialflag7/opacity1/partial-alpha and requires existing native material/auxiliary ownership work outside this model task. Its original GC texture pair b5e4651f-7ad40bce, SHA776f475f, is disclosed diagnostic restoration only, not source fallback approval. Full parasite/ten source/native proofs and the opaque-support package remain retained; whole-phase live auxiliary admission is unqualified. The older pinned checker still flags world prop43 NOT-DRAWN; the coordinator/garr18 characters-only checker change is external. No checker/allowlist was loosened here.
 
