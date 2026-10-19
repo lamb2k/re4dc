@@ -5283,6 +5283,9 @@ extern "C" void re4dc_log(const char* fmt, ...);
 // native_ui.cpp (COARSE_ONE_SUBMIT): re4dc_model_direct_begin for a part the caller has just reserved.
 extern "C" int re4dc_model_direct_begin_reserved(const Re4dcModelPart*, const Re4dcModelPacket*, Re4dcModelDirect*);
 namespace {
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+#include "native_actor_chunk.inc"
+#endif
 // qualifies() for a part without arrays (positions == nullptr: its array term is lazy_skin()), keeping
 // lazy_skin()'s registry entry and source for one_frame().
 bool one_qualifies(const Re4dcModelPart& p, const SkinEntry*& se, Re4dcActorSource& src) {
@@ -5789,7 +5792,11 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         unsigned all, any;
         APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);
         APROF_SPAN(aprof_pos, APROF_POS);
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+        chunk_positions(e, r, nv, k, s16_uv, all, any);
+#else
         pass_positions(e, r, nv, k, s16_uv, all, any);
+#endif
         APROF_STOP(aprof_pos);
         if (all & kOcCull) {
             ++stats.meshlets_culled;
@@ -5839,8 +5846,17 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         if (bake == kBakeNone) stats.normals_lit += nv;
         if (any & kOcNear) ++stats.meshlets_clipped;
         APROF_SPAN(aprof_pack, APROF_PACK);
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+        {
+            ChunkSink sink;
+            chunk_sink_begin(sink, e);
+            ok = chunk_sink_strips(sink, r, index, ni, nt, any);
+            chunk_sink_end(sink);
+        }
+#else
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
         else ok = e.strips(r, index, ni);
+#endif
         APROF_STOP(aprof_pack);
     }
     if (e.direct) {

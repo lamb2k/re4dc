@@ -1,0 +1,81 @@
+// platform/native_actor_chunk.inc -- CHAR_CHUNK (chardraw19.mk; lane character-draw-path, CHARDRAW19-STATUS.md).
+// Included by native_actor_fast.cpp inside its anonymous namespace, after Part / pass_positions, only when
+// RE4DC_CHAR_CHUNK is set (knob 0 compiles nothing).
+//
+// Stage 1 (exact, render only): the character front end of the chunk path.
+//   * Position once: a chunk's records are sorted by (position palette, normal palette, vi, ni) by the converter,
+//     so records that repeat a skinned point sit next to each other. Each distinct point is skinned and projected
+//     once by the same kernel (pass_positions over a compacted record list), then copied to the records that repeat
+//     it; a repeat with other texture coordinates gets them from the kernel's own float steps (fmul, then fadd).
+//   * Submit: through chunk_sink_* below, an adapter with the shape of chunk_submit.h (begin / points / strips /
+//     end) over today's store-queue window (Part::whole / Part::strips, emit_sq and the clipper unchanged). When
+//     scenery19's chunk_submit v1 lands, chunk_sink_* forward to re4dc_chunk_* (one switch, CHAR_CHUNK_BACKEND).
+// Exactness: the TA words of every vertex are the knob-off path's (same kernel on the same inputs, a copy of its
+// output, or the same two float operations for u / v); strip order, culling and clipping are unchanged.
+
+constexpr unsigned kChunkRecPad = 2;  // the kernels read up to two records past the last
+alignas(32) u16 chunk_rec[(kMaxVertices + kChunkRecPad) * 3];
+u8 chunk_src[kMaxVertices];           // record -> compacted point
+struct ChunkStats { unsigned chunks, records, points; } chunk_stats;
+unsigned chunk_stats_log = 0;
+
+#if defined(__GNUC__) && !defined(__clang__)
+__attribute__((optimize("fp-contract=off")))
+#endif
+inline void chunk_uv(pvr_vertex_t& d, const u8* uv, unsigned ti, bool s16_uv, const PosConst& k) {
+    const u8* t = uv + ti * 4U;
+    const float tu = s16_uv ? float(*reinterpret_cast<const short*>(t)) : float(*reinterpret_cast<const u16*>(t));
+    const float tv = s16_uv ? float(*reinterpret_cast<const short*>(t + 2)) : float(*reinterpret_cast<const u16*>(t + 2));
+    volatile float mu = tu * k.au, mv = tv * k.av;  // two roundings, as the kernel's fmul + fadd
+    d.u = mu + k.bu; d.v = mv + k.bv;
+}
+
+// pass_positions with each repeated point done once. all / any as pass_positions (repeats add no new outcode).
+void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, bool s16_uv, unsigned& all,
+                     unsigned& any) {
+    unsigned u = 0;
+    unsigned prev = ~0U;
+    for (unsigned i = 0; i < n; ++i) {
+        const unsigned vi = r.vi(i);
+        if (vi != prev) {
+            u16* d = chunk_rec + u * 3U;
+            d[0] = u16(vi); d[1] = u16(r.ni(i)); d[2] = u16(r.ti(i));
+            prev = vi; ++u;
+        }
+        chunk_src[i] = u8(u - 1U);
+    }
+    ++chunk_stats.chunks; chunk_stats.records += n; chunk_stats.points += u;
+    if (frame_serial - chunk_stats_log >= 600U) {
+        chunk_stats_log = frame_serial;
+        re4dc_log("char chunk: frame=%u chunks=%u records=%u points=%u\n", frame_serial, chunk_stats.chunks,
+                  chunk_stats.records, chunk_stats.points);
+    }
+    if (u == n) { pass_positions(e, r, n, k, s16_uv, all, any); return; }
+    for (unsigned j = 0; j < kChunkRecPad * 3U; ++j) chunk_rec[u * 3U + j] = chunk_rec[(u - 1U) * 3U + j % 3U];
+    const Records c{chunk_rec, 3U, r.color, false};
+    pass_positions(e, c, u, k, s16_uv, all, any);
+    // Expand in place from the back: point chunk_src[i] <= i, and slots above i are already final.
+    pvr_vertex_t* v = e.cache.v;
+    u8* oc = e.cache.oc;
+    for (unsigned i = n; i-- > 0;) {
+        const unsigned s = chunk_src[i];
+        if (s == i) continue;
+        const pvr_vertex_t& from = v[s];
+        pvr_vertex_t& to = v[i];
+        to.x = from.x; to.y = from.y; to.z = from.z;
+        if (r.ti(i) == chunk_rec[s * 3U + 2U]) { to.u = from.u; to.v = from.v; }
+        else chunk_uv(to, e.p.uv, r.ti(i), s16_uv, k);
+        oc[i] = oc[s];
+    }
+}
+
+// The chunk sink adapter (chunk_submit.h shape over today's window).
+struct ChunkSink { Part* e; };
+inline void chunk_sink_begin(ChunkSink& s, Part& e) { s.e = &e; }
+// Points are already in the window's cache (chunk_positions + the light pass): nothing to send separately.
+inline bool chunk_sink_strips(ChunkSink& s, const Records& r, const u8* index, unsigned ni, unsigned nt, unsigned any) {
+    Part& e = *s.e;
+    if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; return e.whole(index, ni, nt); }
+    return e.strips(r, index, ni);
+}
+inline void chunk_sink_end(ChunkSink&) {}
