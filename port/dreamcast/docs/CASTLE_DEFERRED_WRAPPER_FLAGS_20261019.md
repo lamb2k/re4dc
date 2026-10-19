@@ -1,6 +1,6 @@
 # Deferred room-wrapper flag commands, 2026-10-19
 
-Status: default-off candidate. Fresh Disc1 off identity and isolated paired source activation/native-draw checks pass. Enabled room residency still fails; do not add this switch to a chapter/release recipe yet.
+Status: default-off candidate. Fresh Disc1 off identity and isolated paired source activation/native-draw checks pass. Matched V18 gameplay residency now passes; current-upstream chapter recipe integration and full progression remain separate.
 
 ## Observed failure
 
@@ -52,3 +52,13 @@ Private paired proof: `workers/ch32/deferred-flags/r20c-paired-runtime-proof.jso
 The separate V18 additive candidate preserves all5,776 records from the latest r212/219 union and adds15 source-observed r20c gameplay keys (5,791total). Dimensions/formats use actual source upload metadata, including non-power-of-two source sizes; selected package winners and every image byte stay unchanged. The three later death-text keys remain outside the room list, retained in the complete ledger for source ownership review. Fresh matched enabled-program validation is pending.
 
 Private dataset `castle18-ch32-r20c-active-resident-v18-20261019` is mirrored to C:. Resident SHA fbc6957986724720d9127021a6bfda8d2fce66dac8a988a121c5bd103dd25568; manifest d730b723f64db27c2a65c5997833ea94863e2125cf8a04e32e5fe5d3141c718a. Source fragment `port/dreamcast/tools/d367/castle18/ch32-r20c-active-resident-v18-20261019.json`.
+
+## V18 matched gameplay gate and death-menu ownership
+
+The fresh enabled0838/V18 diagnostic completes56.00 seconds plus55.67 seconds of unchanged saved-state continuation, with owned exits/errors0 and691 exact shared history lines. All6,601 staged payload names match the failed enabled control; only `dc/resident.bin` differs. Official gameplay uploads improve15→0 with guard/refusal/retry/eviction/TEX/audio failures0. Last room memory: pinned414496, dynamic1047296, other90112, free1015520, largest970752 bytes; peak pinned1461792. Exact held/requested49152 reserve passes with minimum logged headroom38208 bytes.
+
+D6 again releases at1571, receives original flag1 and reaches routine1/27/1 at the floor. Native0ag admissions/submissions and zero declines persist; the retained tail30-second still visibly shows the full claw enemy confronting Leon. The subsequent unattended death is retained; survival, whole-fight completion, all waves/doors and no-warp progression are not claimed.
+
+All three post-preload first-sight keys are bound directly to the exact staged `ss/eng/option.dat` (SHA b56409dee1d1d504c54e129490fcab1f7cb27a8afe0107c7695bbc99d795a3db). `gameDiedemo` loads OptionArc.ofs_10 EFF at0x80 with TEX_OWNER_ID_DEAD. Its original texture IDs0x73/0x74/0x75 resolve to0a9ac65a-2bd5be68 (Yes),02532d51-aa29c281 (No),fed05d68-c5d3a36b (Continue). Source metadata, pixel/palette identity hashes and decoded text images match exactly. They are explicitly retained as death-menu uploads outside the room list; no paused-menu detector or runtime filter changes.
+
+Detailed proof: `workers/ch32/deferred-flags/r20c-active-v18-matched-proof.json`; source owner proof `r20c-death-text-source-owner.json`. Combined log SHA a0d24bff3615e05703e8b84b182e82837f13f206ecb112a3203d7b2cd0ffa61a; matched disc e6433a00f6b394ebbcb4f5e70b73e522ba36c6b31bc6951d7d7d1241efdfb442. All source claims released. The pair remains isolated7adb/ACTOR_PLAN0; f255/ACTOR_PLAN1 needs its own integration coverage.
