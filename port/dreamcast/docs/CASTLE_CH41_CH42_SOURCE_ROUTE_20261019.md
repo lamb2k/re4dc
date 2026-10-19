@@ -219,6 +219,22 @@ Private set `castle18-ch41-r219-audio-20261019` is mirrored on C:, manifest
 Additive fixture: `tools/d367/castle18/ch41-r219-audio-20261019.json`.
 Evidence: `r219-entry-preparation.json` and `r219-audio-fit-proof.json`.
 
+The selected 76-stream file lacks both original cart streams, 1:E4 and
+1:E5. A header inventory of 30 retained containers found neither. The
+existing converter prepares those two original 32 kHz stereo sounds;
+their encoded lengths are 131,072 and 180,224 bytes. The additive 78-entry
+union preserves every previous descriptor, offset and encoded payload.
+All 78 source descriptors match the original stream headers. The current
+c18oimW resolved capacity is 80, so no program or capacity change is needed.
+
+Private set `castle18-ch41-r219-streams-20261019` is mirrored on C:, manifest
+`5e95da70d4ac1b3e4a5bbad01ec70f3087af6b779a5568a825788aa1635c3a37`.
+Output SHA:
+`208dcd229c1cd985b6165fdff31d9f30116f723af970003ebe5c4de389bc0143`.
+The source fragment is `tools/d367/castle18/ch41-r219-streams-20261019.json`.
+Compose only these two additions into newer stream unions. These are host
+checks; actual playback and both original cart events remain unqualified.
+
 ## r222 near-enemy diagnostic and residency correction
 
 `cx-r222-walk-neararea10kos02` starts at the original area 10 centre,
