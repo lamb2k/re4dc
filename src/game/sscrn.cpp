@@ -303,6 +303,9 @@ static const u16 qwList[4][10] = {
 static u32 qwStopBak;
 static unsigned qwT0;
 extern "C" unsigned re4dc_model_source_stamp();  // platform/native_model.cpp: KOS timer, us
+#if RE4DC_QW_METER
+extern "C" void re4dc_disc_meter_totals(unsigned* reads, unsigned long long* bytes, unsigned long long* block_us);
+#endif
 
 static void qwTask()
 {
@@ -315,9 +318,19 @@ static void qwTask()
     if (pG->weapon_no != wepNo || pG->weapon_type != wepType || pG->bullet_type != wepLv) {
         SndBlkStop(2);
         pl->weaponRelease();
+#if RE4DC_QW_METER
+        unsigned r0, r1;
+        unsigned long long k0, k1, b0, b1;
+        re4dc_disc_meter_totals(&r0, &k0, &b0);
+#endif
         t1 = re4dc_model_source_stamp();
         pl->weaponLoad(wepNo, wepType);
         t2 = re4dc_model_source_stamp();
+#if RE4DC_QW_METER
+        re4dc_disc_meter_totals(&r1, &k1, &b1);
+        OSReport("quick weapon: read %u calls %u bytes drive %u us (weapon %x)\n", r1 - r0, (unsigned) (k1 - k0),
+                 (unsigned) (b1 - b0), wepNo);
+#endif
 #if RE4DC_WEAPON_HEAP4
         {
             extern int re4dc_wep_reverted;
