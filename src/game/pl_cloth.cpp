@@ -300,12 +300,87 @@ void PlClothSetLeon(cModel* pl, PlCloth* jacket, PlCloth* holster, PlCloth* hair
 
 // Per frame (cPlLeon::moveCloth): simulates the jacket, holster and hair, then clears the model's
 // warp / no-cloth flags (be_flag 0x00E00000) that reset the chains this frame.
+#if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
+// LEON_CLOTH_DRAWN (game30.mk; approximation, user 10-18 "go for it"; runtime word re4dc_leon_cloth_drawn): Leon's
+// jacket, holster and hair are simulated only on ticks whose image is drawn (pace.cpp re4dc_pace_image_dropped). A
+// dropped tick keeps only the wind's shared-random draw (PenClothSkipTick). The next drawn tick runs one normal step
+// with the body motion of both ticks: the root's old position is the one saved at the first dropped tick, so the
+// chains follow Leon without lagging. A reset / warp tick (be_flag 0x00E00000) always runs in full and forgets the
+// carry, as does a gap (the carry is used only when the dropped ticks run up to the previous tick).
+// Pacing Off, cutscene holds, sub screens and loads never drop an image, so they simulate every tick as the source.
+void PenClothSkipTick(PenCloth* c);
+extern "C" int re4dc_pace_image_dropped(void);
+extern "C" {
+u32 __attribute__((section(".data"))) re4dc_leon_cloth_drawn = 1;
+}
+namespace {
+struct LeonClothCarry {
+    cModel* model;
+    Vec oldRoot;      // the root's world_old at the first dropped tick
+    s32 lastSkip;     // Frame_cnt of the last dropped tick
+    s32 pending;
+};
+LeonClothCarry leonCarry[2];   // the player and the event Leon (obj18)
+}
+static LeonClothCarry* leonCarryFor(cModel* pl)
+{
+    for (int i = 0; i < 2; i++) {
+        if (leonCarry[i].model == pl) {
+            return &leonCarry[i];
+        }
+    }
+    LeonClothCarry* e = leonCarry[0].pending ? &leonCarry[1] : &leonCarry[0];
+    e->model = pl;
+    e->pending = 0;
+    return e;
+}
+#endif
 void PlClothMoveLeon(cModel* pl, PlCloth* jacket, PlCloth* holster, PlCloth* hair)
 {
+#if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
+    cModel* root = 0;
+    Vec keepOld;
+    if (re4dc_leon_cloth_drawn) {
+        LeonClothCarry* cc = leonCarryFor(pl);
+        root = pl->getPartsPtr(0);
+        if (cc->pending && cc->lastSkip != (s32) pG->Frame_cnt - 1) {
+            cc->pending = 0;
+        }
+        if (pl->be_flag & 0x00E00000) {
+            cc->pending = 0;
+        } else if (re4dc_pace_image_dropped()) {
+            if (!cc->pending) {
+                cc->oldRoot = root->world_old;
+                cc->pending = 1;
+            }
+            cc->lastSkip = (s32) pG->Frame_cnt;
+            if (pG->pl_costume == 0) {
+                PenClothSkipTick((PenCloth*) jacket);
+            }
+            if (pG->pl_costume == 1) {
+                PenClothSkipTick((PenCloth*) holster);
+            }
+            PenClothSkipTick((PenCloth*) hair);
+            return;
+        }
+        if (cc->pending) {
+            keepOld = root->world_old;
+            root->world_old = cc->oldRoot;
+            cc->pending = 0;
+        } else {
+            root = 0;
+        }
+    }
+#endif
     testJacketMoveLeon(pl, jacket);
     testHolsterMoveLeon(pl, holster);
     testHairMoveLeon(pl, hair);
     pl->be_flag &= ~0x00E00000;
+#if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
+    if (root) {
+        root->world_old = keepOld;
+    }
+#endif
 }
 
 // Likewise (&girlHair, &girlSkirt, &girlSweater) are used as skirt, hair, sweater (or ribbon).

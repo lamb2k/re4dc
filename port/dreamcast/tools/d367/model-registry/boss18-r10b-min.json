@@ -1,0 +1,78 @@
+{
+ "registry": "boss18-r10b-min",
+ "about": "Boss18 Del Lago source-full reference with protected-min gameplay candidate: achieved 78.4% positions, not a g50/g70 rung; timing and user gates pending.",
+ "cast_dir": "/root/re4data/private/boss18-dellago-20261018/combined/r10b-min",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT)",
+ "cast_sources": [
+  "/root/re4data/private/boss18-dellago-20261018/cast/r10b-full",
+  "/root/re4data/private/boss18-dellago-20261018/cast/r10b-min"
+ ],
+ "descriptors": [
+  {
+   "name": "dellago-em2f-00",
+   "archive": "em2f",
+   "model_id": "0x2f",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2f/em2f.cpp type 0: modelInit(ARC 4, ARC 5)",
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "fish-em27-00",
+   "archive": "em27",
+   "model_id": "0x27",
+   "source_types": [
+    0,
+    1
+   ],
+   "module": "src/em27/em27.cpp em27_R0_Init: modelInit(ARC 4, ARC 5)",
+   "mask_runs": {
+    "0": "/root/re4data/private/boss18-dellago-20261018/support/mask-fish-em27-00"
+   },
+   "source_drops": [
+    "bump"
+   ]
+  },
+  {
+   "name": "boat-pl0f-00",
+   "archive": "pl0f",
+   "model_id": "0x0f",
+   "source_types": [],
+   "module": "src/pl0f/pl0f.cpp pl0f_R0_Init: modelInit(ARC 5, ARC 6)",
+   "source_drops": [
+    "bump",
+    "alt-specular"
+   ]
+  },
+  {
+   "name": "dl2f00-min",
+   "archive": "em2f",
+   "model_id": "0x2f",
+   "source_types": [
+    0
+   ],
+   "module": "src/em2f/em2f.cpp type 0: modelInit(ARC 4, ARC 5)",
+   "source_drops": [
+    "bump"
+   ],
+   "lod_of": "dellago-em2f-00"
+  }
+ ],
+ "room_packages": {
+  "10b": {
+   "descriptors": [
+    "dellago-em2f-00",
+    "fish-em27-00",
+    "boat-pl0f-00",
+    "dl2f00-min"
+   ],
+   "evidence": "Boss17 PS2 source full conversion reused; original fish/boat masks and material drops retained; source/native checks pass, fight measurement and look pending."
+  }
+ }
+}
