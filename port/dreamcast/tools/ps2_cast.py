@@ -476,8 +476,8 @@ PRESETS['regen-em36-02'] = dict(_em36(0x15, 0x16, 0x24, [2, 3], ['r309', 'r310']
 # em39.cpp (Krauser, r31c) type 1 modelInit(ARC 0x15, ARC 0x17) + ModInfoMgr.create (5, 0x10), (6, 0x18), (7, 0x12), the knife
 # (9, 0x10), em39HandSet right hands 0xA..0xD and left hands 0xE / 0xF (TPL 0x14), em39DieModelSet (0x21, 0x22); type 2
 # modelInit(ARC 0x1A, ARC 0x1D) + (5, 0x10), (6, 0x1E), (0x1B, 0x1F), (0x1C, 0x20), the knife, right hands only.
-# NOT CONVERTED (cast16 10-17): `convert` refuses both Krauser presets - the PS2 em39 skeleton is not the GC one (body
-# bone positions differ by up to 16.7 mm for type 1, 55.7 mm for type 2), so the PS2 mesh needs a retarget (a look decision).
+# Source-pinned body inverse-bind retarget (boss18): original127 GC parts and authored PS2 geometry stay intact.
+# Partial/duplicate attachment rest tables remain source evidence; addModel uses the body owner. Animated look is unqualified.
 _EM39_HANDS = [(0xa, 'right-hand', 0x14), (0xb, 'right-hand-b', 0x14), (0xc, 'right-hand-c', 0x14), (0xd, 'right-hand-d', 0x14)]
 PRESETS['krauser-em39-01'] = dict(archive='em39', sections=[(0x15, 'body'), (5, 'acc0', 0x10), (6, 'acc1', 0x18), (7, 'acc2', 0x12),
                                   (9, 'knife', 0x10)] + _EM39_HANDS + [(0xe, 'left-hand', 0x14), (0xf, 'left-hand-b', 0x14),
@@ -485,6 +485,36 @@ PRESETS['krauser-em39-01'] = dict(archive='em39', sections=[(0x15, 'body'), (5, 
 PRESETS['krauser-em39-02'] = dict(archive='em39', sections=[(0x1a, 'body'), (5, 'acc0', 0x10), (6, 'acc1', 0x1e), (0x1b, 'acc2', 0x1f),
                                   (0x1c, 'acc3', 0x20), (9, 'knife', 0x10)] + _EM39_HANDS + [(0x21, 'death', 0x22)],
                                   tpl=0x1d, rooms=['r31c'], types=[2], category='registry', model_id=0x39, lit=True)
+# Exact original BIN identities for the optional source-owner retarget. No runtime admission.
+_EM39_SOURCE_HASHES = {
+    0x5: ('bddb27c0d2be42488970e90a4c84fd7d5cdbee24746700ad777e8d8f4cf25887', 'db697d772b5822df3a46ac0052344b4ac0014569d503571890fe2352ec24353d'),
+    0x6: ('2e57e09329a28c2078d81ae608d9862b2e6276dd199cf0a3d939523123c6cfe1', '53a3d416cf082c518c4de56b8ab6ab249a98794c5a4085ddf52ebb9676efa6a2'),
+    0x7: ('667f1f97cbccd0803d36ec794c35dbcccf4e358d0ad25df417883fba12fec189', '8a10e98d091b070ed4a8dd4e18add0eb50540dbb25046b7030089b322133b4a0'),
+    0x9: ('5e47bd2aeca8452a7bef840c77957a2b35951f2578fa43eaf48722cdf84a2841', '4d5f7bd3096695cab885628b1dee4a374df93093009808cc0c564ba64786eb45'),
+    0xa: ('0e6a922f1b9ab893857548bfcb51d098f4157c96e462ba69ba4a53cbdd656856', '1f2378161b0118149270e459eb24b04368ac4cf9fe77a6f46a7544df76454b17'),
+    0xb: ('8ac4f08fb63fac932879e2227d71099facb38901d75f4646ea0b605e502b0d13', '99fa506e3b53c0b521facbdcfdea9540e060d36cb12021ad061919041cbb97c3'),
+    0xc: ('8ac4f08fb63fac932879e2227d71099facb38901d75f4646ea0b605e502b0d13', 'f671c8c0983c401a692d26867b3962e43d47f4d37ccbcccb0c715a665b12628f'),
+    0xd: ('8ac4f08fb63fac932879e2227d71099facb38901d75f4646ea0b605e502b0d13', '4d5349ac332ae260a838d0bd2a1512e43218614225f1a19cd89b974956b5c7ed'),
+    0xe: ('ee4395d1c08d1fb6dcc664fa22e29338c18612cbbd9625716684a23bfa669517', '9996dcc175e108d720d8a33c60dbfecbdd69bb38f2bd29d6aaf381d59a5c7efa'),
+    0xf: ('52fdcaaaa8d75d84ea04664aeee848b85fc137f686ed168b0ff3f33e995bf644', '6d320410f74783204859c43f003b669299114147bf03195cc3a728310add4817'),
+    0x15: ('a89a73b441b29e74c259e436da2fd383df075287e0648250618333b12d3d18bb', '2428aec9e76184dae0a381e44eef4862c2a89e601ffa16bd89c7195f909fbbe7'),
+    0x1a: ('8c8fb758f313bd533d35b41a074c56d16489c4b45808fc3b5eb647b0ad8541c1', 'bbd93400eafbdc5013cbc382dfdbdf01eb9eb4c4e872efba64dbfd5669ae986d'),
+    0x1b: ('d072d48ae8ecfe4ca84ecb9631b202370e3b571d1f2b5811af710920dcce2d65', '1f17b7628a54f09c54ce019205d28f668cea32e4160f83ee0c49a1dec9ae514d'),
+    0x1c: ('fcec1b92f520bff89f6f259fa109e0776ec4e1ba10a423fe51e97f8f46957817', '5e0a49ecb231350b98e86f15e7e174e00a45a612c417400a9b28d4965ff6e823'),
+    0x21: ('1da7d604d7b1acc87abcbd7fcfa25cf174d1c3a268fbaf1b082cb3c2336140b9', '0ffbd44a8875fa0353b78c10b8b74822cc71ebe5f87ceef8ed309d4e09726d33'),
+}
+for _em39_app in ('krauser-em39-01', 'krauser-em39-02'):
+    _em39_spec = PRESETS[_em39_app]
+    _em39_body = _em39_spec['sections'][0][0]
+    _em39_ps2, _em39_gc = _EM39_SOURCE_HASHES[_em39_body]
+    _em39_bind = dict(kind='same-id-parent-gc-inverse-bind', ps2_sha256=_em39_ps2, gc_sha256=_em39_gc)
+    _em39_spec.update(source_bind_offsets={_em39_body: _em39_bind},
+        host_ordered_strips=True, atlas_wrap_gutters=True,
+        attachment_owner_skeletons={arc: dict(kind='source-pinned-retarget-owner-attachment',
+            ps2_sha256=_EM39_SOURCE_HASHES[arc][0], gc_sha256=_EM39_SOURCE_HASHES[arc][1],
+            owner_ps2_sha256=_em39_ps2, owner_gc_sha256=_em39_gc, owner_bind_contract=_em39_bind)
+            for arc, *_ in _em39_spec['sections'][1:]})
+
 # em3a.cpp (the r31c gunship) types 0 / 1 modelInit(ARC 5, ARC 6), type 2 modelInit(ARC 0xB, ARC 0xC).
 PRESETS['gunship-em3a-00'] = dict(archive='em3a', sections=[(5, 'body')], tpl=6, rooms=['r31c'], types=[0, 1], category='registry',
                                   model_id=0x3a, lit=True)
@@ -823,6 +853,77 @@ def source_bind_offsets(pbin, gbin, ps2_bones, gc_bones, contract):
                 animation_evidence='NONE: source inverse-bind correspondence only; actual poses and look pending')
 
 
+def source_retarget_owner_attachment(pbin, gbin, owner_pbin, owner_gbin, source_bones, owner_ps2,
+                                     section_gc, owner_gc, weighted, contract, bone_tol):
+    """Prove an addModel section on an explicitly retargeted, unchanged body owner.
+
+    Only modelInit supplies cParts and their bind matrices. The attachment BIN's
+    complete partial/duplicate rest records remain source evidence, not a new
+    skeleton. Every weighted ID must exist in that BIN, its GC section and the
+    original body. Geometry and numeric weights are never remapped here.
+    """
+    keys = {'kind', 'ps2_sha256', 'gc_sha256', 'owner_ps2_sha256', 'owner_gc_sha256', 'owner_bind_contract'}
+    if set(contract) != keys or contract['kind'] != 'source-pinned-retarget-owner-attachment':
+        raise ValueError('unknown retarget attachment owner contract')
+    payloads = dict(ps2_sha256=pbin, gc_sha256=gbin,
+                    owner_ps2_sha256=owner_pbin, owner_gc_sha256=owner_gbin)
+    if any(sha(data) != contract[key] for key, data in payloads.items()):
+        raise ValueError('retarget attachment/owner source BIN identity changed')
+    n = len(owner_gc)
+    if not 1 <= n <= 255 or len(owner_ps2) != n:
+        raise ValueError('retarget attachment needs the complete original body owner')
+    offsets = source_bind_offsets(owner_pbin, owner_gbin, owner_ps2, owner_gc,
+                                  contract['owner_bind_contract'])
+    def index(v):
+        return isinstance(v, int) and not isinstance(v, bool)
+    def xyz(v):
+        return isinstance(v, (tuple, list)) and len(v) == 3 and all(
+            isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x) for x in v)
+    for i, (p, g) in enumerate(zip(owner_ps2, owner_gc)):
+        if any(not index(v) for v in (p.get('id'), p.get('parent'), g.get('id'), g.get('attach'), g.get('parent'))) or \
+                not xyz(p.get('pos')) or not xyz(g.get('translation')):
+            raise ValueError('invalid original body owner index/translation')
+    original, seen = {}, set()
+    for q in source_bones:
+        i, parent = q.get('id'), q.get('parent')
+        if not index(i) or not 0 <= i < n or not index(parent) or not -1 <= parent < n or not xyz(q.get('pos')):
+            raise ValueError('invalid original attachment rest record')
+        value = (parent, tuple(q['pos']))
+        if i in original and original[i] != value:
+            raise ValueError('conflicting original attachment duplicate rest records')
+        if parent >= 0 and parent not in seen:
+            raise ValueError('original attachment parent must precede its child')
+        original[i] = value; seen.add(i)
+    if not original:
+        raise ValueError('missing original attachment rest records')
+    attachments = set()
+    for k, g in enumerate(section_gc):
+        i, parent = g.get('attach'), g.get('parent')
+        if not index(g.get('id')) or g.get('id') != k or not index(i) or not 0 <= i < n or i in attachments or not index(parent) or \
+                not -1 <= parent < n or not xyz(g.get('translation')):
+            raise ValueError('attachment GC section does not reference the original owner hierarchy')
+        # Unused section heads can have a different parent (Krauser head120/121).
+        # addModel never installs them as cParts; preserve them, validate their
+        # references, and require every PS2-weighted section ID to name the owner.
+        if i in weighted and parent not in (-1, owner_gc[i]['parent']):
+            raise ValueError('weighted attachment GC hierarchy differs from original owner')
+        rest = np.asarray(g.get('rest'))
+        if rest.shape != (4, 4) or not np.isfinite(rest).all():
+            raise ValueError('invalid original GC attachment rest matrix')
+        attachments.add(i)
+    if not weighted or any(not index(i) for i in weighted) or not set(weighted) <= (set(original) & attachments):
+        raise ValueError('attachment weights escape original source/section/body owner')
+    return [dict(p) for p in owner_ps2], dict(kind=contract['kind'],
+        source_BIN_sha256={key:sha(data) for key, data in payloads.items()},
+        original_PS2_rest_records=[dict(p) for p in source_bones],
+        original_GC_rest_records=[dict(g) for g in section_gc],
+        original_PS2_rest_record_count=len(source_bones), original_GC_rest_record_count=len(section_gc),
+        owner_parts=n, weighted_ids=sorted(weighted), owner_bind_offsets=offsets,
+        binding='Source modelInit body owns every animated part and inverse bind; addModel only links infos. '
+                'All original partial/duplicate section rest metadata is retained, not substituted runtime parts.',
+        bone_tolerance_mm=bone_tol, animation_evidence='NONE: inverse-bind algebra only; actual poses/look pending')
+
+
 def source_attachment_owner_skeleton(pbin, gbin, owner_pbin, owner_gbin, source_bones, owner_ps2,
                                      section_gc, owner_gc, weighted, contract, bone_tol):
     """An explicitly proved addModel attachment uses modelInit's existing owner parts.
@@ -832,6 +933,9 @@ def source_attachment_owner_skeleton(pbin, gbin, owner_pbin, owner_gbin, source_
     source archive or runtime bone is changed. Only declared four-source identities
     may use this contract; ordinary section skeleton validation remains the default.
     """
+    if contract.get('kind') == 'source-pinned-retarget-owner-attachment':
+        return source_retarget_owner_attachment(pbin, gbin, owner_pbin, owner_gbin, source_bones,
+            owner_ps2, section_gc, owner_gc, weighted, contract, bone_tol)
     if contract.get('kind') != 'source-pinned-body-owner-attachment':
         raise ValueError('unknown attachment owner skeleton contract')
     payloads = dict(ps2_sha256=pbin, gc_sha256=gbin,
@@ -990,6 +1094,11 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                 ps2_entry(ps2, selections[0][0], 'BIN'), sections[0]['gbin'], m.bones,
                 sections[0]['bin'].bones, gsk, bones, weighted, owner_contract, bone_tol)
             val.setdefault('attachment_owner_skeletons', {})[si] = proof
+            if proof['kind'] == 'source-pinned-retarget-owner-attachment':
+                # calcWeightMat uses modelInit's original cParts bindMat across all infos.
+                # The raw attachment table remains verbatim in proof; source BIN/TPL facts stay raw.
+                gsk = bones
+                bind_offsets[si] = proof['owner_bind_offsets']
         # skeleton identity: PS2 (id, parent, translation) == GC (attach, parent, translation)
         if len(gsk) != len(bones):
             # a partial GC section skeleton (stage-3 soldier head / hands: the parts they weight, by attach id):
@@ -1057,7 +1166,7 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
         if contract is not None:
             assert len(gsk) == len(bones), 'bind offsets require a complete body-table section'
             bind_offsets[si] = source_bind_offsets(pbin, gbin, m.bones, gsk, contract)
-        else:
+        elif si not in bind_offsets:
             assert dt <= bone_tol, (role, id_parent, dt)
         tris = pb.triangles(m)
         for mat in m.materials:
@@ -1076,6 +1185,9 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                                         ps2_materials=[dict(flag=x['flag'], diffuse=x['diffuse'], opacity=x['opacity']) for x in m.materials],
                                         ps2_triangles=len(tris), ps2_strip_vertices=sum(len(s['verts']) for n in m.nodes for s in n['segments']),
                                         ps2_segments=sum(len(n['segments']) for n in m.nodes))))
+        if owner_contract is not None and owner_contract.get('kind') == 'source-pinned-retarget-owner-attachment':
+            sections[-1]['check']['skeleton_checked'] = ('Original modelInit owner and declared inverse-bind offsets; '
+                'unused original PS2/GC attachment rest tables retained in attachment_owner_skeletons proof.')
     used.sort()
     gutters = {}
     if spec.get('atlas_wrap_gutters'):
