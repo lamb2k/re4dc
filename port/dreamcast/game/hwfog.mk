@@ -88,9 +88,10 @@ $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_HAZE_SPRITE_CUT=1
 endif
 # FX_MIST_PS2=1 (lane fx19 2026-10-19; approximation class, gameplay-equivalence gated; default 0 = no code, identical
 #   image): the GameCube-only mist sheets (Esp48 room records the PS2 release does not have: r100's GC sheet textures,
-#   every room-table sheet in r101..r10b and r117..r11b, kPs2SheetCut's r105..r200 rows) are not kept. EspSeqSet makes
-#   every seed draw as before, then returns the slot to the pool, so the sheets never move, animate or reach the sprite
-#   pass. HAZE_SPRITE_CUT=1 already draws none of them. Log: `mist ps2: room=...` lines (count per room).
+#   every room-table sheet in r101..r10b and r117..r11b, kPs2SheetCut's r105..r200 rows) go dormant at birth. EspSeqSet
+#   makes every seed draw as before and the sheet keeps its pool slot (pool order and every other effect unchanged), but
+#   it never moves, animates or reaches the sprite pass (esp48.cpp). HAZE_SPRITE_CUT=1 already draws none of them.
+#   Log: `mist ps2: room=...` lines (count per room).
 FX_MIST_PS2 ?= 0
 ifneq ($(filter-out 0 1,$(FX_MIST_PS2)),)
 $(error FX_MIST_PS2 is 0 or 1)
@@ -99,7 +100,7 @@ ifeq ($(FX_MIST_PS2),1)
 ifneq ($(HAZE_SPRITE_CUT),1)
 $(error FX_MIST_PS2=1 needs HAZE_SPRITE_CUT=1)
 endif
-$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_FX_MIST_PS2=1
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/esp48.o: GAME_CPPFLAGS += -DRE4DC_FX_MIST_PS2=1
 endif
 # FOLIAGE_TRIM=<level> (lane mist16 2026-10-16; user: "we should get the fixes from foliage agent in", the Options row is a
 #   fast follow; render only; unset = no code, identical image). The chapter 1 outdoor translucent overdraw is the PS2
