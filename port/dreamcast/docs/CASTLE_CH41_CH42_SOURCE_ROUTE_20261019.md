@@ -693,3 +693,43 @@ Late Flycast registration again rises to188-191ms/2.8FPS. No hardware timing
 or speed gain is claimed. Next: normal plate/rack inputs, original roof and
 drill events, native visible enemies, cup6f and no-warp chapter progression.
 Proof: r212-entry-runtime-proof.json and r212-entry-saved-state-audit.json.
+
+
+## r212 original four-plate puzzle, normal controls
+
+The continuous diagnostic-origin state chain reaches the original puzzle
+completion at frame2627: two racks pushed onto the west plates, Ashley left
+on the upper east plate with the normal Wait command, and Leon walked onto
+the last plate. Source hitNow/hitOld840f and all three door status fields1;
+Leon1440/Ashley600 remain unchanged. The final original thumbnail shows the
+opened passage. No external health, flag or transform writes, debug puzzle
+bypass or state retargeting were used. Guard-closed movement attempts are
+retained in the16-capture chain, including the original entry. The source
+puzzle opens its door, returns the camera and invokes its own autosave.
+
+All23 program payloads and disc c9d12b8c remain exact. Frozen746 Flycast
+CAST-GC and NOT-DRAWN pass: summed census counts Leon8250, Ashley8173 and
+em11 763, all GC0. Exact49,152 reserve/min32,832 headroom. Texture/audio-fit,
+fatal and VRAM refusal/guard/absent/drop counts remain zero. Native drawing
+of the two distant drill actors is observed; combat is not qualified.
+
+Residency is still FAIL: the last interval reports eight gameplay uploads,
+and the later original partner Wait command adds a ninth. Loads202 become
+211, with769,504 free VRAM in the latest native-stream sample. The initial
+preload-only pass never established whole-room residency. Nine actual
+selected texture winners are sealed; two are native em11 atlas/mask keys.
+The generic native-UI loader prefix is not evidence that all are menu assets.
+
+The additive preload candidate preserves all5,791 V18 records and all other
+rooms, adding nine source-observed r212 keys for5,800 records. Runtime is
+pending. Private set castle18-ch41-r212-gameplay-resident-20261019 is mirrored
+on C:, resident SHA b93f1fdd53a413dc351667c9521d413567152e355dfdaf3f2137152a81e8e73b,
+manifest1969d7cf38e0b834d42b2235b240946481dad8f754b0c8fc055355522f6ecf40.
+
+Proofs: r212-original-puzzle-runtime-proof.json,
+r212-normal-chain-through-15.json (fee99920c967f78977364528e0ca1657f723a265e9015a6ee52baae83415b06f),
+r212-normal-through15-gate.json and r212-normal-first-sight-winners.json.
+Final state d6b3b85bb70251f9abfd38b5289182c90f9a8224bf6030c4701ca3cd66377b8b;
+combined log4473d5a10477f639eabf9684e9fdf75392574fb1e49b8ab5ccc76ac77ab796fb.
+Roof/drill/cup and return remain open. This is not current-recipe chapter
+acceptance, hardware timing, whole-room appearance or a frame-rate gain.
