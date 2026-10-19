@@ -1,0 +1,33 @@
+{
+  "schema": "boss18-common-source-atlas-1",
+  "source_seal_sha256": "f2ec2d432696facfea11ee9e42d11243f662500526a215f2e758b149ea8b167b",
+  "scope": "Explicit full original Krauser source input selection; all source roles/skeleton/weights/normals/rawUV preserved, common atlas cell relocation only. No runtime or look acceptance.",
+  "archive": "inputs/em39.dat",
+  "archive_sha256": "cfd4b1a848027bb08fcd75e29d287b68c3bd2dc21b7f9008dbe66e6448c52f41",
+  "forms": [
+    {
+      "path": "full-source/krauser-em39-01",
+      "files": {
+        "source.json": "a4e415c5fe6bd4b1310793031c8108e90a4567bc5f1f71a7d71a50c0e5b101ad",
+        "source-bindings.json": "ffcb594fdf2eaf22af815f26a71177971ffd81da17b9a64c3e39700badb74e58",
+        "mesh.json": "245e8716af81ba125af67e1a4cd9be6f012d80804da8875a5de0a53f77b0d77d",
+        "validation.json": "53dcd730583308a2ab03c5389de77a821a165986ea4f402d32828dd3cd0dc959",
+        "atlas.png": "de4a57627e58fe9e77f8d9db45a0d9183e3a9a48135c1d96d59249573b16ee73",
+        "manifest.json": "15541a2e6ca3fada6c9599dd854b633eaf7bc972143459b4d3c0c021a67e8992",
+        "runtime/castmodel_runtime.h": "37984186d76abb9d37c75fbf623dca36851e4b31ba303d77c9c0a6cda1f69ad4"
+      }
+    },
+    {
+      "path": "full-source/krauser-em39-02",
+      "files": {
+        "source.json": "a39e508d9ae0897290f8eb191a44607b586449cc1d41896bca750cc011626f17",
+        "source-bindings.json": "09f35c882177941f9e035f0b250b85b2f8facd9f16b40544423f16944e03d1c6",
+        "mesh.json": "05b9694c0f374053aed3e2debc0d76478175e74af59d6f2ede256183cb05a3dc",
+        "validation.json": "7f1154abe7e6cf580f55adebd2be7f6420b6bed93079da9c396b65a69a170727",
+        "atlas.png": "689bb69823575569bde1d6c39d9e0384cc45dba3dfbf5cc9ebd36ed6a3a05fe7",
+        "manifest.json": "f2f0505b77cfcac947178462ec1d8e7f2d80404556f0ba114657bc06985b0bcb",
+        "runtime/castmodel_runtime.h": "a735f9e7e0a3a048022abfcb0872aa46621115bc0d81b3b15faa9877f465701f"
+      }
+    }
+  ]
+}
