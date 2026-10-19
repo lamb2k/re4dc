@@ -61,3 +61,19 @@ Private `castle18-ch32-r20b-wolf-v2-20261019` is mirrored with manifest `af3c598
 ## Memory-pressure evidence correction
 
 The first six worker captures all explicitly report `kos squeeze: held=0 requested=0`. A generic `49152` check incorrectly matched the AICA stream buffer, so every previous 48 KiB-held claim is withdrawn. Exact payload-only residency comparisons and observed native drawing remain valid without the extra pressure. Both matched proofs now preserve exact squeeze receipts and mark memory-pressure qualification false; their original versions are retained as superseded evidence. Future qualifying fixtures must request `squeeze 49152 0` and match the exact held/requested receipt. Existing rooms need this coverage in the latest integrated route union; no chapter acceptance is claimed.
+
+## r20b original wave and memory-pressure check
+
+The original balcony entry held the explicitly requested 49152-byte reserve but had no wolves. A separate initial placement inside original AEV area6 triggered the unchanged source wave. Its 56.14-second capture drew em22 948 native / 0 GC with four wolves sampled; Leon450 / 0 and TEX pass. Merchant18 remained GC250 and is a separate blocker. The close still retains the original back-parasite objects, whose independent source/PS2 qualification remains open.
+
+The initial official residency zero was insufficient because its last room summary was preload. A 56.44-second continuation uses the exact same disc/program and unmodified saved state. The logs share695 exact history lines; joining that overlap yields actual later tick summaries and24 late uploads. These are an observed residency failure, despite no refusal/eviction/retry and guard0. The current exact-reserve verifier passes the joined lineage with49152held/requested and minimum KOS32680bytes. Eight original effect images have no PS2 counterpart and remain explicit exceptions.
+
+The source-observed additive candidate includes25 previously absent keys, retaining actual source dimensions/format and all5672 prior records. Its new union has5697 records. The one additional early source load accounts for why additions differ from the24 late-upload count. Actual selected package winners are sealed; no texture/model/program changes accompany this resident candidate. Fresh candidate runtime remains pending. Keep previous room additions when composing into the newest main union.
+
+## r20c original source body intake
+
+The original chapter3 enemy list requires em1b types7/10 plus separate em25 parasite actors. Existing full current r201 package9485af27 includes em1b07p/08p/0ag; the current producer reproduces it exactly. The new r20c package0082606f changes only room/header CRC bytes, with the entire payload after64bytes exact.
+
+All43 source roles and23 prepared BIN entries match the original source. Existing source-only bump slots retain header/sampler facts with the already established zero-key contract; they are recorded explicitly. Eight apparent missing texture keys are virtual colour/mask tokens, resolved to four combined packages. All seven real native packages are present; current descriptor/pixel bytes match retained inputs, and only debug-name/CRC differences exist for some atlases. Current selected bytes are preserved.
+
+The actual runtime loader host check accepts20c and rejects the same package for201. Private castle18-ch32-r20c-em1b-v2-20261019 is mirrored with manifest1878d4a44ed91569ba08c9717a4215d010122aafcbcdcc7f97ab2ccf8677792f. This establishes source-compatible package preparation, not current r20c runtime, parasites, encounter progress or chapter acceptance.
