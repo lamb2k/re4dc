@@ -796,3 +796,37 @@ resident b93f1fdd53a413dc351667c9521d413567152e355dfdaf3f2137152a81e8e73b;
 manifest1969d7cf38e0b834d42b2235b240946481dad8f754b0c8fc055355522f6ecf40.
 The original normal16 roof state remains available for normal shooting,
 drill combat, cup collection and return; those events are still open.
+
+
+## r212 original ceiling trap completed with normal shots
+
+The original roof watcher completes at source frame3878: room flags3f000000
+contain all four hit bits and the completion bit, with the exit door open.
+Five normal handgun shots consume magazine10 to5; Leon1440/Ashley600 stay
+unchanged. The original saved thumbnail was inspected. All controller
+feedback is read-only; ordinary owned-window ready, aim and fire inputs
+cause the original collision, damage, flags and door changes.
+
+The22-capture chain retains exact successive states, original discc9d12b8c,
+ELF746a2a5f and all23 programs. Normal17's350tick aim guard and normal19's
+transient-hit-observation guard are retained. The controller now reads the
+original first child muzzle matrix and latched source hit flags. No game
+code, health, ammunition, transform or flag was edited.
+
+Exact49,152 reserve remains, minimum KOS headroom29,272. Native census
+totals Leon22,264, Ashley21,436 and em11 7,564 have GC0. Texture, audio-fit,
+fatal and VRAM refusal/guard/absent/drop errors remain zero. The movie's
+earlier one underrun/76silence bytes remains recorded.
+
+Whole-room residency is still open. Sixteen further selected loader keys
+are now observed beyond the earlier nine; all selected bytes are sealed
+in r212-roof-first-sight-winners.json. The last native-stream load count226
+precedes another observed upload and is not a final count. The earlier
+bounded nine-to-zero matched result remains valid, but does not cover
+these roof, weapon and effect exposures. No new resident-list edit yet.
+
+Proof r212-original-roof-trap-proof.json: e763465fa285c75b1af1b4c9a1abbc5ac7e01fe4f721b017ab29ef66337d07f6.
+State aabf466d7964c98fcb76a00eb7b29bc3b4d7009762f840e1417704aced580ff3;
+chain8f83bea2b570bdb710f2037284f250fb39c9313290dc54c637cbad9c118b2013.
+The original drill fight, cup6f, return and current-recipe chapter gate
+remain open. This is frozen diagnostic progression, not console timing.
