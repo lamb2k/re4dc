@@ -1,0 +1,90 @@
+{
+  "registry": "castle18-ch34-r20e-armor",
+  "about": "Chapter 3-4 r20e source armour family. Reuses the complete qualified type0..3 PS2 bodies, chainmail and weapons without changing any geometry or texture bytes.",
+  "cast_dir": "/root/re4data/private/castle18-ch34-armor-20261019/cast-em3c",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "lighting": "lit source normals",
+  "descriptors": [
+    {
+      "name": "armor-em3c-00w",
+      "archive": "em3c",
+      "model_id": "0x3c",
+      "source_types": [
+        0
+      ],
+      "partial_sections": true,
+      "pool": true,
+      "module": "src/em3c/em3c.cpp em3cModelInit body, chainmail and original weapon selection",
+      "source_drops": [
+        "bump",
+        "alt-specular"
+      ],
+      "mask_runs": {}
+    },
+    {
+      "name": "armor-em3c-01w",
+      "archive": "em3c",
+      "model_id": "0x3c",
+      "source_types": [
+        1
+      ],
+      "partial_sections": true,
+      "pool": true,
+      "module": "src/em3c/em3c.cpp em3cModelInit body, chainmail and original weapon selection",
+      "source_drops": [
+        "bump",
+        "alt-specular"
+      ],
+      "mask_runs": {}
+    },
+    {
+      "name": "armor-em3c-02w",
+      "archive": "em3c",
+      "model_id": "0x3c",
+      "source_types": [
+        2
+      ],
+      "partial_sections": true,
+      "pool": true,
+      "module": "src/em3c/em3c.cpp em3cModelInit body, chainmail and original weapon selection",
+      "source_drops": [
+        "bump",
+        "alt-specular"
+      ],
+      "mask_runs": {
+        "0": "/root/re4data/private/castle18-cast-variants-20261018/mask/armor-em3c-02w/0"
+      }
+    },
+    {
+      "name": "armor-em3c-03w",
+      "archive": "em3c",
+      "model_id": "0x3c",
+      "source_types": [
+        3
+      ],
+      "partial_sections": true,
+      "pool": true,
+      "module": "src/em3c/em3c.cpp em3cModelInit body, chainmail and original weapon selection",
+      "source_drops": [
+        "bump",
+        "alt-specular"
+      ],
+      "mask_runs": {
+        "0": "/root/re4data/private/castle18-cast-variants-20261018/mask/armor-em3c-03w/0"
+      }
+    }
+  ],
+  "room_packages": {
+    "20e": {
+      "descriptors": [
+        "armor-em3c-00w",
+        "armor-em3c-01w",
+        "armor-em3c-02w",
+        "armor-em3c-03w"
+      ],
+      "evidence": "Original emleon03 r20e rows178 and187..194, original r20e_startArmor cEmWrap row references; current PS2 chapter3 list remains authoritative. Room/live model qualification is pending."
+    }
+  }
+}

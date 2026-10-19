@@ -485,6 +485,11 @@ ifneq ($(or $(ROUTE_SOON_RETURN),0),0)
 $(OBJDIR)/src/game/sce_at.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_SOON_RETURN=1
 $(OBJDIR)/route_end.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_SOON_RETURN=1
 endif
+# ROUTE_SOON_KEY=1 (lane route20, default 0; needs ROUTE_SOON_RETURN=1): the r11b -> r10c gate's Coming Soon also gives
+# the chapter 2-1 church key (item 0x3C) once, with r10c's key flags, since r10c is not on the disc (Test 17.1 block).
+ifneq ($(or $(ROUTE_SOON_KEY),0),0)
+$(OBJDIR)/route_end.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_SOON_KEY=1
+endif
 # ROUTE_CH21=1 (route lane r11b, default 0: no effect; needs ROUTE_CH13=1 and ROUTE_OVL=1): chapter 2-1 starts in
 # r11b (the lake shore, entered through r10b door 6 after the chapter 1-3 save). em22 (module 5, the wolves of the
 # shore ambush) is a third room overlay (em22.ovl, linked after pl0f / em2f so theirs are unchanged), and r11b's
@@ -2959,6 +2964,8 @@ include g1parts.mk
 include actor_ganado_ps2_stump.mk
 # D367 generic native models (NATIVE_MODEL_REGISTRY; default off: no effect).
 include native_model_registry.mk
+# Lane actorplan17: ACTOR_PLAN (character draw plan) and ACTOR_PROF (diagnostic profiler); default off: no effect.
+include actorplan.mk
 # D367 charbake (CHARBAKE_HAIR, CHARBAKE_TOGGLE; default off: no effect).
 include charbake.mk
 # D367 ps2leon (PS2_LEON test arms; default off: no effect).

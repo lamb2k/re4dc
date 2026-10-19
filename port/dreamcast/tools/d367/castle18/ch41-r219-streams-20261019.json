@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "bgm/aica_str.dat": "/root/re4data/private/castle18-ch41-r219-streams-20261019/bgm/aica_str.dat"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Host-qualified additive source cart streams; runtime playback and original cart sequence pending.",
+    "base_sha256": "17754bc809dd3401144e1c2e66e76d9cab541967ece38b989782a432a7c33add",
+    "output_sha256": "208dcd229c1cd985b6165fdff31d9f30116f723af970003ebe5c4de389bc0143",
+    "integration": "Preserves all 76 existing encoded streams and offsets. Append only source streams 1:E4 and 1:E5 into newer unions; current program capacity is 80."
+  }
+}

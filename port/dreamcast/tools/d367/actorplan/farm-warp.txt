@@ -1,0 +1,9 @@
+name bench-r103-farm
+# lane actorplan17 A/B disc scenes 3-4: the r103 farm wide outdoor view (benchmark Part 2 "A230", lane t2exact
+# farm-warp.txt): Leon near the r106 door looking back over the farm; 5 Ganados not alerted; god, no pad input.
+room 0x103
+pos 7500 38 -400
+ang -2.30
+inv default
+god
+alivelog 150

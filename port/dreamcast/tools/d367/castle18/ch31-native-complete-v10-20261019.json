@@ -1,0 +1,70 @@
+{
+  "replace": {
+    "dc/tex/7/74663de9-0d2f61f1.re4tex": "/root/re4data/private/castle18-ch31-native-complete-v10-20261019/files/dc/tex/7/74663de9-0d2f61f1.re4tex",
+    "dc/tex/d/d8c6abaf-844c131a.re4tex": "/root/re4data/private/castle18-ch31-native-complete-v10-20261019/files/dc/tex/d/d8c6abaf-844c131a.re4tex",
+    "em/pl00.drs": "/root/re4data/private/castle18-ch31-native-complete-v10-20261019/files/em/pl00.drs",
+    "em/pl08.drs": "/root/re4data/private/castle18-ch31-native-complete-v10-20261019/files/em/pl08.drs"
+  },
+  "remove": [],
+  "provenance": {
+    "data_set": "castle18-ch31-native-complete-v10-20261019",
+    "manifest_sha256": "9302bdd771adee04e464c154d2b75f8bb7f9f26aafa403f6bcc0d368c4a55915",
+    "source": "Existing qualified r201k atlas winners and approved garr18-head-20261019 archives. Matching old base hashes and all non-head archive entries verified. No modeling/conversion/runtime changes.",
+    "changes": [
+      {
+        "kind": "restore-existing-native-atlas",
+        "file": "dc/tex/7/74663de9-0d2f61f1.re4tex",
+        "rooms": [
+          "dc/native/r201/registry.re4nmr"
+        ],
+        "recoverable": true,
+        "old_winner": "loose",
+        "bytes": 133264,
+        "sha256": "bee5f9deffd4438ced3df1cc54ed899f7edaec79f131bf5c176a7f4621e342e8"
+      },
+      {
+        "kind": "restore-existing-native-atlas",
+        "file": "dc/tex/d/d8c6abaf-844c131a.re4tex",
+        "rooms": [
+          "dc/native/r201/registry.re4nmr"
+        ],
+        "recoverable": true,
+        "old_winner": "loose",
+        "bytes": 67728,
+        "sha256": "e6e575a80c563524cfad4e8ec413e9c23087e10792a2dd63d7c2aea6e8cf7dd7"
+      },
+      {
+        "kind": "reuse-approved-matching-base-head-v2",
+        "file": "em/pl00.drs",
+        "src_bytes": 3062048,
+        "src_sha256": "1fdb5378611ee718c6b4e7b9e42553f7314a57868bbd6781730e92e73aeba0fc",
+        "out_bytes": 3053536,
+        "out_sha256": "8f70bbd69726796a7c34a0b35e7f1aab9d8383fee1a5ba86de85fa4245c02576",
+        "entry_count": 134,
+        "only_changed_entries": [
+          8,
+          133
+        ],
+        "nonhead_entries_identical": true,
+        "native_offset_table_shift_and_crc_verified": true
+      },
+      {
+        "kind": "reuse-approved-matching-base-head-v2",
+        "file": "em/pl08.drs",
+        "src_bytes": 3087648,
+        "src_sha256": "f4acbfadf62da07f190af141e5f10bf8de347f6afa115b84f79b49d6417717a8",
+        "out_bytes": 3079136,
+        "out_sha256": "08e2ddd805b9fe7ffedc216b09585399a3d01f3799e9e201ee42c8edb6740d0b",
+        "entry_count": 134,
+        "only_changed_entries": [
+          8,
+          133
+        ],
+        "nonhead_entries_identical": true,
+        "native_offset_table_shift_and_crc_verified": true
+      }
+    ],
+    "gate": "r201n current I009 program746, 55.66s; native Garrador/Leon7/flyinghead, character CAST/NOTDRAWN/TEX/VRAM PASS; 48KiB held, minimum KOS29312B. Diagnostic only, full chapter open.",
+    "requires": "Compose after the chapter V9 resident/I009 ROOM-pair fragment. Preserve optimized tex.pak afa9e5ab3216fd03340af3257f9d8d958995cad88cfa82caa9bdf8090893b12e and AUX_OBJ_NATIVE=0."
+  }
+}
