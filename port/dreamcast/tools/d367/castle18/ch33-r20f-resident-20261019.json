@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle18-ch33-r20f-resident-20261019/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "r20f +41 exact source-observed gameplay resident keys, all5801 V20 records preserved. Compose these additions into any newer union; never overwrite later records.",
+    "base_resident_sha256": "85c5b10cf1587d6f281d74ed0a5502739db855654017d618d3068802a49c4ff7",
+    "resident_sha256": "49a48c29eabdc24bd69070e6fb241002b70acb077814599ed00ca6c698d7017b",
+    "source_role_package_required": "boss18-r20f-alt-material-20261019 registry da42932a6c2b029cbc3d26d7e0105a0b2885738564c0b41a73813fa125e35d7d; current texture29480f18 preserved."
+  }
+}

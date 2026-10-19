@@ -179,3 +179,50 @@ The completed disc's two owned links and sole exact cache link were hash-verifie
 ## Current r206 chapter-end preparation
 
 `r206-current-ap1-death.json` now selects the same fresh 23 current programs and V18 5,791-record resident union. All nonprogram/nonresident payloads are byte-identical to the audited source-prepared r206 fixture, including original chapter2 Ashley, em11 package, audio and all S00/S10/S20 movies. Preparation proof is `r206-current-ap1-preparation.json` (`521bb543566e523c9bdc7bc8bc47da7372f51020fa6b31236494448b2d90a157`). The unskipped original Luis movie, CHAPTER_3_3 save and genuine cold-load gate have not run yet. Any resulting save keeps its diagnostic-entry origin and cannot replace the final no-warp chapter route.
+
+## r20f original alternate role and residency candidate
+
+Boss H043/H045 provides the missing original BIN217/TPL219 role without
+changing geometry or existing material winners. The current same-key texture
+29480f18 and donor edc35f81 have identical complete texels and decoded RGBA;
+only header name/CRC differ. The candidate therefore stages only registry
+`da42932a6c2b029cbc3d26d7e0105a0b2885738564c0b41a73813fa125e35d7d`.
+All other 6,601 staged payloads, including all programs/images, remain exact.
+The actual selected pair remains the existing loose 29480f18 file.
+
+The same-6f081 AP1 comparison and unchanged saved-state continuation ran
+55.94 and 55.97 seconds, both owned processes exited with no capture errors.
+The original E0 info now binds role21/global146 for BIN217/TPL219; DF retains
+its original TPL218 role20. Actual native draws occur for all selected 6/7/8
+families. Combined census totals are em14 native24,486/GC0 and Leon
+native5,400/GC0; these are repeated census totals, not unique frames or speed.
+CAST-GC and NOT-DRAWN pass. TEX and audio-fit failures are zero. Exact KOS
+reserve is49,152 and minimum logged headroom36,424 bytes.
+
+The later official room ticks at f767/f1367 establish a separate residency
+FAIL:41 post-preload uploads, guard/refusal/eviction0. At the last tick pinned
+933,344/dynamic562,304/other90,112/free981,664/largest948,224 bytes. This is not
+accepted room residency. The first capture's preload-only report was not used
+as a passing gate. Stills do not provide a close actor look; movement, combat,
+whole-wave/platform/lever/door and no-warp chapter gates remain open.
+
+The new data set `castle18-ch33-r20f-resident-20261019` adds exactly those41
+source-observed keys over all5,801 V20 records, preserving every original row
+and all other rooms. Source dimensions/formats and actual package winners are
+recorded; no texture, model, program or audio bytes change. New total5,842,
+resident SHA256 `49a48c29eabdc24bd69070e6fb241002b70acb077814599ed00ca6c698d7017b`,
+manifest `63b99b15a3e95ebc1ae6aa98cfc1febe03b5d1e36a114a286ff22b378c37125f`.
+The WSL set is hash-verified and mirrored to the same private leaf on C:.
+Its fixture fragment is `tools/d367/castle18/ch33-r20f-resident-20261019.json`.
+Compose these additions into newer unions; never replace later room records.
+Matched runtime residency remains pending.
+
+Private evidence: `workers/ch32/r20f-alt-material-complete-runtime.json`,
+`r20f-alt-material-actor-role-audit.json`,
+`r20f-alt-material-first-sight-winners.json`,
+`r20f-alt-material-continuation-provenance.json` and
+`r20f-resident-host-proof.json`. The continuation joins718 exact ring-history
+lines; the original state is unchanged. The old default first-pass checker
+path was missing; the current source checker was run explicitly and retains
+walk/provenance scope as unproven. Finished disc links/cache were hash-checked,
+journaled and retired; all logs, states, stills, programs and source inputs stay.
