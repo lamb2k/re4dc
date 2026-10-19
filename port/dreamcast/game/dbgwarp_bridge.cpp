@@ -103,6 +103,8 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include "emdoor.h"
 #include "sscrn.h"
 #include "re4dc_platform.h"
+#include "geometry.h"
+#include "camera.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -775,8 +777,13 @@ void kill_poll()
         // NOT-DRAWN gate (release lane rel17b, 10-18; warp builds only): every enemy id alive in logic (SceCheckEmAlive,
         // as SceCountEmAlive counts), as id x count @ nearest distance to Leon. tools/d367/cast_gc.py --not-drawn
         // fails a room where an id is alive here but has no NMRS census draw row (Krauser r31c, 10-18).
+        // fix18 (10-18): "/vN" = how many of them are inside the camera's view frustum (body sphere y+900 r1200, as
+        // act_cap.cpp inView without its margin; a read of the frustum, no logic state). cast_gc.py judges only ids
+        // seen in view, so out-of-view enemies held for a script need no allowlist row (replaces the 12 m rule).
         unsigned char cnt[256] = {};
+        unsigned char vis[256] = {};
         int nearest[256];
+        GeoHexahedron* fr = (GeoHexahedron*) CameraViewFrustumPtr(&pG->Cam);
         for (u32 i = 0; i < EmMgr.nArray; i++) {
             cEm* em = (cEm*) EmMgr.workAt(i);
             if (!em || SceCheckEmAlive(em) != 1) continue;
@@ -788,11 +795,19 @@ void kill_poll()
             }
             if (!cnt[id] || (d >= 0 && d < nearest[id])) nearest[id] = d;
             if (cnt[id] < 255) ++cnt[id];
+            GeoSphere s;
+            s.pos.x = em->pos.x;
+            s.pos.y = em->pos.y + 900.0f;
+            s.pos.z = em->pos.z;
+            s.r = 1200.0f;
+            if (fr && collision_sphere_hexahedron(&s, fr) && vis[id] < 255) ++vis[id];
         }
-        char line[192];
+        char line[256];
         int len = 0;
-        for (unsigned id = 0; id < 256 && len < (int) sizeof(line) - 24; ++id)
-            if (cnt[id]) len += snprintf(line + len, sizeof(line) - len, " %02x*%u@%d", id, (unsigned) cnt[id], nearest[id]);
+        for (unsigned id = 0; id < 256 && len < (int) sizeof(line) - 28; ++id)
+            if (cnt[id])
+                len += snprintf(line + len, sizeof(line) - len, " %02x*%u@%d/v%u", id, (unsigned) cnt[id], nearest[id],
+                                (unsigned) vis[id]);
         line[len] = 0;
         re4dc_log("warp: alivelist room %03x frame %u ids%s\n", (unsigned) pG->room_id, (unsigned) wp.room_frames, line);
     }

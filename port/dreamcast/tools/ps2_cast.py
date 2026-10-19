@@ -742,6 +742,30 @@ def winding_agreement(verts, tris, corner_normals):
 # ------------------------------------------------------------------------------------------ convert
 
 
+def gutter_texture(rgba, width, height, uv_bounds, wrap):
+    """Extend source texels for unchanged raw UVs in an atlas (optional).
+
+    GC wrap 0 clamps and wrap 1 repeats. A one-texel filtering margin plus
+    the complete authored UV excursion keeps interpolation inside this image.
+    Unsupported samplers fail rather than approximating their edge behavior.
+    """
+    if width <= 0 or height <= 0 or len(wrap) != 2 or any(w not in (0, 1) for w in wrap):
+        raise ValueError('atlas gutters require positive dimensions and GX_CLAMP/GX_REPEAT')
+    lo, hi = uv_bounds
+    if len(lo) != 2 or len(hi) != 2 or any(not math.isfinite(x) for x in (*lo, *hi)) or any(a > b for a, b in zip(lo, hi)):
+        raise ValueError('invalid atlas gutter UV bounds')
+    left = max(1, math.ceil(-lo[0] * width / 256.0) + 1)
+    top = max(1, math.ceil(-lo[1] * height / 256.0) + 1)
+    right = max(1, math.ceil((hi[0] - 256) * width / 256.0) + 1)
+    bottom = max(1, math.ceil((hi[1] - 256) * height / 256.0) + 1)
+    if width + left + right > 2048 or height + top + bottom > 2048:
+        raise ValueError('atlas gutter image exceeds 2048')
+    image = np.frombuffer(rgba, dtype=np.uint8).reshape(height, width, 4)
+    image = np.pad(image, ((top, bottom), (0, 0), (0, 0)), mode='wrap' if wrap[1] else 'edge')
+    image = np.pad(image, ((0, 0), (left, right), (0, 0)), mode='wrap' if wrap[0] else 'edge')
+    return image.tobytes(), (left, top, right, bottom)
+
+
 def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.001):
     spec = PRESETS[preset]
     if spec.get('converter'):
@@ -859,11 +883,46 @@ def convert(preset, out, ps2_iso=PS2_ISO, gc_iso=GC_ISO, poses=None, bone_tol=0.
                                         ps2_triangles=len(tris), ps2_strip_vertices=sum(len(s['verts']) for n in m.nodes for s in n['segments']),
                                         ps2_segments=sum(len(n['segments']) for n in m.nodes))))
     used.sort()
-    cells, (aw, ah) = pack_atlas([(k, images[k]['width'], images[k]['height']) for k in used])
+    gutters = {}
+    if spec.get('atlas_wrap_gutters'):
+        if spec.get('repeat_uvs') or spec.get('uv_edge_texels'):
+            raise ValueError('atlas_wrap_gutters preserves raw UVs; do not combine with UV transforms')
+        bounds, wraps = {}, {}
+        for s in sections:
+            for material in s['bin'].materials:
+                image = material['diffuse']
+                k = s['image_base'] + image
+                wrap = tpl_wrap_modes(gc_entry(gc, s['tpl'], 'TPL'), image)
+                if k in wraps and wraps[k] != wrap:
+                    raise ValueError('one atlas image has inconsistent source wrap modes')
+                wraps[k] = wrap
+                bounds.setdefault(k, ([0, 0], [256, 256]))
+            for mat_i, corners in s['tris']:
+                image = s['bin'].materials[mat_i]['diffuse']
+                k = s['image_base'] + image
+                lo, hi = bounds[k]
+                for c in corners:
+                    for axis, value in enumerate(c['raw']['uv']):
+                        lo[axis] = min(lo[axis], value)
+                        hi[axis] = max(hi[axis], value)
+        for k in used:
+            im = images[k]
+            pixels, padding = gutter_texture(im['rgba'], im['width'], im['height'], bounds[k], wraps[k])
+            gutters[k] = dict(rgba=pixels, padding=padding, wrap=wraps[k], uv_bounds=bounds[k])
+        val['atlas_wrap_gutters'] = {str(k): {q: v for q, v in g.items() if q != 'rgba'} for k, g in gutters.items()}
+    cells, (aw, ah) = pack_atlas([(k, images[k]['width'] + sum(gutters[k]['padding'][::2]),
+                                 images[k]['height'] + sum(gutters[k]['padding'][1::2])) if k in gutters else
+                                (k, images[k]['width'], images[k]['height']) for k in used])
     atlas = Image.new('RGBA', (aw, ah), (0, 0, 0, 255))
     for k in used:
         im = images[k]
-        atlas.paste(Image.frombytes('RGBA', (im['width'], im['height']), im['rgba']), cells[k][:2])
+        if k in gutters:
+            x, y, w, h = cells[k]
+            atlas.paste(Image.frombytes('RGBA', (w, h), gutters[k]['rgba']), (x, y))
+            left, top, _, _ = gutters[k]['padding']
+            cells[k] = (x + left, y + top, im['width'], im['height'])
+        else:
+            atlas.paste(Image.frombytes('RGBA', (im['width'], im['height']), im['rgba']), cells[k][:2])
     opaque = all(a >= 128 for im in images for a in im['alpha_raw'] if im['index'] in used)
     atlas_rgb = atlas.convert('RGB').convert('RGBA')  # opaque: PS2 alpha 0x80 = 1.0; RGB565 VQ has no alpha
     atlas_rgb.save(out / 'atlas.png')
@@ -1074,6 +1133,7 @@ def pack_atlas(items):
     wide) that holds them, largest first, deterministic. -> ({k: (x, y, w, h)}, (atlas w, atlas h))."""
     area = sum(w * h for _, w, h in items)
     side = max(max(w for _, w, _ in items), max(h for _, _, h in items))
+    side = 1 << (side - 1).bit_length()  # optional gutters need not have power-of-two dimensions
     cands = []
     # from side / 2 (lane ps2cast-4): a single wide image (em22's 512 x 256 TPL) takes a 2:1 atlas of its own size
     # instead of a square one twice as large (a too small candidate simply fails to pack)

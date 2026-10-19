@@ -30,7 +30,11 @@ no NMRS row). The warp builds' `alivelog <period>` also logs
   warp: alivelist room XXX frame N ids II*count@nearest ...
       every enemy id alive in logic (SceCheckEmAlive, as SceCountEmAlive counts) with its count and the nearest
       distance to Leon (dbgwarp_bridge.cpp kill_poll; warp builds only, never the release image).
-A room FAILS when an id (10..ff) is alive in at least --min-samples samples there but has no NMRS row of that id in that
+In-view rule (lane fix18, 10-18; replaces the 12 m --near scoping): newer warps add "/vN" per id, the number of those
+enemies inside the camera's view frustum at the sample (body sphere y+900 r1200). An id is judged only when it was in view
+in at least --min-samples samples; an enemy that stays out of view (held behind a gate, waiting for its wave) is listed
+"out of view (not judged)" and needs no allowlist row. Logs without "/v" fall back to judging every id (older warps).
+A room FAILS when a judged id (10..ff) has no NMRS row of that id in that
 room (no draw pass of any outcome: native, crowd, GameCube). Reviewed exceptions: castgc/notdrawn-allow.tsv (room or *,
 id hex, reason, owner). With --not-drawn and no alivelist line at all: exit 2 (not a pass: the warp lacks alivelog).
 """
@@ -51,8 +55,8 @@ PARTNER_ID = 0x03
 PACK_OPEN = re.compile(r'NMRPACK open room=([0-9a-f]+)')
 ADMIT = re.compile(r'NMRM admit .*?room=([0-9a-f]+) .*?id=([0-9a-f]+) desc=(\S+)')
 KV = re.compile(r'(\w+)=(-?\d+)')
-ALIVELIST = re.compile(r'warp: alivelist room ([0-9a-f]+) frame (\d+) ids((?: [0-9a-f]{2}\*\d+@-?\d+)*)')
-ALIVE_ID = re.compile(r'([0-9a-f]{2})\*(\d+)@(-?\d+)')
+ALIVELIST = re.compile(r'warp: alivelist room ([0-9a-f]+) frame (\d+) ids((?: [0-9a-f]{2}\*\d+@-?\d+(?:/v\d+)?)*)')
+ALIVE_ID = re.compile(r'([0-9a-f]{2})\*(\d+)@(-?\d+)(?:/v(\d+))?')
 REASONS = ('roles', 'skeleton', 'layout', 'semantics', 'certificate', 'acquire', 'skin', 'plan', 'shape', 'revision',
            'finite', 'none')
 PLAN = {'-': 'none', 'L': 'Leon/pl08 plan', 'G': 'PS2 Ganado cast', 'R': 'registry package'}
@@ -167,7 +171,7 @@ def load_allow(path):
 
 
 def parse_alive(paths):
-    """(room, id) -> [samples, max count, nearest distance]; and the number of alivelist lines."""
+    """(room, id) -> [samples, max count, nearest distance, in-view samples or None]; and the number of alivelist lines."""
     alive, n = {}, 0
     for p in paths:
         for line in Path(p).read_text(errors='replace').splitlines():
@@ -176,9 +180,11 @@ def parse_alive(paths):
                 continue
             n += 1
             room = room3(m.group(1))
-            for i, c, d in ALIVE_ID.findall(m.group(3)):
-                s = alive.setdefault((room, int(i, 16)), [0, 0, None])
+            for i, c, d, v in ALIVE_ID.findall(m.group(3)):
+                s = alive.setdefault((room, int(i, 16)), [0, 0, None, None])
                 s[0] += 1
+                if v != '':
+                    s[3] = (s[3] or 0) + (int(v) > 0)
                 s[1] = max(s[1], int(c))
                 if int(d) >= 0 and (s[2] is None or int(d) < s[2]):
                     s[2] = int(d)
@@ -194,25 +200,28 @@ def not_drawn(a, rows):
     only = set(a.rooms.split(',')) if a.rooms else None
     drawn = {k for k in rows}
     out, fails = [], 0
-    for (room, mid), (samples, cnt, near) in sorted(alive.items()):
+    for (room, mid), (samples, cnt, near, seen) in sorted(alive.items()):
         if (only and room not in only) or mid < 0x10 or mid > a.max_id:
             continue
         if a.near and (near is None or near > a.near):
             continue
         ok = (room, mid) in drawn
         verdict = 'drawn'
-        if not ok and samples >= a.min_samples:
+        if not ok and seen is not None and seen < a.min_samples:
+            verdict = 'out of view (in view in %d sample(s); not judged)' % seen
+        elif not ok and samples >= a.min_samples:
             hit = [x for x in allow if x[1] == mid and x[0] in ('*', room)]
             verdict = 'allowed (%s; owner %s)' % (hit[0][2], hit[0][3]) if hit else 'FAIL'
             fails += not hit
         elif not ok:
             verdict = 'not drawn, %d sample(s) < %d (not judged)' % (samples, a.min_samples)
         out.append({'room': room, 'id': '%02x' % mid, 'name': name_of(mid), 'samples': samples, 'max_alive': cnt,
-                    'nearest': near, 'verdict': verdict})
-    w = '%-5s %-3s %-6s %-7s %-5s %-8s %s'
-    print(w % ('room', 'id', 'name', 'samples', 'max', 'nearest', 'verdict'))
+                    'nearest': near, 'in_view': seen, 'verdict': verdict})
+    w = '%-5s %-3s %-6s %-7s %-5s %-8s %-6s %s'
+    print(w % ('room', 'id', 'name', 'samples', 'max', 'nearest', 'inview', 'verdict'))
     for r in out:
-        print(w % (r['room'], r['id'], r['name'], r['samples'], r['max_alive'], r['nearest'], r['verdict']))
+        print(w % (r['room'], r['id'], r['name'], r['samples'], r['max_alive'], r['nearest'],
+                   '-' if r['in_view'] is None else r['in_view'], r['verdict']))
     print('NOT-DRAWN %s: %d alivelist lines, %d room/id rows, %d alive but never drawn%s'
           % (a.label, n, len(out), fails, '' if fails else ' (PASS)'))
     return (1 if fails else 0), out
@@ -230,7 +239,7 @@ def main():
     ap.add_argument('--min-samples', type=int, default=2, help='NOT-DRAWN: alive samples needed to judge an id (default 2)')
     # Scoping (rel17b 10-18, open for the coordinator's review): the literal rule also flags core-program objects with no
     # cast model (em41 / em43 / em48 / em4a in most rooms), traps (em2a) and enemies alive far off screen.
-    ap.add_argument('--near', type=int, default=0, help='NOT-DRAWN: judge only ids that came within this many units of Leon (0 = all)')
+    ap.add_argument('--near', type=int, default=0, help='NOT-DRAWN: also skip ids never within this many units of Leon (0 = off; the in-view rule replaces it)')
     ap.add_argument('--max-id', type=lambda s: int(s, 0), default=0xff, help='NOT-DRAWN: judge only ids up to this one (e.g. 0x3f)')
     a = ap.parse_args()
     rows, meta, reasons, pack, admits, n, partner_refused = parse(a.logs)
