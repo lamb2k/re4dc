@@ -15,3 +15,11 @@ Private audit: healing/message-field-layout-saved-state-audit.json, SHA2564f47bd
 ## Typed answer semantics
 
 The existing public Message member is signed s8 m_sel (include/mes.h); original Message::init clears it to0 at mes.cpp713/726. Message::code08 writes m_cur+1 on ordinary A at1439; source B may select the last choice or write-1 according to original attributes at1458/1461. PieceSelect::move at2057 waits on0, closes the original window for nonzero, then preserves its existing1=yes and2=no consequences. The proposed alias retains signed promotion and does not reinterpret-1, manufacture an answer, or change these decisions. The only callsite changes are the aliases themselves; checkMsgWindow and both original menu consumers remain textually unchanged.
+
+## Implemented behind a disabled switch
+
+The approved two-file change is now implemented as proposed. Original-source sanitizer tests pass 260 flag cases, 24 signed-answer cases and five original input cases. Tests run the actual Message classes/getMes, code01/code08 and original menu consumers with external rendering/board effects stubbed. A separate SH-4 compile of the real header proves the 236-byte slot stride, 4-byte virtual pointer, control mes offset 8, flags2 offset 16 and signed answer offset 229. Neither replaces guest acceptance.
+
+Both actual current compiler inputs produce byte-identical preprocessed output with the switch omitted or explicitly zero; the PPC aliases remain exact. Eight knob cases verify the single target definition and reject invalid/missing dependencies. Initial host extraction/compatibility failures are preserved, then corrected without changing game code.
+
+Fresh isolated controls are complete: exact upstream 083c09d17 literal T15 reference c32msrrP has ELF 4e2683e9 and end 8c40a618; the clean current Castle 9b53329f5 chapter arm c32msbmW has ELF 9ea2e107 and end 8c473778. Both preserve 45 generated headers, actual commands and all program payloads. SG_SELECT_LEAN and SCENERY_CHUNK are inherited at 1. Chapter actor-lifetime/Goto switches remain 0. Candidate disabled identity and a same-current-source SS1/MSG0 versus SS1/MSG1 refusal pair remain pending. No recipe is enabled.
