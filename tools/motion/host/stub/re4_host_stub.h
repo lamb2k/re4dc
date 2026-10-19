@@ -25,6 +25,9 @@ typedef int32_t s32;
 typedef int64_t s64;
 typedef uint8_t u8;
 typedef uint16_t u16;
+// Same unaligned FCV halfword type as include/types.h on non-PowerPC.
+typedef u16 u16_un __attribute__((aligned(1)));
+static_assert(sizeof(u16_un) == 2 && alignof(u16_un) == 1, "source FCV halfword ABI");
 // Match the recovered native game ABI: newlib uint32_t is unsigned long on
 // SH-4, while source u32 and the native key-pointer bridge use unsigned int.
 typedef unsigned int u32;
