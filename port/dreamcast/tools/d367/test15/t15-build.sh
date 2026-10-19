@@ -139,7 +139,9 @@ T15_G="ACTOR_PROBE_LIGHT=2 GANADO_LIT=1 GANADO_LIT_NEAREST=0"
 #      T15_V="" builds the control without it.
 #      Test 19 on (lane bootdef19, user 10-19 "a middle ground for draw distance"): VIEW_DIST_BOOT=1, every boot starts
 #      at Near (18.75 m); the lakes stay uncut (kViewRoomMin), so LAKE_FAR's 45 m lake view is unchanged.
-T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1}
+#      Test 19 on (lane qws19, user 10-19 "I also want to integrate the weapon switch"): QUICK_WEAPON=1, hold X + D-pad to
+#      equip a weapon by kind (quickweapon.mk). Logic only when the chord is pressed; QUICK_WEAPON_POC_KIT never goes here.
+T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1}
 # lane resident16 (10-16): the room preload runs again when SS heap 11 closes (chapter title / results / save screens), so
 #   r105 after the chapter 1-2 save screen loads its set back in one pass instead of 81 disc reads in play. Render only.
 T15_P="SS11_PRELOAD=1"

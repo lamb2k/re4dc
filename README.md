@@ -143,6 +143,7 @@ The disc is a standard GD-ROM image, laid out like a pressed disc
 | Run / cancel | B |
 | Knife | L |
 | Inventory | Y |
+| Quick weapon (from Test 19) | Hold X, press the D-pad: up handguns, right shotguns, down grenades, left rifles and others. Press again for the next one. |
 | Pause / options | START |
 | Speed display on / off | Hold R, press START |
 

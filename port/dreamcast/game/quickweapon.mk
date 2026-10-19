@@ -5,6 +5,9 @@
 # the game frozen while the weapon module reads from disc. Gate = the case's (subScrCheck + SubScreenCall's
 # conditions) plus not shooting / reloading / carrying Ashley. With X up the D-pad maps exactly as before.
 # Files: platform/pad.cpp (the chord), src/game/sscrn.cpp (re4dc_qw_frame / qwTask).
+# In the release recipe from Test 19 (tools/d367/test15/t15-build.sh group T15_V; user 10-19 "I also want to integrate
+# the weapon switch"; the swap pause, a few frames while the weapon module reads, is accepted). No chord = no change:
+# knob on without the chord is STRICT against knob off.
 QUICK_WEAPON ?= 0
 ifeq ($(filter $(QUICK_WEAPON),0 1),)
 $(error QUICK_WEAPON must be 0 or 1)
