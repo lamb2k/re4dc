@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""I009 static Garrador core highlight candidate; requires user look approval.
+"""I009 broad first trial, WITHDRAWN; retained for reproduction only.
+
+Use bake_garrador_core_localized.py for the current user-look candidate.
 
 Usage (Windows Python with numpy/Pillow):
   bake_garrador_core.py <original-ps2_cast-core-conversion> <new-output-directory>
