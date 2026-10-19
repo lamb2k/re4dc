@@ -2,8 +2,20 @@
 extern "C" const Re4dcManualPageContext* re4dc_ui_manual_page(unsigned row){
     return row<RE4DC_MANUAL_PAGE_COUNT ? &manual_pages[row].context : nullptr;
 }
+#if defined(RE4DC_MANUAL_PACK_PROBE) && RE4DC_MANUAL_PACK_PROBE && RE4DC_TEX_PACK
+// MANUAL_PACK_PROBE: a packed disc has no loose dc/tex/<n>/ files; the package is in dc/tex.pak (load() reads it there).
+static int manual_pack_size(const Key& key){
+    unsigned offset=0,size=0;
+    return texpack::find(key,offset,size,frame)==texpack::kFound ? int(size) : -1;
+}
+#define RE4DC_MANUAL_PACK_SIZE(key) manual_pack_size(key)
+#else
+#define RE4DC_MANUAL_PACK_SIZE(key) (-1)
+#endif
 extern "C" int re4dc_ui_manual_page_available(unsigned row){
     if(row>=RE4DC_MANUAL_PAGE_COUNT || !manual_pages[row].context.companion_path)return 0;
+    const int packed=RE4DC_MANUAL_PACK_SIZE(manual_pages[row].keys[1]);
+    if(packed>=0)return packed==RE4DC_MANUAL_PACKAGE_BYTES || packed==RE4DC_MANUAL_VQ_PACKAGE_BYTES;
     // One authority for resident/sharded versus flat package paths.
     char path[96];RE4DC_TEX_PATH(path,manual_pages[row].keys[1]);
     const file_t f=fs_open(path,O_RDONLY);if(f==FILEHND_INVALID)return 0;
@@ -51,9 +63,11 @@ extern "C" int re4dc_ui_manual_generic_identify(const Re4dcUiImage* image){
     const unsigned metadata[]={640,360,14,0xffffffffU,0};
     Key key{0xffffffffU,2166136261U};hash_bytes(key,metadata,sizeof(metadata));
     hash_bytes(key,image->pixels,115200U);key.crc=~key.crc;
+    if(RE4DC_MANUAL_PACK_SIZE(key)<0){
     char path[96];RE4DC_TEX_PATH(path,key);
     const file_t f=fs_open(path,O_RDONLY);if(f==FILEHND_INVALID)return 0;
     fs_close(f);
+    }
     if(!(key==manual_generic_key))manual_generic_failed=false;
     manual_generic_key=key;return 1;
 }
