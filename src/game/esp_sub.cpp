@@ -301,7 +301,11 @@ struct Ps2fxHaze {
 #else
 #define PS2FX_POP_COUNTS(gc, ps2)
 #endif
+#if RE4DC_FX_HAZE_INDEX
+static constexpr Ps2fxHaze kPs2Haze[PS2FX_HAZE_ROOMS] = {
+#else
 static const Ps2fxHaze kPs2Haze[PS2FX_HAZE_ROOMS] = {
+#endif
     // r100: GC 60 x 1283.056 mm (+0.011), alpha 70, R 5090.2; PS2 11 x 2000 mm (+0.010), (235,235,210,34), R 5000
     {0x100, 5, 235, 235, 210, 34, 5000.0f, (2000.0f * 2.0f) / (1283.056f * 2.1f)},
     // r101: GC 39 x 1299.956 mm, alpha 25, R 6860.2; PS2 8 x 1900 mm, (255,250,240,35), R 5000
@@ -396,6 +400,28 @@ public:
 #if defined(RE4DC_HW_FOG_HAZE) && RE4DC_HW_FOG_HAZE
 extern "C" int re4dc_hwfog_haze(unsigned room, float depth, float indoor);   // game/hwfog.cpp (hwfog.mk)
 #endif
+#if RE4DC_FX_HAZE_INDEX
+// Generated from the immutable table: no room/particle cache or runtime init.
+// A negative membership result skips only a loop that cannot match a row.
+static constexpr u16 Ps2fxLastHazeRoom()
+{
+    u16 last = 0;
+    for (const Ps2fxHaze& h : kPs2Haze) {
+        if (h.room > last) last = h.room;
+    }
+    return last;
+}
+struct Ps2fxRoomMask {
+    u32 words[(Ps2fxLastHazeRoom() >> 5) + 1] = {};
+    constexpr Ps2fxRoomMask()
+    {
+        for (const Ps2fxHaze& h : kPs2Haze) {
+            words[h.room >> 5] |= u32(1) << (h.room & 31);
+        }
+    }
+};
+static constexpr Ps2fxRoomMask kPs2HazeRoomMask;
+#endif
 static const Ps2fxHaze* Ps2fxHazeFor(cEsp* esp)
 {
 #if RE4DC_PS2_FX_STAGE1
@@ -407,6 +433,13 @@ static const Ps2fxHaze* Ps2fxHazeFor(cEsp* esp)
         return NULL;
     }
     const u16 room = G_ROOM_ID;
+#if RE4DC_FX_HAZE_INDEX
+    const unsigned word = room >> 5;
+    if (word >= sizeof(kPs2HazeRoomMask.words) / sizeof(kPs2HazeRoomMask.words[0]) ||
+        !(kPs2HazeRoomMask.words[word] & (u32(1) << (room & 31)))) {
+        return NULL;
+    }
+#endif
     for (int i = 0; i < PS2FX_HAZE_ROOMS; ++i) {
         if (kPs2Haze[i].room == room) {
 #if RE4DC_PS2_FX_ROOMS

@@ -25,6 +25,9 @@ MOT_HIST_HOST = '#define MOT_HIST(w, flip, n) ((w)->Key_hist[flip][n])'
 def host_text(text):
     text = re.sub(r'\s*asm\("f?r\d+"\)', '', text)
     text = text.replace(MOT_HIST_GAME, MOT_HIST_HOST)
+    # The target's size_t is 32-bit; the host libc declaration is pointer-sized.
+    text = text.replace('extern "C" void* memset(void* dst, int c, unsigned int n);',
+                        'extern "C" void* memset(void* dst, int c, size_t n);')
     return text.replace('(u32)', '(uintptr_t)')
 
 
@@ -35,7 +38,13 @@ def motion(src, dst):
 
 
 def extract(src, dst, names):
-    lines = open(src).read().split('\n')
+    with open(src) as source:
+        lines = source.read().split('\n')
+    # Count source braces, not braces in comments/strings. Each conditional arm
+    # starts at the same depth: e.g. two alternative `if (...) {` lines before
+    # one shared body must not be counted as two nested scopes.
+    tokens = re.compile(r'//[^\n]*|/\*.*?\*/|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'', re.S)
+    lexical = tokens.sub(lambda m: '\n' * m.group(0).count('\n'), '\n'.join(lines)).split('\n')
     out = [f'#include "re4_host_stub.h"', '']
     for name in names:
         start = None
@@ -47,11 +56,42 @@ def extract(src, dst, names):
             sys.exit(f'{src}: function {name} not found')
         depth = 0
         end = None
+        opened = False
+        conditional = []
         for i in range(start, len(lines)):
-            depth += lines[i].count('{') - lines[i].count('}')
-            if depth == 0 and '{' in ''.join(lines[start:i + 1]):
+            line = lexical[i]
+            directive = re.match(r'^\s*#\s*(if|ifdef|ifndef|elif|else|endif)\b', line)
+            if directive:
+                op = directive.group(1)
+                if op in ('if', 'ifdef', 'ifndef'):
+                    conditional.append([depth, [], False])
+                elif op in ('elif', 'else'):
+                    if not conditional:
+                        sys.exit(f'{src}:{i+1}: unmatched #{op} in {name}')
+                    frame = conditional[-1]
+                    frame[1].append(depth)
+                    frame[2] |= op == 'else'
+                    depth = frame[0]
+                else:
+                    if not conditional:
+                        sys.exit(f'{src}:{i+1}: unmatched #endif in {name}')
+                    base, branches, has_else = conditional.pop()
+                    branches.append(depth)
+                    if not has_else:
+                        branches.append(base)
+                    if len(set(branches)) != 1:
+                        sys.exit(f'{src}:{i+1}: inconsistent conditional scopes in {name}')
+                    depth = branches[0]
+                continue
+            if line.lstrip().startswith('#'):
+                continue
+            opened |= '{' in line
+            depth += line.count('{') - line.count('}')
+            if depth == 0 and opened and not conditional:
                 end = i
                 break
+        if end is None:
+            sys.exit(f'{src}: unterminated function {name}')
         out.append(f'#line {start + 1} "{src}"')
         body = lines[start:end + 1]
         body[0] = re.sub(r'^inline ', '', body[0])   # defined in one TU, called from others

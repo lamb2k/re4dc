@@ -20,6 +20,13 @@
 #include "player.h"
 #include "eprintf.h"
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_LOCOMOTION_POSE
+#include "locomotion_pose_cache.h"
+static LocomotionPoseCache locomotionPoseCache;
+typedef char LocomotionPoseBudget[(sizeof(LocomotionPoseCache) <= 32768) ? 1 : -1];
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
+
 extern const Vec vecZero;
 extern "C" void* memset(void* dst, int c, unsigned int n);
 
@@ -722,6 +729,37 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
 #line 1067
         pLog->err(0, 0, "MotionMoveCore():%d Flip Info Error!", __LINE__);
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_LOCOMOTION_POSE
+    LocomotionPoseCache::Pose* sharedPose = 0;
+#if RE4DC_LOCOMOTION_POSE == 2
+    static u32 contextReports;
+    if (contextReports < 24 && pG->Frame_cnt >= 240) {
+        ++contextReports;
+        re4dc_log("LPOSECTX room=%x tick=%u id=%x kind=%u r=%u/%u joints=%u phase=%f max=%f\n",
+                  (u32)pG->room_id, pG->Frame_cnt, (u32)m->id, (u32)m->kindid,
+                  (u32)m->r_no_0, (u32)m->r_no_1, (u32)n, (double)prm.frame, (double)prm.maxFrame);
+    }
+#endif
+    // Only ordinary village/farm Ganado walk/dash. Root motion, blend clocks,
+    // sequence events, per-actor transforms and IK remain outside this service.
+    if ((pG->room_id == 0x101 || pG->room_id == 0x103) && m->kindid == 0 &&
+        m->id >= 0x10 && m->id <= 0x20 && m->r_no_0 == 1 &&
+        (m->r_no_1 == 0x10 || m->r_no_1 == 0x11)) {
+        sharedPose = locomotionPoseCache.begin(pG->Frame_cnt, pG->room_id, pG->pRoom,
+                                               w->pMot, native_keys, prm, n);
+        static u32 reportTick = ~0u;
+        if (reportTick == ~0u || pG->Frame_cnt - reportTick >= 120) {
+            reportTick = pG->Frame_cnt;
+            re4dc_log("LPOSE mode=%u room=%x tick=%u bytes=%u hit=%u miss=%u bypass=%u mismatch=%u\n",
+                      (u32)RE4DC_LOCOMOTION_POSE, (u32)pG->room_id, pG->Frame_cnt,
+                      (u32)sizeof(locomotionPoseCache), locomotionPoseCache.hits,
+                      locomotionPoseCache.misses, locomotionPoseCache.bypasses, locomotionPoseCache.mismatches);
+        }
+    }
+#define LOCAL_POSE(out, hist) (sharedPose ? locomotionPoseCache.sample<(RE4DC_LOCOMOTION_POSE == 2)>(sharedPose, i, pp, out, hist, HermiteInterpolation) : HermiteInterpolation(pp, out, hist))
+#else
+#define LOCAL_POSE(out, hist) HermiteInterpolation(pp, out, hist)
+#endif
     do {
 #if defined(RE4DC_HF_PF) && RE4DC_HF_PF
         if (i + 1 < n) {
@@ -796,21 +834,21 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
             pp->flags &= ~8;
         }
         if (kind & 2) {
-            HermiteInterpolation(pp, &p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
+            LOCAL_POSE(&p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
             VecRadLimit(&p->ang);
             if (w->Mot_attr & 0x40) {
                 p->ang.y = -p->ang.y;
                 p->ang.z = -p->ang.z;
             }
         } else if (kind & 4) {
-            HermiteInterpolation(pp, &p->pos, flip ? MOTION_PARTS(p)->hist[4] : MOTION_PARTS(p)->hist[1]);
+            LOCAL_POSE(&p->pos, flip ? MOTION_PARTS(p)->hist[4] : MOTION_PARTS(p)->hist[1]);
             if (w->Mot_attr & 0x40) {
                 p->pos.x = -p->pos.x;
             }
         } else if (kind & 8) {
-            HermiteInterpolation(pp, &p->scale, flip ? MOTION_PARTS(p)->hist[5] : MOTION_PARTS(p)->hist[2]);
+            LOCAL_POSE(&p->scale, flip ? MOTION_PARTS(p)->hist[5] : MOTION_PARTS(p)->hist[2]);
         } else if (kind & 0x30) {
-            HermiteInterpolation(pp, &p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
+            LOCAL_POSE(&p->ang, flip ? MOTION_PARTS(p)->hist[3] : MOTION_PARTS(p)->hist[0]);
             VecRadLimit(&p->ang);
             if (w->Mot_attr & 0x40) {
                 p->ang.y = -p->ang.y;
@@ -818,6 +856,7 @@ void MotionMoveCore(cModel* m, MotionWork* w, int flag)
             }
         }
     } while (++i < n);
+#undef LOCAL_POSE
 }
 
 // |d| < eps.
