@@ -37,6 +37,7 @@ void re4dc_chunk_window_begin(re4dc_chunk_sink* s,std::uint32_t* sq,void* cache,
                               void* clip_ctx){
     s->sq=sq;s->cache=static_cast<std::uint8_t*>(cache);s->clip=clip;s->clip_ctx=clip_ctx;s->limit=limit;
     s->points=s->corners=0;s->slots=s->strips=s->culled=s->clipped=0;
+    s->vsrc=s->cache;s->csrc=s->cache+kCornerCodeOff;
 }
 void re4dc_chunk_header(re4dc_chunk_sink* s,const std::uint32_t words[8]){
     std::uint32_t* q=s->sq;
@@ -77,14 +78,17 @@ void re4dc_chunk_corners(re4dc_chunk_sink* s,const std::uint8_t* point,const flo
         v[i].u=uv[2*i];v[i].v=uv[2*i+1];v[i].argb=argb[i];v[i].oargb=0;
         oc[i]=pc[point[i]];
     }
-    s->corners=n;
+    s->corners=n;s->vsrc=v;s->csrc=oc;
 }
-const void* re4dc_chunk_vertices(const re4dc_chunk_sink* s){return s->cache;}
-const std::uint8_t* re4dc_chunk_outcodes(const re4dc_chunk_sink* s){return s->cache+kCornerCodeOff;}
+void re4dc_chunk_vertices_direct(re4dc_chunk_sink* s,const void* vertices,const std::uint8_t* outcodes,unsigned n){
+    s->vsrc=vertices;s->csrc=outcodes;s->corners=n;
+}
+const void* re4dc_chunk_vertices(const re4dc_chunk_sink* s){return s->vsrc;}
+const std::uint8_t* re4dc_chunk_outcodes(const re4dc_chunk_sink* s){return s->csrc;}
 std::uint32_t** re4dc_chunk_sq(re4dc_chunk_sink* s){return &s->sq;}
 int re4dc_chunk_strips(re4dc_chunk_sink* s,const std::uint8_t* strips,unsigned strip_bytes,unsigned form){
     const std::uint8_t* const end=strips+strip_bytes;
-    const pvr_vertex_t* v=verts(s);const std::uint8_t* oc=ccodes(s);
+    const auto* v=static_cast<const pvr_vertex_t*>(s->vsrc);const std::uint8_t* oc=s->csrc;
     const unsigned mask=form==RE4DC_CHUNK_STRIPS_ACTOR?0x7fU:0xffU;
     while(strips<end){
         unsigned n;const std::uint8_t* idx;
