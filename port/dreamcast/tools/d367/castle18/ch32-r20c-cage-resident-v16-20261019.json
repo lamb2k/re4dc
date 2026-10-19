@@ -4,7 +4,7 @@
   },
   "remove": [],
   "provenance": {
-    "scope": "r20c +17 exact source-observed cold-load resident keys; all 5738 latest union records unchanged.",
+    "scope": "r20c +17 exact source-observed cage-event resident keys; all 5738 latest union records unchanged.",
     "base_resident_sha256": "faf18768a268d1f2b3b465a8eee21ed7bd943828586f18c26b6ea78fc7049b12",
     "resident_sha256": "2ccc55c0776a061af8d33dd1316d054f997368417f7dba1a8a4fccd87426aaa2",
     "warning": "Compose the r20c records into any newer resident union; never overwrite later room additions."
