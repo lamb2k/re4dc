@@ -301,8 +301,8 @@ static const u16 qwList[4][10] = {
     {0x10, 0x2E, 0x2F, 0x30, 0x34, 0x53, 0x35, 0x6D, 0x36, 0},  // left: rifles, TMP, then launchers
 };
 static u32 qwStopBak;
-static unsigned long long qwT0;
-extern "C" unsigned long long timer_us_gettime64(void);  // KOS timer
+static unsigned qwT0;
+extern "C" unsigned re4dc_model_source_stamp();  // platform/native_model.cpp: KOS timer, us
 
 static void qwTask()
 {
@@ -310,14 +310,14 @@ static void qwTask()
     const int wepNo = WeaponId2WeaponNo(ItemMgr.m_wep_id);
     const int wepType = WeaponId2WeaponType(ItemMgr.m_wep_id);
     int wepLv = ItemMgr.pArm ? ItemMgr.pArm->bullet >> 13 : 0;
-    unsigned long long t1 = 0, t2 = 0, t3 = 0;
+    unsigned t1 = 0, t2 = 0, t3 = 0;
 
     if (pG->weapon_no != wepNo || pG->weapon_type != wepType || pG->bullet_type != wepLv) {
         SndBlkStop(2);
         pl->weaponRelease();
-        t1 = timer_us_gettime64();
+        t1 = re4dc_model_source_stamp();
         pl->weaponLoad(wepNo, wepType);
-        t2 = timer_us_gettime64();
+        t2 = re4dc_model_source_stamp();
 #if RE4DC_WEAPON_HEAP4
         {
             extern int re4dc_wep_reverted;
@@ -335,13 +335,13 @@ static void qwTask()
                 pl->Wep->m_pWep->move();
             }
         }
-        t3 = timer_us_gettime64();
+        t3 = re4dc_model_source_stamp();
     }
     {
-        const unsigned long long t4 = timer_us_gettime64();
-        OSReport("quick weapon: %04x no %x type %x lv %d bullets %d total %u us release %u load %u init %u\n",
+        const unsigned t4 = re4dc_model_source_stamp();
+        OSReport("quick weapon: %04x no %x type %x lv %d loaded %d total %u us release %u load %u init %u\n",
                  ItemMgr.m_wep_id, pG->weapon_no, pG->weapon_type, pG->bullet_type,
-                 ItemMgr.pArm ? (int) ItemMgr.pArm->num : -1, (unsigned) (t4 - qwT0),
+                 (int) ItemMgr.bulletNum(), (unsigned) (t4 - qwT0),
                  t1 ? (unsigned) (t1 - qwT0) : 0u, t1 ? (unsigned) (t2 - t1) : 0u, t1 ? (unsigned) (t3 - t2) : 0u);
     }
     pG->Stop_flg = qwStopBak;
@@ -364,8 +364,11 @@ static void re4dc_qw_frame()
         return;
     }
     if ((pG->Stop_flg & 0x80000000) || pPL->subScrCheck() != 1 || pPL->r_no_2 == 2 || pPL->r_no_2 == 4) {
+        OSReport("quick weapon: slot %d ignored (routine %d/%d/%d)\n", slot, pPL->r_no_0, pPL->r_no_1, pPL->r_no_2);
         return;
     }
+    OSReport("quick weapon: slot %d from %04x loaded %d (routine %d/%d/%d)\n", slot, ItemMgr.m_wep_id,
+             (int) ItemMgr.bulletNum(), pPL->r_no_0, pPL->r_no_1, pPL->r_no_2);
     const u16* list = qwList[slot - 1];
     int n = 0;
     int cur = -1;
@@ -375,22 +378,19 @@ static void re4dc_qw_frame()
         }
         n++;
     }
+    ItemWork* old = ItemMgr.pArm;
     ItemWork* pick = 0;
     for (int k = 1; k <= n; k++) {
         ItemWork* p = ItemMgr.search(list[(cur + k + n) % n]);
-        if (p && p->num) {
+        if (p && p != old && ItemMgr.arm(p)) {  // arm refuses an empty slot (num 0), as in the case
             pick = p;
             break;
         }
     }
-    if (pick == 0 || pick == ItemMgr.pArm) {
+    if (pick == 0) {
         return;
     }
-    ItemWork* old = ItemMgr.pArm;
-    if (!ItemMgr.arm(pick)) {
-        return;
-    }
-    qwT0 = timer_us_gettime64();
+    qwT0 = re4dc_model_source_stamp();
     BitOn(pG->Status_flg[2], 0x04000000);  // no case open while the swap runs
     pG->Status_flg[0] &= ~0x02000000;
     qwStopBak = pG->Stop_flg;
