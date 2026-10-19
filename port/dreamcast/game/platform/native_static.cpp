@@ -2085,6 +2085,12 @@ extern "C" { volatile unsigned re4dc_sg_lean_on=1; void re4dc_sg_select_lean_set
 #if RE4DC_PS2_PVS
 namespace pvs { unsigned cl_tested=0,cl_skipped=0; } // PS2_PVS cluster counters (the rest of namespace pvs is at ps2_open)
 #endif
+#if RE4DC_SCENERY_CHUNK
+// SCENERY_CHUNK (scenery19.mk): the per-part / per-meshlet walk at -O2 (this unit is -Os). The same expressions, so the
+// same decisions and vertex words (FP contraction is the same at -Os and -O2).
+#pragma GCC push_options
+#pragma GCC optimize("O2")
+#endif
 struct MeshDraw : Emitter {
     const re4dc::room::MeshPackage& package; const re4dc::room::MeshPart& part;
     const std::uint32_t* lut; // mesh view's colour LUT (nullptr: per-corner path)
@@ -2589,6 +2595,9 @@ struct MeshDraw : Emitter {
         return 1;
     }
 };
+#if RE4DC_SCENERY_CHUNK
+#pragma GCC pop_options
+#endif
 #endif
 } // namespace
 
