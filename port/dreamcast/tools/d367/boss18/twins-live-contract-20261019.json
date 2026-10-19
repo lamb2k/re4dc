@@ -1,0 +1,84 @@
+{
+  "scope": "Hash-only source requirements; no private payload or actual native/fight acceptance.",
+  "receipt": {
+    "status": "APPROVED_SELECTION_UNCHANGED_LIVE_SOURCE_REQUIREMENTS_OPEN",
+    "source_commit": "467b6a865c2a21c6d64a303a8a8fa36c316e2f4c",
+    "actual_unchanged_lod_function_tests": 10,
+    "ASan_UBSan_stderr": "",
+    "pGS_aliases_pG": true,
+    "selector_full_flag": "Status_flg[1] & 0x10000000",
+    "preceding_hand_callback_flag": "Status_flg[1] |= 0x8000",
+    "hand_only_predicate_result": "Protected gameplay level, not full",
+    "strangle_and_parasite_QTE": "Source sets0x10000000; full predicate selects full",
+    "actual_captured_grab": null,
+    "r224_hole_material": "Ctrl12 64x64 / source table F7 / body+head ratio255 type2; active state does not satisfy existing idle-only certificate",
+    "source_auxiliaries": [
+      {
+        "kind": "ObjMgr chain",
+        "id": "0x1d",
+        "parts": 9,
+        "instances": 3,
+        "source_BIN": "0x13",
+        "source_TPL": "0x14",
+        "parent_parts": [
+          "0x3b",
+          "0x40",
+          "0x41"
+        ]
+      },
+      {
+        "kind": "ObjMgr parasite",
+        "id": "0x16",
+        "type": 8,
+        "parts": 25,
+        "source_BIN": "0xd6",
+        "source_TPL": "0xd7",
+        "parent_part": "0x3e"
+      },
+      {
+        "kind": "ObjMgr ten",
+        "id": "0x16",
+        "type": 9,
+        "parts": 10,
+        "source_BIN": "0xe0",
+        "source_TPL": "0xe1",
+        "up_to_source_instances": 10
+      },
+      {
+        "kind": "Temporary source player weapon",
+        "id": "0x0b",
+        "source_BIN": "PL0x18",
+        "source_TPL": "PL0x17",
+        "qualification": "Existing weapon/owner route must qualify; body proof does not certify it"
+      }
+    ],
+    "approved_control": {
+      "approved_set_SHA256SUMS": "979f631760356cd59d3e81c4b9bf9ea8ceadb3de9aa03aa37aa5e48cf9a2051f",
+      "verified_files": 58,
+      "approved_package_sha256": "70a81b2638e9283f023958061490b55b61f03a609be312aff135fd5e75cdec03",
+      "canonical_spec_sha256": "0dfd34748bbf82e3a9b22970982ecfd9bd43cd9c54ba9ce373a374bb6040ba2f",
+      "selection_unchanged": "Protected type1, type3 full, both full parents retained"
+    },
+    "no_model_data_or_selector_or_runtime_change": true,
+    "no_game_build_or_Flycast": true,
+    "scope": "Source policy/ownership handoff and host predicate observations, not actual whole-fight or native auxiliary acceptance. No assumed concurrency or new timing/LOD decision."
+  },
+  "private_set": {
+    "set": "boss18-twins-live-contract-20261019",
+    "files": 22,
+    "bytes": 539020,
+    "sha256sums_sha256": "86a94a4c2955cbf963418f1159666612fb38dced816860af9584da07dd0d065f",
+    "mirror_verified": true,
+    "source_handoff_only": true
+  },
+  "proofs": [
+    {
+      "file": "host/results.json",
+      "sha256": "5a8af7e2fadd5e12a21aa8089153f5df356eceeb99b503f92facb47bc3eeb718"
+    },
+    {
+      "file": "approved-selection-unchanged.json",
+      "sha256": "472de48c4a92b97b6e5b801fb940e1ea94a46483c466bacfb82a8b4a898782cd"
+    }
+  ]
+}
