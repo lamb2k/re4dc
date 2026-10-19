@@ -870,9 +870,20 @@ extern "C" int re4dc_ps2_interior_trans_active();  // native_static.cpp
 extern "C" int re4dc_ps2_interior_owner_hidden(const float lo[3], const float hi[3]);  // native_static.cpp
 #endif
 #if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
-// ENEMY_VIS_CULL (engine_preview.mk; lane engine19; render only): the same two skips for a Ganado whose box the room
-// data file's VIS section says the room's PS2 world hides from the Trans camera (platform/room_vis.c).
+// ENEMY_VIS_CULL (engine_preview.mk; lane engine19; render only): the same two skips for a Ganado whose box a large
+// opaque occluder of the room's PS2 world hides from the Trans camera (room data file OCCL, platform/room_occl.c).
+// Never while the next Render's fog is not believed (the world's far would be unknown), and never for a Ganado
+// within 3 m of Leon or Ashley (grabs, QTEs, Ashley carried or caught).
 #include "room_vis.h"
+extern cModel* re4dc_vis_pl asm("pPL");    // player.h pPL
+extern cModel* re4dc_vis_sub asm("pSUB");  // pl_npc.h pSUB (0 without Ashley)
+static inline bool invis_near_actor(const cModel* a, const float lo[3], const float hi[3]) {
+    if (!a) return false;
+    const float x = a->pos.x, z = a->pos.z;
+    const float dx = x < lo[0] ? lo[0] - x : x > hi[0] ? x - hi[0] : 0.0f;
+    const float dz = z < lo[2] ? lo[2] - z : z > hi[2] ? z - hi[2] : 0.0f;
+    return dx * dx + dz * dz < 3000.0f * 3000.0f;
+}
 static inline bool invis_trans_active() {
     return re4dc_room_vis_active()
 #if defined(RE4DC_OWNER_SETUP_LEAN) && RE4DC_OWNER_SETUP_LEAN
@@ -881,7 +892,11 @@ static inline bool invis_trans_active() {
         ;
 }
 static inline bool invis_wall_hidden(const float lo[3], const float hi[3]) {
-    return re4dc_room_vis_hidden(&pG->Cam.v_mat[0][0], lo, hi) != 0;
+    const InvisView& iv = invis_view;
+    if (!iv.ok || iv.fog < 0.0f) return false;
+    if (invis_near_actor(re4dc_vis_pl, lo, hi) || invis_near_actor(re4dc_vis_sub, lo, hi)) return false;
+    const float far = iv.far_owner < 25000.0f ? iv.far_owner : 25000.0f;   // native_ps2_world.cpp's far cap
+    return re4dc_room_vis_hidden(&pG->Cam.v_mat[0][0], iv.near, far, lo, hi) != 0;
 }
 #elif defined(RE4DC_OWNER_SETUP_LEAN) && RE4DC_OWNER_SETUP_LEAN
 static inline bool invis_trans_active() { return re4dc_ps2_interior_trans_active() != 0; }

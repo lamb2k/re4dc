@@ -90,8 +90,9 @@ static inline int cell_of(float x, float z, int* cx, int* cz)
     return *cx < v.vw && *cz < v.vh;
 }
 
-int re4dc_room_vis_hidden(const float* view, const float lo[3], const float hi[3])
+int re4dc_room_vis_hidden(const float* view, float near, float far, const float lo[3], const float hi[3])
 {
+    (void) near; (void) far;
     if (!v.ok) return 0;
     ++c_tests;
     if (!(c_tests & 1023) && c_logged < 400) {

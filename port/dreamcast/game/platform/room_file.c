@@ -1,7 +1,7 @@
 /* room_file.c: the per-room data file (lane engine19; tools/enginebake/room_compile.py, R4RC v1), loaded at room entry.
  *
  * /cd/dc/native/rXXX/room.r4rc: a 64 B header, a section directory, 16 B aligned sections. Only the sections this
- * program uses are read (GRID with ENGINE_PREVIEW, VIS with ENEMY_VIS_CULL), into ONE heap-4 block
+ * program uses are read (GRID with ENGINE_PREVIEW, OCCL with ENEMY_VIS_CULL=1, VIS with =2), into ONE heap-4 block
  * (re4dc_static_alloc: the native package reserve rules apply), freed at room leave. Every check failing (no file,
  * header, directory, extents, an unknown required section, no heap) leaves no section: the users run the source path.
  * Used by platform/actor_rt.c (GRID) and platform/room_vis.c (VIS). No allocation or file access after the entry. */
@@ -22,6 +22,9 @@ extern int re4dc_static_heap_free(void);
 #ifndef RE4DC_ROOMFILE_VIS
 #define RE4DC_ROOMFILE_VIS 0
 #endif
+#ifndef RE4DC_ROOMFILE_OCCL
+#define RE4DC_ROOMFILE_OCCL 0
+#endif
 
 #define MAXSEC 8
 static struct {
@@ -39,6 +42,7 @@ static int wanted(const uint8_t* tag)
 {
     if (RE4DC_ROOMFILE_GRID && !memcmp(tag, "GRID", 4)) return 1;
     if (RE4DC_ROOMFILE_VIS && !memcmp(tag, "VIS\0", 4)) return 1;
+    if (RE4DC_ROOMFILE_OCCL && !memcmp(tag, "OCCL", 4)) return 1;
     return 0;
 }
 
@@ -71,7 +75,8 @@ void re4dc_room_file_enter(unsigned room)
         const uint32_t off = rd32(d + 8), len = rd32(d + 12);
         if ((off & 15u) || off < 64u + 32u * nsec || off > size || len > size - off) why = "section extent";
         else if (wanted(d)) need += (len + 31u) & ~31u;
-        else if ((rd16(d + 6) & 1) && memcmp(d, "SRCB", 4) && memcmp(d, "GRID", 4) && memcmp(d, "VIS\0", 4))
+        else if ((rd16(d + 6) & 1) && memcmp(d, "SRCB", 4) && memcmp(d, "GRID", 4) && memcmp(d, "VIS\0", 4) &&
+                 memcmp(d, "OCCL", 4))
             why = "unknown required section";
     }
     const int before = re4dc_static_heap_free();
