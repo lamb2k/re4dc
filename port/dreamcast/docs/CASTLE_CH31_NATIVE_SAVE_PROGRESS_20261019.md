@@ -57,12 +57,25 @@ The prison key, further waves, locked door, Garrador route and chapter-end save 
 
 Current source is separately refreshed through upstreame86bf58e and WorkerA'sa996608e control document in48def0f3. Frozen I014 a808/25d default-off identity and inventory target-upload gates remain bound to their exact recorded controls; later upstream is not covered by that identity comparison.
 
-## H027 continuing: original r203 Prison Key and source queue
+## H027 continuing: original r203 Castle Gate Key and source queue
 
-The same immutable historical 746 program and 60aa disc continue from the native chapter 6 route. Both metal doors open through normal A input, and ordinary movement follows the original stairs to the upper chest. The normal chest action completes its original callback in CL: the area 7 item-event entry is removed, source Rsf4 is set, and gameplay resumes. CM then uses normal A to take the revealed Prison Key. At source frame 33098, the original ItemMgr contains active item A7 with quantity 1; phase is 3, Stop is 0, and Leon/Ashley remain 1440/360. There are no inventory, health, actor, flag or snapshot writes.
+The same immutable historical 746 program and 60aa disc continue from the native chapter 6 route. Both metal doors open through normal A input, and ordinary movement follows the original stairs to the upper chest. The normal chest action completes its original callback in CL: the area 7 item-event entry is removed, source Rsf4 is set, and gameplay resumes. CM then uses normal A to take the revealed Castle Gate Key. At source frame 33098, the original ItemMgr contains active item A7 with quantity 1; phase is 3, Stop is 0, and Leon/Ashley remain 1440/360. There are no inventory, health, actor, flag or snapshot writes.
 
 The exact CM state is 5c224652c3ea026f72e5469ae3cf760d4770b83ab12f79594ec94ecf743b201c. Four independent unchanged ELF anchors bind the read-only audit to this program. The owned pickup capture exits after 7.62 seconds with no capture errors. Evidence is `r203-native-CM-original-prison-key-snapshot-20261019.json` and the controller receipt under `h-c18oimW-r200l/scenarios/cx-r200-walk-resevtcm` in the Castle evidence root.
 
 The original GetKeyItem callback adds source entries 4B/4C/4D/4E to the held queue. Its first nine byte entries are now 48/37/39/3A/3B/4B/4C/4D/4E; the same four original type7 enemies 44/45/46/47 remain loaded at HP1000. This proves the pickup's source send behavior and retention, not later releases, movement, wave clear or room acceptance. The immediate source setGoto calls remain a separate r203 consumer to qualify; the new movement fix is deliberately limited to r207.
 
-The route next returns through the same corridors to the original locked prison door and uses the actual key. Garrador, the remaining chapter rooms, current-source replay, residency and the chapter-end save remain open.
+The route next returns through the same corridors to the original locked castle gate and uses the actual key. Garrador, the remaining chapter rooms, current-source replay, residency and the chapter-end save remain open.
+## H027 continuing: Castle Gate Key accepted by the original gate
+
+The actual original key-item screen identifies A7 as the **Castle Gate Key**. Earlier prose and private evidence filenames called it the prison key; that descriptive label was wrong. The numeric item, source callback, archive, original inputs and saved-state lineage were always A7. Existing evidence filenames are retained with this correction. The later r201 dungeon/prison key is a separate item.
+
+The normal return follows the source stairs and both internal metal doors, opening each through its actual A OPEN prompt. CY acknowledges the original locked-gate dialog and opens the original key-item screen (type0x80). It visibly shows Castle Gate Key as the sole key-column item, index0. The read-only original itemInfo/makeItemList audit independently matches that order; the metadata function is unchanged from the native build's source.
+
+CZ selects this original entry and its original Use command. ItemMgr consumes A7 and the original r209_CheckUseKey watcher sets door_unlock[0] bit0x00020000. The source confirmation visibly reads “You used the Castle Gate Key.” DA acknowledges that confirmation normally and returns to phase3/Stop0 at frame36358, with Leon1440/Ashley360. Both original actor identities are restored (id0/id3), A7 is absent from active inventory, and all nine previously recorded held source rows remain retained. No actor, item, health, flag, executable or snapshot bytes are written by the controller.
+
+Exact DA snapshot:8f6f0d603b4be4aa2d8037bb449f5897630571d8e5a6e969a6edaf72803f4646. The four-code-anchor proof is `r203-native-DA-original-castle-gate-unlock-snapshot-20261019.json`. CZ's used-key state isfed2a00c56269c1b9c1c07d67379c906e5676d08f87e555119f168610db1e3d7. Owned times are CY11.78s, CZ48.31s and DA8.45s; each exits cleanly with no capture errors.
+
+CX is explicitly a host-guard false positive, not a game death or route failure. The first original A action opens the healthy lock dialog, whose Stop mask is0xffffffbf. The inherited guard mistakenly classified that mask alone as Continue and closed its4.2-second capture. The original snapshot proves health1440/360 and the actual source death bit clear. Subsequent private controllers use the source death bit plus health, preserve that snapshot, and continue the original dialog without guest edits.
+
+This remains the unchanged historical746 program and60aa disc. The gate's source progression is proved; current-source chapter acceptance, wave clear, all room residency and the final chapter save remain open. The next step is ordinary entry through the unlocked gate to r201.
