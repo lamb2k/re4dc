@@ -205,8 +205,9 @@ static int EspSpriteEligible(cEsp* esp)
 {
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
     // PVR_RTT (pvr_rtt.mk): inside a render target's OT bracket its effects draw into the target, whatever the owner.
-    if ((esp->m_Tool_flg & 0x10000) && re4dc_rtt_capturing()) {
-        return !((esp->m_Tool_flg & 0x4000) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+    // Outside the bracket they never reach the screen: the GC draws them only into the target's EFB area.
+    if (esp->m_Tool_flg & 0x10000) {
+        return re4dc_rtt_capturing() && !((esp->m_Tool_flg & 0x4000) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
     }
 #endif
     // Et0a hanging lamps use 0x5e for their source flame/smoke sprites, including
