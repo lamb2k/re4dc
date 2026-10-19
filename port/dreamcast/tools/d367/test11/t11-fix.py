@@ -630,6 +630,11 @@ DATA['res18f'] = {'dc/resident.bin': RES18FD + '/resident.bin'}
 # (tools/d367/ps2leon/build_head.py): em/pl00.drs and em/pl08.drs with GC arc 0xC stubbed and the PS2 severed head as
 # its payload. Built from the payload disc's pl00 (1fdb5378) / pl08 (f4acbfad); no set on the Test 18 line stages either.
 # Only with LEON_HEADLESS=1 (without the knob the stub would draw nothing for the flying head).
+# boss18g50r (rel18, 10-19) = boss18g50's two registries without its tex/ (the Test 18 disc line): on the pak17 line the
+# pack is looked up first and already holds both g50 atlases (a383881d with the same bytes as pak17's loose base,
+# cd6162c8 a key of its input pack), so the loose copies are never read; drop-loose refuses them as "new" and the
+# Build-Assets zip takes no loose textures. This is the data fix18 gated (mkg50.sh: registries only).
+DATA['boss18g50r'] = {k: v for k, v in DATA['boss18g50'].items() if k != 'tex'}
 G18HD = os.environ.get('G18HD', '/root/re4data/private/garr18-head-20261019')
 DATA['garr18h'] = {'em/pl00.drs': G18HD + '/pl00.drs', 'em/pl08.drs': G18HD + '/pl08.drs'}
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
