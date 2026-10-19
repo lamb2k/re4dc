@@ -240,6 +240,12 @@ void em_diag(unsigned k, cEm* e)
               t, k, em_w4(e->id), em_w4(e->type), em_w4(e->be_flag), em_w4(e->stat), em_w4(e->Motion.Mot_state),
               em_w4(e->hp), em_w4(e->Motion.Mot_frame), em_w4(e->pos.x), em_w4(e->pos.y), em_w4(e->pos.z),
               (unsigned) (unsigned long) e, vt);
+    // behave18 feel recorder (tools/d367/behave18/feel_rec.py): the yaw for turn rate; Leon once per tick (k=0).
+    re4dc_log("LF t=%u k=%u ay=%08x\n", t, k, em_w4(e->ang.y));
+    if (k == 0 && pPL)
+        re4dc_log("LL t=%u hp=%x st=%08x ms=%x pos=%08x,%08x,%08x ay=%08x\n", t, em_w4(pPL->hp), em_w4(pPL->stat),
+                  em_w4(pPL->Motion.Mot_state), em_w4(pPL->pos.x), em_w4(pPL->pos.y), em_w4(pPL->pos.z),
+                  em_w4(pPL->ang.y));
 }
 #endif
 
