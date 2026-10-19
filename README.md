@@ -56,7 +56,7 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [ ] **Fix:** a few effect pictures missing in r102 right after loading a save ([#33](https://github.com/lamb2k/re4dc/issues/33)).
 - [ ] **Fix:** pictures still loaded from the disc during the first house fight (r100) and at the night lake shore (r11b).
 - [x] **Fix:** a short gap in the sound in cutscenes ([#38](https://github.com/lamb2k/re4dc/issues/38)). The Mendez cutscene that ends as soon as you pass its button prompt does the same in the original game.
-- [ ] **Fix:** effect sprites missing on the way to the castle gate ([#39](https://github.com/lamb2k/re4dc/issues/39)).
+- [x] **Fix:** a world picture and some effect pictures missing on the way to the castle gate ([#39](https://github.com/lamb2k/re4dc/issues/39)). For about a second in r200, some effect sprites can still be skipped; that part stays a known issue.
 - [ ] **Work continues** on cheaper enemies and cheaper scenery.
 
 Screenshots come with the release.
