@@ -137,3 +137,55 @@ It includes hashes, source witnesses, complete per-tick coverage, pairwise
 cohorts and parity outputs. Earlier quick notes mistakenly treated per-arm
 qualified averages as the same tick and quoted full→g50 1.508835ms; that
 claim was explicitly withdrawn. Only the qualified cohorts above are final.
+
+## I008 retained r11e attribution and source retirement guard (2026-10-19)
+
+The original b18srT/daac42cf/slots1 traces290/295/300/305 (complete20count
+290:309) were audited without a new runtime/build/emulator. The old full actor
+8cd34640 is retired at tick231; its replacement8cd35420 is the stable actor in
+the priced window. The host witness helper formerly expected room= on retire
+records, although the actual logger omits it. That kept a retired full-descriptor
+actor in the selection and suppressed joint coverage. The helper now consumes
+the real record format, removes pre-window retirees, refuses selected in-window
+retirement/replacement, and refuses malformed ownership records.
+
+Six regression/lifetime controls pass. Actual r119 full/g70/g50 and current
+twins full/type1 still produce byte-identical witness C/header/proof files.
+For all r11e arms, regenerated retire-v2 timing, caller contexts, function frames,
+context audits and actual field witnesses are byte-identical to their original
+observational runs. The source-owner selection metadata is corrected; no game,
+model, registry gate, caller attribution or timing rule changes. Full now
+selects only8cd35420. The host-only fix is d57c4d08; old outputs are retained.
+
+| Level | Requested / observed roots / complete non-invalid | Qualified ticks and native presentation MODELLED ms |
+|---|---|---|
+| Full | 4 /3 /3 | 290:4.438190;295:4.435270;305:4.459735 |
+| g70 | 4 /3 /2 | 295:3.625245;300:3.638930 |
+| g50 | 4 /4 /1 | 300:2.872370 |
+
+There is no jointly complete full/g50 or all-three tick. Full→g50 exclusive
+draw saving remains unpriced. The matched full/g70 comparison at295 only is
+4.435270→3.625245 (-0.810025ms). The matched shipped-g70/g50 comparison at300
+only is3.638930→2.872370 (-0.766560ms). These different cohorts cannot be
+summed or extrapolated. Original complete-frame g50 gain remains0.919ms versus
+shippedg70,1.577ms versus full; the approved Test18 selection is unchanged.
+
+All numbers are exclusive self charges below the source-model-witnessed
+commonModelTrans, IRQ excluded, one picture per logic tick, no actor division
+or steady30fps multiplier. Source getter bytes and native admission are pinned.
+Separate preparation, auxiliary actors and boss logic remain unpriced without
+the exact pre-strip overlay symbols. Four/six/four unresolved witnesses and
+every incomplete/invalid call remain explicit for full/g70/g50.
+
+Original boot-only replay reproduces all retained per-trace cycles exactly.
+Augmenting observed verified overlay bytes changes the mean by
+-0.0007975/-0.00079125/-0.0007825ms (full/g70/g50); instrumented timing bytes
+and disjoint charge conservation equal the augmented uninstrumented replay.
+No fresh slots2/current-build or console acceptance is claimed.
+
+Final report:
+C:/Flycast-Evidence/re4-dreamcast/boss18-20261018/r11e-exclusive-draw-attribution-20261019.json;
+per-arm attribution-I008-20261019/actor-model-witness-retire-v2. The actual
+unchanged controls are in retire-parser-actual-controls-20261019/results.json.
+Source343fe694 was merged separately as4ff868bd; these historical runtime
+images remain pinned and were not retargeted to that newer source.
