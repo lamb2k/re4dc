@@ -26,7 +26,7 @@ This preserves the existing GC-pair correspondence and ARGB4444 quantization. It
 | Unchanged capacity | 425984 | 425984 |
 | Source roles | 50 | 51 |
 | Type8 sections | 21 | 22 |
-| New pair VRAM | 0 | 16384 |
+| Pair VRAM footprint when uploaded | n/a | 16384 |
 
 Geometry, the complete 252128-byte blob, parents, inverse binds, model/part facts and source blobs are byte-identical. Existing reference/texture/texture-fact/role records are exact prefixes. The only changed old descriptor byte is its type8 section count. New role21 names BIN 0x217/TPL 0x219 and reuses the existing geometry. All existing texture package files remain exact; one pair is added.
 
@@ -40,6 +40,18 @@ The private root is `/root/re4data/private/boss18-r20f-alt-material-20261019`, m
 
 The owned `tools/d367/boss18/prepare_r20f_alt_accessory.py` pins original inputs, baseline registry/headers and retained pair, proves raw source and complete oriented masked-chart correspondence, then creates a fresh private additive set. Its companion asset-free tests cover eight append/refusal cases. The new `tools/d367/model-registry/boss18-r20f-alt-material.json` is the exact emitted spec. Use existing `model_registry.py` with `--package-room 20f --pack-bones 96 --wide-identity --pool --roles5`. No shared converter/helper or runtime source is changed.
 
-For the current A fixture, replace only `candidate/package/r20f/registry.re4nmr` and add `candidate/tex/7a5e30d0-89b5ef09.re4tex` from that private root. Preserve the current room-census package precedence and every existing atlas winner. Do not substitute the candidate's entire texture directory or an earlier package for the current merged chapter set.
+For the current A fixture, replace only `candidate/package/r20f/registry.re4nmr`. Preserve its existing selected `7a5e30d0-89b5ef09.re4tex` and all other room-census texture winners. H-045 below proves the current pair is exactly equivalent to the donor despite a different package hash. No texture file addition or replacement is needed in this fixture. Do not substitute the candidate's entire texture directory or an earlier package for the current merged chapter set.
 
 Verification: eight asset-free tests pass; standard generator preflight, capacity and self-check pass; the control generator reproduces A's exact baseline; binary section and texture preservation checks pass. Private `source-material-audit.json`, `retained-alternate-correspondence.json`, `additive/additive-proof.json` and `package-preservation-proof.json` record exact source and output details. No new target build, live capture, speed or complete-fight gate was run. Castle still owns original E0/DF adoption/drawing, TEX/CAST/VRAM, 48 KiB KOS, materials/look and route checks. Existing bump drops on unrelated retained sections are unchanged and are not qualified by this addition.
+
+## H-045: current selected pair is exact; preserve it
+
+A correctly stopped staging when the current same-key package differed from the donor. The selected file is `/root/re4data/private/castle18-cast-variants-20261018/reg-r208-v2/tex/7a5e30d0-89b5ef09.re4tex`, SHA256 `29480f1801718ac4d07d98c154f6cbdf821355a52897471b65c240be33ccec00`. The current AP1 fixture SHA256 is `900a250f2ee1baa081f224bd5e50d5b9d8eadaab508cf2f2b2f54477164a0386`; its top-level replace entry explicitly selects that file.
+
+Only seven bytes differ from the proven donor: four CRC bytes at offsets36-39 and three material-name bytes at66/69/70. The names are `ps2mask_zealot_em1a_08q` and `ps2mask_zealot_em1c_09h`. Both package CRCs validate; every other header and sampling descriptor field is exact. All 16384 payload bytes match, SHA256 `7d99da668c5c0871a3bccac4ba7755fab45b2933223a9952416dcb3ea7e746de`.
+
+The existing NumPy decoder and an independent scalar ARGB4444/twiddle decoder agree: all8192 RGBA texels, including partial alpha, are identical, SHA256 `a5e7c2ed01891119edaeab501197de801091788e84bec962c46962849b683743`. The proven role21 chart is unchanged from lit section20 (`ee88971d...`), so complete payload identity preserves every sampled footprint as well. No rounding or image similarity threshold is used.
+
+This is the native actor pair path: `game/platform/native_ui.cpp:6581-6584` loads the external key and uses texture index0; the descriptive material name does not select this actor binding. Other package consumers may use material-name lookup; no general name-agnostic contract is asserted. Source files are pinned in the hash-only `tools/d367/boss18/r20f-current-pair-winner-20261019.json`.
+
+Use registry `da42932a...` with the existing current pair `29480f18...`; preserve every texture winner. There is no extra disc texture file. Actual upload/residency, its16KiB allocation and material/look/native room gates remain with Castle. Private comparison root `boss18-r20f-pair-winner-20261019` has10files/61741bytes, immediately C-mirrored and verified; SHA256SUMS `75acb1b5c906741f1792afcdd5284f941bd5490b7f6b7e2180b4b18084000268`, exact proof `fc59f62deedeeacb821be44953502b73ca726a6f8acc2569d8dadcc8127cea3e`. No existing dataset was changed and no new game build/capture occurred.

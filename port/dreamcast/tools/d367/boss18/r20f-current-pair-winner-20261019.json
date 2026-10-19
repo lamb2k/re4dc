@@ -1,0 +1,57 @@
+{
+  "scope": "Hash-only exact current-winner equivalence; no game payload or new runtime/look acceptance.",
+  "proof": {
+    "current_sha256": "29480f1801718ac4d07d98c154f6cbdf821355a52897471b65c240be33ccec00",
+    "donor_sha256": "edc35f81c1e2958137856a3699ad0e0fa02b380c19bff75dc297d30ab92b0ac0",
+    "package_bytes": 16528,
+    "payload_bytes": 16384,
+    "payload_sha256": "7d99da668c5c0871a3bccac4ba7755fab45b2933223a9952416dcb3ea7e746de",
+    "all_payload_bytes_exact": true,
+    "all_8192_rgba_pixels_and_alpha_exact": true,
+    "rgba_sha256": "a5e7c2ed01891119edaeab501197de801091788e84bec962c46962849b683743",
+    "independent_scalar_and_existing_numpy_decoders_agree": true,
+    "binary_difference_offsets": [
+      36,
+      37,
+      38,
+      39,
+      66,
+      69,
+      70
+    ],
+    "only_difference": "Texture material descriptor name and corresponding package CRC32",
+    "sampling_descriptor_fields_exact": true,
+    "both_package_CRCs_valid": true,
+    "chart_uv_sha256": "ee88971d71c6c9215822fd0b9ee811063aa762d9a095fc23797cb2d277007ac7",
+    "chart_same_as_current_lit_section20": true,
+    "all_source_triangles": 241,
+    "fixture_sha256": "900a250f2ee1baa081f224bd5e50d5b9d8eadaab508cf2f2b2f54477164a0386",
+    "selected_file": "/root/re4data/private/castle18-cast-variants-20261018/reg-r208-v2/tex/7a5e30d0-89b5ef09.re4tex",
+    "source_commit": "c95868f643518e25f8c423836d4879ab6ed19a62",
+    "stage": "Replace only registry with H043da429. Preserve current29480f18 pair and every other texture winner. No pair substitution/addition.",
+    "capacity_note": "No additional disc texture file is needed; actual upload/residency and16KiBpairallocation remain room gates, not claimed free.",
+    "qualification": "Exact offline package/pixel/chart equivalence. Existing GC-pair mapping and ARGB4444 source limits unchanged. No new live/PS2-render equivalence or game capture.",
+    "source_pins": [
+      {
+        "path": "port/dreamcast/game/platform/native_ui.cpp",
+        "sha256": "c7cfe20310f2933d8db99ae9866976cce7706a8499b398c2e8d01e9868234a84"
+      },
+      {
+        "path": "port/dreamcast/room/texture_package.cpp",
+        "sha256": "026a20ff2dbea0dc10b4979e8e6d9bccb18ccd75f952b5e83fc9f2c8c9d5a8d5"
+      },
+      {
+        "path": "port/dreamcast/room/texture_package.hpp",
+        "sha256": "4ef4100dcbab1c32b0ba313c739a48982a7d788eb566fbb3ca516a864b2eb516"
+      }
+    ]
+  },
+  "private_set": {
+    "set": "boss18-r20f-pair-winner-20261019",
+    "files": 10,
+    "bytes": 61741,
+    "sha256sums_sha256": "75acb1b5c906741f1792afcdd5284f941bd5490b7f6b7e2180b4b18084000268",
+    "mirror_verified": true,
+    "proof_sha256": "fc59f62deedeeacb821be44953502b73ca726a6f8acc2569d8dadcc8127cea3e"
+  }
+}
