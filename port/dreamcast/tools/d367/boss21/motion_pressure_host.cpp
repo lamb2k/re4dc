@@ -393,13 +393,38 @@ static void resume_partial_and_chained_movie() {
     }clean();
 }
 #endif
+
+#if RE4DC_MOTION_PRESSURE_BACKING && RE4DC_MOTION_RESERVE_PACK && RE4DC_TEST_EXPECT_REGION
+// OPEN A06 gate: exact K05 assigned-body sizes, using the real loader.
+// The fixed free/largest fixture is not a simulation of the full game heap.
+static void castle_capacity_boundary_is_open() {
+    {
+        heap_free=83168;
+        ActualArchive f({22400,17408,32416});
+        assert(f.bind());
+        auto& b=bindings[0];
+        assert(b.joined && 22400+17408+32416==72224 && 2*b.slab_bytes==64832);
+        const unsigned before=allocated;
+        for(unsigned tick=0;tick<20;++tick)
+            for(unsigned i=0;i<3;++i) {
+                auto token=acquire_entry(b,i);
+                re4dc_motion_release(token);
+            }
+        assert(allocated==before && b.resident<=64832);
+        assert(stats.evictions>0); // expected unresolved capacity failure, not a clearance
+        std::cout<<"OPEN castle-capacity demand=72224 backing=64832 free=83168 loads="
+                 <<stats.loads<<" evictions="<<stats.evictions<<"\n";
+    }clean();
+}
+#endif
+
 int main(){reserved_fill();
 #if RE4DC_MOTION_PRESSURE_BACKING
 aggregate_heap_and_pins();all_heap_pinned_and_hold();bounded_no_spill();cold_pool_keeps_cap();heap_load_keeps_cap();allocation_failure_keeps_leases();
 three_cold_loop({11744,7744,12224});three_cold_loop({22400,9152,17408});three_cold_loop({22400,9152,32416});
 region_three_key_loop(12032);region_three_key_loop(15584);
 #if RE4DC_MOTION_RESERVE_PACK && RE4DC_TEST_EXPECT_REGION
-region_pins_owners_and_fallback();
+region_pins_owners_and_fallback();castle_capacity_boundary_is_open();
 #endif
 #if RE4DC_MOTION_RESERVE_PACK
 packed_coactive_pins();packed_holes_owners_and_retirement();packed_bad_read_keeps_backing();
