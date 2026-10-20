@@ -1,0 +1,12 @@
+name ll20-hwfarm
+# scenery19 console A/B disc, scene 5 = /cd/dc/bench5.txt: the r103 farm fight mid-wave (scenario19 farm-midfight,
+# wip/scenario19-20261019 5346349e): one Ganado killed at room frame 150 (its body stays), 4 live at cap 4 with the
+# held ones released as kills happen, the animals present. God, no pad input. Settle 0..299, measure 300..1199.
+room 0x103
+pos -47609 12 7084
+ang 1.8890
+inv default
+god
+killnear
+kill 0x12 150 0x103
+alivelog 150
