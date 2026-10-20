@@ -15,7 +15,7 @@ with tempfile.TemporaryDirectory(prefix='re4-motion-pressure-')as name:
            '-DRE4DC_SUBSCREEN=1','-DRE4DC_MOTION_OOM_EVICT=1','-DRE4DC_MOVIE_HEAP_EVICT=1',
            '-DRE4DC_MOTION_COLD_POOL=262144','-DRE4DC_MOTION_RESERVE_SPILL=524288',
            '-I'+str(root),'-I'+str(repo/'port/dreamcast/game/platform/include')]
-    for mode,lean,pack in [(0,0,0),(1,0,0),(1,1,0),(1,0,1),(1,1,1)]:
-        binary=root/('test'+str(mode)+'lean'+str(lean)+'pack'+str(pack))
-        subprocess.run([os.environ.get('CXX','g++'),*flags,'-DRE4DC_MOTION_PRESSURE_BACKING='+str(mode),'-DRE4DC_MOTION_LEASE_LEAN='+str(lean),'-DRE4DC_MOTION_RESERVE_PACK='+str(pack),str(HERE/'motion_pressure_host.cpp'),'-o',str(binary)],check=True)
+    for mode,lean,pack,resume in [(0,0,0,0),(1,0,0,0),(1,1,0,0),(1,0,1,0),(1,1,1,0),(1,0,1,1),(1,1,1,1)]:
+        binary=root/('test'+str(mode)+'lean'+str(lean)+'pack'+str(pack)+'resume'+str(resume))
+        subprocess.run([os.environ.get('CXX','g++'),*flags,'-DRE4DC_MOTION_PRESSURE_BACKING='+str(mode),'-DRE4DC_MOTION_LEASE_LEAN='+str(lean),'-DRE4DC_MOTION_RESERVE_PACK='+str(pack),'-DRE4DC_MOTION_RESUME='+str(resume),str(HERE/'motion_pressure_host.cpp'),'-o',str(binary)],check=True)
         subprocess.run([str(binary)],check=True,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=1'})
