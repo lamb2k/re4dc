@@ -52,5 +52,15 @@
     "r200-current-characters.json": "77a6a4dd4c6dec8ede4f15f5d6985966f7c7a12092895d16928b0763f82bcee0",
     "r200-current-vram.json": "0d4f3d886e87e74c3e652526e91a272621b4c6ba70b66f11a59c49d807a288b3",
     "current-r200-snapshot-audit.json": "1bcdf503e5c2ebe0dbe2eafac9e9770d1c8ec1be9dea8fcc84c2f29471e540a3"
-  }
+  },
+  "retained_C_disc": {
+    "scope": "Exact immutable RAM master retained as owned C image; no remaster/truncation or current input changes.",
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\base\\track03.iso",
+    "bytes": 1018361856,
+    "iso_sectors": 497247,
+    "sha256": "dc536893569c42a928c19ad1568c0dba6d41e3d82ea0028bd63d8e3b0032150b",
+    "before_free": 21215748096,
+    "after_free": 20134002688
+  },
+  "retention_receipt_sha256": "eef8a4345736c7a39f9b15c485e524e97c792b353a7dd1735f1d4b7cd07fd2cb"
 }
