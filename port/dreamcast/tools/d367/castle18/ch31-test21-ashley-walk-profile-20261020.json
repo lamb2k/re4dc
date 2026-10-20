@@ -1,0 +1,102 @@
+{
+  "scope": "Additive named data profile and exact guarded admission facts for the observed current r202 Ashley follow working set. No default/recipe/cache policy/engine service change. Target qualification remains pending; r11e existing profile remains unchanged.",
+  "profile": "pl11-walk",
+  "source_sha256": "f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58",
+  "added_full_source_arc_indices": [
+    22,
+    23,
+    37
+  ],
+  "old_full_source_arcs": [
+    64,
+    67,
+    18,
+    19,
+    21,
+    24,
+    36,
+    68,
+    108,
+    109
+  ],
+  "new_profile": {
+    "profile": "pl11-walk",
+    "module": 47,
+    "version": 3,
+    "clip_cap": 32768,
+    "count": 58,
+    "table_crc32": 2576710471,
+    "body_bytes": 423136,
+    "body_crc32": 3762690999,
+    "body_sha256": "940d2f7b3642c3ccc2a876abc31ba861cc9a47cd56aba569a0ff9fed368df671",
+    "descriptor_sha256": "56f200f02c619bc96c5af94d6cbfd28fbc8cf13f77c9396329296ebaaeffdc6a",
+    "descriptor_words": [
+      47,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3690987521,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "preserved_full_arcs": [
+      64,
+      67,
+      18,
+      19,
+      21,
+      24,
+      36,
+      68,
+      108,
+      109,
+      22,
+      23,
+      37
+    ],
+    "policy": "two reserved slabs only; zero hot flags; no spill; no heap12 cache"
+  },
+  "host": {
+    "actual_profile_admitted": true,
+    "malformed_rejections": 13,
+    "allocation_failures_checked": 3,
+    "all58clips_twice": true,
+    "only_two_slabs": true,
+    "scope": "Existing real native_motion.cpp/room_storage.cpp host harness with bounded profile enabled. New exact walk body admitted, 13 actual malformed profiles rejected, allocation failures cleaned, every remaining cold clip acquired twice. Host safety/data gate only; no target room acceptance.",
+    "body_sha256": "940d2f7b3642c3ccc2a876abc31ba861cc9a47cd56aba569a0ff9fed368df671"
+  },
+  "audio_preservation": {
+    "scope": "Offline candidate only; original current qualified wrapper and all audio/transport bytes preserved, exactly like QA fix. No runtime admission exists yet. No new slab/cache policy, events/rate/cloth/geometry modifications.",
+    "source_wrapper_sha256": "ecf3098097fcb2b2c86d632b62fd3d9112e61f5e39b56819db6a2e277fffcfa2",
+    "body_sha256": "940d2f7b3642c3ccc2a876abc31ba861cc9a47cd56aba569a0ff9fed368df671",
+    "wrapper_sha256": "12bf1589821db613693f4d0c6545b622a42ed831cc02fd9061869849dfcd3e3f",
+    "body_bytes": 423136,
+    "wrapper_bytes": 2192928,
+    "wrapper_growth_vs_qualified_hot": 11392,
+    "file_sector_growth_vs_qualified_hot": 5,
+    "changed_old_header_byte_count": 6,
+    "aic1_headers": 1,
+    "runtime_qualified": false
+  },
+  "changes": {
+    "generator": "One explicit profile entry; uses existing exact-source producer.",
+    "runtime": "One exact admission row in native_motion_r11f_profiles.inc; all current CRC/module/descriptor/extent tests stay enforced.",
+    "remaining_cold_keys": "All58 remaining source key SHA values equal existing pl11-hot output.",
+    "slabs": "Same two25440-byte slabs; cap/budget/pinning/spill/retire behavior unchanged."
+  },
+  "pending": [
+    "Fresh current-program target run for r202 ordinary following",
+    "Memory and read-only cache/audio counter gate",
+    "Explicit r203/r208 current checks",
+    "Complete source-prefetch coverage and chapter progression"
+  ]
+}

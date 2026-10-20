@@ -186,6 +186,11 @@ BOUNDED_PROFILES={
     'pl11-hot': dict(name='pl11.drs',module=47,cap=32768,count=61,
         source='f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58',
         retain=(0x40,0x43,18,19,21,24,36,68,108,109)),
+    # Current castle r202 ordinary following also cycles cold entries1/2/14 (ARC22/23/37).
+    # Add their exact full FCVs; keep the existing hot profile and bounded cache policy unchanged.
+    'pl11-walk': dict(name='pl11.drs',module=47,cap=32768,count=58,
+        source='f6fd174c7a02949c467f792eb08ecbd0529034a66189766dd7fd87e0ee991c58',
+        retain=(0x40,0x43,18,19,21,24,36,68,108,109,22,23,37)),
 }
 
 def prepare(source, destination, hot_slots=(), textures=None, keep_motion_resident=False, compact_effects=False, bounded_profile=None):
