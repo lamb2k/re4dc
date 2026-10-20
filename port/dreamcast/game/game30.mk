@@ -122,6 +122,19 @@ $(error MOTION_PRESSURE_BACKING needs MOTION_PRESSURE_BYTES)
 endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PRESSURE_BACKING=$(MOTION_PRESSURE_BACKING)
 endif
+# MOTION_RESERVE_PACK=1 (default off): v2 cold clips share aligned first-fit
+# subregions of the existing two reserved slabs. No moves, backing growth or
+# extra allocations; pins and heap margins remain. Strict v3 stays two cells.
+MOTION_RESERVE_PACK ?= 0
+ifneq ($(MOTION_RESERVE_PACK),0)
+ifneq ($(MOTION_RESERVE_PACK),1)
+$(error MOTION_RESERVE_PACK must be 0 or 1)
+endif
+ifneq ($(MOTION_PRESSURE_BACKING),1)
+$(error MOTION_RESERVE_PACK needs MOTION_PRESSURE_BACKING=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_RESERVE_PACK=$(MOTION_RESERVE_PACK)
+endif
 # MOTION_PRESSURE_GROW=<bytes> (test 14 r103 motion thrash, crash lane 10-15; needs MOTION_PRESSURE_BYTES; render and
 # I/O only, default 0 = image unchanged): a key load over the MOTION_PRESSURE_BYTES cap does not evict while heap 4
 # keeps at least <bytes> free after it (as MOTION_RESERVE_SPILL): the cap holds only under heap 4 pressure. The r103
