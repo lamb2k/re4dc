@@ -193,7 +193,7 @@ struct Warp {
     int chapter;    // `chapter <n>`: pG->chapter (chapters finished) before the first room loads, 0 = unset (+1 stored)
     u8 dead[64];
     unsigned n_dead;
-    Act act[32];
+    Act act[96];
     unsigned n_act;
     bool has_trg, trg_fired;
     int trg_no;
@@ -275,7 +275,7 @@ struct Warp {
     u16 late_room;
     // god: Leon's life refilled every frame (benchmark fixtures; hwcal's invuln). alert <frame>: the room-forced
     // alert + the "Ganado hurt" alarm at Leon once at that room frame of its entry (hwcal's alert): the crowd hunts him.
-    bool god, has_alert, alert_done;
+    bool god, has_alert, alert_done, ammo;  // ammo: `ammo` keeps the equipped weapon loaded (shotfx20 rigs)
     // face <target|corpse>: 1 = the current kill target, 2 = the newest kill still listed (ring of the last 8 kills)
     u8 face_mode;
     u8 face_n;
@@ -393,7 +393,7 @@ void load()
         } else if (!strcmp(k, "entry") && n >= 2 && num(tok[1]) >= 1 && num(tok[1]) <= 8) {
             wp.parse_entry = (u8) num(tok[1]);
             if (wp.parse_entry > wp.max_entry) wp.max_entry = wp.parse_entry;
-        } else if (!strcmp(k, "act") && n >= 4 && wp.n_act < 32) {
+        } else if (!strcmp(k, "act") && n >= 4 && wp.n_act < 96) {
             Act& a = wp.act[wp.n_act++];
             a.entry = wp.parse_entry;
             a.frame = num(tok[1]);
@@ -512,8 +512,12 @@ void load()
         } else if (!strcmp(k, "dump")) {
             wp.dump = true;
         } else if (!strcmp(k, "face") && n >= 2) {
-            wp.face_mode = !strcmp(tok[1], "corpse") ? 2 : 1;
+            wp.face_mode = !strcmp(tok[1], "corpse") ? 2 : !strcmp(tok[1], "near") ? 3 : 1;
+            if (wp.face_mode == 3) wp.face_id[0] = (u8) (n >= 3 ? num(tok[2]) : 0x15);  // `face near <em id> [dist/100 mm]` (shotfx20 rigs)
+            if (wp.face_mode == 3) wp.face_id[1] = (u8) (n >= 4 ? num(tok[3]) : 0);
             re4dc_log("warp: face %s\n", wp.face_mode == 2 ? "corpse" : "target");
+        } else if (!strcmp(k, "ammo")) {
+            wp.ammo = true;
         } else if (!strcmp(k, "god")) {
             wp.god = true;
             re4dc_log("warp: god (Leon's life refilled every frame)\n");
@@ -1008,7 +1012,25 @@ void face_poll()
 {
     if (!wp.face_mode || !pPL || (pG->Status_flg[1] & 0x10000000)) return;
     cEm* em = nullptr;
-    if (wp.face_mode == 1) {
+    if (wp.face_mode == 3) {  // `face near <id>`: the live enemy of that id nearest Leon (shooting rigs)
+        f32 best = 1e30f;
+        for (cEm* e = EmMgr.getEmPtr(wp.face_id[0], 0); e; e = EmMgr.getEmPtr(wp.face_id[0], e)) {
+            if ((e->be_flag & 0x21) != 0x21 || e->hp <= 0) continue;
+            const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d2 = dx * dx + dz * dz;
+            if (d2 < best) { best = d2; em = e; }
+        }
+        static cEm* near_last;  // `face near <id> <mm>`: each new target is placed that far in front of Leon once
+        if (em && em != near_last && wp.face_id[1]) {
+            near_last = em;
+            const f32 a = pPL->ang.y, d = (f32) wp.face_id[1] * 100.0f;
+            em->pos.x = pPL->pos.x + __builtin_sinf(a) * d;
+            em->pos.z = pPL->pos.z + __builtin_cosf(a) * d;
+            em->pos.y = pPL->pos.y;
+            em->ang.y = a + 3.14159265f;
+            re4dc_log("warp: face near target m=%08x placed %d mm ahead t=%u\n", (unsigned) (uintptr_t) em, (int) d,
+                      (unsigned) pG->Frame_cnt);
+        }
+    } else if (wp.face_mode == 1) {
         if (wp.kill_em && face_listed(wp.kill_em, wp.kill_cur)) em = wp.kill_em;
     } else {
         for (unsigned k = 0; k < 8 && k < wp.face_n && !em; ++k) {
@@ -1029,6 +1051,8 @@ namespace {
 void god_alert_poll()
 {
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
+    if (wp.ammo && ItemMgr.pArm && (ItemMgr.pArm->bullet & 0x1FFF) < 3)
+        ItemMgr.pArm->bullet = (u16) ((ItemMgr.pArm->bullet & 0xE000) | 9);
     if (wp.b108_n && pG && pG->room_id == 0x108 && wp.room_frames >= wp.b108_frame) {
         char what[64];
         snprintf(what, sizeof(what), "bell108 shot at room frame %u (alive %d)", (unsigned) wp.room_frames,
