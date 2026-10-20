@@ -1,0 +1,199 @@
+{
+  "scope": "Actual currentI no-warp r202 source Wait command through normal ownedSDL keyonly; read-only exact source feedback and current ELF anchors. No source/process/state writes. No wholechapter/residency/performance acceptance.",
+  "snapshot": {
+    "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+    "state_sha256": "9ccd82774932309a01fd790dc030cffed2411bbc087f3eafe7da6ff2ecf9fc27",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x202",
+    "chapter": 6,
+    "source_frame": 6971,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "stop": "0x0",
+    "actual_death": false,
+    "Leon": {
+      "pointer": "0x8caba7e0",
+      "pos": [
+        13497.2021484375,
+        0.001220703125,
+        -19119.943359375
+      ],
+      "yaw": 1.4664905071258545
+    },
+    "Ashley": {
+      "pointer": "0x8cce56a0",
+      "pos": [
+        10104.0185546875,
+        -0.00384521484375,
+        -15333.8359375
+      ],
+      "yaw": -2.920170783996582
+    }
+  },
+  "run": {
+    "elapsed_s": 50.6,
+    "errors": [],
+    "emulator_exited": true
+  },
+  "events": [
+    {
+      "normal_partner_source_after_hold": {
+        "frame": 6892,
+        "key_on": "0x20200",
+        "key_trg": "0x0",
+        "subFlags": "0x42",
+        "command_timer": 8
+      }
+    },
+    {
+      "normal_partner_X_command": true
+    },
+    {
+      "normal_Ashley_Wait_confirmed": {
+        "frame": 6922,
+        "stable_source_ticks": 30,
+        "subFlags": "0x42",
+        "partner_hp": 600,
+        "partner_pos": [
+          10104.0185546875,
+          0.000732421875,
+          -15333.8359375
+        ],
+        "stable_anchor": [
+          10104.0185546875,
+          -0.00341796875,
+          -15333.8359375
+        ]
+      }
+    },
+    {
+      "waypoint_reached": 0,
+      "target": [
+        11500.0,
+        -18500.0
+      ],
+      "pos": [
+        11395.5888671875,
+        0.001220703125,
+        -18378.6328125
+      ]
+    }
+  ],
+  "actual_source_fact": "Numeric subFlags0x2 SET preventsordinaryfollowing in cSubChar::moveCore; sourcecFlag::check(1)=1<<1. DWARF outeranonymousmember+1024 and nestedsubFlags+0 establish+0x400 in currentI.",
+  "motion": {
+    "first": {
+      "host_s": 0.0,
+      "frame": 6880,
+      "hits": 2695,
+      "misses": 681,
+      "evictions": 675,
+      "loads": 680,
+      "resident": 25920,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb856e0",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 17408,
+          "keys": [
+            [
+              86,
+              17408,
+              "ba4d09f9-27cc4d48",
+              0
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cce64c0",
+          "bytes": 411744,
+          "count": 61,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 8512,
+          "keys": [
+            [
+              1,
+              5088,
+              "07688fa0-46cd60ed",
+              0
+            ],
+            [
+              2,
+              3424,
+              "9097142e-74a9729c",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    "last": {
+      "host_s": 49.437,
+      "frame": 6971,
+      "hits": 3162,
+      "misses": 924,
+      "evictions": 918,
+      "loads": 923,
+      "resident": 25920,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb856e0",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 17408,
+          "keys": [
+            [
+              86,
+              17408,
+              "ba4d09f9-27cc4d48",
+              0
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cce64c0",
+          "bytes": 411744,
+          "count": 61,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 8512,
+          "keys": [
+            [
+              1,
+              5088,
+              "07688fa0-46cd60ed",
+              0
+            ],
+            [
+              2,
+              3424,
+              "9097142e-74a9729c",
+              0
+            ]
+          ]
+        }
+      ]
+    },
+    "sha256": "8acb9be20ff71f9f4634e7a1b2e50edfba8e450495d4968ee915422551a26153"
+  },
+  "limitations": [
+    "Current oldhot411744 profile still thrashes even in actualstationaryWaitblend; fresh423136 candidate targetpending.",
+    "InitialI04/I05/privateWait claims were wrong and corrected; onlythisarm provesWait."
+  ]
+}
