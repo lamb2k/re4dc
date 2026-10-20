@@ -10,8 +10,8 @@ Output: the same three files (same formats, so today's loader and draw path read
     re-encoded on the cell's grid (positions), the part's UV range (UV) and the source colour word (unchanged);
   - placements that can move (an id used once in ps2-world.ids, id < 250: PS2_WORLD_DYNAMIC) keep their source mesh,
     affine, placement field and id, so the dynamic path still drives them.
-Strip-group (r4sg), translucency (r4tc) and other per-package sidecars no longer match the new R4PW crc and are refused
-by the runtime (whole-meshlet path / defaults). Approximation: UV and positions are re-quantised (16 bit).
+The R4TC translucency classes are carried over per part (--r4tc). Strip groups (r4sg) and the room file (OCCL) are rebuilt by
+dcw_room.sh (ps2_strip_groups.py, room_compile.py). Approximation: UV and positions are re-quantised (16 bit).
 
 Usage: dcworld_build.py <in room dir> <out dir> [--cell 20000]
 """
@@ -37,7 +37,7 @@ def align32(n):
 
 
 class Src:
-    def __init__(self, d):
+    def __init__(self, d, r4tc=None):
         d = Path(d)
         m = (d / 'ps2-world.re4mesh').read_bytes()
         p = (d / 'ps2-world.r4pw').read_bytes()
@@ -67,6 +67,13 @@ class Src:
             mg, ver, count, crc = struct.unpack_from('<4sIII', b, 0)
             if mg == b'R4ID' and ver == 1 and count == nplace and crc == hp[5]:
                 self.ids = b[16:16 + count]
+        self.tc = None
+        q = Path(r4tc) if r4tc else d / 'ps2-world.r4tc'
+        if q.exists():
+            b = q.read_bytes()
+            mg, ver, clsf, parts, pwcrc, bcrc = struct.unpack_from('<4s5I', b, 0)
+            if mg == b'R4TC' and ver == 1 and parts == nparts and pwcrc == hp[5]:
+                self.tc, self.tc_classifier = b[24:24 + parts], clsf
 
     def let_corners(self, li):
         """(corners as raw 6-tuples in strip-index order, strip bytes, strip count)."""
@@ -85,12 +92,14 @@ def mat_mul(A, G):
     return [[sum(A[r][k] * G[k][c] for k in range(3)) + (A[r][3] if c == 3 else 0.0) for c in range(4)] for r in range(3)]
 
 
-def build(src, cell):
+def build(src, cell, keep=()):
     nplace = len(src.placements)
     dynamic = set()
     if src.ids is not None:
         cnt = collections.Counter(src.ids)
         dynamic = {i for i, v in enumerate(src.ids) if v < K_IDS and cnt[v] == 1}
+    dynamic |= {i for i in keep if i < nplace}
+    assert all(src.placements[i][1] == i for i in range(nplace)), 'placement field != index'
     # ---- gather static clusters into (cell, material) runs ----
     runs = collections.OrderedDict()      # (cell, material) -> list of (M, scale, part, cluster)
     for pi, pl in enumerate(src.placements):
@@ -121,7 +130,7 @@ def build(src, cell):
                 runs.setdefault((key, material), []).append((M, scale, part, c))
     cells = sorted({k[0] for k in runs})
     # ---- output tables ----
-    meshes, parts, plods, clusters, levels, lets, verts, idx, pmeta, places, ids_out = ([] for _ in range(11))
+    meshes, parts, plods, clusters, levels, lets, verts, idx, pmeta, places, ids_out, part_src, cell_meshes = ([] for _ in range(13))
 
     def transform(M, q):
         return [M[r][0] * q[0] + M[r][1] * q[1] + M[r][2] * q[2] + M[r][3] for r in range(3)]
@@ -199,13 +208,13 @@ def build(src, cell):
                           len(lets) - first_let_part, ulo[0], ulo[1], us[0], us[1]))
             plods.append((first_cluster, len(clusters) - first_cluster))
             pmeta.append(pm)
+            part_src.append(items[0][2])
         hi_q = [lo[a] + 65535 * step[a] for a in range(3)]
         meshes.append((len(meshes), 0, 0x50, 0, len(parts) - first_part, 0, first_part, len(parts) - first_part,
                        *lo, *step, *lo, *hi_q))
-        places.append((len(meshes) - 1, 0xFFFF, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0))
-        ids_out.append(0xFF)
+        cell_meshes.append(len(meshes) - 1)
     # ---- dynamic placements: their source mesh copied whole ----
-    copied = {}
+    copied, kept = {}, {}
     for pi in sorted(dynamic):
         pl = src.placements[pi]
         mi = pl[0]
@@ -236,11 +245,25 @@ def build(src, cell):
                 parts.append(tuple(rp[:6]) + (first_let_part, len(lets) - first_let_part) + tuple(rp[8:12]))
                 plods.append((first_cluster, len(clusters) - first_cluster))
                 pmeta.append(src.pmeta[part])
+                part_src.append(part)
             m = src.meshes[mi]
             meshes.append((len(meshes),) + tuple(m[1:6]) + (first_part, len(parts) - first_part) + tuple(m[8:]))
             copied[mi] = len(meshes) - 1
-        places.append((copied[mi], pl[1]) + tuple(pl[2:]))
-        ids_out.append(src.ids[pi])
+        kept[pi] = (copied[mi], pl[1]) + tuple(pl[2:])
+    # ---- placements: every source field keeps its index (dyn ids, sky rows, gates and owners address placements by
+    # field); kept placements at their own field, cell meshes in the first free fields, the rest an empty mesh ----
+    empty = len(meshes)
+    meshes.append((empty, 0, 0x50, 0, 0, 0, len(parts), 0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0))
+    free = [i for i in range(nplace) if i not in kept]
+    if len(free) < len(cell_meshes):
+        raise SystemExit('more cells than free placement fields')
+    ident = (1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+    slot = {f: m for f, m in zip(free, cell_meshes)}
+    for i in range(nplace):
+        if i in kept:
+            places.append(kept[i]); ids_out.append(src.ids[i] if src.ids is not None else 0xFF)
+        else:
+            places.append((slot.get(i, empty), i) + ident); ids_out.append(0xFF)
     # ---- write R4IM ----
     head = HEADER.size + LOD_HEADER.size
     body = bytearray()
@@ -272,11 +295,16 @@ def build(src, cell):
     side = struct.pack('<4s7I', b'R4PW', 1, len(places), len(pmeta), len(meshes), pcrc, 0, 0) + pbody
     ids = struct.pack('<4sIII', b'R4ID', 1, len(places), pcrc) + bytes(ids_out)
     ids += b'\xff' * (align32(len(ids)) - len(ids))
+    tc = None
+    if src.tc is not None:
+        cls = bytes(src.tc[i] for i in part_src)
+        tc = struct.pack('<4s5I', b'R4TC', 1, src.tc_classifier, len(cls), pcrc, zlib.crc32(cls) & 0xFFFFFFFF) + cls
+        tc += bytes(-len(tc) % 4)
     stats = dict(cells=len(cells), static_runs=len(runs), dynamic_placements=len(dynamic), placements=len(places),
                  meshes=len(meshes), parts=len(parts), clusters=len(clusters), meshlets=len(lets), vertices=len(verts),
                  re4mesh_bytes=len(mesh_blob), src_placements=nplace, src_parts=len(src.parts),
                  src_re4mesh_bytes=len(src.m))
-    return mesh_blob, side, ids, stats
+    return mesh_blob, side, ids, tc, stats
 
 
 def main():
@@ -284,13 +312,20 @@ def main():
     ap.add_argument('src', type=Path)
     ap.add_argument('out', type=Path)
     ap.add_argument('--cell', type=float, default=20000.0)
+    ap.add_argument('--keep', default='', help='placement fields kept on their source mesh (sky rows, baked objects), '
+                    'besides the dynamic ids: comma list, e.g. 0,1,2,209,210')
+    ap.add_argument('--r4tc', type=Path, help='source package R4TC sidecar (default <src>/ps2-world.r4tc)')
     a = ap.parse_args()
-    src = Src(a.src)
-    mesh_blob, side, ids, stats = build(src, a.cell)
+    src = Src(a.src, a.r4tc)
+    keep = [int(x, 0) for x in a.keep.split(',') if x] if a.keep else []
+    mesh_blob, side, ids, tc, stats = build(src, a.cell, keep)
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'ps2-world.re4mesh').write_bytes(mesh_blob)
     (a.out / 'ps2-world.r4pw').write_bytes(side)
     (a.out / 'ps2-world.ids').write_bytes(ids)
+    if tc is not None:
+        (a.out / 'ps2-world.r4tc').write_bytes(tc)
+    stats['r4tc'] = tc is not None
     stats['cell'] = a.cell
     (a.out / 'dcworld.json').write_text(json.dumps(stats, indent=1))
     print(json.dumps(stats))
