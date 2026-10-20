@@ -3506,6 +3506,39 @@ endif
 $(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 $(SH4ZAM_INC)
 endif
 endif
+# SKIN_SH4ZAM=1 (lane shzadopt20 2026-10-20; render only, default 0 = not built, the previous image): the skinned
+#   meshlet position pass (native_actor_fast.cpp avk_positions, skinned parts) through SH4ZAM's
+#   shz_xmtrx_project_skinned_s16 / _u16 (third_party/sh4zam source/sh4/shz_xmtrx_skin_sh4.s: our avk_sh4.S pos_skin
+#   kernels contributed upstream, fork lamb2k/sh4zam). Needs the submodule at a commit that has the routine
+#   (re4dc-pin-33fa485 until upstream merges it). =2: check build, SH4ZAM's portable reference (_sw) beside every call,
+#   "SKZCHK" log lines. Needs ACTOR_VTX_KERNEL.
+SKIN_SH4ZAM ?= 0
+ifneq ($(SKIN_SH4ZAM),0)
+ifeq ($(filter-out 0,$(ACTOR_VTX_KERNEL)),)
+$(error SKIN_SH4ZAM needs ACTOR_VTX_KERNEL)
+endif
+ifneq ($(filter-out 1 2,$(SKIN_SH4ZAM)),)
+$(error SKIN_SH4ZAM must be 0, 1 or 2)
+endif
+ifeq ($(wildcard $(SH4ZAM_DIR)/source/sh4/shz_xmtrx_skin_sh4.s),)
+$(error SKIN_SH4ZAM needs the SH4ZAM submodule at a commit with shz_xmtrx_project_skinned (lamb2k/sh4zam re4dc-pin-33fa485))
+endif
+SKIN_SH4ZAM_CHECK := $(if $(filter 2,$(SKIN_SH4ZAM)),1,0)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_SKIN_SH4ZAM=1
+PLATFORM_OBJS += $(OBJDIR)/platform/sh4zam_skin.o $(OBJDIR)/platform/shz_xmtrx_skin_sh4.o
+$(OBJDIR)/platform/sh4zam_skin.o: platform/sh4zam_skin.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 $(SH4ZAM_INC) -DRE4DC_SKIN_SH4ZAM_CHECK=$(SKIN_SH4ZAM_CHECK) -MMD -MP -c $< -o $@
+$(OBJDIR)/platform/shz_xmtrx_skin_sh4.o: $(SH4ZAM_DIR)/source/sh4/shz_xmtrx_skin_sh4.s
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) -c $< -o $@
+ifeq ($(SKIN_SH4ZAM_CHECK),1)
+PLATFORM_OBJS += $(OBJDIR)/platform/shz_xmtrx_sw.o
+$(OBJDIR)/platform/shz_xmtrx_sw.o: $(SH4ZAM_DIR)/source/sw/shz_xmtrx_sw.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 $(SH4ZAM_INC) -MMD -MP -c $< -o $@
+endif
+endif
 # The objects that include SH4ZAM must leave no shz_ symbol undefined: nothing links libsh4zam.a (SH4ZAM_DIR above).
 ifeq ($(SH4ZAM_ON),1)
 SH4ZAM_OBJS := $(if $(filter 1,$(SH4_APPROX_ON)),$(OBJDIR)/platform/sh4_approx.o) \
