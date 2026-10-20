@@ -524,6 +524,12 @@ struct View {
 };
 View views[kViews];
 Re4dcStaticStats stats{};
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+// SCN_CENSUS=1 (logiclod20.mk; test only): per meshlet drawn by meshlet(): visits, corners, corners of meshlets none of
+// whose strips reached the screen (all culled after the transform), strips emitted / culled, triangles emitted, plus the
+// strip-group corner skips; one "scnc:" line every 120 frames (sums over those frames).
+unsigned scn_cen[10];
+#endif
 unsigned last_log_frame=~0U;
 
 unsigned view_index(int block){return block<0?0U:unsigned(block)+1U;}
@@ -2259,6 +2265,16 @@ struct MeshDraw : Emitter {
     // the same three outcomes, in the same order, as Emitter::strip().
     int meshlet(const re4dc::room::Meshlet& l,const re4dc::room::CompactBatch& batch){
         namespace vp=re4dc::vp;
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+        struct CenScope {
+            const Emitter* e;unsigned n,s0,c0,o0,v0;
+            ~CenScope(){
+                const unsigned es=stats.strips-s0,cs=stats.strips_culled-c0;
+                scn_cen[0]++;scn_cen[1]+=n;if(!es)scn_cen[2]+=n;scn_cen[3]+=es;scn_cen[4]+=cs;scn_cen[5]+=e->output-o0;
+                if(!es && cs)scn_cen[6]++;
+            }
+        } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
+#endif
         const float bmin[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
         const float bmax[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
         // RE4DC_MESH_CLASSIFY=0 (default) saves ~1.5 KiB of image, i.e. KOS heap,
@@ -2762,6 +2778,16 @@ struct MeshDraw : Emitter {
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
         const auto& l=package.meshlets()[pk.let];
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+        struct CenScope {
+            const Emitter* e;unsigned n,s0,c0,o0,v0;
+            ~CenScope(){
+                const unsigned es=stats.strips-s0,cs=stats.strips_culled-c0;
+                scn_cen[0]++;scn_cen[1]+=n;if(!es)scn_cen[2]+=n;scn_cen[3]+=es;scn_cen[4]+=cs;scn_cen[5]+=e->output-o0;
+                if(!es && cs)scn_cen[6]++;
+            }
+        } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
+#endif
         const auto* base=corners(l);
         const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
         if(l.vertex_count>primed){vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
@@ -5442,6 +5468,13 @@ int ps2_pass(unsigned pass,float zfar){
     lean::prime_at=nullptr;lean::primed=0; // bit 4: the prime holds within this pass only
     if(!pass){
         const unsigned f=re4dc_ui_frame();
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+        if(!(f%120)){
+            re4dc_log("scnc: frame=%u meshlets=%u corners=%u corners_no_strip=%u strips=%u strips_culled=%u tris=%u all_culled_meshlets=%u sg_vskip=%u\n",
+                f,scn_cen[0],scn_cen[1],scn_cen[2],scn_cen[3],scn_cen[4],scn_cen[5],scn_cen[6],lean::st.sg_vskip);
+            for(unsigned& x:scn_cen)x=0;
+        }
+#endif
         if(!(f%120))re4dc_log("PS2LEAN frame=%u mode=%u pre_culled=%u pl_inside=%u cl_inside=%u skipped=%u prime_reuse=%u check_bad=%u prime_bad=%u dyn_fast=%u class_diff=%u sg_tests=%u sg_culled=%u sg_meshlets=%u sg_vskip=%u\n",
             f,lean::kMode,lean::st.pre_culled,lean::st.pl_inside,lean::st.cl_inside,lean::st.skipped,lean::st.prime_reuse,
             lean::st.check_bad,lean::st.prime_bad,lean::st.dyn_fast,lean::st.class_diff,lean::st.sg_tests,lean::st.sg_culled,
