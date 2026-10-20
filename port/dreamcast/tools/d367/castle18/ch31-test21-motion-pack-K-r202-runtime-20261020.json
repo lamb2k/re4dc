@@ -905,6 +905,907 @@
       "All four observed cold keys form81376B temporalunion, above64832B backing. Individual sampledsubsets fit;0.2s observations do not establish per-tick concurrentco-use.",
       "No existing per-tick request trace: MOTION_USAGE_LOG0. No instrumented rerun or guestwrites. Shared budget/policy successor belongs to root.",
       "Same K healthy checkpoint retained; J stays immutable. No new room-specific asset/profile patch. Prior12postpreloadtextureupload gap remains open; sparse05 checker output does not close it."
-    ]
+    ],
+    "same_frame_alive_motion_proxy_audit": {
+      "scope": "Read-only same immutable K05 sourceframe. Exact cModel.Motion@1D8/pMot@0/blend@D0/Brate@C8 fields mapped by native_motion_acquire exact archive+record.offset equality. Headers establish actor logical body/blend identities, not a captured per-tick call trace; blend requires nonzero weight per source MotionMove. No new fixture or instrumented rerun.",
+      "state_sha256": "bc758ad5a77145742d0c6e440b3810a6d4c0207beffb8b34986128e425f22046",
+      "source_frame": 6925,
+      "phase": [
+        3,
+        0
+      ],
+      "stop": "0x0",
+      "em_mgr_alive_head": "0x8cd78fa0",
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb85980",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "bounded": 0
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cce6760",
+          "bytes": 423136,
+          "count": 58,
+          "budget": 50880,
+          "bounded": 1
+        }
+      ],
+      "actors": [
+        {
+          "actor": "0x8cd78fa0",
+          "id": "0x11",
+          "type": 8,
+          "be_flag": "0x2002077",
+          "routines": [
+            1,
+            77,
+            1,
+            0
+          ],
+          "pos": [
+            -9191.7744140625,
+            13377.80078125,
+            -33157.39453125
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cd79178",
+              "header": "0x8cc4df80",
+              "proxy": {
+                "binding": 0,
+                "archive_bytes": 1323136,
+                "entry": 0,
+                "bytes": 22400,
+                "key": "18f9ad45-ba6230e7",
+                "flags": 0
+              },
+              "blend_weight": 0.0,
+              "mot_attr": "0x5",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8ccdf7c0",
+          "id": "0x11",
+          "type": 7,
+          "be_flag": "0x2012077",
+          "routines": [
+            1,
+            72,
+            1,
+            0
+          ],
+          "pos": [
+            -11831.3291015625,
+            13377.80078125,
+            -32132.66796875
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8ccdf998",
+              "header": "0x8cc4df80",
+              "proxy": {
+                "binding": 0,
+                "archive_bytes": 1323136,
+                "entry": 0,
+                "bytes": 22400,
+                "key": "18f9ad45-ba6230e7",
+                "flags": 0
+              },
+              "blend_weight": 0.0,
+              "mot_attr": "0x5",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8ccde9e0",
+          "id": "0x11",
+          "type": 7,
+          "be_flag": "0x2002077",
+          "routines": [
+            1,
+            19,
+            9,
+            0
+          ],
+          "pos": [
+            6322.267578125,
+            3073.17919921875,
+            -23822.029296875
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8ccdebb8",
+              "header": "0x8ccc7040",
+              "proxy": {
+                "binding": 0,
+                "archive_bytes": 1323136,
+                "entry": 152,
+                "bytes": 32416,
+                "key": "902bff70-ad8d96a1",
+                "flags": 0
+              },
+              "blend_weight": 0.0,
+              "mot_attr": "0x1",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb5fbe0",
+          "id": "0x11",
+          "type": 7,
+          "be_flag": "0x2002077",
+          "routines": [
+            1,
+            19,
+            1,
+            0
+          ],
+          "pos": [
+            12812.455078125,
+            3073.18017578125,
+            -22623.794921875
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb5fdb8",
+              "header": "0x8cc5d640",
+              "proxy": {
+                "binding": 0,
+                "archive_bytes": 1323136,
+                "entry": 86,
+                "bytes": 17408,
+                "key": "ba4d09f9-27cc4d48",
+                "flags": 0
+              },
+              "blend_weight": 0.0,
+              "mot_attr": "0x5",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb5ee00",
+          "id": "0x43",
+          "type": 0,
+          "be_flag": "0x200686f",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -5015.94482421875,
+            10613.8623046875,
+            -20010.263671875
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb5efd8",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb5db40",
+          "id": "0x43",
+          "type": 0,
+          "be_flag": "0x200686f",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -5412.44921875,
+            9814.5966796875,
+            -20010.263671875
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb5dd18",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb5cd60",
+          "id": "0x43",
+          "type": 3,
+          "be_flag": "0x200686f",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            23555.267578125,
+            3018.529052734375,
+            -28395.3125
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb5cf38",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb5baa0",
+          "id": "0x43",
+          "type": 3,
+          "be_flag": "0x200686f",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            24139.85546875,
+            3018.529052734375,
+            -27471.2890625
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb5bc78",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb5acc0",
+          "id": "0x43",
+          "type": 3,
+          "be_flag": "0x200686f",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            23894.705078125,
+            3018.529052734375,
+            -25924.96484375
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb5ae98",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb59a00",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            1305.7139892578125,
+            15004.2353515625,
+            -13838.3759765625
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb59bd8",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb58c20",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -10190.2041015625,
+            14772.30859375,
+            -29001.830078125
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb58df8",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb57960",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            19107.56640625,
+            15010.123046875,
+            -45999.23828125
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb57b38",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb56b80",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            2245.321044921875,
+            14671.3642578125,
+            -45630.984375
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb56d58",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb54620",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            21715.84375,
+            11119.9833984375,
+            -58018.33203125
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb547f8",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb53840",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            20240.921875,
+            5751.4189453125,
+            -22418.087890625
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb53a18",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb52580",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            13140.671875,
+            11379.71484375,
+            -44122.57421875
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb52758",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb517a0",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            7575.908203125,
+            11436.5380859375,
+            -44146.66015625
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb51978",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb504e0",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            18293.69921875,
+            12416.0498046875,
+            -22043.7421875
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb506b8",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb4f700",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            11327.294921875,
+            4782.47314453125,
+            -24033.68359375
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb4f8d8",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb4e160",
+          "id": "0x47",
+          "type": 0,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -5723.52294921875,
+            1778.8489990234375,
+            1507.5999755859375
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb4e338",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb4d380",
+          "id": "0x48",
+          "type": 0,
+          "be_flag": "0x200686f",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            3754.568115234375,
+            13338.927734375,
+            -49945.3515625
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb4d558",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb4bb00",
+          "id": "0x48",
+          "type": 0,
+          "be_flag": "0x200686f",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -9254.7158203125,
+            13338.927734375,
+            -29576.17578125
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb4bcd8",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cb4ad20",
+          "id": "0x48",
+          "type": 0,
+          "be_flag": "0x200686f",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            2339.131103515625,
+            13253.5419921875,
+            -13750.89453125
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cb4aef8",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cabb860",
+          "id": "0x47",
+          "type": 4,
+          "be_flag": "0x2006867",
+          "routines": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -8746.4453125,
+            10500.4658203125,
+            -20148.54296875
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cabba38",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cabaa80",
+          "id": "0x0",
+          "type": 0,
+          "be_flag": "0xb002077",
+          "routines": [
+            0,
+            3,
+            3,
+            4
+          ],
+          "pos": [
+            11190.095703125,
+            -0.00341796875,
+            -7406.9345703125
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cabac58",
+              "header": "0x8c75cde0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x5",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cce5940",
+          "id": "0x3",
+          "type": 0,
+          "be_flag": "0x2002077",
+          "routines": [
+            0,
+            1,
+            3,
+            1
+          ],
+          "pos": [
+            10148.978515625,
+            -0.0025634765625,
+            -7508.06982421875
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cce5b18",
+              "header": "0x8cd39920",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x2004",
+              "mot_flag": "0x0",
+              "blend": "0x8cce5d94"
+            },
+            {
+              "kind": "blend",
+              "work": "0x8cce5d94",
+              "header": "0x8cd3ad00",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x4",
+              "mot_flag": "0x88000000",
+              "blend": "0x8cb56574"
+            },
+            {
+              "kind": "blend",
+              "work": "0x8cb56574",
+              "header": "0x8c2ce920",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0xc4277800",
+              "blend": "0x0"
+            }
+          ]
+        },
+        {
+          "actor": "0x8cce4b60",
+          "id": "0x4a",
+          "type": 0,
+          "be_flag": "0x2002067",
+          "routines": [
+            1,
+            2,
+            0,
+            0
+          ],
+          "pos": [
+            0.0,
+            8.0,
+            -24.0
+          ],
+          "works": [
+            {
+              "kind": "body",
+              "work": "0x8cce4d38",
+              "header": "0x0",
+              "proxy": null,
+              "blend_weight": 0.0,
+              "mot_attr": "0x0",
+              "mot_flag": "0x0",
+              "blend": "0x0"
+            }
+          ]
+        }
+      ],
+      "em11_active_proxy_keys": [
+        {
+          "binding": 0,
+          "archive_bytes": 1323136,
+          "entry": 0,
+          "bytes": 22400,
+          "key": "18f9ad45-ba6230e7",
+          "flags": 0
+        },
+        {
+          "binding": 0,
+          "archive_bytes": 1323136,
+          "entry": 152,
+          "bytes": 32416,
+          "key": "902bff70-ad8d96a1",
+          "flags": 0
+        },
+        {
+          "binding": 0,
+          "archive_bytes": 1323136,
+          "entry": 86,
+          "bytes": 17408,
+          "key": "ba4d09f9-27cc4d48",
+          "flags": 0
+        }
+      ],
+      "em11_active_proxy_bytes": 72224
+    },
+    "same_frame_body_demand_lower_bound": {
+      "entries": [
+        0,
+        152,
+        86
+      ],
+      "bytes": 72224,
+      "backing": 64832,
+      "shortfall": 7392,
+      "source_frame": 6925,
+      "interpretation": "Same-frame live assigned body MotionData proxies already exceed backing. This establishes an ownership/budget boundary without requiring key6 or simultaneous leases; actual per-tick request-call trace is not captured."
+    }
   }
 }
