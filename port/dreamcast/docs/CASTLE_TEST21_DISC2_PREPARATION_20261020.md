@@ -117,3 +117,13 @@ and zero extra ambient. Under PL_ASHLEY the source group is now1 only for the
 already validated currentpPL model0/141-joint owner. No model or gameplay
 field is changed, and every other material/modifier/color check remains.
 A fresh target run is still required.
+
+
+Fresh c21hmW passes the source TEV check and matches all7 role certificates,
+but refuses Capability13 (requiredff). The existing PS2_ASHLEY2 rest-face
+capability was assigned only to partner model3. The exact typed currentPL1
+descriptor now receives the same Bump/Morph implementation contract after its
+face BIN7/TPL9, live modifiers and mask/material runs have been proved.
+This is the inherited PS2 rest-face approximation; facial morph expressions
+are not claimed equivalent to the source. No general Morph bypass is added.
+A fresh target draw check remains required.

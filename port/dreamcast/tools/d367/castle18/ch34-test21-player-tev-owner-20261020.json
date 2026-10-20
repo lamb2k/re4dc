@@ -21,5 +21,15 @@
   "material_decline": "LiveModifier11/role0; existing group helper expected0 for registry player",
   "source_contract": "src/game/pl_ashley.cpp:105 TevScaleGroup=1",
   "repair": "Under existing PL_ASHLEY, require sourcegroup1 only for already validated currentpPL model0/141; all other modifiers/certificates unchanged",
-  "target_rerun_pending": true
+  "target_rerun_pending": true,
+  "target_H_followup": {
+    "program": "c21hmW",
+    "elapsed_s": 50.9,
+    "errors": [],
+    "matched_roles": 7,
+    "material_decline": "Capability13/requiredff; typedplayerMorph16 implementation omitted",
+    "repair": "Same existing PS2_ASHLEY2 rest-face contract only exact typedcurrentPL1; completeface/material/run proof remainsmandatory",
+    "source_facial_expression_equivalence_claim": false,
+    "target_rerun_pending": true
+  }
 }
