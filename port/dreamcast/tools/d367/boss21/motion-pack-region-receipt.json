@@ -48,7 +48,7 @@
     ],
     "variants": 7
   },
-  "target_object": "PENDING",
+  "target_object": "PASS actual Makefile SH4 defaultPACK0 identity; PACK1 text+258/data0/BSS0 versus prior54be",
   "full_program_gameplay": "PENDING",
   "console": "NOT RUN",
   "observed_QA20_set": {
@@ -74,5 +74,6 @@
     },
     "with_later_back93_temporal_union": 73696,
     "four_key_concurrency": "UNPROVEN, exceeds reserved backing"
-  }
+  },
+  "target_bindings_bytes": 192
 }
