@@ -14,6 +14,7 @@
 #include <dc/maple/controller.h>
 #include <dc/video.h>
 #include <arch/timer.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
@@ -24,7 +25,20 @@ int re4dc_fixture_read(const char* path, char* buffer, unsigned size);
 void __real_OSInit(void);
 int re4dc_quality_speed(void);      // platform/quality.cpp: 0 off, 1 VMU, 2 screen, 3 both
 void re4dc_speed_cycle(void);       // pace.cpp
+// Diagnostics sources; weak: a build without the knob shows "N/A" for that row.
+int re4dc_qa_speed(unsigned v[3]) __attribute__((weak));                                       // pace.cpp
+int re4dc_tick_log_snapshot(const char** name, unsigned* avg_us, unsigned* max_us, int max, unsigned* seq)
+    __attribute__((weak));                                                                     // tick_log.cpp
+void re4dc_kos_heap_state(unsigned* free_chunks, unsigned* used, unsigned* break_room) __attribute__((weak));
+void re4dc_vram_pages_census(unsigned* out) __attribute__((weak));                             // vram_pages.cpp
+void re4dc_disc_meter_totals(unsigned* reads, unsigned long long* bytes, unsigned long long* block_us)
+    __attribute__((weak));                                                                     // dvd_read_safe.cpp
+extern unsigned long re4dc_fx_esp_live[32] __attribute__((weak));                            // esp.cpp (FX_SCAN)
+extern volatile unsigned re4dc_qa_shore_far_mm __attribute__((weak));                      // native_static.cpp (LAKE_FAR)
+extern volatile unsigned long re4dc_log_head;                                                  // platform/mem.cpp
+extern char re4dc_logbuf[0x10000];
 }
+#include "third_party/qrcodegen/qrcodegen.h"
 
 namespace {
 constexpr uint32_t kWhite = 0xFFFFFF, kYellow = 0xFFE040, kGrey = 0x909090, kCyan = 0x60E0FF, kRed = 0x900000,
@@ -174,19 +188,162 @@ void load_presets() {
     re4dc_log("qa: %d presets in %d chapters\n", g_np, g_nch);
 }
 
+// ---------------------------------------------------------------- diagnostics
+// The game side (dbgwarp_bridge.cpp qa_poll, at menu open): room, Ganados alive, heap 4 free, preset name.
+struct QaGame { unsigned room; int alive, heap4; char preset[24]; };
+QaGame g_game;
+char g_diag[3072];             // the snapshot: "key=value" lines, then LOG and the last log lines
+int g_diag_len, g_diag_stats;  // bytes, bytes before LOG
+constexpr int kLogLines = 20, kLogCols = 96;
+char g_log[kLogLines][kLogCols + 1];
+int g_nlog;
+
+void snap_log() {   // the last kLogLines lines of the RAM log ring (platform/mem.cpp), oldest first
+    const unsigned long head = re4dc_log_head;
+    const unsigned long size = sizeof(re4dc_logbuf);
+    const unsigned long avail = head < size ? head : size;
+    unsigned long end = head, p = head;
+    int n = 0;
+    char tmp[kLogLines][kLogCols + 1];
+    if (p && re4dc_logbuf[(p - 1) % size] == '\n') { --p; end = p; }
+    while (n < kLogLines && head - p < avail) {
+        unsigned long s = p;
+        while (head - s < avail && s > 0 && re4dc_logbuf[(s - 1) % size] != '\n') --s;
+        unsigned long len = end - s;
+        if (len > kLogCols) len = kLogCols;
+        for (unsigned long i = 0; i < len; ++i) {
+            const char c = re4dc_logbuf[(s + i) % size];
+            tmp[n][i] = c >= 32 && c < 127 ? c : ' ';
+        }
+        tmp[n][len] = 0;
+        ++n;
+        if (s == 0 || head - s >= avail) break;
+        p = s - 1; end = p;
+    }
+    g_nlog = n;
+    for (int i = 0; i < n; ++i) memcpy(g_log[i], tmp[n - 1 - i], sizeof(g_log[i]));
+}
+
+int addf(int at, const char* fmt, ...) __attribute__((format(printf, 2, 3)));
+int addf(int at, const char* fmt, ...) {
+    if (at >= (int) sizeof(g_diag) - 1) return at;
+    va_list ap;
+    va_start(ap, fmt);
+    const int k = vsnprintf(g_diag + at, sizeof(g_diag) - at, fmt, ap);
+    va_end(ap);
+    return k < 0 ? at : (at + k >= (int) sizeof(g_diag) ? (int) sizeof(g_diag) - 1 : at + k);
+}
+
+void snap_diag() {
+    int a = 0;
+    a = addf(a, "RE4DCQA1\nbuild=%s\nroom=%03x preset=%s\n", RE4DC_QA_NAME, g_game.room,
+             g_game.preset[0] ? g_game.preset : "-");
+    unsigned v[3];
+    if (re4dc_qa_speed && re4dc_qa_speed(v)) a = addf(a, "fps=%u.%u speed=%u cpu=%u\n", v[0] / 10, v[0] % 10, v[1], v[2]);
+    else a = addf(a, "fps=NA\n");
+    if (re4dc_tick_log_snapshot) {
+        const char* nm[32]; unsigned avg[32]; unsigned seq = 0;
+        const int n = re4dc_tick_log_snapshot(nm, avg, nullptr, 32, &seq);
+        auto get = [&](const char* k) -> unsigned { for (int i = 0; i < n; ++i) if (nm[i] && !strcmp(nm[i], k)) return avg[i]; return 0u; };
+        const unsigned logic = get("logic"), em = get("EspMove"), et = get("EspTrans");
+        const unsigned objs = get("objTrans") + get("ShadowTrans") + get("MirrorTrans") + get("ClothTrans");
+        const unsigned trans = get("trans"), post = get("post"), cpu = get("cpu"), remain = get("remain"), total = get("total");
+        const unsigned other = trans > et + objs ? trans - et - objs : 0;
+        const unsigned draw = remain > cpu ? remain - cpu : 0, wait = total > remain ? total - remain : 0;
+        auto ms = [](unsigned us) { return (us + 50) / 100; };   // 0.1 ms
+        a = addf(a, "ms10 logic=%u fx=%u models=%u scenery=%u post=%u draw=%u wait=%u total=%u\n",
+                 ms(logic > em ? logic - em : 0), ms(em + et), ms(objs), ms(other), ms(post), ms(draw), ms(wait), ms(total));
+    } else a = addf(a, "ms10=NA\n");
+    a = addf(a, "heap4=%d\n", g_game.heap4);
+    if (re4dc_kos_heap_state) { unsigned f = 0, u = 0, b = 0; re4dc_kos_heap_state(&f, &u, &b); a = addf(a, "kos free=%u used=%u brk=%u\n", f, u, b); }
+    if (re4dc_vram_pages_census) { unsigned o[16] = {0}; re4dc_vram_pages_census(o); a = addf(a, "vram free=%u big=%u fails=%u\n", o[3], o[4], o[10]); }
+    if (re4dc_disc_meter_totals) {
+        unsigned r = 0; unsigned long long by = 0, bl = 0;
+        re4dc_disc_meter_totals(&r, &by, &bl);
+        a = addf(a, "disc reads=%u kb=%u blocked_ms=%u\n", r, (unsigned) (by >> 10), (unsigned) (bl / 1000));
+    } else a = addf(a, "disc=NA\n");
+    a = addf(a, "ganados_alive=%d\n", g_game.alive);
+    if (re4dc_fx_esp_live) {
+        unsigned n = 0;
+        for (int i = 0; i < 32; ++i) n += (unsigned) __builtin_popcountl(re4dc_fx_esp_live[i]);
+        a = addf(a, "fx_live=%u\n", n);
+    }
+    g_diag_stats = a;
+    snap_log();
+    a = addf(a, "LOG\n");
+    for (int i = 0; i < g_nlog; ++i) a = addf(a, "%.72s\n", g_log[i]);
+    g_diag_len = a;
+}
+
+// QR pages: each page is "RE4DCQA <p>/<n>\n" + a slice of g_diag (ECC high, version <= 23: 109 modules, 4 px each).
+constexpr int kQrChunk = 300, kQrMaxVer = 23;
+int qr_pages() { return (g_diag_len + kQrChunk - 1) / kQrChunk; }
+void draw_qr(const Fb& fb, int page) {
+    static uint8_t qr[qrcodegen_BUFFER_LEN_FOR_VERSION(kQrMaxVer)], tmp[qrcodegen_BUFFER_LEN_FOR_VERSION(kQrMaxVer)];
+    char text[kQrChunk + 32];
+    const int n = qr_pages();
+    const int off = page * kQrChunk, len = g_diag_len - off < kQrChunk ? g_diag_len - off : kQrChunk;
+    const int h = snprintf(text, sizeof(text), "RE4DCQA %d/%d\n", page + 1, n);
+    memcpy(text + h, g_diag + off, len);
+    text[h + len] = 0;
+    fb_fill(fb, 0, 0, fb.w, fb.h, 0xFFFFFF);
+    if (!qrcodegen_encodeText(text, tmp, qr, qrcodegen_Ecc_HIGH, 1, kQrMaxVer, qrcodegen_Mask_AUTO, false)) {
+        fb_center(fb, 200, 2, 3, 0x000000, "QR ENCODE FAILED");
+        return;
+    }
+    const int size = qrcodegen_getSize(qr);
+    int px = (fb.h - 16) / (size + 4);
+    if (px > 8) px = 8;
+    const int x0 = 24 + 2 * px, y0 = (fb.h - size * px) / 2;
+    for (int y = 0; y < size; ++y)
+        for (int x = 0; x < size; ++x)
+            if (qrcodegen_getModule(qr, x, y)) fb_fill(fb, x0 + x * px, y0 + y * px, px, px, 0x000000);
+    char buf[48];
+    const int tx = x0 + size * px + 3 * px;
+    snprintf(buf, sizeof(buf), "PAGE %d/%d", page + 1, n);
+    fb_text(fb, tx, 60, 2, 3, 0x000000, buf);
+    fb_text(fb, tx, 100, 1, 2, 0x000000, "X: NEXT PAGE");
+    fb_text(fb, tx, 120, 1, 2, 0x000000, "B: BACK");
+    fb_text(fb, tx, 160, 1, 2, 0x000000, "PHOTO EACH PAGE");
+}
+void draw_diag(const Fb& fb) {
+    fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
+    fb_fill(fb, 20, 8, fb.w - 40, 22, kRed);
+    fb_center(fb, 12, 1, 2, kWhite, RE4DC_QA_NAME " - DIAGNOSTICS (GAME PAUSED)");
+    int y = 38;
+    for (int i = 0; i < g_diag_stats;) {   // the stats, one row each (after the first line)
+        int j = i;
+        while (j < g_diag_stats && g_diag[j] != '\n') ++j;
+        if (i) {
+            char row[100];
+            int k = j - i < 99 ? j - i : 99;
+            memcpy(row, g_diag + i, k); row[k] = 0;
+            fb_text(fb, 30, y, 1, 2, kCyan, row);
+            y += 16;
+        }
+        i = j + 1;
+    }
+    y += 4;
+    fb_text(fb, 30, y, 1, 2, kYellow, "LAST LOG LINES"); y += 16;
+    for (int i = 0; i < g_nlog && y < fb.h - 36; ++i) {
+        char row[100];
+        snprintf(row, sizeof(row), "%.100s", g_log[i]);
+        fb_text(fb, 30, y, 1, 1, kWhite, row);
+        y += 10;
+    }
+    fb_text(fb, 30, fb.h - 26, 1, 2, kGrey, "X: QR SNAPSHOT (PHOTO IT)   B: BACK");
+}
+
 // ---------------------------------------------------------------- menu
-enum { M_MAIN, M_CHAP, M_PRE };
-enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL };
+enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
+enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE };
 struct Menu {
     bool boot;
-    int screen, sel[3], chap;
-    int items[10], nitems;
+    int screen, sel[5], chap, qr_page;
+    int items[12], nitems;
 };
 const char* onoff(unsigned bit) { return (g_flags & bit) ? "ON" : "OFF"; }
-const char* speed_name() {
-    static const char* const k[4] = {"OFF", "VMU", "SCREEN", "VMU + SCREEN"};
-    return k[re4dc_quality_speed() & 3];
-}
+const char* speed_name() { return (re4dc_quality_speed() & 2) ? "ON" : "OFF"; }
 void item_text(int a, char* out, unsigned n) {
     switch (a) {
     case A_RESUME: snprintf(out, n, "RESUME"); break;
@@ -198,6 +355,8 @@ void item_text(int a, char* out, unsigned n) {
     case A_ENEMY: snprintf(out, n, "ENEMIES INVINCIBLE: %s", onoff(4)); break;
     case A_SPEED: snprintf(out, n, "SPEED DISPLAY: %s", speed_name()); break;
     case A_TITLE: snprintf(out, n, "QUIT TO THE TITLE SCREEN"); break;
+    case A_DIAG: snprintf(out, n, "DIAGNOSTICS"); break;
+    case A_SHORE: snprintf(out, n, "LAKE SHORE VIEW: %s", &re4dc_qa_shore_far_mm && re4dc_qa_shore_far_mm ? "30 M" : "45 M"); break;
     default: out[0] = 0;
     }
 }
@@ -207,7 +366,17 @@ int presets_of(int ch, int* idx) {
         if (g_p[i].ch == ch) idx[n++] = i;
     return n;
 }
+void draw_screen(const Fb& fb, const Menu& m);
+// The screen, then a log line with the framebuffer for the harness captures (capture_ui_vram.py reads "fb=front,back" as
+// KOS pointers: 0xa5000000 + 2 x the display offset).
 void draw(const Fb& fb, const Menu& m) {
+    draw_screen(fb, m);
+    const unsigned long ptr = 0xa5000000ul + 2ul * ((unsigned long) fb.base & 0x007FFFFFul);
+    re4dc_log("qa: screen %d fb=%08lx,%08lx\n", m.screen, ptr, ptr);
+}
+void draw_screen(const Fb& fb, const Menu& m) {
+    if (m.screen == M_DIAG) { draw_diag(fb); return; }
+    if (m.screen == M_QR) { draw_qr(fb, m.qr_page); return; }
     fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
     fb_fill(fb, 20, 14, fb.w - 40, 44, kRed);
     fb_center(fb, 20, 2, 3, kWhite, RE4DC_QA_NAME);
@@ -288,10 +457,17 @@ int run(Menu& m, bool boot) {
         if (press & CONT_B) {
             dirty = true;
             if (m.screen == M_PRE) m.screen = M_CHAP;
-            else if (m.screen == M_CHAP) m.screen = M_MAIN;
+            else if (m.screen == M_QR) m.screen = M_DIAG;
+            else if (m.screen == M_CHAP || m.screen == M_DIAG) m.screen = M_MAIN;
             else if (!boot) return A_RESUME;
         }
         if ((press & CONT_START) && m.screen == M_MAIN && !boot) return A_RESUME;
+        if ((press & CONT_X) && (m.screen == M_DIAG || m.screen == M_QR)) {
+            m.qr_page = m.screen == M_QR ? (m.qr_page + 1) % qr_pages() : 0;
+            m.screen = M_QR;
+            dirty = true;
+            re4dc_log("qa: diagnostics QR page %d/%d\n", m.qr_page + 1, qr_pages());
+        }
         if ((press & CONT_A) && n) {
             dirty = true;
             if (m.screen == M_CHAP) { m.chap = s; m.screen = M_PRE; m.sel[M_PRE] = 0; }
@@ -305,7 +481,12 @@ int run(Menu& m, bool boot) {
                 else if (a == A_LEON) g_flags ^= 1;
                 else if (a == A_PARTNER) g_flags ^= 2;
                 else if (a == A_ENEMY) g_flags ^= 4;
-                else if (a == A_SPEED) re4dc_speed_cycle();
+                else if (a == A_SPEED) {   // until the on-screen bit changes (SPEED_VMU_OFF reads VMU as off)
+                    const int was = re4dc_quality_speed() & 2;
+                    for (int k = 0; k < 4 && (re4dc_quality_speed() & 2) == was; ++k) re4dc_speed_cycle();
+                }
+                else if (a == A_DIAG) { snap_diag(); m.screen = M_DIAG; }
+                else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
                 else return a;
                 if (a >= A_LEON && a <= A_ENEMY) re4dc_log("qa: toggles %x\n", (unsigned) g_flags);
             }
@@ -334,14 +515,52 @@ int re4dc_qa_combo(void) {
 }
 
 unsigned re4dc_qa_flags(void) { return g_flags; }
+void re4dc_qa_set_flags(unsigned f) { g_flags = f & 7; }
+
+// The game side of the Diagnostics page (dbgwarp_bridge.cpp, at menu open).
+void re4dc_qa_game(unsigned room, int alive, int heap4, const char* preset) {
+    g_game.room = room; g_game.alive = alive; g_game.heap4 = heap4;
+    strncpy(g_game.preset, preset ? preset : "", sizeof(g_game.preset) - 1);
+}
+
+// Harness (`qa_menu` / `qa_diag` warp lines): the menu drawn once, the Diagnostics page and its QR pages held for
+// hold_ms each (captures), then a teleport to /cd/dc/qa/<file> (file empty: resume).
+int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms) {
+    static Menu m;
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, A_TITLE};
+    m.nitems = 10;
+    memcpy(m.items, items, sizeof(items));
+    load_presets();
+    m.screen = M_MAIN;
+    draw(fb_displayed(), m);
+    spin_us(500000);
+    if (hold_ms) {
+        snap_diag();
+        m.screen = M_DIAG;
+        draw(fb_displayed(), m);
+        re4dc_log("qa: auto diagnostics (%d bytes, %d QR pages)\n", g_diag_len, qr_pages());
+        for (unsigned t = 0; t < hold_ms; t += 16) spin_us(16000);
+        for (int pg = 0; pg < qr_pages(); ++pg) {
+            m.screen = M_QR; m.qr_page = pg;
+            draw(fb_displayed(), m);
+            re4dc_log("qa: auto QR page %d/%d\n", pg + 1, qr_pages());
+            for (unsigned t = 0; t < hold_ms; t += 16) spin_us(16000);
+        }
+    }
+    if (!file || !file[0]) return 0;
+    snprintf(g_path, sizeof(g_path), "/cd/dc/qa/%s", file);
+    re4dc_log("qa: auto teleport %s\n", g_path);
+    *path = g_path;
+    return 1;
+}
 
 // In-game menu (the warp rig's poll, frame loop stopped). 0 resume, 1 teleport (*path), 2 title, 3 refill health.
 int re4dc_qa_menu(const char** path) {
     static Menu m;
     m.boot = false;
     if (m.screen != M_MAIN) m.screen = M_MAIN;
-    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE};
-    m.nitems = 8;
+    const int items[] = {A_RESUME, A_TELEPORT_MENU, A_DIAG, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_SHORE, A_TITLE};
+    m.nitems = 10;
     memcpy(m.items, items, sizeof(items));
     re4dc_log("qa: menu open\n");
     const int a = run(m, false);

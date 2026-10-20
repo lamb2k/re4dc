@@ -128,6 +128,9 @@ const char* re4dc_qa_boot_path(void);   // qa_menu.cpp (qamenu.mk QA_MENU)
 int re4dc_qa_combo(void);
 unsigned re4dc_qa_flags(void);
 int re4dc_qa_menu(const char** path);
+int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms);
+void re4dc_qa_game(unsigned room, int alive, int heap4, const char* preset);
+void re4dc_qa_set_flags(unsigned f);
 void re4dc_qa_in_room(int on);
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
@@ -322,6 +325,13 @@ const char* qa_next;
 bool qa_pending;
 unsigned qa_frames;     // free-play poll frames in the current room (the menu opens from 30 on)
 bool qa_enemy_on;       // enemies invincible was on last frame (off again: hp back to hp_max)
+// Harness lines (a fixture in dc/warp.txt; the QA disc has none): `qa_flags <mask>` sets the toggles, `qa_menu <free
+// frame> <preset file | -> [hold ms]` opens the in-game menu at that free-play frame, with hold ms also shows the
+// Diagnostics page and each QR page for that long (captures), then teleports to /cd/dc/qa/<file> (`-`: resumes):
+// the menu -> soft reset -> preset chain without pad input.
+unsigned qa_auto_frame, qa_auto_hold;
+char qa_auto_file[24];
+bool qa_auto_armed;
 void load(const char* path = nullptr)
 #else
 void load()
@@ -667,6 +677,18 @@ void load()
             re4dc_mist_cut = num(tok[1]);
             re4dc_log("warp: mistcut %u (CAP_COMPARE translucency arm)\n", re4dc_mist_cut);
 #endif
+#endif
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+        } else if (!strcmp(k, "qa_flags") && n >= 2) {
+            re4dc_qa_set_flags(num(tok[1]));
+            re4dc_log("warp: qa_flags %x\n", (unsigned) num(tok[1]));
+        } else if (!strcmp(k, "qa_menu") && n >= 3) {
+            qa_auto_frame = num(tok[1]);
+            strncpy(qa_auto_file, strcmp(tok[2], "-") ? tok[2] : "", sizeof(qa_auto_file) - 1);
+            qa_auto_file[sizeof(qa_auto_file) - 1] = 0;
+            qa_auto_hold = n >= 4 ? num(tok[3]) : 0;
+            qa_auto_armed = true;
+            re4dc_log("warp: qa_menu at free frame %u -> %s\n", qa_auto_frame, qa_auto_file);
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
         } else if (!strcmp(k, "bench") && n >= 5) {
@@ -1155,12 +1177,24 @@ bool qa_poll()
     const bool free_play = pPL && pG->Rno0 == 3 && pG->Rno1 == 0 && !(pG->Status_flg[1] & 0x10000000) &&
                            !SubScreenWk.type && !SceSys.event_start_cnt && pPL->checkEvent() == 1;
     qa_frames = free_play ? qa_frames + 1 : 0;
-    if (qa_frames < 30 || !re4dc_qa_combo()) return false;
+    const bool autom = qa_auto_armed && qa_frames >= (qa_auto_frame > 30 ? qa_auto_frame : 30);
+    if (!autom && (qa_frames < 30 || !re4dc_qa_combo())) return false;
     const u32 keep = pG->System_flg & 0x20000000;
     pG->System_flg |= 0x20000000;   // no hang check while the menu holds the frame loop
     const char* path = nullptr;
     int r;
-    while ((r = re4dc_qa_menu(&path)) == 3) {
+    {   // the Diagnostics page's game side
+        int live = 0;
+        for (int id = 0x10; id <= 0x20; ++id)
+            for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e))
+                if ((e->be_flag & 1) && e->hp > 0) ++live;
+        re4dc_qa_game((unsigned) pG->room_id, live, memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1,
+                      wp.name[0] ? wp.name : nullptr);
+    }
+    if (autom) {
+        r = re4dc_qa_menu_auto(qa_auto_file, &path, qa_auto_hold);
+        qa_auto_armed = false;
+    } else while ((r = re4dc_qa_menu(&path)) == 3) {
         pG->pl_life = pG->pl_life_max;
         if (pG->ashley_life_max) pG->ashley_life = pG->ashley_life_max;
         re4dc_log("qa: health refilled\n");

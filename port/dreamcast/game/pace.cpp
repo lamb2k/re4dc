@@ -566,6 +566,15 @@ extern "C" int re4dc_speed_screen(unsigned v[3])
     v[0] = speed_fps10; v[1] = speed_pct; v[2] = speed_cpu;
     return 1;
 }
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+// QA_MENU Diagnostics page (qa_menu.cpp): the last window's values whether or not the counter is shown.
+extern "C" int re4dc_qa_speed(unsigned v[3])
+{
+    if (!speed_valid) return 0;
+    v[0] = speed_fps10; v[1] = speed_pct; v[2] = speed_cpu;
+    return 1;
+}
+#endif
 #endif
 
 #if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN

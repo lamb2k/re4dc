@@ -4,7 +4,7 @@
 Writes <out>/menu.txt and one fixture per preset (<out>/<id>.txt); the disc carries them as /cd/dc/qa/.
 Sources (no new states are invented here):
   - castgc/warps/<room>.txt: the CAST-GC census fixtures (each puts a route room in a play state with its enemies alive);
-  - fullplay/segments/lake-warp.txt: the Del Lago fight (trg 1) and, with its kill line, the night shore after it (#43);
+  - qa20/src/lake-scene1..5.txt: lane lake20's scenario fixtures (t15/int 46fa14ff tools/d367/lake20/scenario);
   - benchpub/scene1-warp.txt: the r101 cross benchmark view; qa20/src/farm-midfight.txt (from scenario19) (r103 farm fight);
   - stage_route.py door entries (dstPos / dstAngle) for route rooms without a census fixture (bare jumps).
 Lines only a measurement needs are dropped (god, alivelog, census, act, kill, bench, alert, dump, stills): the menu's
@@ -18,13 +18,13 @@ DROP = re.compile(r'^(god|alivelog|census|act|act_clock|kill|killrep|killnear|ki
                   r'shot|quit|stop|viewdist|face|bring|handpose|lookstep|charbake|lodat|late|name)\b')
 
 
-def fixture(src, keep_kill=False):
+def fixture(src, keep_kill=False, keep=()):
     out = []
     for l in (D / src).read_text().splitlines():
         s = l.split('#', 1)[0].strip()
         if not s:
             continue
-        if keep_kill and re.match(r'^(kill)\b', s):
+        if (keep_kill and re.match(r'^(kill)\b', s)) or s.split()[0] in keep:
             out.append(s)
             continue
         if DROP.match(s):
@@ -50,7 +50,6 @@ def main():
                        stdout=subprocess.DEVNULL)
     sr = json.load(open(sr1))['rooms']
     cg = lambda r: fixture('castgc/warps/%s.txt' % r)
-    lake = 'fullplay/segments/lake-warp.txt'
     # (chapter, [(id, kind, label, lines)])
     menu = [
         ('CHAPTER 1-1: VILLAGE', [
@@ -74,15 +73,15 @@ def main():
             ('r119', 'S', 'R119 EL GIGANTE (FIGHT)', cg('r119')),
         ]),
         ('CHAPTER 1-3: LAKE', [
-            ('r10b', 'S', 'R10B LAKE SHORE, BOAT START', cg('r10b')),
-            ('r10bd', 'S', 'R10B DEL LAGO FIGHT', [l for l in fixture(lake) if not l.startswith('census')]),
-            ('r11bn', 'S', 'R11B NIGHT SHORE AFTER DEL LAGO', fixture(lake, keep_kill=True)),
-            ('r11b', 'S', 'R11B NIGHT SHORE (WALK)', cg('r11b')),
+            ('r10b', 'S', 'R10B LAKE PATH, BOAT START', fixture('qa20/src/lake-scene1.txt')),
+            ('r10bd', 'S', 'R10B DEL LAGO FIGHT', fixture('qa20/src/lake-scene2.txt', keep=('act',))),
             ('r11a', 'S', 'R11A ENTRY', cg('r11a')),
         ]),
-        ('CHAPTER 2-1: DAM', [
-            ('r10c', 'S', 'R10C DAM', cg('r10c')),
-            ('r10d', 'B', 'R10D DAM SIDE ROOM (DOOR ENTRY)', door_entry(sr, 'r10d')),
+        ('CHAPTER 2-1: NIGHT LAKE AND DAM', [
+            ('r11bn', 'S', 'R11B NIGHT SHORE AFTER DEL LAGO', fixture('qa20/src/lake-scene3.txt', keep_kill=True, keep=('god',))),
+            ('r11b', 'S', 'R11B NIGHT SHORE (WALK)', cg('r11b')),
+            ('r10c', 'S', 'R10C DAM', fixture('qa20/src/lake-scene5.txt')),
+            ('r10d', 'S', 'R10D DAM SIDE ROOM', fixture('qa20/src/lake-scene4.txt')),
             ('r10e', 'S', 'R10E DAM', cg('r10e')),
             ('r10f', 'S', 'R10F ENTRY', cg('r10f')),
         ]),
@@ -107,7 +106,7 @@ def main():
             if not body:
                 print('skip %s: no state source' % pid, file=sys.stderr)
                 continue
-            (out / (pid + '.txt')).write_text('\n'.join(['# QA preset %s: %s' % (pid, label)] + body) + '\n')
+            (out / (pid + '.txt')).write_text('\n'.join(['# QA preset %s: %s' % (pid, label), 'name %s' % pid] + body) + '\n')
             lines.append('p %s.txt %s %s' % (pid, kind, label))
     (out / 'menu.txt').write_text('\n'.join(lines) + '\n')
     print('mkqa: %d presets in %s' % (sum(1 for l in lines if l.startswith('p ')), out))

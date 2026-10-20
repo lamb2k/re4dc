@@ -10,6 +10,10 @@
 #   QA name banner on the title, RE4DC_QA_BANNER).
 #   Needs DBG_WARP=1 and WARP_AFTER_RESET=1; not with BENCHMARK=1 (both own the OSInit wrap and the banner).
 #   QA_NAME="RE4DC QA <test> <sha8>" is shown on the boot menu, the in-game menu header and the title banner.
+#   Diagnostics (in-game menu): fps / speed / CPU, phase buckets (PHASE_METER's tick log), heap 4, KOS, VRAM, disc
+#   reads (DISC_READ_METER), Ganados alive, live effect slots, room / preset / build, the last 20 log lines (the log
+#   ring), and X = a QR snapshot of all of it (pages; tools/d367/qa20/decode_qr.py reads a photo).
+#   The QA disc recipe adds GAME_TICK_LOG=60 PACE_VMU_GPU=1 PHASE_METER=1 DISC_READ_METER=1 for the numbers.
 #   Default 0: nothing is compiled or linked; the image is byte-identical with or without this file.
 QA_MENU ?= 0
 # QA_TEST / QA_SRC (no spaces: build-r21.sh passes knobs unquoted) make the name, e.g. QA_TEST=21 QA_SRC=5f26453a.
@@ -49,4 +53,13 @@ $(OBJDIR)/qa_menu.o: qa_menu.cpp $(OBJDIR)/qa_menu.h
 	@mkdir -p $(dir $@)
 	kos-c++ $(KOS_CFLAGS) $(PLATFORM_CPPFLAGS) $(QA_MENU_UI_WRAP) -include $(OBJDIR)/qa_menu.h -MMD -MP -c $< -o $@
 -include $(OBJDIR)/qa_menu.d
+# Diagnostics page QR snapshot: nayuki qrcodegen (third_party/qrcodegen, MIT, vendored unchanged)
+PLATFORM_OBJS += $(OBJDIR)/third_party/qrcodegen/qrcodegen.o
+$(TARGET): $(OBJDIR)/third_party/qrcodegen/qrcodegen.o
+$(OBJDIR)/third_party/qrcodegen/qrcodegen.o: third_party/qrcodegen/qrcodegen.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) -Os -MMD -MP -c $< -o $@
+$(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_QA_MENU=1
+# "Lake shore view: 45 m / 30 m" (LAKE_FAR builds): re4dc_far_cap reads the menu's runtime shore far
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_MENU=1
 endif
