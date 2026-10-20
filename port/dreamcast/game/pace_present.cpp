@@ -2,15 +2,16 @@
 // them; native_ui.cpp calls the hooks from present_submit / present_fence (PVR_PIPELINE=2, KOS manual flip).
 //
 // PACE_STEADY: in the "Steady" pacing mode each presented picture is held for a constant number of TV fields
-// (pace.cpp re4dc_pace_steady_hold: 2, 3 or 4, chosen from recent work with hysteresis). A picture whose scene is
-// finished early is not handed to KOS at once: its present decision is deferred and released by a vblank handler one
-// field before its target field (last flip + hold), so the flip lands on the target. A late picture flips as soon as it
-// can and the next target counts from that flip. Discards, movies, and every other mode present as before.
-// One deferred picture at most: a second present waits (re4dc_steady_wait) until the first was handed over.
+// (pace.cpp re4dc_pace_steady_hold: 2, 3 or 4, chosen from recent work with hysteresis). A finished picture is not handed
+// to KOS at once: its present decision joins a queue (two pictures deep) and a vblank handler releases it one field
+// before its target field (the previous picture's target + hold), so the flip lands on the target. A late picture flips
+// as soon as it can and the next target counts from it. The game thread waits only when the queue is full (a third
+// finished picture) or at a fence (VRAM, single bank, discard), and that wait is not counted as work (pace.cpp).
+// Discards, movies and every other mode present as before.
 //
 // PACE_HOLD_LOG: telemetry in every mode (bench builds). Per picture: the fields it was held (flip to flip), the logic
 // ticks it covers, the ready deadline (target field), CPU work end (scene finish) and the actual flip. A histogram line
-// per pace report window; =2 also one line per picture.
+// per pace report window; =2 also one "PACE pic" line per picture.
 #include "global.h"
 #include "re4dc_platform.h"
 #include <kos.h>
@@ -25,29 +26,37 @@
 #endif
 
 extern "C" u32 re4dc_vi_retrace_count(void);
-extern "C" int re4dc_pace_steady_hold(void);   // pace.cpp: 0 unless Steady is pacing now
+extern "C" int re4dc_pace_steady_hold(void);     // pace.cpp: 0 unless Steady is pacing now
 extern "C" unsigned re4dc_pace_tick_total(void); // pace.cpp: logic ticks run under the pacing clock
 
 namespace {
-volatile int st_deferred;          // a present decision waits for its target field
-volatile u32 st_target;            // field (retrace count) the deferred picture should flip on
+// Steady queue (game thread pushes with interrupts off, the vblank handler pops).
+constexpr unsigned kQ = 2;
+volatile u32 q_target[kQ];
+volatile unsigned q_head, q_n;
+volatile u32 last_target;          // target of the picture scheduled last (queued or handed over)
 volatile int watch;                // a present decision was handed to KOS and has not flipped yet
 volatile u32 last_flip_vb;         // field of the last flip
 volatile u32 flip_n;               // flips seen
 int handler_id = -1;
-unsigned releases_late, releases_on_time, waits;
-unsigned long long wait_us;
+volatile unsigned releases_late, releases_on_time;
+unsigned waits;
+unsigned long long wait_us, wait_iter_us;
 
 // Hold telemetry (IRQ side writes, game side reads and clears).
-constexpr int kHoldBins = 8;       // 1..6 fields, 7 = 7 or more, 0 unused
+constexpr int kHoldBins = 8;       // 1..6 fields, 7 = 7 or more
 volatile unsigned hold_hist[kHoldBins];
-volatile unsigned long long lat_sum_us; // scene finish -> flip
+volatile unsigned long long lat_sum_us;   // scene finish -> flip
 volatile unsigned lat_n, lat_max_us;
-volatile unsigned long long submit_us_v; // scene finish of the picture in flight
-#if RE4DC_PACE_HOLD_LOG >= 2
+// Pictures between scene finish and flip, oldest first.
+constexpr unsigned kP = 4;
 struct Pic { u32 submit_vb, target_vb, flip_vb, ticks; unsigned long long submit_us, flip_us; };
-volatile Pic cur, done;
-volatile int done_ready;
+volatile Pic pic[kP];
+volatile unsigned p_head, p_n;
+#if RE4DC_PACE_HOLD_LOG >= 2
+constexpr unsigned kDone = 8;
+volatile Pic done[kDone];
+volatile unsigned d_w, d_r;
 #endif
 
 void on_flip(u32 now)
@@ -55,23 +64,35 @@ void on_flip(u32 now)
     const unsigned long long t = timer_us_gettime64();
     if (flip_n) {
         u32 h = now - last_flip_vb;
-        if (h >= kHoldBins) h = kHoldBins - 1;
+        if (h >= (u32) kHoldBins) h = kHoldBins - 1;
         ++hold_hist[h];
     }
     ++flip_n;
     last_flip_vb = now;
-    if (submit_us_v) {
-        const unsigned d = unsigned(t - submit_us_v);
+    if (p_n) {
+        volatile Pic& p = pic[p_head];
+        const unsigned d = unsigned(t - p.submit_us);
         lat_sum_us += d; ++lat_n;
         if (d > lat_max_us) lat_max_us = d;
-        submit_us_v = 0;
-    }
 #if RE4DC_PACE_HOLD_LOG >= 2
-    cur.flip_vb = now; cur.flip_us = t;
-    done.submit_vb = cur.submit_vb; done.target_vb = cur.target_vb; done.flip_vb = cur.flip_vb;
-    done.ticks = cur.ticks; done.submit_us = cur.submit_us; done.flip_us = cur.flip_us;
-    done_ready = 1;
+        if (d_w - d_r < kDone) {
+            volatile Pic& o = done[d_w % kDone];
+            o.submit_vb = p.submit_vb; o.target_vb = p.target_vb; o.flip_vb = now; o.ticks = p.ticks;
+            o.submit_us = p.submit_us; o.flip_us = t;
+            ++d_w;
+        }
 #endif
+        p_head = (p_head + 1) % kP; --p_n;
+    }
+}
+
+bool post_head(u32 now)
+{
+    if (pvr_present_async(true) != 0) return false;
+    if (now + 1 == q_target[q_head]) ++releases_on_time; else ++releases_late;
+    q_head = (q_head + 1) % kQ; --q_n;
+    watch = 1;
+    return true;
 }
 
 // Runs after KOS's own vblank handler (added later), so a flip KOS made in this vblank is already visible, and a
@@ -83,76 +104,91 @@ void vbl(uint32_t, void*)
         watch = 0;
         on_flip(now);
     }
-    if (st_deferred && (int) (now + 1 - st_target) >= 0) {
-        if (pvr_present_async(true) == 0) {
-            st_deferred = 0;
-            watch = 1;
-            if (now + 1 == st_target) ++releases_on_time; else ++releases_late;
-        }
-    }
+    if (q_n && !watch && (int) (now + 1 - q_target[q_head]) >= 0) post_head(now);
 }
 
 void ensure_handler()
 {
     if (handler_id < 0) handler_id = vblank_handler_add(vbl, nullptr);
 }
+
+void wait_until(unsigned max_n)
+{
+    if (q_n <= max_n) return;
+    const unsigned long long t0 = timer_us_gettime64();
+    while (q_n > max_n) thd_pass();
+    const unsigned long long d = timer_us_gettime64() - t0;
+    ++waits; wait_us += d; wait_iter_us += d;
+}
+
+void note_submit(u32 now, u32 target)
+{
+    if (p_n == kP) { p_head = (p_head + 1) % kP; --p_n; }   // telemetry only: drop the oldest
+    volatile Pic& p = pic[(p_head + p_n) % kP];
+    p.submit_vb = now; p.target_vb = target; p.flip_vb = 0; p.ticks = re4dc_pace_tick_total();
+    p.submit_us = timer_us_gettime64();
+    ++p_n;
+}
 }  // namespace
 
 extern "C" {
 
-// present_fence (game thread): a deferred picture counts as pending; wait until it was handed to KOS.
-void re4dc_steady_wait(void)
+// present_fence (game thread): every queued picture is handed to KOS first.
+void re4dc_steady_wait(void) { wait_until(0); }
+
+int re4dc_steady_pending(void) { return q_n != 0; }
+
+// pace.cpp: the game thread's queue wait in this iteration (not work), then cleared.
+unsigned re4dc_steady_wait_take(void)
 {
-    if (!st_deferred) return;
-    const unsigned long long t0 = timer_us_gettime64();
-    while (st_deferred) thd_pass();
-    ++waits; wait_us += timer_us_gettime64() - t0;
+    const unsigned w = unsigned(wait_iter_us);
+    wait_iter_us = 0;
+    return w;
 }
 
-int re4dc_steady_pending(void) { return st_deferred; }
-
-// present_submit, before pvr_present_async. Returns 1 when the present decision was deferred (the caller skips it).
+// present_submit, before pvr_present_async. Returns 1 when the present decision was queued (the caller skips it).
 int re4dc_steady_present(int present)
 {
     ensure_handler();
-    re4dc_steady_wait();                              // one deferred picture at most; a discard follows it too
-    if (!present) return 0;
-    const u32 now = re4dc_vi_retrace_count();
-    const unsigned long long t = timer_us_gettime64();
-    submit_us_v = t;
 #if RE4DC_PACE_HOLD_LOG >= 2
-    if (done_ready) {
-        done_ready = 0;
-        re4dc_log("PACE pic sub=%u tgt=%u flip=%u ticks=%u lat_us=%u\n", (unsigned) done.submit_vb,
-                  (unsigned) done.target_vb, (unsigned) done.flip_vb, (unsigned) done.ticks,
-                  unsigned(done.flip_us - done.submit_us));
+    while (d_r != d_w) {
+        const volatile Pic& o = done[d_r % kDone];
+        re4dc_log("PACE pic sub=%u tgt=%u flip=%u ticks=%u lat_us=%u\n", (unsigned) o.submit_vb, (unsigned) o.target_vb,
+                  (unsigned) o.flip_vb, (unsigned) o.ticks, unsigned(o.flip_us - o.submit_us));
+        ++d_r;
     }
-    cur.submit_vb = now; cur.submit_us = t; cur.target_vb = now + 1; cur.ticks = re4dc_pace_tick_total();
 #endif
+    if (!present) { wait_until(0); return 0; }       // a discard applies to the oldest finished scene: queue empty first
+    const u32 now = re4dc_vi_retrace_count();
 #if RE4DC_PACE_STEADY
     const int hold = re4dc_pace_steady_hold();
     if (hold && flip_n) {
-        // The previous picture flips on its own target (still pending) or already did.
-        const u32 base = watch ? st_target : last_flip_vb;
-        const u32 target = base + (u32) hold;
-#if RE4DC_PACE_HOLD_LOG >= 2
-        cur.target_vb = target;
-#endif
-        if ((int) (now + 1 - target) < 0) {
-            st_target = target;
-            st_deferred = 1;                          // released by vbl() at field target - 1
-            return 1;
+        wait_until(kQ - 1);                           // room in the queue
+        const int irq = irq_disable();
+        const u32 base = (q_n || watch) ? last_target : last_flip_vb;
+        u32 target = base + (u32) hold;
+        if ((int) (now + 1 - target) > 0) target = now + 1;   // late: as soon as possible, the next counts from here
+        if (!q_n && !watch && target == now + 1) {
+            last_target = target;
+            irq_restore(irq);
+            note_submit(now, target);
+            return 0;                                 // due now: the caller presents at once
         }
-        st_target = now + 1;                          // late: present now, the next target counts from this flip
-        ++releases_late;
-    } else {
-        st_target = now + 1;
+        q_target[(q_head + q_n) % kQ] = target;
+        ++q_n;
+        last_target = target;
+        irq_restore(irq);
+        note_submit(now, target);
+        return 1;                                     // released by vbl() at field target - 1
     }
 #endif
+    wait_until(0);                                    // leaving Steady: queued pictures first, in order
+    last_target = now + 1;
+    note_submit(now, now + 1);
     return 0;
 }
 
-// present_submit, after a successful pvr_present_async(present) by the game thread.
+// present_submit, after a successful pvr_present_async(present) by the game thread (interrupts off).
 void re4dc_present_posted(int present)
 {
     if (present) watch = 1;
@@ -163,19 +199,18 @@ void re4dc_present_hold_report(void)
 {
     unsigned h[kHoldBins];
     unsigned long long ls;
-    unsigned ln, lm;
+    unsigned ln, lm, rl, ro;
     {
         const int irq = irq_disable();
         for (int i = 0; i < kHoldBins; ++i) { h[i] = hold_hist[i]; hold_hist[i] = 0; }
-        ls = lat_sum_us; ln = lat_n; lm = lat_max_us;
-        lat_sum_us = 0; lat_n = 0; lat_max_us = 0;
+        ls = lat_sum_us; ln = lat_n; lm = lat_max_us; rl = releases_late; ro = releases_on_time;
+        lat_sum_us = 0; lat_n = 0; lat_max_us = 0; releases_late = releases_on_time = 0;
         irq_restore(irq);
     }
     re4dc_log("PACE hold h1=%u h2=%u h3=%u h4=%u h5=%u h6=%u h7p=%u lat_avg_us=%u lat_max_us=%u steady_late=%u "
               "steady_on_time=%u steady_waits=%u steady_wait_us=%u\n",
-              h[1], h[2], h[3], h[4], h[5], h[6], h[7], ln ? unsigned(ls / ln) : 0, lm, releases_late,
-              releases_on_time, waits, unsigned(wait_us));
-    releases_late = releases_on_time = waits = 0; wait_us = 0;
+              h[1], h[2], h[3], h[4], h[5], h[6], h[7], ln ? unsigned(ls / ln) : 0, lm, rl, ro, waits, unsigned(wait_us));
+    waits = 0; wait_us = 0;
 }
 
 }  // extern "C"

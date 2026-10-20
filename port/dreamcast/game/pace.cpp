@@ -72,6 +72,9 @@ extern "C" u32 re4dc_vi_retrace_count(void);
 #if RE4DC_PACE_HOLD_LOG
 extern "C" void re4dc_present_hold_report(void);   // pace_present.cpp
 #endif
+#if RE4DC_PACE_STEADY
+extern "C" unsigned re4dc_steady_wait_take(void);  // pace_present.cpp
+#endif
 extern "C" void* re4dc_ui_movie_texture() __attribute__((weak));   // ROUTE_MOVIES builds
 #if defined(RE4DC_RENDER_OPTION) && RE4DC_RENDER_OPTION
 #include "platform/quality.h"
@@ -808,7 +811,13 @@ extern "C" int re4dc_pace_itask(void)
 extern "C" int re4dc_pace_end(void)
 {
     const unsigned long long us = timer_us_gettime64();
+#if RE4DC_PACE_STEADY
+    // A wait for a Steady picture's target field (pace_present.cpp queue full or a fence) is not work.
+    const unsigned waited_us = re4dc_steady_wait_take();
+    const unsigned cost = unsigned(us - iter_us) > waited_us ? unsigned(us - iter_us) - waited_us : 0;
+#else
     const unsigned cost = unsigned(us - iter_us);
+#endif
     if (re4dc_pace_skipping) {
         skip_ema = ema(skip_ema, cost); ++w_skip; since_skip = 0;
     } else {
