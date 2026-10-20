@@ -1,0 +1,12 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle21-r212-roof-resident-20261020/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Sixteen original roof/weapon/effect first-sight texture keys; additive residency preparation only. Historical746 selected winner hashes retained. Current Test21/Disc2 gameplay, look, no-late-load and memory gates remain pending.",
+    "base_resident_sha256": "adf26c24a1efa9c550996ab92c78ae2025cf40506416bf64ec7cabf61d94e844",
+    "resident_sha256": "4555afb6545cb3b66d45db372a1a0343767e25590838ea3fb10a16f2c026da4b",
+    "integration": "Preserves 5858 prior rows plus sixteen r212 keys. Compose keys into any newer union rather than replacing newer rows."
+  }
+}

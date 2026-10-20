@@ -830,3 +830,25 @@ State aabf466d7964c98fcb76a00eb7b29bc3b4d7009762f840e1417704aced580ff3;
 chain8f83bea2b570bdb710f2037284f250fb39c9313290dc54c637cbad9c118b2013.
 The original drill fight, cup6f, return and current-recipe chapter gate
 remain open. This is frozen diagnostic progression, not console timing.
+
+## Test 21 roof residency preparation, October 20
+
+The sixteen additional r212 loader keys from the original ceiling-trap
+route are added to the current 5,858-record union. All prior records and
+other rooms remain exact; the new union has 5,874 records. This is a data
+preparation checkpoint. Current Test 21 gameplay, native drawing, memory,
+look and no-late-upload checks remain pending.
+
+The private set castle21-r212-roof-resident-20261020 is mirrored on C: with
+verified hashes. Resident SHA256:
+4555afb6545cb3b66d45db372a1a0343767e25590838ea3fb10a16f2c026da4b.
+Manifest SHA256:
+8728850e240c74abdb8de43bec9687398c67a0c1e8814eb4b9def6e8455a5be4.
+The additive fixture is tools/d367/castle18/ch41-r212-roof-resident-20261020.json.
+Integrate its keys into any newer union rather than replacing newer rows.
+
+The padded resident payload stays 94,208 bytes, adding zero payload sectors.
+The final packed Disc 2 sector count belongs to its staging check. Historical
+746 selected texture winners and earlier bounded nine-to-zero evidence stay
+separate from the new release recipe. No game code, texture payload, shared
+recipe or staging tool changes in this checkpoint.
