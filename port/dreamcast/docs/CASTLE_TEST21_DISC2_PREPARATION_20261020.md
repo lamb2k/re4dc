@@ -256,3 +256,12 @@ Full Disc2 mkdisc2/master is6762files,496343data/497456ISO sectors, ZERO added s
 Fresh original VMU CardLoad begins without a prior state seed; J states are never retargeted. Actual fresh r202 native/cold-cache/memory gates remain pending. J/K compile DISC_READ_METER=0, so K observes motion loads/hits/evictions, pins and reserved subranges; sampled stream state does not prove total drive reads or readquiet. No hardware timing or whole-chapter acceptance.
 
 Asset-free build and master receipts: tools/d367/castle18/ch31-test21-motion-pack-K-{build,master}-20261020.json.
+
+
+### Fresh K r202 packed-motion runtime gate
+
+The new K program boots the original chapter VMU and uses only its own unchanged-program snapshots. Normal stairs and the original doorway reach r202 with Leon1200/Ashley600. A50.7-second neutral original-AI window advances source5061 to6506:9070hits,3loads,2evictions,65440motion bytes,0failures. Shared enemy clips0/6 remain together; clip6 is at offset22400 inside the first existing32416-byte slab. The second slab switches152 to86 and back, retaining each temporal set without the previous three-key cell contention. The four-key union exceeds existing backing, so this is not zero whole-fight I/O. Longest observed motion-read-quiet windows are21.58s/635ticks and18.17s/544ticks; cumulative drive reads are compiled out and no whole-drive/hardware claim is made.
+
+CAST and NOT-DRAWN pass: em11 native5342/0GC, Leon/Ashley8250/0GC. Motion metadata119168B/peakresident88288B, existing slab budgets and margins unchanged. Separate VRAM gate fails12postpreloaduploads, with0textureevictions/retries/audiofail in this window and minKOS30856B. Route03's navigation displacement stop is retained; source-SAT normal route continues from K's own healthy snapshot. J states remain immutable. Private observer byte-field labeling was corrected against the actual header; original observations plus correction sidecars are preserved. No release/default/SD change, wholechapter acceptance or hardware timing.
+
+Asset-free runtime/lineage/check receipts: tools/d367/castle18/ch31-test21-motion-pack-K-r202-runtime-20261020.json.

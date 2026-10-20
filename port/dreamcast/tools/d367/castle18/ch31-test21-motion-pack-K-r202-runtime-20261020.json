@@ -1,0 +1,540 @@
+{
+  "scope": "Isolated default-off K candidate, fresh original VMU/CardLoad and only current same-program snapshots. Native enemy working-set gate in r202; not a release/default/SD change, full chapter acceptance, hardware performance or whole-drive quiet claim.",
+  "source": "343c463aa",
+  "elf_sha256": "5c5d6ef821d045c05c0710c25c80d3cb137d239cacfd729c257ff97501e0f84c",
+  "disc_sha256": "b0973c044a607a73985099d3b586273deb544ccaefc79ca9462263dbbc62a20c",
+  "original_vmu": "handoff-ch23end-A1.bin",
+  "chain": [
+    {
+      "capture": "current-k-coldload01",
+      "elapsed_s": 50.9,
+      "run_sha256": "18fe779e1288d419756673b78c7475b36db12e07a1b69e2f07a25d406fb44a3d",
+      "snapshot": {
+        "scope": "Read-only currentK ownproductionstate,4ELFanchors; freshoriginalVMU CardLoadlineage,nohistoricalstateseed.",
+        "state_sha256": "f0bcc191e04697217b3b37c579636c22053976550a76eb8059e696e602e7e0cc",
+        "phase": [
+          0,
+          0
+        ],
+        "room": "0x120",
+        "chapter": 0,
+        "health": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "source_frame": 1383,
+        "Stop": "0x0",
+        "pPL": "0x0",
+        "pSUB": "0x0"
+      }
+    },
+    {
+      "capture": "current-k-coldload02",
+      "elapsed_s": 50.9,
+      "run_sha256": "9305b8fcf1edbbf3ec99a734fb3b7ebd98d58f791ffcb5746e738949ff29a983",
+      "snapshot": {
+        "scope": "Read-only currentK ownproductionstate,4ELFanchors; freshoriginalVMU CardLoadlineage,nohistoricalstateseed.",
+        "state_sha256": "c4f134c82948654941001ee8a3a0617393c11ccc3acbbbf9e77e040719e12f1b",
+        "phase": [
+          2,
+          0
+        ],
+        "room": "0x200",
+        "chapter": 6,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "source_frame": 4030,
+        "Stop": "0x0",
+        "pPL": "0x0",
+        "pSUB": "0x0"
+      }
+    },
+    {
+      "capture": "current-k-route-walk01",
+      "elapsed_s": 22.5,
+      "run_sha256": "10c8051ea29cae1dcaf4627acb2e350d640cc3ee846a60ebebfbdca0b0865ac8",
+      "snapshot": {
+        "scope": "Read-only currentK ownproductionstate,4ELFanchors; freshoriginalVMU CardLoadlineage,nohistoricalstateseed.",
+        "state_sha256": "3fbe77079b10daee634efb2ac308dabd1a057a5c94709d281b3ad877066a1991",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x200",
+        "chapter": 6,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "source_frame": 4432,
+        "Stop": "0x0",
+        "pPL": "0x8cafdca0",
+        "pSUB": "0x8cb4b900"
+      }
+    },
+    {
+      "capture": "current-k-route-walk02",
+      "elapsed_s": 30.6,
+      "run_sha256": "505407ecfd52c64f28a5d3e0cc0b158c2bb7ac93309d276073d7e4c909289773",
+      "snapshot": {
+        "scope": "Read-only currentK ownproductionstate,4ELFanchors; freshoriginalVMU CardLoadlineage,nohistoricalstateseed.",
+        "state_sha256": "99a3e35cd57f7c499082034a26e6ff32a1b7652d3fca8f308d42654b1cfd64af",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "source_frame": 4935,
+        "Stop": "0x0",
+        "pPL": "0x8cabaa80",
+        "pSUB": "0x8cce5940"
+      }
+    },
+    {
+      "capture": "current-k-route-walk03",
+      "elapsed_s": 8.2,
+      "run_sha256": "52adc31fa51742576dddb5682e949fbad62de846710acecb0dc68f16dfafd688",
+      "snapshot": {
+        "scope": "Read-only currentK ownproductionstate,4ELFanchors; freshoriginalVMU CardLoadlineage,nohistoricalstateseed.",
+        "state_sha256": "c22c8ea25c89925795a5677d08612dea261dc5f2e5c7acf4ceb38d18b1e26635",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "source_frame": 5061,
+        "Stop": "0x0",
+        "pPL": "0x8cabaa80",
+        "pSUB": "0x8cce5940"
+      }
+    },
+    {
+      "capture": "current-k-route-walk04",
+      "elapsed_s": 50.7,
+      "run_sha256": "a0629df5b920e268689ba64bda2d1d140c2934d17d17ffb11b148d34bf20a279",
+      "snapshot": {
+        "scope": "Read-only currentK ownproductionstate,4ELFanchors; freshoriginalVMU CardLoadlineage,nohistoricalstateseed.",
+        "state_sha256": "20f3dfa64ff8f03054bc876228195861feef5196f59c79cea5e25805862f8a93",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "source_frame": 6506,
+        "Stop": "0x0",
+        "pPL": "0x8cabaa80",
+        "pSUB": "0x8cce5940"
+      }
+    }
+  ],
+  "runtime": {
+    "scope": "Fresh originalVMU/CardLoad, current K own snapshots only. Fifty-second neutral original r202 AI window; motion reads only, not whole-drive quiet or hardware performance.",
+    "capture": "current-k-route-walk04",
+    "samples": 246,
+    "first": {
+      "host_s": 0.0,
+      "frame": 5061,
+      "hits": 558,
+      "misses": 6,
+      "evictions": 1,
+      "loads": 6,
+      "failures": 0,
+      "motion_bytes_read": 105696
+    },
+    "last": {
+      "host_s": 49.438,
+      "frame": 6506,
+      "hits": 9628,
+      "misses": 9,
+      "evictions": 3,
+      "loads": 9,
+      "failures": 0,
+      "motion_bytes_read": 171136
+    },
+    "delta": {
+      "hits": 9070,
+      "misses": 3,
+      "evictions": 2,
+      "loads": 3,
+      "failures": 0,
+      "motion_bytes_read": 65440
+    },
+    "enemy_working_set_changes": [
+      {
+        "host_s": 0.0,
+        "frame": 5061,
+        "keys": [
+          0,
+          6,
+          152
+        ],
+        "resident": 63968,
+        "storage": [
+          {
+            "entry": 0,
+            "pointer": "0x8ccc94a0",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 0
+          },
+          {
+            "entry": 6,
+            "pointer": "0x8cccec20",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 22400
+          },
+          {
+            "entry": 152,
+            "pointer": "0x8ccd13a0",
+            "pins": 0,
+            "reserved_slab": 1,
+            "offset": 0
+          }
+        ],
+        "loads": 6,
+        "evictions": 1,
+        "motion_bytes_read": 105696
+      },
+      {
+        "host_s": 9.297,
+        "frame": 5323,
+        "keys": [
+          0,
+          6
+        ],
+        "resident": 31552,
+        "storage": [
+          {
+            "entry": 0,
+            "pointer": "0x8ccc94a0",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 0
+          },
+          {
+            "entry": 6,
+            "pointer": "0x8cccec20",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 22400
+          }
+        ],
+        "loads": 7,
+        "evictions": 2,
+        "motion_bytes_read": 121312
+      },
+      {
+        "host_s": 9.485,
+        "frame": 5326,
+        "keys": [
+          0,
+          6,
+          86
+        ],
+        "resident": 48960,
+        "storage": [
+          {
+            "entry": 0,
+            "pointer": "0x8ccc94a0",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 0
+          },
+          {
+            "entry": 6,
+            "pointer": "0x8cccec20",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 22400
+          },
+          {
+            "entry": 86,
+            "pointer": "0x8ccd13a0",
+            "pins": 0,
+            "reserved_slab": 1,
+            "offset": 0
+          }
+        ],
+        "loads": 8,
+        "evictions": 2,
+        "motion_bytes_read": 138720
+      },
+      {
+        "host_s": 27.657,
+        "frame": 5870,
+        "keys": [
+          0,
+          6
+        ],
+        "resident": 31552,
+        "storage": [
+          {
+            "entry": 0,
+            "pointer": "0x8ccc94a0",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 0
+          },
+          {
+            "entry": 6,
+            "pointer": "0x8cccec20",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 22400
+          }
+        ],
+        "loads": 8,
+        "evictions": 3,
+        "motion_bytes_read": 138720
+      },
+      {
+        "host_s": 27.86,
+        "frame": 5871,
+        "keys": [
+          0,
+          6,
+          152
+        ],
+        "resident": 63968,
+        "storage": [
+          {
+            "entry": 0,
+            "pointer": "0x8ccc94a0",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 0
+          },
+          {
+            "entry": 6,
+            "pointer": "0x8cccec20",
+            "pins": 0,
+            "reserved_slab": 0,
+            "offset": 22400
+          },
+          {
+            "entry": 152,
+            "pointer": "0x8ccd13a0",
+            "pins": 0,
+            "reserved_slab": 1,
+            "offset": 0
+          }
+        ],
+        "loads": 9,
+        "evictions": 3,
+        "motion_bytes_read": 171136
+      }
+    ],
+    "longest_motion_read_quiet_windows": [
+      {
+        "host_seconds": 21.578,
+        "source_ticks": 635,
+        "first": 5871,
+        "last": 6506,
+        "bytes_read": 171136
+      },
+      {
+        "host_seconds": 18.172,
+        "source_ticks": 544,
+        "first": 5326,
+        "last": 5870,
+        "bytes_read": 138720
+      },
+      {
+        "host_seconds": 6.266,
+        "source_ticks": 178,
+        "first": 5061,
+        "last": 5239,
+        "bytes_read": 105696
+      },
+      {
+        "host_seconds": 2.843,
+        "source_ticks": 80,
+        "first": 5243,
+        "last": 5323,
+        "bytes_read": 121312
+      }
+    ],
+    "peak_resident": 88288,
+    "peak_pinned": 32416,
+    "metadata": 119168,
+    "failures": 0
+  },
+  "native_check": {
+    "rows": [
+      {
+        "room": "r202",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 8250,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 8250,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "ashley11"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 5342,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "zealot-em11-07p"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r202",
+        "id": "11",
+        "name": "em11",
+        "samples": 26,
+        "max_alive": 4,
+        "nearest": 24886,
+        "in_view": 10,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "vram_check": {
+    "rooms": [
+      {
+        "room": "202",
+        "start": 3485,
+        "samples": 5,
+        "closed": false,
+        "min_free": 77728,
+        "min_largest": 282656,
+        "peak_pinned": 1916192,
+        "last": {
+          "pinned": 431040,
+          "dynamic": 1527456,
+          "other": 90112,
+          "free": 518816,
+          "largest": 282656,
+          "min_free": 77728,
+          "min_largest": 282656,
+          "peak_pinned": 1916192,
+          "loads": 207,
+          "evicted": 0,
+          "retries": 0,
+          "at": "tick",
+          "f": 4685
+        },
+        "gaps": {
+          "refusals": 0,
+          "guard": 0,
+          "guard_p": 0,
+          "nocontig": 0,
+          "latched": 0,
+          "absent": 0,
+          "gc_fx": 0,
+          "dropped": 0,
+          "fx_dropped": 0,
+          "tex_rej": 0,
+          "snd_fail": 0,
+          "meta": 0
+        },
+        "snd_used": 1804992,
+        "loads": 207,
+        "evicted": 0,
+        "retries": 0,
+        "min_kos": 30856,
+        "menu_loads": 0,
+        "play_loads": 12,
+        "play_evicted": 0
+      }
+    ],
+    "failures": [
+      {
+        "cat": "vram",
+        "what": "r202: 12 upload(s) after the room-entry preload in a room with a resident list (disc re-reads: add the keys to vram/resident/r202.tsv, resident_keys.py list)",
+        "line": "line 1266: vram gaps: r=202 at=tick f=4085 refusals=0 guard=0 guard_p=0 nocontig=0 latched=0 absent=0 gc_fx=0 dropped=0 fx_dropped=0 tex_rej=0 snd_fail=0 snd_used=1804992 meta=0 kos=30856"
+      }
+    ],
+    "known_gaps": [],
+    "notes": [],
+    "new_format": true
+  },
+  "interpretation": [
+    "Enemy0/6/152=63968B and0/6/86=48960B fit the existing64832B backing. Entry6 stays at interior offset22400; base pointers remain stable in sampled windows. No new slabs or data/profile changes.",
+    "Four-key union81376B exceeds backing. Two observed enemy evictions coincide with legitimate152-to86-to152 AI working-set changes; not zero whole-fight I/O. One additional Ashley first-use load is included in global delta3.",
+    "The0.2s read-only sample excludes held/changing worlds. It cannot prove every lease or physical seek. DISC_READ_METER0/IO_PROBE0; motion bytes only.",
+    "Original route03 stopped safely at displacement guard. Route04 is neutral original AI observation, not a matched-input FPS benchmark against J. Fresh normal K route continues separately.",
+    "Private observer v1 misnamed word6/7/8/10 byte fields. Original logs preserved and corrected-label sidecars retained. v2 derives actual field order from native_motion.h; hits/misses/loads/evictions unaffected.",
+    "Native CAST/NOTDRAWN passes current observed room. VRAM separately fails12postpreloaduploads; no retries/evictions/audiofail or dropped effects in this window. minKOS30856B.",
+    "r203/r208, fullr207, Garrador/dungeon/waves/end save, wholechapter and hardware checks remain pending."
+  ]
+}
