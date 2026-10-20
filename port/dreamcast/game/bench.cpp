@@ -45,6 +45,7 @@ void* __real_maple_dev_status(maple_device_t* dev);
 maple_device_t* __real_maple_enum_dev(int p, int u);
 unsigned __real_re4dc_ui_frame(void);
 uint32_t re4dc_vi_retrace_count(void);   // TAIL_METER
+void re4dc_cache20_arm(int on) __attribute__((weak));   // platform/cache20.cpp (BENCH_CENSUS: the arm's levers)
 }
 
 namespace {
@@ -68,7 +69,10 @@ namespace {
 #define RE4DC_BENCH_NAME "BENCHMARK DISC"
 #endif
 constexpr int kScenes = RE4DC_BENCH_SCENES;
-static_assert(kScenes >= 2 && kScenes <= 16, "RE4DC_BENCH_SCENES 2..16");
+#ifndef RE4DC_BENCH_CENSUS
+#define RE4DC_BENCH_CENSUS 0
+#endif
+static_assert(kScenes >= 2 && kScenes <= (RE4DC_BENCH_CENSUS ? 24 : 16), "RE4DC_BENCH_SCENES 2..16 (census discs 24)");
 #ifndef RE4DC_BENCH_CAPCMP
 #define RE4DC_BENCH_CAPCMP 0
 #endif
@@ -86,6 +90,18 @@ const char* const kScenePath[16] = {"/cd/dc/warp.txt", "/cd/dc/bench2.txt", "/cd
 // The start screen's choice on a disc of more than two scenes (the Saddler stress disc: START all, X / Y / B one scene):
 // -1 = every scene in order, k = scene k + 1 alone (then the results screen).
 int g_only = -1;
+// BENCH_CENSUS (lane cache20, cache20 bench disc): a fixture file may hold several `bench` lines (rows): the rows of one
+// file run back to back in the same room without a reset (a row ends, the next row of the file starts at its own begin
+// frame), so timed warp lines between them (rigid / fx / crowd / tank / autofire) change one thing per row. Files:
+// RE4DC_BENCH_FILES (warp.txt, bench2.txt, ...); rows: RE4DC_BENCH_SCENES. The start screen also picks the arm:
+// D-pad LEFT = A (re4dc_cache20_mask 0), RIGHT = B (every built cache20 lever); the results show it.
+#ifndef RE4DC_BENCH_FILES
+#define RE4DC_BENCH_FILES RE4DC_BENCH_SCENES
+#endif
+constexpr int kFiles = RE4DC_BENCH_FILES;
+int g_file;                       // fixture file of the running rows
+bool g_file_first;                // the next `bench` line is the file's first row
+char g_arm = 'A';
 struct Scene {
     char name[24];
     unsigned begin, end;          // measured room frames [begin, end)
@@ -116,6 +132,11 @@ struct Scene {
     // TAIL_METER: per drawn picture (us; T_VB / T_ITER are counts), summed and worst over the measured pictures
     unsigned long long tl_sum[10];
     unsigned tl_max[10], tl_n, tl_rnd_n;
+    // BENCH_CENSUS, each measured tick: live effects (esp pool), hits on the tank target (total at the row end), rigid
+    // parts / vertices reaching the draw
+    int file;
+    unsigned long long esp_sum, rg_parts_sum, rg_verts_sum;
+    unsigned esp_max, cen_n, hits0, hits1;
 };
 #ifndef RE4DC_TAIL_METER
 #define RE4DC_TAIL_METER 0
@@ -414,8 +435,43 @@ void draw_results_tail(const Fb& fb) {
     for (const char* n : notes) { fb_text(fb, 16, y, 1, 2, kGrey, n); y += 15; }
 }
 
+unsigned cen_avg(unsigned long long sum, unsigned n) { return n ? (unsigned) ((sum + n / 2) / n) : 0; }
+// BENCH_CENSUS results page 1: every row with fps, CPU per tick, GPU, the frame-tail buckets (CPU work, GPU wait, to vblank,
+// pacing), the logic phases (enemies, Leon, effects), Ganados alive, live effects, hits on the tank target, rigid parts.
+void draw_results_census(const Fb& fb) {
+    char line[160], a[12], b[12], c[12], d[12], e[12], g[12], h[12], i2[12], j[12], k2[12];
+    fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
+    int y = 6;
+    fb_fill(fb, 30, y - 4, 580, 26, 0x900000);
+    fb_center(fb, y, 2, 2, kWhite, RE4DC_BENCH_NAME " - NOT THE GAME"); y += 24;
+    snprintf(line, sizeof(line), "ARM %c (%s)  BUILD %s  RUN %u  PAGE 1/2  Y: FRAME TAIL PAGE  A: RUN AGAIN", g_arm,
+             g_arm == 'B' ? "CACHE LEVERS ON" : "AS SHIPPED", RE4DC_BENCH_ID, g_run);
+    fb_center(fb, y, 1, 2, kYellow, line); y += 18;
+    fb_text(fb, 6, y, 1, 2, kCyan, "ROW               FPS  CPU/T  GPU   WORK  WAITG  VBLNK  PACE  ENEMY LEON  FX  ALIVE FXLIVE  HITS RIGID"); y += 16;
+    for (int k = 0; k < kScenes; ++k) {
+        const Scene& s = g_scene[k];
+        if (!s.defined) continue;
+        if (!s.windows) { snprintf(line, sizeof(line), "%2d %-14s NOT MEASURED", k + 1, s.name); fb_text(fb, 6, y, 1, 2, kRed, line); y += 15; continue; }
+        snprintf(line, sizeof(line), "%2d %-14s %5s %6s %5s %6s %6s %6s %5s %6s %4s %4s %5s %3u/%-3u %4u %2u/%uK",
+                 k + 1, s.name, d1(fps10(s), a), d1(cpu10(s), b), d1(gpu10(s), c), d1(ms10(tl_avg(s, T_WORK)), d),
+                 d1(ms10(tl_avg(s, T_BLK)), e), d1(ms10(tl_avg(s, T_ROUND)), g), d1(ms10(tl_avg(s, T_PACE)), h),
+                 d1(em10(s), i2), d1(pl10(s), j), d1(fx10(s), k2), d1(alive10(s), a), cen_avg(s.esp_sum, s.cen_n),
+                 s.esp_max, s.hits1 - s.hits0, cen_avg(s.rg_parts_sum, s.cen_n),
+                 (cen_avg(s.rg_verts_sum, s.cen_n) + 500) / 1000);
+        fb_text(fb, 6, y, 1, 2, kWhite, line); y += 15;
+    }
+    y += 6;
+    const char* notes[] = {
+        "FPS: SHOWN PICTURES PER SECOND.  CPU/T: GAME CPU MS PER TICK.  GPU: PVR RENDER MS.  ALL MS PER DRAWN PICTURE:",
+        "WORK: CPU WORK  WAITG: CPU WAITING ON THE GRAPHICS CHIP  VBLNK: SPIN TO VBLANK  PACE: SPIN OVER FURTHER VBLANKS",
+        "ENEMY / LEON / FX: LOGIC MS PER TICK.  FXLIVE: LIVE EFFECTS AVG/MAX.  HITS: SHOTS THAT HIT THE TANK GANADO IN THE ROW",
+        "RIGID: RIGID MODEL PARTS / THOUSAND VERTICES REACHING THE DRAW PER FRAME.  PHOTOGRAPH BOTH PAGES OF BOTH ARMS."};
+    for (const char* n : notes) { fb_text(fb, 6, y, 1, 2, kGrey, n); y += 14; }
+}
+
 void draw_results(const Fb& fb) {
     if (RE4DC_TAIL_METER && g_page) { draw_results_tail(fb); return; }
+    if (RE4DC_BENCH_CENSUS) { draw_results_census(fb); return; }
     if (RE4DC_BENCH_CAPCMP) { draw_results_capcmp(fb, g_page); return; }
     char a[12], b[12], c[12], d[12], e[12], line[96], code[256];
     const int rs = kTight ? 2 : 3, rh = kTight ? 20 : 28;
@@ -466,6 +522,10 @@ void log_results() {
                   "gpu10=%u speed=%u reads=%u reads_ps10=%u wait_ms=%u kos_min=%u end_frame=%u\n",
                   g_run, k + 1, s.name, s.windows, s.drawn, s.ticks, s.vblanks, fps10(s), s.min_fps10, cpu10(s), gpu10(s),
                   speed_pct(s), s.reads, reads_ps10(s), wait_ms(s), s.kos_min, s.end_frame);
+        if (RE4DC_BENCH_CENSUS)
+            re4dc_log("bench: census arm %c run %u row %d %s esp_avg=%u esp_max=%u hits=%u rigid_parts=%u rigid_verts=%u n=%u\n",
+                      g_arm, g_run, k + 1, s.name, cen_avg(s.esp_sum, s.cen_n), s.esp_max, s.hits1 - s.hits0,
+                      cen_avg(s.rg_parts_sum, s.cen_n), cen_avg(s.rg_verts_sum, s.cen_n), s.cen_n);
         re4dc_log("bench: result2 run %u scene %d %s mspic10=%u skipped=%u alive10=%u alive_min=%u alive_max=%u alive_n=%u "
                   "cpu_max_us=%u secs=%u \n", g_run, k + 1, s.name, mspic10(s), skipped(s), alive10(s),
                   s.alive_n ? s.alive_min : 0, s.alive_max, s.alive_n, s.cpu_max_us, s.n_sec);
@@ -507,6 +567,12 @@ void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* nam
     strncpy(s.name, name ? name : "-", sizeof(s.name) - 1);
     s.begin = begin; s.end = end; s.defined = true;
     s.min_fps10 = ~0u; s.kos_min = ~0u; s.alive_min = ~0u;
+    s.file = g_file;
+    if (RE4DC_BENCH_CENSUS && !g_file_first) {
+        re4dc_log("bench: row %d %s (file %d) frames %u..%u\n", no, s.name, g_file + 1, begin, end);
+        return;
+    }
+    g_file_first = false;
     g_cur = no - 1;
     g_prev_include = g_last_include = false;
     re4dc_log("bench: scene %d %s armed: measure room frames %u..%u (run %u)\n", no, s.name, begin, end, g_run);
@@ -542,6 +608,14 @@ int re4dc_bench_tick(unsigned room_frame)
         s.end_frame = room_frame;
         re4dc_log("bench: scene %d end room frame %u windows=%u fps10=%u min1s10=%u cpu10=%u gpu10=%u kos_min=%u\n",
                   g_cur + 1, room_frame, s.windows, fps10(s), s.windows ? s.min_fps10 : 0, cpu10(s), gpu10(s), s.kos_min);
+        if (RE4DC_BENCH_CENSUS && g_cur + 1 < kScenes && g_scene[g_cur + 1].defined && !g_scene[g_cur + 1].done &&
+            g_scene[g_cur + 1].file == s.file && g_scene[g_cur + 1].begin > room_frame) {
+            ++g_cur;   // the file's next row, same room, no reset
+            g_prev_include = g_last_include = false;
+            re4dc_log("bench: row %d %s next (frames %u..%u)\n", g_cur + 1, g_scene[g_cur].name, g_scene[g_cur].begin,
+                      g_scene[g_cur].end);
+            return 0;
+        }
         return 1;
     }
     return 0;
@@ -551,8 +625,29 @@ int re4dc_bench_tick(unsigned room_frame)
 const char* re4dc_bench_next_scene(void)
 {
     if (g_only >= 0) return nullptr;
+    if (RE4DC_BENCH_CENSUS) return g_file + 1 < kFiles ? kScenePath[g_file + 1] : nullptr;
     return g_cur + 1 < kScenes ? kScenePath[g_cur + 1] : nullptr;
 }
+// The warp rig, before it parses a fixture: which file it is (BENCH_CENSUS rows).
+void re4dc_bench_fixture_begin(const char* path)
+{
+    for (int i = 0; i < 16; ++i)
+        if (path && !strcmp(path, kScenePath[i])) g_file = i;
+    g_file_first = true;
+}
+// BENCH_CENSUS, each tick of the room before re4dc_bench_tick: live effects, hits on the tank target so far, rigid parts
+// and vertices that reached the draw in the last frame.
+void re4dc_bench_census(unsigned esp_live, unsigned hits, unsigned rg_parts, unsigned rg_verts)
+{
+    Scene& s = g_scene[g_cur];
+    if (!s.defined || !s.measuring) return;
+    if (!s.cen_n) s.hits0 = hits;
+    s.hits1 = hits;
+    ++s.cen_n;
+    s.esp_sum += esp_live; s.rg_parts_sum += rg_parts; s.rg_verts_sum += rg_verts;
+    if (esp_live > s.esp_max) s.esp_max = esp_live;
+}
+char re4dc_bench_arm(void) { return g_arm; }
 // The first scene's fixture (the warp rig's first load): scene 1, or the start screen's single scene.
 const char* re4dc_bench_first_scene(void) { return kScenePath[g_only >= 0 ? g_only : 0]; }
 int re4dc_bench_scene_no(void) { return g_cur + 1; }
@@ -588,6 +683,7 @@ const char* re4dc_bench_results(void)
     ++g_run;
     re4dc_log("bench: A pressed: run %u\n", g_run);
     g_cur = 0;
+    if (RE4DC_BENCH_CENSUS) for (int k = 0; k < kScenes; ++k) g_scene[k].defined = false;
     return kScenePath[g_only >= 0 ? g_only : 0];
 }
 
@@ -941,8 +1037,19 @@ extern "C" void __wrap_OSInit(void)
             fb_text(fb, 60, y, 2, 2, kGrey, msg); y += 30;
             snprintf(msg, sizeof(msg), "PRESS START TO BEGIN (AUTO IN %u S)", el < kAuto ? kAuto - el : 0);
             fb_text(fb, 60, y, 2, 3, kCyan, msg);
+            if (RE4DC_BENCH_CENSUS) {
+                fb_fill(fb, 60, 452, 520, 22, 0x000000);
+                snprintf(msg, sizeof(msg), "ARM %c - D-PAD LEFT: A (AS SHIPPED)  RIGHT: B", g_arm);
+                fb_text(fb, 60, 452, 2, 2, g_arm == 'B' ? kGreen : kYellow, msg);
+            }
         }
         const unsigned btn = pad_buttons();
+        if (RE4DC_BENCH_CENSUS) {
+            const char was = g_arm;
+            if (btn & CONT_DPAD_LEFT) g_arm = 'A';
+            if (btn & CONT_DPAD_RIGHT) g_arm = 'B';
+            if (was != g_arm) shown = ~0u;   // redraw
+        }
         if (btn & CONT_START) pressed = true;
         if (kTight && !pressed) {
             // X / Y / B: one scene alone (the stress disc's arm menu); released like START
@@ -950,9 +1057,11 @@ extern "C" void __wrap_OSInit(void)
             // CAP_COMPARE: X / Y / A / B = scenes 1..4 (r101 cap 3 / 4 / 5 / 6), d-pad up / down / left / right = 5..8, and
             // the combos (held together, then released) UP + X / Y / A = 9..11 (r101 T1..T3), DOWN + X / Y / A = 12..14 (farm)
             const unsigned U = CONT_DPAD_UP, D = CONT_DPAD_DOWN;
-            const unsigned keys[16] = {CONT_X, CONT_Y, RE4DC_BENCH_CAPCMP ? CONT_A : CONT_B, RE4DC_BENCH_CAPCMP ? CONT_B : 0,
+            unsigned keys[16] = {CONT_X, CONT_Y, RE4DC_BENCH_CAPCMP ? CONT_A : CONT_B, RE4DC_BENCH_CAPCMP ? CONT_B : 0,
                                        U, D, CONT_DPAD_LEFT, CONT_DPAD_RIGHT,
                                        U | CONT_X, U | CONT_Y, U | CONT_A, D | CONT_X, D | CONT_Y, D | CONT_A, 0, 0};
+            if (RE4DC_BENCH_CENSUS)   // census discs: X / Y / B pick a file; the d-pad picks the arm
+                for (int k = 3; k < 16; ++k) keys[k] = 0;
             unsigned mask = 0;
             for (int k = 0; k < kScenes && k < 16; ++k) mask |= keys[k];
             const unsigned pick = btn & mask;
@@ -974,8 +1083,9 @@ extern "C" void __wrap_OSInit(void)
     fb_center(fb, 200, 3, 4, kWhite, RE4DC_BENCH_NAME " - NOT THE GAME");
     fb_center(fb, 250, 2, 3, kCyan, "STARTING - HANDS OFF THE CONTROLLER");
     g_masked = true;
-    re4dc_log("bench: start (%s) build %s scene %s\n", pressed ? "START" : "auto", RE4DC_BENCH_ID,
-              g_only >= 0 ? kScenePath[g_only] : "all");
+    if (RE4DC_BENCH_CENSUS && re4dc_cache20_arm) re4dc_cache20_arm(g_arm == 'B');
+    re4dc_log("bench: start (%s) build %s scene %s arm %c\n", pressed ? "START" : "auto", RE4DC_BENCH_ID,
+              g_only >= 0 ? kScenePath[g_only] : "all", g_arm);
 }
 
 }  // extern "C"

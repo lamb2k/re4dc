@@ -45,6 +45,7 @@
 #include <cstring>
 #include <cstdlib>
 #include "native_static.h"
+#include "cache20.h"
 #if RE4DC_QUALITY
 #include "quality.h"
 #endif
@@ -2720,6 +2721,9 @@ struct MeshDraw : Emitter {
             for(unsigned i=0;i<lv.meshlet_count;++i){
                 const unsigned li=lv.first_meshlet+i;
                 const auto& l=all[li];
+#if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
+                if(RE4DC_C20_PREF_ON())RE4DC_C20_PREF(&all[li+1]);   // PREF_WALK: the next meshlet header (bounds)
+#endif
                 unsigned mask=0;
                 if(cin==2)++lean::st.skipped;
                 else if(groups){
@@ -2844,7 +2848,15 @@ struct MeshDraw : Emitter {
         palette=nullptr;
         batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
         batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
-        for(unsigned i=0;i<n;++i){const int r=emit_pick(pk[i]);if(r<=0)return r;}
+        for(unsigned i=0;i<n;++i){
+#if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
+            // PREF_WALK (cache20.h): the next pick's corners and first strip bytes while this one is transformed / sent
+            if(i+1<n && RE4DC_C20_PREF_ON()){
+                const auto& nl=package.meshlets()[pk[i+1].let];
+                RE4DC_C20_PREF(package.vertices()+nl.first_vertex);RE4DC_C20_PREF(package.strip_begin(nl));
+            }
+#endif
+            const int r=emit_pick(pk[i]);if(r<=0)return r;}
         if(used)re4dc_model_packet_commit(used);
         re4dc_model_result(0,input,output);
         return 1;

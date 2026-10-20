@@ -131,6 +131,17 @@ const char* re4dc_bench_first_scene(void);
 void re4dc_bench_alive(int n);
 int re4dc_bench_scene_no(void);
 const char* re4dc_bench_results(void);
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+void re4dc_bench_fixture_begin(const char* path);
+void re4dc_bench_census(unsigned esp_live, unsigned hits, unsigned rg_parts, unsigned rg_verts);
+unsigned re4dc_bench_esp_live(void);                                  // esp.cpp (BENCH_CENSUS)
+extern volatile unsigned re4dc_rigid_hide __attribute__((weak));     // native_actor_fast.cpp (RIGID_CENSUS=2)
+extern unsigned re4dc_rigid_census[6] __attribute__((weak));
+extern const void* re4dc_rigid_census_big __attribute__((weak));
+#if defined(RE4DC_BENCH_MISTCUT) && RE4DC_BENCH_MISTCUT
+extern unsigned re4dc_mist_cut;   // esp_sub.cpp (hwfog.mk MIST_CUT): effect classes not drawn (render only)
+#endif
+#endif
 #endif
 #if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
 extern "C" unsigned re4dc_actor_plan_on;  // platform/native_actor_fast.cpp (actorplan.mk ACTOR_PLAN)
@@ -294,6 +305,23 @@ struct Warp {
     // (the last presented image stays on screen for the harness's periodic framebuffer shots), then play goes on.
     u32 still_tick[8], still_ms[8];
     unsigned n_still, still_next;
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+    // BENCH_CENSUS (lane cache20, census bench disc), timed lines of the first room (room frames):
+    //   rigid <frame> on|off       rigid model parts drawn / not drawn (RIGID_CENSUS=2, render only)
+    //   fx <frame> on|off          every effect sprite + mist card drawn / not (MIST_CUT mask 239, render only)
+    //   crowd <frame> <n> [dist]   n more live Ganados (nearest first) put in front of Leon, dist (default 450) ahead,
+    //                              spread across the view, facing him (a census of n on screen; they then act as usual)
+    //   tank <frame>               the brought Ganado nearest Leon becomes the tank: its hp is held at 30000 every tick
+    //                              (hits, reactions, blood and gore still happen; it does not die), hits counted
+    //   autofire <frame> <end> [period]  Leon aims (R) at the tank and fires (A) every period frames (default 30),
+    //                              infinite ammo (Debug_flg[2] 0x00400000) while it runs
+    struct CenAt { u32 frame; u8 kind; s32 a, b; bool done; } cen[24];
+    unsigned n_cen;
+    cEm* crowd_em[8];
+    unsigned n_crowd;
+    cEm* tank;
+    u32 tank_hits, fire_from, fire_to, fire_period;
+#endif
 #if defined(RE4DC_WARP_AFTER_RESET) && RE4DC_WARP_AFTER_RESET
     // after_reset (WARP_AFTER_RESET=1, lane resetmem): the rig stays passive (title, card load, play) until the first
     // soft reset, then warps from the title shown after it (the s30 heap gate after load -> reset -> New Game).
@@ -318,6 +346,13 @@ void load()
     static char text[4096];
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     if (!path) path = re4dc_bench_first_scene();   // scene 1, or the start screen's single scene
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+    re4dc_bench_fixture_begin(path);
+#if defined(RE4DC_BENCH_MISTCUT) && RE4DC_BENCH_MISTCUT
+    re4dc_mist_cut = 0;   // every fixture starts with every effect drawn
+#endif
+    if (&re4dc_rigid_hide) re4dc_rigid_hide = 0;
+#endif
     const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
     re4dc_log("warp: bench fixture %s (%d bytes)\n", path, len);
 #else
@@ -654,6 +689,21 @@ void load()
 #endif
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+        } else if ((!strcmp(k, "rigid") || !strcmp(k, "fx")) && n >= 3 && wp.n_cen < 24) {
+            wp.cen[wp.n_cen++] = {num(tok[1]), (u8) (k[0] == 'r' ? 1 : 2), !strcmp(tok[2], "off") ? 1 : 0, 0, false};
+        } else if (!strcmp(k, "crowd") && n >= 3 && wp.n_cen < 24) {
+            wp.cen[wp.n_cen++] = {num(tok[1]), 3, (s32) num(tok[2]), n >= 4 ? (s32) num(tok[3]) : 450, false};
+        } else if (!strcmp(k, "objdump") && n >= 2 && wp.n_cen < 24) {
+            wp.cen[wp.n_cen++] = {num(tok[1]), 5, 0, 0, false};
+        } else if (!strcmp(k, "tank") && n >= 2 && wp.n_cen < 24) {
+            wp.cen[wp.n_cen++] = {num(tok[1]), 4, 0, 0, false};
+        } else if (!strcmp(k, "autofire") && n >= 3) {
+            wp.fire_from = num(tok[1]);
+            wp.fire_to = num(tok[2]);
+            wp.fire_period = n >= 4 ? num(tok[3]) : 30;
+            if (wp.fire_period < 8) wp.fire_period = 8;
+#endif
         } else if (!strcmp(k, "bench") && n >= 5) {
             // BENCHMARK: `bench <scene no> <begin room frame> <end room frame> <name...>` (bench.cpp measures [begin, end))
             char name[24] = "";
@@ -1074,6 +1124,125 @@ void god_alert_poll()
              (unsigned) wp.rooms, (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
     stamp(what);
 }
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+bool cen_live(cEm* e) { return e && (e->be_flag & 0x21) == 0x21 && e->hp > 0; }
+bool cen_listed(cEm* e)
+{
+    for (int id = 0x10; id <= 0x20; ++id)
+        for (cEm* x = EmMgr.getEmPtr(id, 0); x; x = EmMgr.getEmPtr(id, x))
+            if (x == e) return true;
+    return false;
+}
+// BENCH_CENSUS timed lines (first room, each tick), the tank's hp hold and Leon facing it while auto-fire runs.
+void census_poll()
+{
+    if (wp.rooms != 1 || !pPL || !pG) return;
+    for (unsigned i = 0; i < wp.n_cen; ++i) {
+        auto& c = wp.cen[i];
+        if (c.done || wp.room_frames < c.frame) continue;
+        c.done = true;
+        char what[96];
+        if (c.kind == 1) {
+            if (&re4dc_rigid_hide) re4dc_rigid_hide = (unsigned) c.a;
+            snprintf(what, sizeof(what), "census: rigid %s at room frame %u", c.a ? "off" : "on", (unsigned) wp.room_frames);
+        } else if (c.kind == 2) {
+#if defined(RE4DC_BENCH_MISTCUT) && RE4DC_BENCH_MISTCUT
+            re4dc_mist_cut = c.a ? 239u : 0u;
+#endif
+            snprintf(what, sizeof(what), "census: fx %s at room frame %u", c.a ? "off" : "on", (unsigned) wp.room_frames);
+        } else if (c.kind == 3) {
+            unsigned put = 0;
+            for (s32 m = 0; m < c.a && wp.n_crowd < 8; ++m) {
+                cEm* best = nullptr;
+                f32 best_d = 1e30f;
+                for (int id = 0x10; id <= 0x20; ++id)
+                    for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e)) {
+                        if (!cen_live(e)) continue;
+                        bool used = false;
+                        for (unsigned q = 0; q < wp.n_crowd; ++q) used = used || wp.crowd_em[q] == e;
+                        if (used) continue;
+                        const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+                        if (d < best_d) { best_d = d; best = e; }
+                    }
+                if (!best) break;
+                // spread across the view: -1.5, +1.5, -0.5, +0.5, -2.5, +2.5 m ... to Leon's side, dist ahead
+                const unsigned slot = wp.n_crowd;
+                const f32 side = ((slot & 1) ? 1.0f : -1.0f) * (slot < 2 ? 150.0f : slot < 4 ? 50.0f : 250.0f);
+                const f32 a = pPL->ang.y, d = (f32) c.b + (f32) (slot / 2) * 60.0f;
+                best->pos.x = pPL->pos.x + __builtin_sinf(a) * d - __builtin_cosf(a) * side;
+                best->pos.z = pPL->pos.z + __builtin_cosf(a) * d + __builtin_sinf(a) * side;
+                best->pos.y = pPL->pos.y;
+                best->ang.y = a + 3.14159265f;
+                wp.crowd_em[wp.n_crowd++] = best;
+                ++put;
+            }
+            snprintf(what, sizeof(what), "census: crowd %u put in front (asked %d, %u brought) at room frame %u", put,
+                     (int) c.a, wp.n_crowd, (unsigned) wp.room_frames);
+        } else if (c.kind == 5) {
+            // objdump: every listed object (ObjMgr) and enemy (EmMgr) with id, kind and position (finding the props)
+            unsigned no = 0;
+            for (cUnit* u = ObjMgr.pAlive; u; u = u->pNext, ++no) {
+                const cModel* m = (const cModel*) u;
+                re4dc_log("census: obj %u id=%02x kind=%u pos=%d,%d,%d\n", no, (unsigned) m->id, (unsigned) m->kindid,
+                          (int) m->pos.x, (int) m->pos.y, (int) m->pos.z);
+            }
+            for (cUnit* u = EmMgr.pAlive; u; u = u->pNext, ++no) {
+                const cEm* e = (const cEm*) u;
+                re4dc_log("census: em %u id=%02x be=%08x hp=%d pos=%d,%d,%d\n", no, (unsigned) e->id, (unsigned) e->be_flag,
+                          (int) e->hp, (int) e->pos.x, (int) e->pos.y, (int) e->pos.z);
+            }
+            snprintf(what, sizeof(what), "census: objdump %u at room frame %u pl=%d,%d,%d", no, (unsigned) wp.room_frames,
+                     (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
+        } else {
+            cEm* best = nullptr;
+            f32 best_d = 1e30f;
+            for (unsigned q = 0; q < wp.n_crowd; ++q) {
+                cEm* e = wp.crowd_em[q];
+                if (!cen_listed(e) || !cen_live(e)) continue;
+                const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+                if (d < best_d) { best_d = d; best = e; }
+            }
+            wp.tank = best;
+            if (best) best->hp = 30000;
+            snprintf(what, sizeof(what), "census: tank %s at room frame %u", best ? "set" : "none", (unsigned) wp.room_frames);
+        }
+        stamp(what);
+    }
+    if (wp.tank) {
+        if (!cen_listed(wp.tank) || wp.tank->hp <= 0) {
+            re4dc_log("census: tank lost at room frame %u (hits %u)\n", (unsigned) wp.room_frames, (unsigned) wp.tank_hits);
+            wp.tank = nullptr;
+        } else {
+            if (wp.tank->hp < 30000) { ++wp.tank_hits; wp.tank->hp = 30000; }
+        }
+    }
+    const bool firing = wp.fire_to && wp.room_frames >= wp.fire_from && wp.room_frames < wp.fire_to;
+    if (firing) {
+        pG->Debug_flg[2] |= 0x00400000;   // infinite ammo
+        if (wp.tank && !(pG->Status_flg[1] & 0x10000000)) {
+            const f32 dx = wp.tank->pos.x - pPL->pos.x, dz = wp.tank->pos.z - pPL->pos.z;
+            if (dx * dx + dz * dz >= 1.0f) pPL->ang.y = atan2f(dx, dz);
+        }
+    }
+    unsigned rp = 0, rv = 0;
+    if (re4dc_rigid_census) {
+        rp = re4dc_rigid_census[0]; rv = re4dc_rigid_census[2];
+        if (!(wp.room_frames % 150) && rp)
+            re4dc_log("census: rigid frame %u parts=%u meshlets=%u verts=%u big=%p big_verts=%u big_ml=%u big_lod=%u\n",
+                      (unsigned) wp.room_frames, rp, re4dc_rigid_census[1], rv,
+                      re4dc_rigid_census_big ? re4dc_rigid_census_big : nullptr, re4dc_rigid_census[3],
+                      re4dc_rigid_census[4], re4dc_rigid_census[5]);
+        if (!(wp.room_frames % 150) && re4dc_rigid_census_big) {
+            const cModel* m = (const cModel*) re4dc_rigid_census_big;
+            re4dc_log("census: rigid big model id=%02x kind=%u pos=%d,%d,%d\n", (unsigned) m->id, (unsigned) m->kindid,
+                      (int) m->pos.x, (int) m->pos.y, (int) m->pos.z);
+        }
+        for (unsigned i = 0; i < 6; ++i) re4dc_rigid_census[i] = 0;
+        re4dc_rigid_census_big = nullptr;
+    }
+    re4dc_bench_census(re4dc_bench_esp_live(), wp.tank_hits, rp, rv);
+}
+#endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 // BENCHMARK: the scene's end state (the determinism check compares these lines between runs): Leon, the Ganados of
 // the rooms' count range (model ids 0x10..0x20) with position, hp and flags, folded into one hash.
@@ -1316,6 +1485,9 @@ void re4dc_warp_poll(void)
         for (;;) thd_sleep(1000);
     }
     ++wp.room_frames;
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+    census_poll();
+#endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     if (wp.rooms == 1 && bench_poll()) return;
 #endif
@@ -1476,6 +1648,13 @@ void re4dc_warp_pad(unsigned short* buttons, signed char* stickX, signed char* s
         re4dc_warp_cut("event");
         return;
     }
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+    if (wp.fire_to && wp.rooms == 1 && wp.room_frames >= wp.fire_from && wp.room_frames < wp.fire_to) {
+        *buttons |= 0x0020;                                                     // R: aim
+        if ((wp.room_frames - wp.fire_from) % wp.fire_period >= 4 &&
+            (wp.room_frames - wp.fire_from) % wp.fire_period < 7) *buttons |= 0x0100;   // A: fire (after 4 aimed frames)
+    }
+#endif
     if (wp.cur_act >= 0 && wp.cur_act < (int) wp.n_act && wp.pad_frames < wp.cur_until) {
         const Act& a = wp.act[wp.cur_act];
         *buttons |= a.buttons;

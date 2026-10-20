@@ -1,7 +1,12 @@
 # Lane rigid20 (props-new-path, P2; RIGID20-STATUS.md). Default 0: no code, image unchanged.
 # RIGID_CENSUS=1 (diagnostic only, never in a recipe): rigid (unskinned) native actor parts are not drawn, and an RGC
 # line every 600 frames counts them (parts, meshlets, vertices). A/B against the same build without it = their cost.
+# RIGID_CENSUS=2 (benchmark census discs only, lane cache20): rigid parts are counted every frame and hidden only while the
+# run-time switch re4dc_rigid_hide is set (warp line `rigid <frame> off|on`, BENCH_CENSUS=1).
 RIGID_CENSUS ?= 0
+ifneq ($(filter-out 0 1 2,$(RIGID_CENSUS)),)
+$(error RIGID_CENSUS is 0, 1 or 2)
+endif
 ifneq ($(RIGID_CENSUS),0)
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_RIGID_CENSUS=$(RIGID_CENSUS)
 endif
