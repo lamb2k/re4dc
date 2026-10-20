@@ -168,6 +168,24 @@ def evaluate_set(a, indices):
                 strict_two_slab_overflow=(v==3 and len(cold)>2),
                 conclusion='unresolved mapping' if missing else 'demonstrable recurring cold working set exceeds two slots' if v==3 and len(cold)>2 else 'specific set fits/inline; not all-state closure')
 
+def pressure_contract(a, cap):
+    """Compare existing archive declaration to active logical pressure policy.
+    A mismatch is a capacity-contract risk, never evidence of actual thrash.
+    Reserve backing is already allocated at bind; payload occupancy allocates no
+    extra heap block. Global co-binding/current-stream closure is separate.
+    """
+    m=a.get('mtc')
+    if not m:return None
+    reserve=2*m['max_cold_slab'];hot=m['hot_preload_bytes']
+    return dict(version=m['version'],hot_payload_bytes=hot,
+                reserved_backing_bytes=reserve,declared_hot_plus_two_cold_bytes=hot+reserve,
+                active_global_logical_cap=cap,
+                declaration_exceeds_cap=(hot+reserve>cap) if cap else None,
+                excess_bytes=max(0,hot+reserve-cap) if cap else None,
+                reserved_fill_additional_heap_bytes=0,
+                hot_is_permanent_lease=False,whole_working_set_admission_proven=False)
+
+
 def reviewed_rules(root, archives):
     # Fail closed on source drift in reviewed anchors. References remain in report.
     anchors={
@@ -290,6 +308,16 @@ def main():
                    'MTC v2 hot flags preload; global pressure can evict; spill/pool require actual compiled knobs',
                    'inline FCV removes this cache read path after archive admission, not archive-switch/texture/hand/renderpack I/O',
                    'dynamic selector/Work alias and encounter concurrency closure remains explicit; historic render/STRICT gates are not cache closure'])
+    cap=None
+    if a.resolved_knobs:
+        for line in a.resolved_knobs.read_text().splitlines():
+            if line.startswith('MOTION_PRESSURE_BYTES='):cap=int(line.split('=',1)[1],0)
+    report['shared_cache_contract']=dict(
+        scope='Existing QA-selected MTC census against its resolved pressure cap; not a room re-audit',
+        archives={k:pressure_contract(v,cap) for k,v in archives.items() if k.startswith('qa-fixed:') and v['mtc']},
+        simultaneous_or_recurring_body_blend_shape_closure='Only explicit reviewed rules above; individual evaluation leases protect pointers, not a complete recurring set',
+        restoration='Hot preload occurs at bind; movie/OOM eviction and dead-heap cleanup may discard unleased data without an explicit all-hot replay at resume',
+        producer='Source ARC hot membership is explicit; current shared Ganado flags also derive from observed run unions, not whole-source coactivity closure')
     baseline=[x for x in report['reviewed_recurring_sets'] if x['archive'].startswith('qa-original:')]
     fixed=[x for x in report['reviewed_recurring_sets'] if x['archive']=='qa-fixed:em/pl11.drs']
     if baseline:

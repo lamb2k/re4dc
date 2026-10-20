@@ -9643,5 +9643,569 @@
     "leon": "candidate-hot02 run-output lines597/606-607/928 load pl08+61184B PS2 render pack+wep02. pl00 is selected on disc, not exercised in this QA window. Separate LHPACK render-cache async reads appear in rejected-audio hot01; not animation thrash attribution.",
     "mendez": "Prior read-only917files/51matches receipt b745bcf5: no per-em35 motion misses/working-set rows; no thrash conclusion. Global counter after room change is not Mendez evidence.",
     "later": "Castle source/staged tree is boss21 retained diagnostic, not current shipping acceptance. Island archives are prepared candidates; no QA Disc1 presence inferred. Historical bind sizes differ for U3 and Garrador controls."
+  },
+  "shared_cache_contract": {
+    "scope": "Existing QA-selected census against exact QA resolved pressure cap; later archives remain separate",
+    "archives": {
+      "qa-fixed:em/em11.drs": {
+        "version": 2,
+        "hot_payload_bytes": 0,
+        "reserved_backing_bytes": 64832,
+        "declared_hot_plus_two_cold_bytes": 64832,
+        "active_global_logical_cap": 262144,
+        "declaration_exceeds_cap": false,
+        "excess_bytes": 0,
+        "reserved_fill_additional_heap_bytes": 0,
+        "hot_is_permanent_lease": false,
+        "whole_working_set_admission_proven": false
+      },
+      "qa-fixed:em/em12.drs": {
+        "version": 2,
+        "hot_payload_bytes": 225184,
+        "reserved_backing_bytes": 64832,
+        "declared_hot_plus_two_cold_bytes": 290016,
+        "active_global_logical_cap": 262144,
+        "declaration_exceeds_cap": true,
+        "excess_bytes": 27872,
+        "reserved_fill_additional_heap_bytes": 0,
+        "hot_is_permanent_lease": false,
+        "whole_working_set_admission_proven": false
+      },
+      "qa-fixed:em/em13.drs": {
+        "version": 2,
+        "hot_payload_bytes": 198944,
+        "reserved_backing_bytes": 64832,
+        "declared_hot_plus_two_cold_bytes": 263776,
+        "active_global_logical_cap": 262144,
+        "declaration_exceeds_cap": true,
+        "excess_bytes": 1632,
+        "reserved_fill_additional_heap_bytes": 0,
+        "hot_is_permanent_lease": false,
+        "whole_working_set_admission_proven": false
+      },
+      "qa-fixed:em/em15.drs": {
+        "version": 2,
+        "hot_payload_bytes": 242176,
+        "reserved_backing_bytes": 64832,
+        "declared_hot_plus_two_cold_bytes": 307008,
+        "active_global_logical_cap": 262144,
+        "declaration_exceeds_cap": true,
+        "excess_bytes": 44864,
+        "reserved_fill_additional_heap_bytes": 0,
+        "hot_is_permanent_lease": false,
+        "whole_working_set_admission_proven": false
+      },
+      "qa-fixed:em/em16.drs": {
+        "version": 2,
+        "hot_payload_bytes": 0,
+        "reserved_backing_bytes": 64832,
+        "declared_hot_plus_two_cold_bytes": 64832,
+        "active_global_logical_cap": 262144,
+        "declaration_exceeds_cap": false,
+        "excess_bytes": 0,
+        "reserved_fill_additional_heap_bytes": 0,
+        "hot_is_permanent_lease": false,
+        "whole_working_set_admission_proven": false
+      },
+      "qa-fixed:em/em17.drs": {
+        "version": 2,
+        "hot_payload_bytes": 124736,
+        "reserved_backing_bytes": 64832,
+        "declared_hot_plus_two_cold_bytes": 189568,
+        "active_global_logical_cap": 262144,
+        "declaration_exceeds_cap": false,
+        "excess_bytes": 0,
+        "reserved_fill_additional_heap_bytes": 0,
+        "hot_is_permanent_lease": false,
+        "whole_working_set_admission_proven": false
+      },
+      "qa-fixed:em/em2b.drs": {
+        "version": 2,
+        "hot_payload_bytes": 0,
+        "reserved_backing_bytes": 63232,
+        "declared_hot_plus_two_cold_bytes": 63232,
+        "active_global_logical_cap": 262144,
+        "declaration_exceeds_cap": false,
+        "excess_bytes": 0,
+        "reserved_fill_additional_heap_bytes": 0,
+        "hot_is_permanent_lease": false,
+        "whole_working_set_admission_proven": false
+      },
+      "qa-fixed:em/em35.drs": {
+        "version": 3,
+        "hot_payload_bytes": 0,
+        "reserved_backing_bytes": 246016,
+        "declared_hot_plus_two_cold_bytes": 246016,
+        "active_global_logical_cap": 262144,
+        "declaration_exceeds_cap": false,
+        "excess_bytes": 0,
+        "reserved_fill_additional_heap_bytes": 0,
+        "hot_is_permanent_lease": false,
+        "whole_working_set_admission_proven": false
+      },
+      "qa-fixed:em/pl11.drs": {
+        "version": 3,
+        "hot_payload_bytes": 0,
+        "reserved_backing_bytes": 50880,
+        "declared_hot_plus_two_cold_bytes": 50880,
+        "active_global_logical_cap": 262144,
+        "declaration_exceeds_cap": false,
+        "excess_bytes": 0,
+        "reserved_fill_additional_heap_bytes": 0,
+        "hot_is_permanent_lease": false,
+        "whole_working_set_admission_proven": false
+      }
+    },
+    "findings": [
+      "Individual evaluator leases protect pointers; they do not reserve a complete recurring body/blend/shape set across a tick.",
+      "Hot flags are preload hints; global pressure ignores hot classification and per-binding hot+2largest budget.",
+      "Reserved slabs allocate at binding; logical pressure also counts their occupants although filling them allocates no extra heap block.",
+      "Bind is the hot preloader; no explicit all-hot restoration is present after movie eviction or dead-heap cleanup.",
+      "Shared Ganado stage hot flags use observed run unions, which leave source work/transition state closure incomplete."
+    ],
+    "repairs_not_implemented": [
+      "Separate heap-backed pressure accounting from fixed reserved backing, with aggregate admission and lease checks.",
+      "Generate state/coactivity hot or inline sets from source body/blend/shape/object aliases and reject policy mismatch before staging.",
+      "Restore a verified admitted recurring set at safe movie/menu resume before gameplay, under the same physical bound; do not blindly preload all keys."
+    ],
+    "source_pins": [
+      {
+        "path": "port/dreamcast/game/platform/native_motion.cpp",
+        "sha256": "e1f7ca6cfa127badcd5df5be726fde3256e97c6c90649b89dae23cb936a8f8c1"
+      },
+      {
+        "path": "port/dreamcast/tools/prepare_enemy_motions.py",
+        "sha256": "3eca667ea7f0d7a24a924c943330057e0fc4e03fede2b580d431066b61345bf6"
+      },
+      {
+        "path": "port/dreamcast/tools/audit_enemy_motion_prefetch.py",
+        "sha256": "ddd04b3018b96ad5ee0736573fe2a3ab0f4300a2b28e8e3d855c4df59d07eded"
+      },
+      {
+        "path": "port/dreamcast/tools/d367/motion/motion_hot.py",
+        "sha256": "fad127856100d1bb0fda4c931ee11f3d42d227bc1be6a8cf2495ce286fe365b5"
+      },
+      {
+        "path": "port/dreamcast/tools/d367/motion/hot/em12-r100-r103-r11a.txt",
+        "sha256": "8d2df84eac2e529c6f8e76ef1ccbe304d5dcf8ec411a0efc78984805a7af840d"
+      },
+      {
+        "path": "port/dreamcast/tools/d367/test11/t11-fix.py",
+        "sha256": "7bfa2b4b537cc6543000ba4f86953cd5e4a79e4820efb4d18cf198cd611d2c58"
+      },
+      {
+        "path": "port/dreamcast/game/sscrn_bridge.cpp",
+        "sha256": "eb704d519337b4349fc069b11fd9aea7825831f5048a4fd5980b81f857a703ab"
+      },
+      {
+        "path": "port/dreamcast/game/platform/native_movie.cpp",
+        "sha256": "e09567a549940b0200999c70c4b71179ff2f722c4482f9e8b2be3913381da864"
+      },
+      {
+        "path": "src/game/motion.cpp",
+        "sha256": "d5aafa42667b16d10e9083ab69b1e7f0dd45788d0727bed61674c8a47dbb5b11"
+      },
+      {
+        "path": "src/game/shape.cpp",
+        "sha256": "ac649e177201543059452c8481a2d47c3ebd52bab4c518683ffe469410167031"
+      },
+      {
+        "path": "src/game/cam_motion.cpp",
+        "sha256": "4c5ce5f7f73cfa30564158ee3aec3193296e80543e2f0561391bf79fdf71c734"
+      },
+      {
+        "path": "src/game/stage.cpp",
+        "sha256": "f95342121195ba1e4ad3d89629c946636866dbca36578d35f42b4cda5b9a1c60"
+      },
+      {
+        "path": "src/game/em_set.cpp",
+        "sha256": "ba44bd6e2fc0eae391956f1a4648a0b25439f826fa292c4256c5bc47be8b0d6a"
+      },
+      {
+        "path": "src/game/read.cpp",
+        "sha256": "6d0cfec2e30638236a84a44591a1f62d6446b1b1d2af56f4c030f5e612f343a0"
+      },
+      {
+        "path": "src/em10/em10.cpp",
+        "sha256": "88ab2aaff5c17f59a969c522e7d384d1113d23723919f485cfc42ae122b0a0a3"
+      },
+      {
+        "path": "include/em_set.h",
+        "sha256": "b4c66b2e4b1220d2c620b5430af7833dabd74e5ec5c48d5319a77b41943f1930"
+      }
+    ],
+    "r103_application": {
+      "qualification": "Selected ESL/module binding and shared worker selectors only, not a separate room audit",
+      "esl": "etc/emleon00.esl",
+      "rows": [
+        {
+          "index": 95,
+          "id": 18,
+          "type": 3,
+          "set": 8
+        },
+        {
+          "index": 96,
+          "id": 18,
+          "type": 0,
+          "set": 9
+        },
+        {
+          "index": 97,
+          "id": 18,
+          "type": 4,
+          "set": 26
+        },
+        {
+          "index": 98,
+          "id": 18,
+          "type": 1,
+          "set": 0
+        },
+        {
+          "index": 99,
+          "id": 18,
+          "type": 4,
+          "set": 7
+        }
+      ],
+      "source_dispatch": "sets7/8/9 -> routine8 Suki; set1a -> routine7 Bucket; set0 -> ordinary Wait/Keeper",
+      "clips": {
+        "0x8": {
+          "arc": 8,
+          "offset": 498144,
+          "entry": 2,
+          "bytes": 16608,
+          "key": "4c4a3483-8be0de5f",
+          "state": "cached-hot-preload"
+        },
+        "0x1af": {
+          "arc": 431,
+          "offset": 631776,
+          "state": "inline-resident"
+        },
+        "0x1b1": {
+          "arc": 433,
+          "offset": 655584,
+          "entry": 99,
+          "bytes": 8640,
+          "key": "24e92217-8b01debc",
+          "state": "cached-hot-preload"
+        },
+        "0x1b3": {
+          "arc": 435,
+          "offset": 656000,
+          "entry": 100,
+          "bytes": 27584,
+          "key": "a72a4b59-5e6aadaa",
+          "state": "cached-cold"
+        },
+        "0x1b5": {
+          "arc": 437,
+          "offset": 657088,
+          "entry": 101,
+          "bytes": 18784,
+          "key": "123ce089-29a8bcd0",
+          "state": "cached-hot-preload"
+        },
+        "0x1b7": {
+          "arc": 439,
+          "offset": 657920,
+          "entry": 102,
+          "bytes": 21152,
+          "key": "8f33847b-4126293b",
+          "state": "cached-cold"
+        }
+      },
+      "evidence": "Actual selected little-endian ESL read; stage PS2 patch leaves these Ganado fields unchanged; source comments naming R102/R103 do not override staged route identity",
+      "conclusion": "Specific recurring worker clips can fit; full declared hot set plus both worker cold clips totals273920B,11776overcap, allowing hot eviction but not proving recurrent thrash.",
+      "esl_manifest_identity": {
+        "sha256": "ccfdb4a7a301a189259cc001fb47f518b83bd6f900289bc3ed25c2619ea39715",
+        "size": 8160
+      }
+    },
+    "hud_existing_resident_application": {
+      "manifest_identity": {
+        "sha256": "a9dca43b2b62e75235c6ae1cba0a1880fd18b0df6df61b3001a0441a724ce76d",
+        "size": 86528
+      },
+      "digits": [
+        {
+          "digit": 0,
+          "key": "79d3fc0f-e9580b27",
+          "listed_rooms": [
+            "0x0",
+            "0x101",
+            "0x102",
+            "0x103",
+            "0x105",
+            "0x108",
+            "0x10b",
+            "0x10f",
+            "0x111",
+            "0x112",
+            "0x113",
+            "0x117",
+            "0x118",
+            "0x11c",
+            "0x11d",
+            "0x11e",
+            "0x11f",
+            "0x200",
+            "0x201",
+            "0x202",
+            "0x203",
+            "0x204",
+            "0x205",
+            "0x207",
+            "0x208",
+            "0x209",
+            "0x20a",
+            "0x20b",
+            "0x20c",
+            "0x20d",
+            "0x20e",
+            "0x20f",
+            "0x300",
+            "0x301",
+            "0x303",
+            "0x304",
+            "0x305",
+            "0x306",
+            "0x307",
+            "0x308",
+            "0x309",
+            "0x30a",
+            "0x30b",
+            "0x30c",
+            "0x30d",
+            "0x30e",
+            "0x30f",
+            "0x310",
+            "0x311",
+            "0x312",
+            "0x315",
+            "0x316",
+            "0x317",
+            "0x318",
+            "0x31a",
+            "0x31b",
+            "0x31c",
+            "0x31d",
+            "0x320",
+            "0x321",
+            "0x325",
+            "0x326",
+            "0x327",
+            "0x329",
+            "0x330",
+            "0x331",
+            "0x332"
+          ],
+          "r100_preload_listed": true,
+          "minimum_vram_bytes": 1024
+        },
+        {
+          "digit": 1,
+          "key": "7bf226fe-35eb7852",
+          "listed_rooms": [
+            "0x0",
+            "0x101",
+            "0x102",
+            "0x103",
+            "0x105",
+            "0x108",
+            "0x10b",
+            "0x10f",
+            "0x111",
+            "0x112",
+            "0x113",
+            "0x117",
+            "0x118",
+            "0x11c",
+            "0x11d",
+            "0x11e",
+            "0x11f",
+            "0x200",
+            "0x201",
+            "0x202",
+            "0x203",
+            "0x204",
+            "0x205",
+            "0x206",
+            "0x207",
+            "0x208",
+            "0x209",
+            "0x20a",
+            "0x20b",
+            "0x20c",
+            "0x20d",
+            "0x20e",
+            "0x20f",
+            "0x300",
+            "0x301",
+            "0x303",
+            "0x304",
+            "0x305",
+            "0x306",
+            "0x307",
+            "0x308",
+            "0x309",
+            "0x30a",
+            "0x30b",
+            "0x30c",
+            "0x30d",
+            "0x30e",
+            "0x30f",
+            "0x310",
+            "0x311",
+            "0x312",
+            "0x315",
+            "0x316",
+            "0x317",
+            "0x318",
+            "0x31a",
+            "0x31b",
+            "0x31c",
+            "0x31d",
+            "0x320",
+            "0x321",
+            "0x325",
+            "0x326",
+            "0x327",
+            "0x329",
+            "0x330",
+            "0x331",
+            "0x332"
+          ],
+          "r100_preload_listed": true,
+          "minimum_vram_bytes": 1024
+        },
+        {
+          "digit": 2,
+          "key": "076e860e-52b615a0",
+          "listed_rooms": [
+            "0x101",
+            "0x102",
+            "0x105",
+            "0x10f",
+            "0x112",
+            "0x117",
+            "0x11b",
+            "0x11c",
+            "0x11e",
+            "0x200",
+            "0x203",
+            "0x20a",
+            "0x20c",
+            "0x20f",
+            "0x212",
+            "0x213",
+            "0x214",
+            "0x217",
+            "0x301",
+            "0x304",
+            "0x30a",
+            "0x30f",
+            "0x311",
+            "0x315",
+            "0x31c"
+          ],
+          "r100_preload_listed": false,
+          "minimum_vram_bytes": 1024
+        },
+        {
+          "digit": 3,
+          "key": "b0a8148d-0a80a967",
+          "listed_rooms": [
+            "0x101",
+            "0x105",
+            "0x107",
+            "0x108",
+            "0x10a",
+            "0x10b",
+            "0x111",
+            "0x113",
+            "0x118",
+            "0x11d",
+            "0x200",
+            "0x208",
+            "0x30c"
+          ],
+          "r100_preload_listed": false,
+          "minimum_vram_bytes": 1024
+        },
+        {
+          "digit": 4,
+          "key": "ef2f7909-ea057c42",
+          "listed_rooms": [
+            "0x103",
+            "0x106",
+            "0x200"
+          ],
+          "r100_preload_listed": false,
+          "minimum_vram_bytes": 1024
+        },
+        {
+          "digit": 5,
+          "key": "25c5a20b-d4e366ff",
+          "listed_rooms": [
+            "0x200"
+          ],
+          "r100_preload_listed": false,
+          "minimum_vram_bytes": 1024
+        },
+        {
+          "digit": 6,
+          "key": "8997cf6c-68daadee",
+          "listed_rooms": [
+            "0x200"
+          ],
+          "r100_preload_listed": false,
+          "minimum_vram_bytes": 1024
+        },
+        {
+          "digit": 7,
+          "key": "aeb265a3-b2ded538",
+          "listed_rooms": [
+            "0x102",
+            "0x10b",
+            "0x200"
+          ],
+          "r100_preload_listed": false,
+          "minimum_vram_bytes": 1024
+        },
+        {
+          "digit": 8,
+          "key": "48c096e1-fcd52e2d",
+          "listed_rooms": [
+            "0x200",
+            "0x205"
+          ],
+          "r100_preload_listed": false,
+          "minimum_vram_bytes": 1024
+        },
+        {
+          "digit": 9,
+          "key": "951a629c-a43ebab7",
+          "listed_rooms": [
+            "0x200"
+          ],
+          "r100_preload_listed": false,
+          "minimum_vram_bytes": 1024
+        }
+      ],
+      "unlisted_r100_digits": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "qualification": "Data-only prewarm can use existing room list machinery; slot/byte cutoff and actual preloading still require verification; no change prepared here"
+    }
   }
 }

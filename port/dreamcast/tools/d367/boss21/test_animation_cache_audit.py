@@ -29,6 +29,19 @@ class CapacitySemantics(unittest.TestCase):
     def test_missing_fcv_is_not_a_pass(self):
         r=audit.evaluate_set(fixture(None,['inline-resident']),[0,5])
         self.assertEqual(r['conclusion'],'unresolved mapping')
+    def test_em12_declared_budget_exceeds_active_pressure_cap(self):
+        a=dict(mtc=dict(version=2,hot_preload_bytes=225184,max_cold_slab=32416))
+        r=audit.pressure_contract(a,262144)
+        self.assertEqual(r['declared_hot_plus_two_cold_bytes'],290016)
+        self.assertEqual(r['excess_bytes'],27872)
+        self.assertTrue(r['declaration_exceeds_cap'])
+        self.assertEqual(r['reserved_fill_additional_heap_bytes'],0)
+        self.assertFalse(r['whole_working_set_admission_proven'])
+    def test_bounded_budget_fits_but_does_not_clear_three_streams(self):
+        a=fixture(3,['cached-cold']*3)
+        a['mtc'].update(hot_preload_bytes=0,max_cold_slab=25440)
+        self.assertFalse(audit.pressure_contract(a,262144)['declaration_exceeds_cap'])
+        self.assertTrue(audit.evaluate_set(a,[0,1,2])['strict_two_slab_overflow'])
     def test_function_parser_keeps_macro_lines_and_ignores_comments(self):
         t='// void fake() { ARC(5); }\nvoid real() { ARC(8); }\n#define RELOAD(x) '+chr(92)+'\n x = WEP_ARC_PTR(9);\n'
         found=list(audit.functions(t))
