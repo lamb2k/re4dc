@@ -107,3 +107,13 @@ correctly refused ambiguity. Under PL_ASHLEY the shortcut is now limited to
 Leon's model0/119-joint owner. Ashley's141-joint owner must prove both hands
 through its real records. Default-off behavior and full certificate checks
 remain intact. A fresh target run is still required.
+
+
+Fresh c21gmW now selects the unique registry planR with all source Infos,
+hands and skeleton proved. Its material certificate refuses LiveModifier11:
+source cPlAshley::setModel assigns TEV group1, while the helper expected group0
+for a registry player. Saved-state fields confirm group1,alpha255,cull0,shader0
+and zero extra ambient. Under PL_ASHLEY the source group is now1 only for the
+already validated currentpPL model0/141-joint owner. No model or gameplay
+field is changed, and every other material/modifier/color check remains.
+A fresh target run is still required.

@@ -1,0 +1,25 @@
+{
+  "program": "c21gmW",
+  "state_sha256": "00fbb0c71146ce70f775ba4d774fca5f1fa2c57f935ea03eee228990cbb5ed41",
+  "room": "0x20d",
+  "source_frame": 659,
+  "observed_model": {
+    "id": 0,
+    "parts": 141,
+    "ot_type": 7,
+    "TevScaleGroup": 1,
+    "alpha_omit": 255,
+    "CullMode": 0,
+    "Shader_type": 0,
+    "AddAmb": [
+      0,
+      0,
+      0
+    ]
+  },
+  "unique_registry_plan": "R; full sourceInfo/hand/skeleton proof passed",
+  "material_decline": "LiveModifier11/role0; existing group helper expected0 for registry player",
+  "source_contract": "src/game/pl_ashley.cpp:105 TevScaleGroup=1",
+  "repair": "Under existing PL_ASHLEY, require sourcegroup1 only for already validated currentpPL model0/141; all other modifiers/certificates unchanged",
+  "target_rerun_pending": true
+}
