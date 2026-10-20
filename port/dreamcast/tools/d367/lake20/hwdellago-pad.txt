@@ -1,0 +1,2 @@
+# Ordinary START only in the source r10b s10 route movie; low16 route id0x10b10 is2832. Source end callback still runs.
++1 1000 1 movie=1/2832 200000

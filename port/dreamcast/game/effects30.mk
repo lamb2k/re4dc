@@ -235,6 +235,16 @@ endif
 #                    size, alpha, a view-depth cap and a per-frame room-sprite budget (esp_sub.cpp kFxLevel, with
 #                    per-recipe overrides kFxLevelOverride). The value is the build default of the runtime variable
 #                    re4dc_fx_level (re4dc_fx_level_set / _cycle for a menu or tester toggle).
+# SHORE_FX_LEVEL=1|2 (lane lake20 2026-10-20; render only; unset by default = no code): the FX_LEVEL dial for the night
+#                    lake shore only (r11b; the r11b walk is effects-bound, ~16 fps in Flycast): r11b draws at this
+#                    level, every other room at FX_LEVEL (0 when FX_LEVEL is unset). Needs PS2_FX_ROOMS=1.
+SHORE_FX_LEVEL ?=
+ifneq ($(SHORE_FX_LEVEL),)
+ifneq ($(filter $(SHORE_FX_LEVEL),1 2),$(SHORE_FX_LEVEL))
+$(error SHORE_FX_LEVEL must be 1 or 2)
+endif
+FX_LEVEL ?= 0
+endif
 FX_LEVEL ?=
 ifneq ($(FX_LEVEL),)
 ifneq ($(filter $(FX_LEVEL),0 1 2)$(PS2_FX_ROOMS),$(FX_LEVEL)1)
@@ -474,6 +484,9 @@ ifneq ($(EFFECT_OWNERS_ALL),0)
 endif
 ifneq ($(FX_LEVEL),)
 	@printf '#define RE4DC_FX_LEVEL %s\n' '$(FX_LEVEL)' >> $@.tmp
+endif
+ifneq ($(SHORE_FX_LEVEL),)
+	@printf '#define RE4DC_SHORE_FX_LEVEL %s\n' '$(SHORE_FX_LEVEL)' >> $@.tmp
 endif
 ifneq ($(EFFECT_TORCH),0)
 	@printf '#define RE4DC_EFFECT_TORCH %s\n' '$(EFFECT_TORCH)' >> $@.tmp

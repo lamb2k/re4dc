@@ -3728,6 +3728,9 @@ unsigned rce_retire_frame;bool rce_armed;   // ROOM_CHANGE_EVICT: set at room re
 #if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
 unsigned rce_last_room=~0U;                 // ROOM_REENTRY_EVICT: the room of the previous room-change evict
 #endif
+#if defined(RE4DC_SS11_ROOM_EVICT) && RE4DC_SS11_ROOM_EVICT
+bool rce_force_all;                          // SS11_ROOM_EVICT: the next room-change evict closes every unpinned entry
+#endif
 #if RE4DC_QUALITY_ASSETS
 bool preload_room_pass; // Standard: skip the index's drop keys in the room-identity pass only
 #endif
@@ -4065,7 +4068,10 @@ void preload_identities(){
 #if defined(__sh__)
         re4dc_profile_source(&rce_src);
 #endif
-        const bool rce_same=rce_src.room==rce_last_room;rce_last_room=rce_src.room;
+        bool rce_same=rce_src.room==rce_last_room;rce_last_room=rce_src.room;
+#if defined(RE4DC_SS11_ROOM_EVICT) && RE4DC_SS11_ROOM_EVICT
+        if(rce_force_all){rce_same=true;rce_force_all=false;}   // a room change behind a chapter-end screen
+#endif
 #endif
         for(auto& e:entries){
             if(!e.valid || RE4DC_ENTRY_PINNED(e))continue;
@@ -4540,6 +4546,25 @@ extern "C" void re4dc_ui_vram_unclaim(){
 extern "C" void re4dc_ui_room_preload_again(){
 #if RE4DC_TEX_RESIDENT
     preload_pending=true;
+#endif
+#if defined(RE4DC_SS11_ROOM_EVICT) && RE4DC_SS11_ROOM_EVICT
+    {
+        // SS11_ROOM_EVICT (Makefile; render only; lane lake20, #43): a chapter end changes the room behind its results /
+        // save screens without a room retirement (Del Lago r10b -> the night shore r11b), so r10b's 1.6 MB dynamic set
+        // stayed beside r11b's preload and three 256x256 pictures found no contiguous block (~2 s latched waits). When
+        // the room differs from the last room-change evict's, arm one here: every unpinned, unleased entry closes at the
+        // preload pass, as on a re-entry; the new room's listed set is pinned and loads into the freed pool.
+        re4dc::profile::Source src{};
+#if defined(__sh__)
+        re4dc_profile_source(&src);
+#endif
+        if(src.room!=rce_last_room){
+            for(auto& e:entries)if(e.frame>=frame)e.frame=frame?frame-1:0U;
+            rce_retire_frame=frame;rce_armed=true;rce_force_all=true;
+            re4dc_log("native texture preload again: room %03x -> %03x behind SS heap 11, room change evict armed\n",
+                      rce_last_room&0xfffU,unsigned(src.room));
+        }
+    }
 #endif
     re4dc_log("native texture preload again: SS heap 11 closed free=%u\n",(unsigned)pvr_mem_available());
 }

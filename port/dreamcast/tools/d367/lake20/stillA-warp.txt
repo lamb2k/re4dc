@@ -1,0 +1,9 @@
+name lk20-stillA
+# lake20 still pair spot A: the night shore (r11b), Leon placed, game frozen at room frame 300 (render-only arms compared)
+room 0x11b
+pos 125762 -175 171957
+ang 1.503
+rsf 0x11b 0
+inv default
+god
+freeze 300

@@ -950,6 +950,11 @@ static int FxLevelKeep(u32 key)
 // Ps2fxClass: 1 = thinned out at this level.
 static int FxLevelThin(cEsp* esp)
 {
+#if defined(RE4DC_SHORE_FX_LEVEL)
+    // SHORE_FX_LEVEL (effects30.mk, lane lake20): the night lake shore (r11b) draws at its own level; every Ps2fxClass
+    // call passes here first, so the level follows the room before any sprite or rain line of the frame is drawn.
+    re4dc_fx_level = (u8) (G_ROOM_ID == 0x11b ? RE4DC_SHORE_FX_LEVEL : RE4DC_FX_LEVEL);
+#endif
     return (FxLevelParts(esp) & FXL_THIN) && !FxLevelKeep((u32) ((u8*) esp - (u8*) g_pEspSys->pEspBuf) / 0x150);
 }
 static void FxLevelScale(Re4dcEffectSprite* s, f32 size, f32 alpha)
