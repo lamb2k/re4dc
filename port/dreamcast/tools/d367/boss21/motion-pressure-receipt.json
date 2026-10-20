@@ -1,0 +1,77 @@
+{
+  "base": "6e0ee147a9ec975071d491bdab5636054b6b6f78",
+  "qualification": "SH4 native_motion object with actual motion-policy flags; not a full linked-program or guest gate",
+  "object_knobs": [
+    "MOTION_RESERVE=1",
+    "MOTION_PRESSURE_BYTES=262144",
+    "MOTION_PRESSURE_GROW=0 (inherited default)",
+    "MOTION_BOUNDED_R11F=1",
+    "MOTION_RESERVE_SPILL=524288",
+    "MOTION_COLD_POOL=262144",
+    "SUBSCREEN=1",
+    "MOTION_OOM_EVICT=1",
+    "MOVIE_HEAP_EVICT=1",
+    "MOTION_FAST_READ=1",
+    "MOTION_LEASE_LEAN=1",
+    "GAME_MOTION_INDEX=1"
+  ],
+  "rows": {
+    "baseline": {
+      "bytes": 116912,
+      "sha256": "8348a204ba14ba3e3f923b434836a3c0c8dd7a4063aea0d17d71682e3690c3cf",
+      "stripped_sha256": "81d803db4c769d00a460b910df9e3b03f7e9dc9d42af789b1a6d879dbda31986",
+      "size_output": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   8538\t      0\t    557\t   9095\t   2387\t/root/probe/boss21-motion-build/control-native_motion.o"
+    },
+    "off": {
+      "bytes": 116760,
+      "sha256": "ed2efbbbdf5954264db6b37f65b172aedc034e21e08afa671784dc9954f392e9",
+      "stripped_sha256": "81d803db4c769d00a460b910df9e3b03f7e9dc9d42af789b1a6d879dbda31986",
+      "size_output": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   8538\t      0\t    557\t   9095\t   2387\t/root/probe/boss21-motion-build/off/platform/native_motion.o"
+    },
+    "on": {
+      "bytes": 119680,
+      "sha256": "66c78345683af8c7e87a3eed874dc35d41a8bca5e4e298ff9bbd74d45995de17",
+      "stripped_sha256": "7d47e4b801d234f6cc9bd0016fd790fe7d62d45f4ae9c35a62907267e9aa0b1f",
+      "size_output": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   8712\t      0\t    557\t   9269\t   2435\t/root/probe/boss21-motion-build/on/platform/native_motion.o"
+    }
+  },
+  "off_stripped_object_identical": true,
+  "host_regression": {
+    "implementation": "actual native_motion.cpp; synthetic FCVs and host KOS transport/allocation mocks",
+    "variants": [
+      "BACKING=0 LEASE_LEAN=0",
+      "BACKING=1 LEASE_LEAN=0",
+      "BACKING=1 LEASE_LEAN=1"
+    ],
+    "sanitizers": [
+      "AddressSanitizer",
+      "UndefinedBehaviorSanitizer",
+      "leak detection"
+    ],
+    "reserved_fill": {
+      "hot_heap_bytes": 225184,
+      "reserved_bytes": [
+        32416,
+        32416
+      ],
+      "control_evictions": 2,
+      "enabled_evictions": 0,
+      "enabled_new_allocations": 0
+    },
+    "other_cases": [
+      "aggregate two-binding heap cap with live acquire/release lease",
+      "all heap keys pinned: rejection without eviction",
+      "hold: suspended slot pointer poison remains unread",
+      "v3 strict two slabs: replacement only, then both pinned rejection despite free heap",
+      "cold-pool heap allocation retains cap",
+      "heap-backed hot load retains cap",
+      "injected heap allocation failure: OOM evicts heap key while preserving live lease and both slab occupants"
+    ]
+  },
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_motion.cpp": "594ea1ca33c9e7455acc7eb2aecbc29c7e15a764f136947bc007048a803769e0",
+    "port/dreamcast/game/game30.mk": "52b3d5151045b34f4cc11935e14086d1b0a9123a3d10bb8ab38fd73202fb5f1d",
+    "port/dreamcast/tools/d367/boss21/motion_pressure_host.cpp": "f1552ed4ca292a2f76162fecf0e9009398e189c09f70dfc88b62f7a8e01a78d8",
+    "port/dreamcast/tools/d367/boss21/test_motion_pressure.py": "488356bf7c97556ca74b41cf1a4e22259ee47b95275df175338c9bd972e5979c"
+  }
+}

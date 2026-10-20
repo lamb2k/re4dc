@@ -69,6 +69,12 @@ static_assert(RE4DC_MOTION_PRESSURE_BYTES >= 65536 &&
 #ifndef RE4DC_MOTION_BOUNDED_R11F
 #define RE4DC_MOTION_BOUNDED_R11F 0
 #endif
+#ifndef RE4DC_MOTION_PRESSURE_BACKING
+#define RE4DC_MOTION_PRESSURE_BACKING 0
+#endif
+#if RE4DC_MOTION_PRESSURE_BACKING && (!RE4DC_MOTION_RESERVE || !RE4DC_MOTION_PRESSURE_BYTES)
+#error "motion backing accounting needs reserve and pressure budget"
+#endif
 #if RE4DC_MOTION_BOUNDED_R11F
 #if !RE4DC_MOTION_RESERVE || RE4DC_MOTION_USAGE_LOG
 #error "bounded r11f motion needs reserve=1, usage_log=0"
@@ -259,13 +265,35 @@ void release_binding(Binding& b) {
 // proxy identities, slot tables, pins, and source MotionWork stay untouched.
 // A hot flag remains a preload hint here, rather than a permanent RAM lease.
 // Each iteration removes a positive-sized entry, so at most 4*255 iterations.
+#if RE4DC_MOTION_PRESSURE_BACKING
+// Reserved slabs are already allocated and charged as binding metadata. Their
+// occupied payload is useful residency telemetry, not another heap allocation.
+// Keep the existing global heap-key cap; fixed backing and slot tables remain
+// bounded separately by successful binding admission. Called only under Locked
+// after the suspended-heap hold check below.
+bool reserved_data(const Binding& b,const unsigned char* p) {
+    return p && (p==b.slab[0] || p==b.slab[1]);
+}
+unsigned pressure_heap_bytes() {
+    unsigned bytes=0;
+    for(const auto& b:bindings)if(b.archive)
+        for(unsigned i=0;i<b.count;++i)if(b.slots[i].data && !reserved_data(b,b.slots[i].data))
+            bytes+=aligned(word(record(b,i)+4));
+    return bytes;
+}
+#endif
 void pressure_room_for(unsigned bytes) {
     if(re4dc_motion_current_heap()!=4)fail("motion pressure outside owning room heap");
 #if RE4DC_SUBSCREEN
     if(hold)return; // suspended room cells must never be read/freed by eviction
 #endif
     if(bytes>RE4DC_MOTION_PRESSURE_BYTES)fail("motion pressure clip exceeds budget");
+#if RE4DC_MOTION_PRESSURE_BACKING
+    unsigned resident=pressure_heap_bytes();
+    while(resident>RE4DC_MOTION_PRESSURE_BYTES-bytes) {
+#else
     while(stats.resident_bytes>RE4DC_MOTION_PRESSURE_BYTES-bytes) {
+#endif
 #if defined(RE4DC_MOTION_PRESSURE_GROW) && RE4DC_MOTION_PRESSURE_GROW
         // MOTION_PRESSURE_GROW: over the cap, evict only while heap 4 would keep less than the margin after this key.
         if(re4dc_static_heap_free()>=int(bytes+RE4DC_MOTION_PRESSURE_GROW))break;
@@ -276,12 +304,18 @@ void pressure_room_for(unsigned bytes) {
             if(!q.archive)continue;
             for(unsigned j=0;j<q.count;++j) {
                 const auto& slot=q.slots[j];
+#if RE4DC_MOTION_PRESSURE_BACKING
+                if(reserved_data(q,slot.data))continue; // discarding a slab key frees no heap
+#endif
                 if(slot.data && !slot.pins && slot.used<oldest) {
                     victim=&q;index=j;oldest=slot.used;
                 }
             }
         }
         if(!victim)fail("motion pressure live leases exceed budget");
+#if RE4DC_MOTION_PRESSURE_BACKING
+        resident-=aligned(word(record(*victim,index)+4));
+#endif
         discard(*victim,index);++stats.evictions;
     }
 }
@@ -327,7 +361,9 @@ unsigned* load(Binding& b,unsigned i) {
         ++stats.misses;const auto started=timer_us_gettime64();
         const unsigned size=word(e+4),bytes=aligned(size);
 #if RE4DC_MOTION_PRESSURE_BYTES
+#if !RE4DC_MOTION_PRESSURE_BACKING
         pressure_room_for(bytes);
+#endif
 #else
 #if RE4DC_SUBSCREEN
         while(!hold && b.resident+bytes>b.budget) {
@@ -374,6 +410,9 @@ unsigned* load(Binding& b,unsigned i) {
                     !b.bounded &&
 #endif
                     re4dc_static_heap_free()>=int(bytes+cold_pool_margin())) {
+#if RE4DC_MOTION_PRESSURE_BACKING
+                    pressure_room_for(bytes); // this path really allocates a heap-backed key
+#endif
                     data=static_cast<unsigned char*>(re4dc_motion_alloc(bytes));
                     static unsigned pooled,refused;
                     if(data) {
@@ -401,7 +440,12 @@ unsigned* load(Binding& b,unsigned i) {
 #endif
         if(!data)
 #endif
-        data=static_cast<unsigned char*>(re4dc_motion_alloc(bytes));
+        {
+#if RE4DC_MOTION_PRESSURE_BACKING
+            pressure_room_for(bytes); // a reserved-slab fill never reaches this allocation
+#endif
+            data=static_cast<unsigned char*>(re4dc_motion_alloc(bytes));
+        }
 #if RE4DC_MOTION_OOM_EVICT
         if(!data)data=oom_evict_alloc(bytes);
 #endif
