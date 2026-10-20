@@ -5,7 +5,7 @@
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 export T=${T:-$(cd "$HERE/../../../../.." && pwd)}
-export K=${K:?Set K to this build's log directory}
+export K=${K:?Set K to the build log directory}
 export LP=${LP:?Set a fresh LP label}
 source "$T/port/dreamcast/tools/d367/rr/recipe.conf"
 PE2=${PE2:-/root/re4data/private/ps2enemy-ch2-20261016}
