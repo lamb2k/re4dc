@@ -2947,6 +2947,8 @@ include t2exact.mk
 include scenery19.mk
 # Lane chardraw19 (CHAR_CHUNK; default off: no effect).
 include chardraw19.mk
+# Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
+include logiclod20.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
 include knobs.mk
 include esppool.mk
