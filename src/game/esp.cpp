@@ -14,6 +14,21 @@
 #include "esp.h"
 #include "espgen.h"
 
+#if defined(RE4DC_ESP_HIT_THIN) && RE4DC_ESP_HIT_THIN
+// ESP_HIT_THIN=N (shotfx20.mk; render only, visible): of the hit-burst particles an enemy, animal or object spawns
+// (0x1A blood jitter, 0x00 spray, 0x10 drops; owner 0x10..0xCF), only those in every Nth pool slot are drawn. The rest
+// are "ghosts": they live, animate and make their Rnd() draws as before (logic STRICT), but are not queued for drawing
+// and skip their camera jitter (esp1a.cpp). A fixed slot test, so the same particles stay drawn (no flicker).
+int re4dc_esp_hit_ghost(const cEsp* esp)
+{
+    const u32 id = esp->m_Id, own = esp->info.owner;
+    if (own < 0x10 || own > 0xCF || (id != 0x1A && id != 0x00 && id != 0x10)) {
+        return 0;
+    }
+    const u32 slot = (u32) ((const u8*) esp - (const u8*) g_pEspSys->pEspBuf) / 0x150;
+    return (slot % RE4DC_ESP_HIT_THIN) != 0;
+}
+#endif
 // number of live effects per owner id (debug display)
 u16 esp_num_list[0xD3];
 EspTransFunc EspTransTbl[0xFF];
@@ -837,6 +852,11 @@ int EspTrans()
         if (trans == NULL) {
             continue;
         }
+#if defined(RE4DC_ESP_HIT_THIN) && RE4DC_ESP_HIT_THIN
+        if (trans == EspCommonTrans && re4dc_esp_hit_ghost(esp)) {
+            continue;   // ESP_HIT_THIN: a ghost hit particle is not drawn
+        }
+#endif
 #if defined(RE4DC_ESP_TYPE_CAP) && RE4DC_ESP_TYPE_CAP
         // ESP_TYPE_CAP=N (logiclod20.mk; render only, a visible APPROXIMATION): at most N effects of one id spawned by
         // an enemy, animal or object (owner 0x10..0xCF: blood sprays, hit sparks, death bursts) are queued for drawing

@@ -4385,6 +4385,16 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
         triangles += table[m].n.triangles(); corners += table[m].n.indices();
         for (unsigned i = 0; i < table[m].n.indices(); ++i) strips += lists[table[m].index + i] >> 7;
     }
+#if defined(RE4DC_ACTOR_LOD_PART_MAX) && RE4DC_ACTOR_LOD_PART_MAX
+    // ACTOR_LOD_PART_MAX=N (shotfx20.mk; render only): a part over N triangles is not simplified at run time (one
+    // such build is ~20 hw ms in a single frame, the first time a gun, arm or Ganado part is drawn); it stays at
+    // level 0, full detail.
+    if (triangles > RE4DC_ACTOR_LOD_PART_MAX) {
+        Re4dcActorStreamMutation mutation(p.stream, p.stream_bytes);
+        stream[2] &= u8(~kLodPending);
+        return;
+    }
+#endif
     if (triangles >= kLodMinTriangles && !lod_take(triangles)) return;
     Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
     stream[2] &= u8(~kLodPending);
@@ -4448,6 +4458,10 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
 }
 }  // namespace
 
+#if defined(RE4DC_ACTOR_LOD_ENTRY) && RE4DC_ACTOR_LOD_ENTRY
+extern "C" int re4dc_room4_state(unsigned* generation, unsigned* cells, unsigned* bytes, unsigned* stale,
+                                 unsigned* refused);
+#endif
 extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
 #if RE4DC_ACTOR_TRANSACTION
     re4dc_actor_owner_retire(); // before workspace rebinding
@@ -4458,6 +4472,17 @@ extern "C" void re4dc_actor_frame(void* memory, unsigned bytes) {
     workspace_top = 0; workspace_end = workspace_bytes;
     ++frame_serial;
     lod_budget = lod_budget_frame;
+#if defined(RE4DC_ACTOR_LOD_ENTRY) && RE4DC_ACTOR_LOD_ENTRY
+    {   // ACTOR_LOD_ENTRY=K (shotfx20.mk; render only, exact triangles): for the first K frames of a room every part
+        // drawn has its detail levels built at once (no per-frame budget), so the builds land in the room-entry
+        // window instead of a later gameplay frame. Levels are built in place: no memory cost.
+        static unsigned entry_gen = ~0U, entry_left;
+        unsigned gen = 0, cells = 0, cb = 0, st = 0, rf = 0;
+        re4dc_room4_state(&gen, &cells, &cb, &st, &rf);
+        if (gen != entry_gen) { entry_gen = gen; entry_left = RE4DC_ACTOR_LOD_ENTRY; }
+        if (entry_left && lod_budget_frame) { --entry_left; lod_budget = 0x7FFFFFFFU; }
+    }
+#endif
     lod_wanted_last = lod_wanted; lod_wanted = false;
     if constexpr (kCrowd) crowd_rank();
 #if RE4DC_GIGANTE_LIGHTS
