@@ -25,13 +25,19 @@ class ResumeJournal {
     }
 public:
     // Call on successful bind and before unbind/retire. Clearing every per-slot
-    // mask also prevents stale tickets on counter wrap or archive-address reuse.
+    // mask also rejects old key identities after serial wrap/address reuse when
+    // tickets are restricted against the current recent-use masks.
     void binding_changed(unsigned binding) {
         if(binding>=4)return;
         if(!++generation_[binding])++generation_[binding];
         std::memset(used_[binding],0,sizeof used_[binding]);
         std::memset(previous_[binding],0,sizeof previous_[binding]);
         std::memset(evicted_[binding],0,sizeof evicted_[binding]);
+    }
+    void key_forgotten(unsigned binding,unsigned entry) {
+        if(binding>=4 || entry>=255)return;
+        const auto keep=~(1u<<(entry%32));const auto word=entry/32;
+        used_[binding][word]&=keep;previous_[binding][word]&=keep;evicted_[binding][word]&=keep;
     }
     std::uint32_t generation(unsigned binding) const { return binding<4?generation_[binding]:0; }
     // Only an actual successful source acquire belongs here. Bind preload alone
@@ -52,6 +58,15 @@ public:
            generation_[binding]!=movie_generation_[binding])return;
         const auto bit=1u<<(entry%32);const auto word=entry/32;
         if((used_[binding][word]|previous_[binding][word])&bit)evicted_[binding][word]|=bit;
+    }
+    // A queued ticket can outlive a skipped/cancel clip. Recheck source age
+    // and key lifetime at the final boundary, not just its binding serial.
+    bool restrict_recent(ResumeTickets& tickets,std::uint32_t frame) {
+        if(movie_){tickets={};return false;}
+        advance(frame);
+        for(unsigned b=0;b<4;++b)for(unsigned w=0;w<8;++w)
+            tickets.keys[b][w]&=current(tickets,b)?(used_[b][w]|previous_[b][w]):0;
+        return true;
     }
     ResumeTickets finish_movie() {
         ResumeTickets out{};

@@ -17,10 +17,13 @@ static std::map<std::string,std::vector<unsigned char>> files;
 static unsigned allocated,peak,reads;
 static int heap_free=0;
 static unsigned fail_allocations;
+static unsigned source_frame=100,heap_largest=0,fail_after_read=0;
 extern "C" void re4dc_log(const char*,...) {}
 extern "C" void re4dc_missing(const char* s) { throw Missing(s); }
 extern "C" int re4dc_motion_current_heap() { return 4; }
 extern "C" int re4dc_static_heap_free() { return heap_free; }
+extern "C" unsigned re4dc_fixture_source_frame() { return source_frame; }
+extern "C" unsigned re4dc_heap_largest_current(unsigned* out) { *out=heap_free;return heap_largest?heap_largest:unsigned(heap_free); }
 extern "C" int re4dc_motion_owner_live(const void* p) { assert(allocations.count(const_cast<void*>(p)));return 1; }
 extern "C" void* re4dc_motion_alloc(unsigned n) {
     if(fail_allocations){--fail_allocations;return nullptr;}
@@ -35,6 +38,7 @@ void Arena::init(std::uint8_t* p,std::size_t n) { base_=p;capacity_=n;used_=0; }
 ReadResult read_file(Arena& arena,const char* path) {
     auto i=files.find(path);if(i==files.end())return {nullptr,0,"missing",0};
     assert(i->second.size()<=arena.capacity());std::memcpy(arena.base(),i->second.data(),i->second.size());++reads;
+    if(fail_after_read && reads==fail_after_read)fail_allocations=1;
     return {arena.base(),i->second.size(),nullptr,1};
 }
 }
@@ -45,6 +49,9 @@ struct Fixture {
         auto& b=bindings[no];assert(!b.archive);b.archive=archive.data();b.bytes=archive.size();b.records=records.data();b.count=sizes.size();
         const unsigned meta=aligned(b.count*sizeof(Slot));b.slots=static_cast<Slot*>(re4dc_motion_alloc(meta));std::memset(b.slots,0,meta);stats.metadata_bytes+=meta;
         b.slab_bytes=slab;b.bounded=bounded;
+#if RE4DC_MOTION_RESUME
+        resume_journal.binding_changed(no);
+#endif
         if(slab){for(auto*& p:b.slab)p=static_cast<unsigned char*>(re4dc_motion_alloc(slab));stats.metadata_bytes+=2*slab;}
         for(unsigned i=0;i<sizes.size();++i) {
             std::vector<unsigned char> f(sizes[i],0);f[0]=1;f[2]=1;put(f,12,16);f.back()=static_cast<unsigned char>(i+1);
@@ -62,7 +69,11 @@ struct Fixture {
     void hot(unsigned i) { put(records,20*i+16,1);const auto n=word(record(bindings[no],i)+4);bindings[no].hot_bytes+=n;stats.hot_bytes+=n;seed(i); }
     ~Fixture() { auto& b=bindings[no];for(unsigned i=0;i<b.count;++i)b.slots[i].pins=0;release_binding(b); }
 };
-static void clean() { assert(allocations.empty());assert(!allocated);stats={};stamp=0;hold=false;files.clear();reads=peak=fail_allocations=0;heap_free=0; }
+static void clean() { assert(allocations.empty());assert(!allocated);stats={};stamp=0;hold=false;files.clear();reads=peak=fail_allocations=heap_largest=fail_after_read=0;heap_free=0;source_frame=100;
+#if RE4DC_MOTION_RESUME
+resume_journal={};resume_pending={};resume_pending_live=false;
+#endif
+}
 static void reserved_fill() {
     // The exact selected em12 hot entry byte sizes, metadata only (H050 census).
     std::vector<unsigned> sizes={22400,16608,17664,9152,13216,7840,9216,19648,17696,5632,20896,15648,5696,8640,18784,2304,320,224,5248,8352};const unsigned count=sizes.size();sizes.push_back(32416);sizes.push_back(32416);
@@ -216,6 +227,89 @@ static void packed_bad_read_keeps_backing() {
 
 #endif
 #endif
+#if RE4DC_MOTION_RESUME
+static void use(unsigned binding,unsigned entry) {
+    auto& b=bindings[binding];unsigned* table=nullptr;const int t=re4dc_motion_acquire(b.archive+word(record(b,entry)),&table);assert(t);re4dc_motion_release(t);
+}
+static void evict_movie(unsigned n) { for(unsigned i=0;i<n;++i)assert(re4dc_motion_movie_evict_one());re4dc_motion_movie_finish(0); }
+static void resume_recent_only() {
+    {
+        Fixture f(0,{16000,16000,16000});for(unsigned i=0;i<3;++i)f.hot(i);use(0,0);use(0,1);
+        re4dc_motion_movie_begin();evict_movie(3); // unused preload is evicted too, but is not a restore ticket
+        const unsigned evictions=stats.evictions,before=reads;heap_free=1048576;
+        assert(re4dc_motion_movie_restore()==2&&reads==before+2&&stats.evictions==evictions);
+        assert(bindings[0].slots[0].data&&bindings[0].slots[1].data&&!bindings[0].slots[2].data);
+        assert(re4dc_motion_movie_restore()==0); // no per-frame retry loop
+    }clean();
+}
+static void resume_fail_closed() {
+    for(unsigned mode=0;mode<7;++mode) {
+        {
+            Fixture f(0,{16000,16000});f.hot(0);f.hot(1);use(0,0);use(0,1);re4dc_motion_movie_begin();evict_movie(2);
+            const unsigned before=reads,evictions=stats.evictions;heap_free=1048576;
+            if(mode==0)heap_free=16000; // group will not fit physically
+            if(mode==1)heap_largest=16000; // total free, but fragmented
+            if(mode==2)fail_allocations=1; // allocator can still refuse after preflight
+            if(mode==3)source_frame+=2; // stale source footprint, no blind replay
+            if(mode==4){resume_journal.binding_changed(0);} // same slot/new archive generation
+            if(mode==5){re4dc_motion_hold(1);} // pending tickets dropped before suspended-table access
+            if(mode==6){resume_journal.key_forgotten(0,0);resume_journal.key_forgotten(0,1);}
+            assert(re4dc_motion_movie_restore()==0&&reads==before&&stats.evictions==evictions);
+            re4dc_motion_hold(0);
+        }clean();
+    }
+}
+static void resume_cap_margin_and_retire() {
+    {
+        Fixture f(0,{16000});f.hot(0);use(0,0);re4dc_motion_movie_begin();evict_movie(1);
+        Fixture other(1,std::vector<unsigned>(8,32768));for(unsigned i=0;i<8;++i)other.hot(i);
+        heap_free=1048576;const unsigned before=reads,evictions=stats.evictions;
+        assert(re4dc_motion_movie_restore()==0&&reads==before&&stats.evictions==evictions&&pressure_heap_bytes()==262144);
+    }clean();
+    for(unsigned enough=0;enough<2;++enough) {
+        {
+            Fixture f(0,{16000});f.seed(0);use(0,0);re4dc_motion_movie_begin();evict_movie(1);
+            heap_free=enough?1048576:93824;const unsigned before=reads;
+            assert(re4dc_motion_movie_restore()==enough&&reads==before+enough); // cold heap restore keeps existing margin
+            if(enough)assert(!reserved_data(bindings[0],bindings[0].slots[0].data));
+        }clean();
+    }
+    {
+        Fixture f(0,{16000});f.hot(0);use(0,0);re4dc_motion_movie_begin();assert(re4dc_motion_movie_evict_one());re4dc_motion_movie_finish(1);
+        heap_free=1048576;const unsigned before=reads;assert(re4dc_motion_movie_restore()==0&&reads==before);
+    }clean();
+}
+static void resume_policy_and_read_failure() {
+    {
+        Fixture f(0,{16000},32416,true);f.hot(0);use(0,0);re4dc_motion_movie_begin();evict_movie(1);
+        heap_free=1048576;const unsigned before=reads;
+        assert(re4dc_motion_movie_restore()==0&&reads==before); // malformed/historic v3 heap state never admits another heap key
+    }clean();
+    {
+        Fixture f(0,{16000});f.hot(0);use(0,0);re4dc_motion_movie_begin();evict_movie(1);
+        heap_free=1048576;files.clear();const unsigned before=allocated,evictions=stats.evictions;bool rejected=false;
+        try{re4dc_motion_movie_restore();}catch(const Missing& e){rejected=std::string(e.what())=="motion key read";}
+        assert(rejected&&allocated==before&&!bindings[0].slots[0].data&&stats.evictions==evictions);
+    }clean();
+}
+static void resume_partial_and_chained_movie() {
+    {
+        Fixture f(0,{16000,16000});f.hot(0);f.hot(1);use(0,0);use(0,1);re4dc_motion_movie_begin();evict_movie(2);
+        heap_free=1048576;fail_after_read=reads+1;const unsigned evictions=stats.evictions,before=reads;
+        assert(re4dc_motion_movie_restore()==1&&reads==before+1&&stats.evictions==evictions); // external allocation race, no forced eviction
+        assert(re4dc_motion_movie_restore()==0);
+    }clean();
+    {
+        Fixture f(0,{16000,16000});f.hot(0);f.hot(1);use(0,0);use(0,1);re4dc_motion_movie_begin();evict_movie(1);
+        re4dc_motion_movie_begin();evict_movie(1); // skip -> cancel clip, before the final route boundary
+        heap_free=1048576;assert(re4dc_motion_movie_restore()==2);
+    }clean();
+    {
+        Fixture f(0,{16000});f.hot(0);use(0,0);re4dc_motion_movie_begin();assert(re4dc_motion_evict_one());re4dc_motion_movie_finish(0);
+        heap_free=1048576;const unsigned before=reads;assert(re4dc_motion_movie_restore()==0&&reads==before); // ordinary/weapon eviction is not a movie victim
+    }clean();
+}
+#endif
 int main(){reserved_fill();
 #if RE4DC_MOTION_PRESSURE_BACKING
 aggregate_heap_and_pins();all_heap_pinned_and_hold();bounded_no_spill();cold_pool_keeps_cap();heap_load_keeps_cap();allocation_failure_keeps_leases();
@@ -223,5 +317,9 @@ three_cold_loop({11744,7744,12224});three_cold_loop({22400,9152,17408});three_co
 #if RE4DC_MOTION_RESERVE_PACK
 packed_coactive_pins();packed_holes_owners_and_retirement();packed_bad_read_keeps_backing();
 #endif
+#endif
+#if RE4DC_MOTION_RESUME
+resume_recent_only();resume_fail_closed();resume_cap_margin_and_retire();resume_policy_and_read_failure();resume_partial_and_chained_movie();
+std::cout<<"native motion resume source cases PASS journal="<<sizeof resume_journal<<" tickets="<<sizeof resume_pending<<"\n";
 #endif
 std::cout<<"native motion pressure cases PASS\n";}

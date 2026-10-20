@@ -24,6 +24,14 @@ int main() {
     assert(j.begin_movie(40));j.movie_evicted(0,10);j.cancel_movie();assert(!j.finish_movie().contains(0,10));
     j.acquired(0,11,UINT32_MAX);j.acquired(0,12,0);assert(j.begin_movie(0));j.movie_evicted(0,11);j.movie_evicted(0,12);
     auto wrap=j.finish_movie();assert(wrap.contains(0,11)&&wrap.contains(0,12)); // source frame wrap
+    j.acquired(0,13,50);assert(j.begin_movie(50));j.movie_evicted(0,13);
+    auto forgotten=j.finish_movie();j.key_forgotten(0,13);
+    assert(j.restrict_recent(forgotten,50)&&!forgotten.contains(0,13));
+    j.acquired(0,14,60);assert(j.begin_movie(60));j.movie_evicted(0,14);
+    auto stale=j.finish_movie();assert(j.restrict_recent(stale,62)&&!stale.contains(0,14));
+    j.acquired(0,15,70);assert(j.begin_movie(70));j.movie_evicted(0,15);
+    auto valid=j.finish_movie();assert(j.restrict_recent(valid,71)&&valid.contains(0,15));
+    assert(j.begin_movie(71));assert(!j.restrict_recent(valid,71)&&!valid.contains(0,15));j.cancel_movie();
     j.acquired(4,0,1);j.acquired(0,255,1);j.binding_changed(4);j.movie_evicted(4,0);
     assert(!wrap.contains(4,0)&&!wrap.contains(0,255));
     std::cout<<"motion resume journal PASS metadata="<<sizeof j<<" tickets="<<sizeof wrap<<"\n";
