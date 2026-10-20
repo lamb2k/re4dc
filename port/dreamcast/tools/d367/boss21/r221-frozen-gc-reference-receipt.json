@@ -1,0 +1,272 @@
+{
+  "scope": "Matching original r221 bottle4 frozen look reference; source AI/material/pose untouched. This is private diagnostic source-controller input and pre-init player position, not hardware/gameplay/performance acceptance.",
+  "source_commit": "36cc20278e7ca042da26e918671441a891aafc3b",
+  "built_runtime_commit": "87cff2a4ca98001e99bcb3545d954048034480c6",
+  "native_elf_sha256": "0633b72fb0ba45dbd6f95799d897756e57540c9030d213bc6f1fbd8752dcc7d2",
+  "native_fixture_receipt_sha256": "5ca2b904b65f1a9e558d2a3ba681aeb702c9ab05311c79c511879bd287f2c981",
+  "native_still": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\runs\\original-frozen-r\\shots\\t0006\\frames\\fb0.png",
+    "sha256": "d5c53abb6992e8e1b6dae01530f6bd62b9126f7fdb302821bea08e01448f7df5",
+    "size": [
+      640,
+      480
+    ],
+    "material": {
+      "ratio": 255,
+      "blend_type": 2,
+      "target": [
+        64,
+        64
+      ]
+    },
+    "look": "dark body; ice coat absent or much weaker than original reference"
+  },
+  "GC_still": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\dolphin-reference\\probe-source-l\\xfb-28-0.png",
+    "sha256": "aac5f7d2e81a5953e132f0f46881c160b50e5e434efc40f6d29defaa71cf4224",
+    "size": [
+      512,
+      448
+    ],
+    "inspected": true,
+    "look": "full bright reflective white ice body directly in front of Leon; original ghosted coat and eyes visible"
+  },
+  "GC_program": {
+    "path": "C:\\Game Dev\\Emulators\\Resident Evil 4 Debug (Disc 1)\\Resident Evil 4 Debug (Disc 1).iso",
+    "header": "G4BE08",
+    "bytes": 1459978240,
+    "mtime_ns": 1162874342000000000,
+    "Dolphin_path": "C:\\Game Dev\\Emulators\\Dolphin\\Dolphin-x64\\Dolphin.exe",
+    "Dolphin_sha256": "1ed5e3f63f08b672133dade2c570e87ea4fa7fac2f6a65a118cc300a18dc0dac",
+    "version": "2609",
+    "emulation_speed": 3.0,
+    "no_performance_claim": true
+  },
+  "GC_fixture": {
+    "result_path": "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\dolphin-reference\\probe-source-l\\result.json",
+    "result_sha256": "cf91007db60e67eb5d1a9b5ca24a48b95ed6ae46b13a223b356b469f40743adf",
+    "neutral_DTM_sha256": "cc8bfca08dd089f34dcc8cc80fb9d3e199203b44a118df5fa5a45d952277564c",
+    "private_controller_path": "C:\\Game Dev\\Emulators\\codex-lanes\\boss18\\boss21-dolphin-source-l.py",
+    "private_controller_sha256": "b6c15f7a1a11685818a73a523098cee7bb7f79e5c7429d2351cae7f22f86576b",
+    "owner": {
+      "pid": 52020,
+      "path": "C:\\Game Dev\\Emulators\\Dolphin\\Dolphin-x64\\Dolphin.exe",
+      "command": [
+        "C:\\Game Dev\\Emulators\\Dolphin\\Dolphin-x64\\Dolphin.exe",
+        "-b",
+        "-u",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\dolphin-reference\\probe-source-l\\User",
+        "-e",
+        "C:\\Game Dev\\Emulators\\Resident Evil 4 Debug (Disc 1)\\Resident Evil 4 Debug (Disc 1).iso",
+        "-m",
+        "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\dolphin-reference\\probe-source-l\\boot-r221.dtm"
+      ],
+      "started": 1792525300.6857321,
+      "scope": "Owned Dolphin GC reference; neutral DTM plus explicitly recorded source Joy/Key controller fields; no global keyboard/mouse or shared user profile."
+    },
+    "exitcode": 1,
+    "run_bound_seconds": 30,
+    "source_r221_flags": "3/4/5/8/9; same persisted flags as native fixture",
+    "preinit_player": "original area19 NextPos/NextY/sub_pos only; original callback/AI performs appearance",
+    "original_controller": "phase-ready Up then A; exact pad.cpp Key_type_tbl aliases and held analog direction bits; normal walk to original bottle4 AEV radius1306.324/cloud5000.671; original A interaction; normal walk toward native viewpoint(-7429,-3515) then normal turn toward live body",
+    "writes": 5248,
+    "write_classes": {
+      "Same original saved r221 flags3/4/5/8/9 as DC source fixture": 1,
+      "Source-ready title Up edge Joy held input": 4,
+      "Source-ready title Up edge complete Key_type_tbl held aliases": 4,
+      "Source-ready title Up edge Joy fresh edge": 4,
+      "Source-ready title Up edge complete Key_type_tbl fresh aliases": 4,
+      "Source-ready title A edge after Up release Joy held input": 21,
+      "Source-ready title A edge after Up release complete Key_type_tbl held aliases": 21,
+      "Source-ready title A edge after Up release Joy fresh edge": 21,
+      "Source-ready title A edge after Up release complete Key_type_tbl fresh aliases": 21,
+      "Original debug game confirmation A edge Joy held input": 41,
+      "Original debug game confirmation A edge complete Key_type_tbl held aliases": 41,
+      "Original debug game confirmation A edge Joy fresh edge": 41,
+      "Original debug game confirmation A edge complete Key_type_tbl fresh aliases": 41,
+      "Diagnostic starting NextPos at original area19, before original player init": 41,
+      "Diagnostic starting NextY": 41,
+      "Diagnostic starting sub_pos mirrors NextPos before original player init": 41,
+      "Diagnostic original Joy analog input": 1212,
+      "Diagnostic original logical Key analog input": 1212,
+      "Original PadRead analog-direction held bits": 1212,
+      "Original Key_type_tbl held direction aliases": 1212,
+      "Original bottle A edge inside source AEV1306.324 radius Joy held input": 2,
+      "Original bottle A edge inside source AEV1306.324 radius complete Key_type_tbl held aliases": 2,
+      "Original bottle A edge inside source AEV1306.324 radius Joy fresh edge": 2,
+      "Original bottle A edge inside source AEV1306.324 radius complete Key_type_tbl fresh aliases": 2,
+      "Original bottle interaction A edge Joy held input": 1,
+      "Original bottle interaction A edge complete Key_type_tbl held aliases": 1,
+      "Original bottle interaction A edge Joy fresh edge": 1,
+      "Original bottle interaction A edge complete Key_type_tbl fresh aliases": 1
+    },
+    "allowed_write_addresses": [
+      "0x802e04a4",
+      "0x802e04b0",
+      "0x802e5438",
+      "0x802e8b30",
+      "0x802e8b40",
+      "0x802e8b44",
+      "0x802e94d0",
+      "0x802e94e0",
+      "0x802e94e8",
+      "0x80a76804"
+    ],
+    "source_frames_are_GlobalFrameCnt": true,
+    "samples": 2499,
+    "ice_samples": 729,
+    "first_ice": {
+      "player_pos": [
+        -7099.06494140625,
+        836.5599975585938,
+        -5863.6142578125
+      ],
+      "player_yaw": 0.010183453559875488,
+      "player_routines": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "host_s": 21.657,
+      "pG": "0x802e0478",
+      "pPL": "0x810001e0",
+      "room": "0221",
+      "ui_stage": "exit",
+      "title_state": [
+        7,
+        3,
+        0,
+        0
+      ],
+      "title_cursor": 0,
+      "title_counter": 587,
+      "source_frame": 1554,
+      "joy": "3c3c0000000000000000000000000100000a000000000000000001000000000000000000",
+      "key": "3c3c000000000000000000000000000000000000050000050000000000000000000000000000000000000000000000000000000000000000",
+      "title_owner": "0x80a8a540",
+      "actors": [
+        {
+          "ptr": "0x81002b80",
+          "be_flag": "0x2002077",
+          "type": 0,
+          "routines": [
+            2,
+            5,
+            1,
+            0
+          ],
+          "pos": [
+            -10679.9931640625,
+            836.560546875,
+            -4159.49951171875
+          ],
+          "flags": "0x800",
+          "material": {
+            "ratio": 255,
+            "blend_type": 2,
+            "table": "0x810034f8"
+          },
+          "target_size": [
+            64,
+            64
+          ]
+        }
+      ],
+      "raw_pad": "000000000000000000000000"
+    },
+    "view_cue": {
+      "frozen_view": true,
+      "frame": 1761,
+      "player_pos": [
+        -7318.32421875,
+        836.562255859375,
+        -3661.527099609375
+      ],
+      "body": {
+        "ptr": "0x81002b80",
+        "be_flag": "0x2002077",
+        "type": 0,
+        "routines": [
+          1,
+          24,
+          1,
+          0
+        ],
+        "pos": [
+          -11436.26171875,
+          836.5625,
+          -3259.91796875
+        ],
+        "flags": "0x900",
+        "material": {
+          "ratio": 255,
+          "blend_type": 2,
+          "table": "0x810034f8"
+        },
+        "target_size": [
+          64,
+          64
+        ]
+      },
+      "host_s": 24.28200000000652
+    },
+    "unmodified_actor": "No boss/AI/material/pose write. GC cUnit be_flag isoffset0/pNext4; native DC be_flag offset4.",
+    "artifacts": {
+      "result.json": "cf91007db60e67eb5d1a9b5ca24a48b95ed6ae46b13a223b356b469f40743adf",
+      "owned-process.json": "8a703e65364cfc3cf6e8ebe05b86da139719dcbb7deb6a565b611cd3bce84895",
+      "boot-r221.dtm": "cc8bfca08dd089f34dcc8cc80fb9d3e199203b44a118df5fa5a45d952277564c",
+      "last-mem1.bin": "808a0ed2de14f90a6da6be9ffd00248201f3b62fb3603df70859cdf764299693",
+      "User/GameSettings/G4BE08.ini": "b4cafb9b53a0b8886a86a1815ab89beb19ffaa36623812f4d1867db45739fae4"
+    }
+  },
+  "additional_reference": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\dolphin-reference\\probe-source-k",
+    "result_sha256": "481d2771f004af00eab358f30bbab061ad4236884c2567b3f85f76b1fb90424b",
+    "view_cue": {
+      "frozen_view": true,
+      "frame": 2042,
+      "player_pos": [
+        -7211.740234375,
+        836.564697265625,
+        -5850.90869140625
+      ],
+      "body": {
+        "ptr": "0x81002b80",
+        "be_flag": "0x2002077",
+        "type": 0,
+        "routines": [
+          2,
+          5,
+          1,
+          0
+        ],
+        "pos": [
+          -10615.720703125,
+          836.561279296875,
+          -3757.049560546875
+        ],
+        "flags": "0x801",
+        "material": {
+          "ratio": 255,
+          "blend_type": 2,
+          "table": "0x810034f8"
+        },
+        "target_size": [
+          64,
+          64
+        ]
+      },
+      "host_s": 27.375
+    },
+    "ice_samples": 2679,
+    "scope": "K55s first positive original bottle/freeze; door partly occludes its27s still. L30s clears the view."
+  },
+  "comparison": {
+    "verdict": "LOOK MISMATCH; renderer-owner follow-up needed",
+    "finding": "Both source ice states have ratio255/blendtype2/64x64 target. Original GC has bright reflective white coat; current native DC is dark. This receipt does not attribute the cause to a particular RTT copy, texture, blend or lighting step.",
+    "same_moment": "Same original bottle4 producer and frozen phase, close source view position; different nativePS2 and originalGC geometry/camera/animation sample. No pixel/pose identity or visual acceptance.",
+    "images": "Uncropped original output sizes; no retouch, recolor or scaling."
+  },
+  "remaining_gates": "Native38uploads after preload/3audio failures, fullfight/route/STRICT/decisions and consoleRTTcost remain open as H048. No shipping recipe change."
+}

@@ -41,3 +41,16 @@ Warm run `original-frozen-r` resumes the exact P program/disc/state and turns to
 The official checks pass on these exact P/R logs: CAST-GC body1092/3147 native and0GC; NOT-DRAWN56/114 alive-list samples,12/70 in view,0never-drawn. TEXCHK remains0 and the cold boot holds49152bytes of KOS reserve. The VRAM checker passes with P minimum free868352/largest839648bytes and R865280/834560bytes. **r221 has no resident list:** P still reports38uploads after preload and3sound failures. R is warm, not a fresh residency test. Those gaps are not waived by the checker pass.
 
 The asset-free frozen receipt pins the program, disc, seed, VMU, logs, observations, controller, still and gate outputs. Matching GC reference remains open: phase-ready G proves Up changes original cursor1to0, but its short A window does not reach player initialization. There is no new runtime change, reduced level, shipping recipe, full-fight/route, STRICT/decisions, console or hardware acceptance.
+
+## Matching original GC look reference (H049)
+
+The original G4BE08 debug disc is region/header-checked and runs in an isolated Dolphin2609 profile. Source-ready Up and A enter its original debug game/r221. The private controller uses the original `pad.cpp` aliases and held directions, walks to bottle4, presses A within its original1306.324-radius area, then walks toward the native fixture's view position and turns toward the live frozen body. Original bottle4/cloud5000.671, AI, freeze and material logic perform the response. Only source controller fields, persisted room flags and pre-init player position are written; no title cursor, boss, AI, pose or material field is written.
+
+K55s is the first positive source freeze/reference (2679ice observations); its27s still has doorway occlusion. L30s supplies the clear reference and closes its owned Dolphin process at the deadline. The inspected `dolphin-reference/probe-source-l/xfb-28-0.png` shows full frozen Verdugo directly in front of Leon near(-7245,837,-3631), close to native R's(-7445,837,-3509). The live original state has flags0x900, materialratio255/type2/table810034f8 and a64x64 target. The source game is at3x emulation speed solely to prepare the reference; no timing or hardware comparison is made.
+
+| Still | Source ice state | Visible result |
+|---|---|---|
+| Native R `shots/t0006/frames/fb0.png`,640x480 | Ice flag, ratio255/type2,64x64 target; original material state retained | Body in view, visibly dark |
+| Original GC L `xfb-28-0.png`,512x448 | Original freeze, ratio255/type2,64x64 target | Body in view with bright reflective white ice coat |
+
+**Look mismatch:** the current native ice coat is absent or substantially weaker than the original GC reference. The pair is ready for the renderer owner; no look acceptance or specific root-cause claim is made. The pictures are uncropped original output at their own sizes, with different nativePS2/originalGC geometry and camera/animation samples; this is a source-state look comparison, not pixel or pose identity. The asset-free reference receipt pins both stills, original private controller, input/movie, profile, MEM1, source state and process receipt. Existing native residency/audio/fullfight/route/STRICT and consoleRTTcost gaps remain open.
