@@ -1,5 +1,5 @@
 #!/bin/bash
-# D367 host-wide trace slots (2026-10-13 dettrace rule): at most TRACE_SLOTS (default 4) logic-trace Flycast runs
+# D367 host-wide trace slots (2026-10-13 dettrace rule; 12 from 10-19, user): at most TRACE_SLOTS (default 12) logic-trace Flycast runs
 # (STRICT pairs, decision traces) at a time on this host, across Claude and Codex lanes. Trace runs are deterministic
 # in emulated time, so they may run in parallel; the cap only protects host memory. Other Flycast runs need no slot.
 # Every trace run sets RE4DC_LOG_STOP_TICK (same N for both runs of a pair); a "[LOG OVERRUN" line or a tick gap
@@ -11,7 +11,7 @@
 # Slot 0 is /root/probe/.trace.lock (the old single lock, so copies of the old script in lane trees take slot 0 and
 # the cap still holds); slot k > 0 is /root/probe/.trace.lock.k. Holders: /root/probe/.trace.holder[.k].
 set -u
-N=${TRACE_SLOTS:-4}
+N=${TRACE_SLOTS:-12}
 lockf() { [ "$1" -eq 0 ] && echo /root/probe/.trace.lock || echo "/root/probe/.trace.lock.$1"; }
 holdf() { [ "$1" -eq 0 ] && echo /root/probe/.trace.holder || echo "/root/probe/.trace.holder.$1"; }
 if [ "${1:-}" = "--status" ]; then
