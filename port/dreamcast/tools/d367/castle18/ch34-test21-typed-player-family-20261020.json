@@ -1,0 +1,182 @@
+{
+  "diffs": [
+    {
+      "room": "20d",
+      "bytes": 210176,
+      "changed_bytes": 20,
+      "only_family_and_header_checksums": true,
+      "old_sha256": "c52993fcb050c31babdb907df16b4b8be249ee32c2700cd0085ebaa82285c818",
+      "new_sha256": "4a0825ced2c9f2884e154f7f72b28aa2023033181c322def5a615cbf7c683c76"
+    },
+    {
+      "room": "20e",
+      "bytes": 212288,
+      "changed_bytes": 20,
+      "only_family_and_header_checksums": true,
+      "old_sha256": "c9aecc2b57b13264704344a369c148cbfa7806d897a0abf5fadc2cad62e8b216",
+      "new_sha256": "eb897e5db86275ff917d708b343f92f15e6693562bd572db1b4a4d4c128f7f0d"
+    }
+  ],
+  "cases": [
+    {
+      "room": "20d",
+      "case": "good",
+      "expected": "none",
+      "got": "none"
+    },
+    {
+      "room": "20d",
+      "case": "legacy-wrong-family",
+      "expected": "blob",
+      "got": "blob"
+    },
+    {
+      "room": "20d",
+      "case": "enemy-family",
+      "expected": "blob",
+      "got": "blob"
+    },
+    {
+      "room": "20d",
+      "case": "weapon-family",
+      "expected": "blob",
+      "got": "blob"
+    },
+    {
+      "room": "20d",
+      "case": "zero-family",
+      "expected": "blob",
+      "got": "blob"
+    },
+    {
+      "room": "20d",
+      "case": "r20d-parents-short",
+      "got": "skeleton"
+    },
+    {
+      "room": "20d",
+      "case": "r20d-slot-order",
+      "got": "skeleton"
+    },
+    {
+      "room": "20d",
+      "case": "r20d-slot-range",
+      "got": "skeleton"
+    },
+    {
+      "room": "20d",
+      "case": "r20d-source-bind-nan",
+      "got": "skeleton"
+    },
+    {
+      "room": "20d",
+      "case": "r20d-source-count",
+      "got": "descriptor"
+    },
+    {
+      "room": "20d",
+      "case": "r20d-source-forward",
+      "got": "skeleton"
+    },
+    {
+      "room": "20d",
+      "case": "r20d-source-root",
+      "got": "skeleton"
+    },
+    {
+      "room": "20d",
+      "case": "r20d-word44-high",
+      "got": "descriptor"
+    },
+    {
+      "room": "20e",
+      "case": "good",
+      "expected": "none",
+      "got": "none"
+    },
+    {
+      "room": "20e",
+      "case": "legacy-wrong-family",
+      "expected": "blob",
+      "got": "blob"
+    },
+    {
+      "room": "20e",
+      "case": "enemy-family",
+      "expected": "blob",
+      "got": "blob"
+    },
+    {
+      "room": "20e",
+      "case": "weapon-family",
+      "expected": "blob",
+      "got": "blob"
+    },
+    {
+      "room": "20e",
+      "case": "zero-family",
+      "expected": "blob",
+      "got": "blob"
+    },
+    {
+      "room": "20e",
+      "case": "r20e-parents-short",
+      "got": "skeleton"
+    },
+    {
+      "room": "20e",
+      "case": "r20e-slot-order",
+      "got": "skeleton"
+    },
+    {
+      "room": "20e",
+      "case": "r20e-slot-range",
+      "got": "skeleton"
+    },
+    {
+      "room": "20e",
+      "case": "r20e-source-bind-nan",
+      "got": "skeleton"
+    },
+    {
+      "room": "20e",
+      "case": "r20e-source-count",
+      "got": "descriptor"
+    },
+    {
+      "room": "20e",
+      "case": "r20e-source-forward",
+      "got": "skeleton"
+    },
+    {
+      "room": "20e",
+      "case": "r20e-source-root",
+      "got": "skeleton"
+    },
+    {
+      "room": "20e",
+      "case": "r20e-word44-high",
+      "got": "descriptor"
+    }
+  ],
+  "scope": "Host validation and current target failure diagnosis; fresh enabled target qualification pending.",
+  "baseline": {
+    "program": "c21amW",
+    "room": "20d",
+    "state_sha256": "7d15c50192fecdf578de20cceefb564de2c1c921c33f59bea16b5d3d9beec093",
+    "actual_player": "cPlAshley",
+    "model_id": 0,
+    "source_joints": 141,
+    "infos": 7,
+    "ot": 7,
+    "native_draws": 0,
+    "declined_draws": 300,
+    "missing_live_info_records": 7,
+    "player_texture_identity_bind": "ok count30; actor source blobs incorrectly family2",
+    "audio_bank_no_fit": 1
+  },
+  "runtime_knob": "NATIVE_MODEL_REGISTRY_PL_ASHLEY=1 with PS2_ASHLEY>=2",
+  "generator_knob": "--player-ashley (default off)",
+  "host_cases_pass": 26,
+  "geometry_roles_textures_binds_source_unchanged": true
+}

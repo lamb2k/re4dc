@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """model_registry.py <spec.json> <out dir> [--tree <checkout>] [--package-room <hex room>] [--source-normal-length]
-  [--wide-identity] [--ch23-facts] [--ch23-mendez-budget] [--ch22-luis-coverage] [--slots]
+  [--player-ashley] [--wide-identity] [--ch23-facts] [--ch23-mendez-budget] [--ch22-luis-coverage] [--slots]
 (D367 generic native models, 2026-10-03)
+
+--player-ashley (default off): with --slots, exact pl01 model0/141-joint/seven-role
+source blobs name player-family storage (1), matching ReadPlayerData. Requires
+NATIVE_MODEL_REGISTRY_PL_ASHLEY=1. Other archives retain enemy family 2.
 
 --slots (lane ps2cast 2026-10-14, default off: output unchanged; package only, NATIVE_MODEL_REGISTRY_SLOTS images):
 a cast whose source.json lists "draw_slots" (ps2_ashley.py: Ashley's 141-joint GC skeleton, 68 joints drawn) packs
@@ -486,6 +490,7 @@ def luis_coverage(inputs, descriptor, source, bindings, arc, archive_name):
 
 
 # ---------------------------------------------------------------- main
+PLAYER_ASHLEY = False
 def main():
     args = sys.argv[1:]
     tree = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../..'))
@@ -502,6 +507,12 @@ def main():
         i = args.index('--pack-bones'); PACK_BONES = int(args[i + 1]); del args[i:i + 2]
         if PACK_BONES not in (48, 64, 80, 96, 128):
             sys.exit('model_registry: --pack-bones takes 48, 64, 80, 96 or 128 (NATIVE_MODEL_REGISTRY_BONES)')
+    global PLAYER_ASHLEY
+    if '--player-ashley' in args:
+        args.remove('--player-ashley')
+        if '--slots' not in args or package_room is None:
+            sys.exit('model_registry: --player-ashley needs --slots and --package-room')
+        PLAYER_ASHLEY = True
     global CH22_LUIS_COVERAGE
     if '--ch22-luis-coverage' in args:
         args.remove('--ch22-luis-coverage')
@@ -1326,7 +1337,18 @@ def write_package(out, room, spec, runtime, textures, used_tex, bins, tpls, blob
                     pal = x['palette'] or [0xffffffff, 0, 0, 0]
                     ftex.append(struct.pack('<17I', *x['key'], *x['whf'], *x['sampler'], *pal))
             roles.append(struct.pack('<8I', r['appearance'], s['role'], s['bin'], s['tpl'], fm_index[mk], *ft_index[tk], 0))
-    sblob = [struct.pack('<8I', fm_index[(a, b)], 2, b, *bins[(a, b)]['normalized'], 0, 0) for a, b in blobs]
+    # The player archive is adopted with family 1; partner/enemy archives use 2.
+    # Only the reviewed playable-Ashley source owner can request player facts.
+    player_archives = set()
+    for r in runtime:
+        if not PLAYER_ASHLEY or r['archive'] != 'pl01':
+            continue
+        if not (r['model_id'] == 0 and r.get('source_bones') == 141 and
+                r.get('slots') and len(r['sections']) == 7 and not r.get('pool')):
+            raise Fail('pl01 player facts require the full 141-joint seven-role draw-slot owner')
+        player_archives.add(r['archive'])
+    sblob = [struct.pack('<8I', fm_index[(a, b)], 1 if a in player_archives else 2,
+                         b, *bins[(a, b)]['normalized'], 0, 0) for a, b in blobs]
     tex = [struct.pack('<4I', *textures[t][:4]) for t in used_tex]
     geom = [struct.pack('<16I', *g['counts'], *g['at'], g['crc'], g['fnv'], 0) for g in geoms]
     body = dict(desc=b''.join(desc), ref=b''.join(struct.pack('<4I', *x) for x in refs), geom=b''.join(geom), blob=bytes(blob),

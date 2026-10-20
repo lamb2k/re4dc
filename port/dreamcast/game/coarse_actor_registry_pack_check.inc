@@ -440,7 +440,7 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
                 const bool mask_only=(mw&255u)==0;
 #if RE4DC_NMR_POOL
                 // NATIVE_MODEL_REGISTRY_POOL: a pool section whose every triangle is a masked card is mask-only too.
-                if(mask_only && !(luis && i==3u) && !desc.pool)return kPwRef;
+                if(mask_only && !(luis && i==3u))return kPwRef;
 #else
                 if(mask_only && !(luis && i==3u))return kPwRef;
 #endif
@@ -554,11 +554,28 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
         }
         if(same){detail=a*256+b;return kPwDuplicate;}
     }
-    // ---- source blobs: one per fact model, enemy archives; every role's model has the blob of its BIN
+    // ---- source blobs: one per fact model; every role's model has the blob of its BIN
     for(unsigned k=0;k<sec[kSBlob].count;++k) {
         const unsigned char* r=p+sec[kSBlob].at+k*32;detail=k;
         const unsigned fm=pu32(r,0),family=pu32(r,4),bin=pu32(r,8);
-        if(fm>=sec[kFModel].count || family!=2 || !bin || !pu32(r,12) || pu32(r,24) || pu32(r,28))return kPwBlob;
+        if(fm>=sec[kFModel].count || !bin || !pu32(r,12) || pu32(r,24) || pu32(r,28))return kPwBlob;
+        unsigned expected_family=2;
+#if RE4DC_NMR_ASHLEY >= 2 && defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+        // Every role using this fact must belong to the typed playable owner.
+        // A shared/enemy fact cannot be relabelled as player storage.
+        bool used=false,player=true;
+        for(unsigned q=0;q<sec[kRole].count;++q)if(PKR[q].model==&PKM[fm]) {
+            used=true;bool typed=false;
+            for(unsigned d=0;d<sec[kDesc].count;++d) {
+                const auto& desc=PKD[d];
+                if(desc.appearance==PKR[q].appearance && desc.model_id==0u &&
+                   desc.source_bones==141u && desc.sections==7u)typed=true;
+            }
+            player&=typed;
+        }
+        if(used && player)expected_family=1;
+#endif
+        if(family!=expected_family)return kPwBlob;
         for(unsigned u=0;u<k;++u)if(PKB[u].model==&PKM[fm])return kPwDuplicate;
         PKB[k]={&PKM[fm],family,bin,{pu32(r,12),pu32(r,16),pu32(r,20)}};
     }

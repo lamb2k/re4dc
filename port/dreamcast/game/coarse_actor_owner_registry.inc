@@ -1065,7 +1065,14 @@ extern "C" int re4dc_registry_merchant_robe(unsigned appearance,unsigned role,un
 extern "C" int re4dc_registry_model(const cModel* m,const Re4dcActorPlan* p) {
     const auto* desc=p?registry_descriptor(p->appearance):nullptr;
 #if RE4DC_NMR_SLOTS
-    return desc && m && m->id==desc->model_id && m->nParts==registry_source_bones(*desc) && RE4DC_PLAN_SHAPE(p,desc) && RE4DC_REGISTRY_OT_OK(m,desc);
+    bool player_ot=false;
+#if RE4DC_NMR_ASHLEY >= 2 && defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+    // cPlAshley uses the source OT7 callback (including its skirt second pass).
+    // Leon's model0/119-joint owner and unrelated OT7 models cannot qualify.
+    player_ot=desc && m && (const cModel*)pPL==m && m->ot_type==7u &&
+        desc->model_id==0u && desc->source_bones==141u && desc->sections==7u;
+#endif
+    return desc && m && m->id==desc->model_id && m->nParts==registry_source_bones(*desc) && RE4DC_PLAN_SHAPE(p,desc) && (RE4DC_REGISTRY_OT_OK(m,desc) || player_ot);
 #else
     return desc && m && m->id==desc->model_id && m->nParts==desc->bones && RE4DC_PLAN_SHAPE(p,desc) && RE4DC_REGISTRY_OT_OK(m,desc);
 #endif

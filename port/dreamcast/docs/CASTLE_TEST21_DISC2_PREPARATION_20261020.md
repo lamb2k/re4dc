@@ -41,3 +41,39 @@ The separate current48KiB diagnostic c21cmW now builds52s/missing0, ELFdb520f68a
 Dedicated current c21cmW fresh r200 now completes50.9s/errors empty with actual49152bytes held in one block throughout. CAST-GC/NOT-DRAWN and TEXCHK0 pass: Leon/Ashley each450native/0GC; distant em12/em3b stay out of view and are explicitly unjudged. Standard VRAM gate passes the observed window: pinned2185538/dynamic0/other57374/free324512/largest272384,0after-preload loads/evictions/retries/refusals/guard/nocontig/texrej/sndfail. KOS watch minimum headroom26024, final26088/top24320/holes1768; this small remaining reserve is reported directly. Snapshot source756 is r200/chapter6/phase3/Stop0, diagnostic1440/600health. This standalone diagnostic closes only the observed r20048KiB gate; normal route programA and its1200/600r202state remain unchanged, and later rooms/menus/waves still need their own gates.
 
 The dedicated diagnostic master is also exact-hash retained onC:497248sectors,1018363904bytes, SHA256ece7acdf4e3c2c5a3050b30257cf60e642fcb5810c9027d1c15e6d9a18ab5806. Guarded copy after-free21713915904bytes; original image remains separate. Exact public receipt ch31-test21-r200-held49152-gate-20261020.json links source/build/actualdata/runtime/snapshot hashes. No hardware or I/O timing claim.
+
+
+## Playable Ashley typed ownership repair and requested skinning candidate
+
+The fresh current Disc2 r206 source-selection diagnostic reached actual r20d
+with cPlAshley (model0,141 source joints,7 Infos,OT7). Both native packages
+were admitted, but the player drew through fallback (native0/declined300).
+A read-only saved-state audit found all7 player Infos missing ownership records.
+The successful player texture bind had30 identities; the package exporter and
+validator had required enemy-family2 source blobs, while ReadPlayerData correctly
+adopts player-family1. The native registry also lacked the typed OT7 admission.
+This is diagnostic coverage, not chapter progression. The enemy19 fallback and
+one audio-bank no-fit in this arm remain separate open gates.
+
+The existing default-off PL_ASHLEY feature now admits OT7 only for currentpPL
+with model0/source141/seven roles, preserving the full owner certificate.
+The new default-off exporter option --player-ashley emits family1 only for
+that exact pl01 owner. The validator requires every role using a player fact
+to name that typed descriptor; other actors retain enemy-family2. It neither
+changes source player loading nor borrows Leon's119-joint owner. Regeneration
+changed exactly20 bytes per package:8 family bytes plus12 checksum bytes.
+All geometry,binds,roles,source identities,texture records and cloth inputs
+remain byte-identical. The target reader passes26 host cases, including old
+family2 rejection, invalid-family rejection and the retained slot/skeleton
+corruption cases. Enabled target admission remains pending.
+
+The user's explicit backend directive is assigned to the next current candidate:
+SKIN_SH4ZAM=1 with isolated dependency516f192bb6585a4f5986ff10301a5d34d4b5c3ed.
+The frozenA/B/C programs and submodule remain unchanged. Actual emitted flag,
+symbol/call path, partner/playable rendering and memory checks are required
+before claiming that candidate qualified. The library switch itself does not
+repair ownership or draw-order admission.
+
+The user's hot-animation consistency directive also requires explicit r203/r208
+read-only motion-cache checks and reuse of QA's exact qualified audio-preserving
+pl11-hot payload. No all-room residency claim follows from r11e.
