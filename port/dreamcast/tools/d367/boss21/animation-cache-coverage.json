@@ -1497,7 +1497,7 @@
       "missing": [],
       "exceeds_two_reserved_if_preload_or_spill_lost": true,
       "strict_two_slab_overflow": false,
-      "conclusion": "specific set fits/inline; not all-state closure"
+      "conclusion": "v2 set exceeds two reserved slots; conditional spill/pool/global-pressure closure required"
     }
   ],
   "source_files": [

@@ -26,6 +26,7 @@ class CapacitySemantics(unittest.TestCase):
         r=audit.evaluate_set(a,[0,1,2])
         self.assertFalse(r['strict_two_slab_overflow'])
         self.assertTrue(r['exceeds_two_reserved_if_preload_or_spill_lost'])
+        self.assertIn('conditional spill',r['conclusion'])
     def test_missing_fcv_is_not_a_pass(self):
         r=audit.evaluate_set(fixture(None,['inline-resident']),[0,5])
         self.assertEqual(r['conclusion'],'unresolved mapping')

@@ -166,7 +166,7 @@ def evaluate_set(a, indices):
     return dict(clips=clips,distinct_cold=len(cold),distinct_cached=len(cached),missing=missing,
                 exceeds_two_reserved_if_preload_or_spill_lost=(v is not None and len(cached)>2),
                 strict_two_slab_overflow=(v==3 and len(cold)>2),
-                conclusion='unresolved mapping' if missing else 'demonstrable recurring cold working set exceeds two slots' if v==3 and len(cold)>2 else 'specific set fits/inline; not all-state closure')
+                conclusion='unresolved mapping' if missing else 'demonstrable recurring cold working set exceeds two slots' if v==3 and len(cold)>2 else 'v2 set exceeds two reserved slots; conditional spill/pool/global-pressure closure required' if v==2 and len(cached)>2 else 'specific set fits slots/inline; not all-state closure')
 
 def pressure_contract(a, cap):
     """Compare existing archive declaration to active logical pressure policy.
