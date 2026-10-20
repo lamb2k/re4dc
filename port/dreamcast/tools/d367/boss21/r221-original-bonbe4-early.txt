@@ -1,0 +1,20 @@
+name boss21-r221-original-bonbe4-early
+room 0x221
+chapter 10
+rsf 0x221 3 4 5 8 9
+pos -12720 837 -79910
+ang 3.14159265
+inv default
+alivelog 15
+census 30
+census 150
+census 300
+census 450
+census 600
+dump
+area 0x19
+goto 160 -7429.0781 836.5619 -6015.2271 0
+goto 380 -7429.0781 836.5619 -6015.2271 0
+act 400 a 4
+act 415 a 4
+goto 780 -7429.0781 836.5619 -3515.2271 3.14159265

@@ -1,0 +1,246 @@
+{
+  "scope": "Original source nitrogen bottle freeze plus normal controller turn toward live body. Full-only diagnostic, no reduced/full switch, fullfight, GC-look, hardware, IO or FPS acceptance.",
+  "source_commit": "87cff2a4ca98001e99bcb3545d954048034480c6",
+  "base": "5f26453a9",
+  "renderer_patch": "11298e540cef367c49901a5837bb13981ba85469",
+  "elf_sha256": "0633b72fb0ba45dbd6f95799d897756e57540c9030d213bc6f1fbd8752dcc7d2",
+  "disc_sha256": "a0083a08ee3a0adca6922445d8e2b65a95df184db551e739b72b4dd9225ef45b",
+  "source_fixture": {
+    "path": "tools/d367/boss21/r221-original-bonbe4-early.txt",
+    "sha256": "06642da5bf0c233291f598a76335f8f1957d659b844a52188573457a36a9c376",
+    "producer": "r201_throwBonbe(3): original area10 action / area11 enemy flag64 / original em2cDmCk and em2cSetFreeze"
+  },
+  "P": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\runs\\original-bonbe-p",
+    "elapsed_s": 51.0,
+    "errors": [],
+    "samples": 1093,
+    "frozen_samples": 336,
+    "writes": [],
+    "first_frozen": {
+      "host_s": 47.625,
+      "source_frame": 771,
+      "room_flags": [
+        "0x200000",
+        "0x0",
+        "0x80000000",
+        "0x0"
+      ],
+      "source_stop": "0x0",
+      "player": "0x8ca48700",
+      "player_routines": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "player_pos": [
+        -7099.0283203125,
+        836.565185546875,
+        -5863.6298828125
+      ],
+      "hp": 1440,
+      "source_hp_global": [
+        1440,
+        1440
+      ],
+      "dmg_owner": "0x0",
+      "custom_callback": "0x0",
+      "grab_full_predicate": false,
+      "actors": [
+        {
+          "pointer": "0x8ca8cba0",
+          "name": "verdugo-em2c-00",
+          "type": 0,
+          "parts": 201,
+          "routines": [
+            2,
+            5,
+            1,
+            0
+          ],
+          "be_flag": "0x2002077",
+          "set": 1,
+          "em_flag": "0x9",
+          "timer": 0,
+          "pos": [
+            -10694.865234375,
+            836.563232421875,
+            -4121.77783203125
+          ],
+          "flags": "0x800",
+          "guard_count": 898,
+          "pTex": "0x8c391b18",
+          "model_info": "0x8cd60860",
+          "material": {
+            "flags": "0x4",
+            "ratio": 255,
+            "blend_type": 2,
+            "table": "0x8ca8d518"
+          },
+          "render_target": {
+            "used": 1,
+            "buffer": "0x8cd78de0",
+            "tex_id": 248,
+            "mask": "0x8",
+            "width": 64,
+            "height": 64,
+            "repeat": 1
+          }
+        }
+      ]
+    },
+    "minimum_source_HP": 1440,
+    "artifacts": {
+      "run-result.json": "51b24cf26a5c56dae2a2102e06d530724a262754812bde44aaa3b6671f952925",
+      "run-start.json": "f4a7f07df7a43fdb0698038ea193951856454c6a83ded2e316ed8d3287ef410d",
+      "owned-process.json": "3a31b7ae283a466cecdedbae96c1ff3f2e206e0634b5de0adc23569ffc642342",
+      "run-output.txt": "88b516ca32a2dde536174a0e50686421e5372f8b22fae0d5f92ef9c0526996d9",
+      "boss-observation.json": "8c7a07abf319595cfabb20b31d929a3fe47072fd4fe8500da618c2ba3cf7b552",
+      "data/disc.state": "4e36b4673c47fb0174fa7afc8f454648f17d87c24a79eb3eda7ffdaef28979cb",
+      "data/T0000_vmu_save_A1.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    }
+  },
+  "R": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\runs\\original-frozen-r",
+    "elapsed_s": 31.2,
+    "errors": [],
+    "samples": 1121,
+    "frozen_samples": 1121,
+    "writes": [],
+    "first_frozen": {
+      "host_s": 6.328,
+      "source_frame": 1021,
+      "room_flags": [
+        "0x200000",
+        "0x0",
+        "0x0",
+        "0x0"
+      ],
+      "source_stop": "0x0",
+      "player": "0x8ca48700",
+      "player_routines": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "player_pos": [
+        -7431.33935546875,
+        836.5615234375,
+        -3512.942138671875
+      ],
+      "hp": 1440,
+      "source_hp_global": [
+        1440,
+        1440
+      ],
+      "dmg_owner": "0x0",
+      "custom_callback": "0x0",
+      "grab_full_predicate": false,
+      "actors": [
+        {
+          "pointer": "0x8ca8cba0",
+          "name": "verdugo-em2c-00",
+          "type": 0,
+          "parts": 201,
+          "routines": [
+            1,
+            25,
+            1,
+            1
+          ],
+          "be_flag": "0x2002077",
+          "set": 1,
+          "em_flag": "0x9",
+          "timer": 15,
+          "pos": [
+            -10917.228515625,
+            836.563232421875,
+            -3547.849853515625
+          ],
+          "flags": "0x10880",
+          "guard_count": 648,
+          "pTex": "0x8c391b18",
+          "model_info": "0x8cd60860",
+          "material": {
+            "flags": "0x4",
+            "ratio": 255,
+            "blend_type": 2,
+            "table": "0x8ca8d518"
+          },
+          "render_target": {
+            "used": 1,
+            "buffer": "0x8cd78de0",
+            "tex_id": 248,
+            "mask": "0x8",
+            "width": 64,
+            "height": 64,
+            "repeat": 1
+          }
+        }
+      ]
+    },
+    "minimum_source_HP": 0,
+    "artifacts": {
+      "run-result.json": "b1b42de97ae015a80eb45cf3bdcd5548e27e3836e7e74e5d46f7fdadad95b3eb",
+      "run-start.json": "bdea11aa4382357069b53545fbf05d4d11200a17df5a42dcaf3f726d1bf2cf96",
+      "owned-process.json": "adc83b98990cf2d3693f5129c5aed071849e3c27120aa7ac203fd3afc758f39e",
+      "run-output.txt": "e68884e3a1061a7ea75daac3e245723f69e55287e75c77d2eaf6e4391efd756a",
+      "boss-observation.json": "d3388fa30f7eade9adda28c87fd5d6a83e0addd607823cefe26ae328b14ef3a4",
+      "data/disc.state": "2d98d63a517856dc2d0099a98adb28356dd102a3d303d9029b81c869e9f0c419",
+      "data/T0000_vmu_save_A1.bin": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    }
+  },
+  "view": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\runs\\original-frozen-r\\shots\\t0006\\frames\\fb0.png",
+    "sha256": "d5c53abb6992e8e1b6dae01530f6bd62b9126f7fdb302821bea08e01448f7df5",
+    "inspected": true,
+    "controller_path": "C:\\Flycast-Evidence\\re4-dreamcast\\boss21-20261020\\runs\\original-frozen-r\\owned-window-frozen-view.json",
+    "controller_sha256": "212b24335087810bdafbe009f313a0be4255b1c92347fd5bcf5e3234362fb035",
+    "controller_rights": "PROCESS_VM_READ|PROCESS_QUERY_LIMITED_INFORMATION",
+    "turn": "normal J/L messages to exact owned PID/start-time SDL_app HWND; no movement or process/state writes"
+  },
+  "target": {
+    "width": 64,
+    "height": 64,
+    "repeat": 1,
+    "ratio": 255,
+    "blend_type": 2,
+    "guard_count_first": 898,
+    "frame_label": "source_frame is Global::Frame_cnt, not the fixture room-local frame"
+  },
+  "gates": {
+    "castgc_P": "PASS:1092native body/0GC",
+    "notdrawn_P": "PASS:56alive samples/12inview",
+    "castgc_R": "PASS:3147native body/0GC",
+    "notdrawn_R": "PASS:114alive samples/70inview",
+    "TEXCHK_fails": 0,
+    "KOS_hold_bytes": 49152,
+    "VRAM_checker": "PASS P/R; resident-list limitation below",
+    "resident_gap": "r221 has no resident list; P38uploads afterpreload,3sound failures remain. R is a warm continuation with no fresh preload. No no-reread gate is claimed.",
+    "VRAM_P": {
+      "min_free": 868352,
+      "min_largest": 839648,
+      "peak_pinned": 1022688,
+      "last_pinned": 1022688,
+      "last_dynamic": 578080,
+      "last_other": 98304
+    },
+    "VRAM_R": {
+      "min_free": 865280,
+      "min_largest": 834560,
+      "last_pinned": 864928,
+      "last_dynamic": 738912,
+      "last_other": 98304
+    }
+  },
+  "gate_artifacts": {
+    "frozen-p-castgc.json": "dd175b052a4622d230a93216a95dc7aa975741300ae2062b1cae81b29afa4db5",
+    "frozen-r-castgc.json": "473c800de07abec530f195cab1ac570e25d43d6468039f22a0879c59f4e1e171",
+    "frozen-p-vram.json": "dd11d9317f6fa8fb2fa1ad637412270f071f7afa9be9131f6aca27e9708b292a",
+    "frozen-r-vram.json": "8b67fc44deb791c8b6985f4044809dfacf10b3e3df888e6505cad6fb276e6f0b"
+  },
+  "GC_reference": "Pending. G proved source-ready Up cursor1->0 but short A did not start a game. H source-phase control continues separately.",
+  "retained_controls": "k/l/m/n no qualified frozen view; Q20s rejected before guest by unchanged harness minimum30, R30s used instead."
+}
