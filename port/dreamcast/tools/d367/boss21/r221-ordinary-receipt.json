@@ -1,0 +1,99 @@
+{
+  "source_commit": "87cff2a4ca98001e99bcb3545d954048034480c6",
+  "base": "5f26453a9",
+  "reused_renderer_patch": "11298e540cef367c49901a5837bb13981ba85469",
+  "elf_sha256": "0633b72fb0ba45dbd6f95799d897756e57540c9030d213bc6f1fbd8752dcc7d2",
+  "disc_sha256": "a0083a08ee3a0adca6922445d8e2b65a95df184db551e739b72b4dd9225ef45b",
+  "disc_sectors": 503059,
+  "disc_data_sectors": 501928,
+  "disc_limit": 504000,
+  "added_data_sectors": 5794,
+  "source_list05_raw_sha256": "57c251fb92baf9ee6b44f4376828d5e34f6187787c060d7d933d5329cbc8c860",
+  "source_list05_le_sha256": "a506e148c5ce57b5640f8068299cf1c127422254ff67b26cfdec86143327c6dd",
+  "source_list05_checked_rows": 163,
+  "appearance_seed_sha256": "d8028855dcbf5b7352abe2430a25c068e66930874a31fc04b10225538539d4d9",
+  "appearance_seed_vmu_sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+  "ordinary_run": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/runs/normal-attack-j",
+    "elapsed_s": 50.8,
+    "run_receipt_sha256": "5a65e4a4e435b2c616e4e5c28a7c6f1b12851eca1f4db2714f2a2858d3b0f2cc",
+    "observation_sha256": "8ebf5d9c11cba76aa4a128fc22aee24fb2ca6e3cdb17c97241b355cbd8415c0f",
+    "log_sha256": "9879d4a3847c91db0dc044298447e7375e5ad55603338e0c40e0971368f794fe",
+    "writes": [],
+    "samples": 1872,
+    "custom_damage_samples": 43,
+    "first_host_s": 12.203,
+    "last_host_s": 13.328,
+    "first_custom_damage": {
+      "host_s": 12.203,
+      "player": "0x8ca48700",
+      "player_routines": [
+        4,
+        0,
+        1,
+        0
+      ],
+      "player_pos": [
+        -2245.38916015625,
+        836.5656127929688,
+        -1919.78564453125
+      ],
+      "hp": 1440,
+      "source_hp_global": [
+        140,
+        1440
+      ],
+      "dmg_owner": "0x8ca8cba0",
+      "grab_full_predicate": true,
+      "actors": [
+        {
+          "pointer": "0x8ca8cba0",
+          "name": "verdugo-em2c-00",
+          "type": 0,
+          "parts": 201,
+          "routines": [
+            1,
+            9,
+            1,
+            0
+          ],
+          "be_flag": "0x2002077",
+          "set": 1,
+          "em_flag": "0xd",
+          "timer": 0,
+          "pos": [
+            -1625.867431640625,
+            836.5656127929688,
+            -2245.654296875
+          ],
+          "flags": "0x10081",
+          "guard_count": 0,
+          "pTex": "0x8c391b18",
+          "model_info": "0x8cd60860",
+          "material": {
+            "flags": "0x0",
+            "ratio": 0,
+            "blend_type": 0,
+            "table": "0x0"
+          },
+          "render_target": {
+            "used": 1,
+            "buffer": "0x8cd78de0",
+            "tex_id": 248,
+            "mask": "0x8",
+            "width": 64,
+            "height": 64,
+            "repeat": 1
+          }
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Full-only package: predicate fixture, not reduced/full switch acceptance.",
+    "11 cumulative Verdugo registry semantics declines in source appearance/attack lineage; clean whole-arm native gate fails.",
+    "Enemy AICA bank no-fit remains; death UI unsupported entries remain.",
+    "Frozen native look and matching GC reference pending.",
+    "RAM IO functional evidence, no hardware or performance claim."
+  ]
+}

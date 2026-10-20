@@ -1,0 +1,15 @@
+name boss21-r221-source-appearance
+room 0x221
+chapter 10
+rsf 0x221 3 4 5 8 9
+pos -12720 837 -79910
+ang 3.14159265
+inv default
+alivelog 15
+census 30
+census 150
+census 300
+census 450
+census 600
+dump
+area 0x19
