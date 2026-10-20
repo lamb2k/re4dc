@@ -838,3 +838,9 @@ def main():
 
 if __name__ == '__main__':
     main()
+# ash21 (lane release-test21 10-20, Test 21 item 7, user "Put her fix in test 21"): Codex qa21-r11e corrected Ashley
+# archive em/pl11.drs (QA Alpha Fix 1, tag e974d7b0): ch2's pl11 (ecf30980) with the three cold r11e pre-fight clips kept
+# in the admitted body (167 loads/evictions, 3,011 reads over 111 ticks -> none); prebuilt AICA sound preserved.
+# After ch2 in the data line. Private store copy: re4-assets-private/ash21-20261020 (RECIPE.txt, SHA256SUMS).
+ASH21D = os.environ.get('ASH21D', '/root/re4data/private/ash21-20261020')
+DATA['ash21'] = {'em/pl11.drs': ASH21D + '/em/pl11.drs'}
