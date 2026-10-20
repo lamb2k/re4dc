@@ -478,8 +478,10 @@ static int re4dc_logic_lod_skip(cEm* em)
 #include "dmg.h"
 // BODY_CORPSE=1 (bodysvc20.mk; lane bodysvc20 2026-10-20, master plan P3 "dead enemies cost near zero"; an
 // APPROXIMATION, default 0 = off): a settled Ganado corpse skips its whole frame step. Settled = a Ganado (ids
-// 0x10..0x20 but 0x18: every cEm10) resting in Die_Cramp's last state (r_no_0 3, r_no_1 0, r_no_2 2: the chapter 1 bodies that never
-// dissolve) whose position has not changed bit for bit for BODY_CORPSE_TICKS consecutive ticks (default 90: every death
+// 0x10..0x20 but 0x18: every cEm10) resting in Die_Cramp's last state (r_no_0 3, r_no_1 0, r_no_2 2: bodies that
+// never dissolve) or in Die_Lost's last state (r_no_1 3, r_no_2 2: a dissolved body, invisible and without collision,
+// whose work stays alive with Reset_enable set; measured 10-20: every r103 farm kill ends here and still ran its
+// whole step and ShapeMove every tick) whose position has not changed bit for bit for BODY_CORPSE_TICKS consecutive ticks (default 90: every death
 // motion has ended by then). Its skeleton, part matrices and collision stay as the last full step left them, so it is
 // drawn unchanged. Never skipped: a pending hit (dmg.m_Flag), a tick inside an explosion / fire volume
 // (DmgMgr.hitCheck), any other routine. Scripts that remove bodies (Die_Lost, destroy) still run: a skipped corpse is
@@ -499,7 +501,14 @@ extern "C" void re4dc_log(const char* fmt, ...);
 #endif
 static int re4dc_body_corpse_skip(cEm* em)
 {
-    if (em->id < 0x10 || em->id > 0x20 || em->id == 0x18 || em->r_no_0 != 3 || em->r_no_1 != 0 || em->r_no_2 != 2) {
+#if defined(RE4DC_BODY_LOG) && RE4DC_BODY_LOG
+    if (em->id >= 0x10 && em->id <= 0x20 && em->r_no_0 == 3 && ((u32) pG->Frame_cnt % 60) == 0) {
+        re4dc_log("bodysvc: f=%u dead em=%08x id=%02x r=%u/%u/%u room_id32=%08x\n", (u32) pG->Frame_cnt, (u32) em,
+                  em->id, em->r_no_0, em->r_no_1, em->r_no_2, (u32) pG->room_id32);
+    }
+#endif
+    if (em->id < 0x10 || em->id > 0x20 || em->id == 0x18 || em->r_no_0 != 3 || (em->r_no_1 != 0 && em->r_no_1 != 3) ||
+        em->r_no_2 != 2) {
         return 0;
     }
     const u32 now = (u32) pG->Frame_cnt;
