@@ -1,0 +1,786 @@
+{
+  "scope": "Fresh J original CardLoad same-program/Disc2 normal doorway, following and actual Wait. No warp or snapshot retarget. New Ashley three-clip retention is exercised, but separate enemy I/O thrash remains: this is not all-room cache closure, a whole chapter gate, or hardware timing.",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "chain": [
+    {
+      "capture": "current-j-route-walk02",
+      "elapsed_s": 24.5,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "34abeddcbe8daa912c1d7b57906c29e20966776d487095b587c99f49386e3987",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 5721,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            -5197.1591796875,
+            -0.00244140625,
+            -308.55926513671875
+          ],
+          "yaw": 1.4504408836364746
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            -5197.14794921875,
+            -0.00152587890625,
+            -308.5240173339844
+          ],
+          "yaw": 1.4504408836364746
+        }
+      },
+      "run_sha256": "b59c676335a304d0a4712071e5c8a377489dadf29fc8c556dbf5f75825abbb3b",
+      "controller_sha256": "a8f1d4d4d8543b64efeabfd8ff15577b1ea9ea46e74904fc5cbf5fe758225e67",
+      "sampler_log_sha256": "c8244a9154433ad86a86449a512d472528253f400cd8d5a1f7aef1453e792215"
+    },
+    {
+      "capture": "current-j-route-walk03",
+      "elapsed_s": 51.3,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "9845f9d0898fb87acb06ba9cd6c528b7f996e4fd4bb3e8cc9c3098e5a3984bf8",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 6054,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            10731.5048828125,
+            -0.000732421875,
+            -7326.46044921875
+          ],
+          "yaw": 1.8651310205459595
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            9694.5224609375,
+            0.000244140625,
+            -7427.48291015625
+          ],
+          "yaw": 1.8778101205825806
+        }
+      },
+      "run_sha256": "dc17dfa1fe123b48d8aa9f47d318e0d7995d4f125f93a192adc8969ad0001adf",
+      "controller_sha256": "e05912555e0b1fba830961e885b603bdae33d3a462ef71a8cee7fc358d43098a",
+      "sampler_log_sha256": "a76ffe6526b78be740bcbc7a9f0f005534e7fb92cebc009e711438737c8e9c03"
+    },
+    {
+      "capture": "current-j-route-walk04",
+      "elapsed_s": 26.1,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "0abf566a011b412e5dee4a9ffd32d1f99371f9a0f41bd1175c8997d48fae038b",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 6131,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            10599.1796875,
+            -0.000244140625,
+            -15431.5439453125
+          ],
+          "yaw": -2.545992136001587
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            10668.4736328125,
+            0.000732421875,
+            -14370.6728515625
+          ],
+          "yaw": -2.756918430328369
+        }
+      },
+      "run_sha256": "a497c7432c31bd742457a5eb087901b87a3a313d8b598f83c42148ce52c08707",
+      "controller_sha256": "5ecc9245105109bc63491ed217d522c09bfa7ffd867c6c20e276ddc9bb2e9da4",
+      "sampler_log_sha256": "abf9ef5f9dc1a7bacdd41b5467e97fbbad53a7cf5c07d1e129d424b7e35af942"
+    },
+    {
+      "capture": "current-j-route-walk05",
+      "elapsed_s": 50.7,
+      "snapshot": {
+        "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+        "state_sha256": "b1c1fba31f23e9de38ee2b0d195fe24fd7b89e5859ffa55095198e147f8147e3",
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x202",
+        "chapter": 6,
+        "source_frame": 6240,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "stop": "0x0",
+        "actual_death": false,
+        "Leon": {
+          "pointer": "0x8caba800",
+          "pos": [
+            14481.607421875,
+            -0.0025634765625,
+            -19044.716796875
+          ],
+          "yaw": 1.5741753578186035
+        },
+        "Ashley": {
+          "pointer": "0x8cce56c0",
+          "pos": [
+            10519.9072265625,
+            -0.001708984375,
+            -14702.650390625
+          ],
+          "yaw": 2.7459588050842285
+        }
+      },
+      "run_sha256": "1dedd41e68fa8707f23424cb1c58b56c24f4248fea904a60368f6c3a1eb91190",
+      "controller_sha256": "2f3b180dfc018b5346d14ba8127b248ed0a0297c268b56c58fd2eea63dcbd957",
+      "sampler_log_sha256": "2cca08cb589a8411ae98004c85c96d9608c559ee17a8cd7087bc30115ef90156"
+    }
+  ],
+  "normal_wait": {
+    "frame": 6173,
+    "stable_source_ticks": 30,
+    "subFlags": "0x42",
+    "partner_hp": 600,
+    "partner_pos": [
+      10505.5791015625,
+      -0.000732421875,
+      -14768.9814453125
+    ],
+    "stable_anchor": [
+      10505.5791015625,
+      0.001220703125,
+      -14768.9814453125
+    ]
+  },
+  "working_set": {
+    "scope": "Read-only fresh J r202 normal-follow trace; additional Ashley clips remain inline; separate enemy cache remains unqualified. Global counters are cumulative and do not by themselves attribute every miss. Observed key occupancy is sampled every0.2s and is not a complete acquire census.",
+    "first": {
+      "host_s": 0.0,
+      "frame": 5721,
+      "hits": 381,
+      "misses": 5,
+      "evictions": 2,
+      "loads": 5,
+      "resident": 22400,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb85700",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 22400,
+          "keys": [
+            [
+              0,
+              22400,
+              "18f9ad45-ba6230e7",
+              0
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cce64e0",
+          "bytes": 423136,
+          "count": 58,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 0,
+          "keys": []
+        }
+      ]
+    },
+    "last": {
+      "host_s": 49.672,
+      "frame": 6054,
+      "hits": 830,
+      "misses": 314,
+      "evictions": 310,
+      "loads": 313,
+      "resident": 22400,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb85700",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 22400,
+          "keys": [
+            [
+              0,
+              22400,
+              "18f9ad45-ba6230e7",
+              0
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cce64e0",
+          "bytes": 423136,
+          "count": 58,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 0,
+          "keys": []
+        }
+      ]
+    },
+    "samples": 248,
+    "observed_keys": [
+      {
+        "archive_bytes": 1323136,
+        "entry": 0,
+        "bytes": 22400,
+        "key": "18f9ad45-ba6230e7",
+        "samples": 77
+      },
+      {
+        "archive_bytes": 1323136,
+        "entry": 86,
+        "bytes": 17408,
+        "key": "ba4d09f9-27cc4d48",
+        "samples": 6
+      },
+      {
+        "archive_bytes": 1323136,
+        "entry": 6,
+        "bytes": 9152,
+        "key": "c64f139d-98988b59",
+        "samples": 166
+      },
+      {
+        "archive_bytes": 1323136,
+        "entry": 152,
+        "bytes": 32416,
+        "key": "902bff70-ad8d96a1",
+        "samples": 49
+      }
+    ],
+    "archive_matches": [
+      {
+        "file": "em11.drs",
+        "file_sha256": "c49cd3d04ea5c63b9b1e09db82a3ab36b3422288a5242f29d7a08e7edc6e7bee",
+        "header_offset": 7144896,
+        "version": 2,
+        "body_bytes": 1323136,
+        "count": 157,
+        "table_crc": 4222181831,
+        "keys": [
+          {
+            "entry": 0,
+            "bytes": 22400,
+            "key": "18f9ad45-ba6230e7",
+            "hot": 0
+          },
+          {
+            "entry": 6,
+            "bytes": 9152,
+            "key": "c64f139d-98988b59",
+            "hot": 0
+          },
+          {
+            "entry": 86,
+            "bytes": 17408,
+            "key": "ba4d09f9-27cc4d48",
+            "hot": 0
+          },
+          {
+            "entry": 152,
+            "bytes": 32416,
+            "key": "902bff70-ad8d96a1",
+            "hot": 0
+          }
+        ]
+      }
+    ]
+  },
+  "temporal_windows": {
+    "current-j-route-walk03": {
+      "first_frame": 5721,
+      "last_frame": 6054,
+      "key_windows": [
+        {
+          "entry": 0,
+          "bytes": 22400,
+          "key": "18f9ad45-ba6230e7",
+          "samples": 77,
+          "first_source": 5721,
+          "last_source": 6054,
+          "first_host": 0.0,
+          "last_host": 49.672,
+          "max_sampled_pins": 0
+        },
+        {
+          "entry": 86,
+          "bytes": 17408,
+          "key": "ba4d09f9-27cc4d48",
+          "samples": 6,
+          "first_source": 5725,
+          "last_source": 5762,
+          "first_host": 1.812,
+          "last_host": 13.281,
+          "max_sampled_pins": 0
+        },
+        {
+          "entry": 6,
+          "bytes": 9152,
+          "key": "c64f139d-98988b59",
+          "samples": 166,
+          "first_source": 5745,
+          "last_source": 6052,
+          "first_host": 8.047,
+          "last_host": 48.875,
+          "max_sampled_pins": 0
+        },
+        {
+          "entry": 152,
+          "bytes": 32416,
+          "key": "902bff70-ad8d96a1",
+          "samples": 49,
+          "first_source": 5765,
+          "last_source": 6048,
+          "first_host": 14.078,
+          "last_host": 48.266,
+          "max_sampled_pins": 0
+        }
+      ],
+      "pinned_samples": 0,
+      "last10s_keys": [
+        0,
+        6,
+        152
+      ]
+    },
+    "current-j-route-walk04": {
+      "first_frame": 6054,
+      "last_frame": 6131,
+      "key_windows": [
+        {
+          "entry": 0,
+          "bytes": 22400,
+          "key": "18f9ad45-ba6230e7",
+          "samples": 24,
+          "first_source": 6054,
+          "last_source": 6125,
+          "first_host": 0.0,
+          "last_host": 22.094,
+          "max_sampled_pins": 0
+        },
+        {
+          "entry": 6,
+          "bytes": 9152,
+          "key": "c64f139d-98988b59",
+          "samples": 89,
+          "first_source": 6054,
+          "last_source": 6130,
+          "first_host": 0.219,
+          "last_host": 23.703,
+          "max_sampled_pins": 0
+        },
+        {
+          "entry": 152,
+          "bytes": 32416,
+          "key": "902bff70-ad8d96a1",
+          "samples": 13,
+          "first_source": 6054,
+          "last_source": 6126,
+          "first_host": 0.5,
+          "last_host": 22.688,
+          "max_sampled_pins": 0
+        },
+        {
+          "entry": 86,
+          "bytes": 17408,
+          "key": "ba4d09f9-27cc4d48",
+          "samples": 7,
+          "first_source": 6081,
+          "last_source": 6131,
+          "first_host": 7.563,
+          "last_host": 24.5,
+          "max_sampled_pins": 0
+        }
+      ],
+      "pinned_samples": 0,
+      "last10s_keys": [
+        0,
+        6,
+        86,
+        152
+      ]
+    },
+    "current-j-route-walk05": {
+      "first_frame": 6131,
+      "last_frame": 6240,
+      "key_windows": [
+        {
+          "entry": 86,
+          "bytes": 17408,
+          "key": "ba4d09f9-27cc4d48",
+          "samples": 26,
+          "first_source": 6131,
+          "last_source": 6238,
+          "first_host": 0.0,
+          "last_host": 48.672,
+          "max_sampled_pins": 0
+        },
+        {
+          "entry": 0,
+          "bytes": 22400,
+          "key": "18f9ad45-ba6230e7",
+          "samples": 84,
+          "first_source": 6131,
+          "last_source": 6240,
+          "first_host": 0.203,
+          "last_host": 48.875,
+          "max_sampled_pins": 0
+        },
+        {
+          "entry": 6,
+          "bytes": 9152,
+          "key": "c64f139d-98988b59",
+          "samples": 150,
+          "first_source": 6131,
+          "last_source": 6240,
+          "first_host": 0.406,
+          "last_host": 49.469,
+          "max_sampled_pins": 0
+        }
+      ],
+      "pinned_samples": 0,
+      "last10s_keys": [
+        0,
+        6,
+        86
+      ]
+    }
+  },
+  "slab_snapshot": {
+    "scope": "Read-only currentJ production snapshots, four exact ELF anchors and nm-verified native_motion.cpp stats/bindings. All four binding slots audited, no source/process/state edits. Entry snapshots show loaded archive policy; this is not a sustained working-set or all-room pass.",
+    "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "rows": [
+      {
+        "capture": "current-j-route-walk03",
+        "state_sha256": "9845f9d0898fb87acb06ba9cd6c528b7f996e4fd4bb3e8cc9c3098e5a3984bf8",
+        "room": "0x202",
+        "frame": 6054,
+        "stats_first11": [
+          830,
+          314,
+          310,
+          313,
+          0,
+          22400,
+          54816,
+          0,
+          32416,
+          119168,
+          0
+        ],
+        "archives": [],
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8cb85700",
+            "bytes": 1323136,
+            "count": 157,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 22400,
+            "bounded": false,
+            "slab_bytes": 32416,
+            "slabs": [
+              "0x8ccc9220",
+              "0x8ccd1120"
+            ],
+            "loaded": [
+              {
+                "index": 0,
+                "bytes": 22400,
+                "key": "18f9ad45-ba6230e7",
+                "flags": 0,
+                "loaded": true,
+                "pointer": "0x8ccc9220",
+                "pins": 0
+              }
+            ],
+            "hot": []
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cce64e0",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 0,
+            "bounded": true,
+            "slab_bytes": 25440,
+            "slabs": [
+              "0x8cd4de20",
+              "0x8cd541e0"
+            ],
+            "loaded": [],
+            "hot": []
+          }
+        ]
+      },
+      {
+        "capture": "current-j-route-walk04",
+        "state_sha256": "0abf566a011b412e5dee4a9ffd32d1f99371f9a0f41bd1175c8997d48fae038b",
+        "room": "0x202",
+        "frame": 6131,
+        "stats_first11": [
+          1202,
+          523,
+          519,
+          522,
+          0,
+          17408,
+          54816,
+          0,
+          32416,
+          119168,
+          0
+        ],
+        "archives": [],
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8cb85700",
+            "bytes": 1323136,
+            "count": 157,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 17408,
+            "bounded": false,
+            "slab_bytes": 32416,
+            "slabs": [
+              "0x8ccc9220",
+              "0x8ccd1120"
+            ],
+            "loaded": [
+              {
+                "index": 86,
+                "bytes": 17408,
+                "key": "ba4d09f9-27cc4d48",
+                "flags": 0,
+                "loaded": true,
+                "pointer": "0x8ccd1120",
+                "pins": 0
+              }
+            ],
+            "hot": []
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cce64e0",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 0,
+            "bounded": true,
+            "slab_bytes": 25440,
+            "slabs": [
+              "0x8cd4de20",
+              "0x8cd541e0"
+            ],
+            "loaded": [],
+            "hot": []
+          }
+        ]
+      }
+    ]
+  },
+  "native_draw_check": {
+    "rows": [
+      {
+        "room": "r200",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 1491,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r200",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 1491,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r200",
+        "id": "18",
+        "name": "em18",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 1491,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          61
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 52,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 52,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "ashley11"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 67,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "zealot-em11-07p"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r202",
+        "id": "11",
+        "name": "em11",
+        "samples": 5,
+        "max_alive": 4,
+        "nearest": 17492,
+        "in_view": 5,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "interpretation": [
+    "Added Ashley ARC22/23/37 full FCVs remain inline; no Ashley cold-slot occupancy sampled during following03/04. Wait05 can load other cold keys normally.",
+    "Global load/eviction counters are cumulative. The 0.2s sampler does not prove every miss or simultaneous lease concurrency.",
+    "em11 v2 cold keys0/6/152 total63968B and0/6/86 total48960B each fit existing64832B backing when packed; four-key union81376B is not proven simultaneous.",
+    "Distinct existing slabs and unchanged castle131072B margin are recorded. Shared systemic packing repair belongs to the separate boss motion lane.",
+    "r203/r208 original room checks, Garrador and chapter completion remain pending."
+  ]
+}
