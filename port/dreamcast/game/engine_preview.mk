@@ -17,13 +17,28 @@ endif
 #   OCCL / fog not believed / within 3 m of Leon or Ashley / the world not as compiled: drawn.
 ENEMY_VIS_CULL ?= 0
 ROOMFILE_SECTIONS :=
+# BODY_GRID=1 (lane bodysvc20, master plan P3 body service 1; an APPROXIMATION, default 0 = nothing built): the
+#   ENGINE_PREVIEW grid as a play service, without the preview's log lines. Every Ganado (cEm10) in a room whose data
+#   file carries a static GRID takes its movement collision (SatMgr.check -> wall segments + floor plane) and its foot
+#   IK floor from the grid; SatMgr decides wherever the grid cannot (outside, no floor, another level). Leon is not
+#   covered. Gate: gameplay equivalence (tools/d367/bodysvc20), not STRICT. Not with ENGINE_PREVIEW=1.
+BODY_GRID ?= 0
+BODY_GRID_DEF :=
+ifeq ($(BODY_GRID),1)
 ifeq ($(ENGINE_PREVIEW),1)
-$(OBJDIR)/mod/em10g/shared/src/em10/em10.o $(OBJDIR)/src/game/ik.o: GAME_CPPFLAGS += -DRE4DC_ENGINE_PREVIEW=1 -Iplatform/include
+$(error BODY_GRID=1 replaces ENGINE_PREVIEW=1: set one)
+endif
+BODY_GRID_DEF := -DRE4DC_BODY_GRID=1
+else ifneq ($(BODY_GRID),0)
+$(error BODY_GRID is 0 or 1)
+endif
+ifneq ($(filter 1,$(ENGINE_PREVIEW) $(BODY_GRID)),)
+$(OBJDIR)/mod/em10g/shared/src/em10/em10.o $(OBJDIR)/src/game/ik.o: GAME_CPPFLAGS += -DRE4DC_ENGINE_PREVIEW=1 $(BODY_GRID_DEF) -Iplatform/include
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ENGINE_PREVIEW=1
 PLATFORM_OBJS += $(OBJDIR)/platform/actor_rt.o
 $(OBJDIR)/platform/actor_rt.o: platform/actor_rt.c platform/include/actor_rt.h platform/include/room_file.h
 	@mkdir -p $(dir $@)
-	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include -c $< -o $@
+	kos-cc $(KOS_CFLAGS) -O2 -Iplatform/include $(BODY_GRID_DEF) -c $< -o $@
 ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_GRID=1
 else ifneq ($(ENGINE_PREVIEW),0)
 $(error ENGINE_PREVIEW is 0 or 1)
@@ -61,6 +76,10 @@ ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_VIS=1
 endif
 else ifneq ($(ENEMY_VIS_CULL),0)
 $(error ENEMY_VIS_CULL is 0, 1 or 2)
+endif
+# SCENERY_DEDUP=2 (lane scenery19, scenery19.mk): the room file's SCDD section (scenery point dedup tables).
+ifeq ($(SCENERY_DEDUP),2)
+ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_SCDD=1
 endif
 ifneq ($(strip $(ROOMFILE_SECTIONS)),)
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ROOM_FILE=1 -Iplatform/include

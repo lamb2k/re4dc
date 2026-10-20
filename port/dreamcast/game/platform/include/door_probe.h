@@ -15,8 +15,25 @@ void re4dc_doorspin(int end);                   // main.cpp: the main loop's vbl
 #define RE4DC_DOORPH(m) re4dc_doorph(m, (unsigned) pG->room_id)
 #define RE4DC_DOORPH_END(r) re4dc_doorph_end(r)
 #define RE4DC_DOORSPIN(e) re4dc_doorspin(e)
+#define RE4DC_TAIL_VB() ((void) 0)
+#elif defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
+// TAIL_METER (bench.mk, benchmark discs only): the same spin marks feed the frame tail meter (bench.cpp), and every
+// vblank (main.cpp postVSyncCallback) is stamped so a spin splits into "to the next vblank" and "further vblanks".
+#ifdef __cplusplus
+extern "C" {
+#endif
+void re4dc_tail_spin(int end);
+void re4dc_tail_vb(void);
+#ifdef __cplusplus
+}
+#endif
+#define RE4DC_DOORPH(m) ((void) 0)
+#define RE4DC_DOORPH_END(r) ((void) 0)
+#define RE4DC_DOORSPIN(e) re4dc_tail_spin(e)
+#define RE4DC_TAIL_VB() re4dc_tail_vb()
 #else
 #define RE4DC_DOORPH(m) ((void) 0)
 #define RE4DC_DOORPH_END(r) ((void) 0)
 #define RE4DC_DOORSPIN(e) ((void) 0)
+#define RE4DC_TAIL_VB() ((void) 0)
 #endif

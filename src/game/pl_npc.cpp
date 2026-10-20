@@ -2,6 +2,7 @@
 // hide / action logic, damage, neck and face control. Owns the cSubChar vtable.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "light.h"
 #include "dmg.h"
 #include "player.h"
@@ -2362,8 +2363,9 @@ int cSubChar::fanceCheck()
     b.x = -400.0f;
     b.y = 300.0f;
     b.z = 1000.0f;
-    PSMTXMultVec(subSelf->mat, &a, &a);
-    PSMTXMultVec(subSelf->mat, &b, &b);
+    RE4DC_XM_LOAD(subSelf->mat);
+    RE4DC_XM_POINT(subSelf->mat, &a, &a);
+    RE4DC_XM_POINT(subSelf->mat, &b, &b);
     if (SatMgr.hitCheck(&a, &b, 0, 0, 0, 0)) {
         return 0;
     }

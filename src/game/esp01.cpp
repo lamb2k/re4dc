@@ -5,6 +5,7 @@
 // Size_base_y. EspStrip_draw_poly is the quad emitter shared with esp02.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "light.h"
 #include "gx.h"
 #include "global.h"
@@ -135,8 +136,9 @@ void esp01Trans_sub(cEsp01* esp)
     int i;
     int j;
 
-    PSMTXMultVecSR(esp->m_Mat, &esp->m_Speed, &spd);
-    PSMTXMultVecSR(esp->m_Mat, &esp->m_Speed_plus, &acc);
+    RE4DC_XM_LOAD(esp->m_Mat);
+    RE4DC_XM_DIR(esp->m_Mat, &esp->m_Speed, &spd);
+    RE4DC_XM_DIR(esp->m_Mat, &esp->m_Speed_plus, &acc);
     org.x = 0.0f;
     org.y = 0.0f;
     org.z = 0.0f;

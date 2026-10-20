@@ -220,7 +220,11 @@ static AliveCapPendingGoto aliveCapPendingGoto[64];
 // 06-0C (ems[0..6]); r10f the gondola riders and 32 / 35; r11c (GameCube cabin, bit 0x40 off) Luis C8 and C9-D1.
 static const u32 aliveCapKeepTbl[] = {
     0x10003, 0x10004, 0x10005, 0x10006, 0x10007, 0x10008, 0x10025,
-    0x10C02, 0x10C06, 0x10C07, 0x10C08, 0x10C09, 0x10C0A, 0x10C0B, 0x10C0C,
+    0x10C02,
+#if !(defined(RE4DC_ROUTE_CH21_FULL) && RE4DC_ROUTE_CH21_FULL)
+    // ROUTE_CH21_FULL (lane ch2rooms20): r10c's ambush checks its sends, so 06-0C go through the cap (held, not kept).
+    0x10C06, 0x10C07, 0x10C08, 0x10C09, 0x10C0A, 0x10C0B, 0x10C0C,
+#endif
 #if defined(RE4DC_ROUTE_CH3) && RE4DC_ROUTE_CH3
     // Island (stage 3 lane census 2026-10-15): r300 the gate event Ganado 0x4B (setEvtMotion on getPtr()),
     // r303 entry 0x24 (em->flag / EstSet on the return).

@@ -3,6 +3,7 @@
 // proportion to the length used. Used for laser sight style beams and tracers.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "gx.h"
 #include "global.h"
 #include "math_sub.h"
@@ -115,8 +116,9 @@ static void Draw_line3d_local_222(Vec* p0, Vec* p1, Mtx mtx, u32 color, cEsp* es
     GXGetViewportv(V);
     if (V[2] <= 0.0f || V[3] <= 0.0f) return;
     Vec v[2];
-    PSMTXMultVec(mtx, p0, &v[0]);
-    PSMTXMultVec(mtx, &end, &v[1]);
+    RE4DC_XM_LOAD(mtx);
+    RE4DC_XM_POINT(mtx, p0, &v[0]);
+    RE4DC_XM_POINT(mtx, &end, &v[1]);
     const u32 col[2] = {0xff000000U | ((u32)r << 16) | ((u32)g << 8) | b,
         ((u32)(u8)(a * rate) << 24) | ((u32)(u8)(r * rate) << 16) |
         ((u32)(u8)(g * rate) << 8) | (u8)(b * rate)};

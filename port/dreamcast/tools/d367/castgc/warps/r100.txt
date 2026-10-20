@@ -8,7 +8,9 @@ ang -0.1293
 rsf 0x100 13
 scenario 0 0x00000010
 inv default
-act 30 fwd 150
+# damlight20 10-20: walk from room frame 90, not 30, so TEX_CHECK prints its frame-240 summary before the s03
+# movie starts (with 30 the movie began at frame ~236 and every census reported r100 TEXCHK "no coverage").
+act 90 fwd 150
 kill 0x12 400 0x100
 god
 alivelog 150

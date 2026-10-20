@@ -475,6 +475,14 @@ DATA['boss18g50'] = {'dc/native/r119/registry.re4nmr': B18G50D + '/native/r119/r
 # res17g. The old -20261016 / -20261017 dirs are gone.
 R108PD = os.environ.get('R108PD', '/root/re4data/private/r108p-20261018')
 DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
+# CAST-GC r111 (lane notdrawn20, 10-20, GitHub #42): r111's package with the same em17 type 0xc POOL descriptor
+# (model-registry/ps2-ch2-r111p.json = ps2-ch2-r113p re-roomed to 111) instead of the non-pool ganado-em17-0c. r111's
+# torch / weapon em17 did not bind the non-pool rows: the PS2 Ganado cast declined it and the GameCube model drew (NMRS
+# r111 id=17 plan=G declined 746 of 950 passes; with r111p plan=R native 746, declined 0). Its 3 textures are r113p's,
+# already in pak17's tex.pak (no loose texture). Heap 4 after the r111 package opens: 7,126,016 free (was 7,199,776).
+# Private data /root/re4data/private/r111p-20261020 (C: twin re4-assets-private/r111p-20261020, cast dir inside).
+R111PD = os.environ.get('R111PD', '/root/re4data/private/r111p-20261020')
+DATA['r111p'] = {'dc/native/r111/registry.re4nmr': R111PD + '/registry.re4nmr'}
 # lane stump17 (10-17): ACTOR_GANADO_PS2_STUMP's variant package (the exact PS2 lost-head stumps of the five cast
 # appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
 STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')
@@ -544,8 +552,14 @@ def drop_loose(names, r, rm, rec):
                              'rebuild it (tools/d367/vram/disc_pack.py)' % (n, len(stale), len(new), (stale + new)[:3]))
         # PAK_DERIVED (lane vram101 10-17): a later set may stage a pack made from this one with some packages
         # re-encoded (same keys; its sidecar JSON names the base pack's and its own sha256).
-        ok = {b['out']} | {d_['out'] for d_ in (json.load(open(PAK_DERIVED[m_])) for m_ in names if m_ in PAK_DERIVED)
-                           if d_['base'] == b['out']}
+        # Derived packs chain (lane ch2rooms20 10-20: ch21r's pack derives from v101's): follow base -> out links.
+        ok = {b['out']}
+        derived = [json.load(open(PAK_DERIVED[m_])) for m_ in names if m_ in PAK_DERIVED]
+        while True:
+            more = {d_['out'] for d_ in derived if d_['base'] in ok} - ok
+            if not more:
+                break
+            ok |= more
         if full(pak) not in ok:
             raise SystemExit('drop-loose: the staged dc/tex.pak is not %s\'s pack (or a pack derived from it)' % n)
     lacking = []
@@ -645,6 +659,45 @@ RC19D = os.environ.get('RC19D', '/root/re4data/private/rc19o2-20261019')
 if os.path.isdir(RC19D):
     DATA['rc19'] = {'dc/native/%s/room.r4rc' % r: '%s/%s/room.r4rc' % (RC19D, r)
                     for r in sorted(os.listdir(RC19D)) if os.path.isfile('%s/%s/room.r4rc' % (RC19D, r))}
+# Lane ch2rooms20 (10-20; ROUTE_CH21_FULL, chapter 2-1's real path): ch21r = rooms r10c (the dam: the insignia key's own
+# pickup) / r10d / r10e: st1 arc + dar (GC disc 1, island18 prepare recipe; dar sound banks refitted, r10c's FOOT bank
+# tail-first), PS2 worlds + MAINSCENARIO under dc/native/<room>, r102's merchant registry retargeted to r10d / r10e, and
+# dc/tex.pak = v101's pack + the rooms' 234 new keys (ch2rooms/pack_add.py; pak-derived.json: base v101's pack). Last in
+# the data line. Private store copy: re4-assets-private/ch21r-20261020 (RECIPE.txt, SHA256SUMS).
+CH21RD = os.environ.get('CH21RD', '/root/re4data/private/ch21r-20261020')
+DATA['ch21r'] = {'dc/tex.pak': CH21RD + '/dc/tex.pak'}
+for _r in ('r10c', 'r10d', 'r10e'):
+    DATA['ch21r'].update({'st1/%s.%s' % (_r, _x): '%s/st1/%s.%s' % (CH21RD, _r, _x) for _x in ('arc', 'dar')})
+    for _f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'registry.re4nmr'):
+        if _f != 'registry.re4nmr' or _r != 'r10c':
+            DATA['ch21r']['dc/native/%s/%s' % (_r, _f)] = '%s/dc/native/%s/%s' % (CH21RD, _r, _f)
+PAK_DERIVED['ch21r'] = CH21RD + '/pak-derived.json'
+# nostd20 (lane ch2rooms20 10-20, disc space: Test 20 was 4,401 sectors over the GD-ROM high-density zone with ch21r):
+# removes the GC scenery package dc/native/<room>/MAINSCENARIO.re4mesh of every route room that has a PS2 world. With
+# PS2_WORLD_ROOMS=2 (the recipe) native_static.cpp no_std_skip never opens it in a room whose PS2 world preloads
+# ("native mesh: no-std room=...: scenery package not opened"). r100 (multi-part FILE_0x scenery) and r101 (low/ quality
+# packages) keep theirs. A 'remove' entry takes the paths off the disc. Knob-off / PS2_WORLD_ROOMS<2 discs must not stage it.
+DATA['nostd20'] = {'remove': ['dc/native/%s/MAINSCENARIO.re4mesh' % _r for _r in (
+    'r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10f r111 r112 r113 r117 r118 r119 r11a r11b '
+    'r11c r11d r11e').split()]}
+# pair20 (lane release-test20 10-20): the r200 GC material pair a38b935e-3c0af8b7 (colour 3822d4ec-70fde01b + mask
+# 9c93897d-8518d3d3), drawn in r200 after the chapter 2-3 truck when LOGIC_LOD_EM=2 shifts the timing; it was never on a
+# disc (ch23end texchk FAIL). dc/tex.pak = ch21r's pack + that key (ch2rooms/pack_add.py); last in the data line.
+# Private store copy: re4-assets-private/pair20-20261020 (RECIPE.txt, SHA256SUMS).
+PAIR20D = os.environ.get('PAIR20D', '/root/re4data/private/pair20-20261020')
+DATA['pair20'] = {'dc/tex.pak': PAIR20D + '/dc/tex.pak'}
+PAK_DERIVED['pair20'] = PAIR20D + '/pak-derived.json'
+# ch21l (lane fix-dam-light 10-20, GitHub #47): r10c / r10d / r10e PS2 worlds reconverted with the PS2 amb_scr measured
+# in PCSX2 (cLightEnv bytes 0..2 over PINE at each door arrival: r10c 50,45,40; r10d 14,23,38; r10e 45,45,45) instead of
+# ch21r's GC LIT cut-0 ambient. Supersedes ch21r's ps2-world.* only. The worlds' texture gains move with the light, so
+# dc/tex.pak = pair20's pack + 46 new keys (pack_add.py). Last in the data line (after pair20).
+# Private store copy: re4-assets-private/ch21l-20261020 (RECIPE.txt, SHA256SUMS).
+CH21LD = os.environ.get('CH21LD', '/root/re4data/private/ch21l-20261020')
+DATA['ch21l'] = {'dc/tex.pak': CH21LD + '/dc/tex.pak'}
+for _r in ('r10c', 'r10d', 'r10e'):
+    for _f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids'):
+        DATA['ch21l']['dc/native/%s/%s' % (_r, _f)] = '%s/dc/native/%s/%s' % (CH21LD, _r, _f)
+PAK_DERIVED['ch21l'] = CH21LD + '/pak-derived.json'
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
@@ -738,6 +791,10 @@ def main():
                     f_ = '%s/candidate-route%s/%s.ovl' % (prog, new, o_)
                     assert os.path.exists(f_), f_
                     r['dc/%s.ovl' % o_] = f_; rm.discard('dc/%s.ovl' % o_); rec.append('%s ovl %s' % (nm, o_))
+                continue
+            if k == 'remove':   # paths the set takes off the disc (nostd20)
+                for p_ in v:
+                    r.pop(p_, None); rm.add(p_); rec.append('%s rm %s' % (nm, p_))
                 continue
             if k == 'dc/tex.pak' and nm in DROP_LOOSE:
                 PREV_PAK[nm] = r.get('dc/tex.pak')

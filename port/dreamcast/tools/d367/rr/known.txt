@@ -1,0 +1,1 @@
+# rr known rows: <check> <room> <reason>. Reported as known, never as a FAIL. Remove a row when it is fixed.

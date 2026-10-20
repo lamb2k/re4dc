@@ -1093,6 +1093,27 @@ extern "C" int re4dc_registry_ashley_face(unsigned appearance,unsigned role) {
     const auto* desc=registry_descriptor(appearance);
     return desc && desc->model_id==3u && desc->source_bones && desc->sections==7u && role==1u;
 }
+#if defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+// NATIVE_MODEL_REGISTRY_PL_ASHLEY (native_model_registry.mk): playable Ashley (chapter 3-4; cPlAshley, the player pPL,
+// model id 0, ot_type 7) by a draw-slot descriptor of model 0 over her complete 141-joint source owner, with the seven
+// sections of cPlAshley::setModel + setRightHand / setLeftHand in its info order: body 4/5, face 7/9 (Body->pShape,
+// be_flag 2), hair 6/B, skirt 8/5 (be_flag 0x40: the ot_type 7 second pass, coarse_actor_transaction.inc), extra A/5,
+// right hand, left hand. Leon (model 0, 119 joints, his own owner) never matches. 1 = the face, 2 = the skirt, 0 = other.
+inline const nmr::Descriptor* registry_player_ashley(unsigned appearance) {
+    const auto* desc=registry_descriptor(appearance);
+    return desc && desc->model_id==0u && desc->source_bones==141u && desc->sections==7u?desc:nullptr;
+}
+extern "C" int re4dc_registry_player_ashley_role(unsigned appearance,unsigned role,unsigned bin,unsigned tpl) {
+    if(!registry_player_ashley(appearance))return 0;
+    if(role==1u && bin==7u && tpl==9u)return 1;
+    if(role==3u && bin==8u && tpl==5u)return 2;
+    return 0;
+}
+// The transaction's shape-role test (it has no archive ordinals; the certificate proved them per role first).
+extern "C" int re4dc_registry_player_ashley_face(unsigned appearance,unsigned role) {
+    return registry_player_ashley(appearance) && role==1u;
+}
+#endif
 #endif
 extern "C" unsigned re4dc_registry_sections(unsigned appearance) {
     const auto* desc=registry_descriptor(appearance);return desc?desc->sections:0;

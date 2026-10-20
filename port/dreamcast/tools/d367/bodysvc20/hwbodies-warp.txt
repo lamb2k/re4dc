@@ -1,0 +1,13 @@
+name bs20-hwbodies
+# lane bodysvc20 (10-20): the r103 farm after a fight, bodies down. As hwfarm (scenario19 farm-midfight start) but the
+# nearest Ganado is killed at room frame 150 and again every 40 frames, 6 kills in all; cap 4 releases the held ones
+# as kills happen. God, no pad input. Measure from room frame 450 on.
+room 0x103
+pos -47609 12 7084
+ang 1.8890
+inv default
+god
+killnear
+kill 0x12 150 0x103
+killrep 5 40
+alivelog 150

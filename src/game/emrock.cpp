@@ -12,6 +12,7 @@
 // argument registers were clobbered by the calls), i.e. `cam` was computed before `ca` existed.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "atari_init.h"
 #include "light.h"
 #include "dmg.h"
@@ -1854,8 +1855,9 @@ void plemRockEscapeCamMove(cPlayer* pl, f32 rate)
     Camera* cam = &emRockCam;
 
     FSet(cam->param.fovy, 27.0f);
-    PSMTXMultVec(pl->mat, &emRock_campos, &p0);
-    PSMTXMultVec(pl->mat, &emRock_target, &p1);
+    RE4DC_XM_LOAD(pl->mat);
+    RE4DC_XM_POINT(pl->mat, &emRock_campos, &p0);
+    RE4DC_XM_POINT(pl->mat, &emRock_target, &p1);
     PosToPos(&g->Cam.param.at, &p1, &emRockCam.param.at, rate);
     PosToPos(&g->Cam.param.pos, &p0, &emRockCam.param.pos, rate);
     r.x = fRand1_1() * 10.0f;
@@ -1910,8 +1912,9 @@ void plemRockEscapeCamMove2(cPlayer* pl, int side)
     } else {
         emRock_campos.y = 490.0f;
     }
-    PSMTXMultVec(pl->mat, &emRock_campos, &p0);
-    PSMTXMultVec(pl->mat, &emRock_target, &p1);
+    RE4DC_XM_LOAD(pl->mat);
+    RE4DC_XM_POINT(pl->mat, &emRock_campos, &p0);
+    RE4DC_XM_POINT(pl->mat, &emRock_target, &p1);
     PosToPos(&gcam->param.at, &p1, &emRockCam.param.at, 1.0f);
     PosToPos(&gcam->param.pos, &p0, &emRockCam.param.pos, 1.0f);
     r.x = fRand1_1() * 10.0f;

@@ -527,6 +527,18 @@ endif
 ifneq ($(or $(ROUTE_SOON_KEY),0),0)
 $(OBJDIR)/route_end.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_SOON_KEY=1
 endif
+# ROUTE_CH21_FULL=1 (lane ch2rooms20, default 0 = image unchanged): chapter 2-1's own path r11b -> r10c (the dam, the
+# insignia key) -> r10e -> r119, and r10d (the ladder), with the rooms' data set ch21r on the disc (a door into a room
+# whose world package is on the disc no longer shows Coming Soon, so ROUTE_SOON_KEY's handover never fires there).
+# Code: r10c's seven-Ganado ambush (06-0C) goes through the alive cap (held sends return 0 and are null-checked; was a
+# kept exception that peaked at 7+).
+ROUTE_CH21_FULL ?= 0
+ifneq ($(ROUTE_CH21_FULL),0)
+$(OBJDIR)/mod/st1_2/src/st1/r10c.o $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21_FULL=1
+# Audio (needs AICA_SPILL=1): r10c's room banks plus em12 (601 KB prebuilt) exceed the room arena by 44 KB even at
+# 8 kHz; its FOOT bank is marked tail-first (aica_banks.py fit --tail-blk 5) and goes to the BGM0 slot's idle tail.
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_TAIL_FIRST=1
+endif
 # ROUTE_CH21=1 (route lane r11b, default 0: no effect; needs ROUTE_CH13=1 and ROUTE_OVL=1): chapter 2-1 starts in
 # r11b (the lake shore, entered through r10b door 6 after the chapter 1-3 save). em22 (module 5, the wolves of the
 # shore ambush) is a third room overlay (em22.ovl, linked after pl0f / em2f so theirs are unchanged), and r11b's
@@ -996,6 +1008,17 @@ endif
 DISC2_DROPPED = st1_0 st1_1 st1_2 st1_3 em12 em15 em13 em17 em11 em21 em24 em26 em27 em28 em29 em2a em2e
 MODULES := $(filter-out $(DISC2_DROPPED),$(MODULES))
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2=1
+endif
+# DISC_SET=1 (default 0: no effect; DISC-LAYOUT-20261016.md, lane discsets20): the three-disc release. One program
+# image on every disc; dc/disc.id says which disc it is; StageInit asks for the disc by chapters finished (1-1..2-3
+# disc 1, 3-1..4-4 disc 2, island disc 3) and a wrong disc holds on the game's "insert disc N" message.
+DISC_SET ?= 0
+ifneq ($(DISC_SET),0)
+ifneq ($(DISC_SET)$(DISC2),10)
+$(error DISC_SET must be 0 or 1 and excludes DISC2=1)
+endif
+$(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_SET=1
+$(OBJDIR)/src/game/game.o $(OBJDIR)/src/game/dvd.o: GAME_CPPFLAGS += -DRE4DC_DISC_SET=1
 endif
 EM10_GROUP = $(filter em12 em15 em13 em17 em11 em16 em1a em1b em14 em19 em1c $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(and $(filter 1,$(EM10_SHARED)),$(strip $(EM10_GROUP))),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
@@ -2975,6 +2998,8 @@ include dbgwarp.mk
 include safecuts.mk
 # D367 effects30 (EFFECT_LEAN, EFFECT_SPRITES; default off: no effect).
 include effects30.mk
+# PVR_RTT (lane castlerender19 2026-10-19): PVR render-to-texture for TexRenderMng targets (default off: no effect).
+include pvr_rtt.mk
 # HW_FOG_HAZE (lane hwfog 2026-10-14): the distant camera haze as PVR table fog
 include hwfog.mk
 # D367 scenery30 (PLAN_ADMIT_LEAN, SCENERY_GATE, MODEL_SLAB_LATCH; default off: no effect).
@@ -3018,6 +3043,12 @@ include t2exact.mk
 include scenery19.mk
 # Lane chardraw19 (CHAR_CHUNK; default off: no effect).
 include chardraw19.mk
+# Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
+include logiclod20.mk
+# Lane rigid20 (RIGID_CENSUS, RIGID_CHUNK; default off: no effect).
+include rigid20.mk
+# Lane bodysvc20 (BODY_CORPSE, BODY_IK, BODY_ROUTE, BODY_POSE; default off: no effect). BODY_GRID is in engine_preview.mk.
+include bodysvc20.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
 include knobs.mk
 include esppool.mk

@@ -61,4 +61,14 @@ void re4dc_fault_init(void);
 }
 #endif
 
+// TAIL_METER (bench.mk, benchmark discs only; default 0 = empty): the time the game thread spends inside the native
+// frame's PVR scene open / close (fences, TA bank waits, scene finish), i.e. the CPU blocked on the graphics chip.
+#if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER && defined(__cplusplus)
+extern "C" void re4dc_tail_gpu(int end);   // bench.cpp
+struct Re4dcTailGpuScope { Re4dcTailGpuScope() { re4dc_tail_gpu(0); } ~Re4dcTailGpuScope() { re4dc_tail_gpu(1); } };
+#define RE4DC_TAIL_GPU_SCOPE(n) Re4dcTailGpuScope re4dc_tail_gpu_##n
+#else
+#define RE4DC_TAIL_GPU_SCOPE(n)
+#endif
+
 #endif
