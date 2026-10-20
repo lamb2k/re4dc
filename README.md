@@ -7,8 +7,18 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 19](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 19.1](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 19.1
+
+A hotfix of Test 19. Full details are in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **The cliff cutscene after the first house plays smoothly again** ([#45](https://github.com/lamb2k/re4dc/issues/45)).
+  The scenery now shares repeated corner points, which leaves the cutscene enough memory.
+- **No skipped effect sprites in r117** after the Saddler scene starts ([#46](https://github.com/lamb2k/re4dc/issues/46)).
+- **Back to the earlier character drawing.** Test 19's new path for Leon and the enemies measured slower, so 19.1
+  goes back to the one before it. The picture is the same.
 
 ## What's new in Test 19
 
