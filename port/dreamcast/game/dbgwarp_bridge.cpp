@@ -110,6 +110,10 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include <arch/timer.h>
 #include <kos/thread.h>
 
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+extern volatile int vsync_cnt;   // main.cpp: presentation heartbeat, also used by the source hang detector
+#endif
+
 extern "C" {
 u32 re4dc_vi_retrace_count(void);
 #if defined(RE4DC_CAP_COMPARE)
@@ -1199,6 +1203,10 @@ bool qa_poll()
         if (pG->ashley_life_max) pG->ashley_life = pG->ashley_life_max;
         re4dc_log("qa: health refilled\n");
     }
+    // Retraces continue during this intentional pause. Refresh the presentation heartbeat before
+    // restoring the source hang check: otherwise a menu held for 60 s HALTs main.cpp(548) on close.
+    // The check stays enabled in gameplay, and an already-disabled check keeps its original state.
+    vsync_cnt = 0;
     pG->System_flg = (pG->System_flg & ~0x20000000) | keep;
     qa_frames = 0;
     if (r == 0) return false;
