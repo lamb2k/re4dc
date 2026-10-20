@@ -6,6 +6,7 @@
 // value and help text).
 // Original source: D:/Bio4/Prog/area.cpp.
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "vec.h"
 #include "global.h"
 #include "area.h"
@@ -287,8 +288,9 @@ void area_Draw_sphere(Vec pos, f32 r, u32 color, Mtx mtx)
 void area_Draw_line(Vec pos1, Vec pos2, u32 color, Mtx mtx)
 {
     if (mtx) {
-        PSMTXMultVec(mtx, &pos1, &pos1);
-        PSMTXMultVec(mtx, &pos2, &pos2);
+        RE4DC_XM_LOAD(mtx);
+        RE4DC_XM_POINT(mtx, &pos1, &pos1);
+        RE4DC_XM_POINT(mtx, &pos2, &pos2);
     }
     GXSetLineWidth(16, 0);
     Draw_line3d(&pos1, &pos2, color, 0);
@@ -763,8 +765,9 @@ void area_xz4_Disp(AreaXZ4* pXz4, u32 color, int flag, Mtx mtx)
     }
     if (mtx) {
         for (i = 0; i < 5; i++) {
-            PSMTXMultVec(mtx, &v[i], &v[i]);
-            PSMTXMultVec(mtx, &w[i], &w[i]);
+            RE4DC_XM_LOAD(mtx);
+            RE4DC_XM_POINT(mtx, &v[i], &v[i]);
+            RE4DC_XM_POINT(mtx, &w[i], &w[i]);
         }
     }
     Draw_poly(v, color, 0);

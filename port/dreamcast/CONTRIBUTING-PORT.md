@@ -45,11 +45,13 @@ Options:
 
 * **Character data** the release program was built with: `ps2leon/`, `ps2ganado/`, and `glod/ganado_lod.re4gl`
   (the lighter villager meshes named by `GANADO_LOD_PACK`). Your program draws the same characters as the release.
-* **Chapter 2 enemy rows** (from test 17): `ps2enemych2/`, the PS2 enemy rows of chapters 2-2 and 2-3
+* **Chapter 2 enemy rows:** `ps2enemych2/`, the PS2 enemy rows of chapters 2-2 and 2-3
   (`PS2_ENEMY_CH22_DIR` / `PS2_ENEMY_CH23_DIR`, compiled into the program), so your program places the same enemies.
   Also `ps2stump/`, the layout header of the PS2 lost-head stump and hand-pose package (`ACTOR_GANADO_PS2_STUMP_DIR`).
+* **Leon after his head comes off:** `ps2leonhead/`, the PS2 neck header (`LEON_HEADLESS_DIR`).
+  The head archives `em/pl00.drs` and `em/pl08.drs` are disc data (set `garr18h`).
 * **Newer disc data files,** under `re4dc-assets/disc/<disc path>`: the knob file's disc sets (its `disc-sets` line),
-  among them the chapter 2 rooms, the far shells, `dc/resident.bin` and `dc/tex.pak`. From test 17 `dc/tex.pak`
+  among them the chapter 2 rooms, the far shells, `dc/resident.bin` and `dc/tex.pak`. `dc/tex.pak`
   holds every texture, so the disc and the zip carry no loose `dc/tex/<c>/` textures. They are on the release disc
   already; you need them only for a disc of your own.
 * **Byte for byte:** built from the release's source commit with its zip, the program is the release's program.
@@ -116,7 +118,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test17/release-knobs.txt` (test 17: the previous release recipe plus the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` (`ROUTE_CH22=1 ROUTE_CH23=1 PS2_CH2_ENEMY=1`, El Gigante and Mendez at their lighter level `NATIVE_MODEL_REGISTRY_LOD=1`), `FAR_SHELL=1`, `STAGE_OVL=1 SS_POOL_TOP=1`, `PRIM_BUF_KB=432`, `NATIVE_MODEL_REGISTRY_DYING=1 TEX_PKG_SKIP=1`, `ACTOR_GANADO_PS2_STUMP=1`, `PROP_GATE=1`, `PS2_ASHLEY_ROOMS=2` and `RAIN_DC=1 RAIN_DC_N=320`; the disc data sets are on its `disc-sets` line; its header names the source commit). The maintainers write that file from
+`tools/d367/test20/release-knobs.txt` (test 20: the previous release recipe plus `ROUTE_CH21_FULL=1` (chapter 2-1's real path: the dam r10c, r10d and r10e, with the Insignia Key from the dam's own pickup; data set `ch21r`; it replaces `ROUTE_SOON_KEY`), the scenery speed knobs `SCENERY_UNIT_CONCAT=1 SCENERY_SCREEN_MEMO=1 SCENERY_FAR_LOD=4` and the enemy logic knobs `LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01 ESP_TYPE_CAP=16 ESP_CUT_EARLY=1`; `SCENERY_DEDUP` and `CHAR_CHUNK` are off (measured slower). The `T15_V` group of `tools/d367/test15/t15-build.sh` carries `VIEW_DIST_BOOT=1` and `FOLIAGE_TRIM=2` (every boot at view distance Near and foliage Off), `QUICK_WEAPON=1`, `ACTOR_PLAN=1`, `MANUAL_PACK_PROBE=1` (the Dreamcast manual pages), `SCENERY_CHUNK=1 SG_SELECT_LEAN=1` (scenery draw path) and `ENEMY_VIS_CULL=1` (the wall check, with the room files of data set `rc19`); see the knob notes below. Earlier releases added the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` and `ROUTE_SOON_RETURN=1`, `MOVIE_AUDIO_PRIME=1` (cutscene sound loaded before it starts), `ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1` (the r10f to r200 pictures), `LEON_SKIN_SLOTS=2` (r119), `LEON_HEADLESS=1` (Leon after his head comes off), `LEON_CLOTH_DRAWN=1` (jacket movement only when shown) and `FX_MIST_PS2=1 PS2_HDR_SETS=128` (the village and farm mist); the disc data sets are on its `disc-sets` line, with the lighter El Gigante `boss18g50` and the resident lists `res18f`; its header names the source commit). The maintainers write that file from
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
@@ -138,11 +140,13 @@ chapter 2 enemies, below); it looks different from the release:
   release.
 * Leon and the villagers draw from the original GameCube models on the disc instead of the converted
   meshes. They cost more time to draw, so do not compare speed with the release.
-* `PS2_CH2_ENEMY=0` (test 17 on, without the zip's `ps2enemych2/`): chapters 2-2 and 2-3 use the GameCube enemy
+* `PS2_CH2_ENEMY=0` (without the zip's `ps2enemych2/`): chapters 2-2 and 2-3 use the GameCube enemy
   lists and room code instead of the PS2 ones, so the enemies there differ from the release (this one changes
   gameplay in those chapters; chapter 1 is unchanged).
-* `ACTOR_GANADO_PS2_STUMP=0` (test 17 on, without the zip's `ps2stump/`): a villager whose head is shot off, or
+* `ACTOR_GANADO_PS2_STUMP=0` (without the zip's `ps2stump/`): a villager whose head is shot off, or
   who raises or points a hand, draws the GameCube model until the pose ends (looks only).
+* `LEON_HEADLESS=0` (without the zip's `ps2leon/` or `ps2leonhead/`): after a chainsaw or claw kill Leon
+  draws the GameCube model for the death scene (looks only).
 * The memory card messages show the GameCube wording ("Memory Card in Slot A") instead of the VMU wording.
 
 Either way, measure your change against your own build with the change switched off.
@@ -192,7 +196,8 @@ The player options are the rows in Options (START), and the knobs behind them:
 * **Frame pacing:** stored on the VMU.
 * **Rendering:** Standard or FSAA, knob `RENDER_FSAA`. Not saved; every boot starts in Standard.
 * **View distance:** Full, Near or Short, knob `VIEW_DIST_OPTION`. The world is drawn to 25, 18.75 or 12.5 m and the
-  fog reaches full strength there. Drawing only; the game logic is unchanged. Not saved; every boot starts in Full.
+  fog reaches full strength there. Drawing only; the game logic is unchanged. Not saved; every boot starts at the
+  `VIEW_DIST_BOOT` level (0 Full, the knob default; the release recipe uses 1, Near).
   Two rules refine it (game/option_rows.cpp):
   * a per-room minimum far table, `kViewRoomMin`, keeps rooms that need their horizon at Full (the lakes r10b, r11a
     and r11b);
@@ -200,16 +205,45 @@ The player options are the rows in Options (START), and the knobs behind them:
     0x02000000), the fog ramp starts behind that area. A house interior is not fogged, while the scenery seen through
     its doors and windows still fades out before the cut.
 * **Foliage:** Full, Near or Off, knobs `FOLIAGE_TRIM` (the level word and the boot level, hwfog.mk) and
-  `FOLIAGE_OPTION` (the row).
+  `FOLIAGE_OPTION` (the row). The release recipe boots at Off (`FOLIAGE_TRIM=2`).
   * Near draws the translucent PS2 world parts whose texture is a near-binary cut-out (leaf / brush cards, fence gaps)
     in the punch-through list up to 12 m. The key table is platform/include/foliage_keys.inc, built from an alpha
     census of the chapter 1 packages.
   * Off leaves out every listed card key (classes 1-4, soft shadow / mist / grass cards included).
   * Surfaces without cut-out holes (walls, floors, water), unlisted keys and the vertex-alpha overlays always draw.
-  * Not saved: every boot starts at the recipe's `FOLIAGE_TRIM` level (Near in the release).
+  * Not saved: every boot starts at the recipe's `FOLIAGE_TRIM` level (Off in the release).
   * `FOLIAGE_NEAR_FIX=1` (hwfog.mk, recipe group `T15_FN`; render only) makes Near's punch-through pass also visit
     placements that only have translucent parts, so their cut-out cards draw at Near (without it they were drawn in
     neither pass).
+
+Control knob in the release recipe:
+
+* **Quick weapon** (quickweapon.mk, recipe group `T15_V`): `QUICK_WEAPON=1`. Hold X and press the D-pad
+  to equip a weapon by kind: up handguns, right shotguns, down grenades, left rifles, the TMP, then launchers. Pressing
+  the same direction again picks the next weapon of that kind in the case.
+  * The equip is the case's own: `cItemMgr::arm`, then the weapon reload of `SubScreenExit`. The game pauses for a few
+    frames while the weapon's module reads from the disc.
+  * A swap is ignored where the case could not open, and while shooting, reloading or carrying Ashley.
+  * With X released the D-pad works as before (camera look, a tap down for the map). Nothing changes until the chord is
+    pressed, so the logic trace stays STRICT.
+  * `QUICK_WEAPON_POC_KIT=1` (a starting weapon kit) is for test discs only and never goes in a recipe.
+
+Speed knobs in the release recipe (recipe group `T15_V`; each one exact or render only, so the logic trace stays
+STRICT, except the approximations marked below):
+
+* `ACTOR_PLAN=1` (actorplan.mk): character setup runs once per tick and is reused by every draw of that tick.
+* `SCENERY_CHUNK=1 SG_SELECT_LEAN=1` (scenery19.mk): the PS2 world pass selects first, then emits; pixel identical.
+* `CHAR_CHUNK` (chardraw19.mk) is off in the release: the new character draw path measured slower.
+* `SCENERY_UNIT_CONCAT=1 SCENERY_SCREEN_MEMO=1` (scenery19.mk): the PS2 world pass skips repeated matrix products and
+  reuses its last screen matrix when the inputs match (exact). `SCENERY_FAR_LOD=4` swaps far world pieces to their lower detail (an
+  approximation; far detail only). `SCENERY_DEDUP` is off (measured slower).
+* `LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01 ESP_TYPE_CAP=16 ESP_CUT_EARLY=1` (logiclod20.mk): cheaper logic for far
+  enemies and effects (approximations, each its own switch; gated for the same kills, doors, waves and cutscenes).
+* `ENEMY_VIS_CULL=1` (engine_preview.mk): the wall check. A villager fully hidden behind a wall is not drawn; logic,
+  sound and collision are unchanged. It reads the room file `dc/native/<room>/room.r4rc` (R4RC grid + wall-check
+  occluders, tools/enginebake/room_compile.py), staged by data set `rc19` (private store `rc19o2-20261019`, in the
+  Build-Assets zip). A room without its file draws every villager, as before.
+* `MANUAL_PACK_PROBE=1`: the Player's Manual finds the Dreamcast manual pages in `dc/tex.pak`.
 
 Render knobs in the release recipe:
 
@@ -233,7 +267,7 @@ Render knobs in the release recipe:
   Docs: docs/MIST_CUT.md.
 * **Warp discs:** on a warp test disc (`DBG_WARP=1`) the warp line `viewdist 0|1|2` starts the run at Full, Near or Short.
 
-In the release from test 17:
+In the release:
 
 * **Far shell** (knob `FAR_SHELL`, needs `VIEW_DIST_OPTION`, recipe group `T15_FS`; game/platform/far_shell.inc).
   Built for r100 and r101 as `dc/native/rXXX/far-shell.fsh` (disc data set fsh). It is read at Short only (Full and
@@ -299,7 +333,7 @@ maintainers keep outside the repository.
 | GameCube Resident Evil 4 debug disc 1 (G4BE08, extracted file tree) | base disc tree: rooms, enemies, sound banks, menus | mostly (`tools/le_mirror.py`, `tools/d367/stage.sh`, `tools/aica_banks.py disc`) |
 | same | Dreamcast room meshes (`dc/native/rXXX/MAINSCENARIO.re4mesh`) | yes, per room (`tools/convert_room_bins.py`) |
 | same | room archives with Dreamcast audio (`st1/rXXX.dar`) | per room steps, not one command |
-| same plus game run logs | texture package `dc/tex.pak`: from test 17 every texture of the disc (no loose `dc/tex/` files), 16-bit pictures VQ by default | partly: `tools/d367/vram/disc_pack.py` packs a disc's loose textures (opaque 16-bit pictures of 16 KiB or more as VQ when PSNR >= 29 dB; UI, alpha and small pictures stay 16-bit), but the earlier VQ selections come from logs of test runs |
+| same plus game run logs | texture package `dc/tex.pak`: every texture of the disc (no loose `dc/tex/` files), 16-bit pictures VQ by default | partly: `tools/d367/vram/disc_pack.py` packs a disc's loose textures (opaque 16-bit pictures of 16 KiB or more as VQ when PSNR >= 29 dB; UI, alpha and small pictures stay 16-bit), but the earlier VQ selections come from logs of test runs |
 | none (the lists are in the repository, made from game run logs) | per-room resident texture lists `dc/resident.bin` (ROOM_RESIDENT) | yes (`tools/d367/vram/resident_keys.py pack` of `tools/d367/vram/resident/r*.tsv`) |
 | PS2 Resident Evil 4, USA (SLUS 21134), `BIO4MOV.AFS` | cutscene movies `dc/movie/*.seq` | yes (`tools/convert_route_movies.py`, needs ffmpeg) |
 | PS2 USA, `BIO4DAT.AFS` rooms (plus two JADERLINK unpack tools) | PS2 room worlds `dc/native/rXXX/ps2-world.*` | converters exist; the released set is a reviewed frozen output |

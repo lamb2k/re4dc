@@ -472,6 +472,11 @@ unsigned registry_lod_want(cModel* m,unsigned d,unsigned count) {
     if(d>=registry.descriptor_count)return d;
     const unsigned full=registry.descriptors[d].lod_of?registry.descriptors[d].lod_of-1u:d;
     if(pG && (pG->Status_flg[1]&0x10000000u))return full;
+#if defined(RE4DC_NMR_GRAB_FULL) && RE4DC_NMR_GRAB_FULL
+    // NATIVE_MODEL_REGISTRY_GRAB_FULL: the player's custom damage routine (SetPlDamage: routine 4) that this actor
+    // started (dmgType holds the enemy) is a close-up: the full model, as in an event.
+    if(pPL && pPL->r_no_0==4 && pPL->dmgType==(int)(intptr_t)m)return full;
+#endif
     for(unsigned l=0;l<registry.descriptor_count;++l) {
         const auto& ld=registry.descriptors[l];
         if(ld.lod_of!=full+1u || ld.sections!=count)continue;
@@ -1046,9 +1051,16 @@ extern "C" int re4dc_registry_merchant_robe(unsigned appearance,unsigned role,un
 #if RE4DC_NMR_CH1CAST
 // PS2_CAST_CH1: the r106 bats (em29, model 0x29) are ot_type 1 (ModelTrans: OT 0x11, AddOtWorldPosRadius, the same
 // ModelRender callback as ot_type 0 in a later group); the owner path draws inside that callback, so the order is kept.
-#define RE4DC_REGISTRY_OT_OK(m,desc) (!(m)->ot_type || ((m)->ot_type==1 && (desc)->model_id==0x29u))
+#define RE4DC_REGISTRY_OT_BASE(m,desc) (!(m)->ot_type || ((m)->ot_type==1 && (desc)->model_id==0x29u))
 #else
-#define RE4DC_REGISTRY_OT_OK(m,desc) (!(m)->ot_type)
+#define RE4DC_REGISTRY_OT_BASE(m,desc) (!(m)->ot_type)
+#endif
+#if defined(RE4DC_NMR_OT5) && RE4DC_NMR_OT5
+// NATIVE_MODEL_REGISTRY_OT5: the Verdugo (em2c, model 0x2c) is ot_type 5 (ModelTrans: AddOtDirect(0x10, ModelRender,
+// 0, 2), one source call per frame); the owner path draws inside that callback, so the order is kept.
+#define RE4DC_REGISTRY_OT_OK(m,desc) (RE4DC_REGISTRY_OT_BASE(m,desc) || ((m)->ot_type==5 && (desc)->model_id==0x2cu))
+#else
+#define RE4DC_REGISTRY_OT_OK(m,desc) RE4DC_REGISTRY_OT_BASE(m,desc)
 #endif
 extern "C" int re4dc_registry_model(const cModel* m,const Re4dcActorPlan* p) {
     const auto* desc=p?registry_descriptor(p->appearance):nullptr;
@@ -1081,6 +1093,27 @@ extern "C" int re4dc_registry_ashley_face(unsigned appearance,unsigned role) {
     const auto* desc=registry_descriptor(appearance);
     return desc && desc->model_id==3u && desc->source_bones && desc->sections==7u && role==1u;
 }
+#if defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+// NATIVE_MODEL_REGISTRY_PL_ASHLEY (native_model_registry.mk): playable Ashley (chapter 3-4; cPlAshley, the player pPL,
+// model id 0, ot_type 7) by a draw-slot descriptor of model 0 over her complete 141-joint source owner, with the seven
+// sections of cPlAshley::setModel + setRightHand / setLeftHand in its info order: body 4/5, face 7/9 (Body->pShape,
+// be_flag 2), hair 6/B, skirt 8/5 (be_flag 0x40: the ot_type 7 second pass, coarse_actor_transaction.inc), extra A/5,
+// right hand, left hand. Leon (model 0, 119 joints, his own owner) never matches. 1 = the face, 2 = the skirt, 0 = other.
+inline const nmr::Descriptor* registry_player_ashley(unsigned appearance) {
+    const auto* desc=registry_descriptor(appearance);
+    return desc && desc->model_id==0u && desc->source_bones==141u && desc->sections==7u?desc:nullptr;
+}
+extern "C" int re4dc_registry_player_ashley_role(unsigned appearance,unsigned role,unsigned bin,unsigned tpl) {
+    if(!registry_player_ashley(appearance))return 0;
+    if(role==1u && bin==7u && tpl==9u)return 1;
+    if(role==3u && bin==8u && tpl==5u)return 2;
+    return 0;
+}
+// The transaction's shape-role test (it has no archive ordinals; the certificate proved them per role first).
+extern "C" int re4dc_registry_player_ashley_face(unsigned appearance,unsigned role) {
+    return registry_player_ashley(appearance) && role==1u;
+}
+#endif
 #endif
 extern "C" unsigned re4dc_registry_sections(unsigned appearance) {
     const auto* desc=registry_descriptor(appearance);return desc?desc->sections:0;

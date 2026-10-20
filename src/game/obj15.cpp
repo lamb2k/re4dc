@@ -5,6 +5,7 @@
 // weapon damage and break it (R1 1) unless breakMode says otherwise; an optional eat collision
 // follows it.
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "light.h"
 #include "obj.h"
 #include "esp.h"
@@ -390,8 +391,9 @@ int obj15GunHitck(cObjGatling* obj)
     mzl.y = fRand1_1() * 5000.0f;
     mzl.z = 50000.0f;
     parts = obj->getPartsPtr(2);
-    PSMTXMultVec(parts->mat, &ofs, &ofs);
-    PSMTXMultVec(parts->mat, &mzl, &mzl);
+    RE4DC_XM_LOAD(parts->mat);
+    RE4DC_XM_POINT(parts->mat, &ofs, &ofs);
+    RE4DC_XM_POINT(parts->mat, &mzl, &mzl);
     PlWepHitCheck2(0, &ofs, &mzl, 0xC, 3, 6000.0f);
     em = EmAtkLineHitCk(&ofs, &mzl, &hit, &dir, &attr);
     if (em == 0) {
@@ -447,8 +449,9 @@ static void obj15GunHitckDbg(cObjGatling* obj)
     mzl.y = 0.0f;
     mzl.z = 50000.0f;
     parts = obj->getPartsPtr(2);
-    PSMTXMultVec(parts->mat, &ofs, &ofs);
-    PSMTXMultVec(parts->mat, &mzl, &mzl);
+    RE4DC_XM_LOAD(parts->mat);
+    RE4DC_XM_POINT(parts->mat, &ofs, &ofs);
+    RE4DC_XM_POINT(parts->mat, &mzl, &mzl);
     PlWepHitCheck2(0, &ofs, &mzl, 0xC, 3, 1.0f);
 }
 

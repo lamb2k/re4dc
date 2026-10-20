@@ -2536,6 +2536,30 @@ void em10KickHitMark(cEm10* em)
 #if defined(RE4DC_SKEL_FTRV) && RE4DC_SKEL_FTRV
 extern "C" int re4dc_skel_scope;
 #endif
+#if defined(RE4DC_ENGINE_VIS_LOG) && RE4DC_ENGINE_VIS_LOG
+extern "C" unsigned re4dc_ui_frame();
+extern "C" void re4dc_log(const char* fmt, ...);
+static void re4dc_vis_log(unsigned e, int x, int y, int z, int hp)
+{
+    re4dc_log("EVIS f=%u e=%x p=%d,%d,%d hp=%d d=1\n", re4dc_ui_frame(), e, x, y, z, hp);
+}
+#endif
+#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
+// ENGINE_PREVIEW=1 (lane behave18, engine_preview.mk; viewing only): the original brain with a new body. cEm10's own
+// AI (routines, route, decisions, attacks, damage, deaths) runs unchanged; in a room with a grid the native actor
+// runtime (platform/actor_rt.c) takes over the body work it calls: movement collision (SatMgr.check -> the grid) and
+// the foot IK floor query (ik.cpp SatMgr.getFloor -> the grid, through re4dc_rt_ik_actor). Bullets and hits stay
+// polygon-exact (EmAtCheck). Each service falls back to the source where the grid cannot decide.
+#include "actor_rt.h"
+static int em10RtOwns(cEm10* em)
+{
+    Em10Work* w = EM10_WK(em);
+    if (em->hp <= 0 || em->r_no_0 != 1) return 0;
+    if ((w->flags & 0x400000) || (em->flag & 0x400)) return 0;
+    return re4dc_rt_room((unsigned(pG->stage_no) << 8) | pG->room_no);
+}
+#endif
+
 void cEm10::move()
 {
 #if defined(RE4DC_SKEL_FTRV) && RE4DC_SKEL_FTRV
@@ -2555,11 +2579,33 @@ void cEm10::move()
     }
     w->flags &= 0xACC081A7;
     clearStatus(EM_STATUS_IK_OFF);
+#if defined(RE4DC_BODY_IK) && RE4DC_BODY_IK
+    // BODY_IK=1 (bodysvc20.mk; lane bodysvc20, master plan P3 service 3; an APPROXIMATION): no foot IK (no floor
+    // queries, no leg correction) for a Ganado farther than BODY_IK_FAR from Leon, or more than BODY_IK_NEAR away and
+    // off screen (over 60 degrees off the camera axis or behind it). Its legs keep the motion's pose. Corpses already
+    // run without IK (Die_Cramp sets EM_STATUS_IK_OFF).
+    if (plDist2 > (f32) RE4DC_BODY_IK_FAR * (f32) RE4DC_BODY_IK_FAR) {
+        setStatus(EM_STATUS_IK_OFF);
+    } else if (plDist2 > (f32) RE4DC_BODY_IK_NEAR * (f32) RE4DC_BODY_IK_NEAR) {
+        const Camera* cam = &pG->Cam;
+        const f32 vx = pos.x - cam->param.pos.x;
+        const f32 vy = pos.y - cam->param.pos.y;
+        const f32 vz = pos.z - cam->param.pos.z;
+        const f32 f = -(vx * cam->Look.x + vy * cam->Look.y + vz * cam->Look.z);   // Look = pos - at
+        if (!(f > 0.0f && f * f >= 0.25f * (vx * vx + vy * vy + vz * vz))) {
+            setStatus(EM_STATUS_IK_OFF);
+        }
+    }
+#endif
     hitInfo.flags |= 1;
     if ((w->flags & 0x80) && w->pCore == 0 && w->pParasite == 0) {
         hitInfo.flags &= ~1;
     }
     em10RouteCk(this);
+#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
+    int rt = em10RtOwns(this);
+    re4dc_rt_ik_actor = rt ? (void*) this : 0;
+#endif
     {
         u32 lost = w->flags & 0x800000;
         w->flags &= ~0x04000004;
@@ -2649,6 +2695,16 @@ void cEm10::move()
         EmMgr.destroy(this);
         return;
     }
+#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW && !(defined(RE4DC_BODY_GRID) && RE4DC_BODY_GRID)
+    if (re4dc_rt_room((unsigned(pG->stage_no) << 8) | pG->room_no)) {
+        re4dc_rt_state(this, stat, hp, (unsigned) pG->Frame_cnt, pos.x, pos.z);
+    }
+#endif
+#if defined(RE4DC_ENGINE_VIS_LOG) && RE4DC_ENGINE_VIS_LOG
+    // ENGINE_VIS_LOG (engine19 Task 2 measurement, diagnostic only): each Ganado's feet position per tick, keyed by the
+    // picture counter the PS2CAM line uses (engine19 vis_enemy.py)
+    re4dc_vis_log((unsigned) (unsigned long) this, (int) pos.x, (int) pos.y, (int) pos.z, (int) hp);
+#endif
     if (seFlags28B & 0x80) {
         w->flags |= 0x10;
         w->flags |= 0x01000000;
@@ -2690,9 +2746,23 @@ void cEm10::move()
             atari.move();
             if (w->flags & 0x80000) {
                 SatMgr.checkAir(this, 0x1C2810);
-            } else {
+            } else
+#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
+            if (rt && r_no_0 == 1 && re4dc_rt_collide(&pos.x, &pos.y, &pos.z, pos_old.x, pos_old.z)) {
+#if !(defined(RE4DC_BODY_GRID) && RE4DC_BODY_GRID)
+                re4dc_rt_count(1, 0);
+#endif
+            } else
+#endif
+            {
+#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW && !(defined(RE4DC_BODY_GRID) && RE4DC_BODY_GRID)
+                if (rt) re4dc_rt_count(0, 1);
+#endif
                 SatMgr.check(this, 0);
             }
+#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW && !(defined(RE4DC_BODY_GRID) && RE4DC_BODY_GRID)
+            if (rt) re4dc_rt_log((unsigned) pG->Frame_cnt, (s16) pG->pl_life);
+#endif
             atari.m_flag = atFlags;
             moved = SQRTF((pos.x - pos_old.x) * (pos.x - pos_old.x) + (pos.z - pos_old.z) * (pos.z - pos_old.z));
             if (moved < dist * 0.5f) {
@@ -16619,6 +16689,17 @@ void em10RouteCk(cEm10* em)
         EM10_ROUTE_LOCKON();
         return;
     }
+#if defined(RE4DC_BODY_ROUTE) && RE4DC_BODY_ROUTE
+    // BODY_ROUTE=1 (bodysvc20.mk; lane bodysvc20, master plan P3 service 4; an APPROXIMATION): the source refreshes a
+    // Ganado's route queries (route points to Leon / Ashley / the goto point, the sight lines) every 8th tick; one
+    // farther than BODY_ROUTE_FAR from Leon keeps its last answers for 16 ticks instead (the cached form above).
+    if (em->r_no_0 != 0 && !(w->flags & 4) && em->plDist2 > (f32) RE4DC_BODY_ROUTE_FAR * (f32) RE4DC_BODY_ROUTE_FAR &&
+        (pG->Frame_cnt & 15) != (em->emset_no & 15)) {
+        em10RouteTargetSet(em);
+        EM10_ROUTE_LOCKON();
+        return;
+    }
+#endif
     w->Go_target = 0;
     if (w->flags & 0x8000) {
         BitOff(w->flags, 0x08000000);

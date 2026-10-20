@@ -1,0 +1,8 @@
+name ap19-still-leon
+room 0x101
+pos -7914 0 -254
+ang 2.960
+find 0x00002000
+inv default
+god
+freeze 300

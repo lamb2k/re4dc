@@ -26,7 +26,8 @@ PS2_LEON_DIR -> re4dc-assets/ps2leon/, PS2_GANADO_DIR -> re4dc-assets/ps2ganado/
 PS2_ENEMY_CH23_DIR (test 17 on: the chapter 2-2 / 2-3 PS2 enemy rows, ps2_enemy_ch22_data.inc /
 ps2_enemy_ch23_data.inc, compiled into the program) -> re4dc-assets/ps2enemych2/ (both knobs name one directory; two
 different directories for one zip place are an error), ACTOR_GANADO_PS2_STUMP_DIR (test 17 on: the stump / hand-pose
-package's layout header ganado_ps2_stump_runtime.h; the package itself is disc data set stump17) -> re4dc-assets/ps2stump/. Private files: GANADO_LOD_PACK
+package's layout header ganado_ps2_stump_runtime.h; the package itself is disc data set stump17) -> re4dc-assets/ps2stump/, LEON_HEADLESS_DIR (test 18 on: ps2leon_neck.h; the head archives are disc data set
+garr18h) -> re4dc-assets/ps2leonhead/. Private files: GANADO_LOD_PACK
 -> re4dc-assets/glod/<name> (the knob file names it kit-relative, @ASSETS@/glod/<name>). Any other knob whose value is
 an absolute path outside the tree is an error: a new private input must get a place in the zip (and a line in
 build-public.sh's PRIVATE_OFF) before the release can publish.
@@ -42,7 +43,7 @@ from pathlib import Path
 BUNDLE = '/root/probe/lanes/play-actor-bundle'
 PRIVATE = {'PS2_LEON_DIR': 'ps2leon', 'PS2_GANADO_DIR': 'ps2ganado',
            'PS2_ENEMY_CH22_DIR': 'ps2enemych2', 'PS2_ENEMY_CH23_DIR': 'ps2enemych2',
-           'ACTOR_GANADO_PS2_STUMP_DIR': 'ps2stump'}
+           'ACTOR_GANADO_PS2_STUMP_DIR': 'ps2stump', 'LEON_HEADLESS_DIR': 'ps2leonhead'}
 PRIVATE_FILES = {'GANADO_LOD_PACK': 'glod'}
 FIX_TOOL = Path(__file__).resolve().parent / 'test11' / 't11-fix.py'
 ZIP_ROOT = 're4dc-assets'

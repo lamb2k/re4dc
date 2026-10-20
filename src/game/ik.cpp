@@ -8,6 +8,21 @@
 #include "em.h"
 #include "math_sub.h"
 #include "db_log.h"
+#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW
+#include "actor_rt.h"
+// ENGINE_PREVIEW (behave18): the foot floor of the actor the native runtime owns comes from the room grid.
+static inline f32 ik_floor(cModel* m, Vec* t, f32 up, f32 down)
+{
+    if (m == (cModel*) re4dc_rt_ik_actor) {
+        f32 y = re4dc_rt_floor(t->x, t->y, t->z);
+        if (y != -100000.0f) return y;
+    }
+    return SatMgr.getFloor(t, up, down, 0, 0);
+}
+#define IK_GET_FLOOR(t, up, down) ik_floor(m, t, up, down)
+#else
+#define IK_GET_FLOOR(t, up, down) SatMgr.getFloor(t, up, down, 0, 0)
+#endif
 
 extern "C" {
 void ikCalc(cModel* root, cModel* joint, cModel* eff);
@@ -332,11 +347,11 @@ void InverseKinematics(cModel* m, int flag)
                 floorY = target.y - eff->pos.y;
             } else if (IK_FLAGS(p) & 0x800) {
                 target.y += 1000.0f;
-                floorY = SatMgr.getFloor(&target, 500.0f, 100000.0f, 0, 0);
+                floorY = IK_GET_FLOOR(&target, 500.0f, 100000.0f);
             } else if (IK_FLAGS(p) & 0x40) {
-                floorY = SatMgr.getFloor(&target, 6000.0f, 100000.0f, 0, 0);
+                floorY = IK_GET_FLOOR(&target, 6000.0f, 100000.0f);
             } else {
-                floorY = SatMgr.getFloor(&target, 500.0f, 100000.0f, 0, 0);
+                floorY = IK_GET_FLOOR(&target, 500.0f, 100000.0f);
             }
             if (floorY != -100000.0f) {
                 f32 dist;

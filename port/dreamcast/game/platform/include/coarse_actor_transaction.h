@@ -88,7 +88,14 @@ int re4dc_actor_transaction_candidate(cModel*);
 // A role whose info may carry the shape bit (be_flag 2) on the owner path: Leon's bone-driven face and, under
 // PS2_ASHLEY=2 (native_model_registry.mk; user look decision pending), Ashley's head drawn at its PS2 rest face
 // (coarse_actor_owner_registry.inc re4dc_registry_ashley_face). Off: exactly RE4DC_LEON_FACE_ROLE.
-#if defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY >= 2
+#if defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+// NATIVE_MODEL_REGISTRY_PL_ASHLEY: also playable Ashley's face (role 1 of her model 0 / 141-joint descriptor).
+extern "C" int re4dc_registry_ashley_face(unsigned appearance,unsigned role);
+extern "C" int re4dc_registry_player_ashley_face(unsigned appearance,unsigned role);
+extern "C" int re4dc_registry_player_ashley_role(unsigned appearance,unsigned role,unsigned bin,unsigned tpl);
+#define RE4DC_ACTOR_SHAPE_ROLE(p,i) (RE4DC_LEON_FACE_ROLE(p,i) || re4dc_registry_ashley_face((p).appearance,(i)) || \
+    re4dc_registry_player_ashley_face((p).appearance,(i)))
+#elif defined(RE4DC_NMR_ASHLEY) && RE4DC_NMR_ASHLEY >= 2
 extern "C" int re4dc_registry_ashley_face(unsigned appearance,unsigned role);
 #define RE4DC_ACTOR_SHAPE_ROLE(p,i) (RE4DC_LEON_FACE_ROLE(p,i) || re4dc_registry_ashley_face((p).appearance,(i)))
 #else

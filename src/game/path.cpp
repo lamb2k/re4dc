@@ -1,4 +1,5 @@
 #include "path.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "esp.h"
 #include "model.h"
 #include "motion.h"
@@ -222,9 +223,10 @@ int PathGetMatEm(void* path, cModel* model, f32 dist, u16* seg, Mtx out)
         Hermite_1(&key0, &key1, t, ph);
         Hermite_1_dt(&key0, &key1, t, &(&hvel.x)[j]);
     }
-    PSMTXMultVec(m0, &hpos, &hpos);
-    PSMTXMultVecSR(m0, &hvel, &hvel);
-    PSMTXMultVecSR(m0, &(v - step)->nrm, &n0);
+    RE4DC_XM_LOAD(m0);
+    RE4DC_XM_POINT(m0, &hpos, &hpos);
+    RE4DC_XM_DIR(m0, &hvel, &hvel);
+    RE4DC_XM_DIR(m0, &(v - step)->nrm, &n0);
     PSMTXMultVecSR(m1, &v->nrm, &n1);
     PSVECSubtract(&n1, &n0, &tmp);
     PSVECScale(&tmp, &tmp, t);

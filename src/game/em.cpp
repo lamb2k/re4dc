@@ -413,6 +413,153 @@ void cEm::setNoItem()
     itemFlag = 0;
 }
 
+#if defined(RE4DC_LOGIC_LOD_EM) && RE4DC_LOGIC_LOD_EM > 1
+#include "dmg.h"
+// LOGIC_LOD_EM=N (logiclod.mk; lane logiclod20 2026-10-20; an APPROXIMATION, default 0 = off; 2..4): far or off-screen
+// enemies and farm animals run their whole frame step (move = AI + motion, skeleton with foot IK and cloth, old
+// position) only every Nth tick, staggered by serial. Covered:
+// - Ganados (ids 0x10..0x20, act_cap.cpp isGanado) only in a walking / idle routine (r_no_0 1, r_no_1 in act_cap.cpp's
+//   park whitelist: Wait, Keeper, Hide, the r101 idles, Walk, Dash, Back, Goto, GuardWalk, Turn180, SitDown, Stay,
+//   Guard, R100WalkStay, StayWalk, AttackWait, FindLost) and not holding Leon. Attacks, grabs, finds, door bashes,
+//   ladders, damage, death and every scripted routine run every tick.
+// - cows (em26) and chickens (em28) anywhere, the dog (em21) in r103 only (lane animfar17's rule).
+// Skipped only while far (> LOGIC_LOD_FAR units from Leon, default 25 m, past the 25 m fog) or off screen (more than
+// LOGIC_LOD_NEAR units away, default 5 m, and more than 60 degrees off the camera axis or behind it). Never skipped:
+// the creation tick, a pending hit (dmg.m_Flag), a tick inside an explosion / fire volume (DmgMgr.hitCheck).
+// Kills, drops, triggers and waves run in the actors' own move as before; far walkers move at 1/N speed off screen and
+// the Rnd() stream differs, so this is gameplay-equivalent, not STRICT.
+static int re4dc_logic_lod_skip(cEm* em)
+{
+    const int ganado = em->id >= 0x10 && em->id <= 0x20;
+    if (ganado) {
+        if (em->r_no_0 != 1 || pPL->dmgType == (int) em) {
+            return 0;
+        }
+        switch (em->r_no_1) {
+        case 0x00: case 0x01: case 0x02: case 0x07: case 0x08: case 0x09:
+        case 0x10: case 0x11: case 0x12: case 0x13: case 0x14: case 0x15:
+        case 0x1A: case 0x1B: case 0x1D: case 0x4C: case 0x4E: case 0x4F: case 0x5D:
+            break;
+        default:
+            return 0;
+        }
+    } else if (em->id != 0x26 && em->id != 0x28 && !(em->id == 0x21 && pG->room_id == 0x103)) {
+        return 0;
+    } else if (em->r_no_0 == 0) {
+        return 0;
+    }
+    if (em->dmg.m_Flag) {
+        return 0;
+    }
+    if ((((u32) pG->Frame_cnt + (u32) em->serial) % RE4DC_LOGIC_LOD_EM) == 0) {
+        return 0;
+    }
+    if (em->plDist2 <= (f32) RE4DC_LOGIC_LOD_NEAR * (f32) RE4DC_LOGIC_LOD_NEAR) {
+        return 0;
+    }
+    if (em->plDist2 <= (f32) RE4DC_LOGIC_LOD_FAR * (f32) RE4DC_LOGIC_LOD_FAR) {
+        const Camera* cam = &pG->Cam;
+        const f32 vx = em->pos.x - cam->param.pos.x;
+        const f32 vy = em->pos.y - cam->param.pos.y;
+        const f32 vz = em->pos.z - cam->param.pos.z;
+        const f32 f = -(vx * cam->Look.x + vy * cam->Look.y + vz * cam->Look.z);   // Look = pos - at: forward is -Look
+        if (f > 0.0f && f * f >= 0.25f * (vx * vx + vy * vy + vz * vz)) {
+            return 0;   // on screen
+        }
+    }
+    if (DmgMgr.hitCheck(&em->pos, 0)) {
+        return 0;
+    }
+    return 1;
+}
+#endif
+
+#if defined(RE4DC_BODY_CORPSE) && RE4DC_BODY_CORPSE
+#include "dmg.h"
+// BODY_CORPSE=1 (bodysvc20.mk; lane bodysvc20 2026-10-20, master plan P3 "dead enemies cost near zero"; an
+// APPROXIMATION, default 0 = off): a settled Ganado corpse skips its whole frame step. Settled = a Ganado (ids
+// 0x10..0x20 but 0x18: every cEm10) resting in Die_Cramp's last state (r_no_0 3, r_no_1 0, r_no_2 2: bodies that
+// never dissolve) or in Die_Lost's last state (r_no_1 3, r_no_2 2: a dissolved body, invisible and without collision,
+// whose work stays alive with Reset_enable set; measured 10-20: every r103 farm kill ends here and still ran its
+// whole step and ShapeMove every tick) whose position has not changed bit for bit for BODY_CORPSE_TICKS consecutive ticks (default 90: every death
+// motion has ended by then). Its skeleton, part matrices and collision stay as the last full step left them, so it is
+// drawn unchanged. Never skipped: a pending hit (dmg.m_Flag), a tick inside an explosion / fire volume
+// (DmgMgr.hitCheck), any other routine. Scripts that remove bodies (Die_Lost, destroy) still run: a skipped corpse is
+// still a live work. Kills, drops and counters happen at the death itself (Die_Cramp state 0), before any skip.
+#ifndef RE4DC_BODY_CORPSE_TICKS
+#define RE4DC_BODY_CORPSE_TICKS 90
+#endif
+struct BodyCorpse {
+    const cEm* em;
+    u32 frame;    // pG->Frame_cnt of the last look
+    u32 ticks;    // consecutive settled ticks
+    u32 pos[3];   // the position's bits
+};
+static BodyCorpse re4dc_body_corpse[32];
+#if defined(RE4DC_BODY_LOG) && RE4DC_BODY_LOG
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
+static int re4dc_body_corpse_skip(cEm* em)
+{
+#if defined(RE4DC_BODY_LOG) && RE4DC_BODY_LOG
+    if (em->id >= 0x10 && em->id <= 0x20 && em->r_no_0 == 3 && ((u32) pG->Frame_cnt % 60) == 0) {
+        re4dc_log("bodysvc: f=%u dead em=%08x id=%02x r=%u/%u/%u room_id32=%08x\n", (u32) pG->Frame_cnt, (u32) em,
+                  em->id, em->r_no_0, em->r_no_1, em->r_no_2, (u32) pG->room_id32);
+    }
+#endif
+    if (em->id < 0x10 || em->id > 0x20 || em->id == 0x18 || em->r_no_0 != 3 || (em->r_no_1 != 0 && em->r_no_1 != 3) ||
+        em->r_no_2 != 2) {
+        return 0;
+    }
+    const u32 now = (u32) pG->Frame_cnt;
+    u32 pb[3];
+    __builtin_memcpy(pb, &em->pos, 12);
+    BodyCorpse* e = 0;
+    BodyCorpse* lru = &re4dc_body_corpse[0];
+    for (int i = 0; i < 32; i++) {
+        BodyCorpse* c = &re4dc_body_corpse[i];
+        if (c->em == em) {
+            e = c;
+            break;
+        }
+        if ((u32) (now - c->frame) > (u32) (now - lru->frame)) {
+            lru = c;
+        }
+    }
+    if (!e || e->frame + 1 != now || __builtin_memcmp(e->pos, pb, 12) != 0) {
+        if (!e) {
+            e = lru;
+            e->em = em;
+        }
+        e->frame = now;
+        e->ticks = 0;
+        __builtin_memcpy(e->pos, pb, 12);
+        return 0;
+    }
+    e->frame = now;
+    if (e->ticks < RE4DC_BODY_CORPSE_TICKS) {
+        e->ticks++;
+        return 0;
+    }
+    if (em->dmg.m_Flag || DmgMgr.hitCheck(&em->pos, 0)) {
+        e->ticks = 0;
+        return 0;
+    }
+#if defined(RE4DC_BODY_LOG) && RE4DC_BODY_LOG
+    {
+        // BODY_LOG=1 (test arms only): skipped corpse steps, one line per 300 ticks
+        static u32 skips, last;
+        skips++;
+        if (now - last >= 300) {
+            last = now;
+            re4dc_log("bodysvc: f=%u corpse skips=%u\n", now, skips);
+        }
+    }
+#endif
+    return 1;
+}
+#endif
+
 // Per-character frame step for every work but the player: skips hidden works during an event
 // pause (Status_flg[1] 0x10000000 unless be_flag 0x800) and the frozen partner; caches the
 // squared distance to the player (plDist2), ticks the damage info, runs the virtual move(), then
@@ -441,6 +588,17 @@ void emMove(cEm* em)
     dx = pPL->pos.x - em->pos.x;
     em->plDist2 = dx * dx + dz * dz;
     em->l_sub = 1e16f;
+#if defined(RE4DC_LOGIC_LOD_EM) && RE4DC_LOGIC_LOD_EM > 1
+    if (re4dc_logic_lod_skip(em)) {
+        return;
+    }
+#endif
+#if defined(RE4DC_BODY_CORPSE) && RE4DC_BODY_CORPSE
+    if (re4dc_body_corpse_skip(em)) {
+        em->invisible_factor2 = 1.0f;
+        return;
+    }
+#endif
     em->dmg.move();
 #if defined(RE4DC_EL_CENSUS) && RE4DC_EL_CENSUS
     re4dc_elc_em = em;
