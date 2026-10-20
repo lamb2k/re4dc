@@ -40,6 +40,7 @@ case "${1:-status}" in
     R=$W/pkg L=rr${S7}rP P="$CAND" SRC_SHA=${SHA:0:8} TN=$TN PKG_KIT_DIR=$W/kit KSETS=$KSETS bash "$TT/test16/t16-package.sh" 2>&1 | tail -8
     echo "knob file for the release lane: $W/kit/release-knobs.txt" ;;
   install)
+    [ "$HERE" != "$(cd "$RR_HOME/bin" 2>/dev/null && pwd)" ] || { echo "rr: run install from a source tree (tools/d367/rr/rr.sh install), not from $RR_HOME/bin"; exit 2; }
     mkdir -p "$RR_HOME/bin" "$RR_HOME/logs" "$RR_HOME/state"
     for f in "$HERE"/*; do [ -f "$f" ] || continue; tr -d '\r' < "$f" > "$RR_HOME/bin/$(basename "$f")"; done
     chmod +x "$RR_HOME"/bin/*.sh
