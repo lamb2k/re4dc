@@ -118,6 +118,11 @@ extern "C" void re4dc_leon_hands_weapon(const char* name);  // coarse_actor_leon
 static void* in_data_addr;
 u32 out_data_size;
 u8 oldWepId;
+#if defined(RE4DC_WEAPON_ARCHIVE_REUSE) && RE4DC_WEAPON_ARCHIVE_REUSE
+// File identity distinguishes the per-character tables, even when their mapped weapon numbers agree.
+// Published only after a successful load/link and invalidated before any weapon backing is released.
+static u16 wepResidentFile;
+#endif
 
 ReadModule EmReadModule[4] __attribute__((aligned(32)));
 ReadModule PlReadModule __attribute__((aligned(32)));
@@ -1037,6 +1042,10 @@ static void* wepHeap4Alloc(u32 need)
 
 void ReleaseWepData()
 {
+#if defined(RE4DC_WEAPON_ARCHIVE_REUSE) && RE4DC_WEAPON_ARCHIVE_REUSE
+    wepResidentFile = 0;
+    oldWepId = 0xFF;
+#endif
     if (pG->weapon_no_old != 0xFF) {
         InitModule(&WepReadModule);
         pG->weapon_no_old = 0xFF;
@@ -1314,10 +1323,21 @@ void ReadWepData(u32 no, u32 type)
     if (e->file == 0) {
         return;
     }
+#if defined(RE4DC_WEAPON_ARCHIVE_REUSE) && RE4DC_WEAPON_ARCHIVE_REUSE
+    if (oldWepId != 0xFF && no == oldWepId && wepResidentFile == e->file &&
+        pG->weapon_no_old != 0xFF && WepReadModule.pArc != NULL &&
+        pG->pWep == WepReadModule.pArc && BitChk16(WepReadModule.flag, 2)) {
+        // Different logical weapons can share an archive (grenades/eggs). Keep the equipped
+        // identity current while preserving the linked data used by the following weaponInit.
+        pG->weapon_no_old = pG->weapon_no;
+        return;
+    }
+#else
     if (oldWepId != 0xFF && no == oldWepId) {
         return;
     }
     oldWepId = no;
+#endif
     ReleaseWepData();
     pG->weapon_no_old = pG->weapon_no;
     if (e->dll != 0) {
@@ -1394,6 +1414,10 @@ void ReadWepData(u32 no, u32 type)
 #if defined(RE4DC_LEON_HAND_PACK) && RE4DC_LEON_HAND_PACK
     // LEON_HAND_PACK (render only): the weapon's PS2 hands into Leon's hand cache with the weapon load.
     re4dc_leon_hands_weapon(FileTbl[e->file].name);
+#endif
+#if defined(RE4DC_WEAPON_ARCHIVE_REUSE) && RE4DC_WEAPON_ARCHIVE_REUSE
+    oldWepId = no;
+    wepResidentFile = e->file;
 #endif
 }
 
