@@ -1,11 +1,11 @@
 {
   "scope": "Actual SH4 three-object compile and off stripped-object identity only; no full linked-program or guest qualification",
-  "source": "16aa2f288ec8fce2bbbe8442c9818ad30f1d7c96",
+  "source": "0bb18bdef147feba0e3ffd820b25f0c3e8027e36",
   "upstream_control_source": "c7e0358a44677a15123a7f4233c4115eba627694",
   "knob": "MOTION_RESUME=0/1; fixed common actual R21+motionpolicy flags",
   "off_identity": "PASS all3 objects",
   "C_before": 18446065664,
-  "C_after": 18442645504,
+  "C_after": 19036672000,
   "guard_preflight": 17314086912,
   "guard_stop": 17246978048,
   "runs": [
@@ -50,9 +50,9 @@
         "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   9208\t      0\t    557\t   9765\t   2625\t/root/probe/boss21-motion-resume-objects/off/platform/native_motion.o"
       },
       "on": {
-        "bytes": 155312,
-        "sha256": "5419364d43f7cef203afb7a21160c08c2c5934430d233a7c865d50a0999e09ef",
-        "stripped_sha256": "442bf836f6cf95cc78cadfde4b782163f6295cab01bb5eef2b2b2d4b211eee2e",
+        "bytes": 155456,
+        "sha256": "a1858dc9a58568f1880c85f93d624ab516d85a40abf4f58b249e0b27d0a6be63",
+        "stripped_sha256": "11b534761f94042a7fed03e6ca3e8dc76d8074e868569dcdb6690e87e575ead2",
         "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  12403\t      0\t   1126\t  13529\t   34d9\t/root/probe/boss21-motion-resume-objects/on/platform/native_motion.o"
       }
     },
@@ -97,5 +97,6 @@
       }
     }
   },
-  "control_cmd_sha256": "7a88bb13163b4386070e3fa4f8e746de6cd23e0959a7f27f12d679900bd3ab75"
+  "control_cmd_sha256": "7a88bb13163b4386070e3fa4f8e746de6cd23e0959a7f27f12d679900bd3ab75",
+  "96B_followup": "Native motion off/on recompiled; other2 objects reused only after exact source-byte comparison with16aa2f28"
 }
