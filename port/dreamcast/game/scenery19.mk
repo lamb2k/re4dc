@@ -50,6 +50,12 @@ $(error SCENERY_UNIT_CONCAT needs SCENERY_CHUNK)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_UNIT_CONCAT=1
 endif
+# SCENERY_SCREEN_MEMO=1 (exact, render only): load_screen reloads its last matrix when the inputs (mvq, projection
+# p[1..4], viewport) match the last call, instead of rebuilding it.
+SCENERY_SCREEN_MEMO ?= 0
+ifneq ($(SCENERY_SCREEN_MEMO),0)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SCREEN_MEMO=1
+endif
 # CHUNK_SUBMIT=1: the shared chunk-submit back end (platform/chunk_submit.h / .cpp) for user lanes
 # (character-draw-path, rigid models). Default 0: not built.
 CHUNK_SUBMIT ?= 0

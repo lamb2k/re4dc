@@ -787,6 +787,15 @@ void load_screen(const float* mv,const float* p,const float* v){
     const float row2[4]={0,0,1,0},row3[4]={0,0,-1,0};
     const float* rows[4]={row0,row1,row2,row3};
     alignas(32) static matrix_t screen;
+#if RE4DC_SCENERY_SCREEN_MEMO
+    // SCENERY_SCREEN_MEMO (scenery19): parts of one placement bind with the same inputs; the same inputs give the
+    // same matrix (identical arithmetic), so reload the last one. Exact.
+    static float last[20]; static bool have=false;
+    float in[20];
+    std::memcpy(in,mv,48);in[12]=p[1];in[13]=p[2];in[14]=p[3];in[15]=p[4];std::memcpy(in+16,v,16);
+    if(have && !std::memcmp(in,last,sizeof(in))){mat_load(&screen);return;}
+    std::memcpy(last,in,sizeof(in));have=true;
+#endif
     for(unsigned r=0;r<4;++r)for(unsigned c=0;c<4;++c){
         float value=c==3?rows[r][3]:0.0f;
         for(unsigned k=0;k<3;++k)value+=rows[r][k]*mv[4*k+c];
