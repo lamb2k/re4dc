@@ -42,6 +42,9 @@ int handler_id = -1;
 volatile unsigned releases_late, releases_on_time;
 constexpr unsigned kPhaseRun = 8;
 unsigned early_run, rephase;
+volatile unsigned late_cool;     // pictures to go without a rephase after one flipped later than its target
+volatile unsigned cool_len = 64;   // doubles on every late flip (jittery work stops rephasing), reset on a hold change
+unsigned last_hold;
 unsigned waits;
 unsigned long long wait_us, wait_iter_us, ta_wait_us;
 
@@ -73,6 +76,10 @@ void on_flip(u32 now)
     last_flip_vb = now;
     if (p_n) {
         volatile Pic& p = pic[p_head];
+        if ((int) (now - p.target_vb) > 0) {   // flipped late: the cadence was too early; back off longer each time
+            late_cool = cool_len;
+            if (cool_len < 4096) cool_len *= 2;
+        }
         const unsigned d = unsigned(t - p.submit_us);
         lat_sum_us += d; ++lat_n;
         if (d > lat_max_us) lat_max_us = d;
@@ -186,6 +193,7 @@ int re4dc_steady_present(int present)
     const u32 now = re4dc_vi_retrace_count();
 #if RE4DC_PACE_STEADY
     const int hold = re4dc_pace_steady_hold();
+    if (hold && (unsigned) hold != last_hold) { last_hold = hold; cool_len = 64; }
     if (hold && flip_n) {
         wait_until(kQ - 1);                           // room in the queue
         const int irq = irq_disable();
@@ -195,7 +203,9 @@ int re4dc_steady_present(int present)
         // Phase: when kPhaseRun pictures in a row could have flipped a field earlier, the cadence is late against
         // the work; one hold one field shorter moves it earlier (input latency), then the hold is constant again.
         if ((int) (target - (now + 1)) >= 1) {
-            if (++early_run >= kPhaseRun && (int) (target - 1 - (now + 1)) >= 0 && (int) (target - 1 - base) >= 1) {
+            if (late_cool) {
+                --late_cool; early_run = 0;
+            } else if (++early_run >= kPhaseRun && (int) (target - 1 - (now + 1)) >= 0 && (int) (target - 1 - base) >= 1) {
                 --target; early_run = 0; ++rephase;
             }
         } else {
