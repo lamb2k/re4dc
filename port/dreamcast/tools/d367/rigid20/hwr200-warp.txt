@@ -1,0 +1,11 @@
+name rg20-hwr200
+# lane rigid20: r200 (chapter 2-3 truck area) entry, Ashley found + following, god, no pad input (ch2/warps/e-r200.txt
+# without dump / census / walk). Settle, then the hw window.
+room 0x200
+pos -94 9 -196
+ang 1.4270
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+alivelog 150
