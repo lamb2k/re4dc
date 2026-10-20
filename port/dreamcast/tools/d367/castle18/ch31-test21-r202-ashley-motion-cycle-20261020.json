@@ -311,5 +311,5 @@
     "remaining_keys_sha_unchanged": true,
     "scope": "Offline additive retention candidate only; no runtime admission or production selection. Retains original pl11-hot ten full ARC identities plus three proven currentr202 follow clips22/23/37. All remaining cold FCVs, source headers/events/cloth/sounds preserved; same two slabs and cachepolicy. Full source prefetch audit and target qualification remain open."
   },
-  "controller_correction": "Private observer initially confirmed transient entrysubFlags0x40 asWait; source then initialized normal following. No sustained Wait pass is claimed. cSubChar::control follow setsbit2 whileWaitclearsbits0/1; future controller requires initialized stable source state. This is not a runtime source patch."
+  "controller_correction": "Corrected source interpretation: cSubChar::moveCore returns before ordinary follow when numeric subFlags bit0x2 is SET; cFlag::check(1) is 1<<1. Thus bit0x2 SET is Wait and CLEAR is Follow. Control-mode comments in pl_sub.cpp are misleading. Prior private helper/public metadata interpretation was wrong, and I04/I05 stayed in actual following; neither establishes Wait acceptance. Normal following is precisely the captured thrashing case. No game-source behavior changed."
 }
