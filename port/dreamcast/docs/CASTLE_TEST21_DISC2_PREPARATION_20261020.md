@@ -153,3 +153,31 @@ SD handoff priority. No prior state/program/image is retargeted. Completed
 G/H RAMimage links were retired only after exact retainedCimages and all
 closed-guest receipts were verified, freeing2037563392bytes for the canonical
 QA STANDARD master. The originalA route and newI program remain protected.
+
+
+## Actual typed playable Ashley SKIN1 positive gate
+
+Current c21imW completes a fresh50.9s source-selection diagnostic with errors[]
+and owned exit. The actual cPlAshley vtable, model0/141sourcejoints/7roles/OT7
+are verified against the current ELF and saved source state. It selects the
+unique registry planR: native150 atframe400, native300 atframe550, with0
+player declines and0registry declines. All7 exact sourceInfo/TPL/hand/skeleton
+certificates and requiredff material capabilities pass. Actual49152-byte hold
+is present; minimum KOSwatch headroom25792. No Leon fallback or hand shortcut
+qualifies Ashley. Body/head/hair actualstill was inspected; normal movement,
+face/hand views, events and chapter3-4 no-warp progression remain separate.
+The existing PS2 rest-face mode does not reproduce source facial expressions.
+
+Whole-room acceptance remains blocked: enemy19 drawsGC450/native0, and the
+full diagnostic VRAM checker fails inherited r20650lateuploads/10guards/9GCfx
+plus r20d one soundbank no-fit. Actual r20d has0after-preloadtexture uploads,
+evictions,guards and texrejects. No new allowlist conceals these gaps.
+
+This candidate is separate from the published correctedQA AlphaFix1 and is
+not published/promoted. The new backend flag, emitted native_actor compile
+definition, object relocations to the wrapper and linked516f192 kernels are
+verified. No matched current-scene cost or hardware performance benefit is
+claimed. The exact I master remains pinnedRAM while Ccapacity defers its
+1GB retained copy; all selected source/program/assets and run evidence areC.
+Fresh normal originalVMU CardLoad on I now starts the chapter3-1 continuation;
+no prior A/G/H state is retargeted.
