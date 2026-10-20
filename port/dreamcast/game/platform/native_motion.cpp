@@ -72,6 +72,9 @@ static_assert(RE4DC_MOTION_PRESSURE_BYTES >= 65536 &&
 #ifndef RE4DC_MOTION_PRESSURE_BACKING
 #define RE4DC_MOTION_PRESSURE_BACKING 0
 #endif
+#if defined(RE4DC_MOTION_RESERVE_PACK) && RE4DC_MOTION_RESERVE_PACK
+extern "C" unsigned re4dc_heap_largest_current(unsigned*) __attribute__((weak));
+#endif
 #ifndef RE4DC_MOTION_RESERVE_PACK
 #define RE4DC_MOTION_RESERVE_PACK 0
 #endif
@@ -102,6 +105,9 @@ struct Binding {
     Slot* slots; unsigned budget, hot_bytes, resident;
 #if RE4DC_MOTION_BOUNDED_R11F
     bool bounded; // static binding marker; checked before any suspended archive/slot access
+#endif
+#if RE4DC_MOTION_RESERVE_PACK
+    bool joined; // existing bounded flag stays in place; slab[1] is a non-owning half
 #endif
 #if RE4DC_MOTION_RESERVE
     // MOTION_RESERVE=1: the cold part of the budget (two clips of the largest cold size) is
@@ -233,9 +239,10 @@ const unsigned char* record(const Binding& b,unsigned i) { return b.records+20*i
 const unsigned char* reserved_base(const Binding& b,const unsigned char* p) {
     if(!p)return nullptr;
     const auto address=reinterpret_cast<std::uintptr_t>(p);
-    for(const auto* slab:b.slab)if(slab) {
+    for(unsigned i=0;i<(b.joined?1u:2u);++i)if(const auto* slab=b.slab[i]) {
         const auto base=reinterpret_cast<std::uintptr_t>(slab);
-        if(address>=base && address-base<b.slab_bytes)return slab;
+        const unsigned span=b.joined?2*b.slab_bytes:b.slab_bytes;
+        if(address>=base && address-base<span)return slab;
     }
     return nullptr;
 }
@@ -262,9 +269,9 @@ bool slab_busy(const Binding& b,const unsigned char* p) {
 }
 #if RE4DC_MOTION_RESERVE_PACK
 // First-fit gaps, derived from the existing slot table. Never move live/cached
-// payloads: a leased relocated FCV table keeps exactly the same address. Both
-// slab allocations and every subregion remain 32-byte aligned. No extra heap
-// metadata. Strict v3 profiles deliberately retain one whole clip per slab.
+// payloads: a leased relocated FCV table keeps exactly the same address. V2
+// prefers one allocation of the unchanged two-slab payload; its old two-cell
+// fallback remains packable separately. Strict v3 keeps two whole-clip cells.
 unsigned char* reserve_fit(const Binding& b,unsigned bytes) {
 #if RE4DC_MOTION_BOUNDED_R11F
     if(b.bounded) {
@@ -273,8 +280,9 @@ unsigned char* reserve_fit(const Binding& b,unsigned bytes) {
     }
 #endif
     if(bytes>b.slab_bytes)return nullptr;
-    for(auto* slab:b.slab)if(slab) {
-        const auto base=reinterpret_cast<std::uintptr_t>(slab),end=base+b.slab_bytes;
+    for(unsigned i=0;i<(b.joined?1u:2u);++i)if(auto* slab=b.slab[i]) {
+        const unsigned span=b.joined?2*b.slab_bytes:b.slab_bytes;
+        const auto base=reinterpret_cast<std::uintptr_t>(slab),end=base+span;
         auto candidate=base;
         while(candidate<=end-bytes) {
             auto next=candidate;
@@ -290,6 +298,32 @@ unsigned char* reserve_fit(const Binding& b,unsigned bytes) {
     }
     return nullptr;
 }
+// Same payload bound, with a single owning base when the raw SDK cell can
+// fit payload + MotionAllocation32 + MAD32 + SDKcell32. An absent query or
+// fragmented heap takes the old two-allocation path without a failed large
+// required allocation. A race/allocator refusal also falls back safely.
+bool reserve_allocate(Binding& b,unsigned largest) {
+    b.slab_bytes=aligned(largest);
+    bool v2=true;
+#if RE4DC_MOTION_BOUNDED_R11F
+    v2=!b.bounded;
+#endif
+    unsigned free_bytes=0;
+    const unsigned whole=2*b.slab_bytes;
+    if(v2 && re4dc_heap_largest_current &&
+       re4dc_heap_largest_current(&free_bytes)>=whole+96 && free_bytes>=whole+96) {
+        if(auto* base=static_cast<unsigned char*>(re4dc_motion_alloc(whole))) {
+            b.joined=true;b.slab[0]=base;b.slab[1]=base+b.slab_bytes;
+            stats.metadata_bytes+=whole;return true;
+        }
+    }
+    for(auto*& p:b.slab) {
+        p=static_cast<unsigned char*>(re4dc_motion_alloc(b.slab_bytes));
+        if(!p)return false;
+        stats.metadata_bytes+=b.slab_bytes;
+    }
+    return true;
+}
 #endif
 #endif
 void release_binding(Binding& b) {
@@ -297,12 +331,18 @@ void release_binding(Binding& b) {
     for(unsigned i=0;i<b.count;++i)discard(b,i);
     stats.metadata_bytes-=aligned(b.count*sizeof(Slot));stats.hot_bytes-=b.hot_bytes;
 #if RE4DC_MOTION_RESERVE
+#if RE4DC_MOTION_RESERVE_PACK
+    for(unsigned i=0;i<(b.joined?1u:2u);++i)if(b.slab[i])re4dc_motion_free(b.slab[i]);
+    // Charge only successful allocations, including partial fallback failure.
+    stats.metadata_bytes-=b.joined?2*b.slab_bytes:((b.slab[0]!=nullptr)+(b.slab[1]!=nullptr))*b.slab_bytes;
+#else
     for(auto* p:b.slab)if(p)re4dc_motion_free(p);
 #if RE4DC_MOTION_BOUNDED_R11F
     // New profile accounting charges each successful slab allocation separately.
     stats.metadata_bytes-=b.bounded?((b.slab[0]!=nullptr)+(b.slab[1]!=nullptr))*b.slab_bytes:2*b.slab_bytes;
 #else
     stats.metadata_bytes-=2*b.slab_bytes;
+#endif
 #endif
 #endif
 #if RE4DC_MOTION_USAGE_LOG
@@ -729,6 +769,10 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
     stats.metadata_bytes+=meta;stats.hot_bytes+=hot;
 #if RE4DC_MOTION_RESERVE
     if(largest) {
+#if RE4DC_MOTION_RESERVE_PACK
+        if(!reserve_allocate(*b,largest)) {re4dc_log("motion bind: reserve backing of 2x%u failed\n",b->slab_bytes);release_binding(*b);return 0;}
+        re4dc_log("motion reserve: backing=%s payload=%u\n",b->joined?"joined":"two-cell",2*b->slab_bytes);
+#else
         b->slab_bytes=aligned(largest);
         for(auto*& p:b->slab) {
             p=static_cast<unsigned char*>(re4dc_motion_alloc(b->slab_bytes));
@@ -741,6 +785,7 @@ extern "C" int re4dc_motion_bind(void* archive,unsigned bytes) {
         if(!b->bounded)
 #endif
         stats.metadata_bytes+=2*b->slab_bytes;
+#endif
         re4dc_log("motion reserve: bind slabs=2x%u\n",b->slab_bytes);
     }
 #endif

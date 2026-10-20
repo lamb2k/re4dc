@@ -16,13 +16,22 @@ static std::map<void*,unsigned> allocations;
 static std::map<std::string,std::vector<unsigned char>> files;
 static unsigned allocated,peak,reads;
 static int heap_free=0;
-static unsigned fail_allocations;
+static unsigned fail_allocations,heap_largest;
+static std::vector<unsigned> allocation_requests,failed_allocation_calls;
+#ifndef RE4DC_TEST_EXPECT_REGION
+#define RE4DC_TEST_EXPECT_REGION 1
+#endif
 extern "C" void re4dc_log(const char*,...) {}
 extern "C" void re4dc_missing(const char* s) { throw Missing(s); }
 extern "C" int re4dc_motion_current_heap() { return 4; }
 extern "C" int re4dc_static_heap_free() { return heap_free; }
+#if !defined(RE4DC_TEST_QUERY_ABSENT) || !RE4DC_TEST_QUERY_ABSENT
+extern "C" unsigned re4dc_heap_largest_current(unsigned* out) { *out=heap_free;return heap_largest?heap_largest:unsigned(heap_free); }
+#endif
 extern "C" int re4dc_motion_owner_live(const void* p) { assert(allocations.count(const_cast<void*>(p)));return 1; }
 extern "C" void* re4dc_motion_alloc(unsigned n) {
+    allocation_requests.push_back(n);
+    if(std::find(failed_allocation_calls.begin(),failed_allocation_calls.end(),allocation_requests.size())!=failed_allocation_calls.end())return nullptr;
     if(fail_allocations){--fail_allocations;return nullptr;}
     void* p=nullptr;assert(!posix_memalign(&p,32,(n+31)&~31U));
     allocations[p]=n;allocated+=n;peak=std::max(peak,allocated);return p;
@@ -62,7 +71,80 @@ struct Fixture {
     void hot(unsigned i) { put(records,20*i+16,1);const auto n=word(record(bindings[no],i)+4);bindings[no].hot_bytes+=n;stats.hot_bytes+=n;seed(i); }
     ~Fixture() { auto& b=bindings[no];for(unsigned i=0;i<b.count;++i)b.slots[i].pins=0;release_binding(b); }
 };
-static void clean() { assert(allocations.empty());assert(!allocated);stats={};stamp=0;hold=false;files.clear();reads=peak=fail_allocations=0;heap_free=0; }
+static void clean() { assert(allocations.empty());assert(!allocated);stats={};stamp=0;hold=false;files.clear();reads=peak=fail_allocations=heap_largest=0;heap_free=0;allocation_requests.clear();failed_allocation_calls.clear(); }
+struct ActualArchive {
+    std::vector<unsigned char> archive;
+    ActualArchive(const std::vector<unsigned>& sizes) {
+        const unsigned n=sizes.size()+1,first=aligned(16+8*n),mtc=first+32*sizes.size(),rel=aligned(mtc+32+20*sizes.size()),bytes=rel+64;
+        archive.resize(bytes);put(archive,0,n);put(archive,4,rel);
+        for(unsigned i=0;i<sizes.size();++i) {
+            std::vector<unsigned char> f(sizes[i],0);f[0]=1;f[2]=1;put(f,12,16);f.back()=static_cast<unsigned char>(i+1);
+            const unsigned crc=net_crc32le(f.data(),f.size());unsigned fnv=2166136261U;for(auto v:f)fnv=(fnv^v)*16777619U;
+            const unsigned off=first+32*i;put(archive,16+4*i,off);std::memcpy(archive.data()+16+4*n+4*i,"FCV",4);std::memcpy(archive.data()+off,f.data(),16);
+            put(archive,mtc+32+20*i,off);put(archive,mtc+36+20*i,sizes[i]);put(archive,mtc+40+20*i,crc);put(archive,mtc+44+20*i,fnv);
+            char path[64];std::snprintf(path,sizeof(path),"/cd/dc/mot/%08x-%08x.fcv",crc,fnv);files[path]=std::move(f);
+        }
+        put(archive,16+4*(n-1),mtc);std::memcpy(archive.data()+16+4*n+4*(n-1),"MTC",4);std::memcpy(archive.data()+mtc,"R4MOTBL\0",8);
+        put(archive,mtc+8,2);put(archive,mtc+12,sizes.size());put(archive,mtc+16,20);put(archive,mtc+20,net_crc32le(archive.data()+mtc+32,20*sizes.size()));put(archive,mtc+24,bytes);put(archive,mtc+28,32768);
+    }
+    bool bind(){return re4dc_motion_bind(archive.data(),archive.size())==1;}
+    ~ActualArchive(){re4dc_motion_unbind(archive.data());}
+};
+static int acquire_entry(Binding& b,unsigned i){unsigned* table=nullptr;int token=re4dc_motion_acquire(b.archive+word(record(b,i)),&table);assert(token&&table);return token;}
+static void region_three_key_loop(unsigned third) {
+    {
+        heap_free=93824;ActualArchive f({27584,21152,third,32416});assert(f.bind());auto& b=bindings[0];const unsigned before=allocated;
+        for(unsigned cycle=0;cycle<20;++cycle)for(unsigned i=0;i<3;++i){auto token=acquire_entry(b,i);re4dc_motion_release(token);}
+#if RE4DC_MOTION_RESERVE_PACK && RE4DC_TEST_EXPECT_REGION
+        assert(stats.loads==3&&stats.evictions==0&&stats.hits==57);assert(b.slots[1].data==b.slab[0]+27584&&b.slots[2].data==b.slab[0]+48736);
+#else
+        assert(stats.loads==60&&stats.evictions==58);
+#endif
+        assert(allocated==before&&b.resident<=64832);
+#if RE4DC_MOTION_PRESSURE_BACKING
+        assert(pressure_heap_bytes()==0);
+#endif
+        std::cout<<"region-three-key pack="<<RE4DC_MOTION_RESERVE_PACK<<" third="<<third<<" expect-region="<<RE4DC_TEST_EXPECT_REGION<<" loads="<<stats.loads<<" evictions="<<stats.evictions<<" backing="<<2*b.slab_bytes<<"\n";
+    }clean();
+}
+#if RE4DC_MOTION_RESERVE_PACK && RE4DC_TEST_EXPECT_REGION
+static void region_pins_owners_and_fallback() {
+    {
+        heap_free=93824;ActualArchive f({27584,21152,12032,32416});assert(f.bind());auto& b=bindings[0];const unsigned before=allocated;
+        assert(b.joined&&b.slab[1]==b.slab[0]+32416);assert(allocation_requests.size()==2&&allocation_requests[1]==64832);
+        std::vector<int> tokens;std::vector<unsigned char*> addresses;std::vector<std::vector<unsigned char>> copies;
+        for(unsigned i=0;i<3;++i){tokens.push_back(acquire_entry(b,i));addresses.push_back(b.slots[i].data);copies.emplace_back(b.slots[i].data,b.slots[i].data+word(record(b,i)+4));assert(reserved_base(b,b.slots[i].data)==b.slab[0]);}
+        bool rejected=false;try{load(b,3);}catch(const Missing& e){rejected=std::string(e.what())=="motion reserve slabs pinned";}
+        assert(rejected&&stats.evictions==0&&allocated==before);
+        re4dc_motion_hold(1);assert(re4dc_motion_evict_one()==0);assert(re4dc_motion_forget_dead_heaps()==0&&!hold);
+        for(unsigned i=0;i<3;++i){assert(b.slots[i].data==addresses[i]&&b.slots[i].pins==1);assert(!std::memcmp(addresses[i],copies[i].data(),copies[i].size()));re4dc_motion_release(tokens[i]);}
+    }clean(); // exactly one owning allocation freed; no second-half/interior free
+    {
+        heap_free=93824;ActualArchive f({27584,21152,12032,32416});assert(f.bind());auto& b=bindings[0];load(b,0);const auto* neighbor=b.slots[0].data;std::vector<unsigned char> copy(neighbor,neighbor+27584);const unsigned before=allocated;
+        auto saved=files;files.clear();bool rejected=false;try{load(b,1);}catch(const Missing& e){rejected=std::string(e.what())=="motion key read";}
+        assert(rejected&&!b.slots[1].data&&allocated==before&&b.slots[0].data==neighbor&&!std::memcmp(neighbor,copy.data(),copy.size()));
+        files=std::move(saved);load(b,1);assert(b.slots[1].data==b.slab[0]+27584&&allocated==before);
+    }clean(); // failed/retried FCV crossing the half boundary never frees its owning region
+    for(unsigned mode=0;mode<4;++mode){
+        {
+            heap_free=1048576;ActualArchive f({27584,21152,12032,32416});
+            if(mode==0)heap_largest=64832+64; // not enough for all three headers; skip the whole request
+            if(mode==1)failed_allocation_calls={2}; // allocation race: whole request fails, two cells succeed
+            if(mode==2)failed_allocation_calls={2,4}; // second fallback allocation fails; unwind only owned bytes
+            if(mode==3){heap_largest=50000;failed_allocation_calls={2};} // first fallback allocation fails
+            const bool ok=f.bind();assert(ok==(mode<2));
+            if(ok){auto& b=bindings[0];assert(!b.joined);assert(allocation_requests[mode==0?1:2]==32416);load(b,0);load(b,1);const auto* p=b.slots[0].data;assert(reserved_base(b,p)==p);}
+            else{assert(!allocated&&allocations.empty()&&!stats.metadata_bytes&&!bindings[0].archive);}
+            if(mode==0)assert(std::find(allocation_requests.begin(),allocation_requests.end(),64832)==allocation_requests.end());
+        }clean();
+    }
+    {
+        heap_free=1048576;Fixture f(0,{16000,16000,16000},0,true);auto& b=bindings[0];const auto start=allocation_requests.size();assert(reserve_allocate(b,32416));
+        assert(!b.joined&&allocation_requests.size()==start+2&&allocation_requests[start]==32416&&allocation_requests[start+1]==32416);
+        load(b,0);load(b,1);load(b,2);assert(stats.evictions==1); // strict v3 still one whole clip in each cell
+    }clean();
+}
+#endif
 static void reserved_fill() {
     // The exact selected em12 hot entry byte sizes, metadata only (H050 census).
     std::vector<unsigned> sizes={22400,16608,17664,9152,13216,7840,9216,19648,17696,5632,20896,15648,5696,8640,18784,2304,320,224,5248,8352};const unsigned count=sizes.size();sizes.push_back(32416);sizes.push_back(32416);
@@ -220,6 +302,10 @@ int main(){reserved_fill();
 #if RE4DC_MOTION_PRESSURE_BACKING
 aggregate_heap_and_pins();all_heap_pinned_and_hold();bounded_no_spill();cold_pool_keeps_cap();heap_load_keeps_cap();allocation_failure_keeps_leases();
 three_cold_loop({11744,7744,12224});three_cold_loop({22400,9152,17408});three_cold_loop({22400,9152,32416});
+region_three_key_loop(12032);region_three_key_loop(15584);
+#if RE4DC_MOTION_RESERVE_PACK && RE4DC_TEST_EXPECT_REGION
+region_pins_owners_and_fallback();
+#endif
 #if RE4DC_MOTION_RESERVE_PACK
 packed_coactive_pins();packed_holes_owners_and_retirement();packed_bad_read_keeps_backing();
 #endif
