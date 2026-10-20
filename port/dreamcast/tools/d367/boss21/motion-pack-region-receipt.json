@@ -1,0 +1,78 @@
+{
+  "scope": "Existing PACK-only v2 contiguous reserved payload followup; separate from frozen54be and movie restoration",
+  "base": "c7e0358a44677a15123a7f4233c4115eba627694",
+  "source_possible_couse": {
+    "qualification": "Independent actor state machines sharing archive; not observed triple or simultaneous-lease census",
+    "source_arcs": [
+      "0x1b3",
+      "0x1b7",
+      "0x28"
+    ],
+    "selected_entries": [
+      100,
+      102,
+      14
+    ],
+    "bytes": [
+      27584,
+      21152,
+      12032
+    ],
+    "total": 60768,
+    "largest": 32416,
+    "reserved_payload": 64832,
+    "any_pair_fits_one_prior_cell": false
+  },
+  "policy": {
+    "same_payload": true,
+    "no_cap_growth": true,
+    "same_pins": true,
+    "pointer_stable": true,
+    "strict_v3": "two whole allocations, no joined attempt/spill",
+    "largest_preflight_overhead": 96,
+    "missing_query_or_fragmented": "old two-allocation fallback",
+    "allocation_refusal": "old fallback, exact actual-allocation accounting"
+  },
+  "host": {
+    "actual_source_control": "c7e0358a native_motion.cpp PACK1",
+    "calls": 60,
+    "prior_loads": 60,
+    "prior_evictions": 58,
+    "joined_loads": 3,
+    "joined_evictions": 0,
+    "joined_hits": 57,
+    "sanitizers": [
+      "address",
+      "undefined",
+      "leaks"
+    ],
+    "variants": 7
+  },
+  "target_object": "PENDING",
+  "full_program_gameplay": "PENDING",
+  "console": "NOT RUN",
+  "observed_QA20_set": {
+    "qualification": "100/102 retained reserved,20 admitted during real high-free QA reaction; no low-heap failure established",
+    "entries": [
+      100,
+      102,
+      20
+    ],
+    "bytes": [
+      27584,
+      21152,
+      15584
+    ],
+    "total": 64320,
+    "prior_loader_calls60": {
+      "loads": 60,
+      "evictions": 58
+    },
+    "joined_loader_calls60": {
+      "loads": 3,
+      "evictions": 0
+    },
+    "with_later_back93_temporal_union": 73696,
+    "four_key_concurrency": "UNPROVEN, exceeds reserved backing"
+  }
+}
