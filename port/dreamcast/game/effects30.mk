@@ -235,6 +235,16 @@ endif
 #                    size, alpha, a view-depth cap and a per-frame room-sprite budget (esp_sub.cpp kFxLevel, with
 #                    per-recipe overrides kFxLevelOverride). The value is the build default of the runtime variable
 #                    re4dc_fx_level (re4dc_fx_level_set / _cycle for a menu or tester toggle).
+# SHORE_FX_LEVEL=1|2 (lane lake20 2026-10-20; render only; unset by default = no code): the FX_LEVEL dial for the night
+#                    lake shore only (r11b; the r11b walk is effects-bound, ~16 fps in Flycast): r11b draws at this
+#                    level, every other room at FX_LEVEL (0 when FX_LEVEL is unset). Needs PS2_FX_ROOMS=1.
+SHORE_FX_LEVEL ?=
+ifneq ($(SHORE_FX_LEVEL),)
+ifneq ($(filter $(SHORE_FX_LEVEL),1 2),$(SHORE_FX_LEVEL))
+$(error SHORE_FX_LEVEL must be 1 or 2)
+endif
+FX_LEVEL ?= 0
+endif
 FX_LEVEL ?=
 ifneq ($(FX_LEVEL),)
 ifneq ($(filter $(FX_LEVEL),0 1 2)$(PS2_FX_ROOMS),$(FX_LEVEL)1)
@@ -355,6 +365,21 @@ RAIN_DC_N ?= 160
 $(OBJDIR)/src/game/filter06.o: GAME_CPPFLAGS += -DRE4DC_RAIN_DC=1 -DRE4DC_RAIN_DC_N=$(RAIN_DC_N)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_RAIN_DC=1
 endif
+# LAKE_FIX_TOGGLE=1 (lane lake20 2026-10-20; scenario / QA discs only, default 0 = no code): the lake switches at run time
+#                    from one flag, re4dc_lake_fix (native_ui.cpp; the scenario menu's A button, bench.cpp BENCH_SCENARIO):
+#                    on = SHORE_FX_LEVEL in r11b, half of the RAIN_DC_N rain streaks, SS11_ROOM_EVICT's evict; off = as
+#                    without the switches. Needs SHORE_FX_LEVEL, SS11_ROOM_EVICT=1 and RAIN_DC=1.
+LAKE_FIX_TOGGLE ?= 0
+ifeq ($(LAKE_FIX_TOGGLE),1)
+ifeq ($(SHORE_FX_LEVEL),)
+$(error LAKE_FIX_TOGGLE=1 needs SHORE_FX_LEVEL)
+endif
+ifneq ($(SS11_ROOM_EVICT)$(RAIN_DC),11)
+$(error LAKE_FIX_TOGGLE=1 needs SS11_ROOM_EVICT=1 and RAIN_DC=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o $(OBJDIR)/src/game/filter06.o: GAME_CPPFLAGS += -DRE4DC_LAKE_FIX_TOGGLE=1
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_LAKE_FIX_TOGGLE=1
+endif
 # LAKE_NIGHT_FX=1 (issue #30, lane lakefx165 2026-10-18; needs EFFECT_SPRITES=1 ESP_SPRITE_FAST=1; render only, default
 #                    0): the night lake's torch flames. In r11a / r11b every sprite of the torch owner 0x68 (et14, cEmTorch)
 #                    is drawn as a native sprite, not only its Esp0e glow (EFFECT_TORCH). Log "lake fx:" every 1024 checks.
@@ -474,6 +499,9 @@ ifneq ($(EFFECT_OWNERS_ALL),0)
 endif
 ifneq ($(FX_LEVEL),)
 	@printf '#define RE4DC_FX_LEVEL %s\n' '$(FX_LEVEL)' >> $@.tmp
+endif
+ifneq ($(SHORE_FX_LEVEL),)
+	@printf '#define RE4DC_SHORE_FX_LEVEL %s\n' '$(SHORE_FX_LEVEL)' >> $@.tmp
 endif
 ifneq ($(EFFECT_TORCH),0)
 	@printf '#define RE4DC_EFFECT_TORCH %s\n' '$(EFFECT_TORCH)' >> $@.tmp

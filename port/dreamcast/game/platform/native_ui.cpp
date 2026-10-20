@@ -3728,6 +3728,9 @@ unsigned rce_retire_frame;bool rce_armed;   // ROOM_CHANGE_EVICT: set at room re
 #if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
 unsigned rce_last_room=~0U;                 // ROOM_REENTRY_EVICT: the room of the previous room-change evict
 #endif
+#if defined(RE4DC_SS11_ROOM_EVICT) && RE4DC_SS11_ROOM_EVICT
+bool rce_force_all;                          // SS11_ROOM_EVICT: the next room-change evict closes every unpinned entry
+#endif
 #if RE4DC_QUALITY_ASSETS
 bool preload_room_pass; // Standard: skip the index's drop keys in the room-identity pass only
 #endif
@@ -4065,7 +4068,10 @@ void preload_identities(){
 #if defined(__sh__)
         re4dc_profile_source(&rce_src);
 #endif
-        const bool rce_same=rce_src.room==rce_last_room;rce_last_room=rce_src.room;
+        bool rce_same=rce_src.room==rce_last_room;rce_last_room=rce_src.room;
+#if defined(RE4DC_SS11_ROOM_EVICT) && RE4DC_SS11_ROOM_EVICT
+        if(rce_force_all){rce_same=true;rce_force_all=false;}   // a room change behind a chapter-end screen
+#endif
 #endif
         for(auto& e:entries){
             if(!e.valid || RE4DC_ENTRY_PINNED(e))continue;
@@ -4537,9 +4543,37 @@ extern "C" void re4dc_ui_vram_unclaim(){
 // pictures (~1 MB with the results screen) evicted the room's set, which then came back from disc one first sight at a
 // time in play (r105 after the chapter 1-2 save screen: 81 uploads). A room preload pass at the close loads the room's
 // set back in one pass, before play resumes, as at room entry.
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+// LAKE_FIX_TOGGLE (effects30.mk; scenario / QA discs): the lake switches' run-time flag (esp_sub.cpp SHORE_FX_LEVEL,
+// filter06.cpp rain streaks, the SS11_ROOM_EVICT evict below). bench.cpp's scenario menu sets it (A); on by default.
+extern "C" { unsigned char re4dc_lake_fix = 1; }
+#endif
 extern "C" void re4dc_ui_room_preload_again(){
 #if RE4DC_TEX_RESIDENT
     preload_pending=true;
+#endif
+#if defined(RE4DC_SS11_ROOM_EVICT) && RE4DC_SS11_ROOM_EVICT
+    {
+        // SS11_ROOM_EVICT (Makefile; render only; lane lake20, #43): a chapter end changes the room behind its results /
+        // save screens without a room retirement (Del Lago r10b -> the night shore r11b), so r10b's 1.6 MB dynamic set
+        // stayed beside r11b's preload and three 256x256 pictures found no contiguous block (~2 s latched waits). When
+        // the room differs from the last room-change evict's, arm one here: every unpinned, unleased entry closes at the
+        // preload pass, as on a re-entry; the new room's listed set is pinned and loads into the freed pool.
+        re4dc::profile::Source src{};
+#if defined(__sh__)
+        re4dc_profile_source(&src);
+#endif
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+        if(src.room!=rce_last_room && re4dc_lake_fix){   // LAKE_FIX_TOGGLE: only with the lake switches on
+#else
+        if(src.room!=rce_last_room){
+#endif
+            for(auto& e:entries)if(e.frame>=frame)e.frame=frame?frame-1:0U;
+            rce_retire_frame=frame;rce_armed=true;rce_force_all=true;
+            re4dc_log("native texture preload again: room %03x -> %03x behind SS heap 11, room change evict armed\n",
+                      rce_last_room&0xfffU,unsigned(src.room));
+        }
+    }
 #endif
     re4dc_log("native texture preload again: SS heap 11 closed free=%u\n",(unsigned)pvr_mem_available());
 }

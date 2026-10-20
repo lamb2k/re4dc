@@ -17,8 +17,22 @@
 #                  object changes) where each drawn picture's time goes: CPU work, CPU blocked in the PVR scene open /
 #                  finish, spin to the next vblank, spin over further vblanks (pacing), TA done, PVR render, render still
 #                  running after the CPU work. One log line per drawn picture ("tail:") and a second results page (Y).
+#   BENCH_SCENARIO=1 (lane lake20 2026-10-20; QA scenario discs, needs BENCHMARK=1 and BENCH_SCENES): the start screen is
+#                  a menu of start points (the lake disc: boat, Del Lago, night shore, r10d, r10c; scene fixtures without a
+#                  `bench` line, so play is free with the controller live), A switches LAKE_FIX_TOGGLE's flag, START goes.
 BENCHMARK ?= 0
 BENCH_ID ?= dev
+BENCH_SCENARIO ?= 0
+ifeq ($(BENCH_SCENARIO),1)
+ifneq ($(BENCHMARK),1)
+$(error BENCH_SCENARIO=1 needs BENCHMARK=1)
+endif
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENARIO=1 '-DRE4DC_BENCH_NAME="LAKE SCENARIO DISC"'
+# BENCH_SCENARIO_AUTO=<k><f> (check discs only, never shipped): skip the menu, start scene k with the lake fixes f (0/1)
+ifneq ($(BENCH_SCENARIO_AUTO),)
+$(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_BENCH_SCENARIO_AUTO=$(BENCH_SCENARIO_AUTO)
+endif
+endif
 TAIL_METER ?= 0
 ifneq ($(filter $(TAIL_METER),0 1),$(TAIL_METER))
 $(error TAIL_METER must be 0 or 1)

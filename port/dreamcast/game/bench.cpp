@@ -817,6 +817,72 @@ extern "C" unsigned __wrap_re4dc_ui_frame(void)
     return __real_re4dc_ui_frame() + g_results_ticks;
 }
 
+#if defined(RE4DC_BENCH_SCENARIO) && RE4DC_BENCH_SCENARIO
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+extern unsigned char re4dc_lake_fix;   // native_ui.cpp (effects30.mk LAKE_FIX_TOGGLE)
+#endif
+// BENCH_SCENARIO=1 (bench.mk; lane lake20 2026-10-20): a QA scenario disc. The start screen is a menu of start points
+// (scene k = /cd/dc/warp.txt or bench<k>.txt, fixtures without a `bench` line, so a scene never ends: free play with
+// the controller live); A switches the lake fixes (LAKE_FIX_TOGGLE) on / off before the start. Memory cards stay hidden.
+static void scenario_menu(const Fb& fb)
+{
+    static const char* const kNames[16] = {"BOAT RIDE START (R10B PIER)", "DEL LAGO FIGHT START (R10B LAKE)",
+                                           "NIGHT SHORE AFTER DEL LAGO (R11B, #43)", "DAM SIDE ROOM (R10D)",
+                                           "THE DAM (R10C)"};
+    int cur = 0;
+    unsigned prev = ~0u, last = 0;
+    bool redraw = true, fix = true;
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+    fix = re4dc_lake_fix != 0;
+#endif
+    for (;;) {
+        if (redraw) {
+            redraw = false;
+            fb_fill(fb, 0, 0, 640, 480, 0x000000);
+            fb_fill(fb, 30, 24, 580, 76, 0x900000);
+            fb_center(fb, 30, 3, 4, kWhite, RE4DC_BENCH_NAME);
+            fb_center(fb, 66, 3, 4, kWhite, "THIS IS NOT THE GAME");
+            fb_text(fb, 40, 116, 2, 2, kYellow, "D-PAD UP / DOWN: START POINT");
+            fb_text(fb, 40, 138, 2, 2, kYellow, "A: LAKE FIXES ON / OFF    START: GO");
+            for (int k = 0; k < kScenes && k < 16; ++k) {
+                char line[64];
+                snprintf(line, sizeof(line), "%c %d  %s", k == cur ? '>' : ' ', k + 1, kNames[k] ? kNames[k] : "-");
+                fb_text(fb, 40, 176 + 26 * k, 2, 2, k == cur ? kCyan : kWhite, line);
+            }
+            const int y = 176 + 26 * (kScenes < 16 ? kScenes : 16) + 16;
+            fb_text(fb, 40, y, 2, 2, fix ? kGreen : kGrey, fix ? "LAKE FIXES: ON" : "LAKE FIXES: OFF (AS TEST 20)");
+            fb_text(fb, 40, y + 24, 2, 2, kGrey, "NIGHT SHORE EFFECT LEVEL, RAIN 160, #43 PICTURES");
+            fb_text(fb, 40, y + 52, 2, 2, kGrey, "NOTHING IS SAVED. TO CHANGE: POWER OFF AND ON.");
+            char msg[48];
+            snprintf(msg, sizeof(msg), "BUILD %s", RE4DC_BENCH_ID);
+            fb_text(fb, 40, y + 80, 2, 2, kGrey, msg);
+        }
+#if defined(RE4DC_BENCH_SCENARIO_AUTO)
+        // BENCH_SCENARIO_AUTO=<k><f> (check discs only): start scene k with the fixes f (0 / 1), no controller needed
+        cur = RE4DC_BENCH_SCENARIO_AUTO / 10 - 1; fix = RE4DC_BENCH_SCENARIO_AUTO % 10 != 0;
+        thd_sleep(1000);
+        break;
+#endif
+        const unsigned btn = pad_buttons();
+        const unsigned edge = btn & ~last;   // pressed this poll
+        last = btn;
+        if (prev == ~0u) { prev = 0; thd_sleep(20); continue; }   // ignore buttons held at boot
+        if (edge & CONT_DPAD_UP) { cur = cur > 0 ? cur - 1 : kScenes - 1; redraw = true; }
+        if (edge & CONT_DPAD_DOWN) { cur = cur + 1 < kScenes ? cur + 1 : 0; redraw = true; }
+        if (edge & CONT_A) { fix = !fix; redraw = true; }
+        if (edge & CONT_START) break;
+        thd_sleep(20);
+    }
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+    re4dc_lake_fix = fix ? 1 : 0;
+#endif
+    g_only = cur;
+    fb_fill(fb, 0, 0, 640, 480, 0x000000);
+    fb_center(fb, 200, 3, 4, kWhite, RE4DC_BENCH_NAME " - NOT THE GAME");
+    fb_center(fb, 250, 2, 3, kCyan, kNames[cur] ? kNames[cur] : "STARTING");
+    re4dc_log("bench: scenario start %d (%s) lake_fix=%d build %s\n", cur + 1, kScenePath[cur], fix ? 1 : 0, RE4DC_BENCH_ID);
+}
+#endif
 extern "C" void __wrap_OSInit(void)
 {
     g_hide_vmu = true;
@@ -826,6 +892,10 @@ extern "C" void __wrap_OSInit(void)
     done = true;
     vid_set_mode(DM_640x480, PM_RGB565);
     const Fb fb = fb_boot();
+#if defined(RE4DC_BENCH_SCENARIO) && RE4DC_BENCH_SCENARIO
+    scenario_menu(fb);
+    return;
+#endif
     const uint64_t t0 = timer_us_gettime64();
     constexpr unsigned kAuto = 20;
     unsigned shown = ~0u;

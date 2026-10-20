@@ -1,0 +1,9 @@
+name ch2r-r10d-door
+# r11b door 2 (ladder) -> r10d arrival
+room 0x10d
+pos 160 -2490 -2100
+ang 3.094
+inv default
+act 360 fwd 12
+god
+alivelog 150

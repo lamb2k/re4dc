@@ -2556,6 +2556,18 @@ $(error ROOM_CHANGE_EVICT needs TEX_KEEP=1)
 endif
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_ROOM_CHANGE_EVICT=$(ROOM_CHANGE_EVICT)U
 endif
+# SS11_ROOM_EVICT=1 (lane lake20 2026-10-20, #43; render only, default 0 = image unchanged; needs ROOM_CHANGE_EVICT,
+# ROOM_REENTRY_EVICT=1 and SS11_PRELOAD=1 on the command line): a room change made behind the chapter-end screens (Del
+# Lago r10b -> the night shore r11b) arms the room-change evict at the SS heap 11 preload pass and closes every unpinned
+# entry of the old room, so the new room's preload finds contiguous blocks (Test 20: three 256x256 r11b pictures latched
+# ~2 s, 1 guard refusal).
+SS11_ROOM_EVICT ?= 0
+ifeq ($(SS11_ROOM_EVICT),1)
+ifneq ($(if $(filter-out 0,$(ROOM_CHANGE_EVICT)),1)$(ROOM_REENTRY_EVICT)$(SS11_PRELOAD),111)
+$(error SS11_ROOM_EVICT=1 needs ROOM_CHANGE_EVICT, ROOM_REENTRY_EVICT=1 and SS11_PRELOAD=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SS11_ROOM_EVICT=1
+endif
 # FRAME_QUEUE_DIAG=1 (lane fix18 #39, log only, default 0 = image unchanged): one FQDIAG line per frame whose frame
 # queue refused translucent parts or effect sprites: counts, bytes asked for, the peak, and the queue at the drop.
 FRAME_QUEUE_DIAG ?= 0
