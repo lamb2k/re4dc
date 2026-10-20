@@ -48,12 +48,6 @@ endif
 $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP_CUT_EARLY=1
 endif
 #
-# ESP_PROJ_FAST=1 (render only, last-bit approximation): EspSpriteEmit divides the viewport scale once per sprite.
-ESP_PROJ_FAST ?= 0
-ifeq ($(ESP_PROJ_FAST),1)
-$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP_PROJ_FAST=1
-endif
-#
 # ESP_TYPE_CAP=N (render only, visible approximation; 0 = off): at most N effects of one id spawned by an enemy, animal
 #   or object (owner 0x10..0xCF) are queued for drawing per EspTrans pass (esp.cpp). Room and Leon effects uncapped.
 ESP_TYPE_CAP ?= 0

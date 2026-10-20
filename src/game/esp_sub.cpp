@@ -1434,11 +1434,6 @@ static void EspSpriteEmit(cEsp* esp)
     const int ortho = P[0] != 0.0f;
     const f32 near_d = ortho ? 0.0f : P[6] / (P[5] - 1.0f), far_d = ortho ? 0.0f : P[6] / P[5];
     const Mtx& m = esp->m_Mat;
-#if defined(RE4DC_ESP_PROJ_FAST) && RE4DC_ESP_PROJ_FAST
-    // ESP_PROJ_FAST=1 (logiclod20.mk; render only, last-bit approximation): the viewport scale 640 / V[2] and
-    // 480 / V[3] are divided once per sprite instead of once per corner (8 divides -> 2).
-    const f32 vsx = 640.0f / V[2], vsy = 480.0f / V[3];
-#endif
 #if RE4DC_PS2_FX_STAGE1
     const Ps2fxStatic* fixed=ortho ? NULL : Ps2fxStaticFor(esp);
     f32 fixed_dx=0.0f,fixed_dy=0.0f,fixed_ox=0.0f,fixed_oy=0.0f;
@@ -1497,13 +1492,8 @@ static void EspSpriteEmit(cEsp* esp)
             px = (P[1] * x + P[2] * z) * inv;
             py = (P[3] * y + P[4] * z) * inv;
         }
-#if defined(RE4DC_ESP_PROJ_FAST) && RE4DC_ESP_PROJ_FAST
-        s.x[i] = (V[2] * 0.5f * px + V[0] + V[2] * 0.5f) * vsx;
-        s.y[i] = (-V[3] * 0.5f * py + V[1] + V[3] * 0.5f) * vsy;
-#else
         s.x[i] = (V[2] * 0.5f * px + V[0] + V[2] * 0.5f) * 640.0f / V[2];
         s.y[i] = (-V[3] * 0.5f * py + V[1] + V[3] * 0.5f) * 480.0f / V[3];
-#endif
         s.z[i] = inv;
         s.u[i] = tw->mtx[0][0] * cu[i] + tw->mtx[0][1] * cv[i] + tw->mtx[0][3];
         s.v[i] = tw->mtx[1][0] * cu[i] + tw->mtx[1][1] * cv[i] + tw->mtx[1][3];

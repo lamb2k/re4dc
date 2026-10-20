@@ -840,10 +840,9 @@ int EspTrans()
 #if defined(RE4DC_ESP_TYPE_CAP) && RE4DC_ESP_TYPE_CAP
         // ESP_TYPE_CAP=N (logiclod20.mk; render only, a visible APPROXIMATION): at most N effects of one id spawned by
         // an enemy, animal or object (owner 0x10..0xCF: blood sprays, hit sparks, death bursts) are queued for drawing
-        // per pass, in pool order. Room effects (0x01, 0xD0), Leon's (0x03) and the ids whose Trans carries logic
-        // (0x09, 0x0E, 0x45, 0x47) are never capped. The capped effects still move and live as before.
-        if (esp->info.owner >= 0x10 && esp->info.owner < 0xD0 && esp->m_Id != 0x09 && esp->m_Id != 0x0E &&
-            esp->m_Id != 0x45 && esp->m_Id != 0x47) {
+        // per pass, in pool order. Only effects drawn by the plain EspCommonTrans (a render-only body: no Rnd(), no
+        // game state) are capped; room effects (0x01, 0xD0) and Leon's (0x03) never. Capped effects move and live as before.
+        if (trans == EspCommonTrans && esp->info.owner >= 0x10 && esp->info.owner < 0xD0) {
             u8* n = &espCapN[esp->m_Id & 0xFF];
             if (*n >= RE4DC_ESP_TYPE_CAP) {
                 continue;
