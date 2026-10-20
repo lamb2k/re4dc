@@ -1,0 +1,984 @@
+{
+  "schema": "re4-transition-read-audit-v1",
+  "source_ref": "9eb83d59; hashes pinned per file",
+  "iso": "\\\\wsl.localhost\\Ubuntu-24.04\\dev\\shm\\qa21-r11e-hot-20261020\\master03\\track03.iso",
+  "manifest_sha256": "40f329d4d1f2b9e92ed4d4003181ef51b4c5b6223762aeafe1a14fdb813c4c9d",
+  "source": [
+    {
+      "path": "src/game/cockpit.cpp",
+      "sha256": "69df399a7a1b5f6c5d12a681702f407be731310975e2ddf4e2e8c58f258aaa14"
+    },
+    {
+      "path": "src/game/id_tex.cpp",
+      "sha256": "ffa9b5de1321406ba04466920cdfaf3af984070d8ec3bcad90d26ef32ad90239"
+    },
+    {
+      "path": "src/game/id_sys.cpp",
+      "sha256": "72f2bdcddcd01add6be2321010b730056e9c5822058324c6838f143e059b550d"
+    },
+    {
+      "path": "include/id_sys.h",
+      "sha256": "25dc142236e80043d83c9432de3148fb09916336bf5d3f9070fc7ce8ca9be2e0"
+    },
+    {
+      "path": "src/game/obj10.cpp",
+      "sha256": "3fe7682ec580c24a6ffe694bd875a3fab607ef5299806aeb2d28eeb73e0c6064"
+    },
+    {
+      "path": "port/dreamcast/game/model_bridge.cpp",
+      "sha256": "500885949f58571888bb5044568d46f2c266c37d6dec40e7757a7f82ab66363b"
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "sha256": "426a06c09524c21b6246a818aac130c58bd9fab44fe4d4959f9e8e3042b21f69"
+    },
+    {
+      "path": "src/game/sscrn.cpp",
+      "sha256": "46ad97e6a8951e9e5fe7502aaa4798b4a97dd213576a70daef0f74a64f56267a"
+    },
+    {
+      "path": "src/game/pl_wep.cpp",
+      "sha256": "c0ada3f1d5a6c33a4eb54b4b6c3d928eb1a388abcf2127cc7e263de1e07c7276"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "sha256": "6d0cfec2e30638236a84a44591a1f62d6446b1b1d2af56f4c030f5e612f343a0"
+    },
+    {
+      "path": "src/game/pl_sub.cpp",
+      "sha256": "48baf9cabffaf71a7093ce265471f7cb73ad06295f197489ae8604313052c199"
+    },
+    {
+      "path": "src/game/pl_leon.cpp",
+      "sha256": "88ab1411999e7483f3289786d6b27d724f40308eb0fab1ac0695cf57ae558601"
+    },
+    {
+      "path": "src/game/pl_body.cpp",
+      "sha256": "93116164201423a7b1f4ca5ecfa08b3b6ffb61db21c2aa076b62928eb4d4cb02"
+    },
+    {
+      "path": "src/wep/pl_handgun.cpp",
+      "sha256": "1d53774b578f0b83903c9d28478e539784144554e73d09959540469332885029"
+    },
+    {
+      "path": "src/wep/objRuger.cpp",
+      "sha256": "f93779ba522473ad7878029ba0dab79073e16ea5da6d7029109d8e45c03a0ffc"
+    },
+    {
+      "path": "src/wep02/wep02.cpp",
+      "sha256": "e9f1fdf927afaa1505ee22b0adf5c5f39fc779eeb9f4e25ab4ec077dfb6bc659"
+    },
+    {
+      "path": "src/st1/r100.cpp",
+      "sha256": "ea3ac13c0497861193bef79c1172d6a31f890e36fd50d7444ceb7dbe17fdac3a"
+    },
+    {
+      "path": "src/em10/em10.cpp",
+      "sha256": "88ab2aaff5c17f59a969c522e7d384d1113d23723919f485cfc42ae122b0a0a3"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "sha256": "8a6137510329a78580f9486be9cab01d520d28b22f58190715a7b022afaeb55f"
+    },
+    {
+      "path": "src/game/est.cpp",
+      "sha256": "8b49c628aac0a10d084a7666e7d35bcafea3f503686d6078ed8aa9739b2312bd"
+    },
+    {
+      "path": "src/game/snd.cpp",
+      "sha256": "bd1dd308b7bff42b13e65ec3c174156da56c3f41f3e1c106a20919b68688c206"
+    },
+    {
+      "path": "src/game/snd_iss0.cpp",
+      "sha256": "021782022273d9a94b5371cd3229e9b6d37d9ff8a25f4ec1ef35d39a09f1b5fb"
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_leon_hands.inc",
+      "sha256": "9e856b88d82466ec21b43e279422650e5e69201429e745d91bf1d4f0f8038b70"
+    },
+    {
+      "path": "port/dreamcast/game/actor_pl08_pack_check.inc",
+      "sha256": "0e4ead24cdaaf650215a82bc78449fbdffcfa93c09a43d801b903eb822fb0347"
+    },
+    {
+      "path": "port/dreamcast/game/coarse_ganado_lod.inc",
+      "sha256": "f1ebec8c46acbf0eed3c1a9d64fbfc056f009a3ebc6e949a159c8e3d30c09904"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "sha256": "2b139c5d01d9c502d3caa4ea64f544cc448b3b992d28c922371850c455bfa855"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie.cpp",
+      "sha256": "e09567a549940b0200999c70c4b71179ff2f722c4482f9e8b2be3913381da864"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "sha256": "e1f7ca6cfa127badcd5df5be726fde3256e97c6c90649b89dae23cb936a8f8c1"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "sha256": "abef204aa60471d1388763bd38c6411677c2e4fea9b1b56df7aa97af3b3db261"
+    }
+  ],
+  "r100_archive": {
+    "identity": "em/em12.drs",
+    "wrapper_bytes": 6341600,
+    "wrapper_sha256": "137c4cd20f9941eb0012102f93a7f818173968f6d84f4d462bacf0e599cc43a5",
+    "native_bytes": 1105152,
+    "native_sha256": "bfa2cb8e9f266ce4c04a34a479f18b7dfa9aa01ea6b5cbeb914d204958fe849c",
+    "members": 701,
+    "mtc": {
+      "version": 2,
+      "count": 145,
+      "cap": 32768,
+      "table_crc": "714b52a2",
+      "reserved_slots": 2,
+      "max_cold_slab": 32416,
+      "hot_preload_bytes": 225184,
+      "policy": "two reserved slabs; conditional spill/cold-pool/global pressure",
+      "permanent_hot_lease": false
+    },
+    "inline_unique": 8,
+    "cached_unique": 145
+  },
+  "weapon_archive": {
+    "identity": "em/wep02.drs",
+    "wrapper_bytes": 668416,
+    "wrapper_sha256": "44a4bee008027eed20e8b8ef3537fbc46a822b66f8171901cb6bc83851313eec",
+    "native_bytes": 247776,
+    "native_sha256": "82ddd11ef24329b77d9e7cf3f201f56a086d9c777a973c1ac61ea7d892b8fd56",
+    "members": 61,
+    "mtc": null,
+    "inline_unique": 42,
+    "cached_unique": 0
+  },
+  "damage_head_set": {
+    "clips": [
+      {
+        "arc": 44,
+        "offset": 508448,
+        "entry": 16,
+        "bytes": 10848,
+        "key": "bce65bdb-edf8b5ee",
+        "state": "cached-cold",
+        "disc_file": {
+          "path": "dc/mot/bce65bdb-edf8b5ee.fcv",
+          "first_lba": 512109,
+          "last_lba": 512114,
+          "bytes": 10848
+        }
+      },
+      {
+        "arc": 46,
+        "offset": 508896,
+        "entry": 17,
+        "bytes": 16992,
+        "key": "0d4369c5-a7d2839a",
+        "state": "cached-cold",
+        "disc_file": {
+          "path": "dc/mot/0d4369c5-a7d2839a.fcv",
+          "first_lba": 509798,
+          "last_lba": 509806,
+          "bytes": 16992
+        }
+      },
+      {
+        "arc": 48,
+        "offset": 509536,
+        "entry": 18,
+        "bytes": 17152,
+        "key": "90b231e3-e6ea7dc5",
+        "state": "cached-cold",
+        "disc_file": {
+          "path": "dc/mot/90b231e3-e6ea7dc5.fcv",
+          "first_lba": 511673,
+          "last_lba": 511681,
+          "bytes": 17152
+        }
+      }
+    ],
+    "distinct_cold": 3,
+    "distinct_cached": 3,
+    "missing": [],
+    "exceeds_two_reserved_if_preload_or_spill_lost": true,
+    "strict_two_slab_overflow": false,
+    "conclusion": "Conditional v2 three-cold working set across independently reacting actors; spill/pool/pressure and actual overlap decide reload risk, not strict-v3 overflow."
+  },
+  "combat_literals": {
+    "0x26": {
+      "arc": 38,
+      "offset": 506944,
+      "entry": 13,
+      "bytes": 11840,
+      "key": "69370ad4-e309c0fd",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/69370ad4-e309c0fd.fcv",
+        "first_lba": 511107,
+        "last_lba": 511112,
+        "bytes": 11840
+      }
+    },
+    "0x28": {
+      "arc": 40,
+      "offset": 507488,
+      "entry": 14,
+      "bytes": 12032,
+      "key": "8ec50b82-32efc065",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/8ec50b82-32efc065.fcv",
+        "first_lba": 511613,
+        "last_lba": 511618,
+        "bytes": 12032
+      }
+    },
+    "0x2a": {
+      "arc": 42,
+      "offset": 507968,
+      "entry": 15,
+      "bytes": 10816,
+      "key": "0664c7bb-5999b45a",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/0664c7bb-5999b45a.fcv",
+        "first_lba": 509738,
+        "last_lba": 509743,
+        "bytes": 10816
+      }
+    },
+    "0x2c": {
+      "arc": 44,
+      "offset": 508448,
+      "entry": 16,
+      "bytes": 10848,
+      "key": "bce65bdb-edf8b5ee",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/bce65bdb-edf8b5ee.fcv",
+        "first_lba": 512109,
+        "last_lba": 512114,
+        "bytes": 10848
+      }
+    },
+    "0x2e": {
+      "arc": 46,
+      "offset": 508896,
+      "entry": 17,
+      "bytes": 16992,
+      "key": "0d4369c5-a7d2839a",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/0d4369c5-a7d2839a.fcv",
+        "first_lba": 509798,
+        "last_lba": 509806,
+        "bytes": 16992
+      }
+    },
+    "0x30": {
+      "arc": 48,
+      "offset": 509536,
+      "entry": 18,
+      "bytes": 17152,
+      "key": "90b231e3-e6ea7dc5",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/90b231e3-e6ea7dc5.fcv",
+        "first_lba": 511673,
+        "last_lba": 511681,
+        "bytes": 17152
+      }
+    },
+    "0x32": {
+      "arc": 50,
+      "offset": 510240,
+      "entry": 19,
+      "bytes": 10848,
+      "key": "e013a79d-b71ca50b",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/e013a79d-b71ca50b.fcv",
+        "first_lba": 512752,
+        "last_lba": 512757,
+        "bytes": 10848
+      }
+    },
+    "0x33": {
+      "arc": 51,
+      "offset": 510432,
+      "entry": 20,
+      "bytes": 15584,
+      "key": "05956265-e1b8491b",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/05956265-e1b8491b.fcv",
+        "first_lba": 509730,
+        "last_lba": 509737,
+        "bytes": 15584
+      }
+    },
+    "0x35": {
+      "arc": 53,
+      "offset": 511072,
+      "entry": 21,
+      "bytes": 11264,
+      "key": "ce859b45-c5e22ec5",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/ce859b45-c5e22ec5.fcv",
+        "first_lba": 512416,
+        "last_lba": 512421,
+        "bytes": 11264
+      }
+    },
+    "0x37": {
+      "arc": 55,
+      "offset": 511584,
+      "entry": 22,
+      "bytes": 17472,
+      "key": "17443bca-bd538920",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/17443bca-bd538920.fcv",
+        "first_lba": 509979,
+        "last_lba": 509987,
+        "bytes": 17472
+      }
+    },
+    "0x39": {
+      "arc": 57,
+      "offset": 512256,
+      "entry": 23,
+      "bytes": 13216,
+      "key": "8d522ece-9c9996bf",
+      "state": "cached-hot-preload",
+      "disc_file": {
+        "path": "dc/mot/8d522ece-9c9996bf.fcv",
+        "first_lba": 511557,
+        "last_lba": 511563,
+        "bytes": 13216
+      }
+    },
+    "0x49": {
+      "arc": 73,
+      "offset": 515776,
+      "entry": 31,
+      "bytes": 7840,
+      "key": "5a18c808-b493cf7c",
+      "state": "cached-hot-preload",
+      "disc_file": {
+        "path": "dc/mot/5a18c808-b493cf7c.fcv",
+        "first_lba": 510845,
+        "last_lba": 510848,
+        "bytes": 7840
+      }
+    },
+    "0x51": {
+      "arc": 81,
+      "offset": 517280,
+      "entry": 36,
+      "bytes": 9216,
+      "key": "3512ee9c-51dab15e",
+      "state": "cached-hot-preload",
+      "disc_file": {
+        "path": "dc/mot/3512ee9c-51dab15e.fcv",
+        "first_lba": 510334,
+        "last_lba": 510338,
+        "bytes": 9216
+      }
+    },
+    "0x67": {
+      "arc": 103,
+      "offset": 522048,
+      "entry": 47,
+      "bytes": 19648,
+      "key": "fa3a03c2-e7b4255c",
+      "state": "cached-hot-preload",
+      "disc_file": {
+        "path": "dc/mot/fa3a03c2-e7b4255c.fcv",
+        "first_lba": 513220,
+        "last_lba": 513229,
+        "bytes": 19648
+      }
+    },
+    "0x6b": {
+      "arc": 107,
+      "offset": 523200,
+      "entry": 49,
+      "bytes": 20544,
+      "key": "ff454031-526f54d8",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/ff454031-526f54d8.fcv",
+        "first_lba": 513257,
+        "last_lba": 513267,
+        "bytes": 20544
+      }
+    },
+    "0x6c": {
+      "arc": 108,
+      "offset": 523392,
+      "entry": 50,
+      "bytes": 20192,
+      "key": "97d9ff15-563909b9",
+      "state": "cached-cold",
+      "disc_file": {
+        "path": "dc/mot/97d9ff15-563909b9.fcv",
+        "first_lba": 511754,
+        "last_lba": 511763,
+        "bytes": 20192
+      }
+    }
+  },
+  "archive_extents": {
+    "em/em12.drs": {
+      "first_lba": 196289,
+      "last_lba": 199385,
+      "bytes": 6341600
+    },
+    "em/wep02.drs": {
+      "first_lba": 252628,
+      "last_lba": 252954,
+      "bytes": 668416
+    },
+    "etc/core.das": {
+      "first_lba": 190336,
+      "last_lba": 192233,
+      "bytes": 3885728
+    }
+  },
+  "texture_pack_index": {
+    "path": "dc/tex.pak",
+    "manifest_identity": {
+      "sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+      "size": 156254208
+    },
+    "extent": 258220,
+    "index_offset": 2048,
+    "index_bytes": 104448,
+    "index_crc": "fe8d1eca"
+  },
+  "weapon_fire_sequence0": [
+    {
+      "effect_id": 17,
+      "tex_id": 0,
+      "time": 0
+    },
+    {
+      "effect_id": 0,
+      "tex_id": 30,
+      "time": 0
+    },
+    {
+      "effect_id": 0,
+      "tex_id": 30,
+      "time": 0
+    },
+    {
+      "effect_id": 0,
+      "tex_id": 31,
+      "time": 0
+    },
+    {
+      "effect_id": 0,
+      "tex_id": 31,
+      "time": 0
+    },
+    {
+      "effect_id": 0,
+      "tex_id": 34,
+      "time": 0
+    },
+    {
+      "effect_id": 0,
+      "tex_id": 30,
+      "time": 0
+    },
+    {
+      "effect_id": 0,
+      "tex_id": 30,
+      "time": 0
+    },
+    {
+      "effect_id": 3,
+      "tex_id": 255,
+      "time": 0
+    }
+  ],
+  "ammo_hud_units": [
+    {
+      "unit_id": 23,
+      "tex_id": 39
+    },
+    {
+      "unit_id": 10,
+      "tex_id": 39
+    },
+    {
+      "unit_id": 11,
+      "tex_id": 39
+    }
+  ],
+  "effect_texture_keys": [
+    {
+      "archive": "em/wep02.drs",
+      "owner": 54,
+      "tex_id": 33,
+      "pattern": 0,
+      "width": 128,
+      "height": 88,
+      "format": 9,
+      "key": "a2a0851e-0a54ebcb",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 104208384,
+        "index_sector": 258253,
+        "first_lba": 309103,
+        "last_lba": 309104,
+        "bytes": 2224
+      }
+    },
+    {
+      "archive": "em/wep02.drs",
+      "owner": 54,
+      "tex_id": 33,
+      "pattern": 1,
+      "width": 128,
+      "height": 88,
+      "format": 9,
+      "key": "1e63b784-3723e64d",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 19406848,
+        "index_sector": 258227,
+        "first_lba": 267696,
+        "last_lba": 267697,
+        "bytes": 2224
+      }
+    },
+    {
+      "archive": "em/wep02.drs",
+      "owner": 54,
+      "tex_id": 34,
+      "pattern": 0,
+      "width": 64,
+      "height": 64,
+      "format": 9,
+      "key": "3a866b91-f0606d3c",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 37734400,
+        "index_sector": 258232,
+        "first_lba": 276645,
+        "last_lba": 276646,
+        "bytes": 2224
+      }
+    },
+    {
+      "archive": "em/wep02.drs",
+      "owner": 54,
+      "tex_id": 34,
+      "pattern": 1,
+      "width": 64,
+      "height": 64,
+      "format": 9,
+      "key": "148d2ff5-6f9ba526",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 12883968,
+        "index_sector": 258225,
+        "first_lba": 264511,
+        "last_lba": 264512,
+        "bytes": 2224
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "owner": 0,
+      "tex_id": 30,
+      "pattern": 0,
+      "width": 128,
+      "height": 128,
+      "format": 1,
+      "key": "29558ab4-8b936f66",
+      "method": "validated native identity record",
+      "texture_pack": {
+        "offset": 29097984,
+        "index_sector": 258229,
+        "first_lba": 272428,
+        "last_lba": 272432,
+        "bytes": 8368
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "owner": 0,
+      "tex_id": 31,
+      "pattern": 0,
+      "width": 128,
+      "height": 128,
+      "format": 1,
+      "key": "dbbad2e7-5b0b1eed",
+      "method": "validated native identity record",
+      "texture_pack": {
+        "offset": 137164800,
+        "index_sector": 258264,
+        "first_lba": 325195,
+        "last_lba": 325199,
+        "bytes": 8368
+      }
+    },
+    {
+      "archive": "em/wep02.drs",
+      "role": "cartridge-model",
+      "arc": 9,
+      "pattern": 0,
+      "width": 32,
+      "height": 32,
+      "format": 14,
+      "key": "75eb4ee2-5f583ae1",
+      "method": "validated native identity record; raw placeholder pixels are not the texture identity",
+      "texture_pack": {
+        "offset": 73783296,
+        "index_sector": 258244,
+        "first_lba": 294247,
+        "last_lba": 294248,
+        "bytes": 2192
+      }
+    },
+    {
+      "archive": "em/wep02.drs",
+      "role": "cartridge-model",
+      "arc": 9,
+      "pattern": 1,
+      "width": 16,
+      "height": 16,
+      "format": 3,
+      "key": "797dba9a-fa553624",
+      "method": "validated native identity record; raw placeholder pixels are not the texture identity",
+      "texture_pack": {
+        "offset": 76027904,
+        "index_sector": 258244,
+        "first_lba": 295343,
+        "last_lba": 295343,
+        "bytes": 656
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 0,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "79d3fc0f-e9580b27",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 76058624,
+        "index_sector": 258245,
+        "first_lba": 295358,
+        "last_lba": 295358,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 1,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "7bf226fe-35eb7852",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 76998656,
+        "index_sector": 258245,
+        "first_lba": 295817,
+        "last_lba": 295817,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 2,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "076e860e-52b615a0",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 5197824,
+        "index_sector": 258222,
+        "first_lba": 260758,
+        "last_lba": 260758,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 3,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "b0a8148d-0a80a967",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 111548416,
+        "index_sector": 258256,
+        "first_lba": 312687,
+        "last_lba": 312687,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 4,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "ef2f7909-ea057c42",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 146587648,
+        "index_sector": 258268,
+        "first_lba": 329796,
+        "last_lba": 329796,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 5,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "25c5a20b-d4e366ff",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 26570752,
+        "index_sector": 258228,
+        "first_lba": 271194,
+        "last_lba": 271194,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 6,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "8997cf6c-68daadee",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 85702656,
+        "index_sector": 258248,
+        "first_lba": 300067,
+        "last_lba": 300067,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 7,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "aeb265a3-b2ded538",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 110467072,
+        "index_sector": 258256,
+        "first_lba": 312159,
+        "last_lba": 312159,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 8,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "48c096e1-fcd52e2d",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 45559808,
+        "index_sector": 258235,
+        "first_lba": 280466,
+        "last_lba": 280466,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": true,
+      "tex_id": 39,
+      "pattern": 9,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "951a629c-a43ebab7",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 91408384,
+        "index_sector": 258250,
+        "first_lba": 302853,
+        "last_lba": 302853,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": false,
+      "tex_id": 39,
+      "pattern": 10,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "64cd4c1c-3af77ec3",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 62922752,
+        "index_sector": 258241,
+        "first_lba": 288944,
+        "last_lba": 288944,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": false,
+      "tex_id": 39,
+      "pattern": 11,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "d67bb8c9-dee0959e",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 133609472,
+        "index_sector": 258263,
+        "first_lba": 323459,
+        "last_lba": 323459,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": false,
+      "tex_id": 39,
+      "pattern": 12,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "18afe04b-2f700e30",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 17035264,
+        "index_sector": 258226,
+        "first_lba": 266538,
+        "last_lba": 266538,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": false,
+      "tex_id": 39,
+      "pattern": 13,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "0204f12e-a2d28c9e",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 1480704,
+        "index_sector": 258221,
+        "first_lba": 258943,
+        "last_lba": 258943,
+        "bytes": 1168
+      }
+    },
+    {
+      "archive": "etc/core.das",
+      "role": "hud-ammo-digit",
+      "source_uses_pattern": false,
+      "tex_id": 39,
+      "pattern": 14,
+      "width": 16,
+      "height": 24,
+      "format": 9,
+      "key": "a5f9e40e-be8638d0",
+      "method": "native_ui full_hash metadata + source indices + current palette",
+      "texture_pack": {
+        "offset": 105984000,
+        "index_sector": 258254,
+        "first_lba": 309970,
+        "last_lba": 309970,
+        "bytes": 1168
+      }
+    }
+  ],
+  "ganado_render_package": [
+    {
+      "level": 0,
+      "name": "today",
+      "skin_bytes": 15184,
+      "first_lba": 354409,
+      "last_lba": 354461,
+      "bytes": 106112
+    },
+    {
+      "level": 2,
+      "name": "g70",
+      "skin_bytes": 11952,
+      "first_lba": 354504,
+      "last_lba": 354539,
+      "bytes": 71584
+    }
+  ],
+  "weapon_guard": {
+    "set_before_release": true,
+    "release_resets_old_id": true,
+    "qualification": "single current-archive guard; release resets key; no multi-weapon warm archive cache"
+  },
+  "cautions": [
+    "R100Init pre-reads module12; first appearance may instead be lazy render package/texture/motion admission",
+    "v2 three-cold-set finding is conditional on active actors and actual spill/pool/global pressure; not proof of fresh thrash",
+    "muzzle source sequence and packed keys identify possible reads; first-use versus repeated loads requires actual counters",
+    "absolute LBA is ISO9660 extent; drive FAD may add150; observer must verify its convention",
+    "shot sound normal one-shot path queues resident bank samples; streaming bank/event admission paths remain separate"
+  ]
+}
