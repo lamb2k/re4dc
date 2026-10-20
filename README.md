@@ -101,8 +101,14 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 
 Planned, with no date yet. Ticked items have passed our checks and will be in Test 21.
 
-- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
-- [ ] **Faster farm fights.**
+- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate, on a second disc.
+- [ ] **QA disc for testers:** a second download next to the game.
+  - Teleport to any room in chapters 1 and 2, with its story progress and enemies.
+  - The main guns ready, and invincibility switches for Leon, partners and enemies.
+  - A diagnostics page with a QR code you can photograph and send us.
+- [x] **Lighter fights:** dead bodies and props cost less to run and draw.
+- [x] **r111 villagers** use the PS2 model.
+- [x] **Dam rooms** use the measured PS2 lighting.
 
 Screenshots come with the release.
 
