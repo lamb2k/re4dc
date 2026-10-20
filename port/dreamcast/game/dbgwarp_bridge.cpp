@@ -193,7 +193,7 @@ struct Warp {
     int chapter;    // `chapter <n>`: pG->chapter (chapters finished) before the first room loads, 0 = unset (+1 stored)
     u8 dead[64];
     unsigned n_dead;
-    Act act[64];
+    Act act[96];
     unsigned n_act;
     bool has_trg, trg_fired;
     int trg_no;
@@ -393,7 +393,7 @@ void load()
         } else if (!strcmp(k, "entry") && n >= 2 && num(tok[1]) >= 1 && num(tok[1]) <= 8) {
             wp.parse_entry = (u8) num(tok[1]);
             if (wp.parse_entry > wp.max_entry) wp.max_entry = wp.parse_entry;
-        } else if (!strcmp(k, "act") && n >= 4 && wp.n_act < 64) {
+        } else if (!strcmp(k, "act") && n >= 4 && wp.n_act < 96) {
             Act& a = wp.act[wp.n_act++];
             a.entry = wp.parse_entry;
             a.frame = num(tok[1]);

@@ -24,6 +24,9 @@ public:
 };
 
 extern "C" void get_angle(Vec* v, f32* rx, f32* ry);
+#if defined(RE4DC_ESP_HIT_THIN) && RE4DC_ESP_HIT_THIN
+int re4dc_esp_hit_ghost(const cEsp* esp);   // esp.cpp (shotfx20.mk)
+#endif
 
 // EspCreateTbl[0x1A] factory.
 cEsp* Esp1a_Create()
@@ -44,6 +47,21 @@ void cEsp1a::move()
     Mtx inv;
     Camera* cam;
 
+#if defined(RE4DC_ESP_HIT_THIN) && RE4DC_ESP_HIT_THIN
+    if (re4dc_esp_hit_ghost(this)) {
+        // ESP_HIT_THIN (shotfx20.mk): a thinned blood particle is never drawn, so its camera jitter is skipped; its
+        // life, animation and both Rnd() draws (the shared generator) run exactly as before.
+        if (CommonMove()) {
+            if (!AnmMove()) {
+                PushEsp(this);
+            } else {
+                fRand1_1();
+                fRand1_1();
+            }
+        }
+        return;
+    }
+#endif
     PSVECSubtract(&m_Pos, &w->Move_vec, &m_Pos);
     if (CommonMove()) {
         if (!AnmMove()) {
