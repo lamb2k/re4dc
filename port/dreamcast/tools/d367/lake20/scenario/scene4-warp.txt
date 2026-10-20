@@ -1,0 +1,7 @@
+name lake-r10d
+# Lake scenario disc scene 4: r10d (the dam side room, from the r11b ladder door), full control.
+room 0x10d
+pos 160 -2490 -2100
+ang 3.094
+inv default
+alivelog 300

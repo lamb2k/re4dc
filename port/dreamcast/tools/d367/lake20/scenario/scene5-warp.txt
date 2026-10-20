@@ -1,0 +1,7 @@
+name lake-r10c
+# Lake scenario disc scene 5: r10c (the dam, from the r11b gate door), full control.
+room 0x10c
+pos -843 0 -605
+ang 0.005
+inv default
+alivelog 300
