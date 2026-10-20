@@ -74,6 +74,7 @@ extern "C" void re4dc_present_hold_report(void);   // pace_present.cpp
 #endif
 #if RE4DC_PACE_STEADY
 extern "C" unsigned re4dc_steady_wait_take(void);  // pace_present.cpp
+extern "C" int re4dc_steady_backlog(unsigned hold);  // pace_present.cpp
 #endif
 extern "C" void* re4dc_ui_movie_texture() __attribute__((weak));   // ROUTE_MOVIES builds
 #if defined(RE4DC_RENDER_OPTION) && RE4DC_RENDER_OPTION
@@ -159,7 +160,7 @@ unsigned tick_total;        // ticks run under the pacing clock (pace_present.cp
 //   hold 2: D <= 2 fields; hold 3: 2D + S <= 6 fields; hold 4: otherwise (D + S per 4 fields, as Fast at the cap).
 // Up after 4 iterations over, down one step only after kDownRun iterations that fit the smaller hold with margin.
 constexpr unsigned kDownRun = 90;          // 3 s of ticks under the smaller hold's budget
-unsigned st_hold, st_up, st_down, st_phase;
+unsigned st_hold, st_up, st_down, st_phase, w_st_backlog;
 unsigned st_need(unsigned pct)
 {
     const unsigned D = draw_ema, S = skip_ema ? skip_ema : (draw_ema > render_ema ? draw_ema - render_ema : 0);
@@ -177,7 +178,7 @@ void st_update()
         return;
     }
     st_up = 0;
-    if (need < st_hold && st_need(85) < st_hold) {
+    if (need < st_hold && st_need(90) < st_hold) {
         if (++st_down >= kDownRun) { --st_hold; st_down = 0; st_phase = 0; }
     } else {
         st_down = 0;
@@ -188,6 +189,8 @@ int st_drop()
 {
     if (!st_hold) st_update();
     const unsigned i = st_phase++;
+    // Pictures already wait over a hold: drain (one extra drop, never two skips in a row).
+    if (!re4dc_pace_skipping && re4dc_steady_backlog(st_hold)) { ++w_st_backlog; return 1; }
     return st_hold == 3 ? i % 3 == 2 : st_hold == 4 ? i % 2 == 1 : 0;
 }
 #endif
@@ -301,7 +304,8 @@ void report(u32 now)
     re4dc_present_hold_report();   // pace_present.cpp: the window's hold histogram
 #endif
 #if RE4DC_PACE_STEADY
-    re4dc_log("PACE steady hold=%u\n", st_hold);
+    re4dc_log("PACE steady hold=%u backlog_drops=%u\n", st_hold, w_st_backlog);
+    w_st_backlog = 0;
 #endif
     w_vb0 = now;
     w_ticks = w_drawn = w_skip = w_lagmax = w_dropped = w_reanchor = w_floor = w_cap = w_ctx = w_starve = 0;

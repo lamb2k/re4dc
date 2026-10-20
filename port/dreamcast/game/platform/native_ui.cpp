@@ -219,6 +219,7 @@ extern "C" int re4dc_steady_present(int present);
 extern "C" void re4dc_present_posted(int present);
 extern "C" void re4dc_steady_wait(void);
 extern "C" int re4dc_steady_pending(void);
+extern "C" void re4dc_steady_ta_wait(void);
 #define pvr_present_pending() (pvr_present_pending() || re4dc_steady_pending())
 #else
 #define RE4DC_PACE_PRESENT 0
@@ -1924,6 +1925,9 @@ void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
     re4dc_rtt_render_pending();   // PVR_RTT: last frame's wanted render targets, before this scene
 #endif
     pvr_scene_begin();
+#if RE4DC_PACE_PRESENT
+    re4dc_steady_ta_wait(); // Steady: the TA bank wait for a held picture's flip, timed as a wait (pace_present.cpp)
+#endif
 #if RE4DC_PS2_WORLD_DRAW
     stream_closed_lists=0;
 #endif

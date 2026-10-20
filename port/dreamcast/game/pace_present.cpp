@@ -40,8 +40,10 @@ volatile u32 last_flip_vb;         // field of the last flip
 volatile u32 flip_n;               // flips seen
 int handler_id = -1;
 volatile unsigned releases_late, releases_on_time;
+constexpr unsigned kPhaseRun = 8;
+unsigned early_run, rephase;
 unsigned waits;
-unsigned long long wait_us, wait_iter_us;
+unsigned long long wait_us, wait_iter_us, ta_wait_us;
 
 // Hold telemetry (IRQ side writes, game side reads and clears).
 constexpr int kHoldBins = 8;       // 1..6 fields, 7 = 7 or more
@@ -138,6 +140,28 @@ void re4dc_steady_wait(void) { wait_until(0); }
 
 int re4dc_steady_pending(void) { return q_n != 0; }
 
+// pace.cpp (Steady drop decision): 1 while queued pictures reach more than hold + 1 fields ahead, i.e. the pictures
+// are waiting longer than one hold for their slot (a backlog left by a hold change or a stall). Dropping the next image
+// drains it without changing the flip cadence.
+int re4dc_steady_backlog(unsigned hold)
+{
+    if (!q_n) return 0;
+    return (int) (last_target - re4dc_vi_retrace_count()) > (int) hold + 1;
+}
+
+// native_ui.cpp stream_open, after pvr_scene_begin: in Steady the next scene's TA bank frees only when a held picture
+// flips, so KOS's own wait at the first list (pvr_wait_ready) is taken here and timed as a wait, not as work.
+void re4dc_steady_ta_wait(void)
+{
+#if RE4DC_PACE_STEADY
+    if (!re4dc_pace_steady_hold()) return;
+    const unsigned long long t0 = timer_us_gettime64();
+    pvr_wait_ready();
+    const unsigned long long d = timer_us_gettime64() - t0;
+    wait_iter_us += d; ta_wait_us += d;
+#endif
+}
+
 // pace.cpp: the game thread's queue wait in this iteration (not work), then cleared.
 unsigned re4dc_steady_wait_take(void)
 {
@@ -168,6 +192,15 @@ int re4dc_steady_present(int present)
         const u32 base = (q_n || watch) ? last_target : last_flip_vb;
         u32 target = base + (u32) hold;
         if ((int) (now + 1 - target) > 0) target = now + 1;   // late: as soon as possible, the next counts from here
+        // Phase: when kPhaseRun pictures in a row could have flipped a field earlier, the cadence is late against
+        // the work; one hold one field shorter moves it earlier (input latency), then the hold is constant again.
+        if ((int) (target - (now + 1)) >= 1) {
+            if (++early_run >= kPhaseRun && (int) (target - 1 - (now + 1)) >= 0 && (int) (target - 1 - base) >= 1) {
+                --target; early_run = 0; ++rephase;
+            }
+        } else {
+            early_run = 0;
+        }
         if (!q_n && !watch && target == now + 1) {
             last_target = target;
             irq_restore(irq);
@@ -208,9 +241,10 @@ void re4dc_present_hold_report(void)
         irq_restore(irq);
     }
     re4dc_log("PACE hold h1=%u h2=%u h3=%u h4=%u h5=%u h6=%u h7p=%u lat_avg_us=%u lat_max_us=%u steady_late=%u "
-              "steady_on_time=%u steady_waits=%u steady_wait_us=%u\n",
-              h[1], h[2], h[3], h[4], h[5], h[6], h[7], ln ? unsigned(ls / ln) : 0, lm, rl, ro, waits, unsigned(wait_us));
-    waits = 0; wait_us = 0;
+              "steady_on_time=%u steady_waits=%u steady_wait_us=%u steady_rephase=%u\n",
+              h[1], h[2], h[3], h[4], h[5], h[6], h[7], ln ? unsigned(ls / ln) : 0, lm, rl, ro, waits, unsigned(wait_us), unsigned(ta_wait_us),
+              rephase);
+    waits = 0; wait_us = 0; ta_wait_us = 0; rephase = 0;
 }
 
 }  // extern "C"
