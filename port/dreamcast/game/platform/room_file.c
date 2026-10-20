@@ -15,6 +15,9 @@ extern void re4dc_log(const char* fmt, ...);
 extern void* re4dc_static_alloc(unsigned bytes);
 extern void re4dc_static_free(void* data);
 extern int re4dc_static_heap_free(void);
+#if defined(RE4DC_SCENERY21_AB) && RE4DC_SCENERY21_AB
+extern char re4dc_bench_arm(void) __attribute__((weak));
+#endif
 
 #ifndef RE4DC_ROOMFILE_SCDD
 #define RE4DC_ROOMFILE_SCDD 0   /* SCENERY_DEDUP=2 (lane scenery19): the scenery point-dedup section */
@@ -74,7 +77,18 @@ void re4dc_room_file_enter(unsigned room)
     rf.room = room;
     char path[40];
     snprintf(path, sizeof(path), "/cd/dc/native/r%03x/room.r4rc", room);
+#if defined(RE4DC_SCENERY21_AB) && RE4DC_SCENERY21_AB
+    /* SCENERY21_AB (bench disc): arm B reads the room's sc21 room file when it has one */
+    file_t fd = FILEHND_INVALID;
+    if (re4dc_bench_arm && re4dc_bench_arm() == 'B') {
+        char apath[48];
+        snprintf(apath, sizeof(apath), "/cd/dc/native/r%03x/sc21/room.r4rc", room);
+        fd = fs_open(apath, O_RDONLY);
+    }
+    if (fd == FILEHND_INVALID) fd = fs_open(path, O_RDONLY);
+#else
     file_t fd = fs_open(path, O_RDONLY);
+#endif
     if (fd == FILEHND_INVALID) { c_absent++; re4dc_log("ROOMFILE r%03x absent: source path\n", room); return; }
     const unsigned size = (unsigned) fs_total(fd);
     uint8_t head[64 + 32 * MAXSEC];

@@ -837,6 +837,13 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* key,Re4dcModelDirect
 extern "C" std::uint32_t* re4dc_ps2_piece_slot; // native_ui.cpp: the slot word for the next re4dc_ps2_world_direct_begin
 namespace {
 #endif
+#if RE4DC_SCENERY21_AB
+} // namespace
+extern "C" char re4dc_bench_arm(void) __attribute__((weak)); // bench.cpp: the start screen's arm
+namespace {
+// SCENERY21_AB (bench disc): arm B = the scenery21 data and paths (sc21/ packages), arm A = as shipped
+bool scn21_arm_b(){return re4dc_bench_arm && re4dc_bench_arm()=='B';}
+#endif
 #endif
 struct Emitter {
     const Re4dcModelPart& p;
@@ -4149,6 +4156,9 @@ struct Ps2World {
 #endif
 #if RE4DC_PS2_STRIP_GROUPS
     unsigned char* sg_block=nullptr; const std::uint8_t* sg=nullptr; unsigned sg_groups=0; // ps2-world.r4sg (heap 4)
+#if RE4DC_SCENERY21_AB
+    bool alt=false; // SCENERY21_AB: the package came from dc/native/rXXX/sc21/ (arm B)
+#endif
 #endif
 #if RE4DC_WORLD_VERT
     unsigned vert_loaded=0; // WORLD_VERT: the level resident in storage
@@ -4799,6 +4809,18 @@ static void note(unsigned pass,unsigned drawn){
 void scn21_open(){
     auto& pk=ps2w.package;const auto& h=pk.header();
     unsigned len=0,ver=0,fl=0;
+#if RE4DC_SCENERY21_AB
+    if(!ps2w.alt){   // arm A (or no sc21 package for this room): both paths stay off
+#if RE4DC_SCENERY_CONE
+        cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+        piece::pkg=nullptr;piece::table=nullptr;
+#endif
+        re4dc_log("SCN21 room=%03x arm A or no sc21 package: off\n",ps2w.room);
+        return;
+    }
+#endif
 #if RE4DC_SCENERY_CONE
     {
         cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
@@ -5055,7 +5077,17 @@ bool ps2_open(){
     snprintf(mpath,sizeof(mpath),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
     snprintf(ppath,sizeof(ppath),"/cd/dc/native/r%03x/ps2-world.r4pw",ps2w.room);
     re4dc_log("PS2MESH room=%03x open\n",ps2w.room);
-#if RE4DC_WORLD_VERT
+#if RE4DC_SCENERY21_AB
+    // SCENERY21_AB (bench disc): arm B reads the sc21 package of a room that has one (dc/native/rXXX/sc21/)
+    ps2w.alt=false;
+    file_t fm=FILEHND_INVALID;
+    if(scn21_arm_b()){
+        char apath[48];snprintf(apath,sizeof(apath),"/cd/dc/native/r%03x/sc21/ps2-world.re4mesh",ps2w.room);
+        fm=fs_open(apath,O_RDONLY);
+        if(fm!=FILEHND_INVALID)ps2w.alt=true;
+    }
+    if(fm==FILEHND_INVALID)fm=fs_open(mpath,O_RDONLY);
+#elif RE4DC_WORLD_VERT
     file_t fm=fs_open(mpath,O_RDONLY);
 #else
     const file_t fm=fs_open(mpath,O_RDONLY);
@@ -5268,6 +5300,9 @@ bool ps2_open(){
         // PS2_STRIP_GROUPS: tools/ps2_strip_groups.py's group records for this exact package (mesh crc / bytes, R4PW
         // crc, record crc). Absent or not matching: no groups (the whole-meshlet path).
         char gpath[48];snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/ps2-world.r4sg",ps2w.room);
+#if RE4DC_SCENERY21_AB
+        if(ps2w.alt)snprintf(gpath,sizeof(gpath),"/cd/dc/native/r%03x/sc21/ps2-world.r4sg",ps2w.room);
+#endif
 #if RE4DC_WORLD_VERT
         // WORLD_VERT: the level's own group records, in a block sized by level 0's (memory neutral; larger: no groups).
         file_t fg=fs_open(gpath,O_RDONLY);
@@ -5340,6 +5375,9 @@ bool ps2_movie_reload(){
     Re4dcIoScope io;
     char mesh_path[64],side_path[64];
     snprintf(mesh_path,sizeof(mesh_path),"/cd/dc/native/r%03x/ps2-world.re4mesh",ps2w.room);
+#if RE4DC_SCENERY21_AB
+    if(ps2w.alt)snprintf(mesh_path,sizeof(mesh_path),"/cd/dc/native/r%03x/sc21/ps2-world.re4mesh",ps2w.room);
+#endif
     snprintf(side_path,sizeof(side_path),"/cd/dc/native/r%03x/ps2-world.r4pw",ps2w.room);
     const file_t fm=fs_open(mesh_path,O_RDONLY);
     const file_t fp=fs_open(side_path,O_RDONLY);

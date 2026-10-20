@@ -90,3 +90,14 @@ ifneq ($(SCENERY_PIECE_STATE),0)
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_PIECE_STATE=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_PIECE_STATE=1
 endif
+# SCENERY21_AB=1 (console A/B bench disc only; needs BENCHMARK=1): arm B (bench start screen) reads each room's sc21 package
+# / strip groups / room file from dc/native/rXXX/sc21/ when present and turns SCENERY_CONE / SCENERY_PIECE_STATE on; arm A
+# reads the shipped files with both off.
+SCENERY21_AB ?= 0
+ifneq ($(SCENERY21_AB),0)
+ifneq ($(BENCHMARK),1)
+$(error SCENERY21_AB needs BENCHMARK=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY21_AB=1
+ROOMFILE_SECTIONS += -DRE4DC_SCENERY21_AB=1
+endif
