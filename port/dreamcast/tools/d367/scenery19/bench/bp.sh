@@ -9,6 +9,8 @@ S=$T/scenery19/bench/scenes
 O=/root/probe/lanes/route/out-$L
 D=$K/disc-$L
 export RC19D=/root/re4data/private/rc19s-20261019
+export RE4DC_PROGRAMS_DIR="/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/continuation-20260927/playability-r11-r1/programs"
+PL=${PL:-h5krP}   # a registered program label for the data fixture (its overlays are replaced by the bench build's)
 export RE4DC_PAYLOAD_ROOT=/root/re4payload/t164-20261018
 export PKG_SRC=$RE4DC_PAYLOAD_ROOT/tree
 [ -s $O/re4dc-game.elf ] || { echo "no build $O" >&2; exit 1; }
@@ -19,8 +21,8 @@ if [ -s $O/missing.txt ] && [ "$(tr -d '\n' < $O/missing.txt)" != "_re4dc_disc_m
   echo "$L has missing symbols: $(cat $O/missing.txt)" >&2; exit 1; fi
 rm -rf "${D:?}"; mkdir -p $D/fix
 DATA=$(python3 -c "import importlib.util as u;s=u.spec_from_file_location('f','$T/test11/t11-fix.py');m=u.module_from_spec(s);s.loader.exec_module(m);print(m.T17R_PAYLOAD+',res18f,rc19')")
-python3 $T/test11/t11-fix.py s19xrP $D/pkg0.json --base payload --data $DATA > $D/fix.log
-bash $T/ch2/ch2-gigante-g50.sh s19xrP $D/pkg1.json --base $D/pkg0.json --base-label s19xrP >> $D/fix.log
+python3 $T/test11/t11-fix.py $PL $D/pkg0.json --base payload --data $DATA > $D/fix.log
+bash $T/ch2/ch2-gigante-g50.sh $PL $D/pkg1.json --base $D/pkg0.json --base-label $PL >> $D/fix.log
 python3 - "$D/pkg1.json" "$O" "$D/pkg.json" <<'PY'
 import json, sys
 src, out, dst = sys.argv[1:4]
