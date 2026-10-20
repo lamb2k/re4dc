@@ -7,8 +7,32 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 18](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 19](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 19
+
+Quick weapon select, new Options defaults and faster drawing, still up to the castle gate. Full details are in the
+[release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **Quick weapon select.** Hold X and press the D-pad to swap weapons, like the RE4 remake: up handguns, right
+  shotguns, down grenades, left rifles. Press the same direction again for the next one. The game pauses for a moment
+  while the weapon loads.
+
+  ![Quick weapon select](docs/images/releases/test-19/quick-weapon.jpg)
+  <br>A quick swap in play. Flycast capture, test 19.
+- **New Options defaults.** Foliage starts Off and view distance starts at Near. The lake keeps its long view. You can
+  still change both in Options.
+
+  ![The Options screen](docs/images/releases/test-19/options-defaults.jpg)
+  <br>The Options screen at boot. Flycast capture, test 19.
+- **The Player's Manual shows the Dreamcast pages** ([#44](https://github.com/lamb2k/re4dc/issues/44)), not the
+  GameCube ones.
+
+  ![The Player's Manual](docs/images/releases/test-19/manual-page.jpg)
+  <br>A Dreamcast manual page. Flycast capture, test 19.
+- **Enemies hidden behind walls are no longer drawn.** The game still runs them as before.
+- **Faster drawing.** A new path for the scenery and for Leon and the enemies, with the same picture.
 
 ## What's new in Test 18
 
@@ -45,16 +69,13 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 - **The world picture and the effect pictures on the way to the castle gate are back** ([#39](https://github.com/lamb2k/re4dc/issues/39)).
   For about a second in r200, some effect sprites can still be skipped ([#41](https://github.com/lamb2k/re4dc/issues/41)).
 
-## Coming soon: Test 19
+## Coming soon: Test 20
 
-Planned, with no date yet. Ticked items have passed our checks and will be in Test 19.
+Planned, with no date yet. Ticked items have passed our checks and will be in Test 20.
 
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
-- [x] **Faster character drawing:** a new path for Leon and the enemies.
-- [x] **New Options defaults:** foliage starts Off and view distance starts at Near. The lake keeps its long view. You can still change both.
-- [ ] **Enemies hidden behind walls are no longer drawn.**
-- [x] **Quick weapon select:** hold X and press the D-pad to swap weapons, like the RE4 remake.
-- [ ] **Work continues** on cheaper enemies and cheaper scenery.
+- [ ] **Faster scenery and characters:** the next steps of the new drawing paths.
+- [ ] **Faster farm fights.**
 
 Screenshots come with the release.
 

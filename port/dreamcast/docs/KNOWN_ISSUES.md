@@ -6,12 +6,15 @@ please name the build, real console or emulator, and where in the game it happen
 
 **Last updated:** October 19, 2026.
 
-**Current build: Test 18** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): chapter 2-1 can be
-finished again (the Insignia Key is given at the dam gate), a lighter El Gigante,
-Leon on his PS2 model after a chainsaw kill and in the first El Gigante fight, the r102 pictures after loading a save,
-no sound gap in cutscenes, and fewer disc reads in the r100 house fight and at the night lake shore.
+**Current build: Test 19** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): quick weapon select
+(hold X + D-pad), foliage boots Off and view distance boots Near, the Dreamcast Player's Manual pages (#44), enemies
+hidden behind walls are not drawn, and faster scenery and character drawing.
 
 **Earlier builds** (newest first):
+
+- **Test 18:** chapter 2-1 can be finished again (the Insignia Key is given at the dam gate), a lighter El Gigante,
+Leon on his PS2 model after a chainsaw kill and in the first El Gigante fight, the r102 pictures after loading a save,
+no sound gap in cutscenes, and fewer disc reads in the r100 house fight and at the night lake shore.
 
 - **Test 17.1:** the Coming Soon screen returns you to the room.
 
@@ -41,7 +44,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 | Fixed and checked in our tests; the problem was not console-only | 45 |
 | 🛠️ In progress | Being fixed now | 0 |
 | 🔍 Investigating | Being reproduced or traced | 4 |
-| ⏸️ Open | Known, not yet worked on | 15 |
+| ⏸️ Open | Known, not yet worked on | 17 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Game progress (ongoing work)
@@ -83,6 +86,8 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| The r100 cliff cutscene (after the first house) skips about 43 of its 340 frames, so it looks choppier. The game goes on normally | test 19 | ⏸️ Open, not blocking: Test 19's new code leaves the movie less memory (182 KB, was 216 KB). Fix planned for the next hotfix | [#45](https://github.com/lamb2k/re4dc/issues/45) |
+| In r117, after the Saddler scene starts, a few effect sprites are skipped for about 3 seconds while video memory is short. Play continues | test 19 | ⏸️ Open, not blocking: fix planned for the next hotfix | [#46](https://github.com/lamb2k/re4dc/issues/46) |
 | The Player's Manual pages 1-3 (aim, knife, action) and file 3 show the GameCube controller instead of the Dreamcast one. The Dreamcast pages are on the disc, but the game looks for them outside the texture pack | test 8 to 18 | ✅ Fixed in test 19 | [#44](https://github.com/lamb2k/re4dc/issues/44) |
 | In the Mendez fight (chapter 2-3 barn, r11f) the room's effect pool fills (1,024 of 1,024 sprites) and a few fire / smoke effects are skipped; the same happens with the GameCube's own pool size | test 17 | 🔍 Investigating, not blocking: found by our effect-pool count (ESP_POOL_DIAG), no gameplay effect seen | |
 | Leaves, fences and tree branch tips draw as solid shapes on a real console (fine in emulators) | test 8 | 🟢 Fixed, needs console check | [#26](https://github.com/lamb2k/re4dc/issues/26) |

@@ -12,8 +12,6 @@ void re4dc_room_file_leave(void);
 const void* re4dc_room_section(const char tag[4], unsigned* len, unsigned* version, unsigned* flags,
                                const re4dc_room_header** hdr);
 unsigned re4dc_room_file_room(void);
-/* the loaded sections' heap-4 block (a room-4 cell, for movie-arena validity checks), or 0; built with ROOMFILE_SCDD */
-const void* re4dc_room_file_block(void);
 #ifdef __cplusplus
 }
 #endif

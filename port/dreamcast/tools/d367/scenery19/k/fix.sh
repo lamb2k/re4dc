@@ -9,9 +9,9 @@ HW="/mnt/c/Game Dev/Emulators/re4-assets-private/world-agent-20260926/continuati
 export RE4DC_PROGRAMS_DIR=$HW/programs
 mkdir -p "$K/fix"
 D0=$(python3 - "$D367/test11/t11-fix.py" <<'PY'
-import importlib.util as u, sys, os
+import importlib.util as u, sys
 s=u.spec_from_file_location('fixture',sys.argv[1]);m=u.module_from_spec(s);s.loader.exec_module(m)
-print(m.T17R_PAYLOAD+",res18f"+os.environ.get('DX',''))
+print(m.T17R_PAYLOAD+",res18f")
 PY
 )
 RAW=$K/fix/$N.raw.json; FIX=$K/fix/$N.json

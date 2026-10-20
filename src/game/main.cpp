@@ -397,7 +397,7 @@ void systemVSyncPost()
 // vsync count is reached, and checks for a hang.
 void postVSyncCallback()
 {
-    vsync_cnt++; RE4DC_TAIL_VB();
+    vsync_cnt++;
     if (vsync_cnt >= GetSystemVcnt()) {
         iTaskSuspend();
     }
