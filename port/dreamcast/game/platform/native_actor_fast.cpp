@@ -4819,6 +4819,11 @@ namespace {
 #include "native_actor_chunk.inc"
 }  // namespace
 #endif
+#if defined(RE4DC_CHAR_SH4ZAM) && RE4DC_CHAR_SH4ZAM
+namespace {
+#include "native_actor_zam.inc"
+}  // namespace
+#endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     ++stats.parts;
     PXF_BEGIN(part);
@@ -4864,6 +4869,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         near_distance <= 0.0f || far_distance <= near_distance) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const unsigned mark = workspace_top;
     struct Release { unsigned mark; ~Release() { workspace_top = mark; } } release{mark};
+#if defined(RE4DC_CHAR_SH4ZAM) && RE4DC_CHAR_SH4ZAM
+    zam_begin_call();
+#endif
     const BlobHeader* blob = blob_of(p);
     int crowd_class = 0;
     if constexpr (kCrowd) crowd_class = re4dc_actor_model_class(p.model, p.info);
@@ -5221,6 +5229,8 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         } else if (lights.fast) {
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
             chunk_lights(e, lights, r, nv);
+#elif defined(RE4DC_CHAR_SH4ZAM) && RE4DC_CHAR_SH4ZAM
+            zam_lights(e, lights, r, nv);
 #else
             pass_lights(e, lights, r, nv);
 #endif
@@ -5483,6 +5493,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         near_distance <= 0.0f || far_distance <= near_distance) { ++stats.declined; return 0; }
     const unsigned mark = workspace_top;
     struct Release { unsigned mark; ~Release() { workspace_top = mark; } } release{mark};
+#if defined(RE4DC_CHAR_SH4ZAM) && RE4DC_CHAR_SH4ZAM
+    zam_begin_call();
+#endif
     const BlobHeader* blob = blob_of(p);
     int crowd_class = 0;
     if constexpr (kCrowd) crowd_class = re4dc_actor_model_class(p.model, p.info);
@@ -5843,6 +5856,8 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         } else if (lights.fast) {
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
             chunk_lights(e, lights, r, nv);
+#elif defined(RE4DC_CHAR_SH4ZAM) && RE4DC_CHAR_SH4ZAM
+            zam_lights(e, lights, r, nv);
 #else
             pass_lights(e, lights, r, nv);
 #endif

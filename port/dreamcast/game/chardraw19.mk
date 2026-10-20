@@ -23,3 +23,13 @@ endif
 endif
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CHAR_CHUNK=$(CHAR_CHUNK) -DRE4DC_CHAR_CHUNK_BACKEND=$(CHAR_CHUNK_BACKEND)
 endif
+# CHAR_SH4ZAM (render only; user 10-19: encounter quality over exact): the knob-off actor path (CHAR_CHUNK=0) with
+# lighting from a per-part colour table (platform/native_actor_zam.inc): each normal of the part is lit once per draw
+# call and each corner gathers its normal's colour. Default 0: no code.
+CHAR_SH4ZAM ?= 0
+ifneq ($(CHAR_SH4ZAM),0)
+ifneq ($(CHAR_CHUNK),0)
+$(error CHAR_SH4ZAM needs CHAR_CHUNK=0, it builds on the knob-off actor path)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CHAR_SH4ZAM=$(CHAR_SH4ZAM)
+endif
