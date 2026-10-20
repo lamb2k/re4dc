@@ -541,6 +541,22 @@ bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)
     if (h.slot == 8) {
         u32 need = (total + 31) & ~31u;
 #if defined(RE4DC_AICA_SPILL) && RE4DC_AICA_SPILL
+#if defined(RE4DC_AICA_TAIL_FIRST) && RE4DC_AICA_TAIL_FIRST
+        // ROUTE_CH21_FULL (lane ch2rooms20): a prebuilt room bank marked tail-first (header pad bit 0, written by
+        // aica_banks.py fit --tail-blk) goes to the BGM0 slot's unused tail even while the arena has room, so the room's
+        // later banks (r10c: em12's 601 KB) still fit the arena. Same one-spilled-bank rule and BGM0 overlap check.
+        if ((h.pad & 1) && (g_spillBlk < 0 || !g_blk[g_spillBlk].valid) && g_blk[3].valid
+            && g_blk[3].aica == g_slot[3].base) {
+            const u32 used = (g_blk[3].aica_size + 31) & ~31u;
+            if (used + need <= g_slot[3].size) {
+                base = g_slot[3].base + used;
+                g_spillBlk = t;
+                re4dc_log("aica: blk %d (%u bytes) tail-first to the BGM0 slot tail at %06x (BGM0 %u of %u)\n", t,
+                          (unsigned) total, (unsigned) base, (unsigned) used, (unsigned) g_slot[3].size);
+                goto placed;
+            }
+        }
+#endif
         // Arena full: the unused tail of the BGM0 slot (lane ch2code16). One spilled bank at a time.
         if (g_highBlk >= 0 && g_arenaNext + need > g_arenaTop) {
             // room banks first: a high block in the way is dropped

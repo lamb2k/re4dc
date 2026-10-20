@@ -462,6 +462,9 @@ endif
 ROUTE_CH21_FULL ?= 0
 ifneq ($(ROUTE_CH21_FULL),0)
 $(OBJDIR)/mod/st1_2/src/st1/r10c.o $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21_FULL=1
+# Audio (needs AICA_SPILL=1): r10c's room banks plus em12 (601 KB prebuilt) exceed the room arena by 44 KB even at
+# 8 kHz; its FOOT bank is marked tail-first (aica_banks.py fit --tail-blk 5) and goes to the BGM0 slot's idle tail.
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_TAIL_FIRST=1
 endif
 # ROUTE_CH21=1 (route lane r11b, default 0: no effect; needs ROUTE_CH13=1 and ROUTE_OVL=1): chapter 2-1 starts in
 # r11b (the lake shore, entered through r10b door 6 after the chapter 1-3 save). em22 (module 5, the wolves of the
