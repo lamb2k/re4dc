@@ -105,6 +105,23 @@ MOTION_PRESSURE_BYTES ?= 0
 ifneq ($(MOTION_PRESSURE_BYTES),0)
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PRESSURE_BYTES=$(MOTION_PRESSURE_BYTES)
 endif
+# MOTION_PRESSURE_BACKING=1 (default off): pressure caps only reclaimable heap key
+# payloads. The two slabs already allocated per binding keep their existing fixed
+# size/count and no longer evict hot keys merely when filled. Pins, heap margins,
+# hold/suspend and strict v3 no-spill admission are unchanged. No resume prewarm.
+MOTION_PRESSURE_BACKING ?= 0
+ifneq ($(MOTION_PRESSURE_BACKING),0)
+ifneq ($(MOTION_PRESSURE_BACKING),1)
+$(error MOTION_PRESSURE_BACKING must be 0 or 1)
+endif
+ifneq ($(MOTION_RESERVE),1)
+$(error MOTION_PRESSURE_BACKING needs MOTION_RESERVE=1)
+endif
+ifeq ($(MOTION_PRESSURE_BYTES),0)
+$(error MOTION_PRESSURE_BACKING needs MOTION_PRESSURE_BYTES)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_PRESSURE_BACKING=$(MOTION_PRESSURE_BACKING)
+endif
 # MOTION_PRESSURE_GROW=<bytes> (test 14 r103 motion thrash, crash lane 10-15; needs MOTION_PRESSURE_BYTES; render and
 # I/O only, default 0 = image unchanged): a key load over the MOTION_PRESSURE_BYTES cap does not evict while heap 4
 # keeps at least <bytes> free after it (as MOTION_RESERVE_SPILL): the cap holds only under heap 4 pressure. The r103
