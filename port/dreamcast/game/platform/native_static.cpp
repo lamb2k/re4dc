@@ -832,6 +832,11 @@ bool locate(const Re4dcModelPart& p,Located& out){
 // Strip emission shared by package and mesh draws: one source part's packet.
 #if RE4DC_PS2_WORLD_MESH
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* key,Re4dcModelDirect* out); // native_ui.cpp
+#if RE4DC_SCENERY_PIECE_STATE
+} // namespace: the slot word is a global C symbol
+extern "C" std::uint32_t* re4dc_ps2_piece_slot; // native_ui.cpp: the slot word for the next re4dc_ps2_world_direct_begin
+namespace {
+#endif
 #endif
 struct Emitter {
     const Re4dcModelPart& p;
@@ -847,6 +852,9 @@ struct Emitter {
     re4dc::render::ClipParameters clip{};
 #if RE4DC_PS2_WORLD_MESH
     const unsigned* ps2=nullptr; // PS2_WORLD_MESH part: {crc, fnv, width, height, pass, cull}; binds by key, not by p
+#if RE4DC_SCENERY_PIECE_STATE
+    std::uint32_t* piece_slot=nullptr; // SCENERY_PIECE_STATE: this part's header-slot word (SCPS), nullptr: none
+#endif
 #endif
 #if RE4DC_HW_LEAN
     float proj_bx=0,proj_by=0; // project()'s viewport offsets in 640x480 pixels
@@ -924,7 +932,14 @@ struct Emitter {
         if(direct){
             Re4dcModelDirect out{};
 #if RE4DC_PS2_WORLD_MESH
+#if RE4DC_SCENERY_PIECE_STATE
+            re4dc_ps2_piece_slot=ps2?piece_slot:nullptr;
+            const int begun=ps2?re4dc_ps2_world_direct_begin(ps2,&out):re4dc_model_direct_begin(&p,&out);
+            re4dc_ps2_piece_slot=nullptr;
+            if(!begun)return false;
+#else
             if(!(ps2?re4dc_ps2_world_direct_begin(ps2,&out):re4dc_model_direct_begin(&p,&out)))return false;
+#endif
 #else
             if(!re4dc_model_direct_begin(&p,&out))return false;
 #endif
@@ -2153,6 +2168,23 @@ __attribute__((noinline)) void fill(const re4dc::vp::Vertex12* in,pvr_vertex_t* 
 }
 }
 #endif
+#if RE4DC_SCENERY_CONE
+// SCENERY_CONE (scenery21.mk; render only): the room file's SCCN section (tools/d367/scenery21/scn21_build.py), one
+// back-face cone per strip group (8 B: s8 axis[3], u8 k, f32 R; k 0 = none). chunk_select drops a group whose every
+// triangle faces the culled side for this eye (in grid coordinates): the PVR would cull each of them.
+namespace cone {
+const std::uint8_t* rec=nullptr;  // meshlet x groups x 8 B
+const float* tab2=nullptr;        // 64 squared slopes (T_k^2)
+const void* pkg=nullptr;          // the package the section matches
+unsigned tests=0,rejects=0,vskip=0,picks_dropped=0,logged=0;
+}
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+// SCENERY_PIECE_STATE (scenery21.mk; exact): the room file's SCPS section, one header-slot word per PS2 world part
+// (native_ui.cpp PS2_WORLD_HDR_CACHE slot index + 1, 0 = none yet), written at the part's first bind in the room and
+// checked at every bind (native_ui.cpp re4dc_ps2_piece_slot).
+namespace piece { std::uint32_t* table=nullptr; const void* pkg=nullptr; }
+#endif
 #if RE4DC_SCENERY_CHUNK
 // SCENERY_CHUNK (scenery19.mk): the per-part / per-meshlet walk at -O2 (this unit is -Os). The same expressions, so the
 // same decisions and vertex words (FP contraction is the same at -Os and -O2).
@@ -2696,6 +2728,26 @@ struct MeshDraw : Emitter {
         const auto* clusters=package.clusters();const auto* levels=package.levels();const auto* all=package.meshlets();
         const bool groups=sg && lean_am;
         unsigned np=0;
+#if RE4DC_SCENERY_CONE
+        // SCENERY_CONE: the eye in grid coordinates (view = M g + t: e = -M^-1 t) and the culled side's sign (part cull
+        // 1 CCW / 2 CW, det(M), and the projection's fixed handedness RE4DC_SCENERY_CONE_SIGN).
+        bool cone_on=sg && cone::pkg==static_cast<const void*>(&package) && p.cull>0U && p.cull<=2U;
+        float ex=0,ey=0,ez=0,csgn=1;
+        if(cone_on){
+            const float* m=mvq;
+            const float c0=m[5]*m[10]-m[6]*m[9],c1=m[6]*m[8]-m[4]*m[10],c2=m[4]*m[9]-m[5]*m[8];
+            const float det=m[0]*c0+m[1]*c1+m[2]*c2;
+            if(!(std::fabs(det)>1e-20f))cone_on=false;
+            else{
+                const float id=-1.0f/det,tx=m[3],ty=m[7],tz=m[11];
+                // e = -adj(M) t / det
+                ex=id*(c0*tx+(m[2]*m[9]-m[1]*m[10])*ty+(m[1]*m[6]-m[2]*m[5])*tz);
+                ey=id*(c1*tx+(m[0]*m[10]-m[2]*m[8])*ty+(m[2]*m[4]-m[0]*m[6])*tz);
+                ez=id*(c2*tx+(m[1]*m[8]-m[0]*m[9])*ty+(m[0]*m[5]-m[1]*m[4])*tz);
+                csgn=float(RE4DC_SCENERY_CONE_SIGN)*(p.cull==1U?1.0f:-1.0f)*(det>0.0f?1.0f:-1.0f);
+            }
+        }
+#endif
         for(unsigned c=lod.first_cluster;c<lod.first_cluster+lod.cluster_count;++c){
             const auto& cl=clusters[c];
             float lo[3],hi[3];
@@ -2780,6 +2832,42 @@ struct MeshDraw : Emitter {
                         pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(bits);pk.lo=std::uint8_t(glo);pk.hi=std::uint8_t(ghi);
                     }
                 }
+#if RE4DC_SCENERY_CONE
+                if(cone_on && pk.nr){
+                    // the groups still drawn (all non-empty ones for a whole pick), then each one's cone
+                    const auto* g=reinterpret_cast<const std::uint16_t*>(sg+16U*sg_groups*li);
+                    const std::uint8_t* cr=cone::rec+8U*sg_groups*li;
+                    unsigned keep=0,prev=0;
+                    for(unsigned q=0;q<sg_groups;++q){const unsigned gend=g[8*q+6];if(gend!=prev)keep|=1U<<q;prev=gend;}
+                    if(pk.nr!=0xffU)keep&=pk.gmask;
+                    unsigned rej=0;
+                    for(unsigned q=0;q<sg_groups;++q){
+                        const std::uint8_t* r=cr+8U*q;
+                        if(!((keep>>q)&1U) || !r[3])continue;
+                        const std::uint16_t* b=g+8*q;
+                        const float vx=0.5f*(float(b[0])+float(b[3]))-ex,vy=0.5f*(float(b[1])+float(b[4]))-ey,
+                                    vz=0.5f*(float(b[2])+float(b[5]))-ez;
+                        const float d=csgn*(float(std::int8_t(r[0]))*vx+float(std::int8_t(r[1]))*vy+float(std::int8_t(r[2]))*vz);
+                        float R;std::memcpy(&R,r+4,4);
+                        ++cone::tests;
+                        if(d>R){const float e=d-R;if(e*e>cone::tab2[r[3]]*(vx*vx+vy*vy+vz*vz))rej|=1U<<q;}
+                    }
+                    if(rej){
+                        keep&=~rej;
+                        unsigned nr=0,vlo=255,vhi=0;
+                        const unsigned was=pk.nr==0xffU?l.vertex_count:unsigned(pk.hi-pk.lo+1U);
+                        for(unsigned q=0;q<sg_groups;++q)if((keep>>q)&1U){
+                            ++nr;const unsigned v0=g[8*q+7]&255U,v1=g[8*q+7]>>8;
+                            if(v0<vlo)vlo=v0;
+                            if(v1>vhi)vhi=v1;
+                        }
+                        cone::rejects+=__builtin_popcount(rej);
+                        if(!nr){--np;++cone::picks_dropped;cone::vskip+=was;continue;}
+                        cone::vskip+=was-(vhi-vlo+1U);
+                        pk.nr=std::uint8_t(nr);pk.gmask=std::uint8_t(keep);pk.lo=std::uint8_t(vlo);pk.hi=std::uint8_t(vhi);
+                    }
+                }
+#endif
             }
         }
         return np;
@@ -4702,8 +4790,52 @@ static void note(unsigned pass,unsigned drawn){
 }
 } // namespace trans
 #endif
-#if RE4DC_SCENERY_DEDUP==2
+#if RE4DC_SCENERY_DEDUP==2 || RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
 #include "include/room_file.h"
+#endif
+#if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
+// scenery21: the room file's SCCN / SCPS sections against this package (crc, bytes, counts; SCCN also needs the
+// package's strip groups). A missing or stale section leaves its knob's path off for the room (SCN21 log line says why).
+void scn21_open(){
+    auto& pk=ps2w.package;const auto& h=pk.header();
+    unsigned len=0,ver=0,fl=0;
+#if RE4DC_SCENERY_CONE
+    {
+        cone::pkg=nullptr;cone::rec=nullptr;cone::tab2=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCCN",&len,&ver,&fl,nullptr));
+        const char* why=nullptr;std::uint32_t w[4]={};
+        if(!sec)why="no section";
+        else if(re4dc_room_file_room()!=ps2w.room)why="room";
+        else if(!ps2w.sg)why="no strip groups";
+        else{
+            std::memcpy(w,sec,16);
+            if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.meshlet_count || w[3]!=ps2w.sg_groups ||
+               len<16U+256U+8U*w[2]*w[3])why="package";
+        }
+        if(!why){cone::tab2=reinterpret_cast<const float*>(sec+16);cone::rec=sec+16+256;cone::pkg=&pk;}
+        re4dc_log("SCN21 cone room=%03x %s groups=%u bytes=%u\n",ps2w.room,why?why:"on",unsigned(w[3]),len);
+    }
+#endif
+#if RE4DC_SCENERY_PIECE_STATE
+    {
+        piece::pkg=nullptr;piece::table=nullptr;
+        const auto* sec=static_cast<const std::uint8_t*>(re4dc_room_section("SCPS",&len,&ver,&fl,nullptr));
+        const char* why=nullptr;std::uint32_t w[4]={};
+        if(!sec)why="no section";
+        else if(re4dc_room_file_room()!=ps2w.room)why="room";
+        else{
+            std::memcpy(w,sec,16);
+            if(ver!=1 || w[0]!=h.crc || w[1]!=h.bytes || w[2]!=h.part_count || len<16U+4U*w[2])why="package";
+        }
+        if(!why){
+            piece::table=reinterpret_cast<std::uint32_t*>(const_cast<std::uint8_t*>(sec)+16);
+            std::memset(piece::table,0,4U*w[2]);   // slot words are this program's: start empty at every open
+            piece::pkg=&pk;
+        }
+        re4dc_log("SCN21 piece room=%03x %s parts=%u\n",ps2w.room,why?why:"on",unsigned(w[2]));
+    }
+#endif
+}
 #endif
 #if RE4DC_SCENERY_DEDUP
 namespace dedup {
@@ -5177,6 +5309,9 @@ bool ps2_open(){
                   re4dc_static_heap_free());
     }
 #endif
+#if RE4DC_SCENERY_CONE || RE4DC_SCENERY_PIECE_STATE
+    scn21_open();
+#endif
 #if RE4DC_SCENERY_DEDUP
     dedup_open();
 #endif
@@ -5607,6 +5742,16 @@ int ps2_pass(unsigned pass,float zfar){
     }
     const std::uint8_t* const pvs_cur=pvs::cur;
 #endif
+#if RE4DC_SCENERY_CONE
+    if(!pass){
+        const unsigned f=re4dc_ui_frame();
+        if(f-cone::logged>=600U){
+            cone::logged=f;
+            re4dc_log("SCN21 cone frame=%u room=%03x on=%u tests=%u rejects=%u picks_dropped=%u vskip=%u\n",f,ps2w.room,
+                      cone::pkg?1U:0U,cone::tests,cone::rejects,cone::picks_dropped,cone::vskip);
+        }
+    }
+#endif
     Re4dcModelPart part{};
     std::memcpy(part.projection,P,sizeof(part.projection));std::memcpy(part.viewport,ps2w.viewport,sizeof(part.viewport));
     part.alpha_state=255;part.source_key[2]=1;
@@ -5638,6 +5783,9 @@ int ps2_pass(unsigned pass,float zfar){
             e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
             e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
             std::memcpy(e.mvq,x.mvq,sizeof(x.mvq));std::memcpy(e.mv,x.mvq,sizeof(x.mvq));e.ps2=x.key;
+#if RE4DC_SCENERY_PIECE_STATE
+            e.piece_slot=piece::pkg==static_cast<const void*>(&cpkg)?piece::table+x.index:nullptr;
+#endif
             const int result=e.chunk_emit(cpk+x.first,x.count);
             e.end_direct();
             if(result>0)++c.native;
@@ -5922,6 +6070,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             std::memcpy(d.mvq,mvq,sizeof(mvq));std::memcpy(d.mv,mvq,sizeof(mvq));
             const unsigned key[6]={meta.crc,meta.fnv,meta.width,meta.height,pass,meta.cull};d.ps2=key;
+#if RE4DC_SCENERY_PIECE_STATE
+            d.piece_slot=piece::pkg==static_cast<const void*>(&pk)?piece::table+index:nullptr;
+#endif
 #if RE4DC_PS2_INTERIOR_ACTORS && RE4DC_PS2_INTERIOR_CULL==2
             if(!pass && !pcact::have_key){std::memcpy(pcact::key,key,sizeof(key));pcact::key[5]=0;pcact::have_key=true;}
 #endif

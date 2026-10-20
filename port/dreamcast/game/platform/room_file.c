@@ -19,6 +19,12 @@ extern int re4dc_static_heap_free(void);
 #ifndef RE4DC_ROOMFILE_SCDD
 #define RE4DC_ROOMFILE_SCDD 0   /* SCENERY_DEDUP=2 (lane scenery19): the scenery point-dedup section */
 #endif
+#ifndef RE4DC_ROOMFILE_SCCN
+#define RE4DC_ROOMFILE_SCCN 0   /* SCENERY_CONE (lane scenery21): per strip group back-face cones */
+#endif
+#ifndef RE4DC_ROOMFILE_SCPS
+#define RE4DC_ROOMFILE_SCPS 0   /* SCENERY_PIECE_STATE (lane scenery21): per part header-slot words (written at run time) */
+#endif
 #ifndef RE4DC_ROOMFILE_GRID
 #define RE4DC_ROOMFILE_GRID 0
 #endif
@@ -47,6 +53,8 @@ static int wanted(const uint8_t* tag)
     if (RE4DC_ROOMFILE_VIS && !memcmp(tag, "VIS\0", 4)) return 1;
     if (RE4DC_ROOMFILE_OCCL && !memcmp(tag, "OCCL", 4)) return 1;
     if (RE4DC_ROOMFILE_SCDD && !memcmp(tag, "SCDD", 4)) return 1;
+    if (RE4DC_ROOMFILE_SCCN && !memcmp(tag, "SCCN", 4)) return 1;
+    if (RE4DC_ROOMFILE_SCPS && !memcmp(tag, "SCPS", 4)) return 1;
     return 0;
 }
 #if RE4DC_ROOMFILE_SCDD
