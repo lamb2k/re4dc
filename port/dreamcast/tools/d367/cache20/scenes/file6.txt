@@ -1,0 +1,26 @@
+name c20-r101-census
+# cache20 bench, file 6, rows 9-15: render census at the r101 cross (benchmark-r101's spot, god, no alert). Rows run back
+# to back in one room: as is; every effect sprite off (render only); 2 then 4 Ganados put in front of Leon (the nearest
+# live ones, 4.5 m ahead, spread across the view); then the nearest of them becomes the tank (hp held: hit reactions,
+# blood and gore, never dies) and Leon auto-fires the handgun at it once a second (aim R + fire A, infinite ammo):
+# three 10-shot rows, to see whether the cost climbs with each shot.
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alivelog 150
+bench 9 300 600 CROSS AS IS
+fx 620 off
+bench 10 660 960 CROSS NO FX
+fx 980 on
+crowd 1000 2
+bench 11 1060 1360 CROSS +2 GAN
+crowd 1380 2
+bench 12 1440 1740 CROSS +4 GAN
+tank 1750
+autofire 1760 2730 30
+bench 13 1800 2100 SHOTS 1-10
+bench 14 2101 2400 SHOTS 11-20
+bench 15 2401 2700 SHOTS 21-30

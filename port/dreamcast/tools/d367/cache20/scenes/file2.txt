@@ -1,0 +1,12 @@
+name c20-r103-farmfight
+# cache20 bench, file 2, row 3: the r103 farm fight mid-wave (logiclod20 scene 5 / scenario19 farm-midfight): one Ganado
+# killed at room frame 150, 4 live at cap 4, animals present. God, no pad input. Measure 300..1199.
+room 0x103
+pos -47609 12 7084
+ang 1.8890
+inv default
+god
+killnear
+kill 0x12 150 0x103
+alivelog 150
+bench 3 300 1200 R103 FARMFIGHT

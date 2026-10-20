@@ -1,0 +1,10 @@
+name c20-r11b-shore
+# cache20 bench, file 3, row 4: r11b, the night lake shore (rr census fixture st-r11b's entry spot: room flag 0, god, no
+# pad input; the room's own enemies as they come). Settle 0..299, measure 300..1199.
+room 0x11b
+pos 125762 -175 171957
+rsf 0x11b 0
+inv default
+god
+alivelog 150
+bench 4 300 1200 R11B SHORE

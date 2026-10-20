@@ -2987,6 +2987,8 @@ include logiclod20.mk
 # Lane rigid20 (RIGID_CENSUS, RIGID_CHUNK; default off: no effect).
 include rigid20.mk
 include shotfx20.mk
+# Lane cache20 (GAME_SHZ_MEMSET, SQ_OUT, PREF_WALK; default off: no effect).
+include cache20.mk
 # Lane bodysvc20 (BODY_CORPSE, BODY_IK, BODY_ROUTE, BODY_POSE; default off: no effect). BODY_GRID is in engine_preview.mk.
 include bodysvc20.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
@@ -3010,3 +3012,5 @@ endif
 
 # BENCHMARK=1: the public benchmark disc (bench.mk; default 0: nothing compiled, image unchanged)
 include bench.mk
+# QA_MENU=1: the tester QA disc menu (qamenu.mk; default 0: nothing compiled, image unchanged)
+include qamenu.mk
