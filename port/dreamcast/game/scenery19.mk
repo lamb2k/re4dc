@@ -13,6 +13,43 @@ $(error SCENERY_CHUNK needs PS2_STRIP_GROUPS=1)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_CHUNK=$(SCENERY_CHUNK)
 endif
+# SCENERY_DEDUP=1 (exact, render only; needs SCENERY_CHUNK, MESH_VP_SCHED=1, HW_LEAN): each PS2 world meshlet's corners
+# are reordered at room load (repeated grid positions last), and a draw transforms each position once and builds the
+# repeats from it. Heap 4: 4 bytes per meshlet + 1 per repeat (r101 ~33 KB), freed with the room's world.
+SCENERY_DEDUP ?= 0
+# SCENERY_DEDUP=2: the same draw, but the tables are the room file's R4RC 'SCDD' section (scdd_compile.py; data set
+# rc19s = rc19 + SCDD): no load-time hashing and no allocation of its own (the room file block, r101 43.9 KB). A room
+# without the section, or a section that does not match the package, draws as knob off (SCNDEDUP log line says why).
+ifneq ($(SCENERY_DEDUP),0)
+ifeq ($(SCENERY_DEDUP),1)
+$(error SCENERY_DEDUP=1 is retired: its load-time reorder moved plain meshlets that pool-indexed meshlets address; use 2)
+endif
+ifneq ($(SCENERY_DEDUP),2)
+$(error SCENERY_DEDUP must be 0 or 2)
+endif
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_DEDUP needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP=$(SCENERY_DEDUP)
+# SCENERY_DEDUP_LOADONLY=1 (test arm only): with =2, the section is loaded but not applied (equalises heap 4).
+ifeq ($(SCENERY_DEDUP_LOADONLY),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP_LOADONLY=1
+endif
+# SCENERY_DEDUP_CHECK=1 (check build only): every built repeat compared with the knob-off kernel, mismatches logged.
+ifeq ($(SCENERY_DEDUP_CHECK),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP_CHECK=1
+endif
+endif
+# SCENERY_UNIT_CONCAT=1 (exact, render only; needs SCENERY_CHUNK): ps2_pass skips concat_u's products for a placement
+# whose rotation / scale part is exactly the identity (Ninja guide NJD_EVAL_UNIT_ANG / SCL): r103 134 of 134 placements,
+# r100 180 of 283, r101 15 of 223. Check: PS2_WORLD_LEAN with bit 8 counts check_bad against concat.
+SCENERY_UNIT_CONCAT ?= 0
+ifneq ($(SCENERY_UNIT_CONCAT),0)
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_UNIT_CONCAT needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_UNIT_CONCAT=1
+endif
 # CHUNK_SUBMIT=1: the shared chunk-submit back end (platform/chunk_submit.h / .cpp) for user lanes
 # (character-draw-path, rigid models). Default 0: not built.
 CHUNK_SUBMIT ?= 0

@@ -16,6 +16,9 @@ extern void* re4dc_static_alloc(unsigned bytes);
 extern void re4dc_static_free(void* data);
 extern int re4dc_static_heap_free(void);
 
+#ifndef RE4DC_ROOMFILE_SCDD
+#define RE4DC_ROOMFILE_SCDD 0   /* SCENERY_DEDUP=2 (lane scenery19): the scenery point-dedup section */
+#endif
 #ifndef RE4DC_ROOMFILE_GRID
 #define RE4DC_ROOMFILE_GRID 0
 #endif
@@ -43,8 +46,12 @@ static int wanted(const uint8_t* tag)
     if (RE4DC_ROOMFILE_GRID && !memcmp(tag, "GRID", 4)) return 1;
     if (RE4DC_ROOMFILE_VIS && !memcmp(tag, "VIS\0", 4)) return 1;
     if (RE4DC_ROOMFILE_OCCL && !memcmp(tag, "OCCL", 4)) return 1;
+    if (RE4DC_ROOMFILE_SCDD && !memcmp(tag, "SCDD", 4)) return 1;
     return 0;
 }
+#if RE4DC_ROOMFILE_SCDD
+const void* re4dc_room_file_block(void) { return rf.block; }
+#endif
 
 void re4dc_room_file_leave(void)
 {
