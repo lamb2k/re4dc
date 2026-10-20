@@ -1,0 +1,40 @@
+{
+  "host": {
+    "base": "c7e0358a44677a15123a7f4233c4115eba627694",
+    "source_sha256": "6bb04eae2337fd4d0a60b4d756cd67db86a813b6a2842ee35d4070377c53fa99",
+    "generated_sha256": "37dc15d746f6af15daa91853c724dd6ed17b01127faa0a4099beb3c0795482fa",
+    "runs": [
+      "PASS checks=47 core_pin=0 cache_bytes=4108",
+      "PASS checks=47 core_pin=1 cache_bytes=4108",
+      "PASS checks=47 core_pin=2 cache_bytes=4108"
+    ],
+    "scope": "Actual preload_select + preload_resident extracted from base and candidate, synthetic identities/file backend; ASan+UBSan. Not full renderer, target performance, or console acceptance."
+  },
+  "target": {
+    "base": "c7e0358a44677a15123a7f4233c4115eba627694",
+    "candidate_source_sha256": "6bb04eae2337fd4d0a60b4d756cd67db86a813b6a2842ee35d4070377c53fa99",
+    "recipe_sha256": "5a6f9dc896884bfbb5112dfd7a6aa7096a1590f9859d568846b88ba50de9e790",
+    "checks": {
+      "baseline": {
+        "preprocessed_sha256": "b28be0ae9d82ba80f671670ace32729e6410c48b0dd0f9420cb0681e693df680",
+        "object_sha256": "fc6a67ac06f7c62ce54239d0888df8011329cd56cfd9a5cbcc3e63a14555e349",
+        "stripped_sha256": "5f9fb1eabea2b51912498fc665ea91bc64c66ec65408598b016da0ed1d6c5f3a",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  90304\t 100505\t 149885\t 340694\t  532d6\t/root/probe/cache21-resident-object02-20261020/baseline.o"
+      },
+      "off": {
+        "preprocessed_sha256": "b28be0ae9d82ba80f671670ace32729e6410c48b0dd0f9420cb0681e693df680",
+        "object_sha256": "fc6a67ac06f7c62ce54239d0888df8011329cd56cfd9a5cbcc3e63a14555e349",
+        "stripped_sha256": "5f9fb1eabea2b51912498fc665ea91bc64c66ec65408598b016da0ed1d6c5f3a",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  90304\t 100505\t 149885\t 340694\t  532d6\t/root/probe/cache21-resident-object02-20261020/off.o"
+      },
+      "on": {
+        "preprocessed_sha256": "493ba714f399dd5b02942ef154532a91f6215687901a53f11b96c1f2086fecdf",
+        "object_sha256": "8f95f28daebff5d215fb8c6e7fe266b705495754c02c514f033d3fdfac2ace45",
+        "stripped_sha256": "8c8c918156661cb569c917661dc1931b3f71b37167f3606b9ee12dd452d5492d",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  90892\t 100505\t 153993\t 345390\t  5452e\t/root/probe/cache21-resident-object02-20261020/on.o"
+      }
+    },
+    "off_identity": true
+  },
+  "status": "Source/SH4 translation-unit qualified only; full-program and target runtime gates pending."
+}

@@ -2631,6 +2631,15 @@ PRELOAD_LARGE_FIRST ?= 0
 # the room's list in dc/resident.bin (tools/d367/vram/resident_keys.py: the textures its scenes otherwise load on
 # first sight), so the room's set is resident from its entry. Without the file the preload is as before.
 ROOM_RESIDENT ?= 0
+# RESIDENT_LIST_CACHE=1: retain bounded copied current-room/core list metadata between owner admissions.
+# New owner identities and missing textures still use the original preload; no payload reserve changes.
+RESIDENT_LIST_CACHE ?= 0
+ifneq ($(filter-out 0 1,$(RESIDENT_LIST_CACHE)),)
+$(error RESIDENT_LIST_CACHE must be 0 or 1)
+endif
+ifeq ($(RESIDENT_LIST_CACHE)$(ROOM_RESIDENT),10)
+$(error RESIDENT_LIST_CACHE=1 needs ROOM_RESIDENT=1)
+endif
 ifneq ($(filter-out 0 1,$(ROOM_RESIDENT)),)
 $(error ROOM_RESIDENT must be 0 or 1)
 endif
@@ -2680,6 +2689,7 @@ $(OBJDIR)/pipeline30.h: pipeline30-force
 	@printf '#define RE4DC_TEX_META_EVICT %s\n' '$(TEX_META_EVICT)' >> $@.tmp
 	@printf '#define RE4DC_PRELOAD_LARGE_FIRST %s\n' '$(PRELOAD_LARGE_FIRST)' >> $@.tmp
 	@printf '#define RE4DC_ROOM_RESIDENT %s\n' '$(ROOM_RESIDENT)' >> $@.tmp
+	@printf '#define RE4DC_RESIDENT_LIST_CACHE %s\n' '$(RESIDENT_LIST_CACHE)' >> $@.tmp
 	@printf '#define RE4DC_UI_HANDLES %s\n#define RE4DC_UI_HEADERS %s\n' '$(UI_HANDLES)' '$(UI_HEADERS)' >> $@.tmp
 	@printf '#define RE4DC_TEX_RESIDENT %s\n#define RE4DC_TEX_RESIDENT_RESERVE_KB %s\n#define RE4DC_TEX_PAYLOAD_CRC %s\n#define RE4DC_TEX_SLOTS %s\n' '$(TEX_RESIDENT)' '$(TEX_RESIDENT_RESERVE_KB)' '$(TEX_PAYLOAD_CRC)' '$(TEX_SLOTS)' >> $@.tmp
 	@printf '#define RE4DC_TEX_KEEP %s\n#define RE4DC_PVR_LATCH %s\n' '$(TEX_KEEP)' '$(PVR_LATCH)' >> $@.tmp
