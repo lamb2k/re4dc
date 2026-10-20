@@ -672,6 +672,13 @@ PAK_DERIVED['ch21r'] = CH21RD + '/pak-derived.json'
 DATA['nostd20'] = {'remove': ['dc/native/%s/MAINSCENARIO.re4mesh' % _r for _r in (
     'r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10f r111 r112 r113 r117 r118 r119 r11a r11b '
     'r11c r11d r11e').split()]}
+# pair20 (lane release-test20 10-20): the r200 GC material pair a38b935e-3c0af8b7 (colour 3822d4ec-70fde01b + mask
+# 9c93897d-8518d3d3), drawn in r200 after the chapter 2-3 truck when LOGIC_LOD_EM=2 shifts the timing; it was never on a
+# disc (ch23end texchk FAIL). dc/tex.pak = ch21r's pack + that key (ch2rooms/pack_add.py); last in the data line.
+# Private store copy: re4-assets-private/pair20-20261020 (RECIPE.txt, SHA256SUMS).
+PAIR20D = os.environ.get('PAIR20D', '/root/re4data/private/pair20-20261020')
+DATA['pair20'] = {'dc/tex.pak': PAIR20D + '/dc/tex.pak'}
+PAK_DERIVED['pair20'] = PAIR20D + '/pak-derived.json'
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
