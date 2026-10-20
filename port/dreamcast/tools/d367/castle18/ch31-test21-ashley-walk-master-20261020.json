@@ -15,5 +15,16 @@
   "overlays_match_C_registry": true,
   "raw_boot_matches_descrambled_C_registry": true,
   "ram_master": "/dev/shm/castle21-main-20261020/skin-player-j-master/track03.iso",
-  "final_Cimage_retained": false
+  "final_Cimage_retained": true,
+  "retained_C_image": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\skin-player-j-base\\track03.iso",
+  "retained_C_receipt": {
+    "scope": "Exact immutable RAM master retained as owned C image; no remaster/truncation or current input changes.",
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\skin-player-j-base\\track03.iso",
+    "bytes": 1018789888,
+    "iso_sectors": 497456,
+    "sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+    "before_free": 21404332032,
+    "after_free": 20385456128
+  },
+  "target_qualified": false
 }
