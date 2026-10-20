@@ -4862,6 +4862,19 @@ namespace {
 #include "native_actor_rigid.inc"
 }  // namespace
 #endif
+#if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
+extern "C" {
+volatile unsigned re4dc_rigid_hide;     // dbgwarp_bridge.cpp `rigid <frame> on|off`
+// per frame (the benchmark reads and clears it once a tick): parts, meshlets, vertices; the biggest part's model + verts
+unsigned re4dc_rigid_census[6];
+const void* re4dc_rigid_census_big;
+void re4dc_rigid_census_note(const void* model, unsigned ml, unsigned nv, unsigned levels)
+{
+    ++re4dc_rigid_census[0]; re4dc_rigid_census[1] += ml; re4dc_rigid_census[2] += nv;
+    if (nv > re4dc_rigid_census[3]) { re4dc_rigid_census[3] = nv; re4dc_rigid_census[4] = ml; re4dc_rigid_census[5] = levels; re4dc_rigid_census_big = model; }
+}
+}
+#endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     ++stats.parts;
     PXF_BEGIN(part);
@@ -4926,7 +4939,18 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
 
     Frame& f = *prepare_frame(p, near_distance, far_distance);
-#if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS
+#if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
+    // RIGID_CENSUS=2 (benchmark census discs, lane cache20): every rigid part is counted (re4dc_rigid_census: parts,
+    // meshlets, vertices of the parts that reached here this frame; the biggest part's model) and is not drawn only while
+    // the run-time switch re4dc_rigid_hide is set (the warp line `rigid <frame> off`). Logic is not touched.
+    if (f.mode != kSkin) {
+        unsigned nv = 0;
+        const auto* tb = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
+        for (unsigned i = 0; i < blob->meshlets; ++i) nv += tb[i].n.vertices();
+        re4dc_rigid_census_note(p.model, blob->meshlets, nv, blob->levels);
+        if (re4dc_rigid_hide) { re4dc_model_result(0, 0, 0); return 1; }
+    }
+#elif defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS
     if (f.mode != kSkin) {
         static unsigned rgc_parts, rgc_ml, rgc_nv, rgc_log;
         ++rgc_parts; rgc_ml += blob->meshlets;

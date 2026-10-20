@@ -23,6 +23,9 @@
 #if RE4DC_ACTOR_TEX_PREP
 #include "actor_tex_prep.h"
 #endif
+#if defined(RE4DC_GAME) && !defined(__PPC__)
+#include "cache20.h"
+#endif
 
 #if RE4DC_PS2_WORLD_R11F_OWNER || RE4DC_PS2_WORLD_TRANSITION_OWNER
 #include "ps2_source_world.h"
@@ -1259,12 +1262,14 @@ void Trans()
     for (u = ObjMgr.pAlive; u != 0;) {
         cUnit* cur = u;
         u = u->pNext;
+        RE4DC_C20_PREF_OBJ(u);   // PREF_WALK (cache20.h): the next model while this one is prepared
         func((cModel*) cur);
     }
     func = emTrans;
     for (u = EmMgr.pAlive; u != 0;) {
         cUnit* cur = u;
         u = u->pNext;
+        RE4DC_C20_PREF_OBJ(u);
         func((cModel*) cur);
     }
     }

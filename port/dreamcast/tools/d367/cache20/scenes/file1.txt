@@ -1,0 +1,14 @@
+name c20-r101-cross
+# cache20 bench, file 1 (warp.txt), rows 1-2: the r101 square from the burning cross (benchmark-r101's spot, god, no pad).
+# Row 1 CALM: before the crowd hunts Leon (no alert): the villagers at their chores. Row 2 FIGHT: alert at room frame
+# 930, the crowd converges (cap 4). Settle 0..299.
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alivelog 150
+bench 1 300 900 R101 CALM
+alert 930
+bench 2 1200 2100 R101 FIGHT

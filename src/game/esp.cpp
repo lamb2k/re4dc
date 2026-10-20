@@ -121,6 +121,17 @@ static inline void fxEspMark(cEspSystem* sys, cEsp* esp, int on)
         fxEspOwnBit(sys, esp, on);
     }
 }
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+// Benchmark census disc (dbgwarp_bridge.cpp, lane cache20): live effects in the pool now.
+extern "C" unsigned re4dc_bench_esp_live()
+{
+    cEspSystem* sys = g_pEspSys;
+    unsigned n = 0;
+    for (u32 i = 0; sys && sys->pEspBuf != NULL && i < sys->nEsp; i++)
+        if (((cEsp*) (sys->pEspBuf + i * 0x150))->m_Be_flg & 1) ++n;
+    return n;
+}
+#endif
 // Rebuilds the owner counts and the maps from the pool.
 extern "C" void re4dc_fx_esp_sync()
 {

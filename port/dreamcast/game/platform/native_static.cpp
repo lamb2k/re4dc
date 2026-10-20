@@ -45,6 +45,10 @@
 #include <cstring>
 #include <cstdlib>
 #include "native_static.h"
+#include "cache20.h"
+#if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
+extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID_CENSUS=2)
+#endif
 #if RE4DC_QUALITY
 #include "quality.h"
 #endif
@@ -2720,6 +2724,9 @@ struct MeshDraw : Emitter {
             for(unsigned i=0;i<lv.meshlet_count;++i){
                 const unsigned li=lv.first_meshlet+i;
                 const auto& l=all[li];
+#if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
+                if(RE4DC_C20_PREF_ON())RE4DC_C20_PREF(&all[li+1]);   // PREF_WALK: the next meshlet header (bounds)
+#endif
                 unsigned mask=0;
                 if(cin==2)++lean::st.skipped;
                 else if(groups){
@@ -2844,7 +2851,15 @@ struct MeshDraw : Emitter {
         palette=nullptr;
         batch.uv_bias[0]=part.uv_bias[0];batch.uv_bias[1]=part.uv_bias[1];
         batch.uv_scale[0]=part.uv_scale[0];batch.uv_scale[1]=part.uv_scale[1];
-        for(unsigned i=0;i<n;++i){const int r=emit_pick(pk[i]);if(r<=0)return r;}
+        for(unsigned i=0;i<n;++i){
+#if defined(RE4DC_PREF_WALK) && RE4DC_PREF_WALK
+            // PREF_WALK (cache20.h): the next pick's corners and first strip bytes while this one is transformed / sent
+            if(i+1<n && RE4DC_C20_PREF_ON()){
+                const auto& nl=package.meshlets()[pk[i+1].let];
+                RE4DC_C20_PREF(package.vertices()+nl.first_vertex);RE4DC_C20_PREF(package.strip_begin(nl));
+            }
+#endif
+            const int r=emit_pick(pk[i]);if(r<=0)return r;}
         if(used)re4dc_model_packet_commit(used);
         re4dc_model_result(0,input,output);
         return 1;
@@ -4313,6 +4328,11 @@ unsigned query(unsigned id){
     const unsigned f=re4dc_ui_frame();
     if(f!=frame){frame=f;nmoved=0;std::memset(state,0,sizeof(state));}
     if(state[id])return state[id]-1U;
+#if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
+    // RIGID_CENSUS=2 (cache20 census bench): `rigid <frame> off` also hides every PS2 world placement bound to a source
+    // object (props drawn as PS2 world parts: r100's truck obm2d00, the police car, crates); render only
+    if(re4dc_rigid_hide){++hidden;return 1;}
+#endif
     unsigned r=0;
     Slot& s=slots[slot_of[id]];
     std::uint32_t flag=0,serial=0;
