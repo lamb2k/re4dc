@@ -178,5 +178,17 @@
   "runtime_knob": "NATIVE_MODEL_REGISTRY_PL_ASHLEY=1 with PS2_ASHLEY>=2",
   "generator_knob": "--player-ashley (default off)",
   "host_cases_pass": 26,
-  "geometry_roles_textures_binds_source_unchanged": true
+  "geometry_roles_textures_binds_source_unchanged": true,
+  "target_E_followup": {
+    "program": "c21emW",
+    "errors": [],
+    "elapsed_s": 50.9,
+    "player_archive_family": 1,
+    "source_assets": 7,
+    "live_infos": 0,
+    "native_draws": 0,
+    "declined_draws": 300,
+    "remaining_cause": "TPL owner family still selected via Leon appearance shortcut; exact source family now used for admitted typed PL1 rows",
+    "target_rerun_pending": true
+  }
 }

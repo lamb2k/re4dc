@@ -87,3 +87,13 @@ host gate now explicitly admits the actual r20d primary and the new typed
 partner together; this coverage was missing from the first26 package cases.
 The first candidate, state and logs remain immutable. A new candidate will
 rerun the fresh diagnostic; no old state is retargeted.
+
+
+Fresh corrected c21emW admits both room and partner packages and now retains
+Ashley's family1 player archive with all7 source assets. Its50.9s run still
+has0 native/300 declined player draws: TPL ownership selected family2 through
+the Leon-only appearance shortcut. The typed player source-blob family now
+selects her player TPL owner; the exact TPL span/content and owner-revision
+proofs remain mandatory. Static Leon/head/weapon family rules stay intact.
+The diagnostic info report uses the same family selector. A further fresh
+target check is required; c21e remains unqualified for playable Ashley.

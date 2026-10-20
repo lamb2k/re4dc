@@ -109,6 +109,18 @@ bool tpl_owned(const Archive& o,const void* p,unsigned bytes,const Role& r) {
     }
     return true;
 }
+// The row's admitted source family, not its appearance number, identifies
+// playable Ashley's TPL owner. Static Leon/head/weapon semantics stay intact.
+unsigned tpl_family(const Role& row) {
+    if(RE4DC_LEON_LIKE(row.appearance) || RE4DC_HEAD_APP(row.appearance))return 1u;
+#if RE4DC_NMR_ASHLEY >= 2 && defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+    // The package validator permits family1 only when every referencing role
+    // belongs to the complete model0/141-joint/seven-role player descriptor.
+    for(unsigned t=0;t<RE4DC_BLOB_COUNT;++t)
+        if(RE4DC_BLOB(t).model==row.model && RE4DC_BLOB(t).family==1u)return 1u;
+#endif
+    return 2u;
+}
 Info* find_info(const void* p) {for(auto& i:infos_live)if(i.info==p)return &i;return nullptr;}
 bool info_current(const Info& i,unsigned role) {
     if(!i.info || i.asset>=kAssets || i.tpl_owner>=kArchives || role>=kRoleMaskBits || !(i.roles[role/32]&(1u<<(role%32))))return false;
@@ -235,7 +247,7 @@ extern "C" void re4dc_actor_info_adopt(cModelInfo* info) {
         if(!match)continue;
         for(unsigned k=0;k<kArchives;++k) {
             // LEON_HEADLESS v2: the flying head's rows (0x10A) name the player archive (family 1) like Leon's.
-            const auto& o=archives[k];if(o.family!=((RE4DC_LEON_LIKE(row.appearance) || RE4DC_HEAD_APP(row.appearance))?1u:2u))continue;
+            const auto& o=archives[k];if(o.family!=tpl_family(row))continue;
             const unsigned char* p=nullptr;unsigned n=0;
             if(!entry(o,row.source_tpl,"TPL",p,n) || p!=info->tpl_addr || !tpl_owned(o,p,n,row))continue;
             // Multiple rows may intentionally share default hand geometry.
@@ -292,7 +304,7 @@ extern "C" void re4dc_actor_txdiag_info(const cModel* m,const cModelInfo* info,u
                 if((a.templates&(BlobMask(1u)<<t)) && RE4DC_BLOB(t).model==RE4DC_ROLE(r).model)match=true;
             if(!match)continue;row=true;
             for(unsigned k=0;k<kArchives;++k) {
-                const auto& o=archives[k];if(o.family!=(RE4DC_LEON_LIKE(RE4DC_ROLE(r).appearance)?1u:2u))continue;
+                const auto& o=archives[k];if(o.family!=tpl_family(RE4DC_ROLE(r)))continue;
                 const unsigned char* p=nullptr;unsigned n=0;
                 if(!entry(o,RE4DC_ROLE(r).source_tpl,"TPL",p,n) || p!=info->tpl_addr)continue;tpl=true;
                 if(!tpl_owned(o,p,n,RE4DC_ROLE(r)))continue;
