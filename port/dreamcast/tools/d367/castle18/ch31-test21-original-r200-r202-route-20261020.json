@@ -1,0 +1,220 @@
+{
+  "scope": "Current original handoffVMU title/CardLoad lineage; normal analog/B-run and original doorwayA only; no warp, source writes or snapshot substitution. This is first doorway progress, not chapter acceptance.",
+  "elf_sha256": "a4e1a231cf24e55f31aebe8628577d240111700d607778382299c7b4531bffe2",
+  "disc_sha256": "dc536893569c42a928c19ad1568c0dba6d41e3d82ea0028bd63d8e3b0032150b",
+  "snapshot": {
+    "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+    "state_sha256": "ff76ea9f1df834ec3f7aead06989aacaea585abcf8e973035adb14eee9ac15a7",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x202",
+    "chapter": 6,
+    "source_frame": 5401,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "stop": "0x0",
+    "actual_death": false,
+    "Leon": {
+      "pointer": "0x8caaecc0",
+      "pos": [
+        -5197.1591796875,
+        -0.00244140625,
+        -308.55926513671875
+      ],
+      "yaw": 1.4504408836364746
+    },
+    "Ashley": {
+      "pointer": "0x8ccd9b80",
+      "pos": [
+        -5197.14794921875,
+        -0.00152587890625,
+        -308.5240173339844
+      ],
+      "yaw": 1.4504408836364746
+    }
+  },
+  "segments": [
+    {
+      "name": "current-route-walk01",
+      "status": "RUN_FAILED",
+      "elapsed_s": 28.8,
+      "errors": [
+        {
+          "kind": "run",
+          "error": "disk floor: 17224953856 bytes free"
+        }
+      ],
+      "state_sha256": "7ed18f6f3a2f7b5ff6bcbe091f72985cdfe0bac4d252ec8e4b9262a4035aadfa",
+      "input_receipt_sha256": "dc85778e3bcd9b7b4a640de0c1ed287ad2bbb37dc2598902f326699cf4a6f7fb",
+      "events": [
+        {
+          "abort": "AssertionError()"
+        }
+      ]
+    },
+    {
+      "name": "current-route-walk02",
+      "status": "RUN_COMPLETE",
+      "elapsed_s": 50.5,
+      "errors": [],
+      "state_sha256": "0a061d465093749e5f17e0b3334a30282ef4dd9aec57894287f311c5a609e7ef",
+      "input_receipt_sha256": "8e307daf8fdf2371895be79cd1652409bf67949e576f471934b84d5040130ac4",
+      "events": [
+        {
+          "waypoint_reached": 0,
+          "target": [
+            81500.0,
+            -62000.0
+          ],
+          "pos": [
+            81656.8671875,
+            10118.0859375,
+            -61832.73046875
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            81000.0,
+            -65400.0
+          ],
+          "pos": [
+            80943.0390625,
+            10357.3212890625,
+            -65161.65234375
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            74000.0,
+            -65500.0
+          ],
+          "pos": [
+            74110.9609375,
+            13443.4130859375,
+            -65536.6328125
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            74000.0,
+            -68700.0
+          ],
+          "pos": [
+            73867.125,
+            13443.4130859375,
+            -68509.75
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            80500.0,
+            -68700.0
+          ],
+          "pos": [
+            80537.9296875,
+            15871.0380859375,
+            -68744.1796875
+          ]
+        }
+      ]
+    },
+    {
+      "name": "current-route-walk03",
+      "status": "RUN_COMPLETE",
+      "elapsed_s": 10.1,
+      "errors": [],
+      "state_sha256": "18aa2537c39c1245b5ad2ee3b4fd5c444e35c45d13810430e96fc9f1c8c10173",
+      "input_receipt_sha256": "bd29fc02f53238072839f8ddb697bad1e8d2551850546e1911df537c3b8fe853",
+      "events": [
+        {
+          "normal_input_has_no_displacement": true,
+          "frame": 5211,
+          "pos": [
+            83353.4609375,
+            15871.0380859375,
+            -68624.1015625
+          ],
+          "target": [
+            91500.0,
+            -68791.0
+          ],
+          "source_tick_window": 40
+        }
+      ]
+    },
+    {
+      "name": "current-route-walk04",
+      "status": "RUN_COMPLETE",
+      "elapsed_s": 41.4,
+      "errors": [],
+      "state_sha256": "ff76ea9f1df834ec3f7aead06989aacaea585abcf8e973035adb14eee9ac15a7",
+      "input_receipt_sha256": "9d93eb8b657c474bb11cdd53b933f8522f1e72847d22848a14eb10c45b61c224",
+      "events": [
+        {
+          "waypoint_reached": 0,
+          "target": [
+            83300.0,
+            -68350.0
+          ],
+          "pos": [
+            83345.0,
+            15871.0380859375,
+            -68353.328125
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            89000.0,
+            -68500.0
+          ],
+          "pos": [
+            89029.078125,
+            15871.0380859375,
+            -68561.4453125
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            91500.0,
+            -68791.0
+          ],
+          "pos": [
+            91424.1015625,
+            15871.0380859375,
+            -68768.9375
+          ]
+        },
+        {
+          "original_door_A_attempt": 0,
+          "frame": 5360
+        },
+        {
+          "original_door_A_attempt": 1,
+          "frame": 5365
+        },
+        {
+          "original_door_arrived_r202": true,
+          "source_frame": 5401,
+          "health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -28,3 +28,6 @@ Latest immutable current route seed is current-coldload04/data/disc.state SHA256
 
 
 Final C retention is now complete. The497247-sector ISO was copied from the unchanged RAM master under18GiB+growth preflight and18GiB+64MiB per-block guards, then independently rehashed. Retained C SHA256dc536893569c42a928c19ad1568c0dba6d41e3d82ea0028bd63d8e3b0032150b,1018361856bytes; after-free20134002688bytes. Exact C receipt is C-disc-retention-receipt.json under Test21. No remaster or content/program change. Functional captures so far read the byte-identical RAM image; no hardware or I/O timing acceptance follows.
+
+
+The fresh current original route has now passed r200 stairs and its real doorway into r202. Current-route-walk02 climbs the source switchback stairs, preserving1200/600health. Walk03 stops safely at a corridor collision; ordinary centerline adjustment in04 reaches the door, then two normal A presses trigger the original transition.04 closes41.4s/errors empty after observed r202/phase3/Stop0/source5401. No warp/flag/pose write or program/data substitution.01's earlier capacity-close remains explicitly incomplete. Proof ch31-test21-original-r200-r202-route-20261020.json records every segment, collision/capacity outcome and exact current snapshot. R202 room/wave/native/residency work and the complete chapter remain open.
