@@ -54,3 +54,11 @@ ESP_TYPE_CAP ?= 0
 ifneq ($(ESP_TYPE_CAP),0)
 $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_ESP_TYPE_CAP=$(ESP_TYPE_CAP)
 endif
+#
+# SCN_CENSUS=1 (test only, default 0): "scnc:" lines every 120 frames, scenery meshlets / corners transformed / corners of
+#   meshlets with no strip on screen / strips emitted and culled / triangles (platform/native_static.cpp).
+SCN_CENSUS ?= 0
+ifeq ($(SCN_CENSUS),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCN_CENSUS=1
+endif
+#
