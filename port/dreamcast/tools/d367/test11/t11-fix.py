@@ -660,10 +660,18 @@ CH21RD = os.environ.get('CH21RD', '/root/re4data/private/ch21r-20261020')
 DATA['ch21r'] = {'dc/tex.pak': CH21RD + '/dc/tex.pak'}
 for _r in ('r10c', 'r10d', 'r10e'):
     DATA['ch21r'].update({'st1/%s.%s' % (_r, _x): '%s/st1/%s.%s' % (CH21RD, _r, _x) for _x in ('arc', 'dar')})
-    for _f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'MAINSCENARIO.re4mesh', 'registry.re4nmr'):
+    for _f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'registry.re4nmr'):
         if _f != 'registry.re4nmr' or _r != 'r10c':
             DATA['ch21r']['dc/native/%s/%s' % (_r, _f)] = '%s/dc/native/%s/%s' % (CH21RD, _r, _f)
 PAK_DERIVED['ch21r'] = CH21RD + '/pak-derived.json'
+# nostd20 (lane ch2rooms20 10-20, disc space: Test 20 was 4,401 sectors over the GD-ROM high-density zone with ch21r):
+# removes the GC scenery package dc/native/<room>/MAINSCENARIO.re4mesh of every route room that has a PS2 world. With
+# PS2_WORLD_ROOMS=2 (the recipe) native_static.cpp no_std_skip never opens it in a room whose PS2 world preloads
+# ("native mesh: no-std room=...: scenery package not opened"). r100 (multi-part FILE_0x scenery) and r101 (low/ quality
+# packages) keep theirs. A 'remove' entry takes the paths off the disc. Knob-off / PS2_WORLD_ROOMS<2 discs must not stage it.
+DATA['nostd20'] = {'remove': ['dc/native/%s/MAINSCENARIO.re4mesh' % _r for _r in (
+    'r102 r103 r104 r105 r106 r107 r108 r109 r10a r10b r10f r111 r112 r113 r117 r118 r119 r11a r11b '
+    'r11c r11d r11e').split()]}
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
@@ -757,6 +765,10 @@ def main():
                     f_ = '%s/candidate-route%s/%s.ovl' % (prog, new, o_)
                     assert os.path.exists(f_), f_
                     r['dc/%s.ovl' % o_] = f_; rm.discard('dc/%s.ovl' % o_); rec.append('%s ovl %s' % (nm, o_))
+                continue
+            if k == 'remove':   # paths the set takes off the disc (nostd20)
+                for p_ in v:
+                    r.pop(p_, None); rm.add(p_); rec.append('%s rm %s' % (nm, p_))
                 continue
             if k == 'dc/tex.pak' and nm in DROP_LOOSE:
                 PREV_PAK[nm] = r.get('dc/tex.pak')
