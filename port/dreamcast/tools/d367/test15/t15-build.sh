@@ -158,7 +158,9 @@ T15_G="ACTOR_PROBE_LIGHT=2 GANADO_LIT=1 GANADO_LIT_NEAREST=0"
 #      Leon jacket cloth half rate (gameplay gate: kills, doors, cutscenes, cap identical; farm fight -4.9 ms MODELLED).
 #      Test 20 (10-20, lane logic-lod): ESP_TYPE_CAP=16 (at most 16 drawn effects per id from enemies/animals/objects;
 #      farm fight -3.2 ms) + ESP_CUT_EARLY=1 (exact, never-drawn mist/haze skip the transform).
-T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1 MANUAL_PACK_PROBE=1 SCENERY_CHUNK=1 SG_SELECT_LEAN=1 ENEMY_VIS_CULL=1 SCENERY_UNIT_CONCAT=1 SCENERY_SCREEN_MEMO=1 SCENERY_FAR_LOD=4 LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01 ESP_TYPE_CAP=16 ESP_CUT_EARLY=1 BODY_CORPSE=1 BODY_ROUTE=1 RIGID_CHUNK=1 CHUNK_SUBMIT=1}
+#      Test 21 (10-20, lane pace20, user "yes please"): PACE_STEADY=1 adds STEADY to Options > Frame pacing; the
+#      default stays Fast (players opt in). Knob-off identity fd597042; farm Fast vs Steady same kills.
+T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1 MANUAL_PACK_PROBE=1 SCENERY_CHUNK=1 SG_SELECT_LEAN=1 ENEMY_VIS_CULL=1 SCENERY_UNIT_CONCAT=1 SCENERY_SCREEN_MEMO=1 SCENERY_FAR_LOD=4 LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01 ESP_TYPE_CAP=16 ESP_CUT_EARLY=1 BODY_CORPSE=1 BODY_ROUTE=1 RIGID_CHUNK=1 CHUNK_SUBMIT=1 PACE_STEADY=1}
 # lane resident16 (10-16): the room preload runs again when SS heap 11 closes (chapter title / results / save screens), so
 #   r105 after the chapter 1-2 save screen loads its set back in one pass instead of 81 disc reads in play. Render only.
 T15_P="SS11_PRELOAD=1"
