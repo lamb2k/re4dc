@@ -1,0 +1,20 @@
+name c20-r100-truck
+# cache20 bench, file 5, rows 6-13: render census facing the r100 truck that blocks the road (obm2d00, ~10 m ahead behind
+# the fence; the user's ~15 fps view), before s20 (room flag 13). Rows back to back in one room: as is; props off (rigid
+# models AND the PS2 world placements bound to objects, which is how the truck draws: RIGID_CENSUS=2, render only);
+# props on, every effect sprite off. No Ganado rows here: before s20 r100 has one live Ganado, the scripted s03 one,
+# which stays at its event spot (the crowd / shooting rows are at the r101 cross, file 6).
+room 0x100
+pos -71600 -55 -10540
+ang 2.127
+rsf 0x100 13
+scenario 0 0x00000010
+inv default
+god
+alivelog 150
+bench 6 300 600 TRUCK AS IS
+rigid 620 off
+bench 7 660 960 TRUCK NO PROPS
+rigid 980 on
+fx 990 off
+bench 8 1040 1340 TRUCK NO FX

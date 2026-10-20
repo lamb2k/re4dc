@@ -25,7 +25,7 @@ case "$D" in STAGED_PAYLOAD_IDENTITY_PASS*) ;; *) echo "$N stage failed: $D"; ex
 echo "${PURPOSE:-cache20 run $N: arm $L, $SECS s}" > $S/PURPOSE.txt
 C=$S/capture
 for try in $(seq 1 30); do
-  printf 'set -euo pipefail\ncd "%s"\nexport TRACE_LOCK_OWNER=cache20-%s\nexec bash %s/port/dreamcast/tools/d367/trace_lock.sh /mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe %s route-c20-%s --seconds %s --period %s\n' "$HW" "$N" "$TR" "${RUNNER:-run-emulator-novsync-i26.py}" "$N" "$SECS" "${PERIOD:-30}" > "$SP/tl-$N.sh"
+  printf 'set -euo pipefail\ncd "%s"\nexport TRACE_LOCK_OWNER=cache20-%s\n%s\nexec bash %s/port/dreamcast/tools/d367/trace_lock.sh /mnt/c/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe %s route-c20-%s --seconds %s --period %s\n' "$HW" "$N" "${RE4DC_LOG_STOP_TICK:+export RE4DC_LOG_STOP_TICK=$RE4DC_LOG_STOP_TICK WSLENV=RE4DC_LOG_STOP_TICK/u}" "$TR" "${RUNNER:-run-emulator-novsync-i26.py}" "$N" "$SECS" "${PERIOD:-30}" > "$SP/tl-$N.sh"
   MSYS_NO_PATHCONV=1 TRACE_SLOTS=12 WSLENV=TRACE_SLOTS/u wsl -d Ubuntu-24.04 -u root -- bash /mnt/c/Flycast-Evidence/re4-dreamcast/cache20-20261020/_tools/tl-$N.sh > $S-run-stdout.txt 2>&1 || true
   grep -q "Emulator queue occupied" $S-run-stdout.txt || break
   sleep 60

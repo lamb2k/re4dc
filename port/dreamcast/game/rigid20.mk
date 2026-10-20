@@ -9,6 +9,9 @@ $(error RIGID_CENSUS is 0, 1 or 2)
 endif
 ifneq ($(RIGID_CENSUS),0)
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_RIGID_CENSUS=$(RIGID_CENSUS)
+ifeq ($(RIGID_CENSUS),2)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_RIGID_CENSUS=2
+endif
 endif
 # RIGID_CHUNK=1 (render only, approximation; needs CHUNK_SUBMIT=1 and NATIVE_ACTOR_DIRECT=1): rigid models (unskinned
 # native actor parts: trucks, carts, doors, boats, breakables, weapons, cObj props) take their own path

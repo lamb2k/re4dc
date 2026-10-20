@@ -46,6 +46,9 @@
 #include <cstdlib>
 #include "native_static.h"
 #include "cache20.h"
+#if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
+extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID_CENSUS=2)
+#endif
 #if RE4DC_QUALITY
 #include "quality.h"
 #endif
@@ -4325,6 +4328,11 @@ unsigned query(unsigned id){
     const unsigned f=re4dc_ui_frame();
     if(f!=frame){frame=f;nmoved=0;std::memset(state,0,sizeof(state));}
     if(state[id])return state[id]-1U;
+#if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
+    // RIGID_CENSUS=2 (cache20 census bench): `rigid <frame> off` also hides every PS2 world placement bound to a source
+    // object (props drawn as PS2 world parts: r100's truck obm2d00, the police car, crates); render only
+    if(re4dc_rigid_hide){++hidden;return 1;}
+#endif
     unsigned r=0;
     Slot& s=slots[slot_of[id]];
     std::uint32_t flag=0,serial=0;

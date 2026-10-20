@@ -135,6 +135,7 @@ const char* re4dc_bench_results(void);
 void re4dc_bench_fixture_begin(const char* path);
 void re4dc_bench_census(unsigned esp_live, unsigned hits, unsigned rg_parts, unsigned rg_verts);
 unsigned re4dc_bench_esp_live(void);                                  // esp.cpp (BENCH_CENSUS)
+void re4dc_cache20_arm(int on) __attribute__((weak));               // platform/cache20.cpp
 extern volatile unsigned re4dc_rigid_hide __attribute__((weak));     // native_actor_fast.cpp (RIGID_CENSUS=2)
 extern unsigned re4dc_rigid_census[6] __attribute__((weak));
 extern const void* re4dc_rigid_census_big __attribute__((weak));
@@ -698,6 +699,9 @@ void load()
             wp.cen[wp.n_cen++] = {num(tok[1]), 5, 0, 0, false};
         } else if (!strcmp(k, "tank") && n >= 2 && wp.n_cen < 24) {
             wp.cen[wp.n_cen++] = {num(tok[1]), 4, 0, 0, false};
+        } else if (!strcmp(k, "cachearm") && n >= 2) {
+            // test runs only (Flycast smoke of arm B without the start screen): the cache20 arm, 0 = A, 1 = B
+            if (re4dc_cache20_arm) re4dc_cache20_arm((int) num(tok[1]));
         } else if (!strcmp(k, "autofire") && n >= 3) {
             wp.fire_from = num(tok[1]);
             wp.fire_to = num(tok[2]);
@@ -1157,7 +1161,7 @@ void census_poll()
                 f32 best_d = 1e30f;
                 for (int id = 0x10; id <= 0x20; ++id)
                     for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e)) {
-                        if (!cen_live(e)) continue;
+                        if (!(e->be_flag & 1) || e->hp <= 0) continue;   // listed and alive (a far one may be suspended)
                         bool used = false;
                         for (unsigned q = 0; q < wp.n_crowd; ++q) used = used || wp.crowd_em[q] == e;
                         if (used) continue;

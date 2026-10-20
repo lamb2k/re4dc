@@ -277,6 +277,7 @@ unsigned ph_us(const Scene& s, const char* name) {   // a phase's average us per
     return 0;
 }
 unsigned ms10(unsigned us) { return (us + 50) / 100; }
+unsigned cen_avg(unsigned long long sum, unsigned n) { return n ? (unsigned) ((sum + n / 2) / n) : 0; }
 unsigned em10(const Scene& s) { return ms10(ph_us(s, "EmMgr.move")); }
 unsigned pl10(const Scene& s) { return ms10(ph_us(s, "Player")); }
 unsigned fx10(const Scene& s) { return ms10(ph_us(s, "EspMove") + ph_us(s, "EspTrans")); }
@@ -435,7 +436,6 @@ void draw_results_tail(const Fb& fb) {
     for (const char* n : notes) { fb_text(fb, 16, y, 1, 2, kGrey, n); y += 15; }
 }
 
-unsigned cen_avg(unsigned long long sum, unsigned n) { return n ? (unsigned) ((sum + n / 2) / n) : 0; }
 // BENCH_CENSUS results page 1: every row with fps, CPU per tick, GPU, the frame-tail buckets (CPU work, GPU wait, to vblank,
 // pacing), the logic phases (enemies, Leon, effects), Ganados alive, live effects, hits on the tank target, rigid parts.
 void draw_results_census(const Fb& fb) {
@@ -447,17 +447,17 @@ void draw_results_census(const Fb& fb) {
     snprintf(line, sizeof(line), "ARM %c (%s)  BUILD %s  RUN %u  PAGE 1/2  Y: FRAME TAIL PAGE  A: RUN AGAIN", g_arm,
              g_arm == 'B' ? "CACHE LEVERS ON" : "AS SHIPPED", RE4DC_BENCH_ID, g_run);
     fb_center(fb, y, 1, 2, kYellow, line); y += 18;
-    fb_text(fb, 6, y, 1, 2, kCyan, "ROW               FPS  CPU/T  GPU   WORK  WAITG  VBLNK  PACE  ENEMY LEON  FX  ALIVE FXLIVE  HITS RIGID"); y += 16;
+    fb_text(fb, 6, y, 1, 2, kCyan, "ROW              FPS CPU/T  GPU  WORK WAITG VBLNK  PACE ENEMY LEON  FX ALIVE FXLIVE HITS RIGID  RD/S"); y += 16;
     for (int k = 0; k < kScenes; ++k) {
         const Scene& s = g_scene[k];
         if (!s.defined) continue;
         if (!s.windows) { snprintf(line, sizeof(line), "%2d %-14s NOT MEASURED", k + 1, s.name); fb_text(fb, 6, y, 1, 2, kRed, line); y += 15; continue; }
-        snprintf(line, sizeof(line), "%2d %-14s %5s %6s %5s %6s %6s %6s %5s %6s %4s %4s %5s %3u/%-3u %4u %2u/%uK",
+        snprintf(line, sizeof(line), "%2d %-14s%5s %5s %4s %5s %5s %5s %5s %5s %4s %4s %5s %3u/%-3u %4u %2u/%-2uK %5s",
                  k + 1, s.name, d1(fps10(s), a), d1(cpu10(s), b), d1(gpu10(s), c), d1(ms10(tl_avg(s, T_WORK)), d),
                  d1(ms10(tl_avg(s, T_BLK)), e), d1(ms10(tl_avg(s, T_ROUND)), g), d1(ms10(tl_avg(s, T_PACE)), h),
                  d1(em10(s), i2), d1(pl10(s), j), d1(fx10(s), k2), d1(alive10(s), a), cen_avg(s.esp_sum, s.cen_n),
                  s.esp_max, s.hits1 - s.hits0, cen_avg(s.rg_parts_sum, s.cen_n),
-                 (cen_avg(s.rg_verts_sum, s.cen_n) + 500) / 1000);
+                 (cen_avg(s.rg_verts_sum, s.cen_n) + 500) / 1000, d1(reads_ps10(s), b));
         fb_text(fb, 6, y, 1, 2, kWhite, line); y += 15;
     }
     y += 6;
@@ -465,7 +465,7 @@ void draw_results_census(const Fb& fb) {
         "FPS: SHOWN PICTURES PER SECOND.  CPU/T: GAME CPU MS PER TICK.  GPU: PVR RENDER MS.  ALL MS PER DRAWN PICTURE:",
         "WORK: CPU WORK  WAITG: CPU WAITING ON THE GRAPHICS CHIP  VBLNK: SPIN TO VBLANK  PACE: SPIN OVER FURTHER VBLANKS",
         "ENEMY / LEON / FX: LOGIC MS PER TICK.  FXLIVE: LIVE EFFECTS AVG/MAX.  HITS: SHOTS THAT HIT THE TANK GANADO IN THE ROW",
-        "RIGID: RIGID MODEL PARTS / THOUSAND VERTICES REACHING THE DRAW PER FRAME.  PHOTOGRAPH BOTH PAGES OF BOTH ARMS."};
+        "RIGID: RIGID PARTS / K VERTICES DRAWN PER FRAME.  RD/S: DISC READS PER SECOND.  PHOTOGRAPH BOTH PAGES, BOTH ARMS."};
     for (const char* n : notes) { fb_text(fb, 6, y, 1, 2, kGrey, n); y += 14; }
 }
 
@@ -608,6 +608,10 @@ int re4dc_bench_tick(unsigned room_frame)
         s.end_frame = room_frame;
         re4dc_log("bench: scene %d end room frame %u windows=%u fps10=%u min1s10=%u cpu10=%u gpu10=%u kos_min=%u\n",
                   g_cur + 1, room_frame, s.windows, fps10(s), s.windows ? s.min_fps10 : 0, cpu10(s), gpu10(s), s.kos_min);
+        if (RE4DC_BENCH_CENSUS)
+            re4dc_log("bench: census row %d esp_avg=%u esp_max=%u hits=%u rigid_parts=%u reads_ps10=%u alive10=%u\n", g_cur + 1,
+                      cen_avg(s.esp_sum, s.cen_n), s.esp_max, s.hits1 - s.hits0, cen_avg(s.rg_parts_sum, s.cen_n),
+                      reads_ps10(s), alive10(s));
         if (RE4DC_BENCH_CENSUS && g_cur + 1 < kScenes && g_scene[g_cur + 1].defined && !g_scene[g_cur + 1].done &&
             g_scene[g_cur + 1].file == s.file && g_scene[g_cur + 1].begin > room_frame) {
             ++g_cur;   // the file's next row, same room, no reset
