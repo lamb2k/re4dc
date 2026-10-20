@@ -166,6 +166,18 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1 -I$(OBJDIR)/
 $(OBJDIR)/src/game/read.o $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1
 $(OBJDIR)/platform/native_movie.o $(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_LEON_HAND_PACK=1
 endif
+# LEON_HAND_RETAIN=1 (default off): demand-priority two-cell hand retention,
+# current-slot/cached reuse and stale-job admission; same package/AICA bytes.
+LEON_HAND_RETAIN ?= 0
+ifeq ($(filter $(LEON_HAND_RETAIN),0 1),)
+$(error LEON_HAND_RETAIN must be 0 or 1)
+endif
+ifeq ($(LEON_HAND_RETAIN),1)
+ifneq ($(LEON_HAND_PACK),1)
+$(error LEON_HAND_RETAIN needs LEON_HAND_PACK=1)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_HAND_RETAIN=1
+endif
 # LEON_HEADLESS=1 (lane garr18, 2026-10-19; default 0: no effect; render only; needs ACTOR_PL08=1 PS2_LEON=1
 #              LEON_HAND_POSES=1 and LEON_HEADLESS_DIR, a space-free private dir holding ps2leon_neck.h from
 #              tools/d367/ps2leon/build_neck.py): Leon after his head comes off (cPlLeon::setHead(0): chainsaw / claw /

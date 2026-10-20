@@ -1,10 +1,17 @@
+#ifndef RE4DC_LEON_HAND_RETAIN
+#define RE4DC_LEON_HAND_RETAIN 0
+#endif
 // LEON_HAND_PACK=1 (crowd.mk; needs LEON_HAND_POSES=1, PS2_LEON=1, ACTOR_PL08=1; render only). Included by
 // coarse_actor_owner_leon.inc. Leon's hands (roles 5 right / 6 left) for every pose come from the outfit's hand package
 // (dc/native/pl00/leon_hands_pl00.re4hp, tools/d367/ps2leon/hands_pack.py), not from the image: the standard hands'
 // arrays are left out of ps2leon_runtime.h (hands_pack.py derive), and leon4k::chunks[5] / [6] point at two fixed draw
 // slots that hold the pose drawn now.
 //   - Directory: read once from the package (rows: GC runtime key -> blob; blobs; sources: weapon archive -> blob).
+#if RE4DC_LEON_HAND_RETAIN
+//   - Cache: 4 cells in AICA RAM (two per side, with demand priority over fallback hints), filled
+#else
 //   - Cache: 4 cells in AICA RAM (per side: the home pose, prefetched at room load, and the last other pose), filled
+#endif
 //     from the disc and copied to the draw slot over G2 when the game swaps a hand info. A real-time swap between the
 //     home hand and the equipped weapon's hand (grabs, the boat, the knife) is a copy, not a disc read.
 //   - Prefetch (synchronous, at load points): room load (the standard hands, then the home / alternating poses:
@@ -49,7 +56,11 @@ int slot_blob[2]={-1,-1};
 unsigned aica;               // the cells' base (0: not allocated)
 int cell_blob[4]={-1,-1,-1,-1};   // 0 right home, 1 right other, 2 left home, 3 left other
 int refill[4]={-1,-1,-1,-1};      // what the cells held when they were freed
+#if RE4DC_LEON_HAND_RETAIN
+unsigned cell_used[4],use_clock;   // demand LRU per side; zero means prefetched but not drawn
+#else
 unsigned cell_used[4],use_clock;   // LRU per side: the least recently drawn cell of the side is replaced
+#endif
 unsigned reads,read_bytes,copies,hits,misses,yields,refills,alloc_fails,hit_max_us,async_reads,async_fails,async_max_us,pick_max_us;
 inline unsigned r32(unsigned x){return (x+31u)&~31u;}
 unsigned blob_bytes(const Blob& b){unsigned n=0;for(unsigned i=0;i<5;++i)n+=r32(b.size[i]);return n;}
@@ -99,21 +110,54 @@ bool cells() {
 }
 int cell_of(int b){for(unsigned c=0;c<4;++c)if(cell_blob[c]==b)return int(c);return -1;}
 // The side's cell for a new blob: an empty one, else the least recently drawn (the home poses are only prefetched first).
+#if RE4DC_LEON_HAND_RETAIN
+unsigned cell_for(int b){const int found=cell_of(b);if(found>=0)return unsigned(found);
+    const unsigned c=(blobs[b].role-5u)*2u;
+#else
 unsigned cell_for(int b){const unsigned c=(blobs[b].role-5u)*2u;
+#endif
     if(cell_blob[c]<0)return c;if(cell_blob[c+1]<0)return c+1;return cell_used[c]<=cell_used[c+1]?c:c+1;}
+#if RE4DC_LEON_HAND_RETAIN
+bool hint_room(int b){const unsigned c=(blobs[b].role-5u)*2u;
+    return cell_of(b)>=0 || cell_blob[c]<0 || cell_blob[c+1]<0 || !cell_used[c] || !cell_used[c+1];}
+enum CacheUse { Hint, Prefetch, Demand };
+// A fallback hint cannot evict two demanded poses. Reuse an existing cell;
+// only source demand refreshes LRU, while exact loadpoint prefetch may replace.
+void cache(int b,const unsigned char* from,CacheUse use=Prefetch) {
+    if((use==Hint && !hint_room(b)) || !cells())return;
+    const unsigned c=cell_for(b);const bool same=cell_blob[c]==b;
+#else
 // Put blob b in its cell from `from` (main RAM holding its bytes).
 void cache(int b,const unsigned char* from) {
     if(!cells())return;
     const unsigned c=cell_for(b);
+#endif
     spu_memload(aica+cell_offset(c),from,blob_bytes(blobs[b]));
+#if RE4DC_LEON_HAND_RETAIN
+    cell_blob[c]=b;if(use==Demand)cell_used[c]=++use_clock;else if(!same)cell_used[c]=0;
+#else
     cell_blob[c]=b;cell_used[c]=++use_clock;
+#endif
 }
+#if RE4DC_LEON_HAND_RETAIN
+// Fallback ALT is a hint. An unchanged current CPU slot is already authoritative
+// package data, so loadpoints need not read that blob back from the disc.
+void prefetch(int b,bool hint=false) {
+    if(b<0 || unsigned(b)>=nblobs || cell_of(b)>=0 || (hint && !hint_room(b)) || !cells())return;
+    const unsigned side=blobs[b].role-5u;const auto use=hint?Hint:Prefetch;
+    if(slot_blob[side]==b){cache(b,slot[side],use);return;}
+#else
 // Prefetch blob b into its cell (bounce through DVD_BUFF2; the draw slots are not touched).
 void prefetch(int b) {
     if(b<0 || unsigned(b)>=nblobs || cell_of(b)>=0 || !cells())return;
+#endif
     unsigned char* t=re4dc_dvd_buff+0x10000;
     if(!read_at(unsigned(blobs[b].offset32)*32u,t,blob_bytes(blobs[b])))return;
+#if RE4DC_LEON_HAND_RETAIN
+    cache(b,t,use);
+#else
     cache(b,t);
+#endif
 }
 // Room load: per side the standard hand, then its home (right) / alternating (left) pose; the second prefetch of a
 // side goes to its other cell, so both stay cached.
@@ -160,6 +204,9 @@ bool job_start(int b) {
     return true;
 }
 void set_slot(unsigned side,int b);
+#if RE4DC_LEON_HAND_RETAIN
+bool load(unsigned side,int b);
+#endif
 // Main thread, each Leon draw: take a landed read (into its cell, and into the slot when that side still wants it),
 // then start the next queued one.
 void job_poll() {
@@ -170,8 +217,14 @@ void job_poll() {
         if(job_state==2) {
             const Blob& x=blobs[b];const unsigned side=x.role-5u;
             ++reads;++async_reads;read_bytes+=blob_bytes(x);if(job_us>async_max_us)async_max_us=job_us;
+#if RE4DC_LEON_HAND_RETAIN
+            const bool demanded=want[side]==b;
+            cache(b,job_data(),demanded?Demand:Hint);
+            if(demanded){std::memcpy(slot[side],job_data(),blob_bytes(x));set_slot(side,b);want[side]=-1;}
+#else
             cache(b,job_data());
             if(want[side]==b){std::memcpy(slot[side],job_data(),blob_bytes(x));set_slot(side,b);want[side]=-1;}
+#endif
             if(async_reads<=64)re4dc_log("LHPACK landed blob=%u role=%u read_us=%u\n",unsigned(b),5u+side,unsigned(job_us));
         } else ++async_fails;
         re4dc_motion_free(job_mem);job_mem=nullptr;job_blob=-1;job_state=0;
@@ -181,7 +234,15 @@ void job_poll() {
         for(unsigned i=1;i<job_n;++i)job_queue[i-1]=job_queue[i];
         --job_n;
         const unsigned side=blobs[b].role-5u;
+#if RE4DC_LEON_HAND_RETAIN
+        // An equip/loadpoint may satisfy an already queued pose. Consume its
+        // cached/current-slot bytes before starting an unnecessary worker read.
+        if(cell_of(b)>=0){if(want[side]==b)load(side,b);continue;}
+        if(slot_blob[side]==b){if(want[side]==b)load(side,b);else cache(b,slot[side],Hint);continue;}
+        if(want[side]!=b && !hint_room(b))continue;
+#else
         if(cell_of(b)>=0 && want[side]!=b)continue;
+#endif
         if(!cells() && want[side]!=b)continue;
         if(!job_start(b)){++async_fails;if(want[side]==b)job_enqueue(b);}
         break;
@@ -209,13 +270,25 @@ void set_slot(unsigned side,int b) {
 bool load_now(unsigned side,int b) {
     const Blob& x=blobs[b];
     if(!read_at(unsigned(x.offset32)*32u,slot[side],blob_bytes(x)))return false;
+#if RE4DC_LEON_HAND_RETAIN
+    cache(b,slot[side],Demand);set_slot(side,b);
+#else
     cache(b,slot[side]);set_slot(side,b);
+#endif
     return true;
 }
 // Draw: make slot `side` hold blob b when it is cached (a G2 copy); else ask the worker for it and keep drawing the
 // slot's pose. false: the slot is empty (the plan declines).
 bool load(unsigned side,int b) {
+#if RE4DC_LEON_HAND_RETAIN
+    if(slot_blob[side]==b){
+        want[side]=-1;const int c=cell_of(b);
+        if(c>=0)cell_used[c]=++use_clock;else if(aica)cache(b,slot[side],Demand);
+        return true;
+    }
+#else
     if(slot_blob[side]==b){want[side]=-1;return true;}
+#endif
     const Blob& x=blobs[b];
     const int c=cell_of(b);
     if(c>=0) {
@@ -311,7 +384,11 @@ extern "C" void re4dc_leon_hands_weapon(const char* name) {
         if(srcs[i].wep!=no || done[x.role-5] || (x.flags&2))continue;
         done[x.role-5]=true;prefetch(srcs[i].blob);
     }
+#if RE4DC_LEON_HAND_RETAIN
+    for(unsigned i=0;i<nblobs;++i)if((blobs[i].flags&4) && !done[blobs[i].role-5])prefetch(int(i),true);
+#else
     for(unsigned i=0;i<nblobs;++i)if((blobs[i].flags&4) && !done[blobs[i].role-5])prefetch(int(i));
+#endif
     mutex_unlock(&lh_mutex);
 }
 // Movie open (native_movie.cpp) and a runtime sound bank conversion (audio_aica.cpp): give the AICA cells back.
