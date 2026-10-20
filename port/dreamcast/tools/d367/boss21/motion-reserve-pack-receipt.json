@@ -1,0 +1,103 @@
+{
+  "base": "bfc8aab6b33b6112331287bb43ebe0efc771f400",
+  "own_merge": "d5d378b0779586791c9e05d3170d201e200a2618",
+  "dependency": "c5fbf44d3b7b674efc32b54e63401801a9ad57aa",
+  "qualification": "actual-source host regression plus SH4 native_motion object, not full linked-program or guest acceptance",
+  "object_knobs": {
+    "MOTION_PRESSURE_BACKING": 1,
+    "MOTION_RESERVE_PACK": "0/1 paired",
+    "MOTION_RESERVE": 1,
+    "MOTION_PRESSURE_BYTES": 262144,
+    "MOTION_PRESSURE_GROW": "0 inherited default",
+    "MOTION_BOUNDED_R11F": 1,
+    "MOTION_RESERVE_SPILL": 524288,
+    "MOTION_COLD_POOL": 262144,
+    "SUBSCREEN": 1,
+    "MOTION_OOM_EVICT": 1,
+    "MOVIE_HEAP_EVICT": 1,
+    "MOTION_FAST_READ": 1,
+    "MOTION_LEASE_LEAN": 1,
+    "GAME_MOTION_INDEX": 1
+  },
+  "rows": {
+    "accounting-baseline": {
+      "bytes": 119680,
+      "sha256": "66c78345683af8c7e87a3eed874dc35d41a8bca5e4e298ff9bbd74d45995de17",
+      "stripped_sha256": "7d47e4b801d234f6cc9bd0016fd790fe7d62d45f4ae9c35a62907267e9aa0b1f",
+      "size_output": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   8712\t      0\t    557\t   9269\t   2435\t/root/probe/boss21-motion-build/on/platform/native_motion.o"
+    },
+    "pack-off": {
+      "bytes": 119676,
+      "sha256": "76620c80b9e62856e7d164dc98369fe43a98c935006294327a07fd9dbeba94c8",
+      "stripped_sha256": "7d47e4b801d234f6cc9bd0016fd790fe7d62d45f4ae9c35a62907267e9aa0b1f",
+      "size_output": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   8712\t      0\t    557\t   9269\t   2435\t/root/probe/boss21-motion-build/pack-off/platform/native_motion.o"
+    },
+    "pack-on": {
+      "bytes": 124932,
+      "sha256": "700e7d4067869b82187aff66e56a7853e6da4afcd1d404db773efad2f6b390fe",
+      "stripped_sha256": "d3c65365886eb13ae1d7a0753a0f43c099a9ec5d458fee1b65baa583f024497d",
+      "size_output": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   9208\t      0\t    557\t   9765\t   2625\t/root/probe/boss21-motion-build/pack-on/platform/native_motion.o"
+    }
+  },
+  "pack_off_stripped_object_identical": true,
+  "three_clip_regressions": [
+    {
+      "origin": "QA12 cold24/26/91",
+      "bytes": [
+        11744,
+        7744,
+        12224
+      ],
+      "aggregate": 31712
+    },
+    {
+      "origin": "castle J05 cold0/6/86",
+      "bytes": [
+        22400,
+        9152,
+        17408
+      ],
+      "aggregate": 48960
+    },
+    {
+      "origin": "castle J03 last10s cold0/6/152",
+      "bytes": [
+        22400,
+        9152,
+        32416
+      ],
+      "aggregate": 63968
+    }
+  ],
+  "per_regression": {
+    "calls": 60,
+    "control_loads": 60,
+    "control_evictions": 58,
+    "packed_loads": 3,
+    "packed_evictions": 0,
+    "packed_hits": 57,
+    "new_allocations": 0
+  },
+  "host_variants": [
+    "BACKING0 LEAN0 PACK0",
+    "BACKING1 LEAN0 PACK0",
+    "BACKING1 LEAN1 PACK0",
+    "BACKING1 LEAN0 PACK1",
+    "BACKING1 LEAN1 PACK1"
+  ],
+  "other_host_cases": [
+    "four coactive leased FCVs preserve pointers and relocated bytes; fifth rejected until unpin",
+    "interior gap reuse without neighbor moves",
+    "pressure/OOM/movie eviction skip subregions",
+    "hold and menu resume owner checks use original allocation base",
+    "retirement frees slabs once, no interior free",
+    "read error, identity mismatch and invalid key offset retain backing and reject",
+    "prior accounting/pin/co-bind/v3-no-spill regressions still pass"
+  ],
+  "source_sha256": {
+    "port/dreamcast/game/platform/native_motion.cpp": "166f2cf89359bfa6fbc860759b2e6b3fdaff3925f19ed68071674c967efe7a75",
+    "port/dreamcast/game/game30.mk": "e9aac006f39fb784f924373a002e3dc47dcb0bd9ff25dddf2546cb22bf211268",
+    "port/dreamcast/tools/d367/boss21/motion_pressure_host.cpp": "bc880821144f383432985d4e809c5e78e21ae4b36a9435b164b98d23d22b740b",
+    "port/dreamcast/tools/d367/boss21/test_motion_pressure.py": "b95d930f4809fb480c60e85e57797431d4ddc06e77779e5d48e21a39713c2fa8"
+  }
+}
