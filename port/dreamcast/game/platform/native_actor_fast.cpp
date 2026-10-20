@@ -4819,6 +4819,11 @@ namespace {
 #include "native_actor_chunk.inc"
 }  // namespace
 #endif
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+namespace {
+#include "native_actor_rigid.inc"
+}  // namespace
+#endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     ++stats.parts;
     PXF_BEGIN(part);
@@ -4883,6 +4888,19 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
 
     Frame& f = *prepare_frame(p, near_distance, far_distance);
+#if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS
+    if (f.mode != kSkin) {
+        static unsigned rgc_parts, rgc_ml, rgc_nv, rgc_log;
+        ++rgc_parts; rgc_ml += blob->meshlets;
+        const auto* tb = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
+        for (unsigned i = 0; i < blob->meshlets; ++i) rgc_nv += tb[i].n.vertices();
+        if (frame_serial - rgc_log >= 600U) {
+            re4dc_log("RGC frame=%u parts=%u meshlets=%u verts=%u\n", frame_serial, rgc_parts, rgc_ml, rgc_nv);
+            rgc_log = frame_serial; rgc_parts = rgc_ml = rgc_nv = 0;
+        }
+        re4dc_model_result(0, 0, 0); return 1;
+    }
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     PXF_SPAN(pos_us, pxt);
     if (pxf::Row* pr = pxf::row()) pr->ml += f.mode == kSkin ? 1000000u : 0u;
@@ -5072,6 +5090,19 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             ++stats.culled_parts; re4dc_model_result(0, 0, 0); PXF_EXIT(kSphere); return 1;
         }
     }
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+    // RIGID_CHUNK: the size rule (native_actor_rigid.inc).
+    const bool rigid = f.mode == kRigid;
+    const float rigid_px = rigid ? rigid_pixels(p, *blob, near_distance) : 1.0e9f;
+    if (rigid) {
+        rigid_log();
+        ++rigid_stats.parts;
+        if (rigid_px < RE4DC_RIGID_CULL_PX) {
+            ++rigid_stats.culled; ++stats.culled_parts; re4dc_model_result(0, 0, 0); PXF_EXIT(kSphere); return 1;
+        }
+    }
+    const bool rigid_flat = rigid && rigid_px < RE4DC_RIGID_FLAT_PX;
+#endif
     Part e{p, f, {p.projection, p.viewport}, {near_distance, far_distance, RE4DC_SCREEN_WF, RE4DC_SCREEN_HF, project, nullptr}};
     e.clip.context = &e.projection;
     e.streaming = re4dc_model_packet_streaming() != 0;
@@ -5132,6 +5163,13 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         lights.constant = true;
         lights.constant_rgb = part_colour(lights);
     }
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+    if (rigid_flat && lights.fast && !lights.constant) {
+        ++rigid_stats.flat;
+        lights.constant = true;
+        lights.constant_rgb = part_colour(lights);
+    }
+#endif
     // Skinned directions follow the part's light fold; parts of one info whose
     // folds agree within kDirTolerance of the largest direction (light
     // directions from nearby part centres) keep the entries already built.
@@ -5157,8 +5195,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
     const unsigned rs = 3U + ((blob->flags & kHasCi) ? 1U : 0U) + ((blob->flags & kHasBake) ? 1U : 0U);
     const unsigned color_index = blob->color_index;
-    const unsigned level = tier == kTierFar ? blob->levels
-                           : select_level(p, *blob, near_distance, tier == kTierMid ? crowd_mid_tau : RE4DC_NEAR_LOD_TAU);
+    unsigned level = tier == kTierFar ? blob->levels
+                     : select_level(p, *blob, near_distance, tier == kTierMid ? crowd_mid_tau : RE4DC_NEAR_LOD_TAU);
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+    if (rigid_flat) level = blob->levels;
+#endif
     const LevelInfo* li = level ? reinterpret_cast<const LevelInfo*>(base + blob->lod4 * 4U) + (level - 1) : nullptr;
     const MeshletLevel* lt = li ? reinterpret_cast<const MeshletLevel*>(base + li->table4 * 4U) : nullptr;
     const u8* lists = li ? base + li->lists4 * 4U : base + blob->idx4 * 4U;
@@ -5253,6 +5294,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             chunk_sink_end(sink);
         }
 #else
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+        if (rigid) { ok = rigid_strips(e, r, index, nv, ni, nt, any); continue; }
+#endif
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
         else ok = e.strips(r, index, ni);
 #endif
