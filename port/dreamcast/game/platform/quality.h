@@ -51,12 +51,16 @@ enum {
     // RENDER_OPTION: speed display (R + START cycles it), a 2-bit field: RE4DC_SPEED_*.
     RQ_SPEED_SHIFT = 20,
     RQ_SPEED_MASK = 3u << 20,
+    // PACE_STEADY (pace.mk): the Steady pacing mode, stored as this bit with the 2-bit field at Fast, so a build without
+    // Steady reads the record as Fast. re4dc_quality_pace() returns RE4DC_PACE_STEADY when it is set.
+    RQ_PACE_STEADY_BIT = 1u << 22,
 };
 enum {
     RE4DC_PACE_DEFAULT = 0,   // the build's PACE_* knobs
     RE4DC_PACE_SMOOTH = 1,
     RE4DC_PACE_FAST = 2,
     RE4DC_PACE_OFF = 3,
+    RE4DC_PACE_SET_STEADY = 4,   // PACE_STEADY builds only
 };
 
 enum {

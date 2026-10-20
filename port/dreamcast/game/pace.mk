@@ -92,7 +92,7 @@ SPEED_VMU_OFF ?= 0
 PACE_DEBUG ?= $(or $(QUALITY_DEBUG),0)
 PACE_MODE ?= $(if $(filter 0,$(PACE_FLOOR_FPS)),fast,smooth)
 ifneq ($(PACE_CATCHUP),0)
-PACE_MODE_NUM = $(if $(filter off,$(PACE_MODE)),2,$(if $(filter fast,$(PACE_MODE)),1,$(if $(filter smooth,$(PACE_MODE)),0,$(error PACE_MODE=smooth|fast|off))))
+PACE_MODE_NUM = $(if $(filter steady,$(PACE_MODE)),$(if $(filter 0,$(PACE_STEADY)),$(error PACE_MODE=steady needs PACE_STEADY=1),3),$(if $(filter off,$(PACE_MODE)),2,$(if $(filter fast,$(PACE_MODE)),1,$(if $(filter smooth,$(PACE_MODE)),0,$(error PACE_MODE=smooth|fast|off|steady)))))
 PACE_FORCE_NUM = $(if $(filter R,$(PACE_FORCE)),-1,$(if $(filter T,$(PACE_FORCE)),-2,$(if $(filter A,$(PACE_FORCE)),1,$(PACE_FORCE))))
 ifneq ($(PACE_CAP2_SPEED),0)
 ifneq ($(filter 0 1,$(PACE_CAP)),)
@@ -199,4 +199,46 @@ ifeq ($(DISC_READ_METER),1)
 ifneq ($(PHASE_METER),1)
 $(error DISC_READ_METER=1 needs PHASE_METER=1)
 endif
+endif
+
+# Lane pace20 (2026-10-20, user-approved "Steady" pacing choice; default 0 = image unchanged):
+#   PACE_STEADY=1   a fourth Frame pacing value, "Steady" (Options row, RE4DCCFG, quality.txt pace=4, the test chord): each
+#                   picture is held a constant number of TV fields (2, 3 or 4) chosen from recent work with hysteresis;
+#                   the drawn/dropped pattern follows the hold (3: every third image dropped, 4: every other), the flip
+#                   is deferred to its target field (pace_present.cpp). The 29.97 Hz logic clock, PACE_CAP and the
+#                   pending-drop rule are unchanged; a hold is only taken while its work fits, so it is never slower
+#                   than Fast. Stored as RQ_PACE_STEADY_BIT + Fast (a build without Steady reads Fast).
+#   PACE_PRECISE=1  the v2 drop prediction on the microsecond timer (vblank time stamps) instead of whole retrace counts,
+#                   every mode.
+#   PACE_HOLD_LOG=1 (bench builds) a "PACE hold" histogram per PACE_LOG window: fields each picture was shown
+#                   (flip to flip), scene finish -> flip latency, Steady releases; =2 adds a "PACE pic" line per picture
+#                   (scene finish field, target, flip, paced tick count, latency).
+PACE_STEADY ?= 0
+PACE_PRECISE ?= 0
+PACE_HOLD_LOG ?= 0
+ifneq ($(PACE_STEADY)$(PACE_HOLD_LOG),00)
+ifneq ($(PACE_CATCHUP),2)
+$(error PACE_STEADY / PACE_HOLD_LOG need PACE_CATCHUP=2)
+endif
+ifneq ($(PVR_PIPELINE),2)
+$(error PACE_STEADY / PACE_HOLD_LOG need PVR_PIPELINE=2)
+endif
+PLATFORM_OBJS += $(OBJDIR)/pace_present.o
+$(TARGET): $(OBJDIR)/pace_present.o
+$(OBJDIR)/pace_present.o: pace_present.cpp
+	@mkdir -p $(dir $@)
+	kos-c++ $(KOS_CFLAGS) $(GAME_CPPFLAGS) -DRE4DC_PACE_STEADY=$(PACE_STEADY) -DRE4DC_PACE_HOLD_LOG=$(PACE_HOLD_LOG) -MMD -MP -c $< -o $@
+-include $(OBJDIR)/pace_present.d
+$(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_PACE_STEADY=$(PACE_STEADY) -DRE4DC_PACE_HOLD_LOG=$(PACE_HOLD_LOG)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PACE_STEADY=$(PACE_STEADY) -DRE4DC_PACE_HOLD_LOG=$(PACE_HOLD_LOG)
+endif
+ifneq ($(PACE_STEADY),0)
+$(OBJDIR)/platform/quality.o: PLATFORM_CPPFLAGS += -DRE4DC_PACE_STEADY=1
+$(OBJDIR)/option_rows.o: GAME_CPPFLAGS += -DRE4DC_PACE_STEADY=1
+endif
+ifneq ($(PACE_PRECISE),0)
+ifeq ($(PACE_CATCHUP),0)
+$(error PACE_PRECISE needs PACE_CATCHUP)
+endif
+$(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_PACE_PRECISE=1
 endif

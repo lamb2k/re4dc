@@ -208,6 +208,21 @@ static unsigned ta_vertex_bytes=RE4DC_TA_VERTBUF_KB*1024U;   // TA_HEADROOM: the
 #include <kos/genwait.h>
 #include <kos/sem.h>
 #endif
+#if (defined(RE4DC_PACE_STEADY) && RE4DC_PACE_STEADY) || (defined(RE4DC_PACE_HOLD_LOG) && RE4DC_PACE_HOLD_LOG)
+// pace.mk PACE_STEADY / PACE_HOLD_LOG (pace_present.cpp): a present decision may wait for its target field; it counts
+// as pending for every fence below.
+#if RE4DC_PVR_PIPELINE != 2
+#error PACE_STEADY and PACE_HOLD_LOG defer the KOS async present: need PVR_PIPELINE=2
+#endif
+#define RE4DC_PACE_PRESENT 1
+extern "C" int re4dc_steady_present(int present);
+extern "C" void re4dc_present_posted(int present);
+extern "C" void re4dc_steady_wait(void);
+extern "C" int re4dc_steady_pending(void);
+#define pvr_present_pending() (pvr_present_pending() || re4dc_steady_pending())
+#else
+#define RE4DC_PACE_PRESENT 0
+#endif
 #if RE4DC_PVR_LATCH || RE4DC_PVR_READY_STRICT
 #if RE4DC_PVR_PIPELINE != 2 || !RE4DC_PVR_STREAM
 #error PVR_LATCH and PVR_READY_STRICT read the KOS async-present state: need PVR_PIPELINE=2 and PVR_STREAM=1
@@ -1380,6 +1395,9 @@ void start_presenter(){
     re4dc_log("native frame pipeline: KOS async present (IRQ-applied decision, vblank flip) ta=%s\n",RE4DC_TA_DOUBLEBUF?"double-buffered":"single-bank");
 }
 void present_fence(){
+#if RE4DC_PACE_PRESENT
+    re4dc_steady_wait(); // a deferred picture is handed to KOS first (pace_present.cpp)
+#endif
     if(!pvr_present_pending())return;
 #if RE4DC_PVR_LATCH
     latch::put('f');
@@ -1409,12 +1427,21 @@ void present_submit(bool present,unsigned ta_faults){
     (void)ta_faults;
 #endif
     present_submitted=present_submitted+1;
+#if RE4DC_PACE_PRESENT
+    if(re4dc_steady_present(present))return; // Steady: released at its target field by pace_present.cpp
+    auto post=[](bool p){const int irq=irq_disable();const int r=pvr_present_async(p);if(r==0)re4dc_present_posted(p);irq_restore(irq);return r;};
+    if(post(present)<0){
+        present_fence();
+        if(post(present)<0){present_failures=present_failures|2;present_report();}
+    }
+#else
     // One decision is outstanding at a time: frame N's flip normally happened
     // long before frame N+1 finishes, so this rarely blocks.
     if(pvr_present_async(present)<0){
         present_fence();
         if(pvr_present_async(present)<0){present_failures=present_failures|2;present_report();}
     }
+#endif
 }
 #else
 semaphore_t present_request;
