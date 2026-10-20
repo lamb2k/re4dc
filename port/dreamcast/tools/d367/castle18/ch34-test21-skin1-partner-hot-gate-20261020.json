@@ -1,0 +1,84 @@
+{
+  "scope": "Fresh currentG r200 partner diagnostic, SKIN_SH4ZAM1/actual49152hold; no chapter progression or hardware performance claim",
+  "source": "04db3809b",
+  "program": "c21gmW",
+  "elf_sha256": "8559492292a3222172e825b526aa93030f52869958fa5c10f46bda8f16a04428",
+  "run_seconds": 51.0,
+  "errors": [],
+  "owned_exited": true,
+  "official_gates": {
+    "CAST_GC": "PASS; Leon450/Ashley450 native aggregate,0GC",
+    "NOT_DRAWN": "PASS;0alive-undrawn judged rows",
+    "VRAM": "PASS;0after-preloaduploads/evictions/retries/refusals/guards/texrej/sndfail"
+  },
+  "kos": {
+    "held_bytes": 49152,
+    "min_watch_headroom": 27240
+  },
+  "snapshot": {
+    "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+    "state_sha256": "702f7f7537fece01245747aa40c478286f102c4502b68eaadb4e2f19ee34d59a",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x200",
+    "chapter": 6,
+    "source_frame": 770,
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "stop": "0x0",
+    "actual_death": false,
+    "Leon": {
+      "pointer": "0x8cafd9a0",
+      "pos": [
+        82732.5078125,
+        10118.0830078125,
+        -51540.81640625
+      ],
+      "yaw": 2.930000066757202
+    },
+    "Ashley": {
+      "pointer": "0x8cd1ca40",
+      "pos": [
+        82308.9921875,
+        10118.0830078125,
+        -51549.9296875
+      ],
+      "yaw": 1.5877960920333862
+    }
+  },
+  "motion": {
+    "read_only_rows": 107,
+    "source_frames": [
+      182,
+      770
+    ],
+    "misses": [
+      77,
+      79
+    ],
+    "loads": [
+      77,
+      79
+    ],
+    "evictions": [
+      57,
+      59
+    ],
+    "binding_body_bytes": [
+      411744,
+      1105152
+    ],
+    "qualified_hot_payload_sha256": "c3817d66b62478003e720e3439c858c08cb0c952fdca8e96ab0bc2604723d2c0",
+    "observed": "Two ordinaryloads across588ticks; no repeated three-key thrash observed. Both Ashley/Leon bindings sampled; r203/r208 remain explicitpending"
+  },
+  "visual": "t0041 actual native partner/body/hair/cloth still inspected; movement/hands/events beyond this idlewindow pending",
+  "runtime_log_sha256": "212690c744be0aa67a30753d2468e3fd27b8f2063b5c2791f50e94a6a36020ea",
+  "hardware_claim": false,
+  "matched_current_scene_cost_claim": false
+}

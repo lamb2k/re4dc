@@ -127,3 +127,29 @@ face BIN7/TPL9, live modifiers and mask/material runs have been proved.
 This is the inherited PS2 rest-face approximation; facial morph expressions
 are not claimed equivalent to the source. No general Morph bypass is added.
 A fresh target draw check remains required.
+
+
+## Actual partner SKIN1 and qualified hot-data gate
+
+Current c21gmW fresh r200 diagnostic completes51.0s with errors[] and owned
+guest exit. Actual49152-byte hold is present; minimum KOSwatch headroom27240.
+Official CAST-GC/NOT-DRAWN/VRAM pass: Leon450/Ashley450 native aggregate,0GC,
+0after-preloadtexture uploads/evictions/guards/retries/refusals/texrej/sndfail.
+The saved source snapshot is phase3/Stop0,frame770,health1440/600; the actual
+body/hair/cloth still was inspected. This is bounded diagnostic coverage,
+not chapter progression, full events or physical hardware performance.
+
+The exact qualified c3817d66 hot wrapper is loaded (Ashley body411744).
+A read-only107-row observer samples both Ashley and Leon bindings over
+source182..770: misses/loads77..79,evictions57..59. Two ordinary loads occur
+over588ticks; the repeated three-key thrash was not observed. This does not
+certify r203/r208 or every actor/room. Those explicit checks remain pending.
+No matched current-scene cost benefit is claimed; the inherited516f192
+numerical/modelled gate remains distinct.
+
+Current c21imW builds57s/missing0 from dcd61bc85, end8c485338. Its fresh
+playable target gate and mastering are pending behind the user's correctedQA
+SD handoff priority. No prior state/program/image is retargeted. Completed
+G/H RAMimage links were retired only after exact retainedCimages and all
+closed-guest receipts were verified, freeing2037563392bytes for the canonical
+QA STANDARD master. The originalA route and newI program remain protected.
