@@ -9,7 +9,7 @@ The original PS2 pl01 input is SHA256 `6799931bf25a9e53321bef1bcce737c156cb396d2
 | Normal open-hand appearance | Full | Candidate |
 |---|---:|---:|
 | Unique converted PS2 positions | 2,975 | 2,241 (75.33%) |
-| Native positions | 3,054 | See native report |
+| Native positions | 3,054 | 2,312 |
 | Triangles | 4,925 | 3,717 |
 | Fitted transformed records | 4,100 | 3,251 |
 | Fitted strip corners | 7,129 | 5,613 |
