@@ -105,6 +105,7 @@ void chunk_positions(Part& e, const Records& r, unsigned n, const PosConst& k, b
 u8 chunk_nsrc[kMaxVertices];
 u16 chunk_nkey[256];   // open-address table: normal index + 1 (0 = empty)
 u8 chunk_nval[256];
+unsigned chunk_backend_meshlets, chunk_backend_fallbacks;
 struct ChunkLightStats { unsigned records, normals; } chunk_light_stats;
 void chunk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
     if (e.colors || !n) { pass_lights(e, L, r, n); return; }
@@ -151,18 +152,77 @@ void chunk_lights(Part& e, const Lights& L, const Records& r, unsigned n) {
             }
         checked += n;
         if ((checked & ~16383U) != ((checked - n) & ~16383U))
-            printf("LCHK checked=%u bad=%u normals=%u/%u\n", checked, bad, chunk_light_stats.normals,
-                   chunk_light_stats.records);
+            printf("LCHK checked=%u bad=%u normals=%u/%u backend meshlets=%u fallbacks=%u\n", checked, bad,
+                   chunk_light_stats.normals, chunk_light_stats.records, chunk_backend_meshlets,
+                   chunk_backend_fallbacks);
     }
 #endif
 }
 
-// The chunk sink adapter (chunk_submit.h shape over today's window).
+// The chunk sink: today's store-queue window (adapter) or, with CHUNK_SUBMIT, the shared back end (chunk_submit.h v1).
+#if defined(RE4DC_CHAR_CHUNK_BACKEND) && RE4DC_CHAR_CHUNK_BACKEND
+}  // namespace
+#include "chunk_submit.h"
+namespace {
+// Actor outcode byte (AVK layout: near 32, far 16, left 8, right 4, top 2, bottom 1) -> the back end's (left 32,
+// right 16, top 8, bottom 4, near 2, far 1).
+inline u8 chunk_code(unsigned oc) {
+    return u8(((oc & (kOcLeft | kOcRight | kOcTop | kOcBottom)) == 0 ? 0U : 0U) |
+              ((oc & kOcLeft) ? 32U : 0U) | ((oc & kOcRight) ? 16U : 0U) | ((oc & kOcTop) ? 8U : 0U) |
+              ((oc & kOcBottom) ? 4U : 0U) | ((oc & kOcNear) ? 2U : 0U) | ((oc & kOcFar) ? 1U : 0U));
+}
+// The back end hands every strip with a corner past near or far to the caller. The actor rule is near-only
+// clipping (far and the screen edges only cull, the PVR scissors the rest), so the callback applies it: culled when
+// every corner shares a screen edge or far, sent as is when no corner is past near, else today's clipper.
+struct ChunkClip { Part* e; const Records* r; re4dc_chunk_sink* s; };
+int chunk_clip(void* ctx, const uint8_t* idx, unsigned n, unsigned form) {
+    (void)form;  // actor form: bit 7 on the strip's last index, as Part::strip / clip_strip take it
+    ChunkClip& c = *static_cast<ChunkClip*>(ctx);
+    Part& e = *c.e;
+    unsigned all = ~0U, any = 0;
+    for (unsigned k = 0; k < n; ++k) { const unsigned oc = e.cache.oc[idx[k] & 127U]; all &= oc; any |= oc; }
+    if (all & kOcCull) { ++stats.strips_culled; return 1; }
+    e.sq = *re4dc_chunk_sq(c.s);
+    bool ok = true;
+    if (!(any & kOcNear)) { e.strip(idx, n); e.output += n - 2U; }
+    else ok = e.clip_strip(*c.r, idx, n);
+    *re4dc_chunk_sq(c.s) = e.sq;
+    return ok ? 1 : -1;
+}
+// One meshlet through the back end (v1.1 direct vertices): the corners are the window cache's finished PVR vertices
+// (skinned once per distinct point, lit, flags PVR_CMD_VERTEX, offset colour 0), used in place; only the outcodes are
+// translated to the back end's bits. Strips = the meshlet's actor-form index list. false: not taken (caller falls
+// back to the adapter, nothing sent).
+bool chunk_backend(Part& e, const Records& r, const u8* index, unsigned nv, unsigned ni, unsigned nt, bool& ok) {
+    if (!e.direct || nv > RE4DC_CHUNK_MAX_CORNERS || e.slots + 6U * nt > 32767U) return false;
+    u8 codes[RE4DC_CHUNK_MAX_CORNERS];
+    for (unsigned i = 0; i < nv; ++i) codes[i] = chunk_code(e.cache.oc[i]);
+    re4dc_chunk_sink s;
+    ChunkClip cc{&e, &r, &s};
+    re4dc_chunk_window_begin(&s, e.sq, nullptr, 255U, chunk_clip, &cc);
+    re4dc_chunk_vertices_direct(&s, e.cache.v, codes, nv);
+    const int res = re4dc_chunk_strips(&s, index, ni, RE4DC_CHUNK_STRIPS_ACTOR);
+    e.sq = re4dc_chunk_window_end(&s);
+    // the callback's own sends are already in e.slots / e.output; add the back end's direct strips
+    e.slots += s.slots; e.output += s.slots - 2U * s.strips;
+    e.input += nt;
+    ++chunk_backend_meshlets;
+    ok = res > 0;
+    return true;
+}
+#endif
+
 struct ChunkSink { Part* e; };
 inline void chunk_sink_begin(ChunkSink& s, Part& e) { s.e = &e; }
-// Points are already in the window's cache (chunk_positions + the light pass): nothing to send separately.
-inline bool chunk_sink_strips(ChunkSink& s, const Records& r, const u8* index, unsigned ni, unsigned nt, unsigned any) {
+inline bool chunk_sink_strips(ChunkSink& s, const Records& r, const u8* index, unsigned nv, unsigned ni, unsigned nt,
+                              unsigned any) {
     Part& e = *s.e;
+#if defined(RE4DC_CHAR_CHUNK_BACKEND) && RE4DC_CHAR_CHUNK_BACKEND
+    bool ok = true;
+    if (chunk_backend(e, r, index, nv, ni, nt, ok)) return ok;
+#else
+    (void)nv;
+#endif
     if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; return e.whole(index, ni, nt); }
     return e.strips(r, index, ni);
 }

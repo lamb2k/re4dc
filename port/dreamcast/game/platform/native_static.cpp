@@ -524,6 +524,12 @@ struct View {
 };
 View views[kViews];
 Re4dcStaticStats stats{};
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+// SCN_CENSUS=1 (logiclod20.mk; test only): per meshlet drawn by meshlet(): visits, corners, corners of meshlets none of
+// whose strips reached the screen (all culled after the transform), strips emitted / culled, triangles emitted, plus the
+// strip-group corner skips; one "scnc:" line every 120 frames (sums over those frames).
+unsigned scn_cen[10];
+#endif
 unsigned last_log_frame=~0U;
 
 unsigned view_index(int block){return block<0?0U:unsigned(block)+1U;}
@@ -787,6 +793,15 @@ void load_screen(const float* mv,const float* p,const float* v){
     const float row2[4]={0,0,1,0},row3[4]={0,0,-1,0};
     const float* rows[4]={row0,row1,row2,row3};
     alignas(32) static matrix_t screen;
+#if RE4DC_SCENERY_SCREEN_MEMO
+    // SCENERY_SCREEN_MEMO (scenery19): parts of one placement bind with the same inputs; the same inputs give the
+    // same matrix (identical arithmetic), so reload the last one. Exact.
+    static float last[20]; static bool have=false;
+    float in[20];
+    std::memcpy(in,mv,48);in[12]=p[1];in[13]=p[2];in[14]=p[3];in[15]=p[4];std::memcpy(in+16,v,16);
+    if(have && !std::memcmp(in,last,sizeof(in))){mat_load(&screen);return;}
+    std::memcpy(last,in,sizeof(in));have=true;
+#endif
     for(unsigned r=0;r<4;++r)for(unsigned c=0;c<4;++c){
         float value=c==3?rows[r][3]:0.0f;
         for(unsigned k=0;k<3;++k)value+=rows[r][k]*mv[4*k+c];
@@ -2250,6 +2265,16 @@ struct MeshDraw : Emitter {
     // the same three outcomes, in the same order, as Emitter::strip().
     int meshlet(const re4dc::room::Meshlet& l,const re4dc::room::CompactBatch& batch){
         namespace vp=re4dc::vp;
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+        struct CenScope {
+            const Emitter* e;unsigned n,s0,c0,o0,v0;
+            ~CenScope(){
+                const unsigned es=stats.strips-s0,cs=stats.strips_culled-c0;
+                scn_cen[0]++;scn_cen[1]+=n;if(!es)scn_cen[2]+=n;scn_cen[3]+=es;scn_cen[4]+=cs;scn_cen[5]+=e->output-o0;
+                if(!es && cs)scn_cen[6]++;
+            }
+        } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
+#endif
         const float bmin[3]={float(l.bounds_min[0]),float(l.bounds_min[1]),float(l.bounds_min[2])};
         const float bmax[3]={float(l.bounds_max[0]),float(l.bounds_max[1]),float(l.bounds_max[2])};
         // RE4DC_MESH_CLASSIFY=0 (default) saves ~1.5 KiB of image, i.e. KOS heap,
@@ -2299,8 +2324,15 @@ struct MeshDraw : Emitter {
             ++lean::st.sg_tests;
             if(culled){
                 lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
-                if(!nr){lean::st.sg_vskip+=l.vertex_count;return 1;}
+                if(!nr){lean::st.sg_vskip+=l.vertex_count;
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+                    cen.n=0;
+#endif
+                    return 1;}
                 const unsigned vn=hi-lo+1U;lean::st.sg_vskip+=l.vertex_count-vn;
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+                cen.n=vn;
+#endif
 #if RE4DC_MESH_VP_SCHED==1
                 vp::transform_sched<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
 #if RE4DC_SCENERY_DEDUP
@@ -2753,6 +2785,16 @@ struct MeshDraw : Emitter {
         if(!borrow_gather()){++stats.reserve_rejects;return submitted?-1:0;}
         if(!borrow()){++stats.reserve_rejects;return submitted?-1:0;}
         const auto& l=package.meshlets()[pk.let];
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+        struct CenScope {
+            const Emitter* e;unsigned n,s0,c0,o0,v0;
+            ~CenScope(){
+                const unsigned es=stats.strips-s0,cs=stats.strips_culled-c0;
+                scn_cen[0]++;scn_cen[1]+=n;if(!es)scn_cen[2]+=n;scn_cen[3]+=es;scn_cen[4]+=cs;scn_cen[5]+=e->output-o0;
+                if(!es && cs)scn_cen[6]++;
+            }
+        } cen{this,l.vertex_count,stats.strips,stats.strips_culled,output,0};
+#endif
         const auto* base=corners(l);
         const auto* in=reinterpret_cast<const vp::Vertex12*>(base);
         if(l.vertex_count>primed){vp::prime(cache+primed,l.vertex_count-primed);primed=l.vertex_count;
@@ -2760,6 +2802,9 @@ struct MeshDraw : Emitter {
         }
         const std::uint8_t* const sb=package.strip_begin(l);
         if(pk.nr!=0xffU){
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+            cen.n=pk.nr?pk.hi-pk.lo+1U:0U;  // corners transformed (the strip groups left)
+#endif
             if(!pk.nr)return 1;
             const unsigned vn=pk.hi-pk.lo+1U;
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
@@ -5433,6 +5478,13 @@ int ps2_pass(unsigned pass,float zfar){
     lean::prime_at=nullptr;lean::primed=0; // bit 4: the prime holds within this pass only
     if(!pass){
         const unsigned f=re4dc_ui_frame();
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+        if(!(f%120)){
+            re4dc_log("scnc: frame=%u meshlets=%u corners=%u corners_no_strip=%u strips=%u strips_culled=%u tris=%u all_culled_meshlets=%u sg_vskip=%u\n",
+                f,scn_cen[0],scn_cen[1],scn_cen[2],scn_cen[3],scn_cen[4],scn_cen[5],scn_cen[6],lean::st.sg_vskip);
+            for(unsigned& x:scn_cen)x=0;
+        }
+#endif
         if(!(f%120))re4dc_log("PS2LEAN frame=%u mode=%u pre_culled=%u pl_inside=%u cl_inside=%u skipped=%u prime_reuse=%u check_bad=%u prime_bad=%u dyn_fast=%u class_diff=%u sg_tests=%u sg_culled=%u sg_meshlets=%u sg_vskip=%u\n",
             f,lean::kMode,lean::st.pre_culled,lean::st.pl_inside,lean::st.cl_inside,lean::st.skipped,lean::st.prime_reuse,
             lean::st.check_bad,lean::st.prime_bad,lean::st.dyn_fast,lean::st.class_diff,lean::st.sg_tests,lean::st.sg_culled,
@@ -5589,6 +5641,13 @@ int ps2_pass(unsigned pass,float zfar){
     const float lod_px=re4dc_quality()->lod_px;
 #else
     const float lod_px=float(RE4DC_MESH_LOD_PX);
+#endif
+#ifdef RE4DC_SCENERY_FAR_LOD
+    // SCENERY_FAR_LOD=<n> (scenery19, approximation): the PS2 world takes coarser levels sooner; the allowed
+    // projected error is n times the quality setting's (lod_px), so distant clusters swap to far levels.
+    const float lod_div=lod_px*float(RE4DC_SCENERY_FAR_LOD);
+#else
+    const float lod_div=lod_px;
 #endif
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
@@ -5763,7 +5822,7 @@ int ps2_pass(unsigned pass,float zfar){
             const float n=mv[4*r]*mv[4*r]+mv[4*r+1]*mv[4*r+1]+mv[4*r+2]*mv[4*r+2];
             if(n>scale)scale=n;
         }
-        const float lod_scale=std::sqrt(scale)*px/lod_px;
+        const float lod_scale=std::sqrt(scale)*px/lod_div;
         for(unsigned k=0;k<mesh.part_count;++k){
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}

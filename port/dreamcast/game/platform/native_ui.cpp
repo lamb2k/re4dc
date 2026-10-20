@@ -1860,7 +1860,7 @@ bool ta_double=true,ta_double_wanted=false;
 #if defined(RE4DC_LETTERBOX_CLIP) && RE4DC_LETTERBOX_CLIP
 void stream_send(const void* data,unsigned bytes);
 #endif
-void stream_open() {
+void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
 #if RE4DC_PACE_CATCHUP
     // A movie presents its own picture (re4dc_ui_movie_present_now) even inside a skipped tick.
 #if RE4DC_ROUTE_MOVIES
@@ -2108,7 +2108,7 @@ void stream_close(bool present) {
 #if defined(RE4DC_MCHECK_SAFE) && RE4DC_MCHECK_SAFE
     safe_audit_scene(present);
 #endif
-    sq_lock((void*)PVR_TA_INPUT);
+    sq_lock((void*)PVR_TA_INPUT); RE4DC_TAIL_GPU_SCOPE(close);
 #if RE4DC_CABIN_COMPLETE_HANDOFF
     if(pvr_list_finish()<0 || pvr_scene_finish()<0){
         if(movie_cabin_ui_busy && movie_texture)movie_cabin_ui_close_fault=movie_cabin_ui_epoch;

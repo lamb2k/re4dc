@@ -1,0 +1,10 @@
+name r11b-a1
+room 0x11b
+pos 125762 -175 171957
+rsf 0x11b 0
+inv default
+god
+dump
+goto 200 -58471 1875 -12698
+census 900
+census 1500

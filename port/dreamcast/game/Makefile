@@ -454,6 +454,18 @@ endif
 ifneq ($(or $(ROUTE_SOON_KEY),0),0)
 $(OBJDIR)/route_end.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_SOON_KEY=1
 endif
+# ROUTE_CH21_FULL=1 (lane ch2rooms20, default 0 = image unchanged): chapter 2-1's own path r11b -> r10c (the dam, the
+# insignia key) -> r10e -> r119, and r10d (the ladder), with the rooms' data set ch21r on the disc (a door into a room
+# whose world package is on the disc no longer shows Coming Soon, so ROUTE_SOON_KEY's handover never fires there).
+# Code: r10c's seven-Ganado ambush (06-0C) goes through the alive cap (held sends return 0 and are null-checked; was a
+# kept exception that peaked at 7+).
+ROUTE_CH21_FULL ?= 0
+ifneq ($(ROUTE_CH21_FULL),0)
+$(OBJDIR)/mod/st1_2/src/st1/r10c.o $(OBJDIR)/src/game/em_set.o: GAME_CPPFLAGS += -DRE4DC_ROUTE_CH21_FULL=1
+# Audio (needs AICA_SPILL=1): r10c's room banks plus em12 (601 KB prebuilt) exceed the room arena by 44 KB even at
+# 8 kHz; its FOOT bank is marked tail-first (aica_banks.py fit --tail-blk 5) and goes to the BGM0 slot's idle tail.
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_TAIL_FIRST=1
+endif
 # ROUTE_CH21=1 (route lane r11b, default 0: no effect; needs ROUTE_CH13=1 and ROUTE_OVL=1): chapter 2-1 starts in
 # r11b (the lake shore, entered through r10b door 6 after the chapter 1-3 save). em22 (module 5, the wolves of the
 # shore ambush) is a third room overlay (em22.ovl, linked after pl0f / em2f so theirs are unchanged), and r11b's
@@ -2947,6 +2959,8 @@ include t2exact.mk
 include scenery19.mk
 # Lane chardraw19 (CHAR_CHUNK; default off: no effect).
 include chardraw19.mk
+# Lane logiclod20 (LOGIC_LOD_EM, ESP_LOD; default off: no effect).
+include logiclod20.mk
 # Resolved knobs for tools/d367/build-r21.sh (re4dc-knobs; builds nothing).
 include knobs.mk
 include esppool.mk
