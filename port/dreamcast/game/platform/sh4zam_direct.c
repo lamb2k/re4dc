@@ -195,3 +195,29 @@ float re4dc_zam_VECDistance(const zvec_t* a, const zvec_t* b)
 {
     return shz_sqrtf(shz_mag_sqr3f(a->x - b->x, a->y - b->y, a->z - b->z));
 }
+
+/* GAME_SH4ZAM_LOGIC run batching (include/re4dc_xm.h RE4DC_XM_LOAD / _POINT / _DIR): several vectors through one Mtx.
+ * The game's C++ units cannot include the SH4ZAM headers (its include/cmath.h declares sinf & co. with C++ linkage,
+ * newlib's math.h with C linkage), so the three SH4ZAM calls live here, out of line. XMTRX = the Mtx rows with
+ * 0 0 0 1 as the 4th row (shz_xmtrx_load_rows_3x4); each vector is then one FTRV (shz_xmtrx_transform_point3 /
+ * _vec3). CLOBBERS XMTRX; the caller transforms right after the load with no game call in between. */
+void re4dc_zam_xm_load(const float (*m)[4])
+{
+    shz_xmtrx_load_rows_3x4((const shz_vec4_t*) m[0], (const shz_vec4_t*) m[1], (const shz_vec4_t*) m[2]);
+}
+
+void re4dc_zam_xm_point(const zvec_t* src, zvec_t* dst)
+{
+    const shz_vec3_t v = shz_xmtrx_transform_point3(shz_vec3_init(src->x, src->y, src->z));
+    dst->x = v.x;
+    dst->y = v.y;
+    dst->z = v.z;
+}
+
+void re4dc_zam_xm_dir(const zvec_t* src, zvec_t* dst)
+{
+    const shz_vec3_t v = shz_xmtrx_transform_vec3(shz_vec3_init(src->x, src->y, src->z));
+    dst->x = v.x;
+    dst->y = v.y;
+    dst->z = v.z;
+}

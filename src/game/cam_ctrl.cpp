@@ -7,6 +7,7 @@
 // through the cut interpolation and smoothing; CameraMove (camera.cpp) copies it into pG->Cam.
 
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "vec.h"
 #include "global.h"
 #include "camera.h"
@@ -1440,16 +1441,18 @@ void CameraControl::r0_Debug()
 
         if (joy->substickX != 0) {
             PSMTXRotRad(m, 'y', (f32) joy->substickX * 0.05f * DEG);
-            PSMTXMultVec(m, dp, dp);
-            PSMTXMultVec(m, da, da);
+            RE4DC_XM_LOAD(m);
+            RE4DC_XM_POINT(m, dp, dp);
+            RE4DC_XM_POINT(m, da, da);
         }
         if (joy->substickY != 0) {
             Vec up = {0.0f, 1.0f, 0.0f};
 
             PSVECCrossProduct(dp, &up, &up);
             PSMTXRotAxisRad(m, &up, (f32) joy->substickY * 0.05f * DEG);
-            PSMTXMultVec(m, dp, dp);
-            PSMTXMultVec(m, da, da);
+            RE4DC_XM_LOAD(m);
+            RE4DC_XM_POINT(m, dp, dp);
+            RE4DC_XM_POINT(m, da, da);
         }
         rate = 0.8f;
         if (joy->on == 0) {
@@ -1950,8 +1953,9 @@ void CameraControl::r0_Free()
         MtxRotAxisPosRad(m, &yaxis, &tofs, a.y);
         PSMTXMultVec(m, &this->campos_ofs, &this->campos_ofs);
         PSMTXMultVec(m, &this->target_ofs, &this->target_ofs);
-        PSMTXMultVec(cam_mat, &this->campos_ofs, &cam.param.pos);
-        PSMTXMultVec(cam_mat, &this->target_ofs, &cam.param.at);
+        RE4DC_XM_LOAD(cam_mat);
+        RE4DC_XM_POINT(cam_mat, &this->campos_ofs, &cam.param.pos);
+        RE4DC_XM_POINT(cam_mat, &this->target_ofs, &cam.param.at);
         cam.param.roll = 0.0f;
         cam.param.fovy = m_behind_fovy;
         cur = cam.param;
@@ -2015,8 +2019,9 @@ void CameraControl::r0_Free()
             }
             }
         }
-        PSMTXMultVec(cam_mat, &this->campos_ofs, &cam.param.pos);
-        PSMTXMultVec(cam_mat, &this->target_ofs, &cam.param.at);
+        RE4DC_XM_LOAD(cam_mat);
+        RE4DC_XM_POINT(cam_mat, &this->campos_ofs, &cam.param.pos);
+        RE4DC_XM_POINT(cam_mat, &this->target_ofs, &cam.param.at);
         cam.param.roll = 0.0f;
         cam.param.fovy = m_behind_fovy;
         rate = 0.8f;

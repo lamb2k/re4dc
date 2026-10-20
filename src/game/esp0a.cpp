@@ -5,6 +5,7 @@
 // ghost copies along the predicted path each frame.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "global.h"
 #include "math_sub.h"
 #include "esp.h"
@@ -80,8 +81,9 @@ void cEsp0a::move()
         break;
     case 1:
         PSMTXConcat(pG->Cam.v_mat, parent->mat, m);
-        PSMTXMultVecSR(m, &m_Speed, &dir);
-        PSMTXMultVec(m, &m_Pos, &vpos);
+        RE4DC_XM_LOAD(m);
+        RE4DC_XM_DIR(m, &m_Speed, &dir);
+        RE4DC_XM_POINT(m, &m_Pos, &vpos);
         if (dir.x == 0.0f && dir.y == 0.0f && dir.z == 0.0f) {
             dir.y = 1.0f;
         }

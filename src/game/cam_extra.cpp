@@ -5,6 +5,7 @@
 // scope and binoculars.
 
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "vec.h"
 #include "global.h"
 #include "camera.h"
@@ -116,8 +117,9 @@ void CameraAttachedToMotion::move()
     }
     if (!(MOTION(m_pModel)->Mot_attr & 0x200)) {
         PSMTXInverse(m_pModel->mat, inv);
-        PSMTXMultVec(inv, &param.pos, &pos);
-        PSMTXMultVec(inv, &param.at, &at);
+        RE4DC_XM_LOAD(inv);
+        RE4DC_XM_POINT(inv, &param.pos, &pos);
+        RE4DC_XM_POINT(inv, &param.at, &at);
         // Frame order hit, nrm, pos, at, d, inv, to, from; the model-space test is at.z > 0 && pos.z < 0
         // and the hit check runs from the transformed `at` copy to the `pos` copy.
         if (at.z > 0.0f && pos.z < 0.0f) {
@@ -485,8 +487,9 @@ void CameraScope::move()
         ScaleMatrix(pl->l_mat, &pl->scale);
         PSMTXCopy(pl->l_mat, pl->mat);
     }
-    PSMTXMultVec(pPL->mat, &pos_ofs, &param.pos);
-    PSMTXMultVec(pPL->mat, &ofs, &param.at);
+    RE4DC_XM_LOAD(pPL->mat);
+    RE4DC_XM_POINT(pPL->mat, &pos_ofs, &param.pos);
+    RE4DC_XM_POINT(pPL->mat, &ofs, &param.at);
     CameraSetOrientationZeroRoll(this);
     m_id.move(&zoom);
     if (old_zoom != zoom) {
@@ -630,9 +633,10 @@ CameraBinocular::CameraBinocular(Vec* pos, Vec* at, void* a, void* b)
     CameraSetOrientationUp(this);
     if (mode != 0) {
         PSMTXInverse(pPL->mat, inv);
-        PSMTXMultVec(inv, &param.pos, &m_campos);
-        PSMTXMultVec(inv, &param.at, &m_target);
-        PSMTXMultVecSR(inv, &this->up, &m_up_vec);
+        RE4DC_XM_LOAD(inv);
+        RE4DC_XM_POINT(inv, &param.pos, &m_campos);
+        RE4DC_XM_POINT(inv, &param.at, &m_target);
+        RE4DC_XM_DIR(inv, &this->up, &m_up_vec);
     }
     // Store order pinned by the dying-store rule (the last use of each constant is issued first).
     m_zoom_ratio = 0.0f;
@@ -741,8 +745,9 @@ void CameraBinocular::move()
         m_target = param.at;
         m_up_vec = up;
         PSMTXMultVec(PlRef(pPL)->mat, &m_campos, &param.pos); // `lwz pPL` after the three copies
-        PSMTXMultVec(pPL->mat, &m_target, &param.at);
-        PSMTXMultVecSR(pPL->mat, &m_up_vec, &up);
+        RE4DC_XM_LOAD(pPL->mat);
+        RE4DC_XM_POINT(pPL->mat, &m_target, &param.at);
+        RE4DC_XM_DIR(pPL->mat, &m_up_vec, &up);
     }
     CameraSetOrientationUp(this); // unconditional: mode 0 jumps to it
     id.move(this);
@@ -1057,12 +1062,14 @@ void CameraPushObject::move()
             }
         }
     }
-    PSMTXMultVec(rot, (Vec*) &default_ofs[0], (Vec*) &ofs[0]);
-    PSMTXMultVec(rot, (Vec*) &default_ofs[3], (Vec*) &ofs[3]);
+    RE4DC_XM_LOAD(rot);
+    RE4DC_XM_POINT(rot, (Vec*) &default_ofs[0], (Vec*) &ofs[0]);
+    RE4DC_XM_POINT(rot, (Vec*) &default_ofs[3], (Vec*) &ofs[3]);
     ofs[6] = default_ofs[6];
     ofs[7] = default_ofs[7];
-    PSMTXMultVec(inv, (Vec*) &ofs[0], (Vec*) &ofs[0]);
-    PSMTXMultVec(inv, (Vec*) &ofs[3], (Vec*) &ofs[3]);
+    RE4DC_XM_LOAD(inv);
+    RE4DC_XM_POINT(inv, (Vec*) &ofs[0], (Vec*) &ofs[0]);
+    RE4DC_XM_POINT(inv, (Vec*) &ofs[3], (Vec*) &ofs[3]);
     param.pos = *(Vec*) &ofs[0];
     param.at = *(Vec*) &ofs[3];
     param.roll = ofs[6];
