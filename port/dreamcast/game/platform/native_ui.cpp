@@ -2326,13 +2326,15 @@ void speed_draw(){
     if(note)for(int k=0;k<boxes;++k)hud_rect(b,40.0f+k*36,40.0f,28.0f,16.0f,k==s?0xf0ffff40U:0x60ffffffU);
     hud_flush(b);
 }
-#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+#if (defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK) || (defined(RE4DC_QA_BANNER) && RE4DC_QA_BANNER)
+// QA_MENU=1 (qamenu.mk, RE4DC_QA_BANNER): the same banner with the QA disc name, on the title screens only.
 // BENCHMARK=1 (bench.mk; benchmark disc only): the banner "BENCHMARK DISC - NOT THE GAME" on every presented frame,
 // white BIOS font (bfont 12x24) on red in a 512x32 RGB565 texture (32 KiB of VRAM, written once at the first frame
 // straight into texture memory with 16-bit stores, as KOS's pvr_txr_load_ex does: no RAM copy, the image does not
 // grow; no banner if the allocation fails), one quad at the top centre, inside the top letterbox bar and below tile
 // row 0 (y 32..60: LETTERBOX_CLIP renders no translucent list in row 0).
-extern "C" const char* re4dc_bench_banner(void);   // bench.cpp
+extern "C" const char* re4dc_bench_banner(void);   // bench.cpp (qa_menu.cpp with QA_MENU)
+extern "C" int re4dc_qa_banner_on(void);           // qa_menu.cpp (QA_MENU only)
 pvr_ptr_t bench_vram;bool bench_failed;unsigned bench_w;
 void bench_banner_draw(){
     constexpr unsigned W=512,H=32;
@@ -5655,6 +5657,8 @@ extern "C" void re4dc_ui_present(){
     if(!re4dc_vi_black())speed_draw();
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     if(!re4dc_vi_black() && !stream_aborted)bench_banner_draw();   // bench.mk: on every presented frame
+#elif defined(RE4DC_QA_BANNER) && RE4DC_QA_BANNER
+    if(!re4dc_vi_black() && !stream_aborted && re4dc_qa_banner_on())bench_banner_draw();   // qamenu.mk: title screens
 #endif
 #endif
 #if RE4DC_PERF_HUD
