@@ -6,12 +6,15 @@ please name the build, real console or emulator, and where in the game it happen
 
 **Last updated:** October 19, 2026.
 
-**Current build: Test 18** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): chapter 2-1 can be
-finished again (the Insignia Key is given at the dam gate), a lighter El Gigante,
-Leon on his PS2 model after a chainsaw kill and in the first El Gigante fight, the r102 pictures after loading a save,
-no sound gap in cutscenes, and fewer disc reads in the r100 house fight and at the night lake shore.
+**Current build: Test 19** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): quick weapon select
+(hold X + D-pad), foliage boots Off and view distance boots Near, the Dreamcast Player's Manual pages (#44), enemies
+hidden behind walls are not drawn, and faster scenery and character drawing.
 
 **Earlier builds** (newest first):
+
+- **Test 18:** chapter 2-1 can be finished again (the Insignia Key is given at the dam gate), a lighter El Gigante,
+Leon on his PS2 model after a chainsaw kill and in the first El Gigante fight, the r102 pictures after loading a save,
+no sound gap in cutscenes, and fewer disc reads in the r100 house fight and at the night lake shore.
 
 - **Test 17.1:** the Coming Soon screen returns you to the room.
 
