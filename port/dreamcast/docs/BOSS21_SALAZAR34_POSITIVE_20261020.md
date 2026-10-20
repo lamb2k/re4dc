@@ -1,0 +1,11 @@
+# Test 21 Salazar 34-image positive control, 2026-10-20
+
+The real Salazar upper role now produces a package with all 34 original em38 TPL8 texture facts. The actual target package validator accepts this package with ROLE_TEX34 enabled and rejects it with the switch disabled. The enabled validator also rejects count 33 and 35 controls. Six ASan/UBSan checks pass without sanitizer errors.
+
+Source base is origin/t15/int 5f26453a, merged as 6643bf94. I-014's statement that ROLE_TEX34 had landed is stale for that base: the actual generator and runtime option are absent. This branch reuses the existing reviewed renderer change a8511283 (original lane commit 76ff3812) as 11298e54. It is not a new implementation and is not landed on t15/int by boss18.
+
+Private output: `/root/re4data/private/boss21-salazar-34-20261020/package-positive/package/r228/registry.re4nmr`. SHA256 `011d1601cac20b49bdb96adc061fd1b7ac76c784bda56e4cb9262b3f3420be53`; 208448 bytes, 212288-byte aligned package and skin arena. Stage its two generated texture keys with the package: `2a9bf95a-925f3eb1` and `927b1e1f-6c321464`. The retained full PS2 upper body uses its original 21-part identity and all original source TPL8 facts, with no texture subset or new LOD.
+
+This is a typed-role positive diagnostic. It reuses H-028's ordered 213-face mask candidate to pass the separate existing material contract. That candidate has a known source-alpha classification limitation recorded in H-029. It is not the final material look or a shipping selection. No emulator/native draw, complete r228 cast, source shift 0, whole-cast backing, weak-object ownership, complete fight, residency, performance or appearance acceptance is claimed.
+
+Private set has 40 files and 1950904 bytes, mirrored and hash-verified at `C:/Game Dev/Emulators/re4-assets-private/boss21-salazar-34-20261020`. SHA256SUMS digest `43cddb45475eb4174ab154a250c000d62fdb05144cdbf79353c182ead094ca32`. Evidence seal: `C:/Flycast-Evidence/re4-dreamcast/boss21-20261020/salazar34-positive-seal.json`. The receipt and reproducer scripts retain exact source and compiler settings. Rebuildable host executables were removed with a hash manifest; source, package and results remain.

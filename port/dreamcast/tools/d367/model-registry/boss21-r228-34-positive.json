@@ -1,0 +1,33 @@
+{
+  "registry": "boss21-salazar-34-positive-diagnostic",
+  "about": "Real original full Salazar upper role with all 34 source TPL8 images. Reuses retained full mesh and retained ordered mask candidate solely for positive typed-role validation. Not a complete r228 cast or approved material look.",
+  "cast_dir": "/root/re4data/private/boss18-salazar-role-contract-20261019/cast-full",
+  "revision_overlay": "ps2-overlay",
+  "level": "conservative",
+  "archive_audit": "source/archive-audit.json",
+  "descriptors": [
+    {
+      "name": "salazar-em38-03",
+      "archive": "em38",
+      "model_id": "0x38",
+      "source_types": [
+        3
+      ],
+      "source_drops": [
+        "bump"
+      ],
+      "module": "Original em38 source role; data-only refusal diagnostic, not a complete room package",
+      "mask_runs": {
+        "0": "/root/re4data/private/boss18-salazar-order-20261019/ordered/upper"
+      }
+    }
+  ],
+  "room_packages": {
+    "228": {
+      "descriptors": [
+        "salazar-em38-03"
+      ],
+      "evidence": "I-014 positive real 34-image control only; no source texture subset. Whole room, GS/material look and full fight remain unqualified."
+    }
+  }
+}
