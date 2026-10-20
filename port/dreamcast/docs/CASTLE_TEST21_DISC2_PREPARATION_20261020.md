@@ -77,3 +77,13 @@ repair ownership or draw-order admission.
 The user's hot-animation consistency directive also requires explicit r203/r208
 read-only motion-cache checks and reuse of QA's exact qualified audio-preserving
 pl11-hot payload. No all-room residency claim follows from r11e.
+
+
+The first SKIN1 candidate c21dmW built in68s (missing0), but its fresh50.9s
+diagnostic is unqualified: an unintended edit removed the existing pool
+mask-only exemption, rejecting r20d's primary package at ref16 before partner
+loading. The exact original predicate is restored. A combined target-reader
+host gate now explicitly admits the actual r20d primary and the new typed
+partner together; this coverage was missing from the first26 package cases.
+The first candidate, state and logs remain immutable. A new candidate will
+rerun the fresh diagnostic; no old state is retargeted.

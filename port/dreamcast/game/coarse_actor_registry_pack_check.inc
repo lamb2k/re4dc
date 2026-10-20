@@ -440,7 +440,7 @@ PackWhy pack_validate(const unsigned char* p,unsigned size,unsigned room,unsigne
                 const bool mask_only=(mw&255u)==0;
 #if RE4DC_NMR_POOL
                 // NATIVE_MODEL_REGISTRY_POOL: a pool section whose every triangle is a masked card is mask-only too.
-                if(mask_only && !(luis && i==3u))return kPwRef;
+                if(mask_only && !(luis && i==3u) && !desc.pool)return kPwRef;
 #else
                 if(mask_only && !(luis && i==3u))return kPwRef;
 #endif
