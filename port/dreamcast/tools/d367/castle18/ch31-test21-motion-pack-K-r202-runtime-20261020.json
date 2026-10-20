@@ -536,5 +536,375 @@
     "Private observer v1 misnamed word6/7/8/10 byte fields. Original logs preserved and corrected-label sidecars retained. v2 derives actual field order from native_motion.h; hits/misses/loads/evictions unaffected.",
     "Native CAST/NOTDRAWN passes current observed room. VRAM separately fails12postpreloaduploads; no retries/evictions/audiofail or dropped effects in this window. minKOS30856B.",
     "r203/r208, fullr207, Garrador/dungeon/waves/end save, wholechapter and hardware checks remain pending."
-  ]
+  ],
+  "follow_up_K05": {
+    "scope": "OPEN: normal source-SAT navigation reintroduces rapid motion churn. Neutral04 result stays window-scoped; no whole-room motion closure.",
+    "run": {
+      "elapsed_s": 29.1,
+      "errors": [],
+      "emulator_exited": true
+    },
+    "checkpoint": {
+      "host_monotonic": 288390.562,
+      "room": "0x202",
+      "frame": 6925,
+      "player_hp": 1200,
+      "partner_hp": 600,
+      "pos": [
+        11190.095703125,
+        -0.00341796875,
+        -7406.9345703125
+      ],
+      "yaw": 1.89464271068573,
+      "target_distance": 144.01433496186115,
+      "angle_error": 0.37877887759333406,
+      "player_routines": [
+        0,
+        3,
+        3,
+        4
+      ]
+    },
+    "recurrence": {
+      "scope": "Read-only0.2s K05 sampler; rapid temporal recurrence is not proof of simultaneous pins. No source/fixture changes.",
+      "first": {
+        "host_s": 0.0,
+        "frame": 6506,
+        "hits": 9628,
+        "misses": 9,
+        "loads": 9,
+        "evictions": 3,
+        "motion_bytes_read": 171136
+      },
+      "last": {
+        "host_s": 27.593,
+        "frame": 6925,
+        "hits": 11141,
+        "misses": 151,
+        "loads": 150,
+        "evictions": 146,
+        "motion_bytes_read": 3560672
+      },
+      "delta": {
+        "hits": 1513,
+        "misses": 142,
+        "loads": 141,
+        "evictions": 143,
+        "motion_bytes_read": 3389536
+      },
+      "observed_enemy_keys": [
+        {
+          "entry": 0,
+          "bytes": 22400,
+          "key": "18f9ad45-ba6230e7"
+        },
+        {
+          "entry": 6,
+          "bytes": 9152,
+          "key": "c64f139d-98988b59"
+        },
+        {
+          "entry": 152,
+          "bytes": 32416,
+          "key": "902bff70-ad8d96a1"
+        },
+        {
+          "entry": 86,
+          "bytes": 17408,
+          "key": "ba4d09f9-27cc4d48"
+        }
+      ],
+      "observed_union_bytes": 81376,
+      "backing": 64832,
+      "partition_bytes": [
+        32416,
+        32416
+      ],
+      "sampled_sets": [
+        {
+          "keys": [
+            0
+          ],
+          "samples": 29,
+          "bytes": 22400
+        },
+        {
+          "keys": [
+            86
+          ],
+          "samples": 22,
+          "bytes": 17408
+        },
+        {
+          "keys": [
+            0,
+            6,
+            152
+          ],
+          "samples": 17,
+          "bytes": 63968
+        },
+        {
+          "keys": [
+            152
+          ],
+          "samples": 15,
+          "bytes": 32416
+        },
+        {
+          "keys": [
+            0,
+            6,
+            86
+          ],
+          "samples": 13,
+          "bytes": 48960
+        },
+        {
+          "keys": [
+            86,
+            152
+          ],
+          "samples": 8,
+          "bytes": 49824
+        },
+        {
+          "keys": [
+            0,
+            86
+          ],
+          "samples": 2,
+          "bytes": 39808
+        },
+        {
+          "keys": [
+            0,
+            6
+          ],
+          "samples": 1,
+          "bytes": 31552
+        }
+      ],
+      "pins_sampled_max": 0
+    },
+    "heap": {
+      "scope": "Immutable K05 state, four exact K ELF anchors and exact ELF scoped Heap/HeapArray symbols; source OSCheckHeap free-cell sum minus32B per header, both free/allocated chains validated and exacttotal matched. No game/process/state writes.",
+      "state_sha256": "bc758ad5a77145742d0c6e440b3810a6d4c0207beffb8b34986128e425f22046",
+      "source_frame": 6925,
+      "phase": [
+        3,
+        0
+      ],
+      "room": "0x202",
+      "health": [
+        1200,
+        1200,
+        600,
+        600
+      ],
+      "heap4": {
+        "handle": 0,
+        "status": 0,
+        "start": "0x8c918ae0",
+        "end": "0x8cfbf580",
+        "descriptor_bytes": 6974112,
+        "free_payload": 83168,
+        "largest_free": 83168,
+        "free_cells": [
+          {
+            "pointer": "0x8cd7fee0",
+            "size": 83200,
+            "payload": 83168
+          }
+        ],
+        "allocated_cells": 637
+      },
+      "motion_stats": [
+        11141,
+        151,
+        146,
+        150,
+        0,
+        41728,
+        88288,
+        0,
+        32416,
+        119168,
+        0,
+        3560672,
+        336856
+      ]
+    },
+    "binding_flags": {
+      "scope": "Exact immutableK05 binding/record/slot fields, same currentELF anchors as heap audit. Usage_log compiled0: no per-tick request instrumentation claimed.",
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8cb85980",
+          "archive_bytes": 1323136,
+          "records": "0x8ccc7d60",
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 17408,
+          "bounded": 0,
+          "slab_bases": [
+            "0x8ccc94a0",
+            "0x8ccd13a0"
+          ],
+          "slab_bytes": 32416,
+          "entries": [
+            {
+              "entry": 0,
+              "data_offset": 820736,
+              "bytes": 22400,
+              "key": "18f9ad45-ba6230e7",
+              "record_flags": 0,
+              "pointer": "0x0",
+              "pins": 0,
+              "used": 0,
+              "reserved_owner": null,
+              "slab_offset": null
+            },
+            {
+              "entry": 6,
+              "data_offset": 826816,
+              "bytes": 9152,
+              "key": "c64f139d-98988b59",
+              "record_flags": 0,
+              "pointer": "0x0",
+              "pins": 0,
+              "used": 0,
+              "reserved_owner": null,
+              "slab_offset": null
+            },
+            {
+              "entry": 86,
+              "data_offset": 883904,
+              "bytes": 17408,
+              "key": "ba4d09f9-27cc4d48",
+              "record_flags": 0,
+              "pointer": "0x8ccc94a0",
+              "pins": 0,
+              "used": 11291,
+              "reserved_owner": 0,
+              "slab_offset": 0
+            },
+            {
+              "entry": 152,
+              "data_offset": 1316544,
+              "bytes": 32416,
+              "key": "902bff70-ad8d96a1",
+              "record_flags": 0,
+              "pointer": "0x0",
+              "pins": 0,
+              "used": 0,
+              "reserved_owner": null,
+              "slab_offset": null
+            }
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cce6760",
+          "archive_bytes": 423136,
+          "records": "0x8cd4d760",
+          "count": 58,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 24320,
+          "bounded": 1,
+          "slab_bases": [
+            "0x8cd4e0a0",
+            "0x8cd54460"
+          ],
+          "slab_bytes": 25440,
+          "entries": []
+        }
+      ]
+    },
+    "native_check": {
+      "rows": [
+        {
+          "room": "r202",
+          "id": "00",
+          "name": "Leon",
+          "path": "PS2",
+          "plan": "Leon/pl08 plan",
+          "native": 9362,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            7
+          ],
+          "parts": [
+            119
+          ]
+        },
+        {
+          "room": "r202",
+          "id": "03",
+          "name": "Ashley",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 9362,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [
+            "ashley11"
+          ],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            141
+          ]
+        },
+        {
+          "room": "r202",
+          "id": "11",
+          "name": "em11",
+          "path": "PS2",
+          "plan": "registry package",
+          "native": 5261,
+          "gc": 0,
+          "crowd": 0,
+          "reason": "",
+          "descriptors": [],
+          "verdict": "",
+          "ot": [
+            0
+          ],
+          "parts": [
+            37
+          ]
+        }
+      ],
+      "packages": {},
+      "fails": 0,
+      "not_drawn": [
+        {
+          "room": "r202",
+          "id": "11",
+          "name": "em11",
+          "samples": 21,
+          "max_alive": 4,
+          "nearest": 15905,
+          "in_view": 5,
+          "verdict": "drawn"
+        }
+      ]
+    },
+    "full_sample_audit_sha256": "6bb473b7407ff3a925c8ca457c6a9e1b899b793a2a3e92117c4d6d3ca1addd2b",
+    "limits": [
+      "All four observed cold keys form81376B temporalunion, above64832B backing. Individual sampledsubsets fit;0.2s observations do not establish per-tick concurrentco-use.",
+      "No existing per-tick request trace: MOTION_USAGE_LOG0. No instrumented rerun or guestwrites. Shared budget/policy successor belongs to root.",
+      "Same K healthy checkpoint retained; J stays immutable. No new room-specific asset/profile patch. Prior12postpreloadtextureupload gap remains open; sparse05 checker output does not close it."
+    ]
+  }
 }
