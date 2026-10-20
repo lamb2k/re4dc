@@ -1,0 +1,60 @@
+{
+  "replace": {
+    "dc/tex.pak": "/root/re4data/private/castle21-ch31-disc2-20261020/files/dc/tex.pak",
+    "dc/resident.bin": "/root/re4data/private/castle21-r212-roof-resident-20261020/files/dc/resident.bin",
+    "dc/native/r201/partner.re4nmr": "/root/re4data/private/castle18-ch31-r201-partner-20261019/files/dc/native/r201/partner.re4nmr",
+    "dc/native/r203/partner.re4nmr": "/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r203/partner.re4nmr",
+    "dc/native/r208/partner.re4nmr": "/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r208/partner.re4nmr",
+    "dc/native/r204/partner.re4nmr": "/root/re4data/private/castle18-ch31-remaining-partners-20261019/files/dc/native/r204/partner.re4nmr"
+  },
+  "remove": [
+    "dc/native/r201/MAINSCENARIO.re4mesh",
+    "dc/native/r202/MAINSCENARIO.re4mesh",
+    "dc/native/r203/MAINSCENARIO.re4mesh",
+    "dc/native/r204/MAINSCENARIO.re4mesh",
+    "dc/native/r207/MAINSCENARIO.re4mesh",
+    "dc/native/r208/MAINSCENARIO.re4mesh"
+  ],
+  "provenance": {
+    "scope": "Additive current-release texture union and chapter3-1 full Ashley partners; six PS2-world rooms omit unused GC scenery. Offline data/sector preparation only; runtime and chapter acceptance open.",
+    "current_source": "40dc7860a",
+    "current_upstream": "5f26453a9",
+    "resident": "4555afb6545cb3b66d45db372a1a0343767e25590838ea3fb10a16f2c026da4b",
+    "no_runtime_acceptance": true,
+    "plan_data_sectors": 495459,
+    "baseline_disc2_sectors": 478463,
+    "delta_sectors": 16996,
+    "limit": 504000,
+    "nostd_castle": [
+      {
+        "path": "dc/native/r201/MAINSCENARIO.re4mesh",
+        "bytes": 862368
+      },
+      {
+        "path": "dc/native/r202/MAINSCENARIO.re4mesh",
+        "bytes": 951872
+      },
+      {
+        "path": "dc/native/r203/MAINSCENARIO.re4mesh",
+        "bytes": 323776
+      },
+      {
+        "path": "dc/native/r204/MAINSCENARIO.re4mesh",
+        "bytes": 662336
+      },
+      {
+        "path": "dc/native/r207/MAINSCENARIO.re4mesh",
+        "bytes": 347392
+      },
+      {
+        "path": "dc/native/r208/MAINSCENARIO.re4mesh",
+        "bytes": 1028672
+      }
+    ],
+    "r212_input_rows": 5858,
+    "r212_output_rows": 5874,
+    "source_after_r212_merge": "78905e14b",
+    "data_manifest_sha256": "5ffa9a8f9b05b1bdc262593a597549439c27eb135c62ff49194b854bd1997deb",
+    "r212_manifest_sha256": "8728850e240c74abdb8de43bec9687398c67a0c1e8814eb4b9def6e8455a5be4"
+  }
+}
