@@ -83,6 +83,8 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 
 Planned, with no date yet. Ticked items have passed our checks and will be in Test 20.
 
+- [x] **The dam and the lake's side rooms:** chapter 2-1's real path. You drain the dam and take the insignia
+  key from where the game leaves it, so the key handover and two Coming Soon doors are gone.
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
 - [ ] **Faster scenery and characters:** the next steps of the new drawing paths.
 - [ ] **Faster farm fights.**
