@@ -1,0 +1,326 @@
+{
+  "scope": "Fresh J continuous original CardLoad route: original raised-cannon interaction and complete source callback. Normal owned-window inputs/read-only feedback; no warp, game/process/state writes, program substitution or hardware timing claim.",
+  "source_runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "disc_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "chain": [
+    {
+      "capture": "current-j-route-walk22",
+      "elapsed_s": 8.0,
+      "state_sha256": "73ad93bddee0200a66c1d4a8a004336f13623060f1ce8ca74eea9a803d779a65",
+      "inputs_sha256": "0e566913d3eead0235a10d7feaf8c18d20c056a799aaf89db91dc2f4624317a0",
+      "run_result_sha256": "cd74c264aab6633139eabcadf5e704b787269b68669abcda7b7a87bf178bae49",
+      "controller_sha256": "a916bb90632784a7541613277b9ee2102115d118465228b4617fa0faccc20ff1",
+      "controller_guards": [],
+      "capacity_stop": false
+    },
+    {
+      "capture": "current-j-route-walk23",
+      "elapsed_s": 22.2,
+      "state_sha256": "7fec34415a6189cab9d2185b41c7408fc408571e1ace5be4215470331f38dfc4",
+      "inputs_sha256": "db182472e8bfc8128171d066041cd7275e2cf02e41d082c2babd736f0f760bf7",
+      "run_result_sha256": "9834239fd273fdcf4cc1b4c79e58f0bdbabac3350cf722e712ee00ccd6a82976",
+      "controller_sha256": "f2c5791fcdb6eda75078eae579412bd7d245b5cf585902ac3c7d083a202daa1e",
+      "controller_guards": [],
+      "capacity_stop": false
+    },
+    {
+      "capture": "current-j-route-walk24",
+      "elapsed_s": 8.5,
+      "state_sha256": "a876fcd852842af1015c6a84fdadafcbbd313080a46c0cf877fc9d8609edb381",
+      "inputs_sha256": "6c3b7aa24ec3cc14f429e1ae8a2f4edb609ec183caa8799af28cada71d8e9ac0",
+      "run_result_sha256": "6c4a03caa0d1daf73f4efd70cd992335662b2444aa13effca2a6a2c3c10c7414",
+      "controller_sha256": "f2c5791fcdb6eda75078eae579412bd7d245b5cf585902ac3c7d083a202daa1e",
+      "controller_guards": [],
+      "capacity_stop": false
+    },
+    {
+      "capture": "current-j-route-walk25",
+      "elapsed_s": 15.0,
+      "state_sha256": "267b98413c0fe070ded66122d7d6b6a59cb7c27d5671219ddbdfd9fa69ee77eb",
+      "inputs_sha256": "6007526a2e4149c61f90b2c9fdff14e82a5c5ec9ae2f4acccfd636b7b00eebe6",
+      "run_result_sha256": "5551301474e858cda6ef139b4cea2f2831d02b558f36e4f7c06a248857539c8c",
+      "controller_sha256": "f2c5791fcdb6eda75078eae579412bd7d245b5cf585902ac3c7d083a202daa1e",
+      "controller_guards": [],
+      "capacity_stop": false
+    },
+    {
+      "capture": "current-j-route-walk26",
+      "elapsed_s": 10.0,
+      "state_sha256": "ffbf580bfe8022d2f3dc7d9a6f7a240c143caa61f77e57b8f91e35344fec0852",
+      "inputs_sha256": "0a51e0c12824f8fdbf975513cf84605e3b95956e9c4af98eb31fb0805bec73a2",
+      "run_result_sha256": "b18c5a7c4eec002049deb3d5dfbb54d87729fb9acf3b3dd4631cd4c31a13cb93",
+      "controller_sha256": "f2c5791fcdb6eda75078eae579412bd7d245b5cf585902ac3c7d083a202daa1e",
+      "controller_guards": [],
+      "capacity_stop": false
+    },
+    {
+      "capture": "current-j-route-walk27",
+      "elapsed_s": 50.9,
+      "state_sha256": "6949e1c90737e8232421167fb9f1e3db6b9e10e29f4a4f85a15bce60572a2db7",
+      "inputs_sha256": "d8ce42a87630bdd77a16ed2140ec6a7a2e1b81e4cea98a5e765448172bdea5ac",
+      "run_result_sha256": "f0da64b9d2259dca5ae8bcadb41363a4402b5c014ae7b351aa38c03179a160ee",
+      "controller_sha256": "a3ea6a57be791a3661b32c137a40bd1652cb26799aa5dc37ba35530d26c74737",
+      "controller_guards": [],
+      "capacity_stop": false
+    },
+    {
+      "capture": "current-j-route-walk28",
+      "elapsed_s": 4.6,
+      "state_sha256": "7d241fd75692135a874a668e64553705796530ffe041a0de3d43fa661fda8b7b",
+      "inputs_sha256": "28c42a0d9bad398a272928bbd7cd547ac748811f0145de1fda03a38802eac2a9",
+      "run_result_sha256": "b7b5fc69334ec771417929c3b87fdcd82c5af51811024e2fa03181975cb64402",
+      "controller_sha256": "f2c5791fcdb6eda75078eae579412bd7d245b5cf585902ac3c7d083a202daa1e",
+      "controller_guards": [],
+      "capacity_stop": false
+    },
+    {
+      "capture": "current-j-route-walk29",
+      "elapsed_s": 3.1,
+      "state_sha256": "2a4ef438457664157aabee04d8ed1dd9bd343761b70f7a311dfc00c84def60c2",
+      "inputs_sha256": "8b8fe54643fb7106668ce0b19947bf2a1043fbe583433c9f236f5ff74dca4253",
+      "run_result_sha256": "4a15feb80115a492118d3957d7655122b91532f83d3c5e311548bf47cba9d990",
+      "controller_sha256": "a3ea6a57be791a3661b32c137a40bd1652cb26799aa5dc37ba35530d26c74737",
+      "controller_guards": [
+        {
+          "abort": "AssertionError('Requires original cannon footpoint')"
+        }
+      ],
+      "capacity_stop": false
+    },
+    {
+      "capture": "current-j-route-walk30",
+      "elapsed_s": 2.4,
+      "state_sha256": "9c675fdbd26db27ad04c1dfe92b46cd027a81358671ee8a7b7a97e1f50196a5b",
+      "inputs_sha256": "e3708d649956dd8389a62bcba40c8165447009a2c3e02aa5999a55ea9b9c367e",
+      "run_result_sha256": "e27140aede6aed3643c60c3227a4c7d025265a9c13b36a807f5388b98a2c0ad6",
+      "controller_sha256": "a3d72ad399e08dc17f30a9a8e1f48ebd6817830f3c7dc399824719efbd7f4bf1",
+      "controller_guards": [
+        {
+          "abort": "AssertionError()"
+        }
+      ],
+      "capacity_stop": true
+    },
+    {
+      "capture": "current-j-route-walk31",
+      "elapsed_s": 3.6,
+      "state_sha256": "160f0d4b00591ebd420c3f09a72d491ea135085b77ca3032002a57f24d34ca2e",
+      "inputs_sha256": "396c3b13099452e8b95898b388fce3911d027e24b08ec7059dc7a0b1634d137a",
+      "run_result_sha256": "f18d2585152d56446f8a128251a851547a623918c7a38112642b93bdd8df5738",
+      "controller_sha256": "a3d72ad399e08dc17f30a9a8e1f48ebd6817830f3c7dc399824719efbd7f4bf1",
+      "controller_guards": [],
+      "capacity_stop": false
+    },
+    {
+      "capture": "current-j-route-walk32",
+      "elapsed_s": 12.3,
+      "state_sha256": "e430366255da56dca7e34afb642d33c7c2c9439711199c330a9e8cb5dfb06069",
+      "inputs_sha256": "c9c5b84a923ebe924688df2eb2d0f62005a12872616086e4b52a153f14a5d904",
+      "run_result_sha256": "fb3351eb68369aed901c65d2a5029ed243b3af989010703fe63a707c66440f6f",
+      "controller_sha256": "a3ea6a57be791a3661b32c137a40bd1652cb26799aa5dc37ba35530d26c74737",
+      "controller_guards": [],
+      "capacity_stop": false
+    }
+  ],
+  "original_cannon": {
+    "frame": 9109,
+    "door": "0xa021",
+    "merchant": [
+      {
+        "pointer": "0x8cb5f960",
+        "id": 24,
+        "flags": "0x2002077",
+        "alive": true,
+        "routine": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "life": 1000
+      }
+    ],
+    "enemy11_count": 0,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ]
+  },
+  "current_snapshot": {
+    "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+    "state_sha256": "e430366255da56dca7e34afb642d33c7c2c9439711199c330a9e8cb5dfb06069",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x202",
+    "chapter": 6,
+    "source_frame": 9110,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "stop": "0x0",
+    "actual_death": false,
+    "Leon": {
+      "pointer": "0x8caba800",
+      "pos": [
+        23351.681640625,
+        10595.908203125,
+        -24563.478515625
+      ],
+      "yaw": -1.9104201793670654
+    },
+    "Ashley": {
+      "pointer": "0x8cce56c0",
+      "pos": [
+        10519.9091796875,
+        -0.001708984375,
+        -14702.6708984375
+      ],
+      "yaw": 2.7459588050842285
+    }
+  },
+  "source_R202_RSF": "0xe3000000",
+  "cast_notdrawn": {
+    "rows": [
+      {
+        "room": "r202",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 5831,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 824,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r202",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 5280,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r202",
+        "id": "11",
+        "name": "em11",
+        "samples": 14,
+        "max_alive": 4,
+        "nearest": 8921,
+        "in_view": 3,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "vram": {
+    "rooms": [
+      {
+        "room": "202",
+        "start": 4172,
+        "samples": 2,
+        "closed": false,
+        "min_free": 77728,
+        "min_largest": 4064,
+        "peak_pinned": 1912160,
+        "last": {
+          "pinned": 1713952,
+          "dynamic": 650080,
+          "other": 65536,
+          "free": 137856,
+          "largest": 23584,
+          "min_free": 77728,
+          "min_largest": 4064,
+          "peak_pinned": 1912160,
+          "loads": 257,
+          "evicted": 41,
+          "retries": 9,
+          "at": "preload",
+          "f": 6381
+        },
+        "gaps": {
+          "refusals": 0,
+          "guard": 0,
+          "guard_p": 0,
+          "nocontig": 0,
+          "latched": 0,
+          "absent": 0,
+          "gc_fx": 0,
+          "dropped": 67,
+          "fx_dropped": 15,
+          "tex_rej": 0,
+          "snd_fail": 0,
+          "meta": 0
+        },
+        "snd_used": 1804992,
+        "loads": 257,
+        "evicted": 41,
+        "retries": 9,
+        "min_kos": 23696,
+        "menu_loads": 0,
+        "play_loads": 0,
+        "play_evicted": 0
+      }
+    ],
+    "failures": [],
+    "known_gaps": [],
+    "notes": [],
+    "new_format": true
+  },
+  "limits": [
+    "CAST/NOT-DRAWN pass; original cannon is a functional progression gate only.",
+    "Cumulative residency/effects remain OPEN:41evictions/9retries,67dropped/15fx_dropped. Official checker failures[] does not establish zero churn.",
+    "J29 input guard safely stopped residual running displacement; J30 capacity incomplete2.4s, no game failure. Both exact states retained and continued.",
+    "Ashley remains in actual Wait at10519,-14702; ordinary command/retrieval and original r207 door pending.",
+    "Garrador/dungeon/exit/waves/end save, r203/r208 checks and hardware timing remain pending."
+  ]
+}
