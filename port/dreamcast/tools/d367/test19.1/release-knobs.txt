@@ -6,7 +6,7 @@
 # tag: test-ce4b0bee-20261019-hotfix1
 # source: ce4b0bee
 # recipe: port/dreamcast/tools/d367/ch2/ch2-build.sh
-# image-sha256: 70b7e9b80f763ca66f7336abef8103f07a9970138573ee9a0dcb5d76e65b6378
+# image-sha256: ce1c8d48c0125306dc589bd4f49e69d014e84ca7e78665723f2ff73c46b90fde
 # assets-zip: RE4DC-Test19.1-ce4b0bee-Build-Assets.zip
 # disc-sets: snd16,water16i,vq16w,fsh,ch2,cast16,r108p,pak17,zr17,zr17b,v101,stump17,res17b,trans17,res18f,boss18g50r,garr18h,rc19
 LOGIC_TRACE=0
@@ -184,7 +184,6 @@ ACTOR_PLAN=1
 MANUAL_PACK_PROBE=1
 SCENERY_CHUNK=1
 SG_SELECT_LEAN=1
-CHAR_CHUNK=1
 ENEMY_VIS_CULL=1
 SS11_PRELOAD=1
 WATER_PS2=1
