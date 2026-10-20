@@ -243,7 +243,7 @@ static void resume_recent_only() {
     }clean();
 }
 static void resume_fail_closed() {
-    for(unsigned mode=0;mode<7;++mode) {
+    for(unsigned mode=0;mode<9;++mode) {
         {
             Fixture f(0,{16000,16000});f.hot(0);f.hot(1);use(0,0);use(0,1);re4dc_motion_movie_begin();evict_movie(2);
             const unsigned before=reads,evictions=stats.evictions;heap_free=1048576;
@@ -254,6 +254,8 @@ static void resume_fail_closed() {
             if(mode==4){resume_journal.binding_changed(0);} // same slot/new archive generation
             if(mode==5){re4dc_motion_hold(1);} // pending tickets dropped before suspended-table access
             if(mode==6){resume_journal.key_forgotten(0,0);resume_journal.key_forgotten(0,1);}
+            if(mode==7){heap_largest=32000+2*64;} // old two-header estimate fits; actual three-header requirement must refuse
+            if(mode==8){heap_free=32000+2*64;}
             assert(re4dc_motion_movie_restore()==0&&reads==before&&stats.evictions==evictions);
             re4dc_motion_hold(0);
         }clean();

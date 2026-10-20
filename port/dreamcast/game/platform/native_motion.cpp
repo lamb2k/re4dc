@@ -1009,7 +1009,8 @@ extern "C" unsigned re4dc_motion_movie_restore() {
     }
     if(!count)return 0;
     unsigned free_bytes=0,largest=re4dc_heap_largest_current(&free_bytes);
-    const unsigned overhead=count*64; // MotionAllocation + allocator cell, same contract as movie preflight
+    constexpr unsigned allocation_overhead=96; // MotionAllocation32 + MAD tag32 + SDK heap cell32
+    const unsigned overhead=count*allocation_overhead;
     const unsigned need=bytes+overhead;
     const bool cap=bytes<=RE4DC_MOTION_PRESSURE_BYTES && pressure_heap_bytes()<=RE4DC_MOTION_PRESSURE_BYTES-bytes;
     if(refused || !cap || largest<need || free_bytes<need || margin>free_bytes-need) {
@@ -1024,7 +1025,7 @@ extern "C" unsigned re4dc_motion_movie_restore() {
             largest=re4dc_heap_largest_current(&free_bytes);
             // Other resource owners can allocate while storage yields. Stop
             // safely rather than invoke OOM/pressure eviction or force memory.
-            if(re4dc_motion_current_heap()!=4 || largest<n+64 || free_bytes<n+64 || margin>free_bytes-n-64)goto done;
+            if(re4dc_motion_current_heap()!=4 || largest<n+allocation_overhead || free_bytes<n+allocation_overhead || margin>free_bytes-n-allocation_overhead)goto done;
             auto* data=static_cast<unsigned char*>(re4dc_motion_alloc(n));if(!data)goto done;
             load(b,i,data);++restored;read+=n;
         }
