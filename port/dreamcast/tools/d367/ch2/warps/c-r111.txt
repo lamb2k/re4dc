@@ -1,0 +1,13 @@
+name cg-r111
+# lane notdrawn20 (10-20, #42): the r111 census warp. The cap rig k-r111 (walk + kill every 90 frames) runs r111 at about
+# 2 fps on Flycast, so a 60 s run never reached a census report and the NOT-DRAWN row was empty; this one moves Leon next
+# to the em17 group at frame 5 (no kills), where the census sees them every pass.
+room 0x111
+pos 19213 968 3011
+ang -2.2690
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+alivelog 60
+goto 5 19023 1310 -13608 3.1416

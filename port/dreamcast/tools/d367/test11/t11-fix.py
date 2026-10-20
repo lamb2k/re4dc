@@ -475,6 +475,14 @@ DATA['boss18g50'] = {'dc/native/r119/registry.re4nmr': B18G50D + '/native/r119/r
 # res17g. The old -20261016 / -20261017 dirs are gone.
 R108PD = os.environ.get('R108PD', '/root/re4data/private/r108p-20261018')
 DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
+# CAST-GC r111 (lane notdrawn20, 10-20, GitHub #42): r111's package with the same em17 type 0xc POOL descriptor
+# (model-registry/ps2-ch2-r111p.json = ps2-ch2-r113p re-roomed to 111) instead of the non-pool ganado-em17-0c. r111's
+# torch / weapon em17 did not bind the non-pool rows: the PS2 Ganado cast declined it and the GameCube model drew (NMRS
+# r111 id=17 plan=G declined 746 of 950 passes; with r111p plan=R native 746, declined 0). Its 3 textures are r113p's,
+# already in pak17's tex.pak (no loose texture). Heap 4 after the r111 package opens: 7,126,016 free (was 7,199,776).
+# Private data /root/re4data/private/r111p-20261020 (C: twin re4-assets-private/r111p-20261020, cast dir inside).
+R111PD = os.environ.get('R111PD', '/root/re4data/private/r111p-20261020')
+DATA['r111p'] = {'dc/native/r111/registry.re4nmr': R111PD + '/registry.re4nmr'}
 # lane stump17 (10-17): ACTOR_GANADO_PS2_STUMP's variant package (the exact PS2 lost-head stumps of the five cast
 # appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
 STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')
