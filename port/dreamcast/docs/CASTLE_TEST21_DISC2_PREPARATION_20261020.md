@@ -11,3 +11,10 @@ The offline data plan is495459 file-data sectors,16996 above the discsets20 base
 The private set castle21-ch31-disc2-20261020 is mirrored on C with SHA256SUMS manifest5ffa9a8f9b05b1bdc262593a597549439c27eb135c62ff49194b854bd1997deb. Its original5858-row union is superseded for this fresh image by root's5874-row r212 roof union4555afb6545cb3b66d45db372a1a0343767e25590838ea3fb10a16f2c026da4b; same padded94208bytes and zero extra file sectors. The public additive fragment names exact files. Current build manifests and full prepared fixture remain under Castle evidence/Test21.
 
 Historical original746/60aa states and all older data/programs remain separate and cannot accept current Test21. Main storage/capture work follows the18GiB floor and16host/4Codex Flycast limit. No release/tag/integration branch was changed.
+
+
+Current mastered checkpoint: the full Ashley corrective selection and5882-row residency union are now included. The actual tree has6762files/496134data sectors (+17671 over478463baseline). The actual ISO is497247sectors,6753below504000, SHA256dc536893569c42a928c19ad1568c0dba6d41e3d82ea0028bd63d8e3b0032150b. It was mastered inRAM using the existing mkdisc2/fp_master tools with only private temporary-path adaptations; manifests and every selected source/program remain onC. C image retention awaits capacity and is not claimed.
+
+Actual fresh normal title/CardLoad from the original disc handoffVMU now reaches r200 using two immutable-program production-state segments of50.6/51.0seconds. Both owned emulators exited, errors empty; snapshot/emulator/fixture/disc hashes are preserved. Source entry admits242304-byte primary and229952-byte full Ashley secondary packages. Live census/residency/48KiB observations still need the next segment; no chapter-ready claim follows from entry.
+
+I016's blanket no-visibility-data assumption has one exception: r200 containsSRCB/GRID/OCCL/SCDD and actual ENEMY_VIS1 loads its17832-byteOCCL section (17856 aligned bytes). All41 other staged Castle room files areGRID-only, withoutOCCL. The actual on/off alive/drawn comparison remains pending. Do not infer a no-op for r200 from absent data.
