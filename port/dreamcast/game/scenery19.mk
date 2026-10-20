@@ -40,6 +40,16 @@ ifeq ($(SCENERY_DEDUP_CHECK),1)
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_DEDUP_CHECK=1
 endif
 endif
+# SCENERY_UNIT_CONCAT=1 (exact, render only; needs SCENERY_CHUNK): ps2_pass skips concat_u's products for a placement
+# whose rotation / scale part is exactly the identity (Ninja guide NJD_EVAL_UNIT_ANG / SCL): r103 134 of 134 placements,
+# r100 180 of 283, r101 15 of 223. Check: PS2_WORLD_LEAN with bit 8 counts check_bad against concat.
+SCENERY_UNIT_CONCAT ?= 0
+ifneq ($(SCENERY_UNIT_CONCAT),0)
+ifeq ($(SCENERY_CHUNK),0)
+$(error SCENERY_UNIT_CONCAT needs SCENERY_CHUNK)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_UNIT_CONCAT=1
+endif
 # CHUNK_SUBMIT=1: the shared chunk-submit back end (platform/chunk_submit.h / .cpp) for user lanes
 # (character-draw-path, rigid models). Default 0: not built.
 CHUNK_SUBMIT ?= 0

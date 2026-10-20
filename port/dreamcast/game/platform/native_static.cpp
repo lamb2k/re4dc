@@ -5690,7 +5690,24 @@ int ps2_pass(unsigned pass,float zfar){
         constexpr bool lean_sky=false;
 #endif
         if(lw_on && !lean_sky && lean::world_out(lw,RE4DC_PS2_AFFINE,mesh.bounds_min,mesh.bounds_max)){++c.culled;++lean::st.pre_culled;continue;}
+#if RE4DC_SCENERY_UNIT_CONCAT
+        float mv[12];
+        {   // SCENERY_UNIT_CONCAT (scenery19.mk; exact): a placement whose rotation / scale part is exactly the identity
+            // (the Ninja guide's NJD_EVAL_UNIT_ANG / SCL) gives concat_u's result without its products: each of
+            // the 3x3 elements is a + 0.0f (a * 1 is exact, the two +-0 products leave a non-zero a as it is, and the
+            // trailing + 0.0f turns -0 into +0 as concat_u does); the translation column keeps concat_u's expression.
+            const float* b=RE4DC_PS2_AFFINE;const float* a=ps2w.view;
+            if(b[0]==1.0f && b[5]==1.0f && b[10]==1.0f && b[1]==0.0f && b[2]==0.0f && b[4]==0.0f && b[6]==0.0f &&
+               b[8]==0.0f && b[9]==0.0f){
+                for(unsigned r=0;r<3;++r){
+                    mv[4*r]=a[4*r]+0.0f;mv[4*r+1]=a[4*r+1]+0.0f;mv[4*r+2]=a[4*r+2]+0.0f;
+                    mv[4*r+3]=a[4*r]*b[3]+a[4*r+1]*b[7]+a[4*r+2]*b[11]+a[4*r+3];
+                }
+            }else lean::concat_u(a,b,mv);
+        }
+#else
         float mv[12];lean::concat_u(ps2w.view,RE4DC_PS2_AFFINE,mv);
+#endif
         if(lean::kMode&8U){float r[12];concat(ps2w.view,RE4DC_PS2_AFFINE,r);if(std::memcmp(r,mv,sizeof(r)))++lean::st.check_bad;}
 #endif
         const re4dc::render::DrawBounds bounds{{mesh.bounds_min[0],mesh.bounds_min[1],mesh.bounds_min[2]},
