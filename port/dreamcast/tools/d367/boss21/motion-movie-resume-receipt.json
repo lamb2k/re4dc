@@ -18,9 +18,16 @@
   },
   "actual_makefile_dry_run": "PASS all3 object flags +4 rejected invalid controls",
   "physical_bounds": "existing cap/slabs/margins/pins/v3 unchanged; conservative restore preflight, zero additional eviction",
-  "target_compile": "PENDING",
+  "target_compile": "PASS all3 SH4 objects at16aa2f28 after upstreamc7e0358a merge",
   "full_program_off_identity": "PENDING",
   "gameplay_KOS_movie_menu_gates": "PENDING",
   "console": "NOT RUN",
-  "frozen_candidate": "c5fbf44d3b7b674efc32b54e63401801a9ad57aa +54be5527335edeeb08dcbcbe21ebf33dc0617765"
+  "frozen_candidate": "c5fbf44d3b7b674efc32b54e63401801a9ad57aa +54be5527335edeeb08dcbcbe21ebf33dc0617765",
+  "off_stripped_object_identity": "PASS all3 against upstreamc7e0358a",
+  "target_delta": {
+    "text": 3239,
+    "data": 0,
+    "BSS": 569,
+    "qualification": "Object-section sums only; full linked-program gate pending"
+  }
 }
