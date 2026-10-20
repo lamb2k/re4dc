@@ -474,6 +474,92 @@ static int re4dc_logic_lod_skip(cEm* em)
 }
 #endif
 
+#if defined(RE4DC_BODY_CORPSE) && RE4DC_BODY_CORPSE
+#include "dmg.h"
+// BODY_CORPSE=1 (bodysvc20.mk; lane bodysvc20 2026-10-20, master plan P3 "dead enemies cost near zero"; an
+// APPROXIMATION, default 0 = off): a settled Ganado corpse skips its whole frame step. Settled = a Ganado (ids
+// 0x10..0x20 but 0x18: every cEm10) resting in Die_Cramp's last state (r_no_0 3, r_no_1 0, r_no_2 2: bodies that
+// never dissolve) or in Die_Lost's last state (r_no_1 3, r_no_2 2: a dissolved body, invisible and without collision,
+// whose work stays alive with Reset_enable set; measured 10-20: every r103 farm kill ends here and still ran its
+// whole step and ShapeMove every tick) whose position has not changed bit for bit for BODY_CORPSE_TICKS consecutive ticks (default 90: every death
+// motion has ended by then). Its skeleton, part matrices and collision stay as the last full step left them, so it is
+// drawn unchanged. Never skipped: a pending hit (dmg.m_Flag), a tick inside an explosion / fire volume
+// (DmgMgr.hitCheck), any other routine. Scripts that remove bodies (Die_Lost, destroy) still run: a skipped corpse is
+// still a live work. Kills, drops and counters happen at the death itself (Die_Cramp state 0), before any skip.
+#ifndef RE4DC_BODY_CORPSE_TICKS
+#define RE4DC_BODY_CORPSE_TICKS 90
+#endif
+struct BodyCorpse {
+    const cEm* em;
+    u32 frame;    // pG->Frame_cnt of the last look
+    u32 ticks;    // consecutive settled ticks
+    u32 pos[3];   // the position's bits
+};
+static BodyCorpse re4dc_body_corpse[32];
+#if defined(RE4DC_BODY_LOG) && RE4DC_BODY_LOG
+extern "C" void re4dc_log(const char* fmt, ...);
+#endif
+static int re4dc_body_corpse_skip(cEm* em)
+{
+#if defined(RE4DC_BODY_LOG) && RE4DC_BODY_LOG
+    if (em->id >= 0x10 && em->id <= 0x20 && em->r_no_0 == 3 && ((u32) pG->Frame_cnt % 60) == 0) {
+        re4dc_log("bodysvc: f=%u dead em=%08x id=%02x r=%u/%u/%u room_id32=%08x\n", (u32) pG->Frame_cnt, (u32) em,
+                  em->id, em->r_no_0, em->r_no_1, em->r_no_2, (u32) pG->room_id32);
+    }
+#endif
+    if (em->id < 0x10 || em->id > 0x20 || em->id == 0x18 || em->r_no_0 != 3 || (em->r_no_1 != 0 && em->r_no_1 != 3) ||
+        em->r_no_2 != 2) {
+        return 0;
+    }
+    const u32 now = (u32) pG->Frame_cnt;
+    u32 pb[3];
+    __builtin_memcpy(pb, &em->pos, 12);
+    BodyCorpse* e = 0;
+    BodyCorpse* lru = &re4dc_body_corpse[0];
+    for (int i = 0; i < 32; i++) {
+        BodyCorpse* c = &re4dc_body_corpse[i];
+        if (c->em == em) {
+            e = c;
+            break;
+        }
+        if ((u32) (now - c->frame) > (u32) (now - lru->frame)) {
+            lru = c;
+        }
+    }
+    if (!e || e->frame + 1 != now || __builtin_memcmp(e->pos, pb, 12) != 0) {
+        if (!e) {
+            e = lru;
+            e->em = em;
+        }
+        e->frame = now;
+        e->ticks = 0;
+        __builtin_memcpy(e->pos, pb, 12);
+        return 0;
+    }
+    e->frame = now;
+    if (e->ticks < RE4DC_BODY_CORPSE_TICKS) {
+        e->ticks++;
+        return 0;
+    }
+    if (em->dmg.m_Flag || DmgMgr.hitCheck(&em->pos, 0)) {
+        e->ticks = 0;
+        return 0;
+    }
+#if defined(RE4DC_BODY_LOG) && RE4DC_BODY_LOG
+    {
+        // BODY_LOG=1 (test arms only): skipped corpse steps, one line per 300 ticks
+        static u32 skips, last;
+        skips++;
+        if (now - last >= 300) {
+            last = now;
+            re4dc_log("bodysvc: f=%u corpse skips=%u\n", now, skips);
+        }
+    }
+#endif
+    return 1;
+}
+#endif
+
 // Per-character frame step for every work but the player: skips hidden works during an event
 // pause (Status_flg[1] 0x10000000 unless be_flag 0x800) and the frozen partner; caches the
 // squared distance to the player (plDist2), ticks the damage info, runs the virtual move(), then
@@ -504,6 +590,12 @@ void emMove(cEm* em)
     em->l_sub = 1e16f;
 #if defined(RE4DC_LOGIC_LOD_EM) && RE4DC_LOGIC_LOD_EM > 1
     if (re4dc_logic_lod_skip(em)) {
+        return;
+    }
+#endif
+#if defined(RE4DC_BODY_CORPSE) && RE4DC_BODY_CORPSE
+    if (re4dc_body_corpse_skip(em)) {
+        em->invisible_factor2 = 1.0f;
         return;
     }
 #endif
