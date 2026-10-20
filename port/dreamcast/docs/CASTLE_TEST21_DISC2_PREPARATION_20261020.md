@@ -234,3 +234,12 @@ The unchanged current J original CardLoad lineage completes the raised-cannon in
 CAST and NOT-DRAWN pass. Cumulative41evictions/9retries and67dropped/15fx_dropped remain open room-residency/effect gaps; empty official checker failures do not establish zero churn. Ashley remains at the ordinary Wait position; normal command/retrieval, the r207 door, Garrador/dungeon/exit/waves/end save and r203/r208 checks are still pending. No hardware timing claim. Route29's displacement guard and route30's disk-capacity stop are retained and continued as ordinary guarded controls, not game failures.
 
 Asset-free chain, exact source-event predicate and checker outputs: tools/d367/castle18/ch31-test21-current-j-original-cannon-20261020.json.
+
+
+### Fresh J original r207 entry
+
+The same current J CardLoad lineage returns through the original r202 gate and door into r207. Normal S Follow is source-confirmed with bit0x2 clear for30ticks; Ashley follows the whole route and catches up. Normal RT held until actual aim routine6, followed by B, reloads the original handgun0→10 while reserve ammo20→10. One original door A opens the Hunnigan terminal; normal A dialogue returns phase3/Stop0/SSLoop0 with full health1200/600. Actual terminal continuation40 closes4.1s/errors[]/owned exit. Snapshot ab4f819f315f4f9c178c1ee0d950f169505a260616ee850202f441583074fc9f has four current ELF anchors; original r207 RSF86200000 and restored Parts manager saved-pointers/count all0.
+
+R202 merchant18 draws native2443/0GC. The brief r207 entry census covers Leon and out-of-view enemies only, so full r207 native/visibility/cache qualification is pending with the sword puzzle. Original held-world pointers must not be interpreted during SSLoop1; future private observer guards SSLoop/phase/Stop/live IDs. Earlier collision, early-door and host-timed-reload guard stops are preserved controls and not game failures. No warp, source/state writes, program retarget or hardware timing claim.
+
+Asset-free complete chain and exact inventory/restore/readiness proof: tools/d367/castle18/ch31-test21-current-j-original-r207-entry-20261020.json.
