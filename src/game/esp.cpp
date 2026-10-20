@@ -385,6 +385,39 @@ found:
 
 u32 tubo_amb = 0;
 
+#if defined(RE4DC_ESP_LOD) && RE4DC_ESP_LOD > 1
+// ESP_LOD=N (logiclod.mk; lane logiclod20 2026-10-20; an APPROXIMATION, default 0 = off; 2..4): a world-parented effect
+// (parent pEffParentWorld) that is off screen (more than 3 m from the camera and behind it or more than 60 degrees off
+// its axis) or beyond ESP_LOD_FAR units from the camera (default 40 m) moves only every Nth tick, staggered by slot.
+// Effects attached to a model keep every tick. A skipped effect keeps its slot, position and matrix, and its life runs
+// 1/N as fast while skipped. Effect moves that draw Rnd() draw fewer, so this is gameplay-equivalent, not STRICT.
+static inline int re4dc_esp_lod_skip(const cEsp* esp, u32 i)
+{
+    if (esp->parent != pEffParentWorld) {
+        return 0;
+    }
+    if ((((u32) pG->Frame_cnt + i) % RE4DC_ESP_LOD) == 0) {
+        return 0;
+    }
+    const Camera* cam = &pG->Cam;
+    const f32 vx = esp->m_Pos.x - cam->param.pos.x;
+    const f32 vy = esp->m_Pos.y - cam->param.pos.y;
+    const f32 vz = esp->m_Pos.z - cam->param.pos.z;
+    const f32 d2 = vx * vx + vy * vy + vz * vz;
+    if (d2 > (f32) RE4DC_ESP_LOD_FAR * (f32) RE4DC_ESP_LOD_FAR) {
+        return 1;
+    }
+    if (d2 <= 9000000.0f) {
+        return 0;
+    }
+    const f32 f = -(vx * cam->Look.x + vy * cam->Look.y + vz * cam->Look.z);   // Look = pos - at: forward is -Look
+    return !(f > 0.0f && f * f >= 0.25f * d2);
+}
+#define ESP_LOD_SKIP(esp, i) re4dc_esp_lod_skip((esp), (i))
+#else
+#define ESP_LOD_SKIP(esp, i) 0
+#endif
+
 // Releases a live effect: clears m_Be_flg bits 0-1, decrements ActiveEspNum and runs Destruct().
 // Pushing a slot that is not live only warns.
 void PushEsp(cEsp* esp)
@@ -453,7 +486,9 @@ static inline void fxEspMoveOne(cEspSystem* sys, u32 i, int pause, u32* cnt)
             return;
         }
     }
-    esp->move();
+    if (!ESP_LOD_SKIP(esp, i)) {
+        esp->move();
+    }
     if (esp->m_Be_flg & 1) {
         (*cnt)++;
         if (pG->debug_mode == 0xE) {
@@ -601,7 +636,9 @@ int EspMove()
                 continue;
             }
         }
-        esp->move();
+        if (!ESP_LOD_SKIP(esp, i)) {
+            esp->move();
+        }
         if (esp->m_Be_flg & 1) {
             cnt++;
             if (pG->debug_mode == 0xE) {

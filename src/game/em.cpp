@@ -413,6 +413,67 @@ void cEm::setNoItem()
     itemFlag = 0;
 }
 
+#if defined(RE4DC_LOGIC_LOD_EM) && RE4DC_LOGIC_LOD_EM > 1
+#include "dmg.h"
+// LOGIC_LOD_EM=N (logiclod.mk; lane logiclod20 2026-10-20; an APPROXIMATION, default 0 = off; 2..4): far or off-screen
+// enemies and farm animals run their whole frame step (move = AI + motion, skeleton with foot IK and cloth, old
+// position) only every Nth tick, staggered by serial. Covered:
+// - Ganados (ids 0x10..0x20, act_cap.cpp isGanado) only in a walking / idle routine (r_no_0 1, r_no_1 in act_cap.cpp's
+//   park whitelist: Wait, Keeper, Hide, the r101 idles, Walk, Dash, Back, Goto, GuardWalk, Turn180, SitDown, Stay,
+//   Guard, R100WalkStay, StayWalk, AttackWait, FindLost) and not holding Leon. Attacks, grabs, finds, door bashes,
+//   ladders, damage, death and every scripted routine run every tick.
+// - cows (em26) and chickens (em28) anywhere, the dog (em21) in r103 only (lane animfar17's rule).
+// Skipped only while far (> LOGIC_LOD_FAR units from Leon, default 25 m, past the 25 m fog) or off screen (more than
+// LOGIC_LOD_NEAR units away, default 5 m, and more than 60 degrees off the camera axis or behind it). Never skipped:
+// the creation tick, a pending hit (dmg.m_Flag), a tick inside an explosion / fire volume (DmgMgr.hitCheck).
+// Kills, drops, triggers and waves run in the actors' own move as before; far walkers move at 1/N speed off screen and
+// the Rnd() stream differs, so this is gameplay-equivalent, not STRICT.
+static int re4dc_logic_lod_skip(cEm* em)
+{
+    const int ganado = em->id >= 0x10 && em->id <= 0x20;
+    if (ganado) {
+        if (em->r_no_0 != 1 || pPL->dmgType == (int) em) {
+            return 0;
+        }
+        switch (em->r_no_1) {
+        case 0x00: case 0x01: case 0x02: case 0x07: case 0x08: case 0x09:
+        case 0x10: case 0x11: case 0x12: case 0x13: case 0x14: case 0x15:
+        case 0x1A: case 0x1B: case 0x1D: case 0x4C: case 0x4E: case 0x4F: case 0x5D:
+            break;
+        default:
+            return 0;
+        }
+    } else if (em->id != 0x26 && em->id != 0x28 && !(em->id == 0x21 && pG->room_id == 0x103)) {
+        return 0;
+    } else if (em->r_no_0 == 0) {
+        return 0;
+    }
+    if (em->dmg.m_Flag) {
+        return 0;
+    }
+    if ((((u32) pG->Frame_cnt + (u32) em->serial) % RE4DC_LOGIC_LOD_EM) == 0) {
+        return 0;
+    }
+    if (em->plDist2 <= (f32) RE4DC_LOGIC_LOD_NEAR * (f32) RE4DC_LOGIC_LOD_NEAR) {
+        return 0;
+    }
+    if (em->plDist2 <= (f32) RE4DC_LOGIC_LOD_FAR * (f32) RE4DC_LOGIC_LOD_FAR) {
+        const Camera* cam = &pG->Cam;
+        const f32 vx = em->pos.x - cam->param.pos.x;
+        const f32 vy = em->pos.y - cam->param.pos.y;
+        const f32 vz = em->pos.z - cam->param.pos.z;
+        const f32 f = -(vx * cam->Look.x + vy * cam->Look.y + vz * cam->Look.z);   // Look = pos - at: forward is -Look
+        if (f > 0.0f && f * f >= 0.25f * (vx * vx + vy * vy + vz * vz)) {
+            return 0;   // on screen
+        }
+    }
+    if (DmgMgr.hitCheck(&em->pos, 0)) {
+        return 0;
+    }
+    return 1;
+}
+#endif
+
 // Per-character frame step for every work but the player: skips hidden works during an event
 // pause (Status_flg[1] 0x10000000 unless be_flag 0x800) and the frozen partner; caches the
 // squared distance to the player (plDist2), ticks the damage info, runs the virtual move(), then
@@ -441,6 +502,11 @@ void emMove(cEm* em)
     dx = pPL->pos.x - em->pos.x;
     em->plDist2 = dx * dx + dz * dz;
     em->l_sub = 1e16f;
+#if defined(RE4DC_LOGIC_LOD_EM) && RE4DC_LOGIC_LOD_EM > 1
+    if (re4dc_logic_lod_skip(em)) {
+        return;
+    }
+#endif
     em->dmg.move();
 #if defined(RE4DC_EL_CENSUS) && RE4DC_EL_CENSUS
     re4dc_elc_em = em;
