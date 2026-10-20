@@ -1,0 +1,52 @@
+{
+  "replace": {
+    "dc/resident.bin": "/root/re4data/private/castle21-playable-ashley-resident-20261020/files/dc/resident.bin"
+  },
+  "remove": [],
+  "provenance": {
+    "scope": "Prepared original playable Ashley package-derived native texture keys only. Current gameplay/look/residency acceptance pending.",
+    "input_records": 5874,
+    "output_records": 5882,
+    "added": [
+      [
+        "r20d",
+        "052dc14c-ebd1af87"
+      ],
+      [
+        "r20d",
+        "2353f21e-bfc44079"
+      ],
+      [
+        "r20d",
+        "2c9c252a-51c59944"
+      ],
+      [
+        "r20d",
+        "44dfd9d6-28519c94"
+      ],
+      [
+        "r20e",
+        "052dc14c-ebd1af87"
+      ],
+      [
+        "r20e",
+        "2c9c252a-51c59944"
+      ],
+      [
+        "r20e",
+        "44dfd9d6-28519c94"
+      ],
+      [
+        "r20e",
+        "9f94a5a5-921e2562"
+      ]
+    ],
+    "already_present": [],
+    "base_sha256": "4555afb6545cb3b66d45db372a1a0343767e25590838ea3fb10a16f2c026da4b",
+    "resident_sha256": "f2827a24dfd8c0bfe35aaa6507f94951dd6ef4e17a122f0f648edda606fa8e43",
+    "bytes": 94208,
+    "file_data_sector_delta": 0,
+    "source_package_manifest": "667807db715e66fe2b1f3cbf9699ed3a2ca93199bd4c935dd8fef4c0e3e9656f",
+    "manifest_sha256": "8f89121413c9b363bfb39d0347ae74a8af0fd142305cc94f7941654d235a2eaf"
+  }
+}
