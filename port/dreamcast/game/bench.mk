@@ -13,29 +13,8 @@
 #                  the tick log snapshot (CPU), the disc read meter (reads, game blocked time) and KOS headroom per tick.
 #                  Warp lines: `bench <scene no> <begin room frame> <end room frame> <name>` (the measured window).
 #   BENCH_ID=<id>  build id shown on the start and results screens and in the results code (default dev).
-#   TAIL_METER=1   (lane frame-tail 2026-10-19; benchmark discs only, needs BENCHMARK=1 and PACE_VMU_GPU=1; default 0 = no
-#                  object changes) where each drawn picture's time goes: CPU work, CPU blocked in the PVR scene open /
-#                  finish, spin to the next vblank, spin over further vblanks (pacing), TA done, PVR render, render still
-#                  running after the CPU work. One log line per drawn picture ("tail:") and a second results page (Y).
 BENCHMARK ?= 0
 BENCH_ID ?= dev
-TAIL_METER ?= 0
-ifneq ($(filter $(TAIL_METER),0 1),$(TAIL_METER))
-$(error TAIL_METER must be 0 or 1)
-endif
-ifeq ($(TAIL_METER),1)
-ifneq ($(BENCHMARK),1)
-$(error TAIL_METER=1 needs BENCHMARK=1 (benchmark discs only))
-endif
-ifneq ($(PACE_VMU_GPU),1)
-$(error TAIL_METER=1 needs PACE_VMU_GPU=1 (the PVR event stamps))
-endif
-ifeq ($(DOOR_PROBE),1)
-$(error TAIL_METER=1 and DOOR_PROBE=1 both own the main loop spin marks)
-endif
-$(OBJDIR)/src/game/main.o $(OBJDIR)/pace.o: GAME_CPPFLAGS += -DRE4DC_TAIL_METER=1
-$(OBJDIR)/platform/native_ui.o $(OBJDIR)/bench.o: PLATFORM_CPPFLAGS += -DRE4DC_TAIL_METER=1
-endif
 ifneq ($(filter $(BENCHMARK),0 1),$(BENCHMARK))
 $(error BENCHMARK must be 0 or 1)
 endif

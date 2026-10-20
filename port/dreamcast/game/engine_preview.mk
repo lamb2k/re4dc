@@ -62,10 +62,6 @@ endif
 else ifneq ($(ENEMY_VIS_CULL),0)
 $(error ENEMY_VIS_CULL is 0, 1 or 2)
 endif
-# SCENERY_DEDUP=2 (lane scenery19, scenery19.mk): the room file's SCDD section (scenery point dedup tables).
-ifeq ($(SCENERY_DEDUP),2)
-ROOMFILE_SECTIONS += -DRE4DC_ROOMFILE_SCDD=1
-endif
 ifneq ($(strip $(ROOMFILE_SECTIONS)),)
 $(OBJDIR)/ui_bridge.o: GAME_CPPFLAGS += -DRE4DC_ROOM_FILE=1 -Iplatform/include
 PLATFORM_OBJS += $(OBJDIR)/platform/room_file.o

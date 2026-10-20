@@ -15,7 +15,7 @@ for a in ${ARMS:-b k p}; do
   case $a in
     b) T=$B LP=s9b CH2="$CH2REC $T18" XON="" bash $B/port/dreamcast/tools/d367/ch2/ch2-build.sh rP | cut -c1-120 ;;
     k) T=$T LP=s9k CH2="$CH2REC $T18" XON="" bash $T/port/dreamcast/tools/d367/ch2/ch2-build.sh rP rT mW | cut -c1-120 ;;
-    p) T=$T LP=s9p CH2="$CH2REC $T18 ${PEXTRA:-SCENERY_CHUNK=1}" XON="" bash $T/port/dreamcast/tools/d367/ch2/ch2-build.sh rP rT mW | cut -c1-120 ;;
+    p) T=$T LP=s9p CH2="$CH2REC $T18 SCENERY_CHUNK=1" XON="" bash $T/port/dreamcast/tools/d367/ch2/ch2-build.sh rP rT mW | cut -c1-120 ;;
   esac
 done
 echo GATE BUILDS DONE

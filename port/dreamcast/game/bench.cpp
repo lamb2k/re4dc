@@ -44,7 +44,6 @@ void __real_OSInit(void);
 void* __real_maple_dev_status(maple_device_t* dev);
 maple_device_t* __real_maple_enum_dev(int p, int u);
 unsigned __real_re4dc_ui_frame(void);
-uint32_t re4dc_vi_retrace_count(void);   // TAIL_METER
 }
 
 namespace {
@@ -113,17 +112,7 @@ struct Scene {
     // presented scenes of the measured windows (0 op, 1 op modifier, 2 tr, 3 tr modifier, 4 pt), and those scenes
     unsigned long long ta_words[5];
     unsigned ta_scenes;
-    // TAIL_METER: per drawn picture (us; T_VB / T_ITER are counts), summed and worst over the measured pictures
-    unsigned long long tl_sum[10];
-    unsigned tl_max[10], tl_n, tl_rnd_n;
 };
-#ifndef RE4DC_TAIL_METER
-#define RE4DC_TAIL_METER 0
-#endif
-// TAIL_METER columns: picture period, CPU work, CPU blocked in the PVR scene open / close, spin to the next vblank,
-// spin over further vblanks (pacing), TA done (after the drawn tick's start), PVR render, queue (TA done to render
-// start: a finished scene waiting for the PVR), vblanks per picture, ticks per picture
-enum { T_PIC, T_WORK, T_BLK, T_ROUND, T_PACE, T_TA, T_RND, T_QUEUE, T_VB, T_ITER, kTN };
 Scene g_scene[kScenes];
 int g_cur;                        // scene being run
 unsigned g_run = 1;               // run number (A on the results screen starts the next)
@@ -360,62 +349,7 @@ void draw_results_capcmp(const Fb& fb, int page) {
     }
 }
 
-// TAIL_METER results page 2 (Y): where each drawn picture's time goes, average / worst per scene, 0.1 ms.
-unsigned tl_avg(const Scene& s, int c) { return s.tl_n ? (unsigned) (s.tl_sum[c] / s.tl_n) : 0; }
-const char* tl_cell(const Scene& s, int c, char* buf) {   // "avg/worst" in ms (counts: x.x / n)
-    char a[12], b[12];
-    if (c == T_VB || c == T_ITER) {
-        const unsigned avg10 = s.tl_n ? (unsigned) ((s.tl_sum[c] * 10 + s.tl_n / 2) / s.tl_n) : 0;
-        snprintf(buf, 16, "%s/%u", d1(avg10, a), s.tl_max[c]);
-    } else if (c == T_RND || c == T_QUEUE) {
-        const unsigned avg = s.tl_rnd_n ? (unsigned) (s.tl_sum[c] / s.tl_rnd_n) : 0;
-        snprintf(buf, 16, "%s/%s", d1(ms10(avg), a), d1(ms10(s.tl_max[c]), b));
-    } else {
-        snprintf(buf, 16, "%s/%s", d1(ms10(tl_avg(s, c)), a), d1(ms10(s.tl_max[c]), b));
-    }
-    return buf;
-}
-void draw_results_tail(const Fb& fb) {
-    char line[160], c1[16], c2[16], c3[16], c4[16], c5[16], c6[16];
-    fb_fill(fb, 0, 0, fb.w, fb.h, 0x000000);
-    int y = 8;
-    fb_fill(fb, 30, y - 4, 580, 29, 0x900000);
-    fb_center(fb, y, 2, 3, kWhite, RE4DC_BENCH_NAME " - NOT THE GAME"); y += 30;
-    snprintf(line, sizeof(line), "FRAME TAIL  BUILD %s  RUN %u  PAGE 2/2  Y: PAGE 1  A: RUN AGAIN", RE4DC_BENCH_ID, g_run);
-    fb_center(fb, y, 1, 2, kGrey, line); y += 18;
-    fb_text(fb, 16, y, 1, 2, kYellow, "MS PER DRAWN PICTURE, AVERAGE/WORST"); y += 18;
-    fb_text(fb, 16, y, 1, 2, kCyan, "SCENE           PICTURE    CPU WORK    WAIT GPU   TO VBLANK      PACING     VB/PIC"); y += 16;
-    for (int k = 0; k < kScenes; ++k) {
-        const Scene& s = g_scene[k];
-        if (!s.tl_n) { snprintf(line, sizeof(line), "%d %-12s NOT MEASURED", k + 1, s.name); fb_text(fb, 16, y, 1, 2, kRed, line); y += 15; continue; }
-        snprintf(line, sizeof(line), "%d %-12s %10s %11s %11s %11s %11s %10s", k + 1, s.name, tl_cell(s, T_PIC, c1),
-                 tl_cell(s, T_WORK, c2), tl_cell(s, T_BLK, c3), tl_cell(s, T_ROUND, c4), tl_cell(s, T_PACE, c5), tl_cell(s, T_VB, c6));
-        fb_text(fb, 16, y, 1, 2, kWhite, line); y += 15;
-    }
-    y += 8;
-    fb_text(fb, 16, y, 1, 2, kCyan, "SCENE           TA DONE      RENDER   TA->RENDER  GPU BUSY%  TICKS/PIC   PICTURES"); y += 16;
-    for (int k = 0; k < kScenes; ++k) {
-        const Scene& s = g_scene[k];
-        if (!s.tl_n) continue;
-        snprintf(line, sizeof(line), "%d %-12s %10s %11s %11s %10u %10s %10u", k + 1, s.name, tl_cell(s, T_TA, c1),
-                 tl_cell(s, T_RND, c2), tl_cell(s, T_QUEUE, c3),
-                 (unsigned) (s.tl_rnd_n && s.tl_sum[T_PIC] ? s.tl_sum[T_RND] * 100ULL * s.tl_n / s.tl_rnd_n / s.tl_sum[T_PIC] : 0),
-                 tl_cell(s, T_ITER, c4), s.tl_n);
-        fb_text(fb, 16, y, 1, 2, kWhite, line); y += 15;
-    }
-    y += 10;
-    const char* notes[] = {
-        "PICTURE: TIME BETWEEN SHOWN PICTURES.  CPU WORK: GAME CPU TIME OF ALL TICKS OF THE PICTURE.",
-        "WAIT GPU: CPU STOPPED IN THE GRAPHICS CHIP SCENE OPEN / FINISH (FENCES, TA BANK, PRESENT).",
-        "TO VBLANK: SPIN FROM THE END OF WORK TO THE NEXT VBLANK.  PACING: SPIN OVER FURTHER VBLANKS.",
-        "TA DONE: SCENE FULLY IN THE TA, MS AFTER THE DRAWN TICK STARTED.  RENDER: PVR RENDER TIME.",
-        "TA->RENDER: A FINISHED SCENE WAITING FOR THE PVR TO START IT.  GPU BUSY%: RENDER TIME / PICTURE TIME.",
-        "PLEASE PHOTOGRAPH BOTH PAGES."};
-    for (const char* n : notes) { fb_text(fb, 16, y, 1, 2, kGrey, n); y += 15; }
-}
-
 void draw_results(const Fb& fb) {
-    if (RE4DC_TAIL_METER && g_page) { draw_results_tail(fb); return; }
     if (RE4DC_BENCH_CAPCMP) { draw_results_capcmp(fb, g_page); return; }
     char a[12], b[12], c[12], d[12], e[12], line[96], code[256];
     const int rs = kTight ? 2 : 3, rh = kTight ? 20 : 28;
@@ -454,7 +388,7 @@ void draw_results(const Fb& fb) {
         fb_text(fb, 36, y, 2, 2, kWhite, "PHOTOGRAPH THIS SCREEN. POST IT WITH YOUR"); y += 20;
         fb_text(fb, 36, y, 2, 2, kWhite, "CONSOLE REGION AND GDEMU / ODE / BURNED DISC."); y += 26;
     }
-    fb_text(fb, 36, y, 2, 3, kCyan, RE4DC_TAIL_METER ? "Y: FRAME TAIL PAGE  A: RUN AGAIN" : "PRESS A TO RUN AGAIN");
+    fb_text(fb, 36, y, 2, 3, kCyan, "PRESS A TO RUN AGAIN");
 }
 
 void log_results() {
@@ -479,16 +413,6 @@ void log_results() {
         for (int i = 0; i < 24 && g_ph_name[i]; ++i) {
             len += snprintf(ph + len, sizeof(ph) - len, " %s=%u", g_ph_name[i], s.ph_n[i] ? (unsigned) (s.ph_sum[i] / s.ph_n[i]) : 0);
             if (len > 150 || i == 23 || !g_ph_name[i + 1]) { re4dc_log("bench: phases run %u scene %d%s\n", g_run, k + 1, ph); len = 0; ph[0] = 0; }
-        }
-        if (RE4DC_TAIL_METER) {
-            static const char* const kTName[kTN] = {"pic", "work", "blk", "round", "pace", "ta", "rnd", "queue", "vb", "iter"};
-            char tl[220];
-            int tn = snprintf(tl, sizeof(tl), "bench: tail run %u scene %d pics=%u rnd_n=%u", g_run, k + 1, s.tl_n, s.tl_rnd_n);
-            for (int c = 0; c < kTN && tn < (int) sizeof(tl); ++c)
-                tn += snprintf(tl + tn, sizeof(tl) - tn, " %s=%llu/%u", kTName[c],
-                               (c == T_RND || c == T_QUEUE ? (s.tl_rnd_n ? s.tl_sum[c] / s.tl_rnd_n : 0) : (s.tl_n ? s.tl_sum[c] / s.tl_n : 0)),
-                               s.tl_max[c]);
-            re4dc_log("%s\n", tl);
         }
     }
     re4dc_log("bench: code %s build %s\n", code, RE4DC_BENCH_ID);
@@ -577,7 +501,7 @@ const char* re4dc_bench_results(void)
         if (yb) ydown = true;
         else if (ydown) {
             ydown = false;
-            if ((RE4DC_BENCH_CAPCMP && kScenes > 8) || RE4DC_TAIL_METER) { g_page ^= 1; draw_results(fb_displayed()); }
+            if (RE4DC_BENCH_CAPCMP && kScenes > 8) { g_page ^= 1; draw_results(fb_displayed()); }
         }
         const bool a = (pad_buttons() & CONT_A) != 0;
         if (!a) { if (down) break; up = true; }
@@ -644,149 +568,6 @@ void re4dc_bench_disc(unsigned reads, unsigned long long block_us, unsigned long
     Scene& s = g_scene[g_cur];
     s.reads += reads; s.block_us += block_us; s.disc_us += dt_us;
 }
-
-#if RE4DC_TAIL_METER
-// ---------------------------------------------------------------- frame tail meter (TAIL_METER, lane frame-tail 10-19)
-// Question: of a drawn picture's time, how much is CPU work, CPU blocked on the graphics chip, spin to the next vblank,
-// and spin over further vblanks (the 30 Hz pacing clock), and is the PVR still rendering when the CPU is done?
-// One "picture" = the iterations from after the previous drawn one up to and including the next drawn one (a skipped
-// catch-up tick belongs to the picture that follows it). Hooks:
-//   re4dc_tail_begin   pace.cpp re4dc_pace_begin (top of each iteration): closes the previous iteration
-//   re4dc_tail_spin    main.cpp's two vblank waits (door_probe.h RE4DC_DOORSPIN) and pace_end's anchor wait
-//   re4dc_tail_vb      main.cpp postVSyncCallback (every vblank, interrupt context)
-//   re4dc_tail_gpu     native_ui.cpp stream_open / stream_close from the scene finish on (RE4DC_TAIL_GPU_SCOPE)
-//   re4dc_tail_pvr     pace.cpp __wrap_pvr_sync_stats (interrupts off): TA done, render start, render done
-// The per-picture log line and the bookkeeping run after the iteration's end stamp and before the next start stamp,
-// so the meter's own time is in no column (the picture period comes from the vblank count).
-namespace {
-constexpr unsigned kVbUs = 16683;
-volatile bool tl_in_spin, tl_vb_seen;
-volatile unsigned long long tl_vb_first;            // first vblank inside the current spin (ns)
-unsigned long long tl_spin_t0, tl_blk_t0;
-int tl_blk_depth;
-// current iteration
-bool tl_open, tl_skip;
-unsigned long long tl_t0, tl_last_spin_t0, it_spin, it_round, it_pace, it_blk;
-// current picture
-unsigned long long f_work, f_round, f_pace, f_blk;
-unsigned f_iters, f_vb0, f_seq = 1;
-bool f_vb0_set;
-// PVR events (interrupt side)
-volatile unsigned long long g_ta_t, g_rs_t, g_rs_queue, g_done_rnd, g_done_queue;
-volatile unsigned g_ta_tag, g_rs_tag, g_done_tag;
-volatile bool g_drawn_iter;                          // TA done stamps only count inside a drawn iteration
-unsigned tl_counted_tag;                             // the last render counted (each render once)
-}  // namespace
-
-void re4dc_tail_vb(void)
-{
-    if (tl_in_spin && !tl_vb_seen) { tl_vb_first = timer_ns_gettime64(); tl_vb_seen = true; }
-}
-
-void re4dc_tail_spin(int end)
-{
-    if (!tl_open) return;
-    if (!end) {
-        const int o = irq_disable();
-        tl_spin_t0 = timer_ns_gettime64();
-        tl_vb_seen = false;
-        tl_in_spin = true;
-        irq_restore(o);
-        tl_last_spin_t0 = tl_spin_t0;
-        return;
-    }
-    const int o = irq_disable();
-    const unsigned long long t = timer_ns_gettime64();
-    const bool seen = tl_vb_seen;
-    const unsigned long long vb = tl_vb_first;
-    tl_in_spin = false;
-    irq_restore(o);
-    it_spin += t - tl_spin_t0;
-    if (seen && vb >= tl_spin_t0 && vb <= t) { it_round += vb - tl_spin_t0; it_pace += t - vb; }
-    else it_round += t - tl_spin_t0;
-}
-
-void re4dc_tail_gpu(int end)
-{
-    if (!end) { if (tl_blk_depth++ == 0) tl_blk_t0 = timer_ns_gettime64(); return; }
-    if (tl_blk_depth > 0 && --tl_blk_depth == 0) it_blk += timer_ns_gettime64() - tl_blk_t0;
-}
-
-void re4dc_tail_pvr(int ev, unsigned long long t)   // interrupts off
-{
-    if (ev == 1) { if (g_drawn_iter) { g_ta_t = t; g_ta_tag = f_seq; } }
-    else if (ev == 2) { g_rs_t = t; g_rs_tag = g_ta_tag; g_rs_queue = g_ta_t && t > g_ta_t ? t - g_ta_t : 0; }
-    else if (ev == 3) {
-        g_done_rnd = g_rs_t && t > g_rs_t ? t - g_rs_t : 0; g_done_queue = g_rs_queue; g_done_tag = g_rs_tag;
-    }
-}
-
-namespace {
-inline unsigned us_of(unsigned long long ns) { return (unsigned) (ns / 1000); }
-void tl_put(Scene& s, int c, unsigned v) { s.tl_sum[c] += v; if (v > s.tl_max[c]) s.tl_max[c] = v; }
-}  // namespace
-
-void re4dc_tail_begin(int skip)
-{
-    const unsigned long long now = timer_ns_gettime64();
-    const unsigned vbnow = re4dc_vi_retrace_count();
-    if (!f_vb0_set) { f_vb0 = vbnow; f_vb0_set = true; }
-    if (tl_open) {
-        const unsigned long long dur = now - tl_t0;
-        const unsigned long long spin = it_spin < dur ? it_spin : dur;
-        f_work += dur - spin;
-        f_round += it_round; f_pace += it_pace; f_blk += it_blk;
-        ++f_iters;
-        if (!tl_skip) {   // the drawn iteration closes the picture
-            unsigned long long ta_t, done_rnd, done_queue;
-            unsigned ta_tag, done_tag;
-            {
-                const int o = irq_disable();
-                ta_t = g_ta_t; ta_tag = g_ta_tag; done_rnd = g_done_rnd; done_queue = g_done_queue; done_tag = g_done_tag;
-                g_drawn_iter = false;
-                irq_restore(o);
-            }
-            Scene& s = g_scene[g_cur];
-            const unsigned vb = vbnow - f_vb0;
-            const bool measured = s.defined && s.measuring;
-            const unsigned ta = ta_tag == f_seq && ta_t > tl_t0 ? us_of(ta_t - tl_t0) : 0;
-            // the newest finished render (this picture's or, pipelined, the previous one's), each render counted once
-            const bool fresh = done_tag && done_tag != tl_counted_tag;
-            if (fresh) tl_counted_tag = done_tag;
-            if (measured && vb) {
-                ++s.tl_n;
-                tl_put(s, T_PIC, vb * kVbUs);
-                tl_put(s, T_WORK, us_of(f_work));
-                tl_put(s, T_BLK, us_of(f_blk));
-                tl_put(s, T_ROUND, us_of(f_round));
-                tl_put(s, T_PACE, us_of(f_pace));
-                tl_put(s, T_TA, ta);
-                tl_put(s, T_VB, vb);
-                tl_put(s, T_ITER, f_iters);
-                if (fresh) { tl_put(s, T_RND, us_of(done_rnd)); tl_put(s, T_QUEUE, us_of(done_queue)); ++s.tl_rnd_n; }
-                re4dc_log("tail: sc=%d f=%u it=%u vb=%u work=%u blk=%u round=%u pace=%u ta=%u rnd=%u queue=%u lag=%u\n",
-                          g_cur + 1, g_room_frame, f_iters, vb, us_of(f_work), us_of(f_blk), us_of(f_round), us_of(f_pace),
-                          ta, fresh ? us_of(done_rnd) : 0, fresh ? us_of(done_queue) : 0, fresh ? f_seq - done_tag : 99u);
-            }
-            f_work = f_round = f_pace = f_blk = 0;
-            f_iters = 0;
-            f_vb0 = vbnow;
-            ++f_seq;
-        }
-    }
-    tl_open = true;
-    tl_skip = skip != 0;
-    it_spin = it_round = it_pace = it_blk = 0;
-    tl_last_spin_t0 = 0;
-    tl_blk_depth = 0;
-    {
-        const int o = irq_disable();
-        g_drawn_iter = !tl_skip;
-        irq_restore(o);
-    }
-    tl_t0 = timer_ns_gettime64();   // after the bookkeeping and the log line: the meter is in no column
-}
-#endif
 
 // ---------------------------------------------------------------- banner (native_ui.cpp, every presented frame)
 const char* re4dc_bench_banner(void) { return RE4DC_BENCH_NAME " - NOT THE GAME"; }
