@@ -6,9 +6,9 @@
 
 For players. The full player guide is the [root README](../../README.md).
 
-- **Current build:** Test 18, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest).
+- **Current build:** Test 20, on the [releases page](https://github.com/lamb2k/re4dc/releases/latest).
 - **Playable:** New Game to the end of chapter 2-3, at the castle gate (r200).
-- **Next:** Test 19, see [Coming soon: Test 19](../../README.md#coming-soon-test-19).
+- **Next:** Test 21, see [Coming soon: Test 21](../../README.md#coming-soon-test-21).
 - **Runs on:** a real Dreamcast with GDEMU, or Flycast.
 - **Problems:** see [KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md), and report new ones with the
   [Game bug form](https://github.com/lamb2k/re4dc/issues/new/choose).

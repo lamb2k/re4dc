@@ -1,0 +1,62 @@
+{
+ "registry": "ps2-ch2-r111p",
+ "about": "lane notdrawn20 (2026-10-20, #42 / CAST-GC r111): r111 room package = ps2-ch2-r113p re-roomed to 111 (crows + the em17 type 0xc POOL descriptor ganado-em17-0cp) in place of ps2-ch2-r111 (non-pool ganado-em17-0c). r111 spawns em17 0xc holding a weapon / torch: the non-pool rows do not bind it, so the PS2 Ganado cast plan declined and the GameCube path drew it (NMRS r111 id=17 plan=G declined 746 of 950 passes), as r108 before r108p. Built with --package-room 111 --pool --wide-identity over regcast-ch2p (the r113p cast dir).",
+ "cast_dir": "/mnt/c/Game Dev/Emulators/re4-assets-private/r111p-20261020/regcast-ch2p111",
+ "revision_overlay": "ps2-overlay",
+ "level": "conservative",
+ "archive_audit": "source/archive-audit.json",
+ "lighting": "em17: the source GX lighting record (NATIVE_MODEL_REGISTRY_SOURCE_LIGHT bits 2 and 4); crow: the source GX lighting record and source cull, as ps2-crow",
+ "descriptors": [
+  {
+   "name": "ganado-em17-0cp",
+   "archive": "em17",
+   "model_id": "0x17",
+   "source_types": [
+    12
+   ],
+   "module": "src/em17/em17_set.cpp Em17Set type 0xc + em10HeadSet / em10HandSet / em10SetAccesory (whood)",
+   "mask_runs": {
+    "1": "/root/probe/lanes-20261017r/ch2regen/ps2cast/conv-ch2/e17p-mask-head"
+   },
+   "pool": true,
+   "partial_sections": true
+  },
+  {
+   "name": "crow-folded",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,0): body BIN 5 + wing BIN 6"
+  },
+  {
+   "name": "crow-spread",
+   "archive": "em23",
+   "model_id": "0x23",
+   "source_types": [],
+   "source_drops": [
+    "bump",
+    "alt-specular",
+    "mask"
+   ],
+   "state": "em23SetWing(...,1): body BIN 5 + wing BIN 7"
+  }
+ ],
+ "room_packages": {
+  "111": {
+   "descriptors": [
+    "crow-folded",
+    "crow-spread",
+    "ganado-em17-0cp"
+   ],
+   "evidence": "emleon01: r111 em17 types 0/1/3/12 (12 = 0xc: registry), crows; notdrawn20 s111 NMRS"
+  }
+ },
+ "cast_sources": [
+  "/mnt/c/Game Dev/Emulators/re4-assets-private/p2b-20261011/regcast-r108"
+ ]
+}

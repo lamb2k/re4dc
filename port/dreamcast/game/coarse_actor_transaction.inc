@@ -135,9 +135,27 @@ bool actor_plan_layout(Re4dcActorPlan& p) {
 // but idle (cModelInfo::setTexBlendTbl sets flagsDC 4; blendRatio 0 and blendType 0: trans.cpp TextureBlend adds no
 // stage, the base textures show) draws as the base: the Novistador (em2d) keeps its table for the whole fight and
 // blends only while its camouflage changes (em2dCamouflageMove).
-#define RE4DC_NMR_BLEND_IDLE(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl &&     !(info)->blendRatio && !(info)->blendType)
+#define RE4DC_NMR_BLEND_IDLE0(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl &&     !(info)->blendRatio && !(info)->blendType)
 #else
-#define RE4DC_NMR_BLEND_IDLE(info,app) false
+#define RE4DC_NMR_BLEND_IDLE0(info,app) false
+#endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+// PVR_RTT (pvr_rtt.mk): a registry info showing a render target through TexRenderModSet's table ({1, 0, ?, ?, 0xF7,
+// 0xF8 + slot}) with blend type 2 and ratio 0xFF (em2cSetFreeze: the frozen Verdugo's ice) keeps its plan; the draw
+// adds the target as a second pass (re4dc_nmr_ice_pass below).
+extern "C" void re4dc_rtt_want(int slot);
+extern "C" int re4dc_rtt_ready(int slot);
+extern "C" void re4dc_rtt_override(int slot);
+inline int re4dc_nmr_ice_slot(const cModelInfo* info) {
+    if(!info || info->flagsDC!=4u || !info->texBlendTbl || info->blendType!=2 || info->blendRatio!=0xFFu)return -1;
+    const unsigned char* t=static_cast<const unsigned char*>(info->texBlendTbl);
+    return t[0]==1 && t[4]==0xF7 && t[5]>=0xF8?int(t[5])-0xF8:-1;
+}
+#define RE4DC_NMR_BLEND_ICE(info,app) ((app)>=nmr::appearance_first && re4dc_nmr_ice_slot(info)>=0)
+#define RE4DC_NMR_BLEND_IDLE(info,app) (RE4DC_NMR_BLEND_IDLE0(info,app) || RE4DC_NMR_BLEND_ICE(info,app))
+#else
+#define RE4DC_NMR_BLEND_ICE(info,app) false
+#define RE4DC_NMR_BLEND_IDLE(info,app) RE4DC_NMR_BLEND_IDLE0(info,app)
 #endif
 bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
     if(!m->pParts || !p.count || p.count>kRe4dcActorRoles || !p.palettes ||
@@ -1103,6 +1121,28 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
     const int result=n?RE4DC_ACTOR_SUBMIT_OWNED(&r->base,runs,n,r->plan.materials,r->plan.material_count,&r->workspace,&r->skin,r->textures):1;
 #endif
 #undef RE4DC_ACTOR_SUBMIT_OWNED
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    if(result==1 && n) {   // PVR_RTT: the ice pass over the runs of infos that show a render target
+        Re4dcActorDrawRun ice[kRe4dcActorRuns];unsigned k=0;int slot=-1;
+        for(unsigned j=0;j<n;++j) {
+            const int s=re4dc_nmr_ice_slot(static_cast<const cModelInfo*>(static_cast<const void*>(runs[j].chunk.info)));
+            if(s>=0){slot=s;ice[k++]=runs[j];}
+        }
+        if(k) {
+            re4dc_rtt_want(slot);
+            if(re4dc_rtt_ready(slot)) {
+                Re4dcActorOwnedMaterial mats[kRe4dcActorMaterials];
+                for(unsigned i=0;i<r->plan.material_count;++i){mats[i]=r->plan.materials[i];mats[i].blend=0;mats[i].depth_mode=1;}
+                re4dc_rtt_override(slot);
+                const int ice_result=re4dc_actor_submit_owned_runs(&r->base,ice,k,mats,r->plan.material_count,&r->workspace,&r->skin,r->textures);
+                re4dc_rtt_override(-1);
+                static unsigned ice_passes,ice_failed;
+                ++ice_passes;if(ice_result!=1)++ice_failed;
+                if((ice_passes&127)==1)re4dc_log("PVR_RTT ice pass: model=%p slot=%d runs=%u passes=%u failed=%u\n",m,slot,k,ice_passes,ice_failed);
+            }
+        }
+    }
+#endif
 #if RE4DC_CROWD_OUTPUT
     if(r->crowd_ganado) {
         const unsigned emitted=re4dc_model_output_count()-crowd_out0;

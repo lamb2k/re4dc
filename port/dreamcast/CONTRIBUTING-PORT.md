@@ -118,7 +118,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test18/release-knobs.txt` (test 18: the previous release recipe, that is the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` and `ROUTE_SOON_RETURN=1`, plus `ROUTE_SOON_KEY=1` (the dam gate's Coming Soon gives the Insignia Key, so chapter 2-1 can be finished), `MOVIE_AUDIO_PRIME=1` (cutscene sound loaded before it starts), `ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1` (the r10f to r200 pictures), `LEON_SKIN_SLOTS=2` (r119), `LEON_HEADLESS=1` (Leon after his head comes off), `LEON_CLOTH_DRAWN=1` (jacket movement only when shown) and `FX_MIST_PS2=1 PS2_HDR_SETS=128` (the village and farm mist); the disc data sets are on its `disc-sets` line, with the lighter El Gigante `boss18g50` and the resident lists `res18f`; its header names the source commit). The maintainers write that file from
+`tools/d367/test20/release-knobs.txt` (test 20: the previous release recipe plus `ROUTE_CH21_FULL=1` (chapter 2-1's real path: the dam r10c, r10d and r10e, with the Insignia Key from the dam's own pickup; data set `ch21r`; it replaces `ROUTE_SOON_KEY`), the scenery speed knobs `SCENERY_UNIT_CONCAT=1 SCENERY_SCREEN_MEMO=1 SCENERY_FAR_LOD=4` and the enemy logic knobs `LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01 ESP_TYPE_CAP=16 ESP_CUT_EARLY=1`; `SCENERY_DEDUP` and `CHAR_CHUNK` are off (measured slower). The `T15_V` group of `tools/d367/test15/t15-build.sh` carries `VIEW_DIST_BOOT=1` and `FOLIAGE_TRIM=2` (every boot at view distance Near and foliage Off), `QUICK_WEAPON=1`, `ACTOR_PLAN=1`, `MANUAL_PACK_PROBE=1` (the Dreamcast manual pages), `SCENERY_CHUNK=1 SG_SELECT_LEAN=1` (scenery draw path) and `ENEMY_VIS_CULL=1` (the wall check, with the room files of data set `rc19`); see the knob notes below. Earlier releases added the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` and `ROUTE_SOON_RETURN=1`, `MOVIE_AUDIO_PRIME=1` (cutscene sound loaded before it starts), `ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1` (the r10f to r200 pictures), `LEON_SKIN_SLOTS=2` (r119), `LEON_HEADLESS=1` (Leon after his head comes off), `LEON_CLOTH_DRAWN=1` (jacket movement only when shown) and `FX_MIST_PS2=1 PS2_HDR_SETS=128` (the village and farm mist); the disc data sets are on its `disc-sets` line, with the lighter El Gigante `boss18g50` and the resident lists `res18f`; its header names the source commit). The maintainers write that file from
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
@@ -197,7 +197,7 @@ The player options are the rows in Options (START), and the knobs behind them:
 * **Rendering:** Standard or FSAA, knob `RENDER_FSAA`. Not saved; every boot starts in Standard.
 * **View distance:** Full, Near or Short, knob `VIEW_DIST_OPTION`. The world is drawn to 25, 18.75 or 12.5 m and the
   fog reaches full strength there. Drawing only; the game logic is unchanged. Not saved; every boot starts at the
-  `VIEW_DIST_BOOT` level (0 Full, the knob default; the release recipe uses 1, Near, from Test 19).
+  `VIEW_DIST_BOOT` level (0 Full, the knob default; the release recipe uses 1, Near).
   Two rules refine it (game/option_rows.cpp):
   * a per-room minimum far table, `kViewRoomMin`, keeps rooms that need their horizon at Full (the lakes r10b, r11a
     and r11b);
@@ -205,16 +205,45 @@ The player options are the rows in Options (START), and the knobs behind them:
     0x02000000), the fog ramp starts behind that area. A house interior is not fogged, while the scenery seen through
     its doors and windows still fades out before the cut.
 * **Foliage:** Full, Near or Off, knobs `FOLIAGE_TRIM` (the level word and the boot level, hwfog.mk) and
-  `FOLIAGE_OPTION` (the row). The release recipe boots at Off (`FOLIAGE_TRIM=2`) from Test 19; Near before.
+  `FOLIAGE_OPTION` (the row). The release recipe boots at Off (`FOLIAGE_TRIM=2`).
   * Near draws the translucent PS2 world parts whose texture is a near-binary cut-out (leaf / brush cards, fence gaps)
     in the punch-through list up to 12 m. The key table is platform/include/foliage_keys.inc, built from an alpha
     census of the chapter 1 packages.
   * Off leaves out every listed card key (classes 1-4, soft shadow / mist / grass cards included).
   * Surfaces without cut-out holes (walls, floors, water), unlisted keys and the vertex-alpha overlays always draw.
-  * Not saved: every boot starts at the recipe's `FOLIAGE_TRIM` level (Near in the release).
+  * Not saved: every boot starts at the recipe's `FOLIAGE_TRIM` level (Off in the release).
   * `FOLIAGE_NEAR_FIX=1` (hwfog.mk, recipe group `T15_FN`; render only) makes Near's punch-through pass also visit
     placements that only have translucent parts, so their cut-out cards draw at Near (without it they were drawn in
     neither pass).
+
+Control knob in the release recipe:
+
+* **Quick weapon** (quickweapon.mk, recipe group `T15_V`): `QUICK_WEAPON=1`. Hold X and press the D-pad
+  to equip a weapon by kind: up handguns, right shotguns, down grenades, left rifles, the TMP, then launchers. Pressing
+  the same direction again picks the next weapon of that kind in the case.
+  * The equip is the case's own: `cItemMgr::arm`, then the weapon reload of `SubScreenExit`. The game pauses for a few
+    frames while the weapon's module reads from the disc.
+  * A swap is ignored where the case could not open, and while shooting, reloading or carrying Ashley.
+  * With X released the D-pad works as before (camera look, a tap down for the map). Nothing changes until the chord is
+    pressed, so the logic trace stays STRICT.
+  * `QUICK_WEAPON_POC_KIT=1` (a starting weapon kit) is for test discs only and never goes in a recipe.
+
+Speed knobs in the release recipe (recipe group `T15_V`; each one exact or render only, so the logic trace stays
+STRICT, except the approximations marked below):
+
+* `ACTOR_PLAN=1` (actorplan.mk): character setup runs once per tick and is reused by every draw of that tick.
+* `SCENERY_CHUNK=1 SG_SELECT_LEAN=1` (scenery19.mk): the PS2 world pass selects first, then emits; pixel identical.
+* `CHAR_CHUNK` (chardraw19.mk) is off in the release: the new character draw path measured slower.
+* `SCENERY_UNIT_CONCAT=1 SCENERY_SCREEN_MEMO=1` (scenery19.mk): the PS2 world pass skips repeated matrix products and
+  reuses its last screen matrix when the inputs match (exact). `SCENERY_FAR_LOD=4` swaps far world pieces to their lower detail (an
+  approximation; far detail only). `SCENERY_DEDUP` is off (measured slower).
+* `LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01 ESP_TYPE_CAP=16 ESP_CUT_EARLY=1` (logiclod20.mk): cheaper logic for far
+  enemies and effects (approximations, each its own switch; gated for the same kills, doors, waves and cutscenes).
+* `ENEMY_VIS_CULL=1` (engine_preview.mk): the wall check. A villager fully hidden behind a wall is not drawn; logic,
+  sound and collision are unchanged. It reads the room file `dc/native/<room>/room.r4rc` (R4RC grid + wall-check
+  occluders, tools/enginebake/room_compile.py), staged by data set `rc19` (private store `rc19o2-20261019`, in the
+  Build-Assets zip). A room without its file draws every villager, as before.
+* `MANUAL_PACK_PROBE=1`: the Player's Manual finds the Dreamcast manual pages in `dc/tex.pak`.
 
 Render knobs in the release recipe:
 

@@ -994,6 +994,13 @@ endif
 # must be object-compared before promotion. Manual art is separately gated.
 PAD_PROMPTS ?= 0
 PAD_PROMPT_MANUAL_ART ?= 0
+# MANUAL_PACK_PROBE=1 (lane manual19, 2026-10-19; render only, needs PAD_PROMPT_MANUAL_ART=1 + TEX_PACK=1): the
+# Dreamcast companion manual page (and generic file picture) existence probe also looks in dc/tex.pak. Off, the probe
+# opens only the loose dc/tex/<n>/ file, which a packed disc no longer has, so the GameCube page was always chosen.
+MANUAL_PACK_PROBE ?= 0
+ifneq ($(MANUAL_PACK_PROBE),0)
+PLATFORM_CPPFLAGS += -DRE4DC_MANUAL_PACK_PROBE=1
+endif
 ifneq ($(PAD_PROMPTS),0)
 GAME_CPPFLAGS += -DRE4DC_PAD_PROMPTS=1
 PLATFORM_CPPFLAGS += -DRE4DC_PAD_PROMPTS=1
@@ -3446,6 +3453,19 @@ endif
 GAME_SH4ZAM ?= 0
 GAME_SH4ZAM_RENDER_ONLY ?= 0
 SH4ZAM_SELFTEST ?= 0
+# GAME_SH4ZAM_LOGIC=1 (lane shzadopt20 2026-10-20, rebuilt from lane/sh4zam-adopt b89e5029; GAMEPLAY APPROXIMATION,
+#   default 0 = nothing changes). The gameplay-maths arm: the global rebinding below (every PS* caller on the SH4ZAM
+#   bodies except PSMTXInverse / PSMTXMultVec, measured slower 10-15) plus the logic loops that transform several
+#   vectors by one matrix with XMTRX loaded once (include/re4dc_xm.h RE4DC_XM_*). Gate: gameplay equivalence, never
+#   STRICT. Needs GAME_SH4ZAM=1 GAME_SH4_MATH=1 GAME_TRIG_LEAN=1 GAME_SINCOS=1.
+GAME_SH4ZAM_LOGIC ?= 0
+ifneq ($(GAME_SH4ZAM_LOGIC),0)
+ifeq ($(GAME_SH4ZAM),0)
+$(error GAME_SH4ZAM_LOGIC needs GAME_SH4ZAM=1)
+endif
+override GAME_SH4ZAM_RENDER_ONLY := 0
+GAME_CPPFLAGS += -DRE4DC_SH4ZAM_LOGIC=1
+endif
 ifneq ($(GAME_SH4ZAM),0)
 ifneq ($(SH4_APPROX_ON),0)
 $(error GAME_SH4ZAM and SH4_APPROX_RENDER / SH4_APPROX_LOGIC both rebind the render call sites: pick one)
@@ -3476,9 +3496,47 @@ endif
 GAME30_LINK_INPUTS := $(patsubst platform/ps_alias_sh4.ld,$(OBJDIR)/ps_alias_sh4_zam.ld,$(GAME30_LINK_INPUTS))
 $(OBJDIR)/ps_alias_sh4_zam.ld: platform/ps_alias_sh4.ld
 	@mkdir -p $(dir $@)
+ifneq ($(GAME_SH4ZAM_LOGIC),0)
+	sed -e 's/^_PSMTXConcat = .*;$$/_PSMTXConcat = _re4dc_zam_MTXConcat;/' -e 's/^_PSMTXRotRad = .*;$$/_PSMTXRotRad = _re4dc_zam_MTXRotRad;/' -e 's/^_PSMTXRotAxisRad = .*;$$/_PSMTXRotAxisRad = _re4dc_zam_MTXRotAxisRad;/' -e 's/^_PSMTXMultVecSR = .*;$$/_PSMTXMultVecSR = _re4dc_zam_MTXMultVecSR;/' -e 's/^_PSVECNormalize = .*;$$/_PSVECNormalize = _re4dc_zam_VECNormalize;/' -e 's/^_PSVECSquareMag = .*;$$/_PSVECSquareMag = _re4dc_zam_VECSquareMag;/' -e 's/^_PSVECMag = .*;$$/_PSVECMag = _re4dc_zam_VECMag;/' -e 's/^_PSVECDotProduct = .*;$$/_PSVECDotProduct = _re4dc_zam_VECDotProduct;/' -e 's/^_PSVECSquareDistance = .*;$$/_PSVECSquareDistance = _re4dc_zam_VECSquareDistance;/' -e 's/^_PSVECDistance = .*;$$/_PSVECDistance = _re4dc_zam_VECDistance;/' $< > $@
+	test $$(grep -c '= _re4dc_zam_' $@) = 10
+else
 	sed -e 's/^_PSMTXConcat = .*;$$/_PSMTXConcat = _re4dc_zam_MTXConcat;/' -e 's/^_PSMTXInverse = .*;$$/_PSMTXInverse = _re4dc_zam_MTXInverse;/' -e 's/^_PSMTXRotRad = .*;$$/_PSMTXRotRad = _re4dc_zam_MTXRotRad;/' -e 's/^_PSMTXRotAxisRad = .*;$$/_PSMTXRotAxisRad = _re4dc_zam_MTXRotAxisRad;/' -e 's/^_PSMTXMultVec = .*;$$/_PSMTXMultVec = _re4dc_zam_MTXMultVec;/' -e 's/^_PSMTXMultVecSR = .*;$$/_PSMTXMultVecSR = _re4dc_zam_MTXMultVecSR;/' -e 's/^_PSVECNormalize = .*;$$/_PSVECNormalize = _re4dc_zam_VECNormalize;/' -e 's/^_PSVECSquareMag = .*;$$/_PSVECSquareMag = _re4dc_zam_VECSquareMag;/' -e 's/^_PSVECMag = .*;$$/_PSVECMag = _re4dc_zam_VECMag;/' -e 's/^_PSVECDotProduct = .*;$$/_PSVECDotProduct = _re4dc_zam_VECDotProduct;/' -e 's/^_PSVECSquareDistance = .*;$$/_PSVECSquareDistance = _re4dc_zam_VECSquareDistance;/' -e 's/^_PSVECDistance = .*;$$/_PSVECDistance = _re4dc_zam_VECDistance;/' $< > $@
 	test $$(grep -c '= _re4dc_zam_' $@) = 12
+endif
 $(OBJDIR)/game30_trig.o: KOS_CFLAGS += -DRE4DC_SH4_APPROX_LOGIC=1 $(SH4ZAM_INC)
+endif
+endif
+# SKIN_SH4ZAM=1 (lane shzadopt20 2026-10-20; render only, default 0 = not built, the previous image): the skinned
+#   meshlet position pass (native_actor_fast.cpp avk_positions, skinned parts) through SH4ZAM's
+#   shz_xmtrx_project_skinned_s16 / _u16 (third_party/sh4zam source/sh4/shz_xmtrx_skin_sh4.s: our avk_sh4.S pos_skin
+#   kernels contributed upstream, fork lamb2k/sh4zam). Needs the submodule at a commit that has the routine
+#   (re4dc-pin-33fa485 until upstream merges it). =2: check build, SH4ZAM's portable reference (_sw) beside every call,
+#   "SKZCHK" log lines. Needs ACTOR_VTX_KERNEL.
+SKIN_SH4ZAM ?= 0
+ifneq ($(SKIN_SH4ZAM),0)
+ifeq ($(filter-out 0,$(ACTOR_VTX_KERNEL)),)
+$(error SKIN_SH4ZAM needs ACTOR_VTX_KERNEL)
+endif
+ifneq ($(filter-out 1 2,$(SKIN_SH4ZAM)),)
+$(error SKIN_SH4ZAM must be 0, 1 or 2)
+endif
+ifeq ($(wildcard $(SH4ZAM_DIR)/source/sh4/shz_xmtrx_skin_sh4.s),)
+$(error SKIN_SH4ZAM needs the SH4ZAM submodule at a commit with shz_xmtrx_project_skinned (lamb2k/sh4zam re4dc-pin-33fa485))
+endif
+SKIN_SH4ZAM_CHECK := $(if $(filter 2,$(SKIN_SH4ZAM)),1,0)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_SKIN_SH4ZAM=1
+PLATFORM_OBJS += $(OBJDIR)/platform/sh4zam_skin.o $(OBJDIR)/platform/shz_xmtrx_skin_sh4.o
+$(OBJDIR)/platform/sh4zam_skin.o: platform/sh4zam_skin.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 $(SH4ZAM_INC) -DRE4DC_SKIN_SH4ZAM_CHECK=$(SKIN_SH4ZAM_CHECK) -MMD -MP -c $< -o $@
+$(OBJDIR)/platform/shz_xmtrx_skin_sh4.o: $(SH4ZAM_DIR)/source/sh4/shz_xmtrx_skin_sh4.s
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) -c $< -o $@
+ifeq ($(SKIN_SH4ZAM_CHECK),1)
+PLATFORM_OBJS += $(OBJDIR)/platform/shz_xmtrx_sw.o
+$(OBJDIR)/platform/shz_xmtrx_sw.o: $(SH4ZAM_DIR)/source/sw/shz_xmtrx_sw.c
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) $(GAME_OPT) -O2 -ffp-contract=off -std=gnu11 $(SH4ZAM_INC) -MMD -MP -c $< -o $@
 endif
 endif
 # The objects that include SH4ZAM must leave no shz_ symbol undefined: nothing links libsh4zam.a (SH4ZAM_DIR above).

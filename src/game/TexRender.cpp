@@ -25,6 +25,13 @@ void ModelRender(cModel* m);
 // game/mirror.cpp
 void MirrorDraw2(cModel* m);
 
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+// PVR_RTT (pvr_rtt.mk): the PVR render-to-texture side (platform/include/pvr_rtt.inc).
+extern "C" void re4dc_rtt_capture_begin(int slot, unsigned tw, unsigned th, unsigned efb_w, unsigned efb_h, unsigned ofs);
+extern "C" void re4dc_rtt_capture_end();
+extern "C" void re4dc_rtt_room_reset();
+#endif
+
 TexRenderMng g_RndMgr[8];
 u32 g_RndMgrNum;
 static int g_draw = 0;
@@ -53,6 +60,9 @@ void TexRenderMgrRoomInit()
 {
     u32 i;
 
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    re4dc_rtt_room_reset();
+#endif
     g_RndMgrNum = 0;
     for (i = 0; i < 8; i++) {
         g_RndMgr[i].Init();
@@ -128,6 +138,9 @@ void RenderTexRenderMgr(TexRenderMng* m)
     }
     EFBReSize(w, h);
     GXSetScissor(ofs >> 1, 0, m->m_W_size << 1, m->m_H_size << 1);
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    re4dc_rtt_capture_begin((int) (m - g_RndMgr), m->m_W_size, m->m_H_size, w, h, ofs >> 1);
+#endif
 }
 
 // OT callback (slot's OT, after its render pass): copies the EFB into the target's buffer at
@@ -136,6 +149,9 @@ void RenderTexRenderMgr(TexRenderMng* m)
 void CopyTexRenderMgr(TexRenderMng* m)
 {
     static u8 vfilter[7] __attribute__((aligned(32))) = {32, 0, 0, 0, 0, 0, 32};
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    re4dc_rtt_capture_end();
+#endif
 
     if (pG->Status_flg[1] & 0x08000000) {
         GXRenderModeObj* rmode = &Rmode;

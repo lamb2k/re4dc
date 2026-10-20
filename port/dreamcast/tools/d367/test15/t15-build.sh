@@ -139,7 +139,26 @@ T15_G="ACTOR_PROBE_LIGHT=2 GANADO_LIT=1 GANADO_LIT_NEAREST=0"
 #      T15_V="" builds the control without it.
 #      Test 19 on (lane bootdef19, user 10-19 "a middle ground for draw distance"): VIEW_DIST_BOOT=1, every boot starts
 #      at Near (18.75 m); the lakes stay uncut (kViewRoomMin), so LAKE_FAR's 45 m lake view is unchanged.
-T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1}
+#      Test 19 on (lane qws19, user 10-19 "I also want to integrate the weapon switch"): QUICK_WEAPON=1, hold X + D-pad to
+#      equip a weapon by kind (quickweapon.mk). Logic only when the chord is pressed; QUICK_WEAPON_POC_KIT never goes here.
+#      Also ACTOR_PLAN=1 (lane actorplan19, character setup memoised, render only, approved for Test 19).
+#      Test 19 on (lane manual19, issue #44): MANUAL_PACK_PROBE=1, the manual page checks look in dc/tex.pak first, so the
+#      Dreamcast controller pages show instead of the GameCube ones (render only).
+#      Test 19 on (lane scenery19, P2 stage 1): SCENERY_CHUNK=1, the PS2 world pass selects then emits (exact, render only).
+#      Test 19 on (lane scenery19): SG_SELECT_LEAN=1 with SCENERY_CHUNK=1 (exact; STRICT bell/door103, KOS, stills x4;
+#      r101 scenery 11.09 -> 10.76 ms MODELLED).
+#      Test 19 on (lane chardraw19, P2): CHAR_CHUNK=1, every skinned model on the new draw path (exact: the
+#      CHAR_CHUNK=2 word compare had 0 mismatches for Leon, Ganado, corpse, Ashley, Luis, merchant, riders and
+#      three bosses; KOS 48 KiB 10/10, fight headroom 6,104 B).
+#      Test 19 on (user pull-in 10-19, lane engine19): ENEMY_VIS_CULL=1, the wall check (a villager fully hidden
+#      behind a wall is not drawn; logic, sound and collision unchanged).
+#      Test 20 line (10-20): CHAR_CHUNK off (measured slower, as in 19.1); SCENERY_DEDUP off (measured slower) + SCENERY_UNIT_CONCAT=1 +
+#      SCENERY_SCREEN_MEMO=1 (measured, exact) + SCENERY_FAR_LOD=4 (approximation, look ~1% distant pixels, -0.7 ms).
+#      Test 20 (10-20, lane logic-lod): LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01, far/off-screen Ganados + animals at half rate,
+#      Leon jacket cloth half rate (gameplay gate: kills, doors, cutscenes, cap identical; farm fight -4.9 ms MODELLED).
+#      Test 20 (10-20, lane logic-lod): ESP_TYPE_CAP=16 (at most 16 drawn effects per id from enemies/animals/objects;
+#      farm fight -3.2 ms) + ESP_CUT_EARLY=1 (exact, never-drawn mist/haze skip the transform).
+T15_V=${T15_V-VIEW_DIST_OPTION=1 VIEW_DIST_BOOT=1 QUICK_WEAPON=1 ACTOR_PLAN=1 MANUAL_PACK_PROBE=1 SCENERY_CHUNK=1 SG_SELECT_LEAN=1 ENEMY_VIS_CULL=1 SCENERY_UNIT_CONCAT=1 SCENERY_SCREEN_MEMO=1 SCENERY_FAR_LOD=4 LOGIC_LOD_EM=2 LOGIC_APPROX_MASK=0x01 ESP_TYPE_CAP=16 ESP_CUT_EARLY=1 BODY_CORPSE=1 BODY_ROUTE=1 RIGID_CHUNK=1 CHUNK_SUBMIT=1}
 # lane resident16 (10-16): the room preload runs again when SS heap 11 closes (chapter title / results / save screens), so
 #   r105 after the chapter 1-2 save screen loads its set back in one pass instead of 81 disc reads in play. Render only.
 T15_P="SS11_PRELOAD=1"

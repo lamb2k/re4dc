@@ -4,6 +4,7 @@
 // far plane (initPerspective) and orientation (orientation). Models and effects test against
 // View.world* / sphereWorld before drawing.
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "vec.h"
 #include "global.h"
 #include "math_sub.h"
@@ -281,14 +282,15 @@ void VIEW::orientation()
     Mtx* m = &pG->Cam.mat;
     u32 i;
 
+    RE4DC_XM_LOAD(*m); // one XMTRX load for all 29 vectors (GAME_SH4ZAM_LOGIC)
     for (i = 0; i < 6; i++) {
-        PSMTXMultVecSR(*m, &localFull.normal[i], &worldFull.normal[i]);
-        PSMTXMultVecSR(*m, &local.normal[i], &world.normal[i]);
+        RE4DC_XM_DIR(*m, &localFull.normal[i], &worldFull.normal[i]);
+        RE4DC_XM_DIR(*m, &local.normal[i], &world.normal[i]);
     }
     for (i = 0; i < 8; i++) {
-        PSMTXMultVec(*m, &localFull.point[i], &worldFull.point[i]);
-        PSMTXMultVec(*m, &local.point[i], &world.point[i]);
+        RE4DC_XM_POINT(*m, &localFull.point[i], &worldFull.point[i]);
+        RE4DC_XM_POINT(*m, &local.point[i], &world.point[i]);
     }
     sphereWorld = sphere;
-    PSMTXMultVec(*m, &sphere.center, &sphereWorld.center);
+    RE4DC_XM_POINT(*m, &sphere.center, &sphereWorld.center);
 }

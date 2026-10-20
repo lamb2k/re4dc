@@ -194,6 +194,7 @@ struct Warp {
     unsigned n_rsf;
     u32 scenario[2], find, unlock[2], items[2];  // items: pG->item_flags[0..1] (key-item pickups, r105 area 8)
     u32 status[4];  // `status <0..3> <hex>`: pG->Status_flg bits (3: 0x04000000 Ashley follows, sce_sys.cpp)
+    int chapter;    // `chapter <n>`: pG->chapter (chapters finished) before the first room loads, 0 = unset (+1 stored)
     u8 dead[64];
     unsigned n_dead;
     Act act[32];
@@ -387,6 +388,8 @@ void load()
             wp.find |= num(tok[1]);
         } else if (!strcmp(k, "unlock") && n >= 3) {
             wp.unlock[num(tok[1]) & 1] |= num(tok[2]);
+        } else if (!strcmp(k, "chapter") && n >= 2) {
+            wp.chapter = (int) num(tok[1]) + 1;  // DISC_SET disc check (game.cpp StageInit) reads pG->chapter
         } else if (!strcmp(k, "status") && n >= 3) {
             wp.status[num(tok[1]) & 3] |= num(tok[2]);
         } else if (!strcmp(k, "items") && n >= 3) {
@@ -1304,6 +1307,10 @@ void re4dc_warp_next_pos(void)
         pG->NextPos.z = wp.pos[2];
     }
     if (wp.has_dir) pG->NextY = wp.dir;
+    if (wp.chapter) {
+        pG->chapter = wp.chapter - 1;
+        re4dc_log("warp: chapter %d\n", wp.chapter - 1);
+    }
     re4dc_log("warp: start room=%03x next_room=%03x pos=%d,%d,%d ang=%d/1000\n", (unsigned) wp.room,
               (unsigned) pG->next_room, (int) pG->NextPos.x, (int) pG->NextPos.y, (int) pG->NextPos.z,
               (int) (pG->NextY * 1000.0f));

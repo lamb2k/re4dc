@@ -2036,6 +2036,11 @@ void MesSysMessage(int msg, int disc)
     } else if (msg == 6) {
         msg = disc + 6;
     }
+#if defined(RE4DC_DISC_SET) && RE4DC_DISC_SET
+    if (msg >= 12) {
+        msg = no;  // disc 3 has no GameCube text: the disc-1 form until the port draws "Disc 3" (DISC-LAYOUT 2)
+    }
+#endif
     pos += no * 2;
     cMes.MesSet(mes_no[msg], pos[0], pos[1], 0x01020090, 0xF, 0, 1);
     pG->Disp_flg &= ~0x800;
@@ -2293,11 +2298,19 @@ int cDvd::DiscChange(int disc)
     return 1;
 }
 
+#if defined(RE4DC_DISC_SET) && RE4DC_DISC_SET
+extern "C" int re4dc_disc_wanted(void);
+#endif
 // The current disc number (from the disc id, or the pending change).
 int cDvd::GetDiscNo()
 {
     int no = DVDGetCurrentDiskID()->diskNumber;
 
+#if defined(RE4DC_DISC_SET) && RE4DC_DISC_SET
+    if (discChanged && re4dc_disc_wanted() >= 0) {
+        return re4dc_disc_wanted();  // three discs: the pending disc, not "the other of two"
+    }
+#endif
     if (discChanged) {
         no ^= 1;
     }

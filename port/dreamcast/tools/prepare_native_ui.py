@@ -454,6 +454,10 @@ ROOM_CONTRACTS={
     'r109':dict(slots=30,smd=4,effs=(7,),itm=9,model_slots=(),header_grow=32),
     # r10c: 35 slots, SMD#4, EFF#7, ITM#9, model TPL#28 (after BIN#27); FCV#29-34 byte-identical.
     'r10c':dict(slots=35,smd=4,effs=(7,),itm=9,model_slots=(28,)),
+    # r10d / r10e (lane ch2rooms20, chapter 2-1's side path; slot tags of the GC disc 1 St1/<room>.das): r107's
+    # 27-slot layout (SMD#4, EFF#7, ITM#9; DSE#26 byte-identical; header 232 B, first payload 256 B).
+    'r10d':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
+    'r10e':dict(slots=27,smd=4,effs=(7,),itm=9,model_slots=()),
     # r10f: 48 slots, models TPL#28 (BIN#27) and TPL#32 (BIN#31; BIN#30 alone); FCV#29/#33-46, EMI#47 byte-identical.
     'r10f':dict(slots=48,smd=4,effs=(7,),itm=9,model_slots=(28,32)),
     # r11b (route lane r11b, chapter 2-1's start, the lake shore): 33 slots, SMD#4, EFF#7, ITM#9, model TPL#28

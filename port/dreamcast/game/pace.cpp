@@ -239,6 +239,9 @@ struct GpuAcc {
 GpuAcc g_gpu;                                      // interrupt side; vmu_window takes it with interrupts off
 unsigned long long g_reg_t0, g_regdone_t, g_rnd_t0;
 }  // namespace
+#if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
+extern "C" void re4dc_tail_pvr(int ev, unsigned long long t_ns);   // bench.cpp (bench.mk TAIL_METER)
+#endif
 
 extern "C" void __real_pvr_sync_stats(int event);
 extern "C" void __wrap_pvr_sync_stats(int event)
@@ -279,6 +282,9 @@ extern "C" void __wrap_pvr_sync_stats(int event)
         }
         break;
     }
+#if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
+    re4dc_tail_pvr(event - kSyncRegStart, t);      // bench.cpp: 0 scene open, 1 TA done, 2 render start, 3 render done
+#endif
     irq_restore(irq);
 }
 
@@ -565,6 +571,10 @@ extern "C" int re4dc_speed_screen(unsigned v[3])
 #if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
 static int image_decided;   // LEON_CLOTH_DRAWN: this tick's image was decided early (re4dc_pace_image_dropped)
 #endif
+#if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
+extern "C" void re4dc_tail_begin(int skip);   // bench.cpp (bench.mk TAIL_METER)
+extern "C" void re4dc_tail_spin(int end);
+#endif
 extern "C" void re4dc_pace_reset(void)
 {
     active = false; ok_now = false; run = 0; drop_next = false;
@@ -622,6 +632,9 @@ extern "C" void re4dc_pace_begin(void)
     re4dc_pace_drop_models = 0;
 #if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
     image_decided = 0;
+#endif
+#if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
+    re4dc_tail_begin(skip);   // bench.cpp: closes the previous iteration, opens this one (skip: draws nothing)
 #endif
 }
 
@@ -705,8 +718,14 @@ extern "C" int re4dc_pace_end(void)
     if (active) {
         ++ticks;
         const u32 due = anchor + 2 * ticks;
+#if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
+        re4dc_tail_spin(0);
+#endif
         while ((int) (re4dc_vi_retrace_count() - due) < 0) {
         }
+#if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
+        re4dc_tail_spin(1);
+#endif
         waited = 1;
     }
     re4dc_pace_skipping = 0;
