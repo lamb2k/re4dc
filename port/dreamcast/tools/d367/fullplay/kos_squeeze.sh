@@ -30,7 +30,7 @@ for sc in $SCENES; do
   for lv in $LEVELS; do
     n=${lv%:*}; f=${lv#*:}; L=kos-$sc-$n-$f
     { echo "squeeze $n $f"; tr -d '\r' < "${WARP[$sc]}"; } > "$EVU/fixtures/$L-warp.txt"
-    [ "${EVAL_ONLY:-0}" = 1 ] || python "$here/fp_run.py" --base "$BASE" --warp "$EVU/fixtures/$L-warp.txt" --cap "$EV\\$L" --syms "$S" --seconds ${SECS[$sc]:-60} \
+    [ "${EVAL_ONLY:-0}" = 1 ] || python "$here/fp_run.py" --base "$BASE" --warp "$(cygpath -w "$EVU/fixtures/$L-warp.txt")" --cap "$EV\\$L" --syms "$S" --seconds ${SECS[$sc]:-60} \
       --name $L > "$EVU/fixtures/$L.out" 2>&1 &
   done
   wait
