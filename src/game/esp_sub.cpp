@@ -4,6 +4,13 @@
 // shimmer and frame-buffer ("nega") variants, and EspSeqSet, which turns one EspGenWork record
 // of an effect sequence into a live esp (or an effect model through EfmSeqSet). EspEstSetSelect
 // spawns one record of an est table directly (laser sight, gatling, ...).
+#if defined(RE4DC_ESP_CENSUS) && RE4DC_ESP_CENSUS
+#include <stdio.h>
+static unsigned re4dc_esp_ct[4];
+#define ESPCT(i) (re4dc_esp_ct[i]++)
+#else
+#define ESPCT(i) ((void) 0)
+#endif
 #include "atari.h"
 #include "light.h"
 #include "gx.h"
@@ -1371,6 +1378,38 @@ static void EspSpriteEmit(cEsp* esp)
         return;
     }
 #endif
+#if defined(RE4DC_ESP_CENSUS) && RE4DC_ESP_CENSUS
+    ESPCT(3);
+    {   // ESP_CENSUS: sprites reaching the emit, by (id, owner, tex), the 12 largest every 120 frames ("espe:")
+        struct K { u32 k; u16 n; };
+        static K tab[64];
+        static u32 frame0, frames;
+        if (pG->Frame_cnt != frame0) {
+            frame0 = pG->Frame_cnt;
+            if (++frames == 120) {
+                char buf[240];
+                int n = 0;
+                for (int c = 0; c < 12; c++) {
+                    int b = -1;
+                    for (int j = 0; j < 64; j++) if (tab[j].n && (b < 0 || tab[j].n > tab[b].n)) b = j;
+                    if (b < 0) break;
+                    n += snprintf(buf + n, sizeof(buf) - n, " %06x:%u", (unsigned) tab[b].k, (unsigned) tab[b].n / 120);
+                    tab[b].n = 0;
+                }
+                re4dc_log("espe: f=%u room=%03x id.own.tex:per-frame%s\n", (unsigned) frame0, (unsigned) G_ROOM_ID, buf);
+                re4dc_log("espt: per-frame trans=%u body=%u channel_ok=%u emit=%u\n", re4dc_esp_ct[0] / 120,
+                          re4dc_esp_ct[1] / 120, re4dc_esp_ct[2] / 120, re4dc_esp_ct[3] / 120);
+                re4dc_esp_ct[0] = re4dc_esp_ct[1] = re4dc_esp_ct[2] = re4dc_esp_ct[3] = 0;
+                for (int j = 0; j < 64; j++) tab[j].n = 0, tab[j].k = 0;
+                frames = 0;
+            }
+        }
+        const u32 key = ((u32) esp->m_Id << 16) | ((u32) esp->info.owner << 8) | esp->m_Tex_id;
+        for (int j = 0; j < 64; j++) {
+            if (tab[j].n == 0 || tab[j].k == key) { tab[j].k = key; tab[j].n++; break; }
+        }
+    }
+#endif
     const TEXDescriptor* td = TEXGet(tw->pTpl, RE4DC_FX_FLIP_PTN(esp->m_Ptn_no, tw->pTpl->numDescriptors));   // effects30.mk
     const TEXHeader* th = td->textureHeader;
     Re4dcEffectSprite s;
@@ -1395,6 +1434,11 @@ static void EspSpriteEmit(cEsp* esp)
     const int ortho = P[0] != 0.0f;
     const f32 near_d = ortho ? 0.0f : P[6] / (P[5] - 1.0f), far_d = ortho ? 0.0f : P[6] / P[5];
     const Mtx& m = esp->m_Mat;
+#if defined(RE4DC_ESP_PROJ_FAST) && RE4DC_ESP_PROJ_FAST
+    // ESP_PROJ_FAST=1 (logiclod20.mk; render only, last-bit approximation): the viewport scale 640 / V[2] and
+    // 480 / V[3] are divided once per sprite instead of once per corner (8 divides -> 2).
+    const f32 vsx = 640.0f / V[2], vsy = 480.0f / V[3];
+#endif
 #if RE4DC_PS2_FX_STAGE1
     const Ps2fxStatic* fixed=ortho ? NULL : Ps2fxStaticFor(esp);
     f32 fixed_dx=0.0f,fixed_dy=0.0f,fixed_ox=0.0f,fixed_oy=0.0f;
@@ -1453,8 +1497,13 @@ static void EspSpriteEmit(cEsp* esp)
             px = (P[1] * x + P[2] * z) * inv;
             py = (P[3] * y + P[4] * z) * inv;
         }
+#if defined(RE4DC_ESP_PROJ_FAST) && RE4DC_ESP_PROJ_FAST
+        s.x[i] = (V[2] * 0.5f * px + V[0] + V[2] * 0.5f) * vsx;
+        s.y[i] = (-V[3] * 0.5f * py + V[1] + V[3] * 0.5f) * vsy;
+#else
         s.x[i] = (V[2] * 0.5f * px + V[0] + V[2] * 0.5f) * 640.0f / V[2];
         s.y[i] = (-V[3] * 0.5f * py + V[1] + V[3] * 0.5f) * 480.0f / V[3];
+#endif
         s.z[i] = inv;
         s.u[i] = tw->mtx[0][0] * cu[i] + tw->mtx[0][1] * cv[i] + tw->mtx[0][3];
         s.v[i] = tw->mtx[1][0] * cu[i] + tw->mtx[1][1] * cv[i] + tw->mtx[1][3];
@@ -2192,6 +2241,16 @@ extern "C" int re4dc_esp_coarse_sprite_visible(cEsp* esp)
         return 0;   // FX_MIST_PS2: a dormant GC-only mist sheet (never drawn: HAZE_SPRITE_CUT)
     }
 #endif
+#if defined(RE4DC_ESP_CUT_EARLY) && RE4DC_ESP_CUT_EARLY && defined(RE4DC_HAZE_SPRITE_CUT)
+    // ESP_CUT_EARLY=1 (logiclod20.mk; render only, exact): a sprite HAZE_SPRITE_CUT declines in EspSpriteEmit (every
+    // mist sheet, and a camera haze sprite without a PS2 recipe row) is not queued at all, so EspCommonTrans no longer
+    // builds its channels, matrix and corners for nothing. PS2 recipe haze sprites still go through (HW_FOG_HAZE reads
+    // them before their cut). The cut note is counted here as there.
+    if (esp->m_Id == 0x48 || (esp->m_Id == 0x15 && !Ps2fxHazeFor(esp))) {
+        HazeCutNote(esp);
+        return 0;
+    }
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
     // A beam can cross the view while either endpoint is outside it. Esp19
     // retains source OT checks; its own line adapter clips the full segment.
@@ -2369,6 +2428,7 @@ void EspCommonTrans(cEsp* esp)
     f32 ox;
     f32 oy;
 
+    ESPCT(0);
     if (esp->m_Shimmer_type != 0) {
         EspCommonTransShimmer(esp, esp->m_Shimmer_pow, esp->m_Shimmer_type);
         return;
@@ -2383,6 +2443,16 @@ void EspCommonTrans(cEsp* esp)
     // reads. The cached projection / texture are forgotten, so a following sprite that trusts an OT run of
     // sprites (OtGetPrevKind() == 8) sets them itself, as this one would have.
     if (!EspSpriteEligible(esp)) {
+        s_proj_type = -1;
+        s_tex_no = -1;
+        return;
+    }
+#endif
+#if defined(RE4DC_ESP_CUT_EARLY) && RE4DC_ESP_CUT_EARLY && defined(RE4DC_HAZE_SPRITE_CUT)
+    // ESP_CUT_EARLY (see re4dc_esp_coarse_sprite_visible): a sprite EspSpriteEmit would decline under HAZE_SPRITE_CUT
+    // skips the body. The cached projection / texture are forgotten, as for an ineligible sprite above.
+    if (esp->m_Id == 0x48 || (esp->m_Id == 0x15 && !Ps2fxHazeFor(esp))) {
+        HazeCutNote(esp);
         s_proj_type = -1;
         s_tex_no = -1;
         return;
@@ -2504,6 +2574,7 @@ void EspCommonTrans(cEsp* esp)
         }
         s_tex_no = esp->m_Tex_id;
     }
+    ESPCT(1);
 #if RE4DC_PS2_FX_POPULATION
     if (!esp->ChannelSet() && !Ps2fxPopulationSelected(esp)) {
 #else
@@ -2511,6 +2582,7 @@ void EspCommonTrans(cEsp* esp)
 #endif
         return;
     }
+    ESPCT(2);
     sx = esp->m_Size_base_x * esp->m_Size_mul;
     sy = esp->m_Size_base_y * esp->m_Size_mul;
     if ((f32) s_pAnm->Cx == 0.0f) {
