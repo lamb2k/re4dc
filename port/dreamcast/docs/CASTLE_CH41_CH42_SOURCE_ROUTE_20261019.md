@@ -852,3 +852,26 @@ The final packed Disc 2 sector count belongs to its staging check. Historical
 746 selected texture winners and earlier bounded nine-to-zero evidence stay
 separate from the new release recipe. No game code, texture payload, shared
 recipe or staging tool changes in this checkpoint.
+
+
+## Original roof exit and drill approach, October 20
+
+Normal22 follows five original floor/wall waypoints from the stopped roof
+into the drill corridor. It reaches (-14489,2,-7915) at source frame4341,
+Leon1440/Ashley600, with an ordinary owned-window close after the goals.
+This remains the unmodified historical746/c9 diagnostic chain. Its23rd
+capture and exact successive state are sealed; no current-recipe chapter
+or hardware result is inferred. Exact49,152 reserve/min29,112; native Leon,
+Ashley and em11 have GC0, with no texture/audio-fit/fatal/VRAM refusal.
+Historical residency remains25 late uploads,227total; the9+16 prepared
+entries cover observed keys but need the new current-build gameplay gate.
+
+The retired temporary ELF path was replaced only in the read-only auditor
+by the byte-identical preserved C: ELF. The failed capacity attempt is
+retained separately and sent no guest input. The source archive was read
+back from the held disc and matches its manifest exactly.
+
+Proof r212-original-drill-approach-proof-20261020.json:
+9dd575a68e4a768c7e4474879fa311f4907ea18706f0ddc5300fc15f78a3b486.
+State c954264b3ac51e4e5207b729848460ba75aa5a38cd689485bcc79105d70572c0.
+Original drill event/combat, cup and return remain open.
