@@ -110,6 +110,8 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 - [x] **Lighter fights:** dead bodies and props cost less to run and draw.
 - [x] **r111 villagers** use the PS2 model.
 - [x] **Dam rooms** use the measured PS2 lighting.
+- [x] **Steady frame pacing:** a new Options choice that shows every frame for the same time. Smoother motion
+  for a few fps less. Fast stays the default.
 
 Screenshots come with the release.
 
