@@ -1,7 +1,7 @@
 set -euo pipefail
 # b.sh <label> <arm> [extra knobs...] (WSL; lane logiclod20): one build of the Test 19.1 recipe (rr/recipe.conf CH2 line)
 # on this tree plus extra knobs. Arms as ch2-build.sh (rP play, rW warp, rT trace). HW=1 adds PACE_MODE=off for hwproject.
-T=/root/work/lanes/logiclod20
+T=${TREE:-/root/work/lanes/logiclod20}
 export K=/root/work/lanes/logiclod20-scratch/k
 mkdir -p "$K"
 L=${1:?label}; A=${2:?arm}; shift 2
