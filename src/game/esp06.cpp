@@ -5,6 +5,7 @@
 // PathMat, a transform applied to the path; Vec2 gives a start fraction along it.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "light.h"
 #include "math_sub.h"
 #include "rnd.h"
@@ -80,9 +81,10 @@ void esp06_CommonMove(cEsp06* esp)
     Mtx m;
 
     if (esp->parent != pEffParentWorld && esp->m_Release_time != 0xFF && esp->m_Release_time <= esp->m_Life_time) {
-        PSMTXMultVecSR(esp->parent->mat, &w->LocalPos, &w->LocalPos);
-        PSMTXMultVecSR(esp->parent->mat, &esp->m_Speed, &esp->m_Speed);
-        PSMTXMultVecSR(esp->parent->mat, &esp->m_Speed_plus, &esp->m_Speed_plus);
+        RE4DC_XM_LOAD(esp->parent->mat);
+        RE4DC_XM_DIR(esp->parent->mat, &w->LocalPos, &w->LocalPos);
+        RE4DC_XM_DIR(esp->parent->mat, &esp->m_Speed, &esp->m_Speed);
+        RE4DC_XM_DIR(esp->parent->mat, &esp->m_Speed_plus, &esp->m_Speed_plus);
         if (esp->m_Tool_flg & 1) {
             RotMatrix(m, &esp->m_Ang);
             PSMTXConcat(esp->parent->mat, m, m);

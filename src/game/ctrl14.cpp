@@ -4,6 +4,7 @@
 // them, and their flame (setFire: 30 frame wind-up, 60 frame jet) that burns the player.
 
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "vec.h"
 #include "cManager.h"
 #include "ctrl.h"
@@ -394,8 +395,9 @@ int cCtrl14::ckHitFireBlocked()
         b.x = -2000.0f;
         b.y = 0.0f;
         b.z = 15000.0f;
-        PSMTXMultVec(w->obj[1]->mat, &a, &a);
-        PSMTXMultVec(w->obj[1]->mat, &b, &b);
+        RE4DC_XM_LOAD(w->obj[1]->mat);
+        RE4DC_XM_POINT(w->obj[1]->mat, &a, &a);
+        RE4DC_XM_POINT(w->obj[1]->mat, &b, &b);
         a.y = pPL->pos.y + 1600.0f;
         b.y = pPL->pos.y + 1600.0f;
         if (EatMgr.hitCheck(&a, &b, NULL, NULL, 0, 0x400000)) {
@@ -407,8 +409,9 @@ int cCtrl14::ckHitFireBlocked()
         b.x = 0.0f;
         b.y = 0.0f;
         b.z = 15000.0f;
-        PSMTXMultVec(w->obj[1]->mat, &a, &a);
-        PSMTXMultVec(w->obj[1]->mat, &b, &b);
+        RE4DC_XM_LOAD(w->obj[1]->mat);
+        RE4DC_XM_POINT(w->obj[1]->mat, &a, &a);
+        RE4DC_XM_POINT(w->obj[1]->mat, &b, &b);
         a.y = pPL->pos.y + 1600.0f;
         b.y = pPL->pos.y + 1600.0f;
         if (EatMgr.hitCheck(&a, &b, NULL, NULL, 0, 0x400000)) {
@@ -420,8 +423,9 @@ int cCtrl14::ckHitFireBlocked()
         b.x = 2000.0f;
         b.y = 0.0f;
         b.z = 15000.0f;
-        PSMTXMultVec(w->obj[1]->mat, &a, &a);
-        PSMTXMultVec(w->obj[1]->mat, &b, &b);
+        RE4DC_XM_LOAD(w->obj[1]->mat);
+        RE4DC_XM_POINT(w->obj[1]->mat, &a, &a);
+        RE4DC_XM_POINT(w->obj[1]->mat, &b, &b);
         a.y = pPL->pos.y + 1600.0f;
         b.y = pPL->pos.y + 1600.0f;
         return EatMgr.hitCheck(&a, &b, NULL, NULL, 0, 0x400000) == 0;

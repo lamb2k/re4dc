@@ -7,6 +7,8 @@
 #include "em.h"
 #endif
 #include "actor_transaction_diag.h"
+#include "actor_prof.h"  // ACTOR_PROF (actorplan.mk, diagnostic): empty macros otherwise
+#include "actor_plan.h"  // ACTOR_PLAN (actorplan.mk): RE4DC_PLAN_ON is 0 otherwise
 #include "actor_transaction_diag_impl.inc"
 #include "actor_visibility_diag_impl.inc"
 // NATIVE_MODEL_REGISTRY_SOURCE_LIGHT (native_model_registry.mk): registry plans of the selected enemy ids (bit 0: El
@@ -133,9 +135,27 @@ bool actor_plan_layout(Re4dcActorPlan& p) {
 // but idle (cModelInfo::setTexBlendTbl sets flagsDC 4; blendRatio 0 and blendType 0: trans.cpp TextureBlend adds no
 // stage, the base textures show) draws as the base: the Novistador (em2d) keeps its table for the whole fight and
 // blends only while its camouflage changes (em2dCamouflageMove).
-#define RE4DC_NMR_BLEND_IDLE(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl &&     !(info)->blendRatio && !(info)->blendType)
+#define RE4DC_NMR_BLEND_IDLE0(info,app) ((app)>=nmr::appearance_first && (info)->flagsDC==4u && (info)->texBlendTbl &&     !(info)->blendRatio && !(info)->blendType)
 #else
-#define RE4DC_NMR_BLEND_IDLE(info,app) false
+#define RE4DC_NMR_BLEND_IDLE0(info,app) false
+#endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+// PVR_RTT (pvr_rtt.mk): a registry info showing a render target through TexRenderModSet's table ({1, 0, ?, ?, 0xF7,
+// 0xF8 + slot}) with blend type 2 and ratio 0xFF (em2cSetFreeze: the frozen Verdugo's ice) keeps its plan; the draw
+// adds the target as a second pass (re4dc_nmr_ice_pass below).
+extern "C" void re4dc_rtt_want(int slot);
+extern "C" int re4dc_rtt_ready(int slot);
+extern "C" void re4dc_rtt_override(int slot);
+inline int re4dc_nmr_ice_slot(const cModelInfo* info) {
+    if(!info || info->flagsDC!=4u || !info->texBlendTbl || info->blendType!=2 || info->blendRatio!=0xFFu)return -1;
+    const unsigned char* t=static_cast<const unsigned char*>(info->texBlendTbl);
+    return t[0]==1 && t[4]==0xF7 && t[5]>=0xF8?int(t[5])-0xF8:-1;
+}
+#define RE4DC_NMR_BLEND_ICE(info,app) ((app)>=nmr::appearance_first && re4dc_nmr_ice_slot(info)>=0)
+#define RE4DC_NMR_BLEND_IDLE(info,app) (RE4DC_NMR_BLEND_IDLE0(info,app) || RE4DC_NMR_BLEND_ICE(info,app))
+#else
+#define RE4DC_NMR_BLEND_ICE(info,app) false
+#define RE4DC_NMR_BLEND_IDLE(info,app) RE4DC_NMR_BLEND_IDLE0(info,app)
 #endif
 bool actor_semantics(cModel* m,const Re4dcActorPlan& p) {
     if(!m->pParts || !p.count || p.count>kRe4dcActorRoles || !p.palettes ||
@@ -370,7 +390,9 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
         palettes[i]=reinterpret_cast<float*>(static_cast<unsigned char*>(palette_memory)+at);
         at+=(p.input[i].palette_count*48u+31u)&~31u;
     }
+    APROF_SPAN(aprof_pal,APROF_PAL);
     if(!p.palettes(m,p,palettes)){ATD(m,13,p.appearance,0);return actor_decline(*r,failed);}
+    APROF_STOP(aprof_pal);
     Re4dcActorSkinBinding bindings[kRe4dcActorRoles]{};
     unsigned order=0;
     for(cModelInfo* info=m->pModelInfo;info;info=info->pList) {
@@ -498,6 +520,7 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
 #endif
     r->passes=m->ot_type==7?3u:1u;
     // The whole actor, BOTH pass groups, qualifies before its first TA header.
+    APROF_SPAN(aprof_pre1,APROF_PRE1);
     if(r->run_count!=p.run_count || !re4dc_actor_preflight_owned_runs(&b,r->runs,r->run_count,p.materials,p.material_count,&r->workspace,&r->skin,r->textures)) {
         ATD(m,15,r->run_count,p.run_count);return actor_decline(*r,failed);
     }
@@ -726,6 +749,20 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
     return result;
 }
 static int enc_transaction_draw(cModel* m) {
+#elif defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
+// ACTOR_PROF (diagnostic): the draw below runs unchanged; TX = this call minus the PS2 world flushes it triggers.
+static int aprof_transaction_draw(cModel* m);
+extern "C" int re4dc_actor_transaction_draw(cModel* m) {
+    APROF_FRAME(unsigned(pG->Frame_cnt));
+    APROF_CLS(!m?2u:m->id==0?0u:(m->id>=0x10 && m->id<=0x20)?1u:2u);
+    APROF_COUNT(APROF_N_CALLS,1);
+    const unsigned t=re4dc_aprof_now(),w=re4dc_aprof_wfl_cycles;
+    const int result=aprof_transaction_draw(m);
+    re4dc_aprof_add(APROF_TX,re4dc_aprof_now()-t-(re4dc_aprof_wfl_cycles-w));
+    APROF_CLS(3u);
+    return result;
+}
+static int aprof_transaction_draw(cModel* m) {
 #else
 extern "C" int re4dc_actor_transaction_draw(cModel* m) {
 #endif
@@ -789,6 +826,7 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
 #if RE4DC_LEON_NATIVE_PIPE
         {const int lean=leon_pipe_first(m,frame,model);if(lean!=2)return lean;}
 #endif
+        APROF_SPAN(aprof_plan,APROF_PLAN);
         Re4dcActorPlan p{};
 #if RE4DC_NATIVE_MODEL_REGISTRY
         // NATIVE_MODEL_REGISTRY: the generic descriptors plan after Leon and the Ganado cast. NMR_CENSUS: census builds
@@ -827,7 +865,9 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
                 scene_note(m,plan_kind,plan_kind==3?kScRegistryDeclined:kScDeclined));
             return 0;
         }
+        APROF_STOP(aprof_plan);
         NMR_CENSUS(actor_certificate_reached=false);
+        APROF_SPAN(aprof_sem1,APROF_SEM1);
         if(!actor_semantics(m,p)){
             ATD(m,6,p.appearance,p.count);
 #if RE4DC_ACTOR_TRANSACTION_DIAG
@@ -875,9 +915,11 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
             return 0;
         }
 #endif
+        APROF_STOP(aprof_sem1);
 #if RE4DC_ACTOR_PROOF_LEAN
         lean_serial=re4dc_material::life::exhausted?0u:re4dc_material::life::serial;
 #endif
+        APROF_SPAN(aprof_crowd,APROF_CROWD);
 #if RE4DC_CROWD
         if(crowd_ganado(m)) {
             crowd_would=crowd_policy(m);
@@ -909,6 +951,7 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
             }
         }
 #endif
+        APROF_STOP(aprof_crowd);
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
 #if RE4DC_NMR_DYING && RE4DC_NATIVE_MODEL_REGISTRY_CENSUS
         if(actor_fade_eligible(m,p)) {
@@ -923,7 +966,9 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
         if(actor_fade_eligible(m,p))return actor_fade_enqueue(m,p,frame,model);
 #endif
 #endif
+        APROF_SPAN(aprof_acq,APROF_ACQ);
         bool failed=false;r=actor_acquire(m,p,frame,model,failed);
+        APROF_STOP(aprof_acq);
         if(failed){actor_fail();return -1;}
 #if RE4DC_NATIVE_MODEL_REGISTRY
         if(!r){
@@ -952,6 +997,7 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
         r->crowd_why=crowd_would==1?crowd_why:0;r->crowd_depth=crowd_depth;r->crowd_fog=crowd_fog;
 #endif
     }
+    APROF_SPAN(aprof_pass,APROF_PASS);
     const unsigned pass=m->ot_type==7 && (m->be_flag&0x08000000)?2u:1u;
     if((r->done&pass) || r->released){actor_fail();return -1;}
 #if RE4DC_ACTOR_PROOF_LEAN
@@ -1024,12 +1070,20 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
     }
     if(order!=r->count){actor_release(*r);actor_fail();return -1;}
     Re4dcActorDrawRun runs[kRe4dcActorRuns];unsigned n=0;
+#if RE4DC_ACTOR_PLAN
+    // ACTOR_PLAN: the call that acquired the actor (lean_held: its lifetime token still holds) submits this pass's runs,
+    // a subset of the runs actor_acquire preflighted, through re4dc_actor_submit_preflighted_runs.
+#define RE4DC_ACTOR_SUBMIT_OWNED (lean_held && RE4DC_PLAN_ON?re4dc_actor_submit_preflighted_runs:re4dc_actor_submit_owned_runs)
+#else
+#define RE4DC_ACTOR_SUBMIT_OWNED re4dc_actor_submit_owned_runs
+#endif
     for(unsigned i=0;i<r->count;++i) {
         const auto& p=r->part[i];
         if(!(p.flags&8))continue;
         if(m->ot_type==7 && ((p.flags&0x40)?2u:1u)!=pass)continue;
         for(unsigned j=0;j<r->run_count;++j)if(r->runs[j].chunk.info==p.info)runs[n++]=r->runs[j];
     }
+    APROF_STOP(aprof_pass);
 #if RE4DC_CROWD_OUTPUT
     const unsigned crowd_out0=re4dc_model_output_count();
 #endif
@@ -1052,7 +1106,7 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
 #endif
     }
     (void)pco_nearest;(void)pco_check;
-    const int result=pco_skip?1:n?re4dc_actor_submit_owned_runs(&r->base,runs,n,r->plan.materials,r->plan.material_count,&r->workspace,&r->skin,r->textures):1;
+    const int result=pco_skip?1:n?RE4DC_ACTOR_SUBMIT_OWNED(&r->base,runs,n,r->plan.materials,r->plan.material_count,&r->workspace,&r->skin,r->textures):1;
 #if RE4DC_PS2_INTERIOR_OWNER == 2
     if(pco_check) {
         float have=0;const int noted=re4dc_actor_crowd_peek(m,&have);
@@ -1064,7 +1118,30 @@ extern "C" int re4dc_actor_transaction_draw(cModel* m) {
     }
 #endif
 #else
-    const int result=n?re4dc_actor_submit_owned_runs(&r->base,runs,n,r->plan.materials,r->plan.material_count,&r->workspace,&r->skin,r->textures):1;
+    const int result=n?RE4DC_ACTOR_SUBMIT_OWNED(&r->base,runs,n,r->plan.materials,r->plan.material_count,&r->workspace,&r->skin,r->textures):1;
+#endif
+#undef RE4DC_ACTOR_SUBMIT_OWNED
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    if(result==1 && n) {   // PVR_RTT: the ice pass over the runs of infos that show a render target
+        Re4dcActorDrawRun ice[kRe4dcActorRuns];unsigned k=0;int slot=-1;
+        for(unsigned j=0;j<n;++j) {
+            const int s=re4dc_nmr_ice_slot(static_cast<const cModelInfo*>(static_cast<const void*>(runs[j].chunk.info)));
+            if(s>=0){slot=s;ice[k++]=runs[j];}
+        }
+        if(k) {
+            re4dc_rtt_want(slot);
+            if(re4dc_rtt_ready(slot)) {
+                Re4dcActorOwnedMaterial mats[kRe4dcActorMaterials];
+                for(unsigned i=0;i<r->plan.material_count;++i){mats[i]=r->plan.materials[i];mats[i].blend=0;mats[i].depth_mode=1;}
+                re4dc_rtt_override(slot);
+                const int ice_result=re4dc_actor_submit_owned_runs(&r->base,ice,k,mats,r->plan.material_count,&r->workspace,&r->skin,r->textures);
+                re4dc_rtt_override(-1);
+                static unsigned ice_passes,ice_failed;
+                ++ice_passes;if(ice_result!=1)++ice_failed;
+                if((ice_passes&127)==1)re4dc_log("PVR_RTT ice pass: model=%p slot=%d runs=%u passes=%u failed=%u\n",m,slot,k,ice_passes,ice_failed);
+            }
+        }
+    }
 #endif
 #if RE4DC_CROWD_OUTPUT
     if(r->crowd_ganado) {

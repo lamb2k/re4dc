@@ -28,7 +28,7 @@ CH1 = {
     'r11b': ('door', None),
 }
 CH2 = {
-    'r111': ('file', 'ch2/warps/k-r111.txt'), 'r112': ('file', 'ch2/warps/e-r112.txt'), 'r113': ('file', 'ch2/warps/k-r113.txt'),
+    'r111': ('file', 'ch2/warps/c-r111.txt'), 'r112': ('file', 'ch2/warps/e-r112.txt'), 'r113': ('file', 'ch2/warps/k-r113.txt'),
     'r11c': ('file', 'ch2/warps/e-r11c.txt'), 'r11d': ('file', 'ch2/warps/k-r11d.txt'), 'r11e': ('file', 'ch2/warps/e-r11e.txt'),
     'r10f': ('file', 'ch2/warps/k-r10f.txt'), 'r11f': ('file', 'ch2/warps/e-r11f.txt'), 'r200': ('file', 'ch2/warps/k-r200.txt'),
 }

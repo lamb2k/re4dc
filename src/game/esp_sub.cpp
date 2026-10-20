@@ -4,6 +4,13 @@
 // shimmer and frame-buffer ("nega") variants, and EspSeqSet, which turns one EspGenWork record
 // of an effect sequence into a live esp (or an effect model through EfmSeqSet). EspEstSetSelect
 // spawns one record of an est table directly (laser sight, gatling, ...).
+#if defined(RE4DC_ESP_CENSUS) && RE4DC_ESP_CENSUS
+#include <stdio.h>
+static unsigned re4dc_esp_ct[4];
+#define ESPCT(i) (re4dc_esp_ct[i]++)
+#else
+#define ESPCT(i) ((void) 0)
+#endif
 #include "atari.h"
 #include "light.h"
 #include "gx.h"
@@ -198,8 +205,18 @@ static int EspLakeNightOwner(u32 owner)
     return owner == 0x68 && (G_ROOM_ID == 0x11A || G_ROOM_ID == 0x11B);
 }
 #endif
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+extern "C" int re4dc_rtt_capturing();
+#endif
 static int EspSpriteEligible(cEsp* esp)
 {
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    // PVR_RTT (pvr_rtt.mk): inside a render target's OT bracket its effects draw into the target, whatever the owner.
+    // Outside the bracket they never reach the screen: the GC draws them only into the target's EFB area.
+    if (esp->m_Tool_flg & 0x10000) {
+        return re4dc_rtt_capturing() && !((esp->m_Tool_flg & 0x4000) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+    }
+#endif
     // Et0a hanging lamps use 0x5e for their source flame/smoke sprites, including
     // the impact fire. Keep the existing class, mask and blend restrictions.
     const u32 owner = esp->info.owner;
@@ -1361,6 +1378,38 @@ static void EspSpriteEmit(cEsp* esp)
         return;
     }
 #endif
+#if defined(RE4DC_ESP_CENSUS) && RE4DC_ESP_CENSUS
+    ESPCT(3);
+    {   // ESP_CENSUS: sprites reaching the emit, by (id, owner, tex), the 12 largest every 120 frames ("espe:")
+        struct K { u32 k; u16 n; };
+        static K tab[64];
+        static u32 frame0, frames;
+        if (pG->Frame_cnt != frame0) {
+            frame0 = pG->Frame_cnt;
+            if (++frames == 120) {
+                char buf[240];
+                int n = 0;
+                for (int c = 0; c < 12; c++) {
+                    int b = -1;
+                    for (int j = 0; j < 64; j++) if (tab[j].n && (b < 0 || tab[j].n > tab[b].n)) b = j;
+                    if (b < 0) break;
+                    n += snprintf(buf + n, sizeof(buf) - n, " %06x:%u", (unsigned) tab[b].k, (unsigned) tab[b].n / 120);
+                    tab[b].n = 0;
+                }
+                re4dc_log("espe: f=%u room=%03x id.own.tex:per-frame%s\n", (unsigned) frame0, (unsigned) G_ROOM_ID, buf);
+                re4dc_log("espt: per-frame trans=%u body=%u channel_ok=%u emit=%u\n", re4dc_esp_ct[0] / 120,
+                          re4dc_esp_ct[1] / 120, re4dc_esp_ct[2] / 120, re4dc_esp_ct[3] / 120);
+                re4dc_esp_ct[0] = re4dc_esp_ct[1] = re4dc_esp_ct[2] = re4dc_esp_ct[3] = 0;
+                for (int j = 0; j < 64; j++) tab[j].n = 0, tab[j].k = 0;
+                frames = 0;
+            }
+        }
+        const u32 key = ((u32) esp->m_Id << 16) | ((u32) esp->info.owner << 8) | esp->m_Tex_id;
+        for (int j = 0; j < 64; j++) {
+            if (tab[j].n == 0 || tab[j].k == key) { tab[j].k = key; tab[j].n++; break; }
+        }
+    }
+#endif
     const TEXDescriptor* td = TEXGet(tw->pTpl, RE4DC_FX_FLIP_PTN(esp->m_Ptn_no, tw->pTpl->numDescriptors));   // effects30.mk
     const TEXHeader* th = td->textureHeader;
     Re4dcEffectSprite s;
@@ -2131,8 +2180,19 @@ extern "C" int re4dc_ps2_rain_sheet(cEsp* esp)
 }
 #endif
 #if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+extern "C" int re4dc_rtt_core_wanted(u32 core_flg);
+#endif
 extern "C" int re4dc_esp_sprite_class(cEsp* esp)
 {
+#if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
+    // PVR_RTT (pvr_rtt.mk): a render target's common sprites while a model shows that target (the coarse pass then
+    // queues them in the target's OT, where EspSpriteEligible admits them into the capture).
+    if (esp->m_Tool_flg & 0x10000) {
+        return EspTransTbl[esp->m_Id] == EspCommonTrans && re4dc_rtt_core_wanted(esp->info.Core_flg) &&
+               !((esp->m_Tool_flg & 0x4000) || (esp->m_Flg & 0x10) || esp->xA4 != 1);
+    }
+#endif
 #if defined(RE4DC_RAIN_PS2_SHEET_REF) && RE4DC_RAIN_PS2_SHEET_REF
     if (esp->m_Id == 0x08 && esp->info.owner == 0xD0 && esp->m_Tex_id == 0xC5 &&
         (G_ROOM_ID == 0x11A || G_ROOM_ID == 0x11B)) return 1;
@@ -2169,6 +2229,16 @@ extern "C" int re4dc_esp_coarse_sprite_visible(cEsp* esp)
 #if defined(RE4DC_FX_MIST_PS2) && RE4DC_FX_MIST_PS2
     if (esp->m_Id == 0x48 && re4dc_esp48_is_dormant(esp)) {
         return 0;   // FX_MIST_PS2: a dormant GC-only mist sheet (never drawn: HAZE_SPRITE_CUT)
+    }
+#endif
+#if defined(RE4DC_ESP_CUT_EARLY) && RE4DC_ESP_CUT_EARLY && defined(RE4DC_HAZE_SPRITE_CUT)
+    // ESP_CUT_EARLY=1 (logiclod20.mk; render only, exact): a sprite HAZE_SPRITE_CUT declines in EspSpriteEmit (every
+    // mist sheet, and a camera haze sprite without a PS2 recipe row) is not queued at all, so EspCommonTrans no longer
+    // builds its channels, matrix and corners for nothing. PS2 recipe haze sprites still go through (HW_FOG_HAZE reads
+    // them before their cut). The cut note is counted here as there.
+    if (esp->m_Id == 0x48 || (esp->m_Id == 0x15 && !Ps2fxHazeFor(esp))) {
+        HazeCutNote(esp);
+        return 0;
     }
 #endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
@@ -2348,6 +2418,7 @@ void EspCommonTrans(cEsp* esp)
     f32 ox;
     f32 oy;
 
+    ESPCT(0);
     if (esp->m_Shimmer_type != 0) {
         EspCommonTransShimmer(esp, esp->m_Shimmer_pow, esp->m_Shimmer_type);
         return;
@@ -2362,6 +2433,16 @@ void EspCommonTrans(cEsp* esp)
     // reads. The cached projection / texture are forgotten, so a following sprite that trusts an OT run of
     // sprites (OtGetPrevKind() == 8) sets them itself, as this one would have.
     if (!EspSpriteEligible(esp)) {
+        s_proj_type = -1;
+        s_tex_no = -1;
+        return;
+    }
+#endif
+#if defined(RE4DC_ESP_CUT_EARLY) && RE4DC_ESP_CUT_EARLY && defined(RE4DC_HAZE_SPRITE_CUT)
+    // ESP_CUT_EARLY (see re4dc_esp_coarse_sprite_visible): a sprite EspSpriteEmit would decline under HAZE_SPRITE_CUT
+    // skips the body. The cached projection / texture are forgotten, as for an ineligible sprite above.
+    if (esp->m_Id == 0x48 || (esp->m_Id == 0x15 && !Ps2fxHazeFor(esp))) {
+        HazeCutNote(esp);
         s_proj_type = -1;
         s_tex_no = -1;
         return;
@@ -2483,6 +2564,7 @@ void EspCommonTrans(cEsp* esp)
         }
         s_tex_no = esp->m_Tex_id;
     }
+    ESPCT(1);
 #if RE4DC_PS2_FX_POPULATION
     if (!esp->ChannelSet() && !Ps2fxPopulationSelected(esp)) {
 #else
@@ -2490,6 +2572,7 @@ void EspCommonTrans(cEsp* esp)
 #endif
         return;
     }
+    ESPCT(2);
     sx = esp->m_Size_base_x * esp->m_Size_mul;
     sy = esp->m_Size_base_y * esp->m_Size_mul;
     if ((f32) s_pAnm->Cx == 0.0f) {

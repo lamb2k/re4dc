@@ -4,12 +4,24 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** October 19, 2026.
+**Last updated:** October 20, 2026.
 
-**Current build: Test 17.1** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)), a hotfix of Test 17:
-the Coming Soon screen now returns you to the room.
+**Current build: Test 20** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): chapter 2-1's real path.
+The dam (r10c), r10d and r10e are playable, the Insignia Key comes from the dam, and far scenery and far enemies cost less.
 
 **Earlier builds** (newest first):
+
+- **Test 19.1:** hotfix of Test 19. The r100 cliff cutscene plays all its frames again (#45), r117 keeps its effect
+sprites (#46), and character drawing goes back to the earlier, faster path.
+
+- **Test 19:** quick weapon select (hold X + D-pad), foliage boots Off and view distance boots Near, the Dreamcast
+Player's Manual pages (#44), enemies hidden behind walls are not drawn, and faster scenery drawing.
+
+- **Test 18:** chapter 2-1 can be finished again (the Insignia Key is given at the dam gate), a lighter El Gigante,
+Leon on his PS2 model after a chainsaw kill and in the first El Gigante fight, the r102 pictures after loading a save,
+no sound gap in cutscenes, and fewer disc reads in the r100 house fight and at the night lake shore.
+
+- **Test 17.1:** the Coming Soon screen returns you to the room.
 
 - **Test 17:** chapters 2-2 and 2-3
 up to the castle gate (r200), PS2 Ashley, Mendez and El Gigante as lighter PS2 models, rain at the night lake, solid
@@ -33,12 +45,23 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | Status | Meaning | Count |
 | --- | --- | --- |
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
-| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 13 |
-| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 | Fixed and checked in our tests; the problem was not console-only | 32 |
+| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 8 |
+| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 | Fixed and checked in our tests; the problem was not console-only | 47 |
 | 🛠️ In progress | Being fixed now | 0 |
-| 🔍 Investigating | Being reproduced or traced | 2 |
-| ⏸️ Open | Known, not yet worked on | 18 |
+| 🔍 Investigating | Being reproduced or traced | 4 |
+| ⏸️ Open | Known, not yet worked on | 15 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
+
+## Game progress (ongoing work)
+
+Not bugs: work that goes on from test to test.
+
+- **Frame rate.** It varies by scene, and the busiest fights are slowest. Speed work goes on in every test
+  (history: [#29](https://github.com/lamb2k/re4dc/issues/29)).
+- **Pauses when entering rooms.** Rooms load their pictures and models at the door; this is getting shorter.
+- **Rooms not built yet.** The castle beyond the gate (r200). Its door shows Coming Soon and returns you to the room.
+- **Dark night rooms on some consoles.** Some players report them; our Flycast captures match the GameCube's
+  brightness. We're checking.
 
 ## Stability
 
@@ -60,12 +83,16 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | The cutscene at the r100 cliff (after the first house) is skipped; the game goes on normally after it | test 12, 12.1, 12.2, 13, 14 | 🟢 Fixed in test 15: while the movie plays it borrows the memory of the room's scenery, which is read back from the disc and checked when the movie ends | |
 | Possible out-of-memory crash on a real console when leaving the village (r101) after a long fight, at the next room's start | test 12, 12.1 | 🟢 Fixed in test 12.2, needs console check: found by our memory checks, not reported by anyone yet; the village's leftover texture records are freed when the room changes, and our console-memory test (Flycast with 48 KiB of the console's system memory held back) now leaves the village to r100 and r103 without running out | |
 | Chapter 2-1 has two ways forward and the test carries one. Main path: the lake shore, r11a, r119, r118, r117. Doors that show Coming Soon: on the lake shore the second exit and the ladder (r11b to r10c / r10d); in the El Gigante area by day or night, the side path (r119 / r109 to r10e). Until 17.1 the game stayed on the Coming Soon screen | test 17 and earlier | 🟢 Fixed in test 17.1: the screen now returns you to the room, so you can take the other exit | |
+| Chapter 2-1 can't be finished: the church door (r118) needs the Insignia Key, which is found in the dam (r10c), a room not on the disc yet | test 17, 17.1 | 🟢 Fixed in test 18: the key is given at the gate to the dam, where Coming Soon shows | [#40](https://github.com/lamb2k/re4dc/issues/40) |
 | A crash screen (`MISSING sub screen pool freeze allocation`) when a radio call opens on a real console | test 11 (not released), test 12 preview | ✅ Confirmed fixed on a real Dreamcast (test 12 preview): the call screen now keeps its copies in memory set aside for it | |
 
 ## Picture
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| The r100 cliff cutscene (after the first house) skips about 43 of its 340 frames, so it looks choppier. The game goes on normally | test 19 | 🟢 Fixed in test 19.1: the scenery shares repeated corner points, so the movie has its memory again (340 of 340 frames) | [#45](https://github.com/lamb2k/re4dc/issues/45) |
+| In r117, after the Saddler scene starts, a few effect sprites are skipped for about 3 seconds while video memory is short. Play continues | test 19 | 🟢 Fixed in test 19.1: no sprites skipped in r117 (0 refusals) | [#46](https://github.com/lamb2k/re4dc/issues/46) |
+| The Player's Manual pages 1-3 (aim, knife, action) and file 3 show the GameCube controller instead of the Dreamcast one. The Dreamcast pages are on the disc, but the game looks for them outside the texture pack | test 8 to 18 | ✅ Fixed in test 19 | [#44](https://github.com/lamb2k/re4dc/issues/44) |
 | In the Mendez fight (chapter 2-3 barn, r11f) the room's effect pool fills (1,024 of 1,024 sprites) and a few fire / smoke effects are skipped; the same happens with the GameCube's own pool size | test 17 | 🔍 Investigating, not blocking: found by our effect-pool count (ESP_POOL_DIAG), no gameplay effect seen | |
 | Leaves, fences and tree branch tips draw as solid shapes on a real console (fine in emulators) | test 8 | 🟢 Fixed, needs console check | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Blank screen on door transitions | test 7, test 8 | 🟢 Fixed in test 9 | |
@@ -92,12 +119,14 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | In the village (r101) the burning stake has lost its crossbar and a plank of the pyre (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | In the village (r101) the fence by the house on the right of the square shows only its posts, without its rails (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | The item menu's confirm popup does not look as it did in test 13 | test 14, 15 | ⏸️ Open | |
-| In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 16.5: 4 refused; test 16.3 and 16.4: 5; test 15: 4; test 14: 76) | test 14 to 16.5 | ⏸️ Open: fix planned for a later test (the room's pictures are loaded again in one pass after a save is loaded) | [#33](https://github.com/lamb2k/re4dc/issues/33) |
-| A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3 to 17 | ⏸️ Open: the rooms' resident picture lists miss these pictures; fix planned for a later test | |
+| The dam (r10c), r10d and r10e use the GameCube room light, not a measured PS2 value, so their brightness may differ a little from the PS2 version | test 20 | ⏸️ Open, not blocking: a look check is planned | [#47](https://github.com/lamb2k/re4dc/issues/47) |
+| In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 16.5: 4 refused; test 16.3 and 16.4: 5; test 15: 4; test 14: 76) | test 14 to 17.1 | 🟢 Fixed in test 18: r102's pictures load with the room's resident list after a save is loaded | [#33](https://github.com/lamb2k/re4dc/issues/33) |
+| A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3 to 17.1 | 🟢 Fixed in test 18: the rooms' resident picture lists now hold these pictures | |
 | In r118 one small picture (64x64) is not on the disc, so it is not drawn | test 16.4, 16.5 | 🟢 Fixed in test 17: the picture is in the disc's texture package, and our texture check passes in r118 | [#37](https://github.com/lamb2k/re4dc/issues/37) |
-| On the way from r10f to the castle gate (r200), some effect sprites are not drawn for a while, and one world picture fails our texture check. Play continues: the truck, the chapter 2-3 end, the results and the save all work | test 17 | ⏸️ Open: the world picture and the effect pictures refused for lack of video memory are fixed for test 18. For about a second in r200 some effect sprites are still skipped because the per-frame list of see-through parts is full; making it bigger does not fit in memory yet | [#39](https://github.com/lamb2k/re4dc/issues/39) |
-| After a chainsaw kill, Leon is drawn with his GameCube model for the death scene | test 17 and earlier | ⏸️ Open: fixed for test 18 (Leon keeps his PS2 model, his head included) | |
-| Some players report very dark night rooms on a console | test 17 | 🔍 Investigating: our Flycast captures match the GameCube's brightness; we're looking into it | |
+| In r200, at the castle gate, some effect sprites are skipped for about a second: the per-frame list of see-through parts is full. Play continues | test 17 to 18 | ⏸️ Open: making the list bigger does not fit in memory yet. Test 18 fixed the rest of [#39](https://github.com/lamb2k/re4dc/issues/39) (the world picture and the effect pictures on the way from r10f) | [#41](https://github.com/lamb2k/re4dc/issues/41) |
+| After a chainsaw kill, Leon is drawn with his GameCube model for the death scene | test 17.1 and earlier | 🟢 Fixed in test 18: Leon keeps his PS2 model, his head included | |
+| Arriving at the night lake shore (r11b) straight from the Del Lago fight, three large pictures wait about 2 seconds for a free block of video memory and one effect sprite is skipped. Play continues | test 17.1, 18 | ⏸️ Open, not blocking: found by our new chapter 2-1 checks; test 17.1 does the same (12 waits there, 8 in test 18) | [#43](https://github.com/lamb2k/re4dc/issues/43) |
+| Our not-drawn check finds enemies in view that are not drawn for a while: four Ganados in r111 and seven of the enemies in r113 (model em2a). Play is not affected | test 17.1, 18 | 🔍 Investigating, not blocking: found by our in-view not-drawn check in the test 18 checks; test 17.1 does the same | [#42](https://github.com/lamb2k/re4dc/issues/42) |
 | In r106 the four Ganados waiting behind the closed gate are not drawn until they come through it (they are out of view behind the gate) | test 17 | ⏸️ Open: by design for now; found by our new not-drawn check | |
 
 ## Sound
@@ -105,7 +134,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
 | The rifle sound is lower quality | all | ⏸️ Open (memory limit) | |
-| Cutscenes have a short gap in the sound (about 0.15 s). The Mendez cutscene (r11f) ends as soon as you pass its button prompt, as in the original game | test 17 and earlier | ⏸️ Open: fixed for test 18 (the cutscene sound is fully loaded before it starts) | [#38](https://github.com/lamb2k/re4dc/issues/38) |
+| Cutscenes have a short gap in the sound (about 0.15 s). The Mendez cutscene (r11f) ends as soon as you pass its button prompt, as in the original game | test 17.1 and earlier | 🟢 Fixed in test 18: the cutscene sound is fully loaded before it starts | [#38](https://github.com/lamb2k/re4dc/issues/38) |
 | Radio call subtitles lag behind the voice: they fall further behind as the call goes on and end well after it (real console) | test 14 and earlier | 🟢 Fixed in test 16, needs console check: the subtitles counted one GameCube 30 Hz step per drawn frame of the call, while the voice plays in real time, so every call frame slower than 1/30 s put them further behind. They now follow the voice's own clock from the moment it starts sounding. With the call slowed to 15 frames a second on an emulator (a model, not a console measurement): 27 s behind at the end of the first call before, within 0.06 s of the voice through the whole call after (Flycast at full speed: 0.32 s before, 0.03 s after) | |
 | The chapter results music is silent on the third results screen | test 7 and earlier | 🟢 Fixed in test 8: the music that plays after each chapter's results (chapters 1-1, 1-2 and 1-3, on the save screen) is on the disc. The results table itself has no music, as in the original game: the chapter end stops the room music and starts none | |
 | Footsteps and room ambience are silent in r103 (the farm) | test 13, 14 | 🟢 Fixed in test 15: r103's footstep and ambience sounds are converted for the Dreamcast again (ambience 16 kHz, footsteps 11 kHz, the same rates as the other rooms). The later chapter 1 rooms already had theirs | |
@@ -122,11 +151,9 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | In the village (r101), two Ganado texture sheets load at half resolution, so all of the room's pictures fit in video memory; the villagers have a little less texture detail up close there | test 16.3 | ⏸️ Open: by design, for the frame rate (the other rooms keep full detail) |  |
 | Some scripted Ganado waves in r10a can start early: a Ganado still waiting for its turn under the Ganado limit is counted as dead, so the wave that waits for those kills begins too soon | test 16 | 🟢 Fixed in test 16.1: a waiting Ganado now counts as alive until it arrives and is killed |  |
 | The ambient farm animals are removed for speed: cows, chickens and the farm dog in the village (r101) and the farm (r103); no eggs from chickens. The dog in the bear trap (r100) and the dog that helps against El Gigante stay | test 16.1 | ⏸️ Open: by design, for the frame rate (the farm ran about 20% slower with them in our emulator tests) |  |
-| Pauses when entering rooms | all | ⏸️ Open | |
-| The frame rate drops for a few seconds and then recovers, with no clear reason (for example outdoors in the woods, r100) | test 9.1 and later | 🔍 Investigating. Test 15.1 no longer draws the see-through haze and mist sprites around Leon, in any room and at every Foliage setting (the distant haze is still drawn as fog), and Foliage Off now leaves out every see-through brush, leaf, shadow and mist card. Together with Foliage these were most of the see-through layers outdoors. Please tell us whether the drops remain on test 15.1 or 16 | [#29](https://github.com/lamb2k/re4dc/issues/29) |
 | The farm after the village (r103) re-reads villager animations from the disc during play (about 38 reads a second on a console) and loads textures while playing; after a radio call in the village the on-screen display reloads its pictures | test 12, 13 | 🟢 Fixed in test 14, needs a console check: the animations stay in memory, and r103's and r101's textures are loaded when the room starts. From test 15 the on-screen display also keeps its pictures through the village radio call | |
 | FSAA (Options, Rendering) is slower than Standard in busy scenes such as the village fight: it draws twice the pixels | test 12 | ⏸️ Open: by design; Standard is the default | |
-| View distance Near or Short (Options) shows less of the distant outdoor scenery: it fades into the fog sooner (houses inside stay clear, the lake keeps its full horizon). From test 17, Short draws a simplified far view in the first area and the village (the distant houses, trees and hills kept beyond the cut) | test 15 | ⏸️ Open: by design; Full is the default and every boot starts in Full | |
+| View distance Near or Short (Options) shows less of the distant outdoor scenery: it fades into the fog sooner (houses inside stay clear, the lake keeps its full horizon). From test 17, Short draws a simplified far view in the first area and the village (the distant houses, trees and hills kept beyond the cut) | test 15 | ⏸️ Open: by design; from Test 19 every boot starts at Near (Full is one press away in Options) | |
 | Foliage Near and Off look the same: no near brush or leaf cards at Near | test 16 | 🟢 Fixed in test 16.4 (FOLIAGE_NEAR_FIX), needs console check | |
 | The lake fades into the fog at 25 m, closer than on PS2 | test 16 | 🟢 Fixed in test 16.4 (LAKE_FAR / LAKE_FAR_SHORE), needs console check: 45 m on the boat (Del Lago) and from the shore by day and at night | |
 | The contributor kit's knob file (`tools/d367/test16/release-knobs.txt`) at the test 16.4 tag described an earlier candidate (LAKE_FAR=30000), so a kit build did not match the 16.4 program | test 16.4 | 🟢 Fixed in test 16.5: the knob file is written from the release build and committed on the tagged commit itself | [#34](https://github.com/lamb2k/re4dc/issues/34) |

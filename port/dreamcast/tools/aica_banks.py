@@ -179,6 +179,10 @@ ROOMS = {
     # Follow-up 7 (world coverage lane, St1; assets.sh discover: the rooms' ESL / script enemies)
     'r109': ['st1/r109.dar', 'em/em23.drs'],
     'r10c': ['st1/r10c.dar', 'em/em12.drs'],
+    # r10d / r10e (lane ch2rooms20, chapter 2-1's side path; the runtime's blk 8.. load order): r10d em18 (the merchant)
+    # + pl0f (the boat); r10e pl0f, em29, em27, em18.
+    'r10d': ['st1/r10d.dar', 'em/em18.drs', 'em/pl0f.drs'],
+    'r10e': ['st1/r10e.dar', 'em/pl0f.drs', 'em/em29.drs', 'em/em27.drs', 'em/em18.drs'],
     'r10f': ['st1/r10f.dar', 'em/em13.drs', 'em/pl11.drs'],   # pl11: Ashley (chapter 2-3, lane ch22-1014)
     # r11a (route lane r11a, chapter 2-1): em24 is also read at room entry, as in r108 / r10a (route-r11a-x1a:
     # "blk 9 (34040 bytes) does not fit the room arena"). bgmtbl: bio4midi #10 (as r11b).
@@ -1207,7 +1211,7 @@ def tree_layout(tree):
     raise SystemExit('fit: no prebuilt resident bank in %s (no frozen layout)' % tree)
 
 
-def fit(path_in, path_out, tree, room, cache_dir, check=False, json_out=None):
+def fit(path_in, path_out, tree, room, cache_dir, check=False, json_out=None, tail_blk=None, tail_bytes=0):
     """Prebuild the room-arena banks (ROOM, FOOT, enemies) that a disc file still carries as GC data, into the frozen
     layout of an existing disc tree (lane audio16, 2026-10-16: test 13's objs13 st1/r103.dar was rebuilt from an
     unconverted .dar, so r103's ROOM / FOOT banks went to runtime conversion, which only has the ~30 KB outside the
@@ -1215,7 +1219,10 @@ def fit(path_in, path_out, tree, room, cache_dir, check=False, json_out=None):
     `tree` as prebuilt there (ROOMS[room]); the free arena is layout[8] minus their bytes. Each block starts at
     pref_cap and the planner's LOWER_ORDER steps one cap down on the largest block of the first kind that can still go
     down until all fit. Same image, header and filter as `build` (decimate_aa, AicaBankHeader with the tree's layout);
-    every other byte of the file is kept."""
+    every other byte of the file is kept.
+    tail_blk / tail_bytes (--tail-blk T --tail-bytes N, lane ch2rooms20, ROUTE_CH21_FULL images): block T of the file is
+    marked tail-first (header pad bit 0) and placed by the runtime in the BGM0 slot's unused tail (N bytes = the slot
+    minus the room's BGM0 bank) instead of the arena, so it is left out of the arena budget and must fit N."""
     layout = tree_layout(tree)
     d = bytearray(open(path_in, 'rb').read())
     me = [s for s in ROOMS[room] if not s.partition('#')[0].endswith(os.path.basename(path_in))]
@@ -1247,10 +1254,19 @@ def fit(path_in, path_out, tree, room, cache_dir, check=False, json_out=None):
     free = layout[8] - others
 
     def need():
-        return sum((bank_bytes(b['samples'], b['cap']) + 31) & ~31 for b in todo)
+        return sum((bank_bytes(b['samples'], b['cap']) + 31) & ~31 for b in todo if b['t'] != tail_blk)
+    for b in todo:
+        if b['t'] == tail_blk:
+            while (bank_bytes(b['samples'], b['cap']) + 31) & ~31 > tail_bytes:
+                if b['cap'] == CAPS[-1]:
+                    raise SystemExit('fit: tail block %d needs %d bytes even at %d Hz, tail %d'
+                                     % (tail_blk, bank_bytes(b['samples'], b['cap']), CAPS[-1], tail_bytes))
+                b['cap'] = CAPS[CAPS.index(b['cap']) + 1]
+    if tail_blk is not None and not any(b['t'] == tail_blk for b in todo):
+        raise SystemExit('fit: --tail-blk %d is not a GC arena block of %s' % (tail_blk, path_in))
     while need() > free:
         for kind in LOWER_ORDER:
-            c = [b for b in todo if (b['t'] if b['t'] < 8 else 8) == kind and b['cap'] > CAPS[-1]]
+            c = [b for b in todo if (b['t'] if b['t'] < 8 else 8) == kind and b['cap'] > CAPS[-1] and b['t'] != tail_blk]
             if c:
                 b = max(c, key=lambda x: bank_bytes(x['samples'], x['cap']))
                 b['cap'] = CAPS[CAPS.index(b['cap']) + 1]
@@ -1263,14 +1279,14 @@ def fit(path_in, path_out, tree, room, cache_dir, check=False, json_out=None):
         img, worst = cached_convert(cache_dir, bytes(d[b['ao']:b['ao'] + b['asz']]), b['samples'], b['coefs'], b['cap'],
                                     check, loops)
         assert len(img) == bank_bytes(b['samples'], b['cap'])
-        blob = HDR.pack(MAGIC, VERSION, b['cap'], len(img), len(b['samples']), b['fnv'], b['asz'], slot_of(b['t']), 0,
-                        *layout, *([0] * 7)) + img
+        blob = HDR.pack(MAGIC, VERSION, b['cap'], len(img), len(b['samples']), b['fnv'], b['asz'], slot_of(b['t']),
+                        1 if b['t'] == tail_blk else 0, *layout, *([0] * 7)) + img
         assert len(blob) <= b['asz'], (b['t'], len(blob), b['asz'])
         d[b['ao']:b['ao'] + b['asz']] = blob + bytes(b['asz'] - len(blob))
         rows.append({'block': BLOCK_NAMES.get(b['t'], 'EM%d' % (b['t'] - 8)), 'gc_bytes': b['asz'],
                      'samples': len(b['samples']), 'cap_hz': b['cap'], 'aica_bytes': len(img),
                      'aica_at_pref_cap': bank_bytes(b['samples'], pref_cap(b['t'])), 'fnv': '%08x' % fnv1a(img),
-                     'adpcm_snr_db': None if worst > 900 else round(worst, 1)})
+                     'adpcm_snr_db': None if worst > 900 else round(worst, 1), 'tail_first': b['t'] == tail_blk})
         print('  %s %-4s %7d GC -> %7d AICA at %5d Hz%s' % (os.path.basename(path_in), rows[-1]['block'], b['asz'],
               len(img), b['cap'], '' if worst > 900 else '  ADPCM SNR %.1f dB' % worst))
     os.makedirs(os.path.dirname(os.path.abspath(path_out)), exist_ok=True)
@@ -1278,7 +1294,8 @@ def fit(path_in, path_out, tree, room, cache_dir, check=False, json_out=None):
         f.write(d)
     rep = {'room': room, 'file': path_in, 'out': path_out, 'sha256': hashlib.sha256(bytes(d)).hexdigest(),
            'layout': layout, 'arena': layout[8], 'other_arena_bytes': others, 'runtime_other_banks': runtime_others,
-           'free_before': free, 'used_by_fit': need(), 'arena_left': free - need(), 'blocks': rows}
+           'free_before': free, 'used_by_fit': need(), 'arena_left': free - need(), 'blocks': rows,
+           'tail_blk': tail_blk, 'tail_bytes': tail_bytes}
     if json_out:
         with open(json_out, 'w') as f:
             json.dump(rep, f, indent=1)
@@ -1423,6 +1440,8 @@ def main():
     ap.add_argument('cmd', choices=('plan', 'build', 'merge', 'streams', 'disc', 'reconvert', 'fit'))
     ap.add_argument('--file', help='fit: the disc file whose GC room-arena banks are prebuilt (e.g. a rebuilt st1/r103.dar)')
     ap.add_argument('--room', help='fit: the ROOMS entry whose other arena banks share the arena')
+    ap.add_argument('--tail-blk', type=int, help='fit: mark this block tail-first (BGM0 slot tail; ROUTE_CH21_FULL)')
+    ap.add_argument('--tail-bytes', type=int, default=0, help='fit: bytes free in the BGM0 slot tail for --tail-blk')
     ap.add_argument('--root', help='reconvert: a disc data tree whose prebuilt banks are refiltered '
                     '(--mirror may list several unconverted mirrors, comma separated, tried in order)')
     ap.add_argument('--streams', default=','.join('%d:%d' % k for k in ROUTE_STREAMS), help='blk:no list, or a preset name: ' + ', '.join(sorted(STREAM_PRESETS)))
@@ -1451,7 +1470,7 @@ def main():
     if a.cmd == 'fit':   # --mirror = the disc tree whose layout and other room banks are used
         if not (a.file and a.out and a.room):
             raise SystemExit('fit needs --file, --room and --out')
-        fit(a.file, a.out, a.mirror, a.room, a.cache, a.check, a.json)
+        fit(a.file, a.out, a.mirror, a.room, a.cache, a.check, a.json, a.tail_blk, a.tail_bytes)
         return 0
     if a.cmd == 'reconvert':
         if not (a.root and a.out):

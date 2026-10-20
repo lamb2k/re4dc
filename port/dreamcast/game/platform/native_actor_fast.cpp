@@ -36,6 +36,8 @@
 #endif
 #if RE4DC_ACTOR_TRANSACTION
 #include "actor_native_owner.h"
+#include "actor_prof.h"
+#include "actor_plan.h"
 #endif
 #if defined(RE4DC_ACTOR_PROBE_LIGHT) && RE4DC_ACTOR_PROBE_LIGHT
 #include "actor_light_probe.h"
@@ -168,6 +170,10 @@ static_assert(__builtin_offsetof(AvkLight, dirs) == 24 && __builtin_offsetof(Avk
 extern "C" {
 unsigned re4dc_avk_pos_skin_s16(const AvkPos*);
 unsigned re4dc_avk_pos_skin_u16(const AvkPos*);
+#if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
+unsigned re4dc_shz_pos_skin_s16(const AvkPos*);
+unsigned re4dc_shz_pos_skin_u16(const AvkPos*);
+#endif
 unsigned re4dc_avk_pos_rigid_s16(const AvkPos*);
 unsigned re4dc_avk_pos_rigid_u16(const AvkPos*);
 #ifndef RE4DC_AVK_RIGID6
@@ -3361,6 +3367,11 @@ unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k,
     a.matrix = skin ? f.skin_positions : f.screen; a.ready = f.skin_ready; a.entries = f.palette_entries;
     a.width = k.width; a.height = k.height; a.near_distance = k.near_distance; a.far_distance = k.far_distance;
     a.au = k.au; a.bu = k.bu; a.av = k.av; a.bv = k.bv;
+#if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
+    // SKIN_SH4ZAM (game30.mk): the skinned pass through SH4ZAM's shz_xmtrx_project_skinned_* (platform/sh4zam_skin.c).
+#define re4dc_avk_pos_skin_s16 re4dc_shz_pos_skin_s16
+#define re4dc_avk_pos_skin_u16 re4dc_shz_pos_skin_u16
+#endif
 #if RE4DC_AVK_RIGID6
     unsigned (*const kernel)(const AvkPos*) = skin ? (s16_uv ? re4dc_avk_pos_skin_s16 : re4dc_avk_pos_skin_u16)
                                             : six  ? (s16_uv ? re4dc_avk_pos_rigid6_s16 : re4dc_avk_pos_rigid6_u16)
@@ -3368,6 +3379,10 @@ unsigned avk_positions(Part& e, const Records& r, unsigned n, const PosConst& k,
 #else
     unsigned (*const kernel)(const AvkPos*) = skin ? (s16_uv ? re4dc_avk_pos_skin_s16 : re4dc_avk_pos_skin_u16)
                                                    : (s16_uv ? re4dc_avk_pos_rigid_s16 : re4dc_avk_pos_rigid_u16);
+#endif
+#if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM
+#undef re4dc_avk_pos_skin_s16
+#undef re4dc_avk_pos_skin_u16
 #endif
     const u8* rec = reinterpret_cast<const u8*>(r.r);
     if (skin && !f.avk_all) avk_build_all(f);
@@ -4812,6 +4827,16 @@ void exit_(unsigned e) { if (Row* r = row()) { r->n[e]++; r->us[e] += unsigned(r
 #define PXF_BEGIN(p) do { } while (0)
 #define PXF_EXIT(e) do { } while (0)
 #endif
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+namespace {
+#include "native_actor_chunk.inc"
+}  // namespace
+#endif
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+namespace {
+#include "native_actor_rigid.inc"
+}  // namespace
+#endif
 extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     ++stats.parts;
     PXF_BEGIN(part);
@@ -4876,6 +4901,19 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
 
     Frame& f = *prepare_frame(p, near_distance, far_distance);
+#if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS
+    if (f.mode != kSkin) {
+        static unsigned rgc_parts, rgc_ml, rgc_nv, rgc_log;
+        ++rgc_parts; rgc_ml += blob->meshlets;
+        const auto* tb = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
+        for (unsigned i = 0; i < blob->meshlets; ++i) rgc_nv += tb[i].n.vertices();
+        if (frame_serial - rgc_log >= 600U) {
+            re4dc_log("RGC frame=%u parts=%u meshlets=%u verts=%u\n", frame_serial, rgc_parts, rgc_ml, rgc_nv);
+            rgc_log = frame_serial; rgc_parts = rgc_ml = rgc_nv = 0;
+        }
+        re4dc_model_result(0, 0, 0); return 1;
+    }
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     PXF_SPAN(pos_us, pxt);
     if (pxf::Row* pr = pxf::row()) pr->ml += f.mode == kSkin ? 1000000u : 0u;
@@ -5065,6 +5103,19 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
             ++stats.culled_parts; re4dc_model_result(0, 0, 0); PXF_EXIT(kSphere); return 1;
         }
     }
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+    // RIGID_CHUNK: the size rule (native_actor_rigid.inc).
+    const bool rigid = f.mode == kRigid;
+    const float rigid_px = rigid ? rigid_pixels(p, *blob, near_distance) : 1.0e9f;
+    if (rigid) {
+        rigid_log();
+        ++rigid_stats.parts;
+        if (rigid_px < RE4DC_RIGID_CULL_PX) {
+            ++rigid_stats.culled; ++stats.culled_parts; re4dc_model_result(0, 0, 0); PXF_EXIT(kSphere); return 1;
+        }
+    }
+    const bool rigid_flat = rigid && rigid_px < RE4DC_RIGID_FLAT_PX;
+#endif
     Part e{p, f, {p.projection, p.viewport}, {near_distance, far_distance, RE4DC_SCREEN_WF, RE4DC_SCREEN_HF, project, nullptr}};
     e.clip.context = &e.projection;
     e.streaming = re4dc_model_packet_streaming() != 0;
@@ -5125,6 +5176,13 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         lights.constant = true;
         lights.constant_rgb = part_colour(lights);
     }
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+    if (rigid_flat && lights.fast && !lights.constant) {
+        ++rigid_stats.flat;
+        lights.constant = true;
+        lights.constant_rgb = part_colour(lights);
+    }
+#endif
     // Skinned directions follow the part's light fold; parts of one info whose
     // folds agree within kDirTolerance of the largest direction (light
     // directions from nearby part centres) keep the entries already built.
@@ -5150,8 +5208,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
     const unsigned rs = 3U + ((blob->flags & kHasCi) ? 1U : 0U) + ((blob->flags & kHasBake) ? 1U : 0U);
     const unsigned color_index = blob->color_index;
-    const unsigned level = tier == kTierFar ? blob->levels
-                           : select_level(p, *blob, near_distance, tier == kTierMid ? crowd_mid_tau : RE4DC_NEAR_LOD_TAU);
+    unsigned level = tier == kTierFar ? blob->levels
+                     : select_level(p, *blob, near_distance, tier == kTierMid ? crowd_mid_tau : RE4DC_NEAR_LOD_TAU);
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+    if (rigid_flat) level = blob->levels;
+#endif
     const LevelInfo* li = level ? reinterpret_cast<const LevelInfo*>(base + blob->lod4 * 4U) + (level - 1) : nullptr;
     const MeshletLevel* lt = li ? reinterpret_cast<const MeshletLevel*>(base + li->table4 * 4U) : nullptr;
     const u8* lists = li ? base + li->lists4 * 4U : base + blob->idx4 * 4U;
@@ -5175,7 +5236,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         if (census_cur) { census_cur->nv += nv; census_cur->nt += nt; census_cur->lvl += level; }
 #endif
         unsigned all, any;
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+        chunk_positions(e, r, nv, k, s16_uv, all, any);
+#else
         pass_positions(e, r, nv, k, s16_uv, all, any);
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
         if (pxf::Row* pr = pxf::row()) { pr->ml++; if (all & kOcCull) pr->mlc++; }
 #endif
@@ -5208,7 +5273,11 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
         } else if (bake != kBakeNone) {
             pass_baked(e, r, nv, bake == kBakeScaled ? bake_scale : nullptr);
         } else if (lights.fast) {
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+            chunk_lights(e, lights, r, nv);
+#else
             pass_lights(e, lights, r, nv);
+#endif
         } else {
             pass_lights_exact(e, lights, r, nv);
         }
@@ -5230,8 +5299,20 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
         if (bake == kBakeNone) stats.normals_lit += nv;
         if (any & kOcNear) ++stats.meshlets_clipped;
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+        {
+            ChunkSink sink;
+            chunk_sink_begin(sink, e);
+            ok = chunk_sink_strips(sink, r, index, nv, ni, nt, any);
+            chunk_sink_end(sink);
+        }
+#else
+#if defined(RE4DC_RIGID_CHUNK) && RE4DC_RIGID_CHUNK
+        if (rigid) { ok = rigid_strips(e, r, index, nv, ni, nt, any); continue; }
+#endif
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
         else ok = e.strips(r, index, ni);
+#endif
     }
 #if RE4DC_ACTOR_DIRECT
     if (e.direct) {
@@ -5443,6 +5524,8 @@ int one_chunk_core(Re4dcModelPart& p, OneWindow& w, const SkinEntry* known, cons
 #else
 int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     if (p.positions) return -1;
+    APROF_SPAN(aprof_chunk, APROF_CHUNK);
+    APROF_COUNT(APROF_N_CHUNKS, 1);
     ++stats.parts;
 #if defined(RE4DC_CALLPROF) && RE4DC_CALLPROF
     re4dc_callprof_part(p.model, 1);
@@ -5683,6 +5766,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     }
     e.cache.oc = reinterpret_cast<u8*>(e.cache.v + kMaxVertices);
 
+    APROF_SPAN(aprof_lit0, APROF_LIT);
     const SourceLighting& S = *p.lighting;
     const bool constant_source = !S.enable && !S.ambient_vertex && !S.material_vertex;
     Lights* lp = constant_source ? &w.lights : &w.lit;
@@ -5730,6 +5814,7 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
 #endif
         }
     }
+    APROF_STOP(aprof_lit0);
     const bool s16_uv = (p.flags & 0x80000000U) != 0;
     const float uv_scale = s16_uv ? 1.0f / 256.0f : 1.0f / 32768.0f;
     const PosConst k{0.0f, uv_scale * e.packet.u_scale, p.uv_offset[0] * e.packet.u_scale,
@@ -5751,6 +5836,26 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
     ++stats.lod_draws[level];
     if (kCrowd) ++stats.crowd_parts[tier];
     bool ok = true;
+#if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
+    {   // census only: distinct position / normal indices of the records this chunk draws at its level
+        static u16 seen_v[16384], seen_n[16384], seen_m[16384], last_n[16384], last_t[16384]; static u16 stamp, mstamp;
+        if (++stamp == 0) { std::memset(seen_v, 0, sizeof seen_v); std::memset(seen_n, 0, sizeof seen_n); stamp = 1; }
+        unsigned uv = 0, un = 0, ut = 0, um = 0;
+        for (unsigned mi = 0; mi < blob->meshlets; ++mi) {
+            const Counts c = lt ? lt[mi].n : table[mi].n;
+            const Records rr{reinterpret_cast<const u16*>(records) + table[mi].first * rs, rs, color_index, (blob->flags & kHasCi) != 0};
+            if (++mstamp == 0) { std::memset(seen_m, 0, sizeof seen_m); mstamp = 1; }
+            for (unsigned i = 0, nv = c.indices() ? c.vertices() : 0; i < nv; ++i) {
+                const unsigned vi = rr.vi(i) & 16383u, ni = rr.ni(i) & 16383u, ti = rr.ti(i);
+                if (seen_v[vi] != stamp) { seen_v[vi] = stamp; ++uv; ++ut; last_n[vi] = u16(ni); last_t[vi] = u16(ti); }
+                else if (last_n[vi] != ni || last_t[vi] != ti) { ++ut; last_n[vi] = u16(ni); last_t[vi] = u16(ti); }
+                if (seen_n[ni] != stamp) { seen_n[ni] = stamp; ++un; }
+                if (seen_m[vi] != mstamp) { seen_m[vi] = mstamp; ++um; }
+            }
+        }
+        APROF_COUNT(APROF_N_UVI, uv); APROF_COUNT(APROF_N_UNI, un); APROF_COUNT(APROF_N_UTR, ut); APROF_COUNT(APROF_N_UVM, um);
+    }
+#endif
     for (unsigned mi = 0; ok && mi < blob->meshlets; ++mi) {
         const MeshletInfo& m = table[mi];
         const Counts c = lt ? lt[mi].n : m.n;
@@ -5761,13 +5866,21 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         ++stats.meshlets; stats.vertices += nv; stats.corners += ni; stats.triangles += nt;
         if (kCrowd) stats.crowd_triangles[tier] += nt;
         unsigned all, any;
+        APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);
+        APROF_SPAN(aprof_pos, APROF_POS);
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+        chunk_positions(e, r, nv, k, s16_uv, all, any);
+#else
         pass_positions(e, r, nv, k, s16_uv, all, any);
+#endif
+        APROF_STOP(aprof_pos);
         if (all & kOcCull) {
             ++stats.meshlets_culled;
             e.input += nt;
             continue;
         }
         e.prime(nv);
+        APROF_SPAN(aprof_lit, APROF_LIT);
         if (lights.constant) {
 #if RE4DC_AVK
             if (!e.colors) {
@@ -5785,7 +5898,11 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         } else if (bake != kBakeNone) {
             pass_baked(e, r, nv, bake == kBakeScaled ? bake_scale : nullptr);
         } else if (lights.fast) {
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+            chunk_lights(e, lights, r, nv);
+#else
             pass_lights(e, lights, r, nv);
+#endif
         } else {
             pass_lights_exact(e, lights, r, nv);
         }
@@ -5805,10 +5922,22 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
                 e.cache.v[i].argb = (c & 0xFF000000U) | ((c >> 1) & 0x007F7F7FU);
             }
 #endif
+        APROF_STOP(aprof_lit);
         if (bake == kBakeNone) stats.normals_lit += nv;
         if (any & kOcNear) ++stats.meshlets_clipped;
+        APROF_SPAN(aprof_pack, APROF_PACK);
+#if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
+        {
+            ChunkSink sink;
+            chunk_sink_begin(sink, e);
+            ok = chunk_sink_strips(sink, r, index, nv, ni, nt, any);
+            chunk_sink_end(sink);
+        }
+#else
         if (!(any & (kOcCull | kOcNear)) && e.fits(ni)) { ++stats.meshlets_whole; ok = e.whole(index, ni, nt); }
         else ok = e.strips(r, index, ni);
+#endif
+        APROF_STOP(aprof_pack);
     }
     if (e.direct) {
         w.sq = e.sq; w.slots += e.slots; w.primed = e.primed;
@@ -5977,5 +6106,82 @@ extern "C" void re4dc_actor_test_meshlet_stats(unsigned out[8]) {
     out[4] = test_blob_bytes; out[5] = test_lod_bytes;
     out[6] = unsigned(test_convert_us); out[7] = unsigned(test_lod_us);
     std::printf("converter host time: total %.0f us (LOD %.0f us), max part %.0f us\n", test_convert_us, test_lod_us, test_convert_max_us);
+}
+#endif
+
+#if defined(RE4DC_ACTOR_PROF) && RE4DC_ACTOR_PROF
+// ACTOR_PROF (actorplan.mk; diagnostic only): actor_prof.h. Cycle sums per class x phase since the last report.
+#include <arch/timer.h>
+#include <stdio.h>
+extern "C" void re4dc_log(const char*, ...);
+namespace {
+const char* const kAprofNames[APROF_PHASES] = {"TX", "PLAN", "SEM1", "CROWD", "ACQ", "PAL", "PRE1", "PASS", "SUB",
+                                               "PRE2", "WFL", "CHUNK", "POS", "LIT", "PACK"};
+const char* const kAprofClass[4] = {"leon", "ganado", "other", "free"};
+unsigned long long aprof_sum[4][APROF_PHASES];
+unsigned aprof_n[4][APROF_COUNTS];
+unsigned aprof_first, aprof_last, aprof_frames;
+}  // namespace
+extern "C" {
+unsigned re4dc_aprof_cls = 3;
+unsigned re4dc_aprof_wfl_cycles;
+// TMU2 nanoseconds (timer_ns_gettime64; Flycast does not count PRFC0) as 200 MHz cycles: 1 cycle = 5 ns.
+unsigned re4dc_aprof_now(void) { return unsigned(timer_ns_gettime64() / 5u); }
+void re4dc_aprof_add(unsigned phase, unsigned cycles) {
+    if (phase < APROF_PHASES) aprof_sum[re4dc_aprof_cls & 3][phase] += cycles;
+}
+void re4dc_aprof_count(unsigned what, unsigned n) {
+    if (what < APROF_COUNTS) aprof_n[re4dc_aprof_cls & 3][what] += n;
+}
+// Called with the source frame at each transaction: a report every 300 distinct frames (per-frame means, cycles at
+// 200 MHz printed as microseconds x10 = 0.1 us units / 2 ... printed directly as us with one decimal).
+void re4dc_aprof_frame(unsigned frame) {
+    if (frame == aprof_last) return;
+    if (!aprof_frames) aprof_first = frame;
+    aprof_last = frame; ++aprof_frames;
+    if (aprof_frames <= 300) return;
+    const unsigned frames = aprof_frames - 1;  // the frames fully summed before this one
+    for (unsigned c = 0; c < 4; ++c) {
+        if (!aprof_n[c][APROF_N_CALLS] && !aprof_n[c][APROF_N_CHUNKS]) continue;
+        char line[512]; int at = snprintf(line, sizeof line, "APROF f=%u..%u frames=%u cls=%s calls10=%u chunks10=%u verts=%u "
+            "meshlets10=%u hits10=%u uvi=%u uni=%u utr=%u uvm=%u", aprof_first, frame - 1, frames, kAprofClass[c],
+            aprof_n[c][0] * 10 / frames, aprof_n[c][1] * 10 / frames, aprof_n[c][2] / frames, aprof_n[c][3] * 10 / frames,
+            aprof_n[c][4] * 10 / frames, aprof_n[c][APROF_N_UVI] / frames, aprof_n[c][APROF_N_UNI] / frames,
+            aprof_n[c][APROF_N_UTR] / frames, aprof_n[c][APROF_N_UVM] / frames);
+        for (unsigned p = 0; p < APROF_PHASES && at > 0 && at < int(sizeof line); ++p) {
+            // us per frame with one decimal: cycles / frames / 200 MHz
+            const unsigned long long us10 = aprof_sum[c][p] / frames / 20;
+            at += snprintf(line + at, sizeof line - at, " %s=%llu.%llu", kAprofNames[p], us10 / 10, us10 % 10);
+        }
+        re4dc_log("%s us/frame\n", line);
+    }
+    std::memset(aprof_sum, 0, sizeof aprof_sum); std::memset(aprof_n, 0, sizeof aprof_n);
+    aprof_frames = 1; aprof_first = frame;
+}
+}
+#endif
+
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+// ACTOR_PLAN (actorplan.mk, actor_plan.h): the runtime switch and the compare counters.
+#include <stdio.h>
+extern "C" void re4dc_log(const char*, ...);
+namespace {
+const char* const kAplanNames[APLAN_KINDS] = {"bind", "pre", "roles", "row", "hand", "sem", "mat"};
+unsigned aplan_checks[APLAN_KINDS], aplan_hits[APLAN_KINDS], aplan_bad[APLAN_KINDS], aplan_log_frame;
+}  // namespace
+extern "C" {
+unsigned re4dc_actor_plan_on = 1;
+alignas(32) unsigned char re4dc_actor_plan_store[RE4DC_ACTOR_PLAN_STORE];
+void re4dc_actor_plan_note(unsigned kind, int hit, int bad) {
+    if (kind >= APLAN_KINDS) return;
+    ++aplan_checks[kind]; aplan_hits[kind] += hit != 0; aplan_bad[kind] += bad != 0;
+    if (frame_serial - aplan_log_frame < 600U) return;
+    aplan_log_frame = frame_serial;
+    char line[400]; int at = snprintf(line, sizeof line, "APLAN f=%u on=%u", frame_serial, re4dc_actor_plan_on);
+    for (unsigned k = 0; k < APLAN_KINDS && at > 0 && at < int(sizeof line); ++k)
+        at += snprintf(line + at, sizeof line - at, " %s=%u/%u/%u", kAplanNames[k], aplan_checks[k], aplan_hits[k],
+                       aplan_bad[k]);
+    re4dc_log("%s (checks/hits/bad)\n", line);
+}
 }
 #endif

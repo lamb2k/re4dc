@@ -5,6 +5,7 @@
 // weapons test (em_sub.cpp).
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "at_mod.h"
 #include "at_sub.h"
 #include "emhit.h"
@@ -869,8 +870,9 @@ int At_em_sphere_rect_ck(cEm* sph, cEm* rect)
     c = sph->atari.m_Pos;
     rad = sph->atari.m_radius;
     if (!(sph->atari.m_stat & 1)) {
-        PSMTXMultVec(inv, &sph->atari.m_Pos, &step);
-        PSMTXMultVec(inv, &sph->atari.m_oldPos, &p);
+        RE4DC_XM_LOAD(inv);
+        RE4DC_XM_POINT(inv, &sph->atari.m_Pos, &step);
+        RE4DC_XM_POINT(inv, &sph->atari.m_oldPos, &p);
         if (rad >= 200.0f) {
             n = (int) (GetDistance3(&step, &p) / rad) + 1;
         } else {
@@ -1415,14 +1417,15 @@ static __attribute__((noinline)) void cbmBuild(CbmEntry* e, Mtx m, f32 sx, f32 s
     v[7].x = -sx;
     v[7].y = sy;
     v[7].z = -sz;
-    PSMTXMultVec(mat, &v[0], &v[0]);
-    PSMTXMultVec(mat, &v[1], &v[1]);
-    PSMTXMultVec(mat, &v[2], &v[2]);
-    PSMTXMultVec(mat, &v[3], &v[3]);
-    PSMTXMultVec(mat, &v[4], &v[4]);
-    PSMTXMultVec(mat, &v[5], &v[5]);
-    PSMTXMultVec(mat, &v[6], &v[6]);
-    PSMTXMultVec(mat, &v[7], &v[7]);
+    RE4DC_XM_LOAD(mat);
+    RE4DC_XM_POINT(mat, &v[0], &v[0]);
+    RE4DC_XM_POINT(mat, &v[1], &v[1]);
+    RE4DC_XM_POINT(mat, &v[2], &v[2]);
+    RE4DC_XM_POINT(mat, &v[3], &v[3]);
+    RE4DC_XM_POINT(mat, &v[4], &v[4]);
+    RE4DC_XM_POINT(mat, &v[5], &v[5]);
+    RE4DC_XM_POINT(mat, &v[6], &v[6]);
+    RE4DC_XM_POINT(mat, &v[7], &v[7]);
     e->zero = 0;
     for (f = 0; f < 6; f++) {
         Vec poly[4];
@@ -1660,8 +1663,9 @@ int ObaLineHitChk(cEm* m, cAtariInfo* info, Vec* a, Vec* b, Vec* hit, Vec* nrm)
         pm = m;
     }
     rad = info->m_radius * 0.75f;
-    PSMTXMultVec(pm->mat, &p0, &w0);
-    PSMTXMultVec(pm->mat, &p1, &w1);
+    RE4DC_XM_LOAD(pm->mat);
+    RE4DC_XM_POINT(pm->mat, &p0, &w0);
+    RE4DC_XM_POINT(pm->mat, &p1, &w1);
     PSVECSubtract(&w1, &w0, &d);
     PSVECSubtract(b, a, &e);
     PSVECSubtract(a, &w0, &f);

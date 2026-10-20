@@ -1,8 +1,9 @@
-# lane castgc17 CAST-GC census warp for r111 (<= 60 s): tools/d367/ch2/warps/k-r111.txt; still-capture lines (freeze / viewdist / dump) removed,
+# lane castgc17 CAST-GC census warp for r111 (<= 60 s): tools/d367/ch2/warps/c-r111.txt; still-capture lines (freeze / viewdist / dump) removed,
 # god added. Census build: NATIVE_MODEL_REGISTRY_CENSUS=1 NATIVE_MODEL_REGISTRY_CENSUS_PERIOD=150.
-name ch2-cap6-r111
-# lane ch2code16 cap-6 decisions check: the rig kills one Ganado (id 0x17) every 90 room frames from 300 (31 kills), so
-# held spawns must come in, waves / sends must keep firing and the live count must stay <= 6 (alivecap peak lines).
+name cg-r111
+# lane notdrawn20 (10-20, #42): the r111 census warp. The cap rig k-r111 (walk + kill every 90 frames) runs r111 at about
+# 2 fps on Flycast, so a 60 s run never reached a census report and the NOT-DRAWN row was empty; this one moves Leon next
+# to the em17 group at frame 5 (no kills), where the census sees them every pass.
 room 0x111
 pos 19213 968 3011
 ang -2.2690
@@ -11,7 +12,4 @@ status 3 0x04000000
 inv default
 god
 alivelog 60
-census 300
-act 360 fwd 12
-kill 0x17 300 0x111 1
-killrep 30 90
+goto 5 19023 1310 -13608 3.1416

@@ -132,6 +132,9 @@ void re4dc_bench_alive(int n);
 int re4dc_bench_scene_no(void);
 const char* re4dc_bench_results(void);
 #endif
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+extern "C" unsigned re4dc_actor_plan_on;  // platform/native_actor_fast.cpp (actorplan.mk ACTOR_PLAN)
+#endif
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
 extern "C" void re4dc_ps2_pvs_set(unsigned on);  // native_static.cpp (t2exact.mk PS2_PVS)
 #endif
@@ -187,6 +190,7 @@ struct Warp {
     unsigned n_rsf;
     u32 scenario[2], find, unlock[2], items[2];  // items: pG->item_flags[0..1] (key-item pickups, r105 area 8)
     u32 status[4];  // `status <0..3> <hex>`: pG->Status_flg bits (3: 0x04000000 Ashley follows, sce_sys.cpp)
+    int chapter;    // `chapter <n>`: pG->chapter (chapters finished) before the first room loads, 0 = unset (+1 stored)
     u8 dead[64];
     unsigned n_dead;
     Act act[32];
@@ -364,6 +368,8 @@ void load()
             wp.find |= num(tok[1]);
         } else if (!strcmp(k, "unlock") && n >= 3) {
             wp.unlock[num(tok[1]) & 1] |= num(tok[2]);
+        } else if (!strcmp(k, "chapter") && n >= 2) {
+            wp.chapter = (int) num(tok[1]) + 1;  // DISC_SET disc check (game.cpp StageInit) reads pG->chapter
         } else if (!strcmp(k, "status") && n >= 3) {
             wp.status[num(tok[1]) & 3] |= num(tok[2]);
         } else if (!strcmp(k, "items") && n >= 3) {
@@ -574,6 +580,12 @@ void load()
 #if defined(RE4DC_KOS_SQUEEZE) && RE4DC_KOS_SQUEEZE
         } else if (!strcmp(k, "squeeze")) {
             // KOS_SQUEEZE (platform/os.cpp reads this line at OSInit)
+#endif
+#if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
+        } else if (!strcmp(k, "actorplan") && n >= 2) {
+            // ACTOR_PLAN (actorplan.mk): `actorplan 0|1` turns the plan's reuses off / on at run time (same image).
+            re4dc_actor_plan_on = num(tok[1]) != 0;
+            re4dc_log("warp: actorplan %u\n", re4dc_actor_plan_on);
 #endif
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
         } else if (!strcmp(k, "pvs") && n >= 2) {
@@ -1203,6 +1215,10 @@ void re4dc_warp_next_pos(void)
         pG->NextPos.z = wp.pos[2];
     }
     if (wp.has_dir) pG->NextY = wp.dir;
+    if (wp.chapter) {
+        pG->chapter = wp.chapter - 1;
+        re4dc_log("warp: chapter %d\n", wp.chapter - 1);
+    }
     re4dc_log("warp: start room=%03x next_room=%03x pos=%d,%d,%d ang=%d/1000\n", (unsigned) wp.room,
               (unsigned) pG->next_room, (int) pG->NextPos.x, (int) pG->NextPos.y, (int) pG->NextPos.z,
               (int) (pG->NextY * 1000.0f));

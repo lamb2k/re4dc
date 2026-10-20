@@ -473,7 +473,41 @@ s32 DVDReadAsyncPrio(DVDFileInfo* fi, void* addr, s32 length, s32 offset, DVDCal
 
 s32 DVDGetTransferredSize(DVDFileInfo* fi) { return (s32) fi->cb.transferredSize; }
 s32 DVDGetCommandBlockStatus(const DVDCommandBlock* block) { return block->state; }
+#if defined(RE4DC_DISC_SET) && RE4DC_DISC_SET
+// DISC_SET=1 (three-disc release, DISC-LAYOUT-20261016.md): one program image on every disc; the disc says which
+// one it is in dc/disc.id ("RE4DC disc=N of=3 set=<id>", read once). No hot swap: a requested change to another
+// disc leaves the drive WRONG_DISK, so cDvd::ErrCheck holds on the game's "insert disc N" message (the player
+// resets, boots the right disc in GDEMU and loads the VMU save). A disc without dc/disc.id is disc 1.
+static int g_discSetRead;
+static int g_discWant = -1;  // diskNumber (0-based) requested by DVDChangeDiskAsync, -1 none
+static void disc_set_read()
+{
+    if (g_discSetRead) return;
+    g_discSetRead = 1;
+    char full[96], buf[64];
+    snprintf(full, sizeof(full), "%sdc/disc.id", g_root);
+    file_t f = fs_open(full, O_RDONLY);
+    if (f < 0) {
+        re4dc_log("DISC_SET: no dc/disc.id, disc 1\n");
+        return;
+    }
+    const ssize_t n = fs_read(f, buf, sizeof(buf) - 1);
+    fs_close(f);
+    buf[n > 0 ? n : 0] = 0;
+    const char* p = strstr(buf, "disc=");
+    const int d = p ? atoi(p + 5) : 1;
+    if (d >= 1 && d <= 3) g_diskId.diskNumber = (u8) (d - 1);
+    re4dc_log("DISC_SET: %s -> disc %d\n", buf, g_diskId.diskNumber + 1);
+}
+extern "C" int re4dc_disc_wanted(void) { return g_discWant; }
+s32 DVDGetDriveStatus(void)
+{
+    disc_set_read();
+    return (g_discWant >= 0 && g_discWant != g_diskId.diskNumber) ? 6 : 0;  // DVD_STATE_WRONG_DISK : END
+}
+#else
 s32 DVDGetDriveStatus(void) { return 0; }  // DVD_STATE_END: ready
+#endif
 void* DVDGetFSTLocation(void)
 {
     // dvd.cpp Init computes FstSize = SimulatedMemSize - (fst - 0x80000000); give it 1 MB.
@@ -494,7 +528,11 @@ s32 DVDCancelAll(void)
     return 0;
 }
 
+#if defined(RE4DC_DISC_SET) && RE4DC_DISC_SET
+DVDDiskID* DVDGetCurrentDiskID(void) { disc_set_read(); return &g_diskId; }
+#else
 DVDDiskID* DVDGetCurrentDiskID(void) { return &g_diskId; }
+#endif
 
 DVDDiskID* DVDGenerateDiskID(DVDDiskID* id, const char* game, const char* company, u8 diskNum, u8 version)
 {
@@ -517,7 +555,13 @@ int DVDCompareDiskID(const DVDDiskID* a, const DVDDiskID* b)
 
 int DVDChangeDiskAsync(DVDCommandBlock* block, DVDDiskID* id, DVDCBCallback callback)
 {
+#if defined(RE4DC_DISC_SET) && RE4DC_DISC_SET
+    disc_set_read();
+    g_discWant = id->diskNumber;
+    re4dc_log("DISC_SET: disc %d requested, this is disc %d: hold\n", id->diskNumber + 1, g_diskId.diskNumber + 1);
+#else
     re4dc_log("DVDChangeDiskAsync: disc %d requested (single-disc build)\n", id->diskNumber);
+#endif
     block->state = DVD_STATE_END;
     if (callback) {
         callback(0, block);

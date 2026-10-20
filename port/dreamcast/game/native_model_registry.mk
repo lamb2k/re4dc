@@ -537,6 +537,27 @@ $(error NATIVE_MODEL_REGISTRY_LOD=1 needs NATIVE_MODEL_REGISTRY_POOL=1)
 endif
 GAME_CPPFLAGS += -DRE4DC_NMR_LOD=1
 endif
+# NATIVE_MODEL_REGISTRY_GRAB_FULL=1 (lane castlerender19 2026-10-19; default 0; render only; needs
+#   NATIVE_MODEL_REGISTRY_LOD=1): registry_lod_want also draws the full descriptor while the player runs the custom
+#   damage routine this actor started (pl_sub.cpp SetPlDamage: routine 0 == 4, dmgType = the enemy). r221 Verdugo's
+#   grab, kick, tail and critical hit (em2c.cpp 4601 / 5040 / 5083 / 5100) never set the event bit
+#   Status_flg[1] 0x10000000, so they drew the gameplay level. Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_GRAB_FULL ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_GRAB_FULL),1)
+ifneq ($(NATIVE_MODEL_REGISTRY_LOD),1)
+$(error NATIVE_MODEL_REGISTRY_GRAB_FULL=1 needs NATIVE_MODEL_REGISTRY_LOD=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_NMR_GRAB_FULL=1
+endif
+# NATIVE_MODEL_REGISTRY_OT5=1 (lane castlerender19 2026-10-19; default 0; render only): the registry certificate also
+#   admits ot_type 5 for the r221 Verdugo (em2c, model 0x2c; em2c.cpp 1144). trans.cpp ModelTrans case 5 registers the
+#   same ModelRender callback once, AddOtDirect(0x10, m, ModelRender, 0, 2): one source call per frame at OT 0x10,
+#   like ot_type 0 / 1, and the owner path draws inside that callback, so the source order is kept. Other models keep
+#   the ot_type 5 refusal. Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_OT5 ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_OT5),1)
+GAME_CPPFLAGS += -DRE4DC_NMR_OT5=1
+endif
 # PS2_ASHLEY=1|2 (lane ps2cast 2026-10-14; default 0; render only): Ashley (pl11, the partner pSUB, model id 3; r117
 #              first) through the registry owner path with her PS2 mesh (tools/ps2_ashley.py: PS2 geometry / UVs / weights,
 #              the PS2 cloth influences moved onto the GC cloth links the source solver already moves - no second solver,
@@ -588,6 +609,24 @@ $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_PARTNER=$(PS2_ASHLEY_ROOM
 endif
 ifeq ($(filter $(PS2_ASHLEY),0 1 2),)
 $(error PS2_ASHLEY must be 0, 1 or 2)
+endif
+# NATIVE_MODEL_REGISTRY_PL_ASHLEY=1 (lane castlerender19 2026-10-19, castle item 4; default 0; render only; needs
+#   PS2_ASHLEY=2): the typed contract for PLAYABLE Ashley (chapter 3-4: cPlAshley, the player pPL, model id 0, ot_type 7)
+#   on the registry owner path. A draw-slot descriptor of model 0 over her complete 141-joint source owner (the cloth
+#   owner is kept: no skeleton replacement, no link folding is implied here) with seven sections admits:
+#   - the face, role 1 = BIN 7 / TPL 9 (Body->pShape, be_flag 2), as PS2_ASHLEY=2 admits the partner's head: drawn at
+#     the package's rest face while the source ShapeMove still runs (playable setFace is a no-op in the source);
+#   - the skirt, role 3 = BIN 8 / TPL 5, with its source be_flag 0x40 (cPlAshley::setModel): the transaction draws it in
+#     the ot_type 7 second pass (m->be_flag 0x08000000), as trans.cpp does.
+#   Every other role keeps the plain certificate; a 0x40 or shape bit on any other role or ordinal still declines.
+#   Leon (model 0, 119 joints) never matches the descriptor. No package exists yet (castle18 owns the pl01 conversion):
+#   without one the knob changes nothing at runtime. Knob off: the image is unchanged.
+NATIVE_MODEL_REGISTRY_PL_ASHLEY ?= 0
+ifeq ($(NATIVE_MODEL_REGISTRY_PL_ASHLEY),1)
+ifneq ($(PS2_ASHLEY),2)
+$(error NATIVE_MODEL_REGISTRY_PL_ASHLEY=1 needs PS2_ASHLEY=2)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_NMR_PL_ASHLEY=1
 endif
 ifneq ($(PS2_ASHLEY),0)
 ifneq ($(NATIVE_MODEL_REGISTRY_PACK)$(NATIVE_MODEL_REGISTRY_MASK),11)
@@ -712,6 +751,19 @@ TEX_PKG_SKIP ?= 0
 ifeq ($(TEX_PKG_SKIP),1)
 GAME_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
 PLATFORM_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP=1
+endif
+# TEX_PKG_SKIP_LISTED=1 (lane castlerender19 2026-10-19; render only, default 0; needs TEX_PKG_SKIP=1): VRAM rule. A key of
+#              the room's own resident list (dc/resident.bin, room != 0: a texture the room's scenes loaded on first
+#              sight) is preloaded at room entry even when a package role row names it. Registry actors still draw
+#              those source textures on some frames (r207: the inventory open drew 16 zealot / Ashley role TPLs from
+#              disc in play). The enemy pass and core keys keep TEX_PKG_SKIP. Logs "TEXPKG listed kept=". Knob off:
+#              the image is unchanged.
+TEX_PKG_SKIP_LISTED ?= 0
+ifeq ($(TEX_PKG_SKIP_LISTED),1)
+ifneq ($(TEX_PKG_SKIP),1)
+$(error TEX_PKG_SKIP_LISTED=1 needs TEX_PKG_SKIP=1)
+endif
+PLATFORM_CPPFLAGS += -DRE4DC_TEX_PKG_SKIP_LISTED=1
 endif
 # NATIVE_MODEL_REGISTRY_DYING=1 (lane cast16 2026-10-17; render only, default 0): a Ganado-class enemy (Ganado cast or registry plan)
 #              (ids 0x10..0x20) keeps its PS2 plan while its whole-model fade runs (death: invisible_factor < 1), drawn

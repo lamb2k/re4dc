@@ -18,6 +18,8 @@ Every overlay the candidate holds (dc/<name>.ovl) is also added when the fixture
 2026-10-16): a STAGE_OVL image needs st1_0..st2_3, a ROUTE_* image its enemy overlays, and a fixture written
 for an older image halted at boot with "route overlay missing on the disc" (cast16 Zealot runs).
 
+A pinned 1ST_READ.BIN is retargeted to <candidate>/1ST_READ.BIN too; without that file the script refuses (exit 3).
+
 --data <fixture.json> (the recipe's data set, e.g. a T15_DATA package fixture) checks every prepared archive
 (em/*.drs) against it: a fixture that pins another lane's prepared archive fails here, loudly, instead of
 halting at boot ("invalid prepared enemy motion archive": k6's pl11.drs from an older motion contract).
@@ -54,6 +56,16 @@ def main(argv):
             if rep[k] != new:
                 print('fixture_arm: %s %s -> %s' % (k, rep[k], new)); n += 1
             rep[k] = new
+    # A fixture that pins 1ST_READ.BIN (castle r207j) would boot another arm's program with this arm's overlays
+    # ("MISSING route overlay built for another program"): retarget it, or refuse when the arm has none.
+    if '1ST_READ.BIN' in rep:
+        new = os.path.join(cand, '1ST_READ.BIN')
+        if not os.path.isfile(new):
+            print('fixture_arm: refused: fixture pins 1ST_READ.BIN %s but the arm has no %s' % (rep['1ST_READ.BIN'], new))
+            return 3
+        if rep['1ST_READ.BIN'] != new:
+            print('fixture_arm: 1ST_READ.BIN %s -> %s' % (rep['1ST_READ.BIN'], new)); n += 1
+        rep['1ST_READ.BIN'] = new
     added = 0
     if os.path.isdir(cand):
         for f in sorted(os.listdir(cand)):
