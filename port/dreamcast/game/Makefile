@@ -796,6 +796,16 @@ endif
 # Heap 4 short after one motion-key eviction pass: the equip is reverted to the previously loaded weapon (or bare
 # hands), item state included ("weapon heap4 alloc failed"). A route movie short of heap 4 borrows the body and
 # returns it after the movie. WEAPON_HEAP4_FAILTEST=1 (test only): every heap-4 weapon allocation fails.
+# WEAPON_ARCHIVE_REUSE=1: retain a successfully linked same-file weapon archive across re-equip.
+# Publish the reuse identity after ReleaseWepData/load/link, invalidate it on every release,
+# and check the actual file/module/backing before reuse. Distinct archives still load normally.
+WEAPON_ARCHIVE_REUSE ?= 0
+ifneq ($(WEAPON_ARCHIVE_REUSE),0)
+ifneq ($(WEAPON_ARCHIVE_REUSE),1)
+$(error WEAPON_ARCHIVE_REUSE must be 0 or 1)
+endif
+$(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_WEAPON_ARCHIVE_REUSE=1
+endif
 WEAPON_HEAP4 ?= 0
 WEAPON_HEAP4_FAILTEST ?= 0
 # WEAPON_HEAP4_TOP=1 (with WEAPON_HEAP4): the body goes to the top of the highest free heap-4 cell that fits, so a
