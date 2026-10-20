@@ -544,8 +544,14 @@ def drop_loose(names, r, rm, rec):
                              'rebuild it (tools/d367/vram/disc_pack.py)' % (n, len(stale), len(new), (stale + new)[:3]))
         # PAK_DERIVED (lane vram101 10-17): a later set may stage a pack made from this one with some packages
         # re-encoded (same keys; its sidecar JSON names the base pack's and its own sha256).
-        ok = {b['out']} | {d_['out'] for d_ in (json.load(open(PAK_DERIVED[m_])) for m_ in names if m_ in PAK_DERIVED)
-                           if d_['base'] == b['out']}
+        # Derived packs chain (lane ch2rooms20 10-20: ch21r's pack derives from v101's): follow base -> out links.
+        ok = {b['out']}
+        derived = [json.load(open(PAK_DERIVED[m_])) for m_ in names if m_ in PAK_DERIVED]
+        while True:
+            more = {d_['out'] for d_ in derived if d_['base'] in ok} - ok
+            if not more:
+                break
+            ok |= more
         if full(pak) not in ok:
             raise SystemExit('drop-loose: the staged dc/tex.pak is not %s\'s pack (or a pack derived from it)' % n)
     lacking = []
@@ -645,6 +651,19 @@ RC19D = os.environ.get('RC19D', '/root/re4data/private/rc19o2-20261019')
 if os.path.isdir(RC19D):
     DATA['rc19'] = {'dc/native/%s/room.r4rc' % r: '%s/%s/room.r4rc' % (RC19D, r)
                     for r in sorted(os.listdir(RC19D)) if os.path.isfile('%s/%s/room.r4rc' % (RC19D, r))}
+# Lane ch2rooms20 (10-20; ROUTE_CH21_FULL, chapter 2-1's real path): ch21r = rooms r10c (the dam: the insignia key's own
+# pickup) / r10d / r10e: st1 arc + dar (GC disc 1, island18 prepare recipe; dar sound banks refitted, r10c's FOOT bank
+# tail-first), PS2 worlds + MAINSCENARIO under dc/native/<room>, r102's merchant registry retargeted to r10d / r10e, and
+# dc/tex.pak = v101's pack + the rooms' 234 new keys (ch2rooms/pack_add.py; pak-derived.json: base v101's pack). Last in
+# the data line. Private store copy: re4-assets-private/ch21r-20261020 (RECIPE.txt, SHA256SUMS).
+CH21RD = os.environ.get('CH21RD', '/root/re4data/private/ch21r-20261020')
+DATA['ch21r'] = {'dc/tex.pak': CH21RD + '/dc/tex.pak'}
+for _r in ('r10c', 'r10d', 'r10e'):
+    DATA['ch21r'].update({'st1/%s.%s' % (_r, _x): '%s/st1/%s.%s' % (CH21RD, _r, _x) for _x in ('arc', 'dar')})
+    for _f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids', 'MAINSCENARIO.re4mesh', 'registry.re4nmr'):
+        if _f != 'registry.re4nmr' or _r != 'r10c':
+            DATA['ch21r']['dc/native/%s/%s' % (_r, _f)] = '%s/dc/native/%s/%s' % (CH21RD, _r, _f)
+PAK_DERIVED['ch21r'] = CH21RD + '/pak-derived.json'
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]

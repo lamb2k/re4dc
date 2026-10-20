@@ -711,6 +711,14 @@ static void r10c_EmSet_exit()
 {
     CamCtrl.Comeback(0);
     SceEventEnd(0);
+#if defined(RE4DC_ROUTE_CH21_FULL) && RE4DC_ROUTE_CH21_FULL
+    // ROUTE_CH21_FULL (lane ch2rooms20): the ambush goes through the alive cap; a held send has no enemy (0).
+    for (int i = 0; i < 7; i++) {
+        if (r10c_work.p->ems[i] != 0) {
+            r10c_work.p->ems[i]->setNoSuspend(0);
+        }
+    }
+#else
     r10c_work.p->ems[0]->setNoSuspend(0);
     r10c_work.p->ems[1]->setNoSuspend(0);
     r10c_work.p->ems[2]->setNoSuspend(0);
@@ -718,6 +726,7 @@ static void r10c_EmSet_exit()
     r10c_work.p->ems[4]->setNoSuspend(0);
     r10c_work.p->ems[5]->setNoSuspend(0);
     r10c_work.p->ems[6]->setNoSuspend(0);
+#endif
 }
 
 // Area 8: the ambush on the drained pool floor (camera cut 0x1B).
@@ -745,6 +754,13 @@ static void r10c_EmSet()
         r10c_work.p->ems[4] = setEm(0xA, -1, 1, 1, 1);
         r10c_work.p->ems[5] = setEm(0xB, -1, 1, 1, 1);
         r10c_work.p->ems[6] = setEm(0xC, -1, 1, 1, 1);
+#if defined(RE4DC_ROUTE_CH21_FULL) && RE4DC_ROUTE_CH21_FULL
+        for (int i = 0; i < 7; i++) {
+            if (r10c_work.p->ems[i] != 0) {
+                r10c_work.p->ems[i]->setNoSuspend(1);
+            }
+        }
+#else
         r10c_work.p->ems[0]->setNoSuspend(1);
         r10c_work.p->ems[1]->setNoSuspend(1);
         r10c_work.p->ems[2]->setNoSuspend(1);
@@ -752,6 +768,7 @@ static void r10c_EmSet()
         r10c_work.p->ems[4]->setNoSuspend(1);
         r10c_work.p->ems[5]->setNoSuspend(1);
         r10c_work.p->ems[6]->setNoSuspend(1);
+#endif
         SceSetEventCancel(1, (TaskFunc) r10c_EmSet_exit, 0, -1, 1);
         while (CamCtrl.IsMotionEnd() == 0) {
             SceSleep(1);
