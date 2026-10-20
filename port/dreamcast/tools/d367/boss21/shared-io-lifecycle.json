@@ -1,0 +1,413 @@
+{
+  "schema": 1,
+  "scope": "shared mechanisms + explicitly reviewed state/owner rules; no whole CFG/caller closure",
+  "source_ref": "9eb83d59",
+  "census_sha256": "3adb52b984ed441fe52d58b704d1abc392c11afc39e3ae24a78f551ba756ce60",
+  "archive_inventory_reused": true,
+  "qa_selected_archive_count": 66,
+  "source_pins": [
+    {
+      "path": "src/game/motion.cpp",
+      "sha256": "d5aafa42667b16d10e9083ab69b1e7f0dd45788d0727bed61674c8a47dbb5b11"
+    },
+    {
+      "path": "src/game/shape.cpp",
+      "sha256": "ac649e177201543059452c8481a2d47c3ebd52bab4c518683ffe469410167031"
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "sha256": "4c5ce5f7f73cfa30564158ee3aec3193296e80543e2f0561391bf79fdf71c734"
+    },
+    {
+      "path": "src/game/pl_leon.cpp",
+      "sha256": "88ab1411999e7483f3289786d6b27d724f40308eb0fab1ac0695cf57ae558601"
+    },
+    {
+      "path": "src/game/pl_class.cpp",
+      "sha256": "f6e5ad418cf57ac588ee1faf6328d3f0353210a5d7feb9412263daa0a0dce65c"
+    },
+    {
+      "path": "src/game/pl_npc.cpp",
+      "sha256": "4f79fa5bb9db14945b87f18db9fc1606f7b13a8165d2cb67bd5e084b65cef347"
+    },
+    {
+      "path": "src/game/emwep.cpp",
+      "sha256": "c3d34e8fc9969c20a47969ea3178eebb318903a959e4204cdd5b0963a0dcfddd"
+    },
+    {
+      "path": "src/em10/em10.cpp",
+      "sha256": "88ab2aaff5c17f59a969c522e7d384d1113d23723919f485cfc42ae122b0a0a3"
+    },
+    {
+      "path": "src/em2b/em2b.cpp",
+      "sha256": "248179ca7012cdc83babfbfef7ce79c602085a92173d54b2b616430be4b9c5e8"
+    },
+    {
+      "path": "src/em2c/em2c.cpp",
+      "sha256": "72e67b56bc958456decee97fd2f723ae9a8a602d3a21104013429ab2ddd93987"
+    },
+    {
+      "path": "src/em31/em31.cpp",
+      "sha256": "4d82e0e447302d5ce07af2b066aeb072aa9766eafe60aa5a71c1c34c6d7146d2"
+    },
+    {
+      "path": "src/em32/em32.cpp",
+      "sha256": "1906120c43ce96dde32f9847d3cc99fc5145ba317580cda9da348f9787a70376"
+    },
+    {
+      "path": "src/em35/em35.cpp",
+      "sha256": "7d9aa5190a54632bf42e9984ec21b79ffd95eec74d51c9dd2175df0f8729c1d4"
+    },
+    {
+      "path": "src/em38/em38.cpp",
+      "sha256": "a1dbe3b42e5715783bd717dc9fda82aa33d5d93b710bc5609762c079c95826b9"
+    },
+    {
+      "path": "src/em39/em39.cpp",
+      "sha256": "1fbadfad916f83395371cb3164040b1f38c235878a9035c11b284e359609f907"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "sha256": "6d0cfec2e30638236a84a44591a1f62d6446b1b1d2af56f4c030f5e612f343a0"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "sha256": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343"
+    },
+    {
+      "path": "src/game/snd.cpp",
+      "sha256": "bd1dd308b7bff42b13e65ec3c174156da56c3f41f3e1c106a20919b68688c206"
+    },
+    {
+      "path": "port/dreamcast/game/motion_bridge.cpp",
+      "sha256": "80176e91b5442422bb801bcf3c6063b6a23629723df25ab318a02ef0355842a5"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie.cpp",
+      "sha256": "e09567a549940b0200999c70c4b71179ff2f722c4482f9e8b2be3913381da864"
+    },
+    {
+      "path": "port/dreamcast/game/sscrn_bridge.cpp",
+      "sha256": "eb704d519337b4349fc069b11fd9aea7825831f5048a4fd5980b81f857a703ab"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "sha256": "e1f7ca6cfa127badcd5df5be726fde3256e97c6c90649b89dae23cb936a8f8c1"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/native_motion.h",
+      "sha256": "c205ac5628606c861692f9fbc2a21a91752aa71f2c4faf07ccafec0e3c4d70cd"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_effect.cpp",
+      "sha256": "e1ac17d4375424739857ae450d8b36ceced5cb8e92cc39aa358b0b1916d43d8f"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "sha256": "2b139c5d01d9c502d3caa4ea64f544cc448b3b992d28c922371850c455bfa855"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "sha256": "abef204aa60471d1388763bd38c6411677c2e4fea9b1b56df7aa97af3b3db261"
+    },
+    {
+      "path": "port/dreamcast/game/coarse_ganado_lod.inc",
+      "sha256": "f1ebec8c46acbf0eed3c1a9d64fbfc056f009a3ebc6e949a159c8e3d30c09904"
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_leon_hands.inc",
+      "sha256": "9e856b88d82466ec21b43e279422650e5e69201429e745d91bf1d4f0f8038b70"
+    },
+    {
+      "path": "port/dreamcast/game/coarse_actor_pl08_pack.inc",
+      "sha256": "d3c0eb96c815afbd16e8a36c7444bc5dc3226131c0f339628eaaa6f925669933"
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "sha256": "426a06c09524c21b6246a818aac130c58bd9fab44fe4d4959f9e8e3042b21f69"
+    },
+    {
+      "path": "src/em10/em10_set.cpp",
+      "sha256": "84904f92b580dbf02824df55fa7d7ff978d27e58b9a94926fff51fb296b49636"
+    },
+    {
+      "path": "src/em11/em11_set.cpp",
+      "sha256": "02b7a84b14b5dbba2920792619d9745d43b4beee9a61b009e38ff6f97722e7e0"
+    },
+    {
+      "path": "src/em12/em12_set.cpp",
+      "sha256": "41d9d2082fb0da06227150ad58ae28a89240cfb3b320dc3d1ca277c96a39f760"
+    },
+    {
+      "path": "src/em13/em13_set.cpp",
+      "sha256": "4401be63174acbb6e1ccceabbeabef26f77f4a059569cc51f0a024d03cbb9e45"
+    },
+    {
+      "path": "src/em14/em14_set.cpp",
+      "sha256": "804c23ba1649ca63ba4b056590039a22dbe500035a16d2d7c48af3364be2ad04"
+    },
+    {
+      "path": "src/em15/em15_set.cpp",
+      "sha256": "2e7d1ed7738d029e72ca55672fbaa2592968840a1ea4a861e4942723a27ac694"
+    },
+    {
+      "path": "src/em16/em16_set.cpp",
+      "sha256": "dbc79e1f656678fc8952a5c5e3aee1957739a4f0d80608286bccd4526135511d"
+    },
+    {
+      "path": "src/em17/em17_set.cpp",
+      "sha256": "ccc58e59d878f255fa605f8037ddf1b9eb83f76836efa6e2a3a9270d4b221e7f"
+    },
+    {
+      "path": "src/em1b/em1b_set.cpp",
+      "sha256": "df88d4a9e2b6695091ecd9782f01bd38f971de53be10a216dca08bd7b18370bf"
+    },
+    {
+      "path": "src/em1c/em1c_set.cpp",
+      "sha256": "2bbceaaa8d5bccba640fd3114d4d7ca72ec41a55ea59eb511de922f954edb521"
+    }
+  ],
+  "source_sites": [
+    {
+      "path": "src/game/motion.cpp",
+      "line": 157,
+      "anchor": "void MotionSetCore("
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "line": 446,
+      "anchor": "u16 MotionMove("
+    },
+    {
+      "path": "src/game/shape.cpp",
+      "line": 32,
+      "anchor": "void CalculateShape_new("
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "line": 71,
+      "anchor": "void CameraMotion::move()"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "line": 101,
+      "anchor": "void InitModule("
+    },
+    {
+      "path": "src/game/read.cpp",
+      "line": 102,
+      "anchor": "int readEmData("
+    },
+    {
+      "path": "src/game/read.cpp",
+      "line": 105,
+      "anchor": "void* EmReadSearch("
+    },
+    {
+      "path": "src/game/snd.cpp",
+      "line": 890,
+      "anchor": "u32 SndCall("
+    },
+    {
+      "path": "src/game/snd.cpp",
+      "line": 2772,
+      "anchor": "int SndEmDataReadCheck("
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "line": 859,
+      "anchor": "r = SndEmDataReadCheck("
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie.cpp",
+      "line": 487,
+      "anchor": "int finish("
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie.cpp",
+      "line": 573,
+      "anchor": "bool open("
+    },
+    {
+      "path": "port/dreamcast/game/sscrn_bridge.cpp",
+      "line": 657,
+      "anchor": "const unsigned motions = re4dc_motion_forget_dead_heaps();"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_effect.cpp",
+      "line": 112,
+      "anchor": "static int bind_archive("
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 3196,
+      "anchor": "Entry* load(const Re4dcUiImage&"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "line": 1545,
+      "anchor": "bool str_index_load()"
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "line": 182,
+      "anchor": "unsigned re4dc_fixture_source_frame()"
+    }
+  ],
+  "registered_evaluator_hooks": [
+    {
+      "path": "src/game/motion.cpp",
+      "line": 246
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "line": 676
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "line": 1001
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "line": 1100
+    },
+    {
+      "path": "src/game/shape.cpp",
+      "line": 236
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "line": 42
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "line": 84
+    }
+  ],
+  "reviewed_local_coactivity": {
+    "mendez-bearhug": {
+      "archive": "qa-fixed:em/em35.drs",
+      "arcs": [
+        "0x36",
+        "0x93"
+      ],
+      "clips": [
+        {
+          "arc": 54,
+          "offset": 821312,
+          "entry": 22,
+          "bytes": 123008,
+          "key": "3be6fac4-09ee59e9",
+          "state": "cached-cold"
+        },
+        {
+          "arc": 147,
+          "offset": 1028992,
+          "entry": 75,
+          "bytes": 67552,
+          "key": "69dfb41a-5697eaec",
+          "state": "cached-cold"
+        }
+      ],
+      "cold_count": 2,
+      "cold_bytes": 190560,
+      "strict_two_slot_fits": true,
+      "qualification": "Reviewed local source state only; no all-state/runtime closure"
+    },
+    "mendez-release": {
+      "archive": "qa-fixed:em/em35.drs",
+      "arcs": [
+        "0x38",
+        "0x94"
+      ],
+      "clips": [
+        {
+          "arc": 56,
+          "offset": 823392,
+          "entry": 23,
+          "bytes": 53696,
+          "key": "18bfe535-bad6c45b",
+          "state": "cached-cold"
+        },
+        {
+          "arc": 148,
+          "offset": 1029216,
+          "entry": 76,
+          "bytes": 24320,
+          "key": "3733db5e-914b8430",
+          "state": "cached-cold"
+        }
+      ],
+      "cold_count": 2,
+      "cold_bytes": 78016,
+      "strict_two_slot_fits": true,
+      "qualification": "Reviewed local source state only; no all-state/runtime closure"
+    },
+    "gigante-strangle-body-player-blend": {
+      "archive": "qa-fixed:em/em2b.drs",
+      "arcs": [
+        "0x39",
+        "0xba",
+        "0xbd"
+      ],
+      "clips": [
+        {
+          "arc": 57,
+          "offset": 1115648,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 186,
+          "offset": 1834336,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 189,
+          "offset": 1887424,
+          "state": "inline-resident"
+        }
+      ],
+      "cold_count": 0,
+      "cold_bytes": 0,
+      "strict_two_slot_fits": null,
+      "qualification": "Reviewed local source state only; no all-state/runtime closure"
+    },
+    "leon-face-pain": {
+      "archive": "qa-fixed:em/pl08.drs",
+      "arcs": [
+        "0x62"
+      ],
+      "clips": [
+        {
+          "arc": 98,
+          "offset": 756480,
+          "state": "inline-resident"
+        }
+      ],
+      "cold_count": 0,
+      "cold_bytes": 0,
+      "strict_two_slot_fits": null,
+      "qualification": "Reviewed local source state only; no all-state/runtime closure"
+    }
+  },
+  "unresolved": [
+    "em10 evtMot injection by room/event setters; setter arguments and archive owner must be followed, not assumed em12",
+    "em10 module-specific mot/model alternatives plus independently reacting active actors; source dispatch group contract incomplete",
+    "ElGigante tree/parasite/twin states beyond reviewed walk/strangle; later em2b same policy is not wholefight closure",
+    "Mendez upper-body/beam/damage/borrowed callbacks beyond reviewed spear/bearhug/release; v3 invariant remains unproven globally",
+    "U3/Krauser/Saddler phase tables, attached objects and borrowed player sets beyond reviewed helper arity/triplet",
+    "shape has up to five registered channels; held faces still evaluate; no global per-owner shape-channel concurrency contract",
+    "camera/event FCV archive selection beyond the shared leased evaluator sites",
+    "movie pressure evictions have no bounded source-used generation-safe resume journal; normal menu preserves room cache and should not be blindly replayed"
+  ],
+  "repairs": {
+    "accounting": "c5fbf44d default off; target/host qualified, QA integration owned by root/Claude",
+    "reserved_capacity": "54be5527 default off; v2 only, no growth/moves, strictv3 unchanged; QA/Claude functional gates pending",
+    "motion_resume": "owned424B journal component with host tests; no runtime hooks/native edit while Claude MOTION21 owns integration",
+    "weapon": "root owns read.cpp/weapon archive and hand followup"
+  },
+  "work_alias_count": 1162,
+  "borrowed_assignment_count": 144,
+  "details_qualification": "Initializer alternatives are not coactivity/CFG closure; full metadata can be emitted privately with --details",
+  "details_sha256": "320ed0fbe1704e933ed044b2dd9befccd57209d5607194ffa754ea1999bd4314"
+}
