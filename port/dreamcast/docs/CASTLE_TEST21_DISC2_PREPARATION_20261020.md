@@ -181,3 +181,7 @@ claimed. The exact I master remains pinnedRAM while Ccapacity defers its
 1GB retained copy; all selected source/program/assets and run evidence areC.
 Fresh normal originalVMU CardLoad on I now starts the chapter3-1 continuation;
 no prior A/G/H state is retargeted.
+
+
+### Current I original route checkpoint - 2026-10-20
+Fresh original VMU title/CardLoad through current c21imW SKIN1/typed-player/hot data reaches r200 normally; cold01/02/03 retained individually. Normal stair walk01 completes six waypoints, walk02 safely collision-stops13.3s healthy, and centerline walk03 completes four waypoints plus two original A presses. Actual r202 entry29.5s/errors[]/owned exit, source6408/phase3/Stop0/chapter6, health1200/600. Exact snapshot4117f6bca7e2a37ffbf76c68a6b64667dec266eec9d1dba754e79899229f6910 and four current ELF anchors retained. Public ch31-test21-skin1-original-r200-r202-route-20261020.json records every segment and metadata correction. No warp, historical-state retarget or guest/process/state writes. Current no-warp route now continues r202; Garrador/exit/waves/end save still unfinished. QA normal quick-select/Leon motion gets next serial slot; no main build/new image needed. Parent WorkerB auditing inherited r20d em19 sixth BIN535/TPL537 missing liveInfo; no main source claims.

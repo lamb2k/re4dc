@@ -1,0 +1,254 @@
+{
+  "scope": "Current I SKIN1 typed-player/hot-animation build; fresh original chapter2-3-end VMU title/CardLoad then original stairs and doorway. Normal owned-window analog/B-run/A only. No warp, old-state retarget, source/process/state writes. Entry progress only; chapter completion remains open.",
+  "source_core": "dcd61bc85",
+  "elf_sha256": "45679331fb9d687bd1450b72978fdd5d38ffb8eef0497522064e446646368b34",
+  "disc_sha256": "c8b5022301e36ffc4327f9213cabc2d10eca8832df2826c8e1b2e5c79ee6809a",
+  "snapshot": {
+    "scope": "Read-only current production snapshot with four current ELF anchors and current linked pG/pPL/pSUB addresses; original source member offsets validated by live actor IDs/room/chapter/health bounds. No state changes.",
+    "state_sha256": "4117f6bca7e2a37ffbf76c68a6b64667dec266eec9d1dba754e79899229f6910",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x202",
+    "chapter": 6,
+    "source_frame": 6408,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "stop": "0x0",
+    "actual_death": false,
+    "Leon": {
+      "pointer": "0x8caba7e0",
+      "pos": [
+        -5197.1591796875,
+        -0.00244140625,
+        -308.55926513671875
+      ],
+      "yaw": 1.4504408836364746
+    },
+    "Ashley": {
+      "pointer": "0x8cce56a0",
+      "pos": [
+        -5197.14794921875,
+        -0.00152587890625,
+        -308.5240173339844
+      ],
+      "yaw": 1.4504408836364746
+    }
+  },
+  "segments": [
+    {
+      "name": "current-i-coldload01",
+      "status": "RUN_COMPLETE",
+      "elapsed_s": 51.0,
+      "errors": [],
+      "state_sha256": "0b97b5b9cc11c6543e53f98bcced2e4cb84960fa669ff9b25d93a91296267a86"
+    },
+    {
+      "name": "current-i-coldload02",
+      "status": "RUN_COMPLETE",
+      "elapsed_s": 50.6,
+      "errors": [],
+      "state_sha256": "660f4e5e02bf3f4bf1ae40253c3581e9806f1ef6685c30dcfcace56db203a46a"
+    },
+    {
+      "name": "current-i-coldload03",
+      "status": "RUN_COMPLETE",
+      "elapsed_s": 50.7,
+      "errors": [],
+      "state_sha256": "9e27321fef14ec9a179995ccad2d64e5cf3600a8f8af7a382afe40934299edc0"
+    },
+    {
+      "name": "current-i-route-walk01",
+      "status": "RUN_COMPLETE",
+      "elapsed_s": 15.6,
+      "errors": [],
+      "state_sha256": "ec099f33c1e1eef6141a6bd6dc03aeedf1a91b122edfe097b661cb02bd34188b",
+      "input_receipt_sha256": "1b698f633a557bc2a79248d7302098c942a74ab587530323f553fc1253740231",
+      "events": [
+        {
+          "waypoint_reached": 0,
+          "target": [
+            84650.0,
+            -58800.0
+          ],
+          "pos": [
+            84460.84375,
+            10118.0859375,
+            -58900.10546875
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            81500.0,
+            -62000.0
+          ],
+          "pos": [
+            81665.7578125,
+            10118.0859375,
+            -61946.1015625
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            81000.0,
+            -65400.0
+          ],
+          "pos": [
+            81101.4921875,
+            10269.4736328125,
+            -65258.62890625
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            74000.0,
+            -65500.0
+          ],
+          "pos": [
+            74240.5625,
+            13443.4130859375,
+            -65518.88671875
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            74000.0,
+            -68700.0
+          ],
+          "pos": [
+            74033.78125,
+            13443.4130859375,
+            -68478.890625
+          ]
+        },
+        {
+          "waypoint_reached": 5,
+          "target": [
+            80500.0,
+            -68700.0
+          ],
+          "pos": [
+            80507.8515625,
+            15871.0380859375,
+            -68621.8828125
+          ]
+        }
+      ]
+    },
+    {
+      "name": "current-i-route-walk02",
+      "status": "RUN_COMPLETE",
+      "elapsed_s": 13.3,
+      "errors": [],
+      "state_sha256": "36c4ee991c8b91f21a5edd69a6a1d0daa4828b1cf57ff00c14b8394112b6ad75",
+      "input_receipt_sha256": "973f84979e8606c27dbe3fe1241483de53e7c3af8ea195dbf19976fdccc97db2",
+      "events": [
+        {
+          "normal_input_has_no_displacement": true,
+          "frame": 5910,
+          "pos": [
+            80679.5078125,
+            15871.0380859375,
+            -69355.4375
+          ],
+          "target": [
+            83300.0,
+            -68350.0
+          ],
+          "source_tick_window": 234
+        }
+      ]
+    },
+    {
+      "name": "current-i-route-walk03",
+      "status": "RUN_COMPLETE",
+      "elapsed_s": 29.5,
+      "errors": [],
+      "state_sha256": "4117f6bca7e2a37ffbf76c68a6b64667dec266eec9d1dba754e79899229f6910",
+      "input_receipt_sha256": "9df606ce183ae4777979da166bd67ed6dd966fd021250b3042a9b857022c57f9",
+      "events": [
+        {
+          "waypoint_reached": 0,
+          "target": [
+            80500.0,
+            -68350.0
+          ],
+          "pos": [
+            80527.8203125,
+            15871.0419921875,
+            -68353.328125
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            83300.0,
+            -68350.0
+          ],
+          "pos": [
+            83348.515625,
+            15871.0341796875,
+            -68353.328125
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            89000.0,
+            -68500.0
+          ],
+          "pos": [
+            89072.828125,
+            15871.0380859375,
+            -68517.328125
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            91500.0,
+            -68791.0
+          ],
+          "pos": [
+            91424.1015625,
+            15871.0380859375,
+            -68770.6171875
+          ]
+        },
+        {
+          "original_door_A_attempt": 0,
+          "frame": 6337
+        },
+        {
+          "original_door_A_attempt": 1,
+          "frame": 6372
+        },
+        {
+          "original_door_arrived_r202": true,
+          "source_frame": 6408,
+          "health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "outcomes": {
+    "walk01": "six stair waypoints complete, healthy upper landing",
+    "walk02": "safe collision stop13.3s, healthy, not door pass",
+    "walk03": "four adjusted centerline waypoints and two normal A presses, r202 entered29.5s healthy"
+  },
+  "metadata_correction": "Walk03 preflight inputs JSON inherited three door waypoints; actual launched controller command and immutable run/controller receipts include first80500,-68350 centerline waypoint. This proof records all four actual waypoints; original preflight receipt preserved."
+}
