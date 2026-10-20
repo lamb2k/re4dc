@@ -7,6 +7,11 @@
 // LEON_HAND_POSES: 5 when info is the player's current right hand info, 6 the left hand, else 0 (m must be the player).
 static unsigned re4dc_leon_hand_role(const cModel* m,const cModelInfo* info) {
     if(!pPL || m!=(const cModel*)pPL || !pPL->Body || !info)return 0;
+#if RE4DC_NMR_ASHLEY >= 2 && defined(RE4DC_NMR_PL_ASHLEY) && RE4DC_NMR_PL_ASHLEY
+    // The Leon pose shortcut must not bypass playable Ashley's hand proof.
+    // Her 141-joint owner binds its open/closed variant through exact records.
+    if(m->id!=0u || m->nParts!=119u)return 0;
+#endif
     if(info==pPL->Body->pRight)return 5;
     if(info==pPL->Body->pLeft)return 6;
     return 0;

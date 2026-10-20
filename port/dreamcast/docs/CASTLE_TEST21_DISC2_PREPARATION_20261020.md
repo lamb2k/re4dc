@@ -97,3 +97,13 @@ selects her player TPL owner; the exact TPL span/content and owner-revision
 proofs remain mandatory. Static Leon/head/weapon family rules stay intact.
 The diagnostic info report uses the same family selector. A further fresh
 target check is required; c21e remains unqualified for playable Ashley.
+
+
+Fresh c21fmW retains all7 complete live Info records with the exact player
+archive/TPL owner. Source role rows159..165 uniquely prove the open variant;
+rows166..172 lack the closed left hand172. The generic pPL Leon hand shortcut
+skipped those hand certificates and nominated both variants, so the registry
+correctly refused ambiguity. Under PL_ASHLEY the shortcut is now limited to
+Leon's model0/119-joint owner. Ashley's141-joint owner must prove both hands
+through its real records. Default-off behavior and full certificate checks
+remain intact. A fresh target run is still required.

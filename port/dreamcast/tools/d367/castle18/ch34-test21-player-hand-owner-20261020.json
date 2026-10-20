@@ -1,0 +1,47 @@
+{
+  "source_program": "c21fmW",
+  "state_sha256": "8a474c20ce114e0801f7c00ac0589297b21e22e7421b71eb17249403c646aec4",
+  "source_frame": 659,
+  "room": "0x20d",
+  "model": {
+    "id": 0,
+    "joints": 141,
+    "roles": 7,
+    "ot": 7
+  },
+  "live_role_rows_by_info": [
+    [
+      159,
+      166
+    ],
+    [
+      160,
+      167
+    ],
+    [
+      161,
+      168
+    ],
+    [
+      162,
+      169
+    ],
+    [
+      163,
+      170
+    ],
+    [
+      164,
+      171
+    ],
+    [
+      165
+    ]
+  ],
+  "source_fact_family": 1,
+  "live_info_count": 7,
+  "unique_complete_exact_variant": "open rows159..165; closed166..172 lacks left-hand172",
+  "remaining_cause": "Generic pPL Leon hand shortcut bypassed exact hands and nominated both variants; registry refused ambiguity.",
+  "repair": "Existing default-off PL_ASHLEY feature limits Leon hand shortcut to model0/119 joints; full Ashley certificate mandatory.",
+  "target_enabled_rerun_pending": true
+}
