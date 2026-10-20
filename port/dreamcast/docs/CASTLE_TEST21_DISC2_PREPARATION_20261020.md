@@ -243,3 +243,16 @@ The same current J CardLoad lineage returns through the original r202 gate and d
 R202 merchant18 draws native2443/0GC. The brief r207 entry census covers Leon and out-of-view enemies only, so full r207 native/visibility/cache qualification is pending with the sword puzzle. Original held-world pointers must not be interpreted during SSLoop1; future private observer guards SSLoop/phase/Stop/live IDs. Earlier collision, early-door and host-timed-reload guard stops are preserved controls and not game failures. No warp, source/state writes, program retarget or hardware timing claim.
 
 Asset-free complete chain and exact inventory/restore/readiness proof: tools/d367/castle18/ch31-test21-current-j-original-r207-entry-20261020.json.
+
+
+### Isolated castle K motion-packing successor
+
+Branch codex/castle21-motion-pack-k imports exact c5fbf44d and54be5527 onto J's current104afded7 source. The pl11-walk producer/admission rows, all game data, SKIN1, BONES96 and49152-byte squeeze are unchanged. Only MOTION_PRESSURE_BACKING=1 and MOTION_RESERVE_PACK=1 are enabled in the candidate; both remain default0. No production recipe, release or SD change. Strictv3 two-cell policy, pins, pointer stability and existing heap margins stay unchanged.
+
+Actual-source host ASan/UBSan tests pass. Off-control c21komW builds66s/missing0 and all23 boot/overlay payloads exactly match J. Enabled c21kmW builds59s/missing0; ELF5c5d6ef821d045c05c0710c25c80d3cb137d239cacfd729c257ff97501e0f84c, end8c4855d8 (+640bytes). The motion object grows646text bytes with data0/BSS557 unchanged; actual native_actor_fast relocations still call linked SH4ZAM516f192 skin kernels. Both fullELFs, all23programs each, knobs and source metadata are retained C.
+
+Full Disc2 mkdisc2/master is6762files,496343data/497456ISO sectors, ZERO added sectors versus J,6544ISO sectors spare; no truncation. Every nonprogram asset is byte-identical to J. Image SHAb0973c044a607a73985099d3b586273deb544ccaefc79ca9462263dbbc62a20c. Final C image copy is capacity-deferred; immutable RAM image is used only for functional read tests, with all inputs/programs/VMUs/logs/manifests retained C and unchanged16GiB retained/128MiB output guards. Boss's archived idle-image cleanup supplied RAM; c21c/I/J and root protected artifacts stay intact.
+
+Fresh original VMU CardLoad begins without a prior state seed; J states are never retargeted. Actual fresh r202 native/cold-cache/memory gates remain pending. J/K compile DISC_READ_METER=0, so K observes motion loads/hits/evictions, pins and reserved subranges; sampled stream state does not prove total drive reads or readquiet. No hardware timing or whole-chapter acceptance.
+
+Asset-free build and master receipts: tools/d367/castle18/ch31-test21-motion-pack-K-{build,master}-20261020.json.

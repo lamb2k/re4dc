@@ -1,0 +1,19 @@
+{
+  "scope": "K full Disc2 program-only successor of current J. All game data unchanged; no source truncation. Fresh original CardLoad required; no J/other-program state retarget. RAM-read functional image, finalC image not yet retained; no SD/hardware/release claim.",
+  "source": "343c463aa",
+  "elf_sha256": "5c5d6ef821d045c05c0710c25c80d3cb137d239cacfd729c257ff97501e0f84c",
+  "disc_sha256": "b0973c044a607a73985099d3b586273deb544ccaefc79ca9462263dbbc62a20c",
+  "bytes": 1018789888,
+  "ISO_sectors": 497456,
+  "data_sectors": 496343,
+  "sector_growth_vs_J": 0,
+  "data_sector_growth_vs_original_baseline478463": 17880,
+  "limit": 504000,
+  "remaining_ISO_sectors": 6544,
+  "files": 6762,
+  "nonprogram_assets_identical_to_J": true,
+  "only_allowed_program_diff_count": 19,
+  "raw_boot_and_overlays_match_C_programs": true,
+  "C_final_image_retained": false,
+  "RAM_path": "/dev/shm/castle21-main-20261020/motion-k-master/track03.iso"
+}

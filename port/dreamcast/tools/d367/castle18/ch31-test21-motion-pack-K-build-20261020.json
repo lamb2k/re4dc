@@ -1,0 +1,137 @@
+{
+  "scope": "Isolated current castle K successor from current J source plus exact c5fbf44d/54be5527. Same profile/source data, SKIN1 and KOS48KiB; only enabled motion backing+packing settings differ. Host/build/off-program identity only; no runtime acceptance or old-state retarget.",
+  "branch": "codex/castle21-motion-pack-k",
+  "source": "343c463aa",
+  "imported": [
+    "c5fbf44d3b7b674efc32b54e63401801a9ad57aa",
+    "54be5527335edeeb08dcbcbe21ebf33dc0617765"
+  ],
+  "parent_J": "104afded7",
+  "builds": {
+    "c21komW": {
+      "elf_sha256": "7b5c67bd9dccad8ad613df30a873091640c047ed8740d1f69c96bbb1fb5bbc8b",
+      "end": "8c485358",
+      "knobs": {
+        "SKIN_SH4ZAM": "1",
+        "SKIN_SH4ZAM_CHECK": "0",
+        "NATIVE_MODEL_REGISTRY_BONES": "96",
+        "PS2_ASHLEY": "2",
+        "NATIVE_MODEL_REGISTRY_PL_ASHLEY": "1",
+        "KOS_SQUEEZE": "1",
+        "KOS_SQUEEZE_BYTES": "49152",
+        "DISC_SET": "1",
+        "MOTION_RESERVE": "1",
+        "MOTION_PRESSURE_BYTES": "262144",
+        "MOTION_COLD_POOL": "262144",
+        "MOTION_COLD_POOL_CASTLE": "131072",
+        "MOTION_RESERVE_SPILL": "524288",
+        "MOTION_BOUNDED_R11F": "1",
+        "MOTION_PRESSURE_BACKING": "0",
+        "MOTION_RESERVE_PACK": "0"
+      },
+      "programs": {
+        "1ST_READ.BIN": "a692188076ec6cb6ffd09c0299e48e4ec5d97362581020cdcd014727d427aaaa",
+        "em22.ovl": "fa9394838cd9e99dbf66dc5899b4703424b78f72c4ff1fd2e13b29b224549e9d",
+        "em25.ovl": "82b11b1277314e5503f4b608c594b4d026f11d66e46186ea8a55860bbcf08e2e",
+        "em2b.ovl": "09d813aa606a7d39993613f0767934b93e16e6e4bd031bd394ce14c5880312d0",
+        "em2c.ovl": "a93e9edaaa46214f42b0cf495b1dca12a739d059d16fa101c37c3835684dd447",
+        "em2d.ovl": "b5e2cc5414c3ae1344d9d4c6ce6f5b1781e85e0da23c20c4c52753db6dc23902",
+        "em2f.ovl": "f517094228b7d08b72da1e57a0504182da6d84f2257316b01f30df13ab99e604",
+        "em35.ovl": "1d0819bb17c820f8b4376b6318600faab95be79fa04079bb9c6c76c1715586be",
+        "em38.ovl": "c11afe330141b34c7df3d347943fc1223af13ba94092aef6071dbe825d3e7465",
+        "em3b.ovl": "a4f35caac97754b39cb2dac1d88fcf0884038d8f88a69f8ab0f5c24e7a3e97eb",
+        "em3c.ovl": "1381a00f45ced1fac1d73a3cdf82a1f2237d76a64d4bb95db3b3cab81479fbdf",
+        "pl0f.ovl": "16c8fab40b64334a13973e288a258599d9f4d478a424fb7374d808084a0b5a42",
+        "pl11.ovl": "9087a0cf3ca94982268771babbf0a6cc112971c588639964c1e5561eb07d26e2",
+        "pl14.ovl": "98a93495ed51eb5a4eb352f10518b288fb01f6d8e5358bd517f41849c758cfaa",
+        "sscrn.ovl": "54b0b258d5265da6a08357c93e0b7aebc55a61d795c30d8f588e1c8fd1f06b9e",
+        "st1_0.ovl": "2afff23dd2dbc5d4f51b3e6b9a9d07a3b5ae0065b6584c42c41a05867f43985a",
+        "st1_1.ovl": "0c140d617ac3d07eb34a6b5f65846e3139ce028b242f935b3e2a9640c4f58b43",
+        "st1_2.ovl": "05ad5273c92508d6b3147d8fe8af621aa384c3e1762e2df2753472766a4b74c1",
+        "st1_3.ovl": "e7002df3081e5eee3803e379f265c5dcf319dd6b50c22372fa55ca9af2d2982f",
+        "st2_0.ovl": "3e161ce6f585681e7568c842f50c28a3ece95769df7e7dfc745bea43ba54bf4c",
+        "st2_1.ovl": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+        "st2_2.ovl": "2af553000246fc2da1b1b7507752f554e0c77169a2aa16a1709eb814f8b60d8f",
+        "st2_3.ovl": "09712688397f5feee280ac7e8b1d390c44677f78fd6ca3608cc26f8c0a2941ac"
+      },
+      "full_ELF_and_programs_C_retained": true
+    },
+    "c21kmW": {
+      "elf_sha256": "5c5d6ef821d045c05c0710c25c80d3cb137d239cacfd729c257ff97501e0f84c",
+      "end": "8c4855d8",
+      "knobs": {
+        "SKIN_SH4ZAM": "1",
+        "SKIN_SH4ZAM_CHECK": "0",
+        "NATIVE_MODEL_REGISTRY_BONES": "96",
+        "PS2_ASHLEY": "2",
+        "NATIVE_MODEL_REGISTRY_PL_ASHLEY": "1",
+        "KOS_SQUEEZE": "1",
+        "KOS_SQUEEZE_BYTES": "49152",
+        "DISC_SET": "1",
+        "MOTION_RESERVE": "1",
+        "MOTION_PRESSURE_BYTES": "262144",
+        "MOTION_COLD_POOL": "262144",
+        "MOTION_COLD_POOL_CASTLE": "131072",
+        "MOTION_RESERVE_SPILL": "524288",
+        "MOTION_BOUNDED_R11F": "1",
+        "MOTION_PRESSURE_BACKING": "1",
+        "MOTION_RESERVE_PACK": "1"
+      },
+      "programs": {
+        "1ST_READ.BIN": "c0709941eac66ba1ed7cb1c7295ddcc955bfcd2a2cd77911812a6f7a46c938a1",
+        "em22.ovl": "9c759137751fad4e165d205e39395bb631b99877de491bba5f4bac6e2b10cb4b",
+        "em25.ovl": "9bfb08f0cfcef0060aa2d5e9e6bd3b51ef738fac46e3fbbe6cb73d3a0cea8341",
+        "em2b.ovl": "97c4dae80f7c0f051bfd29c775136e4e8873800762532919654aae87f581c2c5",
+        "em2c.ovl": "cf996cfc98f2b3f3c5685cf56a399ec11a3f95b5fa71be515d25a87a539fab2b",
+        "em2d.ovl": "22b558a5b0b97bd938d1cc602bab37334fccfe6f1fdba9794afe22dd2edf6a0f",
+        "em2f.ovl": "5335be74c40d3442981f957765348a6a1500ed965445de45def4c21c9856a856",
+        "em35.ovl": "415f0c46414a7e755527d4b247629bf5dacd161db89fca4508166911253b27bb",
+        "em38.ovl": "389a651c61b815491327bd7fd081a2827116d06dfd5434bc7570ed8445665f68",
+        "em3b.ovl": "af578fb1ed1d0360e3d5555f5b585d0c4c73b7ad2a62a7150978cbf8b82611b7",
+        "em3c.ovl": "998ee3ac9e1cbab8bdb9faf19858b50f407ffef5a80814fd7be4f5b835ca2138",
+        "pl0f.ovl": "954b488666e6db262ccdc0fb249a8f0213db064b85400c24d470369802dd385a",
+        "pl11.ovl": "5d26b177458ebcb144e415dc4ebdfce937781ac16226742458681c324c928210",
+        "pl14.ovl": "b0277306856d5ab115709477c502e4d6e340a4b6c2a7cae40b747695533f52f8",
+        "sscrn.ovl": "9a63857875d4e52025f5dbda3380d205d8ed73536d60228fd01bb95e03c600e5",
+        "st1_0.ovl": "fea40aa80dc2143c0ed03cffd59d825a0e2523c8c5ac4d7f59b4af33afbb59c4",
+        "st1_1.ovl": "9ed7b636de6a99cffb736b2cd3a3e765513f0d21db7320254460d8c543fad333",
+        "st1_2.ovl": "86acd8d03133d3642c85224980d30a2998aca87354595057fefa25da17682e95",
+        "st1_3.ovl": "88b6c191e5b103ae69dccce5137f191ac06b9e843b71d0c2197b3d32fb6828e1",
+        "st2_0.ovl": "6722462c296aca255f09a76838db9557875fbbc75aa504237f2857eda9d9c02c",
+        "st2_1.ovl": "43f050c4613ffaf991163845920c360ef5314fb2e3def569f799e16bfaed5e9a",
+        "st2_2.ovl": "956037dbbd97c8bd91ed15024ff14874d33c62751f884b48fe5f47649b29cc76",
+        "st2_3.ovl": "b57a537a5d1f078773cf7a1b373ecd4ad233ac0a72d053b8746084e9c368ac3e"
+      },
+      "full_ELF_and_programs_C_retained": true
+    }
+  },
+  "host_test_log_sha256": "d7f7e47435410030a2af0c59797084692d2b7d165bfa87a09151575ff2df75fc",
+  "off_all23_identical_to_J": true,
+  "unchanged_sources": {
+    "port/dreamcast/game/platform/native_motion_r11f_profiles.inc": "5555623f16bf4f59b38ab3f7f0673aaacec318f001243192c46be88eb437b151",
+    "port/dreamcast/tools/prepare_enemy_motions.py": "e9aab515bcf59c3396f1d22a3dc88316cfb358355e8f1301324dd942d9873aa5"
+  },
+  "unchanged_assets": {
+    "pl11_DRS_sha256": "12bf1589821db613693f4d0c6545b622a42ed831cc02fd9061869849dfcd3e3f",
+    "pl11_body_sha256": "940d2f7b3642c3ccc2a876abc31ba861cc9a47cd56aba569a0ff9fed368df671",
+    "texture_pack_sha256": "371498999187206dd9d5ff5985741e9cce40848d82f5d9fef5322ca2c6927542",
+    "resident_sha256": "f2827a24dfd8c0bfe35aaa6507f94951dd6ef4e17a122f0f648edda606fa8e43"
+  },
+  "native_motion_object_size": {
+    "J_text": 8722,
+    "K_off_text": 8722,
+    "K_text": 9368,
+    "delta_text": 646,
+    "data": 0,
+    "BSS": 557,
+    "BSS_delta": 0
+  },
+  "end_growth": 640,
+  "dependency": "516f192bb6585a4f5986ff10301a5d34d4b5c3ed",
+  "pending": [
+    "Program-only full Disc2 master and sector count",
+    "Fresh original CardLoad/r202 native and cold-cache gate",
+    "KOS/memory/VRAM/effects/audio observations",
+    "Current chapter completion; no hardware/release/SD claim"
+  ]
+}
