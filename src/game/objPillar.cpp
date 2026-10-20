@@ -3,6 +3,7 @@
 // at him (R0 2 Throw); the player escapes with action button 0x25 (plemEscape / plemEscape2,
 // run as player damage routines) or is crushed (objPillarAtkCk); R0 4 Fall drops it as debris.
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "atari_init.h"
 #include "light.h"
 #include "dmg.h"
@@ -621,8 +622,9 @@ void EscapeCamMove()
     p1.x = -244.0f;
     p1.y = 809.0f;
     p1.z = 52.6f;
-    PSMTXMultVec(pPL->mat, &p0, &p0);
-    PSMTXMultVec(pPL->mat, &p1, &p1);
+    RE4DC_XM_LOAD(pPL->mat);
+    RE4DC_XM_POINT(pPL->mat, &p0, &p0);
+    RE4DC_XM_POINT(pPL->mat, &p1, &p1);
     PosToPos(&g->Cam.param.at, &p1, &Cam.param.at, 1.0f);
     PosToPos(&g->Cam.param.pos, &p0, &Cam.param.pos, 1.0f);
     if (EatMgr.hitCheck(&Cam.param.at, &Cam.param.pos, &hit, 0, 0x8000, 0)) {

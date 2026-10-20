@@ -4,6 +4,7 @@
 // helpers, and the item drops.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "map_obj.h"
 #include "light.h"
 #include "widget.h"
@@ -187,8 +188,9 @@ int EmGetDmPos(cEm* em, Vec* pos, Vec* dir)
         top.z += p->height;
         break;
     }
-    PSMTXMultVec(parts->mat, &top, &top);
-    PSMTXMultVec(parts->mat, &bottom, &bottom);
+    RE4DC_XM_LOAD(parts->mat);
+    RE4DC_XM_POINT(parts->mat, &top, &top);
+    RE4DC_XM_POINT(parts->mat, &bottom, &bottom);
     PSVECAdd(&top, &bottom, &c);
     PSVECScale(&c, &c, 0.5f);
     s.x = 0.0f;
@@ -555,8 +557,9 @@ YARARE_INFO* emBoxAtCk(cEm* em, Vec* box, Vec* pos, int flag)
             top.y += p->height;
         }
         parts = HitParts(em, p);
-        PSMTXMultVec(parts->mat, &top, &top);
-        PSMTXMultVec(parts->mat, &bottom, &bottom);
+        RE4DC_XM_LOAD(parts->mat);
+        RE4DC_XM_POINT(parts->mat, &top, &top);
+        RE4DC_XM_POINT(parts->mat, &bottom, &bottom);
         PSVECAdd(&top, &bottom, &center);
         PSVECScale(&center, &center, 0.5f);
         up.y = up.x = 0.0f;
@@ -627,8 +630,9 @@ YARARE_INFO* emLineAtCk(cEm* em, Vec* pPos, Vec* pPos2, f32 len, int flag)
             } else {
                 top.y += p->height;
             }
-            PSMTXMultVec(parts->mat, &top, &top);
-            PSMTXMultVec(parts->mat, &bottom, &bottom);
+            RE4DC_XM_LOAD(parts->mat);
+            RE4DC_XM_POINT(parts->mat, &top, &top);
+            RE4DC_XM_POINT(parts->mat, &bottom, &bottom);
             PSVECAdd(&top, &bottom, &center);
             PSVECScale(&center, &center, 0.5f);
             s.x = 0.0f;
@@ -694,8 +698,9 @@ YARARE_INFO* emLineAtCk2(cEm* em, Vec* pPos, Vec* pPos2, f32 len, Vec* out, int 
             } else {
                 top.y += p->height;
             }
-            PSMTXMultVec(parts->mat, &top, &top);
-            PSMTXMultVec(parts->mat, &bottom, &bottom);
+            RE4DC_XM_LOAD(parts->mat);
+            RE4DC_XM_POINT(parts->mat, &top, &top);
+            RE4DC_XM_POINT(parts->mat, &bottom, &bottom);
             PSVECAdd(&top, &bottom, &center);
             PSVECScale(&center, &center, 0.5f);
             s.x = 0.0f;
@@ -776,8 +781,9 @@ int emLineCapsuleCrossCk(Vec* a, Vec* b, Vec* top, Vec* bottom, f32 r, Vec* hit)
     if (PSMTXInverse(m, inv) == 0) {
         PSMTXIdentity(inv);
     }
-    PSMTXMultVec(inv, a, &la);
-    PSMTXMultVec(inv, b, &lb);
+    RE4DC_XM_LOAD(inv);
+    RE4DC_XM_POINT(inv, a, &la);
+    RE4DC_XM_POINT(inv, b, &lb);
     dist = (a->x - top->x) * (a->x - top->x) + (a->y - top->y) * (a->y - top->y) + (a->z - top->z) * (a->z - top->z);
     if (dist < r * r) {
         *hit = *a;
@@ -884,14 +890,15 @@ int emLineCubeCrossCk(Vec* a, Vec* b, Mtx m, f32 sx, f32 sy, f32 sz, Vec* ofs, V
     v[7].x = -sx;
     v[7].y = sy;
     v[7].z = -sz;
-    PSMTXMultVec(mat, &v[0], &v[0]);
-    PSMTXMultVec(mat, &v[1], &v[1]);
-    PSMTXMultVec(mat, &v[2], &v[2]);
-    PSMTXMultVec(mat, &v[3], &v[3]);
-    PSMTXMultVec(mat, &v[4], &v[4]);
-    PSMTXMultVec(mat, &v[5], &v[5]);
-    PSMTXMultVec(mat, &v[6], &v[6]);
-    PSMTXMultVec(mat, &v[7], &v[7]);
+    RE4DC_XM_LOAD(mat);
+    RE4DC_XM_POINT(mat, &v[0], &v[0]);
+    RE4DC_XM_POINT(mat, &v[1], &v[1]);
+    RE4DC_XM_POINT(mat, &v[2], &v[2]);
+    RE4DC_XM_POINT(mat, &v[3], &v[3]);
+    RE4DC_XM_POINT(mat, &v[4], &v[4]);
+    RE4DC_XM_POINT(mat, &v[5], &v[5]);
+    RE4DC_XM_POINT(mat, &v[6], &v[6]);
+    RE4DC_XM_POINT(mat, &v[7], &v[7]);
     poly[0] = v[0];
     poly[1] = v[1];
     poly[2] = v[2];
@@ -1047,8 +1054,9 @@ YARARE_INFO* emSphereAtCk(cEm* em, Vec* pos, Vec* pos2, f32 r, int flag, f32 r2)
             top.y += p->height;
         }
         parts = HitParts(em, p);
-        PSMTXMultVec(parts->mat, &top, &top);
-        PSMTXMultVec(parts->mat, &bottom, &bottom);
+        RE4DC_XM_LOAD(parts->mat);
+        RE4DC_XM_POINT(parts->mat, &top, &top);
+        RE4DC_XM_POINT(parts->mat, &bottom, &bottom);
         PSVECAdd(&top, &bottom, &center);
         PSVECScale(&center, &center, 0.5f);
         if (p->flags & 8) {
@@ -1081,14 +1089,15 @@ YARARE_INFO* emSphereAtCk(cEm* em, Vec* pos, Vec* pos2, f32 r, int flag, f32 r2)
             box[7].x = p->width;
             box[7].y = p->height;
             box[7].z = p->depth;
-            PSMTXMultVec(parts->mat, &box[0], &box[0]);
-            PSMTXMultVec(parts->mat, &box[1], &box[1]);
-            PSMTXMultVec(parts->mat, &box[2], &box[2]);
-            PSMTXMultVec(parts->mat, &box[3], &box[3]);
-            PSMTXMultVec(parts->mat, &box[4], &box[4]);
-            PSMTXMultVec(parts->mat, &box[5], &box[5]);
-            PSMTXMultVec(parts->mat, &box[6], &box[6]);
-            PSMTXMultVec(parts->mat, &box[7], &box[7]);
+            RE4DC_XM_LOAD(parts->mat);
+            RE4DC_XM_POINT(parts->mat, &box[0], &box[0]);
+            RE4DC_XM_POINT(parts->mat, &box[1], &box[1]);
+            RE4DC_XM_POINT(parts->mat, &box[2], &box[2]);
+            RE4DC_XM_POINT(parts->mat, &box[3], &box[3]);
+            RE4DC_XM_POINT(parts->mat, &box[4], &box[4]);
+            RE4DC_XM_POINT(parts->mat, &box[5], &box[5]);
+            RE4DC_XM_POINT(parts->mat, &box[6], &box[6]);
+            RE4DC_XM_POINT(parts->mat, &box[7], &box[7]);
             if (At_box_sphere_ck(box, pos, r) == 0) {
                 continue;
             }
@@ -1597,8 +1606,9 @@ int GetWepTargetListBomb(Vec* pos, f32 r, WepTarget* list, int max, int type, in
             top.z += part->height;
             break;
         }
-        PSMTXMultVec(parts->mat, &top, &top);
-        PSMTXMultVec(parts->mat, &bottom, &bottom);
+        RE4DC_XM_LOAD(parts->mat);
+        RE4DC_XM_POINT(parts->mat, &top, &top);
+        RE4DC_XM_POINT(parts->mat, &bottom, &bottom);
         PSVECAdd(&top, &bottom, &center);
         PSVECScale(&center, &center, 0.5f);
         if (!(part->flags & 0x80)) {
@@ -1851,8 +1861,9 @@ YARARE_INFO* EmYarareContactCk(cEm* em, Vec* pos, Vec* out, f32 r)
             top.y += p->height;
         }
         parts = HitParts(em, p);
-        PSMTXMultVec(parts->mat, &bottom, &bottom);
-        PSMTXMultVec(parts->mat, &top, &top);
+        RE4DC_XM_LOAD(parts->mat);
+        RE4DC_XM_POINT(parts->mat, &bottom, &bottom);
+        RE4DC_XM_POINT(parts->mat, &top, &top);
         s.x = 0.0f;
         s.y = 0.0f;
         s.z = p->width;
@@ -1943,8 +1954,9 @@ void EmYarareDisp(cEm* em)
                 top.y += p->height;
             }
             parts = HitParts(em, p);
-            PSMTXMultVec(parts->mat, &bottom, &bottom);
-            PSMTXMultVec(parts->mat, &top, &top);
+            RE4DC_XM_LOAD(parts->mat);
+            RE4DC_XM_POINT(parts->mat, &bottom, &bottom);
+            RE4DC_XM_POINT(parts->mat, &top, &top);
             s.x = 0.0f;
             s.y = 0.0f;
             s.z = p->width;

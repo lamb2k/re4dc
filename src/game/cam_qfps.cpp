@@ -6,6 +6,7 @@
 // may override the tables through a camera area cut (setAreaData).
 
 #include "types.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "vec.h"
 #include "global.h"
 #include "camera.h"
@@ -757,8 +758,9 @@ void CameraQuasiFPS::hitCheck(Mtx m, QfpsOfs* ofs, CameraParam* out)
     f32 t;
     f32 d;
 
-    PSMTXMultVec(m, &ofs->campos2, &wa);
-    PSMTXMultVec(m, &ofs->Campos, &wb);
+    RE4DC_XM_LOAD(m);
+    RE4DC_XM_POINT(m, &ofs->campos2, &wa);
+    RE4DC_XM_POINT(m, &ofs->Campos, &wb);
     l0 = wa;
     l1 = wb;
     if (pGS->debug_mode == 0xF) {  // struct view: the pG load stays below the copies' stores
@@ -802,8 +804,9 @@ void CameraQuasiFPS::hitCheck(Mtx m, QfpsOfs* ofs, CameraParam* out)
 
         PSVECSubtract(&ofs->campos2, &vv[1], &wa);
         PSVECSubtract(&ofs->Campos, &vv[0], &wb);
-        PSMTXMultVec(m, &wa, &wa);
-        PSMTXMultVec(m, &wb, &wb);
+        RE4DC_XM_LOAD(m);
+        RE4DC_XM_POINT(m, &wa, &wa);
+        RE4DC_XM_POINT(m, &wb, &wb);
         l0 = wa;
         l1 = wb;
         if (pG->debug_mode == 0xF) {
@@ -831,8 +834,9 @@ void CameraQuasiFPS::hitCheck(Mtx m, QfpsOfs* ofs, CameraParam* out)
 
         PSVECAdd(&ofs->campos2, &vv[1], &wa);
         PSVECAdd(&ofs->Campos, &vv[0], &wb);
-        PSMTXMultVec(m, &wa, &wa);
-        PSMTXMultVec(m, &wb, &wb);
+        RE4DC_XM_LOAD(m);
+        RE4DC_XM_POINT(m, &wa, &wa);
+        RE4DC_XM_POINT(m, &wb, &wb);
         l0 = wa;
         l1 = wb;
         if (pG->debug_mode == 0xF) {
@@ -1300,8 +1304,9 @@ void CameraQuasiFPS::move()
             CameraSetOrientationRoll(&c);
             src = vf->point;
             for (j = 0; j < 8; j++, src++) {
-                PSMTXMultVec(c.mat, src, &view_box[cnt].point[j]);
-                PSMTXMultVec(c.mat, src, &view_box[cnt].point[j]);
+                RE4DC_XM_LOAD(c.mat);
+                RE4DC_XM_POINT(c.mat, src, &view_box[cnt].point[j]);
+                RE4DC_XM_POINT(c.mat, src, &view_box[cnt].point[j]);
             }
         }
         for (i = 0; i < 16; i++) {

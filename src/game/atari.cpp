@@ -7,6 +7,7 @@
 // adjust sweeps a sphere; disp draws the polygons for the debug pages.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "atariInfo.h"
 #include "global.h"
 #include "model.h"
@@ -952,8 +953,9 @@ static int spwOrig(u8* arr, u32 n, u32 size, Vec* oldPos, Vec* pos, f32 r, int f
             Vec lo;
             Vec lp;
             memclr_asm(polyBit, (sat->polygon_num + 7) / 8);
-            PSMTXMultVec(sat->imat, oldPos, &lo);
-            PSMTXMultVec(sat->imat, pos, &lp);
+            RE4DC_XM_LOAD(sat->imat);
+            RE4DC_XM_POINT(sat->imat, oldPos, &lo);
+            RE4DC_XM_POINT(sat->imat, pos, &lp);
             if (blkPolySphereCk(sat, sat->block_p, &lo, &lp, r, flag, nrm, mask)) {
                 PSMTXMultVec(sat->mat, &lp, pos);
                 if (nrm) {
@@ -1056,8 +1058,9 @@ static int spwRun(u8* arr, u32 n, u32 size, u32 i0, Vec* oldPos, Vec* pos, f32 r
         {
             Vec ra;
             Vec rb;
-            PSMTXMultVec(sat->imat, oldPos, &ra);
-            PSMTXMultVec(sat->imat, pos, &rb);
+            RE4DC_XM_LOAD(sat->imat);
+            RE4DC_XM_POINT(sat->imat, oldPos, &ra);
+            RE4DC_XM_POINT(sat->imat, pos, &rb);
             if (spwBits(&q.kx[0], &ra.x, 4) || spwBits(&q.kx[1], &ra.z, 4) || spwBits(&q.kx[2], &rb.x, 4) ||
                 spwBits(&q.kx[3], &rb.z, 4)) {
                 ++spwXzMis;
@@ -1073,8 +1076,9 @@ static int spwRun(u8* arr, u32 n, u32 size, u32 i0, Vec* oldPos, Vec* pos, f32 r
             continue;
         }
         memclr_asm(polyBit, (sat->polygon_num + 7) / 8);
-        PSMTXMultVec(sat->imat, oldPos, &lo);
-        PSMTXMultVec(sat->imat, pos, &lp);
+        RE4DC_XM_LOAD(sat->imat);
+        RE4DC_XM_POINT(sat->imat, oldPos, &lo);
+        RE4DC_XM_POINT(sat->imat, pos, &lp);
         q.lo = &lo;
         q.lp = &lp;
         if (rec) {
@@ -1115,8 +1119,9 @@ static int spwReplay(u8* arr, u32 n, u32 size, Vec* oldPos, Vec* pos, f32 r, int
         Vec lo;
         Vec lp;
         memclr_asm(polyBit, (sat->polygon_num + 7) / 8);
-        PSMTXMultVec(sat->imat, oldPos, &lo);
-        PSMTXMultVec(sat->imat, pos, &lp);
+        RE4DC_XM_LOAD(sat->imat);
+        RE4DC_XM_POINT(sat->imat, oldPos, &lo);
+        RE4DC_XM_POINT(sat->imat, pos, &lp);
         const int k0 = k;
         for (; k < rec->n && rec->piece[k] == i; k++) {
             if (spwLeaf(sat, rec->leaf[k], &lo, &lp, r, flag, nrm, mask)) {
@@ -1226,8 +1231,9 @@ int cSatMgr::polySphereCk(Vec* oldPos, Vec* pos, f32 r, int flag, Vec* nrm, int 
             Vec lp;
             cSatBlock* blk = sat->block_p;
             memclr_asm(polyBit, (sat->polygon_num + 7) / 8);
-            PSMTXMultVec(sat->imat, oldPos, &lo);
-            PSMTXMultVec(sat->imat, pos, &lp);
+            RE4DC_XM_LOAD(sat->imat);
+            RE4DC_XM_POINT(sat->imat, oldPos, &lo);
+            RE4DC_XM_POINT(sat->imat, pos, &lp);
             if (blkPolySphereCk(sat, blk, &lo, &lp, r, flag, nrm, mask)) {
                 PSMTXMultVec(sat->mat, &lp, pos);
                 if (nrm) {
@@ -1556,8 +1562,9 @@ static int linePieceWalk(LinePieceQ* q, cSatBlock* blk, cSatBlock** leaf)
         Vec ra;
         Vec rb;
         cSatBlock* ref[LNW_MAX];
-        PSMTXMultVec(q->m, q->p0, &ra);
-        PSMTXMultVec(q->m, q->p1, &rb);
+        RE4DC_XM_LOAD(q->m);
+        RE4DC_XM_POINT(q->m, q->p0, &ra);
+        RE4DC_XM_POINT(q->m, q->p1, &rb);
         if (lnpBits(&q->lax, &ra.x) || lnpBits(&q->laz, &ra.z) || lnpBits(&q->lbx, &rb.x) || lnpBits(&q->lbz, &rb.z)) {
             ++lnpMis;
         }
@@ -1659,8 +1666,9 @@ int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int 
             {
                 Vec ra;
                 Vec rb;
-                PSMTXMultVec(sat->imat, pos0, &ra);
-                PSMTXMultVec(sat->imat, pos1, &rb);
+                RE4DC_XM_LOAD(sat->imat);
+                RE4DC_XM_POINT(sat->imat, pos0, &ra);
+                RE4DC_XM_POINT(sat->imat, pos1, &rb);
                 if (__builtin_memcmp(&ra, &la, 12) != 0 || __builtin_memcmp(&rb, &lb, 12) != 0) {
                     ++lyrMis;
                 }
@@ -1670,12 +1678,14 @@ int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int 
             }
 #endif
 #else
-            PSMTXMultVec(sat->imat, pos0, &la);
-            PSMTXMultVec(sat->imat, pos1, &lb);
+            RE4DC_XM_LOAD(sat->imat);
+            RE4DC_XM_POINT(sat->imat, pos0, &la);
+            RE4DC_XM_POINT(sat->imat, pos1, &lb);
 #endif
 #else
-            PSMTXMultVec(sat->imat, pos0, &la);
-            PSMTXMultVec(sat->imat, pos1, &lb);
+            RE4DC_XM_LOAD(sat->imat);
+            RE4DC_XM_POINT(sat->imat, pos0, &la);
+            RE4DC_XM_POINT(sat->imat, pos1, &lb);
             cSatBlock* leaf[LNW_MAX];
             const int nl = lineWalkPiece(blk, &la, &lb, leaf);
             if (nl == 0) {
@@ -1715,9 +1725,10 @@ int cSatMgr::hitCheck2(Vec* pos0, Vec* pos1, Vec* hit, u32* attr, int flag, int 
             }
 #else
             memclr_asm(polyBit, (sat->polygon_num >> 3) + 1);
-            PSMTXMultVec(sat->imat, pos0, &la);
-            PSMTXMultVec(sat->imat, pos1, &lb);
-            PSMTXMultVec(sat->imat, &cur, &lcur);
+            RE4DC_XM_LOAD(sat->imat);
+            RE4DC_XM_POINT(sat->imat, pos0, &la);
+            RE4DC_XM_POINT(sat->imat, pos1, &lb);
+            RE4DC_XM_POINT(sat->imat, &cur, &lcur);
             r = blkPolyLineCk(sat, blk, &la, &lb, flag, mask, &lcur, &pn);
 #endif
             if (r) {

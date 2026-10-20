@@ -2364,6 +2364,10 @@ extern "C" void re4dc_log(const char* fmt, ...);
 #if RE4DC_WPAL_FAST >= 3
 extern "C" int re4dc_wpal_sh4(const Weight* w, int n, const f32* mtx, f32* dst);  // platform/wpal_sh4.S
 #endif
+#if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM && defined(__sh__)
+extern "C" unsigned re4dc_skin_sh4zam_mask;                                                  // platform/sh4zam_skin.c
+extern "C" int re4dc_shz_weight_palette(const Weight* w, int n, const f32* mtx, f32* dst);  // platform/sh4zam_skin.c
+#endif
 static int MakeWeightPalette(Weight* w0, int n)
 {
     GxWork* gx = GXWORK();
@@ -2376,6 +2380,13 @@ static int MakeWeightPalette(Weight* w0, int n)
         pLog->err(0, 0, "MakeWeightPalette() PTR ERR");
         return 0;
     }
+#if defined(RE4DC_SKIN_SH4ZAM) && RE4DC_SKIN_SH4ZAM && defined(__sh__)
+    // SKIN_SH4ZAM 0x20 (game30.mk; render only): the entries built in XMTRX (shz_xmtrx_init_zero + shz_xmtrx_blend per
+    // weight, platform/sh4zam_skin.c), stored transposed as the loop below stores them.
+    if (re4dc_skin_sh4zam_mask & 0x20u) {
+        return re4dc_shz_weight_palette(w0, n, (const f32*) gx->mtx, (f32*) RE4DC_LC_PALETTE);
+    }
+#endif
     cnt = 0;
 #if RE4DC_WPAL_FAST
     // GAME_WPAL_FAST (game30.mk; render only, exact): the same per-element operations in the same

@@ -4,6 +4,7 @@
 // detached into world space at spawn; Vec0 gives the per-frame jitter amplitudes.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "global.h"
 #include "math_sub.h"
 #include "rnd.h"
@@ -146,8 +147,9 @@ int cEsp1a::SetFreeWork(EspGenWork* gen, u32* seed)
             parts = m_pMod->getPartsPtr(m_Parts_no);
             PSMTXIdentity(m2);
             low_RotMatrix(m2, &m_pMod->ang);
-            PSMTXMultVecSR(m2, &m_Speed, &m_Speed);
-            PSMTXMultVecSR(m2, &m_Speed_plus, &m_Speed_plus);
+            RE4DC_XM_LOAD(m2);
+            RE4DC_XM_DIR(m2, &m_Speed, &m_Speed);
+            RE4DC_XM_DIR(m2, &m_Speed_plus, &m_Speed_plus);
             m_pMod = NULL;
             parent = pEffParentWorld;
         }

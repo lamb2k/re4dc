@@ -5,6 +5,7 @@
 // subobjLadderClimb (mot[16..19]). R1 routines: 0 Set (standing), 1 Fall (with damage areas), 2
 // Down, 3 Reset. A paired ladder shares the collision flags; breakWindow smashes windows at the top.
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "atari_init.h"
 #include "light.h"
 #include "dmg.h"
@@ -941,8 +942,9 @@ void objLadderClimbCamMove(cEm* em)
     camAt.x = 0.0f;
     camAt.y = 300.0f;
     camAt.z = 0.0f;
-    PSMTXMultVec(parts->mat, &camPos, &camPos);
-    PSMTXMultVec(parts->mat, &camAt, &camAt);
+    RE4DC_XM_LOAD(parts->mat);
+    RE4DC_XM_POINT(parts->mat, &camPos, &camPos);
+    RE4DC_XM_POINT(parts->mat, &camAt, &camAt);
     PosToPos(&g->Cam.param.at, &camAt, &objLadderClimbCam.param.at, 1.0f);
     PosToPos(&g->Cam.param.pos, &camPos, &objLadderClimbCam.param.pos, 1.0f);
     objLadderClimbCam.up.x = 0.0f;
@@ -1093,8 +1095,9 @@ void objLadderDownCamMove(cEm* em)
     camAt.x = 0.0f;
     camAt.y = 1000.0f;
     camAt.z = 500.0f;
-    PSMTXMultVec(em->mat, &camPos, &camPos);
-    PSMTXMultVec(em->mat, &camAt, &camAt);
+    RE4DC_XM_LOAD(em->mat);
+    RE4DC_XM_POINT(em->mat, &camPos, &camPos);
+    RE4DC_XM_POINT(em->mat, &camAt, &camAt);
     PosToPos(&g->Cam.param.at, &camAt, &objLadderDownCam.param.at, 1.0f);
     PosToPos(&g->Cam.param.pos, &camPos, &objLadderDownCam.param.pos, 1.0f);
     objLadderDownCam.up.x = 0.0f;
@@ -1198,8 +1201,9 @@ void objLadderResetCamMove(cEm* em)
     camAt.x = 0.0f;
     camAt.y = 1800.0f;
     camAt.z = 0.0f;
-    PSMTXMultVec(em->mat, &camPos, &camPos);
-    PSMTXMultVec(em->mat, &camAt, &camAt);
+    RE4DC_XM_LOAD(em->mat);
+    RE4DC_XM_POINT(em->mat, &camPos, &camPos);
+    RE4DC_XM_POINT(em->mat, &camAt, &camAt);
     PosToPos(&g->Cam.param.at, &camAt, &objLadderResetCam.param.at, 1.0f);
     PosToPos(&g->Cam.param.pos, &camPos, &objLadderResetCam.param.pos, 1.0f);
     objLadderResetCam.up.x = 0.0f;
