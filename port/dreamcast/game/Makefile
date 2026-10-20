@@ -936,6 +936,17 @@ DISC2_DROPPED = st1_0 st1_1 st1_2 st1_3 em12 em15 em13 em17 em11 em21 em24 em26 
 MODULES := $(filter-out $(DISC2_DROPPED),$(MODULES))
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC2=1
 endif
+# DISC_SET=1 (default 0: no effect; DISC-LAYOUT-20261016.md, lane discsets20): the three-disc release. One program
+# image on every disc; dc/disc.id says which disc it is; StageInit asks for the disc by chapters finished (1-1..2-3
+# disc 1, 3-1..4-4 disc 2, island disc 3) and a wrong disc holds on the game's "insert disc N" message.
+DISC_SET ?= 0
+ifneq ($(DISC_SET),0)
+ifneq ($(DISC_SET)$(DISC2),10)
+$(error DISC_SET must be 0 or 1 and excludes DISC2=1)
+endif
+$(OBJDIR)/platform/dvd.o: PLATFORM_CPPFLAGS += -DRE4DC_DISC_SET=1
+$(OBJDIR)/src/game/game.o $(OBJDIR)/src/game/dvd.o: GAME_CPPFLAGS += -DRE4DC_DISC_SET=1
+endif
 EM10_GROUP = $(filter em12 em15 em13 em17 em11 em16 em1a em1b em14 em19 em1c $(if $(filter 1,$(EM1F_SHARED)),em1f),$(MODULES))
 MODULE_ARGS = $(if $(and $(filter 1,$(EM10_SHARED)),$(strip $(EM10_GROUP))),$(filter-out $(EM10_GROUP),$(MODULES)) em10g=$(subst $(eval) ,+,$(strip $(EM10_GROUP))),$(MODULES))
 MODULE_OBJS =
