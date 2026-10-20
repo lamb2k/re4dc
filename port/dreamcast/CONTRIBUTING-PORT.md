@@ -118,7 +118,7 @@ overlays (`*.ovl`) that belong to it, and `resolved-knobs.txt` with every build 
 Add your own knobs at the end, for example `bash port/dreamcast/build-public.sh MY_FEATURE=1`.
 
 **Which recipe.** `build-public.sh` reads the release's knob file, today
-`tools/d367/test18/release-knobs.txt` (test 18: the previous release recipe, that is the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` and `ROUTE_SOON_RETURN=1`, plus `ROUTE_SOON_KEY=1` (the dam gate's Coming Soon gives the Insignia Key, so chapter 2-1 can be finished), `MOVIE_AUDIO_PRIME=1` (cutscene sound loaded before it starts), `ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1` (the r10f to r200 pictures), `LEON_SKIN_SLOTS=2` (r119), `LEON_HEADLESS=1` (Leon after his head comes off), `LEON_CLOTH_DRAWN=1` (jacket movement only when shown) and `FX_MIST_PS2=1 PS2_HDR_SETS=128` (the village and farm mist); the disc data sets are on its `disc-sets` line, with the lighter El Gigante `boss18g50` and the resident lists `res18f`; its header names the source commit). The maintainers write that file from
+`tools/d367/test19/release-knobs.txt` (test 19: the previous release recipe plus the `T15_V` group of `tools/d367/test15/t15-build.sh`: `VIEW_DIST_BOOT=1` and `FOLIAGE_TRIM=2` (every boot at view distance Near and foliage Off), `QUICK_WEAPON=1`, `ACTOR_PLAN=1`, `MANUAL_PACK_PROBE=1` (the Dreamcast manual pages), `SCENERY_CHUNK=1 SG_SELECT_LEAN=1` (scenery draw path), `CHAR_CHUNK=1` (character draw path) and `ENEMY_VIS_CULL=1` (the wall check, with the room files of data set `rc19`); see the knob notes below. Earlier releases added the chapter 2-2 / 2-3 knobs of `tools/d367/ch2/ch2-build.sh` and `ROUTE_SOON_RETURN=1`, plus `ROUTE_SOON_KEY=1` (the dam gate's Coming Soon gives the Insignia Key, so chapter 2-1 can be finished), `MOVIE_AUDIO_PRIME=1` (cutscene sound loaded before it starts), `ROOM_LEFTOVER_FIT=1 PS2_WORLD_SOURCE_TEX_VQ=1` (the r10f to r200 pictures), `LEON_SKIN_SLOTS=2` (r119), `LEON_HEADLESS=1` (Leon after his head comes off), `LEON_CLOTH_DRAWN=1` (jacket movement only when shown) and `FX_MIST_PS2=1 PS2_HDR_SETS=128` (the village and farm mist); the disc data sets are on its `disc-sets` line, with the lighter El Gigante `boss18g50` and the resident lists `res18f`; its header names the source commit). The maintainers write that file from
 the release build itself, so it is the exact knob list of the published program. To build an older
 release, check out that release's source commit: its `build-public.sh` points at its own knob file.
 
@@ -211,7 +211,7 @@ The player options are the rows in Options (START), and the knobs behind them:
     census of the chapter 1 packages.
   * Off leaves out every listed card key (classes 1-4, soft shadow / mist / grass cards included).
   * Surfaces without cut-out holes (walls, floors, water), unlisted keys and the vertex-alpha overlays always draw.
-  * Not saved: every boot starts at the recipe's `FOLIAGE_TRIM` level (Near in the release).
+  * Not saved: every boot starts at the recipe's `FOLIAGE_TRIM` level (Off in the release from Test 19).
   * `FOLIAGE_NEAR_FIX=1` (hwfog.mk, recipe group `T15_FN`; render only) makes Near's punch-through pass also visit
     placements that only have translucent parts, so their cut-out cards draw at Near (without it they were drawn in
     neither pass).
@@ -227,6 +227,18 @@ Control knob in the release recipe:
   * With X released the D-pad works as before (camera look, a tap down for the map). Nothing changes until the chord is
     pressed, so the logic trace stays STRICT.
   * `QUICK_WEAPON_POC_KIT=1` (a starting weapon kit) is for test discs only and never goes in a recipe.
+
+Speed knobs in the release recipe (recipe group `T15_V`; from Test 19; each one exact or render only, so the logic
+trace stays STRICT):
+
+* `ACTOR_PLAN=1` (actorplan.mk): character setup runs once per tick and is reused by every draw of that tick.
+* `SCENERY_CHUNK=1 SG_SELECT_LEAN=1` (scenery19.mk): the PS2 world pass selects first, then emits; pixel identical.
+* `CHAR_CHUNK=1` (chardraw19.mk): every skinned model goes through the new character draw path; exact.
+* `ENEMY_VIS_CULL=1` (engine_preview.mk): the wall check. A villager fully hidden behind a wall is not drawn; logic,
+  sound and collision are unchanged. It reads the room file `dc/native/<room>/room.r4rc` (R4RC grid + wall-check
+  occluders, tools/enginebake/room_compile.py), staged by data set `rc19` (private store `rc19o2-20261019`, in the
+  Build-Assets zip). A room without its file draws every villager, as before.
+* `MANUAL_PACK_PROBE=1`: the Player's Manual finds the Dreamcast manual pages in `dc/tex.pak`.
 
 Render knobs in the release recipe:
 
