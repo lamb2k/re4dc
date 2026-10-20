@@ -679,6 +679,17 @@ DATA['nostd20'] = {'remove': ['dc/native/%s/MAINSCENARIO.re4mesh' % _r for _r in
 PAIR20D = os.environ.get('PAIR20D', '/root/re4data/private/pair20-20261020')
 DATA['pair20'] = {'dc/tex.pak': PAIR20D + '/dc/tex.pak'}
 PAK_DERIVED['pair20'] = PAIR20D + '/pak-derived.json'
+# ch21l (lane fix-dam-light 10-20, GitHub #47): r10c / r10d / r10e PS2 worlds reconverted with the PS2 amb_scr measured
+# in PCSX2 (cLightEnv bytes 0..2 over PINE at each door arrival: r10c 50,45,40; r10d 14,23,38; r10e 45,45,45) instead of
+# ch21r's GC LIT cut-0 ambient. Supersedes ch21r's ps2-world.* only. The worlds' texture gains move with the light, so
+# dc/tex.pak = pair20's pack + 46 new keys (pack_add.py). Last in the data line (after pair20).
+# Private store copy: re4-assets-private/ch21l-20261020 (RECIPE.txt, SHA256SUMS).
+CH21LD = os.environ.get('CH21LD', '/root/re4data/private/ch21l-20261020')
+DATA['ch21l'] = {'dc/tex.pak': CH21LD + '/dc/tex.pak'}
+for _r in ('r10c', 'r10d', 'r10e'):
+    for _f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids'):
+        DATA['ch21l']['dc/native/%s/%s' % (_r, _f)] = '%s/dc/native/%s/%s' % (CH21LD, _r, _f)
+PAK_DERIVED['ch21l'] = CH21LD + '/pak-derived.json'
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
