@@ -369,7 +369,21 @@ void gameStageInit()
             PlSetCostume();
         }
     }
+#if defined(RE4DC_DISC_SET) && RE4DC_DISC_SET
+    // Three-disc release (DISC-LAYOUT-20261016.md): the disc is chosen by chapters finished, not by stage
+    // (r200 is played in 2-3 on disc 1 and in 3-1 on disc 2). 0..5 = 1-1..2-3 disc 1, 6..13 = 3-1..4-4 disc 2,
+    // 14+ = island disc 3. A wrong disc holds on "insert disc N" before this room's data is read.
+    if (!(pG->Debug_flg[2] & 0x2000000) && pG->stage_no != 0) {
+        const int need = pG->chapter < 6 ? 0 : (pG->chapter < 14 ? 1 : 2);
+        if (Dvd.GetDiscNo() != need) {
+            OSReport("DISC_SET: room %x chapter %d needs disc %d\n", pG->room_id, pG->chapter, need + 1);
+            Dvd.DiscChange(need);
+        }
+    }
+    if (0) {
+#else
     if (!(pG->Debug_flg[2] & 0x2000000)) {
+#endif
         switch (pG->stage_no) {
         case 0:
             break;
