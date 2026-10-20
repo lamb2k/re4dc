@@ -200,7 +200,7 @@ if [ "$VERDICT" = PASS ]; then
 else
   CAND=$(cat "$W/cand.txt" 2>/dev/null || true)
   LGC=$(sed -n 's/^cand=//p' "$RR_HOME/state/last-good" 2>/dev/null || true)
-  if [ -n "$CAND" ] && [ "$CAND" != "$LGC" ]; then case "$CAND" in "$CBASE"/cand-*) rm -rf "${CAND:?}/gdemu" ;; esac; fi
+  if [ -n "$CAND" ] && [ "$CAND" != "$LGC" ]; then case "$CAND" in "$CBASE"/cand-*) rm -rf "${CAND:?}" ;; esac; fi
   LGS7=$(sed -n 's/^s7=//p' "$RR_HOME/state/last-good" 2>/dev/null || true)
   [ "$LGS7" = "$S7" ] || bash "$BIN/rr-clean-builds.sh" "$S7"
 fi
