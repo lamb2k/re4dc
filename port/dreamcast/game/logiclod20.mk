@@ -31,3 +31,26 @@ $(error ESP_LOD must be 0 or 2..4 (got $(ESP_LOD)))
 endif
 $(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_ESP_LOD=$(ESP_LOD) -DRE4DC_ESP_LOD_FAR=$(ESP_LOD_FAR)
 endif
+#
+# ESP_CENSUS=1 (test only, default 0): "espc:" lines every 120 frames, live effects by id and by owner (esp.cpp EspMove).
+ESP_CENSUS ?= 0
+ifeq ($(ESP_CENSUS),1)
+$(OBJDIR)/src/game/esp.o $(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP_CENSUS=1
+endif
+#
+# ESP_CUT_EARLY=1 (render only, exact; needs HAZE_SPRITE_CUT=1): sprites HAZE_SPRITE_CUT never draws (mist sheets, haze
+#   without a PS2 recipe row) leave EspCommonTrans at its start and are not queued by the coarse sprite pass.
+ESP_CUT_EARLY ?= 0
+ifeq ($(ESP_CUT_EARLY),1)
+ifneq ($(HAZE_SPRITE_CUT),1)
+$(error ESP_CUT_EARLY=1 needs HAZE_SPRITE_CUT=1)
+endif
+$(OBJDIR)/src/game/esp_sub.o: GAME_CPPFLAGS += -DRE4DC_ESP_CUT_EARLY=1
+endif
+#
+# ESP_TYPE_CAP=N (render only, visible approximation; 0 = off): at most N effects of one id spawned by an enemy, animal
+#   or object (owner 0x10..0xCF) are queued for drawing per EspTrans pass (esp.cpp). Room and Leon effects uncapped.
+ESP_TYPE_CAP ?= 0
+ifneq ($(ESP_TYPE_CAP),0)
+$(OBJDIR)/src/game/esp.o: GAME_CPPFLAGS += -DRE4DC_ESP_TYPE_CAP=$(ESP_TYPE_CAP)
+endif
