@@ -3,7 +3,7 @@
 # Release build rule 3: the disc tree and the GDI are built on WSL ext4 ($K) and cross to C: once.
 #   data   the test release's data set (pkg json of $BASE's label, t11-fix.py --data ...), with the five program
 #          overlays the json takes from the release program replaced by this arm's (overlays are linked to their ELF)
-#   dc/    warp.txt = scene1-warp.txt, bench2.txt = scene2-warp.txt (a squeeze level, if given, is prepended to
+#   dc/    warp.txt = scene1-warp.txt, bench<n>.txt = scene<n>-warp.txt, n = 2, 3, ... (3 = r10b Del Lago) (a squeeze level, if given, is prepended to
 #          warp.txt for the KOS_SQUEEZE twin's gate disc)
 #   IP.BIN title "RE4DC BENCHMARK (NOT THE GAME)", product T0002 (not the game's T0000)
 # Output: $K/disc-<label>[-sq<bytes>-<frag>]/gdemu (disc.gdi, track01.bin, track02.raw, track03.bin) + gdemu-sha256.txt.
@@ -34,8 +34,13 @@ PY
 PKG_K=$D python3 /root/probe/lanes-20261011/test8/t8-pkgtree.py $L $D/pkg.json > $D/pkgtree.txt
 tail -1 $D/pkgtree.txt | grep -q PKGTREE_OK || { echo "pkgtree check failed"; tail -20 $D/pkgtree.txt; exit 1; }
 { [ -z "$SQB" ] || echo "squeeze $SQB $SQF"; tr -d '\r' < $here/scene1-warp.txt; } > $D/fix/warp.txt
-tr -d '\r' < $here/scene2-warp.txt > $D/fix/bench2.txt
-[ $(stat -c %s $D/fix/warp.txt) -lt 2048 ] && [ $(stat -c %s $D/fix/bench2.txt) -lt 2048 ]
+n=2
+while [ -s $here/scene$n-warp.txt ]; do
+  tr -d '\r' < $here/scene$n-warp.txt > $D/fix/bench$n.txt
+  [ $(stat -c %s $D/fix/bench$n.txt) -lt 2048 ] || { echo "scene$n-warp.txt is 2048 B or more" >&2; exit 1; }
+  n=$((n+1))
+done
+[ $(stat -c %s $D/fix/warp.txt) -lt 2048 ]
 TITLE="RE4DC BENCHMARK (NOT THE GAME)" PRODUCT=T0002 bash $here/../mkgdi.sh $O/re4dc-game.elf $D/pkgtree $D/gdemu $D/fix | tail -2
 head -c 256 $D/gdemu/IP.BIN | grep -aq "RE4DC BENCHMARK (NOT THE GAME)" || { echo "IP.BIN title missing" >&2; exit 1; }
 rm -f $D/gdemu/IP.BIN
