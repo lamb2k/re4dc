@@ -102,7 +102,7 @@ if build_ok and jobs:
                             capture_output=True, text=True)
         (EVU / 'castgc.txt').write_text(cg.stdout + cg.stderr)
         line = [l for l in cg.stdout.splitlines() if l.startswith('CAST-GC')]
-        add('CAST-GC', cg.returncode == 0, line[-1][:160] if line else 'rc=%d' % cg.returncode)
+        add('CAST-GC', bool(line) and line[-1].rstrip().endswith('(PASS)'), line[-1][:160] if line else 'rc=%d' % cg.returncode)
         nd = [l for l in cg.stdout.splitlines() if 'NOT-DRAWN' in l]
         extra['not_drawn'] = nd[:6]
         lf = []
@@ -119,7 +119,7 @@ if build_ok and jobs:
             m2 = re.match(r'== .*/cg-(r[0-9a-f]+)/run-output\.txt', l)
             if m2:
                 cur = m2.group(1)
-            elif l.strip().startswith('TEXCHK FAIL') and cur:
+            elif l.startswith('  TEXCHK FAIL') and cur:   # per-log verdict (indented), not the summary line
                 tf.append(cur); cur = None
         unk = [r for r in tf if ('texchk', r) not in known]
         add('TEXCHK', not unk, '%d/%d PASS%s' % (len(logs) - len(tf), len(logs), (' (fail: ' + ' '.join(tf) + (', known: ' + ' '.join(r for r in tf if r not in unk) if len(unk) < len(tf) else '') + ')') if tf else ''),

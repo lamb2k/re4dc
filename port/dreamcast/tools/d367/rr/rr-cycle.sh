@@ -100,7 +100,8 @@ build_twins() {
 }
 package() {
   local tt=$TA/port/dreamcast/tools/d367 O=$ROUTE/out-rr${S7}rP
-  local newest; newest=$(ls -d "$tt"/test*/release-knobs.txt | sort -V | tail -1)
+  # the newest published knob file = the one most recently committed (names do not sort: test122 is 12.2)
+  local newest; newest=$(for f in "$tt"/test*/release-knobs.txt; do echo "$(git -C "$TA" log -1 --format=%ct -- "$f") $f"; done | sort -n | tail -1 | cut -d' ' -f2-)
   mkdir -p "$W/kit" "$W/pkg/fix"
   cp "$(dirname "$newest")/README-package.txt" "$W/kit/README-package.txt"
   python3 "$tt/release-knobs.py" write "$O/candidate.txt" "$W/kit/release-knobs.txt" --test rr --tag "rr-$S8" --source "$S8" \
