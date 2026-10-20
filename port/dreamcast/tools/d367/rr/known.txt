@@ -1,0 +1,2 @@
+# rr known rows: <check> <room> <reason>. Reported as known, never as a FAIL. Remove a row when it is fixed.
+texchk r100 TEXCHK fails in r100 as in Test 17, 18 and 19 (REL19-STATUS: census TEXCHK 25/26)
