@@ -1,0 +1,13 @@
+name lake-nightshore
+# Lake scenario disc scene 3: the Del Lago fight ended by the rig (god, kill at room frame 1510), the chapter 1-3 end,
+# results and save screens (press A through them; no memory card is used), then chapter 2-1 starts at the night
+# shore r11b: the #43 arrival (with the lake fixes on, its three pictures load without the ~2 s wait).
+room 0x10b
+pos -72513 2890 -23602
+inv default
+god
+goto 300 -28306 9389 -32804
+goto 600 -48810 -1000 25500 3.14159
+goto 1000 91507 -1300 87322
+trg 1 1500 0x10b
+kill 0x2f 1510 0x10b

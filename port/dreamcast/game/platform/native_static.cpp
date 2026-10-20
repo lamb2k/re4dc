@@ -6570,10 +6570,17 @@ extern "C" int re4dc_ps2_mesh_failed(unsigned room){
 // night lake) the world, the coarse view and the fog far reach this distance instead of the 25 m cap. The fog ramp still
 // takes the last 20 % of the far to 100 % fog colour, so the cut is hidden there as at 25 m. Render only.
 // Per room (user 2026-10-17): LAKE_FAR for r10b (boat), LAKE_FAR_SHORE (default LAKE_FAR) for r11a / r11b; 0 = 25 m cap.
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+// QA_MENU (qamenu.mk): the QA menu's "Lake shore view" row; 0 = the build's LAKE_FAR_SHORE.
+extern "C" { volatile unsigned re4dc_qa_shore_far_mm; }
+#endif
 extern "C" float re4dc_far_cap(float cap){
     const unsigned r=ps2w.room;
     float lake=0.0f;
     if(r==0x10bU)lake=float(RE4DC_LAKE_FAR);
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+    else if((r==0x11aU || r==0x11bU) && re4dc_qa_shore_far_mm)lake=float(re4dc_qa_shore_far_mm);
+#endif
     else if(r==0x11aU || r==0x11bU)lake=float(RE4DC_LAKE_FAR_SHORE);
     return lake>cap?lake:cap;
 }

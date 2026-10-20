@@ -110,6 +110,10 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include <arch/timer.h>
 #include <kos/thread.h>
 
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+extern volatile int vsync_cnt;   // main.cpp: presentation heartbeat, also used by the source hang detector
+#endif
+
 extern "C" {
 u32 re4dc_vi_retrace_count(void);
 #if defined(RE4DC_CAP_COMPARE)
@@ -123,6 +127,16 @@ extern unsigned re4dc_mist_cut;   // esp_sub.cpp (hwfog.mk MIST_CUT): the runtim
 
 int re4dc_fixture_read(const char* path, char* buffer, unsigned size);
 void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture anchors (overlay)
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+const char* re4dc_qa_boot_path(void);   // qa_menu.cpp (qamenu.mk QA_MENU)
+int re4dc_qa_combo(void);
+unsigned re4dc_qa_flags(void);
+int re4dc_qa_menu(const char** path);
+int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms);
+void re4dc_qa_game(unsigned room, int alive, int heap4, const char* preset);
+void re4dc_qa_set_flags(unsigned f);
+void re4dc_qa_in_room(int on);
+#endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name);  // bench.cpp (bench.mk BENCHMARK)
 int re4dc_bench_tick(unsigned room_frame);
@@ -338,6 +352,20 @@ u32 num(const char* s) { return (u32) strtoul(s, nullptr, 0); }
 const char* bench_next;
 bool bench_pending;
 void load(const char* path = nullptr)
+#elif defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+// QA_MENU (qamenu.mk): the teleport preset armed at the next soft reset, and the reset is pending.
+const char* qa_next;
+bool qa_pending;
+unsigned qa_frames;     // free-play poll frames in the current room (the menu opens from 30 on)
+bool qa_enemy_on;       // enemies invincible was on last frame (off again: hp back to hp_max)
+// Harness lines (a fixture in dc/warp.txt; the QA disc has none): `qa_flags <mask>` sets the toggles, `qa_menu <free
+// frame> <preset file | -> [hold ms]` opens the in-game menu at that free-play frame, with hold ms also shows the
+// Diagnostics page and each QR page for that long (captures), then teleports to /cd/dc/qa/<file> (`-`: resumes):
+// the menu -> soft reset -> preset chain without pad input.
+unsigned qa_auto_frame, qa_auto_hold;
+char qa_auto_file[24];
+bool qa_auto_armed;
+void load(const char* path = nullptr)
 #else
 void load()
 #endif
@@ -356,6 +384,11 @@ void load()
 #endif
     const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
     re4dc_log("warp: bench fixture %s (%d bytes)\n", path, len);
+#elif defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+    if (!path) path = re4dc_qa_boot_path();        // the boot menu's preset, else dc/warp.txt (harness discs)
+    if (!path) path = "/cd/dc/warp.txt";
+    const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
+    re4dc_log("warp: qa fixture %s (%d bytes)\n", path, len);
 #else
     const int len = re4dc_fixture_read("/cd/dc/warp.txt", text, sizeof(text) - 1);
 #endif
@@ -688,6 +721,18 @@ void load()
             re4dc_mist_cut = num(tok[1]);
             re4dc_log("warp: mistcut %u (CAP_COMPARE translucency arm)\n", re4dc_mist_cut);
 #endif
+#endif
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+        } else if (!strcmp(k, "qa_flags") && n >= 2) {
+            re4dc_qa_set_flags(num(tok[1]));
+            re4dc_log("warp: qa_flags %x\n", (unsigned) num(tok[1]));
+        } else if (!strcmp(k, "qa_menu") && n >= 3) {
+            qa_auto_frame = num(tok[1]);
+            strncpy(qa_auto_file, strcmp(tok[2], "-") ? tok[2] : "", sizeof(qa_auto_file) - 1);
+            qa_auto_file[sizeof(qa_auto_file) - 1] = 0;
+            qa_auto_hold = n >= 4 ? num(tok[3]) : 0;
+            qa_auto_armed = true;
+            re4dc_log("warp: qa_menu at free frame %u -> %s\n", qa_auto_frame, qa_auto_file);
 #endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 #if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
@@ -1304,6 +1349,72 @@ bool bench_poll()
     return true;
 }
 #endif
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+// QA_MENU, each game tick (active rig or not): the invincibility toggles, then the in-game menu on the chord (L + R +
+// D-pad Down) in free play only: the main game state (Rno0 3 / Rno1 0), no event or event start, no sub screen
+// (inventory, files, map), Leon free (checkEvent 1, as the rig's radio replay), and 30 such frames since the last room
+// entry or menu (no door load). The menu holds the frame loop (no hang check meanwhile, as `still`). A teleport or
+// "quit to title" requests the source's soft reset (as the benchmark disc); re4dc_warp_soft_reset arms the preset.
+// true = a reset is pending: the rest of the poll is skipped.
+bool qa_poll()
+{
+    if (!pG) return false;
+    if (qa_pending) return true;
+    const unsigned f = re4dc_qa_flags();
+    if (f & 1) pG->pl_life = pG->pl_life_max;
+    if ((f & 2) && pG->ashley_life_max) pG->ashley_life = pG->ashley_life_max;
+    const bool en = (f & 4) != 0;
+    if (en || qa_enemy_on) {
+        // Enemies invincible: hp held high every tick (hits, reactions, blood and gore still run; no death); off again:
+        // hp back to hp_max.
+        for (int id = 0x10; id < 0x80; ++id)
+            for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e)) {
+                if (!(e->be_flag & 1) || e->hp <= 0) continue;
+                if (en) e->hp = 30000;
+                else if (e->hp_max > 0 && e->hp > e->hp_max) e->hp = e->hp_max;
+            }
+        qa_enemy_on = en;
+    }
+    const bool free_play = pPL && pG->Rno0 == 3 && pG->Rno1 == 0 && !(pG->Status_flg[1] & 0x10000000) &&
+                           !SubScreenWk.type && !SceSys.event_start_cnt && pPL->checkEvent() == 1;
+    qa_frames = free_play ? qa_frames + 1 : 0;
+    const bool autom = qa_auto_armed && qa_frames >= (qa_auto_frame > 30 ? qa_auto_frame : 30);
+    if (!autom && (qa_frames < 30 || !re4dc_qa_combo())) return false;
+    const u32 keep = pG->System_flg & 0x20000000;
+    pG->System_flg |= 0x20000000;   // no hang check while the menu holds the frame loop
+    const char* path = nullptr;
+    int r;
+    {   // the Diagnostics page's game side
+        int live = 0;
+        for (int id = 0x10; id <= 0x20; ++id)
+            for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e))
+                if ((e->be_flag & 1) && e->hp > 0) ++live;
+        re4dc_qa_game((unsigned) pG->room_id, live, memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1,
+                      wp.name[0] ? wp.name : nullptr);
+    }
+    if (autom) {
+        r = re4dc_qa_menu_auto(qa_auto_file, &path, qa_auto_hold);
+        qa_auto_armed = false;
+    } else while ((r = re4dc_qa_menu(&path)) == 3) {
+        pG->pl_life = pG->pl_life_max;
+        if (pG->ashley_life_max) pG->ashley_life = pG->ashley_life_max;
+        re4dc_log("qa: health refilled\n");
+    }
+    // Retraces continue during this intentional pause. Refresh the presentation heartbeat before
+    // restoring the source hang check: otherwise a menu held for 60 s HALTs main.cpp(548) on close.
+    // The check stays enabled in gameplay, and an already-disabled check keeps its original state.
+    vsync_cnt = 0;
+    pG->System_flg = (pG->System_flg & ~0x20000000) | keep;
+    qa_frames = 0;
+    if (r == 0) return false;
+    qa_next = r == 1 ? path : nullptr;
+    qa_pending = true;
+    SndSoftReset();
+    pG->System_flg |= 0x4000000;    // soft reset request (systemResetCheck), as the benchmark disc's next scene
+    stamp(r == 1 ? "qa: teleport: soft reset requested" : "qa: quit to title: soft reset requested");
+    return true;
+}
+#endif
 #if RE4DC_WARP_JUMP
 // `jump` (WARP_JUMP=1, diagnostic room change; not a source door/event route): in room `from`, at or after its
 // room frame and outside events, the first pending entry changes room to `to` at the position through the
@@ -1372,6 +1483,21 @@ void re4dc_warp_soft_reset(void)
         return;
     }
 #endif
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+    re4dc_qa_in_room(0);
+    qa_frames = 0;
+    if (qa_pending) {
+        // QA_MENU: the chosen preset from a clean rig (the title that follows is skipped as at boot), or a passive rig
+        // for "quit to title" (the title and its menus run normally).
+        const char* path = qa_next;
+        qa_next = nullptr;
+        qa_pending = false;
+        wp = Warp{};
+        if (path) { load(path); stamp("qa: preset armed at soft reset"); }
+        else { wp.loaded = true; stamp("qa: title at soft reset"); }
+        return;
+    }
+#endif
     if (!wp.loaded) load();
     if (wp.after_reset && !wp.active && wp.room) {
         wp.active = true;
@@ -1424,6 +1550,10 @@ void re4dc_warp_next_pos(void)
 // ui_bridge.cpp re4dc_room_enter (every room entry).
 void re4dc_warp_room_enter(void)
 {
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+    re4dc_qa_in_room(1);
+    qa_frames = 0;
+#endif
     if (!wp.active) return;
     ++wp.rooms;
     wp.room_frames = 0;
@@ -1469,6 +1599,9 @@ void re4dc_warp_room_enter(void)
 // ui_bridge.cpp re4dc_room_cycle_poll (top of gameMainLoop, game thread).
 void re4dc_warp_poll(void)
 {
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+    if (qa_poll()) return;
+#endif
     if (!wp.active) return;
     // `still` counts this room's poll frames (wp.room_frames, the clock the act lines share in the first room).
     if (wp.still_next < wp.n_still && pG && wp.rooms == 1 && wp.room_frames >= wp.still_tick[wp.still_next]) {
