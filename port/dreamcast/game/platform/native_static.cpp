@@ -2324,8 +2324,15 @@ struct MeshDraw : Emitter {
             ++lean::st.sg_tests;
             if(culled){
                 lean::st.sg_culled+=culled;++lean::st.sg_meshlets;
-                if(!nr){lean::st.sg_vskip+=l.vertex_count;return 1;}
+                if(!nr){lean::st.sg_vskip+=l.vertex_count;
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+                    cen.n=0;
+#endif
+                    return 1;}
                 const unsigned vn=hi-lo+1U;lean::st.sg_vskip+=l.vertex_count-vn;
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+                cen.n=vn;
+#endif
 #if RE4DC_MESH_VP_SCHED==1
                 vp::transform_sched<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
 #if RE4DC_SCENERY_DEDUP
@@ -2795,6 +2802,9 @@ struct MeshDraw : Emitter {
         }
         const std::uint8_t* const sb=package.strip_begin(l);
         if(pk.nr!=0xffU){
+#if defined(RE4DC_SCN_CENSUS) && RE4DC_SCN_CENSUS
+            cen.n=pk.nr?pk.hi-pk.lo+1U:0U;  // corners transformed (the strip groups left)
+#endif
             if(!pk.nr)return 1;
             const unsigned vn=pk.hi-pk.lo+1U;
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
