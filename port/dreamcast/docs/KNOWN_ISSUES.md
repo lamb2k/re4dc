@@ -4,12 +4,15 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** October 19, 2026.
+**Last updated:** October 20, 2026.
 
-**Current build: Test 19.1** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): hotfix of Test 19.
-The r100 cliff cutscene plays all its frames again (#45), r117 keeps its effect sprites (#46), and character drawing goes back to the earlier, faster path.
+**Current build: Test 20** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): chapter 2-1's real path.
+The dam (r10c), r10d and r10e are playable, the Insignia Key comes from the dam, and far scenery and far enemies cost less.
 
 **Earlier builds** (newest first):
+
+- **Test 19.1:** hotfix of Test 19. The r100 cliff cutscene plays all its frames again (#45), r117 keeps its effect
+sprites (#46), and character drawing goes back to the earlier, faster path.
 
 - **Test 19:** quick weapon select (hold X + D-pad), foliage boots Off and view distance boots Near, the Dreamcast
 Player's Manual pages (#44), enemies hidden behind walls are not drawn, and faster scenery drawing.
@@ -56,8 +59,7 @@ Not bugs: work that goes on from test to test.
 - **Frame rate.** It varies by scene, and the busiest fights are slowest. Speed work goes on in every test
   (history: [#29](https://github.com/lamb2k/re4dc/issues/29)).
 - **Pauses when entering rooms.** Rooms load their pictures and models at the door; this is getting shorter.
-- **Rooms not built yet.** The dam (r10c), r10d and r10e in chapter 2-1, and the castle beyond the gate (r200).
-  Their doors show Coming Soon and return you to the room. The Insignia Key is given at the dam gate.
+- **Rooms not built yet.** The castle beyond the gate (r200). Its door shows Coming Soon and returns you to the room.
 - **Dark night rooms on some consoles.** Some players report them; our Flycast captures match the GameCube's
   brightness. We're checking.
 
@@ -117,6 +119,7 @@ Not bugs: work that goes on from test to test.
 | In the village (r101) the burning stake has lost its crossbar and a plank of the pyre (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | In the village (r101) the fence by the house on the right of the square shows only its posts, without its rails (the simplified village scenery of test 15) | test 15 | 🟢 Fixed in test 16 (r101 uses its unreduced world again) | |
 | The item menu's confirm popup does not look as it did in test 13 | test 14, 15 | ⏸️ Open | |
+| The dam (r10c), r10d and r10e use the GameCube room light, not a measured PS2 value, so their brightness may differ a little from the PS2 version | test 20 | ⏸️ Open, not blocking: a look check is planned | |
 | In r102, right after loading a save, a few effect pictures are not drawn while video memory is full (test 16.5: 4 refused; test 16.3 and 16.4: 5; test 15: 4; test 14: 76) | test 14 to 17.1 | 🟢 Fixed in test 18: r102's pictures load with the room's resident list after a save is loaded | [#33](https://github.com/lamb2k/re4dc/issues/33) |
 | A few pictures are read from the disc again during play in rooms that should keep all their pictures loaded: the r100 house fight (about 50) and the r11b lake shore (4 to 5) | test 16.3 to 17.1 | 🟢 Fixed in test 18: the rooms' resident picture lists now hold these pictures | |
 | In r118 one small picture (64x64) is not on the disc, so it is not drawn | test 16.4, 16.5 | 🟢 Fixed in test 17: the picture is in the disc's texture package, and our texture check passes in r118 | [#37](https://github.com/lamb2k/re4dc/issues/37) |

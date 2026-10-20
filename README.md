@@ -7,8 +7,26 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 19.1](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 20](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 20
+
+Chapter 2-1's real path: the dam is in. Full details are in the
+[release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **The dam (r10c) and the lake's side rooms (r10d, r10e) are playable.** Open the gate, drain the dam and fight
+  the Ganados there, as in the original.
+
+  ![The dam (r10c)](docs/images/releases/test-20/dam-r10c.jpg)
+  <br>The dam. Flycast capture, test 20.
+- **The Insignia Key is where the game leaves it**, at the dam. The key handover at the dam gate and the two Coming
+  Soon doors are gone.
+
+  ![The Insignia Key pickup (r10c)](docs/images/releases/test-20/insignia-key.jpg)
+  <br>Taking the key at the dam. Flycast capture, test 20.
+- **Faster scenery and enemy logic.** Far scenery uses its lower detail, and far enemies and effects do less work.
+  Fights play the same.
 
 ## What's new in Test 19.1
 
@@ -79,14 +97,11 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 - **The world picture and the effect pictures on the way to the castle gate are back** ([#39](https://github.com/lamb2k/re4dc/issues/39)).
   For about a second in r200, some effect sprites can still be skipped ([#41](https://github.com/lamb2k/re4dc/issues/41)).
 
-## Coming soon: Test 20
+## Coming soon: Test 21
 
-Planned, with no date yet. Ticked items have passed our checks and will be in Test 20.
+Planned, with no date yet. Ticked items have passed our checks and will be in Test 21.
 
-- [x] **The dam and the lake's side rooms:** chapter 2-1's real path. You drain the dam and take the insignia
-  key from where the game leaves it, so the key handover and two Coming Soon doors are gone.
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
-- [ ] **Faster scenery and characters:** the next steps of the new drawing paths.
 - [ ] **Faster farm fights.**
 
 Screenshots come with the release.
