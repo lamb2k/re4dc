@@ -5599,6 +5599,13 @@ int ps2_pass(unsigned pass,float zfar){
 #else
     const float lod_px=float(RE4DC_MESH_LOD_PX);
 #endif
+#ifdef RE4DC_SCENERY_FAR_LOD
+    // SCENERY_FAR_LOD=<n> (scenery19, approximation): the PS2 world takes coarser levels sooner; the allowed
+    // projected error is n times the quality setting's (lod_px), so distant clusters swap to far levels.
+    const float lod_div=lod_px*float(RE4DC_SCENERY_FAR_LOD);
+#else
+    const float lod_div=lod_px;
+#endif
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
@@ -5772,7 +5779,7 @@ int ps2_pass(unsigned pass,float zfar){
             const float n=mv[4*r]*mv[4*r]+mv[4*r+1]*mv[4*r+1]+mv[4*r+2]*mv[4*r+2];
             if(n>scale)scale=n;
         }
-        const float lod_scale=std::sqrt(scale)*px/lod_px;
+        const float lod_scale=std::sqrt(scale)*px/lod_div;
         for(unsigned k=0;k<mesh.part_count;++k){
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}

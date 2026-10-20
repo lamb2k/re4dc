@@ -56,6 +56,12 @@ SCENERY_SCREEN_MEMO ?= 0
 ifneq ($(SCENERY_SCREEN_MEMO),0)
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_SCREEN_MEMO=1
 endif
+# SCENERY_FAR_LOD=<n> (approximation, render only): the PS2 world's LOD pick allows n times the quality setting's
+# projected error (lod_px), so distant clusters take coarser levels sooner. 0 = off (default).
+SCENERY_FAR_LOD ?= 0
+ifneq ($(SCENERY_FAR_LOD),0)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_SCENERY_FAR_LOD=$(SCENERY_FAR_LOD)
+endif
 # CHUNK_SUBMIT=1: the shared chunk-submit back end (platform/chunk_submit.h / .cpp) for user lanes
 # (character-draw-path, rigid models). Default 0: not built.
 CHUNK_SUBMIT ?= 0
