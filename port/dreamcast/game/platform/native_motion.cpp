@@ -72,6 +72,12 @@ static_assert(RE4DC_MOTION_PRESSURE_BYTES >= 65536 &&
 #ifndef RE4DC_MOTION_PRESSURE_BACKING
 #define RE4DC_MOTION_PRESSURE_BACKING 0
 #endif
+#ifndef RE4DC_MOTION_RESERVE_PACK
+#define RE4DC_MOTION_RESERVE_PACK 0
+#endif
+#if RE4DC_MOTION_RESERVE_PACK && !RE4DC_MOTION_PRESSURE_BACKING
+#error "motion reserve packing needs backing accounting"
+#endif
 #if RE4DC_MOTION_PRESSURE_BACKING && (!RE4DC_MOTION_RESERVE || !RE4DC_MOTION_PRESSURE_BYTES)
 #error "motion backing accounting needs reserve and pressure budget"
 #endif
@@ -223,11 +229,27 @@ struct Locked {
     ~Locked() { mutex_unlock(&lock);owner_drop(); }
 };
 const unsigned char* record(const Binding& b,unsigned i) { return b.records+20*i; }
+#if RE4DC_MOTION_RESERVE_PACK
+const unsigned char* reserved_base(const Binding& b,const unsigned char* p) {
+    if(!p)return nullptr;
+    const auto address=reinterpret_cast<std::uintptr_t>(p);
+    for(const auto* slab:b.slab)if(slab) {
+        const auto base=reinterpret_cast<std::uintptr_t>(slab);
+        if(address>=base && address-base<b.slab_bytes)return slab;
+    }
+    return nullptr;
+}
+bool reserved_data(const Binding& b,const unsigned char* p) {
+    return reserved_base(b,p)!=nullptr;
+}
+#endif
 void discard(Binding& b,unsigned i) {
     auto& s=b.slots[i];if(!s.data)return;
     if(s.pins)fail("motion discard pinned");
     const unsigned bytes=aligned(word(record(b,i)+4));
-#if RE4DC_MOTION_RESERVE
+#if RE4DC_MOTION_RESERVE_PACK
+    if(!reserved_data(b,s.data)) // subregions stay with their slab until binding retirement
+#elif RE4DC_MOTION_RESERVE
     if(s.data!=b.slab[0] && s.data!=b.slab[1])   // a slab stays with the binding
 #endif
     re4dc_motion_free(s.data);
@@ -238,6 +260,37 @@ bool slab_busy(const Binding& b,const unsigned char* p) {
     for(unsigned j=0;j<b.count;++j)if(b.slots[j].data==p)return true;
     return false;
 }
+#if RE4DC_MOTION_RESERVE_PACK
+// First-fit gaps, derived from the existing slot table. Never move live/cached
+// payloads: a leased relocated FCV table keeps exactly the same address. Both
+// slab allocations and every subregion remain 32-byte aligned. No extra heap
+// metadata. Strict v3 profiles deliberately retain one whole clip per slab.
+unsigned char* reserve_fit(const Binding& b,unsigned bytes) {
+#if RE4DC_MOTION_BOUNDED_R11F
+    if(b.bounded) {
+        for(auto* p:b.slab)if(!slab_busy(b,p))return p;
+        return nullptr;
+    }
+#endif
+    if(bytes>b.slab_bytes)return nullptr;
+    for(auto* slab:b.slab)if(slab) {
+        const auto base=reinterpret_cast<std::uintptr_t>(slab),end=base+b.slab_bytes;
+        auto candidate=base;
+        while(candidate<=end-bytes) {
+            auto next=candidate;
+            for(unsigned j=0;j<b.count;++j)if(b.slots[j].data) {
+                const auto p=reinterpret_cast<std::uintptr_t>(b.slots[j].data);
+                if(p<base || p>=end)continue;
+                const auto finish=p+aligned(word(record(b,j)+4));
+                if(candidate<finish && p<candidate+bytes && finish>next)next=finish;
+            }
+            if(next==candidate)return reinterpret_cast<unsigned char*>(candidate);
+            candidate=next; // strict progress past at least one occupied interval
+        }
+    }
+    return nullptr;
+}
+#endif
 #endif
 void release_binding(Binding& b) {
     for(unsigned i=0;i<b.count;++i) if(b.slots[i].pins)fail("motion archive retired while pinned");
@@ -271,9 +324,11 @@ void release_binding(Binding& b) {
 // Keep the existing global heap-key cap; fixed backing and slot tables remain
 // bounded separately by successful binding admission. Called only under Locked
 // after the suspended-heap hold check below.
+#if !RE4DC_MOTION_RESERVE_PACK
 bool reserved_data(const Binding& b,const unsigned char* p) {
     return p && (p==b.slab[0] || p==b.slab[1]);
 }
+#endif
 unsigned pressure_heap_bytes() {
     unsigned bytes=0;
     for(const auto& b:bindings)if(b.archive)
@@ -334,7 +389,9 @@ unsigned char* oom_evict_alloc(unsigned bytes) {
             if(!q.archive)continue;
             for(unsigned j=0;j<q.count;++j) {
                 const auto& slot=q.slots[j];
-#if RE4DC_MOTION_RESERVE
+#if RE4DC_MOTION_RESERVE_PACK
+                if(reserved_data(q,slot.data))continue;
+#elif RE4DC_MOTION_RESERVE
                 if(slot.data==q.slab[0] || slot.data==q.slab[1])continue;   // evicting a slab user frees nothing
 #endif
                 if(slot.data && !slot.pins && slot.used<oldest) { victim=&q;index=j;oldest=slot.used; }
@@ -388,7 +445,11 @@ unsigned* load(Binding& b,unsigned i) {
         if(b.slab_bytes && !word(e+16) && bytes<=b.slab_bytes) {
 #endif
             for(;;) {
+#if RE4DC_MOTION_RESERVE_PACK
+                data=reserve_fit(b,bytes);
+#else
                 for(auto* p:b.slab)if(!slab_busy(b,p)) { data=p;break; }
+#endif
                 if(data)break;
 #if RE4DC_MOTION_RESERVE_SPILL
                 // Both slabs busy: cache this key in heap 4 while the source keeps its margin (MOTION_RESERVE_SPILL).
@@ -425,7 +486,11 @@ unsigned* load(Binding& b,unsigned i) {
                 unsigned victim=b.count;std::uint64_t oldest=~std::uint64_t(0);
                 for(unsigned j=0;j<b.count;++j) {
                     const auto& q=b.slots[j];
+#if RE4DC_MOTION_RESERVE_PACK
+                    if(reserved_data(b,q.data) && !q.pins && q.used<oldest) { oldest=q.used;victim=j; }
+#else
                     if((q.data==b.slab[0] || q.data==b.slab[1]) && !q.pins && q.used<oldest) { oldest=q.used;victim=j; }
+#endif
                 }
                 if(victim==b.count)fail("motion reserve slabs pinned");
                 discard(b,victim);++stats.evictions;
@@ -433,7 +498,11 @@ unsigned* load(Binding& b,unsigned i) {
             static unsigned uses;
             if(++uses<=4 || (uses&255)==0)
                 re4dc_log("motion reserve: use #%u bytes=%u slab=%u free=%s\n",uses,bytes,b.slab_bytes,
+#if RE4DC_MOTION_RESERVE_PACK
+                          reserve_fit(b,bytes)?"1":"0");
+#else
                           (slab_busy(b,b.slab[0]) && slab_busy(b,b.slab[1]))?"0":"1");
+#endif
         }
 #if RE4DC_MOTION_BOUNDED_R11F
         if(b.bounded && !data)fail("bounded motion requires reserved slab");
@@ -499,7 +568,9 @@ unsigned* load(Binding& b,unsigned i) {
             }
         }
         if(result.error || result.size!=size) {
-#if RE4DC_MOTION_BOUNDED_R11F
+#if RE4DC_MOTION_RESERVE_PACK
+            if(!reserved_data(b,data))
+#elif RE4DC_MOTION_BOUNDED_R11F
             if(!b.bounded)
 #endif
             re4dc_motion_free(data);fail("motion key read"); }
@@ -511,7 +582,9 @@ unsigned* load(Binding& b,unsigned i) {
         const auto* proxy=b.archive+word(e);const unsigned head=prefix(proxy);
         if(net_crc32le(data,size)!=word(e+8) || fnv!=word(e+12) || std::memcmp(proxy,data,head)) {
 
-#if RE4DC_MOTION_BOUNDED_R11F
+#if RE4DC_MOTION_RESERVE_PACK
+            if(!reserved_data(b,data))
+#elif RE4DC_MOTION_BOUNDED_R11F
             if(!b.bounded)
 #endif
             re4dc_motion_free(data);fail("motion identity/header mismatch");
@@ -520,7 +593,9 @@ unsigned* load(Binding& b,unsigned i) {
         for(unsigned j=0;j<data[2];++j) {
             const unsigned offset=table[j];
             if(offset<head || offset>=size) {
-#if RE4DC_MOTION_BOUNDED_R11F
+#if RE4DC_MOTION_RESERVE_PACK
+            if(!reserved_data(b,data))
+#elif RE4DC_MOTION_BOUNDED_R11F
             if(!b.bounded)
 #endif
             re4dc_motion_free(data);fail("motion key offset"); }
@@ -540,7 +615,11 @@ unsigned* load(Binding& b,unsigned i) {
               re4dc_log("motion miss #%u: archive=%u entry=%u bytes=%u wait_us=%u slab=%d evictions=%u\n",misses,b.bytes,i,size,
                         unsigned(wait),
 #if RE4DC_MOTION_RESERVE
+#if RE4DC_MOTION_RESERVE_PACK
+                        int(reserved_data(b,data)),
+#else
                         int(data==b.slab[0] || data==b.slab[1]),
+#endif
 #else
                         0,
 #endif
@@ -753,7 +832,14 @@ extern "C" unsigned re4dc_motion_forget_dead_heaps() {
         b.resident=0;
         for(unsigned i=0;i<b.count;++i) {
             auto& s=b.slots[i];
+#if RE4DC_MOTION_RESERVE_PACK
+            // owner_live reads the allocator header before a base pointer.
+            // Packed FCVs borrow the slab allocation; an interior FCV has none.
+            const auto* owner=reserved_base(b,s.data);
+            if(s.data && !re4dc_motion_owner_live(owner?owner:s.data)){s={};++n;}
+#else
             if(s.data && !re4dc_motion_owner_live(s.data)){s={};++n;}
+#endif
             if(!s.data)continue;
             b.resident+=aligned(word(record(b,i)+4));
             if(s.pins)pinned+=word(record(b,i)+4);
@@ -783,7 +869,9 @@ extern "C" unsigned re4dc_motion_evict_one() {
         if(!q.archive)continue;
         for(unsigned j=0;j<q.count;++j) {
             const auto& slot=q.slots[j];
-#if RE4DC_MOTION_RESERVE
+#if RE4DC_MOTION_RESERVE_PACK
+            if(reserved_data(q,slot.data))continue;
+#elif RE4DC_MOTION_RESERVE
             if(slot.data==q.slab[0] || slot.data==q.slab[1])continue;   // evicting a slab user frees nothing
 #endif
             if(slot.data && !slot.pins && slot.used<oldest) { victim=&q;index=j;oldest=slot.used; }
