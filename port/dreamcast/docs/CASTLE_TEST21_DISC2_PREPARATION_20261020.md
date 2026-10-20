@@ -243,3 +243,12 @@ The same current J CardLoad lineage returns through the original r202 gate and d
 R202 merchant18 draws native2443/0GC. The brief r207 entry census covers Leon and out-of-view enemies only, so full r207 native/visibility/cache qualification is pending with the sword puzzle. Original held-world pointers must not be interpreted during SSLoop1; future private observer guards SSLoop/phase/Stop/live IDs. Earlier collision, early-door and host-timed-reload guard stops are preserved controls and not game failures. No warp, source/state writes, program retarget or hardware timing claim.
 
 Asset-free complete chain and exact inventory/restore/readiness proof: tools/d367/castle18/ch31-test21-current-j-original-r207-entry-20261020.json.
+
+
+### Original J r207 sword pickups
+
+The preserved current J program/image continues its original VMU/CardLoad lineage through both sword pickups. Normal movement around the original entry table and along source SAT corridor turns reaches the lower mount; original A/dialogue gives itemC4 count1 and clears its original mount bit (RSF86200000 to84200000). Normal source stairs reach the upper mount. Its pickup is still in the source callback at the first deadline, then a4.1-second ordinaryA continuation returns gameplay/Stop0/SSLoop0 with both C4 and80 count1, RSF80300000 and full Leon1200/Ashley600. Exact upper-complete snapshot458a74f39e5d8adf09b8ccf486633b42c196358c870d8cdeea574588c8cac7df has four current ELF anchors. No warp, program/state retarget, game-memory write, new build/stage or K05 workaround.
+
+Native CAST/NOTDRAWN passes the observed lower/stair/upper windows: upper em11 native13081/0GC, Leon26385/0GC, Ashley25405/0GC. Texture telemetry records209loads/0evictions/0retries/0sndfail/minKOS31016B in the sampled window; this is not whole-room residency or whole-drive quiet. Original J motion-policy gaps remain separate. Entry-table/corridor displacement stops and the incomplete first upper deadline are preserved in the route chain. Sword placement, original wall opening/onward progression and remaining chapter gates are pending.
+
+Asset-free original route/checkpoint/native receipts: tools/d367/castle18/ch31-test21-current-j-original-r207-sword-pickups-20261020.json.
