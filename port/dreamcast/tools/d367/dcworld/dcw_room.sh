@@ -19,7 +19,7 @@ keep_of() {
 }
 for R in "$@"; do
   W="$OUT/_w/$R"; mkdir -p "$W" "$OUT/$R"
-  python3 "$HERE/dcworld_build.py" "$IN/$R" "$W" --cell "$CELL" --r4tc "$TC/$R/ps2-world.r4tc" --keep "$(keep_of $R)" > "$OUT/$R/dcworld.txt"
+  python3 "$HERE/dcworld_build.py" "$IN/$R" "$W" --cell "$CELL" --r4tc "$TC/$R/ps2-world.r4tc" --keep "$(keep_of $R)" ${DCW_ARGS:-} > "$OUT/$R/dcworld.txt"
   python3 "$TOOLS/ps2_strip_groups.py" "$W/ps2-world.re4mesh" "$W/ps2-world.r4pw" "$OUT/$R/ps2-world.re4mesh" \
     "$OUT/$R/ps2-world.r4sg" --groups 4 > "$OUT/$R/sg.txt"
   cp "$W/ps2-world.r4pw" "$W/ps2-world.ids" "$OUT/$R/"

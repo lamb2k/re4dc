@@ -92,7 +92,7 @@ def mat_mul(A, G):
     return [[sum(A[r][k] * G[k][c] for k in range(3)) + (A[r][3] if c == 3 else 0.0) for c in range(4)] for r in range(3)]
 
 
-def build(src, cell, keep=()):
+def build(src, cell, keep=(), remap=None):
     nplace = len(src.placements)
     dynamic = set()
     if src.ids is not None:
@@ -120,13 +120,17 @@ def build(src, cell, keep=()):
             if det < 0 and pm[5]:
                 pm[5] = 3 - pm[5]          # mirrored: the front face swaps
             rp = src.parts[part]
-            material = tuple(pm) + (rp[2], rp[3], rp[4])
+            # the draw binds by key, pass, cull and vertex-alpha flag (pm[7]); the source texture indices (pm[6],
+            # part texture byte) only number textures inside one source mesh, so they are not part of the material
+            material = (pm[0], pm[1], pm[2], pm[3], pm[4], pm[5], pm[7], rp[3], rp[4])
+            if remap:
+                material = remap.get(material, material)
             fc, cc = src.plod[part]
             for c in range(fc, fc + cc):
                 cl = src.clusters[c]
                 ctr = [(cl[a] + cl[3 + a]) * 0.5 for a in range(3)]
                 w = [sum(M[r][a] * ctr[a] for a in range(3)) + M[r][3] for r in range(3)]
-                key = (int(w[0] // cell), int(w[2] // cell))
+                key = (int((w[0] + 1e7) // cell), int((w[2] + 1e7) // cell))   # cells counted from -10 km
                 runs.setdefault((key, material), []).append((M, scale, part, c))
     cells = sorted({k[0] for k in runs})
     # ---- output tables ----
@@ -202,9 +206,9 @@ def build(src, cell, keep=()):
                         idx.extend(sb)
                     levels.append((first_let, len(lets) - first_let, float(err) * scale))
                 clusters.append((*cmin, *cmax, first_level, len(levels) - first_level))
-            pm = material[:8]
             rp0 = src.parts[items[0][2]]
-            parts.append((rp0[0], rp0[1], material[8], material[9], material[10], 0, first_let_part,
+            pm = src.pmeta[items[0][2]][:5] + (material[5], src.pmeta[items[0][2]][6], material[6])
+            parts.append((rp0[0], rp0[1], rp0[2], material[7], material[8], 0, first_let_part,
                           len(lets) - first_let_part, ulo[0], ulo[1], us[0], us[1]))
             plods.append((first_cluster, len(clusters) - first_cluster))
             pmeta.append(pm)
@@ -307,18 +311,70 @@ def build(src, cell, keep=()):
     return mesh_blob, side, ids, tc, stats
 
 
+def static_materials(src, keep=()):
+    """{material: [triangles, triangles whose UV crosses an integer line]} over the static placements' level 0."""
+    nplace = len(src.placements)
+    cnt = collections.Counter(src.ids) if src.ids is not None else {}
+    kept = {i for i, v in enumerate(src.ids or b'') if v < K_IDS and cnt[v] == 1} | set(keep)
+    out = collections.defaultdict(lambda: [0, 0])
+    for pi in range(nplace):
+        if pi in kept:
+            continue
+        mesh = src.meshes[src.placements[pi][0]]
+        for k in range(mesh[7]):
+            part = mesh[6] + k
+            pm, rp = src.pmeta[part], src.parts[part]
+            m = out[(pm[0], pm[1], pm[2], pm[3], pm[4], pm[5], pm[7], rp[3], rp[4])]
+            fc, cc = src.plod[part]
+            for c in range(fc, fc + cc):
+                fm, mc, _ = src.levels[src.clusters[c][6]]
+                for li in range(fm, fm + mc):
+                    corners, sb, sc = src.let_corners(li)
+                    uv = [(rp[8] + q[3] * rp[10], rp[9] + q[4] * rp[11]) for q in corners]
+                    i = 0
+                    while i < len(sb):
+                        n = sb[i]; ix = sb[i + 1:i + 1 + n]; i += 1 + n
+                        for t in range(n - 2):
+                            tri = [uv[ix[t + j]] for j in range(3)]
+                            m[0] += 1
+                            if any(math.floor(min(q[a] for q in tri) + 1e-4) != math.floor(max(q[a] for q in tri) - 1e-4)
+                                   for a in range(2)):
+                                m[1] += 1
+    return out
+
+
+def fake_atlas(src, keep):
+    """COST PROBE ONLY (wrong look): every static material with no wrapping triangle takes the key of the first
+    material of its state group (pass, cull, vertex alpha, part alpha / flags, texture format class), as an atlas would."""
+    st = static_materials(src, keep)
+    groups, remap = {}, {}
+    for m, (n, w) in sorted(st.items()):
+        if w:
+            continue
+        g = (m[4], m[5], m[6], m[7], m[8])
+        rep = groups.setdefault(g, m)
+        remap[m] = rep[:4] + m[4:]
+    return remap, len(st), len(groups), sum(1 for v in st.values() if v[1])
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('src', type=Path)
     ap.add_argument('out', type=Path)
     ap.add_argument('--cell', type=float, default=20000.0)
+    ap.add_argument('--fake-atlas', action='store_true', help='COST PROBE ONLY: merge no-wrap materials per state '
+                    'group onto one existing texture key (wrong look; measures the bind count an atlas would give)')
     ap.add_argument('--keep', default='', help='placement fields kept on their source mesh (sky rows, baked objects), '
                     'besides the dynamic ids: comma list, e.g. 0,1,2,209,210')
     ap.add_argument('--r4tc', type=Path, help='source package R4TC sidecar (default <src>/ps2-world.r4tc)')
     a = ap.parse_args()
     src = Src(a.src, a.r4tc)
     keep = [int(x, 0) for x in a.keep.split(',') if x] if a.keep else []
-    mesh_blob, side, ids, tc, stats = build(src, a.cell, keep)
+    remap = None
+    if a.fake_atlas:
+        remap, nmat, natl, nwrap = fake_atlas(src, keep)
+        print('fake atlas: %d static materials -> %d atlas groups + %d wrapping kept' % (nmat, natl, nwrap))
+    mesh_blob, side, ids, tc, stats = build(src, a.cell, keep, remap)
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'ps2-world.re4mesh').write_bytes(mesh_blob)
     (a.out / 'ps2-world.r4pw').write_bytes(side)
