@@ -1,0 +1,16 @@
+name rg20-truckend
+# lane rigid20: the chapter 2-3 truck ride end in r200 (fullplay/segments/ch23end-warp.txt from its r200 arrival):
+# truck area 0, shooting, then the walk to area 4 (s00, chapter 2-3 end), inside a 60 s run.
+room 0x200
+pos 13301 3999 14481
+ang 0
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+act 60 a 4
+act 140 a 4
+act 220 a 4
+goto 100 13288 500 549 1.4270 sub
+goto 900 75905 9841 1303 sub
+alivelog 150

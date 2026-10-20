@@ -1,0 +1,11 @@
+name rg20-s00
+# lane rigid20: r200 chapter 2-3 end (s00): start near the area-4 end point of fullplay/segments/ch23end-warp.txt.
+room 0x200
+pos 70000 9841 1303
+ang 1.4270
+find 0x00100000
+status 3 0x04000000
+inv default
+god
+goto 60 75905 9841 1303 sub
+alivelog 150

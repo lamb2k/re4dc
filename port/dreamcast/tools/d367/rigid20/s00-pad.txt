@@ -1,0 +1,11 @@
+# lane rigid20: START skips the r200 s00 movie once it is active; then at the chapter-end save: A (slot), Left (Yes), A.
+clock source
+0 1000 1 movie=1/0 200000
++1 0000 30
++30 0100 3
++90 0100 3
++90 0100 3
++60 0001 3
++20 0100 3
++90 0100 3
++90 0100 3
