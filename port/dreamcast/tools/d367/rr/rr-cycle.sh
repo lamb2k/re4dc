@@ -54,6 +54,15 @@ W=$RR_HOME/work/$ID; EVU=$EBASE/$ID; EVW='C:\Flycast-Evidence\re4-dreamcast\rr\'
 mkdir -p "$W" "$EVU/_jobs" "$EVU/fixtures"
 STEPS=$W/steps.tsv; : > "$STEPS"
 exec > >(tee -a "$W/cycle.log") 2>&1
+# the recipe of the commit being built (rr-wire 10-21): tools/d367/rr/recipe.conf at $SHA; the installed copy only when
+# that commit has none. rr-jobs.sh, rr-qa.sh and rr-judge.py read $W/recipe.conf.
+if git -C "$MAIN" show "$SHA:port/dreamcast/tools/d367/rr/recipe.conf" 2>/dev/null | tr -d '\r' > "$W/recipe.conf" && [ -s "$W/recipe.conf" ]; then
+  echo "recipe.conf: from ${S8}"
+else
+  cp "$BIN/recipe.conf" "$W/recipe.conf"; echo "recipe.conf: installed copy (none at ${S8})"
+fi
+# shellcheck source=/dev/null
+. "$W/recipe.conf"
 log "cycle $ID tier=$TIER sha=$S8 recipe='$RR_RECIPE_NAME' free_c=${free_gb}G"
 T0=$(date +%s)
 step() { local _n=$1; shift; local _t0; _t0=$(date +%s); local _rc=0
@@ -163,6 +172,8 @@ if [ "$TIER" = full ]; then
   fi
   [ $ok = 1 ] && { step bases bases || ok=0; }
   if [ $ok = 1 ] && [ -n "${CH2_REF:-}" ]; then step trace-arms trace_arms || echo "trace arms failed: decisions not run"; fi
+  # the QA disc of this candidate (standing rule 8): build, presets, mkgdi, disc_lint, zip check, Flycast base
+  [ $ok = 1 ] && { step qa-disc bash "$BIN/rr-qa.sh" "$W" "$TA" "$SHA" RR - "$EVU" || echo "QA disc failed: QA jobs not run"; }
 else
   [ $ok = 1 ] && { step build-release build_release || ok=0; }
   [ $ok = 1 ] && { step build-twins build_twins || ok=0; }
@@ -180,7 +191,7 @@ VERDICT=$(cat "$W/verdict.txt" 2>/dev/null || echo FAIL)
 log "cycle $ID verdict $VERDICT ($(( $(date +%s) - T0 )) s)"
 if [ "$TIER" = full ]; then
   cp "$W/RELEASE-READY.md" "$RR_HOME/state/full-last.md" 2>/dev/null || true
-  rm -rf "${EVU:?}/_discs"
+  rm -rf "${EVU:?}/_discs" "${W:?}/qa/gdemu"
   find "$EVU" \( -name 'track0*.iso' -o -name 'track03.bin' -o -name 'disc.bin' \) -delete
   for a in rT refrT; do [ -d "$ROUTE/out-rr${S7}$a" ] && rm -rf "${ROUTE:?}/out-rr${S7}${a:?}"; done
   exit 0

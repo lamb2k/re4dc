@@ -6,7 +6,7 @@
 set -euo pipefail
 TIER=${1:?}; W=${2:?}; T=${3:?}; S7=${4:?}; EVU=${5:?}; EVW=${6:?}
 BIN=$(cd "$(dirname "$0")" && pwd)
-. "$BIN/recipe.conf"
+if [ -s "$W/recipe.conf" ]; then . "$W/recipe.conf"; else . "$BIN/recipe.conf"; fi   # the built commit's recipe (rr-cycle.sh)
 J=$EVU/_jobs; mkdir -p "$J" "$EVU/fixtures"; : > "$J/list.txt"
 ROUTE=/root/probe/lanes/route
 WT=//wsl.localhost/Ubuntu-24.04$T/port/dreamcast/tools/d367
@@ -83,9 +83,23 @@ else
   CAND=$(cat "$W/cand.txt")
   if [ -n "$KF" ] && ls "$CAND"/*-GDEMU.zip > /dev/null 2>&1; then
     KW=/root/rr/work/kit-$S7
-    job 2 kit "MSYS_NO_PATHCONV=1 wsl -d Ubuntu-24.04 -u root -- bash -c 'set -euo pipefail; rm -rf ${KW:?}; cd $T/port/dreamcast && WORK=$KW JOBS=4 bash tools/d367/kit-check.sh ${KF#$T/port/dreamcast/} $ROUTE/out-rr${S7}rP \"$CAND\"' && bash '$WT/kit-boot.sh' $KW"
+    job 2 kit "MSYS_NO_PATHCONV=1 wsl -d Ubuntu-24.04 -u root -- bash -c 'set -euo pipefail; export RC19D=${RC19D:?recipe.conf RC19D}; rm -rf ${KW:?}; cd $T/port/dreamcast && WORK=$KW JOBS=4 bash tools/d367/kit-check.sh ${KF#$T/port/dreamcast/} $ROUTE/out-rr${S7}rP \"$CAND\"' && bash '$WT/kit-boot.sh' $KW"
   else
     echo "kit: SKIP (no committed knob file for image $(cut -c1-16 "$W/image.sha256") or no packaged zips)" > "$W/kit-skip.txt"
+  fi
+  # QA disc (standing rule 8; rr-qa.sh masters _discs/qa): boot keys (down,a,a,a), a QA-menu warp to r103, and the
+  # GDEMU-profile door103 seed 1
+  QO=$ROUTE/out-rr${S7}qrW
+  if [ -d "$EVU/_discs/qa" ] && [ -s "$QO/syms.txt" ]; then
+    cp "$QO/syms.txt" "$J/syms-qa.txt"
+    printf '%s\n' 'presets in | 2 | down' '- | 1 | a' '- | 1 | a' '- | 1 | a' > "$EVU/fixtures/qa-boot-keys.txt"
+    printf '%s\n' '# QA preset r101, then the QA menu warp to r103' 'name r101' 'room 0x101' 'pos -7914 0 -254' 'ang 2.9600' \
+      'find 0x00002000' 'inv default' 'qa_menu 300 r103.txt 800' > "$EVU/fixtures/qa-warp.txt"
+    job 1 qa-boot "$(run qa-boot qa qa 60 --keys "\"\$EVW\fixtures\qa-boot-keys.txt\"" --stop "'room enter|phase=enter'" --grace 15)"
+    job 1 qa-warp "$(run qa-warp qa qa 60 --warp "\"\$EVW\fixtures\qa-warp.txt\"" --stop "'phase=enter room=103'" --grace 10)"
+    job 1 qa-gdemu "MAXP=1 bash \"\$FPD/gdemu_gate.sh\" rrqa \"\$EVW\gdemu-qa\" \"\$EVW\_discs\qa\" \"\$(cat \$J/syms-qa.txt)\" \"\$FPD/segments/door103-warp.txt\" 1"
+  else
+    echo "QA: no QA base (rr-qa.sh failed or not run)" > "$W/qa-skip.txt"
   fi
   # the release checks (fp_gate.py on the packaged disc, its own prep and twins); 12 slots: it runs --jobs 10
   job 10 relchecks "export FP_BUILD=$ROUTE/out-rr${S7}rP FP_TREE=$T MSYS2_ENV_CONV_EXCL='FP_BUILD;FP_TREE'
