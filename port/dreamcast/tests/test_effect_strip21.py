@@ -1,6 +1,6 @@
 """Compare the adapter to the actual recovered GX strip function, not a copied oracle."""
 from pathlib import Path
-import subprocess,tempfile,unittest
+import re,subprocess,tempfile,unittest
 ROOT=Path(__file__).resolve().parents[1];REPO=ROOT.parents[1]
 
 class EffectStrip21(unittest.TestCase):
@@ -43,6 +43,9 @@ int main(){Vec corners[]={{1,2,-10},{3,4,-20},{5,6,-30},{7,8,-40}};unsigned coun
             self.assertIn('261120 source comparisons',run.stdout)
 
     def test_actual_clipper_packet_FIFO_failure_and_fence_pins(self):
+        native=(ROOT/'game/platform/native_ui.cpp').read_text();start=native.index('        if(deferred_first->lighting==kEffectQuad21Tag)');end=native.index('{',start)+1;depth=1
+        while depth:depth+=(native[end]=='{')-(native[end]=='}');end+=1
+        drain=native[start:end]
         stub=r'''#pragma once
 #include <cstdint>
 #include <cstddef>
@@ -64,6 +67,7 @@ inline int pvr_prim(const void*,std::size_t){return 0;}
 #include <cstring>
 #include <limits>
 #include <new>
+#include <vector>
 #include "native_ui.h"
 #include <dc/pvr.h>
 bool frame_ready=true,stream_aborted=false,draining_parts=false,direct_open=false,source_draws_finished=false;
@@ -73,18 +77,20 @@ struct DeferredLighting{};struct DeferredPart{DeferredPart* next;DeferredLightin
 DeferredPart* deferred_first=nullptr;DeferredPart* deferred_last=nullptr;
 alignas(32) unsigned char frame_storage[32768],spill[2048],sent[2048];
 unsigned deferred_top=sizeof(frame_storage),deferred_spill_top=0,deferred_spill_capacity=0,sent_bytes=0;
-unsigned char* deferred_spill=nullptr;bool spill_available=true,missing=false;
+unsigned char* deferred_spill=nullptr;bool spill_available=true,missing=false;std::vector<unsigned> sent_colors;
 struct Texture{unsigned width=64,height=64;};
 struct Package{Texture value;const Texture* textures(){return &value;}void* pvr_texture(unsigned){return spill;}};
 struct Entry{Package package;unsigned frame=0;} entry;
 namespace re4dc::texture {unsigned pvr_format(const Texture&){return 0x40000000;}}
+#define RE4DC_COVER_W(p,w) (w)
+#define RE4DC_COVER_H(p,h) (h)
 #define RE4DC_TSP_W(t) ((t).width)
 #define RE4DC_TSP_H(t) ((t).height)
 #define RE4DC_FQ_DROP(a,b) (++drops)
 Entry* resolve(const Re4dcUiImage&,const void* mask,bool pin){assert(!mask&&pin);++opens;return missing?nullptr:&entry;}
 void* re4dc_model_deferred_storage(unsigned* n){*n=spill_available?sizeof(spill):0;return spill_available?spill:nullptr;}
 void stream_select(unsigned list){assert(list==PVR_LIST_TR_POLY);}
-void stream_send(const void* data,unsigned bytes){assert(bytes<=sizeof(sent));std::memcpy(sent,data,bytes);sent_bytes=bytes;}
+void stream_send(const void* data,unsigned bytes){assert(bytes<=sizeof(sent));std::memcpy(sent,data,bytes);sent_bytes=bytes;sent_colors.push_back(reinterpret_cast<const pvr_vertex_t*>(data)[1].argb);}
 void pvr_poly_cxt_txr(pvr_poly_cxt_t* c,unsigned list,unsigned fmt,unsigned w,unsigned h,const void* ptr,unsigned filter){
  assert(list==PVR_LIST_TR_POLY&&fmt==0x40000000&&w==64&&h==64&&ptr==spill&&filter==PVR_FILTER_BILINEAR);*c={};}
 void pvr_poly_compile(pvr_poly_hdr_t* p,const pvr_poly_cxt_t* c){*p={};p->words[0]=c->blend.src;p->words[1]=c->blend.dst;
@@ -108,6 +114,7 @@ int main(){auto q=quad();pvr_vertex_t v[12];unsigned n=re4dc::effect_strip21::ve
  assert(header->words[2]==PVR_DEPTHCMP_GEQUAL&&header->words[3]==PVR_DEPTHWRITE_DISABLE);
  assert(header->words[4]==PVR_UVCLAMP_V&&header->words[5]==1&&header->words[6]==PVR_TXRENV_MODULATEALPHA);
  auto* vertices=reinterpret_cast<const pvr_vertex_t*>(bytes+32);assert(vertices[0].argb==0x8197a3bc);
+ drain();assert(sent_colors.size()==2&&sent_colors[0]==0x8197a3bc&&sent_colors[1]==0x91827364);
  q.positions[0][2]=-.5f;n=re4dc::effect_strip21::vertices(q,v);assert(n>0&&n<=12);for(unsigned i=0;i<n;++i)assert(v[i].z>0&&v[i].argb==q.color);
  reset();q=quad();source_draws_finished=true;assert(re4dc_effect_quad(&q));assert(sent_bytes==7*32&&entry.frame==frame&&!deferred_count);
  reset();source_draws_finished=false;deferred_top=8192;spill_available=false;unsigned dropped=fx_dropped;
@@ -120,10 +127,55 @@ int main(){auto q=quad();pvr_vertex_t v[12];unsigned n=re4dc::effect_strip21::ve
  q.positions[0][2]=q.positions[1][2]=q.positions[2][2]=q.positions[3][2]=1;assert(re4dc_effect_quad(&q)&&!deferred_count);
 }
 '''
+        code=code.replace('Re4dcEffectQuad quad(){','void drain(){while(deferred_first){'+drain+'}}\nRe4dcEffectQuad quad(){')
         with tempfile.TemporaryDirectory(prefix='re4dc-strip21-packet-') as temp:
             temp=Path(temp);(temp/'dc').mkdir();(temp/'dc/pvr.h').write_text(stub);cpp=temp/'packet.cpp';cpp.write_text(code);exe=temp/'packet'
-            args=['g++','-std=c++20','-DRE4DC_FX_STRIP21=1','-DRE4DC_UI_HANDLES=1','-DRE4DC_EFFECT_SPRITE_MAX=64','-fsanitize=address,undefined','-fno-pie','-no-pie','-I'+str(temp),'-I'+str(ROOT/'game/platform/include'),'-I'+str(ROOT/'room'),str(cpp),str(ROOT/'room/pvr_geometry.cpp'),'-o',str(exe)]
+            args=['g++','-std=c++20','-DRE4DC_FX_STRIP21=1','-DRE4DC_TA_DIRECT=1','-DRE4DC_UI_HANDLES=1','-DRE4DC_EFFECT_SPRITE_MAX=64','-fsanitize=address,undefined','-fno-pie','-no-pie','-I'+str(temp),'-I'+str(ROOT/'game/platform/include'),'-I'+str(ROOT/'room'),str(cpp),str(ROOT/'room/pvr_geometry.cpp'),'-o',str(exe)]
             build=subprocess.run(args,capture_output=True,text=True);self.assertEqual(build.returncode,0,build.stderr)
             run=subprocess.run([str(exe)],capture_output=True,text=True);self.assertEqual(run.returncode,0,run.stdout+run.stderr)
+
+    def test_actual_source_coarse_dispatch_keeps_strip_callback_and_rejects_special_state(self):
+        def body(source,signature):
+            start=source.index(signature);i=source.index('{',start)+1;depth=1
+            while depth:depth+=(source[i]=='{')-(source[i]=='}');i+=1
+            return source[start:i]
+        source=(REPO/'src/game/esp_sub.cpp').read_text()
+        eligible=body(source,'extern "C" int re4dc_esp_strip21_eligible(')
+        classify=body(source,'extern "C" int re4dc_esp_sprite_class(')
+        dispatch=body((REPO/'src/game/esp.cpp').read_text(),'        if (spriteEntry) {')
+        code=r'''#include <cassert>
+using s8=signed char;
+struct cEsp{unsigned char m_Id,m_Parts_no;unsigned m_Tool_flg,m_Flg,xA4;};
+void EspCommonTrans(cEsp*){}void strip01(cEsp*){}void strip02(cEsp*){};
+using Callback=void(*)(cEsp*);Callback EspTransTbl[256];
+bool EspSpriteEligible(cEsp*){return false;}
+int visible_calls=0;bool re4dc_esp_coarse_sprite_visible(cEsp*){++visible_calls;return false;}
+'''+eligible+classify+'''\nCallback dispatch(cEsp* esp){Callback trans=EspTransTbl[esp->m_Id];bool spriteEntry=true;for(unsigned once=0;once<1;++once){\n'''+dispatch+'''\nreturn trans;}return nullptr;}\n'''+r'''
+int main(){cEsp esp{1,255,0,0,1};EspTransTbl[1]=strip01;EspTransTbl[2]=strip02;
+ for(unsigned id:{1U,2U}){esp.m_Id=id;
+#if RE4DC_FX_STRIP21
+ assert(re4dc_esp_sprite_class(&esp));assert(dispatch(&esp)==EspTransTbl[id]);assert(!visible_calls);
+#else
+ assert(!re4dc_esp_sprite_class(&esp));assert(!dispatch(&esp));
+#endif
+ }
+#if RE4DC_FX_STRIP21
+ esp.m_Tool_flg=0x40;assert(!re4dc_esp_sprite_class(&esp));assert(!dispatch(&esp));esp.m_Tool_flg=0x10000;assert(!re4dc_esp_sprite_class(&esp));
+ esp.m_Tool_flg=0;esp.m_Parts_no=0xf8;assert(!re4dc_esp_sprite_class(&esp));esp.m_Parts_no=255;esp.xA4=2;assert(!re4dc_esp_sprite_class(&esp));
+#endif
+}
+'''
+        code=code.replace('#include <cassert>','#include <cassert>\n#include <initializer_list>')
+        with tempfile.TemporaryDirectory(prefix='re4dc-strip21-dispatch-') as temp:
+            temp=Path(temp);cpp=temp/'dispatch.cpp';cpp.write_text(code);exe=temp/'dispatch'
+            for enabled in (0,1):
+                build=subprocess.run(['g++','-std=c++17','-DRE4DC_FX_STRIP21='+str(enabled),str(cpp),'-o',str(exe)],capture_output=True,text=True)
+                self.assertEqual(build.returncode,0,build.stderr)
+                run=subprocess.run([str(exe)],capture_output=True,text=True);self.assertEqual(run.returncode,0,run.stdout+run.stderr)
+
+    def test_deferred_tag_is_unique_in_native_UI_and_all_owned_includes(self):
+        files=[ROOT/'game/platform/native_ui.cpp',*list((ROOT/'game/platform/include').glob('*.inc'))]
+        hits=[(p.name,m.group(1)) for p in files for m in re.finditer(r'(\w+)\s*=\s*reinterpret_cast<DeferredLighting\*>\(0x5354\)',p.read_text())]
+        self.assertEqual(hits,[('native_effect_strip21.inc','kEffectQuad21Tag')])
 
 if __name__=='__main__':unittest.main()
