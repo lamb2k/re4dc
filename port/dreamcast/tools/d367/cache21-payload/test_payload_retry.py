@@ -11,6 +11,9 @@ def main():
   if args.all:
    policy=d/'policy';subprocess.run(['g++','-std=c++17','-O1','-fsanitize=undefined','-fno-sanitize-recover=all','-I'+str(R/'port/dreamcast/game/platform/include'),str(T/'policy_probe.cpp'),'-o',str(policy)],check=True);result+=subprocess.check_output([str(policy)],text=True)
   if args.all:
+   body_interleaved=body.replace('    const bool in_pack=pack==texpack::kFound;', '    const bool in_pack=pack==texpack::kFound;\n    if(after_find){auto callback=after_find;after_find=nullptr;callback();}')
+   (d/'actual_load_interleaved.inc').write_text(body_interleaved)
+   inter=d/'interleaved';subprocess.run(['g++','-std=c++17','-O1','-fsanitize=undefined','-fno-sanitize-recover=all','-DRE4DC_TEX_PAYLOAD_RETRY='+str(int(args.on)),'-I'+str(d),'-I'+str(R/'port/dreamcast/game/platform/include'),str(T/'interleaved_probe.cpp'),'-o',str(inter)],check=True);result+=subprocess.check_output([str(inter)],text=True)
    index=d/'index';subprocess.run(['g++','-std=c++17','-O1','-fsanitize=undefined','-fno-sanitize-recover=all','-DRE4DC_TEX_PAYLOAD_RETRY='+str(int(args.on)),'-I'+str(R/'port/dreamcast/game/platform/include'),str(T/'index_probe.cpp'),'-o',str(index)],check=True);result+=subprocess.check_output([str(index)],text=True)
    helper=(R/'port/dreamcast/game/platform/include/texpack_payload_retry.inc').read_text();package=(R/'port/dreamcast/room/texture_package.cpp').read_text()
    for literal in re.findall(r'"([^"\n]+)"',helper[helper.index('static const char* const errors[]'):]):

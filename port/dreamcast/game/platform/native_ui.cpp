@@ -3304,8 +3304,8 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #if RE4DC_TEX_PACK
     unsigned pack_offset=0,pack_size=0;
 #if RE4DC_TEX_PAYLOAD_RETRY
-    unsigned pack_member=~0U;
-#define RE4DC_PACK_FIND() texpack::find(key,pack_offset,pack_size,frame,&pack_member)
+    unsigned pack_member=~0U,pack_epoch=0;
+#define RE4DC_PACK_FIND() texpack::find(key,pack_offset,pack_size,frame,&pack_member,&pack_epoch)
 #else
 #define RE4DC_PACK_FIND() texpack::find(key,pack_offset,pack_size,frame)
 #endif
@@ -3323,7 +3323,7 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #if RE4DC_TEX_PAYLOAD_RETRY
     // Existing resident hits returned above. Only this exact failed member waits,
     // before close_entry/eviction or a new package open; never a loose-key miss.
-    if(in_pack && texpack_payload_retry::blocked(pack_member,frame)){
+    if(in_pack && texpack::payload_blocked(pack_member,frame,pack_epoch)){
         RE4DC_TEXCHK_FAIL(key,"pack-payload-retry");return nullptr;
     }
 #endif
@@ -3566,8 +3566,8 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
 #if RE4DC_TEX_PAYLOAD_RETRY
     if(in_pack){
-        if(ok)texpack_payload_retry::succeeded(pack_member);
-        else if(texpack_payload_retry::source_error(slot->package.error()))texpack_payload_retry::failed(pack_member,frame);
+        if(ok)texpack::payload_succeeded(pack_member,pack_epoch);
+        else if(texpack_payload_retry::source_error(slot->package.error()))texpack::payload_failed(pack_member,frame,pack_epoch);
     }
 #endif
     if(!ok) slot->package.close();
