@@ -14,7 +14,7 @@ struct Representation {
     float u_scale,v_scale;
 };
 inline constexpr Representation qualified[] = {
-#include "qualified_representations.inc"
+#include "scoped_representations.inc"
 };
 
 // Pinned KOS pvr_poly_compile stores log2(size)-3 in TSP bits 5..3/2..0.

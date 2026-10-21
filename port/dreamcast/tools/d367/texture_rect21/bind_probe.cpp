@@ -4,7 +4,7 @@
 #include <cstring>
 using namespace re4dc::rect21;
 int main(){
-    unsigned accepted=0,rejected=0;
+    unsigned accepted=0,rejected=0,held_count=0;
     for(const auto& r:qualified){
         float u=-123,v=456;
         assert(!adapt(r.crc,r.fnv,r.logical_width,r.logical_height,r.stored,u,v));
@@ -31,7 +31,15 @@ int main(){
         assert(!header_dimensions(code,r.stored.width/2,r.stored.height));
         assert(!header_dimensions(code,r.stored.width,r.stored.height/2));
     }
+    constexpr Representation held[] = {
+#include "qualified_representations.inc"
+    };
+    for(const auto& r:held){
+        float u=-123,v=456;
+        assert(!adapt(r.crc,r.fnv,r.logical_width,r.logical_height,r.stored,u,v,true));
+        assert(u==-123 && v==456);++held_count;
+    }
     assert(!header_dimensions(0,0,8));assert(!header_dimensions(0,8,0));
     assert(!header_dimensions(0,3,8));assert(!header_dimensions(0,8,2048));
-    std::printf("selected=%u rejected=%u cached_extent_checks=%u\n",accepted,rejected,accepted*3+4);
+    std::printf("selected=%u rejected=%u held_original_refusals=%u cached_extent_checks=%u\n",accepted,rejected,held_count,accepted*3+4);
 }
