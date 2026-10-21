@@ -1,0 +1,3392 @@
+{
+  "source": "6f9d31b0e00497a75fdd7e25bb04f92305103087",
+  "program": "ce080eb290aec073f406e93da27911f4fa70b457768288f52a893175a6846e8e",
+  "elf": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+  "track": "97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18",
+  "qualified": [
+    "Three fresh-cold QA reopening cycles and normal world return",
+    "OPTIONS native walls/floor/menu, ordinary resume and movement",
+    "Four original inventory opens/closes; matching source backing hashes restored",
+    "Original r100s03 normal Start skip followed by live original encounter",
+    "Authentic original damage/death1200 to440 to0, then original Continue leave/entry generation1 to2 and free play life1200",
+    "Natural s03 EOF1465/1465 across fresh cold same-program checkpoints, no movie skip input",
+    "Three post-Continue QA reopening cycles and ordinary movement under independently measured41.8233218s guest",
+    "Original first kill from four handgun shots, natural s20 EOF571/571, six-second original radio hold, normal Start close and exact backing restore",
+    "Original r103-to-r101 door traversal and original new-room manual/files browser; two combined QA cycles and one independent pause-OFF control cycle pass before separate original/shared damage stall"
+  ],
+  "runs": {
+    "qa-cold01": {
+      "elapsed_s": 47.5,
+      "errors": [],
+      "keys_executed": 10,
+      "emulator_exited": true,
+      "checkpoint_sealed": false,
+      "final_sample": {
+        "host_s": 46.954,
+        "non_atomic": true,
+        "qa_frames": 164,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 564,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 251666551,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -82898.921875,
+            860.205078125,
+            -38488.046875
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 72.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 0,
+      "window_closes": [],
+      "movie_results": [],
+      "room_lifecycle": [
+        "room lifecycle: phase=enter room=100 generation=1 frames=0 heap4=8c895f00-8cfbf080 size=7508352 free=7424704 heap_check=ok native4=2/83408 stale=0 refused=0",
+        "room lifecycle: phase=enter vram_free=2477312 kos_free=9232 kos_used=12102424 kos_break=180224 aram_sp=700000 aram_blocks=2 modules=1/0/0/1 threads=4/4/0 heap=4"
+      ]
+    },
+    "pause-cold01": {
+      "elapsed_s": 47.8,
+      "errors": [],
+      "keys_executed": 9,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 46.922,
+        "non_atomic": true,
+        "qa_frames": 192,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            6,
+            1,
+            0,
+            0
+          ],
+          "frame": 797,
+          "stop": 2147483583,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 251666551,
+          "rno": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "pos": [
+            -82908.8125,
+            860.20068359375,
+            -38480.484375
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 14.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 0,
+      "window_closes": [],
+      "movie_results": [],
+      "room_lifecycle": [
+        "room lifecycle: phase=enter room=100 generation=1 frames=0 heap4=8c895f00-8cfbf080 size=7508352 free=7424704 heap_check=ok native4=2/83408 stale=0 refused=0",
+        "room lifecycle: phase=enter vram_free=2477312 kos_free=5168 kos_used=12102392 kos_break=184320 aram_sp=700000 aram_blocks=2 modules=1/0/0/1 threads=4/4/0 heap=4"
+      ]
+    },
+    "pause-return01": {
+      "elapsed_s": 47.9,
+      "errors": [],
+      "keys_executed": 5,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 47.093,
+        "non_atomic": true,
+        "qa_frames": 1367,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 2184,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 117448823,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -82876.28125,
+            860.20068359375,
+            -38581.03515625
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 64.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 1200,
+      "window_closes": [],
+      "movie_results": [],
+      "room_lifecycle": []
+    },
+    "inventory01": {
+      "elapsed_s": 47.8,
+      "errors": [],
+      "keys_executed": 7,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 46.828,
+        "non_atomic": true,
+        "qa_frames": 0,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 3167,
+          "stop": 2013265855,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            17039360,
+            514,
+            67108864,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 0,
+          "rno": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ang": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hp": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 1,
+        "mendez": [],
+        "manager_nodes_seen": 8
+      },
+      "actual_health_min": 1200,
+      "window_closes": [
+        "subscreen backing: close area=8c862b60 restored=3145728 restore_us=319305 hash=c079be6a ok pool_free=74432"
+      ],
+      "movie_results": [],
+      "room_lifecycle": []
+    },
+    "inventory02": {
+      "elapsed_s": 47.9,
+      "errors": [],
+      "keys_executed": 7,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 46.796,
+        "non_atomic": true,
+        "qa_frames": 451,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 4335,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            167772672,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 117448823,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -82853.5234375,
+            860.203369140625,
+            -38617.25
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 5.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 1200,
+      "window_closes": [
+        "subscreen backing: close area=8c862b60 restored=3145728 restore_us=316764 hash=01beb092 ok pool_free=74432",
+        "subscreen backing: close area=8c862b60 restored=3145728 restore_us=316721 hash=3458b223 ok pool_free=74432",
+        "subscreen backing: close area=8c862b60 restored=3145728 restore_us=319291 hash=0c2971b8 ok pool_free=74432"
+      ],
+      "movie_results": [],
+      "room_lifecycle": []
+    },
+    "movie-skip02": {
+      "elapsed_s": 48.1,
+      "errors": [],
+      "keys_executed": 3,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 46.906,
+        "non_atomic": true,
+        "qa_frames": 0,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 5530,
+          "stop": 2151678208,
+          "player_life": 0,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            51380480,
+            167772672,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 50339959,
+          "rno": [
+            2,
+            2,
+            0,
+            0
+          ],
+          "pos": [
+            -84255.1484375,
+            860.20458984375,
+            -38416.609375
+          ],
+          "ang": [
+            0.0,
+            1.75,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c6b1e20",
+          "motion_frame": 86.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 0,
+      "window_closes": [],
+      "movie_results": [
+        "route movie start: id=10003 path=/cd/dc/movie/r100s03.seq size=288x192 frames=1465 media_us=48882166 staged=363328 heap=912320->548128 range=full path=pvr-yuv-converter",
+        "route movie skip: id=10003 mask=1000 picture=117 elapsed_us=3934460",
+        "route movie terminal=2 id=10003 frames=118/1465 uploaded=117 presented=117 wall_us=3904686 media_us=48882166 underruns=1 silence_bytes=1472 heap_before=912320 heap_active=548128 staged=363328"
+      ],
+      "room_lifecycle": []
+    },
+    "death-continue01": {
+      "elapsed_s": 48.3,
+      "errors": [],
+      "keys_executed": 3,
+      "emulator_exited": true,
+      "checkpoint_sealed": true,
+      "final_sample": {
+        "host_s": 47.156,
+        "non_atomic": true,
+        "qa_frames": 536,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 727,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            512,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 50339959,
+          "rno": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "pos": [
+            -99685.3671875,
+            -454.61688232421875,
+            -1343.046630859375
+          ],
+          "ang": [
+            0.0,
+            2.246000051498413,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 86.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "actual_health_min": 0,
+      "window_closes": [],
+      "movie_results": [],
+      "room_lifecycle": [
+        "room lifecycle: phase=leave room=100 generation=1 frames=4352 heap4=8c895f00-8cfbf080 size=7508352 free=4186464 heap_check=ok native4=0/0 stale=0 refused=0",
+        "room lifecycle: phase=leave vram_free=77056 kos_free=3840 kos_used=12214312 kos_break=73728 aram_sp=700000 aram_blocks=2 modules=8/4/10/2 threads=9/21/0 heap=4",
+        "room lifecycle: phase=enter room=100 generation=2 frames=0 heap4=8c895f00-8cfbf080 size=7508352 free=7424704 heap_check=ok native4=2/83408 stale=0 refused=0",
+        "room lifecycle: phase=enter vram_free=77056 kos_free=7936 kos_used=12214312 kos_break=69632 aram_sp=700000 aram_blocks=2 modules=9/4/11/2 threads=9/22/0 heap=4",
+        "room lifecycle: phase=enter drift heap4=0 vram=-2400256 kos=-111920"
+      ]
+    },
+    "movie-natural-cold01": {
+      "elapsed_s": 41.8,
+      "errors": [],
+      "emulator_exited": true,
+      "keys_executed": 6,
+      "final_sample": {
+        "host_s": 40.796,
+        "non_atomic": true,
+        "qa_frames": 0,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 225,
+          "stop": 2151680256,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50336000,
+            301990400,
+            589824,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 251666551,
+          "rno": [
+            5,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -83206.21875,
+            860.201171875,
+            -36255.875
+          ],
+          "ang": [
+            0.0,
+            -0.12929999828338623,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 0.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 2,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "checkpoint_sha256": "3fe10cc9341014d8a8449868ca4d3761cc7ffdbbc44c863923840f9cbbd2be1a",
+      "checkpoint_audit": {
+        "state_sha256": "3f9de09216872cabc26b6f6fbb0f6c2001bba74c9350e6be87e3f8f044ef2c82",
+        "state_bytes": 9835790,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 27785294,
+        "ram_serialization_offset": 11001553,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 151610,
+        "room": 256,
+        "frame": 225,
+        "stop": 2151680256,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -83206.21875,
+          860.201171875,
+          -36255.875
+        ],
+        "player_rno": [
+          5,
+          0,
+          0,
+          0
+        ],
+        "event_start_cnt": 2,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 45332,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\movie-natural-cold01\\flycast.exe",
+        "start_filetime": 134370881074314564,
+        "exit_code": 0,
+        "exit_filetime": 0,
+        "actual_guest_seconds": -13437088107.431456,
+        "launcher_exit": 0,
+        "metric_rejected": "Initial exit-code/time race recorded zero exit FILETIME; complete harness41.8s establishes bounded run, but this process metric is invalid. Corrected by waiting for process signal before final timestamps."
+      },
+      "movie_results": [
+        "route movie start: id=10003 path=/cd/dc/movie/r100s03.seq size=288x192 frames=1465 media_us=48882166 staged=363328 heap=912320->548128 range=full path=pvr-yuv-converter"
+      ],
+      "window_closes": []
+    },
+    "movie-natural-finish01": {
+      "elapsed_s": 41.6,
+      "errors": [],
+      "emulator_exited": true,
+      "keys_executed": 1,
+      "final_sample": {
+        "host_s": 40.782,
+        "non_atomic": true,
+        "qa_frames": 90,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 318,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 184557687,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -83816.8671875,
+            860.2021484375,
+            -38349.61328125
+          ],
+          "ang": [
+            0.0,
+            1.75,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 50.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "checkpoint_sha256": "333eb3564932418d74fd0f0ac2314911a1bcc0160dd7b168361ddeec4636d272",
+      "checkpoint_audit": {
+        "state_sha256": "14913d0574b286ccf7f4d22c92aa556747051b1b3c720d28a4dc807051dd4939",
+        "state_bytes": 10222588,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 28199950,
+        "ram_serialization_offset": 11416209,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 174972,
+        "room": 256,
+        "frame": 326,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -83816.5703125,
+          860.204345703125,
+          -38349.51171875
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 35268,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\movie-natural-finish01\\flycast.exe",
+        "start_filetime": 134370882026907653,
+        "exit_code": 0,
+        "exit_filetime": 134370882442408692,
+        "actual_guest_seconds": 41.5501039,
+        "launcher_exit": 0
+      },
+      "movie_results": [
+        "route movie terminal=1 id=10003 frames=1465/1465 uploaded=1465 presented=1465 wall_us=49020417 media_us=48882166 underruns=1 silence_bytes=1472 heap_before=912320 heap_active=548128 staged=363328"
+      ],
+      "window_closes": []
+    },
+    "qa-after-continue02": {
+      "elapsed_s": 41.9,
+      "errors": [],
+      "emulator_exited": true,
+      "keys_executed": 7,
+      "final_sample": {
+        "host_s": 40.89,
+        "non_atomic": true,
+        "qa_frames": 770,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 1669,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 184557687,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -100596.8359375,
+            -540.037841796875,
+            -628.8192749023438
+          ],
+          "ang": [
+            0.0,
+            2.246000051498413,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 6.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "manager_nodes_seen": 19
+      },
+      "checkpoint_sha256": "609bdea85a06698763f6073bca9176fd6b155ab38bead020f14cda96c1b377ad",
+      "checkpoint_audit": {
+        "state_sha256": "459a185056cdeeed884610bb7fe35f7cae9cccd2336e8b58a9de1acdafcc9db8",
+        "state_bytes": 12280192,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 28249262,
+        "ram_serialization_offset": 11465521,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 675373,
+        "room": 256,
+        "frame": 1677,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -100597.765625,
+          -539.9398193359375,
+          -629.1580810546875
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 40080,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\qa-after-continue02\\flycast.exe",
+        "start_filetime": 134370882876783509,
+        "exit_code": 0,
+        "exit_filetime": 134370883295016727,
+        "actual_guest_seconds": 41.8233218,
+        "launcher_exit": 0
+      },
+      "movie_results": [],
+      "window_closes": []
+    },
+    "radio-route01": {
+      "elapsed_s": 42.1,
+      "errors": [],
+      "emulator_exited": true,
+      "keys_executed": 0,
+      "final_sample": {
+        "host_s": 40.968,
+        "non_atomic": true,
+        "qa_frames": 30,
+        "qa_flags": 0,
+        "global": {
+          "ptr": "0x8c361b38",
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "frame": 754,
+          "stop": 0,
+          "player_life": 1200,
+          "player_life_max": 1200,
+          "room": 256,
+          "status": [
+            50331904,
+            33554944,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": "0x8ca47e60",
+          "id": 0,
+          "type": 0,
+          "alive": 184557687,
+          "rno": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "pos": [
+            -83830.6328125,
+            860.2021484375,
+            -38395.5703125
+          ],
+          "ang": [
+            0.0,
+            1.7602647542953491,
+            0.0
+          ],
+          "hp": 1200,
+          "motion_ptr": "0x8c7058c0",
+          "motion_frame": 29.0
+        },
+        "pad": {
+          "button": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "joy": {
+          "on": 0,
+          "stick": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "triggers": [
+            0,
+            0
+          ]
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "mendez": [],
+        "actors": [
+          {
+            "ptr": "0x8cd417c0",
+            "id": 18,
+            "type": 0,
+            "alive": 33628279,
+            "rno": [
+              1,
+              6,
+              1,
+              0
+            ],
+            "pos": [
+              85157.2109375,
+              1093.4686279296875,
+              17726.412109375
+            ],
+            "ang": [
+              0.0,
+              -2.256294012069702,
+              0.0
+            ],
+            "hp": 0,
+            "motion_ptr": "0x8c9f6ae0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8cd409e0",
+            "id": 18,
+            "type": 3,
+            "alive": 33628279,
+            "rno": [
+              1,
+              6,
+              1,
+              0
+            ],
+            "pos": [
+              83920.7265625,
+              1045.99658203125,
+              18261.544921875
+            ],
+            "ang": [
+              0.0,
+              -2.2555270195007324,
+              0.0
+            ],
+            "hp": 0,
+            "motion_ptr": "0x8c9ecfe0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8cd3a3e0",
+            "id": 18,
+            "type": 1,
+            "alive": 33628279,
+            "rno": [
+              1,
+              6,
+              1,
+              0
+            ],
+            "pos": [
+              82632.046875,
+              1083.5982666015625,
+              18582.11328125
+            ],
+            "ang": [
+              0.0,
+              -2.451301336288452,
+              0.0
+            ],
+            "hp": 0,
+            "motion_ptr": "0x8c9e5be0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8cd39600",
+            "id": 42,
+            "type": 0,
+            "alive": 33562727,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              2550.0,
+              -3110.0,
+              -21850.0
+            ],
+            "ang": [
+              0.0,
+              -2.257061004638672,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x8cd08900",
+            "motion_frame": 1.0
+          },
+          {
+            "ptr": "0x8cd37bc0",
+            "id": 42,
+            "type": 0,
+            "alive": 33562727,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              -25670.0,
+              -520.0,
+              -18250.0
+            ],
+            "ang": [
+              0.0,
+              1.8622527122497559,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x8cd08900",
+            "motion_frame": 1.0
+          },
+          {
+            "ptr": "0x8cd36de0",
+            "id": 42,
+            "type": 0,
+            "alive": 33562727,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              -19980.0,
+              -630.0,
+              -19710.0
+            ],
+            "ang": [
+              0.0,
+              1.5197914838790894,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x8cd08900",
+            "motion_frame": 1.0
+          },
+          {
+            "ptr": "0x8cd35fa0",
+            "id": 42,
+            "type": 0,
+            "alive": 33562727,
+            "rno": [
+              1,
+              5,
+              1,
+              0
+            ],
+            "pos": [
+              -29115.697265625,
+              -238.4063720703125,
+              -13974.951171875
+            ],
+            "ang": [
+              0.0,
+              2.839590311050415,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x8cd1e380",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8cd351c0",
+            "id": 42,
+            "type": 2,
+            "alive": 33562727,
+            "rno": [
+              1,
+              6,
+              0,
+              0
+            ],
+            "pos": [
+              -3300.0,
+              -2070.0,
+              -19050.0
+            ],
+            "ang": [
+              0.0,
+              1.9132575988769531,
+              0.0
+            ],
+            "hp": 1860,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8cca41e0",
+            "id": 42,
+            "type": 2,
+            "alive": 33562727,
+            "rno": [
+              1,
+              6,
+              0,
+              0
+            ],
+            "pos": [
+              3320.0,
+              -1700.0,
+              -23400.0
+            ],
+            "ang": [
+              0.0,
+              -2.8428499698638916,
+              0.0
+            ],
+            "hp": 2160,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8cca3400",
+            "id": 33,
+            "type": 1,
+            "alive": 33562743,
+            "rno": [
+              1,
+              5,
+              1,
+              0
+            ],
+            "pos": [
+              -28705.55859375,
+              -267.4795227050781,
+              -14344.490234375
+            ],
+            "ang": [
+              0.0,
+              2.839590311050415,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x8ccc1920",
+            "motion_frame": 31.0
+          },
+          {
+            "ptr": "0x8cc97200",
+            "id": 18,
+            "type": 3,
+            "alive": 33562741,
+            "rno": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              12977.8271484375,
+              -307.9581604003906,
+              -13065.7333984375
+            ],
+            "ang": [
+              0.0,
+              -1.8267079591751099,
+              0.0
+            ],
+            "hp": 500,
+            "motion_ptr": "0x8cb0ebc0",
+            "motion_frame": 34.0
+          },
+          {
+            "ptr": "0x8cc96420",
+            "id": 18,
+            "type": 1,
+            "alive": 33562743,
+            "rno": [
+              1,
+              76,
+              1,
+              0
+            ],
+            "pos": [
+              -73870.9609375,
+              -51.509521484375,
+              -16378.6630859375
+            ],
+            "ang": [
+              0.0,
+              -3.1360321044921875,
+              0.0
+            ],
+            "hp": 500,
+            "motion_ptr": "0x8caf7000",
+            "motion_frame": 15.0
+          },
+          {
+            "ptr": "0x8cc8b940",
+            "id": 18,
+            "type": 3,
+            "alive": 33562743,
+            "rno": [
+              1,
+              76,
+              1,
+              0
+            ],
+            "pos": [
+              -78180.984375,
+              -65.4197998046875,
+              -19132.35546875
+            ],
+            "ang": [
+              0.0,
+              3.0482115745544434,
+              0.0
+            ],
+            "hp": 500,
+            "motion_ptr": "0x8caf6700",
+            "motion_frame": 16.640625
+          },
+          {
+            "ptr": "0x8cc8ab60",
+            "id": 18,
+            "type": 4,
+            "alive": 33562743,
+            "rno": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -77705.0703125,
+              11.79705810546875,
+              -26760.84375
+            ],
+            "ang": [
+              0.0,
+              -2.6567230224609375,
+              0.0
+            ],
+            "hp": 500,
+            "motion_ptr": "0x8cb0ebc0",
+            "motion_frame": 8.0
+          },
+          {
+            "ptr": "0x8cc7a540",
+            "id": 35,
+            "type": 0,
+            "alive": 33562727,
+            "rno": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -38426.140625,
+              -180.0,
+              -18948.61328125
+            ],
+            "ang": [
+              0.0,
+              1.2275681495666504,
+              0.0
+            ],
+            "hp": 10,
+            "motion_ptr": "0x8cc04de0",
+            "motion_frame": 70.0
+          },
+          {
+            "ptr": "0x8cc79760",
+            "id": 35,
+            "type": 0,
+            "alive": 33562727,
+            "rno": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -36112.16015625,
+              1740.0,
+              -17413.587890625
+            ],
+            "ang": [
+              0.0,
+              -2.598180055618286,
+              0.0
+            ],
+            "hp": 10,
+            "motion_ptr": "0x8cc04de0",
+            "motion_frame": 93.0
+          },
+          {
+            "ptr": "0x8cc72fe0",
+            "id": 35,
+            "type": 0,
+            "alive": 33562727,
+            "rno": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -89247.03125,
+              0.0,
+              -6396.7177734375
+            ],
+            "ang": [
+              0.0,
+              0.7384200096130371,
+              0.0
+            ],
+            "hp": 10,
+            "motion_ptr": "0x8cc04de0",
+            "motion_frame": 143.0
+          },
+          {
+            "ptr": "0x8cc72200",
+            "id": 35,
+            "type": 0,
+            "alive": 33562727,
+            "rno": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -85632.2578125,
+              0.0,
+              -4643.3505859375
+            ],
+            "ang": [
+              0.0,
+              -2.547750473022461,
+              0.0
+            ],
+            "hp": 10,
+            "motion_ptr": "0x8cc04de0",
+            "motion_frame": 112.0
+          },
+          {
+            "ptr": "0x8cbd7b60",
+            "id": 35,
+            "type": 0,
+            "alive": 33562727,
+            "rno": [
+              1,
+              1,
+              1,
+              0
+            ],
+            "pos": [
+              -89577.359375,
+              2060.0,
+              -3793.569580078125
+            ],
+            "ang": [
+              0.0,
+              2.50671648979187,
+              0.0
+            ],
+            "hp": 10,
+            "motion_ptr": "0x8cc00d60",
+            "motion_frame": 89.0
+          },
+          {
+            "ptr": "0x8cbd6d80",
+            "id": 18,
+            "type": 0,
+            "alive": 33628279,
+            "rno": [
+              3,
+              0,
+              2,
+              1
+            ],
+            "pos": [
+              -82766.6640625,
+              860.20166015625,
+              -38441.6328125
+            ],
+            "ang": [
+              0.0,
+              -1.423494815826416,
+              0.0
+            ],
+            "hp": 0,
+            "motion_ptr": "0x8cafc460",
+            "motion_frame": 102.0
+          },
+          {
+            "ptr": "0x8ca6e340",
+            "id": 67,
+            "type": 1,
+            "alive": 33581167,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              -88410.078125,
+              1654.637939453125,
+              -38206.6015625
+            ],
+            "ang": [
+              0.0,
+              -1.2080790996551514,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca6d560",
+            "id": 67,
+            "type": 1,
+            "alive": 33581167,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              43928.12890625,
+              529.4140014648438,
+              -11239.451171875
+            ],
+            "ang": [
+              0.0,
+              -0.04838794842362404,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca6c2a0",
+            "id": 67,
+            "type": 1,
+            "alive": 33581167,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              -52824.85546875,
+              534.3720092773438,
+              -13161.0
+            ],
+            "ang": [
+              0.0,
+              -1.2080790996551514,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca6b4c0",
+            "id": 67,
+            "type": 0,
+            "alive": 33581167,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              80181.4296875,
+              -4665.34814453125,
+              3379.447998046875
+            ],
+            "ang": [
+              0.0,
+              -3.0099074840545654,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca6a200",
+            "id": 67,
+            "type": 0,
+            "alive": 33581167,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              80768.8515625,
+              -4665.34814453125,
+              2626.01611328125
+            ],
+            "ang": [
+              0.0,
+              -1.911660075187683,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca69420",
+            "id": 67,
+            "type": 0,
+            "alive": 33581167,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              46885.3359375,
+              1160.363037109375,
+              -12371.5830078125
+            ],
+            "ang": [
+              0.0,
+              -0.8836321234703064,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca68160",
+            "id": 67,
+            "type": 0,
+            "alive": 33581167,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              -54180.1875,
+              1160.363037109375,
+              -12065.431640625
+            ],
+            "ang": [
+              0.0,
+              -0.1494859755039215,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca67380",
+            "id": 67,
+            "type": 0,
+            "alive": 33581167,
+            "rno": [
+              1,
+              0,
+              1,
+              0
+            ],
+            "pos": [
+              -55121.73046875,
+              1160.363037109375,
+              -11901.6845703125
+            ],
+            "ang": [
+              0.0,
+              -1.5831513404846191,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca650a0",
+            "id": 65,
+            "type": 1,
+            "alive": 33564775,
+            "rno": [
+              1,
+              6,
+              1,
+              0
+            ],
+            "pos": [
+              -77043.8046875,
+              869.6199951171875,
+              -30320.93359375
+            ],
+            "ang": [
+              0.0,
+              1.5707963705062866,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca642c0",
+            "id": 70,
+            "type": 0,
+            "alive": 33564775,
+            "rno": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "pos": [
+              -73760.6328125,
+              4354.869140625,
+              -32290.4375
+            ],
+            "ang": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca48c40",
+            "id": 70,
+            "type": 0,
+            "alive": 33564775,
+            "rno": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "pos": [
+              -85629.5390625,
+              1898.166015625,
+              -32280.1015625
+            ],
+            "ang": [
+              0.0,
+              -1.5707499980926514,
+              0.0
+            ],
+            "hp": 1000,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8ca47e60",
+            "id": 0,
+            "type": 0,
+            "alive": 184557687,
+            "rno": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "pos": [
+              -83830.796875,
+              860.20166015625,
+              -38395.640625
+            ],
+            "ang": [
+              0.0,
+              1.7602647542953491,
+              0.0
+            ],
+            "hp": 1200,
+            "motion_ptr": "0x8c7058c0",
+            "motion_frame": 30.0
+          },
+          {
+            "ptr": "0x8cbdc8c0",
+            "id": 66,
+            "type": 0,
+            "alive": 33579111,
+            "rno": [
+              1,
+              3,
+              0,
+              0
+            ],
+            "pos": [
+              -843.5800170898438,
+              5.809999942779541,
+              866.8699951171875
+            ],
+            "ang": [
+              0.0,
+              -0.7166758179664612,
+              0.0
+            ],
+            "hp": 0,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8cc953a0",
+            "id": 66,
+            "type": 0,
+            "alive": 33579111,
+            "rno": [
+              1,
+              3,
+              0,
+              0
+            ],
+            "pos": [
+              -313.8500061035156,
+              -21.200000762939453,
+              102.20999908447266
+            ],
+            "ang": [
+              0.0,
+              -1.0402162075042725,
+              0.0
+            ],
+            "hp": 0,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8cc945c0",
+            "id": 66,
+            "type": 0,
+            "alive": 33579111,
+            "rno": [
+              1,
+              3,
+              0,
+              0
+            ],
+            "pos": [
+              313.8500061035156,
+              -21.200000762939453,
+              102.20999908447266
+            ],
+            "ang": [
+              0.0,
+              -1.0402162075042725,
+              3.1415927410125732
+            ],
+            "hp": 0,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          },
+          {
+            "ptr": "0x8cca2380",
+            "id": 66,
+            "type": 0,
+            "alive": 33579109,
+            "rno": [
+              1,
+              3,
+              0,
+              0
+            ],
+            "pos": [
+              -843.5800170898438,
+              5.809999942779541,
+              866.8699951171875
+            ],
+            "ang": [
+              0.0,
+              -0.7166758179664612,
+              0.0
+            ],
+            "hp": 0,
+            "motion_ptr": "0x0",
+            "motion_frame": 0.0
+          }
+        ],
+        "ssloop": 0,
+        "manager_nodes_seen": 36
+      },
+      "checkpoint_sha256": "d632b2e02d805e826f4148b8a263e86e02c80f4c1853da2364008ce6942d5668",
+      "checkpoint_audit": {
+        "state_sha256": "e3366fdda3d73a87c9bd1cda1bdf0b11fb873ee92edbe42952042b23632e93a0",
+        "state_bytes": 12513182,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 28141006,
+        "ram_serialization_offset": 11357265,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 238880,
+        "room": 256,
+        "frame": 761,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -83831.9453125,
+          860.204345703125,
+          -38396.19921875
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 44932,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\radio-route01\\flycast.exe",
+        "start_filetime": 134370884447182987,
+        "exit_code": 0,
+        "exit_filetime": 134370884867107298,
+        "actual_guest_seconds": 41.9924311,
+        "launcher_exit": 0,
+        "controller_exit": 0
+      },
+      "movie_results": [
+        "route movie start: id=10020 path=/cd/dc/movie/r100s20.seq size=288x192 frames=571 media_us=19052366 staged=363328 heap=810496->446304 range=full path=pvr-yuv-converter",
+        "route movie terminal=1 id=10020 frames=571/571 uploaded=571 presented=571 wall_us=19114016 media_us=19052366 underruns=2 silence_bytes=8448 heap_before=810496 heap_active=446304 staged=363328"
+      ],
+      "window_closes": [
+        "subscreen backing: close area=8c862b60 restored=3145728 restore_us=319660 hash=6a73576d ok pool_free=150816"
+      ]
+    }
+  },
+  "rejected": {
+    "qa-cold01-checkpoint": {
+      "reason": "Initial launcher selected plain runner; QA input qualifies but no checkpoint exists. No later scenario restores it."
+    },
+    "movie-skip01": {
+      "reason": "Watchdog empty PID-file race; root lane stopped only its verified owned guest at43s. No state is restored from this trial."
+    },
+    "qa-after-continue01": {
+      "reason": "Overall harness52.3s, hard-limit termination and truncated/rejected checkpoint. Process lifetime was not independently recorded; do not qualify or continue it."
+    },
+    "movie-natural-cold01": {
+      "reason": "C floor preflight refused launch; no guest started."
+    }
+  },
+  "inspected_images": {
+    "pause-cold01/events/07-before-start/frames/fb0.png": "b8aa27c2bfbf408c64c54ddac2e9d2ce4dcb32813160065eb7b640b6f53677b1",
+    "pause-cold01/events/08-before-start/frames/fb0.png": "b30d69f758a67b51e89c67233d50fde0cdf89bcaa2e453af0621017caf6de06d",
+    "inventory02/shots/t0013/frames/fb0.png": "e3541ca2ae275a17b80ae8f62e061bce37c626c5ba2494d6af114762af856b01",
+    "inventory02/shots/t0036/frames/fb0.png": "d6de6f7050d112f4d8e2d8ebb143eeaedf5270ecaf6320e825d4b82699f78b83",
+    "death-continue01/shots/t0006/frames/fb0.png": "6bc022639fb644af1069a5b88ab4556a6b14af2ef1b2ef297a3155a862109ea4",
+    "death-continue01/events/03-checkpoint-close/frames/fb0.png": "7af340a4d482627c1fc289656edb5b9b13a7bcd7f40d9b30e34a1b3034649880",
+    "movie-natural-cold01/shots/t0033/frames/fb0.png": "6ba676cbd849c6e30722ef93966ecbb478ac4b3b5f349fb77e0a08fb7e5000e8",
+    "movie-natural-finish01/events/01-checkpoint-close/frames/fb0.png": "4d03d977e92a2398f1d68bd300f1a65b477d4dd9ee4da004bad7d0495f7faa38",
+    "radio-route01/shots/t0036/frames/fb0.png": "eb226fbf9a26c00f1e565cc9785c9bc7ed09f1bb2eee17fa79767f9cd01b909b",
+    "new-room-death-continue01/shots/t0040/frames/fb0.png": "18963ffc75e7446aa4dc0a9d320d70cf15072572c6f56e43a18496a65c539732",
+    "control-new-room-no-qa01/shots/t0039/frames/fb0.png": "2efa644ac4b6ebc6fc7ed4a8a974c0d978d53456e56a15913e789b7e34088fa3"
+  },
+  "resource_limits": [
+    "Continue KOS free3840B leaving/7936B entering",
+    "Inventory texture fragmentation retries remain",
+    "New guests blocked under C18GiB+64MiB; no floor lowered"
+  ],
+  "remaining": [
+    "Post-door life1 stall caller/fix and playable new-room return/Continue",
+    "Natural no-warp complete route; preserved r100 road collision/death is not a pass",
+    "Resource/KOS/fragmentation qualification",
+    "Audio quality: s03 reports1 underrun1472silence bytes; s20 reports2 underruns8448silence bytes",
+    "Release full tier",
+    "Physical Dreamcast acceptance"
+  ],
+  "scope": "Bounded preset-started functional Flycast only. No performance, whole-cache, release or physical-console acceptance.",
+  "storage_context": "Today transparent LZX compression of idle owned combined target97a3219f recovered140,976,128 allocated bytes (810,655,744 to669,679,616); full logical hash/1,032,499,200 bytes/path/file identity/KEEP preserved. Total logical-to-allocation difference362,819,584 bytes. Prior NTFS compression receipts remain retained. No host throughput/performance comparison across storage changes.",
+  "additional_bounded_evidence": {
+    "door-route01": {
+      "classification": "Tooling alias failure; preserved bounded checkpoint; no progression claim",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.9,
+      "errors": [],
+      "keys_executed": 0,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 22304,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\door-route01\\flycast.exe",
+        "start_filetime": 134370886363668561,
+        "exit_code": 0,
+        "exit_filetime": 134370886781881933,
+        "actual_guest_seconds": 41.8213372,
+        "launcher_exit": 0,
+        "controller_exit": 1
+      },
+      "checkpoint_sha256": "a00db2af58f665418b9737cc29c8dfcf74150c087f8bed3f732ddfbe99698779",
+      "checkpoint_audit": {
+        "state_sha256": "8239e8d5fb7f1b5d835ddd7b5c6cbcf2fefdbc1c37478fe8220ea41d6af2b245",
+        "state_bytes": 12493617,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 28103694,
+        "ram_serialization_offset": 11319953,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 303893,
+        "room": 256,
+        "frame": 1958,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -83852.3046875,
+          860.19970703125,
+          -38401.421875
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "door-route02": {
+      "classification": "Original house window approached; A not yet aligned; no fake traversal",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.9,
+      "errors": [],
+      "keys_executed": 0,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 50460,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\door-route02\\flycast.exe",
+        "start_filetime": 134370886992583171,
+        "exit_code": 0,
+        "exit_filetime": 134370887411594356,
+        "actual_guest_seconds": 41.9011185,
+        "launcher_exit": 0,
+        "controller_exit": 0
+      },
+      "checkpoint_sha256": "60cf969e0e425aa31f22a1736a69b25325bf000d7f55454de2e9217763293356",
+      "checkpoint_audit": {
+        "state_sha256": "dd61e29cb258cddf9b260461842086d33d5409bc190b3090730b9f7407c7de5d",
+        "state_bytes": 12390231,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 27808046,
+        "ram_serialization_offset": 11024305,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 387346,
+        "room": 256,
+        "frame": 3158,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -84949.03125,
+          860.202392578125,
+          -32073.5625
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "door-route03": {
+      "classification": "Original source window jump by normal movement/A, authentic life1200 to476",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 42.0,
+      "errors": [],
+      "keys_executed": 0,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 26528,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\door-route03\\flycast.exe",
+        "start_filetime": 134370888147028073,
+        "exit_code": 0,
+        "exit_filetime": 134370888566680668,
+        "actual_guest_seconds": 41.9652595,
+        "launcher_exit": 0,
+        "controller_exit": 0
+      },
+      "checkpoint_sha256": "39a1d25b94bb729d1ffa5b5185d993da8b01dfda31020980bf74142020a9a55c",
+      "checkpoint_audit": {
+        "state_sha256": "e97040b93878dbcac7807c042bcbbe858f253b3697c5125a44f8efa3e21ce865",
+        "state_bytes": 12519093,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 28018318,
+        "ram_serialization_offset": 11234577,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 470589,
+        "room": 256,
+        "frame": 4334,
+        "stop": 0,
+        "player_life": 476,
+        "player_life_max": 1200,
+        "player_pos": [
+          -88036.21875,
+          890.2919921875,
+          -28739.822265625
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "door-route04": {
+      "classification": "Road collision stall followed authentic enemy damage476 to153 to0; no no-warp route acceptance",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.8,
+      "errors": [],
+      "keys_executed": 0,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 20092,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\door-route04\\flycast.exe",
+        "start_filetime": 134370889192421267,
+        "exit_code": 0,
+        "exit_filetime": 134370889610377283,
+        "actual_guest_seconds": 41.7956016,
+        "launcher_exit": 0,
+        "controller_exit": 0
+      },
+      "checkpoint_sha256": "42156e2422d3f1ea2ce2543be8d806beb66ba9936056028b341b49a478601b85",
+      "checkpoint_audit": {
+        "state_sha256": "ea9b961491e45debbdafc46b90e9b6f63a8a80093f4580407ca6d55ed79d8a85",
+        "state_bytes": 11883409,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 27787246,
+        "ram_serialization_offset": 11003505,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 541232,
+        "room": 256,
+        "frame": 5523,
+        "stop": 2151678208,
+        "player_life": 0,
+        "player_life_max": 1200,
+        "player_pos": [
+          -87298.2421875,
+          890.2694091796875,
+          -28075.9453125
+        ],
+        "player_rno": [
+          2,
+          2,
+          0,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "door-death-continue01": {
+      "classification": "Original Continue from authentic preceding death; health/state lineage preserved",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 42.0,
+      "errors": [],
+      "keys_executed": 3,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 47580,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\door-death-continue01\\flycast.exe",
+        "start_filetime": 134370891153831140,
+        "exit_code": 0,
+        "exit_filetime": 134370891573877626,
+        "actual_guest_seconds": 42.0046486,
+        "launcher_exit": 0
+      },
+      "checkpoint_sha256": "a596657694877f28a1809db821b5199c2e23a946a45f19d87fcb5bcf31b382fe",
+      "checkpoint_audit": {
+        "state_sha256": "6d9fa912af5c2ce1509ce08d2bcd6f1a5268db1436bde6b99a53539830d355da",
+        "state_bytes": 12401726,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 27785294,
+        "ram_serialization_offset": 11001553,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 674284,
+        "room": 256,
+        "frame": 545,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -99685.6484375,
+          -454.5938720703125,
+          -1343.0992431640625
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "r103-cold01": {
+      "classification": "Fresh combined cold preset4 r103, life1200; independent of original r100 lineage",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.8,
+      "errors": [],
+      "keys_executed": 8,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 35988,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\r103-cold01\\flycast.exe",
+        "start_filetime": 134370892406773414,
+        "exit_code": 0,
+        "exit_filetime": 134370892824251433,
+        "actual_guest_seconds": 41.7478019,
+        "launcher_exit": 0
+      },
+      "checkpoint_sha256": "eabaf36457a562489019bcbc7ecfa35ad1da19e1de6c7ebc18ecca34c97c2fb5",
+      "checkpoint_audit": {
+        "state_sha256": "bcb00bf9eaaf00cc6552023bcde834180c78b54fe064bf83792216a07bd65f1e",
+        "state_bytes": 9092991,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 27785294,
+        "ram_serialization_offset": 11001553,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 166845,
+        "room": 259,
+        "frame": 516,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -47613.35546875,
+          57.6439208984375,
+          7081.60986328125
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "r103-return-door01": {
+      "classification": "Ordinary approach; helper threshold collided before A, no game defect claim",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.8,
+      "errors": [],
+      "keys_executed": 0,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 52348,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\r103-return-door01\\flycast.exe",
+        "start_filetime": 134370893340882714,
+        "exit_code": 0,
+        "exit_filetime": 134370893758765136,
+        "actual_guest_seconds": 41.7882422,
+        "launcher_exit": 0,
+        "controller_exit": 0
+      },
+      "checkpoint_sha256": "df567c817fe53c91ff0c6d9bf48f2c2eed035bf526b024282f2d30a597dbaf2c",
+      "checkpoint_audit": {
+        "state_sha256": "bc5434b6dbe59cd947bfbf99435687658b744ed0a14a98b077dfbb2e64cb330b",
+        "state_bytes": 9143720,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 27785294,
+        "ram_serialization_offset": 11001553,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 236333,
+        "room": 259,
+        "frame": 1698,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -48513.5546875,
+          22.14312744140625,
+          7694.81396484375
+        ],
+        "player_rno": [
+          0,
+          1,
+          1,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "r103-return-door02": {
+      "classification": "Original DOORDEMO start/end, targetr101 generation2 and original PlayingManual2 opened",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.8,
+      "errors": [],
+      "keys_executed": 0,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 48740,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\r103-return-door02\\flycast.exe",
+        "start_filetime": 134370894044654364,
+        "exit_code": 0,
+        "exit_filetime": 134370894461704962,
+        "actual_guest_seconds": 41.7050598,
+        "launcher_exit": 0,
+        "controller_exit": 0
+      },
+      "checkpoint_sha256": "ecec4d147e40e85fe9f18afa9833e37ee22196c050d949518a063b2755d22c04",
+      "checkpoint_audit": {
+        "state_sha256": "e937fedc7e68789417b1c0548b626083a017049b7b1bba08b28365d8ae8debdb",
+        "state_bytes": 10474697,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 28082062,
+        "ram_serialization_offset": 11298321,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 406322,
+        "room": 257,
+        "frame": 2385,
+        "stop": 2013265855,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "player_rno": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "new-room-qa01": {
+      "classification": "Normal B exits reader into files browser; QA withheld while modal; expected safety rejection",
+      "run_status": "RUN_FAILED",
+      "elapsed_s": 21.0,
+      "errors": [
+        {
+          "kind": "run",
+          "error": "QA safe-state sampling did not reach 30 ticks; chord withheld"
+        }
+      ],
+      "keys_executed": 1,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 25536,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\new-room-qa01\\flycast.exe",
+        "start_filetime": 134370895087351579,
+        "exit_code": 0,
+        "exit_filetime": 134370895296791190,
+        "actual_guest_seconds": 20.9439611,
+        "launcher_exit": 0
+      },
+      "checkpoint_sha256": "d30776092a6844abd3af8d9561a776cd3599d8b628542ef28bdc63f8243b7295",
+      "checkpoint_audit": {
+        "state_sha256": "6e587b2f3cb2614903f7626be0060477175c3cbf25d7e0c2dc82680a21d386fc",
+        "state_bytes": 10881936,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 28082158,
+        "ram_serialization_offset": 11298417,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 427347,
+        "room": 257,
+        "frame": 2964,
+        "stop": 2013265855,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "player_rno": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "new-room-qa02": {
+      "classification": "Normal B exits files browser, two QA cycles passed; third withheld after life1 routine2/2 stall",
+      "run_status": "RUN_FAILED",
+      "elapsed_s": 37.4,
+      "errors": [
+        {
+          "kind": "run",
+          "error": "QA safe-state sampling did not reach 30 ticks; chord withheld"
+        }
+      ],
+      "keys_executed": 6,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 17816,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\new-room-qa02\\flycast.exe",
+        "start_filetime": 134370896765745121,
+        "exit_code": 0,
+        "exit_filetime": 134370897138920800,
+        "actual_guest_seconds": 37.3175679,
+        "launcher_exit": 0
+      },
+      "checkpoint_sha256": "5e6f7a2090a7766c6ff7d034f2509598444c4e011678ace48112bdb50e76b3be",
+      "checkpoint_audit": {
+        "state_sha256": "951bd1522bd6f8f229cb285d169ed2bdc70115ad5dbb7e252cddf5f1808be2a4",
+        "state_bytes": 11530682,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 27785294,
+        "ram_serialization_offset": 11001553,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 515412,
+        "room": 257,
+        "frame": 3821,
+        "stop": 0,
+        "player_life": 1,
+        "player_life_max": 1200,
+        "player_pos": [
+          38615.67578125,
+          3030.46533203125,
+          -26020.51953125
+        ],
+        "player_rno": [
+          2,
+          2,
+          0,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "new-room-death-continue01": {
+      "classification": "Name misleading: normal A input while life1 stalled; no death demo/Continue; preserved finding",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.9,
+      "errors": [],
+      "keys_executed": 3,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 9084,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\new-room-death-continue01\\flycast.exe",
+        "start_filetime": 134370898556429274,
+        "exit_code": 0,
+        "exit_filetime": 134370898974809012,
+        "actual_guest_seconds": 41.8379738,
+        "launcher_exit": 0
+      },
+      "checkpoint_sha256": "9655cfc9d6bdb9b02464c9c47dc8f7fd5a8dc4920d50decc496ba7eb2c431d4c",
+      "checkpoint_audit": {
+        "state_sha256": "849efbae58872408bcb4965002271a5dbae12702aa75545fa9a1c6eae969bab9",
+        "state_bytes": 11588138,
+        "elf_sha256": "0d6dcf6fbec0f543fae5818895c7cb4d461cbe9e050563fd7fd309f86923c43e",
+        "decoded_bytes": 28016750,
+        "ram_serialization_offset": 11233009,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "a3c6eb7a7a22e9ec268a7f5664ea1d13d01f0cb626a4978405fdded477378339"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "07af8e75fdf14f63bca77069646280759970dadd8a27e49ff062072a6ca2018a"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "00d17e88ab4ff357397e8f186c752fec1c2221114208ebcd61b499dd255360ed"
+          }
+        ],
+        "log_head": 596440,
+        "room": 257,
+        "frame": 5021,
+        "stop": 0,
+        "player_life": 1,
+        "player_life_max": 1200,
+        "player_pos": [
+          38615.67578125,
+          3030.4697265625,
+          -26020.515625
+        ],
+        "player_rno": [
+          2,
+          2,
+          0,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "control-r103-cold01": {
+      "classification": "Separate fresh cold QA-control PAUSE0 lineage, no candidate-state restore",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.6,
+      "errors": [],
+      "keys_executed": 8,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 36828,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\control-r103-cold01\\flycast.exe",
+        "start_filetime": 134370902338947012,
+        "exit_code": 0,
+        "exit_filetime": 134370902754858048,
+        "actual_guest_seconds": 41.5911036,
+        "launcher_exit": 0
+      },
+      "checkpoint_sha256": "1a8aeab55e541088130288295c264a1274dfef99836aa7a9fb64c6555be1ef99",
+      "checkpoint_audit": {
+        "state_sha256": "4ef3dfd157560fab6aa2b22bc01f5251f9adb1b417e89d4ed32205f5399afe2e",
+        "state_bytes": 9104900,
+        "elf_sha256": "96eb9ddf7c26795297aa87c0fa631c7da582e7c2b01a7b5a100f7d04bee954ad",
+        "decoded_bytes": 27846318,
+        "ram_serialization_offset": 11062577,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "1188c27cca1ceb382a7ecb5023ee0e0bad7e644371757db265cc220d542bef4f"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "6cc9ed5977059fee763a3f28957bbe7752e7449fc9eb2035c61601ade9598634"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "bd609bff417fb4a0847948c4e684222320e8cce07ba08b5a70190bf93b9f800b"
+          }
+        ],
+        "log_head": 166639,
+        "room": 259,
+        "frame": 511,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -47614.34375,
+          57.646484375,
+          7081.14599609375
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "control-r103-return-door01": {
+      "classification": "Ordinary r103 door to r101, original PlayingManual2 opened, life1200",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.8,
+      "errors": [],
+      "keys_executed": 0,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 17160,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\control-r103-return-door01\\flycast.exe",
+        "start_filetime": 134370903564402993,
+        "exit_code": 0,
+        "exit_filetime": 134370903982017421,
+        "actual_guest_seconds": 41.7614428,
+        "launcher_exit": 0,
+        "controller_exit": 0
+      },
+      "checkpoint_sha256": "36fa79ed6baea892c87f9061416f1e18b3d38c62e88695520608fdf6a3fe5b1b",
+      "checkpoint_audit": {
+        "state_sha256": "12b41dbc948b9ebb252df58123f0d370d56648e7938b64ae99e1a6e46c27d509",
+        "state_bytes": 10472668,
+        "elf_sha256": "96eb9ddf7c26795297aa87c0fa631c7da582e7c2b01a7b5a100f7d04bee954ad",
+        "decoded_bytes": 28082062,
+        "ram_serialization_offset": 11298321,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "1188c27cca1ceb382a7ecb5023ee0e0bad7e644371757db265cc220d542bef4f"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "6cc9ed5977059fee763a3f28957bbe7752e7449fc9eb2035c61601ade9598634"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "bd609bff417fb4a0847948c4e684222320e8cce07ba08b5a70190bf93b9f800b"
+          }
+        ],
+        "log_head": 342688,
+        "room": 257,
+        "frame": 1210,
+        "stop": 2013265855,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "player_rno": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "control-new-room-qa01": {
+      "classification": "One QA cycle passed, independent PAUSE0 control reproduces life1 routine2/2 stall; next QA withheld",
+      "run_status": "RUN_FAILED",
+      "elapsed_s": 29.2,
+      "errors": [
+        {
+          "kind": "run",
+          "error": "QA safe-state sampling did not reach 30 ticks; chord withheld"
+        }
+      ],
+      "keys_executed": 4,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 51912,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\control-new-room-qa01\\flycast.exe",
+        "start_filetime": 134370904684225251,
+        "exit_code": 0,
+        "exit_filetime": 134370904976014795,
+        "actual_guest_seconds": 29.1789544,
+        "launcher_exit": 0
+      },
+      "checkpoint_sha256": "9b7c90b3a21c4fc4cb62e5a10e5e9752262c33e47da6b120c0083db45192b0d5",
+      "checkpoint_audit": {
+        "state_sha256": "306ae4944b35edf8dd7542b5758a5db0383547bd1497157c01d3e06ab93dff02",
+        "state_bytes": 11489970,
+        "elf_sha256": "96eb9ddf7c26795297aa87c0fa631c7da582e7c2b01a7b5a100f7d04bee954ad",
+        "decoded_bytes": 27785294,
+        "ram_serialization_offset": 11001553,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "1188c27cca1ceb382a7ecb5023ee0e0bad7e644371757db265cc220d542bef4f"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "6cc9ed5977059fee763a3f28957bbe7752e7449fc9eb2035c61601ade9598634"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "bd609bff417fb4a0847948c4e684222320e8cce07ba08b5a70190bf93b9f800b"
+          }
+        ],
+        "log_head": 413564,
+        "room": 257,
+        "frame": 1907,
+        "stop": 0,
+        "player_life": 1,
+        "player_life_max": 1200,
+        "player_pos": [
+          38715.1171875,
+          3035.24755859375,
+          -25964.029296875
+        ],
+        "player_rno": [
+          2,
+          2,
+          0,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    },
+    "control-new-room-no-qa01": {
+      "classification": "PAUSE0 control ordinary B/B-only closes original manual/files, NO QA chord/menu invocation; same life1 routine2/2 stall; no death demo or Continue",
+      "run_status": "RUN_COMPLETE",
+      "elapsed_s": 41.8,
+      "errors": [],
+      "keys_executed": 2,
+      "supervisor": {
+        "absolute_guest_limit_s": 47.5,
+        "inner_requested_s": 41,
+        "scope": "Independent PID, executable and process-start verified outer guest supervisor",
+        "pid": 37376,
+        "executable": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\control-new-room-no-qa01\\flycast.exe",
+        "start_filetime": 134370929166559336,
+        "exit_code": 0,
+        "exit_filetime": 134370929583771220,
+        "actual_guest_seconds": 41.7211884,
+        "launcher_exit": 0
+      },
+      "checkpoint_sha256": "5cb106761166bd4f95ccfd3452cfaba3e1dc5b4649e638b4eec87939b1f770df",
+      "checkpoint_audit": {
+        "state_sha256": "3b4618f3c662c11a7502b2228574c52a64c14045908a56abd2f90816a3ad67d3",
+        "state_bytes": 11505003,
+        "elf_sha256": "96eb9ddf7c26795297aa87c0fa631c7da582e7c2b01a7b5a100f7d04bee954ad",
+        "decoded_bytes": 27785294,
+        "ram_serialization_offset": 11001553,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "1188c27cca1ceb382a7ecb5023ee0e0bad7e644371757db265cc220d542bef4f"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "6cc9ed5977059fee763a3f28957bbe7752e7449fc9eb2035c61601ade9598634"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "bd609bff417fb4a0847948c4e684222320e8cce07ba08b5a70190bf93b9f800b"
+          }
+        ],
+        "log_head": 443930,
+        "room": 257,
+        "frame": 2362,
+        "stop": 0,
+        "player_life": 1,
+        "player_life_max": 1200,
+        "player_pos": [
+          38715.1171875,
+          3035.2451171875,
+          -25964.033203125
+        ],
+        "player_rno": [
+          2,
+          2,
+          0,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      }
+    }
+  },
+  "open_findings": {
+    "post_door_life1_stall": {
+      "candidate": "new-room-qa02 then new-room-death-continue01",
+      "control": "control-new-room-qa01",
+      "both_programs_have_QA_chord_repair": true,
+      "pause_native_presentation_required_to_reproduce": false,
+      "cause_proven": false,
+      "observed": "Global mode3/0 Stop0 player life1; player routine2/1 then2/2 motion86; no death demo because gameDiedemoCheck requires life<=0; later QA safely withheld",
+      "QA_flags": 0,
+      "control_source_recipe": {
+        "runtime_source": "6f9d31b0e00497a75fdd7e25bb04f92305103087",
+        "QA_MENU": 1,
+        "PAUSE_NATIVE_PRESENTATION": 0,
+        "GAME_SH4ZAM": 1,
+        "SKIN_SH4ZAM": 0
+      },
+      "control_program": "5c5a6c434751b03a0aaa05d8e2478820ca82a3790d7c3b06799f7845d6c5f68b",
+      "control_ELF": "96eb9ddf7c26795297aa87c0fa631c7da582e7c2b01a7b5a100f7d04bee954ad",
+      "control_track": "2a6b3200fb0016a89af9b9da275a207eea7a63c7adc7dfedaf07b4a40709fc9a",
+      "control_debug_flags": [
+        512,
+        0,
+        32768,
+        0
+      ],
+      "control_game_level": 5,
+      "control_state_sha256": "306ae4944b35edf8dd7542b5758a5db0383547bd1497157c01d3e06ab93dff02",
+      "source_pointers": [
+        "src/game/game.cpp:1274 gameDiedemoCheck only triggers at life<=0",
+        "src/game/pl_dmg.cpp:337 Pl_R0_Die routine2/2 advances last motion only",
+        "src/game/em_sub.cpp:1991 LifeDownSet2 early returns at existing life<=0; ordinary keep1 clamp only on positive-life damage",
+        "src/game/em_sub.cpp:2124 PlSetDamage chooses routine2 for lethal ordinary damage",
+        "src/game/pl_class.cpp:705 cPlayer::setDamage dispatches damage type"
+      ],
+      "next": "Root to allocate exact shared instrumentation scope and resources: default-OFF read-only death trace of LifeDownSet2/PlSetDamage, Pl_R0_Die initial entry and gameDiedemoCheck low-life/routine, with original frame and caller-address mapping. No gameplay writes or speculative fix.",
+      "limitations": "Non-atomic live samples and different input/frame/RNG lineages do not prove exact lethal caller; no cross-program state restoration.",
+      "no_QA_invocation_control": "control-new-room-no-qa01",
+      "QA_menu_invocation_required_to_reproduce": false,
+      "no_QA_inputs": [
+        {
+          "step": 0,
+          "keys": [
+            "b"
+          ],
+          "host_s": 1.0,
+          "windows": 5
+        },
+        {
+          "step": 1,
+          "keys": [
+            "b"
+          ],
+          "host_s": 4.8,
+          "windows": 5
+        }
+      ],
+      "no_QA_observations": "Only original B/B inputs; no QA menu/heal, life fixture, or DIEDEMO log; final prone player/live HUD PNG inspected"
+    }
+  },
+  "image_limit": "Live framebuffers are non-atomic. Candidate and no-QA control final prone/live-HUD stall PNGs inspected; earlier QA-control safe-state-error trial ended periodic captures before stall.",
+  "storage_compression_update": {
+    "time": "2026-10-21T17:48:16-0400",
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\combined-input\\gdemu\\track03.iso",
+    "scope": "Idle owned target only; exclusive-read admission probe; transparent LZX storage compression; all logical game bytes and KEEP retained",
+    "before": {
+      "sha256": "97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18",
+      "allocated_bytes": 810655744,
+      "logical_bytes": 1032499200,
+      "file_id": [
+        14332939485708580193,
+        562949958317551
+      ],
+      "attributes": 2080
+    },
+    "after": {
+      "sha256": "97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18",
+      "allocated_bytes": 669679616,
+      "logical_bytes": 1032499200,
+      "file_id": [
+        14332939485708580193,
+        562949958317551
+      ],
+      "attributes": 32
+    },
+    "allocated_recovered_bytes": 140976128,
+    "compact_exit": 0,
+    "host_throughput_comparison": "No performance or throughput comparison across storage compression boundary"
+  }
+}
