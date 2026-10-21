@@ -42,6 +42,7 @@ GAME_LDFLAGS += -Wl,--wrap=re4dc_ui_frame
 QA_MENU_UI_WRAP := -DRE4DC_QA_UI_WRAP=1
 endif
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_QA_MENU=1
+$(OBJDIR)/platform/pad.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_MENU=1
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_QA_BANNER=1
 .PHONY: qamenu-force
 $(OBJDIR)/qa_menu.h: qamenu-force
