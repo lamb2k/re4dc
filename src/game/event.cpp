@@ -72,6 +72,12 @@
 #endif
 #endif
 
+#if defined(RE4DC_EVD_START_ROLLBACK) && RE4DC_EVD_START_ROLLBACK && !defined(__PPC__)
+#if !defined(RE4DC_EVD_ADMISSION_TXN) || !RE4DC_EVD_ADMISSION_TXN || !defined(RE4DC_EVD_START_CLEANUP) || !RE4DC_EVD_START_CLEANUP
+#error EVD_START_ROLLBACK requires EVD_ADMISSION_TXN and EVD_START_CLEANUP
+#endif
+#endif
+
 
 extern "C" {
 void OSReport(const char* fmt, ...);
@@ -2699,11 +2705,31 @@ int EventMgr::SetEvt(void* data, u32* key)
         pLog->err(0, 0, "EventMgr::SetEvt : invalid data");
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_START_ROLLBACK) && RE4DC_EVD_START_ROLLBACK
+    // SetEvd reuses a complete prior owner without taking another reference.
+    // Only this call's new admission may be undone after a failed local start.
+    const int prior = EvtMgr.EvdTbl.ChkDat((char*) hdr);
+#endif
     if (EvtMgr.SetEvd((char*) hdr, hdr, 0, 2) == 0) {
         pLog->err(0, 0, "EventMgr::SetEvt : SetEvd failed[%s]", hdr);
         return 0;
     }
     if (EvtMgr.SetEvt((char*) hdr, &evt) == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_START_ROLLBACK) && RE4DC_EVD_START_ROLLBACK
+        void* registered = 0;
+        u8 type = 0;
+        int slot = 0;
+        if (!prior && EvtMgr.EvdTbl.GetDat(&registered, &type, (char*) hdr, &slot) &&
+            registered == hdr && type == 8) {
+            const DatTblEntry* row = &EvtMgr.EvdTbl.pWork[slot];
+            // A transferred/replaced/debug-owned row is not this admission.
+            // The synchronous source call keeps the immutable header and its
+            // bin reference list live until this rollback returns.
+            if (row->Count == 1 && row->FlagBe8 == 3 && row->dat2 == 0) {
+                EvtMgr.DelEvd((char*) hdr);
+            }
+        }
+#endif
         pLog->err(0, 0, "EventMgr::SetEvt : SetEvt failed[%s]", hdr);
         return 0;
     }

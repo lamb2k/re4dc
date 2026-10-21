@@ -1,0 +1,716 @@
+{
+  "scope": "Actual source failed-start outer rollback with init/end/delete/manager/data-unit/carrier/cabin callbacks; UBSan state suite excludes vptr and retains strict lifetime diagnostics. Synthetic inputs, projected ABI, external services. No target/gameplay occurrence/whole read/reset ownership proof.",
+  "source_head": "32172f54284e745962268f1cb7ea2c6d45556a1f",
+  "fixture_revision": "d396bd9e70f7953866e2055b392dda39e0087644",
+  "source_sha256": {
+    "test_motion_lifetime.py": "5b4e79cbb01dfc0100fc0523cdc9ea643d669e534e7ad335857fad81df1a19e2",
+    "motion_consumer_audit.py": "64cc92e4ccf70f8bf1b8fab98658ca3fd75a6c29fec7d94b4fc2f688d7e15e9d",
+    "motion_event_admission_host.cpp": "7c76797565621c86e767ed19333487ab2fe0b99bf3b7c8fa30b71dfcd4fa0ef7",
+    "src/game/event.cpp": "051d9ee941c075143f93716847fd065f193877c313648e935defe33b14bd0a29",
+    "src/game/datactrl.cpp": "31d38c14806250cdf1d7ad58a7dd742641bc2fbe6e3af5cf5c0f361163277216",
+    "include/event.h": "8d9acb9b41db86dc14c9a31ea045cea16ee9082ca0e8044be5211b96909bb1ac",
+    "include/datactrl.h": "dbe0a9709611a900c08b317a446aa23bd905be85db4b6e06f6a27e800d4f4026",
+    "include/cManager.h": "19ce63044d273bce47c208773df8921f08f90fc58bdfc162e7bb9507f5940e3c",
+    "include/types.h": "8b06345739f3f0d44520890cac81535bd83a3bcc747cfa62debb982a0d4b012d",
+    "src/game/file.cpp": "bfeb91de09bf843dbd6b68600cf11e7798f89bc6fffbcc271900b792b9d87699",
+    "src/game/file_app.cpp": "2d12f307a772b89d1b70bfd0df1f7a807a646c9fee49f6afd9c9864bdbfec005",
+    "include/file.h": "44bad1babd07741a68babf3227fbcb64a793436dd79351d419402694cc511193",
+    "port/dreamcast/game/platform/misc.cpp": "d77e34f445b7a1d656e813aab636336525906da3396162990b461506b03315a6",
+    "port/dreamcast/game/platform/native_event_file.cpp": "8ee1b82f0eb0ea697c3bf36acc024006d7621704de7b553bb051493ed55d3c9e",
+    "port/dreamcast/game/platform/native_cabin.cpp": "5011f4f5d86713a13e913d5b60c70549657fbc46c648ec36c9e9207d08fb5c14"
+  },
+  "selected_methods": [
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::EvtReadSub",
+      "line": 2420,
+      "sha256": "a7671877e5b87f7c393edb3443a757a6c936386f88fca28e0065e834210f9bf5",
+      "execution": "Inspected/pinned, not executed; GetRead has the documented pointer-width ABI adapter."
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::SetRead",
+      "line": 3113,
+      "sha256": "80804c0428e3b445676754cdf401be8b6e4ebabc61fddb49745140b0ea6d6ef9",
+      "execution": "Inspected/pinned, not executed; GetRead has the documented pointer-width ABI adapter."
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::GetRead",
+      "line": 3130,
+      "sha256": "b95201168edfbdf9a887cdf9a803e854054dc24e02332cfed2271dfc9e21080a",
+      "execution": "Inspected/pinned, not executed; GetRead has the documented pointer-width ABI adapter."
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EvtWorkNo",
+      "signature": null,
+      "line": 168,
+      "sha256": "d55c6993be1db2151483277d5ab257ac55930d7bd21f660b2036d154a4c69d4d"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::SetEvd",
+      "signature": null,
+      "line": 2919,
+      "sha256": "6992a0575a0388f02d8af204f71a4036d8c418759f55de1b5ff585b7557521bb"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::SetBin",
+      "signature": null,
+      "line": 2862,
+      "sha256": "8d1be61f03b963f759d207969b041017d92b45dbaa772d2343dda054a2672b2c"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::SetDat",
+      "signature": null,
+      "line": 3448,
+      "sha256": "36e5909861d1239c2fad2fd97cdcbc44a2ae073a69074f40997a573d728e5302"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::ChkDat",
+      "signature": null,
+      "line": 3523,
+      "sha256": "63e68f7f7449bfb4270239a9d988669e84ed89d103abcd7f537a43d01f101146"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::GetDat",
+      "signature": null,
+      "line": 3489,
+      "sha256": "c86018b843c3095c9dd020b1cee22b8fb8e30b418c007754d963f9630180cb29"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::GetWkNo",
+      "signature": null,
+      "line": 3544,
+      "sha256": "bdd118c457807ecfc766df6e99ef9ca6dcfb7dedbea387718126a6ea5d805384"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::DelDat",
+      "signature": null,
+      "line": 3643,
+      "sha256": "79087fe1e5a858b5fabb24b37ac29fc217480b2cb6e3671b3264ad1a1a441196"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::DelAll",
+      "signature": null,
+      "line": 3672,
+      "sha256": "ad1b1756c00a7133cb098b5c997401fcf85a1ddb2b1a4261f9326b0f4567e223"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::GetEvd",
+      "signature": null,
+      "line": 3023,
+      "sha256": "20a6c33984c17aef25fefa6399c4a0dcbcc73859d128f5e50d6d9464cb346a1f"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::DelBin",
+      "signature": null,
+      "line": 2909,
+      "sha256": "c6087958f80942820f498990a91e90f60c75b15bfded4080e3e409e925b7b691"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::DelEvd",
+      "signature": null,
+      "line": 3056,
+      "sha256": "0a18deca3e643c7491ba1b8470bbabd3c7f97e5ebd494942d95067630b8f47f4"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::ToolCoreEvdDel",
+      "signature": null,
+      "line": 2674,
+      "sha256": "5216b3d8d9b71a3939b83a0d0144162cf56068fcca47e172d853f1bdfd1c15d4"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::init",
+      "signature": null,
+      "line": 3415,
+      "sha256": "60340c9f021410e6491c6f7e6c1aeb05e31eb9f1c2289a56758207ea3bede535"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::end",
+      "signature": null,
+      "line": 3432,
+      "sha256": "ab2fb4e450fc94bfb03d0f1075597237ae385f34d76004f5041d5719cc8237ee"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::myRoomInit",
+      "signature": null,
+      "line": 2223,
+      "sha256": "8538ba52150a7f8493692ab8bc85affee637556cc5bcfa2c093b18a8138458c1"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::ClearEmWindowFcv",
+      "signature": null,
+      "line": 3330,
+      "sha256": "45c8f4d3f1eeb491c667726cf50cc82a0a41648370a1b193fb6cfc9c43858fc1"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::SetEvt",
+      "signature": "int EventMgr::SetEvt(void* data, u32* key)",
+      "line": 2682,
+      "sha256": "8cf667de36a8d85dd1fe7e9b7b0be7974556254cf313f26dd6185f0204dc8503"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::SetEvt",
+      "signature": "int EventMgr::SetEvt(char* nm, Event** out)",
+      "line": 2744,
+      "sha256": "460fdae387eabd013ef93da978b0a739cadda5a1d2c080b5f54f0116c89386ca"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::construct",
+      "signature": null,
+      "line": 2191,
+      "sha256": "4a3416903a0ce342a07508c01e066cf60e1dea1c375af34b7901899f8171f1bd"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::DelEvt",
+      "signature": null,
+      "line": 2810,
+      "sha256": "0c4f038b1c20c336d6c9d7e4c932bf7cee35329f3dd11af86379083615a135ab"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::EvtReadExec",
+      "signature": null,
+      "line": 2536,
+      "sha256": "c8ac5aa3e747713fd70825053da04f393b8cbea0a27868640407316390437ce3"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::EvtFree",
+      "signature": null,
+      "line": 2612,
+      "sha256": "9f0aea92965c7a8d99c4f47b2ce585dc98e6d78743a28128dbae3ec690682856"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::DelRead",
+      "signature": null,
+      "line": 3152,
+      "sha256": "f7298e185ee2a1438246d52f45443c6ceff3d648a387ac150675dc3aa23cbc8a"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::IsAliveEvt",
+      "signature": null,
+      "line": 2327,
+      "sha256": "0ff16b0d478854e2a51be77bb1a9bde7764c028ffa249e1638703ddd69e2bb3b"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::GetFunc",
+      "signature": null,
+      "line": 3096,
+      "sha256": "b5e87e82ca2c7f3d2a87975c97d7cc18402a4022644cc900f3722a0d2619cfbc"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::SetFunc",
+      "signature": null,
+      "line": 3076,
+      "sha256": "4c43e306392326bc4ba7557d14774779cf69ef1abdf0b4d031c9655a40bf65d3"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "EventMgr::GetBin",
+      "signature": null,
+      "line": 2876,
+      "sha256": "22145199b1259032b8f669d491df5e8d65861195c057daf0a2477284bb5ef87d"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "Event::Event",
+      "signature": null,
+      "line": 246,
+      "sha256": "2dbe887b1382b05469df757fc3325587bf287b38213a82077ec950ae318857f0"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "Event::~Event",
+      "signature": null,
+      "line": 252,
+      "sha256": "244384e3aae4deec1710f862539dd5dcb23cc3faea8b996463aab278dc9e7297"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "Event::init",
+      "signature": null,
+      "line": 260,
+      "sha256": "169774be2d90f787c9d80539564fa29cee2afbc7abf497b9e1e8fcecd8bf82d2"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "Event::ExeEndEvt",
+      "signature": null,
+      "line": 1647,
+      "sha256": "21e7395f59f583c97c227f7cb62c6a0d6ef1451ea52610054a84cf1d632f5564"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "Event::ExeFunc",
+      "signature": null,
+      "line": 1734,
+      "sha256": "06ee57836f324591d46d7b00efcf4dbb932f0c08364e96c759a73f46c1df173a"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "Event::CalMaxCut",
+      "signature": null,
+      "line": 1813,
+      "sha256": "7c6b8baf4e9a7ec30cb7b6721d40f8097d3c08d11e16cbc50389b451981a7f96"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "Event::CalMaxFrame",
+      "signature": null,
+      "line": 1842,
+      "sha256": "d66f682c6ffd11ea360d2170deef5bbe65a349fe84f4eb247de303d997066f5d"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "Event::CalMaxTotalFrame",
+      "signature": null,
+      "line": 1884,
+      "sha256": "9e0736ad5664b4fe4b4f2835c0d3c3f81ad1bf7d67380919cc719efa36f685ed"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::DatTbl",
+      "signature": null,
+      "line": 3403,
+      "sha256": "a931c70a6e2eb2923d195bec64fe036163ab2959af41c2cd9c565fae394d9676"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::~DatTbl",
+      "signature": null,
+      "line": 3409,
+      "sha256": "24197ac5394099d43598784decd625ef15c3ba2f388365ba638f91cbb2a04a8a"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::GetNumDat",
+      "signature": null,
+      "line": 3569,
+      "sha256": "7a55ba66988e5fc4798368f7ec06317d156cd4e1df0d3121ec86c7210a96dc5e"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::GetDatWkNo",
+      "signature": null,
+      "line": 3575,
+      "sha256": "89cd9da0d645a4788776df2ab4518870f7ffb15f9de7df0baae1b5809735e28d"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "DatTbl::DelDatWkNo",
+      "signature": null,
+      "line": 3618,
+      "sha256": "0c371e81077196fb3f3d47c524e2fd39afb59a9c2ac2ee95c56215943d89efa6"
+    },
+    {
+      "path": "include/cManager.h",
+      "name": "cManager<T>::create",
+      "signature": "T* cManager<T>::create(int id)",
+      "line": 353,
+      "sha256": "532062f48ad892161fedf0d92269f1331c6ddc4ac4c9803ecd494253c86393d1"
+    },
+    {
+      "path": "include/cManager.h",
+      "name": "cManager<T>::countActiveWork",
+      "signature": null,
+      "line": 326,
+      "sha256": "542bccfd64bdb33d6034a5835e033edfcf0c7a2d9c3cfa16d241eecf3ef8a58e"
+    },
+    {
+      "path": "include/cManager.h",
+      "name": "cManager<T>::destroy",
+      "signature": null,
+      "line": 469,
+      "sha256": "0bccc3afa3496ffaf02b07f78afc2f4386727a90e6454fa1a8171fd6f79280db"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "name": "cManager<T>::destroyNow",
+      "signature": null,
+      "line": 230,
+      "sha256": "8b8614f26c3b5782771e220881b5ac91e9b49b83091e877d5f468a9faa994ca8"
+    },
+    {
+      "path": "include/cManager.h",
+      "name": "deleteList",
+      "signature": "int deleteList(T* p)",
+      "line": 119,
+      "sha256": "2b42ec0c18778a83d235f05794e49f86d8ed89704a1ab371599cbb234839d5a5"
+    },
+    {
+      "path": "include/cManager.h",
+      "name": "addListFront",
+      "signature": "void addListFront(T* p)",
+      "line": 142,
+      "sha256": "70c7e836f7d0eb96666be6a61ca558d8e1f82cb0939b518c013c89a757915886"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "name": "cDataUnit::setCommand",
+      "signature": null,
+      "line": 104,
+      "sha256": "46908b8c48edfdd926d92fed735368e27ea6b45df72165bc9357523c22ebd220"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "name": "cDataUnit::getCommand",
+      "signature": null,
+      "line": 115,
+      "sha256": "8b2812915cf5b282b74758063b2bc833e988c1253202a00058019310638b1b34"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "name": "cDataUnit::getCondition",
+      "signature": null,
+      "line": 127,
+      "sha256": "3b7b8d36a3b445c06120e32a8c3d89f85c0a34e73ad166ce1a9dbd997fe66f9d"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "name": "cDataUnit::isLoadOk",
+      "signature": null,
+      "line": 206,
+      "sha256": "3d8e56a18585ec0a880b25a6fab019670732108e6e54a7245591d85eeb9328d2"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "name": "cDataUnit::waitLoadOk",
+      "signature": null,
+      "line": 219,
+      "sha256": "49899f560afd7f9731344fe7867969cf8a7989ed45b85f76e9eedc537ae0c85e"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "name": "cDataUnit::checkCommand",
+      "signature": null,
+      "line": 728,
+      "sha256": "5a2469932ba7f83ee271c0808ebd43cb0679f04519ccb6b6a6ec95c638ab7672"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "name": "cDataUnit::setClear",
+      "signature": null,
+      "line": 561,
+      "sha256": "da8d1059c7c46cb2484ea433d710de45f51bd5b238d02b2daa58c0c44a79d05a"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "name": "cDataUnit::checkMallocRelease",
+      "signature": null,
+      "line": 133,
+      "sha256": "ad8471963f805a8f825349018a6dc6c9f034ae3f7aa8fe81db0942f9b7f216e9"
+    },
+    {
+      "path": "port/dreamcast/game/platform/misc.cpp",
+      "name": "PCopen",
+      "signature": "int PCopen(",
+      "line": 138,
+      "sha256": "d7ba7f0e9d03079d1c81eb58baf1ddbdfb28585db2dc24bdb45935b4c3431356"
+    },
+    {
+      "path": "port/dreamcast/game/platform/misc.cpp",
+      "name": "PCcreat",
+      "signature": "int PCcreat(",
+      "line": 139,
+      "sha256": "c82cf4b2fe2477cb11668835686f2b5c5d9a16e0832367c004a4c8dd62933fb6"
+    },
+    {
+      "path": "port/dreamcast/game/platform/misc.cpp",
+      "name": "PCclose",
+      "signature": "int PCclose(",
+      "line": 140,
+      "sha256": "b1bbcc0e988a05e7522935b8d4dc7f692664be408c062daa8eddd1b8394e9092"
+    },
+    {
+      "path": "port/dreamcast/game/platform/misc.cpp",
+      "name": "PCread",
+      "signature": "int PCread(",
+      "line": 141,
+      "sha256": "a3decd66e6b857f491e07ada3c80855a18475b27f969997f1c1dedcaa9dab398"
+    },
+    {
+      "path": "port/dreamcast/game/platform/misc.cpp",
+      "name": "PClseek",
+      "signature": "int PClseek(",
+      "line": 143,
+      "sha256": "d032901b25281d0613de42dc20cc9bf708f8f0deedd2818a10f6a00b7ba3fdf5"
+    },
+    {
+      "path": "src/game/file.cpp",
+      "name": "file_open",
+      "signature": null,
+      "line": 37,
+      "sha256": "a0772b3d14e2ccbd83e9856c734ab19c80d3ac912f5aadece91d42eb2022c01a"
+    },
+    {
+      "path": "src/game/file.cpp",
+      "name": "file_close",
+      "signature": null,
+      "line": 62,
+      "sha256": "9ba222fc0c87d15c88ee49ba2de85ed79daa8d8b48f42b2aaedc07cb4d702b8a"
+    },
+    {
+      "path": "src/game/file.cpp",
+      "name": "file_read",
+      "signature": null,
+      "line": 79,
+      "sha256": "2a45654973ac80ab6199a6486c6e4d362080fe782499f0755c22bc4e77c49f95"
+    },
+    {
+      "path": "src/game/file.cpp",
+      "name": "file_seek",
+      "signature": null,
+      "line": 101,
+      "sha256": "c45409a8cbb5c8e1054d7f6727e0055552af64444b438ae6ebdbaf14dd1809f0"
+    },
+    {
+      "path": "src/game/file_app.cpp",
+      "name": "HDReadDebugAlloc",
+      "signature": null,
+      "line": 96,
+      "sha256": "782d470bae7ea2c391bf4f8015bed5f744797e1422ed3dc237a1248cc4a5c73e"
+    },
+    {
+      "path": "src/game/file_app.cpp",
+      "name": "hdRead_malloc",
+      "signature": null,
+      "line": 102,
+      "sha256": "42625e5ecb71fc3603daf98a9c5a9a6dab23f95f0e9b08a28bf79a105ee90121"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "declaration": "#if defined\\(RE4DC_EVD_START_CLEANUP\\).*?^#endif\\n#endif",
+      "line": 69,
+      "sha256": "3aad2edd97524a951fec5e763b7cda1c2882b15d6b4fad9ce57e828048376e98"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "declaration": "enum CarrierState \\{[^}]+};",
+      "line": 272,
+      "sha256": "18a064e5aa5a9e3de82b78a61399001b97ba5c958ac78db7f0f566b95775e629"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "declaration": "struct CabinCarrier \\{.*?^};",
+      "line": 273,
+      "sha256": "e2295f9b319a78d85ceb67058c2d741a381ce591c438befca114e635bdb864c8"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "declaration": "^CabinCarrier carriers\\[3\\]\\{\\};",
+      "line": 282,
+      "sha256": "a533f03403bd5e7b694ba2b54b4e2357a41a5d084815e16552708c590882a27a"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "declaration": "^bool carrier_fault;",
+      "line": 285,
+      "sha256": "8643e5b3a5a889a6c86d887403e49d512346d18c7aff089f355b36c1324a7a7b"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "declaration": "^const char\\* carrier_names\\[3\\]=[^\\n]+",
+      "line": 289,
+      "sha256": "cd3f2a57357b5d286c509fc6b431f9c0182fe659eef89ca26d1c6594b0cc0c06"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_cabin.cpp",
+      "declaration": "struct CabinSource \\{.*?^} cabin;",
+      "line": 12,
+      "sha256": "bd9526a1790bbfd39b3a66a6578a44b912103b3eeca702438372eef88bb1e277"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "name": "carrier_index",
+      "signature": "int carrier_index(",
+      "line": 292,
+      "sha256": "df910e412ff5450248ceaff484f68505c8b3aea7ed13ec49d13cbd9902c9f882"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "name": "carrier_number",
+      "signature": "unsigned carrier_number(",
+      "line": 305,
+      "sha256": "c965e9b666a0db13328f14f08c34721aa0022b128463b439155d02e602cb1119"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "name": "carrier_current",
+      "signature": "bool carrier_current(",
+      "line": 306,
+      "sha256": "216b737219395c4ddfe9d20ab43f63947ad0ecf9d36a0919c3a9998c67f59f28"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "name": "carrier_mram_current",
+      "signature": "bool carrier_mram_current(",
+      "line": 328,
+      "sha256": "5ab08564e45467ad5f861a0f8985a0b390d79b797f5ad2d8a945742ecdfa04a3"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "name": "re4dc_cabin_carrier_reserved",
+      "signature": "extern \"C\" unsigned re4dc_cabin_carrier_reserved(",
+      "line": 421,
+      "sha256": "9c3d4be36fc343c1c8cedc6eecea88d5dbec2bd19baa32d886b4f32c11bf4327"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "name": "re4dc_cabin_carrier_event",
+      "signature": "extern \"C\" int re4dc_cabin_carrier_event(",
+      "line": 494,
+      "sha256": "8aa5af49e2e429b6f4c7e1e4e9bd9b5f342ff0afae04a5f26d32f989e564d268"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "name": "re4dc_cabin_carrier_event_deleted",
+      "signature": "extern \"C\" void re4dc_cabin_carrier_event_deleted(",
+      "line": 502,
+      "sha256": "edf35d61fc06a87c57c0d3a2f5c180ab0b941d45c420181bcde1978858544a48"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_cabin.cpp",
+      "name": "cabin_key",
+      "signature": "const char* cabin_key(",
+      "line": 23,
+      "sha256": "24d3a532a187ddad877e1b2a8a01b7b0d3505d5613d7a1e345b2085eabe9fdc9"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_cabin.cpp",
+      "name": "cabin_failure",
+      "signature": "void cabin_failure(",
+      "line": 28,
+      "sha256": "a9d48bed05ae293e479ab97c58dc9122896d662c6126949602c1224cc9110ef8"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_cabin.cpp",
+      "name": "close_audio",
+      "signature": "bool close_audio(",
+      "line": 59,
+      "sha256": "958cf2dae2ee478f6cfe2312a9900fe47a90d91ff7a6a300b81f319bcba98da8"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_cabin.cpp",
+      "name": "re4dc_cabin_event_bound",
+      "signature": "extern \"C\" void re4dc_cabin_event_bound(",
+      "line": 106,
+      "sha256": "530755cb09c70333a87e5d6cf5fe947055a10b1aa6c93ba86111b7cc0558681d"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_cabin.cpp",
+      "name": "re4dc_cabin_event_deleted",
+      "signature": "extern \"C\" void re4dc_cabin_event_deleted(",
+      "line": 136,
+      "sha256": "07c574f578f06826ad95846dddada821393b89f328c6afa3c58c4a82445e82f5"
+    }
+  ],
+  "variants": [
+    {
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 0,
+      "cabin_source": 0,
+      "cabin_complete_handoff": 0,
+      "output": "EVENT_START_CASES=23 txn=1 cleanup=1 cabin=0 PASS\n"
+    },
+    {
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 1,
+      "cabin_source": 0,
+      "cabin_complete_handoff": 0,
+      "output": "EVENT_START_CASES=23 txn=1 cleanup=1 cabin=0 PASS\n"
+    },
+    {
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 0,
+      "cabin_source": 1,
+      "cabin_complete_handoff": 0,
+      "output": "EVENT_START_CASES=43 txn=1 cleanup=1 cabin=1 PASS\n"
+    },
+    {
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 1,
+      "cabin_source": 1,
+      "cabin_complete_handoff": 0,
+      "output": "EVENT_START_CASES=43 txn=1 cleanup=1 cabin=1 PASS\n"
+    },
+    {
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 0,
+      "cabin_source": 1,
+      "cabin_complete_handoff": 1,
+      "output": "EVENT_START_CASES=43 txn=1 cleanup=1 cabin=1 PASS\n"
+    },
+    {
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 1,
+      "cabin_source": 1,
+      "cabin_complete_handoff": 1,
+      "output": "EVENT_START_CASES=43 txn=1 cleanup=1 cabin=1 PASS\n"
+    }
+  ],
+  "strict_vptr_lifetime_controls": [
+    {
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "returncode": 1,
+      "output": "/root/probe/cache21-callers-rollback-init-20261021-01/rollback0-cabin0-handoff0/init_actual_manager_methods.inc:73:12: runtime error: member access within address 0x00008c100000 which does not point to an object of type 'cUnit'\n0x00008c100000: note: object has invalid vptr\n<memory cannot be printed>\n",
+      "source_boundary": "Actual cManager::destroy writes p->be_flag after delete in the source no-free pool; this strict UBSan vptr diagnostic remains open, not called fixed."
+    },
+    {
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "returncode": 1,
+      "output": "/root/probe/cache21-callers-rollback-init-20261021-01/rollback1-cabin0-handoff0/init_actual_manager_methods.inc:73:12: runtime error: member access within address 0x00008c100000 which does not point to an object of type 'cUnit'\n0x00008c100000: note: object has invalid vptr\n<memory cannot be printed>\n",
+      "source_boundary": "Actual cManager::destroy writes p->be_flag after delete in the source no-free pool; this strict UBSan vptr diagnostic remains open, not called fixed."
+    }
+  ],
+  "prior_fixture_revision": "5d10f51e6f68f1c2ee5bca429f9e94d041115574",
+  "prior_fixture_sha256": {
+    "event_init_failure_host.cpp": "a830fd7d3277fca194947761fb8ec25fd1858b4958292bc384bcb9d21f54241e",
+    "test_event_init_failure.py": "4546c2bc62f584fbdd0b856a5c0258d136669d53b50366fd6aed916af2d07754"
+  },
+  "host_boundaries": [
+    "Model table allocation/final free, backing-page free, player/partner/camera/light/effect/messages/sound/scenario services are explicit recorded boundaries.",
+    "GetRead native32 pointer-local and EvtReadExec signed int->pointer conversions use the prior explicit host64 ABI adapters.",
+    "PFuncTbl is pointer-width in the host projection; cUnit pool delete size uses host size_t; target layouts are not claimed.",
+    "Final-check case renames only the actual CalMaxTotalFrame definition binding and mutates the packet after its successful return. This is an injected immutable-input violation, not a normal source failure or target occurrence.",
+    "Carrier unit/allocation/module observers and audio/movie services are explicit boundaries; actual carrier admission/exact-event unbind and cabin callbacks execute. Unselected clear/free/reverse paths abort if reached.",
+    "ON tests call registered-name SetEvt directly: EvtReadExec would wait for the preserved prior live name, whose completion this fixture does not simulate. Outer read/scenario policy is not repaired or accepted here."
+  ],
+  "test_sha256": {
+    "test_event_rollback_init.py": "10149c33c15b208a3bcdd9dc2830dfba4b26e81969c91436cf80d2f5adfb185c",
+    "event_rollback_init_host.cpp": "1150f51a1f535514939086d11a3ecf99566ffc6c32bcbf63711f6dc1fd82bb7e"
+  }
+}
