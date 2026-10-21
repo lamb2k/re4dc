@@ -1,0 +1,208 @@
+{
+  "kind": "sealed-window-source-accounting-reconciliation",
+  "frozen_source": "b21116ec0cf2c984e9f49769a148373553bff00d",
+  "source_identities": {
+    "port/dreamcast/game/platform/native_ui.cpp": "6c2adb5ff72e903e76a263cfbc30c07d6d1cf25e6352b773b70cd42f152ebc4b",
+    "port/dreamcast/game/platform/include/texpack_index.inc": "2c25e7013dccb8458644517e9929dce3f8fc88be04a068e2625e45a6886ea900",
+    "port/dreamcast/room/texture_package.cpp": "026a20ff2dbea0dc10b4979e8e6d9bccb18ccd75f952b5e83fc9f2c8c9d5a8d5",
+    "port/dreamcast/room/room_storage.cpp": "08fa626752a98755d4d670aafac571ac7a05ff4c82ba040a5759c5c57621147b",
+    "port/dreamcast/game/platform/dvd_read_safe.cpp": "9926277feedc37806d61baa49261899a22517f97f08692d907e80af562dcb0cb",
+    "port/dreamcast/game/Makefile": "62820da621e65e8562c8deaab55cc6dc70a38af1de6bc68f3f4e04f74edd1e2c",
+    "port/dreamcast/patches/kos-804b319-fs-iso9660-aeee10d9.patch": "a6c4c10d14eb7a500440be9a603c55e88b12d191954940c2406064c7bce2d30b"
+  },
+  "builds": {
+    "off": {
+      "generated_iso_source": {
+        "path": "/root/probe/cache21-window-build-20261021/out-off/obj/kosfix/fs_iso9660.c",
+        "sha256": "500da02b87d0e0790585f9a3661abd487a2bde0bca0ff1126cb561277113a0bc"
+      },
+      "program": {
+        "path": "/root/probe/cache21-window-build-20261021/out-off/program.bin",
+        "sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d"
+      },
+      "ELF": {
+        "path": "/root/probe/cache21-window-build-20261021/out-off/re4dc-game.elf",
+        "sha256": "51da665e4293a113ac541dfc79c68f525ce83322f7e1abf26c2ab9b3d5d41802"
+      },
+      "iso_read": {
+        "symbol": "_iso_read",
+        "address": "0x8c205964",
+        "bytes": 824,
+        "sha256": "c3ba3c1be38c5c8b882716288e21b8c33774a5c542370bb17cbf9efd198b3f93"
+      },
+      "knobs_sha256": "e48cb446b794d6730777fae6578d0a85a64a9435b396e3c61d0ec35132cc6850",
+      "build_log_sha256": "77a10ca9e480dec4f726327f86e055d37a103f3b7ffc91305cbe7190e6314a63"
+    },
+    "on": {
+      "generated_iso_source": {
+        "path": "/root/probe/cache21-window-build-20261021/out-on/obj/kosfix/fs_iso9660.c",
+        "sha256": "500da02b87d0e0790585f9a3661abd487a2bde0bca0ff1126cb561277113a0bc"
+      },
+      "program": {
+        "path": "/root/probe/cache21-window-build-20261021/out-on/program.bin",
+        "sha256": "fca8d1debdf2d5889f2a6e1f617c70a7d0da71cb3a7156bebba940027dd8a1c4"
+      },
+      "ELF": {
+        "path": "/root/probe/cache21-window-build-20261021/out-on/re4dc-game.elf",
+        "sha256": "25d64552500e02a75d08f6a0c9a5ec08878ac90e9f93a76d53a5b0b6c0955639"
+      },
+      "iso_read": {
+        "symbol": "_iso_read",
+        "address": "0x8c2059ac",
+        "bytes": 824,
+        "sha256": "36e83537267cc7700ead2339fd75ae956b61f4e14298c07e655f44a342040ef4"
+      },
+      "knobs_sha256": "3d065dd6c1ed9a0daac04ee6ff3e96a379cb3bc5e8d4b5fb23759acb51b1721d",
+      "build_log_sha256": "c86c036b887eb53d7179c0aa1d4a38784470ab9ed4263b2faab7dd9dbfaa7894"
+    }
+  },
+  "pack": {
+    "path": "/root/re4data/private/mipmap21-release21-pack-recovery-20261021/tex.pak",
+    "sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+    "selected_extra_members": 26,
+    "selected_bytes": 126656,
+    "selected_payload_bytes": 122912
+  },
+  "selected_actual_knobs": {
+    "DISC_READ_FALLBACK": "3",
+    "DISC_READ_LOG": "0",
+    "DISC_READ_METER": "1",
+    "IO_PROBE": "0",
+    "IO_SERIAL": "1",
+    "KOS_DISC_FIX": "1",
+    "STORAGE_BOUNCE_ALIGNED": "0",
+    "TEX_PACK": "1",
+    "TEX_PACK_WINDOW": "0",
+    "TEX_PAYLOAD_CRC": "0",
+    "TEX_RESIDENT": "1"
+  },
+  "storage_chunk_bytes_from_compiler_define": 16384,
+  "input_receipts": {
+    "window-demand-attribution-02.json": "a730029f1f53f32ae070595fb47a5c5e9b08bc22d8d10643b2f6a5df738d65ba",
+    "inventory-pair-result.json": "ea8a3bd41d9ba067e94d00c3cac3a90366d0366a7e9509a03d93a04b1ff98ca7",
+    "inventory-off-samples.json": "4f45ec334b5c5716c153c5bce09f53875e9e93dbc40ffbf17a467e9c577fda6d",
+    "inventory-on-samples.json": "bd3a34a1be6f1812a6f21df3c1e767b140e7285e00294eb1ce7cacecc5a26cf7",
+    "run-output.txt": "4a65e712aa55251a6982b3394a03310aad3ee3c71af1cbe7fd0596e4372e9223",
+    "off_run_output_sha256": "9541d197fea1ece1ffe873692078b906300acb75734035a1d2950ec102b97022",
+    "on_run_output_sha256": "4a65e712aa55251a6982b3394a03310aad3ee3c71af1cbe7fd0596e4372e9223"
+  },
+  "counter_plateaus": {
+    "off": {
+      "samples": [
+        {
+          "host_s": 29.015,
+          "reads": 1692,
+          "bytes": 17100288,
+          "block": 11392805
+        },
+        {
+          "host_s": 42.859,
+          "reads": 1822,
+          "bytes": 19195456,
+          "block": 11939341
+        },
+        {
+          "host_s": 44.969,
+          "reads": 1881,
+          "bytes": 19331104,
+          "block": 12671330
+        },
+        {
+          "host_s": 49.984,
+          "reads": 1881,
+          "bytes": 19331104,
+          "block": 12671330
+        }
+      ],
+      "held_delta": {
+        "reads": 130,
+        "bytes": 2095168
+      },
+      "return_delta": {
+        "reads": 59,
+        "bytes": 135648
+      }
+    },
+    "on": {
+      "samples": [
+        {
+          "host_s": 29.016,
+          "reads": 1692,
+          "bytes": 17100288,
+          "block": 11392786
+        },
+        {
+          "host_s": 42.875,
+          "reads": 1822,
+          "bytes": 19195456,
+          "block": 11939296
+        },
+        {
+          "host_s": 44.969,
+          "reads": 1983,
+          "bytes": 19499136,
+          "block": 13088989
+        },
+        {
+          "host_s": 50.0,
+          "reads": 1983,
+          "bytes": 19499136,
+          "block": 13088989
+        }
+      ],
+      "held_delta": {
+        "reads": 130,
+        "bytes": 2095168
+      },
+      "return_delta": {
+        "reads": 161,
+        "bytes": 303680
+      }
+    }
+  },
+  "host_replay_receipt": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/window-traffic-host-v3.json",
+    "sha256": "776bcb670af14304b945cbe56b0baf184572c8dcf35aee4405d6c9c2349db168"
+  },
+  "source_reconciliation": {
+    "extra_member_payload": 122912,
+    "extra_member_header_descriptors": 3744,
+    "extra_final_stream_tail_overread": 416,
+    "extra_index_lookup_stream_bytes": 40960,
+    "sum": 168032,
+    "requests": {
+      "member_header_sector_calls": 26,
+      "member_bulk_stream_requests": 28,
+      "member_32byte_tail_stream_requests": 28,
+      "index_lookup_stream_requests": 20,
+      "sum": 102
+    },
+    "index_transitions": {
+      "OFF": 3,
+      "ON": 23
+    },
+    "restore_only_replay": {
+      "OFF": {
+        "reads": 16,
+        "bytes": 47584
+      },
+      "ON": {
+        "reads": 118,
+        "bytes": 215616
+      }
+    },
+    "common_return_residual_each_arm": {
+      "reads": 43,
+      "bytes": 88064
+    }
+  },
+  "limits": [
+    "This exactly reconciles sealed aggregate request/byte differences with retained logs, real pack metadata and exact generated KOS read code replay under the recorded source call sequence. It is not a retained per-request guest trace.",
+    "DISC_READ_LOG=0 and IO_PROBE=0: the old capture cannot independently name each drive request LBA/path or physical optical seek.",
+    "Mock drive calls, file handles and source-level read call sizes are used. Directory open lookup and concurrent background effects are not replayed; the common residual cancels in this pair.",
+    "Current unpatched libkallisti fs_iso9660.o is not the linked generated KOS_DISC_FIX code; initial unpatched host v1 is superseded. The exact patched frozen source v3 is authoritative.",
+    "Counter bytes count wrapper request sizes, including padding and requests before success/failure is known; internal real retries are not separately counted. Music is excluded; other nonmusic threads are included.",
+    "Block417678us delta, physical Dreamcast acceptance and future gameplay need/visible-use are not explained by byte accounting.",
+    "The candidate remains a negative traffic result and stays disabled; no performance adoption or new guest result."
+  ]
+}
