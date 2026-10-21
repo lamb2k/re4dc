@@ -1,0 +1,39 @@
+{
+  "scope": "Derived projection of original native modes0..12, prior read and effect_refs1; other adapter boundaries remain those of the sealed bf250 source fixture.",
+  "selection": "mode<=12 && fresh==0 && effect_refs==1",
+  "source_cases_sha256": "b7d1a8d224ae6939f2648c80fc7ba1fd9135e3e4f049519992a14e7b553a05f6",
+  "groups": [
+    {
+      "forward_receipt": 0,
+      "diagnostic_stop": 0,
+      "cases": 13,
+      "halt": 0,
+      "return_failure": 0,
+      "return_success": 13
+    },
+    {
+      "forward_receipt": 0,
+      "diagnostic_stop": 1,
+      "cases": 13,
+      "halt": 11,
+      "return_failure": 0,
+      "return_success": 2
+    },
+    {
+      "forward_receipt": 1,
+      "diagnostic_stop": 0,
+      "cases": 13,
+      "halt": 0,
+      "return_failure": 11,
+      "return_success": 2
+    },
+    {
+      "forward_receipt": 1,
+      "diagnostic_stop": 1,
+      "cases": 13,
+      "halt": 10,
+      "return_failure": 2,
+      "return_success": 1
+    }
+  ]
+}
