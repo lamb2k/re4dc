@@ -1,0 +1,108 @@
+{
+  "schema": "re4dc-source-path-emitter-qualification-1",
+  "candidate_only": true,
+  "source_pack_sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+  "selected_base_pack_sha256": "00fe02fd954018de9614e1bbcedcf8461a48ee32f2911371b4e87aaa9327dc7c",
+  "candidate_pack_sha256": "bdfceba81830035075b6438929b8ad8b51d19376e9aba5055d5ba4b2b2b9b896",
+  "candidate_pack_bytes": 155781120,
+  "private_set": "mipmap21-world-path-emitter-fx-20261021",
+  "private_sums_sha256": "45de03bf2ccea544cd72cbbee534d0394d029f78d4cf19f826a20783d6021f0e",
+  "source_policy_set": "mipmap21-fx-consumer-policy-v4-20261021",
+  "source_policy_sha256": "9f1ec29e9885fe1dc30486eabd5da882555fa27c9a9506d82975eb15feff8d03",
+  "source_policy_sums_sha256": "7b33fbe655c57429bb3814de376f40e512cdbc6d9172fae0704018ffe1d14a00",
+  "wholepack_policy_set": "mipmap21-current-wholepack-policy-v6-20261021",
+  "wholepack_policy_sums_sha256": "6ab757c454caac6c6b28f268e7ad8243148ab9cebf363cc9a93448b779747ea8",
+  "source_sampling_contract_version": 3,
+  "source_contract_changes": [
+    "Espgen02 emits the unchanged Id/Tex_id record through EspSeqSet; post-spawn changes position, speed, size and alpha only.",
+    "Esp0c starts another EST and never samples the nominal record texture; reflection state driver0x4c remains held."
+  ],
+  "fresh_named_source_check": {
+    "bytes": 3885728,
+    "sha256": "439ba106e2a8f83beb5c5c1668cf02dc5795614f408847025b163fa14d36e47d",
+    "verified_texture_bindings": 57
+  },
+  "selected_counts": {
+    "mipmapped": 872,
+    "changed": 1001,
+    "exact": 5500,
+    "selective_FX": 169,
+    "fixed_ID_UI_holds": 79,
+    "separate_uncomposed_actor_keys": 20,
+    "source_qualified_FX_total": 171,
+    "generic_FX": 2,
+    "canonical_PAL8": 3,
+    "path_emitter_new_keys": 2
+  },
+  "source_consumer_decisions": {
+    "world-common-sprite-source-candidate": 169,
+    "hold-unresolved-consumer": 259,
+    "hold-custom-or-generator-effect": 84,
+    "hold-fixed-ID-UI": 35,
+    "hold-screen-or-mixed-effect": 6
+  },
+  "source_tests": {
+    "distinct_cases": 14,
+    "passed": 14
+  },
+  "independent_generated_level_decodes": 16,
+  "independent_original_base_decodes": 2,
+  "all_original_bases_RGBA_alpha_exact": true,
+  "all_base_indices_and_referenced_vectors_or_palette_exact": true,
+  "unrelated_selected_members_exact": 6499,
+  "layered_OFF_current_pack_exact": true,
+  "payload_increase": 4098,
+  "rounded32_request_increase": 4128,
+  "archive_increase": 2048,
+  "actual_Package_host_cases": [
+    {
+      "UI_VRAM": 0,
+      "accepted_packages": 2,
+      "adopt_and_stream_upload": true,
+      "ASan_UBSan": true,
+      "actual_Package_payload_allocation_requests": [
+        10956,
+        10956,
+        7510,
+        7510
+      ],
+      "palette_and_mip_format": true,
+      "fences_payload_release_close": true
+    },
+    {
+      "UI_VRAM": 1,
+      "accepted_packages": 2,
+      "adopt_and_stream_upload": true,
+      "ASan_UBSan": true,
+      "actual_Package_payload_allocation_requests": [
+        10956,
+        10956,
+        7510,
+        9526,
+        7510,
+        9526
+      ],
+      "palette_and_mip_format": true,
+      "fences_payload_release_close": true
+    }
+  ],
+  "allocation_note": "UI_VRAM=1 may retry a misaligned VQ allocation with payload+2016bytes; the recorded host addresses take that branch. Requests are not live target residency.",
+  "sampler_policy": "Existing effect sprite and haze paths use bilinear filtering, UV clamp, MODULATEALPHA and default MIPD. Covered dimensions, UVs, source blend/depth/fog and timing stay unchanged. Cached header keys include the complete PVR format/mip bit.",
+  "quality_scope": "Full-resolution exactness is proved. Smaller levels are filtered/quantized, with explicit error metrics in the private independent gate. No visual acceptance.",
+  "required_build_knobs": [
+    "CAST_MIPMAP=1",
+    "TEX_PAL4_ALPHA=1",
+    "TEX_PAL4_MIPMAP=1",
+    "TEX_PAL8_ALPHA=1",
+    "TEX_PAL8_MIPMAP=1",
+    "TEX_TWIDDLED_MIPMAP=1"
+  ],
+  "limits": [
+    "Fresh independent decoder and actual mocked-host Package checks only; no target PVR sampler, look, full-program OFF identity, KOS/VRAM/palette peak or timing acceptance.",
+    "Lower levels are deliberately filtered/quantized; their independent error metrics are not visual acceptance. The VQ mip reference has lower-level alpha differences as already recorded in the inherited review.",
+    "The original Release21 texture pack was exactly recovered; the original raw disc is absent.",
+    "Actor20 candidates stay separate; SH4ZAM is preserved; no game build, guest, release/default or SD operation.",
+    "The two common-source descriptors total the stated payload/request increase. This is not a per-room live working set or simultaneous-residency claim. No native-world reference is bound to these two keys."
+  ],
+  "metadata_correction": "v5 retained the prior source_qualified_FX_total169; v6 recomputes the171 total as169 PS2 plus2 generic. Pack bytes and all row decisions are unchanged."
+}

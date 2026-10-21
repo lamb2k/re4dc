@@ -3402,6 +3402,55 @@ ifeq ($(TEX_PAL4_ALPHA),1)
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL4_ALPHA=1
 endif
 
+# Compact square twiddled PAL4 ARGB4444 mip chains; render-only, opt-in.
+# Off adds no compiler definitions and preserves previous admission/sampling.
+TEX_PAL4_MIPMAP ?= 0
+ifeq ($(filter $(TEX_PAL4_MIPMAP),0 1),)
+$(error TEX_PAL4_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_PAL4_MIPMAP),1)
+ifneq ($(TEX_PAL4_ALPHA)$(CAST_MIPMAP),11)
+$(error TEX_PAL4_MIPMAP=1 requires TEX_PAL4_ALPHA=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL4_MIPMAP=1
+endif
+
+# Exact square uncompressed PAL8 ARGB4444, with aligned shared palettes.
+# Off adds no definition or admission; it does not change any release recipe.
+TEX_PAL8_ALPHA ?= 0
+TEX_PAL8_MIPMAP ?= 0
+ifeq ($(filter $(TEX_PAL8_ALPHA),0 1),)
+$(error TEX_PAL8_ALPHA must be 0 or 1)
+endif
+ifeq ($(filter $(TEX_PAL8_MIPMAP),0 1),)
+$(error TEX_PAL8_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_PAL8_ALPHA),1)
+ifneq ($(TEX_PAL4_ALPHA),1)
+$(error TEX_PAL8_ALPHA=1 requires TEX_PAL4_ALPHA=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_ALPHA=1
+endif
+ifeq ($(TEX_PAL8_MIPMAP),1)
+ifneq ($(TEX_PAL8_ALPHA)$(CAST_MIPMAP),11)
+$(error TEX_PAL8_MIPMAP=1 requires TEX_PAL8_ALPHA=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_MIPMAP=1
+endif
+
+# Native square 16-bit twiddled mip chains, with unchanged base texels.
+# Off contributes no compiler definition; existing CAST_MIPMAP forwards TCW.
+TEX_TWIDDLED_MIPMAP ?= 0
+ifeq ($(filter $(TEX_TWIDDLED_MIPMAP),0 1),)
+$(error TEX_TWIDDLED_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_TWIDDLED_MIPMAP),1)
+ifneq ($(CAST_MIPMAP),1)
+$(error TEX_TWIDDLED_MIPMAP=1 requires CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_TWIDDLED_MIPMAP=1
+endif
+
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.
 # Two owned slabs per binding, existing global pressure cap, no spill for these profiles.
 MOTION_BOUNDED_R11F ?= 0
