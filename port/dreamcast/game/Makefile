@@ -55,6 +55,15 @@ endif
 $(OBJDIR)/src/game/em_sub.o $(OBJDIR)/src/game/pl_dmg.o $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_DEATH_TRACE=1
 endif
 
+# Native Ganado routine-byte repair; default off preserves the original object bytes.
+GANADO_ROUTINE_BYTES ?= 0
+ifneq ($(GANADO_ROUTINE_BYTES),0)
+ifneq ($(GANADO_ROUTINE_BYTES),1)
+$(error GANADO_ROUTINE_BYTES must be 0 or 1)
+endif
+$(OBJDIR)/mod/em10g/shared/src/em10/em10.o: GAME_CPPFLAGS += -DRE4DC_GANADO_ROUTINE_BYTES=1
+endif
+
 # UI_POLY_ORDER: keep pickup/subscreen polygon headers in the source UI list.
 UI_POLY_ORDER ?= 0
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_POLY_ORDER=$(UI_POLY_ORDER)
