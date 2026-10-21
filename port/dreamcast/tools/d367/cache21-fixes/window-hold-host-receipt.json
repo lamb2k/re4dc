@@ -1,0 +1,98 @@
+{
+  "scope": "Actual helpers, actual actor lease class, ASan/UBSan; package/GPU/snapshot boundary adapters; no PVR or gameplay acceptance",
+  "baseline_revision": "54cef5d1560c41d074beee05ffa1ecd38f2ee642",
+  "selected_helper_identities": {
+    "fe0efcdd": {
+      "void close_entry(": "cb443c404088c4475189b56e27d4b5faa0ccec52b01acdc4bd0ad08469b50424",
+      "unsigned movie_window_release(": "d4d259a48df7934c854f352338afe2d43e074289f0ce67225d83224e89d58473",
+      "int vram_claim(": "f7e53e0cfd14fbcc64474bc396eb2699a337bd32320eb9ded6fabea22c19681d",
+      "extern \"C\" void re4dc_ui_vram_hold(": "6c1e9e67a2404b87307381766c328699d896634ceeb2254648401436626fccf1",
+      "extern \"C\" void re4dc_ui_vram_unclaim(": "13fc90ed90ae8f9f81c150f3282e93c8e65943f6aee7c724b16c44dddd5c64b0"
+    },
+    "d4a3b31fac3362937a3f21eaa874e07be94fd061": {
+      "void close_entry(": "cb443c404088c4475189b56e27d4b5faa0ccec52b01acdc4bd0ad08469b50424",
+      "unsigned movie_window_release(": "d4d259a48df7934c854f352338afe2d43e074289f0ce67225d83224e89d58473",
+      "int vram_claim(": "f7e53e0cfd14fbcc64474bc396eb2699a337bd32320eb9ded6fabea22c19681d",
+      "extern \"C\" void re4dc_ui_vram_hold(": "6c1e9e67a2404b87307381766c328699d896634ceeb2254648401436626fccf1",
+      "extern \"C\" void re4dc_ui_vram_unclaim(": "13fc90ed90ae8f9f81c150f3282e93c8e65943f6aee7c724b16c44dddd5c64b0"
+    }
+  },
+  "source_pins": {
+    "baseline": {
+      "source_sha256": "0649d13483d6be347b7d5b886314367e3a9c2d99071bcd6da01ee5055923c956",
+      "hold_macro_sha256": "b1280852e20dcf207752e86adf62aae62a4d49f71c9593cb4c1a82ae24f06283",
+      "function_sha256": {
+        "void close_entry(": "cb443c404088c4475189b56e27d4b5faa0ccec52b01acdc4bd0ad08469b50424",
+        "unsigned movie_window_release(": "d4d259a48df7934c854f352338afe2d43e074289f0ce67225d83224e89d58473",
+        "int vram_claim(": "f7e53e0cfd14fbcc64474bc396eb2699a337bd32320eb9ded6fabea22c19681d",
+        "extern \"C\" void re4dc_ui_vram_hold(": "6c1e9e67a2404b87307381766c328699d896634ceeb2254648401436626fccf1",
+        "extern \"C\" void re4dc_ui_vram_unclaim(": "13fc90ed90ae8f9f81c150f3282e93c8e65943f6aee7c724b16c44dddd5c64b0"
+      }
+    },
+    "candidate": {
+      "source_sha256": "35d9d0c4400785c93b5434ed0df8d704cd6eab3890eb248007275c44d37b8d82",
+      "hold_macro_sha256": "b1280852e20dcf207752e86adf62aae62a4d49f71c9593cb4c1a82ae24f06283",
+      "function_sha256": {
+        "void close_entry(": "cb443c404088c4475189b56e27d4b5faa0ccec52b01acdc4bd0ad08469b50424",
+        "unsigned movie_window_release(": "6c4bfe1dc7b439934269481bfa44f20632f586f3ca2359e8c83b7dfb3b254024",
+        "int vram_claim(": "f7e53e0cfd14fbcc64474bc396eb2699a337bd32320eb9ded6fabea22c19681d",
+        "extern \"C\" void re4dc_ui_vram_hold(": "6c1e9e67a2404b87307381766c328699d896634ceeb2254648401436626fccf1",
+        "extern \"C\" void re4dc_ui_vram_unclaim(": "13fc90ed90ae8f9f81c150f3282e93c8e65943f6aee7c724b16c44dddd5c64b0"
+      }
+    },
+    "selected-fe0efcdd": {
+      "source_sha256": "cb436dcb57de59d8fb719e7fef70680ff25cd4b328d905f899226275cd80319e",
+      "hold_macro_sha256": "b1280852e20dcf207752e86adf62aae62a4d49f71c9593cb4c1a82ae24f06283",
+      "function_sha256": {
+        "void close_entry(": "cb443c404088c4475189b56e27d4b5faa0ccec52b01acdc4bd0ad08469b50424",
+        "unsigned movie_window_release(": "d4d259a48df7934c854f352338afe2d43e074289f0ce67225d83224e89d58473",
+        "int vram_claim(": "f7e53e0cfd14fbcc64474bc396eb2699a337bd32320eb9ded6fabea22c19681d",
+        "extern \"C\" void re4dc_ui_vram_hold(": "6c1e9e67a2404b87307381766c328699d896634ceeb2254648401436626fccf1",
+        "extern \"C\" void re4dc_ui_vram_unclaim(": "13fc90ed90ae8f9f81c150f3282e93c8e65943f6aee7c724b16c44dddd5c64b0"
+      }
+    },
+    "selected-d4a3b31fac3362937a3f21eaa874e07be94fd061": {
+      "source_sha256": "6bb04eae2337fd4d0a60b4d756cd67db86a813b6a2842ee35d4070377c53fa99",
+      "hold_macro_sha256": "b1280852e20dcf207752e86adf62aae62a4d49f71c9593cb4c1a82ae24f06283",
+      "function_sha256": {
+        "void close_entry(": "cb443c404088c4475189b56e27d4b5faa0ccec52b01acdc4bd0ad08469b50424",
+        "unsigned movie_window_release(": "d4d259a48df7934c854f352338afe2d43e074289f0ce67225d83224e89d58473",
+        "int vram_claim(": "f7e53e0cfd14fbcc64474bc396eb2699a337bd32320eb9ded6fabea22c19681d",
+        "extern \"C\" void re4dc_ui_vram_hold(": "6c1e9e67a2404b87307381766c328699d896634ceeb2254648401436626fccf1",
+        "extern \"C\" void re4dc_ui_vram_unclaim(": "13fc90ed90ae8f9f81c150f3282e93c8e65943f6aee7c724b16c44dddd5c64b0"
+      }
+    }
+  },
+  "variants": [
+    {
+      "variant": "baseline",
+      "window_note": 0,
+      "hold_restore": 1,
+      "output": "actual movie_window_release/hold/unclaim/close/claim: window_note=0 hold=1 checks=26 PASS\n"
+    },
+    {
+      "variant": "disabled",
+      "window_note": 0,
+      "hold_restore": 1,
+      "output": "actual movie_window_release/hold/unclaim/close/claim: window_note=0 hold=1 checks=26 PASS\n"
+    },
+    {
+      "variant": "enabled",
+      "window_note": 1,
+      "hold_restore": 1,
+      "output": "actual movie_window_release/hold/unclaim/close/claim: window_note=1 hold=1 checks=26 PASS\n"
+    },
+    {
+      "variant": "hold-disabled",
+      "window_note": 0,
+      "hold_restore": 0,
+      "output": "actual movie_window_release/hold/unclaim/close/claim: window_note=0 hold=0 checks=25 PASS\n"
+    }
+  ],
+  "test_sha256": {
+    "test_window_hold.py": "3cf2669e6d1b6c77053ed10715ea8ae9e4224b34d3a367bde594d8ebe152d8c0",
+    "window_hold_host.cpp": "9c0e7e82a100b9521cd1a3a08259ff7e874d3bfbe67583bd4b89441d2be4f730",
+    "test_movie_world_arena.py": "5bc21d3b144cea605e04892d98a1ef88666a8e9616086fa0d92bbcd5cda398ac",
+    "actor_resource_lease.h": "47d2432a34b6b4e296541e6a94e87b5c71cbfc300fd3b78ee0b71ddba4d7a0e9"
+  }
+}

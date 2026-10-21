@@ -4512,6 +4512,9 @@ unsigned movie_window_release(unsigned bytes,bool pinned_ok,unsigned& released_b
         Entry& e=entries[owner[b]];
         if(!e.valid)continue; // closed through an earlier block of the same entry
         released_bytes+=e.package.vram_bytes();++released;
+#if defined(RE4DC_SS_WINDOW_HOLD_RESTORE) && RE4DC_SS_WINDOW_HOLD_RESTORE
+        RE4DC_HOLD_EVICTED(e);
+#endif
         RE4DC_PROFILE_COUNT(TextureEvictions,1);close_entry(e);
     }
     re4dc_log("native texture claim: movie window at %08x cost=%u B entries=%u pinned_ok=%d\n",base+best_start,best_cost,released,pinned_ok?1:0);

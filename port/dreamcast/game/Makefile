@@ -2950,6 +2950,19 @@ include frontend30.mk
 # D367 W11 knobs (SUBSCREEN, W11_FIXTURE; default off: no effect).
 include subscreen.mk
 
+# SS_WINDOW_HOLD_RESTORE=1 (default 0): window eviction uses the same bounded
+# hold journal as load(), so eligible uploads can join the existing restore pass.
+SS_WINDOW_HOLD_RESTORE ?= 0
+ifneq ($(SS_WINDOW_HOLD_RESTORE),0)
+ifneq ($(SS_WINDOW_HOLD_RESTORE),1)
+$(error SS_WINDOW_HOLD_RESTORE must be 0 or 1)
+endif
+ifneq ($(SS_HOLD_RESTORE)$(MOVIE_WINDOW)$(TEX_RESIDENT),111)
+$(error SS_WINDOW_HOLD_RESTORE needs SS_HOLD_RESTORE=1 MOVIE_WINDOW=1 TEX_RESIDENT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_SS_WINDOW_HOLD_RESTORE=1
+endif
+
 include vmusave.mk
 # D367 test warp rig (DBG_WARP; default off: no effect).
 include dbgwarp.mk

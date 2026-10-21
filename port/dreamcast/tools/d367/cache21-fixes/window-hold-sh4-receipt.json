@@ -1,0 +1,70 @@
+{
+  "scope": "Actual whole SH-4 native_ui.o; matching-source default/off identity; no linked-program/guest/hardware gate",
+  "baseline_revision": "a3727579d2f3a8c49cc6877e330f8a783780ce99",
+  "knobs": {
+    "UI_VRAM": 1,
+    "TEX_RESIDENT": 1,
+    "VRAM_PAGES": 1,
+    "MOVIE_WINDOW": 1,
+    "SUBSCREEN": 1,
+    "SS_PACK": 1,
+    "SS_HOLD_RESTORE": 1,
+    "UI_FRAG_WINDOW": 1,
+    "UI_FRAG_LATCH": 1,
+    "PVR_STREAM": 1,
+    "PS2_WORLD_DRAW": 1,
+    "COARSE": 1,
+    "PACE_CATCHUP": 2,
+    "PACE_TRANS_SKIP": 4063,
+    "TREE_IMPOSTOR": 1,
+    "NATIVE_MESH": 1,
+    "MESH_LOD": 1,
+    "D349_RENDERER_STACK": 1,
+    "TA_DIRECT": 1
+  },
+  "start_C_free_bytes": 25940549632,
+  "finish_C_free_bytes": 25937526784,
+  "objects": [
+    {
+      "variant": "baseline",
+      "source_sha256": "0649d13483d6be347b7d5b886314367e3a9c2d99071bcd6da01ee5055923c956",
+      "stripped_native_ui_o_sha256": "965f482a0ab050e805191508f6aba3ad0fbf85f3f76e805d9063bdf4b30c9c81",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  33404\t  30740\t  43849\t 107993\t  1a5d9\t/root/probe/cache21-fixes-window-sh4-20261021-07/baseline/native_ui-stripped.o\n"
+    },
+    {
+      "variant": "disabled",
+      "source_sha256": "35d9d0c4400785c93b5434ed0df8d704cd6eab3890eb248007275c44d37b8d82",
+      "stripped_native_ui_o_sha256": "965f482a0ab050e805191508f6aba3ad0fbf85f3f76e805d9063bdf4b30c9c81",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  33404\t  30740\t  43849\t 107993\t  1a5d9\t/root/probe/cache21-fixes-window-sh4-20261021-07/disabled/native_ui-stripped.o\n"
+    },
+    {
+      "variant": "enabled",
+      "source_sha256": "35d9d0c4400785c93b5434ed0df8d704cd6eab3890eb248007275c44d37b8d82",
+      "stripped_native_ui_o_sha256": "f3e7471f9ca08f8ff056c5143a643c4adde581ab34dae6b71bfd98a8f26a8444",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  33500\t  30740\t  43849\t 108089\t  1a639\t/root/probe/cache21-fixes-window-sh4-20261021-07/enabled/native_ui-stripped.o\n"
+    }
+  ],
+  "invalid_values_or_prerequisites_rejected": [
+    {
+      "SS_WINDOW_HOLD_RESTORE": "2"
+    },
+    {
+      "SS_WINDOW_HOLD_RESTORE": "-1"
+    },
+    {
+      "SS_WINDOW_HOLD_RESTORE": "yes"
+    },
+    {
+      "SS_WINDOW_HOLD_RESTORE": "1",
+      "SS_HOLD_RESTORE": "0"
+    },
+    {
+      "SS_WINDOW_HOLD_RESTORE": "1",
+      "MOVIE_WINDOW": "0"
+    },
+    {
+      "SS_WINDOW_HOLD_RESTORE": "1",
+      "TEX_RESIDENT": "0"
+    }
+  ]
+}
