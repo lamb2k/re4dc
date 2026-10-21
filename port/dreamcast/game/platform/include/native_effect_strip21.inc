@@ -11,7 +11,10 @@ DeferredLighting* const kEffectQuad21Tag=reinterpret_cast<DeferredLighting*>(0x5
 constexpr unsigned kEffectQuad21Node=(sizeof(DeferredPart)+31)&~31U;
 }
 extern "C" int re4dc_effect_quad(const Re4dcEffectQuad* q){
-    if(!q || !frame_ready || stream_aborted || draining_parts || direct_open)return 0;
+    if(!q || !frame_ready || stream_aborted || draining_parts)return 0;
+#if RE4DC_TA_DIRECT
+    if(direct_open)return 0;
+#endif
 #if defined(RE4DC_PVR_RTT) && RE4DC_PVR_RTT
     if(rtt::capture_slot>=0)return 0; // RTT strips need their capture-owner contract
 #endif
@@ -58,8 +61,9 @@ extern "C" int re4dc_effect_quad(const Re4dcEffectQuad* q){
 #endif
     const auto& t=e->package.textures()[0];
     // Preserve repeating-source extent. Padding may only scale clamped axes.
-    if((q->wrap_s && q->image.width!=t.width)||(q->wrap_t && q->image.height!=t.height))return 0;
-    const float su=float(q->image.width)/float(t.width),sv=float(q->image.height)/float(t.height);
+    const unsigned covered_w=RE4DC_COVER_W(e->package,q->image.width),covered_h=RE4DC_COVER_H(e->package,q->image.height);
+    if((q->wrap_s && covered_w!=t.width)||(q->wrap_t && covered_h!=t.height))return 0;
+    const float su=float(covered_w)/float(t.width),sv=float(covered_h)/float(t.height);
     for(unsigned i=0;i<count;++i){vertices[i].u*=su;vertices[i].v*=sv;}
     alignas(32) pvr_vertex_t packet[13];
     pvr_poly_cxt_t c;pvr_poly_cxt_txr(&c,PVR_LIST_TR_POLY,re4dc::texture::pvr_format(t),

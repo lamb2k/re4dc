@@ -713,3 +713,36 @@ matching mask material. Dynamic registry state and sameUV/ref0 admission,
 target look, combined resources, full-program identity and timing remain open.
 See effect-model-mask-qualification-20261021.json. No runtime, recipe/default,
 release or SD change. The older 947-mip candidate remains sealed unchanged.
+
+### Guarded source strip runtime consumer
+
+`FX_STRIP21=1` restores the qualified unlit Esp01/Esp02 source callbacks into
+the existing native effect FIFO. It defaults to zero and changes no recipe.
+The adapter carries the current view-space corners, each original depth and
+UV, the source GX_QUADS diagonal, source colour/TEV scale, texture extent/wrap
+and blend. It reuses the existing native clipper, frame storage/spill, texture
+loader/pool budgets, Entry frame pins and PVR frame/fence owner. Unsupported
+RTT/mask/tool40 lighting/custom texture-matrix states remain on their old path.
+
+The actual recovered strip function is the UV oracle: 261120 combinations of
+repeat/slice/direction/mirror match float bits and source corner order, including
+its signed16 cast. Four host tests also run the actual native clipper/packet
+include, exact queue-drain branch and source coarse callback dispatch. They
+cover varying corner depths/UVs, near clipping, colour/blend/wrap, FIFO/direct/
+spill order, tag noncollision, missing texture/repeat refusal and segment-only
+queue exhaustion without frame abort. ASan/UBSan passes.
+
+All five affected SH4 units compile with the extension and are byte-identical
+OFF against pre-strip 1b9c98344 under explicit recorded standalone flags. The
+native UI control also passes with TA_DIRECT/UI_HANDLES/FX_TEX_POOL/EFFECT_ROOM/
+NATIVE_FOG enabled. A minimal-feature compile caught and repaired an unguarded
+direct_open reference when TA_DIRECT=0. Existing covered texture extents are
+preserved through the standard package macros. Static frames: source bridge
+256 B, quad submit 1064 B and geometry helper 472 B; these do not establish a
+full-program stack/KOS budget.
+
+The 54-file private source/object qualification is mirrored and SHA-verified.
+See strip-source-contract-20261021.json. Full current-program identity, target
+same-scene sampling/look/clip, combined resources and timing remain open. No
+guest/hardware acceptance, full game staging, release or SD action occurred.
+Existing 947/948-mip review assets remain immutable and separate.

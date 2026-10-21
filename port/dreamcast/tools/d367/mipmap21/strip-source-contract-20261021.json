@@ -1,41 +1,137 @@
 {
-  "schema": "re4dc-FX-STRIP21-source-contract-1",
-  "state": "WIP-target-object-checks-pending-disk-guard",
+  "schema": "re4dc-FX-STRIP21-source-contract-2",
+  "state": "source-host-and-target-object-qualified; target-integration-look-open",
   "default_knob": "FX_STRIP21=0",
   "source_base": "1b9c983445d3dfa5f28a95c8fe62daae5ab9648a",
+  "WIP_checkpoint": "34ec20df862dbc3aaccce0881cef365602200863",
+  "source_files": [
+    {
+      "path": "src/game/esp.cpp",
+      "sha256": "ce693515ecd3263196a2f74d0c63d2fc947ad0e4007b4f84dcb5f10749ca7854"
+    },
+    {
+      "path": "src/game/esp_sub.cpp",
+      "sha256": "0a0ac38ca0e3276e3bd003a869e743017b654e5853fb5f27113b41afdbe3f82b"
+    },
+    {
+      "path": "src/game/esp01.cpp",
+      "sha256": "bfb61bf66928526715aeda74469a787778055e26f60a24db1ddb7ab70c3d71a0"
+    },
+    {
+      "path": "src/game/esp02.cpp",
+      "sha256": "760ee564fb020bc66af2a4a2b908858051015dcf1d1cace0c954a84f07945bdc"
+    },
+    {
+      "path": "port/dreamcast/game/effects30.mk",
+      "sha256": "66ba70dc9c8f92a87b75aae884da838ac0be23693aba326d7700c05dbe97e5a5"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "sha256": "2549317a6db281cc1c621504933e4f014136e9fca1317ce7a2b521aa26305c3d"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/native_ui.h",
+      "sha256": "361802a7e4d7705da9a9a1609cdedd9f0f80fd4dfc69082695211a309817cc5f"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/native_effect_strip21.inc",
+      "sha256": "f7bd9744d2f8981a395f2685f162345e043352adc412ccc2441bc4b0597847b4"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/effect_strip_geometry21.hpp",
+      "sha256": "c86f8f5942f18ecb53c489a6089bd30a4a96c376a120525bd15b180159990481"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/effect_strip_uv21.hpp",
+      "sha256": "4ffb90f47a5250f7b9fbe6f3ed95ce33184894e1dbd023dca6757e1943f4cb76"
+    },
+    {
+      "path": "port/dreamcast/tests/test_effect_strip21.py",
+      "sha256": "e45b980f35465a10ff374af72a6b81a45c515b393d6391132db36a5b18b7ee5e"
+    }
+  ],
   "source_families": [
-    "Esp01 motion-trail",
+    "Esp01 motion trail",
     "Esp02 ribbon"
   ],
-  "source_vertices": "Current view-space source quads; GX order0,1,3,2 and GX_QUADS diagonal0,1,2 /0,2,3 preserved.",
+  "source_vertices": "Current view-space four-corner positions, GX order0,1,3,2, GX_QUADS diagonal0,1,2 /0,2,3; each depth and authored UV is retained.",
   "UV_oracle": {
     "actual_recovered_function": "src/game/esp01.cpp:EspStrip_draw_poly",
     "comparisons": 261120,
     "bit_exact": true,
     "signed16_conversion_preserved": true
   },
-  "host_packet_test": {
-    "actual_native_include": true,
+  "host_tests": {
+    "cases": 4,
+    "passed": 4,
+    "actual_native_include_and_clipper": true,
     "ASan_UBSan": true,
-    "four_depths_UVs_colors": true,
+    "actual_source_coarse_dispatch_ON_OFF": true,
+    "actual_source_drain_branch": true,
+    "unique_FIFO_tag": true,
+    "four_depths_UVs_uniform_colors": true,
     "near_clip": true,
     "FIFO": true,
-    "source_draw_finished_direct": true,
+    "direct": true,
     "shared_spill": true,
     "queue_exhaustion_drops_segment_only": true,
     "missing_texture_preserves_frame": true,
     "repeat_extent_refusal": true,
     "frame_pin": true
   },
-  "ownership": "Existing native_ui DeferredPart/frame_storage/spill/FIFO/Entry frame pins and PVR stream owner. No new frame or heap owner.",
-  "eligible_state": "Id01/02, valid world Parts_no, ordinary blendmode1, no RTT/mask/tool40 lighting, registered current pattern and identity EspTexWk texture matrix; explicit unsupported states retain their old path.",
-  "source_color": "ChannelSet final material bytes, Esp02 per-segment override, original TEV color/alpha scale; no sprite/billboard substitution.",
-  "target_objects": "NOT RUN. Windows C free below18GiB+128MiB root guard; first target command was rejected before starting compiler.",
+  "target_objects": {
+    "all_five_minimal_OFF_exact_to_prestrip": true,
+    "all_five_ON_compile": true,
+    "coarse_source_branch_enabled": true,
+    "selected_native_UI_features_OFF_exact": true,
+    "selected_native_UI_features_ON_compile": true,
+    "selected_features": [
+      "TA_DIRECT=1",
+      "UI_HANDLES=1",
+      "FX_TEX_POOL=64",
+      "EFFECT_ROOM=7",
+      "NATIVE_FOG=1"
+    ],
+    "compiler": "/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+    "static_frames_bytes": {
+      "source_bridge": 256,
+      "quad_submit": 1064,
+      "geometry_prepare": 472
+    },
+    "limits": "Standalone object controls with exact recorded argv; not currentQA/full-recipe/program identity."
+  },
+  "ownership": "Existing DeferredPart/frame_storage/spill/FIFO, effect texture pool budget and Entry frame pins; same PVR stream/fence owner, no private heap/frame owner.",
+  "eligible_state": "Id01/02, valid world Parts_no, ordinary blendmode1, no RTT/mask/tool40 lighting, registered pattern and identity EspTexWk texture matrix. Unsupported states retain old source path.",
+  "source_color": "ChannelSet final bytes, Esp02 per-segment override and original TEV color/alpha scale.",
+  "actual_source_examples": [
+    {
+      "key": "58fd30d4-d3f6764b",
+      "sprite": 2,
+      "compact_records": 2,
+      "tool_flags": 3,
+      "parts": [
+        31,
+        81
+      ]
+    },
+    {
+      "key": "88d84ec9-5ceafedf",
+      "sprite": 1,
+      "full_records": 1,
+      "tool_flags": 0,
+      "parts": [
+        255
+      ]
+    }
+  ],
+  "confirmed_implementation_repair": "TA_DIRECT=0 does not define direct_open; new submit guard now tests that state only under RE4DC_TA_DIRECT. Both minimal and direct-enabled target controls compile.",
   "full_program_identity": "NOT RUN",
   "guest": "NOT RUN",
   "hardware": "NOT RUN",
   "limits": [
-    "WIP before target compilation/full recipe and same-scene look/resource/timing gates. No recipe/default enablement, release, SD or physical hardware acceptance.",
-    "The946 previous+selected masked unit remains separate; all947 original mip packages and the948-mip review pack are immutable."
-  ]
+    "No full build/stage, target same-scene texture/material/colour/near-clip/look validation, combined KOS/VRAM or timing acceptance yet.",
+    "No recipe/default enablement, release, SD or physical hardware acceptance. Existing947/948-mip assets remain immutable and separate."
+  ],
+  "private_set": "mipmap21-strip-source-qualification-v2-20261021",
+  "private_sums_sha256": "b85ed6b867c05bf098a67ad0366963596468007e531467e0c99e21be0ba6425e"
 }
