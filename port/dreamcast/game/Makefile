@@ -788,6 +788,28 @@ endif
 MODULES += wep01 wep07 wep09 wep11 wep13 wep19
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_MODULES=1
 endif
+# EVD_ADMISSION_TXN=1 (default 0): publish SetEvd only after all required bins
+# succeed; roll back only this attempt's bin references on admission failure.
+EVD_ADMISSION_TXN ?= 0
+ifneq ($(EVD_ADMISSION_TXN),0)
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_ADMISSION_TXN must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_ADMISSION_TXN=1
+endif
+# EVD_START_CLEANUP=1 (default 0): locally abandon work whose init failed;
+# publish its effect-model view only after validation. Admission/read ownership
+# remains with the caller and is not repaired by this switch.
+EVD_START_CLEANUP ?= 0
+ifneq ($(EVD_START_CLEANUP),0)
+ifneq ($(EVD_START_CLEANUP),1)
+$(error EVD_START_CLEANUP must be 0 or 1)
+endif
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_START_CLEANUP requires EVD_ADMISSION_TXN=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_START_CLEANUP=1
+endif
 # WEAPON_HEAP4=1 (option 3 of issue lamb2k/re4dc#1, default 0: no effect): a weapon body larger than the resident
 # weapon block (WEAPON_RESIDENT_BYTES; the r104 merchant's rifle 398,144 / with scope 404,608, rocket launcher
 # 382,688, TMP 289,248 / with stock 299,200) is read into heap 4, the room heap, as Krauser's body goes to

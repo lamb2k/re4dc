@@ -66,6 +66,12 @@
 #include "native_cabin.h"
 #endif
 
+#if defined(RE4DC_EVD_START_CLEANUP) && RE4DC_EVD_START_CLEANUP && !defined(__PPC__)
+#if !defined(RE4DC_EVD_ADMISSION_TXN) || !RE4DC_EVD_ADMISSION_TXN
+#error EVD_START_CLEANUP requires EVD_ADMISSION_TXN
+#endif
+#endif
+
 
 extern "C" {
 void OSReport(const char* fmt, ...);
@@ -260,9 +266,11 @@ int Event::init(char* nm, EvtHeader* data)
         pLog->err(0, 0, "Event::init : memory failed");
         return 0;
     }
+#if !defined(RE4DC_EVD_START_CLEANUP) || !RE4DC_EVD_START_CLEANUP || defined(__PPC__)
     for (i = 0; i < 0x80; i++) {
         EspEvModList[i] = 0;
     }
+#endif
     EndRNo1 = 0;
     EndRNo2 = 0;
     EndRNo3 = 0;
@@ -291,6 +299,12 @@ int Event::init(char* nm, EvtHeader* data)
     EvtMgr.GetFunc((void**) &PFuncTbl, nm);
     strcpy(Name, nm);
     if (CalMaxTotalFrame(&MaxCut, &MaxTotalFrame) != 0 && CalMaxFrame(&MaxFrame, NowCut) != 0) {
+#if defined(RE4DC_EVD_START_CLEANUP) && RE4DC_EVD_START_CLEANUP && !defined(__PPC__)
+        // Publish the new event's effect-model view only after validation.
+        for (i = 0; i < 0x80; i++) {
+            EspEvModList[i] = 0;
+        }
+#endif
         return 1;
     }
     pLog->err(0, 0, "Event::init : data failed");
@@ -2733,7 +2747,16 @@ int EventMgr::SetEvt(char* nm, Event** out)
 #endif
     if (evt->init(nm, (EvtHeader*) evd) == 0) {
         pLog->err(0, 0, "EventMgr::SetEvt : init failed[%s]", nm);
+#if defined(RE4DC_EVD_START_CLEANUP) && RE4DC_EVD_START_CLEANUP && !defined(__PPC__)
+#if RE4DC_CABIN_SOURCE
+        re4dc_cabin_carrier_event_deleted(evt);
+#endif
+        // No begin or cabin audio binding has happened. The member destructor
+        // releases ModTbl; normal event end would tear down prior live state.
+        destroyNow(evt);
+#else
         DelEvt(evt, 0);
+#endif
         return 0;
     }
     evt->StatusFlag |= 0x01000000;
@@ -2885,6 +2908,73 @@ int EventMgr::SetEvd(char* nm, void* data, void* dat2, int flag)
         pLog->err(0, 0, "EventMgr::SetEvd : invalid data[%s]", nm);
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_ADMISSION_TXN) && RE4DC_EVD_ADMISSION_TXN
+    // myRoomInit owns at most 0x140 bin slots. Keep only this call's reference
+    // deltas on the stack; a failed admission does not take ownership of dat2.
+    if (EvdTbl.pWork == 0 || BinTbl.pWork == 0 ||
+        BinTbl.NumDatTbl < 0 || BinTbl.NumDatTbl > 0x140 || hdr->nBin < 0) {
+        pLog->err(0, 0, "EventMgr::SetEvd : invalid admission table[%s]", nm);
+        return 0;
+    }
+    void* registered = 0;
+    u8 type = 0;
+    if (EvdTbl.GetDat(&registered, &type, nm, 0) == 1) {
+        // A name alone is not completeness. Preserve the registered owner and
+        // its counts; a legacy partial parent has no child-ref provenance.
+        EvtHeader* prior = (EvtHeader*) registered;
+        if ((int) prior >= 0 || type != 8 || strncmp(prior->tag, "event", 5) != 0 || prior->nBin < 0) {
+            return 0;
+        }
+        for (i = 0; i < prior->nBin; i++) {
+            e = (EvtBinEntry*) (i * sizeof(EvtBinEntry) + (prior->binOfs + (u32) prior));
+            void* bin = 0;
+            if (BinTbl.GetDat(&bin, &type, e->name, 0) == 0 || (int) bin >= 0 || type != 7) {
+                pLog->err(0, 0, "EventMgr::SetEvd : incomplete owner[%s]", nm);
+                return 0;
+            }
+        }
+        return 1;
+    }
+    u16 addedRefs[0x140] = {};
+    u32 newSlots[0x140 / 32] = {};
+    for (i = 0; i < hdr->nBin; i++) {
+        e = (EvtBinEntry*) (i * sizeof(EvtBinEntry) + (hdr->binOfs + (u32) hdr));
+        int slot = 0;
+        const int existed = BinTbl.GetWkNo(&slot, e->name);
+        // DatTbl deletion uses a signed count. Do not wrap a shared reference.
+        if (existed && BinTbl.pWork[slot].Count >= 0x7FFF) {
+            pLog->err(0, 0, "EventMgr::SetEvd : bin count overflow[%s]", e->name);
+            goto evd_admission_failed;
+        }
+        if (SetBin(e->name, (u8*) (e->ofs + (u32) hdr), 0, flag) == 0) {
+            pLog->err(0, 0, "EventMgr::SetEvd : SetBin failed[%s]", e->name);
+            goto evd_admission_failed;
+        }
+        if (!existed) {
+            BinTbl.GetWkNo(&slot, e->name);
+            newSlots[slot >> 5] |= 1U << (slot & 31);
+        }
+        addedRefs[slot]++;
+    }
+    // Publication is last: GetEvd cannot observe a new partial admission.
+    if (EvdTbl.SetDat(nm, hdr, 8, dat2, flag, 0) != 0) {
+        return 1;
+    }
+    pLog->err(0, 0, "EventMgr::SetEvd : failed[%s]", nm);
+evd_admission_failed:
+    for (i = 0; i < BinTbl.NumDatTbl; i++) {
+        if (addedRefs[i] != 0) {
+            DatTblEntry* bin = &BinTbl.pWork[i];
+            bin->Count -= addedRefs[i];
+            if ((newSlots[i >> 5] & (1U << (i & 31))) && bin->Count == 0) {
+                // New bins borrow hdr (dat2 == 0). Do not use DelDat here: a
+                // permanent entry would remain published at Count == 0.
+                memclr_asm(bin, sizeof(DatTblEntry));
+            }
+        }
+    }
+    return 0;
+#else
     if (EvdTbl.ChkDat(nm) == 1) {
         return 1;
     }
@@ -2900,6 +2990,7 @@ int EventMgr::SetEvd(char* nm, void* data, void* dat2, int flag)
         }
     }
     return 1;
+#endif
 }
 
 // Looks a registered evd up by name (tool: read from disk when missing).
