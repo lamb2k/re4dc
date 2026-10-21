@@ -1,0 +1,172 @@
+{
+  "scope": "Finite max4 existing bounded guests only; each next action admitted from exact closed state/program/image/health/position/source certificate. No guest memory/state writes or rollback, no builds/assets/recipes. External stop file honored between guests.",
+  "records": [
+    {
+      "run": 218,
+      "action": "combat",
+      "before_hp": 3396,
+      "after": {
+        "scope": "Read-only exact closed checkpoint combat state, not last asynchronous controller sample. No guest or state writes.",
+        "run": "route-walk218",
+        "state_sha256": "c8ecc88e06c5a8f42b918e4916ae2f3b52c96c20c425e7895abaacadb2d76373",
+        "source": 32754,
+        "health": [
+          624,
+          1200,
+          90,
+          600
+        ],
+        "hero_pos": [
+          18743.140625,
+          -2000.003173828125,
+          -45092.01953125
+        ],
+        "hero_yaw": -0.45957186818122864,
+        "hero_routines": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "partner_pos": [
+          29376.658203125,
+          -2000.00048828125,
+          -42798.91796875
+        ],
+        "partner_flags": "0x46",
+        "boss": {
+          "hp": 3094,
+          "pos": [
+            15737.966796875,
+            1518.7332763671875,
+            -39332.1640625
+          ],
+          "yaw": 1.546221375465393,
+          "routines": [
+            1,
+            89,
+            3,
+            1
+          ]
+        },
+        "items": [
+          {
+            "id": 124,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 35,
+            "num": 1,
+            "bullet": 6
+          },
+          {
+            "id": 4,
+            "num": 10,
+            "bullet": 0
+          },
+          {
+            "id": 172,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 173,
+            "num": 1,
+            "bullet": 0
+          }
+        ],
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "resource_closed": false,
+      "host_log": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\finite-batch-218-run218.log",
+      "controller_sha256": "d5ee00dc9d818a1ee1a5513875e5771a0175e8fc7af2d778d06836d43b1d099f"
+    },
+    {
+      "run": 219,
+      "action": "combined escape and return",
+      "before_hp": 3094,
+      "after": {
+        "scope": "Read-only exact closed checkpoint combat state, not last asynchronous controller sample. No guest or state writes.",
+        "run": "route-walk219",
+        "state_sha256": "87353f19830668287a781389f73876cb2ff2a3a47315436c0630c26ee33687ba",
+        "source": 32891,
+        "health": [
+          624,
+          1200,
+          90,
+          600
+        ],
+        "hero_pos": [
+          25145.619140625,
+          -1999.999267578125,
+          -43514.73046875
+        ],
+        "hero_yaw": 0.8812174797058105,
+        "hero_routines": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "partner_pos": [
+          29376.658203125,
+          -2000.00244140625,
+          -42798.91796875
+        ],
+        "partner_flags": "0x46",
+        "boss": {
+          "hp": 3094,
+          "pos": [
+            18962.72265625,
+            -2000.00341796875,
+            -45175.640625
+          ],
+          "yaw": 1.491051435470581,
+          "routines": [
+            1,
+            45,
+            5,
+            0
+          ]
+        },
+        "items": [
+          {
+            "id": 124,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 35,
+            "num": 1,
+            "bullet": 6
+          },
+          {
+            "id": 4,
+            "num": 10,
+            "bullet": 0
+          },
+          {
+            "id": 172,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 173,
+            "num": 1,
+            "bullet": 0
+          }
+        ],
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "resource_closed": false,
+      "host_log": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\finite-batch-218-run219.log",
+      "controller_sha256": "cd6d38de0bcdc84f02b25fb009ea35372df61ab89d52e823ddfff340f8326f6c"
+    }
+  ],
+  "stopped": "AssertionError('Original stable patrol certificate required')",
+  "elapsed_s": 27.89,
+  "script_sha256": "01b021bf586f82a6bf3618d66fbd1a70bb812cd3d014b83011d5103230f26ba1"
+}
