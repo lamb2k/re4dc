@@ -54,13 +54,22 @@ static void SceEventEnd(int) {}
 #endif
 static void FadeSetW(u32, int, int, int) {}
 class cDataUnit;
-struct Controller { int m_nblock_read_stop{}, dbgHeap{}; cDataUnit* m_DataUnit{};void* m_DummyDataMem{};void setDummyId(int){std::abort();}cDataUnit* setData(char*);cDataUnit* getNewUnit(); } DC;
-struct AramBoundary { void DmaCancel(int) { std::abort(); } int DmaTransReq(int,u32,u32,u32,int){std::abort();} } Aram;
+struct Controller { int m_nblock_read_stop{}, dbgHeap{}; cDataUnit* m_DataUnit{};void* m_DummyDataMem{};void setDummyId(int){std::abort();}cDataUnit* setData(char*);cDataUnit* getNewUnit();u32 getAramFree(u32){std::abort();} } DC;
+struct AramBoundary { void DmaCancel(int) { std::abort(); }
+#if defined(RE4DC_FORWARD_ACTUAL)
+    int DmaTransReq(int,u32,u32,u32,int);
+#else
+    int DmaTransReq(int,u32,u32,u32,int){std::abort();}
+#endif
+} Aram;
 #if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
 static unsigned admission_file_checks;
 static void admission_file_boundary();
 #endif
 struct DvdBoundary {
+#if defined(RE4DC_FORWARD_ACTUAL)
+    struct Queue{int chk(int){std::abort();}void Read(){std::abort();}}*pCur_queue{};
+#endif
 #if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
     int FileExistCheck(char*,u32* bytes){++admission_file_checks;admission_file_boundary();*bytes=27456;return 0;}
 #endif
@@ -88,7 +97,9 @@ static cDataUnit loaded;
 #else
 void cDataUnit::setLoadToMram() { std::abort(); }
 #endif
+#if !defined(RE4DC_FORWARD_ACTUAL)
 void cDataUnit::setLoadToAram() { std::abort(); }
+#endif
 #if !defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
 int cDataUnit::setDelete() { std::abort(); }
 #endif
@@ -113,6 +124,9 @@ struct ReadModule { void* pArc; u32 size; };
 #if defined(RE4DC_EXEC_REAL_TRANSPORT)
 static ReadModule exchange_module;
 static unsigned swap_pushes,swap_pops,swap_calls;
+#if defined(RE4DC_FORWARD_ACTUAL)
+static void actual_MemorySwap(void*,u32,u32);
+#endif
 #if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
 static bool module_missing,swap_refuse;
 static ReadModule* SearchEmModule(int em){assert(em==1||em==0x11);return module_missing?nullptr:&exchange_module;}
@@ -120,6 +134,9 @@ static ReadModule* SearchEmModule(int em){assert(em==1||em==0x11);return module_
 static ReadModule* SearchEmModule(int em){assert(em==1);return &exchange_module;}
 #endif
 static void MemorySwap(void* dst,u32 src,u32 bytes){
+#if defined(RE4DC_FORWARD_ACTUAL)
+    ++swap_calls;actual_MemorySwap(dst,src,bytes);return;
+#endif
 #if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
     if(swap_refuse){++swap_calls;return;}
 #endif
@@ -129,6 +146,9 @@ static void MemorySwap(void* dst,u32 src,u32 bytes){
 static void EspEmDataSwapPop(int em){assert(em==1);++swap_pops;}
 #if defined(RE4DC_READ_ACTUAL_EFFECT)
 #include "admission_actual_effect_boundary.inc"
+#elif defined(RE4DC_FORWARD_ACTUAL)
+static void forward_effect_boundary(int);
+static void EspEmDataSwapPush(int em){assert(em==1);++swap_pushes;forward_effect_boundary(em);}
 #else
 static void EspEmDataSwapPush(int em){assert(em==1);++swap_pushes;}
 #endif
