@@ -1,0 +1,202 @@
+{
+  "scope": "Unchanged qualified J original no-warp CardLoad lineage. Original S Follow and normal physical A through the revealed door; source AI owns partner movement and room placement. No state retarget/rollback/game-memory writes/build/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk85",
+      "result": "Original S Follow accepted and original partner AI rejoined upper floor;120/600 unchanged",
+      "elapsed_s": 5.9,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "f713205e1d2b2955c75fa75debf04fa2004f830dc6e6415fc453351d346488fb",
+      "events": [
+        {
+          "original_Ashley_Follow_and_near_player": {
+            "frame": 19542,
+            "health": [
+              120,
+              600
+            ],
+            "subFlags": "0x44",
+            "partner_pos": [
+              -6325.1083984375,
+              4149.1640625,
+              -10549.8310546875
+            ],
+            "player_pos": [
+              -9601.66796875,
+              4149.16064453125,
+              -10384.0283203125
+            ],
+            "player_distance": 3280.7519206036204
+          },
+          "stable_source_ticks": 95
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk85",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x207",
+          "action_result": "Original S Follow accepted and original partner AI rejoined upper floor;120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk85\\shots\\checkpoint-source-19542\\frames\\fb0.png",
+          "png_sha256": "8139611a55d538f37171d3ec1f7d026379738d47519e1a7cb27867dc1176567f",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk85\\shots\\checkpoint-source-19542\\checkpoint-context.json",
+          "source_frame_interval": [
+            19542,
+            19553
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": null
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk86",
+      "result": "Original revealed door r207 to r203; both actors present,120/600 unchanged",
+      "elapsed_s": 15.2,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "d16fa56d95c4a0d4547bade8fabc3a0a21de44a96f4996b1492c03eb4d0001dc",
+      "events": [
+        {
+          "original_normal_door_r203_entry": {
+            "frame": 19600,
+            "room": "0x203",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "health": [
+              120,
+              1200,
+              600,
+              600
+            ],
+            "player_pos": [
+              -11678.8642578125,
+              4224.11962890625,
+              -10358.9716796875
+            ],
+            "partner_pos": [
+              -11436.5146484375,
+              4224.81591796875,
+              -10038.65625
+            ],
+            "partner_flags": "0x40"
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk86",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Original revealed door r207 to r203; both actors present,120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk86\\shots\\checkpoint-source-19600\\frames\\fb0.png",
+          "png_sha256": "90a486f586aa865a06ab6365fb283f74970d79400a516fbe07669dbb60d3e6aa",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk86\\shots\\checkpoint-source-19600\\checkpoint-context.json",
+          "source_frame_interval": [
+            19600,
+            19609
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "current_snapshot_audit": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "d16fa56d95c4a0d4547bade8fabc3a0a21de44a96f4996b1492c03eb4d0001dc",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x203",
+    "chapter": 6,
+    "source_frame": 19609,
+    "health": [
+      120,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x23080100",
+    "door_flags": "0xa84002b4",
+    "partner_subflags": "0x40",
+    "r207_RSF": "0xc9300000",
+    "player_pos": [
+      -11682.93359375,
+      4224.10888671875,
+      -10355.1884765625
+    ],
+    "partner_pos": [
+      -11436.5146484375,
+      4224.81103515625,
+      -10038.65625
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "native_limit": "r203 entry only retained47 source frames; checker has no r203 room/model census rows, so native/drawn target-room acceptance is pending. Prior r207 check remains separately scoped.",
+  "next": "Source SAT normal r203 reunion approach, then original healing/key/waves/door progression. Critical120/600 guard intact."
+}
