@@ -1,0 +1,141 @@
+{
+  "schema": "re4dc-special-effect-consumer-followups-1",
+  "source_tree_base": "8de6aa8eaafa9e8f620f1a2d56ec8290a37ff44a",
+  "parser_source_sha256": "17980509fdb932dff20950617cb1bf9b6d6bf39abdb764d154e8d121e2cc91d8",
+  "legacy_parser_sha256": "b49f2f17bc2c85711d6ebfbffc0b49db12c8317124fec39c9a2a671bd0edad54",
+  "source_inputs": [
+    {
+      "path": "etc/core.das",
+      "bytes": 3885728,
+      "sha256": "439ba106e2a8f83beb5c5c1668cf02dc5795614f408847025b163fa14d36e47d",
+      "legacy_default_output_exact": true,
+      "effect_model_reference_records": 30,
+      "unresolved_reference_namespace_records": 0
+    },
+    {
+      "path": "st1/r104.arc",
+      "bytes": 1276800,
+      "sha256": "742f4b631ead6982012ecbed366614b4ac4acbb2cb137f47e0bb673376a424dd",
+      "legacy_default_output_exact": true,
+      "effect_model_reference_records": 3,
+      "unresolved_reference_namespace_records": 0
+    }
+  ],
+  "source_code": [
+    {
+      "path": "src/game/esp01.cpp",
+      "sha256": "97f46d2c7f4cc949b97e0eac9ab5da3556944a7c80dabb61ed4572f855b24c8b"
+    },
+    {
+      "path": "src/game/esp02.cpp",
+      "sha256": "ec292ded906f2d436968f5bd2275e044881cffc1e0eb5f2daa9a21a7bffbdf39"
+    },
+    {
+      "path": "src/game/esp4e.cpp",
+      "sha256": "42e5a2ec99194d59ba5eaea9ee782c444287e7b78520887f93157ef2de40dbdc"
+    },
+    {
+      "path": "src/game/cloth.cpp",
+      "sha256": "14da7e9eae34bc40fb7f645f9efbd12baa192a647d8d38eee5023d50d80a08fd"
+    },
+    {
+      "path": "src/game/esp_efm.cpp",
+      "sha256": "91ba25a66a90326568c90b1ff0c32b67063371b33ea1c7298060c9edb86df4a2"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "sha256": "8a6137510329a78580f9486be9cab01d520d28b22f58190715a7b022afaeb55f"
+    },
+    {
+      "path": "src/game/esp.cpp",
+      "sha256": "d1869c9e2fc061f1defc4c2ea23fa8e34905859f0860d81fd76169a3ac6475e8"
+    },
+    {
+      "path": "src/game/esp_sub.cpp",
+      "sha256": "1c5387ae38cd60f186db3a444242766428cd6bc6a24aa8e03702155a83fe24f7"
+    },
+    {
+      "path": "port/dreamcast/game/platform/gx_stub.cpp",
+      "sha256": "9775ceea655cdeba1259b36f128f4222ea325d49b102ccdccea6efe853ca3881"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/fx_core_source_prep.inc",
+      "sha256": "8f38ef2addf1714edb250dacedec28ed85ce5321c158ed2a680f50e0d5d92774"
+    }
+  ],
+  "followups": [
+    {
+      "key": "58fd30d4-d3f6764b",
+      "source_class": "Esp02 single ribbon",
+      "reference_domain": "effect-texture",
+      "source_paths": [
+        "src/game/esp02.cpp:79",
+        "src/game/esp02.cpp:108",
+        "src/game/esp01.cpp:242"
+      ],
+      "finding": "The original texture is bound by EspTexSet and drawn by EspStrip_draw_poly. This is not an ordinary EspCommonTrans billboard.",
+      "conditional_native_gap": "re4dc_esp_sprite_class admits common/0b plus explicit rain/laser cases; Esp02 is absent. GXBegin is a no-op counter stub. Under coarse native-sprite ownership this source ribbon has no identified native strip submit path.",
+      "next_implementation": "Bind the exact current texture key and submit the existing live ribbon vertices, UV/mirrors, blend/depth and alpha through the native PVR backend. Preserve source simulation and compare the same frame before adding its mips.",
+      "owner_recommendation": "native effect geometry implementation, coordinate with main renderer owner"
+    },
+    {
+      "key": "88d84ec9-5ceafedf",
+      "source_class": "Esp01 motion trail plus ordinary sprites",
+      "reference_domain": "effect-texture",
+      "source_paths": [
+        "src/game/esp01.cpp:81",
+        "src/game/esp01.cpp:109",
+        "src/game/esp01.cpp:242"
+      ],
+      "finding": "Generator00 spawns a motion-trail child that binds the same record texture. Shared ordinary sprite records do not establish complete sampler coverage for this key.",
+      "conditional_native_gap": "Same strip-submit gap as Esp02 under coarse native-sprite ownership. Ordinary billboards must not replace the authored trail as an ownership workaround.",
+      "next_implementation": "Reuse one native strip family with Esp02, preserving per-segment source UV slices/mirrors and current trail points; qualify the complete mixed consumer set.",
+      "owner_recommendation": "native effect geometry implementation, coordinate with main renderer owner"
+    },
+    {
+      "key": "ee058318-449384ff",
+      "source_class": "Esp4e cloth grid",
+      "reference_domain": "effect-texture",
+      "source_paths": [
+        "src/game/esp4e.cpp:170",
+        "src/game/esp4e.cpp:179",
+        "src/game/cloth.cpp:173",
+        "src/game/cloth.cpp:470",
+        "src/game/cloth.cpp:485"
+      ],
+      "finding": "Esp4e_Trans is empty because ClothDraw/clothTrans queues and draws the dynamic grid separately. ClothTexSetUp obtains the TPL and initializes GX texture objects with mipmapping disabled.",
+      "conditional_native_gap": "The audited source grid ends in GXBegin/GX vertex functions, and no native cloth texture/geometry submit path is identified in the current audited files. This is a separate consumer contract, not a format5 parser issue.",
+      "next_implementation": "Bind the exact cloth TPL to the native package; submit its current grid/normals, original full UVs, two-sided culling and source blend/depth/alpha. Preserve cloth simulation. Then make mip filtering explicit and run same-frame look/resource checks.",
+      "owner_recommendation": "native dynamic cloth geometry/texture consumer, coordinate with main renderer owner"
+    },
+    {
+      "key": "d284037f-ba73363a",
+      "source_class": "EspSeqSet IdFF effect model",
+      "reference_domain": "effect-model",
+      "model_index": 37,
+      "records": 21,
+      "source_paths": [
+        "src/game/esp_sub.cpp:3970",
+        "src/game/esp_efm.cpp:298",
+        "src/game/esp_efm.cpp:328",
+        "src/game/eff_sys.cpp:987"
+      ],
+      "finding": "Tex_id37 is an efmWk model-table index for these21 IdFF records. It does not prove that ordinary EFF image37, and therefore this texture key, is sampled. The opt-in parser now keeps model references separate.",
+      "next_implementation": "Resolve efmRegist owner/model/TPL and actual model-material texture keys separately; keep the nominal EFF image held until its real consumers are established. Do not convert or call it unused from this numeric coincidence.",
+      "owner_recommendation": "offline effect-model material mapping, then native rigid/actor material consumer owner"
+    }
+  ],
+  "selected_texture_candidate_unchanged": "mipmap21-world-canonical-generic-fx-20261021",
+  "selected_pack_sha256": "ba40722d963153fcd03c3861152682c67f6eae88a1fb37f6ae902317685e7cdc",
+  "source_tests": {
+    "cases": 7,
+    "passed": 7
+  },
+  "limits": [
+    "These are current-source conditional consumer findings, not reproduced missing graphics in a named game image or a cause of the original pause/freeze reports.",
+    "Image-specific claims need resolved flags, selected program/data and runtime evidence. No runtime, default, renderer, release or SD change; current947-mip candidate stays unchanged.",
+    "The opt-in alternate namespace is not enabled in current candidate policies. Unknown generator namespaces retain conservative image binding until traced."
+  ],
+  "private_set": "mipmap21-special-consumer-followups-20261021",
+  "private_sums_sha256": "037af6041f3c3efbab8a0a177fa065c3906420d47753781e055c3341960d0b53"
+}

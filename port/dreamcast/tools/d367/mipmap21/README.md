@@ -666,3 +666,22 @@ The combined private candidate now has 947 mip keys, 1076 original changes and
 4096 bytes. Source/host results do not establish target look, residency or FPS.
 No runtime, recipe/default or release changes occur. The 20 actor candidates
 remain separate. See canonical-generic-qualification-20261021.json.
+
+### Special geometry and effect-model namespaces
+
+The remaining consumer work now has four concrete source follow-ups: Esp01
+trails, Esp02 ribbons, Esp4e cloth and IdFF effect models. Ordinary sprite mip
+coverage does not cover a custom geometry path. The audited strip/cloth bodies
+end in GX calls, while the coarse native sprite class does not admit them. This
+is a conditional source gap; image flags and runtime evidence still determine
+what a particular build actually draws. The implementation queue preserves
+the authored live geometry, UVs, alpha/blend/depth and source simulation.
+
+`source_bindings(..., separate_model_namespace=True)` now distinguishes the
+known IdFC..FF dispatch: Tex_id indexes an Efm/scroll model, not an ordinary
+image. For the exact core input, 21 IdFF records reference model index 37; they
+do not prove EFF image 37 is sampled. Unknown generators retain conservative
+image binding. Default parser output matches the archived earlier parser for
+the exact core and r104 inputs; seven tests pass. The opt-in namespace is not
+applied to current candidate policies, so the 947-mip pack stays unchanged.
+See special-consumer-followups-20261021.json for paths, hashes and next steps.

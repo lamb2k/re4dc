@@ -77,6 +77,30 @@ class SourceEffectConsumers(unittest.TestCase):
         self.assertEqual(parsed['textures'],[dict(texture_id=0x87,tpl_offset=80,records=[])])
         self.assertEqual(parsed['records'],0)
 
+    def test_model_index_never_proves_an_image_binding_and_unknown_generator_stays_held(self):
+        sprite=record(texture=0x31);model=record(ident=0xff,texture=0x31)
+        unknown=bytearray(record(ident=0xff,texture=0x31,kind=1));unknown[265]=9
+        def parse(values,separate=False):
+            blob=bytearray(112+48+300*len(values))
+            struct.pack_into('<12I',blob,0,11,48,64,0,0,0,80,0,96,0,0,0)
+            struct.pack_into('<IHHI',blob,48,1,0x31,0,0)
+            struct.pack_into('<IHHI',blob,64,1,7,0,0)
+            struct.pack_into('<II',blob,80,1,16);struct.pack_into('<II',blob,96,1,16)
+            struct.pack_into('<H',blob,112,len(values))
+            blob[160:]=b''.join(values)
+            return effect.effect(blob,dict(off=0,end=len(blob),index=5),{},separate_model_namespace=separate)
+        legacy=parse([sprite,model]);split=parse([sprite,model],True)
+        self.assertEqual(len(legacy['textures'][0]['records']),2)
+        self.assertNotIn('effect_model_references',legacy)
+        self.assertEqual([r['sprite_id'] for r in split['textures'][0]['records']],[0])
+        self.assertEqual(split['effect_model_references'][0]['model_index'],0x31)
+        held=parse([sprite,bytes(unknown)],True)
+        self.assertEqual(len(held['textures'][0]['records']),2)
+        self.assertEqual(len(held['unresolved_reference_namespaces']),1)
+        self.assertFalse(held['effect_model_references'])
+        for kind,generator,expected in ((0,0,'effect-model'),(1,0,'effect-model'),(1,2,'effect-model'),(1,9,'unresolved-generator-model-or-texture')):
+            self.assertEqual(effect.record_reference_namespace(dict(kind=kind,generator_id=generator,sprite_id=0xfc)),expected)
+
     def test_bad_compact_index_crc_and_sequence_ranges_are_refused(self):
         blob=bytearray(192);struct.pack_into('<I',blob,0,1)
         table=struct.pack('<3I',32,64,1)
