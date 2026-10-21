@@ -135,6 +135,22 @@ $(error MOTION_RESERVE_PACK needs MOTION_PRESSURE_BACKING=1)
 endif
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_RESERVE_PACK=$(MOTION_RESERVE_PACK)
 endif
+# MOTION_CAPACITY=1 (default off): reclaimable v2 heap overflow after packed
+# reserve fills, under the existing aggregate pressure payload cap. Required
+# source heap4 allocations drain only this overflow before final diagnostics.
+# No v3 policy, private reserve size, archive format or fixed margin changes.
+MOTION_CAPACITY ?= 0
+ifneq ($(MOTION_CAPACITY),0)
+ifneq ($(MOTION_CAPACITY),1)
+$(error MOTION_CAPACITY must be 0 or 1)
+endif
+ifneq ($(MOTION_RESERVE_PACK),1)
+$(error MOTION_CAPACITY needs MOTION_RESERVE_PACK=1)
+endif
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_CAPACITY=1
+$(OBJDIR)/motion_bridge.o $(OBJDIR)/ui_bridge.o $(OBJDIR)/src/game/main_mem.o: GAME_CPPFLAGS += -DRE4DC_MOTION_CAPACITY=1
+$(OBJDIR)/sdk/OSAlloc.o: SDK_CFLAGS += -DRE4DC_MOTION_CAPACITY=1
+endif
 # MOTION_PRESSURE_GROW=<bytes> (test 14 r103 motion thrash, crash lane 10-15; needs MOTION_PRESSURE_BYTES; render and
 # I/O only, default 0 = image unchanged): a key load over the MOTION_PRESSURE_BYTES cap does not evict while heap 4
 # keeps at least <bytes> free after it (as MOTION_RESERVE_SPILL): the cap holds only under heap 4 pressure. The r103

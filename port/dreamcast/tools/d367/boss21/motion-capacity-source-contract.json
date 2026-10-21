@@ -1,0 +1,374 @@
+{
+  "base": "d4a3b31fac3362937a3f21eaa874e07be94fd061",
+  "meaning": "Reviewed finite evaluator and direct helper/callback source scopes; hash changes require renewed transitive allocation/lock review. Not whole-program static callgraph proof.",
+  "rows": [
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void MotionSetCore(",
+      "line": 157,
+      "scope": "after lease through function end",
+      "sha256": "4900ac819ef0bc91a2b394b7a90b04d2c9bee6f5227d179a08d60c2c97ab863e",
+      "calls": [
+        "HermiteInterpolation",
+        "MOTION_KEY",
+        "MOTION_PARTS",
+        "MTX_COPY",
+        "PSMTXCopy",
+        "PSVECSubtract",
+        "VecRadLimit",
+        "deleteAttachCamera",
+        "external",
+        "keys",
+        "memclr_asm",
+        "registAttachCamera",
+        "volatile"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void MotionMoveCore(",
+      "line": 660,
+      "scope": "after lease through function end",
+      "sha256": "73e0bfc50514394bfcfb159d7a7ba4ee54a1e55890a326a1c9e2e21b7a052e24",
+      "calls": [
+        "HermiteInterpolation",
+        "MOTION_KEY",
+        "MOTION_PARTS",
+        "RotMatrix",
+        "SEQ_FRAME",
+        "ScaleMatrix",
+        "TransMatrix",
+        "VecRadLimit",
+        "__builtin_prefetch",
+        "err",
+        "getPartsPtr",
+        "keys"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void MotionGetSpeed(",
+      "line": 990,
+      "scope": "after lease through function end",
+      "sha256": "1c42900900a32ee83b6f01df331aaaed761dcb8fd85cb1074f18e26556d931de",
+      "calls": [
+        "HermiteInterpolation",
+        "MOTION",
+        "MOTION_KEY",
+        "MOT_HIST",
+        "PSMTXMultVecSR",
+        "PSMTXRotRad",
+        "PSVECAdd",
+        "PSVECSubtract",
+        "SEQ_FRAME",
+        "err",
+        "keys"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void MotionGetPosition(",
+      "line": 1091,
+      "scope": "after lease through function end",
+      "sha256": "5c37224e8de09e85ff41aacb263b1184f739dacc0f928eb6c5e33576bd36cd3a",
+      "calls": [
+        "HermiteInterpolation",
+        "MOTION_KEY",
+        "MOT_HIST",
+        "SEQ_FRAME",
+        "keys"
+      ]
+    },
+    {
+      "path": "src/game/shape.cpp",
+      "marker": "void CalculateShape_new(cModelInfo* info, ShapeData* data, f32 rate, u8* dst)\n{",
+      "line": 214,
+      "scope": "after lease through function end",
+      "sha256": "c0ccb96ba20f7e6a3929c0927b9fd4a0ebd0607fc2fd238ae4aa8ec0d3d038c9",
+      "calls": [
+        "HermiteInterpolation",
+        "PSQ_L_S16",
+        "PSQ_ST_S16",
+        "__builtin_return_address",
+        "external",
+        "keys",
+        "memclr_asm",
+        "re4dc_log"
+      ]
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "marker": "CameraMotion::CameraMotion(",
+      "line": 24,
+      "scope": "after lease through function end",
+      "sha256": "7f9430dd7b92b249e6bb56d51daf80b3bb957da8ec36f3af56c259e1f24021df",
+      "calls": [
+        "external",
+        "keys"
+      ]
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "marker": "void CameraMotion::move(",
+      "line": 71,
+      "scope": "after lease through function end",
+      "sha256": "bbc1a37918ea12f16cefe4627d170dc5af6ac6b4205597355c85308acc7658bd",
+      "calls": [
+        "CameraSequenceCtrl",
+        "CameraSetOrientationRoll",
+        "CameraSetOrientationUp",
+        "HermiteInterpolation",
+        "RE4DC_XM_LOAD",
+        "RE4DC_XM_POINT",
+        "keys"
+      ]
+    },
+    {
+      "path": "src/game/cam_ctrl.cpp",
+      "marker": "void CameraControl::registAttachCamera(",
+      "line": 2516,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "537205e9a2de01282612d98ce8f3bb02bbd166a7c982bd26b6f575f33aad4068",
+      "calls": [
+        "err",
+        "registAttachCamera"
+      ]
+    },
+    {
+      "path": "src/game/cam_ctrl.cpp",
+      "marker": "void CameraControl::deleteAttachCamera(",
+      "line": 2538,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "e5ff534899a21ca4787d03325474f51cf56c0593f7a499c81f02e4e3befed37e",
+      "calls": [
+        "deleteAttachCamera"
+      ]
+    },
+    {
+      "path": "src/game/model.cpp",
+      "marker": "RE4_INLINE cModel* cModel::getPartsPtr(",
+      "line": 437,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "ae340caa13986f0abc7f87a636d591bbf7e3a91ea861de1885dc5c13da494461",
+      "calls": [
+        "PTR_OK",
+        "err",
+        "getPartsPtr"
+      ]
+    },
+    {
+      "path": "src/game/db_log.cpp",
+      "marker": "cLogWork* cLog::add(",
+      "line": 214,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "b639333463814677684e9b61ddd6596604dccc3d27cbfd3ff6c5a442e7feac38",
+      "calls": [
+        "add",
+        "printf",
+        "strcmp",
+        "strncpy",
+        "vsprintf"
+      ]
+    },
+    {
+      "path": "src/game/cam_sys.cpp",
+      "marker": "void CameraSetOrientationUp(",
+      "line": 36,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "3eab6c078f6ef0f1a1b290f22e999978af356d0c9eed7cf1793b3b7137c984e7",
+      "calls": [
+        "CameraSetOrientationUp",
+        "PSVECCrossProduct",
+        "PSVECSubtract",
+        "VECNormalize",
+        "setColumns"
+      ]
+    },
+    {
+      "path": "src/game/cam_sys.cpp",
+      "marker": "void CameraSetOrientationRoll(",
+      "line": 50,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "0a5b0d98b419d401e52d0361e0f689a8478fa8c4599230ffff79dff6cd803c58",
+      "calls": [
+        "CameraSetOrientationRoll",
+        "PSMTXRotAxisRad",
+        "PSVECCrossProduct",
+        "PSVECMag",
+        "PSVECSubtract",
+        "RE4DC_XM_LOAD",
+        "RE4DC_XM_POINT",
+        "VECNormalize",
+        "getColumn",
+        "setColumns"
+      ]
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "marker": "void dvdread_callback(s32 result, DVDFileInfo* fi)\n{",
+      "line": 632,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "ffbb221226f6002a9d8c22d895ac47821a9a80adf84507e2f8cb3ec894bf32da",
+      "calls": [
+        "ALIGN32",
+        "dvdread_callback"
+      ]
+    },
+    {
+      "path": "src/game/snd_str2.cpp",
+      "marker": "void cb_dvd_read_end(",
+      "line": 85,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "7a67e9089f5873b5f4c0cce9e064339bdbea3127f58f41753b3db0a3d40ad3e3",
+      "calls": [
+        "cb_dvd_read_end"
+      ]
+    },
+    {
+      "path": "src/lib/gcci.c",
+      "marker": "void gcci_rd_cbfn(",
+      "line": 130,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "459d022534cdf45933f206e005abcd94ae62a1060e73177209ee9d8c12a74c27",
+      "calls": [
+        "gcci_rd_cbfn"
+      ]
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "marker": "u32 CameraSequenceCtrl(",
+      "line": 137,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "f31e87e1a898b655cbd233d3b1bcdf1ae18e085b5ce2b6f51aa000eeccf255dd",
+      "calls": [
+        "CameraSequenceCtrl"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_000(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2008,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "aa2e181de175de96c41da021b5d254c3b09cb80c5aa55484b89986af114bb95c",
+      "calls": [
+        "FCC_F32",
+        "Fcc_get_data_000"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_001(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2019,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "df43f4b5969a244555b94bbfbacc0dad95edd296ab16756839b7b0f2317937c5",
+      "calls": [
+        "FCC_F32",
+        "FCC_S16",
+        "Fcc_get_data_001"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_002(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2031,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "812c6ac40d61ea21dc836fac41741e98bc380148bef8ac601f58f1f1ccd58ea4",
+      "calls": [
+        "FCC_F32",
+        "FCC_S8",
+        "Fcc_get_data_002"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_010(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2042,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "56a31c8524357f531995668d83cfb593853ca098b2ce8f50209515294cf9d680",
+      "calls": [
+        "FCC_F32",
+        "FCC_S16",
+        "Fcc_get_data_010"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_011(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2054,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "0307760c98f8e4c3e0f23cf08f47918babb0770780f4aa7e18fd2f90c049764a",
+      "calls": [
+        "FCC_S16",
+        "Fcc_get_data_011"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_012(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2073,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "a7808982cd618e7f4b98cbb7576892cd73cc2c4ac14598658b7a6595d9874bc0",
+      "calls": [
+        "FCC_S16",
+        "FCC_S8",
+        "Fcc_get_data_012"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_020(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2084,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "2d6e42dfffa3517eb20ce671920f615ade8fb72612b5a4b8680fbe767aa9796d",
+      "calls": [
+        "FCC_F32",
+        "FCC_S8",
+        "Fcc_get_data_020"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_021(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2095,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "33e88e0539813357f7409b11c0dc76c81ff703949b787c4097c67752e89efc0a",
+      "calls": [
+        "FCC_S16",
+        "FCC_S8",
+        "Fcc_get_data_021"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_022(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2106,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "ed670a98bc2260ea0c023aae362b0cd0b4e5450377788010f78699f99b86c9fb",
+      "calls": [
+        "FCC_S8",
+        "Fcc_get_data_022"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void Fcc_get_data_033(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2115,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "d2ed6aa6dbf75f33a2a407064f10d88a465cc314bacfc5ea38ce84262a362ab2",
+      "calls": [
+        "FCC_F32",
+        "Fcc_get_data_033"
+      ]
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "marker": "void dummy(u8* d, int i0, int i1, f32* v, f32* t)\n{",
+      "line": 2124,
+      "scope": "reviewed direct helper/callback",
+      "sha256": "7a4a39d7b6b5045e028ee3e9e6436ed33aa3533958e9f751e15000cadd16636e",
+      "calls": [
+        "dummy"
+      ]
+    }
+  ]
+}

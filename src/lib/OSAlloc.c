@@ -1,6 +1,12 @@
 #include <dolphin.h>
 #include <dolphin/os.h>
 
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+/* Native SDK projection intentionally has only a small Dolphin header. */
+extern int OSDisableInterrupts(void);
+extern int OSRestoreInterrupts(int);
+#endif
+
 #define ALIGNMENT 32
 
 #define InRange(cell, arenaStart, arenaEnd) \
@@ -154,6 +160,11 @@ void* OSAllocFromHeap(int heap, u32 size) {
     s32 leftoverSize;
     s32 requested;
 
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+    /* The SH4 scheduler can otherwise switch in the middle of list mutation.
+       Never invoke cache reclamation or wait while this short guard is held. */
+    int motion_capacity_irq = OSDisableInterrupts();
+#endif
     requested = size;
     ASSERTMSGLINE(337, HeapArray, "OSAllocFromHeap(): heap is not initialized.");
     ASSERTMSGLINE(338, (s32)size > 0, "OSAllocFromHeap(): invalid size.");
@@ -171,6 +182,9 @@ void* OSAllocFromHeap(int heap, u32 size) {
     }
 
     if (cell == NULL) {
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+        OSRestoreInterrupts(motion_capacity_irq);
+#endif
 #if DEBUG
         OSReport("OSAllocFromHeap: Warning- failed to allocate %d bytes\n", size);
 #endif
@@ -209,6 +223,9 @@ void* OSAllocFromHeap(int heap, u32 size) {
     hd->headerBytes += 0x20;
     hd->paddingBytes += (cell->size - (requested + 0x20));
     hd->payloadBytes += requested;
+#endif
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+    OSRestoreInterrupts(motion_capacity_irq);
 #endif
     return (u8*)cell + 0x20;
 }
@@ -359,9 +376,17 @@ static int osfree_check(int heap, void* ptr, void* ra) {
 void OSFreeToHeap(int heap, void* ptr) {
     HeapDesc* hd;
     Cell* cell;
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+    int motion_capacity_irq = OSDisableInterrupts();
+#endif
 
 #if defined(RE4DC_OSFREE_CHECK) && RE4DC_OSFREE_CHECK
-    if (!osfree_check(heap, ptr, __builtin_return_address(0))) return;
+    if (!osfree_check(heap, ptr, __builtin_return_address(0))) {
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+        OSRestoreInterrupts(motion_capacity_irq);
+#endif
+        return;
+    }
 #endif
 
     ASSERTMSGLINE(577, HeapArray, "OSFreeToHeap(): heap is not initialized.");
@@ -380,6 +405,9 @@ void OSFreeToHeap(int heap, void* ptr) {
 #endif
     hd->allocated = DLExtract(hd->allocated, cell);
     hd->free = DLInsert(hd->free, cell);
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+    OSRestoreInterrupts(motion_capacity_irq);
+#endif
 }
 
 int OSSetCurrentHeap(int heap) {

@@ -1,0 +1,38 @@
+{
+  "scope": "Actual-source/SDK allocator host tests only; no whole-program/guest/hardware acceptance",
+  "variants": [
+    {
+      "capacity": 0,
+      "lease_lean": 0,
+      "resume": 0,
+      "output": "K05 capacity=0 loads=60 evictions=58 resident=49824 free=83168\nactual source/SDK capacity checks pass\n"
+    },
+    {
+      "capacity": 1,
+      "lease_lean": 0,
+      "resume": 0,
+      "output": "K05 capacity=1 loads=3 evictions=0 resident=72224 free=65664\ncoactive72224/pointer-stability/required-pin-wait/cancellation-owner pass\nlock-busy/inflight-read/published-pin/drain-before-retry pass\neight-concurrent-required-allocators/exact-owner/list-coalescing pass\nnew-binding-metadata/reserve-admission/in-place-reclaim/no-recursive-lock pass\nfragmentation/exhaustive-overflow-reclaim/original-required-failure pass\nunchanged262144-aggregate/pinned-cap/fallback pass\nfailed-read/hold/strict-bounded/retire-owner/no-refill pass\nunsupported-same-evaluator/masked-IRQ-decline (source closure required) pass\nactual source/SDK capacity checks pass\n"
+    },
+    {
+      "capacity": 1,
+      "lease_lean": 1,
+      "resume": 0,
+      "output": "K05 capacity=1 loads=3 evictions=0 resident=72224 free=65664\ncoactive72224/pointer-stability/required-pin-wait/cancellation-owner pass\nlock-busy/inflight-read/published-pin/drain-before-retry pass\neight-concurrent-required-allocators/exact-owner/list-coalescing pass\nnew-binding-metadata/reserve-admission/in-place-reclaim/no-recursive-lock pass\nfragmentation/exhaustive-overflow-reclaim/original-required-failure pass\nunchanged262144-aggregate/pinned-cap/fallback pass\nfailed-read/hold/strict-bounded/retire-owner/no-refill pass\nunsupported-same-evaluator/masked-IRQ-decline (source closure required) pass\nactual source/SDK capacity checks pass\n"
+    },
+    {
+      "capacity": 1,
+      "lease_lean": 1,
+      "resume": 1,
+      "output": "K05 capacity=1 loads=3 evictions=0 resident=72224 free=65664\ncoactive72224/pointer-stability/required-pin-wait/cancellation-owner pass\nlock-busy/inflight-read/published-pin/drain-before-retry pass\neight-concurrent-required-allocators/exact-owner/list-coalescing pass\nnew-binding-metadata/reserve-admission/in-place-reclaim/no-recursive-lock pass\nfragmentation/exhaustive-overflow-reclaim/original-required-failure pass\nunchanged262144-aggregate/pinned-cap/fallback pass\nfailed-read/hold/strict-bounded/retire-owner/no-refill pass\nunsupported-same-evaluator/masked-IRQ-decline (source closure required) pass\nmovie-owned-overflow-loan-ticket/background-pressure-not-ticket pass\nactual source/SDK capacity checks pass\n"
+    }
+  ],
+  "source_sha256": {
+    "src/lib/OSAlloc.c": "3d873625a9813fd5cd7d321842b31ff0abf22e20f33b5baebd02d8fee80638e8",
+    "src/game/main_mem.cpp": "2d0951bdd8d69c4fcf332e8d0a02d8d18afeef03a4c65059e931828d20d2e372",
+    "port/dreamcast/game/platform/native_motion.cpp": "cbd4ce8c8a9c88f61a891b5471be593e2ecebeef39d9842980ed1197a4f250f5",
+    "port/dreamcast/game/motion_bridge.cpp": "17f4d9d7d89a6501835020d373377cfb2b4e9a6249cf54ff2fcd277d0484b145",
+    "port/dreamcast/game/ui_bridge.cpp": "03ec373688475ca943862a7081d66e4353408b8cc241f6f5f0a940ec72fb675b",
+    "port/dreamcast/game/game30.mk": "13711de4383afaef4b469e961b2bc84c13bfada268c1c39cda22cc2bf1f45e38",
+    "port/dreamcast/game/platform/include/native_motion.h": "0ac0f2fb997cb0601427db9e1f2a21b0203d2a032d00eafa84f3fc034301e398"
+  }
+}
