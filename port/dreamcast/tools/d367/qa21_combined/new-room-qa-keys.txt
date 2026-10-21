@@ -1,0 +1,8 @@
+- | 2 | b
+- | 3 | ltrig+rtrig+down 0.5
+qa: menu open | 0.6 | start
+- | 2 | ltrig+rtrig+down 0.5
+qa: menu open | 0.6 | start
+- | 2 | ltrig+rtrig+down 0.5
+qa: menu open | 0.6 | start
+- | 3 | back 0.5

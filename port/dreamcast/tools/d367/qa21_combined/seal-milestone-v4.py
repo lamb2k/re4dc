@@ -1,0 +1,29 @@
+from pathlib import Path
+import hashlib,json,re
+R=Path('C:/Flycast-Evidence/re4-dreamcast/qa21-combined-regression-20261021');out=R/'regression-summary-v4.json';assert not out.exists();base=json.loads((R/'regression-summary-v3.json').read_text())
+notes={
+'door-route01':'Tooling alias failure; preserved bounded checkpoint; no progression claim',
+'door-route02':'Original house window approached; A not yet aligned; no fake traversal',
+'door-route03':'Original source window jump by normal movement/A, authentic life1200 to476',
+'door-route04':'Road collision stall followed authentic enemy damage476 to153 to0; no no-warp route acceptance',
+'door-death-continue01':'Original Continue from authentic preceding death; health/state lineage preserved',
+'r103-cold01':'Fresh combined cold preset4 r103, life1200; independent of original r100 lineage',
+'r103-return-door01':'Ordinary approach; helper threshold collided before A, no game defect claim',
+'r103-return-door02':'Original DOORDEMO start/end, targetr101 generation2 and original PlayingManual2 opened',
+'new-room-qa01':'Normal B exits reader into files browser; QA withheld while modal; expected safety rejection',
+'new-room-qa02':'Normal B exits files browser, two QA cycles passed; third withheld after life1 routine2/2 stall',
+'new-room-death-continue01':'Name misleading: normal A input while life1 stalled; no death demo/Continue; preserved finding',
+'control-r103-cold01':'Separate fresh cold QA-control PAUSE0 lineage, no candidate-state restore',
+'control-r103-return-door01':'Ordinary r103 door to r101, original PlayingManual2 opened, life1200',
+'control-new-room-qa01':'One QA cycle passed, independent PAUSE0 control reproduces life1 routine2/2 stall; next QA withheld'}
+base['additional_bounded_evidence']={}
+for name,note in notes.items():
+ C=R/name;run=json.loads((C/'run-result.json').read_text());supervisor=json.loads((R/'invocations'/name/'process-supervisor.json').read_text());assert 0<supervisor['actual_guest_seconds']<47.5 and not supervisor.get('forced_stop')
+ checkpoint=json.loads((C/'checkpoint.json').read_text());assert not checkpoint['state_edits']
+ base['additional_bounded_evidence'][name]={'classification':note,'run_status':run['status'],'elapsed_s':run['elapsed_s'],'errors':run['errors'],'keys_executed':len(run['key_log']),'supervisor':supervisor,'checkpoint_sha256':hashlib.sha256((C/'checkpoint.json').read_bytes()).hexdigest(),'checkpoint_audit':checkpoint['audit']}
+base['qualified']+=['Original r103-to-r101 door traversal and original new-room manual/files browser; two combined QA cycles and one independent pause-OFF control cycle pass before separate original/shared damage stall']
+base['open_findings']={'post_door_life1_stall':{'candidate':'new-room-qa02 then new-room-death-continue01','control':'control-new-room-qa01','both_programs_have_QA_chord_repair':True,'pause_native_presentation_required_to_reproduce':False,'cause_proven':False,'observed':'Global mode3/0 Stop0 player life1; player routine2/1 then2/2 motion86; no death demo because gameDiedemoCheck requires life<=0; later QA safely withheld','QA_flags':0,'control_source_recipe':{'runtime_source':base['source'],'QA_MENU':1,'PAUSE_NATIVE_PRESENTATION':0,'GAME_SH4ZAM':1,'SKIN_SH4ZAM':0},'control_program':'5c5a6c434751b03a0aaa05d8e2478820ca82a3790d7c3b06799f7845d6c5f68b','control_ELF':'96eb9ddf7c26795297aa87c0fa631c7da582e7c2b01a7b5a100f7d04bee954ad','control_track':'2a6b3200fb0016a89af9b9da275a207eea7a63c7adc7dfedaf07b4a40709fc9a','control_debug_flags':[512,0,32768,0],'control_game_level':5,'control_state_sha256':'306ae4944b35edf8dd7542b5758a5db0383547bd1497157c01d3e06ab93dff02','source_pointers':['src/game/game.cpp:1274 gameDiedemoCheck only triggers at life<=0','src/game/pl_dmg.cpp:337 Pl_R0_Die routine2/2 advances last motion only','src/game/em_sub.cpp:1991 LifeDownSet2 early returns at existing life<=0; ordinary keep1 clamp only on positive-life damage','src/game/em_sub.cpp:2124 PlSetDamage chooses routine2 for lethal ordinary damage','src/game/pl_class.cpp:705 cPlayer::setDamage dispatches damage type'], 'next':'Trace exact caller/type and lifetime writes before assigning a fix. No speculative damage change. Root owns shared runtime allocation/integration.', 'limitations':'Non-atomic live samples and different input/frame/RNG lineages do not prove exact lethal caller; no cross-program state restoration.'}}
+base['remaining']=['Post-door life1 stall caller/fix and playable new-room return/Continue','Natural no-warp complete route; preserved r100 road collision/death is not a pass','Resource/KOS/fragmentation qualification','Audio quality: s03 reports1 underrun1472silence bytes; s20 reports2 underruns8448silence bytes','Release full tier','Physical Dreamcast acceptance']
+base['storage_context']='Own stage/ELFs/idle emulator copies and retained original QA storage losslessly NTFS-compressed with logical SHA verified. Functional outcomes only; no throughput/performance comparisons across compression boundaries.'
+image=R/'new-room-death-continue01/shots/t0040/frames/fb0.png';base['inspected_images'][str(image.relative_to(R)).replace('\\','/')]=hashlib.sha256(image.read_bytes()).hexdigest();base['image_limit']='Live framebuffer readbacks are non-atomic; some transitional/partial frames preserved. Final stalled candidate image inspected; no control post-stall PNG exists because safe-state exception ended periodic captures.'
+out.write_text(json.dumps(base,indent=2)+'\n');print(json.dumps({'prior_accepted_runs':len(base['runs']),'additional_bounded_cases':len(notes),'open_findings':list(base['open_findings'])}))
