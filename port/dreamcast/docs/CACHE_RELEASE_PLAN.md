@@ -2,11 +2,11 @@
 
 Codex main owns the remaining audit, runtime repairs, integration and evidence review. Claude owns production merges, release scope, packaging and publication. Castle is an independent progression workstream and does not wait for this audit. Earlier subagent results are inputs to the main thread, not a queue waiting for those agents to resume.
 
-The next release can use qualified fixes without claiming that the holistic audit is finished. Deliver the existing motion result now, qualify the later candidates as bounded additions, and keep unqualified components disabled. This plan does not authorize a production merge or a release upload.
+The next release can use qualified fixes without claiming that the holistic audit is finished. Test21 is already published as test-fe0efcdd-20261020. Its tagged recipe enables MOTION_PRESSURE_BACKING=1 and MOTION_RESERVE_PACK=1; the earlier core repair is already shipped. Retain its regression evidence, qualify later candidates as bounded additions and keep unqualified components disabled. This plan does not authorize a production merge or a release upload.
 
 ## Inbox authority and ownership
 
-The applicable coordinator directive is boss18 INBOX I-018: the accounting/packing repair landed as 334416a3, and Claude needs the original post-s20 r100 result before enabling it for Test21. That result is already available at the top of CODEX-STATUS.md. The later audit must not become an additional condition on that handoff.
+The applicable coordinator directive is boss18 INBOX I-018: the accounting/packing repair landed as 334416a3, and Claude needs the original post-s20 r100 result before enabling it for Test21. That result is already available at the top of CODEX-STATUS.md, and the published Test21 recipe now enables both switches. The later audit must not reinterpret that fulfilled handoff as an unresolved release hold.
 
 I-016/I-017 require current origin/t15/int before new builds, current recipe/data, castle on disc2 and alive/in-view/not-drawn checks. COMMON.md and CLAUDE.md govern scope freeze, release gates and ownership. The remote integration ref checked for this plan is 54cef5d1560c41d074beee05ffa1ecd38f2ee642. Recheck it before integration; it is a reference point, not a request to freeze Claude's ongoing work.
 
@@ -23,7 +23,7 @@ The already landed accounting/packing pair has a real original-ambush result on 
 
 The repaired run has three ordinary kills and a 16.625-second read-quiet tail. These are bounded Flycast cache results, not a frame-identical timing pair or a console FPS claim. Claude's I-018 records existing identity, STRICT, KOS48KiB and s30 checks on the earlier integration. Use this evidence for the existing motion release decision; do not cherry-pick334416a3 again when it is already in the selected base.
 
-The current open release number and scope belong to Claude. If its candidate is frozen, later additions belong to the next scope unless the user explicitly changes that scope. No status here asserts that Test21 remains open.
+Claude selects the upcoming hotfix or next release scope. Test21 is already published and its assets stay immutable. The tag resolves to documentation commit860281041f3a3560f2a5aef5d50625222e4dadf3 over game sourcefe0efcdd. The tagged release-knobs.txt was read directly: both motion switches are1, CAST_MIPMAP=1 and GANADO_LOD_LEVEL=2 (g70). Later additions require a new candidate and its own gates.
 
 ## Candidate register
 
@@ -44,7 +44,7 @@ That candidate passes cold entry, warmed HG/TMP hands, resident metadata reuse, 
 
 ## Main thread execution order
 
-1. **Deliver I-018 separately now.** Keep the original result and receipt at the top of CODEX-STATUS. Claude can act on the earlier qualified pair while this queue continues.
+1. **Maintain the fulfilled I-018 handoff.** Keep the original result and receipt at the top of CODEX-STATUS as regression evidence. Test21 already enables the pair. Reproduce the new Test21 reports on that immutable release before attributing them to later candidates.
 2. **Finish source repair contracts.** Review capacity and H064 together. Retire native metadata, reserves and overflow before heap destruction, after draining/canceling their actual readers. Guard handle generations and held/reset/callback contexts; a handle-live check or overflow-only drain is insufficient. Restore saved display flags on every readEm return. Make EVD parent/bin registration transactional, preserving pre-existing shared owners and exact refcount deltas on rollback. Reuse actual-source/SDK tests and add the missing exceptional cases before implementing each policy.
 3. **Close repeated image/effect/audio admission.** Trace persistent packed payload failure separately from index backoff, loose missing-key overflow, successful owner reuse and emitter destruction. Add bounded recovery only where failure classification supports it; preserve valid late admission and room-generation rearm. Review existing audio recovery and effect admission candidates rather than reimplementing them. Resolve memory layout/VRAM fragmentation before adding more residency.
 4. **Reconcile the qualified subset onto current integration.** In one isolated landing branch, import selected runtime deltas and required tests/docs. Do not merge every historical branch or old recipe wholesale. The d4 runtime imports are1bb1ddec weapon, b753db30 movie,75802750 joined reserve,fc99c487 hands and3e5ede65 resident metadata; accounting/packing already exists upstream. Resolve shared-file claims first. Preserve all frozen controls and private data.
@@ -110,4 +110,15 @@ Primary receipts: C:/Flycast-Evidence/re4-dreamcast/qa21-r11e-20261020/MOTION-PA
 Main updates the status header and reports a meaningful completion, failure, blocking condition or material change of direction while working. A finished checkpoint advances to the next queue item; it is not an instruction to wait for a user nudge. Claims of active work reflect actual tool/guest activity, not a completed agent's stale WORKING header.
 ## New tester feedback
 
-Five Espiral screenshots are assigned to a separate source-only feedback triage agent at the user's request. Main retains audit and release ownership. The reporter's build, release and device are not established; the question is pending. Photos show an apparent pause/RETRY geometry and lighting difference, and report a frozen boss. These need exact-build reproduction and pause/native-source draw ownership checks before declaring a current-release regression. QA-menu accessibility, Ganado model quality, PS2 facial/cloth simplification and mipmap suggestions are separate items. Mipmap anecdotes from another game are not RE4 performance evidence. Triage is recorded in codex-lanes/feedback21; root attaches its blocker/known-issue classification before selecting a release scope. No automatic model reduction, new feature, renderer edit or mipmap conversion is included in the frozen cache bundle.
+The user confirms Release21. Source-only triage of all five photos is complete in codex-lanes/feedback21/TRIAGE.md, HANDBACK.md and provenance.json. Device, exact QA/main asset, non-boss rooms and freeze persistence after resume remain open. Codex main created and read back four tracking issues at the user's request:
+
+| Issue | Classification and next action |
+| --- | --- |
+| [48 Pause and RETRY geometry and lighting](https://github.com/lamb2k/re4dc/issues/48) | Priority renderer reproduction. Trace the pause native-world/static-submit/generic-source ownership boundary; photos do not prove a second world was loaded. |
+| [49 Reported Mendez freeze](https://github.com/lamb2k/re4dc/issues/49) | Potential progression blocker only if it persists after normal resume. Verify original r11f/em35 fight/phase and source actor progression. |
+| [50 QA selector reopening](https://github.com/lamb2k/re4dc/issues/50) | Existing control is full L+R and Down on portA after30 safe gameplay ticks. Verify Test21, improve discoverability and retain event/transition guards. |
+| [51 Reduced Ganado quality](https://github.com/lamb2k/re4dc/issues/51) | Named same-pose full/reduced comparison and compatible artist contribution path; no new reduction/default without look review. |
+
+Published fe0efcdd and d4 retain the relevant pause/menu paths; current54cef retains the source-supported ownership lead. No gameplay reproduction or fix for these reports is claimed. Source-only pause triage is not a failed renderer acceptance gate by itself. Main includes the confirmed blocker/known-issue classification before choosing the next release scope.
+
+Test21 already enables CAST_MIPMAP for supported textures. Remaining mip coverage/performance and PS2 facial/cloth/bone simplification are separate measured research, not demonstrated cures. No blanket conversion, model reduction or feature expansion is added to the cache bundle. Private chat screenshots are retained as provenance; GitHub issues contain focused summaries rather than the private conversations.
