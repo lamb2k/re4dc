@@ -1,0 +1,74 @@
+{
+  "scope": "Read-only exact closed checkpoint combat state, not last asynchronous controller sample. No guest or state writes.",
+  "run": "route-walk150",
+  "state_sha256": "9ec4812c341890290f2c0adca00eb9b076f49c5916e11170f628e1c9770a9b96",
+  "source": 34368,
+  "health": [
+    1200,
+    1200,
+    90,
+    600
+  ],
+  "hero_pos": [
+    25085.4453125,
+    -1999.99951171875,
+    -43578.70703125
+  ],
+  "hero_yaw": 0.46689990162849426,
+  "hero_routines": [
+    0,
+    1,
+    0,
+    4
+  ],
+  "partner_pos": [
+    29352.775390625,
+    -2000.004150390625,
+    -42825.98046875
+  ],
+  "partner_flags": "0x46",
+  "boss": {
+    "hp": 3094,
+    "pos": [
+      16649.96875,
+      -8.646240234375,
+      -41977.67578125
+    ],
+    "yaw": -2.9793899059295654,
+    "routines": [
+      1,
+      17,
+      1,
+      0
+    ]
+  },
+  "items": [
+    {
+      "id": 124,
+      "num": 1,
+      "bullet": 0
+    },
+    {
+      "id": 35,
+      "num": 1,
+      "bullet": 6
+    },
+    {
+      "id": 4,
+      "num": 10,
+      "bullet": 0
+    },
+    {
+      "id": 172,
+      "num": 1,
+      "bullet": 0
+    },
+    {
+      "id": 173,
+      "num": 1,
+      "bullet": 0
+    }
+  ],
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+}
