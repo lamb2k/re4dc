@@ -1,6 +1,6 @@
 # Shared loading audit and release integration plan
 
-Codex main owns the remaining audit, runtime repairs, integration and evidence review. Claude owns production merges, release scope, packaging and publication. Castle is an independent progression workstream and does not wait for this audit. Earlier subagent results are inputs to the main thread, not a queue waiting for those agents to resume.
+Codex main owns the remaining audit, repair prioritization, integration and evidence review. At the user's latest direction, the dedicated cache_fixes agent implements confirmed defects as main finds them. Claude owns production merges, release scope, packaging and publication. Castle is an independent progression workstream and does not wait for this audit. Earlier subagent results are inputs to the main thread, not a queue waiting for those agents to resume.
 
 The next release can use qualified fixes without claiming that the holistic audit is finished. Test21 is already published as test-fe0efcdd-20261020. Its tagged recipe enables MOTION_PRESSURE_BACKING=1 and MOTION_RESERVE_PACK=1; the earlier core repair is already shipped. Retain its regression evidence, qualify later candidates as bounded additions and keep unqualified components disabled. This plan does not authorize a production merge or a release upload.
 
@@ -10,7 +10,7 @@ The applicable coordinator directive is boss18 INBOX I-018: the accounting/packi
 
 I-016/I-017 require current origin/t15/int before new builds, current recipe/data, castle on disc2 and alive/in-view/not-drawn checks. COMMON.md and CLAUDE.md govern scope freeze, release gates and ownership. The remote integration ref checked for this plan is 54cef5d1560c41d074beee05ffa1ecd38f2ee642. Recheck it before integration; it is a reference point, not a request to freeze Claude's ongoing work.
 
-There was no separate main-cache inbox. codex-lanes/cache21/INBOX.md now records the user's main-thread assignment and references I-018 without inventing a new coordinator directive. Main acknowledges and executes that queue. Subagents are not owners of unfinished audit items. Castle retains its separate queue and checkpoints.
+There was no separate main-cache inbox. codex-lanes/cache21/INBOX.md now records the user's main-thread assignment and references I-018 without inventing a new coordinator directive. Main acknowledges and executes that queue. U004 assigns implementation to /root/cache_fixes in its isolated current-integration worktree; main remains accountable for every audit row, review and integration. Castle retains its separate queue and checkpoints.
 
 ## What Claude can use now
 
@@ -35,18 +35,36 @@ All switches are default off. An evidence-only branch is not a runtime patch.
 | Capacity1f7c34e4fc7a72222fd99c81afe66d08f890aa9e, branch codex/boss21-motion-capacity, parent d4 | MOTION_CAPACITY=1 with packed reserve/pressure backing. | Actual-SDK host K05 60loads/58evictions to3/0; five disabled SH4 objects match. | Root architecture review, reset/borrower contracts, native admission/preflight edges, full link and actual crowded-scene checks. |
 | Audio83cb1ab0d739d95e8fb00d6346578c947e1aa142, branch codex/cache21-audio-recovery, parent c7 | AICA_LAYOUT_RECOVER=1, AICA_AUDIO=1. | 396 source sanitizer checks; disabled SH4 identity. | Reconcile source base, full callchain stack, native bank/ring recovery and playback/KOS checks. |
 | Effectb3101919701173f23260edeff29433d6754d7e8f, branch codex/cache21-effect-admission | EFFECT_ADMISSION_GUARD=1. | Baseline/OFF/ON source tests; disabled actual SH4 object identity; enabled plus 47 text bytes/no data or BSS growth. | Final program identity and failure/retry plus successful FX gameplay checks. Partial downstream registration remains separate. |
+| Display restorationa3727579d2f3a8c49cc6877e330f8a783780ce99, branch codex/cache21-fixes, base54cef5d1 | EM_ADMISSION_DISP_FIX=1. | Actual-source 216 checks per baseline/OFF/ON; disabled SH4 read.o identity for both weapon heap variants. Main reviewed the three-line failure-return repair. | Final program identity and admission/refusal gameplay gates. Failure cleanup, not an ordinary disc-read explanation. |
 | Optional HUD preparationf33c3189 | Existing resident-list format and explicitly selected private data. | Tool/source evidence only. | Separate asset admission and VRAM comparison. Excluded from the default bundle. |
-| Lifetime findingsd396bd9e, branch codex/boss21-motion-lifetime-audit | Docs/tests only; no runtime switch. | Post-destroy frees, display flags on full slots and partial EVD false-complete retry reproduced. | Main implements and validates repairs; do not merge this as if it repaired runtime behavior. |
+| Lifetime findingsd396bd9e, branch codex/boss21-motion-lifetime-audit | Docs/tests only; no runtime switch. | Post-destroy frees, display flags on full slots and partial EVD false-complete retry reproduced. | Fix worker implements scoped repairs; main reviews and validates integration. Do not merge this evidence branch as if it repaired runtime behavior. |
 
 Six-fix runtime identity: ELF 52a5d671203e22e9f20728a8fbc3b61e080f7ba44e06891df635248a374dd053; raw 8c26c048c3e7aec66f2ea6496b1c2ec03e0b2b6e2ce6ff1ae1308dac62958034; ISO a8bfd7e67d8de2c8d79f3b639f6243e30da40afbe8b523aec87d5bb47c3f110d. Qualification 3a38c146421ac953690bec20211c0c50979d370a is tools/docs, not another runtime component.
 
 That candidate passes cold entry, warmed HG/TMP hands, resident metadata reuse, inventory returns, radio portraits, natural s20 completion, original ambush kills and Diagnostics return. Its resource snapshot still has heap54304B, KOSfree8384B plus brk69632B, VRAMfree103168B/largest12160B with fragmentation failures, and movie underruns. Inventory returns still read2.76 to3.06MB. Classify these with a matched control before release; this is functional qualification, not clean resource or whole-cache acceptance.
 
+## Current normal-reload finding
+
+The retained d4 sixfix-inventory07 run has four ordinary HG/TMP menu/equip cycles. Main separated their captured admissions; the log prefix overran, so this is a bounded window, not an all-room texture census.
+
+| Cycle | Total low-level read bytes | Texture opens while menu active | Return preload opens | Later first-sight opens |
+| --- | ---: | ---: | ---: | ---: |
+| 0 | 3056032 | 36 | 32 | 2 |
+| 1 | 2758496 | 32 | 15 | 0 |
+| 2 | 3004704 | 36 | 11 | 1 |
+| 3 | 2999936 | 35 | 17 | 0 |
+
+The observer's metadata-eviction counter stays zero throughout. Motion stays20loads/0evictions, and the last three hand switches need no hand-disc reads. Each menu still logically loads531040B of common data,912704B of puzzle/item data and a126720B overlay. These logical sizes are not added to texture VRAM bytes as if they were disjoint low-level drive counters.
+
+The 3MiB world backing compresses to about1.721MB inside the2MiB bank, with pool0 and ui_released0. Later menu-image uploads trigger texture-window evictions of26,6and2entries. Actual movie_window_release closes entries without RE4DC_HOLD_EVICTED, unlike ordinary LRU/slot eviction. This omission is present in publishedfe0efcdd and current54cef5d1 as well as d4. Main handed this narrow bookkeeping repair to cache_fixes; selected-window, fence and lease behavior must stay unchanged.
+
+Remembering the keys repairs restoration coverage; it does not establish fewer total reads. Existing hold restoration intersects remembered keys with budgeted preload candidates, and real menu/world working-set pressure remains. Exact evicted key ownership, complete package coverage and target before/after validation remain open. Local attribution: codex-lanes/cache21/menu-reload-attribution.json and its replayable analyzer.
+
 ## Main thread execution order
 
 1. **Maintain the fulfilled I-018 handoff.** Keep the original result and receipt at the top of CODEX-STATUS as regression evidence. Test21 already enables the pair. Reproduce the new Test21 reports on that immutable release before attributing them to later candidates.
-2. **Finish source repair contracts.** Review capacity and H064 together. Retire native metadata, reserves and overflow before heap destruction, after draining/canceling their actual readers. Guard handle generations and held/reset/callback contexts; a handle-live check or overflow-only drain is insufficient. Restore saved display flags on every readEm return. Make EVD parent/bin registration transactional, preserving pre-existing shared owners and exact refcount deltas on rollback. Reuse actual-source/SDK tests and add the missing exceptional cases before implementing each policy.
-3. **Close repeated image/effect/audio admission.** Trace persistent packed payload failure separately from index backoff, loose missing-key overflow, successful owner reuse and emitter destruction. Add bounded recovery only where failure classification supports it; preserve valid late admission and room-generation rearm. Review existing audio recovery and effect admission candidates rather than reimplementing them. Resolve memory layout/VRAM fragmentation before adding more residency.
+2. **Trace normal reloads and implement confirmed findings concurrently.** Main follows ordinary enemy, shot, weapon, inventory, player and boss demand into actual read/admission paths. The fix worker implements narrow handed-over defects immediately behind default-off guards; main reviews source tests and integration. Its current small H064 display-flags repair does not replace the normal-path audit. Inventory texture-window bookkeeping is the next handed-over normal-path repair.
+3. **Finish source repair contracts and repeated image/effect/audio admission.** Review capacity and H064 together: retire native metadata, reserves and overflow before heap destruction after draining/canceling actual readers; preserve handle generations and shared-owner refcount deltas during rollback. Trace persistent packed payload failure separately from index backoff, loose missing-key overflow, successful owner reuse and emitter destruction. Reuse the existing audio/effect candidates. Resolve actual working-set and fragmentation constraints before adding residency.
 4. **Reconcile the qualified subset onto current integration.** In one isolated landing branch, import selected runtime deltas and required tests/docs. Do not merge every historical branch or old recipe wholesale. The d4 runtime imports are1bb1ddec weapon, b753db30 movie,75802750 joined reserve,fc99c487 hands and3e5ede65 resident metadata; accounting/packing already exists upstream. Resolve shared-file claims first. Preserve all frozen controls and private data.
 5. **Qualify the combined chosen scope.** Record all modified switches, including changes under existing MOTION_RESERVE_PACK; not just new knob names. Build a matching control and merged-disabled arm with identical labels, recipe and asset inputs. Then build the combined enabled candidate once and run the required gates on those exact bytes. Use component arms only when a failure needs attribution.
 6. **Hand Claude a release integration kit.** Include the one landing revision, prerequisites, switch/data manifest, program/overlay/asset hashes, gate receipts, memory maps, screenshot index and issue classification. Claude selects the open release scope, merges, packages and publishes under the standing release rules.
@@ -55,7 +73,7 @@ A new candidate is not enabled merely because a host test passes. Conversely, fi
 
 ## Remaining holistic audit ledger
 
-Main owns every row below. Prior Boss/QA assignments identify evidence sources, not current delegated ownership. Each row records selected code/data identity, demand group, owner/generation/lifetime, failure/retry behavior and the target case needed for closure.
+Main owns every audit row below. Prior Boss/QA assignments identify evidence sources; the active fix worker implements confirmed scoped defects under main review. Each row records selected code/data identity, demand group, owner/generation/lifetime, failure/retry behavior and the target case needed for closure.
 
 | Area | Evidence already available | Main closure requirement |
 | --- | --- | --- |
