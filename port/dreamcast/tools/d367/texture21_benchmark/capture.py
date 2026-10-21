@@ -8,8 +8,27 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import shutil
 import sys
 import time
+
+
+def validate_checkpoint(seed, capture, image_receipt, expected_exe):
+    seed, capture, expected_exe=Path(seed),Path(capture),Path(expected_exe)
+    if seed.parent.resolve()!=capture.parent.resolve():
+        raise ValueError('checkpoint outside own evidence lineage')
+    identity=json.loads((seed/'checkpoint-identity.json').read_text())
+    if identity['image_track_sha256']!=image_receipt['track']['sha256'] or identity['program']!=image_receipt['files']['1ST_READ.BIN']:
+        raise ValueError('foreign image/program checkpoint rejected')
+    if (seed/'data/disc.state').read_bytes()[:8]!=b'FLYSAVE1':
+        raise ValueError('unsupported checkpoint container')
+    if hashlib.sha256((seed/'data/disc.state').read_bytes()).hexdigest()!=identity['state_sha256']:
+        raise ValueError('checkpoint state hash differs')
+    if hashlib.sha256(expected_exe.read_bytes()).hexdigest()!=identity['flycast_sha256']:
+        raise ValueError('checkpoint emulator identity differs')
+    if not json.loads((seed/'run-result.json').read_text()).get('emulator_exited'):
+        raise ValueError('checkpoint owner has not exited')
+    return seed/'data'
 
 
 def main():
@@ -18,6 +37,8 @@ def main():
     mode.add_argument('--base',help='frozen fullplay base with fixture slots; never modified')
     mode.add_argument('--disc',help='existing unchanged exact QA disc directory')
     p.add_argument('--keys',help='PID-scoped ordinary QA menu input script')
+    p.add_argument('--checkpoint',action='store_true',help='save an original Flycast same-image state on graceful close')
+    p.add_argument('--state-seed',help='own prior capture with authenticated checkpoint-identity.json')
     p.add_argument('--image-receipt',help='complete in-place image identity from bench.py image')
     p.add_argument('--scene',required=True,help='directory prepared by bench.py scene')
     p.add_argument('--cap',required=True,help='new capture directory')
@@ -26,6 +47,9 @@ def main():
     p.add_argument('--reservation',required=True,help='root-issued resource reservation receipt, JSON')
     a=p.parse_args()
     if os.name!='nt':raise SystemExit('Windows Python required by fp_run')
+    if a.base and (a.checkpoint or a.state_seed):raise SystemExit('checkpoint adapter supports unchanged-QA mode only')
+    floor=18*1024**3+128*1024**2
+    if shutil.disk_usage(Path(a.cap).parent).free<floor:raise SystemExit('C floor18GiB+128MiB')
     scene=Path(a.scene); plan=json.loads((scene/'scene.json').read_text())
     if hashlib.sha256((scene/'warp.txt').read_bytes()).hexdigest()!=plan['warp']['sha256']:
         raise SystemExit('prepared warp changed')
@@ -37,22 +61,30 @@ def main():
     # Existing harness uses isolated linked tracks, PID-scoped WM_KEY input only,
     # screenshots every five seconds and disk guards. capture.sh holds trace_lock.
     runner=Path(__file__).resolve().parents[1]/'fullplay/fp_run.py'
+    if a.checkpoint or a.state_seed:
+        runner=Path(__file__).resolve().parent/'checkpoint_run.py'
     cmd=[sys.executable,str(runner),'--cap',a.cap,'--syms',a.syms,
          '--seconds',str(a.seconds),'--period','5','--name','texture21-'+plan['scene']]
     if a.base:
         cmd+=['--base',a.base,'--warp',str(scene/'warp.txt')]
     else:
-        if not a.keys or not a.image_receipt or not plan.get('qa_preset_staged_file'):
+        if not a.keys or not a.image_receipt or not (plan.get('qa_preset_staged_file') or plan.get('qa_normal_start') is True):
             raise SystemExit('unchanged QA mode requires exact image receipt, staged preset and ordinary menu keys')
         image=json.loads(Path(a.image_receipt).read_text())
-        expected=image['files'].get(plan['qa_preset_staged_file'])
-        if expected!=plan['warp']:raise SystemExit('QA preset does not match prepared fixture')
+        if not plan.get('qa_normal_start'):
+            expected=image['files'].get(plan['qa_preset_staged_file'])
+            if expected!=plan['warp']:raise SystemExit('QA preset does not match prepared fixture')
         track=Path(a.disc)/'track03.bin'
         h=hashlib.sha256()
         with track.open('rb') as stream:
             for block in iter(lambda:stream.read(1024*1024),b''):h.update(block)
         if h.hexdigest()!=image['track']['sha256']:raise SystemExit('unchanged QA track identity differs')
         cmd+=['--disc',a.disc,'--keys',a.keys]
+        if a.state_seed:
+            data=validate_checkpoint(a.state_seed,a.cap,image,
+                Path(r'C:\Flycast-Evidence\re4-dreamcast\d367-harness-par\flycast.exe'))
+            cmd+=['--checkpoint-seed',str(data)]
+
 
     env=os.environ.copy();env['RE4DC_MAX_FLYCASTS']='16'
     # fp_run allows a reader drain after its requested limit. Independently cap
@@ -72,10 +104,10 @@ def main():
                 pid=int((cap/'flycast.pid').read_text())
                 probe=kernel.OpenProcess(0x1001,False,pid)
                 if not probe:raise OSError('cannot pin owned guest process')
-                image=ctypes.create_unicode_buffer(32768);count=W.DWORD(len(image))
-                if not kernel.QueryFullProcessImageNameW(probe,0,image,ctypes.byref(count)):
+                image_name=ctypes.create_unicode_buffer(32768);count=W.DWORD(len(image_name))
+                if not kernel.QueryFullProcessImageNameW(probe,0,image_name,ctypes.byref(count)):
                     kernel.CloseHandle(probe);raise OSError('cannot verify owned guest image')
-                if Path(image.value).resolve()!= (cap/'flycast.exe').resolve():
+                if Path(image_name.value).resolve()!= (cap/'flycast.exe').resolve():
                     kernel.CloseHandle(probe);raise RuntimeError('guest ownership mismatch')
                 times=[W.FILETIME() for _ in range(4)]
                 if not kernel.GetProcessTimes(probe,*[ctypes.byref(x) for x in times]):
@@ -83,7 +115,14 @@ def main():
                 guest_started=((times[0].dwHighDateTime<<32)+times[0].dwLowDateTime)/1e7-11644473600
                 if guest_started<started-1:
                     kernel.CloseHandle(probe);raise RuntimeError('stale guest pid file')
-                handle=probe;watchdog['pid']=pid;watchdog['image']=image.value
+                handle=probe;watchdog['pid']=pid;watchdog['image']=image_name.value
+            if handle is not None and cap.exists():
+                linked={'disc.gdi','track01.bin','track01.iso','track02.raw','track03.bin','track03.iso'}
+                growth=sum(p.stat().st_size for p in cap.rglob('*') if p.is_file() and p.name not in linked)
+                if growth>100000000:
+                    watchdog['resource_stop']='100MB capture growth';raise RuntimeError(watchdog['resource_stop'])
+            if handle is not None and shutil.disk_usage(cap.parent).free<floor:
+                watchdog['resource_stop']='C floor18GiB+128MiB';raise RuntimeError(watchdog['resource_stop'])
             if handle is not None and time.time()-guest_started>=49:
                 kernel.TerminateProcess(handle,0)
                 watchdog['terminated_at_limit']=True
@@ -104,6 +143,21 @@ def main():
             (cap/'benchmark-keys.txt').write_bytes(Path(a.keys).read_bytes())
         (cap/'benchmark-scene.json').write_text(json.dumps(plan,indent=2)+'\n')
         (cap/'resource-reservation.json').write_text(json.dumps(reservation,indent=2)+'\n')
+        if a.checkpoint or a.state_seed:
+            state=cap/'data/disc.state'
+            log=(cap/'flycast.log').read_text(errors='replace')
+            import re
+            saved=re.findall(r'Saved state to (.*?) size (\d+)',log)
+            if not state.is_file() or not saved or Path(saved[-1][0]).resolve()!=state.resolve():
+                raise SystemExit('same-image checkpoint save not confirmed; preserve capture but do not continue it')
+            if state.read_bytes()[:8]!=b'FLYSAVE1':raise SystemExit('unsupported saved checkpoint container')
+            if state.stat().st_mtime<started:raise SystemExit('checkpoint save is stale')
+            (cap/'checkpoint-identity.json').write_text(json.dumps({
+                'state_sha256':hashlib.sha256(state.read_bytes()).hexdigest(),
+                'image_track_sha256':image['track']['sha256'],'program':image['files']['1ST_READ.BIN'],
+                'flycast_sha256':hashlib.sha256((cap/'flycast.exe').read_bytes()).hexdigest(),
+                'source':'b21116ec0cf2c984e9f49769a148373553bff00d',
+                'parent_capture':a.state_seed,'scope':'own unchanged-QA lineage only; never restore into another program/image'},indent=2)+'\n')
         (cap/'benchmark-scope.txt').write_text('Flycast capture only. Validate actual source frame window and scene before comparing. Host screenshot times are not source frames. No physical Dreamcast acceptance.\n')
     raise SystemExit(code)
 

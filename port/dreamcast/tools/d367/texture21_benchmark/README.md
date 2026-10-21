@@ -75,3 +75,21 @@ entire original track before launch. It changes no image bytes and restores no
 old guest state. Source room-frame markers and the selected QA preset govern the
 run; an earlier prepared custom warp is not silently installed. Retain the menu
 input script with the capture lineage.
+
+Woods continuation can use `--checkpoint` with unchanged QA mode. The isolated
+checkpoint_run.py adapter reuses Flycast AutoSaveState and the established
+PID-owned SDL close method from the castle harness; shared fp_run.py is untouched.
+Before accepting a checkpoint, require a fresh FLYSAVE1 file and the actual
+Saved-state log receipt. `--state-seed OWN_PREVIOUS_CAPTURE` rejects a different
+lineage folder, staged program/image, emulator binary, modified state hash or
+still-running owner. Restore only this same unchanged program and image; never
+transfer a state to a new candidate program. The adapter is compile/source-tested
+but its first live checkpoint save/restore is still pending the disk floor.
+
+Capture now requires C to retain18GiB+128MiB and limits owned capture growth to
+100,000,000 bytes, counting the private emulator and state while excluding
+hard-linked disc tracks. An independent49-second pinned-handle watchdog caps the
+guest. When a cold woods route does not fit, preserve its incomplete result and
+continue an authenticated same-program checkpoint rather than changing the
+camera or borrowing a foreign state. The initial cold QA normal-boot attempt
+reached title exit, not playable woods, before its watchdog bound.
