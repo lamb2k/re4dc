@@ -1,0 +1,304 @@
+{
+  "scope": "Unchanged qualified J original no-warp VMU/CardLoad lineage; normal source movement/A/dialog and original inventory Use. No item/health/process/state writes, rollback/retarget, asset changes or build/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk92",
+      "result": "Normal east ramp descent reaches lower key-room A OPEN prompt; collider prevents narrow walking goal, no A sent,120/600 unchanged",
+      "elapsed_s": 27.2,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "73a0c1b489ae8cdc727be07ee945a814498703f225de26ba74fdf6b92d69667f",
+      "events": [
+        {
+          "normal_input_has_no_displacement": true,
+          "frame": 21978,
+          "pos": [
+            -55841.70703125,
+            3163.582275390625,
+            9537.544921875
+          ],
+          "target": [
+            -56000.0,
+            9500.0
+          ],
+          "source_tick_window": 240
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk92",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Normal east ramp descent reaches lower key-room A OPEN prompt; collider prevents narrow walking goal, no A sent,120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk92\\shots\\checkpoint-source-21978\\frames\\fb0.png",
+          "png_sha256": "0ba60b354943f19836d6e9c7e4c0a94f54ec6440ca7d6ccbec152ee37e498d23",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk92\\shots\\checkpoint-source-21978\\checkpoint-context.json",
+          "source_frame_interval": [
+            21978,
+            21987
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk93",
+      "result": "Original normal A opens lower key-room door;120/600 unchanged",
+      "elapsed_s": 5.9,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "1866906cc24d45a90773fa5e236ebc6ef420e4cff41ce363afb5d47053400280",
+      "events": [
+        {
+          "original_r203_keyroom_door_action_observed_90_ticks": {
+            "host_monotonic": 296732.875,
+            "room": "0x203",
+            "frame": 22091,
+            "player_hp": 120,
+            "partner_hp": 600,
+            "pos": [
+              -56104.2265625,
+              3163.26904296875,
+              9647.615234375
+            ],
+            "yaw": -1.4522401094436646,
+            "target_distance": 181.46939351141995,
+            "angle_error": 2.97129793796622,
+            "player_routines": [
+              0,
+              0,
+              1,
+              0
+            ]
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk93",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Original normal A opens lower key-room door;120/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk93\\shots\\checkpoint-source-22091\\frames\\fb0.png",
+          "png_sha256": "6205fa50b69b913c66f99fb2474de39a86433ef7e087acd9a31754023000eaf6",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk93\\shots\\checkpoint-source-22091\\checkpoint-context.json",
+          "source_frame_interval": [
+            22091,
+            22100
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk94",
+      "result": "Original Green Herb6 pickup/callback complete;6x1 inventory,120/600 unchanged, not yet used",
+      "elapsed_s": 16.5,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "3744d7547865b064eeac0d187bc2a10d621b6b06f09e2f8ad84c0b251a6794e2",
+      "events": [
+        {
+          "original_Green_Herb_pickup_complete": {
+            "frame": 22526,
+            "swords": [
+              {
+                "id": "0x6",
+                "num": 1,
+                "flags": 1,
+                "type": 0
+              }
+            ],
+            "health": [
+              120,
+              1200,
+              600,
+              600
+            ]
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk94",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Original Green Herb6 pickup/callback complete;6x1 inventory,120/600 unchanged, not yet used",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk94\\shots\\checkpoint-source-22526\\frames\\fb0.png",
+          "png_sha256": "aa30eb36ab64253c6741e0477dcad950f9d874fc4b5fecacab179e5ef95b5a7e",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk94\\shots\\checkpoint-source-22526\\checkpoint-context.json",
+          "source_frame_interval": [
+            22526,
+            22535
+          ],
+          "health_before": [
+            120,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            120,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk95",
+      "result": "Original inventory Green Herb Use consumes6 and heals Leon120 to720; Ashley600, normal inventory return held15source ticks",
+      "elapsed_s": 7.9,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "395c937c13070b1b87cc5a466cf22442b67225f25b0e4b90c3b3110ea9624458",
+      "events": [
+        {
+          "original_Green_Herb_used_and_normal_inventory_return": {
+            "frame": 22609,
+            "life": 720,
+            "Ashley": 600,
+            "initial": {
+              "life": 120,
+              "herb_count": 1
+            }
+          }
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk95",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Original inventory Green Herb Use consumes6 and heals Leon120 to720; Ashley600, normal inventory return held15source ticks",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk95\\shots\\checkpoint-source-22609\\frames\\fb0.png",
+          "png_sha256": "bd9370a2f83e32fdf1f097e6cd74cef4f8b03acba2395a5098692100b9a4dc17",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk95\\shots\\checkpoint-source-22609\\checkpoint-context.json",
+          "source_frame_interval": [
+            22609,
+            22618
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "current_snapshot_audit": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "395c937c13070b1b87cc5a466cf22442b67225f25b0e4b90c3b3110ea9624458",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x203",
+    "chapter": 6,
+    "source_frame": 22618,
+    "health": [
+      720,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0xa84002b4",
+    "partner_subflags": "0x40",
+    "r203_RSF": "0x10000000",
+    "player_pos": [
+      -58075.0078125,
+      4182.19873046875,
+      1873.8433837890625
+    ],
+    "partner_pos": [
+      -58790.625,
+      4189.27099609375,
+      1943.1856689453125
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "use_proof": {
+    "source": "src/game/item.cpp:cItemMgr::use case06 calls healing600",
+    "inventory": "Actual unique source PieceData occupied cells selected; no item move/discard or slot assumption",
+    "result": "Herb6x1 to absent, Leon120 to720 of1200, Ashley600 unchanged; source phase3/Stop0/SSLoop0 and normal actor0/3 restored",
+    "visual": "J94 pre-use and J95 post-use PNG/context are retained for health comparison"
+  },
+  "next": "Original key chest then key/waves/unlock and chapter progression. No whole-room/wave/total-drive or hardware closure claimed."
+}
