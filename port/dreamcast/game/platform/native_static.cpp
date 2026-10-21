@@ -4367,6 +4367,9 @@ struct Slot {
     const unsigned char* obj; std::uint32_t serial; float rest[12];
 #if RE4DC_PS2_WORLD_PARTS
     PartPose* parts; unsigned nparts,pose_offset; bool source;
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    unsigned root_matrix_offset; // offset plus one; ~0U invalid; nonzero records a refused root witness
+#endif
 #endif
 };
 unsigned char* block=nullptr;                      // heap-4 block: the ids file
@@ -4435,6 +4438,34 @@ unsigned query(unsigned id){
     Slot& s=slots[slot_of[id]];
     std::uint32_t flag=0,serial=0;
     if(s.obj){std::memcpy(&flag,s.obj+off_flag,4);std::memcpy(&serial,s.obj+off_serial,4);}
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    // A one-bone model has one rigid transform for all of its geometry. Follow
+    // that live root on the existing PS2 mesh instead of switching to the
+    // source BIN, whose geometry may have been released by offline staging.
+    if(s.root_matrix_offset){
+        if(!s.obj || (flag&7U)!=7U || serial!=s.serial || !s.parts || s.root_matrix_offset==~0U){
+            state[id]=2;++hidden;return 1;
+        }
+        const auto* now=reinterpret_cast<const float*>(s.parts[0].part+s.root_matrix_offset-1U);
+        const auto* rest=reinterpret_cast<const float*>(s.parts+1);
+        const float* inv=rest+12; // computed once at bind, before any changed tick
+        float change[12];
+        bool valid=true;
+        for(unsigned i=0;i<12;++i)valid=valid && std::isfinite(now[i]);
+        if(valid && std::memcmp(now,rest,12U*sizeof(float))){
+            concat(now,inv,change);
+            for(float v:change)valid=valid && std::isfinite(v);
+            if(valid && nmoved<kMoved){
+                std::memcpy(delta[nmoved],change,sizeof(change));moved_of[id]=std::uint8_t(nmoved++);
+                state[id]=3;++moved;return 2;
+            }
+            if(valid)++overflow;
+            valid=false;
+        }
+        if(!valid){state[id]=2;++hidden;return 1;} // never display stale baked geometry on refusal
+        state[id]=1;return 0;
+    }
+#endif
     if(s.obj && (flag&1U) && serial==s.serial){
         const float* m=reinterpret_cast<const float*>(s.obj+off_mat);
 #if RE4DC_PS2_WORLD_PARTS
@@ -4486,6 +4517,17 @@ extern "C" int re4dc_ps2_placements_intact(unsigned room,const unsigned char* fi
             const unsigned id=dyn::ids[p];
             if(id<dyn::kIds && dyn::slot_of[id]!=dyn::kNone){
                 const dyn::Slot& s=dyn::slots[dyn::slot_of[id]];
+#if RE4DC_PS2_WORLD_ROOT_POSE
+                if(s.root_matrix_offset){
+                    if(!s.obj || !s.parts || s.root_matrix_offset==~0U)return 0;
+                    std::uint32_t flag=0,serial=0;
+                    std::memcpy(&flag,s.obj+dyn::off_flag,4);std::memcpy(&serial,s.obj+dyn::off_serial,4);
+                    if((flag&7U)!=7U || serial!=s.serial)return 0;
+                    const auto* now=s.parts[0].part+s.root_matrix_offset-1U;
+                    const auto* rest=reinterpret_cast<const float*>(s.parts+1);
+                    if(std::memcmp(now,rest,12U*sizeof(float)))return 0;
+                }
+#endif
                 if(s.obj){
                     std::uint32_t flag=0,serial=0;
                     std::memcpy(&flag,s.obj+dyn::off_flag,4);std::memcpy(&serial,s.obj+dyn::off_serial,4);
@@ -6554,6 +6596,9 @@ extern "C" void re4dc_ps2_dyn_bind(unsigned room,unsigned id,const void* object,
 #if RE4DC_PS2_WORLD_PARTS
     if(s.parts)re4dc_static_free(s.parts);
     s.parts=nullptr;s.nparts=0;s.source=false;
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    s.root_matrix_offset=0;
+#endif
 #endif
     s.obj=o;std::memcpy(&s.serial,serial,4);std::memcpy(s.rest,mat,sizeof(s.rest));
 #if RE4DC_PS2_WORLD_PARTS
@@ -6563,11 +6608,21 @@ extern "C" void re4dc_ps2_dyn_bind(unsigned room,unsigned id,const void* object,
 }
 #if RE4DC_PS2_WORLD_PARTS
 extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object,const void* first,
-                                     unsigned count,unsigned next_offset,unsigned pose_offset){
+                                     unsigned count,unsigned next_offset,unsigned pose_offset
+#if RE4DC_PS2_WORLD_ROOT_POSE
+                                     ,unsigned matrix_offset
+#endif
+                                     ){
     if(!dyn::ids || ps2w.room!=room || id>=dyn::kIds || dyn::slot_of[id]==dyn::kNone || !count || count>255)return;
     dyn::Slot& s=dyn::slots[dyn::slot_of[id]];
     if(s.obj!=object || s.parts)return;
-    auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(count*sizeof(dyn::PartPose)));
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    if(count==1)s.root_matrix_offset=matrix_offset+1U;
+    const unsigned root_bytes=count==1?24U*sizeof(float):0U;
+#else
+    const unsigned root_bytes=0;
+#endif
+    auto* poses=static_cast<dyn::PartPose*>(re4dc_static_alloc(count*sizeof(dyn::PartPose)+root_bytes));
     if(!poses){re4dc_log("PS2PART no heap id=%02x parts=%u\n",id,count);return;}
     const auto* p=static_cast<const unsigned char*>(first);
     for(unsigned i=0;i<count;++i){
@@ -6575,8 +6630,17 @@ extern "C" void re4dc_ps2_dyn_parts(unsigned room,unsigned id,const void* object
         poses[i].part=p;std::memcpy(poses[i].pose,p+pose_offset,sizeof(poses[i].pose));
         std::memcpy(&p,p+next_offset,sizeof(p));
     }
+#if RE4DC_PS2_WORLD_ROOT_POSE
+    if(count==1){
+        auto* root=reinterpret_cast<float*>(poses+1);
+        std::memcpy(root,static_cast<const unsigned char*>(first)+matrix_offset,12U*sizeof(float));
+        bool valid=inverse(root,root+12);
+        for(unsigned i=0;i<24;++i)valid=valid && std::isfinite(root[i]);
+        if(!valid)s.root_matrix_offset=~0U;
+    }
+#endif
     s.parts=poses;s.nparts=count;s.pose_offset=pose_offset;
-    re4dc_log("PS2PART bind id=%02x parts=%u bytes=%u heap=%d\n",id,count,unsigned(count*sizeof(dyn::PartPose)),re4dc_static_heap_free());
+    re4dc_log("PS2PART bind id=%02x parts=%u bytes=%u heap=%d\n",id,count,unsigned(count*sizeof(dyn::PartPose)+root_bytes),re4dc_static_heap_free());
 }
 extern "C" int re4dc_ps2_dyn_source(unsigned room,const void* object,unsigned serial){
     if(!dyn::ids || ps2w.room!=room)return 0;

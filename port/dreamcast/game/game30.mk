@@ -2816,6 +2816,20 @@ endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_PARTS=1
 $(OBJDIR)/src/game/scroll.o $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_PARTS=1
 endif
+# PS2_WORLD_ROOT_POSE=1: keep one-bone animated scenery on its PS2 geometry,
+# using current root-world * inverse(bind root-world). Multi-bone owners keep
+# the existing source hierarchy path. Refused root witnesses hide, never bake.
+PS2_WORLD_ROOT_POSE ?= 0
+ifneq ($(PS2_WORLD_ROOT_POSE),0)
+ifneq ($(PS2_WORLD_ROOT_POSE),1)
+$(error PS2_WORLD_ROOT_POSE must be 0 or 1)
+endif
+ifneq ($(PS2_WORLD_PARTS),1)
+$(error PS2_WORLD_ROOT_POSE needs PS2_WORLD_PARTS=1)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_ROOT_POSE=1
+$(OBJDIR)/src/game/scroll.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_ROOT_POSE=1
+endif
 # PS2_WORLD_SOURCE_OWNER=1: bounded r200 noncoarse event-image ownership at
 # original model callbacks. Source OTs, callbacks and model postludes remain.
 # SOURCE_TEX_PREP prepares only the reviewed current R4PW late-pass descriptor.
