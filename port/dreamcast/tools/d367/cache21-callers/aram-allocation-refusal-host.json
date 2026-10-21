@@ -1,0 +1,79 @@
+{
+  "scope": "Read-only actual cDataUnit allocation/command/wait/clear characterization. Allocation failure and event-file install/heap/free/native carrier services are boundaries. No runtime repair/generation/reset/target/gameplay occurrence acceptance.",
+  "source_head": "a8db82100fdd0d7546c97f8f14779cc56dc8b62b",
+  "source_sha256": {
+    "src/game/datactrl.cpp": "31d38c14806250cdf1d7ad58a7dd742641bc2fbe6e3af5cf5c0f361163277216",
+    "include/datactrl.h": "dbe0a9709611a900c08b317a446aa23bd905be85db4b6e06f6a27e800d4f4026"
+  },
+  "selected_methods": [
+    {
+      "name": "setCommand",
+      "line": 104,
+      "sha256": "46908b8c48edfdd926d92fed735368e27ea6b45df72165bc9357523c22ebd220"
+    },
+    {
+      "name": "getCommand",
+      "line": 115,
+      "sha256": "8b2812915cf5b282b74758063b2bc833e988c1253202a00058019310638b1b34"
+    },
+    {
+      "name": "getCondition",
+      "line": 127,
+      "sha256": "3b7b8d36a3b445c06120e32a8c3d89f85c0a34e73ad166ce1a9dbd997fe66f9d"
+    },
+    {
+      "name": "isUseOk",
+      "line": 176,
+      "sha256": "3304313fd3bb1fe8241b28f776c6388690f1dd6344119d09cb306110ddb79f80"
+    },
+    {
+      "name": "waitUseOk",
+      "line": 186,
+      "sha256": "5fb5ab4970485a541fe442938b04c365ac6df1a4f8226086e014acb02e40da77"
+    },
+    {
+      "name": "setLoadToMram",
+      "line": 239,
+      "sha256": "1d8f6076a72e01d665c55941c964c95dbf2f3d35f44ac5ab2916b127d7c1b564"
+    },
+    {
+      "name": "setMallocInfo",
+      "line": 151,
+      "sha256": "eb41baddd98ec816c422b92a85d6e627846756064450bf3d3633b8709ccd038c"
+    },
+    {
+      "name": "checkMallocRelease",
+      "line": 133,
+      "sha256": "ad8471963f805a8f825349018a6dc6c9f034ae3f7aa8fe81db0942f9b7f216e9"
+    },
+    {
+      "name": "checkCommand",
+      "line": 728,
+      "sha256": "5a2469932ba7f83ee271c0808ebd43cb0679f04519ccb6b6a6ec95c638ab7672"
+    },
+    {
+      "name": "checkCondition",
+      "line": 749,
+      "sha256": "fe5bcfe67c734d55138acb18f781444398abd097d1dbbea5be42049900a68e04"
+    },
+    {
+      "name": "setClear",
+      "line": 561,
+      "sha256": "da8d1059c7c46cb2484ea433d710de45f51bd5b238d02b2daa58c0c44a79d05a"
+    }
+  ],
+  "variants": [
+    {
+      "cabin_source": 0,
+      "output": "ARAM_ALLOCATION_REFUSAL_CASES=8 cabin=0 PASS\n"
+    },
+    {
+      "cabin_source": 1,
+      "output": "ARAM_ALLOCATION_REFUSAL_CASES=8 cabin=1 PASS\n"
+    }
+  ],
+  "test_sha256": {
+    "test_aram_allocation_refusal.py": "5c155bed3ac067150a5daaf9e9882faf85d49bd8f27dd43b826241dbeb454f5b",
+    "aram_allocation_refusal_host.cpp": "4a2f2182c01d255de70a8d70cd325661861ec80028815ec5074130808514ffb2"
+  }
+}
