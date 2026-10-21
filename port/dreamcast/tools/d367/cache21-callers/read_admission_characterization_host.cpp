@@ -85,8 +85,13 @@ int main(){
     for(unsigned module:{0U,1U}){
         reset_case();++cases;for(unsigned i=1;i<8;++i){reads[i].FlagBe8=3;reads[i].Count=1;std::snprintf(reads[i].Name,sizeof(reads[i].Name),"occupied-read%u",i);reads[i].Dat=&loaded;}
         loaded.m_condition=4;loaded.m_addr=arena+0x10000;EvtMgr.readEm[0]={admission_module,0,{0x12,0x34}};
+        if(module){std::memset(arena,0x21,loaded.m_size);std::memset(arena+0x10000,0x78,loaded.m_size);}
         const auto preload_reads=reads;assert(EvtMgr.EvtReadMram(file_name,module?admission_module:0,&out,0,0));
         assert(transport_calls==unsigned(!module)&&swap_calls==module&&!admission_file_checks&&!std::memcmp(reads.data(),preload_reads.data(),sizeof(reads)));
+        if(module){assert(EvtMgr.readEm[0].swapped==1&&swap_pushes==1);for(unsigned i=0;i<loaded.m_size;++i)assert(arena[i]==0x78&&arena[0x10000+i]==0x21);}
+#if defined(RE4DC_READ_ACTUAL_EFFECT)
+        if(module){assert(!admission_effect_system.ownerCnt[0x10]);for(auto count:effect_release_dispatch)assert(count==1);}
+#endif
     }
     // File work can invalidate capacity after preflight; this guard intentionally
     // does not claim an admission reservation or delete a stale descriptor.
@@ -125,23 +130,28 @@ int main(){
         admission_effect_system.ownerCnt[0x10]=effect_refs;
 #endif
         module_missing=fail==0;exchange_module.size=fail==1?27455:27456;swap_refuse=fail==2;
+#if defined(RE4DC_READ_ACTUAL_EFFECT)
+        const auto before_effects=admission_effect_system;
+#endif
         const auto before_unit=loaded;const auto before=reads;
         std::array<u8,0x20000> data;std::memcpy(data.data(),arena,data.size());out=1;
         const int result=EvtMgr.EvtReadMram(file_name,admission_module,&out,0,0);
-        assert(swap_pushes==1&&!swap_pops&&!release_calls&&!transport_calls);
+        const bool released_effects=!(RE4DC_EVD_MODULE_VALIDATE_FIRST&&fail<2);
+        assert(swap_pushes==unsigned(released_effects)&&!swap_pops&&!release_calls&&!transport_calls);
         assert(!std::memcmp(&loaded,&before_unit,sizeof(loaded))&&!std::memcmp(arena,data.data(),data.size()));
         if(fail<2){assert(!result&&!out&&!EvtMgr.ReadTbl.ChkDat(file_name)&&!swap_calls);}
         else{assert(result&&u32(out)==u32(std::uintptr_t(arena))&&swap_calls==1&&EvtMgr.readEm[0].swapped==1);
              assert(!std::memcmp(reads.data(),before.data(),sizeof(reads)));}
 #if defined(RE4DC_READ_ACTUAL_EFFECT)
-        assert(admission_effect_system.ownerCnt[0x10]==effect_refs-1);
-        for(auto count:effect_release_dispatch)assert(count==unsigned(effect_refs==1));
+        assert(admission_effect_system.ownerCnt[0x10]==effect_refs-unsigned(released_effects));
+        for(auto count:effect_release_dispatch)assert(count==unsigned(released_effects&&effect_refs==1));
+        if(!released_effects)assert(!std::memcmp(&admission_effect_system,&before_effects,sizeof(before_effects)));
 #endif
     }
     std::cout<<"actual prior read caller mutates after missing/undersized module and accepts void swap refusal PASS\n";
 #if defined(RE4DC_READ_ACTUAL_EFFECT)
     std::cout<<"actual valid module0x11 owner0x10 effect count decrement/five final-release dispatches verified PASS\n";
 #endif
-    std::cout<<"READ_ADMISSION_CHARACTERIZATION_CASES="<<cases<<" cabin="<<RE4DC_CABIN_SOURCE<<" preflight="<<RE4DC_EVD_READ_ADMISSION_PREFLIGHT<<" PASS\n";
+    std::cout<<"READ_ADMISSION_CHARACTERIZATION_CASES="<<cases<<" cabin="<<RE4DC_CABIN_SOURCE<<" preflight="<<RE4DC_EVD_READ_ADMISSION_PREFLIGHT<<" module_validate="<<RE4DC_EVD_MODULE_VALIDATE_FIRST<<" PASS\n";
     assert(mprotect(arena,0x20000,PROT_READ|PROT_WRITE)==0);munmap(arena,0x20000);
 }
