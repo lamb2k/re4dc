@@ -16,6 +16,12 @@ def vram_pointer(a):return (a&0xff000000) in (0xa4000000,0xa5000000) and (a&0xff
 class Typed:
  def __init__(self,read,plan):
   self.read=read;self.plan=plan;self.sy=plan['read_only_observer']['symbols'];self.t=plan['read_only_observer']['typed_layouts'];self.entries=self.sy['native_ui_entries']['address'];self.stride=224;self.selected={}
+  required={'scene':{'GlobalWork':['Frame_cnt','room_id','pl_life'],'Camera':['param','mat','v_mat','ProjMat'],'CameraControl':['camera']},'player':{'cCoord':['pos','ang']},'native_ui':{'Entry':['package','key','frame','valid','model_header','model_header_key'],'Package':['header_','data_','pvr_textures_','owns_texture_','upload_complete_'],'Header':['magic','texture_count','texture_stride','texture_offset','payload_crc32'],'Texture':['material','width','height','format','flags','payload','data_size']}}
+  for group,types in required.items():
+   for typename,names in types.items():
+    if any(n not in self.t[group]['types'][typename]['members'] for n in names):raise Invalid('incomplete typed layout: '+group+'.'+typename)
+  entry=self.t['native_ui']['types']['Entry']
+  if entry['size']!=224 or entry['members']!={**entry['members'],'package':0,'key':64,'frame':72,'valid':76,'model_header':96,'model_header_key':128} or self.sy['native_ui_entries']['size']!=448*224:raise Invalid('unexpected native Entry layout')
   for i,r in enumerate(plan['selected']):
    self.selected[r['original_key']]=(i,'original');self.selected[r['scoped_key']]=(i,'candidate')
  def sym(self,n):return self.sy[n]['address']
@@ -107,16 +113,22 @@ class Process:
  def close(self):self.k.CloseHandle(self.h)
 
 def main():
- ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--cap',type=Path,required=True);ap.add_argument('--plan',type=Path,required=True);ap.add_argument('--seconds',type=float,default=41);a=ap.parse_args()
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--cap',type=Path,required=True);ap.add_argument('--plan',type=Path,required=True);ap.add_argument('--seconds',type=float,default=41);ap.add_argument('--runtime-binding',default='observer-runtime-02');a=ap.parse_args()
  if not 0<a.seconds<=41:raise SystemExit('budget must be in (0,41] seconds')
- start=time.monotonic();end=start+a.seconds;plan=json.loads((a.plan/'observation-cold-window.json').read_text());binding=json.loads((a.plan/'observer-runtime-01/binding.json').read_text());inputs=json.loads((a.plan/'inputs-final/plan-inputs.json').read_text());plan['selected']=inputs['selected'];out=a.cap/'typed-observer.jsonl';summary=a.cap/'typed-observer-summary.json'
+ start=time.monotonic();end=start+a.seconds;plan=json.loads((a.plan/'observation-cold-window.json').read_text());binding=json.loads((a.plan/a.runtime_binding/'binding.json').read_text());inputs=json.loads((a.plan/'inputs-final/plan-inputs.json').read_text());plan['selected']=inputs['selected']
+ if 'scene_layout' in binding:
+  layoutpath=a.plan/a.runtime_binding/binding['scene_layout']
+  if hashlib.sha256(layoutpath.read_bytes()).hexdigest()!=binding['scene_layout_sha256']:raise SystemExit('scene layout changed')
+  plan['read_only_observer']['typed_layouts']['scene']=json.loads(layoutpath.read_text())
+ out=a.cap/'typed-observer.jsonl';summary=a.cap/'typed-observer-summary.json'
  if out.exists() or summary.exists():raise SystemExit('preserve existing observer output')
  if hashlib.sha256((a.plan/'observation-cold-window.json').read_bytes()).hexdigest()!=binding['plan_sha256']:raise SystemExit('plan changed')
  pid=int((a.cap/'flycast.pid').read_text());exe=a.cap/'flycast.exe';exe_sha=hashlib.sha256(exe.read_bytes()).hexdigest()
  if exe_sha!=binding['emulator_sha256']:raise SystemExit('emulator changed')
+ typed=Typed(None,plan)
  proc=Process(pid,exe)
  if proc.start/1e7-11644473600<(a.cap/'flycast.pid').stat().st_mtime-10:raise Invalid('owned process predates fresh PID receipt')
- typed=Typed(proc.read,plan);ready=False;rows=0;bytesout=0;waits={};table_due=0;lasttick=None;witnesses=set();max_sample=0.;initial_head=None
+ typed.read=proc.read;ready=False;rows=0;bytesout=0;waits={};table_due=0;lasttick=None;witnesses=set();max_sample=0.;initial_head=None
  def emit(row):
   nonlocal rows,bytesout
   b=(json.dumps(row,separators=(',',':'),allow_nan=False)+'\n').encode()

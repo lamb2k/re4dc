@@ -17,6 +17,10 @@ def parse(lines,wanted):
     dies=[];current=None
     for line in lines:
         m=re.match(r'\s*<(\d+)><([0-9a-f]+)>:.*\((DW_TAG_\w+)\)',line)
+        if re.match(r'\s*<\d+><[0-9a-f]+>: Abbrev Number: 0',line):
+            if current:dies.append(current)
+            current=None
+            continue
         if m:
             if current:dies.append(current)
             current={'depth':int(m[1]),'offset':m[2],'tag':m[3],'attrs':{}}
@@ -25,21 +29,35 @@ def parse(lines,wanted):
             m=re.search(r'DW_AT_(\w+)\s*:\s*(.*)',line)
             if m:current['attrs'][m[1]]=m[2].strip()
     if current:dies.append(current)
+    byoffset={die['offset']:i for i,die in enumerate(dies)}
+    def promoted(index,seen=()):
+        die=dies[index]
+        if index in seen:raise ValueError('cyclic anonymous DWARF type')
+        result={};depth=die['depth'];union=die['tag']=='DW_TAG_union_type'
+        for child in dies[index+1:]:
+            if child['depth']<=depth:break
+            if child['tag']!='DW_TAG_member' or child['depth']!=depth+1:continue
+            a=child['attrs'];location=a.get('data_member_location')
+            if location is None and not union:continue
+            offset=number(location) if location is not None else 0
+            if 'name' in a:
+                result[a['name'].split(': ')[-1]]=offset
+            elif 'type' in a:
+                ref=re.search(r'<0x([0-9a-f]+)>',a['type'])
+                if not ref or ref[1] not in byoffset:raise ValueError('anonymous member type unavailable')
+                for name,at in promoted(byoffset[ref[1]],seen+(index,)).items():
+                    if name in result and result[name]!=offset+at:raise ValueError('conflicting promoted DWARF member '+name)
+                    result[name]=offset+at
+        return result
     results={}
     for i,die in enumerate(dies):
         if die['tag'] not in ['DW_TAG_structure_type','DW_TAG_class_type']:continue
         name=die['attrs'].get('name','').split(': ')[-1]
         if name not in wanted or 'byte_size' not in die['attrs']:continue
-        members={};depth=die['depth']
-        for child in dies[i+1:]:
-            if child['depth']<=depth:break
-            if child['tag']=='DW_TAG_member' and child['depth']==depth+1:
-                a=child['attrs']
-                if 'name' in a and 'data_member_location' in a:
-                    members[a['name'].split(': ')[-1]]=number(a['data_member_location'])
+        members=promoted(i)
         if not members:continue
         record={'size':number(die['attrs']['byte_size']),'members':members,'DIE_offset':die['offset'],'declaration_file_index':die['attrs'].get('decl_file'),'declaration_line':die['attrs'].get('decl_line')}
-        if name in results and results[name]['members']!=members:raise ValueError('ambiguous complete DWARF type '+name)
+        if name in results and (results[name]['members']!=members or results[name]['size']!=record['size']):raise ValueError('ambiguous complete DWARF type '+name)
         results[name]=record
     missing=set(wanted)-set(results)
     if missing:raise ValueError('missing complete DWARF type: '+','.join(sorted(missing)))

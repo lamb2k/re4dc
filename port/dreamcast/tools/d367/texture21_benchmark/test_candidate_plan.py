@@ -35,3 +35,28 @@ class CandidatePlanAdmission(unittest.TestCase):
         with self.assertRaises(ValueError):dwarf_layout.parse(lines,['Entry'])
 
 if __name__=='__main__':unittest.main()
+
+class PromotedDwarfTests(unittest.TestCase):
+ def test_anonymous_nested_union_promotes_room_id(self):
+  text=""" <1><1>: Abbrev Number: 1 (DW_TAG_structure_type)
+ DW_AT_name : GlobalWork
+ DW_AT_byte_size : 34432
+ <2><2>: Abbrev Number: 1 (DW_TAG_union_type)
+ DW_AT_byte_size : 4
+ <3><3>: Abbrev Number: 1 (DW_TAG_structure_type)
+ DW_AT_byte_size : 4
+ <4><4>: Abbrev Number: 1 (DW_TAG_member)
+ DW_AT_name : room_id
+ DW_AT_data_member_location : 2
+ <4><5>: Abbrev Number: 0
+ <3><6>: Abbrev Number: 1 (DW_TAG_member)
+ DW_AT_type : <0x3>
+ <3><7>: Abbrev Number: 0
+ <2><8>: Abbrev Number: 1 (DW_TAG_member)
+ DW_AT_type : <0x2>
+ DW_AT_data_member_location : 20380
+ <2><9>: Abbrev Number: 0
+ <1><a>: Abbrev Number: 0
+"""
+  from dwarf_layout import parse
+  self.assertEqual(parse(text.splitlines(),['GlobalWork'])['GlobalWork']['members']['room_id'],20382)
