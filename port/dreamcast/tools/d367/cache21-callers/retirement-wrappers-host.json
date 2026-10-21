@@ -1,0 +1,189 @@
+{
+  "scope": "Read-only actual InitModule/EmReadInit/PL/Wep and systemSoftReset/systemResetCommon wrappers plus real carrier forward/before_free/reset/heap predicates and actual source heap/room wrappers. Controlled services and generated Host64 adapters remain explicit.",
+  "head": "0b45c82527360bf48c8ea5159e1184dcdd2ec9c4",
+  "source_sha256": {
+    "src/game/read.cpp": "1333da510986bbf7f75ffb35aa9588463db84e5817b8d838ab3c58100e84dfa1",
+    "include/read.h": "6b4ccacfd7f42fc8a328bb1560a2bbd4179cef1a696188e0165ccf2f9e542ce3",
+    "src/game/main_mem.cpp": "47e3b36faa3ebcffd1874dbb5d53bb46404773c9e0bb91fbb5be99ac52ab12b8",
+    "src/game/game.cpp": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+    "src/game/datactrl.cpp": "31d38c14806250cdf1d7ad58a7dd742641bc2fbe6e3af5cf5c0f361163277216",
+    "src/game/main.cpp": "d2c27ac68757a09cec2a1777558cedcf4cdd417bf57591159447e4f004e17d6a",
+    "src/st1/r106.cpp": "69de1aab19713764a212ef25270fbfbf2a2ede0a6ed40819244a8763a236a150",
+    "src/st2/r200.cpp": "e5865340ba263fe7d1048019ce1d17e4f0f1ff5b734295377fc4a50493af65f5",
+    "src/game/dvd.cpp": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343",
+    "port/dreamcast/game/platform/mem.cpp": "c42f173e4bf3cb9b08acb117ec3f66edd794e27fd7f9fe0fdb53278526487adb",
+    "port/dreamcast/game/platform/native_event_file.cpp": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2",
+    "port/dreamcast/game/platform/native_cabin.cpp": "5011f4f5d86713a13e913d5b60c70549657fbc46c648ec36c9e9207d08fb5c14"
+  },
+  "selected_methods": [
+    {
+      "path": "src/game/read.cpp",
+      "signature": "ReadModule* SearchEmModule(",
+      "line": 769,
+      "sha256": "f69435b1c20cf01033b422bc31c698cbe971506c669cfe0e7e597078ccd039cb"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void InitModule(",
+      "line": 404,
+      "sha256": "9f8ffb32a6bf7c4383cea08bfac9cd26ab0bccce08a267727ab14322344f3087"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void EmReadInit(",
+      "line": 731,
+      "sha256": "d7b4498d18123c1624d5886464e5e8a30592857f08e8ed72e7beb387ba895c14"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void ReleasePlData(",
+      "line": 940,
+      "sha256": "47dbce02685698692de82a26db4724402f27c252fedc5f3253c361c8e5019d77"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void ReleaseWepData(",
+      "line": 1043,
+      "sha256": "6d6d27ab6975adbff545ce96e9517be3a6f25b476bd5aee6eb9f0d33f8feb96c"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "signature": "extern \"C\" int re4dc_cabin_source_unit_clear(",
+      "line": 1258,
+      "sha256": "6ae3de689c9fa3f7d5316c792a7bec7c4b841b255bdee96869067a4862aa4ae9"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "signature": "extern \"C\" int re4dc_cabin_carriers_reset(",
+      "line": 388,
+      "sha256": "1b2bde95d59b90dd7f6135bfce80c9af200d13c422de6f23fd86d935c20a5177"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "signature": "extern \"C\" int re4dc_cabin_carriers_before_heap(",
+      "line": 482,
+      "sha256": "96ebcf818a676a7cb5c67a20d589aaf60c7b5472cc975b2cf8ed7c6a97a3bf87"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "signature": "extern \"C\" int re4dc_cabin_carriers_retire_heap(",
+      "line": 500,
+      "sha256": "01637d50d585841a9d681238997f3a6584e3ace772741308c04db50c1a206661"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "static void ModuleMemFree(",
+      "line": 384,
+      "sha256": "676f99c7f28f51372c2298d4861ba3a81cdc18ebc9bac8442892603442527978"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "int MemDestroyHeap(",
+      "line": 394,
+      "sha256": "46d18f51d3bce5f6694afedf466a2e790634329fad5fd77652af85368d692938"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "int MemReplaceHeap(",
+      "line": 434,
+      "sha256": "0ff748aa22c399b519d847960c6d8f6995548a531b5cf6fc77445297adaa15ed"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "void MemClearAllHeap(",
+      "line": 536,
+      "sha256": "7d9a1f4c1fd61831dee06be52a223202a2f9c4bbe0a0f3d48b299a37c8e853df"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "signature": "void gameRoomMemInit(",
+      "line": 1507,
+      "sha256": "410ba400cd3a8655b68405dfe01b29772f37e0bb80fe8678a20260a540bbbf1b"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "signature": "void systemResetCommon(",
+      "line": 668,
+      "sha256": "b26352e9ed5554ce774540aa627162f7c58165e24992fc182ee349ef473650da"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "signature": "void systemSoftReset(",
+      "line": 710,
+      "sha256": "c4cafac57c22349686a26c6d1bfb89bf7ae070ef3cf106584a67f720b8685c96"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "signature": "void cDataUnit::fixMramAddr(",
+      "line": 170,
+      "sha256": "83ebc4423bcdd9ab42eaea7a8391696bf6e014e98f20e03743373d9c01d3e884"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "signature": "void cDataCtrl::initDataUnit(",
+      "line": 875,
+      "sha256": "9169a4eca47e5ad1a0064d269c02390bc3cd756cb4ceabc694640e3cf3236a2e"
+    }
+  ],
+  "test_sha256": {
+    "test_retirement_wrappers.py": "ba73df560621c22c6d5fe113ad535b6521a233856a6a8ebd209cc3165150e4b8",
+    "retirement_wrapper_host.cpp": "b35ad2c67d2605eb3477ccd363fa08e4290616582c1a7548899dab30435d73b5"
+  },
+  "generated_adapters_sha256": {
+    "retirement_forward_base.cpp": "2523567d33d26e673938854413d460dccdc10cbf879d02f1346982a40ecbb76a",
+    "retirement_room_method.inc": "59d35a42318f9da166d31030ed44312ffeafee7ae5dbc9dfb76266dc86a618d9",
+    "retirement_system_methods.inc": "6830d85183566002c395807b38b9f6753362088034c5a1637eefd0dd35af7372",
+    "retirement_unit_reset.inc": "dc3a347e8f7f3833027649bd32e35c7f38abcccfd158845747529d538aab0c45",
+    "retirement_heap_methods.inc": "30b3c99fabe7b1f39789f1b9ff6534c570ba712fba1a868c8ac096f79cbb132d",
+    "retirement_event_base.cpp": "02f28afb3248906d5a1bec3d2ceb399e4a04a3b45aac6da951b5b4ab935951e3",
+    "retirement_module_memfree.inc": "00d565b5dec7a8e06594c0eb802e66ef10082a32f44fc0fcf67a020687c8e84d",
+    "retirement_read_methods.inc": "6eaaf0b18960290b86daff18a3de7f303e224a9d0d6d5c97638ffc8e306d6064",
+    "retirement_native_methods.inc": "f740ddf221e1cc8e404529d8b015124c9b5cc466dc605d810386fc6bde93ef6a"
+  },
+  "command": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-fsanitize=undefined",
+    "-fno-sanitize-recover=all",
+    "-fno-pie",
+    "-no-pie",
+    "-Wall",
+    "-Wextra",
+    "-fpermissive",
+    "-DRE4DC_GAME=1",
+    "-DRE4DC_RESET_HEAP_FIX=1",
+    "-DRE4DC_EVENT_FILES=1",
+    "-DRE4DC_CABIN_SOURCE=1",
+    "-DRE4DC_EVD_ARAM_ALLOC_RETRY=1",
+    "-DRE4DC_EVD_MODULE_VALIDATE_FIRST=1",
+    "-DRE4DC_EVD_FORWARD_RECEIPT=1",
+    "-DRE4DC_EVD_ADMISSION_TXN=1",
+    "-DRE4DC_EVD_START_CLEANUP=1",
+    "-DRE4DC_EVD_START_ROLLBACK=1",
+    "-DRE4DC_EVD_DEBUG_READ_CLEANUP=0",
+    "-I/root/probe/cache21-callers-retirement-wrappers-20261022-09",
+    "-I/root/probe/cache21-callers-retirement-wrappers-20261022-09/forward-fixture/forward0-cabin1",
+    "-I/root/probe/codex-cache21-callers/port/dreamcast/tools/d367/cache21-callers",
+    "/root/probe/codex-cache21-callers/port/dreamcast/tools/d367/cache21-callers/retirement_wrapper_host.cpp",
+    "-o",
+    "/root/probe/cache21-callers-retirement-wrappers-20261022-09/test"
+  ],
+  "output": "REAL_ENEMY13 module_refusal/reset_refusal/EmReadInit_partial/reverse_retry PASS\nDISJOINT_PLAYER_WEAPON real_carrier_no_refusal PASS\nSYNTHETIC_PLAYER_WEAPON_ALIAS wrapper_loss_unreachable_without_alias PASS\nREAL_HEAP_REFUSAL no_OS_destroy_but_room_wrapper_continues_global_reset PASS\nREAL_RETIREMENT_THEN_HEAP_RETRY PASS\nCONTROLLED_UNLINK_CALLBACK new_reader_refuses_later_reset_without_rolling_back_other_module PASS\nREAL_ALL_HEAP_REFUSAL soft_reset_still_publishes_common_keep_valid_and_message_reset PASS\nREAL_PARTIAL_DMA module_and_reset_refuse_preserving_displaced_bytes PASS\nSTRICT_DIAGNOSTIC_STOP module/unit/room/soft_reset_do_not_continue_after_refusal PASS\nRETIREMENT_WRAPPER_CASES=24 PASS\n",
+  "boundaries": [
+    "Full ReadModule definition extracted, Host64 layout only. EmReadModule array is the actual query/forward/wrapper owner; Ashley identity adapter is unchanged for exercised ids0x11/13/14. Old forward matrix is compile closure only after adapter replacement.",
+    "Real carrier admitted by actual source ARAM load and full MemorySwap/native DMA protocol. Provider/allocation/software ARQ services retain prior explicit boundaries; frees/unbind/UI and optional REL unlink callback are controlled.",
+    "PL/Wep disjoint pointers prove no carrier refusal. Alias cases deliberately duplicate enemy13 archive ownership and are synthetic reachability-negative controls, not real PL/Wep defects.",
+    "Actual MemDestroyHeap/ReplaceHeap guard source runs; OS heap services, movie-world callback, native motion/effect/UI retirement and room-enter callback are boundaries. Actual systemSoftReset/systemResetCommon execute against projected keep/system work and controlled task/media/sound/debug/UI services. No real heap allocator, active module REL or whole gameRoomInit/ending/door scheduler executes.",
+    "Controlled REL-unlink callback installs a global reader after the module guard; it demonstrates callback scope only, not a proven production epilog admission.",
+    "Current platform re4dc_missing sleeps forever. Strict diagnostic-stop cases use a host exception solely to observe the halt boundary; returning-diagnostic fallthrough cases are latent source semantics, not target continuation. Actual unit-reset body executes with controlled setAramSort/initDummyId services and synthetic ARAM_FREE_BASE."
+  ],
+  "resource_guard": {
+    "start_C_free_bytes": 21357871104,
+    "finish_C_free_bytes": 21353656320,
+    "floor_bytes": 19461570560,
+    "output_bytes_before_receipt": 2203442,
+    "output_limit_bytes": 20971520
+  }
+}
