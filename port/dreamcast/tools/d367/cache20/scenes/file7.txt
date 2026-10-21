@@ -1,0 +1,18 @@
+name c20-r10b-dellago
+# cache20 bench, file 7, row 16: the r10b lake boat ride with Del Lago (benchpub scene3-warp.txt, lane lake20 46fa14ff):
+# Leon boards (3 A presses), is put in the lake middle at room frame 300 (the s10 movie plays first), a pad 0x0002 hold
+# keeps him aboard; the boat is dragged toward Del Lago. Measure 600..1499. Last on the disc: after other scenes the
+# fight path can differ (the row then shows what it measured).
+room 0x10b
+pos -48810 -1000 25500
+ang 3.14159
+rsf 0x10b 0
+inv default
+god
+act_clock source
+act 60 a 4
+act 80 a 4
+act 100 a 4
+goto 300 91507 -1300 87322
+act 320 0x0002 2400
+bench 16 600 1500 R10B DELLAGO

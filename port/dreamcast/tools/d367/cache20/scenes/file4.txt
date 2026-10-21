@@ -1,0 +1,12 @@
+name c20-r100-forest
+# cache20 bench, file 4, row 5: the r100 forest path where it starts (after the s40 movie and the radio call, room flag
+# 13): Leon at the gate looking down the path into the trees (the user's ~30 fps "tree" view). God, no pad input.
+room 0x100
+pos -99685 -484 -1343
+ang 2.246
+rsf 0x100 13
+scenario 0 0x00000010
+inv default
+god
+alivelog 150
+bench 5 300 900 R100 FOREST

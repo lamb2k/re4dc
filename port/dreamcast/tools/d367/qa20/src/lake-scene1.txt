@@ -1,0 +1,6 @@
+name lake-boat
+# Lake scenario disc scene 1: r10b at the lake path start (as the fullplay boat segment), full control; walk to the pier and board.
+room 0x10b
+pos -72513 2890 -23602
+inv default
+alivelog 300

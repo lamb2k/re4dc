@@ -93,6 +93,12 @@ static u32 s_rain_drawn, s_rain_frames;
 #ifndef RE4DC_RAIN_DC_N
 #define RE4DC_RAIN_DC_N 160
 #endif
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+extern "C" unsigned char re4dc_lake_fix;   // native_ui.cpp (LAKE_FIX_TOGGLE): on = half the streaks drawn
+#define RAIN_DC_DRAWN (re4dc_lake_fix ? RE4DC_RAIN_DC_N / 2 : RE4DC_RAIN_DC_N)
+#else
+#define RAIN_DC_DRAWN RE4DC_RAIN_DC_N
+#endif
 struct RainDcDrop {
     f32 x, y, d, len, w, a;
 };
@@ -151,7 +157,7 @@ static void RainDcFlush()
             RainDcSpawn(p, 1);
         }
         const u32 a = (u32) (p->a * fade);
-        if (a == 0) {
+        if (a == 0 || i >= (u32) RAIN_DC_DRAWN) {
             continue;
         }
         Re4dcRainStreak* s = &s_raindc_out[n++];

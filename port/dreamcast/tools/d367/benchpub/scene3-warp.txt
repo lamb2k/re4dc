@@ -1,0 +1,21 @@
+name bench-r10b-dellago
+# Benchmark disc, scene 3 = /cd/dc/bench3.txt: the lake boat ride with Del Lago (r10b, chapter 1-3; lane check-lake
+# 10-20, fixture from bench/definitive-2026-10 702d82ef scene 3, console-measured 10-15: 16.4 fps before the 45 m lake far).
+# Leon boards the boat at the pier (3 A presses), is placed in the lake middle at room frame 300 (the s10 movie plays
+# first), then a raw pad 0x0002 hold keeps him aboard: frames 600..~1000 the boat is towed toward Del Lago's wake,
+# ~1100..1500 Leon holds the harpoon aim. The release draws the lake at 45 m (LAKE_FAR=45000). The fight path depends
+# on the RNG the earlier scenes leave: Leon must still be aboard at room frame 1500 (status1 not 00280200).
+# Measure 600..1499.
+room 0x10b
+pos -48810 -1000 25500
+ang 3.14159
+rsf 0x10b 0
+inv default
+god
+act_clock source
+act 60 a 4
+act 80 a 4
+act 100 a 4
+goto 300 91507 -1300 87322
+act 320 0x0002 2400
+bench 3 600 1500 R10B DELLAGO

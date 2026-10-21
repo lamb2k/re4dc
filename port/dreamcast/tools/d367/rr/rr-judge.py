@@ -105,6 +105,12 @@ if build_ok and jobs:
         add('CAST-GC', bool(line) and line[-1].rstrip().endswith('(PASS)'), line[-1][:160] if line else 'rc=%d' % cg.returncode)
         nd = [l for l in cg.stdout.splitlines() if 'NOT-DRAWN' in l]
         extra['not_drawn'] = nd[:6]
+        # NOT-DRAWN judged (lane notdrawn20, 10-20, #42): an enemy alive in logic and in view in >= 2 samples with no
+        # census draw row FAILS unless castgc/notdrawn-allow.tsv lists it with a reason and an owner (cast_gc.py --not-drawn).
+        ndl = [l for l in nd if l.startswith('NOT-DRAWN rr:')]
+        add('NOT-DRAWN', bool(ndl) and ndl[-1].rstrip().endswith('(PASS)'),
+            (ndl[-1][:160] if ndl else 'no NOT-DRAWN summary (rc=%d)' % cg.returncode) +
+            ''.join('; ' + ' '.join(l.split()[:3]) for l in cg.stdout.splitlines() if l.rstrip().endswith(' FAIL')))
         lf = []
         for x in logs:
             r = subprocess.run(['python3', str(D367 / 'mcheck/leongc_check.py'), str(x)], capture_output=True, text=True)
@@ -192,7 +198,7 @@ out += ['## This cycle: %s (%s tier)' % (verdict, tier), '',
         '| check | result | detail |', '|---|---|---|']
 out += ['| %s | %s | %s |' % (n, s, d.replace('|', '/')) for n, s, d in checks]
 if extra.get('not_drawn'):
-    out += ['', 'NOT-DRAWN rows (reported, not judged): ' + '; '.join(x.strip() for x in extra['not_drawn'])]
+    out += ['', 'NOT-DRAWN rows (judged, see the NOT-DRAWN check): ' + '; '.join(x.strip() for x in extra['not_drawn'])]
 out += ['', '## Wall times', '', '| step | seconds |', '|---|---|']
 out += ['| %s | %d |' % (n, e - s) for n, s, e, rc in steps]
 if jobs:

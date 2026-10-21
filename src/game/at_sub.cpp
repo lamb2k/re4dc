@@ -3,6 +3,7 @@
 // polygon attribute word and its effect type, plus debug drawing of capsules and boxes.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "at_sub.h"
 #include "math_sub.h"
 #include "dbmodule.h"
@@ -239,14 +240,15 @@ void AtCubeDisp(Mtx m, f32 sx, f32 sy, f32 sz, Vec* pos, u32 color)
     v[7].x = -sx;
     v[7].y = sy;
     v[7].z = -sz;
-    PSMTXMultVec(mat, &v[0], &v[0]);
-    PSMTXMultVec(mat, &v[1], &v[1]);
-    PSMTXMultVec(mat, &v[2], &v[2]);
-    PSMTXMultVec(mat, &v[3], &v[3]);
-    PSMTXMultVec(mat, &v[4], &v[4]);
-    PSMTXMultVec(mat, &v[5], &v[5]);
-    PSMTXMultVec(mat, &v[6], &v[6]);
-    PSMTXMultVec(mat, &v[7], &v[7]);
+    RE4DC_XM_LOAD(mat);
+    RE4DC_XM_POINT(mat, &v[0], &v[0]);
+    RE4DC_XM_POINT(mat, &v[1], &v[1]);
+    RE4DC_XM_POINT(mat, &v[2], &v[2]);
+    RE4DC_XM_POINT(mat, &v[3], &v[3]);
+    RE4DC_XM_POINT(mat, &v[4], &v[4]);
+    RE4DC_XM_POINT(mat, &v[5], &v[5]);
+    RE4DC_XM_POINT(mat, &v[6], &v[6]);
+    RE4DC_XM_POINT(mat, &v[7], &v[7]);
     Draw_line3d(&v[0], &v[1], color, 0);
     Draw_line3d(&v[1], &v[2], color, 0);
     Draw_line3d(&v[2], &v[3], color, 0);

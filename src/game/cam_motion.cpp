@@ -1,5 +1,6 @@
 #if defined(RE4DC_GAME) && !defined(__PPC__)
 #include "native_motion.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #endif
 // game/cam_motion.cpp: CameraMotion, a Camera driven by a camera motion file (cutscene cameras):
 // the file holds Hermite key tracks for position, target, roll and fov; move() evaluates them at
@@ -113,9 +114,10 @@ void CameraMotion::move()
     param.fovy = fov.y * 180.0f / PI;
     CameraSetOrientationRoll(this);
     if (base_mat) {
-        PSMTXMultVec(*base_mat, &param.pos, &param.pos);
-        PSMTXMultVec(*base_mat, &param.at, &param.at);
-        PSMTXMultVec(*base_mat, &up, &up);
+        RE4DC_XM_LOAD(*base_mat);
+        RE4DC_XM_POINT(*base_mat, &param.pos, &param.pos);
+        RE4DC_XM_POINT(*base_mat, &param.at, &param.at);
+        RE4DC_XM_POINT(*base_mat, &up, &up);
         CameraSetOrientationUp(this);
     }
     end = 0;

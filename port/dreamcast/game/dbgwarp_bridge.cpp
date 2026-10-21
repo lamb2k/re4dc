@@ -110,6 +110,10 @@ extern "C" void cModel_swapModelInfo(cModel* m, ModelData* old, cModelInfo* info
 #include <arch/timer.h>
 #include <kos/thread.h>
 
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+extern volatile int vsync_cnt;   // main.cpp: presentation heartbeat, also used by the source hang detector
+#endif
+
 extern "C" {
 u32 re4dc_vi_retrace_count(void);
 #if defined(RE4DC_CAP_COMPARE)
@@ -123,6 +127,16 @@ extern unsigned re4dc_mist_cut;   // esp_sub.cpp (hwfog.mk MIST_CUT): the runtim
 
 int re4dc_fixture_read(const char* path, char* buffer, unsigned size);
 void re4dc_fixture_state(const char* name, int a, int b);  // pad.cpp fixture anchors (overlay)
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+const char* re4dc_qa_boot_path(void);   // qa_menu.cpp (qamenu.mk QA_MENU)
+int re4dc_qa_combo(void);
+unsigned re4dc_qa_flags(void);
+int re4dc_qa_menu(const char** path);
+int re4dc_qa_menu_auto(const char* file, const char** path, unsigned hold_ms);
+void re4dc_qa_game(unsigned room, int alive, int heap4, const char* preset);
+void re4dc_qa_set_flags(unsigned f);
+void re4dc_qa_in_room(int on);
+#endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 void re4dc_bench_scene_def(int no, unsigned begin, unsigned end, const char* name);  // bench.cpp (bench.mk BENCHMARK)
 int re4dc_bench_tick(unsigned room_frame);
@@ -131,6 +145,18 @@ const char* re4dc_bench_first_scene(void);
 void re4dc_bench_alive(int n);
 int re4dc_bench_scene_no(void);
 const char* re4dc_bench_results(void);
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+void re4dc_bench_fixture_begin(const char* path);
+void re4dc_bench_census(unsigned esp_live, unsigned hits, unsigned rg_parts, unsigned rg_verts);
+unsigned re4dc_bench_esp_live(void);                                  // esp.cpp (BENCH_CENSUS)
+void re4dc_cache20_arm(int on) __attribute__((weak));               // platform/cache20.cpp
+extern volatile unsigned re4dc_rigid_hide __attribute__((weak));     // native_actor_fast.cpp (RIGID_CENSUS=2)
+extern unsigned re4dc_rigid_census[6] __attribute__((weak));
+extern const void* re4dc_rigid_census_big __attribute__((weak));
+#if defined(RE4DC_BENCH_MISTCUT) && RE4DC_BENCH_MISTCUT
+extern unsigned re4dc_mist_cut;   // esp_sub.cpp (hwfog.mk MIST_CUT): effect classes not drawn (render only)
+#endif
+#endif
 #endif
 #if defined(RE4DC_ACTOR_PLAN) && RE4DC_ACTOR_PLAN
 extern "C" unsigned re4dc_actor_plan_on;  // platform/native_actor_fast.cpp (actorplan.mk ACTOR_PLAN)
@@ -190,9 +216,10 @@ struct Warp {
     unsigned n_rsf;
     u32 scenario[2], find, unlock[2], items[2];  // items: pG->item_flags[0..1] (key-item pickups, r105 area 8)
     u32 status[4];  // `status <0..3> <hex>`: pG->Status_flg bits (3: 0x04000000 Ashley follows, sce_sys.cpp)
+    int chapter;    // `chapter <n>`: pG->chapter (chapters finished) before the first room loads, 0 = unset (+1 stored)
     u8 dead[64];
     unsigned n_dead;
-    Act act[32];
+    Act act[96];
     unsigned n_act;
     bool has_trg, trg_fired;
     int trg_no;
@@ -274,7 +301,7 @@ struct Warp {
     u16 late_room;
     // god: Leon's life refilled every frame (benchmark fixtures; hwcal's invuln). alert <frame>: the room-forced
     // alert + the "Ganado hurt" alarm at Leon once at that room frame of its entry (hwcal's alert): the crowd hunts him.
-    bool god, has_alert, alert_done;
+    bool god, has_alert, alert_done, ammo;  // ammo: `ammo` keeps the equipped weapon loaded (shotfx20 rigs)
     // face <target|corpse>: 1 = the current kill target, 2 = the newest kill still listed (ring of the last 8 kills)
     u8 face_mode;
     u8 face_n;
@@ -293,6 +320,23 @@ struct Warp {
     // (the last presented image stays on screen for the harness's periodic framebuffer shots), then play goes on.
     u32 still_tick[8], still_ms[8];
     unsigned n_still, still_next;
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+    // BENCH_CENSUS (lane cache20, census bench disc), timed lines of the first room (room frames):
+    //   rigid <frame> on|off       rigid model parts drawn / not drawn (RIGID_CENSUS=2, render only)
+    //   fx <frame> on|off          every effect sprite + mist card drawn / not (MIST_CUT mask 239, render only)
+    //   crowd <frame> <n> [dist]   n more live Ganados (nearest first) put in front of Leon, dist (default 450) ahead,
+    //                              spread across the view, facing him (a census of n on screen; they then act as usual)
+    //   tank <frame>               the brought Ganado nearest Leon becomes the tank: its hp is held at 30000 every tick
+    //                              (hits, reactions, blood and gore still happen; it does not die), hits counted
+    //   autofire <frame> <end> [period]  Leon aims (R) at the tank and fires (A) every period frames (default 30),
+    //                              infinite ammo (Debug_flg[2] 0x00400000) while it runs
+    struct CenAt { u32 frame; u8 kind; s32 a, b; bool done; } cen[24];
+    unsigned n_cen;
+    cEm* crowd_em[8];
+    unsigned n_crowd;
+    cEm* tank;
+    u32 tank_hits, fire_from, fire_to, fire_period;
+#endif
 #if defined(RE4DC_WARP_AFTER_RESET) && RE4DC_WARP_AFTER_RESET
     // after_reset (WARP_AFTER_RESET=1, lane resetmem): the rig stays passive (title, card load, play) until the first
     // soft reset, then warps from the title shown after it (the s30 heap gate after load -> reset -> New Game).
@@ -308,6 +352,20 @@ u32 num(const char* s) { return (u32) strtoul(s, nullptr, 0); }
 const char* bench_next;
 bool bench_pending;
 void load(const char* path = nullptr)
+#elif defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+// QA_MENU (qamenu.mk): the teleport preset armed at the next soft reset, and the reset is pending.
+const char* qa_next;
+bool qa_pending;
+unsigned qa_frames;     // free-play poll frames in the current room (the menu opens from 30 on)
+bool qa_enemy_on;       // enemies invincible was on last frame (off again: hp back to hp_max)
+// Harness lines (a fixture in dc/warp.txt; the QA disc has none): `qa_flags <mask>` sets the toggles, `qa_menu <free
+// frame> <preset file | -> [hold ms]` opens the in-game menu at that free-play frame, with hold ms also shows the
+// Diagnostics page and each QR page for that long (captures), then teleports to /cd/dc/qa/<file> (`-`: resumes):
+// the menu -> soft reset -> preset chain without pad input.
+unsigned qa_auto_frame, qa_auto_hold;
+char qa_auto_file[24];
+bool qa_auto_armed;
+void load(const char* path = nullptr)
 #else
 void load()
 #endif
@@ -317,8 +375,20 @@ void load()
     static char text[4096];
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     if (!path) path = re4dc_bench_first_scene();   // scene 1, or the start screen's single scene
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+    re4dc_bench_fixture_begin(path);
+#if defined(RE4DC_BENCH_MISTCUT) && RE4DC_BENCH_MISTCUT
+    re4dc_mist_cut = 0;   // every fixture starts with every effect drawn
+#endif
+    if (&re4dc_rigid_hide) re4dc_rigid_hide = 0;
+#endif
     const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
     re4dc_log("warp: bench fixture %s (%d bytes)\n", path, len);
+#elif defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+    if (!path) path = re4dc_qa_boot_path();        // the boot menu's preset, else dc/warp.txt (harness discs)
+    if (!path) path = "/cd/dc/warp.txt";
+    const int len = re4dc_fixture_read(path, text, sizeof(text) - 1);
+    re4dc_log("warp: qa fixture %s (%d bytes)\n", path, len);
 #else
     const int len = re4dc_fixture_read("/cd/dc/warp.txt", text, sizeof(text) - 1);
 #endif
@@ -367,6 +437,8 @@ void load()
             wp.find |= num(tok[1]);
         } else if (!strcmp(k, "unlock") && n >= 3) {
             wp.unlock[num(tok[1]) & 1] |= num(tok[2]);
+        } else if (!strcmp(k, "chapter") && n >= 2) {
+            wp.chapter = (int) num(tok[1]) + 1;  // DISC_SET disc check (game.cpp StageInit) reads pG->chapter
         } else if (!strcmp(k, "status") && n >= 3) {
             wp.status[num(tok[1]) & 3] |= num(tok[2]);
         } else if (!strcmp(k, "items") && n >= 3) {
@@ -390,7 +462,7 @@ void load()
         } else if (!strcmp(k, "entry") && n >= 2 && num(tok[1]) >= 1 && num(tok[1]) <= 8) {
             wp.parse_entry = (u8) num(tok[1]);
             if (wp.parse_entry > wp.max_entry) wp.max_entry = wp.parse_entry;
-        } else if (!strcmp(k, "act") && n >= 4 && wp.n_act < 32) {
+        } else if (!strcmp(k, "act") && n >= 4 && wp.n_act < 96) {
             Act& a = wp.act[wp.n_act++];
             a.entry = wp.parse_entry;
             a.frame = num(tok[1]);
@@ -509,8 +581,12 @@ void load()
         } else if (!strcmp(k, "dump")) {
             wp.dump = true;
         } else if (!strcmp(k, "face") && n >= 2) {
-            wp.face_mode = !strcmp(tok[1], "corpse") ? 2 : 1;
+            wp.face_mode = !strcmp(tok[1], "corpse") ? 2 : !strcmp(tok[1], "near") ? 3 : 1;
+            if (wp.face_mode == 3) wp.face_id[0] = (u8) (n >= 3 ? num(tok[2]) : 0x15);  // `face near <em id> [dist/100 mm]` (shotfx20 rigs)
+            if (wp.face_mode == 3) wp.face_id[1] = (u8) (n >= 4 ? num(tok[3]) : 0);
             re4dc_log("warp: face %s\n", wp.face_mode == 2 ? "corpse" : "target");
+        } else if (!strcmp(k, "ammo")) {
+            wp.ammo = true;
         } else if (!strcmp(k, "god")) {
             wp.god = true;
             re4dc_log("warp: god (Leon's life refilled every frame)\n");
@@ -646,7 +722,37 @@ void load()
             re4dc_log("warp: mistcut %u (CAP_COMPARE translucency arm)\n", re4dc_mist_cut);
 #endif
 #endif
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+        } else if (!strcmp(k, "qa_flags") && n >= 2) {
+            re4dc_qa_set_flags(num(tok[1]));
+            re4dc_log("warp: qa_flags %x\n", (unsigned) num(tok[1]));
+        } else if (!strcmp(k, "qa_menu") && n >= 3) {
+            qa_auto_frame = num(tok[1]);
+            strncpy(qa_auto_file, strcmp(tok[2], "-") ? tok[2] : "", sizeof(qa_auto_file) - 1);
+            qa_auto_file[sizeof(qa_auto_file) - 1] = 0;
+            qa_auto_hold = n >= 4 ? num(tok[3]) : 0;
+            qa_auto_armed = true;
+            re4dc_log("warp: qa_menu at free frame %u -> %s\n", qa_auto_frame, qa_auto_file);
+#endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+        } else if ((!strcmp(k, "rigid") || !strcmp(k, "fx")) && n >= 3 && wp.n_cen < 24) {
+            wp.cen[wp.n_cen++] = {num(tok[1]), (u8) (k[0] == 'r' ? 1 : 2), !strcmp(tok[2], "off") ? 1 : 0, 0, false};
+        } else if (!strcmp(k, "crowd") && n >= 3 && wp.n_cen < 24) {
+            wp.cen[wp.n_cen++] = {num(tok[1]), 3, (s32) num(tok[2]), n >= 4 ? (s32) num(tok[3]) : 450, false};
+        } else if (!strcmp(k, "objdump") && n >= 2 && wp.n_cen < 24) {
+            wp.cen[wp.n_cen++] = {num(tok[1]), 5, 0, 0, false};
+        } else if (!strcmp(k, "tank") && n >= 2 && wp.n_cen < 24) {
+            wp.cen[wp.n_cen++] = {num(tok[1]), 4, 0, 0, false};
+        } else if (!strcmp(k, "cachearm") && n >= 2) {
+            // test runs only (Flycast smoke of arm B without the start screen): the cache20 arm, 0 = A, 1 = B
+            if (re4dc_cache20_arm) re4dc_cache20_arm((int) num(tok[1]));
+        } else if (!strcmp(k, "autofire") && n >= 3) {
+            wp.fire_from = num(tok[1]);
+            wp.fire_to = num(tok[2]);
+            wp.fire_period = n >= 4 ? num(tok[3]) : 30;
+            if (wp.fire_period < 8) wp.fire_period = 8;
+#endif
         } else if (!strcmp(k, "bench") && n >= 5) {
             // BENCHMARK: `bench <scene no> <begin room frame> <end room frame> <name...>` (bench.cpp measures [begin, end))
             char name[24] = "";
@@ -1005,7 +1111,25 @@ void face_poll()
 {
     if (!wp.face_mode || !pPL || (pG->Status_flg[1] & 0x10000000)) return;
     cEm* em = nullptr;
-    if (wp.face_mode == 1) {
+    if (wp.face_mode == 3) {  // `face near <id>`: the live enemy of that id nearest Leon (shooting rigs)
+        f32 best = 1e30f;
+        for (cEm* e = EmMgr.getEmPtr(wp.face_id[0], 0); e; e = EmMgr.getEmPtr(wp.face_id[0], e)) {
+            if ((e->be_flag & 0x21) != 0x21 || e->hp <= 0) continue;
+            const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d2 = dx * dx + dz * dz;
+            if (d2 < best) { best = d2; em = e; }
+        }
+        static cEm* near_last;  // `face near <id> <mm>`: each new target is placed that far in front of Leon once
+        if (em && em != near_last && wp.face_id[1]) {
+            near_last = em;
+            const f32 a = pPL->ang.y, d = (f32) wp.face_id[1] * 100.0f;
+            em->pos.x = pPL->pos.x + __builtin_sinf(a) * d;
+            em->pos.z = pPL->pos.z + __builtin_cosf(a) * d;
+            em->pos.y = pPL->pos.y;
+            em->ang.y = a + 3.14159265f;
+            re4dc_log("warp: face near target m=%08x placed %d mm ahead t=%u\n", (unsigned) (uintptr_t) em, (int) d,
+                      (unsigned) pG->Frame_cnt);
+        }
+    } else if (wp.face_mode == 1) {
         if (wp.kill_em && face_listed(wp.kill_em, wp.kill_cur)) em = wp.kill_em;
     } else {
         for (unsigned k = 0; k < 8 && k < wp.face_n && !em; ++k) {
@@ -1026,6 +1150,8 @@ namespace {
 void god_alert_poll()
 {
     if (wp.god && pG) pG->pl_life = pG->pl_life_max;
+    if (wp.ammo && ItemMgr.pArm && (ItemMgr.pArm->bullet & 0x1FFF) < 3)
+        ItemMgr.pArm->bullet = (u16) ((ItemMgr.pArm->bullet & 0xE000) | 9);
     if (wp.b108_n && pG && pG->room_id == 0x108 && wp.room_frames >= wp.b108_frame) {
         char what[64];
         snprintf(what, sizeof(what), "bell108 shot at room frame %u (alive %d)", (unsigned) wp.room_frames,
@@ -1047,6 +1173,125 @@ void god_alert_poll()
              (unsigned) wp.rooms, (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
     stamp(what);
 }
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+bool cen_live(cEm* e) { return e && (e->be_flag & 0x21) == 0x21 && e->hp > 0; }
+bool cen_listed(cEm* e)
+{
+    for (int id = 0x10; id <= 0x20; ++id)
+        for (cEm* x = EmMgr.getEmPtr(id, 0); x; x = EmMgr.getEmPtr(id, x))
+            if (x == e) return true;
+    return false;
+}
+// BENCH_CENSUS timed lines (first room, each tick), the tank's hp hold and Leon facing it while auto-fire runs.
+void census_poll()
+{
+    if (wp.rooms != 1 || !pPL || !pG) return;
+    for (unsigned i = 0; i < wp.n_cen; ++i) {
+        auto& c = wp.cen[i];
+        if (c.done || wp.room_frames < c.frame) continue;
+        c.done = true;
+        char what[96];
+        if (c.kind == 1) {
+            if (&re4dc_rigid_hide) re4dc_rigid_hide = (unsigned) c.a;
+            snprintf(what, sizeof(what), "census: rigid %s at room frame %u", c.a ? "off" : "on", (unsigned) wp.room_frames);
+        } else if (c.kind == 2) {
+#if defined(RE4DC_BENCH_MISTCUT) && RE4DC_BENCH_MISTCUT
+            re4dc_mist_cut = c.a ? 239u : 0u;
+#endif
+            snprintf(what, sizeof(what), "census: fx %s at room frame %u", c.a ? "off" : "on", (unsigned) wp.room_frames);
+        } else if (c.kind == 3) {
+            unsigned put = 0;
+            for (s32 m = 0; m < c.a && wp.n_crowd < 8; ++m) {
+                cEm* best = nullptr;
+                f32 best_d = 1e30f;
+                for (int id = 0x10; id <= 0x20; ++id)
+                    for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e)) {
+                        if (!(e->be_flag & 1) || e->hp <= 0) continue;   // listed and alive (a far one may be suspended)
+                        bool used = false;
+                        for (unsigned q = 0; q < wp.n_crowd; ++q) used = used || wp.crowd_em[q] == e;
+                        if (used) continue;
+                        const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+                        if (d < best_d) { best_d = d; best = e; }
+                    }
+                if (!best) break;
+                // spread across the view: -1.5, +1.5, -0.5, +0.5, -2.5, +2.5 m ... to Leon's side, dist ahead
+                const unsigned slot = wp.n_crowd;
+                const f32 side = ((slot & 1) ? 1.0f : -1.0f) * (slot < 2 ? 150.0f : slot < 4 ? 50.0f : 250.0f);
+                const f32 a = pPL->ang.y, d = (f32) c.b + (f32) (slot / 2) * 60.0f;
+                best->pos.x = pPL->pos.x + __builtin_sinf(a) * d - __builtin_cosf(a) * side;
+                best->pos.z = pPL->pos.z + __builtin_cosf(a) * d + __builtin_sinf(a) * side;
+                best->pos.y = pPL->pos.y;
+                best->ang.y = a + 3.14159265f;
+                wp.crowd_em[wp.n_crowd++] = best;
+                ++put;
+            }
+            snprintf(what, sizeof(what), "census: crowd %u put in front (asked %d, %u brought) at room frame %u", put,
+                     (int) c.a, wp.n_crowd, (unsigned) wp.room_frames);
+        } else if (c.kind == 5) {
+            // objdump: every listed object (ObjMgr) and enemy (EmMgr) with id, kind and position (finding the props)
+            unsigned no = 0;
+            for (cUnit* u = ObjMgr.pAlive; u; u = u->pNext, ++no) {
+                const cModel* m = (const cModel*) u;
+                re4dc_log("census: obj %u id=%02x kind=%u pos=%d,%d,%d\n", no, (unsigned) m->id, (unsigned) m->kindid,
+                          (int) m->pos.x, (int) m->pos.y, (int) m->pos.z);
+            }
+            for (cUnit* u = EmMgr.pAlive; u; u = u->pNext, ++no) {
+                const cEm* e = (const cEm*) u;
+                re4dc_log("census: em %u id=%02x be=%08x hp=%d pos=%d,%d,%d\n", no, (unsigned) e->id, (unsigned) e->be_flag,
+                          (int) e->hp, (int) e->pos.x, (int) e->pos.y, (int) e->pos.z);
+            }
+            snprintf(what, sizeof(what), "census: objdump %u at room frame %u pl=%d,%d,%d", no, (unsigned) wp.room_frames,
+                     (int) pPL->pos.x, (int) pPL->pos.y, (int) pPL->pos.z);
+        } else {
+            cEm* best = nullptr;
+            f32 best_d = 1e30f;
+            for (unsigned q = 0; q < wp.n_crowd; ++q) {
+                cEm* e = wp.crowd_em[q];
+                if (!cen_listed(e) || !cen_live(e)) continue;
+                const f32 dx = e->pos.x - pPL->pos.x, dz = e->pos.z - pPL->pos.z, d = dx * dx + dz * dz;
+                if (d < best_d) { best_d = d; best = e; }
+            }
+            wp.tank = best;
+            if (best) best->hp = 30000;
+            snprintf(what, sizeof(what), "census: tank %s at room frame %u", best ? "set" : "none", (unsigned) wp.room_frames);
+        }
+        stamp(what);
+    }
+    if (wp.tank) {
+        if (!cen_listed(wp.tank) || wp.tank->hp <= 0) {
+            re4dc_log("census: tank lost at room frame %u (hits %u)\n", (unsigned) wp.room_frames, (unsigned) wp.tank_hits);
+            wp.tank = nullptr;
+        } else {
+            if (wp.tank->hp < 30000) { ++wp.tank_hits; wp.tank->hp = 30000; }
+        }
+    }
+    const bool firing = wp.fire_to && wp.room_frames >= wp.fire_from && wp.room_frames < wp.fire_to;
+    if (firing) {
+        pG->Debug_flg[2] |= 0x00400000;   // infinite ammo
+        if (wp.tank && !(pG->Status_flg[1] & 0x10000000)) {
+            const f32 dx = wp.tank->pos.x - pPL->pos.x, dz = wp.tank->pos.z - pPL->pos.z;
+            if (dx * dx + dz * dz >= 1.0f) pPL->ang.y = atan2f(dx, dz);
+        }
+    }
+    unsigned rp = 0, rv = 0;
+    if (re4dc_rigid_census) {
+        rp = re4dc_rigid_census[0]; rv = re4dc_rigid_census[2];
+        if (!(wp.room_frames % 150) && rp)
+            re4dc_log("census: rigid frame %u parts=%u meshlets=%u verts=%u big=%p big_verts=%u big_ml=%u big_lod=%u\n",
+                      (unsigned) wp.room_frames, rp, re4dc_rigid_census[1], rv,
+                      re4dc_rigid_census_big ? re4dc_rigid_census_big : nullptr, re4dc_rigid_census[3],
+                      re4dc_rigid_census[4], re4dc_rigid_census[5]);
+        if (!(wp.room_frames % 150) && re4dc_rigid_census_big) {
+            const cModel* m = (const cModel*) re4dc_rigid_census_big;
+            re4dc_log("census: rigid big model id=%02x kind=%u pos=%d,%d,%d\n", (unsigned) m->id, (unsigned) m->kindid,
+                      (int) m->pos.x, (int) m->pos.y, (int) m->pos.z);
+        }
+        for (unsigned i = 0; i < 6; ++i) re4dc_rigid_census[i] = 0;
+        re4dc_rigid_census_big = nullptr;
+    }
+    re4dc_bench_census(re4dc_bench_esp_live(), wp.tank_hits, rp, rv);
+}
+#endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
 // BENCHMARK: the scene's end state (the determinism check compares these lines between runs): Leon, the Ganados of
 // the rooms' count range (model ids 0x10..0x20) with position, hp and flags, folded into one hash.
@@ -1101,6 +1346,72 @@ bool bench_poll()
     bench_pending = true;
     pG->System_flg |= 0x4000000;        // soft reset request (systemResetCheck: dev_mode path)
     stamp("bench: soft reset requested");
+    return true;
+}
+#endif
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+// QA_MENU, each game tick (active rig or not): the invincibility toggles, then the in-game menu on the chord (L + R +
+// D-pad Down) in free play only: the main game state (Rno0 3 / Rno1 0), no event or event start, no sub screen
+// (inventory, files, map), Leon free (checkEvent 1, as the rig's radio replay), and 30 such frames since the last room
+// entry or menu (no door load). The menu holds the frame loop (no hang check meanwhile, as `still`). A teleport or
+// "quit to title" requests the source's soft reset (as the benchmark disc); re4dc_warp_soft_reset arms the preset.
+// true = a reset is pending: the rest of the poll is skipped.
+bool qa_poll()
+{
+    if (!pG) return false;
+    if (qa_pending) return true;
+    const unsigned f = re4dc_qa_flags();
+    if (f & 1) pG->pl_life = pG->pl_life_max;
+    if ((f & 2) && pG->ashley_life_max) pG->ashley_life = pG->ashley_life_max;
+    const bool en = (f & 4) != 0;
+    if (en || qa_enemy_on) {
+        // Enemies invincible: hp held high every tick (hits, reactions, blood and gore still run; no death); off again:
+        // hp back to hp_max.
+        for (int id = 0x10; id < 0x80; ++id)
+            for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e)) {
+                if (!(e->be_flag & 1) || e->hp <= 0) continue;
+                if (en) e->hp = 30000;
+                else if (e->hp_max > 0 && e->hp > e->hp_max) e->hp = e->hp_max;
+            }
+        qa_enemy_on = en;
+    }
+    const bool free_play = pPL && pG->Rno0 == 3 && pG->Rno1 == 0 && !(pG->Status_flg[1] & 0x10000000) &&
+                           !SubScreenWk.type && !SceSys.event_start_cnt && pPL->checkEvent() == 1;
+    qa_frames = free_play ? qa_frames + 1 : 0;
+    const bool autom = qa_auto_armed && qa_frames >= (qa_auto_frame > 30 ? qa_auto_frame : 30);
+    if (!autom && (qa_frames < 30 || !re4dc_qa_combo())) return false;
+    const u32 keep = pG->System_flg & 0x20000000;
+    pG->System_flg |= 0x20000000;   // no hang check while the menu holds the frame loop
+    const char* path = nullptr;
+    int r;
+    {   // the Diagnostics page's game side
+        int live = 0;
+        for (int id = 0x10; id <= 0x20; ++id)
+            for (cEm* e = EmMgr.getEmPtr(id, 0); e; e = EmMgr.getEmPtr(id, e))
+                if ((e->be_flag & 1) && e->hp > 0) ++live;
+        re4dc_qa_game((unsigned) pG->room_id, live, memCheckHeapActive(4) ? (int) OSCheckHeap(Heap[4].handle) : -1,
+                      wp.name[0] ? wp.name : nullptr);
+    }
+    if (autom) {
+        r = re4dc_qa_menu_auto(qa_auto_file, &path, qa_auto_hold);
+        qa_auto_armed = false;
+    } else while ((r = re4dc_qa_menu(&path)) == 3) {
+        pG->pl_life = pG->pl_life_max;
+        if (pG->ashley_life_max) pG->ashley_life = pG->ashley_life_max;
+        re4dc_log("qa: health refilled\n");
+    }
+    // Retraces continue during this intentional pause. Refresh the presentation heartbeat before
+    // restoring the source hang check: otherwise a menu held for 60 s HALTs main.cpp(548) on close.
+    // The check stays enabled in gameplay, and an already-disabled check keeps its original state.
+    vsync_cnt = 0;
+    pG->System_flg = (pG->System_flg & ~0x20000000) | keep;
+    qa_frames = 0;
+    if (r == 0) return false;
+    qa_next = r == 1 ? path : nullptr;
+    qa_pending = true;
+    SndSoftReset();
+    pG->System_flg |= 0x4000000;    // soft reset request (systemResetCheck), as the benchmark disc's next scene
+    stamp(r == 1 ? "qa: teleport: soft reset requested" : "qa: quit to title: soft reset requested");
     return true;
 }
 #endif
@@ -1172,6 +1483,21 @@ void re4dc_warp_soft_reset(void)
         return;
     }
 #endif
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+    re4dc_qa_in_room(0);
+    qa_frames = 0;
+    if (qa_pending) {
+        // QA_MENU: the chosen preset from a clean rig (the title that follows is skipped as at boot), or a passive rig
+        // for "quit to title" (the title and its menus run normally).
+        const char* path = qa_next;
+        qa_next = nullptr;
+        qa_pending = false;
+        wp = Warp{};
+        if (path) { load(path); stamp("qa: preset armed at soft reset"); }
+        else { wp.loaded = true; stamp("qa: title at soft reset"); }
+        return;
+    }
+#endif
     if (!wp.loaded) load();
     if (wp.after_reset && !wp.active && wp.room) {
         wp.active = true;
@@ -1212,6 +1538,10 @@ void re4dc_warp_next_pos(void)
         pG->NextPos.z = wp.pos[2];
     }
     if (wp.has_dir) pG->NextY = wp.dir;
+    if (wp.chapter) {
+        pG->chapter = wp.chapter - 1;
+        re4dc_log("warp: chapter %d\n", wp.chapter - 1);
+    }
     re4dc_log("warp: start room=%03x next_room=%03x pos=%d,%d,%d ang=%d/1000\n", (unsigned) wp.room,
               (unsigned) pG->next_room, (int) pG->NextPos.x, (int) pG->NextPos.y, (int) pG->NextPos.z,
               (int) (pG->NextY * 1000.0f));
@@ -1220,6 +1550,10 @@ void re4dc_warp_next_pos(void)
 // ui_bridge.cpp re4dc_room_enter (every room entry).
 void re4dc_warp_room_enter(void)
 {
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+    re4dc_qa_in_room(1);
+    qa_frames = 0;
+#endif
     if (!wp.active) return;
     ++wp.rooms;
     wp.room_frames = 0;
@@ -1265,6 +1599,9 @@ void re4dc_warp_room_enter(void)
 // ui_bridge.cpp re4dc_room_cycle_poll (top of gameMainLoop, game thread).
 void re4dc_warp_poll(void)
 {
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+    if (qa_poll()) return;
+#endif
     if (!wp.active) return;
     // `still` counts this room's poll frames (wp.room_frames, the clock the act lines share in the first room).
     if (wp.still_next < wp.n_still && pG && wp.rooms == 1 && wp.room_frames >= wp.still_tick[wp.still_next]) {
@@ -1285,6 +1622,9 @@ void re4dc_warp_poll(void)
         for (;;) thd_sleep(1000);
     }
     ++wp.room_frames;
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+    census_poll();
+#endif
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     if (wp.rooms == 1 && bench_poll()) return;
 #endif
@@ -1445,6 +1785,13 @@ void re4dc_warp_pad(unsigned short* buttons, signed char* stickX, signed char* s
         re4dc_warp_cut("event");
         return;
     }
+#if defined(RE4DC_BENCH_CENSUS) && RE4DC_BENCH_CENSUS
+    if (wp.fire_to && wp.rooms == 1 && wp.room_frames >= wp.fire_from && wp.room_frames < wp.fire_to) {
+        *buttons |= 0x0020;                                                     // R: aim
+        if ((wp.room_frames - wp.fire_from) % wp.fire_period >= 4 &&
+            (wp.room_frames - wp.fire_from) % wp.fire_period < 7) *buttons |= 0x0100;   // A: fire (after 4 aimed frames)
+    }
+#endif
     if (wp.cur_act >= 0 && wp.cur_act < (int) wp.n_act && wp.pad_frames < wp.cur_until) {
         const Act& a = wp.act[wp.cur_act];
         *buttons |= a.buttons;

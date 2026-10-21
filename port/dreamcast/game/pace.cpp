@@ -31,6 +31,10 @@
 #include "re4dc_platform.h"
 #include <kos/timer.h>
 #include <string.h>
+#if defined(RE4DC_PACE_PRECISE) && RE4DC_PACE_PRECISE
+#include <arch/irq.h>
+#include <dc/vblank.h>
+#endif
 
 #ifndef RE4DC_PACE_CATCHUP
 #define RE4DC_PACE_CATCHUP 0
@@ -65,6 +69,13 @@
 #endif
 
 extern "C" u32 re4dc_vi_retrace_count(void);
+#if RE4DC_PACE_HOLD_LOG
+extern "C" void re4dc_present_hold_report(void);   // pace_present.cpp
+#endif
+#if RE4DC_PACE_STEADY
+extern "C" unsigned re4dc_steady_wait_take(void);  // pace_present.cpp
+extern "C" int re4dc_steady_backlog(unsigned hold);  // pace_present.cpp
+#endif
 extern "C" void* re4dc_ui_movie_texture() __attribute__((weak));   // ROUTE_MOVIES builds
 #if defined(RE4DC_RENDER_OPTION) && RE4DC_RENDER_OPTION
 #include "platform/quality.h"
@@ -81,7 +92,18 @@ extern "C" const char* re4dc_look_label(void);  // native_static.cpp (post30.mk 
 #endif                    // esp_sub.cpp (effects30.mk EFFECT_PS2_TOGGLE)
 #endif
 
-enum { PACE_SMOOTH = 0, PACE_FAST = 1, PACE_OFF = 2 };
+enum { PACE_SMOOTH = 0, PACE_FAST = 1, PACE_OFF = 2, PACE_STEADY = 3 };
+#ifndef RE4DC_PACE_STEADY
+#define RE4DC_PACE_STEADY 0
+#endif
+#ifndef RE4DC_PACE_PRECISE
+#define RE4DC_PACE_PRECISE 0
+#endif
+#ifndef RE4DC_PACE_HOLD_LOG
+#define RE4DC_PACE_HOLD_LOG 0
+#endif
+// PACE_STEADY (pace.mk): a fourth runtime mode, Steady (pace_present.cpp holds each picture a constant number of fields).
+constexpr int kModeN = RE4DC_PACE_STEADY ? 4 : 3;
 // Smooth's floor; PACE_FLOOR_FPS=0 makes Fast the default mode.
 constexpr unsigned kFloorFps = RE4DC_PACE_FLOOR_FPS ? RE4DC_PACE_FLOOR_FPS : 15;
 
@@ -96,7 +118,11 @@ namespace {
 constexpr unsigned kVbUs = 16683;          // NTSC field (59.94 Hz)
 constexpr int kReanchorVb = 30;            // > 0.5 s behind: a load / movie / reset, not load
 constexpr int kKeepVb = 2 * RE4DC_PACE_CAP;  // lag kept after a cap drop (repaid by skips)
+#if RE4DC_PACE_STEADY
+constexpr const char* kModeName[4] = {"smooth", "fast", "off", "steady"};
+#else
 constexpr const char* kModeName[3] = {"smooth", "fast", "off"};
+#endif
 
 bool ok_now;                // this iteration may pace (context, vcnt, mode)
 bool active;                // the clock runs (the previous iteration paced too)
@@ -123,6 +149,78 @@ unsigned chk_hash, chk_n, chk_fail;
 #endif
 
 unsigned ema(unsigned e, unsigned v) { return e ? e - (e >> 3) + (v >> 3) : v; }
+
+#if RE4DC_PACE_STEADY || RE4DC_PACE_HOLD_LOG
+unsigned tick_total;        // ticks run under the pacing clock (pace_present.cpp per-picture telemetry)
+#endif
+#if RE4DC_PACE_STEADY
+// Steady: the hold (fields per picture) and its pattern of dropped images. 2 fields draws every tick; 3 drops every
+// third image (2 pictures per 3 ticks, 20 fps); 4 drops every other image (Fast's saturated pair, 15 fps). A hold is
+// chosen only while the work it needs fits its fields, so Steady never runs the game slower than Fast would:
+//   hold 2: D <= 2 fields; hold 3: 2D + S <= 6 fields; hold 4: otherwise (D + S per 4 fields, as Fast at the cap).
+// Up after 4 iterations over, down one step only after kDownRun iterations that fit the smaller hold with margin.
+constexpr unsigned kDownRun = 90;          // 3 s of ticks under the smaller hold's budget
+unsigned st_hold, st_up, st_down, st_phase, w_st_backlog;
+unsigned st_need(unsigned pct)
+{
+    const unsigned D = draw_ema, S = skip_ema ? skip_ema : (draw_ema > render_ema ? draw_ema - render_ema : 0);
+    if (100ULL * D <= 2ULL * kVbUs * pct) return 2;
+    if (100ULL * (2ULL * D + S) <= 6ULL * kVbUs * pct) return 3;
+    return 4;
+}
+void st_update()
+{
+    if (!st_hold) { st_hold = st_need(97); st_phase = 0; return; }
+    const unsigned need = st_need(97);
+    if (need > st_hold) {
+        st_down = 0;
+        if (++st_up >= 4) { st_hold = need; st_up = 0; st_phase = 0; }
+        return;
+    }
+    st_up = 0;
+    if (need < st_hold && st_need(90) < st_hold) {
+        if (++st_down >= kDownRun) { --st_hold; st_down = 0; st_phase = 0; }
+    } else {
+        st_down = 0;
+    }
+}
+// v2 drop of the next image, a pure function of the hold and its phase.
+int st_drop()
+{
+    if (!st_hold) st_update();
+    const unsigned i = st_phase++;
+    // Pictures already wait over a hold: drain (one extra drop, never two skips in a row).
+    if (!re4dc_pace_skipping && re4dc_steady_backlog(st_hold)) { ++w_st_backlog; return 1; }
+    return st_hold == 3 ? i % 3 == 2 : st_hold == 4 ? i % 2 == 1 : 0;
+}
+#endif
+
+#if RE4DC_PACE_PRECISE
+// PACE_PRECISE: decisions on the microsecond timer instead of whole retrace counts. A vblank handler stamps the time of
+// each field; a field number's time is then that stamp + whole fields of 16,683 us.
+volatile u32 pv_cnt;
+volatile unsigned long long pv_us;
+int pv_handler = -1;
+void pv_vbl(uint32_t, void*) { pv_us = timer_us_gettime64(); pv_cnt = re4dc_vi_retrace_count(); }
+unsigned long long field_us(u32 field)
+{
+    if (pv_handler < 0) pv_handler = vblank_handler_add(pv_vbl, nullptr);
+    const int irq = irq_disable();
+    const u32 c = pv_cnt;
+    const unsigned long long t = pv_us;
+    irq_restore(irq);
+    if (!t) return 0;
+    return t + (long long) (int) (field - c) * (long long) kVbUs;
+}
+// Whole fields from `due` to the time `us` (negative before it), from the timer; the retrace count until a stamp exists.
+int lag_fields(unsigned long long us, u32 due)
+{
+    const unsigned long long d = field_us(due);
+    if (!d) return (int) (re4dc_vi_retrace_count() - due);
+    const long long diff = (long long) (us - d);
+    return diff >= 0 ? int(diff / kVbUs) : -int((-diff + kVbUs - 1) / kVbUs);
+}
+#endif
 
 void burn(unsigned us)
 {
@@ -198,9 +296,16 @@ void report(u32 now)
               "reanchor=%u floor_block=%u cap_block=%u ctx_block=%u draw_us=%u skip_us=%u itask_starve=%u mode=%s\n",
               pG ? (unsigned) pG->Frame_cnt : 0, w_ticks, w_drawn, w_skip, fps10 / 10, fps10 % 10, speed / 10,
               speed % 10, w_lagmax, w_dropped, w_dropped / 2, w_reanchor, w_floor, w_cap, w_ctx, draw_ema,
-              skip_ema, w_starve, kModeName[re4dc_pace_mode % 3]);
+              skip_ema, w_starve, kModeName[re4dc_pace_mode % kModeN]);
 #if RE4DC_PACE_CHECK
     re4dc_log("PACE pacechk=%u/%u\n", chk_n, chk_fail);
+#endif
+#if RE4DC_PACE_HOLD_LOG
+    re4dc_present_hold_report();   // pace_present.cpp: the window's hold histogram
+#endif
+#if RE4DC_PACE_STEADY
+    re4dc_log("PACE steady hold=%u backlog_drops=%u\n", st_hold, w_st_backlog);
+    w_st_backlog = 0;
 #endif
     w_vb0 = now;
     w_ticks = w_drawn = w_skip = w_lagmax = w_dropped = w_reanchor = w_floor = w_cap = w_ctx = w_starve = 0;
@@ -420,7 +525,7 @@ void vmu_window(unsigned cost, u32 now)
     }
 #endif
     snprintf(text, sizeof(text), "FPS %u.%u\nSPD %u%%\nCPU %u%%\n%s\nMODE %s", fps10 / 10, fps10 % 10, speed, cpu,
-             gpu, kModeName[re4dc_pace_mode % 3]);
+             gpu, kModeName[re4dc_pace_mode % kModeN]);
     // busy: the window's summed render time as % of its wall time (dvb fields of 16,683 us)
     const unsigned busy = unsigned(a.rnd_sum / (dvb * 166830ULL));
     char page[sizeof(text)];
@@ -436,10 +541,10 @@ void vmu_window(unsigned cost, u32 now)
 #else
 #if defined(RE4DC_EFFECT_PS2_TOGGLE) && RE4DC_EFFECT_PS2_TOGGLE
     snprintf(text, sizeof(text), "FPS %u.%u\nSPD %u%%\nCPU %u%% %s\nMODE %s", fps10 / 10, fps10 % 10, speed, cpu,
-             re4dc_ps2fx_label(), kModeName[re4dc_pace_mode % 3]);
+             re4dc_ps2fx_label(), kModeName[re4dc_pace_mode % kModeN]);
 #else
     snprintf(text, sizeof(text), "FPS %u.%u\nSPD %u%%\nCPU %u%%\nMODE %s", fps10 / 10, fps10 % 10, speed, cpu,
-             kModeName[re4dc_pace_mode % 3]);
+             kModeName[re4dc_pace_mode % kModeN]);
 #endif
 #endif
     if (lcd) {
@@ -485,13 +590,13 @@ static void refresh_mode(const char* why)
         mode = stored ? stored - 1 : RE4DC_PACE_MODE;
     }
     if (mode != re4dc_pace_mode)
-        re4dc_log("PACE mode=%s (%s) t=%u\n", kModeName[mode % 3], why, pG ? (unsigned) pG->Frame_cnt : 0);
+        re4dc_log("PACE mode=%s (%s) t=%u\n", kModeName[mode % kModeN], why, pG ? (unsigned) pG->Frame_cnt : 0);
     re4dc_pace_mode = mode;
 }
 // This-boot override (chord, test toggle); the stored setting belongs to quality.cpp.
 extern "C" void re4dc_pace_set_mode(int mode, const char* why)
 {
-    if (mode < PACE_SMOOTH || mode > PACE_OFF) return;
+    if (mode < PACE_SMOOTH || mode >= kModeN) return;
     override_mode = mode;
     refresh_mode(why ? why : "-");
 }
@@ -499,7 +604,7 @@ extern "C" int re4dc_pace_get_mode(void) { refresh_mode("setting"); return re4dc
 // Test builds: the live chord (pad.cpp) cycles Smooth -> Fast -> Off and shows a note for 2 s.
 extern "C" void re4dc_pace_cycle_mode(void)
 {
-    re4dc_pace_set_mode((re4dc_pace_mode + 1) % 3, "cycle");
+    re4dc_pace_set_mode((re4dc_pace_mode + 1) % kModeN, "cycle");
     note_until = re4dc_vi_retrace_count() + 120;
 }
 // The note (native_ui.cpp, test builds): 1 while it shows; *mode = the current mode.
@@ -566,6 +671,15 @@ extern "C" int re4dc_speed_screen(unsigned v[3])
     v[0] = speed_fps10; v[1] = speed_pct; v[2] = speed_cpu;
     return 1;
 }
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+// QA_MENU Diagnostics page (qa_menu.cpp): the last window's values whether or not the counter is shown.
+extern "C" int re4dc_qa_speed(unsigned v[3])
+{
+    if (!speed_valid) return 0;
+    v[0] = speed_fps10; v[1] = speed_pct; v[2] = speed_cpu;
+    return 1;
+}
+#endif
 #endif
 
 #if defined(RE4DC_LEON_CLOTH_DRAWN) && RE4DC_LEON_CLOTH_DRAWN
@@ -652,9 +766,22 @@ extern "C" void re4dc_pace_decide_image(void)
 #if RE4DC_PACE_FORCE
         drop = forced();
 #else
+#if RE4DC_PACE_STEADY
+        if (re4dc_pace_mode == PACE_STEADY) {
+            drop = st_drop();
+            drop_next = drop;
+            re4dc_pace_drop_models = drop;
+            return;
+        }
+#endif
         // Predicted lag at the start of iteration k+1 (due at anchor + 2(ticks+1)).
+#if RE4DC_PACE_PRECISE
+        // PACE_PRECISE: one rounding of (now + rest of the iteration - due) on the microsecond timer.
+        const int lag = lag_fields(us + rest_ema, anchor + 2 * (ticks + 1));
+#else
         const u32 now = re4dc_vi_retrace_count();
         const int lag = (int) (now - (anchor + 2 * (ticks + 1))) + int(rest_ema / kVbUs);
+#endif
         const unsigned since = re4dc_pace_skipping ? unsigned(us - last_present_us) + rest_ema : 0;
         drop = want_skip(lag, since);
 #endif
@@ -697,7 +824,13 @@ extern "C" int re4dc_pace_itask(void)
 extern "C" int re4dc_pace_end(void)
 {
     const unsigned long long us = timer_us_gettime64();
+#if RE4DC_PACE_STEADY
+    // A wait for a Steady picture's target field (pace_present.cpp queue full or a fence) is not work.
+    const unsigned waited_us = re4dc_steady_wait_take();
+    const unsigned cost = unsigned(us - iter_us) > waited_us ? unsigned(us - iter_us) - waited_us : 0;
+#else
     const unsigned cost = unsigned(us - iter_us);
+#endif
     if (re4dc_pace_skipping) {
         skip_ema = ema(skip_ema, cost); ++w_skip; since_skip = 0;
     } else {
@@ -715,7 +848,14 @@ extern "C" int re4dc_pace_end(void)
     vmu_window(cost, re4dc_vi_retrace_count());
 #endif
     int waited = 0;
+#if RE4DC_PACE_STEADY
+    if (active && re4dc_pace_mode == PACE_STEADY) st_update();
+    else st_hold = 0;   // re-chosen from the work when Steady paces again
+#endif
     if (active) {
+#if RE4DC_PACE_STEADY || RE4DC_PACE_HOLD_LOG
+        ++tick_total;
+#endif
         ++ticks;
         const u32 due = anchor + 2 * ticks;
 #if defined(RE4DC_TAIL_METER) && RE4DC_TAIL_METER
@@ -752,6 +892,19 @@ extern "C" void re4dc_pace_test_tick(void)
 }
 
 // PERF_HUD row: game speed (%) and drawn fps (0.1) of the last telemetry window.
+#if RE4DC_PACE_STEADY || RE4DC_PACE_HOLD_LOG
+// pace_present.cpp: the fields to hold the next picture (0: Steady is not pacing now), the paced tick count.
+extern "C" int re4dc_pace_steady_hold(void)
+{
+#if RE4DC_PACE_STEADY
+    return (re4dc_pace_mode == PACE_STEADY && ok_now && active) ? int(st_hold) : 0;
+#else
+    return 0;
+#endif
+}
+extern "C" unsigned re4dc_pace_tick_total(void) { return tick_total; }
+#endif
+
 extern "C" int re4dc_pace_hud(unsigned v[2])
 {
     v[0] = hud_speed; v[1] = hud_fps10;

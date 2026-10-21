@@ -948,8 +948,20 @@ static int FxLevelKeep(u32 key)
     return ((key * 2654435761U) >> 29) < kFxLevel[re4dc_fx_level].keep_of_8;
 }
 // Ps2fxClass: 1 = thinned out at this level.
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+extern "C" unsigned char re4dc_lake_fix;   // native_ui.cpp (effects30.mk LAKE_FIX_TOGGLE)
+#endif
 static int FxLevelThin(cEsp* esp)
 {
+#if defined(RE4DC_SHORE_FX_LEVEL)
+    // SHORE_FX_LEVEL (effects30.mk, lane lake20): the night lake shore (r11b) draws at its own level; every Ps2fxClass
+    // call passes here first, so the level follows the room before any sprite or rain line of the frame is drawn.
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+    re4dc_fx_level = (u8) (G_ROOM_ID == 0x11b && re4dc_lake_fix ? RE4DC_SHORE_FX_LEVEL : RE4DC_FX_LEVEL);   // LAKE_FIX_TOGGLE
+#else
+    re4dc_fx_level = (u8) (G_ROOM_ID == 0x11b ? RE4DC_SHORE_FX_LEVEL : RE4DC_FX_LEVEL);
+#endif
+#endif
     return (FxLevelParts(esp) & FXL_THIN) && !FxLevelKeep((u32) ((u8*) esp - (u8*) g_pEspSys->pEspBuf) / 0x150);
 }
 static void FxLevelScale(Re4dcEffectSprite* s, f32 size, f32 alpha)

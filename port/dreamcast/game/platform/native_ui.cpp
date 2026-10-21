@@ -208,6 +208,22 @@ static unsigned ta_vertex_bytes=RE4DC_TA_VERTBUF_KB*1024U;   // TA_HEADROOM: the
 #include <kos/genwait.h>
 #include <kos/sem.h>
 #endif
+#if (defined(RE4DC_PACE_STEADY) && RE4DC_PACE_STEADY) || (defined(RE4DC_PACE_HOLD_LOG) && RE4DC_PACE_HOLD_LOG)
+// pace.mk PACE_STEADY / PACE_HOLD_LOG (pace_present.cpp): a present decision may wait for its target field; it counts
+// as pending for every fence below.
+#if RE4DC_PVR_PIPELINE != 2
+#error PACE_STEADY and PACE_HOLD_LOG defer the KOS async present: need PVR_PIPELINE=2
+#endif
+#define RE4DC_PACE_PRESENT 1
+extern "C" int re4dc_steady_present(int present);
+extern "C" void re4dc_present_posted(int present);
+extern "C" void re4dc_steady_wait(void);
+extern "C" int re4dc_steady_pending(void);
+extern "C" void re4dc_steady_ta_wait(void);
+#define pvr_present_pending() (pvr_present_pending() || re4dc_steady_pending())
+#else
+#define RE4DC_PACE_PRESENT 0
+#endif
 #if RE4DC_PVR_LATCH || RE4DC_PVR_READY_STRICT
 #if RE4DC_PVR_PIPELINE != 2 || !RE4DC_PVR_STREAM
 #error PVR_LATCH and PVR_READY_STRICT read the KOS async-present state: need PVR_PIPELINE=2 and PVR_STREAM=1
@@ -1380,6 +1396,9 @@ void start_presenter(){
     re4dc_log("native frame pipeline: KOS async present (IRQ-applied decision, vblank flip) ta=%s\n",RE4DC_TA_DOUBLEBUF?"double-buffered":"single-bank");
 }
 void present_fence(){
+#if RE4DC_PACE_PRESENT
+    re4dc_steady_wait(); // a deferred picture is handed to KOS first (pace_present.cpp)
+#endif
     if(!pvr_present_pending())return;
 #if RE4DC_PVR_LATCH
     latch::put('f');
@@ -1409,12 +1428,21 @@ void present_submit(bool present,unsigned ta_faults){
     (void)ta_faults;
 #endif
     present_submitted=present_submitted+1;
+#if RE4DC_PACE_PRESENT
+    if(re4dc_steady_present(present))return; // Steady: released at its target field by pace_present.cpp
+    auto post=[](bool p){const int irq=irq_disable();const int r=pvr_present_async(p);if(r==0)re4dc_present_posted(p);irq_restore(irq);return r;};
+    if(post(present)<0){
+        present_fence();
+        if(post(present)<0){present_failures=present_failures|2;present_report();}
+    }
+#else
     // One decision is outstanding at a time: frame N's flip normally happened
     // long before frame N+1 finishes, so this rarely blocks.
     if(pvr_present_async(present)<0){
         present_fence();
         if(pvr_present_async(present)<0){present_failures=present_failures|2;present_report();}
     }
+#endif
 }
 #else
 semaphore_t present_request;
@@ -1897,6 +1925,9 @@ void stream_open() { RE4DC_TAIL_GPU_SCOPE(open);
     re4dc_rtt_render_pending();   // PVR_RTT: last frame's wanted render targets, before this scene
 #endif
     pvr_scene_begin();
+#if RE4DC_PACE_PRESENT
+    re4dc_steady_ta_wait(); // Steady: the TA bank wait for a held picture's flip, timed as a wait (pace_present.cpp)
+#endif
 #if RE4DC_PS2_WORLD_DRAW
     stream_closed_lists=0;
 #endif
@@ -2326,13 +2357,15 @@ void speed_draw(){
     if(note)for(int k=0;k<boxes;++k)hud_rect(b,40.0f+k*36,40.0f,28.0f,16.0f,k==s?0xf0ffff40U:0x60ffffffU);
     hud_flush(b);
 }
-#if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
+#if (defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK) || (defined(RE4DC_QA_BANNER) && RE4DC_QA_BANNER)
+// QA_MENU=1 (qamenu.mk, RE4DC_QA_BANNER): the same banner with the QA disc name, on the title screens only.
 // BENCHMARK=1 (bench.mk; benchmark disc only): the banner "BENCHMARK DISC - NOT THE GAME" on every presented frame,
 // white BIOS font (bfont 12x24) on red in a 512x32 RGB565 texture (32 KiB of VRAM, written once at the first frame
 // straight into texture memory with 16-bit stores, as KOS's pvr_txr_load_ex does: no RAM copy, the image does not
 // grow; no banner if the allocation fails), one quad at the top centre, inside the top letterbox bar and below tile
 // row 0 (y 32..60: LETTERBOX_CLIP renders no translucent list in row 0).
-extern "C" const char* re4dc_bench_banner(void);   // bench.cpp
+extern "C" const char* re4dc_bench_banner(void);   // bench.cpp (qa_menu.cpp with QA_MENU)
+extern "C" int re4dc_qa_banner_on(void);           // qa_menu.cpp (QA_MENU only)
 pvr_ptr_t bench_vram;bool bench_failed;unsigned bench_w;
 void bench_banner_draw(){
     constexpr unsigned W=512,H=32;
@@ -3728,6 +3761,9 @@ unsigned rce_retire_frame;bool rce_armed;   // ROOM_CHANGE_EVICT: set at room re
 #if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
 unsigned rce_last_room=~0U;                 // ROOM_REENTRY_EVICT: the room of the previous room-change evict
 #endif
+#if defined(RE4DC_SS11_ROOM_EVICT) && RE4DC_SS11_ROOM_EVICT
+bool rce_force_all;                          // SS11_ROOM_EVICT: the next room-change evict closes every unpinned entry
+#endif
 #if RE4DC_QUALITY_ASSETS
 bool preload_room_pass; // Standard: skip the index's drop keys in the room-identity pass only
 #endif
@@ -4065,7 +4101,10 @@ void preload_identities(){
 #if defined(__sh__)
         re4dc_profile_source(&rce_src);
 #endif
-        const bool rce_same=rce_src.room==rce_last_room;rce_last_room=rce_src.room;
+        bool rce_same=rce_src.room==rce_last_room;rce_last_room=rce_src.room;
+#if defined(RE4DC_SS11_ROOM_EVICT) && RE4DC_SS11_ROOM_EVICT
+        if(rce_force_all){rce_same=true;rce_force_all=false;}   // a room change behind a chapter-end screen
+#endif
 #endif
         for(auto& e:entries){
             if(!e.valid || RE4DC_ENTRY_PINNED(e))continue;
@@ -4537,9 +4576,37 @@ extern "C" void re4dc_ui_vram_unclaim(){
 // pictures (~1 MB with the results screen) evicted the room's set, which then came back from disc one first sight at a
 // time in play (r105 after the chapter 1-2 save screen: 81 uploads). A room preload pass at the close loads the room's
 // set back in one pass, before play resumes, as at room entry.
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+// LAKE_FIX_TOGGLE (effects30.mk; scenario / QA discs): the lake switches' run-time flag (esp_sub.cpp SHORE_FX_LEVEL,
+// filter06.cpp rain streaks, the SS11_ROOM_EVICT evict below). bench.cpp's scenario menu sets it (A); on by default.
+extern "C" { unsigned char re4dc_lake_fix = 1; }
+#endif
 extern "C" void re4dc_ui_room_preload_again(){
 #if RE4DC_TEX_RESIDENT
     preload_pending=true;
+#endif
+#if defined(RE4DC_SS11_ROOM_EVICT) && RE4DC_SS11_ROOM_EVICT
+    {
+        // SS11_ROOM_EVICT (Makefile; render only; lane lake20, #43): a chapter end changes the room behind its results /
+        // save screens without a room retirement (Del Lago r10b -> the night shore r11b), so r10b's 1.6 MB dynamic set
+        // stayed beside r11b's preload and three 256x256 pictures found no contiguous block (~2 s latched waits). When
+        // the room differs from the last room-change evict's, arm one here: every unpinned, unleased entry closes at the
+        // preload pass, as on a re-entry; the new room's listed set is pinned and loads into the freed pool.
+        re4dc::profile::Source src{};
+#if defined(__sh__)
+        re4dc_profile_source(&src);
+#endif
+#if defined(RE4DC_LAKE_FIX_TOGGLE) && RE4DC_LAKE_FIX_TOGGLE
+        if(src.room!=rce_last_room && re4dc_lake_fix){   // LAKE_FIX_TOGGLE: only with the lake switches on
+#else
+        if(src.room!=rce_last_room){
+#endif
+            for(auto& e:entries)if(e.frame>=frame)e.frame=frame?frame-1:0U;
+            rce_retire_frame=frame;rce_armed=true;rce_force_all=true;
+            re4dc_log("native texture preload again: room %03x -> %03x behind SS heap 11, room change evict armed\n",
+                      rce_last_room&0xfffU,unsigned(src.room));
+        }
+    }
 #endif
     re4dc_log("native texture preload again: SS heap 11 closed free=%u\n",(unsigned)pvr_mem_available());
 }
@@ -5655,6 +5722,8 @@ extern "C" void re4dc_ui_present(){
     if(!re4dc_vi_black())speed_draw();
 #if defined(RE4DC_BENCHMARK) && RE4DC_BENCHMARK
     if(!re4dc_vi_black() && !stream_aborted)bench_banner_draw();   // bench.mk: on every presented frame
+#elif defined(RE4DC_QA_BANNER) && RE4DC_QA_BANNER
+    if(!re4dc_vi_black() && !stream_aborted && re4dc_qa_banner_on())bench_banner_draw();   // qamenu.mk: title screens
 #endif
 #endif
 #if RE4DC_PERF_HUD

@@ -213,7 +213,13 @@ void put(const char* s)
         else if (c >= 'a' && c <= 'z') put(u16(c + 0x60));
     }
 }
+#if defined(RE4DC_PACE_STEADY) && RE4DC_PACE_STEADY
+constexpr int kPaceN = 4;   // pace.mk PACE_STEADY: STEADY holds each picture a constant number of fields
+const char* const kPace[4] = {"SMOOTH", "FAST", "OFF", "STEADY"};
+#else
+constexpr int kPaceN = 3;
 const char* const kPace[3] = {"SMOOTH", "FAST", "OFF"};
+#endif
 #if defined(RE4DC_RENDER_FSAA) && RE4DC_RENDER_FSAA
 constexpr int kRenderN = 2;
 const char* const kRender[3] = {"STANDARD", "FSAA", "STANDARD"};  // game30.mk RENDER_FSAA: Standard (default) / FSAA
@@ -221,7 +227,7 @@ const char* const kRender[3] = {"STANDARD", "FSAA", "STANDARD"};  // game30.mk R
 constexpr int kRenderN = 3;
 const char* const kRender[3] = {"QUALITY", "STANDARD", "FAST"};
 #endif
-int pace_value() { const int m = re4dc_pace_get_mode(); return m < 0 || m > 2 ? 0 : m; }
+int pace_value() { const int m = re4dc_pace_get_mode(); return m < 0 || m >= kPaceN ? 0 : m; }
 int render_value() { const int r = re4dc_quality_render(); return r < 0 || r >= kRenderN ? 0 : r; }
 // Messages: 0 pacing row, 1 rendering row, 2 pacing help, 3 rendering help.
 void build()
@@ -335,8 +341,8 @@ void change(int row, int dir)
     }
 #endif
     if (row == kRowPacing) {
-        const int m = (pace_value() + 3 + dir) % 3;
-        re4dc_quality_set_pace(m + 1);   // stored: 1 smooth, 2 fast, 3 off
+        const int m = (pace_value() + kPaceN + dir) % kPaceN;
+        re4dc_quality_set_pace(m + 1);   // stored: 1 smooth, 2 fast, 3 off, 4 steady
         re4dc_pace_set_mode(m, "options");
     } else {
         re4dc_quality_set_render((render_value() + kRenderN + dir) % kRenderN);

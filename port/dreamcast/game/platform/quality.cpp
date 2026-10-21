@@ -31,7 +31,11 @@
 #endif
 #if RE4DC_RENDER_OPTION
 extern "C" void re4dc_res_set(unsigned mode);  // res_mode.cpp
+#if defined(RE4DC_PACE_STEADY) && RE4DC_PACE_STEADY
+#define RQ_KEEP (uint32_t(RQ_PACE_MASK) | uint32_t(RQ_RENDER_MASK) | uint32_t(RQ_SPEED_MASK) | uint32_t(RQ_PACE_STEADY_BIT))
+#else
 #define RQ_KEEP (uint32_t(RQ_PACE_MASK) | uint32_t(RQ_RENDER_MASK) | uint32_t(RQ_SPEED_MASK))  // settings kept across mode presets
+#endif
 #else
 #define RQ_KEEP uint32_t(RQ_PACE_MASK)
 #endif
@@ -91,7 +95,12 @@ void parse_file(char* t)
             else if (!strcmp(s + 5, "original")) mode = RE4DC_QUALITY_ORIGINAL;
             else re4dc_log("quality: quality.txt unknown mode '%s'\n", s + 5);
         } else if (!strncmp(s, "pace=", 5)) {
+#if defined(RE4DC_PACE_STEADY) && RE4DC_PACE_STEADY
+            file_pace = atoi(s + 5) & 7;   // 4 = Steady
+            if (file_pace > RE4DC_PACE_SET_STEADY) file_pace = 0;
+#else
             file_pace = atoi(s + 5) & 3;
+#endif
 #if RE4DC_RENDER_OPTION
         } else if (!strncmp(s, "render=", 7)) {  // Rendering: quality | standard | fast
 #if defined(RE4DC_RENDER_FSAA) && RE4DC_RENDER_FSAA
@@ -252,12 +261,20 @@ extern "C" void re4dc_quality_toggle(uint32_t feature)
 
 extern "C" int re4dc_quality_pace(void)
 {
+#if defined(RE4DC_PACE_STEADY) && RE4DC_PACE_STEADY
+    if (q.features & RQ_PACE_STEADY_BIT) return RE4DC_PACE_SET_STEADY;
+#endif
     return int((q.features & RQ_PACE_MASK) >> RQ_PACE_SHIFT);
 }
 
 extern "C" int re4dc_quality_set_pace(int pace)
 {
     re4dc_quality_init();
+#if defined(RE4DC_PACE_STEADY) && RE4DC_PACE_STEADY
+    // Steady: the bit plus Fast in the 2-bit field (what a build without Steady reads).
+    q.features &= ~uint32_t(RQ_PACE_STEADY_BIT);
+    if (pace == RE4DC_PACE_SET_STEADY) { q.features |= RQ_PACE_STEADY_BIT; pace = RE4DC_PACE_FAST; }
+#endif
     q.features = (q.features & ~uint32_t(RQ_PACE_MASK)) | ((uint32_t(pace) << RQ_PACE_SHIFT) & RQ_PACE_MASK);
     re4dc_log("quality: pace=%d\n", re4dc_quality_pace());
     if (stored_mode == q.mode && stored_features == q.features) return 1;

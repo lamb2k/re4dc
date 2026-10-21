@@ -91,15 +91,13 @@ void re4dc_rt_room_enter(unsigned room)
     if (why) {
         memset(&g_grid, 0, sizeof(g_grid));
         c_refused++;
-        re4dc_log("ENGINE r%03x %s: source path
-", room, why);
+        re4dc_log("ENGINE r%03x %s: source path\n", room, why);
         return;
     }
     g_grid.x0 = h->x0; g_grid.z0 = h->z0;
     g_bytes = len; g_grid.ok = 1; g_grid.room = room;
     c_loads++;
-    re4dc_log("ENGINE r%03x grid=%ux%u cell=%d bytes=%u loads=%u
-", room, g_grid.w, g_grid.h, (int) g_grid.cell, len, c_loads);
+    re4dc_log("ENGINE r%03x grid=%ux%u cell=%d bytes=%u loads=%u\n", room, g_grid.w, g_grid.h, (int) g_grid.cell, len, c_loads);
 }
 
 /* Room leave (ui_bridge.cpp re4dc_room_leave; the block is room_file.c's). */

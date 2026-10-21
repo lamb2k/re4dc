@@ -475,6 +475,14 @@ DATA['boss18g50'] = {'dc/native/r119/registry.re4nmr': B18G50D + '/native/r119/r
 # res17g. The old -20261016 / -20261017 dirs are gone.
 R108PD = os.environ.get('R108PD', '/root/re4data/private/r108p-20261018')
 DATA['r108p'] = {'dc/native/r108/registry.re4nmr': R108PD + '/registry.re4nmr'}
+# CAST-GC r111 (lane notdrawn20, 10-20, GitHub #42): r111's package with the same em17 type 0xc POOL descriptor
+# (model-registry/ps2-ch2-r111p.json = ps2-ch2-r113p re-roomed to 111) instead of the non-pool ganado-em17-0c. r111's
+# torch / weapon em17 did not bind the non-pool rows: the PS2 Ganado cast declined it and the GameCube model drew (NMRS
+# r111 id=17 plan=G declined 746 of 950 passes; with r111p plan=R native 746, declined 0). Its 3 textures are r113p's,
+# already in pak17's tex.pak (no loose texture). Heap 4 after the r111 package opens: 7,126,016 free (was 7,199,776).
+# Private data /root/re4data/private/r111p-20261020 (C: twin re4-assets-private/r111p-20261020, cast dir inside).
+R111PD = os.environ.get('R111PD', '/root/re4data/private/r111p-20261020')
+DATA['r111p'] = {'dc/native/r111/registry.re4nmr': R111PD + '/registry.re4nmr'}
 # lane stump17 (10-17): ACTOR_GANADO_PS2_STUMP's variant package (the exact PS2 lost-head stumps of the five cast
 # appearances and hand poses 449 / 450 / 454 / 455; tools/d367/ps2_ganado_stump.py). Only with the knob on; no texture.
 STUMP17D = os.environ.get('STUMP17D', '/root/re4data/private/stump17-20261017')
@@ -679,6 +687,17 @@ DATA['nostd20'] = {'remove': ['dc/native/%s/MAINSCENARIO.re4mesh' % _r for _r in
 PAIR20D = os.environ.get('PAIR20D', '/root/re4data/private/pair20-20261020')
 DATA['pair20'] = {'dc/tex.pak': PAIR20D + '/dc/tex.pak'}
 PAK_DERIVED['pair20'] = PAIR20D + '/pak-derived.json'
+# ch21l (lane fix-dam-light 10-20, GitHub #47): r10c / r10d / r10e PS2 worlds reconverted with the PS2 amb_scr measured
+# in PCSX2 (cLightEnv bytes 0..2 over PINE at each door arrival: r10c 50,45,40; r10d 14,23,38; r10e 45,45,45) instead of
+# ch21r's GC LIT cut-0 ambient. Supersedes ch21r's ps2-world.* only. The worlds' texture gains move with the light, so
+# dc/tex.pak = pair20's pack + 46 new keys (pack_add.py). Last in the data line (after pair20).
+# Private store copy: re4-assets-private/ch21l-20261020 (RECIPE.txt, SHA256SUMS).
+CH21LD = os.environ.get('CH21LD', '/root/re4data/private/ch21l-20261020')
+DATA['ch21l'] = {'dc/tex.pak': CH21LD + '/dc/tex.pak'}
+for _r in ('r10c', 'r10d', 'r10e'):
+    for _f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids'):
+        DATA['ch21l']['dc/native/%s/%s' % (_r, _f)] = '%s/dc/native/%s/%s' % (CH21LD, _r, _f)
+PAK_DERIVED['ch21l'] = CH21LD + '/pak-derived.json'
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
@@ -815,6 +834,13 @@ def main():
     json.dump(d, open(out, 'w'), indent=1, sort_keys=True)
     print('fixture', out, 'data', ','.join(names) or '-', 'staged', len(rec), 'warp', r.get('dc/warp.txt'),
           'pad', r.get('dc/padscript.txt'))
+
+# ash21 (lane release-test21 10-20, Test 21 item 7, user "Put her fix in test 21"): Codex qa21-r11e corrected Ashley
+# archive em/pl11.drs (QA Alpha Fix 1, tag e974d7b0): ch2's pl11 (ecf30980) with the three cold r11e pre-fight clips kept
+# in the admitted body (167 loads/evictions, 3,011 reads over 111 ticks -> none); prebuilt AICA sound preserved.
+# After ch2 in the data line. Private store copy: re4-assets-private/ash21-20261020 (RECIPE.txt, SHA256SUMS).
+ASH21D = os.environ.get('ASH21D', '/root/re4data/private/ash21-20261020')
+DATA['ash21'] = {'em/pl11.drs': ASH21D + '/em/pl11.drs'}
 
 
 if __name__ == '__main__':

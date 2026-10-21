@@ -4,6 +4,7 @@
 // detached into world space at spawn; Vec0 gives the per-frame jitter amplitudes.
 
 #include "atari.h"
+#include "re4dc_xm.h" // GAME_SH4ZAM_LOGIC (lane sh4zam-direct)
 #include "global.h"
 #include "math_sub.h"
 #include "rnd.h"
@@ -24,6 +25,9 @@ public:
 };
 
 extern "C" void get_angle(Vec* v, f32* rx, f32* ry);
+#if defined(RE4DC_ESP_HIT_THIN) && RE4DC_ESP_HIT_THIN
+int re4dc_esp_hit_ghost(const cEsp* esp);   // esp.cpp (shotfx20.mk)
+#endif
 
 // EspCreateTbl[0x1A] factory.
 cEsp* Esp1a_Create()
@@ -44,6 +48,21 @@ void cEsp1a::move()
     Mtx inv;
     Camera* cam;
 
+#if defined(RE4DC_ESP_HIT_THIN) && RE4DC_ESP_HIT_THIN
+    if (re4dc_esp_hit_ghost(this)) {
+        // ESP_HIT_THIN (shotfx20.mk): a thinned blood particle is never drawn, so its camera jitter is skipped; its
+        // life, animation and both Rnd() draws (the shared generator) run exactly as before.
+        if (CommonMove()) {
+            if (!AnmMove()) {
+                PushEsp(this);
+            } else {
+                fRand1_1();
+                fRand1_1();
+            }
+        }
+        return;
+    }
+#endif
     PSVECSubtract(&m_Pos, &w->Move_vec, &m_Pos);
     if (CommonMove()) {
         if (!AnmMove()) {
@@ -146,8 +165,9 @@ int cEsp1a::SetFreeWork(EspGenWork* gen, u32* seed)
             parts = m_pMod->getPartsPtr(m_Parts_no);
             PSMTXIdentity(m2);
             low_RotMatrix(m2, &m_pMod->ang);
-            PSMTXMultVecSR(m2, &m_Speed, &m_Speed);
-            PSMTXMultVecSR(m2, &m_Speed_plus, &m_Speed_plus);
+            RE4DC_XM_LOAD(m2);
+            RE4DC_XM_DIR(m2, &m_Speed, &m_Speed);
+            RE4DC_XM_DIR(m2, &m_Speed_plus, &m_Speed_plus);
             m_pMod = NULL;
             parent = pEffParentWorld;
         }
