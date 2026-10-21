@@ -3607,3 +3607,15 @@ endif
 ifeq ($(MOTION_MISS_LOG),1)
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_MISS_LOG=1
 endif
+
+# Validate controller/model/part inputs before native effect record reads.
+EFFECT_CONTROLLER_VALIDATE_FIRST ?= 0
+ifneq ($(words $(EFFECT_CONTROLLER_VALIDATE_FIRST)),1)
+$(error EFFECT_CONTROLLER_VALIDATE_FIRST must be 0 or 1)
+endif
+ifeq ($(filter $(EFFECT_CONTROLLER_VALIDATE_FIRST),0 1),)
+$(error EFFECT_CONTROLLER_VALIDATE_FIRST must be 0 or 1)
+endif
+ifeq ($(EFFECT_CONTROLLER_VALIDATE_FIRST),1)
+$(OBJDIR)/src/game/espgen10.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_CONTROLLER_VALIDATE_FIRST=1
+endif

@@ -114,8 +114,10 @@ void espgen10_Update(EspgenWork* w)
     Espgen10Work* p = (Espgen10Work*) w->work;
     EspSeqData* head = p->head;
 #if defined(RE4DC_GAME) && !defined(__PPC__)
+#if !defined(RE4DC_EFFECT_CONTROLLER_VALIDATE_FIRST) || !RE4DC_EFFECT_CONTROLLER_VALIDATE_FIRST
     EspGenWork scratch;
     EspGenWork* rec = re4dc_effect_read(re4dc_effect_ref(head, p->no), scratch);
+#endif
 #else
     EspGenWork* rec = &head->rec[p->no];
 #endif
@@ -167,6 +169,12 @@ void espgen10_Update(EspgenWork* w)
             }
         }
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EFFECT_CONTROLLER_VALIDATE_FIRST) && RE4DC_EFFECT_CONTROLLER_VALIDATE_FIRST
+    // Original validation can discard this controller without reading its
+    // borrowed record. Keep that ordering before the Dreamcast decoder.
+    EspGenWork scratch;
+    EspGenWork* rec = re4dc_effect_read(re4dc_effect_ref(head, p->no), scratch);
+#endif
     if (rec->Set_time < p->Time_cnt) {
         pLog->err(0, 0, "ESP_ESTSET : DATA[%d] is no SORT.", p->no);
         PushEspgen(w);
