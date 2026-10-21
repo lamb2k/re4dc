@@ -239,6 +239,9 @@ void esp01Trans_sub(cEsp01* esp)
 
 // Emits segment `no` of a strip as a 4-vertex quad (v[0], v[1], v[3], v[2]) with texture slice
 // no / texRepeat along t (flag 0) or s (flag 1); Tool_flg bit1 mirrors s, bit2 mirrors t.
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+extern "C" int re4dc_esp_strip21_draw(cEsp*,int,Vec*,u8,int);
+#endif
 void EspStrip_draw_poly(cEsp* esp, int no, Vec* v, u8 texRepeat, int flag)
 {
     EspAnmData* anm;
@@ -276,6 +279,9 @@ void EspStrip_draw_poly(cEsp* esp, int no, Vec* v, u8 texRepeat, int flag)
             t = 1.0f / texRepeat * no;
         }
     }
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+    if(re4dc_esp_strip21_draw(esp,no,v,texRepeat,flag))return;
+#endif
     GXBegin(0x80, 0, 4);
     if (flag) {
         if (esp->m_Tool_flg & 2) {

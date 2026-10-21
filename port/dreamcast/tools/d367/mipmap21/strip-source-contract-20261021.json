@@ -1,0 +1,41 @@
+{
+  "schema": "re4dc-FX-STRIP21-source-contract-1",
+  "state": "WIP-target-object-checks-pending-disk-guard",
+  "default_knob": "FX_STRIP21=0",
+  "source_base": "1b9c983445d3dfa5f28a95c8fe62daae5ab9648a",
+  "source_families": [
+    "Esp01 motion-trail",
+    "Esp02 ribbon"
+  ],
+  "source_vertices": "Current view-space source quads; GX order0,1,3,2 and GX_QUADS diagonal0,1,2 /0,2,3 preserved.",
+  "UV_oracle": {
+    "actual_recovered_function": "src/game/esp01.cpp:EspStrip_draw_poly",
+    "comparisons": 261120,
+    "bit_exact": true,
+    "signed16_conversion_preserved": true
+  },
+  "host_packet_test": {
+    "actual_native_include": true,
+    "ASan_UBSan": true,
+    "four_depths_UVs_colors": true,
+    "near_clip": true,
+    "FIFO": true,
+    "source_draw_finished_direct": true,
+    "shared_spill": true,
+    "queue_exhaustion_drops_segment_only": true,
+    "missing_texture_preserves_frame": true,
+    "repeat_extent_refusal": true,
+    "frame_pin": true
+  },
+  "ownership": "Existing native_ui DeferredPart/frame_storage/spill/FIFO/Entry frame pins and PVR stream owner. No new frame or heap owner.",
+  "eligible_state": "Id01/02, valid world Parts_no, ordinary blendmode1, no RTT/mask/tool40 lighting, registered current pattern and identity EspTexWk texture matrix; explicit unsupported states retain their old path.",
+  "source_color": "ChannelSet final material bytes, Esp02 per-segment override, original TEV color/alpha scale; no sprite/billboard substitution.",
+  "target_objects": "NOT RUN. Windows C free below18GiB+128MiB root guard; first target command was rejected before starting compiler.",
+  "full_program_identity": "NOT RUN",
+  "guest": "NOT RUN",
+  "hardware": "NOT RUN",
+  "limits": [
+    "WIP before target compilation/full recipe and same-scene look/resource/timing gates. No recipe/default enablement, release, SD or physical hardware acceptance.",
+    "The946 previous+selected masked unit remains separate; all947 original mip packages and the948-mip review pack are immutable."
+  ]
+}

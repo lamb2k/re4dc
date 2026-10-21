@@ -53,6 +53,10 @@ static inline int espLogicId(u32 id)
 extern "C" int re4dc_esp_sprite_pass;
 int re4dc_esp_sprite_pass;
 extern "C" int re4dc_esp_sprite_class(cEsp* esp);
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+extern "C" int re4dc_esp_strip21_eligible(cEsp* esp);
+#endif
+
 extern "C" int re4dc_esp_coarse_sprite_visible(cEsp* esp);
 #if defined(RE4DC_ESP_SPRITE_FAST) && RE4DC_ESP_SPRITE_FAST
 extern "C" void re4dc_esp_sprite_pass_begin();   // esp_sub.cpp
@@ -910,7 +914,11 @@ int EspTrans()
         }
 #if defined(RE4DC_COARSE_FX_SPRITES) && RE4DC_COARSE_FX_SPRITES
         if (spriteEntry) {
-            if (!re4dc_esp_coarse_sprite_visible(esp)) {
+            if (
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+                !re4dc_esp_strip21_eligible(esp) &&
+#endif
+                !re4dc_esp_coarse_sprite_visible(esp)) {
                 continue;   // wholly outside the view bound (esp_sub.cpp): not queued
             }
             // Esp0b_Trans is EspCommonTrans after a camera jitter (Core_flg 0x8000) that draws the shared
@@ -920,6 +928,9 @@ int EspTrans()
 #endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
             if (esp->m_Id != 0x19)
+#endif
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+            if(!re4dc_esp_strip21_eligible(esp))
 #endif
             trans = EspCommonTrans;
         }
