@@ -18,6 +18,8 @@ inline constexpr std::uint32_t kArgb4444 = 2;
 inline constexpr std::uint32_t kPal4 = 3;
 // TEX_PAL4_ALPHA=1 only: native twiddled PAL4 indices followed by 16
 // little-endian ARGB4444 words. Exact colors, including partial alpha.
+// TEX_PAL4_MIPMAP=1 additionally admits square PVR-order mip indices.
+// The same 16 palette words remain at the payload tail; no VQ expansion.
 inline constexpr std::uint32_t kPal4Argb4444 = 4;
 #if RE4DC_TEX_PAL4_ALPHA
 // Call after PVR initialization, before any palette upload. Configuration is
@@ -30,6 +32,8 @@ inline constexpr std::uint32_t kBinaryAlpha = 1U << 1U;
 // Game CAST_MIPMAP=1 only: a full-codebook VQ payload with the PVR mip chain
 // (codebook, then the index bytes of every level from 1x1 up), sampled with
 // the TCW mipmap bit. Square textures only; other builds reject the flag.
+// TEX_TWIDDLED_MIPMAP additionally admits square native 16-bit twiddled
+// chains: six prefix bytes, then 1x1 through the unchanged base texels.
 inline constexpr std::uint32_t kMipmap = 1U << 2U;
 // Game GANADO_ATLAS_DROP only, never on disc: set at load time on a mipmapped VQ
 // descriptor whose top level was left out (Package::drop_top_level). The

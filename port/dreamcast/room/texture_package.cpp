@@ -26,6 +26,20 @@ extern "C" void re4dc_pvr_vram_fence();
 #define RE4DC_TEX_PAL4_ALPHA 0
 #endif
 
+#ifndef RE4DC_TEX_PAL4_MIPMAP
+#define RE4DC_TEX_PAL4_MIPMAP 0
+#endif
+#if RE4DC_TEX_PAL4_MIPMAP && (!RE4DC_TEX_PAL4_ALPHA || !RE4DC_CAST_MIPMAP)
+#error TEX_PAL4_MIPMAP requires TEX_PAL4_ALPHA and CAST_MIPMAP
+#endif
+
+#ifndef RE4DC_TEX_TWIDDLED_MIPMAP
+#define RE4DC_TEX_TWIDDLED_MIPMAP 0
+#endif
+#if RE4DC_TEX_TWIDDLED_MIPMAP && !RE4DC_CAST_MIPMAP
+#error TEX_TWIDDLED_MIPMAP requires CAST_MIPMAP
+#endif
+
 namespace re4dc::texture {
 namespace {
 #if defined(RE4DC_TEX_META_EVICT) && RE4DC_TEX_META_EVICT
@@ -499,8 +513,26 @@ bool Package::validate() {
         const bool mip = (texture.flags & kMipmap) != 0;
         std::uint64_t vq_indices = pixels / 4U;
         if(mip) {
+#if RE4DC_TEX_TWIDDLED_MIPMAP
+            const bool native_mip = (texture.format <= kArgb4444 &&
+                texture.payload == kPayloadTwiddled)
+#if RE4DC_TEX_PAL4_MIPMAP
+                || (texture.format == kPal4Argb4444 && texture.payload == kPayloadTwiddled)
+#endif
+                ;
+            if(!dimensions || texture.width != texture.height ||
+               (!native_mip && (texture.payload != kPayloadVq || texture.format > kArgb4444))) {
+                error_ = "unsupported square native mip layout";
+#elif RE4DC_TEX_PAL4_MIPMAP
+            const bool pal4_mip = texture.format == kPal4Argb4444 &&
+                texture.payload == kPayloadTwiddled;
+            if(!dimensions || texture.width != texture.height ||
+               (!pal4_mip && (texture.payload != kPayloadVq || texture.format > kArgb4444))) {
+                error_ = "unsupported square native mip layout";
+#else
             if(texture.payload != kPayloadVq || texture.width != texture.height || texture.format > kArgb4444) {
                 error_ = "mipmapped texture must be square 16-bit VQ";
+#endif
                 close();
                 return false;
             }
@@ -511,14 +543,38 @@ bool Package::validate() {
 #else
 #define RE4DC_VQ_INDICES (pixels / 4U)
 #endif
+#if RE4DC_TEX_TWIDDLED_MIPMAP
+        // Native 16-bit twiddled mips: three padding texels, then 1x1
+        // through the original base plane. No upload-time re-twiddling.
+        const std::uint64_t raw_bytes = ((texture.flags & kMipmap) &&
+            texture.payload == kPayloadTwiddled && texture.format <= kArgb4444)
+            ? (pixels * 4U / 3U + 3U) * 2U : pixels * 2U;
+#define RE4DC_RAW_BYTES raw_bytes
+#else
+#define RE4DC_RAW_BYTES (pixels * 2U)
+#endif
 #if RE4DC_TEX_PAL4_ALPHA
+#if RE4DC_TEX_PAL4_MIPMAP
+        const bool pal4_alpha = texture.format == kPal4Argb4444 &&
+            texture.payload == kPayloadTwiddled;
+        // KOS pvrtex: ceil-chain pixels = floor(base*4/3)+3; PAL4 packs
+        // two indices per byte. Three prefix nibbles precede the 1x1 texel.
+        // The shared ARGB4444 palette remains the final 32 payload bytes.
+        const std::uint64_t pal4_bytes = (texture.flags & kMipmap)
+            ? (pixels * 4U / 3U + 3U) / 2U + 32U : pixels / 2U + 32U;
+#else
         const bool pal4_alpha = texture.format == kPal4Argb4444 &&
             texture.payload == kPayloadTwiddled && !(texture.flags & kMipmap);
+#endif
         const bool pal4_vq = RE4DC_TREE_IMPOSTOR && texture.format == kPal4 &&
             texture.payload == kPayloadVq && !(texture.flags & kMipmap);
+#if RE4DC_TEX_PAL4_MIPMAP
+        const std::uint64_t expected = pal4_alpha ? pal4_bytes :
+#else
         const std::uint64_t expected = pal4_alpha ? pixels / 2U + 32U :
+#endif
             pal4_vq ? 2048U + pixels / 16U + 32U :
-            texture.payload == kPayloadVq ? 2048U + RE4DC_VQ_INDICES : pixels * 2U;
+            texture.payload == kPayloadVq ? 2048U + RE4DC_VQ_INDICES : RE4DC_RAW_BYTES;
         if(!dimensions || texture.payload > kPayloadVq || texture.reserved_0 != 0 ||
            texture.data_size != expected ||
            (texture.format > kArgb4444 && !pal4_alpha && !pal4_vq) ||
@@ -527,12 +583,12 @@ bool Package::validate() {
         // per 4x4 block, then the 16-entry palette.
         const bool pal4 = texture.format == kPal4 && texture.payload == kPayloadVq;
         const std::uint64_t expected = pal4 ? 2048U + pixels / 16U + 32U :
-            texture.payload == kPayloadVq ? 2048U + RE4DC_VQ_INDICES : pixels * 2U;
+            texture.payload == kPayloadVq ? 2048U + RE4DC_VQ_INDICES : RE4DC_RAW_BYTES;
         if(!dimensions || texture.payload > kPayloadVq || texture.reserved_0 != 0 ||
            texture.data_size != expected || (texture.format > kArgb4444 && !pal4) ||
 #else
         const std::uint64_t expected = texture.payload == kPayloadVq
-            ? 2048U + RE4DC_VQ_INDICES : pixels * 2U;
+            ? 2048U + RE4DC_VQ_INDICES : RE4DC_RAW_BYTES;
         if(!dimensions || texture.payload > kPayloadVq || texture.reserved_0 != 0 ||
            texture.data_size != expected || texture.format > kArgb4444 ||
 #endif
@@ -545,6 +601,7 @@ bool Package::validate() {
             return false;
         }
 #undef RE4DC_VQ_INDICES
+#undef RE4DC_RAW_BYTES
     }
     error_ = nullptr;
     return true;
@@ -679,7 +736,11 @@ void release_palettes(const Package& package) {
 std::uint32_t pvr_format(const Texture& texture) {
 #if RE4DC_TEX_PAL4_ALPHA
     if(texture.format == kPal4Argb4444)
-        return PVR_TXRFMT_PAL4BPP | PVR_TXRFMT_4BPP_PAL(texture.reserved_0 - 1U) | PVR_TXRFMT_TWIDDLED;
+        return PVR_TXRFMT_PAL4BPP | PVR_TXRFMT_4BPP_PAL(texture.reserved_0 - 1U) | PVR_TXRFMT_TWIDDLED
+#if RE4DC_TEX_PAL4_MIPMAP
+            | ((texture.flags & kMipmap) ? 0x80000000U : 0U)
+#endif
+            ;
 #endif
 #if RE4DC_TREE_IMPOSTOR
     if(texture.format == kPal4) // reserved_0: palette bank + 1 (bind_palettes)
