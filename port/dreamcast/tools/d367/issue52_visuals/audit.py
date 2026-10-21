@@ -90,4 +90,3 @@ def main():
     args.out.parent.mkdir(parents=True,exist_ok=True);args.out.write_text(json.dumps(report,indent=2)+'\n')
     print(json.dumps(dict(models=len(report['models']),parts=sum(len(m['parts']) for m in report['models']),missing=sum(p['missing'] for m in report['models'] for p in m['parts']),out=str(args.out))))
 if __name__=='__main__':main()
-
