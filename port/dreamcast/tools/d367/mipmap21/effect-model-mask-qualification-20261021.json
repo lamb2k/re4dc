@@ -1,0 +1,101 @@
+{
+  "schema": "re4dc-Efm-masked-material-source-qualification-1",
+  "candidate_only": true,
+  "source_base": "bfb6e55b56c8b55b0f0b05f55b66d77b628f402d",
+  "private_set": "mipmap21-world-efm-masked-vq-v2-20261021",
+  "private_sums_sha256": "422f85c12d2033acecdca15f0ffa82b0414440a463656b9bb97325fc26a7e103",
+  "candidate_pack_sha256": "e19cfc464e789e97ca96864adfc2a4cd44443a9f4775bebd842c3e184a65559b",
+  "candidate_pack_bytes": 155787264,
+  "original_pack_sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+  "base_pack_sha256": "ba40722d963153fcd03c3861152682c67f6eae88a1fb37f6ae902317685e7cdc",
+  "wholepack_policy_set": "mipmap21-current-wholepack-policy-v9-20261021",
+  "wholepack_policy_sums_sha256": "c9d274ee548dc0eda512857d0e3392ad6268ebfed2e9e8145155880f7fbdbf05",
+  "selected_counts": {
+    "mipmapped": 948,
+    "changed": 1077,
+    "exact": 5424,
+    "selective_FX": 239,
+    "fixed_ID_UI_holds": 79,
+    "separate_uncomposed_actor_keys": 20,
+    "source_qualified_FX_total": 246,
+    "generic_FX": 7,
+    "canonical_PAL8": 7,
+    "path_emitter_new_keys": 2,
+    "recovered_source_FX_new_keys": 70,
+    "canonical_generic_FX_new_keys": 5,
+    "effect_model_mask_materials": 1
+  },
+  "new_key": "6da8c35b-a936da0c",
+  "source_archive": {
+    "path": "etc/core.das",
+    "bytes": 3885728,
+    "sha256": "439ba106e2a8f83beb5c5c1668cf02dc5795614f408847025b163fa14d36e47d"
+  },
+  "model_index": 37,
+  "model_offset": 919232,
+  "tpl_offset": 920416,
+  "local_FF_records": 21,
+  "material_flags": 4,
+  "alphaTex": 1,
+  "color_key": "2a58392f-a28726c4",
+  "mask_key": "448b1020-609c60e9",
+  "nominal_sprite_image37_key_held": "d284037f-ba73363a",
+  "all_6500_unrelated_members_exact": true,
+  "all_947_existing_mips_exact": true,
+  "layered_OFF_exact": true,
+  "fresh_source_regeneration_exact": true,
+  "independent_generated_levels": 7,
+  "independent_original_bases": 1,
+  "original_RGBA_alpha_codebook_base_indices_material_dimensions_UV_flags_exact": true,
+  "exact_source_archives": 98,
+  "model_registrations_checked": 66,
+  "matching_source_material_pairs": 1,
+  "new_payload_bytes": 3414,
+  "old_payload_bytes": 3072,
+  "payload_delta": 342,
+  "rounded32_request_delta": 352,
+  "archive_delta": 0,
+  "actual_Package_host_cases": [
+    {
+      "UI_VRAM": 0,
+      "ASan_UBSan": true,
+      "adopt_stream_payload_mip_fences": true,
+      "actual_allocation_requests": [
+        3072,
+        3072,
+        3414,
+        3414
+      ]
+    },
+    {
+      "UI_VRAM": 1,
+      "ASan_UBSan": true,
+      "adopt_stream_payload_mip_fences": true,
+      "actual_allocation_requests": [
+        3072,
+        5088,
+        3072,
+        5088,
+        3414,
+        5430,
+        3414,
+        5430
+      ]
+    }
+  ],
+  "new_defaults": false,
+  "full_build_knobs": [
+    "CAST_MIPMAP=1",
+    "TEX_TWIDDLED_MIPMAP=1",
+    "TEX_PAL4_ALPHA=1",
+    "TEX_PAL4_MIPMAP=1",
+    "TEX_PAL8_ALPHA=1",
+    "TEX_PAL8_MIPMAP=1"
+  ],
+  "sampler_policy": "Source materialSetup/ModelPart texId reaches model_bridge selected GXTexObj, then native_ui model_packet_begin: original wrap, blend/depth, MODULATEALPHA, bilinear and default MIPD retained. No sprite sampler substitution.",
+  "limits": [
+    "Exact source mask identities/materials; current registry owner, flagsDC, alpha_omit and actual draw remain target gates.",
+    "Lower levels deliberately filter/quantize; rendered target sampling/look and combined resources/timing remain open. No full build, guest, recipe/default or release change.",
+    "Offline preview is independent source decode, not a Flycast or Dreamcast screenshot. No full-program identity, target state/look, live budgets or hardware acceptance."
+  ]
+}

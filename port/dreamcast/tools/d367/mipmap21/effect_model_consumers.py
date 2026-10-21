@@ -5,6 +5,7 @@ and target bounds. Registration does not prove the active owner or that every
 TPL descriptor is referenced by a model material.
 """
 from __future__ import annotations
+import hashlib
 import struct
 import sys
 from pathlib import Path
@@ -13,6 +14,8 @@ import ps2_items
 import room_smd
 import convert_character
 import effect_consumers as source
+import convert_tpl
+from prepare_native_ui import image_identity, material_pair_identity
 
 
 def effect_models(body,entry,*,index=None):
@@ -45,7 +48,7 @@ def effect_models(body,entry,*,index=None):
     result=[]
     for i,(ident,model,tpl) in enumerate(decoded):
         result.append(dict(model_index=ident,model_offset=start+model,tpl_offset=start+tpl,
-            model_entry_offset=start+entries[i],
+            model_entry_offset=start+entries[i],effect_end=end,
             sequence_references=[r for r in references if r['model_index']==ident],
             scope='Source registration/TPL binding; active owner and model-material descriptor use remain separate.'))
     return result
@@ -103,6 +106,53 @@ def model_materials(data,*,texture_count=None):
             if off<tex or off+4>min(texend,len(data)):raise ValueError('effect model UV index outside region')
             signed=bool(layout['flags']&0x80000000);u,v=struct.unpack_from('<2h' if signed else '<2H',data,off);scale=256.0 if signed else 32768.0
             uvs.append((u/scale,v/scale))
-        rows.append(dict(part=part,texture_index=image,samples_texture=bool(triangles) and image!=255,triangles=len(triangles),
+        rows.append(dict(part=part,texture_index=image,material_flags=data[at+11],alpha_texture_index=data[at+14],alpha_reference=data[at+20],samples_texture=bool(triangles) and image!=255,triangles=len(triangles),
             UV_indices=indices,UV_bounds=dict(u_min=min(u for u,v in uvs),u_max=max(u for u,v in uvs),v_min=min(v for u,v in uvs),v_max=max(v for u,v in uvs)) if uvs else None))
+    return rows
+
+
+def tpl_images(body,at,*,end=None):
+    """Bound LE metadata before reusing the existing GX image codec/identity."""
+    if end is None:end=len(body)
+    if not 0<=at<end<=len(body):raise ValueError('model TPL effect bounds differ')
+    body=body[:end]
+    if at+12>len(body):raise ValueError('short model TPL')
+    magic,n,desc=struct.unpack_from('<3I',body,at)
+    if magic!=convert_tpl.TPL_MAGIC or not n or desc<12 or n>(len(body)-at-desc)//8:
+        raise ValueError('model TPL descriptor table outside source')
+    for i in range(n):
+        header,palette=struct.unpack_from('<2I',body,at+desc+i*8)
+        if header<12 or at+header+36>len(body):raise ValueError('model TPL header outside source')
+        h,w,fmt,pixels=struct.unpack_from('<2H2I',body,at+header)
+        if not w or not h:raise ValueError('model TPL has empty image')
+        try:size=ps2_items.image_size(w,h,fmt)
+        except KeyError:raise ValueError('unsupported model TPL image') from None
+        if pixels<12 or at+pixels+size>len(body):raise ValueError('model TPL pixels outside source')
+        if palette:raise ValueError('model TPL indexed palette requires separate contract')
+    images=[]
+    for image in ps2_items.gc_tpl_images(body[at:],'<'):
+        count=ps2_items.image_size(image['w'],image['h'],image['fmt'])
+        texture=convert_tpl.TplImage(image['w'],image['h'],image['fmt'],body[at+image['data']:at+image['data']+count])
+        key,identity=image_identity(texture);header=at+image['hdr']
+        wraps=struct.unpack_from('<2I',body,header+12)
+        images.append(dict(image=image['j'],key=key,width=image['w'],height=image['h'],source_format=image['fmt'],
+            header_offset=header,pixel_offset=at+image['data'],pixel_bytes=count,source_identity_sha256=hashlib.sha256(identity).hexdigest(),
+            wrap_s=wraps[0],wrap_t=wraps[1]))
+    return images
+
+
+def masked_material_bindings(body,model):
+    images=tpl_images(body,model['tpl_offset'],end=model.get('effect_end'))
+    materials=model_materials(body[model['model_offset']:model['tpl_offset']],texture_count=len(images))
+    rows=[]
+    for material in materials:
+        if not material['samples_texture']:continue
+        if material['material_flags']!=4 or material['alpha_reference']!=0:
+            raise ValueError('model mask needs explicit material/alpha-reference contract')
+        alpha=material['alpha_texture_index']
+        if alpha>=len(images):raise ValueError('model alpha descriptor outside TPL')
+        color,mask=images[material['texture_index']],images[alpha]
+        if any(color[k]!=mask[k] for k in ('width','height','wrap_s','wrap_t')):
+            raise ValueError('model color/mask dimensions or wrap differ')
+        rows.append(dict(material=material,color=color,mask=mask,pair_key=material_pair_identity(color['key'],mask['key'])))
     return rows

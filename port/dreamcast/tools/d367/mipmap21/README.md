@@ -685,3 +685,31 @@ image binding. Default parser output matches the archived earlier parser for
 the exact core and r104 inputs; seven tests pass. The opt-in namespace is not
 applied to current candidate policies, so the 947-mip pack stays unchanged.
 See special-consumer-followups-20261021.json for paths, hashes and next steps.
+
+### Source Efm material and masked-pair qualification
+
+`effect_model_consumers.py` now records ModelPart material flags, alpha texture
+and alpha reference, bounds TPL metadata/pixels inside the original EFF entry
+and recomputes source image identities with existing codecs. Numeric Efm IDs
+remain separate from ordinary sprite image IDs. Full FF obj04 records qualify
+only without compact/generator/RTT/motion overrides; FE debris stays held.
+
+Core model 37 has material flags 4/alphaTex1, so its standalone diffuse VQ key
+is insufficient proof of the actual consumer. Its color 2a58392f-a28726c4 and
+mask 448b1020-609c60e9 produce the existing runtime R4MP pair 6da8c35b-a936da0c.
+`effect_model_candidate.py --masked-materials --generate` explicitly qualifies
+that original 64-square ARGB4444 VQ pair. Default output is byte-identical; an
+already-selected ancestor package or competing known owner is refused.
+
+The private candidate preserves all 947 previous mip members and 6500 unrelated
+packages. Its one new chain retains the original VQ codebook/base indices and
+full RGBA/alpha; seven levels pass an independent C decoder. Fresh source
+regeneration and both actual Package ASan/UBSan adopt/stream/lifetime modes
+pass. Current total 948 mips/1077 original changes/5424 exact originals; extra
+payload 342 B and rounded request 352 B, with no archive-size change. These are
+source/host inventories, not target residency or speed. All 98 exact retained
+source archives were freshly parsed, resolving 66 Efm registrations and one
+matching mask material. Dynamic registry state and sameUV/ref0 admission,
+target look, combined resources, full-program identity and timing remain open.
+See effect-model-mask-qualification-20261021.json. No runtime, recipe/default,
+release or SD change. The older 947-mip candidate remains sealed unchanged.
