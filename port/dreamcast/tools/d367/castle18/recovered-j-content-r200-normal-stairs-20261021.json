@@ -1,0 +1,312 @@
+{
+  "scope": "Recovered J NEW cold-lineage original r200 normal stair traversal; no old snapshot retarget, game writes, asset/code changes or warp",
+  "state_sha256": "0a943afb035f1ebd16bc8d77090d7f6dcc3b977ab1deea7da988b7ab559d893b",
+  "source_frame": 5911,
+  "room": "r200",
+  "phase": [
+    3,
+    0
+  ],
+  "health": [
+    1200,
+    1200,
+    600,
+    600
+  ],
+  "player_pos": [
+    80625.1640625,
+    15871.0380859375,
+    -68655.21875
+  ],
+  "partner_pos": [
+    79634.2109375,
+    15811.498046875,
+    -69046.3046875
+  ],
+  "points": [
+    {
+      "waypoint_reached": 0,
+      "target": [
+        84650.0,
+        -58800.0
+      ],
+      "pos": [
+        84440.4140625,
+        10118.0859375,
+        -58901.86328125
+      ]
+    },
+    {
+      "waypoint_reached": 1,
+      "target": [
+        81500.0,
+        -62000.0
+      ],
+      "pos": [
+        81709.78125,
+        10118.0859375,
+        -61891.203125
+      ]
+    },
+    {
+      "waypoint_reached": 2,
+      "target": [
+        81000.0,
+        -65400.0
+      ],
+      "pos": [
+        81047.609375,
+        10299.34765625,
+        -65267.2421875
+      ]
+    },
+    {
+      "waypoint_reached": 3,
+      "target": [
+        74000.0,
+        -65500.0
+      ],
+      "pos": [
+        74091.03125,
+        13443.41796875,
+        -65564.71875
+      ]
+    },
+    {
+      "waypoint_reached": 4,
+      "target": [
+        74000.0,
+        -68700.0
+      ],
+      "pos": [
+        73958.796875,
+        13443.41796875,
+        -68459.8359375
+      ]
+    },
+    {
+      "waypoint_reached": 5,
+      "target": [
+        80500.0,
+        -68700.0
+      ],
+      "pos": [
+        80335.3203125,
+        15871.0380859375,
+        -68633.8203125
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "name": "castle21-recoveredJ-normal-original-stairs",
+      "status": "RUN_COMPLETE",
+      "start_utc": "2026-10-21T14:06:38.626853+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "tracks": {
+        "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "kind": "release",
+        "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "seconds": 50,
+      "vmu": null,
+      "keys": null,
+      "stop": null,
+      "fixtures": {
+        "warp": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+          "bytes": 73,
+          "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+        },
+        "pad": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+          "bytes": 208,
+          "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "errors": [],
+      "key_log": [],
+      "align": false,
+      "emu": "harness",
+      "emu_env": {},
+      "early_emulator_exit": 0,
+      "log_idle_s": 0.5,
+      "end_utc": "2026-10-21T14:06:46.358339+00:00",
+      "elapsed_s": 7.7,
+      "emulator_exited": true
+    },
+    {
+      "name": "castle21-recoveredJ-normal-original-stairs",
+      "status": "RUN_COMPLETE",
+      "start_utc": "2026-10-21T14:09:11.602185+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "tracks": {
+        "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "kind": "release",
+        "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "seconds": 50,
+      "vmu": null,
+      "keys": null,
+      "stop": null,
+      "fixtures": {
+        "warp": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+          "bytes": 73,
+          "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+        },
+        "pad": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+          "bytes": 208,
+          "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "errors": [],
+      "key_log": [],
+      "align": false,
+      "emu": "harness",
+      "emu_env": {},
+      "early_emulator_exit": 0,
+      "log_idle_s": 1.0,
+      "end_utc": "2026-10-21T14:09:28.279919+00:00",
+      "elapsed_s": 16.6,
+      "emulator_exited": true
+    }
+  ],
+  "first_arm": "route01 guarded no-displacement; no physical collision cause established or stairprogress claimed",
+  "second_arm": "route02 all6points passed after existing normal frontend release/repress acknowledgement guard",
+  "new_iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "snapshot_ELF_anchor_checks": 4,
+  "screenshot_context": {
+    "run": "route-walk02",
+    "lineage": "Recovered J NEW cold boot progression",
+    "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+    "runtime": "12a841d7c",
+    "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "room": "0x200",
+    "source_frame_interval": [
+      5909,
+      5911
+    ],
+    "health_before": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "health_after": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "action_result": {
+      "waypoint_reached": 5,
+      "target": [
+        80500.0,
+        -68700.0
+      ],
+      "pos": [
+        80335.3203125,
+        15871.0380859375,
+        -68633.8203125
+      ]
+    },
+    "last_sample": {
+      "host_monotonic": 341033.875,
+      "room": "0x200",
+      "frame": 5909,
+      "player_hp": 1200,
+      "partner_hp": 600,
+      "pos": [
+        80335.3203125,
+        15871.0380859375,
+        -68633.8203125
+      ],
+      "yaw": 1.6684634685516357,
+      "target_distance": 177.48000031748737,
+      "angle_error": 0.28444953992187294,
+      "source_Key_on": "0x49040049"
+    },
+    "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+    "png_paths": [
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk02\\shots\\checkpoint-source-5909\\frames\\fb0.png",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk02\\shots\\checkpoint-source-5909\\frames\\fb1.png"
+    ]
+  },
+  "CAST_GC": {
+    "rows": [
+      {
+        "room": "r200",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 9000,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r200",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 9000,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r200",
+        "id": "18",
+        "name": "em18",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 9000,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          61
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": []
+  }
+}
