@@ -10,7 +10,7 @@ class ObserverTests(unittest.TestCase):
   for n in ('frame','direct_open','model_handle','model_used','model_pending','model_packets','m_tot_reads','m_tot_bytes','m_tot_block'):add('__ZN12_GLOBAL__N_1L'+str(len(n))+n+'E')
   for n in ('_pG','_pPL','_CamCtrl'):add(n)
   self.sy['native_ui_entries']={'address':0x8c020000,'size':100352}
-  self.plan={'selected':[{'original_key':'00000001-00000002','scoped_key':'00000003-00000004','candidate_crc32':7,'physical':[64,64]}],'read_only_observer':{'symbols':self.sy,'typed_layouts':{'native_ui':{'types':{'Package':{'members':{}}}},'scene':{'types':{'GlobalWork':{'members':{'Frame_cnt':0,'room_id':4,'pl_life':8}},'Camera':{'members':{'param':0,'mat':32,'v_mat':80,'ProjMat':128}},'CameraControl':{'members':{'camera':0}}}},'player':{'types':{'cCoord':{'members':{'pos':0,'ang':12}}}}}}}
+  self.plan={'selected':[{'original_key':'00000001-00000002','scoped_key':'00000003-00000004','candidate_crc32':7,'physical':[64,64]}],'read_only_observer':{'symbols':self.sy,'typed_layouts':{'native_ui':{'types':{'Package':{'members':{}}}},'scene':{'types':{'GlobalWork':{'members':{'Frame_cnt':0,'room_id':4,'pl_life':8,'Cam':32}},'Camera':{'members':{'param':0,'mat':32,'v_mat':80,'ProjMat':128}},'CameraControl':{'members':{'camera':0}}}},'player':{'types':{'cCoord':{'members':{'pos':0,'ang':12}}}}}}}
   self.plan['read_only_observer']['typed_layouts']['native_ui']['types']={'Entry':{'size':224,'members':{'package':0,'key':64,'frame':72,'valid':76,'model_header':96,'model_header_key':128}},'Package':{'members':{'header_':20,'data_':12,'pvr_textures_':24,'owns_texture_':28,'upload_complete_':45}},'Header':{'members':{'magic':0,'texture_count':20,'texture_stride':16,'texture_offset':24,'payload_crc32':36}},'Texture':{'members':{'material':0,'width':64,'height':68,'format':72,'flags':84,'payload':88,'data_size':80}}}
   self.typed=Typed(self.read,self.plan)
  def put(self,a,b):o=ram_range(a,len(b));self.raw[o:o+len(b)]=b
@@ -19,6 +19,11 @@ class ObserverTests(unittest.TestCase):
  def test_missing_promoted_layout_rejected_before_attach(self):
   bad=copy.deepcopy(self.plan);del bad['read_only_observer']['typed_layouts']['scene']['types']['GlobalWork']['members']['room_id']
   with self.assertRaises(Invalid):Typed(self.read,bad)
+ def test_active_and_controller_camera_are_distinct(self):
+  g=0x8c050000;pl=0x8c060000
+  self.put(self.typed.sym('_pG'),struct.pack('<I',g));self.put(self.typed.sym('_pPL'),struct.pack('<I',pl));self.put(g,struct.pack('<I',1));self.put(g+4,struct.pack('<H',0x103))
+  self.put(g+32,struct.pack('<f',123));self.put(self.typed.sym('_CamCtrl'),struct.pack('<f',456))
+  r=self.typed.scene();self.assertEqual(r['pose']['camera_param'][0],123);self.assertEqual(r['pose']['controller_camera_param'][0],456);self.assertIn('active pG->Cam',r['camera_scope'])
  def test_invalid_start_waits_no_death(self):
   with self.assertRaises(Invalid):self.typed.scene()
  def test_bounds_and_aliases(self):

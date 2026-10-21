@@ -16,7 +16,7 @@ def vram_pointer(a):return (a&0xff000000) in (0xa4000000,0xa5000000) and (a&0xff
 class Typed:
  def __init__(self,read,plan):
   self.read=read;self.plan=plan;self.sy=plan['read_only_observer']['symbols'];self.t=plan['read_only_observer']['typed_layouts'];self.entries=self.sy['native_ui_entries']['address'];self.stride=224;self.selected={}
-  required={'scene':{'GlobalWork':['Frame_cnt','room_id','pl_life'],'Camera':['param','mat','v_mat','ProjMat'],'CameraControl':['camera']},'player':{'cCoord':['pos','ang']},'native_ui':{'Entry':['package','key','frame','valid','model_header','model_header_key'],'Package':['header_','data_','pvr_textures_','owns_texture_','upload_complete_'],'Header':['magic','texture_count','texture_stride','texture_offset','payload_crc32'],'Texture':['material','width','height','format','flags','payload','data_size']}}
+  required={'scene':{'GlobalWork':['Frame_cnt','room_id','pl_life','Cam'],'Camera':['param','mat','v_mat','ProjMat'],'CameraControl':['camera']},'player':{'cCoord':['pos','ang']},'native_ui':{'Entry':['package','key','frame','valid','model_header','model_header_key'],'Package':['header_','data_','pvr_textures_','owns_texture_','upload_complete_'],'Header':['magic','texture_count','texture_stride','texture_offset','payload_crc32'],'Texture':['material','width','height','format','flags','payload','data_size']}}
   for group,types in required.items():
    for typename,names in types.items():
     if any(n not in self.t[group]['types'][typename]['members'] for n in names):raise Invalid('incomplete typed layout: '+group+'.'+typename)
@@ -34,17 +34,17 @@ class Typed:
   if h!=self.read(a+4,4):raise Invalid('torn 64-bit counter')
   return u32(lo)+(u32(h)<<32)
  def scene(self):
-  g=self.scalar('_pG');p=self.scalar('_pPL');G=self.t['scene']['types']['GlobalWork']['members'];C=self.t['scene']['types']['Camera']['members'];cc=self.t['scene']['types']['CameraControl']['members'];co=self.t['player']['types']['cCoord']['members'];cam=self.sym('_CamCtrl')+cc['camera'];tick=u32(self.read(g+G['Frame_cnt'],4))
+  g=self.scalar('_pG');p=self.scalar('_pPL');G=self.t['scene']['types']['GlobalWork']['members'];C=self.t['scene']['types']['Camera']['members'];cc=self.t['scene']['types']['CameraControl']['members'];co=self.t['player']['types']['cCoord']['members'];controller_cam=self.sym('_CamCtrl')+cc['camera'];cam=g+G['Cam'];tick=u32(self.read(g+G['Frame_cnt'],4))
   room=struct.unpack('<H',self.read(g+G['room_id'],2))[0]
   if not tick or room==0 or room>0x500:raise Invalid('source scene not initialized')
   def fs(a,n):
    v=struct.unpack('<'+'f'*n,self.read(a,n*4))
    if not all(math.isfinite(x) for x in v):raise Invalid('nonfinite pose')
    return list(v)
-  pose={'player_position':fs(p+co['pos'],3),'player_angles':fs(p+co['ang'],3),'camera_param':fs(cam+C['param'],8),'camera_mat':fs(cam+C['mat'],12),'camera_view':fs(cam+C['v_mat'],12),'camera_projection':fs(cam+C['ProjMat'],16)}
+  pose={'player_position':fs(p+co['pos'],3),'player_angles':fs(p+co['ang'],3),'camera_param':fs(cam+C['param'],8),'camera_mat':fs(cam+C['mat'],12),'camera_view':fs(cam+C['v_mat'],12),'camera_projection':fs(cam+C['ProjMat'],16),'controller_camera_param':fs(controller_cam+C['param'],8),'controller_camera_mat':fs(controller_cam+C['mat'],12),'controller_camera_view':fs(controller_cam+C['v_mat'],12),'controller_camera_projection':fs(controller_cam+C['ProjMat'],16)}
   life=struct.unpack('<4h',self.read(g+G['pl_life'],8));drive={'reads':self.local('m_tot_reads'),'bytes':self.count64('m_tot_bytes'),'block_us':self.count64('m_tot_block')}
   if tick!=u32(self.read(g+G['Frame_cnt'],4)) or g!=self.scalar('_pG') or p!=self.scalar('_pPL'):raise Invalid('torn source frame')
-  return {'source_tick':tick,'room_id':room,'life_raw':list(life),'pose':pose,'drive_nonmusic':drive,'source_ptr':g}
+  return {'camera_scope':'active pG->Cam after source CameraMove; controller camera recorded separately','source_tick':tick,'room_id':room,'life_raw':list(life),'pose':pose,'drive_nonmusic':drive,'source_ptr':g}
  def table(self):
   raw=self.read(self.entries,448*self.stride);rows=[];valid=0;alloc=set()
   for i in range(448):
@@ -113,7 +113,7 @@ class Process:
  def close(self):self.k.CloseHandle(self.h)
 
 def main():
- ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--cap',type=Path,required=True);ap.add_argument('--plan',type=Path,required=True);ap.add_argument('--seconds',type=float,default=41);ap.add_argument('--runtime-binding',default='observer-runtime-02');a=ap.parse_args()
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--cap',type=Path,required=True);ap.add_argument('--plan',type=Path,required=True);ap.add_argument('--seconds',type=float,default=41);ap.add_argument('--runtime-binding',default='observer-runtime-03');a=ap.parse_args()
  if not 0<a.seconds<=41:raise SystemExit('budget must be in (0,41] seconds')
  start=time.monotonic();end=start+a.seconds;plan=json.loads((a.plan/'observation-cold-window.json').read_text());binding=json.loads((a.plan/a.runtime_binding/'binding.json').read_text());inputs=json.loads((a.plan/'inputs-final/plan-inputs.json').read_text());plan['selected']=inputs['selected']
  if 'scene_layout' in binding:

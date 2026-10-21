@@ -82,7 +82,7 @@ def main():
      if rows[j]['tag']=='DW_TAG_subrange_type':size*=int(ar['count'],0) if 'count' in ar else int(ar['upper_bound'],0)-int(ar.get('lower_bound','0'),0)+1
     return size
    raise ValueError('unsupported member type size '+d['tag'])
-  widths={'Entry':{'package':64,'key':8,'frame':4,'valid':1,'model_header':32,'model_header_key':4},'Key':{'crc':4,'fnv':4},'Package':{n:(1 if n in ('streamed_','payload_released_','upload_complete_') else 4) for n in u['types'].get('Package',{}).get('members',{})},'Header':{n:(8 if n=='magic' else 4) for n in u['types'].get('Header',{}).get('members',{})},'Texture':{n:(64 if n=='material' else 4) for n in u['types'].get('Texture',{}).get('members',{})},'GlobalWork':{'Frame_cnt':4,'room_id':2,'pl_life':2,'pl_life_max':2,'ashley_life':2,'ashley_life_max':2},'Camera':{'param':32,'mat':48,'v_mat':48,'ProjMat':64},'cCoord':{'pos':12,'ang':12}}
+  widths={'Entry':{'package':64,'key':8,'frame':4,'valid':1,'model_header':32,'model_header_key':4},'Key':{'crc':4,'fnv':4},'Package':{n:(1 if n in ('streamed_','payload_released_','upload_complete_') else 4) for n in u['types'].get('Package',{}).get('members',{})},'Header':{n:(8 if n=='magic' else 4) for n in u['types'].get('Header',{}).get('members',{})},'Texture':{n:(64 if n=='material' else 4) for n in u['types'].get('Texture',{}).get('members',{})},'GlobalWork':{'Cam':248,'Frame_cnt':4,'room_id':2,'pl_life':2,'pl_life_max':2,'ashley_life':2,'ashley_life_max':2},'Camera':{'param':32,'mat':48,'v_mat':48,'ProjMat':64},'cCoord':{'pos':12,'ang':12}}
   for typename,record in u['types'].items():
    root=by[record['DIE_offset']]
    for name,off,path,d in fields(root,path=[record['DIE_offset']]):
