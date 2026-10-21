@@ -1,0 +1,7 @@
+{
+  "source_sha256": "387bc0d6f7072c9dc92f0b18ffbf90c4aa89f2719e445791d348d102ec316cf6",
+  "candidate_sha256": "aebbc8f83915a92cc48ad0c6ca3f6aa6cbd8b03521aeb4982ddff1d140f2fa1a",
+  "defect": "Actual133 controller enumerated once before exact owned SDL window existed; zero inputs, health903 unchanged, guest harness exited at recorded49.968s. No healing pass.",
+  "repair": "Bounded5s PID+path+start-time-checked window readiness, using existing owned enumeration. Every other herb inventory and health predicate unchanged.",
+  "validation": "AST compile; one exact startup predicate replacement; runtime pending."
+}

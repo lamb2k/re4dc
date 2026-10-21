@@ -1,0 +1,8 @@
+{
+  "source": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-recovered-j-r201-sealed-health-far-track-weakpoint-still.py",
+  "source_sha256": "f3aef5869f8fb1ed1008e2ddb54d9d7c39d111275a4cd5a87ac5cfe9311503a1",
+  "candidate": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-recovered-j-r201-one-hit-early-disengage-still.py",
+  "candidate_sha256": "425776a00b0cca3dcc92f503cb752b88dfb2ba6f33af36bf54ad84f332544bb3",
+  "reason": "Actual130 source charge killed220HP Leon after129 controller waited through enemy stair descent. Stop immediately after first confirmed weakpoint damage, and twice the former frontal range, preserving actual damage/death and all source ray/laser/health/PID guards. No gameplay writes or game source change.",
+  "validation": "AST compile and exactly one replacement of each original control predicate; actual Flycast use pending."
+}
