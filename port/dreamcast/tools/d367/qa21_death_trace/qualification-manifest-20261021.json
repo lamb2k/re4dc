@@ -1,0 +1,237 @@
+{
+  "scope": "Exact read-only preparation. No build, stage, image sharing, extracted tree or runtime launch",
+  "trace_source": "f99dc69ad8bfeebcdb10913443543514dc40f9cc",
+  "image": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-combined-regression-20261021/combined-input/gdemu/track03.iso",
+    "sha256": "97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18",
+    "logical_bytes": 1032499200,
+    "track_base": 45000,
+    "file_blocks": 504150,
+    "volume_descriptors": [
+      {
+        "lba": 45016,
+        "type": 1,
+        "volume_blocks": 504000
+      }
+    ],
+    "manifest_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-combined-regression-20261021/combined-input/file-manifest.json",
+    "manifest_sha256": "b8a9a6c0f9a2269708dc094a4ea6ed8f48ce4dc69b8c518133159af6539dacd2",
+    "all1743_file_hashes_reverified": true,
+    "all14_input_overlays_bound_to_frozen_combined_ELF": true
+  },
+  "program": {
+    "bytes": 3348420,
+    "sha256": "ce080eb290aec073f406e93da27911f4fa70b457768288f52a893175a6846e8e",
+    "extent": 547365,
+    "changed": true
+  },
+  "verified_zero_tail_bytes": 307200,
+  "max_final_program_bytes_without_relocation": 3655680,
+  "stage_method": {
+    "status": "UNALLOCATED; plan only",
+    "input_read_only": true,
+    "new_standalone_track_copy": true,
+    "image_hardlinks_or_shared_writable_extents": false,
+    "extracted_asset_tree": false,
+    "changes": "Stream immutable2048-byte track into a new standalone file, write final trace program at same final extent, zero its remaining reserved tail, patch all14 newly linked overlays in their existing allocations (refuse oversize), update changed program/overlay byte sizes in ISO/RockRidge+Joliet records and volume blocks in both-endian PVD/SVD fields only when needed. Keep track length and all unrelated extents exact. Copy tiny tracks independently.",
+    "refusal": "If raw exceeds verified final-program-plus-zero-tail bound, refuse. No automatic append, relocation, hardlinks or source-image patch.",
+    "unrelated_gate": "All1728 files outside program plus14 overlays must keep exact paths/extents/sizes/SHA; all14 staged overlays must match the new full-link outputs and ELF binding, never old headers. Reverify whole source SHA before/after and new staged program/full image SHA.",
+    "resource_budget": "Conservatively reserve full1,032,499,200B standalone logical image plus2,295,552B tiny tracks and64MiB metadata/scratch, preserving unchanged18GiB+64MiB runtime floor. Any compression savings are measured after staging, never assumed for admission."
+  },
+  "overlay_paths": [
+    "/dc/em22.ovl",
+    "/dc/em2b.ovl",
+    "/dc/em2f.ovl",
+    "/dc/em35.ovl",
+    "/dc/em3b.ovl",
+    "/dc/pl0f.ovl",
+    "/dc/pl11.ovl",
+    "/dc/pl14.ovl",
+    "/dc/sscrn.ovl",
+    "/dc/st1_0.ovl",
+    "/dc/st1_1.ovl",
+    "/dc/st1_2.ovl",
+    "/dc/st1_3.ovl",
+    "/dc/st2_0.ovl"
+  ],
+  "input_overlay_bindings": {
+    "/dc/em22.ovl": {
+      "bytes": 27236,
+      "sha256": "9dc6518969464347af641171702af565c3e76b1271f73c235592aa9efcdd6cc0",
+      "image_bytes": 26496,
+      "relocations": 169,
+      "image_fnv": 3549086403,
+      "relocation_fnv": 3596127771,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/em2b.ovl": {
+      "bytes": 67932,
+      "sha256": "0494f097aa870281d524a58363de27c687c54f8e2ac28226168a1db5ad942eb9",
+      "image_bytes": 66640,
+      "relocations": 307,
+      "image_fnv": 2062012669,
+      "relocation_fnv": 1071682047,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/em2f.ovl": {
+      "bytes": 16800,
+      "sha256": "8f1e623463b0d47960d41af5cf4a082579bd93a64810be390882ff37e3d53b9f",
+      "image_bytes": 16448,
+      "relocations": 72,
+      "image_fnv": 4099197817,
+      "relocation_fnv": 2061526637,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/em35.ovl": {
+      "bytes": 52392,
+      "sha256": "e0e43555f3edbbb18a79f9dd4c2f19e542628fd3d1327c4bca0f58927a889b41",
+      "image_bytes": 51264,
+      "relocations": 266,
+      "image_fnv": 1676116998,
+      "relocation_fnv": 885258237,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/em3b.ovl": {
+      "bytes": 7568,
+      "sha256": "e4367aa7a3d1ae36645ece2cefb0e65ae920ee56e63e97a85b233a323dcbafbf",
+      "image_bytes": 7360,
+      "relocations": 36,
+      "image_fnv": 3618104688,
+      "relocation_fnv": 803603605,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/pl0f.ovl": {
+      "bytes": 45576,
+      "sha256": "b35b14aa496581f811ad1d685fed8d99ff90e0ad7e7609b131bb31d32355ce29",
+      "image_bytes": 44192,
+      "relocations": 330,
+      "image_fnv": 435711520,
+      "relocation_fnv": 353327057,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/pl11.ovl": {
+      "bytes": 35616,
+      "sha256": "21187989d9c6cc62aa3536153568becdb81439a544a0e6c7aedf8edcb66923c0",
+      "image_bytes": 35084,
+      "relocations": 117,
+      "image_fnv": 3730297519,
+      "relocation_fnv": 2021937791,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/pl14.ovl": {
+      "bytes": 18832,
+      "sha256": "20c34f0b4ac1726843104f707597914bc6ec994725307f7ce8c73d3b5d24613d",
+      "image_bytes": 18036,
+      "relocations": 183,
+      "image_fnv": 4252881497,
+      "relocation_fnv": 596828339,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/sscrn.ovl": {
+      "bytes": 134372,
+      "sha256": "3e36eab0226c28d5a73b07e0fb80886a0dc52a62ebf2268a2396422b75d38019",
+      "image_bytes": 126720,
+      "relocations": 1897,
+      "image_fnv": 2653906117,
+      "relocation_fnv": 2424298167,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/st1_0.ovl": {
+      "bytes": 36240,
+      "sha256": "b6e77fcd1dd99bc46acfda95566caf6b8ede5916b8e3f72c663b6aa52323d2d8",
+      "image_bytes": 33908,
+      "relocations": 567,
+      "image_fnv": 3095770659,
+      "relocation_fnv": 1290518095,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/st1_1.ovl": {
+      "bytes": 81508,
+      "sha256": "9a8a7ed0130ed852e79a53fdb22b610f44c462f1dab7b389f5be79ace70ecd3f",
+      "image_bytes": 77552,
+      "relocations": 973,
+      "image_fnv": 3403433337,
+      "relocation_fnv": 384677319,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/st1_2.ovl": {
+      "bytes": 49696,
+      "sha256": "9993100d52168e3d7dca2b0c1dbe13f825867bebd5fcbf498c2d9eadc324fcf3",
+      "image_bytes": 47252,
+      "relocations": 595,
+      "image_fnv": 1762116947,
+      "relocation_fnv": 3416592451,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/st1_3.ovl": {
+      "bytes": 88552,
+      "sha256": "98823e982859416ea6d235c2126b779beb2d3e56cb4ff8ca994170424b39b6f3",
+      "image_bytes": 84604,
+      "relocations": 971,
+      "image_fnv": 2487816077,
+      "relocation_fnv": 1848666811,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    },
+    "/dc/st2_0.ovl": {
+      "bytes": 96796,
+      "sha256": "678b00c5f563fedeafc12a2dee255d32f2a2c30d8b0f63e94e130d5d7eb9fe50",
+      "image_bytes": 92616,
+      "relocations": 1029,
+      "image_fnv": 254133299,
+      "relocation_fnv": 1149840471,
+      "main_text_fnv": 2039670864,
+      "main_text_bytes": 2447456
+    }
+  },
+  "tools": {
+    "fp_iso_sha256": "e473a3493aa97ba63391cb507b2263935b8904153adddd99c421b689810f54da",
+    "cold_keys": {
+      "path": "/root/probe/codex-qa21-combined-regression/port/dreamcast/tools/d367/qa21_combined/r103-cold-keys.txt",
+      "sha256": "1d521b1ca227b07273fd4f7f1d2a7e1e2848b71eaee18ba07ad691386add2565"
+    },
+    "door_controller": {
+      "path": "/root/probe/codex-qa21-combined-regression/port/dreamcast/tools/d367/qa21_combined/normal-r103-door-v2.py",
+      "sha256": "27de09a9d131c232b92c802baf1d32a491ae4ab4d4507757e8cc3df61f3cf138"
+    },
+    "BB_keys": {
+      "path": "/root/probe/codex-qa21-combined-regression/port/dreamcast/tools/d367/qa21_combined/new-room-no-qa-keys.txt",
+      "sha256": "7d6ed971b81b3b690eb4066916b4cdd2b47aa494884e46a9ad82851d9c630296"
+    }
+  },
+  "cold_lineage": {
+    "status": "UNALLOCATED until exact new stage/binding/DWARF identities exist",
+    "episodes": [
+      {
+        "name": "deathtrace-cold-r10301",
+        "seed": null,
+        "input": "Pinned original QA preset4 selection; cold first process, no.state file allowed"
+      },
+      {
+        "name": "deathtrace-return-door01",
+        "seed": "deathtrace-cold-r10301",
+        "input": "Pinned ordinary PID-owned r103 door controller"
+      },
+      {
+        "name": "deathtrace-BB-only01",
+        "seed": "deathtrace-return-door01",
+        "input": "Only pinned normalB/B, no QA chord atnew room; preserve all damage and exact trace output"
+      }
+    ],
+    "guards": "Global<=16, absolute47.5s own guest/inner41s, fresh18GiB+128MiB/runtime18GiB+64MiB, <=60MB new evidence perguest, PID/executable/start validated",
+    "identity": "Each new checkpoint uses only the exact new trace program/image/ELF/VMU ancestry and four immutable text anchors; old combined/control states prohibited. Screenshots and source frame/caller mappings retained.",
+    "acceptance": "Source/unit, full link, Flycast diagnostic reproduction, release checks and physical Dreamcast acceptance remain separate"
+  }
+}
