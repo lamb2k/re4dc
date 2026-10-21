@@ -1,0 +1,74 @@
+{
+  "scope": "Offline floor/wall test only for complete South-flank/West escape/originalpatrol/fullWestern firingline return; actual injury/collision/PID/resources authoritative, no simulationwrites.16000goal rejectedOFFLINE becausefinalleg rail;16750knownstairsfoot v2 testsalllegs.",
+  "seed_state_sha256": "17e2c51442d37a02809716447cb8682238a03680734366969d002518891d9c73",
+  "segments": [
+    {
+      "start": [
+        27774.599609375,
+        -2000.00390625,
+        -44822.61328125
+      ],
+      "end": [
+        23500,
+        -2000,
+        -47500
+      ],
+      "samples": 69,
+      "blocked": []
+    },
+    {
+      "start": [
+        23500,
+        -2000,
+        -47500
+      ],
+      "end": [
+        16750,
+        -2000,
+        -45500
+      ],
+      "samples": 95,
+      "blocked": []
+    },
+    {
+      "start": [
+        16750,
+        -2000,
+        -45500
+      ],
+      "end": [
+        19000,
+        -2000,
+        -45000
+      ],
+      "samples": 32,
+      "blocked": [
+        [
+          17330.645161290322,
+          -2000.0,
+          -45370.967741935485
+        ],
+        [
+          17403.225806451614,
+          -2000.0,
+          -45354.83870967742
+        ],
+        [
+          17475.8064516129,
+          -2000.0,
+          -45338.709677419356
+        ],
+        [
+          17548.387096774193,
+          -2000.0,
+          -45322.58064516129
+        ],
+        [
+          17620.967741935485,
+          -2000.0,
+          -45306.45161290323
+        ]
+      ]
+    }
+  ]
+}
