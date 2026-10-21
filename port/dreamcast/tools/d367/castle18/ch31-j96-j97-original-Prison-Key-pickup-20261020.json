@@ -6,7 +6,7 @@
   "runs": [
     {
       "run": "current-j-route-walk96",
-      "result": "Original chest A/callback complete and TAKE prompt visible; Prison Key not yet collected,720/600 unchanged",
+      "result": "Original chest A/callback complete and TAKE prompt visible; Castle Gate Key not yet collected,720/600 unchanged",
       "elapsed_s": 9.2,
       "errors": [],
       "emulator_exited": true,
@@ -38,7 +38,7 @@
           "runtime": "12a841d7c",
           "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
           "room": "0x203",
-          "action_result": "Original chest A/callback complete and TAKE prompt visible; Prison Key not yet collected,720/600 unchanged",
+          "action_result": "Original chest A/callback complete and TAKE prompt visible; Castle Gate Key not yet collected,720/600 unchanged",
           "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk96\\shots\\checkpoint-source-22811\\frames\\fb0.png",
           "png_sha256": "e41a97aa1fd9c79ec41999b00cbee806d1b8fbb6411140acc283bbb948aa16b3",
           "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk96\\shots\\checkpoint-source-22811\\checkpoint-context.json",
@@ -63,7 +63,7 @@
     },
     {
       "run": "current-j-route-walk97",
-      "result": "Original aligned A/dialog collects Prison Key A7; inventory A7x1 and30 normal world ticks,720/600 unchanged; four new held/sent enemies, no wave clear",
+      "result": "Original aligned A/dialog collects Castle Gate Key A7; inventory A7x1 and30 normal world ticks,720/600 unchanged; four new held/sent enemies, no wave clear",
       "elapsed_s": 6.4,
       "errors": [],
       "emulator_exited": true,
@@ -97,7 +97,7 @@
           "runtime": "12a841d7c",
           "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
           "room": "0x203",
-          "action_result": "Original aligned A/dialog collects Prison Key A7; inventory A7x1 and30 normal world ticks,720/600 unchanged; four new held/sent enemies, no wave clear",
+          "action_result": "Original aligned A/dialog collects Castle Gate Key A7; inventory A7x1 and30 normal world ticks,720/600 unchanged; four new held/sent enemies, no wave clear",
           "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk97\\shots\\checkpoint-source-22947\\frames\\fb0.png",
           "png_sha256": "b961a10f78721956d1954e1b930e8311744f81fb28660df67247aa6e96266ae4",
           "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk97\\shots\\checkpoint-source-22947\\checkpoint-context.json",
@@ -410,5 +410,6 @@
     "Native observations include retained same-program room history, not isolated post-inventory cost or whole-room residency.",
     "DISC_READ_METER0/IO_PROBE0: no whole-drive quiet or hardware timing claim."
   ],
-  "next": "Normal return to original r201 locked door and original Prison Key Use/unlock; keep independent qualified J route."
+  "next": "Normal return to original r201 locked door and original Castle Gate Key Use/unlock; keep independent qualified J route.",
+  "naming_correction": "A7 is Castle Gate Key, confirmed by original key-item screen/source-backed CASTLE_CH31_NATIVE_SAVE_PROGRESS_20261019.md. Later r201 Prison Key is C3. Existing evidence filenames retained; numeric item/state/input proof unchanged."
 }

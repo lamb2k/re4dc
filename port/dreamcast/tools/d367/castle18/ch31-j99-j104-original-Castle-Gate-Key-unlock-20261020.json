@@ -1,0 +1,2271 @@
+{
+  "scope": "Unchanged qualified J original no-warp VMU/CardLoad lineage; normal physical movement/A/dialog/key-item Use0. No guest/item/health/state writes, rollback, program substitution, data changes or build/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk99",
+      "result": "Normal reverse lower-house stairs reach inside lower door,720/600 unchanged; pursuing enemy visible",
+      "elapsed_s": 15.3,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "c6ba2da51e6c82026378a9586d005187192ad0f2c9fdd8db3d187033ae310e82",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk99\\data\\disc.state"
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            -58100.0,
+            1900.0
+          ],
+          "pos": [
+            -58212.8125,
+            4189.275390625,
+            1763.3607177734375
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            -59250.0,
+            3000.0
+          ],
+          "pos": [
+            -59113.80078125,
+            4189.27099609375,
+            3029.1826171875
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            -59250.0,
+            4500.0
+          ],
+          "pos": [
+            -59302.3203125,
+            3692.4296875,
+            4371.68408203125
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            -59000.0,
+            7000.0
+          ],
+          "pos": [
+            -59042.890625,
+            3171.205078125,
+            6881.86767578125
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            -57250.0,
+            9500.0
+          ],
+          "pos": [
+            -57186.15234375,
+            3163.9453125,
+            9411.4912109375
+          ]
+        },
+        {
+          "normal_r203_key_return_lower_door_segment_complete": true,
+          "frame": 23320,
+          "pos": [
+            -56801.33984375,
+            3163.406005859375,
+            9598.0419921875
+          ],
+          "health": [
+            720,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk99\\shots\\checkpoint-source-23320\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk99\\shots\\checkpoint-source-23320\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk99",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Normal reverse lower-house stairs reach inside lower door,720/600 unchanged; pursuing enemy visible",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk99\\shots\\checkpoint-source-23320\\frames\\fb0.png",
+          "png_sha256": "af767a0b3799f6ea6fda5d26e274a3eafd8c38bf49487a579e5ba9d12f1ea233",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk99\\shots\\checkpoint-source-23320\\checkpoint-context.json",
+          "source_frame_interval": [
+            23320,
+            23329
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk100",
+      "result": "Normal open lower door/east ramp return reaches upper courtyard,720/600 unchanged",
+      "elapsed_s": 12.3,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "81237cfe31f2cd90ae7c1449b3855e3cd8ca3e4eb72e9f1bf1d2c8795a85f10a",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk100\\data\\disc.state"
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            -55800.0,
+            9500.0
+          ],
+          "pos": [
+            -55792.375,
+            3163.16748046875,
+            9681.6787109375
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            -51750.0,
+            7250.0
+          ],
+          "pos": [
+            -51878.55078125,
+            3169.7236328125,
+            7397.9697265625
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            -50900.0,
+            1400.0
+          ],
+          "pos": [
+            -50860.671875,
+            3186.796630859375,
+            1419.820068359375
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            -51450.0,
+            -2500.0
+          ],
+          "pos": [
+            -51309.984375,
+            4210.48291015625,
+            -2409.933349609375
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            -51500.0,
+            -3750.0
+          ],
+          "pos": [
+            -51557.8359375,
+            4180.373046875,
+            -3760.33642578125
+          ]
+        },
+        {
+          "normal_r203_key_return_lower_door_segment_complete": true,
+          "frame": 23619,
+          "pos": [
+            -47609.2421875,
+            4155.76318359375,
+            -8737.4873046875
+          ],
+          "health": [
+            720,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk100\\shots\\checkpoint-source-23620\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk100\\shots\\checkpoint-source-23620\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk100",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Normal open lower door/east ramp return reaches upper courtyard,720/600 unchanged",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk100\\shots\\checkpoint-source-23620\\frames\\fb0.png",
+          "png_sha256": "f13ed2fd7120cdc55df857b19ef15d45ccfd457d2d2751e952cba01ab3c6da04",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk100\\shots\\checkpoint-source-23620\\checkpoint-context.json",
+          "source_frame_interval": [
+            23620,
+            23630
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk101",
+      "result": "Normal approach safely collider-stops at closed interior return door; actual A OPEN prompt,720/600",
+      "elapsed_s": 17.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "f45cc83451982c52fb90462f21cf567b708d6f125435aed6a7865eb3a47d578a",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk101\\data\\disc.state"
+        },
+        {
+          "normal_input_has_no_displacement": true,
+          "frame": 24066,
+          "pos": [
+            -38104.62109375,
+            4155.767578125,
+            -9946.96875
+          ],
+          "target": [
+            -36500.0,
+            -10000.0
+          ],
+          "source_tick_window": 240
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk101\\shots\\checkpoint-source-24066\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk101\\shots\\checkpoint-source-24066\\checkpoint-context.json"
+        },
+        {
+          "owned_close_after_collision_stop": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk101",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Normal approach safely collider-stops at closed interior return door; actual A OPEN prompt,720/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk101\\shots\\checkpoint-source-24066\\frames\\fb0.png",
+          "png_sha256": "79e6b3728bc0c5546df7a757c7f7debca82f6b8a42f94cfb779fdfe544bed50f",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk101\\shots\\checkpoint-source-24066\\checkpoint-context.json",
+          "source_frame_interval": [
+            24066,
+            24076
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk102",
+      "result": "First normal A edge does not open return leaf; safely collider-stopped, actual A OPEN remains,720/600",
+      "elapsed_s": 13.8,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "adb28cdbd2db4224d01eabf4a80790efc3b398f0dae0029255df4edd654a467e",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk102\\data\\disc.state"
+        },
+        {
+          "normal_east_facing_A_at_original_A_OPEN_prompt": {
+            "host_monotonic": 298494.343,
+            "room": "0x203",
+            "frame": 24076,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              -38104.62109375,
+              4155.7685546875,
+              -9940.0732421875
+            ],
+            "yaw": 1.574135184288025,
+            "target_distance": 1605.739726982354,
+            "angle_error": 0.033990154556355456
+          }
+        },
+        {
+          "normal_input_has_no_displacement": true,
+          "frame": 24413,
+          "pos": [
+            -38104.625,
+            4155.76806640625,
+            -10008.849609375
+          ],
+          "target": [
+            -36500.0,
+            -10000.0
+          ],
+          "source_tick_window": 238
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk102\\shots\\checkpoint-source-24414\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk102\\shots\\checkpoint-source-24414\\checkpoint-context.json"
+        },
+        {
+          "owned_close_after_collision_stop": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk102",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "First normal A edge does not open return leaf; safely collider-stopped, actual A OPEN remains,720/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk102\\shots\\checkpoint-source-24414\\frames\\fb0.png",
+          "png_sha256": "7119baf1ebed3a65af098aba2c133655f6f430a914e19302f5d4675cd04d2925",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk102\\shots\\checkpoint-source-24414\\checkpoint-context.json",
+          "source_frame_interval": [
+            24414,
+            24423
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk103",
+      "result": "Neutral30source ticks returns actual idle before normal A; door opens and all3source-SAT front-gate waypoints pass,720/600",
+      "elapsed_s": 14.3,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "65b0e625cd7254fa5ac84c7868696b7b5c38d4aed9945118317c56b7d3bd9691",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk103\\data\\disc.state"
+        },
+        {
+          "normal_east_facing_A_at_original_A_OPEN_prompt": {
+            "host_monotonic": 298598.859,
+            "room": "0x203",
+            "frame": 24453,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              -38104.625,
+              4155.76611328125,
+              -10009.154296875
+            ],
+            "yaw": 1.574135184288025,
+            "target_distance": 1604.6511121662165,
+            "angle_error": -0.009043740293671831,
+            "source_idle_routines_before_door_A": [
+              0,
+              0,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            -36500.0,
+            -10000.0
+          ],
+          "pos": [
+            -36655.05859375,
+            4155.7705078125,
+            -10000.6142578125
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            -32250.0,
+            -19500.0
+          ],
+          "pos": [
+            -32246.6640625,
+            4155.76171875,
+            -19381.71484375
+          ]
+        },
+        {
+          "normal_r203_front_locked_exit_approach_complete": true,
+          "frame": 24780,
+          "pos": [
+            -31162.453125,
+            4155.76171875,
+            -23244.2578125
+          ],
+          "health": [
+            720,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk103\\shots\\checkpoint-source-24781\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk103\\shots\\checkpoint-source-24781\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk103",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Neutral30source ticks returns actual idle before normal A; door opens and all3source-SAT front-gate waypoints pass,720/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk103\\shots\\checkpoint-source-24781\\frames\\fb0.png",
+          "png_sha256": "ebf10783ef2257c8ca4dc98d071ea4ebccbfbada53c02b7602f8517aba10d6c7",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk103\\shots\\checkpoint-source-24781\\checkpoint-context.json",
+          "source_frame_interval": [
+            24781,
+            24790
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk104",
+      "result": "Original sole Castle Gate Key A7 index0/Use0 consumed; original watcher sets door_unlock0 bit20000, confirmation/world return15ticks,720/600",
+      "elapsed_s": 27.7,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "9edfc9881603d38b7201707493b014c607d22e18b63acbbb6359647d624ea470",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk104\\data\\disc.state"
+        },
+        {
+          "normal_aligned_A_at_original_front_gate": {
+            "frame": 25267,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 167,
+                "num": 1,
+                "bullet": 0,
+                "raw": "a700010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": false,
+            "pos": [
+              -30819.48828125,
+              4155.76416015625,
+              -23204.515625
+            ],
+            "yaw": 3.119849920272827,
+            "door_facing_error": 0.021742733316965968,
+            "source_idle_routines": [
+              0,
+              4,
+              2,
+              0
+            ]
+          }
+        },
+        {
+          "normal_A_advances_original_gate_dialog": {
+            "frame": 25292,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 167,
+                "num": 1,
+                "bullet": 0,
+                "raw": "a700010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": false
+          }
+        },
+        {
+          "normal_A_on_verified_Castle_Gate_Key_and_Use0": {
+            "frame": 25317,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 167,
+                "num": 1,
+                "bullet": 0,
+                "raw": "a700010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": false,
+            "item_cursor": "000000000000000000",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xa7"
+            ],
+            "selected_source_id": "0xa7"
+          }
+        },
+        {
+          "normal_A_on_verified_Castle_Gate_Key_and_Use0": {
+            "frame": 25343,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 167,
+                "num": 1,
+                "bullet": 0,
+                "raw": "a700010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": false,
+            "item_cursor": "000000000000ffff00",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xa7"
+            ],
+            "selected_source_id": "0xa7"
+          }
+        },
+        {
+          "normal_A_on_verified_Castle_Gate_Key_and_Use0": {
+            "frame": 25368,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 167,
+                "num": 1,
+                "bullet": 0,
+                "raw": "a700010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": false,
+            "item_cursor": "000000000000ffff00",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xa7"
+            ],
+            "selected_source_id": "0xa7"
+          }
+        },
+        {
+          "normal_A_on_verified_Castle_Gate_Key_and_Use0": {
+            "frame": 25393,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 167,
+                "num": 1,
+                "bullet": 0,
+                "raw": "a700010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": false,
+            "item_cursor": "000000000000ffff00",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xa7"
+            ],
+            "selected_source_id": "0xa7"
+          }
+        },
+        {
+          "normal_A_advances_original_gate_dialog": {
+            "frame": 25418,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": true
+          }
+        },
+        {
+          "normal_A_advances_original_gate_dialog": {
+            "frame": 25443,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": true
+          }
+        },
+        {
+          "normal_A_advances_original_gate_dialog": {
+            "frame": 25469,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": true
+          }
+        },
+        {
+          "original_Castle_Gate_Key_consumed_and_unlock_bit_set": {
+            "frame": 25479,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": true
+          }
+        },
+        {
+          "original_Castle_Gate_Key_unlock_callback_world_return_complete": {
+            "frame": 25495,
+            "life": 720,
+            "Ashley": 600,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 10,
+                "raw": "23000100010000000a0002010001"
+              },
+              {
+                "id": 4,
+                "num": 10,
+                "bullet": 0,
+                "raw": "04000a0001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "gate_unlocked": true
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk104\\shots\\checkpoint-source-25495\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk104\\shots\\checkpoint-source-25495\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk104",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x203",
+          "action_result": "Original sole Castle Gate Key A7 index0/Use0 consumed; original watcher sets door_unlock0 bit20000, confirmation/world return15ticks,720/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk104\\shots\\checkpoint-source-25495\\frames\\fb0.png",
+          "png_sha256": "cb05bcbf50d4063aad6c520e9b89e79a036ab1d86df1d69198eb0d38a08d20eb",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk104\\shots\\checkpoint-source-25495\\checkpoint-context.json",
+          "source_frame_interval": [
+            25495,
+            25503
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "current_snapshot_audit": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "9edfc9881603d38b7201707493b014c607d22e18b63acbbb6359647d624ea470",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x203",
+    "chapter": 6,
+    "source_frame": 25503,
+    "health": [
+      720,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0xa84002b4",
+    "door_unlock": [
+      "0x820000",
+      "0x0"
+    ],
+    "partner_subflags": "0x44",
+    "r203_RSF": "0x18000000",
+    "player_pos": [
+      -30819.681640625,
+      4155.75927734375,
+      -23193.80078125
+    ],
+    "partner_pos": [
+      -31180.45703125,
+      4155.76416015625,
+      -22994.248046875
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "navigation": {
+    "scope": "Read-only source SAT floor+wall conservative250mm grid,300mm wallclearance,550mm maxneighborheight change. No source/game/model edits; path is a navigation hypothesis governed by actual normal collision.",
+    "start": [
+      -47500,
+      4156,
+      -8750
+    ],
+    "goal": [
+      -31000,
+      4156,
+      -24250
+    ],
+    "start_node": [
+      -47500,
+      4155.76318359375,
+      -8750,
+      67
+    ],
+    "goal_node": [
+      -31000,
+      4155.76318359375,
+      -23250,
+      69
+    ],
+    "length": 31000.00000001261,
+    "all_points": [
+      [
+        -47500,
+        4155.76318359375,
+        -8750,
+        67
+      ],
+      [
+        -47250,
+        4155.76318359375,
+        -8750,
+        67
+      ],
+      [
+        -47000,
+        4155.76318359375,
+        -8750,
+        67
+      ],
+      [
+        -46750,
+        4155.76318359375,
+        -8750,
+        67
+      ],
+      [
+        -46500,
+        4155.76318359375,
+        -8750,
+        67
+      ],
+      [
+        -46500,
+        4155.76318359375,
+        -9000,
+        67
+      ],
+      [
+        -46250,
+        4155.76318359375,
+        -9000,
+        67
+      ],
+      [
+        -46250,
+        4155.76318359375,
+        -9250,
+        67
+      ],
+      [
+        -46000,
+        4155.76318359375,
+        -9250,
+        67
+      ],
+      [
+        -46000,
+        4155.76318359375,
+        -9500,
+        67
+      ],
+      [
+        -45750,
+        4155.76318359375,
+        -9500,
+        67
+      ],
+      [
+        -45750,
+        4155.76318359375,
+        -9750,
+        67
+      ],
+      [
+        -45500,
+        4155.76318359375,
+        -9750,
+        67
+      ],
+      [
+        -45500,
+        4155.763183593751,
+        -10000,
+        67
+      ],
+      [
+        -45250,
+        4155.76318359375,
+        -10000,
+        67
+      ],
+      [
+        -45000,
+        4155.76318359375,
+        -10000,
+        67
+      ],
+      [
+        -44750,
+        4155.76318359375,
+        -10000,
+        67
+      ],
+      [
+        -44500,
+        4155.76318359375,
+        -10000,
+        67
+      ],
+      [
+        -44250,
+        4155.76318359375,
+        -10000,
+        67
+      ],
+      [
+        -44000,
+        4155.76318359375,
+        -10000,
+        67
+      ],
+      [
+        -43750,
+        4155.76318359375,
+        -10000,
+        67
+      ],
+      [
+        -43500,
+        4155.76318359375,
+        -10000,
+        67
+      ],
+      [
+        -43250,
+        4155.76318359375,
+        -10000,
+        67
+      ],
+      [
+        -43000,
+        4155.76318359375,
+        -10000,
+        69
+      ],
+      [
+        -42750,
+        4155.76318359375,
+        -10000,
+        69
+      ],
+      [
+        -42500,
+        4155.76318359375,
+        -10000,
+        69
+      ],
+      [
+        -42250,
+        4155.76318359375,
+        -10000,
+        69
+      ],
+      [
+        -42000,
+        4155.763391359905,
+        -10000,
+        68
+      ],
+      [
+        -41750,
+        4155.76367583229,
+        -10000,
+        68
+      ],
+      [
+        -41500,
+        4155.763960304675,
+        -10000,
+        68
+      ],
+      [
+        -41250,
+        4155.7642447770595,
+        -10000,
+        68
+      ],
+      [
+        -41000,
+        4155.7645292494435,
+        -10000,
+        68
+      ],
+      [
+        -40750,
+        4155.7648137218275,
+        -10000,
+        68
+      ],
+      [
+        -40500,
+        4155.765098194212,
+        -10000,
+        68
+      ],
+      [
+        -40250,
+        4155.765382666597,
+        -10000,
+        68
+      ],
+      [
+        -40000,
+        4155.765667138981,
+        -10000,
+        68
+      ],
+      [
+        -39750,
+        4155.765951611366,
+        -10000,
+        68
+      ],
+      [
+        -39500,
+        4155.766236083751,
+        -10000,
+        68
+      ],
+      [
+        -39250,
+        4155.766520556135,
+        -10000,
+        68
+      ],
+      [
+        -39000,
+        4155.766805028519,
+        -10000,
+        68
+      ],
+      [
+        -38750,
+        4155.767089500905,
+        -10000,
+        68
+      ],
+      [
+        -38500,
+        4155.767373973289,
+        -10000,
+        68
+      ],
+      [
+        -38250,
+        4155.767658445674,
+        -10000,
+        68
+      ],
+      [
+        -38000,
+        4155.767942918058,
+        -10000,
+        68
+      ],
+      [
+        -37750,
+        4155.768227390442,
+        -10000,
+        68
+      ],
+      [
+        -37500,
+        4155.768511862827,
+        -10000,
+        68
+      ],
+      [
+        -37250,
+        4155.768796335211,
+        -10000,
+        68
+      ],
+      [
+        -37000,
+        4155.769080807597,
+        -10000,
+        68
+      ],
+      [
+        -36750,
+        4155.769365279981,
+        -10000,
+        68
+      ],
+      [
+        -36500,
+        4155.769649752366,
+        -10000,
+        68
+      ],
+      [
+        -36500,
+        4155.769374197487,
+        -10250,
+        68
+      ],
+      [
+        -36250,
+        4155.769658669872,
+        -10250,
+        68
+      ],
+      [
+        -36250,
+        4155.769383114994,
+        -10500,
+        68
+      ],
+      [
+        -36250,
+        4155.769107560116,
+        -10750,
+        68
+      ],
+      [
+        -36250,
+        4155.768832005238,
+        -11000,
+        68
+      ],
+      [
+        -36250,
+        4155.76855645036,
+        -11250,
+        68
+      ],
+      [
+        -36250,
+        4155.768280895482,
+        -11500,
+        68
+      ],
+      [
+        -36250,
+        4155.768005340604,
+        -11750,
+        68
+      ],
+      [
+        -36250,
+        4155.767729785725,
+        -12000,
+        68
+      ],
+      [
+        -36250,
+        4155.767454230847,
+        -12250,
+        68
+      ],
+      [
+        -36250,
+        4155.76717867597,
+        -12500,
+        68
+      ],
+      [
+        -36250,
+        4155.766903121092,
+        -12750,
+        68
+      ],
+      [
+        -36250,
+        4155.766627566214,
+        -13000,
+        68
+      ],
+      [
+        -36000,
+        4155.766912038598,
+        -13000,
+        68
+      ],
+      [
+        -36000,
+        4155.7666364837205,
+        -13250,
+        68
+      ],
+      [
+        -36000,
+        4155.766360928842,
+        -13500,
+        68
+      ],
+      [
+        -36000,
+        4155.7660853739635,
+        -13750,
+        68
+      ],
+      [
+        -36000,
+        4155.765809819086,
+        -14000,
+        68
+      ],
+      [
+        -36000,
+        4155.765534264208,
+        -14250,
+        68
+      ],
+      [
+        -36000,
+        4155.76525870933,
+        -14500,
+        68
+      ],
+      [
+        -35750,
+        4155.765543181715,
+        -14500,
+        68
+      ],
+      [
+        -35750,
+        4155.765267626837,
+        -14750,
+        68
+      ],
+      [
+        -35750,
+        4155.764992071959,
+        -15000,
+        68
+      ],
+      [
+        -35750,
+        4155.764716517081,
+        -15250,
+        68
+      ],
+      [
+        -35750,
+        4155.764440962203,
+        -15500,
+        68
+      ],
+      [
+        -35500,
+        4155.764725434587,
+        -15500,
+        68
+      ],
+      [
+        -35500,
+        4155.764449879709,
+        -15750,
+        68
+      ],
+      [
+        -35500,
+        4155.764174324831,
+        -16000,
+        68
+      ],
+      [
+        -35500,
+        4155.763898769953,
+        -16250,
+        68
+      ],
+      [
+        -35250,
+        4155.764183242338,
+        -16250,
+        68
+      ],
+      [
+        -35250,
+        4155.763907687459,
+        -16500,
+        68
+      ],
+      [
+        -35250,
+        4155.763632132581,
+        -16750,
+        68
+      ],
+      [
+        -35000,
+        4155.763916604967,
+        -16750,
+        68
+      ],
+      [
+        -34750,
+        4155.764201077351,
+        -16750,
+        68
+      ],
+      [
+        -34750,
+        4155.763925522472,
+        -17000,
+        68
+      ],
+      [
+        -34500,
+        4155.764209994857,
+        -17000,
+        68
+      ],
+      [
+        -34250,
+        4155.764494467242,
+        -17000,
+        68
+      ],
+      [
+        -34250,
+        4155.7642189123635,
+        -17250,
+        68
+      ],
+      [
+        -34000,
+        4155.764503384748,
+        -17250,
+        68
+      ],
+      [
+        -34000,
+        4155.76422782987,
+        -17500,
+        68
+      ],
+      [
+        -33750,
+        4155.764512302255,
+        -17500,
+        68
+      ],
+      [
+        -33750,
+        4155.764236747376,
+        -17750,
+        68
+      ],
+      [
+        -33750,
+        4155.763961192499,
+        -18000,
+        68
+      ],
+      [
+        -33750,
+        4155.763685637621,
+        -18250,
+        68
+      ],
+      [
+        -33500,
+        4155.763970110005,
+        -18250,
+        68
+      ],
+      [
+        -33500,
+        4155.763694555128,
+        -18500,
+        68
+      ],
+      [
+        -33250,
+        4155.763979027512,
+        -18500,
+        68
+      ],
+      [
+        -33250,
+        4155.763703472634,
+        -18750,
+        68
+      ],
+      [
+        -33000,
+        4155.763987945019,
+        -18750,
+        68
+      ],
+      [
+        -33000,
+        4155.76371239014,
+        -19000,
+        68
+      ],
+      [
+        -32750,
+        4155.763996862525,
+        -19000,
+        68
+      ],
+      [
+        -32750,
+        4155.763721307647,
+        -19250,
+        68
+      ],
+      [
+        -32500,
+        4155.764005780032,
+        -19250,
+        68
+      ],
+      [
+        -32250,
+        4155.764290252416,
+        -19250,
+        68
+      ],
+      [
+        -32250,
+        4155.764014697538,
+        -19500,
+        68
+      ],
+      [
+        -32250,
+        4155.76373914266,
+        -19750,
+        68
+      ],
+      [
+        -32250,
+        4155.763463587782,
+        -20000,
+        68
+      ],
+      [
+        -32250,
+        4155.763188032904,
+        -20250,
+        68
+      ],
+      [
+        -32250,
+        4155.76318359375,
+        -20500,
+        69
+      ],
+      [
+        -32250,
+        4155.76318359375,
+        -20750,
+        69
+      ],
+      [
+        -32250,
+        4155.76318359375,
+        -21000,
+        69
+      ],
+      [
+        -32250,
+        4155.76318359375,
+        -21250,
+        69
+      ],
+      [
+        -32000,
+        4155.76318359375,
+        -21250,
+        69
+      ],
+      [
+        -31750,
+        4155.76318359375,
+        -21250,
+        69
+      ],
+      [
+        -31750,
+        4155.76318359375,
+        -21500,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -21500,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -21750,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -22000,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -22250,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -22500,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -22750,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -23000,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -23250,
+        69
+      ],
+      [
+        -31250,
+        4155.76318359375,
+        -23250,
+        69
+      ],
+      [
+        -31000,
+        4155.76318359375,
+        -23250,
+        69
+      ]
+    ],
+    "turns": [
+      [
+        -47500,
+        4155.76318359375,
+        -8750,
+        67
+      ],
+      [
+        -46500,
+        4155.76318359375,
+        -8750,
+        67
+      ],
+      [
+        -46500,
+        4155.76318359375,
+        -9000,
+        67
+      ],
+      [
+        -46250,
+        4155.76318359375,
+        -9000,
+        67
+      ],
+      [
+        -46250,
+        4155.76318359375,
+        -9250,
+        67
+      ],
+      [
+        -46000,
+        4155.76318359375,
+        -9250,
+        67
+      ],
+      [
+        -46000,
+        4155.76318359375,
+        -9500,
+        67
+      ],
+      [
+        -45750,
+        4155.76318359375,
+        -9500,
+        67
+      ],
+      [
+        -45750,
+        4155.76318359375,
+        -9750,
+        67
+      ],
+      [
+        -45500,
+        4155.76318359375,
+        -9750,
+        67
+      ],
+      [
+        -45500,
+        4155.763183593751,
+        -10000,
+        67
+      ],
+      [
+        -36500,
+        4155.769649752366,
+        -10000,
+        68
+      ],
+      [
+        -36500,
+        4155.769374197487,
+        -10250,
+        68
+      ],
+      [
+        -36250,
+        4155.769658669872,
+        -10250,
+        68
+      ],
+      [
+        -36250,
+        4155.766627566214,
+        -13000,
+        68
+      ],
+      [
+        -36000,
+        4155.766912038598,
+        -13000,
+        68
+      ],
+      [
+        -36000,
+        4155.76525870933,
+        -14500,
+        68
+      ],
+      [
+        -35750,
+        4155.765543181715,
+        -14500,
+        68
+      ],
+      [
+        -35750,
+        4155.764440962203,
+        -15500,
+        68
+      ],
+      [
+        -35500,
+        4155.764725434587,
+        -15500,
+        68
+      ],
+      [
+        -35500,
+        4155.763898769953,
+        -16250,
+        68
+      ],
+      [
+        -35250,
+        4155.764183242338,
+        -16250,
+        68
+      ],
+      [
+        -35250,
+        4155.763632132581,
+        -16750,
+        68
+      ],
+      [
+        -34750,
+        4155.764201077351,
+        -16750,
+        68
+      ],
+      [
+        -34750,
+        4155.763925522472,
+        -17000,
+        68
+      ],
+      [
+        -34250,
+        4155.764494467242,
+        -17000,
+        68
+      ],
+      [
+        -34250,
+        4155.7642189123635,
+        -17250,
+        68
+      ],
+      [
+        -34000,
+        4155.764503384748,
+        -17250,
+        68
+      ],
+      [
+        -34000,
+        4155.76422782987,
+        -17500,
+        68
+      ],
+      [
+        -33750,
+        4155.764512302255,
+        -17500,
+        68
+      ],
+      [
+        -33750,
+        4155.763685637621,
+        -18250,
+        68
+      ],
+      [
+        -33500,
+        4155.763970110005,
+        -18250,
+        68
+      ],
+      [
+        -33500,
+        4155.763694555128,
+        -18500,
+        68
+      ],
+      [
+        -33250,
+        4155.763979027512,
+        -18500,
+        68
+      ],
+      [
+        -33250,
+        4155.763703472634,
+        -18750,
+        68
+      ],
+      [
+        -33000,
+        4155.763987945019,
+        -18750,
+        68
+      ],
+      [
+        -33000,
+        4155.76371239014,
+        -19000,
+        68
+      ],
+      [
+        -32750,
+        4155.763996862525,
+        -19000,
+        68
+      ],
+      [
+        -32750,
+        4155.763721307647,
+        -19250,
+        68
+      ],
+      [
+        -32250,
+        4155.764290252416,
+        -19250,
+        68
+      ],
+      [
+        -32250,
+        4155.76318359375,
+        -21250,
+        69
+      ],
+      [
+        -31750,
+        4155.76318359375,
+        -21250,
+        69
+      ],
+      [
+        -31750,
+        4155.76318359375,
+        -21500,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -21500,
+        69
+      ],
+      [
+        -31500,
+        4155.76318359375,
+        -23250,
+        69
+      ],
+      [
+        -31000,
+        4155.76318359375,
+        -23250,
+        69
+      ]
+    ],
+    "source_grid_visibility_compressed": [
+      [
+        -47500,
+        4155.76318359375,
+        -8750,
+        67
+      ],
+      [
+        -36500,
+        4155.769649752366,
+        -10000,
+        68
+      ],
+      [
+        -32250,
+        4155.764014697538,
+        -19500,
+        68
+      ],
+      [
+        -31000,
+        4155.76318359375,
+        -23250,
+        69
+      ]
+    ],
+    "compression_scope": "Read-only line samples every<=100 source units checked against conservative sourcefloor/wall grid, max550heightstep. Original collision remains authoritative; no game writes."
+  },
+  "pre_guest98_control": {
+    "status": "PRE_GUEST_COMMAND_PREPARATION_FAILED",
+    "emulator_started": false,
+    "error": "PowerShell piped final command received CR suffix in Windows Python path",
+    "correction": "Fresh J99 script invoked by WSL bash file path; no game/harness guards changed",
+    "no_state_advance": true
+  },
+  "key_name": "A7 Castle Gate Key, visibly confirmed in J104 t0021; later r201 Prison Key is C3. Prior evidence filenames retained after prose correction.",
+  "limits": [
+    "No original held-wave release/kill/clear closure from walking/key use.",
+    "Short source/memory/control gates do not close full native texture/audio/residency or motion/drive performance gaps.",
+    "DISC_READ_METER0/IO_PROBE0: no whole-drive quiet or hardware timing claim."
+  ],
+  "next": "Normal unlocked gate to r201, then original dungeon/Garrador/stairs/waves/end-save chapter progression."
+}
