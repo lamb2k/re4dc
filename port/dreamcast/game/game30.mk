@@ -2545,6 +2545,30 @@ endif
 $(OBJDIR)/coarse.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_MESH=1
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_ps2_world.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_MESH=1
 endif
+# WORLD_RECT21=1: private selected rectangle representations on the qualified
+# PS2 mesh direct consumer only. Exact key, dimensions, format, flags, layout,
+# payload size and descriptor CRC select the UV rule. No production recipe uses
+# it. Generic, actor and legacy world packet dimension guards stay unchanged.
+WORLD_RECT21 ?= 0
+ifneq ($(words $(WORLD_RECT21)),1)
+$(error WORLD_RECT21 must be 0 or 1)
+endif
+ifneq ($(filter 0 1,$(WORLD_RECT21)),$(WORLD_RECT21))
+$(error WORLD_RECT21 must be 0 or 1)
+endif
+ifeq ($(WORLD_RECT21),1)
+ifneq ($(PS2_WORLD_DRAW),1)
+$(error WORLD_RECT21=1 requires PS2_WORLD_DRAW=1)
+endif
+ifneq ($(PS2_WORLD_MESH),1)
+$(error WORLD_RECT21=1 requires PS2_WORLD_MESH=1)
+endif
+ifneq ($(MESH_DIRECT),1)
+$(error WORLD_RECT21=1 requires MESH_DIRECT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_RECT21=1
+endif
+
 # PS2_WORLD_HDR_CACHE=1 (native_ui.cpp, render only, exact, default 0; needs PS2_WORLD_MESH=1): the PS2 world's
 # direct bind (re4dc_ps2_world_direct_begin) keeps each material's compiled header (texture key/size, pass, cull, fog)
 # with its texture Entry in a 4-way 128-slot table (5 KiB), valid while that Entry holds the key at the same VRAM address:
