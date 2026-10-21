@@ -72,6 +72,12 @@
 #endif
 #endif
 
+#if defined(RE4DC_EVD_EXEC_FAILURE_CLEANUP) && RE4DC_EVD_EXEC_FAILURE_CLEANUP && !defined(__PPC__)
+#if !defined(RE4DC_EVD_START_ROLLBACK) || !RE4DC_EVD_START_ROLLBACK
+#error EVD_EXEC_FAILURE_CLEANUP requires EVD_START_ROLLBACK
+#endif
+#endif
+
 #if defined(RE4DC_EVD_DEBUG_READ_CLEANUP) && RE4DC_EVD_DEBUG_READ_CLEANUP && !defined(__PPC__)
 #if !defined(RE4DC_EVD_ADMISSION_TXN) || !RE4DC_EVD_ADMISSION_TXN
 #error EVD_DEBUG_READ_CLEANUP requires EVD_ADMISSION_TXN
@@ -2550,6 +2556,19 @@ int EventMgr::EvtReadExec(char* nm, int em, u32 flags)
             SceSleep(1);
         }
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_EXEC_FAILURE_CLEANUP) && RE4DC_EVD_EXEC_FAILURE_CLEANUP
+    // The first repair covers direct MRAM reads, including ordinary ARAM
+    // preloads promoted by EvtReadMram. Module exchange needs its own receipt.
+    cDataUnit* prior_unit = 0;
+    int prior_no = 0;
+    EvtReadEm prior_em = {};
+    const int prior_read = em == 0 && GetRead((void**) &prior_unit, &prior_no, nm);
+    if (prior_read && prior_no >= 0 && prior_no < 8) {
+        prior_em = readEm[prior_no];
+    }
+    const u32 prior_status = pG->Status_flg[2] & 0x00090000;
+    const u32 prior_system = pG->System_flg & 0x400;
+#endif
     if (flags & 0x80) {
         pLog->mes(0, 0, "EventMgr::EvtReadExec : SceEventStart(true)");
         SceEventStart(1);
@@ -2583,6 +2602,50 @@ int EventMgr::EvtReadExec(char* nm, int em, u32 flags)
             if (flags & 0x100) {
                 BitOn(evt->StatusFlag, 0x40);
             }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_EXEC_FAILURE_CLEANUP) && RE4DC_EVD_EXEC_FAILURE_CLEANUP
+        } else if (em == 0) {
+            cDataUnit* current = 0;
+            int current_no = 0;
+            if (GetRead((void**) &current, &current_no, nm) && current &&
+                current_no >= 0 && current_no < 8 && current_no < ReadTbl.NumDatTbl) {
+                if (prior_read) {
+                    // A failed new work never releases a pre-existing read.
+                    if (current == prior_unit && current_no == prior_no) {
+                        readEm[current_no] = prior_em;
+                    }
+                } else if ((u32) current->m_addr == (u32) addr &&
+                           readEm[current_no].em == 0 && readEm[current_no].swapped == 0) {
+                    const DatTblEntry* row = &ReadTbl.pWork[current_no];
+                    int borrowed = 0;
+                    const u32 base = (u32) current->m_addr;
+                    for (int i = 0; i < EvdTbl.NumDatTbl && EvdTbl.pWork; i++) {
+                        const DatTblEntry* owner = &EvdTbl.pWork[i];
+                        if ((owner->FlagBe8 & 1) && (u32) owner->Dat - base < current->m_size) borrowed = 1;
+                    }
+                    for (int i = 0; i < BinTbl.NumDatTbl && BinTbl.pWork; i++) {
+                        const DatTblEntry* owner = &BinTbl.pWork[i];
+                        if ((owner->FlagBe8 & 1) && (u32) owner->Dat - base < current->m_size) borrowed = 1;
+                    }
+                    for (u32 i = 0; i < nArray && pArray; i++) {
+                        Event* reader = (Event*) ((u8*) pArray + size * i);
+                        if (reader->isAlive() && (u32) reader->pData - base < current->m_size) borrowed = 1;
+                    }
+                    if (!borrowed && row->Count == 1 && row->FlagBe8 == 3 && row->dat2 == 0) {
+                        if (!EvtFree(nm)) {
+                            // Cabin clear refusal retains its exact read/role
+                            // for retry. Failure is never reported as success.
+                            pLog->warn(0, 0, "EventMgr::EvtReadExec : failed start retained read[%s]", nm);
+                        }
+                    }
+                }
+            }
+            // Pair only this call's Start. Source End handles outer camera
+            // restoration and leaves a prior nested event running.
+            SceEventEnd(0);
+            pG->Status_flg[2] = (pG->Status_flg[2] & ~0x00090000U) | prior_status;
+            pG->System_flg = (pG->System_flg & ~0x400U) | prior_system;
+            return 0;
+#endif
         }
         if (flags & 4) {
             SceSleep(1);

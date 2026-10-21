@@ -1,0 +1,197 @@
+{
+  "scope": "Actual SH-4 event.o only; no linked-program, guest or hardware acceptance",
+  "baseline_revision": "dfc0cf972",
+  "candidate_event_sha256": "34c724861a23c11934598009be70f5d36431dbfc430c90691ca3163e7b2952f7",
+  "qualifier_sha256": "1d5787c7853236fc48f7b1c819a08f75c26d6d71f8bfd52e75d15e9ecd092d77",
+  "baseline_make_sha256": "85cea4176f836231dcc1da66942ee6bc629cc140826a279ca2a1ae09ac84dc24",
+  "start_C_free_bytes": 18532540416,
+  "finish_C_free_bytes": 18501029888,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "invalid_knobs_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "missing_make_prerequisites_rejected": [
+    "0"
+  ],
+  "direct_source_prerequisites_rejected": [
+    null,
+    "0"
+  ],
+  "ppc_selected_preprocessed_sha256": "a4b3b611421a6f33384f87c337810771bcc46a19773890571cdeb9f167ae3388",
+  "ppc_limit": "Selected-source preprocessing only, not a PPC object/full-game identity claim.",
+  "objects": [
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_EXEC_FAILURE_CLEANUP": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "5a75a243c71492a2e66fa21d470210e3c909767a7d56fc294c808afff749b86c",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin0-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:266:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2928:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2750:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2688:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2542:5:int EventMgr::EvtReadExec(char*, int, u32)\t52\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_EXEC_FAILURE_CLEANUP": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "34c724861a23c11934598009be70f5d36431dbfc430c90691ca3163e7b2952f7",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin0-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:272:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2991:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2751:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2548:5:int EventMgr::EvtReadExec(char*, int, u32)\t52\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_EXEC_FAILURE_CLEANUP": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "5a75a243c71492a2e66fa21d470210e3c909767a7d56fc294c808afff749b86c",
+      "stripped_event_o_sha256": "52dcf7af3e5e8b38ae771e5a4020bd11cc3df31b8537e1a6dccf8398732546ea",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39993\t      4\t    640\t  40637\t   9ebd\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin0-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:266:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2928:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2750:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2688:5:int EventMgr::SetEvt(void*, u32*)\t40\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2542:5:int EventMgr::EvtReadExec(char*, int, u32)\t52\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_EXEC_FAILURE_CLEANUP": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "34c724861a23c11934598009be70f5d36431dbfc430c90691ca3163e7b2952f7",
+      "stripped_event_o_sha256": "52dcf7af3e5e8b38ae771e5a4020bd11cc3df31b8537e1a6dccf8398732546ea",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39993\t      4\t    640\t  40637\t   9ebd\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin0-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:272:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2991:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2751:5:int EventMgr::SetEvt(void*, u32*)\t40\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2548:5:int EventMgr::EvtReadExec(char*, int, u32)\t52\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_EXEC_FAILURE_CLEANUP": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "34c724861a23c11934598009be70f5d36431dbfc430c90691ca3163e7b2952f7",
+      "stripped_event_o_sha256": "be9ed60169490f0ac95b9c7970f0682cc95cf91ef76a8afe143e456882835a2d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40613\t      4\t    640\t  41257\t   a129\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin0-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:272:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2991:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2751:5:int EventMgr::SetEvt(void*, u32*)\t40\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2548:5:int EventMgr::EvtReadExec(char*, int, u32)\t80\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_EXEC_FAILURE_CLEANUP": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "5a75a243c71492a2e66fa21d470210e3c909767a7d56fc294c808afff749b86c",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin1-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:266:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2928:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2750:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2688:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2542:5:int EventMgr::EvtReadExec(char*, int, u32)\t52\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_EXEC_FAILURE_CLEANUP": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "34c724861a23c11934598009be70f5d36431dbfc430c90691ca3163e7b2952f7",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin1-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:272:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2991:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2751:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2548:5:int EventMgr::EvtReadExec(char*, int, u32)\t52\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_EXEC_FAILURE_CLEANUP": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "5a75a243c71492a2e66fa21d470210e3c909767a7d56fc294c808afff749b86c",
+      "stripped_event_o_sha256": "1347d172b0a5ae61c70394d1e1409dd4c619893c06ce5c00ed77e3e7699602f0",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40523\t      4\t    640\t  41167\t   a0cf\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin1-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:266:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2928:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2750:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2688:5:int EventMgr::SetEvt(void*, u32*)\t40\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2542:5:int EventMgr::EvtReadExec(char*, int, u32)\t52\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_EXEC_FAILURE_CLEANUP": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "34c724861a23c11934598009be70f5d36431dbfc430c90691ca3163e7b2952f7",
+      "stripped_event_o_sha256": "1347d172b0a5ae61c70394d1e1409dd4c619893c06ce5c00ed77e3e7699602f0",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40523\t      4\t    640\t  41167\t   a0cf\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin1-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:272:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2991:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2751:5:int EventMgr::SetEvt(void*, u32*)\t40\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2548:5:int EventMgr::EvtReadExec(char*, int, u32)\t52\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_EXEC_FAILURE_CLEANUP": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "34c724861a23c11934598009be70f5d36431dbfc430c90691ca3163e7b2952f7",
+      "stripped_event_o_sha256": "2d56ee8247dca2b42e1cce392b98c41d1e04131a8d479101acdffb75b7f19e92",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  41143\t      4\t    640\t  41787\t   a33b\t/root/probe/cache21-callers-exec-failure-sh4-20261021-01/cabin1-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:272:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2991:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2751:5:int EventMgr::SetEvt(void*, u32*)\t40\tstatic",
+        "/root/probe/cache21-callers-exec-failure-sh4-20261021-01/event.cpp:2548:5:int EventMgr::EvtReadExec(char*, int, u32)\t80\tstatic"
+      ]
+    }
+  ]
+}

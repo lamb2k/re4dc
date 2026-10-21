@@ -11,10 +11,11 @@ using u8 = std::uint8_t; using u32 = std::uint32_t; using s32 = std::int32_t;
 struct EvtHeader;
 struct Event {
     u32 be_flag{}, StatusFlag{}; char Name[32]{};
+    EvtHeader* pData{};
     int isAlive() { return (be_flag & 0x201) == 1; }
     int init(char*, EvtHeader*);
 };
-struct Global { u32 Stop_flg{}, Debug_flg[4]{}, Status_flg[3]{}, System_flg{}; } global, *pG = &global;
+struct Global { u32 Stop_flg{}, Debug_flg[4]{}, Status_flg[4]{}, System_flg{}; } global, *pG = &global;
 static unsigned init_calls, pool_logs, release_calls, debug_release_calls, sleep_calls, read_calls;
 static bool retire_on_sleep;
 static void* released;
@@ -28,6 +29,8 @@ static void* host_table_alloc(unsigned, int, int) { std::abort(); }
 #define MEM_ALLOC host_table_alloc
 #define RE4DC_EVENT_FILE_FLAG 4
 #define CMND_CLEAR_DATA 3
+#define CMND_MRAM_LOAD 1
+#define CMND_ARAM_LOAD 2
 #define BitOn(v, bits) ((v) |= (bits))
 #define BitOff(v, bits) ((v) &= ~(bits))
 #define EvtChk(value, bits) (((value) & (bits)) != 0)
@@ -35,11 +38,17 @@ static void OSReport(const char*, ...) {}
 static void retire_prior_event();
 static void SceSleep(int) { ++sleep_calls; if (retire_on_sleep) retire_prior_event(); }
 static int SceCheckEventStart() { return 1; }
+static unsigned camera_calls;
+struct Camera { void Comeback(int) { ++camera_calls; } void LowerBinocular() {} } CamCtrl;
+#if defined(RE4DC_EXEC_REAL_SCENARIO)
+#include "exec_scenario_boundary.inc"
+#else
 static void SceEventStart(int) {}
 static void SceEventEnd(int) {}
+#endif
 static void FadeSetW(u32, int, int, int) {}
-struct Camera { void Comeback(int) {} } CamCtrl;
-struct Controller { int m_nblock_read_stop{}, dbgHeap{}; } DC;
+class cDataUnit;
+struct Controller { int m_nblock_read_stop{}, dbgHeap{}; cDataUnit* setData(char*); } DC;
 struct AramBoundary { void DmaCancel(int) { std::abort(); } } Aram;
 struct DvdBoundary {
     void ReadCancel(int, int) { std::abort(); }
@@ -52,15 +61,39 @@ static void Mem_free_h(void* p, int heap) {
 static void Debug_free_h(void* p, int heap) { ++debug_release_calls; Mem_free_h(p, heap); }
 #include "caller_dataunit_types.inc"
 static cDataUnit loaded;
+#if defined(RE4DC_EXEC_REAL_TRANSPORT)
+#include "exec_transport_boundary.inc"
+#include "exec_cabin_boundary.inc"
+#else
 void cDataUnit::setLoadToMram() { std::abort(); }
+#endif
 void cDataUnit::setLoadToAram() { std::abort(); }
 int cDataUnit::setDelete() { std::abort(); }
+#if defined(RE4DC_EXEC_REAL_TRANSPORT)
+void cDataUnit::checkCondition() {} // External transport progress; injected m_err is checked by actual wait.
+#else
 void cDataUnit::checkCondition() { std::abort(); }
+#endif
 #include "caller_dataunit_methods.inc"
-struct ReadModule { void* pArc; };
+struct ReadModule { void* pArc; u32 size; };
+#if defined(RE4DC_EXEC_REAL_TRANSPORT)
+static ReadModule exchange_module;
+static unsigned swap_pushes,swap_pops,swap_calls;
+static ReadModule* SearchEmModule(int em){assert(em==1);return &exchange_module;}
+static void MemorySwap(void* dst,u32 src,u32 bytes){
+    ++swap_calls;auto*source=reinterpret_cast<u8*>(std::uintptr_t(src));auto*target=static_cast<u8*>(dst);
+    for(u32 i=0;i<bytes;++i)std::swap(source[i],target[i]);
+}
+static void EspEmDataSwapPop(int em){assert(em==1);++swap_pops;}
+static void EspEmDataSwapPush(int em){assert(em==1);++swap_pushes;}
+static void* EmReadSearch(int em,void*,u32){return SearchEmModule(em)->pArc;}
+#else
 static ReadModule* SearchEmModule(int) { std::abort(); }
 static void MemorySwap(void*, u32, u32) { std::abort(); }
 static void EspEmDataSwapPop(int) { std::abort(); }
+static void EspEmDataSwapPush(int) { std::abort(); }
+static void* EmReadSearch(int,void*,u32){std::abort();}
+#endif
 static int HDReadDebugAlloc(char*, void**, int);
 
 // The actual create/full decision uses a projected pool. Allocation, constructor
@@ -82,19 +115,29 @@ static cManager<Event> event_pool;
 #undef main
 
 EventMgr EvtMgr{};
-Event* EventMgr::create(int id) { return event_pool.create(id); }
+#if defined(RE4DC_EXEC_REAL_TRANSPORT)
+static void exec_create_boundary();
+#endif
+Event* EventMgr::create(int id) {
+#if defined(RE4DC_EXEC_REAL_TRANSPORT)
+    exec_create_boundary();
+#endif
+    return event_pool.create(id);
+}
 void EventMgr::destroyNow(Event*) { std::abort(); } // init succeeds in this focused create/full suite.
 int EventMgr::DelEvt(void*, int) { std::abort(); }
-int Event::init(char* name, EvtHeader*) { ++init_calls; std::strcpy(Name, name); return 1; }
+int Event::init(char* name, EvtHeader* data) { ++init_calls; std::strcpy(Name, name); pData=data; return 1; }
 int EventMgr::GetRead(void** out, int* slot, char* name) {
     // ABI adapter: recovered GetRead stores a pointer through a 32-bit int local.
     // The actual table lookup/slot identity is retained with host-width storage.
     u8 type = 0;
     return ReadTbl.GetDat(out, &type, name, nullptr) && ReadTbl.GetWkNo(slot, name);
 }
+#if !defined(RE4DC_EXEC_REAL_TRANSPORT)
 int EventMgr::EvtReadMram(char*, int em, int* out, int, u32) {
     assert(em == 0); ++read_calls; *out = static_cast<int>(reinterpret_cast<std::uintptr_t>(loaded.m_addr)); return 1;
 }
+#endif
 static int HDReadDebugAlloc(char*, void** out, int) {
     assert(debug_transport); ++read_calls; *out = arena; return 1;
 }
@@ -145,7 +188,11 @@ static void verify_debug_failure_free() {
     if(!debug_frees.empty())assert(debug_frees[0]==arena);
 }
 
+#if defined(RE4DC_EXEC_REAL_TRANSPORT)
+int rollback_previous_main() {
+#else
 int main() {
+#endif
     std::cout << std::unitbuf;
     arena = static_cast<unsigned char*>(mmap(reinterpret_cast<void*>(0x90000000), 0x20000,
         PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED_NOREPLACE, -1, 0));
