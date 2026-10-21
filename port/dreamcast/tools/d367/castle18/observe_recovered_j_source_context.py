@@ -34,11 +34,11 @@ with(cap/'readonly-source-context.jsonl').open('x')as out:
     last=row
     if time.monotonic()-lastwrite>.1:out.write(json.dumps(row)+'\n');out.flush();lastwrite=time.monotonic()
    for shot in (cap/'shots').glob('*'):
-    if not shot.is_dir()or str(shot)in done:continue
+    if not shot.is_dir()or shot.name.startswith('checkpoint-')or str(shot)in done:continue
     if str(shot)not in pending:pending[str(shot)]=last
     pngs=list((shot/'frames').glob('*.png'))
     if pngs and row:
-     check();before=pending[str(shot)]or row;context=dict(run=cap.name,lineage='recovered-J-content new cold boot',runtime='12a841d7c',elf_sha256='4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f',iso_sha256='b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6',source_frame_interval=[before['frame'],row['frame']],before=before,after=row,action_result='Normal Title/CardLoad cold boot; screenshot context only, no progression claim from partial menu',method='Read-only globals sampled around existing owned-harness screenshot directory/PNG creation; asynchronous interval includes capture',pngs=[str(p)for p in pngs]);(shot/'checkpoint-context.json').write_text(json.dumps(context,indent=2)+'\n');done.add(str(shot))
+     check();before=pending[str(shot)]or row;context=dict(run=cap.name,lineage='recovered-J-content new cold boot',runtime='12a841d7c',elf_sha256='4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f',iso_sha256='b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6',source_frame_interval=[before['frame'],row['frame']],before=before,after=row,action_result='Normal Title/CardLoad cold boot; screenshot context only, no progression claim from partial menu'if cap.name.startswith('coldload')else'Normal original progression continuation; periodic screenshot context only',method='Read-only globals sampled around existing owned-harness screenshot directory/PNG creation; asynchronous interval includes capture',pngs=[str(p)for p in pngs]);(shot/'checkpoint-context.json').write_text(json.dumps(context,indent=2)+'\n');done.add(str(shot))
    time.sleep(.01)
  except(EOFError,AssertionError,struct.error,OSError):pass
  finally:k.CloseHandle(h)
