@@ -1,0 +1,33 @@
+{
+  "scope": "PREPARED ONLY, one existing50s guarded arm; no guest, continuous loop, new assets/program or guard change.",
+  "new_run": "route-walk197",
+  "seed": "route-walk196",
+  "seed_sha256": "b246ef79832aa18d6750aec0d19cc802914992adaf3b9a143a2fdda2050636b4",
+  "source_frame": 52155,
+  "health": [
+    1,
+    1200,
+    90,
+    600
+  ],
+  "controller": "owned-window-recovered-j-r201-postboss-full-gallery-escape-still.py",
+  "controller_sha256": "03a4970c567ad0c0e2ceb74b151304086a3b84fb628b5b97f7f3dab8c97b3295",
+  "targets": [
+    [
+      32250.0,
+      -24000.0
+    ],
+    [
+      41000.0,
+      -25500.0
+    ],
+    [
+      41500.0,
+      -30000.0
+    ]
+  ],
+  "tolerance": 180,
+  "room": "201",
+  "action": "Preparedonly under diskhold: full north/east gallery escape away from current5C/5B then original sideapproach. Preserve3500approach/1200allnear, HP1/90; no guest untilrootfloor restored",
+  "driver_sha256": "73b00d6410070e39d3cf98805c4527b2bf1abc614ab9a6ce94ecb8ee8be56938"
+}
