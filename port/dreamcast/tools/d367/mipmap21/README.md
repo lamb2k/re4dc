@@ -416,3 +416,14 @@ source gate. Rendering, resource use and appearance remain separate gates.
 This tool does not change recipes, defaults or runtime sampling; the effect
 renderer's existing bilinear/clamp/alpha contract is kept. Sealed private
 receipts distinguish the generated superset from any later selective candidate.
+
+effect_consumers.py reads direct frame TPL bindings and EST/SST records from
+retained native archives, including the existing R4ESQTBL compact EST format.
+It reconstructs packed records through the existing codec with index CRC,
+offset, record-count, padding and eligibility checks. It does not reinterpret
+compact data as 300-byte raw records or infer live drawing from static data.
+The read-only source probe verifies each named input against the original
+release manifest before parsing. Source slots bind the binocular, scope and
+main HUD EFF resources to IdTexDataLoad, so those are explicit fixed-ID-UI
+holds rather than presumed particle textures. Unknown, mixed screen/world,
+custom and generator consumers retain separate follow-up policies.
