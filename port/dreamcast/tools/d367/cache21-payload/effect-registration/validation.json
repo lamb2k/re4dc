@@ -1,0 +1,1139 @@
+{
+  "scope": "A11 read-only source and injected service-boundary audit. No normal gameplay capacity refusal reproduced, runtime fix or adoption proposed.",
+  "selected_ref": "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f",
+  "eff_sys_prior_ref": "e7bb2e5bfe4eb7d7b5cf8115d2003f8a1dd4adac",
+  "source": {
+    "src/game/eff_sys.cpp": {
+      "sha256": "83c5ae8deb709982a37dfeb371038a8d5263f36b7fe180530ddda0857828465f",
+      "bytes": 38311
+    },
+    "include/espgen.h": {
+      "sha256": "245308dc8833b1e18f71682bcf2a0564e73480eda629f076313f6c037be09757",
+      "bytes": 13619
+    },
+    "src/game/emdata.cpp": {
+      "sha256": "49def1a264b98effd9c346567324fee63c3b167711c5e6dbddf5e28e3e4074ec",
+      "bytes": 2736
+    },
+    "src/game/event.cpp": {
+      "sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "bytes": 122192
+    },
+    "src/game/et00.cpp": {
+      "sha256": "899203cb6f0d38037471a5b8fa3ec6ab4f6bd878d61d802ae8dd5838e33aab43",
+      "bytes": 11025
+    },
+    "src/game/game.cpp": {
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "bytes": 67752
+    },
+    "src/em10/em10.cpp": {
+      "sha256": "bf6507e9c5be7261c316e28111e9b8ed5bd2bafc098bc8f78ca17361306c6099",
+      "bytes": 868578
+    },
+    "src/game/pl_leon.cpp": {
+      "sha256": "88ab1411999e7483f3289786d6b27d724f40308eb0fab1ac0695cf57ae558601",
+      "bytes": 10848
+    },
+    "port/dreamcast/game/platform/gx_stub.cpp": {
+      "sha256": "9775ceea655cdeba1259b36f128f4222ea325d49b102ccdccea6efe853ca3881",
+      "bytes": 17457
+    }
+  },
+  "source_call_summary": {
+    "call_counts": {
+      "literal": 195,
+      "dynamic": 5
+    },
+    "literal_owner_range": [
+      0,
+      209
+    ],
+    "observed_returns": [
+      {
+        "path": "src/game/event.cpp",
+        "line": 1172,
+        "call": "if (EspDataLoad((u32) dat, evt->effNo + 0xC4, 0) == 0) {",
+        "arguments": [
+          "(u32) dat",
+          "evt->effNo + 0xC4",
+          "0"
+        ],
+        "literal_owner": null,
+        "return_observed": true
+      }
+    ],
+    "dynamic_calls": [
+      {
+        "path": "src/game/emdata.cpp",
+        "line": 105,
+        "call": "EspDataLoad(data, eff, 0);",
+        "arguments": [
+          "data",
+          "eff",
+          "0"
+        ],
+        "literal_owner": null,
+        "return_observed": false
+      },
+      {
+        "path": "src/game/et00.cpp",
+        "line": 59,
+        "call": "EspDataLoad(GetEtcAddr(arc, eff), effId, 0);",
+        "arguments": [
+          "GetEtcAddr(arc, eff)",
+          "effId",
+          "0"
+        ],
+        "literal_owner": null,
+        "return_observed": false
+      },
+      {
+        "path": "src/game/event.cpp",
+        "line": 1172,
+        "call": "if (EspDataLoad((u32) dat, evt->effNo + 0xC4, 0) == 0) {",
+        "arguments": [
+          "(u32) dat",
+          "evt->effNo + 0xC4",
+          "0"
+        ],
+        "literal_owner": null,
+        "return_observed": true
+      },
+      {
+        "path": "src/t_esp/db_port.cpp",
+        "line": 589,
+        "call": "EspDataLoad((u32) buf, db_effOwner, 0);",
+        "arguments": [
+          "(u32) buf",
+          "db_effOwner",
+          "0"
+        ],
+        "literal_owner": null,
+        "return_observed": false
+      },
+      {
+        "path": "src/t_esp/db_port.cpp",
+        "line": 826,
+        "call": "EspDataLoad((u32) buf, db_effOwner, 0);",
+        "arguments": [
+          "(u32) buf",
+          "db_effOwner",
+          "0"
+        ],
+        "literal_owner": null,
+        "return_observed": false
+      }
+    ]
+  },
+  "asset_census": {
+    "counts": {
+      "input_files": 89,
+      "EFF_blocks": 107,
+      "max_block_texobjs": 200,
+      "max_single_frames": 75,
+      "ids_above255": 0,
+      "frame_descriptor_mismatches": 0,
+      "duplicate_texid_blocks": 0,
+      "duplicate_modelid_blocks": 0
+    },
+    "errors": [],
+    "policy_sha256": "1864af25107b50e4f0039d4798b5216d3aa2617cbdc810d03be5eb410b097d28",
+    "input_identities": [
+      {
+        "path": "em/em11.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/em11.drs",
+        "sha256": "c49cd3d04ea5c63b9b1e09db82a3ab36b3422288a5242f29d7a08e7edc6e7bee",
+        "bytes": 7148160,
+        "active_base": 5825024,
+        "active_bytes": 1323136
+      },
+      {
+        "path": "em/em12.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/em12.drs",
+        "sha256": "137c4cd20f9941eb0012102f93a7f818173968f6d84f4d462bacf0e599cc43a5",
+        "bytes": 6341600,
+        "active_base": 5236448,
+        "active_bytes": 1105152
+      },
+      {
+        "path": "em/em13.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/em13.drs",
+        "sha256": "fb2199c02abddf6966fb42d8e98c92aed267e71206547dbd5072d7229b729cf8",
+        "bytes": 6829984,
+        "active_base": 5598208,
+        "active_bytes": 1231776
+      },
+      {
+        "path": "em/em14.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/em14.drs",
+        "sha256": "538a8b4caf6448d4a39ecfb956791487098deee394ada392b5f13637ee925c92",
+        "bytes": 10484256,
+        "active_base": 6599872,
+        "active_bytes": 3884384
+      },
+      {
+        "path": "em/em15.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/em15.drs",
+        "sha256": "6c281e96971f68ef6a2d16490622abc8ba45079bf87bccadc9f7500ad7300289",
+        "bytes": 6681472,
+        "active_base": 5542016,
+        "active_bytes": 1139456
+      },
+      {
+        "path": "em/em16.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/em16.drs",
+        "sha256": "6278c36ed3520f0685a0c882ed2cb181dd4e9cd6e5554b3ffcfd5d41d8067c30",
+        "bytes": 6938816,
+        "active_base": 5493024,
+        "active_bytes": 1445792
+      },
+      {
+        "path": "em/em17.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/em17.drs",
+        "sha256": "0b9fb84cc15f48ff25429150fc28d175003f1c7233f5d1b697f75fc9d691659a",
+        "bytes": 6149440,
+        "active_base": 5090080,
+        "active_bytes": 1059360
+      },
+      {
+        "path": "em/em18.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/em18.drs",
+        "sha256": "ec1c6c16024ff251b3acdba723c5737ed419f289373b8a3a06ffd0bd1c62b237",
+        "bytes": 1074784,
+        "active_base": 736800,
+        "active_bytes": 337984
+      },
+      {
+        "path": "em/em22.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/em22.drs",
+        "sha256": "73c9c0121f30e07a3aad55e45cb4b81fcdf820b4ff5be6a4ee6bb2dff036e196",
+        "bytes": 2676320,
+        "active_base": 1854208,
+        "active_bytes": 822112
+      },
+      {
+        "path": "em/em23.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/em23.drs",
+        "sha256": "4ad248bc1f541cbc91740273629e44065d761b90cf4bc685cd82e0b989aa0d66",
+        "bytes": 594336,
+        "active_base": 394784,
+        "active_bytes": 199552
+      },
+      {
+        "path": "em/em24.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/em24.drs",
+        "sha256": "7f40fcbc85bba77bd1d6fe1e3972ff3ded0447a89a2fd3cd448f948945f9acab",
+        "bytes": 615392,
+        "active_base": 394176,
+        "active_bytes": 221216
+      },
+      {
+        "path": "em/em26.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/em26.drs",
+        "sha256": "263cd661ea0aa05263772462e271f44946704bfeda0d1e7d9de0f9d0f4eabdd5",
+        "bytes": 535744,
+        "active_base": 355360,
+        "active_bytes": 180384
+      },
+      {
+        "path": "em/em28.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/em28.drs",
+        "sha256": "25a4259cb4a0b2a4bb6a9a8bb784a5ba0c06b9469b69709f4dceed471f2f8e4e",
+        "bytes": 350144,
+        "active_base": 216416,
+        "active_bytes": 133728
+      },
+      {
+        "path": "em/em2b.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/em2b.drs",
+        "sha256": "c9b619860fb66a68efec9aabf213887a00be79f96e4781723c4d27c380518859",
+        "bytes": 8521152,
+        "active_base": 6262944,
+        "active_bytes": 2258208
+      },
+      {
+        "path": "em/em2e.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/em2e.drs",
+        "sha256": "bddff483d4cf420c8dc72cc37eaa5251617770aa60696c26542b4250e538bb23",
+        "bytes": 89344,
+        "active_base": 54528,
+        "active_bytes": 34816
+      },
+      {
+        "path": "em/em35.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/em35.drs",
+        "sha256": "5842663bf79939a0d80b102455b4f04fa01c640ae94e64fc79a830e359f2f45c",
+        "bytes": 9995008,
+        "active_base": 8959616,
+        "active_bytes": 1035392
+      },
+      {
+        "path": "em/pl0e.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/pl0e.drs",
+        "sha256": "dc21c15e9bf950d2821ae25dcb29913df9ff427b408104d24d758346630e59c7",
+        "bytes": 1393472,
+        "active_base": 1024,
+        "active_bytes": 992480
+      },
+      {
+        "path": "em/pl0f.drs",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/em/pl0f.drs",
+        "sha256": "44062097697acd788962cc5f3b2c2471f0de9bcdc7ff1c781ff5c4247554154c",
+        "bytes": 2442304,
+        "active_base": 1684640,
+        "active_bytes": 757664
+      },
+      {
+        "path": "em/wep01.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep01.drs",
+        "sha256": "cb77bd66d536d3535dbbbc6d22c92c5290f3e0eb6dd2447bf6520f7ec5e322bc",
+        "bytes": 437536,
+        "active_base": 1024,
+        "active_bytes": 261344
+      },
+      {
+        "path": "em/wep02.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep02.drs",
+        "sha256": "44a4bee008027eed20e8b8ef3537fbc46a822b66f8171901cb6bc83851313eec",
+        "bytes": 668416,
+        "active_base": 420640,
+        "active_bytes": 247776
+      },
+      {
+        "path": "em/wep03.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep03.drs",
+        "sha256": "a7a98b1bcec8511bafa3c339c2a243649deee14d4d621f3d2b974d66a549d803",
+        "bytes": 504864,
+        "active_base": 1024,
+        "active_bytes": 274528
+      },
+      {
+        "path": "em/wep04.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep04.drs",
+        "sha256": "a39e299cdc517b547b3405771c9a0befc87a5ff3ada7f8c51d284c56af16d585",
+        "bytes": 420544,
+        "active_base": 1024,
+        "active_bytes": 260960
+      },
+      {
+        "path": "em/wep05.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep05.drs",
+        "sha256": "39fbf233ec9d514457aad71381a59772e4a2b400dd333fbcf27ec934b0c20d2f",
+        "bytes": 537536,
+        "active_base": 1024,
+        "active_bytes": 307808
+      },
+      {
+        "path": "em/wep06.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep06.drs",
+        "sha256": "884e4b131261168d7b6de428e0f9b66dac8fca9804e5dedaa6322a6ad28d884b",
+        "bytes": 470880,
+        "active_base": 1024,
+        "active_bytes": 292192
+      },
+      {
+        "path": "em/wep07.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep07.drs",
+        "sha256": "9104067928ca4e2cc1f35dffc4bdfea381bc398e675b74378180ddd0ac2dd255",
+        "bytes": 490848,
+        "active_base": 1024,
+        "active_bytes": 275424
+      },
+      {
+        "path": "em/wep08.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep08.drs",
+        "sha256": "b5f6bdd2722b2411e7d639b2a643d6beb6d98159273e06d6a01b41965e6d2e14",
+        "bytes": 487456,
+        "active_base": 1024,
+        "active_bytes": 257504
+      },
+      {
+        "path": "em/wep09.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep09.drs",
+        "sha256": "7ff373ee00597e745b5bee1b468cb2fbd62ffc1c82a0749f9169c45156ad6cd9",
+        "bytes": 659456,
+        "active_base": 1024,
+        "active_bytes": 398144
+      },
+      {
+        "path": "em/wep10.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep10.drs",
+        "sha256": "5c4fe8658e48e8e0f284d1892f8038141e8834e48ee59eb6721a19d3ea8df85e",
+        "bytes": 555104,
+        "active_base": 1024,
+        "active_bytes": 329120
+      },
+      {
+        "path": "em/wep11.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep11.drs",
+        "sha256": "4bd8e218db06d92260f4a80aa6a5c93410a92d588f77b6efeafe864ebe53fb7b",
+        "bytes": 432768,
+        "active_base": 1024,
+        "active_bytes": 289248
+      },
+      {
+        "path": "em/wep12.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep12.drs",
+        "sha256": "e0ba6e8dabdf813a3d9daed5ba9201272b743bdfc64b79a8cf03afc553513792",
+        "bytes": 474784,
+        "active_base": 1024,
+        "active_bytes": 245664
+      },
+      {
+        "path": "em/wep13.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep13.drs",
+        "sha256": "fa26b394ddc69c045bf0ef3f8f7916b653daf090830a0fae2562fd73999ec20f",
+        "bytes": 458560,
+        "active_base": 1024,
+        "active_bytes": 382688
+      },
+      {
+        "path": "em/wep14.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep14.drs",
+        "sha256": "3ccb9f5914a373187146aed0eb05ebe773a8294030adf88ccb1327ba18343bb1",
+        "bytes": 628704,
+        "active_base": 1024,
+        "active_bytes": 387712
+      },
+      {
+        "path": "em/wep15.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep15.drs",
+        "sha256": "54e3ac054591c1bf0d66ad10f961eedd2275fdd53fa4b1cf1a43127ba40cb7cc",
+        "bytes": 521056,
+        "active_base": 1024,
+        "active_bytes": 304032
+      },
+      {
+        "path": "em/wep17.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep17.drs",
+        "sha256": "06e5dd82c0626b47955fd3b7cf8d17ceb04975ab29669e9b0770cdc5d3417f5c",
+        "bytes": 503744,
+        "active_base": 1024,
+        "active_bytes": 346176
+      },
+      {
+        "path": "em/wep18.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep18.drs",
+        "sha256": "b360eb858d8e52cf44cf8ba0508c482e8231533d0ceeada766269b78055d19f1",
+        "bytes": 510944,
+        "active_base": 1024,
+        "active_bytes": 280608
+      },
+      {
+        "path": "em/wep20.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep20.drs",
+        "sha256": "6ad48e75ce6572305fcef64ceadc42bdfffcde390c742342b1dfde567c800e5e",
+        "bytes": 442720,
+        "active_base": 1024,
+        "active_bytes": 299200
+      },
+      {
+        "path": "em/wep21.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep21.drs",
+        "sha256": "148a63fb582372fb34d464465ca854b1621d1486cfd5f4801260c6f16551185a",
+        "bytes": 665920,
+        "active_base": 1024,
+        "active_bytes": 404608
+      },
+      {
+        "path": "em/wep24.drs",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/em/wep24.drs",
+        "sha256": "5d9042f003dd4274c7acaf4c838675291b3343b1aeb1e518621c3b675bb07235",
+        "bytes": 660544,
+        "active_base": 1024,
+        "active_bytes": 399232
+      },
+      {
+        "path": "etc/core.das",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/etc/core.das",
+        "sha256": "439ba106e2a8f83beb5c5c1668cf02dc5795614f408847025b163fa14d36e47d",
+        "bytes": 3885728,
+        "active_base": 2525120,
+        "active_bytes": 1360608
+      },
+      {
+        "path": "ss/cmn/save_e.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/cmn/save_e.dat",
+        "sha256": "a179bdbf9032ab5da24eb82fd3c79b419935df987c86c949dea05df9baf877b4",
+        "bytes": 559040,
+        "active_base": 0,
+        "active_bytes": 559040
+      },
+      {
+        "path": "ss/cmn/save_f.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/cmn/save_f.dat",
+        "sha256": "f85648c5399a66241b132af0056a30b982af90066054aaa3abc99f87cdb28a1b",
+        "bytes": 551392,
+        "active_base": 0,
+        "active_bytes": 551392
+      },
+      {
+        "path": "ss/cmn/save_g.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/cmn/save_g.dat",
+        "sha256": "f85648c5399a66241b132af0056a30b982af90066054aaa3abc99f87cdb28a1b",
+        "bytes": 551392,
+        "active_base": 0,
+        "active_bytes": 551392
+      },
+      {
+        "path": "ss/cmn/save_i.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/cmn/save_i.dat",
+        "sha256": "f85648c5399a66241b132af0056a30b982af90066054aaa3abc99f87cdb28a1b",
+        "bytes": 551392,
+        "active_base": 0,
+        "active_bytes": 551392
+      },
+      {
+        "path": "ss/cmn/save_j.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/cmn/save_j.dat",
+        "sha256": "d5a363aaa0cf399e04a145f46a069c4b139906fe6a6ffc840f2af7cb95611054",
+        "bytes": 928416,
+        "active_base": 0,
+        "active_bytes": 928416
+      },
+      {
+        "path": "ss/cmn/save_s.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/cmn/save_s.dat",
+        "sha256": "f85648c5399a66241b132af0056a30b982af90066054aaa3abc99f87cdb28a1b",
+        "bytes": 551392,
+        "active_base": 0,
+        "active_bytes": 551392
+      },
+      {
+        "path": "ss/eng/chap01.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/chap01.dat",
+        "sha256": "6eb15cd2dc45ad9f56adf370e7de0f825ba68de36eed1f9978b155249ec0657f",
+        "bytes": 375232,
+        "active_base": 0,
+        "active_bytes": 375232
+      },
+      {
+        "path": "ss/eng/chap02.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/chap02.dat",
+        "sha256": "01794cb369bce4c04584aa11e330861a36b18b44c63fc8b91d08483a4043ccee",
+        "bytes": 374944,
+        "active_base": 0,
+        "active_bytes": 374944
+      },
+      {
+        "path": "ss/eng/chap03.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/chap03.dat",
+        "sha256": "af97b89e61c6451945b405bcd2325b3571aeae968bac3d13700c8da7a94b1da4",
+        "bytes": 389376,
+        "active_base": 0,
+        "active_bytes": 389376
+      },
+      {
+        "path": "ss/eng/chap04.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/chap04.dat",
+        "sha256": "4a44cd18979343ba1277b969183cb09a5cc7f752248f893c0ea533a9d17e26f9",
+        "bytes": 374944,
+        "active_base": 0,
+        "active_bytes": 374944
+      },
+      {
+        "path": "ss/eng/chap05.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/chap05.dat",
+        "sha256": "3ce62ff891c0ce873a524f011075cfe5e855e06ca24dd81fba37442f9d9ef2f5",
+        "bytes": 375072,
+        "active_base": 0,
+        "active_bytes": 375072
+      },
+      {
+        "path": "ss/eng/chap06.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/chap06.dat",
+        "sha256": "bc2d2f843abfafd2477182da705d4a89ae4b05f973dfe0a76d7c18e286aad772",
+        "bytes": 352992,
+        "active_base": 0,
+        "active_bytes": 352992
+      },
+      {
+        "path": "ss/eng/chap07.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/chap07.dat",
+        "sha256": "14cb7e7ae800df79dd184d8f1a0a217e621a59396e9f9042ee3bde5431e6ffbd",
+        "bytes": 389376,
+        "active_base": 0,
+        "active_bytes": 389376
+      },
+      {
+        "path": "ss/eng/chapter.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/chapter.dat",
+        "sha256": "0a6411a042ae60da2dc665e093a5f1e07ae4eec7ed7476187367a396bc502d79",
+        "bytes": 1050112,
+        "active_base": 0,
+        "active_bytes": 1050112
+      },
+      {
+        "path": "ss/eng/id22c.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/id22c.dat",
+        "sha256": "d7ea7dc044e6e687eee591af4f7e7840407006616b1f7a7a9017a9132677b562",
+        "bytes": 289792,
+        "active_base": 0,
+        "active_bytes": 289792
+      },
+      {
+        "path": "ss/eng/id333.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/id333.dat",
+        "sha256": "f9b77d8bc31214a36ab9a3042b52f0354fc9b85e3b6f6e02ec562dc865159d77",
+        "bytes": 116960,
+        "active_base": 0,
+        "active_bytes": 116960
+      },
+      {
+        "path": "ss/eng/id400.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/id400.dat",
+        "sha256": "476a6551c7f44d334a2dd1a6f8dfd50ec51e1099349edaabd668e45899445b91",
+        "bytes": 38176,
+        "active_base": 0,
+        "active_bytes": 38176
+      },
+      {
+        "path": "ss/eng/omk_r0.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/omk_r0.dat",
+        "sha256": "44a652dcbcf1cd900f90c276630e0f4d7bc16ec3620715d7279648e9d027e966",
+        "bytes": 1716256,
+        "active_base": 0,
+        "active_bytes": 1716256
+      },
+      {
+        "path": "ss/eng/omk_r1.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/omk_r1.dat",
+        "sha256": "9f150c5b521433f9746a8f655290bc262b9db624392bf6b51f337e06c43ed797",
+        "bytes": 1742144,
+        "active_base": 0,
+        "active_bytes": 1742144
+      },
+      {
+        "path": "ss/eng/omk_t0.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/omk_t0.dat",
+        "sha256": "f1f4c9b793d391d5f1cea5dcef2eaf44f63d613fc48071be23d0f7102a5d93f1",
+        "bytes": 1807200,
+        "active_base": 0,
+        "active_bytes": 1807200
+      },
+      {
+        "path": "ss/eng/omk_t1.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/omk_t1.dat",
+        "sha256": "1ae6c4d9141f40eddab6f6a04fa9075dbe00c754e80327d18df1b770a46b75d9",
+        "bytes": 1831904,
+        "active_base": 0,
+        "active_bytes": 1831904
+      },
+      {
+        "path": "ss/eng/result.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/result.dat",
+        "sha256": "fa1f7160809e8a7068aaea6a1a4a1c09cd7b1170a8d926d7e76352cc65af6730",
+        "bytes": 358784,
+        "active_base": 0,
+        "active_bytes": 358784
+      },
+      {
+        "path": "ss/eng/ss_map.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/ss_map.dat",
+        "sha256": "fc18bdd372300581e124606d95079906a30831a842fac5d74692baca059c089e",
+        "bytes": 259072,
+        "active_base": 0,
+        "active_bytes": 259072
+      },
+      {
+        "path": "ss/eng/ss_pzzl.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/ss_pzzl.dat",
+        "sha256": "c8fd5ba0f543ae414d5af5167f7bddf8b0cc1aef78129ebf865e6a77d3c9bff8",
+        "bytes": 912704,
+        "active_base": 0,
+        "active_bytes": 912704
+      },
+      {
+        "path": "ss/eng/title.dat",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/ss/eng/title.dat",
+        "sha256": "45a9b352bc4c7da7da99da86e9dcf084fad6bf60041924b48e12b187502d29ca",
+        "bytes": 2518944,
+        "active_base": 0,
+        "active_bytes": 2518944
+      },
+      {
+        "path": "st1/r100.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r100.arc",
+        "sha256": "6c9891b25f3e8c0eb53d5c67629fcd5da6bcdfe37ff6cf3bb8c7b4ebf2b605fd",
+        "bytes": 2876704,
+        "active_base": 0,
+        "active_bytes": 2876704
+      },
+      {
+        "path": "st1/r101.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r101.arc",
+        "sha256": "f1b9890766abf6760e11dd9b18b4b3088276124b1c6d71a83e2aa377feb6db90",
+        "bytes": 1848800,
+        "active_base": 0,
+        "active_bytes": 1848800
+      },
+      {
+        "path": "st1/r102.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r102.arc",
+        "sha256": "fad5aa069df4bbe2ed5076512c931e1311c4f85d48f4bcf9c90b78aecca17147",
+        "bytes": 1277408,
+        "active_base": 0,
+        "active_bytes": 1277408
+      },
+      {
+        "path": "st1/r103.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r103.arc",
+        "sha256": "c3e83a19f654194c9cdae9980327667d993a7dbbf66af458561df72d33de059b",
+        "bytes": 1455456,
+        "active_base": 0,
+        "active_bytes": 1455456
+      },
+      {
+        "path": "st1/r104.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r104.arc",
+        "sha256": "742f4b631ead6982012ecbed366614b4ac4acbb2cb137f47e0bb673376a424dd",
+        "bytes": 1276800,
+        "active_base": 0,
+        "active_bytes": 1276800
+      },
+      {
+        "path": "st1/r105.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r105.arc",
+        "sha256": "233e2fd636cfeb9f9b8aa0bb8e493c433c1e6a9fb4cd176a40325df0fa09359c",
+        "bytes": 1399936,
+        "active_base": 0,
+        "active_bytes": 1399936
+      },
+      {
+        "path": "st1/r106.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r106.arc",
+        "sha256": "dd005831e80d160c6ebab9f2ccbf2133e7ef2453b5ec43b1ae2dd3660d933fe4",
+        "bytes": 1611200,
+        "active_base": 0,
+        "active_bytes": 1611200
+      },
+      {
+        "path": "st1/r107.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r107.arc",
+        "sha256": "0c71656e43b35da23d0a82e9dcb205d38315221d9573de19a779a97d4cba8118",
+        "bytes": 1323968,
+        "active_base": 0,
+        "active_bytes": 1323968
+      },
+      {
+        "path": "st1/r108.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r108.arc",
+        "sha256": "931584e367011510264ac27ec6f6a5bf52d831631464a0f4372f8e18c4a425f8",
+        "bytes": 1346208,
+        "active_base": 0,
+        "active_bytes": 1346208
+      },
+      {
+        "path": "st1/r10a.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r10a.arc",
+        "sha256": "4a9d054baed14b149c4abbe441a671ddcb531c25f7fee8241de280a49f47a9b5",
+        "bytes": 1649152,
+        "active_base": 0,
+        "active_bytes": 1649152
+      },
+      {
+        "path": "st1/r10b.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r10b.arc",
+        "sha256": "55b88ed767328b740b0f3e480a21aca8fe09b867501edd0297e9811c64b5c83a",
+        "bytes": 1689600,
+        "active_base": 0,
+        "active_bytes": 1689600
+      },
+      {
+        "path": "st1/r10c.arc",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/st1/r10c.arc",
+        "sha256": "8a6c607b2e621f844106f8eafd2ae408d61424f9e345311fb43a219719ab7535",
+        "bytes": 1594304,
+        "active_base": 0,
+        "active_bytes": 1594304
+      },
+      {
+        "path": "st1/r10d.arc",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/st1/r10d.arc",
+        "sha256": "cebc453b4367575ee421936a4b53eebe28858cdd81c41eb699f348ecf4c9077d",
+        "bytes": 879072,
+        "active_base": 0,
+        "active_bytes": 879072
+      },
+      {
+        "path": "st1/r10e.arc",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/st1/r10e.arc",
+        "sha256": "2a26891790bf9d8d4af4e8d6da7eaf46606fb8427412493dcb823413d74bf46b",
+        "bytes": 862752,
+        "active_base": 0,
+        "active_bytes": 862752
+      },
+      {
+        "path": "st1/r111.arc",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/st1/r111.arc",
+        "sha256": "6b15f19f3ca2559e1709ae91d08ac8f09d592ab95bf80add6c17ea44bff4beae",
+        "bytes": 1442016,
+        "active_base": 0,
+        "active_bytes": 1442016
+      },
+      {
+        "path": "st1/r112.arc",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/st1/r112.arc",
+        "sha256": "3580b79c785ff9a47a5d3a6ae8b766ee61c9ecd811ff8ffc1f4871c594c98de1",
+        "bytes": 1242464,
+        "active_base": 0,
+        "active_bytes": 1242464
+      },
+      {
+        "path": "st1/r113.arc",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/st1/r113.arc",
+        "sha256": "3a8478c15538110ff4ec10e3bad39e7ee601a44eed0e3d0e59bc847982d4665b",
+        "bytes": 1581920,
+        "active_base": 0,
+        "active_bytes": 1581920
+      },
+      {
+        "path": "st1/r117.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r117.arc",
+        "sha256": "a48eddef94065086248b76ca4c7697a2346ee238bd23b1a130c1ae4cc30f0882",
+        "bytes": 884096,
+        "active_base": 0,
+        "active_bytes": 884096
+      },
+      {
+        "path": "st1/r118.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r118.arc",
+        "sha256": "37f5a0559b2295f847bbd67ae3aeddfa90cbbeabbe5ab8dd63bd291c4049082f",
+        "bytes": 1379360,
+        "active_base": 0,
+        "active_bytes": 1379360
+      },
+      {
+        "path": "st1/r119.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r119.arc",
+        "sha256": "580a61b8af8b6f0fdb3515cf02fecdd2ade7ee665aeb417dd27b08142ef08db6",
+        "bytes": 1306176,
+        "active_base": 0,
+        "active_bytes": 1306176
+      },
+      {
+        "path": "st1/r11a.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r11a.arc",
+        "sha256": "6bf6d446cc34e930256db594d67231c74d5cdc95662c3818dc4a9a30e0ae1f22",
+        "bytes": 1422816,
+        "active_base": 0,
+        "active_bytes": 1422816
+      },
+      {
+        "path": "st1/r11b.arc",
+        "source": "/mnt/c/Game Dev/Emulators/re4-assets-private/harvest18-20261018/t11-20261014/st1/r11b.arc",
+        "sha256": "75734d7dd08ece6d50d54ae5e37bb82953edc92998e5a2a132d9940073112c8e",
+        "bytes": 1480704,
+        "active_base": 0,
+        "active_bytes": 1480704
+      },
+      {
+        "path": "st1/r11c.arc",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/st1/r11c.arc",
+        "sha256": "fd940ae7fe9137dda96ee5c3520e069875f099e896ce80f3d3469a53d2a62aed",
+        "bytes": 1298528,
+        "active_base": 0,
+        "active_bytes": 1298528
+      },
+      {
+        "path": "st1/r11d.arc",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/st1/r11d.arc",
+        "sha256": "254652af520eca1d8c51e180305ba4021a1d7fa593c56f388e85a1afa1059c58",
+        "bytes": 1219488,
+        "active_base": 0,
+        "active_bytes": 1219488
+      },
+      {
+        "path": "st1/r11f.arc",
+        "source": "/root/re4data/private/mipmap21-fx-exact-input-recovery-20261021/files/st1/r11f.arc",
+        "sha256": "ec398ab13d70c828dd807490b9a3e81ae62c0471f623798892b08e8bc9baae6d",
+        "bytes": 2114336,
+        "active_base": 0,
+        "active_bytes": 2114336
+      }
+    ],
+    "core": {
+      "path": "etc/core.das",
+      "archive_word_index": 5,
+      "texture_count": 56,
+      "texobj_demand": 200,
+      "model_ids": [
+        1,
+        8,
+        14,
+        16,
+        37,
+        62
+      ]
+    },
+    "subscreen": {
+      "path": "etc/core.das",
+      "archive_word_index": 20,
+      "texture_count": 0,
+      "texobj_demand": 0,
+      "model_ids": []
+    },
+    "audited_room_count": 25,
+    "max_room_demand": 178,
+    "core_room_texture_and_model_collisions": 0,
+    "ganado_blocks": [
+      {
+        "path": "em/em11.drs",
+        "archive_word_index": 4,
+        "texture_count": 33,
+        "texobj_demand": 42
+      },
+      {
+        "path": "em/em12.drs",
+        "archive_word_index": 4,
+        "texture_count": 33,
+        "texobj_demand": 42
+      },
+      {
+        "path": "em/em13.drs",
+        "archive_word_index": 4,
+        "texture_count": 33,
+        "texobj_demand": 42
+      },
+      {
+        "path": "em/em14.drs",
+        "archive_word_index": 4,
+        "texture_count": 33,
+        "texobj_demand": 42
+      },
+      {
+        "path": "em/em15.drs",
+        "archive_word_index": 4,
+        "texture_count": 33,
+        "texobj_demand": 42
+      },
+      {
+        "path": "em/em16.drs",
+        "archive_word_index": 4,
+        "texture_count": 33,
+        "texobj_demand": 42
+      },
+      {
+        "path": "em/em17.drs",
+        "archive_word_index": 4,
+        "texture_count": 33,
+        "texobj_demand": 42
+      }
+    ],
+    "limits": "107 EFF blocks include other HUD pool and mutually exclusive rooms/shared owners. Player, weapon, ETM, event, residency/order and fragmentation are not covered by a complete live manifest."
+  },
+  "host": {
+    "scope": "Actual fifteen source function bodies against projected service structs/mocks; no gameplay capacity reachability certified.",
+    "ref": "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f",
+    "source_sha256": "83c5ae8deb709982a37dfeb371038a8d5263f36b7fe180530ddda0857828465f",
+    "methods_sha256": "809bf4c089ad8648ff62b68605bbb2c422c8b91bfffbca11845f2f13eee874cf",
+    "functions": [
+      "GXTexObj* EspPullTexObj(u32 num)",
+      "int EspDataLoad(u32 addr, u32 owner, int flag)",
+      "int EspDataRelease(u32 owner, int flag, int warn)",
+      "int espTexRegist(TEXPalette* tpl, EspAnmData* anm, u8 id, u32 owner)",
+      "int estRegist(void* data, void* list, u32 owner)",
+      "int sstRegist(void* data, void* list, u32 owner)",
+      "int pathRegist(void* data, void* list, u32 owner)",
+      "int efmRegist(void* model, void* tpl, void* mot, void* x, u8 id, u32 owner)",
+      "int espTexRelease(u32 owner)",
+      "int estRelease(u32 owner)",
+      "int sstRelease(u32 owner)",
+      "int pathRelease(u32 owner)",
+      "int efmRelease(u32 owner)",
+      "int cEspSystem::GetTexObjFlag(u32 no)",
+      "void cEspSystem::SetTexObjFlag(u32 no, int flag)"
+    ],
+    "runs": [
+      {
+        "mode": 0,
+        "command": [
+          "g++",
+          "-std=c++17",
+          "-O1",
+          "-g",
+          "-fno-pie",
+          "-no-pie",
+          "-fsanitize=undefined",
+          "-fno-sanitize-recover=all",
+          "-Wno-int-to-pointer-cast",
+          "-DRE4DC_EFFECT_ADMISSION_GUARD=0",
+          "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/effect-registration-host-v2",
+          "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/effect-registration/registration_probe.cpp",
+          "-o",
+          "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/effect-registration-host-v2/probe0"
+        ],
+        "output": "REGISTRATION_BOUNDARY PASS checks=46 guard=0 (injected refusal reachability not certified)\n"
+      },
+      {
+        "mode": 1,
+        "command": [
+          "g++",
+          "-std=c++17",
+          "-O1",
+          "-g",
+          "-fno-pie",
+          "-no-pie",
+          "-fsanitize=undefined",
+          "-fno-sanitize-recover=all",
+          "-Wno-int-to-pointer-cast",
+          "-DRE4DC_EFFECT_ADMISSION_GUARD=1",
+          "-I/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/effect-registration-host-v2",
+          "/root/probe/codex-cache21-payload/port/dreamcast/tools/d367/cache21-payload/effect-registration/registration_probe.cpp",
+          "-o",
+          "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/effect-registration-host-v2/probe1"
+        ],
+        "output": "REGISTRATION_BOUNDARY PASS checks=46 guard=1 (injected refusal reachability not certified)\n"
+      }
+    ],
+    "services": "TEX descriptor lookup/relocation and GX initialize calls are stubs; actual global ID/owner/bitmap/load/release code executes. u32 source pointers preserved through non-PIE static buffers.",
+    "output_bytes": 190457
+  },
+  "original_binary": {
+    "ISO_path": "/root/work/re4-dreamcast/orig/G4BE08/re4_debug_disc1.iso",
+    "DOL_offset": 131840,
+    "functions": [
+      {
+        "function": "EspPullTexObj",
+        "address": "0x800eb6f4",
+        "bytes": 212,
+        "sha256": "4631b7281b68d174b7acd2d6cb6fe39d0de91336c7a57787c3521fe9aa30faec",
+        "ISO_offset": 1083892
+      },
+      {
+        "function": "EspDataLoad",
+        "address": "0x800eb7c8",
+        "bytes": 692,
+        "sha256": "c36850a2bfb5f347e444a13131c4a88b86ae76c07a26876909443024ef68d3ca",
+        "ISO_offset": 1084104
+      },
+      {
+        "function": "espTexRegist",
+        "address": "0x800ebef8",
+        "bytes": 468,
+        "sha256": "8ba93a8938dcf7d8f3a2d39b2d963bbdb313715072f92e08d89119f326f74c06",
+        "ISO_offset": 1085944
+      },
+      {
+        "function": "efmRegist",
+        "address": "0x800ec764",
+        "bytes": 300,
+        "sha256": "69bdc1a049695bfdb81f461979b4fc9a628ff97804b4f4b7c4ea4a0e38fec64b",
+        "ISO_offset": 1088100
+      }
+    ]
+  },
+  "original_endpoint": {
+    "compare_address": "0x800eb740",
+    "compare": "cmplwi r0,499",
+    "refusal_address": "0x800eb744",
+    "refusal": "bgt",
+    "conclusion": "Exact-end500 refusal source-faithful; intent not inferred, not a newly established port defect."
+  },
+  "private_artifacts": {
+    "effect-admission-assets-v1.json": {
+      "sha256": "413300d17c69d63b33f569b2cb9151269eb826fdc1ce1fc6006ff58a015f88fc",
+      "bytes": 272222
+    },
+    "effect-source-audit-v3.json": {
+      "sha256": "46764caa5ed3565275090b5e4055f24fbd775c7d3d5257e253a08d36f3fad4d9",
+      "bytes": 71148
+    },
+    "effect-registration-host-v2/receipt.json": {
+      "sha256": "0fe5d77277009a1fe2044024b44fe48c30760ac6b05594d42c8e8f2f63c025f7",
+      "bytes": 2944
+    },
+    "effect-original-binary/EspDataLoad.bin": {
+      "sha256": "c36850a2bfb5f347e444a13131c4a88b86ae76c07a26876909443024ef68d3ca",
+      "bytes": 692
+    },
+    "effect-original-binary/EspDataLoad.txt": {
+      "sha256": "ca8d38162c12b842885b0b1ddb8c45bb4fca8b97dcc724debbf98b836bef5eac",
+      "bytes": 7183
+    },
+    "effect-original-binary/EspPullTexObj.bin": {
+      "sha256": "4631b7281b68d174b7acd2d6cb6fe39d0de91336c7a57787c3521fe9aa30faec",
+      "bytes": 212
+    },
+    "effect-original-binary/EspPullTexObj.txt": {
+      "sha256": "480bffbdd4c4cb358a25b0a668144529fc915eef3cc31e48a9f737360c791bc0",
+      "bytes": 2292
+    },
+    "effect-original-binary/efmRegist.bin": {
+      "sha256": "69bdc1a049695bfdb81f461979b4fc9a628ff97804b4f4b7c4ea4a0e38fec64b",
+      "bytes": 300
+    },
+    "effect-original-binary/efmRegist.txt": {
+      "sha256": "3e3f0eeb15f99bf42819515388363122ab1dad7c3db1a9a76684769371c18939",
+      "bytes": 3207
+    },
+    "effect-original-binary/espTexRegist.bin": {
+      "sha256": "8ba93a8938dcf7d8f3a2d39b2d963bbdb313715072f92e08d89119f326f74c06",
+      "bytes": 468
+    },
+    "effect-original-binary/espTexRegist.txt": {
+      "sha256": "e83c3a5a1e2bfe4227f67882414edace07160e639e1bda0bd1c1c479c3d1546a",
+      "bytes": 4826
+    },
+    "effect-original-binary/receipt.json": {
+      "sha256": "8578411b1e231997bcef520e916711427b7e230c536c18c23f0dc219df17474e",
+      "bytes": 959
+    },
+    "effect-registration-host-v2/actual_methods.inc": {
+      "sha256": "809bf4c089ad8648ff62b68605bbb2c422c8b91bfffbca11845f2f13eee874cf",
+      "bytes": 9979
+    },
+    "effect-registration-host-v2/actual_structs.inc": {
+      "sha256": "f6729f1ed125fff5cb75dffb535664ed4d18ddf00c5c4f5fbfb76b01b6ea04d5",
+      "bytes": 1008
+    },
+    "effect-registration-host-v2/compile0.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "effect-registration-host-v2/compile1.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "effect-registration-host-v2/probe0": {
+      "sha256": "0697af83406aefcb527e00c52dd69b8c92b1dae493ab045aae74cfd27e831247",
+      "bytes": 89480
+    },
+    "effect-registration-host-v2/probe1": {
+      "sha256": "fce1e342cda53d3f846d10a9f9184d7b913d1757f957e4c46aea8ec7db1568d5",
+      "bytes": 89808
+    },
+    "effect-registration-host-v2/run0.log": {
+      "sha256": "421113b98689802aea27a6a6a0fb91a4ed238b183f72fb7c3a714caed2732d2d",
+      "bytes": 91
+    },
+    "effect-registration-host-v2/run1.log": {
+      "sha256": "9ba8188cfe8ed657df51f1ea7e7af7f2a84daab616a56baf1b543158c74381d1",
+      "bytes": 91
+    }
+  },
+  "qualification": {
+    "host_source": "46 OFF and46 ON checks under UBSan",
+    "actual_refusal": "Injected only: pool pressure/fragmentation, ID collision or frame mismatch masks subordinate refusal while outer EspDataLoad returns1 and duplicate skips retry.",
+    "normal_refusal": "Not reproduced; valid live asset/owner/registration-order evidence required.",
+    "SH4": "Not run for this source-only audit",
+    "full_program": "Not run",
+    "Flycast": "Not run",
+    "release": "Not run",
+    "physical_Dreamcast": "Not run"
+  },
+  "runtime_edits": [],
+  "tool_identities": {
+    "README.md": "c25091b51c16c2cd1a93e7eafab94c2a6ac7fa7f6f88f9500168a7a35783c3d4",
+    "audit_source.py": "83f34652c5115735060ce546f5d16da50ea3824bc415a4a5a4e4b60022f383d2",
+    "census_effect_admissions.py": "8e53120c2350a5c429fcda31c713e10cf41511353d0210a56e3dc45145f98703",
+    "registration_probe.cpp": "67f3f4f063e3aa3d0d3c9a9d8ffd8548ed93591b986b1bb49d5da49de9be0c49",
+    "test_registration_boundaries.py": "269582413202bb2087892be4c92a80f5cac65bdada1e20291516adf5f4f6d26a"
+  },
+  "census_helper": {
+    "path": "port/dreamcast/tools/le_mirror.py",
+    "sha256": "dce98783d944ced311d238277c13fa793693d501477cdd7e411c29c98ccaadcb",
+    "matches_selected_git_blob": true
+  }
+}

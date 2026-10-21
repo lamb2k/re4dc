@@ -1,0 +1,2619 @@
+{
+  "ref": "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f",
+  "source": {
+    "src/game/eff_sys.cpp": {
+      "sha256": "83c5ae8deb709982a37dfeb371038a8d5263f36b7fe180530ddda0857828465f",
+      "bytes": 38311
+    },
+    "include/espgen.h": {
+      "sha256": "245308dc8833b1e18f71682bcf2a0564e73480eda629f076313f6c037be09757",
+      "bytes": 13619
+    },
+    "src/game/emdata.cpp": {
+      "sha256": "49def1a264b98effd9c346567324fee63c3b167711c5e6dbddf5e28e3e4074ec",
+      "bytes": 2736
+    },
+    "src/game/event.cpp": {
+      "sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "bytes": 122192
+    },
+    "src/game/et00.cpp": {
+      "sha256": "899203cb6f0d38037471a5b8fa3ec6ab4f6bd878d61d802ae8dd5838e33aab43",
+      "bytes": 11025
+    },
+    "src/game/game.cpp": {
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "bytes": 67752
+    },
+    "src/em10/em10.cpp": {
+      "sha256": "bf6507e9c5be7261c316e28111e9b8ed5bd2bafc098bc8f78ca17361306c6099",
+      "bytes": 868578
+    },
+    "src/game/pl_leon.cpp": {
+      "sha256": "88ab1411999e7483f3289786d6b27d724f40308eb0fab1ac0695cf57ae558601",
+      "bytes": 10848
+    },
+    "port/dreamcast/game/platform/gx_stub.cpp": {
+      "sha256": "9775ceea655cdeba1259b36f128f4222ea325d49b102ccdccea6efe853ca3881",
+      "bytes": 17457
+    }
+  },
+  "eff_sys_identical_to": "e7bb2e5bf",
+  "calls": [
+    {
+      "path": "src/em10/em10.cpp",
+      "line": 3466,
+      "call": "EspDataLoad((u32) PL_ARC_PTR(em->subArc, 4), 0x10, 0);",
+      "arguments": [
+        "(u32) PL_ARC_PTR(em->subArc, 4)",
+        "0x10",
+        "0"
+      ],
+      "literal_owner": 16,
+      "return_observed": false
+    },
+    {
+      "path": "src/em18/em18.cpp",
+      "line": 301,
+      "call": "EspDataLoad((u32) ARC(4), 0x15, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x15",
+        "0"
+      ],
+      "literal_owner": 21,
+      "return_observed": false
+    },
+    {
+      "path": "src/em1d/em1d_set.cpp",
+      "line": 317,
+      "call": "EspDataLoad((u32) ARC(0x1A4), 0xcc, 0);",
+      "arguments": [
+        "(u32) ARC(0x1A4)",
+        "0xcc",
+        "0"
+      ],
+      "literal_owner": 204,
+      "return_observed": false
+    },
+    {
+      "path": "src/em1d/em1d_set.cpp",
+      "line": 318,
+      "call": "EspDataLoad((u32) ARC(0x278), 0xcd, 0);",
+      "arguments": [
+        "(u32) ARC(0x278)",
+        "0xcd",
+        "0"
+      ],
+      "literal_owner": 205,
+      "return_observed": false
+    },
+    {
+      "path": "src/em1e/em1e_set.cpp",
+      "line": 295,
+      "call": "EspDataLoad((u32) ARC(0x278), 0xcd, 0);",
+      "arguments": [
+        "(u32) ARC(0x278)",
+        "0xcd",
+        "0"
+      ],
+      "literal_owner": 205,
+      "return_observed": false
+    },
+    {
+      "path": "src/em1f/em1f_set.cpp",
+      "line": 247,
+      "call": "EspDataLoad((u32) ARC(0x278), 0xcd, 0);",
+      "arguments": [
+        "(u32) ARC(0x278)",
+        "0xcd",
+        "0"
+      ],
+      "literal_owner": 205,
+      "return_observed": false
+    },
+    {
+      "path": "src/em20/em20_set.cpp",
+      "line": 311,
+      "call": "EspDataLoad((u32) ARC(0x278), 0xcd, 0);",
+      "arguments": [
+        "(u32) ARC(0x278)",
+        "0xcd",
+        "0"
+      ],
+      "literal_owner": 205,
+      "return_observed": false
+    },
+    {
+      "path": "src/em22/em22.cpp",
+      "line": 419,
+      "call": "EspDataLoad((u32) ARC(6), 0x1A, 0);",
+      "arguments": [
+        "(u32) ARC(6)",
+        "0x1A",
+        "0"
+      ],
+      "literal_owner": 26,
+      "return_observed": false
+    },
+    {
+      "path": "src/em23/em23.cpp",
+      "line": 282,
+      "call": "EspDataLoad((u32) ARC(4), 0x1B, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x1B",
+        "0"
+      ],
+      "literal_owner": 27,
+      "return_observed": false
+    },
+    {
+      "path": "src/em24/em24.cpp",
+      "line": 232,
+      "call": "EspDataLoad((u32) ARC(4), 0x1C, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x1C",
+        "0"
+      ],
+      "literal_owner": 28,
+      "return_observed": false
+    },
+    {
+      "path": "src/em25/em25.cpp",
+      "line": 361,
+      "call": "EspDataLoad((u32) ARC(7), 0x1D, 0);",
+      "arguments": [
+        "(u32) ARC(7)",
+        "0x1D",
+        "0"
+      ],
+      "literal_owner": 29,
+      "return_observed": false
+    },
+    {
+      "path": "src/em26/em26.cpp",
+      "line": 326,
+      "call": "EspDataLoad((u32) ARC(7), 0x1E, 0);",
+      "arguments": [
+        "(u32) ARC(7)",
+        "0x1E",
+        "0"
+      ],
+      "literal_owner": 30,
+      "return_observed": false
+    },
+    {
+      "path": "src/em27/em27.cpp",
+      "line": 368,
+      "call": "EspDataLoad((u32) ARC(6), 0x1F, 0);",
+      "arguments": [
+        "(u32) ARC(6)",
+        "0x1F",
+        "0"
+      ],
+      "literal_owner": 31,
+      "return_observed": false
+    },
+    {
+      "path": "src/em28/em28.cpp",
+      "line": 318,
+      "call": "EspDataLoad((u32) ARC(0xB), 0x20, 0);",
+      "arguments": [
+        "(u32) ARC(0xB)",
+        "0x20",
+        "0"
+      ],
+      "literal_owner": 32,
+      "return_observed": false
+    },
+    {
+      "path": "src/em29/em29.cpp",
+      "line": 445,
+      "call": "EspDataLoad((u32) ARC(6), 0x21, 0);",
+      "arguments": [
+        "(u32) ARC(6)",
+        "0x21",
+        "0"
+      ],
+      "literal_owner": 33,
+      "return_observed": false
+    },
+    {
+      "path": "src/em2a/em2a.cpp",
+      "line": 366,
+      "call": "EspDataLoad((u32) ARC(0x12), 0x22, 0);",
+      "arguments": [
+        "(u32) ARC(0x12)",
+        "0x22",
+        "0"
+      ],
+      "literal_owner": 34,
+      "return_observed": false
+    },
+    {
+      "path": "src/em2b/em2b.cpp",
+      "line": 997,
+      "call": "EspDataLoad((u32) ARC(4), 0x23, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x23",
+        "0"
+      ],
+      "literal_owner": 35,
+      "return_observed": false
+    },
+    {
+      "path": "src/em2c/em2c.cpp",
+      "line": 1162,
+      "call": "EspDataLoad((u32) ARC(4), 0x24, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x24",
+        "0"
+      ],
+      "literal_owner": 36,
+      "return_observed": false
+    },
+    {
+      "path": "src/em2d/em2d.cpp",
+      "line": 1098,
+      "call": "EspDataLoad((u32) ARC(4), 0x25, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x25",
+        "0"
+      ],
+      "literal_owner": 37,
+      "return_observed": false
+    },
+    {
+      "path": "src/em2e/em2e.cpp",
+      "line": 188,
+      "call": "EspDataLoad((u32) ARC(7), 0x26, 0);",
+      "arguments": [
+        "(u32) ARC(7)",
+        "0x26",
+        "0"
+      ],
+      "literal_owner": 38,
+      "return_observed": false
+    },
+    {
+      "path": "src/em2f/em2f.cpp",
+      "line": 376,
+      "call": "EspDataLoad((u32) ARC(8), 0x27, 0);",
+      "arguments": [
+        "(u32) ARC(8)",
+        "0x27",
+        "0"
+      ],
+      "literal_owner": 39,
+      "return_observed": false
+    },
+    {
+      "path": "src/em30/em30.cpp",
+      "line": 288,
+      "call": "EspDataLoad((u32) ARC(0xE), 0x28, 0);",
+      "arguments": [
+        "(u32) ARC(0xE)",
+        "0x28",
+        "0"
+      ],
+      "literal_owner": 40,
+      "return_observed": false
+    },
+    {
+      "path": "src/em31/em31.cpp",
+      "line": 731,
+      "call": "EspDataLoad((u32) ARC(9), 0x29, 0);",
+      "arguments": [
+        "(u32) ARC(9)",
+        "0x29",
+        "0"
+      ],
+      "literal_owner": 41,
+      "return_observed": false
+    },
+    {
+      "path": "src/em32/em32.cpp",
+      "line": 721,
+      "call": "EspDataLoad((u32) ARC(8), 0x2A, 0);",
+      "arguments": [
+        "(u32) ARC(8)",
+        "0x2A",
+        "0"
+      ],
+      "literal_owner": 42,
+      "return_observed": false
+    },
+    {
+      "path": "src/em34/em34.cpp",
+      "line": 348,
+      "call": "EspDataLoad((u32) ARC(0x10), 0x2B, 0);",
+      "arguments": [
+        "(u32) ARC(0x10)",
+        "0x2B",
+        "0"
+      ],
+      "literal_owner": 43,
+      "return_observed": false
+    },
+    {
+      "path": "src/em35/em35.cpp",
+      "line": 1003,
+      "call": "EspDataLoad((u32) ARC(9), 0x2C, 0);",
+      "arguments": [
+        "(u32) ARC(9)",
+        "0x2C",
+        "0"
+      ],
+      "literal_owner": 44,
+      "return_observed": false
+    },
+    {
+      "path": "src/em36/em36.cpp",
+      "line": 698,
+      "call": "EspDataLoad((u32) ARC(0x25), 0x2D, 0);",
+      "arguments": [
+        "(u32) ARC(0x25)",
+        "0x2D",
+        "0"
+      ],
+      "literal_owner": 45,
+      "return_observed": false
+    },
+    {
+      "path": "src/em38/em38.cpp",
+      "line": 493,
+      "call": "EspDataLoad((u32) ARC(0xB), 0x2E, 0);",
+      "arguments": [
+        "(u32) ARC(0xB)",
+        "0x2E",
+        "0"
+      ],
+      "literal_owner": 46,
+      "return_observed": false
+    },
+    {
+      "path": "src/em39/em39.cpp",
+      "line": 889,
+      "call": "EspDataLoad((u32) ARC(4), 0x2F, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x2F",
+        "0"
+      ],
+      "literal_owner": 47,
+      "return_observed": false
+    },
+    {
+      "path": "src/em3a/em3a.cpp",
+      "line": 422,
+      "call": "EspDataLoad((u32) ARC(4), 2, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "2",
+        "0"
+      ],
+      "literal_owner": 2,
+      "return_observed": false
+    },
+    {
+      "path": "src/em3b/em3b.cpp",
+      "line": 506,
+      "call": "EspDataLoad((u32) ARC(6), 0x30, 0);",
+      "arguments": [
+        "(u32) ARC(6)",
+        "0x30",
+        "0"
+      ],
+      "literal_owner": 48,
+      "return_observed": false
+    },
+    {
+      "path": "src/em3c/em3c.cpp",
+      "line": 585,
+      "call": "EspDataLoad((u32) ARC(4), 0x31, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x31",
+        "0"
+      ],
+      "literal_owner": 49,
+      "return_observed": false
+    },
+    {
+      "path": "src/em3d/em3d.cpp",
+      "line": 331,
+      "call": "EspDataLoad((u32) ARC(4), 0x32, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x32",
+        "0"
+      ],
+      "literal_owner": 50,
+      "return_observed": false
+    },
+    {
+      "path": "src/em3e/em3e.cpp",
+      "line": 175,
+      "call": "EspDataLoad((u32) ARC(4), 0x33, 0);",
+      "arguments": [
+        "(u32) ARC(4)",
+        "0x33",
+        "0"
+      ],
+      "literal_owner": 51,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 415,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et01.eff\"), 0x55, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et01.eff\")",
+        "0x55",
+        "0"
+      ],
+      "literal_owner": 85,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 440,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et02.eff\"), 0x56, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et02.eff\")",
+        "0x56",
+        "0"
+      ],
+      "literal_owner": 86,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 465,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et03.eff\"), 0x57, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et03.eff\")",
+        "0x57",
+        "0"
+      ],
+      "literal_owner": 87,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 466,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 492,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et04.eff\"), 0x58, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et04.eff\")",
+        "0x58",
+        "0"
+      ],
+      "literal_owner": 88,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 517,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et05.eff\"), 0x59, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et05.eff\")",
+        "0x59",
+        "0"
+      ],
+      "literal_owner": 89,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 542,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et15.eff\"), 0x69, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et15.eff\")",
+        "0x69",
+        "0"
+      ],
+      "literal_owner": 105,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 572,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et06.eff\"), 0x5A, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et06.eff\")",
+        "0x5A",
+        "0"
+      ],
+      "literal_owner": 90,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 616,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et08.eff\"), 0x5C, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et08.eff\")",
+        "0x5C",
+        "0"
+      ],
+      "literal_owner": 92,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 653,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et09.eff\"), 0x5D, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et09.eff\")",
+        "0x5D",
+        "0"
+      ],
+      "literal_owner": 93,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 654,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm4c.eff\"), 0xCB, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm4c.eff\")",
+        "0xCB",
+        "0"
+      ],
+      "literal_owner": 203,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 679,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0a.eff\"), 0x5E, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0a.eff\")",
+        "0x5E",
+        "0"
+      ],
+      "literal_owner": 94,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 704,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0b.eff\"), 0x5F, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0b.eff\")",
+        "0x5F",
+        "0"
+      ],
+      "literal_owner": 95,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 736,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0c.eff\"), 0x60, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0c.eff\")",
+        "0x60",
+        "0"
+      ],
+      "literal_owner": 96,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 758,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x61, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x61",
+        "0"
+      ],
+      "literal_owner": 97,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 759,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 774,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et10.eff\"), 0x64, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et10.eff\")",
+        "0x64",
+        "0"
+      ],
+      "literal_owner": 100,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 826,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0f.eff\"), 0x63, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0f.eff\")",
+        "0x63",
+        "0"
+      ],
+      "literal_owner": 99,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 840,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et11.eff\"), 0x65, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et11.eff\")",
+        "0x65",
+        "0"
+      ],
+      "literal_owner": 101,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 865,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et12.eff\"), 0x66, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et12.eff\")",
+        "0x66",
+        "0"
+      ],
+      "literal_owner": 102,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 890,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et13.eff\"), 0x67, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et13.eff\")",
+        "0x67",
+        "0"
+      ],
+      "literal_owner": 103,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 891,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 924,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et14.eff\"), 0x68, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et14.eff\")",
+        "0x68",
+        "0"
+      ],
+      "literal_owner": 104,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 946,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et16.eff\"), 0x6A, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et16.eff\")",
+        "0x6A",
+        "0"
+      ],
+      "literal_owner": 106,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 947,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 969,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et17.eff\"), 0x6B, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et17.eff\")",
+        "0x6B",
+        "0"
+      ],
+      "literal_owner": 107,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 970,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 985,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et18.eff\"), 0x6C, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et18.eff\")",
+        "0x6C",
+        "0"
+      ],
+      "literal_owner": 108,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 986,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1019,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et19.eff\"), 0x6D, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et19.eff\")",
+        "0x6D",
+        "0"
+      ],
+      "literal_owner": 109,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1041,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et1a.eff\"), 0x6E, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et1a.eff\")",
+        "0x6E",
+        "0"
+      ],
+      "literal_owner": 110,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1063,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0f.eff\"), 0x63, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0f.eff\")",
+        "0x63",
+        "0"
+      ],
+      "literal_owner": 99,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1084,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et1c.eff\"), 0x70, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et1c.eff\")",
+        "0x70",
+        "0"
+      ],
+      "literal_owner": 112,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1099,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et11.eff\"), 0x65, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et11.eff\")",
+        "0x65",
+        "0"
+      ],
+      "literal_owner": 101,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1124,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et1f.eff\"), 0x73, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et1f.eff\")",
+        "0x73",
+        "0"
+      ],
+      "literal_owner": 115,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1146,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et20.eff\"), 0x74, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et20.eff\")",
+        "0x74",
+        "0"
+      ],
+      "literal_owner": 116,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1147,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1180,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et21.eff\"), 0x75, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et21.eff\")",
+        "0x75",
+        "0"
+      ],
+      "literal_owner": 117,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1181,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1196,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et22.eff\"), 0x76, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et22.eff\")",
+        "0x76",
+        "0"
+      ],
+      "literal_owner": 118,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1197,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1230,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et23.eff\"), 0x77, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et23.eff\")",
+        "0x77",
+        "0"
+      ],
+      "literal_owner": 119,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1231,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1253,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et24.eff\"), 0x78, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et24.eff\")",
+        "0x78",
+        "0"
+      ],
+      "literal_owner": 120,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1254,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1276,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0f.eff\"), 0x63, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0f.eff\")",
+        "0x63",
+        "0"
+      ],
+      "literal_owner": 99,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1297,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et27.eff\"), 0x7B, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et27.eff\")",
+        "0x7B",
+        "0"
+      ],
+      "literal_owner": 123,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1298,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1320,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0f.eff\"), 0x63, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0f.eff\")",
+        "0x63",
+        "0"
+      ],
+      "literal_owner": 99,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1341,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x7E, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x7E",
+        "0"
+      ],
+      "literal_owner": 126,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1342,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1364,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x7F, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x7F",
+        "0"
+      ],
+      "literal_owner": 127,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1365,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1380,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et2d.eff\"), 0x81, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et2d.eff\")",
+        "0x81",
+        "0"
+      ],
+      "literal_owner": 129,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1405,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et30.eff\"), 0x84, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et30.eff\")",
+        "0x84",
+        "0"
+      ],
+      "literal_owner": 132,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1428,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et2e.eff\"), 0x82, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et2e.eff\")",
+        "0x82",
+        "0"
+      ],
+      "literal_owner": 130,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1456,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et2f.eff\"), 0x83, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et2f.eff\")",
+        "0x83",
+        "0"
+      ],
+      "literal_owner": 131,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1490,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et31.eff\"), 0x85, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et31.eff\")",
+        "0x85",
+        "0"
+      ],
+      "literal_owner": 133,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1491,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1513,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et32.eff\"), 0x86, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et32.eff\")",
+        "0x86",
+        "0"
+      ],
+      "literal_owner": 134,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1514,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1537,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x87, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x87",
+        "0"
+      ],
+      "literal_owner": 135,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1538,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1561,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x88, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x88",
+        "0"
+      ],
+      "literal_owner": 136,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1562,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1584,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et37.eff\"), 0x8B, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et37.eff\")",
+        "0x8B",
+        "0"
+      ],
+      "literal_owner": 139,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1606,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et38.eff\"), 0x8C, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et38.eff\")",
+        "0x8C",
+        "0"
+      ],
+      "literal_owner": 140,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1628,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x8D, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x8D",
+        "0"
+      ],
+      "literal_owner": 141,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1629,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1651,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et3a.eff\"), 0x8E, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et3a.eff\")",
+        "0x8E",
+        "0"
+      ],
+      "literal_owner": 142,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1672,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x8F, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x8F",
+        "0"
+      ],
+      "literal_owner": 143,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1673,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1688,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et3c.eff\"), 0x90, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et3c.eff\")",
+        "0x90",
+        "0"
+      ],
+      "literal_owner": 144,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1713,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et3d.eff\"), 0x91, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et3d.eff\")",
+        "0x91",
+        "0"
+      ],
+      "literal_owner": 145,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1714,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1747,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x92, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x92",
+        "0"
+      ],
+      "literal_owner": 146,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1748,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1770,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x93, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x93",
+        "0"
+      ],
+      "literal_owner": 147,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1771,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1786,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et40.eff\"), 0x94, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et40.eff\")",
+        "0x94",
+        "0"
+      ],
+      "literal_owner": 148,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1787,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1820,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x95, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x95",
+        "0"
+      ],
+      "literal_owner": 149,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1821,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1836,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et42.eff\"), 0x96, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et42.eff\")",
+        "0x96",
+        "0"
+      ],
+      "literal_owner": 150,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1869,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et43.eff\"), 0x97, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et43.eff\")",
+        "0x97",
+        "0"
+      ],
+      "literal_owner": 151,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1890,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x99, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x99",
+        "0"
+      ],
+      "literal_owner": 153,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1891,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1913,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et46.eff\"), 0x9A, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et46.eff\")",
+        "0x9A",
+        "0"
+      ],
+      "literal_owner": 154,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1914,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1937,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x9B, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x9B",
+        "0"
+      ],
+      "literal_owner": 155,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1938,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1960,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0x9D, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0x9D",
+        "0"
+      ],
+      "literal_owner": 157,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1961,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 1983,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et4b.eff\"), 0x9F, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et4b.eff\")",
+        "0x9F",
+        "0"
+      ],
+      "literal_owner": 159,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2004,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et4c.eff\"), 0xA0, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et4c.eff\")",
+        "0xA0",
+        "0"
+      ],
+      "literal_owner": 160,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2025,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0xA1, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0xA1",
+        "0"
+      ],
+      "literal_owner": 161,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2026,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2048,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0xA2, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0xA2",
+        "0"
+      ],
+      "literal_owner": 162,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2049,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2071,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et4b.eff\"), 0xA3, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et4b.eff\")",
+        "0xA3",
+        "0"
+      ],
+      "literal_owner": 163,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2092,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0xAD, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0xAD",
+        "0"
+      ],
+      "literal_owner": 173,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2093,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2115,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et61.eff\"), 0xB5, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et61.eff\")",
+        "0xB5",
+        "0"
+      ],
+      "literal_owner": 181,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2136,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0xB6, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0xB6",
+        "0"
+      ],
+      "literal_owner": 182,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2137,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2159,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et0d.eff\"), 0xB7, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et0d.eff\")",
+        "0xB7",
+        "0"
+      ],
+      "literal_owner": 183,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2160,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"obm2b.eff\"), 0xC9, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"obm2b.eff\")",
+        "0xC9",
+        "0"
+      ],
+      "literal_owner": 201,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2175,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et66.eff\"), 0xBA, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et66.eff\")",
+        "0xBA",
+        "0"
+      ],
+      "literal_owner": 186,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/EtcModel.cpp",
+      "line": 2204,
+      "call": "EspDataLoad(GetEtcAddr(arc, \"et67.eff\"), 0xBB, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, \"et67.eff\")",
+        "0xBB",
+        "0"
+      ],
+      "literal_owner": 187,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "line": 383,
+      "call": "EspDataLoad(pG->pArc->ofs_14 + (u32) pG->pArc, 0, 0);",
+      "arguments": [
+        "pG->pArc->ofs_14 + (u32) pG->pArc",
+        "0",
+        "0"
+      ],
+      "literal_owner": 0,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "line": 384,
+      "call": "EspDataLoad(pG->pArc->ofs_50 + (u32) pG->pArc, 0xD1, 0);",
+      "arguments": [
+        "pG->pArc->ofs_50 + (u32) pG->pArc",
+        "0xD1",
+        "0"
+      ],
+      "literal_owner": 209,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/emdata.cpp",
+      "line": 105,
+      "call": "EspDataLoad(data, eff, 0);",
+      "arguments": [
+        "data",
+        "eff",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/et00.cpp",
+      "line": 59,
+      "call": "EspDataLoad(GetEtcAddr(arc, eff), effId, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, eff)",
+        "effId",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/event.cpp",
+      "line": 1172,
+      "call": "if (EspDataLoad((u32) dat, evt->effNo + 0xC4, 0) == 0) {",
+      "arguments": [
+        "(u32) dat",
+        "evt->effNo + 0xC4",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": true
+    },
+    {
+      "path": "src/game/game.cpp",
+      "line": 669,
+      "call": "EspDataLoad((u32) p, 1, 0);",
+      "arguments": [
+        "(u32) p",
+        "1",
+        "0"
+      ],
+      "literal_owner": 1,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/pl_ashley.cpp",
+      "line": 50,
+      "call": "EspDataLoad(PL_ARC_PTR(pG->pPlayer, 0x1A), 3, 0);",
+      "arguments": [
+        "PL_ARC_PTR(pG->pPlayer, 0x1A)",
+        "3",
+        "0"
+      ],
+      "literal_owner": 3,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/pl_leon.cpp",
+      "line": 56,
+      "call": "EspDataLoad(PL_ARC_PTR(arc, 0x1A), 3, 0);",
+      "arguments": [
+        "PL_ARC_PTR(arc, 0x1A)",
+        "3",
+        "0"
+      ],
+      "literal_owner": 3,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/pl_sub.cpp",
+      "line": 117,
+      "call": "EspDataLoad((u32) PL_ARC_PTR(pG->pPlayer, 0x1A), 3, 0);",
+      "arguments": [
+        "(u32) PL_ARC_PTR(pG->pPlayer, 0x1A)",
+        "3",
+        "0"
+      ],
+      "literal_owner": 3,
+      "return_observed": false
+    },
+    {
+      "path": "src/pl02/pl02.cpp",
+      "line": 167,
+      "call": "EspDataLoad((u32) PL_ARC_PTR(arc, 0x1A), 3, 0);",
+      "arguments": [
+        "(u32) PL_ARC_PTR(arc, 0x1A)",
+        "3",
+        "0"
+      ],
+      "literal_owner": 3,
+      "return_observed": false
+    },
+    {
+      "path": "src/pl06/pl06.cpp",
+      "line": 42,
+      "call": "EspDataLoad((u32) PL_ARC_PTR(arc, 0x1A), 3, 0);",
+      "arguments": [
+        "(u32) PL_ARC_PTR(arc, 0x1A)",
+        "3",
+        "0"
+      ],
+      "literal_owner": 3,
+      "return_observed": false
+    },
+    {
+      "path": "src/pl0a/pl_klauser.cpp",
+      "line": 80,
+      "call": "EspDataLoad((u32) PL_ARC(0x1A), 3, 0);",
+      "arguments": [
+        "(u32) PL_ARC(0x1A)",
+        "3",
+        "0"
+      ],
+      "literal_owner": 3,
+      "return_observed": false
+    },
+    {
+      "path": "src/pl0d/pl_wesker.cpp",
+      "line": 125,
+      "call": "EspDataLoad((u32) PL_ARC_PTR(arc, 0x1A), 3, 0);",
+      "arguments": [
+        "(u32) PL_ARC_PTR(arc, 0x1A)",
+        "3",
+        "0"
+      ],
+      "literal_owner": 3,
+      "return_observed": false
+    },
+    {
+      "path": "src/pl0e/pl0e.cpp",
+      "line": 244,
+      "call": "EspDataLoad((u32) ARC(0x4), 0xE, 0);",
+      "arguments": [
+        "(u32) ARC(0x4)",
+        "0xE",
+        "0"
+      ],
+      "literal_owner": 14,
+      "return_observed": false
+    },
+    {
+      "path": "src/pl0f/pl0f.cpp",
+      "line": 354,
+      "call": "EspDataLoad((u32) ARC(0x4), 0xF, 0);",
+      "arguments": [
+        "(u32) ARC(0x4)",
+        "0xF",
+        "0"
+      ],
+      "literal_owner": 15,
+      "return_observed": false
+    },
+    {
+      "path": "src/pl11/pl11.cpp",
+      "line": 44,
+      "call": "EspDataLoad((u32) ARC(0x11), 4, 0);",
+      "arguments": [
+        "(u32) ARC(0x11)",
+        "4",
+        "0"
+      ],
+      "literal_owner": 4,
+      "return_observed": false
+    },
+    {
+      "path": "src/pl14/pl14.cpp",
+      "line": 181,
+      "call": "EspDataLoad((u32) SUBARC(0x34 / 4), 7, 0);",
+      "arguments": [
+        "(u32) SUBARC(0x34 / 4)",
+        "7",
+        "0"
+      ],
+      "literal_owner": 7,
+      "return_observed": false
+    },
+    {
+      "path": "src/st1/r106.cpp",
+      "line": 189,
+      "call": "EspDataLoad((u32) ROOM_ARC_PTR(pG->pRoom, 0x2E), 0xC8, 0);",
+      "arguments": [
+        "(u32) ROOM_ARC_PTR(pG->pRoom, 0x2E)",
+        "0xC8",
+        "0"
+      ],
+      "literal_owner": 200,
+      "return_observed": false
+    },
+    {
+      "path": "src/st1/r10a.cpp",
+      "line": 97,
+      "call": "EspDataLoad((u32) ROOM_ARC_PTR(pG->pRoom, 0x2E), 0xC8, 0);",
+      "arguments": [
+        "(u32) ROOM_ARC_PTR(pG->pRoom, 0x2E)",
+        "0xC8",
+        "0"
+      ],
+      "literal_owner": 200,
+      "return_observed": false
+    },
+    {
+      "path": "src/st1/r118.cpp",
+      "line": 115,
+      "call": "EspDataLoad((u32) ROOM_ARC_PTR(pG->pRoom, 0x1F), 0xCA, 0);",
+      "arguments": [
+        "(u32) ROOM_ARC_PTR(pG->pRoom, 0x1F)",
+        "0xCA",
+        "0"
+      ],
+      "literal_owner": 202,
+      "return_observed": false
+    },
+    {
+      "path": "src/st1/r11d.cpp",
+      "line": 142,
+      "call": "EspDataLoad((u32) ROOM_ARC_PTR(pG->pRoom, 0x1F), 0xCA, 0);",
+      "arguments": [
+        "(u32) ROOM_ARC_PTR(pG->pRoom, 0x1F)",
+        "0xCA",
+        "0"
+      ],
+      "literal_owner": 202,
+      "return_observed": false
+    },
+    {
+      "path": "src/st1/r11e.cpp",
+      "line": 321,
+      "call": "EspDataLoad((u32) ROOM_ARC_PTR(pG->pRoom, 0x22), 0xC8, 0);",
+      "arguments": [
+        "(u32) ROOM_ARC_PTR(pG->pRoom, 0x22)",
+        "0xC8",
+        "0"
+      ],
+      "literal_owner": 200,
+      "return_observed": false
+    },
+    {
+      "path": "src/st3/r301.cpp",
+      "line": 383,
+      "call": "EspDataLoad((u32) ROOM_ARC_PTR(pG->pRoom, 0x21), 0xCA, 0);",
+      "arguments": [
+        "(u32) ROOM_ARC_PTR(pG->pRoom, 0x21)",
+        "0xCA",
+        "0"
+      ],
+      "literal_owner": 202,
+      "return_observed": false
+    },
+    {
+      "path": "src/t_esp/db_port.cpp",
+      "line": 589,
+      "call": "EspDataLoad((u32) buf, db_effOwner, 0);",
+      "arguments": [
+        "(u32) buf",
+        "db_effOwner",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": false
+    },
+    {
+      "path": "src/t_esp/db_port.cpp",
+      "line": 826,
+      "call": "EspDataLoad((u32) buf, db_effOwner, 0);",
+      "arguments": [
+        "(u32) buf",
+        "db_effOwner",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep01/wep01.cpp",
+      "line": 28,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x35, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x35",
+        "1"
+      ],
+      "literal_owner": 53,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep02/wep02.cpp",
+      "line": 39,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x36, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x36",
+        "1"
+      ],
+      "literal_owner": 54,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep04/wep04.cpp",
+      "line": 52,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x38, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x38",
+        "1"
+      ],
+      "literal_owner": 56,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep05/wep05.cpp",
+      "line": 30,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x39, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x39",
+        "1"
+      ],
+      "literal_owner": 57,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep06/wep06.cpp",
+      "line": 47,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x3A, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x3A",
+        "1"
+      ],
+      "literal_owner": 58,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep07/wep07.cpp",
+      "line": 48,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x3B, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x3B",
+        "1"
+      ],
+      "literal_owner": 59,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep08/wep08.cpp",
+      "line": 48,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x3C, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x3C",
+        "1"
+      ],
+      "literal_owner": 60,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep09/wep09.cpp",
+      "line": 29,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x8), 0x3D, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x8)",
+        "0x3D",
+        "1"
+      ],
+      "literal_owner": 61,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep10/wep10.cpp",
+      "line": 30,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x8), 0x44, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x8)",
+        "0x44",
+        "1"
+      ],
+      "literal_owner": 68,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep11/wep11.cpp",
+      "line": 27,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x45, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x45",
+        "1"
+      ],
+      "literal_owner": 69,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep12/wep12.cpp",
+      "line": 28,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x46, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x46",
+        "1"
+      ],
+      "literal_owner": 70,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep13/wep13.cpp",
+      "line": 30,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x6), 0x47, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x6)",
+        "0x47",
+        "1"
+      ],
+      "literal_owner": 71,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep14/wep14.cpp",
+      "line": 90,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x6), 0x48, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x6)",
+        "0x48",
+        "1"
+      ],
+      "literal_owner": 72,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep15/wep15.cpp",
+      "line": 45,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x49, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x49",
+        "1"
+      ],
+      "literal_owner": 73,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep16/wep16.cpp",
+      "line": 39,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x4A, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x4A",
+        "1"
+      ],
+      "literal_owner": 74,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep17/wep17.cpp",
+      "line": 102,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x4B, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x4B",
+        "1"
+      ],
+      "literal_owner": 75,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep19/wep19.cpp",
+      "line": 47,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x4D, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x4D",
+        "1"
+      ],
+      "literal_owner": 77,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep26/wep26.cpp",
+      "line": 38,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x4E, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x4E",
+        "1"
+      ],
+      "literal_owner": 78,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep27/wep27.cpp",
+      "line": 37,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x45, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x45",
+        "1"
+      ],
+      "literal_owner": 69,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep28/wep28.cpp",
+      "line": 47,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x50, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x50",
+        "1"
+      ],
+      "literal_owner": 80,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep29/wep29.cpp",
+      "line": 28,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x45, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x45",
+        "1"
+      ],
+      "literal_owner": 69,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep30/wep30.cpp",
+      "line": 40,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x4D, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x4D",
+        "1"
+      ],
+      "literal_owner": 77,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep33/wep33.cpp",
+      "line": 47,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x3B, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x3B",
+        "1"
+      ],
+      "literal_owner": 59,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep38/wep38.cpp",
+      "line": 51,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x35, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x35",
+        "1"
+      ],
+      "literal_owner": 53,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep39/wep39.cpp",
+      "line": 37,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x45, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x45",
+        "1"
+      ],
+      "literal_owner": 69,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep40/wep40.cpp",
+      "line": 36,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x8), 0x44, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x8)",
+        "0x44",
+        "1"
+      ],
+      "literal_owner": 68,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep41/wep41.cpp",
+      "line": 44,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x4D, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x4D",
+        "1"
+      ],
+      "literal_owner": 77,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep42/wep42.cpp",
+      "line": 45,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x4D, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x4D",
+        "1"
+      ],
+      "literal_owner": 77,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep43/wep43.cpp",
+      "line": 27,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x36, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x36",
+        "1"
+      ],
+      "literal_owner": 54,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep44/wep44.cpp",
+      "line": 47,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x3A, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x3A",
+        "1"
+      ],
+      "literal_owner": 58,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep45/wep45.cpp",
+      "line": 45,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x4), 0x4D, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x4)",
+        "0x4D",
+        "1"
+      ],
+      "literal_owner": 77,
+      "return_observed": false
+    },
+    {
+      "path": "src/wep47/wep47.cpp",
+      "line": 37,
+      "call": "EspDataLoad((u32) WEP_ARC_PTR(0x8), 0x44, 1);",
+      "arguments": [
+        "(u32) WEP_ARC_PTR(0x8)",
+        "0x44",
+        "1"
+      ],
+      "literal_owner": 68,
+      "return_observed": false
+    }
+  ],
+  "call_counts": {
+    "literal": 195,
+    "dynamic": 5
+  },
+  "literal_owner_range": [
+    0,
+    209
+  ],
+  "observed_returns": [
+    {
+      "path": "src/game/event.cpp",
+      "line": 1172,
+      "call": "if (EspDataLoad((u32) dat, evt->effNo + 0xC4, 0) == 0) {",
+      "arguments": [
+        "(u32) dat",
+        "evt->effNo + 0xC4",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": true
+    }
+  ],
+  "dynamic_calls": [
+    {
+      "path": "src/game/emdata.cpp",
+      "line": 105,
+      "call": "EspDataLoad(data, eff, 0);",
+      "arguments": [
+        "data",
+        "eff",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/et00.cpp",
+      "line": 59,
+      "call": "EspDataLoad(GetEtcAddr(arc, eff), effId, 0);",
+      "arguments": [
+        "GetEtcAddr(arc, eff)",
+        "effId",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": false
+    },
+    {
+      "path": "src/game/event.cpp",
+      "line": 1172,
+      "call": "if (EspDataLoad((u32) dat, evt->effNo + 0xC4, 0) == 0) {",
+      "arguments": [
+        "(u32) dat",
+        "evt->effNo + 0xC4",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": true
+    },
+    {
+      "path": "src/t_esp/db_port.cpp",
+      "line": 589,
+      "call": "EspDataLoad((u32) buf, db_effOwner, 0);",
+      "arguments": [
+        "(u32) buf",
+        "db_effOwner",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": false
+    },
+    {
+      "path": "src/t_esp/db_port.cpp",
+      "line": 826,
+      "call": "EspDataLoad((u32) buf, db_effOwner, 0);",
+      "arguments": [
+        "(u32) buf",
+        "db_effOwner",
+        "0"
+      ],
+      "literal_owner": null,
+      "return_observed": false
+    }
+  ],
+  "searches": {
+    "RoomEfmRegist(": [
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:include/esp.h:484:void RoomEfmRegist(cModel* m, u8 no);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:105:void RoomEfmRegist(cModel* m, u8 id);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:106:void RoomEfmRegist(void* model, void* tpl, u8 id);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:1240:void RoomEfmRegist(cModel* m, u8 id)",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:1246:void RoomEfmRegist(void* model, void* tpl, u8 id)",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/st1/r10b.cpp:244:    RoomEfmRegist(SmdGetGroupObjPtr(0x58), 0x60);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/st1/r11c.cpp:65:void RoomEfmRegist(void* model, void* tpl, u8 id);   // game/eff_sys.cpp (the bin/tpl overload)",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/st1/r11c.cpp:374:        RoomEfmRegist(GetEtcAddr(arc, \"et1400.bin\"), GetEtcAddr(arc, \"et1400.tpl\"), 0x6F);"
+    ],
+    "EspPullTexObj(": [
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:74:GXTexObj* EspPullTexObj(u32 num);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:396:GXTexObj* EspPullTexObj(u32 num)",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:708:    w->pTexObj = EspPullTexObj(w->nTexObj);"
+    ],
+    "texObj[": [
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:include/espgen.h:122:    GXTexObj texObj[0x1F4];      // 0x8684 texture object pool",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:include/global.h:140:    u8 pad_3010[0x4F10 - 0x3010];  // 0x3010  GXTexObj texObj[0xF8] (trans.cpp GxWork view of 0x184..0x4F14)",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:417:    obj = &sys->texObj[start];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:168:    GXTexObj texObj[0xF8];  // 0x2E8C",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:611:        GXLoadTexObj(&gx->texObj[id], map);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:2266:                GXInitTexObj(&gx->texObj[i], td->textureHeader->data, td->textureHeader->width, td->textureHeader->height,",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:2269:                    GXInitTexObjLOD(&gx->texObj[i], filt, 1, (f32) min_lod, (f32) max_lod, lod_bias, 0, edge, aniso);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3136:                GXInitTexObj(&gx->texObj[i], td->textureHeader->data, td->textureHeader->width, td->textureHeader->height,",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3139:                    GXInitTexObjLOD(&gx->texObj[i], filt, 1, (f32) min_lod, (f32) max_lod, lod_bias, 0, edge, aniso);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3277:// re-initialises gx->texObj[0..n) (GXInitTexObj per descriptor, after the wrap fix-up) whenever",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3410:// The object a part reads for texture `id` (gx->texObj[id] in the source).",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3419:    return &gx->texObj[id];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3430:        ftObj(&gx->texObj[i], r[ft_swapped ? ft_remap[i] : i]);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3555:                    GXInitTexObj(&gx->texObj[i], td->textureHeader->data, td->textureHeader->width, td->textureHeader->height,",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3579:            re4dc_model_material(texId <= 0xF7 ? &gx->texObj[texId] : 0, t->u, t->v, t->flags);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3587:                    part->alphaTex <= 0xF7 ? &gx->texObj[part->alphaTex] : 0,",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3696:                    GXInitTexObj(&gx->texObj[i], td->textureHeader->data, td->textureHeader->width, td->textureHeader->height,",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:3992:                    GXInitTexObj(&gx->texObj[i], td->textureHeader->data, td->textureHeader->width, td->textureHeader->height,",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:4065:        texObj[p[0]] = texObj[p[1]];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:4543:    re4dc_model_material(texId <= 0xF7 ? &GXWORK()->texObj[texId] : 0, t->u, t->v, t->flags);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/trans.cpp:5178:    re4dc_model_alpha_material(part->alphaTex <= 0xF7 ? &GXWORK()->texObj[part->alphaTex] : 0,"
+    ],
+    "pTexObj[": [
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:579:    GXLoadTexObj(&w->pTexObj[ptn], 0);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:595:    return &w->pTexObj[ptn];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:718:        obj = &w->pTexObj[i];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/texture.cpp:150:    obj = &pTexObj[start];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/texture.cpp:222:        obj = &w->pTexObj[i];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/texture.cpp:271:    *out = &w->pTexObj[no];"
+    ],
+    "EspGetTexObj(": [
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:include/esp.h:419:GXTexObj* EspGetTexObj(int no, int ptn_no);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/Espgen42.cpp:553:    tex = EspGetTexObj(0xFE, frame);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/Espgen42.cpp:899:            GXTexObj* tex2 = EspGetTexObj(p->texId, 0);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/Espgen42.cpp:1232:    if (EspGetTexObj(0xFE, 0) == NULL) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/Espgen43.cpp:308:    tex = EspGetTexObj(p->TexNo, 0);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/eff_sys.cpp:587:GXTexObj* EspGetTexObj(int id, int ptn)",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/espgen45.cpp:253:    tex = EspGetTexObj(0xFE, frame);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/espgen45.cpp:1045:            GXTexObj* tex2 = EspGetTexObj(p->texId, 0);",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/espgen45.cpp:1502:    if (EspGetTexObj(0xFE, 0) == NULL) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/foot_shadow.cpp:173:            tex = EspGetTexObj(0x13, 0);"
+    ],
+    "effNo =": [
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/event.cpp:1164:    if (evt->effNo == -1 || evt->effNo > 1) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/event.cpp:2239:        e->effNo = no;",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:125:    if (!(subWep.effNo == 0xD2 && subWep.effPrm == 1)) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:127:        if (subWep.effNo == 0 && subWep.effPrm == 0x15) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:265:            subWep.effNo = info->eff13[0];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:269:            subWep.effNo = info->eff16[0];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:273:            subWep.effNo = info->eff17[0];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:277:            subWep.effNo = info->eff17[0];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:281:            subWep.effNo = info->eff17[0];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:285:            subWep.effNo = info->eff17[0];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:327:            subWep.effNo = info->eff13[0];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:331:            subWep.effNo = info->eff16[0];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:335:            subWep.effNo = info->eff17[0];",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:604:        if (subWep.effNo == 0xD2 && subWep.effPrm == 1) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:671:        if (subWep.effNo == 0xD2 && subWep.effPrm == 1) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/objSubWep.cpp:733:        if (subWep.effNo == 0xD2 && subWep.effPrm == 1) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4429:            if (it->effNo == 0) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4439:            if (it->effNo == 0) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4449:            if (it->effNo == 0) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4455:        if (it->effNo == 0) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4504:        it->effNo = 0;",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4524:    it->effNo = 0;",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4528:    it->effNo = EspPullCoreKind();",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4529:    if (it->effNo == 0) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4744:    it->effNo = 0;",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4748:    it->effNo = EspPullCoreKind();",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/game/sce_at.cpp:4749:    if (it->effNo == 0) {",
+      "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f:src/t_sce/t_sce_item.cpp:1542:            pW->area[i].item.effNo = 0;"
+    ]
+  },
+  "limits": "Textual source census only. Dynamic owner validity requires caller-specific proof; invocation counts do not imply simultaneous owners or capacity pressure."
+}
