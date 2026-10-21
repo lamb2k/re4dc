@@ -1,9 +1,9 @@
 {
   "scope": "source/host qualification preparation only; no successor build/image/guest",
-  "utc": "2026-10-21T23:51:32.789115+00:00",
-  "tests": 11,
+  "utc": "2026-10-21T23:53:08.339333+00:00",
+  "tests": 12,
   "returncode": 0,
-  "output": "test_absent_qa_optional_missing_generic_fails (__main__.Adapter.test_absent_qa_optional_missing_generic_fails) ... ok\ntest_actor_identity_and_no_automatic_em10_read (__main__.Adapter.test_actor_identity_and_no_automatic_em10_read) ... ok\ntest_generic_snapshot_without_qa_or_trace (__main__.Adapter.test_generic_snapshot_without_qa_or_trace) ... ok\ntest_initial_pointer_sample_invalid (__main__.Adapter.test_initial_pointer_sample_invalid) ... ok\ntest_mismatched_elf_and_outside_ram_fail (__main__.Adapter.test_mismatched_elf_and_outside_ram_fail) ... ok\ntest_absent_qa_does_not_block_ordinary_shooting (__main__.Gates.test_absent_qa_does_not_block_ordinary_shooting) ... ok\ntest_discharge_needs_ammo_and_both_counters (__main__.Gates.test_discharge_needs_ammo_and_both_counters) ... ok\ntest_event_and_source_masks_withhold_shooting (__main__.Gates.test_event_and_source_masks_withhold_shooting) ... ok\ntest_initial_missing_is_not_death_or_freeplay (__main__.Gates.test_initial_missing_is_not_death_or_freeplay) ... ok\ntest_missing_weapon_cannot_claim_discharge (__main__.Gates.test_missing_weapon_cannot_claim_discharge) ... ok\ntest_weapon_switch_infinite_special_and_room_rejected (__main__.Gates.test_weapon_switch_infinite_special_and_room_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 11 tests in 0.025s\n\nOK\n",
+  "output": "test_absent_qa_optional_missing_generic_fails (__main__.Adapter.test_absent_qa_optional_missing_generic_fails) ... ok\ntest_actor_identity_and_no_automatic_em10_read (__main__.Adapter.test_actor_identity_and_no_automatic_em10_read) ... ok\ntest_generic_snapshot_without_qa_or_trace (__main__.Adapter.test_generic_snapshot_without_qa_or_trace) ... ok\ntest_initial_pointer_sample_invalid (__main__.Adapter.test_initial_pointer_sample_invalid) ... ok\ntest_mismatched_elf_and_outside_ram_fail (__main__.Adapter.test_mismatched_elf_and_outside_ram_fail) ... ok\ntest_absent_qa_does_not_block_ordinary_shooting (__main__.Gates.test_absent_qa_does_not_block_ordinary_shooting) ... ok\ntest_adapter_nested_global_discharge (__main__.Gates.test_adapter_nested_global_discharge) ... ok\ntest_discharge_needs_ammo_and_both_counters (__main__.Gates.test_discharge_needs_ammo_and_both_counters) ... ok\ntest_event_and_source_masks_withhold_shooting (__main__.Gates.test_event_and_source_masks_withhold_shooting) ... ok\ntest_initial_missing_is_not_death_or_freeplay (__main__.Gates.test_initial_missing_is_not_death_or_freeplay) ... ok\ntest_missing_weapon_cannot_claim_discharge (__main__.Gates.test_missing_weapon_cannot_claim_discharge) ... ok\ntest_weapon_switch_infinite_special_and_room_rejected (__main__.Gates.test_weapon_switch_infinite_special_and_room_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 12 tests in 0.022s\n\nOK\n",
   "historical_layout_types": 20,
   "historical_elf": "e3024f3c3a2baf3642677a75f79664ca7a4ab2499dc4c6ba7b49dd41459bff66",
   "successor_reader_source": "c57ff60f0f462fdd2c419883b0258963504d756a",
@@ -14,11 +14,11 @@
     "historical-a18-on-expected.json": "34fc1957e5634a9a8ca75cbeb9f873f449ec572e6a810efbd2dea086aced89dd",
     "historical-a18-on-layout.json": "339e994a0fb82b61a59e34ea7f1c20745d4655520b6127ba5077a48dec0fafc2",
     "observer-adapter.py": "2ca270b3ef29c1ed60284b48472794c5a2d2ad4de1d3ca705fa8b54b03693f10",
-    "policies.py": "9262596cbd4de7570ca63d4c7abca4f66c144009e04e3187daf5aa4e1101d4a7",
+    "policies.py": "71b9bdd8ed567cc633bbeaa8e324dbd0fa4cffa02e860474baa0d1c880cd89f2",
     "prepare-layout.py": "19b46b99c68b97a23539e1ceb0adf29b5ca6098bec4099ff469422e6d3ec7e51",
     "routine-reader-characterization.json": "5cc920916f3e863be7c333e349bd78d1e6ab738ea4c209351f5a394aec7e131f",
     "source-and-transitions.json": "3ea74881d76ef7373646dc7eacc7df61fbefb866de3156f45810e94793411a04",
-    "test-plan.py": "d10c93280bec9bd0c79a01e5f95b8f22ff974df16b09bf76494765db25c18c56"
+    "test-plan.py": "b34ec4461d1ab1e40e9c07b5ca8f2d649e26ff5f2701495a0441822f85a03005"
   },
   "layout_storage": "UTF-8 LF normalized, exact ELF identity unchanged"
 }

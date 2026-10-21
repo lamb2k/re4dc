@@ -22,6 +22,11 @@ class Gates(unittest.TestCase):
   b=self.fixture();e=copy.deepcopy(b);e['frame']+=30;e['weapon']['loaded_rounds']-=1;e['counters']['g_shot_cnt']+=1;e['counters']['c_shot_cnt']+=1
   self.assertTrue(discharge(b,e)['accepted'])
   e['weapon']['loaded_rounds']+=1;self.assertFalse(discharge(b,e)['accepted'])
+ def test_adapter_nested_global_discharge(self):
+  b=self.fixture();e=copy.deepcopy(b);e['frame']+=30;e['weapon']['loaded_rounds']-=1
+  for k in ('g_shot_cnt','c_shot_cnt'):e['counters'][k]+=1
+  for row in (b,e):row['global']={k:row.pop(k) for k in ('room','frame')}
+  self.assertTrue(discharge(b,e)['accepted'])
  def test_missing_weapon_cannot_claim_discharge(self):
   self.assertFalse(discharge({}, {})['accepted'])
   b=self.fixture();e=copy.deepcopy(b);e['weapon']['slot']=0;self.assertFalse(discharge(b,e)['accepted'])
