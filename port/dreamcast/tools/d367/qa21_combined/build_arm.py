@@ -5,7 +5,7 @@ from pathlib import Path
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('arm', choices=['default-off','qa-control','combined'])
 a=p.parse_args()
-T=Path(__file__).resolve().parents[6]
+T=Path(__file__).resolve().parents[5]
 assert T == Path('/root/probe/codex-qa21-combined-regression')
 B=Path('/root/probe/qa21-combined-build-20261021'); O=B/a.arm
 R=Path('/mnt/c/Flycast-Evidence/re4-dreamcast/feedback21-boss-qa-20261021/qa-builds')
