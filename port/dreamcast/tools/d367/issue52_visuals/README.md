@@ -27,3 +27,16 @@ Example: `python3 repair_officer_heads.py --dar private/public-r100.dar --source
 Candidate DAR SHA256 `bdfbba1837d5cd3efcc8ba64d63955abf90819cb375d6d9f1e378bec1f7e2e36` has unchanged5373952B. Exact-input guards and the explicit enable flag apply. Officer body atlas/UV layout remains a separate open case; this candidate does not establish a complete officer repair or a repaired target appearance.
 
 The church swinging chandelier is also separate: three PS2 pictures/UV spaces were merged into the retained single GC atlas. An index-map alone cannot repair that layout. Retained source proof records the1270-triangle material split (1046 opaque,40 curved fixture,184 chain); no chandelier candidate is enabled here.
+## Opt-in chandelier atlas candidate
+
+`repair_chandelier_atlas.py` repairs the exact public Test21 r117 chandelier (BIN0x1f / TPL0x20). It packs the three original PS2 pictures without resizing and rebases each source material's UVs. The opaque body keeps alpha255; the chain and curved fixture retain their separate masks and all16 intensity levels. Eight-texel periodic collars preserve the retained source colour/mask REPEAT modes at UV seams. One original material remains one material; the source joint, animation, lighting and blend contracts stay intact.
+
+Example: `python3 repair_chandelier_atlas.py --dar private/public-r117.dar --sources private/dynamic-source-exact02 --out private/chandelier-atlas --enable-chandelier-atlas`.
+
+The tool is disabled unless explicitly enabled, checks the exact DAR plus four original source identities, and refuses an existing output directory. It writes one candidate DAR, three loose texture packages, a source atlas preview and a receipt. It does not edit or invoke a production recipe. All1270 oriented triangles retain their positions, normals, colours and weights. The26912B BIN extent stays fixed: the rebuilt26848B BIN receives64B padding. Only this BIN and two8B native texture keys change; room size, NTR table, TPL descriptors, object placement and every other room byte stay identical.
+
+Host qualification: eight source tests pass;8890 bilinear samples match the separate source pictures within floating-point rounding; native package alpha decodes exactly to the16 source levels. Repeated WSL and Windows Python generation produces identical DAR/packages. The legacy signed8.8 UV representation adds up to0.4981 atlas texel of coordinate error, so target appearance remains a required gate.
+
+The pair is native ARGB4444,131072B of texture payload versus the old VQ pair18432B: **+112640B source residency payload**. There are90 unique ARGB4444 words but1968 distinct2x2 blocks, so a single256-entry VQ codebook cannot encode it exactly. This correctness candidate adds no palette/runtime switch; target texture capacity and appearance remain open. No speed benefit is claimed.
+
+Candidate DAR SHA256: `94b8b3b81e8fa80cd8dfd6f1ed0970cc21b3d1eed9a3dfef5fb6e8a10540de6e`; unchanged4149248B. Pair key: `9699ee7e-5b272575`. Exact receipts, private assets and the queued target plan are in `issue52-visuals-20261021/chandelier-atlas-candidate01`. No build, stage, guest, release or physical Dreamcast acceptance ran. Officer body work stays separate.
