@@ -2,6 +2,8 @@
 
 Flycast progression qualifies the original Garrador death and battle-door callback. It does not qualify chapter completion, release checks, cache performance, or physical Dreamcast acceptance.
 
+Subsequent original wave death200 and normal GameContinue201 reset the current boss encounter through game logic. The completed192 encounter below remains historical evidence. The ongoing replay is recorded by newer `recovered-j-resume-*-20261021.json` receipts and the current lane STATUS; no historical snapshot was restored.
+
 The frozen runtime is `12a841d7c`, candidate `c21jmW`. ELF SHA256 is `4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f`; image SHA256 is `b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6`. No game source, program, assets, production recipe, or experimental default changed for these attempts.
 
 Original checkpoint127 remains preserved: source33328, Leon220/Ashley90, Garrador3464, state `ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16`. Attempt129 landed an ordinary weakpoint hit before the genuine death130. Original GameContinue131 reset the encounter through game logic. No historical snapshot rollback, position/health/item/AI/flag write, or save retarget was used.
