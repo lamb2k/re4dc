@@ -45,6 +45,16 @@ SDK_GEN = $(addprefix platform/sdk/gen/,$(addsuffix .c,$(SDK_UNITS)))
 
 OBJDIR = obj
 
+# EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
+# readEm cannot find a free module slot, as on its transport-failure return.
+EM_ADMISSION_DISP_FIX ?= 0
+ifneq ($(EM_ADMISSION_DISP_FIX),0)
+ifneq ($(EM_ADMISSION_DISP_FIX),1)
+$(error EM_ADMISSION_DISP_FIX must be 0 or 1)
+endif
+$(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_EM_ADMISSION_DISP_FIX=1
+endif
+
 # UI_POLY_ORDER: keep pickup/subscreen polygon headers in the source UI list.
 UI_POLY_ORDER ?= 0
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_POLY_ORDER=$(UI_POLY_ORDER)
