@@ -12,12 +12,13 @@
     "PLAN.md": "ceb1ef7720c4e85a2ba28a79f932361b34e20600013de4217efee656a7a177db",
     "bind-elf.py": "f6207889cf7ddc3261db394c2059f3fe1ee2aac781b03fd9df8f56b9b20bb7e0",
     "historical-a18-on-expected.json": "34fc1957e5634a9a8ca75cbeb9f873f449ec572e6a810efbd2dea086aced89dd",
-    "historical-a18-on-layout.json": "c675c6b10dca848925146613144a0ae70d8d4a53fcc63b9d6dc3ac9352728ca2",
+    "historical-a18-on-layout.json": "339e994a0fb82b61a59e34ea7f1c20745d4655520b6127ba5077a48dec0fafc2",
     "observer-adapter.py": "2ca270b3ef29c1ed60284b48472794c5a2d2ad4de1d3ca705fa8b54b03693f10",
     "policies.py": "9262596cbd4de7570ca63d4c7abca4f66c144009e04e3187daf5aa4e1101d4a7",
     "prepare-layout.py": "19b46b99c68b97a23539e1ceb0adf29b5ca6098bec4099ff469422e6d3ec7e51",
     "routine-reader-characterization.json": "5cc920916f3e863be7c333e349bd78d1e6ab738ea4c209351f5a394aec7e131f",
     "source-and-transitions.json": "3ea74881d76ef7373646dc7eacc7df61fbefb866de3156f45810e94793411a04",
     "test-plan.py": "d10c93280bec9bd0c79a01e5f95b8f22ff974df16b09bf76494765db25c18c56"
-  }
+  },
+  "layout_storage": "UTF-8 LF normalized, exact ELF identity unchanged"
 }
