@@ -76,6 +76,41 @@ sleep during the DVD read. Investigation continues through the first actor
 move, possible scheduler yields and owner retirement. event/read changes are
 coordinated with the cache caller lane.
 
+The exact public native archive tables also pass a source-reference bounds
+check: eight literal r10c room references and 53 Em12 archive references.
+The room event motion raw index `0x26` names body entry 34, tagged FCV, offset
+`0x17a4a0`, 43,040 bytes. The recovered macros count the four header words in
+their indices; interpreting `0x26` as the entry number would falsely report
+an out-of-bounds reference. This check establishes table bounds and published
+asset identity, not runtime read integrity or pointer lifetime.
+
+## Bounded diagnostic candidate
+
+`ISSUE52_ACTOR_DIAG=1` is a default-off diagnostic requiring `CRASH_SCREEN=1`,
+`STAGE_OVL=1` and `ROUTE_OVL=1`. It copies the current source frame, room,
+returned actor address and the trusted st1_2 registry's runtime image address.
+The crash header displays that copied state before its existing detail rows.
+It never reads the candidate actor or vtable, and retains the original fault
+register and stack capture. No production recipe enables it.
+
+| Phase | Source boundary |
+| --- | --- |
+| 1 | First-villager event admitted, before original room-flag changes |
+| 2 | Immediately before `EmSetFromList2(2, 1)`, including its initial move |
+| 3 | Spawn returned, before the first virtual `setNoSuspend` call |
+| 4 | That virtual call returned |
+| 5 | Event motion setup returned |
+| 6 | Event cleanup entered, before original actor destruction |
+| 7 | Event cleanup completed |
+
+The source diagnostic is a candidate. All three actual SH4 target objects
+compile with the diagnostic on. With it off, all three stripped objects match
+the prior source objects exactly. The enabled objects also pass a partial
+little-endian SH4 link with both diagnostic symbols resolved. Make guard checks
+prove default off, the three intended target flags, and rejection of invalid
+values or missing prerequisites. This is object qualification; a full program
+comparison, diagnostic disc, guest and hardware outcome remain untested.
+
 ## Private receipts and limits
 
 Evidence root:
@@ -84,9 +119,13 @@ Receipts: `public-test21-recovery.json`, `exact-test21-binding.json`,
 `final-full-identity-verification.json`, `rejected-t15-only-verification.json`,
 `exact-test21-overlay-binding.json`, `hardware-relocation-candidates.json`.
 ELFs, disassembly, resolved flags and logs are retained in `exact-test21-build`.
+Diagnostic object receipts are under `diagnostic-objects/{before,off,on}`;
+`diagnostic-unit-receipt.json` and `diagnostic-make-guards.json` preserve the
+partial-link and Make checks. `exact-public-archive-source-bounds.json` records
+the source-index audit.
 The original three issue photos remain in `issue52-20261021`, unchanged.
 
-This milestone ran source builds and artifact checks. It launched no guest,
-staged no disc, changed no runtime or production recipe, and made no release
-or physical Dreamcast acceptance claim. Public package identity does not prove
-the reporter's SD card bytes.
+The executable-identity milestone ran source builds and artifact checks. The
+subsequent diagnostic remains default off. Neither launched a guest, staged a
+disc, changed a production recipe, or established release or physical Dreamcast
+acceptance. Public package identity does not prove the reporter's SD card bytes.
