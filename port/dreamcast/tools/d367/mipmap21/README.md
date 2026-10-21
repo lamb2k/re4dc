@@ -566,3 +566,23 @@ mip flag attached to base-only bytes fail closed. All options default to false;
 existing valid base checks and normal pack-over-loose precedence remain intact.
 These options validate bytes and sampling dimensions. They do not qualify
 palette capacity, appearance, residency, performance or release selection.
+
+### Shared canonical PAL8 composition
+
+`pal8_candidate.py` layers exact canonical grayscale/alpha palettes onto the
+already-qualified square native chains. It binds the complete original and
+selected normal-pack namespaces and member hashes before selecting source-owned
+world/effect keys. UI, separate actor owners, unclassified keys and independent
+color palettes stay unchanged. Without `--generate`, the selected pack is exact.
+The current private three-key layer shares one palette, preserves all 25 changed
+levels and original bases, and leaves 6498 selected members byte-identical.
+Whole-pack original differences and the 870 mip keys are inherited, not new keys
+converted by this layer. Full per-room reference unions and separate effect-key
+requests are recorded; they are not live residency.
+
+The complete texture switches also include inherited `TEX_PAL4_MIPMAP=1` and
+`TEX_TWIDDLED_MIPMAP=1` alongside the PAL8 parents. The initial sealed generator
+listed the PAL8 dependencies and explicitly retained inherited knobs; its source
+is archived. The current metadata lists the full set and reproduces exactly the
+same pack. See `canonical-pal8-qualification-20261021.json`. This is still private
+review data pending combined game palette/KOS/VRAM/look and timing gates.
