@@ -581,7 +581,20 @@ struct PlayerPtr {
     cPlayer* p;
 };
 #define pPLS (((PlayerPtr*) &pPL)->p)
+// Routine words are big endian on the recovered target. Set the named bytes on native
+// little-endian builds so the branch's new routine runs in this same source tick.
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_GANADO_ROUTINE_BYTES) && RE4DC_GANADO_ROUTINE_BYTES
+static inline void Em10RoutineBytes(cEm10* em, int r0, int r1)
+{
+    em->r_no_0 = u8(r0);
+    em->r_no_1 = u8(r1);
+    em->r_no_2 = 0;
+    em->r_no_3 = 0;
+}
+#define EM_RTN_SET(em, fc, fd) Em10RoutineBytes((em), (fc), (fd))
+#else
 #define EM_RTN_SET(em, fc, fd) ((em)->stat = (u32) (((fc) << 24) | ((fd) << 16)))
+#endif
 
 Em10Func Em10SetFunc = 0;
 
