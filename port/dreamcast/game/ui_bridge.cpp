@@ -27,6 +27,10 @@ extern "C" void GXProject(float,float,float,const float[3][4],const float*,const
 extern "C" int re4dc_item_ui_order() { return pG && (pG->Status_flg[1] & 2U); }
 #endif
 extern "C" int OSCheckHeap(int);
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+extern "C" int OSDisableInterrupts();
+extern "C" int OSRestoreInterrupts(int);
+#endif
 extern "C" int re4dc_ui_heap_free() { return OSCheckHeap(Heap[MemGetCurrentHeap()].handle); }
 
 extern "C" void* re4dc_ui_stage_alloc(unsigned bytes) {
@@ -687,9 +691,18 @@ void* room_alloc4_high(unsigned bytes,const char* tag){
     auto* d=reinterpret_cast<OSHeapDescriptor*>((u32(re4dc_mem.heap)+0x1FU)&~0x1FU)+Heap[4].handle;
     const u32 payload=(bytes+sizeof(Room4Cell)+0x1FU)&~0x1FU;
     const s32 size=s32(payload+0x40U);
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+    // Paired with OSAlloc.c's list mutation guards. No I/O or allocation inside.
+    const int motion_capacity_irq=OSDisableInterrupts();
+#endif
     OSHeapCell* best=nullptr;
     for(OSHeapCell* c=d->free;c;c=c->next)if(c->size>=size)best=c;  // address order: the last fit is highest
-    if(!best)return nullptr;
+    if(!best) {
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+        OSRestoreInterrupts(motion_capacity_irq);
+#endif
+        return nullptr;
+    }
     OSHeapCell* cell;
     if(best->size-size<0x40){
         if(best->prev)best->prev->next=best->next;else d->free=best->next;
@@ -703,6 +716,9 @@ void* room_alloc4_high(unsigned bytes,const char* tag){
     cell->prev=nullptr;cell->next=d->allocated;
     if(cell->next)cell->next->prev=cell;
     d->allocated=cell;
+#if defined(RE4DC_MOTION_CAPACITY) && RE4DC_MOTION_CAPACITY
+    OSRestoreInterrupts(motion_capacity_irq);
+#endif
     auto* p=reinterpret_cast<u8*>(cell)+0x20;
     u8* t=p+payload;
     t[0]=0;t[1]='M';t[2]='A';t[3]='D';
