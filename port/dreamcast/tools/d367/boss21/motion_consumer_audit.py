@@ -173,14 +173,64 @@ def reviewed_groups(census,texts):
  return result
 
 
+
+def lifecycle_rules(texts):
+ """Reviewed shared normal-return and door quiescence, not all-exit closure."""
+ rows=[]
+ def body(path,name):
+  b,line=fn(texts[path],name);rows.append(dict(path=path,line=line,function=name));return b
+ b=body('src/game/pl_sub.cpp','SetPlDamage')
+ assert 'Pl_func_tbl[4] = func' in b and 'PlSetRoutine(4, 0, 0, 0)' in b and 'pl->dmgType = type' in b
+ b=body('src/game/em_sub.cpp','EmCatchPLSet')
+ assert 'pPL->subArc = em->subArc' in b and 'SetPlDamage((int) em' in b
+ b=body('src/game/pl_sub.cpp','EndPlDamage')
+ assert all(x in b for x in ['PlSetRoutine(0, 0, 0, 0)','pl->subArc = pl->subArc2','pl->endDamage()'])
+ assert b.index('PlSetRoutine(0, 0, 0, 0)')<b.index('pl->subArc = pl->subArc2')<b.index('pl->endDamage()')
+ b=body('src/game/pl_sub.cpp','EndSubDamage')
+ assert 'sub->subArc = sub->subArc2' in b and 'sub->r_no_0 = 0' in b
+ b=body('src/game/pl_class.cpp','cPlayer::interrupt')
+ interrupt_restores_subarc='subArc' in mask(b)
+ b=body('src/game/pl_class.cpp','cPlayer::endDamage')
+ assert 'setFace(0)' in b
+ begin=body('src/game/pl_class.cpp','cPlayer::beginEvent');end=body('src/game/pl_class.cpp','cPlayer::endEvent')
+ assert 'int mode = modeReg' in begin and 'endEvent0(modeReg)' in end
+ assert 'PPC_REG' in texts['include/types.h'] and 'cUnitEvent' in texts['src/game/sce_com.cpp']
+ b=body('src/game/read.cpp','InitModule')
+ assert b.index('re4dc_cabin_carrier_before_free')<b.index('re4dc_motion_unbind')
+ assert b.index('re4dc_motion_unbind')<b.index('DLL_Unlink')<b.index('re4dc_effect_unbind')<b.index('Mem_free(m->pArc)')
+ b=body('src/game/game.cpp','gameDoordemo')
+ assert b.index('BitSet(pG->Stop_flg, 0xFFFFFFFF)')<b.index('pG->Disp_flg = 0xFFFFFFFF')<b.index('Dvd.ReadCancelAll()')<b.index('EmReadInit()')
+ b=body('src/game/game.cpp','gameRoomMemInit')
+ assert b.index('re4dc_motion_retire_all()')<b.index('MemReplaceHeap(3, 4)')
+ assert b.index('re4dc_effect_retire_room()')<b.index('MemReplaceHeap(3, 4)')
+ empty=[]
+ for path in ['src/em10/em10_set.cpp','src/em11/em11_set.cpp','src/em12/em12_set.cpp']+[f'src/em{x}/em{x}.cpp' for x in ['2b','2c','2f','31','32','35','38','39']]:
+  b=body(path,'_epilog');z=mask(b);start=z.find('{');end=z.find('}',start)
+  assert not z[start+1:end].strip(),(path,'epilog changed; re-review ownership')
+  empty.append(path)
+ b=body('src/game/read.cpp','readEmData')
+ assert b.index('re4dc_ui_bind_enemy')<b.index('re4dc_effect_bind')<b.index('re4dc_motion_bind')<b.index('m->pArc = pArc')
+ early=b[:b.index('m->pArc = pArc')]
+ unwind=re.findall(r'\bre4dc_(?:ui_unbind_enemy|effect_unbind|motion_unbind)\s*\(',mask(early))
+ return dict(source_sites=rows,normal_return='EndPlDamage/EndSubDamage restore archive and routine; retained pMot is not reset by subArc restoration alone',
+  interrupt_restores_subarc=interrupt_restores_subarc,empty_selected_epilogs=empty,
+  player_event_mode_abi=dict(source='beginEvent()/endEvent() read formal-parameter-free register locals; PPC_REG is empty off PPC',status='OPEN nonzero mode behavior; separate selected object corroborates mode0',nonzero_literal_callers=[dict(path='src/st2/r220.cpp',line=162,function='r220_moveElevator',mode=2),dict(path='src/st2/r221.cpp',line=557,function='r221_moveElevator',mode=2)]),
+  door_quiescence='Stop all, disable display, cancel transport, unbind modules; later retire keys before room heap replacement',
+  existing_cabin_guard='RE4DC_CABIN_SOURCE InitModule gate precedes unbind; native_event_file451 checks in-flight DMA and releasing/readers/event counters for its owned carriers only',
+  partial_admission=dict(order=['ui','effect','motion','publish m->pArc'],local_unwind_calls=len(unwind),
+   classification='source-visible rollback candidate; failure returns can precede publication; no observed leak/stale-use claim'),
+  open=['fatal callback external completion','interrupt/replacement outside normal End* callbacks','non-door reset/continue/overlay path ordering','partial-admission refusal and cleanup','caller-owned attachment and emitter pointers'])
+
+
 def run(repo,ref,census_path):
  raw=census_path.read_bytes();assert digest(raw)==CENSUS_SHA,'sealed metadata changed'
  census=json.loads(raw)
  paths=subprocess.check_output(['git','-C',str(repo),'ls-tree','-r','--name-only',ref,'src','include','port/dreamcast/game']).decode().splitlines()
  texts={p:subprocess.check_output(['git','-C',str(repo),'show',ref+':'+p]).decode(errors='replace')
         for p in paths if p.endswith(('.cpp','.c','.h','.hpp','.inc','.S','.s')) and not p.startswith('src/lib/')}
- sites=calls(texts);ev=check_evaluators(texts);bl=check_blends(texts);groups=reviewed_groups(census,texts)
- pins=[dict(path=p,sha256=digest(t.encode()))for p,t in texts.items() if any(c['path']==p for c in sites)]
+ sites=calls(texts);ev=check_evaluators(texts);bl=check_blends(texts);groups=reviewed_groups(census,texts);life=lifecycle_rules(texts)
+ lifecycle_paths={x['path']for x in life['source_sites']}|{'include/types.h','src/game/sce_com.cpp','port/dreamcast/game/platform/native_event_file.cpp'}
+ pins=[dict(path=p,sha256=digest(t.encode()))for p,t in texts.items() if p in lifecycle_paths or any(c['path']==p for c in sites)]
  # Discover literal asm aliases independently of masked string contents.
  aliases=[]
  for p,t in texts.items():
@@ -197,7 +247,7 @@ def run(repo,ref,census_path):
   source_ref=subprocess.check_output(['git','-C',str(repo),'rev-parse',ref]).decode().strip(),
   census_sha256=CENSUS_SHA,qa_archive_inventory_count=sum(k.startswith('qa-fixed:')for k in census['archives']),
   complete_metadata_inventory_count=len(census['archives']),reused_inventory=True,
-  evaluator_rules=ev,blend_helper_rules=bl,reviewed_groups=groups,
+  evaluator_rules=ev,blend_helper_rules=bl,reviewed_groups=groups,lifecycle_rules=life,
   lexical_occurrences_by_symbol=dict(sorted(Counter(c['symbol']for c in sites).items())),
   lexical_occurrences_by_file=dict(sorted(Counter(c['path']for c in sites).items())),
   asm_aliases=aliases,source_pins=pins,subarc_assignment_occurrences=len(borrowed),
@@ -207,8 +257,11 @@ def run(repo,ref,census_path):
 
 
 def main():
- p=argparse.ArgumentParser(description=__doc__);p.add_argument('--repo',type=Path,required=True);p.add_argument('--source-ref',default='c7e0358a');p.add_argument('--census',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--details',type=Path);a=p.parse_args()
+ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--repo',type=Path,required=True);p.add_argument('--source-ref',default='c7e0358a');p.add_argument('--census',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--details',type=Path);p.add_argument('--target-object',type=Path);a=p.parse_args()
  out,details=run(a.repo,a.source_ref,a.census)
+ if a.target_object:
+  target_sha=digest(a.target_object.read_bytes());assert target_sha=='d4cc10f6bdb0bc00f5f2f0999db75d5144d388f0933d00d95092609ed784c887','separate root target object identity changed'
+  out['selected_target_corroboration']=dict(source='root c7 full control4 pl_class.o; hash read-only verified here',sha256=target_sha,reported_disassembly='beginEvent has mode0 routine5/BlendOff/setFootwork path; endEvent passes0 to endEvent0; incoming nonzero mode not preserved',proof='root-provided disassembly + artifact hash, not a new target compile or gameplay test')
  if a.details:
   a.details.write_text(json.dumps(details,indent=2)+'\n');out['private_details_sha256']=digest(a.details.read_bytes())
  a.output.write_text(json.dumps(out,indent=2)+'\n')

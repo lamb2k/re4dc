@@ -13,7 +13,9 @@ class Rules(unittest.TestCase):
  def setUpClass(cls):
   cls.census=json.loads(ARGS.census.read_text())
   paths=set(audit.EVALUATORS)|{f'src/{m}/{m}.cpp' for m in audit.BLENDS}
-  paths|={'src/game/pl_npc.cpp','src/pl11/pl11.cpp'}
+  paths|={'src/game/pl_npc.cpp','src/pl11/pl11.cpp','src/game/pl_sub.cpp','src/game/em_sub.cpp','src/game/pl_class.cpp','src/game/read.cpp','src/game/game.cpp','include/types.h','src/game/sce_com.cpp'}
+  paths|={f'src/em{x}/em{x}.cpp'for x in ['2f','31']}
+  paths|={f'src/em{x}/em{x}_set.cpp'for x in ['10','11','12']}
   cls.texts={p:subprocess.check_output(['git','-C',str(ARGS.repo),'show',ARGS.source_ref+':'+p]).decode() for p in paths}
  def test_seven_evaluators_and_seven_blend_helpers(self):
   self.assertEqual(len(audit.check_evaluators(self.texts)),7)
@@ -46,6 +48,22 @@ class Rules(unittest.TestCase):
  def test_hokan_is_not_a_second_fcv(self):
   b,_=audit.fn(self.texts['src/game/motion.cpp'],'MotionHokan')
   self.assertIn('prevMat',b);self.assertNotIn('HermiteInterpolation(',b)
+ def test_shared_normal_return_and_epilog_lifetime_narrowing(self):
+  r=audit.lifecycle_rules(self.texts)
+  self.assertEqual(len(r['empty_selected_epilogs']),11)
+  self.assertFalse(r['interrupt_restores_subarc'])
+ def test_event_mode_register_local_is_not_marked_target_proven(self):
+  r=audit.lifecycle_rules(self.texts)
+  self.assertTrue(r['player_event_mode_abi']['status'].startswith('OPEN'))
+ def test_donor_free_before_unbind_is_rejected(self):
+  t=dict(self.texts);t['src/game/read.cpp']=t['src/game/read.cpp'].replace('re4dc_motion_unbind(m->pArc);','Mem_free(m->pArc); re4dc_motion_unbind(m->pArc);',1)
+  with self.assertRaises(AssertionError):audit.lifecycle_rules(t)
+ def test_early_door_unbind_before_quiescence_is_rejected(self):
+  t=dict(self.texts);t['src/game/game.cpp']=t['src/game/game.cpp'].replace('void gameDoordemo()\n{','void gameDoordemo()\n{ EmReadInit();',1)
+  with self.assertRaises(AssertionError):audit.lifecycle_rules(t)
+ def test_normal_return_without_archive_restore_is_rejected(self):
+  t=dict(self.texts);text=t['src/game/pl_sub.cpp'];body,_=audit.fn(text,'EndPlDamage');t['src/game/pl_sub.cpp']=text.replace(body,body.replace('pl->subArc = pl->subArc2;',''),1)
+  with self.assertRaises(AssertionError):audit.lifecycle_rules(t)
  def test_alias_scan_ignores_comments_but_keeps_literal_target(self):
   s='// argument x(cModel* m) asm("MotionMove");\nu16 MotionMoveF(cModel* m, int x) asm("MotionMove");\n'
   import re

@@ -632,6 +632,177 @@
       "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
     }
   },
+  "lifecycle_rules": {
+    "source_sites": [
+      {
+        "path": "src/game/pl_sub.cpp",
+        "line": 301,
+        "function": "SetPlDamage"
+      },
+      {
+        "path": "src/game/em_sub.cpp",
+        "line": 2465,
+        "function": "EmCatchPLSet"
+      },
+      {
+        "path": "src/game/pl_sub.cpp",
+        "line": 314,
+        "function": "EndPlDamage"
+      },
+      {
+        "path": "src/game/pl_sub.cpp",
+        "line": 398,
+        "function": "EndSubDamage"
+      },
+      {
+        "path": "src/game/pl_class.cpp",
+        "line": 1125,
+        "function": "cPlayer::interrupt"
+      },
+      {
+        "path": "src/game/pl_class.cpp",
+        "line": 1046,
+        "function": "cPlayer::endDamage"
+      },
+      {
+        "path": "src/game/pl_class.cpp",
+        "line": 1098,
+        "function": "cPlayer::beginEvent"
+      },
+      {
+        "path": "src/game/pl_class.cpp",
+        "line": 1215,
+        "function": "cPlayer::endEvent"
+      },
+      {
+        "path": "src/game/read.cpp",
+        "line": 399,
+        "function": "InitModule"
+      },
+      {
+        "path": "src/game/game.cpp",
+        "line": 1420,
+        "function": "gameDoordemo"
+      },
+      {
+        "path": "src/game/game.cpp",
+        "line": 1507,
+        "function": "gameRoomMemInit"
+      },
+      {
+        "path": "src/em10/em10_set.cpp",
+        "line": 34,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em11/em11_set.cpp",
+        "line": 34,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em12/em12_set.cpp",
+        "line": 34,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em2b/em2b.cpp",
+        "line": 442,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em2c/em2c.cpp",
+        "line": 318,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em2f/em2f.cpp",
+        "line": 133,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em31/em31.cpp",
+        "line": 297,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em32/em32.cpp",
+        "line": 359,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em35/em35.cpp",
+        "line": 159,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em38/em38.cpp",
+        "line": 140,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/em39/em39.cpp",
+        "line": 198,
+        "function": "_epilog"
+      },
+      {
+        "path": "src/game/read.cpp",
+        "line": 532,
+        "function": "readEmData"
+      }
+    ],
+    "normal_return": "EndPlDamage/EndSubDamage restore archive and routine; retained pMot is not reset by subArc restoration alone",
+    "interrupt_restores_subarc": false,
+    "empty_selected_epilogs": [
+      "src/em10/em10_set.cpp",
+      "src/em11/em11_set.cpp",
+      "src/em12/em12_set.cpp",
+      "src/em2b/em2b.cpp",
+      "src/em2c/em2c.cpp",
+      "src/em2f/em2f.cpp",
+      "src/em31/em31.cpp",
+      "src/em32/em32.cpp",
+      "src/em35/em35.cpp",
+      "src/em38/em38.cpp",
+      "src/em39/em39.cpp"
+    ],
+    "player_event_mode_abi": {
+      "source": "beginEvent()/endEvent() read formal-parameter-free register locals; PPC_REG is empty off PPC",
+      "status": "OPEN nonzero mode behavior; separate selected object corroborates mode0",
+      "nonzero_literal_callers": [
+        {
+          "path": "src/st2/r220.cpp",
+          "line": 162,
+          "function": "r220_moveElevator",
+          "mode": 2
+        },
+        {
+          "path": "src/st2/r221.cpp",
+          "line": 557,
+          "function": "r221_moveElevator",
+          "mode": 2
+        }
+      ]
+    },
+    "door_quiescence": "Stop all, disable display, cancel transport, unbind modules; later retire keys before room heap replacement",
+    "existing_cabin_guard": "RE4DC_CABIN_SOURCE InitModule gate precedes unbind; native_event_file451 checks in-flight DMA and releasing/readers/event counters for its owned carriers only",
+    "partial_admission": {
+      "order": [
+        "ui",
+        "effect",
+        "motion",
+        "publish m->pArc"
+      ],
+      "local_unwind_calls": 0,
+      "classification": "source-visible rollback candidate; failure returns can precede publication; no observed leak/stale-use claim"
+    },
+    "open": [
+      "fatal callback external completion",
+      "interrupt/replacement outside normal End* callbacks",
+      "non-door reset/continue/overlay path ordering",
+      "partial-admission refusal and cleanup",
+      "caller-owned attachment and emitter pointers"
+    ]
+  },
   "lexical_occurrences_by_symbol": {
     "CalculateShape_new": 6,
     "FcvGetMaxFrame": 5,
@@ -1274,6 +1445,14 @@
       "sha256": "a0d87601f9db55fad40c7aa9ba6cfd4ef16c50aa43f2c84dea699a010c151e04"
     },
     {
+      "path": "include/types.h",
+      "sha256": "8b06345739f3f0d44520890cac81535bd83a3bcc747cfa62debb982a0d4b012d"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "sha256": "8ee1b82f0eb0ea697c3bf36acc024006d7621704de7b553bb051493ed55d3c9e"
+    },
+    {
       "path": "src/Sscrn/ss_main.cpp",
       "sha256": "c76ac0bea5525a90d96a4846c7cff7e1c50a8e9f6df47ead2cd880a76b6dce2f"
     },
@@ -1288,6 +1467,18 @@
     {
       "path": "src/em10/em10.cpp",
       "sha256": "88ab2aaff5c17f59a969c522e7d384d1113d23723919f485cfc42ae122b0a0a3"
+    },
+    {
+      "path": "src/em10/em10_set.cpp",
+      "sha256": "84904f92b580dbf02824df55fa7d7ff978d27e58b9a94926fff51fb296b49636"
+    },
+    {
+      "path": "src/em11/em11_set.cpp",
+      "sha256": "02b7a84b14b5dbba2920792619d9745d43b4beee9a61b009e38ff6f97722e7e0"
+    },
+    {
+      "path": "src/em12/em12_set.cpp",
+      "sha256": "41d9d2082fb0da06227150ad58ae28a89240cfb3b320dc3d1ca277c96a39f760"
     },
     {
       "path": "src/em18/em18.cpp",
@@ -1466,6 +1657,10 @@
       "sha256": "345e2bcf29d3669983fbad22a5b6e327a5ffb27aa7e527d203f536c2278466a0"
     },
     {
+      "path": "src/game/game.cpp",
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90"
+    },
+    {
       "path": "src/game/mercenaries.cpp",
       "sha256": "5f7f9d248eca0b3b3408288b0d959328457ecabe24cb296ba6517ae6fe5f8b3c"
     },
@@ -1606,8 +1801,20 @@
       "sha256": "f2e025768abf4d66004efd76045683a8dd0d308530202453fbcf1b9ec7d9b04b"
     },
     {
+      "path": "src/game/pl_sub.cpp",
+      "sha256": "48baf9cabffaf71a7093ce265471f7cb73ad06295f197489ae8604313052c199"
+    },
+    {
       "path": "src/game/player.cpp",
       "sha256": "2e057dbe9771fec28c522dc5a407c615a695c78d5baf932224cf9bb3fefe0ddd"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "sha256": "6d0cfec2e30638236a84a44591a1f62d6446b1b1d2af56f4c030f5e612f343a0"
+    },
+    {
+      "path": "src/game/sce_com.cpp",
+      "sha256": "b18dd8fe318e0bd3e9be6277beef056bc3a8ba7a121f8f70a7ab0a8f93a2ff0e"
     },
     {
       "path": "src/game/scroll.cpp",
@@ -2028,5 +2235,11 @@
     "A05 absent selected FCV records are not inferred resident; require actual binding/variant",
     "A07 exceptional grab/QTE/death exits and donor replacement before borrower stop"
   ],
-  "private_details_sha256": "fb5fe343aebb8b33d74d82e791c0d1534e516c4bf59a427f3e69d754dab5e18f"
+  "selected_target_corroboration": {
+    "source": "root c7 full control4 pl_class.o; hash read-only verified here",
+    "sha256": "d4cc10f6bdb0bc00f5f2f0999db75d5144d388f0933d00d95092609ed784c887",
+    "reported_disassembly": "beginEvent has mode0 routine5/BlendOff/setFootwork path; endEvent passes0 to endEvent0; incoming nonzero mode not preserved",
+    "proof": "root-provided disassembly + artifact hash, not a new target compile or gameplay test"
+  },
+  "private_details_sha256": "4bd5225480ab4aaca8dcf10cd4871d85d1c38f37334f9aec8c6734c60ccf58a0"
 }
