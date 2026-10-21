@@ -46,13 +46,25 @@ def pulse(names,hold,row):
   button='a' if names==['shoot'] else 'b';post(['rtrig'],True);time.sleep(.4);post([button],True);time.sleep(hold);post([button],False);time.sleep(.15);post(['rtrig'],False)
  else:post(names,True);time.sleep(hold);post(names,False)
 
-deadline=time.monotonic()+36;stable=0;last_good=None;skipped=False;completed=False
+def valid_sample(row):
+ g=row.get('global') or {};pl=row.get('player') or {}
+ return isinstance(g.get('player_life'),int) and isinstance(g.get('frame'),int) and isinstance(g.get('room'),int) and bool(pl.get('ptr')) and len(pl.get('pos',[]))==3 and len(pl.get('rno',[]))==4
+deadline=time.monotonic()+36;stable=0;last_good=None;skipped=False;completed=False;continued=False;living_seen=False
 try:
  while time.monotonic()<deadline:
   try:row=latest()
   except (FileNotFoundError,IndexError,json.JSONDecodeError):time.sleep(.05);continue
-  live();g=row.get('global',{});text=(cap/'run-output.txt').read_text(errors='replace')
-  if g.get('player_life',0)<=0:record(row,status='AUTHENTIC_DEATH_NO_ROLLBACK');break
+  live()
+  if not valid_sample(row):time.sleep(.05);continue
+  g=row['global'];text=(cap/'run-output.txt').read_text(errors='replace')
+  if not continued:
+   if g['player_life']==0 and g.get('stop',0)>=0xffffff00:
+    pulse(['a'],.15,row);continued=True;record(row,status='ORIGINAL_CONTINUE_ACCEPT_INPUT');time.sleep(.3)
+   else:time.sleep(.05)
+   continue
+  if g['player_life']>0:living_seen=True
+  if not living_seen:time.sleep(.05);continue
+  if g['player_life']<=0:record(row,status='AUTHENTIC_DEATH_NO_ROLLBACK');break
   safe=g.get('rno',[])[:2]==[3,0] and g.get('stop')==0 and not row.get('subscreen_type') and not row.get('event_start_cnt')
   if not safe:
    stable=0

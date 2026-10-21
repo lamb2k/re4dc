@@ -28,10 +28,10 @@ assert r['disc_program_sha256'] not in ('ce080eb290aec073f406e93da27911f4fa70b45
 assert stage['unrelated_exact_file_count']==1728 and stage['all14_staged_overlays_match_build'] and stage['input_track03_sha256']=='2e40da769c049ab502f3608ea4f633b2b8ff32f4e9fe290b0c15ae30ac31b0aa'
 assert not stage['source_image_mutated'] and not stage['image_hardlinks_or_shared_writable_extents']
 assert json.loads(layout.read_text())['elf_sha256']==r['elf_sha256']
-expected={'repair-cold-r10301':(None,'cold',False),'repair-return-door01':('repair-cold-r10301','empty',True),'repair-BB-only01':('repair-return-door01','BB',False),'repair-continue01':('repair-BB-only01','continue',False),'repair-gameplay01':('repair-continue01','empty',True)}
+expected={'repair-cold-r10301':(None,'cold',False),'repair-return-door01':('repair-cold-r10301','empty',True),'repair-BB-only01':('repair-return-door01','BB',False),'repair-continue01':('repair-BB-only01','continue',False),'repair-gameplay01':('repair-continue01','empty',True),'repair-continue-play02':('repair-gameplay01','empty',True)}
 assert a.name in expected;seed,keyname,controller=expected[a.name];assert a.seed==seed and bool(a.controller)==controller
 assert hashlib.sha256(a.keys.read_bytes()).hexdigest()==m['keys'][keyname]['sha256']
-if a.controller:assert hashlib.sha256(a.controller.read_bytes()).hexdigest()==m['gameplay_controller_sha256' if a.name=='repair-gameplay01' else 'door_controller_sha256']
+if a.controller:assert hashlib.sha256(a.controller.read_bytes()).hexdigest()==m['gameplay_controller_sha256' if a.name in ('repair-gameplay01','repair-continue-play02') else 'door_controller_sha256']
 if a.seed:assert (R/a.seed/'checkpoint.json').is_file()
 for name,digest in m['dependencies'].items():assert hashlib.sha256((D/name).read_bytes()).hexdigest()==digest
 assert shutil.disk_usage('C:/').free>18*1024**3+128*1024**2
