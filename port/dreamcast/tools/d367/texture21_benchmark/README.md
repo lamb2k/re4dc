@@ -67,3 +67,11 @@ compiler/source/object/command/macro identities. It preserves the original
 objects and ELF. It rejects source paths outside the selected repository and
 ambiguous or absent compile commands. This establishes the actual translation
 unit definitions; it does not turn a source receipt into a gameplay test.
+
+Existing unchanged QA discs can also run through `capture.sh --disc DISC_DIR
+--keys MENU_KEYS --image-receipt STAGED_RECEIPT ...`. This path requires the
+prepared fixture to match the exact already-staged QA preset and rehashes the
+entire original track before launch. It changes no image bytes and restores no
+old guest state. Source room-frame markers and the selected QA preset govern the
+run; an earlier prepared custom warp is not silently installed. Retain the menu
+input script with the capture lineage.

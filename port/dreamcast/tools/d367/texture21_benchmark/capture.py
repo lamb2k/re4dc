@@ -14,7 +14,11 @@ import time
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--base',required=True,help='frozen fullplay base with fixture slots; never modified')
+    mode=p.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--base',help='frozen fullplay base with fixture slots; never modified')
+    mode.add_argument('--disc',help='existing unchanged exact QA disc directory')
+    p.add_argument('--keys',help='PID-scoped ordinary QA menu input script')
+    p.add_argument('--image-receipt',help='complete in-place image identity from bench.py image')
     p.add_argument('--scene',required=True,help='directory prepared by bench.py scene')
     p.add_argument('--cap',required=True,help='new capture directory')
     p.add_argument('--syms',required=True,help='actual matching ELF log/head/stage physical addresses')
@@ -33,9 +37,23 @@ def main():
     # Existing harness uses isolated linked tracks, PID-scoped WM_KEY input only,
     # screenshots every five seconds and disk guards. capture.sh holds trace_lock.
     runner=Path(__file__).resolve().parents[1]/'fullplay/fp_run.py'
-    cmd=[sys.executable,str(runner),'--base',a.base,'--warp',str(scene/'warp.txt'),
-         '--cap',a.cap,'--syms',a.syms,'--seconds',str(a.seconds),'--period','5',
-         '--name','texture21-'+plan['scene']]
+    cmd=[sys.executable,str(runner),'--cap',a.cap,'--syms',a.syms,
+         '--seconds',str(a.seconds),'--period','5','--name','texture21-'+plan['scene']]
+    if a.base:
+        cmd+=['--base',a.base,'--warp',str(scene/'warp.txt')]
+    else:
+        if not a.keys or not a.image_receipt or not plan.get('qa_preset_staged_file'):
+            raise SystemExit('unchanged QA mode requires exact image receipt, staged preset and ordinary menu keys')
+        image=json.loads(Path(a.image_receipt).read_text())
+        expected=image['files'].get(plan['qa_preset_staged_file'])
+        if expected!=plan['warp']:raise SystemExit('QA preset does not match prepared fixture')
+        track=Path(a.disc)/'track03.bin'
+        h=hashlib.sha256()
+        with track.open('rb') as stream:
+            for block in iter(lambda:stream.read(1024*1024),b''):h.update(block)
+        if h.hexdigest()!=image['track']['sha256']:raise SystemExit('unchanged QA track identity differs')
+        cmd+=['--disc',a.disc,'--keys',a.keys]
+
     env=os.environ.copy();env['RE4DC_MAX_FLYCASTS']='16'
     # fp_run allows a reader drain after its requested limit. Independently cap
     # the actual owned guest at49 seconds using a pinned process handle and image
@@ -82,6 +100,8 @@ def main():
             runner_proc.terminate();runner_proc.wait(timeout=10)
         if cap.exists():(cap/'guest-watchdog.json').write_text(json.dumps(watchdog,indent=2)+'\n')
     if cap.exists():
+        if a.keys:
+            (cap/'benchmark-keys.txt').write_bytes(Path(a.keys).read_bytes())
         (cap/'benchmark-scene.json').write_text(json.dumps(plan,indent=2)+'\n')
         (cap/'resource-reservation.json').write_text(json.dumps(reservation,indent=2)+'\n')
         (cap/'benchmark-scope.txt').write_text('Flycast capture only. Validate actual source frame window and scene before comparing. Host screenshot times are not source frames. No physical Dreamcast acceptance.\n')
