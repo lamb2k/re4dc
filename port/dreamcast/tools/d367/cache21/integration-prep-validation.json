@@ -1,0 +1,179 @@
+{
+  "kind": "source-preparation-not-acceptance",
+  "base": "892c10ddeadcfcc0bb55bcf53c9b4ac25fd035e8",
+  "head": "9398baeb15306c73fe236be2bd1fcea813e9d41a",
+  "components": [
+    {
+      "component": "display-refusal",
+      "original": "a3727579d2f3a8c49cc6877e330f8a783780ce99",
+      "prepared": "2c3e84f95e606baf10be3b27ba8a9e0b90d6668c"
+    },
+    {
+      "component": "effect-first-admission",
+      "original": "b3101919701173f23260edeff29433d6754d7e8f",
+      "prepared": "860890b0b28d0373999f8cf1452dbb9f8e92ac49"
+    },
+    {
+      "component": "event-admission-transaction",
+      "original": "8ff45d690397203e428c7215aadd0f2017ace7ec",
+      "prepared": "3cd3f53fa55b1c39c228bd1d561d3b21a3d6bf89"
+    },
+    {
+      "component": "event-local-start-cleanup",
+      "original": "398ccf612efa6f1bc513b2395e31dd2412ca2bcb",
+      "prepared": "d891597146c387d15724eeaf444192724fe8a529"
+    },
+    {
+      "component": "event-start-admission-rollback",
+      "original": "1d1576c359cf6938bfee946556938166d9051a78",
+      "prepared": "8486313d70465263091fc4ffa424ac454867d8e3"
+    }
+  ],
+  "all_new_switches_default_off": true,
+  "excluded": [
+    "negative window restoration",
+    "capacity/reset successor",
+    "audio successor",
+    "texture/atlas/object target candidates",
+    "unfinished outer event/read/scenario repair"
+  ],
+  "already_in_base": [
+    "aafc10f3 six-fix merge; do not re-import d4"
+  ],
+  "separate_target_candidate": "codex/qa21-combined-regression",
+  "limits": [
+    "No full build, stage, guest or production recipe change.",
+    "Source tests, source review and full combined disabled identity still required.",
+    "Partial source repair does not close prior reader/reset/borrower contracts.",
+    "Claude alone owns production merge, release and publication."
+  ],
+  "time_unix": 1792614066.3156257,
+  "linked_disabled": {
+    "source": "9398baeb15306c73fe236be2bd1fcea813e9d41a",
+    "program_exact": true,
+    "program_sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+    "elf_sha256": "ae5f9b0eddb5cf14e9c028a53a4d62d49da1bfac8e1e4e305000d62ef876fe4c",
+    "overlays": [
+      {
+        "name": "em22.ovl",
+        "exact": true,
+        "sha256": "b6ca37a6819ae25aaaecdaa391e569576fdb55be2ade475160558e988e7a2ac0"
+      },
+      {
+        "name": "em2b.ovl",
+        "exact": true,
+        "sha256": "7f911bf121245585986e1a37d199d192490a765cc6fdf727669502ba1834f0bc"
+      },
+      {
+        "name": "em2f.ovl",
+        "exact": true,
+        "sha256": "aaa459d40a5a36bb026cbba09ec8601923e011c9b08781b3513728910c782db1"
+      },
+      {
+        "name": "em35.ovl",
+        "exact": true,
+        "sha256": "f77eeca51099a2c546c4b294d60eacea043f9a29eefb584e325dbbf835dffbe1"
+      },
+      {
+        "name": "em3b.ovl",
+        "exact": true,
+        "sha256": "8d3206a78dbf47dab0978549d41194228cdf7cb23df7d1b71d6d870a7305b08f"
+      },
+      {
+        "name": "pl0f.ovl",
+        "exact": true,
+        "sha256": "9e6ef28c7037d6a70df159c3b0b619d642b034dd6c7717e27a2e83ca6f2ba1b2"
+      },
+      {
+        "name": "pl11.ovl",
+        "exact": true,
+        "sha256": "c0c09fe91bcd4e773f7f4fd8a0efd6590cf3ecba5ebdd05def988309f7e622a7"
+      },
+      {
+        "name": "pl14.ovl",
+        "exact": true,
+        "sha256": "708eccab1479dc998ed75a14a48186bc11779645e56455bfdad79d08cbcc1454"
+      },
+      {
+        "name": "sscrn.ovl",
+        "exact": true,
+        "sha256": "90b0d74841fd172a297cb4c6802d84fce6abc56104e3169720ebd305abae5f34"
+      },
+      {
+        "name": "st1_0.ovl",
+        "exact": true,
+        "sha256": "fb6fd3c5b69b5d8b2f4778adace333cc8b8e129c18839dc978257a0ab660a299"
+      },
+      {
+        "name": "st1_1.ovl",
+        "exact": true,
+        "sha256": "3040180a3604b63e46780d2d90959c856ef547591c78500ce48260ce700173f5"
+      },
+      {
+        "name": "st1_2.ovl",
+        "exact": true,
+        "sha256": "90576f23dc80e2409902e9c48f27917ecc5cb29a7c413d3288a7836c8ee0d6a0"
+      },
+      {
+        "name": "st1_3.ovl",
+        "exact": true,
+        "sha256": "fb5ed4c7c3b71f481129a0d436f91eebf6fcf2f0bcd8ada23c1abea49728054e"
+      },
+      {
+        "name": "st2_0.ovl",
+        "exact": true,
+        "sha256": "80ba0f71f4f9497c6c066965be309548479b1010a92135173218880da2586ea8"
+      }
+    ],
+    "all14_overlays_exact": true,
+    "disabled": [
+      "EM_ADMISSION_DISP_FIX=0",
+      "EFFECT_ADMISSION_GUARD=0",
+      "EVD_ADMISSION_TXN=0",
+      "EVD_START_CLEANUP=0",
+      "EVD_START_ROLLBACK=0"
+    ],
+    "recipe_sha256": "54d2e5d56f84d76c5c0071484771ca74957c6649d28b103a5974943728715f70",
+    "elapsed_s": 40.13436844700118,
+    "scope": "All-disabled linked identity only; no enabled build, stage, guest, release or hardware acceptance."
+  },
+  "host_receipts": {
+    "display": {
+      "path": "/root/probe/cache21-integration-host-20261021/display/receipt.json",
+      "sha256": "b81071b1bc46f8eb90118ef41a296018bece62f86273285638d7ac8b1ef2f508"
+    },
+    "effect": {
+      "path": "/root/probe/cache21-integration-host-20261021/effect-02/effect-admission-receipt.json",
+      "sha256": "b682db5e3272b63342c29ad3978bf09e5d40550fdf353acfb81d0f284d1270e4"
+    },
+    "event-rollback": {
+      "path": "/root/probe/cache21-integration-host-20261021/event-rollback/receipt.json",
+      "sha256": "4d7e0afcc32688324254f17681922d9a2ea581b72d945e44541c8533d1a2f22b"
+    },
+    "event-init": {
+      "path": "/root/probe/cache21-integration-host-20261021/event-init/receipt.json",
+      "sha256": "f62246c195bcc80e20fde0f18c7657b28def5e606adcaa48149403cfe13b2f6f"
+    }
+  },
+  "host_scope": {
+    "display": "Actual readEm matrix: 216 cases per baseline/OFF/ON on integration composition.",
+    "effect": "350 assertions per baseline/OFF/ON; selected OFF preprocessing exact.",
+    "event-rollback": "15 actual create/table/caller cases per OFF/ON.",
+    "event-init": "23 cabin-off /43 cabin-on cases per selected OFF/ON handoff arm.",
+    "sanitizer_limit": "Existing manager post-delete vptr diagnostic remains in strict controls; separate init state runs exclude vptr. Not a clean full-sanitizer or whole-audit pass."
+  },
+  "qualification_failures_preserved": [
+    "Effect runner initially lacked its helper fixture; exact 07527f7e helper imported in9398baeb1; rerun passed.",
+    "First full-build preflight refused excluded unknown SS_WINDOW_HOLD_RESTORE knob; no compiler started.",
+    "Second full-build preflight found new worktree SH4ZAM uninitialized; pinned33fa4850 submodule initialized.",
+    "Third OFF full build passed; enabled full build preflight later refused C18GiB+640MiB before output creation."
+  ],
+  "remaining": [
+    "Enabled combined program/link/staging and target failure/refusal regressions.",
+    "Bounded outer event failure guard a8db82100 reviewed separately; not part of this five-component source freeze.",
+    "CABIN-backed ARAM refusal receipt repair underway; non-cabin epochs, module exchange and whole-reset still open.",
+    "Capacity/context/audio candidates remain outside this preparation.",
+    "Current texture948+scoped17, atlas0690 and objectf22e candidates require separate resource/look/target gates.",
+    "Physical Dreamcast acceptance and production merge/release remain separate."
+  ]
+}
