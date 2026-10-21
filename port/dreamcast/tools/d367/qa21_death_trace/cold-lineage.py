@@ -1,4 +1,5 @@
 from pathlib import Path
+from evidence_footprint import measure
 import argparse,ctypes,hashlib,json,os,shutil,subprocess,sys,time
 def stop_reason(elapsed, free):
     if elapsed >= 47.5:
@@ -24,7 +25,7 @@ assert r['disc_program_sha256'] not in ('ce080eb290aec073f406e93da27911f4fa70b45
 assert stage['unrelated_exact_file_count']==1728 and stage['all14_staged_overlays_match_build'] and stage['input_track03_sha256']=='97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18'
 assert not stage['source_image_mutated'] and not stage['image_hardlinks_or_shared_writable_extents']
 assert json.loads(layout.read_text())['elf_sha256']==r['elf_sha256']
-expected={'deathtrace-cold-r10301':(None,'cold',False),'deathtrace-return-door01':('deathtrace-cold-r10301','empty',True),'deathtrace-BB-only01':('deathtrace-return-door01','BB',False)}
+expected={'deathtrace-cold-r10302':(None,'cold',False),'deathtrace-return-door02':('deathtrace-cold-r10302','empty',True),'deathtrace-BB-only02':('deathtrace-return-door02','BB',False)}
 assert a.name in expected;seed,keyname,controller=expected[a.name];assert a.seed==seed and bool(a.controller)==controller
 assert hashlib.sha256(a.keys.read_bytes()).hexdigest()==m['keys'][keyname]['sha256']
 if a.controller:assert hashlib.sha256(a.controller.read_bytes()).hexdigest()==m['door_controller_sha256']
@@ -76,8 +77,8 @@ while True:
    k.CloseHandle(handle);handle=None;break
   elapsed=time.time()-(start/1e7-11644473600)
   reason=stop_reason(elapsed,shutil.disk_usage('C:/').free)
-  cap_bytes=sum(p.stat().st_size for p in (R/a.name).rglob('*') if p.is_file())
-  if cap_bytes>=60_000_000:reason='60MB new evidence cap'
+  usage=measure(R/a.name,disc);receipt['latest_evidence_footprint']=usage
+  if usage['charged_bytes']>=60_000_000:reason='60MB new evidence cap'
   if reason and not receipt.get('forced_stop'):
    assert times[0].value==start;assert k.TerminateProcess(handle,125)
    receipt.update(forced_stop=reason,stop_at_s=elapsed,checkpoint_usable=False)
