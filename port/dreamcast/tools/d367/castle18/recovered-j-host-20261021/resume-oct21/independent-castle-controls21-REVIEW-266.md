@@ -1,0 +1,15 @@
+# Run 266 and prepared v4/v8 review
+
+This is a read-only follow-up requested by castle21. Castle21 retains controller implementation, progression and guest ownership. The original review receipt remains unchanged. `review266-prepared-v4-v8.json` pins the new inspected controller bytes, exact source line anchors and existing trace hash.
+
+The new coast drain correctly waits for raw Joy X/Y zero and translated direction clear for three ticks inside its correction-settled branch. Early release from observed error trend is a reasonable bounded heuristic awaiting guest qualification. It is not an exact coast model: model animation, sway and moving targets also change ray error.
+
+Three remaining host defects were reported to castle21 before another guest:
+
+1. Fine mode changes `ticks` to 1, but its source-frame interval begins before the host key request is observed by the guest. Run 266's first correction 30130..30132 records raw Joy X/Y zero throughout, despite held host keys. Later input reaches raw X 33 at 30138 after a request beginning 30135. Thus a one-tick host hold can expire before any selected analog input is delivered. Start the fine interval from actual raw-axis acknowledgement, with a finite acknowledgement timeout.
+2. A coarse correction that reaches its cap can retain the stick across the next outer loop. If that next loop chooses fine mode, it inherits the nonzero axis and potentially repCtr 7. One further tick then runs at the existing coarse rate, followed by decay. Fully drain raw axes before the first fine pulse after persistent coarse input.
+3. The final firing preparation still checks translated `Key.on & 15` and elapsed settling ticks. It does not universally require raw Joy X/Y zero. Source analog magnitudes below the 30-unit direction threshold still increment repCtr and change aim. Apply the actual-zero plus direction-clear plus three-tick latch before final firing as well as after explicitly settled corrections. The physical ray and laser predicates remain necessary.
+
+Raw-axis acknowledgement is sufficient: after an all-axis neutral drain, observe each selected raw signed axis first become nonzero with the expected sign; no 30-unit threshold is needed. `PlWepLockCtrl` consumes those values directly. For a diagonal correction, require each selected axis. Keep RT/routine, phase, health, proximity, PID and finite wall/source-tick guards active. Log translated Key state but do not require it as acknowledgement, since doing so would force a larger stick deflection. Count the fine interval from the acknowledged source frame. Since reads are asynchronous, call this a one source-tick interval after acknowledgement, not proof of exactly one executed control call.
+
+Existing run 266 has 47 correction events, zero recorded firing events and sampled frames 30093..30460. The worker's exact closed-state audit may extend beyond the last asynchronous sample; do not substitute the sample endpoint for that identity. This lane performed syntax parsing only on the prepared Python files, not their execution, and no new host game test, object build, Flycast guest, release or physical-console test.

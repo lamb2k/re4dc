@@ -1,0 +1,27 @@
+{
+  "scope": "Offline source SAT route hypothesis only; no guest or state writes.",
+  "legs": [
+    {
+      "start": [
+        28758.67578125,
+        -47519.9453125
+      ],
+      "end": [
+        27500,
+        -45000
+      ],
+      "blocked": []
+    },
+    {
+      "start": [
+        27500,
+        -45000
+      ],
+      "end": [
+        25000,
+        -44000
+      ],
+      "blocked": []
+    }
+  ]
+}
