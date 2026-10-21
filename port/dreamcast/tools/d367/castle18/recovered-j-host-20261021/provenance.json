@@ -1,0 +1,55 @@
+{
+  "scope": "Asset-free source archive of actual frozen-build host controls, with explicit LF normalization. Private runtime source/receipt byte hashes remain authoritative. Not a game-code change or new general harness.",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "files": [
+    {
+      "archived_file": "ordinary_walk_still.py",
+      "private_source": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-recovered-j-healthy-stair-run-still.py",
+      "private_raw_sha256": "bff140c9a75c492787cd1c78e51e83beaee554f75d9baf5be22b1a50fe1375a1",
+      "normalized_LF_sha256": "bff140c9a75c492787cd1c78e51e83beaee554f75d9baf5be22b1a50fe1375a1"
+    },
+    {
+      "archived_file": "ashley_wait_and_walk.py",
+      "private_source": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-recovered-j-r202-wait-midroute-still.py",
+      "private_raw_sha256": "065cfcdb8ad6d051b476b1207b535d73c12ad1f633c0b6b65544f45b10070f1d",
+      "normalized_LF_sha256": "065cfcdb8ad6d051b476b1207b535d73c12ad1f633c0b6b65544f45b10070f1d"
+    },
+    {
+      "archived_file": "crank_source_pulse.py",
+      "private_source": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-recovered-j-crank-source-pulse-still.py",
+      "private_raw_sha256": "97f6d5043df2392531428281a1c38f378e5e487f7005425f73f1b1c902376c0a",
+      "normalized_LF_sha256": "97f6d5043df2392531428281a1c38f378e5e487f7005425f73f1b1c902376c0a"
+    },
+    {
+      "archived_file": "cannon_precision_walk.py",
+      "private_source": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\owned-window-recovered-j-precision-walk-still.py",
+      "private_raw_sha256": "216941f09c81f595f2cc843678e5577722b3cb0d1c3c399ceabbc1e96371b24c",
+      "normalized_LF_sha256": "216941f09c81f595f2cc843678e5577722b3cb0d1c3c399ceabbc1e96371b24c"
+    },
+    {
+      "archived_file": "fresh_cold01.py",
+      "private_source": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\run-recovered-j-coldload01.py",
+      "private_raw_sha256": "1a2fc263ae8361e904c31ac467620cf1886fdf28ca00ff0222bc15b54a7ad20f",
+      "normalized_LF_sha256": "1a2fc263ae8361e904c31ac467620cf1886fdf28ca00ff0222bc15b54a7ad20f"
+    },
+    {
+      "archived_file": "cold_continuation.py",
+      "private_source": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\run-recovered-j-coldload-continuation.py",
+      "private_raw_sha256": "4a413a544d1fb68268c83e3c90c4b5c7231f55a5f15e0df423e074a1e3d89db5",
+      "normalized_LF_sha256": "4a413a544d1fb68268c83e3c90c4b5c7231f55a5f15e0df423e074a1e3d89db5"
+    },
+    {
+      "archived_file": "run_crank16_example.py",
+      "private_source": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\run-recovered-j-route-walk16.py",
+      "private_raw_sha256": "e7e5a5ed7d030795f176df9d59eed6e10257c359c6608ccae7eada125b9a97bd",
+      "normalized_LF_sha256": "e7e5a5ed7d030795f176df9d59eed6e10257c359c6608ccae7eada125b9a97bd"
+    },
+    {
+      "archived_file": "run_cannon19_example.py",
+      "private_source": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\run-recovered-j-route-walk19.py",
+      "private_raw_sha256": "2d7a1f0af52b1758409a3b979ab082d3b734cb420a13ece12dc73619f53130d0",
+      "normalized_LF_sha256": "2d7a1f0af52b1758409a3b979ab082d3b734cb420a13ece12dc73619f53130d0"
+    }
+  ]
+}
