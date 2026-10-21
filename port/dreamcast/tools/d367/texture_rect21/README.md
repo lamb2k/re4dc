@@ -1,0 +1,9 @@
+# Rectangular native-world adaptation
+
+The first main-lane step recovers existing native bindings before changing layouts. `world_bindings.py` consumes an exact 29-world candidate receipt and the 792-key main queue, verifies every R4PW body checksum and input SHA, then joins actual material-part bindings to logical texture dimensions. It never changes textures, geometry, UVs, runtime or a release.
+
+2026-10-21: all 29 sidecars read from current QA aafc10f3 match the selected original inputs exactly. All 792 rectangular keys have exact native bindings, across 4,371 part rows. Evidence: `C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/native-bindings-01/bindings.json`. Missing references in the older generic TPL probe therefore do not mean these native texture consumers are unidentified.
+
+Current `native_ui.cpp` world packet paths reject width/height differences, select bilinear repeat sampling, and return UV scales of 1. `native_ps2_world.cpp` has separate legacy/source-owner and kernel paths. The square-adaptation candidate must preserve periodic sampling and update every actual vertex consumer; dropping the dimension guard alone is incorrect. Existing original TPL wrap behavior and current native presentation are distinct contracts. Atlas material domains are a separate task.
+
+Next: prepare the first farm/woods rectangular cohort with a sampling oracle and exact base preservation, account for repeated square storage versus compact formats, and qualify opt-in runtime bindings before combining. No converted rectangular package, target timing or rendered acceptance is claimed yet.
