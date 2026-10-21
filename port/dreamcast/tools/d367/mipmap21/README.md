@@ -116,7 +116,8 @@ off identity. The optional oracle and NumPy run on the respective equipped host.
 The retained normal pack has 622 such palette keys, 554 square, with no
 world-sidecar owner among them. Three private data fixtures at 8, 64 and 256
 square decode correctly across all 20 levels, with exact original bases and
-palettes. Their game owners are unclassified. Format compatibility does not
+palettes. Subsequent source/reference and library-hash checks identify all 622
+as PS2 effect-frame conversions; see the compact cohort below. Compatibility does not
 authorize indiscriminate mip generation for UI text or effect atlases.
 Palette VQ, PAL8, rectangles and strided textures need their own contracts.
 
@@ -195,3 +196,52 @@ This texture path neither removes nor upgrades SH4ZAM. The eventual combined
 target must retain its selected SH4ZAM/SKIN_SH4ZAM CPU skinning configuration and
 existing skinning-batch UV contract. Source/data/host checks do not replace that
 combined target's VRAM, look and frame-time gates.
+
+The sealed combined square-world candidate contains 696 changed keys (508 VQ,
+188 native twiddled), with 5805 unrelated keys exact. Its 5376 levels agree with
+the independent pinned decoder and every original base is exact. Pack size is
+157874176 bytes (+1619968); lower-level payload adds2335592 bytes and32-byte
+request inventory adds2343680. These are multi-room inventories, not live peaks.
+
+## Lossless VQ before adding texture cost
+
+compact_native_vq.py dictionary-codes existing native16-bit or PAL4 base texels
+into the existing full-codebook16-bit VQ format. It changes no full-resolution
+RGBA or alpha values. It succeeds only when every distinct2x2 vector fits256
+entries and both total payload and32-byte request size shrink, including the
+entire2048-byte codebook. Existing mip chains are preserved. Larger dictionaries
+are reported as requiring lossy quantization; small PAL4 frames remain compact
+when the VQ codebook overhead would lose. There is no runtime or default change.
+
+compact_candidate.py requires an explicit key selection with original package
+hashes and source-owner evidence, bound to the exact release manifest/pack SHA.
+The default produces an exact control; --generate opts in. Unselected members
+remain byte-identical. Inputs may be a retained track or an exact pack file:
+
+    python port/dreamcast/tools/d367/mipmap21/compact_candidate.py --source-pack /private/tex.pak --release-manifest /private/manifest.json --selection /private/selection.json --output /private/new-compact-candidate --generate
+
+Source converter fx_ps2_pack.py creates one package per effect frame with a
+shared16-color palette and a covered-UV marker. All622 selected Release21 PAL4
+keys have active EFF source references and byte-exact private-library matches.
+Of554 square frames,20 fit lossless VQ with a total byte win:19 at128square and
+one at256square. The private candidate saves53888 payload/request bytes and
+53248 archive bytes. All20 independent before/after RGBA decodes agree;6481
+other keys are exact. Material, dimensions, alpha and covered-UV flags remain
+exact. No new mip levels or runtime flags accompany this candidate.
+
+The original retained raw track is no longer available at its recorded path.
+The exact original texture pack was recovered from the sealed farm candidate
+by restoring its15 preserved source members. Its whole-pack SHA-256 matches
+both the original receipt and release manifest:
+18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef.
+This recovers texture-pack bytes, not a game disc or program. No newly hosted
+release or replacement raw-track identity is claimed.
+
+    python -m unittest test_compact_native_vq test_compact_candidate -v
+
+Run from port/dreamcast/tests with the optional pinned decoder enabled. Nine
+tests cover exact RGBA/alpha/metadata, every16-bit family and both source CRC
+conventions, dictionary overflow and overhead refusals, existing-chain safety,
+actual Package upload and sampler VQ bits under both allocator paths with
+ASan/UBSan, source/selection hash binding, exclusive output and OFF identity.
+No game build, rendered-look, live VRAM or physical-console gate was run.
