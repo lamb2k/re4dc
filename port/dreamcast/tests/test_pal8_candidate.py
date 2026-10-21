@@ -59,6 +59,12 @@ class CanonicalComposition(unittest.TestCase):
         self.assertEqual(r['changed_from_base'],1)
         self.assertEqual(r['held']['missing-source-owner-binding'],1)
 
+    def test_any_original_actor_registry_binding_stays_with_actor_owner(self):
+        a,b,cov,pol=inputs();cov['normal_rows'][0]['native_registry_references']=[dict(owner='actor')]
+        result,r,before,after=c.build(a,b,cov,pol,enabled=True)
+        self.assertEqual(before[(1,1)],after[(1,1)])
+        self.assertEqual(r['changed_from_base'],1)
+
     def test_wrong_pack_namespace_or_member_hash_is_refused(self):
         a,b,cov,pol=inputs()
         variants=[]

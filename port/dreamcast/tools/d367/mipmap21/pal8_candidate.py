@@ -43,7 +43,8 @@ def build(original_pack,selected_pack,coverage,policy,*,enabled=False):
         p=pol[key];t=tpl.TEXTURE.unpack_from(blob,48)
         if not (p.get('native_world_selected') or p.get('selective_effect_candidate') or p.get('generic_effect_candidate')):
             held['not-in-already-qualified-cohort']+=1;continue
-        if p.get('source_proven_fixed_ID_UI') or p.get('separate_actor_candidate'):
+        if (p.get('source_proven_fixed_ID_UI') or p.get('separate_actor_candidate') or
+                cov[key].get('native_registry_references')):
             held['UI-or-separate-actor-owner']+=1;continue
         if (p.get('native_world_selected') and not cov[key]['native_world_references'] or
                 not p.get('native_world_selected') and not cov[key]['source_references']):
