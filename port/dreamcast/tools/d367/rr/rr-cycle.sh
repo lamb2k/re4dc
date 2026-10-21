@@ -216,25 +216,10 @@ fi
 # QA disc (standing rule 8; user 10-21: right after the quick smoke test, first thing on the new candidate, before
 # the full tier). Never blocks: its own QA rows in RELEASE-READY.md; the game verdict and last-good stay as they are.
 # The QA zip stays in the candidate dir (RE4DC-QA-TestRR-<sha8>-<date>-GDEMU.zip) so it can go to testers first.
-qa_tier() {
-  local EVQ=$EBASE/$ID-qa EVQW='C:\Flycast-Evidence\re4-dreamcast\rr\'$ID-qa CAND; CAND=$(cat "$W/cand.txt")
-  local t0; t0=$(date +%s); local rc=0
-  mkdir -p "$EVQ/_jobs" "$EVQ/fixtures"
-  bash "$BIN/rr-qa.sh" "$W" "$TA" "$SHA" RR "$CAND" "$EVQ" > "$W/qa.txt" 2>&1 || rc=$?
-  echo "$rc" > "$W/qa-rc"; tail -12 "$W/qa.txt"
-  printf 'qa-disc\t%s\t%s\t%s\n' "$t0" "$(date +%s)" "$rc" > "$W/qa-steps.tsv"
-  if [ "$rc" = 0 ]; then
-    t0=$(date +%s)
-    bash "$BIN/rr-jobs.sh" qa "$W" "$TA" "$S7" "$EVQ" "$EVQW" > /dev/null && \
-      "$GITBASH" "//wsl.localhost/Ubuntu-24.04$BIN/rr-flycast.sh" "/c/${EVQ#/mnt/c/}" 3 || true
-    printf 'qa-flycast\t%s\t%s\t0\n' "$t0" "$(date +%s)" >> "$W/qa-steps.tsv"
-  fi
-  python3 "$BIN/rr-judge.py" "$W" "$TA" "$BIN" qa "$EVQ" || true
-  rm -rf "${EVQ:?}/_discs"
-  find "$EVQ" \( -name 'track0*.iso' -o -name 'track03.bin' -o -name 'disc.bin' \) -delete
-  log "cycle $ID QA $(cat "$W/qa-verdict.txt" 2>/dev/null || echo FAIL)"
-}
-if [ "$VERDICT" = PASS ]; then qa_tier || log "cycle $ID QA step error (game verdict unchanged)"; fi
+if [ "$VERDICT" = PASS ]; then
+  QV=$(bash "$BIN/rr-qa-tier.sh" "$W" "$TA" "$SHA" "$ID" 2>&1 | tee -a "$W/cycle.log" | tail -1) || true
+  log "cycle $ID QA ${QV:-FAIL} (reported only; the game verdict is unchanged)"
+fi
 # keep the last 10 work dirs (logs only; the pkg trees are deleted by t16-package.sh)
 ls -dt "$RR_HOME"/work/*/ 2>/dev/null | tail -n +11 | while read -r d; do
   [ "$d" = "$(sed -n 's/^work=//p' "$RR_HOME/state/last-good" 2>/dev/null)/" ] || rm -rf "${d:?}"; done
