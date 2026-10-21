@@ -37,6 +37,15 @@ The first v2 seal has 68 file entries and SHA256SUMS hash
 9b524ee573753dcb640cb561ba7966e56c5d57e53200c5dcbd8683f0796ad2a2.
 Its Windows mirror is texture-atlas21-20261021/square128-v2. V1 remains preserved.
 
+The consumers-v2 recovery binds the exact original 17-blob hand archive, the
+37-triangle neck and the 1045-triangle flying face to their actual UV owners.
+The four neck arrays are checked in the actual loaded unchanged QA program,
+not debug sections. None uses the first isolated tile. The separate flying hair
+retains its repeat colour/mask material. These preencoded streams have no pending
+dynamic LOD; the optional LEON_LOD package path is resolved off in the selected
+recipe. The recovery retains original manifest, archive, program and source
+hashes and does not modify any gameplay state or texture input.
+
 Run with Windows Python/NumPy/Pillow:
 
 ```
