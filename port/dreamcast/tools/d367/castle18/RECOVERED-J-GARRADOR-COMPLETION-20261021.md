@@ -2,7 +2,7 @@
 
 Flycast progression qualifies the original Garrador death and battle-door callback. It does not qualify chapter completion, release checks, cache performance, or physical Dreamcast acceptance.
 
-Subsequent original wave death200 and normal GameContinue201 reset the current boss encounter through game logic. The completed192 encounter below remains historical evidence. The ongoing replay is recorded by newer `recovered-j-resume-*-20261021.json` receipts and the current lane STATUS; no historical snapshot was restored.
+Subsequent original wave death200 and normal GameContinue201 reset the current boss encounter through game logic. The completed192 encounter below remains historical evidence. The current replay completed239 after fourteen ordinary source-qualified part37 shots: boss HP0, original death/open-door/lever RSF `0xec400000`, then30 stable free-play source ticks. Leon624/Ashley90 remained unchanged since original injury206. Exact239 source45349, state `20df6761068009d849c734007d76c20d33e2ce0443a8a36e14bb9f09d319bc42`, HG5/no reserve. The current certificate is `recovered-j-current-Garrador239-completion-20261021.json`; newer route receipts and lane STATUS record onward progress. No historical snapshot was restored.
 
 The frozen runtime is `12a841d7c`, candidate `c21jmW`. ELF SHA256 is `4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f`; image SHA256 is `b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6`. No game source, program, assets, production recipe, or experimental default changed for these attempts.
 
