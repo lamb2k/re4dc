@@ -115,12 +115,21 @@ endif
 # No production recipe enables this. Data is emitted by texture_atlas21/runtime_header.py.
 LEON_ATLAS_SPLIT ?= 0
 LEON_ATLAS_SPLIT_DIR ?=
-ifeq ($(filter $(LEON_ATLAS_SPLIT),0 1),)
+ifneq ($(words $(LEON_ATLAS_SPLIT)),1)
+$(error LEON_ATLAS_SPLIT must be 0 or 1)
+endif
+ifneq ($(filter 0 1,$(LEON_ATLAS_SPLIT)),$(LEON_ATLAS_SPLIT))
 $(error LEON_ATLAS_SPLIT must be 0 or 1)
 endif
 ifeq ($(LEON_ATLAS_SPLIT),1)
-ifneq ($(PS2_LEON)$(ACTOR_PL08)$(ACTOR_PL08_PACK),111)
-$(error LEON_ATLAS_SPLIT needs PS2_LEON=1 ACTOR_PL08=1 ACTOR_PL08_PACK=1)
+ifneq ($(PS2_LEON),1)
+$(error LEON_ATLAS_SPLIT needs PS2_LEON=1)
+endif
+ifneq ($(ACTOR_PL08),1)
+$(error LEON_ATLAS_SPLIT needs ACTOR_PL08=1)
+endif
+ifneq ($(ACTOR_PL08_PACK),1)
+$(error LEON_ATLAS_SPLIT needs ACTOR_PL08_PACK=1)
 endif
 ifneq ($(LEON_LOD),0)
 $(error LEON_ATLAS_SPLIT has no alternate LEON_LOD package qualification)
