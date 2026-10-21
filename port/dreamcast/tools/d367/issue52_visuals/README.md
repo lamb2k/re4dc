@@ -17,3 +17,13 @@ The candidate calls the existing converter with map `{0:0, 2:4, 3:5}`. It requir
 Example: `python3 repair_lake_bark.py --dar private/public-r10b.dar --gc-bin private/gc-1e.bin --ps2-bin private/ps2-1e.bin --out private/candidate/r10b.dar --report private/candidate/repair.json --enable-r10b-bark-map`.
 
 Source validation produced candidate DAR SHA256 `8c84649bc5fc87a1b78336349e4ae8e9607440a48f90296458895bebb3db8566`, unchanged5808128B, with5079 changed bytes confined to BIN0x1e. Repaired Flycast appearance and physical Dreamcast acceptance remain open. Evidence/source receipts live in the private issue52-visuals-20261021 folder.
+
+## Opt-in officer head material candidates
+
+`repair_officer_heads.py` repairs two exact Test21 r100 head BINs. The first PS2 face image0 corresponds to GC image2; the second PS2 face image4 corresponds to GC image6. Index-identity assignment instead selected the small blank/hair materials. Existing conversion reproduces both selected broken BINs exactly. Explicit source maps retain all1021/1276 triangles, positions, normals, UVs, colours and weights; only their material cohorts change. Each BIN is padded to its existing extent, preserving DAR/heap/ISO offsets and texture/NTR records.
+
+Example: `python3 repair_officer_heads.py --dar private/public-r100.dar --sources private/dynamic-source-exact02 --out private/heads/r100.dar --report private/heads/repair.json --enable-officer-head-map`.
+
+Candidate DAR SHA256 `bdfbba1837d5cd3efcc8ba64d63955abf90819cb375d6d9f1e378bec1f7e2e36` has unchanged5373952B. Exact-input guards and the explicit enable flag apply. Officer body atlas/UV layout remains a separate open case; this candidate does not establish a complete officer repair or a repaired target appearance.
+
+The church swinging chandelier is also separate: three PS2 pictures/UV spaces were merged into the retained single GC atlas. An index-map alone cannot repair that layout. Retained source proof records the1270-triangle material split (1046 opaque,40 curved fixture,184 chain); no chandelier candidate is enabled here.
