@@ -62,6 +62,48 @@ class WholePackPolicy(unittest.TestCase):
         self.assertEqual([r["winner_scope"] for r in report["loose_and_quality_rows"]],
                          ["normal-pack-wins","conditional-standard-quality-texlow"])
 
+    def test_runtime_pair_identity_needs_same_tpl_and_dimensions_not_just_a_label(self):
+        colour,mask='00000001-00000002','00000003-00000004'
+        key=coverage.material_pair_identity(colour,mask)
+        normal={key:dict(material='source-pair')}
+        a=dict(path='st1/r100.arc',tpl_offset=128,width=64,height=64,owner_category='world-source')
+        b=dict(a)
+        probe=dict(references={colour:[a],mask:[b]})
+        refs=coverage.pair_references(normal,probe,inventory_pairs=[])
+        self.assertEqual(refs[key][0]['colour'],colour)
+        self.assertEqual(refs[key][0]['mask'],mask)
+        self.assertEqual(refs[key][0]['owner_categories'],['world-source'])
+        b['height']=32
+        self.assertEqual(coverage.pair_references(normal,probe,inventory_pairs=[]),{})
+        b['height']=64;b['tpl_offset']=256
+        self.assertEqual(coverage.pair_references(normal,probe,inventory_pairs=[]),{})
+
+    def test_explicit_inventory_pairs_allow_different_source_tables_but_equal_dimensions(self):
+        colour,mask='00000001-00000002','00000003-00000004'
+        key=coverage.material_pair_identity(colour,mask)
+        normal={key:dict(material='source-pair')}
+        a=dict(path='ss/item/a.tpl',tpl_offset=0,width=64,height=64,owner_category='ui-inventory-model-or-image')
+        b=dict(a,path='ss/eng/ss_pzzl.dat',tpl_offset=128)
+        probe=dict(references={colour:[a],mask:[b]})
+        refs=coverage.pair_references(normal,probe,inventory_pairs=[dict(color=colour,mask=mask)])
+        self.assertEqual(refs[key][0]['method'],'explicit-source-selected-inventory-pair')
+        self.assertEqual(refs[key][0]['owner_categories'],['ui-inventory-model-or-image'])
+        b['width']=32
+        self.assertEqual(coverage.pair_references(normal,probe,inventory_pairs=[dict(color=colour,mask=mask)]),{})
+
+    def test_core_archive_has_proved_common_owner_but_no_automatic_mips(self):
+        census,probe,receipt=map(copy.deepcopy,(self.census,self.probe,self.receipt))
+        for data in (census,probe):data['selected_files'][0]['path']='etc/core.das'
+        receipt['etc/core.das']=receipt.pop('ss/f001.tpl')
+        ref=probe['references']['00000001-00000002'][0]
+        ref['path'],ref['owner_category']='etc/core.das','other-source'
+        report,selected=coverage.coverage(self.pack,census,probe,receipt)
+        row=report['normal_rows'][0]
+        self.assertIn('core-common-source',row['owner_categories'])
+        self.assertTrue(row['source_owned_lossless_vq_selection'])
+        self.assertIn('no-automatic-mips',row['mip_policy'])
+        self.assertEqual(len(selected['keys']),1)
+
 
 if __name__=="__main__":
     unittest.main()

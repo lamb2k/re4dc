@@ -22,13 +22,55 @@ sys.path.insert(0, str(TOOLS / "d367"))
 import compact_native_vq as compact
 import convert_tpl as tpl
 import texpack
+from prepare_native_ui import material_pair_identity
+from prepare_inventory_pairs import PAIRS as INVENTORY_PAIRS
 from vram.vq_pak import read_pak
 from world_candidate import sha
 
 TYPED_SOURCE_OWNERS = {
     "effect", "character-enemy-npc", "character-player-partner", "weapon-model",
     "ui-interface-source", "ui-font-source", "ui-inventory-model-or-image", "world-source",
+    "core-common-source",
 }
+
+
+def pair_references(normal,probe,inventory_pairs=None):
+    """Exact runtime pair identity, without inventing a selected native binding."""
+    targets={key for key,row in normal.items() if row.get('material')=='source-pair'}
+    if not targets:
+        return {}
+    groups=collections.defaultdict(dict)
+    matches=collections.defaultdict(list)
+    seen=set()
+    for key,refs in probe['references'].items():
+        for r in refs:
+            groups[(r['path'],r['tpl_offset'],r['width'],r['height'])][key]=r
+    for group,keys in groups.items():
+        for colour,cr in keys.items():
+            for mask,mr in keys.items():
+                if colour==mask:
+                    continue
+                pair=material_pair_identity(colour,mask)
+                if pair in targets:
+                    matches[pair].append(dict(method='same-TPL-equal-dimension-runtime-pair-identity',
+                        colour=colour,mask=mask,colour_reference=cr,mask_reference=mr,
+                        owner_categories=sorted({cr['owner_category'],mr['owner_category']})))
+                    seen.add(pair)
+    for pair in INVENTORY_PAIRS if inventory_pairs is None else inventory_pairs:
+        key=material_pair_identity(pair['color'],pair['mask'])
+        if key not in targets or key in seen:
+            continue
+        colour=probe['references'].get(pair['color'],[])
+        mask=probe['references'].get(pair['mask'],[])
+        for cr in colour:
+            for mr in mask:
+                if (cr['width'],cr['height'])!=(mr['width'],mr['height']):
+                    continue
+                matches[key].append(dict(method='explicit-source-selected-inventory-pair',
+                    producer='port/dreamcast/tools/prepare_inventory_pairs.py:PAIRS',
+                    colour=pair['color'],mask=pair['mask'],colour_reference=cr,mask_reference=mr,
+                    owner_categories=['ui-inventory-model-or-image']))
+    return dict(matches)
 
 
 def validate_proofs(census, probe, receipt):
@@ -59,6 +101,8 @@ def mip_policy(t, owners, native_world):
         return "square-world-data-candidate-target-budget-look-gates-pending"
     if "effect" in owners:
         return "sprite-scale-covered-UV-and-alpha-review-before-selective-mips"
+    if 'core-common-source' in owners:
+        return 'shared-core-resource-no-automatic-mips-before-consumer-sampling-proof'
     if owners & {"character-enemy-npc", "character-player-partner", "native-model-registry", "weapon-model", "known-ganado-atlas"}:
         return "actor-material-atlas-sampling-and-budget-review-preserve-SH4ZAM"
     if "world-source" in owners:
@@ -80,6 +124,7 @@ def coverage(pack, census, probe, receipt):
     if set(normal) != {"%08x-%08x" % k for k in packages}:
         raise ValueError("descriptor census does not cover exactly the packed winners")
     worlds, registries = census.get("world_keys", {}), census.get("registry_keys", {})
+    pairs=pair_references(normal,probe)
     ganado = {r["key"] for r in census.get("proven_ganado_atlases", [])}
     rows, selection, owners_count, plans_count = [], [], collections.Counter(), collections.Counter()
     for key, blob in sorted(packages.items()):
@@ -90,6 +135,11 @@ def coverage(pack, census, probe, receipt):
             raise ValueError("descriptor census disagrees with actual packed winner: " + name)
         refs = probe["references"].get(name, [])
         owners = {r["owner_category"] for r in refs}
+        core=any(r['path']=='etc/core.das' for r in refs)
+        if core:
+            owners.add('core-common-source')
+        pair_refs=pairs.get(name,[])
+        owners.update(c for r in pair_refs for c in r['owner_categories'])
         native_world = name in worlds
         if native_world:
             owners.add("native-world")
@@ -101,6 +151,14 @@ def coverage(pack, census, probe, receipt):
         proof = []
         if refs:
             proof.append(dict(kind="named-source-reference-not-runtime-draw", references=refs))
+        if core:
+            proof.append(dict(kind='source-core-common-resource-binding',
+                resource='etc/core.das',file_table='src/game/dvd.cpp',
+                binding='src/game/read.cpp:re4dc_ui_bind_core',
+                adapter='port/dreamcast/game/platform/native_ui.cpp:core_identities',
+                scope='Common archive source ownership; no individual consumer or draw claim.'))
+        if pair_refs:
+            proof.append(dict(kind='runtime-source-colour-mask-pair-identity-not-native-draw',references=pair_refs))
         if native_world:
             proof.append(dict(kind="selected-native-world-sidecar-reference", references=worlds[name]))
         if name in registries:
@@ -123,7 +181,7 @@ def coverage(pack, census, probe, receipt):
             width=t[1],height=t[2],native_format=t[3],flags=t[6],layout=t[7],
             payload_bytes=t[5],alloc32_bytes=compact.rounded32(t[5]),
             owner_categories=sorted(owners), typed_owner_reference=typed,
-            source_references=refs,native_world_references=worlds.get(name,[]),
+            source_references=refs,derived_pair_references=pair_refs,native_world_references=worlds.get(name,[]),
             native_registry_references=registries.get(name,[]),
             encoding_plan=plan, lossless_vq_candidate=lossless,
             source_owned_lossless_vq_selection=selected,
@@ -136,6 +194,7 @@ def coverage(pack, census, probe, receipt):
         for r in census["textures"] if not r["container"].startswith("dc/tex.pak:")]
     report = dict(schema="re4dc-whole-pack-source-coverage-1", source_pack_sha256=sha(pack),
         normal_packed_winners=len(rows), stored_loose_descriptors=len(loose),
+        source_pair_reference_keys=len(pairs),
         normal_rows=rows, loose_and_quality_rows=loose,
         owner_category_counts=dict(owners_count), encoding_plan_counts=dict(plans_count),
         keys_with_any_owner_reference=sum(bool(r["owner_categories"]) for r in rows),

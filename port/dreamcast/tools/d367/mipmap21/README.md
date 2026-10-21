@@ -347,3 +347,44 @@ all-level decoding, source/reference rejection, OFF identity, overlapping-key
 composition and request accounting. They join the 51 prior related tests.
 No game build, live VRAM, rendered-look, hardware timing or release gate passed
 by implication; the 18 approximate lower chains remain an explicit review gate.
+
+## Source-pair and shared-core coverage extension
+
+The source probe originally indexed only image keys present individually in
+the normal pack. Combined material packages require the runtime R4MPv001
+identity of their color and mask source keys. pair_references now derives that
+identity only from equal-dimension images in the same receipt-bound source TPL,
+or from the explicit inventory-pair producer with both source references.
+This proves source ownership, not a selected native material binding or draw.
+It resolves 158 of 161 source-pair keys; the other three remain open. The 73
+explicit inventory pairs are already within those 158 and are not additive.
+The packed-key-filtered original probe cannot establish every source-only
+input namespace, so missing pair input identities are not declared absent.
+
+All 11 previously generic other-only references are in etc/core.das. The source
+file table in src/game/dvd.cpp and the re4dc_ui_bind_core call in read.cpp prove
+shared core-resource ownership. Their individual consumer/sampling purpose
+remains separate, so they receive no automatic mips. This is a named source
+binding, not a material-label guess.
+
+The current whole-pack policy has 5466 typed-owner keys and 1035 unclassified
+keys. The extra pair proof permits one exact base conversion, and the core
+binding permits five, all 64 square. Eight owner-unclassified format-only
+opportunities remain held. Older Ashley/zealot mask comments still do not prove
+their selected native ownership and do not authorize conversion.
+
+The source-owned base cohort is now 168 keys, saving 1972864 payload/request
+bytes and 2084864 archive bytes; 6333 other members remain exact. The six new
+before/after bases independently decode to exact RGBA/alpha, and all earlier
+162 outputs are unchanged. The combined private world-mip composition changes
+842 keys and keeps 5659 unrelated originals exact. Its pack is 155727872 bytes,
+526336 bytes smaller than the original. All earlier 836 composed outputs,
+all 22 regenerated mip packages and all 29 world-request rows remain exact;
+the four-exact/18-look-review lower-chain gate is unchanged.
+
+These are new versioned private sets; earlier 162/163/836/837 sets remain
+preserved with their own receipts and supersession notes. No runtime, sampler,
+recipe/default or release changes accompany the extension. Three new owner
+tests cover pair identity/table/dimension constraints, explicit inventory
+source pairs and shared-core ownership without automatic mips. The latest six
+coverage tests pass; the earlier mip/compaction/composition suites are unchanged.
