@@ -12,6 +12,8 @@ assert a.name.replace('-','').replace('_','').isalnum()
 # A future separately allocated stage must provide this exact new-program manifest.
 # This launcher never stages anything and never accepts the historical control/combined states.
 m=json.loads(a.runtime_manifest.read_text());assert m['scope']=='trace-runtime-qualification'
+assert hashlib.sha256(Path(__file__).read_bytes()).hexdigest()==m['launcher_sha256']
+assert hashlib.sha256(Path(__file__).with_name('evidence_footprint.py').read_bytes()).hexdigest()==m['evidence_footprint_sha256']
 R=Path(m['evidence_root']);assert R.resolve()==Path('C:/Flycast-Evidence/re4-dreamcast/qa21-death-trace-runtime-20261021').resolve()
 D=Path(m['dependencies_root']);binding=Path(m['binding']);assert binding.parent.resolve()==R.resolve()
 elf=Path(m['elf']);layout=Path(m['layout']);disc=Path(m['disc']);assert disc.resolve()==(R/'trace-input/gdemu').resolve()
@@ -37,7 +39,7 @@ runner=D/'checkpoint_runner18.py'
 cmd=[sys.executable,str(D/'run_observed_v3.py'),'--runner',str(runner),'--runner-sha256',hashlib.sha256(runner.read_bytes()).hexdigest(),'--disc',str(disc),'--cap',str(R/a.name),'--keys',str(a.keys),'--syms',syms,'--name','qa21-deathtrace-'+a.name,'--binding',str(binding),'--layout',str(layout),'--event-shots','--seconds','41','--no-limit','--save-checkpoint','--elf',str(elf)]
 if a.seed:cmd+=['--checkpoint-seed',str(R/a.seed)]
 assert not (R/a.name).exists();I=R/'invocations'/a.name;I.mkdir(parents=True,exist_ok=False)
-shutil.copy2(__file__,I/'run-fixture.py');shutil.copy2(a.keys,I/'keys.txt')
+shutil.copy2(__file__,I/'run-fixture.py');shutil.copy2(Path(__file__).with_name('evidence_footprint.py'),I/'evidence_footprint.py');shutil.copy2(a.keys,I/'keys.txt')
 (I/'invocation.json').write_text(json.dumps({'argv':cmd,'free_c':shutil.disk_usage('C:/').free,'source':r['source_candidate'],'program':r['disc_program_sha256'],'elf':r['elf_sha256'],'tools':{f.name:hashlib.sha256(f.read_bytes()).hexdigest() for f in D.glob('*.py')}},indent=2)+'\n')
 k=ctypes.WinDLL('kernel32',use_last_error=True)
 k.OpenProcess.argtypes=[ctypes.c_ulong,ctypes.c_int,ctypes.c_ulong];k.OpenProcess.restype=ctypes.c_void_p
