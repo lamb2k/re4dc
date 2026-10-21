@@ -1,0 +1,7 @@
+from pathlib import Path
+import ast,hashlib,json
+L=Path(r'C:\Game Dev\Emulators\codex-lanes\castle18');src=L/'owned-window-recovered-j-r201-original-bell120-still.py';dst=L/'owned-window-recovered-j-r201-original-north-bell-still.py';assert not dst.exists();s=src.read_text()
+for old,new in [('bell=0x8caddab8','bell=0x8cadd6e0'),('(26972,178,-50004)','(27273,178,-33277)'),('hit==0x8cc28b00','hit==0x8cc27d20')]:assert s.count(old)==1;s=s.replace(old,new)
+s=s.replace('Exact original southbell identity','Exact original northbell identity').replace("'scope':'Original southbell", "'scope':'Original northbell")
+ast.parse(s);dst.write_text(s,newline='\n')
+(L/'resume-north-bell-review.json').write_text(json.dumps(dict(source_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),candidate_sha256=hashlib.sha256(dst.read_bytes()).hexdigest(),source_binding='Original J136 bell object/part oracle plus exact recovered159 confirms intact objects. North cObjBell8cadd6e0 pos27273,178,-33277, original cEmHit8cc27d20 part1. Same source ROOM ARC22/23, sphere300 offset0,-650,0.',scope='Target identity changes only, same ordinary RT/laser/one shot/ringTimer/3500/health/PID guards. Upper stair firing line actual161 only, no gameplay writes or source/asset changes.',validation='AST compilation and exactly three identity substitutions; actual line of sight and ring callback pending.'),indent=2)+'\n');print(dst)
