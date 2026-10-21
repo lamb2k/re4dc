@@ -1,0 +1,70 @@
+{
+  "scope": "Small SH4 actual native-motion objects; default PACK0 identity and PACK1 delta only, no full program/gameplay",
+  "source": "d7b42d635b2d10932830ec0636b2ac9b0f97cc01",
+  "control": "c7e0358a44677a15123a7f4233c4115eba627694",
+  "default_PACK0_identity": "PASS",
+  "R11F_bounded_policy": 1,
+  "C_before": 20166549504,
+  "C_after": 20310753280,
+  "preflight_jobs": "",
+  "runs": [
+    {
+      "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/build-logs/motion-pack-region-0-object.log",
+      "seconds": 1.32,
+      "C_low": 20162383872
+    },
+    {
+      "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/build-logs/motion-pack-region-1-object.log",
+      "seconds": 1.214,
+      "C_low": 20227141632
+    },
+    {
+      "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/build-logs/motion-pack-region-control0-object.log",
+      "seconds": 0.508,
+      "C_low": 20276166656
+    },
+    {
+      "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/build-logs/motion-pack-region-control1-object.log",
+      "seconds": 0.508,
+      "C_low": 20295323648
+    }
+  ],
+  "objects": {
+    "control0": {
+      "bytes": 119900,
+      "sha256": "45cbed42fc3bb2ae6162a22d2bc3c98a57571d97a104d955b0bf1193951a0264",
+      "stripped_sha256": "7d47e4b801d234f6cc9bd0016fd790fe7d62d45f4ae9c35a62907267e9aa0b1f",
+      "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   8712\t      0\t    557\t   9269\t   2435\t/root/probe/boss21-motion-pack-region-objects/control0.o",
+      "bindings_symbol": [
+        "00000000 000000c0 b __ZN12_GLOBAL__N_1L8bindingsE"
+      ]
+    },
+    "candidate0": {
+      "bytes": 119664,
+      "sha256": "7ecdb4df6f5cd3e440fd29676628758634564f333e3fc98a7ec9734dc0bb8359",
+      "stripped_sha256": "7d47e4b801d234f6cc9bd0016fd790fe7d62d45f4ae9c35a62907267e9aa0b1f",
+      "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   8712\t      0\t    557\t   9269\t   2435\t/root/probe/boss21-motion-pack-region-objects/0/platform/native_motion.o",
+      "bindings_symbol": [
+        "00000000 000000c0 b __ZN12_GLOBAL__N_1L8bindingsE"
+      ]
+    },
+    "control1": {
+      "bytes": 125152,
+      "sha256": "c35e581efe0d503855539f96cbbc15293df0d57abfac42fa6637124c9b7d96ad",
+      "stripped_sha256": "d3c65365886eb13ae1d7a0753a0f43c099a9ec5d458fee1b65baa583f024497d",
+      "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   9208\t      0\t    557\t   9765\t   2625\t/root/probe/boss21-motion-pack-region-objects/control1.o",
+      "bindings_symbol": [
+        "00000000 000000c0 b __ZN12_GLOBAL__N_1L8bindingsE"
+      ]
+    },
+    "candidate1": {
+      "bytes": 126212,
+      "sha256": "7761895d51599164aeaed2306a8005d146287a57e23eec400e7148475e4b3e26",
+      "stripped_sha256": "a7bad8d71da1e3223e6a44f6b5357b05d49582dabaca6988eecbc4d0172a6355",
+      "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   9466\t      0\t    557\t  10023\t   2727\t/root/probe/boss21-motion-pack-region-objects/1/platform/native_motion.o",
+      "bindings_symbol": [
+        "00000000 000000c0 b __ZN12_GLOBAL__N_1L8bindingsE"
+      ]
+    }
+  }
+}
