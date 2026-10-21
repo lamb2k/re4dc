@@ -31,7 +31,17 @@ def main():
     ap.add_argument("--layout", type=Path)
     ap.add_argument("--event-shots", action="store_true")
     ap.add_argument("--require-mendez-for-pause", action="store_true")
+    ap.add_argument("--allow-event-skip", action="store_true")
+    ap.add_argument("--movement-clock", choices=("host", "source"), default="host")
+    ap.add_argument("--seconds", type=int, choices=range(30, 48), default=45)
+    ap.add_argument("--no-limit", action="store_true", help="existing Flycast unthrottled harness setting")
     a = ap.parse_args()
+    if a.no_limit:
+        os.environ["FP_NOLIMIT"] = "1"  # explicit Windows argument; WSL exports need not cross interop
+    source_snapshots = {Path(__file__).name: Path(__file__).read_bytes()}
+    if a.layout:
+        observer_source = Path(__file__).with_name("observe.py")
+        source_snapshots[observer_source.name] = observer_source.read_bytes()
     if hashlib.sha256(a.runner.read_bytes()).hexdigest() != a.runner_sha256:
         raise SystemExit("runner identity changed")
     if a.cap.exists():
@@ -81,14 +91,16 @@ def main():
     def press(pid, names, hold):
         if observer and set(names) == {"ltrig", "rtrig", "down"}:
             deadline = time.monotonic() + 14
-            while not observer.last or observer.last["qa_frames"] < 30:
+            while not observer.qa_safe(observer.last):
                 if time.monotonic() > deadline or not runner.windows_of(pid):
                     raise RuntimeError("QA safe-state sampling did not reach 30 ticks; chord withheld")
                 time.sleep(0.1)
             state.setdefault("chord_safe_samples", []).append(observer.last)
         if a.require_mendez_for_pause and names == ["start"]:
             last = observer.last if observer else None
-            if not last or not any(e["alive"] & 1 and e["hp"] > 0 for e in last["mendez"]):
+            boss = last and any(e["alive"] & 1 and e["hp"] > 0 for e in last["mendez"])
+            event = last and last["event_start_cnt"] > 0 and last.get("global", {}).get("status", [0, 0])[1] & 0x10000000
+            if not boss and not (a.allow_event_skip and event):
                 raise RuntimeError("original Mendez encounter not active; pause input withheld")
         if not runner.windows_of(pid):
             raise RuntimeError("owned emulator window unavailable; input aborted")
@@ -113,11 +125,30 @@ def main():
             return len(windows)
         count = post(False)
         until = time.monotonic() + hold
-        while time.monotonic() < until:
+        movement = set(names) & {"fwd", "back", "turnleft", "turnright"}
+        source_start = observer.last.get("global", {}).get("frame") if observer and observer.last else None
+        source_hold = a.movement_clock == "source" and movement and source_start is not None
+        source_pointer = int(observer.last["global"]["ptr"], 0) if source_hold else None
+        if source_hold:
+            source_start = observer.field(source_pointer, "GlobalWork", "Frame_cnt", "I")
+        source_frames = max(1, round(hold * 30))
+        while source_hold or time.monotonic() < until:
             if state.get("preempted") or not runner.windows_of(pid):
                 raise RuntimeError("owned guest ended during key hold; further posts aborted")
-            time.sleep(min(0.05, max(0, until - time.monotonic())))
+            if source_hold:
+                last = observer.last
+                if last["event_start_cnt"] or last["subscreen_type"] or last.get("global", {}).get("rno", [0])[0] != 3:
+                    break  # release normal movement as soon as an original event takes control
+                source_current = observer.field(source_pointer, "GlobalWork", "Frame_cnt", "I")
+                if source_current - source_start >= source_frames:
+                    break
+                time.sleep(0.02)
+            else:
+                time.sleep(min(0.05, max(0, until - time.monotonic())))
         post(True)
+        if source_hold:
+            state.setdefault("source_movement_holds", []).append(dict(keys=names, first=source_start,
+                last=observer.field(source_pointer, "GlobalWork", "Frame_cnt", "I"), requested_frames=source_frames))
         if set(names) == {"ltrig", "rtrig", "down"}:
             capture_context("qa-chord-released")
         return count
@@ -135,7 +166,10 @@ def main():
     host_started = time.monotonic()
     state = dict(hard_guest_limit_seconds=48, initial_flycasts=runner.count_flycasts(),
                  release_preemption_threshold=14, preempted=False,
-                 memory_writes=False, controller_target="owned PID windows only")
+                 memory_writes=False, controller_target="owned PID windows only",
+                 fp_nolimit=os.environ.get("FP_NOLIMIT") == "1", movement_clock=a.movement_clock,
+                 allow_normal_event_skip=a.allow_event_skip,
+                 tool_sha256={name: hashlib.sha256(data).hexdigest() for name, data in source_snapshots.items()})
     observer = None
     if a.binding or a.layout:
         if not (a.binding and a.layout):
@@ -169,6 +203,10 @@ def main():
             while not done.wait(0.25):
                 if (a.cap / "flycast.pid").exists() and started is None:
                     started = time.monotonic()
+                    snapshots = a.cap / "owned-tools"
+                    snapshots.mkdir()
+                    for filename, data in source_snapshots.items():
+                        (snapshots / filename).write_bytes(data)
                 if started is None:
                     continue
                 if observer:
@@ -186,7 +224,7 @@ def main():
     thread = threading.Thread(target=watchdog, daemon=True)
     thread.start()
     sys.argv = [str(a.runner), "--disc", str(a.disc), "--cap", str(a.cap),
-                "--syms", a.syms, "--seconds", "45", "--period", "3",
+                "--syms", a.syms, "--seconds", str(a.seconds), "--period", "3",
                 "--name", a.name, "--keys", str(a.keys)]
     try:
         runner.main()

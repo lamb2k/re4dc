@@ -9,6 +9,17 @@ import time
 
 
 class Observer:
+    @staticmethod
+    def qa_safe(row):
+        if not row or row.get("qa_frames", 0) < 30:
+            return False
+        game = row.get("global", {})
+        player = row.get("player", {})
+        return (game.get("rno", [])[:2] == [3, 0]
+                and not (game.get("status", [0, 0])[1] & 0x10000000)
+                and not row.get("event_start_cnt", 1) and not row.get("subscreen_type", 1)
+                and player.get("rno", [1])[0] == 0 and bool(player.get("alive", 0) & 1))
+
     def __init__(self, cap, binding, layout):
         self.cap = cap
         self.binding = json.loads(binding.read_text())
