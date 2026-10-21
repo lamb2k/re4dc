@@ -39,6 +39,9 @@ unsigned attempts=0,streak=0,room_gen=0,attempt_gen=0,retry_at=0;  // retry_at: 
 unsigned bad_sector=~0U,bad_until=0;             // the index sector whose last lookup read failed, re-read from bad_until
 unsigned long long pack_bytes=0;
 Key first[kMaxSectors];
+#if RE4DC_TEX_PAYLOAD_RETRY
+unsigned sector_crc[kMaxSectors]{}; // exact ordinal identity when a validated sector is re-read
+#endif
 alignas(32) unsigned char sector[2048];    // read by re4dc::texture::read_file_range: its own handle per read
 unsigned word(const unsigned char* p){return p[0]|p[1]<<8|p[2]<<16|unsigned(p[3])<<24;}
 bool less(const Key& a,const Key& b){return a.crc<b.crc || (a.crc==b.crc && a.fnv<b.fnv);}
@@ -91,12 +94,18 @@ bool open_locked(unsigned now){
     const unsigned long long index_end=2048ULL+2048ULL*nsec;
     if(data_at<index_end || data_at%2048U || data_at>total)return invalid("data offset",data_at,unsigned(index_end));
     Key keys[kMaxSectors];
+#if RE4DC_TEX_PAYLOAD_RETRY
+    unsigned checked_crc[kMaxSectors]; // publish only after the complete index CRC/order validation
+#endif
     Key prev{};unsigned crc_run=0xffffffffU;
     for(unsigned s=0;s<nsec;++s){
         const re4dc::texture::RangeRead ir=read_sector(2048U*(s+1));
         if(ir==re4dc::texture::RangeRead::short_file)return invalid("index past the end of the file",2048U*(s+1),unsigned(total));
         if(ir!=re4dc::texture::RangeRead::ok)return read_failed("index",2048U*(s+1),now);
         crc_run=crc_update(crc_run,sector,2048);
+#if RE4DC_TEX_PAYLOAD_RETRY
+        checked_crc[s]=~crc_update(0xffffffffU,sector,2048);
+#endif
         const unsigned m=std::min(128U,n-128U*s);
         for(unsigned i=0;i<m;++i){
             const unsigned char* e=sector+16*i;
@@ -110,6 +119,13 @@ bool open_locked(unsigned now){
     }
     if(~crc_run!=crc)return invalid("index crc",~crc_run,crc);
     for(unsigned s=0;s<nsec;++s)first[s]=keys[s];
+#if RE4DC_TEX_PAYLOAD_RETRY
+    // Publication is the only ready-index replacement boundary. Drop old ordinal
+    // receipts before publishing a newly validated immutable pack index.
+    texpack_payload_retry::reset();
+    std::memset(sector_crc,0,sizeof(sector_crc));
+    for(unsigned s=0;s<nsec;++s)sector_crc[s]=checked_crc[s];
+#endif
     count=n;data_offset=data_at;sectors=nsec;pack_bytes=total;cached=nsec-1;state=kReady;
     re4dc_log("tex pack: %s count=%u index_sectors=%u bytes=%llu%s\n",kPath,count,sectors,pack_bytes,
               attempts?" (after read errors)":"");
@@ -122,10 +138,18 @@ bool settled(){
 }
 // A room load (native_ui.cpp re4dc_ui_retire_room) allows the next init attempt at once and restarts the fast
 // spacing; it also lets a failed lookup sector be re-read at once.
-void room_loaded(){mutex_lock(&lock);++room_gen;bad_sector=~0U;mutex_unlock(&lock);}
+void room_loaded(){mutex_lock(&lock);++room_gen;bad_sector=~0U;
+#if RE4DC_TEX_PAYLOAD_RETRY
+    texpack_payload_retry::reset();
+#endif
+    mutex_unlock(&lock);}
 // The key's package in the pack: kFound with its offset and size; kNotInPack for the per-file path; kError for a
 // read error (load nothing now, do not remember the key as missing). now: the caller's UI frame (retry spacing).
-Result find(const Key& key,unsigned& offset,unsigned& size,unsigned now){
+Result find(const Key& key,unsigned& offset,unsigned& size,unsigned now
+#if RE4DC_TEX_PAYLOAD_RETRY
+            ,unsigned* member=nullptr
+#endif
+){
     mutex_lock(&lock);
     Result r=kNotInPack;
     if(open_locked(now)){
@@ -137,7 +161,11 @@ Result find(const Key& key,unsigned& offset,unsigned& size,unsigned now){
                 else{
                     cached=~0U;
                     if(read_sector(2048U*(s+1))!=re4dc::texture::RangeRead::ok || word(sector)!=first[s].crc ||
-                       word(sector+4)!=first[s].fnv){
+                       word(sector+4)!=first[s].fnv
+#if RE4DC_TEX_PAYLOAD_RETRY
+                       || ~crc_update(0xffffffffU,sector,2048)!=sector_crc[s]
+#endif
+                       ){
                         ++errors;r=kError;bad_sector=s;bad_until=now+kRetryFrames;
                         re4dc_log("tex pack: %s index sector %u read error (lookup %08x-%08x); re-read in %u frames\n",
                                   kPath,s,key.crc,key.fnv,kRetryFrames);
@@ -149,7 +177,11 @@ Result find(const Key& key,unsigned& offset,unsigned& size,unsigned now){
                 while(lo<hi){
                     const unsigned mid=(lo+hi)/2;const unsigned char* e=sector+16*mid;
                     const Key k{word(e),word(e+4)};
-                    if(k==key){offset=word(e+8);size=word(e+12);r=kFound;break;}
+                    if(k==key){offset=word(e+8);size=word(e+12);r=kFound;
+#if RE4DC_TEX_PAYLOAD_RETRY
+                        if(member)*member=128*s+mid; // unique ordinal in the validated <=8192-member index
+#endif
+                        break;}
                     if(less(k,key))lo=mid+1;else hi=mid;
                 }
             }

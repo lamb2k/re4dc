@@ -2438,6 +2438,24 @@ ifneq ($(TEX_PACK_FAULT),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PACK_FAULT=$(TEX_PACK_FAULT)
 endif
 endif
+# TEX_PAYLOAD_RETRY=1 (default 0): space only failed packed-member I/O/validation retries
+# before eviction; dense exact ordinals require the immutable index sector CRC receipts.
+TEX_PAYLOAD_RETRY ?= 0
+ifneq ($(words $(TEX_PAYLOAD_RETRY)),1)
+$(error TEX_PAYLOAD_RETRY must be exactly 0 or 1)
+endif
+ifeq ($(filter 0 1,$(TEX_PAYLOAD_RETRY)),)
+$(error TEX_PAYLOAD_RETRY must be exactly 0 or 1)
+endif
+ifeq ($(TEX_PAYLOAD_RETRY),1)
+ifneq ($(TEX_PACK),1)
+$(error TEX_PAYLOAD_RETRY needs TEX_PACK=1)
+endif
+ifneq ($(TEX_RESIDENT),1)
+$(error TEX_PAYLOAD_RETRY needs TEX_RESIDENT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAYLOAD_RETRY=1
+endif
 # TEX_PACK_WINDOW=KB (lane plainread16 2026-10-16, user-approved "per-room large texture reads"; default 0 = image
 # unchanged; needs TEX_PACK=1, DISC_READ_FALLBACK=2 and TEX_PAYLOAD_CRC=0): each room preload pass reads tex.pak through
 # a KB read-ahead window (room/texture_package.hpp pack_window_*; a transient staging buffer from the current heap, freed
