@@ -837,6 +837,19 @@ $(error EVD_DEBUG_READ_CLEANUP requires EVD_ADMISSION_TXN=1)
 endif
 $(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_DEBUG_READ_CLEANUP=1
 endif
+# EVD_EXEC_FAILURE_CLEANUP=1 (default 0): direct em0 read/start failure returns
+# failure, preserves a prior read, releases only an unborrowed fresh input and
+# pairs its scenario bracket. Module exchanges retain their existing path.
+EVD_EXEC_FAILURE_CLEANUP ?= 0
+ifneq ($(EVD_EXEC_FAILURE_CLEANUP),0)
+ifneq ($(EVD_EXEC_FAILURE_CLEANUP),1)
+$(error EVD_EXEC_FAILURE_CLEANUP must be 0 or 1)
+endif
+ifneq ($(EVD_START_ROLLBACK),1)
+$(error EVD_EXEC_FAILURE_CLEANUP requires EVD_START_ROLLBACK=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_EXEC_FAILURE_CLEANUP=1
+endif
 # WEAPON_HEAP4=1 (option 3 of issue lamb2k/re4dc#1, default 0: no effect): a weapon body larger than the resident
 # weapon block (WEAPON_RESIDENT_BYTES; the r104 merchant's rifle 398,144 / with scope 404,608, rocket launcher
 # 382,688, TMP 289,248 / with stock 299,200) is read into heap 4, the room heap, as Krauser's body goes to

@@ -45,9 +45,11 @@ def main():
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--baseline-ref")
     parser.add_argument("--debug-cleanup-pair",action="store_true")
+    parser.add_argument("--exec-failure-pair",action="store_true")
     args = parser.parse_args()
-    args.baseline_ref=args.baseline_ref or ("1d1576c35" if args.debug_cleanup_pair else "32172f542")
-    knob="EVD_DEBUG_READ_CLEANUP" if args.debug_cleanup_pair else "EVD_START_ROLLBACK"
+    assert not(args.debug_cleanup_pair and args.exec_failure_pair)
+    args.baseline_ref=args.baseline_ref or ("dfc0cf972" if args.exec_failure_pair else "1d1576c35" if args.debug_cleanup_pair else "32172f542")
+    knob="EVD_EXEC_FAILURE_CLEANUP" if args.exec_failure_pair else "EVD_DEBUG_READ_CLEANUP" if args.debug_cleanup_pair else "EVD_START_ROLLBACK"
     symbol="RE4DC_"+knob
     start_free = space(128)
     args.out.mkdir(parents=True, exist_ok=False)
@@ -74,7 +76,7 @@ def main():
                     "NATIVE_STATIC=1", "D349_RENDERER_STACK=1", "PVR_STREAM=1", f"EVD_ADMISSION_TXN={txn}",f"EVD_START_CLEANUP={txn}"]
             if variant != "baseline":
                 make.append(f"{knob}={enabled}")
-            if args.debug_cleanup_pair:
+            if args.debug_cleanup_pair or args.exec_failure_pair:
                 make.append(f"EVD_START_ROLLBACK={txn}")
             run([*make, str(out / "cabin-source.h"), str(out / "demo-presentation-knobs.txt")], out / "headers.log")
             dry = run([*make, "-n", str(out / "src/game/event.o")], out / "make-command.log")
@@ -101,8 +103,9 @@ def main():
             run(["sh-elf-objcopy", "--strip-debug", obj, stripped], out / "strip.log")
             size = run(["sh-elf-size", stripped], out / "size.txt")
             stack = (out / "src/game/event.su").read_text()
-            selected_stack = [line for line in stack.splitlines() if any(name in line for name in ("EventMgr::SetEvd(", "EventMgr::SetEvt(", "Event::init("))]
-            assert len(selected_stack) == 4
+            stack_names=("EventMgr::SetEvd(", "EventMgr::SetEvt(", "Event::init(")+(('EventMgr::EvtReadExec(',)if args.exec_failure_pair else())
+            selected_stack = [line for line in stack.splitlines() if any(name in line for name in stack_names)]
+            assert len(selected_stack) == (5 if args.exec_failure_pair else 4)
             hashes[variant] = sha(stripped)
             rows.append({"cabin_source": cabin, "evd_admission_txn": txn, "start_cleanup": txn,knob:enabled, "variant": variant, "event_cpp_sha256": hashlib.sha256(data).hexdigest(),
                          "stripped_event_o_sha256": hashes[variant], "size": size,
@@ -116,7 +119,7 @@ def main():
         assert result.returncode != 0 and knob+" must be 0 or 1" in result.stdout
         invalid.append(value)
     prerequisites = []
-    for txn in (("0",) if args.debug_cleanup_pair else ("0", "1")):
+    for txn in (("0",) if args.debug_cleanup_pair or args.exec_failure_pair else ("0", "1")):
         argv = ["make", "--no-print-directory", "-n", knob+"=1","EVD_START_CLEANUP=0","EVD_ADMISSION_TXN="+txn]
         result = subprocess.run(argv, cwd=GAME, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30)
         (args.out / f"missing-transaction-{txn}.log").write_text(result.stdout)
@@ -127,7 +130,7 @@ def main():
     text = candidate_event.decode()
     contract = re.search(r'#if defined\('+re.escape(symbol)+r'\).*?^#endif\n#endif', text, re.M | re.S)[0]
     selected = []
-    for signature in (("int EventMgr::GetBin(void** out, const char* nm, int flagGet)","int EventMgr::GetEvd(void** out, char* nm, int flagGet)") if args.debug_cleanup_pair else ("int EventMgr::SetEvt(void* data, u32* key)",)):
+    for signature in (("int EventMgr::EvtReadExec(char* nm, int em, u32 flags)",) if args.exec_failure_pair else ("int EventMgr::GetBin(void** out, const char* nm, int flagGet)","int EventMgr::GetEvd(void** out, char* nm, int flagGet)") if args.debug_cleanup_pair else ("int EventMgr::SetEvt(void* data, u32* key)",)):
         start = text.index(signature)
         end = start + re.search(r'^}', text[start:], re.M).end()
         selected.append(text[start:end])
@@ -142,12 +145,12 @@ def main():
     raw_contract = args.out / "compile-contract.inc"
     raw_contract.write_text(contract + "\n")
     direct_refusals = []
-    for txn in ((None,"0") if args.debug_cleanup_pair else (None, "0","1")):
+    for txn in ((None,"0") if args.debug_cleanup_pair or args.exec_failure_pair else (None, "0","1")):
         argv = ["kos-c++", "-E", "-P", "-x", "c++", "-D"+symbol+"=1", str(raw_contract)]
         if txn is not None: argv.append("-DRE4DC_EVD_ADMISSION_TXN=" + txn)
         result = subprocess.run(argv, cwd=GAME, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=30)
         (args.out / f"direct-prerequisite-{txn}.log").write_text(result.stdout)
-        assert result.returncode != 0 and knob+" requires EVD_ADMISSION_TXN" in result.stdout
+        assert result.returncode != 0 and knob+" requires "+("EVD_START_ROLLBACK" if args.exec_failure_pair else "EVD_ADMISSION_TXN") in result.stdout
         direct_refusals.append(txn)
     receipt = {"scope": "Actual SH-4 event.o only; no linked-program, guest or hardware acceptance",
                "baseline_revision": args.baseline_ref, "candidate_event_sha256": hashlib.sha256(candidate_event).hexdigest(),
