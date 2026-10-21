@@ -1,0 +1,51 @@
+{
+  "revision": "a22ac26b5201f2c39cb1654c1237d75315278d20",
+  "scope": "Read-only source review. No runtime, target, guest, asset, release or hardware acceptance.",
+  "source": [
+    {
+      "path": "src/game/event.cpp",
+      "sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "bytes": 115671
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "sha256": "31d38c14806250cdf1d7ad58a7dd742641bc2fbe6e3af5cf5c0f361163277216",
+      "bytes": 36694
+    },
+    {
+      "path": "src/game/emdata.cpp",
+      "sha256": "49def1a264b98effd9c346567324fee63c3b167711c5e6dbddf5e28e3e4074ec",
+      "bytes": 2736
+    },
+    {
+      "path": "src/game/read.cpp",
+      "sha256": "1333da510986bbf7f75ffb35aa9588463db84e5817b8d838ab3c58100e84dfa1",
+      "bytes": 54334
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "sha256": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343",
+      "bytes": 77186
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "sha256": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2",
+      "bytes": 34168
+    },
+    {
+      "path": "src/st1/r11c.cpp",
+      "sha256": "78679c72b0be5b4d866ffee9aba2804fa8320c97a24784d2802d8e8a9d57ea2b",
+      "bytes": 48964
+    },
+    {
+      "path": "src/st3/r304.cpp",
+      "sha256": "461713ce96df031030a05ce81bc7f47dae3db68345cc4ece4ae6d4bd9f9f560a",
+      "bytes": 9746
+    },
+    {
+      "path": "src/st3/r310.cpp",
+      "sha256": "4b3ef03a76e4f148f48c5c9857ca1cf29785af094c9a5d3ed4660a7cf14601fa",
+      "bytes": 27010
+    }
+  ]
+}
