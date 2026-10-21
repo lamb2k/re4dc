@@ -1,0 +1,126 @@
+{
+  "kind": "main-cache-integration-checkpoint",
+  "extended_source": "b214cf3304bd61095fb215d24f92bf87c4468275",
+  "frozen_five_fix_enabled_link": {
+    "source": "105be0f93966d444096dee9cf058c0cfcae7c990",
+    "program_exact": false,
+    "program_sha256": "56ab2010c4d906553b13c64d1a401078123134a37f6b6a5d97d5727d055fa545",
+    "elf_sha256": "778a285ecdf586d4482e24c798ae524a70527a403eb3b6df200743a0267779a7",
+    "overlays": [
+      {
+        "name": "em22.ovl",
+        "exact": false,
+        "sha256": "f5eb04895154bc8c1f8637bcdf371d0fe369904fb01d272dcbbd1219f0295a02"
+      },
+      {
+        "name": "em2b.ovl",
+        "exact": false,
+        "sha256": "dfc82b5427a8a637ecad1de3fa608c0db7a12b4554a1764b7ae583fcf7597aa7"
+      },
+      {
+        "name": "em2f.ovl",
+        "exact": false,
+        "sha256": "f96a880fe356988d14eb3b80d3b67f27ec9038888a96e8af0abd8d42390eb488"
+      },
+      {
+        "name": "em35.ovl",
+        "exact": false,
+        "sha256": "d5ab19f53b9af2fbdeb078ea5b3664397a7cb112c8b4d50961a6befb92284c2d"
+      },
+      {
+        "name": "em3b.ovl",
+        "exact": false,
+        "sha256": "5bdce4195e2aa3911606cb10d76f10c707450b8d555cbb496c4a0f57ffb0ff41"
+      },
+      {
+        "name": "pl0f.ovl",
+        "exact": false,
+        "sha256": "dc920499b9ed342c37bf75fc59bac26e31664b563787b642bcc496c90dcd3061"
+      },
+      {
+        "name": "pl11.ovl",
+        "exact": false,
+        "sha256": "7d15fd5c3992dbe97e1a58580526d27534db783005154618d7b9682910dcce20"
+      },
+      {
+        "name": "pl14.ovl",
+        "exact": false,
+        "sha256": "0930d5ed91598b70b25809d142dcad9f1b2610425257881438e846a654e7384a"
+      },
+      {
+        "name": "sscrn.ovl",
+        "exact": false,
+        "sha256": "54d700c1d1e94a053d1d751c2b5fa07517b5bad979f3a7f22149989971586481"
+      },
+      {
+        "name": "st1_0.ovl",
+        "exact": false,
+        "sha256": "0ae5d42abe22869b0eecb75bc2369bc4fe1b38aa3039263a3216ac8168b23048"
+      },
+      {
+        "name": "st1_1.ovl",
+        "exact": false,
+        "sha256": "e4c8d7c136f720425e022f7f7e4e2cc9c838d8c1393293f3d1a73f462c15614b"
+      },
+      {
+        "name": "st1_2.ovl",
+        "exact": false,
+        "sha256": "fd0518949482b4a61a5e3ff9185cde0e0dc7107660b2eb4e998157381c155dcc"
+      },
+      {
+        "name": "st1_3.ovl",
+        "exact": false,
+        "sha256": "43a7ea6a2fd7d4828564ee2cb03728ca6d61eabd6e9f4efaf1d5635f7cf8465f"
+      },
+      {
+        "name": "st2_0.ovl",
+        "exact": false,
+        "sha256": "02968392f640ee7ddca57d8aa3630780ef19db9ad939087ca004107e6cd305f4"
+      }
+    ],
+    "all14_overlays_exact": false,
+    "enabled": true,
+    "switches": [
+      "EM_ADMISSION_DISP_FIX=1",
+      "EFFECT_ADMISSION_GUARD=1",
+      "EVD_ADMISSION_TXN=1",
+      "EVD_START_CLEANUP=1",
+      "EVD_START_ROLLBACK=1"
+    ],
+    "recipe_sha256": "54d2e5d56f84d76c5c0071484771ca74957c6649d28b103a5974943728715f70",
+    "elapsed_s": 40.13392175199988,
+    "scope": "Linked control/candidate only; no stage, guest, release or hardware acceptance."
+  },
+  "fresh_extended_host_receipts": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/main-checkpoint-v2/preflight/receipt.json",
+      "sha256": "720df70980cc1e8cf5776c5e497381d3cdca2585e7208e39686c7e82f2373514"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/main-checkpoint-v2/module-combined-02/receipt.json",
+      "sha256": "ea62098c38ffbc022e9689be60f81843f3207d2f22da95e1a9e222dc2f190a59"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/main-checkpoint-v2/exec-after-module/receipt.json",
+      "sha256": "3b11c3cb3474509461ddcadef5effe2e72c8a6b974cf6b7ae0627e76dab67989"
+    }
+  ],
+  "fresh_extended_host_scope": [
+    "Read admission10 OFF/25 ON cases each CABIN0/1.",
+    "Actual effect/module validation28 cases each module guard OFF/ON and CABIN0/1 with read preflight enabled.",
+    "Failed startup146/153 CABIN0 and146/154 CABIN1; new module guard defaults off in this fixture."
+  ],
+  "motion_repair_receipt": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/motion-retire-preflight-v1/review.json",
+    "sha256": "d62564e861e1a6ae6603d5155eea8630fb41c61e4d2fa11c85447733ec9e36fa"
+  },
+  "limits": [
+    "Extended composition and motion repair are source/host/individual-unit qualified, not full linked or gameplay qualified.",
+    "Frozen five-fix enabled program56ab2010 and ELF778a285e are linked only, no stage/Flycast/release/hardware gate.",
+    "Window restoration stays off after+102requests/+168032bytes.",
+    "Whole reset, generic no-epoch lifetime and native forward exchange completion remain OPEN.",
+    "No live fullbuild or guest admitted while actual C is below unchanged floors.",
+    "fstrim reported2.6GiB discarded, but actual C remained18.14e9B; no recovery claimed."
+  ],
+  "time_unix": 1792621031.9887547
+}
