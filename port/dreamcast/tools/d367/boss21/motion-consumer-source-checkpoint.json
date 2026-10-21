@@ -1,0 +1,2032 @@
+{
+  "schema": 1,
+  "scope": "A01\u2013A05/A07 source checkpoint; no whole-program CFG or complete audit claim",
+  "source_ref": "c7e0358a44677a15123a7f4233c4115eba627694",
+  "census_sha256": "3adb52b984ed441fe52d58b704d1abc392c11afc39e3ae24a78f551ba756ce60",
+  "qa_archive_inventory_count": 66,
+  "complete_metadata_inventory_count": 75,
+  "reused_inventory": true,
+  "evaluator_rules": [
+    {
+      "path": "src/game/motion.cpp",
+      "line": 157,
+      "function": "MotionSetCore",
+      "lease": "local evaluation scope; source stores proxy/header"
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "line": 660,
+      "function": "MotionMoveCore",
+      "lease": "local evaluation scope; source stores proxy/header"
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "line": 990,
+      "function": "MotionGetSpeed",
+      "lease": "local evaluation scope; source stores proxy/header"
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "line": 1091,
+      "function": "MotionGetPosition",
+      "lease": "local evaluation scope; source stores proxy/header"
+    },
+    {
+      "path": "src/game/shape.cpp",
+      "line": 214,
+      "function": "CalculateShape_new",
+      "lease": "local evaluation scope; source stores proxy/header"
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "line": 24,
+      "function": "CameraMotion::CameraMotion",
+      "lease": "local evaluation scope; source stores proxy/header"
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "line": 71,
+      "function": "CameraMotion::move",
+      "lease": "local evaluation scope; source stores proxy/header"
+    }
+  ],
+  "blend_helper_rules": [
+    {
+      "path": "src/em10/em10.cpp",
+      "line": 25850,
+      "function": "em10BlendMotSet",
+      "fcv": "body m0 + one sign-selected m1 OR m2",
+      "sequence_argument": "m3 is sequence for em32/em35/em38; a/b/c otherwise"
+    },
+    {
+      "path": "src/em2b/em2b.cpp",
+      "line": 4150,
+      "function": "em2bBlendMotSet",
+      "fcv": "body m0 + one sign-selected m1 OR m2",
+      "sequence_argument": "m3 is sequence for em32/em35/em38; a/b/c otherwise"
+    },
+    {
+      "path": "src/em2c/em2c.cpp",
+      "line": 6214,
+      "function": "em2cBlendMotSet",
+      "fcv": "body m0 + one sign-selected m1 OR m2",
+      "sequence_argument": "m3 is sequence for em32/em35/em38; a/b/c otherwise"
+    },
+    {
+      "path": "src/em32/em32.cpp",
+      "line": 3891,
+      "function": "em32BlendMotSet",
+      "fcv": "body m0 + one sign-selected m1 OR m2",
+      "sequence_argument": "m3 is sequence for em32/em35/em38; a/b/c otherwise"
+    },
+    {
+      "path": "src/em35/em35.cpp",
+      "line": 5055,
+      "function": "em35BlendMotSet",
+      "fcv": "body m0 + one sign-selected m1 OR m2",
+      "sequence_argument": "m3 is sequence for em32/em35/em38; a/b/c otherwise"
+    },
+    {
+      "path": "src/em38/em38.cpp",
+      "line": 2005,
+      "function": "em38BlendMotSet",
+      "fcv": "body m0 + one sign-selected m1 OR m2",
+      "sequence_argument": "m3 is sequence for em32/em35/em38; a/b/c otherwise"
+    },
+    {
+      "path": "src/em39/em39.cpp",
+      "line": 7347,
+      "function": "em39BlendMotSet",
+      "fcv": "body m0 + one sign-selected m1 OR m2",
+      "sequence_argument": "m3 is sequence for em32/em35/em38; a/b/c otherwise"
+    }
+  ],
+  "reviewed_groups": {
+    "ashley-baseline-body-look-face": {
+      "archive": "qa-original:em/pl11.drs",
+      "native_sha256": "53acdc9c0634db0a697dff2dd9641c8b9a12afc8d040337f98d612c6729a01c3",
+      "native_bytes": 384064,
+      "mtc": {
+        "version": 3,
+        "count": 69,
+        "cap": 32768,
+        "table_crc": "5f23565e",
+        "reserved_slots": 2,
+        "max_cold_slab": 25440,
+        "hot_preload_bytes": 0,
+        "policy": "strict two slabs; no spill",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0x12",
+        "0x18",
+        "0x6d"
+      ],
+      "records": [
+        {
+          "arc": 18,
+          "offset": 325184,
+          "entry": 0,
+          "bytes": 5152,
+          "key": "6a300b14-7ae9f066",
+          "state": "cached-cold"
+        },
+        {
+          "arc": 24,
+          "offset": 326304,
+          "entry": 6,
+          "bytes": 5056,
+          "key": "5bda6eb4-95dd506d",
+          "state": "cached-cold"
+        },
+        {
+          "arc": 109,
+          "offset": 379360,
+          "entry": 61,
+          "bytes": 448,
+          "key": "eaa1231b-cb8a14f8",
+          "state": "cached-cold"
+        }
+      ],
+      "distinct_cached": 3,
+      "cached_payload_bytes": 10656,
+      "cold_bytes": 10656,
+      "strict_v3_over_two": true,
+      "reason": "body + additive look-back + held face4: MTC entries0/6/61",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "ashley-fixed-body-look-face": {
+      "archive": "qa-fixed:em/pl11.drs",
+      "native_sha256": "af13cc94d08e944c3470d62f73713fa26b4147215fae821e242eddaa228da72c",
+      "native_bytes": 411744,
+      "mtc": {
+        "version": 3,
+        "count": 61,
+        "cap": 32768,
+        "table_crc": "3913017b",
+        "reserved_slots": 2,
+        "max_cold_slab": 25440,
+        "hot_preload_bytes": 0,
+        "policy": "strict two slabs; no spill",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0x12",
+        "0x18",
+        "0x6d"
+      ],
+      "records": [
+        {
+          "arc": 18,
+          "offset": 325184,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 24,
+          "offset": 340768,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 109,
+          "offset": 406784,
+          "state": "inline-resident"
+        }
+      ],
+      "distinct_cached": 0,
+      "cached_payload_bytes": 0,
+      "cold_bytes": 0,
+      "strict_v3_over_two": false,
+      "reason": "same source group; all three moved inline by selected hot preparation",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "mendez-spear-negative": {
+      "archive": "qa-fixed:em/em35.drs",
+      "native_sha256": "cb4a18712129e56683020c378d7d8a0c2d52bf61da2441920b1a84331219653f",
+      "native_bytes": 1035392,
+      "mtc": {
+        "version": 3,
+        "count": 82,
+        "cap": 131072,
+        "table_crc": "3766221d",
+        "reserved_slots": 2,
+        "max_cold_slab": 123008,
+        "hot_preload_bytes": 0,
+        "policy": "strict two slabs; no spill",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0x6a",
+        "0x6d"
+      ],
+      "records": [
+        {
+          "arc": 106,
+          "offset": 1015072,
+          "entry": 48,
+          "bytes": 30784,
+          "key": "4a1d5991-f3d8d39e",
+          "state": "cached-cold"
+        },
+        {
+          "arc": 109,
+          "offset": 1016320,
+          "entry": 50,
+          "bytes": 31680,
+          "key": "a042f356-c9c19597",
+          "state": "cached-cold"
+        }
+      ],
+      "distinct_cached": 2,
+      "cached_payload_bytes": 62464,
+      "cold_bytes": 62464,
+      "strict_v3_over_two": false,
+      "reason": "body + negative sign blend; ARC6b sequence excluded",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "mendez-spear-positive": {
+      "archive": "qa-fixed:em/em35.drs",
+      "native_sha256": "cb4a18712129e56683020c378d7d8a0c2d52bf61da2441920b1a84331219653f",
+      "native_bytes": 1035392,
+      "mtc": {
+        "version": 3,
+        "count": 82,
+        "cap": 131072,
+        "table_crc": "3766221d",
+        "reserved_slots": 2,
+        "max_cold_slab": 123008,
+        "hot_preload_bytes": 0,
+        "policy": "strict two slabs; no spill",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0x6a",
+        "0x6c"
+      ],
+      "records": [
+        {
+          "arc": 106,
+          "offset": 1015072,
+          "entry": 48,
+          "bytes": 30784,
+          "key": "4a1d5991-f3d8d39e",
+          "state": "cached-cold"
+        },
+        {
+          "arc": 108,
+          "offset": 1015904,
+          "entry": 49,
+          "bytes": 30336,
+          "key": "7d6f16bf-c7a97e22",
+          "state": "cached-cold"
+        }
+      ],
+      "distinct_cached": 2,
+      "cached_payload_bytes": 61120,
+      "cold_bytes": 61120,
+      "strict_v3_over_two": false,
+      "reason": "body + other sign blend; mutually exclusive with negative pair",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "queen-wait-positive-shell": {
+      "archive": "later-castle:em/em38.drs",
+      "native_sha256": "1475a9db978cfb4485c9c234e409e0623b1f588bb58c842b81d33fe82173f534",
+      "native_bytes": 2377440,
+      "mtc": null,
+      "source_arcs": [
+        "0xc",
+        "0xe",
+        "0x41"
+      ],
+      "records": [
+        {
+          "arc": 12,
+          "offset": 1133952,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 14,
+          "offset": 1201792,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 65,
+          "offset": 2159584,
+          "state": "inline-resident"
+        }
+      ],
+      "distinct_cached": 0,
+      "cached_payload_bytes": 0,
+      "cold_bytes": 0,
+      "strict_v3_over_two": false,
+      "reason": "type0 wait positive turn + independent shell mode1; three FCV streams all inline",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "u3-form0-walk-positive-body": {
+      "archive": "prepared-u3:em/em32.drs",
+      "native_sha256": "0b650b050e34ab52ad96cc25c85c714ac7b4334dce2d6e3376409dcec6f2c163",
+      "native_bytes": 3684000,
+      "mtc": {
+        "version": 2,
+        "count": 51,
+        "cap": 32768,
+        "table_crc": "f071a277",
+        "reserved_slots": 2,
+        "max_cold_slab": 32704,
+        "hot_preload_bytes": 0,
+        "policy": "two reserved slabs; conditional spill/cold-pool/global pressure",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0xb",
+        "0xd",
+        "0xad"
+      ],
+      "records": [
+        {
+          "arc": 11,
+          "offset": 671648,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 13,
+          "offset": 709984,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 173,
+          "offset": 3471712,
+          "entry": 50,
+          "bytes": 1312,
+          "key": "c7c39ae1-1d6ccb84",
+          "state": "cached-cold"
+        }
+      ],
+      "distinct_cached": 1,
+      "cached_payload_bytes": 1312,
+      "cold_bytes": 1312,
+      "strict_v3_over_two": false,
+      "reason": "positive turn body+blend and independent AD BodyMove, unless death suppresses it; two inline + one cold1312",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "u3-form1-walk-negative-body": {
+      "archive": "prepared-u3:em/em32.drs",
+      "native_sha256": "0b650b050e34ab52ad96cc25c85c714ac7b4334dce2d6e3376409dcec6f2c163",
+      "native_bytes": 3684000,
+      "mtc": {
+        "version": 2,
+        "count": 51,
+        "cap": 32768,
+        "table_crc": "f071a277",
+        "reserved_slots": 2,
+        "max_cold_slab": 32704,
+        "hot_preload_bytes": 0,
+        "policy": "two reserved slabs; conditional spill/cold-pool/global pressure",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0x3f",
+        "0x42",
+        "0xad"
+      ],
+      "records": [
+        {
+          "arc": 63,
+          "offset": 1382048,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 66,
+          "offset": 1522304,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 173,
+          "offset": 3471712,
+          "entry": 50,
+          "bytes": 1312,
+          "key": "c7c39ae1-1d6ccb84",
+          "state": "cached-cold"
+        }
+      ],
+      "distinct_cached": 1,
+      "cached_payload_bytes": 1312,
+      "cold_bytes": 1312,
+      "strict_v3_over_two": false,
+      "reason": "negative sign turn and independent AD; two inline + one cold1312",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "u3-form2-walk-positive-body": {
+      "archive": "prepared-u3:em/em32.drs",
+      "native_sha256": "0b650b050e34ab52ad96cc25c85c714ac7b4334dce2d6e3376409dcec6f2c163",
+      "native_bytes": 3684000,
+      "mtc": {
+        "version": 2,
+        "count": 51,
+        "cap": 32768,
+        "table_crc": "f071a277",
+        "reserved_slots": 2,
+        "max_cold_slab": 32704,
+        "hot_preload_bytes": 0,
+        "policy": "two reserved slabs; conditional spill/cold-pool/global pressure",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0x3a",
+        "0x3c",
+        "0xad"
+      ],
+      "records": [
+        {
+          "arc": 58,
+          "offset": 1240960,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 60,
+          "offset": 1287136,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 173,
+          "offset": 3471712,
+          "entry": 50,
+          "bytes": 1312,
+          "key": "c7c39ae1-1d6ccb84",
+          "state": "cached-cold"
+        }
+      ],
+      "distinct_cached": 1,
+      "cached_payload_bytes": 1312,
+      "cold_bytes": 1312,
+      "strict_v3_over_two": false,
+      "reason": "positive turn and independent AD; two inline + one cold1312",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "krauser-type2-wait-arm": {
+      "archive": "prepared-krauser:em/em39.drs",
+      "native_sha256": "ac4fdbb96a7759fdf8879f5056d289795877205cc0e1b8237d258a581e6a44c0",
+      "native_bytes": 1423712,
+      "mtc": {
+        "version": 2,
+        "count": 154,
+        "cap": 32768,
+        "table_crc": "f980833f",
+        "reserved_slots": 2,
+        "max_cold_slab": 32320,
+        "hot_preload_bytes": 90144,
+        "policy": "two reserved slabs; conditional spill/cold-pool/global pressure",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0xd6",
+        "0x104"
+      ],
+      "records": [
+        {
+          "arc": 214,
+          "offset": 985920,
+          "entry": 97,
+          "bytes": 11584,
+          "key": "842b55cc-59ae34be",
+          "state": "cached-cold"
+        },
+        {
+          "arc": 260,
+          "offset": 1168640,
+          "entry": 120,
+          "bytes": 7840,
+          "key": "86a7c036-0da59a68",
+          "state": "cached-cold"
+        }
+      ],
+      "distinct_cached": 2,
+      "cached_payload_bytes": 19424,
+      "cold_bytes": 19424,
+      "strict_v3_over_two": false,
+      "reason": "wait body and Arm_rno8 defaultArm_type0 transition; source-possible pair, arm alternatives not all coactive",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "krauser-mg-body-blend-gun": {
+      "archive": "prepared-krauser:em/em39.drs",
+      "native_sha256": "ac4fdbb96a7759fdf8879f5056d289795877205cc0e1b8237d258a581e6a44c0",
+      "native_bytes": 1423712,
+      "mtc": {
+        "version": 2,
+        "count": 154,
+        "cap": 32768,
+        "table_crc": "f980833f",
+        "reserved_slots": 2,
+        "max_cold_slab": 32320,
+        "hot_preload_bytes": 90144,
+        "policy": "two reserved slabs; conditional spill/cold-pool/global pressure",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0x7f",
+        "0x81",
+        "0x2f"
+      ],
+      "records": [
+        {
+          "arc": 127,
+          "offset": 847680,
+          "entry": 48,
+          "bytes": 4800,
+          "key": "294e016a-4433ef5f",
+          "state": "cached-hot-preload"
+        },
+        {
+          "arc": 129,
+          "offset": 848256,
+          "entry": 50,
+          "bytes": 4704,
+          "key": "076d1510-ec40a72e",
+          "state": "cached-hot-preload"
+        },
+        {
+          "arc": 47,
+          "offset": 758432,
+          "entry": 4,
+          "bytes": 1056,
+          "key": "877ecc58-ed74072d",
+          "state": "cached-hot-preload"
+        }
+      ],
+      "distinct_cached": 3,
+      "cached_payload_bytes": 10560,
+      "cold_bytes": 0,
+      "strict_v3_over_two": false,
+      "reason": "positive MG body+blend+independent cEmWep gun. All preload hints remain reclaimable, not guaranteed resident",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "ganado12-parasite-core-tentacle": {
+      "archive": "qa-fixed:em/em12.drs",
+      "native_sha256": "bfa2cb8e9f266ce4c04a34a479f18b7dfa9aa01ea6b5cbeb914d204958fe849c",
+      "native_bytes": 1105152,
+      "mtc": {
+        "version": 2,
+        "count": 145,
+        "cap": 32768,
+        "table_crc": "714b52a2",
+        "reserved_slots": 2,
+        "max_cold_slab": 32416,
+        "hot_preload_bytes": 225184,
+        "policy": "two reserved slabs; conditional spill/cold-pool/global pressure",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0x27b",
+        "0x253"
+      ],
+      "records": [
+        {
+          "arc": 635,
+          "offset": 1068288,
+          "entry": 112,
+          "bytes": 5248,
+          "key": "c3ce1c9b-d51131df",
+          "state": "cached-hot-preload"
+        },
+        {
+          "arc": 595,
+          "offset": 954720,
+          "entry": 106,
+          "bytes": 2304,
+          "key": "66023c1d-9f868f04",
+          "state": "cached-hot-preload"
+        }
+      ],
+      "distinct_cached": 2,
+      "cached_payload_bytes": 7552,
+      "cold_bytes": 0,
+      "strict_v3_over_two": false,
+      "reason": "live parent body adds to core idle + four tentacle instances sharing one FCV253; no fourfold payload charge",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "leon08-held-face": {
+      "archive": "qa-fixed:em/pl08.drs",
+      "native_sha256": "baa5d01a3d30e98ce4121cce7718c87c0f2ca9f1fe0dd6236ae80aa6ba036fe9",
+      "native_bytes": 861216,
+      "mtc": null,
+      "source_arcs": [
+        "0x62",
+        "0x63"
+      ],
+      "records": [
+        {
+          "arc": 98,
+          "offset": 756480,
+          "state": "inline-resident"
+        },
+        {
+          "arc": 99,
+          "offset": 756608,
+          "state": "inline-resident"
+        }
+      ],
+      "distinct_cached": 0,
+      "cached_payload_bytes": 0,
+      "cold_bytes": 0,
+      "strict_v3_over_two": false,
+      "reason": "face alternatives, not simultaneous; body/neck may use own player or weapon archive",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    }
+  },
+  "lexical_occurrences_by_symbol": {
+    "CalculateShape_new": 6,
+    "FcvGetMaxFrame": 5,
+    "HermiteInterpolation": 29,
+    "MOT_SET": 77,
+    "MotionAddSpeed": 26,
+    "MotionBlendOff": 4,
+    "MotionGetPosition": 3,
+    "MotionGetSpeed": 31,
+    "MotionMove": 194,
+    "MotionMoveCore": 16,
+    "MotionMoveF": 1393,
+    "MotionMoveSub": 2,
+    "MotionSetCore": 2116,
+    "SetShape": 3,
+    "ShapeMove": 13,
+    "ShapeSet": 18,
+    "backCheckSet": 9,
+    "em10BlendMotSet": 8,
+    "em2bBlendMotSet": 2,
+    "em2cBlendMotSet": 2,
+    "em2cBlendMotSet2": 2,
+    "em32BlendMotSet": 2,
+    "em32BlendMotSetI": 5,
+    "em35BlendMotSet": 3,
+    "em38BlendMotSet": 9,
+    "em39BlendMotSet": 10,
+    "motionMove": 263,
+    "motionSet": 272,
+    "plBlendMotSet": 3,
+    "setDrill": 5,
+    "setEvtMotion": 8,
+    "setGatling": 11,
+    "setGondolaMotion": 5,
+    "setGrenadeThrow": 4,
+    "setMotData": 10,
+    "setR11DMotion": 4,
+    "setUFOCatch": 4
+  },
+  "lexical_occurrences_by_file": {
+    "include/em10.h": 7,
+    "include/em2b.h": 3,
+    "include/em2c.h": 2,
+    "include/em32.h": 1,
+    "include/em35.h": 1,
+    "include/em38.h": 1,
+    "include/em39.h": 1,
+    "include/em_wrap.h": 8,
+    "include/emwep.h": 1,
+    "include/model.h": 2,
+    "include/motion.h": 10,
+    "include/pl_mod.h": 1,
+    "include/pl_npc.h": 1,
+    "include/player.h": 2,
+    "src/Sscrn/ss_main.cpp": 4,
+    "src/Sscrn/ss_model.cpp": 54,
+    "src/Sscrn/ss_term.cpp": 13,
+    "src/em10/em10.cpp": 613,
+    "src/em18/em18.cpp": 13,
+    "src/em21/em21.cpp": 64,
+    "src/em22/em22.cpp": 86,
+    "src/em23/em23.cpp": 49,
+    "src/em24/em24.cpp": 30,
+    "src/em25/em25.cpp": 61,
+    "src/em26/em26.cpp": 20,
+    "src/em27/em27.cpp": 34,
+    "src/em28/em28.cpp": 34,
+    "src/em29/em29.cpp": 49,
+    "src/em2a/em2a.cpp": 31,
+    "src/em2b/em2b.cpp": 180,
+    "src/em2c/em2c.cpp": 218,
+    "src/em2d/em2d.cpp": 243,
+    "src/em2f/em2f.cpp": 65,
+    "src/em30/em30.cpp": 13,
+    "src/em31/em31.cpp": 173,
+    "src/em32/em32.cpp": 150,
+    "src/em34/em34.cpp": 25,
+    "src/em35/em35.cpp": 187,
+    "src/em36/em36.cpp": 146,
+    "src/em38/em38.cpp": 102,
+    "src/em39/em39.cpp": 288,
+    "src/em3a/em3a.cpp": 36,
+    "src/em3b/em3b.cpp": 22,
+    "src/em3c/em3c.cpp": 66,
+    "src/game/cMotBase.cpp": 1,
+    "src/game/cam_motion.cpp": 4,
+    "src/game/db_cam.cpp": 4,
+    "src/game/em.cpp": 2,
+    "src/game/emBar.cpp": 4,
+    "src/game/em_sub.cpp": 3,
+    "src/game/emdoor.cpp": 17,
+    "src/game/emhit.cpp": 9,
+    "src/game/emitem.cpp": 2,
+    "src/game/emobj.cpp": 2,
+    "src/game/emrock.cpp": 33,
+    "src/game/emshield.cpp": 3,
+    "src/game/emtorch.cpp": 3,
+    "src/game/emtree.cpp": 3,
+    "src/game/emwep.cpp": 12,
+    "src/game/emwindow.cpp": 4,
+    "src/game/esp_efm.cpp": 3,
+    "src/game/event.cpp": 3,
+    "src/game/mercenaries.cpp": 1,
+    "src/game/model.cpp": 5,
+    "src/game/motion.cpp": 39,
+    "src/game/obj.cpp": 2,
+    "src/game/obj00.cpp": 4,
+    "src/game/obj01.cpp": 4,
+    "src/game/obj02.cpp": 2,
+    "src/game/obj04.cpp": 2,
+    "src/game/obj08.cpp": 4,
+    "src/game/obj10.cpp": 4,
+    "src/game/obj12.cpp": 2,
+    "src/game/obj13.cpp": 27,
+    "src/game/obj16.cpp": 33,
+    "src/game/obj18.cpp": 2,
+    "src/game/obj1b.cpp": 3,
+    "src/game/obj1c.cpp": 15,
+    "src/game/obj1d.cpp": 4,
+    "src/game/obj26.cpp": 3,
+    "src/game/objBull.cpp": 52,
+    "src/game/objGondola.cpp": 10,
+    "src/game/objMissile.cpp": 4,
+    "src/game/objPillar.cpp": 20,
+    "src/game/objRobo.cpp": 22,
+    "src/game/objRocket.cpp": 7,
+    "src/game/objTrolley.cpp": 23,
+    "src/game/objWep.cpp": 4,
+    "src/game/objYagura.cpp": 4,
+    "src/game/pl_class.cpp": 9,
+    "src/game/pl_debug.cpp": 2,
+    "src/game/pl_dmg.cpp": 14,
+    "src/game/pl_event.cpp": 8,
+    "src/game/pl_knife.cpp": 13,
+    "src/game/pl_leon.cpp": 2,
+    "src/game/pl_npc.cpp": 169,
+    "src/game/pl_push.cpp": 4,
+    "src/game/player.cpp": 85,
+    "src/game/scroll.cpp": 2,
+    "src/game/shape.cpp": 11,
+    "src/game/sscrn.cpp": 1,
+    "src/game/t_option.cpp": 2,
+    "src/game/trans.cpp": 3,
+    "src/pl02/pl02.cpp": 1,
+    "src/pl0a/pl_klauser.cpp": 8,
+    "src/pl0a/wep07.cpp": 9,
+    "src/pl0d/pl_wesker.cpp": 1,
+    "src/pl0e/pl0e.cpp": 50,
+    "src/pl0f/pl0f.cpp": 57,
+    "src/pl11/pl11.cpp": 1,
+    "src/pl14/pl14.cpp": 43,
+    "src/st/em_wrap.cpp": 4,
+    "src/st1/r100.cpp": 10,
+    "src/st1/r103.cpp": 1,
+    "src/st1/r10c.cpp": 5,
+    "src/st1/r10f.cpp": 7,
+    "src/st1/r113.cpp": 2,
+    "src/st1/r117.cpp": 6,
+    "src/st1/r11c.cpp": 3,
+    "src/st1/r11d.cpp": 1,
+    "src/st1/r11e.cpp": 6,
+    "src/st1/r11f.cpp": 4,
+    "src/st2/r201.cpp": 1,
+    "src/st2/r202.cpp": 5,
+    "src/st2/r204.cpp": 8,
+    "src/st2/r205.cpp": 2,
+    "src/st2/r206.cpp": 20,
+    "src/st2/r208.cpp": 13,
+    "src/st2/r209.cpp": 1,
+    "src/st2/r20a.cpp": 2,
+    "src/st2/r20c.cpp": 2,
+    "src/st2/r20d.cpp": 10,
+    "src/st2/r20e.cpp": 3,
+    "src/st2/r210.cpp": 11,
+    "src/st2/r212.cpp": 15,
+    "src/st2/r214.cpp": 1,
+    "src/st2/r219.cpp": 6,
+    "src/st2/r21d.cpp": 1,
+    "src/st2/r221.cpp": 2,
+    "src/st2/r222.cpp": 6,
+    "src/st2/r223.cpp": 1,
+    "src/st2/r224.cpp": 6,
+    "src/st2/r225.cpp": 4,
+    "src/st2/r226.cpp": 32,
+    "src/st2/r22a.cpp": 4,
+    "src/st3/r300.cpp": 3,
+    "src/st3/r30b.cpp": 11,
+    "src/st3/r30c.cpp": 9,
+    "src/st3/r30d.cpp": 17,
+    "src/st3/r30f.cpp": 15,
+    "src/st3/r310.cpp": 10,
+    "src/st3/r311.cpp": 9,
+    "src/st3/r315.cpp": 5,
+    "src/st3/r318.cpp": 27,
+    "src/st3/r31b.cpp": 14,
+    "src/st3/r320.cpp": 10,
+    "src/st3/r321.cpp": 1,
+    "src/st3/r326.cpp": 2,
+    "src/st3/r332.cpp": 25,
+    "src/st4/r403.cpp": 6,
+    "src/st4/r404.cpp": 6,
+    "src/st4/r40a.cpp": 1,
+    "src/t_esp/db_port.cpp": 2,
+    "src/tools/db_mod.cpp": 8,
+    "src/wep/objMachinegun.cpp": 2,
+    "src/wep/objRuger.cpp": 2,
+    "src/wep/pl_bow.cpp": 6,
+    "src/wep/pl_grenade.cpp": 7,
+    "src/wep/pl_handgun.cpp": 11,
+    "src/wep/pl_knife.cpp": 13,
+    "src/wep/pl_machine.cpp": 7,
+    "src/wep/pl_rifle.cpp": 16,
+    "src/wep/pl_rocket.cpp": 15,
+    "src/wep/pl_shotgun.cpp": 10,
+    "src/wep01/objFn57.cpp": 2,
+    "src/wep02/objMauser.cpp": 4,
+    "src/wep04/wep04.cpp": 2,
+    "src/wep05/objCivilian.cpp": 2,
+    "src/wep06/wep06.cpp": 2,
+    "src/wep07/wep07.cpp": 2,
+    "src/wep08/wep08.cpp": 2,
+    "src/wep09/objSniper.cpp": 2,
+    "src/wep10/objHkSniper.cpp": 1,
+    "src/wep12/objTompson.cpp": 2,
+    "src/wep14/objMine.cpp": 5,
+    "src/wep14/wep14.cpp": 15,
+    "src/wep15/wep15.cpp": 2,
+    "src/wep16/wep16.cpp": 1,
+    "src/wep17/objVp70.cpp": 3,
+    "src/wep17/wep17.cpp": 20,
+    "src/wep26/wep26.cpp": 1,
+    "src/wep27/wep27.cpp": 2,
+    "src/wep28/wep28.cpp": 3,
+    "src/wep33/wep33.cpp": 2,
+    "src/wep38/wep38.cpp": 2,
+    "src/wep39/wep39.cpp": 2,
+    "src/wep40/wep40.cpp": 1,
+    "src/wep44/wep44.cpp": 2,
+    "src/wep47/wep47.cpp": 1
+  },
+  "asm_aliases": [
+    {
+      "path": "include/db_mod.h",
+      "line": 55,
+      "name": "dbModMotionSetSeqI",
+      "target": "dbModMotionSetSeq"
+    },
+    {
+      "path": "src/Sscrn/ss_main.cpp",
+      "line": 51,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/Sscrn/ss_term.cpp",
+      "line": 66,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em10/em10.cpp",
+      "line": 76,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em18/em18.cpp",
+      "line": 40,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em21/em21.cpp",
+      "line": 35,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em22/em22.cpp",
+      "line": 48,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em23/em23.cpp",
+      "line": 28,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em24/em24.cpp",
+      "line": 32,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em25/em25.cpp",
+      "line": 43,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em26/em26.cpp",
+      "line": 30,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em27/em27.cpp",
+      "line": 29,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em28/em28.cpp",
+      "line": 32,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em29/em29.cpp",
+      "line": 34,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em2a/em2a.cpp",
+      "line": 45,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em2b/em2b.cpp",
+      "line": 68,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em2b/em2b.cpp",
+      "line": 73,
+      "name": "em2bBlendMotSetI",
+      "target": "em2bBlendMotSet__FP5cEm2bPvN21iiiUs"
+    },
+    {
+      "path": "src/em2c/em2c.cpp",
+      "line": 55,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em2c/em2c.cpp",
+      "line": 60,
+      "name": "em2cBlendMotSetI",
+      "target": "em2cBlendMotSet__FP5cEm2cPvN21iiiUs"
+    },
+    {
+      "path": "src/em2c/em2c.cpp",
+      "line": 61,
+      "name": "em2cBlendMotSet2I",
+      "target": "em2cBlendMotSet2__FP5cEm2cPvT1iiUs"
+    },
+    {
+      "path": "src/em2d/em2d.cpp",
+      "line": 50,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em2f/em2f.cpp",
+      "line": 45,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em30/em30.cpp",
+      "line": 42,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em31/em31.cpp",
+      "line": 52,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em32/em32.cpp",
+      "line": 57,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em32/em32.cpp",
+      "line": 64,
+      "name": "em32BlendMotSetI",
+      "target": "em32BlendMotSet__FP5cEm32PvN31iiUs"
+    },
+    {
+      "path": "src/em34/em34.cpp",
+      "line": 42,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em35/em35.cpp",
+      "line": 46,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em36/em36.cpp",
+      "line": 48,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em38/em38.cpp",
+      "line": 46,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em39/em39.cpp",
+      "line": 63,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em3a/em3a.cpp",
+      "line": 47,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em3b/em3b.cpp",
+      "line": 41,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/em3c/em3c.cpp",
+      "line": 47,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/game/model.cpp",
+      "line": 113,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/game/pl_npc.cpp",
+      "line": 42,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/pl0a/wep07.cpp",
+      "line": 18,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/pl0e/pl0e.cpp",
+      "line": 53,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/pl0f/pl0f.cpp",
+      "line": 54,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/pl14/pl14.cpp",
+      "line": 45,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/st2/r210.cpp",
+      "line": 39,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/st2/r226.cpp",
+      "line": 103,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/st3/r30f.cpp",
+      "line": 49,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/st3/r315.cpp",
+      "line": 33,
+      "name": "PREV_ROOM_ID",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/st3/r318.cpp",
+      "line": 106,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/st3/r31b.cpp",
+      "line": 130,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/st3/r332.cpp",
+      "line": 86,
+      "name": "MotionMoveF",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/tools/db_mod.cpp",
+      "line": 2991,
+      "name": "dbmodMotionMove",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/wep/pl_bow.cpp",
+      "line": 25,
+      "name": "MotionMoveI",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/wep/pl_grenade.cpp",
+      "line": 31,
+      "name": "MotionMoveI",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/wep/pl_handgun.cpp",
+      "line": 32,
+      "name": "MotionMoveI",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/wep/pl_machine.cpp",
+      "line": 27,
+      "name": "MotionMoveI",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/wep/pl_rifle.cpp",
+      "line": 28,
+      "name": "MotionMoveI",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/wep/pl_rocket.cpp",
+      "line": 31,
+      "name": "MotionMoveI",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/wep/pl_shotgun.cpp",
+      "line": 28,
+      "name": "MotionMoveI",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/wep14/wep14.cpp",
+      "line": 27,
+      "name": "MotionMoveI",
+      "target": "MotionMove"
+    },
+    {
+      "path": "src/wep17/wep17.cpp",
+      "line": 33,
+      "name": "MotionMoveI",
+      "target": "MotionMove"
+    }
+  ],
+  "source_pins": [
+    {
+      "path": "include/em10.h",
+      "sha256": "c6ab1e95154903cf0eb007f9258266b50afd7095fc1741e597aa9f174b21fbda"
+    },
+    {
+      "path": "include/em2b.h",
+      "sha256": "84a0eb9e3b0eb39cb6d988736e2d26d3c6fb522def126c592c225176b9fe4634"
+    },
+    {
+      "path": "include/em2c.h",
+      "sha256": "71646be4d5a79b22d2398563c00fd8a189b1b7a7faad06859239ebdd8ddedbba"
+    },
+    {
+      "path": "include/em32.h",
+      "sha256": "af47aef856e04d4b5a7e97018f4bbf4220cc1111cfec70918842d3391f8e3472"
+    },
+    {
+      "path": "include/em35.h",
+      "sha256": "c5979ffb0f3f8f014d497f5a76d7ad2988f631e33a20732d00d92bfd947fa97a"
+    },
+    {
+      "path": "include/em38.h",
+      "sha256": "a9e9c45437d6bc02696da66c892b3f0fd77865fabb4e4640f4d81a3f695de8a2"
+    },
+    {
+      "path": "include/em39.h",
+      "sha256": "826a10898fe3f6714804f39f3a005f97668f455e699c1a2736fe4949a5c9f148"
+    },
+    {
+      "path": "include/em_wrap.h",
+      "sha256": "f2146fab40a83de85c6b74b9d9221884039baae4e1aa4d768707074b26d5ba45"
+    },
+    {
+      "path": "include/emwep.h",
+      "sha256": "9716e13bf175da777b9262ed4c66f2421f18299ffbe467e53aa6eea14632caec"
+    },
+    {
+      "path": "include/model.h",
+      "sha256": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5"
+    },
+    {
+      "path": "include/motion.h",
+      "sha256": "4bdf10720065d691e0f20a493082399f8650811b1358eef6fa856206e4b23857"
+    },
+    {
+      "path": "include/pl_mod.h",
+      "sha256": "2218fff86d893816c24eecbbe06ce85df915aa72518960c5e8482352b12cbf78"
+    },
+    {
+      "path": "include/pl_npc.h",
+      "sha256": "4c1d109656ec93c06df6577fc78e239370110f53d22cb54f7bc29234ee48ebc6"
+    },
+    {
+      "path": "include/player.h",
+      "sha256": "a0d87601f9db55fad40c7aa9ba6cfd4ef16c50aa43f2c84dea699a010c151e04"
+    },
+    {
+      "path": "src/Sscrn/ss_main.cpp",
+      "sha256": "c76ac0bea5525a90d96a4846c7cff7e1c50a8e9f6df47ead2cd880a76b6dce2f"
+    },
+    {
+      "path": "src/Sscrn/ss_model.cpp",
+      "sha256": "07c8611f26b738ac40c41e5bf8de389001795a9b967652f9d15a4b58e4b29582"
+    },
+    {
+      "path": "src/Sscrn/ss_term.cpp",
+      "sha256": "6b7b5cb17e64b68aed53418678b6187e799d5c0fcd3b469ea8c90cb2c02109f2"
+    },
+    {
+      "path": "src/em10/em10.cpp",
+      "sha256": "88ab2aaff5c17f59a969c522e7d384d1113d23723919f485cfc42ae122b0a0a3"
+    },
+    {
+      "path": "src/em18/em18.cpp",
+      "sha256": "85ef77b44b83f9ea188c3d4a746736026de3485d803a056aaa5ce0ca975785d5"
+    },
+    {
+      "path": "src/em21/em21.cpp",
+      "sha256": "e473a44a8a714e12afb822c9e17b87180b7940b472022979fccd17d83154fe8d"
+    },
+    {
+      "path": "src/em22/em22.cpp",
+      "sha256": "1512d6963b2305fe63137feb611c4e3e9da487d90726dbe4e21c8be4ce814139"
+    },
+    {
+      "path": "src/em23/em23.cpp",
+      "sha256": "e1f8d6932a4bb4b2413a91335155a5ce483d274af2b2ee327705d8a7d98f8e99"
+    },
+    {
+      "path": "src/em24/em24.cpp",
+      "sha256": "11e232d0410ff29162154f024b9a5b9c0b4fe4bad0b67ea58ce1c185fae484a1"
+    },
+    {
+      "path": "src/em25/em25.cpp",
+      "sha256": "c79ca36a291fcafedab2a351b341e45767a739ea8b5ea673f1c7621dd5dbb781"
+    },
+    {
+      "path": "src/em26/em26.cpp",
+      "sha256": "15d1f77cebaddf2baa90ee0c7f5715baf92a974c859a2a871498d4a32cee2175"
+    },
+    {
+      "path": "src/em27/em27.cpp",
+      "sha256": "808e5b87ca0c5b263ec92cbf50a60e712d9a69471de970d8c9d64755c24397e3"
+    },
+    {
+      "path": "src/em28/em28.cpp",
+      "sha256": "a103ec13dbec46535569dd2244af7cd9f8bffb8aed2467079f0b09742a3b2816"
+    },
+    {
+      "path": "src/em29/em29.cpp",
+      "sha256": "6d6e38691241cc5453c3875ae22b54193c5fc884b7689fa2b02d598bc97a36e1"
+    },
+    {
+      "path": "src/em2a/em2a.cpp",
+      "sha256": "53a12e05267adaac1da10bec01815af5103e2e5733107f6205c05de5b3cdd429"
+    },
+    {
+      "path": "src/em2b/em2b.cpp",
+      "sha256": "248179ca7012cdc83babfbfef7ce79c602085a92173d54b2b616430be4b9c5e8"
+    },
+    {
+      "path": "src/em2c/em2c.cpp",
+      "sha256": "72e67b56bc958456decee97fd2f723ae9a8a602d3a21104013429ab2ddd93987"
+    },
+    {
+      "path": "src/em2d/em2d.cpp",
+      "sha256": "fa7ff5f03a6f44a8ef30182c077ae1e4e5e1708985a8672da9994bd13990989d"
+    },
+    {
+      "path": "src/em2f/em2f.cpp",
+      "sha256": "0a0000a6fcab526e145ef40f83b1a3da481b85cdd1d196eb6c689939cae40595"
+    },
+    {
+      "path": "src/em30/em30.cpp",
+      "sha256": "0323bd03ace537109d2dea79bb43ee524a211d2e60fe36ec725e988a9617789c"
+    },
+    {
+      "path": "src/em31/em31.cpp",
+      "sha256": "4d82e0e447302d5ce07af2b066aeb072aa9766eafe60aa5a71c1c34c6d7146d2"
+    },
+    {
+      "path": "src/em32/em32.cpp",
+      "sha256": "1906120c43ce96dde32f9847d3cc99fc5145ba317580cda9da348f9787a70376"
+    },
+    {
+      "path": "src/em34/em34.cpp",
+      "sha256": "48894f762f680674561931a73e32f0fb6d2070f1b8bddc68d433eaa61e093cf2"
+    },
+    {
+      "path": "src/em35/em35.cpp",
+      "sha256": "7d9aa5190a54632bf42e9984ec21b79ffd95eec74d51c9dd2175df0f8729c1d4"
+    },
+    {
+      "path": "src/em36/em36.cpp",
+      "sha256": "d060e486f9a19a729dc72185b37bcb6236f0668698bcce0a57d256f90874aabc"
+    },
+    {
+      "path": "src/em38/em38.cpp",
+      "sha256": "a1dbe3b42e5715783bd717dc9fda82aa33d5d93b710bc5609762c079c95826b9"
+    },
+    {
+      "path": "src/em39/em39.cpp",
+      "sha256": "1fbadfad916f83395371cb3164040b1f38c235878a9035c11b284e359609f907"
+    },
+    {
+      "path": "src/em3a/em3a.cpp",
+      "sha256": "03190563a7bb61fb55ea20b06b04f369f8db7ceee7265f16d692b038e751d587"
+    },
+    {
+      "path": "src/em3b/em3b.cpp",
+      "sha256": "c22db4a921a3aea099e10e8045d312c9a8f57157e742420c47307cd7bea4c8e3"
+    },
+    {
+      "path": "src/em3c/em3c.cpp",
+      "sha256": "9677c5b5b60ec5aaba50909a2a0a1a9c2abaa883ae8f195bf7b6610a2ac11ecb"
+    },
+    {
+      "path": "src/game/cMotBase.cpp",
+      "sha256": "a1963e835bf47287593a854f2031053dd0b70edf32e349409e77037c3e82fa30"
+    },
+    {
+      "path": "src/game/cam_motion.cpp",
+      "sha256": "4c5ce5f7f73cfa30564158ee3aec3193296e80543e2f0561391bf79fdf71c734"
+    },
+    {
+      "path": "src/game/db_cam.cpp",
+      "sha256": "c0f10c27a4dd04f77517d52d2c9c4efe76b5ea5e07f32cab1c6e41e5d4429dc4"
+    },
+    {
+      "path": "src/game/em.cpp",
+      "sha256": "12f2df9e82640ede3c4ba408edbb8b1684ceb08b63f3042a0e3331267b229fbb"
+    },
+    {
+      "path": "src/game/emBar.cpp",
+      "sha256": "c609d9d54efbcf9a24ae7c477f4c92bdfb40366c8ff38ffe4dffa17b733d3a65"
+    },
+    {
+      "path": "src/game/em_sub.cpp",
+      "sha256": "ddefd4571fd38c21f1af86bdf4f4362aee2009ac2e99cc5d8ddd8f4514700ba0"
+    },
+    {
+      "path": "src/game/emdoor.cpp",
+      "sha256": "e313c681b46d73f70f94024277b961908917d08b59e0ca8177b7e1de00cc4d1c"
+    },
+    {
+      "path": "src/game/emhit.cpp",
+      "sha256": "be0c25031aec03222d871d9fe535b557ff7353ffd1707699079d89a2299dd36a"
+    },
+    {
+      "path": "src/game/emitem.cpp",
+      "sha256": "ac6be12359c16f7c9b794934144bb7e967b6a4d513c8ddc93c8c202ad396d555"
+    },
+    {
+      "path": "src/game/emobj.cpp",
+      "sha256": "18f00613ceea0a3b2cc7d7f05b425b2fb4a0c2df556f01b2a4c9fc103f8ab94c"
+    },
+    {
+      "path": "src/game/emrock.cpp",
+      "sha256": "fdfdf824f604ba12a206cac67b0463bfe5c9a1089326f988e5f9ed9a2d6c78f3"
+    },
+    {
+      "path": "src/game/emshield.cpp",
+      "sha256": "1d38f78d1e320dba6fd3f25391d096562817d3af1350adc80becf2dd750a1d1c"
+    },
+    {
+      "path": "src/game/emtorch.cpp",
+      "sha256": "c2d129e1b12a7c689c9d1c306085c0967e99066829dd96c09f439bf5565adedf"
+    },
+    {
+      "path": "src/game/emtree.cpp",
+      "sha256": "4c69614cffa28033dc2eec0872fa0b5ca1de89bdf5c0811587bbbe7dce824207"
+    },
+    {
+      "path": "src/game/emwep.cpp",
+      "sha256": "c3d34e8fc9969c20a47969ea3178eebb318903a959e4204cdd5b0963a0dcfddd"
+    },
+    {
+      "path": "src/game/emwindow.cpp",
+      "sha256": "63c40fe1a5b999a6925e3499243bf1f048d16159c29a9281cc8ae06f48625e76"
+    },
+    {
+      "path": "src/game/esp_efm.cpp",
+      "sha256": "91ba25a66a90326568c90b1ff0c32b67063371b33ea1c7298060c9edb86df4a2"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "sha256": "345e2bcf29d3669983fbad22a5b6e327a5ffb27aa7e527d203f536c2278466a0"
+    },
+    {
+      "path": "src/game/mercenaries.cpp",
+      "sha256": "5f7f9d248eca0b3b3408288b0d959328457ecabe24cb296ba6517ae6fe5f8b3c"
+    },
+    {
+      "path": "src/game/model.cpp",
+      "sha256": "4c80b3013787bbc6407e0edd9abdf66b9a99e029d31e597dc7668e5c202a47d1"
+    },
+    {
+      "path": "src/game/motion.cpp",
+      "sha256": "d5aafa42667b16d10e9083ab69b1e7f0dd45788d0727bed61674c8a47dbb5b11"
+    },
+    {
+      "path": "src/game/obj.cpp",
+      "sha256": "c206b0b247c06029ee44051deb0db24ccea702ae9534fdaa41dcfc6d0479c601"
+    },
+    {
+      "path": "src/game/obj00.cpp",
+      "sha256": "9132d39a8e1d05c79bb34cb35518b9f06fd687c805e158e3044b68df361200fd"
+    },
+    {
+      "path": "src/game/obj01.cpp",
+      "sha256": "3aebd1e34c8cebb174338089de25e6954aa995a3e4a2a4a36f618e84c95058d4"
+    },
+    {
+      "path": "src/game/obj02.cpp",
+      "sha256": "25524fc5af567575e954c5b4f95e511e34226a08544346bca3864f567e94d8b0"
+    },
+    {
+      "path": "src/game/obj04.cpp",
+      "sha256": "8abb9a24d104d0409856b3f5c03d0fa506e7ef6c54257d96e7483a9971260c45"
+    },
+    {
+      "path": "src/game/obj08.cpp",
+      "sha256": "08f930f5f37c6afd53e860c069994d8bb1eba6651efad510745b2152b0415d0b"
+    },
+    {
+      "path": "src/game/obj10.cpp",
+      "sha256": "3fe7682ec580c24a6ffe694bd875a3fab607ef5299806aeb2d28eeb73e0c6064"
+    },
+    {
+      "path": "src/game/obj12.cpp",
+      "sha256": "027d80f8bfb10a9f709301614c5588b91d0e825438a763968935d1d0ef747cb0"
+    },
+    {
+      "path": "src/game/obj13.cpp",
+      "sha256": "22538a017cc25cf5de687ff5ae38cf84cc38df6d1a0def8f7b80682a5af75cbd"
+    },
+    {
+      "path": "src/game/obj16.cpp",
+      "sha256": "f7b219e70fd3fbd57c668b8fc3db7580b65c39df64210037fc89d1d3a12f9ca7"
+    },
+    {
+      "path": "src/game/obj18.cpp",
+      "sha256": "790f760e3709c47b2c2e3a2d2b2b21637f58049e754a61abb5755fe3e401abf3"
+    },
+    {
+      "path": "src/game/obj1b.cpp",
+      "sha256": "ccbed628002724bb2bbbae6cc8fbca311ce02b66d180ef2e5366500bc423d626"
+    },
+    {
+      "path": "src/game/obj1c.cpp",
+      "sha256": "e6c8b21f894002cedebde368f4757a353006b93d5adf24f3538982c0f20e3141"
+    },
+    {
+      "path": "src/game/obj1d.cpp",
+      "sha256": "28553a0f1aa8985e6a59cad5899a1169a212f1fb77d152e9b47d021fde2f8c8f"
+    },
+    {
+      "path": "src/game/obj26.cpp",
+      "sha256": "3ac64aa60d532994f690f3d47e07733817e7a15dfbc742fc21f4c848cc9ba8eb"
+    },
+    {
+      "path": "src/game/objBull.cpp",
+      "sha256": "b7bc2ab7c0a4b38aa5a4b8238d895aee49aba62b47618b885224d027c4b8d495"
+    },
+    {
+      "path": "src/game/objGondola.cpp",
+      "sha256": "81b45820b68ba98f2e8d4efaf567d0bff26c1a02b5dbd582b0560fa49a4a6c2d"
+    },
+    {
+      "path": "src/game/objMissile.cpp",
+      "sha256": "51f7e35953d34d9b1e3815e8c7e29aa805a9a47b46921a85d1a37a2fe02ad4fc"
+    },
+    {
+      "path": "src/game/objPillar.cpp",
+      "sha256": "8dec898263de9a933308b7aa85d388faf70c169f0daa3c81e6a51d145d0450d5"
+    },
+    {
+      "path": "src/game/objRobo.cpp",
+      "sha256": "f0c84407b83589449c6380f0211c5ae05ced6765b559ae6a79aec7e501ce0c3c"
+    },
+    {
+      "path": "src/game/objRocket.cpp",
+      "sha256": "c4853ebaad29c0b35549956cf62a2f3cf940a408cfdfa2e8ceac86498a770b68"
+    },
+    {
+      "path": "src/game/objTrolley.cpp",
+      "sha256": "8ed6bd4daecd02fed8e98550fab5abe0aaeba519614408c3819ae5c4a8317500"
+    },
+    {
+      "path": "src/game/objWep.cpp",
+      "sha256": "b8e2e42ed1fb39aaa4012d9272a4db55c746a8a56f961ee116994fcef14788be"
+    },
+    {
+      "path": "src/game/objYagura.cpp",
+      "sha256": "26f02163925f050866c48e8d428d317be664ff257123c97fd3fd3cd4a7f15d71"
+    },
+    {
+      "path": "src/game/pl_class.cpp",
+      "sha256": "f6e5ad418cf57ac588ee1faf6328d3f0353210a5d7feb9412263daa0a0dce65c"
+    },
+    {
+      "path": "src/game/pl_debug.cpp",
+      "sha256": "ab8b6e37a629e46058df6e0f5049c23fdf8baff543a37de2a61e84071afec78c"
+    },
+    {
+      "path": "src/game/pl_dmg.cpp",
+      "sha256": "e8dc7a1cc2f6e1b6d6918092a84d51c2b69e3c2a8d4119581311c62c45040ea9"
+    },
+    {
+      "path": "src/game/pl_event.cpp",
+      "sha256": "f7173d9da9cee13d8e6a966987b1ea41214c47932026ac29ec3d0e554906a086"
+    },
+    {
+      "path": "src/game/pl_knife.cpp",
+      "sha256": "61a6a3bc75c3f5fd8da21b06544cc397429cddeb727a57a25fc419b5ca023d93"
+    },
+    {
+      "path": "src/game/pl_leon.cpp",
+      "sha256": "88ab1411999e7483f3289786d6b27d724f40308eb0fab1ac0695cf57ae558601"
+    },
+    {
+      "path": "src/game/pl_npc.cpp",
+      "sha256": "4f79fa5bb9db14945b87f18db9fc1606f7b13a8165d2cb67bd5e084b65cef347"
+    },
+    {
+      "path": "src/game/pl_push.cpp",
+      "sha256": "f2e025768abf4d66004efd76045683a8dd0d308530202453fbcf1b9ec7d9b04b"
+    },
+    {
+      "path": "src/game/player.cpp",
+      "sha256": "2e057dbe9771fec28c522dc5a407c615a695c78d5baf932224cf9bb3fefe0ddd"
+    },
+    {
+      "path": "src/game/scroll.cpp",
+      "sha256": "4392644289fedc476a9dd1f883ed36baf3fb8698be641798afcbc0358a9937d5"
+    },
+    {
+      "path": "src/game/shape.cpp",
+      "sha256": "ac649e177201543059452c8481a2d47c3ebd52bab4c518683ffe469410167031"
+    },
+    {
+      "path": "src/game/sscrn.cpp",
+      "sha256": "46ad97e6a8951e9e5fe7502aaa4798b4a97dd213576a70daef0f74a64f56267a"
+    },
+    {
+      "path": "src/game/t_option.cpp",
+      "sha256": "099a61f04676c1e4f54e78d17424a40d8150dde88a3b879b418f9077684847f2"
+    },
+    {
+      "path": "src/game/trans.cpp",
+      "sha256": "a99f809548a6e77b0ee869bcdd70a0f8fceea7b2bd306d8111ebc21ecd7158fc"
+    },
+    {
+      "path": "src/pl02/pl02.cpp",
+      "sha256": "bc6344b41a71f7fb1f338090280a6dc96d1adf00e1cd22621604c94e1722f29c"
+    },
+    {
+      "path": "src/pl0a/pl_klauser.cpp",
+      "sha256": "de71dbe04239889ebebe01a2b7e4ac027d9ec295ac47f7151e9ecb6d379e3a06"
+    },
+    {
+      "path": "src/pl0a/wep07.cpp",
+      "sha256": "f6fa8e8888633ec8a02952461230bcfcab3c05f000320bb74842eb0f59fa2aa6"
+    },
+    {
+      "path": "src/pl0d/pl_wesker.cpp",
+      "sha256": "797fee6e31b0f7fed001c1bdc06086a93945a5d1329179ccfadc44669edb8e7e"
+    },
+    {
+      "path": "src/pl0e/pl0e.cpp",
+      "sha256": "a9dff95e5f0d537cd6b378aafdae833048661e15fe6c8c52a9c2b01360b18283"
+    },
+    {
+      "path": "src/pl0f/pl0f.cpp",
+      "sha256": "19d26b2865df4083f645f5b0397ceaaf4c16ea59001866cf2c9f674539d4581d"
+    },
+    {
+      "path": "src/pl11/pl11.cpp",
+      "sha256": "3ee1a10cb2dc70f5f31ab3aaadec775f21289b1c158e61681355e9442cc2629a"
+    },
+    {
+      "path": "src/pl14/pl14.cpp",
+      "sha256": "ce00ec1737abd70dda21d75e2942bc04b630cf5ef50d60460c5c11459d53efb3"
+    },
+    {
+      "path": "src/st/em_wrap.cpp",
+      "sha256": "5eb53afe1c0c908eee7f704000f116e6e7a5a2678ae16a95ae83d69f082888ec"
+    },
+    {
+      "path": "src/st1/r100.cpp",
+      "sha256": "ea3ac13c0497861193bef79c1172d6a31f890e36fd50d7444ceb7dbe17fdac3a"
+    },
+    {
+      "path": "src/st1/r103.cpp",
+      "sha256": "8c8b76079f1fab7d6ac8556f584bd570c7352f6306b480a9f64023b241e7fa71"
+    },
+    {
+      "path": "src/st1/r10c.cpp",
+      "sha256": "4b43e8cb20e86f47b208fcabe4270b0ee1b5eaa81005da0bdd3454f1c201f50e"
+    },
+    {
+      "path": "src/st1/r10f.cpp",
+      "sha256": "e5165e05ccbcb0f0518064d651aafb2c6552d4167ee84a2297bd38dac4d5f9e5"
+    },
+    {
+      "path": "src/st1/r113.cpp",
+      "sha256": "3a2c7bcb0e808948da96ee45f93f693b4dc88d3ef0939a798d0678d4b05d53a9"
+    },
+    {
+      "path": "src/st1/r117.cpp",
+      "sha256": "210ff9b130a06293d4b18030ccc9463c194ae10150d96deb26dc715091b9c30a"
+    },
+    {
+      "path": "src/st1/r11c.cpp",
+      "sha256": "78679c72b0be5b4d866ffee9aba2804fa8320c97a24784d2802d8e8a9d57ea2b"
+    },
+    {
+      "path": "src/st1/r11d.cpp",
+      "sha256": "da0561328d92fd326a37b7b32b60d90930a5e566e7f92c77263707fcb938a52b"
+    },
+    {
+      "path": "src/st1/r11e.cpp",
+      "sha256": "c4a539fe28d968904805458d7c6f50d6c977661f61ff79847ebc57369f7a1f94"
+    },
+    {
+      "path": "src/st1/r11f.cpp",
+      "sha256": "c898c2fb18e3e252859705f0d3a6175bd1f2f6aa59570cd50dcbf16e7ed02e4d"
+    },
+    {
+      "path": "src/st2/r201.cpp",
+      "sha256": "13265eb6c38e8b248c2109637ee263f4df4aa2cd34813d008404a35c16b0e67a"
+    },
+    {
+      "path": "src/st2/r202.cpp",
+      "sha256": "cd4ce2aa4ddf4d2bbdfc5a89f5e922c10cbdb0e63acaa149625298942d94a6dd"
+    },
+    {
+      "path": "src/st2/r204.cpp",
+      "sha256": "c07923996fed358183efca25cb52f13c6dce5f7e0b32326506030d01370efb4b"
+    },
+    {
+      "path": "src/st2/r205.cpp",
+      "sha256": "fe4c700fef8dc8f20c65f5c428e3f712c12b2b8f00fdb74333eecdd1f677d7e2"
+    },
+    {
+      "path": "src/st2/r206.cpp",
+      "sha256": "cbb56be5ebdf1b83a5f6c1e9c4744c91dee318b839da46a46470fbe2d71930e5"
+    },
+    {
+      "path": "src/st2/r208.cpp",
+      "sha256": "33222970de982fc6366afb2c4455c5c957497ae845f19b257c2b4432c9aae52e"
+    },
+    {
+      "path": "src/st2/r209.cpp",
+      "sha256": "49e6cc2a3f0ef1042c9be28ac3dcc590c83909f1a748e4803f39bc2ff79e71ee"
+    },
+    {
+      "path": "src/st2/r20a.cpp",
+      "sha256": "25ab1042a298e5ce5e8bb16067026ec4bddc84234ece9144b0214ca77171682c"
+    },
+    {
+      "path": "src/st2/r20c.cpp",
+      "sha256": "36cd0d59c05838b6aef316d34b8f02a7f762b4ad42af251a688e2933aa07e1ad"
+    },
+    {
+      "path": "src/st2/r20d.cpp",
+      "sha256": "6796ca8edb0e8c087e777392dde042373b4726f09d86cc9c8b628d3ac36aa4b6"
+    },
+    {
+      "path": "src/st2/r20e.cpp",
+      "sha256": "6b3c96c1ed5ef7f6ab74ec89bf7e62956a876ac3e83a310c136a18a87048d579"
+    },
+    {
+      "path": "src/st2/r210.cpp",
+      "sha256": "5103017627acd3cd4f926e5119c964dc1fd84daee9ea7353542646850108091a"
+    },
+    {
+      "path": "src/st2/r212.cpp",
+      "sha256": "7af0bd4f3b3a076e32e6d8fa629c2b8f3e0a9275affb57434c83991e6f4a8e7e"
+    },
+    {
+      "path": "src/st2/r214.cpp",
+      "sha256": "52e22694e46196b0cc61befddce7b78583c962c29a6bc179d441887a736a823d"
+    },
+    {
+      "path": "src/st2/r219.cpp",
+      "sha256": "b099245b0eced04b71172b04b4bb0501bc0257041562b9319de5cc70482537c1"
+    },
+    {
+      "path": "src/st2/r21d.cpp",
+      "sha256": "ab5dae348a53be767bf4025cedabf9bfd1dd31003f648eeea435e9bd61a521f9"
+    },
+    {
+      "path": "src/st2/r221.cpp",
+      "sha256": "9ff2a39859b07fd8bbb08624ed4b915d66d695198190fcb5f28d89244f8a3cd8"
+    },
+    {
+      "path": "src/st2/r222.cpp",
+      "sha256": "0e6aee5fc87b432b019024f9c70ba62d4651b8509e0e75b747b2d45770c575ea"
+    },
+    {
+      "path": "src/st2/r223.cpp",
+      "sha256": "396f3dbd749428517906558695111b10819795ebf2e88b6e701ef3d0e682e510"
+    },
+    {
+      "path": "src/st2/r224.cpp",
+      "sha256": "86ff7b573fffe488be30c3d6aab8155545ebdb2e71fc36278c93317ab839ac16"
+    },
+    {
+      "path": "src/st2/r225.cpp",
+      "sha256": "fd726c306d17cea427ddb9c88052377fd4eb1c9a4f4d05643fdb84a06a8e6f61"
+    },
+    {
+      "path": "src/st2/r226.cpp",
+      "sha256": "c8fec564dc23899144f46450ba9a3a14dad8d6fbf9f4e4f4dd2b54d0434290b6"
+    },
+    {
+      "path": "src/st2/r22a.cpp",
+      "sha256": "eebdaccefcc3d08c24581fc15fff1427e580de70d5656bb9d988aa2301613f6a"
+    },
+    {
+      "path": "src/st3/r300.cpp",
+      "sha256": "153e0b1f94ac781f01c1a2fe80a21b59716ca9d0345bf1a41bd0d6fae6cbde36"
+    },
+    {
+      "path": "src/st3/r30b.cpp",
+      "sha256": "6c0db5ad426d981cf40e2fa66d17bfe661a1aee40867aaf48456779d5a6440f2"
+    },
+    {
+      "path": "src/st3/r30c.cpp",
+      "sha256": "6e91b7b5fdd8fce40a7a50fd978062ac60c5225947fff52bf3c36db97a73b50a"
+    },
+    {
+      "path": "src/st3/r30d.cpp",
+      "sha256": "7482d82409c524b9f99508073c57f9e6bed0230f3d394a7f5d940ac10ca4e2ee"
+    },
+    {
+      "path": "src/st3/r30f.cpp",
+      "sha256": "796abaddd5ad436b719b94ff287650fb32a8c8bb8374f9c0c91594a0e5c06145"
+    },
+    {
+      "path": "src/st3/r310.cpp",
+      "sha256": "4b3ef03a76e4f148f48c5c9857ca1cf29785af094c9a5d3ed4660a7cf14601fa"
+    },
+    {
+      "path": "src/st3/r311.cpp",
+      "sha256": "f9c7d75ba5539c4c502afeb38522e25a8510305aa272cf59f90b58bbb0b6a7e4"
+    },
+    {
+      "path": "src/st3/r315.cpp",
+      "sha256": "c269b91375038c68a5c2c19c42a911cbab515ca64afb72df9c7598dd4bc19d8e"
+    },
+    {
+      "path": "src/st3/r318.cpp",
+      "sha256": "8009720a0abb1bab2d6905c1d045683448e06ab3479056c70962e1077164732d"
+    },
+    {
+      "path": "src/st3/r31b.cpp",
+      "sha256": "e1d59c572b8dacc6f4e60cd01827d0f8276b5453bcb503bfe9920a4818006d73"
+    },
+    {
+      "path": "src/st3/r320.cpp",
+      "sha256": "c8b779f69eaa70b3b58ff93e92b8d8924767566495ecf73d37e6d3de06e30ab1"
+    },
+    {
+      "path": "src/st3/r321.cpp",
+      "sha256": "91261ce9a0f3cf9122cb7fabae79be3bbb762cdec594efbf98b7baf3897e58eb"
+    },
+    {
+      "path": "src/st3/r326.cpp",
+      "sha256": "1b27629598bf8847f6111c9bf14b51b97d79733c476228a42be7c9302628d05a"
+    },
+    {
+      "path": "src/st3/r332.cpp",
+      "sha256": "432dd637aee5a0a083fefadbe3104d02f3a5c53e4e96ea67006467e8bc9b7761"
+    },
+    {
+      "path": "src/st4/r403.cpp",
+      "sha256": "df2f5705147e86ea00c03e2c8c1fdb3f08b62950de490e4adaa892d567199639"
+    },
+    {
+      "path": "src/st4/r404.cpp",
+      "sha256": "56cdb0e34453283045ef8ed35c4d39185676acfdda6dde5a51448897ae8f00d9"
+    },
+    {
+      "path": "src/st4/r40a.cpp",
+      "sha256": "b20b19429a3b458456a45b358f7cce5c93db91e73015b9eaeb045e1125018112"
+    },
+    {
+      "path": "src/t_esp/db_port.cpp",
+      "sha256": "0a8b3db4b8b11b8acb2310293777613bd121cfd1be5b91e2f08e00b4db5eb44f"
+    },
+    {
+      "path": "src/tools/db_mod.cpp",
+      "sha256": "1d4d3c558aad89380d8d65ff6be03ca0636c9062b2906bf8cb7f1fbd31ba24c7"
+    },
+    {
+      "path": "src/wep/objMachinegun.cpp",
+      "sha256": "59d64c90dc169d0a0bd532c0ba07b53692bd5ec82f83c92834d1c1cd9d4e9e85"
+    },
+    {
+      "path": "src/wep/objRuger.cpp",
+      "sha256": "f93779ba522473ad7878029ba0dab79073e16ea5da6d7029109d8e45c03a0ffc"
+    },
+    {
+      "path": "src/wep/pl_bow.cpp",
+      "sha256": "d595a784d7f1837d5d14bd4fc101461386fc4d436f0c2342d7fc2a8a8096b6ca"
+    },
+    {
+      "path": "src/wep/pl_grenade.cpp",
+      "sha256": "eca0fb6c2dfc75fadf1e38feb8d986caabde8e451432e36b97abcbcbb1c6471b"
+    },
+    {
+      "path": "src/wep/pl_handgun.cpp",
+      "sha256": "1d53774b578f0b83903c9d28478e539784144554e73d09959540469332885029"
+    },
+    {
+      "path": "src/wep/pl_knife.cpp",
+      "sha256": "fabaa454877097bc98966145cb7043a8bc41a176f49b81fe9e0bdbb56702ff64"
+    },
+    {
+      "path": "src/wep/pl_machine.cpp",
+      "sha256": "2d768e31cb69832c6b1882ef54b969352a1c55b50014f2a604cb96789241c6bc"
+    },
+    {
+      "path": "src/wep/pl_rifle.cpp",
+      "sha256": "794923d38a314eeb9bbea0e58df40069b477b822263270d20f7b823639965cf4"
+    },
+    {
+      "path": "src/wep/pl_rocket.cpp",
+      "sha256": "1cc55dec7b859cc624958de20221f719036a3fc09f478e418e6b146f9a4fb474"
+    },
+    {
+      "path": "src/wep/pl_shotgun.cpp",
+      "sha256": "9f32c13ef84aa52420956ae711cc078646e6711e63edcfd3c756f1410853e585"
+    },
+    {
+      "path": "src/wep01/objFn57.cpp",
+      "sha256": "e10a55333f0fd0f70b867714c7f35349a06b9f669ab60d2fefa5d0c9b82e15b6"
+    },
+    {
+      "path": "src/wep02/objMauser.cpp",
+      "sha256": "182d33e2ca9a2b95fdb6c1cc8499aaa2006460719e2859d7ae73b65e0bc791d7"
+    },
+    {
+      "path": "src/wep04/wep04.cpp",
+      "sha256": "9a2608688a0b12ce0ace19b60a460fadde1be31d613bb004456f29d1a98087ab"
+    },
+    {
+      "path": "src/wep05/objCivilian.cpp",
+      "sha256": "26323feef89fc88a8b2b944a8ce3c094a9862a5abcad6b4fdd10f7f3f30b190c"
+    },
+    {
+      "path": "src/wep06/wep06.cpp",
+      "sha256": "b6216d9f9448f70884d5e7d0d1fc741c364e2c9e0d48883f937c8673d7f2665c"
+    },
+    {
+      "path": "src/wep07/wep07.cpp",
+      "sha256": "e86df46527087ce762d7d51f73baf732e1b86a158d1d2ff082f44cea601723d2"
+    },
+    {
+      "path": "src/wep08/wep08.cpp",
+      "sha256": "c51ce71491bab86c4cdcd16bcd6560c6fcfaa7026e3b30a3fe8325ba5b27e1bd"
+    },
+    {
+      "path": "src/wep09/objSniper.cpp",
+      "sha256": "1adf0926513d8f63617b917ff691e11d1c96bae7538cc38832b57f492bfd8a32"
+    },
+    {
+      "path": "src/wep10/objHkSniper.cpp",
+      "sha256": "20bf17e15b226bf0a0e011a58d7747e73112ed91006125be878bffafbd88a02e"
+    },
+    {
+      "path": "src/wep12/objTompson.cpp",
+      "sha256": "46c49f0a4355295d4f471fae8cf9200ffe06098a934d4ca019cc93885b0589c3"
+    },
+    {
+      "path": "src/wep14/objMine.cpp",
+      "sha256": "12bfd2633aa41ddba29cfccdaee0fc5b1f5d9d5527c010b9098ee3e4532545f4"
+    },
+    {
+      "path": "src/wep14/wep14.cpp",
+      "sha256": "56b69c38e4d6137818a709c4ee0e250f5ba59fdc2eb1259e0795d3407fec1888"
+    },
+    {
+      "path": "src/wep15/wep15.cpp",
+      "sha256": "a305603c81ed01f23d2d5a0b40654d3202cfe80bf5a3f296496ab72ede07e007"
+    },
+    {
+      "path": "src/wep16/wep16.cpp",
+      "sha256": "c37fabf480245ba237e22d7bb6be1c80cc24dfe6dff615a694c7ec6e2e237717"
+    },
+    {
+      "path": "src/wep17/objVp70.cpp",
+      "sha256": "3f916c6d48a9c728fe95f802ee77a4f6a063590bfd3701a644980275ae411e55"
+    },
+    {
+      "path": "src/wep17/wep17.cpp",
+      "sha256": "f7277beaa388071af26b82163e819f97ec917108a815093396d8da746ad19e08"
+    },
+    {
+      "path": "src/wep26/wep26.cpp",
+      "sha256": "3d2a4eee08d9b7d1c06366c9d9020eb7ccd5f63906bc0a6f3f367314e65eab1c"
+    },
+    {
+      "path": "src/wep27/wep27.cpp",
+      "sha256": "2de0998813ff5f5f194a1a3e5b20ec73577df8e802a35f2239fca58f56ef67f7"
+    },
+    {
+      "path": "src/wep28/wep28.cpp",
+      "sha256": "2991514e422ea787c74056ed66e525c58486c294a4f341f061f913693545dc54"
+    },
+    {
+      "path": "src/wep33/wep33.cpp",
+      "sha256": "8ba0e804ca75419eaa25f19015f1de9a4d2b8f8755fd4e7346dd473a71c71fcf"
+    },
+    {
+      "path": "src/wep38/wep38.cpp",
+      "sha256": "662efedb84fa40834802bad1da81013c6bf09c282e1d7f6a8b872355d3618587"
+    },
+    {
+      "path": "src/wep39/wep39.cpp",
+      "sha256": "320d2e1ed163ee0db1982223302bc99f2656105cbd13a339c9711ae48bad1567"
+    },
+    {
+      "path": "src/wep40/wep40.cpp",
+      "sha256": "86616931c66f07e3933d79d6174dc8d9a6dc840554a28ef87b45b894acef9d76"
+    },
+    {
+      "path": "src/wep44/wep44.cpp",
+      "sha256": "ff98c3d80f115cebac39818e64fe49689d0aa3dfa4371d0af1549a4e84a466bb"
+    },
+    {
+      "path": "src/wep47/wep47.cpp",
+      "sha256": "267af1a991e345bf9032a0706a7778a281bf35f92c767233df67460b5cb4cd75"
+    }
+  ],
+  "subarc_assignment_occurrences": 261,
+  "evidence_levels": {
+    "source": "reviewed rules plus lexical inventory; dynamic ownership edges remain named OPEN",
+    "host": "Python source-rule regression only; no C++ target execution by this tool",
+    "runtime": "no new build/guest; H050/H055 and later handbacks retain their independent scopes"
+  },
+  "open_edges": [
+    "A01 indirect or raw-pointer mutation and selected linkage beyond lexical scope",
+    "A02 all dynamic blend-owner setters and cross-state source assignments",
+    "A03 per-active-info shape population and all attachment setter generations",
+    "A04 module Work variants, variable indexes and event payload identities",
+    "A05 absent selected FCV records are not inferred resident; require actual binding/variant",
+    "A07 exceptional grab/QTE/death exits and donor replacement before borrower stop"
+  ],
+  "private_details_sha256": "fb5fe343aebb8b33d74d82e791c0d1534e516c4bf59a427f3e69d754dab5e18f"
+}
