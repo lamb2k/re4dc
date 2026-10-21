@@ -8028,6 +8028,9 @@ static_assert(sizeof(pvr_poly_hdr_t)==32);
 Ps2HdrSlot ps2_hdr[kPs2HdrSets][kPs2HdrWays];
 unsigned char ps2_hdr_next[kPs2HdrSets];
 unsigned ps2_hdr_hits,ps2_hdr_fills,ps2_hdr_log=~0U;
+#if RE4DC_SCENERY_PIECE_STATE
+unsigned ps2_piece_hits; // SCENERY_PIECE_STATE: hits found through the part's slot word
+#endif
 #if RE4DC_PS2_WORLD_HDR_CACHE==2
 unsigned ps2_hdr_checked,ps2_hdr_bad;
 #endif
@@ -8077,6 +8080,9 @@ extern "C" int re4dc_ui_texture_resident(unsigned crc,unsigned fnv){
     return 0;
 }
 #endif
+#if RE4DC_SCENERY_PIECE_STATE
+extern "C" { std::uint32_t* re4dc_ps2_piece_slot=nullptr; } // native_static.cpp sets it around a PS2 part's bind
+#endif
 extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* out){
 #if RE4DC_TA_MATERIAL_DIAG
     tamat::Scope source_scope(1);
@@ -8121,12 +8127,26 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
             ps2_hdr_log=frame;
 #if RE4DC_PS2_WORLD_HDR_CACHE==2
             re4dc_log("PS2HDR frame=%u hits=%u fills=%u checked=%u mismatched=%u\n",frame,ps2_hdr_hits,ps2_hdr_fills,ps2_hdr_checked,ps2_hdr_bad);
+#elif RE4DC_SCENERY_PIECE_STATE
+            re4dc_log("PS2HDR frame=%u hits=%u fills=%u piece_hits=%u\n",frame,ps2_hdr_hits,ps2_hdr_fills,ps2_piece_hits);
 #else
             re4dc_log("PS2HDR frame=%u hits=%u fills=%u\n",frame,ps2_hdr_hits,ps2_hdr_fills);
 #endif
         }
+#if RE4DC_SCENERY_PIECE_STATE
+        // SCENERY_PIECE_STATE: the part's slot word (room file SCPS) names its slot: no set scan when it still holds
+        // this key (the entry / VRAM address test below applies as for any hit)
+        if(re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot && *re4dc_ps2_piece_slot<=kPs2HdrSets*kPs2HdrWays){
+            Ps2HdrSlot& s=(&ps2_hdr[0][0])[*re4dc_ps2_piece_slot-1U];
+            if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size){hit=&s;++ps2_piece_hits;}
+        }
+        if(!hit)
+#endif
         for(auto& s:ps2_hdr[hdr_set])
             if(s.mode==hdr_mode && s.crc==k[0] && s.fnv==k[1] && s.size==hdr_size){hit=&s;break;}
+#if RE4DC_SCENERY_PIECE_STATE
+        if(hit && re4dc_ps2_piece_slot)*re4dc_ps2_piece_slot=unsigned(hit-&ps2_hdr[0][0])+1U;
+#endif
     }
     if(hit && hit->entry->valid && hit->entry->key==key && hit->entry->package.pvr_texture(0)==hit->texture){
         const Ps2HdrSlot& slot=*hit;
@@ -8289,6 +8309,9 @@ extern "C" int re4dc_ps2_world_direct_begin(const unsigned* k,Re4dcModelDirect* 
         slot.texture=handle->package.pvr_texture(0);
         for(unsigned i=0;i<4;++i)slot.words[i]=hw[i];
         ++ps2_hdr_fills;
+#if RE4DC_SCENERY_PIECE_STATE
+        if(re4dc_ps2_piece_slot)*re4dc_ps2_piece_slot=unsigned(&slot-&ps2_hdr[0][0])+1U;
+#endif
     }
 #endif
 #if RE4DC_PS2_INTERIOR_CULL==2

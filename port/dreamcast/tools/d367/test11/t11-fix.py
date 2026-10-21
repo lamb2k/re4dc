@@ -698,6 +698,16 @@ for _r in ('r10c', 'r10d', 'r10e'):
     for _f in ('ps2-world.re4mesh', 'ps2-world.r4pw', 'ps2-world.ids'):
         DATA['ch21l']['dc/native/%s/%s' % (_r, _f)] = '%s/dc/native/%s/%s' % (CH21LD, _r, _f)
 PAK_DERIVED['ch21l'] = CH21LD + '/pak-derived.json'
+# sc21 (lane scenery21 10-20, SCENERY_CONE / SCENERY_PIECE_STATE): every PS2 world room's package with facing-grouped
+# strip groups (dc/native/<room>/ps2-world.re4mesh + ps2-world.r4sg: the same triangles, corners renumbered per group) and
+# its room file with the SCCN / SCPS sections (tools/d367/scenery21/scn21_build.py over the Test 20 line disc's
+# dc/native). Last in the data line (after ch21l: built from its r10c..r10e worlds). Knob-off programs read the r4sg
+# (PS2_STRIP_GROUPS) and draw the same triangles. Private store copy: re4-assets-private/sc21-20261020 (SHA256SUMS).
+SC21D = os.environ.get('SC21D', '/root/re4data/private/sc21-20261020')
+if os.path.isdir(SC21D):
+    DATA['sc21'] = {'dc/native/%s/%s' % (r, f): '%s/%s/%s' % (SC21D, r, f)
+                    for r in sorted(os.listdir(SC21D)) if os.path.isdir('%s/%s' % (SC21D, r))
+                    for f in ('ps2-world.re4mesh', 'ps2-world.r4sg', 'room.r4rc')}
 # Over the payload base (the 16.4 disc, payroot18), which already carries T15_DATA except the far shells (fsh: 16.x
 # shipped without FAR_SHELL): fsh + every set after T15_DATA.
 T17R_PAYLOAD = 'fsh' + T17R_DATA[len(T15_DATA):]
