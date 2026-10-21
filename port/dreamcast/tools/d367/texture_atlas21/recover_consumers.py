@@ -70,7 +70,9 @@ def main():
     neck_row=audit(arrays['uv'],arrays['gx'],tiles)
     elf=a.bound_elf.read_bytes()
     if atlas.sha(elf)!='4c92ce29920476605c297bc5ea319bde9bbd24a1a5a5a6bc5012c4a31ebc9a2c':raise ValueError('unchanged QA ELF identity')
-    anchors={name:dict(bytes=len(arrays[name]),sha256=atlas.sha(arrays[name]),occurrences=elf.count(arrays[name]))
+    program=a.bound_elf.with_name('program-from-elf.bin').read_bytes()
+    if atlas.sha(program)!='8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d':raise ValueError('unchanged loaded program identity')
+    anchors={name:dict(bytes=len(arrays[name]),sha256=atlas.sha(arrays[name]),occurrences=program.count(arrays[name]))
              for name in ('pos','nrm','uv','gx')}
     if not all(row['occurrences'] for row in anchors.values()):raise ValueError('selected neck bytes absent from exact QA ELF')
     archives={};payloads=[]
@@ -99,7 +101,8 @@ def main():
     if 'blob->flags & kLodPending' not in text:raise ValueError('runtime LOD pending gate changed')
     result=dict(schema='re4dc-atlas-dynamic-consumers-1',original_manifest_sha256=atlas.sha((a.source_root/'leon-v1/inputs/original_release_manifest.json').read_bytes()),
         hands=dict(proof=hproof,blobs=nblobs,rows=nrows,sources=nsrc,uv_consumers=hand_rows),
-        neck=dict(header_sha256=atlas.sha(neck.read_bytes()),exact_current_QA_ELF_anchors=anchors,sampling=neck_row),
+        neck=dict(header_sha256=atlas.sha(neck.read_bytes()),exact_current_QA_loaded_program_anchors=anchors,
+            loaded_program_sha256=atlas.sha(program),sampling=neck_row),
         flying_head=dict(archives=archives,payload_sha256=atlas.sha(payload),face=face,
             hair=dict(triangles=w[27],uv_bytes=w[24],stream_bytes=w[26],material='separate colour/mask, repeat; never sample the body atlas')),
         lod=dict(resolved=lod,resolved_receipt_sha256=atlas.sha(a.resolved_knobs.read_bytes()),runtime_source_sha256=atlas.sha(code.read_bytes()),
