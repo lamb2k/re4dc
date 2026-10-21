@@ -76,7 +76,7 @@ if QA:
     qv = 'PASS' if checks and all(c[1] == 'PASS' for c in checks) else 'FAIL'
     (W / 'qa-verdict.txt').write_text(qv + '\n')
     qs = [l.split('\t') for l in rd(W / 'qa-steps.tsv').splitlines() if l.count('\t') == 3]
-    sec = ['', '## QA disc: %s (does not change the game verdict)' % qv, '',
+    sec = ['', '## QA disc: %s, candidate %s (does not change the game verdict)' % (qv, env['sha'][:8]), '',
            '- QA build of the same recipe + QA_MENU=1 (QA_TEST=RR QA_SRC=%s); zip kept in the candidate dir for testers' % env['sha'][:8],
            '- wall: ' + ', '.join('%s %d s' % (p[0], int(p[2]) - int(p[1])) for p in qs),
            '- evidence: %s' % str(EVU).replace('/mnt/c/', 'C:\\').replace('/', '\\'), '',
@@ -256,6 +256,11 @@ out += rd(W / 'knobs-diff.txt').strip().splitlines()[:40] or ['(not written)']
 out += ['```', '']
 (W / 'result.json').write_text(json.dumps({'verdict': verdict, 'checks': checks, 'steps': steps, 'jobs': jobs, 'extra': extra}, indent=1))
 txt = '\n'.join(out) + '\n'
+# keep the last good candidate's QA disc section (its quick cycle's QA step wrote it) under later reports
+_st = dict(l.split('=', 1) for l in rd(lgp).splitlines() if '=' in l)
+_q = rd(Path(_st['work']) / 'RELEASE-READY.md') if _st.get('work') else ''
+if '\n## QA disc:' in _q:
+    txt = txt.rstrip('\n') + '\n' + _q[_q.index('\n## QA disc:'):].rstrip('\n') + '\n'
 (W / 'RELEASE-READY.md').write_text(txt)
 REPORT.write_text(txt)
 print(verdict, '%d checks, %d failed' % (len(checks), len(fails)))
