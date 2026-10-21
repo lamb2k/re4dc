@@ -83,8 +83,8 @@ Before accepting a checkpoint, require a fresh FLYSAVE1 file and the actual
 Saved-state log receipt. `--state-seed OWN_PREVIOUS_CAPTURE` rejects a different
 lineage folder, staged program/image, emulator binary, modified state hash or
 still-running owner. Restore only this same unchanged program and image; never
-transfer a state to a new candidate program. The adapter is compile/source-tested
-but its first live checkpoint save/restore is still pending the disk floor.
+transfer a state to a new candidate program. The adapter passed a bounded unchanged-QA cold save and its authenticated
+same-image continuation into r100 woods. Record each new lineage independently.
 
 Capture now requires C to retain18GiB+128MiB and limits owned capture growth to
 100,000,000 bytes, counting the private emulator and state while excluding
@@ -93,3 +93,21 @@ guest. When a cold woods route does not fit, preserve its incomplete result and
 continue an authenticated same-program checkpoint rather than changing the
 camera or borrowing a foreign state. The initial cold QA normal-boot attempt
 reached title exit, not playable woods, before its watchdog bound.
+
+
+For exact saved camera/pose, `layout.py --repo SOURCE --preprocessing RECEIPT
+--out NEW_DIR` emits the offsets with the pinned target compiler and actual
+selected flags. `snapshot.py --state OWN_STATE --elf EXACT_ELF --layout
+LAYOUT_JSON --out NEW.json` decodes the established FLYSAVE1/RZIP format, uses two
+unique256-byte exact ELF code signatures to locate16MiB guest RAM, and reads only
+bounded typed scalars/matrices with those target offsets. It records room, source
+GlobalWork.Frame_cnt, player position/angles, camera position/target/roll/FOV,
+view/projection matrices and identities. This is an exact checkpoint endpoint;
+it does not assign earlier host-time screenshots an invented source tick.
+
+The qualified original QA woods baseline uses the original normal-start/intro
+skip path and its own unchanged-image checkpoint, rather than the historical
+custom bridge warp. Its actual source window is GlobalWork.Frame_cnt1801..1920.
+Never restore that original-image checkpoint into a candidate asset image, even
+when its program is unchanged. Cold-replay the input lineage into each frozen
+candidate and authenticate that candidate's own checkpoint before comparison.

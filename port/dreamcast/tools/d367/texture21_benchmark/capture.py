@@ -147,8 +147,13 @@ def main():
             state=cap/'data/disc.state'
             log=(cap/'flycast.log').read_text(errors='replace')
             import re
+            resolve_state=lambda value: (Path(value) if Path(value).is_absolute() else cap/Path(value)).resolve()
+            if a.state_seed:
+                loaded=re.findall(r'Loaded state ver \d+ from (.*?) size \d+',log)
+                if not loaded or resolve_state(loaded[-1])!=state.resolve():
+                    raise SystemExit('authenticated checkpoint load was not confirmed')
             saved=re.findall(r'Saved state to (.*?) size (\d+)',log)
-            if not state.is_file() or not saved or Path(saved[-1][0]).resolve()!=state.resolve():
+            if not state.is_file() or not saved or resolve_state(saved[-1][0])!=state.resolve():
                 raise SystemExit('same-image checkpoint save not confirmed; preserve capture but do not continue it')
             if state.read_bytes()[:8]!=b'FLYSAVE1':raise SystemExit('unsupported saved checkpoint container')
             if state.stat().st_mtime<started:raise SystemExit('checkpoint save is stale')
