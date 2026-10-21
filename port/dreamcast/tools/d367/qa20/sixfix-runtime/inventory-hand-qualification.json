@@ -1,0 +1,166 @@
+{
+  "source": "d4a3b31fac3362937a3f21eaa874e07be94fd061",
+  "elf_sha256": "52a5d671203e22e9f20728a8fbc3b61e080f7ba44e06891df635248a374dd053",
+  "run": "sixfix-inventory07",
+  "result": {
+    "name": "qa21-sixfix-inventory",
+    "status": "RUN_COMPLETE",
+    "start_utc": "2026-10-21T01:36:17.100080+00:00",
+    "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-r11e-20261020\\sixfix-master",
+    "tracks": {
+      "disc.gdi": 83,
+      "track01.bin": 1058400,
+      "track02.raw": 1237152,
+      "track03.iso": 1017761792
+    },
+    "seconds": 50,
+    "vmu": null,
+    "keys": null,
+    "stop": null,
+    "fixtures": {},
+    "errors": [],
+    "key_log": [],
+    "align": false,
+    "emu": "harness",
+    "emu_env": {},
+    "stopped": "owned controller guard",
+    "owned_stop_request": {
+      "pid": 55108,
+      "start_filetime": 134370201772095146,
+      "reason": "NORMAL_INVENTORY_HG_TMP_COMPLETE"
+    },
+    "log_idle_s": 1.4,
+    "end_utc": "2026-10-21T01:36:51.550489+00:00",
+    "elapsed_s": 34.4,
+    "emulator_exited": true
+  },
+  "changes": [
+    {
+      "step": 0,
+      "item": 48,
+      "disc_delta": {
+        "reads": 335,
+        "bytes": 3056032,
+        "block_us": 1170748
+      },
+      "hand_delta": {
+        "reads": 1,
+        "read_bytes": 5248,
+        "misses": 1,
+        "async_reads": 1,
+        "copies": 0,
+        "yields": 0
+      },
+      "frame_before": 309,
+      "frame_after": 406,
+      "weapon_before": 2,
+      "weapon_after": 11,
+      "health_after": [
+        1200,
+        1200,
+        600
+      ],
+      "motion_load_delta": 0,
+      "motion_eviction_delta": 0,
+      "texture_load_delta": 70
+    },
+    {
+      "step": 1,
+      "item": 35,
+      "disc_delta": {
+        "reads": 222,
+        "bytes": 2758496,
+        "block_us": 710456
+      },
+      "hand_delta": {
+        "reads": 0,
+        "read_bytes": 0,
+        "misses": 0,
+        "async_reads": 0,
+        "copies": 1,
+        "yields": 0
+      },
+      "frame_before": 423,
+      "frame_after": 502,
+      "weapon_before": 11,
+      "weapon_after": 2,
+      "health_after": [
+        1200,
+        1200,
+        600
+      ],
+      "motion_load_delta": 0,
+      "motion_eviction_delta": 0,
+      "texture_load_delta": 47
+    },
+    {
+      "step": 2,
+      "item": 48,
+      "disc_delta": {
+        "reads": 251,
+        "bytes": 3004704,
+        "block_us": 710382
+      },
+      "hand_delta": {
+        "reads": 0,
+        "read_bytes": 0,
+        "misses": 0,
+        "async_reads": 0,
+        "copies": 1,
+        "yields": 0
+      },
+      "frame_before": 519,
+      "frame_after": 615,
+      "weapon_before": 2,
+      "weapon_after": 11,
+      "health_after": [
+        1200,
+        1200,
+        600
+      ],
+      "motion_load_delta": 0,
+      "motion_eviction_delta": 0,
+      "texture_load_delta": 48
+    },
+    {
+      "step": 3,
+      "item": 35,
+      "disc_delta": {
+        "reads": 268,
+        "bytes": 2999936,
+        "block_us": 754940
+      },
+      "hand_delta": {
+        "reads": 0,
+        "read_bytes": 0,
+        "misses": 0,
+        "async_reads": 0,
+        "copies": 1,
+        "yields": 0
+      },
+      "frame_before": 633,
+      "frame_after": 709,
+      "weapon_before": 11,
+      "weapon_after": 2,
+      "health_after": [
+        1200,
+        1200,
+        600
+      ],
+      "motion_load_delta": 0,
+      "motion_eviction_delta": 0,
+      "texture_load_delta": 52
+    }
+  ],
+  "files": {
+    "sixfix-inventory07/normal-inventory-controls.jsonl": "0d859256e57a265c3a8245ae4b8c51fe6e15d5aa982961f1960782156341d882",
+    "sixfix-inventory07/readonly-combat-io.jsonl": "a99e59f8f5498e02e042d5ba190e63198e7121d895a5800154df82412e94c0df",
+    "sixfix-inventory07/data/disc.state": "54a730e148d07154728e0104e8e2cb3579f119e9533e763163d3f4d7bfdeecd4"
+  },
+  "limits": [
+    "Flycast functional proxy only; not hardware/frame-identical comparison",
+    "Original inventory performs other image/file loads; no total I/O-free menu claim",
+    "VRAM fragmentation retries occur; missing textures0 in retained periodic rows",
+    "d4 excludes separate audio recovery and forthcoming K05 capacity successor"
+  ]
+}
