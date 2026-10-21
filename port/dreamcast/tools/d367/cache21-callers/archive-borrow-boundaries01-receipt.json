@@ -1,0 +1,272 @@
+{
+  "kind": "supersedes ca2ea function-boundary labels, not its immutable receipt",
+  "source_old": "836a72425d4f753a7b0ef0f3509716621942b461",
+  "source_current": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "files": [
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "4b56933c648f99be976f4d8470cf5c3e3b28b425",
+      "sha256": "09b256cf1fcf33d900d4a1f00a3ca748b597f5584354d0ac4a707ffeb8bb23df",
+      "bytes": 484167
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_model.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "d01e94ebe51a53dfec415381175e2010bebc02d3",
+      "sha256": "cef1d5ae450e8793f16f4a730991d737be562a90583357b49093845890d2dd37",
+      "bytes": 52020
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_draw_plan_owner.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "8baad757fb33ec30102f800a271ecf36a2f58e6b",
+      "sha256": "1617bae63e153c7597bce03ad2b451857403482aed1bcdb5de69b6e20e2b619f",
+      "bytes": 19646
+    },
+    {
+      "path": "src/game/scheduler.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "d108af401d421abb3434c5ed352e4d956c6e87eb",
+      "sha256": "6479263912945cd5e396f270a2872d88262a69b85bbf4dc357e9e6f4212ea5ce",
+      "bytes": 18839
+    },
+    {
+      "path": "src/game/main.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "355a1d7b7af5d55e3206914e8bdc05e7ea78b36b",
+      "sha256": "d2c27ac68757a09cec2a1777558cedcf4cdd417bf57591159447e4f004e17d6a",
+      "bytes": 21850
+    },
+    {
+      "path": "src/game/game.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "53ad0e7322de9ad1d1b9b218ac05982ac9a7c9e2",
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "bytes": 67752
+    },
+    {
+      "path": "src/game/read.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "11bf2026b93a2ec663e6509185dd78202cd109ff",
+      "sha256": "fa7688e8cf6a2f21548d7d31e93b3f0e6023131333c3b8c90d25c4d61ce78d08",
+      "bytes": 54487
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "86dbfd27576368a17bb83cf696713359b4a74ced",
+      "sha256": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343",
+      "bytes": 77186
+    },
+    {
+      "path": "port/dreamcast/room/texture_package.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "575152ba03098a6b313e51c857137a0f8543a800",
+      "sha256": "026a20ff2dbea0dc10b4979e8e6d9bccb18ccd75f952b5e83fc9f2c8c9d5a8d5",
+      "bytes": 45745
+    },
+    {
+      "path": "port/dreamcast/room/room_storage.cpp",
+      "old_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+      "new_commit": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "identical": true,
+      "blob": "7c1da7b05806c563448613d7889b30b56c34f577",
+      "sha256": "08fa626752a98755d4d670aafac571ac7a05ff4c82ba040a5759c5c57621147b",
+      "bytes": 7606
+    }
+  ],
+  "functions": [
+    {
+      "signature": "extern \"C\" int re4dc_model_packet_reserve(",
+      "start": 6152,
+      "end": 6203
+    },
+    {
+      "signature": "extern \"C\" int re4dc_model_packet_begin(",
+      "start": 6286,
+      "end": 6499
+    },
+    {
+      "signature": "void stream_open()",
+      "start": 1906,
+      "end": 1981
+    },
+    {
+      "signature": "extern \"C\" void re4dc_ui_retire_room()",
+      "start": 4820,
+      "end": 4885
+    },
+    {
+      "signature": "    bool bind()",
+      "start": 268,
+      "end": 280
+    },
+    {
+      "signature": "    bool flush()",
+      "start": 281,
+      "end": 292
+    },
+    {
+      "signature": "    bool walk(bool emit)",
+      "start": 624,
+      "end": 653
+    },
+    {
+      "signature": "    bool walk_plan(",
+      "start": 584,
+      "end": 623
+    },
+    {
+      "signature": "void TaskSchedulerMain(TASK* t)",
+      "start": 156,
+      "end": 236
+    },
+    {
+      "signature": "void TaskSleep(int frames)",
+      "start": 331,
+      "end": 363
+    }
+  ],
+  "checks": [
+    {
+      "name": "reserve includes slab allocation",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "reserve has no stream_select or texture load",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "begin calls reserve before texture resolution",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "begin resolves texture before abort check",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "begin abort check precedes stream_select",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "no generic abort recheck after begin stream_select",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "TA open includes present and scene/list admission",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "retire abort is conditional on existing stream",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "no-stream retire fences then clears identities",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "first bind may load/wait then marks bound",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "later binds short-circuit",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "first flush binds before commit",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "flush leaves builder bound for later chunks",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "stream walk reads source on loop continuation",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "planned walk still refers to source corners",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "initial validation walk precedes emit and final bind",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "UV-scale changed bind can restart source walk",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "ordinary source task handshake blocks scheduler",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "ordinary task sleep requires resume token",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "ISR task excluded from ordinary wait",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "frame scheduler precedes Trans then ISR work",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "room reset call sites restricted in game.cpp",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    },
+    {
+      "name": "room decode iTask site belongs to PPC branch",
+      "result": "PASS",
+      "kind": "static function-bounded source condition"
+    }
+  ],
+  "limitations": [
+    "No compiler/build/guest",
+    "No source task retirement during draw wait demonstrated",
+    "Abort flag is not archive epoch ownership",
+    "Native room decode iTask is PPC-only; source DVD ISR remains separate"
+  ]
+}

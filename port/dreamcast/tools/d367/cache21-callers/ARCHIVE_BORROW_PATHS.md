@@ -1,5 +1,12 @@
 # A11 direct archive borrows and quiescence boundaries
 
+**Function-boundary correction:** the original static extractor accidentally
+included `packet_begin` inside its `packet_reserve` slice. Reserve does not load
+textures or call `stream_select`. The corrected, function-bounded audit and real
+task dispatch qualification are in `ARCHIVE_BORROW_BOUNDARIES_CORRECTION.md`.
+The original receipt/script remain immutable historical evidence, including their
+misnamed checks. They are not authoritative for the reserve/begin boundary.
+
 Read-only selected-source qualification at `836a72425d4f753a7b0ef0f3509716621942b461`
 (preceding integration source `a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f`).
 The snapshot uses Git objects, so it excludes root's current em10 working changes.
@@ -15,15 +22,20 @@ addresses. Their registries/revision checks and cache-arena leases do not form a
 common archive read lease. This supports the already-open A11 range contract; it
 does not establish another observed gameplay fault or justify a generic reset fix.
 
-One concrete source ordering gap deserves a target scheduling reproduction:
-`native_ui.cpp:6380` tests `stream_aborted` **before** `stream_select`, whose
+One source ordering remains open for qualification, without established normal
+concurrent room-task reachability: **packet_begin**, `native_ui.cpp:6380`, tests
+`stream_aborted` **before** `stream_select`, whose
 `stream_open` can wait for presenter/TA ownership. There is no generic abort
-recheck between that selection and successful packet reservation. The caller
-subsequently reads the source geometry. Ordinary room retirement explicitly
+recheck between that selection and successful packet begin. A first bind inside
+a chunked walk can subsequently continue source geometry reads, and a final
+bind can trigger a UV-scale restart. Ordinary room retirement explicitly
 permits a source task to retire while main owns an unfinished TA list, clears
 archive metadata, and marks the stream aborted. This is a candidate interleaving,
 not proof that a real room task can reach destructive retirement during that
-particular wait. Existing source-world owner checks may reject their covered
+particular wait. Ordinary source tasks are handshake-serialized; a KOS wait alone
+does not dispatch the next ordinary game task. Also, no-stream room retirement
+can clear source identities without setting `stream_aborted`, so an abort-only
+check cannot establish source ownership. Existing source-world owner checks may reject their covered
 world inputs; they must not be generalized to all enemy/player/model inputs.
 No injected callback is counted as ordinary scheduling evidence.
 
@@ -40,7 +52,7 @@ not addresses or timing measurements.
 | External texture identity metadata | `texture_package.cpp:119..165` validates then retains `data_` and `native+32`. `record:171` and `lookup:180` reread those bytes; palette lookup also reads its caller palette. `native_ui.cpp:2599` searches room/core/option/player/weapon/enemy identity views. | UI unbind clears views and calls source/owner invalidation. `SourceIdentityTable::clear` clears metadata only. Cached uploaded package metadata and VRAM are separately owned and can survive source retirement; their continued residency is not an archive borrow. |
 | Actor archive ownership metadata | `actor_lifetime.inc:131` adopts original archive spans and revision-linked asset/info records; `model_bridge.cpp:90` can return original position/normal arrays. Transaction/converted actor paths have additional ownership checks and workspace storage. | `archive_retire:126` revokes registry entries/revisions. This does not scan an in-flight generic `Re4dcModelPart`, and converted/private arrays must not be falsely classified as archive ranges. |
 | Deferred model views | `native_ui.cpp:564..604,7008` retains a compact view whose geometry/stream/material pointers can still address source data; lighting is copied. `finish_source_draws:8475` restores a view, removes its queue node, then calls model submission. | `reset_deferred:711` clears queued views; owner reset calls `invalidate_pending:8614`, which aborts when a queue or drain is active. That also covers the last-node drain case: an empty queue alone does not bypass the `draining_parts` test. |
-| Synchronous native model submission | `native_model.cpp:822..899` validates numeric ranges, reserves a texture/packet, then reads GX stream/positions/normals/UV/colors through walks or a draw plan. Texture misses and TA opening may yield before those reads. | Source-world guards cover configured world owners. Numeric RAM checks are not allocation/revision proof. The post-`stream_select` generic abort gap above is distinct from queued-view invalidation. |
+| Synchronous native model submission | `native_model.cpp:822..899` validates numeric ranges, reserves packet/slab capacity, then performs initial source validation and emitted walks. First `Builder::bind` enters packet_begin, which resolves textures and selects a TA list. This may occur inside the first chunk flush; later geometry can be consumed after it. | Source-world guards cover configured world owners. Numeric RAM checks are not allocation/revision proof. The post-`stream_select` generic abort ordering is inside packet_begin, distinct from queued-view invalidation; ordinary concurrent destructive retirement is unproved. |
 | Draw-plan cache | `native_draw_plan_owner.cpp:17..40` retains owner spans and stream/source pointers beside copied topology. `acquire_plan` validates owner ranges before incrementing `leases`. | `reset_draw_plans:60` defers cache-arena reset while leased, but unbind/retire still removes source-owner descriptors. `leases` protects cached plan storage, not the source archive allocation. |
 | GPU packets and uploaded textures | `native_ui.cpp:6500` submits copied native packets and pins the uploaded texture entry for that frame. `texture_package.cpp:63` copies native payload bytes into VRAM. | Presenter/TA/VRAM fences protect submitted packets and GPU uploads. They do not by themselves drain a CPU model walk, effect controller or identity-table lookup. |
 
@@ -89,7 +101,7 @@ build, link, stage, guest or asset conversion ran. Existing source fixtures and
 their old receipts were preserved unchanged. Flycast, release and physical
 Dreamcast acceptance are all open; no performance claim is made.
 
-Next concrete qualification for main: reproduce the reserve/TA-wait retirement
+Next concrete qualification for main: establish whether first-bind/TA-wait retirement
 ordering with the real source task entry, configured owner guards and exact
 allocation range; capture the first resumed CPU source access. Until then keep
 it a scheduling-window candidate. The already-saved A11 archive contract remains
