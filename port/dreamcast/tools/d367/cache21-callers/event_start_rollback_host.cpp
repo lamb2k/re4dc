@@ -54,9 +54,12 @@ static void SceEventEnd(int) {}
 #endif
 static void FadeSetW(u32, int, int, int) {}
 class cDataUnit;
-struct Controller { int m_nblock_read_stop{}, dbgHeap{}; cDataUnit* m_DataUnit{};void* m_DummyDataMem{};void setDummyId(int){std::abort();}cDataUnit* setData(char*); } DC;
+struct Controller { int m_nblock_read_stop{}, dbgHeap{}; cDataUnit* m_DataUnit{};void* m_DummyDataMem{};void setDummyId(int){std::abort();}cDataUnit* setData(char*);cDataUnit* getNewUnit(); } DC;
 struct AramBoundary { void DmaCancel(int) { std::abort(); } int DmaTransReq(int,u32,u32,u32,int){std::abort();} } Aram;
 struct DvdBoundary {
+#if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
+    int FileExistCheck(char*,u32* bytes){*bytes=27456;return 0;}
+#endif
     void ReadCancel(int, int) { std::abort(); }
     void ReadCheck(int, void*, void*, void*) { std::abort(); }
 } Dvd;
@@ -82,7 +85,9 @@ static cDataUnit loaded;
 void cDataUnit::setLoadToMram() { std::abort(); }
 #endif
 void cDataUnit::setLoadToAram() { std::abort(); }
+#if !defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
 int cDataUnit::setDelete() { std::abort(); }
+#endif
 #if defined(RE4DC_ARAM_ACTUAL)
 // The actual checkCondition body is exported into caller_dataunit_methods.inc.
 #elif defined(RE4DC_EXEC_REAL_TRANSPORT)
@@ -90,20 +95,30 @@ void cDataUnit::checkCondition() {} // External transport progress; injected m_e
 #else
 void cDataUnit::checkCondition() { std::abort(); }
 #endif
-#if defined(RE4DC_ARAM_ACTUAL)
+#if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
+#define pLog (&admission_logger)
+#elif defined(RE4DC_ARAM_ACTUAL)
 struct AramDataLogger{void err(int,int,const char*,...){std::abort();}} aram_data_logger;
 #define pLog (&aram_data_logger)
 #endif
 #include "caller_dataunit_methods.inc"
-#if defined(RE4DC_ARAM_ACTUAL)
+#if defined(RE4DC_ARAM_ACTUAL) || defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
 #undef pLog
 #endif
 struct ReadModule { void* pArc; u32 size; };
 #if defined(RE4DC_EXEC_REAL_TRANSPORT)
 static ReadModule exchange_module;
 static unsigned swap_pushes,swap_pops,swap_calls;
+#if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
+static bool module_missing,swap_refuse;
+static ReadModule* SearchEmModule(int em){assert(em==1);return module_missing?nullptr:&exchange_module;}
+#else
 static ReadModule* SearchEmModule(int em){assert(em==1);return &exchange_module;}
+#endif
 static void MemorySwap(void* dst,u32 src,u32 bytes){
+#if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
+    if(swap_refuse){++swap_calls;return;}
+#endif
     ++swap_calls;auto*source=reinterpret_cast<u8*>(std::uintptr_t(src));auto*target=static_cast<u8*>(dst);
     for(u32 i=0;i<bytes;++i)std::swap(source[i],target[i]);
 }

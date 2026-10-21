@@ -3,7 +3,19 @@
 static unsigned transport_calls;
 static bool transport_refuse;
 static bool transport_other_flags;
+#if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
+static unsigned admission_source_errors;
+struct AdmissionLogger{void err(int,int,const char*,...){++admission_source_errors;}} admission_logger;
+static void re4dc_missing(const char*);
+static int re4dc_cabin_carrier_unit_available(const void*){return 1;}
+#define HALT() std::abort()
+#define pLog (&admission_logger)
+#include "admission_controller_methods.inc"
+#undef pLog
+#undef HALT
+#else
 cDataUnit* Controller::setData(char*){return &loaded;}
+#endif
 #if defined(RE4DC_ARAM_ACTUAL)
 static void* Debug_alloc(unsigned bytes,int flag){return aram_actual_alloc(bytes,flag,13);}
 static int MemGetCurrentHeap(){return 4;}static int MemGetCurrentDbgHeap(){return 7;}
