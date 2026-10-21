@@ -252,3 +252,12 @@ The preserved current J program/image continues its original VMU/CardLoad lineag
 Native CAST/NOTDRAWN passes the observed lower/stair/upper windows: upper em11 native13081/0GC, Leon26385/0GC, Ashley25405/0GC. Texture telemetry records209loads/0evictions/0retries/0sndfail/minKOS31016B in the sampled window; this is not whole-room residency or whole-drive quiet. Original J motion-policy gaps remain separate. Entry-table/corridor displacement stops and the incomplete first upper deadline are preserved in the route chain. Sword placement, original wall opening/onward progression and remaining chapter gates are pending.
 
 Asset-free original route/checkpoint/native receipts: tools/d367/castle18/ch31-test21-current-j-original-r207-sword-pickups-20261020.json.
+
+
+### Original J upper sword placement and guarded descent
+
+Normal source key-item selection and Use0 place the Platinum Sword on the upper mount. The source inventory order is acquisition order: C4 precedes80, so the private controller checks the actual source makeItemList order instead of assuming index1. Completed49 closes5.1s/errors[]/owned exit, source17740/Stop0/SSLoop0/full1200+600; C4 is removed and RSF80300000 becomes81300000. Exact four-anchor snapshotb0e113caf0488b2d9139c4b88e5f232216456b29771a5091d82876e2e0d1a053 is retained. Earlier readiness/fixed-slot controls are preserved without placement credit.
+
+The normal descent50 reaches the lower stair landing but a live type8 enemy heavy-weapon hit reduces Leon1200 to480 and Ashley600 to330. The health guard saves/closes15.6s/errors[]; exact immutable snapshote3fa7e98deaaffc455f068c204b9554ccd56275d208210fdc4aebbf84d1621ef links dmgType to the original live em11/type8 and exact current Pl_func_tbl[4]=plemDmMStar. Source handler plays the original heavy flail/claw stagger then EndPlDamage; the earlier stair/fall inference is withdrawn. No HP/enemy/source edit, rollback or game-failure claim. Recovery51 is capacity-closed after2.1s with the unchanged runtime floor, so no combat coverage is credited. Golden lower placement, wall opening and chapter progression remain pending; all original checkpoints and K05 proof are protected.
+
+Asset-free placement/source-damage/capacity receipts: tools/d367/castle18/ch31-test21-current-j-original-r207-upper-placement-20261020.json.
