@@ -7,7 +7,11 @@ static bool transport_other_flags;
 static unsigned admission_source_errors;
 struct AdmissionLogger{void err(int,int,const char*,...){++admission_source_errors;}} admission_logger;
 static void re4dc_missing(const char*);
+#if defined(RE4DC_FORWARD_ACTUAL)
+extern "C" int re4dc_cabin_carrier_unit_available(const void*);
+#else
 static int re4dc_cabin_carrier_unit_available(const void*){return 1;}
+#endif
 #define HALT() std::abort()
 #define pLog (&admission_logger)
 #include "admission_controller_methods.inc"

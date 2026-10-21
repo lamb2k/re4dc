@@ -892,6 +892,25 @@ $(error EVD_MODULE_VALIDATE_FIRST must be 0 or 1)
 endif
 $(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_MODULE_VALIDATE_FIRST=1
 endif
+# EVD_FORWARD_RECEIPT=1 (default 0): accepted prepared first-forward source
+# receipt before/after effect release and the void MemorySwap boundary.
+# Unsupported initial zero epochs and rows retain their existing behavior.
+EVD_FORWARD_RECEIPT ?= 0
+ifneq ($(EVD_FORWARD_RECEIPT),0)
+ifneq ($(EVD_FORWARD_RECEIPT),1)
+$(error EVD_FORWARD_RECEIPT must be 0 or 1)
+endif
+ifneq ($(CABIN_SOURCE),1)
+$(error EVD_FORWARD_RECEIPT requires CABIN_SOURCE=1)
+endif
+ifneq ($(EVD_ARAM_ALLOC_RETRY),1)
+$(error EVD_FORWARD_RECEIPT requires EVD_ARAM_ALLOC_RETRY=1)
+endif
+ifneq ($(EVD_MODULE_VALIDATE_FIRST),1)
+$(error EVD_FORWARD_RECEIPT requires EVD_MODULE_VALIDATE_FIRST=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_FORWARD_RECEIPT=1
+endif
 # WEAPON_HEAP4=1 (option 3 of issue lamb2k/re4dc#1, default 0: no effect): a weapon body larger than the resident
 # weapon block (WEAPON_RESIDENT_BYTES; the r104 merchant's rifle 398,144 / with scope 404,608, rocket launcher
 # 382,688, TMP 289,248 / with stock 299,200) is read into heap 4, the room heap, as Krauser's body goes to
