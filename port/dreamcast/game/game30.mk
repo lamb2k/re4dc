@@ -3415,6 +3415,29 @@ endif
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL4_MIPMAP=1
 endif
 
+# Exact square uncompressed PAL8 ARGB4444, with aligned shared palettes.
+# Off adds no definition or admission; it does not change any release recipe.
+TEX_PAL8_ALPHA ?= 0
+TEX_PAL8_MIPMAP ?= 0
+ifeq ($(filter $(TEX_PAL8_ALPHA),0 1),)
+$(error TEX_PAL8_ALPHA must be 0 or 1)
+endif
+ifeq ($(filter $(TEX_PAL8_MIPMAP),0 1),)
+$(error TEX_PAL8_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_PAL8_ALPHA),1)
+ifneq ($(TEX_PAL4_ALPHA),1)
+$(error TEX_PAL8_ALPHA=1 requires TEX_PAL4_ALPHA=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_ALPHA=1
+endif
+ifeq ($(TEX_PAL8_MIPMAP),1)
+ifneq ($(TEX_PAL8_ALPHA)$(CAST_MIPMAP),11)
+$(error TEX_PAL8_MIPMAP=1 requires TEX_PAL8_ALPHA=1 CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL8_MIPMAP=1
+endif
+
 # Native square 16-bit twiddled mip chains, with unchanged base texels.
 # Off contributes no compiler definition; existing CAST_MIPMAP forwards TCW.
 TEX_TWIDDLED_MIPMAP ?= 0

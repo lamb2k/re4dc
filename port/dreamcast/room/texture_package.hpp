@@ -21,6 +21,10 @@ inline constexpr std::uint32_t kPal4 = 3;
 // TEX_PAL4_MIPMAP=1 additionally admits square PVR-order mip indices.
 // The same 16 palette words remain at the payload tail; no VQ expansion.
 inline constexpr std::uint32_t kPal4Argb4444 = 4;
+// TEX_PAL8_ALPHA=1 only: square twiddled PAL8 indices followed by 256
+// ARGB4444 words. TEX_PAL8_MIPMAP additionally admits the PVR mip chain.
+// One palette owns an aligned block of sixteen PAL4 banks; exact palettes share.
+inline constexpr std::uint32_t kPal8Argb4444 = 5;
 #if RE4DC_TEX_PAL4_ALPHA
 // Call after PVR initialization, before any palette upload. Configuration is
 // immutable; repeated identical calls preserve all live package ownership.
@@ -42,8 +46,8 @@ inline constexpr std::uint32_t kMipmap = 1U << 2U;
 inline constexpr std::uint32_t kTopDrop = 1U << 30U;
 // Linear 16-bit payloads use the existing upload-time twiddler. Twiddled and
 // full-codebook VQ payloads are copied unchanged and sampled in their native
-// format. Indexed formats have the explicit layouts described above; PAL8 and
-// partial VQ codebooks are unsupported.
+// format. Indexed formats have the explicit layouts described above; PAL8 is
+// opt-in and uncompressed. Partial VQ codebooks are unsupported.
 inline constexpr std::uint32_t kPayloadLinear = 0;
 inline constexpr std::uint32_t kPayloadTwiddled = 1;
 inline constexpr std::uint32_t kPayloadVq = 2;

@@ -518,11 +518,35 @@ plus alpha uses one canonical 256-color palette so compatible frames can share
 a palette. A 512-byte palette tail counts toward package bytes; smaller PAL4
 inputs and conversions without an actual rounded-payload saving stay unchanged.
 
-The experimental descriptor format is 5. This source/data milestone does not
-admit it to the game: runtime admission, aligned 256-entry palette ownership,
-capacity/refcount handling and target sampling remain separate default-off gates.
+The experimental descriptor format is 5. Runtime admission is now implemented
+behind `TEX_PAL8_ALPHA=1`, requiring `TEX_PAL4_ALPHA=1` for the shared ARGB8888
+palette manager. Chains also require `TEX_PAL8_MIPMAP=1 CAST_MIPMAP=1`. Both new
+switches default to zero and add no definition while off. No recipe enables them.
+The combined manager owns aligned 256-entry blocks, excludes reserved/PAL4 banks,
+shares only identical full palettes, preserves ARGB1555 versus ARGB4444
+interpretation and releases each block after its final reference and render fence.
+It checks the complete transaction after normal payload upload, before changing
+any palette. Streamed metadata has no palette tail; this ordering adds no separate
+disc reads. On refusal, the package retains its partial VRAM allocation until
+`close()`, as other upload failures do. No live palette is changed on exhaustion.
+The enabled path also avoids closing a borrowed live-window handle on payload
+release. Baseline controls reproduce both that existing ownership bug and the
+old cross-interpretation palette-sharing error; their broader default-path fixes
+remain separate from this opt-in extension.
+
 It does not change UVs, wrap, sampler, dimensions, alpha mode or a release recipe.
+Target sampling/look, combined palette/VRAM/KOS budgets and timing remain open.
+Source-qualified data fits are not blanket enablement: most distinct PAL8 palettes
+cannot coexist because the message renderer leaves only three aligned blocks.
 `test_compact_native_pal8.py` checks OFF identity, exact base/chain values, both
 CRC conventions, rejected inputs, palette overhead and the independently decoded
 PVR layout. Set `MIPMAP_PVRTEX_ORACLE_PAL8` to a separately built oracle library
 from `tests/fixtures/mipmap_pvrtex_oracle.c` to run the pinned C decoder cases.
+
+`tests/test_pal8_runtime.py` compiles the actual Package with ASan/UBSan across
+both UI VRAM modes, bases/chains, aliases, sharing, fragmentation, whole-transaction
+refusal, metadata/payload release, partial failures and ordinary/live/closed-window
+pack reads. It checks OFF object identity and make guards. The older PAL4 capacity
+fixture now uses distinct palettes for actual exhaustion and expects the already
+shipped exact-palette sharing for aliases; repeating identical palettes no longer
+counts as filling separate banks.
