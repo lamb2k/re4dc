@@ -300,6 +300,35 @@ int main() {
     assert(EvtMgr.GetBin(&out,"fresh.bin",0)&&out==arena&&read_calls==1&&debug_frees.empty());
     assert(EvtMgr.DelBin(const_cast<char*>("fresh.bin"))&&debug_frees.size()==1&&debug_frees[0]==arena);
     std::cout << "actual tool fresh debug-input failures and successful ownership transfer/final release verified PASS\n";
+    setup();++cases;
+    assert(EvtMgr.ReadTbl.SetDat(file_name,&loaded,0,nullptr,2,nullptr));
+    const auto shared_reads=reads;const auto shared_unit=loaded;const auto shared_em=EvtMgr.readEm[0];
+    assert(EvtMgr.EvtFree(file_name)&&reads[0].Count==1);
+#if defined(RE4DC_EVD_READ_RELEASE_REFS) && RE4DC_EVD_READ_RELEASE_REFS
+    assert(!release_calls&&!std::memcmp(&loaded,&shared_unit,sizeof(loaded)));
+    assert(!std::memcmp(&EvtMgr.readEm[0],&shared_em,sizeof(shared_em)));
+    auto expected_reads=shared_reads;expected_reads[0].Count--;
+    assert(!std::memcmp(reads.data(),expected_reads.data(),sizeof(reads)));
+    assert(EvtMgr.EvtFree(file_name)&&release_calls==1&&!EvtMgr.ReadTbl.ChkDat(file_name));
+#else
+    assert(release_calls==1&&!loaded.m_addr&&EvtMgr.ReadTbl.ChkDat(file_name));
+#endif
+    std::cout << "actual multiple-registration EvtFree source control verified; final-reader contract remains separate PASS\n";
+#if defined(RE4DC_EVD_READ_RELEASE_REFS) && RE4DC_EVD_READ_RELEASE_REFS
+    setup();++cases;reads[0].Count=2;EvtMgr.readEm[0]={0x20,1,{0x12,0x34}};
+    const auto module_unit=loaded;const auto module_em=EvtMgr.readEm[0];
+    assert(EvtMgr.EvtFree(file_name)&&!release_calls&&reads[0].Count==1);
+    assert(!std::memcmp(&loaded,&module_unit,sizeof(loaded))&&!std::memcmp(&EvtMgr.readEm[0],&module_em,sizeof(module_em)));
+#endif
+    for(unsigned malformed=0;malformed<4;++malformed){
+        setup();++cases;reads[0].Count=2;
+        if(malformed==0)reads[0].Etc=1;
+        if(malformed==1)reads[0].FlagBe8=1;
+        if(malformed==2)reads[0].Count=0;
+        if(malformed==3)reads[0].Count=0x8001;
+        assert(EvtMgr.EvtFree(file_name)&&release_calls==1&&!loaded.m_addr);
+    }
+    std::cout << "exact registration row eligibility and non-final module metadata preservation verified PASS\n";
     std::cout << "EVENT_START_ROLLBACK_CASES=" << cases << " rollback=" << RE4DC_EVD_START_ROLLBACK << " PASS\n";
     assert(mprotect(arena, 0x20000, PROT_READ | PROT_WRITE) == 0); munmap(arena, 0x20000);
 }
