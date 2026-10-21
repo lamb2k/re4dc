@@ -1,0 +1,13 @@
+# First effect admission guard
+
+The failed-registration audit07527f7e confirmed that EspDataLoad published its first reference before rejecting an invalid EFF version. A corrected flag-zero retry then returned success without registering the data. EFFECT_ADMISSION_GUARD=1 validates the first admission before changing its owner count. It is default zero and affects only src/game/eff_sys.cpp.
+
+The repair preserves NULL refusal, valid first loads, repeated valid registrations, strict duplicate failure, counter saturation and counted/forced releases. It also preserves the existing behavior of an already registered owner ignoring a different supplied file on flag-zero duplicates. It does not change successful gameplay, schedules, assets, geometry, animation rate or cache capacity. No time or read-count saving is claimed.
+
+The actual EspDataLoad/Release functions are compiled in baseline, disabled and enabled arms under ASan/UBSan. All three pass350 assertions each. The enabled bad-version/corrected-retry arm performs actual registration-boundary calls and holds one reference; baseline/disabled reproduce the fake-success state. Cases include persistent malformed input, independent owners, both release modes and valid nonempty texture/model tables. Registration/release callees are instrumented boundaries, not complete texture/effect subsystems. See effect-admission-host-receipt.json and test_effect_admission.py.
+
+The actual SH4 eff_sys object compiles with the exact retained d4 enabled-six-fix command. The stripped disabled object matches the retained baseline object exactly. Enabled text grows47bytes; data840 and BSS644 are unchanged. Whole-program/overlay identity and gameplay validation remain OPEN. The target compile uses preserved generated headers read-only and guarded private output; no full game build/image/guest was launched. See effect-admission-sh4-receipt.json.
+
+Make dry runs verify that EFFECT_ADMISSION_GUARD=1 defines only the eff_sys target flag, zero supplies no definition, and value2 fails with the named validation error. No recipe enables this candidate.
+
+Partial downstream registration, emitter/source-pointer lifetime and selected malformed gameplay inputs remain OPEN. This repair is not established as a cause or cure of the reported shooting slowdown. Reset/free-order, full-slot display restoration and event partial-admission findings are separate. The broader audit continues.
