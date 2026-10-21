@@ -1,0 +1,294 @@
+{
+  "source_commit": "836a72425d4f753a7b0ef0f3509716621942b461",
+  "source_tree": "663d1e417ebc3d832229ea76db5b558b9f55767b",
+  "kind": "read-only exact-source inventory/static assertions",
+  "checks": [
+    {
+      "name": "raw-even-reference returned before binding validation",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "compact reference must match live archive before decode",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "compact refusal uses fatal diagnostic",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "effect unbind clears descriptor, not controller scan",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "identity adoption stores direct archive/table pointers",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "identity record rereads table and backing",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "identity clear releases only metadata",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "model reserve abort check precedes stream selection",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "no generic abort recheck after stream selection",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "successful reserve publishes packet destination after stream selection",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "stream opening can wait for presenter/TA",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "room retirement resets deferred views",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "room retirement aborts unfinished stream",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "room retirement clears direct identity views",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "packet reservation precedes source walk",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "draw-plan reset defers own arena while leased",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "owner unbind clears owners despite pending plan lease",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "actor archive metadata explicitly borrowed",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "actor archive retirement revokes metadata",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "native IO is per source-thread counter",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "ISR skips parking native IO owner",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "DVD nominal async entry performs synchronous host read",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "storage mutex guards bounce buffer only",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "CABIN DMA readers have exact request/generation decrement",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "CABIN event and DMA counters are distinct",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    },
+    {
+      "name": "current missing diagnostic loops without returning",
+      "result": "PASS",
+      "qualification": "static source ordering/presence only"
+    }
+  ],
+  "files": [
+    {
+      "path": "src/game/event.cpp",
+      "bytes": 122192,
+      "sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "blob": "da91e67631d3b5f8e1398a0cd8d85b0ec91deb98"
+    },
+    {
+      "path": "src/game/emdata.cpp",
+      "bytes": 2736,
+      "sha256": "49def1a264b98effd9c346567324fee63c3b167711c5e6dbddf5e28e3e4074ec",
+      "blob": "30c8cfe7cc2226af45e9db2933e588a4330ac1f8"
+    },
+    {
+      "path": "src/game/eff_sys.cpp",
+      "bytes": 38311,
+      "sha256": "83c5ae8deb709982a37dfeb371038a8d5263f36b7fe180530ddda0857828465f",
+      "blob": "3bc771dc170bb60184ea40a992359b4347a27bbb"
+    },
+    {
+      "path": "src/game/espgen.cpp",
+      "bytes": 28724,
+      "sha256": "43bc31c723c59f77d706864322de95d5dd4c3f29bb33bc7fb3dd64e6b1a2bb07",
+      "blob": "d97851234b93c2e94f616e54a4cc06f9dee85bb9"
+    },
+    {
+      "path": "src/game/espgen00.cpp",
+      "bytes": 10329,
+      "sha256": "08abab772e8056ac5ff5ff409916b631a1809ea05217376449c177822ed4619c",
+      "blob": "f0e715eb9ef4e5945e56e74345e3e9959db152ab"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "bytes": 67752,
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "blob": "53ad0e7322de9ad1d1b9b218ac05982ac9a7c9e2"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "bytes": 77186,
+      "sha256": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343",
+      "blob": "86dbfd27576368a17bb83cf696713359b4a74ced"
+    },
+    {
+      "path": "src/game/scheduler.cpp",
+      "bytes": 18839,
+      "sha256": "6479263912945cd5e396f270a2872d88262a69b85bbf4dc357e9e6f4212ea5ce",
+      "blob": "d108af401d421abb3434c5ed352e4d956c6e87eb"
+    },
+    {
+      "path": "port/dreamcast/game/actor_lifetime.inc",
+      "bytes": 47158,
+      "sha256": "5854274d434f6f25432a4bede00243c9de612dabe32788e5899a7344e0b9b8f0",
+      "blob": "b214a2a0d1efd8a5407a524d40790db3ccf61601"
+    },
+    {
+      "path": "port/dreamcast/game/model_bridge.cpp",
+      "bytes": 54633,
+      "sha256": "500885949f58571888bb5044568d46f2c266c37d6dec40e7757a7f82ab66363b",
+      "blob": "7fcb29113b2cdd40401c834129eb4260c0b5c715"
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "bytes": 45157,
+      "sha256": "426a06c09524c21b6246a818aac130c58bd9fab44fe4d4959f9e8e3042b21f69",
+      "blob": "c73c09498ba6c22f6efda26860f5c18baf892c3c"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_effect.cpp",
+      "bytes": 11155,
+      "sha256": "e1ac17d4375424739857ae450d8b36ceced5cb8e92cc39aa358b0b1916d43d8f",
+      "blob": "2fe36f35b1de585a8592bf93f288548a7c480023"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "bytes": 484167,
+      "sha256": "09b256cf1fcf33d900d4a1f00a3ca748b597f5584354d0ac4a707ffeb8bb23df",
+      "blob": "4b56933c648f99be976f4d8470cf5c3e3b28b425"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_model.cpp",
+      "bytes": 52020,
+      "sha256": "cef1d5ae450e8793f16f4a730991d737be562a90583357b49093845890d2dd37",
+      "blob": "d01e94ebe51a53dfec415381175e2010bebc02d3"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_draw_plan_owner.cpp",
+      "bytes": 19646,
+      "sha256": "1617bae63e153c7597bce03ad2b451857403482aed1bcdb5de69b6e20e2b619f",
+      "blob": "8baad757fb33ec30102f800a271ecf36a2f58e6b"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "bytes": 34168,
+      "sha256": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2",
+      "blob": "3065eb00d1497cb7aa0d8e50133dc5b8b46ac1b1"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie.cpp",
+      "bytes": 68858,
+      "sha256": "93df753579f4191495a5827939a2cda784937c2931839b978104c09015155500",
+      "blob": "39942d4467333fe91f50093709d3d9fbe6a71a74"
+    },
+    {
+      "path": "port/dreamcast/game/platform/os.cpp",
+      "bytes": 35736,
+      "sha256": "f861a5b9ebb9c6555fc642922af604674fa1acc16a90ba757f55e8ea135b7c92",
+      "blob": "52b0bc63a46efea208e6e116cf93a5162e6d0acb"
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "bytes": 20989,
+      "sha256": "058b5dab66aba43c5e69a0a3733c030c09ef695c4eacac0fa600d5052a82bb7f",
+      "blob": "80eefd2493d785ef2e200de9db3f72f7c7971f54"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_stub.cpp",
+      "bytes": 12675,
+      "sha256": "30cf01fc29bd20163db1cda2d888931b3494e0b1b50bdf47eed8ee11a26f944e",
+      "blob": "618e01ca339231bbee33a61c5a89b4142ce05d40"
+    },
+    {
+      "path": "port/dreamcast/game/platform/mem.cpp",
+      "bytes": 10033,
+      "sha256": "c42f173e4bf3cb9b08acb117ec3f66edd794e27fd7f9fe0fdb53278526487adb",
+      "blob": "5791ddfc1d025dc24621393dafea86df055bfecb"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/native_io.h",
+      "bytes": 1504,
+      "sha256": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86",
+      "blob": "600ba38493e9adedadfb82d0639b762a730760a1"
+    },
+    {
+      "path": "port/dreamcast/room/texture_package.hpp",
+      "bytes": 12226,
+      "sha256": "4ef4100dcbab1c32b0ba313c739a48982a7d788eb566fbb3ca516a864b2eb516",
+      "blob": "e4fc64d149967d133da6a1b382ea2760ecd37e42"
+    },
+    {
+      "path": "port/dreamcast/room/texture_package.cpp",
+      "bytes": 45745,
+      "sha256": "026a20ff2dbea0dc10b4979e8e6d9bccb18ccd75f952b5e83fc9f2c8c9d5a8d5",
+      "blob": "575152ba03098a6b313e51c857137a0f8543a800"
+    },
+    {
+      "path": "port/dreamcast/room/room_storage.cpp",
+      "bytes": 7606,
+      "sha256": "08fa626752a98755d4d670aafac571ac7a05ff4c82ba040a5759c5c57621147b",
+      "blob": "7c1da7b05806c563448613d7889b30b56c34f577"
+    }
+  ],
+  "not_established": [
+    "No compile/link/guest executed",
+    "No gameplay UAF or normal interleaving demonstrated",
+    "No whole archive/reset lease or acceptance claim"
+  ]
+}
