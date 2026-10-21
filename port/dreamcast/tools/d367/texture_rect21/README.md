@@ -93,3 +93,14 @@ transfer. Same ON a58579b8 B/C comparison isolates17 rectangles from the inherit
 snapshots can establish distinct minimum admission/submission evidence, with
 explicit visibility limits. Approximation look, actual key coverage, co-resident
 originals,lifecycle and matching benchmark windows remain target gates.
+
+2026-10-21 stage readback: authorized sequential C then B images now exist under
+C evidence standalone-C-01/gdemu and standalone-B-01/gdemu. Both match their
+RAM-only predicted complete cooked hashes, including source program and all14
+overlays. An independent directory/byte reader verifies all1743 file extents,
+18C/16B actual changed members,1874 directory records,three LE/BE metadata field
+pairs,PVD504002,IP.BIN,TOC/GDI/othertrack identities and148 retained zero sectors.
+The original program LBA is retained. No fulltrack mirror,full extraction or
+intermediate image was created. `staged-image-qualification.json` binds this
+image gate to frozen004cf224,a58579b8/e08c9abc and their exact DATA inputs.
+A single fresh C functional guest is allocated next; B timing is not allocated.
