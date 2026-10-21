@@ -45,6 +45,15 @@ SDK_GEN = $(addprefix platform/sdk/gen/,$(addsuffix .c,$(SDK_UNITS)))
 
 OBJDIR = obj
 
+# Native Ganado routine-byte repair; default off preserves the original object bytes.
+GANADO_ROUTINE_BYTES ?= 0
+ifneq ($(GANADO_ROUTINE_BYTES),0)
+ifneq ($(GANADO_ROUTINE_BYTES),1)
+$(error GANADO_ROUTINE_BYTES must be 0 or 1)
+endif
+$(OBJDIR)/mod/em10g/shared/src/em10/em10.o: GAME_CPPFLAGS += -DRE4DC_GANADO_ROUTINE_BYTES=1
+endif
+
 # EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
 # readEm cannot find a free module slot, as on its transport-failure return.
 EM_ADMISSION_DISP_FIX ?= 0

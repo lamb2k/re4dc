@@ -1,0 +1,11 @@
+# Ganado routine-byte repair
+
+`GANADO_ROUTINE_BYTES=1` repairs the twelve `EM_RTN_SET` transitions in the native shared em10 unit. The switch defaults to zero. PPC and disabled compilation retain the original packed-word expression.
+
+The recovered macro stores `(r0 << 24) | (r1 << 16)` into a word that shares memory with four routine bytes. On little-endian SH4, the chainsaw hit transition to `1/0x30/0/0` consequently becomes `0/0/0x30/1`. The branch dispatcher immediately reads the wrong `r_no_1`, skipping the catch handler that should replace the player's temporary ordinary death routine. The enabled helper assigns the four named bytes. The compiler combines the constant example into the correct native word `0x00003001`.
+
+The exact trace ELF `56bc10f8c82ff08bed11f6481dbcc57043d8c13b1d75cbd6155b0d31297fead8` proves the original wrong store at `8c194c98`, and the chainsaw helper's intentional life-one store at `8c194abe`. The retained Flycast trace independently records ordinary lethal `EmAtkHitCk`, type-zero damage, then life one with the player stuck in routine two. It does not record the parent chainsaw actor pointer at that source frame, so the exact runtime attribution and repaired cold-route acceptance remain qualification work.
+
+Run `check-routine-bytes.py` once in a fresh output directory after checking its local baseline/evidence paths. It checks all eight unique constant pairs across the twelve call sites with exact source macro extraction under UBSan, disabled/zero/enabled and PPC-preprocessor controls; validates the narrow Make target and rejects invalid or empty switch values; and compiles matched SH4 em10 objects with equal debug/path normalization. Disabled/default and explicit-zero objects must match the untouched baseline, and the enabled object must compile and differ. The 20 MiB source/output cap and the existing C: floor are enforced. This performs no full link, staging or guest run.
+
+`characterize.py` retains the separate nine-case actual-source life/damage characterization. Its synthetic positive-life type-six caller illustrates a possible state mechanism and is not attribution of the captured type-zero fault. The original `LifeDownSet` third argument is random spread: original binary confirms that it must not be swapped into the keep flag.
