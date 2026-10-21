@@ -2816,6 +2816,22 @@ endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_PARTS=1
 $(OBJDIR)/src/game/scroll.o $(OBJDIR)/src/game/trans.o: GAME_CPPFLAGS += -DRE4DC_PS2_WORLD_PARTS=1
 endif
+# PS2_WORLD_NONEMPTY_LOD=1: after the ordinary PS2 world LOD error test,
+# keep the nearest finer nonempty geometry instead of an empty reduction.
+# Source visibility/culling, authored empty bases and source meshes stay intact.
+PS2_WORLD_NONEMPTY_LOD ?= 0
+ifneq ($(PS2_WORLD_NONEMPTY_LOD),0)
+ifneq ($(PS2_WORLD_NONEMPTY_LOD),1)
+$(error PS2_WORLD_NONEMPTY_LOD must be 0 or 1)
+endif
+ifneq ($(MESH_LOD),1)
+$(error PS2_WORLD_NONEMPTY_LOD needs MESH_LOD=1)
+endif
+ifeq ($(filter 1 2,$(PS2_WORLD_ROOMS)),)
+$(error PS2_WORLD_NONEMPTY_LOD needs PS2_WORLD_ROOMS=1 or 2)
+endif
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_WORLD_NONEMPTY_LOD=1
+endif
 # PS2_WORLD_ROOT_POSE=1: keep one-bone animated scenery on its PS2 geometry,
 # using current root-world * inverse(bind root-world). Multi-bone owners keep
 # the existing source hierarchy path. Refused root witnesses hide, never bake.

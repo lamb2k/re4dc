@@ -57,6 +57,9 @@ extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID
 #include "../../room/room_package.hpp"
 #include "../../room/static_room_prepare.hpp"
 #include "../../room/pvr_geometry.hpp"
+#if RE4DC_PS2_WORLD_NONEMPTY_LOD
+#include "../../room/nonempty_lod.hpp"
+#endif
 
 #ifndef RE4DC_NATIVE_STATIC
 #define RE4DC_NATIVE_STATIC 0
@@ -2678,6 +2681,9 @@ struct MeshDraw : Emitter {
             if(depth<near)depth=near;
             unsigned level=cl.level_count-1;
             while(level && levels[cl.first_level+level].error*lod_scale>depth)--level;
+#if RE4DC_PS2_WORLD_NONEMPTY_LOD
+            if(ps2)level=re4dc::room::nonempty_lod(levels+cl.first_level,cl.level_count,level);
+#endif
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
             const auto* lets=package.meshlets()+lv.first_meshlet;
@@ -2778,6 +2784,9 @@ struct MeshDraw : Emitter {
             if(depth<near)depth=near;
             unsigned level=cl.level_count-1;
             while(level && levels[cl.first_level+level].error*lod_scale>depth)--level;
+#if RE4DC_PS2_WORLD_NONEMPTY_LOD
+            if(ps2)level=re4dc::room::nonempty_lod(levels+cl.first_level,cl.level_count,level);
+#endif
             ++stats.lod_draws[level<3?level:3];
             const auto& lv=levels[cl.first_level+level];
             for(unsigned i=0;i<lv.meshlet_count;++i){
