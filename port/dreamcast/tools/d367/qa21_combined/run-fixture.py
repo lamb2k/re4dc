@@ -8,7 +8,7 @@ def stop_reason(elapsed, free):
     return None
 p=argparse.ArgumentParser();p.add_argument('name');p.add_argument('--keys',type=Path,required=True);p.add_argument('--seed');a=p.parse_args()
 assert a.name.replace('-','').replace('_','').isalnum()
-R=Path('C:/Flycast-Evidence/re4-dreamcast/qa21-combined-regression-20261021');D=R/'dependencies';assert shutil.disk_usage('C:/').free>18*1024**3+64*1024**2
+R=Path('C:/Flycast-Evidence/re4-dreamcast/qa21-combined-regression-20261021');D=R/'dependencies';assert shutil.disk_usage('C:/').free>18*1024**3+128*1024**2
 binding=R/'combined-binding.json';r=json.loads(binding.read_text());syms=' '.join(hex(int(r['symbols'][x],0)-0x8c000000) for x in ('logbuf','head','stage'))
 runner=D/'checkpoint_runner18.py'
 cmd=[sys.executable,str(D/'run_observed_v3.py'),'--runner',str(runner),'--runner-sha256',hashlib.sha256(runner.read_bytes()).hexdigest(),'--disc',str(R/'combined-input/gdemu'),'--cap',str(R/a.name),'--keys',str(a.keys),'--syms',syms,'--name','qa21-combined-'+a.name,'--binding',str(binding),'--layout',str(R/'builds/combined/dwarf-layout.json'),'--event-shots','--seconds','41','--no-limit','--save-checkpoint','--elf',str(R/'builds/combined/re4dc-game.elf')]
@@ -22,6 +22,7 @@ k.QueryFullProcessImageNameW.argtypes=[ctypes.c_void_p,ctypes.c_ulong,ctypes.c_w
 k.GetProcessTimes.argtypes=[ctypes.c_void_p]+[ctypes.POINTER(ctypes.c_ulonglong)]*4
 k.GetExitCodeProcess.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.c_ulong)]
 k.TerminateProcess.argtypes=[ctypes.c_void_p,ctypes.c_uint]
+k.WaitForSingleObject.argtypes=[ctypes.c_void_p,ctypes.c_ulong];k.WaitForSingleObject.restype=ctypes.c_ulong
 k.CloseHandle.argtypes=[ctypes.c_void_p]
 child=subprocess.Popen(cmd);handle=None;receipt={'absolute_guest_limit_s':47.5,'inner_requested_s':41,'scope':'Independent PID, executable and process-start verified outer guest supervisor'}
 while True:
@@ -40,6 +41,11 @@ while True:
   code=ctypes.c_ulong();assert k.GetExitCodeProcess(handle,ctypes.byref(code))
   times=[ctypes.c_ulonglong() for _ in range(4)];assert k.GetProcessTimes(handle,*[ctypes.byref(x) for x in times])
   if code.value!=259:
+   # ExitCode can be published before the kernel has finalized exit timestamps.
+   if k.WaitForSingleObject(handle,0)!=0:
+    time.sleep(0.05);continue
+   assert k.GetProcessTimes(handle,*[ctypes.byref(x) for x in times])
+   assert times[0].value==start and times[1].value>=start and times[1].value!=0
    receipt.update(exit_code=code.value,exit_filetime=times[1].value,actual_guest_seconds=(times[1].value-start)/1e7)
    k.CloseHandle(handle);handle=None;break
   elapsed=time.time()-(start/1e7-11644473600)
