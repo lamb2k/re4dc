@@ -1,0 +1,222 @@
+{
+  "scope": "Unchanged qualified J original no-warp VMU/CardLoad lineage; normal hall movement triggers original movie, then neutral same-program continuation/no A/START. No guest/state writes, rollback, source/asset changes or rebuild/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk108",
+      "result": "Normal r201 hall movement triggers original Salazar entry movie20100; held source28487, not completed path,720/600",
+      "elapsed_s": 51.2,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "8e64c27e37488ac4480025c253b99cb87f347d63a88cee80a8b24bd8417b88f0",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk108\\data\\disc.state"
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk108\\shots\\checkpoint-source-28487\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk108\\shots\\checkpoint-source-28487\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk108",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Normal r201 hall movement triggers original Salazar entry movie20100; held source28487, not completed path,720/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk108\\shots\\checkpoint-source-28487\\frames\\fb0.png",
+          "png_sha256": "ecc6d1b3eb102fd713716287feebcc5bed12b9c0206c6d9db32eeaf3d7e88ff6",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk108\\shots\\checkpoint-source-28487\\checkpoint-context.json",
+          "source_frame_interval": [
+            28487,
+            28487
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk109",
+      "result": "Neutral original movie continuation no A/START; natural EOF1794/1794 and original callback15worldticks,720/600",
+      "elapsed_s": 18.5,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "bc0f5b7e913903cb07e27cb06398cd9afb3c923c2febfe6b19c23f7dc5d4cf38",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk109\\data\\disc.state"
+        },
+        {
+          "original_r201_movie_natural_return_world_15ticks": {
+            "frame": 28503,
+            "room": "0x201",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "SSLoop": 0,
+            "world_heap_held": false,
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "Item_find": "0x310004",
+            "player_pos": [
+              -330.7973327636719,
+              -0.00079345703125,
+              -13391.48046875
+            ],
+            "partner_pos": [
+              -726.0082397460938,
+              -0.00030517578125,
+              -12609.908203125
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk109\\shots\\checkpoint-source-28503\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk109\\shots\\checkpoint-source-28503\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk109",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Neutral original movie continuation no A/START; natural EOF1794/1794 and original callback15worldticks,720/600",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk109\\shots\\checkpoint-source-28503\\frames\\fb0.png",
+          "png_sha256": "5f33bf3413019ed00c575f2fcdc9f2faccb7709b349043332dcdf25aa444695e",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk109\\shots\\checkpoint-source-28503\\checkpoint-context.json",
+          "source_frame_interval": [
+            28503,
+            28511
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "current_snapshot_audit": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "bc0f5b7e913903cb07e27cb06398cd9afb3c923c2febfe6b19c23f7dc5d4cf38",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x201",
+    "chapter": 6,
+    "source_frame": 28511,
+    "health": [
+      720,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0xa84002b4",
+    "door_unlock": [
+      "0x820000",
+      "0x0"
+    ],
+    "partner_subflags": "0x40",
+    "r203_RSF": "0x18000000",
+    "r201_RSF": "0x8000000",
+    "player_pos": [
+      -332.36541748046875,
+      0.00115966796875,
+      -13395.8193359375
+    ],
+    "partner_pos": [
+      -726.0082397460938,
+      -0.00390625,
+      -12609.908203125
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "movie_log": [
+    "route movie start: id=20100 path=/cd/dc/movie/r201s00.seq size=288x192 frames=1794 media_us=59859800 staged=363328 heap=833760->469568 range=full path=pvr-yuv-converter",
+    "route movie terminal=1 id=20100 frames=1794/1794 uploaded=1794 presented=1794 wall_us=60019246 media_us=59859800 underruns=0 silence_bytes=0 heap_before=833760 heap_active=469568 staged=363328",
+    "route movie cadence id=20100 shown=1794 dropped=0 late=0 two_field=1793 other=0 max_gap_fields=2 (29.97 fps = one picture per 2 fields)",
+    "route movie retired: id=20100 source_heap=833760 staged=363328 vram_free=814368 aica_largest_any=1004192 kos_free=9856 stream_init=0 stream_active=0",
+    "route cutscene: id=20100 terminal=1 skip_func=0 end_func=0 pose=kept scenario0=00800000 system=01000840"
+  ],
+  "movie_result": "Original1794/1794 uploaded/presented,underruns0/silence0,dropped0/late0; original SceEventEnd/OpeOwTypeSet4 return phase3/Stop0/Loop0 and15source worldticks.",
+  "limits": [
+    "Movie cadence/cost fields are retained Flycast evidence, not Dreamcast hardware timing.",
+    "No full hall/path/native/cell/combat/wave/residency/chapter closure."
+  ],
+  "next": "Normal source hall/stairs/east interior door/corridor toward original Prison KeyC3."
+}
