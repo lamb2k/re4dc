@@ -101,7 +101,7 @@ def main(argv=None) -> int:
     parser.add_argument("--material", default="source")
     parser.add_argument("--mipmap", action="store_true", help="--pack-existing: accept a mipmapped DcTx (CAST_MIPMAP runtime)")
     parser.add_argument("--native-package", type=pathlib.Path,
-                        help="existing native VQ package; unchanged unless --add-mipmaps is given")
+                        help="existing supported native package; unchanged unless --add-mipmaps is given")
     parser.add_argument("--add-mipmaps", action="store_true",
                         help="generate lower mips, preserving native base/codebook bytes")
     parser.add_argument("--mip-engine", choices=("auto", "python", "numpy"), default="auto")
@@ -112,8 +112,13 @@ def main(argv=None) -> int:
             parser.error("--native-package requires --package and excludes encoded/export arguments")
         import json
         import mipmap_vq
-        package, metadata = mipmap_vq.add_mipmaps(
-            args.native_package.read_bytes(), enabled=args.add_mipmaps, engine=args.mip_engine)
+        source = args.native_package.read_bytes()
+        generator = mipmap_vq
+        if len(source) >= 144 and convert_tpl.TEXTURE.unpack_from(source, 48)[3] == convert_tpl.FORMAT_PAL4_ARGB4444:
+            import mipmap_pal4
+            generator = mipmap_pal4
+        package, metadata = generator.add_mipmaps(
+            source, enabled=args.add_mipmaps, engine=args.mip_engine)
         metadata.update(candidate_only=True, base_reencoded=False,
                         source_package=str(args.native_package))
         report = args.package.with_suffix(args.package.suffix + ".json")

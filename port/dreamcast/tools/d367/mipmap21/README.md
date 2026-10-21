@@ -89,3 +89,33 @@ r103 private data candidate changes 15 members, leaves 6486 unchanged, adds
 archive padding absorbs the additions: archive size is unchanged. Independent
 pvrtex decoding agrees on all 116 candidate levels and every original base.
 This is data evidence; actual residency, look and frame time are pending.
+
+## Compact palette mips
+
+The same --native-package / --add-mipmaps interface also supports one square
+twiddled PAL4 ARGB4444 package (native format 4). Its 4-bit base indices and
+32-byte palette tail stay exact. Lower levels choose from the same palette using
+integer premultiplied-color filtering. No palette expansion or new palette bank
+is added. The 1x1 nibble is replicated for hardware/legacy decoder agreement.
+
+Runtime use requires TEX_PAL4_MIPMAP=1 TEX_PAL4_ALPHA=1 CAST_MIPMAP=1.
+TEX_PAL4_MIPMAP defaults to 0 and only defines its native texture Package object.
+It admits the square compact chain, validates its exact size, preserves the
+existing fenced palette owner and forwards the TCW mip flag. With it off, the
+actual host object is byte-identical to integration source 54cef5d1. A full
+Dreamcast program off-identity build has not been run.
+
+    python -m unittest discover -s port/dreamcast/tests -p test_mipmap_pal4.py -v
+
+Nine host tests cover independent pinned decode of all levels/partial alpha,
+palette/base/header preservation, legacy CRC, pure Python/NumPy identity,
+exporter opt-in, malformed layouts, actual upload/palette-tail/fence behavior
+with ASan/UBSan and both allocator paths, build-flag constraints and host object
+off identity. The optional oracle and NumPy run on the respective equipped host.
+
+The retained normal pack has 622 such palette keys, 554 square, with no
+world-sidecar owner among them. Three private data fixtures at 8, 64 and 256
+square decode correctly across all 20 levels, with exact original bases and
+palettes. Their game owners are unclassified. Format compatibility does not
+authorize indiscriminate mip generation for UI text or effect atlases.
+Palette VQ, PAL8, rectangles and strided textures need their own contracts.

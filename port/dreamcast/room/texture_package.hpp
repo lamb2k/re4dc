@@ -18,6 +18,8 @@ inline constexpr std::uint32_t kArgb4444 = 2;
 inline constexpr std::uint32_t kPal4 = 3;
 // TEX_PAL4_ALPHA=1 only: native twiddled PAL4 indices followed by 16
 // little-endian ARGB4444 words. Exact colors, including partial alpha.
+// TEX_PAL4_MIPMAP=1 additionally admits square PVR-order mip indices.
+// The same 16 palette words remain at the payload tail; no VQ expansion.
 inline constexpr std::uint32_t kPal4Argb4444 = 4;
 #if RE4DC_TEX_PAL4_ALPHA
 // Call after PVR initialization, before any palette upload. Configuration is
