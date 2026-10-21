@@ -6,10 +6,15 @@ please name the build, real console or emulator, and where in the game it happen
 
 **Last updated:** October 20, 2026.
 
-**Current build: Test 20** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): chapter 2-1's real path.
-The dam (r10c), r10d and r10e are playable, the Insignia Key comes from the dam, and far scenery and far enemies cost less.
+**Current build: Test 21** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): lighter, smoother fights.
+Fights no longer stall reloading enemy animations, Ashley no longer stalls the game before the El Gigante fight, dead bodies and props cost less, the night road villagers (r111) use
+their PS2 model, the dam rooms use the PS2 lighting, and Options has a Steady frame pacing choice. A QA build for
+testers is the second download.
 
 **Earlier builds** (newest first):
+
+- **Test 20:** chapter 2-1's real path. The dam (r10c), r10d and r10e are playable, the Insignia Key comes from the
+dam, and far scenery and far enemies cost less.
 
 - **Test 19.1:** hotfix of Test 19. The r100 cliff cutscene plays all its frames again (#45), r117 keeps its effect
 sprites (#46), and character drawing goes back to the earlier, faster path.

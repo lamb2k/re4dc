@@ -7,8 +7,30 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 20](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 21](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 21
+
+Lighter, smoother fights and two places fixed, still up to the castle gate. Full details are in the
+[release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **Fights no longer stall reloading enemy animations** (the r100 ambush, the village fights). In the forest ambush after the house, animation loads dropped from about 700 to about 20, with no disc reads in the last 16 seconds (Flycast measurement).
+- **Ashley no longer stalls the game before the El Gigante fight (r11e).**
+- **Lighter fights.** Dead bodies and props cost less to run and draw.
+- **The night road villagers (r111) use their PS2 model** ([#42](https://github.com/lamb2k/re4dc/issues/42)).
+
+  ![Villagers on the night road (r111)](docs/images/releases/test-21/r111-villagers.jpg)
+  <br>The night road villagers. Flycast capture, test 21.
+- **The dam rooms use the PS2 lighting** ([#47](https://github.com/lamb2k/re4dc/issues/47)).
+
+  ![The dam with PS2 lighting](docs/images/releases/test-21/dam-light.jpg)
+  <br>The dam. Flycast capture, test 21.
+- **Steady frame pacing.** Options > Frame pacing > Steady shows every frame for the same time. Fast stays the default.
+
+  ![Options: Frame pacing Steady](docs/images/releases/test-21/options-steady.jpg)
+  <br>The Options screen. Flycast capture, test 21.
+- **QA build for testers** is a second download: teleports, a weapon kit and a Diagnostics page with a QR code.
 
 ## What's new in Test 20
 
@@ -97,23 +119,12 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 - **The world picture and the effect pictures on the way to the castle gate are back** ([#39](https://github.com/lamb2k/re4dc/issues/39)).
   For about a second in r200, some effect sprites can still be skipped ([#41](https://github.com/lamb2k/re4dc/issues/41)).
 
-## Coming soon: Test 21
+## Coming soon: Test 22
 
-Planned, with no date yet. Ticked items have passed our checks and will be in Test 21.
+Planned, with no date yet. Ticked items have passed our checks and will be in Test 22.
 
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate, on a second disc.
-- [x] **QA disc for testers:** out now as its own download,
-  [QA Alpha Fix 1](https://github.com/lamb2k/re4dc/releases/tag/qa-alpha-fix1-20261020). A test tool, not for normal play.
-  - Teleport to any room in chapters 1 and 2, with its story progress and enemies.
-  - The main guns ready, and invincibility switches for Leon, partners and enemies.
-  - A diagnostics page with a QR code you can photograph and send us.
-- [x] **Lighter fights:** dead bodies and props cost less to run and draw.
-- [x] **r111 villagers** use the PS2 model.
-- [x] **Dam rooms** use the measured PS2 lighting.
-- [x] **Steady frame pacing:** a new Options choice that shows every frame for the same time. Smoother motion
-  for a few fps less. Fast stays the default.
-
-Screenshots come with the release.
+- [ ] **Faster scenery drawing.**
 
 ## What's new in Test 17.1
 
