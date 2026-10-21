@@ -1,0 +1,435 @@
+{
+  "scope": "Default-off native Ganado routine reader repair, completing the existing guarded byte writer.",
+  "source_parent": "836a72425d4f753a7b0ef0f3509716621942b461",
+  "source_sha256": "065613c2d2297a5f843d71c897daffd14a715d7aac7e17c3fe563c6be990aaad",
+  "finding": "On little-endian native builds the BE packed EM_RTN test rejects named routine bytes1/48/0/0 (stat0x00003001), prematurely taking EndPlDamage in plem10_C_SawHit. Existing repair-only runtime gameplay evidence did not certify cinematic fidelity.",
+  "change": "Within existing GANADO_ROUTINE_BYTES only, compare cModel.r_no_0/r_no_1 via a common-base inline helper. Receiver evaluated once; player and enemy callers supported; r_no_2/r_no_3 ignored as in original BE high-half test.",
+  "reader_calls": 30,
+  "reader_pairs": [
+    [
+      0,
+      3
+    ],
+    [
+      1,
+      7
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      1,
+      9
+    ],
+    [
+      1,
+      13
+    ],
+    [
+      1,
+      17
+    ],
+    [
+      1,
+      19
+    ],
+    [
+      1,
+      27
+    ],
+    [
+      1,
+      48
+    ],
+    [
+      1,
+      52
+    ],
+    [
+      1,
+      54
+    ],
+    [
+      1,
+      55
+    ],
+    [
+      1,
+      56
+    ],
+    [
+      1,
+      94
+    ],
+    [
+      1,
+      95
+    ]
+  ],
+  "writer_calls": 12,
+  "writer_pairs": [
+    [
+      1,
+      48
+    ],
+    [
+      1,
+      50
+    ],
+    [
+      1,
+      52
+    ],
+    [
+      1,
+      53
+    ],
+    [
+      1,
+      54
+    ],
+    [
+      1,
+      55
+    ],
+    [
+      1,
+      56
+    ],
+    [
+      1,
+      58
+    ]
+  ],
+  "calls": [
+    {
+      "macro": "EM_RTN",
+      "line": 332,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 986,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 94
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 1073,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 94
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 1089,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 95
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 2833,
+      "receiver": "this",
+      "r0": 1,
+      "r1": 7
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 2842,
+      "receiver": "this",
+      "r0": 1,
+      "r1": 8
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 2871,
+      "receiver": "this",
+      "r0": 1,
+      "r1": 9
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 7756,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 11022,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 17
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 11806,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 48
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 12331,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 52
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 12360,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 52
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 12410,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 52
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 12700,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 54
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 12738,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 54
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 12909,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 55
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 13096,
+      "receiver": "(cEm*) pPL->dmgType",
+      "r0": 1,
+      "r1": 56
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 17430,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 20931,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 21043,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 21744,
+      "receiver": "pPL",
+      "r0": 0,
+      "r1": 3
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 21793,
+      "receiver": "e",
+      "r0": 1,
+      "r1": 13
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 22076,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 22143,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 22150,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 23159,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 23289,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 26838,
+      "receiver": "o",
+      "r0": 1,
+      "r1": 19
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 26922,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 27
+    },
+    {
+      "macro": "EM_RTN",
+      "line": 27135,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 17
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 11604,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 48
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 11857,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 48
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 11859,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 50
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 12020,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 54
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 12023,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 56
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 12025,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 55
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 12028,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 52
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 13141,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 56
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 13143,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 55
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 13146,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 52
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 17695,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 53
+    },
+    {
+      "macro": "EM_RTN_SET",
+      "line": 17699,
+      "receiver": "em",
+      "r0": 1,
+      "r1": 58
+    }
+  ],
+  "source_tests": "3932160 exhaustive reader comparisons and8 writer round trips per default/zero/one/PPC-preprocessor-control arm, UBSan fail-fast. Native ON adds player/const-base/single-evaluation and explicit old-predicate-mismatch controls. PPC is host preprocessor control, not PPC execution.",
+  "objects": [
+    {
+      "arm": "baseline",
+      "object_sha256": "2e092aecd0ec389b2a5d0ed8a6f126a5d595092b999b4dd96f0f0b6b46581ee3",
+      "object_bytes": 401236
+    },
+    {
+      "arm": "off-default",
+      "object_sha256": "2e092aecd0ec389b2a5d0ed8a6f126a5d595092b999b4dd96f0f0b6b46581ee3",
+      "object_bytes": 401236
+    },
+    {
+      "arm": "off-zero",
+      "object_sha256": "2e092aecd0ec389b2a5d0ed8a6f126a5d595092b999b4dd96f0f0b6b46581ee3",
+      "object_bytes": 401236
+    },
+    {
+      "arm": "on",
+      "object_sha256": "03eeaf8ca6e284319119cbe6298ea276838eaecc6a633c8e9d861eab7c82e271",
+      "object_bytes": 401164
+    }
+  ],
+  "OFF_default_and_zero_exact": true,
+  "receipt": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/ganado-reader-unit-v1/reader-unit-receipt.json",
+  "receipt_sha256": "e5e5940360771669d897c586e9da11f37cf51b37381a4187e6da6e5bd9afe05e",
+  "tool_sha256": "28033b013e1196b1a6bb0ccb76062d3a054f1cff816f3248076e06c65930b6df",
+  "limits": [
+    "Whole SH4 em10.o compile and source/host controls only; no linked programme/image/guest for this reader successor yet.",
+    "Earlier a18 programmes8942/453 and traced programme6624 remain preserved, distinct historical builds; do not attribute new reader behavior to them.",
+    "Guard remains default0; original PPC/preprocessor and unset/zero object identity retained. No production recipe/release/SD action.",
+    "Manager post-delete lifetime diagnostic remains open; no sanitizer exclusion is claimed as its fix.",
+    "Main owns holistic cache audit/integration; Claude owns production merge/release."
+  ]
+}
