@@ -193,3 +193,7 @@ These close the named indirect setter and boat owner origins. Remaining acceptan
 ## Reproduce this checkpoint
 
 Run `motion_consumer_audit.py --repo <repo> --source-ref c7e0358a --census <sealed animation-cache-coverage-work.json> --output <receipt> --details <private details>` and `test_motion_consumer_audit.py` with the same repo/ref/census arguments. No assets are emitted. The public receipt contains hashes/metadata only. Optional --target-object verifies the separate pinned root control4 object and attaches the root-reported disassembly conclusion; it does not compile or independently disassemble it. Do not reinterpret discovered call counts, initializer counts, archival STRICT/census gates or quiet guest windows as closure of an OPEN edge.
+
+## H064 continuation
+
+Reset, borrowed-FCV retirement and partial admission now have an actual-source/SDK host checkpoint in `MOTION_LIFETIME_AUDIT_20261020.md` and `motion-lifetime-host-receipt.json`. Three defects are reproduced; native partial reserve failure unwinds correctly. Five other lifetime cases and the named admission subcases remain OPEN. Capacity1f7 and mode0/mode2 target classifications remain separate. No runtime changes or new guest evidence.
