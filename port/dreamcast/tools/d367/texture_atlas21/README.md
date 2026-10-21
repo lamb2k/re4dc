@@ -46,6 +46,15 @@ dynamic LOD; the optional LEON_LOD package path is resolved off in the selected
 recipe. The recovery retains original manifest, archive, program and source
 hashes and does not modify any gameplay state or texture input.
 
+Reload checkpoint: atlas_bind.h and bind_probe.cpp/.py are untested WIP. The
+uninstalled adapter defaults off and attempts atomic run/material replacement
+against actual plan types, exact cold triangle/UV comparison, source epoch and
+an externally reserved immutable-ID range. No current runtime includes it.
+The probe has not been compiled or run. First fix its include path: own.parents[3]
+currently resolves port; game/platform/include is under own.parents[2]. Then
+qualify the probe in a fresh output directory. Global IDs, source package
+retirement, capability/material hooks and target resource gates remain open.
+
 Run with Windows Python/NumPy/Pillow:
 
 ```
