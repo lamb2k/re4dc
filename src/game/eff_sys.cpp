@@ -448,6 +448,15 @@ int EspDataLoad(u32 addr, u32 owner, int flag)
         OWNER_ERR(owner, "EspDataLoad():EffData [%s:NULL] Invalid.", "EspDataLoad():EffData [%x:NULL] Invalid.");
         return 0;
     }
+#if defined(RE4DC_EFFECT_ADMISSION_GUARD) && RE4DC_EFFECT_ADMISSION_GUARD
+    // Validate the first admission before publishing its reference. Existing
+    // registrations retain the original duplicate/refcount semantics below.
+    if (sys->ownerCnt[owner] == 0 && data->version != 0xB) {
+        OWNER_ERR2(owner, "EspDataLoad():EffData [%s:0x%x] Invalid.", "EspDataLoad():EffData [%x:0x%x] Invalid.",
+                   data);
+        return 0;
+    }
+#endif
     if (sys->ownerCnt[owner] <= 0xC7) {
         sys->ownerCnt[owner]++;
     }

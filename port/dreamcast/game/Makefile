@@ -809,6 +809,15 @@ endif
 # WEAPON_ARCHIVE_REUSE=1: retain a successfully linked same-file weapon archive across re-equip.
 # Publish the reuse identity after ReleaseWepData/load/link, invalidate it on every release,
 # and check the actual file/module/backing before reuse. Distinct archives still load normally.
+# EFFECT_ADMISSION_GUARD=1: reject an invalid first EFF load before publishing its owner reference.
+# Existing valid duplicate/refcount behavior is preserved. Default-off source path is unchanged.
+EFFECT_ADMISSION_GUARD ?= 0
+ifneq ($(EFFECT_ADMISSION_GUARD),0)
+ifneq ($(EFFECT_ADMISSION_GUARD),1)
+$(error EFFECT_ADMISSION_GUARD must be 0 or 1)
+endif
+$(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_ADMISSION_GUARD=1
+endif
 WEAPON_ARCHIVE_REUSE ?= 0
 ifneq ($(WEAPON_ARCHIVE_REUSE),0)
 ifneq ($(WEAPON_ARCHIVE_REUSE),1)

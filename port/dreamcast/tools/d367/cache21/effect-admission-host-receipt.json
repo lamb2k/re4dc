@@ -1,0 +1,67 @@
+{
+  "reference": "07527f7e75c746c6d9ce938b0327dfba77726387",
+  "source_sha256": "83c5ae8deb709982a37dfeb371038a8d5263f36b7fe180530ddda0857828465f",
+  "source_diff": "diff --git a/src/game/eff_sys.cpp b/src/game/eff_sys.cpp\nindex 796fbab2..3bc771dc 100644\n--- a/src/game/eff_sys.cpp\n+++ b/src/game/eff_sys.cpp\n@@ -448,6 +448,15 @@ int EspDataLoad(u32 addr, u32 owner, int flag)\n         OWNER_ERR(owner, \"EspDataLoad():EffData [%s:NULL] Invalid.\", \"EspDataLoad():EffData [%x:NULL] Invalid.\");\n         return 0;\n     }\n+#if defined(RE4DC_EFFECT_ADMISSION_GUARD) && RE4DC_EFFECT_ADMISSION_GUARD\n+    // Validate the first admission before publishing its reference. Existing\n+    // registrations retain the original duplicate/refcount semantics below.\n+    if (sys->ownerCnt[owner] == 0 && data->version != 0xB) {\n+        OWNER_ERR2(owner, \"EspDataLoad():EffData [%s:0x%x] Invalid.\", \"EspDataLoad():EffData [%x:0x%x] Invalid.\",\n+                   data);\n+        return 0;\n+    }\n+#endif\n     if (sys->ownerCnt[owner] <= 0xC7) {\n         sys->ownerCnt[owner]++;\n     }\n",
+  "arms": [
+    {
+      "arm": "baseline",
+      "result": "PASS FIXED=0 assertions=350",
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fno-omit-frame-pointer",
+        "-fsanitize=address,undefined",
+        "-fno-pie",
+        "-no-pie",
+        "-DFIXED=0",
+        "-DRE4DC_EFFECT_ADMISSION_GUARD=0",
+        "/root/probe/cache21-effect-admission-20261021/baseline.cpp",
+        "-o",
+        "/root/probe/cache21-effect-admission-20261021/baseline"
+      ]
+    },
+    {
+      "arm": "off",
+      "result": "PASS FIXED=0 assertions=350",
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fno-omit-frame-pointer",
+        "-fsanitize=address,undefined",
+        "-fno-pie",
+        "-no-pie",
+        "-DFIXED=0",
+        "-DRE4DC_EFFECT_ADMISSION_GUARD=0",
+        "/root/probe/cache21-effect-admission-20261021/off.cpp",
+        "-o",
+        "/root/probe/cache21-effect-admission-20261021/off"
+      ]
+    },
+    {
+      "arm": "on",
+      "result": "PASS FIXED=1 assertions=350",
+      "command": [
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g",
+        "-fno-omit-frame-pointer",
+        "-fsanitize=address,undefined",
+        "-fno-pie",
+        "-no-pie",
+        "-DFIXED=1",
+        "-DRE4DC_EFFECT_ADMISSION_GUARD=1",
+        "/root/probe/cache21-effect-admission-20261021/on.cpp",
+        "-o",
+        "/root/probe/cache21-effect-admission-20261021/on"
+      ]
+    }
+  ],
+  "off_extracted_preprocessor_identity": true,
+  "off_projection_sha256": "3630d82ddd99fc0f22a62e897702ba2252d281bf4503b15cd43b940328fb2c5d",
+  "scope": "Actual source function bodies; registration/release boundaries instrumented. Synthetic low-address EFF fixtures. No full-TU/linked/gameplay/console acceptance; partial downstream registration remains open."
+}
