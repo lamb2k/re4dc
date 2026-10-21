@@ -114,10 +114,12 @@ def leon_binding(proofs):
     if any(p not in proofs for p in needed):
         raise ValueError("standard Leon binding lacks selected draw/variant/recipe proof")
     draw, variants, recipe, default, mk = (proofs[p].decode() for p in needed)
+    explicit = re.findall(r"(?:^|\s)CHARBAKE_VARIANT=(\d+)(?=\s|$)", recipe)
     if ("constexpr unsigned crc=0xec255e66U, fnv=0x76812316U;" not in draw
             or not re.search(r'\{"CUR",0xec255e66U,0x76812316U,', variants)
             or "PS2_LEON=1" not in recipe or "CHARBAKE_TOGGLE=1" not in recipe
             or not re.search(r"CHARBAKE_VARIANT\s*\?=\s*0", default)
+            or (explicit and int(explicit[-1]) != 0)
             or "atlas ec255e66-76812316" not in mk):
         raise ValueError("selected standard Leon key/variant/recipe no longer matches")
     return dict(kind="standard-leon", appearance=256, boot_variant=0,
@@ -126,17 +128,50 @@ def leon_binding(proofs):
                 hair_separate=True, runtime_selection_not_measured=True)
 
 
+def leon_variant_binding(proofs, name, index):
+    owner = leon_binding(proofs)
+    variants = re.findall(r'\{"([^"]+)",0x([0-9a-f]+)U,0x([0-9a-f]+)U,', proofs["leon_variants"].decode())
+    if index <= 0 or index >= len(variants):
+        raise ValueError("conditional Leon variant index is not in the source table")
+    label, crc, fnv = variants[index]
+    if name != "%08x-%08x" % (int(crc, 16), int(fnv, 16)):
+        raise ValueError("conditional Leon key differs from its source variant")
+    return dict(owner, kind="conditional-leon-variant", key=name, variant_index=index,
+                variant_label=label, selected_at_boot=False,
+                selection="Explicit runtime charbake variant only; the normal recipe boots CUR")
+
+
+def leon_pl08_binding(proofs):
+    owner = leon_binding(proofs)
+    draw, recipe = proofs["leon_draw"].decode(), proofs["leon_recipe"].decode()
+    if ("constexpr unsigned pl08_crc=0x7506e95fU, pl08_fnv=0x68cf2211U;" not in draw
+            or "ACTOR_PL08_PACK=1" not in recipe
+            or "p.image=pl08_image;p.crc=pl08_crc;p.fnv=pl08_fnv" not in proofs["pl08_owner"].decode()):
+        raise ValueError("selected no-jacket Leon key/package consumer differs")
+    expected = json.loads(proofs["original_release_manifest"])["dc/native/pl08/leon_pl08_ps2.re4cp"]
+    package = proofs["pl08_package"]
+    if expected != dict(size=len(package), sha256=sha(package)):
+        raise ValueError("selected no-jacket geometry package is not the original release winner")
+    return dict(owner, kind="leon-pl08", key="7506e95f-68cf2211", appearance=264,
+                package_sha256=sha(package), package_bytes=len(package),
+                selection="Exact ACTOR_PL08 owner; standard pl00 and its variant keys do not select this atlas")
+
+
+def runtime_uv_array(header, role):
+    found = re.search(r"unsigned char i%d_uv\[\] = \{(.*?)\};" % role, header.decode(), re.S)
+    if not found:
+        raise ValueError("selected Leon runtime UV array is absent")
+    values = [int(v) for v in re.findall(r"\d+", found.group(1))]
+    if any(v > 255 for v in values) or len(values) % 4:
+        raise ValueError("selected Leon UV array is not packed u16 pairs")
+    return set(struct.iter_unpack("<2H", bytes(values)))
+
+
 def leon_runtime_uv(header, mesh):
     """Bind source-mesh footprint evidence to the selected recipe's UV arrays."""
     rows = []
     for role in range(8):
-        found = re.search(r"unsigned char i%d_uv\[\] = \{(.*?)\};" % role, header.decode(), re.S)
-        if not found:
-            raise ValueError("selected Leon runtime UV array is absent")
-        values = [int(v) for v in re.findall(r"\d+", found.group(1))]
-        if any(v > 255 for v in values) or len(values) % 4:
-            raise ValueError("selected Leon UV array is not packed u16 pairs")
-        actual = set(struct.iter_unpack("<2H", bytes(values)))
+        actual = runtime_uv_array(header, role)
         expected = {tuple(round(x * 32768) for x in c["uv"])
                     for t in mesh["triangles"] if t["source_info"] == role for c in t["corners"]}
         if actual != expected or not actual:
@@ -144,10 +179,34 @@ def leon_runtime_uv(header, mesh):
         rows.append(dict(role=role, unique_uvs=len(actual), exact_quantized_uv_set=True))
     return dict(selected_runtime_sha256=sha(header), roles=rows,
                 source_mesh_uvs_match_selected_runtime=True,
+                scope="Static base chunks. Dynamic hand poses, headless substitutions and screen derivatives need separate evidence.",
                 convention="u16 little endian, normalized value / 32768; tile x=u*512, y=(1-v)*512")
 
 
-def atlas_boundaries(tiles, mesh, side):
+def pl08_runtime_uv(header, package, mesh):
+    if len(package) < 256 or package[:8] != b"RE4PL08\0" or struct.unpack_from("<4I", package, 8) != (1, 256, len(package), 3):
+        raise ValueError("selected no-jacket Leon package header differs")
+    by_info, rows = {}, []
+    for k, (role, info) in enumerate(((0, 0), (1, 1), (8, 6))):
+        entry = struct.unpack_from("<16I", package, 64 + k * 64)
+        at, length = entry[11:13]
+        if entry[:2] != (role, info) or at < 256 or length % 4 or at + length > len(package):
+            raise ValueError("selected no-jacket Leon UV table differs")
+        by_info[info] = set(struct.iter_unpack("<2H", package[at:at + length]))
+    for info, role in ((2, 2), (3, 3), (4, 4), (5, 7), (7, 5), (8, 6)):
+        by_info[info] = runtime_uv_array(header, role)
+    for info, actual in sorted(by_info.items()):
+        expected = {tuple(round(x * 32768) for x in c["uv"])
+                    for t in mesh["triangles"] if t["source_info"] == info for c in t["corners"]}
+        if actual != expected or not actual:
+            raise ValueError("source mesh UVs differ from selected no-jacket Leon info " + str(info))
+        rows.append(dict(source_info=info, unique_uvs=len(actual), exact_quantized_uv_set=True))
+    return dict(package_sha256=sha(package), shared_runtime_sha256=sha(header), source_infos=rows,
+                source_mesh_uvs_match_selected_runtime=True,
+                scope="Static base chunks. Dynamic hands/headless substitutions and screen derivatives need separate evidence.")
+
+
+def atlas_boundaries(tiles, mesh, side, hair_source_infos=(7,)):
     """Conservative box-filter + bilinear footprint audit of actual mesh corners.
 
     Tile x/y follow the converter's source_uv_tiles layout. pack_arm.py uses
@@ -170,7 +229,7 @@ def atlas_boundaries(tiles, mesh, side):
     by_tile = {name: 0 for name, *_ in rectangles}
     for triangle in mesh["triangles"]:
         # PS2_LEON's role7 uses its separately owned hair colour/mask runs.
-        if triangle["source_info"] == 7:
+        if triangle["source_info"] in hair_source_infos:
             continue
         triangles += 1
         owners = set()
@@ -217,7 +276,7 @@ def atlas_boundaries(tiles, mesh, side):
                            sampler_acceptance="needs look and derivative evidence" if bad or mixed else "source footprint contained"))
     return dict(kind="atlas", tile_count=len(rectangles), gutter_texels=2,
                 triangles=triangles, sampled_corners=len(corners), corner_counts=by_tile,
-                hair_role7_excluded=True, all_body_triangles_within_one_tile=True,
+                excluded_hair_source_infos=list(hair_source_infos), all_body_triangles_within_one_tile=True,
                 levels=levels, runtime_mip_adoption_accepted=False,
                 limitation="Finite atlas gutters do not isolate every coarse mip. Full-chain candidate is for review; no sampler or default is changed.")
 
@@ -249,10 +308,17 @@ def build_candidate(pack, contract, proofs, *, enabled=False, engine="auto"):
             raise ValueError("actor candidates require an existing base-only VQ package")
         if (before.texture[1], before.texture[2]) != tuple(item["dimensions"]):
             raise ValueError("selected actor dimensions differ")
-        if item["binding"]["kind"] == "standard-leon" and name == "ec255e66-76812316":
+        if item["binding"]["kind"] in ("standard-leon", "conditional-leon-variant", "leon-pl08"):
             if item["dimensions"] != [512, 512]:
                 raise ValueError("the selected standard Leon consumer requires its 512-square atlas")
-            owner = leon_binding(proofs)
+            if item["binding"]["kind"] == "standard-leon" and name == "ec255e66-76812316":
+                owner = leon_binding(proofs)
+            elif item["binding"]["kind"] == "conditional-leon-variant":
+                owner = leon_variant_binding(proofs, name, item["binding"]["variant_index"])
+            elif item["binding"]["kind"] == "leon-pl08" and name == "7506e95f-68cf2211":
+                owner = leon_pl08_binding(proofs)
+            else:
+                raise ValueError("Leon key differs from its exact source consumer")
         elif item["binding"]["kind"] == "native-registry":
             owner = registry_binding(proofs[item["binding"]["proof"]], name, item["dimensions"])
             consumers = item["binding"].get("proofs", [item["binding"]["proof"]])
@@ -270,6 +336,11 @@ def build_candidate(pack, contract, proofs, *, enabled=False, engine="auto"):
             mesh = json.loads(proofs[sampling["mesh_proof"]])
             sampling = atlas_boundaries(tiles, mesh, before.size)
             sampling["runtime_uv_identity"] = leon_runtime_uv(proofs[item["sampling"]["runtime_proof"]], mesh)
+        elif sampling.get("kind") == "leon-pl08-atlas":
+            tiles = json.loads(proofs[sampling["tiles_proof"]])["source_uv_tiles"]
+            mesh = json.loads(proofs[sampling["mesh_proof"]])
+            sampling = atlas_boundaries(tiles, mesh, before.size, hair_source_infos=(5,))
+            sampling["runtime_uv_identity"] = pl08_runtime_uv(proofs[item["sampling"]["runtime_proof"]], proofs["pl08_package"], mesh)
         elif sampling.get("kind") == "owned-native-atlas":
             sampling = dict(sampling, runtime_mip_adoption_accepted=False,
                             limitation="Native UV words and atlas layout stay exact; coarse-level seam and derivative checks remain pending.")

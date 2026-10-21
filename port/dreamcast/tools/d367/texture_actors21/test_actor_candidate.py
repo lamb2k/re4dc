@@ -132,6 +132,37 @@ class ActorCandidates(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "role 4"):
             actor.leon_runtime_uv(header, mesh)
 
+    def test_conditional_leon_variants_are_bound_to_the_source_table_and_boot(self):
+        proofs = dict(leon_draw=b"constexpr unsigned crc=0xec255e66U, fnv=0x76812316U;",
+                      leon_variants=b'{"CUR",0xec255e66U,0x76812316U,\n{"LVQ",0x49abeafeU,0x882b9aa5U,',
+                      leon_recipe=b"PS2_LEON=1 CHARBAKE_TOGGLE=1", leon_default=b"CHARBAKE_VARIANT ?= 0",
+                      leon_mk=b"atlas ec255e66-76812316")
+        got = actor.leon_variant_binding(proofs, "49abeafe-882b9aa5", 1)
+        self.assertEqual(got["variant_label"], "LVQ")
+        self.assertFalse(got["selected_at_boot"])
+        with self.assertRaises(ValueError):
+            actor.leon_variant_binding(proofs, "172a4735-95d0fae5", 1)
+        proofs["leon_recipe"] += b" CHARBAKE_VARIANT=1"
+        with self.assertRaisesRegex(ValueError, "recipe no longer matches"):
+            actor.leon_binding(proofs)
+
+    def test_pl08_own_and_shared_uvs_must_match_exact_source_infos(self):
+        uv = struct.pack("<2H", 8192, 16384)
+        header = "\n".join(f"unsigned char i{i}_uv[] = {{{','.join(str(x) for x in uv)}}};" for i in range(8)).encode()
+        mesh = dict(triangles=[dict(source_info=i, corners=[dict(uv=[.25, .5])] * 3) for i in range(9)])
+        package = bytearray(268)
+        package[:8] = b"RE4PL08\0"
+        struct.pack_into("<4I", package, 8, 1, 256, 268, 3)
+        for k, (role, info) in enumerate(((0, 0), (1, 1), (8, 6))):
+            row = [0] * 16
+            row[0], row[1], row[11], row[12] = role, info, 256 + k * 4, 4
+            struct.pack_into("<16I", package, 64 + k * 64, *row)
+            package[256 + k * 4:260 + k * 4] = uv
+        self.assertTrue(actor.pl08_runtime_uv(header, bytes(package), mesh)["source_mesh_uvs_match_selected_runtime"])
+        package[256] ^= 1
+        with self.assertRaisesRegex(ValueError, "info 0"):
+            actor.pl08_runtime_uv(header, bytes(package), mesh)
+
 
 if __name__ == "__main__":
     unittest.main()

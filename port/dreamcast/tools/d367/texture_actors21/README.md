@@ -45,6 +45,12 @@ and 13419 corners belong to one tile per triangle. The separately owned hair
 role uses its colour/mask runs and is excluded from the body footprint audit.
 The atlas is opaque RGB565; its alpha values and the separate masks are exact.
 
+This UV identity check covers the static base chunk arrays. The current release
+also enables `LEON_HAND_PACK` and `LEON_HEADLESS`. Dynamic hand poses and
+headless substitutions require separate UV/derivative evidence. The contained
+256 level in the static audit is not a guarantee for every runtime pose or
+substitution. Their assets and drawing code are unchanged by these candidates.
+
 The audit combines each mip's aligned source box with both bilinear taps. It
 is a conservative source footprint bound, not measured screen derivatives or
 proof that a camera selects a level. At an exact tap centre it still includes
@@ -124,6 +130,44 @@ adaptation owner. No stretching, padding or UV change was made. Original
 registry names outside the normal-pack namespace are not labelled runtime
 failures merely because they do not match a pack member.
 
+## Remaining existing-VQ Leon cohort
+
+`leon-extra-v1` adds three source-bound candidates, each retaining its existing
+VQ codebook and base indices:
+
+| Key | Consumer | Source selection |
+|---|---|---|
+| `7506e95f-68cf2211` | No-jacket Leon / pl08 | Exact ACTOR_PL08 owner and selected costume package |
+| `49abeafe-882b9aa5` | LVQ | Explicit charbake variant 4, conditional; not the boot choice |
+| `172a4735-95d0fae5` | GVQ | Explicit charbake variant 5, conditional; not the boot choice |
+
+The pl08 package is 61184 bytes, SHA256
+`beb8c19886d60a0546d11312e84e2b922a343b805fc9b7ca24186d513ac5283f`,
+exact against the original release manifest. Its own source infos 0/1/6 match
+the package's UV arrays; the six shared infos match their mapped standard Leon
+runtime arrays. The pl08 static body audit covers 4789 triangles / 14367
+corners. Its 256 footprints are contained; 94 corner footprints cross tile
+ownership at 128. The two conditional variants reuse the static standard Leon
+audit, preserving their own distinct original full-resolution bytes.
+
+All 30 levels independently decode. The additional raw request is 65538 bytes,
+or 65568 after 32-byte rounding. All 6498 unselected pack entries and five
+Ganado mip packages remain exact. The Windows subset contains 94 verified
+files; SHA256SUMS is
+`a37930b5d27176758a84b2f7c948d38834481cd2354c88bdda017e98e2f9a0b9`.
+
+The complete three-set source checkpoint contains 20 texture candidates and
+184 independently decoded levels. Across all unique keys, request deltas are
+260792 raw bytes or 260992 rounded bytes. That includes alternate costumes
+and conditional look choices, and is not a simultaneous room budget. Source
+request accounting cannot accept residency, sampling, rendered look or timing.
+
+AO, SKY and GCB are the other three named conditional Leon variants. They are
+native16 packages, not existing VQ. Their owners are explicit in the same
+source table, but this lane does not silently re-encode their bases or assume
+that they are the normal boot selection. Their format policy remains with the
+broader texture pipeline owner.
+
 ## Use
 
 The private JSON contract has schema `re4dc-actor-mip-contract-1`, an exact
@@ -165,8 +209,9 @@ Mirror that sealed set to the Windows private store and verify every receipt.
 python3 test_actor_candidate.py
 ```
 
-Nine source/tool regression tests cover explicit selection, disabled identity,
+Eleven source/tool regression tests cover explicit selection, disabled identity,
 owner and hash refusal, primary-geometry binding, protected Ganado packages,
-every declared room consumer, atlas boundaries and selected-runtime UV disagreement. These and
+every declared room consumer, atlas boundaries, explicit conditional variants,
+changed boot selection and selected-runtime/package UV disagreement. These and
 the private decoder seal establish source/data correctness. Runtime VRAM,
 residency, look, gameplay and physical hardware timing remain separate gates.
