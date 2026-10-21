@@ -87,14 +87,46 @@ int main(){
         assert(alloc_calls==3&&provider_calls==1&&loaded.m_condition==2&&loaded.m_err==0&&loaded.m_addr==arena);
         assert(carriers[0].state==CarrierMram&&carriers[0].mram==arena&&!epoch());
         assert(!std::memcmp(reads.data(),before_reads.data(),sizeof(reads)));
-        assert(EvtMgr.EvtFree(file_name)&&native_frees==1&&!allocation_active);
+        assert(EvtMgr.EvtFree(file_name));
+#if RE4DC_EVD_READ_RELEASE_REFS
+        if(prior_count>1){
+            assert(!native_frees&&allocation_active&&reads[0].Count==1&&loaded.m_addr==arena);
+            assert(EvtMgr.EvtFree(file_name));
+        }
+        assert(native_frees==1&&!allocation_active&&!EvtMgr.ReadTbl.ChkDat(file_name));
+#else
+        assert(native_frees==1&&!allocation_active);
         if(prior_count==1)assert(!EvtMgr.ReadTbl.ChkDat(file_name));
         else assert(reads[0].Count==1); // Existing successful shared-release contract remains separate.
+#endif
 #else
         assert(loaded.m_condition==0&&!loaded.m_addr&&!carriers[0].state);
         assert(prior_count==1?!EvtMgr.ReadTbl.ChkDat(file_name):reads[0].Count==1);
 #endif
     }
+    // Registration releases are not native reader leases. Non-final logical
+    // releases preserve even a currently borrowed carrier; final release still
+    // executes the actual reader refusal and must be retried after unbinding.
+#if RE4DC_EVD_READ_RELEASE_REFS
+    for(unsigned count:{2U,3U,32767U}){
+        prepare();++cases;reads[0].Count=count;allow_allocation=true;int out=0;
+        assert(EvtMgr.EvtReadMram(file_name,0,&out,0,0)&&loaded.m_addr==arena);
+        assert(re4dc_cabin_carrier_event(&pool[1],arena,file_name));
+        const auto before=loaded;const auto before_carriers=carrier_snapshot();const auto before_em=EvtMgr.readEm[0];
+        auto expected_reads=reads;--expected_reads[0].Count;
+        assert(EvtMgr.EvtFree(file_name)&&!native_frees&&allocation_active);
+        assert(!std::memcmp(&loaded,&before,sizeof(before))&&!std::memcmp(carriers,before_carriers.data(),sizeof(carriers)));
+        assert(!std::memcmp(reads.data(),expected_reads.data(),sizeof(reads))&&!std::memcmp(&EvtMgr.readEm[0],&before_em,sizeof(before_em)));
+        while(reads[0].Count>1)assert(EvtMgr.EvtFree(file_name));
+        const auto final_reads=reads;
+        assert(!EvtMgr.EvtFree(file_name)&&!native_frees&&allocation_active);
+        assert(!std::memcmp(reads.data(),final_reads.data(),sizeof(reads))&&!std::memcmp(&loaded,&before,sizeof(before)));
+        assert(!std::memcmp(carriers,before_carriers.data(),sizeof(carriers)));
+        re4dc_cabin_carrier_event_deleted(&pool[1]);
+        assert(!carriers[0].event&&!carriers[0].readers);
+        assert(EvtMgr.EvtFree(file_name)&&native_frees==1&&!allocation_active&&!EvtMgr.ReadTbl.ChkDat(file_name));
+    }
+#endif
     // Each query is observational, including malformed/refused contexts.
     for(unsigned refusal=0;refusal<26;++refusal){
         prepare();++cases;

@@ -2751,6 +2751,18 @@ int EventMgr::EvtFree(char* nm)
         pLog->err(0, 0, "EventMgr::EvtFree : NameEvt failed [%s]", nm);
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_READ_RELEASE_REFS) && RE4DC_EVD_READ_RELEASE_REFS
+    if (unit && no < 8 && ReadTbl.pWork && no < (u32) ReadTbl.NumDatTbl) {
+        const DatTblEntry* row = &ReadTbl.pWork[no];
+        if (row->Dat == unit && row->Etc == 0 && row->FlagBe8 == 3 && !row->dat2 &&
+            row->Count > 1 && row->Count <= 0x7FFF) {
+            // Release this registration only. Other registrations still own
+            // the unit and its current module/exchange role. Count is not an
+            // Event/DMA reader lease; their final-release checks stay below.
+            return DelRead(nm);
+        }
+    }
+#endif
 #if RE4DC_CABIN_SOURCE
     const bool cabin_owned=unit && re4dc_cabin_carrier_reserved(unit);
     if(!cabin_owned)DelRead(nm);
