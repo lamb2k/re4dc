@@ -1,0 +1,804 @@
+{
+  "scope": "Compact source/control/evidence index; all detailed immutable proofs remain at the cited C paths. No data, gameplay or state writes. Flycast results establish no release or physical Dreamcast acceptance.",
+  "summary": "Garrador remains at 3,094 HP; Leon has 1,200 and Ashley 90. The second south-bell lure was consumed by the original AI and the full west approach passed. The next combat window withheld fire at the early frontal guard.",
+  "next": "No guest is active. Await the shared C disk recovery threshold before launching prepared155, the full east escape. All original checkpoints and damage lineage remain preserved.",
+  "program_runtime": "12a841d7c",
+  "program_elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "original127_preserved": true,
+  "shared_claims": [],
+  "checkpoints": [
+    {
+      "run": "route-walk151",
+      "source": 34655,
+      "state_sha256": "318fcc32b87ba185e4f4fb60f4df8ebd046c10c180173dc6b0db90a8a73b5e7f",
+      "health": [
+        1200,
+        1200,
+        90,
+        600
+      ],
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "run_result": {
+        "name": "castle21-recoveredJ-route-walk151",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T20:19:48.442263+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T20:20:00.657391+00:00",
+        "elapsed_s": 12.1,
+        "emulator_exited": true
+      },
+      "full_checkpoint_proof": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk151-checkpoint-proof.json",
+        "sha256": "e865dae70ba1429fcda0b4d00491d113de5373e6c66f940bcf212ad1ec30e7a3"
+      },
+      "inputs": {
+        "scope": "Actual149 two weakpoint hits3094HP and150 full eastescape1200/90. Normal single southbell lure from currentcentralstandoff, then remainstationary forweakpoint combat so no new footsteps overridebell. Originalring/laser/HP/PID guards, no writes/reset/build.",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk150",
+        "seed_sha256": "9ec4812c341890290f2c0adca00eb9b076f49c5916e11170f628e1c9770a9b96",
+        "new_iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "target_xz": "25085,-43579",
+        "controller_sha256": "316ed982467860997ee4a6776f6dbe9afce23bd22cf03b62d7f22cf3263262de"
+      },
+      "screenshots": [
+        {
+          "source_frame_interval": [
+            34654,
+            34655
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "images": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk151\\shots\\checkpoint-source-34654\\frames\\fb0.png",
+              "sha256": "aec879562833d6fe347484680abb78b5353b0fbd12810187db96e5785d64c2cf"
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk151\\shots\\checkpoint-source-34654\\frames\\fb1.png",
+              "sha256": "8596d76f52c966aec3e669be647877e2d6265f5708cacccd1c0f4c563a72ca43"
+            }
+          ]
+        }
+      ],
+      "exact-combat": {
+        "scope": "Read-only exact closed checkpoint combat state, not last asynchronous controller sample. No guest or state writes.",
+        "run": "route-walk151",
+        "state_sha256": "318fcc32b87ba185e4f4fb60f4df8ebd046c10c180173dc6b0db90a8a73b5e7f",
+        "source": 34655,
+        "health": [
+          1200,
+          1200,
+          90,
+          600
+        ],
+        "hero_pos": [
+          25154.521484375,
+          -1999.9989013671875,
+          -43468.7109375
+        ],
+        "hero_yaw": 2.685100793838501,
+        "hero_routines": [
+          0,
+          6,
+          2,
+          1
+        ],
+        "partner_pos": [
+          29363.37890625,
+          -2000.003662109375,
+          -42856.953125
+        ],
+        "partner_flags": "0x46",
+        "boss": {
+          "hp": 3094,
+          "pos": [
+            17536.71484375,
+            -2000.0029296875,
+            -46237.27734375
+          ],
+          "yaw": 1.6148934364318848,
+          "routines": [
+            1,
+            45,
+            1,
+            0
+          ]
+        },
+        "items": [
+          {
+            "id": 124,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 35,
+            "num": 1,
+            "bullet": 5
+          },
+          {
+            "id": 4,
+            "num": 10,
+            "bullet": 0
+          },
+          {
+            "id": 172,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 173,
+            "num": 1,
+            "bullet": 0
+          }
+        ],
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      }
+    },
+    {
+      "run": "route-walk152",
+      "source": 34710,
+      "state_sha256": "3f3c1df9d6d7ee10b88bb3e34632cb95d87952084272f4125ea58f6fc1bedf7f",
+      "health": [
+        1200,
+        1200,
+        90,
+        600
+      ],
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "run_result": {
+        "name": "castle21-recoveredJ-route-walk152",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T20:20:56.863784+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T20:21:01.059858+00:00",
+        "elapsed_s": 4.1,
+        "emulator_exited": true
+      },
+      "full_checkpoint_proof": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk152-checkpoint-proof.json",
+        "sha256": "6fce4f3f738982c182641d42c1d807488ab99559b29f73289ef6061306a25c33"
+      },
+      "inputs": {
+        "scope": "Actual151 normalbell ring89 passed1200/90 boss3094. Remainstationary to honor originalbell lure then full42s max6weakpointcombat, early6500 frontalguard, actualray/laser/rear/part37/health mandatory. No footsteps/AI/statewrites/reset/build.",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk151",
+        "seed_sha256": "318fcc32b87ba185e4f4fb60f4df8ebd046c10c180173dc6b0db90a8a73b5e7f",
+        "new_iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "target_xz": "25085,-43579",
+        "controller_sha256": "a18087a10e52a6d3ba334d1fd06d4937fdc2ac1c766564c67ef9161bc9fcf626"
+      },
+      "screenshots": [
+        {
+          "source_frame_interval": [
+            34708,
+            34710
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "images": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk152\\shots\\checkpoint-source-34708\\frames\\fb0.png",
+              "sha256": "d16beec6a9c6a9b5e6014e21d7a57845c86556ca25898336cde3066a2fa35394"
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk152\\shots\\checkpoint-source-34708\\frames\\fb1.png",
+              "sha256": "d27e483358f58c8c5e6dc19918ef7fada918cebd95d71cb8bb79225511882d01"
+            }
+          ]
+        }
+      ],
+      "exact-combat": {
+        "scope": "Read-only exact closed checkpoint combat state, not last asynchronous controller sample. No guest or state writes.",
+        "run": "route-walk152",
+        "state_sha256": "3f3c1df9d6d7ee10b88bb3e34632cb95d87952084272f4125ea58f6fc1bedf7f",
+        "source": 34710,
+        "health": [
+          1200,
+          1200,
+          90,
+          600
+        ],
+        "hero_pos": [
+          25153.205078125,
+          -2000.00244140625,
+          -43470.28125
+        ],
+        "hero_yaw": -3.0284292697906494,
+        "hero_routines": [
+          0,
+          0,
+          2,
+          0
+        ],
+        "partner_pos": [
+          29364.328125,
+          -2000.001220703125,
+          -42863.140625
+        ],
+        "partner_flags": "0x46",
+        "boss": {
+          "hp": 3094,
+          "pos": [
+            20145.837890625,
+            -2000.00048828125,
+            -47058.6640625
+          ],
+          "yaw": 1.9478880167007446,
+          "routines": [
+            1,
+            45,
+            3,
+            0
+          ]
+        },
+        "items": [
+          {
+            "id": 124,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 35,
+            "num": 1,
+            "bullet": 5
+          },
+          {
+            "id": 4,
+            "num": 10,
+            "bullet": 0
+          },
+          {
+            "id": 172,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 173,
+            "num": 1,
+            "bullet": 0
+          }
+        ],
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "bell-context": {
+        "run": "route-walk152",
+        "state_sha256": "3f3c1df9d6d7ee10b88bb3e34632cb95d87952084272f4125ea58f6fc1bedf7f",
+        "source": 34710,
+        "boss_position": [
+          20145.837890625,
+          -2000.00048828125,
+          -47058.6640625
+        ],
+        "boss_yaw": 1.9478880167007446,
+        "boss_routines": [
+          1,
+          45,
+          3,
+          0
+        ],
+        "boss_original_target_x5F0": [
+          26972.0,
+          -1999.998046875,
+          -49754.0
+        ],
+        "boss_route_target_Pl_pos": [
+          26972.0,
+          -1999.998046875,
+          -49754.0
+        ],
+        "boss_CriAtk_wait": 0,
+        "bellTimer": 32,
+        "bell_stat": 2,
+        "announced_bell_pos": [
+          26972.0,
+          -1999.998046875,
+          -49754.0
+        ],
+        "status1": "0x20000204",
+        "hero_pos": [
+          25153.205078125,
+          -2000.00244140625,
+          -43470.28125
+        ],
+        "heading_projection": {
+          "forward": 3334.239499606276,
+          "lateral": 5180.064123035771
+        },
+        "scope": "Read-only exact checkpoint bell-source context. Heading geometry is a navigation estimate; no gameplay or state writes."
+      }
+    },
+    {
+      "run": "route-walk153",
+      "source": 34879,
+      "state_sha256": "7d246f9d024f999ab113b6eed3227e1ba17ae66502de28c6eb7d46404ea8ce67",
+      "health": [
+        1200,
+        1200,
+        90,
+        600
+      ],
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "run_result": {
+        "name": "castle21-recoveredJ-route-walk153",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T20:23:41.546719+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T20:23:49.810749+00:00",
+        "elapsed_s": 8.2,
+        "emulator_exited": true
+      },
+      "full_checkpoint_proof": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk153-checkpoint-proof.json",
+        "sha256": "527e01ecca93ac2985c55ebdaef2f77b48603e4c3b66b21bfa0db0480db4cb27"
+      },
+      "inputs": {
+        "scope": "Actual1521200/90 boss3094; exactsourcebell pursuit target26972,-49754 andlateralpath5180 confirmed, early6500front guard respected. Fullknownwest combatapproach behind bell trajectory, no extra bellshot/guardexception. Sameanyinjury/PID/collision guards no writes/reset/build.",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk152",
+        "seed_sha256": "3f3c1df9d6d7ee10b88bb3e34632cb95d87952084272f4125ea58f6fc1bedf7f",
+        "new_iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "target_xz": "21300,-42000;19000,-45000",
+        "controller_sha256": "81c1e33fd7af80ea8cfc53ba1b6d07191aa854567246aa7f224ad7951b2f080f"
+      },
+      "screenshots": [
+        {
+          "source_frame_interval": [
+            34876,
+            34879
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "images": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk153\\shots\\checkpoint-source-34876\\frames\\fb0.png",
+              "sha256": "e217e41b3b5a41efbb4d34ca06317010cc2edf4e0c8c3499e3b6ef1c177e574f"
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk153\\shots\\checkpoint-source-34876\\frames\\fb1.png",
+              "sha256": "19aaf62288994a707f28d24391880b53ffa35c1c95ea44d16843bcd77f286b12"
+            }
+          ]
+        }
+      ],
+      "exact-combat": {
+        "scope": "Read-only exact closed checkpoint combat state, not last asynchronous controller sample. No guest or state writes.",
+        "run": "route-walk153",
+        "state_sha256": "7d246f9d024f999ab113b6eed3227e1ba17ae66502de28c6eb7d46404ea8ce67",
+        "source": 34879,
+        "health": [
+          1200,
+          1200,
+          90,
+          600
+        ],
+        "hero_pos": [
+          18825.1484375,
+          -2000.00244140625,
+          -45161.9140625
+        ],
+        "hero_yaw": -2.455976963043213,
+        "hero_routines": [
+          0,
+          1,
+          0,
+          4
+        ],
+        "partner_pos": [
+          29327.609375,
+          -2000.001708984375,
+          -42810.58984375
+        ],
+        "partner_flags": "0x46",
+        "boss": {
+          "hp": 3094,
+          "pos": [
+            27708.09375,
+            -2000.0009765625,
+            -49549.68359375
+          ],
+          "yaw": 1.9461225271224976,
+          "routines": [
+            1,
+            45,
+            7,
+            0
+          ]
+        },
+        "items": [
+          {
+            "id": 124,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 35,
+            "num": 1,
+            "bullet": 5
+          },
+          {
+            "id": 4,
+            "num": 10,
+            "bullet": 0
+          },
+          {
+            "id": 172,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 173,
+            "num": 1,
+            "bullet": 0
+          }
+        ],
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      }
+    },
+    {
+      "run": "route-walk154",
+      "source": 35342,
+      "state_sha256": "9242ceaa1a474275ec2492b13cc006c98620a70f71c07676faa7ecdea9e57af9",
+      "health": [
+        1200,
+        1200,
+        90,
+        600
+      ],
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "run_result": {
+        "name": "castle21-recoveredJ-route-walk154",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T20:24:09.009243+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T20:24:26.693771+00:00",
+        "elapsed_s": 17.6,
+        "emulator_exited": true
+      },
+      "full_checkpoint_proof": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk154-checkpoint-proof.json",
+        "sha256": "c31ecf59524634cc73443b34f585f380c044833eb6a5e591c5de648330ad024f"
+      },
+      "inputs": {
+        "scope": "Actual1531200/90 boss3094 arrived atoriginalsouthbell x27708,-49550 routine14570, source-lure rearposition after fullwestapproach. Full42s max6weakpoint sustainedcombat, 6500frontal and source ray/laser/rear/HP/PID guards retained, no writes/reset/build.",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk153",
+        "seed_sha256": "7d246f9d024f999ab113b6eed3227e1ba17ae66502de28c6eb7d46404ea8ce67",
+        "new_iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "target_xz": "18825,-45162",
+        "controller_sha256": "a18087a10e52a6d3ba334d1fd06d4937fdc2ac1c766564c67ef9161bc9fcf626"
+      },
+      "screenshots": [
+        {
+          "source_frame_interval": [
+            35340,
+            35342
+          ],
+          "health_before": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            90,
+            600
+          ],
+          "images": [
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk154\\shots\\checkpoint-source-35340\\frames\\fb0.png",
+              "sha256": "64fb8ead1497e31d41a82071fd93a8b661089de394b9e8764ce005bd2ec92172"
+            },
+            {
+              "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk154\\shots\\checkpoint-source-35340\\frames\\fb1.png",
+              "sha256": "3b64aead739430b71044bfa6207c858fba03bd64e983b1453a923f1e9c38106c"
+            }
+          ]
+        }
+      ],
+      "exact-combat": {
+        "scope": "Read-only exact closed checkpoint combat state, not last asynchronous controller sample. No guest or state writes.",
+        "run": "route-walk154",
+        "state_sha256": "9242ceaa1a474275ec2492b13cc006c98620a70f71c07676faa7ecdea9e57af9",
+        "source": 35342,
+        "health": [
+          1200,
+          1200,
+          90,
+          600
+        ],
+        "hero_pos": [
+          18766.537109375,
+          -2000.00048828125,
+          -45240.77734375
+        ],
+        "hero_yaw": 2.198164224624634,
+        "hero_routines": [
+          0,
+          0,
+          2,
+          0
+        ],
+        "partner_pos": [
+          29327.609375,
+          -1999.999267578125,
+          -42810.58984375
+        ],
+        "partner_flags": "0x46",
+        "boss": {
+          "hp": 3094,
+          "pos": [
+            24341.9609375,
+            -2000.00048828125,
+            -48304.7578125
+          ],
+          "yaw": -1.2071720361709595,
+          "routines": [
+            1,
+            16,
+            1,
+            0
+          ]
+        },
+        "items": [
+          {
+            "id": 124,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 35,
+            "num": 1,
+            "bullet": 5
+          },
+          {
+            "id": 4,
+            "num": 10,
+            "bullet": 0
+          },
+          {
+            "id": 172,
+            "num": 1,
+            "bullet": 0
+          },
+          {
+            "id": 173,
+            "num": 1,
+            "bullet": 0
+          }
+        ],
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      }
+    }
+  ],
+  "host_inputs": [
+    {
+      "path": "seal-resume-delta.py",
+      "sha256": "5066d6b1f760c772ee1d201bc08652a46873904e011cbaa9238e04c528db0b14"
+    },
+    {
+      "path": "audit-resume-bell-context.py",
+      "sha256": "1df02360700e484be200fb3428662393a487bce85033e13d42ff008cda55afa4"
+    },
+    {
+      "path": "run-recovered-j-route-walk151.py",
+      "sha256": "9e55faa7003f940c49317b720d483b4a96b1ec3cb4baba4ca1f10368e05037b1"
+    },
+    {
+      "path": "run-recovered-j-route-walk151.sh",
+      "sha256": "bbf422451562efef6f82c19213345e344f42756592602345ef64e3b57c3c2c98"
+    },
+    {
+      "path": "run-recovered-j-route-walk152.py",
+      "sha256": "4b8d34ade3cea507746021fece0f5e7daf4b83860508617adebe2fb43c1d5350"
+    },
+    {
+      "path": "run-recovered-j-route-walk152.sh",
+      "sha256": "baff896de5e170c59761d2d5312587f7a60b55fad3ddcf8f75b495433180b2f0"
+    },
+    {
+      "path": "run-recovered-j-route-walk153.py",
+      "sha256": "f716175c98d0d07204c4aad49c3604e57f5c31b2bd4412f271483c6678561b6e"
+    },
+    {
+      "path": "run-recovered-j-route-walk153.sh",
+      "sha256": "9d1118edb851df466c8cf35ca3365cb86c94ac19bc97c77fc234cb43ef6b2872"
+    },
+    {
+      "path": "run-recovered-j-route-walk154.py",
+      "sha256": "36ae5da979a21991c0cd8b84b04b2eae2e1b3e96ea25fc38e99db1d5eddc092a"
+    },
+    {
+      "path": "run-recovered-j-route-walk154.sh",
+      "sha256": "5930b29c736c7797b4309a4d5885a620974b3a224461bca23b1147bc0bb653f6"
+    }
+  ]
+}
