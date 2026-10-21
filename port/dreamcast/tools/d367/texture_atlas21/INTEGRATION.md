@@ -84,3 +84,59 @@ activation. If another component changes, the archived QA ce080eb290 program is
 not a substitute for a new paired control. Changed programs require fresh cold
 lineage and symbols. Complete program/overlay equality, final image/heap/stack,
 material leases, transitions, real screenshots and matched timing remain open.
+
+## Full source/program pair, 2026-10-21
+
+The later atlas-only qualification at source
+4c210b3813556677470c4fca59d5354acfb75e4d includes runtime e345473b9 and the
+0690cc6ed Make guard fix. This updates the earlier object-only limits above.
+It does not qualify the later combined QA source6f9d31b0e or target rendering.
+Both full j4 builds used the original QA labels, assets and recipe, with
+GAME_SH4ZAM=1, SKIN_SH4ZAM=0 and SOURCE_DATE_EPOCH=1760000000. The atlas knob
+stays default0. The source has no window-restoration knob; it was omitted and
+remains unenabled. An initial setup rejected an explicit absent knob before
+compilation; its evidence remains separately preserved.
+
+OFF passed exact original QA raw program equality and all14 original overlays
+before ON was allowed to build. Raw SHA256:
+
+- OFF: 8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d
+- ON: 3b2995018ce4ea17ac1d64425195825c3ebe409af9de341f6ec26037b1a4cdb7
+
+ELF SHA256:
+
+- OFF: 31114defff534958c9f0722be9cab0c67af3c2e2ab878f2378845c2b6d47e1cf
+- ON: 6322d50de5c974de7956e1ba21c66ec877e1236dce3b01a0775350441a89bb49
+
+The final link adds8576 text and42112 data bytes; whole ELF BSS is unchanged.
+CHAR_DATA_BLOCK puts actor data/BSS into loadable PROGBITS. Actual character
+section size is489632 OFF /531744 ON, rounded to491520 /540672 (+49152).
+Section padding is1888 /8928. Linked _end and raw size move by57728 bytes.
+Both builds resolve ARENA_FIT=1, ARENA_FIT_KOS_BYTES=196608,
+ARENA_KOS_BYTES=53248, CORE_RESIDENT_BYTES=1360608, CHAR_DATA_BLOCK=1 and
+IMAGE_PAD_BYTES=0. Runtime arena size depends on actual sbrk/mallinfo and4KiB
+rounding; no runtime KOS free/heap4 arena, stack high-water or rendering capacity
+is measured by this link. Static per-function stack rows remain bind1848,
+project1844, atlas_capability1772 and ordinary factories2008/3936.
+
+The selected canonical dependency receipts are actual-compile-inputs-v2.json:
+162 OFF /165 ON complete dependencies, with archived generated input hashes.
+Their earlier v1 files captured zero dependencies because -M was combined with
+-MMD without an explicit stdout dependency destination; they are preserved but
+superseded. The static stack observer stripped objects match the actual full
+build actor objects. The receipts retain compiler flags, source/header hashes,
+resolved recipes, linker wrapper/command, toolchain/static library identities,
+section/symbol/program-header dumps, raw/ELF/all14 overlays and generated input
+copies. Completed owned objdirs were removed only after recording per-file SHA
+manifests; source, asset and evidence data remain.
+
+Private evidence is mirrored/readback verified at
+C:/Flycast-Evidence/re4-dreamcast/texture-atlas21-program-20261021/pair-02
+(182 files,77301218 bytes). SHA256SUMS seal:
+99fb49ca5a07b9ce5750c7d5e9b7c75e4f07f74030f831da6562119f3de38d8a.
+QUALIFICATION.json SHA256:
+511b7ea9da9da4381a5958030e3f6bb8a51a301d77282f6cd883894bb1ae3e6a.
+No full stage, guest, target screenshot or physical Dreamcast test occurred.
+Root implementation review/combined integration, cold target lifecycle/geometry,
+material/texture leases, KOS/heap/stack/VRAM admission, sampling/look screenshots
+and matched performance remain open. Production merge/release stays with Claude.
