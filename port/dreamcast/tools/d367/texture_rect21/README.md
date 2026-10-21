@@ -61,3 +61,35 @@ bytes plus40-byte helper; PAL planning frame480 bytes. Compiler stack observers
 are stripped-object exact to actual build objects. These per-function numbers
 are not runtime stack/heap high-water or target performance. No image staging,
 guest, scene look/residency/regression or physical-console acceptance occurred.
+
+2026-10-21 standalone image and cold-test plan (`image-qualification-plan.json`):
+read-only verification rehashes all 1,743 baseline files, every file extent and
+1,874 ISO/Rock Ridge directory records. This exact baseline has no Joliet tree.
+The PVD declares 504,000 sectors while track03 contains 504,150. All 150 decoded
+tail sectors are zero and outside every file/directory. The enlarged final
+program needs two of them: keep its original LBA 547365 and every other file
+extent, expand the volume count to 504002 and preserve the remaining 148 tail
+sectors. Both packs, all overlays and sidecars fit their original allocations.
+
+A future single-pass raw2352 to cooked2048 writer changes only selected payloads,
+zero padding and exactly three metadata fields: program size, pack size and
+PVD volume count, each LE/BE pair. The selected allowlist is program,14 overlays,
+pack,two sidecars. B changes16 files; C changes18. All1,725 unrelated file extents,
+lengths and hashes stay fixed. No new directory tree, whole extraction or
+intermediate image is needed. Stage readback must verify every file plus the
+exact metadata delta and retained tail; a virtual hash is not an image test.
+
+Each cooked track stays 1,032,499,200 bytes. Conservative full-image bounds are
+1,034,794,967 bytes per image and 2,069,589,934 per pair; with16MiB metadata reserve,
+the pair bound is2,086,367,150 bytes, below2.3GiB. `plan_image.py --out <new-dir>`
+creates metadata only. Streaming RAM-only overlays predict B track SHA e9efca15
+and C SHA13c99813; future staging must match the full digests in the receipt.
+No image was staged and no guest ran. Earlier append plan03 is superseded.
+
+Cold-plan evidence maps17 scoped keys onto49 r100 and29 r103 material rows. Each
+B/C image needs its own new cold checkpoint lineage; no original-image save can
+transfer. Same ON a58579b8 B/C comparison isolates17 rectangles from the inherited
+948 pipeline. Read-only resident/cache fields and stable observed SQ-header
+snapshots can establish distinct minimum admission/submission evidence, with
+explicit visibility limits. Approximation look, actual key coverage, co-resident
+originals,lifecycle and matching benchmark windows remain target gates.
