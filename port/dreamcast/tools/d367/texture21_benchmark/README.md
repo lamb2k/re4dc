@@ -58,3 +58,12 @@ and physical Dreamcast independently. The latter two remain Claude/user owned.
 
 Run focused source tests: `python3 -m unittest discover -s
 port/dreamcast/tools/d367/texture21_benchmark -p test_bench.py -v`.
+
+`preprocess.py --repo SOURCE --build BUILD --out NEW_DIR --source
+platform/native_actor_fast.cpp --source platform/native_static.cpp --source
+../room/texture_package.cpp` finds each exact logged `kos-c++` compilation,
+replays its flags with the pinned SH target compiler in `-E -dM` mode, and records
+compiler/source/object/command/macro identities. It preserves the original
+objects and ELF. It rejects source paths outside the selected repository and
+ambiguous or absent compile commands. This establishes the actual translation
+unit definitions; it does not turn a source receipt into a gameplay test.
