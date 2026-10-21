@@ -5,6 +5,7 @@ import subprocess,tempfile,unittest
 ROOT=Path(__file__).resolve().parents[3]
 CPP=ROOT/'port/dreamcast/game/coarse.cpp'
 MK=ROOT/'port/dreamcast/game/game30.mk'
+GAME=ROOT/'src/game/game.cpp'
 def body(text):
  start=text.index('extern "C" int re4dc_coarse_tick(int dropped)')
  at=text.index('{',start);depth=1;end=at+1
@@ -21,6 +22,8 @@ void re4dc_std_scenery_tick(int value){++ticks;latched=value;}
 #define RE4DC_NO_STD_SCENERY 0
 #define RE4DC_PS2_WORLD_ROOMS 2
 '''
+GAME_ACCESSOR=GAME.read_text().split('extern "C" int re4dc_game_option_from_play() {',1)[1].split('\n}',1)[0]
+PREFIX+='extern "C" int re4dc_game_option_from_play() {'+GAME_ACCESSOR+'\n}\n'
 MAIN='''
 int main(){unsigned cases=0;
 for(unsigned mode=0;mode<8;++mode)for(unsigned sub=0;sub<4;++sub)
@@ -45,7 +48,7 @@ std::printf("%u context cases plus null state passed\\n",cases);
 '''
 class PauseContextTests(unittest.TestCase):
  def test_disabled_preprocessing_exact(self):
-  old=subprocess.check_output(['git','show','HEAD:port/dreamcast/game/coarse.cpp'],cwd=ROOT,text=True)
+  old=subprocess.check_output(['git','show','892c10ddeadcfcc0bb55bcf53c9b4ac25fd035e8:port/dreamcast/game/coarse.cpp'],cwd=ROOT,text=True)
   def pp(text):
    return subprocess.check_output(['g++','-E','-P','-x','c++','-DRE4DC_PAUSE_NATIVE_PRESENTATION=0','-'],input=PREFIX+body(text),text=True)
   self.assertEqual(pp(old),pp(CPP.read_text()))
