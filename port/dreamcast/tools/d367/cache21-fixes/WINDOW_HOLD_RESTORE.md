@@ -82,3 +82,48 @@ not acceptance evidence. This is source/object qualification only: no full
 linked-program/overlay build, stage, guest, screenshot, hardware, recipe enable,
 release, issue or SD action ran. Root owns chosen-candidate integration and
 gameplay qualification; Claude alone merges production and publishes.
+
+## October 21 matched inventory result: disabled
+
+Main subsequently qualified current source b21116ec0 on integration892c10dd.
+Both full builds finished, and OFF matches the retained QA program and all14
+overlays. ON preserves all1,728 unrelated files. The ordinary-input inventory
+pair has one actual menu cycle per arm, no guest errors and no log overruns.
+Its matched host-time interval adds102 low-level nonmusic requests and168,032
+bytes with the candidate enabled. This is a negative traffic result. Keep
+SS_WINDOW_HOLD_RESTORE disabled; no recipe adoption or performance claim.
+
+The retained logs show exactly26 additional eager restored keys with122,912
+upload bytes, matching the26-entry/122,912-byte window release. OFF opens none
+of those26 keys later in its captured return tail. This does not prove no
+future demand from a different camera or path, and upload bytes are not added
+to drive counters. No counterfactual saving is derived from this attribution.
+
+Main inspected both returned-room screenshots. They show the ordinary room;
+this is bounded visual evidence, not a source-tick or whole-scene equivalence
+gate. The raw global-prefix bytes in the old observer are unvalidated and do
+not establish game mode. Low-level requests are not physical optical seeks.
+Flycast blocked time and screenshots do not establish console performance.
+
+The eligibility contract needs further work: Entry.frame is written by resident
+preload selection, successful preloads and ordinary unpinned lookups as well as
+scene commitment. The hold rule therefore cannot treat that shared field as
+exclusively the last visible draw. Simply restoring the larger journal fixes
+bookkeeping coverage while eagerly reloading data; it is not a cache policy
+improvement. Preserve explicit owner/lease/fence and memory limits when tracing
+actual pre-hold demand. Do not replace this result with a source-only estimate.
+
+Reproduce attribution without a guest using analyze_window_demand.py with
+--evidence pointing to the sealed cache21-window-20261021 directory, --source
+pointing to this native_ui.cpp, and --output pointing to a new private file.
+The tool hashes the complete source/logs and original pair receipt, labels
+cold/menu/restore/tail opens, and preserves existing outputs. Raw key lists and
+logs remain in private evidence. Broader menu/movie/Continue/resource and
+physical Dreamcast gates remain open.
+The optional --pack argument hashes the exact original archive and reads only
+selected members. The recovered original pack18fcee1149 contains126,656 stored
+member bytes for these26 keys, of which122,912 are texture payload. This is
+asset size attribution; it does not account for all168,032 additional measured
+drive bytes or102 low-level requests. Metadata, validation, filesystem traffic
+and replacement/fragmentation effects must be traced before attributing every
+request to a package.
