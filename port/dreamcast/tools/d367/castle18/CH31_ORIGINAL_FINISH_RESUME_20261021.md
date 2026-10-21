@@ -4,9 +4,9 @@ This is preparation, not completed route acceptance. Continue the original game 
 
 ## Exact current checkpoint
 
-The last actual guest is J197, with Leon at 368/1200, Ashley at 600/600 in the western Wait corner, and the Garrador alive at 761 HP. Its saved state SHA256 is `56ce18fbd42e96a5e5184190e6557475c4b694bc4414d99e90b30849a6569e4b`. The original lever remains set; the boss-death and open battle-door bits remain clear. The saved room flags are `0x2c400000`.
+The last actual guest is J202, with Leon at 368/1200 and Ashley at 600/600. The original Garrador death callback passed: room-save bits 0 and 1 were set at source frame 54426, followed by 30 stable freeplay ticks. The saved state is at frame 54465 with room flags `0xec400000` and SHA256 `7a98a65054ae20ee0a0c54e5db230e4b9066bf53aaa06851b482700043d589ce`. The original HP-zero corpse remains present. The handgun is empty, with 15 reserve rounds; Ashley is still in the safe western Wait corner. Next use normal reload and Follow, then the original stairs/exit and reset waves.
 
-J198 was refused at the disk-space preflight before guest or capture-directory creation. No game state advanced. J199 is prepared from the exact J197 state, using normal no-B walking toward the western rear stance at (17000,-46000). Do not rerun its shell after it has created the per-run RAM links; prepare a new numbered retry if preflight refuses again. Do not substitute an older checkpoint.
+Historical J198 was refused before guest creation and advanced nothing. J199 subsequently resumed the exact last actual J197 state. J200/J201 used normal handgun shots; the J201 controller timeout label preceded its next enemy-HP read and is stale. Its authoritative saved state proves HP zero but no death callback yet; J202 supplies that separate callback acceptance. Raw logs and screenshots remain intact.
 
 The unchanged guest preflight requires 17,314,086,912 bytes free on C:. The runtime floor is 17,246,978,048 bytes, with a bounded 128 MiB output allowance. Check Windows and WSL processes, serialized guest ownership and live free space immediately before launch. A refusal does not authorize reducing the floor or deleting protected files.
 
