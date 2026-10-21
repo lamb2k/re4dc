@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "scope": "A01\u2013A05/A07 source checkpoint; no whole-program CFG or complete audit claim",
+  "scope": "A01\u2013A05/A07/A08 source checkpoint; no whole-program CFG or complete audit claim",
   "source_ref": "c7e0358a44677a15123a7f4233c4115eba627694",
   "census_sha256": "3adb52b984ed441fe52d58b704d1abc392c11afc39e3ae24a78f551ba756ce60",
   "qa_archive_inventory_count": 66,
@@ -793,7 +793,7 @@
         "publish m->pArc"
       ],
       "local_unwind_calls": 0,
-      "classification": "source-visible rollback candidate; failure returns can precede publication; no observed leak/stale-use claim"
+      "classification": "bind refusal is terminal re4dc_missing halt; early nonfatal read/resize and exhausted-slot returns require separate cleanup proof"
     },
     "open": [
       "fatal callback external completion",
@@ -801,6 +801,636 @@
       "non-door reset/continue/overlay path ordering",
       "partial-admission refusal and cleanup",
       "caller-owned attachment and emitter pointers"
+    ]
+  },
+  "ownership_followup": {
+    "source_sites": [
+      {
+        "path": "src/game/shape.cpp",
+        "line": 58,
+        "function": "ShapeMove"
+      },
+      {
+        "path": "src/game/pl_class.cpp",
+        "line": 1677,
+        "function": "cPlNeck::motSet"
+      },
+      {
+        "path": "src/game/pl_npc.cpp",
+        "line": 2241,
+        "function": "cSubChar::neckCtrl"
+      },
+      {
+        "path": "src/game/pl_npc.cpp",
+        "line": 3071,
+        "function": "cSubChar::beginEvent"
+      },
+      {
+        "path": "src/game/pl_npc.cpp",
+        "line": 3888,
+        "function": "cSubChar::interrupt"
+      },
+      {
+        "path": "src/game/em.cpp",
+        "line": 248,
+        "function": "cEmMgr::move"
+      },
+      {
+        "path": "src/game/em.cpp",
+        "line": 568,
+        "function": "emMove"
+      },
+      {
+        "path": "src/game/model.cpp",
+        "line": 1310,
+        "function": "cModel::push"
+      },
+      {
+        "path": "src/em10/em10.cpp",
+        "line": 765,
+        "function": "cEm10::~cEm10"
+      },
+      {
+        "path": "include/cManager.h",
+        "line": 469,
+        "function": "cManager<T>::destroy"
+      },
+      {
+        "path": "include/cManager.h",
+        "line": 301,
+        "function": "cManager<T>::dieCheck"
+      },
+      {
+        "path": "src/game/obj12.cpp",
+        "line": 46,
+        "function": "cObj12::move"
+      },
+      {
+        "path": "src/game/obj16.cpp",
+        "line": 204,
+        "function": "cObj16::move"
+      },
+      {
+        "path": "src/em10/em10_set.cpp",
+        "line": 259,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em11/em11_set.cpp",
+        "line": 227,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em12/em12_set.cpp",
+        "line": 266,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em13/em13_set.cpp",
+        "line": 310,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em14/em14_set.cpp",
+        "line": 277,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em15/em15_set.cpp",
+        "line": 266,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em16/em16_set.cpp",
+        "line": 264,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em17/em17_set.cpp",
+        "line": 265,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em19/em19_set.cpp",
+        "line": 229,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em1a/em1a_set.cpp",
+        "line": 232,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em1b/em1b_set.cpp",
+        "line": 225,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em1c/em1c_set.cpp",
+        "line": 271,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em1d/em1d_set.cpp",
+        "line": 338,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em1e/em1e_set.cpp",
+        "line": 315,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em1f/em1f_set.cpp",
+        "line": 267,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em20/em20_set.cpp",
+        "line": 331,
+        "function": "Work mot51 initializer"
+      },
+      {
+        "path": "src/em10/em10.cpp",
+        "line": 22809,
+        "function": "em10SetWalkMotion"
+      },
+      {
+        "path": "src/em10/em10.cpp",
+        "line": 22964,
+        "function": "em10SetDashMotion"
+      },
+      {
+        "path": "src/em10/em10.cpp",
+        "line": 22757,
+        "function": "em10SetWaitMotion"
+      },
+      {
+        "path": "src/game/emwep.cpp",
+        "line": 2260,
+        "function": "cEmWep::setGrenadeThrow"
+      },
+      {
+        "path": "src/em10/em10.cpp",
+        "line": 11946,
+        "function": "plem10_C_SawCriHit"
+      },
+      {
+        "path": "src/em35/em35.cpp",
+        "line": 2225,
+        "function": "plem35_CriticalHit"
+      },
+      {
+        "path": "src/em38/em38.cpp",
+        "line": 839,
+        "function": "plem38_AtkHit"
+      },
+      {
+        "path": "src/em32/em32.cpp",
+        "line": 4925,
+        "function": "plemDivide"
+      },
+      {
+        "path": "src/em39/em39.cpp",
+        "line": 1226,
+        "function": "plem39_Failure"
+      },
+      {
+        "path": "src/game/emrock.cpp",
+        "line": 2389,
+        "function": "plemDropDie"
+      },
+      {
+        "path": "src/game/emrock.cpp",
+        "line": 2413,
+        "function": "subemDropDie"
+      },
+      {
+        "path": "src/game/game.cpp",
+        "line": 1288,
+        "function": "gameDiedemo"
+      },
+      {
+        "path": "src/game/game.cpp",
+        "line": 964,
+        "function": "GameContinue"
+      },
+      {
+        "path": "src/game/main.cpp",
+        "line": 710,
+        "function": "systemSoftReset"
+      },
+      {
+        "path": "src/game/main.cpp",
+        "line": 668,
+        "function": "systemResetCommon"
+      },
+      {
+        "path": "port/dreamcast/game/motion_bridge.cpp",
+        "line": 22,
+        "function": "re4dc_motion_free"
+      },
+      {
+        "path": "src/game/read.cpp",
+        "line": 379,
+        "function": "ModuleMemFree"
+      },
+      {
+        "path": "src/game/main_mem.cpp",
+        "line": 394,
+        "function": "MemDestroyHeap"
+      },
+      {
+        "path": "port/dreamcast/game/platform/mem.cpp",
+        "line": 215,
+        "function": "re4dc_missing"
+      },
+      {
+        "path": "src/game/read.cpp",
+        "line": 435,
+        "function": "readEm"
+      },
+      {
+        "path": "src/game/read.cpp",
+        "line": 532,
+        "function": "readEmData"
+      },
+      {
+        "path": "src/game/event.cpp",
+        "line": 2870,
+        "function": "EventMgr::SetEvd"
+      },
+      {
+        "path": "src/game/event.cpp",
+        "line": 2827,
+        "function": "EventMgr::GetBin"
+      },
+      {
+        "path": "src/game/event.cpp",
+        "line": 2906,
+        "function": "EventMgr::GetEvd"
+      },
+      {
+        "path": "src/game/event.cpp",
+        "line": 1627,
+        "function": "Event::ExeEndEvt"
+      },
+      {
+        "path": "src/game/event.cpp",
+        "line": 2761,
+        "function": "EventMgr::DelEvt"
+      },
+      {
+        "path": "src/game/pl_class.cpp",
+        "line": 1225,
+        "function": "cPlayer::endEvent0"
+      },
+      {
+        "path": "src/game/model.cpp",
+        "line": 221,
+        "function": "cModel::modelInit"
+      },
+      {
+        "path": "src/game/pl_leon.cpp",
+        "line": 89,
+        "function": "cPlLeon::setModel"
+      }
+    ],
+    "multiplicity": {
+      "normal_shape": "one pShape curve per active info through ShapeMove; info chain may have multiple independent curves",
+      "leon_neck": "neckMot is blendMot, not an additional third body channel",
+      "partner_neck": "procedural matrices; subBackMot is the blend work; face remains independent",
+      "event_shape": "ExePacket_Shp resolves ModTbl target; type2 info and distinct model targets require selected event ownership"
+    },
+    "cart_selector_rows": [
+      {
+        "path": "src/em10/em10_set.cpp",
+        "line": 259,
+        "value": "ARC(0x25E)"
+      },
+      {
+        "path": "src/em11/em11_set.cpp",
+        "line": 227,
+        "value": "0"
+      },
+      {
+        "path": "src/em12/em12_set.cpp",
+        "line": 266,
+        "value": "ARC(0x25E)"
+      },
+      {
+        "path": "src/em13/em13_set.cpp",
+        "line": 310,
+        "value": "ARC(0x25E)"
+      },
+      {
+        "path": "src/em14/em14_set.cpp",
+        "line": 277,
+        "value": "0"
+      },
+      {
+        "path": "src/em15/em15_set.cpp",
+        "line": 266,
+        "value": "ARC(0x25E)"
+      },
+      {
+        "path": "src/em16/em16_set.cpp",
+        "line": 264,
+        "value": "0"
+      },
+      {
+        "path": "src/em17/em17_set.cpp",
+        "line": 265,
+        "value": "0"
+      },
+      {
+        "path": "src/em19/em19_set.cpp",
+        "line": 229,
+        "value": "0"
+      },
+      {
+        "path": "src/em1a/em1a_set.cpp",
+        "line": 232,
+        "value": "0"
+      },
+      {
+        "path": "src/em1b/em1b_set.cpp",
+        "line": 225,
+        "value": "0"
+      },
+      {
+        "path": "src/em1c/em1c_set.cpp",
+        "line": 271,
+        "value": "0"
+      },
+      {
+        "path": "src/em1d/em1d_set.cpp",
+        "line": 338,
+        "value": "0"
+      },
+      {
+        "path": "src/em1e/em1e_set.cpp",
+        "line": 315,
+        "value": "0"
+      },
+      {
+        "path": "src/em1f/em1f_set.cpp",
+        "line": 267,
+        "value": "0"
+      },
+      {
+        "path": "src/em20/em20_set.cpp",
+        "line": 331,
+        "value": "0"
+      }
+    ],
+    "cart_selected_em12": {
+      "archive": "qa-fixed:em/em12.drs",
+      "native_sha256": "bfa2cb8e9f266ce4c04a34a479f18b7dfa9aa01ea6b5cbeb914d204958fe849c",
+      "native_bytes": 1105152,
+      "mtc": {
+        "version": 2,
+        "count": 145,
+        "cap": 32768,
+        "table_crc": "714b52a2",
+        "reserved_slots": 2,
+        "max_cold_slab": 32416,
+        "hot_preload_bytes": 225184,
+        "policy": "two reserved slabs; conditional spill/cold-pool/global pressure",
+        "permanent_hot_lease": false
+      },
+      "source_arcs": [
+        "0x25d",
+        "0x25e"
+      ],
+      "records": [
+        {
+          "arc": 605,
+          "offset": 981408,
+          "entry": 110,
+          "bytes": 1120,
+          "key": "ccaabfa6-792e7576",
+          "state": "cached-cold"
+        },
+        {
+          "arc": 606,
+          "offset": 981440,
+          "entry": 111,
+          "bytes": 448,
+          "key": "39d2c347-efb714bb",
+          "state": "cached-cold"
+        }
+      ],
+      "distinct_cached": 2,
+      "cached_payload_bytes": 1568,
+      "cold_bytes": 1568,
+      "strict_v3_over_two": false,
+      "reason": "independent cart state alternatives; not a simultaneous pair",
+      "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+    },
+    "selector_contracts": {
+      "literal_work_archive_origins": [
+        {
+          "path": "src/em10/em10_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em11/em11_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em12/em12_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em13/em13_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em14/em14_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em15/em15_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em16/em16_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em17/em17_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em1b/em1b_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em1c/em1c_set.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em2b/em2b.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em2c/em2c.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em32/em32.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em38/em38.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        },
+        {
+          "path": "src/em39/em39.cpp",
+          "owner": "em->subArc",
+          "scope": "literal Work initializer, not state co-use proof"
+        }
+      ],
+      "ganado": "own subArc; type/Ganado/weapon/shield/Walk_type and emset/water select ONE body FCV plus its SEQ; not all alternatives at once",
+      "grenade": {
+        "owner": "Krauser ARC10b/10c/10d/111 supplied through stored fields; weapon subArc is not their owner",
+        "callers": [
+          {
+            "path": "src/em39/em39.cpp",
+            "line": 4150,
+            "symbol": "setGrenadeThrow",
+            "context_hint": "em39_R1_AppearMG2",
+            "arguments": "&(spd), 60, ARC(0x10B), ARC(0x10C), ARC(0x10D), ARC(0x111)",
+            "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+          },
+          {
+            "path": "src/em39/em39.cpp",
+            "line": 4425,
+            "symbol": "setGrenadeThrow",
+            "context_hint": "em39_R1_ThrowGR",
+            "arguments": "&spd, 45, ARC(0x10B), ARC(0x10C), ARC(0x10D), ARC(0x111)",
+            "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+          }
+        ]
+      }
+    },
+    "fatal_retained_headers": [
+      {
+        "path": "src/em10/em10.cpp",
+        "function": "plem10_C_SawCriHit",
+        "classification": "retained borrowed header; normal End* not the termination owner"
+      },
+      {
+        "path": "src/em35/em35.cpp",
+        "function": "plem35_CriticalHit",
+        "classification": "retained borrowed header; normal End* not the termination owner"
+      },
+      {
+        "path": "src/em38/em38.cpp",
+        "function": "plem38_AtkHit",
+        "classification": "retained borrowed header; normal End* not the termination owner"
+      },
+      {
+        "path": "src/em32/em32.cpp",
+        "function": "plemDivide",
+        "classification": "retained borrowed header; normal End* not the termination owner"
+      },
+      {
+        "path": "src/em39/em39.cpp",
+        "function": "plem39_Failure",
+        "classification": "retained borrowed header; normal End* not the termination owner"
+      },
+      {
+        "path": "src/game/emrock.cpp",
+        "function": "plemDropDie",
+        "classification": "retained borrowed header; normal End* not the termination owner"
+      },
+      {
+        "path": "src/game/emrock.cpp",
+        "function": "subemDropDie",
+        "classification": "retained borrowed header; normal End* not the termination owner"
+      }
+    ],
+    "partial_admission": {
+      "bind_refusal": "terminal re4dc_missing halt in selected implementation; local returns are not a recoverable gameplay retry",
+      "module_slot_exhaustion_restores_display": false,
+      "resize_relocation": "pre-bind nonfatal return if replacement differs; new owner is not published, cleanup OPEN",
+      "event_partial_registration": "SetEvd publishes header before all bins; no local rollback; subsequent ChkDat success can mask prior partial bin failure",
+      "event_fallback_allocation": "GetBin/GetEvd allocate before registration; local registration failure does not free dat; actual bridge/allocator failure OPEN",
+      "model": "modelInit releases base info if joint init fails; cPlLeon::setModel can return after prior infos added, caller transactional recovery OPEN"
+    },
+    "lifetime_edges": [
+      {
+        "id": "A03-OBJ12",
+        "owner": "parent source archive retained by obj12 motion header",
+        "termination": "parent guard follows MotionMove; detached cart can remain independent",
+        "status": "OPEN stop-before-free",
+        "next_case": "mark parent, retain child Motion, retire donor before next child tick; prove child stop or explicit owner retention"
+      },
+      {
+        "id": "A03-OBJ16",
+        "owner": "target/body borrowed model + own stored pMotion",
+        "termination": "dead target/body guard precedes move and deletes owner emitters; does not guard render-before-tick or address reuse",
+        "status": "source local guard proved; generation boundary OPEN",
+        "next_case": "destroy/reuse target between child update and model trans; verify emitter/shape/model readers drain"
+      },
+      {
+        "id": "A07-FATAL",
+        "owner": "dmgType donor + retained pMot, independent catch props",
+        "termination": "death demo retains archive; Continue selects door quiescence; interrupt alone does not restore callback",
+        "status": "source normal Continue contract; intra-room/forced interrupt OPEN",
+        "next_case": "abort a retained fatal/QTE callback through each non-door module retirement; require callback and catch prop quiescence"
+      },
+      {
+        "id": "A08-RESET",
+        "owner": "native slot/slab saved SDK heap handle",
+        "termination": "soft reset destroys heaps before module unbind; ModuleMemFree source guard does not wrap native motion free",
+        "status": "OPEN native post-destroy free risk",
+        "next_case": "loaded MTC reset with existing native allocator/handle audit; compare before-clear retirement versus later unbind, no guest claimed"
+      },
+      {
+        "id": "A08-INTRAROOM",
+        "owner": "em15 bell/em3,4,13 cabin/em11 cannon plus borrowers/children",
+        "termination": "bell/cabin sleep2 before InitModule; cannon frees before next yield; event pause exempts be_flag800",
+        "status": "OPEN per-caller deferred destruction and no-suspend proof",
+        "next_case": "prove two actual manager dieCheck passes, slow-motion skip and child/borrower termination; cannon has no drain before free"
+      },
+      {
+        "id": "A08-SLOTS",
+        "owner": "saved pG->Disp_flg in readEm",
+        "termination": "read failure restores saved flags; no-slot early return currently does not",
+        "status": "source-visible failure-path defect",
+        "next_case": "exhaust four module slots and check original display word restored on returned NULL"
+      },
+      {
+        "id": "A08-EVENT-SHAPE",
+        "owner": "external type5 model info pShape from named EVD bin",
+        "termination": "ExeEndEvt clears body motion but not ShapeEnd/ClrShape; normal event data destroy follows",
+        "status": "OPEN selected packet/owner lifetime",
+        "next_case": "a type5 model with event Shp plus live frame after carrier deletion; prove shape stop or retain carrier; also dead-player endEvent0 skips routine reset"
+      },
+      {
+        "id": "A08-EVDBINS",
+        "owner": "EvdTbl header + BinTbl borrowed entries/refcounts",
+        "termination": "normal Event destroy before DelEvd; partial SetBin refusal leaves header registered",
+        "status": "source-visible transactional admission defect",
+        "next_case": "fail kth BinTbl registration then retry same EVD name; require complete bins or rollback without releasing live refs"
+      }
     ]
   },
   "lexical_occurrences_by_symbol": {
@@ -1389,6 +2019,10 @@
   ],
   "source_pins": [
     {
+      "path": "include/cManager.h",
+      "sha256": "19ce63044d273bce47c208773df8921f08f90fc58bdfc162e7bb9507f5940e3c"
+    },
+    {
       "path": "include/em10.h",
       "sha256": "c6ab1e95154903cf0eb007f9258266b50afd7095fc1741e597aa9f174b21fbda"
     },
@@ -1449,6 +2083,14 @@
       "sha256": "8b06345739f3f0d44520890cac81535bd83a3bcc747cfa62debb982a0d4b012d"
     },
     {
+      "path": "port/dreamcast/game/motion_bridge.cpp",
+      "sha256": "80176e91b5442422bb801bcf3c6063b6a23629723df25ab318a02ef0355842a5"
+    },
+    {
+      "path": "port/dreamcast/game/platform/mem.cpp",
+      "sha256": "c42f173e4bf3cb9b08acb117ec3f66edd794e27fd7f9fe0fdb53278526487adb"
+    },
+    {
       "path": "port/dreamcast/game/platform/native_event_file.cpp",
       "sha256": "8ee1b82f0eb0ea697c3bf36acc024006d7621704de7b553bb051493ed55d3c9e"
     },
@@ -1481,8 +2123,60 @@
       "sha256": "41d9d2082fb0da06227150ad58ae28a89240cfb3b320dc3d1ca277c96a39f760"
     },
     {
+      "path": "src/em13/em13_set.cpp",
+      "sha256": "4401be63174acbb6e1ccceabbeabef26f77f4a059569cc51f0a024d03cbb9e45"
+    },
+    {
+      "path": "src/em14/em14_set.cpp",
+      "sha256": "804c23ba1649ca63ba4b056590039a22dbe500035a16d2d7c48af3364be2ad04"
+    },
+    {
+      "path": "src/em15/em15_set.cpp",
+      "sha256": "2e7d1ed7738d029e72ca55672fbaa2592968840a1ea4a861e4942723a27ac694"
+    },
+    {
+      "path": "src/em16/em16_set.cpp",
+      "sha256": "dbc79e1f656678fc8952a5c5e3aee1957739a4f0d80608286bccd4526135511d"
+    },
+    {
+      "path": "src/em17/em17_set.cpp",
+      "sha256": "ccc58e59d878f255fa605f8037ddf1b9eb83f76836efa6e2a3a9270d4b221e7f"
+    },
+    {
       "path": "src/em18/em18.cpp",
       "sha256": "85ef77b44b83f9ea188c3d4a746736026de3485d803a056aaa5ce0ca975785d5"
+    },
+    {
+      "path": "src/em19/em19_set.cpp",
+      "sha256": "cdf9fc304cc8e83bb14aa188260405ef16b4ab7261fab23a849d927a4400d249"
+    },
+    {
+      "path": "src/em1a/em1a_set.cpp",
+      "sha256": "cb5ccdc555af666255d60b11f8b32ad42aabcfdcc466733a7d7c50cdf37190e0"
+    },
+    {
+      "path": "src/em1b/em1b_set.cpp",
+      "sha256": "df88d4a9e2b6695091ecd9782f01bd38f971de53be10a216dca08bd7b18370bf"
+    },
+    {
+      "path": "src/em1c/em1c_set.cpp",
+      "sha256": "2bbceaaa8d5bccba640fd3114d4d7ca72ec41a55ea59eb511de922f954edb521"
+    },
+    {
+      "path": "src/em1d/em1d_set.cpp",
+      "sha256": "473f8cc0dea342e6aa364a3887ebdd521d15d24fb824c8dd993ab453a245429d"
+    },
+    {
+      "path": "src/em1e/em1e_set.cpp",
+      "sha256": "120f2de9284ae97b81ed9004d59993dfb88821cd9bb89fef042b00d699c5e11e"
+    },
+    {
+      "path": "src/em1f/em1f_set.cpp",
+      "sha256": "6699cb8914297232ec55d02041719e7747cc5d19c273899722857e9e844cad4a"
+    },
+    {
+      "path": "src/em20/em20_set.cpp",
+      "sha256": "65446bad7ed8d64d6921396fa6e9dc6ca031c07647e18e001a73881bec359acc"
     },
     {
       "path": "src/em21/em21.cpp",
@@ -1659,6 +2353,14 @@
     {
       "path": "src/game/game.cpp",
       "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "sha256": "d2c27ac68757a09cec2a1777558cedcf4cdd417bf57591159447e4f004e17d6a"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "sha256": "47e3b36faa3ebcffd1874dbb5d53bb46404773c9e0bb91fbb5be99ac52ab12b8"
     },
     {
       "path": "src/game/mercenaries.cpp",
@@ -2241,5 +2943,5 @@
     "reported_disassembly": "beginEvent has mode0 routine5/BlendOff/setFootwork path; endEvent passes0 to endEvent0; incoming nonzero mode not preserved",
     "proof": "root-provided disassembly + artifact hash, not a new target compile or gameplay test"
   },
-  "private_details_sha256": "4bd5225480ab4aaca8dcf10cd4871d85d1c38f37334f9aec8c6734c60ccf58a0"
+  "private_details_sha256": "a55a5d8a039d128cd795e85e1611bea12dc0798075170fac3c6d54c42565b228"
 }

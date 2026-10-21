@@ -55,9 +55,21 @@ def definitions(s):
 
 
 def fn(s,name):
- defs=definitions(s);hits=[i for i,x in enumerate(defs) if x[2]==name]
+ """Exact reviewed name + source-style boundary; deliberately not a CFG."""
+ z=mask(s)
+ hits=list(re.finditer(r'^[^\n;{}#=]*?\b'+re.escape(name)+r'\s*\([^;{}]*\)\s*(?:const\s*)?\{',z,re.M))
+ hits=[m for m in hits if not re.match(r'^\s*(?:if|for|while|switch|return)\b',z[m.start():m.end()])]
  assert len(hits)==1,(name,len(hits))
- i=hits[0];start=defs[i][0];end=defs[i+1][0] if i+1<len(defs) else len(s)
+ start=hits[0].start();opening=hits[0].end();depth=1;end=opening
+ # A raw #if can have mutually exclusive opening braces. The selected source
+ # style uses a column-zero function close. Do not truncate at a compound Vec
+ # literal/multiline call that the loose navigation index mistook for a function.
+ closing=re.search(r'^}',z[opening:],re.M)
+ if closing:end=opening+closing.end();depth=0
+ else:
+  while depth and end<len(z):
+   depth+=(z[end]=='{')-(z[end]=='}');end+=1
+ assert depth==0,(name,'unbalanced reviewed function')
  return s[start:end],s.count('\n',0,start)+1
 
 
@@ -218,8 +230,127 @@ def lifecycle_rules(texts):
   door_quiescence='Stop all, disable display, cancel transport, unbind modules; later retire keys before room heap replacement',
   existing_cabin_guard='RE4DC_CABIN_SOURCE InitModule gate precedes unbind; native_event_file451 checks in-flight DMA and releasing/readers/event counters for its owned carriers only',
   partial_admission=dict(order=['ui','effect','motion','publish m->pArc'],local_unwind_calls=len(unwind),
-   classification='source-visible rollback candidate; failure returns can precede publication; no observed leak/stale-use claim'),
+   classification='bind refusal is terminal re4dc_missing halt; early nonfatal read/resize and exhausted-slot returns require separate cleanup proof'),
   open=['fatal callback external completion','interrupt/replacement outside normal End* callbacks','non-door reset/continue/overlay path ordering','partial-admission refusal and cleanup','caller-owned attachment and emitter pointers'])
+
+
+
+def block(s,anchor):
+ """Balanced block at an exact reviewed template/macro signature."""
+ start=s.index(anchor);z=mask(s);opening=z.index('{',start)+1;depth=1;end=opening
+ while depth and end<len(z):
+  depth+=(z[end]=='{')-(z[end]=='}');end+=1
+ assert depth==0,(anchor,'unbalanced reviewed block')
+ return s[start:end],s.count('\n',0,start)+1
+
+
+def ownership_rules(texts,census):
+ """Source contracts and named counterexamples, not a runtime lifetime proof."""
+ sites=[]
+ def body(path,name):
+  b,line=fn(texts[path],name);sites.append(dict(path=path,line=line,function=name));return b
+ shape=body('src/game/shape.cpp','ShapeMove')
+ assert 'p = p->pList' in shape and shape.count('SetShape(p, p->pShape,')==1
+ assert shape.index('SetOriginalShape(p)')<shape.index('SetShape(p, p->pShape,')
+ neck=body('src/game/pl_class.cpp','cPlNeck::motSet')
+ assert 'p->blendMot = &p->neckMot' in neck and 'MotionSetCore(p, &p->neckMot' in neck
+ partner=body('src/game/pl_npc.cpp','cSubChar::neckCtrl')
+ assert not calls({'src/game/pl_npc.cpp':partner},['MotionMove','MotionMoveCore','MotionSetCore'])
+ begin=body('src/game/pl_npc.cpp','cSubChar::beginEvent');interrupt=body('src/game/pl_npc.cpp','cSubChar::interrupt')
+ assert 'interrupt()' in begin and 'subArc' not in mask(begin+interrupt) and 'r_no_0 =' not in mask(begin+interrupt)
+ manager=body('src/game/em.cpp','cEmMgr::move');move=body('src/game/em.cpp','emMove')
+ assert manager.index('dieCheck()')<manager.index('if (!(pG->Stop_flg')
+ assert move.index('pG->Status_flg[1] & 0x10000000')<move.index('em->move()')
+ assert '!(em->be_flag & 0x800)' in move
+ push=body('src/game/model.cpp','cModel::push')
+ assert 'releasePartsList(0)' in push and 'releaseModelInfo()' in push
+ destructor=body('src/em10/em10.cpp','cEm10::~cEm10')
+ assert 'MotionSetCore(w->pCart, MOTION(w->pCart), w->mot[51]' in destructor
+ destroy,line=block(texts['include/cManager.h'],'inline void cManager<T>::destroy(T* p)')
+ sites.append(dict(path='include/cManager.h',line=line,function='cManager<T>::destroy'))
+ assert 'case 2:' in destroy and 'p->be_flag |= 0x200' in destroy
+ die,line=block(texts['include/cManager.h'],'int cManager<T>::dieCheck()')
+ sites.append(dict(path='include/cManager.h',line=line,function='cManager<T>::dieCheck'))
+ assert die.index('p->be_flag & 0x400')<die.index('delete p')<die.index('p->be_flag |= 0x400')
+ obj12=body('src/game/obj12.cpp','cObj12::move');obj16=body('src/game/obj16.cpp','cObj16::move')
+ assert obj12.index('MotionMove(this, 0)')<obj12.index('w->oya->be_flag & 0x201')
+ assert obj16.index('w->target->be_flag & 0x201')<obj16.index('Obj16_R1_move_tbl')
+ lost=texts['src/game/obj16.cpp'].split('#define OBJ16_LOST',1)[1].split('// Per-frame:',1)[0]
+ assert lost.index('EffectEspDelete')<lost.index('ObjMgr.destroy') and 'EffectEspgenDelete' in lost and 'EffectEfmDelete' in lost
+ cart=[]
+ for p,t in sorted(texts.items()):
+  if re.fullmatch(r'src/em[0-9a-f]{2}/em[0-9a-f]{2}_set.cpp',p):
+   m=re.search(r'w->mot\[51\]\s*=\s*([^;]+);',mask(t))
+   if m:
+    value=t[m.start(1):m.end(1)].strip();cart.append(dict(path=p,line=t.count('\n',0,m.start())+1,value=value))
+ sites.extend(dict(path=x['path'],line=x['line'],function='Work mot51 initializer')for x in cart)
+ assert [x['path'].split('/')[1]for x in cart if x['value']!='0']==['em10','em12','em13','em15']
+ origins=[]
+ for module in ['10','11','12','13','14','15','16','17','1b','1c']:
+  p=f'src/em{module}/em{module}_set.cpp';assert '#define ARC(no) PL_ARC_PTR(em->subArc, no)' in texts[p]
+  origins.append(dict(path=p,owner='em->subArc',scope='literal Work initializer, not state co-use proof'))
+ for module in ['2b','2c','32','38','39']:
+  p=f'src/em{module}/em{module}.cpp';assert '#define ARC(no) PL_ARC_PTR(em->subArc, no)' in texts[p]
+  origins.append(dict(path=p,owner='em->subArc',scope='literal Work initializer, not state co-use proof'))
+ walk=body('src/em10/em10.cpp','em10SetWalkMotion');dash=body('src/em10/em10.cpp','em10SetDashMotion');wait=body('src/em10/em10.cpp','em10SetWaitMotion')
+ assert all(x in walk for x in ['w->Ganado','w->Wep_type','w->pShield','em->type','w->Walk_type','em->emset_no % 5','CheckInWater','MotionSetCore(em, MOTION(em), m0, (int) m1'])
+ assert 'MotionSetCore(em, MOTION(em), m0, (int) m1' in dash and 'MotionSetCore(em, MOTION(em), mot, 0' in wait
+ grenade=body('src/game/emwep.cpp','cEmWep::setGrenadeThrow')
+ assert all(x in grenade for x in ['w->Mot_escape = motEscape','w->motEscape2 = motEscape2','w->motBackjump = motBackjump','w->motFront = motFront','w->pEm_oya = 0'])
+ # A transient subArc restoration does not change these caller-supplied headers.
+ gsites=calls(texts,['setGrenadeThrow']);gcallers=[x for x in gsites if x['path']=='src/em39/em39.cpp']
+ assert len(gcallers)==2 and all('ARC(0x10B)' in x['arguments']for x in gcallers)
+ fatal=[]
+ for path,name in [('src/em10/em10.cpp','plem10_C_SawCriHit'),('src/em35/em35.cpp','plem35_CriticalHit'),('src/em38/em38.cpp','plem38_AtkHit'),('src/em32/em32.cpp','plemDivide'),('src/em39/em39.cpp','plem39_Failure'),('src/game/emrock.cpp','plemDropDie'),('src/game/emrock.cpp','subemDropDie')]:
+  b=body(path,name);assert 'subArc' in b and not re.search(r'\bEnd(?:Pl|Sub)Damage\s*\(',mask(b))
+  fatal.append(dict(path=path,function=name,classification='retained borrowed header; normal End* not the termination owner'))
+ death=body('src/game/game.cpp','gameDiedemo');cont=body('src/game/game.cpp','GameContinue')
+ assert 'GameContinue(0)' in death and 'pG->Rno0 = 4' in cont
+ reset=body('src/game/main.cpp','systemSoftReset');common=body('src/game/main.cpp','systemResetCommon')
+ assert reset.index('Dvd.ReadCancelAll()')<reset.index('MemClearAllHeap()')<reset.index('systemResetCommon()')
+ assert common.index('TaskAllClear()')<common.index('EmReadInit()')
+ bridge=body('port/dreamcast/game/motion_bridge.cpp','re4dc_motion_free')
+ assert 'OSFreeToHeap(allocation->heap,allocation)' in bridge
+ free=body('src/game/read.cpp','ModuleMemFree');assert 'Heap[i].handle < 0' in free
+ heap=body('src/game/main_mem.cpp','MemDestroyHeap')
+ assert 're4dc_motion_retire_all' not in heap and 'OSDestroyHeap' in heap
+ # Distinguish fatal admission from an ordinary failure return.
+ missing=body('port/dreamcast/game/platform/mem.cpp','re4dc_missing')
+ assert 'for (;;)' in missing and 'thd_sleep(1000)' in missing
+ read=body('src/game/read.cpp','readEm');data=body('src/game/read.cpp','readEmData')
+ no_slot=read.split('if (m == NULL)',1)[1].split('if (readEmData',1)[0]
+ assert 'return NULL' in no_slot
+ resize=data.split('if (len < size)',1)[1].split('} else {',1)[0]
+ assert 'Mem_free(old)' in resize and 'if (pArc != old)' in resize and 'm->pArc =' not in resize
+ setevd=body('src/game/event.cpp','EventMgr::SetEvd');getbin=body('src/game/event.cpp','EventMgr::GetBin');getevd=body('src/game/event.cpp','EventMgr::GetEvd')
+ assert setevd.index('EvdTbl.SetDat')<setevd.index('for (i = 0; i < hdr->nBin')<setevd.index('SetBin(e->name')
+ assert 'DelEvd(' not in mask(setevd) and 'DelBin(' not in mask(setevd)
+ for b in [getbin,getevd]:assert 'HDReadDebugAlloc' in b and 'Debug_free(' not in mask(b)
+ endevt=body('src/game/event.cpp','Event::ExeEndEvt');delevt=body('src/game/event.cpp','EventMgr::DelEvt')
+ assert 'case 5:\n            MotionClear(m, 0)' in endevt
+ assert endevt.index('EventAllEffDelete()')<endevt.index('ExeFunc(2, 0)')<endevt.index('pPL->move()')
+ assert delevt.index('evt->ExeEndEvt(evt, 0)')<delevt.index('destroyNow(evt)')<delevt.index('DelEvd(p)')
+ assert 'ClrShape(' not in mask(endevt) and 'ShapeEnd(' not in mask(endevt)
+ assert 'if ((s16) pG->pl_life > 0)' in body('src/game/pl_class.cpp','cPlayer::endEvent0')
+ model=body('src/game/model.cpp','cModel::modelInit')
+ assert 'releaseModelInfo();' in model.split('if (initJoint(bin) != 1)',1)[1]
+ leon=body('src/game/pl_leon.cpp','cPlLeon::setModel')
+ assert leon.count('setModel() failed.')>=5 and leon.count('addModel(info)')>=5
+ return dict(source_sites=sites,
+  multiplicity=dict(normal_shape='one pShape curve per active info through ShapeMove; info chain may have multiple independent curves',leon_neck='neckMot is blendMot, not an additional third body channel',partner_neck='procedural matrices; subBackMot is the blend work; face remains independent',event_shape='ExePacket_Shp resolves ModTbl target; type2 info and distinct model targets require selected event ownership'),
+  cart_selector_rows=cart,cart_selected_em12=group(census,'qa-fixed:em/em12.drs',[0x25d,0x25e],'independent cart state alternatives; not a simultaneous pair'),
+  selector_contracts=dict(literal_work_archive_origins=origins,ganado='own subArc; type/Ganado/weapon/shield/Walk_type and emset/water select ONE body FCV plus its SEQ; not all alternatives at once',grenade=dict(owner='Krauser ARC10b/10c/10d/111 supplied through stored fields; weapon subArc is not their owner',callers=gcallers)),
+  fatal_retained_headers=fatal,
+  partial_admission=dict(bind_refusal='terminal re4dc_missing halt in selected implementation; local returns are not a recoverable gameplay retry',module_slot_exhaustion_restores_display='pG->Disp_flg = flags' in no_slot,resize_relocation='pre-bind nonfatal return if replacement differs; new owner is not published, cleanup OPEN',event_partial_registration='SetEvd publishes header before all bins; no local rollback; subsequent ChkDat success can mask prior partial bin failure',event_fallback_allocation='GetBin/GetEvd allocate before registration; local registration failure does not free dat; actual bridge/allocator failure OPEN',model='modelInit releases base info if joint init fails; cPlLeon::setModel can return after prior infos added, caller transactional recovery OPEN'),
+  lifetime_edges=[
+   dict(id='A03-OBJ12',owner='parent source archive retained by obj12 motion header',termination='parent guard follows MotionMove; detached cart can remain independent',status='OPEN stop-before-free',next_case='mark parent, retain child Motion, retire donor before next child tick; prove child stop or explicit owner retention'),
+   dict(id='A03-OBJ16',owner='target/body borrowed model + own stored pMotion',termination='dead target/body guard precedes move and deletes owner emitters; does not guard render-before-tick or address reuse',status='source local guard proved; generation boundary OPEN',next_case='destroy/reuse target between child update and model trans; verify emitter/shape/model readers drain'),
+   dict(id='A07-FATAL',owner='dmgType donor + retained pMot, independent catch props',termination='death demo retains archive; Continue selects door quiescence; interrupt alone does not restore callback',status='source normal Continue contract; intra-room/forced interrupt OPEN',next_case='abort a retained fatal/QTE callback through each non-door module retirement; require callback and catch prop quiescence'),
+   dict(id='A08-RESET',owner='native slot/slab saved SDK heap handle',termination='soft reset destroys heaps before module unbind; ModuleMemFree source guard does not wrap native motion free',status='OPEN native post-destroy free risk',next_case='loaded MTC reset with existing native allocator/handle audit; compare before-clear retirement versus later unbind, no guest claimed'),
+   dict(id='A08-INTRAROOM',owner='em15 bell/em3,4,13 cabin/em11 cannon plus borrowers/children',termination='bell/cabin sleep2 before InitModule; cannon frees before next yield; event pause exempts be_flag800',status='OPEN per-caller deferred destruction and no-suspend proof',next_case='prove two actual manager dieCheck passes, slow-motion skip and child/borrower termination; cannon has no drain before free'),
+   dict(id='A08-SLOTS',owner='saved pG->Disp_flg in readEm',termination='read failure restores saved flags; no-slot early return currently does not',status='source-visible failure-path defect',next_case='exhaust four module slots and check original display word restored on returned NULL'),
+   dict(id='A08-EVENT-SHAPE',owner='external type5 model info pShape from named EVD bin',termination='ExeEndEvt clears body motion but not ShapeEnd/ClrShape; normal event data destroy follows',status='OPEN selected packet/owner lifetime',next_case='a type5 model with event Shp plus live frame after carrier deletion; prove shape stop or retain carrier; also dead-player endEvent0 skips routine reset'),
+   dict(id='A08-EVDBINS',owner='EvdTbl header + BinTbl borrowed entries/refcounts',termination='normal Event destroy before DelEvd; partial SetBin refusal leaves header registered',status='source-visible transactional admission defect',next_case='fail kth BinTbl registration then retry same EVD name; require complete bins or rollback without releasing live refs')])
 
 
 def run(repo,ref,census_path):
@@ -228,8 +359,8 @@ def run(repo,ref,census_path):
  paths=subprocess.check_output(['git','-C',str(repo),'ls-tree','-r','--name-only',ref,'src','include','port/dreamcast/game']).decode().splitlines()
  texts={p:subprocess.check_output(['git','-C',str(repo),'show',ref+':'+p]).decode(errors='replace')
         for p in paths if p.endswith(('.cpp','.c','.h','.hpp','.inc','.S','.s')) and not p.startswith('src/lib/')}
- sites=calls(texts);ev=check_evaluators(texts);bl=check_blends(texts);groups=reviewed_groups(census,texts);life=lifecycle_rules(texts)
- lifecycle_paths={x['path']for x in life['source_sites']}|{'include/types.h','src/game/sce_com.cpp','port/dreamcast/game/platform/native_event_file.cpp'}
+ sites=calls(texts);ev=check_evaluators(texts);bl=check_blends(texts);groups=reviewed_groups(census,texts);life=lifecycle_rules(texts);owners=ownership_rules(texts,census)
+ lifecycle_paths={x['path']for x in life['source_sites']+owners['source_sites']}|{'include/types.h','src/game/sce_com.cpp','port/dreamcast/game/platform/native_event_file.cpp'}
  pins=[dict(path=p,sha256=digest(t.encode()))for p,t in texts.items() if p in lifecycle_paths or any(c['path']==p for c in sites)]
  # Discover literal asm aliases independently of masked string contents.
  aliases=[]
@@ -243,11 +374,11 @@ def run(repo,ref,census_path):
    borrowed.append(dict(path=p,line=t.count('\n',0,m.start())+1,target=m[1],source=t[m.start(2):m.end(2)].strip(),
                         proof='assignment inventory only; exceptional exits/retirement OPEN'))
  details=dict(source_ref=ref,source_pins=pins,occurrences=sites,asm_aliases=aliases,borrowed_assignments=borrowed)
- out=dict(schema=1,scope='A01–A05/A07 source checkpoint; no whole-program CFG or complete audit claim',
+ out=dict(schema=1,scope='A01–A05/A07/A08 source checkpoint; no whole-program CFG or complete audit claim',
   source_ref=subprocess.check_output(['git','-C',str(repo),'rev-parse',ref]).decode().strip(),
   census_sha256=CENSUS_SHA,qa_archive_inventory_count=sum(k.startswith('qa-fixed:')for k in census['archives']),
   complete_metadata_inventory_count=len(census['archives']),reused_inventory=True,
-  evaluator_rules=ev,blend_helper_rules=bl,reviewed_groups=groups,lifecycle_rules=life,
+  evaluator_rules=ev,blend_helper_rules=bl,reviewed_groups=groups,lifecycle_rules=life,ownership_followup=owners,
   lexical_occurrences_by_symbol=dict(sorted(Counter(c['symbol']for c in sites).items())),
   lexical_occurrences_by_file=dict(sorted(Counter(c['path']for c in sites).items())),
   asm_aliases=aliases,source_pins=pins,subarc_assignment_occurrences=len(borrowed),

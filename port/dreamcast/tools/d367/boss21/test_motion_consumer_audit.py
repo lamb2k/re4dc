@@ -16,6 +16,8 @@ class Rules(unittest.TestCase):
   paths|={'src/game/pl_npc.cpp','src/pl11/pl11.cpp','src/game/pl_sub.cpp','src/game/em_sub.cpp','src/game/pl_class.cpp','src/game/read.cpp','src/game/game.cpp','include/types.h','src/game/sce_com.cpp'}
   paths|={f'src/em{x}/em{x}.cpp'for x in ['2f','31']}
   paths|={f'src/em{x}/em{x}_set.cpp'for x in ['10','11','12']}
+  paths|={'src/game/model.cpp','src/game/obj12.cpp','src/game/obj16.cpp','src/game/em.cpp','src/game/emwep.cpp','src/game/emrock.cpp','src/game/main.cpp','src/game/main_mem.cpp','src/game/event.cpp','src/game/pl_leon.cpp','include/cManager.h','port/dreamcast/game/motion_bridge.cpp','port/dreamcast/game/platform/mem.cpp'}
+  paths|={p for p in subprocess.check_output(['git','-C',str(ARGS.repo),'ls-tree','-r','--name-only',ARGS.source_ref,'src']).decode().splitlines()if p.endswith('_set.cpp')}
   cls.texts={p:subprocess.check_output(['git','-C',str(ARGS.repo),'show',ARGS.source_ref+':'+p]).decode() for p in paths}
  def test_seven_evaluators_and_seven_blend_helpers(self):
   self.assertEqual(len(audit.check_evaluators(self.texts)),7)
@@ -69,6 +71,69 @@ class Rules(unittest.TestCase):
   import re
   a=re.findall(r'\b(\w+)\s*\([^;{}]*\)\s*asm\("([^"\n]+)"\)',audit.mask_comments(s))
   self.assertEqual(a,[('MotionMoveF','MotionMove')])
+
+ def test_function_boundary_keeps_cases_after_compound_vec_literal(self):
+  b,_=audit.fn(self.texts['src/em2b/em2b.cpp'],'plem2b_Strangle')
+  self.assertIn('&((Vec) {',b);self.assertIn('EndPlDamage()',b);self.assertIn('case 5:',b)
+  s="""void victim() {
+#if A
+ for(int x=0;x<1;++x) {
+#else
+ for(int y=0;y<1;++y) {
+#endif
+  call();
+ }
+ after();
+}
+void next() { wrong(); }
+"""
+  b,_=audit.fn(s,'victim');self.assertIn('after()',b);self.assertNotIn('wrong()',b)
+ def test_owner_contracts_expose_different_failure_kinds(self):
+  r=audit.ownership_rules(self.texts,self.census)
+  self.assertFalse(r['partial_admission']['module_slot_exhaustion_restores_display'])
+  self.assertIn('terminal',r['partial_admission']['bind_refusal'])
+  self.assertEqual(len(r['lifetime_edges']),8)
+ def test_display_failure_classification_changes_if_source_restores_flags(self):
+  t=dict(self.texts);old='if (m == NULL) {\n        return NULL;';new='if (m == NULL) {\n        pG->Disp_flg = flags; return NULL;'
+  self.assertIn(old,t['src/game/read.cpp']);t['src/game/read.cpp']=t['src/game/read.cpp'].replace(old,new)
+  self.assertTrue(audit.ownership_rules(t,self.census)['partial_admission']['module_slot_exhaustion_restores_display'])
+ def test_leon_neck_cannot_be_counted_as_an_independent_third_body_stream(self):
+  t=dict(self.texts);t['src/game/pl_class.cpp']=t['src/game/pl_class.cpp'].replace('p->blendMot = &p->neckMot','p->blendMot = &p->Motion',1)
+  with self.assertRaises(AssertionError):audit.ownership_rules(t,self.census)
+ def test_new_partner_neck_evaluator_requires_review(self):
+  t=dict(self.texts);b,_=audit.fn(t['src/game/pl_npc.cpp'],'cSubChar::neckCtrl');t['src/game/pl_npc.cpp']=t['src/game/pl_npc.cpp'].replace(b,b.replace('{','{ MotionMove(this,0);',1),1)
+  with self.assertRaises(AssertionError):audit.ownership_rules(t,self.census)
+ def test_halt_cannot_be_silently_classified_as_recoverable_return(self):
+  t=dict(self.texts);t['port/dreamcast/game/platform/mem.cpp']=t['port/dreamcast/game/platform/mem.cpp'].replace('thd_sleep(1000)','return',1)
+  with self.assertRaises(AssertionError):audit.ownership_rules(t,self.census)
+ def test_obj16_early_evaluation_before_owner_guard_is_rejected(self):
+  t=dict(self.texts);b,_=audit.fn(t['src/game/obj16.cpp'],'cObj16::move');t['src/game/obj16.cpp']=t['src/game/obj16.cpp'].replace(b,b.replace('{','{ Obj16_R1_move_tbl[r_no_1](this);',1),1)
+  with self.assertRaises(AssertionError):audit.ownership_rules(t,self.census)
+ def test_cart_work_owner_variant_must_not_change_silently(self):
+  t=dict(self.texts);t['src/em11/em11_set.cpp']=t['src/em11/em11_set.cpp'].replace('w->mot[51] = 0','w->mot[51] = ARC(0x25E)',1)
+  with self.assertRaises(AssertionError):audit.ownership_rules(t,self.census)
+ def test_recovery_sets_keep_death_continue_and_nondoor_reset_separate(self):
+  r=audit.ownership_rules(self.texts,self.census);edges={x['id']:x for x in r['lifetime_edges']}
+  self.assertIn('source normal Continue',edges['A07-FATAL']['status']);self.assertTrue(edges['A08-RESET']['status'].startswith('OPEN'))
+  self.assertIn('post-destroy',edges['A08-RESET']['status'])
+ def test_reset_owner_order_change_requires_reclassification(self):
+  t=dict(self.texts);t['src/game/main.cpp']=t['src/game/main.cpp'].replace('    MemClearAllHeap();','    systemResetCommon();\n    MemClearAllHeap();',1)
+  with self.assertRaises(AssertionError):audit.ownership_rules(t,self.census)
+ def test_shape_writer_multiplicity_must_be_reviewed(self):
+  t=dict(self.texts);t['src/game/shape.cpp']=t['src/game/shape.cpp'].replace('SetShape(p, p->pShape, (f32) p->shape_frame);','SetShape(p, p->pShape, (f32) p->shape_frame); SetShape(p, p->pShape, 0);',1)
+  with self.assertRaises(AssertionError):audit.ownership_rules(t,self.census)
+
+ def test_all_literal_work_initializer_macro_owners_are_pinned(self):
+  r=audit.ownership_rules(self.texts,self.census)
+  self.assertEqual(len(r['selector_contracts']['literal_work_archive_origins']),15)
+  t=dict(self.texts);t['src/em12/em12_set.cpp']=t['src/em12/em12_set.cpp'].replace('#define ARC(no) PL_ARC_PTR(em->subArc, no)','#define ARC(no) ROOM_ARC_PTR(no)')
+  with self.assertRaises(AssertionError):audit.ownership_rules(t,self.census)
+ def test_event_end_precedes_registration_release(self):
+  t=dict(self.texts);t['src/game/event.cpp']=t['src/game/event.cpp'].replace('evt->ExeEndEvt(evt, 0);','DelEvd(p); evt->ExeEndEvt(evt, 0);',1)
+  with self.assertRaises(AssertionError):audit.ownership_rules(t,self.census)
+ def test_event_shape_stop_is_not_inferred_from_body_motion_clear(self):
+  r=audit.ownership_rules(self.texts,self.census);e=next(x for x in r['lifetime_edges']if x['id']=='A08-EVENT-SHAPE')
+  self.assertTrue(e['status'].startswith('OPEN'));self.assertIn('not ShapeEnd',e['termination'])
 
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--repo',type=Path,required=True);p.add_argument('--source-ref',default='c7e0358a');p.add_argument('--census',type=Path,required=True);ARGS,rest=p.parse_known_args();unittest.main(argv=[sys.argv[0]]+rest)
