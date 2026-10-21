@@ -41,6 +41,8 @@ struct AramBoundary{int DmaTransReq(int type,u32 src,u32 dst,u32 bytes,int wait)
 }}Aram;
 static void OSReport(const char*,...){}
 static void DCFlushRange(void*,u32){}
+static int re4dc_event_file_range(u32,u32){return 0;}
+static void re4dc_event_file_reject_swap(){std::abort();}
 #define ALIGN32(n) (((n)+31U)&~31U)
 #define DVD_BUFF swap_save
 #define DVD_BUFF2 swap_read
@@ -88,21 +90,36 @@ int main(){
     }
     reset();seed(arena);auto*d=reinterpret_cast<EffData*>(arena);d->version=0xa;
     assert(actual_EspDataLoad(u32(std::uintptr_t(arena)),0x10,0)==0);
-    assert(system_work.ownerCnt[0x10]==1&&system_work.estTbl[0x10].owner==0xd2&&errors==1);
+    assert(system_work.ownerCnt[0x10]==(RE4DC_EFFECT_ADMISSION_GUARD?0U:1U)&&system_work.estTbl[0x10].owner==0xd2&&errors==1);
     d->version=0xb;
     assert(actual_EspDataLoad(u32(std::uintptr_t(arena)),0x10,0)==1);
-    assert(system_work.ownerCnt[0x10]==2&&!EspGetEstAddr(0x10,7,1));++cases;
-    std::cout<<"EFFECT_INVALID_VERSION poisons_count_then_retry_returns_success_without_registration PASS\n";
+    assert(system_work.ownerCnt[0x10]==(RE4DC_EFFECT_ADMISSION_GUARD?1U:2U));
+    assert(bool(EspGetEstAddr(0x10,7,1))==bool(RE4DC_EFFECT_ADMISSION_GUARD));++cases;
+    std::cout<<"EFFECT_INVALID_VERSION source_control_corrected_retry PASS\n";
+    for(unsigned refs:{1U,2U,200U}){
+        reset();seed(arena);
+        for(unsigned i=0;i<refs;++i)assert(actual_EspDataLoad(u32(std::uintptr_t(arena)),0x10,0)==1);
+        auto*before=EspGetEstAddr(0x10,7,1);reinterpret_cast<EffData*>(arena)->version=0xa;
+        assert(actual_EspDataLoad(u32(std::uintptr_t(arena)),0x10,0)==1);
+        assert(system_work.ownerCnt[0x10]==(refs<200?refs+1:200));
+        assert(EspGetEstAddr(0x10,7,1)==before&&!errors);++cases;
+        // Existing explicit duplicate-error behavior is outside this repair:
+        // a valid repeated flag1 call still acquires a count before returning0.
+        reset();seed(arena);
+        for(unsigned i=0;i<refs;++i)assert(actual_EspDataLoad(u32(std::uintptr_t(arena)),0x10,0)==1);
+        before=EspGetEstAddr(0x10,7,1);assert(actual_EspDataLoad(u32(std::uintptr_t(arena)),0x10,1)==0);
+        assert(system_work.ownerCnt[0x10]==(refs<200?refs+1:200)&&EspGetEstAddr(0x10,7,1)==before&&errors==1);++cases;
+    }
     reset();seed(arena);assert(actual_EspDataLoad(u32(std::uintptr_t(arena)),0x10,0)==1);EspEmDataSwapPush(0x13);
     eff_present=false;EspEmDataSwapPop(0x13);
     assert(!system_work.ownerCnt[0x10]&&!load_calls&&!EspGetEstAddr(0x10,7,1)&&errors==1);++cases;
     std::cout<<"EFFECT_POP_MISSING_EFF void_failure_keeps_owner_unregistered PASS\n";
     reset();seed(arena);assert(actual_EspDataLoad(u32(std::uintptr_t(arena)),0x10,0)==1);EspEmDataSwapPush(0x13);
     reinterpret_cast<EffData*>(arena)->version=0xa;EspEmDataSwapPop(0x13);
-    assert(system_work.ownerCnt[0x10]==1&&load_calls==1&&!EspGetEstAddr(0x10,7,1)&&errors==1);++cases;
-    std::cout<<"EFFECT_POP_INVALID_VERSION void_failure_keeps_poisoned_count PASS\n";
+    assert(system_work.ownerCnt[0x10]==(RE4DC_EFFECT_ADMISSION_GUARD?0U:1U)&&load_calls==1&&!EspGetEstAddr(0x10,7,1)&&errors==1);++cases;
+    std::cout<<"EFFECT_POP_INVALID_VERSION void_failure_count_control PASS\n";
     reset();assert(actual_EspDataLoad(0,0x10,0)==0&&!system_work.ownerCnt[0x10]);++cases;
     std::cout<<"EFFECT_NULL_DATA preserves_zero_count PASS\n";
-    std::cout<<"EFFECT_LIFETIME_CHARACTERIZATION_CASES="<<cases<<" PASS\n";
+    std::cout<<"EFFECT_LIFETIME_CHARACTERIZATION_CASES="<<cases<<" enabled="<<RE4DC_EFFECT_ADMISSION_GUARD<<" PASS\n";
     munmap(arena,0x80000);
 }
