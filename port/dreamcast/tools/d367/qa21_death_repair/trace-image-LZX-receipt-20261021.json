@@ -1,0 +1,37 @@
+{
+  "scope": "Idle owned trace image transparent NTFS LZX compression only; exclusive-handle admission; no guest or logical/source fixture change",
+  "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-trace-runtime-20261021\\trace-input\\gdemu\\track03.iso",
+  "before": {
+    "logical_bytes": 1032499200,
+    "allocated_bytes": 1032499200,
+    "sha256": "2e40da769c049ab502f3608ea4f633b2b8ff32f4e9fe290b0c15ae30ac31b0aa",
+    "file_id": [
+      14332939485708580193,
+      562949955817434
+    ],
+    "links": 1,
+    "attributes": 32,
+    "C_free_bytes": 21315268608
+  },
+  "after": {
+    "logical_bytes": 1032499200,
+    "allocated_bytes": 669679616,
+    "sha256": "2e40da769c049ab502f3608ea4f633b2b8ff32f4e9fe290b0c15ae30ac31b0aa",
+    "file_id": [
+      14332939485708580193,
+      562949955817434
+    ],
+    "links": 1,
+    "attributes": 32,
+    "C_free_bytes": 21679718400
+  },
+  "allocated_recovered_bytes": 362819584,
+  "actual_C_free_delta": 364449792,
+  "compact_exit": 0,
+  "guard": null,
+  "seconds": 9.688000000023749,
+  "keep_hashes": {
+    "builds\\trace\\KEEP.txt": "cb861f0986723aa54993753ef57f68579dd1139e8fd5f7ab3161c9dcb0e1a339"
+  },
+  "host_throughput_comparison": "No throughput comparison across this compression boundary"
+}

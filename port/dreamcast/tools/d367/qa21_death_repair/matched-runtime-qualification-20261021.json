@@ -1,0 +1,2527 @@
+{
+  "status": "DIAGNOSTIC_MATCHED_ROUTE_FUNCTIONAL_GATES_PASSED",
+  "scope": "Source/unit/fullbuild and bounded Flycast diagnostic evidence only; no release/performance/physical Dreamcast acceptance",
+  "repair_source": "f071b4e9069ebd3a7dec48a98f2fea95f6d11215",
+  "trace_source": "f99dc69ad8bfeebcdb10913443543514dc40f9cc",
+  "both_fullbuild_source": "d82b317b66f147c1e2d375f8e8f5786867e63d85",
+  "DEATH_TRACE_constant": 1,
+  "repair_OFF_control": {
+    "program": "ca30bfc0c28490c91d18dbd37182e89d1f905cbf9bf735280bc7cd90cdb93b94",
+    "ELF_load_segments_equal_to": "56bc10f8c82ff08bed11f6481dbcc57043d8c13b1d75cbd6155b0d31297fead8",
+    "full_debug_path_ELF": "8614901fa1fb7c173a41e8764dbe0283e0972d37c4d2fabc4fd5e81c6f397871",
+    "all14_trace_overlays_exact": true,
+    "GANADO_ROUTINE_BYTES": 0
+  },
+  "repair_ON": {
+    "program_sha256": "6624b9a8a8ac1a2f8aa143f1d159247ecc7ad48db5b1e8e9390fd3e6d2e29f9c",
+    "elf_sha256": "bedade3364d51da2a62fac1f58b73a63707ebe1ddd43c83e13b315004b0ad726",
+    "image_sha256": "3c216e5ae8e8c9716906eace0ac98bc1b0712c8540f053359438d32ba77a9238",
+    "GANADO_ROUTINE_BYTES": 1,
+    "all14_bind_new_ELF": true
+  },
+  "stage_unrelated_files_exact": 1728,
+  "asset_manifest_sha256": "6c225ba8f8c558d2678bebe1cef4edcbdbc5dcb7f6a87e25e6f6e3db1e3bae57",
+  "stage_receipt_sha256": "948b690f3df191aae21ce8b98aad2c1f4119a5285da32a26e53b7182c6683c87",
+  "cases": {
+    "repair-cold-r10301": {
+      "actual_guest_seconds": 41.5636653,
+      "process_supervisor_sha256": "a7ec797942363b07a4acafca89275a8d9707c73ffa5f6cc72152b59d98b7d2b2",
+      "checkpoint_sha256": "44940219e8370f2dbed1b1e63a8f609d0a82f7d6beb5821ecdb5f34f91b64d82",
+      "state_sha256": "b4667fda844827e9d1d53128aa42d6ebc9b83ea021378cdd06cb3ea78f54d5bb",
+      "audit": {
+        "state_sha256": "b4667fda844827e9d1d53128aa42d6ebc9b83ea021378cdd06cb3ea78f54d5bb",
+        "state_bytes": 9227918,
+        "elf_sha256": "bedade3364d51da2a62fac1f58b73a63707ebe1ddd43c83e13b315004b0ad726",
+        "decoded_bytes": 28274766,
+        "ram_serialization_offset": 11491025,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "ecaa69dd39bff6a1d63a9f80dfa09af725926c18153ec342f977da8209868a95"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "ea29a7edf07c45a2a2218f6b87755e0e5463cd6e2d72efaf05028dab05410266"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "2348eedc05d0aa3c51f160e31e9612f39db962d610d3233d20c4f49379af32ed"
+          }
+        ],
+        "log_head": 166630,
+        "room": 259,
+        "frame": 508,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          -47614.8046875,
+          57.6419677734375,
+          7080.97119140625
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "checkpoint_parent": null,
+      "read_only_state_sha256": "3e59bc9b10f7659b3873ee00a4e7622624c074b64281eb209b870a621e89d217",
+      "log_sha256": "005c4655ac152adcb6935aa0347ac3eda12365bd573ea49504a8f2ca38f0190d",
+      "input_posts": [
+        [
+          "down"
+        ],
+        [
+          "a"
+        ],
+        [
+          "a"
+        ],
+        [
+          "down"
+        ],
+        [
+          "down"
+        ],
+        [
+          "down"
+        ],
+        [
+          "down"
+        ],
+        [
+          "a"
+        ]
+      ],
+      "ownership_guard_sha256": "83664268be067025e56606da0cff64b63ae9003ad9c2fa8966d1052236767e98",
+      "last_screenshot": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-cold-r10301\\shots\\t0038\\frames\\fb0.png",
+        "sha256": "26c0086b4e3dc9724567954ed82fc7a3d54cc872cce1e62589c1a563559623e9"
+      },
+      "controller_exit": null
+    },
+    "repair-return-door01": {
+      "actual_guest_seconds": 41.8850365,
+      "process_supervisor_sha256": "8c2ac81fa9fba5f6cf872d288d540d78dc899310654f0702ff8d1d58393b24d4",
+      "checkpoint_sha256": "cec947eba22b5bec9acee1ad3a0165af6a5f4fe6cd60a77f259eb3c076510f5c",
+      "state_sha256": "b7fd5349efee95e47b57d974233a4edd19c8947998955ac10900dbf64c6f5b71",
+      "audit": {
+        "state_sha256": "b7fd5349efee95e47b57d974233a4edd19c8947998955ac10900dbf64c6f5b71",
+        "state_bytes": 10463242,
+        "elf_sha256": "bedade3364d51da2a62fac1f58b73a63707ebe1ddd43c83e13b315004b0ad726",
+        "decoded_bytes": 28082158,
+        "ram_serialization_offset": 11298417,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "ecaa69dd39bff6a1d63a9f80dfa09af725926c18153ec342f977da8209868a95"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "ea29a7edf07c45a2a2218f6b87755e0e5463cd6e2d72efaf05028dab05410266"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "2348eedc05d0aa3c51f160e31e9612f39db962d610d3233d20c4f49379af32ed"
+          }
+        ],
+        "log_head": 344794,
+        "room": 257,
+        "frame": 1208,
+        "stop": 2013265855,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "player_rno": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "checkpoint_parent": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-cold-r10301",
+        "receipt_sha256": "44940219e8370f2dbed1b1e63a8f609d0a82f7d6beb5821ecdb5f34f91b64d82"
+      },
+      "read_only_state_sha256": "3ee10bfd366edd4fdbed163798927d3c978c9d2c298acf0e17e02bef28751834",
+      "log_sha256": "373659ae8a4313658d9a787aca834dd79dd68312558766701d29074500ee1d66",
+      "input_posts": [],
+      "ownership_guard_sha256": "c8de13ee5e8686482ac378ea1c7992e5829d9b2bc726edd20002bf6a56cd4d2a",
+      "last_screenshot": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-return-door01\\shots\\t0039\\frames\\fb0.png",
+        "sha256": "99795ad0c75bc92002e1ded4b6a4b6a3185537047b2a45fb3514d5455c575516"
+      },
+      "controller_exit": 0
+    },
+    "repair-BB-only01": {
+      "actual_guest_seconds": 41.9139056,
+      "process_supervisor_sha256": "c4878037f34e70b33c9e000eee00afe3f7cf7c41da47962bd5781f8aa57f4289",
+      "checkpoint_sha256": "9d4cca648778ad8b0310ffcc66f164cbb92a76462e27f3e91467b1fbde533436",
+      "state_sha256": "884bc747f3ed33cd592bfbe7aaf106adef5d64456a50f6621626c779d0f2986b",
+      "audit": {
+        "state_sha256": "884bc747f3ed33cd592bfbe7aaf106adef5d64456a50f6621626c779d0f2986b",
+        "state_bytes": 10692875,
+        "elf_sha256": "bedade3364d51da2a62fac1f58b73a63707ebe1ddd43c83e13b315004b0ad726",
+        "decoded_bytes": 27976878,
+        "ram_serialization_offset": 11193137,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "ecaa69dd39bff6a1d63a9f80dfa09af725926c18153ec342f977da8209868a95"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "ea29a7edf07c45a2a2218f6b87755e0e5463cd6e2d72efaf05028dab05410266"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "2348eedc05d0aa3c51f160e31e9612f39db962d610d3233d20c4f49379af32ed"
+          }
+        ],
+        "log_head": 443797,
+        "room": 257,
+        "frame": 2368,
+        "stop": 4294967231,
+        "player_life": 0,
+        "player_life_max": 1200,
+        "player_pos": [
+          39400.08203125,
+          3104.81103515625,
+          -26657.068359375
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "checkpoint_parent": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-return-door01",
+        "receipt_sha256": "cec947eba22b5bec9acee1ad3a0165af6a5f4fe6cd60a77f259eb3c076510f5c"
+      },
+      "read_only_state_sha256": "be20d61b497ae2bf1d0ec07a77236179e0841cbc5ddaf7fcb28b1abe408dec59",
+      "log_sha256": "8090903b8d47fd54200bda06da8e177d50ea81269a3f8f8717fd05273c468da2",
+      "input_posts": [
+        [
+          "b"
+        ],
+        [
+          "b"
+        ]
+      ],
+      "ownership_guard_sha256": "3fe0748e0deea01a83bf88ffd986053f19c30cf5874a982a35758658eb3c8445",
+      "last_screenshot": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-BB-only01\\shots\\t0039\\frames\\fb0.png",
+        "sha256": "fec9594d082ef86252d52e60ba725c61408ed1b08c6886d95b4ee0588ea829d6"
+      },
+      "controller_exit": null
+    },
+    "repair-continue01": {
+      "actual_guest_seconds": 41.822254,
+      "process_supervisor_sha256": "f71f829b99856088319a34e8f1110ff1d8f42c1bbe6173126d7bb7b7e608cb95",
+      "checkpoint_sha256": "70f976e3ceaa1f3f8e941c42ca36c511c97226397dfde391e0503e013bf78a7d",
+      "state_sha256": "3a4d97611d6dfd88013d3b8ce72b9f35b3dbab6f954469703e33cce393619b4d",
+      "audit": {
+        "state_sha256": "3a4d97611d6dfd88013d3b8ce72b9f35b3dbab6f954469703e33cce393619b4d",
+        "state_bytes": 11627944,
+        "elf_sha256": "bedade3364d51da2a62fac1f58b73a63707ebe1ddd43c83e13b315004b0ad726",
+        "decoded_bytes": 27976590,
+        "ram_serialization_offset": 11192849,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "ecaa69dd39bff6a1d63a9f80dfa09af725926c18153ec342f977da8209868a95"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "ea29a7edf07c45a2a2218f6b87755e0e5463cd6e2d72efaf05028dab05410266"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "2348eedc05d0aa3c51f160e31e9612f39db962d610d3233d20c4f49379af32ed"
+          }
+        ],
+        "log_head": 630523,
+        "room": 257,
+        "frame": 1576,
+        "stop": 2151678208,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "player_pos": [
+          39372.76953125,
+          3101.485595703125,
+          -26668.625
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "event_start_cnt": 1,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "checkpoint_parent": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-BB-only01",
+        "receipt_sha256": "9d4cca648778ad8b0310ffcc66f164cbb92a76462e27f3e91467b1fbde533436"
+      },
+      "read_only_state_sha256": "3af1bdf1ac5692de4d219172edf82666b2ab927110c2721003ed29dbf287c9d4",
+      "log_sha256": "519df33ce8c19754e4d7a56887893db7ca1517deddc511acd640d616cbcfd2c4",
+      "input_posts": [
+        [
+          "a"
+        ],
+        [
+          "a"
+        ],
+        [
+          "back"
+        ]
+      ],
+      "ownership_guard_sha256": "955deebf0c4e5eeaed358dbbcf826281846740cddb5c062f80586947ea4cfe5e",
+      "last_screenshot": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-continue01\\shots\\t0039\\frames\\fb0.png",
+        "sha256": "bda5a285d1a6ed26473e76acd042e3c3705b0e29235c44edfc62932e33bf6589"
+      },
+      "controller_exit": null
+    },
+    "repair-gameplay01": {
+      "actual_guest_seconds": 41.8150594,
+      "process_supervisor_sha256": "cd5ae981210755b2c7308fd59f69af08a8c89e4fc9d0508156903bfa006c489d",
+      "checkpoint_sha256": "f1820672ca15fe19e6c6fe056c8a5fee4cd0aee311d5878b2bb83c704a9e611b",
+      "state_sha256": "578a1d60fe56045341bcb48fde90ae3e8a8eace2f2a706cf66c66d3f0a72fc11",
+      "audit": {
+        "state_sha256": "578a1d60fe56045341bcb48fde90ae3e8a8eace2f2a706cf66c66d3f0a72fc11",
+        "state_bytes": 10813373,
+        "elf_sha256": "bedade3364d51da2a62fac1f58b73a63707ebe1ddd43c83e13b315004b0ad726",
+        "decoded_bytes": 27785294,
+        "ram_serialization_offset": 11001553,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "ecaa69dd39bff6a1d63a9f80dfa09af725926c18153ec342f977da8209868a95"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "ea29a7edf07c45a2a2218f6b87755e0e5463cd6e2d72efaf05028dab05410266"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "2348eedc05d0aa3c51f160e31e9612f39db962d610d3233d20c4f49379af32ed"
+          }
+        ],
+        "log_head": 712900,
+        "room": 257,
+        "frame": 2747,
+        "stop": 4294967231,
+        "player_life": 0,
+        "player_life_max": 1200,
+        "player_pos": [
+          38274.1640625,
+          3050.2265625,
+          -27387.24609375
+        ],
+        "player_rno": [
+          4,
+          0,
+          2,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "checkpoint_parent": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-continue01",
+        "receipt_sha256": "70f976e3ceaa1f3f8e941c42ca36c511c97226397dfde391e0503e013bf78a7d"
+      },
+      "read_only_state_sha256": "3469c09e6cf7ad88e25dde4b9e0f0a2d072da74e2ea9dfeb2d008be4e663dc42",
+      "log_sha256": "90be7a5ab3c6818b3200517208488b4644630b185ee8aaa19aa2fc257b4e9392",
+      "input_posts": [],
+      "ownership_guard_sha256": "d65e092c6c15f31ae6d57dd45d1aaa1dfdb1e1e31ae06c7ce2691ba076a54cb6",
+      "last_screenshot": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-gameplay01\\shots\\t0039\\frames\\fb0.png",
+        "sha256": "538f5053d71249de09606b01c8341777fca46b1767dcb767bfa5e208b47311f5"
+      },
+      "controller_exit": 0
+    },
+    "repair-continue-play02": {
+      "actual_guest_seconds": 41.8157046,
+      "process_supervisor_sha256": "117b818a9c5cb3eda911e13cc63d91a095be82649290de45177b0029c192c7b8",
+      "checkpoint_sha256": "073f806b370711060aaef42fc2e931d82646b38139e060f8bf63d9cb71a70c87",
+      "state_sha256": "0abbe8706bf7240adeda58c261141572270b1259cbe7bf3e478d2786fcb19a0e",
+      "audit": {
+        "state_sha256": "0abbe8706bf7240adeda58c261141572270b1259cbe7bf3e478d2786fcb19a0e",
+        "state_bytes": 10976834,
+        "elf_sha256": "bedade3364d51da2a62fac1f58b73a63707ebe1ddd43c83e13b315004b0ad726",
+        "decoded_bytes": 28074766,
+        "ram_serialization_offset": 11291025,
+        "immutable_anchors": [
+          {
+            "address": "0x8c014000",
+            "bytes": 256,
+            "sha256": "ecaa69dd39bff6a1d63a9f80dfa09af725926c18153ec342f977da8209868a95"
+          },
+          {
+            "address": "0x8c050000",
+            "bytes": 256,
+            "sha256": "d217c5968e5c4c949718c607d598222c4a79c0b3799d0db498d12aa26ebc0869"
+          },
+          {
+            "address": "0x8c110000",
+            "bytes": 256,
+            "sha256": "ea29a7edf07c45a2a2218f6b87755e0e5463cd6e2d72efaf05028dab05410266"
+          },
+          {
+            "address": "0x8c190000",
+            "bytes": 256,
+            "sha256": "2348eedc05d0aa3c51f160e31e9612f39db962d610d3233d20c4f49379af32ed"
+          }
+        ],
+        "log_head": 891913,
+        "room": 257,
+        "frame": 1951,
+        "stop": 2151678208,
+        "player_life": 0,
+        "player_life_max": 1200,
+        "player_pos": [
+          40610.3515625,
+          3250.959716796875,
+          -26264.26171875
+        ],
+        "player_rno": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "event_start_cnt": 0,
+        "qa_flags": 0,
+        "memory_edits": false
+      },
+      "checkpoint_parent": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-gameplay01",
+        "receipt_sha256": "f1820672ca15fe19e6c6fe056c8a5fee4cd0aee311d5878b2bb83c704a9e611b"
+      },
+      "read_only_state_sha256": "b366e307b4b294be7669ec5dc2cf53dd7016e3acee94bd3148342607fa5c2152",
+      "log_sha256": "581e0b65c0845919cd657dc7b82f962cc1a3c15e49a06bcd9f41fbb74830fd96",
+      "input_posts": [],
+      "ownership_guard_sha256": "493b1ef34cb84885b4ccf86e8b9220385d6dc22db4c47c53f84c7449462f03aa",
+      "last_screenshot": {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-continue-play02\\shots\\t0039\\frames\\fb0.png",
+        "sha256": "c2301c9f436b9a20f933200703f508ea68a0dc8482b4ff8fd66878ccc7b0097d"
+      },
+      "controller_exit": 0
+    }
+  },
+  "direct_reciprocal_catch_samples": [
+    {
+      "frame": 1716,
+      "life": 1,
+      "player_ptr": "0x8ca624c0",
+      "player_rno": [
+        4,
+        0,
+        0,
+        0
+      ],
+      "player_dmgType": "0x8cc8a340",
+      "actor": {
+        "ptr": "0x8cc8a340",
+        "id": 21,
+        "type": 4,
+        "alive": 33562743,
+        "rno": [
+          1,
+          48,
+          0,
+          0
+        ],
+        "pos": [
+          38865.2265625,
+          3071.736572265625,
+          -26827.935546875
+        ],
+        "ang": [
+          0.0,
+          1.2030569314956665,
+          0.0
+        ],
+        "hp": 3000,
+        "dmgType": 2359698624,
+        "motion_ptr": "0x8cbb9ae0",
+        "motion_frame": 44.0
+      }
+    },
+    {
+      "frame": 1720,
+      "life": 1,
+      "player_ptr": "0x8ca624c0",
+      "player_rno": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "player_dmgType": "0x8cc8a340",
+      "actor": {
+        "ptr": "0x8cc8a340",
+        "id": 21,
+        "type": 4,
+        "alive": 33562743,
+        "rno": [
+          1,
+          48,
+          1,
+          3
+        ],
+        "pos": [
+          38960.38671875,
+          3076.123779296875,
+          -26767.7265625
+        ],
+        "ang": [
+          0.0,
+          1.2551190853118896,
+          0.0
+        ],
+        "hp": 3000,
+        "dmgType": 2359698624,
+        "motion_ptr": "0x8cbb9ae0",
+        "motion_frame": 4.0
+      }
+    }
+  ],
+  "direct_catch_samples_count": 58,
+  "death_trace": [
+    "death trace: life.before frame=1716 caller=8c0b1d8c dmg=9999 rnd=0 flag=0 type=-1 life=1200 rno=0/0/1/1",
+    "death trace: life.after frame=1716 caller=8c0b1d8c dmg=1200 rnd=0 flag=0 type=-1 life=0 rno=0/0/1/1",
+    "death trace: damage.enter frame=1716 caller=8c0b1da0 dmg=0 rnd=0 flag=0 type=0 life=0 rno=0/0/1/1",
+    "death trace: check frame=1717 caller=8c01b478 life=1 rno=0/0/0/0",
+    "death trace: check frame=1747 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=1777 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=1807 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=1837 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=1867 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=1897 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=1927 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=1957 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=1987 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2017 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2047 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2077 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2107 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2137 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2167 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2197 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2227 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2257 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2287 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2317 caller=8c01b478 life=0 rno=0/0/1/0",
+    "death trace: check frame=2347 caller=8c01b478 life=0 rno=0/0/1/0"
+  ],
+  "original_death_demo_started": true,
+  "Continue_menu_screenshot_verified": true,
+  "ordinary_movement": {
+    "before": {
+      "host_s": 23.422,
+      "non_atomic": true,
+      "qa_frames": 51,
+      "qa_flags": 0,
+      "global": {
+        "ptr": "0x8c361ea0",
+        "rno": [
+          3,
+          0,
+          0,
+          0
+        ],
+        "frame": 1422,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "room": 257,
+        "status": [
+          50856192,
+          512,
+          0,
+          268435456
+        ]
+      },
+      "player": {
+        "ptr": "0x8ca624c0",
+        "id": 0,
+        "type": 0,
+        "alive": 117448823,
+        "rno": [
+          0,
+          0,
+          1,
+          1
+        ],
+        "pos": [
+          39376.8671875,
+          3101.99267578125,
+          -26665.74609375
+        ],
+        "ang": [
+          0.0,
+          -1.503808856010437,
+          0.0
+        ],
+        "hp": 1200,
+        "dmgType": 0,
+        "motion_ptr": "0x8c705c20",
+        "motion_frame": 53.0
+      },
+      "pad": {
+        "button": 0,
+        "stick": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "triggers": [
+          0,
+          0
+        ]
+      },
+      "joy": {
+        "on": 0,
+        "stick": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "triggers": [
+          0,
+          0
+        ]
+      },
+      "event_start_cnt": 0,
+      "subscreen_type": 0,
+      "mendez": [],
+      "actors": [
+        {
+          "ptr": "0x8cc978c0",
+          "id": 21,
+          "type": 4,
+          "alive": 33562743,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            5774.27880859375,
+            3205.18505859375,
+            -15490.38671875
+          ],
+          "ang": [
+            0.0,
+            1.7744323015213013,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x8cba0620",
+          "motion_frame": 39.0
+        },
+        {
+          "ptr": "0x8cc96ae0",
+          "id": 21,
+          "type": 3,
+          "alive": 33562743,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -4593.7294921875,
+            3199.99853515625,
+            -11056.486328125
+          ],
+          "ang": [
+            0.0,
+            0.20382770895957947,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x8cba0620",
+          "motion_frame": 52.0
+        },
+        {
+          "ptr": "0x8cc8a340",
+          "id": 21,
+          "type": 4,
+          "alive": 33562743,
+          "rno": [
+            1,
+            14,
+            1,
+            0
+          ],
+          "pos": [
+            40258.484375,
+            3201.809326171875,
+            -27093.33984375
+          ],
+          "ang": [
+            0.0,
+            -1.2716701030731201,
+            0.0
+          ],
+          "hp": 3000,
+          "dmgType": 0,
+          "motion_ptr": "0x8cbb8920",
+          "motion_frame": 49.0
+        },
+        {
+          "ptr": "0x8cc89560",
+          "id": 21,
+          "type": 0,
+          "alive": 33562743,
+          "rno": [
+            1,
+            9,
+            1,
+            0
+          ],
+          "pos": [
+            -11386.2255859375,
+            -0.0001220703125,
+            -879.3084106445312
+          ],
+          "ang": [
+            0.0,
+            0.01319259125739336,
+            0.0
+          ],
+          "hp": 800,
+          "dmgType": 0,
+          "motion_ptr": "0x8cbcd380",
+          "motion_frame": 25.0
+        },
+        {
+          "ptr": "0x8caf8e40",
+          "id": 70,
+          "type": 3,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -483.6109924316406,
+            5081.10009765625,
+            -16859.853515625
+          ],
+          "ang": [
+            0.0,
+            1.5707499980926514,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf8060",
+          "id": 67,
+          "type": 5,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            310.4859924316406,
+            885.8410034179688,
+            11993.6220703125
+          ],
+          "ang": [
+            0.0,
+            -0.4537722170352936,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf6da0",
+          "id": 67,
+          "type": 3,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            5979.59521484375,
+            912.2670288085938,
+            14312.30078125
+          ],
+          "ang": [
+            0.0,
+            -0.9434101581573486,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf5fc0",
+          "id": 67,
+          "type": 3,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            3116.14697265625,
+            0.0,
+            -14303.4052734375
+          ],
+          "ang": [
+            0.0,
+            -0.9434101581573486,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf4d00",
+          "id": 67,
+          "type": 3,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            4012.2529296875,
+            0.0,
+            -14241.265625
+          ],
+          "ang": [
+            0.0,
+            -0.025952856987714767,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf3f20",
+          "id": 67,
+          "type": 3,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -6620.125,
+            0.0,
+            -9125.6357421875
+          ],
+          "ang": [
+            0.0,
+            0.30586153268814087,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf19c0",
+          "id": 67,
+          "type": 1,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            9879.0693359375,
+            1812.4739990234375,
+            -20355.46484375
+          ],
+          "ang": [
+            0.0,
+            2.658987522125244,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf0be0",
+          "id": 67,
+          "type": 1,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -8548.03515625,
+            892.6640014648438,
+            -20384.63671875
+          ],
+          "ang": [
+            0.0,
+            2.176506519317627,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caef920",
+          "id": 67,
+          "type": 1,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -5580.2578125,
+            892.6640014648438,
+            25481.96875
+          ],
+          "ang": [
+            0.0,
+            3.059608221054077,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caeeb40",
+          "id": 67,
+          "type": 1,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -20303.86328125,
+            3780.0,
+            29438.068359375
+          ],
+          "ang": [
+            0.0,
+            -1.5006624460220337,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caed880",
+          "id": 67,
+          "type": 0,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -3844.402099609375,
+            960.0,
+            -10849.6064453125
+          ],
+          "ang": [
+            0.0,
+            -1.2588919401168823,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caecaa0",
+          "id": 67,
+          "type": 0,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            6111.9091796875,
+            1861.862060546875,
+            16151.01171875
+          ],
+          "ang": [
+            0.0,
+            -1.3606038093566895,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caeb7e0",
+          "id": 67,
+          "type": 0,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -4068.533935546875,
+            960.0,
+            -11487.6416015625
+          ],
+          "ang": [
+            0.0,
+            4.6064982414245605,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caeaa00",
+          "id": 67,
+          "type": 0,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -19336.4453125,
+            3780.212890625,
+            29426.798828125
+          ],
+          "ang": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae8920",
+          "id": 70,
+          "type": 1,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -1098.217041015625,
+            1000.0,
+            -8198.474609375
+          ],
+          "ang": [
+            0.0,
+            4.712250232696533,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae7b40",
+          "id": 69,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            6656.0,
+            902.0,
+            8925.0
+          ],
+          "ang": [
+            0.0,
+            0.10466645658016205,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae5760",
+          "id": 69,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            4702.53076171875,
+            0.0,
+            -7030.1767578125
+          ],
+          "ang": [
+            0.0,
+            3.1414999961853027,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae4980",
+          "id": 69,
+          "type": 1,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -399.9110107421875,
+            0.0,
+            -10076.244140625
+          ],
+          "ang": [
+            0.0,
+            1.5707499980926514,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae26a0",
+          "id": 65,
+          "type": 1,
+          "alive": 33581159,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            8136.3408203125,
+            902.0,
+            13373.478515625
+          ],
+          "ang": [
+            0.0,
+            0.10606180131435394,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae18c0",
+          "id": 70,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -937.9169921875,
+            4200.0,
+            -13150.1630859375
+          ],
+          "ang": [
+            0.0,
+            -1.5707499980926514,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cadcdc0",
+          "id": 70,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -7152.037109375,
+            1000.0,
+            -14070.2041015625
+          ],
+          "ang": [
+            0.0,
+            3.418593645095825,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cadbfe0",
+          "id": 65,
+          "type": 0,
+          "alive": 33581159,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            4035.912109375,
+            902.0,
+            8500.353515625
+          ],
+          "ang": [
+            0.0,
+            0.10606180131435394,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cad7e60",
+          "id": 65,
+          "type": 0,
+          "alive": 33562727,
+          "rno": [
+            1,
+            6,
+            1,
+            0
+          ],
+          "pos": [
+            6539.63818359375,
+            0.0,
+            -6422.44189453125
+          ],
+          "ang": [
+            0.0,
+            4.712296485900879,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cad7080",
+          "id": 65,
+          "type": 0,
+          "alive": 33581159,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -10849.0400390625,
+            0.0,
+            -6771.60595703125
+          ],
+          "ang": [
+            0.0,
+            1.7916696071624756,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8ca632a0",
+          "id": 70,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            384.2640075683594,
+            4200.0,
+            -6405.5732421875
+          ],
+          "ang": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8ca624c0",
+          "id": 0,
+          "type": 0,
+          "alive": 117448823,
+          "rno": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "pos": [
+            39376.8671875,
+            3101.99267578125,
+            -26665.74609375
+          ],
+          "ang": [
+            0.0,
+            -1.503808856010437,
+            0.0
+          ],
+          "hp": 1200,
+          "dmgType": 0,
+          "motion_ptr": "0x8c705c20",
+          "motion_frame": 53.0
+        },
+        {
+          "ptr": "0x8cc95880",
+          "id": 66,
+          "type": 0,
+          "alive": 33562727,
+          "rno": [
+            1,
+            3,
+            0,
+            0
+          ],
+          "pos": [
+            -304.239990234375,
+            -17.860000610351562,
+            -57.43000030517578
+          ],
+          "ang": [
+            1.483529806137085,
+            0.0,
+            -1.5707963705062866
+          ],
+          "hp": 0,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cc94aa0",
+          "id": 66,
+          "type": 0,
+          "alive": 33579111,
+          "rno": [
+            1,
+            3,
+            0,
+            0
+          ],
+          "pos": [
+            140.0,
+            -30.0,
+            -150.0
+          ],
+          "ang": [
+            1.5707963705062866,
+            0.0,
+            1.8849555253982544
+          ],
+          "hp": 0,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cca4d80",
+          "id": 66,
+          "type": 0,
+          "alive": 33579111,
+          "rno": [
+            1,
+            3,
+            0,
+            0
+          ],
+          "pos": [
+            140.0,
+            -30.0,
+            -150.0
+          ],
+          "ang": [
+            1.5707963705062866,
+            0.0,
+            1.8849555253982544
+          ],
+          "hp": 0,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        }
+      ],
+      "ssloop": 0,
+      "manager_nodes_seen": 33
+    },
+    "after": {
+      "host_s": 24.922,
+      "non_atomic": true,
+      "qa_frames": 96,
+      "qa_flags": 0,
+      "global": {
+        "ptr": "0x8c361ea0",
+        "rno": [
+          3,
+          0,
+          0,
+          0
+        ],
+        "frame": 1467,
+        "stop": 0,
+        "player_life": 1200,
+        "player_life_max": 1200,
+        "room": 257,
+        "status": [
+          50856192,
+          512,
+          0,
+          0
+        ]
+      },
+      "player": {
+        "ptr": "0x8ca624c0",
+        "id": 0,
+        "type": 0,
+        "alive": 251666551,
+        "rno": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "pos": [
+          40622.70703125,
+          3252.392333984375,
+          -26266.76953125
+        ],
+        "ang": [
+          0.0,
+          -1.503808856010437,
+          0.0
+        ],
+        "hp": 1200,
+        "dmgType": 0,
+        "motion_ptr": "0x8c705c20",
+        "motion_frame": 2.0
+      },
+      "pad": {
+        "button": 0,
+        "stick": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "triggers": [
+          0,
+          0
+        ]
+      },
+      "joy": {
+        "on": 0,
+        "stick": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "triggers": [
+          0,
+          0
+        ]
+      },
+      "event_start_cnt": 0,
+      "subscreen_type": 0,
+      "mendez": [],
+      "actors": [
+        {
+          "ptr": "0x8cc978c0",
+          "id": 21,
+          "type": 4,
+          "alive": 33562743,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            5755.11328125,
+            3205.18603515625,
+            -15393.865234375
+          ],
+          "ang": [
+            0.0,
+            1.7744323015213013,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x8cba0620",
+          "motion_frame": 61.0
+        },
+        {
+          "ptr": "0x8cc96ae0",
+          "id": 21,
+          "type": 3,
+          "alive": 33562743,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -4653.7001953125,
+            3199.99951171875,
+            -11072.3173828125
+          ],
+          "ang": [
+            0.0,
+            0.20382770895957947,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x8cba0620",
+          "motion_frame": 74.0
+        },
+        {
+          "ptr": "0x8cc8a340",
+          "id": 21,
+          "type": 4,
+          "alive": 33562743,
+          "rno": [
+            1,
+            14,
+            1,
+            0
+          ],
+          "pos": [
+            39636.19140625,
+            3130.5517578125,
+            -26877.57421875
+          ],
+          "ang": [
+            0.0,
+            -1.2716701030731201,
+            0.0
+          ],
+          "hp": 3000,
+          "dmgType": 0,
+          "motion_ptr": "0x8cbb8920",
+          "motion_frame": 94.0
+        },
+        {
+          "ptr": "0x8cc89560",
+          "id": 21,
+          "type": 0,
+          "alive": 33562743,
+          "rno": [
+            1,
+            9,
+            1,
+            0
+          ],
+          "pos": [
+            -11404.2275390625,
+            0.001220703125,
+            -597.4959716796875
+          ],
+          "ang": [
+            0.0,
+            0.020083865150809288,
+            0.0
+          ],
+          "hp": 800,
+          "dmgType": 0,
+          "motion_ptr": "0x8cbcd380",
+          "motion_frame": 48.0
+        },
+        {
+          "ptr": "0x8caf8e40",
+          "id": 70,
+          "type": 3,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -483.6109924316406,
+            5081.10009765625,
+            -16859.853515625
+          ],
+          "ang": [
+            0.0,
+            1.5707499980926514,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf8060",
+          "id": 67,
+          "type": 5,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            310.4859924316406,
+            885.8410034179688,
+            11993.6220703125
+          ],
+          "ang": [
+            0.0,
+            -0.4537722170352936,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf6da0",
+          "id": 67,
+          "type": 3,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            5979.59521484375,
+            912.2670288085938,
+            14312.30078125
+          ],
+          "ang": [
+            0.0,
+            -0.9434101581573486,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf5fc0",
+          "id": 67,
+          "type": 3,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            3116.14697265625,
+            0.0,
+            -14303.4052734375
+          ],
+          "ang": [
+            0.0,
+            -0.9434101581573486,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf4d00",
+          "id": 67,
+          "type": 3,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            4012.2529296875,
+            0.0,
+            -14241.265625
+          ],
+          "ang": [
+            0.0,
+            -0.025952856987714767,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf3f20",
+          "id": 67,
+          "type": 3,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -6620.125,
+            0.0,
+            -9125.6357421875
+          ],
+          "ang": [
+            0.0,
+            0.30586153268814087,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf19c0",
+          "id": 67,
+          "type": 1,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            9879.0693359375,
+            1812.4739990234375,
+            -20355.46484375
+          ],
+          "ang": [
+            0.0,
+            2.658987522125244,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caf0be0",
+          "id": 67,
+          "type": 1,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -8548.03515625,
+            892.6640014648438,
+            -20384.63671875
+          ],
+          "ang": [
+            0.0,
+            2.176506519317627,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caef920",
+          "id": 67,
+          "type": 1,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -5580.2578125,
+            892.6640014648438,
+            25481.96875
+          ],
+          "ang": [
+            0.0,
+            3.059608221054077,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caeeb40",
+          "id": 67,
+          "type": 1,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -20303.86328125,
+            3780.0,
+            29438.068359375
+          ],
+          "ang": [
+            0.0,
+            -1.5006624460220337,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caed880",
+          "id": 67,
+          "type": 0,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -3844.402099609375,
+            960.0,
+            -10849.6064453125
+          ],
+          "ang": [
+            0.0,
+            -1.2588919401168823,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caecaa0",
+          "id": 67,
+          "type": 0,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            6111.9091796875,
+            1861.862060546875,
+            16151.01171875
+          ],
+          "ang": [
+            0.0,
+            -1.3606038093566895,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caeb7e0",
+          "id": 67,
+          "type": 0,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -4068.533935546875,
+            960.0,
+            -11487.6416015625
+          ],
+          "ang": [
+            0.0,
+            4.6064982414245605,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8caeaa00",
+          "id": 67,
+          "type": 0,
+          "alive": 33581167,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -19336.4453125,
+            3780.212890625,
+            29426.798828125
+          ],
+          "ang": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae8920",
+          "id": 70,
+          "type": 1,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -1098.217041015625,
+            1000.0,
+            -8198.474609375
+          ],
+          "ang": [
+            0.0,
+            4.712250232696533,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae7b40",
+          "id": 69,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            6656.0,
+            902.0,
+            8925.0
+          ],
+          "ang": [
+            0.0,
+            0.10466645658016205,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae5760",
+          "id": 69,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            4702.53076171875,
+            0.0,
+            -7030.1767578125
+          ],
+          "ang": [
+            0.0,
+            3.1414999961853027,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae4980",
+          "id": 69,
+          "type": 1,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -399.9110107421875,
+            0.0,
+            -10076.244140625
+          ],
+          "ang": [
+            0.0,
+            1.5707499980926514,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae26a0",
+          "id": 65,
+          "type": 1,
+          "alive": 33581159,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            8136.3408203125,
+            902.0,
+            13373.478515625
+          ],
+          "ang": [
+            0.0,
+            0.10606180131435394,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cae18c0",
+          "id": 70,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -937.9169921875,
+            4200.0,
+            -13150.1630859375
+          ],
+          "ang": [
+            0.0,
+            -1.5707499980926514,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cadcdc0",
+          "id": 70,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            -7152.037109375,
+            1000.0,
+            -14070.2041015625
+          ],
+          "ang": [
+            0.0,
+            3.418593645095825,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cadbfe0",
+          "id": 65,
+          "type": 0,
+          "alive": 33581159,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            4035.912109375,
+            902.0,
+            8500.353515625
+          ],
+          "ang": [
+            0.0,
+            0.10606180131435394,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cad7e60",
+          "id": 65,
+          "type": 0,
+          "alive": 33562727,
+          "rno": [
+            1,
+            6,
+            1,
+            0
+          ],
+          "pos": [
+            6539.63818359375,
+            0.0,
+            -6422.44189453125
+          ],
+          "ang": [
+            0.0,
+            4.712296485900879,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cad7080",
+          "id": 65,
+          "type": 0,
+          "alive": 33581159,
+          "rno": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            -10849.0400390625,
+            0.0,
+            -6771.60595703125
+          ],
+          "ang": [
+            0.0,
+            1.7916696071624756,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8ca632a0",
+          "id": 70,
+          "type": 0,
+          "alive": 33564775,
+          "rno": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "pos": [
+            384.2640075683594,
+            4200.0,
+            -6405.5732421875
+          ],
+          "ang": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "hp": 1000,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8ca624c0",
+          "id": 0,
+          "type": 0,
+          "alive": 251666551,
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "pos": [
+            40622.70703125,
+            3252.392333984375,
+            -26266.76953125
+          ],
+          "ang": [
+            0.0,
+            -1.503808856010437,
+            0.0
+          ],
+          "hp": 1200,
+          "dmgType": 0,
+          "motion_ptr": "0x8c705c20",
+          "motion_frame": 2.0
+        },
+        {
+          "ptr": "0x8cc95880",
+          "id": 66,
+          "type": 0,
+          "alive": 33562727,
+          "rno": [
+            1,
+            3,
+            0,
+            0
+          ],
+          "pos": [
+            -304.239990234375,
+            -17.860000610351562,
+            -57.43000030517578
+          ],
+          "ang": [
+            1.483529806137085,
+            0.0,
+            -1.5707963705062866
+          ],
+          "hp": 0,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cc94aa0",
+          "id": 66,
+          "type": 0,
+          "alive": 33579111,
+          "rno": [
+            1,
+            3,
+            0,
+            0
+          ],
+          "pos": [
+            140.0,
+            -30.0,
+            -150.0
+          ],
+          "ang": [
+            1.5707963705062866,
+            0.0,
+            1.8849555253982544
+          ],
+          "hp": 0,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        },
+        {
+          "ptr": "0x8cca4d80",
+          "id": 66,
+          "type": 0,
+          "alive": 33579111,
+          "rno": [
+            1,
+            3,
+            0,
+            0
+          ],
+          "pos": [
+            140.0,
+            -30.0,
+            -150.0
+          ],
+          "ang": [
+            1.5707963705062866,
+            0.0,
+            1.8849555253982544
+          ],
+          "hp": 0,
+          "dmgType": 0,
+          "motion_ptr": "0x0",
+          "motion_frame": 0.0
+        }
+      ],
+      "ssloop": 0,
+      "manager_nodes_seen": 33
+    },
+    "distance": 1316.7836841664457,
+    "source_frames": [
+      1422,
+      1467
+    ],
+    "life1200_throughout_samples": true,
+    "input": "back1.2s after freeplay gate",
+    "firing_withheld_due_original_event": true
+  },
+  "screenshots": {
+    "catch": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-BB-only01\\shots\\t0019\\frames\\fb0.png",
+      "sha256": "4a5b3a0882dc3617b2badd76afa3b769208502211226407e1473ef99fca8fe0e",
+      "visually_inspected": true
+    },
+    "death_sequence": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-BB-only01\\shots\\t0023\\frames\\fb0.png",
+      "sha256": "43153872c87445bf07650f299ed1fbc8942fb6bfa919cb26f10905f5a3deb3e6",
+      "visually_inspected": true
+    },
+    "Continue_menu": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-BB-only01\\shots\\t0039\\frames\\fb0.png",
+      "sha256": "fec9594d082ef86252d52e60ba725c61408ed1b08c6886d95b4ee0588ea829d6",
+      "visually_inspected": true
+    },
+    "postContinue_gameplay": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-continue-play02\\shots\\t0022\\frames\\fb0.png",
+      "sha256": "cee4ad4dcb73a0d215d6458d2d4853780e29be19c8df2cf2a7b0c7ce4ffccd10",
+      "visually_inspected": true
+    },
+    "original_village_event": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-continue-play02\\shots\\t0025\\frames\\fb0.png",
+      "sha256": "bbfc95ff154a2c65785b87d2979e72440d1fe8e3e7e5bd973509ea8fadaf7405",
+      "visually_inspected": true
+    }
+  },
+  "preserved_controller_failures": {
+    "repair-continue01": "Timed back during globalrno2 room load; Continue accepted, movement not qualified",
+    "repair-gameplay01": "Initial incomplete observer sample falsely classified missing life as death; no controls posted; resulting authentic death checkpoint used for Continue+play02, no positiveHProllback"
+  },
+  "terminal_state_preserved": {
+    "case": "repair-continue-play02",
+    "frame": 1951,
+    "life": 0,
+    "note": "Natural combat later kills Leon again; movement acceptance is limited to living/freeplay frames1422..1467, not final survival"
+  },
+  "limitations": [
+    "DEATH_TRACE0/GANADO_ROUTINE_BYTES1 fullprogram not built in this qualification",
+    "Firing/shooting withheld when original village event starts; not qualified",
+    "Chainsaw cinematic/rendering fidelity not certified; screenshots retained including close camera/clipping",
+    "No victory/survival claim, otherroom acceptance, release validation or physical Dreamcast acceptance",
+    "Image/EXE NTFS compression changes hostthroughput context; no timing comparison across boundary"
+  ],
+  "storage_receipts": {
+    "OWNED-IDLE-EXE-LZX-COMPRESSION-20261021.json": "82be8e26b382f5187c3364686c40bf1905a5d1ab578e95a2d99125aaa64ada77",
+    "OWNED-REPAIR-STAGE-LZX-COMPRESSION-20261021.json": "937de5b9654c28503fa2f70e7bc60ca86a5ed70dd7118c0d6278b07264dec149"
+  },
+  "sealed_utc": "2026-10-21T23:26:53.556666+00:00"
+}
