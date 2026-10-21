@@ -14,7 +14,11 @@
 
 extern "C" {
 // game/trans_lit.cpp
+#if defined(RE4DC_CLOTH_LIGHT_ABI_FIX) && RE4DC_CLOTH_LIGHT_ABI_FIX && !defined(__PPC__)
+void commonClothLightSet(cLight** list, int n, Vec* pos, f32 radius);
+#else
 void commonClothLightSet(cLight** list, int n, Vec pos, f32 radius);
+#endif
 void OSReport(const char* fmt, ...);
 }
 
@@ -520,7 +524,11 @@ void clothTrans(Cloth* pCL)
     } else {
         r = model.LightInfo.Size.y;
     }
+#if defined(RE4DC_CLOTH_LIGHT_ABI_FIX) && RE4DC_CLOTH_LIGHT_ABI_FIX && !defined(__PPC__)
+    commonClothLightSet(model.LightInfo.pLight, 8, &model.pos, r);
+#else
     commonClothLightSet(model.LightInfo.pLight, 8, model.pos, r);
+#endif
     GXSetChanMatColor(4, pCL->color);
     GXSetNumTexGens(1);
     GXLoadTexObj(tex, 0);

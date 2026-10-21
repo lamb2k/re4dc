@@ -3829,3 +3829,13 @@ endif
 ifeq ($(EFFECT_CONTROLLER_VALIDATE_FIRST),1)
 $(OBJDIR)/src/game/espgen10.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_CONTROLLER_VALIDATE_FIRST=1
 endif
+
+# CLOTH_LIGHT_ABI_FIX: SH4 caller passes the live Vec address expected by the
+# existing commonClothLightSet definition. Original OFF/PPC path stays exact.
+CLOTH_LIGHT_ABI_FIX ?= 0
+ifneq ($(filter-out 0 1,$(CLOTH_LIGHT_ABI_FIX)),)
+$(error CLOTH_LIGHT_ABI_FIX is 0 or 1)
+endif
+ifeq ($(CLOTH_LIGHT_ABI_FIX),1)
+$(OBJDIR)/src/game/cloth.o: GAME_CPPFLAGS += -DRE4DC_CLOTH_LIGHT_ABI_FIX=1
+endif
