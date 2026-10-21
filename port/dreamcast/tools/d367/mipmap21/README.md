@@ -401,7 +401,18 @@ Those targets are newly filtered PAL4 candidate levels, not accepted artwork.
 
 OFF preserves the selected base archive exactly. The current source fixtures
 cover OFF identity, PAL4 and VQ alpha/base preservation, independent mip decode,
-source-library mismatch and shared-consumer exclusion. No real effect candidate
-has been generated at this checkpoint. Rendering, resource use and appearance
-remain separate gates. This tool does not change recipes, defaults or runtime
-sampling; the effect renderer's existing bilinear/clamp/alpha contract is kept.
+source-library mismatch and shared-consumer exclusion. The private review
+superset now has 553 frames: 533 PAL4 and 20 already-compacted VQ, with 3795
+independently decoded levels and 553 exact original bases. Both actual Package
+host allocator modes admit/upload/release every frame under ASan/UBSan. It
+changes 1375 original keys and keeps 5126 exact, with a 155963392-byte archive
+290816 bytes smaller than the original pack. None of this is target acceptance.
+
+EFF ownership alone does not establish screen/world sampling purpose. The
+offline preview includes letters, borders and other symbols, and some coarse
+levels have substantial alpha error. This review superset must not be treated
+as a blanket release selection. EST/SST and direct consumer policy is the next
+source gate. Rendering, resource use and appearance remain separate gates.
+This tool does not change recipes, defaults or runtime sampling; the effect
+renderer's existing bilinear/clamp/alpha contract is kept. Sealed private
+receipts distinguish the generated superset from any later selective candidate.
