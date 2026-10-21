@@ -86,6 +86,10 @@ int main(){
  // Any earlier synthetic map pulse is cleared when the raw QA chord is taken.
  reset();poll(CONT_DPAD_DOWN);poll();assert(p.button&PAD_TRIGGER_Z);
  poll(CONT_DPAD_DOWN,255,255);assert(!(p.button&PAD_TRIGGER_Z));poll();assert(!(p.button&PAD_TRIGGER_Z));
+ // Raw QA shortcuts belong only to port A; other ports retain native Down.
+ reset();Re4dcPadIn secondary={CONT_DPAD_DOWN,255,255,0,0,0,0};
+ re4dcMapPad(&secondary,RE4DC_PAD_CTX_NATIVE,0,&m,&p,0);
+ assert(p.button&PAD_BUTTON_DOWN);assert(!m.qaChord);
  printf("QA mapper release cases=%d; ordinary map and threshold controls pass\n",cases);
 }
 """
@@ -108,6 +112,19 @@ void mapped(const Re4dcPadIn* in,int ctx,int dual,Re4dcPadMap* m,PADStatus* p){
                 outputs.append(output.read_bytes())
             self.assertEqual(outputs[0], outputs[1])
             self.assertEqual(outputs[0], outputs[2])
+
+    def test_actual_qa_include_scopes_the_pad_define(self):
+        with tempfile.TemporaryDirectory() as directory:
+            makefile = Path(directory) / "probe.mk"
+            makefile.write_text("TARGET=unused\nOBJDIR=probe-obj\n.DEFAULT_GOAL:=probe\n"
+                                "include " + str(ROOT / "port/dreamcast/game/qamenu.mk") + "\n"
+                                "probe: probe-obj/platform/pad.o\n"
+                                "probe-obj/platform/pad.o:\n\t@printf '%s\\n' '$(PLATFORM_CPPFLAGS)'\n")
+            for enabled in (0, 1):
+                result = subprocess.check_output(["make", "--no-print-directory", "-f", str(makefile),
+                                                  f"QA_MENU={enabled}", "DBG_WARP=1", "WARP_AFTER_RESET=1",
+                                                  "BENCHMARK=0", "CRASH_SCREEN=0"], cwd=directory, text=True)
+                self.assertEqual("-DRE4DC_QA_MENU=1" in result, bool(enabled))
 
 
 if __name__ == "__main__":
