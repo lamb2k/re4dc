@@ -3,7 +3,7 @@ from pathlib import Path
 import ctypes,json,math,sys,time
 cap=Path(sys.argv[1]);deps=Path(sys.argv[2]);seed=Path(sys.argv[3]) if len(sys.argv)>3 and sys.argv[3] else None
 sys.path.insert(0,str(deps));import checkpoint_runner18 as pad
-pad.KEYS.update(rtrig=(0x2f,0),turnleft=(0x24,0),turnright=(0x26,0));pad.VK.update(rtrig=0x56,turnleft=0x4a,turnright=0x4c)
+pad.KEYS.update(back=(0x25,0),rtrig=(0x2f,0),turnleft=(0x24,0),turnright=(0x26,0));pad.VK.update(back=0x4b,rtrig=0x56,turnleft=0x4a,turnright=0x4c)
 pad.user32.PostMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
 k=ctypes.WinDLL('kernel32',use_last_error=True);k.OpenProcess.argtypes=[ctypes.c_ulong,ctypes.c_int,ctypes.c_ulong];k.OpenProcess.restype=ctypes.c_void_p
 k.QueryFullProcessImageNameW.argtypes=[ctypes.c_void_p,ctypes.c_ulong,ctypes.c_wchar_p,ctypes.POINTER(ctypes.c_ulong)]
