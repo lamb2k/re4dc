@@ -1,0 +1,1059 @@
+{
+  "timestamp": "2026-10-21T23:18:06.954735+00:00",
+  "scope": "Read-only source and existing Flycast evidence audit; no new guest/build/runtime/controller edits.",
+  "inspected_head": "8babb1788019269aa48f953b6a7a7292dd001b27",
+  "runtime_commit": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "runtime_elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "elf_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\builds\\c21jmW\\re4dc-game.elf",
+  "elf_hash_recomputed": true,
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "image_hash_basis": "Existing castle run identity receipts; no multi-gigabyte image rehash in this metadata-only review.",
+  "working_status": " M port/dreamcast/tools/d367/castle18/RECOVERED-J-GARRADOR-COMPLETION-20261021.md\n",
+  "source": [
+    {
+      "path": "src/game/pl_wep.cpp",
+      "git_blob": "21b0ec12e4ffb1a7612518becf350752da5f40a2",
+      "sha256": "c0ada3f1d5a6c33a4eb54b4b6c3d928eb1a388abcf2127cc7e263de1e07c7276",
+      "bytes": 37789,
+      "equal_current_head_and_working_file": true
+    },
+    {
+      "path": "src/game/player.cpp",
+      "git_blob": "fb6c4afdc24ca89b313b6fd5cebd1db6a7f0d5c2",
+      "sha256": "2e057dbe9771fec28c522dc5a407c615a695c78d5baf932224cf9bb3fefe0ddd",
+      "bytes": 48647,
+      "equal_current_head_and_working_file": true
+    },
+    {
+      "path": "src/game/pl_class.cpp",
+      "git_blob": "084d7580ba74c580404817463cc81dfccc61b213",
+      "sha256": "f6e5ad418cf57ac588ee1faf6328d3f0353210a5d7feb9412263daa0a0dce65c",
+      "bytes": 46412,
+      "equal_current_head_and_working_file": true
+    },
+    {
+      "path": "src/game/pl_sub.cpp",
+      "git_blob": "f68ab573a1ae06b3131e4cb3ef5fba5a09197b56",
+      "sha256": "48baf9cabffaf71a7093ce265471f7cb73ad06295f197489ae8604313052c199",
+      "bytes": 28313,
+      "equal_current_head_and_working_file": true
+    },
+    {
+      "path": "src/game/objWep.cpp",
+      "git_blob": "35faa2752c0a0c47c3db38d88919677c0e22d590",
+      "sha256": "b8e2e42ed1fb39aaa4012d9272a4db55c746a8a56f961ee116994fcef14788be",
+      "bytes": 17866,
+      "equal_current_head_and_working_file": true
+    },
+    {
+      "path": "src/game/pad.cpp",
+      "git_blob": "cf582369eda3b1db4c7da83edea784f3a05f5445",
+      "sha256": "e30bdefcafae5069b7add3f985a20999fa75665bd9820b418aa81b1f4f33f41e",
+      "bytes": 15261,
+      "equal_current_head_and_working_file": true
+    },
+    {
+      "path": "include/joy.h",
+      "git_blob": "dc3e409cafa4d076058be595644b7e508bfeda2c",
+      "sha256": "e20bab477cf784375a20ae7c46a116acb000d31a0705976e252e8582be181330",
+      "bytes": 2875,
+      "equal_current_head_and_working_file": true
+    },
+    {
+      "path": "port/dreamcast/game/platform/pad.cpp",
+      "git_blob": "ca6de13b673ad8215e32a9ccbcb0f4b7c90f2461",
+      "sha256": "6eeff8d5882182961cd0abb95bb6fedd9f0e33042e7bc02ad45f20796cffbd57",
+      "bytes": 31519,
+      "equal_current_head_and_working_file": true
+    }
+  ],
+  "evidence": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk249\\owned-window-current-stair-walk.json",
+      "sha256": "b23fc04a1ea7da66c43040f64e65f760734be300b2458947c34917ee9061d345",
+      "bytes": 350010
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk252\\owned-window-current-stair-walk.json",
+      "sha256": "7b5db6f00c9c4da2751e27bd8014773aa1c9ad004aaa4cee8a37bc6856050511",
+      "bytes": 221703
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk253\\owned-window-current-stair-walk.json",
+      "sha256": "6febce439ea55446af4c392da598bb4a47f718c59f562a8e328012ea8b94761e",
+      "bytes": 111538
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\source249-aim-pitch-target-audit-20261021.json",
+      "sha256": "6ce4d5dbb509dfd326f5b56bc63eb6e8042769674494548ce4a3ec0e17d399fe",
+      "bytes": 564
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk253-exact-wave.json",
+      "sha256": "cf3faab211deaab8dec6c5cdb455cc40d373d6097b591b115b648316aaec21f8",
+      "bytes": 1938
+    }
+  ],
+  "runs": [
+    {
+      "run": 249,
+      "sampled_source_frames": [
+        46948,
+        47240
+      ],
+      "sampled_health_first_last": [
+        [
+          255,
+          1200,
+          90,
+          600
+        ],
+        [
+          255,
+          1200,
+          90,
+          600
+        ]
+      ],
+      "ray_rows": 54,
+      "ray_first": {
+        "frame": 47002,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          255,
+          1200,
+          90,
+          600
+        ],
+        "source_Key_on": "0x800010",
+        "wave_status": {
+          "held_count": 0,
+          "held_ids": [],
+          "held_sent": [],
+          "active_character_actors": [
+            {
+              "ptr": "0x8cccf3c0",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x5c",
+              "hp": 1000,
+              "pos": [
+                17597.84375,
+                1999.9957275390625,
+                -25844.607421875
+              ],
+              "routines": [
+                1,
+                16,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8ccf5f80",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x5b",
+              "hp": 1000,
+              "pos": [
+                19472.4453125,
+                2000.0008544921875,
+                -24381.505859375
+              ],
+              "routines": [
+                1,
+                16,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8ccf51a0",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x57",
+              "hp": 1000,
+              "pos": [
+                36632.53515625,
+                1999.9979248046875,
+                -52580.61328125
+              ],
+              "routines": [
+                1,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8caf2460",
+              "id": "0x1b",
+              "type": 10,
+              "source_list_no": "0x56",
+              "hp": 0,
+              "pos": [
+                16013.2265625,
+                1350.09375,
+                -39624.2734375
+              ],
+              "routines": [
+                3,
+                0,
+                2,
+                1
+              ]
+            }
+          ]
+        },
+        "nearest_live_enemy": 12251.76267515029,
+        "nearest_to_Ashley": 11655.99721205504,
+        "original_weakpoint_scaled_radius": 164.64963524689978,
+        "player_pos": [
+          15948.552734375,
+          1999.9979248046875,
+          -37984.8515625
+        ],
+        "yaw": 0.052109360694885254,
+        "player_routines": [
+          0,
+          6,
+          1,
+          4
+        ],
+        "selected_source5C_hp": 1000,
+        "selected_source5C_pos": [
+          17597.84375,
+          1999.9957275390625,
+          -25844.607421875
+        ],
+        "selected_source5C_yaw": -2.8070273399353027,
+        "selected_source5C_routines": [
+          1,
+          16,
+          1,
+          0
+        ],
+        "head5_world": [
+          17520.29241579771,
+          3601.2057441473007,
+          -26117.937902882695
+        ],
+        "player_back_dot": 12008.664540924181,
+        "partner_safe_corner_pos": [
+          15631.90234375,
+          1999.9957275390625,
+          -37333.6171875
+        ],
+        "weakpoint_velocity_per_source_tick": 48.458072959507824,
+        "status1": "0x204",
+        "audible_footstep": false,
+        "actual_damage_record": {
+          "weapon": 0,
+          "part_ptr": "0x0",
+          "partNo": null,
+          "flags": 0
+        },
+        "standing_target_yaw_error": 0.0795714318291707,
+        "normal_aim_point_offset_within_original_sphere": [
+          0,
+          0,
+          0
+        ],
+        "weapon_object": "0x8cab2dc8",
+        "muzzle": [
+          15756.79091065377,
+          3328.0074894726276,
+          -37810.86635136604
+        ],
+        "ray_direction": [
+          0.1397510143282448,
+          0.33207251459908343,
+          0.9328437699004417
+        ],
+        "ray_pitch": 0.3384999248337765,
+        "ray_yaw_error": 0.000983741534841709,
+        "ray_pitch_error": -0.3154009087099045,
+        "ray_sphere_miss": 3669.1333128170013,
+        "ray_forward_distance": 11244.84821058648,
+        "range_dependent_aim_tolerance": 0.005335776782074559
+      },
+      "ray_last": {
+        "frame": 47236,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          255,
+          1200,
+          90,
+          600
+        ],
+        "source_Key_on": "0x800010",
+        "wave_status": {
+          "held_count": 0,
+          "held_ids": [],
+          "held_sent": [],
+          "active_character_actors": [
+            {
+              "ptr": "0x8cccf3c0",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x5c",
+              "hp": 1000,
+              "pos": [
+                16242.94921875,
+                1999.9984130859375,
+                -33693.91015625
+              ],
+              "routines": [
+                1,
+                16,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8ccf5f80",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x5b",
+              "hp": 1000,
+              "pos": [
+                17450.556640625,
+                1999.9979248046875,
+                -27364.517578125
+              ],
+              "routines": [
+                1,
+                16,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8ccf51a0",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x57",
+              "hp": 1000,
+              "pos": [
+                36674.140625,
+                1999.9993896484375,
+                -52598.30859375
+              ],
+              "routines": [
+                1,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8caf2460",
+              "id": "0x1b",
+              "type": 10,
+              "source_list_no": "0x56",
+              "hp": 0,
+              "pos": [
+                16013.2265625,
+                1350.08935546875,
+                -39624.2734375
+              ],
+              "routines": [
+                3,
+                0,
+                2,
+                1
+              ]
+            }
+          ]
+        },
+        "nearest_live_enemy": 4301.028649275694,
+        "nearest_to_Ashley": 3619.6759600298874,
+        "original_weakpoint_scaled_radius": 164.64959233062902,
+        "player_pos": [
+          15948.552734375,
+          1999.9957275390625,
+          -37984.8515625
+        ],
+        "yaw": 0.052109360694885254,
+        "player_routines": [
+          0,
+          6,
+          1,
+          1
+        ],
+        "selected_source5C_hp": 1000,
+        "selected_source5C_pos": [
+          16242.94921875,
+          1999.9984130859375,
+          -33693.91015625
+        ],
+        "selected_source5C_yaw": -2.978795051574707,
+        "selected_source5C_routines": [
+          1,
+          16,
+          1,
+          0
+        ],
+        "head5_world": [
+          16227.522375784814,
+          3578.090543150902,
+          -33998.89965483546
+        ],
+        "player_back_dot": 4281.9209618321665,
+        "partner_safe_corner_pos": [
+          15648.5546875,
+          1999.9984130859375,
+          -37264.44921875
+        ],
+        "weakpoint_velocity_per_source_tick": 29.482091357412592,
+        "status1": "0x200",
+        "audible_footstep": false,
+        "actual_damage_record": {
+          "weapon": 0,
+          "part_ptr": "0x0",
+          "partNo": null,
+          "flags": 0
+        },
+        "standing_target_yaw_error": 0.017764908980228977,
+        "normal_aim_point_offset_within_original_sphere": [
+          0,
+          0,
+          0
+        ],
+        "weapon_object": "0x8cab2dc8",
+        "muzzle": [
+          15814.826259791851,
+          3433.120577957481,
+          -37748.966377705336
+        ],
+        "ray_direction": [
+          0.12607417587562555,
+          -0.01550378826730735,
+          0.9918996596060735
+        ],
+        "ray_pitch": -0.015504409435508746,
+        "ray_yaw_error": -0.016816585278438545,
+        "ray_pitch_error": 0.05391149331592908,
+        "ray_sphere_miss": 213.0980518132395,
+        "ray_forward_distance": 3769.4726449800974,
+        "range_dependent_aim_tolerance": 0.015917345913069172
+      },
+      "pulse_count": 54,
+      "pulse_lengths": [
+        5,
+        1,
+        2,
+        2,
+        3,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "pitch_direction_flips": 14,
+      "fire_events": 0,
+      "quickturn_events": [
+        {
+          "ordinary_Back_source_ack_then_B_quickturn_BEFORE_RT": {
+            "frame": 46972,
+            "ack_frame": 46975,
+            "JoyY": -72,
+            "starting_yaw": -3.089576005935669,
+            "desired_delta": -3.042117949285349
+          }
+        }
+      ]
+    },
+    {
+      "run": 252,
+      "sampled_source_frames": [
+        47565,
+        47737
+      ],
+      "sampled_health_first_last": [
+        [
+          255,
+          1200,
+          90,
+          600
+        ],
+        [
+          255,
+          1200,
+          90,
+          600
+        ]
+      ],
+      "ray_rows": 27,
+      "ray_first": {
+        "frame": 47619,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          255,
+          1200,
+          90,
+          600
+        ],
+        "source_Key_on": "0x800010",
+        "wave_status": {
+          "held_count": 0,
+          "held_ids": [],
+          "held_sent": [],
+          "active_character_actors": [
+            {
+              "ptr": "0x8cccf3c0",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x5c",
+              "hp": 1000,
+              "pos": [
+                17490.083984375,
+                -2000.00390625,
+                -45511.8828125
+              ],
+              "routines": [
+                1,
+                16,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8ccf5f80",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x5b",
+              "hp": 1000,
+              "pos": [
+                16712.4765625,
+                1999.9971923828125,
+                -31554.24609375
+              ],
+              "routines": [
+                1,
+                16,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8ccf51a0",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x57",
+              "hp": 1000,
+              "pos": [
+                36752.0390625,
+                1999.9984130859375,
+                -52610.92578125
+              ],
+              "routines": [
+                1,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8caf2460",
+              "id": "0x1b",
+              "type": 10,
+              "source_list_no": "0x56",
+              "hp": 0,
+              "pos": [
+                16013.2265625,
+                1350.091552734375,
+                -39624.2734375
+              ],
+              "routines": [
+                3,
+                0,
+                2,
+                1
+              ]
+            }
+          ]
+        },
+        "nearest_live_enemy": 7771.54287006707,
+        "nearest_to_Ashley": 7475.540882894169,
+        "original_weakpoint_scaled_radius": 164.64962198550393,
+        "player_pos": [
+          25043.29296875,
+          -2000.002197265625,
+          -43682.69921875
+        ],
+        "yaw": -2.4270176887512207,
+        "player_routines": [
+          0,
+          6,
+          1,
+          4
+        ],
+        "selected_source5C_hp": 1000,
+        "selected_source5C_pos": [
+          17490.083984375,
+          -2000.00390625,
+          -45511.8828125
+        ],
+        "selected_source5C_yaw": 1.420886754989624,
+        "selected_source5C_routines": [
+          1,
+          16,
+          1,
+          0
+        ],
+        "head5_world": [
+          17767.075727015734,
+          -386.89627796411514,
+          -45444.40005274792
+        ],
+        "player_back_dot": 7741.682855197641,
+        "partner_safe_corner_pos": [
+          24879.33984375,
+          -1999.9986572265625,
+          -44379.359375
+        ],
+        "weakpoint_velocity_per_source_tick": 26.76505146968302,
+        "status1": "0x204",
+        "audible_footstep": false,
+        "actual_damage_record": {
+          "weapon": 0,
+          "part_ptr": "0x0",
+          "partNo": null,
+          "flags": 0
+        },
+        "standing_target_yaw_error": 0.6186750012524103,
+        "normal_aim_point_offset_within_original_sphere": [
+          0,
+          0,
+          0
+        ],
+        "weapon_object": "0x8cab2dc8",
+        "muzzle": [
+          25087.489103108644,
+          -671.9934994578362,
+          -43937.828272894025
+        ],
+        "ray_direction": [
+          -0.6839507004921642,
+          0.33207334680580536,
+          -0.6495681116229992
+        ],
+        "ray_pitch": 0.3385008071061807,
+        "ray_yaw_error": 0.5566502835091587,
+        "ray_pitch_error": -0.30037325195432046,
+        "ray_sphere_miss": 4355.677123450229,
+        "ray_forward_distance": 6080.0960310416085,
+        "range_dependent_aim_tolerance": 0.00986826518753539,
+        "source_m3r": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_pitch_inverted": false
+      },
+      "ray_last": {
+        "frame": 47733,
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0,
+        "health": [
+          255,
+          1200,
+          90,
+          600
+        ],
+        "source_Key_on": "0x800010",
+        "wave_status": {
+          "held_count": 0,
+          "held_ids": [],
+          "held_sent": [],
+          "active_character_actors": [
+            {
+              "ptr": "0x8cccf3c0",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x5c",
+              "hp": 1000,
+              "pos": [
+                21313.125,
+                -2000.0009765625,
+                -44912.03515625
+              ],
+              "routines": [
+                1,
+                16,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8ccf5f80",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x5b",
+              "hp": 1000,
+              "pos": [
+                16536.126953125,
+                1999.9984130859375,
+                -32571.892578125
+              ],
+              "routines": [
+                1,
+                16,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8ccf51a0",
+              "id": "0x1b",
+              "type": 7,
+              "source_list_no": "0x57",
+              "hp": 1000,
+              "pos": [
+                36680.51171875,
+                1999.9998779296875,
+                -52625.46875
+              ],
+              "routines": [
+                1,
+                0,
+                1,
+                0
+              ]
+            },
+            {
+              "ptr": "0x8caf2460",
+              "id": "0x1b",
+              "type": 10,
+              "source_list_no": "0x56",
+              "hp": 0,
+              "pos": [
+                16013.2265625,
+                1350.0908203125,
+                -39624.2734375
+              ],
+              "routines": [
+                3,
+                0,
+                2,
+                1
+              ]
+            }
+          ]
+        },
+        "nearest_live_enemy": 3927.5208366500647,
+        "nearest_to_Ashley": 3538.6352343562444,
+        "original_weakpoint_scaled_radius": 164.64958933264555,
+        "player_pos": [
+          25043.29296875,
+          -1999.999267578125,
+          -43682.69921875
+        ],
+        "yaw": -2.4270176887512207,
+        "player_routines": [
+          0,
+          6,
+          1,
+          1
+        ],
+        "selected_source5C_hp": 1000,
+        "selected_source5C_pos": [
+          21313.125,
+          -2000.0009765625,
+          -44912.03515625
+        ],
+        "selected_source5C_yaw": 1.4327701330184937,
+        "selected_source5C_routines": [
+          1,
+          16,
+          1,
+          0
+        ],
+        "head5_world": [
+          21598.035857230425,
+          -397.7188262939453,
+          -44891.57218559086
+        ],
+        "player_back_dot": 3863.834502327514,
+        "partner_safe_corner_pos": [
+          24819.099609375,
+          -2000.001708984375,
+          -44432.3671875
+        ],
+        "weakpoint_velocity_per_source_tick": 27.55875779671074,
+        "status1": "0x204",
+        "audible_footstep": false,
+        "actual_damage_record": {
+          "weapon": 0,
+          "part_ptr": "0x0",
+          "partNo": null,
+          "flags": 0
+        },
+        "standing_target_yaw_error": 0.518762495813383,
+        "normal_aim_point_offset_within_original_sphere": [
+          0,
+          0,
+          0
+        ],
+        "weapon_object": "0x8cab2dc8",
+        "muzzle": [
+          24998.829688951373,
+          -560.6911667995155,
+          -43945.43115891144
+        ],
+        "ray_direction": [
+          -0.7300760417673994,
+          0.012215216863606436,
+          -0.683256731920163
+        ],
+        "ray_pitch": 0.012215520659190671,
+        "ray_yaw_error": 0.48093363825764346,
+        "ray_pitch_error": 0.03392011009807604,
+        "ray_sphere_miss": 1637.7390125964969,
+        "ray_forward_distance": 3131.286067836435,
+        "range_dependent_aim_tolerance": 0.01916145593221288,
+        "source_m3r": [
+          0.0048610675148665905,
+          0.0048610675148665905,
+          0.0
+        ],
+        "source_pitch_inverted": false
+      },
+      "pulse_count": 27,
+      "pulse_lengths": [
+        5,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "pitch_direction_flips": 0,
+      "fire_events": 0,
+      "quickturn_events": [
+        {
+          "ordinary_Back_source_ack_then_B_quickturn_BEFORE_RT": {
+            "frame": 47589,
+            "ack_frame": 47593,
+            "JoyY": -72,
+            "starting_yaw": 0.714482307434082,
+            "desired_delta": -2.4897339278972166
+          }
+        }
+      ]
+    },
+    {
+      "run": 253,
+      "sampled_source_frames": [
+        47740,
+        47895
+      ],
+      "sampled_health_first_last": [
+        null,
+        null
+      ],
+      "ray_rows": 0,
+      "ray_first": null,
+      "ray_last": null,
+      "pulse_count": 0,
+      "pulse_lengths": [],
+      "pitch_direction_flips": 0,
+      "fire_events": 0,
+      "quickturn_events": []
+    }
+  ],
+  "closed253": {
+    "scope": "Read-only exact CLOSED snapshot linked-list and scoped held-array audit, four frozenELF anchors; not asynchronouslastsample, no game/statewrites.",
+    "run": 253,
+    "state_sha256": "f3712ce771bf0ae84b5e247b43dddbc40a0159b39bfc9efb70a67d18e07d38c8",
+    "source": 47896,
+    "health": [
+      255,
+      1200,
+      0,
+      600
+    ],
+    "actors": [
+      {
+        "ptr": "0x8cccf3c0",
+        "id": "0x1b",
+        "type": 7,
+        "source_list_no": "0x5c",
+        "hp": 1000,
+        "pos": [
+          24826.525390625,
+          -2000.00439453125,
+          -43634.74609375
+        ],
+        "routines": [
+          1,
+          38,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8ccf5f80",
+        "id": "0x1b",
+        "type": 7,
+        "source_list_no": "0x5b",
+        "hp": 1000,
+        "pos": [
+          16329.1962890625,
+          1999.9993896484375,
+          -34205.44140625
+        ],
+        "routines": [
+          1,
+          27,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8ccf51a0",
+        "id": "0x1b",
+        "type": 7,
+        "source_list_no": "0x57",
+        "hp": 1000,
+        "pos": [
+          36632.51171875,
+          1999.9979248046875,
+          -52580.56640625
+        ],
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8caf2460",
+        "id": "0x1b",
+        "type": 10,
+        "source_list_no": "0x56",
+        "hp": 0,
+        "pos": [
+          16013.2265625,
+          1350.090576171875,
+          -39624.2734375
+        ],
+        "routines": [
+          3,
+          0,
+          2,
+          1
+        ]
+      }
+    ],
+    "held_ids": [],
+    "m3r": [
+      -0.0013926289975643158,
+      -0.0013926289975643158,
+      0.0
+    ],
+    "system_flags": "0x2000000",
+    "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+  },
+  "arithmetic": {
+    "scope": "Arithmetic illustration of source analog accumulator, default weapon spd=1, constant abs(stickX)=72. Excludes waist saturation, body/model animation, sway, sampling and moving targets; not a gameplay test or measured timing.",
+    "analog_abs_stick": 72,
+    "unit_yaw_coefficient_rad": 0.005654866776461627,
+    "continuous_20_ticks_ramp_sum": 119,
+    "five_single_ticks_each_followed_by_three_neutral_ramp_sum": 5,
+    "continuous_20_ticks_preclamp_yaw_accumulator_rad": 0.6729291463989336,
+    "five_single_tick_preclamp_yaw_accumulator_rad": 0.028274333882308135
+  }
+}
