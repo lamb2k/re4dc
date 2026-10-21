@@ -1326,7 +1326,7 @@ endif
 ifneq ($(COARSE),1)
 $(error PAUSE_NATIVE_PRESENTATION needs COARSE=1)
 endif
-$(OBJDIR)/coarse.o: GAME_CPPFLAGS += -DRE4DC_PAUSE_NATIVE_PRESENTATION=1
+$(OBJDIR)/coarse.o $(OBJDIR)/src/game/game.o: GAME_CPPFLAGS += -DRE4DC_PAUSE_NATIVE_PRESENTATION=1
 endif
 # COARSE_NO_STD_SCENERY=1 (heap-4 reclaim, render-only; only with COARSE=1 and COARSE_WORLD set, below): in the
 #   room the coarse world draws (coarse_world.h kRoom) native_static.cpp bind_mesh() neither opens nor binds the

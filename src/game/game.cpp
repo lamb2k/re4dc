@@ -181,6 +181,12 @@ struct GameWork {
 int lbl_80314B90 = 0;
 
 GameWork Game;
+#if defined(RE4DC_PAUSE_NATIVE_PRESENTATION) && RE4DC_PAUSE_NATIVE_PRESENTATION
+// Read the source-owned saved mode without exporting its private work layout.
+extern "C" int re4dc_game_option_from_play() {
+    return reinterpret_cast<const unsigned char*>(&Game.Rno_bak)[0] == 3;
+}
+#endif
 u32 g_at_cnt[20];
 u32 g_at_cyc[20];
 u32 g_at2_cnt[20];
