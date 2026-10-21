@@ -1,0 +1,133 @@
+{
+  "schema": "re4dc-canonical-generic-FX-source-qualification-1",
+  "candidate_only": true,
+  "private_set": "mipmap21-world-canonical-generic-fx-20261021",
+  "private_sums_sha256": "5d856f9dd79476970d2fa6be739619b7970299beaa2033921bb6570ae787153e",
+  "candidate_pack_sha256": "ba40722d963153fcd03c3861152682c67f6eae88a1fb37f6ae902317685e7cdc",
+  "candidate_pack_bytes": 155787264,
+  "selected_base_pack_sha256": "26cdd2601e56ca1ecb34ec59ac67f4f87104562e6a5ec9f5f7fb705e78119d4f",
+  "original_pack_sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+  "wholepack_policy_set": "mipmap21-current-wholepack-policy-v8-20261021",
+  "wholepack_policy_sums_sha256": "6760f0a4713bb60439431edbcc3bde43dc684c38b44e1f4290297afa7539972d",
+  "selected_counts": {
+    "mipmapped": 947,
+    "changed": 1076,
+    "exact": 5425,
+    "selective_FX": 239,
+    "fixed_ID_UI_holds": 79,
+    "separate_uncomposed_actor_keys": 20,
+    "source_qualified_FX_total": 246,
+    "generic_FX": 7,
+    "canonical_PAL8": 7,
+    "path_emitter_new_keys": 2,
+    "recovered_source_FX_new_keys": 70,
+    "canonical_generic_FX_new_keys": 5
+  },
+  "source_policy_set": "mipmap21-generic-fx-consumer-policy-v3-20261021",
+  "source_policy_sums_sha256": "3c39d012cc364519a660026d92a2f8ab8624ae61c0b68aea28ac86f7fd9647ff",
+  "source_decisions": {
+    "hold-fixed-ID-UI": 44,
+    "hold-unresolved-consumer": 105,
+    "hold-custom-or-generator-effect": 31,
+    "hold-screen-or-mixed-effect": 33,
+    "world-common-sprite-source-candidate": 7
+  },
+  "source_exact_parsed_input_proofs": 57,
+  "source_fresh_scope": "Eleven recovered inputs parsed in v2 plus one exact r200 input in v3;45 sealed source proofs inherited.",
+  "generic_tests": {
+    "cases": 7,
+    "passed": 7
+  },
+  "sampling_contract_version": 3,
+  "canonical_PAL8_option_default": false,
+  "legacy_default_two_key_ON_output_identical": true,
+  "layered_OFF_pack_identical": true,
+  "new_keys": 5,
+  "unrelated_current_members_exact": 6496,
+  "independent_generated_levels": 33,
+  "independent_original_bases": 5,
+  "independent_native_reference_levels": 24,
+  "full_resolution_RGBA_alpha_and_material_dimensions_UV_flags_exact": true,
+  "original_VQ_book_and_base_indices_exact": true,
+  "new_family_counts": {
+    "canonical-PAL8-native16": 4,
+    "original-VQ": 1
+  },
+  "new_frames": [
+    {
+      "key": "18d2fc67-3721baba",
+      "family": "canonical-PAL8-native16",
+      "before_payload_bytes": 2048,
+      "after_payload_bytes": 1880,
+      "extra_payload_bytes": -168
+    },
+    {
+      "key": "19203dfd-cb359506",
+      "family": "canonical-PAL8-native16",
+      "before_payload_bytes": 2048,
+      "after_payload_bytes": 1880,
+      "extra_payload_bytes": -168
+    },
+    {
+      "key": "5fbdc472-c6cf216f",
+      "family": "canonical-PAL8-native16",
+      "before_payload_bytes": 2048,
+      "after_payload_bytes": 1880,
+      "extra_payload_bytes": -168
+    },
+    {
+      "key": "61b7d24f-dc461841",
+      "family": "canonical-PAL8-native16",
+      "before_payload_bytes": 2048,
+      "after_payload_bytes": 1880,
+      "extra_payload_bytes": -168
+    },
+    {
+      "key": "6f6b4888-bf4fa5d9",
+      "family": "original-VQ",
+      "before_payload_bytes": 18432,
+      "after_payload_bytes": 23894,
+      "extra_payload_bytes": 5462
+    }
+  ],
+  "seven_canonical_PAL8_packages_share_one_exact_palette": true,
+  "actual_Package_host_cases": [
+    {
+      "UI_VRAM": 0,
+      "ASan_UBSan": true,
+      "seven_simultaneous_PAL8_packages_one_exact_palette": true,
+      "palette_writes_after_seven_uploads": 256,
+      "palette_writes_after_last_close_and_reload": 512,
+      "VQ_adopt_stream_mip_payload_and_fences": true
+    },
+    {
+      "UI_VRAM": 1,
+      "ASan_UBSan": true,
+      "seven_simultaneous_PAL8_packages_one_exact_palette": true,
+      "palette_writes_after_seven_uploads": 256,
+      "palette_writes_after_last_close_and_reload": 512,
+      "VQ_adopt_stream_mip_payload_and_fences": true
+    }
+  ],
+  "payload_delta": 4790,
+  "rounded32_request_delta": 4832,
+  "archive_delta": -4096,
+  "new_four_PAL8_payload_delta": -672,
+  "new_four_PAL8_rounded32_request_delta": -640,
+  "new_original_VQ_payload_delta": 5462,
+  "full_build_knobs": [
+    "CAST_MIPMAP=1",
+    "TEX_TWIDDLED_MIPMAP=1",
+    "TEX_PAL4_ALPHA=1",
+    "TEX_PAL4_MIPMAP=1",
+    "TEX_PAL8_ALPHA=1",
+    "TEX_PAL8_MIPMAP=1"
+  ],
+  "sampler_policy": "Existing native effect sprite bilinear/clamp/MODULATEALPHA/default-MIPD path; dimensions, UVs, blend/depth/fog, frame timing, base texels and accepted source VQ codebooks/indices stay exact. Preserve SH4ZAM/SKIN_SH4ZAM.",
+  "limits": [
+    "Source/data and mocked-host proof only. No target sampling/look, full-program identity, combined KOS/VRAM peaks or timing acceptance.",
+    "Four new32-square PAL8 chains retain original full-resolution RGBA/alpha and the separately filtered native reference exactly. That does not establish visual quality of deliberate minification.",
+    "Source inputs are exact old archives recovered from retained currentQA; current/public-program and original-disc identity remain separate.",
+    "All20 actor mip candidates remain separate. No renderer/SH4ZAM/default/recipe/release or SD action."
+  ]
+}

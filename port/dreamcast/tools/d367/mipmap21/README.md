@@ -632,3 +632,37 @@ prior source-qualified layer. Source-group unions overlap; they are not live
 room residency. Actor candidates, UI and other holds stay separate. No target
 look, palette/KOS/VRAM capacity or timing is claimed; no recipe/default changed.
 See recovered-fx-qualification-20261021.json.
+
+### Compact generic effect follow-up
+
+`generic_effect_candidate.py --sampling-policy` accepts an explicitly sealed
+exact-source policy. Sampling contracts 2 and 3 remain distinct. Every original
+source binding must be present once, and a fixed-ID UI reference is refused
+even if a policy label tries to disguise it. Existing discovery and native/VQ
+output stay unchanged by default; the earlier two-key ON output is reproduced
+byte-for-byte as an additional real-data control.
+
+`--canonical-pal8` opts native ARGB4444 chains into the existing shared palette.
+A chain must preserve native words exactly, use the canonical grayscale/alpha
+palette and beat its original base payload. Other native cases stay at their
+base; there is no larger raw-chain fallback for a failed compact fit. Existing
+VQ paths preserve their original codebook and base indices. Seven source tests
+cover complete bindings, disguised UI, versioned emitters, exact compact bases
+and refusal of unsuitable palette/size tradeoffs.
+
+One newly named r200 archive also matches the original manifest, completing
+parsed input evidence for all 57 generic-source files. Policy 3 now has seven
+qualified, 105 unresolved, 31 custom, 33 screen/mixed and 44 UI keys. Four new
+32-square chains share the three existing PAL8 textures' exact palette; each
+1880-byte chain is smaller than its 2048-byte original native base. The fifth
+new key keeps its original 256-square VQ book and indices. Fresh C checks cover
+33 levels, five original bases and 24 native-reference levels. Actual Package
+host checks retain all seven PAL8 packages on one palette, including last-ref
+release/reload, under both UI allocator modes with ASan/UBSan.
+
+The combined private candidate now has 947 mip keys, 1076 original changes and
+5425 exact originals. This five-key step leaves 6496 other members exact, adds
+4790 payload bytes / 4832 rounded descriptor bytes and reduces archive size by
+4096 bytes. Source/host results do not establish target look, residency or FPS.
+No runtime, recipe/default or release changes occur. The 20 actor candidates
+remain separate. See canonical-generic-qualification-20261021.json.

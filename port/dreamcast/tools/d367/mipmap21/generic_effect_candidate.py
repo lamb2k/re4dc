@@ -17,6 +17,7 @@ import sys
 TOOLS=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(TOOLS));sys.path.insert(0,str(TOOLS/'d367'))
 import convert_tpl as tpl
+import compact_native_pal8 as pal8
 import effect_consumers
 import effect_policy
 import mipmap_compact_vq as compact_mips
@@ -65,8 +66,9 @@ def source_policy(coverage,manifest,source_root,source_code_root):
                 'Missing/mismatched original inputs, fixed UI, native material aliases and special effects remain held.'])
 
 
-def build(original,base_pack,coverage,policy,*,enabled=False,engine='auto'):
-    if policy.get('sampling_contract_version',2)!=2:raise ValueError('unsupported generic effect sampling contract')
+def build(original,base_pack,coverage,policy,*,enabled=False,engine='auto',canonical_pal8=False):
+    version=policy.get('sampling_contract_version',2)
+    if version not in (2,3):raise ValueError('unsupported generic effect sampling contract')
     source,base=map(_read,(original,base_pack))
     if set(source)!=set(base) or coverage['source_pack_sha256']!=sha(original) or policy['source_pack_sha256']!=sha(original):
         raise ValueError('generic effect source/base policy identity differs')
@@ -87,7 +89,13 @@ def build(original,base_pack,coverage,policy,*,enabled=False,engine='auto'):
         for b in row['source_bindings']:
             m=policy['source_files'].get(b['source_path'],{})
             if not m.get('retained') or not m.get('parsed') or m['sha256']!=b['source_sha256']:raise ValueError('effect policy source is not exact')
-        classes=[effect_consumers.record_sampling(r,policy['common_sprite_ids'],extended=True) for r in records]
+        expected_refs={(b['path'],b['arc_index'],b['tpl_offset'],b['file_sha256']) for b in expected[name]['source_refs']}
+        actual_refs={(b['source_path'],b['archive_entry'],b['tpl_offset'],b['source_sha256']) for b in row['source_bindings']}
+        if actual_refs!=expected_refs or len(actual_refs)!=len(row['source_bindings']):
+            raise ValueError('generic effect policy omits or duplicates an original source binding')
+        if any((b['path'],b['arc_index']) in effect_policy.ID_UI for b in expected[name]['source_refs']):
+            raise ValueError('generic effect source has a fixed-ID UI consumer')
+        classes=[effect_consumers.record_sampling(r,policy['common_sprite_ids'],contract_version=version) for r in records]
         if any(c.startswith('hold-') for c in classes) or not any(c.startswith('common-world-sprite') for c in classes):raise ValueError('effect policy contains an unsupported sampler')
         st=tpl.TEXTURE.unpack_from(source[key],48);bt=tpl.TEXTURE.unpack_from(base[key],48)
         if st[6]&tpl.FLAG_MIPMAP or bt[6]&tpl.FLAG_MIPMAP:
@@ -100,9 +108,23 @@ def build(original,base_pack,coverage,policy,*,enabled=False,engine='auto'):
             after[key],result=compact_mips.add_mipmaps(base[key],reference,enabled=enabled,engine=engine)
             family='compact-base-VQ'
         elif base[key]==source[key]:
-            converter=vq if st[7]==tpl.PAYLOAD_VQ else twiddled
-            after[key],result=converter.add_mipmaps(base[key],enabled=enabled,engine=engine)
-            family='original-VQ' if st[7]==tpl.PAYLOAD_VQ else 'original-native16'
+            if canonical_pal8 and st[7]==tpl.PAYLOAD_TWIDDLED:
+                if st[3]!=tpl.FORMAT_ARGB4444:
+                    held.append(dict(key=name,decision='hold-no-canonical-PAL8-path',reasons=['retain-native-base-for-another-compact-family']));continue
+                reference,native_result=twiddled.add_mipmaps(base[key],enabled=True,engine=engine)
+                compact,palette_result=pal8.compact(reference,enabled=True)
+                if (not palette_result['changed'] or not palette_result.get('canonical_grayscale_alpha_palette')
+                        or palette_result['after_payload_bytes']>=bt[5]):
+                    held.append(dict(key=name,decision='hold-no-canonical-PAL8-base-win',reasons=['retain-original-until-compact-path-and-palette-budget-fit']));continue
+                after[key]=compact if enabled else base[key]
+                result=dict(native_result,native_mip_reference=native_result,pal8_compaction=palette_result,
+                    enabled=bool(enabled),changed=bool(enabled),after_payload_bytes=palette_result['after_payload_bytes'] if enabled else bt[5],
+                    extra_payload_bytes=palette_result['after_payload_bytes']-bt[5] if enabled else 0,package_sha256=sha(after[key]))
+                family='canonical-PAL8-native16'
+            else:
+                converter=vq if st[7]==tpl.PAYLOAD_VQ else twiddled
+                after[key],result=converter.add_mipmaps(base[key],enabled=enabled,engine=engine)
+                family='original-VQ' if st[7]==tpl.PAYLOAD_VQ else 'original-native16'
         else:raise ValueError('generic effect has an unrecognized base ancestor change')
         result.update(key=name,family=family,source_policy=row)
         rows.append(result)
@@ -125,6 +147,8 @@ def build(original,base_pack,coverage,policy,*,enabled=False,engine='auto'):
             selected_base_sha256=sha(base[k]),changed_from_base=base[k]!=after[k]) for k in sorted(source)],
         limits=['Lower mip levels are filtered/quantized candidates requiring rendered look and sampling acceptance.',
                 'No game build, guest, runtime/default, recipe, release or SD changes.'])
+    if enabled and any(tpl.TEXTURE.unpack_from(blob,48)[3]==tpl.FORMAT_PAL8_ARGB4444 for blob in after.values()):
+        report['required_build_knobs']+=['TEX_PAL8_ALPHA=1','TEX_PAL8_MIPMAP=1']
     return result,report,base,after
 
 
@@ -133,14 +157,17 @@ def main(argv=None):
     for name in ('source-pack','base-candidate','coverage','release-manifest','retained-source-root','source-code-root','output'):
         ap.add_argument('--'+name,type=Path,required=True)
     ap.add_argument('--generate',action='store_true');ap.add_argument('--engine',choices=('auto','numpy','python'),default='auto')
+    ap.add_argument('--sampling-policy',type=Path,help='explicit exact-source policy; default keeps the existing source discovery')
+    ap.add_argument('--canonical-pal8',action='store_true',help='opt-in exact shared-palette native chains only when their total payload beats the original base')
     a=ap.parse_args(argv)
     if a.output.exists() or not a.output.parent.is_dir():ap.error('output must be a new private directory')
     original=a.source_pack.read_bytes()
     if shutil.disk_usage(a.output.parent).free<3*len(original)+512*1024*1024:raise ValueError('insufficient private candidate headroom')
     base=bound_candidate(a.base_candidate,original);coverage_bytes=a.coverage.read_bytes();coverage=json.loads(coverage_bytes)
     manifest_bytes=a.release_manifest.read_bytes();manifest=json.loads(manifest_bytes)
-    policy=source_policy(coverage,manifest,a.retained_source_root,a.source_code_root)
-    result,report,before,after=build(original,base,coverage,policy,enabled=a.generate,engine=a.engine)
+    policy=(json.loads(a.sampling_policy.read_text()) if a.sampling_policy else source_policy(coverage,manifest,a.retained_source_root,a.source_code_root))
+    result,report,before,after=build(original,base,coverage,policy,enabled=a.generate,engine=a.engine,canonical_pal8=a.canonical_pal8)
+    if a.sampling_policy:report['sampling_policy_sha256']=sha(a.sampling_policy.read_bytes())
     report.update(tool_sha256=sha(Path(__file__).read_bytes()),coverage_sha256=sha(coverage_bytes),release_manifest_sha256=sha(manifest_bytes))
     code=[Path(__file__),Path(__file__).with_name('effect_policy.py'),Path(__file__).with_name('effect_consumers.py'),
         TOOLS/'mipmap_compact_vq.py',TOOLS/'mipmap_vq.py',TOOLS/'mipmap_twiddled.py']
@@ -148,7 +175,7 @@ def main(argv=None):
         'src/game/espgen00.cpp','src/game/esp0b.cpp','src/game/esp11.cpp','src/game/esp46.cpp',
         'src/game/esp4a.cpp','src/game/esp4c.cpp','src/game/cam_extra.cpp','src/game/cockpit.cpp',
         'src/st1/r101.cpp','src/st1/r10b.cpp','include/esp.h','include/global.h'))
-    policy['source_code']=[dict(path=str(p),sha256=sha(p.read_bytes())) for p in code]
+    policy['candidate_source_code' if a.sampling_policy else 'source_code']=[dict(path=str(p),sha256=sha(p.read_bytes())) for p in code]
     a.output.mkdir();outputs={}
     def write(path,data):
         with path.open('xb') as f:f.write(data)
