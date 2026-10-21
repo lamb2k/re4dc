@@ -1,0 +1,150 @@
+{
+  "scope": "Read-only SH-4 diagnostic POC. Retained Oct18 r101-fast-a model fixture; no new layout, relink, game or console timing.",
+  "window": {
+    "frames": 16,
+    "first": 480,
+    "last": 525,
+    "stride": 3,
+    "traces_present": 16
+  },
+  "elf_sha256": "9c9a6ef567aad4f2520f1319bcb6e075aaf250045824a6ed390ec3555dd6070f",
+  "replay_source_sha256": "8af0719973d2f3b4f5e24f9505052f382ba4ed01652ade0187407776c57744d3",
+  "test_source_sha256": "e3b7a5facde7a5295955049d5a7d3d8784f9d69092e2cd91e0624542bbb8ad73",
+  "unit_tests": {
+    "passed": 7,
+    "command": "python3 -m unittest -v test_sh4_icache_trace.py"
+  },
+  "model_baseline": {
+    "instructions": 158164423,
+    "instruction_cache_fills": 1414147,
+    "matches_retained_pinned_counters": true,
+    "retained_fit_check_sha256": "8428619759905f3866e80ff95ef66f38171fda36be09c38313a85ca0e13138f9"
+  },
+  "traces": [
+    {
+      "sha256": "4eec3a2cb72ba442d63141958cb54a409a711819920ac37fd6254cdacedb64b6",
+      "bytes": 32178224,
+      "instructions": 9768170,
+      "fills": 88748,
+      "name": "trace-00480.bin"
+    },
+    {
+      "sha256": "bacd56ad82684cd2e96a69bc776a936ff5e12b6f40b51851118fa7265ad5aab1",
+      "bytes": 31631960,
+      "instructions": 9540449,
+      "fills": 87515,
+      "name": "trace-00483.bin"
+    },
+    {
+      "sha256": "25cb72dcdfd9d90c28297ae17042e2a0dbf0df9b7af2e7ecb1bebfc868460525",
+      "bytes": 33666816,
+      "instructions": 10140303,
+      "fills": 87501,
+      "name": "trace-00486.bin"
+    },
+    {
+      "sha256": "229f935113b8798867802c1949b77127651e71ee7e3cd1f72c04f9b011cfc42f",
+      "bytes": 33047160,
+      "instructions": 9884247,
+      "fills": 88295,
+      "name": "trace-00489.bin"
+    },
+    {
+      "sha256": "ed730e5d9eb792be4d14461f74610bc7d53279dac7939730dc814e75adb6d2e7",
+      "bytes": 33971216,
+      "instructions": 10302930,
+      "fills": 89867,
+      "name": "trace-00492.bin"
+    },
+    {
+      "sha256": "c7035d021bbfa65d134a153d6c86d7d7478747211320adf3a7009f1eb0ba9eb3",
+      "bytes": 32823912,
+      "instructions": 9959495,
+      "fills": 88371,
+      "name": "trace-00495.bin"
+    },
+    {
+      "sha256": "c67f6339fa23f3e53d9443acd3021062f29e4076148a36d3663f3d07edb33e57",
+      "bytes": 32985624,
+      "instructions": 9880208,
+      "fills": 88313,
+      "name": "trace-00498.bin"
+    },
+    {
+      "sha256": "aa2637548f205d577821731e6a53a59e8c4fe7e12225087f6bb7e1e4578bd267",
+      "bytes": 31864336,
+      "instructions": 9615171,
+      "fills": 88596,
+      "name": "trace-00501.bin"
+    },
+    {
+      "sha256": "797ebd1bbd3f1e51d46493b34e3f82c5c531c4573498ef767a70b1ee4f31de50",
+      "bytes": 32002728,
+      "instructions": 9659311,
+      "fills": 88632,
+      "name": "trace-00504.bin"
+    },
+    {
+      "sha256": "62fb96854068fdf1ba37bb98ec7d1ec6b64f6b08dd0a3121b2d5c758975ada18",
+      "bytes": 32680024,
+      "instructions": 9776255,
+      "fills": 88241,
+      "name": "trace-00507.bin"
+    },
+    {
+      "sha256": "881ae1b0afe047e36a56a295502a5116d1bf86eeb326a69d5c5a3deb57edb8ee",
+      "bytes": 33593344,
+      "instructions": 10132250,
+      "fills": 88257,
+      "name": "trace-00510.bin"
+    },
+    {
+      "sha256": "d7c7d0fdd74570cd0890c04054c60a1bd631ac3d86ccb637799aeb5c6f6ce98c",
+      "bytes": 32845560,
+      "instructions": 9826120,
+      "fills": 88137,
+      "name": "trace-00513.bin"
+    },
+    {
+      "sha256": "18eab3ab50c1ccf041edb57a9a11395b6289790545ee59910607b58a5564d7f8",
+      "bytes": 33987304,
+      "instructions": 10301756,
+      "fills": 89341,
+      "name": "trace-00516.bin"
+    },
+    {
+      "sha256": "20f568b8e5814945c684b4aa3bd1e7451f2305b2b095d64bf91fd8c27e66931c",
+      "bytes": 32761920,
+      "instructions": 9955372,
+      "fills": 88572,
+      "name": "trace-00519.bin"
+    },
+    {
+      "sha256": "0152b5d117739ec8f80bb1f98d5b4411bca3cc887f0dfb8d310337688b38b866",
+      "bytes": 33103760,
+      "instructions": 9909862,
+      "fills": 88025,
+      "name": "trace-00522.bin"
+    },
+    {
+      "sha256": "036bf8d3aa0c8d66a853ef3af784990464ae42595d435b2c828a37d072004e06",
+      "bytes": 31483160,
+      "instructions": 9512524,
+      "fills": 87736,
+      "name": "trace-00525.bin"
+    }
+  ],
+  "reference_classification": {
+    "first": 10582,
+    "conflict": 537627,
+    "capacity": 865938
+  },
+  "limits": [
+    "Same-size fully associative LRU is a diagnostic reference, not a lower bound or predicted saving; initial recency is unknown.",
+    "Cache-line labels may cover multiple functions and do not prove independently movable linker-section ownership.",
+    "Existing hwsim cache state carries across sparse input files; real intervening cache state is unknown.",
+    "This diagnostic does not model all cache-control events or prove movable section ownership.",
+    "No layout or performance saving is implemented or claimed."
+  ],
+  "private_full_receipt_sha256": "723d9b04dc851fcffd62d666a8672943b27661ec31a504adb6b5a00ce5b6cb0b"
+}
