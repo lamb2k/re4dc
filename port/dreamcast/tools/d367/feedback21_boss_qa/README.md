@@ -60,8 +60,24 @@ to `track03.bin`. The layout comes from the exact preserved ELF, not from
 source comments or an unrelated symbols file.
 
 See [QA_REOPEN.md](QA_REOPEN.md) for the confirmed original QA shortcut
-problem, the narrow source repair and remaining target gates. Private
+problem, the narrow source repair and matching target qualification. Private
 runtime evidence lives under `feedback21-boss-qa-20261021` in the normal
 Flycast evidence root. The completed texture work remains unchanged.
-See [MENDEZ_ROUTE.md](MENDEZ_ROUTE.md) for the authentic pre-combat route and
-the open boss-pause gate; the meeting/QTE is not a boss-freeze proof.
+See [MENDEZ_ROUTE.md](MENDEZ_ROUTE.md) and [CHECKPOINTS.md](CHECKPOINTS.md) for the
+authentic checkpoint route and observed current-QA boss pause/resume passes.
+# Qualified target and unedited continuation
+
+See QA_REOPEN.md for full QA_MENU=0 program/14-overlay identity and actual repaired
+QA open/close qualification. See CHECKPOINTS.md for the separately unchanged
+Mendez route and pause/resume results. Changed-QA programs never reuse original
+program checkpoints, symbol offsets or layouts.
+
+`--save-checkpoint --elf <bound.elf>` selects a hash-pinned checkpoint_runner.py,
+requires binding/layout and seals Flycast's complete normal-unload state. Add
+`--checkpoint-seed <own sealed run directory>` only for that exact program, disc
+and emulator. `--health-stop` uses authoritative GlobalWork.pl_life and ends on
+the first natural decrease; it never sets health. Serialized state, VMUs, inputs
+and parent receipts are preserved without edits. The original pause fix remains
+absent from these boss observations. Checkpoint continuation is a preset-started
+functional check, not the eventual natural no-warp release route or hardware
+performance evidence.

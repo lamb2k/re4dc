@@ -67,7 +67,44 @@ suite also passes. A fourth focused test evaluates the actual qamenu.mk
 include and verifies that the pad-object QA define is present only in QA
 builds. Only port A reserves the shortcut; other ports retain native Down.
 
-This is source/host qualification. A rebuilt matching QA program must still
-show menu close, normal play and repeated reopening without the map opening.
-No fixed-program runtime, hardware, release or whole boss-fight acceptance
-is claimed. Mendez's actual normal fight/resume remains a separate open gate.
+The source/host gates above now have the matching target qualification below.
+Hardware, release and the complete boss fight remain separate gates.
+
+## Matching target qualification, October 21
+
+The private QA repair now passes three actual open/close cycles in `qa-fixed01`.
+The original controller safety gates remain in force. Each normal Start close
+returns to gameplay without the original unsolicited map. The final free-play
+samples advance from source frame 396 to 441, Stop_flg=0, life=1200 and QA flags=0.
+First and third actual menu PNGs were visually inspected. The cold run exits its
+owned guest in 48.2 host seconds including cleanup, with errors=[] and zero log
+overruns. This is current-QA Flycast functional evidence, not hardware timing or
+identity to the tester's Release21 program.
+
+Three isolated complete SH4 build arms use frozen source trees and the recovered
+original QA recipe. The repair's QA_MENU=0 program and all 14 overlays equal the
+pre-fix control byte for byte. The off raw program is 3,325,316 bytes,
+SHA256 `eeabc5bd354571300164f330fb1815ba54f52a21ce68c9f2bb1fa20630df90cc`.
+The repaired QA_MENU=1 raw program is 3,348,452 bytes,
+SHA256 `5c5a6c434751b03a0aaa05d8e2478820ca82a3790d7c3b06799f7845d6c5f68b`;
+its actual ELF SHA256 is
+`ed41834fd6930d800b5daf93a8db39113383a1a9a608ff28e4b3cf7a5715b9a6`.
+GAME_SH4ZAM=1 is retained. The exact historical QA recipe resolves SKIN_SH4ZAM=0
+in all three arms; this qualification does not choose the eventual combined
+target's skin setting. The first frozen worktree build
+stopped on its empty submodule; that failed output is preserved. Initializing the
+exact pinned dependency resolved it without source/option changes.
+
+The private 2048-sector QA image changes only program and its matching 14 overlays;
+1,728 other files remain exact against the original disc. Its track03 SHA256 is
+`2a6b3200fb0016a89af9b9da275a207eea7a63c7adc7dfedaf07b4a40709fc9a`.
+The unchanged recipe retains the old QA_SRC banner text; the banner is not this
+candidate's identity. A fresh actual ELF symbol table and DWARF bind observations:
+log/head/stage offsets are `0x3db460 0x3eb464 0x3eb460`, _end=8c4370f8. Original
+Mendez checkpoints never use this changed program or its symbols.
+
+Receipts and screenshots are under the private Windows evidence root
+`C:/Flycast-Evidence/re4-dreamcast/feedback21-boss-qa-20261021`: qa-default-off-identity.json,
+qa-builds/, qa-repair-input/candidate-receipt.json, qa-repair-binding.json and
+qa-fixed01/events/{05,09}-before-start/frames/fb0.png. No release, recipe, asset,
+SD or issue-tracker change is made by this qualification.

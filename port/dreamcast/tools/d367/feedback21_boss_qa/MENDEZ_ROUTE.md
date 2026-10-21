@@ -1,4 +1,16 @@
-# Mendez original-route checkpoint: combat remains untested
+# Mendez original-route continuation: combat pause/resume passes
+
+The latest original-program checkpoint continuations now reach combat and test
+ordinary pause/resume. Repeat05 shows actual em35/type0 moving and naturally
+attacking after resume; Leon's authoritative life drops1200 to400 and the health
+guard ends the guest. Repeat06 holds the visible OPTIONS menu six seconds,
+resumes normally and accepts45 source frames of ordinary back+B input. The boss
+continues moving/animating through source frame1522 with Stop0, life1200 and
+QA flags0. See CHECKPOINTS.md for exact ancestry, program/code binding and PNGs.
+This does not reproduce a post-resume boss freeze on unchanged current QA.
+Tester Release21 program/device identity and later boss phases remain open.
+
+## Preserved earlier route probes, before checkpoint authorization
 
 The unchanged aafc10f3 QA disc's r11f entry preset starts outside the barn.
 It does not spawn a combat Mendez immediately. With ordinary controller
@@ -47,9 +59,9 @@ with sampled source context adjacent. This is a movie image of Leon and
 Ashley before combat, not a native boss rendering acceptance still.
 The latest run also preserves exact owned tool snapshots and SHA256 values.
 
-Remaining gate: continue the authentic route through the original QTE and
+At that earlier checkpoint the remaining gate was to continue through the QTE and
 follow-up movie, observe a real combat Mendez, pause/resume normally, then
 record movement/attacks and source stop/motion state. Untampered emulator
 checkpoint continuation was raised with the coordinator because every
 guest must remain bounded; none has been restored without clarification.
-No boss runtime or AI repair is justified by these pre-combat probes.
+No boss runtime or AI repair was justified by those pre-combat probes.

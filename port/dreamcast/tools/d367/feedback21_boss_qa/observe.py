@@ -106,6 +106,8 @@ class Observer:
             row["global"] = dict(ptr=hex(pg), rno=self.read(pg + self.offset("GlobalWork", "Rno0"), "4B"),
                                  frame=self.field(pg, "GlobalWork", "Frame_cnt", "I"),
                                  stop=self.field(pg, "GlobalWork", "Stop_flg", "I"),
+                                 player_life=self.field(pg, "GlobalWork", "pl_life", "H"),
+                                 player_life_max=self.field(pg, "GlobalWork", "pl_life_max", "H"),
                                  room=self.field(pg, "GlobalWork", "room_id", "H"),
                                  status=self.field(pg, "GlobalWork", "Status_flg", "4I"))
         pl = self.read(self.symbols["pPL"], "I")
