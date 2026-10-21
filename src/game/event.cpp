@@ -66,6 +66,12 @@
 #include "native_cabin.h"
 #endif
 
+#if defined(RE4DC_EVD_START_CLEANUP) && RE4DC_EVD_START_CLEANUP && !defined(__PPC__)
+#if !defined(RE4DC_EVD_ADMISSION_TXN) || !RE4DC_EVD_ADMISSION_TXN
+#error EVD_START_CLEANUP requires EVD_ADMISSION_TXN
+#endif
+#endif
+
 
 extern "C" {
 void OSReport(const char* fmt, ...);
@@ -260,9 +266,11 @@ int Event::init(char* nm, EvtHeader* data)
         pLog->err(0, 0, "Event::init : memory failed");
         return 0;
     }
+#if !defined(RE4DC_EVD_START_CLEANUP) || !RE4DC_EVD_START_CLEANUP || defined(__PPC__)
     for (i = 0; i < 0x80; i++) {
         EspEvModList[i] = 0;
     }
+#endif
     EndRNo1 = 0;
     EndRNo2 = 0;
     EndRNo3 = 0;
@@ -291,6 +299,12 @@ int Event::init(char* nm, EvtHeader* data)
     EvtMgr.GetFunc((void**) &PFuncTbl, nm);
     strcpy(Name, nm);
     if (CalMaxTotalFrame(&MaxCut, &MaxTotalFrame) != 0 && CalMaxFrame(&MaxFrame, NowCut) != 0) {
+#if defined(RE4DC_EVD_START_CLEANUP) && RE4DC_EVD_START_CLEANUP && !defined(__PPC__)
+        // Publish the new event's effect-model view only after validation.
+        for (i = 0; i < 0x80; i++) {
+            EspEvModList[i] = 0;
+        }
+#endif
         return 1;
     }
     pLog->err(0, 0, "Event::init : data failed");
@@ -2733,7 +2747,16 @@ int EventMgr::SetEvt(char* nm, Event** out)
 #endif
     if (evt->init(nm, (EvtHeader*) evd) == 0) {
         pLog->err(0, 0, "EventMgr::SetEvt : init failed[%s]", nm);
+#if defined(RE4DC_EVD_START_CLEANUP) && RE4DC_EVD_START_CLEANUP && !defined(__PPC__)
+#if RE4DC_CABIN_SOURCE
+        re4dc_cabin_carrier_event_deleted(evt);
+#endif
+        // No begin or cabin audio binding has happened. The member destructor
+        // releases ModTbl; normal event end would tear down prior live state.
+        destroyNow(evt);
+#else
         DelEvt(evt, 0);
+#endif
         return 0;
     }
     evt->StatusFlag |= 0x01000000;
