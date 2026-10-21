@@ -14,7 +14,7 @@ for weapon in ('09','10','13','14'):
     ID_UI[('em/wep'+weapon+'.drs',4)]='IdScope::init WEP_ARC_PTR(4)'
 
 
-def classify(frame,parsed,source_meta,common_ids):
+def classify(frame,parsed,source_meta,common_ids,*,sampling_contract_version=2):
     refs=[];records=[];reasons=set();ui=set()
     for ref in frame['source_refs']:
         rel,slot=ref['path'],ref['arc_index']
@@ -33,7 +33,7 @@ def classify(frame,parsed,source_meta,common_ids):
         records.extend(t['records'])
         if not t['records']:reasons.add('no-EST-SST-consumer-in-this-resource')
     if not frame['source_refs']:reasons.add('no-source-reference')
-    contracts=[effect_consumers.record_sampling(r,common_ids,extended=True) for r in records]
+    contracts=[effect_consumers.record_sampling(r,common_ids,contract_version=sampling_contract_version) for r in records]
     if ui:
         decision='hold-fixed-ID-UI';reasons.add('source-proven-ID-sprite-resource')
     elif reasons:

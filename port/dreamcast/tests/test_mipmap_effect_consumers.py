@@ -34,6 +34,21 @@ class SourceEffectConsumers(unittest.TestCase):
         r.update(sprite_id=0,tool_flags=0x2000)
         self.assertEqual(effect.record_sampling(r,{0},extended=True),'hold-RTT-shimmer-or-negative')
 
+    def test_version3_path_emitter_preserves_sampling_and_EST_trigger_does_not_sample(self):
+        r=dict(kind=1,generator_id=2,sprite_id=0,screen_parts=False,tool_flags=0,shimmer_type=0)
+        self.assertEqual(effect.record_sampling(r,{0},contract_version=2),'hold-generator')
+        self.assertEqual(effect.record_sampling(r,{0},contract_version=3),'common-world-sprite-emitter02')
+        for field,value,expected in (('screen_parts',True,'hold-screen'),('tool_flags',0x2000,'hold-RTT-shimmer-or-negative'),
+                ('shimmer_type',1,'hold-RTT-shimmer-or-negative'),('generator_id',9,'hold-generator')):
+            bad=dict(r);bad[field]=value
+            self.assertEqual(effect.record_sampling(bad,{0},contract_version=3),expected)
+        r.update(kind=0,sprite_id=0x0c)
+        self.assertEqual(effect.record_sampling(r,{0},contract_version=2),'hold-custom-renderer')
+        self.assertEqual(effect.record_sampling(r,{0},contract_version=3),'no-record-texture-sampling')
+        r['sprite_id']=0x4c
+        self.assertEqual(effect.record_sampling(r,{0},contract_version=3),'hold-custom-renderer')
+        with self.assertRaises(ValueError):effect.record_sampling(r,{0},contract_version=4)
+
     def test_raw_world_and_screen_records_remain_distinct(self):
         a,b=record(),record(parts=248)
         data=struct.pack('<H',2)+bytes(46)+a+b

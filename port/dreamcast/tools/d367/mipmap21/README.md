@@ -586,3 +586,28 @@ listed the PAL8 dependencies and explicitly retained inherited knobs; its source
 is archived. The current metadata lists the full set and reproduces exactly the
 same pack. See `canonical-pal8-qualification-20261021.json`. This is still private
 review data pending combined game palette/KOS/VRAM/look and timing gates.
+
+### Source-qualified path emitter follow-up
+
+Sampling contract 3 admits Espgen02: its child goes through EspSeqSet with the
+same record texture, while the emitter changes transforms, size, speed and
+alpha. Esp0c starts another EST and never samples its nominal texture. Earlier
+contract versions are unchanged; unknown generators and reflection/RTT/screen
+consumers stay held. A fresh exact core.das parse rechecks 57 bindings. Other
+source proofs are inherited explicitly.
+
+`layer_effect_candidate.py` binds all source and current members before
+reusing reviewed mip packages. Later actor/compact/PAL8 layers survive exactly;
+a selected alias differing from both review ancestors is rejected for explicit
+regeneration. OFF is byte-identical. Four layer tests plus ten consumer/selector
+cases pass.
+
+The two-key private follow-up keeps 6499 current members exact, adds 4098 payload
+bytes / 4128 rounded descriptor bytes and changes 1001 original members with 872 mip
+keys. Sixteen independently decoded levels and two original bases pass, as do
+actual Package ASan/UBSan admission/upload/lifecycle cases in both UI VRAM modes.
+A VQ page-placement retry is recorded separately from descriptor bytes. The
+169 PS2 qualified effects,84 custom/generator holds and259 unresolved consumers
+remain distinct from the generic 220-key family. Lower-level look, combined
+palette/KOS/VRAM, same-scene sampling and timing remain open. No recipe/default,
+SH4ZAM or release changes occurred. See path-emitter-qualification-20261021.json.

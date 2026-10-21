@@ -144,7 +144,7 @@ def source_bindings(blob):
         effects=[effect(body,e,index) for e in entries if e['tag']==b'EFF'])
 
 
-def record_sampling(record,common_sprite_ids,*,extended=False):
+def record_sampling(record,common_sprite_ids,*,extended=False,contract_version=None):
     """Static texture sampling class, not a guarantee of actual drawing.
 
     Extended contracts are source-specific: Espgen00 emits the same record via
@@ -152,13 +152,21 @@ def record_sampling(record,common_sprite_ids,*,extended=False):
     drives light state, Esp46 colour filters and Esp4a camera shake without
     sampling their record's texture. Esp4c also draws nothing itself but sets
     reflection texture state, so it deliberately remains a held consumer.
+    Version 3 adds path emitter 02, whose EspSeqSet child retains the same record
+    sampler; only position/size/speed/alpha change. Esp0c starts another EST and
+    never samples its nominal texture. Earlier v1/v2 contracts stay unchanged.
     """
+    version = (2 if extended else 1) if contract_version is None else contract_version
+    if version not in (1,2,3):raise ValueError('unknown effect sampling contract version')
+    extended = version >= 2
     ident=record['sprite_id'];kind=record['kind']
-    emitter=kind==1 and record['generator_id']==0
+    generator=record['generator_id'] if kind==1 else 0
+    emitter=kind==1 and (generator==0 or version>=3 and generator==2)
     if kind!=0 and not (extended and emitter):return 'hold-generator'
-    if extended and ident in (0x11,0x46,0x4a):return 'no-record-texture-sampling'
+    if extended and (ident in (0x11,0x46,0x4a) or version>=3 and ident==0x0c):
+        return 'no-record-texture-sampling'
     if record['screen_parts']:return 'hold-screen'
     if record['tool_flags']&(0x10000|0x4000|0x2000) or record['shimmer_type']:
         return 'hold-RTT-shimmer-or-negative'
     if ident not in common_sprite_ids and not (extended and ident==0x0b):return 'hold-custom-renderer'
-    return 'common-world-sprite-emitter00' if emitter else 'common-world-sprite'
+    return ('common-world-sprite-emitter02' if generator==2 else 'common-world-sprite-emitter00') if emitter else 'common-world-sprite'

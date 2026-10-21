@@ -63,6 +63,9 @@ class SelectEffects(unittest.TestCase):
         r['generator_id']=2
         with self.assertRaises(ValueError):select.select(self.original,self.base,self.review,self.receipt,policy,enabled=True)
         policy['sampling_contract_version']=3
+        _,report,_,_=select.select(self.original,self.base,self.review,self.receipt,policy,enabled=True)
+        self.assertEqual(report['selected_frames'],1)
+        policy['sampling_contract_version']=4
         with self.assertRaises(ValueError):select.select(self.original,self.base,self.review,self.receipt,policy,enabled=True)
 
     def test_ancestry_source_hash_and_incomplete_policy_are_refused(self):

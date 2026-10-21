@@ -22,7 +22,7 @@ from world_candidate import sha
 
 
 def select(original,base_pack,review_pack,review_receipt,policy,*,enabled=False):
-    if policy.get('sampling_contract_version',1) not in (1,2):
+    if policy.get('sampling_contract_version',1) not in (1,2,3):
         raise ValueError('unknown effect sampling contract version')
     source,base,review=map(_read,(original,base_pack,review_pack))
     if (set(source)!=set(base) or set(source)!=set(review) or
@@ -59,7 +59,7 @@ def select(original,base_pack,review_pack,review_receipt,policy,*,enabled=False)
             meta=policy['source_files'].get(b['source_path'],{})
             if not meta.get('retained') or not meta.get('parsed') or meta['sha256']!=b['source_sha256']:
                 raise ValueError('world sprite source is not an exact parsed input')
-        contracts=[record_sampling(r,policy['common_sprite_ids'],extended=policy.get('sampling_contract_version')==2) for r in records]
+        contracts=[record_sampling(r,policy['common_sprite_ids'],contract_version=policy.get('sampling_contract_version',1)) for r in records]
         if any(c.startswith('hold-') for c in contracts) or not any(c.startswith('common-world-sprite') for c in contracts):
             raise ValueError('world sprite policy contains a held screen/custom/generator record')
         selected.add(tuple(int(v,16) for v in name.split('-')))
