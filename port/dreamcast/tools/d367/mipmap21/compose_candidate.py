@@ -120,7 +120,7 @@ def compose(original,compact_pack,world_pack,coverage,*,enabled=False,engine="au
 def bound_candidate(path,original):
     receipt=json.loads((path/'candidate.json').read_text())
     pack=(path/'tex.pak').read_bytes()
-    if receipt['source_pack_sha256']!=sha(original) or receipt['candidate_pack_sha256']!=sha(pack):
+    if receipt.get('source_pack_sha256',receipt.get('original_pack_sha256'))!=sha(original) or receipt['candidate_pack_sha256']!=sha(pack):
         raise ValueError("sealed candidate source/archive hash mismatch")
     before,after=map(_read,(original,pack))
     if set(before)!=set(after):

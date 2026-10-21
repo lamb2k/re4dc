@@ -14,6 +14,8 @@ import mipmap_twiddled as twiddled
 import mipmap_vq as vq
 import convert_tpl as tpl
 from test_mipmap_twiddled import from_words
+from test_mipmap_pal4 import package as palette_package
+import mipmap_pal4
 
 
 def pair(fmt=0,full=False):
@@ -64,6 +66,21 @@ class CompactMips(unittest.TestCase):
         wrong,_=twiddled.add_mipmaps(source,enabled=True)
         with self.assertRaises(ValueError):composed.add_mipmaps(base,wrong,enabled=True)
         with self.assertRaises(ValueError):composed.add_mipmaps(base,source,enabled=True)
+
+    def test_palette_reference_keeps_native_alpha_base_and_mip_target_words(self):
+        source=palette_package(128)
+        base,report=compact.compact(source,enabled=True)
+        self.assertTrue(report['changed'])
+        reference,_=mipmap_pal4.add_mipmaps(source,enabled=True,engine='python')
+        result,proof=composed.add_mipmaps(base,reference,enabled=True,engine='python')
+        a,b=vq.read_native_vq(base),vq.read_native_vq(result)
+        self.assertEqual(vq.decode_level(a,128),vq.decode_level(b,128))
+        ref=mipmap_pal4.read_native_pal4(reference)
+        self.assertEqual(composed.reference_words(ref,1),(struct.unpack('<16H',ref.palette)[ref.payload[1]>>4],))
+        self.assertEqual(a.base_indices,b.base_indices)
+        self.assertEqual(b.texture[3],tpl.FORMAT_ARGB4444)
+        self.assertEqual(a.texture[6]|4,b.texture[6])
+        self.assertEqual(a.header[9:],b.header[9:])
 
     @unittest.skipUnless(os.environ.get('MIPMAP_PVRTEX_ORACLE'),'independent decoder optional')
     def test_actual_pvrtex_decodes_every_rebuilt_level_and_base(self):

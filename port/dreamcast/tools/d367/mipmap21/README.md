@@ -388,3 +388,20 @@ recipe/default or release changes accompany the extension. Three new owner
 tests cover pair identity/table/dimension constraints, explicit inventory
 source pairs and shared-core ownership without automatic mips. The latest six
 coverage tests pass; the earlier mip/compaction/composition suites are unchanged.
+
+## Square PS2 effect frame candidate
+
+fx_candidate.py is an opt-in private candidate builder layered on a sealed
+compact-base-first archive. It admits only exact-library-matched, full-square
+PS2 EFF frames whose known source consumers are all effects. Shared non-effect
+consumers and rectangles are held. PAL4 chains retain the original palette and
+base indices. Already losslessly compacted VQ frames retain their base vectors,
+index plane and RGBA/alpha while unused codebook slots fit lower-level targets.
+Those targets are newly filtered PAL4 candidate levels, not accepted artwork.
+
+OFF preserves the selected base archive exactly. The current source fixtures
+cover OFF identity, PAL4 and VQ alpha/base preservation, independent mip decode,
+source-library mismatch and shared-consumer exclusion. No real effect candidate
+has been generated at this checkpoint. Rendering, resource use and appearance
+remain separate gates. This tool does not change recipes, defaults or runtime
+sampling; the effect renderer's existing bilinear/clamp/alpha contract is kept.

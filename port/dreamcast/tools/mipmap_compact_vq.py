@@ -1,8 +1,8 @@
 """Mip-aware use of unused vectors in a newly losslessly compacted VQ base.
 
 Referenced base vectors and the complete base index plane remain exact.
-Only unused codebook slots may be replaced. Lower-level targets are the
-previous native16-bit mip planes, retaining their filter/alpha quantization.
+Only unused codebook slots may be replaced. Lower-level targets are native
+16-bit or compact PAL4 mip planes, retaining their filter/alpha quantization.
 This opt-in composition helper does not alter original accepted VQ assets.
 """
 from __future__ import annotations
@@ -14,6 +14,7 @@ import struct
 import zlib
 
 import convert_tpl as tpl
+import mipmap_pal4 as pal4
 import mipmap_twiddled as twiddled
 import mipmap_vq as vq
 
@@ -26,11 +27,37 @@ def _distance(a, b):
     return sum((x-y)**2 for x,y in zip(a,b))
 
 
+def reference_native(blob):
+    if len(blob)<144:
+        raise ValueError('short native mip reference')
+    if tpl.TEXTURE.unpack_from(blob,48)[3]==tpl.FORMAT_PAL4_ARGB4444:
+        return pal4.read_native_pal4(blob),tpl.FORMAT_ARGB4444
+    native=twiddled.read_native_twiddled(blob)
+    return native,native.texture[3]
+
+
+def reference_decode(native,side):
+    reader=pal4 if isinstance(native,pal4.NativePal4) else twiddled
+    return reader.decode_level(native,side)
+
+
+def reference_words(native,side):
+    if isinstance(native,pal4.NativePal4):
+        palette=struct.unpack('<16H',native.palette)
+        if side==1:
+            return (palette[native.payload[1]>>4],)
+        off=pal4.level_offset(side)
+        return tuple(palette[(b>>shift)&15] for b in native.payload[off:off+side*side//2]
+                     for shift in (0,4))
+    off=twiddled.level_offset(side)
+    return struct.unpack('<%dH'%(side*side),native.payload[off:off+side*side*2])
+
+
 def quality(reference, result):
     rows=[]
     for level in range(result.size.bit_length()):
         side=1 << level
-        a=twiddled.decode_level(reference,side)
+        a=reference_decode(reference,side)
         b=vq.decode_level(result,side)
         count=side*side
         rgba=sum((p[c]-q[c])**2 for p,q in zip(a,b) for c in range(4))
@@ -47,14 +74,14 @@ def quality(reference, result):
 
 def add_mipmaps(base_blob, reference_blob, *, enabled=False, engine="auto"):
     base=vq.read_native_vq(base_blob)
-    reference=twiddled.read_native_twiddled(reference_blob)
+    reference,reference_format=reference_native(reference_blob)
     if base.mipmapped or not reference.mipmapped:
-        raise ValueError("expected a new VQ base and a native16-bit mip reference")
-    if (base.texture[:4] != reference.texture[:4] or
+        raise ValueError("expected a new VQ base and a native mip reference")
+    if (base.texture[:3] != reference.texture[:3] or base.texture[3]!=reference_format or
             base.texture[6] != reference.texture[6] & ~tpl.FLAG_MIPMAP or
             base.header[9:] != reference.header[9:]):
         raise ValueError("base/reference material, dimensions, format, alpha or header flags differ")
-    if vq.decode_level(base,base.size) != twiddled.decode_level(reference,reference.size):
+    if vq.decode_level(base,base.size) != reference_decode(reference,reference.size):
         raise ValueError("reference has a different full-resolution RGBA base")
     used=sorted(set(base.base_indices))
     report=dict(enabled=bool(enabled),changed=False,width=base.size,height=base.size,
@@ -77,13 +104,11 @@ def add_mipmaps(base_blob, reference_blob, *, enabled=False, engine="auto"):
     targets=collections.Counter()
     for level in range(1,base.size.bit_length()-1):
         side=1 << level
-        off=twiddled.level_offset(side)
-        plane=reference.payload[off:off+side*side*2]
-        row=struct.unpack("<%dH"%(side*side),plane)
+        row=reference_words(reference,side)
         targets.update(tuple(row[i:i+4]) for i in range(0,len(row),4))
     # The single-pixel mip only samples BR. Reserve an exact BR when possible;
     # no other word of that vector is required by this mip's hardware contract.
-    one=struct.unpack_from("<H",reference.payload,twiddled.level_offset(1))[0]
+    one=reference_words(reference,1)[0]
     if not any(book[i][3]==one for i in used) and free:
         index=free.pop(0)
         book[index]=(one,)*4
@@ -108,7 +133,7 @@ def add_mipmaps(base_blob, reference_blob, *, enabled=False, engine="auto"):
     levels={base.size:base.base_indices}
     for level in range(base.size.bit_length()-1):
         side=1 << level
-        pixels=[vq._feature(p) for p in twiddled.decode_level(reference,side)]
+        pixels=[vq._feature(p) for p in reference_decode(reference,side)]
         levels[side],_=vq._encode_level(pixels,side,feature_book,engine)
     payload=b"".join(struct.pack("<4H",*q) for q in book)+b"".join(
         levels[1 << i] for i in range(base.size.bit_length()))
@@ -131,5 +156,5 @@ def add_mipmaps(base_blob, reference_blob, *, enabled=False, engine="auto"):
         unused_slots_changed=sum(book[i]!=tuple(words[4*i:4*i+4]) for i in range(256) if i not in used),
         exact_all_reference_levels=all(r["exact_rgba"] for r in metrics),
         lower_level_quality=metrics,
-        lower_level_quality_scope="Against the prior filtered/quantized native16-bit mip planes, not a console screenshot or perceptual acceptance.")
+        lower_level_quality_scope="Against the supplied filtered/quantized native mip reference, not a console screenshot or perceptual acceptance.")
     return result,report
