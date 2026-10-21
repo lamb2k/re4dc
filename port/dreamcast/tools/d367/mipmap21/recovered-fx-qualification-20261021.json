@@ -1,0 +1,552 @@
+{
+  "schema": "re4dc-recovered-FX-source-qualification-1",
+  "candidate_only": true,
+  "source_pack_sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+  "selected_base_pack_sha256": "bdfceba81830035075b6438929b8ad8b51d19376e9aba5055d5ba4b2b2b9b896",
+  "candidate_pack_sha256": "26cdd2601e56ca1ecb34ec59ac67f4f87104562e6a5ec9f5f7fb705e78119d4f",
+  "candidate_pack_bytes": 155791360,
+  "private_set": "mipmap21-world-recovered-fx-mips-20261021",
+  "private_sums_sha256": "6e0b65909baf9d2943e8837ee3fba2ff76868d2c26d997f30735b5dbadfcc38a",
+  "source_policy_set": "mipmap21-fx-consumer-policy-v5-20261021",
+  "source_policy_sums_sha256": "5d2d12d5079865ee2d198d5c8a34cc036fe4e98a06d8e3a7edfac4687d6fc265",
+  "exact_recovery_set": "mipmap21-fx-exact-input-recovery-20261021",
+  "exact_recovery_sums_sha256": "fc8b12487ecaf9cb31edae64bc5f4023fa5a7206974113270587133cbbd5eafb",
+  "original_archive_matches": 19,
+  "freshly_parsed_named_inputs": 19,
+  "source_policy_decisions": {
+    "world-common-sprite-source-candidate": 239,
+    "hold-unresolved-consumer": 123,
+    "hold-custom-or-generator-effect": 89,
+    "hold-screen-or-mixed-effect": 67,
+    "hold-fixed-ID-UI": 35
+  },
+  "wholepack_policy_set": "mipmap21-current-wholepack-policy-v7-20261021",
+  "wholepack_policy_sums_sha256": "f7db99297074e12d11c579104e93e09c257dd4128221c6962ad5e62c108d2cee",
+  "selected_counts": {
+    "mipmapped": 942,
+    "changed": 1071,
+    "exact": 5430,
+    "selective_FX": 239,
+    "fixed_ID_UI_holds": 79,
+    "separate_uncomposed_actor_keys": 20,
+    "source_qualified_FX_total": 241,
+    "generic_FX": 2,
+    "canonical_PAL8": 3,
+    "path_emitter_new_keys": 2,
+    "recovered_source_FX_new_keys": 70
+  },
+  "unchanged_sampling_contract_version": 3,
+  "newly_source_qualified_keys": 70,
+  "new_formats": {
+    "compact_PAL4": 70
+  },
+  "dimensions": {
+    "16": 4,
+    "64": 65,
+    "256": 1
+  },
+  "independent_decoded_levels": 484,
+  "independent_original_bases": 70,
+  "all_full_resolution_RGBA_alpha_indices_palette_UV_flags_exact": true,
+  "layered_OFF_exact": true,
+  "unrelated_current_members_exact": 6431,
+  "additional_payload_bytes": 55560,
+  "additional_rounded32_request_bytes": 56960,
+  "additional_archive_bytes": 10240,
+  "source_group_request_unions": {
+    "st1/r113.arc": {
+      "keys": [
+        "0252597a-7f4c3cc9",
+        "03b990f5-3cc3c62a",
+        "08563e10-220c2bf7",
+        "0b341b6d-1dca9e39",
+        "1dfd425d-74c1c5c2",
+        "3883fcbe-37e2b180",
+        "3f4abcbc-939e2ae4",
+        "4825280e-45fa7fcc",
+        "545a0aa6-33f57194",
+        "5700864a-205cae77",
+        "5be0e9ff-15dea279",
+        "609724e4-950435dc",
+        "733c2a06-4aae17b7",
+        "74c48b0d-9d83e7b1",
+        "8bf8d096-1e54816b",
+        "9d718183-56103fce",
+        "a1e2768a-e4fc572d",
+        "d0d28b2f-1e69cdf6",
+        "d49c1c7d-fd47d1de",
+        "e5e4b09c-1aa15319",
+        "edb57301-2f9e15de",
+        "f57156f2-6db7adab",
+        "fe766b3a-32c00a18"
+      ],
+      "payload_increase": 15732,
+      "rounded32_request_increase": 16192
+    },
+    "st1/r103.arc": {
+      "keys": [
+        "0252597a-7f4c3cc9",
+        "03b990f5-3cc3c62a",
+        "08563e10-220c2bf7",
+        "0b341b6d-1dca9e39",
+        "1dfd425d-74c1c5c2",
+        "2df18576-801808b4",
+        "3883fcbe-37e2b180",
+        "3f4abcbc-939e2ae4",
+        "4825280e-45fa7fcc",
+        "545a0aa6-33f57194",
+        "5700864a-205cae77",
+        "5be0e9ff-15dea279",
+        "609724e4-950435dc",
+        "733c2a06-4aae17b7",
+        "74c48b0d-9d83e7b1",
+        "895ee2aa-6d294450",
+        "8bf8d096-1e54816b",
+        "9d718183-56103fce",
+        "a1e2768a-e4fc572d",
+        "d0d28b2f-1e69cdf6",
+        "d49c1c7d-fd47d1de",
+        "e5e4b09c-1aa15319",
+        "ed9d77bf-d514faf9",
+        "edb57301-2f9e15de",
+        "eefcf9ae-f6247021",
+        "f57156f2-6db7adab",
+        "fe766b3a-32c00a18"
+      ],
+      "payload_increase": 15908,
+      "rounded32_request_increase": 16448
+    },
+    "st1/r105.arc": {
+      "keys": [
+        "0252597a-7f4c3cc9",
+        "03b990f5-3cc3c62a",
+        "08563e10-220c2bf7",
+        "0b341b6d-1dca9e39",
+        "1dfd425d-74c1c5c2",
+        "2df18576-801808b4",
+        "3883fcbe-37e2b180",
+        "3f4abcbc-939e2ae4",
+        "4825280e-45fa7fcc",
+        "545a0aa6-33f57194",
+        "5700864a-205cae77",
+        "5be0e9ff-15dea279",
+        "609724e4-950435dc",
+        "733c2a06-4aae17b7",
+        "74c48b0d-9d83e7b1",
+        "895ee2aa-6d294450",
+        "8bf8d096-1e54816b",
+        "9d718183-56103fce",
+        "a1e2768a-e4fc572d",
+        "d0d28b2f-1e69cdf6",
+        "d49c1c7d-fd47d1de",
+        "e5e4b09c-1aa15319",
+        "ed9d77bf-d514faf9",
+        "edb57301-2f9e15de",
+        "eefcf9ae-f6247021",
+        "f57156f2-6db7adab",
+        "fe766b3a-32c00a18"
+      ],
+      "payload_increase": 15908,
+      "rounded32_request_increase": 16448
+    },
+    "st1/r101.arc": {
+      "keys": [
+        "033d2aa2-2edefe32",
+        "0de6a8fd-94b7e35a",
+        "2df18576-801808b4",
+        "468fb83b-4e031613",
+        "4ac3ffe0-90fff9b1",
+        "4d4b9a7c-6d9fbe6f",
+        "4dda8e08-3815ac54",
+        "62a4e3a3-9405ef8a",
+        "64bf271e-1731c552",
+        "6ef7f645-be18abcb",
+        "75413f13-cd08698e",
+        "7e06ff3a-9a869941",
+        "7e808447-3bca1e90",
+        "7f5416ea-6dd00451",
+        "81719c34-4dc19307",
+        "85534bb1-beb4d439",
+        "8842e12b-b00515d9",
+        "895ee2aa-6d294450",
+        "8d461823-1a1c2a4d",
+        "8f4f940a-3db0b6d7",
+        "90280539-0123c23c",
+        "9527cea5-0b889a30",
+        "a8f605bf-f743dafa",
+        "b0d91df4-87238e6c",
+        "b6138504-a84552cb",
+        "c43b580d-25d36e38",
+        "c6cbc695-ecb1fc88",
+        "d06dd9b5-35594950",
+        "dad13f3a-51761007",
+        "ead2fcb6-10c619a3",
+        "ed9d77bf-d514faf9",
+        "ee568f99-44b47369",
+        "eefcf9ae-f6247021",
+        "f49c247a-db6f36cd"
+      ],
+      "payload_increase": 20696,
+      "rounded32_request_increase": 21376
+    },
+    "st1/r11f.arc": {
+      "keys": [
+        "033d2aa2-2edefe32",
+        "0de6a8fd-94b7e35a",
+        "468fb83b-4e031613",
+        "4ac3ffe0-90fff9b1",
+        "4d4b9a7c-6d9fbe6f",
+        "4dda8e08-3815ac54",
+        "62a4e3a3-9405ef8a",
+        "64bf271e-1731c552",
+        "6ef7f645-be18abcb",
+        "75413f13-cd08698e",
+        "7e06ff3a-9a869941",
+        "7e808447-3bca1e90",
+        "7f5416ea-6dd00451",
+        "81719c34-4dc19307",
+        "85534bb1-beb4d439",
+        "8842e12b-b00515d9",
+        "8d461823-1a1c2a4d",
+        "8f4f940a-3db0b6d7",
+        "90280539-0123c23c",
+        "9527cea5-0b889a30",
+        "a8f605bf-f743dafa",
+        "b0d91df4-87238e6c",
+        "b6138504-a84552cb",
+        "c43b580d-25d36e38",
+        "c6cbc695-ecb1fc88",
+        "d06dd9b5-35594950",
+        "dad13f3a-51761007",
+        "ead2fcb6-10c619a3",
+        "ee568f99-44b47369",
+        "f49c247a-db6f36cd"
+      ],
+      "payload_increase": 20520,
+      "rounded32_request_increase": 21120
+    },
+    "st1/r119.arc": {
+      "keys": [
+        "033d2aa2-2edefe32",
+        "0de6a8fd-94b7e35a",
+        "468fb83b-4e031613",
+        "4ac3ffe0-90fff9b1",
+        "4d4b9a7c-6d9fbe6f",
+        "4dda8e08-3815ac54",
+        "62a4e3a3-9405ef8a",
+        "64bf271e-1731c552",
+        "6ef7f645-be18abcb",
+        "75413f13-cd08698e",
+        "7e06ff3a-9a869941",
+        "7e808447-3bca1e90",
+        "7f5416ea-6dd00451",
+        "81719c34-4dc19307",
+        "85534bb1-beb4d439",
+        "8842e12b-b00515d9",
+        "8d461823-1a1c2a4d",
+        "8f4f940a-3db0b6d7",
+        "90280539-0123c23c",
+        "9527cea5-0b889a30",
+        "a8f605bf-f743dafa",
+        "b0d91df4-87238e6c",
+        "b6138504-a84552cb",
+        "c43b580d-25d36e38",
+        "c6cbc695-ecb1fc88",
+        "d06dd9b5-35594950",
+        "dad13f3a-51761007",
+        "ead2fcb6-10c619a3",
+        "ee568f99-44b47369",
+        "f49c247a-db6f36cd"
+      ],
+      "payload_increase": 20520,
+      "rounded32_request_increase": 21120
+    },
+    "em/em24.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "86b0c825-92eb0bc4",
+        "c5e68ce5-20ef9c6b",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 6840,
+      "rounded32_request_increase": 7040
+    },
+    "em/em11.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "86b0c825-92eb0bc4",
+        "99d97293-418995e4",
+        "c5e68ce5-20ef9c6b",
+        "e65bb363-896ad16a",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 8208,
+      "rounded32_request_increase": 8448
+    },
+    "em/em12.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "86b0c825-92eb0bc4",
+        "99d97293-418995e4",
+        "c5e68ce5-20ef9c6b",
+        "e65bb363-896ad16a",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 8208,
+      "rounded32_request_increase": 8448
+    },
+    "em/em16.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "86b0c825-92eb0bc4",
+        "99d97293-418995e4",
+        "c5e68ce5-20ef9c6b",
+        "e65bb363-896ad16a",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 8208,
+      "rounded32_request_increase": 8448
+    },
+    "em/em14.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "86b0c825-92eb0bc4",
+        "99d97293-418995e4",
+        "c5e68ce5-20ef9c6b",
+        "e65bb363-896ad16a",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 8208,
+      "rounded32_request_increase": 8448
+    },
+    "em/em13.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "86b0c825-92eb0bc4",
+        "99d97293-418995e4",
+        "c5e68ce5-20ef9c6b",
+        "e65bb363-896ad16a",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 8208,
+      "rounded32_request_increase": 8448
+    },
+    "em/em35.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "86b0c825-92eb0bc4",
+        "c5e68ce5-20ef9c6b",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 6840,
+      "rounded32_request_increase": 7040
+    },
+    "em/em17.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "86b0c825-92eb0bc4",
+        "99d97293-418995e4",
+        "c5e68ce5-20ef9c6b",
+        "e65bb363-896ad16a",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 8208,
+      "rounded32_request_increase": 8448
+    },
+    "em/em15.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "86b0c825-92eb0bc4",
+        "99d97293-418995e4",
+        "c5e68ce5-20ef9c6b",
+        "e65bb363-896ad16a",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 8208,
+      "rounded32_request_increase": 8448
+    },
+    "em/em22.drs": {
+      "keys": [
+        "0bc97357-afc0b33d",
+        "2cc71ebf-c3692cf5",
+        "31aebb0b-90bb4b6f",
+        "3b10fbae-92304def",
+        "48f1773a-acd526ab",
+        "5c437883-86dc609f",
+        "5e3dfdba-9b38b938",
+        "70654fc9-79af5308",
+        "86b0c825-92eb0bc4",
+        "99d97293-418995e4",
+        "c5e68ce5-20ef9c6b",
+        "fb35e292-1f4dbba2"
+      ],
+      "payload_increase": 18448,
+      "rounded32_request_increase": 18688
+    },
+    "st1/r111.arc": {
+      "keys": [
+        "2df18576-801808b4",
+        "895ee2aa-6d294450",
+        "ed9d77bf-d514faf9",
+        "eefcf9ae-f6247021"
+      ],
+      "payload_increase": 176,
+      "rounded32_request_increase": 256
+    },
+    "st1/r100.arc": {
+      "keys": [
+        "2df18576-801808b4",
+        "895ee2aa-6d294450",
+        "ed9d77bf-d514faf9",
+        "eefcf9ae-f6247021"
+      ],
+      "payload_increase": 176,
+      "rounded32_request_increase": 256
+    },
+    "st1/r10a.arc": {
+      "keys": [
+        "70654fc9-79af5308"
+      ],
+      "payload_increase": 10924,
+      "rounded32_request_increase": 10944
+    },
+    "st1/r11a.arc": {
+      "keys": [
+        "70654fc9-79af5308"
+      ],
+      "payload_increase": 10924,
+      "rounded32_request_increase": 10944
+    },
+    "st1/r10b.arc": {
+      "keys": [
+        "70654fc9-79af5308"
+      ],
+      "payload_increase": 10924,
+      "rounded32_request_increase": 10944
+    },
+    "st1/r10d.arc": {
+      "keys": [
+        "70654fc9-79af5308"
+      ],
+      "payload_increase": 10924,
+      "rounded32_request_increase": 10944
+    },
+    "st1/r11b.arc": {
+      "keys": [
+        "70654fc9-79af5308"
+      ],
+      "payload_increase": 10924,
+      "rounded32_request_increase": 10944
+    },
+    "em/em2b.drs": {
+      "keys": [
+        "99d97293-418995e4"
+      ],
+      "payload_increase": 684,
+      "rounded32_request_increase": 704
+    }
+  },
+  "group_scope": "Reference unions overlap and are not simultaneous live residency or actual room allocation peaks.",
+  "actual_Package_host_cases": [
+    {
+      "UI_VRAM": 0,
+      "accepted_packages": 70,
+      "adopt_and_stream_upload": true,
+      "ASan_UBSan": true,
+      "palette_and_mip_format": true,
+      "fences_payload_release_close": true,
+      "allocation_request_count": 140,
+      "allocation_request_sizes": {
+        "2764": 130,
+        "204": 8,
+        "43724": 2
+      }
+    },
+    {
+      "UI_VRAM": 1,
+      "accepted_packages": 70,
+      "adopt_and_stream_upload": true,
+      "ASan_UBSan": true,
+      "palette_and_mip_format": true,
+      "fences_payload_release_close": true,
+      "allocation_request_count": 142,
+      "allocation_request_sizes": {
+        "2764": 130,
+        "204": 8,
+        "2220": 2,
+        "43724": 2
+      }
+    }
+  ],
+  "lower_level_quality_scope": "Independent filtered/quantized lower-level error metrics are retained privately. Original base exactness is not visible-look acceptance.",
+  "max_new_lower_level_alpha_RMSE_vs_filtered_base": 23.538279619774034,
+  "required_build_knobs": [
+    "CAST_MIPMAP=1",
+    "TEX_PAL4_ALPHA=1",
+    "TEX_PAL4_MIPMAP=1",
+    "TEX_PAL8_ALPHA=1",
+    "TEX_PAL8_MIPMAP=1",
+    "TEX_TWIDDLED_MIPMAP=1"
+  ],
+  "sampler_policy": "Existing effect sprite and haze paths use bilinear filtering, UV clamp, MODULATEALPHA and default MIPD. Covered dimensions, UVs, source blend/depth/fog and timing stay unchanged. Cached header keys include the complete PVR format/mip bit.",
+  "limits": [
+    "Fresh independent decoder and actual mocked-host Package checks only; no target PVR sampler, look, full-program OFF identity, KOS/VRAM/palette peak or timing acceptance.",
+    "Lower levels are deliberately filtered/quantized; their independent error metrics are not visual acceptance. The VQ mip reference has lower-level alpha differences as already recorded in the inherited review.",
+    "The original Release21 texture pack was exactly recovered; the original raw disc is absent.",
+    "Actor20 candidates stay separate; SH4ZAM is preserved; no game build, guest, release/default or SD operation."
+  ]
+}

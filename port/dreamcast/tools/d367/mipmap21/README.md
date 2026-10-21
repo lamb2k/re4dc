@@ -611,3 +611,24 @@ A VQ page-placement retry is recorded separately from descriptor bytes. The
 remain distinct from the generic 220-key family. Lower-level look, combined
 palette/KOS/VRAM, same-scene sampling and timing remain open. No recipe/default,
 SH4ZAM or release changes occurred. See path-emitter-qualification-20261021.json.
+
+### Exact missing-input recovery and effect expansion
+
+The next 19 named archives are now recovered from a retained current QA image.
+Each archive's size and SHA match the original Release21 manifest; the current
+QA program and original public program are still distinct. All 19 archives parse
+successfully. Keeping sampling contract 3 unchanged qualifies 70 more PS2 effect
+keys, resolves 61 earlier unknowns as screen/mixed holds and five as custom
+consumer holds. The PS2 family now has 239 qualified, 123 unresolved, 89 custom,
+67 screen/mixed and 35 fixed-ID UI keys.
+
+The private follow-up reuses 70 compact PAL4 chains while retaining all 6431
+other current members exactly. Fresh independent C checks cover 484 levels and
+70 original bases, including their alpha, indices and palettes. Actual Package
+adopt/stream/upload/lifetime checks pass with ASan/UBSan in both UI VRAM modes.
+The current candidate has 942 mip keys, 1071 original changes and 5430 exact
+originals. It adds 55560 payload bytes / 56960 rounded descriptor bytes over the
+prior source-qualified layer. Source-group unions overlap; they are not live
+room residency. Actor candidates, UI and other holds stay separate. No target
+look, palette/KOS/VRAM capacity or timing is claimed; no recipe/default changed.
+See recovered-fx-qualification-20261021.json.
