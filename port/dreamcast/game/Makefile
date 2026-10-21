@@ -883,6 +883,16 @@ $(error EVD_READ_RELEASE_REFS must be 0 or 1)
 endif
 $(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_READ_RELEASE_REFS=1
 endif
+# EVD_READ_ADMISSION_PREFLIGHT=1 (default 0): reject impossible fresh table
+# admission before acquiring a descriptor, and retain an existing swapped role.
+# This does not reserve a table slot across file/diagnostic callbacks.
+EVD_READ_ADMISSION_PREFLIGHT ?= 0
+ifneq ($(EVD_READ_ADMISSION_PREFLIGHT),0)
+ifneq ($(EVD_READ_ADMISSION_PREFLIGHT),1)
+$(error EVD_READ_ADMISSION_PREFLIGHT must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_READ_ADMISSION_PREFLIGHT=1
+endif
 # WEAPON_HEAP4=1 (option 3 of issue lamb2k/re4dc#1, default 0: no effect): a weapon body larger than the resident
 # weapon block (WEAPON_RESIDENT_BYTES; the r104 merchant's rifle 398,144 / with scope 404,608, rocket launcher
 # 382,688, TMP 289,248 / with stock 299,200) is read into heap 4, the room heap, as Krauser's body goes to

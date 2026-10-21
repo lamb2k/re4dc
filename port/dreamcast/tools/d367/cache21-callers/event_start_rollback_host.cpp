@@ -56,9 +56,13 @@ static void FadeSetW(u32, int, int, int) {}
 class cDataUnit;
 struct Controller { int m_nblock_read_stop{}, dbgHeap{}; cDataUnit* m_DataUnit{};void* m_DummyDataMem{};void setDummyId(int){std::abort();}cDataUnit* setData(char*);cDataUnit* getNewUnit(); } DC;
 struct AramBoundary { void DmaCancel(int) { std::abort(); } int DmaTransReq(int,u32,u32,u32,int){std::abort();} } Aram;
+#if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
+static unsigned admission_file_checks;
+static void admission_file_boundary();
+#endif
 struct DvdBoundary {
 #if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
-    int FileExistCheck(char*,u32* bytes){*bytes=27456;return 0;}
+    int FileExistCheck(char*,u32* bytes){++admission_file_checks;admission_file_boundary();*bytes=27456;return 0;}
 #endif
     void ReadCancel(int, int) { std::abort(); }
     void ReadCheck(int, void*, void*, void*) { std::abort(); }

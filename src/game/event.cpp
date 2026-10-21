@@ -2453,6 +2453,24 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
         *out = 0;
     }
     if (GetRead((void**) &unit, (int*) &no, nm) == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_READ_ADMISSION_PREFLIGHT) && RE4DC_EVD_READ_ADMISSION_PREFLIGHT
+        // Refuse a known impossible fresh registration before acquiring an
+        // active data-unit descriptor. This is not a reservation across I/O:
+        // a table changed by later callbacks still needs an owner receipt.
+        bool read_slot = false;
+        if (ReadTbl.pWork && strlen(nm) <= 0x2F) {
+            for (int i = 0; i < ReadTbl.NumDatTbl && i < 8; ++i) {
+                if (!(ReadTbl.pWork[i].FlagBe8 & 1)) {
+                    read_slot = true;
+                    break;
+                }
+            }
+        }
+        if (!read_slot) {
+            pLog->err(0, 0, "EventMgr::EvtRead : no admissible read slot[%s]", nm);
+            return 0;
+        }
+#endif
         p = strstr(nm, "evd/");
         if (p == 0) {
             pLog->err(0, 0, "EventMgr::EvtRead : Name failed [%s]", nm);
@@ -2475,6 +2493,14 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
         pLog->err(0, 0, "EventMgr::EvtRead : WkNo failed [%d]", no);
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_READ_ADMISSION_PREFLIGHT) && RE4DC_EVD_READ_ADMISSION_PREFLIGHT
+    if (!fresh && readEm[no].swapped != 0) {
+        // The existing exchange must be retired through its owner before a
+        // new read may overwrite its role or promote the underlying unit.
+        pLog->err(0, 0, "EventMgr::EvtRead : prior exchange still owned[%s]", nm);
+        return 0;
+    }
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY
     unsigned preload_epoch = 0;
     cDataUnit preload_unit;
