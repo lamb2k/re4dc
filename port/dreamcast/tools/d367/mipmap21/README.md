@@ -63,3 +63,29 @@ The first intended private selection is the r103 farm's 15 compatible keys.
 Payload/allocation deltas, precedence and unchanged archive members must be
 checked against its exact release input before staging. Private source assets
 and generated packages never belong in this repository.
+
+## Room-selected packed candidate
+
+    python port/dreamcast/tools/d367/mipmap21/world_candidate.py --track /private/track03.bin --release-manifest /private/manifest.json --room 103 --output /private/new-control
+    python port/dreamcast/tools/d367/mipmap21/world_candidate.py --track /private/track03.bin --release-manifest /private/manifest.json --room 103 --output /private/new-candidate --generate
+
+The named archive and world sidecar must match the supplied release manifest's
+sizes and SHA-256. The source pack must rebuild byte-exact with the existing
+texpack builder. Only referenced compatible square 16-bit VQ keys are eligible.
+The default control is byte-identical. Unsupported format families are listed,
+and missing normal packed world keys refuse the candidate. Other archive members
+remain byte-identical. The tool reports payload bytes, 32-byte request rounding,
+archive-sector padding and every member hash separately. Global keys shared by
+another room change there too if this pack is staged.
+
+New private directories only. No disc, source tree, program or release is changed.
+SHA256SUMS uses portable slash-separated paths for WSL and Windows mirrors.
+
+    python -m unittest discover -s port/dreamcast/tests -p test_mipmap_world_candidate.py -v
+
+Five selection/control/refusal host tests pass. The first retained Release21
+r103 private data candidate changes 15 members, leaves 6486 unchanged, adds
+16394 payload bytes and 16544 bytes after 32-byte request rounding. Existing
+archive padding absorbs the additions: archive size is unchanged. Independent
+pvrtex decoding agrees on all 116 candidate levels and every original base.
+This is data evidence; actual residency, look and frame time are pending.
