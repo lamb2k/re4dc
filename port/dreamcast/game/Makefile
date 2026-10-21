@@ -883,6 +883,15 @@ $(error EVD_READ_ADMISSION_PREFLIGHT must be 0 or 1)
 endif
 $(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_READ_ADMISSION_PREFLIGHT=1
 endif
+# EVD_MODULE_VALIDATE_FIRST=1 (default 0): validate existing module/size before
+# releasing its effects for exchange. Forward exchange completion is separate.
+EVD_MODULE_VALIDATE_FIRST ?= 0
+ifneq ($(EVD_MODULE_VALIDATE_FIRST),0)
+ifneq ($(EVD_MODULE_VALIDATE_FIRST),1)
+$(error EVD_MODULE_VALIDATE_FIRST must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_MODULE_VALIDATE_FIRST=1
+endif
 # WEAPON_HEAP4=1 (option 3 of issue lamb2k/re4dc#1, default 0: no effect): a weapon body larger than the resident
 # weapon block (WEAPON_RESIDENT_BYTES; the r104 merchant's rifle 398,144 / with scope 404,608, rocket launcher
 # 382,688, TMP 289,248 / with stock 299,200) is read into heap 4, the room heap, as Krauser's body goes to

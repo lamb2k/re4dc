@@ -48,11 +48,12 @@ def main():
     parser.add_argument("--exec-failure-pair",action="store_true")
     parser.add_argument("--read-release-pair",action="store_true")
     parser.add_argument("--read-preflight-pair",action="store_true")
+    parser.add_argument("--module-validate-pair",action="store_true")
     args = parser.parse_args()
-    assert sum((args.debug_cleanup_pair,args.exec_failure_pair,args.read_release_pair,args.read_preflight_pair))<=1
-    simple_pair=args.read_release_pair or args.read_preflight_pair
-    args.baseline_ref=args.baseline_ref or ("d21bd80a6" if args.read_preflight_pair else "868b43448" if args.read_release_pair else "dfc0cf972" if args.exec_failure_pair else "1d1576c35" if args.debug_cleanup_pair else "32172f542")
-    knob="EVD_READ_ADMISSION_PREFLIGHT" if args.read_preflight_pair else "EVD_READ_RELEASE_REFS" if args.read_release_pair else "EVD_EXEC_FAILURE_CLEANUP" if args.exec_failure_pair else "EVD_DEBUG_READ_CLEANUP" if args.debug_cleanup_pair else "EVD_START_ROLLBACK"
+    assert sum((args.debug_cleanup_pair,args.exec_failure_pair,args.read_release_pair,args.read_preflight_pair,args.module_validate_pair))<=1
+    simple_pair=args.read_release_pair or args.read_preflight_pair or args.module_validate_pair
+    args.baseline_ref=args.baseline_ref or ("6540f37ef" if args.module_validate_pair else "d21bd80a6" if args.read_preflight_pair else "868b43448" if args.read_release_pair else "dfc0cf972" if args.exec_failure_pair else "1d1576c35" if args.debug_cleanup_pair else "32172f542")
+    knob="EVD_MODULE_VALIDATE_FIRST" if args.module_validate_pair else "EVD_READ_ADMISSION_PREFLIGHT" if args.read_preflight_pair else "EVD_READ_RELEASE_REFS" if args.read_release_pair else "EVD_EXEC_FAILURE_CLEANUP" if args.exec_failure_pair else "EVD_DEBUG_READ_CLEANUP" if args.debug_cleanup_pair else "EVD_START_ROLLBACK"
     symbol="RE4DC_"+knob
     start_free = space(128)
     args.out.mkdir(parents=True, exist_ok=False)
@@ -106,7 +107,7 @@ def main():
             run(["sh-elf-objcopy", "--strip-debug", obj, stripped], out / "strip.log")
             size = run(["sh-elf-size", stripped], out / "size.txt")
             stack = (out / "src/game/event.su").read_text()
-            stack_names=("EventMgr::SetEvd(", "EventMgr::SetEvt(", "Event::init(")+(('EventMgr::EvtReadExec(',)if args.exec_failure_pair else('EventMgr::EvtFree(',)if args.read_release_pair else('EventMgr::EvtReadSub(',)if args.read_preflight_pair else())
+            stack_names=("EventMgr::SetEvd(", "EventMgr::SetEvt(", "Event::init(")+(('EventMgr::EvtReadExec(',)if args.exec_failure_pair else('EventMgr::EvtFree(',)if args.read_release_pair else('EventMgr::EvtReadSub(',)if args.read_preflight_pair or args.module_validate_pair else())
             selected_stack = [line for line in stack.splitlines() if any(name in line for name in stack_names)]
             assert len(selected_stack) == (5 if args.exec_failure_pair or simple_pair else 4)
             hashes[variant] = sha(stripped)
@@ -133,7 +134,7 @@ def main():
     text = candidate_event.decode()
     contract = "" if simple_pair else re.search(r'#if defined\('+re.escape(symbol)+r'\).*?^#endif\n#endif', text, re.M | re.S)[0]
     selected = []
-    for signature in (("int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)",) if args.read_preflight_pair else ("int EventMgr::EvtFree(char* nm)",) if args.read_release_pair else ("int EventMgr::EvtReadExec(char* nm, int em, u32 flags)",) if args.exec_failure_pair else ("int EventMgr::GetBin(void** out, const char* nm, int flagGet)","int EventMgr::GetEvd(void** out, char* nm, int flagGet)") if args.debug_cleanup_pair else ("int EventMgr::SetEvt(void* data, u32* key)",)):
+    for signature in (("int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)",) if args.read_preflight_pair or args.module_validate_pair else ("int EventMgr::EvtFree(char* nm)",) if args.read_release_pair else ("int EventMgr::EvtReadExec(char* nm, int em, u32 flags)",) if args.exec_failure_pair else ("int EventMgr::GetBin(void** out, const char* nm, int flagGet)","int EventMgr::GetEvd(void** out, char* nm, int flagGet)") if args.debug_cleanup_pair else ("int EventMgr::SetEvt(void* data, u32* key)",)):
         start = text.index(signature)
         end = start + re.search(r'^}', text[start:], re.M).end()
         selected.append(text[start:end])

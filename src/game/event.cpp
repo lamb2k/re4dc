@@ -2544,7 +2544,9 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
                 pLog->err(0, 0, "readEvent() : out of memory (0x%x)[%s]", unit->m_size, nm);
                 return 0;
             }
+#if !(defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_MODULE_VALIDATE_FIRST) && RE4DC_EVD_MODULE_VALIDATE_FIRST)
             EspEmDataSwapPush(em);
+#endif
             mod = SearchEmModule(em);
             if (mod == 0) {
                 DelRead(nm);
@@ -2556,6 +2558,11 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
                 pLog->err(0, 0, "EventMgr::EvtRead : event size too large!![%d]>[%d]", unit->m_size, mod->size);
                 return 0;
             }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_MODULE_VALIDATE_FIRST) && RE4DC_EVD_MODULE_VALIDATE_FIRST
+            // Push releases effect registrations. Validate the module first
+            // so these two refusals do not release another owner's effects.
+            EspEmDataSwapPush(em);
+#endif
             MemorySwap(mod->pArc, (u32) unit->m_addr, unit->m_size);
             readEm[no].swapped = 1;
             r = mod->pArc;

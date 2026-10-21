@@ -25,7 +25,12 @@ def main():
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--preflight-pair",action="store_true")
     parser.add_argument("--actual-effects",action="store_true")
+    parser.add_argument("--module-validate-pair",action="store_true")
+    parser.add_argument("--with-preflight",action="store_true")
     args = parser.parse_args()
+    assert not(args.preflight_pair and args.module_validate_pair)
+    assert not args.module_validate_pair or args.actual_effects
+    assert not(args.with_preflight and args.preflight_pair)
     floor=16*1024**3+128*1024**2
     start_free=shutil.disk_usage('/mnt/c').free
     assert start_free>=floor,'Fresh C: source-test floor refused'
@@ -79,8 +84,9 @@ def main():
     manager_methods = ["template <class T>\n" + body("include/cManager.h", "cManager<T>::create", "T* cManager<T>::create(int id)"),
                        "template <class T>\n" + body("include/cManager.h", "cManager<T>::countActiveWork")]
     variants = []
-    for enabled,cabin in (((0,0),(1,0),(0,1),(1,1))if args.preflight_pair else((0,0),(0,1))):
-        out = args.out / f"preflight{enabled}-cabin{cabin}"; out.mkdir()
+    for enabled,cabin in (((0,0),(1,0),(0,1),(1,1))if args.preflight_pair or args.module_validate_pair else((0,0),(0,1))):
+        preflight=enabled if args.preflight_pair else int(args.with_preflight);module_validate=enabled if args.module_validate_pair else 0
+        out = args.out / f"preflight{preflight}-module{module_validate}-cabin{cabin}"; out.mkdir()
         adapted, changes = transaction.adapt_scaffold((fixture / "motion_event_admission_host.cpp").read_text())
         adapted = adapted.replace("void warn(int,int,const char*,...){}}logger", "void warn(int,int,const char*,...){}void mes(int,int,const char*,...){}}logger")
         assert "void mes(" in adapted
@@ -105,12 +111,12 @@ def main():
         (out / "admission_actual_effect_methods.inc").write_text("\n".join(effects)+"\n")
         command = ["g++", "-std=c++17", "-O1", "-g", "-fsanitize=undefined", "-fno-sanitize-recover=all", "-fno-omit-frame-pointer",
                    "-fno-pie", "-no-pie", "-Wall", "-Wextra", "-fpermissive", "-DRE4DC_GAME=1", f"-DRE4DC_CABIN_SOURCE={cabin}",
-                   "-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", "-DRE4DC_EVD_START_ROLLBACK=1","-DRE4DC_EVD_DEBUG_READ_CLEANUP=0", "-DRE4DC_EVD_EXEC_FAILURE_CLEANUP=0",f"-DRE4DC_EVD_READ_ADMISSION_PREFLIGHT={enabled}", "-I" + str(out), "-I"+str(HERE),str(HERE / "read_admission_characterization_host.cpp"), "-o", str(out / "test")]
+                   "-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", "-DRE4DC_EVD_START_ROLLBACK=1","-DRE4DC_EVD_DEBUG_READ_CLEANUP=0", "-DRE4DC_EVD_EXEC_FAILURE_CLEANUP=0",f"-DRE4DC_EVD_READ_ADMISSION_PREFLIGHT={preflight}",f"-DRE4DC_EVD_MODULE_VALIDATE_FIRST={module_validate}", "-I" + str(out), "-I"+str(HERE),str(HERE / "read_admission_characterization_host.cpp"), "-o", str(out / "test")]
         if args.actual_effects:command.append('-DRE4DC_READ_ACTUAL_EFFECT=1')
         assert shutil.disk_usage('/mnt/c').free>=floor,'C: source-test floor refused before compiler'
         h064.command(command, out / "compile.txt", 30)
         result = h064.command([out / "test"], out / "run.txt", 15); print(result, end="")
-        variants.append(dict(evd_admission_txn=1,start_cleanup=1,start_rollback=1,read_admission_preflight=enabled,cabin_source=cabin,actual_effects=args.actual_effects, output=result))
+        variants.append(dict(evd_admission_txn=1,start_cleanup=1,start_rollback=1,read_admission_preflight=preflight,module_validate_first=module_validate,cabin_source=cabin,actual_effects=args.actual_effects, output=result))
     receipt = dict(scope="Actual EvtReadSub/Mram/SetRead/GetRead/table plus dataCtrl setData/getNewUnit and unit command/wait/clear/delete. File existence/size, unit availability, transport completion, module/effect/swap and native carrier policies are explicit boundaries. Bounded preflight source test only; no whole acquisition epoch/target/guest/hardware acceptance.",
                    selected_head=transaction.git("rev-parse", "HEAD").decode().strip(), fixture_revision=transaction.FIXTURE_REF,
                    source_sha256=pins, selected_methods=selected, variants=variants,
