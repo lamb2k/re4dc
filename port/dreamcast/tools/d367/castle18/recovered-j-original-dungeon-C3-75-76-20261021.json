@@ -1,0 +1,1633 @@
+{
+  "scope": "Original C3 return/Use/barrier callback76 PASS, no flag-only chapter acceptance.",
+  "checkpoints": [
+    {
+      "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+      "run": "route-walk75",
+      "state_sha256": "becaea5466323caffdd3bb84289b6b1260d3db12e115b0cd8ca3aa6cda8ee062",
+      "source_frame": 25430,
+      "room": "0x201",
+      "chapter": 6,
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "held_world": "0x0",
+      "health": [
+        903,
+        1200,
+        90,
+        600
+      ],
+      "start": {
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk75\\disc.gdi",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk74\\data",
+        "start_utc": "2026-10-21T18:14:55.006166+00:00"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk75",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T18:14:54.880159+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T18:15:14.601062+00:00",
+        "elapsed_s": 19.6,
+        "emulator_exited": true
+      },
+      "ELF_anchors": 4,
+      "player_pos": [
+        15985.1220703125,
+        1999.9967041015625,
+        -37797.98046875
+      ],
+      "partner_pos": [
+        15646.4453125,
+        1999.9989013671875,
+        -36666.046875
+      ],
+      "partner_subflags": "0x44",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk75\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_mapped_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "normal_owned_key_release_repress_after_source_Key_zero": {
+            "source_frame": 24952,
+            "wanted": [
+              "right"
+            ],
+            "count": 1
+          }
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            45000.0,
+            -36500.0
+          ],
+          "pos": [
+            44994.7109375,
+            1999.9989013671875,
+            -36674.54296875
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            43500.0,
+            -36500.0
+          ],
+          "pos": [
+            43589.640625,
+            1999.9957275390625,
+            -36642.16015625
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            43500.0,
+            -35000.0
+          ],
+          "pos": [
+            43410.32421875,
+            1999.9998779296875,
+            -35068.25
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            42000.0,
+            -34750.0
+          ],
+          "pos": [
+            42099.00390625,
+            1999.9979248046875,
+            -34789.8359375
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            41500.0,
+            -33000.0
+          ],
+          "pos": [
+            41415.1484375,
+            1999.9979248046875,
+            -33147.14453125
+          ]
+        },
+        {
+          "waypoint_reached": 5,
+          "target": [
+            41000.0,
+            -31750.0
+          ],
+          "pos": [
+            41116.99609375,
+            1999.9974365234375,
+            -31698.71875
+          ]
+        },
+        {
+          "waypoint_reached": 6,
+          "target": [
+            39000.0,
+            -30500.0
+          ],
+          "pos": [
+            39157.87890625,
+            1999.9967041015625,
+            -30515.689453125
+          ]
+        },
+        {
+          "waypoint_reached": 7,
+          "target": [
+            17000.0,
+            -30500.0
+          ],
+          "pos": [
+            17094.48046875,
+            1999.9971923828125,
+            -30487.787109375
+          ]
+        },
+        {
+          "waypoint_reached": 8,
+          "target": [
+            16100.0,
+            -37000.0
+          ],
+          "pos": [
+            16023.2900390625,
+            1999.9974365234375,
+            -36877.49609375
+          ]
+        },
+        {
+          "normal_r201_original_dungeon_lock_approach_complete": true,
+          "frame": 25428,
+          "pos": [
+            15993.68359375,
+            1999.9974365234375,
+            -37658.37890625
+          ],
+          "health": [
+            903,
+            90
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk75\\shots\\checkpoint-source-25428\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk75\\shots\\checkpoint-source-25428\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "host_monotonic": 355779.921,
+        "room": "0x201",
+        "frame": 25428,
+        "player_hp": 903,
+        "partner_hp": 90,
+        "pos": [
+          15993.68359375,
+          1999.9974365234375,
+          -37658.37890625
+        ],
+        "yaw": -3.1234724521636963,
+        "target_distance": 142.74160415891834,
+        "angle_error": 0.19136189157926164,
+        "source_Key_on": "0x41040041",
+        "player_routines": [
+          0,
+          3,
+          3,
+          4
+        ]
+      },
+      "screenshot_contexts": [
+        {
+          "run": "route-walk75",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            25428,
+            25430
+          ],
+          "health_before": [
+            903,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            903,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "normal_r201_original_dungeon_lock_approach_complete": true,
+            "frame": 25428,
+            "pos": [
+              15993.68359375,
+              1999.9974365234375,
+              -37658.37890625
+            ],
+            "health": [
+              903,
+              90
+            ]
+          },
+          "last_sample": {
+            "host_monotonic": 355779.921,
+            "room": "0x201",
+            "frame": 25428,
+            "player_hp": 903,
+            "partner_hp": 90,
+            "pos": [
+              15993.68359375,
+              1999.9974365234375,
+              -37658.37890625
+            ],
+            "yaw": -3.1234724521636963,
+            "target_distance": 142.74160415891834,
+            "angle_error": 0.19136189157926164,
+            "source_Key_on": "0x41040041",
+            "player_routines": [
+              0,
+              3,
+              3,
+              4
+            ]
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk75\\shots\\checkpoint-source-25428\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk75\\shots\\checkpoint-source-25428\\frames\\fb1.png"
+          ]
+        }
+      ],
+      "motion_first_sample": {
+        "host_s": 0.0,
+        "frame": 24921,
+        "hits": 103278,
+        "misses": 3085,
+        "evictions": 3036,
+        "loads": 3085,
+        "resident": 18144,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4000",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 6112,
+            "keys": [
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2a6a0",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 12032,
+            "keys": [
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ],
+              [
+                52,
+                6688,
+                "394a3bab-439026d9",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      },
+      "motion_last_sample": {
+        "host_s": 18.5,
+        "frame": 25430,
+        "hits": 104199,
+        "misses": 3094,
+        "evictions": 3045,
+        "loads": 3094,
+        "resident": 18144,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4000",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 6112,
+            "keys": [
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2a6a0",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 12032,
+            "keys": [
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ],
+              [
+                52,
+                6688,
+                "394a3bab-439026d9",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      }
+    },
+    {
+      "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+      "run": "route-walk76",
+      "state_sha256": "44b35a5310a52b72edeaa2a94eb52285382a5983a0fac30cf13f24e2d8f29627",
+      "source_frame": 25752,
+      "room": "0x201",
+      "chapter": 6,
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0,
+      "held_world": "0x0",
+      "health": [
+        903,
+        1200,
+        90,
+        600
+      ],
+      "start": {
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk76\\disc.gdi",
+        "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk75\\data",
+        "start_utc": "2026-10-21T18:17:46.526913+00:00"
+      },
+      "result": {
+        "name": "castle21-recoveredJ-route-walk76",
+        "status": "RUN_COMPLETE",
+        "start_utc": "2026-10-21T18:17:46.406326+00:00",
+        "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "tracks": {
+          "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+          "kind": "release",
+          "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+        },
+        "seconds": 50,
+        "vmu": null,
+        "keys": null,
+        "stop": null,
+        "fixtures": {
+          "warp": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+            "bytes": 73,
+            "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+          },
+          "pad": {
+            "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+            "bytes": 208,
+            "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+          },
+          "w11": {
+            "src": null,
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        "errors": [],
+        "key_log": [],
+        "align": false,
+        "emu": "harness",
+        "emu_env": {},
+        "early_emulator_exit": 0,
+        "log_idle_s": 1.0,
+        "end_utc": "2026-10-21T18:18:00.586674+00:00",
+        "elapsed_s": 14.1,
+        "emulator_exited": true
+      },
+      "ELF_anchors": 4,
+      "player_pos": [
+        15979.59765625,
+        1999.9974365234375,
+        -37797.31640625
+      ],
+      "partner_pos": [
+        15801.10546875,
+        1999.9993896484375,
+        -37439.0234375
+      ],
+      "partner_subflags": "0x44",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk76\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_aligned_A_at_original_dungeon_CHECK": {
+            "frame": 25460,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "pos": [
+              15982.3095703125,
+              1999.9993896484375,
+              -37797.72265625
+            ],
+            "yaw": -3.1234724521636963,
+            "door_facing_error": -0.04870985501588976,
+            "source_idle_routines": [
+              0,
+              0,
+              1,
+              0
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk76\\shots\\checkpoint-source-25460\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk76\\shots\\checkpoint-source-25460\\checkpoint-context.json"
+        },
+        {
+          "normal_dungeon_A_actual_press_after_screenshot_frame": 25463
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 25488,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false
+          }
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 25513,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false
+          }
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 25538,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false
+          }
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 25563,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false
+          }
+        },
+        {
+          "normal_A_on_verified_Prison_Key_C3_and_Use0": {
+            "frame": 25589,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "item_cursor": "000000000000000000",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xc3"
+            ],
+            "selected_source_id": "0xc3"
+          }
+        },
+        {
+          "normal_A_on_verified_Prison_Key_C3_and_Use0": {
+            "frame": 25613,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "item_cursor": "000000000000ffff00",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xc3"
+            ],
+            "selected_source_id": "0xc3"
+          }
+        },
+        {
+          "normal_A_on_verified_Prison_Key_C3_and_Use0": {
+            "frame": 25639,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 1,
+            "Stop": "0x400900",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "item_cursor": "000000000000ffff00",
+            "col": 0,
+            "idx": 0,
+            "sel": 0,
+            "cmd": 0,
+            "source_key_item_order": [
+              "0xc3"
+            ],
+            "selected_source_id": "0xc3"
+          }
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 25665,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": true
+          }
+        },
+        {
+          "normal_A_advances_original_dungeon_dialog": {
+            "frame": 25690,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0xffffffbf",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": true
+          }
+        },
+        {
+          "original_Prison_Key_C3_consumed_and_unlock_bit_set": {
+            "frame": 25734,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": true,
+            "r201_RSF": "0x48400000",
+            "door_flags": "0xe84002b4",
+            "battle_collision_area_A_flags": 2
+          }
+        },
+        {
+          "original_Prison_Key_C3_unlock_callback_world_return_complete": {
+            "frame": 25749,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": true,
+            "r201_RSF": "0x48400000",
+            "door_flags": "0xe84002b4",
+            "battle_collision_area_A_flags": 2
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk76\\shots\\checkpoint-source-25749\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk76\\shots\\checkpoint-source-25749\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "last_sample": {
+        "frame": 25749,
+        "life": 903,
+        "Ashley": 90,
+        "Loop": 0,
+        "Stop": "0x0",
+        "items": [
+          {
+            "id": 124,
+            "num": 1,
+            "bullet": 0,
+            "raw": "7c00010001000000000000000000"
+          },
+          {
+            "id": 35,
+            "num": 1,
+            "bullet": 0,
+            "raw": "2300010001000000000002010001"
+          },
+          {
+            "id": 4,
+            "num": 20,
+            "bullet": 0,
+            "raw": "0400140001000000000007000001"
+          },
+          {
+            "id": 172,
+            "num": 1,
+            "bullet": 0,
+            "raw": "ac00010001000000000000000000"
+          },
+          {
+            "id": 173,
+            "num": 1,
+            "bullet": 0,
+            "raw": "ad00010001000000000000000000"
+          }
+        ],
+        "dungeon_unlocked": true,
+        "r201_RSF": "0x48400000",
+        "door_flags": "0xe84002b4",
+        "battle_collision_area_A_flags": 2
+      },
+      "screenshot_contexts": [
+        {
+          "run": "route-walk76",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            25460,
+            25463
+          ],
+          "health_before": [
+            903,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            903,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "normal_aligned_A_at_original_dungeon_CHECK": {
+              "frame": 25460,
+              "life": 903,
+              "Ashley": 90,
+              "Loop": 0,
+              "Stop": "0x0",
+              "items": [
+                {
+                  "id": 124,
+                  "num": 1,
+                  "bullet": 0,
+                  "raw": "7c00010001000000000000000000"
+                },
+                {
+                  "id": 35,
+                  "num": 1,
+                  "bullet": 0,
+                  "raw": "2300010001000000000002010001"
+                },
+                {
+                  "id": 4,
+                  "num": 20,
+                  "bullet": 0,
+                  "raw": "0400140001000000000007000001"
+                },
+                {
+                  "id": 195,
+                  "num": 1,
+                  "bullet": 0,
+                  "raw": "c300010001000000000000000000"
+                },
+                {
+                  "id": 172,
+                  "num": 1,
+                  "bullet": 0,
+                  "raw": "ac00010001000000000000000000"
+                },
+                {
+                  "id": 173,
+                  "num": 1,
+                  "bullet": 0,
+                  "raw": "ad00010001000000000000000000"
+                }
+              ],
+              "dungeon_unlocked": false,
+              "pos": [
+                15982.3095703125,
+                1999.9993896484375,
+                -37797.72265625
+              ],
+              "yaw": -3.1234724521636963,
+              "door_facing_error": -0.04870985501588976,
+              "source_idle_routines": [
+                0,
+                0,
+                1,
+                0
+              ]
+            }
+          },
+          "last_sample": {
+            "frame": 25460,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 195,
+                "num": 1,
+                "bullet": 0,
+                "raw": "c300010001000000000000000000"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": false,
+            "pos": [
+              15982.3095703125,
+              1999.9993896484375,
+              -37797.72265625
+            ],
+            "yaw": -3.1234724521636963,
+            "door_facing_error": -0.04870985501588976,
+            "source_idle_routines": [
+              0,
+              0,
+              1,
+              0
+            ]
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk76\\shots\\checkpoint-source-25460\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk76\\shots\\checkpoint-source-25460\\frames\\fb1.png"
+          ]
+        },
+        {
+          "run": "route-walk76",
+          "lineage": "Recovered J NEW cold boot progression",
+          "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "source_frame_interval": [
+            25749,
+            25751
+          ],
+          "health_before": [
+            903,
+            1200,
+            90,
+            600
+          ],
+          "health_after": [
+            903,
+            1200,
+            90,
+            600
+          ],
+          "action_result": {
+            "original_Prison_Key_C3_unlock_callback_world_return_complete": {
+              "frame": 25749,
+              "life": 903,
+              "Ashley": 90,
+              "Loop": 0,
+              "Stop": "0x0",
+              "items": [
+                {
+                  "id": 124,
+                  "num": 1,
+                  "bullet": 0,
+                  "raw": "7c00010001000000000000000000"
+                },
+                {
+                  "id": 35,
+                  "num": 1,
+                  "bullet": 0,
+                  "raw": "2300010001000000000002010001"
+                },
+                {
+                  "id": 4,
+                  "num": 20,
+                  "bullet": 0,
+                  "raw": "0400140001000000000007000001"
+                },
+                {
+                  "id": 172,
+                  "num": 1,
+                  "bullet": 0,
+                  "raw": "ac00010001000000000000000000"
+                },
+                {
+                  "id": 173,
+                  "num": 1,
+                  "bullet": 0,
+                  "raw": "ad00010001000000000000000000"
+                }
+              ],
+              "dungeon_unlocked": true,
+              "r201_RSF": "0x48400000",
+              "door_flags": "0xe84002b4",
+              "battle_collision_area_A_flags": 2
+            }
+          },
+          "last_sample": {
+            "frame": 25749,
+            "life": 903,
+            "Ashley": 90,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "dungeon_unlocked": true,
+            "r201_RSF": "0x48400000",
+            "door_flags": "0xe84002b4",
+            "battle_collision_area_A_flags": 2
+          },
+          "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+          "png_paths": [
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk76\\shots\\checkpoint-source-25749\\frames\\fb0.png",
+            "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk76\\shots\\checkpoint-source-25749\\frames\\fb1.png"
+          ]
+        }
+      ],
+      "motion_first_sample": {
+        "host_s": 0.0,
+        "frame": 25430,
+        "hits": 104199,
+        "misses": 3094,
+        "evictions": 3045,
+        "loads": 3094,
+        "resident": 18144,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4000",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 6112,
+            "keys": [
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2a6a0",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 12032,
+            "keys": [
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ],
+              [
+                52,
+                6688,
+                "394a3bab-439026d9",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      },
+      "motion_last_sample": {
+        "host_s": 13.047,
+        "frame": 25752,
+        "hits": 104384,
+        "misses": 3095,
+        "evictions": 3046,
+        "loads": 3095,
+        "resident": 16800,
+        "bindings": [
+          {
+            "slot": 0,
+            "archive": "0x8caf4000",
+            "bytes": 1163168,
+            "count": 173,
+            "budget": 64832,
+            "hot_bytes": 0,
+            "resident": 6112,
+            "keys": [
+              [
+                137,
+                6112,
+                "0d8fb760-91029c79",
+                0
+              ]
+            ]
+          },
+          {
+            "slot": 1,
+            "archive": "0x8cc2a6a0",
+            "bytes": 423136,
+            "count": 58,
+            "budget": 50880,
+            "hot_bytes": 0,
+            "resident": 10688,
+            "keys": [
+              [
+                51,
+                5344,
+                "92503ed4-d5cc7ea5",
+                0
+              ],
+              [
+                54,
+                5344,
+                "c88b649f-bf9dc1d0",
+                0
+              ]
+            ]
+          }
+        ],
+        "room": "0x201",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x0",
+        "SSLoop": 0
+      }
+    }
+  ],
+  "callback": {
+    "frame": 25749,
+    "life": 903,
+    "Ashley": 90,
+    "Loop": 0,
+    "Stop": "0x0",
+    "items": [
+      {
+        "id": 124,
+        "num": 1,
+        "bullet": 0,
+        "raw": "7c00010001000000000000000000"
+      },
+      {
+        "id": 35,
+        "num": 1,
+        "bullet": 0,
+        "raw": "2300010001000000000002010001"
+      },
+      {
+        "id": 4,
+        "num": 20,
+        "bullet": 0,
+        "raw": "0400140001000000000007000001"
+      },
+      {
+        "id": 172,
+        "num": 1,
+        "bullet": 0,
+        "raw": "ac00010001000000000000000000"
+      },
+      {
+        "id": 173,
+        "num": 1,
+        "bullet": 0,
+        "raw": "ad00010001000000000000000000"
+      }
+    ],
+    "dungeon_unlocked": true,
+    "r201_RSF": "0x48400000",
+    "door_flags": "0xe84002b4",
+    "battle_collision_area_A_flags": 2
+  },
+  "outcome": "Normal return to CHECK then source-aligned A counted10ticks AFTER before-still, soleC3Use0 consumed key/unlocked8000. Original savedroomflag1/doorflag40000000 and actual collisionAreaA disabled, nativeworld+15ticks,903/90 unchanged.",
+  "limits": [
+    "No direct object-Y measurement claimed; original callback/collision verified, physical traversal is next.",
+    "No lever/Garrador/stairs/waves/chapter-save acceptance."
+  ]
+}
