@@ -54,7 +54,17 @@ static void SceEventEnd(int) {}
 #endif
 static void FadeSetW(u32, int, int, int) {}
 class cDataUnit;
-struct Controller { int m_nblock_read_stop{}, dbgHeap{}; cDataUnit* m_DataUnit{};void* m_DummyDataMem{};void setDummyId(int){std::abort();}cDataUnit* setData(char*);cDataUnit* getNewUnit();u32 getAramFree(u32){std::abort();} } DC;
+struct Controller {
+    int m_nblock_read_stop{}, dbgHeap{};cDataUnit* m_DataUnit{};void* m_DummyDataMem{};
+    void setDummyId(int){std::abort();}cDataUnit* setData(char*);cDataUnit* getNewUnit();
+    u32 getAramFree(u32 bytes){
+#if defined(RE4DC_FORWARD_ACTUAL)
+        assert(bytes==27456);return 0x1000;
+#else
+        (void)bytes;std::abort();
+#endif
+    }
+} DC;
 struct AramBoundary { void DmaCancel(int) { std::abort(); }
 #if defined(RE4DC_FORWARD_ACTUAL)
     int DmaTransReq(int,u32,u32,u32,int);
@@ -126,10 +136,18 @@ static ReadModule exchange_module;
 static unsigned swap_pushes,swap_pops,swap_calls;
 #if defined(RE4DC_FORWARD_ACTUAL)
 static void actual_MemorySwap(void*,u32,u32);
+static ReadModule* forward_module_binding;
+static unsigned forward_emread_calls;
 #endif
 #if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
 static bool module_missing,swap_refuse;
-static ReadModule* SearchEmModule(int em){assert(em==1||em==0x11);return module_missing?nullptr:&exchange_module;}
+static ReadModule* SearchEmModule(int em){assert(em==1||em==0x11||em==0x13);
+#if defined(RE4DC_FORWARD_ACTUAL)
+    return module_missing?nullptr:forward_module_binding;
+#else
+    return module_missing?nullptr:&exchange_module;
+#endif
+}
 #else
 static ReadModule* SearchEmModule(int em){assert(em==1);return &exchange_module;}
 #endif
@@ -144,15 +162,22 @@ static void MemorySwap(void* dst,u32 src,u32 bytes){
     for(u32 i=0;i<bytes;++i)std::swap(source[i],target[i]);
 }
 static void EspEmDataSwapPop(int em){assert(em==1);++swap_pops;}
+#if defined(RE4DC_FORWARD_ACTUAL)
+static void forward_effect_boundary(int);
+#endif
 #if defined(RE4DC_READ_ACTUAL_EFFECT)
 #include "admission_actual_effect_boundary.inc"
 #elif defined(RE4DC_FORWARD_ACTUAL)
-static void forward_effect_boundary(int);
 static void EspEmDataSwapPush(int em){assert(em==1);++swap_pushes;forward_effect_boundary(em);}
 #else
 static void EspEmDataSwapPush(int em){assert(em==1);++swap_pushes;}
 #endif
-static void* EmReadSearch(int em,void*,u32){return SearchEmModule(em)->pArc;}
+static void* EmReadSearch(int em,void*,u32){
+#if defined(RE4DC_FORWARD_ACTUAL)
+    ++forward_emread_calls;
+#endif
+    return SearchEmModule(em)->pArc;
+}
 #else
 static ReadModule* SearchEmModule(int) { std::abort(); }
 static void MemorySwap(void*, u32, u32) { std::abort(); }

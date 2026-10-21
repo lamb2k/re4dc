@@ -23,8 +23,9 @@ def sha(data):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--forward-pair",action="store_true")
     args = parser.parse_args()
-    floor=16*1024**3+128*1024**2;start_free=shutil.disk_usage('/mnt/c').free
+    floor=18*1024**3+128*1024**2;start_free=shutil.disk_usage('/mnt/c').free
     assert start_free>=floor,'Fresh C: source-test floor refused'
     args.out.mkdir(parents=True, exist_ok=False)
     fixture = args.out / "h064-fixture" / transaction.FIXTURE_DIR
@@ -36,7 +37,7 @@ def main():
     sys.path.insert(0, str(fixture))
     spec = importlib.util.spec_from_file_location("h064_caller_fixture", fixture / "test_motion_lifetime.py")
     h064 = importlib.util.module_from_spec(spec); spec.loader.exec_module(h064)
-    source_files = ("src/game/event.cpp", "src/game/datactrl.cpp", "include/event.h", "include/datactrl.h", "include/cManager.h","src/game/sce_com.cpp","src/game/dvd.cpp","port/dreamcast/game/platform/native_event_file.cpp","port/dreamcast/game/platform/include/native_cabin.h")
+    source_files = ("src/game/event.cpp", "src/game/datactrl.cpp", "include/event.h", "include/datactrl.h", "include/cManager.h","include/read.h","src/game/sce_com.cpp","src/game/dvd.cpp","src/game/read.cpp","src/game/emdata.cpp","src/game/eff_sys.cpp","port/dreamcast/game/platform/native_event_file.cpp","port/dreamcast/game/platform/include/native_cabin.h")
     source = {}
     for name in source_files:
         data = (REPO / name).read_bytes(); source[name] = data.decode(); pins[name] = sha(data)
@@ -65,7 +66,10 @@ def main():
     assert sum(method.count(cast) for method in event_methods) == 1
     event_methods = [method.replace(cast, "EvtMgr.SetEvt((void*) (u32) addr, (u32*) &evt)") for method in event_methods]
     unit_methods = [body("src/game/datactrl.cpp", "cDataUnit::" + name) for name in
-                    ("setCommand", "getCommand", "getCondition", "isLoadOk", "waitLoadOk", "isUseOk","waitUseOk","checkCommand", "setClear", "checkMallocRelease","checkCondition","setMallocInfo","setLoadToMram","setLoadToAram")]
+                    ("setCommand", "getCommand", "getCondition", "setCondition", "setDelete", "isLoadOk", "waitLoadOk", "isUseOk","waitUseOk","checkCommand", "setClear", "checkMallocRelease","checkCondition","setMallocInfo","setLoadToMram","setLoadToAram")]
+    controller=[body('src/game/datactrl.cpp','cDataUnit::setName')]
+    controller += [body('src/game/datactrl.cpp','cDataCtrl::'+name).replace('cDataCtrl::','Controller::')for name in ('getNewUnit','setData')]
+    effects=[body('src/game/emdata.cpp','GetEmEffId'),body('src/game/eff_sys.cpp','EspDataRelease'),body('src/game/emdata.cpp','EspEmDataSwapPush').replace('void EspEmDataSwapPush(', 'void actual_EspEmDataSwapPush(')]
     task_flag=re.search(r'^static inline void SceTaskFlagSet[^\n]+',source['src/game/sce_com.cpp'],re.M)[0]
     selected.append(dict(path='src/game/sce_com.cpp',name='SceTaskFlagSet',sha256=sha(task_flag.encode())))
     scenario=[body('src/game/sce_com.cpp','SceEventStart'),task_flag,body('src/game/sce_com.cpp','SceEventEnd')]
@@ -103,7 +107,7 @@ def main():
         'bool carrier_mram_current(', 'bool carrier_backing_current(', 'bool carrier_can_retire(', 'bool carrier_retirement_ready(',
         'extern "C" int re4dc_cabin_carrier_prepare(', 'extern "C" int re4dc_cabin_carrier_clear(', 'extern "C" int re4dc_cabin_carrier_install(', 'extern "C" int re4dc_cabin_carrier_before_free(',
         'extern "C" int re4dc_cabin_carrier_rebase(', 'extern "C" int re4dc_cabin_carrier_park(',
-        'extern "C" unsigned re4dc_cabin_carrier_reserved(', 'extern "C" unsigned re4dc_cabin_carrier_preload_epoch(',
+        'extern "C" unsigned re4dc_cabin_carrier_reserved(', 'extern "C" unsigned re4dc_cabin_carrier_preload_epoch(', 'extern "C" int re4dc_cabin_carrier_unit_available(',
         'extern "C" int re4dc_cabin_carrier_mram_move(', 'extern "C" int re4dc_cabin_carrier_event(',
         'extern "C" void re4dc_cabin_carrier_event_deleted(',
         'extern "C" unsigned re4dc_cabin_carrier_reverse_token(', 'extern "C" int re4dc_cabin_carrier_reverse_complete(',
@@ -115,11 +119,13 @@ def main():
                 'static int re4dc_event_file_prepare(const char*,unsigned){std::abort();}',
                 'static void re4dc_event_file_moved(){std::abort();}']
     forward=[body('src/game/dvd.cpp','MemorySwap').replace('void MemorySwap(', 'void actual_MemorySwap(')]
+    source_module=exact('src/game/read.cpp','extern "C" const void* re4dc_cabin_source_module(')
     manager_methods = ["template <class T>\n" + body("include/cManager.h", "cManager<T>::create", "T* cManager<T>::create(int id)"),
                        "template <class T>\n" + body("include/cManager.h", "cManager<T>::countActiveWork")]
     variants = []
-    for enabled,cabin,release_refs,preflight in ((1,1,0,0),):
-        out = args.out / f"retry{enabled}-cabin{cabin}-refs{release_refs}-preflight{preflight}"; out.mkdir()
+    for forward_receipt in ((0,1)if args.forward_pair else(0,)):
+        enabled,cabin,release_refs,preflight=1,1,0,0
+        out = args.out / f"forward{forward_receipt}-cabin{cabin}"; out.mkdir()
         adapted, changes = transaction.adapt_scaffold((fixture / "motion_event_admission_host.cpp").read_text())
         adapted = adapted.replace("void warn(int,int,const char*,...){}}logger", "void warn(int,int,const char*,...){}void mes(int,int,const char*,...){}}logger")
         assert "void mes(" in adapted
@@ -142,31 +148,35 @@ def main():
         (out / "exec_actual_scenario.inc").write_text("\n".join(scenario)+"\n")
         (out / "aram_actual_carrier.inc").write_text("\n".join(carrier)+"\n")
         (out / "forward_actual_memoryswap.inc").write_text("\n".join(forward)+"\n")
+        (out / "admission_controller_methods.inc").write_text("\n".join(controller)+"\n")
+        (out / "admission_actual_effect_methods.inc").write_text("\n".join(effects)+"\n")
+        (out / "forward_source_module.inc").write_text(source_module+"\n")
         command = ["g++", "-std=c++17", "-O1", "-g", "-fsanitize=undefined", "-fno-sanitize-recover=all", "-fno-omit-frame-pointer",
                    "-fno-pie", "-no-pie", "-Wall", "-Wextra", "-fpermissive", "-DRE4DC_GAME=1", f"-DRE4DC_CABIN_SOURCE={cabin}",
-                   "-DRE4DC_EVENT_FILES=1","-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", "-DRE4DC_EVD_START_ROLLBACK=1","-DRE4DC_EVD_DEBUG_READ_CLEANUP=0", "-DRE4DC_EVD_EXEC_FAILURE_CLEANUP=0",f"-DRE4DC_EVD_ARAM_ALLOC_RETRY={enabled}",f"-DRE4DC_EVD_READ_RELEASE_REFS={release_refs}",f"-DRE4DC_EVD_READ_ADMISSION_PREFLIGHT={preflight}", "-DRE4DC_EVD_MODULE_VALIDATE_FIRST=1", "-I" + str(out), "-I"+str(HERE),str(HERE / "cabin_forward_characterization_host.cpp"), "-o", str(out / "test")]
+                   "-DRE4DC_EVENT_FILES=1","-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", "-DRE4DC_EVD_START_ROLLBACK=1","-DRE4DC_EVD_DEBUG_READ_CLEANUP=0", "-DRE4DC_EVD_EXEC_FAILURE_CLEANUP=0",f"-DRE4DC_EVD_ARAM_ALLOC_RETRY={enabled}",f"-DRE4DC_EVD_READ_RELEASE_REFS={release_refs}",f"-DRE4DC_EVD_READ_ADMISSION_PREFLIGHT={preflight}", "-DRE4DC_EVD_MODULE_VALIDATE_FIRST=1",f"-DRE4DC_EVD_FORWARD_RECEIPT={forward_receipt}", "-I" + str(out), "-I"+str(HERE),str(HERE / "cabin_forward_characterization_host.cpp"), "-o", str(out / "test")]
+        assert shutil.disk_usage('/mnt/c').free>=floor,'Fresh C: source compiler admission refused'
         h064.command(command, out / "compile.txt", 30)
-        result = h064.command([out / "test"], out / "run.txt", 15); print(result, end="")
-        variants.append(dict(aram_alloc_retry=enabled,cabin_source=cabin,read_release_refs=release_refs,read_admission_preflight=preflight, output=result))
-    receipt = dict(scope="Actual unit setLoadToAram and EvtReadSub/Mram/MemorySwap plus native prepare/swap/admission/software-copy/callback/release/end and epoch/reverse-token predicates; source-unit validity/range executes. Idle descriptor/explicit logical destination seeded; provider/allocator/module/effect Push, software ARQ progression/flush/borrow-scope are boundaries. No private-asset/target/guest/whole-epoch acceptance.",
+        result = h064.command([out / "test"], out / "run.txt", 15); print(result.splitlines()[-1])
+        variants.append(dict(aram_alloc_retry=enabled,cabin_source=cabin,read_release_refs=release_refs,read_admission_preflight=preflight,forward_receipt=forward_receipt, output=result))
+    receipt = dict(scope="Bounded accepted first-forward receipt OFF/ON: actual fresh/prior EvtReadSub/Mram, Controller setData/getNewUnit, unit load, module validation, effect owner/release, MemorySwap and native epoch/DMA/reverse predicates. Controlled providers/allocators/module lookup/software scheduler remain boundaries. No private-asset/target/guest/whole-epoch acceptance.",
                    selected_head=transaction.git("rev-parse", "HEAD").decode().strip(), fixture_revision=transaction.FIXTURE_REF,
                    source_sha256=pins, selected_methods=selected, variants=variants,
-                   test_sha256={p.name: sha(p.read_bytes()) for p in (Path(__file__), HERE / "cabin_forward_characterization_host.cpp",HERE/'event_start_rollback_host.cpp',HERE/'exec_scenario_boundary.inc',HERE/'exec_transport_boundary.inc',HERE/'exec_cabin_boundary.inc')},
+                   test_sha256={p.name: sha(p.read_bytes()) for p in (Path(__file__), HERE / "cabin_forward_characterization_host.cpp",HERE/'event_start_rollback_host.cpp',HERE/'exec_scenario_boundary.inc',HERE/'exec_transport_boundary.inc',HERE/'exec_cabin_boundary.inc',HERE/'admission_actual_effect_boundary.inc')},
                    host_abi_adapters=["Actual recovered GetRead writes a pointer through an int local; host adapter preserves real DatTbl lookup/slot with pointer-width storage.",
-                                      "EvtReadExec's sole (void*)addr signed-int cast is normalized to (void*)(u32)addr, preserving native32 bits instead of host64 sign extension. No admission/failure/free decision changed."],
+                                      "EvtReadExec's sole (void*)addr signed-int cast is normalized to (void*)(u32)addr, preserving native32 bits instead of host64 sign extension. No admission/failure/free decision changed.",
+                                      "Actual cDataCtrl method definitions are renamed Controller:: to bind the host projection. Native cDataUnit fields/types are extracted; Host64 layout is not target layout acceptance.",
+                                      "ReadModule exposes the exact pArc/size fields used by these source bodies; its other fields and actual module manager are outside this fixture."],
                    executed_evtreadexec_sha256=sha(next(method for method in event_methods if "int EventMgr::EvtReadExec(" in method).encode()))
-    receipt['execution_roots']=['cDataUnit::setCommand/setLoadToAram','EventMgr::EvtReadMram/EvtReadSub','MemorySwap','native prepare/swap/owned DMA protocol and reverse-token query']
-    receipt['unexecuted_compile_closure']='Actual SetEvt/Event/create/scenario/reverse source bodies remain in the inherited fixture compile closure but are not exercised by this allocation-refusal unit.'
+    receipt['execution_roots']=['EventMgr::EvtReadMram/EvtReadSub/SetRead/EvtFree','cDataCtrl::setData/getNewUnit','cDataUnit::setCommand/setLoadToAram/setClear','GetEmEffId/EspEmDataSwapPush/EspDataRelease','MemorySwap','re4dc_cabin_source_module','native prepare/swap/owned DMA protocol and reverse-token query']
+    receipt['unexecuted_compile_closure']='Actual SetEvt/Event/create/scenario and MRAM allocation bodies remain inherited compile closure. Forward mode7 exercises actual EvtFree/setClear refusal; it does not certify successful target deallocation.'
     receipt['transport_boundaries']=[
-        'Actual setLoadToMram/command/condition/wait/allocation metadata/clear execute. Allocation returns NULL or the exact controlled host mapping; real target allocator/recovery/stdout scheduling is not certified.',
-        'Actual source-unit valid/retire-ready/release and native carrier query/install/clear/retirement/before-free predicates execute. Allocation/provider/free/module service boundaries verify exact pointer/size/heap and synthetic input identities.',
-        'Certified provider run is an explicit boundary that writes synthetic bytes, not a private game asset or actual target file qualification.',
-        'The query body is exported independently for observational predicate tests in both host arms; whole native-TU disabled object identity separately proves absence with the switch off.',
-        'Nine allocation-boundary epoch/row/unit/reader mutations are adversarial controls. They prove refusal to restore/clear current changed state, not absence of every possible callback/reset interleaving.',
-        'Source unit storage is explicitly zeroed as in actual initDataUnit. Host64 structures/negative32 pointer conversions remain projections, not native layout/whole-program acceptance.',
-        'These are native forward protocol source controls; prior read/shared-release and allocation-refusal fixtures remain separate.']
-    receipt['unexecuted_compile_closure']='Actual Event/create/scenario, MRAM allocator and clear bodies remain compile closure but are not exercised by this forward protocol fixture.'
-    receipt['transport_boundaries']=['Seeded idle descriptor and explicit logical destination; actual setLoadToAram calls actual native prepare and publishes condition4. Synthetic certificate provider and exact module/heap allocations. Ordinary ARAM gap allocator not exercised.', 'Actual MemorySwap body and native owner protocol execute. Software ARQ progression, flush, inactive DVD queue and outer borrow scope are controlled boundaries; no actual hardware ARQ or callback scheduler is exercised.', 'Failure injections occur before/after owned copies/releases and at epoch/module/source ownership changes. Current source still publishes output/swapped after void failure; no repair is claimed.']
+        'Fresh controls execute actual Controller setData/getNewUnit and FileExistCheck call; the file service returns controlled synthetic size. The ARAM gap allocator and prior explicit destination return controlled logical1000. Source unit storage is initialized explicitly.',
+        'Actual setLoadToAram prepares the native carrier. Certified provider run writes synthetic bytes; source allocation/free predicates verify controlled exact pointers/sizes/heaps. Actual target heap, allocator recovery, file I/O and private assets are unqualified.',
+        'Actual read.cpp source-module pArc/size predicate executes against a controlled SearchEmModule binding. EmReadSearch is a counted cached-module boundary; actual caller fresh output write and its failure clearing execute.',
+        'Actual owner mapping, effect Push/Release count/final dispatch execute for refs1/2. Five effect-subtable release helpers are controlled exact-owner dispatch counters. Effects already released on armed failure are retained as released; no effect rollback is claimed.',
+        'Actual MemorySwap and native owner/DMA protocol execute. Software ARQ progress, cache flush, null DVD queue, returnable missing diagnostic and outer borrow scope are controlled boundaries; actual hardware ARQ/callback scheduling and whole-epoch retirement remain open.',
+        'Mutation controls cover pre-swap ownership/row/unit/readEm/module/heap changes and post-copy changes, real repeated role2, initial zero epoch and nonmatching rows. Partial second-copy release refusal retains carrier/read lease and displaced module bytes; no stale restore or delete occurs.',
+        'Unsupported initial zero-epoch/repeated-role2/nonmatching-row cases deliberately retain legacy publication, including false success outside the bounded accepted receipt. Prior acquisition/reverse/reset and whole caller lifetime are separate open contracts.']
     output_bytes=sum(p.stat().st_size for p in args.out.rglob('*')if p.is_file());assert output_bytes<=20*1024**2
     receipt['resource_guard']={'start_C_free_bytes':start_free,'finish_C_free_bytes':shutil.disk_usage('/mnt/c').free,'floor_bytes':floor,'output_bytes_before_receipt':output_bytes,'output_limit_bytes':20*1024**2}
     (args.out / "receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")

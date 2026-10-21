@@ -12,4 +12,9 @@ static void efmRelease(u32 owner){assert(owner==0x10);++effect_release_dispatch[
 #include "admission_actual_effect_methods.inc"
 #undef pLog
 #undef OWNER_ERR
-static void EspEmDataSwapPush(int em){assert(em==0x11);++swap_pushes;actual_EspEmDataSwapPush(em);}
+static void EspEmDataSwapPush(int em){
+    assert(em==0x11||em==0x13);++swap_pushes;actual_EspEmDataSwapPush(em);
+#if defined(RE4DC_FORWARD_ACTUAL)
+    forward_effect_boundary(em);
+#endif
+}

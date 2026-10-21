@@ -78,6 +78,19 @@
 #endif
 #endif
 
+#if defined(RE4DC_EVD_FORWARD_RECEIPT) && RE4DC_EVD_FORWARD_RECEIPT && !defined(__PPC__)
+#if !defined(RE4DC_CABIN_SOURCE) || !RE4DC_CABIN_SOURCE
+#error EVD_FORWARD_RECEIPT requires CABIN_SOURCE
+#endif
+#if !defined(RE4DC_EVD_ARAM_ALLOC_RETRY) || !RE4DC_EVD_ARAM_ALLOC_RETRY
+#error EVD_FORWARD_RECEIPT requires EVD_ARAM_ALLOC_RETRY
+#endif
+#if !defined(RE4DC_EVD_MODULE_VALIDATE_FIRST) || !RE4DC_EVD_MODULE_VALIDATE_FIRST
+#error EVD_FORWARD_RECEIPT requires EVD_MODULE_VALIDATE_FIRST
+#endif
+extern "C" int re4dc_cabin_source_allocation(const void*,unsigned,int*);
+#endif
+
 #if defined(RE4DC_EVD_EXEC_FAILURE_CLEANUP) && RE4DC_EVD_EXEC_FAILURE_CLEANUP && !defined(__PPC__)
 #if !defined(RE4DC_EVD_START_ROLLBACK) || !RE4DC_EVD_START_ROLLBACK
 #error EVD_EXEC_FAILURE_CLEANUP requires EVD_START_ROLLBACK
@@ -2558,10 +2571,79 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
                 pLog->err(0, 0, "EventMgr::EvtRead : event size too large!![%d]>[%d]", unit->m_size, mod->size);
                 return 0;
             }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_FORWARD_RECEIPT) && RE4DC_EVD_FORWARD_RECEIPT
+            // Only an accepted first-forward source receipt changes this path.
+            // Unsupported zero-epoch/repeated-role inputs retain legacy policy.
+            unsigned forward_epoch = 0;
+            cDataUnit forward_unit;
+            DatTblEntry forward_row = {};
+            EvtReadEm forward_em = {};
+            DatTblEntry* const forward_rows = ReadTbl.pWork;
+            const int forward_count = ReadTbl.NumDatTbl;
+            ReadModule* const forward_module = mod;
+            void* const forward_mram = mod->pArc;
+            const u32 forward_module_size = mod->size;
+            int forward_heap = -1;
+            if (unit && no < 8 && forward_rows && forward_count > 0 && no < (u32) forward_count) {
+                const DatTblEntry* row = &forward_rows[no];
+                if (row->Dat == unit && row->Etc == 0 && row->FlagBe8 == 3 &&
+                    row->Count && row->Count <= 0x7FFF && !row->dat2 &&
+                    readEm[no].em == em && readEm[no].swapped == 0 &&
+                    re4dc_cabin_source_allocation(forward_mram,forward_module_size,&forward_heap)) {
+                    forward_epoch = re4dc_cabin_carrier_preload_epoch(unit,(u32)unit->m_addr,unit->m_size);
+                    if (forward_epoch) {
+                        memcpy(&forward_unit,unit,sizeof(forward_unit));
+                        memcpy(&forward_row,row,sizeof(forward_row));
+                        memcpy(&forward_em,&readEm[no],sizeof(forward_em));
+                    }
+                }
+            }
+            const auto forward_current = [&]() -> bool {
+                int current_heap = -1;
+                return ReadTbl.pWork == forward_rows && ReadTbl.NumDatTbl == forward_count &&
+                    ReadTbl.pWork && no < (u32) ReadTbl.NumDatTbl &&
+                    memcmp(&ReadTbl.pWork[no],&forward_row,sizeof(forward_row)) == 0 &&
+                    memcmp(unit,&forward_unit,sizeof(forward_unit)) == 0 &&
+                    memcmp(&readEm[no],&forward_em,sizeof(forward_em)) == 0 &&
+                    SearchEmModule(em) == forward_module && forward_module->pArc == forward_mram &&
+                    forward_module->size == forward_module_size &&
+                    re4dc_cabin_source_allocation(forward_mram,forward_module_size,&current_heap) &&
+                    current_heap == forward_heap;
+            };
+            if (forward_epoch && (!forward_current() ||
+                re4dc_cabin_carrier_preload_epoch(unit,(u32)forward_unit.m_addr,forward_unit.m_size) != forward_epoch)) {
+                if (out) *out = 0;
+                pLog->err(0, 0, "EventMgr::EvtRead : forward receipt changed before effects[%s]", nm);
+                return 0;
+            }
+#endif
 #if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_MODULE_VALIDATE_FIRST) && RE4DC_EVD_MODULE_VALIDATE_FIRST
             // Push releases effect registrations. Validate the module first
             // so these two refusals do not release another owner's effects.
             EspEmDataSwapPush(em);
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_FORWARD_RECEIPT) && RE4DC_EVD_FORWARD_RECEIPT
+            if (forward_epoch) {
+                // Push can have changed ownership. Never exchange a new owner
+                // merely because the old unit/module addresses still exist.
+                if (!forward_current() ||
+                    re4dc_cabin_carrier_preload_epoch(unit,(u32)forward_unit.m_addr,forward_unit.m_size) != forward_epoch) {
+                    if (out) *out = 0;
+                    pLog->err(0, 0, "EventMgr::EvtRead : forward receipt changed after effects[%s]", nm);
+                    return 0;
+                }
+                MemorySwap(forward_mram,(u32)forward_unit.m_addr,forward_unit.m_size);
+                int current_heap = -1;
+                if (!forward_current() ||
+                    re4dc_cabin_carrier_reverse_token(unit,forward_module,forward_mram,forward_unit.m_size,&current_heap) != forward_epoch ||
+                    current_heap != forward_heap) {
+                    // Native partial copies/requests may own the only displaced
+                    // module bytes. Retain them; failure is not effect rollback.
+                    if (out) *out = 0;
+                    pLog->err(0, 0, "EventMgr::EvtRead : forward exchange not accepted[%s]", nm);
+                    return 0;
+                }
+            } else
 #endif
             MemorySwap(mod->pArc, (u32) unit->m_addr, unit->m_size);
             readEm[no].swapped = 1;

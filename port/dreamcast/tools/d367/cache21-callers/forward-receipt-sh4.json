@@ -1,0 +1,218 @@
+{
+  "scope": "Actual SH4 event.o only. No linked program, guest, full-stack, whole epoch or hardware acceptance.",
+  "baseline_revision": "0b58098ee",
+  "candidate_event_sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+  "qualifier_sha256": "4fa57024657daed64be45acfd3cce51a758a90e9743d6fb58b02f81b27b0e10c",
+  "helper_sha256": "355153499171dac1148802d7eafd952bd82395c26e0bd59bee91a213661b9aa5",
+  "baseline_make_sha256": "5e09793b5625b49b330ddf3efc7df8d8bc71394781345585f7a662697097db73",
+  "objects": [
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "aram_alloc_retry": 0,
+      "module_validate_first": 1,
+      "forward_receipt": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "365719f64d16a6c9c13e919599a2b5639e4ff9bca1ea3d3e464453517c22e84b",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38881\t      4\t    640\t  39525\t   9a65\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin0-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "aram_alloc_retry": 0,
+      "module_validate_first": 1,
+      "forward_receipt": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "stripped_event_o_sha256": "365719f64d16a6c9c13e919599a2b5639e4ff9bca1ea3d3e464453517c22e84b",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38881\t      4\t    640\t  39525\t   9a65\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin0-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:294:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3180:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2454:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3002:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2940:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "aram_alloc_retry": 0,
+      "module_validate_first": 1,
+      "forward_receipt": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "41a4fdc7de78160dd901c183d45f622d55d655803f9ece3c2ce01c1b76978fe4",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39837\t      4\t    640\t  40481\t   9e21\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin0-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "aram_alloc_retry": 0,
+      "module_validate_first": 1,
+      "forward_receipt": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "stripped_event_o_sha256": "41a4fdc7de78160dd901c183d45f622d55d655803f9ece3c2ce01c1b76978fe4",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39837\t      4\t    640\t  40481\t   9e21\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin0-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:294:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3180:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2454:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3002:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2940:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "aram_alloc_retry": 1,
+      "module_validate_first": 1,
+      "forward_receipt": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "e8d1f0c26457faac6923f7cf10446c618e23c813e680546bcdd0f75682935125",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40181\t      4\t    640\t  40825\t   9f79\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin1-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t196\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "aram_alloc_retry": 1,
+      "module_validate_first": 1,
+      "forward_receipt": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "stripped_event_o_sha256": "e8d1f0c26457faac6923f7cf10446c618e23c813e680546bcdd0f75682935125",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40181\t      4\t    640\t  40825\t   9f79\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin1-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:294:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3180:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2454:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t196\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3002:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2940:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "aram_alloc_retry": 1,
+      "module_validate_first": 1,
+      "forward_receipt": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "stripped_event_o_sha256": "75d42f996441dbdf5e511bf71d8faf3447e3f0041ef5202d8bbcfe82ec2c5110",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  41417\t      4\t    640\t  42061\t   a44d\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin1-txn0/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:294:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3180:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2454:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t384\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3002:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2940:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "aram_alloc_retry": 1,
+      "module_validate_first": 1,
+      "forward_receipt": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "d59d82e351ba81c2eef0a0042324b572ef38c151907097f1b6ad96b685240e60",
+      "stripped_event_o_sha256": "33c164448834023c3e40b57f0c2c58d0c0906d03868b1a790a2c8f0f085e03ba",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  41147\t      4\t    640\t  41791\t   a33f\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin1-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3098:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t196\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2920:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2858:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "aram_alloc_retry": 1,
+      "module_validate_first": 1,
+      "forward_receipt": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "stripped_event_o_sha256": "33c164448834023c3e40b57f0c2c58d0c0906d03868b1a790a2c8f0f085e03ba",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  41147\t      4\t    640\t  41791\t   a33f\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin1-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:294:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3180:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2454:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t196\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3002:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2940:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "aram_alloc_retry": 1,
+      "module_validate_first": 1,
+      "forward_receipt": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "stripped_event_o_sha256": "eb4f4c7f9b0d001b8b7024e7f583347a97a1bcf351fd11f94c909d8a7cf09a6a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  42383\t      4\t    640\t  43027\t   a813\t/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/cabin1-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:294:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3180:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2454:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t384\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:3002:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-forward-receipt-sh4-20261022-01/event.cpp:2940:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ],
+      "auxiliary_lambda_stack_usage": []
+    }
+  ],
+  "invalid_knobs_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "make_and_direct_prerequisites_rejected": [
+    "CABIN_SOURCE",
+    "EVD_ARAM_ALLOC_RETRY",
+    "EVD_MODULE_VALIDATE_FIRST"
+  ],
+  "ppc_selected_preprocessed_sha256": "06138205e2152093a7039148ac176c4abecdcff9e3fc241ab6af503b3618061f",
+  "ppc_limit": "Selected source preprocessing, not a PPC object/full game identity.",
+  "start_C_free_bytes": 24232386560,
+  "finish_C_free_bytes": 24231686144,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "output_bytes_before_receipt": 6121101,
+  "output_limit_bytes": 20971520
+}
