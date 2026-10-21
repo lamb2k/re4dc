@@ -1,0 +1,220 @@
+{
+  "schema": "re4dc-r104-cloth-source-material-contract-1",
+  "state": "source-contract-only; native-material-pass-contract-open",
+  "source_base": "87833f42fdbfd9da9d6ac954066122a7c28302bd",
+  "source_archive": {
+    "path": "st1/r104.arc",
+    "bytes": 1276800,
+    "sha256": "742f4b631ead6982012ecbed366614b4ac4acbb2cb137f47e0bb673376a424dd",
+    "active_body_offset": 0
+  },
+  "records": [
+    {
+      "record_offset": 351248,
+      "record_sha256": "a35d176986658b5390fc2a5a5f201fd179e8e94d4296b6093dbff4796eaa8e32",
+      "sprite_id": 78,
+      "texture_id": 199,
+      "Blend_type": 0,
+      "size_base": [
+        50.0,
+        50.0
+      ],
+      "R_size_base": 0.0,
+      "nominal_grid": [
+        9,
+        6
+      ],
+      "nominal_vertices": 54,
+      "nominal_triangles": 80,
+      "tool_flags": 1,
+      "start_RGBA": [
+        120,
+        120,
+        120,
+        255
+      ]
+    },
+    {
+      "record_offset": 351548,
+      "record_sha256": "92ef0d988d1116d65e79eccf209777581c95ced068be9d0c4e0eb234a4cad48d",
+      "sprite_id": 78,
+      "texture_id": 199,
+      "Blend_type": 0,
+      "size_base": [
+        50.0,
+        50.0
+      ],
+      "R_size_base": 0.0,
+      "nominal_grid": [
+        9,
+        6
+      ],
+      "nominal_vertices": 54,
+      "nominal_triangles": 80,
+      "tool_flags": 1,
+      "start_RGBA": [
+        80,
+        80,
+        70,
+        255
+      ]
+    },
+    {
+      "record_offset": 351848,
+      "record_sha256": "69fb6dd6363ad292c10215416227f797262ae44d5db684bcdd0edd1930e7f89f",
+      "sprite_id": 78,
+      "texture_id": 199,
+      "Blend_type": 0,
+      "size_base": [
+        50.0,
+        50.0
+      ],
+      "R_size_base": 0.0,
+      "nominal_grid": [
+        9,
+        6
+      ],
+      "nominal_vertices": 54,
+      "nominal_triangles": 80,
+      "tool_flags": 1,
+      "start_RGBA": [
+        80,
+        80,
+        90,
+        255
+      ]
+    },
+    {
+      "record_offset": 352148,
+      "record_sha256": "22167ccc21dc25bded917c1ae6ef215fd0031518b19828ce44ceedb53c9658e2",
+      "sprite_id": 78,
+      "texture_id": 199,
+      "Blend_type": 0,
+      "size_base": [
+        50.0,
+        50.0
+      ],
+      "R_size_base": 0.0,
+      "nominal_grid": [
+        9,
+        6
+      ],
+      "nominal_vertices": 54,
+      "nominal_triangles": 80,
+      "tool_flags": 1,
+      "start_RGBA": [
+        80,
+        80,
+        70,
+        255
+      ]
+    },
+    {
+      "record_offset": 352448,
+      "record_sha256": "91cdd7ce016c5e509e0b0db537c34da5f7579b9ea7284019f686b3db01215cc7",
+      "sprite_id": 78,
+      "texture_id": 199,
+      "Blend_type": 0,
+      "size_base": [
+        50.0,
+        50.0
+      ],
+      "R_size_base": 0.0,
+      "nominal_grid": [
+        9,
+        6
+      ],
+      "nominal_vertices": 54,
+      "nominal_triangles": 80,
+      "tool_flags": 1,
+      "start_RGBA": [
+        95,
+        80,
+        70,
+        255
+      ]
+    }
+  ],
+  "texture": {
+    "key": "ee058318-449384ff",
+    "current_pack_sha256": "e19cfc464e789e97ca96864adfc2a4cd44443a9f4775bebd842c3e184a65559b",
+    "package_sha256": "5306088d2019beb35853e20721af6924acfd1bb2834088faadf08c7185381c73",
+    "width": 256,
+    "height": 256,
+    "format": "PAL4 ARGB4444",
+    "mipmapped": false,
+    "alpha_histogram": {
+      "238": 52287,
+      "170": 754,
+      "68": 733,
+      "0": 9802,
+      "187": 893,
+      "102": 1067
+    }
+  },
+  "source_sampler": {
+    "ClothTexSetUp": "descriptor0; GXInitTexObj clamp0/clamp0/mip0, overriding TPL wrap1/wrap1",
+    "Esp4e_second_texture": "NULL in both CI and non-CI paths",
+    "source_blend": "Blend_type0 -> SRCALPHA/INVSRCALPHA and depthwriteON; additive x74 -> ONE/ONE depthwriteOFF",
+    "alpha_compare": "GREATER4 OR GREATER255 => alpha>4, after4x TEV alpha; not ordinary uniform stripmaterial",
+    "geometry": "One GX triangle strip per live row, current float pVer/pNor, full UVs, view*cloth*Scale, inverse-transpose normals and source selected room lighting",
+    "ownership": "ClothDraw OT13 per live drawnslot. Source physics, slots, pVer/pNor lifetimes remain with Cloth/Esp4e."
+  },
+  "nominal_scope": {
+    "source_records": 5,
+    "total_grid_vertices": 270,
+    "total_triangles": 400,
+    "caution": "Nominal source initial-size calculation only; actual live dimensions/owners require target capture."
+  },
+  "reuse": {
+    "geometry_clipper": "existing pvr_geometry::clip_projected_triangle",
+    "lighting": "existing SourceLighting snapshot and evaluate_prepared_source_lighting after original commonClothLightSet",
+    "queue": "existing bounded DeferredPart/PVR stream/fence owner; immutable per-draw snapshots needed",
+    "strip_quad_limit": "Current FX_STRIP21 quad has uniform color and depthwriteOFF; it is not a drop-in cloth renderer."
+  },
+  "material_boundary": {
+    "existing_PVR_PT_alpha_reference": 128,
+    "source_reference": "native_ui.cpp:PVR_SET(PVR_PT_ALPHA_REF,128)",
+    "pinned_KOS_register": {
+      "path": "/root/work/kos-re4dc-d367/kernel/arch/dreamcast/include/dc/pvr/pvr_regs.h",
+      "sha256": "58f79ae58ce345f3056929a76b29c52399c97de4ddcbe69613983cfce3c3c91b",
+      "name": "PVR_PT_ALPHA_REF",
+      "address": "0x011c",
+      "contract": "Only pixels alpha>=reference drawn for PunchThrough polygons"
+    },
+    "finding": "PlainTR+depthwrite writes through transparent cloth holes; simply using currentPT alpha128 also differs from sourcealpha>4 and4x post-texture alpha. No global threshold or frame-owner change is authorized here."
+  },
+  "source_files": [
+    {
+      "path": "src/game/cloth.cpp",
+      "sha256": "fbf9e40d5cf366d6985e13a4b3d9e8a7a7c3fbeefea68f650a74c13dd7de22c1"
+    },
+    {
+      "path": "src/game/esp4e.cpp",
+      "sha256": "42e5a2ec99194d59ba5eaea9ee782c444287e7b78520887f93157ef2de40dbdc"
+    },
+    {
+      "path": "src/game/trans_lit.cpp",
+      "sha256": "5f58e0dc7129152ebf46224affe9cae989b664d9c014c428702f0c607f1087e2"
+    },
+    {
+      "path": "port/dreamcast/room/source_lighting.cpp",
+      "sha256": "456cf98468febc9a3b0d1803546957af93de9fa9c5cda9d7bd5bcd63c72a868c"
+    },
+    {
+      "path": "port/dreamcast/room/pvr_geometry.cpp",
+      "sha256": "1f3bb880101796e0ecb2ee7ac2dc5c0f3990421c6dc06617f7c86d2a64390136"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "sha256": "2549317a6db281cc1c621504933e4f014136e9fca1317ce7a2b521aa26305c3d"
+    }
+  ],
+  "limits": [
+    "No new native cloth rendering/mip/runtime claim, no source physics/material/pass changes, no guest or reproduced issue cause.",
+    "Source reads/nominal grids/decoded package alpha are not actual runtime residency, screenshots, cost or acceptance.",
+    "Separate guarded cloth ABI repair87833f42f and strip source unit5ceff070b remain available for main qualification. Existing947/948 data stays immutable."
+  ],
+  "private_set": "mipmap21-r104-cloth-contract-20261021",
+  "private_sums_sha256": "2d87e0705d39812aac7cd7889c131db8d588f6e224b2f8832adf45efa08e7d22"
+}
