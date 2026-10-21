@@ -1,0 +1,601 @@
+{
+  "scope": "Original sword puzzle and wall callback49 COMPLETE on recovered NEW cold lineage.",
+  "checkpoint": {
+    "scope": "Read-only immutable checkpoint audit of recovered-J NEW cold lineage only. No original J state retarget or game writes.",
+    "run": "route-walk49",
+    "state_sha256": "75e5c66160da85d2b512b7ce2b95cd19ddb20f29f4bec4ca5a8779a140ef6372",
+    "source_frame": 15135,
+    "room": "0x207",
+    "chapter": 6,
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "held_world": "0x0",
+    "health": [
+      303,
+      1200,
+      330,
+      600
+    ],
+    "start": {
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "disc_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+      "ram_gdi": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\segments\\route-walk49\\disc.gdi",
+      "seed": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk48\\data",
+      "start_utc": "2026-10-21T17:11:21.140098+00:00"
+    },
+    "result": {
+      "name": "castle21-recoveredJ-route-walk49",
+      "status": "RUN_COMPLETE",
+      "start_utc": "2026-10-21T17:11:20.989939+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "tracks": {
+        "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+        "kind": "release",
+        "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+      },
+      "seconds": 50,
+      "vmu": null,
+      "keys": null,
+      "stop": null,
+      "fixtures": {
+        "warp": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\coldload-observer.txt",
+          "bytes": 73,
+          "sha256": "0c99c0876c31de8c6b1779d37298d0c3d522e8b136c966a9424c8d51db1782cb"
+        },
+        "pad": {
+          "src": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\fixtures\\load-pad.txt",
+          "bytes": 208,
+          "sha256": "71ee624d5bf0f81555e5ba8b6785a8e3385f26c37e18eb040dda439b80f87496"
+        },
+        "w11": {
+          "src": null,
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "errors": [],
+      "key_log": [],
+      "align": false,
+      "emu": "harness",
+      "emu_env": {},
+      "early_emulator_exit": 0,
+      "log_idle_s": 1.5,
+      "end_utc": "2026-10-21T17:11:34.654463+00:00",
+      "elapsed_s": 13.5,
+      "emulator_exited": true
+    },
+    "ELF_anchors": 4,
+    "player_pos": [
+      771.0360107421875,
+      145.45281982421875,
+      -7108.97900390625
+    ],
+    "partner_pos": [
+      2443.843017578125,
+      126.744140625,
+      -1866.176513671875
+    ],
+    "partner_subflags": "0x46",
+    "events": [
+      {
+        "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk49\\data\\disc.state"
+      },
+      {
+        "normal_A_opens_lower_empty_mount_inventory": 14967
+      },
+      {
+        "normal_A_on_verified_Golden_and_Use0": {
+          "frame": 14982,
+          "index": 0,
+          "source_id": "0x80",
+          "cmd": 0
+        }
+      },
+      {
+        "normal_A_on_verified_Golden_and_Use0": {
+          "frame": 15008,
+          "index": 0,
+          "source_id": "0x80",
+          "cmd": 0
+        }
+      },
+      {
+        "normal_A_on_verified_Golden_and_Use0": {
+          "frame": 15034,
+          "index": 0,
+          "source_id": "0x80",
+          "cmd": 0
+        }
+      },
+      {
+        "original_Golden_lower_and_wall_complete": {
+          "frame": 15133,
+          "life": 303,
+          "Ashley": 330,
+          "Loop": 0,
+          "Stop": "0x0",
+          "items": [
+            {
+              "id": 124,
+              "num": 1,
+              "bullet": 0,
+              "raw": "7c00010001000000000000000000"
+            },
+            {
+              "id": 35,
+              "num": 1,
+              "bullet": 0,
+              "raw": "2300010001000000000002010001"
+            },
+            {
+              "id": 4,
+              "num": 20,
+              "bullet": 0,
+              "raw": "0400140001000000000007000001"
+            },
+            {
+              "id": 172,
+              "num": 1,
+              "bullet": 0,
+              "raw": "ac00010001000000000000000000"
+            },
+            {
+              "id": 173,
+              "num": 1,
+              "bullet": 0,
+              "raw": "ad00010001000000000000000000"
+            }
+          ],
+          "Rsf": "0xc9300000",
+          "door_flags": "0xa84002b4"
+        }
+      },
+      {
+        "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk49\\shots\\checkpoint-source-15133\\frames\\fb0.png",
+        "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk49\\shots\\checkpoint-source-15133\\checkpoint-context.json"
+      },
+      {
+        "owned_close_at_input_deadline": true
+      }
+    ],
+    "last_sample": {
+      "frame": 15133,
+      "life": 303,
+      "Ashley": 330,
+      "Loop": 0,
+      "Stop": "0x0",
+      "items": [
+        {
+          "id": 124,
+          "num": 1,
+          "bullet": 0,
+          "raw": "7c00010001000000000000000000"
+        },
+        {
+          "id": 35,
+          "num": 1,
+          "bullet": 0,
+          "raw": "2300010001000000000002010001"
+        },
+        {
+          "id": 4,
+          "num": 20,
+          "bullet": 0,
+          "raw": "0400140001000000000007000001"
+        },
+        {
+          "id": 172,
+          "num": 1,
+          "bullet": 0,
+          "raw": "ac00010001000000000000000000"
+        },
+        {
+          "id": 173,
+          "num": 1,
+          "bullet": 0,
+          "raw": "ad00010001000000000000000000"
+        }
+      ],
+      "Rsf": "0xc9300000",
+      "door_flags": "0xa84002b4"
+    },
+    "screenshot_contexts": [
+      {
+        "run": "route-walk49",
+        "lineage": "Recovered J NEW cold boot progression",
+        "iso_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+        "runtime": "12a841d7c",
+        "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+        "room": "0x207",
+        "source_frame_interval": [
+          15133,
+          15135
+        ],
+        "health_before": [
+          303,
+          1200,
+          330,
+          600
+        ],
+        "health_after": [
+          303,
+          1200,
+          330,
+          600
+        ],
+        "action_result": {
+          "original_Golden_lower_and_wall_complete": {
+            "frame": 15133,
+            "life": 303,
+            "Ashley": 330,
+            "Loop": 0,
+            "Stop": "0x0",
+            "items": [
+              {
+                "id": 124,
+                "num": 1,
+                "bullet": 0,
+                "raw": "7c00010001000000000000000000"
+              },
+              {
+                "id": 35,
+                "num": 1,
+                "bullet": 0,
+                "raw": "2300010001000000000002010001"
+              },
+              {
+                "id": 4,
+                "num": 20,
+                "bullet": 0,
+                "raw": "0400140001000000000007000001"
+              },
+              {
+                "id": 172,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ac00010001000000000000000000"
+              },
+              {
+                "id": 173,
+                "num": 1,
+                "bullet": 0,
+                "raw": "ad00010001000000000000000000"
+              }
+            ],
+            "Rsf": "0xc9300000",
+            "door_flags": "0xa84002b4"
+          }
+        },
+        "last_sample": {
+          "frame": 15133,
+          "life": 303,
+          "Ashley": 330,
+          "Loop": 0,
+          "Stop": "0x0",
+          "items": [
+            {
+              "id": 124,
+              "num": 1,
+              "bullet": 0,
+              "raw": "7c00010001000000000000000000"
+            },
+            {
+              "id": 35,
+              "num": 1,
+              "bullet": 0,
+              "raw": "2300010001000000000002010001"
+            },
+            {
+              "id": 4,
+              "num": 20,
+              "bullet": 0,
+              "raw": "0400140001000000000007000001"
+            },
+            {
+              "id": 172,
+              "num": 1,
+              "bullet": 0,
+              "raw": "ac00010001000000000000000000"
+            },
+            {
+              "id": 173,
+              "num": 1,
+              "bullet": 0,
+              "raw": "ad00010001000000000000000000"
+            }
+          ],
+          "Rsf": "0xc9300000",
+          "door_flags": "0xa84002b4"
+        },
+        "capture_method": "Existing read-only VRAM/RGB565 method with offline-compatible private vector decoding, preloaded before guest; asynchronous source-frame interval, no simulation freeze",
+        "png_paths": [
+          "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk49\\shots\\checkpoint-source-15133\\frames\\fb0.png",
+          "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk49\\shots\\checkpoint-source-15133\\frames\\fb1.png"
+        ]
+      }
+    ],
+    "motion_first_sample": {
+      "host_s": 0.0,
+      "frame": 14835,
+      "hits": 53792,
+      "misses": 3007,
+      "evictions": 2971,
+      "loads": 3007,
+      "resident": 214208,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8c9d6900",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 189888,
+          "keys": [
+            [
+              0,
+              22400,
+              "18f9ad45-ba6230e7",
+              0
+            ],
+            [
+              5,
+              15744,
+              "e4328954-ab32a7cb",
+              0
+            ],
+            [
+              6,
+              9152,
+              "c64f139d-98988b59",
+              0
+            ],
+            [
+              53,
+              10784,
+              "24bbc949-2931f8bb",
+              0
+            ],
+            [
+              54,
+              17696,
+              "648e518b-9bece019",
+              0
+            ],
+            [
+              63,
+              12224,
+              "19a2d5bf-062558f3",
+              0
+            ],
+            [
+              65,
+              15872,
+              "806195b1-5680610b",
+              0
+            ],
+            [
+              86,
+              17408,
+              "ba4d09f9-27cc4d48",
+              0
+            ],
+            [
+              89,
+              14528,
+              "fc023680-7d42cbf6",
+              0
+            ],
+            [
+              90,
+              16160,
+              "d8b79f85-eb928ef2",
+              0
+            ],
+            [
+              91,
+              5568,
+              "c97de4b8-c76141ff",
+              0
+            ],
+            [
+              92,
+              10560,
+              "0fd30303-18f32605",
+              0
+            ],
+            [
+              121,
+              13440,
+              "8dffbbec-945a33f3",
+              0
+            ],
+            [
+              122,
+              8352,
+              "b46a662b-6478ab29",
+              0
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cb3bb80",
+          "bytes": 423136,
+          "count": 58,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 24320,
+          "keys": [
+            [
+              1,
+              15616,
+              "f0448a79-19fe5c0a",
+              0
+            ],
+            [
+              28,
+              8704,
+              "6759a9f6-ac49d197",
+              0
+            ]
+          ]
+        }
+      ],
+      "room": "0x207",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0
+    },
+    "motion_last_sample": {
+      "host_s": 12.25,
+      "frame": 15135,
+      "hits": 55080,
+      "misses": 3007,
+      "evictions": 2971,
+      "loads": 3007,
+      "resident": 214208,
+      "bindings": [
+        {
+          "slot": 0,
+          "archive": "0x8c9d6900",
+          "bytes": 1323136,
+          "count": 157,
+          "budget": 64832,
+          "hot_bytes": 0,
+          "resident": 189888,
+          "keys": [
+            [
+              0,
+              22400,
+              "18f9ad45-ba6230e7",
+              0
+            ],
+            [
+              5,
+              15744,
+              "e4328954-ab32a7cb",
+              0
+            ],
+            [
+              6,
+              9152,
+              "c64f139d-98988b59",
+              0
+            ],
+            [
+              53,
+              10784,
+              "24bbc949-2931f8bb",
+              0
+            ],
+            [
+              54,
+              17696,
+              "648e518b-9bece019",
+              0
+            ],
+            [
+              63,
+              12224,
+              "19a2d5bf-062558f3",
+              0
+            ],
+            [
+              65,
+              15872,
+              "806195b1-5680610b",
+              0
+            ],
+            [
+              86,
+              17408,
+              "ba4d09f9-27cc4d48",
+              0
+            ],
+            [
+              89,
+              14528,
+              "fc023680-7d42cbf6",
+              0
+            ],
+            [
+              90,
+              16160,
+              "d8b79f85-eb928ef2",
+              0
+            ],
+            [
+              91,
+              5568,
+              "c97de4b8-c76141ff",
+              0
+            ],
+            [
+              92,
+              10560,
+              "0fd30303-18f32605",
+              0
+            ],
+            [
+              121,
+              13440,
+              "8dffbbec-945a33f3",
+              0
+            ],
+            [
+              122,
+              8352,
+              "b46a662b-6478ab29",
+              0
+            ]
+          ]
+        },
+        {
+          "slot": 1,
+          "archive": "0x8cb3bb80",
+          "bytes": 423136,
+          "count": 58,
+          "budget": 50880,
+          "hot_bytes": 0,
+          "resident": 24320,
+          "keys": [
+            [
+              1,
+              15616,
+              "f0448a79-19fe5c0a",
+              0
+            ],
+            [
+              28,
+              8704,
+              "6759a9f6-ac49d197",
+              0
+            ]
+          ]
+        }
+      ],
+      "room": "0x207",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "SSLoop": 0
+    }
+  },
+  "outcome": "Golden80 consumed, priorC4 consumed; both correct bits/RSFc9300000, original wall event ended, passage door flag20000000 and15stable native freeplayticks.",
+  "source_contract": "Frozen12a841d7c src/st2/r207.cpp r207_SetSword requires bits4/7 then original r207_WallMove; EndProc sets door_flags_51CC20000000 and SceEventEnd.",
+  "limits": [
+    "No enemy kill/whole room/native texture/residency acceptance inferred.",
+    "Original exit/r203 and chapter completion remain pending; oldJ221 separate."
+  ]
+}
