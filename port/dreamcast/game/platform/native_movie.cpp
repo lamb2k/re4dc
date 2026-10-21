@@ -195,6 +195,11 @@ void movie_stage_free(void* p){
 #define MOVIE_WHY(s) ((void)0)
 #endif
 #if RE4DC_MOVIE_HEAP_EVICT
+#if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
+extern "C" void re4dc_motion_movie_begin();
+extern "C" unsigned re4dc_motion_movie_evict_one();
+extern "C" void re4dc_motion_movie_finish(int);
+#endif
 extern "C" unsigned re4dc_motion_evict_one();   // native_motion.cpp
 #if RE4DC_WEAPON_HEAP4
 extern "C" int re4dc_weapon_heap4_movie_release();   // read.cpp
@@ -244,7 +249,12 @@ void* stage_alloc(size_t n){
             }
 #endif
             while(largest<want){
-                const unsigned f=re4dc_motion_evict_one();
+                const unsigned f=
+#if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
+                    re4dc_motion_movie_evict_one();
+#else
+                    re4dc_motion_evict_one();
+#endif
                 if(!f)break;
                 ++evicted;freed+=f;
                 largest=re4dc_heap_largest_current(&free_bytes);
@@ -291,7 +301,12 @@ void* stage_alloc(size_t n){
     if(!p){
         unsigned evicted=0,freed=0;
         while(!p){
-            const unsigned f=re4dc_motion_evict_one();
+            const unsigned f=
+#if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
+                    re4dc_motion_movie_evict_one();
+#else
+                    re4dc_motion_evict_one();
+#endif
             if(!f)break;
             ++evicted;freed+=f;
             p=re4dc_ui_stage_alloc((unsigned)n);
@@ -553,6 +568,15 @@ int finish(int status){
                         "the next model draw retries\n",requests);
      }}
 #endif
+#if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
+    // Queue only. Route restoration runs after weapon/world loans and source
+    // end callbacks, before the next normal source gameplay frame.
+#if RE4DC_MOVIE_WORLD_ARENA
+    re4dc_motion_movie_finish(movie_retiring?1:0);
+#else
+    re4dc_motion_movie_finish(0);
+#endif
+#endif
     const unsigned long long wall=timer_us_gettime64()-(m.start?m.start:m.entered);
     const unsigned d=m.frames?m.frames:1;
     re4dc_log("route movie terminal=%d id=%05x frames=%u/%u uploaded=%u presented=%u wall_us=%llu media_us=%llu underruns=%u silence_bytes=%u heap_before=%d heap_active=%d staged=%u\n",
@@ -571,6 +595,12 @@ int finish(int status){
     return status;
 }
 bool open(unsigned id){
+#if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
+#if RE4DC_CABIN_SOURCE
+    if(!cabin_movie.generation)
+#endif
+    re4dc_motion_movie_begin();
+#endif
 #if RE4DC_PS2_INTERIOR_CULL
     // PS2_INTERIOR_CULL: no world is drawn during a route movie, so it borrows the r100 cell block (read again by
     // route_movie_bridge.cpp after the movie); taken before heap_before so the movie sees the knob-off heap.

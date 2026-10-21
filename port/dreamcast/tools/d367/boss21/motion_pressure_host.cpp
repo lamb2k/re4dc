@@ -17,12 +17,23 @@ static std::map<std::string,std::vector<unsigned char>> files;
 static unsigned allocated,peak,reads;
 static int heap_free=0;
 static unsigned fail_allocations;
+static unsigned source_frame=100,heap_largest=0,fail_after_read=0;
+static std::vector<unsigned> allocation_requests,failed_allocation_calls;
+#ifndef RE4DC_TEST_EXPECT_REGION
+#define RE4DC_TEST_EXPECT_REGION 1
+#endif
 extern "C" void re4dc_log(const char*,...) {}
 extern "C" void re4dc_missing(const char* s) { throw Missing(s); }
 extern "C" int re4dc_motion_current_heap() { return 4; }
 extern "C" int re4dc_static_heap_free() { return heap_free; }
+extern "C" unsigned re4dc_fixture_source_frame() { return source_frame; }
+#if !defined(RE4DC_TEST_QUERY_ABSENT) || !RE4DC_TEST_QUERY_ABSENT
+extern "C" unsigned re4dc_heap_largest_current(unsigned* out) { *out=heap_free;return heap_largest?heap_largest:unsigned(heap_free); }
+#endif
 extern "C" int re4dc_motion_owner_live(const void* p) { assert(allocations.count(const_cast<void*>(p)));return 1; }
 extern "C" void* re4dc_motion_alloc(unsigned n) {
+    allocation_requests.push_back(n);
+    if(std::find(failed_allocation_calls.begin(),failed_allocation_calls.end(),allocation_requests.size())!=failed_allocation_calls.end())return nullptr;
     if(fail_allocations){--fail_allocations;return nullptr;}
     void* p=nullptr;assert(!posix_memalign(&p,32,(n+31)&~31U));
     allocations[p]=n;allocated+=n;peak=std::max(peak,allocated);return p;
@@ -35,6 +46,7 @@ void Arena::init(std::uint8_t* p,std::size_t n) { base_=p;capacity_=n;used_=0; }
 ReadResult read_file(Arena& arena,const char* path) {
     auto i=files.find(path);if(i==files.end())return {nullptr,0,"missing",0};
     assert(i->second.size()<=arena.capacity());std::memcpy(arena.base(),i->second.data(),i->second.size());++reads;
+    if(fail_after_read && reads==fail_after_read)fail_allocations=1;
     return {arena.base(),i->second.size(),nullptr,1};
 }
 }
@@ -45,6 +57,9 @@ struct Fixture {
         auto& b=bindings[no];assert(!b.archive);b.archive=archive.data();b.bytes=archive.size();b.records=records.data();b.count=sizes.size();
         const unsigned meta=aligned(b.count*sizeof(Slot));b.slots=static_cast<Slot*>(re4dc_motion_alloc(meta));std::memset(b.slots,0,meta);stats.metadata_bytes+=meta;
         b.slab_bytes=slab;b.bounded=bounded;
+#if RE4DC_MOTION_RESUME
+        resume_journal.binding_changed(no);
+#endif
         if(slab){for(auto*& p:b.slab)p=static_cast<unsigned char*>(re4dc_motion_alloc(slab));stats.metadata_bytes+=2*slab;}
         for(unsigned i=0;i<sizes.size();++i) {
             std::vector<unsigned char> f(sizes[i],0);f[0]=1;f[2]=1;put(f,12,16);f.back()=static_cast<unsigned char>(i+1);
@@ -62,7 +77,84 @@ struct Fixture {
     void hot(unsigned i) { put(records,20*i+16,1);const auto n=word(record(bindings[no],i)+4);bindings[no].hot_bytes+=n;stats.hot_bytes+=n;seed(i); }
     ~Fixture() { auto& b=bindings[no];for(unsigned i=0;i<b.count;++i)b.slots[i].pins=0;release_binding(b); }
 };
-static void clean() { assert(allocations.empty());assert(!allocated);stats={};stamp=0;hold=false;files.clear();reads=peak=fail_allocations=0;heap_free=0; }
+static void clean() { assert(allocations.empty());assert(!allocated);stats={};stamp=0;hold=false;files.clear();reads=peak=fail_allocations=heap_largest=fail_after_read=0;heap_free=0;source_frame=100;allocation_requests.clear();failed_allocation_calls.clear();
+#if RE4DC_MOTION_RESUME
+resume_journal={};resume_pending={};resume_pending_live=false;
+#endif
+}
+struct ActualArchive {
+    std::vector<unsigned char> archive;
+    ActualArchive(const std::vector<unsigned>& sizes) {
+        const unsigned n=sizes.size()+1,first=aligned(16+8*n),mtc=first+32*sizes.size(),rel=aligned(mtc+32+20*sizes.size()),bytes=rel+64;
+        archive.resize(bytes);put(archive,0,n);put(archive,4,rel);
+        for(unsigned i=0;i<sizes.size();++i) {
+            std::vector<unsigned char> f(sizes[i],0);f[0]=1;f[2]=1;put(f,12,16);f.back()=static_cast<unsigned char>(i+1);
+            const unsigned crc=net_crc32le(f.data(),f.size());unsigned fnv=2166136261U;for(auto v:f)fnv=(fnv^v)*16777619U;
+            const unsigned off=first+32*i;put(archive,16+4*i,off);std::memcpy(archive.data()+16+4*n+4*i,"FCV",4);std::memcpy(archive.data()+off,f.data(),16);
+            put(archive,mtc+32+20*i,off);put(archive,mtc+36+20*i,sizes[i]);put(archive,mtc+40+20*i,crc);put(archive,mtc+44+20*i,fnv);
+            char path[64];std::snprintf(path,sizeof(path),"/cd/dc/mot/%08x-%08x.fcv",crc,fnv);files[path]=std::move(f);
+        }
+        put(archive,16+4*(n-1),mtc);std::memcpy(archive.data()+16+4*n+4*(n-1),"MTC",4);std::memcpy(archive.data()+mtc,"R4MOTBL\0",8);
+        put(archive,mtc+8,2);put(archive,mtc+12,sizes.size());put(archive,mtc+16,20);put(archive,mtc+20,net_crc32le(archive.data()+mtc+32,20*sizes.size()));put(archive,mtc+24,bytes);put(archive,mtc+28,32768);
+    }
+    bool bind(){return re4dc_motion_bind(archive.data(),archive.size())==1;}
+    ~ActualArchive(){re4dc_motion_unbind(archive.data());}
+};
+static int acquire_entry(Binding& b,unsigned i){unsigned* table=nullptr;int token=re4dc_motion_acquire(b.archive+word(record(b,i)),&table);assert(token&&table);return token;}
+static void region_three_key_loop(unsigned third) {
+    {
+        heap_free=93824;ActualArchive f({27584,21152,third,32416});assert(f.bind());auto& b=bindings[0];const unsigned before=allocated;
+        for(unsigned cycle=0;cycle<20;++cycle)for(unsigned i=0;i<3;++i){auto token=acquire_entry(b,i);re4dc_motion_release(token);}
+#if RE4DC_MOTION_RESERVE_PACK && RE4DC_TEST_EXPECT_REGION
+        assert(stats.loads==3&&stats.evictions==0&&stats.hits==57);assert(b.slots[1].data==b.slab[0]+27584&&b.slots[2].data==b.slab[0]+48736);
+#else
+        assert(stats.loads==60&&stats.evictions==58);
+#endif
+        assert(allocated==before&&b.resident<=64832);
+#if RE4DC_MOTION_PRESSURE_BACKING
+        assert(pressure_heap_bytes()==0);
+#endif
+        std::cout<<"region-three-key pack="<<RE4DC_MOTION_RESERVE_PACK<<" third="<<third<<" expect-region="<<RE4DC_TEST_EXPECT_REGION<<" loads="<<stats.loads<<" evictions="<<stats.evictions<<" backing="<<2*b.slab_bytes<<"\n";
+    }clean();
+}
+#if RE4DC_MOTION_RESERVE_PACK && RE4DC_TEST_EXPECT_REGION
+static void region_pins_owners_and_fallback() {
+    {
+        heap_free=93824;ActualArchive f({27584,21152,12032,32416});assert(f.bind());auto& b=bindings[0];const unsigned before=allocated;
+        assert(b.joined&&b.slab[1]==b.slab[0]+32416);assert(allocation_requests.size()==2&&allocation_requests[1]==64832);
+        std::vector<int> tokens;std::vector<unsigned char*> addresses;std::vector<std::vector<unsigned char>> copies;
+        for(unsigned i=0;i<3;++i){tokens.push_back(acquire_entry(b,i));addresses.push_back(b.slots[i].data);copies.emplace_back(b.slots[i].data,b.slots[i].data+word(record(b,i)+4));assert(reserved_base(b,b.slots[i].data)==b.slab[0]);}
+        bool rejected=false;try{load(b,3);}catch(const Missing& e){rejected=std::string(e.what())=="motion reserve slabs pinned";}
+        assert(rejected&&stats.evictions==0&&allocated==before);
+        re4dc_motion_hold(1);assert(re4dc_motion_evict_one()==0);assert(re4dc_motion_forget_dead_heaps()==0&&!hold);
+        for(unsigned i=0;i<3;++i){assert(b.slots[i].data==addresses[i]&&b.slots[i].pins==1);assert(!std::memcmp(addresses[i],copies[i].data(),copies[i].size()));re4dc_motion_release(tokens[i]);}
+    }clean(); // exactly one owning allocation freed; no second-half/interior free
+    {
+        heap_free=93824;ActualArchive f({27584,21152,12032,32416});assert(f.bind());auto& b=bindings[0];load(b,0);const auto* neighbor=b.slots[0].data;std::vector<unsigned char> copy(neighbor,neighbor+27584);const unsigned before=allocated;
+        auto saved=files;files.clear();bool rejected=false;try{load(b,1);}catch(const Missing& e){rejected=std::string(e.what())=="motion key read";}
+        assert(rejected&&!b.slots[1].data&&allocated==before&&b.slots[0].data==neighbor&&!std::memcmp(neighbor,copy.data(),copy.size()));
+        files=std::move(saved);load(b,1);assert(b.slots[1].data==b.slab[0]+27584&&allocated==before);
+    }clean(); // failed/retried FCV crossing the half boundary never frees its owning region
+    for(unsigned mode=0;mode<4;++mode){
+        {
+            heap_free=1048576;ActualArchive f({27584,21152,12032,32416});
+            if(mode==0)heap_largest=64832+64; // not enough for all three headers; skip the whole request
+            if(mode==1)failed_allocation_calls={2}; // allocation race: whole request fails, two cells succeed
+            if(mode==2)failed_allocation_calls={2,4}; // second fallback allocation fails; unwind only owned bytes
+            if(mode==3){heap_largest=50000;failed_allocation_calls={2};} // first fallback allocation fails
+            const bool ok=f.bind();assert(ok==(mode<2));
+            if(ok){auto& b=bindings[0];assert(!b.joined);assert(allocation_requests[mode==0?1:2]==32416);load(b,0);load(b,1);const auto* p=b.slots[0].data;assert(reserved_base(b,p)==p);}
+            else{assert(!allocated&&allocations.empty()&&!stats.metadata_bytes&&!bindings[0].archive);}
+            if(mode==0)assert(std::find(allocation_requests.begin(),allocation_requests.end(),64832)==allocation_requests.end());
+        }clean();
+    }
+    {
+        heap_free=1048576;Fixture f(0,{16000,16000,16000},0,true);auto& b=bindings[0];const auto start=allocation_requests.size();assert(reserve_allocate(b,32416));
+        assert(!b.joined&&allocation_requests.size()==start+2&&allocation_requests[start]==32416&&allocation_requests[start+1]==32416);
+        load(b,0);load(b,1);load(b,2);assert(stats.evictions==1); // strict v3 still one whole clip in each cell
+    }clean();
+}
+#endif
 static void reserved_fill() {
     // The exact selected em12 hot entry byte sizes, metadata only (H050 census).
     std::vector<unsigned> sizes={22400,16608,17664,9152,13216,7840,9216,19648,17696,5632,20896,15648,5696,8640,18784,2304,320,224,5248,8352};const unsigned count=sizes.size();sizes.push_back(32416);sizes.push_back(32416);
@@ -216,12 +308,130 @@ static void packed_bad_read_keeps_backing() {
 
 #endif
 #endif
+#if RE4DC_MOTION_RESUME
+static void use(unsigned binding,unsigned entry) {
+    auto& b=bindings[binding];unsigned* table=nullptr;const int t=re4dc_motion_acquire(b.archive+word(record(b,entry)),&table);assert(t);re4dc_motion_release(t);
+}
+static void evict_movie(unsigned n) { for(unsigned i=0;i<n;++i)assert(re4dc_motion_movie_evict_one());re4dc_motion_movie_finish(0); }
+static void resume_recent_only() {
+    {
+        Fixture f(0,{16000,16000,16000});for(unsigned i=0;i<3;++i)f.hot(i);use(0,0);use(0,1);
+        re4dc_motion_movie_begin();evict_movie(3); // unused preload is evicted too, but is not a restore ticket
+        const unsigned evictions=stats.evictions,before=reads;heap_free=1048576;
+        assert(re4dc_motion_movie_restore()==2&&reads==before+2&&stats.evictions==evictions);
+        assert(bindings[0].slots[0].data&&bindings[0].slots[1].data&&!bindings[0].slots[2].data);
+        assert(re4dc_motion_movie_restore()==0); // no per-frame retry loop
+    }clean();
+}
+static void resume_fail_closed() {
+    for(unsigned mode=0;mode<9;++mode) {
+        {
+            Fixture f(0,{16000,16000});f.hot(0);f.hot(1);use(0,0);use(0,1);re4dc_motion_movie_begin();evict_movie(2);
+            const unsigned before=reads,evictions=stats.evictions;heap_free=1048576;
+            if(mode==0)heap_free=16000; // group will not fit physically
+            if(mode==1)heap_largest=16000; // total free, but fragmented
+            if(mode==2)fail_allocations=1; // allocator can still refuse after preflight
+            if(mode==3)source_frame+=2; // stale source footprint, no blind replay
+            if(mode==4){resume_journal.binding_changed(0);} // same slot/new archive generation
+            if(mode==5){re4dc_motion_hold(1);} // pending tickets dropped before suspended-table access
+            if(mode==6){resume_journal.key_forgotten(0,0);resume_journal.key_forgotten(0,1);}
+            if(mode==7){heap_largest=32000+2*64;} // old two-header estimate fits; actual three-header requirement must refuse
+            if(mode==8){heap_free=32000+2*64;}
+            assert(re4dc_motion_movie_restore()==0&&reads==before&&stats.evictions==evictions);
+            re4dc_motion_hold(0);
+        }clean();
+    }
+}
+static void resume_cap_margin_and_retire() {
+    {
+        Fixture f(0,{16000});f.hot(0);use(0,0);re4dc_motion_movie_begin();evict_movie(1);
+        Fixture other(1,std::vector<unsigned>(8,32768));for(unsigned i=0;i<8;++i)other.hot(i);
+        heap_free=1048576;const unsigned before=reads,evictions=stats.evictions;
+        assert(re4dc_motion_movie_restore()==0&&reads==before&&stats.evictions==evictions&&pressure_heap_bytes()==262144);
+    }clean();
+    for(unsigned enough=0;enough<2;++enough) {
+        {
+            Fixture f(0,{16000});f.seed(0);use(0,0);re4dc_motion_movie_begin();evict_movie(1);
+            heap_free=enough?1048576:93824;const unsigned before=reads;
+            assert(re4dc_motion_movie_restore()==enough&&reads==before+enough); // cold heap restore keeps existing margin
+            if(enough)assert(!reserved_data(bindings[0],bindings[0].slots[0].data));
+        }clean();
+    }
+    {
+        Fixture f(0,{16000});f.hot(0);use(0,0);re4dc_motion_movie_begin();assert(re4dc_motion_movie_evict_one());re4dc_motion_movie_finish(1);
+        heap_free=1048576;const unsigned before=reads;assert(re4dc_motion_movie_restore()==0&&reads==before);
+    }clean();
+}
+static void resume_policy_and_read_failure() {
+    {
+        Fixture f(0,{16000},32416,true);f.hot(0);use(0,0);re4dc_motion_movie_begin();evict_movie(1);
+        heap_free=1048576;const unsigned before=reads;
+        assert(re4dc_motion_movie_restore()==0&&reads==before); // malformed/historic v3 heap state never admits another heap key
+    }clean();
+    {
+        Fixture f(0,{16000});f.hot(0);use(0,0);re4dc_motion_movie_begin();evict_movie(1);
+        heap_free=1048576;files.clear();const unsigned before=allocated,evictions=stats.evictions;bool rejected=false;
+        try{re4dc_motion_movie_restore();}catch(const Missing& e){rejected=std::string(e.what())=="motion key read";}
+        assert(rejected&&allocated==before&&!bindings[0].slots[0].data&&stats.evictions==evictions);
+    }clean();
+}
+static void resume_partial_and_chained_movie() {
+    {
+        Fixture f(0,{16000,16000});f.hot(0);f.hot(1);use(0,0);use(0,1);re4dc_motion_movie_begin();evict_movie(2);
+        heap_free=1048576;fail_after_read=reads+1;const unsigned evictions=stats.evictions,before=reads;
+        assert(re4dc_motion_movie_restore()==1&&reads==before+1&&stats.evictions==evictions); // external allocation race, no forced eviction
+        assert(re4dc_motion_movie_restore()==0);
+    }clean();
+    {
+        Fixture f(0,{16000,16000});f.hot(0);f.hot(1);use(0,0);use(0,1);re4dc_motion_movie_begin();evict_movie(1);
+        re4dc_motion_movie_begin();evict_movie(1); // skip -> cancel clip, before the final route boundary
+        heap_free=1048576;assert(re4dc_motion_movie_restore()==2);
+    }clean();
+    {
+        Fixture f(0,{16000});f.hot(0);use(0,0);re4dc_motion_movie_begin();assert(re4dc_motion_evict_one());re4dc_motion_movie_finish(0);
+        heap_free=1048576;const unsigned before=reads;assert(re4dc_motion_movie_restore()==0&&reads==before); // ordinary/weapon eviction is not a movie victim
+    }clean();
+}
+#endif
+
+#if RE4DC_MOTION_PRESSURE_BACKING && RE4DC_MOTION_RESERVE_PACK && RE4DC_TEST_EXPECT_REGION
+// OPEN A06 gate: exact K05 assigned-body sizes, using the real loader.
+// The fixed free/largest fixture is not a simulation of the full game heap.
+static void castle_capacity_boundary_is_open() {
+    {
+        heap_free=83168;
+        ActualArchive f({22400,17408,32416});
+        assert(f.bind());
+        auto& b=bindings[0];
+        assert(b.joined && 22400+17408+32416==72224 && 2*b.slab_bytes==64832);
+        const unsigned before=allocated;
+        for(unsigned tick=0;tick<20;++tick)
+            for(unsigned i=0;i<3;++i) {
+                auto token=acquire_entry(b,i);
+                re4dc_motion_release(token);
+            }
+        assert(allocated==before && b.resident<=64832);
+        assert(stats.evictions>0); // expected unresolved capacity failure, not a clearance
+        std::cout<<"OPEN castle-capacity demand=72224 backing=64832 free=83168 loads="
+                 <<stats.loads<<" evictions="<<stats.evictions<<"\n";
+    }clean();
+}
+#endif
+
 int main(){reserved_fill();
 #if RE4DC_MOTION_PRESSURE_BACKING
 aggregate_heap_and_pins();all_heap_pinned_and_hold();bounded_no_spill();cold_pool_keeps_cap();heap_load_keeps_cap();allocation_failure_keeps_leases();
 three_cold_loop({11744,7744,12224});three_cold_loop({22400,9152,17408});three_cold_loop({22400,9152,32416});
+region_three_key_loop(12032);region_three_key_loop(15584);
+#if RE4DC_MOTION_RESERVE_PACK && RE4DC_TEST_EXPECT_REGION
+region_pins_owners_and_fallback();castle_capacity_boundary_is_open();
+#endif
 #if RE4DC_MOTION_RESERVE_PACK
 packed_coactive_pins();packed_holes_owners_and_retirement();packed_bad_read_keeps_backing();
 #endif
+#endif
+#if RE4DC_MOTION_RESUME
+resume_recent_only();resume_fail_closed();resume_cap_margin_and_retire();resume_policy_and_read_failure();resume_partial_and_chained_movie();
+std::cout<<"native motion resume source cases PASS journal="<<sizeof resume_journal<<" tickets="<<sizeof resume_pending<<"\n";
 #endif
 std::cout<<"native motion pressure cases PASS\n";}

@@ -1,0 +1,102 @@
+{
+  "scope": "Actual SH4 three-object compile and off stripped-object identity only; no full linked-program or guest qualification",
+  "source": "0bb18bdef147feba0e3ffd820b25f0c3e8027e36",
+  "upstream_control_source": "c7e0358a44677a15123a7f4233c4115eba627694",
+  "knob": "MOTION_RESUME=0/1; fixed common actual R21+motionpolicy flags",
+  "off_identity": "PASS all3 objects",
+  "C_before": 18446065664,
+  "C_after": 19036672000,
+  "guard_preflight": 17314086912,
+  "guard_stop": 17246978048,
+  "runs": [
+    {
+      "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/build-logs/motion-resume-off-objects.log",
+      "seconds": 3.013,
+      "C_low": 18443423744
+    },
+    {
+      "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/build-logs/motion-resume-on-objects.log",
+      "seconds": 3.013,
+      "C_low": 18443214848
+    },
+    {
+      "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/build-logs/motion-resume-control-native_motion.log",
+      "seconds": 0.404,
+      "C_low": 18443075584
+    },
+    {
+      "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/build-logs/motion-resume-control-native_movie.log",
+      "seconds": 2.009,
+      "C_low": 18441822208
+    },
+    {
+      "log": "/mnt/c/Flycast-Evidence/re4-dreamcast/boss21-20261020/build-logs/motion-resume-control-route_movie_bridge.log",
+      "seconds": 0.205,
+      "C_low": 18442940416
+    }
+  ],
+  "objects": {
+    "platform/native_motion.o": {
+      "control": {
+        "bytes": 125136,
+        "sha256": "107ff093f80fcac929aee4e1cbf0359e2ff087788b239bd19fa3b94cc1eaf5e8",
+        "stripped_sha256": "d3c65365886eb13ae1d7a0753a0f43c099a9ec5d458fee1b65baa583f024497d",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   9208\t      0\t    557\t   9765\t   2625\t/root/probe/boss21-motion-resume-objects/control-native_motion.o"
+      },
+      "off": {
+        "bytes": 124912,
+        "sha256": "c4678e6485a6cd05851806340a836b8fcbeeb4a561b0050773a56098d7b85629",
+        "stripped_sha256": "d3c65365886eb13ae1d7a0753a0f43c099a9ec5d458fee1b65baa583f024497d",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   9208\t      0\t    557\t   9765\t   2625\t/root/probe/boss21-motion-resume-objects/off/platform/native_motion.o"
+      },
+      "on": {
+        "bytes": 155456,
+        "sha256": "a1858dc9a58568f1880c85f93d624ab516d85a40abf4f58b249e0b27d0a6be63",
+        "stripped_sha256": "11b534761f94042a7fed03e6ca3e8dc76d8074e868569dcdb6690e87e575ead2",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  12403\t      0\t   1126\t  13529\t   34d9\t/root/probe/boss21-motion-resume-objects/on/platform/native_motion.o"
+      }
+    },
+    "platform/native_movie.o": {
+      "control": {
+        "bytes": 603864,
+        "sha256": "fa41a06403038612a6ac6dbd42d092d4b70ca833907bb52f0c2f4de5d90b1150",
+        "stripped_sha256": "07f9eaeba8326f619beb87e9ea09a3d539c31f70ab07218820d7572fb42d9084",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  60713\t    516\t    512\t  61741\t   f12d\t/root/probe/boss21-motion-resume-objects/control-native_movie.o"
+      },
+      "off": {
+        "bytes": 603588,
+        "sha256": "9b024f115f33c98a4d39ef273eb9f0cc542668ae2974535271fe038217cee888",
+        "stripped_sha256": "07f9eaeba8326f619beb87e9ea09a3d539c31f70ab07218820d7572fb42d9084",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  60713\t    516\t    512\t  61741\t   f12d\t/root/probe/boss21-motion-resume-objects/off/platform/native_movie.o"
+      },
+      "on": {
+        "bytes": 603936,
+        "sha256": "f61e6a57c6a7b880439e44f77a73e70e1107054c3089b90670224110601ddee4",
+        "stripped_sha256": "f14202ae3fb48ac57d94171da39dc7a6b33fbc7cca727b293b02c310c3524e43",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n  60733\t    516\t    512\t  61761\t   f141\t/root/probe/boss21-motion-resume-objects/on/platform/native_movie.o"
+      }
+    },
+    "route_movie_bridge.o": {
+      "control": {
+        "bytes": 29176,
+        "sha256": "74a56e9969975d5f1b78a7f024ac6a897692b729c71924f0e28f4812be6f7aa8",
+        "stripped_sha256": "96aeb25548fad42345e087c5c021147de0979abe16b52215232fb391a416b3fa",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   1970\t      0\t    632\t   2602\t    a2a\t/root/probe/boss21-motion-resume-objects/control-route_movie_bridge.o"
+      },
+      "off": {
+        "bytes": 28996,
+        "sha256": "042430644f1570930148604ce916c6cd17b045f4daf910bcc99afa7355d7f08b",
+        "stripped_sha256": "96aeb25548fad42345e087c5c021147de0979abe16b52215232fb391a416b3fa",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   1970\t      0\t    632\t   2602\t    a2a\t/root/probe/boss21-motion-resume-objects/off/route_movie_bridge.o"
+      },
+      "on": {
+        "bytes": 29216,
+        "sha256": "1fd49a355b7bc770cd7c64977833be404d6fc6f57c30e143d4f69938385644bc",
+        "stripped_sha256": "03b74d571c781079e4e4790bd54559f36a00b3a0a7fe1bcd27ff69a1b8f0af98",
+        "size": "text\t   data\t    bss\t    dec\t    hex\tfilename\n   1994\t      0\t    632\t   2626\t    a42\t/root/probe/boss21-motion-resume-objects/on/route_movie_bridge.o"
+      }
+    }
+  },
+  "control_cmd_sha256": "7a88bb13163b4386070e3fa4f8e746de6cd23e0959a7f27f12d679900bd3ab75",
+  "96B_followup": "Native motion off/on recompiled; other2 objects reused only after exact source-byte comparison with16aa2f28"
+}

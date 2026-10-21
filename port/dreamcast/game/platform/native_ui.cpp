@@ -1,3 +1,6 @@
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+#include "include/resident_list_cache.h"
+#endif
 #include "include/movie_world_arena.h"
 #include "include/actor_visibility_diag.h"
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
@@ -3822,23 +3825,62 @@ void preload_select(const re4dc::texture::SourceIdentityTable& table,unsigned& n
 // piece at a time into a stack buffer (re4dc::texture::read_file_range: a handle per read, IO_SERIAL like the opens);
 // without the file there is no list.
 unsigned resident_listed,resident_picked;
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+re4dc::texture::ResidentListCache resident_list_cache;
+#endif
 void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned limit,unsigned byte_limit){
     re4dc::profile::Source src{};
 #if defined(__sh__)
     re4dc_profile_source(&src);
 #endif
     resident_listed=resident_picked=0;
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+    using Rec=re4dc::texture::ResidentListRecord;
+#else
     struct Rec { std::uint16_t room,width,height,format; std::uint32_t crc,fnv; };
+#endif
     static_assert(sizeof(Rec)==16,"dc/resident.bin record");
     Rec buf[32];
     unsigned pieces=0;
 #if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN==2
     unsigned own=0;
 #endif
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+    // The disc list is immutable. Keep only copied rows for this room, never owner/archive pointers.
+    const bool cached=resident_list_cache.matches(src.room);
+    if(!cached)resident_list_cache.begin(src.room);
+    unsigned long long first_file_bytes=0;
+    bool have_file_bytes=false,same_file_bytes=true;
+    for(unsigned block=0;;++block){
+        const Rec* records=buf;
+        unsigned record_count=32;
+        if(cached){
+            if(block)break;
+            records=resident_list_cache.data();record_count=resident_list_cache.size();
+        }else{
+            unsigned long long file_bytes=0;
+            const auto result=re4dc::texture::read_file_range("/cd/dc/resident.bin",pieces*sizeof(buf),buf,
+                                                            sizeof(buf),&file_bytes);
+            if(!have_file_bytes){first_file_bytes=file_bytes;have_file_bytes=true;}
+            else if(first_file_bytes!=file_bytes)same_file_bytes=false;
+            if(result!=re4dc::texture::RangeRead::ok){
+                // An exact EOF certifies a complete list. Errors, trailing partial pieces and overflow retry later.
+                const bool complete=result==re4dc::texture::RangeRead::short_file && same_file_bytes &&
+                                    file_bytes==static_cast<unsigned long long>(pieces)*sizeof(buf);
+                resident_list_cache.finish(complete);break;
+            }
+            ++pieces;
+            // Capture independently of today's admission limits: a later owner/pass may have more space.
+            for(const auto& r:buf)resident_list_cache.append(r);
+        }
+        for(unsigned i=0;i<record_count && n+resident<limit;++i){
+            const Rec& r=records[i];
+#else
     for(;re4dc::texture::read_file_range("/cd/dc/resident.bin",pieces*sizeof(buf),buf,sizeof(buf),nullptr)==
           re4dc::texture::RangeRead::ok;++pieces){
         for(unsigned i=0;i<32 && n+resident<limit;++i){
             const Rec& r=buf[i];
+#endif
 #if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN
             if(!r.room && r.width && (r.crc|r.fnv)){   // CORE_PIN: a core key, pinned and listed in every room
                 const Key ck{r.crc,r.fnv};bool have=false;
@@ -3877,6 +3919,10 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
     }
     if(pieces)re4dc_log("native texture preload: resident list room=%03x pieces=%u listed=%u picked=%u\n",src.room,pieces,
                         resident_listed,resident_picked);
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+    if(cached)re4dc_log("native resident list cache: room=%03x rows=%u listed=%u picked=%u reads=0\n",
+                       src.room,resident_list_cache.size(),resident_listed,resident_picked);
+#endif
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP && defined(RE4DC_TEX_PKG_SKIP_LISTED) && RE4DC_TEX_PKG_SKIP_LISTED
     if(pieces)re4dc_log("TEXPKG listed kept=%u\n",pkg_listed_kept);
     pkg_listed_kept=0;

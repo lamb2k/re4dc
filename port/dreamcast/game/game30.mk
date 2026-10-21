@@ -232,6 +232,26 @@ ifneq ($(MOVIE_BALLAST_TEST),0)
 $(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOVIE_BALLAST_TEST=$(MOVIE_BALLAST_TEST)
 endif
 endif
+# MOTION_RESUME=1 (default off): restore only recent source-used, movie-evicted
+# heap FCVs at the final route boundary. Bounded admission; no pins/cap growth.
+MOTION_RESUME ?= 0
+ifneq ($(MOTION_RESUME),0)
+ifneq ($(MOTION_RESUME),1)
+$(error MOTION_RESUME must be 0 or 1)
+endif
+ifneq ($(MOTION_PRESSURE_BACKING),1)
+$(error MOTION_RESUME needs MOTION_PRESSURE_BACKING=1)
+endif
+ifneq ($(MOVIE_HEAP_EVICT),1)
+$(error MOTION_RESUME needs MOVIE_HEAP_EVICT=1)
+endif
+ifneq ($(ROUTE_MOVIES),1)
+$(error MOTION_RESUME needs ROUTE_MOVIES=1)
+endif
+$(OBJDIR)/platform/native_motion.o $(OBJDIR)/platform/native_movie.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_RESUME=1
+$(OBJDIR)/route_movie_bridge.o: GAME_CPPFLAGS += -DRE4DC_MOTION_RESUME=1
+endif
+
 ifneq ($(MOTION_OOM_EVICT),0)
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_OOM_EVICT=$(MOTION_OOM_EVICT)
 endif

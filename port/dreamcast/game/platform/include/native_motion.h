@@ -16,6 +16,12 @@ void re4dc_motion_get_stats(Re4dcMotionStats*);
 int re4dc_motion_current_heap();
 void* re4dc_motion_alloc(unsigned bytes);
 void re4dc_motion_free(void*);
+#if defined(RE4DC_MOTION_RESUME) && RE4DC_MOTION_RESUME
+void re4dc_motion_movie_begin();
+unsigned re4dc_motion_movie_evict_one();
+void re4dc_motion_movie_finish(int retiring);
+unsigned re4dc_motion_movie_restore();
+#endif
 }
 // Leased tables are local to the evaluation; source work retains its resident
 // proxy table even during evaluation. Pin release retains the cache entry.

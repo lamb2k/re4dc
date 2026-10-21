@@ -1,0 +1,59 @@
+{
+  "scope": "Source-attributed demand-priority Leon hand cache repair; separate successor, no current guest change",
+  "base": "c7e0358a44677a15123a7f4233c4115eba627694",
+  "knob": {
+    "name": "LEON_HAND_RETAIN",
+    "default": 0,
+    "requires": "LEON_HAND_PACK=1",
+    "target": "coarse_actor.o only"
+  },
+  "selected_package": {
+    "bytes": 95520,
+    "sha256": "d752aac59ae99256b767da74ab8fefc98d896e37d29e42b188dfa8a6ab16697f",
+    "HGwep02_right_source": 0,
+    "TMPwep11_right_source": 0,
+    "both_no_left_weapon_source": true,
+    "fallback_left": 6,
+    "actual_demanded_left": [
+      1,
+      7
+    ]
+  },
+  "host_round_trips": 8,
+  "host_prior": {
+    "additional_reads": 24,
+    "additional_async": 16
+  },
+  "host_enabled": {
+    "additional_reads": 0,
+    "additional_async": 0
+  },
+  "AICA_bytes": 25088,
+  "payload_package_growth": 0,
+  "new_persistent_cache_metadata": 0,
+  "source_cases": [
+    "selected HG/TMP alternation",
+    "current-slot LRU touch",
+    "existing-cell duplicate exclusion",
+    "queued cached-hit reuse",
+    "currentCPUslot reuse afteryield",
+    "late/stale completion admission",
+    "named exact weapon source prefetch",
+    "yield/refill/inflight retirement",
+    "read failure",
+    "motion allocation failure",
+    "thread creation failure",
+    "AICA refusal"
+  ],
+  "actual_source_host_variants": 3,
+  "sanitizers": [
+    "address",
+    "undefined",
+    "leaks"
+  ],
+  "off_loader_preprocessing_identity": "PASS current0 versus actualc7 source",
+  "actual_Makefile_dry_run": "PASS flags/default/value/dependency",
+  "target_compile_off_object": "PENDING root owner",
+  "full_program_gameplay_console": "PENDING",
+  "not_covered": "Unchanged runtime key nomination/render glue, true OS thread scheduling, all weapons/states/console; distinct archive reads remain separate"
+}
