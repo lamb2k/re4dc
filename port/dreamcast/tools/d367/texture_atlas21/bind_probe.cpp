@@ -34,7 +34,7 @@ static Re4dcActorPlan source_plan(const Bundle& b) {
 #endif
         auto& r=p.runs[p.run_count++];r.role=i;r.material=i==7?1u:0u;r.immutable_asset_id=100+i;
         r.triangles=p.input[i].triangles;r.uv=p.input[i].uv;r.stream=p.input[i].stream;
-        if(i==7) {auto& second=p.runs[p.run_count++];second=r;second.immutable_asset_id=200;}
+        if(i==7 && RE4DC_ATLAS_TEST_HAIR_RUNS==2) {auto& second=p.runs[p.run_count++];second=r;second.immutable_asset_id=200;}
     }
     return p;
 }
