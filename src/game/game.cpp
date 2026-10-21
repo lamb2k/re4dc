@@ -68,6 +68,11 @@
 #include "debug.h"
 #include "eprintf.h"
 #include "pad.h"
+
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+extern "C" void re4dc_log(const char*, ...);
+#endif
+#line 71
 #include "route_ck.h"
 #include "math_sub.h"
 #include "motion.h"
@@ -1271,8 +1276,26 @@ void DiedemoExec(int time, int type)
 
 // Per-frame: starts the death demo when the partner's life (ashley_life) or the player's life
 // (pl_life) is <= 0 (skipped in debug no-death mode).
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+__attribute__((noinline))
+#endif
 void gameDiedemoCheck()
 {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+    // Report the first low-life/death-routine sample, then at most once per 30 source frames.
+    static bool death_seen;
+    static unsigned death_last_frame;
+    if (pPL && ((s16) pG->pl_life <= 1 || pPL->r_no_0 == 2)) {
+        const unsigned frame = unsigned(pG->Frame_cnt);
+        if (!death_seen || frame - death_last_frame >= 30) {
+            death_seen = true;
+            death_last_frame = frame;
+            re4dc_log("death trace: check frame=%u caller=%08x life=%d rno=%u/%u/%u/%u\n",
+                      frame, unsigned((u32) __builtin_return_address(0)), int(s16(pG->pl_life)),
+                      unsigned(pPL->r_no_0), unsigned(pPL->r_no_1), unsigned(pPL->r_no_2), unsigned(pPL->r_no_3));
+        }
+    }
+#endif
     if ((s32) pG->Debug_flg[0] < 0) {
         return;
     }

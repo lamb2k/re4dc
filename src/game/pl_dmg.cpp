@@ -14,6 +14,10 @@
 #include "esp.h"
 #include "math_sub.h"
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+extern "C" void re4dc_log(const char*, ...);
+#endif
+
 void MotionSetCore(cModel* m, void* work, void* data, int a, int b, int c, int d);  // game/motion.cpp (result unused here: void keeps the `mr r3` before the arg li`s)
 extern "C" {
 int MotionCheckCrossFrame(void* work, f32 frame);  // game/motion.cpp
@@ -334,9 +338,22 @@ void damageBlast(cPlayer* pl)
 // Routine 0 == 2 (death): r_no_1 0 starts the death motion (0x4C/0x4D) with the blood effect,
 // scream (when the character has hair data — Leon), rumble at frames 40 / 70; 1 plays it, 2 holds
 // the last frame while the game-over sequence runs.
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+__attribute__((noinline))
+#endif
 void Pl_R0_Die(cPlayer* pl)
 {
     int no = pl->r_no_1;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_DEATH_TRACE) && RE4DC_DEATH_TRACE
+    static bool death_seen;
+    if (!death_seen || no == 0) {
+        death_seen = true;
+        re4dc_log("death trace: die.enter frame=%u caller=%08x life=%d rno=%u/%u/%u/%u\n",
+                  unsigned(pG->Frame_cnt), unsigned((u32) __builtin_return_address(0)),
+                  int(s16(pG->pl_life)), unsigned(pl->r_no_0), unsigned(pl->r_no_1),
+                  unsigned(pl->r_no_2), unsigned(pl->r_no_3));
+    }
+#endif
 
     switch (no) {
     case 0:
