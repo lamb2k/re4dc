@@ -42,3 +42,22 @@ Source consumer review confirms PS2_PRELOAD_LEAN reads the scoped keys from the 
 The set is `/root/re4data/private/texture-rect21-current948-scoped17-20261021`, mirrored at the same basename under the C: private assets folder. SHA256SUMS is b2dc69e1d1ee705ded6604b13f0649313c69378ac09f7945035c4ada95e1cfbe. An independent raw header/index parser verifies all 6,518 member hashes and base byte equality; direct stream comparison verifies all six files and exact directories between WSL and Windows. Public `current948-data-qualification.json` records the full data/source identities and required inherited format flags, while private membership-proof.json retains every member hash.
 
 Actual data plus mirror writes are 317,081,742 bytes, exactly as forecast. Including producer and review evidence, the completed data output uses 317,098,792 bytes of the 536,870,912-byte allocation. Fresh-start 18 GiB plus 768 MiB and runtime 18 GiB plus 64 MiB guards passed; no third pack copy was written. The observed host free-space delta is recorded separately and is not an attributed write cost or performance result. `materialize_current948.py` preserves prior output paths and refuses before output if measured bytes, allocation or headroom fail. Main separately owns the exact matching guarded source/program freeze and all target gates; this data artifact is not program, scene, timing, release or physical Dreamcast acceptance.
+
+2026-10-21 full program qualification: frozen runtime source
+`004cf224674fa60cf08dc10e641c723de238a0fd`, original QA8942 recipe
+`54d2e5d56f84d76c5c0071484771ca74957c6649d28b103a5974943728715f70`.
+OFF raw program `8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d`,
+all14 overlays and ELF load segments match the original control exactly. ON raw
+program `a58579b87da0c45267cb93efe29feea2438da9ddab62d0fe31c47a1c6ff32c71`
+links with required mip/PAL/world flags explicit; all14 outputs are retained.
+Atlas runtime hooks are absent from this frozen source and both atlas keys stay
+excluded. This qualifies source compatibility with frozen948+17 DATA pack
+`bbcef25f0090fa4004e03331a33c84f8f89fd3582704e4a08945a8f6a15d5026`.
+
+`program-qualification.json` records exact source/program/asset identities and
+static costs. ON adds1984 text,896 read-only and2112 BSS bytes, data unchanged;
+linked `_end` advances5120 bytes after alignment. Direct-world bind frame360→384
+bytes plus40-byte helper; PAL planning frame480 bytes. Compiler stack observers
+are stripped-object exact to actual build objects. These per-function numbers
+are not runtime stack/heap high-water or target performance. No image staging,
+guest, scene look/residency/regression or physical-console acceptance occurred.
