@@ -16,6 +16,7 @@ def main():
     ap.add_argument('--candidate',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
     ap.add_argument('--consumers',type=Path)
+    ap.add_argument('--runtime-data',type=Path)
     a=ap.parse_args()
     if a.out.exists():raise ValueError('preserve existing checks')
     sums=a.candidate/'SHA256SUMS'
@@ -95,8 +96,9 @@ def main():
         for enabled in (0,1):
             exe=folder/f'bind-{enabled}'
             cmd=['g++','-std=c++17','-O1','-g','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-fno-omit-frame-pointer',
-                '-DRE4DC_ACTOR_PL08=1',f'-DRE4DC_ATLAS_DYNAMIC_PROBE={int(bool(dynamic))}',f'-DRE4DC_LEON_ATLAS_SPLIT={enabled}',
+                '-DRE4DC_ACTOR_PL08=1',f'-DRE4DC_ATLAS_RUNTIME_PROBE={int(bool(a.runtime_data))}',f'-DRE4DC_ATLAS_DYNAMIC_PROBE={int(bool(dynamic))}',f'-DRE4DC_LEON_ATLAS_SPLIT={enabled}',
                 '-isystem',str(include),'-I'+str(own),'-I'+str(folder),str(own/'bind_probe.cpp'),'-o',str(exe)]
+            if a.runtime_data:cmd[1:1]=['-I'+str(a.runtime_data)]
             build=subprocess.run(cmd,capture_output=True,text=True)
             (folder/f'build-{enabled}.log').write_text(build.stdout+build.stderr)
             if build.returncode:raise RuntimeError(build.stderr)
@@ -106,7 +108,7 @@ def main():
             results.append(dict(actor=actor,**json.loads(result.stdout)))
     receipt=dict(schema='re4dc-atlas-binding-probe-1',candidate_sha256sums=sha(sums),
         actual_plan_header_sha256=sha(include/'coarse_actor_transaction.h'),actual_preflight_sha256=sha(include/'coarse_actor_preflight.h'),
-        adapter_sha256=sha(own/'atlas_bind.h'),fixture_sha256=sha(own/'bind_probe.cpp'),consumer_sha256sums=consumer_seal,sanitizers=['address','undefined'],results=results,
+        adapter_sha256=sha(own/'atlas_bind.h'),fixture_sha256=sha(own/'bind_probe.cpp'),consumer_sha256sums=consumer_seal,runtime_data_sha256=sha(a.runtime_data/'leon_atlas_split_data.h') if a.runtime_data else None,sanitizers=['address','undefined'],results=results,
         limits='Host source-format fixture. Foreign role descriptors are sentinels. No global immutable ID range, current owner/lifetime/material certificate, texture lease or runtime hook is admitted.')
     (a.out/'binding-result.json').write_text(json.dumps(receipt,indent=2)+'\n')
     print(json.dumps(receipt))

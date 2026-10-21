@@ -110,3 +110,24 @@ $(OBJDIR)/coarse_ganado.o: $(GANADO_LOD_HDR)
 $(OBJDIR)/coarse_ganado.o: GAME_CPPFLAGS += -DRE4DC_GANADO_LOD=1 -DRE4DC_GANADO_LOD_LEVEL=$(GANADO_LOD_LEVEL) -I$(OBJDIR)/ganado_lod
 $(OBJDIR)/coarse_actor.o $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_GANADO_LOD=1
 endif
+
+# Selected square128 Leon body tile isolation. Experimental, render only.
+# No production recipe enables this. Data is emitted by texture_atlas21/runtime_header.py.
+LEON_ATLAS_SPLIT ?= 0
+LEON_ATLAS_SPLIT_DIR ?=
+ifeq ($(filter $(LEON_ATLAS_SPLIT),0 1),)
+$(error LEON_ATLAS_SPLIT must be 0 or 1)
+endif
+ifeq ($(LEON_ATLAS_SPLIT),1)
+ifneq ($(PS2_LEON)$(ACTOR_PL08)$(ACTOR_PL08_PACK),111)
+$(error LEON_ATLAS_SPLIT needs PS2_LEON=1 ACTOR_PL08=1 ACTOR_PL08_PACK=1)
+endif
+ifneq ($(LEON_LOD),0)
+$(error LEON_ATLAS_SPLIT has no alternate LEON_LOD package qualification)
+endif
+ifeq ($(strip $(LEON_ATLAS_SPLIT_DIR)),)
+$(error LEON_ATLAS_SPLIT needs LEON_ATLAS_SPLIT_DIR)
+endif
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_LEON_ATLAS_SPLIT=1 -I$(LEON_ATLAS_SPLIT_DIR)
+$(OBJDIR)/coarse_actor.o: $(LEON_ATLAS_SPLIT_DIR)/leon_atlas_split_data.h ../tools/d367/texture_atlas21/atlas_bind.h coarse_actor_atlas_split.inc
+endif

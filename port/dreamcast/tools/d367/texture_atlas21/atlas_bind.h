@@ -43,6 +43,8 @@ class Qualified {
     bool ready_=false;
     friend bool qualify(const Bundle&,Qualified&);
     friend bool bind(const Re4dcActorPlan&,const Qualified&,unsigned,ReservedIds,Re4dcActorPlan&);
+    friend bool source_layout(const Re4dcActorPlan&,const Qualified&,unsigned,ReservedIds,unsigned&);
+    friend bool project(const Re4dcActorPlan&,const Qualified&,unsigned,ReservedIds,Re4dcActorPlan&);
 };
 // The package owner calls this before retiring any byte span or reusing an epoch.
 // It invalidates the prepared binding; it does not release or own the backing.
@@ -132,13 +134,11 @@ inline bool qualify(const Bundle& b,Qualified& out) {
     Qualified next{};next.bundle_=b;next.ready_=true;out=next;return true;
 #endif
 }
-// Atomic plan edit after the original owner has built its ordinary plan. A
-// failed/default-off call leaves out untouched, including when out aliases in.
-// Palette callbacks, role chunks, infos and existing materials/runs are copied.
-inline bool bind(const Re4dcActorPlan& in,const Qualified& qualified,unsigned current_epoch,
-                 ReservedIds ids,Re4dcActorPlan& out) {
+// Validate the complete original plan without allocating a plan-sized copy.
+inline bool source_layout(const Re4dcActorPlan& in,const Qualified& qualified,unsigned current_epoch,
+                          ReservedIds ids,unsigned& selected_at) {
 #if !RE4DC_LEON_ATLAS_SPLIT
-    (void)in;(void)qualified;(void)current_epoch;(void)ids;(void)out;return false;
+    (void)in;(void)qualified;(void)current_epoch;(void)ids;(void)selected_at;return false;
 #else
     if(!qualified.ready_)return false;
     const auto& b=qualified.bundle_;
@@ -171,6 +171,17 @@ inline bool bind(const Re4dcActorPlan& in,const Qualified& qualified,unsigned cu
         }
     }
     if(found!=1)return false;
+    selected_at=at;return true;
+#endif
+}
+// Atomic edit; failed/default-off calls preserve out, even when it aliases in.
+inline bool bind(const Re4dcActorPlan& in,const Qualified& qualified,unsigned current_epoch,
+                 ReservedIds ids,Re4dcActorPlan& out) {
+#if !RE4DC_LEON_ATLAS_SPLIT
+    (void)in;(void)qualified;(void)current_epoch;(void)ids;(void)out;return false;
+#else
+    unsigned at=0;if(!source_layout(in,qualified,current_epoch,ids,at))return false;
+    const auto& b=qualified.bundle_;
     Re4dcActorPlan next=in;
     const unsigned material=next.material_count++;
     next.materials[material]={};
@@ -183,6 +194,47 @@ inline bool bind(const Re4dcActorPlan& in,const Qualified& qualified,unsigned cu
             run={};run.role=b.role;run.material=source.isolated?material:0u;
             run.immutable_asset_id=ids.first+j;run.triangles=source.triangles;run.uv=source.uv;run.stream=source.stream;
         }
+    }
+    out=next;return true;
+#endif
+}
+
+// Recover an ordinary plan only after re-binding it reproduces every active
+// split material/run exactly. The existing capability and material certificate
+// can validate that original plan without recognizing arbitrary extra runs.
+inline bool project(const Re4dcActorPlan& in,const Qualified& q,unsigned epoch,
+                    ReservedIds ids,Re4dcActorPlan& out) {
+#if !RE4DC_LEON_ATLAS_SPLIT
+    (void)in;(void)q;(void)epoch;(void)ids;(void)out;return false;
+#else
+    if(!q.ready_ || !in.count || in.count>kRe4dcActorRoles || !in.material_count ||
+       in.material_count>kRe4dcActorMaterials || !in.run_count || in.run_count>kRe4dcActorRuns)return false;
+    const auto& b=q.bundle_;
+    Re4dcActorPlan next=in;--next.material_count;
+    next.materials[next.material_count]={};next.run_count=0;
+    bool replaced=false;
+    for(unsigned i=0;i<in.run_count;++i) {
+        const auto& r=in.runs[i];
+        if(r.role!=b.role)next.runs[next.run_count++]=r;
+        else if(!replaced) {
+            auto& original=next.runs[next.run_count++];original={};original.role=b.role;
+            original.immutable_asset_id=in.immutable_asset_id[b.role];original.triangles=b.source.triangles;
+            original.uv=b.source.uv;original.stream=b.source.stream;replaced=true;
+        }
+    }
+    if(!replaced)return false;
+    for(unsigned i=next.run_count;i<kRe4dcActorRuns;++i)next.runs[i]={};
+    unsigned at=0;
+    if(!source_layout(next,q,epoch,ids,at) || next.run_count-1+b.run_count!=in.run_count)return false;
+    Re4dcActorOwnedMaterial expected{};expected.image=b.tile_image;expected.crc=b.tile_crc;expected.fnv=b.tile_fnv;
+    const auto& v=in.materials[in.material_count-1];
+    if(!same(expected.image,v.image) || !same(expected.mask,v.mask) || expected.crc!=v.crc || expected.fnv!=v.fnv ||
+       expected.material_flags!=v.material_flags || expected.blend!=v.blend || expected.depth_mode!=v.depth_mode ||
+       expected.mask_ref!=v.mask_ref || expected.mask_same_uv!=v.mask_same_uv || expected.wrap_s!=v.wrap_s || expected.wrap_t!=v.wrap_t)return false;
+    for(unsigned i=0;i<b.run_count;++i) {
+        const auto& r=in.runs[at+i];const auto& want=b.runs[i];
+        if(r.role!=b.role || r.material!=(want.isolated?next.material_count:0u) || r.immutable_asset_id!=ids.first+i ||
+           r.triangles!=want.triangles || !same(r.uv,want.uv) || !same(r.stream,want.stream))return false;
     }
     out=next;return true;
 #endif

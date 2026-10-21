@@ -8,6 +8,13 @@ class cModelInfo { public: cModelInfo* pList=nullptr; };
 #include <cstring>
 #include <limits>
 #include <vector>
+#if RE4DC_ATLAS_RUNTIME_PROBE && RE4DC_LEON_ATLAS_SPLIT
+constexpr unsigned kLeonAtlasAsset0=1000;
+static struct {bool published;unsigned generation;} pl08_pack{true,1};
+#include "../../../game/coarse_actor_atlas_split.inc"
+// Routing sentinel only; actual unchanged capability is compiled in the SH4 gate.
+extern "C" unsigned re4dc_actor_material_runs_capability(const Re4dcActorPlan*) {return 3u;}
+#endif
 using namespace re4dc_atlas_split;
 static unsigned checks=0;
 static int palettes(cModel*,const Re4dcActorPlan&,float* const*) { return 0; }
@@ -73,6 +80,38 @@ int main() {
         }
     }
     assert(j==out.run_count);++checks;unchanged(source,original);
+    Re4dcActorPlan projected{};
+    assert(project(out,qualified,b.epoch,{1000,2000},projected));++checks;
+    assert(projected.run_count==source.run_count && projected.material_count==source.material_count);
+    for(unsigned i=0;i<source.run_count;++i)assert(same_run(projected.runs[i],source.runs[i]));
+    auto corrupt=out;corrupt.runs[0].immutable_asset_id^=1;
+    if(corrupt.runs[0].role!=b.role) { // unrelated IDs remain the ordinary owner's responsibility
+        for(unsigned i=0;i<corrupt.run_count;++i)if(corrupt.runs[i].role==b.role){corrupt.runs[i].immutable_asset_id^=1;break;}
+    }
+    auto projection_destination=source;const auto projection_before=bytes(projection_destination);
+    assert(!project(corrupt,qualified,b.epoch,{1000,2000},projection_destination));unchanged(projection_destination,projection_before);
+    corrupt=out;corrupt.materials[corrupt.material_count-1].wrap_s=1;
+    assert(!project(corrupt,qualified,b.epoch,{1000,2000},projection_destination));unchanged(projection_destination,projection_before);
+#if RE4DC_ATLAS_RUNTIME_PROBE
+    auto runtime=source;
+    assert(re4dc_atlas_apply(&runtime));++checks;
+    auto from_runtime=source;
+    assert(re4dc_atlas_project(&runtime,&from_runtime));++checks;
+    assert(from_runtime.run_count==source.run_count && from_runtime.material_count==source.material_count);
+    unsigned runtime_crc=0,runtime_fnv=0;
+    assert(re4dc_atlas_texture_key(&runtime.materials[runtime.material_count-1].image,&runtime_crc,&runtime_fnv));
+    assert(runtime_crc==b.tile_crc && runtime_fnv==b.tile_fnv);++checks;
+    if(b.appearance!=0x100) {
+        re4dc_atlas_retire_pl08();const auto before_retired_project=bytes(from_runtime);
+        assert(!re4dc_atlas_project(&runtime,&from_runtime));unchanged(from_runtime,before_retired_project);
+        ++pl08_pack.generation; // identical source addresses, fresh publication
+        assert(!re4dc_atlas_project(&runtime,&from_runtime));unchanged(from_runtime,before_retired_project);
+        auto fresh=source;assert(re4dc_atlas_apply(&fresh));++checks;
+        assert(re4dc_atlas_project(&fresh,&from_runtime));++checks;
+        pl08_pack.published=false;
+        assert(!re4dc_atlas_project(&fresh,&from_runtime));++checks;
+    }
+#endif
     auto reject=[&](const Re4dcActorPlan& p,unsigned epoch,ReservedIds ids) {
         auto destination=source;const auto old=bytes(destination);assert(!bind(p,qualified,epoch,ids,destination));unchanged(destination,old);
     };

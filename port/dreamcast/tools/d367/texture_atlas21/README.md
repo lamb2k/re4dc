@@ -68,10 +68,13 @@ hand plans. The candidate/source seals remain unchanged. Foreign owner-info and
 unrelated role descriptors are explicit host sentinels; these results do not
 certify a full live owner, original material, runtime lease or game frame.
 
-No runtime includes the adapter yet. RE4DC_LEON_ATLAS_SPLIT defaults to zero.
-Global immutable IDs, package generation/reset wiring, material-capability hooks,
-pinned resources and target gates remain open. The next shared-hook proposal
-must preserve the complete existing material certificate and transaction leases.
+The guarded runtime hook is now implemented, with LEON_ATLAS_SPLIT defaulting to
+zero. It appends disjoint run IDs, keys exact tile tokens, binds the actual pl08
+package generation/backing, and revokes proofs before reset/free/republication.
+Capability projection requires an existing current proof and then invokes the
+unchanged ordinary material capability; it cannot create a new proof from an old
+retained plan. The existing full material certificate and texture leases remain.
+See INTEGRATION.md for exact source/object gates and outstanding target work.
 
 Run with Windows Python/NumPy/Pillow:
 
@@ -81,9 +84,8 @@ python atlas_split.py --source-root PRIVATE/texture-actors21-20261021 \
 ```
 
 Without the switch it emits exact original package identities. Existing output
-directories refuse. No runtime/shared helper, recipe, asset input, release or SD
-is changed. New runtime adoption stays default0 and needs separate coordination,
-material/run admission, allocation, actual projected sampling/look and hardware
-checks. Historical actor source policies and exact source hashes accompany the
+directories refuse. No production recipe, original asset input, release or SD
+is changed. Runtime adoption remains default0 and needs the combined gates in
+INTEGRATION.md. Historical actor source policies and exact source hashes accompany the
 candidate. Sampling charts are mathematical texture comparisons, not gameplay
 screenshots or target performance.

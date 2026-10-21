@@ -5,6 +5,11 @@
 #include "coarse_actor_geometry_once.h"
 #include "actor_ganado_ps2_stump.h"
 namespace {
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+#define RE4DC_ATLAS_ARRAY_SIZE(n) ((n)+22u)
+#else
+#define RE4DC_ATLAS_ARRAY_SIZE(n) n
+#endif
 struct ActorImmutableChunk {
     re4dc_source::ChunkInput input{};
     re4dc_source::ChunkProof proof{};
@@ -27,7 +32,7 @@ constexpr unsigned kActorPl08Asset0=kActorImmutableChunks+1u;
 #if RE4DC_LEON_HAND_TABLE
 // LEON_HAND_POSES + LEON_HAND_DIR: the PS2 pose hands (ps2leon_hands.h) follow the pl08 IDs, one ID per pose.
 constexpr unsigned kLeonHandAsset0=kActorImmutableChunks+4u;
-ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks+3u+leon_hands::count];
+ActorImmutableChunk actor_immutable_chunks[RE4DC_ATLAS_ARRAY_SIZE(kActorImmutableChunks+3u+leon_hands::count)];
 #define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+3u+leon_hands::count)
 #elif RE4DC_LEON_HEADLESS
 // LEON_HEADLESS: the PS2 neck chunk (appearance 0x109 role 3, ps2leon_neck.h) follows the three pl08 IDs.
@@ -36,19 +41,29 @@ constexpr unsigned kLeonNeckAsset=kActorImmutableChunks+4u;
 // arc 0xC, build_head.py). Their bytes live in the archive: a new payload address resets the three IDs
 // (actor_immutable_reset_head) before any plan names them.
 constexpr unsigned kLeonHeadAsset=kActorImmutableChunks+5u;
-ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks+7u];
+ActorImmutableChunk actor_immutable_chunks[RE4DC_ATLAS_ARRAY_SIZE(kActorImmutableChunks+7u)];
 #define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+7u)
 #define RE4DC_LEON_HEAD_IDS 1
 #else
-ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks+3u];
+ActorImmutableChunk actor_immutable_chunks[RE4DC_ATLAS_ARRAY_SIZE(kActorImmutableChunks+3u)];
 #define RE4DC_IMMUTABLE_CHUNK_COUNT (kActorImmutableChunks+3u)
 #endif
 #else
 #define RE4DC_IMMUTABLE_CHUNK_COUNT kActorImmutableChunks
 #endif
 #if !RE4DC_ACTOR_PL08
-ActorImmutableChunk actor_immutable_chunks[kActorImmutableChunks];
+ActorImmutableChunk actor_immutable_chunks[RE4DC_ATLAS_ARRAY_SIZE(kActorImmutableChunks)];
 #endif
+
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+// Appended after all registry, pl08, hand and flying-head IDs. Source roles keep
+// their existing IDs; only emitted atlas runs name these additional proofs.
+constexpr unsigned kLeonAtlasAsset0=RE4DC_IMMUTABLE_CHUNK_COUNT+1u;
+constexpr unsigned kLeonAtlasTableCount=RE4DC_IMMUTABLE_CHUNK_COUNT+22u;
+#undef RE4DC_IMMUTABLE_CHUNK_COUNT
+#define RE4DC_IMMUTABLE_CHUNK_COUNT kLeonAtlasTableCount
+#endif
+#undef RE4DC_ATLAS_ARRAY_SIZE
 
 bool actor_same_span(const re4dc_source::ByteSpan& a,
                      const re4dc_source::ByteSpan& b) {
@@ -127,6 +142,9 @@ namespace {
 unsigned actor_immutable_reset_pl08() {
     unsigned n=0;
     for(unsigned id=kActorPl08Asset0;id<kActorPl08Asset0+3u;++id){auto& e=actor_immutable_chunks[id-1];n+=e.state!=0;e={};}
+#if defined(RE4DC_LEON_ATLAS_SPLIT) && RE4DC_LEON_ATLAS_SPLIT
+    for(unsigned id=kLeonAtlasAsset0+9u;id<kLeonAtlasAsset0+22u;++id){auto& e=actor_immutable_chunks[id-1];n+=e.state!=0;e={};}
+#endif
     return n;
 }
 }
