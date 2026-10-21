@@ -860,6 +860,19 @@ $(error EVD_EXEC_FAILURE_CLEANUP requires EVD_START_ROLLBACK=1)
 endif
 $(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_EXEC_FAILURE_CLEANUP=1
 endif
+# EVD_ARAM_ALLOC_RETRY=1 (default 0): preserve a prior immutable cabin preload
+# after exact allocation refusal using the existing carrier epoch receipt.
+EVD_ARAM_ALLOC_RETRY ?= 0
+ifneq ($(EVD_ARAM_ALLOC_RETRY),0)
+ifneq ($(EVD_ARAM_ALLOC_RETRY),1)
+$(error EVD_ARAM_ALLOC_RETRY must be 0 or 1)
+endif
+ifneq ($(CABIN_SOURCE),1)
+$(error EVD_ARAM_ALLOC_RETRY requires CABIN_SOURCE=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_ARAM_ALLOC_RETRY=1
+$(OBJDIR)/platform/native_event_file.o: PLATFORM_CPPFLAGS += -DRE4DC_EVD_ARAM_ALLOC_RETRY=1
+endif
 # WEAPON_HEAP4=1 (option 3 of issue lamb2k/re4dc#1, default 0: no effect): a weapon body larger than the resident
 # weapon block (WEAPON_RESIDENT_BYTES; the r104 merchant's rifle 398,144 / with scope 404,608, rocket launcher
 # 382,688, TMP 289,248 / with stock 299,200) is read into heap 4, the room heap, as Krauser's body goes to

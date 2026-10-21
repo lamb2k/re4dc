@@ -10,6 +10,12 @@
 #include <cstring>
 #include <cstdio>
 
+#if defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY
+#if !defined(RE4DC_CABIN_SOURCE) || !RE4DC_CABIN_SOURCE
+#error EVD_ARAM_ALLOC_RETRY requires CABIN_SOURCE
+#endif
+#endif
+
 namespace {
 Re4dcEventFileStats stats{};
 constexpr unsigned chunk_bytes=65536, max_bytes=4*1024*1024;
@@ -422,6 +428,23 @@ extern "C" unsigned re4dc_cabin_carrier_reserved(const void* unit){
     for(const auto& c:carriers)if(c.state && c.unit==unit)return c.logical;
     return 0;
 }
+#if defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY
+extern "C" unsigned re4dc_cabin_carrier_preload_epoch(const void* unit,unsigned logical,unsigned bytes){
+    if(!unit || !logical || !bytes || carrier_fault || carrier_event_readers || carrier_dma_scope)return 0;
+    const CabinCarrier* found=nullptr;
+    for(const auto& c:carriers)if(c.state && c.unit==unit){
+        // Only a prepared immutable source, with no installed allocation,
+        // module role or accepted reader, can issue this read-only receipt.
+        if(found || c.logical!=logical || c.bytes!=bytes || !c.generation || c.generation>0x7fffffffu || c.generation>carrier_epoch ||
+           c.state!=CarrierReference || c.role || c.phase || c.backing || c.mram || c.module ||
+           c.event || c.readers || c.releasing || c.heap!=-1 || c.backing_heap!=-1 || !carrier_current(c) ||
+           !re4dc_cabin_source_unit_retire_ready(c.unit,carrier_number(c),logical,bytes,nullptr))return 0;
+        for(const auto& d:carrier_dma)if(d.state && d.owner==carrier_number(c))return 0;
+        found=&c;
+    }
+    return found?found->generation:0;
+}
+#endif
 extern "C" int re4dc_cabin_carrier_unit_available(const void* unit){
     if(carrier_fault)return 0;
     for(const auto& c:carriers)if(c.state && c.unit==unit)return 0;

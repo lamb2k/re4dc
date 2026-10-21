@@ -1,0 +1,138 @@
+{
+  "scope": "Whole actual SH4 event.o/native_event_file.o only; no linked program/overlay/guest/hardware/whole-reset acceptance.",
+  "baseline_revision": "06f598ba5",
+  "source_sha256": {
+    "src/game/event.cpp": "d9b88f7d8ca201a0a59bee6801711c001a0dcf725da219ea481f10481ae6694e",
+    "port/dreamcast/game/platform/native_event_file.cpp": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2"
+  },
+  "header_sha256": "d47467dfb29a17dd344c03cb45f77408ba89914343499edd03646844bada5660",
+  "qualifier_sha256": "81d500d10804d51b3b2b138ece9cf1592292f2381331a9b4232f72f3b9022fa5",
+  "start_C_free_bytes": 19563372544,
+  "finish_C_free_bytes": 19560001536,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "invalid_values_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "direct_source_missing_cabin_rejected": [
+    "event",
+    "native"
+  ],
+  "ppc_selected_preprocessed_sha256": "06138205e2152093a7039148ac176c4abecdcff9e3fc241ab6af503b3618061f",
+  "objects": [
+    {
+      "cabin_source": 0,
+      "variant": "baseline",
+      "enabled": 0,
+      "object": "event",
+      "source_sha256": "34c724861a23c11934598009be70f5d36431dbfc430c90691ca3163e7b2952f7",
+      "stripped_object_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin0/baseline/event.cpp:2432:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "variant": "baseline",
+      "enabled": 0,
+      "object": "native",
+      "source_sha256": "8ee1b82f0eb0ea697c3bf36acc024006d7621704de7b553bb051493ed55d3c9e",
+      "stripped_object_sha256": "ebdb075cb0389dac441d6f617c6d00dd010ca9f01a9b51c5bf113d98d5874476",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   2364\t      0\t     28\t   2392\t    958\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin0/baseline/native-stripped.o\n",
+      "selected_stack_usage": []
+    },
+    {
+      "cabin_source": 0,
+      "variant": "disabled",
+      "enabled": 0,
+      "object": "event",
+      "source_sha256": "d9b88f7d8ca201a0a59bee6801711c001a0dcf725da219ea481f10481ae6694e",
+      "stripped_object_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin0/disabled/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "variant": "disabled",
+      "enabled": 0,
+      "object": "native",
+      "source_sha256": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2",
+      "stripped_object_sha256": "ebdb075cb0389dac441d6f617c6d00dd010ca9f01a9b51c5bf113d98d5874476",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   2364\t      0\t     28\t   2392\t    958\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin0/disabled/native-stripped.o\n",
+      "selected_stack_usage": []
+    },
+    {
+      "cabin_source": 1,
+      "variant": "baseline",
+      "enabled": 0,
+      "object": "event",
+      "source_sha256": "34c724861a23c11934598009be70f5d36431dbfc430c90691ca3163e7b2952f7",
+      "stripped_object_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/baseline/event.cpp:2432:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "variant": "baseline",
+      "enabled": 0,
+      "object": "native",
+      "source_sha256": "8ee1b82f0eb0ea697c3bf36acc024006d7621704de7b553bb051493ed55d3c9e",
+      "stripped_object_sha256": "e2ad97bf53970f4e9a902471a9306a85d4bf52c056514d2a72cc2e94f230da4b",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  11085\t      0\t    929\t  12014\t   2eee\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/baseline/native-stripped.o\n",
+      "selected_stack_usage": []
+    },
+    {
+      "cabin_source": 1,
+      "variant": "disabled",
+      "enabled": 0,
+      "object": "event",
+      "source_sha256": "d9b88f7d8ca201a0a59bee6801711c001a0dcf725da219ea481f10481ae6694e",
+      "stripped_object_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/disabled/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "variant": "disabled",
+      "enabled": 0,
+      "object": "native",
+      "source_sha256": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2",
+      "stripped_object_sha256": "e2ad97bf53970f4e9a902471a9306a85d4bf52c056514d2a72cc2e94f230da4b",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  11085\t      0\t    929\t  12014\t   2eee\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/disabled/native-stripped.o\n",
+      "selected_stack_usage": []
+    },
+    {
+      "cabin_source": 1,
+      "variant": "enabled",
+      "enabled": 1,
+      "object": "event",
+      "source_sha256": "d9b88f7d8ca201a0a59bee6801711c001a0dcf725da219ea481f10481ae6694e",
+      "stripped_object_sha256": "080ac11d8de3548ad3edbcc59c12504cdfb681f780db1ecf95a90996d4149787",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40181\t      4\t    640\t  40825\t   9f79\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/enabled/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t196\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "variant": "enabled",
+      "enabled": 1,
+      "object": "native",
+      "source_sha256": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2",
+      "stripped_object_sha256": "eb3857688ff2893ecb3e5bebcbfddeefe75e266a91b07c87f1ce7d1e8d727bac",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  11557\t      0\t    929\t  12486\t   30c6\t/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/enabled/native-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-cabin-aram-retry-sh4-20261021-01/cabin1/enabled/native.cpp:432:21:unsigned int re4dc_cabin_carrier_preload_epoch(const void*, unsigned int, unsigned int)\t40\tstatic"
+      ]
+    }
+  ]
+}
