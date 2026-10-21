@@ -287,3 +287,63 @@ composition step must use the selected compact base first, regenerate selective
 mips for these keys, then compare lower-level quality and per-room requests.
 The original 696-key candidate remains unchanged. Actor VQ mip work and the
 rectangular UV/wrap/edge architecture retain their separate owners.
+
+## Compact-base-first world mip composition
+
+compose_candidate.py validates both sealed input archives and every member
+receipt, binds the whole-pack owner policy, then combines the 162 compact bases
+with the 696 world mip keys. It refuses unclassified base conversions and mip
+keys without a selected native-world reference. OFF is the original pack.
+When enabled, 22 overlapping keys regenerate their chains from the exact new
+compact VQ base rather than overwrite or discard the previous mip levels.
+
+    python port/dreamcast/tools/d367/mipmap21/compose_candidate.py --source-pack /private/tex.pak --compact-candidate /private/compact-set --world-mip-candidate /private/world-mip-set --coverage /private/coverage.json --output /private/new-composition --generate
+
+mipmap_compact_vq.py preserves every referenced base vector and the entire base
+index plane. It uses spare codebook slots for the previous native16-bit mip
+targets, using integer premultiplied features and deterministic weighted
+farthest residual selection. The base remains lossless; the regenerated lower
+levels can have VQ error. The original 508 source-VQ codebooks are not altered.
+Only the newly compacted overlap keys use this spare-slot policy.
+
+The sealed composition is 155764736 bytes, 489472 bytes smaller than the
+original pack and 2109440 bytes smaller than the prior world-mip pack. It changes
+836 keys, preserves 5665 unrelated members, retains all 674 non-overlapping
+world-mip outputs and all 140 non-overlapping compact-only outputs exactly.
+Its 701 mipmapped keys comprise the 696 world keys and five unchanged Ganado
+atlases. UI/text and other compact-only keys receive no new mip levels.
+
+All 156 regenerated levels and 22 original bases agree with independent pinned
+PVR decoding. All original base RGBA/alpha, referenced base vectors and base
+indices are exact. Four chains also exactly match every prior native lower
+level; 18 require rendered-look acceptance. Compared with those native mip
+targets, worst per-level premultiplied RGB RMSE is about 9.89/255 and worst alpha
+RMSE about 36.06/255. These metrics do not establish visual acceptance. The
+actual host Package release-streamed reader admits every regenerated package.
+
+The sampler policy keeps dimensions, UVs, wrap, filter and MIPD configuration;
+the existing Package TCW mip bit enables the selected chains. The combined
+target requires CAST_MIPMAP=1 and TEX_TWIDDLED_MIPMAP=1, while keeping its
+SH4ZAM/SKIN_SH4ZAM and skinning-batch UV contract. No renderer/default or recipe
+change accompanies the source/data candidate.
+
+Per-room reports include every source-referenced world key, its actual payload
+bytes, rounded 32-byte request and the optional UI_VRAM page-placement branch.
+allocate_texture first requests payload bytes; an unaligned VQ or crossing
+small texture can retry payload+2016 bytes. Reported upper sums describe this
+branch, not observed addresses or retries. Differences of upper sums are not
+guaranteed bounds on the actual allocation delta; before/after placement can
+differ. Inventory totals are not simultaneous residency, peaks or largest
+blocks, and omit actor/effect/UI working sets.
+
+| World references | Plain request delta vs original | Delta vs prior world-mip candidate |
+|---|---:|---:|
+| r100 | +147904 B | 0 B |
+| r101 | +90816 B | 0 B |
+| r103 farm | +121792 B | -7520 B |
+
+Six new host tests cover exact bases/alpha, spare/full dictionaries, independent
+all-level decoding, source/reference rejection, OFF identity, overlapping-key
+composition and request accounting. They join the 51 prior related tests.
+No game build, live VRAM, rendered-look, hardware timing or release gate passed
+by implication; the 18 approximate lower chains remain an explicit review gate.
