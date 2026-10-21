@@ -87,3 +87,38 @@ int mipmap_oracle_decode_twiddled(const void *payload, size_t bytes,
     ptdFree(&decoder);
     return (int)(output_side * output_side * 4u);
 }
+
+/* Experimental uncompressed PAL8 with the same exact ARGB4444 palette words. */
+int mipmap_oracle_decode_pal8(const void *payload, size_t bytes,
+                              unsigned side, int mipmapped, unsigned level,
+                              unsigned char *rgba, size_t capacity) {
+    if(side < 8 || side > 1024 || (side & (side - 1)) || level > 10)
+        return -1;
+    size_t texels = CalcTextureSize(side, side, PT_PALETTE_8B, mipmapped, 0, 0);
+    if(bytes != texels + 512)
+        return -2;
+    unsigned output_side = mipmapped ? 1u << level : side;
+    if(output_side > side || capacity < output_side * output_side * 4u)
+        return -3;
+    pxlABGR8888 palette[256];
+    for(unsigned i = 0; i < 256; ++i) {
+        uint16_t word;
+        memcpy(&word, (const unsigned char *)payload + texels + 2u * i, 2);
+        unsigned char color[4] = {
+            ((word >> 8u) & 15u) * 17u, ((word >> 4u) & 15u) * 17u,
+            (word & 15u) * 17u, (word >> 12u) * 17u
+        };
+        memcpy(&palette[i], color, 4);
+    }
+    PvrTexDecoder decoder;
+    ptdInit(&decoder);
+    ptdSetSize(&decoder, side, side, mipmapped);
+    ptdSetPixelFormat(&decoder, PT_PALETTE_8B);
+    ptdSetUncompressedSource(&decoder, payload);
+    ptdSetPalette(&decoder, 256, palette);
+    ptdDecode(&decoder);
+    memcpy(rgba, decoder.result_mips[mipmapped ? level : 0],
+           output_side * output_side * 4u);
+    ptdFree(&decoder);
+    return (int)(output_side * output_side * 4u);
+}

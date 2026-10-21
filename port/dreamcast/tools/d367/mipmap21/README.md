@@ -507,3 +507,22 @@ proposed textures. Two reproduced reader failures now pass; ten relevant
 reader/formula/palette tests pass. These values are payload inventories, not
 allocator rounding/page placement or live residency. Existing candidate
 inventories already used descriptor sizes, so their receipts do not change.
+
+### Exact uncompressed PAL8 compatibility fixture
+
+`../../compact_native_pal8.py` is an opt-in offline ARGB4444 path for square
+native twiddled bases or complete native mip chains containing 17–256 distinct
+16-bit words. It replaces each existing word with an 8-bit palette index; every
+existing decoded base and lower-level RGBA/alpha value stays exact. Grayscale
+plus alpha uses one canonical 256-color palette so compatible frames can share
+a palette. A 512-byte palette tail counts toward package bytes; smaller PAL4
+inputs and conversions without an actual rounded-payload saving stay unchanged.
+
+The experimental descriptor format is 5. This source/data milestone does not
+admit it to the game: runtime admission, aligned 256-entry palette ownership,
+capacity/refcount handling and target sampling remain separate default-off gates.
+It does not change UVs, wrap, sampler, dimensions, alpha mode or a release recipe.
+`test_compact_native_pal8.py` checks OFF identity, exact base/chain values, both
+CRC conventions, rejected inputs, palette overhead and the independently decoded
+PVR layout. Set `MIPMAP_PVRTEX_ORACLE_PAL8` to a separately built oracle library
+from `tests/fixtures/mipmap_pvrtex_oracle.c` to run the pinned C decoder cases.
