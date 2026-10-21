@@ -41,6 +41,29 @@ unsigned long long pack_bytes=0;
 Key first[kMaxSectors];
 #if RE4DC_TEX_PAYLOAD_RETRY
 unsigned sector_crc[kMaxSectors]{}; // exact ordinal identity when a validated sector is re-read
+unsigned payload_epoch=1;
+bool payload_epoch_exhausted;
+// All bitmap operations and epoch publication use this existing index mutex.
+// A caller can yield in a package read after find() unlocks; a late completion
+// must never change the next room/index epoch's retry bits.
+void payload_reset_locked(){
+    texpack_payload_retry::reset();
+    if(payload_epoch!=~0U)++payload_epoch;
+    else if(!payload_epoch_exhausted){
+        payload_epoch_exhausted=true;
+        re4dc_log("tex pack: payload retry epoch exhausted; new packed loads refused until restart\n");
+    }
+}
+bool payload_current(unsigned member,unsigned epoch){return !payload_epoch_exhausted && epoch && epoch==payload_epoch && member<kMaxCount;}
+bool payload_blocked(unsigned member,unsigned now,unsigned epoch){
+    mutex_lock(&lock);const bool blocked=!payload_current(member,epoch) || texpack_payload_retry::blocked(member,now);mutex_unlock(&lock);return blocked;
+}
+void payload_failed(unsigned member,unsigned now,unsigned epoch){
+    mutex_lock(&lock);if(payload_current(member,epoch))texpack_payload_retry::failed(member,now);mutex_unlock(&lock);
+}
+void payload_succeeded(unsigned member,unsigned epoch){
+    mutex_lock(&lock);if(payload_current(member,epoch))texpack_payload_retry::succeeded(member);mutex_unlock(&lock);
+}
 #endif
 alignas(32) unsigned char sector[2048];    // read by re4dc::texture::read_file_range: its own handle per read
 unsigned word(const unsigned char* p){return p[0]|p[1]<<8|p[2]<<16|unsigned(p[3])<<24;}
@@ -122,7 +145,7 @@ bool open_locked(unsigned now){
 #if RE4DC_TEX_PAYLOAD_RETRY
     // Publication is the only ready-index replacement boundary. Drop old ordinal
     // receipts before publishing a newly validated immutable pack index.
-    texpack_payload_retry::reset();
+    payload_reset_locked();
     std::memset(sector_crc,0,sizeof(sector_crc));
     for(unsigned s=0;s<nsec;++s)sector_crc[s]=checked_crc[s];
 #endif
@@ -140,14 +163,14 @@ bool settled(){
 // spacing; it also lets a failed lookup sector be re-read at once.
 void room_loaded(){mutex_lock(&lock);++room_gen;bad_sector=~0U;
 #if RE4DC_TEX_PAYLOAD_RETRY
-    texpack_payload_retry::reset();
+    payload_reset_locked();
 #endif
     mutex_unlock(&lock);}
 // The key's package in the pack: kFound with its offset and size; kNotInPack for the per-file path; kError for a
 // read error (load nothing now, do not remember the key as missing). now: the caller's UI frame (retry spacing).
 Result find(const Key& key,unsigned& offset,unsigned& size,unsigned now
 #if RE4DC_TEX_PAYLOAD_RETRY
-            ,unsigned* member=nullptr
+            ,unsigned* member=nullptr,unsigned* epoch=nullptr
 #endif
 ){
     mutex_lock(&lock);
@@ -180,6 +203,7 @@ Result find(const Key& key,unsigned& offset,unsigned& size,unsigned now
                     if(k==key){offset=word(e+8);size=word(e+12);r=kFound;
 #if RE4DC_TEX_PAYLOAD_RETRY
                         if(member)*member=128*s+mid; // unique ordinal in the validated <=8192-member index
+                        if(epoch)*epoch=payload_epoch_exhausted?0:payload_epoch;
 #endif
                         break;}
                     if(less(k,key))lo=mid+1;else hi=mid;

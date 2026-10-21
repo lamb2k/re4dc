@@ -53,15 +53,20 @@ void close_entry(Entry& e){if(e.valid){++evictions;e.valid=false;used-=16;}e.pac
 namespace texpack {constexpr const char* kPath="pack";enum Result{kFound,kNotInPack,kError};Result selected=kFound;unsigned member=0;
  Result find(const Key&,unsigned& offset,unsigned& size,unsigned
 #if RE4DC_TEX_PAYLOAD_RETRY
- ,unsigned* ordinal=nullptr
+ ,unsigned* ordinal=nullptr,unsigned* epoch=nullptr
 #endif
  ){offset=member*2048;size=200;
 #if RE4DC_TEX_PAYLOAD_RETRY
- if(ordinal)*ordinal=member;
+ if(ordinal)*ordinal=member;if(epoch)*epoch=1;
 #endif
  return selected;}}
 #if RE4DC_TEX_PAYLOAD_RETRY
 #include "texpack_payload_retry.inc"
+namespace texpack {
+bool payload_blocked(unsigned m,unsigned n,unsigned){return texpack_payload_retry::blocked(m,n);}
+void payload_failed(unsigned m,unsigned n,unsigned){texpack_payload_retry::failed(m,n);}
+void payload_succeeded(unsigned m,unsigned){texpack_payload_retry::succeeded(m);}
+}
 #endif
 #include "actual_load.inc"
 void refill(){for(unsigned i=0;i<4;++i){entries[i].valid=true;entries[i].key=Key{100+i,100};entries[i].frame=0;}used=64;}
