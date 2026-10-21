@@ -117,6 +117,9 @@ def main(argv=None) -> int:
         if len(source) >= 144 and convert_tpl.TEXTURE.unpack_from(source, 48)[3] == convert_tpl.FORMAT_PAL4_ARGB4444:
             import mipmap_pal4
             generator = mipmap_pal4
+        elif len(source) >= 144 and convert_tpl.TEXTURE.unpack_from(source, 48)[7] == convert_tpl.PAYLOAD_TWIDDLED:
+            import mipmap_twiddled
+            generator = mipmap_twiddled
         package, metadata = generator.add_mipmaps(
             source, enabled=args.add_mipmaps, engine=args.mip_engine)
         metadata.update(candidate_only=True, base_reencoded=False,

@@ -20,6 +20,7 @@ TOOLS = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(TOOLS))
 sys.path.insert(0, str(TOOLS / "d367"))
 import mipmap_vq as mip
+import mipmap_twiddled as twiddled
 import texpack
 from fullplay import fp_iso
 from vram.vq_pak import read_pak
@@ -55,7 +56,7 @@ def referenced_keys(world):
     return set().union(*(world_keys(b) for b in world_map(world).values()))
 
 
-def select(pack, world):
+def select(pack, world, *, include_twiddled=False):
     texpack.verify(pack)
     packages = read_pak(pack)
     rebuilt, _ = texpack.build(packages)
@@ -70,7 +71,15 @@ def select(pack, world):
         try:
             native = mip.read_native_vq(packages[key])
         except ValueError as error:
-            refused.append(dict(key=name, reason=str(error)))
+            if include_twiddled:
+                try:
+                    native = twiddled.read_native_twiddled(packages[key])
+                except ValueError as other:
+                    refused.append(dict(key=name, reason=str(error), twiddled_reason=str(other)))
+                else:
+                    supported.append((key, native))
+            else:
+                refused.append(dict(key=name, reason=str(error)))
         else:
             supported.append((key, native))
     if missing:
@@ -78,20 +87,23 @@ def select(pack, world):
     return packages, supported, refused
 
 
-def build_candidate(pack, world, *, enabled=False, engine="auto", progress=None):
-    packages, supported, refused = select(pack, world)
+def build_candidate(pack, world, *, enabled=False, engine="auto", progress=None,
+                    include_twiddled=False):
+    packages, supported, refused = select(pack, world, include_twiddled=include_twiddled)
     new = dict(packages)
     rows = []
     for done, (key, before) in enumerate(supported, 1):
-        after_blob, row = mip.add_mipmaps(packages[key], enabled=enabled, engine=engine)
-        after = mip.read_native_vq(after_blob)
-        row.update(key="%08x-%08x" % key,
+        generator = twiddled if before.texture[7] == 1 else mip
+        after_blob, row = generator.add_mipmaps(packages[key], enabled=enabled, engine=engine)
+        after = (twiddled.read_native_twiddled(after_blob) if generator is twiddled
+                 else mip.read_native_vq(after_blob))
+        row.update(key="%08x-%08x" % key, layout=before.texture[7],
                    before_alloc32=rounded(len(before.payload), 32),
                    after_alloc32=rounded(len(after.payload), 32),
                    before_archive_slot=rounded(len(packages[key]), 2048),
                    after_archive_slot=rounded(len(after_blob), 2048))
         # Independent of generated lower levels: preserve exact decoded base RGBA.
-        if mip.decode_level(before, before.size) != mip.decode_level(after, after.size):
+        if generator.decode_level(before, before.size) != generator.decode_level(after, after.size):
             raise ValueError("decoded source base changed for " + row["key"])
         new[key] = after_blob
         rows.append(row)
@@ -100,8 +112,7 @@ def build_candidate(pack, world, *, enabled=False, engine="auto", progress=None)
     candidate, count = texpack.build(new)
     texpack.verify(candidate)
     changed = {k for k in packages if packages[k] != new[k]}
-    expected = {k for k, _ in supported if mip.read_native_vq(new[k]).mipmapped and enabled
-                and not mip.read_native_vq(packages[k]).mipmapped}
+    expected = {k for k, native in supported if enabled and not native.mipmapped}
     if changed != expected or (not enabled and candidate != pack):
         raise ValueError("candidate changed an unselected package or disabled output")
     report = dict(
@@ -114,7 +125,9 @@ def build_candidate(pack, world, *, enabled=False, engine="auto", progress=None)
         default_off_pack_exact=True,
         extra_payload_bytes=sum(r["extra_payload_bytes"] for r in rows),
         extra_alloc32_bytes=sum(r["after_alloc32"] - r["before_alloc32"] for r in rows),
-        compatible=rows, other_formats=refused,
+        compatible=rows, other_formats=refused, include_twiddled=bool(include_twiddled),
+        required_build_knobs=(["CAST_MIPMAP=1"] +
+            (["TEX_TWIDDLED_MIPMAP=1"] if include_twiddled else [])) if enabled else [],
         limitations=[
             "Pack keys are global; shared keys change wherever this candidate pack is used.",
             "World references are not proof that every key draws in the selected camera.",
@@ -172,6 +185,8 @@ def main(argv=None):
     selection.add_argument("--all-worlds", action="store_true",
                            help="all named world sidecars in the bound release manifest")
     ap.add_argument("--progress", action="store_true", help="print bounded offline progress")
+    ap.add_argument("--include-twiddled", action="store_true",
+                    help="also select square16-bit twiddled keys; requires TEX_TWIDDLED_MIPMAP runtime")
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--generate", action="store_true", help="opt in; default creates an exact control")
     ap.add_argument("--engine", choices=("auto", "python", "numpy"), default="auto")
@@ -199,7 +214,8 @@ def main(argv=None):
     progress = (lambda done, total: print("mipmap21: processed %d/%d compatible world keys" %
                 (done, total), flush=True)) if args.progress else None
     candidate, report, before, after = build_candidate(
-        pack, world, enabled=args.generate, engine=args.engine, progress=progress)
+        pack, world, enabled=args.generate, engine=args.engine, progress=progress,
+        include_twiddled=args.include_twiddled)
     report.update(
         updated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
         room="all-worlds" if args.all_worlds else "r%03x" % args.room,

@@ -3395,6 +3395,19 @@ endif
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAL4_MIPMAP=1
 endif
 
+# Native square 16-bit twiddled mip chains, with unchanged base texels.
+# Off contributes no compiler definition; existing CAST_MIPMAP forwards TCW.
+TEX_TWIDDLED_MIPMAP ?= 0
+ifeq ($(filter $(TEX_TWIDDLED_MIPMAP),0 1),)
+$(error TEX_TWIDDLED_MIPMAP must be 0 or 1)
+endif
+ifeq ($(TEX_TWIDDLED_MIPMAP),1)
+ifneq ($(CAST_MIPMAP),1)
+$(error TEX_TWIDDLED_MIPMAP=1 requires CAST_MIPMAP=1)
+endif
+$(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_TWIDDLED_MIPMAP=1
+endif
+
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.
 # Two owned slabs per binding, existing global pressure cap, no spill for these profiles.
 MOTION_BOUNDED_R11F ?= 0

@@ -68,6 +68,23 @@ class RoomSelection(unittest.TestCase):
         self.assertEqual(candidate.world_paths(manifest), names)
         self.assertEqual(candidate.world_paths(manifest, 0x103), [names[1]])
 
+    def test_square_twiddled_selection_is_explicit_and_retains_exact_base(self):
+        from test_mipmap_twiddled import native as raw
+        import mipmap_twiddled as twiddled
+        source = {(1, 2): native(), (3, 4): raw(fmt=2)}
+        pack, _ = texpack.build(source)
+        worlds = world(list(source))
+        _, report, _, _ = candidate.build_candidate(pack, worlds, enabled=True, engine="python")
+        self.assertEqual(report["changed_keys"], 1)
+        control, _, _, _ = candidate.build_candidate(pack, worlds, include_twiddled=True)
+        self.assertEqual(control, pack)
+        _, report, before, after = candidate.build_candidate(
+            pack, worlds, enabled=True, include_twiddled=True, engine="python")
+        self.assertEqual(report["changed_keys"], 2)
+        self.assertIn("TEX_TWIDDLED_MIPMAP=1", report["required_build_knobs"])
+        self.assertEqual(twiddled.read_native_twiddled(before[(3, 4)]).base_texels,
+                         twiddled.read_native_twiddled(after[(3, 4)]).base_texels)
+
     def test_missing_world_key_is_refused(self):
         pack, _ = texpack.build({(1, 2): native()})
         with self.assertRaisesRegex(ValueError, "absent"):

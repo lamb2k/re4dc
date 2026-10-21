@@ -143,8 +143,8 @@ deduplication with intentionally overlapping per-room inventory sums.
 
 Compatibility is an implementation boundary:
 - 508 square 16-bit VQ keys use the existing direct runtime layout.
-- 188 square twiddled 16-bit keys can preserve their full-resolution texels
-  with mip-prefix rearrangement; reader/converter support is the next change.
+- 188 square twiddled 16-bit keys preserve full-resolution texels with a
+  mip prefix using TEX_TWIDDLED_MIPMAP, described below.
 - 672 rectangular VQ and 120 rectangular twiddled keys need a correct square
   texture-domain/UV/wrap/edge contract. Padding can preserve base pixels but
   changes sampling semantics unless the renderer and each lower level agree.
@@ -155,3 +155,43 @@ Compatibility is an implementation boundary:
 
 No recipe, release, runtime defaults or frame-rate claim accompanies this
 private whole-world data candidate.
+
+
+## Native16-bit twiddled mip support
+
+The native-package exporter also supports square twiddled RGB565, ARGB1555 and
+ARGB4444 without re-encoding their original texel plane. It places the exact
+base words behind the PVR's six-byte/mip prefix and generates lower planes in
+the same native format. Integer premultiplied-color filtering prevents hidden
+transparent RGB bleeding; the existing converter's native packers preserve the
+format's binary or partial alpha rules. Lower planes are deliberately filtered
+and quantized, not lossless copies.
+
+Runtime requires TEX_TWIDDLED_MIPMAP=1 CAST_MIPMAP=1. The new knob defaults to
+0, defines only the native Package object, admits the exact square native
+layout, and uses the existing shared sampler's mip flag. Upload stays a native
+copy, not an upload-time twiddle. The original material/UV dimensions and flags
+stay exact. Linear payloads and rectangles remain refused by this path.
+
+For all selected worlds, opt in separately:
+
+    python port/dreamcast/tools/d367/mipmap21/world_candidate.py --track /private/track03.bin --release-manifest /private/manifest.json --all-worlds --include-twiddled --output /private/new-square-candidate --generate
+
+Omitting --include-twiddled keeps the previous VQ-only selection. Disabling
+--generate is still whole-archive identity, even when the new family is selected.
+
+    python -m unittest discover -s port/dreamcast/tests -p test_mipmap_twiddled.py -v
+
+The complete mip suites now run 39 tests on WSL with the independent decoder,
+passing with only the two optional NumPy checks skipped (NumPy parity is checked
+on Windows). New cases cover every level/all three formats, exact bases/CRC/
+header/flags, binary and partial alpha, hidden-color filtering, CLI opt-in,
+actual Package admission/upload/fences with ASan/UBSan, sampler bits, refusal of
+malformed/linear/rectangular mips, object-target build guards and explicit room
+selection. Both new runtime knobs at 0 retain the exact host object for 54cef5d1;
+a full Dreamcast program off-identity gate remains unrun.
+
+This texture path neither removes nor upgrades SH4ZAM. The eventual combined
+target must retain its selected SH4ZAM/SKIN_SH4ZAM CPU skinning configuration and
+existing skinning-batch UV contract. Source/data/host checks do not replace that
+combined target's VRAM, look and frame-time gates.

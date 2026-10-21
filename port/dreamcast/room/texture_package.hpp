@@ -32,6 +32,8 @@ inline constexpr std::uint32_t kBinaryAlpha = 1U << 1U;
 // Game CAST_MIPMAP=1 only: a full-codebook VQ payload with the PVR mip chain
 // (codebook, then the index bytes of every level from 1x1 up), sampled with
 // the TCW mipmap bit. Square textures only; other builds reject the flag.
+// TEX_TWIDDLED_MIPMAP additionally admits square native 16-bit twiddled
+// chains: six prefix bytes, then 1x1 through the unchanged base texels.
 inline constexpr std::uint32_t kMipmap = 1U << 2U;
 // Game GANADO_ATLAS_DROP only, never on disc: set at load time on a mipmapped VQ
 // descriptor whose top level was left out (Package::drop_top_level). The

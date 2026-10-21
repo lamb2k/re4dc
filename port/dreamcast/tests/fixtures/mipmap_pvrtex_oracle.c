@@ -62,3 +62,28 @@ int mipmap_oracle_decode_pal4(const void *payload, size_t bytes,
     ptdFree(&decoder);
     return (int)(output_side * output_side * 4u);
 }
+
+/* Native uncompressed16-bit mip layout, decoded by the actual pinned codec. */
+int mipmap_oracle_decode_twiddled(const void *payload, size_t bytes,
+                                 unsigned native_format, unsigned side,
+                                 int mipmapped, unsigned level,
+                                 unsigned char *rgba, size_t capacity) {
+    const ptPixelFormat formats[3] = { PT_RGB565, PT_ARGB1555, PT_ARGB4444 };
+    if(native_format > 2 || side < 8 || side > 1024 || (side & (side - 1)))
+        return -1;
+    if(bytes != CalcTextureSize(side, side, formats[native_format], mipmapped, 0, 0))
+        return -2;
+    unsigned output_side = mipmapped ? 1u << level : side;
+    if(output_side > side || capacity < output_side * output_side * 4u)
+        return -3;
+    PvrTexDecoder decoder;
+    ptdInit(&decoder);
+    ptdSetSize(&decoder, side, side, mipmapped);
+    ptdSetPixelFormat(&decoder, formats[native_format]);
+    ptdSetUncompressedSource(&decoder, payload);
+    ptdDecode(&decoder);
+    memcpy(rgba, decoder.result_mips[mipmapped ? level : 0],
+           output_side * output_side * 4u);
+    ptdFree(&decoder);
+    return (int)(output_side * output_side * 4u);
+}
