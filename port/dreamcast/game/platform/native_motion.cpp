@@ -3,6 +3,12 @@
 #include "native_motion.h"
 #include "re4dc_platform.h"
 #include "../../room/room_storage.hpp"
+#ifndef RE4DC_MOTION_RETIRE_PREFLIGHT
+#define RE4DC_MOTION_RETIRE_PREFLIGHT 0
+#endif
+#if RE4DC_MOTION_RETIRE_PREFLIGHT != 0 && RE4DC_MOTION_RETIRE_PREFLIGHT != 1
+#error MOTION_RETIRE_PREFLIGHT must be 0 or 1
+#endif
 #ifndef RE4DC_IO_PROBE
 #define RE4DC_IO_PROBE 0
 #endif
@@ -952,7 +958,15 @@ extern "C" unsigned re4dc_motion_forget_dead_heaps() {
 }
 #endif
 extern "C" void re4dc_motion_retire_all() {
-    Locked guard;for(auto& b:bindings)if(b.archive)release_binding(b);
+    Locked guard;
+#if RE4DC_MOTION_RETIRE_PREFLIGHT
+    // Validate the complete set under the same lock used for retirement.
+    // A later pinned binding must not leave earlier bindings already freed.
+    for(const auto& b:bindings)if(b.archive)
+        for(unsigned i=0;i<b.count;++i)
+            if(b.slots[i].pins)fail("motion archive retired while pinned");
+#endif
+    for(auto& b:bindings)if(b.archive)release_binding(b);
 }
 #if RE4DC_MOVIE_HEAP_EVICT
 // MOVIE_HEAP_EVICT=1 (game30.mk): a route movie whose staging allocation fails evicts the least recently

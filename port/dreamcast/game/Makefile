@@ -1315,6 +1315,17 @@ $(OBJDIR)/platform/audio_stub.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/aica-au
 # MOTION_LEASE_LEAN=1 removes acquire-only telemetry timers and reuses the
 # guard's existing owner slot for its extra lease; =2 compares the source lookup.
 # Counts, mutex/pins/release order and cancellation ownership remain unchanged.
+# Bulk motion retirement preflight; no room-reset/admission serialization claim.
+MOTION_RETIRE_PREFLIGHT ?= 0
+ifneq ($(words $(MOTION_RETIRE_PREFLIGHT)),1)
+$(error MOTION_RETIRE_PREFLIGHT must be 0 or 1)
+endif
+ifeq ($(filter $(MOTION_RETIRE_PREFLIGHT),0 1),)
+$(error MOTION_RETIRE_PREFLIGHT must be 0 or 1)
+endif
+ifeq ($(MOTION_RETIRE_PREFLIGHT),1)
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_RETIRE_PREFLIGHT=1
+endif
 MOTION_LEASE_LEAN ?= 0
 .PHONY: motion-lease-lean-force
 $(OBJDIR)/motion-lease-lean.h: motion-lease-lean-force
