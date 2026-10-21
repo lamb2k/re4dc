@@ -1,0 +1,66 @@
+{
+  "scope": "Actual SH-4 event.o only; no linked-program, guest or hardware acceptance",
+  "baseline_revision": "54cef5d1560c41d074beee05ffa1ecd38f2ee642",
+  "candidate_event_sha256": "ac25a8479d7b68f4d58ca3cb610ed83ef819d5250e08f5d2f428feba12c53419",
+  "qualifier_sha256": "3c6862839ce07e0e17298eef25e88025035e0763b022e8b2245d0a9e097cd816",
+  "baseline_make_sha256": "5d08697a93111ff8c813507a7fa3b623440a618c05c5b5ba32b04422ce1ed9f5",
+  "start_C_free_bytes": 23655956480,
+  "finish_C_free_bytes": 23655092224,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "invalid_knobs_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "objects": [
+    {
+      "cabin_source": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "345e2bcf29d3669983fbad22a5b6e327a5ffb27aa7e527d203f536c2278466a0",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-event-admission-sh4-20261021-03/cabin0/baseline/event-stripped.o\n",
+      "setevd_stack_usage": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2870:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic"
+    },
+    {
+      "cabin_source": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "ac25a8479d7b68f4d58ca3cb610ed83ef819d5250e08f5d2f428feba12c53419",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-event-admission-sh4-20261021-03/cabin0/disabled/event-stripped.o\n",
+      "setevd_stack_usage": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2870:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic"
+    },
+    {
+      "cabin_source": 0,
+      "variant": "enabled",
+      "event_cpp_sha256": "ac25a8479d7b68f4d58ca3cb610ed83ef819d5250e08f5d2f428feba12c53419",
+      "stripped_event_o_sha256": "fded74d94da28183f33eb591f9e44a87ddf6c081f66f31afcfc290e8e83c3d58",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39825\t      4\t    640\t  40469\t   9e15\t/root/probe/cache21-event-admission-sh4-20261021-03/cabin0/enabled/event-stripped.o\n",
+      "setevd_stack_usage": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2870:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic"
+    },
+    {
+      "cabin_source": 1,
+      "variant": "baseline",
+      "event_cpp_sha256": "345e2bcf29d3669983fbad22a5b6e327a5ffb27aa7e527d203f536c2278466a0",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-event-admission-sh4-20261021-03/cabin1/baseline/event-stripped.o\n",
+      "setevd_stack_usage": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2870:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic"
+    },
+    {
+      "cabin_source": 1,
+      "variant": "disabled",
+      "event_cpp_sha256": "ac25a8479d7b68f4d58ca3cb610ed83ef819d5250e08f5d2f428feba12c53419",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-event-admission-sh4-20261021-03/cabin1/disabled/event-stripped.o\n",
+      "setevd_stack_usage": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2870:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic"
+    },
+    {
+      "cabin_source": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "ac25a8479d7b68f4d58ca3cb610ed83ef819d5250e08f5d2f428feba12c53419",
+      "stripped_event_o_sha256": "bcce4e402761218d6349ea83b9595dc8c04b390f7bcb182f5ff8f3e82429d77a",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40345\t      4\t    640\t  40989\t   a01d\t/root/probe/cache21-event-admission-sh4-20261021-03/cabin1/enabled/event-stripped.o\n",
+      "setevd_stack_usage": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2870:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic"
+    }
+  ]
+}
