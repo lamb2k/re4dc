@@ -1,0 +1,95 @@
+{
+  "scope": "Read-only exact CLOSED snapshot linked-list and scoped held-array audit, four frozenELF anchors; not asynchronouslastsample, no game/statewrites.",
+  "run": 253,
+  "state_sha256": "f3712ce771bf0ae84b5e247b43dddbc40a0159b39bfc9efb70a67d18e07d38c8",
+  "source": 47896,
+  "health": [
+    255,
+    1200,
+    0,
+    600
+  ],
+  "actors": [
+    {
+      "ptr": "0x8cccf3c0",
+      "id": "0x1b",
+      "type": 7,
+      "source_list_no": "0x5c",
+      "hp": 1000,
+      "pos": [
+        24826.525390625,
+        -2000.00439453125,
+        -43634.74609375
+      ],
+      "routines": [
+        1,
+        38,
+        1,
+        0
+      ]
+    },
+    {
+      "ptr": "0x8ccf5f80",
+      "id": "0x1b",
+      "type": 7,
+      "source_list_no": "0x5b",
+      "hp": 1000,
+      "pos": [
+        16329.1962890625,
+        1999.9993896484375,
+        -34205.44140625
+      ],
+      "routines": [
+        1,
+        27,
+        0,
+        0
+      ]
+    },
+    {
+      "ptr": "0x8ccf51a0",
+      "id": "0x1b",
+      "type": 7,
+      "source_list_no": "0x57",
+      "hp": 1000,
+      "pos": [
+        36632.51171875,
+        1999.9979248046875,
+        -52580.56640625
+      ],
+      "routines": [
+        1,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "ptr": "0x8caf2460",
+      "id": "0x1b",
+      "type": 10,
+      "source_list_no": "0x56",
+      "hp": 0,
+      "pos": [
+        16013.2265625,
+        1350.090576171875,
+        -39624.2734375
+      ],
+      "routines": [
+        3,
+        0,
+        2,
+        1
+      ]
+    }
+  ],
+  "held_ids": [],
+  "m3r": [
+    -0.0013926289975643158,
+    -0.0013926289975643158,
+    0.0
+  ],
+  "system_flags": "0x2000000",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+}
