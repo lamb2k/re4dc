@@ -25,5 +25,15 @@ class AtlasTests(unittest.TestCase):
         self.assertEqual(blob[16:32],header[16:32])
         with self.assertRaises(ValueError):atlas.read_fe(blob[:40])
 
+    def test_existing_run_capacity_holds_unselected_segments_without_reordering(self):
+        uv=[(384*64+2*64,256*64+3*64)]
+        tri=((0,0,0),(1,1,0),(2,2,0))
+        groups=[(bool(i&1),[tri]*i) for i in range(1,16)]
+        chosen,held=atlas.budget_groups(groups,uv,(384,256,128),5)
+        self.assertLessEqual(len(chosen),5)
+        self.assertTrue(held)
+        self.assertEqual([t for _,ts in groups for t in ts],[t for _,ts in chosen for t in ts])
+        self.assertEqual(sum(pick for pick,_ in chosen),2)
+
 
 if __name__=='__main__':unittest.main()

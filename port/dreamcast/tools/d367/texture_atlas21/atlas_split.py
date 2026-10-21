@@ -25,6 +25,7 @@ import hands_pack
 
 TARGET='SourceTex_878b23c0-e7038833'
 PACK_SHA='18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef'
+SOURCE_SEAL='487ad3c970d2443db2b15d489e61f2cff7e1ef1377e44b579b6917aa2735b31b'
 KEYS={'standard':'ec255e66-76812316','pl08':'7506e95f-68cf2211'}
 
 def sha(blob):return hashlib.sha256(blob).hexdigest()
@@ -136,7 +137,32 @@ def chunks(actor,inputs):
     return dict(pos=part(e[7],e[8]),nrm=part(e[9],e[10]),uv=part(e[11],e[12]),
                 gx=part(e[13],e[6]),weights=part(e[14],e[4]*16))
 
-def ordered_bindings(arrays,rect,out):
+def budget_groups(groups,uv,rect,max_runs):
+    """Retain source order and isolate only segments fitting the existing plan."""
+    if max_runs<3:raise ValueError('no room for a bounded source tile run')
+    if len(groups)<=max_runs:return groups,[]
+    x,y,side=rect
+    def crossings(triangles,lod):
+        scale=1<<lod;count=0
+        for triangle in triangles:
+            for c in triangle:
+                u,v=uv[c[2]];a=math.floor(u/64/scale-.5);b=math.floor(v/64/scale-.5)
+                count+=(a*scale<x or (a+2)*scale>x+side or b*scale<y or (b+2)*scale>y+side)
+        return count
+    selected=[(i,tris) for i,(pick,tris) in enumerate(groups) if pick]
+    selected.sort(key=lambda row:(-crossings(row[1],2),-crossings(row[1],3),-len(row[1]),row[0]))
+    keep={i for i,_ in selected[:(max_runs-1)//2]}
+    held=[dict(source_segment=i,triangles=len(tris),conservative_crossing_corners_at128=crossings(tris,2))
+          for i,tris in selected if i not in keep]
+    merged=[]
+    for i,(pick,tris) in enumerate(groups):
+        pick=pick and i in keep
+        if not merged or merged[-1][0]!=pick:merged.append((pick,list(tris)))
+        else:merged[-1][1].extend(tris)
+    if len(merged)>max_runs:raise ValueError('existing run budget exceeded')
+    return merged,held
+
+def ordered_bindings(arrays,rect,out,max_runs=14):
     uv=list(struct.iter_unpack('<2H',arrays['uv']));source=read_fe(arrays['gx'])
     groups=[];selected=0
     x,y,side=rect
@@ -146,6 +172,9 @@ def ordered_bindings(arrays,rect,out):
         pick=all(own)
         if not groups or groups[-1][0]!=pick:groups.append((pick,[]))
         groups[-1][1].append(tri);selected+=pick
+    target_triangles=selected
+    groups,held=budget_groups(groups,uv,rect,max_runs)
+    selected=sum(len(tris) for pick,tris in groups if pick)
     reports=[];roundtrip=[];sample_uv=[]
     for number,(pick,tris) in enumerate(groups):
         folder=out/f'run-{number:03d}';folder.mkdir(parents=True)
@@ -166,7 +195,8 @@ def ordered_bindings(arrays,rect,out):
             uv_bytes=len(ub),stream_bytes=len(stream),uv_sha256=sha(ub),stream_sha256=sha(stream)))
     if roundtrip!=source or not selected:raise ValueError('ordered geometry identity failed')
     for name in ('pos','nrm','weights'):(out/('source-'+name+'.bin')).write_bytes(arrays[name])
-    return dict(source_triangles=len(source),selected_triangles=selected,runs=reports,
+    return dict(source_triangles=len(source),source_tile_triangles=target_triangles,selected_triangles=selected,
+        held_segments_for_existing_run_budget=held,role_run_budget=max_runs,runs=reports,
         position_normal_weight_bytes_unchanged={n:sha(arrays[n]) for n in ('pos','nrm','weights')},
         emitted_triangle_order_rotation_indices_and_winding_exact=True),sample_uv
 
@@ -224,7 +254,17 @@ def comparison(before,after,rect,tri_uv,out):
 
 def run(source_root,out,enabled=False):
     if out.exists():raise ValueError('preserve existing candidate')
+    seal=(source_root/'SHA256SUMS-actors-v2').read_bytes()
+    if sha(seal)!=SOURCE_SEAL:raise ValueError('source actor seal changed')
+    sealed={name:digest for digest,name in (line.split('  ',1) for line in seal.decode().splitlines())}
+    names=['sampling-scope-v1.json','leon-source-policy-v1.json','leon-v1/inputs/leon_tiles.json',
+           'leon-v1/inputs/leon_runtime.h','leon-extra-v1/inputs/leon_runtime.h','leon-extra-v1/inputs/pl08_package.re4cp']
+    names += [f'{cohort}/{kind}/{key}.re4tex' for actor,cohort in [('standard','leon-v1'),('pl08','leon-extra-v1')]
+              for kind in ('originals','replacements') for key in (KEYS[actor],)]
+    for name in names:
+        if sha((source_root/name).read_bytes())!=sealed[name]:raise ValueError('selected sealed source changed: '+name)
     out.mkdir(parents=True)
+    dump(out/'source-inputs.json',dict(actor_seal_sha256=SOURCE_SEAL,selected={name:sealed[name] for name in names}))
     policies=['sampling-scope-v1.json','leon-source-policy-v1.json']
     for name in policies:(out/name).write_bytes((source_root/name).read_bytes())
     tiles=json.loads((source_root/'leon-v1/inputs/leon_tiles.json').read_text())['source_uv_tiles']
@@ -250,7 +290,12 @@ def run(source_root,out,enabled=False):
         original=mip.read_native_vq(blob);after=mip.read_native_vq(candidate)
         if after.codebook!=original.codebook:raise ValueError('original codebook changed')
         arr=chunks(actor,inputs)
-        binding,uv=ordered_bindings(arr,rect,folder/'bindings')
+        # The existing plan permits22 runs. Reserve all other body roles and
+        # the source's maximum two hair runs; no runtime capacity is raised.
+        old_plan_bound=9 if actor=='standard' else 10
+        binding,uv=ordered_bindings(arr,rect,folder/'bindings',max_runs=22-(old_plan_bound-1))
+        binding['conservative_total_plan_runs']=old_plan_bound-1+len(binding['runs'])
+        binding['existing_plan_run_capacity']=22
         quality=comparison(mip.read_native_vq(before),after,rect,uv,folder)
         seed=('texture-atlas21:v1:'+key+':'+TARGET+':'+sha(candidate)).encode()
         crc=zlib.crc32(seed)&0xffffffff;fnv=hands_pack.fnv(seed)
