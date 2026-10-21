@@ -820,6 +820,21 @@ $(error EVD_START_CLEANUP requires EVD_ADMISSION_TXN=1)
 endif
 $(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_START_CLEANUP=1
 endif
+# EVD_START_ROLLBACK=1 (default 0): undo this call's complete new parent/bin
+# admission when starting its Event fails. Preserve pre-existing owners.
+EVD_START_ROLLBACK ?= 0
+ifneq ($(EVD_START_ROLLBACK),0)
+ifneq ($(EVD_START_ROLLBACK),1)
+$(error EVD_START_ROLLBACK must be 0 or 1)
+endif
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_START_ROLLBACK requires EVD_ADMISSION_TXN=1)
+endif
+ifneq ($(EVD_START_CLEANUP),1)
+$(error EVD_START_ROLLBACK requires EVD_START_CLEANUP=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_START_ROLLBACK=1
+endif
 # WEAPON_HEAP4=1 (option 3 of issue lamb2k/re4dc#1, default 0: no effect): a weapon body larger than the resident
 # weapon block (WEAPON_RESIDENT_BYTES; the r104 merchant's rifle 398,144 / with scope 404,608, rocket launcher
 # 382,688, TMP 289,248 / with stock 299,200) is read into heap 4, the room heap, as Krauser's body goes to
