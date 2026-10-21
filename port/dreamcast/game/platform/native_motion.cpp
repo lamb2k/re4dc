@@ -794,7 +794,11 @@ struct RequiredScope {
     ~RequiredScope() { int old=irq_disable();--required_waiters;irq_restore(old);owner_drop(); }
 };
 bool can_wait_required() {
-    int old=irq_disable();bool allowed=!irq_inside_int() && (old&0xf0)!=0xf0 && lock_owner!=thd_current;
+    // KOS returns the complete prior SR. A partial IMASK, blocked exceptions
+    // (BL), or exception register bank (RB) is still a protected caller context.
+    // Restore that exact state; never enable it just to wait for cache readers.
+    constexpr unsigned protected_sr=0x300000f0U;
+    int old=irq_disable();bool allowed=thd_current && !irq_inside_int() && !(unsigned(old)&protected_sr) && lock_owner!=thd_current;
     for(const auto& o:owners)if(o.thread==thd_current && o.leases)allowed=false;
     irq_restore(old);return allowed;
 }
@@ -815,7 +819,7 @@ extern "C" void* re4dc_motion_required_alloc(int heap,unsigned bytes) {
     // Binding metadata/reserve admission already owns this mutex. Reclaim in
     // place using only SDK try/free calls: no recursive lock or native alloc,
     // no pin wait, and no false final required-allocation diagnostic.
-    int old=irq_disable();const bool internal=lock_owner==thd_current;irq_restore(old);
+    int old=irq_disable();const bool internal=thd_current && lock_owner==thd_current;irq_restore(old);
     if(internal) {
 #if RE4DC_SUBSCREEN
         if(hold)return nullptr;

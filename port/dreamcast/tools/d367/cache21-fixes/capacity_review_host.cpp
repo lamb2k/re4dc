@@ -37,16 +37,31 @@ static void raw_sr_contract()
         host_irq_sr = 0x40000001 | mask;
         const bool allowed = can_wait_required();
         assert(host_irq_sr == (0x40000001 | mask) && !host_irq_depth);
-        assert(allowed == (mask != 0xf0));
+        assert(allowed == (CAPACITY_CONTEXT_GUARD_EXPECT ? mask == 0 : mask != 0xf0));
         if (allowed) ++accepted; else ++rejected;
     }
     host_irq_sr = 0x40000001; host_inside_interrupt = true;
     assert(!can_wait_required()); host_inside_interrupt = false;
     host_irq_sr = 0;
-    std::cout << "raw SR predicate: allowed=" << accepted << " rejected=" << rejected
-              << "; partial mask0x10..0xe0 accepted (contract gap), IRQ rejected PASS\n";
+    for (unsigned state : {0x10000000U, 0x20000000U, 0x30000000U}) {
+        host_irq_sr = 0x40000001 | state;
+        assert(can_wait_required() == !CAPACITY_CONTEXT_GUARD_EXPECT);
+        assert(host_irq_sr == (0x40000001 | state));
+    }
+    host_irq_sr = 0;
+    host_thread_present = false;
+    assert(!can_wait_required());
+#if CAPACITY_CONTEXT_GUARD_EXPECT
+    host_pass_calls = 0;
+    assert(!re4dc_motion_required_alloc(Heap[4].handle, 32));
+    assert(!host_pass_calls);
+#endif
+    host_thread_present = true;
+    std::cout << "raw SR predicate: guard=" << CAPACITY_CONTEXT_GUARD_EXPECT
+              << " allowed=" << accepted << " rejected=" << rejected
+              << "; BL/RB/ISR/no-thread controls and exact prior SR restore PASS\n";
 
-    for (unsigned mask : {0x10U, 0x80U, 0xe0U, 0xf0U}) {
+    for (unsigned mask : {0U, 0x10U, 0x80U, 0xe0U, 0xf0U, 0x10000000U, 0x20000000U, 0x30000000U}) {
         reset(); {
             ActualArchive a({22400, 32416, 17408}); assert(a.bind());
             auto& b = bindings[0]; void* trim = trim_free(83168);
@@ -60,8 +75,9 @@ static void raw_sr_contract()
                 for (int token : tokens) re4dc_motion_release(token);
             });
             ready.get(); assert(overflow_count() == 1);
-            void* fill = trim_free(64); host_masked_yields = 0;
+            void* fill = trim_free(64); host_masked_yields = host_pass_calls = 0;
             host_irq_sr = 0x40000001 | mask;
+            host_inside_interrupt = mask == 0; // explicit ISR even with unmasked prior SR
             bool yielded = false;
             try {
                 assert(!re4dc_motion_required_alloc(Heap[4].handle, 17408));
@@ -69,14 +85,36 @@ static void raw_sr_contract()
                 yielded = std::string(e.what()) == "masked yield observer";
                 assert(yielded);
             }
-            assert(yielded == (mask != 0xf0));
-            assert(host_masked_yields == (mask != 0xf0 ? 1U : 0U));
+            const bool refused = CAPACITY_CONTEXT_GUARD_EXPECT || mask == 0xf0 || host_inside_interrupt;
+            assert(yielded == !refused);
+            assert(host_masked_yields == (refused ? 0U : 1U));
+            assert(host_pass_calls == (refused ? 0U : 1U));
             assert(!required_waiters && host_irq_sr == (0x40000001 | mask));
-            host_irq_sr = 0; finish = true; borrower.join();
+            host_masked_yields = host_pass_calls = 0; bool retire_yielded = false;
+            try { assert(!re4dc_motion_capacity_retire()); }
+            catch (const std::runtime_error& e) {
+                retire_yielded = std::string(e.what()) == "masked yield observer";
+                assert(retire_yielded);
+            }
+            assert(retire_yielded == !refused && host_pass_calls == (refused ? 0U : 1U));
+            assert(!required_waiters && host_irq_sr == (0x40000001 | mask));
+            host_irq_sr = 0; host_inside_interrupt = false; finish = true; borrower.join();
             OSFreeToHeap(Heap[4].handle, fill); OSFreeToHeap(Heap[4].handle, trim); valid_heap();
         }
     }
-    std::cout << "actual required request reaches thd_pass under masks0x10/0x80/0xe0;0xf0 declines PASS; observer stops the wait, no target deadlock claim\n";
+    reset(); {
+        ActualArchive a({22400, 32416, 17408}); assert(a.bind()); auto& b = bindings[0];
+        void* trim = trim_free(83168); std::vector<int> tokens;
+        for (unsigned i = 0; i < 3; ++i) tokens.push_back(acquire_entry(b, i));
+        void* fill = trim_free(64); host_irq_sr = 0x40000001; host_pass_calls = 0;
+        assert(!re4dc_motion_required_alloc(Heap[4].handle, 17408));
+        assert(!re4dc_motion_capacity_retire() && !host_pass_calls && host_irq_sr == 0x40000001);
+        host_irq_sr = 0;
+        for (int token : tokens) re4dc_motion_release(token);
+        OSFreeToHeap(Heap[4].handle, fill); OSFreeToHeap(Heap[4].handle, trim); valid_heap();
+    }
+    std::cout << "actual required requests: guard=" << CAPACITY_CONTEXT_GUARD_EXPECT
+              << "; all IMASK/BL/RB contexts restore exact SR; refused contexts never call thd_pass PASS\n";
 }
 
 static void static_preflight_and_high_placement()
@@ -167,6 +205,9 @@ int main()
     fragmentation_and_original_failure();
     aggregate_cap_and_pins();
     failed_read_hold_strict_and_retire();
+#if RE4DC_MOTION_RESUME
+    movie_loans_keep_owner_tickets();
+#endif
     unsupported_contexts_do_not_deadlock();
     raw_sr_contract();
     static_preflight_and_high_placement();
