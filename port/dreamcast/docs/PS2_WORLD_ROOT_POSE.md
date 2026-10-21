@@ -28,6 +28,17 @@ Scroll setup calls `matUpdate` after applying placement and SMX parameters,
 before publishing the part witness. For exactly one bone, retain its bind world
 matrix and inverse in the existing witness allocation. At draw time use
 `current_root_world * inverse(bind_root_world) * baked_PS2_placement`.
+The selected retained BIN roots are part 0, parent 0xFF (the object), with zero
+local centre and unit object scale. `modelInit -> initJoint -> setPartsParent ->
+setPartsOffset` initializes the parts; the latter builds both local and world
+matrices. `SmdSetParam` applies authored placement and calls `matUpdate`.
+`setObj` applies SMX and calls `matUpdate` again before both native binds.
+`cModel::matUpdate` rebuilds the object matrix, local part matrices and then
+world part matrices, including the object's parent transform. Room SMD setup
+also precedes scenario initialization and the gear tasks. The captured matrix
+is initialized world space. Applying an extra object delta would apply it twice.
+Source hashes and exact call-order lines are in `source-bind-order.json`.
+
 The current root is source-owned; no animation, event, collision or AI code is
 changed. The existing PS2 material, camera, clipping and ordering paths remain.
 
@@ -49,7 +60,8 @@ geometry for those objects remains an open gap.
 
 `test_ps2_root_pose.py` compiles the actual adapter, affine helpers and occluder
 query with address/undefined sanitizers. It covers root movement with pivot,
-translation, nonuniform and negative scale, return to rest, visibility/readiness,
+translation, nonuniform and negative scale, simultaneous object/root motion,
+return to rest, visibility/readiness,
 serial/address reuse, wrong-room lookup, allocation failure, singular/NaN input,
 delta exhaustion, unchanged multi-bone fallback and reset retirement.
 `test_ps2_dynamic_parts.py` retains the disabled-path lifetime checks.

@@ -49,6 +49,16 @@ int main(){
  float local[3]={2,-3,5},baked[3],actual[3],expected[3];point(rest,local,baked);point(dyn::delta[dyn::moved_of[5]],baked,actual);point(current,local,expected);for(unsigned k=0;k<3;++k)near(actual[k],expected[k]);
  // Returning to the bind pose returns to the PS2 baked placement.
  std::memcpy(p.mat,rest,sizeof(rest));++frame_no;assert(dyn::query(5)==0);
+ // Simultaneous object and local-root motion is already included in root world.
+ float object_before[12]={1,0,0,100,0,1,0,-20,0,0,1,30};
+ float child_before[12]={1,0,0,3,0,1,0,4,0,0,1,5};
+ float object_after[12]={0,-1,0,40,1,0,0,50,0,0,1,-60};
+ float child_after[12]={0,0,1,7,0,1,0,8,-1,0,0,9};
+ std::memcpy(o.mat,object_before,sizeof(o.mat));concat(o.mat,child_before,p.mat);bind(5,o,p);
+ point(p.mat,local,baked);assert(dyn::query(5)==0);
+ std::memcpy(o.mat,object_after,sizeof(o.mat));concat(o.mat,child_after,p.mat);++frame_no;
+ assert(dyn::query(5)==2);point(dyn::delta[dyn::moved_of[5]],baked,actual);point(p.mat,local,expected);
+ for(unsigned k=0;k<3;++k)near(actual[k],expected[k]);
  // Visibility and owner serial are checked before touching borrowed parts.
  o.flag=1;++frame_no;assert(dyn::query(5)==1);assert(!re4dc_ps2_placements_intact(0x104,fields,1));o.flag=3;++frame_no;assert(dyn::query(5)==1);o.flag=7;
  o.serial=11;++frame_no;assert(dyn::query(5)==1);assert(!re4dc_ps2_placements_intact(0x104,fields,1));assert(!re4dc_ps2_dyn_source(0x104,&o,11));
