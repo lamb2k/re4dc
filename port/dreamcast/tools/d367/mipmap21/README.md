@@ -472,3 +472,38 @@ explicit and unknown versions are refused. Eighteen focused tests now pass;
 the two extra cases cover emitter/jitter versus reflection/negative paths and
 the selector's reviewed generator contract. Target appearance, combined memory
 and timing remain separate gates, with no recipe or runtime default changes.
+
+## Generic native16/VQ effects and reporting
+
+generic_effect_candidate.py applies the same source contract outside the PS2
+PAL4-frame family. All 220 square native16/VQ EFF keys are assessed, including
+44 source-proven ID UI holds, 173 unresolved consumers, one screen/mixed key and
+two source-qualified world-sprite keys. Forty-five of 57 named source files
+match the original manifest and parse; missing/different inputs remain held.
+Native world/actor material aliases are refused. Original source VQ codebooks
+and full-resolution texels stay exact; an earlier compact base retains its
+used vectors/indices while unused slots fit its mip targets. OFF keeps the
+selected167-FX ancestor. Three new tests cover these families, shared/UI holds,
+bad source hashes, sampling versions and full-resolution RGBA equality.
+
+The two-key compatibility set has 17 independently decoded levels and two
+exact original bases, plus actual Package host ASan/UBSan upload/lifecycle/mip
+checks under both allocator modes. It changes 1000 original keys and keeps
+5501 exact, with 870 total mipmapped keys and a 155912192-byte archive (342016
+below original). Compared with the167-FX ancestor, it adds 45062 payload bytes
+and45088 rounded request bytes. Most of that is one256-square ARGB4444 native
+chain: +43696 payload bytes. It is a format-compatibility candidate, not an
+over-budget fallback or a blanket enablement recommendation. Compression/
+appearance and combined memory remain gates; no speculative speed is claimed.
+The other128-square key retains its prior exact compact VQ base. The producer
+snapshot and every private file are mirrored with hashes. The full6501 policy
+now has79 explicit fixed-ID-UI holds; all51 loose/conditional descriptors and
+the20 separate actor candidates remain separate.
+
+assetpipe.texture.read_re4tex also now counts a stored mip payload's complete
+descriptor size, including lower levels and palette tails. Existing nonmip
+reports keep their prior values. The base-only vram_bytes formula remains for
+proposed textures. Two reproduced reader failures now pass; ten relevant
+reader/formula/palette tests pass. These values are payload inventories, not
+allocator rounding/page placement or live residency. Existing candidate
+inventories already used descriptor sizes, so their receipts do not change.
