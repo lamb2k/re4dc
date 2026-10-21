@@ -1,0 +1,120 @@
+{
+  "scope": "Offline source floor/wall clearance only; actual normal collision and unchanged injury/resource guards remain authoritative. No guest or game writes.",
+  "source_sha256": "908a16ccce6063b6ddf81774e4dde5e023fe800f65bd415baccb632e73dc5781",
+  "historical_stairs193_position_reference_only": true,
+  "original_source_only_future_route": true,
+  "segments": [
+    {
+      "start": [
+        16012.0664,
+        2000,
+        -37525
+      ],
+      "end": [
+        16250,
+        2000,
+        -30750
+      ],
+      "samples": 92,
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        16250,
+        2000,
+        -30750
+      ],
+      "end": [
+        17750,
+        2000,
+        -25250
+      ],
+      "samples": 78,
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        17750,
+        2000,
+        -25250
+      ],
+      "end": [
+        20000,
+        2000,
+        -24000
+      ],
+      "samples": 36,
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        20000,
+        2000,
+        -24000
+      ],
+      "end": [
+        32250,
+        2000,
+        -25500
+      ],
+      "samples": 166,
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        32250,
+        2000,
+        -25500
+      ],
+      "end": [
+        32250,
+        2000,
+        -29250
+      ],
+      "samples": 51,
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        32250,
+        2000,
+        -29250
+      ],
+      "end": [
+        39250,
+        2000,
+        -30500
+      ],
+      "samples": 96,
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        39250,
+        2000,
+        -30500
+      ],
+      "end": [
+        41000,
+        2000,
+        -32000
+      ],
+      "samples": 32,
+      "blocked_samples": []
+    },
+    {
+      "start": [
+        41000,
+        2000,
+        -32000
+      ],
+      "end": [
+        41500,
+        2000,
+        -33250
+      ],
+      "samples": 19,
+      "blocked_samples": []
+    }
+  ]
+}
