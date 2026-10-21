@@ -18,6 +18,7 @@ class Rules(unittest.TestCase):
   paths|={f'src/em{x}/em{x}_set.cpp'for x in ['10','11','12']}
   paths|={'src/game/model.cpp','src/game/obj12.cpp','src/game/obj16.cpp','src/game/em.cpp','src/game/emwep.cpp','src/game/emrock.cpp','src/game/main.cpp','src/game/main_mem.cpp','src/game/event.cpp','src/game/pl_leon.cpp','include/cManager.h','port/dreamcast/game/motion_bridge.cpp','port/dreamcast/game/platform/mem.cpp'}
   paths|={p for p in subprocess.check_output(['git','-C',str(ARGS.repo),'ls-tree','-r','--name-only',ARGS.source_ref,'src']).decode().splitlines()if p.endswith('_set.cpp')}
+  paths|={'src/em30/em30.cpp','src/em3c/em3c.cpp','src/pl0e/pl0e.cpp','src/pl0f/pl0f.cpp'}
   cls.texts={p:subprocess.check_output(['git','-C',str(ARGS.repo),'show',ARGS.source_ref+':'+p]).decode() for p in paths}
  def test_seven_evaluators_and_seven_blend_helpers(self):
   self.assertEqual(len(audit.check_evaluators(self.texts)),7)
@@ -134,6 +135,24 @@ void next() { wrong(); }
  def test_event_shape_stop_is_not_inferred_from_body_motion_clear(self):
   r=audit.ownership_rules(self.texts,self.census);e=next(x for x in r['lifetime_edges']if x['id']=='A08-EVENT-SHAPE')
   self.assertTrue(e['status'].startswith('OPEN'));self.assertIn('not ShapeEnd',e['termination'])
+
+ def test_indirect_bite_borrower_without_subarc_store_is_reviewed(self):
+  r=audit.indirect_owner_rules(self.texts,self.census)
+  self.assertIn('no subArc store',r['bite_contract']);self.assertEqual(len(r['head_setter_callers']['setPlDmgMot']),3)
+ def test_head_setter_alternatives_not_eleven_simultaneous_streams(self):
+  r=audit.indirect_owner_rules(self.texts,self.census)
+  self.assertEqual(len(r['head_setter_callers']['setMotData']),6)
+  t=dict(self.texts);t['src/game/obj16.cpp']=t['src/game/obj16.cpp'].replace('w->mot[10] = m10;','w->mot[10] = m9;',1)
+  with self.assertRaises(AssertionError):audit.indirect_owner_rules(t,self.census)
+ def test_boat_reviewed_six_stream_group_uses_actual_inline_records(self):
+  r=audit.indirect_owner_rules(self.texts,self.census);g=r['reviewed_groups']['jet-ski-positive-lean-six-body-streams']
+  self.assertEqual(len(g['records']),6);self.assertEqual(g['distinct_cached'],0);self.assertIsNone(g['mtc'])
+ def test_boat_default_archive_restore_cannot_be_removed_silently(self):
+  t=dict(self.texts);b,_=audit.fn(t['src/pl0e/pl0e.cpp'],'PlBoatMove');t['src/pl0e/pl0e.cpp']=t['src/pl0e/pl0e.cpp'].replace(b,b.replace('pl->subArc = pl->subArc2;',''),1)
+  with self.assertRaises((AssertionError,ValueError)):audit.indirect_owner_rules(t,self.census)
+ def test_bite_callback_normal_return_must_still_end_damage(self):
+  t=dict(self.texts);b,_=audit.fn(t['src/game/obj16.cpp'],'plemDmMStar');t['src/game/obj16.cpp']=t['src/game/obj16.cpp'].replace(b,b.replace('EndPlDamage();',''),1)
+  with self.assertRaises(AssertionError):audit.indirect_owner_rules(t,self.census)
 
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--repo',type=Path,required=True);p.add_argument('--source-ref',default='c7e0358a');p.add_argument('--census',type=Path,required=True);ARGS,rest=p.parse_known_args();unittest.main(argv=[sys.argv[0]]+rest)

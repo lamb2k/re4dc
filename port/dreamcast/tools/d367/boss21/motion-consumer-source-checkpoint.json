@@ -1433,6 +1433,267 @@
       }
     ]
   },
+  "indirect_owner_followup": {
+    "source_sites": [
+      {
+        "path": "src/game/obj16.cpp",
+        "line": 951,
+        "function": "cObj16::setMotData"
+      },
+      {
+        "path": "src/game/obj16.cpp",
+        "line": 988,
+        "function": "cObj16::setPlDmgMot"
+      },
+      {
+        "path": "src/game/obj16.cpp",
+        "line": 1338,
+        "function": "plemDmMStar"
+      },
+      {
+        "path": "src/pl0e/pl0e.cpp",
+        "line": 840,
+        "function": "PlBoatMove"
+      },
+      {
+        "path": "src/pl0e/pl0e.cpp",
+        "line": 1052,
+        "function": "plboatBlendMotSet"
+      },
+      {
+        "path": "src/pl0e/pl0e.cpp",
+        "line": 1082,
+        "function": "subBlendMotSet"
+      },
+      {
+        "path": "src/pl0e/pl0e.cpp",
+        "line": 1637,
+        "function": "pl0eBlendMotSet"
+      },
+      {
+        "path": "src/pl0f/pl0f.cpp",
+        "line": 1924,
+        "function": "PlBoatMove"
+      },
+      {
+        "path": "src/pl0f/pl0f.cpp",
+        "line": 3325,
+        "function": "plboatBlendMotSet"
+      },
+      {
+        "path": "src/pl0f/pl0f.cpp",
+        "line": 3354,
+        "function": "subBlendMotSet"
+      },
+      {
+        "path": "src/pl0e/pl0e.cpp",
+        "line": 1171,
+        "function": "subBoatRun"
+      },
+      {
+        "path": "src/pl0e/pl0e.cpp",
+        "line": 897,
+        "function": "plboat_R2_Move"
+      },
+      {
+        "path": "src/pl0f/pl0f.cpp",
+        "line": 2017,
+        "function": "plboat_R2_Getoff"
+      },
+      {
+        "path": "src/pl0f/pl0f.cpp",
+        "line": 3868,
+        "function": "subBoatGetoff"
+      }
+    ],
+    "head_setter_callers": {
+      "setMotData": [
+        {
+          "path": "src/em10/em10.cpp",
+          "line": 3077,
+          "symbol": "setMotData",
+          "context_hint": "em10InitRtnSet",
+          "arguments": "PL_ARC_PTR(arc, 0x229), PL_ARC_PTR(arc, 0x229), PL_ARC_PTR(arc, 0x229), PL_ARC_PTR(arc, 0x229),\n                                     PL_ARC_PTR(arc, 0x229), PL_ARC_PTR(arc, 0x229), PL_ARC_PTR(arc, 0x229), PL_ARC_PTR(arc, 0x22A),\n                                     PL_ARC_PTR(arc, 0x22A), PL_ARC_PTR(arc, 0x229), PL_ARC_PTR(arc, 0x229)",
+          "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+        },
+        {
+          "path": "src/em10/em10.cpp",
+          "line": 22702,
+          "symbol": "setMotData",
+          "context_hint": "em10SetParasite",
+          "arguments": "m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10",
+          "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+        },
+        {
+          "path": "src/em30/em30.cpp",
+          "line": 553,
+          "symbol": "setMotData",
+          "context_hint": "em30SetParasite",
+          "arguments": "m0, m1, m2, m3, m4, m4, m4, m7, m8, m9, m10",
+          "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+        },
+        {
+          "path": "src/em30/em30.cpp",
+          "line": 554,
+          "symbol": "setMotData",
+          "context_hint": "em30SetParasite",
+          "arguments": "m0, m1, m2, m3, m4, m4, m4, m7, m8, m9, m10",
+          "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+        },
+        {
+          "path": "src/em3c/em3c.cpp",
+          "line": 2308,
+          "symbol": "setMotData",
+          "context_hint": "em3cSetParasite",
+          "arguments": "m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10",
+          "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+        },
+        {
+          "path": "src/em3c/em3c.cpp",
+          "line": 2309,
+          "symbol": "setMotData",
+          "context_hint": "em3cSetParasite",
+          "arguments": "m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10",
+          "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+        }
+      ],
+      "setPlDmgMot": [
+        {
+          "path": "src/em10/em10.cpp",
+          "line": 22704,
+          "symbol": "setPlDmgMot",
+          "context_hint": "em10SetParasite",
+          "arguments": "PL_ARC_PTR(em->subArc, 0x17A), (int) PL_ARC_PTR(em->subArc, 0x17B)",
+          "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+        },
+        {
+          "path": "src/em30/em30.cpp",
+          "line": 555,
+          "symbol": "setPlDmgMot",
+          "context_hint": "em30SetParasite",
+          "arguments": "ARC(0x20), 0",
+          "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+        },
+        {
+          "path": "src/em3c/em3c.cpp",
+          "line": 2310,
+          "symbol": "setPlDmgMot",
+          "context_hint": "em3cSetParasite",
+          "arguments": "ARC(0x61), (int) ARC(0x62)",
+          "classification": "lexical occurrence; declaration, macro, inactive branch and indirect dispatch require review"
+        }
+      ]
+    },
+    "head_contract": "11 alternatives feed one child body work; independent parasite/tentacle/body/player demand still counts; duplicate setters do not create another stream",
+    "bite_contract": "dmgType obj16 points to Mot_pl_dm from em10 own ARC17a/SEQ17b, legacy em30 ARC20, or em3c ARC61/SEQ62; no subArc store in callback; EndPlDamage is normal exit",
+    "boat_dispatch": [
+      {
+        "path": "src/pl0e/pl0e.cpp",
+        "archive": "qa-fixed:em/pl0e.drs",
+        "native_sha256": "83ea74ed3b80f4892fd3639a43a440c8eccd874f1e52e65e414a06c7013ec192",
+        "native_bytes": 992480,
+        "motion_policy": "selected prepared archive has no MTC; reviewed FCVs below are inline, not motion-cache entries",
+        "dispatch_states": 7,
+        "lifetime": "m_pBoat null check only; no alive/generation check; normal door/Continue retains source contract, mid-ride donor destroy OPEN"
+      },
+      {
+        "path": "src/pl0f/pl0f.cpp",
+        "archive": "qa-fixed:em/pl0f.drs",
+        "native_sha256": "71befc509cbea4d54c618f8ff529bfbd3beeea30ed85661215e685833149a0f4",
+        "native_bytes": 757664,
+        "motion_policy": "selected prepared archive has no MTC; reviewed FCVs below are inline, not motion-cache entries",
+        "dispatch_states": 19,
+        "lifetime": "m_pBoat null check only; no alive/generation check; normal door/Continue retains source contract, mid-ride donor destroy OPEN"
+      }
+    ],
+    "reviewed_groups": {
+      "jet-ski-positive-lean-six-body-streams": {
+        "archive": "qa-fixed:em/pl0e.drs",
+        "native_sha256": "83ea74ed3b80f4892fd3639a43a440c8eccd874f1e52e65e414a06c7013ec192",
+        "native_bytes": 992480,
+        "mtc": null,
+        "source_arcs": [
+          "0x8",
+          "0x9",
+          "0x16",
+          "0x17",
+          "0x25",
+          "0x26"
+        ],
+        "records": [
+          {
+            "arc": 8,
+            "offset": 625536,
+            "state": "inline-resident"
+          },
+          {
+            "arc": 9,
+            "offset": 626336,
+            "state": "inline-resident"
+          },
+          {
+            "arc": 22,
+            "offset": 656416,
+            "state": "inline-resident"
+          },
+          {
+            "arc": 23,
+            "offset": 663680,
+            "state": "inline-resident"
+          },
+          {
+            "arc": 37,
+            "offset": 821888,
+            "state": "inline-resident"
+          },
+          {
+            "arc": 38,
+            "offset": 830144,
+            "state": "inline-resident"
+          }
+        ],
+        "distinct_cached": 0,
+        "cached_payload_bytes": 0,
+        "cold_bytes": 0,
+        "strict_v3_over_two": false,
+        "reason": "ski body+lean, rider body+lean, partner body+lean; positive sign example",
+        "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+      },
+      "del-lago-boat-rider-positive-lean": {
+        "archive": "qa-fixed:em/pl0f.drs",
+        "native_sha256": "71befc509cbea4d54c618f8ff529bfbd3beeea30ed85661215e685833149a0f4",
+        "native_bytes": 757664,
+        "mtc": null,
+        "source_arcs": [
+          "0x9",
+          "0xa"
+        ],
+        "records": [
+          {
+            "arc": 9,
+            "offset": 355104,
+            "state": "inline-resident"
+          },
+          {
+            "arc": 10,
+            "offset": 375968,
+            "state": "inline-resident"
+          }
+        ],
+        "distinct_cached": 0,
+        "cached_payload_bytes": 0,
+        "cold_bytes": 0,
+        "strict_v3_over_two": false,
+        "reason": "player boat body+one lean; boss and boat own body remain separate",
+        "proof": "reviewed local source demand, no runtime acceptance or all-state closure"
+      }
+    },
+    "remaining": [
+      "raw dmgType donor retirement during obj16 bite before EndPlDamage",
+      "jet-ski partner callback/ride stopped before exceptional donor unload",
+      "actual loaded boat variant and render/hand/texture/audio reads are runtime gates, not inferred from no MTC"
+    ]
+  },
   "lexical_occurrences_by_symbol": {
     "CalculateShape_new": 6,
     "FcvGetMaxFrame": 5,

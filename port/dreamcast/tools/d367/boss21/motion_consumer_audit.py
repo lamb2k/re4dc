@@ -353,14 +353,50 @@ def ownership_rules(texts,census):
    dict(id='A08-EVDBINS',owner='EvdTbl header + BinTbl borrowed entries/refcounts',termination='normal Event destroy before DelEvd; partial SetBin refusal leaves header registered',status='source-visible transactional admission defect',next_case='fail kth BinTbl registration then retry same EVD name; require complete bins or rollback without releasing live refs')])
 
 
+
+def indirect_owner_rules(texts,census):
+ sites=[]
+ def body(path,name):
+  b,line=fn(texts[path],name);sites.append(dict(path=path,line=line,function=name));return b
+ setter=body('src/game/obj16.cpp','cObj16::setMotData')
+ assert all(f'w->mot[{i}] = m{i};' in setter for i in range(11))
+ assert 'MotionSetCore(this, &pMotion, m2' in setter and 'MotionSetCore(this, &pMotion, m0' in setter
+ damage=body('src/game/obj16.cpp','cObj16::setPlDmgMot');assert 'w->Mot_pl_dm = mot' in damage and 'w->Seq_pl_dm = a' in damage
+ bite=body('src/game/obj16.cpp','plemDmMStar')
+ assert 'w->Mot_pl_dm, w->Seq_pl_dm' in bite and 'EndPlDamage()' in bite
+ assert '->subArc =' not in mask(bite) # subArc-assignment census alone misses this borrower
+ actual={n:[x for x in calls(texts,[n])if x['path'].startswith('src/') and x['path']!='src/game/obj16.cpp']for n in ['setMotData','setPlDmgMot']}
+ assert len(actual['setMotData'])==6 and len(actual['setPlDmgMot'])==3
+ assert {x['path']for x in actual['setMotData']}=={'src/em10/em10.cpp','src/em30/em30.cpp','src/em3c/em3c.cpp'}
+ for module in ['30','3c']:
+  assert '#define ARC(no) PL_ARC_PTR(em->subArc, no)' in texts[f'src/em{module}/em{module}.cpp']
+ boat=[]
+ for module in ['0e','0f']:
+  path=f'src/pl{module}/pl{module}.cpp';move=body(path,'PlBoatMove')
+  assert move.index('pl->subArc = pl->m_pBoat->subArc')<move.index('plboat_R2_move_tbl[pl->r_no_2](pl)')<move.index('pl->subArc = pl->subArc2')
+  for name in ['plboatBlendMotSet','subBlendMotSet']+(['pl0eBlendMotSet']if module=='0e'else[]):
+   b=body(path,name);assert b.count('MotionSetCore(')==2 and 'm = m1' in b and 'm = m2' in b
+  label=f'qa-fixed:em/pl{module}.drs';archive=census['archives'][label];assert archive['mtc'] is None
+  boat.append(dict(path=path,archive=label,native_sha256=archive['native_sha256'],native_bytes=archive['native_bytes'],motion_policy='selected prepared archive has no MTC; reviewed FCVs below are inline, not motion-cache entries',dispatch_states=7 if module=='0e'else 19,lifetime='m_pBoat null check only; no alive/generation check; normal door/Continue retains source contract, mid-ride donor destroy OPEN'))
+ ski=body('src/pl0e/pl0e.cpp','subBoatRun');ride=body('src/pl0e/pl0e.cpp','plboat_R2_Move')
+ assert 'SUBARC(0x25), SUBARC(0x27), SUBARC(0x26)' in ski and 'PLARC(0x16), PLARC(0x18), PLARC(0x17)' in ride
+ leave=body('src/pl0f/pl0f.cpp','plboat_R2_Getoff');assert 'EndPlDamage()' in leave
+ leave_sub=body('src/pl0f/pl0f.cpp','subBoatGetoff');assert 'EndSubDamage()' in leave_sub
+ groups={
+  'jet-ski-positive-lean-six-body-streams':group(census,'qa-fixed:em/pl0e.drs',[0x8,0x9,0x16,0x17,0x25,0x26],'ski body+lean, rider body+lean, partner body+lean; positive sign example'),
+  'del-lago-boat-rider-positive-lean':group(census,'qa-fixed:em/pl0f.drs',[0x9,0xa],'player boat body+one lean; boss and boat own body remain separate'),
+ }
+ assert all(g['distinct_cached']==0 and all(x['state']=='inline-resident'for x in g['records'])for g in groups.values())
+ return dict(source_sites=sites,head_setter_callers=actual,head_contract='11 alternatives feed one child body work; independent parasite/tentacle/body/player demand still counts; duplicate setters do not create another stream',bite_contract='dmgType obj16 points to Mot_pl_dm from em10 own ARC17a/SEQ17b, legacy em30 ARC20, or em3c ARC61/SEQ62; no subArc store in callback; EndPlDamage is normal exit',boat_dispatch=boat,reviewed_groups=groups,remaining=['raw dmgType donor retirement during obj16 bite before EndPlDamage','jet-ski partner callback/ride stopped before exceptional donor unload','actual loaded boat variant and render/hand/texture/audio reads are runtime gates, not inferred from no MTC'])
+
 def run(repo,ref,census_path):
  raw=census_path.read_bytes();assert digest(raw)==CENSUS_SHA,'sealed metadata changed'
  census=json.loads(raw)
  paths=subprocess.check_output(['git','-C',str(repo),'ls-tree','-r','--name-only',ref,'src','include','port/dreamcast/game']).decode().splitlines()
  texts={p:subprocess.check_output(['git','-C',str(repo),'show',ref+':'+p]).decode(errors='replace')
         for p in paths if p.endswith(('.cpp','.c','.h','.hpp','.inc','.S','.s')) and not p.startswith('src/lib/')}
- sites=calls(texts);ev=check_evaluators(texts);bl=check_blends(texts);groups=reviewed_groups(census,texts);life=lifecycle_rules(texts);owners=ownership_rules(texts,census)
- lifecycle_paths={x['path']for x in life['source_sites']+owners['source_sites']}|{'include/types.h','src/game/sce_com.cpp','port/dreamcast/game/platform/native_event_file.cpp'}
+ sites=calls(texts);ev=check_evaluators(texts);bl=check_blends(texts);groups=reviewed_groups(census,texts);life=lifecycle_rules(texts);owners=ownership_rules(texts,census);indirect=indirect_owner_rules(texts,census)
+ lifecycle_paths={x['path']for x in life['source_sites']+owners['source_sites']+indirect['source_sites']}|{'include/types.h','src/game/sce_com.cpp','port/dreamcast/game/platform/native_event_file.cpp'}
  pins=[dict(path=p,sha256=digest(t.encode()))for p,t in texts.items() if p in lifecycle_paths or any(c['path']==p for c in sites)]
  # Discover literal asm aliases independently of masked string contents.
  aliases=[]
@@ -378,7 +414,7 @@ def run(repo,ref,census_path):
   source_ref=subprocess.check_output(['git','-C',str(repo),'rev-parse',ref]).decode().strip(),
   census_sha256=CENSUS_SHA,qa_archive_inventory_count=sum(k.startswith('qa-fixed:')for k in census['archives']),
   complete_metadata_inventory_count=len(census['archives']),reused_inventory=True,
-  evaluator_rules=ev,blend_helper_rules=bl,reviewed_groups=groups,lifecycle_rules=life,ownership_followup=owners,
+  evaluator_rules=ev,blend_helper_rules=bl,reviewed_groups=groups,lifecycle_rules=life,ownership_followup=owners,indirect_owner_followup=indirect,
   lexical_occurrences_by_symbol=dict(sorted(Counter(c['symbol']for c in sites).items())),
   lexical_occurrences_by_file=dict(sorted(Counter(c['path']for c in sites).items())),
   asm_aliases=aliases,source_pins=pins,subarc_assignment_occurrences=len(borrowed),
