@@ -1,0 +1,730 @@
+{
+  "source_revision": "e12734dd39481e753de0e7b28bd20d92da54dcda",
+  "reviewed_base": "c7e0358a44677a15123a7f4233c4115eba627694 + resident e12734dd",
+  "foundation": "176912fd (16-path lifecycle); H051 5ebed846 selected shot/HUD keys reused, no new asset census",
+  "scope": "A10-A13 docs/tests only. Source classification and fault characterization are not blanket runtime/console clearance.",
+  "pins": [
+    {
+      "id": "image-hit",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 3230,
+      "lines": 34,
+      "needle": "Entry* load(const Re4dcUiImage& image",
+      "sha256": "72f98d10bd34fdb23aaa8c255020e24f90df4cd72ee5aee9df57abbfce0973df"
+    },
+    {
+      "id": "image-negative",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 3275,
+      "lines": 5,
+      "needle": "for(const auto& m:missing_keys) if(m.crc|m.fnv)",
+      "sha256": "69dbf8ba5a8db7408c185db2dff0c3a977a937dad524e3f969ffe85b279ac4e5"
+    },
+    {
+      "id": "image-pack-error",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 3302,
+      "lines": 2,
+      "needle": "if(pack==texpack::kError)",
+      "sha256": "161465b90a922a63df06ad8c18ce9f1cbe10ba4e751aa671c69bbbbe590c5fe0"
+    },
+    {
+      "id": "image-open",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 3339,
+      "lines": 4,
+      "needle": "bool ok=RE4DC_OPEN_PACKAGE();",
+      "sha256": "0acc88af9ad9131806c10f18b960b61e93a8b063fbfd63a9eb51cfba298a8e00"
+    },
+    {
+      "id": "image-failure",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 3541,
+      "lines": 14,
+      "needle": "if(!ok) slot->package.close();",
+      "sha256": "26ea2ccd84dcda6b3630645adfd55b88d69b7c3eb9e40f90a368c55f4e8e3739"
+    },
+    {
+      "id": "image-metadata",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 3387,
+      "lines": 9,
+      "needle": "for(unsigned tries=0;!ok && tries<8",
+      "sha256": "146204f045ba62f8ca2f1901461ed1494898cc969a6ead6423fe621c6bce7e34"
+    },
+    {
+      "id": "image-latch",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 3281,
+      "lines": 2,
+      "needle": "if(key==frag_key && frame-frag_frame<kFragRetryFrames)",
+      "sha256": "3d095c4d00296d8113b227d8533dc30a9353319dae18176343edac910de6fe09"
+    },
+    {
+      "id": "image-owner",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 4704,
+      "lines": 12,
+      "needle": "extern \"C\" int re4dc_ui_bind_weapon(",
+      "sha256": "1fcd97c2acd0909cddd5e5030b232b1c1c0ed53899ed6b93258971cda756d8d6"
+    },
+    {
+      "id": "image-hold",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 4608,
+      "lines": 14,
+      "needle": "extern \"C\" void re4dc_ui_vram_unclaim()",
+      "sha256": "ebd9eca975ee8c43495da81fb8407062ce0cd50c7198abb31138822caefb7b30"
+    },
+    {
+      "id": "image-room",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 4788,
+      "lines": 62,
+      "needle": "extern \"C\" void re4dc_ui_retire_room()",
+      "sha256": "f7f2825a681d4084c922162680d3f5a14a450c019965abc5f3b4c6bd2f4bccd0"
+    },
+    {
+      "id": "image-fx",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 7324,
+      "lines": 15,
+      "needle": "const unsigned opens=load_opens;",
+      "sha256": "9a14d0bab6de44b50246c36e49c999091a84ae3d16c1f9f97927c50cf3e39e00"
+    },
+    {
+      "id": "image-core",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "line": 3827,
+      "lines": 5,
+      "needle": "unsigned resident_listed,resident_picked;",
+      "sha256": "e69c0016eb559165b8a5bde3c22d12646775e7c4aabc7a490bc4042ed72b1155"
+    },
+    {
+      "id": "pack-index",
+      "path": "port/dreamcast/game/platform/include/texpack_index.inc",
+      "line": 128,
+      "lines": 33,
+      "needle": "Result find(const Key& key",
+      "sha256": "e4bfad0962bbd7a05f3314ebac62693d913da81dfbc907a4f913d84a933594e0"
+    },
+    {
+      "id": "pack-retry",
+      "path": "port/dreamcast/game/platform/include/texpack_index.inc",
+      "line": 63,
+      "lines": 12,
+      "needle": "bool read_failed(",
+      "sha256": "14f93f5d13b8169f55aeea6749765845a85ecc2143bbaab4d9cf90864a357337"
+    },
+    {
+      "id": "image-file",
+      "path": "port/dreamcast/room/texture_package.cpp",
+      "line": 252,
+      "lines": 22,
+      "needle": "RangeRead read_file_range(",
+      "sha256": "ab49dbfad745201b26666ddb8f7d30f84585d69865c399776710db87f507dbcd"
+    },
+    {
+      "id": "effect-register",
+      "path": "src/game/eff_sys.cpp",
+      "line": 435,
+      "lines": 75,
+      "needle": "int EspDataLoad(u32 addr, u32 owner, int flag)\n{",
+      "sha256": "8ef56f22d812b28c54139d2054ebe514f1c58c5e0e00b5293c7cfaa284a1fba9"
+    },
+    {
+      "id": "effect-release",
+      "path": "src/game/eff_sys.cpp",
+      "line": 520,
+      "lines": 28,
+      "needle": "int EspDataRelease(u32 owner, int flag, int warn)\n{",
+      "sha256": "a37f966b0fe8b0b4b18b0522dbcd7051c7c5b318bfb0669df0bc0dc24f6ff491"
+    },
+    {
+      "id": "effect-table-release",
+      "path": "src/game/eff_sys.cpp",
+      "line": 927,
+      "lines": 15,
+      "needle": "int estRelease(u32 owner)\n{",
+      "sha256": "d97e4abb680edb8e8f679bdd2a57d90a44aa77f7f1fec980a556366cefdeb8c0"
+    },
+    {
+      "id": "emitter-head",
+      "path": "src/game/est.cpp",
+      "line": 68,
+      "lines": 16,
+      "needle": "p->head = head;",
+      "sha256": "f8c6b8f4c291a279f82c14acaef0c473abc0d0fa6dda386f51cdd52f43c1f45e"
+    },
+    {
+      "id": "emitter-set",
+      "path": "src/game/est.cpp",
+      "line": 30,
+      "lines": 8,
+      "needle": "void EstSet(int a, int b, Vec* pos",
+      "sha256": "be47e28153117c892950b1fcb2ad8dad9502a77ae9a453fa35e88bf6e86d6065"
+    },
+    {
+      "id": "emitter-delete",
+      "path": "src/game/est.cpp",
+      "line": 240,
+      "lines": 20,
+      "needle": "void EffectDeleteAll()\n{",
+      "sha256": "2351daf24e86cd1d557636389a4139ce8bd70a7257d1e05172bd21b4c0ab5fd4"
+    },
+    {
+      "id": "emitter-read",
+      "path": "src/game/espgen10.cpp",
+      "line": 112,
+      "lines": 14,
+      "needle": "void espgen10_Update(EspgenWork* w)\n{",
+      "sha256": "b44686f37c32489579cb57f15b0778c861290c0adbd43906275c3df0f9124fac"
+    },
+    {
+      "id": "effect-bind",
+      "path": "port/dreamcast/game/platform/native_effect.cpp",
+      "line": 112,
+      "lines": 51,
+      "needle": "static int bind_archive(",
+      "sha256": "a415b81f7e0761e5fa1812290591ea988ab36230664b55a154f24c8a27e2706d"
+    },
+    {
+      "id": "effect-retire",
+      "path": "port/dreamcast/game/platform/native_effect.cpp",
+      "line": 166,
+      "lines": 13,
+      "needle": "extern \"C\" void re4dc_effect_unbind(",
+      "sha256": "16c8d134f6b6b9da8205c3b33563d200e011f15d247c4bcd980ab67a9779e33b"
+    },
+    {
+      "id": "effect-decode",
+      "path": "port/dreamcast/game/platform/native_effect.cpp",
+      "line": 192,
+      "lines": 29,
+      "needle": "extern \"C\" void* re4dc_effect_record_read(",
+      "sha256": "0f68e2423b5083eca8dc96e32e010b1d622bc3661cce7a76b5e22e2e8f36e1e8"
+    },
+    {
+      "id": "weapon-release",
+      "path": "src/game/pl_wep.cpp",
+      "line": 114,
+      "lines": 6,
+      "needle": "EspDataRelease(0x36, 1, 1);",
+      "sha256": "f9d2c1fc79c35216b243e23ebe9eefc3a6eea42c614fffa9c3309a401b2d3eae"
+    },
+    {
+      "id": "weapon-emitter-delete",
+      "path": "src/game/pl_wep.cpp",
+      "line": 174,
+      "lines": 4,
+      "needle": "EffectEspDelete(0, 10, this, 0);",
+      "sha256": "63a8eae51f7f9b799c2a09998bab99bd6883b34c3b11ab3a7d4da031a8c92db7"
+    },
+    {
+      "id": "event-effect-retire",
+      "path": "src/game/event.cpp",
+      "line": 1680,
+      "lines": 7,
+      "needle": "EspDataRelease(evt->effNo + 0xC4, 1, 1);",
+      "sha256": "8771787ef87372b2e8bcd0ba0dcb9f78d7c9f71497c12cc844818813a8b3075b"
+    },
+    {
+      "id": "module-retire",
+      "path": "src/game/read.cpp",
+      "line": 399,
+      "lines": 31,
+      "needle": "void InitModule(ReadModule* m)\n{",
+      "sha256": "1aee18e63230befd5286340890aed3fa08145fcce3309f19acf8faf4ad0fb6e8"
+    },
+    {
+      "id": "head-model",
+      "path": "src/em10/em10.cpp",
+      "line": 19135,
+      "lines": 44,
+      "needle": "void em10HeadSet(cEm10* em, int no)\n{",
+      "sha256": "8799decc71355fcaad85fa3581a2913b131c0ff4e02dbfd31fec5794ca1172a0"
+    },
+    {
+      "id": "head-fx",
+      "path": "src/em10/em10.cpp",
+      "line": 17908,
+      "lines": 25,
+      "needle": "em10HeadSet(em, 1);\n    if (a == 3)",
+      "sha256": "7a4fa4f6a67d2088c9b45b3c29a9c19cdd0b465746e4c9b4cdf574378770a87e"
+    },
+    {
+      "id": "prop-box",
+      "path": "src/game/embox.cpp",
+      "line": 407,
+      "lines": 67,
+      "needle": "void emBoxSetBreak(cEmBox* em, u32 kind)\n{",
+      "sha256": "2f5df792fcdd7b3dd9553ddb32ce7215d61a78510b1119c78c3c3cccd755707f"
+    },
+    {
+      "id": "prop-barrel",
+      "path": "src/game/embarrel.cpp",
+      "line": 463,
+      "lines": 32,
+      "needle": "void emBarrelSetBreak(cEmBarrel* em, int kind)\n{",
+      "sha256": "209fc749a85b9801c88190d1c67cf9af7997b28509ce56fac64214b641708e25"
+    },
+    {
+      "id": "prop-register",
+      "path": "src/game/EtcModel.cpp",
+      "line": 434,
+      "lines": 20,
+      "needle": "int Et02_init(void* arc, EtcSetData* d, cModel** out)\n{",
+      "sha256": "a2c1721541017136fdf5b7b5dfbf631b44b1567f32f30284cd31d2962c6c422e"
+    },
+    {
+      "id": "sound-play",
+      "path": "src/game/snd.cpp",
+      "line": 890,
+      "lines": 78,
+      "needle": "u32 SndCall(u16 blk, u16 no, Vec* pos, int id, int vol, cUnit* obj)\n{",
+      "sha256": "65b13c0465b82978feee4502e19b2c101ab94836aee4c3eab6f98dd845f2e79e"
+    },
+    {
+      "id": "sound-guard",
+      "path": "src/game/snd.cpp",
+      "line": 472,
+      "lines": 18,
+      "needle": "static int sndExistCheck(int blk, u32 no)\n{",
+      "sha256": "353e997c2d95479b19904c3ca4cf6e8ba1d98027ccd675bdc7852512cd521f02"
+    },
+    {
+      "id": "sound-reuse",
+      "path": "src/game/snd.cpp",
+      "line": 2772,
+      "lines": 19,
+      "needle": "int SndEmDataReadCheck(int id)\n{",
+      "sha256": "8245ef6603c2cc50e9ad7a798ecfadf6f0a498f10255060be80a487a513c78c8"
+    },
+    {
+      "id": "sound-register",
+      "path": "src/game/snd.cpp",
+      "line": 2790,
+      "lines": 43,
+      "needle": "void SndBlkInit(int type, int id, int no)\n{",
+      "sha256": "625bf3abcaa74f21bf0b2f947b24d274040e1d71f74fbf9c5c727ff46238806e"
+    },
+    {
+      "id": "sound-room",
+      "path": "src/game/snd.cpp",
+      "line": 1724,
+      "lines": 31,
+      "needle": "void SndNextRoomInit()\n{",
+      "sha256": "6b5bd5b9c63cf368cc631fe8baaab261e1d19e0839ef0afc60a0269af1f2db3c"
+    },
+    {
+      "id": "sound-dvd",
+      "path": "src/game/dvd.cpp",
+      "line": 859,
+      "lines": 27,
+      "needle": "r = SndEmDataReadCheck((*ph)->sndArg);",
+      "sha256": "5041a2926e25305c5a8fca251e89bc32e9082a72f80c16aabd482b2533afc261"
+    },
+    {
+      "id": "sound-finish",
+      "path": "src/game/dvd.cpp",
+      "line": 967,
+      "lines": 5,
+      "needle": "SndBlkInit((*ph)->sndType, (*ph)->sndArg, (*ph)->sndNo);",
+      "sha256": "52196f9daf82a3b2e3c85ba5cb0257a56d410912ce88fba87028bd9ed3f488c7"
+    },
+    {
+      "id": "aica-layout",
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "line": 461,
+      "lines": 47,
+      "needle": "bool layout_init(const AicaBankHeader& h)\n{",
+      "sha256": "3e6a5e9b7b1dfa3fbb337fc7f7e697d513b31c3449c8f6190d5802f06531dd09"
+    },
+    {
+      "id": "aica-prebuilt",
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "line": 509,
+      "lines": 22,
+      "needle": "bool blk_begin_prebuilt(int t, u32 dst, const AicaBankHeader& h)\n{",
+      "sha256": "6a0e77e08a0753ed783035d772ecf3c5fa7646bf4767a9f017961f8eb94fe778"
+    },
+    {
+      "id": "aica-arq",
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "line": 2064,
+      "lines": 30,
+      "needle": "void re4dc_audio_arq(u32 src, u32 dst, u32 len)\n{",
+      "sha256": "02387f227c7e5c5b2ec346c94de1f4f32596da5ceff3eff0c9627866768d7825"
+    },
+    {
+      "id": "aica-play",
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "line": 2199,
+      "lines": 46,
+      "needle": "void AXSetVoiceState(void* vp, u16 st)\n{",
+      "sha256": "2b95d475ec24024fdd7e0e3ba6c34e3d89b9bda24004688857ca705894878d16"
+    },
+    {
+      "id": "aica-room",
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "line": 421,
+      "lines": 15,
+      "needle": "void blk_prepare(int t, u32 dst)\n{",
+      "sha256": "827ae1d4d39a8e4eef0eebfb9b1bd9177b68e610238a7db0af30715c52afde6e"
+    },
+    {
+      "id": "stream-index",
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "line": 1545,
+      "lines": 37,
+      "needle": "bool str_index_load()\n{",
+      "sha256": "271c851dd6c11153252d890434e22f5fdb47d25b098d4b2d8ccf97bd70fd3d84"
+    },
+    {
+      "id": "stream-read",
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "line": 1653,
+      "lines": 26,
+      "needle": "bool str_cache(u32 fofs, u32 fend)\n{",
+      "sha256": "20e78530fc116c83df2d2bd5f97f34c0d5784ff58d5246e0f2530f3460bd0a3a"
+    },
+    {
+      "id": "stream-thread",
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "line": 1721,
+      "lines": 61,
+      "needle": "__attribute__((unused)) void* str_main(void*)\n{",
+      "sha256": "56f86ea5bf9239ccd9bb34491b55b84a32c484915e9b039d6b7c51d09eb86daa"
+    },
+    {
+      "id": "stream-meters",
+      "path": "port/dreamcast/game/platform/dvd_read_safe.cpp",
+      "line": 134,
+      "lines": 44,
+      "needle": "struct DiscMeterScope {",
+      "sha256": "8ec79e82bc2099e6af3b141bb3e0a4fe7e55c6cd7c2def632c87a27b913cc8ce"
+    },
+    {
+      "id": "shot-init",
+      "path": "src/wep02/wep02.cpp",
+      "line": 17,
+      "lines": 27,
+      "needle": "void Wep02_init(cModel* m)",
+      "sha256": "df6f2aacdc33aebe1e2fc969e2c49347e33efcfce115698915244c04540f86a4"
+    },
+    {
+      "id": "shot-ruger",
+      "path": "src/wep/objRuger.cpp",
+      "line": 97,
+      "lines": 3,
+      "needle": "SndCall(2, 0, &pParts->world, 0, 0, 0);",
+      "sha256": "d66d1215ea81716660d66132c606bb3d593568eba6273d6af1e5e608470d82b6"
+    },
+    {
+      "id": "hud-digit",
+      "path": "src/game/cockpit.cpp",
+      "line": 552,
+      "lines": 45,
+      "needle": "void BulletInfo::move()",
+      "sha256": "67ede04fd43c58b3e2201305594f0cf0a0c8133ada8d15dca21214a179e49667"
+    }
+  ],
+  "sites": [
+    {
+      "id": "T01",
+      "area": "A10",
+      "caller": "UI/HUD/model/effect resolve -> load",
+      "file": "dc/tex.pak index+payload, or dc/tex/<key>.re4tex",
+      "owner": "stable image key -> Entry/package",
+      "lifetime": "Hit returns before pack/filesystem; entry close invalidates handle, not archive identity.",
+      "classification": "FINITE FIRST USE or capacity/readmission after eviction, not per-draw by design",
+      "pins": [
+        "image-hit",
+        "image-file",
+        "image-fx"
+      ],
+      "remaining_verify": "Attribute every repeated key to close_entry/pressure/claim; first-shot muzzle/HUD warm-zero receipts cover only missed-shot control, not headloss/death images."
+    },
+    {
+      "id": "T02",
+      "area": "A10",
+      "caller": "load -> texpack::find",
+      "file": "dc/tex.pak index sectors",
+      "owner": "one sector cache plus first-key directory",
+      "lifetime": "Switching keys in different sectors rereads index; payload warmth bypasses find.",
+      "classification": "BOUNDED INDEX CACHE; can recur under varied cold image admission, not animation payload",
+      "pins": [
+        "pack-index",
+        "image-hit"
+      ],
+      "remaining_verify": "Correlate repeated index LBA with actual misses; separate metadata seeks from payload bytes."
+    },
+    {
+      "id": "T03",
+      "area": "A10",
+      "caller": "texpack::open_locked/find read failure",
+      "file": "dc/tex.pak header/index",
+      "owner": "pack state, retry frame, room generation",
+      "lifetime": "Read failures spaced; room_loaded permits retry; absent/invalid pack uses loose paths.",
+      "classification": "EXPECTED TRANSIENT RETRY; existing host tests pass",
+      "pins": [
+        "pack-retry",
+        "pack-index",
+        "image-pack-error"
+      ],
+      "remaining_verify": "Target I/O-fault recovery and loose-fallback availability on selected packed disc remain OPEN."
+    },
+    {
+      "id": "T04",
+      "area": "A10",
+      "caller": "load open failed / invalid payload / upload failure",
+      "file": "dc/tex.pak payload or loose re4tex",
+      "owner": "missing_keys[32], frag latch, package error",
+      "lifetime": "Loose absent keys are a 32-key ring; >32 distinct missing keys can age out. Packed payload/corrupt/header rejection is not negatively cached; VRAM fragmentation has separate latch.",
+      "classification": "OPEN RETRY RISK: payload errors/corruption can repeat; no current recurrence attribution",
+      "pins": [
+        "image-negative",
+        "image-open",
+        "image-failure",
+        "image-latch"
+      ],
+      "remaining_verify": "Inject persistent payload error/corrupt package and >32 missing keys, measure retries/evictions without hiding recoverable assets. No automatic permanent-failure policy change proposed."
+    },
+    {
+      "id": "T05",
+      "area": "A10",
+      "caller": "new weapon/player/enemy preload -> preload_resident",
+      "file": "dc/resident.bin",
+      "owner": "copied current-room/core metadata under RESIDENT_LIST_CACHE",
+      "lifetime": "Immutable list cached only after exact complete scan; new owner admission remains.",
+      "classification": "CONFIRMED REDUNDANT SCAN REPAIRED SOURCE e12734dd; target gate pending",
+      "pins": [
+        "image-owner",
+        "image-core"
+      ],
+      "remaining_verify": "Combined fresh target repeated switch/new enemy/menu/movie refill: zero warm list reads while missing owner keys still load."
+    },
+    {
+      "id": "T06",
+      "area": "A10",
+      "caller": "vram claim/hold/unclaim and heap11 close",
+      "file": "same texture key packages; resident list",
+      "owner": "VRAM claims and remembered dropped keys",
+      "lifetime": "Evicted images legitimately refill; packed hold restores remembered keys, claim release requests preload. Room retirement clears borrowed identities and releases FX pins.",
+      "classification": "LIFECYCLE READMISSION, amount depends on actual evictions",
+      "pins": [
+        "image-hold",
+        "image-room",
+        "image-metadata"
+      ],
+      "remaining_verify": "Trace ordinary menu/radio/movie return including no-eviction close; verify no full payload reload unless entry lost, KOS/VRAM floor and fences preserved."
+    },
+    {
+      "id": "E01",
+      "area": "A11",
+      "caller": "EstSet -> espgen10_Update -> native effect record read",
+      "file": "NONE for ESQ decode; source archive already resident",
+      "owner": "borrowed head/sequence table, 300-byte caller scratch",
+      "lifetime": "Emitter retains head; decoder verifies live binding for compact records.",
+      "classification": "CPU DECODE, NOT DVD",
+      "pins": [
+        "emitter-set",
+        "emitter-head",
+        "emitter-read",
+        "effect-bind",
+        "effect-decode"
+      ],
+      "remaining_verify": "All module/weapon/event teardown callers must prove emitter removal or completion before archive free; bind validation alone does not prove borrower lifetime."
+    },
+    {
+      "id": "E02",
+      "area": "A11",
+      "caller": "EspDataRelease / InitModule / event end / weapon release",
+      "file": "NONE at deregistration; later new image may load",
+      "owner": "effect owner count and borrowed archive",
+      "lifetime": "EspDataRelease clears registration tables; does not itself sweep live controllers. Weapon/event call explicit deletes; room EffectDeleteAll clears all arrays. InitModule unbinds compact table before free.",
+      "classification": "OPEN OWNERSHIP PROOF across module swaps; not an observed stale pointer",
+      "pins": [
+        "effect-release",
+        "effect-table-release",
+        "weapon-release",
+        "weapon-emitter-delete",
+        "event-effect-retire",
+        "module-retire",
+        "effect-retire",
+        "emitter-delete"
+      ],
+      "remaining_verify": "Complete caller-specific teardown ordering with Boss A08, including deferred objects, failed admission and event cancel; no blanket lifecycle closure."
+    },
+    {
+      "id": "E03",
+      "area": "A11",
+      "caller": "EspDataLoad first registration / duplicate / malformed version",
+      "file": "NONE; passed EFF memory",
+      "owner": "ownerCnt then EFF registration",
+      "lifetime": "Count increments before version validation; invalid first version can leave owner count so next flag0 call returns success without registration.",
+      "classification": "OPEN FAILED-REGISTRATION STATE risk, not recurring I/O proof",
+      "pins": [
+        "effect-register"
+      ],
+      "remaining_verify": "Actual-source invalid-version then corrected retry/refcount teardown test; selected discs validate EFF, so no observed runtime occurrence."
+    },
+    {
+      "id": "G01",
+      "area": "A10/A11/A12",
+      "caller": "ordinary Ruger shot and casing",
+      "file": "resident EFF/weapon BIN; image miss -> tex.pak; resident sound block2",
+      "owner": "weapon EFF owner0x36, core sprites, source sound block2",
+      "lifetime": "EFF registered at init; per-shot EstSet/SndCall; selected Tex22 muzzle keys first-use finite, warm missed-shot arm0reads.",
+      "classification": "FINITE FIRST USE CONFIRMED in missed-shot control only",
+      "pins": [
+        "sound-play",
+        "image-fx",
+        "emitter-set",
+        "shot-init",
+        "shot-ruger",
+        "hud-digit"
+      ],
+      "remaining_verify": "Successor ordinary aim/fire/reload/move and weapon cycling; correlate muzzle/casing/HUD separately from reaction FCVs. Reuse H051 selected-key receipt."
+    },
+    {
+      "id": "G02",
+      "area": "A10/A11/A12",
+      "caller": "em10LostHead -> em10HeadSet/EstSet/SndCall",
+      "file": "head BIN/TPL from w->mot; image miss -> tex.pak; bank8",
+      "owner": "selected enemy archive, core owner0x10 effects, enemy sound ID",
+      "lifetime": "Head model changes from already-held source pointers; effects can introduce new images; sound uses existing registered bank. Death also reserves source loot.",
+      "classification": "FINITE FIRST USE candidate; complete headloss/death image/loot chain OPEN",
+      "pins": [
+        "head-model",
+        "head-fx",
+        "sound-play",
+        "sound-reuse"
+      ],
+      "remaining_verify": "Actual normal headloss vs body death, disappearing/head projectile/parasite and loot admissions; map selected image keys and any caller-executed module load. QA ambush ordinary kills do not certify every headloss variant."
+    },
+    {
+      "id": "P01",
+      "area": "A10/A11/A12",
+      "caller": "emBoxSetBreak/emBarrelSetBreak -> EstSet/SndCall",
+      "file": "room/Etc EFF already registered; image miss -> tex.pak",
+      "owner": "Etc EFF owner (e.g.0x56) plus room sound6/player sound1",
+      "lifetime": "Triggers use source-selected EFF ID and sound blocks; etc init registers in-memory EFF. Break debris and pickups have independent source model lifetimes.",
+      "classification": "FINITE FIRST USE candidate; dynamic model/image admission OPEN",
+      "pins": [
+        "prop-box",
+        "prop-barrel",
+        "prop-register",
+        "emitter-set",
+        "sound-play"
+      ],
+      "remaining_verify": "One ordinary box/barrel break representative per distinct owner/data contract; track debris/item model bind and image first-use vs repeated identical trigger, no blanket all-prop claim."
+    },
+    {
+      "id": "S01",
+      "area": "A12",
+      "caller": "SndCall -> Snd_iss_req_para -> AXSetVoiceState",
+      "file": "NONE for each resident one-shot",
+      "owner": "SIT/sequence/driver block, AICA map",
+      "lifetime": "Missing/unmapped one-shot returns silent; playback does not issue DVD read or load bank.",
+      "classification": "RESIDENT PLAYBACK, NOT DISC I/O",
+      "pins": [
+        "sound-play",
+        "sound-guard",
+        "aica-play"
+      ],
+      "remaining_verify": "Repeated headloss/death/shot/prop sounds: inspect mapped/unmapped and source block flag; do not attribute stream or module sound-part reads to SndCall."
+    },
+    {
+      "id": "S02",
+      "area": "A12",
+      "caller": "DVD sound type8 -> SndEmDataReadCheck -> SndBlkInit -> ARQ",
+      "file": "sound MRAM/ARAM parts of selected enemy DRS; BGM file0x61",
+      "owner": "six enemy source slots, two BGM slots, fixed AICA layout/room arena",
+      "lifetime": "Successful source block flag+ID skips future sound parts; SndNextRoomInit clears enemy/foot/room blocks; native room arena resets at ROOM block address.",
+      "classification": "FINITE BANK ADMISSION / ROOM REENTRY",
+      "pins": [
+        "sound-dvd",
+        "sound-finish",
+        "sound-reuse",
+        "sound-register",
+        "sound-room",
+        "aica-room"
+      ],
+      "remaining_verify": "Confirm selected sound-part identity, successful skips across multiple same-ID actors, room re-entry and weapon bank adoption; free-slot-before-ID search assumes dense occupied prefix."
+    },
+    {
+      "id": "S03",
+      "area": "A12",
+      "caller": "SndBlkInit rejected header vs native blk_begin_prebuilt reject",
+      "file": "DRS sound parts only when higher-level request repeats",
+      "owner": "source blk_flag differs from native AICA valid/map state",
+      "lifetime": "With DISC_READ_FALLBACK, source invalid-header return leaves flag clear, so later module admission retries and advances sound MRAM top. Native prebuilt rejection happens in ARQ before blk_prepare for several validation failures; source can remain registered and prior native bank state may remain. No automatic per-shot retry.",
+      "classification": "OPEN FAILED-REGISTRATION RETRY/VALIDITY; no automatic per-shot DVD loop proven",
+      "pins": [
+        "sound-register",
+        "sound-dvd",
+        "aica-prebuilt",
+        "aica-arq",
+        "aica-play"
+      ],
+      "remaining_verify": "Fault source header and native prebuilt hash/layout separately, both fresh and replacing valid bank; record blk_flag/nativevalid/map generation/mram_top and sound output across repeated requests and room reset."
+    },
+    {
+      "id": "S04",
+      "area": "A12",
+      "caller": "first bank -> layout_init partial allocation failure",
+      "file": "NONE; AICA allocation state",
+      "owner": "g_slot and g_aicaUsed",
+      "lifetime": "Freed partial slots do not subtract accounted bytes; subsequent otherwise-fit attempt can fail.",
+      "classification": "DEFECT CONFIRMED by actual-source fault test; runtime occurrence OPEN",
+      "pins": [
+        "aica-layout"
+      ],
+      "remaining_verify": "Narrow rollback fix needs owner claim, partial fail at each slot with nonzero prior usage, then success/room/reset and target AICA budget checks."
+    },
+    {
+      "id": "S05",
+      "area": "A12/A13",
+      "caller": "layout_init ring allocation failure -> str_scan",
+      "file": "NONE at failure; missing stream ring prevents later reads",
+      "owner": "one-shot layout readiness versus stream ring readiness",
+      "lifetime": "g_layout=true before optional ring malloc; failure leaves ring0 and later layout calls return early. One-shot slots can be valid while streaming remains unavailable.",
+      "classification": "DEFECT CONFIRMED recovery gap; do not make one-shots fail automatically",
+      "pins": [
+        "aica-layout",
+        "stream-thread"
+      ],
+      "remaining_verify": "Define bounded ring retry independently from one-shot layout success; fault allocation then recover and verify streams start without disturbing existing banks/movie reserve."
+    },
+    {
+      "id": "M01",
+      "area": "A13",
+      "caller": "str_main -> str_index_load/str_cache/str_fill",
+      "file": "bgm/aica_str.dat",
+      "owner": "one persistent file, 8KiB cache, two12KiB-per-channel AICA ring halves",
+      "lifetime": "Index opens once per reader thread; missing/invalid index exits thread. Refills/loops expected; read failure invalidates byte cache, current stream may underrun/silence.",
+      "classification": "EXPECTED STREAM; index failure retry is absent within same reader lifetime",
+      "pins": [
+        "stream-index",
+        "stream-read",
+        "stream-thread"
+      ],
+      "remaining_verify": "Separate stream thread ID/bytes/time from blocked game-task reads, track underruns and music/voice generation; missing/short header recovery needs explicit restart semantics, not per-shot retries."
+    },
+    {
+      "id": "M02",
+      "area": "A13",
+      "caller": "MOVIE_DISC_QUIET stream prefill vs running stream + DVD meter",
+      "file": "aica_str.dat versus route movie file",
+      "owner": "stream generation, movie disc owner, registered music thread",
+      "lifetime": "New prefill waits while route movie owns disc; already-playing stream keeps refilling. Meter tags music separately; game/task blocked time is distinct.",
+      "classification": "EXPECTED SHARED DISC INTERACTION; not zero-I/O promise",
+      "pins": [
+        "stream-thread",
+        "stream-meters"
+      ],
+      "remaining_verify": "Chained movie completion/skip and running voice/BGM: retain caller/thread/file bytes and blocked-time windows; prove game-thread stalls separately. No concurrency benchmark requested."
+    }
+  ]
+}

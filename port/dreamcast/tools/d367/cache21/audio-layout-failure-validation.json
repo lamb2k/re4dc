@@ -1,0 +1,7 @@
+{
+  "source": "port/dreamcast/game/platform/audio_aica.cpp",
+  "source_sha256": "abef204aa60471d1388763bd38c6411677c2e4fea9b1b56df7aa97af3b3db261",
+  "function_sha256": "3e6a5e9b7b1dfa3fbb337fc7f7e697d513b31c3449c8f6190d5802f06531dd09",
+  "result": "PASS characterization: warm reuse; first allocation retry; partial rollback leaves phantom bytes; ring failure does not retry",
+  "scope": "Unmodified actual function with mock AICA allocator and reduced synthetic capacities. Failure-path characterization, not a runtime fix or observed console cause."
+}
