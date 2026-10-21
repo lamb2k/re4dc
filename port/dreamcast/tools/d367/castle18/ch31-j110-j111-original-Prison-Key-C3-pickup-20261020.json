@@ -1,0 +1,706 @@
+{
+  "scope": "Unchanged qualified J original no-warp VMU/CardLoad lineage, exact current r201 source ARC; ordinary movement/A/dialog only. No guest/item/health/state writes, rollback, historical-state/program reuse, source/data change or rebuild/stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "selected_r201_arc_sha256": "adc818de7cd3363a25e501ca9518e4c561ada4c481c171a593433adbdc96e594",
+  "runs": [
+    {
+      "run": "current-j-route-walk110",
+      "result": "Original normal stairs/east-door A and90ticks, all7hall/corridorwaypoints pass720/600; before/after door and final PNGs",
+      "elapsed_s": 28.8,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "7acb32463f7982a9e329e42aff37710a42e47b9c320e1a6e797c9f48ed801ed2",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\data\\disc.state"
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            0.0,
+            -20000.0
+          ],
+          "pos": [
+            -16.141510009765625,
+            1999.9957275390625,
+            -20004.72265625
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            1750.0,
+            -22500.0
+          ],
+          "pos": [
+            1640.8282470703125,
+            1999.9957275390625,
+            -22355.7109375
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            2500.0,
+            -25500.0
+          ],
+          "pos": [
+            2426.733642578125,
+            1999.9979248046875,
+            -25363.548828125
+          ]
+        },
+        {
+          "normal_original_r201_east_door_before_A": {
+            "host_monotonic": 299706.781,
+            "room": "0x201",
+            "frame": 28942,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              9489.19140625,
+              1999.9989013671875,
+              -30175.576171875
+            ],
+            "yaw": 1.5070120096206665,
+            "target_distance": 175.90854961920436,
+            "angle_error": -1.445528889525299
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-28942\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-28942\\checkpoint-context.json"
+        },
+        {
+          "normal_original_r201_east_door_after_A_90ticks": {
+            "host_monotonic": 299710.031,
+            "room": "0x201",
+            "frame": 29040,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              9684.6015625,
+              1999.9979248046875,
+              -30059.6171875
+            ],
+            "yaw": 1.5708427429199219,
+            "target_distance": 193.98955106616324,
+            "angle_error": -2.829261887600463
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-29040\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-29040\\checkpoint-context.json"
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            12000.0,
+            -30200.0
+          ],
+          "pos": [
+            12094.115234375,
+            1999.9993896484375,
+            -30211.986328125
+          ]
+        },
+        {
+          "waypoint_reached": 5,
+          "target": [
+            30000.0,
+            -30200.0
+          ],
+          "pos": [
+            29908.078125,
+            1999.9989013671875,
+            -30212.66796875
+          ]
+        },
+        {
+          "normal_r201_original_east_door_corridor_complete": true,
+          "frame": 29303,
+          "pos": [
+            37831.328125,
+            1999.9984130859375,
+            -30073.51953125
+          ],
+          "health": [
+            720,
+            600
+          ]
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-29303\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-29303\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk110",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original normal stairs/east-door A and90ticks, all7hall/corridorwaypoints pass720/600; before/after door and final PNGs",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-28942\\frames\\fb0.png",
+          "png_sha256": "a10602c00f561c1a7c897c3b23b770ac16895d38dfee026cdfb57fdac17df7bc",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-28942\\checkpoint-context.json",
+          "source_frame_interval": [
+            28942,
+            28950
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk110",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original normal stairs/east-door A and90ticks, all7hall/corridorwaypoints pass720/600; before/after door and final PNGs",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-29040\\frames\\fb0.png",
+          "png_sha256": "a82fe30f3bfec0d6e0bafa37c87f97fa1ba87add8e3766b3d515fbf92b2ae4c6",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-29040\\checkpoint-context.json",
+          "source_frame_interval": [
+            29040,
+            29046
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk110",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original normal stairs/east-door A and90ticks, all7hall/corridorwaypoints pass720/600; before/after door and final PNGs",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-29303\\frames\\fb0.png",
+          "png_sha256": "9494294ffed1628c65c857f4d115bb58f1370571b2008be6888a07604788bf75",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\shots\\checkpoint-source-29303\\checkpoint-context.json",
+          "source_frame_interval": [
+            29303,
+            29310
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk111",
+      "result": "Original9waypoint picture approach, normal CHECK/A/dialog yields actual Prison KeyC3x1 and30worldticks720/600; before/after pickup PNGs",
+      "elapsed_s": 19.6,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "8ce9bfb9cdeba65d669ae4de88e2340129527ff78236dcd82c900b00344e24bd",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk111\\data\\disc.state"
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            39000.0,
+            -30500.0
+          ],
+          "pos": [
+            38965.23828125,
+            1999.9974365234375,
+            -30398.109375
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            40000.0,
+            -31600.0
+          ],
+          "pos": [
+            40033.70703125,
+            1999.9989013671875,
+            -31528.935546875
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            41200.0,
+            -32000.0
+          ],
+          "pos": [
+            41182.203125,
+            1999.9989013671875,
+            -31869.578125
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            41750.0,
+            -34500.0
+          ],
+          "pos": [
+            41658.85546875,
+            1999.9967041015625,
+            -34406.26171875
+          ]
+        },
+        {
+          "waypoint_reached": 4,
+          "target": [
+            43500.0,
+            -35000.0
+          ],
+          "pos": [
+            43410.32421875,
+            1999.9984130859375,
+            -34935.203125
+          ]
+        },
+        {
+          "waypoint_reached": 5,
+          "target": [
+            43500.0,
+            -36500.0
+          ],
+          "pos": [
+            43422.5859375,
+            1999.9979248046875,
+            -36421.6328125
+          ]
+        },
+        {
+          "waypoint_reached": 6,
+          "target": [
+            45000.0,
+            -36500.0
+          ],
+          "pos": [
+            44969.98828125,
+            1999.9974365234375,
+            -36674.54296875
+          ]
+        },
+        {
+          "waypoint_reached": 7,
+          "target": [
+            46300.0,
+            -37900.0
+          ],
+          "pos": [
+            46240.63671875,
+            1999.9962158203125,
+            -37830.47265625
+          ]
+        },
+        {
+          "original_r201_picture_CHECK_before_A": {
+            "host_monotonic": 299904.312,
+            "room": "0x201",
+            "frame": 29680,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              46671.26171875,
+              1999.9962158203125,
+              -38262.8125
+            ],
+            "yaw": 1.0753427743911743,
+            "target_distance": 143.0795852504965,
+            "angle_error": -1.0142318722388888,
+            "player_routines": [
+              0,
+              4,
+              1,
+              0
+            ],
+            "source_Prison_Key_C3": []
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk111\\shots\\checkpoint-source-29681\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk111\\shots\\checkpoint-source-29681\\checkpoint-context.json"
+        },
+        {
+          "normal_original_Prison_Key_C3_picture_A": 29689
+        },
+        {
+          "original_Prison_Key_C3_pickup_complete": {
+            "frame": 29822,
+            "items": [
+              {
+                "id": "0xc3",
+                "num": 1,
+                "flags": 1,
+                "type": 0
+              }
+            ],
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "item_find_flags": "0x310004",
+            "normal_world_ticks_after_pickup": 30
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk111\\shots\\checkpoint-source-29822\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk111\\shots\\checkpoint-source-29822\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk111",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original9waypoint picture approach, normal CHECK/A/dialog yields actual Prison KeyC3x1 and30worldticks720/600; before/after pickup PNGs",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk111\\shots\\checkpoint-source-29681\\frames\\fb0.png",
+          "png_sha256": "49d14e3787d81ae59ed0562f7c0a6bbe65461e497ec408e2baf5223525ee2bbc",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk111\\shots\\checkpoint-source-29681\\checkpoint-context.json",
+          "source_frame_interval": [
+            29681,
+            29689
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk111",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original9waypoint picture approach, normal CHECK/A/dialog yields actual Prison KeyC3x1 and30worldticks720/600; before/after pickup PNGs",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk111\\shots\\checkpoint-source-29822\\frames\\fb0.png",
+          "png_sha256": "a2593ce6d9d97f3b1686f9cd1c40617f31fca063e1c5e90dd2e12c0d8f55c222",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk111\\shots\\checkpoint-source-29822\\checkpoint-context.json",
+          "source_frame_interval": [
+            29822,
+            29829
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "current_snapshot_audit": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "8ce9bfb9cdeba65d669ae4de88e2340129527ff78236dcd82c900b00344e24bd",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x201",
+    "chapter": 6,
+    "source_frame": 29829,
+    "health": [
+      720,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0xa84002b4",
+    "door_unlock": [
+      "0x820000",
+      "0x0"
+    ],
+    "partner_subflags": "0x40",
+    "r203_RSF": "0x18000000",
+    "r201_RSF": "0x8400000",
+    "player_pos": [
+      46647.2109375,
+      1999.9989013671875,
+      -38226.5390625
+    ],
+    "partner_pos": [
+      45736.8046875,
+      2000.0009765625,
+      -37921.37890625
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xc3",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "native_cast": {
+    "rows": [
+      {
+        "room": "r201",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 1222,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 1222,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "ashley11"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r201",
+        "id": "1b",
+        "name": "em1b",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 444,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "zealot-em1b-0ag"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          38
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": []
+  },
+  "vram_gate": {
+    "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk110\\run-output.txt": {
+      "rooms": [
+        {
+          "room": "201",
+          "start": 36853,
+          "samples": 4,
+          "closed": false,
+          "min_free": 135328,
+          "min_largest": 735232,
+          "peak_pinned": 1633248,
+          "last": {
+            "pinned": 711008,
+            "dynamic": 981664,
+            "other": 90112,
+            "free": 784640,
+            "largest": 735232,
+            "min_free": 135328,
+            "min_largest": 735232,
+            "peak_pinned": 1633248,
+            "loads": 262,
+            "evicted": 0,
+            "retries": 0,
+            "at": "tick",
+            "f": 37453
+          },
+          "gaps": {
+            "refusals": 0,
+            "guard": 0,
+            "guard_p": 0,
+            "nocontig": 0,
+            "latched": 0,
+            "absent": 0,
+            "gc_fx": 8,
+            "dropped": 0,
+            "fx_dropped": 0,
+            "tex_rej": 0,
+            "snd_fail": 0,
+            "meta": 0
+          },
+          "snd_used": 1804992,
+          "loads": 262,
+          "evicted": 0,
+          "retries": 0,
+          "min_kos": 22856,
+          "menu_loads": 0,
+          "play_loads": 27,
+          "play_evicted": 0
+        }
+      ],
+      "failures": [
+        {
+          "cat": "vram",
+          "what": "r201: 27 upload(s) after the room-entry preload in a room with a resident list (disc re-reads: add the keys to vram/resident/r201.tsv, resident_keys.py list)",
+          "line": "line 1319: vram gaps: r=201 at=tick f=37453 refusals=0 guard=0 guard_p=0 nocontig=0 latched=0 absent=0 gc_fx=8 dropped=0 fx_dropped=0 tex_rej=0 snd_fail=0 snd_used=1804992 meta=0 kos=22856"
+        }
+      ],
+      "known_gaps": [
+        {
+          "cat": "gc-fallback",
+          "what": "r201: GameCube effect picture d8318a77-dac4560b: no PS2 counterpart (ps2lib NONE st1/r102.arc#7:0x86,st1/r108.arc#7:0x86,st1/r117.arc#7:0x86,st1/r206.arc#7:0x86)",
+          "line": "line 521: vram gc-fx: r=201 f=36867 key=d8318a77-dac4560b"
+        },
+        {
+          "cat": "gc-fallback",
+          "what": "r201: GameCube effect picture c9dbb59a-5ee3abe4: no PS2 counterpart (ps2lib NONE st1/r102.arc#7:0x86,st1/r108.arc#7:0x86,st1/r117.arc#7:0x86,st1/r206.arc#7:0x86)",
+          "line": "line 577: vram gc-fx: r=201 f=36868 key=c9dbb59a-5ee3abe4"
+        },
+        {
+          "cat": "gc-fallback",
+          "what": "r201: GameCube effect picture 0adb8cf5-c8c204c0: no PS2 counterpart (ps2lib NONE st1/r102.arc#7:0x86,st1/r108.arc#7:0x86,st1/r117.arc#7:0x86,st1/r206.arc#7:0x86)",
+          "line": "line 593: vram gc-fx: r=201 f=36869 key=0adb8cf5-c8c204c0"
+        },
+        {
+          "cat": "gc-fallback",
+          "what": "r201: GameCube effect picture e8d85192-1fdd652a: no PS2 counterpart (ps2lib NONE st1/r102.arc#7:0x86,st1/r108.arc#7:0x86,st1/r117.arc#7:0x86,st1/r206.arc#7:0x86)",
+          "line": "line 596: vram gc-fx: r=201 f=36870 key=e8d85192-1fdd652a"
+        },
+        {
+          "cat": "gc-fallback",
+          "what": "r201: GameCube effect picture 0cd16eb4-34eaec7e: no PS2 counterpart (ps2lib NONE st1/r102.arc#7:0x86,st1/r108.arc#7:0x86,st1/r117.arc#7:0x86,st1/r206.arc#7:0x86)",
+          "line": "line 597: vram gc-fx: r=201 f=36871 key=0cd16eb4-34eaec7e"
+        },
+        {
+          "cat": "gc-fallback",
+          "what": "r201: GameCube effect picture 63188e0b-6f790403: no PS2 counterpart (ps2lib NONE st1/r102.arc#7:0x86,st1/r108.arc#7:0x86,st1/r117.arc#7:0x86,st1/r206.arc#7:0x86)",
+          "line": "line 598: vram gc-fx: r=201 f=36872 key=63188e0b-6f790403"
+        },
+        {
+          "cat": "gc-fallback",
+          "what": "r201: GameCube effect picture 27bc33f9-feaa4ea9: no PS2 counterpart (ps2lib NONE st1/r102.arc#7:0x86,st1/r108.arc#7:0x86,st1/r117.arc#7:0x86,st1/r206.arc#7:0x86)",
+          "line": "line 599: vram gc-fx: r=201 f=36873 key=27bc33f9-feaa4ea9"
+        },
+        {
+          "cat": "gc-fallback",
+          "what": "r201: GameCube effect picture d7bc557a-3aefdb7a: no PS2 counterpart (ps2lib NONE st1/r102.arc#7:0x86,st1/r108.arc#7:0x86,st1/r117.arc#7:0x86,st1/r206.arc#7:0x86)",
+          "line": "line 600: vram gc-fx: r=201 f=36874 key=d7bc557a-3aefdb7a"
+        }
+      ],
+      "notes": [],
+      "new_format": true
+    }
+  },
+  "limits": [
+    "C3 is the actual Prison Key, distinct from already consumed Castle Gate KeyA7. C3 not yet used in this receipt.",
+    "NativeLeon/Ashley1222 andem1b444 are positive0GC, but NOT-DRAWN has0live-IDrows; no wholefight/alivebody coverage closure.",
+    "VRAM FAIL27postpreloaduploads;0evictions/refusals/fragmentretries/sndfail/texreject.8knownGC effect pictures withoutPS2counterparts remain explicit.",
+    "No fullroom/residency/wave/chapter or whole-drive/hardware timing claim."
+  ],
+  "next": "Normal dungeon CHECK/C3Use/unlock, original stairs/Garrador/lever/dungeonexit/waves/end-save."
+}
