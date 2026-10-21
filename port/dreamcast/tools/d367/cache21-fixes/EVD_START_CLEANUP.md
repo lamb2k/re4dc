@@ -10,6 +10,9 @@ The branch starts at current integration
 The independent transaction commit `8ff45d69` was merged without rewriting
 history as `35435c7dbb4ed7e98f5eca42f927a822427be320`. That merge is the
 matching baseline for this new unit. All prior checkouts and evidence remain.
+Runtime implementation and host evidence were pushed as
+`398ccf612efa6f1bc513b2395e31dd2412ca2bcb`; subsequent qualification changes
+only this document and the object receipt.
 
 ## Approved runtime unit
 
@@ -99,11 +102,42 @@ same source path for exact baseline/candidate comparison. It checks whole SH4
 transaction 1, default/explicit-zero compiler-command agreement, static frames,
 invalid values and Make/direct-source prerequisite refusal. Selected edited
 methods are also preprocessed with `__PPC__` and the switch off/on; that is not a
-PPC object or whole-program identity claim. Final results and hashes are recorded
-in `event-start-cleanup-sh4.json` once this qualification completes.
+PPC object or whole-program identity claim. All ten object arms pass. Baseline
+and disabled hashes match at each transaction/cabin configuration:
+
+| Cabin | Transaction | Baseline and disabled SH4 object SHA256 |
+| --- | --- | --- |
+| 0 | 0 | cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf |
+| 0 | 1 | fded74d94da28183f33eb591f9e44a87ddf6c081f66f31afcfc290e8e83c3d58 |
+| 1 | 0 | bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882 |
+| 1 | 1 | bcce4e402761218d6349ea83b9595dc8c04b390f7bcb182f5ff8f3e82429d77a |
+
+With transaction 1, enabled cabin0 is
+`e45f1072f25a2db05491189ccaa2b6b5e7a38702ef28527d7fbd840dd886568d`
+and cabin1 is
+`4da5cc73e3273ff54fdc081268e98b1900a91d73a24c811e862ba0a771ca2969`.
+Text grows 16/26 bytes respectively; data/BSS remain 4/640. Selected static
+frames are unchanged: init16, SetEvt(name)32/36, SetEvt(data)24. The existing
+transaction's SetEvd752 frame is unchanged, not a new whole-stack acceptance.
+Invalid switch2/-1/yes, missing Make and direct-source transaction prerequisites
+all refuse. Selected PPC preprocessing hashes match
+`0c705aa680d75f53fc95dcbfff3937d4761c2ad802b8024cc8a538969a5fb306`.
+
+Final source SHA256 is
+`9a4bcc63affe0c5419040fdc258ba66820720b20b7970b5381ada03ad61266f1`.
+`event-start-cleanup-host.json` and `event-start-cleanup-sh4.json` record exact
+commands, source/declaration/body/test/tool pins, observations and limitations.
+Host receipt SHA256 is
+`cdbd4980c41ff9e193766ae6ff8560f1fb1406f2717aea546ac6e5081cb63da3`;
+SH4 receipt is
+`1cdd5c390343a0b370d9b4d4bb47add4dc8d7e7132cd9b6101196d8bf14170b7`.
 
 The established small-object preflight is 16 GiB + 128 MiB, with a 16 GiB +
 64 MiB stop and 4 MiB bounded logs. Full-build thresholds remain unchanged.
+Actual object-run C: free was 31,734,796,288 bytes at start and
+31,704,088,576 at finish. Private final host06, SH4-01 and prior/scaffold evidence
+are mirrored at
+`C:/Flycast-Evidence/re4-dreamcast/cache21-fixes-20261021/event-start-cleanup`.
 
 ## Explicit remaining caller boundaries
 
