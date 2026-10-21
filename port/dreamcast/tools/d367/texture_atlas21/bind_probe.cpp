@@ -15,15 +15,18 @@ static Re4dcActorPlan source_plan(const Bundle& b) {
     // Foreign role descriptors are host fixture sentinels. Only the modified
     // role uses the exact selected source bytes. This is not live owner proof.
     static cModelInfo infos[9];static unsigned char hair_token;
-    Re4dcActorPlan p{};p.appearance=b.appearance;p.count=b.appearance==0x100?8u:9u;
+    Re4dcActorPlan p{};p.appearance=b.appearance;p.count=b.appearance==0x100?8u:b.appearance==0x109?7u:9u;
     p.image=b.source_image;p.crc=b.source_crc;p.fnv=b.source_fnv;p.palette_bytes=1234;p.workspace_bytes=5678;p.palettes=palettes;
-    p.material_count=2;p.materials[0].image=p.image;p.materials[0].crc=p.crc;p.materials[0].fnv=p.fnv;
+    p.material_count=b.appearance==0x109?1u:2u;p.materials[0].image=p.image;p.materials[0].crc=p.crc;p.materials[0].fnv=p.fnv;
     p.materials[1].image={&hair_token,nullptr,64,128,14,0xffffffffu,0};
     p.materials[1].material_flags=4;p.materials[1].mask_ref=0;p.materials[1].mask_same_uv=1;p.materials[1].wrap_s=p.materials[1].wrap_t=1;
     for(unsigned i=0;i<p.count;++i) {
         p.info[i]=&infos[i];p.input[i]=b.source;p.immutable_asset_id[i]=100+i;
+#if RE4DC_ATLAS_DYNAMIC_PROBE
+        if(b.appearance==0x109 && i==3)p.input[i]=case_data::neck_input();
+#endif
         auto& r=p.runs[p.run_count++];r.role=i;r.material=i==7?1u:0u;r.immutable_asset_id=100+i;
-        r.triangles=b.source.triangles;r.uv=b.source.uv;r.stream=b.source.stream;
+        r.triangles=p.input[i].triangles;r.uv=p.input[i].uv;r.stream=p.input[i].stream;
         if(i==7) {auto& second=p.runs[p.run_count++];second=r;second.immutable_asset_id=200;}
     }
     return p;
@@ -76,7 +79,8 @@ int main() {
     const ReservedIds ids{1000,2000};
     reject(source,0,ids);reject(source,b.epoch+1,ids);reject(source,b.epoch,{0,2000});
     reject(source,b.epoch,{1000,1000+b.run_count-2});reject(source,b.epoch,{std::numeric_limits<unsigned>::max(),0});
-    auto p=source;p.appearance=0x109;reject(p,b.epoch,ids);
+    auto p=source;p.appearance=0x10b;reject(p,b.epoch,ids);
+    p=source;p.appearance=0x10a;p.count=1;reject(p,b.epoch,ids);
     p=source;p.input[b.role].positions.data++;reject(p,b.epoch,ids);
     p=source;p.crc^=1;reject(p,b.epoch,ids);
     p=source;p.material_count=kRe4dcActorMaterials;reject(p,b.epoch,ids);
@@ -84,18 +88,58 @@ int main() {
     p=source;p.materials[0].wrap_s=1;reject(p,b.epoch,ids);
     p=source;p.materials[0].mask_same_uv=1;reject(p,b.epoch,ids);
     p=source;p.materials[0].depth_mode=1;reject(p,b.epoch,ids);
-    p=source;p.materials[1].image.pixels=b.tile_image.pixels;reject(p,b.epoch,ids);
+    p=source;p.materials[p.material_count++].image.pixels=b.tile_image.pixels;reject(p,b.epoch,ids);
     reject(source,b.epoch,{source.immutable_asset_id[b.role],2000});
     auto invalid=b;invalid.source.bones=118;Qualified bad{};assert(!qualify(invalid,bad));++checks;
     invalid=b;invalid.run_count=MaxSplitRuns+1;assert(!qualify(invalid,bad));++checks;
     invalid=b;invalid.runs[0].triangles++;assert(!qualify(invalid,bad));++checks;
     invalid=b;invalid.runs[0].stream.size=31;assert(!qualify(invalid,bad));++checks;
+    // Selected optional LOD / pending mutation is outside this immutable proof.
+    std::vector<unsigned char> lod(b.source.stream.data,b.source.stream.data+b.source.stream.size);
+    lod[2]|=128;invalid=b;invalid.source.stream={lod.data(),lod.size()};assert(!qualify(invalid,bad));++checks;
+    lod[2]&=127;lod[3]=1;assert(!qualify(invalid,bad));++checks;
     // A structurally valid UV perturbation must fail the exact affine proof.
     unsigned isolated=0;while(!b.runs[isolated].isolated)++isolated;
     std::vector<unsigned char> uv(b.runs[isolated].uv.data,b.runs[isolated].uv.data+b.runs[isolated].uv.size);
     uv[0]^=1;invalid=b;invalid.runs[isolated].uv={uv.data(),uv.size()};assert(!qualify(invalid,bad));++checks;
+    unsigned dynamic_plans=0;
+#if RE4DC_ATLAS_DYNAMIC_PROBE
+    if(b.appearance==0x109) {
+        re4dc_source::ChunkProof neck_proof{};
+        assert(re4dc_source::preflight_chunk(source.input[3],neck_proof)==re4dc_source::BlobError::None);
+        assert(same(out.input[3],source.input[3]) && out.input[3].triangles==37);++checks;
+    }
+#endif
+#if RE4DC_ATLAS_DYNAMIC_PROBE
+    // Each exact original hand blob replaces its current source role. The split
+    // must copy the full role input, immutable ID, palette callback and run.
+    for(unsigned h=0;h<case_data::hand_count;++h) {
+        auto hand=source;const auto source_role=case_data::hand_role(h);
+        const auto role=b.appearance==0x109?source_role-1:source_role;
+        hand.input[role]=case_data::hand_input(h);hand.immutable_asset_id[role]=300+h;
+        re4dc_source::ChunkProof proof{};
+        assert(re4dc_source::preflight_chunk(hand.input[role],proof)==re4dc_source::BlobError::None);
+        for(unsigned i=0;i<hand.run_count;++i)if(hand.runs[i].role==role) {
+            auto& r=hand.runs[i];r.immutable_asset_id=hand.immutable_asset_id[role];
+            r.uv=hand.input[role].uv;r.stream=hand.input[role].stream;r.triangles=hand.input[role].triangles;
+        }
+        const auto old=bytes(hand);auto result=hand;
+        assert(bind(hand,qualified,b.epoch,ids,result));unchanged(hand,old);
+        assert(same(result.input[role],hand.input[role]) && result.immutable_asset_id[role]==hand.immutable_asset_id[role] &&
+               result.palettes==hand.palettes && result.palette_bytes==hand.palette_bytes && result.workspace_bytes==hand.workspace_bytes);
+        unsigned matches=0;
+        for(unsigned i=0;i<result.run_count;++i)if(result.runs[i].role==role) {
+            const auto& r=result.runs[i];assert(r.immutable_asset_id==hand.immutable_asset_id[role] &&
+                same(r.uv,hand.input[role].uv) && same(r.stream,hand.input[role].stream) && r.triangles==hand.input[role].triangles);++matches;
+        }
+        assert(matches==1);++checks;++dynamic_plans;
+    }
+#endif
+    // Retire before source package reset. Even the same epoch/pointers decline.
+    auto retired=qualified;retire(retired);auto after_retire=source;const auto retired_before=bytes(after_retire);
+    assert(!bind(source,retired,b.epoch,ids,after_retire));unchanged(after_retire,retired_before);
     auto alias=source;assert(bind(alias,qualified,b.epoch,ids,alias));assert(alias.run_count==out.run_count);++checks;
-    std::printf("{\"enabled\":true,\"checks\":%u,\"runs\":%u,\"materials\":%u,\"source_role_triangles\":%u,\"actual_plan_type\":true,\"foreign_roles_are_host_sentinels\":true,\"runtime_admitted\":false}\n",
-        checks,out.run_count,out.material_count,b.source.triangles);return 0;
+    std::printf("{\"enabled\":true,\"checks\":%u,\"runs\":%u,\"materials\":%u,\"source_role_triangles\":%u,\"exact_original_hand_plans\":%u,\"actual_plan_type\":true,\"foreign_roles_are_host_sentinels\":true,\"runtime_admitted\":false}\n",
+        checks,out.run_count,out.material_count,b.source.triangles,dynamic_plans);return 0;
 #endif
 }

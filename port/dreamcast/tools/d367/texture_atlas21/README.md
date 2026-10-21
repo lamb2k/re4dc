@@ -46,14 +46,32 @@ dynamic LOD; the optional LEON_LOD package path is resolved off in the selected
 recipe. The recovery retains original manifest, archive, program and source
 hashes and does not modify any gameplay state or texture input.
 
-Reload checkpoint: atlas_bind.h and bind_probe.cpp/.py are untested WIP. The
-uninstalled adapter defaults off and attempts atomic run/material replacement
-against actual plan types, exact cold triangle/UV comparison, source epoch and
-an externally reserved immutable-ID range. No current runtime includes it.
-The probe has not been compiled or run. First fix its include path: own.parents[3]
-currently resolves port; game/platform/include is under own.parents[2]. Then
-qualify the probe in a fresh output directory. Global IDs, source package
-retirement, capability/material hooks and target resource gates remain open.
+The resumed adapter is now source-qualified against the unchanged actual plan
+and preflight types under ASan/UBSan. Standard, pl08 and headless pl08 produce
+17, 22 and 19 conservative runs respectively, appending only the selected tile
+material. All 17 original hand blobs are preserved in each appearance's correct
+current role (51 dynamic plan variants). The headless fixture also retains and
+preflights the actual 37-triangle neck. Flying-head appearance 0x10A declines
+without changing the original plan because it does not sample this tile.
+
+Cold qualification walks every source and emitted triangle in order and checks
+exact position/normal references and original or affine UV values. It refuses
+pending/alternate LOD streams. Bind refuses stale epochs, insufficient/overlapping
+local immutable-ID ranges, changed source descriptors and run/material overflow.
+Both failed and default-off edits leave the destination unchanged, including an
+aliased source/destination. retire() revokes a prepared binding before its package
+owner can free or reuse backing. No backing is allocated or freed by the adapter.
+
+binding-v1 seals six actual OFF/ON source-format executables and logs. Enabled
+standard/pl08/headless cases pass 65/65/66 checks, including 51 original dynamic
+hand plans. The candidate/source seals remain unchanged. Foreign owner-info and
+unrelated role descriptors are explicit host sentinels; these results do not
+certify a full live owner, original material, runtime lease or game frame.
+
+No runtime includes the adapter yet. RE4DC_LEON_ATLAS_SPLIT defaults to zero.
+Global immutable IDs, package generation/reset wiring, material-capability hooks,
+pinned resources and target gates remain open. The next shared-hook proposal
+must preserve the complete existing material certificate and transaction leases.
 
 Run with Windows Python/NumPy/Pillow:
 

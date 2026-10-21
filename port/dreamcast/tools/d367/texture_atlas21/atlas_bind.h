@@ -44,6 +44,9 @@ class Qualified {
     friend bool qualify(const Bundle&,Qualified&);
     friend bool bind(const Re4dcActorPlan&,const Qualified&,unsigned,ReservedIds,Re4dcActorPlan&);
 };
+// The package owner calls this before retiring any byte span or reusing an epoch.
+// It invalidates the prepared binding; it does not release or own the backing.
+inline void retire(Qualified& q) { q=Qualified{}; }
 namespace detail {
 // Only construct after the complete bounded stream passed source preflight.
 class Triangles {
@@ -97,7 +100,7 @@ inline bool qualify(const Bundle& b,Qualified& out) {
     (void)b;(void)out;return false;
 #else
     const bool standard=b.appearance==0x100u;
-    if((!standard && b.appearance!=0x108u) || b.role!=(standard?1u:0u) || !b.epoch ||
+    if((!standard && b.appearance!=0x108u && b.appearance!=0x109u) || b.role!=(standard?1u:0u) || !b.epoch ||
        b.source_crc!=(standard?0xec255e66u:0x7506e95fu) || b.source_fnv!=(standard?0x76812316u:0x68cf2211u) ||
        b.tile_crc!=(standard?0x3662c0aau:0xfefdf580u) || b.tile_fnv!=(standard?0xc9e71c00u:0xf15c1f47u) ||
        !opaque_image(b.source_image,512u) || !opaque_image(b.tile_image,128u) ||
@@ -140,7 +143,7 @@ inline bool bind(const Re4dcActorPlan& in,const Qualified& qualified,unsigned cu
     if(!qualified.ready_)return false;
     const auto& b=qualified.bundle_;
     if(current_epoch!=b.epoch || !current_epoch || in.appearance!=b.appearance ||
-       in.count!=(b.appearance==0x100u?8u:9u) || b.role>=in.count ||
+       in.count!=(b.appearance==0x100u?8u:b.appearance==0x109u?7u:9u) || b.role>=in.count ||
        in.crc!=b.source_crc || in.fnv!=b.source_fnv || !same(in.image,b.source_image) ||
        !same(in.input[b.role],b.source) || !in.material_count || in.material_count>=kRe4dcActorMaterials ||
        !in.run_count || in.run_count>kRe4dcActorRuns || b.run_count-1>kRe4dcActorRuns-in.run_count ||
