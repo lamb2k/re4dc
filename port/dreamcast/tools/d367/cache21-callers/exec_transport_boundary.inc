@@ -20,10 +20,15 @@ cDataUnit* Controller::setData(char*){return &loaded;}
 static void* Debug_alloc(unsigned bytes,int flag){return aram_actual_alloc(bytes,flag,13);}
 static int MemGetCurrentHeap(){return 4;}static int MemGetCurrentDbgHeap(){return 7;}
 static int DvdReadN(const char*,void*,u32,u32,u32,int,const char*,int){std::abort();}
+#if defined(RE4DC_FORWARD_ACTUAL)
+static void DCFlushRange(void*,u32){}
+static void re4dc_missing(const char*);
+#else
 static void DCFlushRange(void*,u32){std::abort();}
+static void re4dc_missing(const char*){std::abort();}
+#endif
 static int re4dc_event_file_install(const char*,u32,void*){std::abort();}
 static int re4dc_aram_file_read(const char*,void*,u32){std::abort();}
-static void re4dc_missing(const char*){std::abort();}
 void cDataUnit::checkLoadToMram(){std::abort();}void cDataUnit::checkLoadToAram(){std::abort();}
 void cDataUnit::checkAramToMram(){std::abort();}void cDataUnit::checkMramToAram(){std::abort();}
 void cDataUnit::checkAramToAram(){std::abort();}void cDataUnit::checkMramToMram(){std::abort();}
