@@ -453,3 +453,22 @@ The full6501 policy snapshot includes the 51 loose/conditional descriptors
 separately, these fixed-ID-UI refinements and the 20 separate actor mip candidates
 without overlaying them. Lower-level alpha/look, target sampler, combined VRAM
 and timing remain open. No runtime/default, recipe or release change occurred.
+
+The next source contract expands that selective set to 167 frames (157 PAL4,
+10 existing VQ) without touching the fixed-ID-UI holds. Espgen00 emits its same
+record through EspSeqSet and Esp0b_Trans uses EspCommonTrans after position
+jitter. Esp11 light state, Esp46 colour-filter state and Esp4a camera shake do
+not sample the record's nominal texture; they therefore do not falsely hold a
+key used by a reviewed sprite. Esp4c remains held because it changes reflection
+texture state even though its own Trans is empty. Generator02, screen/mixed,
+reflection, shimmer, negative/RTT and other custom consumers stay explicit.
+
+The 167-frame archive changes 999 original members, keeps 5502 exact and has
+868 mipmapped keys. It is 155869184 bytes, 385024 below the original archive,
+with 238808 added payload bytes /242048 rounded request bytes versus the842
+input. It exactly reuses 1178 verified review levels and167 original bases.
+The smaller74-frame artifact is preserved. Sampling contract versions are
+explicit and unknown versions are refused. Eighteen focused tests now pass;
+the two extra cases cover emitter/jitter versus reflection/negative paths and
+the selector's reviewed generator contract. Target appearance, combined memory
+and timing remain separate gates, with no recipe or runtime default changes.

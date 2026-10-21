@@ -142,3 +142,23 @@ def source_bindings(blob):
     body,offset,entries=archive(blob);index=compact_index(body,entries)
     return dict(active_body_offset=offset,active_body_bytes=len(body),compact_sequences=len(index),
         effects=[effect(body,e,index) for e in entries if e['tag']==b'EFF'])
+
+
+def record_sampling(record,common_sprite_ids,*,extended=False):
+    """Static texture sampling class, not a guarantee of actual drawing.
+
+    Extended contracts are source-specific: Espgen00 emits the same record via
+    EspSeqSet; Esp0b_Trans calls EspCommonTrans after position jitter. Esp11
+    drives light state, Esp46 colour filters and Esp4a camera shake without
+    sampling their record's texture. Esp4c also draws nothing itself but sets
+    reflection texture state, so it deliberately remains a held consumer.
+    """
+    ident=record['sprite_id'];kind=record['kind']
+    emitter=kind==1 and record['generator_id']==0
+    if kind!=0 and not (extended and emitter):return 'hold-generator'
+    if extended and ident in (0x11,0x46,0x4a):return 'no-record-texture-sampling'
+    if record['screen_parts']:return 'hold-screen'
+    if record['tool_flags']&(0x10000|0x4000|0x2000) or record['shimmer_type']:
+        return 'hold-RTT-shimmer-or-negative'
+    if ident not in common_sprite_ids and not (extended and ident==0x0b):return 'hold-custom-renderer'
+    return 'common-world-sprite-emitter00' if emitter else 'common-world-sprite'

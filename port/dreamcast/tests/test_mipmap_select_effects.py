@@ -54,6 +54,17 @@ class SelectEffects(unittest.TestCase):
         policy=copy.deepcopy(self.policy);policy['rows'][0]['source_bindings'][0]['records'][0]['screen_parts']=True
         with self.assertRaises(ValueError):select.select(self.original,self.base,self.review,self.receipt,policy,enabled=True)
 
+    def test_extended_emitter_contract_accepts_only_reviewed_generator00(self):
+        policy=copy.deepcopy(self.policy);policy['sampling_contract_version']=2
+        r=policy['rows'][0]['source_bindings'][0]['records'][0]
+        r.update(kind=1,generator_id=0)
+        _,report,_,_=select.select(self.original,self.base,self.review,self.receipt,policy,enabled=True)
+        self.assertEqual(report['selected_frames'],1)
+        r['generator_id']=2
+        with self.assertRaises(ValueError):select.select(self.original,self.base,self.review,self.receipt,policy,enabled=True)
+        policy['sampling_contract_version']=3
+        with self.assertRaises(ValueError):select.select(self.original,self.base,self.review,self.receipt,policy,enabled=True)
+
     def test_ancestry_source_hash_and_incomplete_policy_are_refused(self):
         for field in ('original_source_pack_sha256','selected_base_pack_sha256','review_candidate_sha256'):
             policy=copy.deepcopy(self.policy);policy[field]='bad'

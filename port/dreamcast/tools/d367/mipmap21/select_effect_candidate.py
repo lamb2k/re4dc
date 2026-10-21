@@ -16,11 +16,14 @@ import sys
 TOOLS=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(TOOLS));sys.path.insert(0,str(TOOLS/'d367'))
 import texpack
+from effect_consumers import record_sampling
 from compose_candidate import _read,bound_candidate,request_inventory
 from world_candidate import sha
 
 
 def select(original,base_pack,review_pack,review_receipt,policy,*,enabled=False):
+    if policy.get('sampling_contract_version',1) not in (1,2):
+        raise ValueError('unknown effect sampling contract version')
     source,base,review=map(_read,(original,base_pack,review_pack))
     if (set(source)!=set(base) or set(source)!=set(review) or
             review_receipt['original_pack_sha256']!=sha(original) or
@@ -56,8 +59,8 @@ def select(original,base_pack,review_pack,review_receipt,policy,*,enabled=False)
             meta=policy['source_files'].get(b['source_path'],{})
             if not meta.get('retained') or not meta.get('parsed') or meta['sha256']!=b['source_sha256']:
                 raise ValueError('world sprite source is not an exact parsed input')
-        if any(r['screen_parts'] or r['kind']!=0 or r['sprite_id'] not in policy['common_sprite_ids'] or
-               r['tool_flags']&(0x10000|0x4000) or r['shimmer_type'] for r in records):
+        contracts=[record_sampling(r,policy['common_sprite_ids'],extended=policy.get('sampling_contract_version')==2) for r in records]
+        if any(c.startswith('hold-') for c in contracts) or not any(c.startswith('common-world-sprite') for c in contracts):
             raise ValueError('world sprite policy contains a held screen/custom/generator record')
         selected.add(tuple(int(v,16) for v in name.split('-')))
     after=dict(base)
@@ -71,6 +74,7 @@ def select(original,base_pack,review_pack,review_receipt,policy,*,enabled=False)
         for frame in frames['%08x-%08x'%k]['library_proof']['frames']:
             groups[frame['room']].add(k)
     report=dict(schema='re4dc-selective-source-world-effect-mip-candidate-1',candidate_only=True,
+        sampling_contract_version=policy.get('sampling_contract_version',1),
         enabled=bool(enabled),original_pack_sha256=sha(original),base_pack_sha256=sha(base_pack),
         source_pack_sha256=sha(original),review_pack_sha256=sha(review_pack),candidate_pack_sha256=sha(result),
         packages=count,selected_frames=len(selected),changed_from_base=len(altered),
@@ -108,7 +112,8 @@ def main(argv=None):
     if policy['candidate_receipt_sha256']!=sha(receipt_bytes):raise ValueError('sampling policy review receipt SHA differs')
     result,report,before,after=select(source,base,review,receipt,policy,enabled=args.generate)
     report.update(sampling_policy_sha256=sha(policy_bytes),review_receipt_sha256=sha(receipt_bytes),
-        tool_sha256=sha(Path(__file__).read_bytes()))
+        tool_sha256=sha(Path(__file__).read_bytes()),
+        record_sampling_source_sha256=sha((Path(__file__).parent/'effect_consumers.py').read_bytes()))
     args.output.mkdir();outputs={}
     def write(path,data):
         with path.open('xb') as f:f.write(data)

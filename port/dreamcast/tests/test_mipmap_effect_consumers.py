@@ -19,6 +19,21 @@ def record(parts=254,kind=0,ident=0,texture=0x31):
 
 
 class SourceEffectConsumers(unittest.TestCase):
+    def test_emitter_and_jitter_wrapper_preserve_sampler_but_reflection_is_held(self):
+        r=dict(kind=1,generator_id=0,sprite_id=0,screen_parts=False,tool_flags=0,shimmer_type=0)
+        self.assertEqual(effect.record_sampling(r,{0}),'hold-generator')
+        self.assertEqual(effect.record_sampling(r,{0},extended=True),'common-world-sprite-emitter00')
+        r['generator_id']=2
+        self.assertEqual(effect.record_sampling(r,{0},extended=True),'hold-generator')
+        r.update(kind=0,sprite_id=11)
+        self.assertEqual(effect.record_sampling(r,{0},extended=True),'common-world-sprite')
+        r['sprite_id']=0x11
+        self.assertEqual(effect.record_sampling(r,{0},extended=True),'no-record-texture-sampling')
+        r['sprite_id']=0x4c
+        self.assertEqual(effect.record_sampling(r,{0},extended=True),'hold-custom-renderer')
+        r.update(sprite_id=0,tool_flags=0x2000)
+        self.assertEqual(effect.record_sampling(r,{0},extended=True),'hold-RTT-shimmer-or-negative')
+
     def test_raw_world_and_screen_records_remain_distinct(self):
         a,b=record(),record(parts=248)
         data=struct.pack('<H',2)+bytes(46)+a+b
