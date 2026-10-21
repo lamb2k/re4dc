@@ -1,0 +1,27 @@
+{
+  "source_head": "d4a3b31fac3362937a3f21eaa874e07be94fd061",
+  "source_sha256": "8a6137510329a78580f9486be9cab01d520d28b22f58190715a7b022afaeb55f",
+  "extracted_functions_sha256": "8c3ab1a076fd4e90aaf6f63545cf4abf7ede5d34e2b1442fc7ececa94cfe388c",
+  "functions": [
+    "EspDataLoad",
+    "EspDataRelease"
+  ],
+  "native_source_modified": false,
+  "stubs": "registration/release callees instrumented; actual u8 owner counter; low executable address preserves u32 source pointer ABI",
+  "command": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-fno-omit-frame-pointer",
+    "-fsanitize=address,undefined",
+    "-fno-pie",
+    "-no-pie",
+    "/root/probe/cache21-effect-registration-20261020/effect-registration.cpp",
+    "-o",
+    "/root/probe/cache21-effect-registration-20261020/effect-registration"
+  ],
+  "returncode": 0,
+  "result": "PASS 356 assertions; bad-version retry falsely succeeds without registration",
+  "classification": "CONFIRMED source fault; selected malformed gameplay input and console occurrence unproven; no runtime fix"
+}
