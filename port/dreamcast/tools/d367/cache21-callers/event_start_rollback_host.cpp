@@ -140,6 +140,10 @@ static void verify_failed_admission() {
     verify_registered(arena);
 #endif
 }
+static void verify_debug_failure_free() {
+    assert(debug_frees.size()==unsigned(RE4DC_EVD_DEBUG_READ_CLEANUP));
+    if(!debug_frees.empty())assert(debug_frees[0]==arena);
+}
 
 int main() {
     std::cout << std::unitbuf;
@@ -204,13 +208,28 @@ int main() {
     std::cout << "shared temporary/permanent bin owner and reference count preserved exactly by rollback PASS\n";
     setup(); ++cases; debug_transport = true; EvtMgr.BinTbl.NumDatTbl = 0;
     void* out = nullptr;
-    assert(EvtMgr.GetEvd(&out, header_name, 0) == 0 && !out && read_calls == 1 && debug_frees.empty());
+    assert(EvtMgr.GetEvd(&out, header_name, 0) == 0 && !out && read_calls == 1);
+    verify_debug_failure_free();
 #if RE4DC_EVD_ADMISSION_TXN
     assert(!EvtMgr.EvdTbl.ChkDat(header_name)); // No owner took the debug input.
 #else
     assert(EvtMgr.EvdTbl.ChkDat(header_name) && parents[0].dat2 == arena);
 #endif
-    std::cout << "actual tool GetEvd debug-read failure leaves input cleanup to caller PASS (cleanup absent)\n";
+    setup(); ++cases; debug_transport=true;EvtMgr.EvdTbl.NumDatTbl=0;
+    assert(!EvtMgr.GetEvd(&out,header_name,0)&&!out&&read_calls==1);
+    verify_debug_failure_free();
+    assert(!EvtMgr.BinTbl.ChkDat("first.bin")&&!EvtMgr.BinTbl.ChkDat("second.bin"));
+    setup(); ++cases; debug_transport=true;EvtMgr.BinTbl.NumDatTbl=0;
+    assert(!EvtMgr.GetBin(&out,"fresh.bin",0)&&!out&&read_calls==1);
+    verify_debug_failure_free();
+    setup(); ++cases; debug_transport=true;
+    assert(EvtMgr.GetEvd(&out,header_name,0)&&out==arena&&read_calls==1&&debug_frees.empty());
+    assert(EvtMgr.DelEvd(header_name)&&debug_frees.size()==1&&debug_frees[0]==arena);
+    setup(); ++cases; debug_transport=true;
+    assert(EvtMgr.GetBin(&out,"fresh.bin",0)&&out==arena&&read_calls==1&&debug_frees.empty());
+    assert(EvtMgr.GetBin(&out,"fresh.bin",0)&&out==arena&&read_calls==1&&debug_frees.empty());
+    assert(EvtMgr.DelBin(const_cast<char*>("fresh.bin"))&&debug_frees.size()==1&&debug_frees[0]==arena);
+    std::cout << "actual tool fresh debug-input failures and successful ownership transfer/final release verified PASS\n";
     std::cout << "EVENT_START_ROLLBACK_CASES=" << cases << " rollback=" << RE4DC_EVD_START_ROLLBACK << " PASS\n";
     assert(mprotect(arena, 0x20000, PROT_READ | PROT_WRITE) == 0); munmap(arena, 0x20000);
 }

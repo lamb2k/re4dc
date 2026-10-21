@@ -72,6 +72,12 @@
 #endif
 #endif
 
+#if defined(RE4DC_EVD_DEBUG_READ_CLEANUP) && RE4DC_EVD_DEBUG_READ_CLEANUP && !defined(__PPC__)
+#if !defined(RE4DC_EVD_ADMISSION_TXN) || !RE4DC_EVD_ADMISSION_TXN
+#error EVD_DEBUG_READ_CLEANUP requires EVD_ADMISSION_TXN
+#endif
+#endif
+
 #if defined(RE4DC_EVD_START_ROLLBACK) && RE4DC_EVD_START_ROLLBACK && !defined(__PPC__)
 #if !defined(RE4DC_EVD_ADMISSION_TXN) || !RE4DC_EVD_ADMISSION_TXN || !defined(RE4DC_EVD_START_CLEANUP) || !RE4DC_EVD_START_CLEANUP
 #error EVD_START_ROLLBACK requires EVD_ADMISSION_TXN and EVD_START_CLEANUP
@@ -2893,6 +2899,9 @@ int EventMgr::GetBin(void** out, const char* nm, int flagGet)
                 return 0;
             }
             if (SetBin((char*) nm, dat, dat, 2) == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_DEBUG_READ_CLEANUP) && RE4DC_EVD_DEBUG_READ_CLEANUP
+                Debug_free(dat);
+#endif
                 pLog->err(0, 0, "EventMgr::GetBin : non SetBin[%s]", path);
                 return 0;
             }
@@ -3040,6 +3049,11 @@ int EventMgr::GetEvd(void** out, char* nm, int flagGet)
                 return 0;
             }
             if (SetEvd(nm, dat, dat, 2) == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_DEBUG_READ_CLEANUP) && RE4DC_EVD_DEBUG_READ_CLEANUP
+                // Transaction failure publishes no owner of this fresh debug
+                // allocation. The legacy partial-admission path cannot free it.
+                Debug_free(dat);
+#endif
                 pLog->err(0, 0, "EventMgr::GetEvd : non SetBin[%s]", path);
                 return 0;
             }

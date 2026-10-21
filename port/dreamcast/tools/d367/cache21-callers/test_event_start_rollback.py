@@ -22,6 +22,7 @@ def sha(data):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--debug-cleanup-pair", action="store_true")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=False)
     fixture = args.out / "h064-fixture" / transaction.FIXTURE_DIR
@@ -55,7 +56,7 @@ def main():
     event_methods = [body("src/game/event.cpp", name) for name in transaction.METHODS]
     event_methods += [body("src/game/event.cpp", "EventMgr::SetEvt", signature)
                       for signature in ("int EventMgr::SetEvt(void* data, u32* key)", "int EventMgr::SetEvt(char* nm, Event** out)")]
-    event_methods += [body("src/game/event.cpp", name) for name in ("EventMgr::EvtReadExec", "EventMgr::EvtFree", "EventMgr::DelRead", "EventMgr::IsAliveEvt")]
+    event_methods += [body("src/game/event.cpp", name) for name in ("EventMgr::EvtReadExec", "EventMgr::EvtFree", "EventMgr::DelRead", "EventMgr::IsAliveEvt","EventMgr::GetBin")]
     # Native32 int->pointer preserves the address bits. Host64 sign-extends a
     # negative int, so normalize only that cast, without changing any decision.
     cast = "EvtMgr.SetEvt((void*) addr, (u32*) &evt)"
@@ -66,14 +67,14 @@ def main():
     manager_methods = ["template <class T>\n" + body("include/cManager.h", "cManager<T>::create", "T* cManager<T>::create(int id)"),
                        "template <class T>\n" + body("include/cManager.h", "cManager<T>::countActiveWork")]
     variants = []
-    for enabled in (0, 1):
-        out = args.out / f"rollback{enabled}"; out.mkdir()
+    for enabled,debug_cleanup in ([(1,0),(1,1)] if args.debug_cleanup_pair else [(0,0),(1,0)]):
+        out = args.out / f"rollback{enabled}-debug{debug_cleanup}"; out.mkdir()
         adapted, changes = transaction.adapt_scaffold((fixture / "motion_event_admission_host.cpp").read_text())
         adapted = adapted.replace("void warn(int,int,const char*,...){}}logger", "void warn(int,int,const char*,...){}void mes(int,int,const char*,...){}}logger")
         assert "void mes(" in adapted
         old = "u32 NowExeEvtKey{},pUnit[32]{};void*emWindowFcv[3]{};};"
         new = ("union{u32 NowExeEvtKey;char NowExeEvtName[48];};u32 pUnit[32]{};void*emWindowFcv[3]{};"
-               "Event*create(int);void destroyNow(Event*);int SetEvt(void*,u32*);int SetEvt(char*,Event**);int DelEvt(void*,int);"
+               "Event*create(int);void destroyNow(Event*);int GetBin(void**,const char*,int);int SetEvt(void*,u32*);int SetEvt(char*,Event**);int DelEvt(void*,int);"
                "int EvtReadExec(char*,int,u32);int EvtReadMram(char*,int,int*,int,u32);int EvtFree(char*);"
                "int GetRead(void**,int*,char*);int DelRead(char*);int IsAliveEvt(u32*,int,int);"
                "Event*pArray{};u32 nArray{},size{};EvtReadEm readEm[8]{};};")
@@ -89,10 +90,10 @@ def main():
         (out / "caller_dataunit_methods.inc").write_text("\n".join(unit_methods) + "\n")
         command = ["g++", "-std=c++17", "-O1", "-g", "-fsanitize=undefined", "-fno-sanitize-recover=all", "-fno-omit-frame-pointer",
                    "-fno-pie", "-no-pie", "-Wall", "-Wextra", "-fpermissive", "-DRE4DC_GAME=1", "-DRE4DC_CABIN_SOURCE=0",
-                   "-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", f"-DRE4DC_EVD_START_ROLLBACK={enabled}", "-I" + str(out), str(HERE / "event_start_rollback_host.cpp"), "-o", str(out / "test")]
+                   "-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", f"-DRE4DC_EVD_START_ROLLBACK={enabled}",f"-DRE4DC_EVD_DEBUG_READ_CLEANUP={debug_cleanup}", "-I" + str(out), str(HERE / "event_start_rollback_host.cpp"), "-o", str(out / "test")]
         h064.command(command, out / "compile.txt", 30)
         result = h064.command([out / "test"], out / "run.txt", 15); print(result, end="")
-        variants.append(dict(evd_admission_txn=1,start_cleanup=1,start_rollback=enabled, output=result))
+        variants.append(dict(evd_admission_txn=1,start_cleanup=1,start_rollback=enabled,debug_read_cleanup=debug_cleanup, output=result))
     receipt = dict(scope="Actual failed-create rollback, prior-owner/shared-bin preservation and outer caller characterization; UBSan, negative32 mmap. Init positive control, manager constructor/list, input transport, final-free are boundaries. Init-failure/reset/target/high-water are not accepted here.",
                    selected_head=transaction.git("rev-parse", "HEAD").decode().strip(), fixture_revision=transaction.FIXTURE_REF,
                    source_sha256=pins, selected_methods=selected, variants=variants,
