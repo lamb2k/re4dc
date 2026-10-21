@@ -1370,6 +1370,18 @@ endif
 # D367 audio: AICA_AUDIO=1 plays the recovered sound driver on the AICA
 # (platform/audio_aica.cpp); default images keep the silent audio_stub.cpp.
 AICA_AUDIO ?= 0
+# AICA_LAYOUT_RECOVER=1: roll back failed first-layout accounting and retry a missing stream ring
+# independently from valid one-shot banks. No payload budget/source-registration change; default off.
+AICA_LAYOUT_RECOVER ?= 0
+ifneq ($(filter-out 0 1,$(AICA_LAYOUT_RECOVER)),)
+$(error AICA_LAYOUT_RECOVER must be 0 or 1)
+endif
+ifeq ($(AICA_LAYOUT_RECOVER),1)
+ifneq ($(AICA_AUDIO),1)
+$(error AICA_LAYOUT_RECOVER=1 requires AICA_AUDIO=1)
+endif
+$(OBJDIR)/platform/audio_aica.o: PLATFORM_CPPFLAGS += -DRE4DC_AICA_LAYOUT_RECOVER=1
+endif
 ifneq ($(AICA_AUDIO),1)
 PLATFORM_OBJS := $(filter-out $(OBJDIR)/platform/audio_aica.o,$(PLATFORM_OBJS))
 endif
