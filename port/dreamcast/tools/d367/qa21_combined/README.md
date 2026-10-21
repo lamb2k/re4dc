@@ -32,3 +32,13 @@ Movie/death/room fixtures require fresh combined lineage. Retained six-fix qa21-
 ## First practical output
 
 `verify_retained.py --evidence /mnt/c/Flycast-Evidence/re4-dreamcast --output <new-receipt.json>` validates retained qualification receipts, the resolved skinning settings and three screenshot hashes without copying or changing game data. Full target staging requires fresh exact program/ELF/overlay identities and all-file asset comparison. Existing historical receipts alone do not establish a combined target pass.
+
+## Functional milestone and safety follow-up
+
+Runtime source is frozen at `6f9d31b0e`; subsequent commits change qualification tools and receipts only. `results/regression-summary-v2.json` records seven accepted bounded Flycast runs: repeated QA reopening, OPTIONS with native room walls/floor, resume/movement, four original inventory cycles with matching restored backing hashes, original r100s03 skip, authentic damage/death and original Continue to normal play. Maximum complete harness time among these accepted runs is 48.3 seconds. The original Continue returns to the source checkpoint outdoors; it does not establish a new-room door route. KOS headroom and inventory fragmentation retries remain open resource gates.
+
+Three tooling incidents are preserved and separated from game results: the first optional checkpoint used the plain runner and has no state; a later watchdog saw an empty just-created PID file and its owned guest was stopped; post-Continue QA produced 52.3 seconds of complete harness time and a truncated checkpoint, so its qualification/state are rejected. No continuation uses those rejected states.
+
+The active launcher is now `run-fixture.py`, with an independent process supervisor that verifies executable/PID/start identity, records Windows process start/exit FILETIMEs, requests inner closure at 41 seconds, and terminates at 47.5 seconds or the C 18 GiB plus 64 MiB floor. Its time/disk boundary tests and missing/empty PID retry tests pass. `run_observed_v3.py` also snapshots the actual selected runner. These safety changes await a new admitted guest; source tests alone are not runtime proof. `run-combined.py` is retained as historical setup evidence and is superseded by the active launcher.
+
+Natural movie EOF, radio/held background, original doors/new rooms and post-Continue QA under the new supervisor remain open. The next fresh cold movie fixture was refused before launch because C dropped below its existing floor. No floor is lowered. The last valid authentic progression state is `death-continue01`, preserving original Continue semantics. No release or hardware acceptance is inferred.
