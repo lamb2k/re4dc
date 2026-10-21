@@ -1,0 +1,649 @@
+{
+  "scope": "Original qualified J continuous no-warp source-Continue lineage. Normal resource pickup, inventoryUse and partnerWait before a new fight; no source/data/build/stage/game-memory writes or host rollback.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "image_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "runs": [
+    {
+      "run": "current-j-route-walk154",
+      "result": "Original upper-hall HandgunAmmo4x15 pickup; reserve10 to25 with mag10,720/600 and30worldticks.",
+      "elapsed_s": 17.1,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "50f5dc0a9cc2aed73967b98faf8a654a4c58527b18d3ea930258f791563bc080",
+      "four_ELF_anchor_saved_state_audit": {
+        "source_frame": 33967,
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 25,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "death": false,
+        "partner_pos": [
+          19522.361328125,
+          1999.9989013671875,
+          -24465.275390625
+        ],
+        "partner_flags": "0x44"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk154\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            17750.0,
+            -25250.0
+          ],
+          "pos": [
+            17702.775390625,
+            1999.9957275390625,
+            -25337.564453125
+          ]
+        },
+        {
+          "original_r201_dungeon_Handgun_Ammo15_before_A": {
+            "host_monotonic": 307666.234,
+            "room": "0x201",
+            "frame": 33859,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              20287.845703125,
+              1999.9998779296875,
+              -23884.953125
+            ],
+            "yaw": -0.4953628182411194,
+            "target_distance": 309.9853742594822,
+            "angle_error": -1.4556661031569214,
+            "player_routines": [
+              0,
+              4,
+              1,
+              0
+            ],
+            "source_Handgun_Ammo15": [
+              {
+                "id": "0x4",
+                "num": 10,
+                "flags": 1,
+                "type": 0
+              }
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk154\\shots\\checkpoint-source-33859\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk154\\shots\\checkpoint-source-33859\\checkpoint-context.json"
+        },
+        {
+          "normal_original_dungeon_Handgun_Ammo15_A": 33868
+        },
+        {
+          "original_dungeon_Handgun_Ammo15_pickup_complete": {
+            "frame": 33960,
+            "items": [
+              {
+                "id": "0x4",
+                "num": 25,
+                "flags": 1,
+                "type": 0
+              }
+            ],
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "item_find_flags": "0x310004",
+            "normal_world_ticks_after_pickup": 30
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk154\\shots\\checkpoint-source-33960\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk154\\shots\\checkpoint-source-33960\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk154",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original upper-hall HandgunAmmo4x15 pickup; reserve10 to25 with mag10,720/600 and30worldticks.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk154\\shots\\checkpoint-source-33859\\frames\\fb0.png",
+          "png_sha256": "576840ba5e63416f031954ada45db8f56037ce882fd8ac1615807d8a766a01cb",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk154\\shots\\checkpoint-source-33859\\checkpoint-context.json",
+          "source_frame_interval": [
+            33859,
+            33868
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk154",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original upper-hall HandgunAmmo4x15 pickup; reserve10 to25 with mag10,720/600 and30worldticks.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk154\\shots\\checkpoint-source-33960\\frames\\fb0.png",
+          "png_sha256": "4c9955cc94af3eabb3da97a0d4a59f4344736ce8598fdefa4d40cae102ceb6f4",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk154\\shots\\checkpoint-source-33960\\checkpoint-context.json",
+          "source_frame_interval": [
+            33960,
+            33967
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk155",
+      "result": "Current source-SAT return and original GreenHerb6 pickup; ammo preserved,720/600 and30worldticks.",
+      "elapsed_s": 21.2,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "c4dd46aa1969175e866f965da92d091e9866d10f4067d7d55278e97e9806de77",
+      "four_ELF_anchor_saved_state_audit": {
+        "source_frame": 34523,
+        "health": [
+          720,
+          1200,
+          600,
+          600
+        ],
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 25,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x6",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "death": false,
+        "partner_pos": [
+          23264.740234375,
+          -2000.000732421875,
+          -48711.18359375
+        ],
+        "partner_flags": "0x40"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk155\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "back",
+            "action"
+          ]
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            17750.0,
+            -25250.0
+          ],
+          "pos": [
+            17839.421875,
+            1999.9979248046875,
+            -25109.51953125
+          ]
+        },
+        {
+          "waypoint_reached": 1,
+          "target": [
+            16250.0,
+            -38750.0
+          ],
+          "pos": [
+            16098.513671875,
+            1808.0211181640625,
+            -38831.12109375
+          ]
+        },
+        {
+          "waypoint_reached": 2,
+          "target": [
+            16750.0,
+            -45500.0
+          ],
+          "pos": [
+            16790.84375,
+            -1955.287353515625,
+            -45349.3515625
+          ]
+        },
+        {
+          "waypoint_reached": 3,
+          "target": [
+            23250.0,
+            -47750.0
+          ],
+          "pos": [
+            23130.546875,
+            -2000.003662109375,
+            -47721.12890625
+          ]
+        },
+        {
+          "original_r201_dungeon_Green_Herb_before_A": {
+            "host_monotonic": 307948.953,
+            "room": "0x201",
+            "frame": 34436,
+            "player_hp": 720,
+            "partner_hp": 600,
+            "pos": [
+              23557.1484375,
+              -1999.999755859375,
+              -49562.80859375
+            ],
+            "yaw": -1.4313926696777344,
+            "target_distance": 84.91680256312024,
+            "angle_error": 0.6931443997158491,
+            "player_routines": [
+              0,
+              4,
+              2,
+              0
+            ],
+            "source_Green_Herb6": []
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk155\\shots\\checkpoint-source-34436\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk155\\shots\\checkpoint-source-34436\\checkpoint-context.json"
+        },
+        {
+          "normal_original_dungeon_Green_Herb6_A": 34444
+        },
+        {
+          "original_dungeon_Green_Herb6_pickup_complete": {
+            "frame": 34517,
+            "items": [
+              {
+                "id": "0x6",
+                "num": 1,
+                "flags": 1,
+                "type": 0
+              }
+            ],
+            "health": [
+              720,
+              1200,
+              600,
+              600
+            ],
+            "item_find_flags": "0x310004",
+            "normal_world_ticks_after_pickup": 30
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk155\\shots\\checkpoint-source-34517\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk155\\shots\\checkpoint-source-34517\\checkpoint-context.json"
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk155",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Current source-SAT return and original GreenHerb6 pickup; ammo preserved,720/600 and30worldticks.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk155\\shots\\checkpoint-source-34436\\frames\\fb0.png",
+          "png_sha256": "0fb63e1de6928617a6836d19d8f0d65bbf5fb914e56e92853ef3179694d575d3",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk155\\shots\\checkpoint-source-34436\\checkpoint-context.json",
+          "source_frame_interval": [
+            34436,
+            34444
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        },
+        {
+          "run": "current-j-route-walk155",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Current source-SAT return and original GreenHerb6 pickup; ammo preserved,720/600 and30worldticks.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk155\\shots\\checkpoint-source-34517\\frames\\fb0.png",
+          "png_sha256": "207b9eeead065d2111df137a1c40047f577fe4921c5e4b4acf5c4aff38e749a5",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk155\\shots\\checkpoint-source-34517\\checkpoint-context.json",
+          "source_frame_interval": [
+            34517,
+            34523
+          ],
+          "health_before": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            720,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            720,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    },
+    {
+      "run": "current-j-route-walk156",
+      "result": "Original inventory Use consumes6/heals720 to1200; normal source-readyS parksAshley600/Wait42 in westerncorner23265,-48711,15stableticks.",
+      "elapsed_s": 9.5,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "a3640c5815ebc8193d9b45b3fd0ccaf22f8a6895e8350ae5a62bb23dc94c4c4c",
+      "four_ELF_anchor_saved_state_audit": {
+        "source_frame": 34653,
+        "health": [
+          1200,
+          1200,
+          600,
+          600
+        ],
+        "items": [
+          {
+            "id": "0x7c",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0x23",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 10
+          },
+          {
+            "id": "0x4",
+            "num": 25,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xac",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          },
+          {
+            "id": "0xad",
+            "num": 1,
+            "flags": 1,
+            "type": 0,
+            "bullet": 0
+          }
+        ],
+        "death": false,
+        "partner_pos": [
+          23264.740234375,
+          -2000.001220703125,
+          -48711.18359375
+        ],
+        "partner_flags": "0x42"
+      },
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk156\\data\\disc.state"
+        },
+        {
+          "normal_owned_all_button_releases_after_exact_snapshot_load": [
+            "forward",
+            "left",
+            "right",
+            "dash",
+            "partner",
+            "ready",
+            "fire",
+            "knife",
+            "inventory",
+            "menu_left",
+            "menu_right",
+            "menu_up",
+            "menu_down"
+          ]
+        },
+        {
+          "normal_inventory_Y_pulse": 34553
+        },
+        {
+          "normal_Green_Herb_context_A": 34571
+        },
+        {
+          "normal_Green_Herb_Use_or_default_Leon_A": 34575
+        },
+        {
+          "normal_S_Wait_at_western_herb_corner": {
+            "frame": 34616,
+            "partner_flags": "0x40",
+            "partner_pos": [
+              23264.740234375,
+              -2000.000732421875,
+              -48711.18359375
+            ]
+          }
+        },
+        {
+          "original_Green_Herb_Use_and_source_ready_safe_corner_Wait": {
+            "frame": 34644,
+            "life": 1200,
+            "Ashley": 600,
+            "initial": {
+              "life": 720,
+              "herb_count": 1
+            },
+            "partner_flags": "0x42",
+            "partner_pos": [
+              23264.740234375,
+              -2000.002685546875,
+              -48711.18359375
+            ]
+          }
+        },
+        {
+          "checkpoint_screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk156\\shots\\checkpoint-source-34644\\frames\\fb0.png",
+          "context": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk156\\shots\\checkpoint-source-34644\\checkpoint-context.json"
+        }
+      ],
+      "screenshots": [
+        {
+          "run": "current-j-route-walk156",
+          "runtime": "12a841d7c",
+          "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+          "room": "0x201",
+          "action_result": "Original inventory Use consumes6/heals720 to1200; normal source-readyS parksAshley600/Wait42 in westerncorner23265,-48711,15stableticks.",
+          "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk156\\shots\\checkpoint-source-34644\\frames\\fb0.png",
+          "png_sha256": "9fd0b0f31f7f5e3f4786b86c148d3a58f21cfb8fe1d0a935018797f3468c4d37",
+          "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk156\\shots\\checkpoint-source-34644\\checkpoint-context.json",
+          "source_frame_interval": [
+            34644,
+            34652
+          ],
+          "health_before": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "health_after": [
+            1200,
+            1200,
+            600,
+            600
+          ],
+          "authoritative_saved_health": [
+            1200,
+            1200,
+            600,
+            600
+          ]
+        }
+      ]
+    }
+  ],
+  "preparation_change": "Actual ammo now35 total versus20 previously; fullhealth restored by originalherb. Ashley waits at the westernherb corner rather than the prior cell-front charge lane.",
+  "limits": [
+    "Garrador is not yet awakened in this preparation. No new fight, damage, kill, exit, waves or chapter save claim.",
+    "Additional20rounds beyond upper trap corridor are deferred until the original switch opens it; no geometry/collision shortcut.",
+    "All screenshot intervals and authoritative saved health retained; Flycast functional evidence only, no hardware performance claim."
+  ],
+  "next": "Solo cell approach/upcut and original cellopening; normal wake/earlybell lure with Ashley safely parked. Same J image and sources."
+}
