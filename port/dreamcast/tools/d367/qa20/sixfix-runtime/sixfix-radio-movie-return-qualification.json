@@ -1,0 +1,409 @@
+{
+  "source": "d4a3b31fac3362937a3f21eaa874e07be94fd061",
+  "elf_sha256": "52a5d671203e22e9f20728a8fbc3b61e080f7ba44e06891df635248a374dd053",
+  "run": "sixfix-route02",
+  "result": {
+    "name": "qa21-sixfix-route",
+    "status": "RUN_COMPLETE",
+    "start_utc": "2026-10-21T01:46:24.909738+00:00",
+    "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-r11e-20261020\\sixfix-master",
+    "tracks": {
+      "disc.gdi": 83,
+      "track01.bin": 1058400,
+      "track02.raw": 1237152,
+      "track03.iso": 1017761792
+    },
+    "seconds": 50,
+    "vmu": null,
+    "keys": null,
+    "stop": null,
+    "fixtures": {},
+    "errors": [],
+    "key_log": [],
+    "align": false,
+    "emu": "harness",
+    "emu_env": {},
+    "log_idle_s": 1.4,
+    "end_utc": "2026-10-21T01:47:16.262450+00:00",
+    "elapsed_s": 51.3,
+    "emulator_exited": true
+  },
+  "events": [
+    {
+      "frame": 380,
+      "stage": "await_s20",
+      "status": "ORIGINAL_FIRST_KILL"
+    },
+    {
+      "frame": 656,
+      "stage": "walk",
+      "status": "ORIGINAL_RADIO_CLOSED"
+    },
+    {
+      "frame": 930,
+      "stage": "ambush",
+      "status": "ORIGINAL_WINDOW_OUTSIDE"
+    }
+  ],
+  "final": {
+    "frame": 1440,
+    "health": [
+      1200,
+      1200,
+      600
+    ],
+    "phase": [
+      3,
+      0
+    ],
+    "stop": "0x0",
+    "ssloop": 0,
+    "motion": {
+      "hits": 3990,
+      "misses": 24,
+      "evictions": 0,
+      "loads": 24,
+      "failures": 0,
+      "resident": 269120,
+      "peak_cache": 269120,
+      "pinned": 0,
+      "peak_pinned": 22400,
+      "metadata": 67168,
+      "hot": 225184,
+      "bytes_read": 269120,
+      "worst_wait_us": 282420
+    },
+    "audio": {
+      "layout": 1,
+      "aica_used": 1831264,
+      "map_used": 335,
+      "valid_banks": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11
+      ],
+      "voices_used": 13,
+      "voices_running": 13
+    }
+  },
+  "radio_screenshot": "sixfix-route02/shots/checkpoint-radio-open/frames/fb0.png",
+  "radio_context": {
+    "run_id": "sixfix-route02",
+    "source": "d4a3b31fac3362937a3f21eaa874e07be94fd061",
+    "elf_sha256": "52a5d671203e22e9f20728a8fbc3b61e080f7ba44e06891df635248a374dd053",
+    "disc_sha256": "a8bfd7e67d8de2c8d79f3b639f6243e30da40afbe8b523aec87d5bb47c3f110d",
+    "room": 256,
+    "source_frame_interval": [
+      631,
+      638
+    ],
+    "action": "Original post-s20 radio",
+    "result": "Original modal before normal START close",
+    "before": {
+      "host_s": 21.578,
+      "frame": 631,
+      "room": 256,
+      "phase": [
+        3,
+        0
+      ],
+      "stop": "0x77ffffbf",
+      "motion": {
+        "hits": 263,
+        "misses": 21,
+        "evictions": 0,
+        "loads": 21,
+        "failures": 0,
+        "resident": 232928,
+        "peak_cache": 232928,
+        "pinned": 0,
+        "peak_pinned": 22400,
+        "metadata": 67168,
+        "hot": 225184,
+        "bytes_read": 232928,
+        "worst_wait_us": 149610
+      },
+      "bindings": [],
+      "hand": {
+        "pick_max_us": 229,
+        "async_max_us": 130962,
+        "async_fails": 0,
+        "async_reads": 4,
+        "hit_max_us": 115,
+        "alloc_fails": 0,
+        "refills": 2,
+        "yields": 2,
+        "misses": 1,
+        "hits": 1,
+        "copies": 1,
+        "read_bytes": 67904,
+        "reads": 14,
+        "cells": [
+          10,
+          0,
+          6,
+          1
+        ],
+        "slots": [
+          10,
+          6
+        ],
+        "want": [
+          -1,
+          -1
+        ],
+        "job_state": 0
+      },
+      "disc": {
+        "reads": 1896,
+        "bytes": 23227808,
+        "block_us": 8341509,
+        "last_sector": 315570,
+        "last_count": 19099
+      },
+      "weapon": [
+        0,
+        0,
+        0,
+        7
+      ],
+      "old_wep": 7,
+      "audio": {
+        "layout": 1,
+        "aica_used": 1831264,
+        "map_used": 335,
+        "valid_banks": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11
+        ],
+        "voices_used": 6,
+        "voices_running": 2
+      },
+      "texture": {
+        "loads": 311,
+        "preload_loads": 279,
+        "load_opens": 311,
+        "metadata_evictions": 0
+      },
+      "cache": {
+        "data": [
+          516920,
+          516921,
+          516922,
+          516923,
+          516924,
+          516925,
+          516926,
+          516927,
+          516928,
+          516929,
+          516930,
+          516931,
+          516932,
+          516933,
+          516934,
+          516935
+        ],
+        "inode": [
+          45379,
+          45373,
+          45368,
+          45273,
+          45270,
+          45295,
+          45372,
+          45258,
+          45259,
+          45260,
+          45266,
+          45245,
+          45261,
+          45262,
+          45241,
+          45276
+        ]
+      },
+      "actors": [],
+      "world_safe": false,
+      "ssloop": 1,
+      "health": [
+        1200,
+        1200,
+        600
+      ]
+    },
+    "after": {
+      "host_s": 21.781,
+      "frame": 638,
+      "room": 256,
+      "phase": [
+        3,
+        0
+      ],
+      "stop": "0x77ffffbf",
+      "motion": {
+        "hits": 263,
+        "misses": 21,
+        "evictions": 0,
+        "loads": 21,
+        "failures": 0,
+        "resident": 232928,
+        "peak_cache": 232928,
+        "pinned": 0,
+        "peak_pinned": 22400,
+        "metadata": 67168,
+        "hot": 225184,
+        "bytes_read": 232928,
+        "worst_wait_us": 149610
+      },
+      "bindings": [],
+      "hand": {
+        "pick_max_us": 229,
+        "async_max_us": 130962,
+        "async_fails": 0,
+        "async_reads": 4,
+        "hit_max_us": 115,
+        "alloc_fails": 0,
+        "refills": 2,
+        "yields": 2,
+        "misses": 1,
+        "hits": 1,
+        "copies": 1,
+        "read_bytes": 67904,
+        "reads": 14,
+        "cells": [
+          10,
+          0,
+          6,
+          1
+        ],
+        "slots": [
+          10,
+          6
+        ],
+        "want": [
+          -1,
+          -1
+        ],
+        "job_state": 0
+      },
+      "disc": {
+        "reads": 1896,
+        "bytes": 23227808,
+        "block_us": 8341509,
+        "last_sector": 315570,
+        "last_count": 19099
+      },
+      "weapon": [
+        0,
+        0,
+        0,
+        7
+      ],
+      "old_wep": 7,
+      "audio": {
+        "layout": 1,
+        "aica_used": 1831264,
+        "map_used": 335,
+        "valid_banks": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11
+        ],
+        "voices_used": 6,
+        "voices_running": 2
+      },
+      "texture": {
+        "loads": 311,
+        "preload_loads": 279,
+        "load_opens": 311,
+        "metadata_evictions": 0
+      },
+      "cache": {
+        "data": [
+          516920,
+          516921,
+          516922,
+          516923,
+          516924,
+          516925,
+          516926,
+          516927,
+          516928,
+          516929,
+          516930,
+          516931,
+          516932,
+          516933,
+          516934,
+          516935
+        ],
+        "inode": [
+          45379,
+          45373,
+          45368,
+          45273,
+          45270,
+          45295,
+          45372,
+          45258,
+          45259,
+          45260,
+          45266,
+          45245,
+          45261,
+          45262,
+          45241,
+          45276
+        ]
+      },
+      "actors": [],
+      "world_safe": false,
+      "ssloop": 1,
+      "health": [
+        1200,
+        1200,
+        600
+      ]
+    },
+    "method": "Existing framebuffer capture; asynchronous source-frame interval, no guest freeze/write",
+    "pngs": [
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-r11e-20261020\\sixfix-route02\\shots\\checkpoint-radio-open\\frames\\fb0.png",
+        "sha256": "1f504867e24b08f32e24ccc7c23a3a69b14f7de2f7475d4681557866acaf257e"
+      },
+      {
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-r11e-20261020\\sixfix-route02\\shots\\checkpoint-radio-open\\frames\\fb1.png",
+        "sha256": "7504b62103672fd205504e701a61f02d30b91eda5c61e1971c1f30321d755af2"
+      }
+    ]
+  },
+  "visual_review": "Both original Leon and Hunnigan portraits, subtitles, radio UI visible after six-second dwell. Normal START return then original window jump/live ambush.",
+  "limits": [
+    "Flycast proxy, no physical hardware/audio quality acceptance",
+    "Movies10003/10020 terminal2 ordinary START skip returns, not natural EOF",
+    "d4 excludes separate audio recovery/capacity successor"
+  ]
+}

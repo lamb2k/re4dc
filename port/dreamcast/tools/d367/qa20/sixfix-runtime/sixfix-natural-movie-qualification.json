@@ -1,0 +1,102 @@
+{
+  "source": "d4a3b31fac3362937a3f21eaa874e07be94fd061",
+  "run": "sixfix-natural01",
+  "result": {
+    "name": "qa21-sixfix-natural",
+    "status": "RUN_COMPLETE",
+    "start_utc": "2026-10-21T01:49:33.044634+00:00",
+    "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-r11e-20261020\\sixfix-master",
+    "tracks": {
+      "disc.gdi": 83,
+      "track01.bin": 1058400,
+      "track02.raw": 1237152,
+      "track03.iso": 1017761792
+    },
+    "seconds": 50,
+    "vmu": null,
+    "keys": null,
+    "stop": null,
+    "fixtures": {},
+    "errors": [],
+    "key_log": [],
+    "align": false,
+    "emu": "harness",
+    "emu_env": {},
+    "stopped": "owned controller guard",
+    "owned_stop_request": {
+      "pid": 32648,
+      "start_filetime": 134370209731590755,
+      "reason": "SIXFIX_NATURAL_MOVIE_RETURN_COMPLETE"
+    },
+    "log_idle_s": 1.4,
+    "end_utc": "2026-10-21T01:50:14.857837+00:00",
+    "elapsed_s": 41.7,
+    "emulator_exited": true
+  },
+  "movie_log": [
+    "route movie terminal=2 id=10003 frames=83/1465 uploaded=82 presented=82 wall_us=2731163 media_us=48882166 underruns=1 silence_bytes=1472 heap_before=924608 heap_active=560416 staged=363328",
+    "route movie cadence id=10003 shown=82 dropped=0 late=0 two_field=81 other=0 max_gap_fields=2 (29.97 fps = one picture per 2 fields)",
+    "route movie retired: id=10003 source_heap=924608 staged=363328 vram_free=431296 aica_largest_any=1004192 kos_free=6824 stream_init=0 stream_active=0",
+    "route movie terminal=1 id=10020 frames=571/571 uploaded=571 presented=571 wall_us=19114133 media_us=19052366 underruns=2 silence_bytes=8448 heap_before=822592 heap_active=458400 staged=363328",
+    "route movie cadence id=10020 shown=571 dropped=0 late=0 two_field=570 other=0 max_gap_fields=2 (29.97 fps = one picture per 2 fields)",
+    "route movie retired: id=10020 source_heap=822592 staged=363328 vram_free=402272 aica_largest_any=1004192 kos_free=5320 stream_init=0 stream_active=0"
+  ],
+  "final": {
+    "frame": 673,
+    "phase": [
+      3,
+      0
+    ],
+    "stop": "0x0",
+    "ssloop": 0,
+    "health": [
+      1200,
+      1200,
+      600
+    ],
+    "motion": {
+      "hits": 325,
+      "misses": 21,
+      "evictions": 0,
+      "loads": 21,
+      "failures": 0,
+      "resident": 232928,
+      "peak_cache": 232928,
+      "pinned": 0,
+      "peak_pinned": 22400,
+      "metadata": 67168,
+      "hot": 225184,
+      "bytes_read": 232928,
+      "worst_wait_us": 149610
+    },
+    "audio": {
+      "layout": 1,
+      "aica_used": 1831264,
+      "map_used": 335,
+      "valid_banks": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11
+      ],
+      "voices_used": 7,
+      "voices_running": 7
+    }
+  },
+  "visual_review": [
+    "s20 moving picture periodic0020/fb0 inspected",
+    "Original radio portraits/subtitles inspected route02",
+    "Natural s20 EOF/radio return final world fb0 inspected"
+  ],
+  "limits": [
+    "Full natural49s s03 not run: its ordinary START-skip return passed",
+    "Movie s20 reports2underruns/8448silenceB; no physical audible-quality acceptance",
+    "Bounded Flycast functional acceptance, no hardware/frame-identical/release/squeeze-wide claim"
+  ]
+}

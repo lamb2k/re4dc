@@ -1,0 +1,158 @@
+{
+  "source": "d4a3b31fac3362937a3f21eaa874e07be94fd061",
+  "elf_sha256": "52a5d671203e22e9f20728a8fbc3b61e080f7ba44e06891df635248a374dd053",
+  "run": "sixfix-resources01",
+  "result": {
+    "name": "qa21-sixfix-resources",
+    "status": "RUN_COMPLETE",
+    "start_utc": "2026-10-21T01:43:54.004388+00:00",
+    "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-r11e-20261020\\sixfix-master",
+    "tracks": {
+      "disc.gdi": 83,
+      "track01.bin": 1058400,
+      "track02.raw": 1237152,
+      "track03.iso": 1017761792
+    },
+    "seconds": 50,
+    "vmu": null,
+    "keys": null,
+    "stop": null,
+    "fixtures": {},
+    "errors": [],
+    "key_log": [],
+    "align": false,
+    "emu": "harness",
+    "emu_env": {},
+    "stopped": "owned controller guard",
+    "owned_stop_request": {
+      "pid": 49296,
+      "start_filetime": 134370206341107442,
+      "reason": "SIXFIX_RESOURCE_GATE_COMPLETE"
+    },
+    "log_idle_s": 1.4,
+    "end_utc": "2026-10-21T01:44:11.105101+00:00",
+    "elapsed_s": 17.0,
+    "emulator_exited": true
+  },
+  "frames": [
+    1418,
+    1769
+  ],
+  "health": [
+    1200,
+    1200,
+    600
+  ],
+  "motion": {
+    "hits": 7046,
+    "misses": 27,
+    "evictions": 0,
+    "loads": 27,
+    "failures": 0,
+    "resident": 285440,
+    "peak_cache": 285440,
+    "pinned": 0,
+    "peak_pinned": 22400,
+    "metadata": 67168,
+    "hot": 225184,
+    "bytes_read": 285440,
+    "worst_wait_us": 330929
+  },
+  "audio_final": {
+    "layout": 1,
+    "aica_used": 1831264,
+    "map_used": 335,
+    "valid_banks": [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6,
+      8,
+      9,
+      10,
+      11
+    ],
+    "voices_used": 4,
+    "voices_running": 4
+  },
+  "max_running_voices": 14,
+  "actual_shots": 2,
+  "enemy_start": [
+    [
+      "0x8cd40b00",
+      0
+    ],
+    [
+      "0x8cd3fd20",
+      0
+    ],
+    [
+      "0x8cd37800",
+      0
+    ],
+    [
+      "0x8cc95b00",
+      500
+    ],
+    [
+      "0x8cc94d20",
+      500
+    ],
+    [
+      "0x8cc88640",
+      500
+    ],
+    [
+      "0x8cc87860",
+      0
+    ],
+    [
+      "0x8cbd3f00",
+      0
+    ]
+  ],
+  "enemy_end": [
+    [
+      "0x8cd40b00",
+      0
+    ],
+    [
+      "0x8cd3fd20",
+      0
+    ],
+    [
+      "0x8cd37800",
+      0
+    ],
+    [
+      "0x8cc95b00",
+      500
+    ],
+    [
+      "0x8cc94d20",
+      0
+    ],
+    [
+      "0x8cc88640",
+      0
+    ],
+    [
+      "0x8cc87860",
+      0
+    ],
+    [
+      "0x8cbd3f00",
+      0
+    ]
+  ],
+  "diagnostic": "RE4DCQA1\nbuild=RE4DC QA TEST 21C cache21\nroom=100 preset=r100\nfps=30.4 speed=102 cpu=97\nms10 logic=84 fx=39 models=12 scenery=2 post=0 draw=0 wait=2 total=329\nheap4=54304\nkos free=8384 used=12225768 brk=69632\nvram free=103168 big=12160 fails=31\ndisc=NA\nganados_alive=1\nfx_live=600\nLOG\nCOARSE_CROWD t=1680 limit=-1 layout=0 candidates=0 meshes=0 emitted=0 tr\nCOARSE_PREGATE t=1680 actors=611 culled_actors=0 chunks=2444 culled_chun\naica: t=82401 note ch=4 prog=4 key=60 vel=100 db=-14 hz=8000 ar=19 dl=0 \nPHASES: gpu=75 render=0 logic=84 fxmove=18 fxtrans=21 objs=12 other=2 po\nPACE vmu t=1682 win_vb=61 drawn=31 gpu_n=31 gpu_avg_us=7583 gpu_max_us=1\nPS2LEAN frame=1920 mode=23 pre_culled=368551 pl_inside=4773 cl_inside=81\nSGLEAN frame=1920 knob=1 on=1 calls=0 box=0 sel_bad=0 bm_bad=0\nPCACT frame=1920 trans=1613 active=555 tests=0 hidden=45 view=0/1294 reu\nPCCULL frame=1920 active=0 cell=-1 eye=-90014,2678,-32071 corner=126 por\nPCOWN frame=1920 tests=235 hidden=45\nPS2MESH frame=1920 pass=0 placements=216 culled=176 parts=91 native=91 f\nPS2MESH frame=1920 pass=1 placements=37 culled=27 parts=4 native=4 fallb\nPS2MESH frame=1920 pass=2 placements=79 culled=56 parts=3 native=3 fallb\nPS2MESH frame=1920 strips=1145851 culled=1354562 clipped=153932 vertices\nFARSHELL frame=1920 mode=1 view=1 room=100 loaded=0 shown=0 groups=0 ver\nPACE vmu t=1713 win_vb=61 drawn=31 gpu_n=31 gpu_avg_us=7502 gpu_max_us=7\nqa: menu open\nqa: screen 0 fb=a5461300,a5461300\nqa: screen 0 fb=a5461300,a5461300\nqa: screen 0 fb=a5461300,a5461300\n",
+  "limits": [
+    "Flycast proxy only; no physical audible/hardware acceptance",
+    "Low heap/KOS/VRAM headroom reported, not squeeze-wide acceptance",
+    "Native VRAM allocation failures/retries present; not blanket cleared",
+    "Original radio source return passed route01 but initial PNG black fade; presentation dwell queued",
+    "Current d4 excludes later audio recovery/capacity changes"
+  ]
+}

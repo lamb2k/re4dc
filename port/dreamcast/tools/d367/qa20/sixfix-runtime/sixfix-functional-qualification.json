@@ -1,0 +1,34 @@
+{
+  "source": "d4a3b31fac3362937a3f21eaa874e07be94fd061",
+  "elf_sha256": "52a5d671203e22e9f20728a8fbc3b61e080f7ba44e06891df635248a374dd053",
+  "program_sha256": "8c26c048c3e7aec66f2ea6496b1c2ec03e0b2b6e2ce6ff1ae1308dac62958034",
+  "iso_sha256": "a8bfd7e67d8de2c8d79f3b639f6243e30da40afbe8b523aec87d5bb47c3f110d",
+  "classification": "Six-fix bounded Flycast functional gates PASS in named scope; hardware/audio quality/memory squeeze/K05capacity OPEN",
+  "gates": {
+    "immutable_assets_source_preserved": "PASS",
+    "fresh_reset_lineage": "PASS",
+    "warm_resident_metadata_scan_elimination": "PASS rows123/picked0/reads0",
+    "warmed_two_pose_HG_TMP_hands": "PASS initial1read5248B then3transitions0/0/0",
+    "normal_inventory_equip_world_returns": "PASS4returns",
+    "original_s03_s20_skip_callbacks": "PASS",
+    "original_s20_natural_EOF": "PASS571/571",
+    "original_radio_portraits_and_world_return": "PASS6s dwell",
+    "actual_ambush_ordinary_kills": "PASS2kills/health1200/600/motion27loads0evictions0failures",
+    "Diagnostics_close_resume": "PASS",
+    "native_audio_state": "PASS layout1/10validbanks/max14runningvoices; not audible acceptance"
+  },
+  "limits": [
+    "SDKheap54304B;KOSfree8384B+brk69632B snapshot only, no minimum/squeeze acceptance",
+    "VRAMfree103168B/big12160B/fails31 and fragmentation retries present",
+    "Inventory still222..335physicalreads/2.76..3.06MB with47..70image admissions; no total I/O-free UI claim",
+    "Movie s20 2underruns/8448silenceB; physical audio quality pending",
+    "Natural fulls03/wholegame/hardware not tested",
+    "Separate audio83cb and forthcoming capacity code are NOT included"
+  ],
+  "receipts": {
+    "SIXFIX-INVENTORY-HAND-QUALIFICATION.json": "a6a128562ce01912412644ac0f3bcce84bbabb41e7d4d8681004cd037e594acf",
+    "SIXFIX-AMBUSH-RESOURCE-QUALIFICATION.json": "9bf1af9c968491aad6923947ffdd6c3f0d44bcfc29f8e4f585a967e407cec0f9",
+    "SIXFIX-RADIO-MOVIE-RETURN-QUALIFICATION.json": "e929080180144f829d1c68416cc0f61e097e136d26cd586f2d22c3971a14f587",
+    "SIXFIX-NATURAL-MOVIE-QUALIFICATION.json": "497f75429ed8c6cac9f518065637911d6dcd9508b55c27c41a623855f18b3cbd"
+  }
+}

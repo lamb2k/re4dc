@@ -19,6 +19,7 @@ path=ctypes.create_unicode_buffer(32768);size=W.DWORD(len(path));assert k.QueryF
 assert Path(path.value).resolve()==Path(owner['path']).resolve()
 c,e,kt,ut=(W.FILETIME() for _ in range(4));assert k.GetProcessTimes(h,ctypes.byref(c),ctypes.byref(e),ctypes.byref(kt),ctypes.byref(ut))
 assert (c.dwHighDateTime<<32|c.dwLowDateTime)==owner['start_filetime']
+(cap/'observer-source.py').write_bytes(Path(__file__).read_bytes())
 ram=int(match[-1],16)
 def read(a,n):
     b=ctypes.create_string_buffer(n);got=ctypes.c_size_t()
@@ -57,6 +58,7 @@ with (cap/'readonly-combat-io.jsonl').open('x') as out:
             lh=dict(zip(lh_names,struct.unpack('<13I',read(0x8c2de300,52))))
             lh.update(cells=list(struct.unpack('<4i',read(0x8c2de358,16))),slots=list(struct.unpack('<2i',read(0x8c2de36c,8))),want=list(struct.unpack('<2i',read(0x8c2de2bc,8))),job_state=u32(0x8c2de2f0))
             row=dict(host_s=round(time.monotonic()-start,3),frame=u32(pg+0x51e4),room=room,phase=list(read(pg+0x20,2)),stop=hex(u32(pg+0x170)),motion=dict(hits=v[0],misses=v[1],evictions=v[2],loads=v[3],failures=v[4],resident=v[5],peak_cache=v[6],pinned=v[7],peak_pinned=v[8],metadata=v[9],hot=v[10],bytes_read=struct.unpack('<Q',read(0x8c3f170c+44,8))[0],worst_wait_us=struct.unpack('<Q',read(0x8c3f170c+52,8))[0]),bindings=bindings,hand=lh,disc=dict(reads=u32(0x8c3b7454),bytes=struct.unpack('<Q',read(0x8c3b744c,8))[0],block_us=struct.unpack('<Q',read(0x8c3b7444,8))[0],last_sector=u32(0x8c3b7404),last_count=u32(0x8c3b7400)),weapon=list(read(pg+0x4fb0,4)),old_wep=read(0x8c370ee2,1)[0])
+            voices=read(0x8c3a22c0,29184);banks=read(0x8c3a9e38,448);row['audio']=dict(layout=read(0x8c3a9de5,1)[0],aica_used=u32(0x8c3a2288),map_used=u32(0x8c3a9ff8),valid_banks=[j for j in range(14)if banks[j*32+22]],voices_used=sum(bool(voices[j*456])for j in range(64)),voices_running=sum(bool(voices[j*456+1])for j in range(64)))
             row['texture']=dict(loads=u32(0x8c412104),preload_loads=u32(0x8c4190d8),load_opens=u32(0x8c41993c),metadata_evictions=u32(0x8c41bc3c))
             row['cache']={}
             for label,addr in [('data',0x8c41fb74),('inode',0x8c41fbb4)]:

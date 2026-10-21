@@ -48,6 +48,8 @@ with (cap/'normal-combat-controller.jsonl').open('x') as out:
             if s['frame']==last_frame:time.sleep(.05);continue
             last_frame=s['frame']
             if '10020' in skipped and not radio_skip and 'SS/eng/ss_term.dat' in log and s.get('ssloop') and s['stop']!='0x0':
+                seen.setdefault('radio_ready_wait',time.monotonic())
+                if time.monotonic()-seen['radio_ready_wait']<6:time.sleep(.05);continue
                 record(s,screenshot=capture_checkpoint(cap,'radio-open','Original post-s20 radio','Original modal before normal START close'));action(['start'],.15,s);radio_skip=True;stage='await_world';time.sleep(.5);continue
             if not all(k in s for k in ['player_pos','player_yaw','health','actors']):time.sleep(.05);continue
             px,py,pz=s['player_pos'];world=-100000<px<-65000 and 0<py<7000 and -45000<pz<-20000
