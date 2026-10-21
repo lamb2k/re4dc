@@ -67,3 +67,34 @@ current module. Corrected assertion verifies exact inside/outside pointers.
 No runtime source, knob, object, linked program, target image, Flycast, release,
 physical Dreamcast or performance acceptance is added by this review. Main
 retains holistic lifetime/integration and Claude production merge/release.
+
+## Existing selected guard comparison
+
+The invalid first-admission count defect is already repaired by
+`EFFECT_ADMISSION_GUARD` in `b3101919701173f23260edeff29433d6754d7e8f`, imported
+as `860890b0b28d0373999f8cf1452dbb9f8e92ac49` and present in main review
+`3a14fa96b`. The complete eff_sys.cpp files at all three revisions are identical:
+SHA256 `83c5ae8deb709982a37dfeb371038a8d5263f36b7fe180530ddda0857828465f`.
+
+`effect-selected-guard-host.json` executes that exact selected source OFF/ON,
+16 controls each. Guard ON refuses a wrong-version first load at count0,
+preserves count0/no tables, then a corrected immediate retry performs the real
+first registration at count1. Invalid-version Pop likewise preserves count0.
+Valid first/shared registration, final/non-final release and valid Pop retain
+their behavior. NULL and missing EFF controls pass. Shared invalid-version input
+and valid repeated flag1 error deliberately retain prior duplicate/count
+semantics; no new defect is inferred from that compatibility policy.
+
+The same source tests still reproduce the shared EST pointer-overwrite gap
+with this existing guard ON. That guard certifies first file admission; it does
+not retire archive borrowers or convert void Pop to a result-bearing API.
+
+An independently drafted all-input version-before-count switch was unnecessary
+for the established first-admission defect. It was never committed or enabled
+in a production recipe. Its exact runtime patch and small host/SH4 evidence are
+preserved under the evidence root with `SUPERSEDED-` prefixes. Draft runtime
+changes were removed; event.cpp, eff_sys.cpp, game Makefile and game30.mk have
+no changes in this comparison commit. New draft object results are not the
+selected guard's qualification. Selected raw source/run/receipt evidence is
+`cache21-callers-effect-selected-guard-host-20261022-01` under that same root.
+The initial characterization and failed host01 evidence remain immutable.
