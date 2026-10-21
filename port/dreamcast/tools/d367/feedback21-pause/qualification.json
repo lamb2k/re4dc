@@ -1,0 +1,106 @@
+{
+  "source": "372c61cef6ee4f15649bb3fd16cff9b2b967d9b0",
+  "branch": "codex/feedback21-pause",
+  "default": 0,
+  "host_cases_per_mode": 8192,
+  "full_builds": {
+    "off": {
+      "mode": "off",
+      "seconds": 56.039683511000476,
+      "source": "372c61cef6ee4f15649bb3fd16cff9b2b967d9b0",
+      "elf_sha256": "b1ecf359877173a259d788eaaf35a4fd9561ec6cd2043f64fea5c705ae1f850d",
+      "program_sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+      "knob_input_sha256": "54d2e5d56f84d76c5c0071484771ca74957c6649d28b103a5974943728715f70",
+      "resolved_sha256": "767ff4c7cf268d2642dc05242d7fcdb7fbed187b56f7c10fdaea679bfaea26b8",
+      "scope": "Private QA pause regression candidate, not release adoption"
+    },
+    "on": {
+      "mode": "on",
+      "seconds": 50.033416145000956,
+      "source": "372c61cef6ee4f15649bb3fd16cff9b2b967d9b0",
+      "elf_sha256": "f6a671d7cd3213a95c8e0990a843a5fba98e4b22dddd19fed540c03fdc78f314",
+      "program_sha256": "3feca3190805ccda92b2de0f782451e7b5c43d625f0cc75c456ed25479d12ee8",
+      "knob_input_sha256": "54d2e5d56f84d76c5c0071484771ca74957c6649d28b103a5974943728715f70",
+      "resolved_sha256": "a8e58ec6893b7b99f2a8439e7b852b6ea386809b0db621899a25f6e6e4829a79",
+      "scope": "Private QA pause regression candidate, not release adoption"
+    }
+  },
+  "candidate": {
+    "source": "372c61cef6ee4f15649bb3fd16cff9b2b967d9b0",
+    "knob": "PAUSE_NATIVE_PRESENTATION=1",
+    "baseline_program_exact": true,
+    "off_overlays_14_exact": [
+      "/dc/em22.ovl",
+      "/dc/em2b.ovl",
+      "/dc/em2f.ovl",
+      "/dc/em35.ovl",
+      "/dc/em3b.ovl",
+      "/dc/pl0f.ovl",
+      "/dc/pl11.ovl",
+      "/dc/pl14.ovl",
+      "/dc/sscrn.ovl",
+      "/dc/st1_0.ovl",
+      "/dc/st1_1.ovl",
+      "/dc/st1_2.ovl",
+      "/dc/st1_3.ovl",
+      "/dc/st2_0.ovl"
+    ],
+    "candidate_overlays_from_same_on_build": true,
+    "unchanged_files": 1728,
+    "changed_files": [
+      "/1ST_READ.BIN",
+      "/dc/em22.ovl",
+      "/dc/em2b.ovl",
+      "/dc/em2f.ovl",
+      "/dc/em35.ovl",
+      "/dc/em3b.ovl",
+      "/dc/pl0f.ovl",
+      "/dc/pl11.ovl",
+      "/dc/pl14.ovl",
+      "/dc/sscrn.ovl",
+      "/dc/st1_0.ovl",
+      "/dc/st1_1.ovl",
+      "/dc/st1_2.ovl",
+      "/dc/st1_3.ovl",
+      "/dc/st2_0.ovl"
+    ],
+    "old_program_bytes": 3348164,
+    "new_program_bytes": 3348388,
+    "program_sha256": "3feca3190805ccda92b2de0f782451e7b5c43d625f0cc75c456ed25479d12ee8",
+    "track03_sha256": "edb67c55efff6e5f49dcd77404a24eeae2438b710d8295f4d73c148ee8d754c4",
+    "scope": "Private 2048-sector QA input, ordinary input only, no fixture/state/AI edits or release adoption"
+  },
+  "runtime": {
+    "scene": "QA r100 opening house, pre-s03 preset",
+    "method": "Same cold QA preset and ordinary START input sequence; no state/health/AI pokes",
+    "baseline": "Exact QA aafc10f3 package program, not asserted to be public Test21 binary",
+    "off_visual": "OPTIONS renders Leon and floating doors/windows with missing wall/floor surfaces",
+    "on_visual": "OPTIONS menu and native room walls/floor coexist; ordinary resume restores gameplay view",
+    "run": {
+      "elapsed_s": 46.3,
+      "errors": [],
+      "owned_emulator_exited": true,
+      "keys_executed": 8
+    },
+    "screenshots": {
+      "off_pause": {
+        "path": "C:/Flycast-Evidence/re4-dreamcast/feedback21-runtime-20261021/pause-r100-01/shots/t0032/frames/fb0.png",
+        "sha256": "46e31db7bc967cba1de4808ba94d33144cdb2e28a408018c4b5f9fd1a314bd42"
+      },
+      "on_pause": {
+        "path": "C:/Flycast-Evidence/re4-dreamcast/feedback21-runtime-20261021/pause-r100-on2/shots/t0031/frames/fb0.png",
+        "sha256": "cb3d68b321e72aa7a04f95b7013f4359ff05ce305e7deefc52b03c278389f0ed"
+      },
+      "on_resume": {
+        "path": "C:/Flycast-Evidence/re4-dreamcast/feedback21-runtime-20261021/pause-r100-on2/shots/t0036/frames/fb0.png",
+        "sha256": "61ee157459fd4c6e8ac11b96e71f4bbb817c2a4845fb2939f8a9a0bba782a7e6"
+      }
+    }
+  },
+  "limits": [
+    "Single room/ordinary pause only; no whole-renderer acceptance",
+    "Inventory, movie/death/held-background and boss pause regression tests remain open",
+    "No physical Dreamcast timing, no speed claim",
+    "No recipe enablement, production merge, release or SD action"
+  ]
+}
