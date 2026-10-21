@@ -1,0 +1,226 @@
+{
+  "scope": "Actual SH-4 event.o only; no linked-program, guest or hardware acceptance",
+  "baseline_revision": "d21bd80a6",
+  "candidate_event_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+  "qualifier_sha256": "0d01003fd728ea30e869b7b1807bff254f790224dcc7704ac882c519328b4008",
+  "baseline_make_sha256": "96082e7d1e680befef262d39fdd379eeda3b6163eba0c0293c38e8230349485c",
+  "start_C_free_bytes": 19496439808,
+  "finish_C_free_bytes": 19489951744,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "invalid_knobs_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "missing_make_prerequisites_rejected": [],
+  "direct_source_prerequisites_rejected": [],
+  "ppc_selected_preprocessed_sha256": "06138205e2152093a7039148ac176c4abecdcff9e3fc241ab6af503b3618061f",
+  "ppc_limit": "Selected-source preprocessing only, not a PPC object/full-game identity claim.",
+  "objects": [
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_ADMISSION_PREFLIGHT": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin0-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_ADMISSION_PREFLIGHT": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin0-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_ADMISSION_PREFLIGHT": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "7e55887f12187b71f5c93007aba80f800a1b063660f25c84f6aa0095d196aa1c",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39186\t      4\t    640\t  39830\t   9b96\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin0-txn0/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_ADMISSION_PREFLIGHT": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "e45f1072f25a2db05491189ccaa2b6b5e7a38702ef28527d7fbd840dd886568d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39841\t      4\t    640\t  40485\t   9e25\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin0-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_ADMISSION_PREFLIGHT": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "e45f1072f25a2db05491189ccaa2b6b5e7a38702ef28527d7fbd840dd886568d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39841\t      4\t    640\t  40485\t   9e25\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin0-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_ADMISSION_PREFLIGHT": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "303410219c9832e699c2e7b4cd5dea3f45029eacc5e216e41e17e4f4297e778f",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40142\t      4\t    640\t  40786\t   9f52\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin0-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_ADMISSION_PREFLIGHT": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin1-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_ADMISSION_PREFLIGHT": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin1-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_ADMISSION_PREFLIGHT": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "9c92c56dcdce4a7a6ff4a5fb8df25dede9e40c0e29d8b3744652a1bffdf0e0f0",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39706\t      4\t    640\t  40350\t   9d9e\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin1-txn0/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_ADMISSION_PREFLIGHT": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "4da5cc73e3273ff54fdc081268e98b1900a91d73a24c811e862ba0a771ca2969",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40371\t      4\t    640\t  41015\t   a037\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin1-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_ADMISSION_PREFLIGHT": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "4da5cc73e3273ff54fdc081268e98b1900a91d73a24c811e862ba0a771ca2969",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40371\t      4\t    640\t  41015\t   a037\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin1-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_ADMISSION_PREFLIGHT": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "ae27d08f41aed2e4715ca28c0cf010d6d33e7a87106c41ef049cb5b3f1e2bb91",
+      "stripped_event_o_sha256": "c6906e2f21953886e0cff5b59208d3aa18fea57a6d75b8a2bd2f47a0294eb876",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40672\t      4\t    640\t  41316\t   a164\t/root/probe/cache21-callers-read-preflight-sh4-20261022-01/cabin1-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:3091:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2441:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)\t48\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2913:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-preflight-sh4-20261022-01/event.cpp:2851:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    }
+  ]
+}

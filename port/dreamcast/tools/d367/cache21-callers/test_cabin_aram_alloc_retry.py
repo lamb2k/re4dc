@@ -23,6 +23,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", required=True, type=Path)
     parser.add_argument("--release-refs-pair",action="store_true")
+    parser.add_argument("--preflight-pair",action="store_true")
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=False)
     fixture = args.out / "h064-fixture" / transaction.FIXTURE_DIR
@@ -103,8 +104,9 @@ def main():
     manager_methods = ["template <class T>\n" + body("include/cManager.h", "cManager<T>::create", "T* cManager<T>::create(int id)"),
                        "template <class T>\n" + body("include/cManager.h", "cManager<T>::countActiveWork")]
     variants = []
-    for enabled,cabin,release_refs in (((1,1,0),(1,1,1))if args.release_refs_pair else((0,1,0),(1,1,0))):
-        out = args.out / f"retry{enabled}-cabin{cabin}-refs{release_refs}"; out.mkdir()
+    assert not(args.release_refs_pair and args.preflight_pair)
+    for enabled,cabin,release_refs,preflight in (((1,1,0,0),(1,1,0,1))if args.preflight_pair else((1,1,0,0),(1,1,1,0))if args.release_refs_pair else((0,1,0,0),(1,1,0,0))):
+        out = args.out / f"retry{enabled}-cabin{cabin}-refs{release_refs}-preflight{preflight}"; out.mkdir()
         adapted, changes = transaction.adapt_scaffold((fixture / "motion_event_admission_host.cpp").read_text())
         adapted = adapted.replace("void warn(int,int,const char*,...){}}logger", "void warn(int,int,const char*,...){}void mes(int,int,const char*,...){}}logger")
         assert "void mes(" in adapted
@@ -128,10 +130,10 @@ def main():
         (out / "aram_actual_carrier.inc").write_text("\n".join(carrier)+"\n")
         command = ["g++", "-std=c++17", "-O1", "-g", "-fsanitize=undefined", "-fno-sanitize-recover=all", "-fno-omit-frame-pointer",
                    "-fno-pie", "-no-pie", "-Wall", "-Wextra", "-fpermissive", "-DRE4DC_GAME=1", f"-DRE4DC_CABIN_SOURCE={cabin}",
-                   "-DRE4DC_EVENT_FILES=1","-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", "-DRE4DC_EVD_START_ROLLBACK=1","-DRE4DC_EVD_DEBUG_READ_CLEANUP=0", "-DRE4DC_EVD_EXEC_FAILURE_CLEANUP=0",f"-DRE4DC_EVD_ARAM_ALLOC_RETRY={enabled}",f"-DRE4DC_EVD_READ_RELEASE_REFS={release_refs}", "-I" + str(out), "-I"+str(HERE),str(HERE / "cabin_aram_alloc_retry_host.cpp"), "-o", str(out / "test")]
+                   "-DRE4DC_EVENT_FILES=1","-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", "-DRE4DC_EVD_START_ROLLBACK=1","-DRE4DC_EVD_DEBUG_READ_CLEANUP=0", "-DRE4DC_EVD_EXEC_FAILURE_CLEANUP=0",f"-DRE4DC_EVD_ARAM_ALLOC_RETRY={enabled}",f"-DRE4DC_EVD_READ_RELEASE_REFS={release_refs}",f"-DRE4DC_EVD_READ_ADMISSION_PREFLIGHT={preflight}", "-I" + str(out), "-I"+str(HERE),str(HERE / "cabin_aram_alloc_retry_host.cpp"), "-o", str(out / "test")]
         h064.command(command, out / "compile.txt", 30)
         result = h064.command([out / "test"], out / "run.txt", 15); print(result, end="")
-        variants.append(dict(aram_alloc_retry=enabled,cabin_source=cabin,read_release_refs=release_refs, output=result))
+        variants.append(dict(aram_alloc_retry=enabled,cabin_source=cabin,read_release_refs=release_refs,read_admission_preflight=preflight, output=result))
     receipt = dict(scope="Actual EvtReadSub/Mram plus cDataUnit command/condition/wait/setLoadToMram/allocation metadata/clear and native carrier epoch/install/retirement/refusal predicates; exact source-unit checks. Allocation/provider I/O/heap/free and unrelated actor/scenario services are boundaries. No whole-reset/target/high-water proof.",
                    selected_head=transaction.git("rev-parse", "HEAD").decode().strip(), fixture_revision=transaction.FIXTURE_REF,
                    source_sha256=pins, selected_methods=selected, variants=variants,

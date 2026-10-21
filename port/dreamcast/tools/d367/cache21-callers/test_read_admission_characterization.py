@@ -6,6 +6,7 @@ import importlib.util
 import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import sys
 
@@ -22,7 +23,11 @@ def sha(data):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--out", required=True, type=Path)
+    parser.add_argument("--preflight-pair",action="store_true")
     args = parser.parse_args()
+    floor=16*1024**3+128*1024**2
+    start_free=shutil.disk_usage('/mnt/c').free
+    assert start_free>=floor,'Fresh C: source-test floor refused'
     args.out.mkdir(parents=True, exist_ok=False)
     fixture = args.out / "h064-fixture" / transaction.FIXTURE_DIR
     fixture.mkdir(parents=True)
@@ -72,8 +77,8 @@ def main():
     manager_methods = ["template <class T>\n" + body("include/cManager.h", "cManager<T>::create", "T* cManager<T>::create(int id)"),
                        "template <class T>\n" + body("include/cManager.h", "cManager<T>::countActiveWork")]
     variants = []
-    for enabled,cabin in ((0,0),(0,1)):
-        out = args.out / f"exec{enabled}-cabin{cabin}"; out.mkdir()
+    for enabled,cabin in (((0,0),(1,0),(0,1),(1,1))if args.preflight_pair else((0,0),(0,1))):
+        out = args.out / f"preflight{enabled}-cabin{cabin}"; out.mkdir()
         adapted, changes = transaction.adapt_scaffold((fixture / "motion_event_admission_host.cpp").read_text())
         adapted = adapted.replace("void warn(int,int,const char*,...){}}logger", "void warn(int,int,const char*,...){}void mes(int,int,const char*,...){}}logger")
         assert "void mes(" in adapted
@@ -97,11 +102,12 @@ def main():
         (out / "admission_controller_methods.inc").write_text("\n".join(controller)+"\n")
         command = ["g++", "-std=c++17", "-O1", "-g", "-fsanitize=undefined", "-fno-sanitize-recover=all", "-fno-omit-frame-pointer",
                    "-fno-pie", "-no-pie", "-Wall", "-Wextra", "-fpermissive", "-DRE4DC_GAME=1", f"-DRE4DC_CABIN_SOURCE={cabin}",
-                   "-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", "-DRE4DC_EVD_START_ROLLBACK=1","-DRE4DC_EVD_DEBUG_READ_CLEANUP=0", f"-DRE4DC_EVD_EXEC_FAILURE_CLEANUP={enabled}", "-I" + str(out), "-I"+str(HERE),str(HERE / "read_admission_characterization_host.cpp"), "-o", str(out / "test")]
+                   "-DRE4DC_EVD_ADMISSION_TXN=1", "-DRE4DC_EVD_START_CLEANUP=1", "-DRE4DC_EVD_START_ROLLBACK=1","-DRE4DC_EVD_DEBUG_READ_CLEANUP=0", "-DRE4DC_EVD_EXEC_FAILURE_CLEANUP=0",f"-DRE4DC_EVD_READ_ADMISSION_PREFLIGHT={enabled}", "-I" + str(out), "-I"+str(HERE),str(HERE / "read_admission_characterization_host.cpp"), "-o", str(out / "test")]
+        assert shutil.disk_usage('/mnt/c').free>=floor,'C: source-test floor refused before compiler'
         h064.command(command, out / "compile.txt", 30)
         result = h064.command([out / "test"], out / "run.txt", 15); print(result, end="")
-        variants.append(dict(evd_admission_txn=1,start_cleanup=1,start_rollback=1,exec_failure_cleanup=enabled,cabin_source=cabin, output=result))
-    receipt = dict(scope="Actual EvtReadSub/Mram/SetRead/GetRead/table plus dataCtrl setData/getNewUnit and unit command/wait/clear/delete. File existence/size, unit availability, transport completion, module/effect/swap and native carrier policies are explicit boundaries. Characterization only; no repair/target/guest/hardware acceptance.",
+        variants.append(dict(evd_admission_txn=1,start_cleanup=1,start_rollback=1,read_admission_preflight=enabled,cabin_source=cabin, output=result))
+    receipt = dict(scope="Actual EvtReadSub/Mram/SetRead/GetRead/table plus dataCtrl setData/getNewUnit and unit command/wait/clear/delete. File existence/size, unit availability, transport completion, module/effect/swap and native carrier policies are explicit boundaries. Bounded preflight source test only; no whole acquisition epoch/target/guest/hardware acceptance.",
                    selected_head=transaction.git("rev-parse", "HEAD").decode().strip(), fixture_revision=transaction.FIXTURE_REF,
                    source_sha256=pins, selected_methods=selected, variants=variants,
                    test_sha256={p.name: sha(p.read_bytes()) for p in (Path(__file__), HERE / "read_admission_characterization_host.cpp",HERE/'event_start_rollback_host.cpp',HERE/'exec_scenario_boundary.inc',HERE/'exec_transport_boundary.inc',HERE/'exec_cabin_boundary.inc')},
@@ -111,6 +117,9 @@ def main():
     receipt['execution_roots']=['EvtReadMram/EvtReadSub','cDataCtrl::setData/getNewUnit','cDataUnit::setClear/setDelete']
     receipt['controller_binding_adapter']='Rename cDataCtrl method bindings to projected Controller with identical accessed fields. Actual bodies and allocation decisions execute; Host64 layout is not native ABI acceptance.'
     receipt['unexecuted_compile_closure']='Event/create/scenario/reverse bodies compile for inherited fixture closure but are not exercised.'
+    output_bytes=sum(p.stat().st_size for p in args.out.rglob('*')if p.is_file())
+    assert output_bytes<=20*1024**2,'Source-test output budget exceeded'
+    receipt['resource_guard']={'start_C_free_bytes':start_free,'finish_C_free_bytes':shutil.disk_usage('/mnt/c').free,'floor_bytes':floor,'output_bytes_before_receipt':output_bytes,'output_limit_bytes':20*1024**2}
     receipt['transport_boundaries']=[
         'DVD FileExistCheck returns one synthetic size; no private asset is opened. Actual setData/getNewUnit choose and publish the descriptor. Unit-availability is an explicit accepting boundary.',
         'Actual command/check/wait/clear/delete execute; setLoadToMram synthesizes completion. No target allocation/backing or scheduling is qualified.',
