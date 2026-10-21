@@ -6,6 +6,13 @@
 char* EventMgr::NameChange(char* name){return name;}
 static void exec_create_boundary(){std::abort();}
 static cDataUnit descriptor_pool[32];
+#if defined(RE4DC_READ_ACTUAL_EFFECT)
+static constexpr int admission_module=0x11;
+static constexpr unsigned effect_cases=2;
+#else
+static constexpr int admission_module=1;
+static constexpr unsigned effect_cases=1;
+#endif
 static bool change_table_at_file_check;
 static void admission_file_boundary(){if(change_table_at_file_check)EvtMgr.ReadTbl.NumDatTbl=0;}
 static void reset_case(){
@@ -15,6 +22,10 @@ static void reset_case(){
     transport_refuse=transport_other_flags=false;cabin_clear_refuse=false;clear_refusals=0;
     exchange_module={arena,27456};loaded.m_size=27456;
     EvtMgr.readEm[0]={0,0,{0x55,0xaa}};
+#if defined(RE4DC_READ_ACTUAL_EFFECT)
+    admission_effect_system={};admission_effect_system.ownerCnt[0x10]=1;
+    std::memset(effect_release_dispatch,0,sizeof(effect_release_dispatch));
+#endif
 }
 int main(){
     std::cout<<std::unitbuf;
@@ -45,7 +56,7 @@ int main(){
     assert(DC.getNewUnit()==acquired);
     std::cout<<"actual clear retains descriptor; delete permits exact slot reuse PASS\n";
     reset_case();++cases;
-    loaded.m_condition=4;loaded.m_addr=arena+0x10000;EvtMgr.readEm[0]={1,1,{0x55,0xaa}};
+    loaded.m_condition=4;loaded.m_addr=arena+0x10000;EvtMgr.readEm[0]={admission_module,1,{0x55,0xaa}};
     const auto before_reads=reads;const auto prior=EvtMgr.readEm[0];
     const auto before_unit=loaded;const auto before_descriptors=descriptor_pool[0];
 #if RE4DC_EVD_READ_ADMISSION_PREFLIGHT
@@ -62,10 +73,10 @@ int main(){
     std::cout<<"existing swapped role admission source OFF/ON control PASS\n";
 #if RE4DC_EVD_READ_ADMISSION_PREFLIGHT
     for(unsigned mode:{0U,1U,2U})for(unsigned swapped:{1U,2U,255U}){
-        reset_case();++cases;EvtMgr.readEm[0]={1,u8(swapped),{0x12,0x34}};
+        reset_case();++cases;EvtMgr.readEm[0]={admission_module,u8(swapped),{0x12,0x34}};
         loaded.m_condition=4;loaded.m_addr=arena+0x10000;
         const auto read_snapshot=reads;const auto unit_snapshot=loaded;const auto em_snapshot=EvtMgr.readEm[0];
-        assert(!EvtMgr.EvtReadSub(file_name,mode==2,mode==1, &out,0,0)&&!out);
+        assert(!EvtMgr.EvtReadSub(file_name,mode==2,mode==1?admission_module:0, &out,0,0)&&!out);
         assert(!std::memcmp(reads.data(),read_snapshot.data(),sizeof(reads))&&!std::memcmp(&loaded,&unit_snapshot,sizeof(loaded)));
         assert(!std::memcmp(&EvtMgr.readEm[0],&em_snapshot,sizeof(em_snapshot))&&!swap_pushes&&!swap_calls&&!transport_calls);
     }
@@ -73,8 +84,8 @@ int main(){
     // A full table may still reuse its existing unswapped preload owner.
     for(unsigned module:{0U,1U}){
         reset_case();++cases;for(unsigned i=1;i<8;++i){reads[i].FlagBe8=3;reads[i].Count=1;std::snprintf(reads[i].Name,sizeof(reads[i].Name),"occupied-read%u",i);reads[i].Dat=&loaded;}
-        loaded.m_condition=4;loaded.m_addr=arena+0x10000;EvtMgr.readEm[0]={1,0,{0x12,0x34}};
-        const auto preload_reads=reads;assert(EvtMgr.EvtReadMram(file_name,module,&out,0,0));
+        loaded.m_condition=4;loaded.m_addr=arena+0x10000;EvtMgr.readEm[0]={admission_module,0,{0x12,0x34}};
+        const auto preload_reads=reads;assert(EvtMgr.EvtReadMram(file_name,module?admission_module:0,&out,0,0));
         assert(transport_calls==unsigned(!module)&&swap_calls==module&&!admission_file_checks&&!std::memcmp(reads.data(),preload_reads.data(),sizeof(reads)));
     }
     // File work can invalidate capacity after preflight; this guard intentionally
@@ -108,19 +119,29 @@ int main(){
     assert(admission_file_checks==unsigned(!RE4DC_EVD_READ_ADMISSION_PREFLIGHT));
     assert(descriptor_pool[0].chk(1)==int(!RE4DC_EVD_READ_ADMISSION_PREFLIGHT));
     assert(!std::memcmp(oversized.data(),oversized_before.data(),sizeof(oversized)));
-    for(unsigned fail:{0U,1U,2U}){
+    for(unsigned effect_refs=1;effect_refs<=effect_cases;++effect_refs)for(unsigned fail:{0U,1U,2U}){
         reset_case();++cases;loaded.m_condition=4;loaded.m_addr=arena+0x10000;
+#if defined(RE4DC_READ_ACTUAL_EFFECT)
+        admission_effect_system.ownerCnt[0x10]=effect_refs;
+#endif
         module_missing=fail==0;exchange_module.size=fail==1?27455:27456;swap_refuse=fail==2;
         const auto before_unit=loaded;const auto before=reads;
         std::array<u8,0x20000> data;std::memcpy(data.data(),arena,data.size());out=1;
-        const int result=EvtMgr.EvtReadMram(file_name,1,&out,0,0);
+        const int result=EvtMgr.EvtReadMram(file_name,admission_module,&out,0,0);
         assert(swap_pushes==1&&!swap_pops&&!release_calls&&!transport_calls);
         assert(!std::memcmp(&loaded,&before_unit,sizeof(loaded))&&!std::memcmp(arena,data.data(),data.size()));
         if(fail<2){assert(!result&&!out&&!EvtMgr.ReadTbl.ChkDat(file_name)&&!swap_calls);}
         else{assert(result&&u32(out)==u32(std::uintptr_t(arena))&&swap_calls==1&&EvtMgr.readEm[0].swapped==1);
              assert(!std::memcmp(reads.data(),before.data(),sizeof(reads)));}
+#if defined(RE4DC_READ_ACTUAL_EFFECT)
+        assert(admission_effect_system.ownerCnt[0x10]==effect_refs-1);
+        for(auto count:effect_release_dispatch)assert(count==unsigned(effect_refs==1));
+#endif
     }
     std::cout<<"actual prior read caller mutates after missing/undersized module and accepts void swap refusal PASS\n";
+#if defined(RE4DC_READ_ACTUAL_EFFECT)
+    std::cout<<"actual valid module0x11 owner0x10 effect count decrement/five final-release dispatches verified PASS\n";
+#endif
     std::cout<<"READ_ADMISSION_CHARACTERIZATION_CASES="<<cases<<" cabin="<<RE4DC_CABIN_SOURCE<<" preflight="<<RE4DC_EVD_READ_ADMISSION_PREFLIGHT<<" PASS\n";
     assert(mprotect(arena,0x20000,PROT_READ|PROT_WRITE)==0);munmap(arena,0x20000);
 }

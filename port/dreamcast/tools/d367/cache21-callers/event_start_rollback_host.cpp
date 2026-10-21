@@ -115,7 +115,7 @@ static ReadModule exchange_module;
 static unsigned swap_pushes,swap_pops,swap_calls;
 #if defined(RE4DC_READ_ADMISSION_CHARACTERIZE)
 static bool module_missing,swap_refuse;
-static ReadModule* SearchEmModule(int em){assert(em==1);return module_missing?nullptr:&exchange_module;}
+static ReadModule* SearchEmModule(int em){assert(em==1||em==0x11);return module_missing?nullptr:&exchange_module;}
 #else
 static ReadModule* SearchEmModule(int em){assert(em==1);return &exchange_module;}
 #endif
@@ -127,7 +127,11 @@ static void MemorySwap(void* dst,u32 src,u32 bytes){
     for(u32 i=0;i<bytes;++i)std::swap(source[i],target[i]);
 }
 static void EspEmDataSwapPop(int em){assert(em==1);++swap_pops;}
+#if defined(RE4DC_READ_ACTUAL_EFFECT)
+#include "admission_actual_effect_boundary.inc"
+#else
 static void EspEmDataSwapPush(int em){assert(em==1);++swap_pushes;}
+#endif
 static void* EmReadSearch(int em,void*,u32){return SearchEmModule(em)->pArc;}
 #else
 static ReadModule* SearchEmModule(int) { std::abort(); }
