@@ -1,0 +1,59 @@
+{
+  "key": "1c7a6886-9dcfa8d2",
+  "room": "r103",
+  "enabled": true,
+  "source_dimensions": [
+    128,
+    64
+  ],
+  "square_side": 128,
+  "uv_scale": [
+    1.0,
+    0.5
+  ],
+  "source_payload_bytes": 4096,
+  "square_base_payload_bytes": 6144,
+  "crc_rule": "header",
+  "codebook_exact": true,
+  "runtime_compatible": false,
+  "source_package_sha256": "d69c1923d71458e19f719db7757f7f422c22f8405837f5034a581f359a5155f2",
+  "candidate_sha256": "7dd924a6bd4410cbcd817ce433406e1db23a8819051c98a3c4137c4e7c57be33",
+  "mip_payload_bytes": 7510,
+  "base_sampling_cases": 2097,
+  "maximum_channel_error": 0,
+  "wrong_UV_negative_control_failures": 2062,
+  "independently_decoded_levels": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    128
+  ],
+  "base_pixels_exact": true,
+  "limits": [
+    "OFF preserves original bytes; enabled output is a private offline prototype.",
+    "World dimensions and all packet UV consumer paths still need an opt-in runtime contract.",
+    "Lower mips use existing filtered/quantized VQ; exact base sampling does not certify lower-level look.",
+    "Square storage is larger; no resource/performance win or release adoption."
+  ],
+  "source_files_sha256": {
+    "/root/probe/codex-texture-rect21/port/dreamcast/tools/d367/texture_rect21/rectangular_vq.py": "716c58d6a5d81c9cf0881816a5dd7c654fd04b366519b4734824b2ac93101881",
+    "/root/probe/codex-texture-rect21/port/dreamcast/tools/d367/texture_rect21/rect_oracle.c": "36c49b0bb5dc502911163df67403e2cddf6c4297d34f14c828b45bd1949aa446",
+    "/root/probe/codex-texture-rect21/port/dreamcast/tests/fixtures/mipmap_pvrtex_oracle.c": "d1e7eddc2d62a0b4702ac60fc1f1d5911964cf5b369423c2ec97b31a1c5d8602",
+    "/root/work/kos-re4dc-d336/utils/pvrtex/pvr_texture_decoder.c": "12698e1b27f57c62c11d11400c4c12c760ed21ca57584d57b82e3b65ac165036",
+    "/root/work/kos-re4dc-d336/utils/pvrtex/pvr_texture_decoder.h": "cfad027e8fed4548a5f2f943284aa9f8c5a39e946963af61c8cd333929f8b2cb",
+    "/root/work/kos-re4dc-d336/utils/pvrtex/pvr_texture.c": "5c8ec405ce421c5e1c220759be7c04fd37c937e57d98bddc239d535a16dc5e8c",
+    "/root/work/kos-re4dc-d336/utils/pvrtex/palette.c": "46487bcfe69085f2e76309dd7a7ec3991111caa83aa9ef32b7df54a6c592aff1"
+  },
+  "oracle_sha256": "9aa99db42201950e20a5cd7d9f83e038b319aa4d7eb3b19a27e61449abe5dc70",
+  "original_pack_sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+  "binding_receipt_sha256": "e24a1ee4150c91f1228879f92bb9e6e934176fc6d3c1011f45c265ea8d606003",
+  "screenshots_visually_inspected": [
+    "before.png",
+    "repeated-square.png"
+  ],
+  "lower_mip_look_accepted": false
+}
