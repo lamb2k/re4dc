@@ -124,6 +124,8 @@ package() {
     || { tail -20 "$W/package.txt"; return 1; }
   grep -E 'disc_lint|boot file|PACKAGE|tracks-match' "$W/package.txt" | cut -c1-200
   cp "$W/pkg/logs/"disc_lint-*.txt "$EVU/" 2>/dev/null || true
+  # the game tracks' sums for fp_gate (NOZIP=1 package has no zip to carry them)
+  (cd "$CAND/gdemu" && sha256sum disc.gdi track01.bin track02.raw track03.bin | sed 's#  #  gdemu/#') > "$CAND/SHA256SUMS.txt"
   echo "$CAND" > "$W/cand.txt"
 }
 bases() {
