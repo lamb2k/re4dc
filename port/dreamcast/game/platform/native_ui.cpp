@@ -7463,6 +7463,9 @@ extern "C" int re4dc_effect_sprite(const Re4dcEffectSprite* s){
 #if defined(RE4DC_PS2_FX_ADDITIONS) && RE4DC_PS2_FX_ADDITIONS
 #include "include/native_effect_stage1_batch.inc"
 #endif
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+#include "include/native_effect_strip21.inc"
+#endif
 #if defined(RE4DC_NATIVE_LASER) && RE4DC_NATIVE_LASER
 // Esp19's source line becomes one untextured, colour-interpolated strip in
 // the same bounded OT queue as effect sprites. All packet bytes are copied
@@ -8489,6 +8492,13 @@ extern "C" void re4dc_model_finish_source_draws(){
 #endif
 #endif
 #if RE4DC_EFFECT_SPRITES
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+        if(deferred_first->lighting==kEffectQuad21Tag){
+            const auto* packet=reinterpret_cast<const unsigned char*>(deferred_first)+kEffectQuad21Node;
+            const unsigned bytes=deferred_first->changed[0];
+            deferred_first=deferred_first->next;stream_send(packet,bytes);continue;
+        }
+#endif
         if(deferred_first->lighting==kSpriteTag){
             auto* packet=reinterpret_cast<unsigned char*>(deferred_first)+kSpriteNode;
             const bool screen=deferred_first->changed[0]!=0;
