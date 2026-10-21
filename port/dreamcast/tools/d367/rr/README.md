@@ -39,3 +39,12 @@ Deletes only its own outputs (out-rr<sha7>*, out-fprr<sha7>*, RE4DC-RR\cand-*, i
 ## When the release recipe changes
 
 Edit `recipe.conf` (CH2, DATA, KSETS, data dirs, CH2_REF) in the same landing, then `rr.sh install`.
+
+## 2026-10-21 (lane rr-wire)
+
+- Each cycle reads `recipe.conf` from the commit it builds (`git show <sha>:.../rr/recipe.conf` into `work/<id>/recipe.conf`);
+  the installed copy is only the fallback.
+- `rr.sh package` takes README-package.txt from the newest committed `test<N>/` (rr-newest.sh), and also writes the QA zip.
+- The kit job exports `RC19D` (recipe.conf) for kit-check.sh's zipcheck.
+- QA disc per candidate (standing rule 8, rr-qa.sh): the full tier builds it (QA_MENU=1 warp build of the same recipe,
+  dc/qa presets, mkgdi, disc_lint, zip test) and runs QA boot keys, a QA-menu warp to r103 and a GDEMU door103 seed.
