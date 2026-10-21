@@ -1,6 +1,6 @@
 #!/bin/bash
 # rr-qa-tier.sh <work dir> <tree> <sha> <cycle id>   (WSL; lane rr, standing rule 8, user 10-21 order)
-# The QA step of a candidate: rr-qa.sh (build, presets, mkgdi, disc_lint, zip kept in the candidate dir), the QA Flycast
+# The QA step of a candidate: rr-qa.sh (build, presets, mkgdi, disc_lint, zip kept in the candidate qa/ dir), the QA Flycast
 # jobs (rr-jobs.sh qa: qa-boot, qa-warp, qa-gdemu; 3 slots) and rr-judge.py qa (the "QA disc" section of
 # RELEASE-READY.md). Never changes the game verdict or last good. Run by rr-cycle.sh after a quick-tier PASS, or by
 # hand: rr.sh qa (the last good candidate).
@@ -14,7 +14,7 @@ GITBASH="/mnt/c/Program Files/Git/bin/bash.exe"
 CAND=$(cat "$W/cand.txt")
 mkdir -p "$EVQ/_jobs" "$EVQ/fixtures"
 t0=$(date +%s); rc=0
-bash "$BIN/rr-qa.sh" "$W" "$TA" "$SHA" RR "$CAND" "$EVQ" > "$W/qa.txt" 2>&1 || rc=$?
+bash "$BIN/rr-qa.sh" "$W" "$TA" "$SHA" RR "$CAND/qa" "$EVQ" > "$W/qa.txt" 2>&1 || rc=$?
 echo "$rc" > "$W/qa-rc"; tail -8 "$W/qa.txt"
 printf 'qa-disc\t%s\t%s\t%s\n' "$t0" "$(date +%s)" "$rc" > "$W/qa-steps.tsv"
 if [ "$rc" = 0 ]; then

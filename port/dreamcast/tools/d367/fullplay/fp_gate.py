@@ -57,7 +57,7 @@ def release_tracks(src, ev, log):
     else:
         g = src if (src / 'disc.gdi').exists() else src / 'gdemu'
         sums, origin = None, None
-        for z in sorted(g.parent.glob('*GDEMU*.zip')):
+        for z in sorted(z for z in g.parent.glob('*GDEMU*.zip') if '-QA-' not in z.name):  # QA disc zip: other tracks
             sums = sums_from_zip(z); origin = 'zip %s (inner SHA256SUMS.txt)' % z.name
             if sums:
                 break
