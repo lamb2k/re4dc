@@ -1,0 +1,203 @@
+#!/usr/bin/env python3
+"""One pre-emptable, PID-owned <=50s unchanged-QA regression run.
+
+Uses a hash-pinned existing fullplay runner. Controller posts target only the
+owned emulator windows. No game/state/HP/AI writes, builds or asset changes.
+"""
+import argparse
+import ctypes
+import hashlib
+import importlib.util
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import sys
+import threading
+import time
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--runner", type=Path, required=True)
+    ap.add_argument("--runner-sha256", required=True)
+    ap.add_argument("--disc", type=Path, required=True)
+    ap.add_argument("--cap", type=Path, required=True)
+    ap.add_argument("--keys", type=Path, required=True)
+    ap.add_argument("--syms", required=True)
+    ap.add_argument("--name", required=True)
+    ap.add_argument("--binding", type=Path)
+    ap.add_argument("--layout", type=Path)
+    ap.add_argument("--event-shots", action="store_true")
+    ap.add_argument("--require-mendez-for-pause", action="store_true")
+    a = ap.parse_args()
+    if hashlib.sha256(a.runner.read_bytes()).hexdigest() != a.runner_sha256:
+        raise SystemExit("runner identity changed")
+    if a.cap.exists():
+        raise SystemExit("evidence directory exists")
+    if a.binding:
+        bound = json.loads(a.binding.read_text(encoding="utf-8-sig"))
+        source_track = a.disc / bound.get("disc_track03_name", "track03.bin")
+        with source_track.open("rb") as stream:
+            actual_track = hashlib.file_digest(stream, "sha256").hexdigest()
+        if actual_track != bound["input_track03_sha256"]:
+            raise SystemExit("disc track differs from bound QA input; guest not started")
+        offsets = [int(bound["symbols"][key], 0) - 0x8c000000 for key in ("logbuf", "head", "stage")]
+        if [int(value, 0) for value in a.syms.split()] != offsets:
+            raise SystemExit("log symbols differ from bound ELF; guest not started")
+    spec = importlib.util.spec_from_file_location("owned_fp_run", a.runner)
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    if runner.count_flycasts() >= 12:
+        raise SystemExit("release launch pressure: no guest started")
+    os.environ["RE4DC_MAX_FLYCASTS"] = "16"
+    # Exact default KeyboardInputMapping: F/V are the full analog triggers;
+    # I/K/J/L are the left analog stick. Existing controller bindings remain.
+    runner.KEYS.update(ltrig=(0x21, 0), rtrig=(0x2f, 0),
+                       fwd=(0x17, 0), back=(0x25, 0), turnleft=(0x24, 0), turnright=(0x26, 0))
+    runner.VK.update(ltrig=0x46, rtrig=0x56, fwd=0x49, back=0x4b, turnleft=0x4a, turnright=0x4c)
+    def capture_context(label):
+        if not a.event_shots:
+            return
+        try:
+            text = (a.cap / "run-output.txt").read_text(errors="replace")
+            fb = re.findall(r"fb=[0-9a-f]+,[0-9a-f]+", text)
+            if not fb:
+                raise ValueError("no source framebuffer pointer")
+            folder = a.cap / "events" / ("%02d-" % len(state.get("input_posts", [])) + label)
+            folder.mkdir(parents=True)
+            for filename in ("emu.cfg", "flycast.log", "flycast.pid"):
+                shutil.copyfile(a.cap / filename, folder / filename)
+            (folder / "boot.log").write_text(fb[-1] + "\n", encoding="utf-16")
+            spec = importlib.util.spec_from_file_location("owned_event_capture", a.cap / "capture_ui_vram.py")
+            capture = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(capture)
+            capture.capture(folder, folder / "frames")
+            (folder / "state-context.json").write_text(json.dumps(observer.last if observer else {}, indent=2) + "\n")
+        except Exception as exc:
+            state.setdefault("event_shot_errors", []).append(str(exc))
+
+    def press(pid, names, hold):
+        if observer and set(names) == {"ltrig", "rtrig", "down"}:
+            deadline = time.monotonic() + 14
+            while not observer.last or observer.last["qa_frames"] < 30:
+                if time.monotonic() > deadline or not runner.windows_of(pid):
+                    raise RuntimeError("QA safe-state sampling did not reach 30 ticks; chord withheld")
+                time.sleep(0.1)
+            state.setdefault("chord_safe_samples", []).append(observer.last)
+        if a.require_mendez_for_pause and names == ["start"]:
+            last = observer.last if observer else None
+            if not last or not any(e["alive"] & 1 and e["hp"] > 0 for e in last["mendez"]):
+                raise RuntimeError("original Mendez encounter not active; pause input withheld")
+        if not runner.windows_of(pid):
+            raise RuntimeError("owned emulator window unavailable; input aborted")
+        if names == ["start"]:
+            capture_context("before-start")
+        state.setdefault("input_posts", []).append(dict(keys=names, host_s=time.monotonic() - host_started,
+                                                         state=observer.last if observer else None))
+        def post(key_up):
+            # Re-enumerate after every hold: a pre-empted guest's old HWND may
+            # already have been recycled by another application.
+            windows = runner.windows_of(pid)
+            if not windows or state.get("preempted"):
+                raise RuntimeError("owned emulator window vanished; input aborted")
+            for key in names:
+                scan, extended = runner.KEYS[key]
+                flags = 1 | (scan << 16) | (extended << 24)
+                if key_up:
+                    flags |= (1 << 30) | (1 << 31)
+                for window in windows:
+                    if not runner.user32.PostMessageW(window, 0x101 if key_up else 0x100, runner.VK[key], flags):
+                        raise ctypes.WinError(ctypes.get_last_error())
+            return len(windows)
+        count = post(False)
+        until = time.monotonic() + hold
+        while time.monotonic() < until:
+            if state.get("preempted") or not runner.windows_of(pid):
+                raise RuntimeError("owned guest ended during key hold; further posts aborted")
+            time.sleep(min(0.05, max(0, until - time.monotonic())))
+        post(True)
+        if set(names) == {"ltrig", "rtrig", "down"}:
+            capture_context("qa-chord-released")
+        return count
+
+    runner.press = press
+    runner.user32.PostMessageW.argtypes = [ctypes.c_void_p, ctypes.c_uint, ctypes.c_size_t, ctypes.c_ssize_t]
+    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel.OpenProcess.argtypes = [ctypes.c_ulong, ctypes.c_int, ctypes.c_ulong]
+    kernel.OpenProcess.restype = ctypes.c_void_p
+    kernel.QueryFullProcessImageNameW.argtypes = [ctypes.c_void_p, ctypes.c_ulong,
+                                                 ctypes.c_wchar_p, ctypes.POINTER(ctypes.c_ulong)]
+    kernel.TerminateProcess.argtypes = [ctypes.c_void_p, ctypes.c_uint]
+    kernel.CloseHandle.argtypes = [ctypes.c_void_p]
+    done = threading.Event()
+    host_started = time.monotonic()
+    state = dict(hard_guest_limit_seconds=48, initial_flycasts=runner.count_flycasts(),
+                 release_preemption_threshold=14, preempted=False,
+                 memory_writes=False, controller_target="owned PID windows only")
+    observer = None
+    if a.binding or a.layout:
+        if not (a.binding and a.layout):
+            raise SystemExit("read-only sampling requires both binding and DWARF layout")
+        from observe import Observer
+        observer = Observer(a.cap, a.binding, a.layout)
+
+    def stop_owned(reason):
+        pidfile = a.cap / "flycast.pid"
+        if not pidfile.exists():
+            return
+        pid = int(pidfile.read_text())
+        handle = kernel.OpenProcess(0x1001, False, pid)
+        if not handle:
+            return
+        try:
+            path = ctypes.create_unicode_buffer(32768)
+            length = ctypes.c_ulong(len(path))
+            if not kernel.QueryFullProcessImageNameW(handle, 0, path, ctypes.byref(length)):
+                raise RuntimeError("cannot verify owned emulator executable")
+            if os.path.normcase(os.path.abspath(path.value)) != os.path.normcase(str((a.cap / "flycast.exe").resolve())):
+                raise RuntimeError("PID no longer belongs to this evidence executable")
+            kernel.TerminateProcess(handle, 125)
+            state.update(preempted=True, reason=reason, owned_pid=pid)
+        finally:
+            kernel.CloseHandle(handle)
+
+    def watchdog():
+        started = None
+        try:
+            while not done.wait(0.25):
+                if (a.cap / "flycast.pid").exists() and started is None:
+                    started = time.monotonic()
+                if started is None:
+                    continue
+                if observer:
+                    observer.sample()
+                if time.monotonic() - started >= 48:
+                    stop_owned("hard guest time limit")
+                    break
+                if runner.count_flycasts() >= 14:
+                    stop_owned("release launch pressure")
+                    break
+        except Exception as exc:
+            state["watchdog_error"] = str(exc)
+            stop_owned("watchdog failure")
+
+    thread = threading.Thread(target=watchdog, daemon=True)
+    thread.start()
+    sys.argv = [str(a.runner), "--disc", str(a.disc), "--cap", str(a.cap),
+                "--syms", a.syms, "--seconds", "45", "--period", "3",
+                "--name", a.name, "--keys", str(a.keys)]
+    try:
+        runner.main()
+    finally:
+        done.set()
+        thread.join(timeout=2)
+        if observer:
+            observer.close()
+        if a.cap.exists():
+            (a.cap / "ownership-resource-guard.json").write_text(json.dumps(state, indent=2) + "\n")
+
+
+if __name__ == "__main__":
+    main()

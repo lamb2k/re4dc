@@ -135,7 +135,11 @@ static u16 gcDpad(u32 buttons)
 
 // One poll of one port: `in` (maple), `ctx` (RE4DC_PAD_CTX_*), `capsDual` (the
 // device advertises C / Z / a second stick) -> button, sticks and triggers of `p`.
-static void re4dcMapPad(const Re4dcPadIn* in, int ctx, int capsDual, Re4dcPadMap* m, PADStatus* p)
+static void re4dcMapPad(const Re4dcPadIn* in, int ctx, int capsDual, Re4dcPadMap* m, PADStatus* p
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+                         , int qaPort = 1
+#endif
+)
 {
     const u32 dirs = CONT_DPAD_UP | CONT_DPAD_DOWN | CONT_DPAD_LEFT | CONT_DPAD_RIGHT;
     u32 dpad = in->buttons & dirs;
@@ -143,8 +147,8 @@ static void re4dcMapPad(const Re4dcPadIn* in, int ctx, int capsDual, Re4dcPadMap
     // The raw QA menu stops game polls while it waits for this chord to be
     // released. Do not turn the one mapped Down poll into a Z/map tap when
     // gameplay resumes. Keep consuming Down through partial chord releases.
-    if ((dpad & CONT_DPAD_DOWN) && in->ltrig > 200 && in->rtrig > 200) m->qaChord = 1;
-    if (m->qaChord) {
+    if (qaPort && (dpad & CONT_DPAD_DOWN) && in->ltrig > 200 && in->rtrig > 200) m->qaChord = 1;
+    if (qaPort && m->qaChord) {
         m->tapPolls = m->tapClean = m->zPulse = 0;
         dpad &= ~CONT_DPAD_DOWN;
         if (!(in->buttons & CONT_DPAD_DOWN) && in->ltrig <= 40 && in->rtrig <= 40) m->qaChord = 0;
@@ -551,7 +555,11 @@ u32 PADRead(PADStatus* status)
 #endif
         PADStatus mapped;
         u8 wasDual = maps[i].dual;
-        re4dcMapPad(&in, i == 0 ? ctx0 : RE4DC_PAD_CTX_NATIVE, capsDual, &maps[i], &mapped);
+        re4dcMapPad(&in, i == 0 ? ctx0 : RE4DC_PAD_CTX_NATIVE, capsDual, &maps[i], &mapped
+#if defined(RE4DC_QA_MENU) && RE4DC_QA_MENU
+                      , i == 0
+#endif
+        );
 #if RE4DC_PAD_PROMPTS
         if(prompt_real) {
 #if RE4DC_PAD_PROMPT_MANUAL_ART

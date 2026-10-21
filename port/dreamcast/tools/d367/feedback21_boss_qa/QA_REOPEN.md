@@ -44,6 +44,15 @@ unqualified input attempts. Host timestamps are controller/capture context,
 not Dreamcast performance measurements. This current QA program has not
 been established as byte-identical to the original tester's public build.
 
+A second unchanged-program run, `qa-reopen04`, completes in46.1 host seconds
+with no runner errors or log overruns. It opens the QA menu, closes with
+normal Start, then closes the unsolicited map with ordinary B. The map's
+backing restore hash matches its saved hash. The QA chord subsequently
+opens the menu again; closing repeats the unsolicited map. Thus reopening
+is possible after the map is closed. Actual menu screenshots are preserved
+in `events/05-before-start/frames/fb0.png` and
+`events/09-before-start/frames/fb0.png`, with source state context adjacent.
+
 ## Source validation
 
 Run `python3 -m unittest discover -s port/dreamcast/tools/d367/feedback21_boss_qa -p 'test_*.py' -v`
@@ -54,7 +63,9 @@ produces two stale map polls. The repaired mapper passes 33 release-order,
 context, controller-kind and threshold cases, including ordinary map taps
 after the chord. Its complete host mapper object matches the original
 exactly with RE4DC_QA_MENU undefined or0. The existing standard/dual mapping
-suite also passes.
+suite also passes. A fourth focused test evaluates the actual qamenu.mk
+include and verifies that the pad-object QA define is present only in QA
+builds. Only port A reserves the shortcut; other ports retain native Down.
 
 This is source/host qualification. A rebuilt matching QA program must still
 show menu close, normal play and repeated reopening without the map opening.
