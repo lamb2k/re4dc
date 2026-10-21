@@ -520,13 +520,13 @@ bool Package::validate() {
                 || (texture.format == kPal4Argb4444 && texture.payload == kPayloadTwiddled)
 #endif
                 ;
-            if(texture.width != texture.height ||
+            if(!dimensions || texture.width != texture.height ||
                (!native_mip && (texture.payload != kPayloadVq || texture.format > kArgb4444))) {
                 error_ = "unsupported square native mip layout";
 #elif RE4DC_TEX_PAL4_MIPMAP
             const bool pal4_mip = texture.format == kPal4Argb4444 &&
                 texture.payload == kPayloadTwiddled;
-            if(texture.width != texture.height ||
+            if(!dimensions || texture.width != texture.height ||
                (!pal4_mip && (texture.payload != kPayloadVq || texture.format > kArgb4444))) {
                 error_ = "unsupported square native mip layout";
 #else

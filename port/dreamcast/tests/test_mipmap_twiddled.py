@@ -159,7 +159,8 @@ class TwiddledMipRuntime(unittest.TestCase):
                 cases["chain%d" % fmt] = chain
             chain = cases["chain2"]
             cases.update(truncated=chain[:-1], rectangle=mutate(chain, 2, 16),
-                         linear=mutate(chain, 7, 0), reserved=mutate(chain, 8, 1))
+                         linear=mutate(chain, 7, 0), reserved=mutate(chain, 8, 1),
+                         giant=mutate(mutate(chain, 1, 1 << 31), 2, 1 << 31))
             for name, blob in cases.items():
                 (d / name).write_bytes(blob)
             for knob in (0, 1):
@@ -179,7 +180,7 @@ class TwiddledMipRuntime(unittest.TestCase):
                     for name in cases:
                         accepted = name.startswith("base") or name.startswith("chain") and knob == 1
                         subprocess.run([str(exe), str(d / name), str(int(accepted))],
-                                       capture_output=True, check=True)
+                                       capture_output=True, check=True, timeout=5)
 
     def test_build_flag_and_parent_guard(self):
         make = shutil.which("make")
