@@ -1,0 +1,428 @@
+{
+  "scope": "Original J no-warp lineage after normal Continue. Normal handgun/knife combat and guarded injury controls; no game-memory writes, state retarget, rollback, new build or stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "disc_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "chain": [
+    {
+      "run": "current-j-route-walk59",
+      "elapsed_s": 10.1,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "637e6f3e10429c7546e41eb546d9a13556e0a5598d771cd2098e29d08dffa85e",
+      "controller_sha256": "c5411232d42c47c42f6d24cafeb5676a8b28b18c8f15722a3f385f21f260b036",
+      "source_frame_window": [
+        14113,
+        14321
+      ],
+      "final_health": [
+        778,
+        90
+      ],
+      "event_names": [
+        "exact_owned_snapshot_loaded_before_input",
+        "normal_S_Follow_call_from_original_injury",
+        "normal_S_Follow_call_from_original_injury",
+        "normal_S_Follow_call_from_original_injury",
+        "any_further_original_damage_stop",
+        "owned_close_at_input_deadline"
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk59\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk60",
+      "elapsed_s": 5.9,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "b6bd43d08a95ab3690fd4d675cd520cac90da478fdf5cc4a4e036259dfbcb18f",
+      "controller_sha256": "b27618d76d2b921b04b4ce82d7691c1e4073da72c4cc749f62ccc106144c2754",
+      "source_frame_window": [
+        14323,
+        14427
+      ],
+      "final_health": [
+        356,
+        1200,
+        90,
+        600
+      ],
+      "event_names": [
+        "exact_owned_snapshot_loaded_before_input",
+        "normal_RT_A_handgun_shot",
+        "normal_original_handgun_hit",
+        "owned_close_at_input_deadline"
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk60\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk61",
+      "elapsed_s": 50.8,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "5160f93a08aaffaf3b4fea24ba327604f09929a39e9a6540226d63e570bfbebf",
+      "controller_sha256": "9eb7e989f5ed10178b8e1893f1df1c32b3f3127ea0cbcd75c01d6d3aaa1cf788",
+      "source_frame_window": [
+        14427,
+        15810
+      ],
+      "final_health": [
+        356,
+        1200,
+        90,
+        600
+      ],
+      "event_names": [
+        "exact_owned_snapshot_loaded_before_input",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_A_handgun_shot",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "normal_RT_B_reload",
+        "owned_close_at_input_deadline"
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk61\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk62",
+      "elapsed_s": 9.5,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "a7787d44b5fcd9746544d7f635f46084f0a2cb545ac37200e37979d2c63d9bf6",
+      "controller_sha256": "d20f5f2f6924b4298120bd495aecb54beba3ec0bc708fdd48e4a65c186703c82",
+      "source_frame_window": [
+        15811,
+        15998
+      ],
+      "final_health": [
+        1,
+        1200,
+        90,
+        600
+      ],
+      "event_names": [
+        "exact_owned_snapshot_loaded_before_input",
+        "owned_close_on_any_further_original_damage",
+        "owned_close_at_input_deadline"
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk62\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk63",
+      "elapsed_s": 3.6,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "30391135e5a343d8bb987a938e1a903ed900b23aebcda036c27b060403b56df0",
+      "controller_sha256": "abb0446bf982e7af0d3d5ed0d47ce4c9911653a3a14fc812777813547a03df00",
+      "source_frame_window": [
+        15998,
+        16034
+      ],
+      "final_health": [
+        1,
+        1200,
+        90,
+        600
+      ],
+      "event_names": [
+        "exact_owned_snapshot_loaded_before_input",
+        "abort",
+        "owned_close_on_guard"
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk63\\owned-window-current-stair-walk.json"
+    },
+    {
+      "run": "current-j-route-walk64",
+      "elapsed_s": 10.0,
+      "errors": [],
+      "owned_exited": true,
+      "state_sha256": "015167d4b686a975f1dace0732208a6ea82707f5422000920ab1bd77d87b217c",
+      "controller_sha256": "3b4a3b2286c0192e6c8c52628d10a4108b2e266ad63cee863e5973b5592c664a",
+      "source_frame_window": [
+        16034,
+        16197
+      ],
+      "final_health": [
+        1,
+        1200,
+        90,
+        600
+      ],
+      "event_names": [
+        "exact_owned_snapshot_loaded_before_input",
+        "normal_L_A_knife_slash",
+        "normal_L_A_knife_slash",
+        "normal_L_A_knife_slash",
+        "normal_L_A_knife_slash",
+        "normal_L_A_knife_slash",
+        "original_type7_kill_checkpoint",
+        "checkpoint_screenshot",
+        "owned_close_at_input_deadline"
+      ],
+      "detail_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk64\\owned-window-current-stair-walk.json"
+    }
+  ],
+  "handgun_hit": {
+    "run": 60,
+    "source_frame": 14427,
+    "original_hp_before": 1000,
+    "original_hp_after": 883,
+    "Leon": 356,
+    "Ashley": 90
+  },
+  "after_burst": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "5160f93a08aaffaf3b4fea24ba327604f09929a39e9a6540226d63e570bfbebf",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 15811,
+    "health": [
+      356,
+      1200,
+      90,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3080100",
+    "door_flags": "0x884002b4",
+    "r207_RSF": "0x82300000",
+    "player_pos": [
+      -3840.992431640625,
+      4149.16064453125,
+      -10890.9169921875
+    ],
+    "partner_pos": [
+      -5638.20849609375,
+      4149.16357421875,
+      -11796.2578125
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x80",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "knife_result": {
+    "run": 64,
+    "source_frame": 16197,
+    "actor": "0x8cb2f960",
+    "original_hp": 0,
+    "routines": [
+      2,
+      4,
+      1,
+      0
+    ],
+    "health": [
+      1,
+      1200,
+      90,
+      600
+    ],
+    "scope": "First observed original type7 HP0/death routine; remaining combat/loots/puzzle still pending, no broad kill-closure claim"
+  },
+  "native_observed_log64": {
+    "rows": [
+      {
+        "room": "r207",
+        "id": "00",
+        "name": "Leon",
+        "path": "PS2",
+        "plan": "Leon/pl08 plan",
+        "native": 32608,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          7
+        ],
+        "parts": [
+          119
+        ]
+      },
+      {
+        "room": "r207",
+        "id": "03",
+        "name": "Ashley",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 31940,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          141
+        ]
+      },
+      {
+        "room": "r207",
+        "id": "11",
+        "name": "em11",
+        "path": "PS2",
+        "plan": "registry package",
+        "native": 51936,
+        "gc": 0,
+        "crowd": 0,
+        "reason": "",
+        "descriptors": [
+          "zealot-em11-07p"
+        ],
+        "verdict": "",
+        "ot": [
+          0
+        ],
+        "parts": [
+          37
+        ]
+      }
+    ],
+    "packages": {},
+    "fails": 0,
+    "not_drawn": [
+      {
+        "room": "r207",
+        "id": "11",
+        "name": "em11",
+        "samples": 16,
+        "max_alive": 4,
+        "nearest": 995,
+        "in_view": 16,
+        "verdict": "drawn"
+      }
+    ]
+  },
+  "screenshots": [
+    {
+      "run": "current-j-route-walk55",
+      "runtime": "12a841d7c",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x207",
+      "action_result": "Original Golden mount dialogue; pickup callback partial, completes in56",
+      "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk55\\shots\\t0047\\frames\\fb0.png",
+      "png_sha256": "5798ec5983c6c48f65455dee0731a0f96e1d564904deea755d0b0d7d94451ae6",
+      "source_frame_interval": null,
+      "sampling_limit": "Historical periodic framebuffer still; exact source-frame interval not recorded. Do not assign an exact simulation tick."
+    },
+    {
+      "run": "current-j-route-walk60",
+      "runtime": "12a841d7c",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x207",
+      "action_result": "Original handgun encounter; source hit1000 to883 established in same run, exact screenshot tick unknown",
+      "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk60\\shots\\t0005\\frames\\fb0.png",
+      "png_sha256": "73c9f592c0ad52ceb2e9c94911962a51cbb6025b2117965b6ff90226b6eb3aae",
+      "source_frame_interval": null,
+      "sampling_limit": "Historical periodic framebuffer still; exact source-frame interval not recorded. Do not assign an exact simulation tick."
+    },
+    {
+      "run": "current-j-route-walk64",
+      "runtime": "12a841d7c",
+      "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+      "room": "0x207",
+      "action_result": "Post original type7 HP0/death-routine checkpoint; defeated actor offscreen",
+      "png_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk64\\shots\\checkpoint-source-16197\\frames\\fb0.png",
+      "png_sha256": "5d73d03b151dac157b765493efc075620e2cc9b408e3236ae77783a2dd7e1159",
+      "source_frame_interval": [
+        16197,
+        16207
+      ],
+      "health": [
+        1,
+        1200,
+        90,
+        600
+      ],
+      "context_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk64\\shots\\checkpoint-source-16197\\checkpoint-context.json"
+    }
+  ],
+  "limits": [
+    "63 missing private knife mapping fails before knife input, preserved as helper-only control;64 corrects only F mapping.",
+    "62 records original nonlethal damage356 to1, no original deathbit at saved checkpoint.",
+    "61 exhausts original20 handgun rounds; no ammo edits.",
+    "Known J em11 cache churn/texture/audio gaps remain separate; no hardware IO/performance or chapter acceptance."
+  ]
+}
