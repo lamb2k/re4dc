@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "exact_control_ELF": "56bc10f8c82ff08bed11f6481dbcc57043d8c13b1d75cbd6155b0d31297fead8",
+  "load_segments": [
+    {
+      "vaddr": 2348875776,
+      "paddr": 2348875776,
+      "filesz": 2672352,
+      "memsz": 2672352,
+      "flags": 5,
+      "align": 128,
+      "sha256": "a0d6bc779030c858f5b277ad2d61991417cfd831cdab663fe859fd4c7e879591"
+    },
+    {
+      "vaddr": 2351548256,
+      "paddr": 2351548256,
+      "filesz": 674912,
+      "memsz": 674912,
+      "flags": 6,
+      "align": 128,
+      "sha256": "990059e33d814667825058f5589090fd57f6d4066794bb2d7356e462988a0714"
+    },
+    {
+      "vaddr": 2352225048,
+      "paddr": 2352225048,
+      "filesz": 12,
+      "memsz": 1005856,
+      "flags": 6,
+      "align": 128,
+      "sha256": "15ec7bf0b50732b49f8228e07d24365338f9e3ab994b00af08e5a3bffe55fd8b"
+    }
+  ],
+  "nonload_debug_suffix_ignored": true,
+  "changed_load_segment_rejected": true
+}

@@ -1,0 +1,13 @@
+{
+  "trace_files": {
+    "src/game/em_sub.cpp": "27080c8094e0b7391b388aac6c5ee39661d8692505d08f36d08a368e1c030cfb",
+    "src/game/pl_dmg.cpp": "b4096f0426d61f2ae7fe9f9ff680782b3d66bbbf86bb5bbdf0e08607a912cb66",
+    "src/game/game.cpp": "810dc0bfa6042f34a5dc9cb876f2b077844a54d6c76d0f9e2a2f7e064a1e1c03",
+    "src/em10/em10.cpp": "bf6507e9c5be7261c316e28111e9b8ed5bd2bafc098bc8f78ca17361306c6099",
+    "port/dreamcast/game/Makefile": "aedd3793ba4ee8a827e247521205e58d470abebe67fa9cca01f4117199a94ea9"
+  },
+  "trace_runtime": "f99dc69ad8bfeebcdb10913443543514dc40f9cc",
+  "repair_source": "f071b4e9069ebd3a7dec48a98f2fea95f6d11215",
+  "import_commit": "2c2260398",
+  "note": "Original3 trace sources byte-identical; original traceMakeguard and repairMakeguard retained together after insertion-site conflict resolution; em10 exact author repair."
+}
