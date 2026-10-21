@@ -1,0 +1,75 @@
+{
+  "evidence_root": "feedback21-boss-qa-20261021",
+  "qualification_source": "4c1512f7731f6935061a3f1bf09cce2a62001cc5",
+  "evidence_manifest": "SHA256SUMS-regression-v3",
+  "evidence_manifest_sha256": "4da899862404b7916e1592ea7d70cf9d82947cdd7e6b2d17ec7a3589156215b1",
+  "scope": "Current QA Flycast functional evidence, not exact tester Release21 or hardware/release acceptance",
+  "result": "Reported persistent Mendez freeze not reproduced in this bounded full-body case",
+  "program_sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+  "elf_sha256": "4c92ce29920476605c297bc5ea319bde9bbd24a1a5a5a6bc5012c4a31ebc9a2c",
+  "track03_sha256": "5ae451a0cb1e5c6e6db9b68d27335a09a00d27abd83e9c838c66ef2f8b69cfa8",
+  "parent_checkpoint_receipt_sha256": "f6921a71a7c102a5a50721c88c3520293359a47403651862f76912cf2b851d68",
+  "parent_state_sha256": "e566b5a5337190dcddafada4c4a83e8a9f8c5c5b35e86e5596ab6cf135f97c41",
+  "checkpoint_scope": "Unedited normal-controller route from ordinary r11f QA preset, not natural no-warp boot route",
+  "input_only": true,
+  "gameplay_field_writes": false,
+  "qa_flags": 0,
+  "runs": {
+    "mendez-checkpoint05": {
+      "seconds": 25.8,
+      "run_receipt_sha256": "d463a3e5d722656510746f0908a0480dc035d94420e8080efa48d4f92c1828c3",
+      "controller_guard_receipt_sha256": "c500be49c4aab19540d1ca376c3f08c4153493c4e18a84231793aef5ca8906cf",
+      "state_sha256": "a93074cc5578e00f3d2a2decb384019185cbc577f48217210457ef4266da814c"
+    },
+    "mendez-checkpoint06": {
+      "seconds": 45.0,
+      "run_receipt_sha256": "52c2966d95fb06b101211b5db5c8bf2b8ec210272ee2c3012d5498240b6eccc7",
+      "controller_guard_receipt_sha256": "485c1db0c2bd86c1f4da5d9388955b45e212d9959136cf59d19598b2a35c8e5e",
+      "state_sha256": "1ebd084688412a6214da51c1952d9b0191c546e2b19ddd8ba1c0f50cc40e5968"
+    }
+  },
+  "natural_attack": {
+    "run": "mendez-checkpoint05",
+    "life_before": 1200,
+    "life_after": 400,
+    "health_guard_stopped": true,
+    "boss_id": "0x35",
+    "type": 0,
+    "hp": 1500,
+    "attack_routine": [
+      1,
+      4,
+      1,
+      1
+    ]
+  },
+  "visible_pause_and_input": {
+    "run": "mendez-checkpoint06",
+    "ordinary_start_close": true,
+    "ordinary_start_resume": true,
+    "paused_rno": [
+      6,
+      1
+    ],
+    "paused_stop": "0x7fffffbf",
+    "paused_boss_motion_frame": 83,
+    "normal_back_B_hold_source_frames": [
+      971,
+      1016
+    ],
+    "later_source_frame": 1522,
+    "stop": 0,
+    "life": 1200
+  },
+  "screenshots": {
+    "mendez-checkpoint05/events/03-before-start/frames/fb0.png": "51c2d0fc99eafffa1c831bb57d95ad45234dc04278ab789674c7b6ac598dd693",
+    "mendez-checkpoint05/events/06-natural-health-decrease/frames/fb0.png": "1bdd31dcaacef5ffa7f8ab033514d41f3e91c1d3dda3c8b1846a028b02b5d5de",
+    "mendez-checkpoint06/events/04-before-start/frames/fb0.png": "570dd63ba1dd51376fd222c4d662f805d2ee2f262eb7b268b197d0afb5b74a5c"
+  },
+  "open_gates": [
+    "Exact tester program/device",
+    "Later boss forms and phase progression",
+    "Natural no-warp release route",
+    "Combined target and hardware acceptance"
+  ]
+}

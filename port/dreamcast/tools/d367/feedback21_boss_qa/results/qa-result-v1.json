@@ -1,0 +1,180 @@
+{
+  "evidence_root": "feedback21-boss-qa-20261021",
+  "qualification_source": "4c1512f7731f6935061a3f1bf09cce2a62001cc5",
+  "evidence_manifest": "SHA256SUMS-regression-v3",
+  "evidence_manifest_sha256": "4da899862404b7916e1592ea7d70cf9d82947cdd7e6b2d17ec7a3589156215b1",
+  "scope": "Current QA Flycast functional evidence, not exact tester Release21 or hardware/release acceptance",
+  "result": "Three QA open/close cycles pass without unsolicited map",
+  "built_source": "3bb0eb2ee6cb774fb9052bb8124c56dbf69274fa",
+  "build": {
+    "arm": "qa-on",
+    "source": "3bb0eb2ee6cb774fb9052bb8124c56dbf69274fa",
+    "seconds": 38.02832092600147,
+    "elf_sha256": "ed41834fd6930d800b5daf93a8db39113383a1a9a608ff28e4b3cf7a5715b9a6",
+    "program_sha256": "5c5a6c434751b03a0aaa05d8e2478820ca82a3790d7c3b06799f7845d6c5f68b",
+    "program_bytes": 3348452,
+    "original_recipe_sha256": "54d2e5d56f84d76c5c0071484771ca74957c6649d28b103a5974943728715f70",
+    "candidate_sha256": "54d2e5d56f84d76c5c0071484771ca74957c6649d28b103a5974943728715f70",
+    "resolved_sha256": "d2dfb0c3638c9d6561d34ce3dd5755fd85e4310f9b629ef520ad2a8ed3c39831",
+    "scope": "Private QA repair qualification only"
+  },
+  "candidate": {
+    "source": "3bb0eb2ee6cb774fb9052bb8124c56dbf69274fa",
+    "knob": "QA_MENU=1",
+    "default_off_program_and_14_overlays_exact": true,
+    "candidate_overlays_from_same_build": [
+      "/dc/em22.ovl",
+      "/dc/em2b.ovl",
+      "/dc/em2f.ovl",
+      "/dc/em35.ovl",
+      "/dc/em3b.ovl",
+      "/dc/pl0f.ovl",
+      "/dc/pl11.ovl",
+      "/dc/pl14.ovl",
+      "/dc/sscrn.ovl",
+      "/dc/st1_0.ovl",
+      "/dc/st1_1.ovl",
+      "/dc/st1_2.ovl",
+      "/dc/st1_3.ovl",
+      "/dc/st2_0.ovl"
+    ],
+    "unchanged_file_count": 1728,
+    "changed_files": [
+      "/1ST_READ.BIN",
+      "/dc/em22.ovl",
+      "/dc/em2b.ovl",
+      "/dc/em2f.ovl",
+      "/dc/em35.ovl",
+      "/dc/em3b.ovl",
+      "/dc/pl0f.ovl",
+      "/dc/pl11.ovl",
+      "/dc/pl14.ovl",
+      "/dc/sscrn.ovl",
+      "/dc/st1_0.ovl",
+      "/dc/st1_1.ovl",
+      "/dc/st1_2.ovl",
+      "/dc/st1_3.ovl",
+      "/dc/st2_0.ovl"
+    ],
+    "original_program_sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+    "program_sha256": "5c5a6c434751b03a0aaa05d8e2478820ca82a3790d7c3b06799f7845d6c5f68b",
+    "elf_sha256": "ed41834fd6930d800b5daf93a8db39113383a1a9a608ff28e4b3cf7a5715b9a6",
+    "input_track03_sha256": "2a6b3200fb0016a89af9b9da275a207eea7a63c7adc7dfedaf07b4a40709fc9a",
+    "disc_track03_name": "track03.iso",
+    "program_bytes": 3348452,
+    "original_program_bytes": 3348164,
+    "files": {
+      "disc.gdi": {
+        "bytes": 83,
+        "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140"
+      },
+      "track01.bin": {
+        "bytes": 1058400,
+        "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9"
+      },
+      "track02.raw": {
+        "bytes": 1237152,
+        "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48"
+      },
+      "track03.iso": {
+        "bytes": 1032499200,
+        "sha256": "2a6b3200fb0016a89af9b9da275a207eea7a63c7adc7dfedaf07b4a40709fc9a"
+      }
+    },
+    "scope": "Private QA shortcut repair qualification; program and matching overlays only, no asset/fixture/state/recipe edits"
+  },
+  "default_off": {
+    "program_and_14_overlays_exact": true,
+    "files": {
+      "program.bin": {
+        "bytes": 3325316,
+        "sha256": "eeabc5bd354571300164f330fb1815ba54f52a21ce68c9f2bb1fa20630df90cc"
+      },
+      "em22.ovl": {
+        "bytes": 27236,
+        "sha256": "e33701305ea7b75fa98507edac9596899f88e00fcb1abf54cae534b988fc87b5"
+      },
+      "em2b.ovl": {
+        "bytes": 67932,
+        "sha256": "72c86139913050657afb094cfce3b42e3b6f051f028abf39d3349d883764ef3e"
+      },
+      "em2f.ovl": {
+        "bytes": 16800,
+        "sha256": "f2d04e6e072aa5072bf246292b28c6d7209e8d4e0cc0ca240287759402bad556"
+      },
+      "em35.ovl": {
+        "bytes": 52392,
+        "sha256": "d016f59c7621569d47125eb93332ef8c8e1f0a81e401b61889bdf9d9fa32269a"
+      },
+      "em3b.ovl": {
+        "bytes": 7568,
+        "sha256": "819f5732346ebdb817f7da42e228862b29c13e0a6fd18b2787d8bd9bf62f3e13"
+      },
+      "pl0f.ovl": {
+        "bytes": 45576,
+        "sha256": "5cda648f304a670d6ad9be034d912c10ecc93147386120978b51ed99b503c2d1"
+      },
+      "pl11.ovl": {
+        "bytes": 35616,
+        "sha256": "520547e4ba7f8fcac675994557bbb55d1fe419fad40c2a4fbe8428e726efadde"
+      },
+      "pl14.ovl": {
+        "bytes": 18832,
+        "sha256": "09ddb162f54ffcc63f8eb69f5aa97fe625e5c457cbc2f2bde5f906d1a2835b56"
+      },
+      "sscrn.ovl": {
+        "bytes": 134372,
+        "sha256": "56037fd4b8f60417f9a007f39d3e909267b1ea235f958a9f8a86847ff32a6a16"
+      },
+      "st1_0.ovl": {
+        "bytes": 36240,
+        "sha256": "a62affe5940bfef8bd0ae1b804afc235edfb4f3a7e81b7aa3a80ed85adcfac6e"
+      },
+      "st1_1.ovl": {
+        "bytes": 81508,
+        "sha256": "9f040450e8ed529136e61568c3670df9ec2a551389e2c838c9a4cd85b78b6782"
+      },
+      "st1_2.ovl": {
+        "bytes": 49696,
+        "sha256": "dc8bf80e74ec9d4d23c92d91c727ac3705e3700b319d4f93ca8c78ed65f282a7"
+      },
+      "st1_3.ovl": {
+        "bytes": 88552,
+        "sha256": "08aecf0ad615ccba5e0d519d0bb4a78eed95696c666c4206b30779db1bf30b46"
+      },
+      "st2_0.ovl": {
+        "bytes": 96796,
+        "sha256": "2a636be673dd62168a955649f765cd7869514b34dd1a0de486755674c6f515a0"
+      }
+    },
+    "control_source": "892c10ddeadcfcc0bb55bcf53c9b4ac25fd035e8",
+    "candidate_source": "3bb0eb2ee6cb774fb9052bb8124c56dbf69274fa",
+    "knob": "QA_MENU=0"
+  },
+  "run": "qa-fixed01",
+  "seconds": 48.2,
+  "qa_opens": 3,
+  "qa_closes": 3,
+  "unsolicited_map_opens": 0,
+  "source_resume_frames": [
+    396,
+    441
+  ],
+  "stop": 0,
+  "life": 1200,
+  "qa_flags": 0,
+  "ring_overruns": 0,
+  "run_receipt_sha256": "87b4a0e4224cb2d59e4f8a4d48e052bdecd75f77f5c22d1e282040b5aef5041c",
+  "bound_elf_receipt_sha256": "171f8c8fd5bd2d692869dafc51a3cad9cc48c3f041f34ebbc04bd3ade7d92305",
+  "screenshots": {
+    "qa-fixed01/events/05-before-start/frames/fb0.png": "b056b921fbc97c40891e20e10cf9e52a0386268e91bfcdb87c3b276c6af72f76",
+    "qa-fixed01/events/09-before-start/frames/fb0.png": "b056b921fbc97c40891e20e10cf9e52a0386268e91bfcdb87c3b276c6af72f76"
+  },
+  "recipe": "Original recovered QA recipe unchanged; GAME_SH4ZAM1/SKIN_SH4ZAM0 retained",
+  "old_banner_text": "QA_SRC remains aafc10f3 from the exact original recipe; actual rebuilt program identity is hash-bound separately",
+  "tests_passed": 10,
+  "open_gates": [
+    "Combined target",
+    "Hardware and release acceptance"
+  ]
+}
