@@ -427,3 +427,29 @@ release manifest before parsing. Source slots bind the binocular, scope and
 main HUD EFF resources to IdTexDataLoad, so those are explicit fixed-ID-UI
 holds rather than presumed particle textures. Unknown, mixed screen/world,
 custom and generator consumers retain separate follow-up policies.
+
+select_effect_candidate.py applies the receipt-bound source consumer policy to
+the sealed review bytes. The first selective set has 74 common world-sprite
+source candidates (65 PAL4, nine already-compacted VQ). It holds 35 source-proven
+ID UI keys, six screen/mixed keys, 179 custom/generator keys and 259 unresolved
+keys. Seventy of 89 named inputs match the original release manifest and parse;
+missing or different source bytes are not silently promoted. Static source
+records still do not establish every runtime override or a rendered result.
+
+The selective archive changes 907 original keys and keeps 5594 exact. It has
+775 mipmapped keys: 696 world, 74 FX and five original Ganados. Its 155840512
+bytes are 413696 below the original pack. Compared with the sealed842 input it
+adds 169394 payload bytes and 170784 rounded request bytes; those are inventories,
+not live residency. All selected bytes exactly reuse the independently decoded
+review packages (564 levels and 74 original bases), including both host Package
+allocator/lifecycle checks. The new selective receipts bind original-source
+members as well as their selected base ancestor, so later composition validates
+without confusing the review superset's base-relative receipts. OFF preserves
+the selected842 base. Three tests reject forged UI/world labels, source/ancestor
+hash mismatches, screen records and incomplete policies, and verify ordinary
+sealed-candidate composition and unchanged UI bytes.
+
+The full6501 policy snapshot includes the 51 loose/conditional descriptors
+separately, these fixed-ID-UI refinements and the 20 separate actor mip candidates
+without overlaying them. Lower-level alpha/look, target sampler, combined VRAM
+and timing remain open. No runtime/default, recipe or release change occurred.
