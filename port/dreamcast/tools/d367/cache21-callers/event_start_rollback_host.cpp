@@ -15,7 +15,7 @@ struct Event {
     int isAlive() { return (be_flag & 0x201) == 1; }
     int init(char*, EvtHeader*);
 };
-struct Global { u32 Stop_flg{}, Debug_flg[4]{}, Status_flg[4]{}, System_flg{}; } global, *pG = &global;
+struct Global { u32 Stop_flg{}, Debug_flg[4]{}, Status_flg[4]{}, System_flg{}; int dev_mode{}; } global, *pG = &global;
 static unsigned init_calls, pool_logs, release_calls, debug_release_calls, sleep_calls, read_calls;
 static bool retire_on_sleep;
 static void* released;
@@ -25,7 +25,13 @@ static std::vector<void*> debug_frees;
 static void host_before_clear(void*, unsigned) {}
 static void Debug_free(void* p) { debug_frees.push_back(p); }
 static void Mem_free(void*) { std::abort(); }
+#if defined(RE4DC_ARAM_ACTUAL)
+static void* aram_actual_alloc(unsigned,int,int);
+static void aram_actual_free_boundary(void*,int);
+static void* host_table_alloc(unsigned bytes,int flag,int heap){return aram_actual_alloc(bytes,flag,heap);}
+#else
 static void* host_table_alloc(unsigned, int, int) { std::abort(); }
+#endif
 #define MEM_ALLOC host_table_alloc
 #define RE4DC_EVENT_FILE_FLAG 4
 #define CMND_CLEAR_DATA 3
@@ -48,19 +54,27 @@ static void SceEventEnd(int) {}
 #endif
 static void FadeSetW(u32, int, int, int) {}
 class cDataUnit;
-struct Controller { int m_nblock_read_stop{}, dbgHeap{}; cDataUnit* setData(char*); } DC;
-struct AramBoundary { void DmaCancel(int) { std::abort(); } } Aram;
+struct Controller { int m_nblock_read_stop{}, dbgHeap{}; cDataUnit* m_DataUnit{};void* m_DummyDataMem{};void setDummyId(int){std::abort();}cDataUnit* setData(char*); } DC;
+struct AramBoundary { void DmaCancel(int) { std::abort(); } int DmaTransReq(int,u32,u32,u32,int){std::abort();} } Aram;
 struct DvdBoundary {
     void ReadCancel(int, int) { std::abort(); }
     void ReadCheck(int, void*, void*, void*) { std::abort(); }
 } Dvd;
 static void Mem_free_h(void* p, int heap) {
+#if defined(RE4DC_ARAM_ACTUAL)
+    aram_actual_free_boundary(p,heap);
+#endif
     assert(heap == 4); ++release_calls; released = p;
     assert(mprotect(p, 4096, PROT_NONE) == 0);
 }
 static void Debug_free_h(void* p, int heap) { ++debug_release_calls; Mem_free_h(p, heap); }
 #include "caller_dataunit_types.inc"
+#if defined(RE4DC_ARAM_ACTUAL)
+static cDataUnit actual_units[32];
+#define loaded actual_units[0]
+#else
 static cDataUnit loaded;
+#endif
 #if defined(RE4DC_EXEC_REAL_TRANSPORT)
 #include "exec_transport_boundary.inc"
 #include "exec_cabin_boundary.inc"
@@ -69,12 +83,21 @@ void cDataUnit::setLoadToMram() { std::abort(); }
 #endif
 void cDataUnit::setLoadToAram() { std::abort(); }
 int cDataUnit::setDelete() { std::abort(); }
-#if defined(RE4DC_EXEC_REAL_TRANSPORT)
+#if defined(RE4DC_ARAM_ACTUAL)
+// The actual checkCondition body is exported into caller_dataunit_methods.inc.
+#elif defined(RE4DC_EXEC_REAL_TRANSPORT)
 void cDataUnit::checkCondition() {} // External transport progress; injected m_err is checked by actual wait.
 #else
 void cDataUnit::checkCondition() { std::abort(); }
 #endif
+#if defined(RE4DC_ARAM_ACTUAL)
+struct AramDataLogger{void err(int,int,const char*,...){std::abort();}} aram_data_logger;
+#define pLog (&aram_data_logger)
+#endif
 #include "caller_dataunit_methods.inc"
+#if defined(RE4DC_ARAM_ACTUAL)
+#undef pLog
+#endif
 struct ReadModule { void* pArc; u32 size; };
 #if defined(RE4DC_EXEC_REAL_TRANSPORT)
 static ReadModule exchange_module;

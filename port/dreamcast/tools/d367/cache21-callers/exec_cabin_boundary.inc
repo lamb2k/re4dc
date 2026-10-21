@@ -1,3 +1,6 @@
+#if defined(RE4DC_ARAM_ACTUAL)
+#include "aram_actual_carrier.inc"
+#else
 // Existing native carrier refusal policy is an explicit boundary here; actual
 // EvtFree and cDataUnit::setClear refusal propagation execute unchanged.
 static bool cabin_clear_refuse;
@@ -12,3 +15,4 @@ static void re4dc_cabin_carrier_event_deleted(const void*){}
 static void re4dc_cabin_event_bound(const void*,const char*){}
 static void re4dc_cabin_event_deleted(const void*){}
 static void re4dc_missing(const char*){std::abort();}
+#endif

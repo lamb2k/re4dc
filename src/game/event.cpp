@@ -72,6 +72,12 @@
 #endif
 #endif
 
+#if defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY && !defined(__PPC__)
+#if !defined(RE4DC_CABIN_SOURCE) || !RE4DC_CABIN_SOURCE
+#error EVD_ARAM_ALLOC_RETRY requires CABIN_SOURCE
+#endif
+#endif
+
 #if defined(RE4DC_EVD_EXEC_FAILURE_CLEANUP) && RE4DC_EVD_EXEC_FAILURE_CLEANUP && !defined(__PPC__)
 #if !defined(RE4DC_EVD_START_ROLLBACK) || !RE4DC_EVD_START_ROLLBACK
 #error EVD_EXEC_FAILURE_CLEANUP requires EVD_START_ROLLBACK
@@ -101,6 +107,9 @@ int strncmp(const char* a, const char* b, unsigned int n);
 unsigned int strlen(const char* s);
 char* strchr(const char* s, int c);
 char* strstr(const char* s, const char* sub);
+#if defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY && !defined(__PPC__)
+int memcmp(const void* first,const void* second,unsigned int bytes);
+#endif
 // game/eff_sys.cpp
 // game/read.cpp: SearchEmModule (C++ linkage) comes from read.h
 // game/shape.cpp
@@ -2466,6 +2475,27 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
         pLog->err(0, 0, "EventMgr::EvtRead : WkNo failed [%d]", no);
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY
+    unsigned preload_epoch = 0;
+    cDataUnit preload_unit;
+    DatTblEntry preload_row = {};
+    EvtReadEm preload_em = {};
+    if (!fresh && !aram && !em && unit && no < (u32) ReadTbl.NumDatTbl &&
+        unit->m_condition == 4 && unit->m_command == 0 && unit->m_err == 0 &&
+        unit->m_be_flag == (1 | RE4DC_EVENT_FILE_FLAG) && !unit->m_malloc_addr &&
+        !unit->m_fix_addr && !unit->arg && !unit->m_wait && unit->m_addr &&
+        unit->dest == (u32) unit->m_addr && readEm[no].em == 0 && readEm[no].swapped == 0) {
+        const DatTblEntry* row = &ReadTbl.pWork[no];
+        if (row->Dat == unit && row->Etc == 0 && row->FlagBe8 == 3 && row->Count && !row->dat2) {
+            preload_epoch = re4dc_cabin_carrier_preload_epoch(unit,(u32) unit->m_addr,unit->m_size);
+            if (preload_epoch) {
+                preload_unit = *unit;
+                preload_row = *row;
+                preload_em = readEm[no];
+            }
+        }
+    }
+#endif
     readEm[no].em = em;
     readEm[no].swapped = 0;
     if (aram == 0) {
@@ -2509,6 +2539,38 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
         } else {
             unit->setCommand(CMND_MRAM_LOAD, 0, 1);
             if (unit->waitUseOk() == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY
+                if (preload_epoch) {
+                    const u8 preload_wait = preload_unit.wait;
+                    const u32 logical = (u32) preload_unit.m_addr;
+                    // Allocation error one occurs before install/DMA or any
+                    // owned MRAM exists. Match every other original byte and
+                    // the same accepted source epoch before restoring deltas.
+                    preload_unit.m_command = CMND_MRAM_LOAD;
+                    preload_unit.m_err = 1;
+                    preload_unit.arg = 0;
+                    preload_unit.wait = 1;
+                    preload_unit.m_wait = 1;
+                    preload_unit.dest = 0;
+                    if (re4dc_cabin_carrier_preload_epoch(unit,logical,preload_unit.m_size) == preload_epoch &&
+                        ReadTbl.pWork && no < (u32) ReadTbl.NumDatTbl &&
+                        memcmp(&ReadTbl.pWork[no],&preload_row,sizeof(preload_row)) == 0 &&
+                        memcmp(&readEm[no],&preload_em,sizeof(preload_em)) == 0 &&
+                        memcmp(unit,&preload_unit,sizeof(preload_unit)) == 0) {
+                        unit->m_command = 0;
+                        unit->m_err = 0;
+                        unit->arg = 0;
+                        unit->wait = preload_wait;
+                        unit->m_wait = 0;
+                        unit->dest = logical;
+                    }
+                    // A lost/changed receipt also forbids clearing a new or
+                    // partially installed owner. Preserve current state for
+                    // explicit retry/retirement; never restore stale fields.
+                    pLog->err(0, 0, "readEvent() : retained preload after allocation refusal[%s]", nm);
+                    return 0;
+                }
+#endif
                 unit->setCommand(CMND_CLEAR_DATA, 0, 0);
                 DelRead(nm);
                 pLog->err(0, 0, "readEvent() : out of memory (0x%x)[%s]", unit->m_size, nm);
