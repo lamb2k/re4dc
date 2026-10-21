@@ -200,16 +200,16 @@ combined target's VRAM, look and frame-time gates.
 The sealed combined square-world candidate contains 696 changed keys (508 VQ,
 188 native twiddled), with 5805 unrelated keys exact. Its 5376 levels agree with
 the independent pinned decoder and every original base is exact. Pack size is
-157874176 bytes (+1619968); lower-level payload adds2335592 bytes and32-byte
-request inventory adds2343680. These are multi-room inventories, not live peaks.
+157874176 bytes (+1619968); lower-level payload adds 2335592 bytes and 32-byte
+request inventory adds 2343680. These are multi-room inventories, not live peaks.
 
 ## Lossless VQ before adding texture cost
 
-compact_native_vq.py dictionary-codes existing native16-bit or PAL4 base texels
-into the existing full-codebook16-bit VQ format. It changes no full-resolution
-RGBA or alpha values. It succeeds only when every distinct2x2 vector fits256
-entries and both total payload and32-byte request size shrink, including the
-entire2048-byte codebook. Existing mip chains are preserved. Larger dictionaries
+compact_native_vq.py dictionary-codes existing native 16-bit or PAL4 base texels
+into the existing full-codebook 16-bit VQ format. It changes no full-resolution
+RGBA or alpha values. It succeeds only when every distinct 2x2 vector fits 256
+entries and both total payload and 32-byte request size shrink, including the
+entire 2048-byte codebook. Existing mip chains are preserved. Larger dictionaries
 are reported as requiring lossy quantization; small PAL4 frames remain compact
 when the VQ codebook overhead would lose. There is no runtime or default change.
 
@@ -221,17 +221,17 @@ remain byte-identical. Inputs may be a retained track or an exact pack file:
     python port/dreamcast/tools/d367/mipmap21/compact_candidate.py --source-pack /private/tex.pak --release-manifest /private/manifest.json --selection /private/selection.json --output /private/new-compact-candidate --generate
 
 Source converter fx_ps2_pack.py creates one package per effect frame with a
-shared16-color palette and a covered-UV marker. All622 selected Release21 PAL4
+shared 16-color palette and a covered-UV marker. All 622 selected Release21 PAL4
 keys have active EFF source references and byte-exact private-library matches.
-Of554 square frames,20 fit lossless VQ with a total byte win:19 at128square and
-one at256square. The private candidate saves53888 payload/request bytes and
-53248 archive bytes. All20 independent before/after RGBA decodes agree;6481
+Of 554 square frames, 20 fit lossless VQ with a total byte win: 19 at 128 square
+and one at 256 square. The private candidate saves 53888 payload/request bytes
+and 53248 archive bytes. All 20 independent before/after RGBA decodes agree; 6481
 other keys are exact. Material, dimensions, alpha and covered-UV flags remain
 exact. No new mip levels or runtime flags accompany this candidate.
 
 The original retained raw track is no longer available at its recorded path.
 The exact original texture pack was recovered from the sealed farm candidate
-by restoring its15 preserved source members. Its whole-pack SHA-256 matches
+by restoring its 15 preserved source members. Its whole-pack SHA-256 matches
 both the original receipt and release manifest:
 18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef.
 This recovers texture-pack bytes, not a game disc or program. No newly hosted
@@ -240,8 +240,50 @@ release or replacement raw-track identity is claimed.
     python -m unittest test_compact_native_vq test_compact_candidate -v
 
 Run from port/dreamcast/tests with the optional pinned decoder enabled. Nine
-tests cover exact RGBA/alpha/metadata, every16-bit family and both source CRC
+tests cover exact RGBA/alpha/metadata, every 16-bit family and both source CRC
 conventions, dictionary overflow and overhead refusals, existing-chain safety,
 actual Package upload and sampler VQ bits under both allocator paths with
 ASan/UBSan, source/selection hash binding, exclusive output and OFF identity.
 No game build, rendered-look, live VRAM or physical-console gate was run.
+
+## Whole-pack owner and quality policy
+
+source_coverage.py combines the exact packed-winner descriptors with the
+preserved named-source probe, native-world sidecars and native-model registries.
+Every preserved source-file hash/size must match the release receipt. Normal
+pack entries, four overridden loose duplicates and 47 conditional texlow
+entries remain separate. Source references do not prove current alias choice,
+an actual draw or simultaneous residency. No asset conversion occurs in this
+coverage step.
+
+The selected Release21 inventory has 6501 normal packed winners. 5297 have
+typed source/native ownership references; 11 have only generic other-source
+references and 1193 remain unclassified. All source categories overlap. UI,
+inventory images/3D models, font sheets, effects and actor references are
+explicit policies rather than omitted from scope. Runtime-generated glyph
+atlases and diagnostics are separate from stored package coverage.
+
+Format analysis finds 176 lossless VQ opportunities. The private selection uses
+162 with typed owners; it holds nine unclassified and five other-only owners.
+This changes exact base encoding only, without adding mips. The candidate pack
+is 154206208 bytes (-2048000 archive bytes); payload and 32-byte-request
+inventories each shrink 1942144 bytes. All 324 independent before/after decodes
+match exact RGBA/alpha; 6339 unselected packages and all earlier 20 FX outputs
+remain exact. The release streamed Package reader admits all 162. Its 160
+full-body CRC packages also pass strict validation; two existing legacy
+texel-only CRC conventions are preserved and retain their prior strict-reader
+refusal. No newly corrupted payload is inferred from that known convention.
+
+    python port/dreamcast/tools/d367/mipmap21/source_coverage.py --source-pack /private/tex.pak --release-manifest /private/manifest.json --census /private/census.json --owner-probe /private/owner-probe.json --output /private/new-coverage
+
+51 related host tests pass (two optional NumPy checks skipped on WSL; separate
+Windows parity checks exist). No full repository suite or game/console run is
+claimed. The coverage and 162-key candidate are sealed in separate private sets
+with complete hashes and C: mirrors.
+
+22 of these keys overlap the preserved 696-key square-world mip candidate.
+Do not blindly overlay the base-only pack onto it and lose mip levels. The
+composition step must use the selected compact base first, regenerate selective
+mips for these keys, then compare lower-level quality and per-room requests.
+The original 696-key candidate remains unchanged. Actor VQ mip work and the
+rectangular UV/wrap/edge architecture retain their separate owners.
