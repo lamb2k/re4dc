@@ -100,7 +100,34 @@ def main(argv=None) -> int:
     parser.add_argument("--package", type=pathlib.Path)
     parser.add_argument("--material", default="source")
     parser.add_argument("--mipmap", action="store_true", help="--pack-existing: accept a mipmapped DcTx (CAST_MIPMAP runtime)")
+    parser.add_argument("--native-package", type=pathlib.Path,
+                        help="existing native VQ package; unchanged unless --add-mipmaps is given")
+    parser.add_argument("--add-mipmaps", action="store_true",
+                        help="generate lower mips, preserving native base/codebook bytes")
+    parser.add_argument("--mip-engine", choices=("auto", "python", "numpy"), default="auto")
     args = parser.parse_args(argv)
+    if args.native_package:
+        if not args.package or any((args.tpl, args.mtl, args.out, args.pvrtex,
+                                    args.pack_existing, args.mipmap)):
+            parser.error("--native-package requires --package and excludes encoded/export arguments")
+        import json
+        import mipmap_vq
+        package, metadata = mipmap_vq.add_mipmaps(
+            args.native_package.read_bytes(), enabled=args.add_mipmaps, engine=args.mip_engine)
+        metadata.update(candidate_only=True, base_reencoded=False,
+                        source_package=str(args.native_package))
+        report = args.package.with_suffix(args.package.suffix + ".json")
+        if args.package.exists() or report.exists():
+            parser.error("native candidate or its metadata already exists")
+        args.package.parent.mkdir(parents=True, exist_ok=True)
+        with args.package.open("xb") as f:
+            f.write(package)
+        with report.open("x", encoding="utf-8") as f:
+            f.write(json.dumps(metadata, indent=2) + "\n")
+        print(json.dumps(metadata, sort_keys=True))
+        return 0
+    if args.add_mipmaps:
+        parser.error("--add-mipmaps requires --native-package")
     if args.pack_existing:
         if not args.package or any((args.tpl,args.mtl,args.out,args.pvrtex)):
             parser.error("--pack-existing requires --package and excludes export/encoder arguments")
