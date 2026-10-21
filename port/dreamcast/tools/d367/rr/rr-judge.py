@@ -47,7 +47,7 @@ for l in rd(J / 'times.tsv').splitlines():
         jobs.append((p[0], int(p[1]), int(p[2]), int(p[3])))
 
 build_ok = env.get('build_ok') == '1'
-for s in ('trees', 'build-release', 'build-twins', 'package', 'bases'):
+for s in ('trees', 'build-release', 'build-twins', 'package', 'bases', 'qa-disc'):
     if s in srt:
         add('step ' + s, srt[s][3] == 0, 'rc=%d, %d s' % (srt[s][3], srt[s][2] - srt[s][1]))
     elif not build_ok:
@@ -60,6 +60,9 @@ for prof in ('loader', 'standard'):
     t = rd(W / ('pkg/logs/disc_lint-%s-rr%srP.txt' % (prof, env['sha'][:7]))).strip().splitlines()
     if t:   # t16-package.sh stops on any disc_lint violation, so a finished package step means both passed
         add('disc_lint ' + prof, 'package' in srt and srt['package'][3] == 0, t[-1][:120])
+    q = rd(W / ('qa/logs/disc_lint-%s.txt' % prof)).strip().splitlines()
+    if q:   # rr-qa.sh stops on any disc_lint violation
+        add('QA disc_lint ' + prof, 'qa-disc' in srt and srt['qa-disc'][3] == 0, q[-1][:120])
 
 extra = {}
 if build_ok and jobs:
@@ -146,6 +149,15 @@ if build_ok and jobs:
             add(n, not bad.search(o), 'peak alive %s' % (max([int(x) for x in re.findall(r'warp: alive (\d+)', o)] or [0])))
         if n == 'kit':
             add('kit-check + kit-boot', rc == 0, (rd(J / 'kit.log').strip().splitlines() or ['no log'])[-1][:160])
+        if n in ('qa-boot', 'qa-warp'):
+            o = runlog(n)
+            want = r'room enter|phase=enter' if n == 'qa-boot' else r'phase=enter room=103'
+            add('QA ' + n[3:], bool(re.search(want, o)) and not bad.search(o),
+                ('reached ' + ('a room' if n == 'qa-boot' else 'r103')) if re.search(want, o) else ('HALT/FAULT' if bad.search(o) else 'not reached'))
+        if n == 'qa-gdemu':
+            lg = rd(J / (n + '.log'))
+            g = re.findall(r'GDEMU RACE GATE[^\n]*', lg)
+            add('QA GDEMU door103', bool(g) and 'PASS' in g[-1], g[-1] if g else lg.strip()[-120:])
         if n == 'relchecks':
             lg = rd(J / 'relchecks.log')
             v = re.findall(r'verdict rc=[^\n]*', lg)
@@ -168,6 +180,8 @@ if build_ok and jobs:
         vl = [l for l in d.stdout.splitlines() if 'verdict' in l.lower()]
         add('decisions ' + w, d.returncode == 0, 'decision_cmp: %s; STRICT: %s' % ((vl[0] if vl else 'rc=%d' % d.returncode)[:100], sv))
 
+if tier == 'full' and (W / 'qa-skip.txt').exists():
+    add('QA disc Flycast', False, rd(W / 'qa-skip.txt').strip())
 if (W / 'kit-skip.txt').exists():
     checks.append(('kit-check + kit-boot', 'SKIP', rd(W / 'kit-skip.txt').strip()))
 fails = [c for c in checks if c[1] == 'FAIL']
@@ -190,7 +204,7 @@ if lg:
 else:
     out += ['**Last good candidate:** none yet.', '']
 out += ['## This cycle: %s (%s tier)' % (verdict, tier), '',
-        '- t15/int %s; recipe: %s' % (env['sha'][:8], subprocess.run(['bash', '-c', '. "%s/recipe.conf"; echo "$RR_RECIPE_NAME"' % BIN], capture_output=True, text=True).stdout.strip()),
+        '- t15/int %s; recipe: %s' % (env['sha'][:8], subprocess.run(['bash', '-c', '. "%s"; echo "$RR_RECIPE_NAME"' % (W / 'recipe.conf' if (W / 'recipe.conf').exists() else BIN / 'recipe.conf')], capture_output=True, text=True).stdout.strip()),
         '- image (objcopy -R .stack) %s' % (image[:16] or 'n/a'),
         '- heap 4 before s30: %s' % (extra.get('s30_heap_before') or 'n/a'),
         '- KOS min headroom: %s' % (min(extra['kos_min_headroom']) if extra.get('kos_min_headroom') else 'n/a'),
