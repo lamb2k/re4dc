@@ -255,6 +255,11 @@ def build_candidate(pack, contract, proofs, *, enabled=False, engine="auto"):
             owner = leon_binding(proofs)
         elif item["binding"]["kind"] == "native-registry":
             owner = registry_binding(proofs[item["binding"]["proof"]], name, item["dimensions"])
+            consumers = item["binding"].get("proofs", [item["binding"]["proof"]])
+            if len(set(consumers)) != len(consumers) or item["binding"]["proof"] not in consumers:
+                raise ValueError("native registry consumer list has duplicate or missing primary proof")
+            owner["proven_consumers"] = [dict(proof=p, **registry_binding(proofs[p], name, item["dimensions"]))
+                                         for p in consumers]
         else:
             raise ValueError("unsupported actor consumer binding")
         if before.texture[3] != mip.tpl.FORMAT_RGB565:
@@ -323,7 +328,8 @@ def write_previews(before_blob, after_blob, directory):
         while old_side > side:
             ideal = mip._halve(ideal, old_side)
             old_side //= 2
-        actual = list(image.getdata())
+        flat = image.tobytes()
+        actual = [tuple(flat[i:i + 4]) for i in range(0, len(flat), 4)]
         squared = sum((a[c] - b[c]) ** 2 for a, b in zip(actual, ideal) for c in range(3))
         mse = squared / (side * side * 3)
         quality.append(dict(side=side, rgb_rmse=math.sqrt(mse),

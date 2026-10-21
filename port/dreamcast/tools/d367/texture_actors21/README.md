@@ -74,6 +74,56 @@ references, a contact sheet and `quality.json`. At 256, fixed-codebook
 quantization measures 29.37 dB RGB PSNR against the rounded box reference;
 this describes a texture-level difference, not a gameplay image or acceptance.
 
+## Native actor cohort checkpoint
+
+`native-v1` contains 16 existing-VQ actor keys with 51 primary-geometry consumer
+bindings. Every selected native registry/partner file was recovered from
+existing private sources by exact SHA256 and size against the retained original
+release manifest. All 39 selected registry/partner files match. Their private
+copies and pinned proofs are preserved; no original disc was required.
+
+The cohort includes Ashley, em17, Del Lago, its boat, Mendez's legs, Luis,
+merchant, cows, chickens, dogs, crow and traps. Each declared room consumer is
+checked for a real primary-geometry texture reference. All native UV words,
+geometry, mask run references and separate mask packages remain exact.
+
+| Evidence | Result |
+|---|---|
+| Independent levels | 144 pass the same pinned pvrtex decoder |
+| Base pixels, codebooks and indices | Exact for all 16 keys |
+| Unselected normal-pack entries | All 6485 exact, including the five protected Ganado mips |
+| Payload request increase | 173408 bytes across the unique 16-key cohort |
+| 32-byte rounded request increase | 173568 bytes across the unique 16-key cohort |
+| Canonical reconstructed pack | 156405760 bytes; SHA256 `234a147a1022d856801c1809f076b58f2ae65e5353ab36c5c4dc3599fe31225d`; not written |
+| Windows mirror | 400 verified private files, including copied consumer blobs and all mip/reference/contact images |
+| Private SHA256SUMS | `e4646d49954f7ea84f7999ea2376586b16e8f0fd1c1f38a272484ca2093b921d` |
+
+Native atlas tile layouts and actual sampling derivatives have not been
+qualified. These are review candidates, with that limitation recorded per key.
+At the first lower level, RGB PSNR against each rounded box reference ranges
+from 29.03 to 39.62 dB. Separate per-key quality reports and previews preserve
+the differences; these numbers do not accept their rendered appearance.
+
+`allocation_summary.py` combines explicit sparse candidates while refusing
+overlapping keys or different source packs. The Leon + native summary contains
+17 unique keys and 26 source-bound native rooms. The total increase is 195254
+raw bytes or 195424 rounded bytes across the whole unique set, not a simultaneous
+room peak. Within the native subset, r11c has three referenced keys and +65568
+rounded bytes. Standard Leon deliberately has no automatic room assignment:
+pl00/pl08 and live selection need their own evidence. There is no overlap with
+the original 1488-key world sidecar cohort.
+
+```sh
+python3 allocation_summary.py --candidate /private/leon-v1 \
+  --candidate /private/native-v1 --out /private/new-allocation-requests.json
+```
+
+Fourteen rectangular native actor keys, including Gigante and Mendez's full
+body, have an explicit private source-binding handoff to the rectangular
+adaptation owner. No stretching, padding or UV change was made. Original
+registry names outside the normal-pack namespace are not labelled runtime
+failures merely because they do not match a pack member.
+
 ## Use
 
 The private JSON contract has schema `re4dc-actor-mip-contract-1`, an exact
@@ -115,8 +165,8 @@ Mirror that sealed set to the Windows private store and verify every receipt.
 python3 test_actor_candidate.py
 ```
 
-Eight source/tool regression tests cover explicit selection, disabled identity,
+Nine source/tool regression tests cover explicit selection, disabled identity,
 owner and hash refusal, primary-geometry binding, protected Ganado packages,
-atlas boundaries and source-mesh/selected-runtime UV disagreement. These and
+every declared room consumer, atlas boundaries and selected-runtime UV disagreement. These and
 the private decoder seal establish source/data correctness. Runtime VRAM,
 residency, look, gameplay and physical hardware timing remain separate gates.

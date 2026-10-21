@@ -91,6 +91,18 @@ class ActorCandidates(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "no primary geometry"):
             actor.registry_binding(bytes(b), "00000001-00000002", [8, 8])
 
+    def test_every_declared_room_consumer_requires_its_primary_geometry_binding(self):
+        pack, contract, proofs = fixture()
+        proofs["registry2"] = registry()
+        contract["proofs"].append(dict(id="registry2", sha256=actor.sha(proofs["registry2"]), path="unused"))
+        contract["textures"][0]["binding"]["proofs"] = ["registry", "registry2"]
+        _, report = actor.build_candidate(pack, contract, proofs)
+        self.assertEqual(len(report["textures"][0]["owner"]["proven_consumers"]), 2)
+        proofs["registry2"] = registry((5, 6))
+        contract["proofs"][1]["sha256"] = actor.sha(proofs["registry2"])
+        with self.assertRaisesRegex(ValueError, "unique exact texture binding"):
+            actor.build_candidate(pack, contract, proofs)
+
     def test_atlas_audit_identifies_coarse_cross_tile_sampling_and_excludes_hair(self):
         tiles = {"left": dict(x=0, y=0, width=8, height=16, inner_width=4, inner_height=12),
                  "right": dict(x=8, y=0, width=8, height=16, inner_width=4, inner_height=12)}
