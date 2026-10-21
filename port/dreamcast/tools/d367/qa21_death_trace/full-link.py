@@ -3,6 +3,7 @@
 import argparse,hashlib,json,os,shlex,shutil,signal,subprocess,time
 from pathlib import Path
 from overlay_identity import elf_text,overlay_bytes
+from guarded_process import run_guarded
 BASE=Path('/root/probe/codex-qa21-combined-regression');TRACE=Path('/root/probe/codex-qa21-death-trace');R=Path('/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-combined-regression-20261021')
 START=18*1024**3+640*1024**2;FLOOR=18*1024**3+64*1024**2;CAP=320*1024**2;LOG_CAP=8_000_000
 p=argparse.ArgumentParser(description=__doc__);p.add_argument('--execute-link',action='store_true');p.add_argument('--execute-enabled-link',action='store_true');p.add_argument('--arm',choices=['off','on'],default='on');p.add_argument('--job',type=Path);a=p.parse_args();a.job=a.job or Path('/root/probe/qa21-death-trace-full-'+a.arm+'-20261021');assert a.job.parent==Path('/root/probe') and a.job.name.startswith('qa21-death-trace-full-');JOB=a.job;VIEW=JOB/'source-view';OUT=JOB/'enabled'
@@ -23,7 +24,9 @@ def owned_size():
   if not root.exists():continue
   for folder,dirs,files in os.walk(root,followlinks=False):
    for name in files+dirs:
-    st=(Path(folder)/name).lstat();total+=max(st.st_size,st.st_blocks*512)
+    try:st=(Path(folder)/name).lstat()
+    except FileNotFoundError:continue # make atomically removes transient *.tmp2 files
+    total+=max(st.st_size,st.st_blocks*512)
  return total
 def stop_build_reason(free, used, log_bytes, elapsed):
  if free<FLOOR:return 'C18GiB+64MiB runtime floor'
@@ -64,19 +67,15 @@ for name,digest in unit['trace_files'].items():assert sha(VIEW/name)==digest
 (OUT/'candidate.txt').write_text(' '.join(knobs)+'\n');(JOB/'preflight.json').write_text(json.dumps(plan,indent=2)+'\n')
 env=os.environ.copy();env.update(TREE=str(VIEW),ROUTE_OUT_ROOT=str(JOB),ROUTE_PROGRAMS_DIR=str(JOB/'programs'),ROUTE_PROGRAMS_JSON='',SOURCE_DATE_EPOCH='1760000000',ASSETS='/root/probe/lanes/play-actor-bundle',OBJDIR=str(OUT/'obj'),OUT=str(OUT),JOBS='4',PYTHONDONTWRITEBYTECODE='1')
 cmd=['bash','/root/probe/d367-buildslot.sh','bash',str(VIEW/'port/dreamcast/tools/d367/build-r21.sh'),*knobs];log=OUT/'build.log';started=time.monotonic();guard=None;peak=owned_size();min_free=shutil.disk_usage('/mnt/c').free
-with log.open('xb') as stream:
- child=subprocess.Popen(cmd,cwd=VIEW,env=env,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True);start=Path('/proc/'+str(child.pid)+'/stat').read_text().split()[21];owned={'pid':child.pid,'pgid':os.getpgid(child.pid),'proc_start':start,'argv':cmd,'scope':'Only this owned process group may be stopped'};(JOB/'owned-build.json').write_text(json.dumps(owned,indent=2)+'\n')
- while child.poll() is None:
-  used=owned_size();free=shutil.disk_usage('/mnt/c').free;peak=max(peak,used);min_free=min(min_free,free)
-  guard=stop_build_reason(free,used,log.stat().st_size,time.monotonic()-started)
-
-  if guard:
-   assert Path('/proc/'+str(child.pid)+'/stat').read_text().split()[21]==start and os.getpgid(child.pid)==child.pid;os.killpg(child.pid,signal.SIGTERM)
-   try:child.wait(timeout=8)
-   except subprocess.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);child.wait()
-   break
-  time.sleep(.25)
- rc=child.wait()
+def sample():
+ global peak,min_free
+ used=owned_size();free=shutil.disk_usage('/mnt/c').free;peak=max(peak,used);min_free=min(min_free,free)
+ return stop_build_reason(free,used,log.stat().st_size,time.monotonic()-started)
+try:
+ with log.open('xb') as stream:rc,guard,owned=run_guarded(cmd,VIEW,env,stream,sample,JOB/'owned-build.json')
+except BaseException as error:
+ (JOB/'supervisor-exception.json').write_text(json.dumps({'status':'FAILED_QUALIFICATION_SUPERVISOR_EXCEPTION','error':repr(error),'owned_cleanup_attempted':True,'stage_performed':False},indent=2)+'\n')
+ raise
 assert frozen_scratch==tree_files(BASE/'port/dreamcast/game/obj'),'Frozen link scratch changed';assert frozen_sdk==tree_files(BASE/'port/dreamcast/game/platform/sdk/gen'),'Frozen SDK generated sources changed';assert not git(BASE,'status','--porcelain')
 assert all(sha(TRACE/name)==digest for name,digest in unit['trace_files'].items())
 assert sha('/root/work/kos-re4dc-d367/lib/dreamcast/libkallisti.a')==plan['KOSlib_sha256']
