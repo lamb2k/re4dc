@@ -46,7 +46,8 @@ case "${1:-status}" in
     R=$W/pkg L=rr${S7}rP P="$CAND" SRC_SHA=${SHA:0:8} TN=$TN PKG_KIT_DIR=$W/kit KSETS=$KSETS bash "$TT/test16/t16-package.sh" 2>&1 | tail -8
     echo "knob file for the release lane: $W/kit/release-knobs.txt"
     # the QA disc zip beside the game zip (standing rule 8)
-    bash "$RR_HOME/bin/rr-qa.sh" "$W" /root/work/lanes/rr "$SHA" "$TN" "$CAND" 2>&1 | tail -6 ;;
+    { bash "$RR_HOME/bin/rr-qa.sh" "$W" /root/work/lanes/rr "$SHA" "$TN" "$CAND" 2>&1 | tail -6; } \
+      || echo "QA disc: FAIL (reported only; the game package above is unaffected)" ;;
   install)
     [ "$HERE" != "$(cd "$RR_HOME/bin" 2>/dev/null && pwd)" ] || { echo "rr: run install from a source tree (tools/d367/rr/rr.sh install), not from $RR_HOME/bin"; exit 2; }
     mkdir -p "$RR_HOME/bin" "$RR_HOME/logs" "$RR_HOME/state"

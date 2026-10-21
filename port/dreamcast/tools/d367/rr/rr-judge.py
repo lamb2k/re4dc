@@ -14,7 +14,8 @@ D367 = T / 'port/dreamcast/tools/d367'
 REPORT = Path('/mnt/c/Game Dev/Emulators/RELEASE-READY.md')
 RR_HOME = Path(os.environ.get('RR_HOME', '/root/rr'))
 env = dict(l.split('=', 1) for l in (W / 'cycle.env').read_text().split('\n') if '=' in l)
-EVU = Path(env['ev']); J = EVU / '_jobs'
+QA = len(sys.argv) > 4 and sys.argv[4] == 'qa'   # qa <evidence>: the QA disc section only (never the game verdict)
+EVU = Path(sys.argv[5]) if QA else Path(env['ev']); J = EVU / '_jobs'
 tier = env.get('tier', 'quick')
 known = set()
 kf = BIN / 'known.txt'
@@ -46,8 +47,51 @@ for l in rd(J / 'times.tsv').splitlines():
     if len(p) == 4 and all(x.lstrip('-').isdigit() for x in p[1:]):
         jobs.append((p[0], int(p[1]), int(p[2]), int(p[3])))
 
+if QA:
+    qrc = rd(W / 'qa-rc').strip()
+    add('QA build + package', qrc == '0', 'rr-qa.sh rc=%s; %s' % (qrc or '?', (rd(W / 'qa.txt').strip().splitlines() or [''])[-1][:100]))
+    for prof in ('loader', 'standard'):
+        q = rd(W / ('qa/logs/disc_lint-%s.txt' % prof)).strip().splitlines()
+        if q:
+            add('QA disc_lint ' + prof, qrc == '0' or 'violation' not in q[-1], q[-1][:120])
+    zl = [l for l in rd(W / 'qa.txt').splitlines() if l.startswith('QA zip')]
+    if zl:
+        add('QA zip', 'testzip ok' in zl[-1], zl[-1][:140])
+    jl = {}
+    for l in rd(J / 'times.tsv').splitlines():
+        p = l.split('\t')
+        if len(p) == 4:
+            jl[p[0]] = p
+    bad = re.compile(r'HALT|FAULT|RE4DC MISSING|Out of memory')
+    for n, want, what in (('qa-boot', r'room enter|phase=enter', 'boot keys down,a,a,a'), ('qa-warp', r'phase=enter room=103', 'qa_menu warp to r103')):
+        if qrc != '0':
+            break
+        o = runlog(n)
+        add('QA ' + n[3:], bool(re.search(want, o)) and not bad.search(o),
+            what + ': ' + (('HALT/FAULT' if bad.search(o) else 'room reached') if re.search(want, o) else ('not run' if n not in jl else 'not reached')))
+    if qrc == '0':
+        lg = rd(J / 'qa-gdemu.log')
+        g = re.findall(r'GDEMU RACE GATE[^\n]*', lg)
+        add('QA GDEMU door103', bool(g) and 'PASS' in g[-1], g[-1] if g else (lg.strip()[-120:] or 'not run'))
+    qv = 'PASS' if checks and all(c[1] == 'PASS' for c in checks) else 'FAIL'
+    (W / 'qa-verdict.txt').write_text(qv + '\n')
+    qs = [l.split('\t') for l in rd(W / 'qa-steps.tsv').splitlines() if l.count('\t') == 3]
+    sec = ['', '## QA disc: %s (does not change the game verdict)' % qv, '',
+           '- QA build of the same recipe + QA_MENU=1 (QA_TEST=RR QA_SRC=%s); zip kept in the candidate dir for testers' % env['sha'][:8],
+           '- wall: ' + ', '.join('%s %d s' % (p[0], int(p[2]) - int(p[1])) for p in qs),
+           '- evidence: %s' % str(EVU).replace('/mnt/c/', 'C:\\').replace('/', '\\'), '',
+           '| QA check | result | detail |', '|---|---|---|']
+    sec += ['| %s | %s | %s |' % (n, s, d.replace('|', '/')) for n, s, d in checks]
+    for f in (W / 'RELEASE-READY.md', REPORT):
+        t = rd(f)
+        if '## QA disc:' in t:
+            t = t[:t.index('\n## QA disc:')] + '\n'
+        f.write_text(t.rstrip('\n') + '\n' + '\n'.join(sec) + '\n')
+    print('QA', qv, '%d checks' % len(checks))
+    sys.exit(0)
+
 build_ok = env.get('build_ok') == '1'
-for s in ('trees', 'build-release', 'build-twins', 'package', 'bases', 'qa-disc'):
+for s in ('trees', 'build-release', 'build-twins', 'package', 'bases'):
     if s in srt:
         add('step ' + s, srt[s][3] == 0, 'rc=%d, %d s' % (srt[s][3], srt[s][2] - srt[s][1]))
     elif not build_ok:
@@ -60,9 +104,6 @@ for prof in ('loader', 'standard'):
     t = rd(W / ('pkg/logs/disc_lint-%s-rr%srP.txt' % (prof, env['sha'][:7]))).strip().splitlines()
     if t:   # t16-package.sh stops on any disc_lint violation, so a finished package step means both passed
         add('disc_lint ' + prof, 'package' in srt and srt['package'][3] == 0, t[-1][:120])
-    q = rd(W / ('qa/logs/disc_lint-%s.txt' % prof)).strip().splitlines()
-    if q:   # rr-qa.sh stops on any disc_lint violation
-        add('QA disc_lint ' + prof, 'qa-disc' in srt and srt['qa-disc'][3] == 0, q[-1][:120])
 
 extra = {}
 if build_ok and jobs:
@@ -149,15 +190,6 @@ if build_ok and jobs:
             add(n, not bad.search(o), 'peak alive %s' % (max([int(x) for x in re.findall(r'warp: alive (\d+)', o)] or [0])))
         if n == 'kit':
             add('kit-check + kit-boot', rc == 0, (rd(J / 'kit.log').strip().splitlines() or ['no log'])[-1][:160])
-        if n in ('qa-boot', 'qa-warp'):
-            o = runlog(n)
-            want = r'room enter|phase=enter' if n == 'qa-boot' else r'phase=enter room=103'
-            add('QA ' + n[3:], bool(re.search(want, o)) and not bad.search(o),
-                ('reached ' + ('a room' if n == 'qa-boot' else 'r103')) if re.search(want, o) else ('HALT/FAULT' if bad.search(o) else 'not reached'))
-        if n == 'qa-gdemu':
-            lg = rd(J / (n + '.log'))
-            g = re.findall(r'GDEMU RACE GATE[^\n]*', lg)
-            add('QA GDEMU door103', bool(g) and 'PASS' in g[-1], g[-1] if g else lg.strip()[-120:])
         if n == 'relchecks':
             lg = rd(J / 'relchecks.log')
             v = re.findall(r'verdict rc=[^\n]*', lg)
@@ -180,8 +212,6 @@ if build_ok and jobs:
         vl = [l for l in d.stdout.splitlines() if 'verdict' in l.lower()]
         add('decisions ' + w, d.returncode == 0, 'decision_cmp: %s; STRICT: %s' % ((vl[0] if vl else 'rc=%d' % d.returncode)[:100], sv))
 
-if tier == 'full' and (W / 'qa-skip.txt').exists():
-    add('QA disc Flycast', False, rd(W / 'qa-skip.txt').strip())
 if (W / 'kit-skip.txt').exists():
     checks.append(('kit-check + kit-boot', 'SKIP', rd(W / 'kit-skip.txt').strip()))
 fails = [c for c in checks if c[1] == 'FAIL']

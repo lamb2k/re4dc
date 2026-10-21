@@ -172,8 +172,6 @@ if [ "$TIER" = full ]; then
   fi
   [ $ok = 1 ] && { step bases bases || ok=0; }
   if [ $ok = 1 ] && [ -n "${CH2_REF:-}" ]; then step trace-arms trace_arms || echo "trace arms failed: decisions not run"; fi
-  # the QA disc of this candidate (standing rule 8): build, presets, mkgdi, disc_lint, zip check, Flycast base
-  [ $ok = 1 ] && { step qa-disc bash "$BIN/rr-qa.sh" "$W" "$TA" "$SHA" RR - "$EVU" || echo "QA disc failed: QA jobs not run"; }
 else
   [ $ok = 1 ] && { step build-release build_release || ok=0; }
   [ $ok = 1 ] && { step build-twins build_twins || ok=0; }
@@ -191,7 +189,7 @@ VERDICT=$(cat "$W/verdict.txt" 2>/dev/null || echo FAIL)
 log "cycle $ID verdict $VERDICT ($(( $(date +%s) - T0 )) s)"
 if [ "$TIER" = full ]; then
   cp "$W/RELEASE-READY.md" "$RR_HOME/state/full-last.md" 2>/dev/null || true
-  rm -rf "${EVU:?}/_discs" "${W:?}/qa/gdemu"
+  rm -rf "${EVU:?}/_discs"
   find "$EVU" \( -name 'track0*.iso' -o -name 'track03.bin' -o -name 'disc.bin' \) -delete
   for a in rT refrT; do [ -d "$ROUTE/out-rr${S7}$a" ] && rm -rf "${ROUTE:?}/out-rr${S7}${a:?}"; done
   exit 0
@@ -215,6 +213,28 @@ else
   LGS7=$(sed -n 's/^s7=//p' "$RR_HOME/state/last-good" 2>/dev/null || true)
   [ "$LGS7" = "$S7" ] || bash "$BIN/rr-clean-builds.sh" "$S7"
 fi
+# QA disc (standing rule 8; user 10-21: right after the quick smoke test, first thing on the new candidate, before
+# the full tier). Never blocks: its own QA rows in RELEASE-READY.md; the game verdict and last-good stay as they are.
+# The QA zip stays in the candidate dir (RE4DC-QA-TestRR-<sha8>-<date>-GDEMU.zip) so it can go to testers first.
+qa_tier() {
+  local EVQ=$EBASE/$ID-qa EVQW='C:\Flycast-Evidence\re4-dreamcast\rr\'$ID-qa CAND; CAND=$(cat "$W/cand.txt")
+  local t0; t0=$(date +%s); local rc=0
+  mkdir -p "$EVQ/_jobs" "$EVQ/fixtures"
+  bash "$BIN/rr-qa.sh" "$W" "$TA" "$SHA" RR "$CAND" "$EVQ" > "$W/qa.txt" 2>&1 || rc=$?
+  echo "$rc" > "$W/qa-rc"; tail -12 "$W/qa.txt"
+  printf 'qa-disc\t%s\t%s\t%s\n' "$t0" "$(date +%s)" "$rc" > "$W/qa-steps.tsv"
+  if [ "$rc" = 0 ]; then
+    t0=$(date +%s)
+    bash "$BIN/rr-jobs.sh" qa "$W" "$TA" "$S7" "$EVQ" "$EVQW" > /dev/null && \
+      "$GITBASH" "//wsl.localhost/Ubuntu-24.04$BIN/rr-flycast.sh" "/c/${EVQ#/mnt/c/}" 3 || true
+    printf 'qa-flycast\t%s\t%s\t0\n' "$t0" "$(date +%s)" >> "$W/qa-steps.tsv"
+  fi
+  python3 "$BIN/rr-judge.py" "$W" "$TA" "$BIN" qa "$EVQ" || true
+  rm -rf "${EVQ:?}/_discs"
+  find "$EVQ" \( -name 'track0*.iso' -o -name 'track03.bin' -o -name 'disc.bin' \) -delete
+  log "cycle $ID QA $(cat "$W/qa-verdict.txt" 2>/dev/null || echo FAIL)"
+}
+if [ "$VERDICT" = PASS ]; then qa_tier || log "cycle $ID QA step error (game verdict unchanged)"; fi
 # keep the last 10 work dirs (logs only; the pkg trees are deleted by t16-package.sh)
 ls -dt "$RR_HOME"/work/*/ 2>/dev/null | tail -n +11 | while read -r d; do
   [ "$d" = "$(sed -n 's/^work=//p' "$RR_HOME/state/last-good" 2>/dev/null)/" ] || rm -rf "${d:?}"; done
