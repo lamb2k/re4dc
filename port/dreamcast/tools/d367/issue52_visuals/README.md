@@ -66,3 +66,13 @@ This emits only `r100-body-25.tpl` (256B), three native RGB565 packages and an i
 Independent verification example: `python3 verify_officer_body.py --candidate private/officer-body-candidate01 --sources private/dynamic-source-exact02 --plan private/officer-body-transform-plan02.json --report private/new-readback.json`.
 
 Emission/readback are source/asset qualifications. Main retains the room integration decision; final combined-pack collisions, target appearance/capacity, release checks and physical Dreamcast acceptance remain open. No runtime/converter/recipe or production setting changes.
+
+## Metadata-only officer BODY integration plan
+
+`plan_officer_body_integration.py` reads frozen47d TPL/packages, exact public Test21 r100 DAR, recovered original6501-member global pack, frozen605 plan and exact release program/14overlay/knob receipts. It requires `--enable-integration-plan`, writes a new JSON outside the frozen bundle and never emits a DAR/package/pack/image. Every room member is hashed; only32 bytes in TPL0x25 may change. Body BINs0x24/26, heads0x27/29, headTPLs0x28/2a, motions0x2b/2c, NTR and all other bytes stay exact.
+
+The hypothetical same-size DAR SHA is independently checked by sparse byte patches. A canonical sorted virtual pack adds exactly three keys while retaining all6501 original members. Sequential stream and independent cross-boundary virtual reader hashes agree; tests also compare with the existing canonical pack builder entirely in memory. A final combined pack requires a fresh collision check against other selected lane candidates. Expected hashes are plans, not evidence that an integrated artifact exists.
+
+Native RGB565 format0/payload1 accepts rectangular power-of-two images without a new format feature. Existing registered NTR3 rows remain valid when native record/header shapes agree. Actual control/candidate program, ELF,14overlays and resolved flags must be frozen by main; historical Test21 flags do not establish a current program. Keep experimental `SS_WINDOW_HOLD_RESTORE=0` after its +102 request/+168032B regression; this differs from historical `SS_HOLD_RESTORE`.
+
+Global pack growth is219136B; source unique body payload grows139264B to212992B, with131072B largest texture allocation. Both officers share three keys; actual residency/coexistence, allocator overhead, appearance and repeated-load behavior need an allocated target test. The manifest records normal r100 car/officer camera comparisons and residency acceptance gates. Main retains integration allocation/decision; Claude retains production ownership. No defaults/recipes/shared runtime changes.
