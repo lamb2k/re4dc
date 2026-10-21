@@ -45,6 +45,29 @@ class RoomSelection(unittest.TestCase):
             self.assertEqual(old.base_indices, new.base_indices)
         self.assertEqual(report["extra_payload_bytes"], 2 * 6)
 
+    def test_all_world_keys_are_deduplicated_and_per_room_sums_keep_overlap(self):
+        source = {(1, 2): native(), (3, 4): native(), (5, 6): native()}
+        pack, _ = texpack.build(source)
+        worlds = {"r100": world([(1, 2), (3, 4)]), "r103": world([(3, 4), (5, 6)])}
+        progress = []
+        _, report, _, _ = candidate.build_candidate(
+            pack, worlds, enabled=True, engine="python",
+            progress=lambda done, total: progress.append((done, total)))
+        self.assertEqual(report["changed_keys"], 3)
+        self.assertEqual(report["extra_payload_bytes"], 18)
+        self.assertEqual(report["per_room"]["r100"]["changed_keys"], 2)
+        self.assertEqual(report["per_room"]["r103"]["changed_keys"], 2)
+        self.assertEqual(sum(r["extra_payload_bytes"] for r in report["per_room"].values()), 24)
+        self.assertEqual(progress, [(3, 3)])
+        self.assertIn("not simultaneous", report["per_room_sum_caution"])
+
+    def test_all_world_selector_is_limited_to_named_sidecars_in_manifest(self):
+        names = ["dc/native/r100/ps2-world.r4pw", "dc/native/r103/ps2-world.r4pw"]
+        manifest = dict.fromkeys(names + ["dc/native/r100/other.r4pw", "dc/tex.pak",
+            "dc/native/r1234/ps2-world.r4pw", "dc/native/r100/ps2-worldXr4pw"])
+        self.assertEqual(candidate.world_paths(manifest), names)
+        self.assertEqual(candidate.world_paths(manifest, 0x103), [names[1]])
+
     def test_missing_world_key_is_refused(self):
         pack, _ = texpack.build({(1, 2): native()})
         with self.assertRaisesRegex(ValueError, "absent"):

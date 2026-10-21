@@ -119,3 +119,39 @@ square decode correctly across all 20 levels, with exact original bases and
 palettes. Their game owners are unclassified. Format compatibility does not
 authorize indiscriminate mip generation for UI text or effect atlases.
 Palette VQ, PAL8, rectangles and strided textures need their own contracts.
+
+## All selected native worlds
+
+Replace --room 103 with --all-worlds to select the named world sidecars in the
+bound release manifest. --progress prints bounded offline conversion progress.
+Every input sidecar is hash-bound separately. Shared texture keys are converted
+only once. The per_room table reports each room's referenced compatible keys and
+payload/32-byte-request sums, with an explicit overlap/non-residency warning.
+
+    python port/dreamcast/tools/d367/mipmap21/world_candidate.py --track /private/track03.bin --release-manifest /private/manifest.json --all-worlds --output /private/new-world-candidate --generate
+
+The retained Release21 candidate covers all 508 directly supported square
+16-bit VQ keys among 1488 world-reference keys across 29 selected sidecars.
+All 4100 generated levels agree with the independent decoder; all 508 original
+bases/codebooks/indices stay exact and 5993 other archive members are identical.
+Archive: 156254208 -> 156889088 bytes (+634880). Lower mip payload: +1222312
+bytes; 32-byte allocation requests: +1227392, across the entire multi-room
+inventory. These are not a simultaneous working set, resident peak or timing.
+
+Seven room-selector tests include all-world path filtering and shared-key
+deduplication with intentionally overlapping per-room inventory sums.
+
+Compatibility is an implementation boundary:
+- 508 square 16-bit VQ keys use the existing direct runtime layout.
+- 188 square twiddled 16-bit keys can preserve their full-resolution texels
+  with mip-prefix rearrangement; reader/converter support is the next change.
+- 672 rectangular VQ and 120 rectangular twiddled keys need a correct square
+  texture-domain/UV/wrap/edge contract. Padding can preserve base pixels but
+  changes sampling semantics unless the renderer and each lower level agree.
+  Do not silently stretch, pad or recompress them.
+- Palette owners, UI/effects and unclassified packages remain a distinct
+  adoption decision. Filtered lower mip levels are not lossless copies; the
+  promise here is exact preservation of the original full-resolution data.
+
+No recipe, release, runtime defaults or frame-rate claim accompanies this
+private whole-world data candidate.

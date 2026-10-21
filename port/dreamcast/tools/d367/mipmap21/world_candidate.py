@@ -12,6 +12,7 @@ import hashlib
 import json
 from pathlib import Path
 import shutil
+import re
 import struct
 import sys
 
@@ -42,6 +43,18 @@ def world_keys(blob):
             struct.iter_unpack("<IIHH4B", blob[32:32 + count * 16])}
 
 
+def world_map(world):
+    if isinstance(world, (bytes, bytearray)):
+        return {"selected": world}
+    if not isinstance(world, dict) or not world:
+        raise ValueError("expected a named world-sidecar map")
+    return world
+
+
+def referenced_keys(world):
+    return set().union(*(world_keys(b) for b in world_map(world).values()))
+
+
 def select(pack, world):
     texpack.verify(pack)
     packages = read_pak(pack)
@@ -49,7 +62,7 @@ def select(pack, world):
     if rebuilt != pack:
         raise ValueError("source pack is not byte-identical to canonical texpack.build")
     missing, supported, refused = [], [], []
-    for key in sorted(world_keys(world)):
+    for key in sorted(referenced_keys(world)):
         name = "%08x-%08x" % key
         if key not in packages:
             missing.append(name)
@@ -65,11 +78,11 @@ def select(pack, world):
     return packages, supported, refused
 
 
-def build_candidate(pack, world, *, enabled=False, engine="auto"):
+def build_candidate(pack, world, *, enabled=False, engine="auto", progress=None):
     packages, supported, refused = select(pack, world)
     new = dict(packages)
     rows = []
-    for key, before in supported:
+    for done, (key, before) in enumerate(supported, 1):
         after_blob, row = mip.add_mipmaps(packages[key], enabled=enabled, engine=engine)
         after = mip.read_native_vq(after_blob)
         row.update(key="%08x-%08x" % key,
@@ -82,6 +95,8 @@ def build_candidate(pack, world, *, enabled=False, engine="auto"):
             raise ValueError("decoded source base changed for " + row["key"])
         new[key] = after_blob
         rows.append(row)
+        if progress and (done % 32 == 0 or done == len(supported)):
+            progress(done, len(supported))
     candidate, count = texpack.build(new)
     texpack.verify(candidate)
     changed = {k for k in packages if packages[k] != new[k]}
@@ -94,7 +109,7 @@ def build_candidate(pack, world, *, enabled=False, engine="auto"):
         source_pack_sha256=sha(pack), candidate_pack_sha256=sha(candidate),
         source_pack_bytes=len(pack), candidate_pack_bytes=len(candidate),
         archive_extra_bytes=len(candidate) - len(pack), packages=count,
-        world_keys=len(world_keys(world)), compatible_keys=len(supported),
+        world_keys=len(referenced_keys(world)), compatible_keys=len(supported),
         changed_keys=len(changed), unchanged_keys=count - len(changed),
         default_off_pack_exact=True,
         extra_payload_bytes=sum(r["extra_payload_bytes"] for r in rows),
@@ -106,6 +121,25 @@ def build_candidate(pack, world, *, enabled=False, engine="auto"):
             "Allocation sums are request sizes, not measured peak or contiguous VRAM.",
             "No gameplay, frame time, rendered look, release or hardware acceptance.",
         ])
+    by_key = {r["key"]: r for r in rows}
+    report["per_room"] = {}
+    for name, sidecar in sorted(world_map(world).items()):
+        keys = world_keys(sidecar)
+        compatible = [by_key["%08x-%08x" % k] for k in sorted(keys)
+                      if "%08x-%08x" % k in by_key]
+        report["per_room"][name] = dict(
+            world_keys=len(keys), compatible_keys=len(compatible),
+            changed_keys=sum(r["changed"] for r in compatible),
+            before_payload_bytes=sum(r["before_payload_bytes"] for r in compatible),
+            after_payload_bytes=sum(r["after_payload_bytes"] for r in compatible),
+            extra_payload_bytes=sum(r["extra_payload_bytes"] for r in compatible),
+            before_alloc32_bytes=sum(r["before_alloc32"] for r in compatible),
+            after_alloc32_bytes=sum(r["after_alloc32"] for r in compatible),
+            extra_alloc32_bytes=sum(r["after_alloc32"]-r["before_alloc32"] for r in compatible),
+            compatible_key_names=[r["key"] for r in compatible])
+    report["per_room_sum_caution"] = (
+        "Per-room eligible-key inventory sums, not simultaneous live residency or measured peaks; "
+        "shared keys overlap rooms and must not be added as a global working set.")
     return candidate, report, packages, new
 
 
@@ -122,11 +156,22 @@ def bound_input(track, files, manifest, path):
     return data
 
 
+def world_paths(manifest, room=None):
+    if room is not None:
+        return ["dc/native/r%03x/ps2-world.r4pw" % room]
+    return sorted(path for path in manifest
+                  if re.fullmatch(r"dc/native/r[0-9a-fA-F]{3}/ps2-world[.]r4pw", path))
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--track", type=Path, required=True)
     ap.add_argument("--release-manifest", type=Path, required=True)
-    ap.add_argument("--room", type=lambda x: int(x.removeprefix("r"), 16), required=True)
+    selection = ap.add_mutually_exclusive_group(required=True)
+    selection.add_argument("--room", type=lambda x: int(x.removeprefix("r"), 16))
+    selection.add_argument("--all-worlds", action="store_true",
+                           help="all named world sidecars in the bound release manifest")
+    ap.add_argument("--progress", action="store_true", help="print bounded offline progress")
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--generate", action="store_true", help="opt in; default creates an exact control")
     ap.add_argument("--engine", choices=("auto", "python", "numpy"), default="auto")
@@ -138,24 +183,30 @@ def main(argv=None):
         ap.error("private output parent must already exist")
     receipt = args.release_manifest.read_bytes()
     manifest = json.loads(receipt)
-    sidecar = "dc/native/r%03x/ps2-world.r4pw" % args.room
+    paths = world_paths(manifest, args.room)
+    if not paths:
+        raise ValueError("no named world sidecars in release manifest")
     track = fp_iso.Track(str(args.track), args.lba)
     try:
         files = {path.lstrip("/"): (extent, size)
                  for path, extent, size in fp_iso.files(track)}
         pack = bound_input(track, files, manifest, "dc/tex.pak")
-        world = bound_input(track, files, manifest, sidecar)
+        world = {path: bound_input(track, files, manifest, path) for path in paths}
     finally:
         track.f.close()
     if shutil.disk_usage(args.output.parent).free < len(pack) * 3 + 512 * 1024 * 1024:
         raise ValueError("private output volume lacks the bounded candidate headroom")
+    progress = (lambda done, total: print("mipmap21: processed %d/%d compatible world keys" %
+                (done, total), flush=True)) if args.progress else None
     candidate, report, before, after = build_candidate(
-        pack, world, enabled=args.generate, engine=args.engine)
+        pack, world, enabled=args.generate, engine=args.engine, progress=progress)
     report.update(
         updated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        room="r%03x" % args.room, track=str(args.track), raw_sectors=track.raw, lba=args.lba,
+        room="all-worlds" if args.all_worlds else "r%03x" % args.room,
+        track=str(args.track), raw_sectors=track.raw, lba=args.lba,
         manifest=str(args.release_manifest), manifest_sha256=sha(receipt),
-        world_path=sidecar, world_sha256=sha(world), world_bytes=len(world),
+        world_inputs=[dict(path=path, sha256=sha(blob), size=len(blob))
+                      for path, blob in sorted(world.items())],
         tool_sha256=sha(Path(__file__).read_bytes()),
         generator_sha256=sha((TOOLS / "mipmap_vq.py").read_bytes()))
     args.output.mkdir()
