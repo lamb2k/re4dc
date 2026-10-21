@@ -39,6 +39,7 @@ FORMAT_RGB565 = 0
 FORMAT_ARGB1555 = 1
 FORMAT_ARGB4444 = 2
 FORMAT_PAL4_ARGB4444 = 4
+FORMAT_PAL8_ARGB4444 = 5
 FLAG_ALPHA = 1
 FLAG_BINARY_ALPHA = 2
 # CAST_MIPMAP (Phase 2 A2): the VQ payload carries the PVR mip chain (codebook, then the index bytes of every level

@@ -550,3 +550,19 @@ pack reads. It checks OFF object identity and make guards. The older PAL4 capaci
 fixture now uses distinct palettes for actual exhaustion and expects the already
 shipped exact-palette sharing for aliases; repeating identical palettes no longer
 counts as filling separate banks.
+
+### Offline validation and inventories
+
+The native format5 constant is shared with `convert_tpl.py`. Asset inventories
+name PAL8 ARGB4444 and count all stored index levels plus the 512-byte palette
+tail. The legacy `vram_bytes` report field describes descriptor payload bytes;
+it is neither allocator/page rounding nor measured live residency.
+
+`ps2world/world_registry.py` accepts the existing native families only with
+explicit matching feature options: `cast_mipmap`, `twiddled_mipmap`,
+`pal4_alpha`, `pal4_mipmap`, `pal8_alpha` and `pal8_mipmap`. The CLI exposes the
+same names with hyphens. Missing parents, rectangular mips, wrong lengths and a
+mip flag attached to base-only bytes fail closed. All options default to false;
+existing valid base checks and normal pack-over-loose precedence remain intact.
+These options validate bytes and sampling dimensions. They do not qualify
+palette capacity, appearance, residency, performance or release selection.

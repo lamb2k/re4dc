@@ -5,7 +5,7 @@ import struct
 HEADER = struct.Struct("<8s10I")      # room/texture_package.hpp Header (48 B)
 TEXTURE = struct.Struct("<64s8I")     # Texture (96 B)
 PAYLOADS = {0: "linear", 1: "twiddled", 2: "vq"}
-FORMATS = {0: "RGB565", 1: "ARGB1555", 2: "ARGB4444", 4: "PAL4_ARGB4444"}
+FORMATS = {0: "RGB565", 1: "ARGB1555", 2: "ARGB4444", 4: "PAL4_ARGB4444", 5: "PAL8_ARGB4444"}
 
 
 def read_re4tex(path):
@@ -27,6 +27,7 @@ def read_re4tex(path):
         out.append(dict(width=w, height=hh, format=FORMATS.get(fmt, fmt), payload=PAYLOADS.get(payload, payload),
                         data_bytes=dsize, vram_bytes=(dsize if flags & 4 else
                             w * hh // 2 + 32 if fmt == 4 and payload == 1 else
+                            w * hh + 512 if fmt == 5 and payload == 1 else
                             vram_bytes(PAYLOADS.get(payload, "linear"), w, hh))))
     return dict(file_bytes=len(d), textures=out, vram_bytes=sum(t["vram_bytes"] for t in out))
 

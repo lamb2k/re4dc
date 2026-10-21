@@ -13,7 +13,7 @@ import convert_tpl as tpl
 import mipmap_twiddled as tw
 import mipmap_vq as vq
 
-FORMAT_PAL8_ARGB4444=5
+FORMAT_PAL8_ARGB4444=tpl.FORMAT_PAL8_ARGB4444
 
 
 def chain_bytes(side):return side*side*4//3+3
