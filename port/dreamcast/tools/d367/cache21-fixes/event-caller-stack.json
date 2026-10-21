@@ -1,0 +1,1295 @@
+{
+  "scope": "Actual SH4 static source frames/call references, not a full call-chain bound or target high-water measurement.",
+  "source_head": "8ff45d690397203e428c7215aadd0f2017ace7ec",
+  "start_C_free_bytes": 49452789760,
+  "finish_C_free_bytes": 49451151360,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "make_prerequisites": [
+    "CABIN_SOURCE=1",
+    "EVD_ADMISSION_TXN=1",
+    "ROUTE_CH21=1",
+    "ROUTE_CH22=1",
+    "ROUTE_OVL=1",
+    "EM10_SHARED=1",
+    "WORLD_STAGE_MODULES=0",
+    "ROUTE_MOVIES=1",
+    "AICA_AUDIO=1",
+    "AICA_STREAMS=1",
+    "NATIVE_STATIC=1",
+    "D349_RENDERER_STACK=1",
+    "PVR_STREAM=1",
+    "DVD_READ_SAFE=1"
+  ],
+  "objects": [
+    {
+      "source": "src/game/event.cpp",
+      "source_sha256": "ac25a8479d7b68f4d58ca3cb610ed83ef819d5250e08f5d2f428feba12c53419",
+      "object_sha256": "c918df4715c1ffc19fc0524441bc963d01e1487723f3ead437a99debf713fde2",
+      "frames": [
+        {
+          "name": "../../../include/cManager.h:25:18:virtual void cUnit::beginEvent()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "../../../include/cManager.h:26:18:virtual void cUnit::endEvent()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:913:5:static int Event::ExePacket_BeginEvt(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:934:5:static int Event::ExePacket_SetEm(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1098:5:static int Event::ExePacket_SetList(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1178:5:static int Event::ExePacket_CamPos(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1184:5:static int Event::ExePacket_CamDammy(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1249:5:static int Event::ExePacket_PosPl(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1533:5:static int Event::ExePacket_ParentOn(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1539:5:static int Event::ExePacket_ParentOff(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1545:5:static int Event::ExePacket_EndPl(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1551:5:static int Event::ExePacket_EndEm(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1557:5:static int Event::ExePacket_EndOm(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1563:5:static int Event::ExePacket_EndParts(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1569:5:static int Event::ExePacket_EndList(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1575:5:static int Event::ExePacket_EndEvt(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1581:5:static int Event::ExePacket_EndPac(Event*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3316:1:EventDebug::~EventDebug()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "../../../include/cManager.h:239:6:) [with T = Event]",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "../../../include/cManager.h:469:13:void cManager<T>::destroy(T*) [with T = Event]",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1517:5:static int Event::ExePacket_Func(Event*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1479:5:static int Event::ExePacket_Se(Event*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.h:1109:18:virtual void EventMgr::memClear(Event*, u32)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.h:1107:19:virtual void* EventMgr::memAlloc(u32)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.h:1108:18:virtual void EventMgr::memFree(void*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1488:5:static int Event::ExePacket_Fade(Event*)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:383:6:void Event::EspSetModelPtr(cModel*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:679:6:void Event::CancelSet()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:687:6:void Event::CancelNoSet()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:818:5:int Event::IsExePacket()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:841:5:int Event::ExePacket()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1746:6:void Event::CalNextPacket()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1793:5:int Event::CalMaxCut(int*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1915:6:void Event::SetDiedemoExec()",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1929:6:void Event::BeginActBtn(int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1937:6:void Event::EndActBtn()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1943:5:int Event::GetActBtnCount()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1949:6:void Event::ExecActBtn()",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1964:6:void Event::MesSet(int, int, int, int)",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1501:5:static int Event::ExePacket_Mes(Event*)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1986:6:void Event::MesClear()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2002:6:void Event::FogMove(Event*, void*)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2024:6:void Event::FocusMove(Event*, void*)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2195:5:int EventMgr::init()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2307:5:int EventMgr::IsAliveEvt(u32*, int, int)",
+          "bytes": 72,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2355:5:int EventMgr::NameCheck(char*)",
+          "bytes": 1204,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:783:6:void Event::DebugDisp()",
+          "bytes": 80,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:803:6:void Event::DebugDispTool()",
+          "bytes": 76,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2378:7:char* EventMgr::NameChange(char*)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2754:5:int EventMgr::GetEvt(u32*, void**)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3144:5:int EventMgr::EvtSndStrStop(u32*, int, int)",
+          "bytes": 40,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3195:6:void EventMgr::EvtSndStrPlay(u32*, int, int, int, f32)",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1453:5:static int Event::ExePacket_Str(Event*)",
+          "bytes": 80,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3250:5:int EventMgr::GetZeroPartsWorldPos(cModel*, Vec*, Vec*)",
+          "bytes": 80,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3281:6:void EventMgr::ClearEmWindowFcv()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3289:6:void EventMgr::SetEmWindowFcv(void*, void*, void*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3297:6:void EventMgr::GetEmWindowFcv(void**, void**, void**)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3311:1:EventDebug::EventDebug()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3321:5:int EventDebug::myRoomInit()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3328:6:void EventDebug::ClrModelFiles()",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3338:5:int EventDebug::AddNameBinTpl(int, char*, char*)",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3354:1:DatTbl::DatTbl()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:234:1:Event::Event(u8)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2171:5:virtual int EventMgr::construct(Event*, u32)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2161:1:EventMgr::EventMgr()",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3366:5:int DatTbl::init(int)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2203:5:int EventMgr::myRoomInit()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5775:5:int DatTbl::SetDat(const char*, void*, u8, void*, u8, int*)",
+          "bytes": 52,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2078:5:int Event::SetMod(char*, void*, u8, void*, u8, int*)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:919:5:static int Event::ExePacket_SetPl(Event*)",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2813:5:int EventMgr::SetBin(char*, void*, void*, int)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3027:5:int EventMgr::SetFunc(char*, void*)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3064:5:int EventMgr::SetRead(char*, int*, void*)",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5816:5:int DatTbl::GetDat(void**, u8*, const char*, int*)",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2096:5:int Event::GetMod(void**, char*, u8*, int*)",
+          "bytes": 32,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:519:5:int Event::GetModelPtrNo(int*, cModel**, char*)",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:438:6:void Event::EspToolSetMod(int, char*)",
+          "bytes": 836,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1192:5:static int Event::ExePacket_Pos(Event*)",
+          "bytes": 56,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1337:5:static int Event::ExePacket_Esp(Event*)",
+          "bytes": 64,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2827:5:int EventMgr::GetBin(void**, const char*, int)",
+          "bytes": 292,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:942:5:static int Event::ExePacket_SetOm(Event*)",
+          "bytes": 1244,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1061:5:int Event::ExePacket_SetPartsSub(char*, char*, char*, char*)",
+          "bytes": 40,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1032:5:static int Event::ExePacket_SetParts(Event*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1105:5:static int Event::ExePacket_SetEff(Event*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1128:5:static int Event::ExePacket_SetMdt(Event*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1256:5:static int Event::ExePacket_Mot(Event*)",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1302:5:static int Event::ExePacket_Shp(Event*)",
+          "bytes": 32,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1388:5:static int Event::ExePacket_Lit(Event*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1412:5:static int Event::ExePacket_Fog(Event*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1429:5:static int Event::ExePacket_Focus(Event*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1822:5:int Event::CalMaxFrame(int*, int)",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1757:6:void Event::CalNextFrame()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1864:5:int Event::CalMaxTotalFrame(int*, int*)",
+          "bytes": 44,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3047:5:int EventMgr::GetFunc(void**, char*)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:248:5:int Event::init(char*, EvtHeader*)",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1714:5:int Event::ExeFunc(int, int)",
+          "bytes": 88,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1590:6:void Event::ExeBeginEvt(Event*, int)",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1785:6:void Event::ChkCutZero()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5850:5:int DatTbl::ChkDat(const char*)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5871:5:int DatTbl::GetWkNo(int*, const char*)",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2870:5:int EventMgr::SetEvd(char*, void*, void*, int)",
+          "bytes": 752,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2974:5:int EventMgr::GetEvd(void**, char*, int)",
+          "bytes": 292,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3113:5:int EventMgr::SetEvs(void*)",
+          "bytes": 40,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3081:5:int EventMgr::GetRead(void**, int*, char*)",
+          "bytes": 32,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5896:5:int DatTbl::GetNumDat()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5902:5:int DatTbl::GetDatWkNo(void**, u8*, int)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2048:6:void Event::MotClear()",
+          "bytes": 40,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1145:5:static int Event::ExePacket_Cam(Event*)",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5925:5:int DatTbl::ChkDatWkNoName(int, const char*)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:695:6:void Event::ControlTransFlag()",
+          "bytes": 48,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:305:5:int Event::Run()",
+          "bytes": 44,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:548:5:int Event::RunTool(int, int)",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:396:5:int Event::EspToolSetDat()",
+          "bytes": 64,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:625:5:int Event::RunEvtCancel()",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5945:5:int DatTbl::DelDatWkNo(int)",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5970:5:int DatTbl::DelDat(const char*)",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2860:5:int EventMgr::DelBin(char*)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3007:5:int EventMgr::DelEvd(char*)",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3103:5:int EventMgr::DelRead(char*)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2400:5:int EventMgr::EvtReadSub(char*, int, int, int*, int, u32)",
+          "bytes": 48,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2337:5:int EventMgr::EvtReadAram(char*, int, int*, int, u32)",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2348:5:int EventMgr::EvtReadMram(char*, int, int*, int, u32)",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2592:5:int EventMgr::EvtFree(char*)",
+          "bytes": 64,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5999:5:int DatTbl::DelAll(int)",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2654:6:void EventMgr::ToolCoreEvdDel()",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:5759:5:int DatTbl::end()",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:3360:1:DatTbl::~DatTbl()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:240:1:Event::~Event()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:240:1:virtual Event::~Event()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2166:1:EventMgr::~EventMgr()",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2166:1:virtual EventMgr::~EventMgr()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:6019:5:int SndStrPlayBlock(int, int, f32)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:6033:6:void SndStrStopBlock(int)",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "../../../include/cManager.h:353:4:T* cManager<T>::create(int) [with T = Event]",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/event.cpp:6050:21:cpp)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:1627:6:void Event::ExeEndEvt(Event*, u32)",
+          "bytes": 72,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2761:5:int EventMgr::DelEvt(void*, int)",
+          "bytes": 76,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2230:5:int EventMgr::DelAll()",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2248:5:int EventMgr::Run()",
+          "bytes": 32,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2704:5:int EventMgr::SetEvt(char*, Event**)",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2662:5:int EventMgr::SetEvt(void*, u32*)",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "/root/probe/cache21-event-admission-sh4-20261021-03/event.cpp:2516:5:int EventMgr::EvtReadExec(char*, int, u32)",
+          "bytes": 52,
+          "kind": "static"
+        }
+      ],
+      "provenance": "Read-only copy of qualified cabin1 enabled event.o and .su"
+    },
+    {
+      "source": "src/game/db_log.cpp",
+      "source_sha256": "b40f9f40d9204753b495dc2e8b0f456eeef9b62591342e65f5f9d324bc5cc35f",
+      "object_sha256": "6a9cfb168e7af1c0bfd8cbd37866eba482e35d7748bbfd253e9e555679d46187",
+      "frames": [
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:97:6:void cLog::clear()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:108:5:int cLog::modeReset()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:36:6:void cLog::init()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:28:6:void LogInit()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:117:5:int cLog::modeSet(int, int, int, int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:170:5:int cLog::dispLineNum(int, int)",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:181:5:int cLog::on(int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:188:5:int cLog::scrSet(s8)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:205:11:cLogWork* cLog::add(int, int, const char*, va_list)",
+          "bytes": 304,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:70:6:void cLog::vmes(int, int, const char*, va_list)",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:43:6:)",
+          "bytes": 80,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:79:6:void cLog::verr(int, int, const char*, va_list)",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:52:6:)",
+          "bytes": 80,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:88:6:void cLog::vwarn(int, int, const char*, va_list)",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:61:6:)",
+          "bytes": 80,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:242:6:void cLogWork::print(int, int)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:129:6:void cLog::disp()",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/db_log.cpp:248:6:void cLogWork::clear()",
+          "bytes": 0,
+          "kind": "static"
+        }
+      ],
+      "provenance": "Actual current Make small object"
+    },
+    {
+      "source": "src/game/game.cpp",
+      "source_sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "object_sha256": "cd915f618effa51269756c45695ee569a0eb4ce3dba23466faff267b77c01b71",
+      "frames": [
+        {
+          "name": "D:/Bio4/Prog/game.cpp:272:6:void gameStageInit()",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1436:6:void gameOption()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1643:6:void gameDoordemo()",
+          "bytes": 32,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:99:6:void DoorFlagInit()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:914:6:void clearGlobalSaveData()",
+          "bytes": 140,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1006:6:void cGameSave::calcOffset(GameSaveData*, void*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1031:6:void cGameSave::calcAddr(GameSaveData*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:995:6:void cGameSave::checkAddr(GameSaveData*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:942:5:int cGameSave::load(void*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:857:6:void GameLoad()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:871:6:void GameContinue(int)",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:975:16:int save__9cGameSavePv(cGameSave*, GameSaveData*, int)",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1055:15:GameSaveData* cGameSave::alloc()",
+          "bytes": 32,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1471:6:void DiedemoExec(int, int)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1491:6:void gameDiedemoCheck()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1730:6:void gameRoomMemInit()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1399:6:void gameEnding()",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1824:6:void GameAddPoint(int)",
+          "bytes": 100,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1511:6:void gameDiedemo(DiedemoWork*)",
+          "bytes": 56,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1776:6:void GamePointInit(u32)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:144:6:void gameInit()",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1962:6:void GamePointBossReset()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:1981:6:void primInit()",
+          "bytes": 32,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:2234:6:void primFree()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:2241:6:void PrimDispWorkNum(int, int, int)",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:2251:6:void GameStopModeEnd()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:2261:6:void gameStopMove()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:2305:6:void gameDebugDisp()",
+          "bytes": 112,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:2464:6:void gameDebug()",
+          "bytes": 44,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:119:6:void GameTask()",
+          "bytes": 56,
+          "kind": "static"
+        },
+        {
+          "name": "../../../include/cManager.h:287:5:int cManager<T>::arrayAlloc(u32) [with T = cSat]",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "../../../include/cManager.h:389:4:T* cManager<T>::create(int, u32) [with T = cEm]",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:422:6:void gameRoomInit()",
+          "bytes": 64,
+          "kind": "static"
+        },
+        {
+          "name": "../../../include/cManager.h:301:5:int cManager<T>::dieCheck() [with T = cSat]",
+          "bytes": 32,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:2530:5:int cManager<T>::dispWorkNum(int, int, int, int) [with T = cSat]",
+          "bytes": 36,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/game.cpp:680:6:void gameMainLoop()",
+          "bytes": 52,
+          "kind": "static"
+        }
+      ],
+      "provenance": "Actual current Make small object"
+    },
+    {
+      "source": "src/game/scheduler.cpp",
+      "source_sha256": "6479263912945cd5e396f270a2872d88262a69b85bbf4dc357e9e6f4212ea5ce",
+      "object_sha256": "df5006854c86cc3b8a9a739c1f43765cc2e3dab50bac82f3bfc82622db13561d",
+      "frames": [
+        {
+          "name": "../../../src/game/scheduler.cpp:48:13:void NativeYieldTask(TASK*)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "../../../src/game/scheduler.cpp:39:14:TASK* NativeExecutingTask()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:250:7:void* TaskExec_hook(void*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "../../../src/game/scheduler.cpp:58:6:void TaskSchedulerInit()",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:77:5:u32 GetStackSize(int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:218:6:void stackUsedCheck()",
+          "bytes": 52,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:238:6:void StackOverflowCheck(TASK*)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:135:6:void TaskSchedulerMain(TASK*)",
+          "bytes": 24,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:106:6:void TaskScheduler()",
+          "bytes": 20,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:290:7:TASK* TaskExec(int, TaskFunc, int)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:310:6:void TaskSleep(int)",
+          "bytes": 12,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:346:6:void TaskChain(TaskFunc, int)",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:374:6:void TaskExit()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:406:6:void TaskKill(TASK*)",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:399:6:void TaskKill(int)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:66:6:void TaskAllClear()",
+          "bytes": 16,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:439:6:void TaskSuspend(int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:448:6:void TaskSignal(int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:463:4:u8 TaskStatus(int)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:469:6:void SetTaskModelPtr(void*, TASK*)",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:480:6:void iTaskScheduler()",
+          "bytes": 8,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:497:7:TASK* iTaskExec(TaskFunc)",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:512:6:void iTaskKill()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:519:6:void iTaskExit()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:527:6:void iTaskSuspend()",
+          "bytes": 4,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:544:5:int iTaskStatus()",
+          "bytes": 0,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:552:17:void re4dc_task_dump()",
+          "bytes": 28,
+          "kind": "static"
+        },
+        {
+          "name": "D:/Bio4/Prog/scheduler.cpp:561:1:cpp)",
+          "bytes": 0,
+          "kind": "static"
+        }
+      ],
+      "provenance": "Actual current Make small object"
+    }
+  ],
+  "selected_event_references": {
+    "EventMgr::SetBin(char*, void*, void*, int)": [
+      "DatTbl::SetDat(char const*, void*, unsigned char, void*, unsigned char, int*)",
+      ".rodata._ZN8EventMgr6SetBinEPcPvS1_i.str1.4",
+      "pLog",
+      "cLog::err(int, int, char const*, ...)",
+      ".rodata._ZN8EventMgr6SetBinEPcPvS1_i.str1.4"
+    ],
+    "EventMgr::SetEvd(char*, void*, void*, int)": [
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      "pLog",
+      "cLog::err(int, int, char const*, ...)",
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      "DatTbl::GetDat(void**, unsigned char*, char const*, int*)",
+      "memset",
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      "DatTbl::GetDat(void**, unsigned char*, char const*, int*)",
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      "pLog",
+      "cLog::err(int, int, char const*, ...)",
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      "DatTbl::SetDat(char const*, void*, unsigned char, void*, unsigned char, int*)",
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      "memclr_asm",
+      "EventMgr::SetBin(char*, void*, void*, int)",
+      "DatTbl::GetWkNo(int*, char const*)",
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      "pLog",
+      "cLog::err(int, int, char const*, ...)"
+    ],
+    "EventMgr::GetEvd(void**, char*, int)": [
+      "DatTbl::GetDat(void**, unsigned char*, char const*, int*)",
+      ".rodata._ZN8EventMgr6GetEvdEPPvPci.str1.4",
+      "pLog",
+      "cLog::warn(int, int, char const*, ...)",
+      "strcat",
+      "HDReadDebugAlloc(char const*, void**, int)",
+      "EventMgr::SetEvd(char*, void*, void*, int)",
+      ".rodata._ZN8EventMgr6GetEvdEPPvPci.str1.4",
+      "cLog::err(int, int, char const*, ...)",
+      ".rodata._ZN8EventMgr6GetEvdEPPvPci.str1.4"
+    ],
+    "EventMgr::SetEvs(void*)": [
+      "EventMgr::SetEvd(char*, void*, void*, int)",
+      ".rodata._ZN8EventMgr6SetEvsEPv.str1.4",
+      "pLog",
+      "cLog::err(int, int, char const*, ...)",
+      ".rodata._ZN8EventMgr6SetEvsEPv.str1.4"
+    ],
+    "EventMgr::SetEvt(char*, Event**)": [
+      "pG",
+      "cManager<Event>::create(int)",
+      "EventMgr::GetEvd(void**, char*, int)",
+      "re4dc_cabin_carrier_event",
+      "Event::init(char*, EvtHeader*)",
+      "re4dc_cabin_event_bound",
+      "EvtMgr",
+      "strcpy",
+      ".rodata._ZN8EventMgr6SetEvtEPcPP5Event.str1.4",
+      "pLog",
+      "cLog::err(int, int, char const*, ...)",
+      ".rodata._ZN8EventMgr6SetEvtEPcPP5Event.str1.4",
+      "EventMgr::DelEvt(void*, int)",
+      ".rodata._ZN8EventMgr6SetEvtEPcPP5Event.str1.4",
+      "re4dc_missing",
+      ".rodata._ZN8EventMgr6SetEvtEPcPP5Event.str1.4"
+    ],
+    "EventMgr::SetEvt(void*, unsigned long*)": [
+      "pG",
+      ".rodata._ZN8EventMgr6SetEvdEPcPvS1_i.str1.4",
+      "EvtMgr",
+      "EventMgr::SetEvd(char*, void*, void*, int)",
+      "EventMgr::SetEvt(char*, Event**)",
+      ".rodata._ZN8EventMgr6SetEvtEPvPm.str1.4",
+      "pLog",
+      "cLog::err(int, int, char const*, ...)",
+      ".rodata._ZN8EventMgr6SetEvtEPvPm.str1.4",
+      ".rodata._ZN8EventMgr6SetEvtEPvPm.str1.4",
+      ".rodata._ZN8EventMgr6SetEvtEPvPm.str1.4"
+    ],
+    "EventMgr::EvtReadExec(char*, int, unsigned long)": [
+      "SceCheckEventStart",
+      "SceSleep",
+      ".rodata._ZN8EventMgr11EvtReadExecEPcim.str1.4",
+      "pLog",
+      "cLog::mes(int, int, char const*, ...)",
+      "SceEventStart",
+      "pG",
+      "EventMgr::EvtReadMram(char*, int, int*, int, unsigned long)",
+      "EvtMgr",
+      "EventMgr::SetEvt(void*, unsigned long*)",
+      "EvtMgr",
+      "EventMgr::IsAliveEvt(unsigned long*, int, int)",
+      "FadeSet",
+      "EventMgr::EvtFree(char*)",
+      ".rodata._ZN8EventMgr11EvtReadExecEPcim.str1.4",
+      "pLog",
+      "cLog::err(int, int, char const*, ...)",
+      "pG",
+      "CamCtrl",
+      "CameraControl::Comeback(int)",
+      "SceEventEnd"
+    ]
+  },
+  "source_subtotals": {
+    "EvtReadExec52_SetEvtData24_SetEvd752_SetBin20_SetDat52": 900,
+    "SetEvs40_SetEvd752_SetBin20_SetDat52": 864,
+    "GetEvd292_SetEvd752_SetBin20_SetDat52": 1116
+  },
+  "limits": [
+    "Unmeasured outer callers, libc/printf/device paths, IRQ/OS frames and dynamic target high-water remain outside these source-frame sums.",
+    "SetEvt(name) is called after SetEvd returns; its36-byte frame does not overlap this752-byte admission frame.",
+    "GetEvd finishes HDReadDebugAlloc before SetEvd; deep file-open temporaries must not be added as simultaneous admission frames."
+  ],
+  "qualifier_sha256": "7026280b6d888e0b6c0b41f5a9412f6ab7a2440c8034c546640641ab6ef61363"
+}
