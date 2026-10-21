@@ -1,0 +1,1000 @@
+{
+  "scope": "Original J source enemy death followed by original gameDiedemo default Continue through normal A only. No snapshot rollback, game-memory writes, state retarget, new build or stage.",
+  "runtime": "12a841d7c",
+  "elf_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "disc_sha256": "87ba0ee4f54b289a1c227328e58577e57f3d5d72df9c22f4e4de33c1fe6e016b",
+  "chain": [
+    {
+      "capture": "current-j-route-walk52",
+      "elapsed_s": 11.8,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "277589ec27a61f5e0eb10cb467b0c68c89c02b9d33c3244138782a2536d5561c",
+      "run_sha256": "d53764895c9b330107eb5733f57d258588fa6fe2252408dee13beb4a3009509f",
+      "controller_sha256": "d810130ab9fc6c644f473d72fe2688bf5ccbfcdda62570521a2cebdf80fc3371",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk52\\data\\disc.state"
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290945.546
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290945.593
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290945.609
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290945.64
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290945.656
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290945.687
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290945.703
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290945.75
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290945.765
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290945.828
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290945.843
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290945.89
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290945.906
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290945.937
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290945.953
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290945.984
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.0
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.078
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.093
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.125
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.14
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.14
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.171
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.187
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.203
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.25
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.265
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.312
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.328
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.359
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.375
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.406
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.421
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.468
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.5
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.546
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.562
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.562
+        },
+        {
+          "key": "dash",
+          "down": true,
+          "host_monotonic": 290946.593
+        },
+        {
+          "key": "forward",
+          "down": true,
+          "host_monotonic": 290946.593
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.593
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.609
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.64
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.796
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.812
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.828
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.843
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.859
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.89
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.906
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.937
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.968
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290946.984
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290946.984
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.0
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.031
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.062
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.078
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.093
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.093
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.125
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.125
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.156
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.171
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.203
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.218
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.234
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.265
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.281
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.296
+        },
+        {
+          "key": "dash",
+          "up": true,
+          "host_monotonic": 290947.328
+        },
+        {
+          "key": "forward",
+          "up": true,
+          "host_monotonic": 290947.328
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.328
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.343
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.375
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.406
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.421
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.437
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.468
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.484
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.5
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.546
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.562
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.562
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.578
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.625
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.656
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.671
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.703
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.703
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.718
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.765
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.796
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.796
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.812
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.843
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.859
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.906
+        },
+        {
+          "key": "dash",
+          "down": true,
+          "host_monotonic": 290947.937
+        },
+        {
+          "key": "forward",
+          "down": true,
+          "host_monotonic": 290947.937
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.937
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290947.953
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290947.968
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290948.0
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290948.015
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290948.046
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290948.078
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290948.093
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290948.109
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290948.14
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290948.156
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290948.187
+        },
+        {
+          "key": "dash",
+          "up": true,
+          "host_monotonic": 290948.203
+        },
+        {
+          "key": "forward",
+          "up": true,
+          "host_monotonic": 290948.203
+        },
+        {
+          "waypoint_reached": 0,
+          "target": [
+            -2000.0,
+            -3800.0
+          ],
+          "pos": [
+            -1939.2744140625,
+            184.184814453125,
+            -3837.967529296875
+          ]
+        },
+        {
+          "key": "back",
+          "down": true,
+          "host_monotonic": 290948.359
+        },
+        {
+          "key": "dash",
+          "down": true,
+          "host_monotonic": 290948.359
+        },
+        {
+          "key": "back",
+          "up": true,
+          "host_monotonic": 290948.609
+        },
+        {
+          "key": "dash",
+          "up": true,
+          "host_monotonic": 290948.609
+        },
+        {
+          "normal_back_and_B_quickturn": true,
+          "frame": 18218,
+          "starting_yaw": -2.3072280883789062,
+          "desired_angle_error": -2.6746082079353775
+        },
+        {
+          "key": "dash",
+          "down": true,
+          "host_monotonic": 290952.25
+        },
+        {
+          "key": "forward",
+          "down": true,
+          "host_monotonic": 290952.25
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.25
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.265
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.281
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.296
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.328
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.343
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.359
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.39
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.406
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.437
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.468
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.484
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.5
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.515
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.531
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.578
+        },
+        {
+          "key": "dash",
+          "up": true,
+          "host_monotonic": 290952.593
+        },
+        {
+          "key": "forward",
+          "up": true,
+          "host_monotonic": 290952.593
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.593
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.609
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.625
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.656
+        },
+        {
+          "key": "left",
+          "down": true,
+          "host_monotonic": 290952.671
+        },
+        {
+          "key": "left",
+          "up": true,
+          "host_monotonic": 290952.718
+        },
+        {
+          "abort": "AssertionError(('original source death flag active', '0x3180100'))"
+        },
+        {
+          "owned_close_on_guard": true
+        }
+      ]
+    },
+    {
+      "capture": "current-j-route-walk53",
+      "elapsed_s": 26.3,
+      "errors": [],
+      "emulator_exited": true,
+      "state_sha256": "2e988df8f6fe9ad3407da9360fe67c6ec49a1451e47b6510c0854e925abdd811",
+      "run_sha256": "8f2bc4b0d1f2dc6aa23a63c62548f6c827ffbdcbadeb451d6d9cc0f85dacc48e",
+      "controller_sha256": "5f7ec0218ae50e7fa76dd248b6e97deed7fa44abfb4c3b25ff3891b7f9f25fa6",
+      "events": [
+        {
+          "exact_owned_snapshot_loaded_before_input": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\current-j-route-walk53\\data\\disc.state"
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291272.218
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291272.515
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291273.125
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291273.421
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291274.031
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291274.328
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291274.937
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291275.25
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291275.875
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291276.187
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291276.796
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291277.093
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291277.703
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291278.0
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291278.609
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291278.906
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291279.515
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291279.812
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291280.421
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291280.718
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291281.328
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291281.625
+        },
+        {
+          "key": "action",
+          "down": true,
+          "host_monotonic": 291282.234
+        },
+        {
+          "key": "action",
+          "up": true,
+          "host_monotonic": 291282.531
+        },
+        {
+          "original_Continue_recovered": {
+            "frame": 11821,
+            "room": "0x207",
+            "phase": [
+              3,
+              0
+            ],
+            "Stop": "0x0",
+            "death_flags": "0x3000100",
+            "flags5010": "0x200",
+            "SSLoop": 0,
+            "life": 1200,
+            "maxlife": 1200,
+            "ashley_life": 600,
+            "maxashley": 600,
+            "Continue_source_log": true
+          },
+          "initial_death_observed": true
+        },
+        {
+          "owned_close_after_original_Continue": true
+        },
+        {
+          "owned_close_at_input_deadline": true
+        }
+      ]
+    }
+  ],
+  "recovery": {
+    "scope": "Immutable current J original no-warp CardLoad lineage, four exact ELF anchors; original inventory and RSF read-only. No state changes.",
+    "state_sha256": "2e988df8f6fe9ad3407da9360fe67c6ec49a1451e47b6510c0854e925abdd811",
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x207",
+    "chapter": 6,
+    "source_frame": 11821,
+    "health": [
+      1200,
+      1200,
+      600,
+      600
+    ],
+    "Stop": "0x0",
+    "SSLoop": 0,
+    "death_flags": "0x3000100",
+    "door_flags": "0x884002b4",
+    "r207_RSF": "0x86200000",
+    "player_pos": [
+      523.8322143554688,
+      126.740478515625,
+      -49.904441833496094
+    ],
+    "partner_pos": [
+      523.8602905273438,
+      126.741455078125,
+      -49.92855453491211
+    ],
+    "items": [
+      {
+        "id": "0x7c",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0x23",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 10
+      },
+      {
+        "id": "0x4",
+        "num": 10,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xac",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      },
+      {
+        "id": "0xad",
+        "num": 1,
+        "flags": 1,
+        "type": 0,
+        "bullet": 0
+      }
+    ]
+  },
+  "source_contract": "src/game/game.cpp gameDiedemo: default sel1; normal A opens/accepts Continue; source --CONTINUE SELECT!! precedes GameContinue(0).",
+  "limits": [
+    "Original retry reset r207 puzzle and restored full1200/600; no sword placement or chapter completion credited from this return.",
+    "Death52 retained; K05 cache-budget proof frozen. No hardware IO/performance or full native/death-scene acceptance claimed."
+  ]
+}
