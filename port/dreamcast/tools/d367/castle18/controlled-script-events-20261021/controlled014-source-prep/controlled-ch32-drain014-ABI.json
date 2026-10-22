@@ -48,7 +48,8 @@
     },
     "cEm": {
       "hp": 800,
-      "emset_no": 920
+      "emset_no": 920,
+      "status": 964
     },
     "cManager<cEm>": {
       "pAlive": 20
@@ -76,7 +77,8 @@
     "SceMesSet": "8c14efc4 attr1002;flags20 adds10;native slot0/current sel-1",
     "SceMesGetSelection": "8c14f0fc native cMes+ed signedbyte waits0",
     "Action_set": "8c087974 stride24/work68/func+4,arg+8,type14,button15,d16",
-    "Message_code08": "8c110f0c; nativeA=>cur+1;attr00800000Up/Down elseLeft/Right"
+    "Message_code08": "8c110f0c; nativeA=>cur+1;attr00800000Up/Down elseLeft/Right",
+    "SceCheckEmAlive": "8c14f178 be_flag&201==1 thencheckStatus(5); cEm::checkStatus8c0210fc usesstatus+3c4 bit1<<5. Actor68 active classification matches source, HP is separate observation."
   },
   "native_front_observation": "Matrix-derived front is UNCLIPPED diagnostic. Source hit08, type1-only checkType and registered action observe actual engine collision-clipped test result; no numeric clippedpoint reconstruction or function invocation.",
   "write_allowlist": [

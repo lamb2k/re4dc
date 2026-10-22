@@ -95,9 +95,9 @@ def sample():
  row['message0']=native_message();row['message0_source_identity']=message_identity(pg,row['message0'])
  p=u32(0x8c39d3b8+20);seen=set();actors=[]
  while p and p not in seen and len(seen)<128:
-  if not inram(p,0x3a0):return None
-  seen.add(p);b=read(p,0x3a0);actors.append(dict(ptr=hex(p),id=b[0x100],type=b[0x101],source_list=b[0x398],hp=struct.unpack_from('<h',b,0x320)[0],be_flag=hex(struct.unpack_from('<I',b,4)[0]),routines=list(b[0xfc:0x100])));p=struct.unpack_from('<I',b,8)[0]
- row['actors']=actors;row['source68_active_observed']=any(v['source_list']==0x68 and int(v['be_flag'],16)&1 and v['hp']>0 for v in actors)
+  if not inram(p,0x3c8):return None
+  seen.add(p);b=read(p,0x3c8);actors.append(dict(ptr=hex(p),id=b[0x100],type=b[0x101],source_list=b[0x398],hp=struct.unpack_from('<h',b,0x320)[0],native_status=hex(struct.unpack_from('<I',b,0x3c4)[0]),be_flag=hex(struct.unpack_from('<I',b,4)[0]),routines=list(b[0xfc:0x100])));p=struct.unpack_from('<I',b,8)[0]
+ row['actors']=actors;row['source68_active_observed']=any(v['source_list']==0x68 and int(v['be_flag'],16)&0x201==1 and int(v['native_status'],16)&0x20 for v in actors)
  if stamp!=(u32(pg+0x51e4),read(pg+0x20,2))or pg!=u32(0x8c2e91dc)or pl!=u32(0x8c39d700):return None
  return row
 

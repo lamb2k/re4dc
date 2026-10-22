@@ -1,0 +1,114 @@
+{
+  "scope": "Final014 SOURCE qualification CLEAR; no guest/build/image/new allocation. Frozen c2b/dbdb/3d011 candidate is ready for root exactlaunch review only.",
+  "created_utc": "2026-10-22T05:30:53.797568+00:00",
+  "source_review_commit": "54c05c140f67b4b8c9fd6e45a8c6103aa80c75dc",
+  "exact_final": {
+    "observe-controlled-ch32-drain014.py": "c2b0331770e8f013e3d68a1522814e8d2b655eb2595cd11d62998a72cda31688",
+    "run-controlled-ch32-drain014.py": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+    "controlled-ch32-drain014-pins.json": "3d01155a3c1bd7c4b4c85c1d1d8f23b5ced1d94dd1626fdb9ffac9bfb5f331bd",
+    "CONTROLLED014-SOURCE-LAUNCH-PROPOSAL.json": "79022fc5cbf8d5bae2527ef844262697aef368d4efcf359f4139fa259df98955"
+  },
+  "reviewfiles": {
+    "ACTUAL-ELF-ANCHORS-SYMBOLS.json": {
+      "bytes": 1914,
+      "sha256": "087af04f462fb2a6d32cf2d3e25e7aed4c5451cc641feb4e4d865ec4415c893b"
+    },
+    "audit-fresh-dwarf35-types-v2.py": {
+      "bytes": 4095,
+      "sha256": "1ed69d37356ddb6a477131d1e8ea01257e2cf5c262ab3f52b5c9a4dcd555b22f"
+    },
+    "audit-fresh-dwarf35-types.py": {
+      "bytes": 4066,
+      "sha256": "4b6988ce3d3abbc70d458d39ec6f3fbf334d87ef51e08bbf49ed3b5bf4ec3a54"
+    },
+    "audit-fresh-dwarf35.py": {
+      "bytes": 3781,
+      "sha256": "dbf0ed911198ffd3ccd12456f5faf928e5aa9a4aa264fa882183099084e2d6f9"
+    },
+    "finish-implementation-review-v2.py": {
+      "bytes": 9056,
+      "sha256": "1b2f2f7b7453e2101ff3951b2f7da399229298b225138d69234b65c6a09ea190"
+    },
+    "finish-implementation-review.py": {
+      "bytes": 9217,
+      "sha256": "891ee37d3c9e8b6fb6a6cfe0fe1448d1cc8584ef1719e2c9e16e34fe1cf41558"
+    },
+    "FRESH-DWARF35-TYPES.json": {
+      "bytes": 7665,
+      "sha256": "1023a9cda8f92c702f117ce60759e01a61c2b459945dd1bdb257fe7c112ae39d"
+    },
+    "FRESH-DWARF35.json": {
+      "bytes": 6021,
+      "sha256": "8aabd32886512bdce1aea766df6648eae6724cde9d4bf329716029ec90b5c33d"
+    },
+    "FROZEN-INPUTS.json": {
+      "bytes": 1848,
+      "sha256": "74469d0daa04b8846c6f55919b4c9f18e777420a50c1b9176a69e88b7ed67490"
+    },
+    "INDEPENDENT-27-PREDICATES.json": {
+      "bytes": 1299,
+      "sha256": "195121da5a7953ab39b659b6847e04611c35e1588cac4754e063d5f59637cef6"
+    },
+    "INDEPENDENT-DEFAULT-PREPARE.json": {
+      "bytes": 578,
+      "sha256": "7638305c9dc9315c9b78c5c7d6de0e8d5edb9a352e402fed682dc304fc3146b9"
+    },
+    "independent-existing27.py": {
+      "bytes": 3543,
+      "sha256": "a8bcf80bcebc27973b23614360ba8bace7bb9948a208df6992d87e6223a51994"
+    },
+    "INDEPENDENT-STARTUP-FIX-PASS.json": {
+      "bytes": 540,
+      "sha256": "3c5bda0baa727b2f6ed430e9a3cbb8a061b1340963669e3fa7f21e060d521980"
+    },
+    "independent-startupfix.py": {
+      "bytes": 2379,
+      "sha256": "89a9a7d6494109d21b62af2bd67cb052b18a186b4a22621f2912d1405e192f5f"
+    },
+    "repro-startup-failure.py": {
+      "bytes": 1804,
+      "sha256": "e2f2b7912606c1c46cebdd2055d5bba485101f5560c8d96f8dfce78d234ddae4"
+    },
+    "REVIEW-FINAL.json": {
+      "bytes": 10878,
+      "sha256": "cc1a8ae7c81e2e9e262a549aabcd71db9554a54407f723c21016a2448ef50969"
+    },
+    "SHA256SUMS": {
+      "bytes": 3047,
+      "sha256": "15f4b40dda4340b71b6ef63545752214f9fd64f3968d176b43d8d77ac9a0933e"
+    },
+    "STARTUP-FAILURE-REPRO.json": {
+      "bytes": 496,
+      "sha256": "bc1fdfc9eb2c1d658d5e2841ddeb400f5786e851a2011246938a03d21225a150"
+    }
+  },
+  "additional_launch_binding": {
+    "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-castle18\\port\\dreamcast\\tools\\d367\\trace_lock.sh",
+    "sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+    "requirement": "Root should recheck/pin shared trace_lock at launch review; this record adds no allocation and does not mutate reviewed19-input pins."
+  },
+  "qualified": {
+    "native_offsets": 35,
+    "independent_critical_widths": 13,
+    "independent_symbols": 18,
+    "planned_live_PT_LOAD_anchors": 5,
+    "pure_input_predicate_tests": 27,
+    "focused_fake_helper_cleanup_case": true,
+    "default_19_pin_prepare": true
+  },
+  "protected_actual_inputs": {
+    "route-walk-controlled-native-radio013/data/disc.state": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+    "route-walk127/data/disc.state": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294/data/disc.state": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258",
+    "route-walk-controlled-event009/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0"
+  },
+  "never_done": [
+    "Flycast/guest",
+    "liveUI/action acceptance",
+    "drain event acceptance",
+    "build/image/stage",
+    "productionrecipe/release/SD/thirdparty actions"
+  ],
+  "root_required_next": "Read exact79022proposal/argv/resources+review, freshprocess/ownership/disk/global16/castle2 andpeercharges, optionally allocateONE014 viaDRAIN014-ROOT-ALLOCATION.json. No automatic retry or nextguest.",
+  "source_budget": "Finalcandidate tools/metadata+mirrors well below2MiB incremental global64MiBsourcepeer. Old4240/3d9fcandidate immutableGit01ae4af59; oldCwrapper/proposals preservedadditively."
+}

@@ -1,16 +1,16 @@
 {
   "scope": "Source-qualified014 candidate and launch proposal only. NO guest/build/image allocation or execution. Independent perf21_scene review pending.",
-  "observer": "4240eedd162e968b4b381005bd19ea61c159baa64644719c7ef934764205750e",
-  "wrapper": "3d9f0169b3603a0f3135d5b5b3cc1372861be466922baef982795e85f58d1c42",
+  "observer": "c2b0331770e8f013e3d68a1522814e8d2b655eb2595cd11d62998a72cda31688",
+  "wrapper": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
   "shell": "8db6799ad4d6fc01256a577b27ee89da224c7aa69be8117b79b44d615c8b9936",
-  "pins": "6495d4b3de069c4006428c3b94e3e84a8eb7804b31424578bc1a691b4f956890",
+  "pins": "3d01155a3c1bd7c4b4c85c1d1d8f23b5ced1d94dd1626fdb9ffac9bfb5f331bd",
   "fixture": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe",
-  "ABI": "f6726b590fe7be21f2ec257da8a96af595e3d01b7d703dd4ddc7bc4a92f74745",
+  "ABI": "7c1d549c21590c4a6027f784cca4a0e995489beb4cbc2b37333dd3f7f3bdecea",
   "DWARF": "ac0c7fb410a572522b494954f906250e6194835dcd21690031ec5cbb8725fc2b",
   "message0_identity": "d9954a3b9bac1b35b31f953323b4e820798a4514192a88d6d9c75b0e919e33fb",
-  "focused_source_checks": "446e0978209c5be9365719adbead528e2a721e28e239c57d78bfe70d6b7a69a6",
+  "focused_source_checks": "195121da5a7953ab39b659b6847e04611c35e1588cac4754e063d5f59637cef6",
   "source_checks_pass": 27,
-  "native_offset_checks": 34,
+  "native_offset_checks": 35,
   "root_command": [
     "wsl.exe",
     "-d",
@@ -25,8 +25,8 @@
   "allocation_required": {
     "file": "DRAIN014-ROOT-ALLOCATION.json",
     "allocated014": true,
-    "wrapper_sha256": "3d9f0169b3603a0f3135d5b5b3cc1372861be466922baef982795e85f58d1c42",
-    "pins_sha256": "6495d4b3de069c4006428c3b94e3e84a8eb7804b31424578bc1a691b4f956890"
+    "wrapper_sha256": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+    "pins_sha256": "3d01155a3c1bd7c4b4c85c1d1d8f23b5ced1d94dd1626fdb9ffac9bfb5f331bd"
   },
   "resources": {
     "start_free_bytes": 20342374400,
@@ -47,5 +47,11 @@
     "Source68 absence alone is not a proven cap hold; inspect original log/cap reason separately",
     "Camouflage CAST failure remains independent; no performance/release/hardwareclaim"
   ],
-  "additional_guards": "5live32B maincode/vtable PT_LOAD anchors; transient readiness/coherence onlyskipsinput, preserves fullboundedobservation. No guestexecuted."
+  "additional_guards": "5live32B maincode/vtable PT_LOAD anchors; transient readiness/coherence onlyskipsinput, preserves fullboundedobservation. No guestexecuted.",
+  "final_candidate": "observerc2b033 active classification; wrapperdbdb673 protected helperstartup cleanup. Final independent delta review pending; no guest allocation.",
+  "startup_cleanup_case": {
+    "path": "controlled-ch32-drain014-startup-cleanup-source-case.json",
+    "sha256": "3c5bda0baa727b2f6ed430e9a3cbb8a061b1340963669e3fa7f21e060d521980",
+    "scope": "One focused actualwrapperAST fake-helpercase, zero OSchild/guest/runtimefiles; source-only"
+  }
 }

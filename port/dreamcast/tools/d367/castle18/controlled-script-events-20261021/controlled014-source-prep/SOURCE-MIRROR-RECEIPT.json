@@ -1,13 +1,17 @@
 {
-  "scope": "Source-only exactCbytes mirrored; folder-local -text preserves raw hash identity through Git. Not a guest/build/image or actualinput/event result. Independentfinalreview pending.",
+  "scope": "Final c2b/dbdb SOURCE-qualified exactC/Git mirror, independentreview54c05c140. No guest/allocation/build/image. Prior initialsource mirrorreceipt preservedadditively.",
   "files": {
     "observe-controlled-ch32-drain014.py": {
-      "sha256": "4240eedd162e968b4b381005bd19ea61c159baa64644719c7ef934764205750e",
-      "bytes": 16643
+      "sha256": "c2b0331770e8f013e3d68a1522814e8d2b655eb2595cd11d62998a72cda31688",
+      "bytes": 16727
     },
-    "run-controlled-ch32-drain014.py": {
-      "sha256": "3d9f0169b3603a0f3135d5b5b3cc1372861be466922baef982795e85f58d1c42",
-      "bytes": 6285
+    ".gitattributes": {
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "bytes": 8
+    },
+    "SOURCE-MIRROR-RECEIPT-before-final-review.json": {
+      "sha256": "80dd58beaeb9090d5ff553e008a9b68e9145a7236231b2272659ad1dc8e4a3de",
+      "bytes": 2211
     },
     "run-controlled-ch32-drain014.sh": {
       "sha256": "8db6799ad4d6fc01256a577b27ee89da224c7aa69be8117b79b44d615c8b9936",
@@ -18,37 +22,66 @@
       "bytes": 159
     },
     "controlled-ch32-drain014-ABI.json": {
-      "sha256": "f6726b590fe7be21f2ec257da8a96af595e3d01b7d703dd4ddc7bc4a92f74745",
-      "bytes": 3167
+      "sha256": "7c1d549c21590c4a6027f784cca4a0e995489beb4cbc2b37333dd3f7f3bdecea",
+      "bytes": 3383
+    },
+    "run-controlled-ch32-drain014.py": {
+      "sha256": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+      "bytes": 7304
     },
     "controlled-ch32-drain014-frozen-DWARF.json": {
       "sha256": "ac0c7fb410a572522b494954f906250e6194835dcd21690031ec5cbb8725fc2b",
       "bytes": 35837
     },
-    "controlled-ch32-drain014-room-message0.json": {
-      "sha256": "d9954a3b9bac1b35b31f953323b4e820798a4514192a88d6d9c75b0e919e33fb",
-      "bytes": 1877
+    "CONTROLLED014-SOURCE-LAUNCH-PROPOSAL-before-helper-cleanup.json": {
+      "sha256": "f75e1e6ff6a2cdb89544f29aec9b6e7e993edc5944f898666dee87856dd7a576",
+      "bytes": 3266
     },
     "controlled-ch32-drain014-pins.json": {
-      "sha256": "6495d4b3de069c4006428c3b94e3e84a8eb7804b31424578bc1a691b4f956890",
+      "sha256": "3d01155a3c1bd7c4b4c85c1d1d8f23b5ced1d94dd1626fdb9ffac9bfb5f331bd",
       "bytes": 3239
     },
-    "controlled-ch32-drain014-focused-source-checks.json": {
-      "sha256": "446e0978209c5be9365719adbead528e2a721e28e239c57d78bfe70d6b7a69a6",
-      "bytes": 1299
+    "CONTROLLED014-SOURCE-LAUNCH-PROPOSAL-before-actor-classification.json": {
+      "sha256": "2f7a1250ef40d7f7b5473e94b42351857fb8b75c76c59f72e338d3a413cd9a3c",
+      "bytes": 3118
     },
-    "test-controlled014-source-predicates.py": {
-      "sha256": "96a8462e9455352fb2509fc5266220cf39f17892ac71622be4e2984d6394cc90",
-      "bytes": 3357
+    "controlled-ch32-drain014-focused-source-checks.json": {
+      "sha256": "195121da5a7953ab39b659b6847e04611c35e1588cac4754e063d5f59637cef6",
+      "bytes": 1299
     },
     "extract-controlled014-frozen-DWARF.py": {
       "sha256": "57f45dc162b9b3c9d140267d7479b43ed6e319faf903db7420f25a166864694f",
       "bytes": 1932
     },
+    "controlled-ch32-drain014-room-message0.json": {
+      "sha256": "d9954a3b9bac1b35b31f953323b4e820798a4514192a88d6d9c75b0e919e33fb",
+      "bytes": 1877
+    },
+    "controlled-ch32-drain014-startup-cleanup-source-case.json": {
+      "sha256": "3c5bda0baa727b2f6ed430e9a3cbb8a061b1340963669e3fa7f21e060d521980",
+      "bytes": 540
+    },
+    "test-controlled014-helper-startup-cleanup.py": {
+      "sha256": "187aa93be5e1d95a634b7bc84f766ad31fbb19dbc36a8647727712ea5ec7ab0d",
+      "bytes": 2190
+    },
+    "test-controlled014-source-predicates.py": {
+      "sha256": "96a8462e9455352fb2509fc5266220cf39f17892ac71622be4e2984d6394cc90",
+      "bytes": 3357
+    },
     "CONTROLLED014-SOURCE-LAUNCH-PROPOSAL.json": {
-      "sha256": "2f7a1250ef40d7f7b5473e94b42351857fb8b75c76c59f72e338d3a413cd9a3c",
-      "bytes": 3118
+      "sha256": "79022fc5cbf8d5bae2527ef844262697aef368d4efcf359f4139fa259df98955",
+      "bytes": 3589
+    },
+    "DRAIN014-SOURCE-QUALIFIED-HANDBACK.json": {
+      "sha256": "5e63f4a4c5f3aadba8541af4bfbcb992f52cb69eb477fb42482e1e5cb081b079",
+      "bytes": 5318
+    },
+    "run-controlled-ch32-drain014-before-helper-cleanup-fix.py": {
+      "sha256": "3d9f0169b3603a0f3135d5b5b3cc1372861be466922baef982795e85f58d1c42",
+      "bytes": 6285
     }
   },
-  "C_plus_checkout_mirror_bytes": 154542
+  "checkout_bytes": 101993,
+  "C_plus_checkout_source_evidence": "Under2MiB incremental; exactcheckout currently~102KB plusCtools/metadata/helpers."
 }

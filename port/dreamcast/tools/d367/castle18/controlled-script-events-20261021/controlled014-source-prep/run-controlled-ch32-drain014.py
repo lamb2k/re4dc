@@ -28,19 +28,42 @@ segment=D/'segments'/cap.name;assert not segment.exists();segment.mkdir(parents=
 for n in ['track03.iso','track02.raw']:os.link(D/'master'/n,segment/n)
 proof=dict(scope='CONTROLLED new cold205 active DBG_WARP placement/chapter setup, ordinary native lever+Yes and original drain/end. No snapshot seed, teleported authentic state, atfunc/HP/RSF/AI/outcome injection, build or fullimagecopy. Private009VMU copied but nativeLoad not performed; original inputs immutable.',inputs=pins,argv=argv,fixture_sha256=sha(fixture),observer_sha256=sha(observer),supervisor_sha256=sha(guard),programme_binding_receipt_sha256=sha(D/'frozen-master-programme-binding-20261021.json'),environment={n:os.environ.get(n)for n in ['RE4DC_EMU','TRACE_SLOTS','TRACE_LOCK_OWNER']},admission_bytes=admission,runtime_floor_bytes=runtime,capture_cap_bytes=60*1024**2,raw_seconds=41,normal_close_seconds=39,absolute_seconds=47.5,global16=True,lane2=True,protected=protected,initial_process_inventory=processes,acceptance='Actual native clipped-hit/action, exact room205 message0 hash+typed slot0, ordinaryYes, originalRSF0/1+area changes+Stop/eventreturn+source68 actual/held qualification. Earlyflags alone insufficient; no optional upperdoor/nextroom in014 scope.')
 (D/(cap.name+'-preparation.json')).write_text(json.dumps(proof,indent=2)+'\n')
-watch=subprocess.Popen([sys.executable,str(guard),str(cap)],creationflags=subprocess.CREATE_NO_WINDOW);obs=subprocess.Popen([sys.executable,str(observer),str(cap)],creationflags=subprocess.CREATE_NO_WINDOW)
+watch=None;obs=None;harness_started=False
 try:
+ watch=subprocess.Popen([sys.executable,str(guard),str(cap)],creationflags=subprocess.CREATE_NO_WINDOW)
+ obs=subprocess.Popen([sys.executable,str(observer),str(cap)],creationflags=subprocess.CREATE_NO_WINDOW)
  until=time.monotonic()+15
  while not(D/(cap.name+'-observer-ready.json')).exists():assert obs.poll()is None and time.monotonic()<until;time.sleep(.05)
+ harness_started=True
  subprocess.run(argv,check=True)
 finally:
- watch.wait(timeout=85)
- if obs.poll()is None:
-  try:obs.wait(timeout=5)
-  except subprocess.TimeoutExpired:obs.terminate();obs.wait(timeout=3)
- for name,digest in protected.items():assert sha(D/name)==digest,('Protected input changed',name)
- assert (cap/'owned-resource-guard.json').exists(),'No retained supervisor receipt'
- receipt=json.loads((cap/'owned-resource-guard.json').read_text());assert receipt['process_exited']and receipt['closed_identity']['retained_handle_signaled'],'Exact owned exit unverified'
- assert watch.returncode==0,('V5 failure preserved',watch.returncode)
- assert obs.returncode==0,('Observer failure preserved',obs.returncode)
+ try:
+  if not harness_started:
+   # These exact helper objects cannot own a guest: the harness has never been invoked.
+   # Any unexpected ownership artifact retains the watcher rather than guessing closure.
+   assert not(cap/'owned-process.json').exists(),'Unexpected guest ownership before harness invocation'
+   cleanup_errors=[]
+   for label,helper in [('observer',obs),('watcher',watch)]:
+    if helper is None:continue
+    try:
+     if helper.poll()is None:helper.terminate()
+     helper.wait(timeout=5)
+    except BaseException as e:cleanup_errors.append((label,repr(e)))
+   assert not cleanup_errors,('Startup helper cleanup failed',cleanup_errors)
+  else:
+   try:
+    assert watch is not None
+    watch.wait(timeout=85)  # Never terminate the guest's independent V5 watcher here.
+   finally:
+    # A watcher wait failure must not bypass reaping this exact owned observer helper.
+    if obs is not None and obs.poll()is None:
+     try:obs.wait(timeout=5)
+     except subprocess.TimeoutExpired:obs.terminate();obs.wait(timeout=3)
+ finally:
+  for name,digest in protected.items():assert sha(D/name)==digest,('Protected input changed',name)
+ if harness_started:
+  assert (cap/'owned-resource-guard.json').exists(),'No retained supervisor receipt'
+  receipt=json.loads((cap/'owned-resource-guard.json').read_text());assert receipt['process_exited']and receipt['closed_identity']['retained_handle_signaled'],'Exact owned exit unverified'
+  assert watch.returncode==0,('V5 failure preserved',watch.returncode)
+  assert obs.returncode==0,('Observer failure preserved',obs.returncode)
 print('Controlled cold205 drain014 closed; audit original gameplay outcome independently')

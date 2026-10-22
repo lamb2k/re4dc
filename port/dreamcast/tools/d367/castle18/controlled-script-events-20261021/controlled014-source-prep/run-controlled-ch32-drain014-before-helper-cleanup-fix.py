@@ -1,0 +1,46 @@
+"""Source-qualified cold205 drain014; default checks only. Exact root allocation required to execute."""
+from pathlib import Path
+import sys,json,hashlib,shutil,subprocess,os,time,argparse
+L=Path(__file__).parent;R=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21');D=R/'recovered-j-content-20261021';cap=D/'route-walk-controlled-ch32-drain014'
+sha=lambda p:hashlib.file_digest(p.open('rb'),'sha256').hexdigest()
+ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--execute-allocated014',action='store_true');a=ap.parse_args()
+fixture=L/'controlled-ch32-drain014-warp.txt';observer=L/'observe-controlled-ch32-drain014.py';guard=L/'guard-resume-41inner-47absolute-resources-v5.py';vmu=D/'route-walk-controlled-event009/data/T0000_vmu_save_A1.bin'
+pinpath=L/'controlled-ch32-drain014-pins.json';pins=json.loads(pinpath.read_text(encoding='utf-8'))
+actual=[fixture,observer,guard,vmu,L/'controlled-ch32-drain014-ABI.json',L/'controlled-ch32-drain014-room-message0.json',R/'tools/fp_run_ram.py']
+for p in actual:assert str(p)in pins,('Actual argv/dependency is not pinned',str(p))
+for name,digest in pins.items():assert sha(Path(name))==digest,('Input identity mismatch',name)
+assert os.environ.get('RE4DC_EMU','')!='console','This allocation is native Windows Flycast only'
+assert sha(guard)=='7aa4113d44b5bab5b1010649a432ed1d50e34aaf4de7fb4899aaf692055b0ba0'
+protected={'route-walk127/data/disc.state':'ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16','route-walk294/data/disc.state':'cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258','route-walk-controlled-native-radio013/data/disc.state':'97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13','route-walk-controlled-event009/data/T0000_vmu_save_A1.bin':'425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0'}
+for name,digest in protected.items():assert sha(D/name)==digest
+compile(observer.read_text(encoding='utf-8'),str(observer),'exec')
+assert fixture.read_text().splitlines()==['squeeze 49152 0','name castle21-CONTROLLED-ch32-drain014','room 0x205','jp 0','chapter 7','pos 46118.5419921875 996.8269653320312 48787.291015625','ang 0','alivelog 30','dump']
+admission=20342374400;runtime=19394461696
+argv=[sys.executable,str(R/'tools/fp_run_ram.py'),'--base',str(D/'master'),'--cap',str(cap),'--syms',(R/'builds/c21jmW/syms.txt').read_text().strip(),'--seconds','41','--vmu',str(vmu),'--warp',str(fixture),'--period','0','--name','castle21-CONTROLLED-original205-drain014']
+if not a.execute_allocated014:
+ print(json.dumps(dict(prepared_only=True,no_guest=True,observer_sha256=sha(observer),wrapper_sha256=sha(Path(__file__)),pins_sha256=sha(pinpath),argv=argv,admission_bytes=admission,runtime_floor=runtime,capture_cap=60*1024**2,global_limit=16,lane_limit=2,source_only=True)));sys.exit(0)
+allocation=json.loads((L/'DRAIN014-ROOT-ALLOCATION.json').read_text(encoding='utf-8'));assert allocation['allocated014']is True and allocation['wrapper_sha256']==sha(Path(__file__))and allocation['pins_sha256']==sha(pinpath),'Exact one-run root allocation required'
+assert not cap.exists()and not(D/(cap.name+'-observer-ready.json')).exists()
+assert shutil.disk_usage(D).free>=admission,('Fresh disk admission',admission)
+cmd="$p=@(Get-CimInstance Win32_Process -Filter \"Name LIKE 'Flycast%'\"); ConvertTo-Json -InputObject @($p | Select-Object ProcessId,ExecutablePath) -Compress"
+p=subprocess.run(['powershell.exe','-NoProfile','-Command',cmd],capture_output=True,text=True,check=True);processes=json.loads(p.stdout or'[]');assert isinstance(processes,list)and len(processes)<16,'Global Flycast16 admission';assert sum(str(v.get('ExecutablePath','')).lower().startswith(str(D).lower())for v in processes)<2,'Castle2 admission'
+segment=D/'segments'/cap.name;assert not segment.exists();segment.mkdir(parents=True)
+for n in ['track03.iso','track02.raw']:os.link(D/'master'/n,segment/n)
+proof=dict(scope='CONTROLLED new cold205 active DBG_WARP placement/chapter setup, ordinary native lever+Yes and original drain/end. No snapshot seed, teleported authentic state, atfunc/HP/RSF/AI/outcome injection, build or fullimagecopy. Private009VMU copied but nativeLoad not performed; original inputs immutable.',inputs=pins,argv=argv,fixture_sha256=sha(fixture),observer_sha256=sha(observer),supervisor_sha256=sha(guard),programme_binding_receipt_sha256=sha(D/'frozen-master-programme-binding-20261021.json'),environment={n:os.environ.get(n)for n in ['RE4DC_EMU','TRACE_SLOTS','TRACE_LOCK_OWNER']},admission_bytes=admission,runtime_floor_bytes=runtime,capture_cap_bytes=60*1024**2,raw_seconds=41,normal_close_seconds=39,absolute_seconds=47.5,global16=True,lane2=True,protected=protected,initial_process_inventory=processes,acceptance='Actual native clipped-hit/action, exact room205 message0 hash+typed slot0, ordinaryYes, originalRSF0/1+area changes+Stop/eventreturn+source68 actual/held qualification. Earlyflags alone insufficient; no optional upperdoor/nextroom in014 scope.')
+(D/(cap.name+'-preparation.json')).write_text(json.dumps(proof,indent=2)+'\n')
+watch=subprocess.Popen([sys.executable,str(guard),str(cap)],creationflags=subprocess.CREATE_NO_WINDOW);obs=subprocess.Popen([sys.executable,str(observer),str(cap)],creationflags=subprocess.CREATE_NO_WINDOW)
+try:
+ until=time.monotonic()+15
+ while not(D/(cap.name+'-observer-ready.json')).exists():assert obs.poll()is None and time.monotonic()<until;time.sleep(.05)
+ subprocess.run(argv,check=True)
+finally:
+ watch.wait(timeout=85)
+ if obs.poll()is None:
+  try:obs.wait(timeout=5)
+  except subprocess.TimeoutExpired:obs.terminate();obs.wait(timeout=3)
+ for name,digest in protected.items():assert sha(D/name)==digest,('Protected input changed',name)
+ assert (cap/'owned-resource-guard.json').exists(),'No retained supervisor receipt'
+ receipt=json.loads((cap/'owned-resource-guard.json').read_text());assert receipt['process_exited']and receipt['closed_identity']['retained_handle_signaled'],'Exact owned exit unverified'
+ assert watch.returncode==0,('V5 failure preserved',watch.returncode)
+ assert obs.returncode==0,('Observer failure preserved',obs.returncode)
+print('Controlled cold205 drain014 closed; audit original gameplay outcome independently')
