@@ -599,7 +599,7 @@ retry:
     {
         static int injected;
 
-        if (pG->room_id == 0x10C && (RE4DC_EM_READ_FAIL_INJECT >= 99 || injected < RE4DC_EM_READ_FAIL_INJECT)) {
+        if (pG->room_id == RE4DC_EM_READ_FAIL_INJECT_ROOM && (RE4DC_EM_READ_FAIL_INJECT >= 99 || injected < RE4DC_EM_READ_FAIL_INJECT)) {
             injected++;
             req = -3;
             goto issued;

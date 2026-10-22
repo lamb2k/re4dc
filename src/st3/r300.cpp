@@ -982,7 +982,7 @@ static void r300_find_camera_event()
         em2.setFindPL();
         CamCtrl.CutCall(0xA);
         SceSleep(0xF);
-        SndCall(8, 0x1A, &em2.getPtr()->pos, em2.getPtr()->id, 0, em2.getPtr());
+        if (EM_OK(em2.getPtr())) SndCall(8, 0x1A, &em2.getPtr()->pos, em2.getPtr()->id, 0, em2.getPtr());
         while (CamCtrl.IsMotionEnd() == 0) {
             SceSleep(1);
         }
@@ -1486,7 +1486,7 @@ static void r300_em_set()
     Vec pos = {-28500.0f, -14200.0f, -24783.0f};
     f32 ry = 1.32f;
     r300_wk->em[20].setEm(0x4B, -1, 1, 1, 1);
-    ((cEmGanado*) r300_wk->em[20].getPtr())->setEvtMotion(ROOM_ARC_PTR(pG->pRoom, 0x33), ROOM_ARC_PTR(pG->pRoom, 0x34), 0, 0);
+    if (EM_OK(r300_wk->em[20].getPtr())) ((cEmGanado*) r300_wk->em[20].getPtr())->setEvtMotion(ROOM_ARC_PTR(pG->pRoom, 0x33), ROOM_ARC_PTR(pG->pRoom, 0x34), 0, 0);
     r300_wk->em[20].setNoSuspend(1);
     r300_wk->em[20].setFindPL();
     r300_wk->plPos = pPLS->pos;
@@ -1520,7 +1520,7 @@ static void r300_em_set()
         r300_setEmAng(&r300_wk->em[20], &ang, ry);
     }
     for (i = 0; i <= 0x22; i++) {
-        r300_wk->em[20].getPtr()->move();
+        if (EM_OK(r300_wk->em[20].getPtr())) r300_wk->em[20].getPtr()->move();
     }
     CamCtrl.CutCall(0x17);
     while (CamCtrl.IsMotionEnd() == 0) {

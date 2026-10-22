@@ -70,4 +70,12 @@ void re4dc_halt(const char* file, int line);
 #define NULL 0
 #endif
 
+// EM_READ_RETRY (issue #52): a list send / create that still failed after readEmData's retries returns 0; room code
+// guarded with EM_OK skips that enemy's part instead of dereferencing 0. Knob off: EM_OK is 1 (original code).
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+#define EM_OK(e) ((e) != 0)
+#else
+#define EM_OK(e) 1
+#endif
+
 #endif

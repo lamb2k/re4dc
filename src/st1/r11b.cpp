@@ -219,8 +219,8 @@ void R11bInit()
         l->set = one;
         PSet(r11b_work.p->boat, EmSetFromList2(0x3C, 0));
         pG->room_id_prev = 0x11B;
-        r11b_work.p->boat->setPos(&pos);
-        r11b_work.p->boat->setAng(&rot);
+        if (EM_OK(r11b_work.p->boat)) r11b_work.p->boat->setPos(&pos);
+        if (EM_OK(r11b_work.p->boat)) r11b_work.p->boat->setAng(&rot);
     } else {
         r11b_work.p->boat = EmSetFromList2(0x3C, 0);
         l->set = 1;
@@ -230,8 +230,8 @@ void R11bInit()
 
             pos = r11b_boatPos1;
             rot2 = r11b_boatRot1;
-            r11b_work.p->boat->setPos(&pos);
-            r11b_work.p->boat->setAng(&rot2);
+            if (EM_OK(r11b_work.p->boat)) r11b_work.p->boat->setPos(&pos);
+            if (EM_OK(r11b_work.p->boat)) r11b_work.p->boat->setAng(&rot2);
             if (RsfCheck(G_ROOM_ID, 0) == 0) {
                 RsfSet(G_ROOM_ID, 0);
                 SceExec(0x12, (TaskFunc) R11b_Event, 0, 0, SCE_PRIO_DEF_2, 0);
@@ -459,13 +459,13 @@ static void r11b_EmEvent()
         r11b_work.p->em[4] = EmSetFromList2(0x44, 1);
         r11b_work.p->em[5] = EmSetFromList2(0x45, 1);
         r11b_work.p->em[6] = EmSetFromList2(0x46, 1);
-        r11b_work.p->em[0]->setNoSuspend(1);
-        r11b_work.p->em[1]->setNoSuspend(1);
-        r11b_work.p->em[2]->setNoSuspend(1);
-        r11b_work.p->em[3]->setNoSuspend(1);
-        r11b_work.p->em[4]->setNoSuspend(1);
-        r11b_work.p->em[5]->setNoSuspend(1);
-        r11b_work.p->em[6]->setNoSuspend(1);
+        if (EM_OK(r11b_work.p->em[0])) r11b_work.p->em[0]->setNoSuspend(1);
+        if (EM_OK(r11b_work.p->em[1])) r11b_work.p->em[1]->setNoSuspend(1);
+        if (EM_OK(r11b_work.p->em[2])) r11b_work.p->em[2]->setNoSuspend(1);
+        if (EM_OK(r11b_work.p->em[3])) r11b_work.p->em[3]->setNoSuspend(1);
+        if (EM_OK(r11b_work.p->em[4])) r11b_work.p->em[4]->setNoSuspend(1);
+        if (EM_OK(r11b_work.p->em[5])) r11b_work.p->em[5]->setNoSuspend(1);
+        if (EM_OK(r11b_work.p->em[6])) r11b_work.p->em[6]->setNoSuspend(1);
         SceEventStart(0);
         SndStrReq(1, 0x24, 0x80000003, 0, 0, 0.0f);
         pPL->setNoSuspend(1);

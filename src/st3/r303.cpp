@@ -164,15 +164,15 @@ static void door_down()
     RsfSet(G_ROOM_ID, 0);
     SmdGetObjPtr(0xB)->type = zero;
     em = setEm(0x24, -1, 1, 1, 1);
-    em->flag |= 1;
-    EstSet((int) em, -1, 0, 0, 1, 0x10, 0, 0, (u32) em, (void*) zero);
+    if (EM_OK(em)) em->flag |= 1;
+    if (EM_OK(em)) EstSet((int) em, -1, 0, 0, 1, 0x10, 0, 0, (u32) em, (void*) zero);
     EstSet(0, -1, 0, 0, 1, 2, 0, 0, zero, (void*) zero);
     t = 0.01f;
     cnt = 0;
     SndCall(6, 2, &SmdGetObjPtr(0xB)->pos, 0, 0, 0);
     for (;;) {
         if (cnt > 60) {
-            em->hp = 0;
+            if (EM_OK(em)) em->hp = 0;
         } else {
             cnt++;
         }
