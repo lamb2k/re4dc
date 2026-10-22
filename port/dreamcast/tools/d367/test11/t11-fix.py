@@ -646,6 +646,11 @@ DATA['res18f'] = {'dc/resident.bin': RES18FD + '/resident.bin'}
 # in-play uploads of 13 rooms; 5,502 records, sha256 8fb526cc (= vram/resident/RELEASE.sha256). Last: replaces res18f's.
 RES22D = os.environ.get('RES22D', '/root/re4data/private/res22-20261022')
 DATA['res22'] = {'dc/resident.bin': RES22D + '/resident.bin'}
+# Lane inv23 (10-22, user-approved option A): sslz23 = ss/eng/ss_cmmn.lz + ss_pzzl.lz, the sub screen data files packed
+# by tools/d367/inv23/ss_lz.py set (one LZ4 block each; 1,443,744 -> 822,053 B; SHA256SUMS in the set). Read only by
+# SS_DATA_LZ=1 programs; the .dat files stay on the disc for every other program. Any place in the data line.
+SSLZ23D = os.environ.get('SSLZ23D', '/root/re4data/private/sslz23-20261022')
+DATA['sslz23'] = {'ss/eng/ss_cmmn.lz': SSLZ23D + '/ss/eng/ss_cmmn.lz', 'ss/eng/ss_pzzl.lz': SSLZ23D + '/ss/eng/ss_pzzl.lz'}
 # Release lane rel18 (10-19, Test 18 item 10): garr18h = the LEON_HEADLESS v2 archives of data set garr18-head-20261019
 # (tools/d367/ps2leon/build_head.py): em/pl00.drs and em/pl08.drs with GC arc 0xC stubbed and the PS2 severed head as
 # its payload. Built from the payload disc's pl00 (1fdb5378) / pl08 (f4acbfad); no set on the Test 18 line stages either.

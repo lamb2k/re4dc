@@ -53,6 +53,27 @@ unsigned re4dc_ssb_bank_bytes();
 unsigned long long re4dc_ssb_us();
 long re4dc_ssb_file_size(const char* name);
 long re4dc_ssb_file_read(const char* name, void* dst, unsigned capacity);
+#if defined(RE4DC_SS_DATA_LZ) && RE4DC_SS_DATA_LZ
+long re4dc_ssb_lz_size(const char* name);
+long re4dc_ssb_lz_read(const char* name, void* dst, unsigned capacity, void* scratch, unsigned scratch_capacity);
+// SS_DATA_LZ=1 (lane inv23): the packed ss_cmmn / ss_pzzl copies (SS/<lang>/*.lz) when the disc has them.
+static unsigned lz_files, lz_fallbacks;
+static long ss_data_size(const char* name)
+{
+    const long n = re4dc_ssb_lz_size(name);
+    return n > 0 ? n : re4dc_ssb_file_size(name);
+}
+static long ss_data_read(const char* name, void* dst, unsigned capacity, u32 scratch, u32 scratch_end)
+{
+    const long n = re4dc_ssb_lz_read(name, dst, capacity, reinterpret_cast<void*>(scratch), scratch_end - scratch);
+    if (n == long(capacity)) {
+        ++lz_files;
+        return n;
+    }
+    ++lz_fallbacks;
+    return re4dc_ssb_file_read(name, dst, capacity);
+}
+#endif
 u32 re4dc_vi_retrace_count(void);
 void re4dc_fixture_state(const char* name, int a, int b);
 void re4dc_motion_hold(int on);
@@ -376,12 +397,20 @@ extern "C" void re4dc_subscreen_aram_init(SubScreenWork* wk)
              kDescriptorBytes);
 #endif
     sscrnDataFilename(wk, "ss_cmmn.dat");
+#if defined(RE4DC_SS_DATA_LZ) && RE4DC_SS_DATA_LZ
+    long size = ss_data_size(wk->path);
+#else
     long size = re4dc_ssb_file_size(wk->path);
+#endif
     cmmn_bytes = size > 0 ? u32(size) : 0;
     wk->pCommonOffs = wk->aramSize;
     wk->aramSize += align32(cmmn_bytes);
     sscrnDataFilename(wk, "ss_pzzl.dat");
+#if defined(RE4DC_SS_DATA_LZ) && RE4DC_SS_DATA_LZ
+    size = ss_data_size(wk->path);
+#else
     size = re4dc_ssb_file_size(wk->path);
+#endif
     pzzl_bytes = size > 0 ? u32(size) : 0;
     wk->pzzlOfs = wk->aramSize;
     wk->aramSize += align32(pzzl_bytes);
@@ -635,12 +664,26 @@ extern "C" void re4dc_subscreen_swap_open(SubScreenWork* wk)
     d[0] = kSscrnModuleId;
     d[0x1c / 4] = kCompactDescriptor;
     sscrnDataFilename(wk, "ss_cmmn.dat");
+#if defined(RE4DC_SS_DATA_LZ) && RE4DC_SS_DATA_LZ
+    // The packed copies are read into the area's free tail (above the data, below the sub screen heap, which is
+    // created after this) and decoded in place of the whole-file reads.
+    const u32 lz_scratch = lo + ((wk->aramSize + 31) & ~31u);
+    const long cmmn = ss_data_read(wk->path, reinterpret_cast<void*>(lo + wk->pCommonOffs), cmmn_bytes, lz_scratch,
+                                   lo + kSsAramSize);
+#else
     const long cmmn = re4dc_ssb_file_read(wk->path, reinterpret_cast<void*>(lo + wk->pCommonOffs), cmmn_bytes);
+#endif
     // ss_pzzl.dat for every type: besides the puzzles it holds the item BIN / TPL pairs that the
     // inventory, examine and shop screens draw (read fresh each open: the pristine copy that
     // SubScreenExit re-read into ARAM after a puzzle).
     sscrnDataFilename(wk, "ss_pzzl.dat");
+#if defined(RE4DC_SS_DATA_LZ) && RE4DC_SS_DATA_LZ
+    const long pzzl = ss_data_read(wk->path, reinterpret_cast<void*>(lo + wk->pzzlOfs), pzzl_bytes, lz_scratch,
+                                   lo + kSsAramSize);
+    re4dc_log("subscreen data lz: packed=%u fallbacks=%u\n", lz_files, lz_fallbacks);
+#else
     const long pzzl = re4dc_ssb_file_read(wk->path, reinterpret_cast<void*>(lo + wk->pzzlOfs), pzzl_bytes);
+#endif
     if (cmmn != long(cmmn_bytes) || pzzl != long(pzzl_bytes)) re4dc_missing("sub screen file read failed");
     // Source-image pointer keys cached by the native UI named the game's bytes at these addresses.
     re4dc_ui_invalidate_sources();
