@@ -1,4 +1,7 @@
 #include "../world_draw_meter.h"
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER && RE4DC_PVR_STREAM
+static unsigned world_meter_begin_discards;
+#endif
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
 #endif
@@ -1475,6 +1478,9 @@ void present_fence(){
     present_report();
 }
 void present_submit(bool present,unsigned ta_faults){
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    const unsigned meter_token=re4dc_world_meter_token();
+#endif
 #if RE4DC_TA_GUARD
     present=guard_present(present,ta_faults);
 #else
@@ -1482,29 +1488,58 @@ void present_submit(bool present,unsigned ta_faults){
 #endif
     present_submitted=present_submitted+1;
 #if RE4DC_PACE_PRESENT
-    if(re4dc_steady_present(present))return; // Steady: released at its target field by pace_present.cpp
+    if(re4dc_steady_present(present)){
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+        re4dc_world_meter_outcome(meter_token,frame,present); // Accepted defer, not a display witness.
+#endif
+        return;
+    } // Steady: released at its target field by pace_present.cpp
     auto post=[](bool p){const int irq=irq_disable();const int r=pvr_present_async(p);if(r==0)re4dc_present_posted(p);irq_restore(irq);return r;};
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    int meter_post=post(present);
+    if(meter_post<0){
+        present_fence(); meter_post=post(present);
+        if(meter_post<0){present_failures=present_failures|2;present_report();}
+    }
+    re4dc_world_meter_outcome(meter_token,frame,present && meter_post>=0);
+#else
     if(post(present)<0){
         present_fence();
         if(post(present)<0){present_failures=present_failures|2;present_report();}
     }
+#endif
 #else
     // One decision is outstanding at a time: frame N's flip normally happened
     // long before frame N+1 finishes, so this rarely blocks.
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    int meter_post=pvr_present_async(present);
+    if(meter_post<0){
+        present_fence(); meter_post=pvr_present_async(present);
+        if(meter_post<0){present_failures=present_failures|2;present_report();}
+    }
+    re4dc_world_meter_outcome(meter_token,frame,present && meter_post>=0);
+#else
     if(pvr_present_async(present)<0){
         present_fence();
         if(pvr_present_async(present)<0){present_failures=present_failures|2;present_report();}
     }
+#endif
 #endif
 }
 #else
 semaphore_t present_request;
 volatile bool present_decision;
 volatile unsigned present_ta_faults;
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+volatile unsigned present_meter_token,present_meter_frame;
+#endif
 alignas(32) unsigned char presenter_stack[4096];
 void* presenter_main(void*){
     for(;;){
         sem_wait(&present_request);
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+        const unsigned meter_token=present_meter_token,meter_frame=present_meter_frame;
+#endif
         bool present=present_decision;
         unsigned failure=0;
         {
@@ -1517,6 +1552,9 @@ void* presenter_main(void*){
                 if(pvr_resolve_frame(present)<0)failure=2;
             }
         }
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+        re4dc_world_meter_outcome(meter_token,meter_frame,present && !failure);
+#endif
         const int o=irq_disable();
         present_failures=present_failures|failure;present_resolved=present_resolved+1;
         genwait_wake_all((void*)&present_resolved);
@@ -1547,6 +1585,9 @@ void present_fence(){
     present_report();
 }
 void present_submit(bool present,unsigned ta_faults){
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    present_meter_token=re4dc_world_meter_token();present_meter_frame=frame;
+#endif
     present_decision=present;present_ta_faults=ta_faults;present_submitted=present_submitted+1;
     sem_signal(&present_request);
     // Let the higher-priority presenter reach its render-done wait now, as
@@ -2232,7 +2273,13 @@ void stream_close(bool present) {
 #else
     const bool shown=present;
 #endif
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    const int meter_resolved=pvr_resolve_frame(shown);
+    re4dc_world_meter_outcome(re4dc_world_meter_token(),frame,shown && meter_resolved>=0);
+    if(meter_resolved<0)re4dc_missing("native source presentation resolve failed");
+#else
     if(pvr_resolve_frame(shown)<0)re4dc_missing("native source presentation resolve failed");
+#endif
     }
 #endif
     if(!present)++stream_discards;
@@ -5575,6 +5622,9 @@ extern "C" void re4dc_ui_begin(){
         re4dc_log("native model DIAGNOSTIC boundary: frame=%u previous_bytes=%u committed_parts=%u invalid=%u resource=%u overflow=%u presented=%u\n",frame,model_used*32,model_parts,model_invalid,model_resource,model_overflow,model_presented);
     nquad=0;model_used=0;++frame;
 #if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+#if RE4DC_PVR_STREAM
+    world_meter_begin_discards=stream_discards; // Covers every discard since real frame begin.
+#endif
     re4dc_world_meter_begin(frame); // Real render frames only; begin_skip never enters the meter.
 #endif
 #if RE4DC_TEX_CHECK
@@ -5951,7 +6001,12 @@ extern "C" void re4dc_ui_present(){
     if(frame%120==0)re4dc_log("native direct: frame=%u parts=%u slots=%u\n",frame,direct_parts,direct_slots);
 #endif
 #else
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    const int meter_list=pvr_list_finish(),meter_scene=pvr_scene_finish();
+    re4dc_world_meter_outcome(re4dc_world_meter_token(),frame,meter_list>=0 && meter_scene>=0);
+#else
     pvr_list_finish();pvr_scene_finish();
+#endif
 #endif
     if(frame%120==0 && model_diagnostic==1)
         re4dc_log("native model DIAGNOSTIC: frame=%u packets=%u parts=%u invalid=%u resource=%u overflow=%u input=%u emitted=%u peak=%u heap=%d black=%d\n",frame,model_used*32,model_parts,model_invalid,model_resource,model_overflow,model_input,model_output,model_peak,re4dc_ui_heap_free(),re4dc_vi_black());
@@ -6036,9 +6091,6 @@ extern "C" void re4dc_ui_present(){
 }
 
 extern "C" void re4dc_ui_end_frame(int present){
-#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER && RE4DC_PVR_STREAM
-    const unsigned world_meter_discards=stream_discards;
-#endif
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreFinish();
 #endif
@@ -6085,7 +6137,7 @@ extern "C" void re4dc_ui_end_frame(int present){
         if(e.frame==frame){RE4DC_PROFILE_COUNT(TexturePinnedCount,1);RE4DC_PROFILE_COUNT(TexturePinnedBytes,e.package.vram_bytes());}}
 #if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
 #if RE4DC_PVR_STREAM
-    re4dc_world_meter_end(frame,present && !black && !stream_aborted && stream_discards==world_meter_discards);
+    re4dc_world_meter_end(frame,present && !black && !stream_aborted && stream_discards==world_meter_begin_discards);
 #else
     re4dc_world_meter_end(frame,frame_ready && present && !re4dc_vi_black());
 #endif

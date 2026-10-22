@@ -5,9 +5,10 @@
 using namespace re4dc::worldmeter;
 namespace re4dc { namespace worldmeter {
 static unsigned fake_time=0, recorded=0;
+static bool last_ok=false;
 unsigned clock_us() { return fake_time+=17; }
 void record(Pass pass, unsigned start, unsigned end, bool ok, float view) {
-    assert(pass==Opaque && start==17 && end==34 && ok && view==18750); ++recorded;
+    assert(pass==Opaque && end-start==17 && view==18750); last_ok=ok; ++recorded;
 }
 }}
 static const Identity id{0x101,7};
@@ -24,6 +25,10 @@ int main() {
     unsigned calls=0;
     const int result=RE4DC_WORLD_MEASURE(Opaque,18750,++calls);
     assert(result==1 && calls==1 && recorded==1);
+    assert(last_ok);
+    assert(RE4DC_WORLD_MEASURE(Opaque,18750,-1)==-1 && !last_ok);
+    assert(RE4DC_WORLD_MEASURE(Opaque,18750,0)==0 && !last_ok);
+    assert(RE4DC_WORLD_MEASURE(Opaque,18750,2)==2 && last_ok);
     Meter m;
     assert(!m.snapshot(id).valid); fill(m);
     auto s=m.snapshot(id); assert(s.valid && s.samples==60 && s.mean_us==1500 && s.peak_us==1500);

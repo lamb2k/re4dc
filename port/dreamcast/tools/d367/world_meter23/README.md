@@ -2,8 +2,8 @@
 
 `WORLD_DRAW_METER=1 PS2_WORLD_DRAW=1` enables a default-off diagnostic. It does
 not alter a recipe or change rendering. QA Diagnostics and its QR pages show a
-frozen completed window of 60 accepted drawn frames, with mean/peak milliseconds
-per drawn frame, per-pass mean microseconds, room/generation, first/last render
+frozen completed window of 60 accepted CPU world submissions, with mean/peak
+milliseconds per accepted submission, per-pass mean microseconds, room/generation, first/last render
 frame, runtime View setting, actual OP/PT/TR far planes, shell call/success
 frames, disc-read frames and stopped frames. The QA header supplies build and
 preset identity. The existing broad `scenery` phase remainder is unchanged.
@@ -25,15 +25,39 @@ of saved work, or proof of memory stalls. The real-console instrumentation cost
 still needs measuring. No per-vertex/meshlet timestamps were added.
 
 The frame starts immediately after native UI's real `++frame`, before its
-preload work. Completion occurs after the existing frame presentation path;
-`present=0`, VI-black, abort and changed `stream_discards` reject the sample.
+preload work, and captures the discard baseline there. Eligibility checked at
+frame end rejects `present=0`, VI-black, abort and any changed `stream_discards`
+since that begin, including earlier scene discards. Eligibility alone cannot
+admit a sample: an exact token/frame-bound renderer outcome must also exist.
 An early return with no completion stays invalid, and the next begin discards
 it. The native skip functions never enter the meter. Thus skipped logic ticks
 do not become zero-time images or dilute the denominator. Completion requires
-all three main passes exactly once and successful. Duplicate/partial/main-pass
-failure/no-world frames clear the current and completed windows. A shell call
+all three main passes exactly once and a **positive** return; source-world `-1`
+failures are rejected while preserving the original return to its caller.
+Duplicate/partial/main-pass failure/no-world frames clear the current and completed windows. A shell call
 returning zero is timed and explicitly counted as an unsuccessful shell call;
 it does not erase otherwise complete main-pass timing.
+
+Renderer outcomes have explicit contracts. The synchronous stream path records
+the actual `guard_present` decision and successful resolve. Pipeline 1 records
+the presenter thread's guarded decision and successful resolve using the token
+and frame captured when that work was submitted. Pipeline 2 records its guarded
+decision plus successful async queueing or an explicitly accepted Steady defer.
+The nonstream path requires successful list and scene finish. These witnesses
+establish **accepted CPU submissions**, not an eventual IRQ/vblank flip or
+physical display. The QA denominator is named `accepted_submits`; its frame
+range is `submit_frames`. This is not a counter of images confirmed displayed.
+
+The presenter writes only a small outcome receipt. Receipt publication and
+copying share short interrupt exclusions; that thread never accesses the live
+Meter. Main keeps an immutable pending end context if the receipt is not yet
+known. Snapshot or the next begin consumes a matching outcome after revalidating
+live room/generation/View. If still unresolved at the next begin, that context is
+rejected without waiting. Late/wrong-frame/wrong-token/reset receipts cannot
+revive it. Multiple outcomes for one token before consumption are ambiguous and
+fail closed; duplicate outcomes after consumption cannot count a second sample.
+Thus Pipeline 1 may provide fewer eligible samples if its presenter resolves
+too late; the meter never assumes that pending work succeeded.
 
 Room/generation changes, world retirement/movie discard, runtime View changes,
 per-pass far-plane changes and shell participation/result changes invalidate
@@ -66,7 +90,11 @@ Run `python3 port/dreamcast/tools/d367/world_meter23/run_tests.py`.
 The tests compile and execute the real accumulator and runtime callback unit,
 exercise timer/frame/read-count wrapping, mean/peak aggregation, shell separation,
 frozen windows, skipped gaps, missing end, partial/no-world/failure/duplicate
-rejection, room/generation/View/far changes and read/stop flags. Actual host
+rejection, room/generation/View/far changes and read/stop flags. Runtime controls
+also cover negative pass/outcome returns, callback-before-end, delayed callback
+consumed by snapshot, negative guard/resolve/queue disposition, prior-discard
+eligibility, pending work dropped at next begin, late/wrong/reset/duplicate
+receipts and changed live identity. Actual host
 objects prove the disabled expression wrapper is identical to its baseline
 expression (default and explicit zero), and the disabled runtime has no symbols.
 Real Make evaluation checks off/on/invalid values and the world-draw dependency.

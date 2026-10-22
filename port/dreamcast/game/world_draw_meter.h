@@ -49,12 +49,12 @@ public:
                (completed_.valid && completed_.view_mm!=view))clear_window();
         }
     }
-    void end(unsigned frame, Identity id, bool drawn, bool disc_known, unsigned reads, bool stopped) {
+    void end(unsigned frame, Identity id, bool admitted, bool disc_known, unsigned reads, bool stopped) {
         if(!open_ || frame!=frame_)return;
         open_=false;
         if(!same(id,identity_)) { identity_=id; clear_window(); return; }
         // Zero-world, incomplete, discarded and failed frames never leave stale results visible.
-        if(!drawn || bad_ || (mask_&7u)!=7u || !view_) { clear_window(); return; }
+        if(!admitted || bad_ || (mask_&7u)!=7u || !view_) { clear_window(); return; }
         const unsigned shell=unsigned((mask_&(1u<<FarShell))!=0);
         if((window_.samples && (bool(window_.shell_frames)!=bool(shell) || bool(window_.shell_ok_frames)!=shell_ok_)) ||
            (completed_.valid && (bool(completed_.shell_frames)!=bool(shell) || bool(completed_.shell_ok_frames)!=shell_ok_)))clear_window();
@@ -87,13 +87,16 @@ template<class F> auto measure(Pass pass, float view, F call) -> decltype(call()
     const unsigned start=clock_us();
     const auto result=call();
     const unsigned end=clock_us();
-    record(pass,start,end,result!=0,view);
+    record(pass,start,end,result>0,view); // Source-world -1 is a failure, not success.
     return result;
 }
 }}
 extern "C" void re4dc_world_meter_begin(unsigned frame);
 extern "C" void re4dc_world_meter_end(unsigned frame, int drawn);
 extern "C" void re4dc_world_meter_reset();
+// Receipts describe guarded renderer submission/resolve decisions, not physical display.
+extern "C" unsigned re4dc_world_meter_token();
+extern "C" void re4dc_world_meter_outcome(unsigned token, unsigned frame, int accepted);
 extern "C" re4dc::worldmeter::Snapshot re4dc_world_meter_snapshot(unsigned room);
 #define RE4DC_WORLD_MEASURE(pass,view,expr) re4dc::worldmeter::measure(re4dc::worldmeter::pass,view,[&](){return (expr);})
 #else

@@ -259,10 +259,10 @@ void snap_diag() {
     // Freeze the completed window once. Diagnostics and every QR page use these same bytes.
     const auto world=re4dc_world_meter_snapshot(g_game.room);
     if(world.valid) {
-        a=addf(a,"world_cpu_ms=%u.%03u peak=%u.%03u per_draw n=%u\n",
+        a=addf(a,"world_cpu_ms=%u.%03u peak=%u.%03u accepted_submits=%u\n",
                world.mean_us/1000,world.mean_us%1000,world.peak_us/1000,world.peak_us%1000,world.samples);
         const char* view=world.view_setting==0?"FULL":world.view_setting==1?"NEAR":world.view_setting==2?"SHORT":"NA";
-        a=addf(a,"world room=%03x gen=%u draw_frames=%u-%u view=%s\n",
+        a=addf(a,"world room=%03x gen=%u submit_frames=%u-%u view=%s\n",
                world.room,world.generation,world.first,world.last,view);
         a=addf(a,"world_far_mm op=%u pt=%u tr=%u shell_call=%u ok=%u\n",
                world.far_mm[0],world.far_mm[1],world.far_mm[2],world.shell_frames,world.shell_ok_frames);
@@ -270,7 +270,7 @@ void snap_diag() {
                world.pass_us[0],world.pass_us[1],world.pass_us[2],world.pass_us[3]);
         if(world.disc_known)a=addf(a,"world read_frames=%u stopped_frames=%u\n",world.read_frames,world.stopped_frames);
         else a=addf(a,"world read_frames=NA stopped_frames=%u\n",world.stopped_frames);
-    } else a=addf(a,"world_cpu_ms=NA (needs 60 complete world draws)\n");
+    } else a=addf(a,"world_cpu_ms=NA (needs 60 accepted world submits)\n");
     a=addf(a,"world transformed=NA submitted=NA bytes=NA strips=NA\n");
 #endif
     a = addf(a, "heap4=%d\n", g_game.heap4);
