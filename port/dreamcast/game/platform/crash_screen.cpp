@@ -58,6 +58,39 @@ struct Issue52ActorSnapshot {
     unsigned long base, actor;
 };
 static volatile Issue52ActorSnapshot g_issue52_actor{};
+static Issue52Attempt g_issue52_attempt{};
+
+extern "C" unsigned re4dc_issue52_begin(unsigned long task, unsigned frame,
+    unsigned room, unsigned entry, unsigned id)
+{
+    const unsigned long base = re4dc_issue52_stage_base();
+    const int old = irq_disable();
+    const unsigned token = g_issue52_attempt.begin(task, frame, room, entry, id, base);
+    irq_restore(old);
+    return token;
+}
+extern "C" unsigned re4dc_issue52_current(unsigned long task, unsigned id)
+{
+    const int old = irq_disable();
+    const unsigned token = g_issue52_attempt.current(task, id);
+    irq_restore(old);
+    return token;
+}
+extern "C" void re4dc_issue52_detail(unsigned token, unsigned long task,
+    unsigned kind, int a, int b)
+{
+    const int old = irq_disable();
+    g_issue52_attempt.detail(token, task, kind, a, b);
+    irq_restore(old);
+}
+extern "C" void re4dc_issue52_finish(unsigned token, unsigned long task,
+    unsigned reason, unsigned long actor, unsigned frame)
+{
+    const unsigned long base = re4dc_issue52_stage_base();
+    const int old = irq_disable();
+    g_issue52_attempt.finish(token, task, reason, actor, frame, base);
+    irq_restore(old);
+}
 
 extern "C" void re4dc_issue52_actor_note(unsigned phase, unsigned frame,
                                          unsigned room, unsigned long actor)
@@ -84,6 +117,18 @@ static bool issue52_actor_line(char* out, unsigned size)
     if (!s.phase) return false;
     snprintf(out, size, "I52 %u r%03x b%08lx a%08lx f%u",
              s.phase, s.room, s.base, s.actor, s.frame);
+    return true;
+}
+
+static bool issue52_attempt_line(char* out, unsigned size)
+{
+    const int old = irq_disable();
+    const Issue52Attempt s = g_issue52_attempt;
+    irq_restore(old);
+    if (!s.serial) return false;
+    // Integers copied while live only. Pending/abandoned is not a causal result.
+    snprintf(out, size, "52 t%u s%u w%x c%x R%x q%d r%d n%x", s.serial,
+        s.state, s.reason, s.construct, s.read_path, s.request, s.poll, s.negatives);
     return true;
 }
 #endif
@@ -374,6 +419,7 @@ void show(const char* kind, const char* detail, bool wait_render)
 #endif
 #if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
     if (issue52_actor_line(line, sizeof(line))) put_text(0, row++, line, 0xFFE0);
+    if (issue52_attempt_line(line, sizeof(line))) put_text(0, row++, line, 0xFFE0);
 #endif
 #if RE4DC_CRASH_FAULT_DETAIL
     fault_detail(row);

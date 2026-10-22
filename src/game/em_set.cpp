@@ -15,6 +15,19 @@
 #endif
 #include "global.h"
 #include "db_log.h"
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+#include "scheduler.h"
+#include "issue52_actor_diag.h"
+extern "C" unsigned long re4dc_issue52_source_task()
+{
+    // Same actual-thread mapping as NativeExecutingTask in scheduler.cpp.
+    // pCTask alone can name a different source task while native I/O yields.
+    OSThread* self = OSGetCurrentThread();
+    for (u32 i = 0; i < TASK_NUM; ++i)
+        if (&Task[i].Thread == self) return (unsigned long) &Task[i];
+    return 0; // Outside a source task: collect no attributed evidence.
+}
+#endif
 #if defined(RE4DC_ALIVE_CAP_NOVIS) && RE4DC_ALIVE_CAP_NOVIS
 #include "flag_rsf.h"
 #endif
@@ -1134,33 +1147,46 @@ cEm* EmSetFromList2(int no, int chkDead)
 {
     EmListData* d = EM_LIST(no);
     cEm* em;
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
+    unsigned issue52_token = 0;
+    if (no == 2 && pG->room_id == 0x10c)
+        issue52_token = re4dc_issue52_begin(re4dc_issue52_source_task(),
+            pG->Frame_cnt, pG->room_id, no, d->id);
+#define I52_ADMISSION_RETURN(why, value) do { \
+    if (issue52_token) re4dc_issue52_finish(issue52_token, re4dc_issue52_source_task(), \
+        why, (unsigned long) (value), pG->Frame_cnt); \
+    return value; \
+} while (0)
+#else
+#define I52_ADMISSION_RETURN(why, value) return value
+#endif
 
     if (EM_SET_ID_NG(d->id)) {
-        return errEm;
+        I52_ADMISSION_RETURN(I52_ID_FILTER, errEm);
     }
     if (pG->stage_no != d->room >> 8) {
-        return errEm;
+        I52_ADMISSION_RETURN(I52_STAGE, errEm);
     }
     if (pG->room_no != (d->room & 0xFF)) {
-        return errEm;
+        I52_ADMISSION_RETURN(I52_ROOM, errEm);
     }
     if (d->be_flag & 2) {
-        return errEm;
+        I52_ADMISSION_RETURN(I52_ALREADY_SET, errEm);
     }
     if (d->id == 0) {
-        return errEm;
+        I52_ADMISSION_RETURN(I52_ZERO_ID, errEm);
     }
     if (chkDead) {
         if (EmSetDieCk(no)) {
-            return errEm;
+            I52_ADMISSION_RETURN(I52_DEAD, errEm);
         }
     }
     if (checkListId(no) == 0) {
-        return errEm;
+        I52_ADMISSION_RETURN(I52_LIST_FILTER, errEm);
     }
 #if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP
     if (re4dc_aliveCapDefer(no, d->id)) {
-        return errEm;
+        I52_ADMISSION_RETURN(I52_CAP, errEm);
     }
 #endif
     em = EmCreate(d->id);
@@ -1169,7 +1195,7 @@ cEm* EmSetFromList2(int no, int chkDead)
 #endif
     if (em == 0) {
         pLog->err(0, 0, "EmSetFromList2() Em set failed, Id = %x", d->id);
-        return errEm;
+        I52_ADMISSION_RETURN(I52_CREATE_FAILED, errEm);
     }
     EM_SET_WORK(em, d, no);
     d->be_flag |= 2;
@@ -1191,7 +1217,8 @@ cEm* EmSetFromList2(int no, int chkDead)
     aliveCapApplyPending(em, no);
 #endif
 #endif
-    return em;
+    I52_ADMISSION_RETURN(I52_CREATED, em);
+#undef I52_ADMISSION_RETURN
 }
 
 // Event enemy from a list entry outside the room list (never called in the DOL).
