@@ -1,0 +1,245 @@
+{
+ "unclassified": 1035,
+ "counts": {
+  "already-mipped": 1,
+  "not-worth": 10,
+  "needs-work": 3,
+  "not-on-route": 1019,
+  "never": 2
+ },
+ "drawn_unclassified": 16,
+ "seen_keys_all": 913,
+ "runs": {
+  "texclass22/r100": {
+   "windows": 5,
+   "scenes": 600,
+   "rooms": [
+    "100"
+   ]
+  },
+  "texclass22/r101": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "101"
+   ]
+  },
+  "texclass22/r102": {
+   "windows": 9,
+   "scenes": 1080,
+   "rooms": [
+    "102"
+   ]
+  },
+  "texclass22/r103": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "103"
+   ]
+  },
+  "texclass22/r104": {
+   "windows": 10,
+   "scenes": 1200,
+   "rooms": [
+    "104"
+   ]
+  },
+  "texclass22/r105": {
+   "windows": 7,
+   "scenes": 840,
+   "rooms": [
+    "105"
+   ]
+  },
+  "texclass22/r106": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "106"
+   ]
+  },
+  "texclass22/r107": {
+   "windows": 7,
+   "scenes": 840,
+   "rooms": [
+    "107"
+   ]
+  },
+  "texclass22/r108": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "108"
+   ]
+  },
+  "texclass22/r109": {
+   "windows": 3,
+   "scenes": 360,
+   "rooms": [
+    "109"
+   ]
+  },
+  "texclass22/r10a": {
+   "windows": 9,
+   "scenes": 1080,
+   "rooms": [
+    "10a"
+   ]
+  },
+  "texclass22/r10b": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "10b"
+   ]
+  },
+  "texclass22/r10c": {
+   "windows": 10,
+   "scenes": 1200,
+   "rooms": [
+    "10c"
+   ]
+  },
+  "texclass22/r10e": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "10e"
+   ]
+  },
+  "texclass22/r10f": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "10f"
+   ]
+  },
+  "texclass22/r111": {
+   "windows": 12,
+   "scenes": 1440,
+   "rooms": [
+    "111"
+   ]
+  },
+  "texclass22/r112": {
+   "windows": 3,
+   "scenes": 360,
+   "rooms": [
+    "112"
+   ]
+  },
+  "texclass22/r113": {
+   "windows": 4,
+   "scenes": 480,
+   "rooms": [
+    "113"
+   ]
+  },
+  "texclass22/r117": {
+   "windows": 7,
+   "scenes": 840,
+   "rooms": [
+    "117"
+   ]
+  },
+  "texclass22/r118": {
+   "windows": 10,
+   "scenes": 1200,
+   "rooms": [
+    "118"
+   ]
+  },
+  "texclass22/r119": {
+   "windows": 4,
+   "scenes": 480,
+   "rooms": [
+    "119"
+   ]
+  },
+  "texclass22/r11a": {
+   "windows": 7,
+   "scenes": 840,
+   "rooms": [
+    "11a"
+   ]
+  },
+  "texclass22/r11b": {
+   "windows": 4,
+   "scenes": 480,
+   "rooms": [
+    "11b"
+   ]
+  },
+  "texclass22/r11c": {
+   "windows": 3,
+   "scenes": 360,
+   "rooms": [
+    "11c"
+   ]
+  },
+  "texclass22/r11d": {
+   "windows": 5,
+   "scenes": 600,
+   "rooms": [
+    "11d"
+   ]
+  },
+  "texclass22/r11e": {
+   "windows": 4,
+   "scenes": 480,
+   "rooms": [
+    "11e"
+   ]
+  },
+  "texclass22/r11f": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "11f"
+   ]
+  },
+  "texusage22/cross": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "101"
+   ]
+  },
+  "texusage22/shoot": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "101"
+   ]
+  },
+  "texusage22/farm": {
+   "windows": 5,
+   "scenes": 600,
+   "rooms": [
+    "103"
+   ]
+  },
+  "texusage22/ambush": {
+   "windows": 5,
+   "scenes": 600,
+   "rooms": [
+    "100"
+   ]
+  },
+  "texusage22/woods": {
+   "windows": 6,
+   "scenes": 720,
+   "rooms": [
+    "104"
+   ]
+  }
+ },
+ "formats": {
+  "RGB565/vq": 692,
+  "ARGB4444/vq": 31,
+  "ARGB4444/twiddled": 188,
+  "RGB565/twiddled": 108,
+  "ARGB1555/twiddled": 16
+ }
+}
