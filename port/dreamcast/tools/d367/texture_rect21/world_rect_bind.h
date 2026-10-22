@@ -24,7 +24,7 @@ constexpr bool keys_ordered() {
     }
     return true;
 }
-static_assert(qualified_count==792U && keys_ordered());
+static_assert(qualified_count==798U && keys_ordered());
 
 // Pinned KOS pvr_poly_compile stores log2(size)-3 in TSP bits 5..3/2..0.
 // A retired Entry can reuse its slot/address. Reject a cached physical extent
