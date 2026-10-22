@@ -1,0 +1,12 @@
+{
+  "test": "actual newv2 write_one closes suspended coalescer on downstream guard failure while exception retained",
+  "result": "PASS",
+  "v2_observed_sha256": "84acd018745b6bbe5048ac760e2ff090efd53c1306f78f0514c2d250c22d8eb8",
+  "write_one_source_start": 126,
+  "write_one_source_end": 147,
+  "write_one_AST_sha256": "7b73da02190b21639499d792f311635ecd767f127eff8430e7a30b52dd3d6c1c",
+  "closed_before_exception_release": true,
+  "partial_bytes": 0,
+  "helper_sha256": "3e6c20648b641421c2dce8ed7948a9a550483da2b463cf19ab0b7a9deaccbbfc",
+  "scope": "One tiny Linux/Python source control; observed v2 snapshot only, not final freeze/job/throughput proof"
+}

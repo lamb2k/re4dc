@@ -1,0 +1,15 @@
+{
+  "tests": 8,
+  "failures": 0,
+  "errors": 0,
+  "helper_sha256": "3e6c20648b641421c2dce8ed7948a9a550483da2b463cf19ab0b7a9deaccbbfc",
+  "frozen_v1_sha256": "0b97fd7afdf5c1811bc8d3530bb6ba7ed1145f27faa027a154fa3c44d6bed4d0",
+  "safe_path_sha256": "78bff1657d6416271617b57f93883625f6dd6f6ebcdae9cf4279f546052957ef",
+  "observations": {
+    "handle_bound": "8 retained shared descriptors PLUS1 transient single-use descriptor; default actual pack topology expected1 shared",
+    "chunk_precondition": "For descriptor rows first read must be>=144B; configurable positive chunks1..143 refuse valid descriptors. Default1MiB unaffected.",
+    "downstream_v1_gap": "CONFIRMED: retained actual write_one traceback owns suspended coalescer/sharedFD; explicit consumer close retires handle;0B partial preserved",
+    "path_replacement": "POSIX source fixture: helper uses original retained object and validates path once; frozen v1 reopens replacement and rejects changed bytes. No Windows/UNC sharing assertion."
+  },
+  "scope": "Tiny source-extracted Python/Linux host controls only, no large pack write/controller/guest or throughput claim"
+}
