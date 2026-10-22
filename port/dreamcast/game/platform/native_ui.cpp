@@ -4222,16 +4222,14 @@ void preload_identities(){
         for(auto& e:entries){
             if(!e.valid || RE4DC_ENTRY_PINNED(e))continue;
             const unsigned sz=e.package.vram_bytes();
-#if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+            // VRAM_ROOM_ARENA: the old room's region is freed as one block; core keys live at the top. Nothing else
+            // is kept, so the new room's preload fills one hole-free region from the bottom.
+            if(RE4DC_CORE_PINNED(e)){++kept;kept_bytes+=sz;continue;}
+#elif defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
             if(!rce_same && e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
 #else
-#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
-            // VRAM_ROOM_ARENA: the old room's region is freed as one block; listed keys were pinned above, core keys
-            // live at the top. Nothing else is kept, so the new room's preload fills one hole-free region.
-            if(RE4DC_CORE_PINNED(e)){++kept;kept_bytes+=sz;continue;}
-#else
             if(e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
-#endif
 #endif
             close_entry(e);++closed;closed_bytes+=sz;
         }
