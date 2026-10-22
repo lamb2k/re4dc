@@ -1,0 +1,156 @@
+{
+  "scope": "actual backface.mk before/after inserted after early linkprereqs in GNU make -n only; dummy source/base/trace targets; no command executed",
+  "tip": "cd5f1be0c2d614b0704c692dfe54caf5c9e59f77",
+  "main_Makefile_sha256": "6fd39fdc2dbf12b227fdb723ab1549deb08cb52c4037f3c3b28aa0af74d7c05e",
+  "fixed_block_sha256": "6f37f424f67325dcfb2d128e6a2f6354320d3db77ff58eadb0d64dd102c770c5",
+  "TARGET_explicitly_defined": true,
+  "parse_order_verified": true,
+  "controls": [
+    {
+      "revision": "before",
+      "case": "default",
+      "returncode": 0,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "before",
+      "case": "cpu0",
+      "returncode": 0,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "before",
+      "case": "cpu1",
+      "returncode": 0,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "before",
+      "case": "cpu2-hash0",
+      "returncode": 0,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o review-objects/platform/backface_sh4.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "before",
+      "case": "cpu2-hash1",
+      "returncode": 0,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o review-objects/platform/backface_sh4.o review-objects/platform/backface_sh4_trace.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "before",
+      "case": "cpu2-hash4",
+      "returncode": 0,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o review-objects/platform/backface_sh4.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "before",
+      "case": "cpu2-nosh4",
+      "returncode": 2,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "",
+      "stderr": "/tmp/GmsYeWgp:48: *** CPU_BACKFACE=2 needs GAME_SH4ZAM=1.  Stop.\n"
+    },
+    {
+      "revision": "before",
+      "case": "invalid",
+      "returncode": 2,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "",
+      "stderr": "/tmp/Gm1RVmAk:39: *** CPU_BACKFACE must be 0, 1 or 2.  Stop.\n"
+    },
+    {
+      "revision": "fixed",
+      "case": "default",
+      "returncode": 0,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "fixed",
+      "case": "cpu0",
+      "returncode": 0,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "fixed",
+      "case": "cpu1",
+      "returncode": 0,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "fixed",
+      "case": "cpu2-hash0",
+      "returncode": 0,
+      "asm_build_recipe_selected": true,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho SOURCE_PLACEHOLDER\nmkdir -p review-objects/platform/\nkos-cc  -c platform/backface_sh4.S -o review-objects/platform/backface_sh4.o\necho LINK_OBJS review-objects/base.o review-objects/platform/backface_sh4.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "fixed",
+      "case": "cpu2-hash1",
+      "returncode": 0,
+      "asm_build_recipe_selected": true,
+      "trace_build_recipe_selected": true,
+      "stdout": "echo BASE_PLACEHOLDER\necho SOURCE_PLACEHOLDER\nmkdir -p review-objects/platform/\nkos-cc -DRE4DC_BACKFACE_SH4_TRACE=1 -c platform/backface_sh4.S -o review-objects/platform/backface_sh4.o\necho TRACE_PLACEHOLDER\necho LINK_OBJS review-objects/base.o review-objects/platform/backface_sh4.o review-objects/platform/backface_sh4_trace.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "fixed",
+      "case": "cpu2-hash4",
+      "returncode": 0,
+      "asm_build_recipe_selected": true,
+      "trace_build_recipe_selected": false,
+      "stdout": "echo BASE_PLACEHOLDER\necho SOURCE_PLACEHOLDER\nmkdir -p review-objects/platform/\nkos-cc  -c platform/backface_sh4.S -o review-objects/platform/backface_sh4.o\necho LINK_OBJS review-objects/base.o review-objects/platform/backface_sh4.o\n",
+      "stderr": ""
+    },
+    {
+      "revision": "fixed",
+      "case": "cpu2-nosh4",
+      "returncode": 2,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "",
+      "stderr": "/tmp/Gm93ms0U:48: *** CPU_BACKFACE=2 needs GAME_SH4ZAM=1.  Stop.\n"
+    },
+    {
+      "revision": "fixed",
+      "case": "invalid",
+      "returncode": 2,
+      "asm_build_recipe_selected": false,
+      "trace_build_recipe_selected": false,
+      "stdout": "",
+      "stderr": "/tmp/GmKDLsSg:39: *** CPU_BACKFACE must be 0, 1 or 2.  Stop.\n"
+    }
+  ],
+  "fixed_make_dependency_gate": true,
+  "not_proved": "full production Make/resource/source/header/object/linked programme or OFF identity"
+}
