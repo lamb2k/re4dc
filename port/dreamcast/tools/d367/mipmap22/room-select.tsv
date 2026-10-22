@@ -12,7 +12,6 @@ key	rooms	side	format	reason
 0d47aaf3-40582528	r101	64	pal4	small-chain
 0de6a8fd-94b7e35a	r101	64	pal4	small-chain
 100928af-66abcfdc	r101	32	vq	small-chain
-1119e961-3a1ae601	r101	64	vq	small-chain
 1b9a8e27-61903f6e	r101	32	pal4	small-chain
 1fc2be2d-cd29bbaf	r101	64	pal4	small-chain
 29e37164-fd4bb981	r101	32	vq	small-chain
@@ -39,7 +38,6 @@ key	rooms	side	format	reason
 673bc5b0-0ff1b8b9	r101	64	vq	small-chain
 69314fa6-2a5520a1	r101	64	vq	small-chain
 69ac38af-57e68b8a	r100	64	vq	small-chain
-69c74ec4-0759bcac	r101	16	vq	small-chain
 6da63ddd-5ba0afb7	r101	64	pal4	small-chain
 6da8c35b-a936da0c	r101,r100	64	vq	small-chain
 6ec1b059-49aa9b5f	r101	64	pal4	small-chain
@@ -79,7 +77,6 @@ ad28d346-0d4c9ea1	r101	64	pal4	small-chain
 ae9bc4c7-ecd64d96	r101	64	pal4	small-chain
 aec43726-feaf240a	r101	32	twiddled	small-chain
 af02b970-99f4989d	r101	64	pal4	small-chain
-afbe459e-ac52354d	r101	64	vq	small-chain
 b00321c5-ff2bbc92	r101	32	vq	small-chain
 b0920af0-420b71c5	r101	32	vq	small-chain
 b14b1748-01ea2742	r101	64	pal4	small-chain
@@ -108,7 +105,6 @@ dc8f2e71-223eec94	r101	32	vq	small-chain
 df3efbf6-62cf1a14	r101	64	vq	small-chain
 e5f30b86-5eed8a23	r100	32	twiddled	small-chain
 e68eb52c-ccad3d51	r101	64	pal4	small-chain
-e7c7b516-fc37bd2f	r100	64	vq	small-chain
 eb4b1808-c264ad69	r100	32	vq	small-chain
 ecd901d5-65f743e8	r101	64	pal4	small-chain
 ed9d77bf-d514faf9	r101	16	pal4	small-chain
@@ -125,17 +121,14 @@ fdf15325-0deb119d	r101	32	pal4	small-chain
 ff21ceee-b2bf965f	r101	32	vq	small-chain
 01447a1a-65103724	r100	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 04eba87d-7ba0eb37	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
-095707ef-6c371c03	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 0f9b23b9-d2e55597	r100,r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 14ccf6d2-91e2129c	r100,r101	128	pal4	mid-chain (tier 2: r101 -> r100 re-entry block)
 1858c9c9-97d07cb5	r100	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 1866c99a-a70d083e	r100,r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 1a940b46-88eb4161	r100	128	pal4	mid-chain (tier 2: r101 -> r100 re-entry block)
-1adb038f-8c46c492	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 1c2237b9-ac214209	r100	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 2284a6d7-4f09117b	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 23be1ee3-45072a8f	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
-24d9d6bf-35289bb6	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 2dbb5670-d561405f	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 2fd79943-712ad365	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 32ff85fc-7f02cf7c	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
@@ -143,7 +136,6 @@ ff21ceee-b2bf965f	r101	32	vq	small-chain
 3ed7c4a4-0719a0b3	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 43de8415-11f7b721	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 478f047b-9cdbcec6	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
-49cd67eb-620cd287	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 4fa92ea7-bad7ef36	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 52847c8d-aa6326fd	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 5fbd6614-98a42cfb	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
@@ -153,13 +145,11 @@ ff21ceee-b2bf965f	r101	32	vq	small-chain
 6d47e0e6-8454336c	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 700ead47-1f5fd20c	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 739cc4c3-f5a1ff24	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
-782aed8c-a11abc8a	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 78a05b99-c0a4da33	r101	128	pal4	mid-chain (tier 2: r101 -> r100 re-entry block)
 7c925f03-83cfe717	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 8625fdf0-32a8e6fd	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 905cac2c-59612515	r100	128	twiddled	mid-chain (tier 2: r101 -> r100 re-entry block)
 913ae330-9e03b34c	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
-994e89c5-da857ed5	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 9c1015e5-dbf96e86	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 9cd9a843-d0bfe970	r100	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 9d22175c-1bcb3246	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
@@ -174,9 +164,7 @@ b7cf559f-b3f222e5	r100	128	twiddled	mid-chain (tier 2: r101 -> r100 re-entry blo
 be8e3da7-f5fa9ccf	r101	128	pal4	mid-chain (tier 2: r101 -> r100 re-entry block)
 cff20f97-49b55c1e	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 d2c36a5b-3b2792a8	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
-d4d20f8a-c276acbe	r100	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 dc08f53f-a653966c	r100	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
-dd622ae4-a41c9e00	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 e62d912f-fb756618	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 e9ecd8fe-52e60480	r101	128	vq	mid-chain (tier 2: r101 -> r100 re-entry block)
 eaec6243-ad0bd2bd	r101	128	pal4	mid-chain (tier 2: r101 -> r100 re-entry block)
