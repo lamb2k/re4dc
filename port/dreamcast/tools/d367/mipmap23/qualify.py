@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read back the seven-key candidate and report static preload costs.
+"""Read back a reviewed mipmap23 candidate and report static preload costs.
 
 This is package/host qualification. It neither measures runtime memory fit nor
 proves a material is drawn or usefully minified. Private assets stay local.
@@ -28,9 +28,11 @@ def alpha_hist(px):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--dataset', type=Path, required=True)
+    p.add_argument('--report-name', default='qualification.json')
     args = p.parse_args()
     ds = args.dataset
-    target = ds/'qualification.json'
+    assert Path(args.report_name).name == args.report_name
+    target = ds/args.report_name
     assert not target.exists()
     cv = load(TOOLS/'texsrc22/convert.py', 'mipmap23_qualification_converter')
     pre = json.loads((ds/'input-preflight.json').read_bytes())
@@ -114,14 +116,14 @@ def main():
     assert sha(resident_blob) == pre['resident_sha256']
     # Final read protects the frozen input after all qualification work.
     assert sha(source_path.read_bytes()) == pre['source_pack_sha256']
-    result = dict(schema='re4dc-mipmap23-seven-qualification-1', scope='source/host/package only',
+    result = dict(schema='re4dc-mipmap23-qualification-1', scope='source/host/package only',
         source_pack_sha256=sha(before), output_pack_sha256=sha(after),
         source_pack_bytes=len(before), output_pack_bytes=len(after), pack_delta_bytes=len(after)-len(before),
         same_member_keys=True, members=len(bp), selected=len(selected), changed=len(changed),
         unchanged=len(bp)-len(changed), unselected_exact=len(bp)-len(selected),
         all_41_shared_ganado_exact=True, unresolved_39_not_converted=True,
         actual_pack_default_off_exact=True, current_input_pack_before_after_exact=True,
-        resident_input_unchanged=True, output_resident_file='none; retain current mip22b resident.bin',
+        resident_input_unchanged=True, output_resident_file='none; retain current RR resident.bin at ' + pre['resident'],
         quality_gate_sha256=pre['quality_gate_sha256'], room_hold_manifest_sha256=pre['room_hold_manifest_sha256'],
         lower_levels_in_output=sum(len(r['levels']) for r in rows),
         generated_lower_levels_audited=sum(len(r['quality']['levels']) for r in conversion['rows']),

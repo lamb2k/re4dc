@@ -1,3 +1,65 @@
+# mipmap23: bounded coverage additions
+
+The follow-on item unit qualifies two further PS2 item keys atop the six-chain
+candidate below. It uses the unchanged PR53 converter and quality policy.
+The 70-row ledger is reused, never rerun as a new census.
+
+| Key | Current PS2 carrier | Result | Extra allocation |
+| --- | --- | --- | ---: |
+| f9282a10-6ed63371 | ITM itm57 in eleven source room archives | RGB565 VQ chain | 352 bytes |
+| fdb79120-f3f8ce57 | ITM document ae/b0/b2/b3/b4 in five source room archives | RGB565 VQ chain | 352 bytes |
+
+next_preflight.py pins the first-six candidate as input, compares it against
+the current RR-selected pack, and requires exactly the six prior differences.
+It validates actual PS2 manifest/package hashes, current R4NREF records in all
+sixteen source uses, current resident preloads and compatible native sampler
+source. It does not infer usefulness or release readiness from the ledger.
+
+Input: 6f65275b62838bdff6e7660a2ba8d6b2b43ffabb09cadf5ae05dabb34d9d6c1e.
+Combined output: e45f7d6669798715e0edc8f5d88e15eee381d336855aa2a24626f14dcce48f96.
+Both packs are 162,205,696 bytes; additional payload 684 bytes and rounded texture
+allocation 704 bytes. All 7,297 unselected packages, the first six chains, the
+colour-held object and all 41 shared Ganado packages stay exact. Twelve proposed
+levels passed through 1x1 and were independently read back; base payloads and
+pixels remain exact. Converter suite: eleven tests pass.
+
+The actual RR map still selects mip22b tex.pak, now alongside res22c resident.bin.
+The output is a candidate additive texture replacement. Keep current RR resident,
+world and other files; this unit produces no runtime or residency files.
+qualify.py --report-name qualification-items.json reuses the existing output
+readback without a seven-key schema or stale resident-file description.
+
+Native model resolve passes package flags through texture::pvr_format and compiles
+a bilinear PVR header; CAST_MIPMAP admits the mip TCW bit. The source TPL LOD
+[0,0,0] fields do not clamp this native model-header path. This establishes
+source compatibility, not observed minification, visual approval, room fit,
+Flycast or physical-console acceptance.
+
+Current resident preloads add r101 704 bytes and r103/r108/r109/r117/r119 352
+bytes each. Other positive source consumers add 352 bytes if loaded dynamically.
+Full consumer uses are in the private receipt; the review ledger's truncated
+room lists must not be used as absence evidence.
+
+Of the original seventy review candidates, eight are now converted and one
+remains colour-held. Sixty-one are unconverted: shared GC Ganado 24, cutscene 12,
+PS2 item 8, mask 6, Leon variant 4, standard actor 3, core effect 3, shared
+breakable 1. These counts describe review progress, not an approval queue.
+All 57 original convert-blocked rows remain untouched (including 17 shared
+Ganado rows), as do the original excludes and allegedly unreachable rows.
+No pruning is authorized.
+
+Next compatibility work: inspect material flag 1 and exact current model binding
+before the remaining opaque itm3b/itm1c keys; verify paired alpha/material use for
+six remaining item keys; resolve mask consumer/coverage; trace variant selection
+and cutscene/effect samplers. Non-square or multi-image blocked inputs require
+a separately qualified runtime-compatible layout extension, not speculative
+square padding or relaxed gates. Shared consumers remain held while unresolved.
+
+No runtime, arena, allocator, inventory, recipe, guest, disc or release work.
+Private generation/mirroring stays local. Coordinator owns adoption.
+
+---
+
 # mipmap23: seven room-object candidates
 
 Local package qualification of the first seven positive-preload PS2 room-object
