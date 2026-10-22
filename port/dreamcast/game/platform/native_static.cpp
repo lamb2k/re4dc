@@ -56,8 +56,13 @@
 #include <cstring>
 #include <cstdlib>
 #include "native_static.h"
+#if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
+#include "include/pvs23_format.hpp"
+#endif
 #include "cache20.h"
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+#include "include/pvs23_meter.hpp"
+extern "C" void re4dc_wm_corners(const std::uint8_t*,unsigned,unsigned);
 // WORLD_METER (game30.mk): the QA menu's world rows (0 = the game's own far / shell; defined before re4dc_ps2_mesh_draw).
 extern "C" volatile unsigned re4dc_qa_wopq_mm,re4dc_qa_wxlu_mm,re4dc_qa_wshell;
 #endif
@@ -2406,6 +2411,9 @@ struct MeshDraw : Emitter {
 #else
                 vp::transform<vp::kChecksAll>(in+lo,vn,cache+lo,outcodes+lo,k);
 #endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+                if(ps2)re4dc_wm_corners(outcodes+lo,vn,0x3fU);
+#endif
                 const std::uint8_t* const sb=package.strip_begin(l);
                 for(unsigned i=0;i<nr;++i){
                     int result=1;
@@ -2435,6 +2443,15 @@ struct MeshDraw : Emitter {
 #endif
 #if RE4DC_MESH_VP_SCHED==2
         if(checks==vp::kChecksAll)vp_sched_compare(in,l.vertex_count,cache,outcodes,k);
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        if(ps2){
+            unsigned count=l.vertex_count;
+#if RE4DC_MESH_VP_SCHED==1 && RE4DC_SCENERY_DEDUP
+            if(checks==vp::kChecksAll)if(const std::uint32_t dw=dd_word(l);dw>>24)count-=dw>>24;
+#endif
+            re4dc_wm_corners(outcodes,count,checks==vp::kChecksNone?0U:checks==vp::kChecksScreen?0x0fU:0x3fU);
+        }
 #endif
         const unsigned screen=vp::screen_mask(checks),depth=vp::depth_mask(checks);
 #if RE4DC_MESH_STRIP_LEAN==2
@@ -2974,6 +2991,9 @@ struct MeshDraw : Emitter {
             if(!pk.nr)return 1;
             const unsigned vn=pk.hi-pk.lo+1U;
             vp::transform_sched<vp::kChecksAll>(in+pk.lo,vn,cache+pk.lo,outcodes+pk.lo,k);
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+            if(ps2)re4dc_wm_corners(outcodes+pk.lo,vn,0x3fU);
+#endif
 #if RE4DC_SCENERY_DEDUP
             if(const std::uint32_t dw=dd_word(l);dw>>24)
                 dedup::fill(in,cache,outcodes,l.vertex_count-(dw>>24),l.vertex_count,dedup::src+(dw&0xffffffU),k,pk.lo,pk.hi);
@@ -3000,6 +3020,15 @@ struct MeshDraw : Emitter {
         }else
 #endif
         vp::transform_sched<vp::kChecksAll>(in,l.vertex_count,cache,outcodes,k);
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        if(ps2){
+            unsigned count=l.vertex_count;
+#if RE4DC_SCENERY_DEDUP
+            if(const std::uint32_t dw=dd_word(l);dw>>24)count-=dw>>24;
+#endif
+            re4dc_wm_corners(outcodes,count,0x3fU);
+        }
+#endif
         int result=1;
         strips_lean(sb,sb+l.strip_bytes,base,batch,result);
         return result;
@@ -4638,6 +4667,10 @@ std::uint32_t ps2_crc32(const unsigned char* p,unsigned n){
 void ps2_free();
 #endif
 #if RE4DC_PS2_PVS
+// Admission and frame guards are provided by the independently qualified static
+// world proof unit. No guard/certificate, or a legacy sampled table: draw all.
+extern "C" int re4dc_pvs23_table_guard(unsigned,const void*,unsigned,unsigned,unsigned,unsigned) __attribute__((weak));
+extern "C" int re4dc_pvs23_frame_guard(unsigned,const float*,const float*,const float*,float,float) __attribute__((weak));
 // PS2_PVS (t2exact.mk; exact, render only; lane t2exact 2026-10-15, backlog B4): an offline potentially visible set per
 // camera cell (tools/d367/ps2world/pvs: pvs_prep.py, pvs_cast.cpp, pvs_emit.py). The room's X/Z grid of cells, each
 // with a Y range (local ground + the camera heights) and a bit set over the package's cluster instances (placement
@@ -4646,18 +4679,19 @@ void ps2_free();
 // A camera outside every cell's volume, no file, or a file built for another package: no set, everything is drawn as
 // before. Runtime toggle re4dc_ps2_pvs_on (warp line "pvs 0|1"; re4dc_ps2_pvs_set for a benchmark sweep row) on top of
 // the build knob. The file is read into one heap-4 block with the per-placement and per-part instance offsets.
-extern "C" { volatile unsigned re4dc_ps2_pvs_on=RE4DC_PS2_PVS_DEFAULT; void re4dc_ps2_pvs_set(unsigned on){re4dc_ps2_pvs_on=on<=2U?on:1U;} }
+extern "C" { volatile unsigned re4dc_ps2_pvs_on=RE4DC_PS2_PVS_DEFAULT; void re4dc_ps2_pvs_set(unsigned on); }
 namespace pvs {
 struct Head { char magic[4]; std::uint32_t version,mesh_crc,mesh_bytes,sidecar_crc,ninst,nx,nz; float x0,z0,cell;
               std::uint32_t nsets,set_bytes,ncells,pad[2]; };
 struct Cell { std::uint16_t set; std::int16_t ylo,yhi,pad; };
 static_assert(sizeof(Head)==64 && sizeof(Cell)==8);
+unsigned loaded_room=~0U;
 unsigned char* block=nullptr; Head h{}; const Cell* cells=nullptr; const std::uint8_t* sets=nullptr;
 const std::uint16_t* base=nullptr; const std::uint16_t* poff=nullptr; // per placement (n+1) / per part: first instance
-const std::uint8_t* cur=nullptr; unsigned cur_frame=~0U; int cur_cell=-1; float eye[3]={0,0,0};
+const std::uint8_t* cur=nullptr; unsigned cur_frame=~0U,last_on=~0U; float last_view[12]{}; int cur_cell=-1; float eye[3]={0,0,0};
 unsigned frames=0,active=0,pl_tested=0,pl_skipped=0,logged=~0U,bytes=0; const char* why="off";
 void close(){if(block)re4dc_static_free(block);block=nullptr;cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;cur=nullptr;
-             cur_frame=~0U;cur_cell=-1;bytes=0;why="off";}
+             cur_frame=~0U;cur_cell=-1;bytes=0;loaded_room=~0U;h={};why="off";}
 // The camera's world position from the world-to-view affine (rows): v = R w + t, so w = -R^-1 t.
 bool eye_of(const float* v,float e[3]){
     const float a=v[0],b=v[1],c=v[2],d=v[4],f=v[5],g=v[6],k=v[8],l=v[9],m=v[10];
@@ -4677,6 +4711,7 @@ void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uin
     if(f==FILEHND_INVALID){re4dc_log("PS2PVS room=%03x file=absent\n",room);return;}
     const unsigned size=unsigned(fs_total(f));
     const unsigned np=ps2w.nplacements,nparts=ps2w.package.header().part_count;
+    if(np>=65536U || nparts>=65536U){fs_close(f);why="instance capacity";return;}
     const unsigned extra=((np+1U)*2U+nparts*2U+31U)&~31U;
     auto* b=size>=sizeof(Head) && size<=262144U && !(size&31U)?static_cast<unsigned char*>(re4dc_static_alloc(size+extra)):nullptr;
     why=b?"read":"size or heap";
@@ -4689,38 +4724,60 @@ void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uin
     if(ok){
         std::memcpy(&h,b,sizeof(h));why="header";
         if(!std::memcmp(h.magic,"R4PV",4) && h.version==1 && h.mesh_crc==mesh_crc && h.mesh_bytes==mesh_bytes &&
-           h.sidecar_crc==side_crc && h.nx && h.nz && h.nx*h.nz<=65536U && h.set_bytes==(h.ninst+7U)/8U &&
-           sizeof(Head)+8U*h.nx*h.nz+h.nsets*h.set_bytes<=size && h.cell>0){
+           h.sidecar_crc==side_crc && re4dc::pvs23::layout(h,size)){
+            const unsigned used=sizeof(Head)+8U*h.nx*h.nz+h.nsets*h.set_bytes;
+            bool padding=true;for(unsigned i=used;i<size;++i)padding=padding && b[i]==0;
+            if(!padding){re4dc_static_free(b);why="padding";return;}
             // instance offsets, counted as pvs_prep.py counts them; the total must be the file's
             auto* pb=reinterpret_cast<std::uint16_t*>(b+size);auto* po=pb+np+1U;
             const auto& pk=ps2w.package;const auto* lods=pk.part_lods();
+            bool offsets_ok=true;
             for(unsigned m=0;m<pk.header().mesh_count;++m){
-                const auto& mesh=pk.meshes()[m];unsigned o=0;
-                for(unsigned k=0;k<mesh.part_count;++k){po[mesh.first_part+k]=std::uint16_t(o);o+=lods[mesh.first_part+k].cluster_count;}
+                const auto& mesh=pk.meshes()[m];std::uint64_t o=0;
+                for(unsigned k=0;k<mesh.part_count;++k){
+                    if(o>=65536U)offsets_ok=false;
+                    po[mesh.first_part+k]=std::uint16_t(o);o+=lods[mesh.first_part+k].cluster_count;
+                }
+                if(o>=65536U)offsets_ok=false;
             }
-            unsigned n=0;
+            std::uint64_t n=0;
             for(unsigned i=0;i<np;++i){
                 pb[i]=std::uint16_t(n);const auto& mesh=pk.meshes()[ps2w.placements[i].mesh];
                 for(unsigned k=0;k<mesh.part_count;++k)n+=lods[mesh.first_part+k].cluster_count;
             }
             pb[np]=std::uint16_t(n);
             why="instances";
-            if(n==h.ninst && n<65536U){
+            if(offsets_ok && n==h.ninst && n<65536U){
                 why=nullptr;
                 cells=reinterpret_cast<const Cell*>(b+sizeof(Head));sets=b+sizeof(Head)+8U*h.nx*h.nz;base=pb;poff=po;
-                for(unsigned c=0;c<h.nx*h.nz;++c)if(cells[c].set!=0xffffU && cells[c].set>=h.nsets){why="cell set";break;}
+                unsigned valid_cells=0;
+                for(unsigned c=0;c<h.nx*h.nz;++c){
+                    const Cell& cell=cells[c];
+                    if(cell.pad || (cell.set!=0xffffU && (cell.set>=h.nsets || cell.ylo>cell.yhi))){why="cell set/range";break;}
+                    if(cell.set!=0xffffU)++valid_cells;
+                }
+                if(!why && valid_cells!=h.ncells)why="cell count";
+                if(!why && (!re4dc_pvs23_table_guard || !re4dc_pvs23_frame_guard ||
+                    !re4dc_pvs23_table_guard(room,b,size,mesh_crc,mesh_bytes,side_crc)))why="uncertified";
             }
         }
     }
     if(why){if(b)re4dc_static_free(b);cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;}
-    else {block=b;bytes=size+extra;}
+    else {block=b;bytes=size+extra;loaded_room=room;}
     re4dc_log("PS2PVS room=%03x file=%s bytes=%u cells=%ux%u with_set=%u sets=%u instances=%u cell_mm=%d heap=%d\n",room,why?why:"ok",
-              size+extra,unsigned(h.nx),unsigned(h.nz),unsigned(h.ncells),unsigned(h.nsets),unsigned(h.ninst),int(h.cell),re4dc_static_heap_free());
+              size+extra,unsigned(h.nx),unsigned(h.nz),unsigned(h.ncells),unsigned(h.nsets),unsigned(h.ninst),
+              std::isfinite(h.cell) && h.cell>=0 && h.cell<2147483520.0f?int(h.cell):0,re4dc_static_heap_free());
 }
 // Once per frame: the camera's cell and its set (cur), or none.
-void frame(const float* view){
+void frame(const float* view,const float* projection,const float* viewport,float near,float far){
     const unsigned f=re4dc_ui_frame();
-    if(f==cur_frame)return;
+    const unsigned on=re4dc_ps2_pvs_on;
+    if(!cells || on!=1U || !re4dc_pvs23_frame_guard ||
+       !re4dc_pvs23_frame_guard(loaded_room,view,projection,viewport,near,far)){
+        cur=nullptr;cur_frame=~0U;cur_cell=-1;return;
+    }
+    if(f==cur_frame && on==last_on && !std::memcmp(last_view,view,sizeof(last_view)))return;
+    std::memcpy(last_view,view,sizeof(last_view));last_on=on;
     cur_frame=f;cur=nullptr;cur_cell=-1;++frames;
     if(!cells || re4dc_ps2_pvs_on!=1U || !eye_of(view,eye))return;
     const float fx=(eye[0]-h.x0)/h.cell,fz=(eye[2]-h.z0)/h.cell;
@@ -4731,12 +4788,20 @@ void frame(const float* view){
 }
 // A placement with no visible instance (no bit set in [base[i], base[i+1])).
 bool hidden(unsigned i){
+    if(!cur || !base || i>=ps2w.nplacements)return false;
     unsigned a=base[i];const unsigned e=base[i+1];
     ++pl_tested;
     for(;a<e;++a)if((cur[a>>3]>>(a&7U))&1U)return false;
     ++pl_skipped;return true;
 }
 } // namespace pvs
+extern "C" void re4dc_ps2_pvs_set(unsigned on){
+    re4dc_ps2_pvs_on=on<=2U?on:1U;
+    pvs::cur=nullptr;pvs::cur_frame=~0U;pvs::cur_cell=-1;
+}
+extern "C" void re4dc_ps2_pvs_state(unsigned out[4]){
+    out[0]=re4dc_ps2_pvs_on;out[1]=pvs::block?1U:0U;out[2]=pvs::cur?1U:0U;out[3]=pvs::bytes;
+}
 #endif
 #if RE4DC_FAR_SHELL
 #define RE4DC_FAR_SHELL_PART 1
@@ -5908,7 +5973,7 @@ int ps2_pass(unsigned pass,float zfar){
     }
 #endif
 #if RE4DC_PS2_PVS
-    pvs::frame(ps2w.view);
+    pvs::frame(ps2w.view,P,ps2w.viewport,near,cull_far);
     if(!pass){
         const unsigned f=re4dc_ui_frame();
         if(!(f%120) && pvs::logged!=f){
@@ -6494,16 +6559,51 @@ void pc_scan(unsigned frame){
 // WORLD_METER (game30.mk; QA disc only; display / render only). Per tick: us and vertices of the PS2 world's opaque pass
 // (0), its punch-through + translucent passes (1), the far shell (2); tick_log.cpp takes them once per tick.
 extern "C" { volatile unsigned re4dc_qa_wopq_mm,re4dc_qa_wxlu_mm,re4dc_qa_wshell; }
+extern "C" unsigned re4dc_wm_room(void);
+extern "C" int re4dc_view_dist_get(void) __attribute__((weak));
+static unsigned wm_generation;
+extern "C" void re4dc_world_meter_identity(unsigned out[7]){
+    out[6]=wm_generation;
+    out[0]=re4dc_wm_room();out[1]=re4dc_view_dist_get?unsigned(re4dc_view_dist_get()):~0U;
+#if RE4DC_PS2_PVS
+    out[2]=re4dc_ps2_pvs_on;
+#else
+    out[2]=~0U;
+#endif
+    out[3]=re4dc_qa_wopq_mm;out[4]=re4dc_qa_wxlu_mm;out[5]=re4dc_qa_wshell;
+}
 namespace wmeter {
-unsigned long long us[3];unsigned vtx[3];
+unsigned long long us[3];unsigned vtx[3],key[7];bool have_key=false;
+unsigned active_pass=3;re4dc::pvs23::Geometry geometry;
+void identity(){
+    unsigned now[7];re4dc_world_meter_identity(now);
+    if(!have_key || !re4dc::pvs23::same(now,key)){
+        std::memcpy(key,now,sizeof(key));have_key=true;
+        for(unsigned k=0;k<3;++k){us[k]=0;vtx[k]=0;}
+        geometry.clear();
+    }
+}
 struct Scope {
-    unsigned k,v0;unsigned long long t0;const unsigned* src;
-    Scope(unsigned kind,const unsigned* vsrc):k(kind),v0(*vsrc),t0(timer_us_gettime64()),src(vsrc){}
-    ~Scope(){us[k]+=timer_us_gettime64()-t0;const unsigned v1=*src;if(v1>=v0)vtx[k]+=v1-v0;}
+    unsigned k,v0,previous;unsigned long long t0;const unsigned* src;
+    Scope(unsigned kind,const unsigned* vsrc,unsigned pass=3):k(kind),v0(*vsrc),previous(active_pass),t0(timer_us_gettime64()),src(vsrc){identity();active_pass=pass;}
+    ~Scope(){us[k]+=timer_us_gettime64()-t0;const unsigned v1=*src;if(v1>=v0)vtx[k]+=v1-v0;active_pass=previous;}
 };
 }
-extern "C" void re4dc_world_meter_take(unsigned* us_out,unsigned* vtx_out){
-    for(unsigned k=0;k<3;++k){us_out[k]=unsigned(wmeter::us[k]);vtx_out[k]=wmeter::vtx[k];wmeter::us[k]=0;wmeter::vtx[k]=0;}
+extern "C" void re4dc_wm_corners(const std::uint8_t* codes,unsigned count,unsigned mask){
+    wmeter::geometry.add(wmeter::active_pass,codes,count,mask);
+}
+extern "C" void re4dc_world_meter_resume(){++wm_generation;}
+extern "C" int re4dc_world_meter_geometry_supported(){
+    return RE4DC_MESH_FASTPATH && RE4DC_MESH_VP_SCHED!=2;
+}
+extern "C" void re4dc_world_meter_take(unsigned* us_out,unsigned* vtx_out,unsigned* geometry_out,unsigned* identity_out){
+    wmeter::identity();std::memcpy(identity_out,wmeter::key,sizeof(wmeter::key));
+    for(unsigned k=0;k<3;++k){
+        us_out[k]=unsigned(wmeter::us[k]);vtx_out[k]=wmeter::vtx[k];wmeter::us[k]=0;wmeter::vtx[k]=0;
+        geometry_out[k]=unsigned(wmeter::geometry.transformed[k]);
+        geometry_out[k+3]=unsigned(wmeter::geometry.input_inside[k]);
+    }
+    wmeter::geometry.clear();
 }
 // The far a world pass draws with under the QA rows: pass 0 the opaque cut, passes 1 / 2 the translucent far (1 = Full: the
 // far before the View distance cut: re4dc_fog_note_far's, already within FOG_FAR / the lake cap).
@@ -6522,7 +6622,7 @@ extern "C" int re4dc_wm_shell_draw(float cut,float full){
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
     RE4DC_BFC_SCOPE(1u,0u);  // BACKFACE_CENSUS
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    const wmeter::Scope wm_scope(pass?1U:0U,&stats.vertices);
+    const wmeter::Scope wm_scope(pass?1U:0U,&stats.vertices,pass);
     zfar=re4dc_wm_far(pass,zfar);
 #endif
 #if RE4DC_MOVIE_WORLD_ARENA
@@ -6665,6 +6765,9 @@ extern "C" void re4dc_ps2_mesh_log(unsigned frame){
 #endif
 }
 extern "C" void re4dc_ps2_mesh_retire(){
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    ++wm_generation; // also invalidate a same-room package reload or teleport
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie.readers || ps2_movie.unavailable()){
         re4dc_missing("movie world arena retired before borrower cleanup");return;

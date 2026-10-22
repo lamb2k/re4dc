@@ -39,6 +39,11 @@ extern volatile unsigned re4dc_qa_shore_far_mm __attribute__((weak));           
 // WORLD_METER (game30.mk): the world rows (0 = the game's own) and the VRAM failure rooms.
 extern volatile unsigned re4dc_qa_wopq_mm, re4dc_qa_wxlu_mm, re4dc_qa_wshell;               // native_static.cpp
 unsigned re4dc_vram_fail_rooms(unsigned* last_room, unsigned* last_n, unsigned* rooms, unsigned* counts, unsigned max);
+void re4dc_ps2_pvs_set(unsigned on) __attribute__((weak));
+void re4dc_ps2_pvs_state(unsigned out[4]) __attribute__((weak));
+int re4dc_world_meter_window(unsigned out[11]);
+int re4dc_world_meter_geometry_supported(void);
+void re4dc_world_meter_resume(void);
 int re4dc_view_dist_get(void) __attribute__((weak));                                         // option_rows.cpp
 #endif
 extern volatile unsigned long re4dc_log_head;                                                  // platform/mem.cpp
@@ -267,12 +272,15 @@ void snap_diag() {
     else a = addf(a, "fps=NA\n");
     if (re4dc_tick_log_snapshot) {
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-        constexpr int kSnap = 40;   // tick_log.cpp's WORLD_METER slots
+        constexpr int kSnap = 48;   // tick_log.cpp's WORLD_METER slots
 #else
         constexpr int kSnap = 32;
 #endif
         const char* nm[kSnap]; unsigned avg[kSnap]; unsigned seq = 0;
         const int n = re4dc_tick_log_snapshot(nm, avg, nullptr, kSnap, &seq);
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        if(n>0){
+#endif
         auto get = [&](const char* k) -> unsigned { for (int i = 0; i < n; ++i) if (nm[i] && !strcmp(nm[i], k)) return avg[i]; return 0u; };
         const unsigned logic = get("logic"), em = get("EspMove"), et = get("EspTrans");
         const unsigned objs = get("objTrans") + get("ShadowTrans") + get("MirrorTrans") + get("ClothTrans");
@@ -293,11 +301,22 @@ void snap_diag() {
                  p_draw, p_wait);
         a = addf(a, "ms10 world_opq=%u world_xlu=%u shell=%u render=%d other=%d total=%u\n", wopq, wxlu, wsh, p_render,
                  (int) wall - shown, wall);
-        a = addf(a, "vtx world_opq=%u world_xlu=%u shell=%u\n", get("vopq"), get("vxlu"), get("vshell"));
+        a = addf(a, "strip_input opq=%u xlu=%u shell_sent=%u per_tick\n", get("vopq"), get("vxlu"), get("vshell"));
+        if(re4dc_world_meter_geometry_supported()){
+            a=addf(a,"TRANSFORMED / INSIDE VIEW OPQ=%u / %u per tick\n",get("topq"),get("iopq"));
+            a=addf(a,"TRANSFORMED / INSIDE VIEW PT=%u / %u per tick\n",get("tpt"),get("ipt"));
+            a=addf(a,"TRANSFORMED / INSIDE VIEW TR=%u / %u per tick\n",get("ttr"),get("itr"));
+            a=addf(a,"Crossing triangles may have 0 corners inside; depth visibility NA.\n");
+        }else a=addf(a,"cache_xform/input_inside=NA unsupported transform path\n");
+        unsigned window[11];
+        if(re4dc_world_meter_window(window))a=addf(a,"world_window room=%03x View=%u PVS=%u frames=%u-%u ticks=%u seq=%u\n",window[0],window[1],window[2],window[7],window[8],window[9],window[10]);
         (void) total;
 #else
         a = addf(a, "ms10 logic=%u fx=%u models=%u scenery=%u post=%u draw=%u wait=%u total=%u\n",
                  ms(logic > em ? logic - em : 0), ms(em + et), ms(objs), ms(other), ms(post), ms(draw), ms(wait), ms(total));
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+        }else a=addf(a,"world timing/vertices=NA collecting this room/View/PVS window\n");
 #endif
     } else a = addf(a, "ms10=NA\n");
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
@@ -306,6 +325,9 @@ void snap_diag() {
         a = addf(a, "world rows opq=%s xlu=%s shell=%s view=%s\n", wm_opq_name(), wm_xlu_name(), wm_shell_name(),
                  vd == 2 ? "short" : vd == 1 ? "near" : vd == 0 ? "full" : "na");
     }
+#endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    if(re4dc_ps2_pvs_state){unsigned state[4];re4dc_ps2_pvs_state(state);a=addf(a,"PVS current=%u file=%s active=%u heap_bytes=%u\n",state[0],state[1]?"loaded":"fallback",state[2],state[3]);}
 #endif
     a = addf(a, "heap4=%d\n", g_game.heap4);
     if (re4dc_kos_heap_state) { unsigned f = 0, u = 0, b = 0; re4dc_kos_heap_state(&f, &u, &b); a = addf(a, "kos free=%u used=%u brk=%u\n", f, u, b); }
@@ -398,7 +420,11 @@ void draw_diag(const Fb& fb) {
 
 // ---------------------------------------------------------------- menu
 enum { M_MAIN, M_CHAP, M_PRE, M_DIAG, M_QR };
-enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE, A_WOPQ, A_WXLU, A_WSHELL };
+enum { A_RESUME, A_TELEPORT_MENU, A_HEALTH, A_LEON, A_PARTNER, A_ENEMY, A_SPEED, A_TITLE, A_NORMAL, A_DIAG, A_SHORE, A_WOPQ, A_WXLU, A_WSHELL
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    , A_PVS
+#endif
+};
 struct Menu {
     bool boot;
     int screen, sel[5], chap, qr_page;
@@ -427,6 +453,7 @@ void item_text(int a, char* out, unsigned n) {
     case A_WOPQ: snprintf(out, n, "OPAQUE WORLD CUT: %s", wm_opq_name()); break;
     case A_WXLU: snprintf(out, n, "TRANSLUCENT WORLD: %s", wm_xlu_name()); break;
     case A_WSHELL: snprintf(out, n, "FAR SHELL: %s", wm_shell_name()); break;
+    case A_PVS: {unsigned state[4]={};if(re4dc_ps2_pvs_state)re4dc_ps2_pvs_state(state);snprintf(out,n,"WORLD PVS (THIS BOOT): %s",state[0]==1?(state[1]?"ON":"ON / DRAW ALL"):"OFF");break;}
 #endif
     default: out[0] = 0;
     }
@@ -559,6 +586,11 @@ int run(Menu& m, bool boot) {
                 else if (a == A_DIAG) { snap_diag(); m.screen = M_DIAG; }
                 else if (a == A_SHORE) { if (&re4dc_qa_shore_far_mm) re4dc_qa_shore_far_mm = re4dc_qa_shore_far_mm ? 0u : 30000u; }
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+                else if(a==A_PVS){
+                    unsigned state[4]={};if(re4dc_ps2_pvs_state)re4dc_ps2_pvs_state(state);
+                    if(re4dc_ps2_pvs_set)re4dc_ps2_pvs_set(state[0]==1?0U:1U);
+                    re4dc_log("qa: PVS %s this boot; meter recollects window\n",state[0]==1?"OFF":"ON");
+                }
                 else if (a == A_WOPQ || a == A_WXLU || a == A_WSHELL) {
                     if (a == A_WOPQ) re4dc_qa_wopq_mm = next_of(kOpq, re4dc_qa_wopq_mm);
                     else if (a == A_WXLU) re4dc_qa_wxlu_mm = next_of(kXlu, re4dc_qa_wxlu_mm);
@@ -651,9 +683,15 @@ int re4dc_qa_menu(const char** path) {
 #endif
     m.nitems = (int) (sizeof(items) / sizeof(items[0]));
     memcpy(m.items, items, sizeof(items));
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    if(re4dc_ps2_pvs_set && re4dc_ps2_pvs_state){m.items[m.nitems-1]=A_PVS;m.items[m.nitems++]=A_TITLE;}
+#endif
     re4dc_log("qa: menu open\n");
     const int a = run(m, false);
     wait_release();
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    re4dc_world_meter_resume(); // exclude paused-menu wall time from the next window
+#endif
     re4dc_log("qa: menu closed (%d)\n", a);
     if (a == -1) { *path = g_path; return 1; }
     if (a == A_TITLE) return 2;
