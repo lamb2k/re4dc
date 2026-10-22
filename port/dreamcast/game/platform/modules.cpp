@@ -18,6 +18,13 @@
 // is also what a per-link constructor pass would run.
 
 #include "re4dc_platform.h"
+#if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
+#include <stdlib.h>
+#include <string.h>
+static void ovlWatchAdd(const char* name, unsigned char* image, unsigned long bytes);
+static void ovlWatchDrop(unsigned char* image);
+extern "C" void re4dc_ovl_watch(const char* where);
+#endif
 #include <stdio.h>
 
 typedef unsigned long u32;
@@ -604,6 +611,9 @@ static void routeOverlayLoad(unsigned index)
     o.block = block;
     o.image_bytes = h.image_bytes;
     ++o.loads;
+#if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
+    ovlWatchAdd(m.name, image, h.image_bytes);
+#endif
     re4dc_module_overlay(m.id, reinterpret_cast<void (*)(void)>(image + h.prolog),
                          reinterpret_cast<void (*)(void)>(image + h.epilog), reinterpret_cast<char*>(image + h.data),
                          reinterpret_cast<char*>(image + h.data_end), reinterpret_cast<char*>(image + h.bss),
@@ -620,6 +630,39 @@ static void routeOverlayLoad(unsigned index)
               h.relocs, u32(image), free_before, re4dc_static_heap_free());
 #endif
 }
+
+#if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
+// OVL_WATCH (lane mipfault22, diagnostic): a copy of each route overlay's relocated image; re4dc_ovl_watch(where)
+// compares the live image with it and logs every changed word (once per word) with the caller's tag.
+static u8* g_watch_copy[8]; static u8* g_watch_img[8]; static u32 g_watch_bytes[8]; static const char* g_watch_name[8];
+static void ovlWatchAdd(const char* name, u8* image, u32 bytes)
+{
+    for (int i = 0; i < 8; ++i) if (g_watch_img[i] == image) { free(g_watch_copy[i]); g_watch_img[i] = 0; }
+    for (int i = 0; i < 8; ++i) if (!g_watch_img[i]) {
+        g_watch_copy[i] = static_cast<u8*>(malloc(bytes));
+        if (!g_watch_copy[i]) { re4dc_log("OVLWATCH no copy for %s\n", name); return; }
+        memcpy(g_watch_copy[i], image, bytes); g_watch_img[i] = image; g_watch_bytes[i] = bytes; g_watch_name[i] = name;
+        re4dc_log("OVLWATCH arm %s at %08lx +%lx\n", name, u32(image), bytes); return;
+    }
+}
+static void ovlWatchDrop(u8* image)
+{
+    for (int i = 0; i < 8; ++i) if (g_watch_img[i] == image) { free(g_watch_copy[i]); g_watch_img[i] = 0; }
+}
+extern "C" void re4dc_ovl_watch(const char* where)
+{
+    for (int i = 0; i < 8; ++i) {
+        if (!g_watch_img[i]) continue;
+        u32* live = reinterpret_cast<u32*>(g_watch_img[i]); u32* ref = reinterpret_cast<u32*>(g_watch_copy[i]);
+        for (u32 w = 0; w < g_watch_bytes[i] / 4; ++w)
+            if (live[w] != ref[w]) {
+                re4dc_log("OVLWATCH %s: %s+%lx (%08lx) %08lx -> %08lx\n", where, g_watch_name[i], w * 4,
+                          u32(g_watch_img[i]) + w * 4, ref[w], live[w]);
+                ref[w] = live[w];
+            }
+    }
+}
+#endif
 
 #if defined(RE4DC_CRASH_OVL_LINE) && RE4DC_CRASH_OVL_LINE
 // CRASH_OVL_LINE (lane mipfault22, diagnostic, default 0): the crash screen's overlay line, "name@image+bytes" per
@@ -651,6 +694,10 @@ static void routeOverlayRelease(unsigned index, const char* why)
     RouteOverlay& o = OVL_REF(m.id);
     if (!o.block) return;
     u8* image = o.block + sizeof(RouteOverlayHeader);
+#if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
+    re4dc_ovl_watch("release");
+    ovlWatchDrop(image);
+#endif
     for (u32 i = 0; i + 2 <= o.image_bytes; i += 2) *reinterpret_cast<unsigned short*>(image + i) = 0xC3FF;
     dcache_flush_range(reinterpret_cast<uintptr_t>(image), o.image_bytes);
     icache_flush_range(reinterpret_cast<uintptr_t>(image), o.image_bytes);

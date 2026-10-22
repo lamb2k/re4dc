@@ -2733,6 +2733,12 @@ VRAM_ROOM_ARENA ?= 0
 # CRASH_OVL_LINE=1 (lane mipfault22, diagnostic, default 0 = image unchanged): the crash screen lists each loaded
 # route overlay as name@image+bytes, so a console fault pc / pr in an overlay can be symbolized.
 CRASH_OVL_LINE ?= 0
+# OVL_WATCH=1 (lane mipfault22, diagnostic only): log every changed word of a loaded route overlay (after each
+# texture upload and close, and at release).
+OVL_WATCH ?= 0
+ifneq ($(OVL_WATCH),0)
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_WATCH=1
+endif
 ifneq ($(CRASH_OVL_LINE),0)
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_CRASH_OVL_LINE=1
 endif
