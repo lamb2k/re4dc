@@ -1,0 +1,11 @@
+# Return-door child independent source review
+
+Candidate `514fe3b5a61c370addd8719eee32f6aa8ae079be`: BLOCKED by a missing child-local runtime dependency. This review imports no candidate modules, runs no tests/native child/full preflight, mutates no QA seal and launches no guest.
+
+`inner-adapter.py:178` reads `(P/'exact-log-symbols.json').read_text()`. The new child does not contain or locally pin that file. Its manifest correctly hashes the original v1 absolute file, but that cannot redirect a child-relative read. The controller thread starts on177, before this read, and the runner cleanup try/finally begins180. The absent file therefore raises before runner startup and outside that cleanup block. Existing private-job containment remains unchanged; this is a deterministic source launch failure, not an observed guest failure.
+
+All83manifest file size/hash pins pass:27local plus56absolute. The profile is exactly4c386fa2...ce99b; child manifest8d06f482...f500; concrete requestdadfedac...27d. Ten guardian runtime modules are byte-identical to acceptedf63bb6de; controller source differs only at Door contactA.20 to.15. Parser/nativebirth/exit/job/resources/input-deadline modules remain exact. No other missing directP/literal runtime dependency was found. Actual qualifiede81e/frame533 parent metadata has the same profile and programme; the external source/ABI/key/dependency/parent pins resolve and hash, but those successes do not qualify the missing local symbol target.
+
+Main and QA were notified before allocation. Preserve this baseline evidence and immutable seal. A successor must bind the actual read target and qualify it independently, retaining all original guards and strict parent checks. Static and retained source/host evidence do not establish return-door runtime acceptance, performance, release checks or physical Dreamcast acceptance.
+
+`review_static.py` uses standard-library AST/hash/file reads only. `review-514fe3.json` records exact pins, all83verifiedfiles,11runtimeidentities and the missing-target/order proof. No full disc/nativepreflight was rerun. The readonly preflight and nine-per-platform child receipts were inspected as retained evidence only.

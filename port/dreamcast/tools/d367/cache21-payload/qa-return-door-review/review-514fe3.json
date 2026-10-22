@@ -1,0 +1,852 @@
+{
+  "scope": "Independent SOURCE ONLY: no imports/tests/nativechildren/fullpreflight/build/image/guest/seal mutation",
+  "utc": "2026-10-22T04:54:17.237518+00:00",
+  "candidate_commit": "514fe3b5a61c370addd8719eee32f6aa8ae079be",
+  "disposition": "BLOCK: child-local exact-log-symbols.json absent",
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "tools_sha256": "8d06f482b0a4587aef90a610e2b2db132fa0fb9a09c015496f7f93e836d5f500",
+  "request_sha256": "dadfedacf34803b339fa667854c6aa9d7bb570fbccb3db3e16794ed143b9c27d",
+  "manifest": [
+    {
+      "path": ".gitattributes",
+      "absolute": false,
+      "exists": true,
+      "bytes": 71,
+      "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7",
+      "match": true
+    },
+    {
+      "path": "CHILD_SEAL.md",
+      "absolute": false,
+      "exists": true,
+      "bytes": 3595,
+      "sha256": "f7ea099f60fdb6769477d46e4e68c62f031b7c6347579589ad6327593f023a43",
+      "match": true
+    },
+    {
+      "path": "capture-budget.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 712,
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "match": true
+    },
+    {
+      "path": "child-tests-linux-20261022T044842706272Z.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 2401,
+      "sha256": "8cbdc6233f5407652fa3fb21020a457f70029b9b2f5977a1f403d105662f365a",
+      "match": true
+    },
+    {
+      "path": "child-tests-linux.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 2401,
+      "sha256": "c3c9ed0d806d22428dd9ba0e209382acfef904560b9df2f0f0a3260ad02758f6",
+      "match": true
+    },
+    {
+      "path": "child-tests-windows-20261022T044842397099Z.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 2381,
+      "sha256": "98d2cdbb8cde7745eb2da21aff88a454968bcc896d8ba0100f787937d38f3e2a",
+      "match": true
+    },
+    {
+      "path": "child-tests-windows.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 2381,
+      "sha256": "1b4b5a86e15afa502f635ad438339f95453ab7a02a9771afbab80effdddffc73",
+      "match": true
+    },
+    {
+      "path": "controller-core.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 7468,
+      "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "match": true
+    },
+    {
+      "path": "guest-profile-v2.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 13113,
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+      "match": true
+    },
+    {
+      "path": "guest-supervisor-core.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 5185,
+      "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "match": true
+    },
+    {
+      "path": "incidents/child-tests-linux.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 4066,
+      "sha256": "01c194bbb665705814db4deb4c667a95c31e2a39d181446b41b96477a9aada87",
+      "match": true
+    },
+    {
+      "path": "incidents/child-tests-windows.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 4086,
+      "sha256": "74e0356610c27d7934ddc87199f477301fa520bb6f7ee35fc77be14871024838",
+      "match": true
+    },
+    {
+      "path": "incidents/test-child-seal-initial.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 5856,
+      "sha256": "45ed3b93068e5db601f8bbe9fe38226c97de60a10b56bedd302df424bf55a8b0",
+      "match": true
+    },
+    {
+      "path": "inner-adapter.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "match": true
+    },
+    {
+      "path": "input-deadlines.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "match": true
+    },
+    {
+      "path": "layout-contract.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 4538,
+      "sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "match": true
+    },
+    {
+      "path": "observe.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 6626,
+      "sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "match": true
+    },
+    {
+      "path": "observer-v2.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 8805,
+      "sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "match": true
+    },
+    {
+      "path": "outer-driver.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 13247,
+      "sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "match": true
+    },
+    {
+      "path": "parent-source-qualification.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 2156,
+      "sha256": "a4e429b264200f3709dc73b3c2e8d50c36b586ac81d045d77785c1aeab49c7c8",
+      "match": true
+    },
+    {
+      "path": "policies.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 3455,
+      "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "match": true
+    },
+    {
+      "path": "referenced-readonly-files.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 18603,
+      "sha256": "8d0242980b9eaa47415d275a3ce74d8ddfb03ca855ced56b6b04fe46dd097747",
+      "match": true
+    },
+    {
+      "path": "run-child-seal-tests.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 1183,
+      "sha256": "14c155749e39b62eade74d73a19a669fc9f65a686bdef57ab19294f79b508ac3",
+      "match": true
+    },
+    {
+      "path": "runtime-source-proof.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 2970,
+      "sha256": "9b1611e7a11980be6099ae428830f2296a20e2cd85299a1db99de0db0d471273",
+      "match": true
+    },
+    {
+      "path": "source-qualification.json",
+      "absolute": false,
+      "exists": true,
+      "bytes": 2044,
+      "sha256": "845c480e771fc536d1aed1c88d1aa60fa9951b8430749a965953c471ebe397ee",
+      "match": true
+    },
+    {
+      "path": "test-child-seal.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 5939,
+      "sha256": "41a1eda900ae23ba0a0728c944dd57657a83767dc297ab4e800b17505f2d19f7",
+      "match": true
+    },
+    {
+      "path": "windows-backend.py",
+      "absolute": false,
+      "exists": true,
+      "bytes": 15331,
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\.gitattributes",
+      "absolute": true,
+      "exists": true,
+      "bytes": 71,
+      "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\SEAL_PLAN.md",
+      "absolute": true,
+      "exists": true,
+      "bytes": 4420,
+      "sha256": "e84ec8769c8eec63abf8b23352b688bb7e1c46451fb5ffea17fb450e5f774a77",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\capture-budget.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 712,
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\checkpoint-ABI.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 4613,
+      "sha256": "15b4c7ea458bb8f957c5b4e86e3dde47cf82a8b35da4c8575bbd92d453d1140f",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\controller-core.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 7467,
+      "sha256": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\current-transitions.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 18703,
+      "sha256": "25c5d4cccfbcea660849a02350aa0c334d2205e84a54d856819cf28f8e44a041",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\death-demo-source.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 2192,
+      "sha256": "e863aa62087251dd200fe7f34e0edfaef835fbd50773304e619c5279d3ff62e6",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\empty-keys.txt",
+      "absolute": true,
+      "exists": true,
+      "bytes": 76,
+      "sha256": "69c29ed80746da752fdd53d2410cf277060bfd04e9805e1c7a8664316ddacca2",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\exact-log-symbols.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 634,
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\guard-delta-proof.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 3096,
+      "sha256": "9c7361dc434d082238402496c6d3a9cedf379424945bd1794fcec579c019261c",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\guest-profile-v2.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 13113,
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\guest-supervisor-core.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 5185,
+      "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\incidents\\test-native-seal-initial.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 5108,
+      "sha256": "32d9c0712fcdaf354e4a26b28bd1afbba2471c03be70cd312712e57d544daa6c",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\independent-85bac-README.md",
+      "absolute": true,
+      "exists": true,
+      "bytes": 6122,
+      "sha256": "42d22171c95745a297fc131467aacedbd42c62a3cee399ac47bd0a6fdd39a7eb",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\independent-85bac-review.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 15797,
+      "sha256": "9a6755e5fc2a339425a3f35140ac5be828266bdb56c49d6522322cc95cefafaa",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\inner-adapter.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\input-deadlines.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\layout-contract.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 4538,
+      "sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\native-host-cases-20261022T040636338844Z.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 4715,
+      "sha256": "508d2ce7a1b97fa20d8b503446426881afcefa150e911bf85f7985790b8e6233",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observe.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 6626,
+      "sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-binding-v2.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 1434,
+      "sha256": "ce53a9509462d920d9a2bee26e54566ba9c04f0080d11fadec82c89cf41d4bcd",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-v2-ABI.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 43125,
+      "sha256": "c48f2858953d7c693e1fb1885d0354fdb2706706c458099697fb1cc288ea228e",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-v2.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 8805,
+      "sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\outer-driver.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 13247,
+      "sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\policies.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 3455,
+      "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\r103-cold-keys.txt",
+      "absolute": true,
+      "exists": true,
+      "bytes": 189,
+      "sha256": "1d521b1ca227b07273fd4f7f1d2a7e1e2848b71eaee18ba07ad691386add2565",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\run-seal-tests.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 1820,
+      "sha256": "34afe005a75081ed508509f8bf195de42c2647c47d914d1c954d78a45da3b4ea",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-linux-20261022T040453736461Z.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 6650,
+      "sha256": "0bbf8b1c399cc74a52811a46cd86f4fb74f0e0ea1339f7f3d3705b1c45fa435e",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-windows-20261022T040453558946Z.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 9407,
+      "sha256": "19d86c72342db076919de1c56e88a805923238049156cf6b59c821c3d7a511b2",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-windows-20261022T040559721376Z.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 2218,
+      "sha256": "9df234c488fe025113f049186dc38b00ad3b5bed06fb98d39d6a0ff6b5e72bb7",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-windows-20261022T040636472072Z.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 2218,
+      "sha256": "70ebc51deb885ccbd17946d07e51e7ccba4c1650d62ce0e235cd0d6fccf60017",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\selected-assets.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 2561,
+      "sha256": "b03b8053b9b85dfce317ed4c174f225bd4ed91cc489ae31cb0cd085ad861eb0e",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\source-contract-v2.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 8160,
+      "sha256": "b242787825500bcd453e399465f19bc2b71e45f881f069047e374d21e135f579",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\source-qualification.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 3241,
+      "sha256": "954a1cdcba2b64f5bf63f085f64ddeca63f111710f7024606f7e8ec427d435f1",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\test-failure-telemetry.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 10106,
+      "sha256": "f2ee60d6ced646115f980e01384d192909210bee11293d174c7ac729c9eaa5dc",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\test-native-seal.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 6320,
+      "sha256": "21aa1826986d014fddff4d025c40c6faa07f0e6c026fe342959c903740bde525",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\test-seal.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 6957,
+      "sha256": "63b4ba7559b5dbc7c0e7291357da7bf5ace221a1e7ac740471261131f73d6bbe",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\windows-backend.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 15331,
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\source-manifest.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 5892,
+      "sha256": "0b12c09410599ee55c96d49875dadf5236b210ef8d8267cc0d7aaa82ad921bfd",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_plan\\reader-c57-on-layout.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 1142783,
+      "sha256": "17289a5336a9fb5de4e83a3ed7b198696fcc2249342e26fe03d2aeaa6ca5baf8",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\run_observed_v3.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 18870,
+      "sha256": "592cc71d35749c6700c40df0b037b3bd9c0822558fc3040a6f649fa785781d72",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_runner18.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 17566,
+      "sha256": "8960ffcf6652e1aac9f846d2857cc5932314bf03bcbf99ae538d68d131d1ca20",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 6588,
+      "sha256": "c1d88f5cb650517f9163576e802104b6b0356e198fa2a23db3c36b79be6a3a75",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_read_log.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 6235,
+      "sha256": "e708e4cf748ce679aceaf9124f1a2412bd4d8242ddbdaaa92e3accae7323850f",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_runner.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 17551,
+      "sha256": "b1bf7235eed65f757ebb765ccaaefd3108ce935ff6bd80fe3c0a2e425ef0d394",
+      "match": true
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_death_repair\\evidence_footprint.py",
+      "absolute": true,
+      "exists": true,
+      "bytes": 1616,
+      "sha256": "e4d25d3fd26df445e6b7f30d98bd43debce5348dcfb28ca873d249c3d0f38132",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\dc_nvmem.bin",
+      "absolute": true,
+      "exists": true,
+      "bytes": 131072,
+      "sha256": "4a598599e9d376573354e4e76879decea8fcd1f7d01a0d97f9365ca6b937d311",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\disc.state",
+      "absolute": true,
+      "exists": true,
+      "bytes": 9273760,
+      "sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\dx11_shader_cache.bin",
+      "absolute": true,
+      "exists": true,
+      "bytes": 52224,
+      "sha256": "2892cce6e64f82dbc9c251b6d3bb844ddb8ba7be38fe9bfa09402771b27ca303",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\T0000_vmu_save_A1.bin",
+      "absolute": true,
+      "exists": true,
+      "bytes": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\vmu_save_A2.bin",
+      "absolute": true,
+      "exists": true,
+      "bytes": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\checkpoint.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 3022,
+      "sha256": "c61d68c940e1ee3fd72446ae066ee28bbf32eda9959ea4e5ea6f08f33c0a0d4d",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01-control\\qualification.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 95488,
+      "sha256": "a46f87ab02469a2504c525aedb19ebbe73da9ba5b1ab7519c23866f9cbb31afb",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01-control\\observed-acceptance.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 58750,
+      "sha256": "c5fcc6141cca426099e1fc34537edfeb522987c8c8a7814059afa150b279b83e",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\inner-control.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 82595,
+      "sha256": "b904189bd1a76fb32eca023cb0c0ec6d36cccfc148135160f50b89db264183b5",
+      "match": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\ownership-resource-guard.json",
+      "absolute": true,
+      "exists": true,
+      "bytes": 92273,
+      "sha256": "baf86bac00d05b2d52f751ab53f09f5047bc9682072e2c628d897b559a9ce385",
+      "match": true
+    }
+  ],
+  "runtime_identity": {
+    "outer-driver.py": {
+      "base": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "child": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "same": true
+    },
+    "inner-adapter.py": {
+      "base": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "child": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "same": true
+    },
+    "windows-backend.py": {
+      "base": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "child": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "same": true
+    },
+    "guest-supervisor-core.py": {
+      "base": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "child": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "same": true
+    },
+    "input-deadlines.py": {
+      "base": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "child": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "same": true
+    },
+    "controller-core.py": {
+      "base": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a",
+      "child": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "same": false
+    },
+    "policies.py": {
+      "base": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "child": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "same": true
+    },
+    "observe.py": {
+      "base": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "child": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "same": true
+    },
+    "observer-v2.py": {
+      "base": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "child": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "same": true
+    },
+    "layout-contract.py": {
+      "base": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "child": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "same": true
+    },
+    "capture-budget.py": {
+      "base": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "child": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "same": true
+    }
+  },
+  "direct_P_relative_literals": [
+    {
+      "module": "outer-driver.py",
+      "line": 130,
+      "target": "inner-adapter.py",
+      "exists": true,
+      "pinned_locally": true
+    },
+    {
+      "module": "outer-driver.py",
+      "line": 131,
+      "target": "guest-supervisor-core.py",
+      "exists": true,
+      "pinned_locally": true
+    },
+    {
+      "module": "outer-driver.py",
+      "line": 131,
+      "target": "windows-backend.py",
+      "exists": true,
+      "pinned_locally": true
+    },
+    {
+      "module": "outer-driver.py",
+      "line": 141,
+      "target": "inner-adapter.py",
+      "exists": true,
+      "pinned_locally": true
+    },
+    {
+      "module": "outer-driver.py",
+      "line": 74,
+      "target": "source-manifest.json",
+      "exists": true,
+      "pinned_locally": false
+    },
+    {
+      "module": "outer-driver.py",
+      "line": 126,
+      "target": "source-manifest.json",
+      "exists": true,
+      "pinned_locally": false
+    },
+    {
+      "module": "outer-driver.py",
+      "line": 127,
+      "target": "source-manifest.json",
+      "exists": true,
+      "pinned_locally": false
+    },
+    {
+      "module": "inner-adapter.py",
+      "line": 39,
+      "target": "controller-core.py",
+      "exists": true,
+      "pinned_locally": true
+    },
+    {
+      "module": "inner-adapter.py",
+      "line": 136,
+      "target": "input-deadlines.py",
+      "exists": true,
+      "pinned_locally": true
+    },
+    {
+      "module": "inner-adapter.py",
+      "line": 39,
+      "target": "capture-budget.py",
+      "exists": true,
+      "pinned_locally": true
+    },
+    {
+      "module": "inner-adapter.py",
+      "line": 102,
+      "target": "input-deadlines.py",
+      "exists": true,
+      "pinned_locally": true
+    },
+    {
+      "module": "inner-adapter.py",
+      "line": 178,
+      "target": "exact-log-symbols.json",
+      "exists": false,
+      "pinned_locally": false
+    },
+    {
+      "module": "observe.py",
+      "line": 4,
+      "target": "observer-v2.py",
+      "exists": true,
+      "pinned_locally": true
+    }
+  ],
+  "blocking_missing": [
+    {
+      "module": "inner-adapter.py",
+      "line": 178,
+      "target": "exact-log-symbols.json",
+      "exists": false,
+      "pinned_locally": false
+    }
+  ],
+  "existing_external_symbol_pin": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\exact-log-symbols.json",
+  "order": {
+    "thread_start": 177,
+    "missing_read": 178,
+    "runner_main_try": 180
+  },
+  "parent_source_metadata": {
+    "qualified": true,
+    "same_profile": true,
+    "state": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+    "frame": 533
+  },
+  "limitations": [
+    "Static launch-blocking proof, not a guest execution",
+    "Absolute manifest pin verifies v1 file but does not redirect child P-relative read",
+    "Retained parent/test/resource receipts inspected, not rerun",
+    "Runtime timing/exit/job/resource byte identity confirmed only; no new door qualification"
+  ]
+}
