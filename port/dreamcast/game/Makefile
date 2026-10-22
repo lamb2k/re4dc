@@ -3255,6 +3255,7 @@ include blender30.mk
 include tahash.mk
 # D367 machine checks (MCHECK_PT, MCHECK_SAFE; test builds; default off: no effect).
 include mcheck.mk
+include backface.mk
 # D367 PS2 world holes (WORLD_HOLE_DIAG; test 11 item E; default off: no effect).
 include worldhole.mk
 # D367 effect sprite trimming (FX_SPRITE_TRIM; test 11; default off: no effect).

@@ -766,6 +766,7 @@ static int aprof_transaction_draw(cModel* m) {
 #else
 extern "C" int re4dc_actor_transaction_draw(cModel* m) {
 #endif
+    RE4DC_BFC_SCOPE(!m?5u:m->id==0?3u:(m->id>=0x10 && m->id<=0x20)?4u:5u,m?unsigned(m->id):0u);  // BACKFACE_CENSUS
     ATD(m,0,0,0);INVIS_NOTE(m,0);
 #if RE4DC_ACTOR_BIND_REUSE
     ++re4dc_actor_tx_serial;  // this call: the Ganado plan's binding token names it (coarse_actor_owner_ganado.inc)

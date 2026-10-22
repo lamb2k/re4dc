@@ -1,3 +1,4 @@
+#include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
 #include "include/native_cabin.h"
 #if RE4DC_MOVIE_WORLD_ARENA
@@ -4065,6 +4066,7 @@ int mesh_submit(const Re4dcModelPart& p){
 }
 #endif
 extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
+    RE4DC_BFC_SCOPE(2u,0u);  // BACKFACE_CENSUS
 #if RE4DC_NATIVE_STATIC
     const Re4dcModelPart& p=*part;
     const unsigned frame=re4dc_ui_frame();
@@ -6445,6 +6447,7 @@ void pc_scan(unsigned frame){
 #undef RE4DC_FAR_SHELL_PART
 #endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
+    RE4DC_BFC_SCOPE(1u,0u);  // BACKFACE_CENSUS
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return 1;
 #endif
