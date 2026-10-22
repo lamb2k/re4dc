@@ -1,3 +1,65 @@
+# Per-key follow-on: item materials and selected mask runs
+
+The next bounded unit prepares seven further chains as individual .re4tex
+files over the immutable e45f7d66 combined candidate. It writes no full pack.
+Main owns any later pack assembly, residency checks and adoption.
+
+per_key.py reuses PR53 build_candidate on one-member archives in memory.
+It validates the actual current item BIN prefixes, external R4NREF or inline
+CMPR texture identities, PS2 provenance, source material headers and matching
+alpha-pair wrap/dimensions. Two formerly uncertain item keys are base colour
+inputs distinct from bump textures: itm3b tex0/bump1 and itm1c tex0/bump2.
+Source material flag 1 enables bumpSetup, not a mip layout. This work preserves
+the current native base sampler and does not implement or certify bump/specular.
+
+The six item alpha pairs match current source parts with alphaRef zero and
+equal size/wrap. Three already carry VQ bases in the sealed input while the
+historical PS2 library has twiddled packages. Their current VQ bases are pinned
+and preserved; historical library bytes are never silently restored.
+
+The mask extractor derives R4MPv001 pair keys from exact current registry and
+partner records. Three conv4_h3 keys bind Ashley11/h1/h3 partner mask runs;
+628a66ab binds the r200 truck-em3b-00 mask run. These native materials use
+same-UV alpha, TR blending, no depth writes and the existing bilinear mip header.
+Two Mendez-labelled candidates have positive preloads but no resolved direct
+or derived-pair binding in the inspected selected registry/partner packages.
+Their originals remain held; this is not proof of absence or pruning authority.
+
+| Key | Result | Added allocation |
+| --- | --- | ---: |
+| 15eb41ec-439f3753 | pass: item alpha pair | 2,752 bytes |
+| 494053fc-10003b8f | pass: item base colour | 352 bytes |
+| 56d70169-8a2e5214 | pass: Ashley alpha pair | 2,752 bytes |
+| 628a66ab-711d6b46 | pass: truck alpha pair | 1,376 bytes |
+| 83fef658-3fc6836e | pass: item alpha pair | 2,752 bytes |
+| 95e685c9-b3d27d88 | pass: item base colour | 352 bytes |
+| e224e969-04254881 | pass: existing VQ item alpha pair | 352 bytes |
+
+Twelve eligible keys were generated serially through the unchanged policy;
+seven passed and five remained exact after refusal. All 74 proposed lower
+levels were audited; all 43 accepted levels were independently decoded through
+1x1 with exact base pixels/payload and material identity. Five new holds:
+2c9c252a coverage, bc5bb46e coverage-tiny (1x1 vanishes), ded04d98 coverage,
+6596bca3 and f52df17e VQ colour (2x2 mean shifts 18.23 and 17.38 exceed 12).
+No threshold/encoder change and no held binary is supplied as an overlay.
+
+Overlay payload is 10,600 bytes above the seven originals, rounded allocation
+10,688 bytes. The seven output files total 51,544 bytes. Source input e45f7d66,
+all prior eight chains, colour-held original and all shared Ganado bytes remain
+untouched. Package/host compatibility is not observed useful minification,
+look, VRAM peak/fit, guest or physical-console acceptance; no FPS claim.
+
+Of the 70 review candidates: 15 prepared chains (eight in the sealed pack and
+seven in the overlay), six quality-held, 49 other unconverted. The latter are
+24 shared Ganado, 12 cutscene, four Leon variants, three actors, three effects,
+one breakable and two consumer-held Mendez masks. All 57 historically blocked
+rectangular keys remain unchanged. Future quality recovery must satisfy the
+existing gates: alpha-aware coverage-preserving lower-level construction, or
+an exact-base VQ lower-level encoder that meets the tiny-level colour limits.
+Such encoder work is outside this unit; held originals remain authoritative.
+
+---
+
 # mipmap23: bounded coverage additions
 
 The follow-on item unit qualifies two further PS2 item keys atop the six-chain
