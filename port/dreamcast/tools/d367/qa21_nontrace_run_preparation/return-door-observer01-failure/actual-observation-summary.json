@@ -1,0 +1,256 @@
+{
+  "scope": "actual original13bf observer01 evidence; qualification remainsFALSE",
+  "rows": 164,
+  "valid_rows": 161,
+  "invalid_rows": 3,
+  "typed_file_UI64_Loop1_rows": 19,
+  "manual_UI_frame_range": [
+    1108,
+    1230
+  ],
+  "actor_manager_valid_rows": 1,
+  "last_valid_ui_row": {
+    "global": {
+      "ptr": "0x8c361a58",
+      "frame": 1230,
+      "room": 257,
+      "player_life": 1200,
+      "rno": [
+        3,
+        0,
+        0,
+        0
+      ],
+      "stop": 2013265855,
+      "status": [
+        17563648,
+        514,
+        67108864,
+        268435456
+      ]
+    },
+    "player": {
+      "ptr": 2359697536,
+      "pos": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "ang": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rno": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "alive": 0,
+      "serial": 0,
+      "dmgType": 0,
+      "dmgType_bits": 0
+    },
+    "event_start_cnt": 0,
+    "subscreen_type": 64,
+    "ssloop": 1,
+    "qa_frames": 0,
+    "qa_flags": 0,
+    "keys": {
+      "on": 0,
+      "trg": 0,
+      "rel": 0
+    },
+    "counters": {
+      "g_shot_cnt": 2,
+      "c_shot_cnt": 2,
+      "g_hit_cnt": 0,
+      "c_hit_cnt": 0,
+      "g_kill_cnt": 0,
+      "c_kill_cnt": 0
+    },
+    "debug_flags": [
+      512,
+      0,
+      32768,
+      0
+    ],
+    "weapon_no": 2,
+    "pl_type": 0,
+    "weapon": {
+      "slot": 2357594286,
+      "id": 35,
+      "equipped_id": 35,
+      "weapon_no": 2,
+      "loaded_rounds": 8,
+      "item_class": 1,
+      "attribute": 0,
+      "weapon_source_match": true,
+      "valid_inventory_slot": true
+    },
+    "motion": {
+      "pMot": 0,
+      "Mot_frame": 0.0,
+      "Seq_frame": 0.0,
+      "Seq_frame_num": 0
+    },
+    "body": null,
+    "system": {
+      "region": 1,
+      "key_type": 0,
+      "flags": 0
+    },
+    "camera": {
+      "pos": [
+        0.0,
+        0.0,
+        5000.0
+      ],
+      "at": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "roll": 0.0,
+      "fovy": 20.0
+    },
+    "end_frame": 1230,
+    "coherent": true,
+    "valid": true,
+    "non_atomic": true,
+    "diagnostics": {
+      "death_trace": null,
+      "lethal_caller": null,
+      "LifeDownSet2_before_after": null
+    },
+    "unavailable": [
+      "diagnostics.death_trace",
+      "diagnostics.lethal_caller",
+      "diagnostics.LifeDownSet2_before_after"
+    ],
+    "actors": [],
+    "manager_valid": false,
+    "reason": "active node outside exact pool",
+    "manager_nodes_seen": 0,
+    "transport_coherent": true,
+    "transport_attempts": 1,
+    "host_s": 41.95299999997951,
+    "observed_monotonic": 396869.218,
+    "pid": 50724,
+    "start_filetime": 134371211620128448
+  },
+  "range_failure": {
+    "valid": false,
+    "coherent": false,
+    "non_atomic": true,
+    "reason": "snapshot address/extent outside SH4 RAM; unavailable, no input or witness",
+    "global": null,
+    "player": null,
+    "qa_frames": null,
+    "qa_flags": null,
+    "actors": [],
+    "manager_valid": false,
+    "read_failure": {
+      "kind": "RAMRangeError",
+      "address": "0x4648f008",
+      "format": "I",
+      "bytes": 4,
+      "allowed_start": "0x8c000000",
+      "allowed_end_exclusive": "0x8d000000",
+      "field_context": {
+        "base": "0x4648f000",
+        "structure": "cPlBody",
+        "member": "pHeadData",
+        "offset": 8
+      },
+      "attempt": 4
+    },
+    "unavailable": [
+      "global",
+      "player",
+      "weapon",
+      "motion",
+      "body",
+      "system",
+      "camera",
+      "actors"
+    ],
+    "transport_coherent": false,
+    "transport_attempts": 4,
+    "discarded_read_failures": [
+      {
+        "kind": "RAMRangeError",
+        "address": "0x4648f008",
+        "format": "I",
+        "bytes": 4,
+        "allowed_start": "0x8c000000",
+        "allowed_end_exclusive": "0x8d000000",
+        "field_context": {
+          "base": "0x4648f000",
+          "structure": "cPlBody",
+          "member": "pHeadData",
+          "offset": 8
+        },
+        "attempt": 1
+      },
+      {
+        "kind": "RAMRangeError",
+        "address": "0x4648f008",
+        "format": "I",
+        "bytes": 4,
+        "allowed_start": "0x8c000000",
+        "allowed_end_exclusive": "0x8d000000",
+        "field_context": {
+          "base": "0x4648f000",
+          "structure": "cPlBody",
+          "member": "pHeadData",
+          "offset": 8
+        },
+        "attempt": 2
+      },
+      {
+        "kind": "RAMRangeError",
+        "address": "0x4648f008",
+        "format": "I",
+        "bytes": 4,
+        "allowed_start": "0x8c000000",
+        "allowed_end_exclusive": "0x8d000000",
+        "field_context": {
+          "base": "0x4648f000",
+          "structure": "cPlBody",
+          "member": "pHeadData",
+          "offset": 8
+        },
+        "attempt": 3
+      },
+      {
+        "kind": "RAMRangeError",
+        "address": "0x4648f008",
+        "format": "I",
+        "bytes": 4,
+        "allowed_start": "0x8c000000",
+        "allowed_end_exclusive": "0x8d000000",
+        "field_context": {
+          "base": "0x4648f000",
+          "structure": "cPlBody",
+          "member": "pHeadData",
+          "offset": 8
+        },
+        "attempt": 4
+      }
+    ],
+    "host_s": 5.687999999965541,
+    "observed_monotonic": 396832.953,
+    "pid": 50724,
+    "start_filetime": 134371211620128448
+  },
+  "manual2_log_literal_emitted": false,
+  "PNG_visual_manual2": true,
+  "old_attempt_qualified": false,
+  "notes": [
+    "latest-state invalid is teardown row, not all41s",
+    "19UI rows prove genericfiles UI; exactAEfile3 fromterminal/rawsupplement+pixelsseparate",
+    "bodybadread fromTHISrun, not missingoriginal6.712slivefault"
+  ]
+}

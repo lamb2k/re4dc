@@ -1,0 +1,57 @@
+{
+  "scope": "closed originalevidence pins; no copies ofstate/image/assets",
+  "files": {
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/data/disc.state": {
+      "bytes": 10405569,
+      "sha256": "4717fff5b557f792f7d31fd26bc7a780777f19dbf22a6e359627b7307389be5c"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/latest-state.json": {
+      "bytes": 370,
+      "sha256": "c736fbd0c2b8356764520611b25f6ebea3ca01b8b2afd51077d533a3b1943440"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/read-only-state.jsonl": {
+      "bytes": 281998,
+      "sha256": "74694a9bbb5686e9dcce921b9cd0761e08f5c5fc45e900948a18cfe076e25223"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/run-output.txt": {
+      "bytes": 181425,
+      "sha256": "38fd984d996705a98abdccbe00edae75251a287ab196fa35fbff89d4e57c7c05"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/flycast.log": {
+      "bytes": 3714,
+      "sha256": "12312a3f08fb964272458694f11b9a13bdc99dfa59aed4655bbad20c2c186569"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/events/final/state-context.json": {
+      "bytes": 5087,
+      "sha256": "06b4489b7dfa4f8e55d95301aa003b66b730a3db62ed8d8f47313c110ae831b4"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/events/final/frames/fb0.png": {
+      "bytes": 101562,
+      "sha256": "5602c100027d99ad2c41ae76a46e5cfafb267013155448a0754e3069d3b198f0"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/events/final/frames/fb1.png": {
+      "bytes": 101603,
+      "sha256": "19d6516293d61dc2c762b29528ac0156b231e1e64728ed937dbcee91d055ea52"
+    },
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01-control/qualification.json": {
+      "bytes": 2849,
+      "sha256": "7f910f9fe2c6139e75f8d7c270e1c56ac62c4511a4ee261bac679379424557a8"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/qa21-combined-regression/RETURN-DOOR-OBSERVER01-ROOT-ALLOCATION.json": {
+      "bytes": 2480,
+      "sha256": "73edda8cf6f0c5d59770ef9ef9078ca9b0a04b7e0a7399499d856da8997df085"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/qa21-combined-regression/RETURN-DOOR-OBSERVER01-ROOT-LAUNCH.json": {
+      "bytes": 1112,
+      "sha256": "4a2371ad0d1314a3a507d569de30bc0b463d4aa352ced896754a5efc9243e57e"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/qa21-combined-regression/RETURN-DOOR-OBSERVER01-ROOT-stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/mnt/c/Game Dev/Emulators/codex-lanes/qa21-combined-regression/RETURN-DOOR-OBSERVER01-ROOT-stdout.log": {
+      "bytes": 353,
+      "sha256": "6f4d14ad028ffa3024b717af16f783b82d2c3fdca2b2823837f6391356689f7d"
+    }
+  }
+}

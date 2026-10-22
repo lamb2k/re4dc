@@ -1,0 +1,21 @@
+{
+  "scope": "12NEW captured manual evidence domains/fakeWinAPI pending-exit controls; no guest/attach/nativechild/input",
+  "utc": "2026-10-22T05:52:55.460107+00:00",
+  "platform": "Windows-11-10.0.26220-SP0",
+  "sources": {
+    "test-domains-exit.py": "681fe9bade53bbd1175d7a32f466d5b0a95f8a849832bbc76844c47a455e506d",
+    "run-domains-exit-tests.py": "6c0dc3b29121572c466bbe39da003d01e5ee530670d52e62b2cc5d11af13ad11",
+    "observer-v2.py": "b4ce92c72aba84010a4b22db372622415433c3ad531adae26bc17eed5dc7194c",
+    "observe.py": "a9c736b0a5cbdfc244b4caa0f036ff98c7df5bd89eb75e69f1e929076021ec15",
+    "layout-contract.py": "74754ec6977299b1268bc8c1a48423e42bed9e3b236d96e84cec36e255667b2e",
+    "policies.py": "f1f23f2ae281f9e35410d2a51fee6de13dc18d1643501644955fc0d40b92e899",
+    "inner-adapter.py": "82c4bf56dcb2a67407f20bb4f8eb008583ef14bfd1f3be026bba317ff63c6307",
+    "outer-driver.py": "61d6638aeb8f437ee9e932dc801fc78af6d99739d8611d7529960f85543e26bf",
+    "windows-backend.py": "dc983989b13be69ac5e043375d59edc6c12e878091e9918f98c92aaeb5ca74e7",
+    "captured-manual-terminal-fixture.json": "df5d1af8d5fba00be61baeb0091d2c7ae647b706b0c42d20e0fe717b6f0f5a84"
+  },
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "test_captured_manual_globalUI_valid_borrowed_player_and_actor_unavailable (__main__.Domains.test_captured_manual_globalUI_valid_borrowed_player_and_actor_unavailable) ... ok\ntest_existing_input_policies_and_deadline_core_unchanged (__main__.Domains.test_existing_input_policies_and_deadline_core_unchanged) ... ok\ntest_initial_player_reason_not_clobbered_by_independent_actor_reason (__main__.Domains.test_initial_player_reason_not_clobbered_by_independent_actor_reason) ... ok\ntest_manual_evidence_rejects_defaults_other_file_and_stale_identity_coherence (__main__.Domains.test_manual_evidence_rejects_defaults_other_file_and_stale_identity_coherence) ... ok\ntest_postread_PID_failure_prevents_all_domain_publication (__main__.Domains.test_postread_PID_failure_prevents_all_domain_publication) ... ok\ntest_sample_strictUI_domain_and_no_gameplay_inputs_or_actor_witness (__main__.Domains.test_sample_strictUI_domain_and_no_gameplay_inputs_or_actor_witness) ... ok\ntest_FAILED_unknown_reversed_time_and_birth_mismatch_refuse (__main__.ExitPhase.test_FAILED_unknown_reversed_time_and_birth_mismatch_refuse) ... ok\ntest_exit_timestamp_with_TIMEOUT_preserves_pinned_birth_identity_not_final_exit (__main__.ExitPhase.test_exit_timestamp_with_TIMEOUT_preserves_pinned_birth_identity_not_final_exit) ... ok\ntest_final_telemetry_still_refuses_pending_exit (__main__.ExitPhase.test_final_telemetry_still_refuses_pending_exit) ... ok\ntest_pending_exit_keyrelease_claims_no_queue_or_released_flag (__main__.ExitPhase.test_pending_exit_keyrelease_claims_no_queue_or_released_flag) ... ok\ntest_pending_inner_exit_cannot_skip_owned_job_stop (__main__.ExitPhase.test_pending_inner_exit_cannot_skip_owned_job_stop) ... ok\ntest_signaled_exit_uses_exact_final_duration (__main__.ExitPhase.test_signaled_exit_uses_exact_final_duration) ... ok\n\n----------------------------------------------------------------------\nRan 12 tests in 0.258s\n\nOK\n",
+  "guest_qualified": false
+}

@@ -1,0 +1,36 @@
+{
+  "scope": "13NEW captured-domain/fake-exit sourcecontrols only; no runtime qualification",
+  "utc": "2026-10-22T06:01:06.789842+00:00",
+  "pass": true,
+  "tests": {
+    "linux": {
+      "path": "domains-exit-tests-linux-20261022T055748458274Z.json",
+      "bytes": 3365,
+      "sha256": "aee5c4cdb6af11ee5c850894244734231b6a26c21f24c87d6c3381eca3d10438",
+      "tests": 13,
+      "sources_current": true
+    },
+    "windows": {
+      "path": "domains-exit-tests-windows-20261022T055749382054Z.json",
+      "bytes": 3345,
+      "sha256": "9dfcf429bfc253181ca9b42a53cdc1f9494b3669a695ac24771539627445c471",
+      "tests": 13,
+      "sources_current": true
+    }
+  },
+  "runtime_delta": {
+    "bytes": 2871,
+    "sha256": "10ed117c9083cf1463c7b34f367ad31d5add7d476c91ce22fd0b4af66b66c4a3"
+  },
+  "ABI_supplement": {
+    "bytes": 1860,
+    "sha256": "44a0a870112b16bca38bda2a06e5e325d39bd17a57aae82c1ab302c1639aa2dc"
+  },
+  "actual_terminal_state": "4717fff5b557f792f7d31fd26bc7a780777f19dbf22a6e359627b7307389be5c",
+  "actual_original_attempt_qualified": false,
+  "old_wait_error_exact_status": "unavailable; olddiagnosticdidnotrecord258vsFAILED",
+  "earlier12tests": "preserved; addedstrict UI signature coherence andfocusednegative, notruntimeguest",
+  "guest_allocated": false,
+  "future_reference_contract_gap": "actual3imagehardlinks vsimmutableprofile2; no relink/unlink/guardrelaxation",
+  "earlier_receipts": "initial12 + initial13 unsignedWAIT_FAILED proofs preserved with sourceversions inincidents; final13 adds signedFAILED -1 case"
+}
