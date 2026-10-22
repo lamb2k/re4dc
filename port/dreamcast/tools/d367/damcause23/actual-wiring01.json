@@ -1,0 +1,139 @@
+{
+  "applied": true,
+  "game30_blob": "2f2ae9676b4201a7fa64cb12707c8f267be41ef2",
+  "game30_sha256": "77a0b38a106c73725da6a37cb303ae0834e0f2c824926c61f2820e6d119f6ebe",
+  "only_change": "$(OBJDIR)/src/game/em_set.o $(OBJDIR)/src/game/em.o $(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_ISSUE52_ACTOR_DIAG=1",
+  "results": [
+    {
+      "variant": "default",
+      "exit": 0,
+      "stdout": "obj/src/game/em_set.o\nobj/src/game/em.o\nobj/src/game/read.o\nobj/mod/st1_2/src/st1/r10c.o\nobj/platform/modules.o\nobj/platform/crash_screen.o\nobj/src/game/em_sub.o\n",
+      "stderr": ""
+    },
+    {
+      "variant": "zero",
+      "exit": 0,
+      "stdout": "obj/src/game/em_set.o\nobj/src/game/em.o\nobj/src/game/read.o\nobj/mod/st1_2/src/st1/r10c.o\nobj/platform/modules.o\nobj/platform/crash_screen.o\nobj/src/game/em_sub.o\n",
+      "stderr": ""
+    },
+    {
+      "variant": "one",
+      "exit": 0,
+      "stdout": "obj/src/game/em_set.o -DRE4DC_ISSUE52_ACTOR_DIAG=1\nobj/src/game/em.o -DRE4DC_ISSUE52_ACTOR_DIAG=1\nobj/src/game/read.o -DRE4DC_ISSUE52_ACTOR_DIAG=1\nobj/mod/st1_2/src/st1/r10c.o -DRE4DC_ISSUE52_ACTOR_DIAG=1\nobj/platform/modules.o -DRE4DC_ISSUE52_ACTOR_DIAG=1\nobj/platform/crash_screen.o -DRE4DC_ISSUE52_ACTOR_DIAG=1\nobj/src/game/em_sub.o\n",
+      "stderr": ""
+    },
+    {
+      "variant": "invalid",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "/tmp/GmKS7u6P:7: *** ISSUE52_ACTOR_DIAG must be 0 or 1.  Stop.\n"
+    },
+    {
+      "variant": "no_crash",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "/tmp/GmGpodPt:11: *** ISSUE52_ACTOR_DIAG needs CRASH_SCREEN=1.  Stop.\n"
+    },
+    {
+      "variant": "no_stage",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "/tmp/Gm2tvrP6:14: *** ISSUE52_ACTOR_DIAG needs STAGE_OVL=1.  Stop.\n"
+    },
+    {
+      "variant": "no_route",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "/tmp/GmidaMfs:17: *** ISSUE52_ACTOR_DIAG needs ROUTE_OVL=1 via ROUTE_CH13=1.  Stop.\n"
+    }
+  ],
+  "prior_host_receipt_sha256": "c1fa42ec9723fff8f56e97c8308cb87b9b6b8e83e995571bc70016219dd7b7c3",
+  "prior_host_source_pins_all_match": true,
+  "disabled_parity_controls": [
+    {
+      "variant": "default",
+      "path": "src/game/em_set.cpp",
+      "tokens": 4794,
+      "exact": true
+    },
+    {
+      "variant": "default",
+      "path": "src/game/em.cpp",
+      "tokens": 2069,
+      "exact": true
+    },
+    {
+      "variant": "default",
+      "path": "src/game/read.cpp",
+      "tokens": 9434,
+      "exact": true
+    },
+    {
+      "variant": "default",
+      "path": "port/dreamcast/game/platform/crash_screen.cpp",
+      "tokens": 3827,
+      "exact": true
+    },
+    {
+      "variant": "zero",
+      "path": "src/game/em_set.cpp",
+      "tokens": 4794,
+      "exact": true
+    },
+    {
+      "variant": "zero",
+      "path": "src/game/em.cpp",
+      "tokens": 2069,
+      "exact": true
+    },
+    {
+      "variant": "zero",
+      "path": "src/game/read.cpp",
+      "tokens": 9434,
+      "exact": true
+    },
+    {
+      "variant": "zero",
+      "path": "port/dreamcast/game/platform/crash_screen.cpp",
+      "tokens": 3827,
+      "exact": true
+    },
+    {
+      "variant": "ppc_one",
+      "path": "src/game/em_set.cpp",
+      "tokens": 4794,
+      "exact": true
+    },
+    {
+      "variant": "ppc_one",
+      "path": "src/game/em.cpp",
+      "tokens": 2069,
+      "exact": true
+    },
+    {
+      "variant": "ppc_one",
+      "path": "src/game/read.cpp",
+      "tokens": 9062,
+      "exact": true
+    },
+    {
+      "variant": "non_native_one",
+      "path": "src/game/em_set.cpp",
+      "tokens": 4794,
+      "exact": true
+    },
+    {
+      "variant": "non_native_one",
+      "path": "src/game/em.cpp",
+      "tokens": 2069,
+      "exact": true
+    },
+    {
+      "variant": "non_native_one",
+      "path": "src/game/read.cpp",
+      "tokens": 9158,
+      "exact": true
+    }
+  ],
+  "limits": "Actual edited Make block evaluated; source unchanged from host04/OFF/PPC controls; no target object or full Makefile/recipe execution"
+}
