@@ -1,0 +1,135 @@
+{
+  "state": "PRIMARY_DOOR_SOURCE_ASSET_CLEAR_DESCRIPTOR_IMPLEMENTATION_REVIEW_PENDING",
+  "checks": [
+    "actual-205-ARC-hash",
+    "unique-205-AEV-0",
+    "door-type1-front-only-player",
+    "disk-door-trigger2",
+    "unlocked-data",
+    "conditional-identity-front-inside-3D-prism",
+    "actual-204-ARC-hash",
+    "unique-204-AEV-4",
+    "door-type1-front-only-player",
+    "disk-door-trigger2",
+    "unlocked-data",
+    "conditional-identity-front-inside-3D-prism",
+    "native205-upperdoor0-to204-Part1",
+    "native204-door4-to209",
+    "original-door0-exit-hook-bound",
+    "exit-hook-BGM-only",
+    "native-door-action-conversion2-to8",
+    "original-partner-and-built-room-guards-retained",
+    "generic-door-owns-prevroom-and-Part-transition",
+    "native204-entry-starts-firstcut-chase",
+    "firstcut-statusbit-off-Stopbit-on",
+    "goto-guard-does-not-cover-firstcut-Stop",
+    "existing-goto-is-game-thread-placement-once-currententry",
+    "built-room-gate-checks-native-package-existence",
+    "actual209-native-R4PW-present",
+    "exact-actual015-seed-identity",
+    "retained015-closed-freeplay205"
+  ],
+  "check_count": 27,
+  "frozen_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "programme_ELF": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "raw_programme": "78fb06976cc394ec6e4cb7861046c24a15f82ddf7bcb2fcbfd452d3fcbf72e33",
+  "master": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "actual015_closed_audit_sha256": "101565e36c31a6c6e40e3532ec15b85c189eb904ae729615369441ea7b45104c",
+  "door0": {
+    "record_hex": "00000000010100004f2f1c4600007a4400803b44aacacc459c68224779a4fb45f9332247f190fc459c7c2c478e52cd45d95e2c470301000102010000000000000000000002000000002d0000000000000000000000000000000000005a7f1546fd7fbb45660765c5c4dcdfbf020400000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "floor": 9995.8271484375,
+    "height": 1000.0,
+    "quad": [
+      [
+        6553.3330078125,
+        41576.609375
+      ],
+      [
+        8052.55908203125,
+        41523.97265625
+      ],
+      [
+        8082.11767578125,
+        44156.609375
+      ],
+      [
+        6570.3193359375,
+        44126.84765625
+      ]
+    ],
+    "candidate_pose": [
+      7314.582275390625,
+      9996.8271484375,
+      42846.009765625
+    ],
+    "candidate_angle": 0,
+    "destination": "0x204",
+    "destination_part": 1,
+    "destination_pose": [
+      9567.837890625,
+      5999.99853515625,
+      -3664.46240234375
+    ],
+    "lock_type": 0,
+    "disk_trigger": 2,
+    "native_trigger_expected": 8
+  },
+  "later_door4": {
+    "record_hex": "0000000001010000fd7fbb4500007a4400803b44546e3ac6577de6c6a46623c6a2ebe4c6e88d22c681d2d7c6e45c3ac69bdfd6c60301040102010000000000000000000002000000002d0000000000000000000000000000000000003e820f440000bc3bddedf0424ce5b0bf020900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "floor": 5999.99853515625,
+    "height": 1000.0,
+    "quad": [
+      [
+        -11931.58203125,
+        -29502.669921875
+      ],
+      [
+        -10457.66015625,
+        -29301.81640625
+      ],
+      [
+        -10403.4765625,
+        -27625.251953125
+      ],
+      [
+        -11927.22265625,
+        -27503.802734375
+      ]
+    ],
+    "candidate_pose": [
+      -11179.9853515625,
+      6000.99853515625,
+      -28483.38525390625
+    ],
+    "candidate_angle": 0,
+    "destination": "0x209",
+    "destination_part": 0,
+    "destination_pose": [
+      574.0350341796875,
+      0.0057373046875,
+      120.4645767211914
+    ],
+    "lock_type": 0,
+    "disk_trigger": 2,
+    "native_trigger_expected": 8
+  },
+  "source_findings": [
+    "RuntimeDoor0trigger8 is correct: sourceSceAtRoomSet converts disk2 to action8/actKind16/otNo2. Do not use disk2 as runtimegate.",
+    "Door0 is ordinaryAEVtype1 withfunc+0x40 normally0; originalexit hook is doorFunc+0x70, transferred/cleared bynativehandler. Do notinherit leverfunc-nonzero gate.",
+    "Native CheckDoorJumpWithAshley and built-room checks remain authoritative. Partner healthshadow doesnot establish actorpresence; subfalse must not override originalpartnerfailure.",
+    "Door0 data takesoriginalnextpos/prev205/Part1; actual204 entry andfirstcut are separate gates, not completionfromphase4alone.",
+    "R204 firstcut clearsStatus1eventbit whileStop0x10000000 remainsset. Nativegoto_poll onlychecksStatus1, so queuedentry2goto can execute duringfirstcut. Noentry2 descriptor/209 move in primary016.",
+    "209 has originalunlockedDoor4 andnativepackage onmaster. That provesstored capability only. Teleporting toDoor4 can bypass physicalchandelier/switch/chase traversal; it doesnot qualify thoseoriginalevents. No bounded39s timing is established fromsource, whosecamloops/counters depend onruntime."
+  ],
+  "publication_review_requirements": [
+    "A future explicit opt-in controlled test write method, not read-only or productionpath: exactfrozenWarp/Goto ABI/address/source androotallowlist reviewed beforelaunch.",
+    "Confirm currentwp active/applied/currententry, n_go0/unusedslot andcoherent205freeplay/Stop0. Write only24Bgo0 withdonefalse/subfalse/currententry, verifybeforepublish, publish4Bn_go1last. Neveredit actor/room/RSF/HP/outcomes orwrite max_entry/entry2.",
+    "Afterpublication engine owns done; observe nativegoto log/done/actualpose andactualclippedhit0/registeredaction before ordinaryDoor0A. No rollback/rewrite afterpartialfailure; preserve failedcontrolledstate.",
+    "Root aloneallocates exactnewsetupwrite lineage aftercandidate/lifecycle/publication review, freshprocess/disk/peer admission. Authentic127/294/013/009 and015seed remainprotected."
+  ],
+  "limits": [
+    "Conditionalidentitymatrixfront geometry is not actualcollision-clipped front; nativehit/actionreadiness remainsruntimegate.",
+    "No new016targetwrite/read API,guest/UIinput/build/image/sourceedit performed bythisreview. ProposedWarp addresses/layout fromowner are not yet independently qualified here.",
+    "No209promise ororiginalchandelier/chase/switch/no-warp/release/physicalacceptance inferred."
+  ]
+}
