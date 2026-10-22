@@ -161,9 +161,9 @@ pvr_ptr_t pvr_mem_malloc(size_t size) {
     } else
 #endif
     for(unsigned i = 0; i < nfree; ++i) {
-        Extent candidate = free_list[i];
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA && \
     defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) && RE4DC_VRAM_ROOM_ARENA_NO_TOP
+        Extent candidate = free_list[i];
         // Console experiment: keep glyphs, the overlay slab and core keys below
         // a47f2000. Class 1 room placement/retirement and dynamic use are unchanged.
         // Clip only the candidate, never the real free list: other classes may
@@ -175,10 +175,16 @@ pvr_ptr_t pvr_mem_malloc(size_t size) {
             const std::uintptr_t available = kLongLivedEnd - start;
             if(candidate.len > available) candidate.len = std::uint32_t(available);
         }
-#endif
         const std::uint32_t at = place(candidate, len);
         if(at == ~0U) continue;
         const std::uint32_t left = candidate.len - len;
+#else
+        // Keep the original expression with the experiment off: at the release
+        // recipe's -O1, even an equivalent local extent copy changes code size.
+        const std::uint32_t at = place(free_list[i], len);
+        if(at == ~0U) continue;
+        const std::uint32_t left = free_list[i].len - len;
+#endif
         if(left < best_left) { best = i; best_at = at; best_left = left; if(!left) break; }
     }
     if(best == ~0U || nalloc >= kMaxAlloc) { ++fails; return nullptr; }
