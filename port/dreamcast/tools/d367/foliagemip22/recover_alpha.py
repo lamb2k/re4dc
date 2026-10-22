@@ -14,6 +14,7 @@ import hashlib
 import json
 import multiprocessing
 import re
+import struct
 import sys
 from pathlib import Path
 
@@ -39,7 +40,7 @@ def r32(n):
     return (n + 31) // 32 * 32
 
 
-def start_set(quality_json, rooms):
+def start_set(quality_json, rooms, worlds=None):
     fol = {}
     for line in (PORT / "game/platform/include/foliage_keys.inc").read_text().splitlines():
         m = re.match(r"\{0x(\w{8})U,0x(\w{8})U,(\d)\}, // (r\w+)(.*)", line)
@@ -57,6 +58,22 @@ def start_set(quality_json, rooms):
             out.append(dict(key=r["key"], original=o, room=fol[o][1], foliage_class=fol[o][0], census=fol[o][2],
                             format=r["format"], pixel_format=r["pixel_format"], side=r["side"],
                             v2_reasons=r["reasons"], v2_levels=r["levels"]))
+    if worlds:   # cut-outs outside the foliage table (bare-tree branches, fences) placed in these rooms' PS2 worlds
+        have = {e["key"] for e in out}
+        for room in sorted(rooms):
+            p = Path(worlds) / room / "ps2-world.r4pw"
+            if not p.exists():
+                continue
+            w = p.read_bytes()
+            for r in json.loads(Path(quality_json).read_text())["rows"]:
+                if r["key"] in have or not r["alpha"] or not set(r["reasons"]) & {"coverage", "coverage-tiny"}:
+                    continue
+                if struct.pack("<I", int(r["key"].split("-")[0], 16)) in w:
+                    have.add(r["key"])
+                    out.append(dict(key=r["key"], original=s2o.get(r["key"], r["key"]), room=room, foliage_class=None,
+                                    census="world cut-out (not in foliage_keys.inc)", format=r["format"],
+                                    pixel_format=r["pixel_format"], side=r["side"], v2_reasons=r["reasons"],
+                                    v2_levels=r["levels"]))
     return sorted(out, key=lambda e: (e["room"], e["key"]))
 
 
@@ -107,6 +124,7 @@ def main():
     ap.add_argument("--quality-json", type=Path, required=True)
     ap.add_argument("--room-select", type=Path, required=True)
     ap.add_argument("--rooms", default="r100,r101,r103,r104")
+    ap.add_argument("--worlds", help="dir with <room>/ps2-world.r4pw: add held cut-outs those worlds place")
     ap.add_argument("--min-iou", type=float, default=0.5)
     ap.add_argument("--scoped-inc", nargs=2, action="append", default=[], metavar=("IN", "OUT"))
     ap.add_argument("--out-pack", type=Path)
@@ -118,7 +136,7 @@ def main():
     texpack.verify(pack)
     members = read_pak(pack)
     holds = mq.read_hold(a.room_select)
-    entries = start_set(a.quality_json, set(a.rooms.split(",")))
+    entries = start_set(a.quality_json, set(a.rooms.split(",")), a.worlds)
     jobs, ledger = [], []
     for e in entries:
         blob = members.get(key_tuple(e["key"]))
