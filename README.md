@@ -7,13 +7,39 @@
 It is the GameCube game's own recovered code, not a remake, drawn by a native Dreamcast renderer.
 This is an experimental fan test build, not the complete game.
 
-**[Download Test 21](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
+**[Download Test 22](https://github.com/lamb2k/re4dc/releases/latest)** · [Known issues](port/dreamcast/docs/KNOWN_ISSUES.md) ·
 [Port notes](port/dreamcast/README.md) · [Build the port](port/dreamcast/CONTRIBUTING-PORT.md) · [Decompilation](docs/DECOMPILATION.md)
+
+## What's new in Test 22
+
+Smoother distant textures, fewer pauses and crash and stall fixes, still up to the castle gate. Full details are
+in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
+
+- **Smoother distant textures (mipmaps).** Far ground and walls use smaller copies of their pictures, so they
+  shimmer less.
+
+  ![Mipmaps in the village: before left, Test 22 right](docs/images/releases/test-22/mipmaps-village.jpg)
+  <br>The village. Left without mipmaps, right Test 22. Flycast capture.
+
+  ![Mipmaps at the farm: before left, Test 22 right](docs/images/releases/test-22/mipmaps-farm.jpg)
+  <br>The farm. Left without mipmaps, right Test 22. Flycast capture.
+- **No disc read when you shoot.** The ammo digits and the muzzle flash load with the room.
+- **No stutter at in-game events.** Ganados keep their models through scripted moments.
+- **Faster inventory opening.** Its data is packed smaller on the disc.
+- **Fixed: the crash at the dam's first villager** on a real Dreamcast ([#52](https://github.com/lamb2k/re4dc/issues/52)).
+- **Fixed: less free memory after loading a save and resetting** ([#26](https://github.com/lamb2k/re4dc/issues/26)).
+- **Fixed: Ganados stalling as they die**, and the death scene after a chainsaw catch.
+- **Fixed: pausing in the Mendez fight**, and the world behind the pause menu ([#48](https://github.com/lamb2k/re4dc/issues/48), [#49](https://github.com/lamb2k/re4dc/issues/49)).
+- **Lake trees** on the islands no longer look shredded.
+
+  ![Lake island trees: Test 21 left, Test 22 right](docs/images/releases/test-22/lake-trees.jpg)
+  <br>The lake from the boat. Left Test 21, right Test 22. Flycast capture.
+- **Trail and ribbon effects** draw again.
+- **Safety guards** stop a failed load from crashing the game.
 
 ## What's new in Test 21
 
-Lighter, smoother fights and two places fixed, still up to the castle gate. Full details are in the
-[release notes](https://github.com/lamb2k/re4dc/releases/latest).
+Lighter, smoother fights and two places fixed, still up to the castle gate.
 
 - **Fights no longer stall reloading enemy animations** (the r100 ambush, the village fights). In the forest ambush after the house, animation loads dropped from about 700 to about 20, with no disc reads in the last 16 seconds (Flycast measurement).
 - **Ashley no longer stalls the game before the El Gigante fight (r11e).**
@@ -119,13 +145,16 @@ Fixes and a little more speed, still up to the castle gate. Full details are in 
 - **The world picture and the effect pictures on the way to the castle gate are back** ([#39](https://github.com/lamb2k/re4dc/issues/39)).
   For about a second in r200, some effect sprites can still be skipped ([#41](https://github.com/lamb2k/re4dc/issues/41)).
 
-## Coming soon: Test 22
+## Coming soon: Test 23
 
-Planned, with no date yet. Ticked items have passed our checks and will be in Test 22.
+Planned, with no date yet. Ticked items have passed our checks and will be in Test 23.
 
-- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate, on a second disc.
-- [ ] **Faster scenery drawing.**
-- [ ] **Sharper, steadier textures:** distant ground and walls use smaller copies of their pictures (mipmaps), so they shimmer less.
+- [ ] **Chapter 3-1 playable:** the castle's first part, past the gate.
+- [ ] **Mipmaps in more places**, with the room texture memory arranged to fit them.
+- [ ] **Faster drawing of hidden faces** of the world and the characters.
+- [ ] **Less scenery drawn when it can't be seen.**
+- [ ] **Faster inventory:** it reads only the item you open.
+- [ ] **A better-looking El Gigante up close.**
 
 ## What's new in Test 17.1
 
