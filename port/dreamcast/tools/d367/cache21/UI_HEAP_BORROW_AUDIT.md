@@ -78,3 +78,22 @@ A separate fault-containment question remains: close computes restore hash
 before thaw/recount but reports a mismatch after them. This is a review
 question about a failed restore, not evidence of an observed corrupt restore
 or the cause of issue52. No runtime patch or guard/default changed here.
+
+Disposition after follow-up: the conditional restore-fault containment question
+above is fixed in the separate default0 source candidate26bc3e787; see
+SS_RESTORE_VALIDATE_FIRST.md and independent caller review58ecc175c. Source/
+host checks do not establish target acceptance. The normal co-owner archive
+trace found no live-slot/dead-archive recount witness during ordinary UI close.
+
+The same independent37-check/35-function trace identified a separate reset
+contract: diedemo decline can select systemSoftReset, which clears all heaps
+before systemResetCommon/EmReadInit subsequently unbinds motion archives.
+Motion release_binding uses captured allocation headers/heap handles; the
+RESET_HEAP_FIX module-free wrapper does not cover motion_free. An already
+closed screen does not add retirement via SubScreenExitCore. A loaded MTC
+binding is the prerequisite. This is a source-path finding, not an observed
+runtime failure or cause of issue52. Main next implementation unit must qualify
+an ordered reset prephase: restore an active borrowed UI while its room heap
+still exists, quiesce readers/native consumers, retire motion before all-heap
+destruction, and retain ownership on refusal. A blind retire call in
+MemClearAllHeap cannot handle the active-UI ownership boundary safely.
