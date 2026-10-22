@@ -18,6 +18,13 @@
       Which listed rooms the packed file does not fully cover (lane r200-17, 10-16): a data set built from an older
       tree or a partial list set (the ch4 lane's resident-ch3.bin listed 6 of r10f's 153 keys and missed r112's set,
       so their r10f / r112 runs re-read 49 / 65 pictures from disc). Prints one line per short room; exit 1 if any.
+  resident_keys.py release <out.bin> [<d367 tools dir>]
+      The release dc/resident.bin in one step (lane residentbin22, 10-22): every top-level vram/resident/r*.tsv
+      plus every water/resident/r*.tsv, deduplicated, sorted and padded. Byte-identical to the res17b / res18f
+      method (pack vram/resident/*.tsv, then water/water_resident.py pack ... water/resident/*.tsv). Not the
+      castle18/ split (chapter 3 discs), not the vram lists alone (that drops the water rooms' pictures).
+      test_resident_release.py proves it rebuilds the shipped res18f (a9dca43b) from lane/fix18's lists and that
+      vram/resident/RELEASE.sha256 matches the current lists (rebuild resident.bin and update it with every list edit).
 
 The lists are data: tools/d367/vram/resident/r<room>.tsv, checked in, regenerated from the benchmark and play
 logs of a room when its texture set changes. The runtime loads a listed key only while the preload's slot and byte
@@ -146,5 +153,31 @@ def cmd_check(a):
     sys.exit(1 if short else 0)
 
 
+def release_lists(d367):
+    d367 = Path(d367)
+    return sorted((d367 / 'vram' / 'resident').glob('r*.tsv')) + sorted((d367 / 'water' / 'resident').glob('r*.tsv'))
+
+
+def release_bytes(d367):
+    recs = set()
+    for t in release_lists(d367):
+        room = int(re.match(r'r([0-9a-f]+)', t.stem).group(1), 16)
+        for ln in t.read_text().splitlines()[1:]:
+            if not ln.strip():
+                continue
+            k, w, h, f, _n = ln.split('\t')
+            crc, fnv = (int(x, 16) for x in k.split('-'))
+            recs.add((room, crc, fnv, int(w), int(h), int(f)))
+    b = b''.join(struct.pack('<4H2I', r, w, h, f, c, v) for r, c, v, w, h, f in sorted(recs))
+    return b + b'\0' * (-len(b) % 512), len(recs)
+
+
+def cmd_release(a):
+    import hashlib
+    b, n = release_bytes(a[1] if len(a) > 1 else Path(__file__).resolve().parents[1])
+    Path(a[0]).write_bytes(b)
+    print('%s: %d records, %d bytes, sha256 %s' % (a[0], n, len(b), hashlib.sha256(b).hexdigest()))
+
+
 if __name__ == '__main__':
-    {'list': cmd_list, 'pack': cmd_pack, 'check': cmd_check}[sys.argv[1]](sys.argv[2:])
+    {'list': cmd_list, 'pack': cmd_pack, 'check': cmd_check, 'release': cmd_release}[sys.argv[1]](sys.argv[2:])

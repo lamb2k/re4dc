@@ -640,6 +640,12 @@ T17R_DATA = T17T_DATA + ',res17b'
 # (a9dca43b; only those three rooms differ). Goes last, after res17b, on the Test 18 data line (not T17R_DATA).
 RES18FD = os.environ.get('RES18FD', '/root/re4data/private/fix18-20261018')
 DATA['res18f'] = {'dc/resident.bin': RES18FD + '/resident.bin'}
+# Lane residentbin22 (10-22, data only, no knob): res22 = dc/resident.bin from vram/resident_keys.py release (all
+# top-level vram/resident/r*.tsv + water/resident/r*.tsv in one step; the res17b / res18f method, which it rebuilds byte
+# for byte: vram/test_resident_release.py). res18f + r100 3d9d333a (in play after the sub screen closes) + 95 census
+# in-play uploads of 13 rooms; 5,502 records, sha256 8fb526cc (= vram/resident/RELEASE.sha256). Last: replaces res18f's.
+RES22D = os.environ.get('RES22D', '/root/re4data/private/res22-20261022')
+DATA['res22'] = {'dc/resident.bin': RES22D + '/resident.bin'}
 # Release lane rel18 (10-19, Test 18 item 10): garr18h = the LEON_HEADLESS v2 archives of data set garr18-head-20261019
 # (tools/d367/ps2leon/build_head.py): em/pl00.drs and em/pl08.drs with GC arc 0xC stubbed and the PS2 severed head as
 # its payload. Built from the payload disc's pl00 (1fdb5378) / pl08 (f4acbfad); no set on the Test 18 line stages either.
