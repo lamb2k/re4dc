@@ -455,6 +455,28 @@ endif
 GAME_CPPFLAGS += -DRE4DC_FAR_SHELL=1
 PLATFORM_CPPFLAGS += -DRE4DC_FAR_SHELL=1
 endif
+# WORLD_METER=1 (lane worlddraw23, Test 23 groundwork; QA disc only; default 0 = no code; render / display only): meters
+#   the PS2 world draw, which runs inside Render() (the "setup" ProcessTick phase the QA Diagnostics page never showed):
+#   WORLD OPQ (pass 0, the opaque world inside the cut), WORLD XLU (passes 1 + 2, punch-through and translucent, at
+#   whatever far they draw), SHELL (far shell): us and vertices per tick, plus the tick's wall time, in the GAME_TICK_LOG
+#   window (PT line fields wopq / wxlu / wshell / wall / vopq / vxlu / vshell). The Diagnostics page shows them with
+#   RENDER (setup minus the world) and OTHER (wall minus every shown part), so the shown parts add up to the frame.
+#   VRAM: every failed texture-RAM allocation is logged (VRAMFAIL size, caller, texture key, room) and counted per room.
+#   QA menu rows (this boot only; default GAME = the Options View distance as built): opaque world cut 12.5 / 10 / 8 m,
+#   translucent world far Full / 12.5 / 8 m, far shell On / Off; each changes only its own pass (the fog follows the
+#   Options View distance as before). DBG_WARP builds: warp line `wmeter <opaque mm> <translucent mm, 1 = full> <shell 0
+#   game, 1 on, 2 off>`. Needs QA_MENU=1, GAME_TICK_LOG, FAR_SHELL=1, VRAM_PAGES=1 (the QA disc recipe).
+WORLD_METER ?= 0
+ifneq ($(filter-out 0 1,$(WORLD_METER)),)
+$(error WORLD_METER must be 0 or 1)
+endif
+ifeq ($(WORLD_METER),1)
+ifneq ($(FAR_SHELL),1)
+$(error WORLD_METER needs FAR_SHELL=1)
+endif
+GAME_CPPFLAGS += -DRE4DC_WORLD_METER=1
+PLATFORM_CPPFLAGS += -DRE4DC_WORLD_METER=1
+endif
 # FOLIAGE_OPTION=1 (test 15, user 10-16 "ship with full near and off"; default 0 = no code; render only): a fourth Options
 #   row below View distance, "Foliage  Full / Near / Off" (option_rows.cpp), setting the FOLIAGE_TRIM level (hwfog.mk:
 #   0 full = every translucent world part as the PS2 draws it, 1 near = cut-out brush / leaf cards in the punch-through
