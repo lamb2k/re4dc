@@ -1,0 +1,19 @@
+# Independent exact-reference proposal review
+
+CLEAR as an immutable, unadopted source-only proposal0823ddf31e45984d5658bfa1b886142cfd4c2304; contract59f6bb01ea28822c319549a180fcdaad4998442167da67823bb3aa87f2732b45. This does not clear runtime implementation/adoption or a guest. Sixteenproposal pins, exact505f source-onlymanifest/831areview/profile4c pins and retained11fakecase receipts perWindows/Linux verify. No tests/model imports, actualreference query, image read/hash, preflight, guest or sealadoption was performed here.
+
+The declared boundary is consistent: exact3prelaunch/cleanpost paths; exact4only fixedreturn-door-domains01 track03 during staged-owned/live-owned phases. Staged requires rootallocation/capowner/retainedinneridentity/privatejob/reviewedrunnercreation. Live additionally requires actualcurrentretainedguest identity. Every positive puremodel assessment remains adoptedFalse/preflightFalse/launchAuthorizedFalse. Defaultoff/adoptionFalse are enforced. Oldprofile4c2link rule remains unchanged and refuses retained3. Every failednamespace/reference remains preserved.
+
+Identityconstants come from retained05:54receipt; fake metadata input is not current native evidence. The model checks allname/refsets, exactidentity/links/stat/hash/alias fields and sourcebefore-after equality, but cannot authenticate their acquisition. Its Boolean ownershipproof is a placeholder, not currentguest binding. A realcollector must repeat allnativehardlinknames and eachreference identity/stat around hashing, not only sourcecount: a same-count name swap could evade a collector that supplies stale enumeration alongside unchanged source stat.
+
+Required implementation delta before adoption:
+
+1. Newisolatedchild exactextensionpath/hash plus exactreviewedchildtoolspin activation, defaultoff; absentactivation runs baseline2. Refuse partial CLI and arbitraryreferences/outputnames. Pin all executedsources/data/ABI before imports.
+2. Guardednative collector for exactfullcanonical hardlinknames, eachancestor/reparse refusal/nativeFileID/samefile/inode/size/mtime/links and fullsourcehash. Repeat fullset/reference snapshots before/after hashing and at phase transitions; missing/racing evidence refuses.
+3. Derive stagedownership from actualrootallocation, exactcapowner, retainedinnerbirth/path/privatejob and reviewedrunnercreation. Derive liveownership from currentretainedguestbirth/path/job/exactcap. Do not accept Boolean assertions as proof.
+4. Add stagedhook after hardlinkcreation and before launch inside a newly reviewed child. Retainedrunner creates links130/140, enters guestPopen212 and unlinks active tracks301 in finally. A Popen-only wrapper throws inside that cleanup region; place validation before launchtry or explicitly preserve activefourth on contractfailure. No productionrunner/recipe edit is approved by this proposal.
+5. Fixednewreturn-door-domains01/control, semanticreturn-door01, sameprofile4c/e81e533 strictparent only. Preservefailedreturn-door01/observer01 and all3baseline links.
+6. Exact4duringownedstaging/live and exact3after clean existingrunnercompletion. Contractfailure/leftover4 preserves evidence and refuses cleanpost/futurelaunch until separatelyrevieweddeclaration; no unlink/rename to satisfy refusal.
+7. Independently qualify source/mock negative boundaries, review newseal/request, then separately perform authorizedfreshpreflight/resource/peer/native admission and allocation. No allocation follows from this source disposition.
+
+`review_static.py` uses only standard-library source/hash/AST/JSON reads; `review.json` records exactpins, runnerhook sourceidentity and the implementation boundary. Existinggameguards/recipe/profile/programme/ELF/assets/limits remain untouched. No gameplay/manual/AI/cinematic/Continue/performance/release/physical Dreamcast acceptance follows.
