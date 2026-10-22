@@ -9,11 +9,13 @@ level exactly as the PVR reads it (after quantization / VQ encoding) and checks:
   encoded level, on every level of side >= MIN_SIDE, must stay within coverage_tol of
   the base level's share (relative, so thin branch / leaf cards with a small share are
   judged against their own silhouette: r101 bare-tree branches thinned in game).
+  2x2 / 1x1 policy: the opaque texel count must equal the 4x4 level's coverage
+  rounded to that level (1x1 = majority of the 4x4 silhouette), within one texel at 2x2.
   Premultiplied box filtering followed by a fixed binary threshold turns 25 % into 0 %
   and 50-75 % into 100 %, which makes fences, leaves and hair vanish or fill in.
 * VQ lower-level colour (all VQ chains: the kept codebook may lack the averaged
   colours): against the ideal premultiplied box-filtered base, per level of side >=
-  MIN_SIDE, the compact-VQ metrics (premultiplied RGB RMSE) plus the mean colour shift.
+  every level down to 1x1, the compact-VQ metrics (premultiplied RGB RMSE) plus the mean colour shift.
   Fails above COLOUR_RMSE or MEAN_SHIFT.
 
 A failing texture is HELD at its original representation: the mip chain is stripped
@@ -141,6 +143,7 @@ def audit(item):
     reasons = set()
     if row["key"] in HOLD_KEYS:   # lane mipmap22: per-room selection manifest (--hold-keys)
         reasons.add("room-select")
+    cov_small = cov0
     s = side
     while s > 1:
         ideal = halve(ideal, s)
@@ -150,12 +153,22 @@ def audit(item):
         if alpha:
             c = coverage(lvl)
             entry["coverage"] = round(c, 4)
-            if s >= MIN_SIDE and abs(c - cov0) > coverage_tol(cov0, s):
-                reasons.add("coverage")
+            if s >= MIN_SIDE:
+                if abs(c - cov0) > coverage_tol(cov0, s):
+                    reasons.add("coverage")
+                if s == MIN_SIDE:
+                    cov_small = c
+            else:
+                # Tiny levels (2x2, 1x1) cannot hold an arbitrary share: the opaque texel count must equal the
+                # 4x4 level's share rounded to that level (1x1 = majority), within one texel at 2x2.
+                n = s * s
+                want = math.floor(cov_small * n + 0.5)
+                if abs(round(c * n) - want) > (1 if n > 1 else 0):
+                    reasons.add("coverage-tiny")
         if name == "vq":
             rmse, shift = colour(ideal, premul(lvl))
             entry.update(premultiplied_rgb_rmse=round(rmse, 2), mean_shift=round(shift, 2))
-            if s >= MIN_SIDE and (rmse > COLOUR_RMSE or shift > MEAN_SHIFT):
+            if rmse > COLOUR_RMSE or shift > MEAN_SHIFT:   # every selectable level, down to 1x1
                 reasons.add("vq-colour")
         row["levels"].append(entry)
     row["verdict"] = "held" if reasons else "pass"
