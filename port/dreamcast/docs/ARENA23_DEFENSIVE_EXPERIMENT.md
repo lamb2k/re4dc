@@ -81,7 +81,7 @@ Any module/cache mutation requires coordinated ownership; KOS remains untouched.
 
 Resource proposal: current sparse source is about 50.3 MB. Source/host/target-object
 allocation stays below 256 MiB. A future full build should request up to 2 GiB for
-objects/ELF/overlays and one standard GDEMU package at 1,188,056,400 bytes (prior
+objects/ELF/overlays and one standard GDEMU package at 1,188,056,352 bytes (prior
 layout: track01 1,058,400 + track02 1,237,152 + track03 1,185,760,800); final sizes
 must be measured. Keep one staging tree cap of 1.2 GB and at most two retained discs
 (about 2.38 GB); this is a later peak proposal, not current allocation. Admission
