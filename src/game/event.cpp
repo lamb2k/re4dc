@@ -27,6 +27,13 @@
 #include "types.h"
 #include "atari.h"
 #include "event.h"
+#if !defined(__PPC__) && defined(RE4DC_EVENT_MANAGER_STORAGE_FLAGS) && RE4DC_EVENT_MANAGER_STORAGE_FLAGS
+// Verify the actual Event layout, independently of the base policy's offset.
+typedef char EventStorageFlagOffsetMustMatch[
+    (__builtin_offsetof(Event, be_flag) == re4dcEventStorageFlags::offset) ? 1 : -1];
+typedef char EventStorageFlagWidthMustMatch[
+    (sizeof(((Event*)0)->be_flag) == sizeof(u32)) ? 1 : -1];
+#endif
 #include "light.h"
 #include "xml.h"
 #include "dbg_button.h"
@@ -2288,7 +2295,7 @@ int EventMgr::DelAll()
 
     for (i = 0; i < nArray; i++) {
         e = (Event*) ((u8*) pArray + size * i);
-        if (e->isAlive()) {
+        if (RE4DC_EVENT_IS_ALIVE(e)) {
             DelEvt(e, 0);
         }
     }
@@ -2307,7 +2314,7 @@ int EventMgr::Run()
     dieCheck();
     for (i = 0; i < nArray; i++) {
         e = (Event*) ((u8*) pArray + size * i);
-        if (!e->isAlive()) {
+        if (!RE4DC_EVENT_IS_ALIVE(e)) {
             continue;
         }
         if (EvtChk(e->StatusFlag, 0x00080000)) {
@@ -2367,7 +2374,7 @@ int EventMgr::IsAliveEvt(u32* key, int out, int chk)
     for (i = 0; i < nArray; i++) {
         char* p = nm;
         e = (Event*) ((u8*) pArray + size * i);
-        if (!e->isAlive()) {
+        if (!RE4DC_EVENT_IS_ALIVE(e)) {
             continue;
         }
         if (chk != 1) {
@@ -2805,7 +2812,7 @@ int EventMgr::EvtReadExec(char* nm, int em, u32 flags)
                     }
                     for (u32 i = 0; i < nArray && pArray; i++) {
                         Event* reader = (Event*) ((u8*) pArray + size * i);
-                        if (reader->isAlive() && (u32) reader->pData - base < current->m_size) borrowed = 1;
+                        if (RE4DC_EVENT_IS_ALIVE(reader) && (u32) reader->pData - base < current->m_size) borrowed = 1;
                     }
                     if (!borrowed && row->Count == 1 && row->FlagBe8 == 3 && row->dat2 == 0) {
                         if (!EvtFree(nm)) {

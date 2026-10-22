@@ -26,6 +26,17 @@
 #                     timing-perturbation control arm that proves the fixture is insensitive to
 #                     CPU speed before any A/B verdict is trusted.
 # Build every arm in its own OBJDIR (flag changes do not rebuild existing objects).
+# Event storage bookkeeping: every TU must use the same template policy.
+# Native only; other manager predicates/layout and recipe defaults are unchanged.
+EVENT_MANAGER_STORAGE_FLAGS ?= 0
+ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),0)
+ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),1)
+$(error EVENT_MANAGER_STORAGE_FLAGS must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1
+PLATFORM_CPPFLAGS += -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1
+endif
+
 GAME_CPU ?= 0
 ifeq ($(GAME_CPU),1)
 GAME_PS_ALIAS ?= 1
