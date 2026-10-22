@@ -1,0 +1,15 @@
+# Backface first-pair adapter interface
+
+No guest has been run. `launch.py` defaults to validation only. Root must prepare the current linked C/ASM identities and exact allocation before adding `--execute`.
+
+The profile fields consumed are: fixture_name (`f1` or `close-ganado`), arm (`C` or `ASM`), output (fresh directory below C:\Flycast-Evidence\re4-dreamcast\backface-sh4zam), capture (one child directory of output), controller_child_argv (exact current Python, -B, stock_child.py, absolute profile), stock_runner, stock_sha256, stock_argv, environment, inputs, hardlink_refs, current_programme_closure_verified, overlays (all14), console_sha256, freeze_tick330, lane_live_guests0/1, fresh_root_capacity_review true.
+
+The literal stock option order is `--disc DISC --cap CAP --syms THREE_SYMBOLS --seconds 40 --period 2 --stop "^warp: frozen at tick 330$" --grace 8 --name UNIQUE_NAME`. Disc fixtures are already baked, no --warp override. `environment` must equal every inherited RE4DC_* and FP_NOLIMIT value; console and global16 are mandatory. Root separately confirms lane2, current capacity and loaded fixture/class coverage.
+
+`inputs` pins every current program/ELF/overlay/disc/asset closure receipt plus Python, stock adapter/dependencies, console binary, harness config/read_log/capture helper/PIL/data. Hardlink entries are keyed by exact future capture track path and contain source, bytes, inode, device, links_before, sha256. Only exact samefile original tracks are exempt; EXE/copies/new track01 remain charged.
+
+Allocation JSON is exactly: {"allocated":true,"profile_sha256":"PROFILE_SHA","controller_sha256":"CONTAIN_SHA","attempt_limit":1,"guard_seconds":59,"closure_seconds":59.5}. Pass both profile/allocation SHA via launch.py. Admission/hashes are separate from the59/59.5 native execution/closure clock. Every original/discovered retained handle is collected, job-empty established, and handle-using threads joined before handles close. Never-returning OS calls are outside proof. Sampling uses a soft byte abort and final64KiB reserve, not a mathematically hard filesystem quota.
+
+The unique stock capture call is the sole AST replacement. Both existing RGB565 framebuffer decodes remain untouched. Event metadata records exact stock stop_at minus8, source KOS framebuffer pointers/offsets, current PID/creation/path/private job membership before and after, timestamps, and image hashes. Active scanout is unknown. `compare_four.py` accepts only mutual decoded identity of Cfb0,Cfb1,ASMfb0,ASMfb1 with equal dimensions; pairwise-only identity is refused. Root must separately establish clean frozen gameplay (including alive Ganado NMRS/class4), not blank/crash pixels. If four-way identity fails, retain evidence and require an actual selector; never choose closest pixels.
+
+Example execution interface: Python -B launch.py --profile ABS_PROFILE --profile-sha256 SHA --allocation ABS_ALLOCATION --allocation-sha256 SHA [--execute]. No retries or overwrite. Parent retains allocation ownership and phase authority.
