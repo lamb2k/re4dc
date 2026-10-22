@@ -1,0 +1,16 @@
+{
+  "scope": "Final019sourcequalification only; frozen candidate retained.",
+  "prior_seal_sha256": "2fbe47eae3693c261cf3a169e8b08a9de88e6d69c88ff27e46371414d5d9072f",
+  "members": [
+    {
+      "path": "DOOR019-SOURCE-QUALIFIED-HANDBACK.json",
+      "sha256": "c93affbacba27827e96399939846cfb01792a211c6994e8780599e08ea05db56",
+      "bytes": 3460
+    },
+    {
+      "path": "FINAL-CURRENT-STATUS.md",
+      "sha256": "eef7c170071fdfb35271788ebb9c5acc391f9cb38e8d7986da901659afeb865b",
+      "bytes": 3868
+    }
+  ]
+}
