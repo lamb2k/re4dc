@@ -1,0 +1,12 @@
+name tu22-r104-woods
+# lane texusage22: r104 from the r106 door, arrival event done (castgc r104 census warp), walking forward into the woods.
+room 0x104
+pos -3443 0 12338
+ang -1.5810
+rsf 0x104 1
+inv default
+god
+alivelog 150
+act 60 fwd 400
+act 470 right 30
+act 500 fwd 400

@@ -5,10 +5,20 @@
 #include <cstdint>
 #include <cstring>
 namespace re4dc_tamat {
+#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE
+// TEX_USAGE_LOG (lane texusage22): rows live for a whole window (many scenes), so the table is larger.
+constexpr unsigned MaxRows=1024, Buckets=4096, None=~0u, Bins=5;
+#else
 constexpr unsigned MaxRows=256, Buckets=512, None=~0u;
+#endif
 struct Row {
     unsigned source, list, tsp, tcw, textured, crc, fnv, resolved, tris;
     float fill;
+#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE
+    unsigned hdrs;        // polygon / sprite headers selecting this row (draw submissions)
+    float bin[Bins];      // clipped screen area by texels per pixel: <1, 1-2, 2-4, 4-8, >=8
+    float texels;         // sum of (texels per pixel x clipped area): area-weighted mean = texels / fill
+#endif
 };
 inline bool finite(float f) { return std::isfinite(f); }
 inline float area(const float* xs,const float* ys,unsigned n) {
@@ -46,12 +56,13 @@ struct Census {
                 if(r.source==source && r.list==list && r.tsp==tsp && r.tcw==tcw && r.textured==unsigned(textured))return current[list]=i;
             }else{
                 if(count==MaxRows){++overflow;return current[list]=None;}
-                const unsigned i=count++;rows[i]={source,list,tsp,tcw,unsigned(textured),0,0,0,0,0};b=std::uint16_t(i+1);return current[list]=i;
+                const unsigned i=count++;rows[i]=Row{};rows[i].source=source;rows[i].list=list;rows[i].tsp=tsp;rows[i].tcw=tcw;
+                rows[i].textured=unsigned(textured);b=std::uint16_t(i+1);return current[list]=i;
             }
         }
         ++overflow;return current[list]=None;
     }
-    void add(unsigned list,const float* x,const float* y,unsigned n,unsigned triangles) {
+    void add(unsigned list,const float* x,const float* y,unsigned n,unsigned triangles,const float* u=nullptr,const float* v=nullptr) {
         if(list!=0 && list!=2 && list!=4)return;
         const float a=area(x,y,n);
         if(a<0){++invalid;return;}
@@ -59,6 +70,20 @@ struct Census {
         const unsigned i=current[list];
         if(i==None){++orphans;return;}
         rows[i].tris+=triangles;rows[i].fill+=a;
+#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE
+        Row& r=rows[i];
+        if(!u || !v || !r.textured || a<=0)return;
+        // Unclipped screen area and UV area of the same polygon (shoelace); the texture size from the TSP.
+        float sa=0,ua=0;
+        for(unsigned k=0;k<n;++k){const unsigned j=(k+1)%n;sa+=x[k]*y[j]-x[j]*y[k];ua+=u[k]*v[j]-u[j]*v[k];}
+        sa=std::fabs(sa)*0.5f;ua=std::fabs(ua)*0.5f;
+        if(!finite(sa) || !finite(ua) || sa<1e-3f)return;
+        const float tw=float(8u<<((r.tsp>>3)&7u)),th=float(8u<<(r.tsp&7u));
+        const float tpp=ua*tw*th/sa;
+        if(!finite(tpp))return;
+        const unsigned b=tpp<1.0f?0u:tpp<2.0f?1u:tpp<4.0f?2u:tpp<8.0f?3u:4u;
+        r.bin[b]+=a;r.texels+=(tpp<4096.0f?tpp:4096.0f)*a;
+#endif
     }
     void sprite_first(unsigned list,const float* f) {
         sprite_x[list][0]=f[1];sprite_y[list][0]=f[2];
@@ -67,7 +92,16 @@ struct Census {
     void sprite_second(unsigned list,const float* f) {
         const float x[4]={sprite_x[list][0],sprite_x[list][1],sprite_x[list][2],f[2]};
         const float y[4]={sprite_y[list][0],sprite_y[list][1],f[0],f[3]};
+#if defined(RE4DC_TEX_USAGE) && RE4DC_TEX_USAGE
+        // Sprite UVs: words 13..15 (A, B, C) as 16-bit u (high) / v (low) halves; D completes the parallelogram.
+        std::uint32_t w[3];std::memcpy(w,f+5,sizeof(w));
+        float u[4],v[4];
+        for(unsigned k=0;k<3;++k){const std::uint32_t hu=w[k]&0xffff0000u,hv=w[k]<<16;std::memcpy(&u[k],&hu,4);std::memcpy(&v[k],&hv,4);}
+        u[3]=u[0]+u[2]-u[1];v[3]=v[0]+v[2]-v[1];
+        add(list,x,y,4,2,u,v);
+#else
         add(list,x,y,4,2);
+#endif
     }
     // Totals use exactly the printed row floors. Independent float reduction
     // orders can differ by more than one pixel after thousands of triangles.
