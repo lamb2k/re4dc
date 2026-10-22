@@ -1,0 +1,16 @@
+{
+  "scope": "Final022externalindependent sourcequalification only, originalcandidate/021partial unchanged; no guest or allocation.",
+  "prior_source_seal_sha256": "a4ea57cf27ec5d0df8d2e3e929935eb377283c5a33eb354e5a3dfebcf5992191",
+  "members": [
+    {
+      "path": "DOOR022-SOURCE-QUALIFIED-HANDBACK.json",
+      "bytes": 4911,
+      "sha256": "26be3ba4691d052b0694e34b4102e14d38785f40f50abccea51ba057493b23ab"
+    },
+    {
+      "path": "CURRENT-STATUS.md",
+      "bytes": 753,
+      "sha256": "757c9fe768fa2337dfb9b30cd1dc29b83ec03038cfe33d256807137b16faf14a"
+    }
+  ]
+}
