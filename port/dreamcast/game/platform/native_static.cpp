@@ -1,3 +1,4 @@
+#include "../world_scratch.h"
 #include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
 #include "include/native_cabin.h"
@@ -2215,6 +2216,18 @@ namespace piece { std::uint32_t* table=nullptr; const void* pkg=nullptr; }
 #pragma GCC push_options
 #pragma GCC optimize("O2")
 #endif
+#if RE4DC_WORLD_SCRATCH
+#if !RE4DC_NATIVE_MESH || !RE4DC_MESH_FASTPATH || !RE4DC_MESH_DIRECT || !RE4DC_PS2_WORLD_MESH
+#error WORLD_SCRATCH requires the original indexed direct mesh fast path
+#endif
+static_assert(sizeof(pvr_vertex_t)*re4dc::vp::kCacheEntries==re4dc::world_scratch::kVertexBytes);
+static_assert(sizeof(pvr_vertex_t)*re4dc::vp::kCacheSlots==re4dc::world_scratch::kReservedBytes);
+extern "C" void re4dc_world_scratch_prime_reset(){
+#if RE4DC_PS2_WORLD_LEAN
+    lean::prime_at=nullptr;lean::primed=0;
+#endif
+}
+#endif
 struct MeshDraw : Emitter {
     const re4dc::room::MeshPackage& package; const re4dc::room::MeshPart& part;
     const std::uint32_t* lut; // mesh view's colour LUT (nullptr: per-corner path)
@@ -2294,11 +2307,30 @@ struct MeshDraw : Emitter {
     // borrow per part per placement: ~30k entries a frame for ~24k transformed PS2 world vertices).
     unsigned primed=0;
 #endif
+#if RE4DC_WORLD_SCRATCH
+    bool scratch_borrowed=false;
+    ~MeshDraw(){if(scratch_borrowed)re4dc_world_scratch_release();}
+#endif
     bool borrow(){
         if(cache)return true;
         if(!lut || limit<re4dc::vp::kCacheSlots+64U)return false; // small slab: per-corner path
         limit-=re4dc::vp::kCacheSlots;
         cache=dst+limit;outcodes=reinterpret_cast<std::uint8_t*>(cache+re4dc::vp::kCacheEntries);
+#if RE4DC_WORLD_SCRATCH
+        // Outcodes and all 264 packet slots remain in the original RAM tail.
+        // The only relocated storage is the projected record array, for PS2 world.
+        if(ps2){
+            void* selected=cache;
+            const int borrowed=re4dc_world_scratch_acquire(cache,&selected);
+            if(borrowed<0){re4dc_model_packet_abort();return false;}
+            if(borrowed){
+                cache=static_cast<pvr_vertex_t*>(selected);scratch_borrowed=true;
+                // acquire resets retained prime state on each mode/storage epoch.
+                // The unchanged prime below (or lazy per-entry prime) initializes
+                // flags and oargb before any projected entry can be consumed.
+            }
+        }
+#endif
 #if !RE4DC_MESH_PRIME_LAZY
         re4dc::vp::prime(cache,re4dc::vp::kCacheEntries);
 #endif
