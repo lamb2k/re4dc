@@ -1483,7 +1483,7 @@ static void r22cSetWepMan()
         d.hp = 0x3E8;
         d.Guard_r = 0;
         d.Character = 0;
-        em = EmSetEvent(&d);
+        em = EM_MUST(cEm*, EmSetEvent(&d));
         r22c_work.p->wepMan = em;
         em->dmg.set(0, 0x80);
         SceAtDataSet_exec(1, SCE_LEVEL10, 0, (TaskFunc) r22c_talkWepMan, 0, 1);

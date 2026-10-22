@@ -1561,3 +1561,20 @@ extern "C" const void* re4dc_cabin_source_module(const void* pointer,unsigned by
     return module && module->pArc==pointer && bytes && bytes<=module->size ? module : NULL;
 }
 #endif
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+// em_set.cpp EM_MUST backoff: sleeps the calling task (the scenario task through SceSleep, as readEmData waits).
+extern "C" void re4dc_em_sleep(int frames)
+{
+    int k;
+
+    for (k = 0; k < frames; k++) {
+        if (SceSys.checkCTaskRange() == 1) {
+            SceSys.x73 = 1;
+            SceSleep(1);
+            SceSys.x73 = 0;
+        } else {
+            TaskSleep(1);
+        }
+    }
+}
+#endif

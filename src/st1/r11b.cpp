@@ -217,12 +217,12 @@ void R11bInit()
         new (&pos) Vec(r11b_boatPos0);
         new (&rot) Vec(r11b_boatRot0);
         l->set = one;
-        PSet(r11b_work.p->boat, EmSetFromList2(0x3C, 0));
+        PSet(r11b_work.p->boat, EM_MUST(cEm*, EmSetFromList2(0x3C, 0)));
         pG->room_id_prev = 0x11B;
         if (EM_OK(r11b_work.p->boat)) r11b_work.p->boat->setPos(&pos);
         if (EM_OK(r11b_work.p->boat)) r11b_work.p->boat->setAng(&rot);
     } else {
-        r11b_work.p->boat = EmSetFromList2(0x3C, 0);
+        r11b_work.p->boat = EM_MUST(cEm*, EmSetFromList2(0x3C, 0));
         l->set = 1;
         if (RsfCheck(G_ROOM_ID, 2) == 0) {
             static const Vec r11b_boatPos1 = {127560.0f, -1300.0f, 149100.0f};

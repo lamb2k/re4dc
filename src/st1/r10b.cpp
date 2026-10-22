@@ -439,7 +439,7 @@ static void R10b_chkWater()
             readEvent(0, 0, 0);
             }
             GamePointBossReset();
-            r10b_work->boss = EmSetFromList2(0xA1, 1);
+            r10b_work->boss = EM_MUST(cEm*, EmSetFromList2(0xA1, 1));
             SceExec(0x12, (TaskFunc) R10b_chkEmDie, 0, 0, SCE_PRIO_DEF_2, 0);
             CamCtrl.Comeback(0);
             em = GetEmPtrFromList(0xA0);

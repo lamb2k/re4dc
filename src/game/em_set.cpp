@@ -1097,6 +1097,37 @@ void EmSetFromList()
     }
 }
 
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+// EM_MUST (issue #52, coordinator 10-22): a progress-critical spawn (boss, the r11b boat) is never skipped. While
+// re4dc_emSetMust is set, a failed EmCreate (its module read failed even after readEmData's retries) sleeps with a
+// growing backoff capped at 60 frames (2 s) and tries again, with no limit: a slow load, never a soft-lock.
+extern "C" void re4dc_em_sleep(int frames);   // read.cpp
+extern "C" void OSReport(const char* fmt, ...);
+extern "C" int re4dc_emSetMust;
+int re4dc_emSetMust;
+extern "C" void* re4dc_em_must_end(void* em)
+{
+    re4dc_emSetMust = 0;
+    return em;
+}
+static cEm* emMustCreate(cEm* em, u8 id)
+{
+    int t;
+
+    for (t = 1; em == 0 && re4dc_emSetMust; t++) {
+        int f = 4 * t;
+
+        if (f > 60) {
+            f = 60;
+        }
+        OSReport("emset: required enemy id %x not created, retry %d in %d frames\n", (unsigned) id, t, f);
+        re4dc_em_sleep(f);
+        em = EmCreate(id);
+    }
+    return em;
+}
+#endif
+
 // Creates list entry `no` on demand (room event scripts): same checks as EmSetFromList, the
 // death bit only with chkDead. Returns the enemy, or errEm when nothing was created.
 cEm* EmSetFromList2(int no, int chkDead)
@@ -1133,6 +1164,9 @@ cEm* EmSetFromList2(int no, int chkDead)
     }
 #endif
     em = EmCreate(d->id);
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+    em = emMustCreate(em, d->id);
+#endif
     if (em == 0) {
         pLog->err(0, 0, "EmSetFromList2() Em set failed, Id = %x", d->id);
         return errEm;
@@ -1169,6 +1203,9 @@ cEm* EmSetEvent(EmListData* d)
         return errEm;
     }
     em = EmCreate(d->id);
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+    em = emMustCreate(em, d->id);
+#endif
     if (em == 0) {
         pLog->err(0, 0, "EmSetEvent() Em set failed, Id = %x", d->id);
         return errEm;

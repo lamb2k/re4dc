@@ -299,8 +299,8 @@ void R204Init()
         cEm* em0;
         cEm* em1;
 
-        em0 = setEm(0x59, -1, 1, 1, 1);
-        em1 = setEm(0x55, -1, 1, 1, 1);
+        em0 = EM_MUST(cEm*, setEm(0x59, -1, 1, 1, 1));
+        em1 = EM_MUST(cEm*, setEm(0x55, -1, 1, 1, 1));
         if (RsfCheck(G_ROOM_ID, 1)) {
             EmMgr.destroy(em0);
         } else {

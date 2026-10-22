@@ -77,5 +77,14 @@ void re4dc_halt(const char* file, int line);
 #else
 #define EM_OK(e) 1
 #endif
+// EM_MUST(T, expr): a progress-critical spawn (boss, boat): the create inside expr retries until it loads
+// (em_set.cpp). Knob off: expr unchanged.
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY && defined(__cplusplus)
+extern "C" int re4dc_emSetMust;
+extern "C" void* re4dc_em_must_end(void* em);
+#define EM_MUST(T, x) ((T) re4dc_em_must_end((re4dc_emSetMust = 1, (void*) (x))))
+#else
+#define EM_MUST(T, x) (x)
+#endif
 
 #endif
