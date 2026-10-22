@@ -18,6 +18,10 @@ def main():
     args=ap.parse_args()
     header=args.private/'certificate/pvs23_certificates.inc'
     native=NATIVE.read_text()
+    pvs_start=native.index('namespace pvs {\nstruct Head')
+    pvs_head=re.search(r'struct Head \{.*?\};',native[pvs_start:],re.S)[0]
+    admission=re.search(r'        if\(std::memcmp\(h.magic,"R4PV",4\)\).*?        else why=nullptr;',native[pvs_start:],re.S)[0]
+    caller=re.search(r'    pvs::open\(ps2w.room,[^\n]*;',native)[0]
     structs='\n'.join(re.search(r'struct '+name+r' \{[^\n]*',native)[0] for name in ('Ps2Part','Ps2Placement','Ps2Head'))
     eye=native[native.index('bool eye_of(const float* v,float e[3])',native.index('namespace pvs {\nstruct Head')):]
     eye=eye[:eye.index('\nvoid open(')]
@@ -35,7 +39,9 @@ def main():
 #include <vector>
 #include <limits>
 #include "pvs23_proof.hpp"
+#include "pvs23_format.hpp"
 #include "instanced_mesh.hpp"
+#include "world_rect_provenance.h"
 struct pvr_vertex_t {unsigned flags;float x,y,z,u,v;unsigned argb,oargb;};
 namespace re4dc::vp {constexpr unsigned kCacheSlots=264;}
 namespace re4dc::render {bool is_finite(float x){return re4dc::pvsproof::normal_or_zero(x);}}
@@ -58,6 +64,19 @@ struct World {unsigned room=0,nplacements=0;void* storage=nullptr;re4dc::room::M
 volatile unsigned re4dc_ps2_pvs_on=1;
 namespace pvs {unsigned generation=1,pl_skipped=0,cl_skipped=0;unsigned char bit=0;const std::uint8_t* cur=&bit;bool can_cut(unsigned);
 ''' + eye+'\n}\n'
+    call_probe='\nnamespace pvs {\n'+pvs_head+r'''
+std::vector<unsigned char> caller_table;
+const char* caller_reason="not called";bool caller_ok=false;unsigned caller_policy=0;
+void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uint32_t side_crc){
+    Head h{};const unsigned size=caller_table.size();assert(size>=sizeof(h));
+    std::memcpy(&h,caller_table.data(),sizeof(h));const char* why=nullptr;
+'''+admission+r'''
+    caller_policy=side_crc;caller_reason=why;
+    caller_ok=!why && re4dc_pvs23_table_guard(room,caller_table.data(),size,mesh_crc,mesh_bytes,side_crc);
+}
+}
+void invoke_real_ps2_open_call(const Ps2Head& h,unsigned policySourceCrc){
+'''+caller+'\n}\n'
     controls=r'''
 void generic(){
  using namespace re4dc::pvsproof;
@@ -93,6 +112,18 @@ int main(){
   ps2w.room=room;ps2w.storage=mesh.data();ps2w.nplacements=h->placements;
   ps2w.parts=reinterpret_cast<const Ps2Part*>(policy.data()+sizeof(Ps2Head));
   ps2w.placements=reinterpret_cast<const Ps2Placement*>(ps2w.parts+h->parts);
+  assert(!std::memcmp(h->magic,"R4PW",4) && h->version==1 && !h->reserved[0] && !h->reserved[1]);
+  assert(policy.size()==32U+16U*h->parts+52U*h->placements && h->crc==ps2_crc32(policy.data()+32,policy.size()-32));
+  assert(h->parts==ps2w.package.header().part_count && h->meshes==ps2w.package.header().mesh_count);
+  const unsigned policySourceCrc=re4dc::rect21::provenance::policy_source_crc(room,policy.data(),policy.size(),
+      ps2w.package.header().crc,mesh.size(),h->parts,h->meshes);
+  assert(policySourceCrc==(room==0x100?0x14118acdU:0x68100b21U) && policySourceCrc!=h->crc);
+  pvs::caller_table=table;
+  invoke_real_ps2_open_call(*h,policySourceCrc); // extracted production call, not a hand-written physical argument
+  assert(pvs::caller_policy==h->crc && !pvs::caller_reason && pvs::caller_ok);
+  pvs::open(room,ps2w.package.header().crc,mesh.size(),policySourceCrc);
+  assert(!pvs::caller_ok && !std::strcmp(pvs::caller_reason,"physical policy crc"));
+  invoke_real_ps2_open_call(*h,policySourceCrc);assert(pvs::caller_ok);
   auto load=[&](){return re4dc_pvs23_table_guard(room,table.data(),table.size(),ps2w.package.header().crc,mesh.size(),h->crc);};
   assert(load());
   table.back()^=1;assert(!load());table.back()^=1;assert(load());
@@ -144,11 +175,11 @@ int main(){
 '''
     with tempfile.TemporaryDirectory(prefix='pvs23-proof-') as td:
         td=Path(td);(td/'kos').mkdir();(td/'kos/fs.h').write_text('#pragma once\ntypedef int file_t;\n#define FILEHND_INVALID (-1)\n')
-        flags=['-I'+str(GAME.parent/'room'),'-DRE4DC_PVS23_CERTIFICATES="'+str(header)+'"',
+        flags=['-I'+str(GAME.parent/'room'),'-I'+str(GAME.parent/'tools/d367/texture_rect21'),'-DRE4DC_PVS23_CERTIFICATES="'+str(header)+'"',
                '-DPRIVATE_ROOT="'+str(args.private)+'"','-DRE4DC_MESH_FASTPATH=1','-DRE4DC_MESH_DIRECT=1',
                '-DRE4DC_MESH_VP_SCHED=1','-DRE4DC_HW_LEAN=1','-DRE4DC_SCENERY_CHUNK=1',
                '-DRE4DC_SCREEN_WF=640.0f','-DRE4DC_SCREEN_HF=480.0f']
-        compile_run(td,'proof',prefix+runtime+controls,flags)
+        compile_run(td,'proof',prefix+runtime+call_probe+controls,flags)
         compile_run(td,'uncertified',prefix+runtime+'\nint main(){unsigned char b[64]{};assert(!re4dc_pvs23_table_guard(0x100,b,64,1,2,3));assert(!pvs::can_cut(999));}\n',
                     [flag for flag in flags if not flag.startswith('-DRE4DC_PVS23_CERTIFICATES=')])
     print('PASS: real private mesh/table admission and actual generic guards/receipts; synthetic screen transcripts; target FPSCR/material/scene stubs')

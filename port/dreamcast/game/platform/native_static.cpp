@@ -4762,8 +4762,14 @@ void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uin
     fs_close(f);
     if(ok){
         std::memcpy(&h,b,sizeof(h));why="header";
-        if(!std::memcmp(h.magic,"R4PV",4) && h.version==1 && h.mesh_crc==mesh_crc && h.mesh_bytes==mesh_bytes &&
-           h.sidecar_crc==side_crc && re4dc::pvs23::layout(h,size)){
+        if(std::memcmp(h.magic,"R4PV",4))why="magic";
+        else if(h.version!=1U)why="version";
+        else if(h.mesh_crc!=mesh_crc)why="mesh crc";
+        else if(h.mesh_bytes!=mesh_bytes)why="mesh bytes";
+        else if(h.sidecar_crc!=side_crc)why="physical policy crc";
+        else if(!re4dc::pvs23::layout(h,size))why="layout";
+        else why=nullptr;
+        if(!why){
             const unsigned used=sizeof(Head)+8U*h.nx*h.nz+h.nsets*h.set_bytes;
             bool padding=true;for(unsigned i=used;i<size;++i)padding=padding && b[i]==0;
             if(!padding){re4dc_static_free(b);why="padding";return;}
@@ -4799,6 +4805,10 @@ void open(unsigned room,std::uint32_t mesh_crc,std::uint32_t mesh_bytes,std::uin
                 if(!why && (!re4dc_pvs23_table_guard || !re4dc_pvs23_frame_guard ||
                     !re4dc_pvs23_table_guard(room,b,size,mesh_crc,mesh_bytes,side_crc)))why="uncertified";
             }
+        }else{
+            re4dc_log("PS2PVS header reject room=%03x why=%s version=%u mesh_crc=%08x/%08x mesh_bytes=%u/%u physical_policy=%08x/%08x file_bytes=%u\n",
+                      room,why,unsigned(h.version),unsigned(h.mesh_crc),unsigned(mesh_crc),unsigned(h.mesh_bytes),mesh_bytes,
+                      unsigned(h.sidecar_crc),unsigned(side_crc),size);
         }
     }
     if(why){if(b)re4dc_static_free(b);cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;}
@@ -5503,7 +5513,9 @@ bool ps2_open(){
 #endif
 #endif
 #if RE4DC_PS2_PVS
-    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,policySourceCrc);
+    // PVS23 authenticates the exact physical scoped policy, unlike original
+    // baked AREA/IDs/SG metadata which uses the provenance-mapped source CRC.
+    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc);
 #endif
 #if RE4DC_MESH_FASTPATH
     auto* lut=reinterpret_cast<std::uint32_t*>(s+mbytes+pbytes);re4dc::vp::build_lut(lut);ps2w.lut=lut;
