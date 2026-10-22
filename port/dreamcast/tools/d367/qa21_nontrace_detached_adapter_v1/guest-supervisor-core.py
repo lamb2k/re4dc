@@ -1,0 +1,105 @@
+"""Portable independently supervised guest lifecycle, backend retained handles/job.
+No filesystem or native API is hidden here; fake backend verifies every exit path.
+"""
+ABSOLUTE=47.5;INPUT_RELEASE=40.75;INNER=41;CAP=60000000;ADMISSION=18*1024**3+128*1024**2;RUNTIME=18*1024**3+64*1024**2
+
+def monitor(backend,cmd,after_spawn=None):
+ job=None;inner=None;guest=None;identity=None;result={'qualified':False};released=False
+ try:
+  if backend.free()<ADMISSION:raise RuntimeError('fresh disk admission')
+  if backend.global_count()>=16:raise RuntimeError('global16 admission')
+  job=backend.create_private_job();inner=backend.spawn_waiting(cmd,job)
+  if after_spawn:after_spawn(inner)
+  backend.arm_deadlines(inner);backend.release(inner)
+  while True:
+   backend.check_deadlines()
+   if backend.free()<RUNTIME:raise RuntimeError('runtime disk floor')
+   if backend.evidence_bytes()>=CAP:raise RuntimeError('60MB evidence cap')
+   if backend.global_count()>16:raise RuntimeError('global16 overflow')
+   found=backend.find_guest()
+   if found is not None:
+    now=backend.identity(found)
+    if guest is None:guest=found;identity=now
+    if now!=identity:raise RuntimeError('PID/start/path identity changed')
+    elapsed=backend.actual_seconds(guest)
+    if elapsed>=INPUT_RELEASE and not released:backend.release_inputs(guest);released=True
+    if elapsed>=ABSOLUTE:raise RuntimeError('absolute47.5s cap')
+   if not backend.inner_alive(inner):
+    backend.wait(inner);result['qualified']=backend.exit_code(inner)==0;break
+   backend.tick()
+  backend.check_deadlines()
+  if guest is None:raise RuntimeError('no owned guest observed')
+  if backend.guest_alive(guest):raise RuntimeError('guest outlived runner')
+  actual=backend.actual_seconds(guest)
+  if actual>ABSOLUTE:raise RuntimeError('actual process exceeded47.5s')
+  result.update(actual_guest_seconds=actual,input_release_before41=released,identity=identity)
+ except BaseException as error:result.update(qualified=False,error=type(error).__name__+': '+str(error))
+ finally:
+  # Each cleanup attempt is independent; even failed pipe/wait/identity operations
+  # cannot skip private-job termination, remaining waits or final handle closure.
+  def cleanup(label,fn):
+   try:fn()
+   except BaseException as error:
+    result['qualified']=False;errors=result.setdefault('cleanup_errors',[])
+    if len(errors)<32:errors.append(label+': '+type(error).__name__+': '+str(error))
+    else:result['additional_cleanup_failures']=result.get('additional_cleanup_failures',0)+1
+  if inner is None:inner=getattr(backend,'inner',None) # Retain Popen whose startup raised before returning.
+  if job is not None and inner is not None and getattr(backend,'deadline_thread',None) is None:cleanup('startup failure guard',lambda:backend.arm_deadlines(inner))
+  # Keep the independent hard deadline armed until private-job termination.
+  if job is not None:cleanup('private job stop',lambda:backend.stop_private_job(job))
+  if inner is not None:cleanup('pipe close',lambda:backend.close_release_pipe(inner))
+  if guest is not None:
+   def release_owned():
+    if backend.identity(guest)!=identity:raise RuntimeError('refuse foreign guest input cleanup')
+    backend.release_inputs(guest)
+   cleanup('input release',release_owned)
+  if inner is not None:cleanup('inner wait',lambda:backend.wait(inner))
+  inner_finalized=inner is None
+  def confirm_inner():
+   nonlocal inner_finalized
+   proof=backend.inner_shutdown_proof(inner);result['inner_shutdown']=proof;inner_finalized=proof['finalized']
+   if not inner_finalized:raise RuntimeError('retained inner exit not signaled/finalized')
+  if inner is not None:cleanup('inner shutdown proof',confirm_inner)
+  if guest is not None:cleanup('guest wait',lambda:backend.wait_guest(guest))
+  def retain_exit_telemetry():
+   reporter=getattr(backend,'final_process_telemetry',None)
+   if reporter is None:
+    result['process_telemetry']={'available':False,'reason':'backend has no retained process telemetry provider'};return
+   try:result['process_telemetry']=reporter()
+   except BaseException as error:
+    result['process_telemetry']={'available':False,'reason':type(error).__name__+': '+str(error)};raise
+   if result['process_telemetry'].get('available'):
+    result['identity']=result['process_telemetry']['identity'];result['actual_guest_seconds']=result['process_telemetry']['actual_guest_seconds']
+    if result['actual_guest_seconds']>ABSOLUTE:raise RuntimeError('final retained process exceeded47.5s')
+  # Diagnostic failures cannot skip cleanup or change a failed run into PASS.
+  cleanup('retained exit telemetry',retain_exit_telemetry)
+  job_empty=job is None
+  if job is not None:
+   def confirm_empty():
+    nonlocal job_empty
+    backend.wait_private_job_empty(job);job_empty=True
+   cleanup('private job empty',confirm_empty)
+  def retain_final_resources():
+   snapshot={'available':False}
+   result['final_resources']=snapshot
+   try:
+    snapshot.update(free_C_bytes=backend.free(),charged_evidence_bytes=backend.evidence_bytes(),global_flycast_count=backend.global_count())
+   except BaseException as error:snapshot['reason']=type(error).__name__+': '+str(error);raise
+   snapshot.update(available=True,runtime_floor=RUNTIME,evidence_cap=CAP,global_limit=16,phase='after owned stop/waits and private-job empty check, before handle close')
+   if snapshot['free_C_bytes']<RUNTIME:raise RuntimeError('final runtime disk floor')
+   if snapshot['charged_evidence_bytes']>=CAP:raise RuntimeError('final60MB evidence cap')
+   if snapshot['global_flycast_count']>16:raise RuntimeError('final global16 overflow')
+  cleanup('final resource sample',retain_final_resources)
+  while not (job_empty and inner_finalized):
+   result.update(qualified=False,hard_deadline_retained='HOLD: missing empty-job/retained-signaled inner proof; guards and handles retained')
+   if job is not None:cleanup('HOLD private job stop',lambda:backend.stop_private_job(job))
+   if inner is not None:
+    cleanup('HOLD pipe close',lambda:backend.close_release_pipe(inner))
+    cleanup('HOLD inner wait',lambda:backend.wait(inner))
+    cleanup('HOLD inner proof',confirm_inner)
+   if guest is not None:cleanup('HOLD guest wait',lambda:backend.wait_guest(guest))
+   if job is not None:cleanup('HOLD job empty',confirm_empty)
+   if not (job_empty and inner_finalized):backend.tick()
+  cleanup('deadline join',backend.stop_deadlines)
+  cleanup('handle close',lambda:backend.close_owned_handles(job,inner,guest))
+ return result
