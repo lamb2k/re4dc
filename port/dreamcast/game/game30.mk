@@ -3449,6 +3449,20 @@ RESET_HEAP_FIX ?= 0
 ifeq ($(RESET_HEAP_FIX),1)
 GAME_CPPFLAGS += -DRE4DC_RESET_HEAP_FIX=1
 endif
+# EM_READ_RETRY=1 (issue #52, default ON, crash fix): read.cpp readEmData re-issues a failed enemy module read (no
+#   free DVD queue slot / GD read error; GDEMU only) up to 8 times with a growing sleep instead of returning 0, and
+#   r10c's first-villager event retries a NULL EmSetFromList2 for 60 frames, then skips the axe cut (spawning the
+#   bank's enemies 3/4 as its exit does) instead of dereferencing NULL. 0: the original code.
+EM_READ_RETRY ?= 1
+ifeq ($(EM_READ_RETRY),1)
+GAME_CPPFLAGS += -DRE4DC_EM_READ_RETRY=1
+endif
+# EM_READ_FAIL_INJECT=N (test only, default 0 = no code): r10c enemy module reads fail N times (>= 99: always), the
+#   issue #52 console failure on Flycast.
+EM_READ_FAIL_INJECT ?= 0
+ifneq ($(EM_READ_FAIL_INJECT),0)
+GAME_CPPFLAGS += -DRE4DC_EM_READ_FAIL_INJECT=$(EM_READ_FAIL_INJECT)
+endif
 # RESET_MEM_FIX=1 (lane resetmem; load a save, Game Reset / Retry, New Game: r100 started with less heap 4 and KOS
 #   malloc than after a fresh boot): state the port keeps across a soft reset goes back to its fresh-boot value.
 #   ACTOR_PL08_PACK: the bound player file is forgotten with the player archive (systemResetCommon), so a New Game's

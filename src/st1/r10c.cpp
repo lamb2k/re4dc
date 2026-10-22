@@ -414,9 +414,30 @@ static void r10c_EmEvent()
 
             ISSUE52_NOTE(2, 0);
             em = EmSetFromList2(2, 1);
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+            // Issue #52: EmSetFromList2 returns errEm (0) when the enemy cannot be created (its module read or a
+            // pool slot failed; readEmData has already retried the read); the original dereferences it. Try twice
+            // more 30 frames apart, then play on without the axe cut: the bank's enemies 3 and 4 still come in, as
+            // at the end of the event.
+            for (int k = 0; em == 0 && k < 2; k++) {
+                SceSleep(30);
+                em = EmSetFromList2(2, 1);
+            }
+#endif
             ISSUE52_NOTE(3, em);
             l->set = 0;
         }
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+        if (em == 0) {
+            OSReport("r10c: event Ganado (list 2) not created, axe cut skipped\n");
+            EM_LIST(3)->be_flag |= 1;
+            EM_LIST(3)->set = 0;
+            EmSetFromList2(3, 1);
+            EM_LIST(4)->be_flag |= 1;
+            EmSetFromList2(4, 1);
+            return;
+        }
+#endif
         em->setNoSuspend(1);
         ISSUE52_NOTE(4, em);
         r10c_work.p->em = em;
