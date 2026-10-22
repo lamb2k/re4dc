@@ -1,0 +1,20 @@
+{
+  "utc": "2026-10-22T00:12:20.709812+00:00",
+  "scope": "Source-only virtual stage planning; no image or guest",
+  "tests": 4,
+  "output": "test_hash_virtual_and_source_distinct (__main__.Planner.test_hash_virtual_and_source_distinct) ... ok\ntest_mirrored_endian_mismatch_rejected (__main__.Planner.test_mirrored_endian_mismatch_rejected) ... ok\ntest_overlapping_patch_rejected (__main__.Planner.test_overlapping_patch_rejected) ... ok\ntest_virtual_splice_boundaries_and_immutable_source (__main__.Planner.test_virtual_splice_boundaries_and_immutable_source) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.000s\n\nOK\n",
+  "virtual_source_reader_pid": 989414,
+  "proc_start_ticks": 3804271,
+  "reader_exited": 0,
+  "reader_handles_closed": true,
+  "files": {
+    "STAGE_PLAN.md": "0bc32776fa4c1876522ef70efeee8436709a0e08c150056785fc7e85bf31a3bd",
+    "iso-independent.py": "50f054415bb83c9a80de3117a2abde0083f7f2ac919b1a662b9769f377644498",
+    "main-fullpair-binding-reference.json": "95b71dd297f9cc28a128876a0313e2dd7194bebcc6810f89979f9c2739c2ddd8",
+    "source-descriptor-trees.json": "580405b4dabe19b8631d0685ca1e173fd20aea0b6054badbb5f7326d7687a861",
+    "source-native-identity.json": "77652b69237f0e33590c6807df9f1f82b918ae28f325afe104abb88286297260",
+    "test-planner.py": "cd1a4b527c614553de7de7851da59a201113f35c332004ac96819c8f9e39e994",
+    "virtual-stage-plan.py": "3186bcb9e64b2666ef8d1ef6dd040d2f7819f01a26fa10459d44d6a691fcfa88",
+    "virtual-stage-result.json": "9d542a13a2d1d77404dd66442750327420a0c63f4d4ad5e106dd061c03e43411"
+  }
+}

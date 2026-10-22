@@ -1,0 +1,18 @@
+{
+  "scope": "readonly descriptor check; no image copy",
+  "descriptors": [
+    {
+      "offset": 32768,
+      "kind": 1,
+      "blocks": 504001
+    }
+  ],
+  "roots": [
+    [
+      1,
+      45018,
+      2048
+    ]
+  ],
+  "Joliet_present": false
+}

@@ -1,0 +1,207 @@
+{
+  "main_docs_commit": "047f6301152393bba2189ed111f0995d8e2e6bc4",
+  "qualification_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/ganado-reader-nontrace-v1/qualification.json",
+  "qualification_sha256": "e75dddbb4b8f7c1396f4057f5d7364d5f6c553d02f88cf9f0030cc3357b558dd",
+  "scope": "Reference to main completed independent FNV/relocation/main-ELF checks; full hashes independently reread by observer/planner",
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "rows": [
+    {
+      "arm": "off-01",
+      "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "program": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+      "program_bytes": 3348164,
+      "ELF": "af9b231fcec77cc9d186d2159d21a4fc5d658450aeb6fb1fa18df58673b7328a",
+      "overlays": [
+        {
+          "name": "em22.ovl",
+          "sha256": "b6ca37a6819ae25aaaecdaa391e569576fdb55be2ade475160558e988e7a2ac0",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em2b.ovl",
+          "sha256": "7f911bf121245585986e1a37d199d192490a765cc6fdf727669502ba1834f0bc",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em2f.ovl",
+          "sha256": "aaa459d40a5a36bb026cbba09ec8601923e011c9b08781b3513728910c782db1",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em35.ovl",
+          "sha256": "f77eeca51099a2c546c4b294d60eacea043f9a29eefb584e325dbbf835dffbe1",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em3b.ovl",
+          "sha256": "8d3206a78dbf47dab0978549d41194228cdf7cb23df7d1b71d6d870a7305b08f",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl0f.ovl",
+          "sha256": "9e6ef28c7037d6a70df159c3b0b619d642b034dd6c7717e27a2e83ca6f2ba1b2",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl11.ovl",
+          "sha256": "c0c09fe91bcd4e773f7f4fd8a0efd6590cf3ecba5ebdd05def988309f7e622a7",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl14.ovl",
+          "sha256": "708eccab1479dc998ed75a14a48186bc11779645e56455bfdad79d08cbcc1454",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "sscrn.ovl",
+          "sha256": "90b0d74841fd172a297cb4c6802d84fce6abc56104e3169720ebd305abae5f34",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_0.ovl",
+          "sha256": "fb6fd3c5b69b5d8b2f4778adace333cc8b8e129c18839dc978257a0ab660a299",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_1.ovl",
+          "sha256": "3040180a3604b63e46780d2d90959c856ef547591c78500ce48260ce700173f5",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_2.ovl",
+          "sha256": "90576f23dc80e2409902e9c48f27917ecc5cb29a7c413d3288a7836c8ee0d6a0",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_3.ovl",
+          "sha256": "fb5ed4c7c3b71f481129a0d436f91eebf6fcf2f0bcd8ada23c1abea49728054e",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st2_0.ovl",
+          "sha256": "80ba0f71f4f9497c6c066965be309548479b1010a92135173218880da2586ea8",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        }
+      ],
+      "GANADO_ROUTINE_BYTES": 0,
+      "DEATH_TRACE_imported": false,
+      "all15_cache_guards": 0,
+      "CABIN_SOURCE": 0,
+      "recipe_sha256": "6839e3edb4f6b9fec0389bafaea48054d22a7a222b43e811aa0249b4adc1e301",
+      "log_sha256": "f7bd7c81f9325200d7f38ba37ed1016e38e4460545d14f5c0ec1082085bf6e22"
+    },
+    {
+      "arm": "on-01",
+      "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+      "program": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+      "program_bytes": 3348196,
+      "ELF": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+      "overlays": [
+        {
+          "name": "em22.ovl",
+          "sha256": "9b0d94e44950538646eaec6191f6d0ca91356c6fbdbdf2c34757ff04fe861f7c",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em2b.ovl",
+          "sha256": "370e53495f33fff29424f5d268b4028ea52db55bdd259799a6e6b7ee3ecb69f0",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em2f.ovl",
+          "sha256": "8b3841b7adbca6be06ffe5caaee601fcd7d0b1d3a3f0c1819062e122fd85b38a",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em35.ovl",
+          "sha256": "1abb74bdedd0e7671ce9763a43f1605c0c98ee82f5814b06d4928b655053ace2",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em3b.ovl",
+          "sha256": "1ca7839fc3d5774783253bc49e5a17c4f685b84a766b362f89ba635752b77a44",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl0f.ovl",
+          "sha256": "31bcfb11c774370074f8484e4a3ceeed46ed06ea99cce33ba0b99b80332c204d",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl11.ovl",
+          "sha256": "801907fdf2729b8b8c4f3e28a50a9efd995e42d57a78154ecd55227de957d3f3",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl14.ovl",
+          "sha256": "539df3d0a50cb7f94d56ccc84ba3bad3f238a3eb5e9abda8b284d5cd0b6e8334",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "sscrn.ovl",
+          "sha256": "a032b5d336a637aa90eb9d1a54b90f61c57c28867c4019f9766cd0d7efc41421",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_0.ovl",
+          "sha256": "5dd28dbd5962da5ef1b40fc28e294b6dc4fea54c23413196fa953f02e4fab455",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_1.ovl",
+          "sha256": "2c89e0e4bf1a2eaf4d7b5d4d19fcf88ab994ad883c587acc345f56ca9f1c5661",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_2.ovl",
+          "sha256": "974c0ee4941756cf316664da1f4e1b19eca127f46cb5ea74f1bbbf0afd556d07",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_3.ovl",
+          "sha256": "2cc5413537f9b13c3332493f22ed7c7dcb825e7c4957f000b8c9301673e4cb2e",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st2_0.ovl",
+          "sha256": "3b6c1b20edcec8db482d882f4ba29eb51f6f3e0d7114faecfa360f37027b234d",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        }
+      ],
+      "GANADO_ROUTINE_BYTES": 1,
+      "DEATH_TRACE_imported": false,
+      "all15_cache_guards": 0,
+      "CABIN_SOURCE": 0,
+      "recipe_sha256": "725a37281fef8b08b423158aa306523827ee8e4f06a7d410d669906bca8cf66e",
+      "log_sha256": "3ed6c13e087ed9d627aa39100a003e26db8f07be42915033c481e9e8a27dd137"
+    }
+  ]
+}
