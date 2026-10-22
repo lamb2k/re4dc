@@ -167,6 +167,9 @@ int main(){
 '''
     wm_start=source.index('extern "C" { volatile unsigned re4dc_qa_wopq_mm,re4dc_qa_wxlu_mm,re4dc_qa_wshell; }')
     wm_end=source.index('// The far a world pass draws with under the QA rows:',wm_start)
+    # Match the real FAR_SHELL include's anonymous-namespace declaration. A
+    # second global weak getter makes address lookup ambiguous in the full TU.
+    view_decl=re.search(r'extern "C" int re4dc_view_dist_get\(void\);', (GAME/'platform/far_shell.inc').read_text())[0]
     wm_driver=r'''
 #include <cassert>
 #include <cstring>
@@ -174,7 +177,9 @@ int main(){
 struct pvr_vertex_t {float x,y,z;};
 unsigned current_room=0x101;int current_view=0;
 extern "C" unsigned re4dc_wm_room(){return current_room;}
+'''+ '\nnamespace {\n'+view_decl+r'''
 extern "C" int re4dc_view_dist_get(){return current_view;}
+}
 volatile unsigned re4dc_ps2_pvs_on;
 unsigned long long timer_us_gettime64(){static unsigned long long t;return ++t;}
 '''+source[wm_start:wm_end]+r'''
@@ -196,7 +201,8 @@ int main(){
         compile_run(scratch,'pvs-no-guards',prefix+pvs+tests,('-DNO_GUARDS',))
         compile_run(scratch,'geometry',geometry)
         compile_run(scratch,'native-meter',wm_driver,('-DRE4DC_PS2_PVS=1','-DRE4DC_MESH_FASTPATH=1',
-            '-DRE4DC_MESH_VP_SCHED=1','-DRE4DC_SCREEN_W=640','-DRE4DC_SCREEN_H=480'))
+            '-DRE4DC_MESH_VP_SCHED=1','-DRE4DC_SCREEN_W=640','-DRE4DC_SCREEN_H=480',
+            '-DRE4DC_VIEW_DIST_OPTION=1','-DRE4DC_FAR_SHELL=1','-DRE4DC_WORLD_METER=1'))
         (scratch/'re4dc_platform.h').write_text('extern "C" void re4dc_log(const char*,...);\n')
         (scratch/'arch').mkdir()
         (scratch/'arch/timer.h').write_text('extern unsigned long long host_clock; inline unsigned long long timer_us_gettime64(){return host_clock;}\n')

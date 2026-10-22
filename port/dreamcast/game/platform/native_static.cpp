@@ -6026,8 +6026,9 @@ int ps2_pass(unsigned pass,float zfar){
     if(!pass && re4dc_ps2_pvs_on==2U){
         // pvs 2 (measurement): no set, and this frame's camera for the offline occlusion count (pvs_ceiling.py)
         std::uint32_t w[25];std::memcpy(w,ps2w.view,48);std::memcpy(w+12,P,28);std::memcpy(w+19,ps2w.viewport,24);
+        std::uint32_t far_bits;std::memcpy(&far_bits,&cull_far,sizeof(far_bits));
         re4dc_log("PS2CAM f=%u cf=%08x c=%08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x %08x p=%08x %08x %08x %08x %08x %08x %08x vp=%08x %08x %08x %08x %08x %08x\n",
-            re4dc_ui_frame(),unsigned(*reinterpret_cast<const std::uint32_t*>(&cull_far)),w[0],w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10],w[11],
+            re4dc_ui_frame(),unsigned(far_bits),w[0],w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10],w[11],
             w[12],w[13],w[14],w[15],w[16],w[17],w[18],w[19],w[20],w[21],w[22],w[23],w[24]);
     }
 #endif
@@ -6620,11 +6621,10 @@ void pc_scan(unsigned frame){
 // (0), its punch-through + translucent passes (1), the far shell (2); tick_log.cpp takes them once per tick.
 extern "C" { volatile unsigned re4dc_qa_wopq_mm,re4dc_qa_wxlu_mm,re4dc_qa_wshell; }
 extern "C" unsigned re4dc_wm_room(void);
-extern "C" int re4dc_view_dist_get(void) __attribute__((weak));
 static unsigned wm_generation;
 extern "C" void re4dc_world_meter_identity(unsigned out[7]){
     out[6]=wm_generation;
-    out[0]=re4dc_wm_room();out[1]=re4dc_view_dist_get?unsigned(re4dc_view_dist_get()):~0U;
+    out[0]=re4dc_wm_room();out[1]=unsigned(re4dc_view_dist_get()); // existing FAR_SHELL/VIEW_DIST_OPTION interface
 #if RE4DC_PS2_PVS
     out[2]=re4dc_ps2_pvs_on;
 #else
