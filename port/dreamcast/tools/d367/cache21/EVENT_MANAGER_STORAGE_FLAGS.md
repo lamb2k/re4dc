@@ -35,7 +35,7 @@ Attempt03 uses DVD_READ_SAFE=1 and PVR_PIPELINE=1 in every arm; no ad-hoc macro 
 source fix was used. Those qualification inputs do not change production recipes.
 The second receipt records the accepted game gate and first Event receipt.
 
-Independent actual-source strict-vptr lifecycle fixtures are pending. Allocation,
+Independent review927d1a425 passed23 lifecycle groups/108 assertions under strict undefined/vptr diagnostics, with ten isolated OFF controls reproducing the expected raw/dead-slot violations. No bounded implementation defect was found. Host-only sized-delete ABI adaptation, service stubs, source-reviewed rather than executed branches and all scope limits are recorded in event-storage-host-review.md and event-storage-host-independent.json. Allocation,
 heap reset, active-object/reader epochs, other managers, yielding constructors and
 stale handles remain separate audit obligations. This does not establish issue52's
 hardware cause. No linked programme, guest, release or Dreamcast acceptance.
