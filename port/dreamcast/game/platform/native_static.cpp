@@ -57,6 +57,10 @@
 #include <cstdlib>
 #include "native_static.h"
 #include "cache20.h"
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// WORLD_METER (game30.mk): the QA menu's world rows (0 = the game's own far / shell; defined before re4dc_ps2_mesh_draw).
+extern "C" volatile unsigned re4dc_qa_wopq_mm,re4dc_qa_wxlu_mm,re4dc_qa_wshell;
+#endif
 #if defined(RE4DC_RIGID_CENSUS) && RE4DC_RIGID_CENSUS == 2
 extern "C" volatile unsigned re4dc_rigid_hide;   // native_actor_fast.cpp (RIGID_CENSUS=2)
 #endif
@@ -6486,8 +6490,41 @@ void pc_scan(unsigned frame){
 #include "far_shell.inc"
 #undef RE4DC_FAR_SHELL_PART
 #endif
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+// WORLD_METER (game30.mk; QA disc only; display / render only). Per tick: us and vertices of the PS2 world's opaque pass
+// (0), its punch-through + translucent passes (1), the far shell (2); tick_log.cpp takes them once per tick.
+extern "C" { volatile unsigned re4dc_qa_wopq_mm,re4dc_qa_wxlu_mm,re4dc_qa_wshell; }
+namespace wmeter {
+unsigned long long us[3];unsigned vtx[3];
+struct Scope {
+    unsigned k,v0;unsigned long long t0;const unsigned* src;
+    Scope(unsigned kind,const unsigned* vsrc):k(kind),v0(*vsrc),t0(timer_us_gettime64()),src(vsrc){}
+    ~Scope(){us[k]+=timer_us_gettime64()-t0;const unsigned v1=*src;if(v1>=v0)vtx[k]+=v1-v0;}
+};
+}
+extern "C" void re4dc_world_meter_take(unsigned* us_out,unsigned* vtx_out){
+    for(unsigned k=0;k<3;++k){us_out[k]=unsigned(wmeter::us[k]);vtx_out[k]=wmeter::vtx[k];wmeter::us[k]=0;wmeter::vtx[k]=0;}
+}
+// The far a world pass draws with under the QA rows: pass 0 the opaque cut, passes 1 / 2 the translucent far (1 = Full: the
+// far before the View distance cut: re4dc_fog_note_far's, already within FOG_FAR / the lake cap).
+extern "C" float re4dc_wm_far(unsigned pass,float far){
+    const unsigned o=pass?re4dc_qa_wxlu_mm:re4dc_qa_wopq_mm;
+    if(!o)return far;
+    return o==1U?(far_shell_noted>far?far_shell_noted:far):float(o);
+}
+extern "C" float re4dc_wm_full(void){return far_shell_noted;}
+// native_ps2_world.cpp: the far shell's draw, metered (vertices = strip vertices sent).
+extern "C" int re4dc_wm_shell_draw(float cut,float full){
+    const wmeter::Scope wm_scope(2U,&farshell::st.strip_verts);
+    return re4dc_far_shell_draw(cut,full);
+}
+#endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
     RE4DC_BFC_SCOPE(1u,0u);  // BACKFACE_CENSUS
+#if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
+    const wmeter::Scope wm_scope(pass?1U:0U,&stats.vertices);
+    zfar=re4dc_wm_far(pass,zfar);
+#endif
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return 1;
 #endif
