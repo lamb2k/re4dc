@@ -52,12 +52,15 @@ def pairs(p,pi,cl,level=0):
                 edge_map.setdefault(key,[]).append((ti,tri))
 
 
-def certify(pkgdir,work,room,limit=32):
+def certify(pkgdir,work,room,limit=32,margin=32.,pairs_only=False):
     pkgdir,work=Path(pkgdir),Path(work)
     p=Pkg(pkgdir/'ps2-world.re4mesh',pkgdir/'ps2-world.r4pw')
     meta=json.loads((work/'meta.json').read_text())
     assert meta['room']==room
+    assert meta['static_qualified'] and 'ps2-world.ids' in meta['input_hashes'],'missing static provenance or ids'
+    assert meta['static_provenance']['name'] in meta['input_hashes']
     for name,expected in meta['input_hashes'].items():assert sha(pkgdir/name)==expected,'stale prepared input: '+name
+    for name,expected in meta['prepared_hashes'].items():assert sha(work/name)==expected,'stale prepared output: '+name
     assert sha(pkgdir/'original.r4pw')==meta['original_policy_sha256']
     C,I=load_cells(work),load_inst(work)
     rows=list(p.iter_clusters())
@@ -71,11 +74,11 @@ def certify(pkgdir,work,room,limit=32):
             # Empty clusters are retained, not used as occluders.
             lo.append([-1e9]*3);hi.append([1e9]*3);continue
         assert np.isfinite(pts).all() and np.max(abs(pts))<1e6,'unsupported coordinate magnitude'
-        lo.append(np.nextafter(pts.min(0)-32.,-np.inf));hi.append(np.nextafter(pts.max(0)+32.,np.inf))
+        lo.append(np.nextafter(pts.min(0)-margin,-np.inf));hi.append(np.nextafter(pts.max(0)+margin,np.inf))
         if I['dyn'][instance] or pas!=0 or cull not in (0,2):continue
         for ti,t in enumerate(levels[0]):
             normal=np.cross(t[1]-t[0],t[2]-t[0]);area=np.linalg.norm(normal)
-            if cluster['level_count']==1 and area>2e6 and abs(normal[1])<0.5*area:candidates.append((float(area),instance,pi,part,cl,ti,t,cull,None))
+            if not pairs_only and cluster['level_count']==1 and area>2e6 and abs(normal[1])<0.5*area:candidates.append((float(area),instance,pi,part,cl,ti,t,cull,None))
         def panelkey(boundary):
             v=[tuple(x) for x in boundary]
             return min(tuple(v[k:]+v[:k]) for k in range(4))
@@ -120,19 +123,34 @@ def certify(pkgdir,work,room,limit=32):
                 edge=np.cross(a-center,b-center)
                 possible &= ((targets-center)@edge*direction).max(1)<0
             for target in np.flatnonzero(possible):
-                proven=all(quad_hides(q['triangles'],q['boundary'],elo,ehi,lo[target],hi[target],two_sided=cull==0,vertex_error=32.,clearance=2000.) for q in pair['all_lod_panels']) if pair else triangle_hides(t,elo,ehi,lo[target],hi[target],two_sided=cull==0,vertex_error=32.,clearance=2000.)
+                proven=all(quad_hides(q['triangles'],q['boundary'],elo,ehi,lo[target],hi[target],two_sided=cull==0,vertex_error=margin,clearance=2000.) for q in pair['all_lod_panels']) if pair else triangle_hides(t,elo,ehi,lo[target],hi[target],two_sided=cull==0,vertex_error=margin,clearance=2000.)
                 if proven:
                     S[cell,target]=False
                     proof.append([int(cell),int(target),int(ci)])
                     used[ci]=dict(instance=int(instance),placement_index=int(pi),placement_field=int(p.placements[pi]['placement']),part=int(part),cluster=int(cl),level=0,triangle_index=int(ti),triangle=t.tolist(),cull=int(cull),key=[p.pmeta[part]['crc'],p.pmeta[part]['fnv']])
                     if pair:used[ci]['pair']={k:(v.tolist() if isinstance(v,np.ndarray) else v) for k,v in pair.items()}
         if not S[cell].all():cells_with_cut+=1
+    # A runtime may wait for all dependency panels to be successfully submitted
+    # in the ordinary opaque placement prefix. Never clear an earlier target.
+    max_source_placement=max((d['placement_index'] for d in used.values()),default=-1)
+    prefix_proof=[]
+    for cell,target,dep in proof:
+        if rows[target][0]>max_source_placement:prefix_proof.append([cell,target,dep])
+        else:S[cell,target]=True
+    prefix_dropped=len(proof)-len(prefix_proof);proof=prefix_proof
+    cells_with_cut=int((~S[C['has']]).any(1).sum())
     packed=np.packbits(S,axis=1,bitorder='little').tobytes()
     (work/'proof-bits.bin').write_bytes(packed)
     report=dict(room=room,kind='continuous-triangle-geometric-candidate',runtime_admitted=False,clearance_mm=2000,vertex_uncertainty_mm=32,target_bound_expansion_mm=32,eye_bound_expansion_mm=32,occluder_lod_policy='single triangles from single-level clusters; exact directed quad panels certified at every actual LOD',pinned_instances=sorted(pinned),candidate_triangles=len(candidates),used_occluders=used,cell_target_proofs=proof,cells_with_cuts=cells_with_cut,cleared_bits=len(proof),set_cells=int(C['has'].sum()),cells=int(C['nx']*C['nz']),instances=int(C['ninst']),hashes={name:sha(work/name) for name in ('meta.json','cells.bin','inst.tsv','proof-bits.bin')},input_hashes={name:sha(pkgdir/name) for name in ('ps2-world.re4mesh','ps2-world.r4pw','original.r4pw','ps2-world.ids','ps2-world.r4tc')},runtime_requirements=['exact compiled certificate and all input identity checks','all used placements, source parts and opaque material keys guaranteed live this frame','no unsupported source hide/AREA/gate/root-pose/animation policy','near/FOV projection clip bound less than 1000mm ray radius','all panel vertices safely inside actual near/far to avoid shared-edge clipping ambiguity','opaque packet preflight and texture residency','ordinary opaque full geometry path with CPU backface off','unsupported state means draw all'])
+    report['opaque_prefix_max_placement']=max_source_placement
+    report['pairs_only']=pairs_only
+    report['vertex_uncertainty_mm']=margin
+    report['target_bound_expansion_mm']=margin
+    report['prefix_early_bits_retained']=prefix_dropped
+    report['input_hashes'].update(meta['input_hashes'])
     (work/'proof.json').write_text(json.dumps(report,indent=1)+'\n')
     print(json.dumps({k:report[k] for k in ('room','candidate_triangles','cells_with_cuts','cleared_bits','set_cells','cells','instances','runtime_admitted')}),flush=True)
 
 
 if __name__=='__main__':
-    a=sys.argv[1:];certify(a[0],a[1],int(a[2],16),int(a[a.index('--limit')+1]) if '--limit' in a else 32)
+    a=sys.argv[1:];certify(a[0],a[1],int(a[2],16),int(a[a.index('--limit')+1]) if '--limit' in a else 32,float(a[a.index('--margin')+1]) if '--margin' in a else 32.,'--pairs-only' in a)

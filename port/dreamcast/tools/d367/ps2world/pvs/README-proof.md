@@ -49,11 +49,17 @@ be genuine. Apart from texture key bytes and the payload CRC, **every byte**
 of both policies must match, including placement matrices and material flags.
 Mesh payload CRC, ids count and prepared input SHA256 identities are checked.
 The original append provenance is required to exclude appended owned objects.
+For a package with no appended geometry, `base-report.json` must authenticate
+the exact original mesh/policy and source placement count. Missing provenance
+or ids makes every placement ineligible. Prepared instance/triangle hashes are
+bound into metadata and checked before eligibility, not only after generation.
+The working package directory contains `original.r4pw` for policy reconciliation.
 
 Example, after preparing and creating cell domains in WORK:
 
 ```
-python pvs_certify.py PACKAGE WORK 101 --limit 128
+python pvs_certify.py PACKAGE WORK 101 --limit 128 --margin 32 --pairs-only
+python pvs_verify.py PACKAGE WORK 101
 python pvs_emit.py emit WORK candidate.pvs --geometric-candidate --dilate 0 --near 0
 python test_pvs_prove.py
 python test_pvs_emit.py
@@ -76,3 +82,11 @@ submitted; a loaded package alone is insufficient. Failure means draw all.
 The current data receipt records geometric candidate cuts, not active-frame
 work saved, FPS, hardware acceptance or guaranteed gains in a particular view.
 All-visible controls remain explicitly labelled controls.
+
+The paired-only private QA cohort also retains all targets at or before the
+largest used occluder placement index. Its runtime can activate cuts only after
+all source dependency panels have actually been submitted in the ordinary
+opaque placement prefix, in the same frame/scene/camera epoch. Speculative
+preflight alone is not a receipt. Each data file states its requested numeric
+margin; the actual loaded-source/matrix arithmetic error bound must fit that
+margin before applying its bits. The HW_LEAN reciprocal path stays unchanged.

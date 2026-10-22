@@ -38,6 +38,7 @@ def main():
     assert zlib.crc32(p.m[80:]) == p.mesh_crc, 'mesh payload CRC mismatch'
     effective_policy = (pkg_dir / 'ps2-world.r4pw').read_bytes()
     assert zlib.crc32(effective_policy[32:]) == p.sidecar_crc, 'policy payload CRC mismatch'
+    state_policy_sha=hashlib.sha256(effective_policy).hexdigest()
     ids_path = pkg_dir / 'ps2-world.ids'
     dyn_field = set()
     if ids_path.exists():
@@ -53,6 +54,7 @@ def main():
             op = Pkg(pkg_dir / 'ps2-world.re4mesh', original)
             assert op.sidecar_crc == crc, 'ids does not bind original policy'
             original_policy = original.read_bytes()
+            state_policy_sha=hashlib.sha256(original_policy).hexdigest()
             assert zlib.crc32(original_policy[32:]) == op.sidecar_crc, 'original payload CRC mismatch'
             def normalized_policy(data):
                 data=bytearray(data);data[20:24]=bytes(4)
@@ -73,16 +75,32 @@ def main():
     # sky / backdrop rows (native_static.cpp ps2_sky_row: drawn to the projection far with SKY_FAR): always visible,
     # never occluders
     sky_rows = {0x100: {2, 3, 75, 33, 34, 35, 36, 37}, 0x101: {0, 1, 2}}.get(room, set())
-    base_places = None
+    # Absence of append metadata is not proof that no objects were appended.
+    # A conversion report for this exact original package can establish that
+    # the entire input is a base package; otherwise no placement may occlude.
+    base_places = 0
+    static_provenance = None
     app = pkg_dir / 'append.json'
     if app.exists():
-        base_places = json.loads(app.read_text())['base_placements']
+        report=json.loads(app.read_text());base_places=report['base_placements']
+        assert type(base_places) is int and 0<=base_places<=len(p.placements), 'invalid base placements'
+        assert report['r4pw_sha256']==state_policy_sha and report['r4pw_bytes']==len(effective_policy), 'append report policy mismatch'
+        static_provenance=dict(kind='append-report',name='append.json',base_placements=base_places)
+    else:
+        base_report=pkg_dir/'base-report.json'
+        if base_report.exists():
+            report=json.loads(base_report.read_text())
+            assert report['re4mesh_sha256']==hashlib.sha256(p.m).hexdigest() and report['r4pw_sha256']==state_policy_sha, 'base report package mismatch'
+            assert report['placements']==len(p.placements) and report['groups']==len(p.placements), 'base report count mismatch'
+            base_places=len(p.placements)
+            static_provenance=dict(kind='base-conversion-report',name='base-report.json',base_placements=base_places)
+    static_qualified=ids_path.exists() and static_provenance is not None
     rows, tris, inst = [], [], 0
     lo_all, hi_all = np.full(3, 1e30), np.full(3, -1e30)
     for pi, pl in enumerate(p.placements):
         mesh = p.meshes[pl['mesh']]
         M = p.wq(pl)
-        dyn = pl['placement'] in dyn_field or (base_places is not None and pi >= base_places) or pl['placement'] in sky_rows
+        dyn = not static_qualified or pl['placement'] in dyn_field or pi >= base_places or pl['placement'] in sky_rows
         for k in range(mesh['part_count']):
             part = mesh['first_part'] + k
             fc, cc = p.plod[part]
@@ -122,8 +140,11 @@ def main():
                 occluder_triangles=int((rec['flags'] & 1).sum()), dynamic_placements=sorted(
                     {r[1] for r in rows if r[7]}), world_lo=lo_all.tolist(), world_hi=hi_all.tolist())
     meta['input_hashes']={name:hashlib.sha256((pkg_dir/name).read_bytes()).hexdigest()
-                          for name in ('ps2-world.re4mesh','ps2-world.r4pw','ps2-world.ids','append.json')
+                          for name in ('ps2-world.re4mesh','ps2-world.r4pw','ps2-world.ids','append.json','base-report.json')
                           if (pkg_dir/name).exists()}
+    meta['static_qualified']=static_qualified
+    meta['static_provenance']=static_provenance
+    meta['prepared_hashes']={name:hashlib.sha256((work/name).read_bytes()).hexdigest() for name in ('inst.tsv','tris.bin')}
     if '--original-policy' in sys.argv:
         meta['original_policy_sha256']=hashlib.sha256(Path(sys.argv[sys.argv.index('--original-policy')+1]).read_bytes()).hexdigest()
     (work / 'meta.json').write_text(json.dumps(meta, indent=1))
