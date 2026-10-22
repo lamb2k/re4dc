@@ -14,6 +14,11 @@ def shooting_safe(row):
  g=row['global'];status=g.get('status',[])
  return len(status)==4 and not(status[0]&0x200000) and not(status[2]&0x80000000) and row['player']['rno'][0]==0
 
+def ordinary_weapon_ready(row):
+ if not shooting_safe(row):return False
+ w=row.get('weapon') or {};debug=row.get('debug_flags') or []
+ return w.get('valid_inventory_slot') is True and w.get('item_class')==1 and w.get('weapon_source_match') is True and w.get('id') not in (0x52,0x6d) and type(w.get('loaded_rounds')) is int and w['loaded_rounds']>0 and len(debug)>=3 and not(debug[2]&0x400000)
+
 def qa_safe(row):
  frames=row.get('qa_frames')
  return isinstance(frames,int) and frames>=30 and free_play(row) and row.get('qa_flags') is not None
@@ -25,6 +30,7 @@ def discharge(before,after):
    state=row.get('global',row)
    if any(type(state[k]) is not int for k in ('room','frame')):raise ValueError()
    w=row['weapon'];c=row['counters']
+   if w.get('valid_inventory_slot') is not True or w.get('item_class')!=1 or w.get('weapon_source_match') is not True:raise ValueError()
    if not w['slot'] or any(type(w[k]) is not int for k in ('slot','id','equipped_id','weapon_no','loaded_rounds')) or not 0<=w['loaded_rounds']<=0x1fff:raise ValueError()
    if len(row['debug_flags'])<3 or any(type(c[k]) is not int for k in ('g_shot_cnt','c_shot_cnt','g_hit_cnt','g_kill_cnt')):raise ValueError()
  except (KeyError,TypeError,ValueError):

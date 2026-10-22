@@ -17,7 +17,7 @@ class Gates(unittest.TestCase):
    r=copy.deepcopy(self.row);r['global']['status'][index]=mask;self.assertFalse(shooting_safe(r))
   self.row['coherent']=False;self.assertFalse(shooting_safe(self.row))
  def fixture(self):
-  return {'room':0x103,'frame':100,'weapon':{'slot':12,'id':1,'equipped_id':1,'weapon_no':2,'loaded_rounds':10},'debug_flags':[0]*4,'counters':{'g_shot_cnt':3,'c_shot_cnt':3,'g_hit_cnt':1,'g_kill_cnt':0}}
+  return {'room':0x103,'frame':100,'weapon':{'slot':12,'id':0x23,'equipped_id':0x23,'weapon_no':2,'loaded_rounds':10,'item_class':1,'valid_inventory_slot':True,'weapon_source_match':True},'debug_flags':[0]*4,'counters':{'g_shot_cnt':3,'c_shot_cnt':3,'g_hit_cnt':1,'g_kill_cnt':0}}
  def test_discharge_needs_ammo_and_both_counters(self):
   b=self.fixture();e=copy.deepcopy(b);e['frame']+=30;e['weapon']['loaded_rounds']-=1;e['counters']['g_shot_cnt']+=1;e['counters']['c_shot_cnt']+=1
   self.assertTrue(discharge(b,e)['accepted'])
@@ -42,7 +42,7 @@ class Gates(unittest.TestCase):
 class Adapter(unittest.TestCase):
  def setUp(self):
   self.layout=json.loads((P/'historical-a18-on-layout.json').read_text());self.sy={n:0x8c010000+i*512 for i,n in enumerate(a.REQUIRED)};self.mem=bytearray(16*1024*1024)
-  self.r=a.Reader(lambda p,n:bytes(self.mem[p-0x8c000000:p-0x8c000000+n]),self.sy,self.layout,self.layout['elf_sha256'])
+  self.r=a.Reader(lambda p,n:bytes(self.mem[p-0x8c000000:p-0x8c000000+n]),self.sy,self.layout,self.layout['elf_sha256'],strict=False)
  def put(self,p,fmt,v):struct.pack_into('<'+fmt,self.mem,p-0x8c000000,*v)
  def field(self,b,t,n,fmt,v):self.put(b+self.r.off(t,n),fmt,v)
  def test_absent_qa_optional_missing_generic_fails(self):
