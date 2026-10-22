@@ -1,0 +1,9 @@
+{
+  "scope": "018 source candidate current handoff; no guest allocation.",
+  "lane_status_sha256": "daba3b0f145eaaec905fcd7cf7b3ea940a7575eafaeb4780f16bc2e599cbbdbe",
+  "lane_handback_sha256": "7c8f7d7beee7bb7541a8712837309e4ce3c5cd045f4f0049932a0b761efbcccc",
+  "lane_inbox_sha256": "2e140aadea4d710776e385398da599ef4075da6f75c78810751543cc56624dd6",
+  "last_completed_commit": "2be1546fb",
+  "actual017_audit_sha256": "7078fc018c5e466a2d3f37fcf242e90b742791ce5294521040615a38aae93405",
+  "root_visual_sha256": "e5f13910c4668aa4db09f772bbb7d2337841b214e93b0f5767f56a2fde06fb40"
+}

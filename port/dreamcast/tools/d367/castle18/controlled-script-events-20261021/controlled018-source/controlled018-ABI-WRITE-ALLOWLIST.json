@@ -1,0 +1,80 @@
+{
+  "scope": "SOURCE ONLY018; no process/guest/write/input. New root exactwriteallocation required.",
+  "source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "seed_sha256": "1b1485784a8c796fbaad18573002ae353f75d9b67c0b4b156e1724bf296ac04b",
+  "inherited_ABI_sha256": "c63c8ac0f3ab8ee4810fb3776286570631f2cd6126e454f01635b9e30e15dbaf",
+  "physical_door_DWARF_sha256": "7a28ffd405dcba283a49019a94174812590a22e4f4f69a5b9791b31d0786d922",
+  "camera_DWARF_sha256": "eb76e48ad36fe6a8996013532d209705c2e98cdd4e12a7fad2558f7ecb037493",
+  "start_fields_sha256": "4ddec9d0992fb21e50a34a8505b4837962884dc2ac0173218e43d3cee0871296",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff48",
+      "bytes": 24,
+      "stage": 1,
+      "entry": 2
+    },
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24,
+      "stage": 2,
+      "entry": 3
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1,
+      "values": [
+        2,
+        3
+      ]
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4,
+      "values": [
+        2,
+        3
+      ]
+    }
+  ],
+  "maximum_successful_bytes": 58,
+  "contract": "EachcurrententryONLY: descriptor24B readback+coherentactualStop0/freeplay\u2192max_entry1B readback+repoll\u2192count4B LAST. Stage2 requires actualnative209entry/previous204/Part0/Stop0 plusstage1done. No futureentryprequeue. Anyshort/failedcall/statechangeblocks furtheractions, no rollback/rewrite. Existing goto_poll alone changesactorpose ongamethread.",
+  "native_read_fields": {
+    "cEm_flag": 968,
+    "cEm_status": 964,
+    "EmDoorWork": 992,
+    "Etc_no": 2079,
+    "base_dir": 1912,
+    "base_mat": 1916,
+    "base_im": 1964,
+    "Key_flag": 2012,
+    "Open_flag": 2077,
+    "CamCtrl": "0x8c3949a4",
+    "cameraNo": 1682
+  },
+  "physical_action": {
+    "kind": 16,
+    "slot": 5,
+    "button": 1,
+    "type": 0,
+    "d": 0,
+    "flags": 0,
+    "arg": "exactcurrentnativeactorid41/EtcNo1",
+    "callbacks": [
+      "0x8c0bc300",
+      "0x8c0bc384"
+    ],
+    "key_flag": 54
+  },
+  "frozen_source_route_review_sha256": "5d8e249ef250a6230a5283943127b43c27f2ec51f686d694e79e6d911ad926d2",
+  "event_observation": "NativeAEV0Aexecuted is one-frame diagnostic, maybemissed. MustobservephysicalDoor1opening plusnativeeventactive/camera3\u21922 theneventclear/Stop0/advancingframes; code/room/doorflagalone not completion.",
+  "forbidden": [
+    "actor/partnerposewrites",
+    "health/AI/RSF/outcomes",
+    "pGroom/nextroom",
+    "nativecode",
+    "wpactive/applied/rooms",
+    "slotrewrite/retry/rollback",
+    "futureentrydescriptorbeforeactualcurrententry"
+  ]
+}

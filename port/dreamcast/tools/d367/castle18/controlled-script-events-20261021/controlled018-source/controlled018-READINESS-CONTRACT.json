@@ -1,0 +1,33 @@
+{
+  "scope": "SOURCE ONLY018 startup/readiness contract; no live execution.",
+  "seed_sha256": "1b1485784a8c796fbaad18573002ae353f75d9b67c0b4b156e1724bf296ac04b",
+  "minimum_frame": 2604,
+  "rooms": [
+    "0x204",
+    "0x209"
+  ],
+  "inherited_readiness_source_sha256": "7122a0d2c864243bdb02d77996756bc1a364b9daafad5989d8661685821fee13",
+  "readiness": "Exactcurrentcap stateLoaded afterlastRAMmapping, committedaccessiblepGregion thenexactmaincodeanchors/twoadvancingsourceframes samepG/mapping beforecommand/UI. RPMunavailable records Win32error/partialbytes/VQE, clearsinputreadiness; samplerwaits boundedfreshsequence. Actionreaderrorblocksfurtheractions; failed/shortwritesfailclosed withno retry/rollback.",
+  "command_contract": "EachcurrententryONLY: descriptor24B readback+coherentactualStop0/freeplay\u2192max_entry1B readback+repoll\u2192count4B LAST. Stage2 requires actualnative209entry/previous204/Part0/Stop0 plusstage1done. No futureentryprequeue. Anyshort/failedcall/statechangeblocks furtheractions, no rollback/rewrite. Existing goto_poll alone changesactorpose ongamethread.",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff48",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_bytes": 58,
+  "default_off": true,
+  "runtime_acceptance": "NativeAEV0Aexecuted is one-frame diagnostic, maybemissed. MustobservephysicalDoor1opening plusnativeeventactive/camera3\u21922 theneventclear/Stop0/advancingframes; code/room/doorflagalone not completion."
+}

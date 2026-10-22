@@ -1,0 +1,130 @@
+{
+  "scope": "Frozen018source candidate mirror only; no actualguest/acceptance.",
+  "members": [
+    {
+      "path": "observe-controlled-ch32-door018.py",
+      "sha256": "16154512b11b99880c76392e198b2b7de38650d7618502ba83236928b4f21eae",
+      "bytes": 27222
+    },
+    {
+      "path": "run-controlled-ch32-door018.py",
+      "sha256": "cdd4de7242f870fac6c9e595142a9f6d5a0f37d5d43e6a2d904440d728e40a33",
+      "bytes": 9249
+    },
+    {
+      "path": "run-controlled-ch32-door018.sh",
+      "sha256": "79130af2d477928a171a04581a529e68df404ce850e13f669e527e9ebe8c7d3f",
+      "bytes": 352
+    },
+    {
+      "path": "controlled-ch32-door018-pins.json",
+      "sha256": "2bb24552c810c222f6f08795bbb18637e798625a6cab6ea3cd94cb4f782412fc",
+      "bytes": 6326
+    },
+    {
+      "path": "controlled018-ABI-WRITE-ALLOWLIST.json",
+      "sha256": "d180429458ada2c1fef6464aad20eebe407e47c404bd06528b9e8f3819bdf862",
+      "bytes": 2746
+    },
+    {
+      "path": "controlled018-READINESS-CONTRACT.json",
+      "sha256": "50806bf98c224701fb3faac05fc4fe9ef1080ee56477a8e4fe786b23cd68048a",
+      "bytes": 1693
+    },
+    {
+      "path": "controlled018-physical-door-DWARF.json",
+      "sha256": "7a28ffd405dcba283a49019a94174812590a22e4f4f69a5b9791b31d0786d922",
+      "bytes": 1877
+    },
+    {
+      "path": "controlled018-camera-DWARF.json",
+      "sha256": "eb76e48ad36fe6a8996013532d209705c2e98cdd4e12a7fad2558f7ecb037493",
+      "bytes": 452
+    },
+    {
+      "path": "controlled018-closed017-start.json",
+      "sha256": "4ddec9d0992fb21e50a34a8505b4837962884dc2ac0173218e43d3cee0871296",
+      "bytes": 714
+    },
+    {
+      "path": "extract-controlled018-physical-door-DWARF.py",
+      "sha256": "10feed438383f7e54fb5b7dde4d77d7759cfb4c3db36dd8b992b7a3cacaed6ba",
+      "bytes": 2607
+    },
+    {
+      "path": "extract-controlled018-camera-DWARF.py",
+      "sha256": "f4a124e41584ae4b9b7745c80faafd1ad2107c76944d31ea16e2cdd57ddf3982",
+      "bytes": 2481
+    },
+    {
+      "path": "prepare-controlled018-start.py",
+      "sha256": "4b49ea45160cdab66bf17c525c674ebec1039870b3b87e3c06fd9ea5eaeebb82",
+      "bytes": 1608
+    },
+    {
+      "path": "test-controlled018-command-source-gates.py",
+      "sha256": "98cecdc097142b56f0c94ad9dbe79a3db0ce45c9337cf793e686e8614cda0617",
+      "bytes": 7471
+    },
+    {
+      "path": "test-controlled018-readiness-source.py",
+      "sha256": "5f9d50d43dd5dd821cf7bbe921e43b446555ee6587f221794e9c59450f68f99f",
+      "bytes": 4133
+    },
+    {
+      "path": "controlled018-source-gates.json",
+      "sha256": "40efd24cc1b9bdbbb008b7d55cfb1d85644e7eae4a516a025e96ac96635f553f",
+      "bytes": 1843
+    },
+    {
+      "path": "controlled018-readiness-source-cases.json",
+      "sha256": "2157581bb5cb98c07751b480da61dd623e4bb86f82cf93a09bb81b05a9698214",
+      "bytes": 1695
+    },
+    {
+      "path": "controlled018-default-prepare.json",
+      "sha256": "b3060898ad898fb032361302000e1fd27046bbd707a861860fd4073e334c92f0",
+      "bytes": 1562
+    },
+    {
+      "path": "CONTROLLED018-SOURCE-LAUNCH-PROPOSAL.json",
+      "sha256": "b01d8564a4dfbfe9f612f8e5419004221915d4e6475ab53eccc262d01784d8ed",
+      "bytes": 7619
+    },
+    {
+      "path": "build-controlled018-source.py",
+      "sha256": "89808109b7081c87f45cc89fb76fa6899170aea1db0a968dddf9a16896260316",
+      "bytes": 14201
+    },
+    {
+      "path": "build-controlled018-wrapper.py",
+      "sha256": "3638784055c0230a8ad372ad8c772adaa307f64f4d1cd0b0d88ad595a3b89d17",
+      "bytes": 7334
+    },
+    {
+      "path": "prepare-controlled018-handoff.py",
+      "sha256": "48bcd96401104186d000fcba63424e89aa0577f3504a2f43e7dd79a78264352e",
+      "bytes": 6784
+    },
+    {
+      "path": "CURRENT-DOC-IDENTITIES.json",
+      "sha256": "ebdf411338d9533190c412040d2dab16c9795165d49967dc92ad3d20b56f2760",
+      "bytes": 590
+    },
+    {
+      "path": "CURRENT-STATUS.md",
+      "sha256": "daba3b0f145eaaec905fcd7cf7b3ea940a7575eafaeb4780f16bc2e599cbbdbe",
+      "bytes": 2973
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "bytes": 8
+    },
+    {
+      "path": "HISTORICAL-STATUS-BEFORE018.md",
+      "sha256": "5577cf682ecd638ba877d745c71fed40e12136263167c6bd8ae0e38dc283efa2",
+      "bytes": 59069
+    }
+  ]
+}
