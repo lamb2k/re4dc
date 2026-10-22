@@ -1,0 +1,97 @@
+{
+  "scope": "focused source/fake API controls only; no native query/process/image/input",
+  "platform": "Windows-11-10.0.26220-SP0",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "utc": "2026-10-22T17:29:05.945828+00:00",
+  "tests_run": 25,
+  "failures": 0,
+  "errors": 0,
+  "passed": true,
+  "tested_python_sources": {
+    "capture-budget.py": {
+      "bytes": 712,
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+    },
+    "controller-core.py": {
+      "bytes": 7468,
+      "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b"
+    },
+    "evidence-footprint-native.py": {
+      "bytes": 2436,
+      "sha256": "0f9be202ecd802b47930aec3f6dd69d3cf5139a84382766c89fb21efbf96d164"
+    },
+    "guest-supervisor-core.py": {
+      "bytes": 6484,
+      "sha256": "f85d2de4373483e46ae0058124aace162086d2d73efdc0083dc3c67313f29890"
+    },
+    "inner-adapter.py": {
+      "bytes": 15928,
+      "sha256": "2f2245d7f8302c3b52ec50eb04d7b0f9cb2500aa940d06355d7667ff50e5a094"
+    },
+    "input-deadlines.py": {
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    "layout-contract.py": {
+      "bytes": 4606,
+      "sha256": "74754ec6977299b1268bc8c1a48423e42bed9e3b236d96e84cec36e255667b2e"
+    },
+    "native-process-count.py": {
+      "bytes": 1968,
+      "sha256": "bb381698b1a731f630c7ca560628355f44575877643f15a566b7cc4642d5211b"
+    },
+    "observe.py": {
+      "bytes": 8571,
+      "sha256": "ab9f4d942bb2fac633ad16ba4ed81d8ee8f0e38e69cd0fbd3f906ce9b333d6dc"
+    },
+    "observer-v2.py": {
+      "bytes": 11338,
+      "sha256": "b4ce92c72aba84010a4b22db372622415433c3ad531adae26bc17eed5dc7194c"
+    },
+    "outer-driver.py": {
+      "bytes": 16676,
+      "sha256": "23c303790f5c1c6d908bfb6cd2b7e6491bcfb6ffa7e36a8d8f6ee435ec0f9444"
+    },
+    "policies.py": {
+      "bytes": 4231,
+      "sha256": "f1f23f2ae281f9e35410d2a51fee6de13dc18d1643501644955fc0d40b92e899"
+    },
+    "reference-hooks/checkpoint_runner18.child.py": {
+      "bytes": 18192,
+      "sha256": "b80455da27b608aa419bea755d17a1bb05182517cb11399a930654d3cc34f387"
+    },
+    "reference-hooks/child_reference_proxy.py": {
+      "bytes": 5369,
+      "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19"
+    },
+    "reference-hooks/native_reference_api.py": {
+      "bytes": 9151,
+      "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255"
+    },
+    "reference-hooks/parent_reference_broker.py": {
+      "bytes": 16780,
+      "sha256": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f"
+    },
+    "reference-hooks/reference_collector.py": {
+      "bytes": 6856,
+      "sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d"
+    },
+    "run_source_tests.py": {
+      "bytes": 1228,
+      "sha256": "fc053d6ceaabaf5f0e0848444f174c3879c963b6a453473edcd4e293a98e70d7"
+    },
+    "test_changed_paths.py": {
+      "bytes": 16039,
+      "sha256": "9c7e4381e6c0d8f77965c6614180c64e1a09d6a02460fbe89187e04416395802"
+    },
+    "windows-backend.py": {
+      "bytes": 17536,
+      "sha256": "233bc7e8bb5b02fbb3ec6f026d8c5d962225b33f4a0dd401489c244f6b1e9847"
+    },
+    "wiring-backend.py": {
+      "bytes": 4336,
+      "sha256": "8b416981222490e35405295b736f8e4fed4c13035acbc8475a19c0c906f900c2"
+    }
+  },
+  "output": "test_all_invalid_snapshot_handles_refuse_without_close (focused_changed_paths.Tests.test_all_invalid_snapshot_handles_refuse_without_close) ... ok\ntest_backend_pending_inner_refuses_handleclose (focused_changed_paths.Tests.test_backend_pending_inner_refuses_handleclose) ... ok\ntest_bound_output_and_seed_changes_are_exact (focused_changed_paths.Tests.test_bound_output_and_seed_changes_are_exact) ... ok\ntest_core_emptyjob_does_not_drop_unassigned_live_inner (focused_changed_paths.Tests.test_core_emptyjob_does_not_drop_unassigned_live_inner) ... ok\ntest_counter_casefold_exact_basename (focused_changed_paths.Tests.test_counter_casefold_exact_basename) ... ok\ntest_duplicate_pid_refuses_partial_count (focused_changed_paths.Tests.test_duplicate_pid_refuses_partial_count) ... ok\ntest_empty_job_and_pending_inner_keeps_guard_and_handles_on_hold (focused_changed_paths.Tests.test_empty_job_and_pending_inner_keeps_guard_and_handles_on_hold) ... ok\ntest_empty_no_more_is_only_valid_zero (focused_changed_paths.Tests.test_empty_no_more_is_only_valid_zero) ... ok\ntest_exception_always_closes_snapshot (focused_changed_paths.Tests.test_exception_always_closes_snapshot) ... ok\ntest_first_error_refuses_not_zero (focused_changed_paths.Tests.test_first_error_refuses_not_zero) ... ok\ntest_launch_membership_and_gameplay_sources_stay_strict (focused_changed_paths.Tests.test_launch_membership_and_gameplay_sources_stay_strict) ... ok\ntest_native_allocation_excludes_only_exact_top_level_track_samefile (focused_changed_paths.Tests.test_native_allocation_excludes_only_exact_top_level_track_samefile) ... ok\ntest_native_counter_prototypes_without_native_query (focused_changed_paths.Tests.test_native_counter_prototypes_without_native_query) ... ok\ntest_new_backend_assignment_failure_keeps_owned_proc (focused_changed_paths.Tests.test_new_backend_assignment_failure_keeps_owned_proc) ... ok\ntest_next_error_code_captured_before_close (focused_changed_paths.Tests.test_next_error_code_captured_before_close) ... ok\ntest_owned_stop_attempts_unassigned_termination_even_when_job_stop_denied (focused_changed_paths.Tests.test_owned_stop_attempts_unassigned_termination_even_when_job_stop_denied) ... ok\ntest_perfile_native_extent_and_directory_charge (focused_changed_paths.Tests.test_perfile_native_extent_and_directory_charge) ... ok\ntest_retained_inner_signaled_birth_and_exit_required (focused_changed_paths.Tests.test_retained_inner_signaled_birth_and_exit_required) ... ok\ntest_same_named_nonalias_track_is_charged (focused_changed_paths.Tests.test_same_named_nonalias_track_is_charged) ... ok\ntest_signaled_inner_but_nonempty_job_keeps_guard_and_handles_on_hold (focused_changed_paths.Tests.test_signaled_inner_but_nonempty_job_keeps_guard_and_handles_on_hold) ... ok\ntest_snapshot_close_failure_refuses (focused_changed_paths.Tests.test_snapshot_close_failure_refuses) ... ok\ntest_startup_info_membership_failures_retain_original_handle (focused_changed_paths.Tests.test_startup_info_membership_failures_retain_original_handle) ... ok\ntest_unsigned_invalid_handle_never_closed_or_counted (focused_changed_paths.Tests.test_unsigned_invalid_handle_never_closed_or_counted) ... ok\ntest_windows_struct_abi_fixed_utf16 (focused_changed_paths.Tests.test_windows_struct_abi_fixed_utf16) ... ok\ntest_zero_last_error_is_failure_not_empty_success (focused_changed_paths.Tests.test_zero_last_error_is_failure_not_empty_success) ... ok\n\n----------------------------------------------------------------------\nRan 25 tests in 0.222s\n\nOK\n"
+}

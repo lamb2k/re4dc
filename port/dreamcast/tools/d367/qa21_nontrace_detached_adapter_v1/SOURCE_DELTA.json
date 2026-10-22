@@ -1,0 +1,173 @@
+{
+  "source_only": true,
+  "runtime_adopted": false,
+  "original_namespace": "qa21_nontrace_owned_adapter_v1",
+  "preserved_partial_commit": "64d18491b",
+  "source_baseline_commit": "606dcbb2a86a2ae5f32672f78edf1e00736a8d2d",
+  "changes": {
+    "windows-backend.py": "DETACHED_PROCESS inner; preserve original Popen on startup failure; retain/signaled proof and unassigned handle termination; shared native counter delegate; repeat hard guard until finalized",
+    "guest-supervisor-core.py": "recover backend.inner on throwing spawn; bounded cleanup diagnostics; require empty job AND retained signaled inner before disarm/close; persistent refusal HOLD",
+    "reference-hooks/checkpoint_runner18.child.py": "ONLY count_flycasts body to shared native counter and Python reader CREATE_NO_WINDOW -> DETACHED_PROCESS; GUI Flycast Popen unchanged",
+    "outer-driver.py": "fixed domains02 output/control fields; derived hook original baseline verification; explicit local native footprint override with old dependency SHA verification retained",
+    "inner-adapter.py": "fixed domains02 cap/context fields; local native footprint override",
+    "wiring-backend.py": "ONLY future fixed RETURN-DOOR-DOMAINS02-DETACHED-ROOT-ALLOCATION.json path",
+    "reference-hooks/COLLECTOR_CONTRACT.json": "ONLY proposed output_name/control_name and future fourth reference path domains01 -> domains02",
+    "REVIEWED_COMPONENTS.json": "new derived-hook baseline provenance; no old review reclassified",
+    ".gitattributes": "preserve exact source bytes",
+    "native-process-count.py": "new read-only fixed Toolhelp32 process basename count; no native operation at import",
+    "evidence-footprint-native.py": "necessary source-local FILE_STANDARD_INFO per-file allocation/directory accounting correction"
+  },
+  "compared_original_files": {
+    ".gitattributes": {
+      "original_sha256": "fe5bc4af5132485cecbdabe96ef5a97e610451db0221188911d0f3afe3959284",
+      "candidate_sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "unchanged": false
+    },
+    "EXTRA_REFERENCE_RECEIPT.json": {
+      "original_sha256": "1488c51fff53a60d72fd9e1addcb2f88a5996f187ff110f3207a90aeebda894c",
+      "candidate_sha256": "1488c51fff53a60d72fd9e1addcb2f88a5996f187ff110f3207a90aeebda894c",
+      "unchanged": true
+    },
+    "REVIEWED_COMPONENTS.json": {
+      "original_sha256": "0152755ba96fcf62b86b2876565bafa297ad48d30c03bc43941394ae33a853ac",
+      "candidate_sha256": "9a79ada1517830d22076f66b598f7b927c3f936eeb12422a5caa30afe327d8b3",
+      "unchanged": false
+    },
+    "SEED_CONTRACT.json": {
+      "original_sha256": "2d8c4a5f9c3812ec1c746c0c3ce5c031029ed471cd752885c307564ba00093eb",
+      "candidate_sha256": "2d8c4a5f9c3812ec1c746c0c3ce5c031029ed471cd752885c307564ba00093eb",
+      "unchanged": true
+    },
+    "capture-budget.py": {
+      "original_sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "candidate_sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "unchanged": true
+    },
+    "controller-core.py": {
+      "original_sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "candidate_sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "unchanged": true
+    },
+    "exact-log-symbols.json": {
+      "original_sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29",
+      "candidate_sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29",
+      "unchanged": true
+    },
+    "global-ui-ABI-supplement.json": {
+      "original_sha256": "44a0a870112b16bca38bda2a06e5e325d39bd17a57aae82c1ab302c1639aa2dc",
+      "candidate_sha256": "44a0a870112b16bca38bda2a06e5e325d39bd17a57aae82c1ab302c1639aa2dc",
+      "unchanged": true
+    },
+    "guest-profile-v2.json": {
+      "original_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+      "candidate_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+      "unchanged": true
+    },
+    "guest-supervisor-core.py": {
+      "original_sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "candidate_sha256": "f85d2de4373483e46ae0058124aace162086d2d73efdc0083dc3c67313f29890",
+      "unchanged": false
+    },
+    "inner-adapter.py": {
+      "original_sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758",
+      "candidate_sha256": "2f2245d7f8302c3b52ec50eb04d7b0f9cb2500aa940d06355d7667ff50e5a094",
+      "unchanged": false
+    },
+    "input-deadlines.py": {
+      "original_sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "candidate_sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "unchanged": true
+    },
+    "layout-contract.py": {
+      "original_sha256": "74754ec6977299b1268bc8c1a48423e42bed9e3b236d96e84cec36e255667b2e",
+      "candidate_sha256": "74754ec6977299b1268bc8c1a48423e42bed9e3b236d96e84cec36e255667b2e",
+      "unchanged": true
+    },
+    "observe.py": {
+      "original_sha256": "ab9f4d942bb2fac633ad16ba4ed81d8ee8f0e38e69cd0fbd3f906ce9b333d6dc",
+      "candidate_sha256": "ab9f4d942bb2fac633ad16ba4ed81d8ee8f0e38e69cd0fbd3f906ce9b333d6dc",
+      "unchanged": true
+    },
+    "observer-v2.py": {
+      "original_sha256": "b4ce92c72aba84010a4b22db372622415433c3ad531adae26bc17eed5dc7194c",
+      "candidate_sha256": "b4ce92c72aba84010a4b22db372622415433c3ad531adae26bc17eed5dc7194c",
+      "unchanged": true
+    },
+    "outer-driver.py": {
+      "original_sha256": "aff7a57f9e6c69b7043d1e11a655879bb29d0a506a30e84941c61838d8c5cfbe",
+      "candidate_sha256": "23c303790f5c1c6d908bfb6cd2b7e6491bcfb6ffa7e36a8d8f6ee435ec0f9444",
+      "unchanged": false
+    },
+    "policies.py": {
+      "original_sha256": "f1f23f2ae281f9e35410d2a51fee6de13dc18d1643501644955fc0d40b92e899",
+      "candidate_sha256": "f1f23f2ae281f9e35410d2a51fee6de13dc18d1643501644955fc0d40b92e899",
+      "unchanged": true
+    },
+    "reference-hooks/COLLECTOR_CONTRACT.json": {
+      "original_sha256": "ff15e0f1ae5dd059a01f71bd25245b16c977f576ece6f8c0d07ff6b30a4546b1",
+      "candidate_sha256": "fb19b53f804afe461c5904fbd848fc5c7c10b63490c4f8b631624dda9ff12f65",
+      "unchanged": false
+    },
+    "reference-hooks/checkpoint_runner18.child.py": {
+      "original_sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6",
+      "candidate_sha256": "b80455da27b608aa419bea755d17a1bb05182517cb11399a930654d3cc34f387",
+      "unchanged": false
+    },
+    "reference-hooks/child_reference_proxy.py": {
+      "original_sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19",
+      "candidate_sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19",
+      "unchanged": true
+    },
+    "reference-hooks/native_reference_api.py": {
+      "original_sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+      "candidate_sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+      "unchanged": true
+    },
+    "reference-hooks/parent_reference_broker.py": {
+      "original_sha256": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f",
+      "candidate_sha256": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f",
+      "unchanged": true
+    },
+    "reference-hooks/reference_collector.py": {
+      "original_sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d",
+      "candidate_sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d",
+      "unchanged": true
+    },
+    "reference-hooks/retained-all-track-declarations.json": {
+      "original_sha256": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0",
+      "candidate_sha256": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0",
+      "unchanged": true
+    },
+    "windows-backend.py": {
+      "original_sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+      "candidate_sha256": "233bc7e8bb5b02fbb3ec6f026d8c5d962225b33f4a0dd401489c244f6b1e9847",
+      "unchanged": false
+    },
+    "wiring-backend.py": {
+      "original_sha256": "69b4a350882d0b65f50fdec0ce8545822853bf6d911b261c6a5332c123d1ba9c",
+      "candidate_sha256": "8b416981222490e35405295b736f8e4fed4c13035acbc8475a19c0c906f900c2",
+      "unchanged": false
+    }
+  },
+  "thresholds": {
+    "private_job_seconds": 47,
+    "absolute_seconds": 47.5,
+    "input_cutoff_seconds": 40.75,
+    "inner_seconds": 41,
+    "evidence_bytes": 60000000,
+    "runtime_floor_bytes": 19394461696
+  },
+  "not_established": [
+    "native counter correctness on this host",
+    "full private-job/IPC/runtime interoperability",
+    "native cleanup timing under denial",
+    "game/manual/input/ordinary-play acceptance"
+  ],
+  "root_owns": [
+    "source review",
+    "concrete launch seal",
+    "native qualification",
+    "guest/controller approval",
+    "new runtime allocation"
+  ]
+}
