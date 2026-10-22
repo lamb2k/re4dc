@@ -1,0 +1,263 @@
+{
+  "scope": "Independent source/AST/hash review only; no candidate imports/tests/nativechildren/preflight/build/image/guest/reseal",
+  "utc": "2026-10-22T05:13:41.202838+00:00",
+  "candidate": "7c17119ea2517c390acd2e143a33ea839334cc12",
+  "disposition": "CLEAR bounded source-only lifecycle repair; NOT a launchseal/allocation",
+  "source_only_manifest": "8f2d76dd31d29e7f093cd26b4287294cfc101c010b211f0287fafde58cd40a7c",
+  "pins": [
+    {
+      "path": "observer-v2.py",
+      "bytes": 9608,
+      "sha256": "254f708a1374d2a43f13225b7759fa014b61c9898b5672f0738316fef754157a"
+    },
+    {
+      "path": ".gitattributes",
+      "bytes": 71,
+      "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7"
+    },
+    {
+      "path": "runtime-delta-proof.json",
+      "bytes": 2767,
+      "sha256": "bb8f71ab7b375622f972caf36075da8187c9dd0d6bb18673299b76dee52eae3d"
+    },
+    {
+      "path": "test-lifecycle-reader.py",
+      "bytes": 7490,
+      "sha256": "df6fc68e8dbec4db484f8c10f21a198a598d59159586ac11263fcd7dcb07e735"
+    },
+    {
+      "path": "inner-adapter.py",
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    {
+      "path": "controller-core.py",
+      "bytes": 7468,
+      "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b"
+    },
+    {
+      "path": "input-deadlines.py",
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    {
+      "path": "layout-contract.py",
+      "bytes": 4538,
+      "sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5"
+    },
+    {
+      "path": "guest-supervisor-core.py",
+      "bytes": 5185,
+      "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb"
+    },
+    {
+      "path": "lifecycle-tests-linux-20261022T051034062935Z.json",
+      "bytes": 2577,
+      "sha256": "03b42704fa7b14be736f20e69f2649bb0b5c9a8e4f3414b94ef194a103c54ada"
+    },
+    {
+      "path": "captured-terminal-fixture.json",
+      "bytes": 6607,
+      "sha256": "652ae5c7cd9cf98b4190414738894d1b44d1e81f4dfe0c1ccdb68b9c9fb3a881"
+    },
+    {
+      "path": "capture-budget.py",
+      "bytes": 712,
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+    },
+    {
+      "path": "observe.py",
+      "bytes": 7226,
+      "sha256": "4f98cc5c10c1242930edc871f9a03dbcb8dc86eaec2bf9ac7f2ac1cc18b48c03"
+    },
+    {
+      "path": "DIAGNOSIS.md",
+      "bytes": 3798,
+      "sha256": "9a57b8dbe93d791db42e7ef8ec52503d470c5024e25855658877469aefb0db5a"
+    },
+    {
+      "path": "policies.py",
+      "bytes": 3455,
+      "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233"
+    },
+    {
+      "path": "windows-backend.py",
+      "bytes": 15331,
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e"
+    },
+    {
+      "path": "exact-log-symbols.json",
+      "bytes": 634,
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+    },
+    {
+      "path": "source-qualification.json",
+      "bytes": 1209,
+      "sha256": "e04711c66a91353de63a38eca15ed8231ee90e98705155b5f381196205921944"
+    },
+    {
+      "path": "run-lifecycle-tests.py",
+      "bytes": 1219,
+      "sha256": "6dadce1e6102e5c315b4182905ebecf583aa988c10af13d90037c2151e1a344a"
+    },
+    {
+      "path": "outer-driver.py",
+      "bytes": 13247,
+      "sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c"
+    },
+    {
+      "path": "lifecycle-tests-windows-20261022T051034672009Z.json",
+      "bytes": 2557,
+      "sha256": "3d261e93f8c920940efdc2396bea2c1d9655bebf6c318407d24cc59633047bfc"
+    },
+    {
+      "path": "guest-profile-v2.json",
+      "bytes": 13113,
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+    }
+  ],
+  "runtime": {
+    "outer-driver.py": {
+      "old": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "new": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "same": true
+    },
+    "inner-adapter.py": {
+      "old": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "new": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "same": true
+    },
+    "windows-backend.py": {
+      "old": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "new": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "same": true
+    },
+    "guest-supervisor-core.py": {
+      "old": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "new": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "same": true
+    },
+    "input-deadlines.py": {
+      "old": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "new": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "same": true
+    },
+    "controller-core.py": {
+      "old": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "new": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "same": true
+    },
+    "policies.py": {
+      "old": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "new": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "same": true
+    },
+    "observe.py": {
+      "old": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "new": "4f98cc5c10c1242930edc871f9a03dbcb8dc86eaec2bf9ac7f2ac1cc18b48c03",
+      "same": false
+    },
+    "observer-v2.py": {
+      "old": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "new": "254f708a1374d2a43f13225b7759fa014b61c9898b5672f0738316fef754157a",
+      "same": false
+    },
+    "layout-contract.py": {
+      "old": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "new": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "same": true
+    },
+    "capture-budget.py": {
+      "old": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "new": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "same": true
+    }
+  },
+  "unchanged_AST_methods": [
+    "observe.py:qa_safe",
+    "observe.py:__init__",
+    "observe.py:buffer_read",
+    "observe.py:live_read",
+    "observe.py:field",
+    "observe.py:register",
+    "observe.py:require_live",
+    "observe.py:close",
+    "observer-v2.py:__init__",
+    "observer-v2.py:off",
+    "observer-v2.py:snapshot",
+    "observer-v2.py:actor",
+    "observer-v2.py:actor_chain"
+  ],
+  "typed_exception_only": "a.RAMRangeError",
+  "attempt_loop": "range(4)",
+  "require_live_phases": [
+    "'before snapshot'",
+    "'before publish'",
+    "'after snapshot attempt ' + str(attempt + 1)"
+  ],
+  "retained_receipts": [
+    {
+      "platform": "windows",
+      "path": "lifecycle-tests-windows-20261022T051034672009Z.json",
+      "sha256": "3d261e93f8c920940efdc2396bea2c1d9655bebf6c318407d24cc59633047bfc",
+      "retained_tests": 9,
+      "current_source_hashes": true,
+      "rerun": false
+    },
+    {
+      "platform": "linux",
+      "path": "lifecycle-tests-linux-20261022T051034062935Z.json",
+      "sha256": "03b42704fa7b14be736f20e69f2649bb0b5c9a8e4f3414b94ef194a103c54ada",
+      "retained_tests": 9,
+      "current_source_hashes": true,
+      "rerun": false
+    }
+  ],
+  "external_metadata": [
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_run_preparation\\return-door-v2-failure\\source-repair-reference.json",
+      "bytes": 494,
+      "sha256": "6340255b5c8690248f511b0cba5f02da9e0c7fa021ac1fa4abea201ae8e98ff3"
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_run_preparation\\return-door-v2-failure\\retained-inputs.json",
+      "bytes": 2855,
+      "sha256": "f40cb235f0c0fd355a931a90ad8a790dd106b13aa0652270bcb9793b0c6e4833"
+    },
+    {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_run_preparation\\return-door-v2-failure\\terminal-replay.json",
+      "bytes": 4093,
+      "sha256": "c1a566c5d77f72d37119e9093062429a699345b339b902f6ac8f4cbe510f9d4a"
+    }
+  ],
+  "fixture": {
+    "bytes": 6607,
+    "sha256": "652ae5c7cd9cf98b4190414738894d1b44d1e81f4dfe0c1ccdb68b9c9fb3a881",
+    "sparse_reads": 61,
+    "state": "640c9dadddf5b42a5b9b58e2781cbda3b797b0ac439b0ae78b180a10f7986ee0",
+    "frame": 671,
+    "room": 257
+  },
+  "limits": {
+    "inner_seconds": 41,
+    "input_cutoff_seconds": 40.75,
+    "absolute_actual_seconds": 47.5,
+    "independent_conservative_private_job_seconds": 47.0,
+    "evidence_bytes": 60000000,
+    "disk_admission": 19461570560,
+    "disk_runtime": 19394461696,
+    "global_admission": "<16",
+    "global_runtime": "<=16",
+    "max_PNG": 8,
+    "periodic_capture": 0
+  },
+  "launch_manifest_absent": true,
+  "limitations": [
+    "Original failinglive16MiBsnapshot not retained; exact rejectedaddress/field unavailable",
+    "Laterterminal fixture/control and injected host pointers do not replay lost livefailure",
+    "Managerinvalid reason itself does not throw/newgamefault not established",
+    "No new door/manual/AI/cinematic/Continue/performance/release/physical acceptance",
+    "Existing strict native/process/ABI/unrelatedValueError exceptions remain fatal",
+    "Main owns any fresh launch namespace/seal/output contract/allocation"
+  ]
+}
