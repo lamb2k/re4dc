@@ -97,3 +97,10 @@ an ordered reset prephase: restore an active borrowed UI while its room heap
 still exists, quiesce readers/native consumers, retire motion before all-heap
 destruction, and retain ownership on refusal. A blind retire call in
 MemClearAllHeap cannot handle the active-UI ownership boundary safely.
+
+Disposition 2026-10-22: main implemented the default-zero full room-owner reset
+successor at babfaa7d8, after the narrower a7811d890 prephase. See
+RESET_ROOM_OWNER_CLOSURE.md and INTEGRATION_PREPARATION_20261022.md. Eight fresh
+full-file SH-4 gates now pass, including exact previous/default/zero controls.
+Programme and runtime acceptance remain open. Existing menu-demand attribution
+already isolates 26 extra ON restoration keys; no measured gain is inferred.
