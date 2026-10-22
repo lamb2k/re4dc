@@ -22,13 +22,28 @@ endif
 #   owned actor except the registry bosses NMR_SOURCE_CULL selects (Del Lago 0x2F, ...). The lean strip walk
 #   (MESH_STRIP_LEAN) is replaced by a C walk for culling parts. Default 0: no code.
 CPU_BACKFACE ?= 0
-ifneq ($(filter $(CPU_BACKFACE),0 1),$(CPU_BACKFACE))
-$(error CPU_BACKFACE must be 0 or 1)
+ifneq ($(filter $(CPU_BACKFACE),0 1 2),$(CPU_BACKFACE))
+$(error CPU_BACKFACE must be 0, 1 or 2)
 endif
-ifeq ($(CPU_BACKFACE),1)
-$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=1
+ifneq ($(CPU_BACKFACE),0)
+$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=$(CPU_BACKFACE)
 endif
-# ACTOR_BACKFACE=1 (render, look change; needs CPU_BACKFACE=1): Leon, the Ganados and El Gigante (owned path) use the source model's cull
+# CPU_BACKFACE=2 keeps facing/run rejection in the SH-4 strip emitter. The
+# assembly is linked only for this arm; OFF and the C reference gain no object.
+ifeq ($(CPU_BACKFACE),2)
+ifneq ($(GAME_SH4ZAM),1)
+$(error CPU_BACKFACE=2 needs GAME_SH4ZAM=1)
+endif
+PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4.o
+ifneq ($(filter-out 0 4,$(TA_HASH)),)
+PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4_trace.o
+$(OBJDIR)/platform/backface_sh4.o: KOS_CFLAGS += -DRE4DC_BACKFACE_SH4_TRACE=1
+endif
+$(OBJDIR)/platform/backface_sh4.o: platform/backface_sh4.S
+	@mkdir -p $(dir $@)
+	kos-cc $(KOS_CFLAGS) -c $< -o $@
+endif
+# ACTOR_BACKFACE=1 (render, look change; needs CPU_BACKFACE=1 or 2): Leon, the Ganados and El Gigante (owned path) use the source model's cull
 #   mode instead of cull none, so CPU_BACKFACE drops their back faces too; alpha-mask and no-depth-write materials stay
 #   double-sided. Default 0: no code.
 ACTOR_BACKFACE ?= 0
@@ -36,8 +51,8 @@ ifneq ($(filter $(ACTOR_BACKFACE),0 1),$(ACTOR_BACKFACE))
 $(error ACTOR_BACKFACE must be 0 or 1)
 endif
 ifeq ($(ACTOR_BACKFACE),1)
-ifneq ($(CPU_BACKFACE),1)
-$(error ACTOR_BACKFACE=1 needs CPU_BACKFACE=1)
+ifeq ($(filter $(CPU_BACKFACE),1 2),)
+$(error ACTOR_BACKFACE=1 needs CPU_BACKFACE=1 or 2)
 endif
 $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1
 $(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1
