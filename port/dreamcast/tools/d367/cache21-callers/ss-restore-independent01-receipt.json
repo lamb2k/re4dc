@@ -1,0 +1,75 @@
+{
+  "scope": "Independent source/actual Make stanza parsing only; no compiler/build/guest",
+  "source_sha256": "2c9179df90c206bf079d3915f4ade4175ed8b0f2f79ca774cfadf0379de123b9",
+  "game30_sha256": "3029abb5c377125e104e0025234330be32d899efac9adc7db8f92cc0af5ca4b6",
+  "all_other_source_bytes_equal_54ba": true,
+  "all_other_game30_bytes_equal_54ba": true,
+  "source_patch": "#if RE4DC_SS_RESTORE_VALIDATE_FIRST\n    // A bad restore must halt before thaw or motion recount dereferences it.\n    // Keep suspension and backing ownership intact for the failure diagnostic.\n    if (h != open_hash) re4dc_missing(\"sub screen backing corrupted while the screen was open\");\n#endif\n",
+  "make_stanza": "SS_RESTORE_VALIDATE_FIRST ?= 0\nifneq ($(SS_RESTORE_VALIDATE_FIRST),0)\nifneq ($(SS_RESTORE_VALIDATE_FIRST),1)\n$(error SS_RESTORE_VALIDATE_FIRST must be 0 or 1)\nendif\nGAME_CPPFLAGS += -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1\nendif\n",
+  "make_probes": [
+    {
+      "value": null,
+      "returncode": 0,
+      "stdout": "AUDIT_FLAGS=\n",
+      "stderr": ""
+    },
+    {
+      "value": "0",
+      "returncode": 0,
+      "stdout": "AUDIT_FLAGS=\n",
+      "stderr": ""
+    },
+    {
+      "value": "1",
+      "returncode": 0,
+      "stdout": "AUDIT_FLAGS=-DRE4DC_SS_RESTORE_VALIDATE_FIRST=1\n",
+      "stderr": ""
+    },
+    {
+      "value": "2",
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "/tmp/GmOFPwvx:4: *** SS_RESTORE_VALIDATE_FIRST must be 0 or 1.  Stop.\n"
+    },
+    {
+      "value": "-1",
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "/tmp/Gmf2rPJ5:4: *** SS_RESTORE_VALIDATE_FIRST must be 0 or 1.  Stop.\n"
+    },
+    {
+      "value": "yes",
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "/tmp/GmW3SP3f:4: *** SS_RESTORE_VALIDATE_FIRST must be 0 or 1.  Stop.\n"
+    },
+    {
+      "value": "",
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "/tmp/GmN6srOU:4: *** SS_RESTORE_VALIDATE_FIRST must be 0 or 1.  Stop.\n"
+    }
+  ],
+  "actual_missing": {
+    "path": "port/dreamcast/game/platform/mem.cpp",
+    "file_sha256": "c42f173e4bf3cb9b08acb117ec3f66edd794e27fd7f9fe0fdb53278526487adb",
+    "start": 215,
+    "end": 228,
+    "body": "\n    // Keep the first failure before the intentional sleep loop hides it from\n    // the watchdog. The hook is absent when CRASH_SCREEN is disabled.\n    if (re4dc_crash_screen_missing) re4dc_crash_screen_missing(name);\n    re4dc_log(\"RE4DC MISSING: %s called; halting\\n\", name);\n#if RE4DC_VMU_DEBUG_SLOT\n    re4dc_dbgslot_ring(2, (unsigned) name, 0);\n#endif\n    fflush(stdout);\n    for (;;) {\n        thd_sleep(1000);\n    }\n",
+    "nonreturning_loop": true
+  },
+  "owner_host_receipt": {
+    "path": "/root/probe/cache21-ss-restore-first-host-20261022-01/receipt.json",
+    "sha256": "8b79a8431f4d1d73a4f86aa304d01ad2147d16dd5be6b8c55fde523f0b998eaf",
+    "reported_flags": [
+      "matching_restore_sequence_unchanged",
+      "enabled_mismatch_halts_before_backing_close_thaw_or_recount",
+      "disabled_preprocessed_function_exact"
+    ],
+    "not_reexecuted": true
+  },
+  "limitations": [
+    "Conditional fault containment only; no observed corruption/issue52 cause",
+    "Full archive/reset lifetime and source-pointer validity not established"
+  ]
+}

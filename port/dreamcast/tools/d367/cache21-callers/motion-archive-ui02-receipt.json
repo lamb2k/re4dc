@@ -1,0 +1,550 @@
+{
+  "source_pin": "ef23404565c43af2cb9a1532cc386bbf876a6f4f",
+  "runtime_pin": "f3149dfc7a8e9bbf317eae6d192d9665b9568ce5",
+  "files": [
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "bytes": 49287,
+      "sha256": "5a4b3c64f98815772021bed83ff1ef5e8b302243002df587991c89bfe49bb58d",
+      "blob": "017f13f2791ad27562db222ffd36d7b1c7d7baeb",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "port/dreamcast/game/motion_bridge.cpp",
+      "bytes": 1047,
+      "sha256": "80176e91b5442422bb801bcf3c6063b6a23629723df25ab318a02ef0355842a5",
+      "blob": "196ab28adf718c8c980528529cedfef24464bd42",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "port/dreamcast/game/sscrn_bridge.cpp",
+      "bytes": 46393,
+      "sha256": "eb704d519337b4349fc069b11fd9aea7825831f5048a4fd5980b81f857a703ab",
+      "blob": "1407f6759b8a404c58fc7ff1ab5aea8e7e712362",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "port/dreamcast/game/parts_bridge.cpp",
+      "bytes": 19998,
+      "sha256": "616bcfd7b1606ed0b47a36791b183e6bf1476bfe61b687f2b3652e613536d35f",
+      "blob": "2ef99488529ddbbfb5025adb6cab73df7e03bdb5",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "src/game/read.cpp",
+      "bytes": 54487,
+      "sha256": "fa7688e8cf6a2f21548d7d31e93b3f0e6023131333c3b8c90d25c4d61ce78d08",
+      "blob": "11bf2026b93a2ec663e6509185dd78202cd109ff",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "src/game/sscrn.cpp",
+      "bytes": 39309,
+      "sha256": "46ad97e6a8951e9e5fe7502aaa4798b4a97dd213576a70daef0f74a64f56267a",
+      "blob": "34f901d0e39203eb5d2196db990014f7c181428e",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "src/game/game.cpp",
+      "bytes": 67752,
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "blob": "53ad0e7322de9ad1d1b9b218ac05982ac9a7c9e2",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "src/game/main.cpp",
+      "bytes": 21850,
+      "sha256": "d2c27ac68757a09cec2a1777558cedcf4cdd417bf57591159447e4f004e17d6a",
+      "blob": "355a1d7b7af5d55e3206914e8bdc05e7ea78b36b",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "bytes": 48362,
+      "sha256": "47e3b36faa3ebcffd1874dbb5d53bb46404773c9e0bb91fbb5be99ac52ab12b8",
+      "blob": "c4eb82eabcc990c551442e6cdc897b8e80887de5",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "src/lib/OSAlloc.c",
+      "bytes": 21801,
+      "sha256": "a6d4639da7475543c12332a2fd47ebcca2aecc5eea396bf26e47cae86ae8868b",
+      "blob": "8f1e68a21ff2d0443950421f6c7e661f854a392f",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "src/game/snd.cpp",
+      "bytes": 93973,
+      "sha256": "bd1dd308b7bff42b13e65ec3c174156da56c3f41f3e1c106a20919b68688c206",
+      "blob": "257c0ded914642cbcd35d8fbf5986b44b625e6f4",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "port/dreamcast/game/platform/subscreen_backing.cpp",
+      "bytes": 24990,
+      "sha256": "11d269e4738babaeff5a460c38d0aed1780a1735236e0bf067a9071adfb627ed",
+      "blob": "bb9a75a8818d11c104ee0e63855bcad02bf70be3",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "port/dreamcast/game/platform/mem.cpp",
+      "bytes": 10033,
+      "sha256": "c42f173e4bf3cb9b08acb117ec3f66edd794e27fd7f9fe0fdb53278526487adb",
+      "blob": "5791ddfc1d025dc24621393dafea86df055bfecb",
+      "same_as_runtime_f314": true
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "bytes": 45157,
+      "sha256": "426a06c09524c21b6246a818aac130c58bd9fab44fe4d4959f9e8e3042b21f69",
+      "blob": "c73c09498ba6c22f6efda26860f5c18baf892c3c",
+      "same_as_runtime_f314": true
+    }
+  ],
+  "objects": [
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "signature": "extern \"C\" int re4dc_motion_bind(",
+      "start": 737,
+      "end": 847,
+      "body": "\n    Locked guard;auto* a=static_cast<unsigned char*>(archive);\n    if(!a || bytes<16)return 0;\n    const unsigned n=word(a),rel=word(a+4);if(n>(bytes-16)/8)return 0;\n    const unsigned char* mtc=nullptr;unsigned mtc_offset=0;\n    for(unsigned i=0;i<n;++i)if(!std::memcmp(a+16+4*n+4*i,\"MTC\",4)) {\n        if(mtc || i!=n-1)return 0;\n        mtc_offset=word(a+16+4*i);\n        if(mtc_offset>bytes || bytes-mtc_offset<32)return 0;\n        mtc=a+mtc_offset;\n    }\n    if(!mtc)return 1; // ordinary source archive, no cache allocated\n    // D325 qualifies room-owned em12, before heap4 reset. Frozen stage heaps\n    // and the ARAM/shooting-range swap require a distinct ownership audit.\n    if(re4dc_motion_current_heap()!=4)return 0;\n#if RE4DC_MOTION_BOUNDED_R11F\n    if(rel>bytes || bytes-rel!=64 || mtc_offset<16+8*n ||\n       mtc_offset>=rel || rel-mtc_offset<32 || (mtc_offset&31) ||\n       std::memcmp(mtc,\"R4MOTBL\\0\",8) || word(mtc+16)!=20 || word(mtc+24)!=bytes)return 0;\n    unsigned clip_limit=kClipLimit;bool bounded=false;\n    if(word(mtc+8)==3u) {\n#if RE4DC_SUBSCREEN\n        if(hold)return 0;\n#endif\n        clip_limit=bounded_profile(a,bytes,rel,mtc);\n        if(!clip_limit)return 0;\n        bounded=true;\n    } else if(word(mtc+8)!=2u || word(mtc+28)!=kClipLimit)return 0;\n#else\n    if(rel>bytes || bytes-rel!=64 || mtc_offset<16+8*n ||\n       mtc_offset>=rel || rel-mtc_offset<32 || (mtc_offset&31) ||\n       std::memcmp(mtc,\"R4MOTBL\\0\",8) || word(mtc+8)!=2 || word(mtc+16)!=20 ||\n       word(mtc+24)!=bytes || word(mtc+28)!=kClipLimit)return 0;\n#endif\n    const unsigned count=word(mtc+12);\n    if(!count || count>kEntries || count>(rel-mtc_offset-32)/20 ||\n       net_crc32le(mtc+32,count*20)!=word(mtc+20))return 0;\n    unsigned hot=0,largest=0,prev=0;\n    for(unsigned i=0;i<count;++i) {\n        const auto* e=mtc+32+20*i;const unsigned off=word(e),size=word(e+4),flags=word(e+16);\n        if(off<16+8*n || off>=mtc_offset || (off&31) || off<=prev ||\n#if RE4DC_MOTION_BOUNDED_R11F\n           size>clip_limit || (bounded && flags) ||\n#else\n           size>kClipLimit ||\n#endif\n           size<32 || (size&31) || flags>1 || !a[off+2])return 0;\n        unsigned head=prefix(a+off);if(head>size || head>mtc_offset-off)return 0;\n        bool found=false;unsigned end=mtc_offset;\n        for(unsigned j=0;j<n;++j) {\n            unsigned p=word(a+16+4*j);if(p>off && p<end)end=p;\n            if(p==off) { if(std::memcmp(a+16+4*n+4*j,\"FCV\",4))return 0;found=true; }\n        }\n        if(!found || aligned(head)!=end-off || head>=size)return 0;\n        if(flags)hot+=size;else if(size>largest)largest=size;\n        const auto* table=a+off+head-4*a[off+2];\n        for(unsigned j=0;j<a[off+2];++j)if(word(table+4*j)<head || word(table+4*j)>=size)return 0;\n        prev=off;\n    }\n    Binding* b=nullptr;\n    for(auto& q:bindings) { if(q.archive==a)return 0;if(!q.archive && !b)b=&q; }\n    if(!b)return 0;\n    const unsigned meta=aligned(count*sizeof(Slot));auto* slots=static_cast<Slot*>(re4dc_motion_alloc(meta));\n    if(!slots)return 0;\n    std::memset(slots,0,meta);\n    // Selected recurring/response set plus two largest cold clips. D325 is\n    // diagnostic until the source prefetch/concurrency closure is complete.\n    // Hot entries are never LRU victims; a budget miss is explicit, not thrash.\n    *b={a,bytes,mtc+32,count,slots,hot+2*largest,hot,0};\n#if RE4DC_MOTION_BOUNDED_R11F\n    b->bounded=bounded;\n#endif\n    stats.metadata_bytes+=meta;stats.hot_bytes+=hot;\n#if RE4DC_MOTION_RESUME\n    resume_journal.binding_changed(unsigned(b-bindings));\n#endif\n#if RE4DC_MOTION_RESERVE\n    if(largest) {\n#if RE4DC_MOTION_RESERVE_PACK\n        if(!reserve_allocate(*b,largest)) {re4dc_log(\"motion bind: reserve backing of 2x%u failed\\n\",b->slab_bytes);release_binding(*b);return 0;}\n        re4dc_log(\"motion reserve: backing=%s payload=%u\\n\",b->joined?\"joined\":\"two-cell\",2*b->slab_bytes);\n#else\n        b->slab_bytes=aligned(largest);\n        for(auto*& p:b->slab) {\n            p=static_cast<unsigned char*>(re4dc_motion_alloc(b->slab_bytes));\n            if(!p) { re4dc_log(\"motion bind: reserve slab of %u failed\\n\",b->slab_bytes);release_binding(*b);return 0; }\n#if RE4DC_MOTION_BOUNDED_R11F\n            if(b->bounded)stats.metadata_bytes+=b->slab_bytes;\n#endif\n        }\n#if RE4DC_MOTION_BOUNDED_R11F\n        if(!b->bounded)\n#endif\n        stats.metadata_bytes+=2*b->slab_bytes;\n#endif\n        re4dc_log(\"motion reserve: bind slabs=2x%u\\n\",b->slab_bytes);\n    }\n#endif\n#if RE4DC_MOTION_USAGE_LOG\n    b->seen=static_cast<unsigned char*>(re4dc_motion_alloc(aligned(count)));\n    if(b->seen)std::memset(b->seen,0,aligned(count));\n#endif\n    for(unsigned i=0;i<count;++i)if(word(record(*b,i)+16))load(*b,i);\n    re4dc_log(\"motion bind: archive=%u entries=%u hot=%u cache-budget=%u metadata=%u\\n\",bytes,count,hot,b->budget,meta);\n#if RE4DC_MOTION_PRESSURE_BYTES\n    re4dc_log(\"motion pressure: cap=%u resident=%u peak=%u pinned=%u evictions=%u loads=%u\\n\",\n        unsigned(RE4DC_MOTION_PRESSURE_BYTES),stats.resident_bytes,stats.peak_cache_bytes,\n        stats.pinned_bytes,stats.evictions,stats.loads);\n#endif\n    return 1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "signature": "extern \"C\" unsigned re4dc_motion_forget_dead_heaps()",
+      "start": 917,
+      "end": 958,
+      "body": "\n    Locked guard;unsigned n=0,resident=0,pinned=0;\n    for(auto& b:bindings) {\n        if(!b.archive)continue;\n        if(b.slots && !re4dc_motion_owner_live(b.slots)) {\n#if RE4DC_MOTION_RESERVE\n            stats.metadata_bytes-=2*b.slab_bytes;\n#endif\n            stats.metadata_bytes-=aligned(b.count*sizeof(Slot));stats.hot_bytes-=b.hot_bytes;\n#if RE4DC_MOTION_RESUME\n            resume_journal.binding_changed(unsigned(&b-bindings));\n#endif\n            b={};++n;continue;\n        }\n        b.resident=0;\n        for(unsigned i=0;i<b.count;++i) {\n            auto& s=b.slots[i];\n#if RE4DC_MOTION_RESERVE_PACK\n            // owner_live reads the allocator header before a base pointer.\n            // Packed FCVs borrow the slab allocation; an interior FCV has none.\n            const auto* owner=reserved_base(b,s.data);\n            if(s.data && !re4dc_motion_owner_live(owner?owner:s.data)){\n#if RE4DC_MOTION_RESUME\n                resume_journal.key_forgotten(unsigned(&b-bindings),i);\n#endif\n                s={};++n;}\n#else\n            if(s.data && !re4dc_motion_owner_live(s.data)){\n#if RE4DC_MOTION_RESUME\n                resume_journal.key_forgotten(unsigned(&b-bindings),i);\n#endif\n                s={};++n;}\n#endif\n            if(!s.data)continue;\n            b.resident+=aligned(word(record(b,i)+4));\n            if(s.pins)pinned+=word(record(b,i)+4);\n        }\n        resident+=b.resident;\n    }\n    stats.resident_bytes=resident;stats.pinned_bytes=pinned;hold=false;\n    return n;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "signature": "extern \"C\" void re4dc_motion_hold(",
+      "start": 908,
+      "end": 912,
+      "body": " Locked guard;hold=on!=0;\n#if RE4DC_MOTION_RESUME\n    if(hold){resume_journal.cancel_movie();resume_pending={};resume_pending_live=false;}\n#endif\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "signature": "extern \"C\" void re4dc_motion_unbind(",
+      "start": 903,
+      "end": 905,
+      "body": "\n    Locked guard;for(auto& b:bindings)if(b.archive==archive && archive)release_binding(b);\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "signature": "extern \"C\" void re4dc_motion_retire_all()",
+      "start": 960,
+      "end": 970,
+      "body": "\n    Locked guard;\n#if RE4DC_MOTION_RETIRE_PREFLIGHT\n    // Validate the complete set under the same lock used for retirement.\n    // A later pinned binding must not leave earlier bindings already freed.\n    for(const auto& b:bindings)if(b.archive)\n        for(unsigned i=0;i<b.count;++i)\n            if(b.slots[i].pins)fail(\"motion archive retired while pinned\");\n#endif\n    for(auto& b:bindings)if(b.archive)release_binding(b);\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "signature": "void release_binding(",
+      "start": 351,
+      "end": 380,
+      "body": "\n    for(unsigned i=0;i<b.count;++i) if(b.slots[i].pins)fail(\"motion archive retired while pinned\");\n#if RE4DC_MOTION_RESUME\n    resume_journal.binding_changed(unsigned(&b-bindings));\n#endif\n    for(unsigned i=0;i<b.count;++i)discard(b,i);\n    stats.metadata_bytes-=aligned(b.count*sizeof(Slot));stats.hot_bytes-=b.hot_bytes;\n#if RE4DC_MOTION_RESERVE\n#if RE4DC_MOTION_RESERVE_PACK\n    for(unsigned i=0;i<(b.joined?1u:2u);++i)if(b.slab[i])re4dc_motion_free(b.slab[i]);\n    // Charge only successful allocations, including partial fallback failure.\n    stats.metadata_bytes-=b.joined?2*b.slab_bytes:((b.slab[0]!=nullptr)+(b.slab[1]!=nullptr))*b.slab_bytes;\n#else\n    for(auto* p:b.slab)if(p)re4dc_motion_free(p);\n#if RE4DC_MOTION_BOUNDED_R11F\n    // New profile accounting charges each successful slab allocation separately.\n    stats.metadata_bytes-=b.bounded?((b.slab[0]!=nullptr)+(b.slab[1]!=nullptr))*b.slab_bytes:2*b.slab_bytes;\n#else\n    stats.metadata_bytes-=2*b.slab_bytes;\n#endif\n#endif\n#endif\n#if RE4DC_MOTION_USAGE_LOG\n    if(b.seen)re4dc_motion_free(b.seen);\n#endif\n    re4dc_motion_free(b.slots);b={};\n#if defined(RE4DC_MOTION_STATS_LOG) && RE4DC_MOTION_STATS_LOG\n    {const unsigned k=unsigned(&b-bindings);if(k<kArchives){std::memset(ws_win[k],0,32);std::memset(ws_blk[k],0,32);std::memset(ws_all[k],0,32);}}\n#endif\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_motion.cpp",
+      "signature": "const unsigned char* record(",
+      "start": 259,
+      "end": 259,
+      "body": " return b.records+20*i; "
+    },
+    {
+      "path": "port/dreamcast/game/motion_bridge.cpp",
+      "signature": "extern \"C\" void* re4dc_motion_alloc(",
+      "start": 7,
+      "end": 13,
+      "body": "\n    const int owner=Heap[MemGetCurrentHeap()].handle;\n    auto* p=(MotionAllocation*)mem_alloc(bytes+sizeof(MotionAllocation),\n        \"native motion residency\",0,1,MEM_HEAP_CURRENT);\n    if(!p)return 0;\n    p->heap=owner;return p+1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/motion_bridge.cpp",
+      "signature": "extern \"C\" int re4dc_motion_owner_live(",
+      "start": 16,
+      "end": 20,
+      "body": "\n    const int handle=((const MotionAllocation*)p-1)->heap;\n    for(int h=0;h<MEM_HEAP_NUM;++h)if(Heap[h].handle==handle)return 1;\n    return 0;\n"
+    },
+    {
+      "path": "port/dreamcast/game/motion_bridge.cpp",
+      "signature": "extern \"C\" void re4dc_motion_free(",
+      "start": 22,
+      "end": 26,
+      "body": "\n    if(!p)return;\n    auto* allocation=(MotionAllocation*)p-1;\n    OSFreeToHeap(allocation->heap,allocation);\n"
+    },
+    {
+      "path": "port/dreamcast/game/sscrn_bridge.cpp",
+      "signature": "extern \"C\" void re4dc_subscreen_swap_open(",
+      "start": 458,
+      "end": 562,
+      "body": "\n    if (swapped) re4dc_missing(\"sub screen area swapped twice\");\n    const unsigned long long t0 = re4dc_ssb_us();\n    const u32 lo = u32(wk->pBuf), hi = lo + kSsAramSize;\n    // The room cache may lie in this window. Drop the renderer's borrow before\n    // packing/reusing it; heap 4 keeps ownership and its bytes are restored at\n    // close. Inventory draws on heap 12 cannot reacquire the room cache.\n    re4dc_model_detach_retained_storage();\n    build_spans(lo, hi);\n    unsigned bank = 0, pool = 0;\n    const unsigned pool_before = re4dc_ssb_pool_free();\n    u32 h = 2166136261U;\n#if RE4DC_SS_PACK\n    // SS_PACK=1: the live bytes go LZ4-packed into bank 1, with pool blocks only for what does not fit\n    // (platform/subscreen_backing.cpp). The encoder's table and staging use the first bytes of the\n    // area, which go raw first and are put back right after, before anything else reads the area.\n    const u32 scratch = re4dc_ssb_pack_scratch_bytes();\n    packed = nspan && spans[0].start == lo && spans[0].bytes >= scratch + 64;\n    if (packed) {\n        for (unsigned i = 0; i < nspan; ++i) h = hash_words(reinterpret_cast<const void*>(spans[i].start), spans[i].bytes, h);\n        if (!re4dc_ssb_open_grow()) re4dc_missing(\"sub screen backing: open failed\");\n        re4dc_ssb_rewind();\n        re4dc_ssb_put(reinterpret_cast<const void*>(lo), scratch);\n        for (unsigned i = 0; i < nspan; ++i) {\n            const u32 a = i ? spans[i].start : lo + scratch, b = spans[i].start + spans[i].bytes;\n            re4dc_ssb_put_packed(reinterpret_cast<const void*>(a), b - a, reinterpret_cast<void*>(lo));\n        }\n        packed_bytes = re4dc_ssb_cursor();\n        re4dc_ssb_rewind();\n        re4dc_ssb_get(reinterpret_cast<void*>(lo), scratch);\n        bank = re4dc_ssb_bank_bytes();\n        pool = packed_bytes > bank ? packed_bytes - bank : 0;\n    } else\n#endif\n    {\n        if (!re4dc_ssb_open(live_bytes, &bank, &pool)) {\n            re4dc_log(\"subscreen backing: live=%u bank=%u pool_free=%u\\n\", live_bytes, re4dc_ssb_bank_bytes(), pool_before);\n            re4dc_missing(\"sub screen backing: no VRAM for the swapped area\");\n        }\n        re4dc_ssb_rewind();\n        for (unsigned i = 0; i < nspan; ++i) {\n            re4dc_ssb_put(reinterpret_cast<const void*>(spans[i].start), spans[i].bytes);\n            h = hash_words(reinterpret_cast<const void*>(spans[i].start), spans[i].bytes, h);\n        }\n    }\n    open_hash = h;\n#if defined(RE4DC_LOGIC_TRACE_SWAPPED) && RE4DC_LOGIC_TRACE_SWAPPED\n    // SS_PACK has restored its temporary scratch bytes. The source region is still intact here.\n    re4dc_logic_trace_swap_open(wk->pBuf,kSsAramSize,packed?packed_bytes:live_bytes);\n#endif\n#if defined(RE4DC_TRACE_SS_MASK) && RE4DC_TRACE_SS_MASK\n    { extern void re4dc_logic_trace_ss_mask(int); re4dc_logic_trace_ss_mask(1); }\n#endif\n#line 499\n    swapped = true;\n    area_lo = lo;\n    area_hi = hi;\n#if RE4DC_SS_CERT\n    // The room's bytes are saved and still intact: its certificates leave the live tables until close.\n    re4dc_actor_swap_park(reinterpret_cast<const void*>(lo), kSsAramSize, span_saved);\n#endif\n    save_message_state();\n    re4dc_motion_hold(1);\n    // Room demand pools (the cEm one, for one) whose slot tables live in the window.\n    const unsigned frozen_pools = re4dc_parts_freeze(lo, hi);\n    w11_text_check(\"after-open\");\n    const unsigned long long t1 = re4dc_ssb_us();\n    // What the ARAM copy would bring in.\n    memset(wk->pBuf, 0, kSsAramSize);\n#if RE4DC_SUBSCREEN_OVL\n    const unsigned long long to0 = re4dc_ssb_us();\n    unsigned reloc_us = 0;\n    overlay_load(lo, kSsAramSize, &reloc_us);\n    re4dc_log(\"subscreen backing: overlay %u B at %08x read_us=%u reloc_us=%u\\n\", ovl_image_bytes,\n              lo + kDescriptorBytes, unsigned(re4dc_ssb_us() - to0) - reloc_us, reloc_us);\n    for (u32 i = 0; i < kDescriptorBytes / 4; ++i) reinterpret_cast<u32*>(lo)[i] = 0;\n#endif\n    u32* d = reinterpret_cast<u32*>(lo + wk->pPreplfOffs);\n    d[0] = kSscrnModuleId;\n    d[0x1c / 4] = kCompactDescriptor;\n    sscrnDataFilename(wk, \"ss_cmmn.dat\");\n    const long cmmn = re4dc_ssb_file_read(wk->path, reinterpret_cast<void*>(lo + wk->pCommonOffs), cmmn_bytes);\n    // ss_pzzl.dat for every type: besides the puzzles it holds the item BIN / TPL pairs that the\n    // inventory, examine and shop screens draw (read fresh each open: the pristine copy that\n    // SubScreenExit re-read into ARAM after a puzzle).\n    sscrnDataFilename(wk, \"ss_pzzl.dat\");\n    const long pzzl = re4dc_ssb_file_read(wk->path, reinterpret_cast<void*>(lo + wk->pzzlOfs), pzzl_bytes);\n    if (cmmn != long(cmmn_bytes) || pzzl != long(pzzl_bytes)) re4dc_missing(\"sub screen file read failed\");\n    // Source-image pointer keys cached by the native UI named the game's bytes at these addresses.\n    re4dc_ui_invalidate_sources();\n    const unsigned long long t2 = re4dc_ssb_us();\n    unsigned blocks = 0, reclaimed = 0, reclaimed_bytes = 0;\n    re4dc_ssb_stats(&blocks, &reclaimed, &reclaimed_bytes);\n    re4dc_log(\"subscreen backing: open type=%x area=%08x+%x live=%u skipped_free=%u spans=%u bank=%u pool=%u \"\n              \"blocks=%u ui_released=%u/%uB pool_free=%u->%u save_us=%u read_us=%u cmmn=%ld pzzl=%ld frozen_pools=%u \"\n              \"hash=%08x\\n\",\n              unsigned(wk->type), lo, kSsAramSize, live_bytes, skipped_bytes, nspan, bank, pool, blocks, reclaimed,\n              reclaimed_bytes, pool_before, re4dc_ssb_pool_free(), unsigned(t1 - t0), unsigned(t2 - t1), cmmn, pzzl,\n              frozen_pools, open_hash);\n#if RE4DC_SS_PACK\n    if (packed)\n        re4dc_log(\"subscreen backing: packed %u -> %u B (bank %u, pool %u B)\\n\", live_bytes, packed_bytes, bank, pool);\n#endif\n"
+    },
+    {
+      "path": "port/dreamcast/game/sscrn_bridge.cpp",
+      "signature": "extern \"C\" void re4dc_subscreen_swap_close(",
+      "start": 603,
+      "end": 669,
+      "body": "\n    w11_text_check(\"before-close\");\n    if (!swapped) re4dc_missing(\"sub screen area restored without a swap\");\n    const unsigned long long t0 = re4dc_ssb_us();\n    re4dc_ssb_rewind();\n    u32 h = 2166136261U;\n#if RE4DC_SS_PACK\n    if (packed) {\n        const u32 lo = u32(wk->pBuf), scratch = re4dc_ssb_pack_scratch_bytes();\n        re4dc_ssb_get(reinterpret_cast<void*>(lo), scratch);\n        for (unsigned i = 0; i < nspan; ++i) {\n            const u32 a = i ? spans[i].start : lo + scratch, b = spans[i].start + spans[i].bytes;\n            if (!re4dc_ssb_get_packed(reinterpret_cast<void*>(a), b - a))\n                re4dc_missing(\"sub screen backing: a packed span did not decode\");\n        }\n        for (unsigned i = 0; i < nspan; ++i) h = hash_words(reinterpret_cast<const void*>(spans[i].start), spans[i].bytes, h);\n        packed = false;\n    } else\n#endif\n    for (unsigned i = 0; i < nspan; ++i) {\n        re4dc_ssb_get(reinterpret_cast<void*>(spans[i].start), spans[i].bytes);\n        h = hash_words(reinterpret_cast<const void*>(spans[i].start), spans[i].bytes, h);\n    }\n#if defined(RE4DC_LOGIC_TRACE_SWAPPED) && RE4DC_LOGIC_TRACE_SWAPPED\n    re4dc_logic_trace_swap_close();\n#endif\n    re4dc_ssb_close();\n#if defined(RE4DC_TRACE_SS_MASK) && RE4DC_TRACE_SS_MASK\n    { extern void re4dc_logic_trace_ss_mask(int); re4dc_logic_trace_ss_mask(0); }\n#endif\n#if RE4DC_SS_CLOSE_POISON\n    // SS_CLOSE_POISON=1 (mcheck.mk; debug only, default 0): the bytes close does not put back (the payload of the\n    // free cells skipped at open, which held the sub screen's heap 12 and data) are filled with 0xA5, so a reference\n    // the screen left behind reads poison on Flycast too instead of the screen's still-valid-looking bytes.\n    {\n        const u32 lo = u32(wk->pBuf), hi = lo + kSsAramSize;\n        u32 at = lo, poisoned = 0;\n        for (unsigned i = 0; i <= nspan; ++i) {\n            const u32 end = i < nspan ? spans[i].start : hi;\n            if (end > at) { memset(reinterpret_cast<void*>(at), 0xA5, end - at); poisoned += end - at; }\n            if (i < nspan) at = spans[i].start + spans[i].bytes;\n        }\n        re4dc_log(\"subscreen backing: close poison %u B outside %u spans\\n\", poisoned, nspan);\n    }\n#if RE4DC_SS_CLOSE_POISON >= 2\n    re4dc_poison_dead_stack(\"close\");\n#endif\n#endif\n#line 578\n    swapped = false;\n    re4dc_parts_thaw();\n    restore_message_state(u32(wk->pBuf), u32(wk->pBuf) + kSsAramSize);\n    // Motion clips the screen loaded came from heap 12 (gone now); room tables are back as at open.\n    const unsigned motions = re4dc_motion_forget_dead_heaps();\n    if (motions) re4dc_log(\"subscreen backing: %u motion residency slots from the sub screen heap dropped\\n\", motions);\n    re4dc_ui_invalidate_sources();\n#if RE4DC_SS_CERT\n    // Heap 12 is destroyed (SubScreenExitCore) and the room's bytes are back: parked certificates whose bytes hash\n    // as at open are published again; a failed restore publishes none.\n    re4dc_actor_swap_unpark(h == open_hash);\n#endif\n    const unsigned long long t1 = re4dc_ssb_us();\n    re4dc_log(\"subscreen backing: close area=%08x restored=%u restore_us=%u hash=%08x %s pool_free=%u\\n\", u32(wk->pBuf),\n              live_bytes, unsigned(t1 - t0), h, h == open_hash ? \"ok\" : \"MISMATCH\", re4dc_ssb_pool_free());\n    if (h != open_hash) re4dc_missing(\"sub screen backing corrupted while the screen was open\");\n"
+    },
+    {
+      "path": "port/dreamcast/game/parts_bridge.cpp",
+      "signature": "template<class T> void thaw_type()",
+      "start": 178,
+      "end": 192,
+      "body": "\n    // The window holds the game's bytes again, so the pool header is valid. A manager the sub\n    // screen re-allocated meanwhile pointed into heap 12 (gone now) and gets its room pool back.\n    for(unsigned i=0;i<Registry<T>::nfz;++i) {\n        Frozen<T>& f=Registry<T>::fz[i];\n        if(f.m->pArray!=(T*)f.pool || f.m->nArray!=f.nArray) {\n            re4dc_log(\"work backing: size=%u manager moved while frozen (%p -> %p), room pool restored\\n\",\n                (unsigned)sizeof(T),f.pool,(void*)f.m->pArray);\n            f.m->pArray=(T*)f.pool;f.m->nArray=f.nArray;\n        }\n        RE4DC_FREEZE_FREE(f.slots);\n    }\n    RE4DC_FROZEN_ADD(0u - Registry<T>::nfz);\n    Registry<T>::nfz=0;\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "int readEmData(ReadModule* m, int id, void* addr, u32 size)",
+      "start": 540,
+      "end": 683,
+      "body": "\n    DvdReadInfo info;\n    u32 len;\n    ReadFile* e;\n    char* name;\n    int req;\n    int ret;\n    int mode;\n    void* pArc;\n    void* pModule = NULL;\n    u32 bssSize = 0;\n    u32 newSize;\n    u32 dataSize;\n\n    switch (pG->pl_type) {\n    case 0:\n    case 1:\n    default:\n        e = &EmFileTbl[id];\n        break;\n    case 3:\n    case 5:\n        e = &EmFileTbl_Wesker[id];\n        break;\n    case 2:\n        e = &EmFileTbl_Ada[id];\n        break;\n    case 4:\n        e = &EmFileTbl_Klauser[id];\n        break;\n    }\n    if (e->file == 0) {\n        return 0;\n    }\n    name = (char*) FileTbl[e->file].name;\n    if (e->dll != 0) {\n        SET_DRS_NAME(name);\n        name = (char*) FileTbl[e->file].name;\n    }\n    if (Dvd.FileExistCheck(name, &len) < 0) {\n        pLog->err(0, 0, \"readEmData(): error! %s\", name);\n        return 0;\n    }\n    mode = 1;\n    if (pG->Rno0 == 2) {\n        mode = 0x100;\n    }\n    if (addr == NULL) {\n#line 725 \"D:/Bio4/Prog/read.cpp\"\n        req = DVD_READ_N(name, NULL, 0, 0, 0, mode | 0x8004);\n    } else {\n#line 728 \"D:/Bio4/Prog/read.cpp\"\n        req = DVD_READ_N(name, addr, 0, 0, 0, mode | 0x8000);\n    }\n    while ((ret = Dvd.ReadCheckInfo(req, &info)) != 1) {\n        if (ret < 0) {\n            pLog->err(0, 0, \"readEmData(): error! %s\", name);\n            return 0;\n        }\n        if (SceSys.checkCTaskRange() == 1) {\n            SceSys.x73 = 1;\n            SceSleep(1);\n            SceSys.x73 = 0;\n        } else {\n            TaskSleep(1);\n        }\n    }\n    len = info.size[0][0];\n    if (addr == NULL) {\n        m->flag |= 4;\n        pArc = (void*) info.addr[0][0];\n        if (len < size) {\n            void* old = pArc;\n            newSize = size;\n            Mem_free(old);\n#line 776 \"D:/Bio4/Prog/read.cpp\"\n            pArc = MEM_ALLOC(newSize, 1, 0xD);\n            if (pArc != old) {\n                return 0;\n            }\n        } else {\n            newSize = len;\n        }\n    } else {\n        BitOff16(m->flag, 4);\n        pArc = addr;\n        newSize = len;\n    }\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    if (!re4dc_ui_bind_enemy(pArc, len)) {\n        re4dc_missing(\"invalid prepared enemy texture identities\");\n        return 0;\n    }\n    if (!re4dc_effect_bind(pArc, len)) {\n#if defined(RE4DC_EFFECT_BIND_DIAG) && RE4DC_EFFECT_BIND_DIAG\n        // EFFECT_BIND_DIAG=1: which check refused it (native_effect.cpp line), the file, its size and an FNV-1a of\n        // the buffer (compare with the disc file: a damaged read vs a full or stale binding table)\n        // Then the range is written back and dropped from the operand cache (ocbp) and checked again from RAM: a pass\n        // now means the CPU held stale lines over bytes a DMA had written (cache class); a second failure means RAM\n        // itself is wrong (a damaged / short read, or a dirty line written back over the DMA's bytes).\n        static char why[160];\n        u32 h = 2166136261u, h2 = 2166136261u;\n        for (u32 i = 0; i < (u32) len; ++i) h = (h ^ ((const u8*) pArc)[i]) * 16777619u;\n        const unsigned chk1 = re4dc_effect_bind_fail_line;\n        re4dc_effect_bind_fail_line = 0;\n        re4dc_dcache_purge(pArc, len);\n        const int ok2 = re4dc_effect_bind(pArc, len);\n        for (u32 i = 0; i < (u32) len; ++i) h2 = (h2 ^ ((const u8*) pArc)[i]) * 16777619u;\n        sprintf(why, \"enemy fx chk%u fnv%08x purge %s%u fnv%08x %s %ub @%08x\", chk1, (unsigned) h, ok2 ? \"PASS\" : \"chk\",\n                ok2 ? 0u : re4dc_effect_bind_fail_line, (unsigned) h2, name, (unsigned) len, (unsigned) (u32) pArc);\n        re4dc_missing(why);\n#else\n        re4dc_missing(\"invalid prepared enemy effect records\");\n#endif\n        return 0;\n    }\n    if (!re4dc_motion_bind(pArc, len)) {\n        re4dc_missing(\"invalid prepared enemy motion archive\");\n        return 0;\n    }\n#endif\n    if (e->dll != 0) {\n        pModule = (void*) (*(u32*) ((u8*) pArc + 4) + (u32) pArc);\n        dataSize = (u32) pModule - (u32) pArc;\n        bssSize = len - dataSize;\n        if (addr == NULL && dataSize < size) {\n            void* old = pModule;\n#line 814 \"D:/Bio4/Prog/read.cpp\"\n            pModule = MEM_ALLOC(bssSize, 1, 0xD);\n            memcpy(pModule, old, bssSize);\n            m->flag |= 1;\n        } else do {  // loop notes: `m` weighted ref 15 > newSize in global-alloc (m r29, newSize r28)\n            newSize = dataSize;\n            BitOff16(m->flag, 1);\n        } while (0);\n    }\n    m->id = id;\n    m->pArc = pArc;\n    m->size = newSize;\n    m->pModule = (OSModuleHeader*) pModule;\n    m->bssSize = bssSize;\n    return 1;\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void InitModule(ReadModule* m)",
+      "start": 404,
+      "end": 433,
+      "body": "\n#if RE4DC_CABIN_SOURCE\n    if(!re4dc_cabin_carrier_before_free(m->pArc)){\n        re4dc_missing(\"cabin borrowed module still has readers\");return;\n    }\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    // Required before archive destruction, including the separately linked REL.\n    re4dc_motion_unbind(m->pArc);\n#endif\n    if (m->pModule != NULL && (m->flag & 2)) {\n        DLL_Unlink(m->pModule);\n    }\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    re4dc_effect_unbind(m->pArc);\n    re4dc_ui_unbind_enemy(m->pArc);\n#endif\n    if (m->pArc != NULL && (m->flag & 4)) {\n        if (m->flag & 8) {\n            Debug_free(m->pArc);\n        } else {\n            Mem_free(m->pArc);\n        }\n    }\n    if (m->pModule != NULL && (m->flag & 1)) {\n        Mem_free(m->pModule);\n    }\n    memclr_asm(m, sizeof(ReadModule));\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void EmReadInit()",
+      "start": 734,
+      "end": 741,
+      "body": "\n    int i;\n\n    for (i = 0; i < 4; i++) {\n        InitModule(&EmReadModule[i]);\n    }\n"
+    },
+    {
+      "path": "src/game/sscrn.cpp",
+      "signature": "void SubScreenExitCore(",
+      "start": 788,
+      "end": 814,
+      "body": "\n    if (pG->Status_flg[0] & 0x00040000) {\n#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK\n        re4dc_ot_check(\"ssexit0\");\n#endif\n        MapMgr.roomInit();\n        DLL_Unlink(wk->p_module);\n        wk->relAddr = 0;\n        MemDestroyHeap(12);\n        MemSignalHeap(4);\n        MemSetCurrentHeap(4);\n#if RE4DC_SUBSCREEN\n        re4dc_subscreen_swap_close(wk);\n#else\n        MemorySwap(wk->pBuf, SS_ARAM, SS_ARAM_SIZE);\n#endif\n        DC.m_data_ctrl_flag = 1;\n        RoomData.restartRelData();\n        MGR_PTR(cModel::mm) = &ModInfoMgr;\n        MGR_PTR(cModel::pm) = &PartsMgr;\n        pG->Status_flg[0] &= ~0x00040000;\n#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK\n        re4dc_ot_check(\"ssexit1\");\n#endif\n    }\n"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "signature": "void gameRoomMemInit()",
+      "start": 1507,
+      "end": 1549,
+      "body": "\n#if RE4DC_WEAPON_HEAP4\n    re4dc_weapon_heap4_room_reset();\n#endif\n#if defined(RE4DC_ROUTE_OVL) && RE4DC_ROUTE_OVL\n    re4dc_route_overlay_room_reset();\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    re4dc_motion_retire_all();\n    re4dc_effect_retire_room();\n    re4dc_ui_retire_room();\n#endif\n    if (pG->System_flg & 0x200000) {\n        MemReplaceHeap(3, 4);\n        MemorySwap((void*) 0x807EC000, ARAM_FREE_BASE, 0x188000);\n        memclr_asm((void*) 0x807EC000, 0x188000);\n        MemCreateHeap(10, 0x807EC000, 0x80974000);\n        MemSetCurrentHeap(10);\n    } else {\n        if (pG->System_flg & 0x400000) {\n            MemDestroyHeap(10);\n            MemorySwap((void*) 0x807EC000, ARAM_FREE_BASE, 0x188000);\n        } else {\n            MemReplaceHeap(3, 4);\n        }\n        MemSetCurrentHeap(4);\n    }\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    RE4DC_TRACE_OWNER_RELEASE(3); re4dc_room_enter();\n#endif\n    memclr_asm(pG->pad_16C, 0x4E00);\n    U32Set(pG->Debug_flg[0], 0);\n    U32Set(pG->Debug_flg[1], 0);\n    U32Set(pG->Status_flg[0], 0);\n    U32Set(pG->Status_flg[1], 0);\n    U32Set(pG->Status_flg[2], 0);\n    if (pG->Debug_flg[3] & 0x10000) {\n        BitOn(pG->Debug_flg[0], 0x80000000);\n        BitOn(pG->Stop_flg, 0x800000);\n        BitOn(pG->Stop_flg, 0x20000000);\n    }\n"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "signature": "void gameEnding()",
+      "start": 1185,
+      "end": 1209,
+      "body": "\n    static TEXPalette* pTpl;\n\n    switch (pG->Rno1) {\n    case 0: {\n        int req;\n\n        gameRoomMemInit();\n        BitSet(pG->Disp_flg, 0xFFFFFFFF);\n#line 1419 \"D:/Bio4/Prog/game.cpp\"\n        req = DvdReadN(\"Etc/Ending.tpl\", 0, 0, 0, 0, 5, __FILE__, __LINE__);\n        Dvd.ReadCheck(req, 0, 0, (void**) &pTpl);\n        fadeSetG(0x80000000, 30, 0, 0);\n        pG->Rno1++;\n        break;\n    }\n    case 1:\n        DrawTpl(pTpl, 0, 0, 512, 448);\n        if (Joy[0].trg & 0x100) {\n            BitOn(pG->System_flg, 0x4000000);\n        }\n        break;\n    }\n"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "signature": "void gameDiedemo(DiedemoWork* w)",
+      "start": 1288,
+      "end": 1414,
+      "body": "\n    int cnt = 0;\n    u32 step = 0;\n    int sel = 1;\n    int kind;\n    int id;\n    u64 trg;\n\n    OSReport(\"--DIEDEMO START!!\\n\");\n    int timer = 0;\n    int cnt2 = 0;\n    for (;;) {\n        switch (step) {\n        case 0:\n            if (cnt >= w->exec_frame) {\n                step++;\n            }\n            break;\n        case 1:\n            IdTexDataLoad((void*) (((OptionArc*) pG->pOption)->ofs_10 + (u32) pG->pOption), TEX_OWNER_ID_DEAD);\n            IdSys.kill(0xFF, 0x21);\n            kind = w->demo_type;\n            if (kind == 0) {\n                kind = 1;\n                if (pSUB != 0 && (s16) pG->pl_life != 0) {\n                    kind = 2;\n                }\n            }\n            switch (kind) {\n            case 1:\n                IdSys.set((void*) (((OptionArc*) pG->pOption)->ofs_14 + (u32) pG->pOption), 0xFF, 0x2D, 0x13, 6, 0);\n                break;\n            case 2:\n                IdSys.set((void*) (((OptionArc*) pG->pOption)->ofs_1C + (u32) pG->pOption), 0xFF, 0x2D, 0x13, 6, 0);\n                break;\n            }\n            if (pG->Status_flg[3] & 0x1000000) {\n                IdSys.unitPtr(0, 0x2D)->be_flag |= 8;\n                fadeSetG(0x80000002, 1, 0, 0);\n            } else {\n                IdSys.unitPtr(0, 0x2D)->be_flag &= ~8;\n            }\n            SndAllFadeOut();\n            step++;\n            SndStrReq(0, 0, (int) 0x80000003, 0, 0, 0.0f);\n            /* fallthrough */\n        case 2:\n            if (cnt >= w->exec_frame + 0x10E || KeyTrg(0x80000000)) {\n                IdSys.set((void*) (((OptionArc*) pG->pOption)->ofs_18 + (u32) pG->pOption), 0xFF, 0x2E, 0x13, 5, 0);\n                cnt2 = 0;\n                step++;\n                IdSys.beMove(IdSys.unitPtr(0x30, 0x2E), 0);\n                IdSys.beMove(IdSys.unitPtr(0x40, 0x2E), 0);\n                IdSys.unitPtr(0, 0x2E)->be_flag |= 8;\n                IdSys.unitPtr(1, 0x2E)->be_flag &= ~8;\n                BitSet(pG->Stop_flg, 0xFFFFFFFF);\n                BitOff(pG->Stop_flg, 0x40);\n            }\n            break;\n        case 3:\n            cnt2++;\n            if (cnt2 > 14) {\n                step = 4;\n            }\n            break;\n        case 4:\n            trg = KeyTrg(0x80000000);\n            if (trg) {\n                if (sel) {\n                    timer = 0xB1;\n                    id = 0x40;\n                    SndCall(0, 8, 0, 0, 0, 0);\n                } else {\n                    timer = 0x96;\n                    id = 0x30;\n                    SndCall(0, 5, 0, 0, 0, 0);\n                }\n                IdSys.beMove(IdSys.unitPtr(id, 0x2E), 1);\n                BitOn(pG->Disp_flg, 0x40000000);\n                BitOn(pG->Disp_flg, 0x10000000);\n                step++;\n            } else {\n                int old = sel;\n\n                if (KeyTrg(0x08000000)) {\n                    sel = 1;\n                }\n                if (KeyTrg(0x04000000)) {\n                    sel = 0;\n                }\n                if (old != sel) {\n                    IdSys.unitPtr(0, 0x2E)->timer[2] = 0;\n                    IdSys.unitPtr(1, 0x2E)->timer[2] = 0;\n                    SndCall(0, 6, 0, 0, 0, 0);\n                }\n                if (sel) {\n                    IdSys.unitPtr(0, 0x2E)->be_flag |= 8;\n                    IdSys.unitPtr(1, 0x2E)->be_flag &= ~8;\n                } else {\n                    IdSys.unitPtr(0, 0x2E)->be_flag &= ~8;\n                    IdSys.unitPtr(1, 0x2E)->be_flag |= 8;\n                }\n            }\n            break;\n        case 5:\n            if (--timer <= 0) {\n                step = 6;\n                CamCtrl.endScope();\n            }\n            break;\n        case 6:\n            if (sel == 1) {\n                OSReport(\"--CONTINUE SELECT!!\\n\");\n                GameContinue(0);\n                GameAddPoint(LVADD_DIE);\n            } else {\n                OSReport(\"--SOFT_RESET SELECT!!\\n\");\n                BitOn(pG->System_flg, 0x4000000);\n            }\n            TaskExit();\n            break;\n        }\n        cnt++;\n        TaskSleep(1);\n    }\n"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "signature": "void systemSoftReset()",
+      "start": 710,
+      "end": 731,
+      "body": "\n    OSReport(\"--SOFT_RESET START!!\\n\");\n    systemVISetBlack(1);\n    VIFlush();\n    VIWaitForRetrace();\n    GXDrawDone();\n    Dvd.ReadCancelAll();\n    Aram.DmaCancelAll();\n    SndSoftReset();\n    DbmenuModuleInit();\n    ResetDebugAlloc();\n    MemClearAllHeap();\n    SndSystemReset();\n    systemResetCommon();\n    RomFontSetting();\n    pG->IsMessageInit = 0;\n#if defined(RE4DC_WARP_AFTER_RESET) && RE4DC_WARP_AFTER_RESET\n    re4dc_warp_soft_reset();  // test rig (WARP_AFTER_RESET=1): an after_reset warp.txt warps from the next title\n#endif\n    OSReport(\"--SOFT_RESET END!!\\n\");\n"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "signature": "void systemResetCommon()",
+      "start": 668,
+      "end": 695,
+      "body": "\n    int i;\n\n    SubScreenExitCore(&SubScreenWk);\n    TaskAllClear();\n    EmReadInit();\n    ReleasePlData();\n#if defined(RE4DC_RESET_MEM_FIX) && RE4DC_RESET_MEM_FIX && defined(RE4DC_ACTOR_PL08_PACK) && RE4DC_ACTOR_PL08_PACK\n    re4dc_pl08_pack_forget();  // RESET_MEM_FIX: the pl08 package follows the released archive (coarse_actor_pl08_pack.inc)\n#endif\n    ReleaseWepData();\n    RoomData.stopRelData();\n    U32Set(pRK->sys_flags, pSys->flags);\n    U8Set(pRK->language, pSys->language);\n    U8Set(pRK->region, pSys->region);\n    U8Set(pRK->game_language, pG->language);\n    U32Set(pRK->sys_unlock_flg, pSys->unlock_flg);\n    U32Set(pRK->g_flags_54, pG->System_flg);\n    for (i = 0; i < 4; i++) {\n        U32SetOfs(pRK->sys_merc_stage, i * 4, pSys->merc_stage[i]);\n    }\n    for (i = 0; i < 2; i++) {\n        U32SetOfs(pRK->sys_merc_rank, i * 4, pSys->merc_rank[i]);\n    }\n    U32Set(pRK->card_checked, pG->CardStatus >> 31);\n    U8Set(pRK->valid, 1);\n"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "signature": "int systemResetCheck()",
+      "start": 638,
+      "end": 664,
+      "body": "\n    static u8 Soft_reset_cnt = 0;\n\n    if ((Joy[0].on & 0x1600) == 0x1600) {\n        Soft_reset_cnt += GetSystemVcnt();\n        if (Soft_reset_cnt > 30) {\n            if (pG->dev_mode == 1) {\n                pG->System_flg |= 0x4000000;\n            } else {\n                pG->System_flg |= 0x8000;\n            }\n        }\n    } else {\n        Soft_reset_cnt = 0;\n    }\n    checkHardReset();\n    if (!(pG->System_flg & 0x8000)) {\n        if (pG->System_flg & 0x4000000) {\n            if (!(pG->System_flg & 0x200)) {\n                systemSoftReset();\n                return 1;\n            }\n        }\n    }\n    return 0;\n"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "void MemSuspendHeap(",
+      "start": 226,
+      "end": 251,
+      "body": "\n#if defined(RE4DC_GAME) && !defined(__PPC__) && (RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER)\n    sourceWorldRetainedSuspend(no);\n#endif\n    int h = Heap[no].handle;\n\n    if (memGetHeapSattus(no) == 0 && h >= 0) {\n#if RE4DC_CABIN_SOURCE\n        // Suspend/resume preserves live allocations. It cannot silently retire\n        // a parked current EVD merely because that EVD has no active readers.\n        if(!re4dc_cabin_carriers_suspendable((void*)Heap[no].start,Heap[no].end-Heap[no].start) ||\n           !re4dc_movie_world_before_heap_change((void*)Heap[no].start,Heap[no].end-Heap[no].start)){\n            re4dc_missing(\"cabin owner before heap suspension\");return;\n        }\n        // The movie fence may have yielded after the first check.\n        if(!re4dc_cabin_carriers_suspendable((void*)Heap[no].start,Heap[no].end-Heap[no].start)){\n            re4dc_missing(\"cabin revalidation before heap suspension\");return;\n        }\n#endif\n        heap_backup[h] = HeapHead[h];\n        HeapHead[h].free = NULL;\n        HeapHead[h].allocated = NULL;\n        Heap[no].status = 1;\n    }\n"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "void MemSignalHeap(",
+      "start": 254,
+      "end": 269,
+      "body": "\n    int h = Heap[no].handle;\n\n    if (memGetHeapSattus(no) == 1 && h >= 0) {\n#if defined(RE4DC_GAME) && !defined(__PPC__) && (RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER)\n        sourceWorldRetainedRestore(no);\n#endif\n        OSHeapDescriptor* hh = HeapHead;\n        OSHeapDescriptor* bk = heap_backup;\n\n        *(OSHeapDescriptor*) (h * sizeof(OSHeapDescriptor) + (u32) hh) =\n            *(OSHeapDescriptor*) (h * sizeof(OSHeapDescriptor) + (u32) bk);\n        Heap[no].status = 0;\n    }\n"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "int MemDestroyHeap(",
+      "start": 394,
+      "end": 429,
+      "body": "\n#if defined(RE4DC_GAME) && !defined(__PPC__) && (RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER)\n    sourceWorldRetainedDestroy(no);\n#endif\n    if (!memCheckHeapActive(no)) {\n        MemSignalHeap(no);\n    }\n    OSReport(\"-- MemDestroyHeap %d  \", no);\n    if (Heap[no].handle >= 0) {\n#if defined(RE4DC_GAME) && !defined(__PPC__) && ((defined(RE4DC_MOVIE_WORLD_ARENA) && RE4DC_MOVIE_WORLD_ARENA) || (defined(RE4DC_CABIN_SOURCE) && RE4DC_CABIN_SOURCE))\n        if (!re4dc_movie_world_before_heap_change((void*)Heap[no].start, Heap[no].end-Heap[no].start)) {\n            re4dc_missing(\"movie arena reader before heap destruction\");\n            return 0;\n        }\n#endif\n#if RE4DC_CABIN_SOURCE\n        if(!re4dc_cabin_carriers_retire_heap((void*)Heap[no].start,Heap[no].end-Heap[no].start)){\n            re4dc_missing(\"cabin retirement before heap destruction\");return 0;\n        }\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ACTOR_TRANSACTION\n        re4dc_actor_forget_range((void*)Heap[no].start,Heap[no].end-Heap[no].start);\n#endif\n        OSDestroyHeap(Heap[no].handle);\n        Heap[no].handle = -1;\n        OSReport(\"succeed!!\\n\");\n#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_SS11_PRELOAD) && RE4DC_SS11_PRELOAD\n        // SS11_PRELOAD: the chapter title / results / save screens (SS heap 11) closed: the room preload runs again.\n        if (no == 11) re4dc_ui_room_preload_again();\n#endif\n        return 1;\n    }\n    OSReport(\"failed!!\\n\");\n    return 0;\n"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "void MemClearAllHeap()",
+      "start": 536,
+      "end": 571,
+      "body": "\n#if defined(RE4DC_GAME) && !defined(__PPC__) && (RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER)\n    sourceWorldRetainedReset();\n#endif\n    u32 i;\n\n#if defined(RE4DC_GAME) && !defined(__PPC__) && ((defined(RE4DC_MOVIE_WORLD_ARENA) && RE4DC_MOVIE_WORLD_ARENA) || (defined(RE4DC_CABIN_SOURCE) && RE4DC_CABIN_SOURCE))\n#if RE4DC_CABIN_SOURCE\n    for(i=0;i<MEM_HEAP_NUM;++i)if(Heap[i].handle>=0 &&\n       !re4dc_cabin_carriers_before_heap((void*)Heap[i].start,Heap[i].end-Heap[i].start)){\n        re4dc_missing(\"cabin preflight before all-heap clear\");return;\n    }\n#endif\n    // Ancestor heaps are destroyed first. Retire the overlapping native owner\n    // while all descriptors are intact, before any iteration changes a heap.\n    for (i = 0; i < MEM_HEAP_NUM; i++) {\n        if (Heap[i].handle >= 0 &&\n            !re4dc_movie_world_before_heap_change((void*)Heap[i].start, Heap[i].end-Heap[i].start)) {\n            re4dc_missing(\"movie arena reader before all-heap clear\");\n            return;\n        }\n    }\n#if RE4DC_CABIN_SOURCE\n    for(i=0;i<MEM_HEAP_NUM;++i)if(Heap[i].handle>=0 &&\n       !re4dc_cabin_carriers_before_heap((void*)Heap[i].start,Heap[i].end-Heap[i].start)){\n        re4dc_missing(\"cabin revalidation before all-heap clear\");return;\n    }\n#endif\n#endif\n    for (i = 0; i < MEM_HEAP_NUM; i++) {\n        if (Heap[i].handle >= 0) {\n            MemDestroyHeap(i);\n        }\n    }\n"
+    },
+    {
+      "path": "src/lib/OSAlloc.c",
+      "signature": "int OSCreateHeap(",
+      "start": 425,
+      "end": 472,
+      "body": "\n    int heap;\n    HeapDesc* hd;\n    Cell* cell;\n\n    ASSERTMSGLINE(705, HeapArray, \"OSCreateHeap(): heap is not initialized.\");\n    ASSERTMSGLINE(706, (u32)start < (u32)end, \"OSCreateHeap(): invalid range.\");\n\n    start = (void*)(((u32)start + 0x1FU) & ~((32)-1));\n    end = (void*)(((u32)end) & ~((32)-1));\n\n    ASSERTMSGLINE(709, (u32)start < (u32)end, \"OSCreateHeap(): invalid range.\");\n    ASSERTMSGLINE(711, (u32)ArenaStart <= (u32)start && (u32)end <= (u32)ArenaEnd, \"OSCreateHeap(): invalid range.\");\n    ASSERTMSGLINE(713, ((u32)end - (u32)start) >= 0x40U, \"OSCreateHeap(): too small range.\");\n\n#if DEBUG\n    for(heap = 0; heap < NumHeaps; heap++) {\n        if (HeapArray[heap].size >= 0) {\n            ASSERTMSGLINE(723, !DLOverlap(HeapArray[heap].free, start, end), \"OSCreateHeap(): invalid range.\");\n            ASSERTMSGLINE(725, !DLOverlap(HeapArray[heap].allocated, start, end), \"OSCreateHeap(): invalid range.\");\n        }\n    }\n#endif\n\n    for(heap = 0; heap < NumHeaps; heap++) {\n        hd = &HeapArray[heap];\n        if (hd->size < 0) {\n            hd->size = (u32)end - (u32)start;\n            cell = start;\n            cell->prev = 0;\n            cell->next = 0;\n            cell->size = hd->size;\n#ifdef ENABLE_HEAPDESC\n            cell->hd = 0;\n#endif\n            hd->free = cell;\n            hd->allocated = 0;\n#ifdef ENABLE_HEAPDESC\n            hd->paddingBytes = hd->headerBytes = hd->payloadBytes = 0;\n#endif\n            return heap;\n        }\n    }\n#if DEBUG\n    OSReport(\"OSCreateHeap: Warning - Failed to find free heap descriptor.\");\n#endif\n    return -1;\n"
+    },
+    {
+      "path": "src/lib/OSAlloc.c",
+      "signature": "void OSDestroyHeap(",
+      "start": 474,
+      "end": 499,
+      "body": "\n    HeapDesc* hd;\n    s32 size;\n\n    ASSERTMSGLINE(782, HeapArray, \"OSDestroyHeap(): heap is not initialized.\");\n    ASSERTMSGLINE(783, (heap >= 0) && (heap < NumHeaps), \"OSDestroyHeap(): invalid heap handle.\");\n    ASSERTMSGLINE(784, HeapArray[heap].size >= 0, \"OSDestroyHeap(): invalid heap handle.\");\n\n    hd = &HeapArray[heap];\n#if DEBUG\n    size = DLSize(hd->free);\n\n    if (hd->size != size) {\n        OSReport(\"OSDestroyHeap(%d): Warning - free list size %d, heap size %d\\n\", heap, size, hd->size);\n    }\n#endif\n    \n    hd->size = -1;\n    hd->free = hd->allocated = 0;\n#ifdef ENABLE_HEAPDESC\n    hd->paddingBytes = hd->headerBytes = hd->payloadBytes = 0;\n    if (__OSCurrHeap == heap) {\n        __OSCurrHeap = -1;\n    }\n#endif\n"
+    },
+    {
+      "path": "src/lib/OSAlloc.c",
+      "signature": "void OSFreeToHeap(",
+      "start": 359,
+      "end": 383,
+      "body": "\n    HeapDesc* hd;\n    Cell* cell;\n\n#if defined(RE4DC_OSFREE_CHECK) && RE4DC_OSFREE_CHECK\n    if (!osfree_check(heap, ptr, __builtin_return_address(0))) return;\n#endif\n\n    ASSERTMSGLINE(577, HeapArray, \"OSFreeToHeap(): heap is not initialized.\");\n    ASSERTMSGLINE(579, ((u32)ArenaStart+0x20) <= (u32)ptr && (u32)ptr < (u32)ArenaEnd, \"OSFreeToHeap(): invalid pointer.\");\n    ASSERTMSGLINE(580, OFFSET(ptr, ALIGNMENT) == 0, \"OSFreeToHeap(): invalid pointer.\");\n    ASSERTMSGLINE(581, HeapArray[heap].size >= 0, \"OSFreeToHeap(): invalid heap handle.\");\n    cell = (void*)((u32)ptr-0x20);\n    hd = &HeapArray[heap];\n    ASSERTMSGLINE(586, cell->hd == hd, \"OSFreeToHeap(): invalid pointer.\");\n    ASSERTMSGLINE(587, DLLookup(hd->allocated, cell), \"OSFreeToHeap(): invalid pointer.\");\n#ifdef ENABLE_HEAPDESC\n    cell->hd = 0;\n    hd->headerBytes -= 0x20;\n    hd->paddingBytes -= (cell->size - (cell->requested + 0x20));\n    hd->payloadBytes -= cell->requested;\n#endif\n    hd->allocated = DLExtract(hd->allocated, cell);\n    hd->free = DLInsert(hd->free, cell);\n"
+    },
+    {
+      "path": "src/game/snd.cpp",
+      "signature": "void SndSystemReset()",
+      "start": 302,
+      "end": 311,
+      "body": "\n    SEQQuit();\n    SYNQuit();\n    AXARTQuit();\n    MIXQuit();\n    AXQuit();\n    AIReset();\n    SndDriverInit();\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/subscreen_backing.cpp",
+      "signature": "void re4dc_ssb_get(",
+      "start": 295,
+      "end": 307,
+      "body": "\n    unsigned* d = static_cast<unsigned*>(dst);\n    if (!store.open || store.cursor + bytes > store.bytes) re4dc_missing(\"subscreen backing underrun\");\n    while (bytes) {\n        unsigned run;\n        const volatile unsigned* s = word_at(store.cursor, &run);\n        if (run > bytes) run = bytes;\n        for (unsigned n = run / 4; n; --n) *d++ = *s++;\n        store.cursor += run;\n        bytes -= run;\n    }\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/subscreen_backing.cpp",
+      "signature": "void re4dc_ssb_close()",
+      "start": 512,
+      "end": 523,
+      "body": "\n    free_blocks();\n    if (store.claimed) re4dc_ui_vram_unclaim();\n    store = Store{};\n#if defined(RE4DC_LOGIC_TRACE_SWAPPED) && RE4DC_LOGIC_TRACE_SWAPPED\n    trace_spare = TraceSpare{};  // the trace's raw bytes and index end with the store\n#endif\n#if RE4DC_SUBSCREEN && RE4DC_TA_DOUBLEBUF\n    re4dc_ui_ta_double_bank_later();  // bank 1 was read back: the TA may use it from the next scene\n#endif\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/mem.cpp",
+      "signature": "void re4dc_missing(",
+      "start": 215,
+      "end": 228,
+      "body": "\n    // Keep the first failure before the intentional sleep loop hides it from\n    // the watchdog. The hook is absent when CRASH_SCREEN is disabled.\n    if (re4dc_crash_screen_missing) re4dc_crash_screen_missing(name);\n    re4dc_log(\"RE4DC MISSING: %s called; halting\\n\", name);\n#if RE4DC_VMU_DEBUG_SLOT\n    re4dc_dbgslot_ring(2, (unsigned) name, 0);\n#endif\n    fflush(stdout);\n    for (;;) {\n        thd_sleep(1000);\n    }\n"
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "signature": "extern \"C\" void re4dc_room_leave()",
+      "start": 397,
+      "end": 440,
+      "body": "\n#if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER\n    re4dc_disc_meter_room(0,unsigned(pG->room_id));   // the room-entry load time starts at the door\n#endif\n#if RE4DC_MOVIE_WORLD_ARENA\n    // Must run before any native owner or source heap is retired.\n    if(!re4dc_movie_world_before_room_retire()){\n        re4dc_missing(\"movie world arena has an active reader at room retirement\");return;\n    }\n#endif\n    unsigned generation,cells,bytes,stale,refused;\n    if(!re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused))return;\n    re4dc_motion_retire_all();\n    re4dc_effect_retire_room();\n#if RE4DC_NATIVE_MODEL_REGISTRY_PACK\n    re4dc_registry_room_leave();                         // the room's model registry package (coarse_actor_registry_pack.inc)\n#endif\n#if RE4DC_ACTOR_PL08_PACK\n    re4dc_pl08_pack_room_leave();                        // the pl08 costume package cell (coarse_actor_pl08_pack.inc)\n#endif\n#if defined(RE4DC_GANADO_VAR) && RE4DC_GANADO_VAR\n    re4dc_ganado_var_room_leave();                       // ACTOR_GANADO_PS2_STUMP variant cell (coarse_actor_owner_ganado.inc)\n#endif\n#if defined(RE4DC_STATIC_OBJ_BATCH) && RE4DC_STATIC_OBJ_BATCH\n    re4dc_sob_room_leave();                              // merged static-object lists (heap-4 cells)\n#endif\n#if defined(RE4DC_STATIC_OBJ_BAKE) && RE4DC_STATIC_OBJ_BAKE\n    re4dc_sob_bake_room_leave();                         // baked-object state and rest copies (heap-4 cells)\n#endif\n    re4dc_ui_retire_room();\n#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW\n    re4dc_rt_room_leave();\n#endif\n#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL\n    re4dc_room_vis_leave();\n#endif\n#if defined(RE4DC_ROOM_FILE) && RE4DC_ROOM_FILE\n    re4dc_room_file_leave();                             // the room data file's heap-4 block (platform/room_file.c)\n#endif\n    re4dc_room4_close();\n    audit(2);\n    re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused);\n    if(cells)re4dc_log(\"room lifecycle: %u native heap-4 cells (%u B) outlived retirement\\n\",cells,bytes);\n"
+    }
+  ],
+  "checks": [
+    {
+      "name": "binding records borrow archive MTC not owned copy",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "MTC binding admitted only currentheap4",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "slot allocation captures current OS handle",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "owner_live is integer handle equality not generation",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "owner_live reads custom prefix before pointer",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "recount does not validate archive ownership",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "recount checks slots then resident data then borrowed records",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "recount lock spans operation and unhold",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "miss outside4 refuses before allocation",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "native UI hold before pool freeze before clear",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "heap suspension retains live handle",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "heap signal restores same backed descriptor",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "normal core destroys12 restores4 before swapclose",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "restored spans hash before source consumers",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "hash mismatch fatal is after recount",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "backing freed and swappedfalse before hash decision",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "plain backing copy checks capacity but not content hash",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "closed backing discarded before diagnosis",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "fatal missing actually does not return",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "normal fresh read requests currentheap allocation",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "external borrowed archive path exists but does not own free",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "module unbind precedes archive free",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "room heap reset retires motions before replacing4",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "stage native leave retires motion owners",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "ending uses normal retirement wrapper",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "softreset heaps destroyed before common close",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "common reset closes UI before clearingtasks and modules",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "destroyed heap clears game handle",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "OS heap handles reused by firstfree descriptor",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "sound reset body does not create source heaps",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "normal diedemo refusal selects soft reset",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "source reset dispatch invokes softreset for that bit",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "allheapclear destroys each active heap without motion retirement",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "release_binding frees slots even no clip data",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "motion_free bypasses ModuleMemFree and targets captured handle",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "allocator free requires still valid heap",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    },
+    {
+      "name": "all actual source EmReadSearch caller destinations zero",
+      "result": "PASS",
+      "kind": "static source condition; no observed normal failure proof"
+    }
+  ],
+  "normal_conclusion": "No normal live-slots/dead-archive recount path established. Fresh source callers use addr0; current4/admission and matched retirement are preconditions, not archive epoch proof.",
+  "fault_containment": {
+    "confirmed_order": "Restore hash computed, backing closed, swapped false/thaw/message restore/recount then hash mismatch fatal.",
+    "conditional_witness": "If bad restored Slot.data is nonzero invalid while slot allocation header still matches a live handle, actual owner_live reads custom prefix at invalid data-32 before planned hash fatal. Alternatively changed archive record length is consumed before mismatch diagnosis.",
+    "not_claimed": [
+      "No observed restore corruption",
+      "No normal root cause or issue52 cause",
+      "No target/compiler execution"
+    ]
+  },
+  "reset_contract": "Normal diedemo softreset with UI closed and any live MTC binding reaches heap destruction before motion_unbind; release_binding ultimately OSFreeToHeap captured dead handle. OSFREE_CHECK/assert build behavior differs; no target failure observed. ActiveUI requires restore before any retire_all, so no blanket post-clear owner test.",
+  "minimum_proposal": "Main-owned default0 hash-validate-first guard immediately after all restore/hash loops and before backing close/thaw/recount/unhold; preserve actual nonreturning failure and OFF tokens. No generic archive owner_live header probe."
+}

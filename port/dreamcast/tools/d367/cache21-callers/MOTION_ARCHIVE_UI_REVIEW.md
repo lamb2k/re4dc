@@ -1,0 +1,48 @@
+# Motion archive/UI/recount and reset source review
+
+Baseline source pin ef23404565c43af2cb9a1532cc386bbf876a6f4f. All14 reviewed files are byte-identical to runtime f3149dfc7a8e9bbf317eae6d192d9665b9568ce5. Main's later SS_RESTORE_VALIDATE_FIRST candidate is reviewed separately below. Main owns implementation; this lane changed no runtime/shared file and ran no compiler/build/guest/asset copy.
+
+The originally requested normal live-slot/dead-archive recount has NOT been established. There are two distinct supported findings: a conditional failed-restore diagnosis ordering gap (main has implemented its bounded guard), and a separate normal soft-reset retirement ordering contract violation when an MTC binding remains live. Neither is an observed corruption, hardware fault or issue52 cause.
+
+## Binding, allocation and ordinary UI path
+
+| Object/boundary | Exact source | Contract |
+| --- | --- | --- |
+| Archive and record table | native_motion.cpp737..847 | The binding stores archive a and records=mtc+32, a borrowed address. No MTC record copy or archive allocation epoch is captured. MTC binding requires current source heap4. |
+| Slots/slabs/clips | motion_bridge.cpp7..26; native_motion bind/load | MotionAllocation adds32B custom prefix containing the current OS heap handle. Slots and bind-time reserves are allocated in4; a miss rejects outside4 before allocation. A hit need not allocate. The old recount comment about heap12 motion loads is not proof those allocations are currently admitted. |
+| Source archive ownership | read.cpp540..683 | Fresh read mode8004 allocates through the request's selected heap; resize and slot bind occur before return. A borrowed addr path exists in API and clears ownership flag4. The classified pinned census finds58 actual EmReadSearch invocations, all second argument0; four declarations/definitions are separate. Thus there is no actual nonzero borrowed destination caller in this census. This is not an archive content/command-generation proof. |
+| Current-allocation test | motion_bridge.cpp16..20 | owner_live reads the custom prefix then accepts equality with ANY current Heap.handle. It does not check a generation, allocation-list membership, range, active/suspended status or archive owner. OSCreateHeap425..472 reuses the first free descriptor; destroy474..499 sets size=-1/listsNULL. Never apply this MotionAllocation-header query directly to an archive allocated by a different API. |
+| UI open | sscrn.cpp652..680; sscrn_bridge458..562 | Source bytes are saved, motion hold is set at521, sparse pools frozen522, then the window is cleared527. Heap4 is suspended, not destroyed, retaining its handle; heap12 is created for the UI. MTC bind/miss outside4 refuses. Bounded bindings have an explicit hold skip. |
+| Ordinary close | sscrn.cpp788..814; sscrn_bridge603..669 | Destroy12, signal/restore4 and select4 BEFORE window restore. Restore spans/hash, close backing, thaw and recount, then restart room REL. In the successful normal path the original archive/slot bytes and same heap4 descriptor are back before recount. Numeric handle reuse alone is not a demonstrated normal dead-archive path. |
+| Recount | native_motion.cpp917..958 | Under Locked, reject dead slot allocation; for nonempty data reject dead custom data owner; then read word(record(b,i)+4) to recount resident/pinned bytes; hold clears at the end. No archive-owner check exists. The nominal co-owner/restoration ordering is a precondition, not a general lease. |
+| Normal room/ending retirement | game.cpp1507..1549 and1185..1209; ui_bridge397..440 | Both room heap reset and stage native room leave retire motion before heap replacement; Ending uses gameRoomMemInit. InitModule404..433 unbinds motion before archive free. Existing pin refusal/preflight semantics remain unchanged. |
+
+The explicit borrowed-archive API, OS handle recycling and global CurrentHeap scheduling contracts remain open preconditions; a synthetic live-slots/dead-archive setup is not promoted to a source-reachable recount bug. Event MemorySwap can change module contents without changing its allocation and has no motion-unbind call; whether a selected MTC archive stays exchanged during an actual UI close remains an independent unproved content-lifetime path. All-zero read destinations alone do not close it.
+
+## Conditional failed-restore containment
+
+The existing plain backing reader (subscreen_backing.cpp295..307) checks bounds and copies words; it does not authenticate content. At sscrn_bridge625, the restored-span hash is computed. Baseline then closes/frees backing629, sets swapped=false653, thaws654/restores message state655/recounts657, and only diagnoses h!=open_hash at669.
+
+A minimal source-compatible fault witness is conditional on incorrect restored bytes: retain a valid slot allocation prefix/handle, but restore a nonzero invalid Slot.data. Recount accepts the slot table and calls owner_live on that data; owner_live dereferences data-32 before the already-computed mismatch is checked. Or a changed restored record length is consumed from b.records+20*i+4. This establishes that the intended mismatch halt can be preempted by consuming failed-restore data. It does NOT establish that backing corruption occurred or any normal/hardware cause. No model execution is offered as that proof.
+
+Main's candidate SS_RESTORE_VALIDATE_FIRST, default0, puts the existing mismatch halt immediately after the complete restore/hash loops, before logic trace close, backing close, swapped=false, thaw, recount or unhold. Matching path and the late check remain. Independent read-only review of sourceSHA2c9179df90c206bf079d3915f4ade4175ed8b0f2f79ca774cfadf0379de123b9 passes: removing exactly that added block gives the FULL54ba sscrn_bridge source byteexact; removing exactly the knob stanza gives the FULL54ba game30 file byteexact. Actual stanza parse accepts omitted/0/1 and rejects2/-1/yes/empty; only1 emits the GAME_CPPFLAGS define. sscrn_bridge is a GAME_CPPFLAGS bridge TU. No compiler/object gate was run by this lane.
+
+Actual platform/mem.cpp215..228 re4dc_missing calls its optional crash hook/log and then unconditionally for(;;) thd_sleep1000. The new source guard therefore never reaches later consumers on the actual mismatch path; this is not based on a returning diagnostic stub. Main's four-variant ASan/UBSan host receipt sourcehash matches; its reported OFF preprocessed identity/ON containment is linked and hash-pinned, not independently reexecuted here. This guard contains the conditional failure ordering only; it does not add allocation epochs or authenticate a successfully hash-matched archive lifetime.
+
+## Separate normal soft-reset retirement ordering
+
+Concrete source entry: gameDiedemo(game.cpp1288..1414), Continue menu else branch1405..1406 sets System_flg4000000; main systemResetCheck638..664 dispatches systemSoftReset. With a loaded MTC binding and UI CLOSED:
+
+1. systemSoftReset710..731 cancels DVD/ARAM and sound, then MemClearAllHeap722. No motion retirement occurs there or in MemClearAllHeap536..571.
+2. OSDestroyHeap sets each descriptor size=-1 and allocated/free=NULL; MemDestroyHeap sets Heap[n].handle=-1. Static native Binding objects remain registered.
+3. systemResetCommon668..695 first calls SubScreenExitCore. With UI closed its status guard makes that a no-op, so forget_dead_heaps does not clear bindings. TaskAllClear then EmReadInit visit the module rows.
+4. InitModule413 calls motion_unbind. release_binding351..380 reads slots/pins and any resident record size; even with NO clips loaded it finally frees b.slots. motion_free22..26 uses captured old handle directly in OSFreeToHeap.
+5. Native Makefile41..44/2243 compiles the game's src/lib/OSAlloc implementation. OSFreeToHeap359..383 requires size>=0; optional OSFREE_CHECK may refuse the invalid free, debug assertions may halt, and unchecked list operations differ by build. All are distinct from valid ownership retirement. RESET_HEAP_FIX only wraps module Mem_free, not this native motion free.
+
+An MTC-present loaded room is the explicit precondition, not an invented archive: selected native MTC classes are established existing assets. No target failure or exact symptom is claimed. This normal reset chain is a source-backed dead-heap free/read contract, separate from the originally requested recount question; it is not proof of live slots surviving dead archive at normal UI close.
+
+A coherent bounded repair must restore an ACTIVE UI while its suspended heap4/window/backing are still owned, then retire motion while archive/slot allocations are live, BEFORE all-heap destruction. A blind retire_all at MemClearAllHeap is unsafe when UI has overwritten those bytes, and a post-destruction integer-handle test is not a reverse receipt. Main owns preflight/close/retirement sequencing and whether it belongs to a broader reset transaction; no runtime patch or blanket suppression is made here.
+
+## Evidence and boundaries
+
+Audit02 passes37 static source conditions across35 complete function bodies/14 file blob+SHA identities; pinned classified caller census58+4 retained. Audit01's original30-check map is preserved; its raw caller census read current HEAD, corrected to pinned/classified census in02. No conclusion relies on01's unpinned census. New guard source/actual Make-stanza review is a separate tiny receipt. These are source traces/conditional witness and Make parse checks, not a compiled lifecycle test, source-destination epoch closure, Flycast/release check or physical Dreamcast acceptance. Root's runtime claims remain exclusive; all this lane's claims remain released. Negative menu restoration stays disabled; no window or prior test rerun.
