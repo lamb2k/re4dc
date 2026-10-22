@@ -1,0 +1,58 @@
+{
+  "scope": "ACTUAL019 partial originalDoor4 target inputunacknowledged, no209event; preservedrawmetadata only, states/PNGs/logJSONL retainedincap.",
+  "functional": "PARTIAL",
+  "supervisor": "PASS exactretainedexit0",
+  "root_visual_addendum_sha256": "bdd54ca7eb06fdc09de603bc0a6164cce5ae10b0b16f513fb2db88fa8a259011",
+  "members": [
+    {
+      "path": "audit-controlled019-native-door-partial.py",
+      "bytes": 6450,
+      "sha256": "2e791674a2a6c18d40edac7990e802464a2c6f61fd0bb171abdfe402391ae675"
+    },
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "controlled-door019-observer-summary.json",
+      "bytes": 83217,
+      "sha256": "484240df41b36b4edc08c6438b7bff8e5a6d964c42c035c996b5cb2eb246efe3"
+    },
+    {
+      "path": "DOOR019-ROOT-ALLOCATION.json",
+      "bytes": 1916,
+      "sha256": "305a7223ad4d7c207b3fea342e9e2df2de5f8312fdb386de9ae21ccbacf14307"
+    },
+    {
+      "path": "run-result.json",
+      "bytes": 1509,
+      "sha256": "86cb765bd497742df9954171838de922141d820e1fb7e0d6bbf4436b0b087899"
+    },
+    {
+      "path": "controlled019-native-door-partial-audit.json",
+      "bytes": 64289,
+      "sha256": "ae488d4b35664aa25c2f21e10224731244d66818dfdcf01cc31ed446c363aa33"
+    },
+    {
+      "path": "owned-process.json",
+      "bytes": 324,
+      "sha256": "51a3bb63fc5a10f24f4e9001cb7314aaad3c6ac2f5051968a8d92b96f1ff55b6"
+    },
+    {
+      "path": "controlled019-root-visual-addendum.json",
+      "bytes": 858,
+      "sha256": "bdd54ca7eb06fdc09de603bc0a6164cce5ae10b0b16f513fb2db88fa8a259011"
+    },
+    {
+      "path": "run-start.json",
+      "bytes": 543,
+      "sha256": "84e8e48d5989afa4373ad6d9dfec6261ecc33967d8e5c29eb76031557912ff7f"
+    },
+    {
+      "path": "owned-resource-guard.json",
+      "bytes": 159589,
+      "sha256": "be7d714e7e50145e25336c9a2152b1a9037c1d7ed2a179718380134e7ac6ed2e"
+    }
+  ]
+}
