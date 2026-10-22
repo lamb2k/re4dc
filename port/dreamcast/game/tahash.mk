@@ -15,7 +15,7 @@ TA_BIN_DIAG ?= 0
 # Per-texture/source submitted-area observer; diagnostic only, default image unchanged.
 TA_MATERIAL_DIAG ?= 0
 # TEX_USAGE_LOG=1 (lane texusage22, 2026-10-22; telemetry only, default 0 = no code): the TA_MATERIAL_DIAG observer
-# aggregated per texture over a window (300 scenes, or until the room changes) instead of per scene, with each
+# aggregated per texture over a window (120 scenes, or until the room changes) instead of per scene, with each
 # triangle's / sprite's texels per pixel (UV area x texture size / unclipped screen area) binned by its clipped screen
 # area (<1, 1-2, 2-4, 4-8, >=8 texels per pixel), the polygon header count and the texture size / mip bit. One
 # "texuse:" line per (list, source, TSP, TCW) row at the window end. Forces TA_HASH=1 TA_BIN_DIAG=1 TA_MATERIAL_DIAG=1.

@@ -1,17 +1,11 @@
 name tu22-r100-ambush
-# lane texusage22: r100 after s20 (benchmark-r100house): s03, the s03 Ganado killed at frame 400, Leon walks into the
-# first house to the back window (frame 1000), village alerted at 1010, the Ganados close in. God.
+# lane texusage22: r100 after s20 and the call (enc tour r100-post-radio), the village crowd alerted at frame 30, god.
 room 0x100
-pos -82910 860 -38480
-ang -0.1293
+pos -99685 -484 -1343
+ang 2.2460
 rsf 0x100 13
 scenario 0 0x00000010
 inv default
-act_clock source
 god
-act 30 fwd 150
-kill 0x12 400 0x100
-goto 620 -84000 860 -38475 -1.5708
-goto 1000 -84950 860 -32280 -1.5708
-alert 1010
+alert 30
 alivelog 150

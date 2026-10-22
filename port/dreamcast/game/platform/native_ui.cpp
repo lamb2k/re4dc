@@ -1636,7 +1636,7 @@ void header(unsigned list,const std::uint32_t* q){
     }
 }
 #if RE4DC_TEX_USAGE
-// TEX_USAGE_LOG (lane texusage22): one window = 300 scenes or a room change; rows are dumped once at its end.
+// TEX_USAGE_LOG (lane texusage22): one window = 120 scenes or a room change; rows are dumped once at its end.
 unsigned win_scenes,win_present,win_room=~0u,win_no,win_first;
 void usage_dump(unsigned frame,unsigned room){
     re4dc_log("texuse win: v=1 w=%u room=%03x f=%u..%u scenes=%u present=%u rows=%u overflow=%u invalid=%u orphan=%u\n",
@@ -1655,7 +1655,7 @@ void report(unsigned frame,bool present){
     if(!win_scenes)win_first=frame;
     win_room=room;++win_scenes;if(present)++win_present;
     for(auto& c:census.current)c=re4dc_tamat::None;   // a new scene re-selects by header
-    if(win_scenes>=300)usage_dump(frame,room);
+    if(win_scenes>=120)usage_dump(frame,room);
     ++scene;
 }
 #else
