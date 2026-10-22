@@ -905,3 +905,7 @@ DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 
 if __name__ == '__main__':
     main()
+# res22nm (lane codex22, 10-22, QA22-NoMips disc only): res22's pre-mipmap resident.bin extended with the current
+# resident lists' keys (resident_keys.py extend, no remap). Replaces res22c on a disc without mip22 / mip22b.
+RES22NMD = os.environ.get('RES22NMD', '/root/re4data/private/res22nm-20261022')
+DATA['res22nm'] = {'dc/resident.bin': RES22NMD + '/resident.bin'}
