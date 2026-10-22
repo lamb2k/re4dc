@@ -1,0 +1,150 @@
+{
+  "state": "SOURCE_PLAN_CLEAR_IMPLEMENTATION_ABI_WRAPPER_LAUNCH_REVIEW_PENDING",
+  "frozen_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "capability_receipt_sha256": "828cb32d2db55dba6dfa0fafbd6221a78e95dd21330b6b73f548117ba3d716bb",
+  "draft_sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe",
+  "checks": [
+    "frozen-source-204",
+    "frozen-source-205",
+    "frozen-source-209",
+    "frozen-source-20a",
+    "frozen-source-20b",
+    "frozen-source-20c",
+    "frozen-source-20f",
+    "frozen-source-206",
+    "actual-r205-ARC-hash",
+    "required-area-records-exist",
+    "lever-type0-front-only-action-trigger8",
+    "lever-no-facing-angle-filter",
+    "lever-center-inside-quad",
+    "identity-front550-inside-quad",
+    "lever-center-outside-automatic-enemy-area3",
+    "old-entry-center-would-hit-enemy-area3",
+    "RSF0-only-after-native-Yes",
+    "Yes-disables-lever8-and7",
+    "original-drain-camera-motion-wait",
+    "original-end-event-before-RSF1-and68",
+    "end-area11-on-and15-off",
+    "end-registers-original-area1B",
+    "native-upper-door0-destination204-Part1",
+    "204-original205-Part1-chase-condition",
+    "chapter32-source-end-is-original-r20b-event",
+    "r20b-movie-owner-and-original-fallback-preserved",
+    "source-action-front-is-actual-model-matrix",
+    "source-front-clipped-by-collision-before-area-test",
+    "draft-has-no-outcome-or-direct-dispatch-commands",
+    "actual-retained-flags-enable-room-script-route",
+    "actual-frozen-jump-and-kill-phase-guards-off",
+    "native-A-returns-cursor-plus1",
+    "native-selection-waits-until-nonzero",
+    "native-direction-attribute-source",
+    "native-up-and-left-paths-preserved",
+    "actual-selected-asset-dc/native/r205/ps2-world.ids",
+    "actual-selected-asset-dc/native/r205/ps2-world.r4pw",
+    "actual-selected-asset-dc/native/r205/ps2-world.re4mesh",
+    "actual-selected-asset-dc/native/r205/registry.re4nmr",
+    "actual-selected-asset-dc/native/r205/room.r4rc",
+    "actual-selected-asset-dc/st2_0.ovl",
+    "actual-selected-asset-dc/st2_1.ovl",
+    "frozen-master-binding-receipt-exact",
+    "master-source-recorded-clean12a",
+    "master-consumes-raw78fb-not-a692-nomination"
+  ],
+  "check_count": 45,
+  "lever_record_hex": "0000000001010000edf4784400007a4400803b4424e431471d943b47e1e6364710a03c47c650364713484147607e3147ead040470300080108010000000000000000000002000000002d14000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "lever_quad": [
+    [
+      45540.140625,
+      48020.11328125
+    ],
+    [
+      46822.87890625,
+      48288.0625
+    ],
+    [
+      46672.7734375,
+      49480.07421875
+    ],
+    [
+      45438.375,
+      49360.9140625
+    ]
+  ],
+  "lever_center_xz": [
+    46118.5419921875,
+    48787.291015625
+  ],
+  "area_prefix_bytes4_through15_uninterpreted_hex": "01010000edf4784400007a44",
+  "notes": [
+    "Front550 identity-matrix geometric proof is conditional; actual matrix/collision-clipped front and native action prompt must be observed. Actor angles alone do not qualify that point.",
+    "Host geometry/source checks are not guest script execution, look, release, no-warp or physical Dreamcast acceptance.",
+    "Cold room205/chapter7 setup is a separate CONTROLLED test lineage, not actual013 continuation or authentic127/294.",
+    "The final fixture/wrapper/observer ABI/pins/guards were not ready at this source checkpoint and remain required before launch. No review approval or allocation inferred.",
+    "Current remaining semantic gates are original prompt and Yes, RSF0, original drain/end, RSF1, area11 enabled/15 disabled, area1B callback registration,68 active or correctly held with exact cap reason, Stop/event return plus source progress.",
+    "1B registration is not the58 wave firing; area11 enabled is not ladder traversal; native upperdoor204Part1/chase is a separate optional handoff, not forced under deadline."
+  ],
+  "new_runtime_or_guest_changes": false,
+  "final_plan_sha256": "98c25c10d38c921d8585cdaf6e006520950cb75e865bd1c85b441f68a3930d81",
+  "actual_asset_compile_receipt_sha256": "279d139881361e6cc22a64b3e1763ac954943485e7f5e5bfe5b7e0186a2f11cc",
+  "programme_binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "exact_programme": {
+    "path": "1ST_READ.BIN",
+    "bytes": 3643960,
+    "sha256": "78fb06976cc394ec6e4cb7861046c24a15f82ddf7bcb2fcbfd452d3fcbf72e33",
+    "extent": 45951,
+    "raw_build_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\builds\\c21jmW\\1ST_READ.raw.bin",
+    "direct_ELF_objcopy_no_scramble": true
+  },
+  "exact_ELF": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "exact_master": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master\\track03.iso",
+    "bytes": 1018789888,
+    "sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+  },
+  "selected_assets_independently_hashed": {
+    "dc/native/r205/ps2-world.ids": {
+      "sha256": "c28e35db3cb374de2351862ff5fa302656575670e65a3947747fe95d6044752f",
+      "size": 160
+    },
+    "dc/native/r205/ps2-world.r4pw": {
+      "sha256": "3d267102d065971daf3974ba657cf1d5f5f81b1a64383e88ad29d7742839633c",
+      "size": 13564
+    },
+    "dc/native/r205/ps2-world.re4mesh": {
+      "sha256": "358f3301b804a938541a1f848d82c366b3172e31bf68d3a7c08642bb7c428d0f",
+      "size": 888960
+    },
+    "dc/native/r205/registry.re4nmr": {
+      "sha256": "6afbcf24c02b57f24e3265ad224b272a2e53be3769eb236f72ef0dfc92f2b6c7",
+      "size": 222304
+    },
+    "dc/native/r205/room.r4rc": {
+      "sha256": "90cbaa2fdd564005773617155d2135353656a87eb941a3d4e352f44c0f54f74e",
+      "size": 34208
+    },
+    "dc/st2_0.ovl": {
+      "sha256": "3e161ce6f585681e7568c842f50c28a3ece95769df7e7dfc745bea43ba54bf4c",
+      "size": 94308
+    },
+    "dc/st2_1.ovl": {
+      "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+      "size": 116100
+    }
+  },
+  "source_observer_ABI_review": "NOT_PERFORMED: no final014 observer exists; no new address/type assumptions admitted.",
+  "final_fixture_review": "DRAFT ONLY; no final A/goto schedule or launchable wrapper. No runtime allocation inferred.",
+  "source_UI_method": "Native source pending m_sel0, actual readiness/slot/identity, m_cur0 and source-mapped ordinaryA -> m_sel1. Attribute00800000 usesUp/Down elseLeft/Right. Futureimplementationmust qualify actual4d823 ELF fields, raw widths and coherent reads; neutral/release between pulses and recheck. Do not write cursor/selection bytes.",
+  "guard_requirements": [
+    "Future final wrapper must default to prepare/check, require root exact014allocation, pin fixture/controller/observer/imports/harness/V5guard/programmebinding/media/VMU and protect127/294/013/009 identities.",
+    "No state-seed or AutoLoadState bypass in cold014; output namespace fresh, normal source inputs only; snapshots/readouts separate fromsetup writes.",
+    "Retain V5 exact7aa and41inner/39normalclose/47.5absolute,60MiB,castle2/global16; fresh disk+currentpeerreservations; exactPID/path/creationtimeheldhandles/normalexit; no automaticretry/followingguest.",
+    "Only root reviews sourceABI and concrete launchrequest then allocates. Newsourceplan cannot certify actualcutsceneexecution, area-state observercoverage, draw/cast/look, release/no-warp orhardware."
+  ],
+  "authenticated_protected_state_check": "Castle closure receipt reports full unchanged hashes; this review never opens/modifies protectedstates and does not independently rehash those large inputs. Final wrapper/root preflight must check them.",
+  "review_limits": [
+    "Source/actualAEV/selectedasset read-only qualification. No freshcompile/object/ELFregeneration or fullhistoricaldependency audit.",
+    "No final014observer/controllercode exists to review memorypublication/ABI or actual setupwriteallowlist. Implementationreview remains required.",
+    "Area0x1B registration is not0x58wavecompletion; spawning/held68 notallsecondarywaves; native204Part1 firstcut/chase remains a new separate sourcegate.",
+    "The initial31check receipt contained an unused rawfloat prefix label; preserved verbatim, superseded by v2 uninterpretedbytes label. No newbinarylayout assumption made."
+  ]
+}
