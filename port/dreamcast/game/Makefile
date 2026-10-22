@@ -2712,6 +2712,15 @@ VRAM_CENSUS ?= 0
 #   10 KB (largest 10,368 B; the bell gate then loaded 7 pictures in play). Placement only: the same textures, bytes and
 #   draws. Doc: VRAM101-20261017.md (lane notes).
 VRAM_PAGES_VQ_ONLY ?= 0
+# VRAM_ROOM_ARENA=1 (lane mipmap22 2026-10-22, render only, default 0 = image unchanged; needs VRAM_PAGES=1, UI_VRAM=1
+# and ROOM_CHANGE_EVICT): two-ended texture RAM. Core keys, the glyph atlas and the overlay slab fill from the top;
+# room textures from the bottom (first fit); dynamic allocations (movie, door, lake) keep best fit in between. At a
+# room change every unpinned, non-core texture of the old room closes (the listed keys of the new room are pinned),
+# so the new room's preload fills one hole-free region (r101 -> r100 x3 had 14 KB largest blocks and 82 evictions).
+VRAM_ROOM_ARENA ?= 0
+ifneq ($(VRAM_ROOM_ARENA),0)
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o: PLATFORM_CPPFLAGS += -DRE4DC_VRAM_ROOM_ARENA=1
+endif
 ifneq ($(filter-out 0 1,$(VRAM_PAGES_VQ_ONLY)),)
 $(error VRAM_PAGES_VQ_ONLY must be 0 or 1)
 endif

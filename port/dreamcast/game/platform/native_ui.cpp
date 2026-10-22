@@ -396,6 +396,9 @@ Key room_pin_key{};
 #else
 #define RE4DC_WRAP_SAFE(pkg) false
 #endif
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
+#endif
 #if RE4DC_ACTOR_TRANSACTION
 re4dc_actor::TextureLeases<kTextureCount> actor_texture_leases;
 #define RE4DC_ENTRY_PINNED(e) ((e).frame==frame || actor_texture_leases.pinned(unsigned(&(e)-entries)) || RE4DC_FX_POOL_PINNED(e) || RE4DC_ROOM_PINNED(e))
@@ -477,7 +480,16 @@ unsigned movie_window_release(unsigned bytes,bool pinned_ok,unsigned& released_b
 #if RE4DC_UI_VRAM && RE4DC_TEX_RESIDENT && RE4DC_UI_OVERLAY_SLAB_KB
 constexpr unsigned kOverlaySlabBytes=RE4DC_UI_OVERLAY_SLAB_KB*1024U;
 pvr_ptr_t overlay_slab; const Entry* overlay_owner; unsigned overlay_uses;
-void overlay_slab_take(){ if(!overlay_slab && !overlay_owner)overlay_slab=pvr_mem_malloc(kOverlaySlabBytes); }
+void overlay_slab_take(){
+    if(overlay_slab || overlay_owner)return;
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    re4dc_vram_arena_class=2;
+#endif
+    overlay_slab=pvr_mem_malloc(kOverlaySlabBytes);
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    re4dc_vram_arena_class=0;
+#endif
+}
 #endif
 #if RE4DC_TEX_RESIDENT
 bool preload_pending; unsigned preload_loads,preload_skipped,preload_runs;
@@ -3442,6 +3454,15 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
             if(!evict()) {RE4DC_PROFILE_COUNT(TextureBudgetFailures,1);ok=false;}
     }
     const unsigned vram_before=pvr_mem_available();
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    // VRAM_ROOM_ARENA: core keys (cross-room) from the top of texture RAM, every other texture from the bottom.
+    struct ArenaClass { explicit ArenaClass(unsigned c){re4dc_vram_arena_class=c;} ~ArenaClass(){re4dc_vram_arena_class=0;} };
+    bool arena_core=false;
+#if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN
+    for(unsigned k=0;k<core_nkeys && !arena_core;++k)arena_core=core_keys[k]==slot->key;
+#endif
+    const ArenaClass arena_class(arena_core?2U:1U);
+#endif
     if(ok) {RE4DC_PROFILE_SCOPE(TextureUpload);
         ok=slot->package.upload();
 #if RE4DC_TEX_RESIDENT && RE4DC_UI_OVERLAY_SLAB_KB
@@ -4204,7 +4225,13 @@ void preload_identities(){
 #if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
             if(!rce_same && e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
 #else
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+            // VRAM_ROOM_ARENA: the old room's region is freed as one block; listed keys were pinned above, core keys
+            // live at the top. Nothing else is kept, so the new room's preload fills one hole-free region.
+            if(RE4DC_CORE_PINNED(e)){++kept;kept_bytes+=sz;continue;}
+#else
             if(e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
+#endif
 #endif
             close_entry(e);++closed;closed_bytes+=sz;
         }
@@ -4941,7 +4968,15 @@ void glyph_init(){
         glyph_twx[i]=(unsigned short)x;glyph_twy[i]=(unsigned short)y;
     }
     const unsigned before=pvr_mem_available();
-    glyph_atlas=pvr_mem_malloc(kGlyphAtlasBytes);
+    {
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+        re4dc_vram_arena_class=2;
+#endif
+        glyph_atlas=pvr_mem_malloc(kGlyphAtlasBytes);
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+        re4dc_vram_arena_class=0;
+#endif
+    }
     if(!glyph_atlas){re4dc_log("native mes: glyph atlas allocation FAILED (free=%u); message text off\n",before);return;}
     alignas(32) static const unsigned char zero[512]={};
     for(unsigned n=0;n<kGlyphAtlasBytes;n+=sizeof(zero))pvr_txr_load(zero,(char*)glyph_atlas+n,sizeof(zero));
