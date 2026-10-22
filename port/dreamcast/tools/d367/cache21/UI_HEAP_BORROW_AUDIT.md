@@ -50,3 +50,31 @@ that does not close every heap/pending-I/O path. No additional runtime fix was
 justified by this bounded source audit. Existing Event lifetime repair f3149dfc7
 and its source/host/object evidence remain unchanged; target qualification is
 separate.
+
+Follow-up borrower review, same ef2340456/runtime f3149dfc7 source:
+
+The renderer reacquisition guard is concrete: ui_bridge.cpp
+re4dc_model_retained_storage rejects requests without preparation_owner,
+current heap4 and active heap4; the movie loan also returns null before
+latching an allocation attempt. The renderer's detached retained pointer
+therefore cannot simply reacquire the room cache from current heap12.
+Source SHA256 ui_bridge.cpp:
+426a06c09524c21b6246a818aac130c58bd9fab44fe4d4959f9e8e3042b21f69.
+
+Motion hold is set before pool freeze and before memset of the3MiB window.
+Close restores the spans before thaw, and forget_dead_heaps recounts under
+Locked before clearing hold. Those are verified ordering boundaries, not a
+whole-archive lifetime proof. Its recount reads record(b,i)+4 after validating
+slot/data allocation ownership; b.records itself points into the bound
+archive. The next independent caller trace must establish whether archive
+and slot owners can diverge across UI/reset/ending, and handle-reuse limits.
+No reachable normal-path counterexample was established by this read alone.
+Source SHA256 native_motion.cpp:
+5a4b3c64f98815772021bed83ff1ef5e8b302243002df587991c89bfe49bb58d;
+motion_bridge.cpp:
+80176e91b5442422bb801bcf3c6063b6a23629723df25ab318a02ef0355842a5.
+
+A separate fault-containment question remains: close computes restore hash
+before thaw/recount but reports a mismatch after them. This is a review
+question about a failed restore, not evidence of an observed corrupt restore
+or the cause of issue52. No runtime patch or guard/default changed here.
