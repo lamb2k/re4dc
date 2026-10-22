@@ -58,7 +58,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 | Fixed and checked in our tests; the problem was not console-only | 50 |
 | 🛠️ In progress | Being fixed now | 1 |
 | 🔍 Investigating | Being reproduced or traced | 4 |
-| ⏸️ Open | Known, not yet worked on | 18 |
+| ⏸️ Open | Known, not yet worked on | 19 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Game progress (ongoing work)
@@ -160,6 +160,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| For contributors: a kit build of the Test 21 source with its own knob file does not give the exact published Test 21 program bytes (26da4fe3, published bd0970c0). The Test 22 kit build does match the Test 22 program. Play is not affected | test 21 | ⏸️ Open, not blocking: older builds are not byte-reproducible across toolchain and tree state | |
 | Opening the inventory still reads about 0.8 to 1.4 MB from the disc each time | test 22 and earlier | 🛠️ In progress: test 22 packs the data smaller (about 0.6 MB less per open); reading only the item you open is planned for Test 23 | |
 | At most 4 Ganados are active at once (6 from test 12 in the village and test 13 in every chapter 1 room; 4 from test 16.1); the others wait and arrive as you kill them | test 12, 13, 16.1 | ⏸️ Open: by design, for the frame rate. Every villager still appears, and the waves, the kills and the events are unchanged. Test 16.1 lowers the limit from 6 to 4 in every room |  |
 | A fifth Ganado could appear for a moment in some village areas (r107), over the limit of 4 | test 16.1 | 🟢 Fixed in test 16.2: every Ganado a room sends waits for its turn under the limit |  |

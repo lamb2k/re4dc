@@ -31,6 +31,9 @@ in the [release notes](https://github.com/lamb2k/re4dc/releases/latest).
 - **Fixed: Ganados stalling as they die**, and the death scene after a chainsaw catch.
 - **Fixed: pausing in the Mendez fight**, and the world behind the pause menu ([#48](https://github.com/lamb2k/re4dc/issues/48), [#49](https://github.com/lamb2k/re4dc/issues/49)).
 - **Lake trees** on the islands no longer look shredded.
+
+  ![Lake island trees: Test 21 left, Test 22 right](docs/images/releases/test-22/lake-trees.jpg)
+  <br>The lake from the boat. Left Test 21, right Test 22. Flycast capture.
 - **Trail and ribbon effects** draw again.
 - **Safety guards** stop a failed load from crashing the game.
 
