@@ -883,7 +883,8 @@ if os.path.isdir(MIP22D):
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
 # (vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
-# table beside it for the coverage gate. After mip22; release discs only (not in KSETS, like mip22).
+# table beside it for the coverage gate. After mip22; release discs only (not in KSETS, like mip22). 10-22: 5,520 records
+# (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 
