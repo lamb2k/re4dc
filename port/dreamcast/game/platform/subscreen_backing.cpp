@@ -601,6 +601,122 @@ long re4dc_ssb_file_read(const char* name, void* dst, unsigned capacity)
     return got == total ? got : -1;
 }
 
+#if defined(RE4DC_SS_DATA_LZ) && RE4DC_SS_DATA_LZ
+// SS_DATA_LZ=1 (lane inv23): the sub screen's data files packed offline (tools/d367/inv23/ss_lz.py):
+// "SS/eng/ss_cmmn.dat" -> "SS/eng/ss_cmmn.lz" = 'SSLZ', u32 raw size, u32 packed size, u32 crc32 (checked offline
+// by ss_lz.py verify), one LZ4 block. The decoder is bounds checked and must produce exactly the raw size.
+static bool lz_name(const char* name, char* out, unsigned capacity)
+{
+    unsigned n = 0;
+    while (name[n]) ++n;
+    if (n < 4 || n + 1 > capacity || name[n - 4] != '.') return false;
+    for (unsigned i = 0; i < n - 3; ++i) out[i] = name[i];
+    out[n - 3] = 'l';
+    out[n - 2] = 'z';
+    out[n - 1] = 0;
+    return true;
+}
+
+static unsigned lz_rd32(const unsigned char* p)
+{
+    return unsigned(p[0]) | unsigned(p[1]) << 8 | unsigned(p[2]) << 16 | unsigned(p[3]) << 24;
+}
+
+// Opens `name`'s packed copy and checks its header. Returns the file's total size, or -1.
+static long lz_header(const char* name, char* full, unsigned full_capacity, unsigned* raw, unsigned* packed)
+{
+    char lzn[64];
+    if (!lz_name(name, lzn, sizeof(lzn)) || !disc_path(lzn, full, full_capacity)) return -1;
+    Re4dcIoScope io;
+    file_t f = fs_open(full, O_RDONLY);
+    if (f < 0) return -1;
+    alignas(4) unsigned char h[16];
+    const long total = (long) fs_total(f);
+    const bool ok = total >= 16 && fs_read(f, h, 16) == 16;
+    fs_close(f);
+    if (!ok || h[0] != 'S' || h[1] != 'S' || h[2] != 'L' || h[3] != 'Z') return -1;
+    *raw = lz_rd32(h + 4);
+    *packed = lz_rd32(h + 8);
+    if (long(*packed) + 16 > total) return -1;
+    return total;
+}
+
+// The raw size of `name`'s packed copy, or -1 when there is none.
+long re4dc_ssb_lz_size(const char* name)
+{
+    char full[96];
+    unsigned raw, packed;
+    return lz_header(name, full, sizeof(full), &raw, &packed) < 0 ? -1 : long(raw);
+}
+
+// One LZ4 block [s, s + n) into [dst, dst + cap). Returns the decoded bytes, or -1.
+static long lz4_block_decode(const unsigned char* s, unsigned n, unsigned char* dst, unsigned cap)
+{
+    const unsigned char* const se = s + n;
+    unsigned char* d = dst;
+    unsigned char* const de = dst + cap;
+    while (s < se) {
+        const unsigned token = *s++;
+        unsigned lit = token >> 4;
+        if (lit == 15) {
+            unsigned b;
+            do {
+                if (s >= se) return -1;
+                lit += (b = *s++);
+            } while (b == 255);
+        }
+        if (lit > unsigned(se - s) || lit > unsigned(de - d)) return -1;
+        memcpy(d, s, lit);
+        d += lit;
+        s += lit;
+        if (s == se) break;  // the last sequence is literals only
+        if (se - s < 2) return -1;
+        const unsigned off = unsigned(s[0]) | unsigned(s[1]) << 8;
+        s += 2;
+        unsigned ml = token & 15;
+        if (ml == 15) {
+            unsigned b;
+            do {
+                if (s >= se) return -1;
+                ml += (b = *s++);
+            } while (b == 255);
+        }
+        ml += 4;
+        if (!off || off > unsigned(d - dst) || ml > unsigned(de - d)) return -1;
+        const unsigned char* m = d - off;
+        while (ml--) *d++ = *m++;  // an overlapping copy repeats the pattern
+    }
+    return long(d - dst);
+}
+
+// Reads `name`'s packed copy into `scratch` (the free tail of the sub screen area), decodes it into `dst` and
+// zeroes the scratch bytes again. Returns the raw bytes, or -1 (the caller then reads the .dat file).
+long re4dc_ssb_lz_read(const char* name, void* dst, unsigned capacity, void* scratch, unsigned scratch_capacity)
+{
+    char full[96];
+    unsigned raw, packed;
+    const long total = lz_header(name, full, sizeof(full), &raw, &packed);
+    if (total < 0 || raw > capacity || unsigned(total) > scratch_capacity) return -1;
+    long got = 0;
+    {
+        Re4dcIoScope io;
+        file_t f = fs_open(full, O_RDONLY);
+        if (f < 0) return -1;
+        while (got < total) {
+            const ssize_t r = fs_read(f, static_cast<char*>(scratch) + got, (size_t) (total - got));
+            if (r <= 0) break;
+            got += (long) r;
+        }
+        fs_close(f);
+    }
+    const long n = got == total ? lz4_block_decode(static_cast<const unsigned char*>(scratch) + 16, packed,
+                                                   static_cast<unsigned char*>(dst), capacity)
+                                : -1;
+    memset(scratch, 0, (size_t) total);  // the area tail was zero (the open's memset)
+    return n == long(raw) ? n : -1;
+}
+#endif
+
 #if RE4DC_SUBSCREEN_OVL
 // The sub screen overlay (SUBSCREEN_OVL=1): /cd/dc/sscrn.ovl, a Dreamcast-only file (no source
 // DVD name), read whole into `dst`. Returns the bytes read or -1.
