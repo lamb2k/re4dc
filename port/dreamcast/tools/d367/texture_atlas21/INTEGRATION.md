@@ -140,3 +140,55 @@ No full stage, guest, target screenshot or physical Dreamcast test occurred.
 Root implementation review/combined integration, cold target lifecycle/geometry,
 material/texture leases, KOS/heap/stack/VRAM admission, sampling/look screenshots
 and matched performance remain open. Production merge/release stays with Claude.
+
+## Cold semantic and wrapper gates, 2026-10-21
+
+The later source-only cold campaign reuses the retained one-hair fixtures and
+runtime-v2 data without generating assets. The actual adapter/runtime wrapper
+and immutable reset source remain byte-identical to frozen source4c210b381.
+`cold_gate_probe.cpp` runs the original binding checks, then mutates every UV
+component referenced by each emitted run. It also tests bounded but incorrect
+position/normal indices, triangle order/winding, render colour/bounds and
+unsupported authored LOD/colour/bake headers. Structurally valid mutations pass
+source preflight before the exact semantic comparison refuses them.
+
+| Appearance | Original binding checks | Cold refusals | Referenced UV components | Warm wrapper lifecycle cases |
+| --- | ---: | ---: | ---: | ---: |
+| Standard | 71 | 1220 | 1160 | 23 |
+| pl08 | 76 | 3854 | 3770 | 28 |
+| Headless | 77 | 3854 | 3770 | 28 |
+
+All three ASan/UBSan arms pass. Warm wrapper checks preserve all17 original hand
+blobs per appearance (51 cases), the actual37-triangle headless neck, current
+hand IDs/inputs and projected ordinary plans. Repeated application declines
+atomically; unsupported replacement LOD data leaves its ordinary plan unchanged
+and a subsequent valid plan can prepare again. Epoch changes, unpublished/zero
+epoch and retired proofs decline; standard proofs survive pl08 retirement.
+These use sentinel foreign roles/hand IDs, not a live model owner.
+
+Three additional sanitizer arms execute the actual immutable source for all
+appearances: IDs127..135 standard /136..148 pl08/headless are disjoint from the
+head IDs, head reset preserves the atlas proofs, standard proofs survive pl08
+reset, all13 pl08 proofs clear, and relocated backing is refused until reset.
+Same-pointer bytes are still required to stay immutable for their entire owner
+epoch; these fixtures do not bless an in-place mutation without retirement.
+
+Evidence: `texture-atlas21-cold-gates-20261021` under private data and its C
+mirror. `cold_gate_probe.py` accepts retained fixtures/runtime data and a fresh
+output; run it under the shared build-slot wrapper with a55s absolute host bound.
+It builds only small host sanitizer probes, bounded to4MiB before a later mirror.
+The executable compile/run commands are retained in the receipts. No programme,
+image, guest, pack or shared runtime edit occurred for this source unit.
+
+No new runtime defect was reproduced. The remaining integration is the existing
+seven-file default-off candidate: coarse_actor.cpp texture-key callback,
+coarse_actor_owner_leon.inc apply/capability/include, coarse_actor_owner_pl08.inc
+apply/capability, coarse_actor_atlas_split.inc owner cache, immutable table/reset,
+pl08 package revoke-before-reset hook, and ps2leon.mk guarded private header.
+Main integration source0425534d does not contain these hooks. A future combined
+source needs review plus its own OFF/ON programme and cold target lineage; the
+canonical1004 pack/image stays frozen. The two atlas keys are disjoint from all
+6537 canonical1004 member keys. Actual current model/material/texture leases,
+heap/stack high-water, VRAM/fragmentation/look/traffic/performance and physical
+Dreamcast acceptance remain open. No native_ui/native_actor claim is needed for
+these source checks, and no switch or production recipe was enabled.
