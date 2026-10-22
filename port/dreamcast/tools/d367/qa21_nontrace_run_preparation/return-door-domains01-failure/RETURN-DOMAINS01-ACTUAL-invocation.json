@@ -1,0 +1,39 @@
+{
+  "scope": "ONE root allocated literal request invocation; no retry",
+  "started_utc": "2026-10-22T07:52:26.133930+00:00",
+  "request_sha256": "59ce668eff65fe289e14d6360d98d5766e505b42335c606d565c78ca0cea9ed6",
+  "argv": [
+    "C:/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_owned_adapter_v1\\outer-driver.py",
+    "--profile",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_owned_adapter_v1\\guest-profile-v2.json",
+    "--profile-sha256",
+    "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+    "--tools-sha256",
+    "8eac4789a775333c218ede0292569e88cb54971ec295da9552d38b6332e956f1",
+    "--mode",
+    "return-door01",
+    "--seed",
+    "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/cold-shoot01",
+    "--root-allocation",
+    "C:/Game Dev/Emulators/codex-lanes/qa21-combined-regression/RETURN-DOOR-DOMAINS01-WIRING-ROOT-ALLOCATION.json",
+    "--root-allocation-sha256",
+    "b3d6d2cb9669de8ddb51967d2168b699f54aa3cce783678d75cd4dd9c1e3dc41",
+    "--execute-root-allocation"
+  ],
+  "fresh_free_C_bytes": 142991048704,
+  "fresh_global_flycasts": 0,
+  "peer_admission_bytes": 19662897152,
+  "runtime_floor": 19394461696,
+  "root_adoption_sha256": "d20567df1e451a36c4d71df3b60a22fe469d653bb040c0489575c8202c7d101b",
+  "outer_identity": {
+    "pid": 55368,
+    "birth_filetime": 134371291461372605,
+    "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+  },
+  "outer_exit_code": 1,
+  "outer_wall_seconds": 3.8429999999934807,
+  "finished_utc": "2026-10-22T07:52:29.981207+00:00",
+  "final_free_C_bytes": 142969102336
+}

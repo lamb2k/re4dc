@@ -1,0 +1,74 @@
+{
+  "scope": "ONE attempted root-adopted actual qualification FAILED before Flycast; no retry",
+  "utc": "2026-10-22T07:56:35.532546+00:00",
+  "source": "1cb552bbe4d9f734ba2962b22307eb118bbfa297",
+  "qualified": false,
+  "outer_identity": {
+    "pid": 55368,
+    "birth_filetime": 134371291461372605,
+    "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+  },
+  "outer_wall_seconds": 3.8429999999934807,
+  "outer_exit_code": 1,
+  "inner_identity": null,
+  "inner_identity_unavailable_reason": "frozen Broker.start refusal did not persist inner identity or actual job PID list; no inference from vanished processes",
+  "error": "Refusal: unexpected/missing private job member",
+  "native_preflight": {
+    "exact3_before_after": true,
+    "full_track_hashes": {
+      "track01.bin": {
+        "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+        "bytes": 1058400
+      },
+      "track02.raw": {
+        "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+        "bytes": 1237152
+      },
+      "track03.iso": {
+        "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+        "bytes": 1032499200
+      }
+    }
+  },
+  "no_guest_acquired": true,
+  "no_new_cap_or_track_refs": true,
+  "no_PNG_input_or_Manual2_witness": true,
+  "broker_closed_after_join": true,
+  "private_job_empty_and_handles_closed": "frozen core cleanup completed without cleanup_errors; source path confirms emptiness before deadline join/handle close",
+  "retained_final_resources": {
+    "available": true,
+    "free_C_bytes": 142969094144,
+    "charged_evidence_bytes": 4096,
+    "global_flycast_count": 0,
+    "runtime_floor": 19394461696,
+    "evidence_cap": 60000000,
+    "global_limit": 16,
+    "phase": "after owned stop/waits and private-job empty check, before handle close"
+  },
+  "postclose_matching_process_snapshot": [],
+  "actual_free_C_bytes": 142381518848,
+  "source_all_manifest_pins_still_exact": true,
+  "files": {
+    "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-domains01-control\\qualification.json": {
+      "sha256": "0135b67922f60778996cc706ae38add866350d845325e8b48aa694cd35ea90b6",
+      "bytes": 13976
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\qa21-combined-regression\\RETURN-DOMAINS01-ACTUAL-invocation.json": {
+      "sha256": "be1d4ba73ffd8d6323fedf0d977c2f3937ca0348a94cd72a502e66ae086995d5",
+      "bytes": 1871
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\qa21-combined-regression\\RETURN-DOMAINS01-ACTUAL-stdout.txt": {
+      "sha256": "8b0f7b9ef249a91e4d989f9fb84bc22485ad6cb67ec0267a8d40cf99999453d3",
+      "bytes": 174
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\qa21-combined-regression\\RETURN-DOMAINS01-ACTUAL-stderr.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  },
+  "programme_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "image_sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+  "no_runtime_interop_Manual2_release_or_hardware_acceptance": true,
+  "next": "root diagnosis/allocation only; no retry or source repair authorized by this actual attempt"
+}
