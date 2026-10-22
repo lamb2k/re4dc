@@ -5,8 +5,10 @@ For every member with a mip chain (VQ, twiddled 16-bit, PAL4, PAL8) it decodes e
 level exactly as the PVR reads it (after quantization / VQ encoding) and checks:
 
 * cutout coverage (textures whose base has alpha < 255): the share of texels at or
-  above the render alpha threshold (PT_ALPHA_REF 128; ARGB1555 is binary) on every
-  level of side >= MIN_SIDE must stay within COVERAGE_TOL of the base level's share.
+  above the render alpha threshold (PT_ALPHA_REF 128; ARGB1555 is binary) of the FINAL
+  encoded level, on every level of side >= MIN_SIDE, must stay within coverage_tol of
+  the base level's share (relative, so thin branch / leaf cards with a small share are
+  judged against their own silhouette: r101 bare-tree branches thinned in game).
   Premultiplied box filtering followed by a fixed binary threshold turns 25 % into 0 %
   and 50-75 % into 100 %, which makes fences, leaves and hair vanish or fill in.
 * VQ lower-level colour (all VQ chains: the kept codebook may lack the averaged
@@ -44,7 +46,12 @@ from vram.vq_pak import read_pak
 
 ALPHA_REF = 128
 MIN_SIDE = 4
-COVERAGE_TOL = 0.15
+COVERAGE_REL = 0.20   # a level may move coverage by 20 % of the base share (thin branches have small shares)
+COVERAGE_ABS = 0.04   # ... or by 4 points, or by one texel of that level, whichever is larger
+
+
+def coverage_tol(cov0, side):
+    return max(COVERAGE_REL * cov0, COVERAGE_ABS, 1.0 / (side * side))
 COLOUR_RMSE = 32.0
 MEAN_SHIFT = 12.0
 
@@ -124,7 +131,7 @@ def audit(item):
         if alpha:
             c = coverage(lvl)
             entry["coverage"] = round(c, 4)
-            if s >= MIN_SIDE and abs(c - cov0) > COVERAGE_TOL:
+            if s >= MIN_SIDE and abs(c - cov0) > coverage_tol(cov0, s):
                 reasons.add("coverage")
         if name == "vq":
             rmse, shift = colour(ideal, premul(lvl))
@@ -200,7 +207,7 @@ def main():
             counts["held:" + reason] = counts.get("held:" + reason, 0) + 1
     summary = dict(source_pack_sha256=hashlib.sha256(pack).hexdigest(), members=len(packages),
                    mipped=len(results), counts=counts,
-                   thresholds=dict(alpha_ref=ALPHA_REF, min_side=MIN_SIDE, coverage_tol=COVERAGE_TOL,
+                   thresholds=dict(alpha_ref=ALPHA_REF, min_side=MIN_SIDE, coverage_rel=COVERAGE_REL, coverage_abs=COVERAGE_ABS,
                                    colour_rmse=COLOUR_RMSE, mean_shift=MEAN_SHIFT))
     if a.out_pack:
         out, n = texpack.build(new)
