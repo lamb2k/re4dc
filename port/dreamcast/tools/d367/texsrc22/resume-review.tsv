@@ -1,0 +1,71 @@
+key	review_group	published_class	published_dimensions	published_format	published_layout	reported_rooms	visible_resident_rooms	source_list_may_be_truncated	minification	approval	next_check
+09b9d35d-9a1a2fc2	ps2-world-object	world	64x64	RGB565	vq	r104	r104	no	unmeasured	pending	Confirm material binding in staged room packages and useful minification.
+0b1dbdd5-203ee448	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+0da6dcd3-1153b1a0	cutscene	cutscene	256x256	RGB565	twiddled	r101,r119	-	no	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+0e2494fb-a7ce0a57	shared-gc-ganado	enemy	128x128	ARGB4444	twiddled	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+0f20d747-2d977dc1	cutscene	cutscene	32x32	RGB565	twiddled	r100,r101,r106,r119,r11c,global	-	yes	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+15728879-8b99f7ca	shared-gc-ganado	enemy	64x64	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+15eb41ec-439f3753	ps2-item	item	64x64	ARGB4444	twiddled	r105	r105	no	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.
+172a4735-95d0fae5	leon-variant	character	512x512	RGB565	vq	global	-	no	unmeasured	pending	Establish whether this build selects the variant; a leon4k label is insufficient.
+1aad1b6c-e247646e	shared-gc-ganado	enemy	256x256	RGB565	twiddled	r320,r327,global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+1fdc83dd-c82c2a72	shared-gc-ganado	enemy	64x64	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+20b41c62-133dd8fa	core-effect	other	64x64	RGB565	twiddled	global	-	no	unmeasured	pending	Resolve the effect consumer and qualify alpha coverage/colour at every mip level.
+2c9c252a-51c59944	ps2-mask	enemy	128x128	ARGB4444	vq	r111,r112,r113,r117,r118,r11c	r111,r112,r113,r117,r118,r11c	no	unmeasured	pending	Confirm the selected mask consumer, then check thin-feature/alpha quality.
+31645579-c9ea2234	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+36e4de50-e0658824	shared-gc-ganado	enemy	64x64	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+3a2564db-9e7bf464	cutscene	cutscene	256x256	RGB565	twiddled	r101,r106,r10b,r119,r11c,r200,global	-	yes	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+3d15af49-311cc721	core-effect	other	64x64	RGB565	twiddled	global	-	no	unmeasured	pending	Resolve the effect consumer and qualify alpha coverage/colour at every mip level.
+3eef2044-72f5709d	leon-variant	character	512x512	RGB565	twiddled	global	-	no	unmeasured	pending	Establish whether this build selects the variant; a leon4k label is insufficient.
+4166aba4-23610a99	ps2-mask	enemy	128x128	ARGB4444	twiddled	r11f	r11f	no	unmeasured	pending	Confirm the selected mask consumer, then check thin-feature/alpha quality.
+484e152b-64f1fb4a	shared-gc-ganado	enemy	128x128	ARGB4444	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+494053fc-10003b8f	ps2-item	item	64x64	RGB565	vq	r105	r105	no	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.
+4ee2229c-ce6b2de4	leon-variant	character	512x512	RGB565	twiddled	global	-	no	unmeasured	pending	Establish whether this build selects the variant; a leon4k label is insufficient.
+4f784887-fc80dbee	ps2-world-object	world	64x64	RGB565	vq	r109,r119	r109,r119	no	unmeasured	pending	Confirm material binding in staged room packages and useful minification.
+5539ebfe-67d7db2b	cutscene	cutscene	32x32	RGB565	twiddled	r101,r10b,r119,r200,global	-	no	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+56d70169-8a2e5214	ps2-mask	enemy	64x64	ARGB4444	twiddled	r111,r112,r113,r117,r118,r11c	r111,r112,r113,r117,r118,r11c	no	unmeasured	pending	Confirm the selected mask consumer, then check thin-feature/alpha quality.
+58632445-8dda3fd2	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+5926862b-e61d4941	ps2-world-object	world	256x256	RGB565	vq	r106	r106	no	unmeasured	pending	Confirm material binding in staged room packages and useful minification.
+5bde298e-c48154cf	shared-gc-ganado	enemy	128x128	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+5be6d1d4-6760d676	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+628a66ab-711d6b46	ps2-mask	enemy	128x128	ARGB4444	vq	r200	r200	no	unmeasured	pending	Confirm the selected mask consumer, then check thin-feature/alpha quality.
+6596bca3-f2f292f2	ps2-item	item	64x64	ARGB4444	vq	r101,r102,r103,r105,r107,r10a,r10b,r118,r119,r11b	r101,r102,r103,r105,r107,r10a,r10b	yes	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.
+66a3c8be-951d7c0d	cutscene	cutscene	256x256	RGB565	twiddled	r101,r119	-	no	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+69275d55-6fb5f00a	cutscene	cutscene	256x256	RGB565	twiddled	r100,r101,r106,r119,r11c,global	-	yes	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+6c7b69e7-5ee8ee0b	cutscene	cutscene	512x512	RGB565	twiddled	r100,r101,r102,r104,r105,r106,r10b,r117,r119,r11b,r11c,r11f,r120,r201,r204,r206,r20b,r212,r213,r214,r215,r227,r228,r22a,r310,global	-	yes	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+6da8c35b-a936da0c	shared-breakable	world-object	64x64	ARGB4444	vq	r100,r101,r103,r107,r108,r10f,r111,r113,r118,r119,r11c,r11d,r11e,r11f,r200,r216,r225,r300,r306,r307,r30b,r30d,r30f,r310,r311,r315,r31a,r31b,r31c,r320,r327,r329,r330	r100,r101,r103,r107,r108,r10f,r111	yes	unmeasured	pending	Check every shared material use, alpha quality and tight-room residency.
+70aead5f-07fae149	shared-gc-ganado	enemy	256x256	RGB565	vq	r201,global	r201	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+83fef658-3fc6836e	ps2-item	item	64x64	ARGB4444	twiddled	r119	r119	no	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.
+92c9c103-2945fe0d	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+95e685c9-b3d27d88	ps2-item	item	64x64	RGB565	vq	r119	r119	no	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.
+98c40b26-84be1101	shared-gc-ganado	enemy	128x128	ARGB4444	twiddled	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+9a446309-c53a4e09	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+9fdcd8b1-d71a134e	cutscene	cutscene	32x32	RGB565	twiddled	r101,r104	-	no	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+a0ccc488-a56757a1	cutscene	cutscene	128x128	RGB565	twiddled	r100,r101,r102,r104,r105,r106,r10b,r117,r119,r11b,r11c,r11f,r120,r200,r201,r204,r206,r209,r20b,r212,r213,r214,r215,r227,r228,r22a,r310,global	-	yes	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+aa4039a6-418ee891	shared-gc-ganado	enemy	128x128	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+adfa0f9a-1b88ada3	cutscene	cutscene	64x64	ARGB4444	twiddled	r101,r10b,r214,global	-	no	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+b2c170b7-c75b1acb	ps2-mask	enemy	128x128	ARGB4444	twiddled	r11f	r11f	no	unmeasured	pending	Confirm the selected mask consumer, then check thin-feature/alpha quality.
+b627530b-9a0b6350	leon-variant	character	512x512	RGB565	twiddled	global	-	no	unmeasured	pending	Establish whether this build selects the variant; a leon4k label is insufficient.
+bc5bb46e-c514110b	ps2-mask	enemy	64x64	ARGB4444	twiddled	r111,r112,r113,r117,r118,r11c	r111,r112,r113,r117,r118,r11c	no	unmeasured	pending	Confirm the selected mask consumer, then check thin-feature/alpha quality.
+be757c7b-9fe6599b	shared-gc-ganado	enemy	256x256	RGB565	vq	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+c228c89d-e9e5fd1c	shared-gc-ganado	enemy	256x256	RGB565	vq	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+c61f5b23-d8d32e30	cutscene	cutscene	128x128	RGB565	twiddled	r101,r10b,r214,global	-	no	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+c8b602c8-633b846d	core-effect	other	64x64	ARGB4444	twiddled	global	-	no	unmeasured	pending	Resolve the effect consumer and qualify alpha coverage/colour at every mip level.
+c8c431e5-b313191c	shared-gc-ganado	enemy	128x128	ARGB4444	twiddled	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+c8d0db2f-3126bc5d	ps2-world-object	world	128x128	RGB565	vq	r103,r108,r118	r103,r108,r118	no	unmeasured	pending	Confirm material binding in staged room packages and useful minification.
+cf95be2f-dfdd581d	standard-actor	enemy	512x512	RGB565	vq	r108	r108	no	unmeasured	pending	Confirm selected actor atlas and assess mid/far detail before admission.
+d8ba2d6e-cba5a166	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+da341786-be875de0	shared-gc-ganado	enemy	128x128	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+daa3d452-b10799f3	ps2-world-object	world	256x256	ARGB4444	twiddled	r10b,r11b	r10b,r11b	no	unmeasured	pending	Confirm material binding in staged room packages and useful minification.
+de020f0a-cc184ee1	ps2-world-object	world	256x256	RGB565	vq	r104,r106,r10a	r106,r10a	no	unmeasured	pending	Confirm material binding in staged room packages and useful minification.
+ded04d98-82ec70ab	ps2-item	item	64x64	ARGB4444	twiddled	r101	r101	no	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.
+e224e969-04254881	ps2-item	item	64x64	ARGB4444	vq	r101,r109,r10a,r119	r101,r109,r10a,r119	no	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.
+e5a32fcc-dd842ab3	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	no	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+ea27ef9a-96765d38	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+ec255e66-76812316	standard-actor	character	512x512	RGB565	vq	r100,r101,r103,r106,global	r100,r101,r103,r106	no	unmeasured	pending	Confirm selected actor atlas and assess mid/far detail before admission.
+edefecf6-60045e28	shared-gc-ganado	enemy	256x256	RGB565	twiddled	global	-	yes	unmeasured	pending	Resolve the exact route/build consumers and fallback paths; retain originals meanwhile.
+f344fc99-8b566d7f	cutscene	cutscene	32x32	RGB565	twiddled	r101,r106,r10b,r119,r11c,r200,global	-	yes	unmeasured	pending	Check the staged cutscene consumers and camera minification before spending room memory.
+f52df17e-83f5bb15	ps2-item	item	64x64	ARGB4444	vq	r101,r102,r103,r107,r10a,r10b,r118,r119,r11b	r101,r102,r103,r107,r10a,r10b,r118	yes	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.
+f56596f9-c3b192f2	ps2-world-object	world	64x64	RGB565	vq	r10b	r10b	no	unmeasured	pending	Confirm material binding in staged room packages and useful minification.
+f9282a10-6ed63371	ps2-item	item	64x64	RGB565	vq	r101,r109,r119	r101,r109,r119	no	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.
+fb5fb8aa-5e38b640	standard-actor	character	512x512	RGB565	vq	global	-	no	unmeasured	pending	Confirm selected actor atlas and assess mid/far detail before admission.
+fdb79120-f3f8ce57	ps2-item	item	64x64	RGB565	vq	r101,r103,r108	r101,r103,r108	no	unmeasured	pending	Check world/inventory shared use; preserve near detail and test inventory VRAM.

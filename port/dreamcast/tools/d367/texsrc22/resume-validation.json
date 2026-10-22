@@ -1,0 +1,25 @@
+{
+  "source_commit": "00ec40a4679e817593cc53bfe0ef704f7ae2b2ba",
+  "date": "2026-10-22",
+  "validation": {
+    "tests": 29,
+    "passed": 29,
+    "skipped": 0,
+    "failed": 0,
+    "classifier_tests": 18,
+    "converter_tests": 11
+  },
+  "quality_gate": {
+    "source_commit": "e8c5dadfd3e5d42b630d7e316e25a10b26828dec",
+    "path": "port/dreamcast/tools/d367/mipmap21/mip_quality.py",
+    "sha256": "5eeba3db83758935d4302d7bbd7d2942edc4e61ef90a1bc58884e9e7e481c7fd"
+  },
+  "checks": [
+    "Frozen classification TSV, summary, key list, scanner and text-reference script unchanged",
+    "70 unique candidate keys, all pending review with unmeasured minification",
+    "41 shared Ganado keys; two explicit r201 resident references",
+    "No private pack or game texture data generated"
+  ],
+  "private_assets_qualified": false,
+  "hardware_or_emulator_qualified": false
+}
