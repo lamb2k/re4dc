@@ -1044,6 +1044,23 @@ def fmt_sce_at(sw, off, size, ctx):
             sw.u16(d + 6)
         elif kind == 8:
             sw.u32(d)
+        elif kind == 9:  # SceAtShdDisp (sce_at.h): shadow number, then byte flags
+            sw.u16(d)
+        elif kind == 10:  # SceAtDamage: time, byte kind/flags, arg, power
+            sw.u32(d)
+            sw.u32(d + 8)
+            sw.f32s(d + 12, 1)
+        elif kind == 12:  # SceAtCamCtrl: position/angle, byte mode, two ranges
+            sw.f32s(d, 4)
+            sw.f32s(d + 20, 2)
+        elif kind == 15:  # SceAtSkey: source installs both runtime pointers
+            null_pointer(d)
+            null_pointer(d + 4)
+        elif kind == 18:  # SceAtHide: byte state, authored position, callback
+            sw.f32s(d + 36, 3)
+            null_pointer(d + 48)
+        elif kind == 19:  # SceAtWork::jumpPos, sceAtFunc_pos_jump
+            sw.f32s(d, 3)
         elif kind == 11:  # runtime SAT/EAT objects plus authored collision attrs
             null_pointer(d)
             null_pointer(d + 4)
