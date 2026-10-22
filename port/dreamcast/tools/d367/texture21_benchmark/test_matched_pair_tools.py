@@ -27,7 +27,7 @@ class Stream(unittest.TestCase):
  def test_missing_resource_admission_rejects_before_image(self):
   p=self.root/'plan.json';p.write_text(json.dumps(self.p));a=self.root/'admission.json';a.write_text(json.dumps({'plan_sha256':s.sha(p),'arm':'M1','stage_authorized':False,'candidate_contract_valid':False}));args=types.SimpleNamespace(plan=p,plan_sha256=s.sha(p),allocation_receipt=a,arm='M1');self.assertRaises(AssertionError,s.write,args);self.assertFalse((self.root/'track03.iso').exists())
  def writer_args(self):
-  self.p['arms']['M1']['predicted']=s.predicted(self.p,'M1');p=self.root/'plan.json';p.write_text(json.dumps(self.p));a=self.root/'admission.json';a.write_text(json.dumps({'plan_sha256':s.sha(p),'arm':'M1','stage_authorized':True,'candidate_contract_valid':True}));out=self.root/'new';out.mkdir()
+  self.p['arms']['M1']['predicted']=s.predicted(self.p,'M1');p=self.root/'plan.json';p.write_text(json.dumps(self.p));a=self.root/'admission.json';a.write_text(json.dumps({'plan_sha256':s.sha(p),'arm':'M1','stage_authorized':True,'candidate_contract_valid':True,'allocation_cap_bytes':100000,'peer_reserved_bytes':0,'allocation_root':str(self.root)}));out=self.root/'new';out.mkdir()
   for name in ['track01.bin','track02.raw','disc.gdi']:(self.root/name).write_bytes(('synthetic '+name).encode())
   return types.SimpleNamespace(plan=p,plan_sha256=s.sha(p),allocation_receipt=a,arm='M1',output=out/'track03.iso',allocation_root=self.root,allocation_cap=100000,peer_reserved=0,smalltracks=self.root)
  def test_bounded_synthetic_writer_copies_exact_smalltracks(self):

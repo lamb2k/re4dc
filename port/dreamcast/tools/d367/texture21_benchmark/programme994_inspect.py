@@ -26,8 +26,8 @@ def elf_tables(b):
    if idx:symbols.setdefault(name(ns,no),[]).append((v,size,idx))
  return sections,symbols
 def main():
- ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--unit',type=Path,required=True);ap.add_argument('--mirror',type=Path,required=True);ap.add_argument('--layout',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
- result=json.loads((a.mirror/'result.json').read_text());assert result['source']==SOURCE
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--source',default=SOURCE);ap.add_argument('--unit',type=Path,required=True);ap.add_argument('--mirror',type=Path,required=True);ap.add_argument('--layout',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
+ result=json.loads((a.mirror/'result.json').read_text());assert result['source']==a.source
  b=(a.unit/'out/re4dc-game.elf').read_bytes();sec,sym=elf_tables(b);text=sec['.text'];tb=b[text[4]:text[4]+(text[5]&~3)];identity=(fnv(tb),len(tb))
  hits=sym['_re4dc_image_id'];assert len(hits)==1
  v=hits[0][0];owners=[r for r in sec.values()if r[1]==1 and r[3]<=v and v+8<=r[3]+r[5]];assert len(owners)==1
@@ -62,7 +62,7 @@ def main():
  knobs=a.mirror/'inherited-resolved-knobs.txt';actual=dict(l.split('=',1)for l in knobs.read_text().splitlines()if '='in l and not l.startswith('#'))
  chosen={k:actual[k]for k in ['CAST_MIPMAP','WORLD_RECT21','LEON_LOD','NATIVE_ACTOR_LOD','ACTOR_UV16','LEON_HEADLESS','CHARBAKE_VARIANT','ANIMALS_OFF','ALIVE_CAP_N']if k in actual}
  # Inherited make knobs are not a replacement for newly compiled on-TU macro bytes.
- out={'schema':'independent-programme994-bindings1','source':SOURCE,'elf_sha256':sha(a.unit/'out/re4dc-game.elf'),'files':files,'image_id':list(identity),'all14':proof,'macro_object_bindings':macros,'inherited_resolved_knobs':chosen,'resolved_flags_sha256':sha(knobs),'compile_inputs_sha256':sha(a.mirror/'actual-complete-dependency-closure.json'),'actual_closure_path':str(a.mirror/'actual-complete-dependency-closure.json'),'input_refs':inputs,'new_ABI_reaudit_required':True,'scope':'Independent stored ELF/raw/overlay header/payload/wordFNV/relocation/imageID/slot/mirror and macro/object binding. Shift ELF outside-image equivalence remains producer receipt, not re-executed here. No runtime allocator/LOD/functional/performance acceptance.'}
+ out={'schema':'independent-programme994-bindings1','source':a.source,'elf_sha256':sha(a.unit/'out/re4dc-game.elf'),'files':files,'image_id':list(identity),'all14':proof,'macro_object_bindings':macros,'inherited_resolved_knobs':chosen,'resolved_flags_sha256':sha(knobs),'compile_inputs_sha256':sha(a.mirror/'actual-complete-dependency-closure.json'),'actual_closure_path':str(a.mirror/'actual-complete-dependency-closure.json'),'input_refs':inputs,'new_ABI_reaudit_required':True,'scope':'Independent stored ELF/raw/overlay header/payload/wordFNV/relocation/imageID/slot/mirror and macro/object binding. Shift ELF outside-image equivalence remains producer receipt, not re-executed here. No runtime allocator/LOD/functional/performance acceptance.'}
  with a.out.open('x')as f:json.dump(out,f,indent=2);f.write('\n')
  print(json.dumps({'report_sha256':sha(a.out),'files':len(files),'overlay_count':len(proof),'image_id':identity,'selected_inherited_knobs':chosen}))
 if __name__=='__main__':main()

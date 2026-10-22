@@ -6,6 +6,7 @@ No pack composition, image mounting, game build, guest or state operation.
 import argparse,hashlib,json,os,shutil,struct,time,zlib
 from pathlib import Path
 from mipmap_pair_plan import sha,local,record_patch,both32,programme_rows,OLD_C
+from file_charge import ChargeSession,conservative_charge,publish_no_replace,roundup
 TRACK=1032499200;FLOOR=18*1024**3
 def check_sources(rows):
  for r in rows:
@@ -75,6 +76,8 @@ def create(a):
  plan={'schema':'matched994-stream-plan1','status':'PREDICTED_ONLY_NO_STAGE_ALLOCATION','source':a.source,'base_path':str(a.base),'base_sha256':OLD_C,'track_bytes':TRACK,'programme_binding_path':str(a.programme),'programme_binding_sha256':sha(a.programme),'elf_sha256':prog['elf_sha256'],'common_exact15':prog['files'],'common_ranges':common,'arms':arms,'asset_differences_between_arms':['/dc/tex.pak','/dc/native/r100/ps2-world.r4pw','/dc/native/r103/ps2-world.r4pw','/dc/native/r101/ps2-world.r4pw'],'comparison':'FULL texture pipeline, original6501 versus combined994. Original control retains protected existing mipmaps; not globally mip-off, not isolated mip-only causal claim.','no_e08_namespace_or_state_transfer':True,'runtime_new_ELF_binding':'PENDING fresh f42 CU/DIE/path/pointer/duplicate/anchor namespace; no boot/performance acceptance','layout':{'files':1743,'all_LBAs_preserved':True,'Joliet':False,'PVD_blocks':504002,'fulltrack_blocks':504150,'programme_tail_remaining_sectors':148},'resource':{'floor_bytes':FLOOR,'runtime_margin':67108864,'smalltracks_and_GDI_per_arm':2295639,'metadata_cap':16777216,'failed_outputs':'Preserve and count all prior failed/closed output bytes plus peer reservations; no automatic retry/cleanup.'}}
  check_sources(common+m0+m1)
  plan['source']=a.source;plan['layout']['PVD_blocks']=newvol;plan['layout']['programme_tail_remaining_sectors']=504150-newvol
+ plan['comparison']=manifest.get('pipeline_label',plan['comparison'])
+ plan['canonical_manifest_reference']=manifest.get('canonical_manifest_reference')
  plan['runtime_new_ELF_binding']='PENDING actual '+prog['elf_sha256']+' CU/DIE/path/pointer/duplicate/anchor namespace; no boot/performance acceptance'
  plan['input_refs']={str(p):sha(p)for p in [a.programme,a.layout,a.baseline,a.combined,a.candidate_worlds]}
  plan['materialization']='Root allocation only. ONE candidate arm FIRST, full1743 file/directory readback; main applies NTFS lossless compression to that closed owned file, rehashes same logical bytes and records actual allocation/free bytes. Fresh guard before original arm SECOND; preserve and count failed/closed outputs. No automatic deletion/retry.'
@@ -86,7 +89,7 @@ def guard(a,plan,remaining):
  # Global peer reservation is supplied fresh by main, never inferred as zero.
  free=shutil.disk_usage(a.output.parent).free
  if free<FLOOR+67108864+a.peer_reserved+remaining:raise ValueError('fresh disk/reservation guard')
- allocated=sum(p.stat().st_size for p in a.allocation_root.rglob('*')if p.is_file()and not p.is_symlink())
+ allocated=a._charge.charge()if hasattr(a,'_charge')else conservative_charge(a.allocation_root)
  if allocated+remaining>a.allocation_cap:raise ValueError('cumulative failed/closed allocation cap')
  return free,allocated
 class WriterGuard:
@@ -106,24 +109,32 @@ class WriterGuard:
 def write(a):
  plan=json.loads(a.plan.read_text());assert sha(a.plan)==a.plan_sha256
  admission=json.loads(a.allocation_receipt.read_text());assert admission['plan_sha256']==a.plan_sha256 and admission['arm']==a.arm and admission['stage_authorized']is True and admission['candidate_contract_valid']is True
+ assert a.allocation_cap==admission['allocation_cap_bytes']and a.peer_reserved==admission['peer_reserved_bytes']and a.allocation_root.resolve()==local(admission['allocation_root']).resolve()
+ with ChargeSession(a.allocation_root,plan,a.plan_sha256,admission.get('charge_credits',[]),a.output)as held:
+  a._charge=held
+  try:_write_allocated(a,plan)
+  finally:del a._charge
+def _write_allocated(a,plan):
  assert a.arm in plan['arms']and not a.output.exists()and a.output.parent.exists();prediction=plan['arms'][a.arm]['predicted'];check_sources(plan['common_ranges']+plan['arms'][a.arm]['ranges']);guard(a,plan,TRACK)
  assert a.output.resolve().is_relative_to(a.allocation_root.resolve())
  small={name:a.smalltracks/name for name in ['track01.bin','track02.raw','disc.gdi']};small_hashes={name:sha(p)for name,p in small.items()};total=TRACK+sum(p.stat().st_size for p in small.values())
  assert a.smalltracks.resolve()==local(plan['base_path']).parent.resolve()
- partial=a.output.with_name(a.output.name+'.partial');assert not partial.exists();h=hashlib.sha256();n=0;wg=WriterGuard(a,plan,total)
+ total_reserved=roundup(TRACK,a._charge.cluster)+sum(roundup(p.stat().st_size,a._charge.cluster)for p in small.values())+a._charge.cluster
+ partial=a.output.with_name(a.output.name+'.partial');assert not partial.exists();h=hashlib.sha256();n=0;wg=WriterGuard(a,plan,total_reserved)
  with partial.open('xb')as f:
   for b in blocks(plan,a.arm):
    wg.advance(len(b));f.write(b);h.update(b);n+=len(b)
   f.flush();os.fsync(f.fileno())
  if n!=prediction['bytes']or h.hexdigest()!=prediction['sha256']:raise ValueError('closed image differs; preserve partial')
- partial.rename(a.output)
+ publish_no_replace(partial,a.output)
  for name,p in small.items():
   with p.open('rb')as src,(a.output.parent/name).open('xb')as dst:
    while b:=src.read(1048576):wg.advance(len(b));dst.write(b)
    dst.flush();os.fsync(dst.fileno())
   assert sha(a.output.parent/name)==small_hashes[name]==sha(p)
  receipt={'arm':a.arm,'plan_sha256':sha(a.plan),'path':str(a.output),'bytes':n,'sha256':h.hexdigest(),'scope':'Writer closed wholeimage identity only; independent1743 directory/file readback remains mandatory before guest.'}
- with a.output.with_suffix('.writer.json').open('x')as f:json.dump(receipt,f,indent=2)
+ data=(json.dumps(receipt,indent=2)+'\n').encode();guard(a,plan,roundup(len(data),a._charge.cluster))
+ with a.output.with_suffix('.writer.json').open('xb')as f:f.write(data)
  print(json.dumps(receipt))
 def main():
  ap=argparse.ArgumentParser(description=__doc__);sub=ap.add_subparsers(dest='action',required=True);p=sub.add_parser('plan')
