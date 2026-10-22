@@ -1,0 +1,52 @@
+{
+  "scope": "MODELLED complete original OFF world walk, same multiple64-index accepted strips and one function lease",
+  "object_sha256": "5189391c513c5639a3919a748d7ebb81a2600750d16a31ee6d7a0974b6777b2b",
+  "rows": [
+    {
+      "batch": 1,
+      "vertices_per_strip": 64,
+      "function_cycles": 1141,
+      "per_strip": 1141.0,
+      "per_input_triangle": 18.403
+    },
+    {
+      "batch": 2,
+      "vertices_per_strip": 64,
+      "function_cycles": 2249,
+      "per_strip": 1124.5,
+      "per_input_triangle": 18.137
+    },
+    {
+      "batch": 4,
+      "vertices_per_strip": 64,
+      "function_cycles": 4465,
+      "per_strip": 1116.25,
+      "per_input_triangle": 18.004
+    },
+    {
+      "batch": 8,
+      "vertices_per_strip": 64,
+      "function_cycles": 8897,
+      "per_strip": 1112.125,
+      "per_input_triangle": 17.938
+    },
+    {
+      "batch": 16,
+      "vertices_per_strip": 64,
+      "function_cycles": 17761,
+      "per_strip": 1110.0625,
+      "per_input_triangle": 17.904
+    },
+    {
+      "batch": 32,
+      "vertices_per_strip": 64,
+      "function_cycles": 35489,
+      "per_strip": 1109.03125,
+      "per_input_triangle": 17.888
+    }
+  ],
+  "limitations": [
+    "Same existing issue-group/latency approximation; no caches/SQ/TA stalls.",
+    "Common transform/skin and RE4 adapter are outside both submission comparisons, not credited as savings."
+  ]
+}
