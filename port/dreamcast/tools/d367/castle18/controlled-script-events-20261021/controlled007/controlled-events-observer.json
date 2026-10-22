@@ -1,0 +1,136 @@
+{
+  "scope": "CONTROLLED direct continuation of closed006 movie state. No rearm/outcome state edits or gameplay buttons. Original005 chapter6/partner/AEV2 setup inherited. Early RSF0/chapter7/RSF7 do not prove movieEOF/resultsUI/savewrite/radio. Authentic127/294 untouched.",
+  "owner": {
+    "pid": 54424,
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event007\\flycast.exe",
+    "start_filetime": 134371073258599959,
+    "created_utc": "2026-10-22T01:48:45.867633+00:00",
+    "rights": "retained subprocess handle receipt"
+  },
+  "baseline_crank": null,
+  "crank_full_frame": null,
+  "baseline_RSF5_clear_seen": false,
+  "events": [
+    {
+      "original_event_RSF0_early": {
+        "pg": 2352652060,
+        "process_age": 2.0031542091746815,
+        "frame": 181,
+        "room": "0x204",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x80400900",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "status1": "0x10000200",
+        "status3": "0x4000000",
+        "chapter": 6,
+        "partner_ptr": "0x8cad8160",
+        "player_pos": [
+          -676.848876953125,
+          -0.0009765625,
+          -41378.0625
+        ],
+        "saved_RSF": "0x80000000",
+        "baseline_RSF0_clear_seen": false,
+        "event_hold_seen": true
+      }
+    },
+    {
+      "framebuffer_readonly_fallback": {
+        "source": "current live frozenELF pvr_state+312/320, checked inherited005/006 buffers",
+        "native": [
+          "0x230980",
+          "0x630980"
+        ],
+        "rgb565": [
+          "0xa5461300",
+          "0xa5c61300"
+        ]
+      }
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event007\\shots\\controlled-original-r204-event-start",
+      "source_interval": [
+        181,
+        181
+      ]
+    },
+    {
+      "chapter_task_early_transition": {
+        "pg": 2352652060,
+        "process_age": 16.597154209157452,
+        "frame": 181,
+        "room": "0x204",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0xff7fffbf",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "status1": "0x10000200",
+        "status3": "0x0",
+        "chapter": 7,
+        "partner_ptr": "0x8cad8160",
+        "player_pos": [
+          -676.848876953125,
+          -0.0009765625,
+          -41378.0625
+        ],
+        "saved_RSF": "0x80000000",
+        "baseline_RSF0_clear_seen": false,
+        "event_hold_seen": true
+      }
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event007\\shots\\controlled-inner-deadline",
+      "source_interval": [
+        848,
+        849
+      ]
+    },
+    {
+      "exact_owned_WM_CLOSE": true
+    }
+  ],
+  "last": {
+    "pg": 2352652060,
+    "process_age": 38.97215420915745,
+    "frame": 847,
+    "room": "0x204",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0xffffffbf",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "status1": "0x10000200",
+    "status3": "0x0",
+    "chapter": 7,
+    "partner_ptr": "0x0",
+    "player_pos": [
+      -676.848876953125,
+      -0.0009765625,
+      -41378.0625
+    ],
+    "saved_RSF": "0x80000000",
+    "baseline_RSF0_clear_seen": false,
+    "event_hold_seen": true
+  }
+}

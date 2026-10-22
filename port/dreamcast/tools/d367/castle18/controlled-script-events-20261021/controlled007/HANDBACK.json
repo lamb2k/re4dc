@@ -1,0 +1,30 @@
+{
+  "scope": "CONTROLLED TEST original204 event/movie/chapter-results coverage; no authenticcombat/release/hardware acceptance.",
+  "state_sha256": "e20edc2f58299c01b890e97cc321945a6e0d6d6459e18a768d14d87507f567b0",
+  "source": 850,
+  "room": "0x204",
+  "chapter": 7,
+  "health": [
+    1440,
+    1440,
+    600,
+    600
+  ],
+  "partner_removed": true,
+  "Stop": "0xffffffbf",
+  "PASS": "Same-lineage005\u2192006\u2192007 resume showed originalmovie20400 EOF995/995, allpresented/0dropped; sourcechaptertask7/removesAshley; finalPNG directlyinspected END OF CHAPTER3-1/NEXT3-2/results/SaveYesNo withcursorYes.",
+  "movie_terminal": [
+    "route movie terminal=1 id=20400 frames=995/995 uploaded=995 presented=995 wall_us=33297568 media_us=33199833 underruns=1 silence_bytes=1472 heap_before=396992 heap_active=32800 staged=363328",
+    "route movie cadence id=20400 shown=995 dropped=0 late=0 two_field=994 other=0 max_gap_fields=2 (29.97 fps = one picture per 2 fields)",
+    "route movie retired: id=20400 source_heap=396992 staged=363328 vram_free=1277888 aica_largest_any=1004192 kos_free=2264 stream_init=0 stream_active=0"
+  ],
+  "not_yet_observed": [
+    "CardSave UI execution",
+    "actual VMU savewrite/readback",
+    "radio0xE/RSF7"
+  ],
+  "next": "008 direct007 SaveYes normalA\u2192originalCardSaveUI prepared; exactlyoneownedordinarypulse/no laterblindbuttons; root allocation required.",
+  "guard": "PID54424 normalexit/raw40.0/V4exit39.71/noactions; capturefallbackread currentlivePVRstate, exactfrozen source/stateproof; no outcomeedits/rearm.",
+  "protected": "Authentic127/294 fullSHAunchanged, allcontrolledstates preserved.",
+  "selector": "FrozenELF SceMesGetSelection direct8c3b6939; code08 E4/E5/E6+nativecontrolbase8. Actual007table2/sel0/cur0/btn1/attr1001 recorded; no reliance onsourceheadercomments/DWARFassumption."
+}
