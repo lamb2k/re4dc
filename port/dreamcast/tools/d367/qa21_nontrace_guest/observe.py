@@ -42,17 +42,23 @@ class Observer:
    if not self.k.GetProcessTimes(h,*[ctypes.byref(v) for v in times]):raise OSError('observer start unavailable')
    self.handle=h;self.start=times[0].value;self.pid=pid;self.ram=int(matches[-1],16);return True
   except BaseException:self.k.CloseHandle(h);raise
+ def require_live(self,phase):
+  values=[ctypes.c_ulonglong() for _ in range(4)]
+  if not self.k.GetProcessTimes(self.handle,*[ctypes.byref(v) for v in values]) or values[0].value!=self.start or values[1].value:
+   self.last=None;self.buffer=None
+   raise EOFError('owned observer PID ended/changed/unavailable '+phase)
  def sample(self):
   if self.handle is None and not self.register():return
-  times=[ctypes.c_ulonglong() for _ in range(4)]
-  if not self.k.GetProcessTimes(self.handle,*[ctypes.byref(v) for v in times]) or times[0].value!=self.start or times[1].value:raise EOFError('owned observer PID ended/changed')
+  self.require_live('before snapshot')
   row=None
   for attempt in range(4):
    pg=struct.unpack('<I',self.live_read(self.adapter.sy['_pG'],4))[0];pl_before=struct.unpack('<I',self.live_read(self.adapter.sy['_pPL'],4))[0];foff=self.adapter.off('GlobalWork','Frame_cnt');before=struct.unpack('<I',self.live_read(pg+foff,4))[0] if 0x8c000000<=pg<=0x8d000000-self.layout['found']['GlobalWork']['bytes'] else None
    self.buffer=self.live_read(0x8c000000,16*1024**2);row=self.adapter.snapshot();row.update(self.adapter.actor_chain())
    pg_after=struct.unpack('<I',self.live_read(self.adapter.sy['_pG'],4))[0];after=struct.unpack('<I',self.live_read(pg_after+foff,4))[0] if before is not None and pg_after==pg else None
    pl_after=struct.unpack('<I',self.live_read(self.adapter.sy['_pPL'],4))[0];frame=(row.get('global') or {}).get('frame');player=(row.get('player') or {}).get('ptr');row['transport_coherent']=coherent_frames(before,frame,after,pg_after==pg and pl_before==pl_after==player);row['coherent']=row.get('coherent',False) and row['transport_coherent'];row['transport_attempts']=attempt+1;row['non_atomic']=True
+   self.require_live('after snapshot attempt '+str(attempt+1))
    if row['coherent']:break
+  self.require_live('before publish')
   row.update(host_s=time.monotonic()-self.started,observed_monotonic=time.monotonic(),pid=self.pid,start_filetime=self.start)
   self.last=row;data=json.dumps(row,allow_nan=False)+'\n';temporary=self.cap/'latest-state.tmp';temporary.write_text(data);os.replace(temporary,self.cap/'latest-state.json')
   g=row.get('global') or {};pl=row.get('player') or {};key=(g.get('player_life'),tuple(g.get('rno',[])),tuple(pl.get('rno',[])),pl.get('dmgType_bits'),tuple((x['ptr'],x['serial'],tuple(x['rno']),x['hp']) for x in row.get('actors',[])))

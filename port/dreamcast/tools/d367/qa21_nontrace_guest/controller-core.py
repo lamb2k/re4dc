@@ -82,4 +82,32 @@ class Door:
    if self.attempts>=4:self.done=True;return [{'unqualified':'ordinary door needs review'}]
    key='a';hold=.2;self.attempts+=1
   else:key='fwd';hold=min(.5,math.hypot(dx,dz)/1900)
-  self.held.add(key);self.until=elapsed+hold;return [{'down':key,'reason':'retained ordinary r103 door route','source_frame':g['frame']}]
+  self.pending_hold=hold;self.held.add(key);self.until=elapsed+hold;return [{'down':key,'reason':'retained ordinary r103 door route','source_frame':g['frame']}]
+
+
+def actual_posted(engine,mode,key,elapsed,row=None):
+ """Anchor phase clocks to verified native down, AFTER any before-shot capture."""
+ engine.held.add(key)
+ if mode=='cold-shoot01':
+  if key=='rtrig':
+   engine.stage='aim';engine.until=elapsed+.4
+   if row is not None:engine.baseline=row
+  elif key=='a':engine.stage='fire';engine.until=elapsed+.15
+ elif mode=='cinematic01' and key=='b':engine.until=elapsed+.15
+ elif mode=='return-door01':engine.until=elapsed+engine.pending_hold
+
+def released_events(engine,mode,actual_held,events,forced=False):
+ """Reconcile native timer/forced releases; never assume a disappeared held key."""
+ engine.held=set(actual_held)
+ for event in events:
+  if mode=='cinematic01' and event['key']=='b':engine.last_b=event['elapsed']
+  if event['reason']!='deadline':continue
+  key=event['key'];when=event['elapsed']
+  if mode=='cold-shoot01':
+   if key=='a' and engine.stage=='fire':engine.stage='settle';engine.until=when+.65
+   elif key=='rtrig':engine.done=True;engine.stage='interrupted'
+  elif mode=='cinematic01' and key=='b':engine.last_b=when
+  elif mode=='return-door01':engine.until=when
+ if forced and any(e['reason']=='before-capture' for e in events):
+  if mode=='cold-shoot01':engine.done=True;engine.stage='interrupted'
+  elif mode=='cinematic01':engine.last_b=max([e['elapsed'] for e in events],default=engine.last_b)

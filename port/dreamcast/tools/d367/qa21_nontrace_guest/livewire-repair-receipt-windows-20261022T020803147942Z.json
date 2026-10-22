@@ -1,0 +1,20 @@
+{
+  "utc": "20261022T020803147942Z",
+  "platform": "windows",
+  "baseline_tools_commit": "fe50ca2395a4071a571aa470c7aa9af53c52e1b1",
+  "scope": "NEW targeted source/negative paths only; no old mock suites, Flycast, native input, RAM, build, image writer or new programme acceptance",
+  "passed": true,
+  "tests_run": 22,
+  "seconds": 0.9220000000204891,
+  "stdout": "",
+  "stderr": "test_capture_before_shot_anchors_aim_at_actual_post (__main__.CaptureAndPulse.test_capture_before_shot_anchors_aim_at_actual_post) ... ok\ntest_capture_releases_and_syncs_before_blocking_work (__main__.CaptureAndPulse.test_capture_releases_and_syncs_before_blocking_work) ... ok\ntest_conservative_cutoff_marker_blocks_later_down (__main__.CaptureAndPulse.test_conservative_cutoff_marker_blocks_later_down) ... ok\ntest_deadline_reconciles_A_settle_and_B_spacing (__main__.CaptureAndPulse.test_deadline_reconciles_A_settle_and_B_spacing) ... ok\ntest_failed_release_prevents_screenshot (__main__.CaptureAndPulse.test_failed_release_prevents_screenshot) ... ok\ntest_final_capture_disables_newdowns_before_work (__main__.CaptureAndPulse.test_final_capture_disables_newdowns_before_work) ... ok\ntest_forced_capture_release_interrupts_started_shot (__main__.CaptureAndPulse.test_forced_capture_release_interrupts_started_shot) ... ok\ntest_hard_deadline_remains_runnable_while_marker_IO_blocks (__main__.CaptureAndPulse.test_hard_deadline_remains_runnable_while_marker_IO_blocks) ... ok\ntest_input_failure_marker_forces_outer_qualification_abort (__main__.CaptureAndPulse.test_input_failure_marker_forces_outer_qualification_abort) ... ok\ntest_late_native_queue_is_disqualified (__main__.CaptureAndPulse.test_late_native_queue_is_disqualified) ... ok\ntest_manual_early_release_preserves_B_spacing (__main__.CaptureAndPulse.test_manual_early_release_preserves_B_spacing) ... ok\ntest_timer_releases_while_observer_lock_is_held (__main__.CaptureAndPulse.test_timer_releases_while_observer_lock_is_held) ... ok\ntest_enum_failure_never_sets_released (__main__.KeyupDelivery.test_enum_failure_never_sets_released) ... ok\ntest_failed_required_post_keeps_release_unproved (__main__.KeyupDelivery.test_failed_required_post_keeps_release_unproved) ... ok\ntest_no_owned_live_window_never_sets_released (__main__.KeyupDelivery.test_no_owned_live_window_never_sets_released) ... ok\ntest_recycled_hwnd_receives_no_post (__main__.KeyupDelivery.test_recycled_hwnd_receives_no_post) ... ok\ntest_success_records_all_queued_keyups_only (__main__.KeyupDelivery.test_success_records_all_queued_keyups_only) ... ok\ntest_exit_during_last_read_rejected_before_publish (__main__.ObserverAfterSnapshot.test_exit_during_last_read_rejected_before_publish) ... ok\ntest_exit_during_retry_stops_before_another_attempt (__main__.ObserverAfterSnapshot.test_exit_during_retry_stops_before_another_attempt) ... ok\ntest_live_postcheck_allows_publish (__main__.ObserverAfterSnapshot.test_live_postcheck_allows_publish) ... ok\ntest_post_identity_unavailable_rejected (__main__.ObserverAfterSnapshot.test_post_identity_unavailable_rejected) ... ok\ntest_start_change_after_bulk_rejected (__main__.ObserverAfterSnapshot.test_start_change_after_bulk_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 22 tests in 0.643s\n\nOK\n",
+  "tested_source_sha256": {
+    "observe.py": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+    "windows-backend.py": "f14fddcc93f4689b489e45c1b8175fb310f5acd5408b7e469c67642db6fe224f",
+    "inner-adapter.py": "90b39901bce2489bf2eeff6f3dbb7540f4ac02a87dca9634b95f5c97ab6b21e4",
+    "input-deadlines.py": "6917893fe1b2f27f87cb49ebea7a93843e84c249e7acdc1242fcf1420164fb8a",
+    "controller-core.py": "251ced8ff329249293671fc3291d03231ad1d2add8cb2581c1d6fe0e2ec80480",
+    "test-livewire-repairs.py": "81c639482cb9ef464d133730cf965e5c7b1ab495c9ef1157953c9346cf84d6b6",
+    "run-livewire-targeted.py": "2593c400e999e9da3a786fdfb29708acbcf581d76c514a801957c0cea31c7384"
+  }
+}

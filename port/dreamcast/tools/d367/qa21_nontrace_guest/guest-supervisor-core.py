@@ -41,16 +41,23 @@ def monitor(backend,cmd,after_spawn=None):
    try:fn()
    except BaseException as error:
     result['qualified']=False;result.setdefault('cleanup_errors',[]).append(label+': '+type(error).__name__+': '+str(error))
-  cleanup('deadline join',backend.stop_deadlines)
+  # Keep the independent hard deadline armed until private-job termination.
+  if job is not None:cleanup('private job stop',lambda:backend.stop_private_job(job))
   if inner is not None:cleanup('pipe close',lambda:backend.close_release_pipe(inner))
   if guest is not None:
    def release_owned():
     if backend.identity(guest)!=identity:raise RuntimeError('refuse foreign guest input cleanup')
     backend.release_inputs(guest)
    cleanup('input release',release_owned)
-  if job is not None:cleanup('private job stop',lambda:backend.stop_private_job(job))
   if inner is not None:cleanup('inner wait',lambda:backend.wait(inner))
   if guest is not None:cleanup('guest wait',lambda:backend.wait_guest(guest))
-  if job is not None:cleanup('private job empty',lambda:backend.wait_private_job_empty(job))
+  job_empty=job is None
+  if job is not None:
+   def confirm_empty():
+    nonlocal job_empty
+    backend.wait_private_job_empty(job);job_empty=True
+   cleanup('private job empty',confirm_empty)
+  if job_empty:cleanup('deadline join',backend.stop_deadlines)
+  else:result.update(qualified=False,hard_deadline_retained='private job emptiness not established; do not disarm live guard')
   cleanup('handle close',lambda:backend.close_owned_handles(job,inner,guest))
  return result

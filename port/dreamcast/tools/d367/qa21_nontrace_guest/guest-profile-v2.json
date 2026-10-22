@@ -177,5 +177,15 @@
     "fresh full image/native-ID/template/dependency/tool identity preflight and postreadback under exact18GiB guards",
     "visually review saved PNGs; Continue and renewed ordinary gameplay require their own observed source/input evidence"
   ],
-  "elf_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\cache21-ganado-reader-build-20261021\\on-01\\re4dc-game.elf"
+  "elf_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\cache21-ganado-reader-build-20261021\\on-01\\re4dc-game.elf",
+  "input_pulse_bounds": {
+    "aim_phase_seconds": 0.4,
+    "R_total_host_queue_upper_seconds": 1.5,
+    "A_B_host_queue_upper_seconds": 0.15,
+    "movement_host_queue_upper_seconds": 0.65,
+    "timer_safety_margin_seconds_up_to": 0.02,
+    "deadline_anchor": "actual verified native post; no capture time charged as aiming",
+    "capture_policy": "release/verify all native held inputs and synchronize engine first; final capture disables newdowns",
+    "cutoff_policy": "owned-cap marker latches adapter input-disabled even after earlier conservative release; single cutoff writer/verified queues are isolated from monotonic hardstop thread; terminate private job and confirm whole-job empty before disarming hard deadline; retain guard on unavailable emptiness"
+  }
 }

@@ -1,14 +1,18 @@
 {
-  "scope": "source/mock and six tiny Windows Python containment tests only; no Flycast allocation/launch",
-  "created_utc": "2026-10-22T01:20:15.468191+00:00",
+  "scope": "source/mock-only; latest25 NEW livewire cases each platform; old suites/native-child receipts historical, no rerun",
+  "created_utc": "2026-10-22T02:19:49.404453+00:00",
   "files": {
     ".gitattributes": {
       "bytes": 71,
       "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7"
     },
+    "LIVEWIRE_REPAIRS.md": {
+      "bytes": 2938,
+      "sha256": "dbed0de9ba00064f322b6d253c5c7c2f2639eb534ed364b7a9fc4f740bf39da7"
+    },
     "PLAN.md": {
-      "bytes": 12417,
-      "sha256": "36cd5ccfd927dbcef0d75f6fedc6f8aa1c4011d18491dae2db25ec2459f21b2e"
+      "bytes": 15074,
+      "sha256": "8e9b78a36618d6bb6575592a77ba125431ae55d5f1e8e2aaeb260a9bd6d96846"
     },
     "capture-budget.py": {
       "bytes": 712,
@@ -19,8 +23,8 @@
       "sha256": "15b4c7ea458bb8f957c5b4e86e3dde47cf82a8b35da4c8575bbd92d453d1140f"
     },
     "controller-core.py": {
-      "bytes": 6075,
-      "sha256": "b04fdc9a865684698ede81157c8ca675d9ec61c36ac6166b92cbcd7faf497336"
+      "bytes": 7467,
+      "sha256": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a"
     },
     "current-transitions.json": {
       "bytes": 18703,
@@ -39,28 +43,76 @@
       "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
     },
     "guest-profile-v2.json": {
-      "bytes": 9331,
-      "sha256": "61a5f8f0a612aadb95fd471b974fde5dd0d8f3808c514e2b065a85e6f6cf270e"
+      "bytes": 10101,
+      "sha256": "8aae247a6c0998af06ffce2d16a3832bfaaaf99dbab1769fc75b32b1a2103d1b"
     },
     "guest-supervisor-core.py": {
-      "bytes": 3168,
-      "sha256": "1d9ba91cc7a8ecc9e7a164078de304e5648672a8e5321b530ae2b07f6f40f87e"
+      "bytes": 3485,
+      "sha256": "2d32dbc3df77c67d6865cef6faa92ce815ec2a92dd9519896ac4500d29b57de0"
     },
     "inner-adapter.py": {
-      "bytes": 11159,
-      "sha256": "881a25e08ef688579070715a5dbd1ac8807ba6fa0b29cb8b489a497e9ceed272"
+      "bytes": 13084,
+      "sha256": "90b39901bce2489bf2eeff6f3dbb7540f4ac02a87dca9634b95f5c97ab6b21e4"
+    },
+    "input-deadlines.py": {
+      "bytes": 2823,
+      "sha256": "6917893fe1b2f27f87cb49ebea7a93843e84c249e7acdc1242fcf1420164fb8a"
     },
     "layout-contract.py": {
       "bytes": 4538,
       "sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5"
+    },
+    "livewire-repair-receipt-linux-20261022T020553515633Z.json": {
+      "bytes": 3867,
+      "sha256": "2f00579096f5f3f58c5720025f8c2ed59a7a1363f3b0ba06d6a295dc1314f77a"
+    },
+    "livewire-repair-receipt-linux-20261022T020803903319Z.json": {
+      "bytes": 4019,
+      "sha256": "c10cfd0861a817b400dd839fe3a4edb59429b7287ce4ecbb34fd2d63aca989b6"
+    },
+    "livewire-repair-receipt-linux-20261022T021252794745Z.json": {
+      "bytes": 4282,
+      "sha256": "25d58d322a1793b194a4b7668c5756b5b2e8ae95db4b5bc79cf192412f3e8666"
+    },
+    "livewire-repair-receipt-linux-20261022T021515408756Z.json": {
+      "bytes": 4429,
+      "sha256": "fbdf57c59af8590c119e00f9bef7826a7f219f690c3d5efa467b34ee1f59edae"
+    },
+    "livewire-repair-receipt-linux-20261022T021903490482Z.json": {
+      "bytes": 4594,
+      "sha256": "27e5a3f428991935a937e456033e8d56e18962577751147127c6d8ceda86a822"
+    },
+    "livewire-repair-receipt-windows-20261022T020553238753Z.json": {
+      "bytes": 3869,
+      "sha256": "5764ac0adeb35f14c298089068b146b2c1b8878d2d435c526e7e9b64a7dfffe1"
+    },
+    "livewire-repair-receipt-windows-20261022T020803147942Z.json": {
+      "bytes": 4021,
+      "sha256": "73564d427e0c03c3e61c009160d36c7a3a275126a55cb29b18dc3718e89cc9b6"
+    },
+    "livewire-repair-receipt-windows-20261022T021252009739Z.json": {
+      "bytes": 4284,
+      "sha256": "40186663bd6031edb7c28e25d887ac912c82e619aaeab7b88a520140ebf3b409"
+    },
+    "livewire-repair-receipt-windows-20261022T021514642542Z.json": {
+      "bytes": 4431,
+      "sha256": "fddf31aff5f8b07fd29c13e6aaa9ff68cd269fa3b49b46c98e1722fdf8416b46"
+    },
+    "livewire-repair-receipt-windows-20261022T021902714424Z.json": {
+      "bytes": 4596,
+      "sha256": "ca53110195b0526b18fad945dcecf9ee5feb83e276c405b4e81117bc9f5299c7"
+    },
+    "livewire-review.json": {
+      "bytes": 1878,
+      "sha256": "52dd807187135fe56bc1b21d3e2d82dcf3f5c1610cf3a4bcbb686b25e03eb444"
     },
     "native-tests-initial-incident.json": {
       "bytes": 1077,
       "sha256": "f5dc28e0d4d09e662a29de7543cc0af34c586904e05ed9c775cef64caa9ad63b"
     },
     "observe.py": {
-      "bytes": 6393,
-      "sha256": "3d85454813cf55d5a50b158b9cce5b9df04fa55e2ebd2c42c486b1726fc41f8c"
+      "bytes": 6626,
+      "sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490"
     },
     "observer-binding-v2.json": {
       "bytes": 1421,
@@ -86,6 +138,10 @@
       "bytes": 189,
       "sha256": "1d521b1ca227b07273fd4f7f1d2a7e1e2848b71eaee18ba07ad691386add2565"
     },
+    "run-livewire-targeted.py": {
+      "bytes": 1418,
+      "sha256": "38906436f612c0988522b23009224364d2e72ac8108f4b3cbf39d4daddb6e743"
+    },
     "run-unit-tests.py": {
       "bytes": 1716,
       "sha256": "076fdcbed6560ca98f2cef4b390bf077c663721d347c25ec2610ea6ee78689bc"
@@ -107,8 +163,12 @@
       "sha256": "bdd31dd98b03d7a66121390d536ebce5a8a9c3856371051ed8fbaafac660032f"
     },
     "test-inner-contract.py": {
-      "bytes": 3255,
-      "sha256": "fca29acc5f116643759b5b1c7841805d379681ad4cc9c69bc4be2931072f1a0f"
+      "bytes": 3319,
+      "sha256": "999b4908ab4e2b64201cc8f7148c07978ddf20af4531ff24880be36787589c97"
+    },
+    "test-livewire-repairs.py": {
+      "bytes": 12786,
+      "sha256": "144e69ee4276d3e692b15493555f122c6f03be0b75daa0afeea32c3a11ea114c"
     },
     "test-observer-v2.py": {
       "bytes": 4289,
@@ -139,14 +199,15 @@
       "sha256": "215e83b38c7a871c67afc90b17636d782c30bb79c78e7f4698c607f7f663ae88"
     },
     "windows-backend.py": {
-      "bytes": 12387,
-      "sha256": "fd74051317f7eb829c1b6648a7d10fe365ff5a3af840831fc32551206a139bf8"
+      "bytes": 14301,
+      "sha256": "561885621f9984226b42ed5ab89387e9e0179dff290a541cc8645cdbdbd4334e"
     }
   },
-  "logical_bytes": 238208,
-  "actual_tree_bytes_including_bytecode": 453156,
+  "logical_bytes": 311715,
+  "actual_tree_bytes_including_bytecode": 550287,
   "allocation_limit": 4194304,
+  "extra_receipts_limit": 2097152,
   "all_prior_fixtures_preserved": true,
   "launch_ready": false,
-  "remaining_gate": "main reviews exact outer/inner/backend/profile/tools hashes and separately allocates fresh bounded guest after peer coordination; PNG visual/Continue/gameplay acceptance remains open"
+  "remaining_gate": "final independent hardstop/cleanup review, main exact-tool review and separately allocated fresh guest; no automatic launch/retry"
 }

@@ -14,6 +14,9 @@ def validate_role(profile,mode,seed):
  if (mode=='cold-shoot01')!=(seed is None):raise ValueError('cold has no seed; later roles require same-program seed')
  return roles[mode]
 
+def input_allowed(cap,disabled,elapsed):
+ return not disabled and not (pathlib.Path(cap)/'inputs-disabled.json').exists() and elapsed<40.75
+
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--profile',type=pathlib.Path,required=True);ap.add_argument('--mode',required=True);ap.add_argument('--cap',type=pathlib.Path,required=True);ap.add_argument('--seed',type=pathlib.Path);a=ap.parse_args()
  # No filesystem mutation or subprocess occurs before containment release.
@@ -40,7 +43,7 @@ def main():
   if parent_role!=expected:raise RuntimeError('same-program parent role differs')
   os.environ['RE4DC_CHECKPOINT_SEED']=str(a.seed);os.environ['RE4DC_CHECKPOINT_LOG_HEAD']=str(parent['audit']['log_head'])
  runner.KEYS.update(ltrig=(0x21,0),rtrig=(0x2f,0),fwd=(0x17,0),back=(0x25,0),turnleft=(0x24,0),turnright=(0x26,0));runner.VK.update(ltrig=0x46,rtrig=0x56,fwd=0x49,back=0x4b,turnleft=0x4a,turnright=0x4c)
- observer=Observer(cap,profile['observer']['binding'],profile['observer']['layout']);engine={'cold-shoot01':core.Shooting,'return-door01':core.Door,'cinematic01':core.Cinematic}[a.mode]();done=threading.Event();lock=threading.RLock();held=set();state={'mode':a.mode,'checkpoint_parent':str(a.seed) if a.seed else None,'source_only_prior_tests':True,'memory_writes':False,'inputs':[],'captures':[],'errors':[]};qacount=0
+ observer=Observer(cap,profile['observer']['binding'],profile['observer']['layout']);engine={'cold-shoot01':core.Shooting,'return-door01':core.Door,'cinematic01':core.Cinematic}[a.mode]();done=threading.Event();lock=threading.RLock();input_disabled=False;state={'mode':a.mode,'checkpoint_parent':str(a.seed) if a.seed else None,'source_only_prior_tests':True,'memory_writes':False,'inputs':[],'captures':[],'errors':[]};qacount=0
  qa_steps=[]
  if a.mode=='cold-shoot01':
   for line in pathlib.Path(role['keys']).read_text().splitlines():
@@ -48,7 +51,7 @@ def main():
    if line:qa_steps.append(line.split('|')[2].strip().split()[0])
  def elapsed():
   v=ctypes.c_ulonglong();observer.k.GetSystemTimeAsFileTime.argtypes=[ctypes.POINTER(ctypes.c_ulonglong)];observer.k.GetSystemTimeAsFileTime(ctypes.byref(v));return (v.value-observer.start)/1e7
- def post(key,up):
+ def native_post(key,up):
   if not observer.handle:raise RuntimeError('no owned observer handle')
   t=[ctypes.c_ulonglong() for _ in range(4)]
   if not observer.k.GetProcessTimes(observer.handle,*[ctypes.byref(x) for x in t]) or t[0].value!=observer.start:raise RuntimeError('input retained start mismatch')
@@ -62,16 +65,31 @@ def main():
    if up and observer.k.GetProcessTimes(observer.handle,*[ctypes.byref(x) for x in ended]) and ended[0].value==observer.start and ended[1].value:return
    raise RuntimeError('live input path unavailable')
   if pathlib.Path(path.value).resolve()!=(cap/'flycast.exe').resolve():raise RuntimeError('input path mismatch')
-  if not up and elapsed()>=40.75:raise RuntimeError('no keydown after input cutoff')
+  if not up and not input_allowed(cap,input_disabled or bool(state['errors']) or runner.STOP_REQUESTED,elapsed()):raise RuntimeError('no keydown after disabled/cutoff')
   windows=runner.windows_of(observer.pid)
-  if not windows and not up:raise RuntimeError('owned windows unavailable')
+  if not windows:raise RuntimeError('exact owned windows unavailable for required queue')
   scan,ext=runner.KEYS[key];flags=1|(scan<<16)|(ext<<24)|(((1<<30)|(1<<31)) if up else 0)
   runner.user32.PostMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
+  runner.user32.GetWindowThreadProcessId.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.c_ulong)]
   for hwnd in windows:
+   owner=ctypes.c_ulong()
+   if not runner.user32.GetWindowThreadProcessId(hwnd,ctypes.byref(owner)) or owner.value!=observer.pid:raise RuntimeError('owned HWND changed before input queue')
    if not runner.user32.PostMessageW(hwnd,0x101 if up else 0x100,runner.VK[key],flags):raise ctypes.WinError(ctypes.get_last_error())
-  held.discard(key) if up else held.add(key);state['inputs'].append({'key':key,'up':up,'guest_s':elapsed(),'state':observer.last})
- def release_all():
-  for key in list(held):post(key,True)
+  state['inputs'].append({'key':key,'up':up,'guest_s':elapsed(),'state':observer.last})
+ def input_failure(error):
+  state['errors'].append('input deadline: '+str(error));runner.STOP_REQUESTED=True
+  try:
+   with (cap/'input-failure.json').open('x') as f:json.dump({'error':str(error)},f)
+  except FileExistsError:pass
+  except OSError as marker_error:state['errors'].append('input-failure marker unavailable: '+str(marker_error))
+ inputs=load('input_deadlines',P/'input-deadlines.py').Inputs(native_post,elapsed,input_failure)
+ def synchronize(forced=False):core.released_events(engine,a.mode,inputs.keys(),inputs.drain(),forced)
+ def post(key,up,bound=None):
+  if up:inputs.up(key);return
+  if bound is None:bound=engine.pending_hold if a.mode=='return-door01' else (1.5 if key=='rtrig' else .15)
+  when=inputs.down(key,bound)
+  if not (a.mode=='cold-shoot01' and qacount<len(qa_steps)):core.actual_posted(engine,a.mode,key,when,observer.last)
+ def release_all():inputs.release_all('normal-release');synchronize()
  def qa_press(pid,names,hold):
   nonlocal qacount
   with lock:
@@ -81,11 +99,11 @@ def main():
     if not observer.register() and time.monotonic()>limit:raise RuntimeError('QA input owned observer registration unavailable')
     time.sleep(.01)
    if pid!=observer.pid:raise RuntimeError('runner PID differs')
-   try:post(names[0],False);time.sleep(hold)
+   try:post(names[0],False,bound=hold);time.sleep(hold)
    finally:post(names[0],True)
    qacount+=1;return len(runner.windows_of(pid))
  runner.press=qa_press
- def capture(label):
+ def capture_work(label):
   existing=sum(1 for _ in cap.rglob('*.png'));charged=runner.usage(cap)
   if not broker.request(label,existing,charged,final=label=='final'):raise RuntimeError('bounded capture unavailable')
   text=(cap/'run-output.txt').read_text(errors='replace');fb=re.findall(r'fb=[0-9a-f]+,[0-9a-f]+',text)
@@ -95,16 +113,24 @@ def main():
   for n in ['emu.cfg','flycast.log','flycast.pid']:shutil.copyfile(cap/n,folder/n)
   (folder/'boot.log').write_text(fb[-1]+'\n',encoding='utf-16');module=load('capture',cap/'capture_ui_vram.py');module.capture(folder,folder/'frames');observer.sample();after=observer.last
   (folder/'state-context.json').write_text(json.dumps({'before':before,'after':after,'non_atomic':True},indent=2)+'\n');broker.validate(sum(1 for _ in cap.rglob('*.png')));state['captures'].append(label)
+ def capture(label):
+  # No live held key may enter a blocking capture. Observer lock is deliberately
+  # unrelated to Inputs.lock, so per-key release timers can always run.
+  helper=load('capture_release',P/'input-deadlines.py')
+  return helper.release_before_capture(inputs,synchronize,lambda:capture_work(label))
  def watch():
+  nonlocal input_disabled
   try:
    final=False
    while not done.wait(.05):
     with lock:
-     observer.sample()
+     if state['errors']:raise RuntimeError('owned input guard failed')
+     synchronize();observer.sample();synchronize()
      if not observer.handle or not observer.last:continue
      e=elapsed()
      if e>=40.75:release_all();continue
-     if e>=39.3 and not final:capture('final');final=True
+     if e>=39.3 and not final:input_disabled=True;capture('final');final=True
+     if input_disabled:continue
      if a.mode=='cold-shoot01' and qacount<len(qa_steps):continue
      row=observer.last;native_text=(cap/'run-output.txt').read_text(errors='replace');row['death_demo_log_observed']='--DIEDEMO START!!' in native_text;age=time.monotonic()-row['observed_monotonic'];args=(row,age,e)
      manual='PlayingManual2' in (cap/'run-output.txt').read_text(errors='replace')
@@ -114,7 +140,7 @@ def main():
       if 'capture'in action:
        state.setdefault('witnesses',[]).append(action);capture(action['capture']+'-'+str(len(state['captures'])))
       if 'down'in action:
-       observer.sample();fresh=observer.last;nowage=time.monotonic()-fresh['observed_monotonic']
+       observer.sample();synchronize();fresh=observer.last;nowage=time.monotonic()-fresh['observed_monotonic']
        # Captures can consume time; every down is re-gated on a new sample.
        valid=core.policy.valid_sample(fresh) and 0<=nowage<=.2 and fresh.get('qa_flags')==0
        if a.mode=='cold-shoot01':valid=valid and core.policy.ordinary_weapon_ready(fresh) and fresh['global']['room']==0x103
@@ -136,7 +162,9 @@ def main():
  sys.argv=[str(runnerpath),'--disc',profile['disc']['path'],'--cap',str(cap),'--syms',syms,'--seconds','41','--period','0','--name',a.mode,'--keys',role['keys']]
  try:runner.main()
  finally:
-  done.set();thread.join(timeout=2)
+  done.set()
+  try:thread.join(timeout=2)
+  finally:inputs.close()
   if thread.is_alive():raise RuntimeError('observer/controller thread still active; outer private job must reap')
   observer.close()
   if cap.exists():(cap/'inner-control.json').write_text(json.dumps(state,indent=2)+'\n')

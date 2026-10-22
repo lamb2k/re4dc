@@ -6,7 +6,7 @@ import csv,ctypes,hashlib,json,os,pathlib,subprocess,sys,time,threading
 class WindowsBackend:
  def __init__(self,cap,invocation,disc,emu_sha,footprint,clock=time.monotonic):
   if os.name!='nt':raise RuntimeError('Windows runtime only')
-  self.cap=pathlib.Path(cap);self.invocation=pathlib.Path(invocation);self.disc=pathlib.Path(disc);self.emu_sha=emu_sha;self.footprint=footprint;self.clock=clock;self.job=None;self.inner=None;self.guest=None;self.startup=self.clock();self.input_released=False;self.deadline_stop=threading.Event();self.deadline_thread=None;self.deadline_failure=None
+  self.cap=pathlib.Path(cap);self.invocation=pathlib.Path(invocation);self.disc=pathlib.Path(disc);self.emu_sha=emu_sha;self.footprint=footprint;self.clock=clock;self.job=None;self.inner=None;self.guest=None;self.startup=self.clock();self.input_released=False;self.deadline_stop=threading.Event();self.deadline_thread=None;self.cutoff_thread=None;self.deadline_failure=None
   k=self.k=ctypes.WinDLL('kernel32',use_last_error=True)
   k.CreateJobObjectW.argtypes=[ctypes.c_void_p,ctypes.c_wchar_p];k.CreateJobObjectW.restype=ctypes.c_void_p
   k.SetInformationJobObject.argtypes=[ctypes.c_void_p,ctypes.c_int,ctypes.c_void_p,ctypes.c_ulong];k.AssignProcessToJobObject.argtypes=[ctypes.c_void_p,ctypes.c_void_p];k.IsProcessInJob.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.POINTER(ctypes.c_int)];k.TerminateJobObject.argtypes=[ctypes.c_void_p,ctypes.c_uint]
@@ -49,32 +49,42 @@ class WindowsBackend:
    finally:proc._handle.Close();self.inner=None
    raise
  def arm_deadlines(self,inner):
-  # Conservative independent wall clock starts BEFORE the release handshake.
-  # Thus hashing, PID registration or a blocked sampler cannot extend guest life.
-  # No post-exit process query races: core joins this thread before cleanup/close.
-  origin=self.clock()
-  def guard():
+  # Hard stop owns only a captured private-job HANDLE and a monotonic clock.
+  # No filesystem, enumeration, path query, input post or join can block it.
+  origin=self.clock();owned_job=self.job
+  if owned_job is None:raise RuntimeError('no captured private job for hard deadline')
+  def age():
+   guest=self.guest;return max(self.clock()-origin,self.clock()-guest['anchor'] if guest is not None else 0)
+  def terminate_now(reason):
+   self.deadline_failure=reason
+   try:self.checked(self.k.TerminateJobObject(owned_job,125))
+   except BaseException as error:self.deadline_failure+='; private job termination failed: '+str(error)
+  def hard_guard():
+   try:
+    while not self.deadline_stop.wait(.01):
+     if age()>=47.0:terminate_now('independent47.0s conservative private-job deadline');return
+   except BaseException as error:terminate_now('hard deadline thread: '+type(error).__name__+': '+str(error))
+  def cutoff_guard():
    try:
     while not self.deadline_stop.wait(.02):
-     elapsed=self.clock()-origin
      guest=self.guest
-     if guest is not None:elapsed=max(elapsed,self.clock()-guest['anchor'])
-     if elapsed>=40.75 and guest is not None and not self.input_released:self.release_inputs(guest)
-     if elapsed>=47.0:
-      self.deadline_failure='independent47.0s conservative private-job deadline'
-      self.stop_private_job(self.job);return
-   except BaseException as error:
-    self.deadline_failure='deadline thread: '+type(error).__name__+': '+str(error)
-    try:self.stop_private_job(self.job)
-    except BaseException as stop_error:self.deadline_failure+='; stop: '+str(stop_error)
-  self.deadline_thread=threading.Thread(target=guard,name='owned-guest-deadline',daemon=True);self.deadline_thread.start()
+     if age()>=40.75 and guest is not None:
+      # This IO/key queue path may block; the separate hard guard never waits for it.
+      self.disable_inputs('independent conservative cutoff');self.release_inputs(guest);return
+   except BaseException as error:terminate_now('input cutoff thread: '+type(error).__name__+': '+str(error))
+  self.deadline_thread=threading.Thread(target=hard_guard,name='owned-hard-guest-deadline',daemon=True);self.cutoff_thread=threading.Thread(target=cutoff_guard,name='owned-input-cutoff',daemon=True)
+  self.deadline_thread.start();self.cutoff_thread.start()
  def check_deadlines(self):
   if self.deadline_failure:raise RuntimeError(self.deadline_failure)
+  if (self.cap/'input-failure.json').exists():raise RuntimeError('owned input guard failed; private job qualification aborted')
  def stop_deadlines(self):
-  self.deadline_stop.set()
-  if self.deadline_thread is not None:
-   self.deadline_thread.join(timeout=2)
-   if self.deadline_thread.is_alive():raise RuntimeError('deadline thread failed to join; handles must stay valid')
+  self.deadline_stop.set();errors=[]
+  for thread in (self.deadline_thread,self.cutoff_thread):
+   if thread is not None:
+    thread.join(timeout=2)
+    if thread.is_alive():errors.append(thread.name)
+  if errors:raise RuntimeError('deadline/cutoff thread failed to join; handles stay valid: '+','.join(errors))
+  if self.deadline_failure:raise RuntimeError('late deadline/cutoff failure: '+self.deadline_failure)
  def release(self,inner):inner.stdin.write(b'owned-job-ready\n');inner.stdin.flush();inner.stdin.close()
  def close_release_pipe(self,inner):
   if inner.stdin and not inner.stdin.closed:inner.stdin.close()
@@ -136,19 +146,33 @@ class WindowsBackend:
   except subprocess.TimeoutExpired:raise RuntimeError('private inner wait timeout')
  def wait_guest(self,guest):
   if self.k.WaitForSingleObject(guest['handle'],2000)!=0:raise RuntimeError('private guest wait timeout')
+ def disable_inputs(self,reason):
+  # Child checks this exclusive owned-cap marker before EVERY new keydown.
+  marker=self.cap/'inputs-disabled.json'
+  try:
+   with marker.open('x') as f:json.dump({'reason':reason},f)
+  except FileExistsError:pass
  def release_inputs(self,guest):
   if self.identity(guest)!=guest['identity']:raise RuntimeError('foreign PID/start/path; no keyups')
   if not self.guest_alive(guest):return
-  # Only own PID windows, re-enumerated; releasing all fixed controller keys never presses any.
-  W=ctypes.WINFUNCTYPE(ctypes.c_int,ctypes.c_void_p,ctypes.c_ssize_t);windows=[]
+  self.input_released=False
+  W=getattr(ctypes,'WINFUNCTYPE',ctypes.CFUNCTYPE)(ctypes.c_int,ctypes.c_void_p,ctypes.c_ssize_t);windows=[]
   self.u.EnumWindows.argtypes=[W,ctypes.c_ssize_t];self.u.GetWindowThreadProcessId.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.c_ulong)]
   def cb(hwnd,_):
-   pid=ctypes.c_ulong();self.u.GetWindowThreadProcessId(hwnd,ctypes.byref(pid))
-   if pid.value==guest['pid']:windows.append(hwnd)
+   pid=ctypes.c_ulong();thread=self.u.GetWindowThreadProcessId(hwnd,ctypes.byref(pid))
+   if thread and pid.value==guest['pid']:windows.append(hwnd)
    return 1
-  self.u.EnumWindows(W(cb),0)
+  if not self.u.EnumWindows(W(cb),0):raise RuntimeError('required EnumWindows failed; keyup unproved')
+  if not windows:raise RuntimeError('no exact owned live window; keyup unproved')
+  queued=0
   for scan,vk in [(0x2d,0x58),(0x2e,0x43),(0x2f,0x56),(0x21,0x46),(0x17,0x49),(0x25,0x4b),(0x24,0x4a),(0x26,0x4c),(0x1c,0x0d)]:
-   for hwnd in windows:self.u.PostMessageW(hwnd,0x101,vk,1|(scan<<16)|(1<<30)|(1<<31))
+   for hwnd in windows:
+    if self.identity(guest)!=guest['identity'] or not self.guest_alive(guest):raise RuntimeError('guest identity/liveness changed during keyup delivery')
+    pid=ctypes.c_ulong()
+    if not self.u.GetWindowThreadProcessId(hwnd,ctypes.byref(pid)) or pid.value!=guest['pid']:raise RuntimeError('owned HWND changed during keyup delivery')
+    if not self.u.PostMessageW(hwnd,0x101,vk,1|(scan<<16)|(1<<30)|(1<<31)):raise RuntimeError('required WM_KEYUP queue failed')
+    queued+=1
+  self.input_release_receipt={'pid':guest['pid'],'start_filetime':guest['identity']['start_filetime'],'queued_keyups':queued,'windows':len(windows),'scope':'WM_KEYUP successfully queued; game acknowledgement not inferred'}
   self.input_released=True
  def stop_private_job(self,job):
   if job!=self.job:raise RuntimeError('refuse foreign job')
@@ -164,7 +188,7 @@ class WindowsBackend:
    if time.monotonic()>=deadline:raise RuntimeError('private job children still active after stop/waits')
    time.sleep(.01)
  def close_owned_handles(self,job,inner,guest):
-  if self.deadline_thread is not None and self.deadline_thread.is_alive():raise RuntimeError('refuse handle closure under live deadline thread')
+  if any(t is not None and t.is_alive() for t in (self.deadline_thread,self.cutoff_thread)):raise RuntimeError('refuse handle closure under live deadline/cutoff thread')
   try:
    if guest is not None:self.k.CloseHandle(guest['handle'])
   finally:
