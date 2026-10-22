@@ -29,7 +29,7 @@ def main():
   commands[mode]=cmd;outputs[mode]=dict(cases=len(paths),result='all_adopt_and_stream_crc1_pass_VQmip'if mode=='on'else'all_mip_disabled_reject',exe_sha256=hashlib.sha256(exe.read_bytes()).hexdigest())
  # Shared corruption controls one representative per dimension, same strict on-reader process.
  corrupt=[]
- for side in(32,64,128,256):
+ for side in sorted({x['physical'][0]for x in r['selected']}):
   row=next(x for x in r['selected']if x['physical'][0]==side);blob=(out/row['relative_path']).read_bytes()
   for kind in('legacy_texel_only_crc','payload_bit','truncated'):
    b=bytearray(blob)

@@ -25,3 +25,14 @@ int rect21_error4(const uint8_t *src,const uint8_t *square,unsigned side,uint64_
   }
  }*sse4=sum;*maximum4=worst;return 0;
 }
+/* Exact denominator2*ratio metric under unchanged normalized periodic UVs. */
+int rect21_error_ratio(const uint8_t *src,const uint8_t *square,unsigned width,unsigned side,uint64_t *sse,unsigned *maximum){
+ if(!src||!square||!sse||!maximum||side<8||side>256||(side&(side-1))||width%side)return -1;
+ unsigned r=width/side;if(r!=2&&r!=4&&r!=8&&r!=16&&r!=32)return -2;
+ unsigned den=2*r;uint64_t sum=0;unsigned worst=0;
+ for(unsigned y=0;y<side;++y)for(unsigned x=0;x<width;++x){unsigned q=x/r,k=x%r,left,wr;
+  if(2*k+1<r){left=(q+side-1)%side;wr=2*k+1+r;}else{left=q;wr=2*k+1-r;}
+  unsigned right=(left+1)%side,wl=den-wr;
+  for(unsigned c=0;c<3;++c){int d=(int)den*src[(y*width+x)*4+c]-(int)(wl*square[(y*side+left)*4+c]+wr*square[(y*side+right)*4+c]);unsigned a=(unsigned)(d<0?-d:d);sum+=(uint64_t)a*a;if(a>worst)worst=a;}
+ }*sse=sum;*maximum=worst;return 0;
+}
