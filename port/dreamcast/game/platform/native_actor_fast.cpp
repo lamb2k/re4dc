@@ -1652,8 +1652,8 @@ static bool section_wall23(const Re4dcModelPart& p,Frame& f,const BlobHeader* bl
     if(!shz_bounds_mode_supported(fpscr)){++st.numeric_draw;return false;}
     // First cohort: owned immutable skeletal positions, opaque depth-writing,
     // one-sided body/head parts only. Alpha, masks and attachments draw.
-    if(p.blend || (p.material_flags&4U) || p.alpha_state!=255 || p.mask.pixels || (p.cull!=1&&p.cull!=2) ||
-       f.mode!=kSkin || !owned_submission || f.position_stride!=8 || !f.palette ||
+    if(p.blend || (p.material_flags&4U) || p.alpha_state!=255 || p.mask.pixels || p.mask_ref!=256 || (p.cull!=1&&p.cull!=2) ||
+       reinterpret_cast<const void*>(blob)!=p.stream || f.mode!=kSkin || !owned_submission || f.position_stride!=8 || !f.palette ||
        p.depth_mode!=0) {++st.material_draw;return false;}
     float view[12];const unsigned epoch=re4dc_actor_visibility23_view(view,p.model,p.info);
     if(!epoch){++st.identity_draw;return false;}
@@ -1671,9 +1671,10 @@ static bool section_wall23(const Re4dcModelPart& p,Frame& f,const BlobHeader* bl
     if(!actor_visibility23::camera_bounds(groups,n,f.palette,f.palette_entries,f.q,p.modelview,view,p.projection,p.viewport,f.near_distance,f.far_distance,lo,hi)) {
         ++st.numeric_draw;return false;
     }
+    ++st.bounded_sections;st.bounded_records+=nv;
     ++st.wall_tests;
-    if(!re4dc_actor_visibility23_wall(p.model,lo,hi))return false;
-    ++st.hidden_sections;
+    if(!re4dc_actor_visibility23_wall(p.model,view,p.projection,p.viewport,lo,hi))return false;
+    ++st.hidden_sections;st.potential_records+=nv;
     if(re4dc_actor_visibility23_mode!=2)return false;
     st.positions_avoided+=nv;st.triangles_avoided+=nt;return true;
 }

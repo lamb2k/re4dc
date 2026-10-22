@@ -7,8 +7,8 @@ namespace {
 Re4dcActorVisibility23Stats stats{};
 using namespace actor_visibility23;
 struct Entry {Key key;Group group[8];unsigned stamp;unsigned char groups;};
-Entry cache[32]{};unsigned clock23;
-struct View {float words[12];shz_interval_t inverse[12];bool seen,ok;} view23{};
+Entry cache[32]{};unsigned cache_epoch23;
+struct View {float words[12];shz_interval_t inverse[12],eye_error[3];bool seen,ok;} view23{};
 bool equal(const Key&a,const Key&b) {
  return a.positions==b.positions&&a.blob==b.blob&&a.records==b.records&&a.epoch==b.epoch&&
  a.position_count==b.position_count&&a.stream_bytes==b.stream_bytes&&a.meshlet==b.meshlet&&
@@ -17,18 +17,19 @@ bool equal(const Key&a,const Key&b) {
 }
 extern "C" const Re4dcActorVisibility23Stats* re4dc_actor_visibility23_stats(){return &stats;}
 extern "C" int re4dc_actor_visibility23_set(unsigned mode){if(mode>2)return 0;re4dc_actor_visibility23_reset();re4dc_actor_visibility23_mode=mode;return 1;}
-extern "C" void re4dc_actor_visibility23_reset(){std::memset(cache,0,sizeof(cache));view23={};clock23=0;++stats.resets;}
+extern "C" void re4dc_actor_visibility23_reset(){std::memset(cache,0,sizeof(cache));view23={};cache_epoch23=0;++stats.resets;}
 namespace actor_visibility23 {
 const Group* acquire(const Key& key,unsigned* count) {
  *count=0;if(!key.epoch||!key.positions||!key.blob||!key.records||key.stride!=8||
  !key.vertices||key.vertices>128||key.record_words<3||key.record_words>5){++stats.identity_draw;return nullptr;}
- if(++clock23==0){re4dc_actor_visibility23_reset();++clock23;}
- unsigned victim=0;
+ if(cache_epoch23!=key.epoch){re4dc_actor_visibility23_reset();cache_epoch23=key.epoch;}
+ unsigned victim=32;
  for(unsigned i=0;i<32;i++) {
-  if(cache[i].stamp&&equal(key,cache[i].key)){++stats.cache_hits;cache[i].stamp=clock23;*count=cache[i].groups;return *count?cache[i].group:nullptr;}
-  if(cache[i].stamp<cache[victim].stamp)victim=i;
+  if(cache[i].stamp&&equal(key,cache[i].key)){++stats.cache_hits;*count=cache[i].groups;return *count?cache[i].group:nullptr;}
+  if(!cache[i].stamp && victim==32)victim=i;
  }
- ++stats.cache_misses;Entry& e=cache[victim];e={};e.key=key;e.stamp=clock23;
+ if(victim==32){++stats.capacity_draw;return nullptr;}
+ ++stats.cache_misses;Entry& e=cache[victim];e={};e.key=key;e.stamp=1;
  const auto* rec=static_cast<const unsigned short*>(key.records);
  for(unsigned i=0;i<key.vertices;i++) {
   const unsigned vi=rec[i*key.record_words];if(vi>=key.position_count){++stats.identity_draw;e.groups=0;return nullptr;}
@@ -45,7 +46,7 @@ const Group* acquire(const Key& key,unsigned* count) {
 // See actor_visibility23/README.md for actual research/manual conditions.
 static bool numeric_pad(const shz_interval_t pm[12],const shz_interval_t mv[12],
                         const shz_interval_t src[3],const float* p,const float* v,
-                        const shz_interval_t world[3],shz_interval_t padded[3]) {
+                        const shz_interval_t world[3],float near,shz_interval_t padded[3]) {
  using I=shz_interval_t;
  auto point=[](float x){return I{x,x};};
  auto absolute=[](I x){float a=__builtin_fabsf(x.lo),b=__builtin_fabsf(x.hi);return I{0,a>b?a:b};};
@@ -73,6 +74,7 @@ static bool numeric_pad(const shz_interval_t pm[12],const shz_interval_t mv[12],
     !shz_bounds_mul(gamma,X,&eX)||!shz_bounds_mul(gamma,Y,&eY)||!shz_bounds_mul(gamma,H[2],&eW))return false;
  if(!shz_bounds_add(H[2],eW,&a)||!shz_bounds_mul(rho,a,&a)||!shz_bounds_neg(rho,&b)||
     !shz_bounds_add(one,b,&den)||!shz_bounds_div(a,den,&a)||!shz_bounds_add(eW,a,&EW))return false;
+ if(EW.hi>50)return false;
  I numer[2]={X,Y},error[2]={eX,eY},offset[2]={cx,cy},focal[2]={ax,ay};
  for(unsigned j=0;j<2;j++) {
   I f=absolute(focal[j]);f.lo=__builtin_fabsf(focal[j].lo)<__builtin_fabsf(focal[j].hi)?__builtin_fabsf(focal[j].lo):__builtin_fabsf(focal[j].hi);
@@ -83,6 +85,15 @@ static bool numeric_pad(const shz_interval_t pm[12],const shz_interval_t mv[12],
  for(unsigned j=0;j<3;j++) {
   I total=point(0);
   for(unsigned k=0;k<3;k++)if(!shz_bounds_mul(absolute(view23.inverse[j*4+k]),E[k],&a)||!shz_bounds_add(total,a,&total))return false;
+  // room_occl uses transpose eye, while bounds use inverse view. A ray
+  // meeting either slab face at fraction lambda can be represented from
+  // the transpose eye by x'=x+delta*(1/lambda-1). All slab corners are at
+  // depth>=near+10; reserve that10mm and bound 1/lambda<=25050/near.
+  // 25050 includes the <=50mm effective-depth envelope below. Thus test
+  // the WHOLE enlarged box; no unqualified rigidity epsilon substitutes.
+  I lever;
+  if(!shz_bounds_div(point(25050),point(near),&lever)||!shz_bounds_add(lever,one,&lever)||
+     !shz_bounds_mul(view23.eye_error[j],lever,&a)||!shz_bounds_add(total,a,&total))return false;
   if(!(total.hi>=0 && total.hi<=50))return false;
   c={-total.hi,total.hi};if(!shz_bounds_add(world[j],c,padded+j))return false;
  }return true;
@@ -113,7 +124,22 @@ bool camera_bounds(const Group* groups,unsigned count,const float* palette,unsig
 
  if(!view23.seen||std::memcmp(view23.words,view,sizeof(view23.words))) {
   std::memcpy(view23.words,view,sizeof(view23.words));view23.seen=true;view23.ok=shz_bounds_inverse(view,view23.inverse)!=0;
+  for(unsigned a=0;view23.ok&&a<3;a++) {
+   shz_interval_t eye{0,0},x,y,z;
+   for(unsigned c=0;c<3;c++) {
+    if(!shz_bounds_point(view[c*4+a],&x)||!shz_bounds_point(view[c*4+3],&y)||
+       !shz_bounds_mul(x,y,&z)||!shz_bounds_add(eye,z,&eye)){view23.ok=false;break;}
+   }
+   if(!view23.ok)break;
+   if(!shz_bounds_neg(eye,&eye)||!shz_bounds_neg(view23.inverse[a*4+3],&x)||
+      !shz_bounds_add(eye,x,&z)){view23.ok=false;break;}
+   const float l=__builtin_fabsf(z.lo),h=__builtin_fabsf(z.hi);
+   view23.eye_error[a]={0,l>h?l:h};
+  }
  }
+ shz_interval_t eye_sum{0,0};
+ for(unsigned a=0;view23.ok&&a<3;a++)if(!shz_bounds_add(eye_sum,view23.eye_error[a],&eye_sum))view23.ok=false;
+ if(eye_sum.hi>1.0f)return false; // true eye remains within1mm of OCCL eye, front margin50mm
  if(!view23.ok||!groups||!count||count>8||!palette)return false;
  shz_interval_t scale,mv[12];if(!shz_bounds_point(q,&scale)||q<=0)return false;
  for(unsigned i=0;i<12;i++)if(!shz_bounds_point(modelview[i],mv+i))return false;
@@ -127,7 +153,7 @@ bool camera_bounds(const Group* groups,unsigned count,const float* palette,unsig
   if(!shz_bounds_affine(pm,src,sk)||!shz_bounds_affine(mv,sk,cam)||!shz_bounds_affine(view23.inverse,cam,world))return false;
   if(cam[2].hi>=-near || cam[2].lo < -25000.0f)return false;
   shz_interval_t padded[3];
-  if(!numeric_pad(pm,mv,src,projection,viewport,world,padded))return false;
+  if(!numeric_pad(pm,mv,src,projection,viewport,world,near,padded))return false;
   for(unsigned a=0;a<3;a++){if(!g||padded[a].lo<lo[a])lo[a]=padded[a].lo;if(!g||padded[a].hi>hi[a])hi[a]=padded[a].hi;}
   ++stats.bound_groups;
  }return true;

@@ -7,14 +7,14 @@
 extern "C" {
 struct Re4dcActorVisibility23Stats {
  unsigned queries,material_draw,identity_draw,cache_hits,cache_misses,source_records,capacity_draw,
- numeric_draw,wall_tests,hidden_sections,positions_avoided,triangles_avoided,bound_groups,resets;
+ numeric_draw,bounded_sections,bounded_records,wall_tests,hidden_sections,potential_records,positions_avoided,triangles_avoided,bound_groups,resets;
 };
 extern unsigned re4dc_actor_visibility23_mode; // 0=off,1=census,2=reject; boot0
 const Re4dcActorVisibility23Stats* re4dc_actor_visibility23_stats();
 void re4dc_actor_visibility23_reset();
 int re4dc_actor_visibility23_set(unsigned mode);
 unsigned re4dc_actor_visibility23_view(float view[12],const void* model,const void* info);
-int re4dc_actor_visibility23_wall(const void* model,const float lo[3],const float hi[3]);
+int re4dc_actor_visibility23_wall(const void* model,const float view[12],const float projection[7],const float viewport[6],const float lo[3],const float hi[3]);
 }
 namespace actor_visibility23 {
 struct Group { short lo[3],hi[3];unsigned short palette; };

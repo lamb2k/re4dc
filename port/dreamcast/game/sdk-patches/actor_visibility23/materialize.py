@@ -12,5 +12,5 @@ p=Path(__file__).resolve().parent
 shutil.copyfile(p/"shz_bounds.h",dest/"include/sh4zam/shz_bounds.h")
 shutil.copyfile(p/"shz_bounds.c",dest/"source/shz_bounds.c")
 f=dest/"source/shz_bounds.c";f.write_text(f.read_text().replace('#include "shz_bounds.h"','#include "sh4zam/shz_bounds.h"'))
-f=dest/"CMakeLists.txt";s=f.read_text().replace("set(SHZ_SOURCES\n","set(SHZ_SOURCES\n    source/shz_bounds.c\n",1).replace("set(SHZ_INCLUDES\n","set(SHZ_INCLUDES\n    include/sh4zam/shz_bounds.h\n",1);f.write_text(s)
+f=dest/"CMakeLists.txt";s=f.read_text().replace("set(SHZ_SOURCES\n","set(SHZ_SOURCES\n    source/shz_bounds.c\n",1).replace("set(SHZ_INCLUDES\n","set(SHZ_INCLUDES\n    include/sh4zam/shz_bounds.h\n",1);s += '\nset_source_files_properties(source/shz_bounds.c PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")\n';f.write_text(s)
 print("Materialized clean SDK pin",pin,"with generic bounds addition",dest)

@@ -941,7 +941,10 @@ extern "C" unsigned re4dc_actor_visibility23_view(float view[12],const void* own
 #if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
     const auto* m=static_cast<const cModel*>(owner);
     if(!m || !((m->id>=0x10&&m->id<=0x20)||m->id==0x2b) ||
-       !invis_view.ok || invis_view.fog<0 || !re4dc_room_vis_active())return 0;
+       !re4dc_room_vis_active() || !re4dc_vis_pl)return 0;
+    if(!coarse_finite(m->pos.x)||!coarse_finite(m->pos.y)||!coarse_finite(m->pos.z)||
+       !coarse_finite(re4dc_vis_pl->pos.x)||!coarse_finite(re4dc_vis_pl->pos.z)||
+       (re4dc_vis_sub&&(!coarse_finite(re4dc_vis_sub->pos.x)||!coarse_finite(re4dc_vis_sub->pos.z))))return 0;
     // Only first two immutable body/head ModelInfos, never extra gear/hands.
     const auto* first=m->pModelInfo;
     if(!first || (info!=first && info!=first->pList))return 0;
@@ -953,9 +956,29 @@ extern "C" unsigned re4dc_actor_visibility23_view(float view[12],const void* own
     (void)view;(void)owner;(void)info;return 0;
 #endif
 }
-extern "C" int re4dc_actor_visibility23_wall(const void* owner,const float lo[3],const float hi[3]) {
-    float view[12];if(!re4dc_actor_visibility23_view(view,owner,static_cast<const cModel*>(owner)->pModelInfo))return 0;
-    return invis_wall_hidden(lo,hi)?1:0;
+extern "C" int re4dc_actor_visibility23_wall(const void* owner,const float view[12],
+                                             const float P[7],const float V[6],
+                                             const float lo[3],const float hi[3]) {
+#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+    if(!owner || !view || !P || !V || !lo || !hi)return 0;
+    const auto* m=static_cast<const cModel*>(owner);float now[12];
+    if(!re4dc_actor_visibility23_view(now,owner,m->pModelInfo)||std::memcmp(now,view,48))return 0;
+    // Actual synchronous Render state, independent of the Trans-time Ganado
+    // predictor. A boss-only room must not need a Ganado to warm its view.
+    float actualP[7],actualV[6];GXGetProjectionv(actualP);GXGetViewportv(actualV);
+    if(std::memcmp(actualP,P,sizeof(actualP))||std::memcmp(actualV,V,sizeof(actualV))||P[0]!=0)return 0;
+    for(unsigned i=0;i<7;i++)if(!coarse_finite(P[i]))return 0;
+    const float near=P[6]/(P[5]-1.0f),proj_far=P[6]/P[5];
+    const float fog=re4dc_fog_gate_far();
+    if(!coarse_finite(near)||!coarse_finite(proj_far)||!coarse_finite(fog)||
+       !(near>0)||!(proj_far>near)||fog<0)return 0;
+    float far=fog>near&&fog<proj_far?fog:proj_far;
+    if(far>25000)far=25000;
+    if(!(far>near)||invis_near_actor(re4dc_vis_pl,lo,hi)||invis_near_actor(re4dc_vis_sub,lo,hi))return 0;
+    return re4dc_room_vis_hidden(view,near,far,lo,hi)!=0;
+#else
+    (void)owner;(void)view;(void)P;(void)V;(void)lo;(void)hi;return 0;
+#endif
 }
 #endif
 static inline void invis_acc(float* lo, float* hi, const float* w, float rho) {

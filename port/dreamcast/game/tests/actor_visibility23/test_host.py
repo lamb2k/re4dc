@@ -33,6 +33,9 @@ for rounding in [0,0xc00]:
    assert F(out.lo)<=min(exact)<=max(exact)<=F(out.hi),(name,a.lo,a.hi,b.lo,b.hi,out.lo,out.hi)
    checks+=1
 assert crt.fesetround(0)==0
+# Cancellation/signed-zero cases and interval extrema are one-sided too.
+for a,b in [(0.,-0.),(1.,-1.),(2**120,-2**120)]:
+ out=I();assert lib.shz_bounds_add(I(a,a),I(b,b),C.byref(out)) and out.lo<=0<=out.hi
 # Unsupported boundary arithmetic must fail rather than output an inward box.
 for x,y in [(2**-126,2**-126),(2**127,2**127)]:assert not lib.shz_bounds_mul(I(x,x),I(y,y),C.byref(I()))
 for x in [float('nan'),float('inf'),2**-149]:assert not lib.shz_bounds_add(I(x,x),I(1,1),C.byref(I()))
@@ -48,6 +51,45 @@ assert not lib.host_groups(pos,rec,1,8,10,6,3,C.byref(n))
 assert not lib.host_groups(pos,rec,1,8,1,8,3,C.byref(n))
 lib.re4dc_actor_visibility23_reset()
 assert lib.host_groups(pos,rec,2,8,10,8,3,C.byref(n))
+# Capacity is fail-open, never LRU source-scan thrash; epoch allows reuse.
+lib.re4dc_actor_visibility23_reset();held=[]
+for j in range(33):
+ buf=(C.c_short*4)(j,0,0,0);held.append(buf)
+ assert bool(lib.host_groups(buf,rec,5,1,1,8,3,C.byref(n)))==(j<32)
+assert not lib.host_groups(held[-1],rec,5,1,1,8,3,C.byref(n))
+assert lib.host_groups(held[-1],rec,6,1,1,8,3,C.byref(n))
+# Adversarial/random live pose and rotated camera oracle, with every source
+# record represented and all palette influences already in the affine matrix.
+def inverse(m):
+ a,b,c,tx,d,e,f,ty,g,h,i,tz=m
+ co=[e*i-f*h,c*h-b*i,b*f-c*e,f*g-d*i,a*i-c*g,c*d-a*f,d*h-e*g,b*g-a*h,a*e-b*d]
+ det=a*co[0]+b*co[3]+c*co[6]
+ inv=[v/det for v in co]
+ return [inv[j*3+k] for j in range(3) for k in range(3)], [tx,ty,tz]
+rotated_cases=0;rotated_vertices=0
+for trial in range(256):
+ raw=[]
+ for k in range(32):raw += [random.randrange(-32000,32001) for _ in range(3)]+[k%8]
+ pos=(C.c_short*len(raw))(*raw);rec=(C.c_ushort*96)(*[v for k in range(32) for v in (k,0,0)])
+ palettes=[]
+ for g in range(8):
+  for c in range(3):
+   for a in range(3):palettes.append(F32((1 if a==c else 0)+random.uniform(-.1,.1)))
+  palettes += [F32(random.uniform(-100,100)) for _ in range(3)]
+ pal=floatarray(palettes);ang=random.uniform(-math.pi,math.pi);c=F32(math.cos(ang));z=F32(math.sin(ang))
+ vw=[c,0,z,F32(random.uniform(-10,10)),0,1,0,F32(random.uniform(-10,10)),-z,0,c,F32(random.uniform(-10,10))];view=floatarray(vw)
+ mv=floatarray([1,.03,0,100,0,1,.02,50,.01,0,1,-12000]);proj=floatarray([0,1,0,1,0,-.001,-1]);viewport=floatarray([0,0,640,480,0,1]);lo=floatarray([0]*3);hi=floatarray([0]*3)
+ lib.re4dc_actor_visibility23_reset()
+ assert lib.host_bounds(pos,rec,32,32,pal,8,1/16,mv,view,proj,viewport,lo,hi),trial
+ inv,t=inverse(vw)
+ for k in range(32):
+  x=[raw[k*4+j]/16 for j in range(3)];P=palettes[(k%8)*12:(k%8+1)*12]
+  sk=[sum(P[j*3+a]*x[j] for j in range(3))+P[9+a] for a in range(3)]
+  cam=[sum(float(mv[a*4+j])*sk[j] for j in range(3))+float(mv[a*4+3])-t[a] for a in range(3)]
+  world=[sum(inv[a*3+j]*cam[j] for j in range(3)) for a in range(3)]
+  assert all(lo[j]<=world[j]<=hi[j] for j in range(3)),(trial,k,tuple(lo),world,tuple(hi))
+  rotated_vertices+=1
+ rotated_cases+=1
 # Real package headers, with clearly SYNTHETIC palette poses and opaque panels.
 results=[];oracle_vertices=0
 for filename in sys.argv[2:]:
@@ -56,14 +98,14 @@ for filename in sys.argv[2:]:
   arrays[prefix,kind]=bytes(int(v.strip(),0) for v in body.replace('\n',',').split(',') if v.strip())
  row={'sha256':hashlib.sha256(text.encode()).hexdigest(),'kind':'real package, synthetic palette/camera/panel; not guest','eligible_records':0,'bounded_records':0,'groups':0,'panel_hidden_records':0,'opening_kept_records':0}
  for (prefix,kind),s in arrays.items():
-  if kind!='gx' or s[:2]!=b'\xfe\3' or (prefix,'pos') not in arrays:continue
+  if not re.search(r'i[01]$',prefix) or kind!='gx' or s[:2]!=b'\xfe\3' or (prefix,'pos') not in arrays:continue
   raw=arrays[prefix,'pos'];posbuf=C.create_string_buffer(raw);nm=struct.unpack_from('<H',s,4)[0];off=struct.unpack_from('<H',s,8)[0]*4;rs=3+bool(s[2]&1)+bool(s[2]&2)
   entries=1+max(struct.unpack_from('<H',raw,i+6)[0] for i in range(0,len(raw),8))
   # Per-palette affine positions, including scale/shear/rotation/translation.
   palettes=[]
   for k in range(entries):
    ang=(k%11)*.07;co=F32(math.cos(ang));si=F32(math.sin(ang));palettes += [co,si,0,-si,co,0,.02,0,1,(k%5)*3,(k%7)*2,0]
-  pal=floatarray(palettes);q=1/16
+  palettes=[F32(x) for x in palettes];pal=floatarray(palettes);q=1/16
   view=floatarray([1,0,0,0,0,1,0,0,0,0,1,0]);mv=floatarray([1,0,0,0,0,1,0,0,0,0,1,-12000])
   proj=floatarray([0,1,0,1,0,-.001,-1]);viewport=floatarray([0,0,640,480,0,1])
   for mi in range(nm):
@@ -102,6 +144,15 @@ for filename in sys.argv[2:]:
     lib.host_panel(mode);assert not lib.re4dc_room_vis_hidden(view,1,25000,lo,hi)
    # Near-straddling, singular camera, non-normal palette always fail open.
    badmv=floatarray([1,0,0,0,0,1,0,0,0,0,1,0]);assert not lib.host_bounds(posbuf,recbuf,nv,len(raw)//8,pal,entries,q,badmv,view,proj,viewport,lo,hi)
+   skew=floatarray([1.001,0,0,100000,0,1,0,0,0,0,1,0]);assert not lib.host_bounds(posbuf,recbuf,nv,len(raw)//8,pal,entries,q,mv,skew,proj,viewport,lo,hi)
    badview=floatarray([0]*12);assert not lib.host_bounds(posbuf,recbuf,nv,len(raw)//8,pal,entries,q,mv,badview,proj,viewport,lo,hi)
  results.append(row)
-print(json.dumps({'exact_endpoint_checks':checks,'unsupported_operations':reject,'real_source_oracle_vertices':oracle_vertices,'packages':results},indent=2))
+# Actual OCCL near-face/near-plane/fog/eye-side negatives, no actor shortcut.
+view=floatarray([1,0,0,0,0,1,0,0,0,0,1,0]);lo=floatarray([-50,-50,-6001]);hi=floatarray([50,50,-6000]);lib.host_panel(0)
+assert not lib.re4dc_room_vis_hidden(view,1,25000,lo,hi)
+lo=floatarray([-50,-50,-12050]);hi=floatarray([50,50,-11950])
+assert not lib.re4dc_room_vis_hidden(view,5995,25000,lo,hi)
+assert not lib.re4dc_room_vis_hidden(view,1,5990,lo,hi)
+behind=floatarray([1,0,0,0,0,1,0,0,0,0,1,10000]);assert not lib.re4dc_room_vis_hidden(behind,1,25000,lo,hi)
+lib.re4dc_room_vis_leave();assert not lib.re4dc_room_vis_hidden(view,1,25000,lo,hi)
+print(json.dumps({'exact_endpoint_checks':checks,'unsupported_operations':reject,'rotated_camera_cases':rotated_cases,'rotated_pose_vertices':rotated_vertices,'real_source_oracle_vertices':oracle_vertices,'packages':results},indent=2))
