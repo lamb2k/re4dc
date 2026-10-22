@@ -1,0 +1,1 @@
+Prior exact16-pass source/config/review snapshot retained as review evidence. Main found pipe-close cleanup, ancestor-alias and source-identity gaps afterward. This snapshot is not approved for runtime and must not be executed. Revised19-test sources/config live in the parent folder.
