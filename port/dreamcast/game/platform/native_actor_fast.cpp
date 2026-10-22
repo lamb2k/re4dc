@@ -26,6 +26,7 @@
 //     buffer), positions/normals are skinned here from vtxOrig/nrmOrig with
 //     that palette. Anything that needs pPosBuf/pNrmBuf (the generic path)
 //     first materializes them with the source's own CalcSk1_x.
+#include "include/bfc_class.h"
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
 #ifndef RE4DC_ACTOR_SKIN_OWNER_POOL
@@ -2590,6 +2591,9 @@ inline void* emit_meshlet(void* dst, const pvr_vertex_t* cache, const u8* index,
     // flags word from index bit 7 (EOL ends a strip). Whole meshlets (Part::whole, the common direct case and the
     // ONE_SUBMIT window) were the actor fast path's unhashed writer (review 2026-10-04).
     if constexpr (SQ) {
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+        RE4DC_BFC_SCOPE((re4dc_bfc_class>=3u && re4dc_bfc_class<=5u)?unsigned(re4dc_bfc_class):6u,unsigned(re4dc_bfc_id));  // an actor burst outside a tagged transaction: class 6
+#endif
         for (unsigned k = 0; k < n; ++k) {
             std::uint32_t w[8];
             __builtin_memcpy(w, cache + (index[k] & 127u), 32);
@@ -2720,6 +2724,9 @@ inline void* emit_meshlet(void* dst, const pvr_vertex_t* cache, const u8* index,
 // The same copy straight into the TA through the store queues (TA_DIRECT):
 // EOL goes into the last vertex before its burst leaves.
 inline std::uint32_t* emit_sq(std::uint32_t* sq, const pvr_vertex_t* cache, const u8* index, unsigned n) {
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+    RE4DC_BFC_SCOPE((re4dc_bfc_class>=3u && re4dc_bfc_class<=5u)?unsigned(re4dc_bfc_class):6u,unsigned(re4dc_bfc_id));
+#endif
     const std::uint32_t eol = PVR_CMD_VERTEX_EOL;
 #if RE4DC_TA_HASH && RE4DC_TA_HASH != 4
     // TA_HASH (test builds): the words this strip sends (EOL in the last flags word), as re4dc_ta_put hashes its own.

@@ -1,5 +1,5 @@
 // bfc_class.h (lane backface22): BACKFACE_CENSUS=1 draw-class tags for platform/backface_census.cpp.
-// 1 PS2 world mesh, 2 static parts, 3 Leon, 4 Ganado (id 0x10..0x20), 5 other actor (bosses, animals, Ashley).
+// 1 PS2 world mesh, 2 static parts, 3 Leon, 4 Ganado (id 0x10..0x20), 5 other actor (bosses, animals, Ashley), 6 actor bursts outside a tagged transaction.
 // Default: the macro expands to nothing (no code).
 #pragma once
 #if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
