@@ -1,0 +1,281 @@
+{
+  "scope": "SOURCE/hash/AST/retainedreceipt only; no imports/tests/nativequery/launch/image/state/preflight/allocation",
+  "utc": "2026-10-22T08:47:13.448216+00:00",
+  "candidate": "86f54d1c0adc49b31406d8c076c546fe57505557",
+  "disposition": "CLEAR focused detached startup/allocation-source correction; no native04 allocation or fulljob qualification",
+  "pins": {
+    "integrity": [
+      {
+        "path": ".gitattributes",
+        "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+        "bytes": 8
+      },
+      {
+        "path": "CONSOLE_LAUNCH_SITES.json",
+        "sha256": "4ec52eca532935435b442128cf5005f037b468b2379137b89a0bbbd7732e3456",
+        "bytes": 2847
+      },
+      {
+        "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+        "sha256": "dcd1143bf78bcb856d37932f87206dab1b0169bf7b7c6b09d58ffaff2cfaefaa",
+        "bytes": 542
+      },
+      {
+        "path": "LAUNCH_REQUEST.json",
+        "sha256": "e6df4294699d9762bfa23d62166b22b788e6d891136f4ba5f2924e31a78a9d0f",
+        "bytes": 815
+      },
+      {
+        "path": "NATIVE_INVENTORY_PLAN.md",
+        "sha256": "43c6b4bcef1dfe751ba72b26f31a5b5e50d7537f0f004808e0c06e340f2b7c92",
+        "bytes": 4936
+      },
+      {
+        "path": "README.md",
+        "sha256": "97b2c52d70576a71c9f42f5e8fb162664194160dca10844da33e7816d8ae55b5",
+        "bytes": 454
+      },
+      {
+        "path": "allocation.py",
+        "sha256": "0a63f1c869bf6965a009850cd81ea655c37d08662e12849b9a11acd3f48f6c31",
+        "bytes": 1039
+      },
+      {
+        "path": "cleanup.py",
+        "sha256": "5a76565c99154461ec11c1aa91fbb8ccd04aa43a06267c453a26e965748af585",
+        "bytes": 3232
+      },
+      {
+        "path": "config.json",
+        "sha256": "24c8c2c7de271ed8ba3c0962aaf3037a919c65f90afb04d27c8cbbae3f44f21d",
+        "bytes": 940
+      },
+      {
+        "path": "coordinator.py",
+        "sha256": "75f0e5c21eb05fadd12493a1db42dc3c352e7f2451892239f2166063d0cd9a20",
+        "bytes": 4980
+      },
+      {
+        "path": "frozen-native-reference-api.py",
+        "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+        "bytes": 9151
+      },
+      {
+        "path": "frozen-windows-backend.py",
+        "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+        "bytes": 16010
+      },
+      {
+        "path": "inventory.py",
+        "sha256": "bc24bd095ae1e7e9c164abdbf849755ea092a98627e1f9228f9fd387b2c9fee4",
+        "bytes": 1480
+      },
+      {
+        "path": "manifest.json",
+        "sha256": "031077676c334cb7989039c53bbcdbb0153e9b6ff93590d93a4eec71f73ac115",
+        "bytes": 1964
+      },
+      {
+        "path": "receipt-linux.json",
+        "sha256": "20775a5470dfcac5d99049cab8f283ee53d57d59cc579a1b0ca7bbd9cf668845",
+        "bytes": 716
+      },
+      {
+        "path": "receipt-windows.json",
+        "sha256": "79853986060b122511df3ed8b69e305f74cd310768954706c4bbe5b0a6efef49",
+        "bytes": 739
+      },
+      {
+        "path": "startup.py",
+        "sha256": "d0e7e01ce2d965fb45b714126218f61bee3ab37253fba9d860f50ed60856bd78",
+        "bytes": 911
+      },
+      {
+        "path": "supervisor.py",
+        "sha256": "4ef4bf4a07971982e5840fabb2a0a6a6ee56ada3d5bbe25940cad98b37770b34",
+        "bytes": 8483
+      },
+      {
+        "path": "test_allocation.py",
+        "sha256": "d5dd16ae6446f2f463b7224fce218aff910a743855fe7b230e355d9cf28b6e21",
+        "bytes": 1289
+      },
+      {
+        "path": "test_startup.py",
+        "sha256": "e96730de348c9ff602272415bd1c76ae7493df0a198e5b0c0c8f60e1a1c3a271",
+        "bytes": 5255
+      }
+    ],
+    "runtime": [
+      {
+        "path": "supervisor.py",
+        "sha256": "4ef4bf4a07971982e5840fabb2a0a6a6ee56ada3d5bbe25940cad98b37770b34",
+        "bytes": 8483
+      },
+      {
+        "path": "coordinator.py",
+        "sha256": "75f0e5c21eb05fadd12493a1db42dc3c352e7f2451892239f2166063d0cd9a20",
+        "bytes": 4980
+      },
+      {
+        "path": "inventory.py",
+        "sha256": "bc24bd095ae1e7e9c164abdbf849755ea092a98627e1f9228f9fd387b2c9fee4",
+        "bytes": 1480
+      },
+      {
+        "path": "cleanup.py",
+        "sha256": "5a76565c99154461ec11c1aa91fbb8ccd04aa43a06267c453a26e965748af585",
+        "bytes": 3232
+      },
+      {
+        "path": "startup.py",
+        "sha256": "d0e7e01ce2d965fb45b714126218f61bee3ab37253fba9d860f50ed60856bd78",
+        "bytes": 911
+      },
+      {
+        "path": "allocation.py",
+        "sha256": "0a63f1c869bf6965a009850cd81ea655c37d08662e12849b9a11acd3f48f6c31",
+        "bytes": 1039
+      },
+      {
+        "path": "frozen-windows-backend.py",
+        "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+        "bytes": 16010
+      },
+      {
+        "path": "frozen-native-reference-api.py",
+        "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+        "bytes": 9151
+      },
+      {
+        "path": "config.json",
+        "sha256": "24c8c2c7de271ed8ba3c0962aaf3037a919c65f90afb04d27c8cbbae3f44f21d",
+        "bytes": 940
+      },
+      {
+        "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+        "sha256": "dcd1143bf78bcb856d37932f87206dab1b0169bf7b7c6b09d58ffaff2cfaefaa",
+        "bytes": 542
+      },
+      {
+        "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_owned_adapter_v1\\inner-adapter.py",
+        "sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758",
+        "bytes": 15902
+      }
+    ]
+  },
+  "exact_v3": [
+    "coordinator.py",
+    "cleanup.py",
+    "inventory.py",
+    "frozen-windows-backend.py",
+    "frozen-native-reference-api.py"
+  ],
+  "startup_exact_only_creationflag_change": true,
+  "supervisor_exact_only_loader_and_nativeallocation_measure_change": true,
+  "file_charge_source": "def file_charge(api,path):\n    # Attribute-only, share writers: inventory may be truncated/written concurrently.\n    # OPEN_REPARSE_POINT avoids following a substituted final component.\n    h=api.k.CreateFileW(str(path),0x80,7,None,3,0x00200000,None)\n    if h in (None,0,-1,0xffffffffffffffff):api.checked(False)\n    try:\n        value=api.stat(h)\n        if value['attributes']&0x400 or value['deleted'] or value['directory']:raise RuntimeError('owned allocation file replaced/deleted/directory/reparse')\n        if value['size']<0 or value['allocated']<0:raise RuntimeError('invalid native allocation extent')\n        return max(value['size'],value['allocated'])\n    finally:api.close(h)",
+  "measure_directory_charge": 4096,
+  "retained_coverage": [
+    {
+      "platform": "linux",
+      "sha256": "20775a5470dfcac5d99049cab8f283ee53d57d59cc579a1b0ca7bbd9cf668845",
+      "retained_tests": 8,
+      "current_test_manifest_pins": true,
+      "rerun": false
+    },
+    {
+      "platform": "windows",
+      "sha256": "79853986060b122511df3ed8b69e305f74cd310768954706c4bbe5b0a6efef49",
+      "retained_tests": 8,
+      "current_test_manifest_pins": true,
+      "rerun": false
+    }
+  ],
+  "retained_console_sites": {
+    "scope": "read-only LOCAL source/PE header inventory; no native query or process launch",
+    "python_exe": {
+      "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+      "subsystem": 3
+    },
+    "local_subprocess_py_sha256": "e9886605ccac88bcfe2330a1b4cd8f132cbaf97ebb6834b1dcb5a69b127b8d5b",
+    "flycast_profile_pinned_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+    "flycast_template_header_subsystem": 2,
+    "sources": {
+      "windows-backend.py": {
+        "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55"
+      },
+      "inner-adapter.py": {
+        "sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758"
+      },
+      "reference-hooks/checkpoint_runner18.child.py": {
+        "sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6"
+      },
+      "reference-hooks/child_reference_proxy.py": {
+        "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19"
+      }
+    },
+    "sites": [
+      {
+        "file": "windows-backend.py",
+        "line": 37,
+        "role": "inner",
+        "inside_private_job": "assigned immediately after Popen",
+        "flag": "CREATE_NO_WINDOW",
+        "v4_candidate_change": "DETACHED_PROCESS only in owned fixture startup.py; production frozen unchanged"
+      },
+      {
+        "file": "windows-backend.py",
+        "line": 93,
+        "role": "parent tasklist global_count",
+        "inside_private_job": false,
+        "flag": "CREATE_NO_WINDOW",
+        "fixture03_04": "not called"
+      },
+      {
+        "file": "reference-hooks/checkpoint_runner18.child.py",
+        "line": 60,
+        "role": "inner tasklist count_flycasts",
+        "inside_private_job": true,
+        "flag": "CREATE_NO_WINDOW",
+        "fixture03_04": "not reached; release blocked"
+      },
+      {
+        "file": "reference-hooks/checkpoint_runner18.child.py",
+        "line": 224,
+        "role": "Flycast",
+        "inside_private_job": true,
+        "flag": "0 + STARTF_USESHOWWINDOW/SW_HIDE",
+        "PE_subsystem": 2,
+        "fixture03_04": "not reached; release blocked"
+      },
+      {
+        "file": "reference-hooks/checkpoint_runner18.child.py",
+        "line": 228,
+        "role": "Python read_log",
+        "inside_private_job": true,
+        "flag": "CREATE_NO_WINDOW",
+        "fixture03_04": "not reached; release blocked"
+      },
+      {
+        "file": "native_inventory_v4/supervisor.py",
+        "role": "coordinator",
+        "inside_private_job": false,
+        "flag": "CREATE_NO_WINDOW",
+        "v4_candidate_change": "unchanged; membership diagnostic concerns owned inner private job only"
+      }
+    ],
+    "console_API_calls_in_owned_inner_runner_proxy_capture_sources": [],
+    "actual03_parent_pid": "UNAVAILABLE",
+    "actual03_commandline": "UNAVAILABLE",
+    "actual03_os_image_hash_signature_nativefileID": "UNAVAILABLE; not queried during retained live capture"
+  },
+  "limitations": [
+    "StrictPIDmembership/retainedidentity/refusal/cleanup/HOLD unchanged; no conhost allowance",
+    "Directorycharging is declared4096perdirectory; no genericdirectorytreeoradversarialnamespacecertification bythisfocusedreview",
+    "FILE_STANDARD_INFO nativeinteroperability/new04 outcome stillrequiresrootallocation",
+    "Observed03conhost supportscandidate motivation but doesnotidentifyold55368cause",
+    "Laterin-jobtasklist/readerNO_WINDOW sites notexercised: unreleasedstartup04 cannotqualifyfullreleasedjob/IPC/game",
+    "Native-success5s/10s conditionalbound; persistentdenialHOLD/no unconditionalPASS",
+    "No actualfileallocation/nativeimage/state/exequery performed byreviewer"
+  ]
+}
