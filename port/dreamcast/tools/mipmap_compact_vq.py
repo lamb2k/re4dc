@@ -158,3 +158,115 @@ def add_mipmaps(base_blob, reference_blob, *, enabled=False, engine="auto"):
         lower_level_quality=metrics,
         lower_level_quality_scope="Against the supplied filtered/quantized native mip reference, not a console screenshot or perceptual acceptance.")
     return result,report
+
+
+def _q565(c, bits):
+    top=(1 << bits)-1
+    return min(top,max(0,int(c*top/255+0.5)))
+
+
+def _original_reference_words(base):
+    """Ideal box-filtered levels of an opaque RGB565 base, quantized to RGB565 words, Morton-free row-major."""
+    side=base.size
+    px=[tuple(float(c) for c in p[:3]) for p in vq.decode_level(base,side)]
+    out={}
+    while side>1:
+        nxt=[]
+        for y in range(0,side,2):
+            for x in range(0,side,2):
+                q=(px[y*side+x],px[y*side+x+1],px[(y+1)*side+x],px[(y+1)*side+x+1])
+                nxt.append(tuple(sum(p[c] for p in q)/4 for c in range(3)))
+        px,side=nxt,side//2
+        out[side]=[(_q565(r,5)<<11)|(_q565(g,6)<<5)|_q565(b,5) for r,g,b in px]
+    return out
+
+
+def _blocks(words,side):
+    """2x2 targets of a row-major level in codebook vector order TL, BL, TR, BR (Morton order not needed for targets)."""
+    return [(words[y*side+x],words[(y+1)*side+x],words[y*side+x+1],words[(y+1)*side+x+1])
+            for y in range(0,side,2) for x in range(0,side,2)]
+
+
+def add_mipmaps_original(base_blob, *, enabled=False, engine="auto"):
+    """Opt-in (lane miprecover22): mip chain for an ORIGINAL base-only RGB565 VQ package.
+
+    Contract extension of add_mipmaps for original-VQ chains: no compacted base or native reference is needed; the
+    reference is the ideal box filter of the decoded base quantized to RGB565. Every base-referenced codeword, the
+    base index plane and the decoded base texels stay exact; only unused codebook slots are rewritten. Each lower
+    level is weighted equally (a 2x2 level is one vector), the 2x2 vector and the 1x1 BR word are reserved first.
+    Disabled returns the input bytes."""
+    base=vq.read_native_vq(base_blob)
+    used=sorted(set(base.base_indices))
+    report=dict(enabled=bool(enabled),changed=False,width=base.size,height=base.size,format=base.texture[3],
+        source_package_sha256=hashlib.sha256(base_blob).hexdigest(),
+        source_codebook_sha256=hashlib.sha256(base.codebook).hexdigest(),
+        used_base_vectors=len(used),unused_codebook_slots=256-len(used),
+        base_indices_sha256=hashlib.sha256(base.base_indices).hexdigest(),before_payload_bytes=len(base.payload))
+    if not enabled:
+        report.update(reason="disabled",after_payload_bytes=len(base.payload),extra_payload_bytes=0)
+        return base_blob,report
+    if base.mipmapped or base.texture[3]!=tpl.FORMAT_RGB565:
+        raise ValueError("expected an original base-only opaque RGB565 VQ package")
+    if len(used)==256:
+        raise ValueError("full codebook: no spare slots")
+    fmt=base.texture[3]
+    words=struct.unpack("<1024H",base.codebook)
+    book=[tuple(words[i:i+4]) for i in range(0,1024,4)]
+    free=[i for i in range(256) if i not in used]
+    old_vectors={book[i] for i in used}
+    active=[_features(book[i],fmt) for i in used]
+    ref=_original_reference_words(base)
+    targets=collections.Counter()
+    for side in sorted(ref):
+        if side<2:
+            continue
+        blocks=_blocks(ref[side],side)
+        for b in blocks:
+            targets[b]+=1.0/len(blocks)
+    reserved=0
+    for vector,one in ((_blocks(ref[2],2)[0],False),((ref[1][0],)*4,True)):
+        if not free or vector in old_vectors:
+            continue
+        if one and any(book[i][3]==vector[3] for i in range(256) if i not in free):
+            continue   # the 1x1 level samples BR only
+        index=free.pop(0)
+        book[index]=vector
+        old_vectors.add(vector)
+        active.append(_features(vector,fmt))
+        reserved+=1
+    candidates=sorted(v for v in targets if v not in old_vectors)
+    features=[_features(q,fmt) for q in candidates]
+    errors=[min(_distance(f,b) for b in active) for f in features]
+    added=0
+    while free and candidates:
+        choice=max(range(len(candidates)),key=lambda i:errors[i]*targets[candidates[i]])
+        if errors[choice]==0:
+            break
+        index=free.pop(0)
+        book[index]=candidates[choice]
+        added+=1
+        chosen=features[choice]
+        errors=[min(error,_distance(f,chosen)) for f,error in zip(features,errors)]
+    feature_book=[_features(q,fmt) for q in book]
+    levels={base.size:base.base_indices}
+    for side in sorted(ref):
+        pixels=[vq._feature(vq.rgba(w,fmt)) for w in ref[side]]
+        levels[side],_=vq._encode_level(pixels,side,feature_book,engine)
+    payload=b"".join(struct.pack("<4H",*q) for q in book)+b"".join(levels[1 << i] for i in range(base.size.bit_length()))
+    assert len(payload)==2048+tpl.vq_mip_index_bytes(base.size)
+    h,t=list(base.header),list(base.texture)
+    t[5],t[6],h[7]=len(payload),t[6]|tpl.FLAG_MIPMAP,len(payload)
+    body=tpl.TEXTURE.pack(*t)+payload
+    h[8]=zlib.crc32(body)&0xffffffff
+    result=tpl.HEADER.pack(*h)+body
+    checked=vq.read_native_vq(result)
+    if checked.base_indices!=base.base_indices or any(
+            checked.codebook[i*8:i*8+8]!=base.codebook[i*8:i*8+8] for i in used):
+        raise ValueError("referenced full-resolution codebook vector or index changed")
+    if vq.decode_level(checked,checked.size)!=vq.decode_level(base,base.size):
+        raise ValueError("mip composition changed the original full-resolution RGBA")
+    report.update(changed=True,reason="unused-slots-for-original-vq-mip-targets",reserved_vectors=reserved,
+        spare_vectors_added=added,after_payload_bytes=len(payload),extra_payload_bytes=len(payload)-len(base.payload),
+        package_sha256=hashlib.sha256(result).hexdigest(),
+        unused_slots_changed=sum(book[i]!=tuple(words[4*i:4*i+4]) for i in range(256) if i not in used))
+    return result,report
