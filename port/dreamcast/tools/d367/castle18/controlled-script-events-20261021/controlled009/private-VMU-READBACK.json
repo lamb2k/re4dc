@@ -1,0 +1,63 @@
+{
+  "scope": "Read-only extraction from actualclosed009 PRIVATE FlycastVMU, using existing vmusave FAT/VMS/LZ/CRC parser. No VMU/source/state writes. Not physicalDreamcast/load-in-game acceptance.",
+  "parser": {
+    "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-castle18\\port\\dreamcast\\tools\\vmusave.py",
+    "sha256": "e79071e90cf9d484c349a59aebdaf44962c627f4ac6e95292db32f96e7367b5b"
+  },
+  "baseline_VMU_sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20",
+  "current_VMU_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "changed": true,
+  "free_blocks": 186,
+  "files": [
+    {
+      "directory": {
+        "name": "RE4DCS01A",
+        "type": 51,
+        "first": 199,
+        "blocks": 12,
+        "off": 129536
+      },
+      "vms_sha256": "c12c76b2643a6b8f12a6a799fcb415748c4987736d813e39dcd1173c5bb48ce0",
+      "vms_CRC16_valid": true,
+      "kind": 1,
+      "package": {
+        "fmt": 1,
+        "kind": 1,
+        "slot": 0,
+        "seq": 1,
+        "raw_len": 51448,
+        "comp_len": 4625,
+        "crc_ok": true,
+        "blocks": 12
+      },
+      "stored_SaveInfo_CRC32": "0x201e8a3f",
+      "computed_SaveInfo_CRC32": "0x201e8a3f",
+      "SaveInfo_CRC_valid": true,
+      "magic": "0x116",
+      "mode": 2,
+      "native_saved_chapter": 7,
+      "native_saved_room": "0x204",
+      "source_SaveInfo_room_at2050": "0x0",
+      "reconstructed_image_sha256": "0639f3294134c665944c6605bedb534904ffdc759c0412708b121139ef9d5d5c",
+      "checks_passed": true
+    },
+    {
+      "directory": {
+        "name": "RE4DCSYS",
+        "type": 51,
+        "first": 187,
+        "blocks": 2,
+        "off": 129568
+      },
+      "vms_sha256": "da694696adce2243e1e3b342971667def81580665e1385facd8771b3d43943bf",
+      "vms_CRC16_valid": true,
+      "kind": 2,
+      "raw_len": 56,
+      "stored_raw_CRC32": "0xe05f5c",
+      "computed_raw_CRC32": "0xe05f5c",
+      "checks_passed": true
+    }
+  ],
+  "native_saved_offsets_note": "Original GameSave block starts2034 and copies native GlobalWork tail4F80. Chapter4F8A\u2192203E, native room4F9E\u21922052 from frozenruntime scalar contract. SourceSaveInfo room comment2050 recorded separately, not substituted.",
+  "crc_note": "VMS CRC16 and R4DC raw CRC32 + storedSaveInfo CRC32 are independent stored checks. WholeGC image CRC is reconstructed by existing unpacker because omitted GCbanner is zero-filled; it is not a storedwholeimage validation."
+}

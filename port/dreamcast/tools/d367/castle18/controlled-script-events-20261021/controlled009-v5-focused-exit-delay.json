@@ -1,0 +1,28 @@
+{
+  "scope": "ONE tiny owned Python child, no Flycast. Actual extracted V5 helper observes delayednormalexit74 beyond old300ms window using retainedPID/path/start handle. This is NOT a live kernelTerminateProcess/IO-stall reproduction or fullsupervisor runtime qualification.",
+  "supervisor_sha256": "7aa4113d44b5bab5b1010649a432ed1d50e34aaf4de7fb4899aaf692055b0ba0",
+  "test_sha256": "09a396a250eebd1050c50f6d0e90bc06ee4b4eeb536dffe56248941480dc9874",
+  "owner": {
+    "pid": 14040,
+    "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+    "start_filetime": 134371090698014515
+  },
+  "old_300ms_wait": 258,
+  "new_exit_proof": {
+    "initial_live_identity_pinned": true,
+    "retained_handle_signaled": true,
+    "exit_code": 74,
+    "postexit_times_available": true,
+    "postexit_path_query": false,
+    "proof_reason": "ONE focused owned finite Python child exit-delay case"
+  },
+  "observed_exit_age_seconds": 0.7389670467819087,
+  "child_returncode": 74,
+  "limits_unchanged": [
+    "47.5absolute",
+    "samplerstale1s failclosed",
+    "18GiB+64MiB runtime",
+    "60MiB capture",
+    "strictalivePID/path/startverification"
+  ]
+}

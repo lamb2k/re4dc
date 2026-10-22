@@ -1,0 +1,624 @@
+{
+  "scope": "CONTROLLED direct continuation of closed008 CardSave Slot01 state. No rearm/outcome state edits. Consolidated source save UI: normalA at Slot01, chooseYes from actual confirmation/current/attrs, confirmA; maxthreepulses with immediate native UI rechecks; no blind followups. Original005 chapter6/partner/AEV2 setup inherited. Early RSF0/chapter7/RSF7 do not prove movieEOF/resultsUI/savewrite/radio. Authentic127/294 untouched.",
+  "owner": {
+    "pid": 42236,
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\flycast.exe",
+    "start_filetime": 134371087379930384,
+    "created_utc": "2026-10-22T02:12:18.001013+00:00",
+    "rights": "retained subprocess handle receipt"
+  },
+  "baseline_RSF0_clear_seen": false,
+  "events": [
+    {
+      "chapter_task_early_transition": {
+        "pg": 2352652060,
+        "process_age": 0.7705260696820915,
+        "frame": 1950,
+        "room": "0x204",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x7fffffbf",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "status1": "0x10000200",
+        "status3": "0x0",
+        "chapter": 7,
+        "partner_ptr": "0x0",
+        "player_pos": [
+          -676.848876953125,
+          -0.0009765625,
+          -41378.0625
+        ],
+        "saved_RSF": "0x80000000",
+        "CardStatus": "0x80000028",
+        "message0": {
+          "table_size": 0,
+          "selection": 0,
+          "current": 0,
+          "button": 1,
+          "attribute": "0x1020051"
+        },
+        "card": {
+          "ptr": "0x8cd050a0",
+          "routines": [
+            2,
+            1,
+            0,
+            0
+          ],
+          "status": "0x0",
+          "type": 1,
+          "slot": 0,
+          "save_no": 0,
+          "error": 0
+        },
+        "baseline_RSF0_clear_seen": false,
+        "event_hold_seen": true
+      }
+    },
+    {
+      "original_event_RSF0_early": {
+        "pg": 2352652060,
+        "process_age": 2.0055260696681216,
+        "frame": 1985,
+        "room": "0x204",
+        "phase": [
+          3,
+          0
+        ],
+        "Stop": "0x7fffffbf",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "status1": "0x10000200",
+        "status3": "0x0",
+        "chapter": 7,
+        "partner_ptr": "0x0",
+        "player_pos": [
+          -676.848876953125,
+          -0.0009765625,
+          -41378.0625
+        ],
+        "saved_RSF": "0x80000000",
+        "CardStatus": "0x80000028",
+        "message0": {
+          "table_size": 0,
+          "selection": 0,
+          "current": 0,
+          "button": 1,
+          "attribute": "0x1020051"
+        },
+        "card": {
+          "ptr": "0x8cd050a0",
+          "routines": [
+            2,
+            1,
+            0,
+            0
+          ],
+          "status": "0x0",
+          "type": 1,
+          "slot": 0,
+          "save_no": 0,
+          "error": 0
+        },
+        "baseline_RSF0_clear_seen": false,
+        "event_hold_seen": true
+      }
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\shots\\controlled-original-save-slot-start",
+      "source_interval": [
+        1986,
+        1988
+      ]
+    },
+    {
+      "immediate_native_save_UI_recheck": "slot-A",
+      "card": {
+        "ptr": "0x8cd050a0",
+        "routines": [
+          2,
+          1,
+          0,
+          0
+        ],
+        "status": "0x0",
+        "type": 1,
+        "slot": 0,
+        "save_no": 0,
+        "error": 0
+      },
+      "message": {
+        "table_size": 0,
+        "selection": 0,
+        "current": 0,
+        "button": 1,
+        "attribute": "0x1020051"
+      },
+      "process_age": 2.0985260696616024
+    },
+    {
+      "ordinary_source_UI_pulse": "slot-A",
+      "seconds": 0.2,
+      "source_ack": [
+        {
+          "frame": 1989,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1989,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1989,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1990,
+          "Key_trg": "0x80080480",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1991,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1991,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1992,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 1,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1993,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 1,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1993,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 1,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1994,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 1,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        }
+      ],
+      "release_before_age": 2.3015260696411133
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\shots\\controlled-original-empty-slot-confirmation",
+      "source_interval": [
+        1996,
+        1998
+      ]
+    },
+    {
+      "immediate_native_save_UI_recheck": "choose-Yes",
+      "card": {
+        "ptr": "0x8cd050a0",
+        "routines": [
+          2,
+          6,
+          0,
+          0
+        ],
+        "status": "0x0",
+        "type": 1,
+        "slot": 0,
+        "save_no": 0,
+        "error": 0
+      },
+      "message": {
+        "table_size": 2,
+        "selection": 0,
+        "current": 1,
+        "button": 1,
+        "attribute": "0x1020051"
+      },
+      "process_age": 2.411526069685351
+    },
+    {
+      "ordinary_source_UI_pulse": "choose-Yes",
+      "seconds": 0.2,
+      "source_ack": [
+        {
+          "frame": 1998,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 1,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1998,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 1,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 1999,
+          "Key_trg": "0x8000008",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2000,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2000,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2001,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2002,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2002,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2003,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2003,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        }
+      ],
+      "release_before_age": 2.614526069664862
+    },
+    {
+      "immediate_native_save_UI_recheck": "confirm-A",
+      "card": {
+        "ptr": "0x8cd050a0",
+        "routines": [
+          2,
+          6,
+          0,
+          0
+        ],
+        "status": "0x0",
+        "type": 1,
+        "slot": 0,
+        "save_no": 0,
+        "error": 0
+      },
+      "message": {
+        "table_size": 2,
+        "selection": 0,
+        "current": 0,
+        "button": 1,
+        "attribute": "0x1020051"
+      },
+      "process_age": 2.8335260696476325
+    },
+    {
+      "ordinary_source_UI_pulse": "confirm-A",
+      "seconds": 0.2,
+      "source_ack": [
+        {
+          "frame": 2010,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2011,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2012,
+          "Key_trg": "0x80080480",
+          "message": {
+            "table_size": 2,
+            "selection": 1,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2012,
+          "Key_trg": "0x80080480",
+          "message": {
+            "table_size": 2,
+            "selection": 1,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2013,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 1,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2013,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 2,
+            "selection": 1,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2014,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2014,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2015,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        },
+        {
+          "frame": 2016,
+          "Key_trg": "0x0",
+          "message": {
+            "table_size": 0,
+            "selection": 0,
+            "current": 0,
+            "button": 1,
+            "attribute": "0x1020051"
+          }
+        }
+      ],
+      "release_before_age": 3.036526069685351
+    },
+    {
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\shots\\controlled-original-save-result",
+      "source_interval": [
+        2197,
+        2199
+      ]
+    },
+    {
+      "observer_error": "AssertionError()",
+      "traceback": "Traceback (most recent call last):\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-r204-event009.py\", line 84, in <module>\n    check();pg=u32(0x8c2e91dc)\n    ^^^^^^^\n  File \"C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-r204-event009.py\", line 8, in check\n    assert k.WaitForSingleObject(h,0)==258,'Owned process exited';b=C.create_unicode_buffer(32768);n=W.DWORD(32768);assert k.QueryFullProcessImageNameW(h,0,b,C.byref(n));assert Path(b.value).resolve()==cap/'flycast.exe';a,b,c,d=(W.FILETIME()for _ in range(4));assert k.GetProcessTimes(h,C.byref(a),C.byref(b),C.byref(c),C.byref(d));assert a.dwLowDateTime+(a.dwHighDateTime<<32)==owner['start_filetime']\n                                                                                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    },
+    {
+      "close_error": "AssertionError()"
+    }
+  ],
+  "last": {
+    "pg": 2352652060,
+    "process_age": 32.05152606964111,
+    "frame": 2886,
+    "room": "0x204",
+    "phase": [
+      3,
+      0
+    ],
+    "Stop": "0x7fffffbf",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "status1": "0x10000200",
+    "status3": "0x0",
+    "chapter": 7,
+    "partner_ptr": "0x0",
+    "player_pos": [
+      -676.848876953125,
+      -0.0009765625,
+      -41378.0625
+    ],
+    "saved_RSF": "0x80000000",
+    "CardStatus": "0x80000028",
+    "message0": {
+      "table_size": 0,
+      "selection": 0,
+      "current": 0,
+      "button": 1,
+      "attribute": "0x1020051"
+    },
+    "card": {
+      "ptr": "0x8cd050a0",
+      "routines": [
+        8,
+        10,
+        0,
+        0
+      ],
+      "status": "0x1",
+      "type": 1,
+      "slot": 0,
+      "save_no": 0,
+      "error": 0
+    },
+    "baseline_RSF0_clear_seen": false,
+    "event_hold_seen": true
+  }
+}
