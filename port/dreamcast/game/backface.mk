@@ -28,3 +28,17 @@ endif
 ifeq ($(CPU_BACKFACE),1)
 $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=1
 endif
+# ACTOR_BACKFACE=1 (render, look change; needs CPU_BACKFACE=1): Leon and the Ganados (owned path) use the source model's cull
+#   mode instead of cull none, so CPU_BACKFACE drops their back faces too; alpha-mask and no-depth-write materials stay
+#   double-sided. Default 0: no code.
+ACTOR_BACKFACE ?= 0
+ifneq ($(filter $(ACTOR_BACKFACE),0 1),$(ACTOR_BACKFACE))
+$(error ACTOR_BACKFACE must be 0 or 1)
+endif
+ifeq ($(ACTOR_BACKFACE),1)
+ifneq ($(CPU_BACKFACE),1)
+$(error ACTOR_BACKFACE=1 needs CPU_BACKFACE=1)
+endif
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1
+$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_ACTOR_BACKFACE=1
+endif
