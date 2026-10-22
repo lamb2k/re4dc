@@ -23,10 +23,10 @@ class Inputs:
   try:native=self.post(key,True)
   except BaseException as error:
    # No keyup return established. Preserve unavailable as null, never zero.
-   pulse['native_keyup']=getattr(error,'native_queue_telemetry',None);error.pulse_telemetry=pulse;raise
+   pulse['native_keyup']=getattr(error,'native_queue_telemetry',None);error.pulse_telemetry=pulse;self.fail(error);raise
   end=self.clock();pulse.update(keyup_return_monotonic=end,keyup_queued=native.get('queued') if isinstance(native,dict) else None,native_keyup=native,queue_hold_upper_seconds=end-token['start'])
   try:released=self.elapsed()
-  except BaseException as error:error.pulse_telemetry=pulse;raise
+  except BaseException as error:error.pulse_telemetry=pulse;self.fail(error);raise
   token['timer'].cancel();del self.held[key]
   event={'key':key,'reason':reason,'elapsed':released,'queue_hold_upper_seconds':end-token['start'],'bound':token['bound'],'pulse_telemetry':pulse};self.events.append(event)
   if event['queue_hold_upper_seconds']>token['bound']:

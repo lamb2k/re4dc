@@ -12,7 +12,7 @@ class Timer:
  def is_alive(self):return False
 class Pulse(unittest.TestCase):
  def setUp(self):self.now=10.;self.errors=[];self.receipt={'queued':True,'messages':[{'before_monotonic':10.16,'after_monotonic':10.161,'post_succeeded':True}]};self.input=d.Inputs(lambda k,u:self.receipt,lambda:self.now,self.errors.append,clock=lambda:self.now,timer=Timer)
- def tearDown(self):self.input.post=lambda *a:self.receipt;self.now=10.;self.input.close()
+ def tearDown(self):self.input.post=lambda *a:self.receipt;self.input.elapsed=lambda:self.now;self.now=10.;self.input.close()
  def late(self):self.input.down('a',.15);self.now=10.17;self.input.expire('a',self.input.held['a']);return self.errors[0]
  def test_late_numeric_receipt_preserves_existing_failure(self):
   e=self.late();p=e.pulse_telemetry;self.assertIn('after declared pulse bound',str(e));self.assertEqual(p['lease_start_monotonic'],10.);self.assertEqual(p['deadline_monotonic'],10.15);self.assertEqual(p['bound_seconds'],.15);self.assertEqual(p['keyup_attempt_monotonic'],10.17);self.assertEqual(p['keyup_return_monotonic'],10.17);self.assertAlmostEqual(p['queue_hold_upper_seconds'],.17);self.assertEqual(p['native_keyup'],self.receipt);self.assertTrue(p['keyup_queued']);self.assertFalse(self.input.keys())
@@ -41,6 +41,27 @@ class Pulse(unittest.TestCase):
     with self.assertRaises(OSError):i.publish_input_failure(tmp,RuntimeError('bad'))
     self.assertFalse((pathlib.Path(tmp)/'input-failure.json').exists());self.assertTrue((pathlib.Path(tmp)/'input-failure.pending').exists())
   finally:i.json.dump=original
+ def test_engine_up_queue_exception_publishes_before_controller_stringification(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   self.input.fail=lambda e:i.publish_input_failure(tmp,e);self.input.down('a',.15)
+   def failed(*a):raise RuntimeError('direct engine keyup failed')
+   self.input.post=failed
+   with self.assertRaisesRegex(RuntimeError,'direct engine'):self.input.up('a')
+   j=json.loads((pathlib.Path(tmp)/'input-failure.json').read_text());self.assertEqual(j['pulse_telemetry']['reason'],'engine-up');self.assertEqual(j['pulse_telemetry']['deadline_monotonic'],10.15);self.assertIsNone(j['pulse_telemetry']['keyup_return_monotonic'])
+ def test_release_all_queue_exception_publishes_before_aggregate_loses_attributes(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   self.input.fail=lambda e:i.publish_input_failure(tmp,e);self.input.down('a',.15)
+   def failed(*a):raise RuntimeError('normal release queue failed')
+   self.input.post=failed
+   with self.assertRaises(RuntimeError) as caught:self.input.release_all('normal-release')
+   self.assertFalse(hasattr(caught.exception,'pulse_telemetry'));j=json.loads((pathlib.Path(tmp)/'input-failure.json').read_text());self.assertEqual(j['pulse_telemetry']['reason'],'normal-release');self.assertEqual(j['pulse_telemetry']['bound_seconds'],.15)
+ def test_engine_up_elapsed_exception_preserves_successful_native_queue(self):
+  with tempfile.TemporaryDirectory() as tmp:
+   self.input.fail=lambda e:i.publish_input_failure(tmp,e);self.input.down('a',.15)
+   def failed():raise RuntimeError('guest elapsed unavailable after native queue')
+   self.input.elapsed=failed
+   with self.assertRaisesRegex(RuntimeError,'elapsed unavailable'):self.input.up('a')
+   j=json.loads((pathlib.Path(tmp)/'input-failure.json').read_text());self.assertTrue(j['pulse_telemetry']['keyup_queued']);self.assertEqual(j['pulse_telemetry']['keyup_return_monotonic'],10.);self.assertEqual(j['pulse_telemetry']['native_keyup'],self.receipt)
 class ExitBackend(unittest.TestCase):
  def make(self,created=100000000,exited=425000000,signaled=0):
   v=object.__new__(b.WindowsBackend);ident={'pid':7,'start_filetime':100000000,'path':'owned/live/pinned.exe'};v.guest={'handle':99,'identity':ident,'pid':7};v.identity=lambda _:ident.copy();v.times=lambda _:[created,exited,22,33];v.checked=lambda x:x
