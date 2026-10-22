@@ -1,0 +1,66 @@
+{
+  "scope": "SOURCE_PLAN_ONLY; no guest, code change, live probe, writes, input, broad ABI copy or timing acceptance.",
+  "source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "source_sha256": {
+    "src/st2/r209.cpp": "49e6cc2a3f0ef1042c9be28ac3dcc590c83909f1a748e4803f39bc2ff79e71ee",
+    "src/game/emdoor.cpp": "e313c681b46d73f70f94024277b961908917d08b59e0ca8177b7e1de00cc4d1c",
+    "src/game/EtcModel.cpp": "6b3a6bebbb1ecae1e70a1189aae12cf141ef0db44edb113a5b2df21c72d2b235",
+    "src/game/act_btn.cpp": "61cda8eada8140e52d808dfc8aa206340607380b0323883bd90fa2f7474dad77",
+    "port/dreamcast/game/dbgwarp_bridge.cpp": "69d47a81a6a43621639612225a45caf4a5e18d6846166a3f4ff019cc5dc0535f"
+  },
+  "r209_arc_sha256": "b257fdea9e1d556603ed0718cddb5d8300653042c38f39e30041f4b287feb36c",
+  "ETS_offset": 1345504,
+  "door1": {
+    "id": 33,
+    "no": 1,
+    "position": [
+      -15750.0,
+      2000.0,
+      12850.0
+    ],
+    "angle": 1.5707499980926514,
+    "type": 1
+  },
+  "candidate": {
+    "closed_door_local": [
+      0,
+      1,
+      -400
+    ],
+    "world_double_reference": [
+      -16150.030113227178,
+      2001.0,
+      13499.981467821544
+    ],
+    "angle": 1.5707499980926514,
+    "unclipped_front_double_reference": [
+      -15600.030113817424,
+      2251.0,
+      13500.00694860777
+    ],
+    "front_inside_AEV0A_prism": true,
+    "warning": "Conditional SDK rotation geometry; collision-clipped native hit, current door1 identity/locks/action readiness and float32 actual pose remain runtime gates."
+  },
+  "native_action": {
+    "kind": 16,
+    "slot": 5,
+    "button": 1,
+    "type": 0,
+    "d": 0,
+    "arg": "actual getRoomEtcDoor1",
+    "callback": "emDoorAction or emDoorAction2"
+  },
+  "sequence": [
+    "After actual017204/Part1/prev205/Stop0, pending existing slot1/currententry2 plus max_entry2 may position at original204Door4; original AEV Door4 A\u2192actual209 required.",
+    "209 room-enter increments wp.rooms to3. max_entry2 does not admit any entry3 goto. Further placement must be dynamically reviewed/allocated with slot2/entry3/max_entry3 only after actual209phase3/Stop0; no blind prequeue.",
+    "R209Init registers original AEV0A only while RSF3 clear. Its callback sets leader find-player then waits physicaldoor1 flag10000000.",
+    "At candidate reach/front, ordinary physical-door A calls original emDoorAction\u2192plemDoorOpen\u2192setOpen2. Open2 motion completion sets flag30000000; no hostflag writes.",
+    "Original AEV0A can then SceEventStart, Cam3 then2, EndProc restorescamera, enablesescorts6/7, SceEventEnd, then leadergoto8 completion andmove5/action."
+  ],
+  "holds": [
+    "No39s fit is proven; dooranimation/camera/leader movement can exceed remaining bound.",
+    "Ordinary physicaldoor action differs from AEV room-exit type2/dplayer; do not reuse that gate.",
+    "Actual source wait/start/camera/end and source actor/door identity evidence required; flag alone is not event completion.",
+    "Sourceplan is not final controller/Warp publication ABI/lifecycle review or launch allocation."
+  ]
+}
