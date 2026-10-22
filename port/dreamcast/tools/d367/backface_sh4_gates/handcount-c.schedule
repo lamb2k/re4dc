@@ -1,0 +1,16 @@
+! Illustrative direct area C arithmetic only; NOT compiler disassembly or complete strip cost.
+fmov.s @r4+,fr0
+fmov.s @r4+,fr1
+fsub fr4,fr0
+fsub fr5,fr1
+fmov.s @r5+,fr2
+fmov.s @r5+,fr3
+fsub fr4,fr2
+fsub fr5,fr3
+fmul fr3,fr0
+fmul fr2,fr1
+fsub fr1,fr0
+fcmp/gt fr0,fr6
+movt r0
+bra loop
+nop

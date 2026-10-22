@@ -1,0 +1,11 @@
+! Illustrative two-load rotating-edge body; NO register rotation/index/SQ/run cost.
+fmov.s @r4+,fr0
+fmov.s @r4+,fr1
+fsub fr4,fr0
+fsub fr5,fr1
+fmul fr7,fr0
+fmul fr6,fr1
+fcmp/gt fr0,fr1
+rotcl r0
+bra loop
+nop
