@@ -1,0 +1,243 @@
+{
+  "scope": "NEW immutable source/mock QA telemetry seal; no guest/retry allocation",
+  "created_utc": "2026-10-22",
+  "fixed_runtime": {
+    "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+    "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "all14": {
+      "em22.ovl": "9b0d94e44950538646eaec6191f6d0ca91356c6fbdbdf2c34757ff04fe861f7c",
+      "em2b.ovl": "370e53495f33fff29424f5d268b4028ea52db55bdd259799a6e6b7ee3ecb69f0",
+      "em2f.ovl": "8b3841b7adbca6be06ffe5caaee601fcd7d0b1d3a3f0c1819062e122fd85b38a",
+      "em35.ovl": "1abb74bdedd0e7671ce9763a43f1605c0c98ee82f5814b06d4928b655053ace2",
+      "em3b.ovl": "1ca7839fc3d5774783253bc49e5a17c4f685b84a766b362f89ba635752b77a44",
+      "pl0f.ovl": "31bcfb11c774370074f8484e4a3ceeed46ed06ea99cce33ba0b99b80332c204d",
+      "pl11.ovl": "801907fdf2729b8b8c4f3e28a50a9efd995e42d57a78154ecd55227de957d3f3",
+      "pl14.ovl": "539df3d0a50cb7f94d56ccc84ba3bad3f238a3eb5e9abda8b284d5cd0b6e8334",
+      "sscrn.ovl": "a032b5d336a637aa90eb9d1a54b90f61c57c28867c4019f9766cd0d7efc41421",
+      "st1_0.ovl": "5dd28dbd5962da5ef1b40fc28e294b6dc4fea54c23413196fa953f02e4fab455",
+      "st1_1.ovl": "2c89e0e4bf1a2eaf4d7b5d4d19fcf88ab994ad883c587acc345f56ca9f1c5661",
+      "st1_2.ovl": "974c0ee4941756cf316664da1f4e1b19eca127f46cb5ea74f1bbbf0afd556d07",
+      "st1_3.ovl": "2cc5413537f9b13c3332493f22ed7c7dcb825e7c4957f000b8c9301673e4cb2e",
+      "st2_0.ovl": "3b6c1b20edcec8db482d882f4ba29eb51f6f3e0d7114faecfa360f37027b234d"
+    },
+    "flags": {
+      "GAME_SH4ZAM": 1,
+      "SKIN_SH4ZAM": 0,
+      "QA_MENU": 1,
+      "GANADO_ROUTINE_BYTES": 1,
+      "CABIN": 0,
+      "all15cacheguards": 0,
+      "DEATH_TRACE": "absent",
+      "RENDER_ONLY": 1
+    },
+    "later_main_changes": "not imported"
+  },
+  "disc": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu",
+    "files": {
+      "disc.gdi": {
+        "bytes": 83,
+        "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140"
+      },
+      "track01.bin": {
+        "bytes": 1058400,
+        "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9"
+      },
+      "track02.raw": {
+        "bytes": 1237152,
+        "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48"
+      },
+      "track03.iso": {
+        "bytes": 1032499200,
+        "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+        "native_id": "0x000000000000000000030000004cbccd",
+        "sha_scope": "sealed accepted stage/readback; fresh pre/post guest rehash required"
+      }
+    },
+    "stage_receipts": {
+      "stage-receipt.json": "b06c3a5602f70934022a134a9445bd0e54359728fe42bf445a47ea170ecb8c34",
+      "supervisor-receipt.json": "fbb726f66ff0b928c0d045f33d6442553cddf705ce7da23d2cf48897d2ea1884",
+      "independent-readback.json": "88fdb6c470110ead19c5b9fe75cad6ed9773b1a353f65cc8b866c6b9b54cb575",
+      "qualification.json": "d11138edf9b8bd963512a69ffd250ae1fc48cd1c70e3e75625fea0d03c555eca",
+      "file-manifest.json": "b00dc88aaa45b1a784c5a472b4a81185a624a1195980120acfaa4fb5ad3ff801",
+      "KEEP.txt": "08fb8fe412572af44507571d3e4935fa8412650d918fbe1f96a8efb3ea405127",
+      "native-image-identity.json": "0cfdad012fb46165888aa2dac90c995ca1b42864dacd9875fa3e9690e3557cad"
+    },
+    "unrelated_files": 1728,
+    "total_files": 1743
+  },
+  "observer": {
+    "binding": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-binding-v2.json",
+    "layout": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_plan\\reader-c57-on-layout.json",
+    "layout_sha256": "17289a5336a9fb5de4e83a3ed7b198696fcc2249342e26fe03d2aeaa6ca5baf8",
+    "ABI": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-v2-ABI.json",
+    "ABI_fields": 73,
+    "motion_work_offset": 472,
+    "motion_work_bytes": 220,
+    "checkpoint_ABI": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\checkpoint-ABI.json",
+    "checkpoint_ABI_additional_reads": 3
+  },
+  "template": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\d367-harness-par",
+    "files": {
+      "flycast.exe": {
+        "bytes": 14415872,
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a"
+      },
+      "emu.cfg": {
+        "bytes": 576,
+        "sha256": "e92b5817e28d4e96f4e7d038d64b365e356264d025e55b03f8184a0dd1817840"
+      },
+      "capture_ui_vram.py": {
+        "bytes": 3725,
+        "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+      },
+      "data/T0000_vmu_save_A1.bin": {
+        "bytes": 131072,
+        "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      },
+      "data/vmu_save_A2.bin": {
+        "bytes": 131072,
+        "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      }
+    },
+    "cold_autoload": "no; assert no unexpected data/autosave files; clear seed env"
+  },
+  "retained_dependencies": {
+    "run_observed_v3.py": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\run_observed_v3.py",
+      "bytes": 18870,
+      "sha256": "592cc71d35749c6700c40df0b037b3bd9c0822558fc3040a6f649fa785781d72"
+    },
+    "checkpoint_runner18.py": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_runner18.py",
+      "bytes": 17566,
+      "sha256": "8960ffcf6652e1aac9f846d2857cc5932314bf03bcbf99ae538d68d131d1ca20"
+    },
+    "checkpoint.py": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint.py",
+      "bytes": 6588,
+      "sha256": "c1d88f5cb650517f9163576e802104b6b0356e198fa2a23db3c36b79be6a3a75"
+    },
+    "checkpoint_read_log.py": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_read_log.py",
+      "bytes": 6235,
+      "sha256": "e708e4cf748ce679aceaf9124f1a2412bd4d8242ddbdaaa92e3accae7323850f"
+    },
+    "checkpoint_runner.py": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_runner.py",
+      "bytes": 17551,
+      "sha256": "b1bf7235eed65f757ebb765ccaaefd3108ce935ff6bd80fe3c0a2e425ef0d394"
+    },
+    "evidence_footprint.py": {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_death_repair\\evidence_footprint.py",
+      "bytes": 1616,
+      "sha256": "e4d25d3fd26df445e6b7f30d98bd43debce5348dcfb28ca873d249c3d0f38132"
+    }
+  },
+  "limits": {
+    "inner_seconds": 41,
+    "input_cutoff_seconds": 40.75,
+    "absolute_actual_seconds": 47.5,
+    "independent_conservative_private_job_seconds": 47.0,
+    "evidence_bytes": 60000000,
+    "disk_admission": 19461570560,
+    "disk_runtime": 19394461696,
+    "global_admission": "<16",
+    "global_runtime": "<=16",
+    "max_PNG": 8,
+    "periodic_capture": 0
+  },
+  "evidence_root": "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022",
+  "roles": [
+    {
+      "name": "cold-shoot01",
+      "seed": null,
+      "keys": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\r103-cold-keys.txt",
+      "objective": "two early ordinary discharges before any door/event; partial retained if window insufficient"
+    },
+    {
+      "name": "return-door01",
+      "seed": "accepted SAME521 cold-shoot01 checkpoint only",
+      "keys": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\empty-keys.txt",
+      "objective": "retained source-gated ordinary return door; no repeated movement qualification"
+    },
+    {
+      "name": "cinematic01",
+      "seed": "accepted SAME521 return-door01 checkpoint only",
+      "keys": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\empty-keys.txt",
+      "objective": "max2 B to original manual only; natural saw catch/death cinematic, no skip/mash/health writes"
+    }
+  ],
+  "allocation": "NO guest allocated; main/root must review exact new profile/source seal and allocate ONE fresh cold attempt separately",
+  "source_only_launch_gates": [
+    "review NEW qa21_nontrace_guest_telemetry_v1_telemetry_v1 profile/source seals; source/mock/native Python child tests are not Flycast acceptance",
+    "separate main allocation after castle/peer coordination; no automatic chained role/retry",
+    "fresh full image/native-ID/template/dependency/tool identity preflight and postreadback under exact18GiB guards",
+    "visually review saved PNGs; Continue and renewed ordinary gameplay require their own observed source/input evidence"
+  ],
+  "elf_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\cache21-ganado-reader-build-20261021\\on-01\\re4dc-game.elf",
+  "input_pulse_bounds": {
+    "aim_phase_seconds": 0.4,
+    "R_total_host_queue_upper_seconds": 1.5,
+    "A_B_host_queue_upper_seconds": 0.15,
+    "movement_host_queue_upper_seconds": 0.65,
+    "timer_safety_margin_seconds_up_to": 0.02,
+    "deadline_anchor": "actual verified native post; no capture time charged as aiming",
+    "capture_policy": "release/verify all native held inputs and synchronize engine first; final capture disables newdowns",
+    "cutoff_policy": "owned-cap marker latches adapter input-disabled even after earlier conservative release; single cutoff writer/verified queues are isolated from monotonic hardstop thread; terminate private job and confirm whole-job empty before disarming hard deadline; retain guard on unavailable emptiness"
+  },
+  "immutable_lineage": {
+    "tools_source": "85bac7a7113816d3e8c9564d0c301ed4c670aa94",
+    "independent_review": "317162fd4",
+    "old_profile": "8aae247a6c0998af06ffce2d16a3832bfaaaf99dbab1769fc75b32b1a2103d1b",
+    "old_tools_manifest": "3557c5224df6b3715d282d3deab5fff7557b1c2ec8273c7d0ea76c1f359a41c1",
+    "old_failed_root": "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-guests-20261021",
+    "old_failure_qualified": false
+  },
+  "retained_source_references": {
+    "scope": "exact immutable samefile refs preserved after failed coldshoot01, no state loads or cleanup; strictimage identity kept with2declaredlinks",
+    "root": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021",
+    "files": {
+      "track01.bin": {
+        "source_native_id": "0x000000000000000000020000004c6739",
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track01.bin",
+        "bytes": 1058400,
+        "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+        "expected_source_links": null,
+        "source_mtime_ns": 1792601985000000000,
+        "native_links_snapshot": 13,
+        "native_guard_scope": "current canonical shared-track snapshot only; original fullSHA+exactretainedsamefile guard"
+      },
+      "track02.raw": {
+        "source_native_id": "0x000000000000000000010000004c673a",
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track02.raw",
+        "bytes": 1237152,
+        "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+        "expected_source_links": null,
+        "source_mtime_ns": 1792601985000000000,
+        "native_links_snapshot": 13,
+        "native_guard_scope": "current canonical shared-track snapshot only; original fullSHA+exactretainedsamefile guard"
+      },
+      "track03.iso": {
+        "source_native_id": "0x000000000000000000030000004cbccd",
+        "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track03.iso",
+        "bytes": 1032499200,
+        "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+        "expected_source_links": 2,
+        "source_mtime_ns": 1792628865730857700,
+        "native_links_snapshot": 2,
+        "native_guard_scope": "strict track03 nativeID/declaredref/link2/mtime"
+      }
+    },
+    "qualification": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01-control\\qualification.json",
+      "sha256": "47bc5138a9849caff07801cc60e0849fc071200eb8ab76ce7eb24d60ab760fa5"
+    },
+    "owner": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\OWNED-BY.json",
+      "sha256": "6e6f874c898b31e7f403178230612b6e4882e6d741218dfc998e68af1725adbf"
+    }
+  }
+}
