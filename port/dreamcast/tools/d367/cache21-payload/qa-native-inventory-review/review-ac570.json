@@ -1,0 +1,199 @@
+{
+  "scope": "SOURCE/hash/AST/retainedreceipt only; no imports/tests/nativequery/launch/image/state/preflight/allocation",
+  "utc": "2026-10-22T08:32:32.190103+00:00",
+  "candidate": "ac57068332ecf51467c552a80dd2334e2fe7fe2c",
+  "disposition": "CLEAR focused v3 startup-retention correction under root conditional native-success/HOLD time contract; not native allocation",
+  "pins": {
+    "integrity": [
+      {
+        "path": ".gitattributes",
+        "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+        "bytes": 8
+      },
+      {
+        "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+        "sha256": "0caf23878fd0803ff1e084a8799089a771d834e9ee00279c23c558ccacdd9fef",
+        "bytes": 432
+      },
+      {
+        "path": "LAUNCH_REQUEST.json",
+        "sha256": "d519e038c434f55b35c65b7456377addf8e1a383d138b11dcba72686a7bafc02",
+        "bytes": 835
+      },
+      {
+        "path": "NATIVE_INVENTORY_PLAN.md",
+        "sha256": "a83b9a4c7cf9ba9a671f4bfdfdf69ae03dea8c896a90f41e3901f3acbe728d04",
+        "bytes": 5392
+      },
+      {
+        "path": "README.md",
+        "sha256": "e8c7526c93e9438538759fcddf2b31d8b69f75b162308283acc3cbf713448bdc",
+        "bytes": 412
+      },
+      {
+        "path": "cleanup.py",
+        "sha256": "5a76565c99154461ec11c1aa91fbb8ccd04aa43a06267c453a26e965748af585",
+        "bytes": 3232
+      },
+      {
+        "path": "config.json",
+        "sha256": "416775197c8a5e94aeb94cda3d3de09be531c0e891b5f16f0fd03ee4f6a7a34d",
+        "bytes": 940
+      },
+      {
+        "path": "coordinator.py",
+        "sha256": "75f0e5c21eb05fadd12493a1db42dc3c352e7f2451892239f2166063d0cd9a20",
+        "bytes": 4980
+      },
+      {
+        "path": "frozen-native-reference-api.py",
+        "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+        "bytes": 9151
+      },
+      {
+        "path": "frozen-windows-backend.py",
+        "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+        "bytes": 16010
+      },
+      {
+        "path": "inventory.py",
+        "sha256": "bc24bd095ae1e7e9c164abdbf849755ea092a98627e1f9228f9fd387b2c9fee4",
+        "bytes": 1480
+      },
+      {
+        "path": "manifest.json",
+        "sha256": "85ab97fee4b8d41dc797c8bb7f393f6e2218f09f7f039648cb0a831b28151b65",
+        "bytes": 1797
+      },
+      {
+        "path": "receipt-linux.json",
+        "sha256": "a8c7d8b83dda7860884cab020bd1febaa9ee5aa7c6b5337a4659f8cb03a59ceb",
+        "bytes": 469
+      },
+      {
+        "path": "receipt-windows.json",
+        "sha256": "7dbc9ebff07724e2d58fd5ad58703434f44dd32fea86c708306ab94609c89780",
+        "bytes": 480
+      },
+      {
+        "path": "startup.py",
+        "sha256": "91d2384c53d3cdbea95e84994d640144a5962cb478bc43e0eaa82385a7e82b83",
+        "bytes": 911
+      },
+      {
+        "path": "supervisor.py",
+        "sha256": "afd80ef58a8bd4fb8405d96a17ad26e81327e770821c0a8c5fded22e77abc44f",
+        "bytes": 8906
+      },
+      {
+        "path": "test_startup.py",
+        "sha256": "b1283e850c42e6b72afa89f72ce3ca622dcf7f8147d455a41a1a77db08396c03",
+        "bytes": 5215
+      }
+    ],
+    "runtime": [
+      {
+        "path": "supervisor.py",
+        "sha256": "afd80ef58a8bd4fb8405d96a17ad26e81327e770821c0a8c5fded22e77abc44f",
+        "bytes": 8906
+      },
+      {
+        "path": "coordinator.py",
+        "sha256": "75f0e5c21eb05fadd12493a1db42dc3c352e7f2451892239f2166063d0cd9a20",
+        "bytes": 4980
+      },
+      {
+        "path": "inventory.py",
+        "sha256": "bc24bd095ae1e7e9c164abdbf849755ea092a98627e1f9228f9fd387b2c9fee4",
+        "bytes": 1480
+      },
+      {
+        "path": "cleanup.py",
+        "sha256": "5a76565c99154461ec11c1aa91fbb8ccd04aa43a06267c453a26e965748af585",
+        "bytes": 3232
+      },
+      {
+        "path": "startup.py",
+        "sha256": "91d2384c53d3cdbea95e84994d640144a5962cb478bc43e0eaa82385a7e82b83",
+        "bytes": 911
+      },
+      {
+        "path": "frozen-windows-backend.py",
+        "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+        "bytes": 16010
+      },
+      {
+        "path": "frozen-native-reference-api.py",
+        "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+        "bytes": 9151
+      },
+      {
+        "path": "config.json",
+        "sha256": "416775197c8a5e94aeb94cda3d3de09be531c0e891b5f16f0fd03ee4f6a7a34d",
+        "bytes": 940
+      },
+      {
+        "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+        "sha256": "0caf23878fd0803ff1e084a8799089a771d834e9ee00279c23c558ccacdd9fef",
+        "bytes": 432
+      },
+      {
+        "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_owned_adapter_v1\\inner-adapter.py",
+        "sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758",
+        "bytes": 15902
+      }
+    ]
+  },
+  "prior_immutable_pins": {
+    "qa21_native_job_inventory_v1": {
+      "manifest": "b529132ee46c7a9c49623bd8b8441810831654e6693f6e30eaba22f75dda953e",
+      "pins": 15
+    },
+    "qa21_native_job_inventory_v2": {
+      "manifest": "169593e26a5f0b01d82e800cad3ed4a6b678b792bc4210cb7050963ec3f4f3a8",
+      "pins": 16
+    }
+  },
+  "byteexact_v2": [
+    "supervisor.py",
+    "inventory.py",
+    "frozen-native-reference-api.py",
+    "frozen-windows-backend.py"
+  ],
+  "coordinator_exact_only_startup_load_call_and_finally_recovery": true,
+  "unchanged_cleanup_functions": [
+    "note",
+    "failure",
+    "retained_cleanup",
+    "disarm_if_proven"
+  ],
+  "startup_source": "def spawn_retained(backend,cmd,job,popen=None):\n    if job!=backend.job:raise RuntimeError('foreign job')\n    if popen is None:popen=subprocess.Popen\n    proc=popen(cmd,stdin=subprocess.PIPE,creationflags=subprocess.CREATE_NO_WINDOW)\n    # Ownership exists immediately after Popen. Never clear/close it on failure.\n    # Outer universal cleanup and captured-job guardian own every later outcome.\n    backend.inner=proc;backend.inner_identity=None\n    backend.inner_identity=backend.info(proc.pid,int(proc._handle))\n    backend.checked(backend.k.AssignProcessToJobObject(job,int(proc._handle)))\n    member=ctypes.c_int();backend.checked(backend.k.IsProcessInJob(int(proc._handle),job,ctypes.byref(member)))\n    if not member.value:raise RuntimeError('job assignment not verified')\n    return proc",
+  "retained_coverage": [
+    {
+      "platform": "linux",
+      "sha256": "a8c7d8b83dda7860884cab020bd1febaa9ee5aa7c6b5337a4659f8cb03a59ceb",
+      "retained_tests": 5,
+      "current_test_manifest_pins": true,
+      "rerun": false
+    },
+    {
+      "platform": "windows",
+      "sha256": "7dbc9ebff07724e2d58fd5ad58703434f44dd32fea86c708306ab94609c89780",
+      "retained_tests": 5,
+      "current_test_manifest_pins": true,
+      "rerun": false
+    }
+  ],
+  "contract": {
+    "native_success_child_seconds": 5,
+    "native_success_parent_seconds": 10,
+    "persistent_native_denial": "HOLD; retain guards/owned handles, no unconditional hardboundPASS",
+    "new_containment": false
+  },
+  "limitations": [
+    "Missingoriginalpathpin staysidentityNone/original_live_pin_availableFalse; creation-ownedhandle mayclose onlyafterretainedsignaledtimestamps+emptyjob",
+    "Startupfailure originalerror remainsqualifiedFalse, safeclosure isnotfixturePASS",
+    "Noactualnativeinteroperability or causeof55368 established",
+    "Oldv1/v2BLOCK evidence preserved; mainaloneactualfixture/allocation"
+  ]
+}
