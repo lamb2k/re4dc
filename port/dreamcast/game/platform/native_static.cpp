@@ -24,6 +24,7 @@
 #error WORLD_RECT21 provenance requires the PS2 world mesh consumer
 #endif
 #include "../../tools/d367/texture_rect21/world_rect_provenance.h"
+#include "../../tools/d367/texture_rect21/scoped_origin.h"
 #endif
 // MESH_DEPTH_CULL: the meshlet fast path drops a strip whose corners all lie outside one depth
 // plane instead of clipping it to nothing (exact). On with PS2_WORLD_MESH.
@@ -5629,6 +5630,9 @@ constexpr std::uint32_t kMistParts[][2]={{0xe967b886U,0x9bd0a435U}};
 static unsigned skipped,last_room;static std::uint32_t last_frame;
 static bool world_part(unsigned pass,std::uint32_t crc,std::uint32_t fnv){
     if(pass!=2)return false;
+#if RE4DC_WORLD_RECT21
+    re4dc::rect21::origin::original(crc,fnv); // policy keys are original material keys (mipfix22)
+#endif
     bool cut=(re4dc_mist_cut&16U)!=0;
     if(!cut && (re4dc_mist_cut&2U))for(const auto& k:kMistParts)cut=cut||(k[0]==crc && k[1]==fnv);
     if(!cut)return false;
@@ -5670,11 +5674,16 @@ static unsigned moved,dropped,last_room;static std::uint32_t last_frame;
 // The pass a pass-2 part draws in at NEAR / OFF: 1 punch-through, 2 translucent (as today), 3 not drawn.
 static unsigned pass_of(const Ps2Part& m){
     if(m.pass!=2 || re4dc_foliage-1U>1U || (m.reserved&1U))return m.pass;
+    std::uint32_t crc=m.crc,fnv=m.fnv;
+#if RE4DC_WORLD_RECT21
+    // A scoped rect21 key (texture loading) keeps its original material's class (mipfix22).
+    re4dc::rect21::origin::original(crc,fnv);
+#endif
     unsigned level=0,lo=0,hi=sizeof(kKeys)/sizeof(kKeys[0]); // kKeys is sorted by crc, fnv
     while(lo<hi){
         const unsigned mid=(lo+hi)/2;const Key& k=kKeys[mid];
-        if(k.crc<m.crc || (k.crc==m.crc && k.fnv<m.fnv))lo=mid+1;
-        else{if(k.crc==m.crc && k.fnv==m.fnv)level=k.level;hi=mid;}
+        if(k.crc<crc || (k.crc==crc && k.fnv<fnv))lo=mid+1;
+        else{if(k.crc==crc && k.fnv==fnv)level=k.level;hi=mid;}
     }
     if(re4dc_foliage==2U)return level?3U:2U;
     return level==1?3U:level==2?1U:2U;
