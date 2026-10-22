@@ -66,7 +66,7 @@ endif
 
 # EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
 # readEm cannot find a free module slot, as on its transport-failure return.
-EM_ADMISSION_DISP_FIX ?= 0
+EM_ADMISSION_DISP_FIX ?= 1
 ifneq ($(EM_ADMISSION_DISP_FIX),0)
 ifneq ($(EM_ADMISSION_DISP_FIX),1)
 $(error EM_ADMISSION_DISP_FIX must be 0 or 1)
@@ -415,7 +415,7 @@ endif
 ALIVE_CAP_NOVIS ?= 0
 # PARTS_LINKED_FLAG: preserve the source indexing promise on linked fallback.
 # Demand-backed parts can reuse a model after a prior contiguous joint.
-PARTS_LINKED_FLAG ?= 0
+PARTS_LINKED_FLAG ?= 1
 ifneq ($(words $(PARTS_LINKED_FLAG)),1)
 $(error PARTS_LINKED_FLAG must be 0 or 1)
 endif
@@ -892,7 +892,7 @@ $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_MODULES=1
 endif
 # EVD_ADMISSION_TXN=1 (default 0): publish SetEvd only after all required bins
 # succeed; roll back only this attempt's bin references on admission failure.
-EVD_ADMISSION_TXN ?= 0
+EVD_ADMISSION_TXN ?= 1
 ifneq ($(EVD_ADMISSION_TXN),0)
 ifneq ($(EVD_ADMISSION_TXN),1)
 $(error EVD_ADMISSION_TXN must be 0 or 1)
@@ -902,7 +902,7 @@ endif
 # EVD_START_CLEANUP=1 (default 0): locally abandon work whose init failed;
 # publish its effect-model view only after validation. Admission/read ownership
 # remains with the caller and is not repaired by this switch.
-EVD_START_CLEANUP ?= 0
+EVD_START_CLEANUP ?= 1
 ifneq ($(EVD_START_CLEANUP),0)
 ifneq ($(EVD_START_CLEANUP),1)
 $(error EVD_START_CLEANUP must be 0 or 1)
@@ -914,7 +914,7 @@ $(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_START_CLEANUP=1
 endif
 # EVD_START_ROLLBACK=1 (default 0): undo this call's complete new parent/bin
 # admission when starting its Event fails. Preserve pre-existing owners.
-EVD_START_ROLLBACK ?= 0
+EVD_START_ROLLBACK ?= 1
 ifneq ($(EVD_START_ROLLBACK),0)
 ifneq ($(EVD_START_ROLLBACK),1)
 $(error EVD_START_ROLLBACK must be 0 or 1)
@@ -929,7 +929,7 @@ $(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_START_ROLLBACK=1
 endif
 # EVD_DEBUG_READ_CLEANUP=1 (default 0): release a fresh debug-file allocation
 # when bin/event admission refuses. Transactional event admission is required.
-EVD_DEBUG_READ_CLEANUP ?= 0
+EVD_DEBUG_READ_CLEANUP ?= 1
 ifneq ($(EVD_DEBUG_READ_CLEANUP),0)
 ifneq ($(EVD_DEBUG_READ_CLEANUP),1)
 $(error EVD_DEBUG_READ_CLEANUP must be 0 or 1)
@@ -942,7 +942,7 @@ endif
 # EVD_EXEC_FAILURE_CLEANUP=1 (default 0): direct em0 read/start failure returns
 # failure, preserves a prior read, releases only an unborrowed fresh input and
 # pairs its scenario bracket. Module exchanges retain their existing path.
-EVD_EXEC_FAILURE_CLEANUP ?= 0
+EVD_EXEC_FAILURE_CLEANUP ?= 1
 ifneq ($(EVD_EXEC_FAILURE_CLEANUP),0)
 ifneq ($(EVD_EXEC_FAILURE_CLEANUP),1)
 $(error EVD_EXEC_FAILURE_CLEANUP must be 0 or 1)
@@ -968,7 +968,7 @@ endif
 # EVD_READ_RELEASE_REFS=1 (default 0): EvtFree drops only one registration when
 # an exact temporary ReadTbl row has multiple references. Final unit/carrier
 # release still follows the existing reader/refusal contract.
-EVD_READ_RELEASE_REFS ?= 0
+EVD_READ_RELEASE_REFS ?= 1
 ifneq ($(EVD_READ_RELEASE_REFS),0)
 ifneq ($(EVD_READ_RELEASE_REFS),1)
 $(error EVD_READ_RELEASE_REFS must be 0 or 1)
@@ -978,7 +978,7 @@ endif
 # EVD_READ_ADMISSION_PREFLIGHT=1 (default 0): reject impossible fresh table
 # admission before acquiring a descriptor, and retain an existing swapped role.
 # This does not reserve a table slot across file/diagnostic callbacks.
-EVD_READ_ADMISSION_PREFLIGHT ?= 0
+EVD_READ_ADMISSION_PREFLIGHT ?= 1
 ifneq ($(EVD_READ_ADMISSION_PREFLIGHT),0)
 ifneq ($(EVD_READ_ADMISSION_PREFLIGHT),1)
 $(error EVD_READ_ADMISSION_PREFLIGHT must be 0 or 1)
@@ -987,7 +987,7 @@ $(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_READ_ADMISSION_PREFLIGH
 endif
 # EVD_MODULE_VALIDATE_FIRST=1 (default 0): validate existing module/size before
 # releasing its effects for exchange. Forward exchange completion is separate.
-EVD_MODULE_VALIDATE_FIRST ?= 0
+EVD_MODULE_VALIDATE_FIRST ?= 1
 ifneq ($(EVD_MODULE_VALIDATE_FIRST),0)
 ifneq ($(EVD_MODULE_VALIDATE_FIRST),1)
 $(error EVD_MODULE_VALIDATE_FIRST must be 0 or 1)
@@ -1026,7 +1026,7 @@ endif
 # and check the actual file/module/backing before reuse. Distinct archives still load normally.
 # EFFECT_ADMISSION_GUARD=1: reject an invalid first EFF load before publishing its owner reference.
 # Existing valid duplicate/refcount behavior is preserved. Default-off source path is unchanged.
-EFFECT_ADMISSION_GUARD ?= 0
+EFFECT_ADMISSION_GUARD ?= 1
 ifneq ($(EFFECT_ADMISSION_GUARD),0)
 ifneq ($(EFFECT_ADMISSION_GUARD),1)
 $(error EFFECT_ADMISSION_GUARD must be 0 or 1)
@@ -1439,7 +1439,7 @@ $(OBJDIR)/platform/audio_stub.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/aica-au
 # guard's existing owner slot for its extra lease; =2 compares the source lookup.
 # Counts, mutex/pins/release order and cancellation ownership remain unchanged.
 # Bulk motion retirement preflight; no room-reset/admission serialization claim.
-MOTION_RETIRE_PREFLIGHT ?= 0
+MOTION_RETIRE_PREFLIGHT ?= 1
 ifneq ($(words $(MOTION_RETIRE_PREFLIGHT)),1)
 $(error MOTION_RETIRE_PREFLIGHT must be 0 or 1)
 endif

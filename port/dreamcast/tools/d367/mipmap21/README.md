@@ -611,3 +611,138 @@ A VQ page-placement retry is recorded separately from descriptor bytes. The
 remain distinct from the generic 220-key family. Lower-level look, combined
 palette/KOS/VRAM, same-scene sampling and timing remain open. No recipe/default,
 SH4ZAM or release changes occurred. See path-emitter-qualification-20261021.json.
+
+### Exact missing-input recovery and effect expansion
+
+The next 19 named archives are now recovered from a retained current QA image.
+Each archive's size and SHA match the original Release21 manifest; the current
+QA program and original public program are still distinct. All 19 archives parse
+successfully. Keeping sampling contract 3 unchanged qualifies 70 more PS2 effect
+keys, resolves 61 earlier unknowns as screen/mixed holds and five as custom
+consumer holds. The PS2 family now has 239 qualified, 123 unresolved, 89 custom,
+67 screen/mixed and 35 fixed-ID UI keys.
+
+The private follow-up reuses 70 compact PAL4 chains while retaining all 6431
+other current members exactly. Fresh independent C checks cover 484 levels and
+70 original bases, including their alpha, indices and palettes. Actual Package
+adopt/stream/upload/lifetime checks pass with ASan/UBSan in both UI VRAM modes.
+The current candidate has 942 mip keys, 1071 original changes and 5430 exact
+originals. It adds 55560 payload bytes / 56960 rounded descriptor bytes over the
+prior source-qualified layer. Source-group unions overlap; they are not live
+room residency. Actor candidates, UI and other holds stay separate. No target
+look, palette/KOS/VRAM capacity or timing is claimed; no recipe/default changed.
+See recovered-fx-qualification-20261021.json.
+
+### Compact generic effect follow-up
+
+`generic_effect_candidate.py --sampling-policy` accepts an explicitly sealed
+exact-source policy. Sampling contracts 2 and 3 remain distinct. Every original
+source binding must be present once, and a fixed-ID UI reference is refused
+even if a policy label tries to disguise it. Existing discovery and native/VQ
+output stay unchanged by default; the earlier two-key ON output is reproduced
+byte-for-byte as an additional real-data control.
+
+`--canonical-pal8` opts native ARGB4444 chains into the existing shared palette.
+A chain must preserve native words exactly, use the canonical grayscale/alpha
+palette and beat its original base payload. Other native cases stay at their
+base; there is no larger raw-chain fallback for a failed compact fit. Existing
+VQ paths preserve their original codebook and base indices. Seven source tests
+cover complete bindings, disguised UI, versioned emitters, exact compact bases
+and refusal of unsuitable palette/size tradeoffs.
+
+One newly named r200 archive also matches the original manifest, completing
+parsed input evidence for all 57 generic-source files. Policy 3 now has seven
+qualified, 105 unresolved, 31 custom, 33 screen/mixed and 44 UI keys. Four new
+32-square chains share the three existing PAL8 textures' exact palette; each
+1880-byte chain is smaller than its 2048-byte original native base. The fifth
+new key keeps its original 256-square VQ book and indices. Fresh C checks cover
+33 levels, five original bases and 24 native-reference levels. Actual Package
+host checks retain all seven PAL8 packages on one palette, including last-ref
+release/reload, under both UI allocator modes with ASan/UBSan.
+
+The combined private candidate now has 947 mip keys, 1076 original changes and
+5425 exact originals. This five-key step leaves 6496 other members exact, adds
+4790 payload bytes / 4832 rounded descriptor bytes and reduces archive size by
+4096 bytes. Source/host results do not establish target look, residency or FPS.
+No runtime, recipe/default or release changes occur. The 20 actor candidates
+remain separate. See canonical-generic-qualification-20261021.json.
+
+### Special geometry and effect-model namespaces
+
+The remaining consumer work now has four concrete source follow-ups: Esp01
+trails, Esp02 ribbons, Esp4e cloth and IdFF effect models. Ordinary sprite mip
+coverage does not cover a custom geometry path. The audited strip/cloth bodies
+end in GX calls, while the coarse native sprite class does not admit them. This
+is a conditional source gap; image flags and runtime evidence still determine
+what a particular build actually draws. The implementation queue preserves
+the authored live geometry, UVs, alpha/blend/depth and source simulation.
+
+`source_bindings(..., separate_model_namespace=True)` now distinguishes the
+known IdFC..FF dispatch: Tex_id indexes an Efm/scroll model, not an ordinary
+image. For the exact core input, 21 IdFF records reference model index 37; they
+do not prove EFF image 37 is sampled. Unknown generators retain conservative
+image binding. Default parser output matches the archived earlier parser for
+the exact core and r104 inputs; seven tests pass. The opt-in namespace is not
+applied to current candidate policies, so the 947-mip pack stays unchanged.
+See special-consumer-followups-20261021.json for paths, hashes and next steps.
+
+### Source Efm material and masked-pair qualification
+
+`effect_model_consumers.py` now records ModelPart material flags, alpha texture
+and alpha reference, bounds TPL metadata/pixels inside the original EFF entry
+and recomputes source image identities with existing codecs. Numeric Efm IDs
+remain separate from ordinary sprite image IDs. Full FF obj04 records qualify
+only without compact/generator/RTT/motion overrides; FE debris stays held.
+
+Core model 37 has material flags 4/alphaTex1, so its standalone diffuse VQ key
+is insufficient proof of the actual consumer. Its color 2a58392f-a28726c4 and
+mask 448b1020-609c60e9 produce the existing runtime R4MP pair 6da8c35b-a936da0c.
+`effect_model_candidate.py --masked-materials --generate` explicitly qualifies
+that original 64-square ARGB4444 VQ pair. Default output is byte-identical; an
+already-selected ancestor package or competing known owner is refused.
+
+The private candidate preserves all 947 previous mip members and 6500 unrelated
+packages. Its one new chain retains the original VQ codebook/base indices and
+full RGBA/alpha; seven levels pass an independent C decoder. Fresh source
+regeneration and both actual Package ASan/UBSan adopt/stream/lifetime modes
+pass. Current total 948 mips/1077 original changes/5424 exact originals; extra
+payload 342 B and rounded request 352 B, with no archive-size change. These are
+source/host inventories, not target residency or speed. All 98 exact retained
+source archives were freshly parsed, resolving 66 Efm registrations and one
+matching mask material. Dynamic registry state and sameUV/ref0 admission,
+target look, combined resources, full-program identity and timing remain open.
+See effect-model-mask-qualification-20261021.json. No runtime, recipe/default,
+release or SD change. The older 947-mip candidate remains sealed unchanged.
+
+### Guarded source strip runtime consumer
+
+`FX_STRIP21=1` restores the qualified unlit Esp01/Esp02 source callbacks into
+the existing native effect FIFO. It defaults to zero and changes no recipe.
+The adapter carries the current view-space corners, each original depth and
+UV, the source GX_QUADS diagonal, source colour/TEV scale, texture extent/wrap
+and blend. It reuses the existing native clipper, frame storage/spill, texture
+loader/pool budgets, Entry frame pins and PVR frame/fence owner. Unsupported
+RTT/mask/tool40 lighting/custom texture-matrix states remain on their old path.
+
+The actual recovered strip function is the UV oracle: 261120 combinations of
+repeat/slice/direction/mirror match float bits and source corner order, including
+its signed16 cast. Four host tests also run the actual native clipper/packet
+include, exact queue-drain branch and source coarse callback dispatch. They
+cover varying corner depths/UVs, near clipping, colour/blend/wrap, FIFO/direct/
+spill order, tag noncollision, missing texture/repeat refusal and segment-only
+queue exhaustion without frame abort. ASan/UBSan passes.
+
+All five affected SH4 units compile with the extension and are byte-identical
+OFF against pre-strip 1b9c98344 under explicit recorded standalone flags. The
+native UI control also passes with TA_DIRECT/UI_HANDLES/FX_TEX_POOL/EFFECT_ROOM/
+NATIVE_FOG enabled. A minimal-feature compile caught and repaired an unguarded
+direct_open reference when TA_DIRECT=0. Existing covered texture extents are
+preserved through the standard package macros. Static frames: source bridge
+256 B, quad submit 1064 B and geometry helper 472 B; these do not establish a
+full-program stack/KOS budget.
+
+The 54-file private source/object qualification is mirrored and SHA-verified.
+See strip-source-contract-20261021.json. Full current-program identity, target
+same-scene sampling/look/clip, combined resources and timing remain open. No
+guest/hardware acceptance, full game staging, release or SD action occurred.
+Existing 947/948-mip review assets remain immutable and separate.
