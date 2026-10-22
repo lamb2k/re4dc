@@ -227,6 +227,8 @@ struct Warp {
     unsigned n_act;
     bool has_trg, trg_fired;
     int trg_no;
+    bool has_atlog, atlog_done;  // `atlog <frame>` (lane backface22): the room's scenario areas, once
+    unsigned atlog_frame;
     u32 trg_frame;
     u16 trg_room;  // 0: any room
 #if defined(RE4DC_WARP_KILL_PHASE) && RE4DC_WARP_KILL_PHASE
@@ -518,6 +520,8 @@ void load()
             a.frame = num(tok[1]);
             a.id = (u16) num(tok[2]);
             a.done = false;
+        } else if (!strcmp(k, "atlog") && n >= 2) {
+            wp.has_atlog = true; wp.atlog_done = false; wp.atlog_frame = num(tok[1]);
         } else if (!strcmp(k, "trg") && n >= 3) {
             wp.has_trg = true;
             wp.trg_no = (int) num(tok[1]);
@@ -1167,6 +1171,20 @@ static void warp_heap4_census(unsigned frame)
 
 void goto_poll()
 {
+    // `atlog <frame>` (lane backface22, finding event trigger areas for fixtures): every enabled scenario area of the
+    // room with its type, number, trigger bits and its area's first words (xz4: floor, height, radius, 4 x/z corners).
+    if (wp.has_atlog && !wp.atlog_done && wp.room_frames >= wp.atlog_frame) {
+        wp.atlog_done = true;
+        for (int no = 0; no < 128; ++no) {
+            SceAtWork* w = SceAtPtr(no);
+            if (!w) continue;
+            const f32* f = (const f32*) &w->area.u;
+            re4dc_log("warp: atlog room %03x no=%d type=%u flag=%02x trig=%02x chk=%u atype=%u f=%d,%d,%d %d,%d %d,%d %d,%d %d,%d\n",
+                      (unsigned) pG->room_id, no, w->type, w->flag, w->trigger, w->checkType, w->area.type, (int) f[0],
+                      (int) f[1], (int) f[2], (int) f[3], (int) f[4], (int) f[5], (int) f[6], (int) f[7], (int) f[8],
+                      (int) f[9], (int) f[10]);
+        }
+    }
     for (unsigned i = 0; i < wp.n_go; ++i) {
         Warp::Goto& g = wp.go[i];
         if (g.done || g.entry != wp.rooms || wp.room_frames < g.frame || !pPL || (pG->Status_flg[1] & 0x10000000)) continue;

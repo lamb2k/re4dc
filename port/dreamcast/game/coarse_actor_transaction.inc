@@ -453,10 +453,10 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
         b.cull=(unsigned char)re4dc_model_cull(m->CullMode,(pG->Debug_flg[0]&0x20000000)!=0);
 #endif
 #if defined(RE4DC_ACTOR_BACKFACE) && RE4DC_ACTOR_BACKFACE
-    // ACTOR_BACKFACE (backface.mk, needs CPU_BACKFACE): Leon (id 0) and the Ganados (0x10..0x20) take the source model's
+    // ACTOR_BACKFACE (backface.mk, needs CPU_BACKFACE): Leon (id 0), the Ganados (0x10..0x20) and El Gigante (0x2B) take the source model's
     // cull mode (as model_bridge.cpp's source path and the NMR_SOURCE_CULL bosses do) instead of cull none; per material,
     // native_actor_owner_runs.inc keeps alpha-mask and no-depth-write materials double-sided.
-    if(m->id==0 || (m->id>=0x10 && m->id<=0x20))
+    if(m->id==0 || (m->id>=0x10 && m->id<=0x20) || m->id==0x2B)  // + El Gigante (em2b)
         b.cull=(unsigned char)re4dc_model_cull(m->CullMode,(pG->Debug_flg[0]&0x20000000)!=0);
 #endif
 #if RE4DC_ACTOR_GANADO_SOURCE_LIGHT
