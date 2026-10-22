@@ -1,0 +1,31 @@
+{
+  "runtime_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "actual_master_programme": {
+    "sha256": "78fb06976cc394ec6e4cb7861046c24a15f82ddf7bcb2fcbfd452d3fcbf72e33",
+    "size": 3643960
+  },
+  "master_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "Flycast_EXE_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+  "source_VMUs_unchanged": {
+    "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-load011\\data\\T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0"
+  },
+  "protected_011seed_state_sha256": "b9a39fbffe221e840f50041eea820cbc75f4720a7b74560e34dc2b74be60339e",
+  "assets": {
+    "st2/r204.arc": {
+      "sha256": "01f320f1e7174d23b5f7f1ce7a777449e4dcf06c7b8b4fc52544bab72a1ef21f",
+      "size": 1367200
+    },
+    "dc/st2_1.ovl": {
+      "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+      "size": 116100
+    },
+    "dc/movie/r204s00.seq": {
+      "sha256": "21c9ca96f64009abac471212823bbae3cc21839cd9e36eadd66c935658d85cf8",
+      "size": 6841067
+    }
+  },
+  "scope_wording_correction": "Generated handback initially inherited cold wording; preceding metadata preserved before-scope-wording-fix, finalexplicitlystates exact011 fullstate continuation. Rawruntime artifacts unchanged."
+}
