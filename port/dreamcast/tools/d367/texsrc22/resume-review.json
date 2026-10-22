@@ -1,0 +1,458 @@
+{
+  "candidate_minification": "unmeasured",
+  "candidate_source_lists_at_cap": 22,
+  "current_integration": {
+    "branch": "wip/mipmap22",
+    "commit": "e8c5dadfd3e5d42b630d7e316e25a10b26828dec",
+    "policy_note": "Round 4 restored all prior room holds under VRAM_ROOM_ARENA; fetch and hash the actual current policy when qualifying a pack.",
+    "quality_gate_sha256": "5eeba3db83758935d4302d7bbd7d2942edc4e61ef90a1bc58884e9e7e481c7fd",
+    "room_hold_rows": 0
+  },
+  "date": "2026-10-22",
+  "exclusion_categories": {
+    "hud": 6,
+    "other": 1,
+    "world-object": 1
+  },
+  "false_unreachable_rows": [
+    {
+      "action": "retain original; identify consumer role",
+      "corrected_status": "bound-consumer-unresolved",
+      "key": "279052e0-b695f91f",
+      "prior_runtime_decision": "needs-work",
+      "published_decision": "not-reachable",
+      "sources": "pak:source | resident:r207"
+    },
+    {
+      "action": "retain original; identify consumer role",
+      "corrected_status": "bound-consumer-unresolved",
+      "key": "dc363980-b5147ee2",
+      "prior_runtime_decision": "not-worth",
+      "published_decision": "not-reachable",
+      "sources": "pak:source | resident:r100"
+    }
+  ],
+  "limits": [
+    "The original source lists were truncated at eight entries; absence of a visible consumer is not proof of absence.",
+    "No private pack, full provenance map, exact Test 22 build receipt or staged overlay manifest was available.",
+    "No row is approved for conversion or disc pruning by this ledger.",
+    "The 70 first-pass mip-chain rows are not 70 proven new additions to the current pack."
+  ],
+  "published_counts": {
+    "already-mipped": 2,
+    "convert-blocked": 57,
+    "exclude": 8,
+    "mip-chain": 70,
+    "not-reachable": 898
+  },
+  "repository": "lamb2k/re4dc",
+  "review_group_counts": {
+    "core-effect": 3,
+    "cutscene": 12,
+    "leon-variant": 4,
+    "ps2-item": 10,
+    "ps2-mask": 6,
+    "ps2-world-object": 7,
+    "shared-breakable": 1,
+    "shared-gc-ganado": 24,
+    "standard-actor": 3
+  },
+  "schema": "re4dc-texsrc22-source-review-1",
+  "shared_ganado": {
+    "consumer_unresolved_count": 39,
+    "positive_resident_count": 2,
+    "pruning_approved_count": 0,
+    "published_decisions": {
+      "convert-blocked": 17,
+      "mip-chain": 24
+    },
+    "rows": [
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "020ef72b-9a58c1e6",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          558
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "0b133c0c-d44003f4",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          546
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "0b1dbdd5-203ee448",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          586
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "0e2494fb-a7ce0a57",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          544
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "15728879-8b99f7ca",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          574,
+          588
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "1aad1b6c-e247646e",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          552,
+          554
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "1fdc83dd-c82c2a72",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          576
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "27e088c4-f6836f02",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          558,
+          582,
+          584
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "31645579-c9ea2234",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          552
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "36e4de50-e0658824",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          572
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "484e152b-64f1fb4a",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          552,
+          554
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "5819933f-12c7603e",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          628
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "58632445-8dda3fd2",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          544
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "59a83bbb-180c2a37",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          576
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "5b1123b0-54c2f126",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          580
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "5bde298e-c48154cf",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          588
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "5be6d1d4-6760d676",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          552
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "5bea37b2-7eaf02a5",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          552
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "5faee1db-099f72b1",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          548
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "68c8f5aa-aad3764e",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          584
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "6da3c892-5b4dd21f",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          582
+        ]
+      },
+      {
+        "action": "retain original; square key remains a static candidate",
+        "evidence": "resident:r201",
+        "key": "70aead5f-07fae149",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          542
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "92c9c103-2945fe0d",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          578
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "95cacac6-04519b04",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          556
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "980385e1-24c9fb3b",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          578,
+          580
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "98c40b26-84be1101",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          544
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "9a446309-c53a4e09",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          552
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "a0e78d84-f7f8e183",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          556,
+          578
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "aa4039a6-418ee891",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          576
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "be757c7b-9fe6599b",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          542
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "c228c89d-e9e5fd1c",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          542
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "c8c431e5-b313191c",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          542
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "d8ba2d6e-cba5a166",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          544
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "da341786-be875de0",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          570
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "dc210de5-90620c29",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          546
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "resident:r201",
+        "key": "dfb309b8-6dbeb0de",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          548
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "e5a32fcc-dd842ab3",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          544
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "e5aaf143-59722a32",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          552
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "ea27ef9a-96765d38",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          580
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "edefecf6-60045e28",
+        "published_decision": "mip-chain",
+        "visible_em10_subentries": [
+          556
+        ]
+      },
+      {
+        "action": "retain original; no speculative conversion",
+        "evidence": "consumer-unresolved",
+        "key": "f67dfffc-4712ecbb",
+        "published_decision": "convert-blocked",
+        "visible_em10_subentries": [
+          552
+        ]
+      }
+    ],
+    "total": 41
+  },
+  "source_commit": "00ec40a4679e817593cc53bfe0ef704f7ae2b2ba",
+  "source_table": "port/dreamcast/tools/d367/texsrc22/texsrc22.tsv",
+  "source_table_sha256": "d2f63678288c9214a89fbc09ee94cbeb49971a55ce097736db83aaf85f9e3ba5",
+  "status": "Source review of frozen public evidence; not a rerun on a current private pack.",
+  "world_category_decisions": {
+    "convert-blocked": 14,
+    "mip-chain": 7,
+    "not-reachable": 823
+  }
+}
