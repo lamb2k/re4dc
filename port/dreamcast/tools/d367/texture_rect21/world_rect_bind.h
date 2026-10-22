@@ -24,7 +24,7 @@ constexpr bool keys_ordered() {
     }
     return true;
 }
-static_assert(qualified_count==650U && keys_ordered());
+static_assert(qualified_count==792U && keys_ordered());
 
 // Pinned KOS pvr_poly_compile stores log2(size)-3 in TSP bits 5..3/2..0.
 // A retired Entry can reuse its slot/address. Reject a cached physical extent
@@ -40,7 +40,7 @@ inline bool header_dimensions(unsigned tsp,unsigned width,unsigned height) {
 inline bool adapt(unsigned crc,unsigned fnv,unsigned width,unsigned height,
                   const Descriptor& actual,float& u,float& v,bool enabled=false) {
     if(!enabled)return false;
-    // Immutable sorted keys avoid scanning 650 descriptors per direct packet.
+    // Immutable sorted keys avoid scanning 792 descriptors per direct packet.
     // Use unsigned comparisons without SH-4 64-bit arithmetic or a mutable index.
     unsigned lo=0,hi=qualified_count;
     while(lo<hi) {

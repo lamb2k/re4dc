@@ -1,11 +1,12 @@
 #pragma once
 #include <cstdint>
 
-// Private 650-descriptor candidate policy/source provenance.
+// Private 792-descriptor candidate policy/source provenance.
 // Call only AFTER MeshPackage::adopt(...,true,true) and the genuine R4PW
 // CRC/record validation. These 27 immutable full-file certificates describe
-// key-only remaps; geometry/placements/pass/cull remain exact. The 650 RGB565
-// descriptors retain opaque alpha. r11f/r200 physical ownership remains held.
+// key-only remaps; geometry/placements/pass/cull remain exact. The added alpha
+// descriptors preserve the reviewed shipped-class or intentional-unlisted policy.
+// Filtered mip appearance remains unaccepted; r11f/r200 ownership remains held.
 // This does not certify filtered RGB appearance, final draws or performance.
 namespace re4dc::rect21::provenance {
 struct Certificate {
