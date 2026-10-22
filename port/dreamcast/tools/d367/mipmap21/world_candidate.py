@@ -112,8 +112,16 @@ def build_candidate(pack, world, *, enabled=False, engine="auto", progress=None,
     candidate, count = texpack.build(new)
     texpack.verify(candidate)
     changed = {k for k in packages if packages[k] != new[k]}
-    expected = {k for k, native in supported if enabled and not native.mipmapped}
-    if changed != expected or (not enabled and candidate != pack):
+    # Selected packages may change two ways: a generated chain (inputs without mips),
+    # or a checksum-only normalization of an already-mipmapped legacy-CRC input
+    # (the exporters emit the canonical full-body CRC). Nothing else may change, and a
+    # disabled build is byte-identical.
+    selected = {k for k, _ in supported} if enabled else set()
+    grown = {k for k, native in supported if enabled and not native.mipmapped}
+    normalized = changed - grown
+    if (not changed <= selected or not grown <= changed or
+            any(new[k] != mip.tpl.canonical_native_crc(packages[k]) for k in normalized) or
+            (not enabled and (changed or candidate != pack))):
         raise ValueError("candidate changed an unselected package or disabled output")
     report = dict(
         schema="re4dc-world-mipmap-candidate-1", candidate_only=True, enabled=bool(enabled),
@@ -122,6 +130,7 @@ def build_candidate(pack, world, *, enabled=False, engine="auto", progress=None,
         archive_extra_bytes=len(candidate) - len(pack), packages=count,
         world_keys=len(referenced_keys(world)), compatible_keys=len(supported),
         changed_keys=len(changed), unchanged_keys=count - len(changed),
+        checksum_normalized_keys=len(normalized),
         default_off_pack_exact=True,
         extra_payload_bytes=sum(r["extra_payload_bytes"] for r in rows),
         extra_alloc32_bytes=sum(r["after_alloc32"] - r["before_alloc32"] for r in rows),

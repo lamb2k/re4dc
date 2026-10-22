@@ -3,6 +3,7 @@ import pathlib
 import struct
 import sys
 import unittest
+import zlib
 
 HERE = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE / "tools"))
@@ -12,6 +13,13 @@ import mipmap_vq as mip
 import texpack
 import world_candidate as candidate
 from test_mipmap_vq import native, replace_texture
+
+
+def legacy_crc(blob):
+    """Restamp a native package with the legacy data-only CRC convention."""
+    h = list(mip.tpl.HEADER.unpack_from(blob))
+    h[8] = zlib.crc32(blob[h[6]:]) & 0xffffffff
+    return mip.tpl.HEADER.pack(*h) + blob[mip.tpl.HEADER.size:]
 
 
 def world(keys):
@@ -84,6 +92,43 @@ class RoomSelection(unittest.TestCase):
         self.assertIn("TEX_TWIDDLED_MIPMAP=1", report["required_build_knobs"])
         self.assertEqual(twiddled.read_native_twiddled(before[(3, 4)]).base_texels,
                          twiddled.read_native_twiddled(after[(3, 4)]).base_texels)
+
+    def test_already_mipmapped_legacy_input_is_checksum_normalized_only(self):
+        mipped, _ = mip.add_mipmaps(native(), enabled=True, engine="python")
+        legacy = legacy_crc(mipped)
+        self.assertEqual(mip.read_native_vq(legacy).crc_rule, "data")
+        source = {(1, 2): legacy, (3, 4): native(rule="data"), (5, 6): legacy_crc(mipped)}
+        pack, _ = texpack.build(source)
+        worlds = world([(1, 2), (3, 4)])
+        off, report, _, _ = candidate.build_candidate(pack, worlds)
+        self.assertEqual(off, pack)
+        self.assertEqual(report["changed_keys"], 0)
+        out, report, before, after = candidate.build_candidate(pack, worlds, enabled=True, engine="python")
+        self.assertEqual(report["changed_keys"], 2)
+        self.assertEqual(report["checksum_normalized_keys"], 1)
+        self.assertEqual(after[(5, 6)], before[(5, 6)])  # unselected legacy key untouched
+        old, new = mip.read_native_vq(before[(1, 2)]), mip.read_native_vq(after[(1, 2)])
+        self.assertEqual((new.crc_rule, new.payload, new.texture), ("header", old.payload, old.texture))
+        self.assertEqual(after[(1, 2)][40:], before[(1, 2)][40:])
+        self.assertEqual(mip.read_native_vq(after[(3, 4)]).crc_rule, "header")
+
+    def test_payload_change_on_already_mipmapped_key_is_refused(self):
+        mipped, _ = mip.add_mipmaps(native(), enabled=True, engine="python")
+        pack, _ = texpack.build({(1, 2): legacy_crc(mipped)})
+        real = mip.tpl.canonical_native_crc
+        try:
+            def tamper(b):
+                c = real(b)
+                c = c[:-1] + bytes([c[-1] ^ 1])
+                h = list(mip.tpl.HEADER.unpack_from(c))
+                h[8] = zlib.crc32(c[h[2]:]) & 0xffffffff
+                return mip.tpl.HEADER.pack(*h) + c[mip.tpl.HEADER.size:]
+            mip.tpl.canonical_native_crc = tamper
+            # refused either by the exact-base check or the checksum-only rule
+            with self.assertRaisesRegex(ValueError, "changed"):
+                candidate.build_candidate(pack, world([(1, 2)]), enabled=True, engine="python")
+        finally:
+            mip.tpl.canonical_native_crc = real
 
     def test_missing_world_key_is_refused(self):
         pack, _ = texpack.build({(1, 2): native()})

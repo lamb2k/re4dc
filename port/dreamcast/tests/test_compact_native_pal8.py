@@ -61,7 +61,8 @@ class ExactPal8Data(unittest.TestCase):
         for blob in (original,pal8.tpl.HEADER.pack(*h)+original[48:]):
             result,report=pal8.compact(blob,enabled=True);self.assertTrue(report['changed'])
             n=pal8.read_native_pal8(result)
-            self.assertEqual(n.crc_rule,tw.read_native_twiddled(blob).crc_rule)
+            self.assertEqual(n.crc_rule,"header")  # legacy input accepted; enabled output carries the canonical checksum
+            self.assertEqual(pal8.compact(blob)[0],blob)  # disabled: exact input
             for broken in (result[:-1],result[:144]+bytes([result[144]^1])+result[145:]):
                 with self.assertRaises(ValueError):pal8.read_native_pal8(broken)
         rgb=fixture.from_words([i for i in range(64*64)],64,fmt=0)
