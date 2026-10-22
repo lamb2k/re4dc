@@ -1,0 +1,38 @@
+{
+  ".gitattributes": {
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  "run-result.json": {
+    "bytes": 1509,
+    "sha256": "0b7d4984925c4b8dc0ae6e275a87ec519a686c1cbac24f8b92d5d160485c02a8"
+  },
+  "audit-controlled017-native-door-closed.py": {
+    "bytes": 7254,
+    "sha256": "284d4f9f7665cf977552411816816b973b0a69a0a26cd79b8a0c522fac41e23e"
+  },
+  "DOOR017-ROOT-ALLOCATION.json": {
+    "bytes": 1617,
+    "sha256": "4d94e03c44e3210a606afb31df04febfd95b1d064c196c70562e7732567e10c3"
+  },
+  "controlled-door017-observer-summary.json": {
+    "bytes": 182085,
+    "sha256": "dcbc2f7ecccf531e2d55ef5135e1be94af88cb69e1e8d00db6b4ac650eace4fa"
+  },
+  "owned-process.json": {
+    "bytes": 324,
+    "sha256": "960b257b5cded85bd9ef7d05d00d28497cedf7683f18e2da3ac55158a12e1cda"
+  },
+  "run-start.json": {
+    "bytes": 543,
+    "sha256": "0b3d72fe802ec37781710761d6902f74c77bc294f0cc147bd91389c4b8a90111"
+  },
+  "owned-resource-guard.json": {
+    "bytes": 159849,
+    "sha256": "b0189c343e3db6026bd4a321f951c599681a779bcc109089f2157a3a1ec25622"
+  },
+  "controlled017-native-door-closed-audit.json": {
+    "bytes": 22480,
+    "sha256": "7078fc018c5e466a2d3f37fcf242e90b742791ce5294521040615a38aae93405"
+  }
+}
