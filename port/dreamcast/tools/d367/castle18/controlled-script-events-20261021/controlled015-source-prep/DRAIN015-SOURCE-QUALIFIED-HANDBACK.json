@@ -1,0 +1,72 @@
+{
+  "scope": "FINAL015 SOURCE QUALIFIED ONLY; root allocation and fresh runtime resources required. Actual014 remains PARTIAL intro-only; V5 closure PASS.",
+  "created_utc": "2026-10-22T05:48:33.608204+00:00",
+  "frozen_component_sha256": {
+    "observe-controlled-ch32-drain015.py": "acff6e46df7e0b8e5362966da7fd74e4fea3853083c6f4da5ec924ac06a40127",
+    "run-controlled-ch32-drain015.py": "471e05d515d70c931fbdaa25bd9c89dec0c6ef000926e6af26bda53e4fb4b2bb",
+    "controlled-ch32-drain015-pins.json": "cb3c62871def0f354e3236be64021a8835f5c4ca3bbd4016ead99f0ff2ff37a3",
+    "CONTROLLED015-SOURCE-LAUNCH-PROPOSAL.json": "4944263790174035d5f71c5dcc06933a502974c19ddfa561883c0fa7b943b050",
+    "run-controlled-ch32-drain015.sh": "89e34913194b2b5944da84fc0603896a72c20a0f6f37a9e9bc20182065bb0d22"
+  },
+  "independent_review": {
+    "commit": "c4c73c27ade414fc79609e68c8a8bdaa382f11a7",
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle015-independent-review21-20261022\\REVIEW-FINAL.json",
+    "sha256": "c3f893e55b3fbb058372a23c784cdaad3e15a90a02ffcea9205610d01a95112e",
+    "seal": "dd6654a5fdd435f3858a79aa146ffbb0235eeb1942c69ed8a0ef11843e19d62e"
+  },
+  "actual014_audit_sha256": "3d11567fb53bacab219cbdd97ac769285965894173e7633696d08cf81ef57062",
+  "protected_inputs_fresh": {
+    "route-walk127/data/disc.state": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294/data/disc.state": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258",
+    "route-walk-controlled-native-radio013/data/disc.state": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+    "route-walk-controlled-event009/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0"
+  },
+  "seed_state_sha256": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+  "source_qualification": "14 existing source gates; default21 actual pins and protected preparation; independent exact014intro/sourceMDT0 offset74/132; inherited ABI/readcore/ownedpulse/helpercleanup unchanged. No new actual runtime or game completion evidence.",
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-drain015.sh",
+    "--execute-allocated015"
+  ],
+  "allocation": "NOT ALLOCATED; no execute flag invoked",
+  "resources": {
+    "start_free_bytes": 20342374400,
+    "runtime_free_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normalclose_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_cap_bytes": 62914560,
+    "global16": true,
+    "castle2": true,
+    "current_peer_charges_required": true
+  },
+  "actual014_log_references": {
+    "controlled-drain014-observations.jsonl": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain014\\controlled-drain014-observations.jsonl",
+      "sha256": "12658d92b4b3945b4519fbe0ae75b860185e3428f15cf67713355cc3554e72b9",
+      "bytes": 4960672
+    },
+    "run-output.txt": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain014\\run-output.txt",
+      "sha256": "9cd85b8e178d0c69c6d64cfcdd71edbe6ab5cb84731f80e3caa7b22b55c9e3d3",
+      "bytes": 180741
+    },
+    "owned-resource-guard.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain014\\owned-resource-guard.json",
+      "sha256": "8383be4f83f750cda500055ba2f6ef1e485ea48074232dec18d3bebcfb3f6f9b",
+      "bytes": 160074
+    },
+    "controlled-drain014-observer-summary.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain014\\controlled-drain014-observer-summary.json",
+      "sha256": "3ee781a5e82b9aba22744d0faba35b48424711b5e7a7a43d2b72138757d5e55e",
+      "bytes": 40462
+    }
+  },
+  "physical_acceptance": false
+}

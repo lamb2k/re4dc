@@ -1,0 +1,112 @@
+{
+  "scope": "Exact014 programme/assets+screenshots identities; Flycast014 lever/intro execution PARTIAL, drain NOTcompleted, V5closurePASS. No sourcechecks/runtime/release/hardware conflation.",
+  "runtime_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "programme_raw": {
+    "sha256": "78fb06976cc394ec6e4cb7861046c24a15f82ddf7bcb2fcbfd452d3fcbf72e33",
+    "size": 3643960
+  },
+  "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "actual_Flycast_EXE_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+  "assets": {
+    "bgm/aica_str.dat": {
+      "sha256": "17754bc809dd3401144e1c2e66e76d9cab541967ece38b989782a432a7c33add",
+      "size": 109187072
+    },
+    "dc/em2d.ovl": {
+      "sha256": "b5e2cc5414c3ae1344d9d4c6ce6f5b1781e85e0da23c20c4c52753db6dc23902",
+      "size": 68628
+    },
+    "dc/native/r205/ps2-world.ids": {
+      "sha256": "c28e35db3cb374de2351862ff5fa302656575670e65a3947747fe95d6044752f",
+      "size": 160
+    },
+    "dc/native/r205/ps2-world.r4pw": {
+      "sha256": "3d267102d065971daf3974ba657cf1d5f5f81b1a64383e88ad29d7742839633c",
+      "size": 13564
+    },
+    "dc/native/r205/ps2-world.re4mesh": {
+      "sha256": "358f3301b804a938541a1f848d82c366b3172e31bf68d3a7c08642bb7c428d0f",
+      "size": 888960
+    },
+    "dc/native/r205/registry.re4nmr": {
+      "sha256": "6afbcf24c02b57f24e3265ad224b272a2e53be3769eb236f72ef0dfc92f2b6c7",
+      "size": 222304
+    },
+    "dc/native/r205/room.r4rc": {
+      "sha256": "90cbaa2fdd564005773617155d2135353656a87eb941a3d4e352f44c0f54f74e",
+      "size": 34208
+    },
+    "dc/st2_1.ovl": {
+      "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+      "size": 116100
+    },
+    "st2/r205.arc": {
+      "sha256": "e0be4a7b572cd8a1ed6ae0a4ca1582ea0e3bfcb0ca0d75294ac015a2638c6083",
+      "size": 1560032
+    }
+  },
+  "audit_sha256": "3d11567fb53bacab219cbdd97ac769285965894173e7633696d08cf81ef57062",
+  "state_sha256": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+  "Flycast_state_saved": true,
+  "native_CardSave_pass": false,
+  "main_visual": "Root inspecteddeadlinefb0 andconfirmedvisibleintrotext valve/drainage, noYesNo yet. Worker didnot attach/input/viewruntime.",
+  "native_intro_mdt0_identity": {
+    "scope": "Hash-only source MDT message0 identity; no text/content payload. Runtime must resolve MesData.lang+ptr1 through frozen getAddr and match whole source span before ordinaryYes.",
+    "arc_sha256": "e0be4a7b572cd8a1ed6ae0a4ca1582ea0e3bfcb0ca0d75294ac015a2638c6083",
+    "MDT_offset": 1500768,
+    "MDT_size": 1856,
+    "MDT_sha256": "31814df7f5c70edddf44fb1b94c2f17a8bcdf04d370db2097943fe57c226c7ac",
+    "languages": {
+      "0": {
+        "table_offset": 28,
+        "count": 4,
+        "message0_offset": 52,
+        "message0_end": 108,
+        "message0_bytes": 56,
+        "sha256": "6e7bd4a9d409a3acac9623fd7015f2457739288b99fdcb0c7a4b2c3e67ef7dec"
+      },
+      "1": {
+        "table_offset": 252,
+        "count": 4,
+        "message0_offset": 276,
+        "message0_end": 412,
+        "message0_bytes": 136,
+        "sha256": "81de22f3af7f69f5bf996eb294de0b236b4669e6e4464a46a5ecc0873d8787f2"
+      },
+      "2": {
+        "table_offset": 828,
+        "count": 4,
+        "message0_offset": 852,
+        "message0_end": 914,
+        "message0_bytes": 62,
+        "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+      },
+      "3": {
+        "table_offset": 1084,
+        "count": 4,
+        "message0_offset": 1108,
+        "message0_end": 1170,
+        "message0_bytes": 62,
+        "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+      },
+      "4": {
+        "table_offset": 1340,
+        "count": 4,
+        "message0_offset": 1364,
+        "message0_end": 1426,
+        "message0_bytes": 62,
+        "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+      },
+      "5": {
+        "table_offset": 1596,
+        "count": 4,
+        "message0_offset": 1620,
+        "message0_end": 1682,
+        "message0_bytes": 62,
+        "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+      }
+    }
+  }
+}
