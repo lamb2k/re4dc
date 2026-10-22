@@ -28,6 +28,14 @@
 # Build every arm in its own OBJDIR (flag changes do not rebuild existing objects).
 # Event storage bookkeeping: every TU must use the same template policy.
 # Native only; other manager predicates/layout and recipe defaults are unchanged.
+# Retire native reset borrowers before destroying their source heaps.
+RESET_RETIRE_BEFORE_HEAPS ?= 0
+ifneq ($(RESET_RETIRE_BEFORE_HEAPS),0)
+ifneq ($(RESET_RETIRE_BEFORE_HEAPS),1)
+$(error RESET_RETIRE_BEFORE_HEAPS must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1
+endif
 # Conditional failed-restore containment; optional source candidate only.
 SS_RESTORE_VALIDATE_FIRST ?= 0
 ifneq ($(SS_RESTORE_VALIDATE_FIRST),0)
