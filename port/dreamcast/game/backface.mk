@@ -13,7 +13,7 @@ ifneq ($(TA_HASH),1)
 $(error BACKFACE_CENSUS=1 needs TA_HASH=1)
 endif
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o $(OBJDIR)/platform/backface_census.o: PLATFORM_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
-$(OBJDIR)/coarse_actor.o: GAME_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
+$(OBJDIR)/coarse_actor.o $(OBJDIR)/model_bridge.o: GAME_CPPFLAGS += -DRE4DC_BACKFACE_CENSUS=1
 endif
 # CPU_BACKFACE=1 (render only; room/backface_emit.hpp): world meshlets (native_static.cpp, direct store-queue sink) and
 #   actor parts (native_actor_fast.cpp, ACTOR_DIRECT) whose PVR header culls (CCW / CW) send only the triangles the ISP
