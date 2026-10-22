@@ -4,14 +4,18 @@ The official list of known problems in the public test builds. Updated with each
 Report new problems with the [bug report form](https://github.com/lamb2k/re4dc/issues/new/choose);
 please name the build, real console or emulator, and where in the game it happened.
 
-**Last updated:** October 20, 2026.
+**Last updated:** October 22, 2026.
 
-**Current build: Test 21** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): lighter, smoother fights.
-Fights no longer stall reloading enemy animations, Ashley no longer stalls the game before the El Gigante fight, dead bodies and props cost less, the night road villagers (r111) use
-their PS2 model, the dam rooms use the PS2 lighting, and Options has a Steady frame pacing choice. A QA build for
-testers is the second download.
+**Current build: Test 22** ([releases page](https://github.com/lamb2k/re4dc/releases/latest)): smoother distant
+textures (mipmaps), no disc read when you shoot, no stutter at in-game events, faster inventory opening, lake trees
+fixed, trail effects back, and fixes for the dam crash (#52), memory after a reset (#26), Ganado death stalls and the
+Mendez pause (#48, #49). A QA build for testers is the second download.
 
 **Earlier builds** (newest first):
+
+- **Test 21:** lighter, smoother fights. Fights no longer stall reloading enemy animations, Ashley no longer stalls
+the game before the El Gigante fight, the night road villagers (r111) use their PS2 model, the dam rooms use the PS2
+lighting, and Options has a Steady frame pacing choice.
 
 - **Test 20:** chapter 2-1's real path. The dam (r10c), r10d and r10e are playable, the Insignia Key comes from the
 dam, and far scenery and far enemies cost less.
@@ -50,11 +54,11 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | Status | Meaning | Count |
 | --- | --- | --- |
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
-| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 8 |
-| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 | Fixed and checked in our tests; the problem was not console-only | 47 |
-| 🛠️ In progress | Being fixed now | 2 |
+| 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 9 |
+| 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 / 22 | Fixed and checked in our tests; the problem was not console-only | 50 |
+| 🛠️ In progress | Being fixed now | 1 |
 | 🔍 Investigating | Being reproduced or traced | 4 |
-| ⏸️ Open | Known, not yet worked on | 15 |
+| ⏸️ Open | Known, not yet worked on | 18 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
 
 ## Game progress (ongoing work)
@@ -72,8 +76,11 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
-| A Ganado with a chainsaw who catches Leon at low health can stall: Leon lies down but the death scene and Continue never come | test 21 and earlier | 🛠️ In progress: fixed for Test 22 (not in this download). The death scene plays and Continue returns you to the room | |
-| Opening the pause menu (Options / RETRY) changes the world behind it: GameCube scenery drawn over the room outdoors, and a big lighting change in the Mendez fight | test 21 | 🛠️ In progress: fixed for Test 22 (not in this download). The paused world stays as it was and play resumes cleanly | [#48](https://github.com/lamb2k/re4dc/issues/48) |
+| A Ganado with a chainsaw who catches Leon at low health can stall: Leon lies down but the death scene and Continue never come | test 21 and earlier | 🟢 Fixed in test 22: the death scene plays and Continue returns you to the room | |
+| Opening the pause menu (Options / RETRY) changes the world behind it: GameCube scenery drawn over the room outdoors, and a big lighting change in the Mendez fight | test 21 | 🟢 Fixed in test 22: the paused world stays as it was and play resumes cleanly, in the Mendez fight too | [#48](https://github.com/lamb2k/re4dc/issues/48), [#49](https://github.com/lamb2k/re4dc/issues/49) |
+| A crash on a real Dreamcast when the first villager at the dam appears (a disc read failed and the enemy was never made) | test 20, 21 | 🟢 Fixed in test 22, needs console check: a failed enemy read is retried, and the dam guards a missing enemy | [#52](https://github.com/lamb2k/re4dc/issues/52) |
+| At the castle gate (r200), at the end of chapter 2-3, one texture fails its preparation check in our tests. Play goes on | test 22 | ⏸️ Open, not blocking: started with the mipmap data | |
+| Video memory is short by one 32 KB block for the look buffer when you enter the village (r101). Play goes on | test 22 | ⏸️ Open, not blocking: the room texture memory arrangement that fixes it is held for Test 23 | |
 | Random crashes on a real console, often in the village or shortly after a room loads (memory corruption) | test 7, test 8 | 🟢 Fixed, needs console check | [#23](https://github.com/lamb2k/re4dc/issues/23), [#27](https://github.com/lamb2k/re4dc/issues/27), [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Changing the Rendering level sometimes crashes a few seconds later | test 8 | 🟢 Fixed in test 9: the Rendering option was removed. Test 12 brings the row back with two choices, Standard and FSAA (both full 480-line pictures), checked in both and while switching | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Loading a save and then starting a New Game shows an error | test 7, test 8 | 🟢 Fixed in test 9 | [#26](https://github.com/lamb2k/re4dc/issues/26) |
@@ -97,6 +104,8 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| El Gigante looks blocky up close: he is drawn with his low-detail model | test 17 and later | ⏸️ Open: a better close-up model is planned for Test 23 | |
+| Trees on the lake islands (r10b) look shredded | test 21 and earlier | 🟢 Fixed in test 22: the bark uses its own picture again | |
 | The r100 cliff cutscene (after the first house) skips about 43 of its 340 frames, so it looks choppier. The game goes on normally | test 19 | 🟢 Fixed in test 19.1: the scenery shares repeated corner points, so the movie has its memory again (340 of 340 frames) | [#45](https://github.com/lamb2k/re4dc/issues/45) |
 | In r117, after the Saddler scene starts, a few effect sprites are skipped for about 3 seconds while video memory is short. Play continues | test 19 | 🟢 Fixed in test 19.1: no sprites skipped in r117 (0 refusals) | [#46](https://github.com/lamb2k/re4dc/issues/46) |
 | The Player's Manual pages 1-3 (aim, knife, action) and file 3 show the GameCube controller instead of the Dreamcast one. The Dreamcast pages are on the disc, but the game looks for them outside the texture pack | test 8 to 18 | ✅ Fixed in test 19 | [#44](https://github.com/lamb2k/re4dc/issues/44) |
@@ -151,6 +160,7 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| Opening the inventory still reads about 0.8 to 1.4 MB from the disc each time | test 22 and earlier | 🛠️ In progress: test 22 packs the data smaller (about 0.6 MB less per open); reading only the item you open is planned for Test 23 | |
 | At most 4 Ganados are active at once (6 from test 12 in the village and test 13 in every chapter 1 room; 4 from test 16.1); the others wait and arrive as you kill them | test 12, 13, 16.1 | ⏸️ Open: by design, for the frame rate. Every villager still appears, and the waves, the kills and the events are unchanged. Test 16.1 lowers the limit from 6 to 4 in every room |  |
 | A fifth Ganado could appear for a moment in some village areas (r107), over the limit of 4 | test 16.1 | 🟢 Fixed in test 16.2: every Ganado a room sends waits for its turn under the limit |  |
 | In r108, the Ganados holding a weapon use the GameCube model instead of the PS2 one | test 16, 16.1 | 🟢 Fixed in test 16.2 |  |
