@@ -1,0 +1,62 @@
+name tu22-r101-shoot
+# lane texusage22: r101 cross fight, Leon aims (R) and fires (A) every 50 frames, rig kills from 600. God.
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+ammo
+alert 30
+alivelog 150
+killnear
+kill 0x15 600 0x101
+killrep 6 90
+act 300 0x0020 20
+act 320 0x0120 6
+act 350 0x0020 20
+act 370 0x0120 6
+act 400 0x0020 20
+act 420 0x0120 6
+act 450 0x0020 20
+act 470 0x0120 6
+act 500 0x0020 20
+act 520 0x0120 6
+act 550 0x0020 20
+act 570 0x0120 6
+act 600 0x0020 20
+act 620 0x0120 6
+act 650 0x0020 20
+act 670 0x0120 6
+act 700 0x0020 20
+act 720 0x0120 6
+act 750 0x0020 20
+act 770 0x0120 6
+act 800 0x0020 20
+act 820 0x0120 6
+act 850 0x0020 20
+act 870 0x0120 6
+act 900 0x0020 20
+act 920 0x0120 6
+act 950 0x0020 20
+act 970 0x0120 6
+act 1000 0x0020 20
+act 1020 0x0120 6
+act 1050 0x0020 20
+act 1070 0x0120 6
+act 1100 0x0020 20
+act 1120 0x0120 6
+act 1150 0x0020 20
+act 1170 0x0120 6
+act 1200 0x0020 20
+act 1220 0x0120 6
+act 1250 0x0020 20
+act 1270 0x0120 6
+act 1300 0x0020 20
+act 1320 0x0120 6
+act 1350 0x0020 20
+act 1370 0x0120 6
+act 1400 0x0020 20
+act 1420 0x0120 6
+act 1450 0x0020 20
+act 1470 0x0120 6
