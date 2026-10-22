@@ -1,5 +1,5 @@
 """Small Python children only, no Flycast, RAM or input. Windows containment tests."""
-import importlib.util,json,os,pathlib,subprocess,sys,tempfile,time,unittest
+import ctypes,importlib.util,json,os,pathlib,subprocess,sys,tempfile,time,unittest
 P=pathlib.Path(__file__).parent
 s=importlib.util.spec_from_file_location('backend',P/'windows-backend.py');b=importlib.util.module_from_spec(s);s.loader.exec_module(b)
 s=importlib.util.spec_from_file_location('supervisor',P/'guest-supervisor-core.py');c=importlib.util.module_from_spec(s);s.loader.exec_module(c)
@@ -53,6 +53,23 @@ class Kernel(unittest.TestCase):
  def test_normal_exit_retained_handle_times_no_query_race(self):
   backend=self.backend();saved=[];cmd=[sys.executable,'-c','import sys,time;sys.stdin.buffer.readline();time.sleep(.08)']
   result=c.monitor(backend,cmd,lambda p:saved.append(p));self.assertTrue(result['qualified'],result);self.assertLess(result['actual_guest_seconds'],2);self.assertIsNotNone(saved[0].returncode);self.assertIsNone(backend.job)
+ def test_inherited_reader_child_job_is_empty_before_close(self):
+  backend=self.backend();saved=[];grand=[];ready=self.p/'grandchild';release=backend.release
+  def released(proc):
+   release(proc);limit=time.monotonic()+2
+   while not ready.exists():
+    if time.monotonic()>limit:raise RuntimeError('reader child readiness deadline')
+    time.sleep(.005)
+   pid=int(ready.read_text());h=backend.checked(backend.k.OpenProcess(0x101001,False,pid));info=backend.info(pid,h);member=ctypes.c_int();backend.checked(backend.k.IsProcessInJob(h,backend.job,ctypes.byref(member)))
+   if not member.value:raise RuntimeError('reader child escaped private job')
+   grand.append((h,info));backend.sample_fault=True
+  backend.release=released
+  code="import pathlib,subprocess,sys,time;sys.stdin.buffer.readline();p=subprocess.Popen([sys.executable,'-c','import time;time.sleep(30)']);pathlib.Path("+repr(str(ready))+").write_text(str(p.pid));time.sleep(30)"
+  try:
+   result=c.monitor(backend,[sys.executable,'-c',code],lambda p:saved.append(p));self.assertFalse(result['qualified']);self.assertEqual(len(grand),1);self.assertIsNotNone(saved[0].returncode);self.assertIsNone(backend.job)
+   self.assertEqual(backend.k.WaitForSingleObject(grand[0][0],0),0);self.assertGreater(backend.times(grand[0][0])[1],0)
+  finally:
+   for h,_ in grand:backend.k.CloseHandle(h)
 if __name__=='__main__':
  if os.name!='nt':raise SystemExit('Windows only; no emulator is invoked')
  unittest.main(verbosity=2)

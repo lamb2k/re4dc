@@ -1,5 +1,5 @@
 """No process/Windows runtime; review role and concrete retained-runner wiring."""
-import importlib.util,json,pathlib,unittest
+import importlib.util,json,pathlib,types,unittest
 P=pathlib.Path(__file__).parent;s=importlib.util.spec_from_file_location('inner',P/'inner-adapter.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
 class Contract(unittest.TestCase):
  def setUp(self):self.profile=json.loads((P/'guest-profile-v2.json').read_text())
@@ -19,4 +19,9 @@ class Contract(unittest.TestCase):
   transitions=json.loads((P/'current-transitions.json').read_text());self.assertEqual(transitions['callsite_count'],12);self.assertEqual(transitions['source'],self.profile['fixed_runtime']['source']);self.assertEqual(len(self.profile['fixed_runtime']['all14']),14)
  def test_read_only_transport_no_memory_write_api(self):
   source=(P/'observe.py').read_text();self.assertIn('ReadProcessMemory',source);self.assertNotIn('WriteProcessMemory',source)
+ def test_postexit_query_race_uses_retained_creation_and_signaled_exit(self):
+  backend=m.load('backend_test',P/'windows-backend.py');obj=object.__new__(backend.WindowsBackend);rows=iter([[123,0,0,0],[123,456,0,0]]);obj.times=lambda _:next(rows);obj.info=lambda *a:(_ for _ in ()).throw(OSError('exit during live path query'));obj.k=types.SimpleNamespace(WaitForSingleObject=lambda *a:0);pinned={'pid':21,'start_filetime':123,'path':'owned'};self.assertEqual(obj.retained_identity(21,99,pinned),pinned)
+ def test_postexit_query_failure_without_finalized_exit_refused(self):
+  backend=m.load('backend_test2',P/'windows-backend.py');obj=object.__new__(backend.WindowsBackend);obj.times=lambda _:[123,0,0,0];obj.info=lambda *a:(_ for _ in ()).throw(OSError('unexplained query failure'));obj.k=types.SimpleNamespace(WaitForSingleObject=lambda *a:0)
+  with self.assertRaises(OSError):obj.retained_identity(21,99,{'pid':21,'start_filetime':123,'path':'owned'})
 if __name__=='__main__':unittest.main(verbosity=2)

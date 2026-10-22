@@ -12,6 +12,7 @@ class WindowsBackend:
   k.SetInformationJobObject.argtypes=[ctypes.c_void_p,ctypes.c_int,ctypes.c_void_p,ctypes.c_ulong];k.AssignProcessToJobObject.argtypes=[ctypes.c_void_p,ctypes.c_void_p];k.IsProcessInJob.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.POINTER(ctypes.c_int)];k.TerminateJobObject.argtypes=[ctypes.c_void_p,ctypes.c_uint]
   k.OpenProcess.argtypes=[ctypes.c_ulong,ctypes.c_int,ctypes.c_ulong];k.OpenProcess.restype=ctypes.c_void_p
   k.QueryFullProcessImageNameW.argtypes=[ctypes.c_void_p,ctypes.c_ulong,ctypes.c_wchar_p,ctypes.POINTER(ctypes.c_ulong)];k.GetProcessTimes.argtypes=[ctypes.c_void_p]+[ctypes.POINTER(ctypes.c_ulonglong)]*4;k.GetExitCodeProcess.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.c_ulong)];k.WaitForSingleObject.argtypes=[ctypes.c_void_p,ctypes.c_ulong];k.TerminateProcess.argtypes=[ctypes.c_void_p,ctypes.c_uint];k.CloseHandle.argtypes=[ctypes.c_void_p]
+  k.QueryInformationJobObject.argtypes=[ctypes.c_void_p,ctypes.c_int,ctypes.c_void_p,ctypes.c_ulong,ctypes.POINTER(ctypes.c_ulong)]
   k.GetSystemTimeAsFileTime.argtypes=[ctypes.POINTER(ctypes.c_ulonglong)]
   self.u=ctypes.WinDLL('user32',use_last_error=True);self.u.PostMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
  def checked(self,value):
@@ -81,7 +82,7 @@ class WindowsBackend:
  def global_count(self):
   text=subprocess.check_output(['tasklist','/FI','IMAGENAME eq flycast.exe','/FO','CSV','/NH'],text=True,creationflags=subprocess.CREATE_NO_WINDOW,timeout=2)
   return sum(1 for r in csv.reader(text.splitlines()) if r and r[0].lower()=='flycast.exe')
- def evidence_bytes(self):return self.footprint.measure(self.cap,self.disc)['charged_bytes']+self.footprint.measure(self.invocation,self.disc)['charged_bytes']
+ def evidence_bytes(self):return self.footprint.measure(self.cap,self.disc)['charged_bytes']+self.footprint.measure(self.invocation,self.disc)['charged_bytes']+getattr(self,'marker_bytes',0)
  def find_guest(self):
   f=self.cap/'flycast.pid'
   try:value=f.read_text().strip()
@@ -111,7 +112,12 @@ class WindowsBackend:
    # QueryFullProcessImageNameW can fail after exit (WinError31). A retained
    # process HANDLE cannot refer to a recycled PID; path was checked while live.
    return pinned.copy()
-  return self.info(pid,handle)
+  try:return self.info(pid,handle)
+  except OSError:
+   # Exit can occur BETWEEN the first times read and live path query.
+   created2,exited2,*_=self.times(handle)
+   if created2==pinned['start_filetime'] and exited2 and self.k.WaitForSingleObject(handle,0)==0:return pinned.copy()
+   raise
  def identity(self,guest):return self.retained_identity(guest['pid'],guest['handle'],guest['identity'])
  def actual_seconds(self,guest):
   created,exited,*_=self.times(guest['handle'])
@@ -148,6 +154,15 @@ class WindowsBackend:
   if job!=self.job:raise RuntimeError('refuse foreign job')
   if self.inner is not None and self.retained_identity(self.inner.pid,int(self.inner._handle),self.inner_identity)!=self.inner_identity:raise RuntimeError('retained inner identity mismatch')
   self.checked(self.k.TerminateJobObject(job,125))
+ def wait_private_job_empty(self,job):
+  if job!=self.job:raise RuntimeError('refuse foreign job query')
+  class Accounting(ctypes.Structure):_fields_=[(n,ctypes.c_longlong) for n in ['TotalUserTime','TotalKernelTime','ThisPeriodTotalUserTime','ThisPeriodTotalKernelTime']]+[(n,ctypes.c_ulong) for n in ['TotalPageFaultCount','TotalProcesses','ActiveProcesses','TotalTerminatedProcesses']]
+  deadline=time.monotonic()+2
+  while True:
+   data=Accounting();self.checked(self.k.QueryInformationJobObject(job,1,ctypes.byref(data),ctypes.sizeof(data),None))
+   if data.ActiveProcesses==0:return
+   if time.monotonic()>=deadline:raise RuntimeError('private job children still active after stop/waits')
+   time.sleep(.01)
  def close_owned_handles(self,job,inner,guest):
   if self.deadline_thread is not None and self.deadline_thread.is_alive():raise RuntimeError('refuse handle closure under live deadline thread')
   try:

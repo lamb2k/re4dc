@@ -51,5 +51,6 @@ def monitor(backend,cmd,after_spawn=None):
   if job is not None:cleanup('private job stop',lambda:backend.stop_private_job(job))
   if inner is not None:cleanup('inner wait',lambda:backend.wait(inner))
   if guest is not None:cleanup('guest wait',lambda:backend.wait_guest(guest))
+  if job is not None:cleanup('private job empty',lambda:backend.wait_private_job_empty(job))
   cleanup('handle close',lambda:backend.close_owned_handles(job,inner,guest))
  return result

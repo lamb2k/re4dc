@@ -5,87 +5,147 @@
   "sites": [
     {
       "line": 11604,
-      "function": "em10_R1_br_C_SawAtk",
+      "function": "static void em10_R1_br_C_SawAtk(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x30);",
       "context": "        pl->atari.set(10, 400.0f, 700.0f);\n        pl->m_Work2 = SndCall(1, 0xC, &pPL->pos, 0, 0, pPL);\n        pl->m_Work0 = 10;\n        pl->r_no_2++;\n    case 1:\n        if (pl->m_Work0) {\n            pl->m_Work0--;\n            EmCatchMotionMove(pl, 0.3f, 0.2f);\n        } else {\n            MotionMoveF(pl, 0);\n        }\n        break;\n    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n}\n\n// Branch check of C_SawAtk (0x2F): on the saw's hit frames em10CsawHitCk decides whether the saw\n// caught the player (C_SawHit 0x30).\nstatic void em10_R1_br_C_SawAtk(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 1) && w->pWep && em10CsawHitCk(em)) {\n        EM_RTN_SET(em, 1, 0x30);\n    }",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M01",
+      "target": "C_SawHit",
+      "source_preconditions": "Ordinary C_SawAtk0x2f; positive actor HP, seFlags28B bit1, nonnull weapon, em10CsawHitCk succeeds.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 11857,
-      "function": "em10_R1_br_C_SawCriAtk",
+      "function": "static void em10_R1_br_C_SawCriAtk(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x30);",
       "context": "        pl->m_Work0 = 15;\n        pl->r_no_2++;\n    case 5:\n        if (pl->frame > 71.7f && pl->frame < 72.3f) {\n            EstSet((int) pl, -1, 0, 0, 0x10, 0x4D, 0, 0, (u32) pl, 0);\n        }\n        if (pl->m_Work0 && --pl->m_Work0 == 0 && pSys->region) {\n            SndStop(pl->m_Work2, 0);\n            em10PlHeadLost();\n        }\n        MotionMoveF(pl, 0);\n        break;\n    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n}\n\n// Branch check of C_SawCriAtk (0x31): em10CsawHitCk on the hit frames goes to C_SawCriHit (0x32).\nstatic void em10_R1_br_C_SawCriAtk(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 1) && w->pWep && em10CsawHitCk(em)) {\n        if (fabsf(pPL->pos.y - em->pos.y) > 50.0f) {\n            EM_RTN_SET(em, 1, 0x30);\n        } else {",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M02",
+      "target": "C_SawHit",
+      "source_preconditions": "Critical saw attack0x31; same successful hit with abs(playerY-actorY)>50, fallback ordinary hit.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 11859,
-      "function": "em10_R1_br_C_SawCriAtk",
+      "function": "static void em10_R1_br_C_SawCriAtk(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x32);",
       "context": "    case 5:\n        if (pl->frame > 71.7f && pl->frame < 72.3f) {\n            EstSet((int) pl, -1, 0, 0, 0x10, 0x4D, 0, 0, (u32) pl, 0);\n        }\n        if (pl->m_Work0 && --pl->m_Work0 == 0 && pSys->region) {\n            SndStop(pl->m_Work2, 0);\n            em10PlHeadLost();\n        }\n        MotionMoveF(pl, 0);\n        break;\n    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n}\n\n// Branch check of C_SawCriAtk (0x31): em10CsawHitCk on the hit frames goes to C_SawCriHit (0x32).\nstatic void em10_R1_br_C_SawCriAtk(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 1) && w->pWep && em10CsawHitCk(em)) {\n        if (fabsf(pPL->pos.y - em->pos.y) > 50.0f) {\n            EM_RTN_SET(em, 1, 0x30);\n        } else {\n            EM_RTN_SET(em, 1, 0x32);\n        }",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M03",
+      "target": "C_SawCriHit",
+      "source_preconditions": "Critical saw attack0x31; successful hit with abs(playerY-actorY)<=50.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 12020,
-      "function": "em10_R1_br_Catch",
+      "function": "static void em10_R1_br_Catch(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x36);",
       "context": "            SndCall(5, 5, &pl->pos, 0, 0, pl);\n        }\n        if (EmCatchMotionMove(pl, 0.3f, 0.2f)) {\n            pl->r_no_2++;\n        }\n        break;\n    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n    if ((s16) pGS->pl_life <= 0) {\n        SndStop(pl->m_Work2, 0);\n    }\n}\n\n// Branch check of Catch (0x33): on the catch frame (seFlags28B bit1) em10CatchCk decides the grab:\n// a dynamite Ganado with the fuse lit goes to Bombhold (0x38), one behind the player with others\n// around or Ashley present to Backhold (0x37), else NeckHang (0x34); em10CatchSubCk grabs the partner.\nstatic void em10_R1_br_Catch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2)) {\n        if (em10CatchCk(em)) {\n            if (pG->pl_type == 1) {\n                EM_RTN_SET(em, 1, 0x36);\n            } else if ((fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB)) || w->Wep_type == 9) {",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M04",
+      "target": "NeckHang_Ashley",
+      "source_preconditions": "Catch0x33 successful hit frame and player pl_type1 (Ashley).",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 12023,
-      "function": "em10_R1_br_Catch",
+      "function": "static void em10_R1_br_Catch(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x38);",
       "context": "            pl->r_no_2++;\n        }\n        break;\n    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n    if ((s16) pGS->pl_life <= 0) {\n        SndStop(pl->m_Work2, 0);\n    }\n}\n\n// Branch check of Catch (0x33): on the catch frame (seFlags28B bit1) em10CatchCk decides the grab:\n// a dynamite Ganado with the fuse lit goes to Bombhold (0x38), one behind the player with others\n// around or Ashley present to Backhold (0x37), else NeckHang (0x34); em10CatchSubCk grabs the partner.\nstatic void em10_R1_br_Catch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2)) {\n        if (em10CatchCk(em)) {\n            if (pG->pl_type == 1) {\n                EM_RTN_SET(em, 1, 0x36);\n            } else if ((fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB)) || w->Wep_type == 9) {\n                if (w->Wep_type == 9 && w->Fire_timer) {\n                    EM_RTN_SET(em, 1, 0x38);\n                } else {",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M05",
+      "target": "Bombhold",
+      "source_preconditions": "Catch0x33 successful Leon grab; rear/nearby-partner-or-weapon9 branch and lit weapon9 Fire_timer.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 12025,
-      "function": "em10_R1_br_Catch",
+      "function": "static void em10_R1_br_Catch(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x37);",
       "context": "        break;\n    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n    if ((s16) pGS->pl_life <= 0) {\n        SndStop(pl->m_Work2, 0);\n    }\n}\n\n// Branch check of Catch (0x33): on the catch frame (seFlags28B bit1) em10CatchCk decides the grab:\n// a dynamite Ganado with the fuse lit goes to Bombhold (0x38), one behind the player with others\n// around or Ashley present to Backhold (0x37), else NeckHang (0x34); em10CatchSubCk grabs the partner.\nstatic void em10_R1_br_Catch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2)) {\n        if (em10CatchCk(em)) {\n            if (pG->pl_type == 1) {\n                EM_RTN_SET(em, 1, 0x36);\n            } else if ((fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB)) || w->Wep_type == 9) {\n                if (w->Wep_type == 9 && w->Fire_timer) {\n                    EM_RTN_SET(em, 1, 0x38);\n                } else {\n                    EM_RTN_SET(em, 1, 0x37);\n                }",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M06",
+      "target": "Backhold",
+      "source_preconditions": "Catch0x33 same rear/nearby/weapon9 branch without lit dynamite condition.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 12028,
-      "function": "em10_R1_br_Catch",
+      "function": "static void em10_R1_br_Catch(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x34);",
       "context": "    pl->subArc = pl->subArc2;\n    if ((s16) pGS->pl_life <= 0) {\n        SndStop(pl->m_Work2, 0);\n    }\n}\n\n// Branch check of Catch (0x33): on the catch frame (seFlags28B bit1) em10CatchCk decides the grab:\n// a dynamite Ganado with the fuse lit goes to Bombhold (0x38), one behind the player with others\n// around or Ashley present to Backhold (0x37), else NeckHang (0x34); em10CatchSubCk grabs the partner.\nstatic void em10_R1_br_Catch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2)) {\n        if (em10CatchCk(em)) {\n            if (pG->pl_type == 1) {\n                EM_RTN_SET(em, 1, 0x36);\n            } else if ((fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB)) || w->Wep_type == 9) {\n                if (w->Wep_type == 9 && w->Fire_timer) {\n                    EM_RTN_SET(em, 1, 0x38);\n                } else {\n                    EM_RTN_SET(em, 1, 0x37);\n                }\n            } else {\n                EM_RTN_SET(em, 1, 0x34);\n            }",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M07",
+      "target": "NeckHang",
+      "source_preconditions": "Catch0x33 successful grab falling through rear/nearby/weapon9 branch.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 13141,
-      "function": "em10_R1_br_DashCatch",
+      "function": "static void em10_R1_br_DashCatch(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x38);",
       "context": "        break;\n    case 4:\n        MotionSetCore(pl, MOTION(pl), PL_ARC_PTR(arc, 0x29B), 0, 5, 1, 0);\n        pl->r_no_2++;\n    case 5:\n        if (MotionMoveF(pl, 0)) {\n            pl->Wep->setTrans(1, 0);\n            EndPlDamage();\n        }\n        break;\n    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n}\n\n// Branch check of DashCatch (0x39): the running grab; on the catch frame the same Bombhold / Backhold /\n// NeckHang choice as br_Catch.\nstatic void em10_R1_br_DashCatch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2) && em10CatchCk(em)) {\n        if (fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB || w->Wep_type == 9)) {\n            if (w->Wep_type == 9 && w->Fire_timer) {\n                EM_RTN_SET(em, 1, 0x38);\n            } else {",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M08",
+      "target": "Bombhold",
+      "source_preconditions": "DashCatch0x39 successful hit; source angle<pi/2 and nearby-or-partner-or-weapon9, lit dynamite9.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 13143,
-      "function": "em10_R1_br_DashCatch",
+      "function": "static void em10_R1_br_DashCatch(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x37);",
       "context": "        MotionSetCore(pl, MOTION(pl), PL_ARC_PTR(arc, 0x29B), 0, 5, 1, 0);\n        pl->r_no_2++;\n    case 5:\n        if (MotionMoveF(pl, 0)) {\n            pl->Wep->setTrans(1, 0);\n            EndPlDamage();\n        }\n        break;\n    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n}\n\n// Branch check of DashCatch (0x39): the running grab; on the catch frame the same Bombhold / Backhold /\n// NeckHang choice as br_Catch.\nstatic void em10_R1_br_DashCatch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2) && em10CatchCk(em)) {\n        if (fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB || w->Wep_type == 9)) {\n            if (w->Wep_type == 9 && w->Fire_timer) {\n                EM_RTN_SET(em, 1, 0x38);\n            } else {\n                EM_RTN_SET(em, 1, 0x37);\n            }",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M09",
+      "target": "Backhold",
+      "source_preconditions": "DashCatch0x39 same angle/context branch, not lit dynamite condition.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 13146,
-      "function": "em10_R1_br_DashCatch",
+      "function": "static void em10_R1_br_DashCatch(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x34);",
       "context": "        if (MotionMoveF(pl, 0)) {\n            pl->Wep->setTrans(1, 0);\n            EndPlDamage();\n        }\n        break;\n    }\n    pl->x3A8 = pl->pos;\n    pl->subArc = pl->subArc2;\n}\n\n// Branch check of DashCatch (0x39): the running grab; on the catch frame the same Bombhold / Backhold /\n// NeckHang choice as br_Catch.\nstatic void em10_R1_br_DashCatch(cEm10* em)\n{\n    Em10Work* w = EM10_WK(em);\n\n    if (em->hp > 0 && (em->seFlags28B & 2) && em10CatchCk(em)) {\n        if (fabsf(Muku2(em->ang.y, pPL->ang.y, PI)) < 1.5707964f && (em10SomebodyNearCk(em) || pSUB || w->Wep_type == 9)) {\n            if (w->Wep_type == 9 && w->Fire_timer) {\n                EM_RTN_SET(em, 1, 0x38);\n            } else {\n                EM_RTN_SET(em, 1, 0x37);\n            }\n        } else {\n            EM_RTN_SET(em, 1, 0x34);\n        }",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M10",
+      "target": "NeckHang",
+      "source_preconditions": "DashCatch0x39 successful hit, opposite angle/context branch.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 17695,
-      "function": "see source context",
+      "function": "int em10CatchSubCk(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x35);",
       "context": "    a.y = 500.0f;\n    a.z = 0.0f;\n    b.x = 300.0f;\n    b.y = 500.0f;\n    b.z = 500.0f;\n    PSMTXMultVec(m, &a, &a);\n    PSMTXMultVec(m, &b, &b);\n    if (EatMgr.hitCheck(&a, &b, 0, 0, 0, 0)) {\n        return 0;\n    }\n    a.x = 300.0f;\n    a.y = 500.0f;\n    a.z = 0.0f;\n    b.x = 300.0f;\n    b.y = 500.0f;\n    b.z = 500.0f;\n    PSMTXMultVec(m, &a, &a);\n    PSMTXMultVec(m, &b, &b);\n    if (EatMgr.hitCheck(&a, &b, 0, 0, 0, 0)) {\n        return 0;\n    }\n    if (pSUB->id == 4) {\n        BitOn(pG->Status_flg[1], 0x00010000);\n        BitOn(pG->Status_flg[2], 0x20000000);\n        EM_RTN_SET(em, 1, 0x35);\n    } else {",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M11",
+      "target": "NeckHang_Luis",
+      "source_preconditions": "em10CatchSubCk full eligibility/visibility/geometry checks and existing partner id4 (Luis).",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     },
     {
       "line": 17699,
-      "function": "see source context",
+      "function": "int em10CatchSubCk(cEm10* em)",
       "call": "EM_RTN_SET(em, 1, 0x3A);",
       "context": "    b.z = 500.0f;\n    PSMTXMultVec(m, &a, &a);\n    PSMTXMultVec(m, &b, &b);\n    if (EatMgr.hitCheck(&a, &b, 0, 0, 0, 0)) {\n        return 0;\n    }\n    a.x = 300.0f;\n    a.y = 500.0f;\n    a.z = 0.0f;\n    b.x = 300.0f;\n    b.y = 500.0f;\n    b.z = 500.0f;\n    PSMTXMultVec(m, &a, &a);\n    PSMTXMultVec(m, &b, &b);\n    if (EatMgr.hitCheck(&a, &b, 0, 0, 0, 0)) {\n        return 0;\n    }\n    if (pSUB->id == 4) {\n        BitOn(pG->Status_flg[1], 0x00010000);\n        BitOn(pG->Status_flg[2], 0x20000000);\n        EM_RTN_SET(em, 1, 0x35);\n    } else {\n        BitOn(pG->Status_flg[1], 0x00010000);\n        BitOn(pG->Status_flg[2], 0x20000000);\n        EM_RTN_SET(em, 1, 0x3A);\n    }",
-      "runtime": "PENDING authentic fixture"
+      "runtime": "PENDING authentic fixture",
+      "id": "M12",
+      "target": "TakeAway",
+      "source_preconditions": "em10CatchSubCk full eligibility/visibility/geometry checks and existing partner id other than4.",
+      "fixture_status": "PENDING authentic current521 checkpoint; no field/actor/health writes",
+      "sampling": "Record prior+next actor named routine bytes and ptr+serial plus source frame/player/partner/camera/region; private Em10 fields unavailable until authentic class proof, never0"
     }
   ],
   "source_scope": "writer-site inventory; corrected named-byte readers covered source/object tests in main handback; no new guest acceptance"

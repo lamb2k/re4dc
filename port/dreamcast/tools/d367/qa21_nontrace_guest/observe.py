@@ -55,7 +55,7 @@ class Observer:
    if row['coherent']:break
   row.update(host_s=time.monotonic()-self.started,observed_monotonic=time.monotonic(),pid=self.pid,start_filetime=self.start)
   self.last=row;data=json.dumps(row,allow_nan=False)+'\n';temporary=self.cap/'latest-state.tmp';temporary.write_text(data);os.replace(temporary,self.cap/'latest-state.json')
-  g=row.get('global') or {};pl=row.get('player') or {};key=(g.get('player_life'),tuple(g.get('rno',[])),tuple(pl.get('rno',[])),pl.get('dmgType_bits'))
+  g=row.get('global') or {};pl=row.get('player') or {};key=(g.get('player_life'),tuple(g.get('rno',[])),tuple(pl.get('rno',[])),pl.get('dmgType_bits'),tuple((x['ptr'],x['serial'],tuple(x['rno']),x['hp']) for x in row.get('actors',[])))
   if time.monotonic()-self.last_log>=.25 or key!=self.last_key:
    with (self.cap/'read-only-state.jsonl').open('a') as f:f.write(data)
    self.last_log=time.monotonic();self.last_key=key

@@ -26,7 +26,8 @@ def main():
   if hashlib.sha256(pathlib.Path(row['path']).read_bytes()).hexdigest()!=row['sha256']:raise RuntimeError('retained dependency changed')
  from observe import Observer
  core=load('controller',P/'controller-core.py');broker=load('broker',P/'capture-budget.py').Budget();runner=load('runner',runnerpath)
- footprint=load('footprint',P.parent/'qa21_death_repair'/'evidence_footprint.py')
+ footprint=load('footprint',profile['retained_dependencies']['evidence_footprint.py']['path'])
+ if pathlib.Path(runner.TEMPLATE).resolve()!=pathlib.Path(profile['template']['path']).resolve():raise RuntimeError('retained runner template differs')
  runner.FLOOR=18*1024**3+64*1024**2;runner.CAPTURE_LIMIT=60000000;runner.usage=lambda folder:footprint.measure(folder,pathlib.Path(profile['disc']['path']))['charged_bytes']
  # Original recipe/template only; no limit/default changes in any production file.
  os.environ['RE4DC_MAX_FLYCASTS']='16';os.environ['FP_NOLIMIT']='1'
@@ -39,7 +40,7 @@ def main():
   if parent_role!=expected:raise RuntimeError('same-program parent role differs')
   os.environ['RE4DC_CHECKPOINT_SEED']=str(a.seed);os.environ['RE4DC_CHECKPOINT_LOG_HEAD']=str(parent['audit']['log_head'])
  runner.KEYS.update(ltrig=(0x21,0),rtrig=(0x2f,0),fwd=(0x17,0),back=(0x25,0),turnleft=(0x24,0),turnright=(0x26,0));runner.VK.update(ltrig=0x46,rtrig=0x56,fwd=0x49,back=0x4b,turnleft=0x4a,turnright=0x4c)
- observer=Observer(cap,profile['observer']['binding'],profile['observer']['layout']);engine={'cold-shoot01':core.Shooting,'return-door01':core.Door,'cinematic01':core.Cinematic}[a.mode]();done=threading.Event();lock=threading.RLock();held=set();state={'mode':a.mode,'source_only_prior_tests':True,'memory_writes':False,'inputs':[],'captures':[],'errors':[]};qacount=0
+ observer=Observer(cap,profile['observer']['binding'],profile['observer']['layout']);engine={'cold-shoot01':core.Shooting,'return-door01':core.Door,'cinematic01':core.Cinematic}[a.mode]();done=threading.Event();lock=threading.RLock();held=set();state={'mode':a.mode,'checkpoint_parent':str(a.seed) if a.seed else None,'source_only_prior_tests':True,'memory_writes':False,'inputs':[],'captures':[],'errors':[]};qacount=0
  qa_steps=[]
  if a.mode=='cold-shoot01':
   for line in pathlib.Path(role['keys']).read_text().splitlines():
@@ -56,7 +57,11 @@ def main():
    raise RuntimeError('no down to exited guest')
   # Live path rechecked before posts; this retained observer handle cannot target recycled PID.
   path=ctypes.create_unicode_buffer(32768);n=ctypes.c_ulong(len(path))
-  if not observer.k.QueryFullProcessImageNameW(observer.handle,0,path,ctypes.byref(n)) or pathlib.Path(path.value).resolve()!=(cap/'flycast.exe').resolve():raise RuntimeError('input path mismatch')
+  if not observer.k.QueryFullProcessImageNameW(observer.handle,0,path,ctypes.byref(n)):
+   ended=[ctypes.c_ulonglong() for _ in range(4)]
+   if up and observer.k.GetProcessTimes(observer.handle,*[ctypes.byref(x) for x in ended]) and ended[0].value==observer.start and ended[1].value:return
+   raise RuntimeError('live input path unavailable')
+  if pathlib.Path(path.value).resolve()!=(cap/'flycast.exe').resolve():raise RuntimeError('input path mismatch')
   if not up and elapsed()>=40.75:raise RuntimeError('no keydown after input cutoff')
   windows=runner.windows_of(observer.pid)
   if not windows and not up:raise RuntimeError('owned windows unavailable')
@@ -101,12 +106,13 @@ def main():
      if e>=40.75:release_all();continue
      if e>=39.3 and not final:capture('final');final=True
      if a.mode=='cold-shoot01' and qacount<len(qa_steps):continue
-     row=observer.last;age=time.monotonic()-row['observed_monotonic'];args=(row,age,e)
+     row=observer.last;native_text=(cap/'run-output.txt').read_text(errors='replace');row['death_demo_log_observed']='--DIEDEMO START!!' in native_text;age=time.monotonic()-row['observed_monotonic'];args=(row,age,e)
      manual='PlayingManual2' in (cap/'run-output.txt').read_text(errors='replace')
      if a.mode=='cinematic01' and a.seed:manual=manual or json.loads((a.seed/'inner-control.json').read_text()).get('original_manual_witness',False)
      actions=engine.step(*args,manual_log=manual) if a.mode=='cinematic01' else engine.step(*args)
      for action in actions:
-      if 'capture'in action:capture(action['capture']+'-'+str(len(state['captures'])))
+      if 'capture'in action:
+       state.setdefault('witnesses',[]).append(action);capture(action['capture']+'-'+str(len(state['captures'])))
       if 'down'in action:
        observer.sample();fresh=observer.last;nowage=time.monotonic()-fresh['observed_monotonic']
        # Captures can consume time; every down is re-gated on a new sample.

@@ -27,6 +27,7 @@ class Fake:
  def close_release_pipe(self,i):self.hit('pipe')
  def stop_private_job(self,j):self.child=False;self.running=False;self.hit('stop')
  def wait_guest(self,g):self.hit('guestwait')
+ def wait_private_job_empty(self,j):self.hit('jobwait')
  def close_owned_handles(self,j,i,g):self.closed=True;self.hit('close')
 class Supervisor(unittest.TestCase):
  def runfake(self,f,callback=None):
@@ -40,7 +41,7 @@ class Supervisor(unittest.TestCase):
   def broken(i):f.calls.append('pipe');raise BrokenPipeError('already closed fd0')
   f.close_release_pipe=broken;r=self.runfake(f);self.assertFalse(r['qualified']);self.assertTrue(r['cleanup_errors']);self.assertIn('stop',f.calls)
  def test_every_post_spawn_fault_cleanup(self):
-  for name in ['arm','release','deadline','sample','find','identity','seconds','alive','tick','keyup','pipe','join','wait','guestwait']:
+  for name in ['arm','release','deadline','sample','find','identity','seconds','alive','tick','keyup','pipe','join','wait','guestwait','jobwait']:
    with self.subTest(name=name):
     f=Fake(name);r=self.runfake(f);self.assertFalse(r['qualified']);self.assertIn('stop',f.calls)
  def test_cleanup_wait_failure_cannot_skip_handleclose(self):

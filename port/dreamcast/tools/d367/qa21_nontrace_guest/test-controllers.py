@@ -50,6 +50,8 @@ class Controller(unittest.TestCase):
   a=e.step(r,0,1);self.assertEqual(a[0]['actor_identity']['serial'],2);self.assertNotIn('down',a[0]);self.assertEqual(e.step(r,0,1.1),[])
  def test_bad_manager_disallows_actor_witness(self):
   e=c.Cinematic();r=row();r['manager_valid']=False;r['actors']=[{}];self.assertEqual(e.step(r,0,1),[])
+ def test_death_demo_requires_sourcebit_and_native_log_not_Rno4(self):
+  e=c.Cinematic();r=row();r['global']['rno'][0]=4;self.assertEqual(e.step(r,0,1),[]);r['global']['rno'][0]=3;r['global']['status'][0]=0x100000;self.assertEqual(e.step(r,0,1),[]);r['death_demo_log_observed']=True;self.assertEqual(e.step(r,0,1)[0]['capture'],'death-demo-start')
  def test_door_ordinary_transition_ends_navigation(self):
   e=c.Door();a=e.step(row(),0,1);self.assertIn(a[0]['down'],['turnleft','turnright','fwd','a']);r=row();r['global']['room']=0x101;a=e.step(r,0,1.01);self.assertTrue(e.done);self.assertIn('up',a[0])
  def test_bulk_source_frame_pointer_coherence(self):

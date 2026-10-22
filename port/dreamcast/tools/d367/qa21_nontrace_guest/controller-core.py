@@ -56,7 +56,7 @@ class Cinematic:
     if reciprocal and actor.get('id')==0x15 and actor.get('type')==4:
      key=('catch',actor['ptr'],actor['serial'],tuple(actor['rno']),tuple(p['rno']))
      if key not in self.seen and 'catch-screenshot' not in self.seen:self.seen.add(key);self.seen.add('catch-screenshot');out.append({'capture':'reciprocal-catch','state':row,'actor_identity':{k:actor[k] for k in ('ptr','serial','id','type')},'inference':'routine-state witness; motion number/pixels need review'})
-  for label,condition in [('life-zero',g['player_life']==0),('demo-transition',g['rno'][0]==4),('continue-UI',row.get('continue_ui_observed') is True)]:
+  for label,condition in [('life-zero',g['player_life']==0),('death-demo-start',row.get('death_demo_log_observed') is True and bool(g.get('status',[0])[0]&0x100000)),('continue-UI',row.get('continue_ui_observed') is True)]:
    if condition and label not in self.seen:self.seen.add(label);out.append({'capture':label,'state':row})
   return out
 

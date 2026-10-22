@@ -1,26 +1,34 @@
 {
-  "scope": "fixed c57 source/mock unit only; no emulator allocation/launch",
-  "created_utc": "2026-10-22T01:07:56.671673+00:00",
+  "scope": "source/mock and six tiny Windows Python containment tests only; no Flycast allocation/launch",
+  "created_utc": "2026-10-22T01:20:15.468191+00:00",
   "files": {
     ".gitattributes": {
       "bytes": 71,
       "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7"
     },
     "PLAN.md": {
-      "bytes": 10511,
-      "sha256": "9d462fdc11c2ca40bf4d643ce73763568e5fcf9aaf70a825fed3f8fd7f667c94"
+      "bytes": 12417,
+      "sha256": "36cd5ccfd927dbcef0d75f6fedc6f8aa1c4011d18491dae2db25ec2459f21b2e"
     },
     "capture-budget.py": {
       "bytes": 712,
       "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
     },
+    "checkpoint-ABI.json": {
+      "bytes": 4613,
+      "sha256": "15b4c7ea458bb8f957c5b4e86e3dde47cf82a8b35da4c8575bbd92d453d1140f"
+    },
     "controller-core.py": {
-      "bytes": 6004,
-      "sha256": "b2c4bc25b3f8c8ef7bb6c33078bb1ee16f3ea5b64af21deede687afaf0057b97"
+      "bytes": 6075,
+      "sha256": "b04fdc9a865684698ede81157c8ca675d9ec61c36ac6166b92cbcd7faf497336"
     },
     "current-transitions.json": {
-      "bytes": 12976,
-      "sha256": "5c6128fc138be7935e117ef48da33a7d5bc46ea3331192a7b1f4f239c683807c"
+      "bytes": 18703,
+      "sha256": "25c5d4cccfbcea660849a02350aa0c334d2205e84a54d856819cf28f8e44a041"
+    },
+    "death-demo-source.json": {
+      "bytes": 2192,
+      "sha256": "e863aa62087251dd200fe7f34e0edfaef835fbd50773304e619c5279d3ff62e6"
     },
     "empty-keys.txt": {
       "bytes": 76,
@@ -31,16 +39,16 @@
       "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
     },
     "guest-profile-v2.json": {
-      "bytes": 8850,
-      "sha256": "873fef956d430ee5bf2ad100183dce38a22ec70e558d98908abba740a45accee"
+      "bytes": 9331,
+      "sha256": "61a5f8f0a612aadb95fd471b974fde5dd0d8f3808c514e2b065a85e6f6cf270e"
     },
     "guest-supervisor-core.py": {
-      "bytes": 3075,
-      "sha256": "35cede831be69d6ef75c3efcc6de4770951224c2ebbdce05c4b241277220f280"
+      "bytes": 3168,
+      "sha256": "1d9ba91cc7a8ecc9e7a164078de304e5648672a8e5321b530ae2b07f6f40f87e"
     },
     "inner-adapter.py": {
-      "bytes": 10499,
-      "sha256": "813ae31b4d91382e24d88612fa275d830baf8103d985be8aad04a15fb8e95c8b"
+      "bytes": 11159,
+      "sha256": "881a25e08ef688579070715a5dbd1ac8807ba6fa0b29cb8b489a497e9ceed272"
     },
     "layout-contract.py": {
       "bytes": 4538,
@@ -51,8 +59,8 @@
       "sha256": "f5dc28e0d4d09e662a29de7543cc0af34c586904e05ed9c775cef64caa9ad63b"
     },
     "observe.py": {
-      "bytes": 6309,
-      "sha256": "47d2bcce7f98d3e8b90ed96f8de82b9e0df2e3dbca2aa44cd033178d5a738821"
+      "bytes": 6393,
+      "sha256": "3d85454813cf55d5a50b158b9cce5b9df04fa55e2ebd2c42c486b1726fc41f8c"
     },
     "observer-binding-v2.json": {
       "bytes": 1421,
@@ -66,6 +74,10 @@
       "bytes": 8805,
       "sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf"
     },
+    "outer-driver.py": {
+      "bytes": 10969,
+      "sha256": "2c36123ba025ad431a85735e4a7cff8a9b1315613ba7595dbefc215adc83a6e8"
+    },
     "policies.py": {
       "bytes": 3455,
       "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233"
@@ -75,8 +87,8 @@
       "sha256": "1d521b1ca227b07273fd4f7f1d2a7e1e2848b71eaee18ba07ad691386add2565"
     },
     "run-unit-tests.py": {
-      "bytes": 1406,
-      "sha256": "ac05edada99f0d70c482d0bfa9626cb7c462c9685aab23ebd52400ffc1a9a660"
+      "bytes": 1716,
+      "sha256": "076fdcbed6560ca98f2cef4b390bf077c663721d347c25ec2610ea6ee78689bc"
     },
     "selected-assets.json": {
       "bytes": 2561,
@@ -91,37 +103,50 @@
       "sha256": "9f3e02286946b0648947f60254d058a9684a8cf388b5cd4c082024c756a963e8"
     },
     "test-controllers.py": {
-      "bytes": 5124,
-      "sha256": "e82b779637c3fe934c9b4bbb2e5fc3a99c350cc3f640f6390de26a8a6f62bceb"
+      "bytes": 5472,
+      "sha256": "bdd31dd98b03d7a66121390d536ebce5a8a9c3856371051ed8fbaafac660032f"
     },
     "test-inner-contract.py": {
-      "bytes": 2294,
-      "sha256": "141aee5d0f90ac968074607afcf3a76bd75d45f95e3a121748253a4644c0fade"
+      "bytes": 3255,
+      "sha256": "fca29acc5f116643759b5b1c7841805d379681ad4cc9c69bc4be2931072f1a0f"
     },
     "test-observer-v2.py": {
       "bytes": 4289,
       "sha256": "779847abaccfb619ddbbe1516ed93dd0dcc8837e13bf4d7d053f174acad1a287"
     },
+    "test-outer-preflight.py": {
+      "bytes": 5414,
+      "sha256": "8b8786377e0c85e406bec099baba5a1efeb0623872ef0b497582dda55e136ee6"
+    },
     "test-supervisor.py": {
-      "bytes": 4709,
-      "sha256": "6fba4a6f54136d861d6f63ec98ed6e5ff3f409980d978b38162d17e4c4feceba"
+      "bytes": 4775,
+      "sha256": "d93ea3c21094f23e9a0cc8ad11811f2084dee4fc2f225a09fc321e9098ac40af"
     },
     "test-windows-private-job.py": {
-      "bytes": 4287,
-      "sha256": "c381aee93ae5dca166586b738de38c880c089dbd50e4f84c95b8a61c5852ef6d"
+      "bytes": 5646,
+      "sha256": "ba84ef4cfa7949977d8c8e5189ca7841abd2dba5174166dd8e39a2d311981ed5"
+    },
+    "unit-test-receipt-linux.json": {
+      "bytes": 11630,
+      "sha256": "9be431404aa553a99df4e25df5ec73a4e9c59164030add02f49d69444c746b25"
+    },
+    "unit-test-receipt-windows.json": {
+      "bytes": 12709,
+      "sha256": "5fb83b555ec57f2382a1702e47c2bfb0b51d25fa7f77421df9477cc5fc579664"
     },
     "unit-test-receipt.json": {
       "bytes": 10132,
       "sha256": "215e83b38c7a871c67afc90b17636d782c30bb79c78e7f4698c607f7f663ae88"
     },
     "windows-backend.py": {
-      "bytes": 11248,
-      "sha256": "49c9b62e3478c0c833ec63c29f7883637332193a685fd91460324e6bdd0451f3"
+      "bytes": 12387,
+      "sha256": "fd74051317f7eb829c1b6648a7d10fe365ff5a3af840831fc32551206a139bf8"
     }
   },
-  "logical_bytes": 177476,
+  "logical_bytes": 238208,
+  "actual_tree_bytes_including_bytecode": 453156,
   "allocation_limit": 4194304,
   "all_prior_fixtures_preserved": true,
   "launch_ready": false,
-  "remaining_gate": "outer invocation pre/post whole image/template/source/native identity/resource/owner checks and separately guarded checkpoint seal need source implementation/review; then main guest allocation"
+  "remaining_gate": "main reviews exact outer/inner/backend/profile/tools hashes and separately allocates fresh bounded guest after peer coordination; PNG visual/Continue/gameplay acceptance remains open"
 }

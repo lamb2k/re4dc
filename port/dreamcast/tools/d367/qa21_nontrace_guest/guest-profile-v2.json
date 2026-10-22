@@ -74,7 +74,9 @@
     "ABI": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest\\observer-v2-ABI.json",
     "ABI_fields": 73,
     "motion_work_offset": 472,
-    "motion_work_bytes": 220
+    "motion_work_bytes": 220,
+    "checkpoint_ABI": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest\\checkpoint-ABI.json",
+    "checkpoint_ABI_additional_reads": 3
   },
   "template": {
     "path": "C:\\Flycast-Evidence\\re4-dreamcast\\d367-harness-par",
@@ -127,6 +129,11 @@
       "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_runner.py",
       "bytes": 17551,
       "sha256": "b1bf7235eed65f757ebb765ccaaefd3108ce935ff6bd80fe3c0a2e425ef0d394"
+    },
+    "evidence_footprint.py": {
+      "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_death_repair\\evidence_footprint.py",
+      "bytes": 1616,
+      "sha256": "e4d25d3fd26df445e6b7f30d98bd43debce5348dcfb28ca873d249c3d0f38132"
     }
   },
   "limits": {
@@ -165,10 +172,10 @@
   ],
   "allocation": "each role separately allocated/reviewed by root; no automatic chained launch",
   "source_only_launch_gates": [
-    "review completed inner-adapter.py wiring; connect portable monitor/native backend in outer invocation with pre/post whole-disc/template/native-ID/hash admission and guarded postguest checkpoint seal; no CLI outer driver yet",
-    "mock/injected source and actual private-job tests recorded; no Flycast acceptance implied",
-    "hash-review final adapter/profile before fresh root resource allocation",
-    "fresh image+nativeID/template+dependencies/preflight checks; no ELF copy or source mutation"
+    "review final outer-driver/inner/backend/profile/source-manifest hashes; source/mock and tiny-child tests are not Flycast acceptance",
+    "separate main allocation after castle/peer coordination; no automatic chained role/retry",
+    "fresh full image/native-ID/template/dependency/tool identity preflight and postreadback under exact18GiB guards",
+    "visually review saved PNGs; Continue and renewed ordinary gameplay require their own observed source/input evidence"
   ],
   "elf_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\cache21-ganado-reader-build-20261021\\on-01\\re4dc-game.elf"
 }
