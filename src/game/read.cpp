@@ -599,7 +599,7 @@ retry:
     {
         static int injected;
 
-        if (pG->room_id == 0x10C && (RE4DC_EM_READ_FAIL_INJECT >= 99 || injected < RE4DC_EM_READ_FAIL_INJECT)) {
+        if (pG->room_id == RE4DC_EM_READ_FAIL_INJECT_ROOM && (RE4DC_EM_READ_FAIL_INJECT >= 99 || injected < RE4DC_EM_READ_FAIL_INJECT)) {
             injected++;
             req = -3;
             goto issued;
@@ -1559,5 +1559,22 @@ extern "C" const void* re4dc_cabin_source_module(const void* pointer,unsigned by
     // Both original r11c swaps borrow the already-loaded module 0x13.
     const ReadModule* module=SearchEmModule(0x13);
     return module && module->pArc==pointer && bytes && bytes<=module->size ? module : NULL;
+}
+#endif
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+// em_set.cpp EM_MUST backoff: sleeps the calling task (the scenario task through SceSleep, as readEmData waits).
+extern "C" void re4dc_em_sleep(int frames)
+{
+    int k;
+
+    for (k = 0; k < frames; k++) {
+        if (SceSys.checkCTaskRange() == 1) {
+            SceSys.x73 = 1;
+            SceSleep(1);
+            SceSys.x73 = 0;
+        } else {
+            TaskSleep(1);
+        }
+    }
 }
 #endif

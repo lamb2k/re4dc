@@ -3457,11 +3457,12 @@ EM_READ_RETRY ?= 1
 ifeq ($(EM_READ_RETRY),1)
 GAME_CPPFLAGS += -DRE4DC_EM_READ_RETRY=1
 endif
-# EM_READ_FAIL_INJECT=N (test only, default 0 = no code): r10c enemy module reads fail N times (>= 99: always), the
+# EM_READ_FAIL_INJECT=N (test only, default 0 = no code): enemy module reads in room EM_READ_FAIL_INJECT_ROOM (default 0x10C) fail N times (>= 99: always), the
 #   issue #52 console failure on Flycast.
 EM_READ_FAIL_INJECT ?= 0
+EM_READ_FAIL_INJECT_ROOM ?= 0x10C
 ifneq ($(EM_READ_FAIL_INJECT),0)
-GAME_CPPFLAGS += -DRE4DC_EM_READ_FAIL_INJECT=$(EM_READ_FAIL_INJECT)
+GAME_CPPFLAGS += -DRE4DC_EM_READ_FAIL_INJECT=$(EM_READ_FAIL_INJECT) -DRE4DC_EM_READ_FAIL_INJECT_ROOM=$(EM_READ_FAIL_INJECT_ROOM)
 endif
 # RESET_MEM_FIX=1 (lane resetmem; load a save, Game Reset / Retry, New Game: r100 started with less heap 4 and KOS
 #   malloc than after a fresh boot): state the port keeps across a soft reset goes back to its fresh-boot value.

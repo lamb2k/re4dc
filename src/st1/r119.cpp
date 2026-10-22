@@ -290,7 +290,7 @@ static void r119_EventGolemAppear()
     EvtMgr.EvtReadAram("event/evd/r119s20.evd", 0, 0, 0, 0);
     EvtMgr.EvtReadAram("event/evd/r119s30.evd", 0, 0, 0, 0);
     }
-    r119_work->golem = EmSetFromList2(0x28, 0);
+    r119_work->golem = EM_MUST(cEm*, EmSetFromList2(0x28, 0));
     GamePointBossReset();
     Cckpt.m_LifeMeter.flags = (u32) r119_work->golem;
     BitOff(pG->Status_flg[1], 0x800);

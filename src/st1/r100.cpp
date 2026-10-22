@@ -581,8 +581,8 @@ static void r100MovieS20Tick(unsigned picture)
     }
     r100MovieS20Cut2 = 1;
     if (!(pG->Debug_flg[0] & 0x02000000)) {
-        W->ems[1]->setNoSuspend(1);
-        W->ems[2]->setNoSuspend(1);
+        if (EM_OK(W->ems[1])) W->ems[1]->setNoSuspend(1);
+        if (EM_OK(W->ems[2])) W->ems[2]->setNoSuspend(1);
     }
 }
 
@@ -874,8 +874,8 @@ static void r100_HouseEvent()
     SceEventStart(0);
     pG->Status_flg[1] |= 0x800;
     W->emHouse = EmSetFromList2(0x25, 1);
-    W->emHouse->setNoSuspend(1);
-    W->emHouse->be_flag |= 0x1000;
+    if (EM_OK(W->emHouse)) W->emHouse->setNoSuspend(1);
+    if (EM_OK(W->emHouse)) W->emHouse->be_flag |= 0x1000;
     W->carSub->setNoSuspend(1);
     {
         cPlayer* p = pPL;
@@ -1144,11 +1144,11 @@ static void r100_Sce_zombi_dead(cEm* em)
     }
     zero = 0;
     pG->System_flg |= 0x400;
-    W->ems[0]->setNoSuspend(0);
-    W->ems[1]->setNoSuspend(0);
-    W->ems[2]->setNoSuspend(0);
-    BitOn(W->ems[1]->flag, 1);
-    BitOn(W->ems[2]->flag, 1);
+    if (EM_OK(W->ems[0])) W->ems[0]->setNoSuspend(0);
+    if (EM_OK(W->ems[1])) W->ems[1]->setNoSuspend(0);
+    if (EM_OK(W->ems[2])) W->ems[2]->setNoSuspend(0);
+    if (EM_OK(W->ems[1])) BitOn(W->ems[1]->flag, 1);
+    if (EM_OK(W->ems[2])) BitOn(W->ems[2]->flag, 1);
     l = EM_LIST(4);
     l->set = zero;
     l = EM_LIST(5);
@@ -1297,7 +1297,7 @@ static void r100_MesTruck()
 // Look-down camera on the first Ganado with message 0xD (the "pardon me" line), as a short event.
 static void r100_MesGanado()
 {
-    CamCtrl.StartLookDownEm(W->em);
+    if (!EM_OK(W->em)) return; CamCtrl.StartLookDownEm(W->em);
     SceEventStart(1);
     W->em->setNoSuspend(1);
     SceMesSet(0xD, 0x20, 1, 0x64, 0x150 - cMes.getWork()->lineSpace - cMes.getWork()->m_font_h - 1);
@@ -1492,8 +1492,8 @@ extern "C" void Evt_R100S20_Func(Event* e)
         case 2:
             if (e->NowFrame == 0) {
                 if (!(pG->Debug_flg[0] & 0x02000000)) {
-                    W->ems[1]->setNoSuspend(1);
-                    W->ems[2]->setNoSuspend(1);
+                    if (EM_OK(W->ems[1])) W->ems[1]->setNoSuspend(1);
+                    if (EM_OK(W->ems[2])) W->ems[2]->setNoSuspend(1);
                 }
             }
             break;
