@@ -1,0 +1,50 @@
+{
+  "guest_observations": 0,
+  "fresh_unique_globals": 13,
+  "draw_proof": false,
+  "external_evidence_pins": [
+    {
+      "sha256": "c080602701809f7990f2ab65bdfb45d2e646c281afc9b9f5b59618a00b9c06ac",
+      "bytes": 2643,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-consumers21-runtime-contract-20261021\\kos-binary-addendum\\binary-proof.json"
+    },
+    {
+      "sha256": "14b61da90ce2fe05fb37816239c936616450e315534cf972658252831ecb2100",
+      "bytes": 16578,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-consumers21-runtime-contract-20261021\\kos-binary-addendum\\DWARF-layouts.json"
+    },
+    {
+      "sha256": "4a6f96d30bba46b573fd69201b6b369578dc1318e316a3320e0597945af12e86",
+      "bytes": 10141,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\canonical-programme-01\\qualification-final.json"
+    }
+  ],
+  "schema": 1,
+  "next": "Benchmark supplies separately qualified raw snapshots. Actual submission needs reviewed immutable per-key world-window event; no hook implemented.",
+  "native_ui_SHA256_matches_frozen_git_source": true,
+  "source_material_bindings": 164,
+  "submitted_vertex_proof": false,
+  "submitted_header_proof": false,
+  "binding_sha256": "dd3373610c4810f40083cbbb14b0497d5102033d3a153e6f7c2fa1cac7d7061e",
+  "state": "SOURCE_HOST_DECODER_QUALIFIED_NO_GUEST",
+  "binding": "bindings-v3.json",
+  "source": "0425534d848973c1dae3ab960d0006ac9afcf363",
+  "tests": {
+    "synthetic_positive_cases": 108,
+    "synthetic_rejections": 720,
+    "keys": 36,
+    "all_header_observations_keep_draw_false": true,
+    "chosen_LOD_never_inferred": true,
+    "guest_observations": 0
+  },
+  "pack_sha256": "89ef27a767fcee529c3ac6ca07fef5a8f9a3e2515f38eda63b61c8929fb0be62",
+  "evidence_levels": [
+    "RESIDENT_DESCRIPTOR_FORMAT",
+    "COHERENT_CPU_DIRECT_PACKET_HEADER"
+  ],
+  "selected_keys": 36,
+  "chosen_LOD": "UNAVAILABLE",
+  "fresh_types": 6,
+  "ELF_sha256": "69f2e7db588f515f4e6a67455d627a74fc17132d5ca20a591db4e0f15deedcae",
+  "programme_sha256": "733afabf6567a9f086eacb48b70559aef764cf52a5b534f44602da3a8bc68a9e"
+}
