@@ -3905,7 +3905,8 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             // Capture independently of today's admission limits: a later owner/pass may have more space.
             for(const auto& r:buf)resident_list_cache.append(r);
         }
-        for(unsigned i=0;i<record_count && n+resident<limit;++i){
+        // Discovery must not depend on texture admission: earlier owner passes may fill the budget.
+        for(unsigned i=0;i<record_count;++i){
             const Rec& r=records[i];
 #else
     for(;re4dc::texture::read_file_range("/cd/dc/resident.bin",pieces*sizeof(buf),buf,sizeof(buf),nullptr)==
@@ -3925,6 +3926,10 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             if((r.room!=src.room && r.room) || !r.width || !r.height || r.width>1024 || r.height>1024)continue;
 #else
             if(r.room!=src.room || !r.width || !r.height || r.width>1024 || r.height>1024)continue;
+#endif
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+            // Keep admission and its accounting bounded after discovering core keys and room-list ownership.
+            if(n+resident>=limit)continue;
 #endif
             ++resident_listed;
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP

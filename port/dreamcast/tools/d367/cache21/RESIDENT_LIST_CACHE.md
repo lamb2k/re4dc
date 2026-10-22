@@ -1,3 +1,15 @@
+## Core metadata discovery repair, October 21
+
+The enabled cache now discovers core keys and whether this room has an own list independently of texture admission slots. Earlier owner passes can fill all slots, or leading core rows can fill them before later own-room rows. Previously both cold scanning and warm replay then skipped those metadata rows and CORE_PIN=2 incorrectly disabled core pinning. The existing differential tests preserved this shared baseline defect.
+
+The existing default-off RESIDENT_LIST_CACHE guard contains this repair. Disabled behavior is unchanged. The original validation order, sixteen-key deduplication/capacity, own-row predicate, file order and successful-prefix behavior remain. Admission counts, texture picks and byte/slot budgets are unchanged. A failed read before the first own row still cannot establish complete ownership; no complete-list claim is made for a partial scan. Cache overflow still disables replay and retries the full scan.
+
+The main rerun passes 141 admission comparisons plus 98 independent semantic assertions under UBSan, including all-full/leading-core/actual owner-selection, warm cache, cross-block rows, sixteen-key cap, invalid own rows, late failures, partial tails and overflow. Checked-in six-core/219-r101 metadata is a host fixture, not proof of saturation on a staged disc. The canonical admission suite separately retains ASan+UBSan. Run the independent suite with core_pin_discovery/run.py --source TREE --ref 8b0340cf7dd0916c6094d2c3db4fecd91a4408a7 --working-ui TREE/port/dreamcast/game/platform/native_ui.cpp --expect-fixed --out FRESH_DIR.
+
+Whole SH4 native_ui OFF objects match exactly. Correctly enabled versus prior enabled adds 20 text bytes, no data/BSS change. Attempt01 is preserved/disqualified because the retained pipeline header overrode the command-line guard to zero; attempt02 uses a final single-guard header and verifies resolved macros. No full linked successor, Flycast occurrence, performance, release or physical acceptance follows from these tests.
+
+---
+
 # Reuse the current room resident-list metadata
 
 `RESIDENT_LIST_CACHE=1` requires `ROOM_RESIDENT=1` and defaults to zero. This caches copied list metadata, not texture payloads. New weapon/enemy identity admission, missing texture loads, VRAM limits, core pin decisions, and existing eviction policy still run on every preload pass.
