@@ -1,0 +1,146 @@
+{
+  "scope": "Focused source-only AEV16 admission/publication regression cases; never imports observer.",
+  "source_sha256": "e2e802830868ae4ae0e56f72e8c09d2d5475d7cff29661df8373a9fa283e1c13",
+  "case_count": 34,
+  "cases": [
+    {
+      "name": "qualifiedoriginalareaandneutralallowsunpublishedslot3",
+      "passed": true
+    },
+    {
+      "name": "roomchanged",
+      "passed": true
+    },
+    {
+      "name": "eventactive",
+      "passed": true
+    },
+    {
+      "name": "nativeplayerbusy",
+      "passed": true
+    },
+    {
+      "name": "stopactive",
+      "passed": true
+    },
+    {
+      "name": "deadplayer",
+      "passed": true
+    },
+    {
+      "name": "callbackmismatch",
+      "passed": true
+    },
+    {
+      "name": "native64oldontrgmustallneutral0",
+      "passed": true
+    },
+    {
+      "name": "native64oldontrgmustallneutral1",
+      "passed": true
+    },
+    {
+      "name": "native64oldontrgmustallneutral2",
+      "passed": true
+    },
+    {
+      "name": "native64ALLbitsmustbeneutral_0x1",
+      "passed": true
+    },
+    {
+      "name": "native64ALLbitsmustbeneutral_0x400",
+      "passed": true
+    },
+    {
+      "name": "native64ALLbitsmustbeneutral_0x100000000",
+      "passed": true
+    },
+    {
+      "name": "inheritedrigidentity_max_entry",
+      "passed": true
+    },
+    {
+      "name": "inheritedrigidentity_n_go",
+      "passed": true
+    },
+    {
+      "name": "inheritedrigidentity_rooms",
+      "passed": true
+    },
+    {
+      "name": "inheritedrigidentity_go3",
+      "passed": true
+    },
+    {
+      "name": "inheritedrigidentity_go2",
+      "passed": true
+    },
+    {
+      "name": "consumedoriginalAEVnotrearmed",
+      "passed": true
+    },
+    {
+      "name": "originalcallbackpointerrequired",
+      "passed": true
+    },
+    {
+      "name": "preparedslotacceptsonlybeforecount",
+      "passed": true
+    },
+    {
+      "name": "engineownsdonebit",
+      "passed": true
+    },
+    {
+      "name": "descriptor24thencount4lastonly",
+      "passed": true
+    },
+    {
+      "name": "freshneutralfailureafterdescriptorpreventspublication",
+      "passed": true
+    },
+    {
+      "name": "inheritedreviewedhelperAST_close",
+      "passed": true
+    },
+    {
+      "name": "inheritedreviewedhelperAST_read",
+      "passed": true
+    },
+    {
+      "name": "inheritedreviewedhelperAST_wait_startup_mapping",
+      "passed": true
+    },
+    {
+      "name": "mainnevercallsinputorfocushelper",
+      "passed": true
+    },
+    {
+      "name": "noactiveinputorfocusAPIbindingsorcalls",
+      "passed": true
+    },
+    {
+      "name": "noMAX_ENTRYwriteinpublisher",
+      "passed": true
+    },
+    {
+      "name": "positiononlynoangleorsubplacement",
+      "passed": true
+    },
+    {
+      "name": "shellrootentryexact023",
+      "passed": true
+    },
+    {
+      "name": "nativefreshneutralgatebeforeonepublication",
+      "passed": true
+    },
+    {
+      "name": "inheritedfinallystartupcleanupunchanged",
+      "passed": true
+    }
+  ],
+  "no_observer_import": true,
+  "no_API_or_guest": true,
+  "no_old_broad_suite_rerun": true
+}

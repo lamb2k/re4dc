@@ -1,0 +1,33 @@
+{
+  "scope": "Source launch entry only, no actual root allocation.",
+  "shell": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\run-controlled-ch32-escape023.sh",
+    "sha256": "7710d67fdd4563a468e773676dc47e7db3bd0eeef7fd7514495eb15c04510df7"
+  },
+  "root_argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-escape023.sh",
+    "--execute-allocated023"
+  ],
+  "required_allocation_path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\ESCAPE023-ROOT-ALLOCATION.json",
+  "allocation_exists": false,
+  "source_handback": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\ESCAPE023-SOURCE-QUALIFIED-HANDBACK.json",
+    "sha256": "e20409c6795cca8a8b3fe114a41bdde58df34a43fe4c1e4eace40c80989455af"
+  },
+  "review": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\review-source023-final-delta.json",
+    "sha256": "16dac3166994564316482720431ff85fa84a3ca4d76f62d634f1253ba43ceb33"
+  },
+  "source_unit_growth": {
+    "files_and_mirror_before_git": 193808,
+    "maximum_including_git_mirror_metadata_bytes": 1048576,
+    "no_guest_programme_image_build_bytes": 0
+  }
+}

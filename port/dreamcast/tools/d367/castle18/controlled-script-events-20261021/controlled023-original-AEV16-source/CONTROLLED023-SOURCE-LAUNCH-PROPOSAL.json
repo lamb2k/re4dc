@@ -1,0 +1,93 @@
+{
+  "scope": "SOURCE_ONLY023 one consolidated originalAEV16 escape attempt; root review/allocation required, no guest/build/image/sourceprogramme allocation.",
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\data\\disc.state",
+    "sha256": "b63e07f2ebb8be87be27e051d4580d28c878a0495348c5f99792ff2dcab4f16a",
+    "frame": 6612,
+    "HP": [
+      1040,
+      1440,
+      600,
+      600
+    ]
+  },
+  "prepared": {
+    "prepared_only": true,
+    "no_guest": true,
+    "observer_sha256": "e2e802830868ae4ae0e56f72e8c09d2d5475d7cff29661df8373a9fa283e1c13",
+    "wrapper_sha256": "651b4298adbc94df0055af54c703bb40380d4c61311e4a505f65be546bced834",
+    "pins_sha256": "045f06552668fc5e9180cdee759ad5285b4a0f835f168dd5ee178b526a5c32c8",
+    "argv": [
+      "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\tools\\fp_run_ram.py",
+      "--base",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "--cap",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023",
+      "--syms",
+      "0x4319a0 0x4419a4 0x4419a0",
+      "--seconds",
+      "41",
+      "--vmu",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+      "--state-seed",
+      "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\data",
+      "--warp",
+      "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-warp.txt",
+      "--period",
+      "0",
+      "--name",
+      "castle21-CONTROLLED-original209-escape023"
+    ],
+    "admission_bytes": 20342374400,
+    "runtime_floor": 19394461696,
+    "capture_cap": 62914560,
+    "global_limit": 16,
+    "lane_limit": 2,
+    "exclusive_gui_input_required": false,
+    "source_only": true
+  },
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff78",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 28,
+  "root_allocation_required": {
+    "allocated023": true,
+    "allow_debug_goto_command_writes": true,
+    "allow_owned_window_focus": false,
+    "allow_scan_code_SendInput": false,
+    "exclusive_gui_input": false,
+    "maximum_successful_command_bytes": 28
+  },
+  "contract": "Two fresh coherent advancing native64Key old/on/trg A-neutral frames after restore, originalnativeidle and exactregisteredAEV16/sourcecallback, inheritedgo0..2consumed/count3/max3/rooms3 beforeone slot3/currententry3 descriptor; recheck thenpublishcount4LAST. No maxentry change, actor/HP/AI/RSF/outcome writes or nativeinput/focus/retry. Originalregisteredcallback owns wrapper/isActive and originalevent. No directexit20a or latermovie20900 substitution.",
+  "acceptance": [
+    "OriginalAEV16trigger/callback and existingengineGoto consumption are prerequisites only.",
+    "ActualCamC thenD plus liftAC rise to2900, originalRSF1/door51cc80000, eventreturn/Stop0/advancingframes/PNGs establish this scripted unit. Sharedcancelendflags alone insufficient; no capturedaudio claim fromSEsource.",
+    "Preservelegitimateinjury and partialstate at41raw/39close/47.5absolute/60MiB; no earlycombat/HPstop orfollowingguest.",
+    "ExternalFlycasts untouched; zeroGUIinput/focus calls, rootownsactualprocessresourceallocation and global16/castle2/floor19394461696/64MiBstandingpeer."
+  ],
+  "protected": "Baseline41pins preserved except ownobserver replacement, plus currentactual022 VMU/state and7qualificationproofinputs. No runtimesource/defaultswitch/productionrecipe change.",
+  "guards": {
+    "raw_seconds": 41,
+    "close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "start_bytes": 20342374400,
+    "runtime_floor_bytes": 19394461696,
+    "global16": true,
+    "castle2": true,
+    "standing_peer_bytes": 67108864
+  },
+  "review_inputs": {
+    "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled023-retained-AEV16-qualification.json": "a6be384f7bae2fcb2feb65517f3d815ac83197ced4d83d5aeebeee5e2d7e5ddf",
+    "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\r209-after022-live-overlay-proof.json": "91ca9fe5de1b195e230fbc9d251ec9c2d5a5690c9b6bac1a8abc3d42df04a5c7",
+    "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\r209-after022-exact-native-wrapper.json": "9370ffecb602e1677187008749d71fbc96d19150f70604aa13d99d36cb8eb4fb"
+  }
+}

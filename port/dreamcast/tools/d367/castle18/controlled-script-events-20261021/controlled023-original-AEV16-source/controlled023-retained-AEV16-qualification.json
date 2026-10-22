@@ -1,0 +1,89 @@
+{
+  "scope": "SOURCE_ONLY closed retained gates and exact original trigger target; not live readiness or event acceptance.",
+  "state_sha256": "b63e07f2ebb8be87be27e051d4580d28c878a0495348c5f99792ff2dcab4f16a",
+  "frame": 6612,
+  "HP": [
+    1040,
+    1440,
+    600,
+    600
+  ],
+  "native_Key": [
+    2148009088,
+    2148009088,
+    0
+  ],
+  "fresh_native_neutral_required": true,
+  "AEV16": {
+    "enabled": true,
+    "type": 0,
+    "checkFlag": 0,
+    "trigger": 129,
+    "checkType": 1,
+    "floor": 4000.00439453125,
+    "height": 1000.0,
+    "func": 2358339092,
+    "quad": [
+      [
+        -36337.58984375,
+        9195.5556640625
+      ],
+      [
+        -33258.21484375,
+        9329.404296875
+      ],
+      [
+        -33160.140625,
+        10733.509765625
+      ],
+      [
+        -36306.7109375,
+        10777.5849609375
+      ]
+    ]
+  },
+  "target": [
+    -34765.6640625,
+    4001.00439453125,
+    10009.013671875
+  ],
+  "target_recipe": "Float32 original quad centroid XZ/floor+1; checkFlag0 selects pos+250, strictly inside original prism. No leader position guessed as player target.",
+  "convex_cross_products": [
+    2294542.1361045837,
+    2183269.850418091,
+    2350441.6592025757,
+    2461713.9448890686
+  ],
+  "callback_bytes_hex": "862f962fa62fb62fc62fd62fcbffdbff224fc59467d00b40f07f036866d1126a66d00b40a3640820038965d965db07a0090065d10b410900f7af09000b4b01e4",
+  "callback_closed_sha256": "33f85f4e0096caee8c8cc2df8f3d9ca83d546f5da8f9900e68eeb647af610667",
+  "callback_asset_binding": "Require independent native overlay mapping receipt before final qualified handback.",
+  "inherited_gotos": [
+    "00000000a894e4454f331c46025e27470000000001010001",
+    "00000000f1af2ec6fd87bb45c586dec60000000001010002",
+    "000000001f587cc60020fa44edef5246560ec93f01010003"
+  ],
+  "descriptor": {
+    "address": "0x8c47ff78",
+    "bytes": 24,
+    "entry": 3,
+    "count_address": "0x8c47fff0",
+    "count": 4,
+    "published_last": true,
+    "maximum_successful_bytes": 28,
+    "max_entry_unchanged": 3
+  },
+  "native_lift_recipe": {
+    "table_symbol": "8c3bdd64",
+    "object_id": 172,
+    "pos_offset": 148,
+    "be_flag_offset": 4,
+    "DWARF": "ac0c7fb410a572522b494954f906250e6194835dcd21690031ec5cbb8725fc2b"
+  },
+  "inputs": {
+    "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\r209-after022-closed-native-gates.json": "8a8ba0eec944ad0a74f3af7c516bf354a8216ccbb2c6037b5954a050d8ff25d2",
+    "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\r209-after022-native-idle-leader-proof.json": "b834aeb9361747e74fa662a0704ac7962b6a9d4a0cb3786937a6a88b6316e61c",
+    "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\r209-after022-source-route-identities.json": "45a81d4dced519acf3e7b0f789053f61b24848ebeacbff64be38ae202a1e48c3",
+    "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\NEXT-CH32-SOURCE-CAPABILITY-20261022.json": "828cb32d2db55dba6dfa0fafbd6221a78e95dd21330b6b73f548117ba3d716bb",
+    "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-frozen-DWARF.json": "ac0c7fb410a572522b494954f906250e6194835dcd21690031ec5cbb8725fc2b"
+  }
+}

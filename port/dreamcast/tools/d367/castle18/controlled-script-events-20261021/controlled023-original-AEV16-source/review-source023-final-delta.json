@@ -1,0 +1,30 @@
+{
+  "utc": "2026-10-22T17:35:47.282672+00:00",
+  "scope": "Independent narrow source read and static inventory only; no observer import/nativeAPI/tests/guest/input/focus/build/allocation. Owner34 NEWfocusedcases read, not rerun.",
+  "disposition": "No remaining concrete source blocker; root owns finalallocation/resource/identity review. Not actual023 acceptance.",
+  "sourcepins": {
+    "observe-controlled-ch32-escape023.py": "e2e802830868ae4ae0e56f72e8c09d2d5475d7cff29661df8373a9fa283e1c13",
+    "run-controlled-ch32-escape023.py": "651b4298adbc94df0055af54c703bb40380d4c61311e4a505f65be546bced834",
+    "controlled-ch32-escape023-pins.json": "045f06552668fc5e9180cdee759ad5285b4a0f835f168dd5ee178b526a5c32c8",
+    "CONTROLLED023-SOURCE-LAUNCH-PROPOSAL.json": "5c882b71d000fe2823416e8414089d6a7afc15559d82b3f3dbd906a7f7a50fa5"
+  },
+  "findings": [
+    "A-only neutral mismatch fixed: ALL64bitszero for each old/on/trg; two advancing coherent samples and immediate prepublication originalarea/code/idle checks. No forced keyclear.",
+    "Removed inherited SendInput/focus APIs/classes/helpers; rootcontract string allow_scan_code_SendInput=false remains. PostMessage only exactowned normal WM_CLOSE.",
+    "Existing28B goto slot3 first/count4 last, oneattempt, max_entry3 unchanged; has_ang0/sub0/entry3 preservesplayerfacing. No actor/RSF/AI/HP/outcome writes; nativeengine owns done byte.",
+    "Directactual022 b63/HP1040 preserved; qualifiedcallback64B/currentarea/currententry/rig flags rechecked. Originalcallback ownsisActive.",
+    "CamC/lift/CamD/flags/return observations do not claim fullanimation from flags. Source task maycontinue afterEventEnd.",
+    "InheritedV5 unchanged7aa4113d/raw41/close39/absolute47.5/60MiB; rootallocation falseGUI/input/defaultprepareonly; shell allocated023 matches wrapper."
+  ],
+  "owner_case_receipt": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled023-focused-source-cases.json",
+    "sha256": "e0666eb98564a4afb6ab7308fdec6fb407586ee5a73bd4759d1c1e35d77b9a9d",
+    "count": 34,
+    "read_not_rerun": true
+  },
+  "closed_gate_proof": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\r209-after022-qualification-final.json",
+    "sha256": "25d7220b699d1b4ac965b9e705c5df19cf45014c2eb431ba96e52049708480ee"
+  },
+  "runtime_limits": "Fresh neutral maynotmaterialize; preservepartial and normalbound, noforce/replay. Actualevent/screenshots/audio/fullchapter/release/hardware/performance need separateevidence."
+}

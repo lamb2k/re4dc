@@ -1,0 +1,53 @@
+{
+  "scope": "SOURCE_ONLY originalAEV16 unit qualified, no actual event/guest/build/programme/image allocated.",
+  "utc": "2026-10-22T17:36:17.184957+00:00",
+  "branch": "codex/castle22-source023",
+  "frozen_runtime_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "ELF": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "raw": "78fb06976cc394ec6e4cb7861046c24a15f82ddf7bcb2fcbfd452d3fcbf72e33",
+  "image": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "identities": {
+    "observer": "e2e802830868ae4ae0e56f72e8c09d2d5475d7cff29661df8373a9fa283e1c13",
+    "wrapper": "651b4298adbc94df0055af54c703bb40380d4c61311e4a505f65be546bced834",
+    "pins": "045f06552668fc5e9180cdee759ad5285b4a0f835f168dd5ee178b526a5c32c8",
+    "proposal": "5c882b71d000fe2823416e8414089d6a7afc15559d82b3f3dbd906a7f7a50fa5"
+  },
+  "pins_count": 48,
+  "all_pins_fresh": true,
+  "focused_cases": 34,
+  "focused_receipt": "e0666eb98564a4afb6ab7308fdec6fb407586ee5a73bd4759d1c1e35d77b9a9d",
+  "old_broad_suites_not_repeated": true,
+  "independent_review": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\review-source023-final-delta.json",
+    "sha256": "16dac3166994564316482720431ff85fa84a3ca4d76f62d634f1253ba43ceb33"
+  },
+  "original_gate_review": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle-controls21\\r209-after022-qualification-final.json",
+    "sha256": "25d7220b699d1b4ac965b9e705c5df19cf45014c2eb431ba96e52049708480ee"
+  },
+  "contract": "Native old/on/trg ALL64bitszero on2freshcoherentadvancing samples; idle/current exact originalAEV16 polygon/callback/main code and inherited rig gating. ONE position-only existingGoto slot3/currententry3 descriptor24B plus count4 LAST4B; max_entry remains3. Engine owns done/position; original registered script owns isActive, C/lift/D/RSF1/door51cc/eventreturn. No keyboard/focus/SendInput API in observer. No no-peer exclusion: fresh global<16/lane<2 and exact root accounting remain.",
+  "next": "Root exact reviewed allocation and fresh resources; one consolidated original event attempt, no retries/followingguest/earlycombatstop. Source qualification is not Flycast/hardware/audio/performance/release acceptance.",
+  "protected_status_sha256": "c114bae10e7f80b69c0aef9e5a5e9ea32d5993b33f59af8059d65b6b75302edd",
+  "resource": {
+    "source_metadata_git_mirror_unit_maximum_bytes": 1048576,
+    "standing_peer_bytes": 67108864,
+    "runtime_floor": 19394461696,
+    "new_guest_build_programme_image_allocation": 0
+  },
+  "owned_files": {
+    "observe-controlled-ch32-escape023.py": "e2e802830868ae4ae0e56f72e8c09d2d5475d7cff29661df8373a9fa283e1c13",
+    "run-controlled-ch32-escape023.py": "651b4298adbc94df0055af54c703bb40380d4c61311e4a505f65be546bced834",
+    "run-controlled-ch32-escape023.sh": "7710d67fdd4563a468e773676dc47e7db3bd0eeef7fd7514495eb15c04510df7",
+    "controlled-ch32-escape023-pins.json": "045f06552668fc5e9180cdee759ad5285b4a0f835f168dd5ee178b526a5c32c8",
+    "CONTROLLED023-SOURCE-LAUNCH-PROPOSAL.json": "5c882b71d000fe2823416e8414089d6a7afc15559d82b3f3dbd906a7f7a50fa5",
+    "controlled023-default-prepare.json": "a34837891fa4528296f82890f70e0d3e5b9f950d85225fbbd5af88ef616fd42d",
+    "controlled023-focused-source-cases.json": "e0666eb98564a4afb6ab7308fdec6fb407586ee5a73bd4759d1c1e35d77b9a9d",
+    "controlled023-retained-AEV16-qualification.json": "a6be384f7bae2fcb2feb65517f3d815ac83197ced4d83d5aeebeee5e2d7e5ddf",
+    "prepare-controlled023-source-unit.py": "a6fc3bdedfdc07fb45fe686bc908cc7fa59bc6fe95047cdc502f59625b6f5ce8",
+    "prepare-controlled023-wrapper.py": "071033bd8a294f600548aeb4953078798edd2c8d1b77782d5893508cdcab7a51",
+    "qualify-controlled023-retained-gates.py": "dea0705c3d679dbe531853a2b4882df0cce17eec52b2cd5410f8cc2112e25d6b",
+    "finalize-controlled023-source.py": "4977127026f1509e7d23a1d6c71c70162e134b57160dd54ff2fd87948c9a800b",
+    "test-controlled023-source.py": "f517930a67dbb5400ea7b2b9626086778f86c1dd4c80ba252ce9603186e156b5",
+    "controlled023-HISTORICAL-STATUS-BEFORE-SOURCE.md": "c114bae10e7f80b69c0aef9e5a5e9ea32d5993b33f59af8059d65b6b75302edd"
+  }
+}
