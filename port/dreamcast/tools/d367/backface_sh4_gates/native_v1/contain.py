@@ -1,6 +1,6 @@
 """Backface-only retained native job. No native work at import; not a generic launcher."""
 from pathlib import Path
-import ctypes as C,ctypes.wintypes as W,hashlib,importlib.util,json,os,shutil,subprocess,sys,threading,time
+import ctypes as C,ctypes.wintypes as W,datetime,hashlib,importlib.util,json,os,shutil,subprocess,sys,threading,time
 HELPER=Path(r'C:\Game Dev\Emulators\codex-lanes\castle-controls21\owned-windows-writer-job.py')
 HELPER_SHA='5dde0bbfd6f288b86bc8662bf3a7d2dfa654b39d83e523052b11fed21c7a4558'
 API=Path(r'\\wsl.localhost\Ubuntu-24.04\root\probe\codex-qa21-death-repair\port\dreamcast\tools\d367\qa22_nontrace_detached_run_v1\reference-hooks\native_reference_api.py')
@@ -34,6 +34,15 @@ def all_guest_count():
    return value
  return m.count_flycasts(BothNames())
 
+def fixed_stock_contract(profile):
+ args=profile['stock_argv']
+ if len(args)!=16 or args[::2]!=['--disc','--cap','--syms','--seconds','--period','--stop','--grace','--name']:raise ValueError('literal stock option set required')
+ opts=dict(zip(args[::2],args[1::2]))
+ tick={'f1':330,'close-ganado':420}[profile['fixture_name']]
+ if profile.get('freeze_tick')!=tick:raise ValueError('fixture freeze tick differs')
+ if (opts['--cap'],opts['--seconds'],opts['--period'],opts['--stop'],opts['--grace'])!=(profile['capture'],'40','2','^warp: frozen at tick '+str(tick)+'$','8'):raise ValueError('fixed40/2/fixturefreeze/grace8 required')
+ return opts
+
 def validate_pixel(argv,output,authority):
  if not authority:raise ValueError('pixel execution requires exact ROOT authority; controls grant does not allocate a guest')
  profile_path,profile_pin,allocation_path,allocation_pin=authority
@@ -45,14 +54,18 @@ def validate_pixel(argv,output,authority):
  if not profile.get('current_programme_closure_verified') or len(profile.get('overlays',[]))!=14:raise ValueError('current linked all14 overlay closure missing')
  if argv!=profile['controller_child_argv'] or str(Path(output))!=profile['output']:raise ValueError('literal argv/output mismatch')
  if argv!=[sys.executable,'-B',str(P/'stock_child.py'),str(profile_path)]:raise ValueError('fixed stock child invocation required')
- args=profile['stock_argv']
- if len(args)!=16 or args[::2]!=['--disc','--cap','--syms','--seconds','--period','--stop','--grace','--name']:raise ValueError('literal stock option set required')
- opts=dict(zip(args[::2],args[1::2]))
- if (opts['--cap'],opts['--seconds'],opts['--period'],opts['--stop'],opts['--grace'])!=(profile['capture'],'40','2','^warp: frozen at tick 330$','8'):raise ValueError('fixed40/2/freeze330/grace8 required')
+ fixed_stock_contract(profile)
  if Path(profile['capture']).parent!=Path(output):raise ValueError('capture must be child of charged output')
  if profile['environment']!={k:v for k,v in os.environ.items() if k.startswith(('RE4DC_','FP_NOLIMIT'))}:raise ValueError('environment mismatch')
  if profile['environment'].get('RE4DC_EMU')!='console' or profile['environment'].get('RE4DC_MAX_FLYCASTS')!='16':raise ValueError('console/global16 required')
  if profile['lane_live_guests'] not in (0,1) or not profile['fresh_root_capacity_review']:raise ValueError('main fresh lane2/global census required')
+ review=profile.get('root_review')
+ if not isinstance(review,dict) or not review.get('programme_and_asset_disc_closure_reviewed') or not review.get('actual_sdk_source_reviewed'):raise ValueError('explicit root stage and actual SDK review missing')
+ age=(datetime.datetime.now(datetime.timezone.utc)-datetime.datetime.fromisoformat(review['capacity_reviewed_utc'])).total_seconds()
+ if not 0<=age<=60:raise ValueError('root capacity review is stale at invocation')
+ for path in (sys.executable,__file__,P/'stock_child.py',P/'launch.py',HELPER,API,COUNTER,profile['stock_runner'],profile['console_source']):
+  if str(Path(path))not in profile['inputs']:raise ValueError('required execution input pin missing: '+str(path))
+ if profile['inputs'][profile['stock_runner']]!=profile['stock_sha256'] or profile['inputs'][profile['console_source']]!=profile['console_sha256']:raise ValueError('stock/console source pins disagree')
  for path,pin in profile['inputs'].items():
   if sha(path)!=pin:raise ValueError('input changed: '+path)
  for target,ref in profile['hardlink_refs'].items():

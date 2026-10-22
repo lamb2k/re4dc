@@ -1,0 +1,13 @@
+# Profile preparation, v3
+
+Only prepare against the fresh SDK-backed pair02 (or a later explicitly named pair), after its completed STAGE-f1-RECEIPT.json or STAGE-close-ganado-RECEIPT.json exists. No real stage receipt was consumed in the source-control unit. The tiny synthetic constructor tests are host file-contract controls only.
+
+`prepare_profile.py` takes --stage ABS --stage-sha256 SHA --source FULL40 --qa-source FULL40 --pair pair02 --fixture f1|close-ganado --arm C|ASM --sdk-evidence ABS --sdk-sha256 SHA --stock ABS --stock-sha256 SHA --console ABS --console-sha256 SHA --environment ABS_JSON --profile FRESH_ABS_JSON [--write] [--root-review ABS_JSON --root-review-sha256 SHA]. Without --write it validates and reports prospective hash. No mode launches a guest or creates a run allocation.
+
+Environment JSON contains exactly the intended RE4DC_* and FP_NOLIMIT keys/values (console and global16 required). Root must set that exact environment at validation/execution. The constructor pins executable/runtime DLLs and extension modules, loaded stock stdlib dependencies, PIL/plugins, fixed template config/read_log/capture/data and native declarations/counter. It hashes staged tracks and current ELF/raw/overlays/manifests against receipts. Parent owns semantic actual-SDK-source clearance and final current image/member closure.
+
+Without root review, the profile has current_programme_closure_verified=false, fresh_root_capacity_review=false, lane_live_guests=null. Such drafts cannot launch. Preserve them; use a separate final profile filename after root review. Run directory remains SOURCE40-fixture-arm-01 under the backface evidence root and must not exist. No automatic retry or output replacement.
+
+Root review JSON must name stage_receipt_sha256, source, qa_source, pair, fixture, arm exactly; programme_and_asset_disc_closure_reviewed=true; actual_sdk_source_reviewed=true; lane_live_guests0/1; global_live_guests0..15; capacity_reviewed_utc with timezone. Root supplies this after actual review and census. It must remain <=60 seconds old at adapter invocation. The review is not the run allocation. Root then separately writes the exact allocation binding final profile SHA and current contain.py SHA with attempt_limit1, guard59 and closure59.5.
+
+The final stock arguments are fixed40 seconds, period2, grace8, and an exact freeze330 stop for f1 or freeze420 for close-ganado. Only the existing capture call is AST-wrapped. Native containment, no-selector all-four comparison, no-stock-edit and no-guest-before-root-allocation rules from v2 remain. Use v3 controller/source hashes; old v2 files are archived under source-history, with their seals preserved.
