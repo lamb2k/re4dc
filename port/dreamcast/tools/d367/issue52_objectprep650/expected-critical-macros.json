@@ -1,0 +1,50 @@
+{
+  "native_ui-default": {
+    "RE4DC_MESH_LOD": "1",
+    "RE4DC_MESH_DIRECT": "1",
+    "RE4DC_WORLD_RECT21": "0",
+    "RE4DC_PS2_WORLD_SOURCE_OWNER": "1"
+  },
+  "native_ui-off": {
+    "RE4DC_MESH_LOD": "1",
+    "RE4DC_MESH_DIRECT": "1",
+    "RE4DC_WORLD_RECT21": "0",
+    "RE4DC_PS2_WORLD_SOURCE_OWNER": "1"
+  },
+  "native_ui-on": {
+    "RE4DC_MESH_LOD": "1",
+    "RE4DC_MESH_DIRECT": "1",
+    "RE4DC_WORLD_RECT21": "1",
+    "RE4DC_PS2_WORLD_SOURCE_OWNER": "1"
+  },
+  "native_static-default": {
+    "RE4DC_MESH_LOD": "1",
+    "RE4DC_PS2_AREA_HIDE": "1",
+    "RE4DC_MESH_DIRECT": "1",
+    "RE4DC_WORLD_RECT21": "0",
+    "RE4DC_PS2_WORLD_SOURCE_OWNER": "1",
+    "RE4DC_PS2_WORLD_ROOMS": "2",
+    "RE4DC_PS2_WORLD_DYNAMIC": "1",
+    "RE4DC_SCENERY_FAR_LOD": "4"
+  },
+  "native_static-off": {
+    "RE4DC_MESH_LOD": "1",
+    "RE4DC_PS2_AREA_HIDE": "1",
+    "RE4DC_MESH_DIRECT": "1",
+    "RE4DC_WORLD_RECT21": "0",
+    "RE4DC_PS2_WORLD_SOURCE_OWNER": "1",
+    "RE4DC_PS2_WORLD_ROOMS": "2",
+    "RE4DC_PS2_WORLD_DYNAMIC": "1",
+    "RE4DC_SCENERY_FAR_LOD": "4"
+  },
+  "native_static-on": {
+    "RE4DC_MESH_LOD": "1",
+    "RE4DC_PS2_AREA_HIDE": "1",
+    "RE4DC_MESH_DIRECT": "1",
+    "RE4DC_WORLD_RECT21": "1",
+    "RE4DC_PS2_WORLD_SOURCE_OWNER": "1",
+    "RE4DC_PS2_WORLD_ROOMS": "2",
+    "RE4DC_PS2_WORLD_DYNAMIC": "1",
+    "RE4DC_SCENERY_FAR_LOD": "4"
+  }
+}

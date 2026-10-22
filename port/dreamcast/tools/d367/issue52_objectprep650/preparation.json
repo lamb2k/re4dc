@@ -1,0 +1,19 @@
+{
+  "source": "33504b9df434b82cd92e7bab3bb4630663a72ddd",
+  "base_source": "0425534d848973c1dae3ab960d0006ac9afcf363",
+  "base_programme": "733afabf6567a9f086eacb48b70559aef764cf52a5b534f44602da3a8bc68a9e",
+  "base_ELF": "69f2e7db588f515f4e6a67455d627a74fc17132d5ca20a591db4e0f15deedcae",
+  "canonical_dependency_closure_verified": 948,
+  "candidate_pinned_inputs": 95,
+  "system_header_pins": 1233,
+  "compiler_version": "sh-elf-g++ (GCC) 15.2.0",
+  "native_ui_source_exact_base": true,
+  "status": "PREPARED ONLY: zero compilation/preprocessing/linking performed",
+  "future_output": "/root/probe/issue52-650-sh4-objects-20261022-01",
+  "runtime_source_owned_by_main": true,
+  "buildslot_disposition": "One shared d367 slot held across six sequential object tasks; no make/full link/stage/guest. Explicit root allocation required.",
+  "requested_future_cap_bytes": 33554432,
+  "estimated_future_peak_bytes": 25165824,
+  "metadata_source_plus_mirror_limit_bytes": 2097152,
+  "root_global_budget_bytes": 67108864
+}

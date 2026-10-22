@@ -1,0 +1,200 @@
+[
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/actual-complete-dependency-closure.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/actual-complete-dependency-closure.json",
+    "bytes": 177394,
+    "sha256": "158e83ce5da15e3f6fd902c5c985028a00effa5403a1868af57c46294b5b128b"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/derived-rename.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/derived-rename.json",
+    "bytes": 698,
+    "sha256": "4a7112350f701922cace374a8e377e006bc137001dae228c8b7af73d07897ba5"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/independent-program-qualification.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/independent-program-qualification.json",
+    "bytes": 40654,
+    "sha256": "b68cf258095ea7dfaf013e9e38fd7291fb67f471fbfa0c4e20a6c301a0cf6be3"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/inherited-resolved-knobs.txt",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/inherited-resolved-knobs.txt",
+    "bytes": 225698,
+    "sha256": "524c873fc9033cde8d9cbc70b424910c28ad109713cb37cb0f495627b593a5c8"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_static-default-receipt.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_static-default-receipt.json",
+    "bytes": 604,
+    "sha256": "0ae82d96967f1b16275b334125bd244868f6c60f967301ec174c6124160bd07d"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_static-off-receipt.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_static-off-receipt.json",
+    "bytes": 600,
+    "sha256": "997131b912cb8b088d77985a6be2478f45b4e6bd367c75a2b043755e270ef3b3"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_static-on-receipt.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_static-on-receipt.json",
+    "bytes": 563,
+    "sha256": "3f90bed2d95b67618a81a9b20316f35e045ae8605c4dacdfd7f5893bb2e7d383"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_ui-default-receipt.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_ui-default-receipt.json",
+    "bytes": 601,
+    "sha256": "d334f30f21e17ee21837389eb488122d75296f5bf4587142590d610f8694cecb"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_ui-off-receipt.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_ui-off-receipt.json",
+    "bytes": 597,
+    "sha256": "4eea4a47c66603a6b086b36a7276ede4a1bdf900720d31f4bc7ad0d87294c40b"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_ui-on-receipt.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/native_ui-on-receipt.json",
+    "bytes": 561,
+    "sha256": "2a0dd004b1c049cc0491ec6da0dd34dc8fba1ab093409a7241aeb53af47f9c55"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/qualification-final.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-01/qualification-final.json",
+    "bytes": 10141,
+    "sha256": "4a6f96d30bba46b573fd69201b6b369578dc1318e316a3320e0597945af12e86"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-plan-01/plan02.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/canonical-programme-plan-01/plan02.json",
+    "bytes": 548689,
+    "sha256": "ace4795913750dca3ca8647b3551d61d9685a6dce51dc1d9d4107760c5a7f881"
+  },
+  {
+    "path": "/root/probe/d367-buildslot.sh",
+    "resolved_path": "/root/probe/d367-buildslot.sh",
+    "bytes": 485,
+    "sha256": "14eaa5f2dc1a3b87282b1a2faaaa20a0676788b0e870f2e4e26bdc87d1e0a4dd"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_static-default-task.json",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_static-default-task.json",
+    "bytes": 15475,
+    "sha256": "1b0f89fc90d8430f988e906acac434d20c0da675b4551826ec6c124af89c1353"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_static-off-task.json",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_static-off-task.json",
+    "bytes": 15553,
+    "sha256": "598161d1b59e7cec6f32ee4b487bd5fbc088f73b06a1ce9314636fd572b221b4"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_static-on-task.json",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_static-on-task.json",
+    "bytes": 15550,
+    "sha256": "49d8358e0c80a05af613398358d176cad5f62e1abce118691b1e3b98aad403e6"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_ui-default-task.json",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_ui-default-task.json",
+    "bytes": 20533,
+    "sha256": "ef74f5aada050dce204aa11d709d3d81ad037df1690047f5e83598ad34cce3c3"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_ui-off-task.json",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_ui-off-task.json",
+    "bytes": 20611,
+    "sha256": "3942c643fc0e60437d306ab5846996ceb712f6c0181197b75f5da5178d153f0f"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_ui-on-task.json",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/native_ui-on-task.json",
+    "bytes": 20608,
+    "sha256": "dce4c369e344e6336e9d9858eee80ee4a879dfcdc387a9b93570e1e277487f88"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-default.d",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-default.d",
+    "bytes": 4359,
+    "sha256": "c85706d51b28099e03729ebeeda95c6c38d3511f15193ea9793092b040dc7f62"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-off.d",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-off.d",
+    "bytes": 4355,
+    "sha256": "70f0e477fd02fc8cbd838f60bef7a90e22e6bba2e0aff918965244ced9650fe9"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on.d",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on.d",
+    "bytes": 4630,
+    "sha256": "52f890ab037ff0aa946a2d82c824e878f2b9292b4504f413246f356e8134d161"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-default.d",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-default.d",
+    "bytes": 7557,
+    "sha256": "f7ca481459cb881e1874bbc8d21eddc1c87d30e30b899a7277541d2fb84737d1"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-off.d",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-off.d",
+    "bytes": 7553,
+    "sha256": "6ca36c7230f4b5308f745f068242163810f816bbd015312c3bc1ee1316eca6fc"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-on.d",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-on.d",
+    "bytes": 7814,
+    "sha256": "27c8520b098c6279c6dbb27033c16caa24957acd6ad02cd4efdad13df150f7d4"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/run.sh",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/run.sh",
+    "bytes": 334,
+    "sha256": "b1d8932f97c6ea6901604d95c634ef476b0b5007053a412658ec2cd1f9f9784c"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/worker.py",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/worker.py",
+    "bytes": 1253,
+    "sha256": "6a6f48cc274297b5d7cbb4f77759805e1530f17261365c9b9c3d02fb2f4a6055"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-default-macros.txt.gz",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-default-macros.txt.gz",
+    "bytes": 53678,
+    "sha256": "a499464729b8070de41e233e214f2c09aac0b8532bea01b9fd9328198a75b70d"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-off-macros.txt.gz",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-off-macros.txt.gz",
+    "bytes": 53678,
+    "sha256": "a499464729b8070de41e233e214f2c09aac0b8532bea01b9fd9328198a75b70d"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-on-macros.txt.gz",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-on-macros.txt.gz",
+    "bytes": 53652,
+    "sha256": "433d8b3eea7332ec8d02781dcefd062f2e15112f26f17e5db9eb1aca8cf3c4ee"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-default-macros.txt.gz",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-default-macros.txt.gz",
+    "bytes": 52214,
+    "sha256": "b94793f7c87ccdd08272df6618a8749fb0549435913b6f62ebcfbc1d76295057"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-off-macros.txt.gz",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-off-macros.txt.gz",
+    "bytes": 52214,
+    "sha256": "b94793f7c87ccdd08272df6618a8749fb0549435913b6f62ebcfbc1d76295057"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on-macros.txt.gz",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on-macros.txt.gz",
+    "bytes": 52105,
+    "sha256": "a63f6669c62d1f04632f899216018f6ff91aee0719b7ff0fd7ab489ddfcf972e"
+  }
+]

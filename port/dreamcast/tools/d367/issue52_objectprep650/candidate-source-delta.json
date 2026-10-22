@@ -1,0 +1,42 @@
+[
+  {
+    "path": "port/dreamcast/game/platform/native_static.cpp",
+    "base_git_blob": "3eb250c97986282eb7ec13d86d6f51a5fcc5af2f",
+    "candidate_git_blob": "1ff1b5ad9a9d52cf6ff94f7c3e69d538c82ebf84",
+    "base_sha256": "18bc6338d8758cc36709a32628cd40f9242a3e18a354917097a05213683a5fb7",
+    "candidate_sha256": "0f0a6f5b0c8225e2baef7c76c3a663fe9f574188304e2913aa8a0e2e841bc7a0",
+    "candidate_bytes": 355618
+  },
+  {
+    "path": "port/dreamcast/tools/d367/texture_rect21/scoped_representations.inc",
+    "base_git_blob": "0f46f74b71b7a904b20daab3c5c29b3539dcdbe5",
+    "candidate_git_blob": "cf327c620e55699951848e7f8a04d416b9fd59d0",
+    "base_sha256": "e446dcc9de719c3ece0606987bb36fc764c291cbebf0e20e247c73e3eb3e2239",
+    "candidate_sha256": "5d079cc538892fd5243d667e7b2dd54deec9ecb32faffcac357624cb1fea81e3",
+    "candidate_bytes": 54641
+  },
+  {
+    "path": "port/dreamcast/tools/d367/texture_rect21/provenance_certificates.inc",
+    "base_git_blob": "e906d97a759840339da05c87c0f40d43ef8b3b44",
+    "candidate_git_blob": "9db28f387a3a9c0b56cf67695bc1ea6e7f067c7f",
+    "base_sha256": "3270b867c224d57a66901f40602f8be57772d0ec126d0b842933ec93fae068cc",
+    "candidate_sha256": "00da3b72daa9d3ec4232568e9cff8747d39bcd4011f7ce717e1f61d993f8b13e",
+    "candidate_bytes": 2429
+  },
+  {
+    "path": "port/dreamcast/tools/d367/texture_rect21/world_rect_bind.h",
+    "base_git_blob": "8b94650a91c9e635ee6ad0db21b04d372e71dbbe",
+    "candidate_git_blob": "2d6ce31406b1a51f04bcb13e3b2aede774e33a47",
+    "base_sha256": "8feabe767fbf77428e0f414a22150c4dfa582cba5221a418aa6a80fd174cd072",
+    "candidate_sha256": "9ccf8c5850f72117faf4b2b2e09d9b2ab1caa4a379e5baeb64c53fe9ba93e89b",
+    "candidate_bytes": 2666
+  },
+  {
+    "path": "port/dreamcast/tools/d367/texture_rect21/world_rect_provenance.h",
+    "base_git_blob": "b5f1db0f119e33d223e04a41bcc4a71e6e88551e",
+    "candidate_git_blob": "9c5c67ab07f4ec6b2090859ab00c5b14729b51b7",
+    "base_sha256": "286d07060a584a466698a5efdaa8f2a4a108014ef0daf698c6df1aa86cfc42ab",
+    "candidate_sha256": "6c06e7353cafc53c2959ed3a44e157946b133afb953b4205bf68a07f890f902e",
+    "candidate_bytes": 2404
+  }
+]

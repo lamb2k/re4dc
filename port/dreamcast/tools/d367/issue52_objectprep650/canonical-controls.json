@@ -1,0 +1,150 @@
+[
+  {
+    "name": "native_ui-default",
+    "guard": "0",
+    "canonical_object": {
+      "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-default.o",
+      "raw_sha256": "6ed59b154793ac933dee9e00c4319c9d95655989f5e82d38084b50e3b303b3da",
+      "stripped_sha256": "8159e0dd836d3007b7bbb7a1e2776816d64d8fd00c3ff2e42cf4daf9bb79cef1",
+      "bytes": 976980,
+      "seconds": 2.6743846449971898,
+      "preprocess": {
+        "sha256": "f7907d08201cea60d21c51e8c6b0ff0fb60115283fdc1319f9f4c237cdb26c3e",
+        "streamed_bytes": 1388338,
+        "guard": "0",
+        "macro_sha256": "b5a0e39be393059dd06c05c153dd09344ad969e1c87dbe8eb4847edba5c3b15f"
+      },
+      "baseline_stripped_exact": true
+    },
+    "argv_count": 204,
+    "optimization_order": [
+      "-O2",
+      "-O1",
+      "-Os"
+    ],
+    "actual_dependency_count": 73
+  },
+  {
+    "name": "native_ui-off",
+    "guard": "0",
+    "canonical_object": {
+      "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-off.o",
+      "raw_sha256": "6ed59b154793ac933dee9e00c4319c9d95655989f5e82d38084b50e3b303b3da",
+      "stripped_sha256": "8159e0dd836d3007b7bbb7a1e2776816d64d8fd00c3ff2e42cf4daf9bb79cef1",
+      "bytes": 976980,
+      "seconds": 2.8159892140029115,
+      "preprocess": {
+        "sha256": "f7907d08201cea60d21c51e8c6b0ff0fb60115283fdc1319f9f4c237cdb26c3e",
+        "streamed_bytes": 1388338,
+        "guard": "0",
+        "macro_sha256": "b5a0e39be393059dd06c05c153dd09344ad969e1c87dbe8eb4847edba5c3b15f"
+      },
+      "baseline_stripped_exact": true
+    },
+    "argv_count": 205,
+    "optimization_order": [
+      "-O2",
+      "-O1",
+      "-Os"
+    ],
+    "actual_dependency_count": 73
+  },
+  {
+    "name": "native_ui-on",
+    "guard": "1",
+    "canonical_object": {
+      "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-on.o",
+      "raw_sha256": "12447f993ae473beeb7233169d0351719dc16dd94f111760680be7a92f1bf5a2",
+      "stripped_sha256": "58e0d921204fb545d2fdfa697a367f69186cfe434141ebf827d4326e2f5a4470",
+      "bytes": 987000,
+      "seconds": 2.8576402019971283,
+      "preprocess": {
+        "sha256": "e204fc6620648c9f4ff10e85ff0dbc5c4215791a534fd3204123e239b13edcbf",
+        "streamed_bytes": 1393514,
+        "guard": "1",
+        "macro_sha256": "ff0e7325319b1ee3904c3bf470a2769cdb4ad1838152483ada25b9849a1a1d20"
+      }
+    },
+    "argv_count": 205,
+    "optimization_order": [
+      "-O2",
+      "-O1",
+      "-Os"
+    ],
+    "actual_dependency_count": 75
+  },
+  {
+    "name": "native_static-default",
+    "guard": "0",
+    "canonical_object": {
+      "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-default.o",
+      "raw_sha256": "fed0f60d0aafd02ee30b316b50412ed2e0f14d9b2516c89139eba281b260b94f",
+      "stripped_sha256": "3b6fbe020ff2e56c26ad3bd41eb6f1cb2b892fb3fb573a62a5bfd5650ec6e017",
+      "bytes": 737008,
+      "seconds": 2.9435562910002773,
+      "preprocess": {
+        "sha256": "89d8603425d3b0a65e435602ebcfcbfa58e7b8ea8eda72e2035d4b4dc86cf2a4",
+        "streamed_bytes": 996323,
+        "guard": "0",
+        "macro_sha256": "53d573ec9e9040d7d3ce78b3ad2c20638bc05663fd3dc91aee134f2a7108989a"
+      },
+      "baseline_stripped_exact": true
+    },
+    "argv_count": 162,
+    "optimization_order": [
+      "-O2",
+      "-O1",
+      "-Os"
+    ],
+    "actual_dependency_count": 45
+  },
+  {
+    "name": "native_static-off",
+    "guard": "0",
+    "canonical_object": {
+      "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-off.o",
+      "raw_sha256": "fed0f60d0aafd02ee30b316b50412ed2e0f14d9b2516c89139eba281b260b94f",
+      "stripped_sha256": "3b6fbe020ff2e56c26ad3bd41eb6f1cb2b892fb3fb573a62a5bfd5650ec6e017",
+      "bytes": 737008,
+      "seconds": 2.6264609019999625,
+      "preprocess": {
+        "sha256": "89d8603425d3b0a65e435602ebcfcbfa58e7b8ea8eda72e2035d4b4dc86cf2a4",
+        "streamed_bytes": 996323,
+        "guard": "0",
+        "macro_sha256": "53d573ec9e9040d7d3ce78b3ad2c20638bc05663fd3dc91aee134f2a7108989a"
+      },
+      "baseline_stripped_exact": true
+    },
+    "argv_count": 163,
+    "optimization_order": [
+      "-O2",
+      "-O1",
+      "-Os"
+    ],
+    "actual_dependency_count": 45
+  },
+  {
+    "name": "native_static-on",
+    "guard": "1",
+    "canonical_object": {
+      "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on.o",
+      "raw_sha256": "8fe1f552634b90a22e33527c37f05d0f7d920ecde5ab56d83951885050db6114",
+      "stripped_sha256": "d31f2506d13498bb7360a7da500619db8a161960a62b1058e108aba6e78301bf",
+      "bytes": 742580,
+      "seconds": 2.707565507000254,
+      "preprocess": {
+        "sha256": "ef88e9d1ebce04abba869f7b44ffce689a2a7410244c103d0042610ac78cfe91",
+        "streamed_bytes": 998531,
+        "guard": "1",
+        "macro_sha256": "091d3f6bbd7f0605619c85a32dfcbd179f040456d1870f5fc535705863aab48b"
+      }
+    },
+    "argv_count": 163,
+    "optimization_order": [
+      "-O2",
+      "-O1",
+      "-Os"
+    ],
+    "actual_dependency_count": 47
+  }
+]

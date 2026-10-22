@@ -1,0 +1,98 @@
+[
+  {
+    "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-as",
+    "resolved_path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-as",
+    "bytes": 1923680,
+    "sha256": "f531978403ce0506056434ca83954df83d5b78347205680997d8a79258a4004d"
+  },
+  {
+    "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+    "resolved_path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-g++",
+    "bytes": 2050928,
+    "sha256": "e93807f83ebb80283de9777d006dae7f5873784032bbaa867a8f16db0e3c0053"
+  },
+  {
+    "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-gcc",
+    "resolved_path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-gcc",
+    "bytes": 2046832,
+    "sha256": "ccd1719433327d505d2d59cb3fd9b2acdcf3172652ecdac6f41cfe0ad2656a13"
+  },
+  {
+    "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+    "resolved_path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-nm",
+    "bytes": 1510408,
+    "sha256": "387845d7aa216b1d75a0874bafbb33189ce25b514626b5042d90f9d109b3533c"
+  },
+  {
+    "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy",
+    "resolved_path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-objcopy",
+    "bytes": 1677552,
+    "sha256": "7993dcb70aaea6cf83190e6babf63c663324a0fd493c3ceb9987a7d8820839d0"
+  },
+  {
+    "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-readelf",
+    "resolved_path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-readelf",
+    "bytes": 1351608,
+    "sha256": "b65ee6d607243a6ea82e571b4ffbc72164fd3b2eff6f8cf0dde684ffa2aa248c"
+  },
+  {
+    "path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+    "resolved_path": "/opt/toolchains/dc/sh-elf/bin/sh-elf-size",
+    "bytes": 1480712,
+    "sha256": "065fa8239db87b0108e73cbb23678486bd1120ea0ccdeaf6871f42d6ccb238d0"
+  },
+  {
+    "path": "/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus",
+    "resolved_path": "/opt/toolchains/dc/sh-elf/libexec/gcc/sh-elf/15.2.0/cc1plus",
+    "bytes": 33567464,
+    "sha256": "9e2183ee4f7380839129e4e16c02101d24ab7e1bef3ec89101b7c65be9a50cfa"
+  },
+  {
+    "path": "/root/probe/codex-mipmap21-next650/port/dreamcast/kos-env.sh",
+    "resolved_path": "/root/probe/codex-mipmap21-next650/port/dreamcast/kos-env.sh",
+    "bytes": 1225,
+    "sha256": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8"
+  },
+  {
+    "path": "/root/probe/d367-buildslot.sh",
+    "resolved_path": "/root/probe/d367-buildslot.sh",
+    "bytes": 485,
+    "sha256": "14eaa5f2dc1a3b87282b1a2faaaa20a0676788b0e870f2e4e26bdc87d1e0a4dd"
+  },
+  {
+    "path": "/root/work/kos-re4dc-d367/environ_base.sh",
+    "resolved_path": "/root/work/kos-re4dc-d367/environ_base.sh",
+    "bytes": 2988,
+    "sha256": "e14090a17f8cdfc381c83ae9304325b4d4311591c9f0a9bb8474b8b87bb24026"
+  },
+  {
+    "path": "/root/work/kos-re4dc-d367/environ_dreamcast.sh",
+    "resolved_path": "/root/work/kos-re4dc-d367/environ_dreamcast.sh",
+    "bytes": 2670,
+    "sha256": "e4398b91d86abf48cd383403d3495aa2dfd05d8a6f3782c869bf460a19defe5b"
+  },
+  {
+    "path": "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-c++",
+    "resolved_path": "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-c++",
+    "bytes": 254,
+    "sha256": "657b7e95d6d95ca9eadb2880db9a7c16f8c4ba720702fc06af20f1eae1a1d2d2"
+  },
+  {
+    "path": "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-cc",
+    "resolved_path": "/root/work/kos-re4dc-d367/utils/build_wrappers/kos-cc",
+    "bytes": 3305,
+    "sha256": "9be639adedf7d4b55482b82ea91bd80f3ee21468f8bdcc31af79b0126e8f09c5"
+  },
+  {
+    "path": "/usr/bin/bash",
+    "resolved_path": "/usr/bin/bash",
+    "bytes": 1446024,
+    "sha256": "bc5945feb8bd26203ebfafea5ce1878bb2e32cb8fb50ab7ae395cfb1e1aaaef1"
+  },
+  {
+    "path": "/usr/bin/python3",
+    "resolved_path": "/usr/bin/python3.12",
+    "bytes": 8020928,
+    "sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+  }
+]
