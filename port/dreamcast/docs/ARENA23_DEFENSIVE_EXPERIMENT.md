@@ -88,3 +88,39 @@ must be measured. Keep one staging tree cap of 1.2 GB and at most two retained d
 requires fresh C free >= 19,394,461,696 + 1,073,741,824 peer bytes + the approved
 actual peak, one nonblocking shared build slot/per-tree lease, jobs <=4, and
 release priority. Do not overwrite original controls, peer data or existing discs.
+
+## Reused diagnostics and narrow repairs
+
+The following missing diagnostics were applied from `origin/wip/mipfault22`,
+without importing any old recipe or private data:
+
+- `f0cacf59e81f903b2f719a53cf52aa0ff04e68fd`: OVL_GUARD modes 1/2.
+- `1ad4de95c674b3819dcfd3f9552958592f923809`: ARENA_RING, OVL_GUARD=3,
+  LOG_TRIM, associated crash/module/memory/native-ui/VRAM diagnostics.
+- `f0188ffb0e9b241ba35f2c0856cd1ff2f3ee2a51`: HDR_ALIGN_PROBE.
+- Only `native_ui.cpp` from `8459e76b634e237d7db528298b2ce345849a577e`:
+  corrected probe newline/caller. The unrelated `tools/link.sh` debug-ELF copy
+  was deliberately excluded. There is no new linker/artifact behavior.
+
+Two confirmed diagnostic guard defects were repaired: the crash-screen ring
+function declaration now depends on ARENA_RING itself, and a ring allocation
+records class 0 when the arena is disabled. Thus independent ARENA_RING=1 with
+CRASH_OVL_LINE=0 and with VRAM_ROOM_ARENA=0 can compile for a controlled arena-off
+comparison. All imported diagnostics still default to 0.
+
+SH-4 objects compiled sequentially under nonblocking shared/per-tree leases:
+base vs diagnostics-off raw objects are identical for `vram_pages`, `modules`,
+`mem`, `crash_screen`, and `native_ui` in their stated focused configurations.
+`vram_pages` ring-on with arena off and with arena+NO_TOP on, crash-screen ring-on
+without CRASH_OVL_LINE, modules OVL_GUARD=3 with route/stage overlays, and native UI
+HDR_ALIGN_PROBE with TEX_MIP_DADJ=3 all compile. These are focused object checks,
+not an integrated programme, linked off-identity, full recipe or guest gate.
+Initial direct compiles omitted normal build-provided native-UI screen/stream
+macros and the crash GD format header; the retained logs show those setup errors
+and the final commands include them. No production file was changed for setup.
+
+The cache experiment must remain independent of WORLD_SCRATCH or any changed
+cache/renderer mode: preserve original relevant settings in the B comparison.
+Combining them could mask the hardware fault. Root cause is still open; the
+next coordinated code step is a cached/uncached pre/post-sync hash diagnostic
+only if the placement experiment and physical B-layout evidence require it.

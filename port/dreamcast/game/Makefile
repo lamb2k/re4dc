@@ -2750,10 +2750,31 @@ CRASH_OVL_LINE ?= 0
 # texture upload and close, and at release).
 OVL_WATCH ?= 0
 # OVL_GUARD=1 (lane mipfault22, console diagnostic only): stop on the first changed word of a loaded route overlay's
-# code (checked per UI frame and texture upload / close) and arm the SH-4 UBC on st1_1 (see platform/modules.cpp).
+# code (checked per UI frame and texture upload / close); =2: instead, the SH-4 UBC on the st1_1 literal word that the
+# console fault read (st1_1+0x6114), reported from the next UI frame (see platform/modules.cpp).
 OVL_GUARD ?= 0
+# =3 (D4): both checks, plus a ring of the last 12 texture-RAM operations (alloc / free / upload) shown on the crash screen.
+# LOG_TRIM=N (diagnostic, default 0): the RAM boot log is N bytes shorter (mem.cpp / crash_screen.cpp), so a
+# diagnostic build can keep the reference image's _end (with IMAGE_PAD_BYTES) and so its heap and overlay addresses.
+# ARENA_RING=1 (lane mipfault22, diagnostic, default 0): the ring of the last 12 texture-RAM operations (A alloc / F free:
+# VRAM offset, bytes, arena class, caller; U upload: key crc, VRAM bytes, main-RAM package) on the crash screen.
+# OVL_GUARD=3 turns it on too.
+ARENA_RING ?= 0
+ifneq ($(filter 3,$(OVL_GUARD))$(filter-out 0,$(ARENA_RING)),)
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_ARENA_RING=1
+endif
+LOG_TRIM ?= 0
+ifneq ($(LOG_TRIM),0)
+$(OBJDIR)/platform/mem.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_LOG_TRIM=$(LOG_TRIM)
+endif
 ifneq ($(OVL_GUARD),0)
-$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=1
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=$(OVL_GUARD)
+endif
+# HDR_ALIGN_PROBE=1 (lane mipfault22, diagnostic, default 0): log each caller that compiles a PVR header into a dst that is
+# not 32-byte aligned (KOS compiles with movca.l). Needs TEX_MIP_DADJ (the wrapper it lives in).
+HDR_ALIGN_PROBE ?= 0
+ifneq ($(HDR_ALIGN_PROBE),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_HDR_ALIGN_PROBE=1
 endif
 ifneq ($(OVL_WATCH),0)
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_WATCH=1
