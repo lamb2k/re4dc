@@ -1,0 +1,48 @@
+{
+  "scope": "SOURCEONLY022 currentactual021209/nativeDoor1ready; zerogame-memorycommands/replay, originalwaiter preserved. No guest/allocation.",
+  "seed_sha256": "93fa4f5243a3c2ffbbaa45617ca046294b56274b17eaf62e1f3ab2ecb604339d",
+  "minimum_frame": 5508,
+  "inherited_position": "Actual021already209/nativeDoor1ready,go2done/count3/max3; noinitialgoto/replay.",
+  "write_allowlist": [],
+  "maximum_successful_command_bytes": 0,
+  "write_gate": "No WriteProcessMemory binding/calls/rights. Only ordinary owned focus/scanSendInput; no gameflag/actor/HP/AI/RSF/outcome edits.",
+  "input_contract": "ONEacceptedscan-codeXdownperstage; exactownedforeground/GUIactive/focus and nativeDoorready plus OSasyncXnotheld beforedown. SendInput count/error independent from OSasyncX and coherentnative64Key/doorrequest. Hold<=.75s orack/focusloss; finallyonekeyup foracceptedowndown evenlostfocus/deadguest/readerror. No keyupwhenpreheldX/downcount0. No retries. ExclusiveGUIlease mandatory.",
+  "native_Key": {
+    "symbol": "0x8c3a948c",
+    "old": 8,
+    "on": 16,
+    "trg": 24,
+    "width": 8,
+    "endian": "little",
+    "mask": "0x80080000",
+    "DWARF_sha256": "435b7811682093c5eadee5ba80a9654997b1f1d1929d2ebf16913a4cc4f2fce7"
+  },
+  "Windows_GUI": {
+    "size": 72,
+    "cbSize": 0,
+    "flags": 4,
+    "hwndActive": 8,
+    "hwndFocus": 16,
+    "rcCaret": 56
+  },
+  "source_qualification": "Onlychangednativeaction/zero-WPM/currentstate logic checks; inheritedSendInputhelper unchanged; no34/26/broad rerun.",
+  "guards": "Same41raw/39close/47.5absolute/60MiB/global16/castle2/start20342374400/runtime19394461696. Identity/release/capture/V5/startuplog/coreABI unchanged.",
+  "exclusive_gui_input": "RootmustcloseQAandallpeerGUIinputbeforeallocation, reserveexclusiveguileasefor022. WrapperfreshFlycastinventorymustbeemptybeforelaunch; observerandwrapperrequireallocationexclusive_gui_input=true. Nopeerinputguestsduringfocuschanges. Global16/castle2capacityunchanged; thisunitserializesonlyitsconflictingGUIresource.",
+  "Windows_SendInput": {
+    "INPUT_size": 40,
+    "union_offset": 8,
+    "KEYBDINPUT_size": 24,
+    "MOUSEINPUT_size": 32,
+    "word_bits": 16,
+    "DWORD_bits": 32,
+    "extraInfo_type": "c_size_t/ULONG_PTR",
+    "scan": "0x2d",
+    "wVk": 0,
+    "down_flags": "0x8",
+    "up_flags": "0xa",
+    "count": 1,
+    "GetAsyncKeyState_return": "signedSHORT/high0x8000",
+    "extraInfo_offset": 16
+  },
+  "placement_admission": "Exactcurrent209/Part0/previous204/Stop0/codeidentity/consumedgo2/count3 plus nativephysicalDoor1constructor/Etc1/unlocked/actualownedslot5callback readiness. No descriptor-radius limit."
+}

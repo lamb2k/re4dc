@@ -1,0 +1,112 @@
+--- frozen021
++++ source022
+@@ -1 +1 @@
+-"""CONTROLLED exact020state alreadyatnative204Door4: experimentalSendInputA to209, remainingcurrententryGoto thenphysicalDoor1/originalleadercut. No actor/room/outcome writes."""
++"""CONTROLLED exact021state already209/nativephysicalDoor1ready: ordinarySendInputA thenoriginalleadercut. Zero game-memory writes/goto/replay; nativeaction replaces hostradius."""
+@@ -5 +5 @@
+-L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');cap=Path(sys.argv[1]).resolve();assert cap==D/'route-walk-controlled-ch32-door021'
++L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');cap=Path(sys.argv[1]).resolve();assert cap==D/'route-walk-controlled-ch32-door022'
+@@ -9 +8,0 @@
+-k.WriteProcessMemory.argtypes=[W.HANDLE,C.c_void_p,C.c_void_p,C.c_size_t,C.POINTER(C.c_size_t)];k.WriteProcessMemory.restype=W.BOOL
+@@ -86 +85 @@
+- return bool(row and previous and row.get('live_native_code_anchors_verified')is True and row.get('phase')==[3,0]and row.get('room')in['0x204','0x209']and row.get('pg')==previous.get('pg')and current_ram==previous.get('RAM_base')and row.get('frame',0)>previous.get('frame',0)and row.get('frame',0)>=4761)
++ return bool(row and previous and row.get('live_native_code_anchors_verified')is True and row.get('phase')==[3,0]and row.get('room')=='0x209'and row.get('pg')==previous.get('pg')and current_ram==previous.get('RAM_base')and row.get('frame',0)>previous.get('frame',0)and row.get('frame',0)>=5508)
+@@ -169 +168 @@
+-WRITE_ALLOWLIST=[{'address':hex(STAGES[2]['address']),'bytes':24},{'address':hex(MAX_ENTRY),'bytes':1},{'address':hex(COUNT),'bytes':4}]
++WRITE_ALLOWLIST=[]
+@@ -179,37 +177,0 @@
+-def setup_ready(row,stage,prepared=0):
+- c=STAGES[stage];w=row.get('warp',{})if row else {};oldentry=c['entry']-1
+- if not freeplay_ready(row,c['room']):return False
+- if stage==1 and not(row.get('Part')==1 and row.get('previous_room')=='0x205'):return False
+- if stage==2 and not(row.get('Part')==0 and row.get('previous_room')=='0x204'and consumed(w,1)):return False
+- return w.get('flags')==[1,1,0,1,1]and w.get('name')=='castle21-CONTROLLED-ch32-drain0'and w.get('room')=='0x205'and w.get('rooms')==c['entry']and w.get('max_entry')==(c['entry']if prepared==2 else oldentry)and w.get('n_go')==stage and w.get('go0')==GO0_DONE.hex()and w.get('go'+str(stage))==('00'*24 if not prepared else c['descriptor'].hex())and(stage!=1 or w.get('go2')=='00'*24)and w.get('n_act')==0 and w.get('n_rsf')==0 and not w.get('has_trg')and not w.get('has_kill')
+-
+-def exact_command_write(address,data,stage):
+- assert stage==2,'Inheritedfirstplacementmustnotbereplayed'
+- c=STAGES[stage]
+- assert (address==c['address']and data==c['descriptor'])or(address==MAX_ENTRY and data==bytes([c['entry']]))or(address==COUNT and data==struct.pack('<I',stage+1)),'Only exact current-stage config writes'
+- check();assert memory_ready and age()<29 and shutil.disk_usage(D).free>=18*1024**3+64*1024**2
+- before=read(address,len(data));buf=C.create_string_buffer(data);got=C.c_size_t()
+- receipt=dict(controlled_existing_rig_command_write=True,stage=stage,address=hex(address),before=before.hex(),after_requested=data.hex(),process_age=age());events.append(receipt)
+- ok=bool(k.WriteProcessMemory(h,ram+address-0x8c000000,buf,len(data),C.byref(got)));receipt.update(api_ok=ok,bytes_written=got.value)
+- assert ok and got.value==len(data),'Exact config write failed; no retry/rollback'
+- receipt['observed_after']=read(address,len(data)).hex()
+-
+-def publish_existing_goto(stage):
+- assert stage==2
+- check();row=sample();c=STAGES[stage]
+- if not setup_ready(row,stage):return False
+- events.append(dict(immediate_command_recheck=row,stage=stage,write_allowlist=WRITE_ALLOWLIST,no_actor_room_or_outcome_writes=True))
+- exact_command_write(c['address'],c['descriptor'],stage)
+- assert read(c['address'],24)==c['descriptor']and u32(COUNT)==stage,'Unpublished descriptor verification failed'
+- row=sample();assert setup_ready(row,stage,1),'State changed before entry admission; no retry/rollback'
+- exact_command_write(MAX_ENTRY,bytes([c['entry']]),stage)
+- row=sample();assert setup_ready(row,stage,2),'State changed before count publication; no retry/rollback'
+- exact_command_write(COUNT,struct.pack('<I',stage+1),stage)
+- assert u32(COUNT)==stage+1,'Command publication not observed'
+- events.append(dict(existing_goto_published=True,stage=stage,process_age=age(),entry=c['entry'],sub=False,count_published_last=True,engine_owns_done=True))
+- return True
+-
+-def pose_matches(row,stage):
+- target=struct.unpack_from('<3f',STAGES[stage]['descriptor'],4);actual=row.get('player_pos',[])
+- return len(actual)==3 and all(math.isfinite(v)for v in actual)and sum((actual[i]-target[i])**2 for i in range(3))<150**2
+-
+@@ -217,6 +179,4 @@
+- if not freeplay_ready(row,STAGES[stage]['room'])or not consumed(row.get('warp',{}),stage)or not pose_matches(row,stage):return False
+- act=row.get('action',{});w=row['warp']
+- if w.get('n_go')!=stage+1 or w.get('max_entry')!=STAGES[stage]['entry']or w.get('rooms')!=STAGES[stage]['entry']or act.get('active')!=1:return False
+- if stage==1:
+-  a=row.get('areas',{}).get('0x4',{});d=a.get('door',{})
+-  return row.get('native_AEV04_clipped_hit')is True and a.get('enabled')and a.get('type')==1 and a.get('func')==0 and a.get('checkFlag')==1 and a.get('trigger')==8 and a.get('checkType')==1 and d.get('destination')=='0x209'and d.get('Part')==0 and d.get('lockType')==0 and d.get('lockFlag')==0 and d.get('callback')=='0x0'and any(v.get('arg')==a.get('ptr')and v.get('kind')==0x10 and v.get('button')==1 and v.get('func')==0x8c14a95c and v.get('type')==2 and v.get('d')==row.get('player_ptr')for v in act.get('work',[]))
++ if stage!=2 or not freeplay_ready(row,'0x209')or row.get('Part')!=0 or row.get('previous_room')!='0x204':return False
++ act=row.get('action',{});w=row.get('warp',{})
++ # The current original native physical-door action proves placement. No descriptor-radius admission.
++ if not consumed(w,2)or w.get('n_go')!=3 or w.get('max_entry')!=3 or w.get('rooms')!=3 or w.get('flags')!=[1,1,0,1,1]or act.get('active')!=1:return False
+@@ -318 +278 @@
+- (shot/'controlled-context.json').write_text(json.dumps(dict(scope='CONTROLLED actual020state; existing config command setup separate from original204Door4/209physicalDoor1/leader-event outputs.',observation=row,before=before,after=after,pngs=[dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())for p in(shot/'frames').glob('*.png')]),indent=2)+'\n')
++ (shot/'controlled-context.json').write_text(json.dumps(dict(scope='CONTROLLED actual021state; existing config command setup separate from original204Door4/209physicalDoor1/leader-event outputs.',observation=row,before=before,after=after,pngs=[dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())for p in(shot/'frames').glob('*.png')]),indent=2)+'\n')
+@@ -321 +281 @@
+- allocation=json.loads((L/'DOOR021-ROOT-ALLOCATION.json').read_text(encoding='utf-8'));assert allocation['allocated021']is True and allocation['allow_debug_goto_command_writes']is True and allocation['allow_owned_window_focus']is True and allocation['allow_scan_code_SendInput']is True and allocation['exclusive_gui_input']is True and allocation['maximum_successful_command_bytes']==29 and allocation['observer_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest() and allocation['write_allowlist']==WRITE_ALLOWLIST, 'Exact root-owned debug command allocation required'
++ allocation=json.loads((L/'DOOR022-ROOT-ALLOCATION.json').read_text(encoding='utf-8'));assert allocation['allocated022']is True and allocation['allow_debug_goto_command_writes']is False and allocation['allow_owned_window_focus']is True and allocation['allow_scan_code_SendInput']is True and allocation['exclusive_gui_input']is True and allocation['maximum_successful_command_bytes']==0 and allocation['observer_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest() and allocation['write_allowlist']==WRITE_ALLOWLIST, 'Exact root-owned debug command allocation required'
+@@ -324 +284 @@
+- owner=json.loads((cap/'owned-process.json').read_text());h=k.OpenProcess(0x1000|0x10|0x20|0x8|0x100000,False,owner['pid']);assert h;check();age0=time.time()-(owner['start_filetime']/1e7-11644473600);mono0=time.monotonic();age=lambda:age0+time.monotonic()-mono0
++ owner=json.loads((cap/'owned-process.json').read_text());h=k.OpenProcess(0x1000|0x10|0x100000,False,owner['pid']);assert h;check();age0=time.time()-(owner['start_filetime']/1e7-11644473600);mono0=time.monotonic();age=lambda:age0+time.monotonic()-mono0
+@@ -326 +286 @@
+- assert re.search(r'(?m)^Dreamcast\.AutoLoadState = yes\s*$',(cap/'emu.cfg').read_text()),'Exact020 fullstate continuation requires AutoLoadState=yes'
++ assert re.search(r'(?m)^Dreamcast\.AutoLoadState = yes\s*$',(cap/'emu.cfg').read_text()),'Exact021 fullstate continuation requires AutoLoadState=yes'
+@@ -330,3 +290,3 @@
+- published={1:True,2:False};sent={1:False,2:False};attempted={1:False,2:False};placed={1:True,2:False};entry=False;door_open=False;cut3=False;cut2=False;returned=False;shots=set();cut2frame=None
+- events.append(dict(inherited017_firstcut_return=True,inherited020_placement_already_consumed=True,state_sha256='eba7a32afa7c59381ec7ce36918ea706feea187757e8fbb40a2fe5f2695ac008',no_replay_015_drain_or_017_firstcut=True,controlled_setup_maximum_successful_bytes=29))
+- with(cap/'controlled-door021-observations.jsonl').open('x')as out:
++ sent={2:False};attempted={2:False};door_open=False;cut3=False;cut2=False;returned=False;shots=set();cut2frame=None
++ events.append(dict(inherited_actual209_entry=True,inherited021_placement_already_consumed=True,state_sha256='93fa4f5243a3c2ffbbaa45617ca046294b56274b17eaf62e1f3ab2ecb604339d',no_initial_goto_or_replay=True,controlled_setup_maximum_successful_bytes=0))
++ with(cap/'controlled-door022-observations.jsonl').open('x')as out:
+@@ -348,17 +308,7 @@
+-    for stage in [1,2]:
+-     # Stage2 is not even offered before the actual original209 load has been observed.
+-     eligible=stage==1 or entry
+-     if eligible and memory_ready and not action_blocked and not published[stage]and age()<(18 if stage==1 else 28)and setup_ready(row,stage):
+-      try:published[stage]=publish_existing_goto(stage)
+-      except MemoryUnavailable as e:action_blocked=True;events.append(dict(command_read_unavailable_no_retry=e.detail,stage=stage))
+-     if published[stage]and not placed[stage]and row.get('room')==STAGES[stage]['room']and consumed(row.get('warp',{}),stage)and pose_matches(row,stage):
+-      placed[stage]=True;events.append(dict(native_existing_goto_consumed=row,stage=stage))
+-     if memory_ready and not action_blocked and placed[stage]and not attempted[stage]and age()<31.5 and door_ready(row,stage):
+-      attempted[stage]=True
+-      try:
+-       pulse_result=pulse_door(stage);sent[stage]=pulse_result['pressed'];events.append(dict(single_action_attempt=pulse_result,no_automatic_retry=True))
+-      except MemoryUnavailable as e:action_blocked=True;events.append(dict(input_read_unavailable_no_retry=e.detail,stage=stage))
+-    if sent[1]and row['phase'][0]==4 and row['next_room']=='0x209'and row['next_point']==0 and'request'not in shots:
+-     shots.add('request');events.append(dict(original_native_209_door_request=row))
+-    if sent[1]and row['room']=='0x209'and row['phase']==[3,0]and row['previous_room']=='0x204'and row['Part']==0:
+-     if not entry:entry=True;events.append(dict(actual_209_entry=row))
++    stage=2
++    if memory_ready and not action_blocked and not attempted[2]and age()<31.5 and door_ready(row,2):
++     attempted[2]=True
++     try:
++      pulse_result=pulse_door(2);sent[2]=pulse_result['pressed'];events.append(dict(single_action_attempt=pulse_result,no_automatic_retry=True))
++     except MemoryUnavailable as e:action_blocked=True;events.append(dict(input_read_unavailable_no_retry=e.detail,stage=2))
++    if row['room']=='0x209'and row['phase']==[3,0]and row['previous_room']=='0x204'and row['Part']==0:
+@@ -392 +342 @@
+- if cap.exists():(cap/'controlled-door021-observer-summary.json').write_text(json.dumps(dict(scope=__doc__,last=last,events=events,owned_close_sent=closed_sent,source_fields_not_acceptance_alone=True,controlled_setup_not_event_completion=True,read_failure_count=read_failure_count,region_failure_count=region_failure_count,read_diagnostics=read_diagnostics),indent=2)+'\n')
++ if cap.exists():(cap/'controlled-door022-observer-summary.json').write_text(json.dumps(dict(scope=__doc__,last=last,events=events,owned_close_sent=closed_sent,source_fields_not_acceptance_alone=True,controlled_setup_not_event_completion=True,read_failure_count=read_failure_count,region_failure_count=region_failure_count,read_diagnostics=read_diagnostics),indent=2)+'\n')
