@@ -2458,6 +2458,9 @@ char* EventMgr::NameChange(char* nm)
 // load (aram != 0) or loads to MRAM; with an enemy module `em` the event is swapped into that
 // module's archive memory (MemorySwap, EspEmDataSwapPush) so it borrows the enemy's space.
 // *out receives the address. Returns 0 on any failure (logged).
+#if defined(RE4DC_GUARD_FAIL_INJECT) && RE4DC_GUARD_FAIL_INJECT
+int re4dc_guard_inject_armed = RE4DC_GUARD_FAIL_INJECT_EVT < 0;
+#endif
 int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
 {
     cDataUnit* unit = 0;
@@ -2500,9 +2503,21 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
 #if defined(RE4DC_GUARD_FAIL_INJECT) && RE4DC_GUARD_FAIL_INJECT && (RE4DC_GUARD_FAIL_INJECT_MASK & 1)
         // GUARD_FAIL_INJECT (test only, lane guards22): fresh event file reads in room GUARD_FAIL_INJECT_ROOM are
         // refused N times (>= 99: always), as a read the disc layer could not admit.
+        // GUARD_FAIL_INJECT_EVT=0xNN (default -1 = any): only reads of event file sNN, which also arm the effect injection.
         {
             static int injected;
-            if (pG->room_id == RE4DC_GUARD_FAIL_INJECT_ROOM &&
+            int match = 1;
+#if RE4DC_GUARD_FAIL_INJECT_EVT >= 0
+            {
+                char tag[8];
+                sprintf(tag, "s%02x", RE4DC_GUARD_FAIL_INJECT_EVT);
+                match = strstr(p, tag) != 0;
+            }
+#endif
+            if (match && pG->room_id == RE4DC_GUARD_FAIL_INJECT_ROOM) {
+                re4dc_guard_inject_armed = 1;
+            }
+            if (match && pG->room_id == RE4DC_GUARD_FAIL_INJECT_ROOM &&
                 (RE4DC_GUARD_FAIL_INJECT >= 99 || injected < RE4DC_GUARD_FAIL_INJECT)) {
                 injected++;
                 OSReport("guard inject: evd read refused %s (%d)\n", p, injected);

@@ -3486,8 +3486,10 @@ endif
 GUARD_FAIL_INJECT ?= 0
 GUARD_FAIL_INJECT_ROOM ?= 0x100
 GUARD_FAIL_INJECT_MASK ?= 3
+# GUARD_FAIL_INJECT_EVT=0xNN: only event file sNN of that room (and effect admissions after its first read); -1 = any.
+GUARD_FAIL_INJECT_EVT ?= -1
 ifneq ($(GUARD_FAIL_INJECT),0)
-$(OBJDIR)/src/game/event.o $(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_GUARD_FAIL_INJECT=$(GUARD_FAIL_INJECT) -DRE4DC_GUARD_FAIL_INJECT_ROOM=$(GUARD_FAIL_INJECT_ROOM) -DRE4DC_GUARD_FAIL_INJECT_MASK=$(GUARD_FAIL_INJECT_MASK)
+$(OBJDIR)/src/game/event.o $(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_GUARD_FAIL_INJECT=$(GUARD_FAIL_INJECT) -DRE4DC_GUARD_FAIL_INJECT_ROOM=$(GUARD_FAIL_INJECT_ROOM) -DRE4DC_GUARD_FAIL_INJECT_MASK=$(GUARD_FAIL_INJECT_MASK) -DRE4DC_GUARD_FAIL_INJECT_EVT=$(GUARD_FAIL_INJECT_EVT)
 endif
 # RESET_MEM_FIX=1 (lane resetmem; load a save, Game Reset / Retry, New Game: r100 started with less heap 4 and KOS
 #   malloc than after a fresh boot): state the port keeps across a soft reset goes back to its fresh-boot value.
