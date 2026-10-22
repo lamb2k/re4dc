@@ -131,6 +131,8 @@ int main(int argc,char**argv){
     class_file=tc_file;ps2w.package.h=mh;ps2w.room=room;
     if(mutation==1 && world.size()>32)world[world.size()-1]^=1;
     if(mutation==2 && world.size()>=32)world[24]^=1;
+    if(mutation==10 && world.size()>=32)world[28]^=1;
+    if(mutation==11 && world.size()>=32)world[4]^=1;
     if(mutation==3 && ids_file.size()>=16)ids_file[12]^=1;
     if(mutation==4 && class_file.size()>24)class_file[24]^=1;
     if(mutation==5 && !pcl.empty())pcl[12]^=1;
@@ -155,6 +157,7 @@ int main(int argc,char**argv){
     }
     TRANS_CALL
     bool trans_ok=trans::cls!=nullptr;unsigned class6=0,class9=0;
+    const auto class_crc=trans_ok?ps2_crc32(trans::cls,trans::nparts):0;
     for(unsigned i=0;trans_ok && i<trans::nparts;++i){class6+=trans::cls[i]==6;class9+=trans::cls[i]==9;}
     PC_PACKAGE
     bool pc_file=false;
@@ -188,7 +191,7 @@ int main(int argc,char**argv){
     trans::close(); // actual reload retains this idle policy behavior.
     std::cout<<"{\"physical\":true,\"actual_crc\":"<<h.crc<<",\"source_crc\":"<<policySourceCrc
              <<",\"profile_crc\":"<<sourceWorldSidecarCrc<<",\"ids\":"<<ids_ok<<",\"unique\":"<<unique
-             <<",\"trans\":"<<trans_ok<<",\"class6\":"<<class6<<",\"class9\":"<<class9
+             <<",\"trans\":"<<trans_ok<<",\"class_crc\":"<<class_crc<<",\"class6\":"<<class6<<",\"class9\":"<<class9
              <<",\"pc_package\":"<<pc::st.ok<<",\"pc_file\":"<<pc_file<<",\"occl\":"<<occl
              <<",\"occl_guards\":"<<(wrong_room&&wrong_crc&&zero_crc&&rest&&area_hidden&&gate_hidden&&object_hidden&&visible_rest&&moved&&hierarchy&&part_moved)
              <<",\"movie_current\":"<<movie_current<<",\"movie_bad_refused\":"<<(movie_bad_refused&&movie_mesh_refused)

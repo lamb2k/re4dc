@@ -243,14 +243,14 @@ the actual native_static physical validator, ID unique-source census,
 transparency parser, PC package/header predicates, visibility world/placement
 guards, and movie capture/reload predicates. Filesystem/allocator/header seams
 are explicit; this is not a full PC heap/load/lend or room_occl parser test.
-The first 41 cases include a deliberately forged same-body-CRC candidate that
+The 47 cases include a deliberately forged same-body-CRC candidate that
 the full-file FNV refuses. Enabled C preserves the baseline unique-source
 counts and exact original class arrays. Default and explicit-zero host probe
 bytes match. The actual existing make block resolves ON to both native_ui and
 native_static; its default/zero flags and seven invalid-value/prerequisite
 failures remain unchanged.
 
-Evidence: provenance-source-01/{host02,make01} under the lane's C evidence
+Evidence: provenance-source-01/{host05,make01} under the lane's C evidence
 folder. SH-4 object/default identity, full program, fresh target lifecycle/look/
 strict comparison, release and physical Dreamcast acceptance remain open.
 No asset, image, guest or production recipe was changed in this unit.

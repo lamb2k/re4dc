@@ -100,22 +100,25 @@ def main():
             result=json.loads(r.stdout);checks+=1
             row=dict(room=name,arm=arm,enabled=enabled,mutation=mutation,mesh_override=mesh_override,room_override=room_override,result=result)
             rows.append(row);return result
+        baseline=None
         def accepted(r):
             require(r['physical'] and r['ids'] and r['trans'] and r['occl'],'four consumers except PC')
             require(bool(r['pc_package'] and r['pc_file'])==(room==0x100),'PC package/file selector')
+            if baseline is not None:require((r['unique'],r['class_crc'])==(baseline['unique'],baseline['class_crc']),'binding/class lineage differs')
             require(r['profile_crc']==r['actual_crc'],'profile canonicalized')
             require(r['occl_guards'] and r['movie_current'] and r['movie_bad_refused'] and r['movie_policy_idle'],'liveness/movie')
             require(r['movie_raw_fnv']==A_fnv(cw if r['actual_crc']==spec['physical_body_crc']else bw),'movie physical FNV')
         for enabled in('default','off','on'):
             r=run('B',enabled);accepted(r);require(r['source_crc']==r['actual_crc']==spec['source_crc'],'B anchor')
+            baseline=r
         for enabled in('default','off'):
             r=run('C',enabled)
             require(r['physical'] and not(r['ids']or r['trans']or r['occl']or r['pc_package']),'C disabled fallback')
             require(r['source_crc']==r['actual_crc']==spec['physical_body_crc'],'C disabled identity')
         r=run();accepted(r)
         require(r['actual_crc']==spec['physical_body_crc'] and r['source_crc']==spec['source_crc'],'candidate split identity')
-        for mutation in(1,6):require(not run(mutation=mutation)['physical'],'bad/truncated physical accepted')
-        for mutation in(2,7,8):
+        for mutation in(1,6,11):require(not run(mutation=mutation)['physical'],'bad/truncated physical accepted')
+        for mutation in(2,7,8,10):
             r=run(mutation=mutation);require(r['physical'] and r['source_crc']==r['actual_crc'] and not(r['ids']or r['trans']or r['occl']or r['pc_package']),'uncertified sidecar mapped')
         collision=crc_collision(cw);r=run(world=collision)
         require(r['physical'] and r['actual_crc']==spec['physical_body_crc'] and r['source_crc']==r['actual_crc'] and not r['ids'],'same-CRC uncertified body mapped')
@@ -124,7 +127,8 @@ def main():
             r=run(mesh_override=(index,value))
             if index>=2:require(not r['physical'],'physical count mismatch')
             else:require(r['source_crc']==r['actual_crc'] and not(r['ids']or r['trans']or r['occl']or r['pc_package']),'uncertified mesh tuple mapped')
-        r=run(room_override=0x101);require(r['source_crc']==r['actual_crc'] and not r['ids'],'unknown room mapped')
+        for test_room in(0x101,0x103 if room==0x100 else 0x100):
+            r=run(room_override=test_room);require(r['source_crc']==r['actual_crc'] and not r['ids'],'unknown/swapped room mapped')
         r=run(mutation=3);require(not r['ids'] and r['trans'] and r['occl'],'IDs corrupt guard')
         r=run(mutation=4);require(not r['trans'] and r['ids'] and r['occl'],'class body CRC guard')
         if room==0x100:

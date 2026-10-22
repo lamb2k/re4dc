@@ -17,6 +17,7 @@ struct Certificate {
 inline constexpr Certificate certificates[] = {
 #include "provenance_certificates.inc"
 };
+static_assert(sizeof(certificates)/sizeof(certificates[0])==2U);
 inline std::uint32_t word(const unsigned char* b) {
     return std::uint32_t(b[0])|(std::uint32_t(b[1])<<8)|
            (std::uint32_t(b[2])<<16)|(std::uint32_t(b[3])<<24);
