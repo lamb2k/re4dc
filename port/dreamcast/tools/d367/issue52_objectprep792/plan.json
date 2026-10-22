@@ -1,0 +1,41 @@
+{
+  "state": "SOURCE_ONLY_PLAN_NO_COMPILER_OR_LEASE",
+  "source": "63644457a2251a398de174f47be650e1b2b4c791",
+  "base_source": "33504b9df434b82cd92e7bab3bb4630663a72ddd",
+  "source_branch": "codex/mipmap21-next792-integration",
+  "root_receipt": "a8e5a20512639e775e8f31415cbcf72957236204caf11a96045dbc0e13949339",
+  "table_sha256": "99c792ef42916b890e2d074740d78da8f96ac00556104b2fc0d089658cc0eabf",
+  "certificate_sha256": "cf71b6e52792e083199203461c776497ae1462296daa69cac330e28a40daa34d",
+  "bind_sha256": "489fde4467114523b5881a094bbad8204d20d27572881e8b7eca765869886395",
+  "provenance_sha256": "962e4f8eb077040f75a1c396a9a42d00fe60eef39dc076aa2d641e29ae65e28e",
+  "world_rect21_default": 0,
+  "descriptor_count": 792,
+  "prior_unchanged_descriptors": 650,
+  "additions": 142,
+  "held_rooms": [
+    "r11f",
+    "r200"
+  ],
+  "runtime_source_owned_by_main": true,
+  "actual_source_input_count": 97,
+  "frozen_review_source_files": 8,
+  "future_output": "/root/probe/issue52-792-sh4-objects-20261022-01",
+  "six_task_order": [
+    "native_ui-default",
+    "native_ui-off",
+    "native_static-default",
+    "native_static-off",
+    "native_ui-on",
+    "native_static-on"
+  ],
+  "no_build_allocation": true,
+  "object_control_policy": "Fresh792 default/explicit0/ON macro/preprocess/full-dependency/object tasks under same flags; old650 outputs only comparison references, never fresh792 evidence",
+  "programme_policy": "Any future programme requires fresh complete actual-resolved tool pre/post/subprocess/plugin closure. Consumer owns helper; old650 or failedprogramme closure cannot certify792.",
+  "fresh_object_request_proposal": {
+    "hard_bytes": 33554432,
+    "soft_abort_bytes": 25165824,
+    "one_shared_slot": true,
+    "no_make_link_programme_stage_image_guest": true
+  },
+  "source_plan_limit_bytes": 524288
+}

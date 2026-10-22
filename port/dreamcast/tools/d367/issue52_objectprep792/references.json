@@ -1,0 +1,86 @@
+[
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/mipmap21-next792-integration-20261022/ROOT-selected792-20261022.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/mipmap21-next792-integration-20261022/ROOT-selected792-20261022.json",
+    "bytes": 50120,
+    "sha256": "a8e5a20512639e775e8f31415cbcf72957236204caf11a96045dbc0e13949339"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/SHA256SUMS",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/SHA256SUMS",
+    "bytes": 1254,
+    "sha256": "6017b58466453cb84a1f77e6099c2f68e36a79fd4e2c27de7ed42e03b3e6046e"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/planned-tasks.json",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/planned-tasks.json",
+    "bytes": 155411,
+    "sha256": "c245323f057f882e466aac028b5f433d71a243c88fb7d0bf344ab3af3fcdf5c9"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/candidate-input-pins.json.gz",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/candidate-input-pins.json.gz",
+    "bytes": 5913,
+    "sha256": "38122201efcdc439bc81cf20b689021635098f50d48b3e83845a16cf999287b2"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/system-header-pins.json.gz",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/system-header-pins.json.gz",
+    "bytes": 66827,
+    "sha256": "f8bcf7700cd2fa9e962dd215664457da6fc7a726618fd668619c7768e6b42850"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/toolchain-pins.json",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/toolchain-pins.json",
+    "bytes": 3982,
+    "sha256": "5876d72a784d5b07a915bdff8e294c36a312419dfa89aae7ab48065c7e451884"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/compiler-environment.json",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/compiler-environment.json",
+    "bytes": 761,
+    "sha256": "686ec2286dd9158fcf9284e198f7ea03600464b9c16e0273b458964fd6351cb3"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/canonical-controls.json",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/canonical-controls.json",
+    "bytes": 5117,
+    "sha256": "678e8e9ce636f5ec45a4c83c320d3ac55413c478b9f8718a0aa85ae54659319f"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/canonical-references.json",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/canonical-references.json",
+    "bytes": 14988,
+    "sha256": "06a7c2544db3fe4162d29fdee419ca10f6afac13a51aa2ee6e25d9f0b833a7de"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/expected-critical-macros.json",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/expected-critical-macros.json",
+    "bytes": 1353,
+    "sha256": "9735c16e118417bf34ef4a5b51b14e4d92cb53821168ab14494f8fe41ebc5078"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-650-sh4-20261022-01/object-gates.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-650-sh4-20261022-01/object-gates.json",
+    "bytes": 5336,
+    "sha256": "95792fbf2784d7db0d61d7d0e6ddaea87321481ac9a00d7cc5a5c55640224312"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-650-sh4-20261022-01/final-audit.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-650-sh4-20261022-01/final-audit.json",
+    "bytes": 5187,
+    "sha256": "a9404cff4518783de924b9bba57281a9b299c797fd9701f56ead6a4fb9c80089"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-650-sh4-20261022-01/FINAL-RESOURCE.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-650-sh4-20261022-01/FINAL-RESOURCE.json",
+    "bytes": 615,
+    "sha256": "0b8f4236af84e117ee28876b7a8aed1587bb7e530c149d40538de84c5edc25ea"
+  },
+  {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-650-sh4-20261022-01/extra-pins.json",
+    "resolved_path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-650-sh4-20261022-01/extra-pins.json",
+    "bytes": 2816,
+    "sha256": "508a9c543fe19d1f7a8c50731c2e51a78e25b4beee78bc04816b35b345cbf715"
+  }
+]
