@@ -1,0 +1,19 @@
+! Source-derived OFF steady emit loop, excludes per-strip setup/clip/call/hash/census.
+fmov @r0+,dr0
+dt r10
+fmov @r0+,dr2
+fmov @r0+,dr4
+fmov @r0+,dr6
+mov.b @r9+,r2
+fmov dr6,@-r8
+extu.b r2,r0
+fmov dr4,@-r8
+shll2 r0
+fmov dr2,@-r8
+shll2 r0
+fmov dr0,@-r8
+add r0,r0
+pref @r8
+add r11,r0
+bf/s loop
+add #64,r8
