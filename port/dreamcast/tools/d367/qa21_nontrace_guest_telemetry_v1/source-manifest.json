@@ -1,0 +1,161 @@
+{
+  "scope": "NEW immutable source/tool/profile seal; no guest allocation. Exact85bac-derived tools plus explicitly reviewedpending guard/parser/finalresource deltas",
+  "utc": "2026-10-22T04:09:26.286113+00:00",
+  "base_tools": "85bac7a7113816d3e8c9564d0c301ed4c670aa94",
+  "telemetry_review": "317162fd4",
+  "fixed_program": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "files": {
+    ".gitattributes": {
+      "bytes": 71,
+      "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7"
+    },
+    "SEAL_PLAN.md": {
+      "bytes": 4420,
+      "sha256": "e84ec8769c8eec63abf8b23352b688bb7e1c46451fb5ffea17fb450e5f774a77"
+    },
+    "capture-budget.py": {
+      "bytes": 712,
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+    },
+    "checkpoint-ABI.json": {
+      "bytes": 4613,
+      "sha256": "15b4c7ea458bb8f957c5b4e86e3dde47cf82a8b35da4c8575bbd92d453d1140f"
+    },
+    "controller-core.py": {
+      "bytes": 7467,
+      "sha256": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a"
+    },
+    "current-transitions.json": {
+      "bytes": 18703,
+      "sha256": "25c5d4cccfbcea660849a02350aa0c334d2205e84a54d856819cf28f8e44a041"
+    },
+    "death-demo-source.json": {
+      "bytes": 2192,
+      "sha256": "e863aa62087251dd200fe7f34e0edfaef835fbd50773304e619c5279d3ff62e6"
+    },
+    "empty-keys.txt": {
+      "bytes": 76,
+      "sha256": "69c29ed80746da752fdd53d2410cf277060bfd04e9805e1c7a8664316ddacca2"
+    },
+    "exact-log-symbols.json": {
+      "bytes": 634,
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+    },
+    "guard-delta-proof.json": {
+      "bytes": 3096,
+      "sha256": "9c7361dc434d082238402496c6d3a9cedf379424945bd1794fcec579c019261c"
+    },
+    "guest-profile-v2.json": {
+      "bytes": 13113,
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+    },
+    "guest-supervisor-core.py": {
+      "bytes": 5185,
+      "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb"
+    },
+    "incidents/test-native-seal-initial.py": {
+      "bytes": 5108,
+      "sha256": "32d9c0712fcdaf354e4a26b28bd1afbba2471c03be70cd312712e57d544daa6c"
+    },
+    "independent-85bac-README.md": {
+      "bytes": 6122,
+      "sha256": "42d22171c95745a297fc131467aacedbd42c62a3cee399ac47bd0a6fdd39a7eb"
+    },
+    "independent-85bac-review.json": {
+      "bytes": 15797,
+      "sha256": "9a6755e5fc2a339425a3f35140ac5be828266bdb56c49d6522322cc95cefafaa"
+    },
+    "inner-adapter.py": {
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    "input-deadlines.py": {
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    "layout-contract.py": {
+      "bytes": 4538,
+      "sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5"
+    },
+    "native-host-cases-20261022T040636338844Z.json": {
+      "bytes": 4715,
+      "sha256": "508d2ce7a1b97fa20d8b503446426881afcefa150e911bf85f7985790b8e6233"
+    },
+    "observe.py": {
+      "bytes": 6626,
+      "sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490"
+    },
+    "observer-binding-v2.json": {
+      "bytes": 1434,
+      "sha256": "ce53a9509462d920d9a2bee26e54566ba9c04f0080d11fadec82c89cf41d4bcd"
+    },
+    "observer-v2-ABI.json": {
+      "bytes": 43125,
+      "sha256": "c48f2858953d7c693e1fb1885d0354fdb2706706c458099697fb1cc288ea228e"
+    },
+    "observer-v2.py": {
+      "bytes": 8805,
+      "sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf"
+    },
+    "outer-driver.py": {
+      "bytes": 13247,
+      "sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c"
+    },
+    "policies.py": {
+      "bytes": 3455,
+      "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233"
+    },
+    "r103-cold-keys.txt": {
+      "bytes": 189,
+      "sha256": "1d521b1ca227b07273fd4f7f1d2a7e1e2848b71eaee18ba07ad691386add2565"
+    },
+    "run-seal-tests.py": {
+      "bytes": 1820,
+      "sha256": "34afe005a75081ed508509f8bf195de42c2647c47d914d1c954d78a45da3b4ea"
+    },
+    "seal-receipt-linux-20261022T040453736461Z.json": {
+      "bytes": 6650,
+      "sha256": "0bbf8b1c399cc74a52811a46cd86f4fb74f0e0ea1339f7f3d3705b1c45fa435e"
+    },
+    "seal-receipt-windows-20261022T040453558946Z.json": {
+      "bytes": 9407,
+      "sha256": "19d86c72342db076919de1c56e88a805923238049156cf6b59c821c3d7a511b2"
+    },
+    "seal-receipt-windows-20261022T040559721376Z.json": {
+      "bytes": 2218,
+      "sha256": "9df234c488fe025113f049186dc38b00ad3b5bed06fb98d39d6a0ff6b5e72bb7"
+    },
+    "seal-receipt-windows-20261022T040636472072Z.json": {
+      "bytes": 2218,
+      "sha256": "70ebc51deb885ccbd17946d07e51e7ccba4c1650d62ce0e235cd0d6fccf60017"
+    },
+    "selected-assets.json": {
+      "bytes": 2561,
+      "sha256": "b03b8053b9b85dfce317ed4c174f225bd4ed91cc489ae31cb0cd085ad861eb0e"
+    },
+    "source-contract-v2.json": {
+      "bytes": 8160,
+      "sha256": "b242787825500bcd453e399465f19bc2b71e45f881f069047e374d21e135f579"
+    },
+    "source-qualification.json": {
+      "bytes": 3241,
+      "sha256": "954a1cdcba2b64f5bf63f085f64ddeca63f111710f7024606f7e8ec427d435f1"
+    },
+    "test-failure-telemetry.py": {
+      "bytes": 10106,
+      "sha256": "f2ee60d6ced646115f980e01384d192909210bee11293d174c7ac729c9eaa5dc"
+    },
+    "test-native-seal.py": {
+      "bytes": 6320,
+      "sha256": "21aa1826986d014fddff4d025c40c6faa07f0e6c026fe342959c903740bde525"
+    },
+    "test-seal.py": {
+      "bytes": 6957,
+      "sha256": "63b4ba7559b5dbc7c0e7291357da7bf5ace221a1e7ac740471261131f73d6bbe"
+    },
+    "windows-backend.py": {
+      "bytes": 15331,
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e"
+    }
+  }
+}
