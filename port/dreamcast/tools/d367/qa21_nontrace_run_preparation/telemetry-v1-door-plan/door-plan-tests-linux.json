@@ -1,0 +1,16 @@
+{
+  "scope": "10pure Door candidate/seed contract tests only; no guest/input/liveRAM",
+  "utc": "2026-10-22T04:34:56.259396+00:00",
+  "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39",
+  "sources": {
+    "controller-candidate.py": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+    "policies.py": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+    "seed-contract.json": "1b9b25ca53b693e9e4a4c964f8aee7cc11c2439d7c5d6f24a8914decf522041f",
+    "test-door-plan.py": "70bb8e47b9dc91bc48ea2ddc9ecbe1383490dd4161161d95efdeffaa2f067b3e",
+    "run-door-plan-tests.py": "a049859ab589c780debd91a8196ced0eeda6794dc6cfd2728014668924772f73"
+  },
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "test_actual_seed_offline_freeplay_and_firstaction_match (__main__.DoorPlan.test_actual_seed_offline_freeplay_and_firstaction_match) ... ok\ntest_candidate_contact_bound_feeds_existing_inputlease_and_releases (__main__.DoorPlan.test_candidate_contact_bound_feeds_existing_inputlease_and_releases) ... ok\ntest_cutoff_prevents_further_navigation (__main__.DoorPlan.test_cutoff_prevents_further_navigation) ... ok\ntest_exact_candidate_is_only_point2_to_point15_contact_hold (__main__.DoorPlan.test_exact_candidate_is_only_point2_to_point15_contact_hold) ... ok\ntest_existing_parser_and_exact_profile_qualified_parent_contract (__main__.DoorPlan.test_existing_parser_and_exact_profile_qualified_parent_contract) ... ok\ntest_four_contact_attempts_max_then_stop (__main__.DoorPlan.test_four_contact_attempts_max_then_stop) ... ok\ntest_geometry_inputs_stay_within_original_bounds (__main__.DoorPlan.test_geometry_inputs_stay_within_original_bounds) ... ok\ntest_reproduces_original_role_bound_gap_without_executing_input (__main__.DoorPlan.test_reproduces_original_role_bound_gap_without_executing_input) ... ok\ntest_roomtransition_to_original_manual_stops_all_navigation (__main__.DoorPlan.test_roomtransition_to_original_manual_stops_all_navigation) ... ok\ntest_stale_qa_ui_event_death_all_withhold_or_release (__main__.DoorPlan.test_stale_qa_ui_event_death_all_withhold_or_release) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.004s\n\nOK\n",
+  "guest_qualified": false
+}
