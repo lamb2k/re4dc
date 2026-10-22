@@ -1,0 +1,435 @@
+{
+  "kind": "manager storage/object lifetime exact source trace, not target bug proof",
+  "source_commit": "720b75381a68f51636b17031f82fd762e72e05d3",
+  "files": [
+    {
+      "path": "include/cManager.h",
+      "bytes": 17522,
+      "sha256": "19ce63044d273bce47c208773df8921f08f90fc58bdfc162e7bb9507f5940e3c",
+      "blob": "6ed002e247aa7fce08efa0ef14cbba3b06cea27c"
+    },
+    {
+      "path": "include/em.h",
+      "bytes": 21283,
+      "sha256": "3fde0e04cd508f086be1c193bc761b55e3ff8ee7cb08c522c344b4d14b19e74f",
+      "blob": "bb0d0a4abe513f130d35e9e290ae68e77d293398"
+    },
+    {
+      "path": "include/em10.h",
+      "bytes": 19754,
+      "sha256": "c6ab1e95154903cf0eb007f9258266b50afd7095fc1741e597aa9f174b21fbda",
+      "blob": "6ace7c0c0ac157da094dd969437397c35a69e2a7"
+    },
+    {
+      "path": "include/model.h",
+      "bytes": 31880,
+      "sha256": "27398c3fbc4f1df2c6e1bf258e1caa6a42d8d720cb2d1b2fbc0fc57ec3df2bc5",
+      "blob": "7f9279d910524f855c703ecf1f5a996206f78568"
+    },
+    {
+      "path": "include/event.h",
+      "bytes": 15462,
+      "sha256": "8d9acb9b41db86dc14c9a31ea045cea16ee9082ca0e8044be5211b96909bb1ac",
+      "blob": "4273a3e0307c5e1fe9d474ea76763c9af73002ba"
+    },
+    {
+      "path": "include/atari.h",
+      "bytes": 8500,
+      "sha256": "852525c2e518f0c1d89301372170425af68e71ffaf917a7a956e42584b68bc72",
+      "blob": "4bdf48fe7bce4ff002065f96e60fb7c32c42027a"
+    },
+    {
+      "path": "port/dreamcast/game/parts_bridge.cpp",
+      "bytes": 19998,
+      "sha256": "616bcfd7b1606ed0b47a36791b183e6bf1476bfe61b687f2b3652e613536d35f",
+      "blob": "2ef99488529ddbbfb5025adb6cab73df7e03bdb5"
+    },
+    {
+      "path": "src/game/em.cpp",
+      "bytes": 20073,
+      "sha256": "12f2df9e82640ede3c4ba408edbb8b1684ceb08b63f3042a0e3331267b229fbb",
+      "blob": "0b3ebbc3fabe415d0ce8868739b9c6f562ebbe03"
+    },
+    {
+      "path": "src/game/em_set.cpp",
+      "bytes": 37614,
+      "sha256": "ba44bd6e2fc0eae391956f1a4648a0b25439f826fa292c4256c5bc47be8b0d6a",
+      "blob": "7819ccd3626e6a35611a21626cb32d8c1f9c30f0"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "bytes": 122192,
+      "sha256": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+      "blob": "da91e67631d3b5f8e1398a0cd8d85b0ec91deb98"
+    },
+    {
+      "path": "src/game/objRocket.cpp",
+      "bytes": 16154,
+      "sha256": "c4853ebaad29c0b35549956cf62a2f3cf940a408cfdfa2e8ceac86498a770b68",
+      "blob": "af186b293e6badf2d329814ebf3e8804df07efe8"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "bytes": 54487,
+      "sha256": "fa7688e8cf6a2f21548d7d31e93b3f0e6023131333c3b8c90d25c4d61ce78d08",
+      "blob": "11bf2026b93a2ec663e6509185dd78202cd109ff"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "bytes": 67752,
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "blob": "53ad0e7322de9ad1d1b9b218ac05982ac9a7c9e2"
+    },
+    {
+      "path": "src/game/scheduler.cpp",
+      "bytes": 18839,
+      "sha256": "6479263912945cd5e396f270a2872d88262a69b85bbf4dc357e9e6f4212ea5ce",
+      "blob": "d108af401d421abb3434c5ed352e4d956c6e87eb"
+    },
+    {
+      "path": "src/game/sce_sys.cpp",
+      "bytes": 18173,
+      "sha256": "bf641562d0d0e473a418906e31d416c2b260c3c5f6ca44fd475863c00424f93c",
+      "blob": "93a5868778efc4394bd253a24dd1a8dce92a2d2d"
+    },
+    {
+      "path": "src/st/em_wrap.cpp",
+      "bytes": 33394,
+      "sha256": "5eb53afe1c0c908eee7f704000f116e6e7a5a2678ae16a95ae83d69f082888ec",
+      "blob": "578a421da915e667c0eff90d636c4382e7299497"
+    },
+    {
+      "path": "include/em_wrap.h",
+      "bytes": 8130,
+      "sha256": "f2146fab40a83de85c6b74b9d9221884039baae4e1aa4d768707074b26d5ba45",
+      "blob": "c3951e24b6577f655cc8271ddd89660ac46e4773"
+    },
+    {
+      "path": "src/st1/r10c.cpp",
+      "bytes": 48160,
+      "sha256": "4b43e8cb20e86f47b208fcabe4270b0ee1b5eaa81005da0bdd3454f1c201f50e",
+      "blob": "d960863fd30045e8cb4209848503a150161cbb41"
+    },
+    {
+      "path": "src/em12/em12_set.cpp",
+      "bytes": 8429,
+      "sha256": "41d9d2082fb0da06227150ad58ae28a89240cfb3b320dc3d1ca277c96a39f760",
+      "blob": "98523ccdeb85008ee0cdc4d1846d75436f8e9ea0"
+    },
+    {
+      "path": "src/em10/em10.cpp",
+      "bytes": 869044,
+      "sha256": "065613c2d2297a5f843d71c897daffd14a715d7aac7e17c3fe563c6be990aaad",
+      "blob": "12adc003fc135855a9ef6b48b5d283863dd32f9f"
+    },
+    {
+      "path": "docs/CACHE21_MAIN_AUDIT_REVIEW_20261021_1959.json",
+      "bytes": 27813,
+      "sha256": "7b013455c6f6cc32a8e5726911c6e4ac18e78ce4c24c3e725d027cf50a4af024",
+      "blob": "6b47dce3ef780aa61181a91b7b020ca340a121c1"
+    }
+  ],
+  "checks": [
+    {
+      "name": "deferred destroy uses typed post-destructor flag store",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "immediate destroy uses typed post-destructor flag store",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "fresh/reused scan occurs before construction",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "back allocator also scans before construction",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "indexed create scans before construction",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "indexed overload ignores construct refusal",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "count scan includes raw/reused flags",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "deferred stages remain two-step",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "pool operator delete is intentionally empty",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "base destructor clears601 before storage retained",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "pool headers and physical runs start as byte-cleared storage",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "pool chunks reclaim test typed flags without constructor proof",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "enemy and object slot addresses retained",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "ordinary sparse teardown frees backing using captured heap handle",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "enemy constructor prewrites subArc before placement constructor",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "enemy creation serial assigned after constructor",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "enemy manager deferred policy is2",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "enemy manager cleanup precedes deferred mark",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "enemy move checks deferred deletion before active traversal",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "first enemy move occurs before returning handle",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "r10c preloads12 before event registration",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "r10c first virtual follows list creation without explicit sleep",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "existing enemy module returns without read caller",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "missing enemy load can yield before module publication",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "raw wrapper checks flag but no serial or current-pool receipt",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "native em12 default initialization preserves prewritten bytes",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "custom SAT alive predicate must not be flattened",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "ordinary scenario loop dispatches EventMgr scans",
+      "result": "PASS",
+      "kind": "static source condition only"
+    }
+  ],
+  "trace": [
+    {
+      "path": "include/cManager.h",
+      "signature": "int cManager<T>::dieCheck()",
+      "line": 301,
+      "end": 323,
+      "source_body_native_PPC_alternatives_masked": "\n    u32 i;\n    for (i = 0; i < nArray; i++) {\n#if !defined(__PPC__)\n        T* p = workAt(i);\n#else\n                                            \n#endif\n#if !defined(__PPC__)\n        if (!p) continue;\n#endif\n        if (p->be_flag & 0x601) {\n            if (p->be_flag & 0x400) {\n                delete p;\n                p->be_flag = 0;\n            } else if (p->be_flag & 0x200) {\n                p->be_flag |= 0x400;\n            }\n        }\n    }\n    return 1;\n"
+    },
+    {
+      "path": "include/cManager.h",
+      "signature": "T* cManager<T>::create(int id)",
+      "line": 353,
+      "end": 380,
+      "source_body_native_PPC_alternatives_masked": "\n    u32 i;\n    for (i = 0; i < nArray; i++) {\n#if !defined(__PPC__)\n        T* p = workAt(i);\n#else\n                                            \n#endif\n#if !defined(__PPC__)\n        if (!p || !(p->be_flag & 0x601)) {\n            if (!prepareWork(i, 1) || !(p = workAt(i))) return 0;\n#else\n                                    \n#endif\n            memClear(p, size);\n            if (construct(p, id) == 0) {\n                log(\"create()->construct() failed. %s id:%d\", name, id);\n                return 0;\n            }\n            addListFront(p);\n            countActiveWork();\n            return p;\n        }\n    }\n    log(\"create() failed. %s work is full id:%d\", name, id);\n    return 0;\n"
+    },
+    {
+      "path": "include/cManager.h",
+      "signature": "T* cManager<T>::create(int id, u32 no)",
+      "line": 389,
+      "end": 410,
+      "source_body_native_PPC_alternatives_masked": "\n    if (no >= nArray) {\n        return 0;\n    }\n#if !defined(__PPC__)\n    if (!prepareWork(no, 1)) return 0;\n    T* p = workAt(no);\n    if (!p) return 0;\n#else\n                                         \n#endif\n    if (p->be_flag & 0x601) {\n        log(\"create() failed %s id:%d\", name, id);\n        return 0;\n    }\n    memClear(p, size);\n    construct(p, id);\n    addListFront(p);\n    countActiveWork();\n    return p;\n"
+    },
+    {
+      "path": "include/cManager.h",
+      "signature": "T* cManager<T>::createBack(int id)",
+      "line": 515,
+      "end": 564,
+      "source_body_native_PPC_alternatives_masked": "\n    int i;\n#if !defined(__PPC__)\n    // Port, demand-backed pools (parts_bridge.cpp): the source takes the highest free slot, and the\n    // GameCube allocates the whole array with the room, so that choice never fails for memory. It is\n    // kept whenever its page can be backed (the same slot index as the GameCube). Only when backing it\n    // fails (heap 4 exhausted, as after the r100 post-house ambush) does the scan go on to the highest\n    // free slot in a page that is already backed, instead of failing the create. Unbacked pages below\n    // the failed one are never smaller, so they are not retried.\n    int unbacked = -1;\n#endif\n    for (i = nArray - 1; i >= 0; i--) {\n#if !defined(__PPC__)\n        T* p = workAt(i);\n#else\n                                            \n#endif\n#if !defined(__PPC__)\n        if (!p || !(p->be_flag & 0x601)) {\n            if (!p && unbacked >= 0) continue;\n            if (!prepareWork(i, 1) || !(p = workAt(i))) {\n                unbacked = i;\n                continue;\n            }\n#else\n                                    \n#endif\n            memClear(p, size);\n            if (construct(p, id) == 0) {\n                log(\"create()->construct() failed. %s id:%d\", name, id);\n                return 0;\n            }\n            addListBack(p);\n            countActiveWork();\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n            if (unbacked >= 0) {\n                re4dc_log(\"createBack: %s id 0x%x slot %d not backed (heap), took backed slot %d\\n\", name, id,\n                          unbacked, i);\n            }\n#endif\n            return p;\n        }\n    }\n#if !defined(__PPC__)\n    if (unbacked >= 0) return 0;  // backing failed and no backed slot was free: as before\n#endif\n    log(\"create() failed. %s work is full id:%d\", name, id);\n    return 0;\n"
+    },
+    {
+      "path": "include/cManager.h",
+      "signature": "inline void cManager<T>::destroy(T* p)",
+      "line": 469,
+      "end": 497,
+      "source_body_native_PPC_alternatives_masked": "\n    if ((u32)p < RE4_MEM_LO || (u32)p > RE4_MEM_HI) {\n        if (p != 0) {\n            log(\"%s::destroy() ERROR, INVALID  PTR %08X\", name, p);\n        }\n        return;\n    }\n    deleteList(p);\n    switch (flag) {\n    case 0:\n        if (!p->isAlive()) {\n            log(\"%s::destroy() delete but not alive\", name);\n            return;\n        }\n        delete p;\n        p->be_flag = 0;\n        break;\n    case 1:\n        p->be_flag |= 0x600;\n        break;\n    case 2:\n        p->be_flag |= 0x200;\n        break;\n    default:\n        log(\"%s::destroy() INVALID ID %d\", name, flag);\n        break;\n    }\n"
+    },
+    {
+      "path": "include/cManager.h",
+      "signature": "u32 cManager<T>::countActiveWork()",
+      "line": 326,
+      "end": 350,
+      "source_body_native_PPC_alternatives_masked": "\n    u32 n = 0;\n    u32 i;\n    for (i = 0; i < nArray; i++) {\n#if !defined(__PPC__)\n        T* p = workAt(i);\n#else\n                                            \n#endif\n#if !defined(__PPC__)\n        if (!p) continue;\n#endif\n        if (p->be_flag & 0x601) {\n            n++;\n        }\n    }\n    if (n > maxAlive) {\n        maxAlive = n;\n    }\n    if (nArray - n < nArray / warnDiv) {\n        log(\"countActiveWork() warning, %s work remain under 1/%d\", name, warnDiv);\n    }\n    return n;\n"
+    },
+    {
+      "path": "port/dreamcast/game/parts_bridge.cpp",
+      "signature": "template<class T> int array_alloc(",
+      "line": 213,
+      "end": 238,
+      "source_body_native_PPC_alternatives_masked": "\n    RE4DC_ALIVE_BUMP();\n    array_free(m);m->nArray=n;\n    if(!demand<T> || m->pArrayPush) {\n        m->pArray=(T*)m->memAlloc(m->size*n);\n        if(n && m->pArray)m->memClear(m->pArray,m->size*n);\n        return !n || m->pArray!=0;\n    }\n    // Tool-memory bulk sweeping needs a separate ownership qualification. Normal\n    // room and subscreen managers use explicit source heap ownership below.\n    if(pG->Debug_flg[3] & 0x200000) { re4dc_missing(\"parts demand debug heap unqualified\");return 0; }\n    if(m->size!=sizeof(T) || n>(0xffffffffU-sizeof(Pool<T>)-31)/sizeof(T*) ||\n       n>(0xffffffffU-sizeof(Chunk<T>)-31)/sizeof(T)) {\n        re4dc_missing(\"parts capacity overflow\");return 0;\n    }\n    const u32 bytes=(sizeof(Pool<T>)+n*sizeof(T*)+31)&~31U;\n    Pool<T>* p=(Pool<T>*)mem_alloc(bytes,\"native parts slots\",0,1,MEM_HEAP_CURRENT);\n    if(!p) { re4dc_missing(\"parts slot allocation\");return 0; }\n    memclr_asm(p,bytes);p->capacity=n;p->bytes=bytes+64;p->peak=p->bytes;\n    p->heap=MemGetCurrentHeap();p->handle=Heap[p->heap].handle;\n    m->pArray=(T*)p;register_pool(m);report(p,\"init\");\n#if RE4DC_HEAP4_PARTS_RESERVE\n    reserve_init(p);\n#endif\n    return 1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/parts_bridge.cpp",
+      "signature": "template<class T> bool prepare_work(",
+      "line": 244,
+      "end": 302,
+      "source_body_native_PPC_alternatives_masked": "\n#if RE4DC_SUBSCREEN\n    if(Frozen<T>* f=frozen(m)) {\n        if(!count || first>=f->n || count>f->n-first) return false;\n        for(u32 j=first;j<first+count;++j) if(!f->slots[j]) f->slots[j]=(T*)frozen_dummy;\n        return true;\n    }\n#endif\n    if(!m->pArray || !count || first>=m->nArray || count>m->nArray-first)return false;\n    if(!sparse(m))return true;\n    Pool<T>* p=pool(m);T** slots=p->slots();\n    // Reusing an existing physical run does not allocate or move anything.\n    for(Chunk<T>* c=p->chunks;c;c=c->next)\n        if(first>=c->first && first-c->first<c->count && count<=c->count-(first-c->first))return true;\n    for(Chunk<T>* c=p->chunks;c;c=c->next) {\n        if(c->first<first+count && c->first+c->count>first && (retain_slots<T> || alive(c)))return false;\n    }\n    // Only fully dead chunks can be replaced. Deferred-deletion flags count as\n    // live. Partial releases cannot invalidate the surviving model's pointers.\n    for(Chunk<T>** c=&p->chunks;*c;) {\n        if((*c)->first<first+count && (*c)->first+(*c)->count>first)discard(p,c);\n        else c=&(*c)->next;\n    }\n    const u32 bytes=(sizeof(Chunk<T>)+count*m->size+31)&~31U;\n#if RE4DC_HEAP4_PARTS_RESERVE >= 2\n    // HEAP4_PARTS_RESERVE=2 (test only): the slab first, so its runs are exercised with heap 4 to spare.\n    Chunk<T>* c=parts_reserve<T>?reserve_take(p,bytes):0;\n    const bool slab_first=c!=0;\n    if(!c) c=(Chunk<T>*)mem_alloc(bytes,\"native parts run\",0,0,p->heap);\n#else\n    Chunk<T>* c=(Chunk<T>*)mem_alloc(bytes,\"native parts run\",0,0,p->heap);\n#endif\n    if(!c) {\n        // Keep dead runs reusable normally; under heap pressure reclaim them.\n        for(Chunk<T>** q=&p->chunks;*q;) { if(!retain_slots<T> && !alive(*q))discard(p,q);else q=&(*q)->next; }\n        c=(Chunk<T>*)mem_alloc(bytes,\"native parts run\",0,1,p->heap);\n    }\n#if RE4DC_HEAP4_PARTS_RESERVE\n    // The GameCube's up-front cParts array never fails here: the slab stands in for it.\n    bool slab=false;\n#if RE4DC_HEAP4_PARTS_RESERVE >= 2\n    slab=slab_first;\n#endif\n    if(!c && parts_reserve<T>) { c=reserve_take(p,bytes); slab=c!=0; }\n#endif\n#if defined(RE4DC_TRACE_ALLOC) && RE4DC_TRACE_ALLOC\n    if(!c && p->heap==4) { extern void re4dc_logic_trace_alloc_fail(unsigned,const char*); re4dc_logic_trace_alloc_fail(bytes,\"native parts run\"); }\n#endif\n#line 253\n    if(!c) { ++p->failures;report(p,\"allocation failed\");return false; }\n    memclr_asm(c,bytes);c->first=first;c->count=count;c->bytes=bytes+64;\n#if RE4DC_HEAP4_PARTS_RESERVE\n    c->reserved[0]=slab;\n#endif\n    c->next=p->chunks;p->chunks=c;\n    for(u32 j=0;j<count;++j)slots[first+j]=c->parts()+j;\n    p->bytes+=c->bytes;++p->chunks_count;if(p->bytes>p->peak)p->peak=p->bytes;\n    report(p,\"grow\");return true;\n"
+    },
+    {
+      "path": "port/dreamcast/game/parts_bridge.cpp",
+      "signature": "template<class T> int array_free(",
+      "line": 198,
+      "end": 212,
+      "source_body_native_PPC_alternatives_masked": "\n    RE4DC_ALIVE_BUMP();\n    if(!m->pArray) return 0;\n    if(frozen(m)) { re4dc_log(\"work backing: size=%u frozen pool kept (freed while the sub screen is open)\\n\",(unsigned)sizeof(T));return 0; }\n    if(!sparse(m)) { m->memFree(m->pArray);m->pArray=0;return 1; }\n    Pool<T>* p=pool(m);\n    // As in the source arrayFree, callers own destruction/order. This releases\n    // backing after those consumers finish; roomInit instead forgets the old\n    // pointer after the owning room heap has been reset by the source.\n    while(p->chunks) discard(p,&p->chunks);\n#if RE4DC_HEAP4_PARTS_RESERVE\n    if(p->reserved[0]) OSFreeToHeap(p->handle,(void*)p->reserved[0]);\n#endif\n    OSFreeToHeap(p->handle,p);m->pArray=0;return 1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/parts_bridge.cpp",
+      "signature": "template<class T> bool alive(",
+      "line": 50,
+      "end": 53,
+      "source_body_native_PPC_alternatives_masked": "\n    for(u32 i=0;i<c->count;++i) if(c->parts()[i].be_flag & 0x601) return true;\n    return false;\n"
+    },
+    {
+      "path": "port/dreamcast/game/parts_bridge.cpp",
+      "signature": "template<class T> void discard(",
+      "line": 54,
+      "end": 62,
+      "source_body_native_PPC_alternatives_masked": "\n    Chunk<T>* c=*link;\n    for(u32 i=0;i<c->count;++i) p->slots()[c->first+i]=0;\n    *link=c->next;p->bytes-=c->bytes;--p->chunks_count;++p->reclaims;\n#if RE4DC_HEAP4_PARTS_RESERVE\n    if(c->reserved[0]) return;   // a slab run: its bytes stay in the slab until the pool goes\n#endif\n    OSFreeToHeap(p->handle,c);\n"
+    },
+    {
+      "path": "src/game/em.cpp",
+      "signature": "int cEmMgr::construct(",
+      "line": 85,
+      "end": 215,
+      "source_body_native_PPC_alternatives_masked": "\n    switch (id) {\n    case 0:\n        switch (pG->pl_type) {\n        case 0:\n            p = new (p) cPlLeon;\n            break;\n        case 1:\n            p = new (p) cPlAshley;\n            break;\n        case 2:\n        case 3:\n        case 4:\n        case 5:\n            PlInitFunc(p);\n            break;\n        }\n        break;\n    case 1:\n    case 2:\n    case 3:\n    case 4:\n    case 5:\n    case 6:\n    case 7:\n    case 8:\n    case 9:\n    case 0xA:\n    case 0xB:\n    case 0xC:\n    case 0xD:\n    case 0xE:\n        p->subArc = (PlArc*)EmReadSearch(id, 0, 0);\n        if (p->subArc == 0) {\n            return 0;\n        }\n        EmInitFunc(p);\n        break;\n    case 0x40:\n        p = new (p) cEmObj;\n        break;\n    case 0x41:\n        p = new (p) cEmDoor;\n        break;\n    case 0x42:\n        p = new (p) cEmWep;\n        break;\n    case 0x43:\n        p = new (p) cEmBox;\n        break;\n    case 0x45:\n        p = new (p) cEmRack;\n        break;\n    case 0x46:\n        p = new (p) cEmWindow;\n        break;\n    case 0x47:\n        p = new (p) cEmTorch;\n        break;\n    case 0x48:\n        p = new (p) cEmBarrel;\n        break;\n    case 0x49:\n        p = new (p) cEmTree;\n        break;\n    case 0x4A:\n        p = new (p) cEmRock;\n        break;\n    case 0x4B:\n        p = new (p) cEmSwitch;\n        break;\n    case 0x4C:\n        p = new (p) cEmItem;\n        break;\n    case 0x4D:\n        p = new (p) cEmHit;\n        break;\n    case 0x4E:\n        p = new (p) cEmBarred;\n        break;\n    case 0x4F:\n        p = new (p) cEmMine;\n        break;\n    case 0x50:\n        p = new (p) cEmShield;\n        break;\n    case 0x51:\n        p = new (p) cEmBar;\n        break;\n    case 0xFF:\n        p = new (p) cEm;\n        break;\n    default:\n        p->subArc = (PlArc*)EmReadSearch(id, 0, 0);\n        if (p->subArc == 0) {\n            return 0;\n        }\n        EmInitFunc(p);\n        break;\n    }\n    switch (p->id) {\n    case 0x10:\n    case 0x11:\n    case 0x12:\n    case 0x13:\n    case 0x14:\n    case 0x15:\n    case 0x16:\n    case 0x17:\n    case 0x18:\n    case 0x19:\n    case 0x1A:\n    case 0x1B:\n    case 0x1C:\n    case 0x1D:\n    case 0x1E:\n    case 0x1F:\n    case 0x20:\n        p->id = 0x10;\n        break;\n    }\n    p->serial = Guid;\n    Guid++;\n    p->emset_no = 0xFF;\n    p->be_flag |= 0x40;\n    p->id = id;\n    p->be_flag |= 0x02000000;\n    p->subArc2 = p->subArc;\n    return 1;\n"
+    },
+    {
+      "path": "src/game/em.cpp",
+      "signature": "void cEmMgr::move()",
+      "line": 248,
+      "end": 276,
+      "source_body_native_PPC_alternatives_masked": "\n    cEm* p;\n    void (*func)(cEm*);\n\n    dieCheck();\n    RouteCk();\n    if (!(pG->Stop_flg & 0x20000000)) {\n#if RE4DC_ACT_CAP || RE4DC_ACT_CAP_TABLE\n        re4dc_act_cap_select();\n#endif\n        p = pAlive;\n        func = emMove;\n        while (p) {\n            cEm* cur = p;\n\n            p = (cEm*) p->pNext;\n#if RE4DC_ACT_CAP || RE4DC_ACT_CAP_TABLE\n            if (re4dc_act_cap_parked(cur)) {\n                emParkMove(cur);\n                continue;\n            }\n#endif\n            func(cur);\n        }\n    } else if (pSUB && !(pG->Stop_flg & 0x1000)) {\n        emMove(pSUB);\n    }\n"
+    },
+    {
+      "path": "src/game/em.cpp",
+      "signature": "void cEmMgr::destroy(",
+      "line": 280,
+      "end": 288,
+      "source_body_native_PPC_alternatives_masked": "\n    if ((u32) p < RE4_MEM_LO || (u32) p > RE4_MEM_HI || (p->be_flag & 0x201) != 1) {\n        pLog->err(0, 0, \"cEmMgr::destroy() WORK IS ALREADY DEAD. %08X\", p);\n        return;\n    }\n    p->push();\n    cManager<cEm>::destroy(p);\n"
+    },
+    {
+      "path": "src/game/em_set.cpp",
+      "signature": "cEm* EmSetFromList2(",
+      "line": 832,
+      "end": 885,
+      "source_body_native_PPC_alternatives_masked": "\n    EmListData* d = EM_LIST(no);\n    cEm* em;\n\n    if (EM_SET_ID_NG(d->id)) {\n        return errEm;\n    }\n    if (pG->stage_no != d->room >> 8) {\n        return errEm;\n    }\n    if (pG->room_no != (d->room & 0xFF)) {\n        return errEm;\n    }\n    if (d->be_flag & 2) {\n        return errEm;\n    }\n    if (d->id == 0) {\n        return errEm;\n    }\n    if (chkDead) {\n        if (EmSetDieCk(no)) {\n            return errEm;\n        }\n    }\n    if (checkListId(no) == 0) {\n        return errEm;\n    }\n#if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP\n    if (re4dc_aliveCapDefer(no, d->id)) {\n        return errEm;\n    }\n#endif\n    em = EmCreate(d->id);\n    if (em == 0) {\n        pLog->err(0, 0, \"EmSetFromList2() Em set failed, Id = %x\", d->id);\n        return errEm;\n    }\n    EM_SET_WORK(em, d, no);\n    d->be_flag |= 2;\n    if (d->be_flag & 4) {\n        d->be_flag |= 8;\n        d->be_flag &= ~4;\n    } else if (!(d->be_flag & 8)) {\n        d->be_flag |= 4;\n    }\n    EmSetDist(em);\n    em->l_sub = 1.0e16f;\n    em->move();\n#if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP\n    aliveCapNoteFresh(em, no);\n#endif\n    return em;\n"
+    },
+    {
+      "path": "src/st1/r10c.cpp",
+      "signature": "void R10cInit()",
+      "line": 118,
+      "end": 223,
+      "source_body_native_PPC_alternatives_masked": "\n#line 113 \"D:/Bio4/Prog/r10c.cpp\"\n    r10c_work.p = (R10cWork*) MEM_CALLOC(sizeof(R10cWork), 1, 0xd);\n    EmReadSearch(0x12, 0, 0);\n    if (pG->JumpPoint == 1) {\n        pG->Room_flg[0] |= 0x04000000;\n    }\n    {\n        Vec zero = {0.0f, 0.0f, 0.0f};\n\n        PSet(r10c_work.p->eat, EatMgr.create(ROOM_ARC_PTR(pG->pRoom, 5), 0, &zero, &zero, 6));\n    }\n    EstSet((int) pPL, -1, 0, 0, 3, 2, 0x800, 0, 0, 0);\n    EstSet((int) pPL, -1, 0, 0, 1, 3, 0x800, 0, 0, 0);\n    pG->Status_flg[1] |= 0x400;\n    SceExec(0x12, (TaskFunc) r10c_ThunderMove, 0, 0, SCE_PRIO_DEF_2, 0);\n    SceExec(0x12, (TaskFunc) moveWheel, 0, 2, SCE_PRIO_DEF_2, 0);\n    setTexRender();\n    SceAtDataSet_exec(3, SCE_LEVEL10, 0, (TaskFunc) r10c_TestPosMove, 0, 1);\n    SceAtDataSet_exec(4, SCE_LEVEL10, 0, (TaskFunc) r10c_TestPosMove, (void*) 1, 1);\n    if (RsfCheck(G_ROOM_ID, 5) == 0) {\n        SceAtDataSet_exec(5, SCE_LEVEL10, 0, (TaskFunc) chkSwitchA, 0, 1);\n    } else {\n        SmdGetObjPtr(0xC)->be_flag |= 0x20;\n        SmdGetObjPtr(0xC)->pParts->ang.z = -1.6f;\n    }\n    if (RsfCheck(G_ROOM_ID, 1) == 0) {\n        SceAtDataSet_exec(1, SCE_LEVEL10, 0, (TaskFunc) r10c_EmEvent, 0, 1);\n    }\n    RsfCheck(G_ROOM_ID, 2);\n    RsfCheck(G_ROOM_ID, 3);\n    RsfCheck(G_ROOM_ID, 4);\n    SceExec(0x12, (TaskFunc) SetEmHitAtari, 0, 0, SCE_PRIO_DEF_2, 0);\n    SceExec(0x12, (TaskFunc) r10c_StrCheck, 0, 2, SCE_PRIO_DEF_2, 0);\n    SceAtDataSet_exec(0x80, SCE_LEVEL10, 0, (TaskFunc) r10c_ItemGet, 0, 1);\n    if (RsfCheck(G_ROOM_ID, 8)) {\n        cObj* obj;\n\n        SceAtSetEnable(7, 0);\n        obj = SmdGetObjPtr(0x71);\n        obj->be_flag |= 0x20;\n        obj->pos.y = 2800.0f;\n    }\n    if (RsfCheck(G_ROOM_ID, 5)) {\n        SetSstDispFlag(9, 1);\n        BitOff(pG->Room_flg[0], 0x04000000);\n        RsfSet(G_ROOM_ID, 7);\n        SetSstDispFlag(0, 0);\n        EffectEspDelete(0, 0xD, 0, 0);\n        EffectEspgenDelete(0, 0xD, 0);\n        EffectEfmDelete(0, 0xD, 0);\n        SceAtSetEnable(0x11, 0);\n        SceAtSetEnable(0x12, 0);\n        SmdGetObjPtr(0)->be_flag &= ~2;\n        SmdGetObjPtr(0xE)->be_flag |= 2;\n        SmdSetTrans(0x55, 0);\n        SmdSetTrans(0x5A, 0);\n        SmdSetTrans(0x58, 0);\n        SmdSetTrans(0x59, 0);\n        SmdSetTrans(0x56, 0);\n        SmdSetTrans(0x57, 0);\n        SmdSetTrans(0x48, 0);\n        SceAtSetEnable(0xE, 0);\n        SceAtSetEnable(0xF, 1);\n        SceAtSetEnable(0xC, 0);\n        SceAtSetEnable(0xD, 0);\n        eat_swap();\n        if (RsfCheck(G_ROOM_ID, 9) == 0) {\n            SceAtDataSet_exec(8, SCE_LEVEL10, 0, (TaskFunc) r10c_EmSet, 0, 1);\n        }\n    } else {\n        SetSstDispFlag(9, 0);\n        SmdSetTrans(0x58, 0);\n        SmdSetTrans(0x59, 0);\n        r10c_work.p->se[0] = SeAtSndCall(0);\n        r10c_work.p->se[1] = SeAtSndCall(1);\n        r10c_work.p->se[2] = SeAtSndCall(2);\n        SceAtSetEnable(0xE, 1);\n        SceAtSetEnable(0xF, 0);\n    }\n    if (pPL->pos.y < -5000.0f) {\n        pG->Room_flg[0] |= 0x04000000;\n    }\n    {\n        Vec pos = {0.0f, 0.0f, 0.0f};\n        Vec rot = {0.0f, 0.0f, 0.0f};\n\n        if (RsfCheck(G_ROOM_ID, 11)) {\n            SatMgr.create(ROOM_ARC_PTR(pG->pRoom, 5), 0, &pos, &rot, 2);\n        }\n        if (RsfCheck(G_ROOM_ID, 12)) {\n            SatMgr.create(ROOM_ARC_PTR(pG->pRoom, 5), 0, &pos, &rot, 3);\n        }\n        if (RsfCheck(G_ROOM_ID, 13)) {\n            SatMgr.create(ROOM_ARC_PTR(pG->pRoom, 5), 0, &pos, &rot, 4);\n        }\n        PSet(r10c_work.p->crate[0], EatMgr.create(ROOM_ARC_PTR(pG->pRoom, 5), 0, &pos, &rot, 1));\n        PSet(r10c_work.p->crate[1], EatMgr.create(ROOM_ARC_PTR(pG->pRoom, 5), 0, &pos, &rot, 1));\n        PSet(r10c_work.p->crate[2], EatMgr.create(ROOM_ARC_PTR(pG->pRoom, 5), 0, &pos, &rot, 1));\n    }\n    if (pSys->language != 0) {\n        SceAtSetEnable(0xC, 0);\n        SceAtSetEnable(0xD, 0);\n    }\n"
+    },
+    {
+      "path": "src/st1/r10c.cpp",
+      "signature": "static void r10c_EmEvent()",
+      "line": 394,
+      "end": 441,
+      "source_body_native_PPC_alternatives_masked": "\n    int cnt = 0;\n\n    if (RsfCheck(G_ROOM_ID, 1) == 0) {\n        cEm* em;\n\n        RsfSet(G_ROOM_ID, 1);\n        BitOff(pG->Room_flg[0], 0x04000000);\n        {\n            EmListData* l = EM_LIST(2);\n\n            em = EmSetFromList2(2, 1);\n            l->set = 0;\n        }\n        em->setNoSuspend(1);\n        r10c_work.p->em = em;\n        EstSet((int) em, -1, 0, 0, 1, 0x1F, 1, 2, 0, 0);\n        BitOn(em->flag, 1);\n        MotionSetCore(em, &em->Motion, ROOM_ARC_PTR(pG->pRoom, 0x26), 0, 0, 1, 0);\n        SndStrReq(1, 0x23, 0x80000003, 0, 0, 0.0f);\n        SceEventStart(0);\n        pG->Status_flg[2] |= 0x02000000;\n        SceSetEventCancel(1, (TaskFunc) r10c_EmEvent_exit, 0, -1, 1);\n        CamCtrl.CutCall(0x11);\n        while (CamCtrl.IsMotionEnd() == 0) {\n            cnt++;\n            SceSleep(1);\n        }\n        CamCtrl.CutCall(0x12);\n        while (CamCtrl.IsMotionEnd() == 0) {\n            if (cnt++ == 219) {\n                BitOn(pG->Room_flg[0], 0x10000000);\n                BitOn(pG->Room_flg[0], 0x08000000);\n            }\n            SceSleep(1);\n        }\n        pPL->setNoSuspend(1);\n        r10c_setPosXYZ(pPL, 3145.0f, 0.0f, 10394.0f);\n        r10c_setAngXYZ(pPL, 0.0f, 0.4f, 0.0f);\n        CamCtrl.CutCall(0x13);\n        while (CamCtrl.IsMotionEnd() == 0) {\n            SceSleep(1);\n        }\n        SceSetEventCancel(0, 0, 0, -1, 1);\n        r10c_EmEvent_exit();\n    }\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void* EmReadSearch(int id, void* addr, u32 size)",
+      "line": 758,
+      "end": 769,
+      "source_body_native_PPC_alternatives_masked": "\n    ReadModule* m;\n\n    id = checkAshleyId(id);\n    m = SearchEmModule(id);\n    if (m != NULL) {\n        EM_INIT_FUNC = m->pInitFunc;\n        return m->pArc;\n    }\n    return readEm(id, addr, size);\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "int readEmData(ReadModule* m, int id, void* addr, u32 size)",
+      "line": 540,
+      "end": 683,
+      "source_body_native_PPC_alternatives_masked": "\n    DvdReadInfo info;\n    u32 len;\n    ReadFile* e;\n    char* name;\n    int req;\n    int ret;\n    int mode;\n    void* pArc;\n    void* pModule = NULL;\n    u32 bssSize = 0;\n    u32 newSize;\n    u32 dataSize;\n\n    switch (pG->pl_type) {\n    case 0:\n    case 1:\n    default:\n        e = &EmFileTbl[id];\n        break;\n    case 3:\n    case 5:\n        e = &EmFileTbl_Wesker[id];\n        break;\n    case 2:\n        e = &EmFileTbl_Ada[id];\n        break;\n    case 4:\n        e = &EmFileTbl_Klauser[id];\n        break;\n    }\n    if (e->file == 0) {\n        return 0;\n    }\n    name = (char*) FileTbl[e->file].name;\n    if (e->dll != 0) {\n        SET_DRS_NAME(name);\n        name = (char*) FileTbl[e->file].name;\n    }\n    if (Dvd.FileExistCheck(name, &len) < 0) {\n        pLog->err(0, 0, \"readEmData(): error! %s\", name);\n        return 0;\n    }\n    mode = 1;\n    if (pG->Rno0 == 2) {\n        mode = 0x100;\n    }\n    if (addr == NULL) {\n#line 725 \"D:/Bio4/Prog/read.cpp\"\n        req = DVD_READ_N(name, NULL, 0, 0, 0, mode | 0x8004);\n    } else {\n#line 728 \"D:/Bio4/Prog/read.cpp\"\n        req = DVD_READ_N(name, addr, 0, 0, 0, mode | 0x8000);\n    }\n    while ((ret = Dvd.ReadCheckInfo(req, &info)) != 1) {\n        if (ret < 0) {\n            pLog->err(0, 0, \"readEmData(): error! %s\", name);\n            return 0;\n        }\n        if (SceSys.checkCTaskRange() == 1) {\n            SceSys.x73 = 1;\n            SceSleep(1);\n            SceSys.x73 = 0;\n        } else {\n            TaskSleep(1);\n        }\n    }\n    len = info.size[0][0];\n    if (addr == NULL) {\n        m->flag |= 4;\n        pArc = (void*) info.addr[0][0];\n        if (len < size) {\n            void* old = pArc;\n            newSize = size;\n            Mem_free(old);\n#line 776 \"D:/Bio4/Prog/read.cpp\"\n            pArc = MEM_ALLOC(newSize, 1, 0xD);\n            if (pArc != old) {\n                return 0;\n            }\n        } else {\n            newSize = len;\n        }\n    } else {\n        BitOff16(m->flag, 4);\n        pArc = addr;\n        newSize = len;\n    }\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    if (!re4dc_ui_bind_enemy(pArc, len)) {\n        re4dc_missing(\"invalid prepared enemy texture identities\");\n        return 0;\n    }\n    if (!re4dc_effect_bind(pArc, len)) {\n#if defined(RE4DC_EFFECT_BIND_DIAG) && RE4DC_EFFECT_BIND_DIAG\n        // EFFECT_BIND_DIAG=1: which check refused it (native_effect.cpp line), the file, its size and an FNV-1a of\n        // the buffer (compare with the disc file: a damaged read vs a full or stale binding table)\n        // Then the range is written back and dropped from the operand cache (ocbp) and checked again from RAM: a pass\n        // now means the CPU held stale lines over bytes a DMA had written (cache class); a second failure means RAM\n        // itself is wrong (a damaged / short read, or a dirty line written back over the DMA's bytes).\n        static char why[160];\n        u32 h = 2166136261u, h2 = 2166136261u;\n        for (u32 i = 0; i < (u32) len; ++i) h = (h ^ ((const u8*) pArc)[i]) * 16777619u;\n        const unsigned chk1 = re4dc_effect_bind_fail_line;\n        re4dc_effect_bind_fail_line = 0;\n        re4dc_dcache_purge(pArc, len);\n        const int ok2 = re4dc_effect_bind(pArc, len);\n        for (u32 i = 0; i < (u32) len; ++i) h2 = (h2 ^ ((const u8*) pArc)[i]) * 16777619u;\n        sprintf(why, \"enemy fx chk%u fnv%08x purge %s%u fnv%08x %s %ub @%08x\", chk1, (unsigned) h, ok2 ? \"PASS\" : \"chk\",\n                ok2 ? 0u : re4dc_effect_bind_fail_line, (unsigned) h2, name, (unsigned) len, (unsigned) (u32) pArc);\n        re4dc_missing(why);\n#else\n        re4dc_missing(\"invalid prepared enemy effect records\");\n#endif\n        return 0;\n    }\n    if (!re4dc_motion_bind(pArc, len)) {\n        re4dc_missing(\"invalid prepared enemy motion archive\");\n        return 0;\n    }\n#endif\n    if (e->dll != 0) {\n        pModule = (void*) (*(u32*) ((u8*) pArc + 4) + (u32) pArc);\n        dataSize = (u32) pModule - (u32) pArc;\n        bssSize = len - dataSize;\n        if (addr == NULL && dataSize < size) {\n            void* old = pModule;\n#line 814 \"D:/Bio4/Prog/read.cpp\"\n            pModule = MEM_ALLOC(bssSize, 1, 0xD);\n            memcpy(pModule, old, bssSize);\n            m->flag |= 1;\n        } else do {  // loop notes: `m` weighted ref 15 > newSize in global-alloc (m r29, newSize r28)\n            newSize = dataSize;\n            BitOff16(m->flag, 1);\n        } while (0);\n    }\n    m->id = id;\n    m->pArc = pArc;\n    m->size = newSize;\n    m->pModule = (OSModuleHeader*) pModule;\n    m->bssSize = bssSize;\n    return 1;\n"
+    },
+    {
+      "path": "src/st/em_wrap.cpp",
+      "signature": "static int emWrapLive(",
+      "line": 57,
+      "end": 67,
+      "source_body_native_PPC_alternatives_masked": "\n    (void) EM_WRAP_HELD(w);\n    if (w->alive != 1) {\n        return 0;\n    }\n    if (w->pEm == 0) {\n        return 0;\n    }\n    return (w->pEm->be_flag & 0x201) == 1;\n"
+    },
+    {
+      "path": "src/game/sce_sys.cpp",
+      "signature": "void ScenarioMove()",
+      "line": 151,
+      "end": 179,
+      "source_body_native_PPC_alternatives_masked": "\n    if (pG->Debug_flg[2] & 0x4000000) {\n        return;\n    }\n    scenarioLoopBeforeInit();\n    if (SceSys.m_item_get == 0 && SceSys.pause == 0) {\n        if (!(pG->Status_flg[0] & 0x100000)) {\n            scenarioCheckEventCancel();\n            RoomData.execMainFunc(pG->room_id);\n        }\n        if (!(pG->Stop_flg & 0x400) || (pG->Debug_flg[3] & 0x80)) {\n#if RE4DC_CABIN_SOURCE\n            re4dc_cabin_before_events();\n#endif\n            EvtMgr.Run();\n#if RE4DC_CABIN_SOURCE\n            re4dc_cabin_after_events();\n#endif\n        }\n    }\n    SceSys.scheduler();\n    scenarioLoopAfterInit();\n#if defined(RE4DC_ALIVE_CAP) && RE4DC_ALIVE_CAP\n    // ALIVE_CAP (em_set.cpp): one held Ganado in below the cap, never during an event, item pick-up or pause.\n    re4dc_aliveCapMove(SceSys.event_start_cnt != 0 || SceSys.m_item_get != 0 || SceSys.pause != 0 ||\n                       (pG->Status_flg[0] & 0x101000) != 0);\n#endif\n"
+    },
+    {
+      "path": "src/em10/em10.cpp",
+      "line": 2716,
+      "qualification": "move marks destroy onr_no_0FF; deferred policy2 above applies",
+      "source_lines": "    }\n    w->Atk_trg = 0;\n    Em10_R0_move_tbl[r_no_0](this);\n    if (r_no_0 == 0xFF) {\n        EmMgr.destroy(this);\n        return;\n    }\n#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW && !(defined(RE4DC_BODY_GRID) && RE4DC_BODY_GRID)\n    if (re4dc_rt_room((unsigned(pG->stage_no) << 8) | pG->room_no)) {"
+    }
+  ],
+  "limits": [
+    "No compiler/runtime/build/guest",
+    "No new normal ABA or issue52 crash trigger established",
+    "Raw byte metadata repair still requires current live allocation and constructor-phase proof",
+    "No whole archive/reset closure; no manager layout/default change proposed"
+  ]
+}
