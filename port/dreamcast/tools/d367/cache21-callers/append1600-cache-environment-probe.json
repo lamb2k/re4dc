@@ -1,0 +1,10 @@
+{
+  "dont_write_bytecode": true,
+  "pycache_prefix": "C:\\Flycast-Evidence\\re4-dreamcast\\texture21-benchmark-20261021\\append1600-materialization-01\\never-created-python-cache",
+  "prefix_exists": false,
+  "cache_paths": [
+    "C:\\Flycast-Evidence\\re4-dreamcast\\texture21-benchmark-20261021\\append1600-materialization-01\\never-created-python-cache\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-texture21-benchmark\\port\\dreamcast\\tools\\d367\\texture21_benchmark\\file_charge.cpython-312.pyc",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\texture21-benchmark-20261021\\append1600-materialization-01\\never-created-python-cache\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-texture-atlas21\\port\\dreamcast\\tools\\d367\\texpack.cpython-312.pyc"
+  ],
+  "scope": "read-only environment/cache-path probe; no writer imports or pack outputs"
+}

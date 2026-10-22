@@ -1,0 +1,624 @@
+{
+  "scope": "SOURCE_ONLY no pack allocation/write/job execution",
+  "manifest": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/writer-plan.json",
+      "sha256": "a41346d1264771e2c0e59c6f08b9dba11bd93a10732d4dd01fe440ec7995749d",
+      "bytes": 2246
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "sha256": "53015865a712cc061cbb29206d316135a3e0d1f609788083b070b06440570b1a",
+      "bytes": 14943
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "sha256": "78bff1657d6416271617b57f93883625f6dd6f6ebcdae9cf4279f546052957ef",
+      "bytes": 7172
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/mipmap_pair_plan.py",
+      "sha256": "f77d2e3f414d1e549cc029fbab3b103e045adb80e9c5ded84531a319a0c8a57a",
+      "bytes": 14106
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "sha256": "dbfd602aef443ce6fc150565e4c98b098e6d3a942698a00dc1a0aba3906e9782",
+      "bytes": 21158
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/PACK1600-JOB-CONTROLLER.md",
+      "sha256": "0a5512114fec76fad8561fcbe30ba1e1e07b531d66623d41468e227c500c1967",
+      "bytes": 6474
+    }
+  ],
+  "objects": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "file_charge",
+      "start": 15,
+      "end": 21,
+      "sha256": "9a7a5d1198b3ac37a27d24a99c28a482c5be97dba4d382e28e714170188deae4"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "sha",
+      "start": 22,
+      "end": 23,
+      "sha256": "3d6bb71e8ac8e2e7c623d4506189a9a5b558ece7c21bcccee256b0fd7ca628c5"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "json_new",
+      "start": 24,
+      "end": 25,
+      "sha256": "0e1cb969a179579452ed4eef6450568412905b4e8a7465a7c8327d6bea2114c8"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "sealed",
+      "start": 26,
+      "end": 30,
+      "sha256": "fc3a438342c4418f760370e80c9f51895bab579d6a2cd0b3332b49c2c311e078"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "resolve",
+      "start": 32,
+      "end": 57,
+      "sha256": "540ecd224135c920af2ccf08e1c88ec05d770a11cefe24448c02049f3c46b058"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "Budget",
+      "start": 59,
+      "end": 96,
+      "sha256": "8265a52b950b8dd5270f17efcb6a942a0b4378c769c57e8bcb1e352bfaef2a45"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "source_stream",
+      "start": 98,
+      "end": 114,
+      "sha256": "bd5cdeaf0c701a90e4868dd5fe7e9b2bd3dfee7a57b81a6d25af5ee7ee89298d"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "inspect_pack",
+      "start": 116,
+      "end": 129,
+      "sha256": "f9611459bf7236cd7478a15f68c8a72c1db3fba157a57a6b871466adc25f8429"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "write_one",
+      "start": 131,
+      "end": 148,
+      "sha256": "8de19765b49e4c4202b29df22e25da2cd21ce1f0869b4fbbb7755a8e370b5c3d"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "copy_blocks",
+      "start": 149,
+      "end": 151,
+      "sha256": "7e64276bbb1c235e16a7a1191f27eeaab5d95495b31e5e3c8ac890d7807425d6"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "allocation",
+      "start": 153,
+      "end": 159,
+      "sha256": "a261760182f6a25ec3adec5d052a1be971a84fc0e915fedbe93902ac63f44b68"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "re_hash",
+      "start": 160,
+      "end": 160,
+      "sha256": "6a328ccdc7208dc27dd6ddad1f2f047dcb4aa82d0005cfa2eddae63e9e2453af"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "main",
+      "start": 162,
+      "end": 203,
+      "sha256": "7b0082b4431ceafc02c7742a671b02851cab78fae84741f452a033fe20bbc6ed"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "__init__",
+      "start": 61,
+      "end": 65,
+      "sha256": "b42a333ec9808ac67980595a9c9b6d03a7aef439ba298071bb3d84478ec14e19"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "root_for",
+      "start": 66,
+      "end": 69,
+      "sha256": "5545f6bf49070b44e8c543823d92eae765d92981adaf31bf6e07047aa824a18f"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "check",
+      "start": 70,
+      "end": 89,
+      "sha256": "b39d0cb23d20d407fb9e7434e165cb73388bd1f1650e6d9176ee78b8e9c92a71"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "claim",
+      "start": 90,
+      "end": 93,
+      "sha256": "c667f26312cf54e6860731bb12e277296ad6c0a0aa21639bd572b2d8f78f198e"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "commit",
+      "start": 94,
+      "end": 94,
+      "sha256": "b55cc45998b947c01e30ea10bd78125d276b5c0ad0c15b8668cb95363c185cbf"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/immutable_append1600_writer.py",
+      "name": "published",
+      "start": 95,
+      "end": 96,
+      "sha256": "21e566c1478860a8f777e61a7e863bcf0b15218764c4e7406710f7c50514ee0d"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "roundup",
+      "start": 6,
+      "end": 6,
+      "sha256": "e0dbf6c9c8832a17e72953850deb83f3432d57244e4f2d44108d78e7adfc9c91"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "cluster_size",
+      "start": 7,
+      "end": 13,
+      "sha256": "0ad443475e33933e414b9e2bb2ef5c88b5845c50cced5c2204a0cd5456e53acf"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "safe_path",
+      "start": 14,
+      "end": 23,
+      "sha256": "ac64e2d53edd30065d7144a72e2421177b832aa7eeafda09fceb7c8a89ce751f"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "entries",
+      "start": 24,
+      "end": 33,
+      "sha256": "1372ae602910caca8214d547afefc158f8c1852b47415a2dd1086be3e449c791"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "WinPin",
+      "start": 34,
+      "end": 69,
+      "sha256": "59711402195e8cac7fceaeb72e2bb3802a6f268b702dde136e7e0897e4f96c45"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "ChargeSession",
+      "start": 70,
+      "end": 98,
+      "sha256": "4484d864aa2b1531d807367beef5eebc8dcce5d048b312fcb020f87e4157e07e"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "conservative_charge",
+      "start": 99,
+      "end": 99,
+      "sha256": "46312c7feeab30565ed60b80a20bfc575519ab46322a358966000b1fb7c89e88"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "publish_no_replace",
+      "start": 100,
+      "end": 107,
+      "sha256": "db9b7fc2341fc9be3ffe37913bb9eb576fb6c782ff42a50f2ff6bd9418df1aa2"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "walk",
+      "start": 26,
+      "end": 32,
+      "sha256": "932e7db4c6087f2e4f80d22496c22abd583b756932ea707af82a7e4e39cb33bb"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "__init__",
+      "start": 36,
+      "end": 54,
+      "sha256": "ef4a8464ee5d37d964407672b4a27b2d7945c315ca5276e5ccece9a2a1b3fa5a"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "identity",
+      "start": 55,
+      "end": 59,
+      "sha256": "17ed7c30977438d74fbc4d6c50fa2afb828cf5d7aa92488160127e821f64d220"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "allocated",
+      "start": 60,
+      "end": 65,
+      "sha256": "4b498769e24be4d4213438bf2a55832061dd1c7f5502e0c05ef03a3542fe53a1"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "close",
+      "start": 66,
+      "end": 67,
+      "sha256": "201bf26ad1094c38f2446df0e90afa280380b9cb37918847fe3a30cfd0859c16"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "__enter__",
+      "start": 68,
+      "end": 68,
+      "sha256": "548293e09354f9ce4ea2450d74a1725ff27e09c952e548ae85f3ecb826ca13ea"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "__exit__",
+      "start": 69,
+      "end": 69,
+      "sha256": "1686518ab25dd2f3ee42003f45a90e31edbee1eec1519879970c31aedaa23a60"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "__init__",
+      "start": 71,
+      "end": 85,
+      "sha256": "6b52e9ca1a2b319d3e014fd9bd66b36203fc060561bce3a10f12fc7841cc2f50"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "charge",
+      "start": 86,
+      "end": 93,
+      "sha256": "c429c13928fada586acd6e8340f10e78a20b1378c10c6fbe502127d33c5e6e93"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "close",
+      "start": 94,
+      "end": 96,
+      "sha256": "e2918185033c23e672c06c20ea490a1f87219a639b45ad12b233d18ae71a3b64"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "__enter__",
+      "start": 97,
+      "end": 97,
+      "sha256": "548293e09354f9ce4ea2450d74a1725ff27e09c952e548ae85f3ecb826ca13ea"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "__exit__",
+      "start": 98,
+      "end": 98,
+      "sha256": "1686518ab25dd2f3ee42003f45a90e31edbee1eec1519879970c31aedaa23a60"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "FT",
+      "start": 40,
+      "end": 40,
+      "sha256": "e3498f0cab6a5c2883aeecbd0385fe24adfbb7e0db1759d1c19de9a95bf3bdac"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/texture21-benchmark-20261021/append1600-writer-adapter-01/source/file_charge.py",
+      "name": "INFO",
+      "start": 41,
+      "end": 41,
+      "sha256": "55724b1089b8d280950a2aa7cdab55760bc23cf3738be64ad363f3c546a87176"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "sha",
+      "start": 18,
+      "end": 19,
+      "sha256": "e8e02a2fff65c7bce776d61da079a0229b5abd91210f8dd06dbf1fc00aaad196"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "canonical",
+      "start": 20,
+      "end": 23,
+      "sha256": "b38b06c784d793f8ae3edc0bb2d7ef7f4c936bea4ee2f04683a57202b2dc2782"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "within",
+      "start": 24,
+      "end": 26,
+      "sha256": "d3ded4b45ef9bacefbfd1859a8031aa698839e5cf4093f6e4e8a16d892ee160a"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "validate",
+      "start": 27,
+      "end": 75,
+      "sha256": "fc87b610e628d10788dee6b8e3a98f2dba6bb45b332fb526b72a0eb259d179a9"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "native",
+      "start": 77,
+      "end": 94,
+      "sha256": "9b041b71d2288f18cd4b13b781b24fdc2b7891a63cce4b841e84a363e53b7043"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "run",
+      "start": 96,
+      "end": 254,
+      "sha256": "53d165d1b932c1b8b0257bb58c9d842caf413dc32fad801c362a962f71bf82b2"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "main",
+      "start": 256,
+      "end": 262,
+      "sha256": "2f13d38ed24ea58ff0b09514cf5b7a74f8e3fbc480ce1d1187b7f7182c353774"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "SECURITY",
+      "start": 79,
+      "end": 79,
+      "sha256": "f8353b6689c48581e5d88659d911b037c1560081fee03b10c0b2418273b8aca9"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "STARTUP",
+      "start": 80,
+      "end": 80,
+      "sha256": "a6e799a90b1b5313c1571fb58b125347baa4d3b2c7195d55f84e2cb06fdcc355"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "PROCESS",
+      "start": 81,
+      "end": 81,
+      "sha256": "01337505ce3ccf37baa01da13d1b407e365d0a7fdb104c0974cae5b8758144c6"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "BASIC",
+      "start": 83,
+      "end": 83,
+      "sha256": "e32cc257cbf83e0b83b952818719f1c4fdbcd51155c4bfb56b2fc3dc1b35963d"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "IO",
+      "start": 84,
+      "end": 84,
+      "sha256": "2bd16d0fee1f22761d6efc185674e4c240f3199bbe15fc047dd5f451a1279dc7"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "EXTENDED",
+      "start": 85,
+      "end": 85,
+      "sha256": "6d53b814a905d94c11327745b4c35b492d6cb08a5792fae806056f1320efa4b8"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "ACCOUNT",
+      "start": 86,
+      "end": 86,
+      "sha256": "6ec551430c83a5c24488ae67383d7ef7cfaa3c57599c0fa486675ed90fd6f2a1"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "checked",
+      "start": 101,
+      "end": 103,
+      "sha256": "26ac87751b8a1038a12e0a9fd7ec963d7878c437d2e4ee6947576318f6363232"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "fail",
+      "start": 104,
+      "end": 104,
+      "sha256": "3f0cc1e496a1e1d08c67b94ab5885a64e2867afb1cc57accd994056b9a8b0c71"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "terminate",
+      "start": 105,
+      "end": 107,
+      "sha256": "d347e1e3ba7dfd6eab4531f240694936a6a85c6796eca33014e33874f1806daa"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "times",
+      "start": 108,
+      "end": 109,
+      "sha256": "0aad93d02051c27f1e999e141d9a5fbbf3e0ceaaac2cea373534a0131ed9cf48"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "live_pin",
+      "start": 110,
+      "end": 116,
+      "sha256": "0cb535fa419af12a519387299754644b8dd8eca0dc5f9cf01f1408555c3ddde3"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "size_tree",
+      "start": 117,
+      "end": 133,
+      "sha256": "0012dbb73da6f17a980cca8776c9e40ed4e5b5e876d5e9581e78382f6dcfbfbe"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "resources",
+      "start": 134,
+      "end": 138,
+      "sha256": "b438171640ab1361617286ea398dc46859e8e81b39545293fc026bb279debe8b"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "log_reader",
+      "start": 139,
+      "end": 154,
+      "sha256": "5dc7cb8128bdf48f87cebc04840169250fd9832e91951cb7f01bc303c4b83b50"
+    },
+    {
+      "path": "/mnt/c/Game Dev/Emulators/codex-lanes/castle-controls21/owned-windows-1600-pack-job.py",
+      "name": "hard_guard",
+      "start": 155,
+      "end": 162,
+      "sha256": "e33ac1d688c9921f1ae1fa5a582ec7ada8334666c0f5612200dadcc0baeeeb20"
+    }
+  ],
+  "checks": [
+    {
+      "name": "frozen exact writer plan source controller binding",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "expected7133 d7fed160122880 bytes",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "two logical packs plus12MiB aggregate",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "peer added exactly once to base floor",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "inner51 outer130 frozen",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "all three writer dependencies pinned",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "exact two payload roots distinct from metadata",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "exclusive partial creation",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "exclusive publication Windows no replace flag",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "child preserves partial on failures",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "writer full hash and allmember readback before publication",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "explicit mirror byte comparison",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "native suspended assigned membership before resume",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "privatejob killclose and singleprocess limit",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "independent hardstop captures job and130-minus-margin",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "retained identity duration and exit code",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "wholejob empty before handles close",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "final output floor and reserve checked",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "outer known UNC errors only",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "inner charges roundedlogical without compression credits",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "root allocation before child creates payload dirs",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "child deadline starts after composition resolution",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "child imports permit cache writes unless environment fixed",
+      "result": "PASS",
+      "kind": "static source condition only"
+    },
+    {
+      "name": "inner native allocation error fallback is broader than outer",
+      "result": "PASS",
+      "kind": "static source condition only"
+    }
+  ],
+  "issues": [
+    {
+      "id": "PYCACHE",
+      "severity": "execution prerequisite",
+      "finding": "Unpinned existing pyc may be read; absent/stale pyc may be written outside three roots. Require inherited PYTHONDONTWRITEBYTECODE=1 plus canonical fresh absent PYTHONPYCACHEPREFIX under metadata, root-recorded and read back before launch."
+    },
+    {
+      "id": "INNER-QUERY-FALLBACK",
+      "severity": "qualified limitation",
+      "finding": "Child falls back to rounded logical on any native query error; outer restricts known UNC errors1/50/120 and independently fails closed. Do not describe child query as identical to outer."
+    },
+    {
+      "id": "DEADLINE-SCOPE",
+      "severity": "qualified limitation",
+      "finding": "51s cooperative begins after resolve/import; outer130 covers process. Hard guard thread starts only after suspended identity and job assignment; no API preemption claim for stalled creation/pinning/assignment."
+    }
+  ]
+}
