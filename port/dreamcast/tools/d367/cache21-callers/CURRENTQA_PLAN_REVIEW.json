@@ -1,0 +1,70 @@
+{
+  "state": "INDEPENDENT_SOURCE_PROVENANCE_PASS_EXECUTION_PENDING",
+  "checks": [
+    "both source/full packet seals and every listed member agree",
+    "all fourteen sealed source members exactly match requested preparation commit89ea",
+    "source-only unallocated packet; all seven execution counters zero",
+    "runtime/docs pins match the requested packet",
+    "two compiler tasks are proposals, not existing results",
+    "selected C57 programme52190/ELF248 and fourteen distinct overlay identities",
+    "receipt recipe SHA is the base recipe, expanded candidate/owned command exact",
+    "actual resolved actor/native-look/VMU1 and CABIN0 preserved",
+    "all fifteen retained cache switches are zero including every EVD switch",
+    "global GAME/PLATFORM actor/VMU macro contract; EVD/Event/CABIN absent",
+    "actual C57 em10/header blobs and current runtime source pins",
+    "historical/current cManager explicitly different; no substituted current header",
+    "fourteen module input rows and target-only rebuild",
+    "all fourteen exact logged argv; thirteen normalized matches; target flag is sole argv delta",
+    "all fourteen retained module object hashes agree with original QA inventory",
+    "every recorded local dependency independently bound to C57 or exact generated inputs",
+    "original GANADO0 command exists and is the GANADO1 command minus only flag/path",
+    "exact state script and ordered partial-link/objcopy recipes",
+    "state script identical to original QA script",
+    "447 ordered link objects split403 inherited/43 helpers/one pending module",
+    "188 C57-path moves yield43 helpers and exclude em10g",
+    "helper input hash set exactly equals independently hashed retained helper set",
+    "eight-unit SS/main actual-QA flags/generated headers and immutable object inputs; current Event0",
+    "two arms replace only SS/main at exact selected-QA argv indices",
+    "Event1 HOLD and full raw/all14/allocated-loadable ELF including BSS must precede ON",
+    "retained ELF projection covers11allocated sections and3 load segments including nonzero BSS",
+    "future fresh paths/environment and tool closure are explicitly unsealed"
+  ],
+  "counts": {
+    "checks": 27,
+    "unique_external_inputs_hashed": 546,
+    "C57_blobs_hashed": 92,
+    "local_module_dependency_occurrences": 270,
+    "link_objects": 447,
+    "helper_moves": 188,
+    "helper_objects": 43
+  },
+  "seals": {
+    "SHA256SUMS": {
+      "sha256": "8816b98a26d29218386abadf6001d1fbeb6e1501f1699fc18bcae75930289ed6",
+      "members": 14
+    },
+    "EVIDENCE-SHA256SUMS": {
+      "sha256": "cc7ded5b8b238b8bbc1669af89ae80e8d4615fa8c8ba1c81f56a3438fda483e7",
+      "members": 20
+    }
+  },
+  "source_preparation": "89ea415b5e698c4ab4aec28c7d2568fbb7f81ba5",
+  "source_runtime": "babfaa7d8ee868c9b81305aef7024ffd543eb6f6",
+  "source_docs": "62a76a77309d70cecfbe7fa8dca9225902231c0a",
+  "selected_programme": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "selected_ELF": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "selected_ELF_projection": "45269e1c1eddaf72d6fc450e67b721581f8c3f011355774bb0a0bf6513cc6773",
+  "base_recipe_sha256": "54d2e5d56f84d76c5c0071484771ca74957c6649d28b103a5974943728715f70",
+  "expanded_candidate_sha256": "725a37281fef8b08b423158aa306523827ee8e4f06a7d410d669906bca8cf66e",
+  "recipe_producer_sha256": "b439c2844b1fe0d345555491ba01daa7c86fc173e3f5d698f9fa01ce1135305e",
+  "runtime_edits": 0,
+  "compiler_preprocessor_linker_lease_guest_runs": 0,
+  "limitations": [
+    "Historical C57 module reconstruction, not whole-current-source qualification.",
+    "43 helpers are currently retained exact bytes tied to C57-path moves; original unpruned helper hashes cannot be recovered by this review. Full OFF gate remains mandatory.",
+    "MMD local dependencies are not full system-header/tool/env closure; root must seal that fresh.",
+    "No fresh GANADO control objects or programme identity results exist in this packet.",
+    "Eight earlier source/host/SH4 claims referenced, not rerun.",
+    "Source-only metadata review is not Flycast/release/physical Dreamcast acceptance."
+  ]
+}
