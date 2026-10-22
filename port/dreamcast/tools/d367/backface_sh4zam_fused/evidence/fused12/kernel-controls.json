@@ -1,0 +1,32 @@
+{
+  "all_16_xf_sentinels_preserved": true,
+  "arithmetic_witness": {
+    "scope": "host libm fmaf plus matching target-opcode execution",
+    "strict_bits": "00000000",
+    "target_fmac_bits": "bc480b30"
+  },
+  "callee_registers_preserved": true,
+  "case_groups": {
+    "FMAC-cancellation-witness": 1,
+    "long-zigzag": 20,
+    "nonfinite/edge": 20,
+    "random": 22,
+    "runs": 2044,
+    "whole-stream": 3
+  },
+  "cases": 2110,
+  "comparisons": 4220,
+  "exact_emitted_words": true,
+  "fpscr_fr_sz_pr_dn_combinations": 32,
+  "max_interpreted_instructions": 131427,
+  "object_sha256": {
+    "kernel-trace0.o": "05e0b7387df4953718ec1e8492b3884f8bbd5ed7c0e5903ab426cc741af16383",
+    "kernel-trace1.o": "c159d41ccbb625762f0e8108c269e86c5fc35aa4744e334daac12084ca3a2b54",
+    "sdk-walk.o": "230e0b57b91c03736e63a5103ba9960992f46ed36bc54e478ccb9df825455da8"
+  },
+  "per_case_trace_variants": 2,
+  "scope": "host interpretation of actual SH4 object opcodes plus original C template with target FMAC determinant lowering; no guest/hardware",
+  "source_sha256": "2d657e7ca60f0a758aed403522e7a06f7ac13ce3b49cc920ae73e35c2b72926c",
+  "sq_bursts_complete": true,
+  "trace_hook_clobbers_checked": true
+}

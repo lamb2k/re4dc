@@ -31,3 +31,4 @@ python3 "$SDK/materialize.py" --output "$OUT/sdk" --receipt "$OUT/sdk-receipt.js
 python3 "$DC/tools/d367/backface_sh4_kernel/object_test.py" --objects "$OUT" --report "$OUT/sdk-kernel-controls.json"
 python3 "$SDK/caller_test.py" --objects "$OUT" --report "$OUT/sdk-caller-controls.json"
 python3 "$SDK/fused_test.py" --objects "$OUT" --report "$OUT/sdk-fused-controls.json"
+python3 "$SDK/sq_guard_test.py" --objects "$OUT" --report "$OUT/sdk-sq-guard-controls.json"

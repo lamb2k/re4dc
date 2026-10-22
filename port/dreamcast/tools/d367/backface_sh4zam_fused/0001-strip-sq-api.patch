@@ -791,7 +791,7 @@ diff --git a/source/shz_strip_fused.inc b/source/shz_strip_fused.inc
 new file mode 100644
 --- /dev/null
 +++ b/source/shz_strip_fused.inc
-@@ -0,0 +1,581 @@
+@@ -0,0 +1,673 @@
 +/* Short-strip fused scan and world batch continuation. No SDK caller returns
 + * between world strips; the public prologue owns one FPU/register lease.
 + * F bit(t-1-i) is original triangle i. No SQ store precedes the clip decision.
@@ -828,6 +828,49 @@ new file mode 100644
 +        fmov.s @r0+,fr\x
 +        fmov.s @r0,fr\y
 +        .endm
++        .macro SHZ_FULL_PHASE label,ax,ay,bx,by,cx,cy,positive,codes
++\label:
++        fsub fr\ay,fr2
++        mov.b @r4+,r0
++        fsub fr\ax,fr3
++        fsub fr\ax,fr0
++        extu.b r0,r0
++        fsub fr\ay,fr1
++        .if \codes == 0
++        and r11,r0
++        .endif
++        fmul fr3,fr2
++        .if \codes
++        mov.b @(r0,r7),r1
++        shld r11,r0
++        and r1,r2
++        or r1,r3
++        .else
++        shld r3,r0
++        .endif
++        fneg fr2
++        add r8,r0
++        fmac fr0,fr1,fr2
++        add #4,r0
++        fmov.s @r0+,fr\ax
++        fmov.s @r0,fr\ay
++        .if \positive
++        fcmp/gt fr14,fr2
++        .else
++        fcmp/gt fr2,fr14
++        .endif
++        /* FCMP has consumed this determinant. Seed the next compiler DAG
++         * in the T latency, carry-pair slots and branch delay. These FMOVs
++         * preserve T and never touch opposite-bank registers. */
++        fmov fr\cy,fr2
++        rotcl r5
++        fmov fr\cx,fr0
++        rotcl r6
++        fmov fr\ax,fr3
++        fmov fr\ay,fr1
++        .endm
++
++
 +        .macro SHZ_PHASE label,ax,ay,bx,by,cx,cy,positive,codes,stream,next
 +\label:
 +        .if \stream
@@ -837,15 +880,11 @@ new file mode 100644
 +        .endif
 +        dt r13
 +        bt .Lphase_terminal\@
-+        fmov fr\by,fr2
-+        fmov fr\cx,fr3
-+        fmov fr\bx,fr0
-+        fmov fr\cy,fr1
 +        fsub fr\ay,fr2
 +        mov.b @r4+,r0
 +        fsub fr\ax,fr3
-+        extu.b r0,r0
 +        fsub fr\ax,fr0
++        extu.b r0,r0
 +        .if \stream
 +        mov r0,r1
 +        .endif
@@ -873,10 +912,16 @@ new file mode 100644
 +        .else
 +        fcmp/gt fr2,fr14
 +        .endif
++        /* FCMP has consumed this determinant. Seed the next compiler DAG
++         * in the T latency, carry-pair slots and branch delay. These FMOVs
++         * preserve T and never touch opposite-bank registers. */
++        fmov fr\cy,fr2
 +        rotcl r5
++        fmov fr\cx,fr0
 +        rotcl r6
++        fmov fr\ax,fr3
 +        bra \next
-+        nop
++        fmov fr\ay,fr1
 +.Lphase_terminal\@:
 +        SHZ_STRIP_AREA \ax,\ay,\bx,\by,\cx,\cy
 +        .if \positive
@@ -915,17 +960,67 @@ new file mode 100644
 +        SHZ_JUMP .Lfused_scan_end
 +998:
 +        SHZ_LOAD_XY 12,13,\codes,\stream
++        fmov fr11,fr2
++        fmov fr12,fr3
++        fmov fr10,fr0
++        fmov fr13,fr1
 +        mov.l @(16,r14),r0
 +        cmp/eq #1,r0
++        .if \stream == 0
++        bt \label\()p_dispatch
++        bra \label\()n_dispatch
++        nop
++        .else
 +        bt \label\()p0
 +        bra \label\()n0
 +        nop
++        .endif
++        .if \stream == 0
++\label\()p_dispatch:
++        mov #6,r0
++        cmp/hi r0,r13
++        bt \label\()p_full0
++        bra \label\()p0
++        nop
++        SHZ_FULL_PHASE \label\()p_full0,8,9,10,11,12,13,1,\codes
++        SHZ_FULL_PHASE \label\()p_full1,10,11,12,13,8,9,0,\codes
++        SHZ_FULL_PHASE \label\()p_full2,12,13,8,9,10,11,1,\codes
++        SHZ_FULL_PHASE \label\()p_full3,8,9,10,11,12,13,0,\codes
++        SHZ_FULL_PHASE \label\()p_full4,10,11,12,13,8,9,1,\codes
++        SHZ_FULL_PHASE \label\()p_full5,12,13,8,9,10,11,0,\codes
++        add #-6,r13
++        mov #6,r0
++        cmp/hi r0,r13
++        bf \label\()p0
++        bra \label\()p_full0
++        nop
++        .endif
 +        SHZ_PHASE \label\()p0,8,9,10,11,12,13,1,\codes,\stream,\label\()p1
 +        SHZ_PHASE \label\()p1,10,11,12,13,8,9,0,\codes,\stream,\label\()p2
 +        SHZ_PHASE \label\()p2,12,13,8,9,10,11,1,\codes,\stream,\label\()p3
 +        SHZ_PHASE \label\()p3,8,9,10,11,12,13,0,\codes,\stream,\label\()p4
 +        SHZ_PHASE \label\()p4,10,11,12,13,8,9,1,\codes,\stream,\label\()p5
 +        SHZ_PHASE \label\()p5,12,13,8,9,10,11,0,\codes,\stream,\label\()p0
++        .if \stream == 0
++\label\()n_dispatch:
++        mov #6,r0
++        cmp/hi r0,r13
++        bt \label\()n_full0
++        bra \label\()n0
++        nop
++        SHZ_FULL_PHASE \label\()n_full0,8,9,10,11,12,13,0,\codes
++        SHZ_FULL_PHASE \label\()n_full1,10,11,12,13,8,9,1,\codes
++        SHZ_FULL_PHASE \label\()n_full2,12,13,8,9,10,11,0,\codes
++        SHZ_FULL_PHASE \label\()n_full3,8,9,10,11,12,13,1,\codes
++        SHZ_FULL_PHASE \label\()n_full4,10,11,12,13,8,9,0,\codes
++        SHZ_FULL_PHASE \label\()n_full5,12,13,8,9,10,11,1,\codes
++        add #-6,r13
++        mov #6,r0
++        cmp/hi r0,r13
++        bf \label\()n0
++        bra \label\()n_full0
++        nop
++        .endif
 +        SHZ_PHASE \label\()n0,8,9,10,11,12,13,0,\codes,\stream,\label\()n1
 +        SHZ_PHASE \label\()n1,10,11,12,13,8,9,1,\codes,\stream,\label\()n2
 +        SHZ_PHASE \label\()n2,12,13,8,9,10,11,0,\codes,\stream,\label\()n3
@@ -981,8 +1076,7 @@ new file mode 100644
 +        mov #64,r0
 +        cmp/hi r0,r13
 +        bt .Lworld_codes_gate
-+        bra .Lfused_begin
-+        nop
++        SHZ_JUMP .Lfused_begin
 +.Lworld_codes_gate:
 +        mov #1,r0
 +        mov.l r0,@(12,r15)
@@ -1004,8 +1098,7 @@ new file mode 100644
 +        bf/s .Llong_codes
 +        or r1,r3
 +        mov.l r4,@(44,r15)
-+        bra .Lfused_world_decide
-+        nop
++        SHZ_JUMP .Lfused_world_decide
 +.Lfused_begin:
 +        mov.l r10,@(56,r15)
 +        mov r10,r13
@@ -1102,8 +1195,7 @@ new file mode 100644
 +        bf .Lfused_mask
 +        mov #2,r0
 +        mov.l r0,@(12,r15)
-+        bra .Lfused_begin
-+        nop
++        SHZ_JUMP .Lfused_begin
 +.Lfused_mask:
 +        mov.l @(44,r15),r13
 +        sub r9,r13

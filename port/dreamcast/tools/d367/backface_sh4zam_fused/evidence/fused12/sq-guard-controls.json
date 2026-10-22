@@ -1,0 +1,29 @@
+{
+  "scope": "Actual-opcode proof that rejected/clipped input does not even write SQ.",
+  "comparisons": 360,
+  "no_store_queue_writes_before_reject_or_clip": true,
+  "no_partial_uncommitted_bursts": true,
+  "sizes": [
+    3,
+    32,
+    64,
+    65,
+    119,
+    255
+  ],
+  "depth_cross_positions": [
+    0,
+    1,
+    2,
+    31,
+    32,
+    63
+  ],
+  "caller_source": "b1ff8e1aaa84f61a6e0a04adea10d57f7dbd20915a1725a6ef7dbab41e78d11c",
+  "interpreter_source": "2d657e7ca60f0a758aed403522e7a06f7ac13ce3b49cc920ae73e35c2b72926c",
+  "files": {
+    "walk-trace1.elf": "081c5af48544eda4c0b888a925d318dfbaafe842da6b5540aa459620bc74d55b",
+    "walk-trace0.elf": "a2b396e208c7f8bd785ffcf8c6508ee427ece4d6477836e4962cbcb3d17f3ad1"
+  },
+  "limits": "Bounded host execution of actual SH4 opcodes; not hardware."
+}
