@@ -35,8 +35,11 @@ ifneq ($(GAME_SH4ZAM),1)
 $(error CPU_BACKFACE=2 needs GAME_SH4ZAM=1)
 endif
 PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4.o
+# This file is included after the main link target's prerequisites were expanded.
+$(TARGET): $(OBJDIR)/platform/backface_sh4.o
 ifneq ($(filter-out 0 4,$(TA_HASH)),)
 PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4_trace.o
+$(TARGET): $(OBJDIR)/platform/backface_sh4_trace.o
 $(OBJDIR)/platform/backface_sh4.o: KOS_CFLAGS += -DRE4DC_BACKFACE_SH4_TRACE=1
 endif
 $(OBJDIR)/platform/backface_sh4.o: platform/backface_sh4.S
