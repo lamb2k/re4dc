@@ -1,0 +1,125 @@
+{
+  "scope": "UNADOPTED SOURCE-ONLY concrete collector/child hook candidate; NOT a launch seal/preflight/allocation/native/Flycast qualification",
+  "utc": "2026-10-22T06:54:49.502154+00:00",
+  "parent_commit": "0823ddf31e45984d5658bfa1b886142cfd4c2304",
+  "fixed_505f_source": "505f3ee487a1bb658199986f4988fdf14008c960",
+  "runtime_flags_unchanged": true,
+  "root_review_required_before_adoption": true,
+  "native_queries_executed": 0,
+  "image_reads_executed": 0,
+  "guests_executed": 0,
+  "fixed_runtime": {
+    "game_source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+    "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+    "runtime_flags": "existing c57 default-off cache/trace/CABIN flags unchanged"
+  },
+  "source_only_tests": {
+    "Linux": 38,
+    "Windows": 38,
+    "real_native_api_interop_or_timing_acceptance": false
+  },
+  "files": {
+    ".gitattributes": {
+      "bytes": 105,
+      "sha256": "3d518c8907fb67ffad0685f52e941b1440892ccffa35724ae820d33fb2cd62e1"
+    },
+    "CLAIM.md": {
+      "sha256": "c4622bfcf17ac1c7fd31ed57afdfcffd4e09fca37bce0db03678e3ab053eb8bc",
+      "bytes": 435
+    },
+    "COLLECTOR_CONTRACT.json": {
+      "sha256": "99741f9b87897bd815add64e0d590722d43ca218fa5d88b96276fb27c70fe6ea",
+      "bytes": 5114
+    },
+    "HOOK_PLAN.md": {
+      "sha256": "7c475f6b57d75b9615fd3033c277c8825a6f0d36d131197e488eb2fe89b6d721",
+      "bytes": 9513
+    },
+    "PROPOSAL_INPUT.json": {
+      "sha256": "59f6bb01ea28822c319549a180fcdaad4998442167da67823bb3aa87f2732b45",
+      "bytes": 6995
+    },
+    "checkpoint_runner18.child.py": {
+      "sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6",
+      "bytes": 18115
+    },
+    "checkpoint_runner18.original.txt": {
+      "sha256": "8960ffcf6652e1aac9f846d2857cc5932314bf03bcbf99ae538d68d131d1ca20",
+      "bytes": 17566
+    },
+    "child-runner.diff": {
+      "sha256": "c7b0cc5a1f5588f746bb900bc4cc39259369ec7709db489dcf88854192f4aa0a",
+      "bytes": 4497
+    },
+    "child_reference_proxy.py": {
+      "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19",
+      "bytes": 5369
+    },
+    "development-failures.json": {
+      "sha256": "d2fe5baefb41d3548d642cafa0b07943d0b6dbbccf5ccd8198c1093ae020d104",
+      "bytes": 357
+    },
+    "frozen-source-proof.json": {
+      "sha256": "2be9c2584430896782f9dd86f0242bcd253c11cb2d36d4708500dae9c4485844",
+      "bytes": 5869
+    },
+    "guest-profile-v2.json": {
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+      "bytes": 13113
+    },
+    "native_reference_api.py": {
+      "sha256": "4ed6c3e0b46e37f1d663f323a74565d2c698c181df7fee9bf0034fd5a848f7e5",
+      "bytes": 9118
+    },
+    "parent_reference_broker.py": {
+      "sha256": "7bbcca22222310e9a9ae1104effa7e31e424df0fe2b346ff6ee286fd6becf7df",
+      "bytes": 14639
+    },
+    "receipt-before-strict-schema-linux.json": {
+      "sha256": "83bc579365909f51f322b1b373c5aa4bd71fd2f5b45122cf67f0ebc2ebb3a7e0",
+      "bytes": 6316
+    },
+    "receipt-before-strict-schema-windows.json": {
+      "sha256": "8dd1d2ef7bca7c43711fb04ac89c2872a3505ee6e4216d83e949c1ec2d8cf732",
+      "bytes": 6349
+    },
+    "receipt-linux.json": {
+      "sha256": "f3077f467f8d3d47699fcda891d34b04042a100d433ab94a9961b7a69b301d50",
+      "bytes": 6771
+    },
+    "receipt-pre-comment-linux.json": {
+      "sha256": "7a797650cdb04ffce13c2b75aa7a1b281a797eaea4b98b1770464c25a0967408",
+      "bytes": 6771
+    },
+    "receipt-pre-comment-windows.json": {
+      "sha256": "e78208da5534bd310106ccb56bd5dd223640593fd89f3b0a565ab2eac32f4d29",
+      "bytes": 6804
+    },
+    "receipt-windows.json": {
+      "sha256": "ba52fb90b654ade5b9addc98739056584a804c849cfdb50b5ad549e23eae2217",
+      "bytes": 6804
+    },
+    "reference_collector.py": {
+      "sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d",
+      "bytes": 6856
+    },
+    "retained-all-track-declarations.json": {
+      "sha256": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0",
+      "bytes": 4295
+    },
+    "run_source_tests.py": {
+      "sha256": "72b32633875c67427d8ccb124965548e06fdb6fcad2a0eb3eb7e3ab0c685e4b8",
+      "bytes": 1489
+    },
+    "runner-origin.json": {
+      "sha256": "43db462a9f865031d2c6b3851a1316db0708bdec95f988d072173fe57144edb1",
+      "bytes": 495
+    },
+    "test_owned_runner.py": {
+      "sha256": "e3da92ff792ef3d0389a61c80a08d9e087be1694408b17899c381da8817de809",
+      "bytes": 25714
+    }
+  }
+}

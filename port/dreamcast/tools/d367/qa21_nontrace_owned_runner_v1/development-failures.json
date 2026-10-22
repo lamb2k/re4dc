@@ -1,0 +1,13 @@
+{
+  "scope": "source-test development failures, no native query/guest",
+  "failures": [
+    {
+      "attempt": 1,
+      "result": "SyntaxError in test literal at234; no tests executed"
+    },
+    {
+      "attempt": 2,
+      "result": "21/22 tests passed; fake Api.close rejected duplicated process handle with KeyError21; fixed fake close only"
+    }
+  ]
+}
