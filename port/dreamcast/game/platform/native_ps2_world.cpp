@@ -1,4 +1,5 @@
 #include "include/movie_world_arena.h"
+#include "../world_draw_meter.h"
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
 #include "include/ps2_source_world.h"
 #endif
@@ -686,14 +687,14 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 #endif
     if(!finite_word(far) || far<=40)return fallback(3);
     state.frame=re4dc_ui_frame();state.flushed=~0u;state.far=far<RE4DC_PS2_FAR?far:RE4DC_PS2_FAR;
-    const bool drawn=re4dc_ps2_mesh_draw(0,state.far)!=0;state.pending=true;
+    const bool drawn=RE4DC_WORLD_MEASURE(Opaque,state.far,re4dc_ps2_mesh_draw(0,state.far))!=0;state.pending=true;
 #if RE4DC_FAR_SHELL
     {
         // FAR_SHELL (far_shell.inc): the opaque pass stopped at the View distance cut; the shell covers cut..Full, and
         // the PT / TR passes (flush) keep Full's far.
         float full=re4dc_far_shell_full(state.far);
         if(full>RE4DC_PS2_FAR)full=RE4DC_PS2_FAR;
-        if(full>state.far){re4dc_far_shell_draw(state.far,full);state.far=full;}
+        if(full>state.far){RE4DC_WORLD_MEASURE(FarShell,state.far,re4dc_far_shell_draw(state.far,full));state.far=full;}
     }
 #endif
     return drawn?1:fallback(4);
@@ -715,9 +716,9 @@ extern "C" int re4dc_ps2_world_draw(unsigned room,const float screen[3][4],float
 #if RE4DC_PS2_WORLD_KERNEL
     for(auto& k:kernel)k={};
     draw.build_light_cache();
-    const bool complete=draw.draw_kernel(0);state.pending=true;
+    const bool complete=RE4DC_WORLD_MEASURE(Opaque,state.far,draw.draw_kernel(0));state.pending=true;
 #else
-    const bool complete=draw.draw(0);state.pending=true;
+    const bool complete=RE4DC_WORLD_MEASURE(Opaque,state.far,draw.draw(0));state.pending=true;
 #endif
     // Failure leaves piece0 collision fallback enabled; already emitted triangles
     // are not falsely called complete. PT/TR success is separately reported.
@@ -739,11 +740,11 @@ extern "C" int re4dc_ps2_world_source_draw(){
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
     re4dc_ps2_source_pass_begin(0);
-    const int drawn=re4dc_ps2_mesh_draw(0,state.far);
+    const int drawn=RE4DC_WORLD_MEASURE(Opaque,state.far,re4dc_ps2_mesh_draw(0,state.far));
     re4dc_ps2_source_pass_result(0,drawn);state.pending=true;
     return drawn;
 #else
-    const bool drawn=re4dc_ps2_mesh_draw(0,state.far)!=0;state.pending=true;
+    const bool drawn=RE4DC_WORLD_MEASURE(Opaque,state.far,re4dc_ps2_mesh_draw(0,state.far))!=0;state.pending=true;
     return drawn;
 #endif
 }
@@ -772,10 +773,10 @@ extern "C" void re4dc_ps2_world_flush(){
     {
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
         re4dc_ps2_source_pass_begin(1);
-        const int pt=re4dc_ps2_mesh_draw(1,state.far);
+        const int pt=RE4DC_WORLD_MEASURE(PunchThrough,state.far,re4dc_ps2_mesh_draw(1,state.far));
         re4dc_ps2_source_pass_result(1,pt);
         re4dc_ps2_source_pass_begin(2);
-        const int tr=re4dc_ps2_mesh_draw(2,state.far);
+        const int tr=RE4DC_WORLD_MEASURE(Translucent,state.far,re4dc_ps2_mesh_draw(2,state.far));
         re4dc_ps2_source_pass_result(2,tr);
         unsigned generation=0;
         const bool transition=re4dc_ps2_source_package(&generation) &&
@@ -783,7 +784,7 @@ extern "C" void re4dc_ps2_world_flush(){
         re4dc_source_world_flush_result(state.frame,transition?
             re4dc_ps2_source_receipt_complete(state.frame,generation):re4dc_ps2_source_passes_complete());
 #else
-        const bool pt=re4dc_ps2_mesh_draw(1,state.far)!=0,tr=re4dc_ps2_mesh_draw(2,state.far)!=0;
+        const bool pt=RE4DC_WORLD_MEASURE(PunchThrough,state.far,re4dc_ps2_mesh_draw(1,state.far))!=0,tr=RE4DC_WORLD_MEASURE(Translucent,state.far,re4dc_ps2_mesh_draw(2,state.far))!=0;
 #if RE4DC_PS2_WORLD_SOURCE_OWNER
         re4dc_source_world_flush_result(state.frame,re4dc_ps2_source_passes_complete());
 #endif
@@ -797,9 +798,9 @@ extern "C" void re4dc_ps2_world_flush(){
 #endif
     WorldDraw draw(storage());
 #if RE4DC_PS2_WORLD_KERNEL
-    const bool pt=draw.draw_kernel(1),tr=draw.draw_kernel(2);
+    const bool pt=RE4DC_WORLD_MEASURE(PunchThrough,state.far,draw.draw_kernel(1)),tr=RE4DC_WORLD_MEASURE(Translucent,state.far,draw.draw_kernel(2));
 #else
-    const bool pt=draw.draw(1),tr=draw.draw(2);
+    const bool pt=RE4DC_WORLD_MEASURE(PunchThrough,state.far,draw.draw(1)),tr=RE4DC_WORLD_MEASURE(Translucent,state.far,draw.draw(2));
 #endif
     if(!(state.frame%120) || !pt || !tr || state.count[0].failed){
         for(unsigned p=0;p<3;++p){const auto& c=state.count[p];
@@ -813,11 +814,17 @@ extern "C" void re4dc_ps2_world_flush(){
 }
 #if RE4DC_MOVIE_WORLD_ARENA
 extern "C" void re4dc_ps2_world_movie_discard(){
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    re4dc_world_meter_reset();
+#endif
     using namespace re4dc::room::ps2;
     state.pending=false;state.frame=state.flushed=~0u;
 }
 #endif
 extern "C" void re4dc_ps2_world_retire(){
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    re4dc_world_meter_reset();
+#endif
 #if RE4DC_PS2_WORLD_MESH
     re4dc_ps2_mesh_retire();
 #endif

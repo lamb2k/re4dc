@@ -1,3 +1,4 @@
+#include "../world_draw_meter.h"
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
 #endif
@@ -5573,6 +5574,9 @@ extern "C" void re4dc_ui_begin(){
     if(model_diagnostic==1 && frame%120==0)
         re4dc_log("native model DIAGNOSTIC boundary: frame=%u previous_bytes=%u committed_parts=%u invalid=%u resource=%u overflow=%u presented=%u\n",frame,model_used*32,model_parts,model_invalid,model_resource,model_overflow,model_presented);
     nquad=0;model_used=0;++frame;
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    re4dc_world_meter_begin(frame); // Real render frames only; begin_skip never enters the meter.
+#endif
 #if RE4DC_TEX_CHECK
     texchk::frame_sweep();
 #endif
@@ -6032,6 +6036,9 @@ extern "C" void re4dc_ui_present(){
 }
 
 extern "C" void re4dc_ui_end_frame(int present){
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER && RE4DC_PVR_STREAM
+    const unsigned world_meter_discards=stream_discards;
+#endif
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreFinish();
 #endif
@@ -6076,6 +6083,13 @@ extern "C" void re4dc_ui_end_frame(int present){
 #endif
     for(const auto& e:entries)if(e.valid){RE4DC_PROFILE_COUNT(TextureResidentCount,1);
         if(e.frame==frame){RE4DC_PROFILE_COUNT(TexturePinnedCount,1);RE4DC_PROFILE_COUNT(TexturePinnedBytes,e.package.vram_bytes());}}
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+#if RE4DC_PVR_STREAM
+    re4dc_world_meter_end(frame,present && !black && !stream_aborted && stream_discards==world_meter_discards);
+#else
+    re4dc_world_meter_end(frame,frame_ready && present && !re4dc_vi_black());
+#endif
+#endif
     re4dc::profile::finish(completed_render_profile,frame,render_source_begin);
 #if RE4DC_PACE_CATCHUP
     re4dc_pcs_frame(frame+pace_skipped_frames); // one mark per iteration, skipped ones included

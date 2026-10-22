@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include "world_draw_meter.h"
 
 extern "C" {
 void re4dc_log(const char* fmt, ...);
@@ -254,6 +255,24 @@ void snap_diag() {
         a = addf(a, "ms10 logic=%u fx=%u models=%u scenery=%u post=%u draw=%u wait=%u total=%u\n",
                  ms(logic > em ? logic - em : 0), ms(em + et), ms(objs), ms(other), ms(post), ms(draw), ms(wait), ms(total));
     } else a = addf(a, "ms10=NA\n");
+#if defined(RE4DC_WORLD_DRAW_METER) && RE4DC_WORLD_DRAW_METER
+    // Freeze the completed window once. Diagnostics and every QR page use these same bytes.
+    const auto world=re4dc_world_meter_snapshot(g_game.room);
+    if(world.valid) {
+        a=addf(a,"world_cpu_ms=%u.%03u peak=%u.%03u per_draw n=%u\n",
+               world.mean_us/1000,world.mean_us%1000,world.peak_us/1000,world.peak_us%1000,world.samples);
+        const char* view=world.view_setting==0?"FULL":world.view_setting==1?"NEAR":world.view_setting==2?"SHORT":"NA";
+        a=addf(a,"world room=%03x gen=%u draw_frames=%u-%u view=%s\n",
+               world.room,world.generation,world.first,world.last,view);
+        a=addf(a,"world_far_mm op=%u pt=%u tr=%u shell_call=%u ok=%u\n",
+               world.far_mm[0],world.far_mm[1],world.far_mm[2],world.shell_frames,world.shell_ok_frames);
+        a=addf(a,"world_pass_us op=%u pt=%u tr=%u shell=%u\n",
+               world.pass_us[0],world.pass_us[1],world.pass_us[2],world.pass_us[3]);
+        if(world.disc_known)a=addf(a,"world read_frames=%u stopped_frames=%u\n",world.read_frames,world.stopped_frames);
+        else a=addf(a,"world read_frames=NA stopped_frames=%u\n",world.stopped_frames);
+    } else a=addf(a,"world_cpu_ms=NA (needs 60 complete world draws)\n");
+    a=addf(a,"world transformed=NA submitted=NA bytes=NA strips=NA\n");
+#endif
     a = addf(a, "heap4=%d\n", g_game.heap4);
     if (re4dc_kos_heap_state) { unsigned f = 0, u = 0, b = 0; re4dc_kos_heap_state(&f, &u, &b); a = addf(a, "kos free=%u used=%u brk=%u\n", f, u, b); }
     if (re4dc_vram_pages_census) { unsigned o[16] = {0}; re4dc_vram_pages_census(o); a = addf(a, "vram free=%u big=%u fails=%u\n", o[3], o[4], o[10]); }
