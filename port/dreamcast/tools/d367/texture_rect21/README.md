@@ -254,3 +254,29 @@ Evidence: provenance-source-01/{host05,make01} under the lane's C evidence
 folder. SH-4 object/default identity, full program, fresh target lifecycle/look/
 strict comparison, release and physical Dreamcast acceptance remain open.
 No asset, image, guest or production recipe was changed in this unit.
+
+### Corrected world26 programme source gate
+
+Runtime source845abb1f4 now has one corrected programme with26 selected world
+representations and3 provenance certificates. The exact frozen446 objects,
+43 overlay-helper copies, library flags and inherited recipe were reused.
+Only native_ui/native_static were rebuilt. Default and explicit0 complete
+stripped objects match the original controls before ON; actual0/1 macros and
+all6 inherited mip/PAL flags were verified. The original20-byte area_flags
+helper and normalized relocations remain exact before its required overlay
+rename. All14 overlays were freshly relocated and bound to the new image.
+
+Programme4ef617a1888ec2fb48c45aae789b8cb21c2c6086f36b1a5d2efe56ceebadb4f9
+is3,352,100 bytes; ELFf42dbb7261ff93c23dbc8f0dfb810a77cd64ad460472239e58a7cb6fa1404e00.
+PT_LOAD reconstruction and all14 header/payload/relocation fingerprints pass.
+Compared with the prior e08 programme: code+384,rodata+544,data0,BSS0,_end+928.
+Static frames are ps2_open596 plus helper44 and direct_begin384 plus matcher40;
+these are compiler frames, not measured thread highwater.
+
+world26-programme-qualification.json names exact outputs. C evidence
+world26-programme-01 is sealed and mirrors the final ELF/program/all14.
+The77,039,087-byte unit remains below128MiB. No image or guest was created.
+Mipmap/compact/VQ conversion is the intended performance enabler; actual target
+look/lifecycle/STRICT timing, whole allocator, release and Dreamcast gates
+remain open. One programme supports the original,965 and994 data roles;994
+includes20 actor replacements and its data holds remain separate.

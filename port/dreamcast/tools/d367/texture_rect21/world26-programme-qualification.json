@@ -1,0 +1,137 @@
+{
+  "source": "845abb1f4ad3a2721d17f64899b6dc59d4bce66c",
+  "programme_sha256": "4ef617a1888ec2fb48c45aae789b8cb21c2c6086f36b1a5d2efe56ceebadb4f9",
+  "programme_bytes": 3352100,
+  "ELF_sha256": "f42dbb7261ff93c23dbc8f0dfb810a77cd64ad460472239e58a7cb6fa1404e00",
+  "image_id_words": [
+    731892411,
+    2449568
+  ],
+  "full_source_programme_gate": true,
+  "derived_area_flags_exact": true,
+  "all14_new_ELF_bound": true,
+  "default_explicit0_both_TUs_stripped_exact": true,
+  "complete_new_actual_dependencies": 948,
+  "mip_PAL_flags_ON": {
+    "CAST_MIPMAP": true,
+    "TEX_TWIDDLED_MIPMAP": true,
+    "TEX_PAL4_ALPHA": true,
+    "TEX_PAL4_MIPMAP": true,
+    "TEX_PAL8_ALPHA": true,
+    "TEX_PAL8_MIPMAP": true
+  },
+  "linked_allocated_delta_vs_e08": {
+    "exec": 384,
+    "rodata": 544,
+    "data": 0,
+    "bss": 0
+  },
+  "linked_end_delta": 928,
+  "inherited_resolved_knobs_sha256": "524c873fc9033cde8d9cbc70b424910c28ad109713cb37cb0f495627b593a5c8",
+  "inherited_recipe": "same original QA control recipe54d2e5d5 plus sealed explicit mip/PAL/world ON flags; new target assignment proven in actual native_static cmd/macros",
+  "images_or_guests": false,
+  "no_prior_image_states": true,
+  "new_observer_binding_required": true,
+  "data_roles": "Sameprogramme supports original6501 baseline, corrected965 world17,994 world26+20actor when its dataholds close",
+  "no_performance_acceptance": true,
+  "no_release_or_physical_Dreamcast_acceptance": true,
+  "mirrored_final_files_exact": true,
+  "source_inputs_immutable": true,
+  "stack_frames_static_bytes": {
+    "ps2_open": 596,
+    "policy_source_crc": 44,
+    "direct_begin": 384,
+    "direct_matcher": 40
+  },
+  "stack_limit": "Compiler per-function static frames, not measured thread highwater.",
+  "all14_files": [
+    {
+      "section": ".ovl_pl0f",
+      "bytes": 45576,
+      "sha256": "a278a4fc1bce3956d9848acdf78892e98a02102fa32f5e5cee4e665032b86bc7",
+      "name": "pl0f.ovl"
+    },
+    {
+      "section": ".ovl_em2f",
+      "bytes": 16800,
+      "sha256": "b3271c6ab5685c05952ffedac9dbe15971a18a5db48ed4f1c59397e7451727a0",
+      "name": "em2f.ovl"
+    },
+    {
+      "section": ".ovl_em22",
+      "bytes": 27236,
+      "sha256": "ec3bca4bbf84a0ed626ba19a24711caa9f62ef4b144f03700f64bddcda4d9881",
+      "name": "em22.ovl"
+    },
+    {
+      "section": ".ovl_em2b",
+      "bytes": 67932,
+      "sha256": "b2bac1549f0f5867fbee709a3e1c6587e4d4b4912edcfdf96e8a74ad7c819db4",
+      "name": "em2b.ovl"
+    },
+    {
+      "section": ".ovl_pl11",
+      "bytes": 35616,
+      "sha256": "84a932aa27d7c4feb987b5daca0303704ae608f77ac8c6f8713d2dc39846a0c4",
+      "name": "pl11.ovl"
+    },
+    {
+      "section": ".ovl_pl14",
+      "bytes": 18832,
+      "sha256": "2de3299f87bf1dd36ff7535dbf477d59e411a20f1b554c6ac7273ce7d0eb5c67",
+      "name": "pl14.ovl"
+    },
+    {
+      "section": ".ovl_em3b",
+      "bytes": 7568,
+      "sha256": "519cdf006d7f78d494f6f9d1916a5f2437cce30b00f2238b62d78132090a80d9",
+      "name": "em3b.ovl"
+    },
+    {
+      "section": ".ovl_em35",
+      "bytes": 52392,
+      "sha256": "5d2049e4fc44e5d7ffbc89166be635b4b513f4f83c9bba8383311459192afd6d",
+      "name": "em35.ovl"
+    },
+    {
+      "section": ".ovl_st1_0",
+      "bytes": 36240,
+      "sha256": "2571d9fca340afaec522ba4aaa01d8f7d34d058af17d00878342492fbf6e2d60",
+      "name": "st1_0.ovl"
+    },
+    {
+      "section": ".ovl_st1_1",
+      "bytes": 81508,
+      "sha256": "4da15f5de3a4416910225ad562e5e2c8f8a9b725b2f07888117f76789e0dd184",
+      "name": "st1_1.ovl"
+    },
+    {
+      "section": ".ovl_st1_2",
+      "bytes": 49696,
+      "sha256": "ed42a459023d20feaf9df0b2723b51465440a812b1bacda8d1536b399b08905b",
+      "name": "st1_2.ovl"
+    },
+    {
+      "section": ".ovl_st1_3",
+      "bytes": 88552,
+      "sha256": "52117aae758a6c8bcde05fec4d28a1e3c1e8ad54b7a1ff2f2535186c6b58810a",
+      "name": "st1_3.ovl"
+    },
+    {
+      "section": ".ovl_st2_0",
+      "bytes": 96796,
+      "sha256": "6bbcda7feed4c77737415ad133a51d4cca74c5ac1ae6ac809e16d531337ea0f6",
+      "name": "st2_0.ovl"
+    },
+    {
+      "section": ".ovl_Sscrn",
+      "bytes": 134372,
+      "sha256": "24f02fa6e25cf658763f35fc0b90bbf38b93ac7accbce0756e30fe299de2b6e4",
+      "name": "sscrn.ovl"
+    }
+  ],
+  "evidence": "C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/world26-programme-01",
+  "evidence_manifest_sha256": "a9e256bba18ab3c1cbb2d710a971227f15d3cae605cae5c59af02dba18499721",
+  "retained_new_unit_bytes": 77039087,
+  "unaccepted": "No staged image, guest, look/lifecycle/STRICT timing, release or physical Dreamcast gate."
+}
