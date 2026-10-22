@@ -1,0 +1,279 @@
+{
+  "state": "READ_ONLY_SOURCE_DATA_REVIEW_NO_TARGET_RUN",
+  "source_base": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+  "image": {
+    "path": "/mnt/c/Game Dev/Emulators/RE4DC-RR/cand-f047721f/gdemu/track03.bin",
+    "bytes": 1185760800,
+    "raw2352": true,
+    "full_track_hash_not_recomputed": true,
+    "selected_members_freshly_read_and_hashed": {
+      "1ST_READ.BIN": {
+        "path": "1ST_READ.BIN",
+        "LBA": 547363,
+        "bytes": 3350752,
+        "sha256": "97beeb54a66f787bc5c4c40159f922bb204c94a2fcec5103ee92cb4df505e723",
+        "exact_retained_manifest": true
+      },
+      "dc/st1_0.ovl": {
+        "path": "dc/st1_0.ovl",
+        "LBA": 256892,
+        "bytes": 36340,
+        "sha256": "6b6fd7a4f87b1818b04dace49a24302b560e7f0f9d88d42c8b174f6636254c1a",
+        "exact_retained_manifest": true
+      },
+      "dc/st1_1.ovl": {
+        "path": "dc/st1_1.ovl",
+        "LBA": 256910,
+        "bytes": 81540,
+        "sha256": "414178e829f933d0b308ef48f7abb0f1870826025c382cba75250abb198b8ed5",
+        "exact_retained_manifest": true
+      },
+      "dc/native/r11c/ps2-world.ids": {
+        "path": "dc/native/r11c/ps2-world.ids",
+        "LBA": 253387,
+        "bytes": 128,
+        "sha256": "27f8d8231cc76a6cee8091f42213b2b3068da000d8a7ef7834d48a07371810ac",
+        "exact_retained_manifest": true
+      },
+      "dc/native/r11c/ps2-world.r4pw": {
+        "path": "dc/native/r11c/ps2-world.r4pw",
+        "LBA": 253388,
+        "bytes": 9232,
+        "sha256": "49e235323ef6d58ac6be0225a5428757b172169dc2de349748e70c2efcf3174c",
+        "exact_retained_manifest": true
+      },
+      "dc/native/r11c/ps2-world.r4tc": {
+        "path": "dc/native/r11c/ps2-world.r4tc",
+        "LBA": 253393,
+        "bytes": 248,
+        "sha256": "9fa30740a9ecf7cad16fbbd68d920f71183dbfe963b64b5ddc07a84951a1eae8",
+        "exact_retained_manifest": true
+      },
+      "dc/native/r11c/ps2-world.re4mesh": {
+        "path": "dc/native/r11c/ps2-world.re4mesh",
+        "LBA": 253394,
+        "bytes": 977792,
+        "sha256": "5abc185c464fa60e667ba90b052fe4769792a8c3452934983069e5c29a63501c",
+        "exact_retained_manifest": true
+      },
+      "dc/native/r100/ps2-world.ids": {
+        "path": "dc/native/r100/ps2-world.ids",
+        "LBA": 239184,
+        "bytes": 320,
+        "sha256": "c4394a5fb19f0a89bcef4f42134d4cfa7dff7619a8368c9a7a967fdca7011cb3",
+        "exact_retained_manifest": true
+      },
+      "dc/native/r100/ps2-world.r4pw": {
+        "path": "dc/native/r100/ps2-world.r4pw",
+        "LBA": 239185,
+        "bytes": 19612,
+        "sha256": "07acc55b2b009abd8368af2880c556272cf6de41595908739afc589baceab6cd",
+        "exact_retained_manifest": true
+      },
+      "dc/native/r100/ps2-world.r4tc": {
+        "path": "dc/native/r100/ps2-world.r4tc",
+        "LBA": 239195,
+        "bytes": 328,
+        "sha256": "a57ddee43c162035c62b4f6fd81f087bcb0bafcf1c3eb3ad5a53434f9b3a8557",
+        "exact_retained_manifest": true
+      },
+      "dc/native/r100/ps2-world.re4mesh": {
+        "path": "dc/native/r100/ps2-world.re4mesh",
+        "LBA": 239196,
+        "bytes": 1537920,
+        "sha256": "130bac7969255f0bf31d5f9226cee21a33415103f044f0fdc7dda3607ffc89bb",
+        "exact_retained_manifest": true
+      },
+      "dc/movie/r100s30.seq": {
+        "path": "dc/movie/r100s30.seq",
+        "LBA": 88981,
+        "bytes": 2402304,
+        "sha256": "a7a73a704159997504e4cbcca8d3aa457c4505cf02da81f2363222077ddc7de3",
+        "exact_retained_manifest": true
+      }
+    },
+    "headers": {
+      "dc/native/r11c/ps2-world.ids": {
+        "magic": "R4ID",
+        "version": 1,
+        "count": 108,
+        "policy_source_crc": "0x9abe7af5"
+      },
+      "dc/native/r11c/ps2-world.r4pw": {
+        "magic": "R4PW",
+        "version": 1,
+        "placements": 108,
+        "parts": 224,
+        "meshes": 108,
+        "body_crc": "0x7972d28f"
+      },
+      "dc/native/r100/ps2-world.ids": {
+        "magic": "R4ID",
+        "version": 1,
+        "count": 283,
+        "policy_source_crc": "0x14118acd"
+      },
+      "dc/native/r100/ps2-world.r4pw": {
+        "magic": "R4PW",
+        "version": 1,
+        "placements": 283,
+        "parts": 304,
+        "meshes": 179,
+        "body_crc": "0x25d5daaf"
+      }
+    },
+    "reader": {
+      "path": "/root/probe/codex-rootpose23/port/dreamcast/tools/d367/fullplay/fp_iso.py",
+      "bytes": 8006,
+      "sha256": "e473a3493aa97ba63391cb507b2263935b8904153adddd99c421b689810f54da"
+    },
+    "manifest": {
+      "path": "/root/rr/work/1022-1420-f047721f/pkg/logs/manifest-rrf047721rP.json",
+      "bytes": 210368,
+      "sha256": "93fab2b41dc274123d9159d5d0d54d6fc8757295ec4e2919ec291d8766c9f95e"
+    }
+  },
+  "programmes": [
+    {
+      "role": "release",
+      "ELF": {
+        "path": "/root/probe/lanes/route/out-rrf047721rP/re4dc-game.elf",
+        "bytes": 28393196,
+        "sha256": "b344ec85a4fd6d6738e44e79368d0fe97c746502732836238f1ff882446b0244"
+      },
+      "candidate": {
+        "path": "/root/probe/lanes/route/out-rrf047721rP/candidate.txt",
+        "bytes": 4903,
+        "sha256": "3d772ff93dcd104d76a18ba1200a5e2f8c9d2ce8b93b8ae59d6e6704225634e4"
+      },
+      "resolved": {
+        "path": "/root/probe/lanes/route/out-rrf047721rP/resolved-knobs.txt",
+        "bytes": 197387,
+        "sha256": "599f542751f716873619d2cb69cb65a3dcbf2bba0696490bf385fded8b0984f1"
+      },
+      "ROOT1_recipe_token": false,
+      "ROOT0_baseline_only": true,
+      "matching_source": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c"
+    },
+    {
+      "role": "H2-twin-g",
+      "ELF": {
+        "path": "/root/probe/lanes/route/out-fprrf047721gW/re4dc-game.elf",
+        "bytes": 28544984,
+        "sha256": "e4b265a3416091a8475f41cbfeffc5713ecf215199610fe35bb0bdd9267c09f8"
+      },
+      "candidate": {
+        "path": "/root/probe/lanes/route/out-fprrf047721gW/candidate.txt",
+        "bytes": 5127,
+        "sha256": "90655595bd379272e3adebb20c6da3b896aede9b9bdf21ecd50a5a83e85ef9a8"
+      },
+      "resolved": {
+        "path": "/root/probe/lanes/route/out-fprrf047721gW/resolved-knobs.txt",
+        "bytes": 202348,
+        "sha256": "6a838a4315ed5e693df8959da066990b106a68bdf4f3b31d61563da625528cb5"
+      },
+      "ROOT1_recipe_token": false,
+      "ROOT0_baseline_only": true,
+      "matching_source": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c"
+    }
+  ],
+  "fixtures": {
+    "h2-result": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1022-1420-f047721f/h2/run-result.json",
+      "bytes": 1465,
+      "sha256": "cc547ac6e1d0f17618cd7502f38b83dd366aa01252643eb05cadc9064fdb926f"
+    },
+    "h2-warp": {
+      "path": "/root/probe/codex-rootpose23/port/dreamcast/tools/d367/fullplay/segments/h2-warp.txt",
+      "bytes": 363,
+      "sha256": "921ee89e2286ff7801736dabd1d9cb58321f25540ab3b3e3e63230eabb822012"
+    },
+    "h2-pad": {
+      "path": "/root/probe/codex-rootpose23/port/dreamcast/tools/d367/fullplay/segments/h2-pad.txt",
+      "bytes": 215,
+      "sha256": "80a97aa5b3ac9c4e3f8945089108d98f432fa8f57b00d2e7385733cb8d461ac1"
+    },
+    "r11c-census": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1022-1420-f047721f/fixtures/cg-r11c.txt",
+      "bytes": 502,
+      "sha256": "e19c69839a6755ce1cbdbf7115b43139a223155e918077d7c43315ea4a9f4bd6"
+    },
+    "r11c-result": {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/rr/1022-1420-f047721f/cg-r11c/run-result.json",
+      "bytes": 1259,
+      "sha256": "144b7d55e56f05224aae75f50184246f9d819662468091682006ab0fcd4aacd9"
+    }
+  },
+  "historical_H2": {
+    "emu": "harness",
+    "elapsed_s": 168.1,
+    "stop": "route movie terminal=. id=10030",
+    "track03_recorded_sha256": "ea744567d1c7a5bd9484218dc360c9e16f954bb8a4eba573eb9eac19c941bc49",
+    "not_new_gate": "Harness mode and168s, targetROOT0; not a console/newROOT1 gate or authorization for300s jobs."
+  },
+  "root_source_pins": [
+    {
+      "source_commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "relative": "port/dreamcast/game/platform/native_static.cpp",
+      "bytes": 359717,
+      "sha256": "ff69daeaa1f5afd3ad30003894fc9ea8f6e00a773e3e059f100329f96d676f26"
+    },
+    {
+      "source_commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "relative": "port/dreamcast/game/ui_bridge.cpp",
+      "bytes": 45756,
+      "sha256": "03ec373688475ca943862a7081d66e4353408b8cc241f6f5f0a940ec72fb675b"
+    },
+    {
+      "source_commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "relative": "port/dreamcast/game/platform/include/movie_world_arena_lifecycle.inc",
+      "bytes": 3516,
+      "sha256": "e137da9d61c8c8a6929ed13412a063028fb8cf173f56a114d52164efe1de27ef"
+    },
+    {
+      "source_commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "relative": "port/dreamcast/game/game30.mk",
+      "bytes": 224314,
+      "sha256": "4db0ff7f9ece7bab55b8c1385f3b389af6e7b614d03f84fb9de1da51c88c48ab"
+    },
+    {
+      "source_commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "relative": "port/dreamcast/tools/d367/rr/rr-cycle.sh",
+      "bytes": 14287,
+      "sha256": "9f1d3814a38f49a98fc742fd229ca72e44a5ee6afa3ccbb326f0f33589b6db31"
+    },
+    {
+      "source_commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "relative": "port/dreamcast/tools/d367/rr/rr-jobs.sh",
+      "bytes": 8400,
+      "sha256": "926cc12c99ffc78a0dedbbac18f50d7096434bbd4343e871478a98092e802a3e"
+    },
+    {
+      "source_commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "relative": "port/dreamcast/tools/d367/fullplay/fp_run.py",
+      "bytes": 15608,
+      "sha256": "646bd4eb42ff2063d4e07dc3754ab0c0d61e3b75348b934a48e7f63a25a07747"
+    },
+    {
+      "source_commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "relative": "port/dreamcast/tools/d367/ch2/ch2-build.sh",
+      "bytes": 3544,
+      "sha256": "d924420ed9d6515e66231166fb148015418f6af13568b6d260297656e1c89f57"
+    }
+  ],
+  "recipe": {
+    "path": "/root/rr/work/1022-1420-f047721f/recipe.conf",
+    "bytes": 4763,
+    "sha256": "510819e4fbc59b7f3ca08d92fcf7c924288bbe2373ea0af5f5f831d444e118a1"
+  },
+  "bisect_historical": [
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/codex22/1022-1203-d3733810/h2",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/codex22/1022-1230-c9ee0e8c/h2"
+  ],
+  "r11c_source_identity_reference": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-objects-20261021/source-object-ledger.json",
+    "bytes": 87316,
+    "sha256": "e9fcc76ccf09785e07abbf3d436e3c26af03f3dfb91fba0fcd041ba218da6fe3"
+  },
+  "not_available": "No activated r11c lever/gears target fixture identified in these retained current RR inputs; census entry is not animation acceptance. No currentROOT1 programme/ELF/image accepted."
+}

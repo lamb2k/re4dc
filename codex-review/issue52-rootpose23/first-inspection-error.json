@@ -1,0 +1,1 @@
+{"state":"READ_ONLY_INSPECTION_FIRST_ATTEMPT_ERROR_PRESERVED","error":"fp_iso.files returns3-tuples; initial inspection attempted4-value unpack","target_tools_or_guest_runs":0,"image_or_source_writes":0,"track_handle_closed_in_finally":true,"output_identity_not_created":true,"correction":"Use the documented existing reader's3-tuple shape; no target rerun or image mutation."}

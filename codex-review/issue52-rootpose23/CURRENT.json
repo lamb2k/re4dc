@@ -1,0 +1,95 @@
+{
+  "state": "INDEPENDENT_SOURCE_DATA_REVIEW_ONLY",
+  "owned_branch": "codex/issue52-rootpose23-review",
+  "owned_tree": "/root/probe/codex-issue52-rootpose23-review",
+  "owned_base": "64a28a7bdc44312924b14414501b7d4ff1d2d032",
+  "reviewed_main_fix": "6b47094d7a9d716107b93a0547ba48ea834303ca",
+  "no_runtime_edits": true,
+  "no_builds_or_tests_or_guests": true,
+  "source_pins": [
+    {
+      "path": "port/dreamcast/game/platform/native_static.cpp",
+      "base_sha256": "0fb8692e623138d8422ed314f1a16ab04db90d5b21f24229d312cbfb114f7fed",
+      "fix_sha256": "094edf172e003b71b029238e43dccfda3f09fb1853739d3a9f3a758cd9d332f7",
+      "bytes": 362157,
+      "unchanged_from_f047": false,
+      "fix_changes": true
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "base_sha256": "03ec373688475ca943862a7081d66e4353408b8cc241f6f5f0a940ec72fb675b",
+      "fix_sha256": "03ec373688475ca943862a7081d66e4353408b8cc241f6f5f0a940ec72fb675b",
+      "bytes": 45756,
+      "unchanged_from_f047": true,
+      "fix_changes": false
+    },
+    {
+      "path": "port/dreamcast/game/dbgwarp_bridge.cpp",
+      "base_sha256": "803405e3084314cf49debd765ddde06ac1c7296c78fffe6c73a3b9ec9941d268",
+      "fix_sha256": "803405e3084314cf49debd765ddde06ac1c7296c78fffe6c73a3b9ec9941d268",
+      "bytes": 103817,
+      "unchanged_from_f047": false,
+      "fix_changes": false
+    },
+    {
+      "path": "src/st1/r100.cpp",
+      "base_sha256": "a732b24228538d15b42343c7e26cb57bc0c502b8f79f9a3b409fd061132a9c6a",
+      "fix_sha256": "a732b24228538d15b42343c7e26cb57bc0c502b8f79f9a3b409fd061132a9c6a",
+      "bytes": 51922,
+      "unchanged_from_f047": true,
+      "fix_changes": false
+    },
+    {
+      "path": "src/st1/r11c.cpp",
+      "base_sha256": "0d144c5649bb8fa56b982eedc7d8778dd3057c75642fa288952a965a7c65b258",
+      "fix_sha256": "0d144c5649bb8fa56b982eedc7d8778dd3057c75642fa288952a965a7c65b258",
+      "bytes": 49046,
+      "unchanged_from_f047": true,
+      "fix_changes": false
+    },
+    {
+      "path": "include/sce_at.h",
+      "base_sha256": "959395cb5395054fe40542c2117592ab48536b8ce4455fb16e415ad7f4aadcf4",
+      "fix_sha256": "959395cb5395054fe40542c2117592ab48536b8ce4455fb16e415ad7f4aadcf4",
+      "bytes": 12990,
+      "unchanged_from_f047": true,
+      "fix_changes": false
+    },
+    {
+      "path": "include/area.h",
+      "base_sha256": "85d5328f053cd74add90a82ec77743e037802d6c097afd94a8ff0ff652c82c1b",
+      "fix_sha256": "85d5328f053cd74add90a82ec77743e037802d6c097afd94a8ff0ff652c82c1b",
+      "bytes": 2954,
+      "unchanged_from_f047": true,
+      "fix_changes": false
+    },
+    {
+      "path": "src/game/sce_at.cpp",
+      "base_sha256": "d7136020456aeeac72122daec47f4864889532075937a83c477ac098720c16ec",
+      "fix_sha256": "d7136020456aeeac72122daec47f4864889532075937a83c477ac098720c16ec",
+      "bytes": 145050,
+      "unchanged_from_f047": true,
+      "fix_changes": false
+    },
+    {
+      "path": "src/game/mes.cpp",
+      "base_sha256": "e8ed43a07c480cc953365247de9c23891e0fd1b76377d3959b6d8977d81eaa64",
+      "fix_sha256": "e8ed43a07c480cc953365247de9c23891e0fd1b76377d3959b6d8977d81eaa64",
+      "bytes": 46043,
+      "unchanged_from_f047": true,
+      "fix_changes": false
+    },
+    {
+      "path": "src/game/sce_com.cpp",
+      "base_sha256": "b18dd8fe318e0bd3e9be6277beef056bc3a8ba7a121f8f70a7ab0a8f93a2ff0e",
+      "fix_sha256": "b18dd8fe318e0bd3e9be6277beef056bc3a8ba7a121f8f70a7ab0a8f93a2ff0e",
+      "bytes": 46733,
+      "unchanged_from_f047": true,
+      "fix_changes": false
+    }
+  ],
+  "old_evidence": "f047 programmes/master/host historical only; not current rebuilt target acceptance",
+  "new_programme_gate": "Main owns matched console s30340/340 and r11c original unset/opposite gear animation/end-state; new allocation and identities required",
+  "status_headers": "Main centrally owns rewrite; lane intentionally did not edit STATUS",
+  "resource_limit_bytes": 1048576
+}
