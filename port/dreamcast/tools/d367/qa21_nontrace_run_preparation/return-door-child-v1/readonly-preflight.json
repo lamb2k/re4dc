@@ -1,0 +1,320 @@
+{
+  "scope": "actual child main-style path/hash expressions+full preflight+strictparent READONLY only; no backend/job/output/guest",
+  "utc": "2026-10-22T04:50:42.955415+00:00",
+  "pass": true,
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "child_tools_sha256": "8d06f482b0a4587aef90a610e2b2db132fa0fb9a09c015496f7f93e836d5f500",
+  "checked_manifest_files": 83,
+  "checked_absolute_actual_readonly_files": [
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\.gitattributes",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\.gitattributes",
+      "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\SEAL_PLAN.md",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\SEAL_PLAN.md",
+      "sha256": "e84ec8769c8eec63abf8b23352b688bb7e1c46451fb5ffea17fb450e5f774a77"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\capture-budget.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\capture-budget.py",
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\checkpoint-ABI.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\checkpoint-ABI.json",
+      "sha256": "15b4c7ea458bb8f957c5b4e86e3dde47cf82a8b35da4c8575bbd92d453d1140f"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\controller-core.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\controller-core.py",
+      "sha256": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\current-transitions.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\current-transitions.json",
+      "sha256": "25c5d4cccfbcea660849a02350aa0c334d2205e84a54d856819cf28f8e44a041"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\death-demo-source.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\death-demo-source.json",
+      "sha256": "e863aa62087251dd200fe7f34e0edfaef835fbd50773304e619c5279d3ff62e6"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\empty-keys.txt",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\empty-keys.txt",
+      "sha256": "69c29ed80746da752fdd53d2410cf277060bfd04e9805e1c7a8664316ddacca2"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\exact-log-symbols.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\exact-log-symbols.json",
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\guard-delta-proof.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\guard-delta-proof.json",
+      "sha256": "9c7361dc434d082238402496c6d3a9cedf379424945bd1794fcec579c019261c"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\guest-profile-v2.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\guest-profile-v2.json",
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\guest-supervisor-core.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\guest-supervisor-core.py",
+      "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\incidents\\test-native-seal-initial.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\incidents\\test-native-seal-initial.py",
+      "sha256": "32d9c0712fcdaf354e4a26b28bd1afbba2471c03be70cd312712e57d544daa6c"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\independent-85bac-README.md",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\independent-85bac-README.md",
+      "sha256": "42d22171c95745a297fc131467aacedbd42c62a3cee399ac47bd0a6fdd39a7eb"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\independent-85bac-review.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\independent-85bac-review.json",
+      "sha256": "9a6755e5fc2a339425a3f35140ac5be828266bdb56c49d6522322cc95cefafaa"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\inner-adapter.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\inner-adapter.py",
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\input-deadlines.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\input-deadlines.py",
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\layout-contract.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\layout-contract.py",
+      "sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\native-host-cases-20261022T040636338844Z.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\native-host-cases-20261022T040636338844Z.json",
+      "sha256": "508d2ce7a1b97fa20d8b503446426881afcefa150e911bf85f7985790b8e6233"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observe.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observe.py",
+      "sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-binding-v2.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-binding-v2.json",
+      "sha256": "ce53a9509462d920d9a2bee26e54566ba9c04f0080d11fadec82c89cf41d4bcd"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-v2-ABI.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-v2-ABI.json",
+      "sha256": "c48f2858953d7c693e1fb1885d0354fdb2706706c458099697fb1cc288ea228e"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-v2.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\observer-v2.py",
+      "sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\outer-driver.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\outer-driver.py",
+      "sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\policies.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\policies.py",
+      "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\r103-cold-keys.txt",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\r103-cold-keys.txt",
+      "sha256": "1d521b1ca227b07273fd4f7f1d2a7e1e2848b71eaee18ba07ad691386add2565"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\run-seal-tests.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\run-seal-tests.py",
+      "sha256": "34afe005a75081ed508509f8bf195de42c2647c47d914d1c954d78a45da3b4ea"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-linux-20261022T040453736461Z.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-linux-20261022T040453736461Z.json",
+      "sha256": "0bbf8b1c399cc74a52811a46cd86f4fb74f0e0ea1339f7f3d3705b1c45fa435e"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-windows-20261022T040453558946Z.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-windows-20261022T040453558946Z.json",
+      "sha256": "19d86c72342db076919de1c56e88a805923238049156cf6b59c821c3d7a511b2"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-windows-20261022T040559721376Z.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-windows-20261022T040559721376Z.json",
+      "sha256": "9df234c488fe025113f049186dc38b00ad3b5bed06fb98d39d6a0ff6b5e72bb7"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-windows-20261022T040636472072Z.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\seal-receipt-windows-20261022T040636472072Z.json",
+      "sha256": "70ebc51deb885ccbd17946d07e51e7ccba4c1650d62ce0e235cd0d6fccf60017"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\selected-assets.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\selected-assets.json",
+      "sha256": "b03b8053b9b85dfce317ed4c174f225bd4ed91cc489ae31cb0cd085ad861eb0e"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\source-contract-v2.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\source-contract-v2.json",
+      "sha256": "b242787825500bcd453e399465f19bc2b71e45f881f069047e374d21e135f579"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\source-qualification.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\source-qualification.json",
+      "sha256": "954a1cdcba2b64f5bf63f085f64ddeca63f111710f7024606f7e8ec427d435f1"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\test-failure-telemetry.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\test-failure-telemetry.py",
+      "sha256": "f2ee60d6ced646115f980e01384d192909210bee11293d174c7ac729c9eaa5dc"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\test-native-seal.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\test-native-seal.py",
+      "sha256": "21aa1826986d014fddff4d025c40c6faa07f0e6c026fe342959c903740bde525"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\test-seal.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\test-seal.py",
+      "sha256": "63b4ba7559b5dbc7c0e7291357da7bf5ace221a1e7ac740471261131f73d6bbe"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\windows-backend.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\windows-backend.py",
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\source-manifest.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_guest_telemetry_v1\\source-manifest.json",
+      "sha256": "0b12c09410599ee55c96d49875dadf5236b210ef8d8267cc0d7aaa82ad921bfd"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_plan\\reader-c57-on-layout.json",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_plan\\reader-c57-on-layout.json",
+      "sha256": "17289a5336a9fb5de4e83a3ed7b198696fcc2249342e26fe03d2aeaa6ca5baf8"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\run_observed_v3.py",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\run_observed_v3.py",
+      "sha256": "592cc71d35749c6700c40df0b037b3bd9c0822558fc3040a6f649fa785781d72"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_runner18.py",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_runner18.py",
+      "sha256": "8960ffcf6652e1aac9f846d2857cc5932314bf03bcbf99ae538d68d131d1ca20"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint.py",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint.py",
+      "sha256": "c1d88f5cb650517f9163576e802104b6b0356e198fa2a23db3c36b79be6a3a75"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_read_log.py",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_read_log.py",
+      "sha256": "e708e4cf748ce679aceaf9124f1a2412bd4d8242ddbdaaa92e3accae7323850f"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_runner.py",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-combined-regression-20261021\\dependencies-route-v4\\checkpoint_runner.py",
+      "sha256": "b1bf7235eed65f757ebb765ccaaefd3108ce935ff6bd80fe3c0a2e425ef0d394"
+    },
+    {
+      "key": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_death_repair\\evidence_footprint.py",
+      "actual_join_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_death_repair\\evidence_footprint.py",
+      "sha256": "e4d25d3fd26df445e6b7f30d98bd43debce5348dcfb28ca873d249c3d0f38132"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\dc_nvmem.bin",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\dc_nvmem.bin",
+      "sha256": "4a598599e9d376573354e4e76879decea8fcd1f7d01a0d97f9365ca6b937d311"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\disc.state",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\disc.state",
+      "sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\dx11_shader_cache.bin",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\dx11_shader_cache.bin",
+      "sha256": "2892cce6e64f82dbc9c251b6d3bb844ddb8ba7be38fe9bfa09402771b27ca303"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\T0000_vmu_save_A1.bin",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\T0000_vmu_save_A1.bin",
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\vmu_save_A2.bin",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\data\\vmu_save_A2.bin",
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\checkpoint.json",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\checkpoint.json",
+      "sha256": "c61d68c940e1ee3fd72446ae066ee28bbf32eda9959ea4e5ea6f08f33c0a0d4d"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01-control\\qualification.json",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01-control\\qualification.json",
+      "sha256": "a46f87ab02469a2504c525aedb19ebbe73da9ba5b1ab7519c23866f9cbb31afb"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01-control\\observed-acceptance.json",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01-control\\observed-acceptance.json",
+      "sha256": "c5fcc6141cca426099e1fc34537edfeb522987c8c8a7814059afa150b279b83e"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\inner-control.json",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\inner-control.json",
+      "sha256": "b904189bd1a76fb32eca023cb0c0ec6d36cccfc148135160f50b89db264183b5"
+    },
+    {
+      "key": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\ownership-resource-guard.json",
+      "actual_join_path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\ownership-resource-guard.json",
+      "sha256": "baf86bac00d05b2d52f751ab53f09f5047bc9682072e2c628d897b559a9ce385"
+    }
+  ],
+  "strict_sameprofile_parent_passed": true,
+  "parent_state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+  "disc_full_sha": {
+    "disc.gdi": {
+      "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+      "bytes": 83
+    },
+    "track01.bin": {
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+      "bytes": 1058400
+    },
+    "track02.raw": {
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "bytes": 1237152
+    },
+    "track03.iso": {
+      "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+      "bytes": 1032499200
+    }
+  },
+  "ELF_full_sha_checked": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "runtime_floor_checks": 349,
+  "C_before": 145183813632,
+  "C_minimum": 145183744000,
+  "C_after": 145183748096,
+  "global_Flycasts_snapshot": "none",
+  "return_role_outputs_absent_after": true,
+  "source_tree_bytes_with_pycache": 259421,
+  "guest_allocated": false,
+  "cold_role_executed": false
+}
