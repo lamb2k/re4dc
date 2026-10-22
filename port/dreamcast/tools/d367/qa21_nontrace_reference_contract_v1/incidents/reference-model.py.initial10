@@ -1,0 +1,37 @@
+"""Pure metadata model ONLY. No files/native API/preflight/guest/adoption entrypoint."""
+from pathlib import PureWindowsPath
+
+def canonical(path):
+ p=PureWindowsPath(path)
+ if not p.is_absolute() or p.drive.lower()!='c:' or any(x in ('.','..') for x in p.parts):raise ValueError('noncanonical absolute C path')
+ return str(p).replace(chr(92),'/').casefold()
+
+def assess_proposal(contract,snapshot,phase,owned_live=None):
+ """Validate captured/fake metadata; success NEVER means launch authorization."""
+ if contract.get('extension_default') is not False or contract.get('adoption_authorized') is not False:raise ValueError('proposal must remain unadopted/default off')
+ if phase not in contract['proposed_phase_rules']:raise ValueError('unreviewed phase')
+ rule=contract['proposed_phase_rules'][phase];image=contract['image'];expected={canonical(p) for p in rule['paths']}
+ actual={canonical(p) for p in snapshot['all_native_hardlink_names']}
+ if len(actual)!=len(snapshot['all_native_hardlink_names']) or actual!=expected:raise ValueError('unexpected/missing/duplicate native reference names')
+ if phase=='live_owned':
+  needed={'separate_root_allocation':True,'exact_output_owner':True,'retained_current_pid_path_start':True,'reviewed_runner_created_reference':True}
+  if owned_live!=needed:raise ValueError('live fourth reference ownership unavailable')
+ if snapshot['source_sha256']!=image['sha256']:raise ValueError('source image bytes changed')
+ if snapshot['before']!=snapshot['after']:raise ValueError('source identity changed across read')
+ rows=snapshot['references']
+ if {canonical(r['path']) for r in rows}!=expected or len(rows)!=len(expected):raise ValueError('reference record set differs')
+ for row in rows:
+  if row.get('samefile') is not True or row.get('ancestor_alias_or_reparse') is not False:raise ValueError('samefile/alias ownership unavailable')
+  if canonical(row['resolved_path'])!=canonical(row['path']):raise ValueError('resolved path alias')
+  if (row['links'],row['bytes'],row['mtime_ns'],row['inode'])!=(rule['expected_links'],image['bytes'],image['mtime_ns'],image['inode']):raise ValueError('reference stat identity/count changed')
+  if int(row['native_file_id'],16)!=int(image['native_file_id'],16):raise ValueError('native FileID changed')
+ for key in ('bytes','mtime_ns','inode'):
+  if snapshot['before'][key]!=image[key]:raise ValueError('source stat changed')
+ if snapshot['before']['links']!=rule['expected_links'] or int(snapshot['before']['native_file_id'],16)!=int(image['native_file_id'],16):raise ValueError('source native identity/count changed')
+ return {'proposal_matches':True,'adopted':False,'preflight_performed':False,'launch_authorized':False,'phase':phase}
+
+def baseline_default_off(contract,snapshot):
+ """Current unmodified two-link rule refuses retained-three metadata."""
+ expected={canonical(p) for p in contract['baseline']['paths']}
+ if snapshot['before']['links']!=contract['baseline']['expected_links'] or {canonical(p) for p in snapshot['all_native_hardlink_names']}!=expected:raise ValueError('immutable baseline two-link guard refuses extension')
+ return {'extension_enabled':False,'launch_authorized':False}

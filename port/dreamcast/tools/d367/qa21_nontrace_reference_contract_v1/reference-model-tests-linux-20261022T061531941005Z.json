@@ -1,0 +1,16 @@
+{
+  "scope": "10NEW pure fake-metadata cases; no source image/reference query/preflight/adoption/guest",
+  "utc": "2026-10-22T06:15:31.939175+00:00",
+  "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39",
+  "sources": {
+    "REFERENCE_EXTENSION_CONTRACT.json": "96232ff6f8a96c2e8a80c180552aae566441aa00d12744f55cb402e788f40166",
+    "reference-model.py": "f01b967efe3f4982538da7ed6d3b88ec4f3692b47e01238e202ac7af4f74f725",
+    "test-reference-model.py": "5dd5a1d7e48ce3c862ce9295abddb9cd9e205354b2745ac1718ce5cc657aa2d1",
+    "run-reference-model-tests.py": "fd9a54826eb49f10df098cd93b2f463339348e38b9edef174dc4972814ce406f"
+  },
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "test_alias_reparse_or_non_samefile_refused (__main__.Contract.test_alias_reparse_or_non_samefile_refused) ... ok\ntest_existing_default_off_two_link_guard_refuses_three (__main__.Contract.test_existing_default_off_two_link_guard_refuses_three) ... ok\ntest_extra_missing_duplicate_native_names_refused (__main__.Contract.test_extra_missing_duplicate_native_names_refused) ... ok\ntest_live_fourth_only_exact_fixed_cap_with_all_ownership_proofs (__main__.Contract.test_live_fourth_only_exact_fixed_cap_with_all_ownership_proofs) ... ok\ntest_native_identity_size_mtime_inode_and_source_hash_changes_refused (__main__.Contract.test_native_identity_size_mtime_inode_and_source_hash_changes_refused) ... ok\ntest_post_clean_fourth_leftover_fails_preserves_no_cleanup_api (__main__.Contract.test_post_clean_fourth_leftover_fails_preserves_no_cleanup_api) ... ok\ntest_reference_count_two_or_four_cannot_pass_retained_three (__main__.Contract.test_reference_count_two_or_four_cannot_pass_retained_three) ... ok\ntest_retained_three_model_matches_but_never_adopts_or_authorizes (__main__.Contract.test_retained_three_model_matches_but_never_adopts_or_authorizes) ... ok\ntest_source_identity_change_during_hash_refused (__main__.Contract.test_source_identity_change_during_hash_refused) ... ok\ntest_unreviewed_phase_and_enabled_proposal_refused (__main__.Contract.test_unreviewed_phase_and_enabled_proposal_refused) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 0.002s\n\nOK\n",
+  "preflight_performed": false,
+  "launch_authorized": false
+}
