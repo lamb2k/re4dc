@@ -1,0 +1,84 @@
+{
+  "scope": "FINAL018 SOURCE QUALIFIED ONLY; no018guest allocated, executed or accepted. Root owns next runtime/write-consent/resources.",
+  "source_commit": "ef9e236f191da8293f078a9e90b36b450d9a0a11",
+  "independent_review": {
+    "commit": "5fbf4fa0ed4887fd2b803e6e32e2e7b79a7300b7",
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle018-implementation-review21-20261022\\REVIEW.json",
+    "sha256": "1763fd8aa8bd0dd2172a0e89455186c934fd8f8694db0f43215fd32ac3fb93e5",
+    "seal_sha256": "6e8f31a56937ff1c7294e392255cc1af67c265ed45899b87a9b49ef9751f8693",
+    "result": "CLEAR_SOURCE_ONLY",
+    "source_cases": [
+      44,
+      17
+    ],
+    "independent_checks": 31,
+    "default_pins": 35,
+    "review_charge_bytes": 221888
+  },
+  "observer_sha256": "16154512b11b99880c76392e198b2b7de38650d7618502ba83236928b4f21eae",
+  "wrapper_sha256": "cdd4de7242f870fac6c9e595142a9f6d5a0f37d5d43e6a2d904440d728e40a33",
+  "pins_sha256": "2bb24552c810c222f6f08795bbb18637e798625a6cab6ea3cd94cb4f782412fc",
+  "proposal_sha256": "b01d8564a4dfbfe9f612f8e5419004221915d4e6475ab53eccc262d01784d8ed",
+  "shell_sha256": "79130af2d477928a171a04581a529e68df404ce850e13f669e527e9ebe8c7d3f",
+  "seed": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door017\\data\\disc.state",
+    "sha256": "1b1485784a8c796fbaad18573002ae353f75d9b67c0b4b156e1724bf296ac04b",
+    "minimum_frame": 2604,
+    "room": "0x204",
+    "Part": 1,
+    "previous": "0x205",
+    "Stop": 0
+  },
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff48",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 58,
+  "argv": [
+    "wsl.exe",
+    "-d",
+    "Ubuntu-24.04",
+    "-u",
+    "root",
+    "--",
+    "bash",
+    "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-door018.sh",
+    "--execute-allocated018"
+  ],
+  "guards": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normal_close": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_flycast": 16,
+    "castle": 2,
+    "global_source_peer_bytes": 67108864
+  },
+  "trace_lock_sha256": "e5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688",
+  "acceptance": [
+    "native204Door4 request and actual209 entry separately",
+    "native game-thread placement/actualpose and exactphysicalDoor1sourceaction identity",
+    "physicalDoor1flag10000000 afterordinaryA",
+    "originalAEV0A execution observation ifsampled; nativeeventactive andCam3then2 theneventclear/Stop0/sourceadvance/screenshots. Flag/roomalone cannot passcut."
+  ],
+  "protected_inputs": "All35resolvedpins freshly matched afterreview; authentic127/294/013/014/015/016/017 and009VMU protected by wrapper before/after. No source/programme/asset/game-state change performed.",
+  "source_budget": "Ownsource+metadata+mirrors conservatively<320KiB of512KiB. Reviewerfreshseparate221888B of512KiB. Standingglobal64MiBsourcepeer.",
+  "actual017_result": "NativeDoor0\u2192204Part1 andfirstcutstatehold/return recorded. Rootpixels: entryLoading,firstcutreturnlabelcinematic,deadlineLeon/HUD; audit7078 androotvisuale5f13910 remainseparate unchanged.",
+  "next": "Root may allocate exactone018 fromactual017 only, subjectfreshprocess/peers/disk andexplicit58B debugconfig consent. No blindfollowups, retries or forcedoutcomes."
+}

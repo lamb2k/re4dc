@@ -1,0 +1,16 @@
+{
+  "scope": "Finalsourcequalification addendum; originalsourcecandidate/seal retained, noactualguest.",
+  "prior_source_seal_sha256": "0d63a96120e3de966766e5e89fc3ee06efa666566094ed27f83b48b88e61536d",
+  "members": [
+    {
+      "path": "DOOR018-SOURCE-QUALIFIED-HANDBACK.json",
+      "sha256": "27dd8cc05cf9d5a3e2f7131f04cb38b7be8ccab64c2ac550c823015b017e097c",
+      "bytes": 3669
+    },
+    {
+      "path": "FINAL-CURRENT-STATUS.md",
+      "sha256": "efcd7742e7b65abae38b7b59bf0f6bb86c35587b078ad9b01061ab6e204b27ee",
+      "bytes": 3285
+    }
+  ]
+}
