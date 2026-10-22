@@ -1,0 +1,82 @@
+{
+  "qualified": false,
+  "purpose": "startup inventory only; no game qualification",
+  "cleanup_errors": [],
+  "snapshots": [
+    {
+      "expected_inner": {
+        "pid": 19944,
+        "start_filetime": 134371316759133980,
+        "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+      },
+      "member_pids": [
+        19944
+      ],
+      "added": [],
+      "missing": [],
+      "members": [
+        {
+          "pid": 19944,
+          "proof": {
+            "pid": 19944,
+            "retained_times": [
+              134371316759133980,
+              0,
+              0,
+              0
+            ],
+            "identity": {
+              "pid": 19944,
+              "start_filetime": 134371316759133980,
+              "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+            },
+            "native": {
+              "pid": 19944,
+              "start_filetime": 134371316759133980,
+              "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe",
+              "exit_filetime": 0,
+              "wait_status": 258,
+              "phase": "live",
+              "kernel_100ns": 0,
+              "user_100ns": 0
+            }
+          },
+          "matches_original_retained_pin": true
+        }
+      ],
+      "strict_membership": true
+    }
+  ],
+  "spawn_started_monotonic": 407341.171,
+  "expected_inner": {
+    "pid": 19944,
+    "start_filetime": 134371316759133980,
+    "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+  },
+  "startup_seconds": 0.01600000000325963,
+  "error": {
+    "type": "RuntimeError",
+    "text": "unexpected/missing private job member; inventory preserved",
+    "winerror": null
+  },
+  "private_job_empty": true,
+  "inner_finalized": true,
+  "inner_exit": {
+    "identity": {
+      "pid": 19944,
+      "start_filetime": 134371316759133980,
+      "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+    },
+    "original_live_pin_available": true,
+    "times": [
+      134371316759133980,
+      134371316759413943,
+      0,
+      0
+    ],
+    "exit_code": 125,
+    "wait_status": 0
+  },
+  "safe_to_disarm": true,
+  "hardstop_fired": false
+}

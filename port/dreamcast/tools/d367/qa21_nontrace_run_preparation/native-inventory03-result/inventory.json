@@ -1,0 +1,73 @@
+{
+  "expected_inner": {
+    "pid": 19944,
+    "start_filetime": 134371316759133980,
+    "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+  },
+  "member_pids": [
+    19944,
+    37152
+  ],
+  "added": [
+    37152
+  ],
+  "missing": [],
+  "members": [
+    {
+      "pid": 19944,
+      "proof": {
+        "pid": 19944,
+        "retained_times": [
+          134371316759133980,
+          0,
+          0,
+          0
+        ],
+        "identity": {
+          "pid": 19944,
+          "start_filetime": 134371316759133980,
+          "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+        },
+        "native": {
+          "pid": 19944,
+          "start_filetime": 134371316759133980,
+          "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe",
+          "exit_filetime": 0,
+          "wait_status": 258,
+          "phase": "live",
+          "kernel_100ns": 0,
+          "user_100ns": 0
+        }
+      },
+      "matches_original_retained_pin": true
+    },
+    {
+      "pid": 37152,
+      "proof": {
+        "pid": 37152,
+        "retained_times": [
+          134371316759198421,
+          0,
+          156250,
+          0
+        ],
+        "identity": {
+          "pid": 37152,
+          "start_filetime": 134371316759198421,
+          "path": "c:\\windows\\system32\\conhost.exe"
+        },
+        "native": {
+          "pid": 37152,
+          "start_filetime": 134371316759198421,
+          "path": "c:\\windows\\system32\\conhost.exe",
+          "exit_filetime": 0,
+          "wait_status": 258,
+          "phase": "live",
+          "kernel_100ns": 156250,
+          "user_100ns": 0
+        }
+      }
+    }
+  ],
+  "strict_membership": false
+}

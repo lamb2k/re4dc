@@ -1,0 +1,13 @@
+{
+  "qualified": false,
+  "purpose": "startup inventory only; no game qualification",
+  "cleanup_errors": [],
+  "snapshots": [],
+  "spawn_started_monotonic": 407341.171,
+  "expected_inner": {
+    "pid": 19944,
+    "start_filetime": 134371316759133980,
+    "path": "c:\\users\\lambd\\appdata\\local\\programs\\python\\python312\\python.exe"
+  },
+  "startup_seconds": 0.01600000000325963
+}
