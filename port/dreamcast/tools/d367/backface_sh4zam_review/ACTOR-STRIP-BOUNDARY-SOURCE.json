@@ -1,0 +1,82 @@
+{
+  "base": "64a28a7bdc44312924b14414501b7d4ff1d2d032",
+  "source_path": "port/dreamcast/tools/strip64_build_blob.py",
+  "source_sha256": "247e31f7c81118d5465f003e23bca81850ab592cd9a8321fc7ac911803258389",
+  "scope": "actual Python producer split function only, no C/ASM oracle or data/target run",
+  "cases": [
+    {
+      "input_single_strip": 3,
+      "output_lengths": [
+        3
+      ],
+      "same_ordered_winding_triangles": true,
+      "owned_source_bound_before_runtime": 64,
+      "C_reference_classification": "comment_contract_stress_array_safe"
+    },
+    {
+      "input_single_strip": 64,
+      "output_lengths": [
+        64
+      ],
+      "same_ordered_winding_triangles": true,
+      "owned_source_bound_before_runtime": 64,
+      "C_reference_classification": "comment_contract_stress_array_safe"
+    },
+    {
+      "input_single_strip": 65,
+      "output_lengths": [
+        64,
+        3
+      ],
+      "same_ordered_winding_triangles": true,
+      "owned_source_bound_before_runtime": 64,
+      "C_reference_classification": "comment_contract_stress_array_safe"
+    },
+    {
+      "input_single_strip": 255,
+      "output_lengths": [
+        64,
+        64,
+        64,
+        64,
+        7
+      ],
+      "same_ordered_winding_triangles": true,
+      "owned_source_bound_before_runtime": 64,
+      "C_reference_classification": "comment_contract_stress_array_safe"
+    },
+    {
+      "input_single_strip": 256,
+      "output_lengths": [
+        64,
+        64,
+        64,
+        64,
+        8
+      ],
+      "same_ordered_winding_triangles": true,
+      "owned_source_bound_before_runtime": 64,
+      "C_reference_classification": "comment_contract_stress_array_safe"
+    },
+    {
+      "input_single_strip": 512,
+      "output_lengths": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        16
+      ],
+      "same_ordered_winding_triangles": true,
+      "owned_source_bound_before_runtime": 64,
+      "C_reference_classification": "OUTSIDE_C_PLAIN256_ARRAY_NOT_EXECUTED"
+    }
+  ],
+  "whole_stream512_eight_valid64_strips_preserved": true,
+  "actual_C_guard_correction": "backface_emit.hpp only n<3 guard; n>255 is documented precondition, not runtime refusal. n256 fits arrays but exceeds comment. n257+ plain[256] overflow.",
+  "owned_accepted_source_proof": "coarse_actor_preflight.h ++len>64 refuses; package/geometry preflight beforepublication; runtimeConverter andLODstripify cap64. Genericblob_of signature alone is not arbitraryblobvalidation."
+}
