@@ -1,0 +1,804 @@
+{
+  "kind": "independent retained menu-window identity/counter/VRAM review; no replay",
+  "frozen_source": "b21116ec0cf2c984e9f49769a148373553bff00d",
+  "checks": [
+    {
+      "name": "same frozen source across original reports",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "off program/ELF reports agree",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "on program/ELF reports agree",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "extra members match source payload accounting",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "off original counter window unchanged",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "off retained plateau 29.015",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "off retained plateau 42.859",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "off retained plateau 44.969",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "off retained plateau 49.984",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "off logical restore opens are unique",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "off restore log matches existing attribution order",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "off original launch completed",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "on original counter window unchanged",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "on retained plateau 29.016",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "on retained plateau 42.875",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "on retained plateau 44.969",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "on retained plateau 50.0",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "on logical restore opens are unique",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "on restore log matches existing attribution order",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "on original launch completed",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "no lost-count splice",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "held phase unchanged traffic",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "pre-return held VRAM counter baseline equal",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "extra observed VRAM work",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "four extra keys and one common key add five retries",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "source bytes reconcile exact original delta",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "source request classes reconcile exact original delta",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    },
+    {
+      "name": "retained candidate inner-file identity claim",
+      "result": "PASS",
+      "kind": "retained evidence/source check, no new target run"
+    }
+  ],
+  "verified_inputs": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-pair-result.json",
+      "bytes": 2324,
+      "sha256": "ea8a3bd41d9ba067e94d00c3cac3a90366d0366a7e9509a03d93a04b1ff98ca7",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/paired-builds.json",
+      "bytes": 1425,
+      "sha256": "59bf2107a924e45c4f080261dcb99ba9f433b933a7ab12b7ae8c6a34f1e30375",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/window-demand-attribution-02.json",
+      "bytes": 142767,
+      "sha256": "a730029f1f53f32ae070595fb47a5c5e9b08bc22d8d10643b2f6a5df738d65ba",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/window-traffic-reconciliation-v1.json",
+      "bytes": 8123,
+      "sha256": "91817b6bb76da76c46657fd33c2eb2a39af23cd987c3f4fd42026f0eec1f97ef",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/window-traffic-host-v3.json",
+      "bytes": 25314,
+      "sha256": "776bcb670af14304b945cbe56b0baf184572c8dcf35aee4405d6c9c2349db168",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/window-demand-attribution-02.json",
+      "bytes": 142767,
+      "sha256": "a730029f1f53f32ae070595fb47a5c5e9b08bc22d8d10643b2f6a5df738d65ba",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-pair-result.json",
+      "bytes": 2324,
+      "sha256": "ea8a3bd41d9ba067e94d00c3cac3a90366d0366a7e9509a03d93a04b1ff98ca7",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-off-samples.json",
+      "bytes": 51211,
+      "sha256": "4f45ec334b5c5716c153c5bce09f53875e9e93dbc40ffbf17a467e9c577fda6d",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-on-samples.json",
+      "bytes": 51235,
+      "sha256": "bd3a34a1be6f1812a6f21df3c1e767b140e7285e00294eb1ce7cacecc5a26cf7",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/window-traffic-host-v3.json",
+      "bytes": 25314,
+      "sha256": "776bcb670af14304b945cbe56b0baf184572c8dcf35aee4405d6c9c2349db168",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/root/probe/cache21-window-build-20261021/out-off/program.bin",
+      "bytes": 3348164,
+      "sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/root/probe/cache21-window-build-20261021/out-off/re4dc-game.elf",
+      "bytes": 28574384,
+      "sha256": "51da665e4293a113ac541dfc79c68f525ce83322f7e1abf26c2ab9b3d5d41802",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/root/probe/cache21-window-build-20261021/out-off/obj/kosfix/fs_iso9660.c",
+      "bytes": 35910,
+      "sha256": "500da02b87d0e0790585f9a3661abd487a2bde0bca0ff1126cb561277113a0bc",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/root/probe/cache21-window-build-20261021/out-on/program.bin",
+      "bytes": 3348356,
+      "sha256": "fca8d1debdf2d5889f2a6e1f617c70a7d0da71cb3a7156bebba940027dd8a1c4",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/root/probe/cache21-window-build-20261021/out-on/re4dc-game.elf",
+      "bytes": 28574560,
+      "sha256": "25d64552500e02a75d08f6a0c9a5ec08878ac90e9f93a76d53a5b0b6c0955639",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/root/probe/cache21-window-build-20261021/out-on/obj/kosfix/fs_iso9660.c",
+      "bytes": 35910,
+      "sha256": "500da02b87d0e0790585f9a3661abd487a2bde0bca0ff1126cb561277113a0bc",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/root/re4data/private/mipmap21-release21-pack-recovery-20261021/tex.pak",
+      "bytes": 156254208,
+      "sha256": "18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-off-01/run-output.txt",
+      "bytes": 189515,
+      "sha256": "9541d197fea1ece1ffe873692078b906300acb75734035a1d2950ec102b97022",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-off-samples.json",
+      "bytes": 51211,
+      "sha256": "4f45ec334b5c5716c153c5bce09f53875e9e93dbc40ffbf17a467e9c577fda6d",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-off-01/shots/t0048/frames/fb0.png",
+      "bytes": 230466,
+      "sha256": "618a8b63d36fc77065d7570b2e83262e7fe85e2f6736caa35d1af423d1cab3be",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-off-01/run-result.json",
+      "bytes": 1674,
+      "sha256": "cde609981ce0e1d622d1f1f266660ce6e48346d92d3eb774039256fbfb55f1be",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-off-01/disc.gdi",
+      "bytes": 87,
+      "sha256": "025516557d49e1835e7eb8571e09244b64db190cf3981ead555c54b1924ca19f",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-on-01/run-output.txt",
+      "bytes": 196884,
+      "sha256": "4a65e712aa55251a6982b3394a03310aad3ee3c71af1cbe7fd0596e4372e9223",
+      "matched_retained_identity": true
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-on-samples.json",
+      "bytes": 51235,
+      "sha256": "bd3a34a1be6f1812a6f21df3c1e767b140e7285e00294eb1ce7cacecc5a26cf7",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-on-01/shots/t0048/frames/fb0.png",
+      "bytes": 230635,
+      "sha256": "a354f24c12a8d84c18aabf82e4707f15354b3cf0a900b8a56b5c9e22d1e3762e",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-on-01/run-result.json",
+      "bytes": 1666,
+      "sha256": "efd2887a6ec4c65ee65c362e632a97dd5b2e3e65c7f02126450d16d7491ecb04",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/inventory-on-01/disc.gdi",
+      "bytes": 83,
+      "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-window-20261021/window-on-input/candidate-receipt.json",
+      "bytes": 1209,
+      "sha256": "e7d0b3672d2ad6dbf851ce35299a43e440e2aeb94f95d12b17a8a1a04293ba05",
+      "matched_retained_identity": false
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/feedback21-runtime-20261021/qa-aafc10f3-input/input-receipt.json",
+      "bytes": 1289,
+      "sha256": "71456b05dc55b370093ca1b5ca4d2eb8dc5db59d5d50bbcc678583be1a37f771",
+      "matched_retained_identity": false
+    }
+  ],
+  "verified_source_objects": [
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "source_commit": "b21116ec0cf2c984e9f49769a148373553bff00d",
+      "bytes": 483007,
+      "sha256": "6c2adb5ff72e903e76a263cfbc30c07d6d1cf25e6352b773b70cd42f152ebc4b",
+      "blob": "f73d6e0bcbec962c7aa922ee9b6e1ffc2e4170db"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/texpack_index.inc",
+      "source_commit": "b21116ec0cf2c984e9f49769a148373553bff00d",
+      "bytes": 10567,
+      "sha256": "2c25e7013dccb8458644517e9929dce3f8fc88be04a068e2625e45a6886ea900",
+      "blob": "4509566380f4ebcc9181ff62f0a807e59aa4791a"
+    },
+    {
+      "path": "port/dreamcast/room/texture_package.cpp",
+      "source_commit": "b21116ec0cf2c984e9f49769a148373553bff00d",
+      "bytes": 45745,
+      "sha256": "026a20ff2dbea0dc10b4979e8e6d9bccb18ccd75f952b5e83fc9f2c8c9d5a8d5",
+      "blob": "575152ba03098a6b313e51c857137a0f8543a800"
+    },
+    {
+      "path": "port/dreamcast/room/room_storage.cpp",
+      "source_commit": "b21116ec0cf2c984e9f49769a148373553bff00d",
+      "bytes": 7606,
+      "sha256": "08fa626752a98755d4d670aafac571ac7a05ff4c82ba040a5759c5c57621147b",
+      "blob": "7c1da7b05806c563448613d7889b30b56c34f577"
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd_read_safe.cpp",
+      "source_commit": "b21116ec0cf2c984e9f49769a148373553bff00d",
+      "bytes": 54760,
+      "sha256": "9926277feedc37806d61baa49261899a22517f97f08692d907e80af562dcb0cb",
+      "blob": "624dbe76694fe5588b2d92b72a53a4c857ef79bb"
+    },
+    {
+      "path": "port/dreamcast/game/Makefile",
+      "source_commit": "b21116ec0cf2c984e9f49769a148373553bff00d",
+      "bytes": 199679,
+      "sha256": "62820da621e65e8562c8deaab55cc6dc70a38af1de6bc68f3f4e04f74edd1e2c",
+      "blob": "1f7c8b4707212aebaf0f28aeb61251dd43ea32b2"
+    },
+    {
+      "path": "port/dreamcast/patches/kos-804b319-fs-iso9660-aeee10d9.patch",
+      "source_commit": "b21116ec0cf2c984e9f49769a148373553bff00d",
+      "bytes": 11308,
+      "sha256": "a6c4c10d14eb7a500440be9a603c55e88b12d191954940c2406064c7bce2d30b",
+      "blob": "0f9a8399553cdc68749cc5255bb226872230e023"
+    }
+  ],
+  "arms": {
+    "off": {
+      "window_before": {
+        "host_s": 29.015,
+        "reads": 1692,
+        "bytes": 17100288,
+        "block": 11392805,
+        "game_mode_bytes": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "window_after": {
+        "host_s": 49.984,
+        "reads": 1881,
+        "bytes": 19331104,
+        "block": 12671330,
+        "game_mode_bytes": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "delta": {
+        "reads": 189,
+        "bytes": 2230816,
+        "block": 1278525
+      },
+      "return_preload_line": 2365,
+      "return_preload": "native texture preload: frame=438 picked=3 resident=208 loads=3 skipped=0 full=0 used=2358648 budget=2444544 entries=448 us=768562",
+      "held_counter_frame360": {
+        "frame": 360,
+        "budget": 2444544,
+        "used": 2365304,
+        "free": 103776,
+        "rejects": 0,
+        "retries": 3,
+        "evicted": 10
+      },
+      "return_vram_summary": {
+        "r": 100,
+        "f": 438,
+        "frames": 271,
+        "pinned": 2358648,
+        "dynamic": 0,
+        "other": 98344,
+        "free": 110432,
+        "largest": 12416,
+        "min_free": 62720,
+        "min_largest": 12416,
+        "peak_pinned": 2358648,
+        "loads": 269,
+        "evicted": 17,
+        "retries": 5
+      },
+      "restore_logical_opens": [
+        "0fc62edc-a38291d8",
+        "13afc3c6-d074dc67",
+        "cf2208cd-a6bfb2ef"
+      ],
+      "fragmentation_retry_rows": [
+        {
+          "line": 2353,
+          "key": "0fc62edc-a38291d8",
+          "text": "native UI: fragmented VRAM, evicted and retrying (retries=4 free=120160)"
+        },
+        {
+          "line": 2358,
+          "key": "13afc3c6-d074dc67",
+          "text": "native UI: fragmented VRAM, evicted and retrying (retries=5 free=114528)"
+        }
+      ]
+    },
+    "on": {
+      "window_before": {
+        "host_s": 29.016,
+        "reads": 1692,
+        "bytes": 17100288,
+        "block": 11392786,
+        "game_mode_bytes": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "window_after": {
+        "host_s": 50.0,
+        "reads": 1983,
+        "bytes": 19499136,
+        "block": 13088989,
+        "game_mode_bytes": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "delta": {
+        "reads": 291,
+        "bytes": 2398848,
+        "block": 1696203
+      },
+      "return_preload_line": 2469,
+      "return_preload": "native texture preload: frame=439 picked=29 resident=208 loads=29 skipped=0 full=0 used=2386840 budget=2444544 entries=448 us=1201931",
+      "held_counter_frame360": {
+        "frame": 360,
+        "budget": 2444544,
+        "used": 2365304,
+        "free": 103776,
+        "rejects": 0,
+        "retries": 3,
+        "evicted": 10
+      },
+      "return_vram_summary": {
+        "r": 100,
+        "f": 439,
+        "frames": 272,
+        "pinned": 2386840,
+        "dynamic": 0,
+        "other": 98344,
+        "free": 82240,
+        "largest": 8192,
+        "min_free": 62720,
+        "min_largest": 8192,
+        "peak_pinned": 2386840,
+        "loads": 295,
+        "evicted": 24,
+        "retries": 10
+      },
+      "restore_logical_opens": [
+        "0fc62edc-a38291d8",
+        "13afc3c6-d074dc67",
+        "9bcfefbd-d81c6b31",
+        "b5603f79-e30d477e",
+        "0342aa1c-3c910366",
+        "0df18b87-be2f6680",
+        "24470e95-054eccad",
+        "30e02da2-aad24e87",
+        "4e881ec9-e3b0d7cd",
+        "51f07c2d-e1b0ac5d",
+        "58921a54-929e60e3",
+        "5acafa63-721ade3f",
+        "5dc73fa0-ddb9303b",
+        "5f581c94-016de731",
+        "69318f38-46ede1ee",
+        "6f3b0fa1-bbd6e0db",
+        "9160de78-c705d4ae",
+        "928267df-00b92fe9",
+        "94fb5409-be2ee2e0",
+        "9dce1993-7c148ce6",
+        "9e052444-c6ed4c6c",
+        "a3bca257-8e3c55d0",
+        "ac1441b2-4f820ccf",
+        "b98b415c-1b77e9ef",
+        "c2fd1e06-1d5d4f52",
+        "c696ceea-ea7e04f9",
+        "cf2208cd-a6bfb2ef",
+        "e7dbb42b-ab309443",
+        "f2da45ed-18f32ad5"
+      ],
+      "fragmentation_retry_rows": [
+        {
+          "line": 2353,
+          "key": "0fc62edc-a38291d8",
+          "text": "native UI: fragmented VRAM, evicted and retrying (retries=4 free=120160)"
+        },
+        {
+          "line": 2358,
+          "key": "13afc3c6-d074dc67",
+          "text": "native UI: fragmented VRAM, evicted and retrying (retries=5 free=114528)"
+        },
+        {
+          "line": 2363,
+          "key": "9bcfefbd-d81c6b31",
+          "text": "native UI: fragmented VRAM, evicted and retrying (retries=6 free=149344)"
+        },
+        {
+          "line": 2368,
+          "key": "b5603f79-e30d477e",
+          "text": "native UI: fragmented VRAM, evicted and retrying (retries=7 free=163680)"
+        },
+        {
+          "line": 2453,
+          "key": "c696ceea-ea7e04f9",
+          "text": "native UI: fragmented VRAM, evicted and retrying (retries=8 free=70976)"
+        },
+        {
+          "line": 2458,
+          "key": "cf2208cd-a6bfb2ef",
+          "text": "native UI: fragmented VRAM, evicted and retrying (retries=9 free=78144)"
+        },
+        {
+          "line": 2462,
+          "key": "e7dbb42b-ab309443",
+          "text": "native UI: fragmented VRAM, evicted and retrying (retries=10 free=90432)"
+        }
+      ]
+    }
+  },
+  "original_launches": {
+    "off": {
+      "start_utc": "2026-10-21T19:48:33.090827+00:00",
+      "end_utc": "2026-10-21T19:49:24.210953+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\feedback21-runtime-20261021\\qa-aafc10f3-input\\gdemu",
+      "tracks": {
+        "disc.gdi": 87,
+        "track01.bin": 1058400,
+        "track02.raw": 1237152,
+        "track03.bin": 1185760800
+      },
+      "key_log": [
+        {
+          "step": 0,
+          "keys": [
+            "down"
+          ],
+          "host_s": 4.6,
+          "windows": 5
+        },
+        {
+          "step": 1,
+          "keys": [
+            "a"
+          ],
+          "host_s": 6.0,
+          "windows": 5
+        },
+        {
+          "step": 2,
+          "keys": [
+            "a"
+          ],
+          "host_s": 7.2,
+          "windows": 5
+        },
+        {
+          "step": 3,
+          "keys": [
+            "a"
+          ],
+          "host_s": 8.3,
+          "windows": 5
+        },
+        {
+          "step": 4,
+          "keys": [
+            "y"
+          ],
+          "host_s": 30.1,
+          "windows": 5
+        },
+        {
+          "step": 5,
+          "keys": [
+            "b"
+          ],
+          "host_s": 36.0,
+          "windows": 5
+        },
+        {
+          "step": 6,
+          "keys": [
+            "y"
+          ],
+          "host_s": 42.0,
+          "windows": 5
+        },
+        {
+          "step": 7,
+          "keys": [
+            "b"
+          ],
+          "host_s": 48.0,
+          "windows": 5
+        }
+      ]
+    },
+    "on": {
+      "start_utc": "2026-10-21T19:49:35.048123+00:00",
+      "end_utc": "2026-10-21T19:50:26.267669+00:00",
+      "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\cache21-window-20261021\\window-on-input\\gdemu",
+      "tracks": {
+        "disc.gdi": 83,
+        "track01.bin": 1058400,
+        "track02.raw": 1237152,
+        "track03.iso": 1032499200
+      },
+      "key_log": [
+        {
+          "step": 0,
+          "keys": [
+            "down"
+          ],
+          "host_s": 4.6,
+          "windows": 5
+        },
+        {
+          "step": 1,
+          "keys": [
+            "a"
+          ],
+          "host_s": 6.0,
+          "windows": 5
+        },
+        {
+          "step": 2,
+          "keys": [
+            "a"
+          ],
+          "host_s": 7.2,
+          "windows": 5
+        },
+        {
+          "step": 3,
+          "keys": [
+            "a"
+          ],
+          "host_s": 8.3,
+          "windows": 5
+        },
+        {
+          "step": 4,
+          "keys": [
+            "y"
+          ],
+          "host_s": 30.1,
+          "windows": 5
+        },
+        {
+          "step": 5,
+          "keys": [
+            "b"
+          ],
+          "host_s": 36.1,
+          "windows": 5
+        },
+        {
+          "step": 6,
+          "keys": [
+            "y"
+          ],
+          "host_s": 42.1,
+          "windows": 5
+        },
+        {
+          "step": 7,
+          "keys": [
+            "b"
+          ],
+          "host_s": 48.0,
+          "windows": 5
+        }
+      ]
+    }
+  },
+  "retained_outer_image_identities": {
+    "off": {
+      "sha256": "5ae451a0cb1e5c6e6db9b68d27335a09a00d27abd83e9c838c66ef2f8b69cfa8",
+      "bytes": 1185760800
+    },
+    "on": {
+      "sha256": "b5e951b1ff1c0f6e7f5a5d0a208558c400ea5f0e31c4fa8c2daba5d693b3fd3a",
+      "bytes": 1032499200
+    },
+    "qualification": "Retained manifest identities; tracks not rehashed or copied by this review; OFF2352/ON2048 layouts differ"
+  },
+  "extra_retry_keys": [
+    "9bcfefbd-d81c6b31",
+    "b5603f79-e30d477e",
+    "c696ceea-ea7e04f9",
+    "e7dbb42b-ab309443"
+  ],
+  "additional_retry_keys": {
+    "9bcfefbd-d81c6b31": 1,
+    "b5603f79-e30d477e": 1,
+    "c696ceea-ea7e04f9": 1,
+    "cf2208cd-a6bfb2ef": 1,
+    "e7dbb42b-ab309443": 1
+  },
+  "return_vram_delta": {
+    "loads": 26,
+    "evicted": 7,
+    "retries": 5,
+    "pinned": 28192,
+    "free": -28192,
+    "largest": -4224
+  },
+  "source_reconciliation": {
+    "extra_member_payload": 122912,
+    "extra_member_header_descriptors": 3744,
+    "extra_final_stream_tail_overread": 416,
+    "extra_index_lookup_stream_bytes": 40960,
+    "sum": 168032,
+    "requests": {
+      "member_header_sector_calls": 26,
+      "member_bulk_stream_requests": 28,
+      "member_32byte_tail_stream_requests": 28,
+      "index_lookup_stream_requests": 20,
+      "sum": 102
+    },
+    "index_transitions": {
+      "OFF": 3,
+      "ON": 23
+    },
+    "restore_only_replay": {
+      "OFF": {
+        "reads": 16,
+        "bytes": 47584
+      },
+      "ON": {
+        "reads": 118,
+        "bytes": 215616
+      }
+    },
+    "common_return_residual_each_arm": {
+      "reads": 43,
+      "bytes": 88064
+    }
+  },
+  "status": "negative traffic finding; SS_WINDOW_HOLD_RESTORE stays disabled",
+  "limits": [
+    "One actual inventory cycle, no second-cycle inference",
+    "Host-time windows not identical source frames",
+    "Repeated metadata reopen is not an extra uncached drive read",
+    "No attribution of block417678us or physical seeks",
+    "Existing mocked KOS replay accounting is verified by identity, not rerun"
+  ]
+}
