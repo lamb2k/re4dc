@@ -56,6 +56,11 @@ ifeq ($(PS2_WORLD_ROOMS),0)
 $(error PS2_PVS needs PS2_WORLD_ROOMS=1 or 2)
 endif
 $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS=1 -DRE4DC_PS2_PVS_DEFAULT=$(PS2_PVS_DEFAULT)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_PS2_PVS=1
+ifneq ($(strip $(PVS23_CERTIFICATES)),)
+# Private generated descriptor; its absolute path and SHA belong in the QA manifest.
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_PVS23_CERTIFICATES=\"$(PVS23_CERTIFICATES)\"
+endif
 $(OBJDIR)/dbgwarp_bridge.o: GAME_CPPFLAGS += -DRE4DC_PS2_PVS=1
 endif
 #

@@ -14,13 +14,17 @@ WORLD_METER=1 PS2_PVS=1 PS2_PVS_DEFAULT=0
 CPU_BACKFACE=0 ACTOR_BACKFACE=0 VRAM_ROOM_ARENA=0
 QA_MENU=1 GAME_TICK_LOG=60 FAR_SHELL=1 VRAM_PAGES=1
 MESH_FASTPATH=1 MESH_VP_SCHED=1 MESH_LOD=1 PS2_WORLD_ROOMS=2
+PVS23_CERTIFICATES=/absolute/private/path/pvs23_certificates.inc
 ```
 
 No scratch implementation is imported or enabled. Keep all other source and
 assets fixed; preserve Full as the visual reference and record the active
 Options View. For the off-program gate use `WORLD_METER=0 PS2_PVS=0`, with the
 other approved control flags identical. Off source-token identity passes;
-target object/program identity remains a separate main-owned gate.
+target object/program identity remains a separate main-owned gate. The generated
+certificate is a private, explicit build input: record its path and SHA256 in
+the programme manifest. No recovered coordinates or private certificate are
+tracked here. Without the include knob, the generic guards refuse every table.
 
 ## Measurement contract
 
@@ -80,17 +84,49 @@ int re4dc_pvs23_frame_guard(unsigned room, const float view[12],
                           float near_distance, float far_distance);
 ```
 
-They have C linkage and are weakly referenced. **No hook implementation or
-certificate is shipped by this unit**, so current source safely draws all.
-The boot menu can show ON / DRAW ALL; Diagnostics reports missing/refused data.
-The separate proof/data unit must authenticate the exact table and serialized
-eye-cell volume, mesh, physical policy, all source dependencies and LOD choices.
-Its live guard must establish finite rigid camera/eye uncertainty, supported
-near/FOV/clip margins, actual opaque/depth-write/cull/material/texture readiness,
-and source hide/AREA/place/dynamic validity for every used occluder. Unsupported
-or uncertain conditions draw all. A loaded package CRC is not sufficient proof
-that an occluder will be drawn. Proof hooks require independent review before
-admitting useful tables; sampled camera paths alone are regression evidence.
+They have C linkage; the generic implementation authenticates the complete table
+CRC/bytes, mesh and physical policy against the private descriptor. The initial
+cohort also validates every dependency's placement, part, cluster, single LOD,
+meshlet and corner references. The data proof covers the actual serialized eye
+cell expanded by its declared error budget, all target LOD bounds, and actual
+opaque coplanar triangle pairs sharing cache endpoints. Earlier targets remain
+visible: all clear bits follow the global source-placement prefix.
+
+Geometric cell selection alone cannot hide anything. Each required panel must
+be observed in a successful **whole** kChecksAll meshlet/pick, with all low six
+outcode bits clear, finite cache coordinates, exact oriented source triangles
+and a strong front-facing area margin. Partial strip-group picks publish no
+receipt. Pending receipts carry the actual frame/scene epoch and commit only
+after end_direct succeeds. Read-only material admission then requires the exact
+pinned resident RGB565 texture, complete upload, matching opaque depth-writing
+header, storage/list readiness and valid source ownership. No loading, pinning,
+eviction, list change or draw reordering is added by that predicate.
+
+Each later placement checks the committed prefix and current scene identity;
+both source placements and the target placement must still be at their baked
+live pose under existing hide/AREA/place/dynamic rules. A replaced/discarded
+scene, camera/projection/viewport/near/far change, package generation change,
+missing receipt or failed guard draws normally. A part-success result alone is
+never accepted as proof that its panel drew. The current qualified recipe keeps
+SCENERY_CHUNK=1, PIECE_STATE/DEDUP/CONE=0, HW_LEAN=1, MESH_STRIP_LEAN=1 and
+PS2_STRIP_GROUPS=1. Unsupported combinations draw all without changing knobs.
+
+The frame guard uses the actual float eye selector and a bounded double inverse,
+finite well-conditioned rigid view, normal-or-zero operands, supported FPSCR
+PR=0/RM=0 or1 with exception enables off, 640x480 perspective projection and
+bounded near/far. It caches the numeric result by the complete view state,
+frame, FPSCR and package generation. Its absolute affine/grid/screen envelope
+uses gamma128 with u=2^-23 and reciprocal allowance rho=2^-18; uncancelled row
+operands remain in the bound. World and eye uncertainty must fit the private
+certificate budget or the frame draws all. These are bounded private-QA
+engineering allowances for the existing SH7091/HW_LEAN chain, not universal
+formal verification. Matched actual pixel paths and console correctness remain
+required. Sampled camera paths alone cannot prove geometric visibility.
+
+The boot menu distinguishes ON / GUARDED from ON / DRAW ALL. QR reports the
+geometric cell separately from source-prefix masks, boot receipt commits and
+actual admitted placement/cluster cuts. PS2PVS logs expose the same actual cut
+counters; loading a table or selecting a cell is not a gain measurement.
 
 ## Host gates and remaining work
 
@@ -101,7 +137,14 @@ ASan/UBSan. Cases cover missing proof hooks, stale/missing/overflow/nonfinite/
 invalid-cell/padding/instance data, same-frame toggle/camera changes, live-guard
 refusal and all seven identity fields. It parses the complete QA translation
 unit with host platform declarations. Off preprocessed source tokens match the
-imported meter baseline. It is not a target build or linked-program proof.
+imported meter baseline. `opaque_checks.py` executes the exact UI eligibility
+body with cached/cold headers, read-only snapshots and failure controls.
+`proof_checks.py --private <private-root>` executes the actual generic guards
+against the real private mesh/table inputs, including stale identity, bad FPSCR,
+numeric/liveness failures, upper outcode don't-care bits, missing/wrong triangles,
+prefix completion and replacement-scene invalidation. Screen transcripts are
+synthetic, and target FPSCR/material/scene reads are explicit host substitutes.
+No host result is a target build, actual camera/pixel or linked-program proof.
 
 Main still owns source review/integration, exact off program, target overhead,
 KOS 48 KiB, r100 s30 heap 4, approved PVS/data proof integration, fixture state,

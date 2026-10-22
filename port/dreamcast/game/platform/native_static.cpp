@@ -58,6 +58,10 @@
 #include "native_static.h"
 #if defined(RE4DC_PS2_PVS) && RE4DC_PS2_PVS
 #include "include/pvs23_format.hpp"
+#include "include/pvs23_proof.hpp"
+extern "C" void re4dc_pvs23_observe(unsigned,unsigned,unsigned,const void*,const std::uint8_t*,unsigned,
+                                   const std::uint8_t*,unsigned,unsigned,unsigned*);
+extern "C" void re4dc_pvs23_commit(unsigned,unsigned,const unsigned*,const unsigned*);
 #endif
 #include "cache20.h"
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
@@ -2259,6 +2263,13 @@ struct MeshDraw : Emitter {
     // fogged past the View far) instead of going through the clipper.
     float cull_far=0;
     unsigned part_index=0; // v2: index into the package's part LOD table
+#if RE4DC_PS2_PVS
+    unsigned pvs_placement=~0U,pvs_pending[3]={~0U,~0U,0};
+    void pvs_finish(bool success){
+        if(success && pvs_pending[2] && ps2)re4dc_pvs23_commit(pvs_placement,part_index,pvs_pending,ps2);
+        pvs_pending[2]=0;
+    }
+#endif
 #if RE4DC_QUALITY_ASSETS
     std::uint64_t skip_clusters=0; // Standard impt: clusters (bit = index in the part) drawn as tree quads
 #endif
@@ -2297,6 +2308,17 @@ struct MeshDraw : Emitter {
     // the bound packet range (never sent: strips stop at 'limit').
     pvr_vertex_t* cache=nullptr; std::uint8_t* outcodes=nullptr;
     re4dc::vp::Constants k{};
+#if RE4DC_PS2_PVS
+    void pvs_observed(const re4dc::room::Meshlet& l){
+#if RE4DC_MESH_DIRECT
+        if(ps2 && direct && sq && pvs_placement!=~0U)
+            re4dc_pvs23_observe(pvs_placement,part_index,unsigned(&l-package.meshlets()),cache,
+                outcodes,l.vertex_count,package.strip_begin(l),l.strip_bytes,p.cull,pvs_pending);
+#else
+        (void)l;
+#endif
+    }
+#endif
 #if RE4DC_MESH_PRIME_LAZY
     // MESH_PRIME_LAZY (exact): the cache's constant words are written for the entries a meshlet
     // uses, the first time they are needed, instead of all kCacheEntries at every borrow (one
@@ -2466,7 +2488,11 @@ struct MeshDraw : Emitter {
 #if RE4DC_MESH_STRIP_LEAN==3
            && strip_lean_select==2U
 #endif
-          ){int result=1;s=strips_lean(s,end,base,batch,result);if(!s)return result;}
+          ){int result=1;s=strips_lean(s,end,base,batch,result);if(!s){
+#if RE4DC_PS2_PVS
+                if(result>0 && checks==vp::kChecksAll)pvs_observed(l);
+#endif
+                return result;}}
 #endif
         while(s<end){
             const unsigned n=*s++;
@@ -2499,6 +2525,9 @@ struct MeshDraw : Emitter {
             }
             s+=n;
         }
+#if RE4DC_PS2_PVS
+        if(checks==vp::kChecksAll)pvs_observed(l);
+#endif
         return 1;
     }
 #if RE4DC_MESH_STRIP_LEAN==1 || RE4DC_MESH_STRIP_LEAN==3
@@ -3031,6 +3060,9 @@ struct MeshDraw : Emitter {
 #endif
         int result=1;
         strips_lean(sb,sb+l.strip_bytes,base,batch,result);
+#if RE4DC_PS2_PVS
+        if(result>0)pvs_observed(l);
+#endif
         return result;
     }
     __attribute__((noinline)) int chunk_emit(const Pick* pk,unsigned n){
@@ -4596,7 +4628,7 @@ unsigned query(unsigned id){
 }
 }
 #endif
-#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+#if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
 // ENEMY_VIS_CULL (engine_preview.mk; lane engine19; read only). re4dc_ps2_world_intact: 1 when the PS2 world drawn
 // this frame is the package the room data file's OCCL section was compiled from (room and sidecar crc).
 // re4dc_ps2_placements_intact: 1 when every listed placement (an occluder's sources, u16 LE fields) is drawn at its
@@ -4611,6 +4643,10 @@ extern "C" int re4dc_ps2_world_intact(unsigned room,std::uint32_t crc){
     return (ps2w.storage && ps2w.parts && crc && enemyVisSidecarCrc==crc)?1:0;
 }
 extern "C" int re4dc_ps2_placements_intact(unsigned room,const unsigned char* fields,unsigned n){
+    if(!ps2w.storage || !ps2w.parts || (!fields && n))return 0;
+#if RE4DC_PS2_WORLD_ROOMS
+    if(ps2w.room!=room)return 0;
+#endif
     (void)room;
     for(unsigned i=0;i<n;++i){
         const unsigned p=unsigned(fields[2*i])|(unsigned(fields[2*i+1])<<8);
@@ -4685,12 +4721,13 @@ struct Head { char magic[4]; std::uint32_t version,mesh_crc,mesh_bytes,sidecar_c
               std::uint32_t nsets,set_bytes,ncells,pad[2]; };
 struct Cell { std::uint16_t set; std::int16_t ylo,yhi,pad; };
 static_assert(sizeof(Head)==64 && sizeof(Cell)==8);
-unsigned loaded_room=~0U;
+unsigned loaded_room=~0U,generation=0;
+bool can_cut(unsigned placement);
 unsigned char* block=nullptr; Head h{}; const Cell* cells=nullptr; const std::uint8_t* sets=nullptr;
 const std::uint16_t* base=nullptr; const std::uint16_t* poff=nullptr; // per placement (n+1) / per part: first instance
 const std::uint8_t* cur=nullptr; unsigned cur_frame=~0U,last_on=~0U; float last_view[12]{}; int cur_cell=-1; float eye[3]={0,0,0};
 unsigned frames=0,active=0,pl_tested=0,pl_skipped=0,logged=~0U,bytes=0; const char* why="off";
-void close(){if(block)re4dc_static_free(block);block=nullptr;cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;cur=nullptr;
+void close(){++generation;if(block)re4dc_static_free(block);block=nullptr;cells=nullptr;sets=nullptr;base=nullptr;poff=nullptr;cur=nullptr;
              cur_frame=~0U;cur_cell=-1;bytes=0;loaded_room=~0U;h={};why="off";}
 // The camera's world position from the world-to-view affine (rows): v = R w + t, so w = -R^-1 t.
 bool eye_of(const float* v,float e[3]){
@@ -4788,13 +4825,14 @@ void frame(const float* view,const float* projection,const float* viewport,float
 }
 // A placement with no visible instance (no bit set in [base[i], base[i+1])).
 bool hidden(unsigned i){
-    if(!cur || !base || i>=ps2w.nplacements)return false;
+    if(!cur || !base || i>=ps2w.nplacements || !can_cut(i))return false;
     unsigned a=base[i];const unsigned e=base[i+1];
     ++pl_tested;
     for(;a<e;++a)if((cur[a>>3]>>(a&7U))&1U)return false;
     ++pl_skipped;return true;
 }
 } // namespace pvs
+#include "include/pvs23_runtime.inc"
 extern "C" void re4dc_ps2_pvs_set(unsigned on){
     re4dc_ps2_pvs_on=on<=2U?on:1U;
     pvs::cur=nullptr;pvs::cur_frame=~0U;pvs::cur_cell=-1;
@@ -5397,7 +5435,7 @@ bool ps2_open(){
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
     sourceWorldSidecarCrc=h.crc;
 #endif
-#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+#if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
     enemyVisSidecarCrc=policySourceCrc;
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC && RE4DC_PS2_WORLD_ROOMS
@@ -5978,9 +6016,9 @@ int ps2_pass(unsigned pass,float zfar){
         const unsigned f=re4dc_ui_frame();
         if(!(f%120) && pvs::logged!=f){
             pvs::logged=f;
-            re4dc_log("PS2PVS frame=%u on=%u file=%s cell=%d eye=%d,%d,%d active=%u/%u placements=%u/%u clusters=%u/%u\n",f,
+            re4dc_log("PS2PVS frame=%u on=%u file=%s cell=%d eye=%d,%d,%d active=%u/%u placements=%u/%u admitted_clusters=%u/%u prefix=%x commits=%u\n",f,
                 unsigned(re4dc_ps2_pvs_on),pvs::why?pvs::why:"ok",pvs::cur_cell,int(pvs::eye[0]),int(pvs::eye[1]),int(pvs::eye[2]),
-                pvs::active,pvs::frames,pvs::pl_skipped,pvs::pl_tested,pvs::cl_skipped,pvs::cl_tested);
+                pvs::active,pvs::frames,pvs::pl_skipped,pvs::pl_tested,pvs::cl_skipped,pvs::cl_tested,proof23::receipts.committed,proof23::commits);
         }
     }
     if(!pass && re4dc_ps2_pvs_on==2U){
@@ -5990,7 +6028,6 @@ int ps2_pass(unsigned pass,float zfar){
             re4dc_ui_frame(),unsigned(*reinterpret_cast<const std::uint32_t*>(&cull_far)),w[0],w[1],w[2],w[3],w[4],w[5],w[6],w[7],w[8],w[9],w[10],w[11],
             w[12],w[13],w[14],w[15],w[16],w[17],w[18],w[19],w[20],w[21],w[22],w[23],w[24]);
     }
-    const std::uint8_t* const pvs_cur=pvs::cur;
 #endif
 #if RE4DC_SCENERY_CONE
     if(!pass){
@@ -6009,6 +6046,9 @@ int ps2_pass(unsigned pass,float zfar){
     // SCENERY_CHUNK: the selected parts of this run (ChunkPart) and their picks, emitted in order by chunk_flush()
     // before any part that takes the ordinary path, when either list is full, and at the end of the pass.
     struct ChunkPart { float mvq[12]; unsigned key[6]; float cull_far,lod_scale; unsigned index,first,count;
+#if RE4DC_PS2_PVS
+                       unsigned placement;
+#endif
                        std::uint8_t cull; bool marked; std::uint8_t sky; };
     static constexpr unsigned kChunkParts=48,kChunkPicks=320;
     ChunkPart cctx[kChunkParts];MeshDraw::Pick cpk[kChunkPicks];unsigned nctx=0,npk=0;
@@ -6031,6 +6071,9 @@ int ps2_pass(unsigned pass,float zfar){
             e.alpha=0xff000000U;e.vertex_alpha=false;e.cull_far=x.cull_far;e.direct=true;
 #endif
             e.part_index=x.index;e.lod_scale=x.lod_scale;e.lean_part=true;
+#if RE4DC_PS2_PVS
+            e.pvs_placement=x.placement;
+#endif
             e.sg=ps2w.sg;e.sg_groups=ps2w.sg_groups;
             std::memcpy(e.mvq,x.mvq,sizeof(x.mvq));std::memcpy(e.mv,x.mvq,sizeof(x.mvq));e.ps2=x.key;
 #if RE4DC_SCENERY_PIECE_STATE
@@ -6038,6 +6081,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
             const int result=e.chunk_emit(cpk+x.first,x.count);
             e.end_direct();
+#if RE4DC_PS2_PVS
+            e.pvs_finish(result>0);
+#endif
             if(result>0)++c.native;
             else if(result<0){re4dc_model_packet_abort();++c.aborts;nctx=npk=0;return -1;}
 #if RE4DC_WORLD_HOLE_DIAG
@@ -6069,6 +6115,9 @@ int ps2_pass(unsigned pass,float zfar){
 #endif
     const auto& pk=ps2w.package;
     for(unsigned i=0;i<ps2w.nplacements;++i){
+#if RE4DC_PS2_PVS
+        const std::uint8_t* const pvs_cur=pvs::can_cut(i)?pvs::cur:nullptr;
+#endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
         if(!re4dc_source_world_binding_valid()){re4dc_source_world_binding_failed();++c.aborts;return -1;}
 #endif
@@ -6287,6 +6336,9 @@ int ps2_pass(unsigned pass,float zfar){
             d.alpha=0xff000000U;d.vertex_alpha=false;d.cull_far=cull_far;d.direct=true;
 #endif
             d.part_index=index;d.lod_scale=lod_scale;
+#if RE4DC_PS2_PVS
+            d.pvs_placement=i;
+#endif
 #if defined(RE4DC_FOLIAGE_TRIM)
             const bool foliage_near=foliage_pass!=meta.pass && foliage::kNear<cull_far;
 #endif
@@ -6336,6 +6388,9 @@ int ps2_pass(unsigned pass,float zfar){
                 ChunkPart& x=cctx[nctx++];
                 std::memcpy(x.mvq,mvq,sizeof(mvq));std::memcpy(x.key,key,sizeof(key));
                 x.cull_far=d.cull_far;x.lod_scale=lod_scale;x.index=index;x.cull=meta.cull;
+#if RE4DC_PS2_PVS
+                x.placement=i;
+#endif
                 x.marked=d.vertex_alpha;x.first=npk;
 #if RE4DC_SKY_ANY
                 x.sky=std::uint8_t(re4dc_ps2_sky_header);
@@ -6357,6 +6412,9 @@ int ps2_pass(unsigned pass,float zfar){
 #else
             const int result=d.run();
             d.end_direct(); // before any abort: releases the store queues
+#endif
+#if RE4DC_PS2_PVS
+            d.pvs_finish(result>0);
 #endif
 #if RE4DC_PS2_WORLD_TRANSITION_OWNER
             part.uv_offset[0]=part.uv_offset[1]=0.f;
@@ -6784,7 +6842,7 @@ extern "C" void re4dc_ps2_mesh_retire(){
     if(sourceWorldPackageGeneration!=~0U)++sourceWorldPackageGeneration;
     sourceWorldSidecarCrc=0;
 #endif
-#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+#if (defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL) || RE4DC_PS2_PVS
     enemyVisSidecarCrc=0;
 #endif
 #if RE4DC_PS2_PLACE_GATE

@@ -28,7 +28,9 @@ def main():
     source = NATIVE.read_text()
     begin = source.index('namespace pvs {\nstruct Head')
     end = source.index('\n#endif',source.index('extern "C" void re4dc_ps2_pvs_state',begin))
-    pvs = source[begin:end]
+    pvs = source[begin:end].replace('#include "include/pvs23_runtime.inc"','')
+    # Loader tests substitute the independently exercised prefix contract.
+    pvs += '\nnamespace pvs {bool can_cut(unsigned){return true;}}\n'
     prefix = r'''
 #include <cassert>
 #include <cmath>

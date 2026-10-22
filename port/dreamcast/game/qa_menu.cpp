@@ -41,6 +41,7 @@ extern volatile unsigned re4dc_qa_wopq_mm, re4dc_qa_wxlu_mm, re4dc_qa_wshell;   
 unsigned re4dc_vram_fail_rooms(unsigned* last_room, unsigned* last_n, unsigned* rooms, unsigned* counts, unsigned max);
 void re4dc_ps2_pvs_set(unsigned on) __attribute__((weak));
 void re4dc_ps2_pvs_state(unsigned out[4]) __attribute__((weak));
+void re4dc_pvs23_receipt_state(unsigned out[5]) __attribute__((weak));
 int re4dc_world_meter_window(unsigned out[11]);
 int re4dc_world_meter_geometry_supported(void);
 void re4dc_world_meter_resume(void);
@@ -327,7 +328,8 @@ void snap_diag() {
     }
 #endif
 #if defined(RE4DC_WORLD_METER) && RE4DC_WORLD_METER
-    if(re4dc_ps2_pvs_state){unsigned state[4];re4dc_ps2_pvs_state(state);a=addf(a,"PVS current=%u file=%s active=%u heap_bytes=%u\n",state[0],state[1]?"loaded":"fallback",state[2],state[3]);}
+    if(re4dc_ps2_pvs_state){unsigned state[4];re4dc_ps2_pvs_state(state);a=addf(a,"PVS current=%u file=%s geometric_cell=%u heap_bytes=%u\n",state[0],state[1]?"loaded":"fallback",state[2],state[3]);}
+    if(re4dc_pvs23_receipt_state){unsigned state[5];re4dc_pvs23_receipt_state(state);a=addf(a,"PVS prefix=%x/%x boot_commits=%u boot_cuts_placement/cluster=%u/%u\n",state[0],state[1],state[2],state[3],state[4]);}
 #endif
     a = addf(a, "heap4=%d\n", g_game.heap4);
     if (re4dc_kos_heap_state) { unsigned f = 0, u = 0, b = 0; re4dc_kos_heap_state(&f, &u, &b); a = addf(a, "kos free=%u used=%u brk=%u\n", f, u, b); }
@@ -453,7 +455,7 @@ void item_text(int a, char* out, unsigned n) {
     case A_WOPQ: snprintf(out, n, "OPAQUE WORLD CUT: %s", wm_opq_name()); break;
     case A_WXLU: snprintf(out, n, "TRANSLUCENT WORLD: %s", wm_xlu_name()); break;
     case A_WSHELL: snprintf(out, n, "FAR SHELL: %s", wm_shell_name()); break;
-    case A_PVS: {unsigned state[4]={};if(re4dc_ps2_pvs_state)re4dc_ps2_pvs_state(state);snprintf(out,n,"WORLD PVS (THIS BOOT): %s",state[0]==1?(state[1]?"ON":"ON / DRAW ALL"):"OFF");break;}
+    case A_PVS: {unsigned state[4]={};if(re4dc_ps2_pvs_state)re4dc_ps2_pvs_state(state);snprintf(out,n,"WORLD PVS (THIS BOOT): %s",state[0]==1?(state[1]?"ON / GUARDED":"ON / DRAW ALL"):"OFF");break;}
 #endif
     default: out[0] = 0;
     }
