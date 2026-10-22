@@ -1,0 +1,61 @@
+{
+  "scope": "INDEPENDENT_SOURCE_AND_RETAINED_RECEIPT_REVIEW_ONLY",
+  "base": "64a28a7bdc44312924b14414501b7d4ff1d2d032",
+  "reviewed_tip": "543c55f17dbd437e3453434224dea337725ebb73",
+  "source_pins_verified": [
+    {
+      "path": "src/game/em_set.cpp",
+      "before_sha256": "b374d561028b70f14a191af8415ab532ec7c4873d9b052f4dd4743841941ddb5",
+      "after_sha256": "ee690c7b74f42589a293e9b0a3a81718fe09578429d9bea0d90ab2742566d667"
+    },
+    {
+      "path": "src/game/em.cpp",
+      "before_sha256": "12f2df9e82640ede3c4ba408edbb8b1684ceb08b63f3042a0e3331267b229fbb",
+      "after_sha256": "c286c701c8374275abf2df37f69379069e50094c1f0d6572a5408fc508e556a8"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "before_sha256": "5b55735df468a38ec9af1df809becacbe373bb483b1b0f700879633b15efa237",
+      "after_sha256": "fd3c97658d17ac91661bdc59545c1c6e81e6fb63f11822b2b603de37af35c1c6"
+    },
+    {
+      "path": "port/dreamcast/game/platform/crash_screen.cpp",
+      "before_sha256": "0efb58916343a9fd9d427f7eff0886385a893758df406019f553156bfd6c10ea",
+      "after_sha256": "0a1348d4a20fa5c849f7452ac3c14220faed84797461ca02778d96cb6c6688b8"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/issue52_actor_diag.h",
+      "before_sha256": "7e0271813cd11401c43877faa4b9eb207db33b39d483f3e5dcf4ed21689e25ad",
+      "after_sha256": "97585b2e172ef28f63b7d2fd6f450fabf054d9b373f8f2ecd7646363aaa45b52"
+    }
+  ],
+  "host_receipt_sha256": "c1fa42ec9723fff8f56e97c8308cb87b9b6b8e83e995571bc70016219dd7b7c3",
+  "actual_wiring_receipt_sha256": "004743f170831612e772b811b27c3edfab68ac82a7b7bb2816fcfdc799b1a249",
+  "host_counts_read_not_rerun": {
+    "scenarios_each": 13,
+    "variants": 3,
+    "collector_controls": 15,
+    "disabled_source_comparisons": 14,
+    "actual_Make_controls": 7
+  },
+  "behavior_fingerprint": "ecedc219b8612312",
+  "no_concrete_source_blocker_found": true,
+  "unchanged_contracts": [
+    "emMustCreate",
+    "cManager.h",
+    "r10c.cpp",
+    "modules.cpp",
+    "Makefile",
+    "scheduler.cpp",
+    "sce_sys.cpp",
+    "scheduler.h"
+  ],
+  "not_proved": [
+    "fullTU/SH4/target linker",
+    "real scheduler/task-slot lifetime",
+    "actual native module bind or I/O",
+    "Flycast guest",
+    "physical Test21 cause"
+  ],
+  "no_test_rerun_or_native_query_or_guest": true
+}
