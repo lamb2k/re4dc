@@ -1,0 +1,9 @@
+{
+  "scope": "ACTUAL023 bounded metadata reference; immutable full audit and8PNGs external, no next guest.",
+  "reference": "0c6b0599056c6b61dbddd8aa683abbe9034915afcf7c7d4c2458666cfdd7f3de",
+  "audit": "f46e2d13990677b5f4467ff5f0a2d824bc3a1a74ff6fabeb1b1a59b743c00abf",
+  "state": "55fbadae8cfc826fa6218ad11d642c848446c9e2680284eed67464436b5b5f21",
+  "allocation": "b747a92023b0375fe0982919ec081721c734e5e0ff787161598314ab0a97c445",
+  "source_commit": "411b4beb5adb750229f576e801a6298570faf094",
+  "root_visual_review_pending": true
+}

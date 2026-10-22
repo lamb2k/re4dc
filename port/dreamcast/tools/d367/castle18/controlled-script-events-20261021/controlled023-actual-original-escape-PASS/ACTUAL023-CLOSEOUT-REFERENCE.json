@@ -1,0 +1,142 @@
+{
+  "scope": "ACTUAL023 controlledFlycast originalAEV16 LeaderEscapeToD C/lift/D/eventreturn PASS. Not completechapter/movie20900/audio/hardware/performance/release acceptance.",
+  "audit_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\controlled023-original-AEV16-escape-PASS-audit.json",
+  "audit_sha256": "f46e2d13990677b5f4467ff5f0a2d824bc3a1a74ff6fabeb1b1a59b743c00abf",
+  "state": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023\\data\\disc.state",
+    "sha256": "55fbadae8cfc826fa6218ad11d642c848446c9e2680284eed67464436b5b5f21",
+    "native": {
+      "frame": 7586,
+      "room": "0x209",
+      "Part": 0,
+      "previous": "0x204",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "HP": [
+        165,
+        1440,
+        600,
+        600
+      ],
+      "position": [
+        -36963.51953125,
+        4000.00048828125,
+        10804.357421875
+      ],
+      "Key": [
+        0,
+        0,
+        0
+      ],
+      "door51cc": "0x884802b4"
+    }
+  },
+  "closed": {
+    "PID": 16816,
+    "retained_signaled": true,
+    "exit_code": 0,
+    "exit_age": 39.78021624946268,
+    "guard_actions": [],
+    "harness_seconds": 39.8,
+    "harness_errors": [],
+    "minimum_free": 68850151424,
+    "maximum_cap": 47865627
+  },
+  "actual_command_bytes": 28,
+  "no_input_focus_or_retry": true,
+  "sourcepins": {
+    "count": 48,
+    "sha256": "045f06552668fc5e9180cdee759ad5285b4a0f835f168dd5ee178b526a5c32c8",
+    "all_fresh": true,
+    "protected_count": 22,
+    "protected_all_fresh": true,
+    "closed_main_code_anchors": 4
+  },
+  "milestones": {
+    "original_engine_goto_consumed": {
+      "frame": 6618,
+      "process_age": 1.1826559124165215,
+      "camera_no": 12,
+      "Stop": "0x80400100"
+    },
+    "original_escape_cameraC": {
+      "frame": 6618,
+      "process_age": 1.1826559124165215,
+      "camera_no": 12,
+      "Stop": "0x80400100"
+    },
+    "original_escape_cameraD": {
+      "frame": 6710,
+      "process_age": 4.260655912396032,
+      "camera_no": 13,
+      "Stop": "0x80400100"
+    },
+    "original_escape_event_return": {
+      "frame": 6802,
+      "process_age": 7.354655912437011,
+      "camera_no": 1,
+      "Stop": "0x0"
+    }
+  },
+  "lift": {
+    "initial": 0,
+    "final": 2904,
+    "distinct_sampled_heights": 73,
+    "monotonic_actual_samples": true
+  },
+  "legitimate_injury": {
+    "start1040": true,
+    "eventreturn1040": true,
+    "terminal165": true,
+    "damage875": true,
+    "no_early_stop_heal_edit_or_rollback": true
+  },
+  "screenshots": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023\\shots\\controlled-deadline-context\\frames\\fb0.png",
+      "bytes": 220503,
+      "sha256": "67cf0163427e676eb2d960d7ea92b9d0fdd18bcd9d3bf45aabfb2f4eac7d0ac1"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023\\shots\\controlled-deadline-context\\frames\\fb1.png",
+      "bytes": 219359,
+      "sha256": "f69c64c7576a465426078211e4156669a55da656ed8a67af48fba3be51b6c579"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023\\shots\\controlled-original-escape-cameraC\\frames\\fb0.png",
+      "bytes": 188425,
+      "sha256": "5f14b9662fec8ac6edfe1542e5597b108a096de552d2663665647abb830e178c"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023\\shots\\controlled-original-escape-cameraC\\frames\\fb1.png",
+      "bytes": 188848,
+      "sha256": "6d1f5f958937f199cf4c70d49ffb5e9e9fd5695a319afcd41bd133d1b14548a0"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023\\shots\\controlled-original-escape-cameraD\\frames\\fb0.png",
+      "bytes": 181333,
+      "sha256": "6df37954cd133dac216b4f37bb34922477a7edaae5250ce3004e1fefe0739388"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023\\shots\\controlled-original-escape-cameraD\\frames\\fb1.png",
+      "bytes": 181138,
+      "sha256": "360417902f5a40d7ee167c82ed64eb5de78a2702088735b8bbc4e9a8e11f477a"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023\\shots\\controlled-original-escape-event-return\\frames\\fb0.png",
+      "bytes": 180724,
+      "sha256": "350beebcf1c9a4a59053689197f0edc9ace2b142d4eead379b9fd3086f1c0411"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-escape023\\shots\\controlled-original-escape-event-return\\frames\\fb1.png",
+      "bytes": 180608,
+      "sha256": "889774e97017d3fcde69049149ca0913c3c9d48cece9f38d3c330699026238d1"
+    }
+  ],
+  "visual_worker": "All8PNGs inspected: cameraC redleader at doorway/lift, cameraD leader emerging onto balcony. Eventreturn-labelled buffers remain cinematic/balcony; laterdeadline buffers show Leon/HUD and enemies, confirming later gameplay separately with sourceStop0/advancingframes. Source SE calls are not recorded audio proof.",
+  "allocation": "b747a92023b0375fe0982919ec081721c734e5e0ff787161598314ab0a97c445",
+  "next": "No followingguest allocated. Preserveterminalstate/HP165; root reviewsPNGs/outcome, then qualifies nextoriginalgate withouttinycombatprobes orforcedoutcomes."
+}

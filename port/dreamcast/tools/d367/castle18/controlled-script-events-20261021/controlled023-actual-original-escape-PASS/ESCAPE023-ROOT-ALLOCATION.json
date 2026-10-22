@@ -1,0 +1,66 @@
+{
+  "owner": "root",
+  "utc": "2026-10-22T17:39:11.5745855Z",
+  "allowed_runs": 1,
+  "no_retry": true,
+  "no_following_guest": true,
+  "allocated023": true,
+  "allow_debug_goto_command_writes": true,
+  "allow_owned_window_focus": false,
+  "allow_scan_code_SendInput": false,
+  "exclusive_gui_input": false,
+  "maximum_successful_command_bytes": 28,
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff78",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "observer_sha256": "e2e802830868ae4ae0e56f72e8c09d2d5475d7cff29661df8373a9fa283e1c13",
+  "wrapper_sha256": "651b4298adbc94df0055af54c703bb40380d4c61311e4a505f65be546bced834",
+  "pins_sha256": "045f06552668fc5e9180cdee759ad5285b4a0f835f168dd5ee178b526a5c32c8",
+  "proposal_sha256": "5c882b71d000fe2823416e8414089d6a7afc15559d82b3f3dbd906a7f7a50fa5",
+  "source_handback_sha256": "e20409c6795cca8a8b3fe114a41bdde58df34a43fe4c1e4eace40c80989455af",
+  "review_sha256": "16dac3166994564316482720431ff85fa84a3ca4d76f62d634f1253ba43ceb33",
+  "source_commit": "411b4beb5adb750229f576e801a6298570faf094",
+  "game_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "seed_sha256": "b63e07f2ebb8be87be27e051d4580d28c878a0495348c5f99792ff2dcab4f16a",
+  "scope": "One consolidated originalAEV16 escape continuation fromactual022/source6612. ALL64 nativeKey old/on/trg zero in two fresh advancing coherent observations BEFORE exact28B position-only existingGoto/countLAST; no maxentry/HP/AI/RSF/outcome edits. No keyboard/focus/input APIs. ActualCamC/liftAC/D/nativeeventreturn separately; preserve legitimate injury/partial, no retry/followguest.",
+  "resources": {
+    "raw_seconds": 41,
+    "close_seconds": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "start_bytes": 20342374400,
+    "runtime_floor_bytes": 19394461696,
+    "global16": true,
+    "castle2": true,
+    "standing_peer_bytes": 67108864
+  },
+  "source_peer_reserved_bytes": 67108864,
+  "actual_closeout_metadata_cap_bytes": 65536,
+  "C_free_bytes": 67692593152,
+  "global_Flycasts": 3,
+  "external_process_inventory": [
+    {
+      "ProcessId": 49532,
+      "CreationDate": "2026-10-22T13:37:59.559566-04:00",
+      "ExecutablePath": "C:\\Flycast-Evidence\\re4-dreamcast\\backface22\\bgA-g8-133759\\flycast.exe"
+    },
+    {
+      "ProcessId": 45980,
+      "CreationDate": "2026-10-22T13:38:42.572492-04:00",
+      "ExecutablePath": "C:\\Flycast-Evidence\\re4-dreamcast\\codex22\\1022-1305-ea8f526f-full\\relchecks\\siege\\flycast.exe"
+    },
+    {
+      "ProcessId": 25108,
+      "CreationDate": "2026-10-22T13:38:45.518045-04:00",
+      "ExecutablePath": "C:\\Flycast-Evidence\\re4-dreamcast\\codex22\\1022-1305-ea8f526f-full\\relchecks\\mendez\\flycast.exe"
+    }
+  ],
+  "no_release_recipe_SD_contact": true
+}
