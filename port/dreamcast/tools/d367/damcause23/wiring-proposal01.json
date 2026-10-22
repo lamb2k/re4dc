@@ -1,0 +1,51 @@
+{
+  "base": "64a28a7bdc44312924b14414501b7d4ff1d2d032",
+  "applied": false,
+  "source_sha256": "4db0ff7f9ece7bab55b8c1385f3b389af6e7b614d03f84fb9de1da51c88c48ab",
+  "proposal": "One three-target GAME_CPPFLAGS line inside existing diagnostic block only",
+  "results": [
+    {
+      "variant": "default",
+      "exit": 0,
+      "stdout": "obj/src/game/em_set.o\nobj/src/game/em.o\nobj/src/game/read.o\n",
+      "stderr": ""
+    },
+    {
+      "variant": "zero",
+      "exit": 0,
+      "stdout": "obj/src/game/em_set.o\nobj/src/game/em.o\nobj/src/game/read.o\n",
+      "stderr": ""
+    },
+    {
+      "variant": "one",
+      "exit": 0,
+      "stdout": "obj/src/game/em_set.o -DRE4DC_ISSUE52_ACTOR_DIAG=1\nobj/src/game/em.o -DRE4DC_ISSUE52_ACTOR_DIAG=1\nobj/src/game/read.o -DRE4DC_ISSUE52_ACTOR_DIAG=1\n",
+      "stderr": ""
+    },
+    {
+      "variant": "invalid",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "/tmp/Gm7tl3ce:7: *** ISSUE52_ACTOR_DIAG must be 0 or 1.  Stop.\n"
+    },
+    {
+      "variant": "no_crash",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "/tmp/GmpLro3h:11: *** ISSUE52_ACTOR_DIAG needs CRASH_SCREEN=1.  Stop.\n"
+    },
+    {
+      "variant": "no_stage",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "/tmp/GmxFuMwU:14: *** ISSUE52_ACTOR_DIAG needs STAGE_OVL=1.  Stop.\n"
+    },
+    {
+      "variant": "no_route",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "/tmp/Gm0t2jnt:17: *** ISSUE52_ACTOR_DIAG needs ROUTE_OVL=1 via ROUTE_CH13=1.  Stop.\n"
+    }
+  ],
+  "limits": "Actual Make block evaluated with proposed line in memory; no shared file edit, object build or target acceptance"
+}
