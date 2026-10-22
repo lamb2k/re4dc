@@ -1,8 +1,8 @@
-#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
-#include "include/resident_list_cache.h"
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
 #endif
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+#include "include/resident_list_cache.h"
 #endif
 #include "include/movie_world_arena.h"
 #include "include/actor_visibility_diag.h"
