@@ -104,3 +104,43 @@ The original program LBA is retained. No fulltrack mirror,full extraction or
 intermediate image was created. `staged-image-qualification.json` binds this
 image gate to frozen004cf224,a58579b8/e08c9abc and their exact DATA inputs.
 A single fresh C functional guest is allocated next; B timing is not allocated.
+2026-10-21 C cold functional check (`cold-functional-qualification.json`): one
+fresh ordinary QA r103f guest ran41.9095005 seconds, within47.5 absolute/41 inner,
+with15,529,812 maximum capture bytes,no foreign state or checkpoint save/load.
+It cold-booted,entered the farm and rendered the inspected t0037 view with terrain,
+hut/tree and HUD. The t0031 pair is still a loading transition; retain both.
+All9 farm scoped keys have contiguous named load,VQ3414-byte payload and upload
+success records with measured3424-byte allocation deltas each(30,816 cumulative).
+These are upload observations,not steady residency,savings or per-key draw proof.
+Sampled aggregate counters report native48+9 parts,fallback/aborts0,UI missing0,
+VRAM retries/rejects/evictions0. No matched B guest or performance attribution.
+
+The typed observer confirmed exact program anchors then failed on missing
+`room_id`: its DWARF parser omitted a promoted anonymous union/struct field.
+The original source/output/failure and a subsequent unavailable same-PID attach
+attempt are preserved. This is an observer defect,not evidence of a game crash.
+The benchmark owner fixed and source-qualified the parser after C01; no second
+guest is inferred. Live residency/co-resident originals,per-key SQ witnesses,
+camera/tick bindings,all8 woods keys,lifecycle checks and physical acceptance
+remain open. Qualitative historical-A image inspection has no measured camera
+or source-tick equality and cannot establish exact look acceptance.
+C02 and C03 are separate, explicitly allocated cold guests; neither overwrites C01.
+`cold-functional02-qualification.json` records nine farm candidate descriptors,
+owned known VRAM bases and simultaneous residency. Its controller-camera view
+and projection arrays were zero; those are not active render-camera evidence.
+`cold-functional03-qualification.json` uses observer runtime03 SHA694b31d3 to
+read active `pG->Cam` and the controller separately. Active camera matrices and
+projection are finite/nonzero, and complete gameMainLoop-only PT windows241–300
+and301–360 plus the farm screenshot establish postload gameplay. All120 source
+ticks241–360 were captured. Direct Rno0/Stop phase flags were not sampled.
+
+C03 has80 coherent selected tables,66 with all9 exact64x64 RGB565/VQ/mip keys on
+nine owned known bases. Payload30,726B and rounded request30,816B are lower
+bounds, not full allocator extents or high water. One stable minimum SQ header
+witness identifies00bdfb7c-15425fe6 at source/UI399, physical64square/VQ/mip,
+with its known VRAM base. It does not establish all-key draws, vertex/raster
+work, sampled pixels or exact look approval. Full-resolution captures and
+C01/C02 failures/limits remain intact. The conditional same-program B control
+must pass actual camera/player/health/source/control and counter comparison
+before any matched timing statement. These are Flycast proxy observations;
+release checks and physical Dreamcast acceptance remain separate.

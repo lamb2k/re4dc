@@ -1,0 +1,83 @@
+{
+  "scope": "Strict exact raw per-source-tick active+controller pose,player,life,room set comparison; no picking matching variants",
+  "references": {
+    "B": {
+      "capture": "cold-functional-B-01",
+      "typed_jsonl_sha256": "fb6f058a764e0784d30bbaddd82ef99235e93c9ec778ee82ca5c2d275c3e2f47",
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\cold-functional-B-01\\shots\\t0037\\frames\\fb1.png",
+      "screenshot_sha256": "9e412e1a0b16f6a24b8459a8b49385cd1061b83e6fdfd8973733bae23404d667"
+    },
+    "C": {
+      "capture": "cold-functional-C-03",
+      "typed_jsonl_sha256": "a4f014760a88f59d530446b312163f930554ec444686647397d1ef93a891132e",
+      "screenshot": "C:\\Flycast-Evidence\\re4-dreamcast\\texture-rect21-20261021\\cold-functional-C-03\\shots\\t0037\\frames\\fb1.png",
+      "screenshot_sha256": "11de3b4acc89fd3d493a1f4a79bcc49f8c0e317c8043d41e820a7505f645a690"
+    }
+  },
+  "predeclared_source_ticks": [
+    241,
+    360
+  ],
+  "ticks_seen": {
+    "B": 120,
+    "C": 120
+  },
+  "unequal_tick_sets": [
+    241,
+    242,
+    244,
+    246,
+    247,
+    248,
+    252,
+    256,
+    257,
+    258,
+    264,
+    265,
+    273,
+    280,
+    281,
+    282,
+    285,
+    286,
+    289,
+    296,
+    297,
+    298,
+    300,
+    303,
+    305,
+    307,
+    308,
+    312,
+    314,
+    315,
+    316,
+    319,
+    320,
+    321,
+    327,
+    332,
+    334,
+    337,
+    338,
+    339,
+    341,
+    344,
+    348,
+    349,
+    350,
+    353,
+    356
+  ],
+  "boundary_equal": {
+    "241": false,
+    "300": false,
+    "301": true,
+    "360": true
+  },
+  "comparison": "OPEN: mismatched current raw sets, possible within-source-tick update phase unqualified; no timing-improvement attribution",
+  "performance_improvement": false,
+  "physical_Dreamcast_acceptance": false
+}
