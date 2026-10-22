@@ -18,7 +18,7 @@ A sky row (ps2_sky_row), a dynamic placement (a unique id in ps2-world.ids: the 
 the base package (PS2_PLACE_GATE baked objects: an object can stop drawing them) never occlude; the caster marks them
 visible from every cell. Translucent (pass 2) and punch-through (pass 1) triangles never occlude either.
 """
-import json, os, struct, sys
+import hashlib, json, os, struct, sys, zlib
 from pathlib import Path
 import numpy as np
 
@@ -34,12 +34,37 @@ def main():
     pkg_dir, room, work = Path(sys.argv[1]), int(sys.argv[2], 16), Path(sys.argv[3])
     work.mkdir(parents=True, exist_ok=True)
     p = Pkg(pkg_dir / 'ps2-world.re4mesh', pkg_dir / 'ps2-world.r4pw')
+    assert p.magic==b'R4IM' and p.version==3 and len(p.m)==p.mesh_bytes
+    assert zlib.crc32(p.m[80:]) == p.mesh_crc, 'mesh payload CRC mismatch'
+    effective_policy = (pkg_dir / 'ps2-world.r4pw').read_bytes()
+    assert zlib.crc32(effective_policy[32:]) == p.sidecar_crc, 'policy payload CRC mismatch'
     ids_path = pkg_dir / 'ps2-world.ids'
     dyn_field = set()
     if ids_path.exists():
         b = ids_path.read_bytes()
         magic, ver, count, crc = struct.unpack_from('<4sIII', b, 0)
-        assert magic == b'R4ID' and ver == 1 and crc == p.sidecar_crc, 'ids file does not match the package'
+        assert magic == b'R4ID' and ver == 1, 'invalid ids file'
+        if crc != p.sidecar_crc:
+            # Scoped texture keys change R4PW identity, but cannot change source
+            # placement/state classification. Require the original authenticated
+            # policy rather than silently trusting an unrelated ids file.
+            assert '--original-policy' in sys.argv, 'ids mismatch: supply --original-policy'
+            original = Path(sys.argv[sys.argv.index('--original-policy') + 1])
+            op = Pkg(pkg_dir / 'ps2-world.re4mesh', original)
+            assert op.sidecar_crc == crc, 'ids does not bind original policy'
+            original_policy = original.read_bytes()
+            assert zlib.crc32(original_policy[32:]) == op.sidecar_crc, 'original payload CRC mismatch'
+            def normalized_policy(data):
+                data=bytearray(data);data[20:24]=bytes(4)
+                for part in range(len(p.pmeta)):data[32+16*part:40+16*part]=bytes(8)
+                return bytes(data)
+            assert normalized_policy(original_policy)==normalized_policy(effective_policy), 'policy bytes changed outside texture keys and payload CRC'
+            assert len(op.placements) == len(p.placements) and len(op.pmeta) == len(p.pmeta)
+            assert all(a['mesh'] == b['mesh'] and a['placement'] == b['placement'] and
+                       np.array_equal(a['affine'], b['affine']) for a, b in zip(op.placements, p.placements)), 'placement change'
+            assert all(all(a[k] == b[k] for k in ('w', 'h', 'pass_', 'cull'))
+                       for a, b in zip(op.pmeta, p.pmeta)), 'non-key material change'
+        assert count == len(p.placements) and 16 + count <= len(b), 'ids count mismatch'
         idv = b[16:16 + count]
         seen = {}
         for v in idv:
@@ -96,6 +121,11 @@ def main():
                 placements=len(p.placements), instances=inst, triangles=n,
                 occluder_triangles=int((rec['flags'] & 1).sum()), dynamic_placements=sorted(
                     {r[1] for r in rows if r[7]}), world_lo=lo_all.tolist(), world_hi=hi_all.tolist())
+    meta['input_hashes']={name:hashlib.sha256((pkg_dir/name).read_bytes()).hexdigest()
+                          for name in ('ps2-world.re4mesh','ps2-world.r4pw','ps2-world.ids','append.json')
+                          if (pkg_dir/name).exists()}
+    if '--original-policy' in sys.argv:
+        meta['original_policy_sha256']=hashlib.sha256(Path(sys.argv[sys.argv.index('--original-policy')+1]).read_bytes()).hexdigest()
     (work / 'meta.json').write_text(json.dumps(meta, indent=1))
     print('room %03x: %d placements, %d instances, %d triangles (%d occluders), %d dynamic placements, box %s .. %s' % (
         room, len(p.placements), inst, n, meta['occluder_triangles'], len(meta['dynamic_placements']),

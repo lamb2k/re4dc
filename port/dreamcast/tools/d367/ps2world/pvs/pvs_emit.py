@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""PS2_PVS step 3 (lane t2exact, 2026-10-15): conservative per-cell sets from the caster's raw sets, the disc file, stats.
+"""PS2_PVS step 3: emit geometric candidates or explicitly unsafe sampled research.
+
+The historical finite-ray union below is not a conservative visibility proof.
+Emission now requires --geometric-candidate or --research-sampled. See README-proof.md.
 
 usage (Windows Python with numpy):
-  pvs_emit.py emit <work dir> <out .pvs> [--dilate 1] [--near 3000]
+  pvs_emit.py emit <work dir> <out .pvs> --geometric-candidate [--dilate 0] [--near 0]
   pvs_emit.py stats <work dir> x,z [x,z ...]          raw / emitted set sizes at points (world mm), vs everything near
   pvs_emit.py verify <work dir> <out .pvs>            checks <work>/verify.bin (pvs_cast verify) against the file
 
@@ -21,7 +24,7 @@ File (little endian): header 64 bytes
   then nx*nz cells x 8 bytes {u16 set (0xffff: none); i16 ylo, yhi (decimetres); u16 pad}, then nsets x set_bytes
   (bit i of a set = instance i, pvs_prep.py's numbering).
 """
-import json, struct, sys
+import hashlib, json, struct, sys
 from pathlib import Path
 import numpy as np
 
@@ -40,7 +43,7 @@ def load_cells(work):
 
 
 def load_inst(work):
-    rows = [l.rstrip('\n').split('\t') for l in open(Path(work) / 'inst.tsv')][1:]
+    rows = [l.split('\t') for l in (Path(work) / 'inst.tsv').read_text().splitlines()][1:]
     a = np.array([[float(x) for x in r] for r in rows])
     return dict(n=len(a), placement=a[:, 1].astype(int), pas=a[:, 5].astype(int), dyn=a[:, 7].astype(bool),
                 lo=a[:, 8:11], hi=a[:, 11:14], verts=a[:, 14].astype(int))
@@ -75,9 +78,23 @@ def conservative(C, I, dilate, near):
     return out
 
 
-def emit(work, out_path, dilate, near):
+def emit(work, out_path, dilate, near, geometric=False, research=False):
     meta = json.loads((Path(work) / 'meta.json').read_text())
     C, I = load_cells(work), load_inst(work)
+    if geometric:
+        report=json.loads((Path(work)/'proof.json').read_text())
+        assert report['kind']=='continuous-triangle-geometric-candidate'
+        assert report['instances']==C['ninst'] and report['cells']==C['nx']*C['nz']
+        for name in ('meta.json','cells.bin','inst.tsv','proof-bits.bin'):
+            assert hashlib.sha256((Path(work)/name).read_bytes()).hexdigest()==report['hashes'][name], 'stale proof input: '+name
+        raw=(Path(work)/'proof-bits.bin').read_bytes()
+        assert len(raw)==C['nx']*C['nz']*C['nb']
+        C['vis']=np.unpackbits(np.frombuffer(raw,np.uint8).reshape(-1,C['nb']),axis=1,bitorder='little')[:,:C['ninst']].astype(bool)
+        # Pin every proposed occluder even if a future certificate set admits
+        # another occluder that could hide it. There are no dependency cycles.
+        C['vis'][:,report['pinned_instances']]=True
+    elif not research:
+        raise ValueError('sampled ray sets are not a conservative PVS proof; use --geometric-candidate with proof.json or --research-sampled for unshippable research')
     S = conservative(C, I, dilate, near)
     nb = C['nb']
     sets, index = {}, []
@@ -96,6 +113,10 @@ def emit(work, out_path, dilate, near):
     blob = head + body + b''.join(sorted(sets, key=sets.get))
     blob += b'\0' * (-len(blob) % 32)
     Path(out_path).write_bytes(blob)
+    if geometric or research:
+        # This sidecar is evidence only. The runtime must authenticate the exact
+        # file and establish liveness/clipping via its fail-closed guard hooks.
+        (Path(str(out_path)+'.admission.json')).write_text(json.dumps(dict(runtime_admitted=False,kind='geometric-candidate' if geometric else 'UNSAFE-sampled-research',sha256=hashlib.sha256(blob).hexdigest(),bytes=len(blob)),indent=1)+'\n')
     used = C['has']
     frac = S[used].sum(1) / C['ninst']
     vfrac = (S[used] * I['verts']).sum(1) / I['verts'].sum()
@@ -158,7 +179,7 @@ def main():
         return float(a[a.index(name) + 1]) if name in a else dflt
     dilate, near = int(opt('--dilate', 1)), opt('--near', 3000)
     if a[0] == 'emit':
-        emit(a[1], a[2], dilate, near)
+        emit(a[1], a[2], dilate, near, geometric='--geometric-candidate' in a, research='--research-sampled' in a)
     elif a[0] == 'stats':
         stats(a[1], [x for x in a[2:] if ',' in x], dilate, near)
     elif a[0] == 'verify':
