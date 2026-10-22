@@ -9,9 +9,11 @@ class WalkMachine(base.Machine):
     def __init__(self,text,cache,stream,oc,limit,cull,fpscr=0,trace=False):
         super().__init__(text,cache,stream,255,cull,fpscr,trace)
         self.map(0xa000,oc)
+        self.area_ops=0
         self.map(0x9000,struct.pack('<10I',0x8000,0x8000+len(stream),0xa000,0x2000,limit,cull,0xe0000000,3,5,7))
     def step(self,pc,delay=False):
         w=self.read(pc,2);n=(w>>8)&15;m=(w>>4)&15;R=self.reg
+        if w&0xf00f in (0xf001,0xf002,0xf005,0xf00e):self.area_ops+=1
         if w&0xf000==0x9000:
             R[n]=base.signed(self.read(pc+4+(w&255)*2,2),16)&base.U32
         elif w&0xf00f==0x6000:R[n]=base.signed(self.read(R[m],1),8)&base.U32
@@ -73,21 +75,35 @@ for i in range(50):
         n=rng.randint(1,64);stream.extend([n]+[rng.randrange(256) for _ in range(n)])
     for j in range(10):oc[rng.randrange(256)]=rng.choice((0,0,0,1,2,4,16,128))
     cases.append((bytes(stream),bytes(oc),rng.randrange(1,256),'random-batch'))
+# Gates must actually elide area, not merely preserve output after wasted math.
+for position in (1,31,32,63):
+    oc=bytearray(256);oc[position]=1
+    cases.append((bytes([64])+bytes(range(64)),bytes(oc),255,'interior-first-zero-depth'))
+for code,limit,kind in ((1,255,'gate-depth-all'),(4,255,'gate-screen-all'),(0,63,'gate-limit-first-zero'),(1,63,'gate-depth-before-limit')):
+    cases.append((bytes([64])+bytes(range(64)),bytes([code])*256,limit,kind))
+oc=bytearray(256);oc[0]=1
+cases.append((bytes([64])+bytes(range(64)),bytes(oc),63,'gate-limit-first-depth'))
+oc=bytearray(256);oc[0]=4
+cases.append((bytes([64])+bytes(range(64)),bytes(oc),255,'prepassed-eligible-first-screen'))
+oc=bytearray([4])*256;oc[0]=0
+cases.append((bytes([64])+bytes(range(64)),bytes(oc),255,'eligible-first-zero-later-screen'))
 passed=0;groups={}
 for stream,oc,limit,kind in cases:
     groups[kind]=groups.get(kind,0)+1
     for cull,trace in itertools.product((1,2),(0,1)):
         text=base.text_section(a.objects/('walk-trace%d.elf'%trace))
-        m=WalkMachine(text,cache,stream,oc,limit,cull,trace=bool(trace))
+        m=WalkMachine(text,cache,stream,oc,limit,cull,trace=bool(trace));m.pc=struct.unpack_from('<I',(a.objects/('walk-trace%d.elf'%trace)).read_bytes(),24)[0]
         try:got=m.run()
         except AssertionError as error:raise AssertionError((kind,len(stream),limit,cull,trace,str(error),list(m.ring))) from error
         want=expected(oracle,cache,stream,oc,limit,cull)
+        if kind.startswith('gate-'):assert m.area_ops==0,(kind,m.area_ops)
+        if kind in ('interior-first-zero-depth','prepassed-eligible-first-screen','eligible-first-zero-later-screen'):assert m.area_ops==62*7,(kind,m.area_ops)
         assert got==want,(kind,len(stream),limit,cull,trace,len(got[0]),len(want[0]),got[1:],want[1:]);passed+=1
 for bits in range(16):
     fpscr=((bits&1)<<21)|((bits&2)<<19)|((bits&4)<<17)|((bits&8)<<15)
     stream=bytes([5,0,1,2,3,4,3,5,6,7]);oc=bytes(256)
     for trace in (0,1):
-        text=base.text_section(a.objects/('walk-trace%d.elf'%trace));m=WalkMachine(text,cache,stream,oc,255,2,fpscr,trace=bool(trace))
+        text=base.text_section(a.objects/('walk-trace%d.elf'%trace));m=WalkMachine(text,cache,stream,oc,255,2,fpscr,trace=bool(trace));m.pc=struct.unpack_from('<I',(a.objects/('walk-trace%d.elf'%trace)).read_bytes(),24)[0]
         assert m.run()==expected(oracle,cache,stream,oc,255,2)
-result=dict(scope=__doc__,comparisons=passed,mode_controls=32,cases=len(cases),groups=groups,exact_words=True,clip_stop_pointer=True,all_any_order=True,counts=True,callee_fpscr_xf=True,no_hardware_claim=True,files={p.name:base.sha(p.read_bytes()) for p in a.objects.glob('walk-trace*.elf')})
+result=dict(scope=__doc__,comparisons=passed,mode_controls=32,cases=len(cases),groups=groups,exact_words=True,clip_stop_pointer=True,all_any_order=True,counts=True,callee_fpscr_xf=True,no_hardware_claim=True,conservative_rejects_skip_all_area=True,interior_crossing_cost_explicit=True,files={p.name:base.sha(p.read_bytes()) for p in a.objects.glob('walk-trace*.elf')})
 a.report.write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))

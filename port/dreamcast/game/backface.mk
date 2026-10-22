@@ -55,11 +55,12 @@ $(TARGET): $(OBJDIR)/platform/backface_sh4_walk.o
 backface-sh4zam-verify:
 	python3 ../tools/d367/backface_sh4zam_sdk/generate.py --check
 	python3 $(BACKFACE_SDK_TOOLS)/materialize.py --output $(BACKFACE_SDK_OVERLAY)
+	python3 $(BACKFACE_SDK_TOOLS)/check_area.py --overlay $(BACKFACE_SDK_OVERLAY)
 $(OBJDIR)/platform/backface_sh4.o $(OBJDIR)/platform/backface_sh4_walk.o $(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: | backface-sh4zam-verify
-$(OBJDIR)/platform/backface_sh4.o: $(BACKFACE_SDK_MANIFEST) $(BACKFACE_SDK_TOOLS)/0001-strip-sq-api.patch $(BACKFACE_SDK_TOOLS)/materialize.py
+$(OBJDIR)/platform/backface_sh4.o: $(BACKFACE_SDK_MANIFEST) $(BACKFACE_SDK_TOOLS)/0001-strip-sq-api.patch $(BACKFACE_SDK_TOOLS)/materialize.py $(BACKFACE_SDK_TOOLS)/check_area.py
 	@mkdir -p $(dir $@)
 	kos-cc $(KOS_CFLAGS) $(BACKFACE_SDK_CPPFLAGS) -c $(BACKFACE_SDK_OVERLAY)/source/shz_strip.S -o $@
-$(OBJDIR)/platform/backface_sh4_walk.o: $(BACKFACE_SDK_MANIFEST) $(BACKFACE_SDK_TOOLS)/0001-strip-sq-api.patch $(BACKFACE_SDK_TOOLS)/materialize.py
+$(OBJDIR)/platform/backface_sh4_walk.o: $(BACKFACE_SDK_MANIFEST) $(BACKFACE_SDK_TOOLS)/0001-strip-sq-api.patch $(BACKFACE_SDK_TOOLS)/materialize.py $(BACKFACE_SDK_TOOLS)/check_area.py
 	@mkdir -p $(dir $@)
 	kos-c++ $(KOS_CFLAGS) $(BACKFACE_SDK_CPPFLAGS) -fno-fast-math -ffp-contract=fast -c $(BACKFACE_SDK_OVERLAY)/source/shz_strip.cpp -o $@
 

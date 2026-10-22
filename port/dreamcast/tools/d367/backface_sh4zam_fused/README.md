@@ -1,57 +1,57 @@
-# Reproducible SH4ZAM strip API: first architecture milestone
+# Patched SH4ZAM fused strip submission
 
-This unit moves the complete current cull/run/parity/SQ algorithm into a local
-patch against the public SDK pin33fa4850. It is **not the fused speed change**.
-The source call graph is now:
+The complete outcode, exact facing, run/parity selection and SQ emitter live
+inside the checked-in patch against clean SDK pin33fa4850. RE4 contains thin
+material/model/clip adapters. CPU0/C1 add no SDK object or include path.
 
-    RE4 material/clip adapter -> shz_strip_walk_sq / shz_strip_sq
-                              -> patched SDK outcodes + assembly cull/run/SQ
+The implementation now includes:
 
-The RE4 world adapter passes its count stream, outcodes, cache, limit, cull and
-counters. It contains no outcode loop, classification, run selection, parity or
-SQ copy. Actor strip and bit7-EOL whole-stream adapters use the same SDK API.
-Material/model eligibility and continuation into RE4's existing clipper stay
-with RE4. The original CPU1 template remains unchanged.
+- Short strips<=64 indices: six raw-ABC/parity phases, next-index/outcode/XY
+  work interleaved with the current exact FMAC determinant, and a64-bit mask.
+- Original run starts are derived before odd-parity repair. Contiguous kept
+  spans use a peeled lean SQ emitter; all-front skips mask/span traversal.
+- World count streams and actor bit7-EOL streams share one public register/
+  FPSCR lease across their entire batch. Long strips retain the qualified
+  SDK assembly, with no C facing fallback.
+- A first-outcode conservative gate avoids facing work for common rejected
+  strips. Oversize first-depth0 strips stop immediately; other possible
+  all-depth cases retain depth rejection before limit/clip ordering.
 
-`0001-strip-sq-api.patch` contains a C-compatible public header, the complete
-qualified assembly, generated exact FMAC arithmetic, world caller, and SDK
-CMake integration. The API's render policy drops end back runs and inner runs
-of at least3 triangles; it preserves exact vertex words and parity, actor flag
-synthesis, world ordinary flags, EOL and all callee/FPSCR/opposite-bank state.
-Optional committed-span tracing is configured with generic `SHZ_STRIP_TRACE`
-and `SHZ_STRIP_TRACE_CALLBACK`; RE4 supplies its existing hash callback symbol.
+The public API takes projected32-byte PVR cache entries. It saves **zero
+transformation or skinning work**. Cull-none, alpha-mask and no-depth-write
+policy stays in RE4. No hidden-house, fog-view, PVS or view-distance benefit is
+claimed. Exact target arithmetic remains four rounded subtractions, rounded
+second product, FNEG and FMAC. `check_area.py` binds both rotating and pipelined
+arithmetic to the real compiler-selected SDK DAG checked by `generate.py`.
 
-`materialize.py` verifies clean SDK pin, patch identity and every resulting
-source/header. It writes a new owned overlay, or verifies an existing one.
-It never edits the vendor checkout/gitlink, fetches a private commit or contacts
-upstream. A changed patch needs a fresh OBJDIR/overlay. CPU2 Make rules compile
-these actual overlay sources, rather than a renamed game-owned walker. CPU0/C1
-add no objects or include paths. The arithmetic generator still checks the real
-pinned SDK primitive lowering before CPU2 builds.
+`materialize.py` verifies clean SDK pin, patch and produced source identities,
+then creates or verifies an owned overlay. It never edits the vendor gitlink,
+fetches a private commit or contacts upstream. Patch updates require a fresh
+OBJDIR/overlay. CPU2 Make rules compile the actual patched SDK sources.
+`repack.py --source <owned-sdk-source>` reproducibly updates the local patch.
 
-Run `bash qualify.sh /absolute/new/output` from this directory. The script
-acquires the shared slot2 and per-tree lease for small compiles, then releases
-them before opcode interpretation. It refuses an existing output directory.
-`materialize_test.py` exercises repeatability and fail-closed controls in fresh
-temporary directories. No game data or guest build is used.
+Run `bash qualify.sh /absolute/new/output`. Small compiles acquire shared slot2
+and the tree lease, then release both before opcode interpretation. Output must
+not exist. `materialize_test.py` verifies reproducibility and rejection of
+source/patch/pin drift. No guest or game assets are generated.
 
-Boundary02 actual objects pass4,220 kernel comparisons plus32 mode controls,
-and696 complete SDK caller comparisons plus32 mode controls. The caller cases
-cover sizes0..255, all/any sign bytes, depth/screen decision order, clip-stop
-pointer, exact limit boundaries, batched streams, exact emitted words and
-additive counters. Actor caller extraction confirms strip/whole dispatch and
-material exclusions. Evidence JSONs bind objects, linked caller, source and
-patch identities. Later CMake-only patch addition leaves all runtime source
-hashes and compiled byte bodies unchanged.
+Frozen compile09 passed4,220 kernel comparisons plus32 mode controls and740
+complete SDK world-caller comparisons plus32 controls. These cover exact vertex
+words, terminal flags, winding, full SQ bursts, NaN/cancellation, short/long/EOL
+streams, all/any/limit ordering, exact clip-stop pointers, counters, callee
+registers, exact FPSCR and all opposite-bank words under adversarial tracing.
+New caller controls count actual floating-point instructions: conservative
+rejects perform zero area work; first0 interior depth crossings explicitly pay
+all62 facing tests. Expanded mask/six-phase controls are being sealed separately.
+Internal SH section relocations are checked against the real target linker's
+result, rather than assuming raw object literals are executable addresses.
 
-Independent MODELLED caller-inclusive64-index costs are2,971 cycles all-front,
-3,635 all-back and3,815 mixed, versus1,141 for the whole OFF world walk. These
-include SDK scan, setup, calls, kernel, counters and return, but not the thin
-RE4 adapter. The first-stage SDK boundary **fails** performance acceptance.
-No performance, full-build OFF identity, Flycast pixels, memory or console
-acceptance is claimed. Root's frozen0f022 source remains separate.
+Independent caller-inclusive MODELLED64-index first0 costs are2,421 cycles
+front,1,611 back,2,637 mixed; OFF is1,141. Batch32 costs per strip are2,309.59,
+1,499.59,2,525.59 versus fair OFF1,109.03. First4-but-eligible and first0 interior
+depth-crossing cases are separate cost rows. This improves the first fused
+candidate but still **fails the OFF submission gate**. Transform cost is common
+and unchanged; cache/bus/PVR timing and scene distributions are uncalibrated.
 
-Next implementation is inside this SDK patch: fuse short-strip outcodes and
-exact facing, six ABC/parity phases,64-bit mask and lean emission; keep a single
-register lease across batches. The qualified SDK assembly remains the long/
-exceptional path. See FUSED-NEXT.md for the register and mask plan.
+No full programme OFF identity, Flycast pixels, memory gate, console timing or
+QA disc is claimed here. Root owns integration/runtime and packaging gates.

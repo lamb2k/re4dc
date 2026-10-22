@@ -1,3 +1,5 @@
+Implementation update: the short-strip scan, six-phase rotation, mask selection, lean SQ spans and batch register lease below are now implemented and opcode-tested in the SDK patch. This original design record is retained for comparison. The current task is reducing complete caller cost against OFF; see README.md and evidence/fused09.
+
 # Fused SDK implementation following the API boundary
 
 The first unit only establishes the library boundary and an exact opcode

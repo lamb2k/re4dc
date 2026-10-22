@@ -17,7 +17,9 @@ python3 "$SDK/materialize.py" --output "$OUT/sdk" --receipt "$OUT/sdk-receipt.js
     exec 8>"$TREE/.backface-kernel-build.lock"
     flock -x 8
     python3 "$DC/tools/d367/backface_sh4zam_sdk/generate.py" --check --receipt "$OUT/arithmetic-receipt.json"
+    python3 "$SDK/check_area.py" --overlay "$OUT/sdk"
     "$CC" -m4-single -ml -O2 -c "$OUT/sdk/source/shz_strip.S" -o "$OUT/kernel-trace0.o"
+    python3 "$SDK/check_area.py" --overlay "$OUT/sdk"
     "$CC" -m4-single -ml -O2 -DSHZ_STRIP_TRACE=1 -DSHZ_STRIP_TRACE_CALLBACK=_re4dc_backface_sh4_trace -c "$OUT/sdk/source/shz_strip.S" -o "$OUT/kernel-trace1.o"
     "$CXX" -m4-single -ml -O2 -std=gnu++17 -I"$OUT/sdk/include" -fno-fast-math -ffp-contract=fast -c "$OUT/sdk/source/shz_strip.cpp" -o "$OUT/sdk-walk.o"
     for t in 0 1; do
@@ -28,3 +30,4 @@ python3 "$SDK/materialize.py" --output "$OUT/sdk" --receipt "$OUT/sdk-receipt.js
 )
 python3 "$DC/tools/d367/backface_sh4_kernel/object_test.py" --objects "$OUT" --report "$OUT/sdk-kernel-controls.json"
 python3 "$SDK/caller_test.py" --objects "$OUT" --report "$OUT/sdk-caller-controls.json"
+python3 "$SDK/fused_test.py" --objects "$OUT" --report "$OUT/sdk-fused-controls.json"

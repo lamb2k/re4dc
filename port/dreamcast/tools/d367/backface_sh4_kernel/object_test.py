@@ -41,9 +41,12 @@ def text_section(path):
             dest,info=struct.unpack_from('<II',blob,at)
             sym=struct.unpack_from('<IIIBBH',blob,syms[4]+(info>>8)*16)
             symbol=st[sym[0]:].split(b'\0')[0].decode()
-            assert info&255==1 and symbol=='_re4dc_backface_sh4_trace',(info,symbol)
-            addend=struct.unpack_from('<i',blob,at+8)[0] if rs[1]==4 else struct.unpack_from('<i',text,dest)[0]
-            struct.pack_into('<I',text,dest,0x700000+addend)
+            assert info&255==1,('unsupported relocation',info,symbol)
+            assert symbol=='_re4dc_backface_sh4_trace' or sym[5]==ti,('foreign relocation',info,symbol,sym[5])
+            addend=struct.unpack_from('<i',text,dest)[0]
+            if rs[1]==4:addend+=struct.unpack_from('<i',blob,at+8)[0]
+            base=0x700000 if symbol=='_re4dc_backface_sh4_trace' else 0x100000+sym[1]
+            struct.pack_into('<I',text,dest,base+addend)
     return bytes(text)
 
 class Machine:
@@ -135,6 +138,7 @@ class Machine:
         elif w&0xf00f==0x3008: R[n]=(R[n]-R[m])&U32
         elif w&0xf00f==0x2009: R[n]&=R[m]
         elif w&0xf00f==0x200a: R[n]^=R[m]
+        elif w&0xf00f==0x200b: R[n]|=R[m]
         elif w&0xf00f==0x2008: self.t=int((R[n]&R[m])==0)
         elif w&0xff00==0xc900: R[0]&=w&255
         elif w&0xff00==0xc800: self.t=int(R[0]&(w&255)==0)
@@ -143,12 +147,26 @@ class Machine:
         elif w&0xf00f==0x3006: self.t=int(R[n]>R[m])
         elif w&0xf00f==0x3000: self.t=int(R[n]==R[m])
         elif w&0xf0ff==0x4011: self.t=int(signed(R[n])>=0)
+        elif w&0xf0ff==0x4015: self.t=int(signed(R[n])>0)
+        elif w&0xf0ff==0x4010:R[n]=(R[n]-1)&U32;self.t=int(R[n]==0)
+        elif w&0xf0ff==0x4024:
+            old=self.t;self.t=(R[n]>>31)&1;R[n]=((R[n]<<1)|old)&U32
+        elif w&0xf0ff==0x4025:
+            old=self.t;self.t=R[n]&1;R[n]=(R[n]>>1)|(old<<31)
+        elif w&0xf00f==0x400d:
+            count=signed(R[m]);amount=(-count)&31
+            R[n]=((R[n]<<(count&31))&U32) if count>=0 else (0 if amount==0 else R[n]>>amount)
+        elif w&0xf0ff==0x402b:target=R[n]
         elif w&0xf0ff in (0x4008,0x4018,0x4028): R[n]=(R[n]<<{0x4008:2,0x4018:8,0x4028:16}[w&0xf0ff])&U32
         elif w&0xf0ff==0x4000: self.t=(R[n]>>31)&1;R[n]=(R[n]<<1)&U32
         elif w&0xf0ff==0x4009: R[n]>>=2
         elif w&0xf0ff==0x4001: self.t=R[n]&1;R[n]>>=1
         elif w&0xff00 in (0x8900,0x8b00):
             if self.t==(w&0xff00==0x8900): nextpc=pc+4+signed(w&255,8)*2
+        elif w&0xff00 in (0x8d00,0x8f00):
+            assert not delay
+            condition=self.t==int(w&0xff00==0x8d00)
+            target=pc+4+signed(w&255,8)*2 if condition else pc+4
         elif w&0xf000==0xa000: target=pc+4+signed(w&4095,12)*2
         elif w&0xf0ff==0x400b: target=R[n];self.pr=pc+4
         elif w&0xf0ff==0x002a: R[n]=self.pr
