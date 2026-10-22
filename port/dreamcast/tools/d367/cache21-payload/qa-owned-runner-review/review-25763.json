@@ -1,0 +1,201 @@
+{
+  "scope": "Independent source/hash/AST/retainedreceipt only; no imports/tests/nativequery/image/preflight/build/guest/adoption",
+  "utc": "2026-10-22T07:00:57.659628+00:00",
+  "candidate": "25763e7e0a045bf8e14c298a8978d16479d0dd0e",
+  "disposition": "BLOCK: two confirmed source gaps, QA successor in preparation; preserve baseline",
+  "source_manifest": "d15859daa1f98a4b76f53432feee947b6e5f9acc405bab702429f2b0c27603fb",
+  "pins": [
+    {
+      "path": ".gitattributes",
+      "bytes": 105,
+      "sha256": "3d518c8907fb67ffad0685f52e941b1440892ccffa35724ae820d33fb2cd62e1"
+    },
+    {
+      "path": "CLAIM.md",
+      "bytes": 435,
+      "sha256": "c4622bfcf17ac1c7fd31ed57afdfcffd4e09fca37bce0db03678e3ab053eb8bc"
+    },
+    {
+      "path": "COLLECTOR_CONTRACT.json",
+      "bytes": 5114,
+      "sha256": "99741f9b87897bd815add64e0d590722d43ca218fa5d88b96276fb27c70fe6ea"
+    },
+    {
+      "path": "HOOK_PLAN.md",
+      "bytes": 9513,
+      "sha256": "7c475f6b57d75b9615fd3033c277c8825a6f0d36d131197e488eb2fe89b6d721"
+    },
+    {
+      "path": "PROPOSAL_INPUT.json",
+      "bytes": 6995,
+      "sha256": "59f6bb01ea28822c319549a180fcdaad4998442167da67823bb3aa87f2732b45"
+    },
+    {
+      "path": "checkpoint_runner18.child.py",
+      "bytes": 18115,
+      "sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6"
+    },
+    {
+      "path": "checkpoint_runner18.original.txt",
+      "bytes": 17566,
+      "sha256": "8960ffcf6652e1aac9f846d2857cc5932314bf03bcbf99ae538d68d131d1ca20"
+    },
+    {
+      "path": "child-runner.diff",
+      "bytes": 4497,
+      "sha256": "c7b0cc5a1f5588f746bb900bc4cc39259369ec7709db489dcf88854192f4aa0a"
+    },
+    {
+      "path": "child_reference_proxy.py",
+      "bytes": 5369,
+      "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19"
+    },
+    {
+      "path": "development-failures.json",
+      "bytes": 357,
+      "sha256": "d2fe5baefb41d3548d642cafa0b07943d0b6dbbccf5ccd8198c1093ae020d104"
+    },
+    {
+      "path": "frozen-source-proof.json",
+      "bytes": 5869,
+      "sha256": "2be9c2584430896782f9dd86f0242bcd253c11cb2d36d4708500dae9c4485844"
+    },
+    {
+      "path": "guest-profile-v2.json",
+      "bytes": 13113,
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+    },
+    {
+      "path": "native_reference_api.py",
+      "bytes": 9118,
+      "sha256": "4ed6c3e0b46e37f1d663f323a74565d2c698c181df7fee9bf0034fd5a848f7e5"
+    },
+    {
+      "path": "parent_reference_broker.py",
+      "bytes": 14639,
+      "sha256": "7bbcca22222310e9a9ae1104effa7e31e424df0fe2b346ff6ee286fd6becf7df"
+    },
+    {
+      "path": "receipt-before-strict-schema-linux.json",
+      "bytes": 6316,
+      "sha256": "83bc579365909f51f322b1b373c5aa4bd71fd2f5b45122cf67f0ebc2ebb3a7e0"
+    },
+    {
+      "path": "receipt-before-strict-schema-windows.json",
+      "bytes": 6349,
+      "sha256": "8dd1d2ef7bca7c43711fb04ac89c2872a3505ee6e4216d83e949c1ec2d8cf732"
+    },
+    {
+      "path": "receipt-linux.json",
+      "bytes": 6771,
+      "sha256": "f3077f467f8d3d47699fcda891d34b04042a100d433ab94a9961b7a69b301d50"
+    },
+    {
+      "path": "receipt-pre-comment-linux.json",
+      "bytes": 6771,
+      "sha256": "7a797650cdb04ffce13c2b75aa7a1b281a797eaea4b98b1770464c25a0967408"
+    },
+    {
+      "path": "receipt-pre-comment-windows.json",
+      "bytes": 6804,
+      "sha256": "e78208da5534bd310106ccb56bd5dd223640593fd89f3b0a565ab2eac32f4d29"
+    },
+    {
+      "path": "receipt-windows.json",
+      "bytes": 6804,
+      "sha256": "ba52fb90b654ade5b9addc98739056584a804c849cfdb50b5ad549e23eae2217"
+    },
+    {
+      "path": "reference_collector.py",
+      "bytes": 6856,
+      "sha256": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d"
+    },
+    {
+      "path": "retained-all-track-declarations.json",
+      "bytes": 4295,
+      "sha256": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0"
+    },
+    {
+      "path": "run_source_tests.py",
+      "bytes": 1489,
+      "sha256": "72b32633875c67427d8ccb124965548e06fdb6fcad2a0eb3eb7e3ab0c685e4b8"
+    },
+    {
+      "path": "runner-origin.json",
+      "bytes": 495,
+      "sha256": "43db462a9f865031d2c6b3851a1316db0708bdec95f988d072173fe57144edb1"
+    },
+    {
+      "path": "test_owned_runner.py",
+      "bytes": 25714,
+      "sha256": "e3da92ff792ef3d0389a61c80a08d9e087be1694408b17899c381da8817de809"
+    }
+  ],
+  "findings": [
+    {
+      "id": "creator-current-alias",
+      "disposition": "BLOCK pending correction",
+      "file": "parent_reference_broker.py",
+      "line": 114,
+      "proof": "Only open_file call is under marker_handle-is-None. Reused marker checks retained handle but never fresh current path or deleted/directory refusal; differs from collector fresh pathname binding.",
+      "scope": "Source validation gap; no actual native replacement claimed",
+      "required": "Fresh open/check actual marker path each call, compare native ID/stat/path/hash with retained before/after; refuse deleted/directory and add direct marker replacement/unlink controls"
+    },
+    {
+      "id": "evidence-cap-boundary",
+      "disposition": "BLOCK pending correction",
+      "file": "parent_reference_broker.py",
+      "line": 71,
+      "proof": "Component guard allows exactly60000000 by using >; original unchanged core refuses >=CAP.",
+      "scope": "Narrow component boundary mismatch; existing outer core still refuses, no target overflow claimed",
+      "required": "Use >=60000000 with exact boundary control"
+    }
+  ],
+  "marker_source": "def marker_proof(self):\n        path=self.cap/'.owned-reference-creator.json'\n        if self.marker_handle is None:\n            self.collector.parents(str(path));self.marker_handle=self.api.open_file(str(path))\n        expected={'inner_pid':self.inner.pid,'nonce':self.nonce,'runner_sha256':self.runner_sha,'allocation_sha256':self.authority['sha256']}\n        raw=json.dumps(expected,sort_keys=True).encode('utf-8')\n        before=self.api.stat(self.marker_handle)\n        hashed=self.api.hash_file(self.marker_handle,self.resource_guard)\n        if self.api.final_path(self.marker_handle)!=canonical(str(path)) or hashed!={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}:\n            raise Refusal('exclusive current creator marker differs')\n        after=self.api.stat(self.marker_handle)\n        if before!=after:raise Refusal('creator marker changed during hash')\n        return {'native_identity':after,'hash':hashed,'exact_contents':expected}",
+  "resource_source": "def resource_guard(self):\n        self.backend.check_deadlines()\n        if self.backend.job!=self.job:raise Refusal('parent job authority changed')\n        if self.backend.free()<19394461696:raise Refusal('unchanged runtime disk floor')\n        if self.backend.evidence_bytes()>60000000:raise Refusal('unchanged cumulative evidence cap')\n        # Every chunk also checks retained live inner, including process birth.\n        self.api.process(int(self.inner._handle),self.job,self.inner_pin,require_live=True)",
+  "hook_lines": {
+    "before_create": 115,
+    "cap_created": 117,
+    "staged": 152,
+    "before_spawn": 219,
+    "guest_started": 226,
+    "reader_started": 230,
+    "cleanup": 312,
+    "link_created": 148
+  },
+  "launch_try_line": 223,
+  "pid_publication_line": 227,
+  "child_generic_unlink_absent": true,
+  "child_default_disarmed": true,
+  "retained_coverage": [
+    {
+      "platform": "linux",
+      "sha256": "f3077f467f8d3d47699fcda891d34b04042a100d433ab94a9961b7a69b301d50",
+      "retained_tests": 38,
+      "current_source_hashes": true,
+      "rerun": false
+    },
+    {
+      "platform": "windows",
+      "sha256": "ba52fb90b654ade5b9addc98739056584a804c849cfdb50b5ad549e23eae2217",
+      "retained_tests": 38,
+      "current_source_hashes": true,
+      "rerun": false
+    }
+  ],
+  "otherwise_reviewed": [
+    "full native names/refstats before/after guarded3trackhashes",
+    "read-only handles duringguest,DELETEonlyafterstoppedprocess/jobproof; exactownedaliases03last",
+    "actualPopenPROCESS handlesduplicatedback,parentsolejob authority",
+    "nonce/strictsequence/rootallocation schema/fixedcap/currentinner+guest proof",
+    "staged/before_spawnoutsideexistinglaunchtry,guesthookbeforePIDpublication",
+    "old505f/profile4c/input/gameplay/productionrunner notadopted ormodified"
+  ],
+  "limitations": [
+    "38injectedAPI/ASTtests are not nativeinteroperability/timing/target acceptance",
+    "Marker replacement sourcegap does not establish observed nativeoccurrence",
+    "Nativefilesystem delete/namespace operations are not atomic; postcommitfailuremustdisqualify",
+    "Futureouter/inneradoption/brokerlifecyclewire/nativequalification remainopen",
+    "Failed13bf and3retainedimage refs preserved"
+  ]
+}
