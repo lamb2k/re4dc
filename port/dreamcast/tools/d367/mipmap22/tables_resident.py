@@ -3,7 +3,8 @@
 (2) remap dc/resident.bin so a room lists the scoped (WORLD_RECT21) key in place of its original.
 
   tables_resident.py tables <rect21 dir> <mipfix dir> <addon-manifest.json>
-  tables_resident.py resident <resident.bin in> <resident.bin out> <origins.inc> <world dir dc/native> [report.tsv]
+  tables_resident.py resident <resident.bin in> <resident.bin out> <origins.inc> <world dir dc/native> [report.tsv] [keep.tsv]
+      keep.tsv (room hex, original key): originals another consumer still loads; listed beside the scoped key.
 """
 import json, re, struct, sys
 from collections import defaultdict
@@ -47,7 +48,13 @@ def tables(rdir, mdir, man):
     print('tables: representations %d origins %d' % (len(rep), len(org)))
 
 
-def resident(src, dst, origins, wdir, report=None):
+def resident(src, dst, origins, wdir, report=None, keep=None):
+    keepset = set()
+    if keep:
+        for l in Path(keep).read_text().splitlines():
+            if l and not l.startswith('#') and not l.startswith('room	'):
+                r, k = l.split('	')[:2]
+                keepset.add((int(r, 16), tuple(int(x, 16) for x in k.split('-'))))
     o2s = defaultdict(list)
     for l in rows(origins):
         sc, sf, oc, of = (int(x, 16) for x in re.findall(r'0x([0-9a-f]+)U', l)[:4])
@@ -67,6 +74,8 @@ def resident(src, dst, origins, wdir, report=None):
                 if struct.pack('<II', sc, sf) in wb:
                     sub.append((sc, sf))
         if sub:
+            if (room, (c, n)) in keepset:
+                out.append((room, w, h, f, c, n))   # another consumer still draws the original (first-sight log)
             for sc, sf in sub:
                 out.append((room, w, h, f, sc, sf)); rep.append('%03x\t%08x-%08x\t%08x-%08x' % (room, c, n, sc, sf))
             changed += 1

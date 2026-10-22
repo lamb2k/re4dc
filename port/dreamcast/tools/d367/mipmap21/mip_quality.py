@@ -108,6 +108,23 @@ def strip(blob, native, base):
     return tpl.HEADER.pack(*h) + body
 
 
+HOLD_KEYS: set = set()
+
+
+def _init_hold(keys):
+    HOLD_KEYS.update(keys)
+
+
+def read_hold(path):
+    """--hold-keys manifest: TSV with a 'key' column (crc-fnv hex), e.g. tools/d367/mipmap22/room-select.tsv."""
+    keys = set()
+    for line in Path(path).read_text().splitlines():
+        if not line or line.startswith('#') or line.startswith('key\t'):
+            continue
+        keys.add(line.split('\t')[0].strip())
+    return keys
+
+
 def audit(item):
     key, blob = item
     found = identify(blob)
@@ -122,6 +139,8 @@ def audit(item):
     row = dict(key="%08x-%08x" % key, format=name, pixel_format=native.texture[3], side=side,
                alpha=alpha, base_coverage=round(cov0, 4), levels=[])
     reasons = set()
+    if row["key"] in HOLD_KEYS:   # lane mipmap22: per-room selection manifest (--hold-keys)
+        reasons.add("room-select")
     s = side
     while s > 1:
         ideal = halve(ideal, s)
@@ -180,11 +199,14 @@ def main():
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--scoped-inc", nargs=2, action="append", default=[], metavar=("IN", "OUT"),
                     help="rewrite rect21 scoped rows of held keys")
+    ap.add_argument("--hold-keys", type=Path, help="per-room selection manifest: hold these chains at their base")
     a = ap.parse_args()
     pack = a.pack.read_bytes()
     texpack.verify(pack)
     packages = read_pak(pack)
-    with multiprocessing.Pool(a.jobs) as pool:
+    hold = read_hold(a.hold_keys) if a.hold_keys else set()
+    _init_hold(hold)
+    with multiprocessing.Pool(a.jobs, initializer=_init_hold, initargs=(hold,)) as pool:
         results = [r for r in pool.imap_unordered(audit, sorted(packages.items()), chunksize=8) if r]
     results.sort(key=lambda r: r[0])
     new = dict(packages)
