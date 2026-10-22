@@ -1,0 +1,85 @@
+{
+  "state": "SOURCE_REVIEW_PASS_WITH_EXPLICIT_LIMITS_NOT_RUNTIME_ALLOCATION",
+  "reviewed_commit": "c38d5fb5b1620a31cd0c9148130abb91217abe1d",
+  "exact_source_sha256": {
+    "observer.py": "694b31d3442beb135638dfbb88ebef7923a7616ee0faf5ca23feba9cd13d35b3",
+    "typed_canonical1004.py": "225c3d37757f7e6258b0611f40d44da332627ffa2bdfeb0b83bf341d983188b2",
+    "phase_latch69f.py": "02175ba576a5b389b2418e9cdf1aecf4e4910713c4c79b6cb2d6805a663a1237",
+    "phase_latch69f05.py": "1e175a7242bd9ef9d3566a6a41a4e85aca7b55e69b271119cc269a5a1d406843",
+    "observer69f.py": "8720989de044d0d19f6b23b0397d316dc743bfcbcc1fb4cfd9bfde4b8679af16",
+    "scalar_priority69f.py": "90ebc64bc753b31807e4c83ce0aae4dcd6534fc7ecf86f5e3e63e884e678088d",
+    "observer69f_scalar_first.py": "200473d1269da1edfadd82d49b699849eb04014acb399e47be166649fe95a794"
+  },
+  "binding_sha256": "dc4b3327bba1704ddc0e8e74e46ce10994f7aa20ea2f76b61edda87c7e849bb8",
+  "SUMMARY_sha256": "03474588335e99dd02289edab4645e695fd6ca70db88d5eda1cf905d2bfa2a2a",
+  "seal_sha256": "603590de59ba3dfb5ac9df40aa273866e492e18751bb04d162c8a52a9a7b2d91",
+  "programme_source": "0425534d848973c1dae3ab960d0006ac9afcf363",
+  "programme_sha256": "733afabf6567a9f086eacb48b70559aef764cf52a5b534f44602da3a8bc68a9e",
+  "ELF_sha256": "69f2e7db588f515f4e6a67455d627a74fc17132d5ca20a591db4e0f15deedcae",
+  "independent_tests": {
+    "Windows": "15 passed, no skip",
+    "Linux": "14 passed,1 Windows API fixture skip",
+    "Windows_elapsed_seconds": 0.819,
+    "Linux_elapsed_seconds": 1.192,
+    "tool_output_chunks": [
+      "c66bec",
+      "5a1dd9"
+    ],
+    "commands": [
+      "Windows Python312 with frozen plan/successor env, test_scalar_priority69f.py -v",
+      "WSL python3 with /mnt/c frozen plan/successor env, same test -v"
+    ],
+    "fixture_scope": "Own Python RAM and synthetic publication fixtures, not guest/console."
+  },
+  "review": [
+    {
+      "area": "publication_and_order",
+      "finding": "PASS",
+      "details": "Source042 NativeFrameStats.sequence is volatile. ui_end_frame increments odd, compiler memory barrier, writes stats, compiler memory barrier, increments even. ScalarLatch inherits full PhaseLatch05: before state includes even nonzero sequence and full raw192 hash; body reads current scene/raw192/proc arrays through StableReads and verifies every range; after state must equal before; body192 hash must equal phase hash. No phase gate, epoch, pointer, scene equality, skip or coverage criterion weakened. This is source plus existing actual69f type/address binding review, not a new independent machine-code ordering proof or atomic RPM claim."
+    },
+    {
+      "area": "hint",
+      "finding": "PASS",
+      "details": "Three bounded reads sequence/frame at completed_frame+0/+4, current UI frame and cursor are hints only. Hint success invokes full existing latch; hint failure can miss observations but cannot create accepted state. Actual frozen type offsets/widths are independently checked by load_successor metadata member-path report."
+    },
+    {
+      "area": "QPC_and_80ms",
+      "finding": "PASS_WITH_LIMIT",
+      "details": "Real default observe clock and precise clock are perf_counter/QPC. End and now+.004 are passed unchanged to precise_deadline. set_window separately sets original monotonic deadline now+.08; no QPC-to-GetTickCount64 subtraction is attempted. read checks QPC before and after synchronous base RPM. 4ms is acceptance deadline, not preemptive blocking bound: an OS/API/log/serialization stall may exceed it before rejection/next poll. Coarse80ms remains secondary, not a relaxed accepted4ms budget. Outer47.5s guard still required. Accepted own-Python fixture cadence cannot establish guest coverage or overhead."
+    },
+    {
+      "area": "RAM_and_output",
+      "finding": "PASS_WITH_LIMIT",
+      "details": "Every guest Process.read still calls frozen ram_range: 0x8c000000..0x8d000000, individual extent<=100352B. New reads are raw192 and proc arrays128 each; StableReads verifies bounded body ranges. Handles remain read/query/synchronize only. Whole JSONL rows buffered<=3500000B; overflow marks raw_output_complete false and stops. Exclusive xb/x outputs preserve old paths. Buffer cap is JSONL bytes, not a total Python RSS cap; parsed rows/coverage/summary overhead and startup flycast.log read are additional. Before RAM discovery, read_text reads the current log; only outer evidence cap bounds that file. Outer evidence/disk/process deadline remains mandatory."
+    },
+    {
+      "area": "coverage_and_variants",
+      "finding": "PASS",
+      "details": "Coverage unchanged. All observed accepted variants enter per-source-frame set; differing phase/rawstats hash/scene/CPU yields conflict. No first-matching variant selection. Missing240..360 states and output overflow remain failure. Scalar channel supplies no fresh table/direct proof."
+    },
+    {
+      "area": "source_UI_and_render",
+      "finding": "PASS_WITH_DOCUMENTED_ASSOCIATION_LIMIT",
+      "details": "Source042 main Render occurs before Frame_cnt increment and source update. Completed native UI frame is rendering clock, not captured post-update pose clock. Actual cold pair had source=UI+1 with skip1; retain all three fields and phase. Target source240..360 supplies121 completed post-update states. With only240 predecessor, successive rendered-state associations241..360 number120; interval240 remains unassociated unless source239 retained. Benchmark accepted this limit in team message; no coverage relaxation or current-camera-to-earlier-image inference."
+    },
+    {
+      "area": "counter_and_timer_meaning",
+      "finding": "PASS_WITH_LIMIT",
+      "details": "frame_pvr_calls/bytes reset at frame_render_start. stream_send increments calls/bytes before interface submission. Direct header paths increment call+32 at header flush; direct_end adds caller-reported vertices*32. These are CPU interface accounting, not accepted TA work, texture fetch bandwidth, raster fill or chosenLOD. frame_render_start follows some preparation; render_end is sampled at ui_end_frame entry. render_wall_us covers that target timer interval including source iteration activity, not pure GPU time. present_wait_us covers all work between render_end and its stats-store timer read: present/retirement/profiles/stats/possible waits, not only hardware present wait. Neither inverse is DreamcastFPS. proc_tick0 TOTAL remains unqualified current because written after Render_swap."
+    }
+  ],
+  "required_new_guest_profile": [
+    "New explicit scalar-first namespace/profile; never substitute driver into frozen first-pair guard. Pin all7 sources, exact successor/base binding, all metadata, plan and input identities, Python/emulator identity and exact733a/69f programme files.",
+    "Parent separately allocates one new owned capture per arm; validate actual assets and image identity. Preserve prior872/808 files/images/captures. No runtime recipe/flags/control changes.",
+    "Use exact prepared CLI in SUMMARY, new capture output paths, --runtime-binding observer-runtime-69f-scalar-first-01, --seconds41; own PID/executable creation/exit verification retained.",
+    "Retain outer41s inner/47.5s absolute and60MB evidence ceilings plus current disk floor, peer/global allocation and process limits. Observe startup log-read bound; no timer-resolution/priority/affinity or guest-state changes.",
+    "Qualify actual poll gaps/rejections/max collection and observer overhead. Require all121 source240..360 states, zero conflicting variants in each and exact paired scene/controls; do not slide window, apply tolerance, replace missing state or claim scheduling-model coverage.",
+    "Retain predecessor239 if claiming all121 render interval associations; otherwise explicitly report120 associations241..360 and interval240 unassociated while121 completed-state gate stays fixed.",
+    "Fresh table/direct/resident proof requires separately allocated channel or retained authenticated evidence; scalar-only run does not refresh those. Pad/RNG/presentation/all-keyTA/chosenLOD remain explicit gaps.",
+    "Primary M0 versus M1 measures entire compact/VQ/mipmap/world/actor pipeline; protected M0 mips mean not globally mip-off. Host/native timers are emulator observations only, not physical Dreamcast acceptance or timer-derivedFPS."
+  ],
+  "runtime_changes": false,
+  "guest_runs": 0,
+  "images_or_programme_builds": 0,
+  "source_claim": "Read-only peer review; owned report/docs only. Benchmark owns successor code and main owns profile/integration/allocation."
+}
