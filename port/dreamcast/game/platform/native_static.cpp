@@ -172,7 +172,9 @@ static volatile unsigned ps2_mask_select=1U+RE4DC_PS2_PASS_MASK_SELECT;
 #endif
 #if RE4DC_NATIVE_MESH && RE4DC_MESH_FASTPATH
 #include "../../room/mesh_fastpath.hpp"
-#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+#include "../../room/backface_sh4.hpp"  // common SH-4 SQ ABI, owned by the main lane
+#elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
 #include "../../room/backface_emit.hpp"  // CPU_BACKFACE (backface.mk, lane backface22)
 #endif
 #if RE4DC_MESH_VP_SCHED
@@ -2480,6 +2482,15 @@ struct MeshDraw : Emitter {
         }
         return 1;
     }
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+    // The caller's source material still owns cull/depth/alpha. Two-sided cards and
+    // no-depth-write runs keep their original walk; accepted opaque strips use
+    // only the common assembly emitter for facing, run splitting and SQ writes.
+    bool bf_on()const{return (p.cull==1U || p.cull==2U) && !(p.material_flags&4U) && p.depth_mode==0U;}
+    void bf_send(const std::uint8_t* s,unsigned n){
+        slots+=re4dc::bf::strip_sq(cache,s,n,0xffU,p.cull,sq);
+    }
+#endif
 #if RE4DC_MESH_STRIP_LEAN==1 || RE4DC_MESH_STRIP_LEAN==3
     // MESH_STRIP_LEAN: meshlet()'s strip walk for kChecksAll meshlets on the store-queue sink. walk_lean()
     // (room/mesh_strip_lean.hpp) takes the strips up to the next one that needs the clipper with the same
@@ -2489,7 +2500,7 @@ struct MeshDraw : Emitter {
     // input = sum n - 2 * strips, stats.vertices = sum n. lean_flush() writes these back before the
     // clipper (which reads and updates the members) and at the end; the clip strip itself runs the
     // original code. Returns nullptr when the meshlet is done (result: meshlet()'s value).
-#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 1
     // CPU_BACKFACE (lane backface22): parts whose header culls (p.cull 1 CCW, 2 CW) send only the triangles the ISP would
     // keep (room/backface_emit.hpp); cull-none parts keep the unchanged paths. strips_bf: the lean walk's decisions in C
     // (depth-all cull, clipper for a depth crossing or n > limit, screen-all cull, else the back-face split).
@@ -2520,6 +2531,31 @@ struct MeshDraw : Emitter {
         result=1;return nullptr;
     }
 #endif
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+    const std::uint8_t* strips_bf_sq(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
+                                     const re4dc::room::CompactBatch& batch,int& result){
+        for(;;){
+            const std::uint8_t* const mark=s;std::uint32_t* q=sq;const std::uint32_t* const qmark=q;
+            unsigned culled=0,emitted=0,accepted_triangles=0;
+            s=re4dc::vp::walk_lean_sq(s,end,outcodes,cache,limit,p.cull,q,culled,emitted,accepted_triangles);
+            // Backface splitting may send zero vertices or several pieces.
+            // Keep the C reference's source-strip counters; slots track actual
+            // SQ writes. lean_flush's output=slots-2*strips cannot be used here.
+            const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips;
+            input+=sum-2U*strips;stats.vertices+=sum;stats.strips_culled+=culled;stats.strips+=emitted;
+            slots+=unsigned(q-qmark)/8U;output+=accepted_triangles;sq=q;
+            // Actual emitted pieces are hashed by the common assembly trace
+            // hook in diagnostic builds. Do not replay rejected original strips.
+            if(s>=end){result=1;return nullptr;}
+            const unsigned n=*s++; // unchanged depth-crossing / oversize clipper
+            input+=n-2;
+            if(n<=limit)stats.vertices+=n;
+            result=clip_strip(base,batch,s,n);
+            if(result<=0)return nullptr;
+            s+=n;
+        }
+    }
+#endif
     void lean_flush(const std::uint8_t* s,const std::uint8_t* mark,std::uint32_t* q,const std::uint32_t* qmark,
                     unsigned culled,unsigned emitted){
         const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips,v=unsigned(q-qmark)/8U;
@@ -2528,7 +2564,9 @@ struct MeshDraw : Emitter {
     }
     const std::uint8_t* strips_lean(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                     const re4dc::room::CompactBatch& batch,int& result){
-#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+        if(bf_on())return strips_bf_sq(s,end,base,batch,result);
+#elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
         if(bf_on())return strips_bf(s,end,base,batch,result);
 #endif
         for(;;){
