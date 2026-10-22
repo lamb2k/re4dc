@@ -2737,10 +2737,11 @@ CRASH_OVL_LINE ?= 0
 # texture upload and close, and at release).
 OVL_WATCH ?= 0
 # OVL_GUARD=1 (lane mipfault22, console diagnostic only): stop on the first changed word of a loaded route overlay's
-# code (checked per UI frame and texture upload / close) and arm the SH-4 UBC on st1_1 (see platform/modules.cpp).
+# code (checked per UI frame and texture upload / close); =2: instead, the SH-4 UBC on the st1_1 literal word that the
+# console fault read (st1_1+0x6114), reported from the next UI frame (see platform/modules.cpp).
 OVL_GUARD ?= 0
 ifneq ($(OVL_GUARD),0)
-$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=1
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=$(OVL_GUARD)
 endif
 ifneq ($(OVL_WATCH),0)
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_WATCH=1
