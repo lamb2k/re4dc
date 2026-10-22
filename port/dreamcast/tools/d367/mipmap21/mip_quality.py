@@ -200,6 +200,9 @@ def main():
     ap.add_argument("--scoped-inc", nargs=2, action="append", default=[], metavar=("IN", "OUT"),
                     help="rewrite rect21 scoped rows of held keys")
     ap.add_argument("--hold-keys", type=Path, help="per-room selection manifest: hold these chains at their base")
+    ap.add_argument("--original-pack", type=Path,
+                    help="a held key that this (release) pack also carries gets that member back byte for byte (its "
+                         "original representation, e.g. a converted PAL8 that needs an aligned palette block)")
     a = ap.parse_args()
     pack = a.pack.read_bytes()
     texpack.verify(pack)
@@ -210,9 +213,20 @@ def main():
         results = [r for r in pool.imap_unordered(audit, sorted(packages.items()), chunksize=8) if r]
     results.sort(key=lambda r: r[0])
     new = dict(packages)
-    for key, _, held in results:
+    original = {}
+    if a.original_pack:
+        opack = a.original_pack.read_bytes()
+        texpack.verify(opack)
+        original = read_pak(opack)
+    restored = 0
+    for key, row, held in results:
         if held is not None:
-            new[key] = held
+            if key in original:
+                new[key] = original[key]
+                row["restored_original"] = True
+                restored += 1
+            else:
+                new[key] = held
     with a.tsv.open("w") as f:
         f.write("key\tformat\tside\talpha\tbase_coverage\tworst_coverage_delta\tworst_rgb_rmse\tworst_mean_shift\tverdict\treasons\n")
         for _, r, _ in results:
@@ -227,6 +241,7 @@ def main():
         counts[r["verdict"]] = counts.get(r["verdict"], 0) + 1
         for reason in r["reasons"]:
             counts["held:" + reason] = counts.get("held:" + reason, 0) + 1
+    counts["held:restored-original"] = restored
     summary = dict(source_pack_sha256=hashlib.sha256(pack).hexdigest(), members=len(packages),
                    mipped=len(results), counts=counts,
                    thresholds=dict(alpha_ref=ALPHA_REF, min_side=MIN_SIDE, coverage_rel=COVERAGE_REL, coverage_abs=COVERAGE_ABS,
@@ -238,7 +253,7 @@ def main():
         a.out_pack.write_bytes(out)
         summary.update(out_pack_sha256=hashlib.sha256(out).hexdigest(), out_members=n,
                        changed_members=len(changed), out_bytes=len(out))
-    held = {k: h for k, _, h in results if h is not None}
+    held = {k: h for k, r, h in results if h is not None and not r.get("restored_original")}
     summary["scoped_rebound"] = {}
     for src, dst in a.scoped_inc:
         text, n = rebind(Path(src).read_text(), held)
