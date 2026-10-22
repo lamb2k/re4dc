@@ -11,22 +11,32 @@ def fnv(b):
  for x in b:h=((h^x)*16777619)&0xffffffff
  return h
 def main():
- O=Path(sys.argv[1]);prior=Path(sys.argv[2])if len(sys.argv)>2 else None;r=json.loads((O/'conversion-receipt.json').read_text());assert r['converted_keys']in(415,177,4,18)and not r['held'];mapping={x['original_key']:x for x in r['selected']};R=Path('/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021');bind=json.loads((R/'native-bindings-01/bindings.json').read_text());files=json.loads((R/'image-plan-04/baseline-file-identities.json').read_text())['files'];B=R/'standalone-B-01/gdemu/track03.iso'
+ O=Path(sys.argv[1]);prior=Path(sys.argv[2])if len(sys.argv)>2 else None;r=json.loads((O/('policy-qualified-receipt.json'if(O/'policy-qualified-receipt.json').exists()else'conversion-receipt.json')).read_text());assert(r['converted_keys']in(415,177,4,18)or r.get('policy_gate_source_and_candidate_equal_shipped_R4TC')is True)and not r['held'];mapping={x['original_key']:x for x in r['selected']};R=Path('/mnt/c/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021');bind=json.loads((R/'native-bindings-01/bindings.json').read_text());files=json.loads((R/'image-plan-04/baseline-file-identities.json').read_text())['files'];B=R/'standalone-B-01/gdemu/track03.iso'
+ def resolve_parent(name):
+  root=prior;seen=set()
+  while root and str(root)not in seen:
+   seen.add(str(root));candidate=root/'proposed-worlds'/name
+   if candidate.exists():return candidate
+   summary=json.loads((root/'summary.json').read_text())if(root/'summary.json').exists()else{};parent=summary.get('proposed_worlds',{}).get('parent')
+   if not parent:
+    rows=json.loads((root/'world-proposals.json').read_text())['worlds'];parent=rows[0].get('parent_lineage','').split('/proposed-worlds/')[0]if rows else None
+   root=Path(parent)if parent else None
+  return canon_root/name
  count=len(mapping);parent_count=json.loads((prior/'world-proposals.json').read_text())['combined_scoped_keys']if prior else 36;combined_count=parent_count+count
  canon_root=Path('/root/re4data/private/texture-world36-canonical-crc-20261021');worlds=[];covered=collections.Counter();certs=[];table=[]
  for x in r['selected']:
   a,b=(int(y,16)for y in x['scoped_key'].split('-'));w,h=x['logical'];s=x['physical'][0]
-  table.append('{0x%08xU,0x%08xU,%dU,%dU,{%dU,%dU,0U,4U,%dU,%dU,0x%08xU},1.0f,1.0f},'%(a,b,w,h,s,s,x['payload_type'],x['candidate_payload'],x['candidate_crc32']))
+  table.append('{0x%08xU,0x%08xU,%dU,%dU,{%dU,%dU,%dU,%dU,%dU,%dU,0x%08xU},1.0f,1.0f},'%(a,b,w,h,s,s,x['format'],x['flags'],x['payload_type'],x['candidate_payload'],x['candidate_crc32']))
  with B.open('rb')as iso:
   for item in bind['matched_worlds']:
-   name=item['path'];room=name.split('/')[2];original=(R/'native-bindings-01/inputs'/name).read_bytes();assert sha(original)==item['sha256'];oldhead=struct.unpack_from('<4s7I',original);parent=(prior/'proposed-worlds'/name)if prior else(canon_root/name);base=parent.read_bytes()if parent.exists()else original
+   name=item['path'];room=name.split('/')[2];original=(R/'native-bindings-01/inputs'/name).read_bytes();assert sha(original)==item['sha256'];oldhead=struct.unpack_from('<4s7I',original);parent=resolve_parent(name)if prior else(canon_root/name);base=parent.read_bytes()if parent.exists()else original
    rows=world.inspect_sidecar(base);out=bytearray(base);changes=[];allowed=set(range(20,24))
    for row in rows:
     x=mapping.get(row['key'])
     if x is None:continue
     assert [row['width'],row['height']]==x['logical'];ref=next(z for z in x['world_refs']if z['world']==name and z['part']==row['part']);assert all(ref[k]==row[k]for k in('width','height','render_pass','cull','texture','flags'))
     at=32+16*row['part'];key=tuple(int(z,16)for z in x['scoped_key'].split('-'));struct.pack_into('<II',out,at,*key);allowed.update(range(at,at+8));changes.append(dict(part=row['part'],source_key=row['key'],candidate_key=x['scoped_key'],render_pass=row['render_pass'],flags=row['flags'],texture_slot=row['texture']));covered[row['key']]+=1
-   if not changes and(base==original or count==18):continue
+   if not changes and(base==original or count==18 or r.get('policy_gate_source_and_candidate_equal_shipped_R4TC')):continue
    struct.pack_into('<I',out,20,zlib.crc32(out[32:])&0xffffffff);assert len(out)==len(base)==len(original)and all(a==b or n in allowed for n,(a,b)in enumerate(zip(base,out)))
    # Existing36 remain byteexact where no new415 key is selected; no geometry/UV/material field changed.
    part_end=32+16*oldhead[3];assert out[part_end:]==original[part_end:]
