@@ -240,7 +240,7 @@ void R10bInit()
     }
     EstSet(0, -1, 0, 0, 1, 2, 1, 2, (u32) zero, zero);
     EstSet((int) pPL, -1, 0, 0, 1, 5, 1, 3, (u32) zero, zero);
-    r10b_work->boat = EmSetFromList2(0xA2, 1);
+    r10b_work->boat = EM_MUST(cEm*, EmSetFromList2(0xA2, 1));
     RoomEfmRegist(SmdGetGroupObjPtr(0x58), 0x60);
     SetSstAddAreaFlag(0x800);
     r10b_setEm();
@@ -516,7 +516,7 @@ static void r10b_GakeEvent()
             }
             freeEvent(3);
         }
-        PSet(r10b_work->boat, EmSetFromList2(0xA3, 0));    // reference store: the pG load waits for it
+        PSet(r10b_work->boat, EM_MUST(cEm*, EmSetFromList2(0xA3, 0)));    // reference store: the pG load waits for it
         pG->System_flg |= 0x400;
         SceSleep(4);
         SceEventEnd(0);
