@@ -1,0 +1,49 @@
+{
+  "state": "SOURCE_ONLY_PREPARATION_NO_ALLOCATION",
+  "source": "babfaa7d8ee868c9b81305aef7024ffd543eb6f6",
+  "tree": "/root/probe/codex-cache21-integration-next",
+  "own_namespace": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_cache_repairs_objectprep",
+  "future_output": "/root/probe/issue52-cache-repairs-sh4-objects-20261022-01",
+  "task_order": [
+    "sscrn-previous",
+    "sscrn-default",
+    "sscrn-off",
+    "reset-previous",
+    "reset-default",
+    "reset-off",
+    "sscrn-on",
+    "reset-on"
+  ],
+  "fresh_controls_before_ON": 6,
+  "actual_compiler_runs": 0,
+  "actual_lease": false,
+  "guard_defaults": 0,
+  "metadata_limit_bytes": 524288,
+  "verified_reused_system_tool_pins": 1250,
+  "new_source_input_pins": 100,
+  "fresh_baselines": 2,
+  "previous_source": {
+    "sscrn": "54ba44079c33117b8241a9277c3aecdce8b4f9ce",
+    "reset": "575953b0bc039dbc716d3411e275be1d04313e2e"
+  },
+  "future_proposal": {
+    "one_shared_lease": true,
+    "sequential": true,
+    "hard_bytes": 33554432,
+    "soft_abort_bytes": 25165824,
+    "estimated_peak_bytes": 16777216,
+    "root_allocation_required": true,
+    "no_make_link_programme_stage_image_guest": true,
+    "no_retry": true
+  },
+  "default_OFF_gate": "For each TU require previous/default/explicit0 full -E -P identity and --strip-debug exact object equality under same flags; macros differ only named guard absent/0 (other source macros unchanged). Compare normalized complete dependencies and all allocated sections/relocations. Stop before ON if any failure.",
+  "old_reference_policy": "C57 objects were pruned; canonical004 objects retained and pinned, with exact normalized C57 argv/generated headers. cManager.h changed after C57/004 but matches both selected previous commits and candidate. Old objects are provenance only, not fresh controls. Fresh previous full-TU controls use exact previous source and its verified dependency contract. Any optional old-object normalized identity comparison must report a disagreement, not waive it.",
+  "source_runtime_ownership": "Main retains all runtime editing and integration; no shared runtime claims taken.",
+  "programme_tool_closure_certified": false,
+  "source_hashes": {
+    "sscrn": "2c9179df90c206bf079d3915f4ade4175ed8b0f2f79ca774cfadf0379de123b9",
+    "reset": "b0956d568914717092569c137ea60eba27e557880351998d4e51105156815e35"
+  },
+  "generated_header_contract": "All five C57 and canonical forced generated headers freshly byte-matched and both paths pinned.",
+  "baseline_view_max_estimated_allocated_bytes": 5349376
+}

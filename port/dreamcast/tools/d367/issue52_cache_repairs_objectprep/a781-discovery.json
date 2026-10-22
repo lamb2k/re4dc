@@ -1,0 +1,18 @@
+{
+  "state": "SUPERSEDED_SOURCE_DISCOVERY_ONLY_NOT_COMPILED",
+  "observed_clean_root_commit": "a7811d890cd71911a6360a3069051e913fe8d967",
+  "sscrn_source_sha256": "2c9179df90c206bf079d3915f4ade4175ed8b0f2f79ca774cfadf0379de123b9",
+  "main_source_sha256": "333e9536c92de24d96d03d2dc3bf3137c1a7d7fa1c56f827af210d2c06bfdc1a",
+  "previous_ss_commit": "54ba44079c33117b8241a9277c3aecdce8b4f9ce",
+  "previous_ss_full_TU_sha256": "eb704d519337b4349fc069b11fd9aea7825831f5048a4fd5980b81f857a703ab",
+  "previous_reset_commit": "575953b0bc039dbc716d3411e275be1d04313e2e",
+  "previous_main_full_TU_sha256": "d2c27ac68757a09cec2a1777558cedcf4cdd417bf57591159447e4f004e17d6a",
+  "canonical_old_ss_object_sha256": "7dd2645c7d313478d5e35aeaa9ce7eaa93342e0cb6e4c2b126e5f982c61b830f",
+  "canonical_old_main_object_sha256": "d1f61fc39f22f22ffc2f811c03af4cf5f2ff46f87cc30bc7eb9f5223a850c0fb",
+  "source_header_discovery": "Historical C57 and canonical004 cManager.h differs from current source. The chosen previous54ba/575 source MMD header dependencies match candidate a781 bytes except the selected complete TU. Exact historical C57/canonical argv normalize identically only for source/output roots; generated forced headers match. Old objects remain references, not fresh OFF controls.",
+  "stop": "Later live main.cpp became dirty under root-owned confirmed reset borrower UAF repair; generator stopped before creating candidate namespace. Await replacement root freeze.",
+  "compiler_runs": 0,
+  "preprocessor_runs": 0,
+  "lease": false,
+  "root_message": "Confirmed SOB/BAKE cached-pointer UAF across a781 reset. Same default0 guard/Make flags; root implements pre-common full room_leave after UI restore/TaskAllClear. SS/header identities unchanged. Eight-task proposal preserved."
+}

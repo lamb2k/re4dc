@@ -1,0 +1,18 @@
+{
+  "sscrn": {
+    "commit": "54ba44079c33117b8241a9277c3aecdce8b4f9ce",
+    "relative_source": "port/dreamcast/game/sscrn_bridge.cpp",
+    "sha256": "eb704d519337b4349fc069b11fd9aea7825831f5048a4fd5980b81f857a703ab",
+    "compressed_source": "sscrn-previous.cpp.gz",
+    "projection": "/root/probe/issue52-cache-repairs-sh4-objects-20261022-01/projections/sscrn",
+    "policy": "Create a read-only symlink view of candidate tree; ancestor directories of both selected TU and compile cwd are real (union); replace only selected TU with decompressed exact previous bytes. Preserve command source argument, relative include lookup, __FILE__ and __BASE_FILE__. Do not edit parent tree. All current dependency bytes except selected TU verified equal previous commit. Pin view and resolved paths at admission; full actual system dependencies must match candidate-normalized closure."
+  },
+  "reset": {
+    "commit": "575953b0bc039dbc716d3411e275be1d04313e2e",
+    "relative_source": "src/game/main.cpp",
+    "sha256": "d2c27ac68757a09cec2a1777558cedcf4cdd417bf57591159447e4f004e17d6a",
+    "compressed_source": "reset-previous.cpp.gz",
+    "projection": "/root/probe/issue52-cache-repairs-sh4-objects-20261022-01/projections/reset",
+    "policy": "Create a read-only symlink view of candidate tree; ancestor directories of both selected TU and compile cwd are real (union); replace only selected TU with decompressed exact previous bytes. Preserve command source argument, relative include lookup, __FILE__ and __BASE_FILE__. Do not edit parent tree. All current dependency bytes except selected TU verified equal previous commit. Pin view and resolved paths at admission; full actual system dependencies must match candidate-normalized closure."
+  }
+}

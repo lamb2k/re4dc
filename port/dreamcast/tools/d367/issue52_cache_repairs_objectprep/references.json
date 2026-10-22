@@ -1,0 +1,110 @@
+[
+  {
+    "path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/build.log",
+    "resolved_path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/build.log",
+    "bytes": 1148477,
+    "sha256": "f7bd7c81f9325200d7f38ba37ed1016e38e4460545d14f5c0ec1082085bf6e22"
+  },
+  {
+    "path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/owned-build.json",
+    "resolved_path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/owned-build.json",
+    "bytes": 7289,
+    "sha256": "577ce46b9309791353b008760f5fac0a5bd257faac3b270e9ba750be33650f20"
+  },
+  {
+    "path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/candidate.txt",
+    "resolved_path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/candidate.txt",
+    "bytes": 5152,
+    "sha256": "6839e3edb4f6b9fec0389bafaea48054d22a7a222b43e811aa0249b4adc1e301"
+  },
+  {
+    "path": "/root/probe/texture-rect21-program-pair-20261021-01/out-off/build.log",
+    "resolved_path": "/root/probe/texture-rect21-program-pair-20261021-01/out-off/build.log",
+    "bytes": 1142053,
+    "sha256": "7f38ba583d9b80be3c4343493785170fa48fa55d3cd80e0c7b2016a5be52421c"
+  },
+  {
+    "path": "/root/probe/texture-rect21-program-pair-20261021-01/pair-result.json",
+    "resolved_path": "/root/probe/texture-rect21-program-pair-20261021-01/pair-result.json",
+    "bytes": 8668,
+    "sha256": "848f7ff521456c0b973c50ae6ec7e7a0ebd158f0ee4bded9020c8d79dd4a52f0"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/system-header-pins.json.gz",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/system-header-pins.json.gz",
+    "bytes": 66827,
+    "sha256": "f8bcf7700cd2fa9e962dd215664457da6fc7a726618fd668619c7768e6b42850"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/toolchain-pins.json",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/toolchain-pins.json",
+    "bytes": 3982,
+    "sha256": "5876d72a784d5b07a915bdff8e294c36a312419dfa89aae7ab48065c7e451884"
+  },
+  {
+    "path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/compiler-environment.json",
+    "resolved_path": "/root/probe/codex-issue52-objects/port/dreamcast/tools/d367/issue52_objectprep650/compiler-environment.json",
+    "bytes": 761,
+    "sha256": "686ec2286dd9158fcf9284e198f7ea03600464b9c16e0273b458964fd6351cb3"
+  },
+  {
+    "path": "/root/probe/d367-buildslot.sh",
+    "resolved_path": "/root/probe/d367-buildslot.sh",
+    "bytes": 485,
+    "sha256": "14eaa5f2dc1a3b87282b1a2faaaa20a0676788b0e870f2e4e26bdc87d1e0a4dd"
+  },
+  {
+    "path": "/root/probe/texture-rect21-program-pair-20261021-01/obj/sscrn_bridge.o",
+    "resolved_path": "/root/probe/texture-rect21-program-pair-20261021-01/obj/sscrn_bridge.o",
+    "bytes": 83444,
+    "sha256": "7dd2645c7d313478d5e35aeaa9ce7eaa93342e0cb6e4c2b126e5f982c61b830f"
+  },
+  {
+    "path": "/root/probe/texture-rect21-program-pair-20261021-01/obj/sscrn_bridge.d",
+    "resolved_path": "/root/probe/texture-rect21-program-pair-20261021-01/obj/sscrn_bridge.d",
+    "bytes": 2698,
+    "sha256": "a5616e3d6898b9f768d7bc2a1223f34c5f1a439fb50ea15da1e3f3b34ab27a6c"
+  },
+  {
+    "path": "/root/probe/texture-rect21-program-pair-20261021-01/obj/src/game/main.o",
+    "resolved_path": "/root/probe/texture-rect21-program-pair-20261021-01/obj/src/game/main.o",
+    "bytes": 148056,
+    "sha256": "d1f61fc39f22f22ffc2f811c03af4cf5f2ff46f87cc30bc7eb9f5223a850c0fb"
+  },
+  {
+    "path": "/root/probe/texture-rect21-program-pair-20261021-01/obj/src/game/main.d",
+    "resolved_path": "/root/probe/texture-rect21-program-pair-20261021-01/obj/src/game/main.d",
+    "bytes": 5297,
+    "sha256": "68586fc012da305034e037c204437d84476f58a0fa8fa807f87c098d939fce25"
+  },
+  {
+    "path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/crash-screen.h",
+    "resolved_path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/crash-screen.h",
+    "bytes": 155,
+    "sha256": "9e302b23a2061d1870ea01ec909449a30aaf2e1f213ea0f240593d8be5a282ef"
+  },
+  {
+    "path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/subscreen.h",
+    "resolved_path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/subscreen.h",
+    "bytes": 193,
+    "sha256": "e1859086e91b60235c8b9eee3b22f1b0e12dc911ee8866aeeccc61d406892505"
+  },
+  {
+    "path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/pipeline30.h",
+    "resolved_path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/pipeline30.h",
+    "bytes": 1227,
+    "sha256": "9c69b5cce7f1a792ee44c6c64d57387c8da36c8467c9805af78d748974c77739"
+  },
+  {
+    "path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/pace.h",
+    "resolved_path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/pace.h",
+    "bytes": 465,
+    "sha256": "79af66a5060a5603df58a8db1dd5937384929028037195d45dcbaa362d1d5ca7"
+  },
+  {
+    "path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/vmu-context-options.h",
+    "resolved_path": "/root/probe/cache21-ganado-reader-build-20261021/off-01/obj/vmu-context-options.h",
+    "bytes": 78,
+    "sha256": "ebe223687629759367416237eaaa19d866986ef4d138d874d3e3bd291f6807fc"
+  }
+]
