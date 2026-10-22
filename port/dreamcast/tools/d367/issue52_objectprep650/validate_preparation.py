@@ -24,7 +24,7 @@ for name in ('canonical-references.json','candidate-input-pins.json.gz','system-
   p=Path(v['path']);require(p.is_file() and sha(p)==v['sha256'],'pin disagreement '+str(p));count+=1
   require(str(p.resolve())==v['resolved_path'],'resolved path changed '+str(p))
 env=load('compiler-environment.json')
-for p in env['absent_include_roots']:require(not Path(p).exists(),'absent include path appeared '+p)
+for p in env['absent_include_roots']+env.get('absent_tool_specs',[]):require(not Path(p).exists(),'absent include path appeared '+p)
 for k,v in env['influencing_environment'].items():require(os.environ.get(k)==v,'compiler environment changed '+k)
 require(not Path(r['future_output']).exists(),'future output exists; preserve and inspect it')
 tasks=load('planned-tasks.json');require(len(tasks)==6,'task inventory')

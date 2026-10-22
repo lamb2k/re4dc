@@ -196,5 +196,77 @@
     "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on-macros.txt.gz",
     "bytes": 52105,
     "sha256": "a63f6669c62d1f04632f899216018f6ff91aee0719b7ff0fd7ab489ddfcf972e"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-default.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-default.o",
+    "bytes": 976980,
+    "sha256": "6ed59b154793ac933dee9e00c4319c9d95655989f5e82d38084b50e3b303b3da"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-default.stripped.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-default.stripped.o",
+    "bytes": 353324,
+    "sha256": "8159e0dd836d3007b7bbb7a1e2776816d64d8fd00c3ff2e42cf4daf9bb79cef1"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-off.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-off.o",
+    "bytes": 976980,
+    "sha256": "6ed59b154793ac933dee9e00c4319c9d95655989f5e82d38084b50e3b303b3da"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-off.stripped.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-off.stripped.o",
+    "bytes": 353324,
+    "sha256": "8159e0dd836d3007b7bbb7a1e2776816d64d8fd00c3ff2e42cf4daf9bb79cef1"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-on.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-on.o",
+    "bytes": 987000,
+    "sha256": "12447f993ae473beeb7233169d0351719dc16dd94f111760680be7a92f1bf5a2"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-on.stripped.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_ui-on.stripped.o",
+    "bytes": 356136,
+    "sha256": "58e0d921204fb545d2fdfa697a367f69186cfe434141ebf827d4326e2f5a4470"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-default.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-default.o",
+    "bytes": 737008,
+    "sha256": "fed0f60d0aafd02ee30b316b50412ed2e0f14d9b2516c89139eba281b260b94f"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-default.stripped.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-default.stripped.o",
+    "bytes": 157440,
+    "sha256": "3b6fbe020ff2e56c26ad3bd41eb6f1cb2b892fb3fb573a62a5bfd5650ec6e017"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-off.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-off.o",
+    "bytes": 737008,
+    "sha256": "fed0f60d0aafd02ee30b316b50412ed2e0f14d9b2516c89139eba281b260b94f"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-off.stripped.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-off.stripped.o",
+    "bytes": 157440,
+    "sha256": "3b6fbe020ff2e56c26ad3bd41eb6f1cb2b892fb3fb573a62a5bfd5650ec6e017"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on.o",
+    "bytes": 742580,
+    "sha256": "8fe1f552634b90a22e33527c37f05d0f7d920ecde5ab56d83951885050db6114"
+  },
+  {
+    "path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on.stripped.o",
+    "resolved_path": "/root/probe/texture-rect21-canonical36-link-20261021-01/objects/native_static-on.stripped.o",
+    "bytes": 158676,
+    "sha256": "d31f2506d13498bb7360a7da500619db8a161960a62b1058e108aba6e78301bf"
   }
 ]

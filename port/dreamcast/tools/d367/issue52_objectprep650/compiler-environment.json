@@ -16,5 +16,8 @@
   },
   "startup_script": "/root/probe/texture-rect21-canonical36-link-20261021-01/run.sh",
   "candidate_kos_env_sha256": "d776b3b236236bc5f91500ae5e469c140b41f94e44ec72165efd556afd7aebb8",
-  "retained_forced_header_root": "/root/probe/texture-rect21-program-pair-20261021-01/obj"
+  "retained_forced_header_root": "/root/probe/texture-rect21-program-pair-20261021-01/obj",
+  "absent_tool_specs": [
+    "/opt/toolchains/dc/sh-elf/lib/gcc/sh-elf/15.2.0/specs"
+  ]
 }

@@ -94,5 +94,11 @@
     "resolved_path": "/usr/bin/python3.12",
     "bytes": 8020928,
     "sha256": "e50d468e8b0adfb05733f5b87b3cff34829c4a8c1aea50c865aa8bdfe4bb150f"
+  },
+  {
+    "path": "/opt/toolchains/dc/sh-elf/sh-elf/bin/as",
+    "resolved_path": "/opt/toolchains/dc/sh-elf/sh-elf/bin/as",
+    "bytes": 1923680,
+    "sha256": "f531978403ce0506056434ca83954df83d5b78347205680997d8a79258a4004d"
   }
 ]
