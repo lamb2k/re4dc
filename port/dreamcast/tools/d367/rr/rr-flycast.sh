@@ -21,7 +21,7 @@ while read -r slots name; do
   [ -n "${name:-}" ] || continue
   [ "$slots" -le "$MAX" ] || slots=$MAX
   while [ $((used + slots)) -gt "$MAX" ]; do sleep 3; reap; done
-  ( t=$(date +%s); bash "$J/$name.sh" > "$J/$name.log" 2>&1; rc=$?; echo $rc > "$J/$name.rc"
+  ( t=$(date +%s); bash "$J/$name.sh" < /dev/null > "$J/$name.log" 2>&1; rc=$?; echo $rc > "$J/$name.rc"
     printf '%s\t%s\t%s\t%s\n' "$name" "$t" "$(date +%s)" "$rc" >> "$J/times.tsv" ) &
   SL[$!]=$slots; used=$((used + slots))
   sleep 3

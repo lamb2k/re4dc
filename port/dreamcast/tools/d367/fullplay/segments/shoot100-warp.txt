@@ -1,0 +1,47 @@
+name shoot-r100
+# lane codex22: r100 house (h2 start, after s03 starts): aim and fire a full magazine, reload, 6 more shots; rig kill of
+# the s03 Ganado 0x12 at 400 (its first appearance and death clips), then the s20 ambush walk (goto 600).
+room 0x100
+pos -82910 860 -38480
+ang -0.1293
+rsf 0x100 13
+scenario 0 0x00000010
+inv default
+god
+kill 0x12 400 0x100
+act 60 0x0020 25
+act 85 0x0120 3
+act 88 0x0020 17
+act 105 0x0120 3
+act 108 0x0020 17
+act 125 0x0120 3
+act 128 0x0020 17
+act 145 0x0120 3
+act 148 0x0020 17
+act 165 0x0120 3
+act 168 0x0020 17
+act 185 0x0120 3
+act 188 0x0020 17
+act 205 0x0120 3
+act 208 0x0020 17
+act 225 0x0120 3
+act 228 0x0020 17
+act 245 0x0120 3
+act 248 0x0020 17
+act 265 0x0120 3
+act 268 0x0020 17
+act 285 0x0220 4
+act 289 0x0020 70
+act 359 0x0120 3
+act 362 0x0020 17
+act 379 0x0120 3
+act 382 0x0020 17
+act 399 0x0120 3
+act 402 0x0020 17
+act 419 0x0120 3
+act 422 0x0020 17
+act 439 0x0120 3
+act 442 0x0020 17
+act 459 0x0120 3
+act 462 0x0020 17
+goto 600 -110405 -733 2193 -1.5708

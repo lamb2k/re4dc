@@ -54,6 +54,17 @@ struct Re4dcRainStreak {
     unsigned tail, head;
 };
 extern "C" unsigned re4dc_rain_dc_streaks(const Re4dcRainStreak*, unsigned);
+#if defined(RE4DC_FX_STRIP21) && RE4DC_FX_STRIP21
+// Source GX quad order, live view-space corners and explicit authored UVs.
+// Same deferred FIFO/frame/fence owner as effects; no source pointer retained.
+struct Re4dcEffectQuad {
+    Re4dcUiImage image;
+    float positions[4][3],u[4],v[4],projection[7],viewport[6];
+    unsigned color;
+    unsigned char src,dst,wrap_s,wrap_t;
+};
+extern "C" int re4dc_effect_quad(const Re4dcEffectQuad*);
+#endif
 struct Re4dcEffectLine {
     float x[2], y[2], z[2];
     unsigned color[2];
