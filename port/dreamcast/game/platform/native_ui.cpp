@@ -9091,16 +9091,14 @@ extern "C" void __real_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_po
 // HDR_ALIGN_PROBE (lane mipfault22, diagnostic): KOS compiles headers with movca.l, which allocates the whole
 // 32-byte line without reading it; a header dst that is not 32-byte aligned leaves stale bytes in the line on
 // console (emulators zero/keep memory). Logs each distinct caller once.
-static void hdr_align_probe(const void* dst,const char* kind) {
+static void hdr_align_probe(const void* dst,const char* kind,void* pr) {
     static void* seen[16];static unsigned n;
     if((reinterpret_cast<std::uintptr_t>(dst)&31U)==0)return;
-    void* pr=__builtin_return_address(1);
     for(unsigned i=0;i<n;++i)if(seen[i]==pr)return;
     if(n<16)seen[n++]=pr;
-    std::printf("re4dc-hdr-misaligned: %s dst=%p pr=%p
-",kind,dst,pr);
+    std::printf("re4dc-hdr-misaligned: %s dst=%p pr=%p\n",kind,dst,pr);
 }
-#define RE4DC_HDR_PROBE(d,k) hdr_align_probe(d,k)
+#define RE4DC_HDR_PROBE(d,k) hdr_align_probe(d,k,__builtin_return_address(0))
 #else
 #define RE4DC_HDR_PROBE(d,k) ((void)0)
 #endif

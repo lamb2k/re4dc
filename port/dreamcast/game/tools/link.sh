@@ -102,7 +102,7 @@ if [ -n "$OVL" ]; then
         kos-c++ $OPT ${GAME_LDFLAGS:-} -Wl,-T,obj/overlay-b.ld -o obj/overlay-b.elf $OBJS obj/missing.o obj/aliases-all.ld
         m=${s#.ovl_}
         python3 tools/gen_overlay.py "$TARGET" obj/overlay-b.elf "$s" $a $((a + 0x100000)) "$OVL_DIR/${m,,}.ovl" || exit 1
-        rm -f obj/overlay-b.elf
+        cp obj/overlay-b.elf "$OVL_DIR/${m,,}.dbg.elf"; rm -f obj/overlay-b.elf
         i=$((i + 1))
     done
     # OVL_ID_GUARD (RE4DC_OVL_ID=1): the image's own identity word pair, after every overlay compared the image
