@@ -17,6 +17,9 @@
 #include <string.h>
 
 #include "re4dc_platform.h"
+#if defined(RE4DC_CRASH_OVL_LINE) && RE4DC_CRASH_OVL_LINE
+extern "C" int re4dc_ovl_crash_line(char* out, int size);   // modules.cpp
+#endif
 #if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
 #include "issue52_actor_diag.h"
 #endif
@@ -350,6 +353,13 @@ void show(const char* kind, const char* detail, bool wait_render)
     put_text(0, row++, line, 0xF800);
     snprintf(line, sizeof(line), "stage %08lx  ui frame %u" RE4DC_GD_FMT, re4dc_stage, re4dc_ui_frame() RE4DC_GD_ARGS);
     put_text(0, row++, line, 0xFFFF);
+#if defined(RE4DC_CRASH_OVL_LINE) && RE4DC_CRASH_OVL_LINE
+    {
+        char ol[192];
+        if (re4dc_ovl_crash_line(ol, sizeof(ol)))
+            for (int k = 0; ol[k] && row < 40; k += 52) { snprintf(line, 53, "%s", ol + k); put_text(0, row++, line, 0x07FF); }
+    }
+#endif
 #if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
     if (issue52_actor_line(line, sizeof(line))) put_text(0, row++, line, 0xFFE0);
 #endif

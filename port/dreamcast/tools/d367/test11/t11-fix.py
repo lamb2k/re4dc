@@ -880,10 +880,19 @@ if os.path.isdir(MIP22D):
     for _r in sorted(os.listdir(MIP22D + '/dc/native')):
         DATA['mip22']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22D, _r)
     PAK_DERIVED['mip22'] = MIP22D + '/pak-derived.json'
+# mip22b (lane mipfault22 10-22): mip22 with da197067-8f589a03 held at its ch21l 16-bit original. mip22 had re-encoded it
+# to PAL8 and r11c ran out of PAL8 palette blocks (TEXCHK r11c "PVR palette banks exhausted" on 48f71838). Replaces mip22
+# in the data line. Private store copy: re4-assets-private/mip22b-20261022 (RECIPE.txt, SHA256SUMS).
+MIP22BD = os.environ.get('MIP22BD', '/root/re4data/private/mip22b-20261022')
+if os.path.isdir(MIP22BD):
+    DATA['mip22b'] = {'dc/tex.pak': MIP22BD + '/dc/tex.pak', 'dc/resident.bin': MIP22BD + '/dc/resident.bin'}
+    for _r in sorted(os.listdir(MIP22BD + '/dc/native')):
+        DATA['mip22b']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22BD, _r)
+    PAK_DERIVED['mip22b'] = MIP22BD + '/pak-derived.json'
 # res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
-# (vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
+# (mip22b ships the same resident.bin and remap; vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
 # same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
-# table beside it for the coverage gate. After mip22; release discs only (not in KSETS, like mip22). 10-22: 5,520 records
+# table beside it for the coverage gate. After mip22 / mip22b; release discs only (not in KSETS, like mip22). 10-22: 5,520 records
 # (13 added: r000 HUD digits 2-9 + muzzle flash 148d2ff5 / 3a866b91; r100 983d1064 96f42df9; r101 cf2208cd), sha256 b81231ff.
 RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
 DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}

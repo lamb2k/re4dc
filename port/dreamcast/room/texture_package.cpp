@@ -1120,8 +1120,8 @@ bool Package::release_payload() {
     }
     if(streamed_) {
         // No whole-file CPU payload was allocated: do not count it as freed.
-#if RE4DC_TEX_PAL8_ALPHA && defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
-        // A live pack window owns the handle. This package has none to close.
+#if defined(RE4DC_TEX_PACK_WINDOW) && RE4DC_TEX_PACK_WINDOW
+        // A live pack window owns the handle. This package has none to close (any texture format; was TEX_PAL8_ALPHA only).
         if(file_ != FILEHND_INVALID)
 #endif
         fs_close(file_);file_=FILEHND_INVALID;

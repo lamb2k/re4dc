@@ -399,6 +399,18 @@ Key room_pin_key{};
 #else
 #define RE4DC_WRAP_SAFE(pkg) false
 #endif
+#if defined(RE4DC_OVL_WATCH) && RE4DC_OVL_WATCH
+extern "C" void re4dc_ovl_watch(const char* where);
+#define OVLW(x) re4dc_ovl_watch(x)
+#else
+#define OVLW(x) ((void)0)
+#endif
+#if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
+extern "C" void re4dc_ovl_guard(const char* where);
+#define OVLG(x) re4dc_ovl_guard(x)
+#else
+#define OVLG(x) ((void)0)
+#endif
 #if RE4DC_ACTOR_TRANSACTION
 re4dc_actor::TextureLeases<kTextureCount> actor_texture_leases;
 #define RE4DC_ENTRY_PINNED(e) ((e).frame==frame || actor_texture_leases.pinned(unsigned(&(e)-entries)) || RE4DC_FX_POOL_PINNED(e) || RE4DC_ROOM_PINNED(e))
@@ -3142,6 +3154,7 @@ void vram_room_track(){
     if(free_bytes<vroom.min_free)vroom.min_free=free_bytes;
 }
 void vram_room_frame(){
+    OVLG("frame");
     vram_room_track();
     if(frame%30==0){unsigned largest,alloc;vram_room_largest(largest,alloc);if(largest<vroom.min_largest)vroom.min_largest=largest;}
     if(frame!=vroom.since && (frame-vroom.since)%600==0)vram_room_sample("tick");
@@ -3151,6 +3164,7 @@ void vram_room_frame(){
 }
 #endif
 void close_entry(Entry& entry) {
+    struct OvlwAfter{~OvlwAfter(){OVLW("close");OVLG("close");}} ovlw_after;
 #if RE4DC_TEX_CHECK
     if(entry.valid)texchk::verify(entry,"close",true);
     texchk::armed[&entry-entries]=false;
@@ -3591,6 +3605,8 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     }
 #endif
     re4dc_log("native UI: upload %s vram=%u\n",ok?"ok":"FAILED",slot->package.vram_bytes());
+    OVLW("upload");
+    OVLG("upload");
 #if RE4DC_TEX_CHECK
     const char* const texchk_why=slot->package.error()?slot->package.error():"upload";
 #endif
