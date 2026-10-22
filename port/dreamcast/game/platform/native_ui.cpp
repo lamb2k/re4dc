@@ -305,9 +305,21 @@ unsigned kos_headroom(){unsigned f=0,u=0,b=0;re4dc_kos_heap_state(&f,&u,&b);retu
 #endif
 #endif
 struct Key { unsigned crc,fnv; bool operator==(const Key& b)const{return crc==b.crc && fnv==b.fnv;} };
-#if RE4DC_TEX_PACK
+#ifndef RE4DC_TEX_PAYLOAD_RETRY
+#define RE4DC_TEX_PAYLOAD_RETRY 0
+#endif
+#if RE4DC_TEX_PAYLOAD_RETRY && (!RE4DC_TEX_PACK || !RE4DC_TEX_RESIDENT)
+#error TEX_PAYLOAD_RETRY requires TEX_PACK and TEX_RESIDENT
+#endif
+#if RE4DC_TEX_PAYLOAD_RETRY
+#include "texpack_payload_retry.inc"
+#endif
 // TEX_PACK (game30.mk; tools/d367/texpack.py): dc/tex.pak index, validation and failure policy.
+#if RE4DC_TEX_PACK
 #include "texpack_index.inc"
+#if RE4DC_TEX_PAYLOAD_RETRY
+static_assert(texpack_payload_retry::kMembers==texpack::kMaxCount,"payload retry ordinal cap must match the validated pack cap");
+#endif
 #endif
 struct Entry { re4dc::texture::Package package; Key key{}; unsigned frame=0; bool valid=false;
 #if RE4DC_D349_RENDERER_STACK
@@ -3291,16 +3303,30 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     // an absent key so it is never tried again.
 #if RE4DC_TEX_PACK
     unsigned pack_offset=0,pack_size=0;
+#if RE4DC_TEX_PAYLOAD_RETRY
+    unsigned pack_member=~0U,pack_epoch=0;
+#define RE4DC_PACK_FIND() texpack::find(key,pack_offset,pack_size,frame,&pack_member,&pack_epoch)
+#else
+#define RE4DC_PACK_FIND() texpack::find(key,pack_offset,pack_size,frame)
+#endif
 #if RE4DC_QUALITY_ASSETS
     // texlow/ keys (Standard index additions) are never in tex/, so never in the pack: skip the lookup.
-    const texpack::Result pack=re4dc_std_texlow(key.crc,key.fnv)?texpack::kNotInPack:texpack::find(key,pack_offset,pack_size,frame);
+    const texpack::Result pack=re4dc_std_texlow(key.crc,key.fnv)?texpack::kNotInPack:RE4DC_PACK_FIND();
 #else
-    const texpack::Result pack=texpack::find(key,pack_offset,pack_size,frame);
+    const texpack::Result pack=RE4DC_PACK_FIND();
 #endif
     // A pack read error is transient: no eviction, no per-file probe, and the key is not remembered as missing
     // (on a packed disc its loose file is gone); a later use retries (texpack_index.inc spaces the retries in UI frames).
     if(pack==texpack::kError){++pack_error_skips;RE4DC_PROFILE_COUNT(TextureOpenFailures,1);RE4DC_TEXCHK_FAIL(key,"pack-error");return nullptr;}
     const bool in_pack=pack==texpack::kFound;
+#undef RE4DC_PACK_FIND
+#if RE4DC_TEX_PAYLOAD_RETRY
+    // Existing resident hits returned above. Only this exact failed member waits,
+    // before close_entry/eviction or a new package open; never a loose-key miss.
+    if(in_pack && texpack::payload_blocked(pack_member,frame,pack_epoch)){
+        RE4DC_TEXCHK_FAIL(key,"pack-payload-retry");return nullptr;
+    }
+#endif
     if(slot->valid && !in_pack){
 #else
     if(slot->valid){
@@ -3537,6 +3563,12 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
     re4dc_log("native UI: upload %s vram=%u\n",ok?"ok":"FAILED",slot->package.vram_bytes());
 #if RE4DC_TEX_CHECK
     const char* const texchk_why=slot->package.error()?slot->package.error():"upload";
+#endif
+#if RE4DC_TEX_PAYLOAD_RETRY
+    if(in_pack){
+        if(ok)texpack::payload_succeeded(pack_member,pack_epoch);
+        else if(texpack_payload_retry::source_error(slot->package.error()))texpack::payload_failed(pack_member,frame,pack_epoch);
+    }
 #endif
     if(!ok) slot->package.close();
 #if RE4DC_TEX_META_EVICT
@@ -3873,7 +3905,8 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             // Capture independently of today's admission limits: a later owner/pass may have more space.
             for(const auto& r:buf)resident_list_cache.append(r);
         }
-        for(unsigned i=0;i<record_count && n+resident<limit;++i){
+        // Discovery must not depend on texture admission: earlier owner passes may fill the budget.
+        for(unsigned i=0;i<record_count;++i){
             const Rec& r=records[i];
 #else
     for(;re4dc::texture::read_file_range("/cd/dc/resident.bin",pieces*sizeof(buf),buf,sizeof(buf),nullptr)==
@@ -3893,6 +3926,10 @@ void preload_resident(unsigned& n,unsigned& resident,unsigned& bytes,unsigned li
             if((r.room!=src.room && r.room) || !r.width || !r.height || r.width>1024 || r.height>1024)continue;
 #else
             if(r.room!=src.room || !r.width || !r.height || r.width>1024 || r.height>1024)continue;
+#endif
+#if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
+            // Keep admission and its accounting bounded after discovering core keys and room-list ownership.
+            if(n+resident>=limit)continue;
 #endif
             ++resident_listed;
 #if defined(RE4DC_TEX_PKG_SKIP) && RE4DC_TEX_PKG_SKIP

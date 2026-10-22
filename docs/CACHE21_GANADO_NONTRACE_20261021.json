@@ -1,0 +1,230 @@
+{
+  "scope": "Main source integration and nontraced OFF/repair-onlyON link qualification",
+  "source": "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f",
+  "selected_repair": "f071b4e9069ebd3a7dec48a98f2fea95f6d11215",
+  "rows": [
+    {
+      "arm": "off-01",
+      "source": "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f",
+      "program": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+      "program_bytes": 3348164,
+      "ELF": "3463c915aff0803914ad88949da7596f795487c2d9b77181af82351457ab9e1a",
+      "overlays": [
+        {
+          "name": "em22.ovl",
+          "sha256": "b6ca37a6819ae25aaaecdaa391e569576fdb55be2ade475160558e988e7a2ac0",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em2b.ovl",
+          "sha256": "7f911bf121245585986e1a37d199d192490a765cc6fdf727669502ba1834f0bc",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em2f.ovl",
+          "sha256": "aaa459d40a5a36bb026cbba09ec8601923e011c9b08781b3513728910c782db1",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em35.ovl",
+          "sha256": "f77eeca51099a2c546c4b294d60eacea043f9a29eefb584e325dbbf835dffbe1",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em3b.ovl",
+          "sha256": "8d3206a78dbf47dab0978549d41194228cdf7cb23df7d1b71d6d870a7305b08f",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl0f.ovl",
+          "sha256": "9e6ef28c7037d6a70df159c3b0b619d642b034dd6c7717e27a2e83ca6f2ba1b2",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl11.ovl",
+          "sha256": "c0c09fe91bcd4e773f7f4fd8a0efd6590cf3ecba5ebdd05def988309f7e622a7",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl14.ovl",
+          "sha256": "708eccab1479dc998ed75a14a48186bc11779645e56455bfdad79d08cbcc1454",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "sscrn.ovl",
+          "sha256": "90b0d74841fd172a297cb4c6802d84fce6abc56104e3169720ebd305abae5f34",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_0.ovl",
+          "sha256": "fb6fd3c5b69b5d8b2f4778adace333cc8b8e129c18839dc978257a0ab660a299",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_1.ovl",
+          "sha256": "3040180a3604b63e46780d2d90959c856ef547591c78500ce48260ce700173f5",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_2.ovl",
+          "sha256": "90576f23dc80e2409902e9c48f27917ecc5cb29a7c413d3288a7836c8ee0d6a0",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_3.ovl",
+          "sha256": "fb5ed4c7c3b71f481129a0d436f91eebf6fcf2f0bcd8ada23c1abea49728054e",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st2_0.ovl",
+          "sha256": "80ba0f71f4f9497c6c066965be309548479b1010a92135173218880da2586ea8",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        }
+      ],
+      "GANADO_ROUTINE_BYTES": 0,
+      "DEATH_TRACE_imported": false,
+      "all15_cache_guards": 0,
+      "CABIN_SOURCE": 0,
+      "recipe_sha256": "6839e3edb4f6b9fec0389bafaea48054d22a7a222b43e811aa0249b4adc1e301",
+      "log_sha256": "e89e831c80e02177fadd005bb6c18dda7b456767b91e947c76d20827181f1390"
+    },
+    {
+      "arm": "on-01",
+      "source": "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f",
+      "program": "453ff2f7ae824ecc6141b34649912e955c527482c04842743af8f5406e40aeb8",
+      "program_bytes": 3348260,
+      "ELF": "e3024f3c3a2baf3642677a75f79664ca7a4ab2499dc4c6ba7b49dd41459bff66",
+      "overlays": [
+        {
+          "name": "em22.ovl",
+          "sha256": "8ea19e13923ac2c6cfb100239c0621ceb8e93141812d57ba838b8bf026b3ea1f",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em2b.ovl",
+          "sha256": "042ed4aa42fdc66bb973aacd56f4e00068e60b82f2c171fbff03876aec2df16c",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em2f.ovl",
+          "sha256": "840f4fa6cda622de468930be37a01ed805cc003146b37403262149b3a4dd86ad",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em35.ovl",
+          "sha256": "7e64ff2044bfe3d54be528e4dace5faf4e587306f8ae90b8f0074063937c5d36",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "em3b.ovl",
+          "sha256": "659f777c65f72abbe40399f7742be3146ddc4cdcc31986609b0d683b7e61893a",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl0f.ovl",
+          "sha256": "e26a886cfdf7ad7b7a9b891527d68c4e2e739e13931e884e99fdb9e80804c9bc",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl11.ovl",
+          "sha256": "3864aa52f0ddf33c082a5168e965c5eeb2efc1602cc9138775bed572e3eaa1c5",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "pl14.ovl",
+          "sha256": "f611bca441978597b911ad20005003266849b776ee5153941c0a9f889b3585cd",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "sscrn.ovl",
+          "sha256": "be45d4adaa0de0c54917e482cc53e22d2dd3436733df7b6a6d091b2d86893d9a",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_0.ovl",
+          "sha256": "81ffec777d7a27af8b7864217a37dbf02294b568f1e5f86bf7c817c04a9e6ceb",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_1.ovl",
+          "sha256": "2554248d73ec12ba4f42cd4292ce29d91fc81b703c8ab479cd7686d7535eed45",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_2.ovl",
+          "sha256": "fcf90ed0a44ea14ab63f21f6b052d7f5fa1b3b469184545d561d3a1f84167f44",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st1_3.ovl",
+          "sha256": "de47f939a16894030199abb4153e508ec4b7e2600df052374bffa0ec6f8df40d",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        },
+        {
+          "name": "st2_0.ovl",
+          "sha256": "d7985959dc928795dcc4bf35701b081867e32c1139da2f94fad28a2052bb3b09",
+          "image_and_relocation_fnv_valid": true,
+          "main_text_binding_valid": true
+        }
+      ],
+      "GANADO_ROUTINE_BYTES": 1,
+      "DEATH_TRACE_imported": false,
+      "all15_cache_guards": 0,
+      "CABIN_SOURCE": 0,
+      "recipe_sha256": "725a37281fef8b08b423158aa306523827ee8e4f06a7d410d669906bca8cf66e",
+      "log_sha256": "d9cc2ebbd87a60c83214d4425b1643829cdf679e4a3cbc47c6bf5f7b03510836"
+    }
+  ],
+  "original_three_game_sources": {
+    "src/game/em_sub.cpp": "ddefd4571fd38c21f1af86bdf4f4362aee2009ac2e99cc5d8ddd8f4514700ba0",
+    "src/game/pl_dmg.cpp": "e8dc7a1cc2f6e1b6d6918092a84d51c2b69e3c2a8d4119581311c62c45040ea9",
+    "src/game/game.cpp": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90"
+  },
+  "prior_traced_Flycast": {
+    "receipt": "C:/Flycast-Evidence/re4-dreamcast/qa21-death-repair-runtime-20261021/matched-repair-qualification-20261021.json",
+    "source": "d82b317b66f147c1e2d375f8e8f5786867e63d85",
+    "program": "6624b9a8a8ac1a2f8aa143f1d159247ecc7ad48db5b1e8e9390fd3e6d2e29f9c",
+    "gates": [
+      "reciprocal catch pointers",
+      "original death demo/Continue menu",
+      "normal Continue and1316.783684-unit freeplay movement at1200HP"
+    ],
+    "limits": [
+      "Actual terminal play02 state later dies naturally:frame1951/life0.",
+      "No shooting, sustained survival or cinematic fidelity acceptance."
+    ]
+  },
+  "limits": [
+    "This nontraced programme has no stage or guest yet; prior traced evidence cannot substitute for this programme.",
+    "All cache guards remain0 in this pair; previous nonCABIN13-guard programme43f4599a is separate.",
+    "No production default/recipe/release/SD/hardware action or acceptance.",
+    "A01-A16 archive/reset/admission/reader audits remain open."
+  ]
+}

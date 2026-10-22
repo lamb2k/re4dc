@@ -64,6 +64,16 @@ endif
 $(OBJDIR)/mod/em10g/shared/src/em10/em10.o: GAME_CPPFLAGS += -DRE4DC_GANADO_ROUTINE_BYTES=1
 endif
 
+# EM_ADMISSION_DISP_FIX=1 (default 0): restore the caller's display flags when
+# readEm cannot find a free module slot, as on its transport-failure return.
+EM_ADMISSION_DISP_FIX ?= 0
+ifneq ($(EM_ADMISSION_DISP_FIX),0)
+ifneq ($(EM_ADMISSION_DISP_FIX),1)
+$(error EM_ADMISSION_DISP_FIX must be 0 or 1)
+endif
+$(OBJDIR)/src/game/read.o: GAME_CPPFLAGS += -DRE4DC_EM_ADMISSION_DISP_FIX=1
+endif
+
 # UI_POLY_ORDER: keep pickup/subscreen polygon headers in the source UI list.
 UI_POLY_ORDER ?= 0
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_UI_POLY_ORDER=$(UI_POLY_ORDER)
@@ -807,6 +817,129 @@ endif
 MODULES += wep01 wep07 wep09 wep11 wep13 wep19
 $(OBJDIR)/platform/modules.o: PLATFORM_CPPFLAGS += -DRE4DC_WEAPON_MODULES=1
 endif
+# EVD_ADMISSION_TXN=1 (default 0): publish SetEvd only after all required bins
+# succeed; roll back only this attempt's bin references on admission failure.
+EVD_ADMISSION_TXN ?= 0
+ifneq ($(EVD_ADMISSION_TXN),0)
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_ADMISSION_TXN must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_ADMISSION_TXN=1
+endif
+# EVD_START_CLEANUP=1 (default 0): locally abandon work whose init failed;
+# publish its effect-model view only after validation. Admission/read ownership
+# remains with the caller and is not repaired by this switch.
+EVD_START_CLEANUP ?= 0
+ifneq ($(EVD_START_CLEANUP),0)
+ifneq ($(EVD_START_CLEANUP),1)
+$(error EVD_START_CLEANUP must be 0 or 1)
+endif
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_START_CLEANUP requires EVD_ADMISSION_TXN=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_START_CLEANUP=1
+endif
+# EVD_START_ROLLBACK=1 (default 0): undo this call's complete new parent/bin
+# admission when starting its Event fails. Preserve pre-existing owners.
+EVD_START_ROLLBACK ?= 0
+ifneq ($(EVD_START_ROLLBACK),0)
+ifneq ($(EVD_START_ROLLBACK),1)
+$(error EVD_START_ROLLBACK must be 0 or 1)
+endif
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_START_ROLLBACK requires EVD_ADMISSION_TXN=1)
+endif
+ifneq ($(EVD_START_CLEANUP),1)
+$(error EVD_START_ROLLBACK requires EVD_START_CLEANUP=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_START_ROLLBACK=1
+endif
+# EVD_DEBUG_READ_CLEANUP=1 (default 0): release a fresh debug-file allocation
+# when bin/event admission refuses. Transactional event admission is required.
+EVD_DEBUG_READ_CLEANUP ?= 0
+ifneq ($(EVD_DEBUG_READ_CLEANUP),0)
+ifneq ($(EVD_DEBUG_READ_CLEANUP),1)
+$(error EVD_DEBUG_READ_CLEANUP must be 0 or 1)
+endif
+ifneq ($(EVD_ADMISSION_TXN),1)
+$(error EVD_DEBUG_READ_CLEANUP requires EVD_ADMISSION_TXN=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_DEBUG_READ_CLEANUP=1
+endif
+# EVD_EXEC_FAILURE_CLEANUP=1 (default 0): direct em0 read/start failure returns
+# failure, preserves a prior read, releases only an unborrowed fresh input and
+# pairs its scenario bracket. Module exchanges retain their existing path.
+EVD_EXEC_FAILURE_CLEANUP ?= 0
+ifneq ($(EVD_EXEC_FAILURE_CLEANUP),0)
+ifneq ($(EVD_EXEC_FAILURE_CLEANUP),1)
+$(error EVD_EXEC_FAILURE_CLEANUP must be 0 or 1)
+endif
+ifneq ($(EVD_START_ROLLBACK),1)
+$(error EVD_EXEC_FAILURE_CLEANUP requires EVD_START_ROLLBACK=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_EXEC_FAILURE_CLEANUP=1
+endif
+# EVD_ARAM_ALLOC_RETRY=1 (default 0): preserve a prior immutable cabin preload
+# after exact allocation refusal using the existing carrier epoch receipt.
+EVD_ARAM_ALLOC_RETRY ?= 0
+ifneq ($(EVD_ARAM_ALLOC_RETRY),0)
+ifneq ($(EVD_ARAM_ALLOC_RETRY),1)
+$(error EVD_ARAM_ALLOC_RETRY must be 0 or 1)
+endif
+ifneq ($(CABIN_SOURCE),1)
+$(error EVD_ARAM_ALLOC_RETRY requires CABIN_SOURCE=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_ARAM_ALLOC_RETRY=1
+$(OBJDIR)/platform/native_event_file.o: PLATFORM_CPPFLAGS += -DRE4DC_EVD_ARAM_ALLOC_RETRY=1
+endif
+# EVD_READ_RELEASE_REFS=1 (default 0): EvtFree drops only one registration when
+# an exact temporary ReadTbl row has multiple references. Final unit/carrier
+# release still follows the existing reader/refusal contract.
+EVD_READ_RELEASE_REFS ?= 0
+ifneq ($(EVD_READ_RELEASE_REFS),0)
+ifneq ($(EVD_READ_RELEASE_REFS),1)
+$(error EVD_READ_RELEASE_REFS must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_READ_RELEASE_REFS=1
+endif
+# EVD_READ_ADMISSION_PREFLIGHT=1 (default 0): reject impossible fresh table
+# admission before acquiring a descriptor, and retain an existing swapped role.
+# This does not reserve a table slot across file/diagnostic callbacks.
+EVD_READ_ADMISSION_PREFLIGHT ?= 0
+ifneq ($(EVD_READ_ADMISSION_PREFLIGHT),0)
+ifneq ($(EVD_READ_ADMISSION_PREFLIGHT),1)
+$(error EVD_READ_ADMISSION_PREFLIGHT must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_READ_ADMISSION_PREFLIGHT=1
+endif
+# EVD_MODULE_VALIDATE_FIRST=1 (default 0): validate existing module/size before
+# releasing its effects for exchange. Forward exchange completion is separate.
+EVD_MODULE_VALIDATE_FIRST ?= 0
+ifneq ($(EVD_MODULE_VALIDATE_FIRST),0)
+ifneq ($(EVD_MODULE_VALIDATE_FIRST),1)
+$(error EVD_MODULE_VALIDATE_FIRST must be 0 or 1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_MODULE_VALIDATE_FIRST=1
+endif
+# EVD_FORWARD_RECEIPT=1 (default 0): accepted prepared first-forward source
+# receipt before/after effect release and the void MemorySwap boundary.
+# Unsupported initial zero epochs and rows retain their existing behavior.
+EVD_FORWARD_RECEIPT ?= 0
+ifneq ($(EVD_FORWARD_RECEIPT),0)
+ifneq ($(EVD_FORWARD_RECEIPT),1)
+$(error EVD_FORWARD_RECEIPT must be 0 or 1)
+endif
+ifneq ($(CABIN_SOURCE),1)
+$(error EVD_FORWARD_RECEIPT requires CABIN_SOURCE=1)
+endif
+ifneq ($(EVD_ARAM_ALLOC_RETRY),1)
+$(error EVD_FORWARD_RECEIPT requires EVD_ARAM_ALLOC_RETRY=1)
+endif
+ifneq ($(EVD_MODULE_VALIDATE_FIRST),1)
+$(error EVD_FORWARD_RECEIPT requires EVD_MODULE_VALIDATE_FIRST=1)
+endif
+$(OBJDIR)/src/game/event.o: GAME_CPPFLAGS += -DRE4DC_EVD_FORWARD_RECEIPT=1
+endif
 # WEAPON_HEAP4=1 (option 3 of issue lamb2k/re4dc#1, default 0: no effect): a weapon body larger than the resident
 # weapon block (WEAPON_RESIDENT_BYTES; the r104 merchant's rifle 398,144 / with scope 404,608, rocket launcher
 # 382,688, TMP 289,248 / with stock 299,200) is read into heap 4, the room heap, as Krauser's body goes to
@@ -818,6 +951,15 @@ endif
 # WEAPON_ARCHIVE_REUSE=1: retain a successfully linked same-file weapon archive across re-equip.
 # Publish the reuse identity after ReleaseWepData/load/link, invalidate it on every release,
 # and check the actual file/module/backing before reuse. Distinct archives still load normally.
+# EFFECT_ADMISSION_GUARD=1: reject an invalid first EFF load before publishing its owner reference.
+# Existing valid duplicate/refcount behavior is preserved. Default-off source path is unchanged.
+EFFECT_ADMISSION_GUARD ?= 0
+ifneq ($(EFFECT_ADMISSION_GUARD),0)
+ifneq ($(EFFECT_ADMISSION_GUARD),1)
+$(error EFFECT_ADMISSION_GUARD must be 0 or 1)
+endif
+$(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_ADMISSION_GUARD=1
+endif
 WEAPON_ARCHIVE_REUSE ?= 0
 ifneq ($(WEAPON_ARCHIVE_REUSE),0)
 ifneq ($(WEAPON_ARCHIVE_REUSE),1)
@@ -1211,6 +1353,17 @@ $(OBJDIR)/platform/audio_stub.o: PLATFORM_CPPFLAGS += -include $(OBJDIR)/aica-au
 # MOTION_LEASE_LEAN=1 removes acquire-only telemetry timers and reuses the
 # guard's existing owner slot for its extra lease; =2 compares the source lookup.
 # Counts, mutex/pins/release order and cancellation ownership remain unchanged.
+# Bulk motion retirement preflight; no room-reset/admission serialization claim.
+MOTION_RETIRE_PREFLIGHT ?= 0
+ifneq ($(words $(MOTION_RETIRE_PREFLIGHT)),1)
+$(error MOTION_RETIRE_PREFLIGHT must be 0 or 1)
+endif
+ifeq ($(filter $(MOTION_RETIRE_PREFLIGHT),0 1),)
+$(error MOTION_RETIRE_PREFLIGHT must be 0 or 1)
+endif
+ifeq ($(MOTION_RETIRE_PREFLIGHT),1)
+$(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_RETIRE_PREFLIGHT=1
+endif
 MOTION_LEASE_LEAN ?= 0
 .PHONY: motion-lease-lean-force
 $(OBJDIR)/motion-lease-lean.h: motion-lease-lean-force

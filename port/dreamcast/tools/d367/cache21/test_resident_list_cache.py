@@ -75,9 +75,11 @@ FakeFS ref_fs,on_fs;unsigned checks=0;
 std::vector<unsigned char> file(std::vector<Rec>rows,unsigned pieces=0){unsigned bytes=pieces?pieces*512:((rows.size()+31)/32)*512;assert(bytes>=rows.size()*sizeof(Rec));std::vector<unsigned char>b(bytes);std::memcpy(b.data(),rows.data(),rows.size()*sizeof(Rec));return b;}
 Rec rec(unsigned room,unsigned key,unsigned width=8,unsigned height=8){return{static_cast<std::uint16_t>(room),static_cast<std::uint16_t>(width),static_cast<std::uint16_t>(height),1,key,key*17+3};}
 void reset(std::vector<unsigned char>b){ref::reset();on::reset();ref_fs={};on_fs={};ref_fs.data=on_fs.data=b;}
+// Admission remains identical; the independent core_pin_discovery suite checks corrected pin metadata.
+std::string admission_signature(const std::string&s){unsigned commas=0;std::size_t end=0;for(;end<s.size();++end)if(s[end]==','&&++commas==5)break;std::string out=s.substr(0,end);std::istringstream in(s);std::string word;while(in>>word)if(word[0]=='P')out+=' '+word;return out;}
 unsigned step(const char*name,unsigned room=0x100,unsigned limit=448,unsigned budget=10000000,bool owner=false){
  active_room=room;active_fs=&ref_fs;auto expected=ref::run(limit,budget,owner);active_fs=&on_fs;unsigned c=on_fs.calls;auto actual=on::run(limit,budget,owner);
- if(expected!=actual){std::fprintf(stderr,"case %s mismatch\nref %s\non %s\n",name,expected.c_str(),actual.c_str());std::abort();}++checks;return on_fs.calls-c;
+ if(admission_signature(expected)!=admission_signature(actual)){std::fprintf(stderr,"case %s mismatch\nref %s\non %s\n",name,expected.c_str(),actual.c_str());std::abort();}++checks;return on_fs.calls-c;
 }
 int main(){
  std::vector<Rec>r;for(unsigned i=0;i<6;++i)r.push_back(rec(0,1+i));for(unsigned i=0;i<117;++i)r.push_back(rec(0x100,100+i));for(unsigned i=0;i<84;++i)r.push_back(rec(0x103,1000+i));
@@ -106,5 +108,5 @@ for pin in [0,1,2]:
  exe=out/('test-core'+str(pin));cmd=['g++','-std=c++17','-O1','-g','-fsanitize=address,undefined','-fno-omit-frame-pointer','-DRE4DC_CORE_PIN='+str(pin),'-I',str(root/'port/dreamcast/game/platform/include'),str(out/'actual-source.cpp'),'-o',str(exe)]
  c=subprocess.run(cmd,capture_output=True,text=True);(out/('compile-core'+str(pin)+'.log')).write_text(c.stdout+c.stderr);assert c.returncode==0,c.stderr
  r=subprocess.run([str(exe)],capture_output=True,text=True);(out/('run-core'+str(pin)+'.log')).write_text(r.stdout+r.stderr);assert r.returncode==0,r.stdout+r.stderr;runs.append(r.stdout.strip())
-receipt=dict(base='c7e0358a44677a15123a7f4233c4115eba627694',source_sha256=hashlib.sha256(candidate.encode()).hexdigest(),generated_sha256=hashlib.sha256(cpp.encode()).hexdigest(),runs=runs,scope='Actual preload_select + preload_resident extracted from base and candidate, synthetic identities/file backend; ASan+UBSan. Not full renderer, target performance, or console acceptance.')
+receipt=dict(base='c7e0358a44677a15123a7f4233c4115eba627694',source_sha256=hashlib.sha256(candidate.encode()).hexdigest(),generated_sha256=hashlib.sha256(cpp.encode()).hexdigest(),runs=runs,scope='Actual source admission equality (n/resident/bytes/listed/picked/keys), excluding corrected core metadata checked by independent core_pin_discovery oracles. Synthetic identities/file backend; ASan+UBSan. Not full renderer, target occurrence/performance, or console acceptance.')
 (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))

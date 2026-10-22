@@ -27,6 +27,13 @@
 #include "types.h"
 #include "atari.h"
 #include "event.h"
+#if !defined(__PPC__) && defined(RE4DC_EVENT_MANAGER_STORAGE_FLAGS) && RE4DC_EVENT_MANAGER_STORAGE_FLAGS
+// Verify the actual Event layout, independently of the base policy's offset.
+typedef char EventStorageFlagOffsetMustMatch[
+    (__builtin_offsetof(Event, be_flag) == re4dcEventStorageFlags::offset) ? 1 : -1];
+typedef char EventStorageFlagWidthMustMatch[
+    (sizeof(((Event*)0)->be_flag) == sizeof(u32)) ? 1 : -1];
+#endif
 #include "light.h"
 #include "xml.h"
 #include "dbg_button.h"
@@ -66,6 +73,49 @@
 #include "native_cabin.h"
 #endif
 
+#if defined(RE4DC_EVD_START_CLEANUP) && RE4DC_EVD_START_CLEANUP && !defined(__PPC__)
+#if !defined(RE4DC_EVD_ADMISSION_TXN) || !RE4DC_EVD_ADMISSION_TXN
+#error EVD_START_CLEANUP requires EVD_ADMISSION_TXN
+#endif
+#endif
+
+#if defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY && !defined(__PPC__)
+#if !defined(RE4DC_CABIN_SOURCE) || !RE4DC_CABIN_SOURCE
+#error EVD_ARAM_ALLOC_RETRY requires CABIN_SOURCE
+#endif
+#endif
+
+#if defined(RE4DC_EVD_FORWARD_RECEIPT) && RE4DC_EVD_FORWARD_RECEIPT && !defined(__PPC__)
+#if !defined(RE4DC_CABIN_SOURCE) || !RE4DC_CABIN_SOURCE
+#error EVD_FORWARD_RECEIPT requires CABIN_SOURCE
+#endif
+#if !defined(RE4DC_EVD_ARAM_ALLOC_RETRY) || !RE4DC_EVD_ARAM_ALLOC_RETRY
+#error EVD_FORWARD_RECEIPT requires EVD_ARAM_ALLOC_RETRY
+#endif
+#if !defined(RE4DC_EVD_MODULE_VALIDATE_FIRST) || !RE4DC_EVD_MODULE_VALIDATE_FIRST
+#error EVD_FORWARD_RECEIPT requires EVD_MODULE_VALIDATE_FIRST
+#endif
+extern "C" int re4dc_cabin_source_allocation(const void*,unsigned,int*);
+#endif
+
+#if defined(RE4DC_EVD_EXEC_FAILURE_CLEANUP) && RE4DC_EVD_EXEC_FAILURE_CLEANUP && !defined(__PPC__)
+#if !defined(RE4DC_EVD_START_ROLLBACK) || !RE4DC_EVD_START_ROLLBACK
+#error EVD_EXEC_FAILURE_CLEANUP requires EVD_START_ROLLBACK
+#endif
+#endif
+
+#if defined(RE4DC_EVD_DEBUG_READ_CLEANUP) && RE4DC_EVD_DEBUG_READ_CLEANUP && !defined(__PPC__)
+#if !defined(RE4DC_EVD_ADMISSION_TXN) || !RE4DC_EVD_ADMISSION_TXN
+#error EVD_DEBUG_READ_CLEANUP requires EVD_ADMISSION_TXN
+#endif
+#endif
+
+#if defined(RE4DC_EVD_START_ROLLBACK) && RE4DC_EVD_START_ROLLBACK && !defined(__PPC__)
+#if !defined(RE4DC_EVD_ADMISSION_TXN) || !RE4DC_EVD_ADMISSION_TXN || !defined(RE4DC_EVD_START_CLEANUP) || !RE4DC_EVD_START_CLEANUP
+#error EVD_START_ROLLBACK requires EVD_ADMISSION_TXN and EVD_START_CLEANUP
+#endif
+#endif
+
 
 extern "C" {
 void OSReport(const char* fmt, ...);
@@ -77,6 +127,9 @@ int strncmp(const char* a, const char* b, unsigned int n);
 unsigned int strlen(const char* s);
 char* strchr(const char* s, int c);
 char* strstr(const char* s, const char* sub);
+#if defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY && !defined(__PPC__)
+int memcmp(const void* first,const void* second,unsigned int bytes);
+#endif
 // game/eff_sys.cpp
 // game/read.cpp: SearchEmModule (C++ linkage) comes from read.h
 // game/shape.cpp
@@ -260,9 +313,11 @@ int Event::init(char* nm, EvtHeader* data)
         pLog->err(0, 0, "Event::init : memory failed");
         return 0;
     }
+#if !defined(RE4DC_EVD_START_CLEANUP) || !RE4DC_EVD_START_CLEANUP || defined(__PPC__)
     for (i = 0; i < 0x80; i++) {
         EspEvModList[i] = 0;
     }
+#endif
     EndRNo1 = 0;
     EndRNo2 = 0;
     EndRNo3 = 0;
@@ -291,6 +346,12 @@ int Event::init(char* nm, EvtHeader* data)
     EvtMgr.GetFunc((void**) &PFuncTbl, nm);
     strcpy(Name, nm);
     if (CalMaxTotalFrame(&MaxCut, &MaxTotalFrame) != 0 && CalMaxFrame(&MaxFrame, NowCut) != 0) {
+#if defined(RE4DC_EVD_START_CLEANUP) && RE4DC_EVD_START_CLEANUP && !defined(__PPC__)
+        // Publish the new event's effect-model view only after validation.
+        for (i = 0; i < 0x80; i++) {
+            EspEvModList[i] = 0;
+        }
+#endif
         return 1;
     }
     pLog->err(0, 0, "Event::init : data failed");
@@ -2234,7 +2295,7 @@ int EventMgr::DelAll()
 
     for (i = 0; i < nArray; i++) {
         e = (Event*) ((u8*) pArray + size * i);
-        if (e->isAlive()) {
+        if (RE4DC_EVENT_IS_ALIVE(e)) {
             DelEvt(e, 0);
         }
     }
@@ -2253,7 +2314,7 @@ int EventMgr::Run()
     dieCheck();
     for (i = 0; i < nArray; i++) {
         e = (Event*) ((u8*) pArray + size * i);
-        if (!e->isAlive()) {
+        if (!RE4DC_EVENT_IS_ALIVE(e)) {
             continue;
         }
         if (EvtChk(e->StatusFlag, 0x00080000)) {
@@ -2313,7 +2374,7 @@ int EventMgr::IsAliveEvt(u32* key, int out, int chk)
     for (i = 0; i < nArray; i++) {
         char* p = nm;
         e = (Event*) ((u8*) pArray + size * i);
-        if (!e->isAlive()) {
+        if (!RE4DC_EVENT_IS_ALIVE(e)) {
             continue;
         }
         if (chk != 1) {
@@ -2412,6 +2473,24 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
         *out = 0;
     }
     if (GetRead((void**) &unit, (int*) &no, nm) == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_READ_ADMISSION_PREFLIGHT) && RE4DC_EVD_READ_ADMISSION_PREFLIGHT
+        // Refuse a known impossible fresh registration before acquiring an
+        // active data-unit descriptor. This is not a reservation across I/O:
+        // a table changed by later callbacks still needs an owner receipt.
+        bool read_slot = false;
+        if (ReadTbl.pWork && strlen(nm) <= 0x2F) {
+            for (int i = 0; i < ReadTbl.NumDatTbl && i < 8; ++i) {
+                if (!(ReadTbl.pWork[i].FlagBe8 & 1)) {
+                    read_slot = true;
+                    break;
+                }
+            }
+        }
+        if (!read_slot) {
+            pLog->err(0, 0, "EventMgr::EvtRead : no admissible read slot[%s]", nm);
+            return 0;
+        }
+#endif
         p = strstr(nm, "evd/");
         if (p == 0) {
             pLog->err(0, 0, "EventMgr::EvtRead : Name failed [%s]", nm);
@@ -2434,6 +2513,35 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
         pLog->err(0, 0, "EventMgr::EvtRead : WkNo failed [%d]", no);
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_READ_ADMISSION_PREFLIGHT) && RE4DC_EVD_READ_ADMISSION_PREFLIGHT
+    if (!fresh && readEm[no].swapped != 0) {
+        // The existing exchange must be retired through its owner before a
+        // new read may overwrite its role or promote the underlying unit.
+        pLog->err(0, 0, "EventMgr::EvtRead : prior exchange still owned[%s]", nm);
+        return 0;
+    }
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY
+    unsigned preload_epoch = 0;
+    cDataUnit preload_unit;
+    DatTblEntry preload_row = {};
+    EvtReadEm preload_em = {};
+    if (!fresh && !aram && !em && unit && no < (u32) ReadTbl.NumDatTbl &&
+        unit->m_condition == 4 && unit->m_command == 0 && unit->m_err == 0 &&
+        unit->m_be_flag == (1 | RE4DC_EVENT_FILE_FLAG) && !unit->m_malloc_addr &&
+        !unit->m_fix_addr && !unit->arg && !unit->m_wait && unit->m_addr &&
+        unit->dest == (u32) unit->m_addr && readEm[no].em == 0 && readEm[no].swapped == 0) {
+        const DatTblEntry* row = &ReadTbl.pWork[no];
+        if (row->Dat == unit && row->Etc == 0 && row->FlagBe8 == 3 && row->Count && !row->dat2) {
+            preload_epoch = re4dc_cabin_carrier_preload_epoch(unit,(u32) unit->m_addr,unit->m_size);
+            if (preload_epoch) {
+                preload_unit = *unit;
+                preload_row = *row;
+                preload_em = readEm[no];
+            }
+        }
+    }
+#endif
     readEm[no].em = em;
     readEm[no].swapped = 0;
     if (aram == 0) {
@@ -2456,7 +2564,9 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
                 pLog->err(0, 0, "readEvent() : out of memory (0x%x)[%s]", unit->m_size, nm);
                 return 0;
             }
+#if !(defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_MODULE_VALIDATE_FIRST) && RE4DC_EVD_MODULE_VALIDATE_FIRST)
             EspEmDataSwapPush(em);
+#endif
             mod = SearchEmModule(em);
             if (mod == 0) {
                 DelRead(nm);
@@ -2468,6 +2578,80 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
                 pLog->err(0, 0, "EventMgr::EvtRead : event size too large!![%d]>[%d]", unit->m_size, mod->size);
                 return 0;
             }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_FORWARD_RECEIPT) && RE4DC_EVD_FORWARD_RECEIPT
+            // Only an accepted first-forward source receipt changes this path.
+            // Unsupported zero-epoch/repeated-role inputs retain legacy policy.
+            unsigned forward_epoch = 0;
+            cDataUnit forward_unit;
+            DatTblEntry forward_row = {};
+            EvtReadEm forward_em = {};
+            DatTblEntry* const forward_rows = ReadTbl.pWork;
+            const int forward_count = ReadTbl.NumDatTbl;
+            ReadModule* const forward_module = mod;
+            void* const forward_mram = mod->pArc;
+            const u32 forward_module_size = mod->size;
+            int forward_heap = -1;
+            if (unit && no < 8 && forward_rows && forward_count > 0 && no < (u32) forward_count) {
+                const DatTblEntry* row = &forward_rows[no];
+                if (row->Dat == unit && row->Etc == 0 && row->FlagBe8 == 3 &&
+                    row->Count && row->Count <= 0x7FFF && !row->dat2 &&
+                    readEm[no].em == em && readEm[no].swapped == 0 &&
+                    re4dc_cabin_source_allocation(forward_mram,forward_module_size,&forward_heap)) {
+                    forward_epoch = re4dc_cabin_carrier_preload_epoch(unit,(u32)unit->m_addr,unit->m_size);
+                    if (forward_epoch) {
+                        memcpy(&forward_unit,unit,sizeof(forward_unit));
+                        memcpy(&forward_row,row,sizeof(forward_row));
+                        memcpy(&forward_em,&readEm[no],sizeof(forward_em));
+                    }
+                }
+            }
+            const auto forward_current = [&]() -> bool {
+                int current_heap = -1;
+                return ReadTbl.pWork == forward_rows && ReadTbl.NumDatTbl == forward_count &&
+                    ReadTbl.pWork && no < (u32) ReadTbl.NumDatTbl &&
+                    memcmp(&ReadTbl.pWork[no],&forward_row,sizeof(forward_row)) == 0 &&
+                    memcmp(unit,&forward_unit,sizeof(forward_unit)) == 0 &&
+                    memcmp(&readEm[no],&forward_em,sizeof(forward_em)) == 0 &&
+                    SearchEmModule(em) == forward_module && forward_module->pArc == forward_mram &&
+                    forward_module->size == forward_module_size &&
+                    re4dc_cabin_source_allocation(forward_mram,forward_module_size,&current_heap) &&
+                    current_heap == forward_heap;
+            };
+            if (forward_epoch && (!forward_current() ||
+                re4dc_cabin_carrier_preload_epoch(unit,(u32)forward_unit.m_addr,forward_unit.m_size) != forward_epoch)) {
+                if (out) *out = 0;
+                pLog->err(0, 0, "EventMgr::EvtRead : forward receipt changed before effects[%s]", nm);
+                return 0;
+            }
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_MODULE_VALIDATE_FIRST) && RE4DC_EVD_MODULE_VALIDATE_FIRST
+            // Push releases effect registrations. Validate the module first
+            // so these two refusals do not release another owner's effects.
+            EspEmDataSwapPush(em);
+#endif
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_FORWARD_RECEIPT) && RE4DC_EVD_FORWARD_RECEIPT
+            if (forward_epoch) {
+                // Push can have changed ownership. Never exchange a new owner
+                // merely because the old unit/module addresses still exist.
+                if (!forward_current() ||
+                    re4dc_cabin_carrier_preload_epoch(unit,(u32)forward_unit.m_addr,forward_unit.m_size) != forward_epoch) {
+                    if (out) *out = 0;
+                    pLog->err(0, 0, "EventMgr::EvtRead : forward receipt changed after effects[%s]", nm);
+                    return 0;
+                }
+                MemorySwap(forward_mram,(u32)forward_unit.m_addr,forward_unit.m_size);
+                int current_heap = -1;
+                if (!forward_current() ||
+                    re4dc_cabin_carrier_reverse_token(unit,forward_module,forward_mram,forward_unit.m_size,&current_heap) != forward_epoch ||
+                    current_heap != forward_heap) {
+                    // Native partial copies/requests may own the only displaced
+                    // module bytes. Retain them; failure is not effect rollback.
+                    if (out) *out = 0;
+                    pLog->err(0, 0, "EventMgr::EvtRead : forward exchange not accepted[%s]", nm);
+                    return 0;
+                }
+            } else
+#endif
             MemorySwap(mod->pArc, (u32) unit->m_addr, unit->m_size);
             readEm[no].swapped = 1;
             r = mod->pArc;
@@ -2477,6 +2661,38 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
         } else {
             unit->setCommand(CMND_MRAM_LOAD, 0, 1);
             if (unit->waitUseOk() == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_ARAM_ALLOC_RETRY) && RE4DC_EVD_ARAM_ALLOC_RETRY
+                if (preload_epoch) {
+                    const u8 preload_wait = preload_unit.wait;
+                    const u32 logical = (u32) preload_unit.m_addr;
+                    // Allocation error one occurs before install/DMA or any
+                    // owned MRAM exists. Match every other original byte and
+                    // the same accepted source epoch before restoring deltas.
+                    preload_unit.m_command = CMND_MRAM_LOAD;
+                    preload_unit.m_err = 1;
+                    preload_unit.arg = 0;
+                    preload_unit.wait = 1;
+                    preload_unit.m_wait = 1;
+                    preload_unit.dest = 0;
+                    if (re4dc_cabin_carrier_preload_epoch(unit,logical,preload_unit.m_size) == preload_epoch &&
+                        ReadTbl.pWork && no < (u32) ReadTbl.NumDatTbl &&
+                        memcmp(&ReadTbl.pWork[no],&preload_row,sizeof(preload_row)) == 0 &&
+                        memcmp(&readEm[no],&preload_em,sizeof(preload_em)) == 0 &&
+                        memcmp(unit,&preload_unit,sizeof(preload_unit)) == 0) {
+                        unit->m_command = 0;
+                        unit->m_err = 0;
+                        unit->arg = 0;
+                        unit->wait = preload_wait;
+                        unit->m_wait = 0;
+                        unit->dest = logical;
+                    }
+                    // A lost/changed receipt also forbids clearing a new or
+                    // partially installed owner. Preserve current state for
+                    // explicit retry/retirement; never restore stale fields.
+                    pLog->err(0, 0, "readEvent() : retained preload after allocation refusal[%s]", nm);
+                    return 0;
+                }
+#endif
                 unit->setCommand(CMND_CLEAR_DATA, 0, 0);
                 DelRead(nm);
                 pLog->err(0, 0, "readEvent() : out of memory (0x%x)[%s]", unit->m_size, nm);
@@ -2524,6 +2740,19 @@ int EventMgr::EvtReadExec(char* nm, int em, u32 flags)
             SceSleep(1);
         }
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_EXEC_FAILURE_CLEANUP) && RE4DC_EVD_EXEC_FAILURE_CLEANUP
+    // The first repair covers direct MRAM reads, including ordinary ARAM
+    // preloads promoted by EvtReadMram. Module exchange needs its own receipt.
+    cDataUnit* prior_unit = 0;
+    int prior_no = 0;
+    EvtReadEm prior_em = {};
+    const int prior_read = em == 0 && GetRead((void**) &prior_unit, &prior_no, nm);
+    if (prior_read && prior_no >= 0 && prior_no < 8) {
+        prior_em = readEm[prior_no];
+    }
+    const u32 prior_status = pG->Status_flg[2] & 0x00090000;
+    const u32 prior_system = pG->System_flg & 0x400;
+#endif
     if (flags & 0x80) {
         pLog->mes(0, 0, "EventMgr::EvtReadExec : SceEventStart(true)");
         SceEventStart(1);
@@ -2557,6 +2786,50 @@ int EventMgr::EvtReadExec(char* nm, int em, u32 flags)
             if (flags & 0x100) {
                 BitOn(evt->StatusFlag, 0x40);
             }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_EXEC_FAILURE_CLEANUP) && RE4DC_EVD_EXEC_FAILURE_CLEANUP
+        } else if (em == 0) {
+            cDataUnit* current = 0;
+            int current_no = 0;
+            if (GetRead((void**) &current, &current_no, nm) && current &&
+                current_no >= 0 && current_no < 8 && current_no < ReadTbl.NumDatTbl) {
+                if (prior_read) {
+                    // A failed new work never releases a pre-existing read.
+                    if (current == prior_unit && current_no == prior_no) {
+                        readEm[current_no] = prior_em;
+                    }
+                } else if ((u32) current->m_addr == (u32) addr &&
+                           readEm[current_no].em == 0 && readEm[current_no].swapped == 0) {
+                    const DatTblEntry* row = &ReadTbl.pWork[current_no];
+                    int borrowed = 0;
+                    const u32 base = (u32) current->m_addr;
+                    for (int i = 0; i < EvdTbl.NumDatTbl && EvdTbl.pWork; i++) {
+                        const DatTblEntry* owner = &EvdTbl.pWork[i];
+                        if ((owner->FlagBe8 & 1) && (u32) owner->Dat - base < current->m_size) borrowed = 1;
+                    }
+                    for (int i = 0; i < BinTbl.NumDatTbl && BinTbl.pWork; i++) {
+                        const DatTblEntry* owner = &BinTbl.pWork[i];
+                        if ((owner->FlagBe8 & 1) && (u32) owner->Dat - base < current->m_size) borrowed = 1;
+                    }
+                    for (u32 i = 0; i < nArray && pArray; i++) {
+                        Event* reader = (Event*) ((u8*) pArray + size * i);
+                        if (RE4DC_EVENT_IS_ALIVE(reader) && (u32) reader->pData - base < current->m_size) borrowed = 1;
+                    }
+                    if (!borrowed && row->Count == 1 && row->FlagBe8 == 3 && row->dat2 == 0) {
+                        if (!EvtFree(nm)) {
+                            // Cabin clear refusal retains its exact read/role
+                            // for retry. Failure is never reported as success.
+                            pLog->warn(0, 0, "EventMgr::EvtReadExec : failed start retained read[%s]", nm);
+                        }
+                    }
+                }
+            }
+            // Pair only this call's Start. Source End handles outer camera
+            // restoration and leaves a prior nested event running.
+            SceEventEnd(0);
+            pG->Status_flg[2] = (pG->Status_flg[2] & ~0x00090000U) | prior_status;
+            pG->System_flg = (pG->System_flg & ~0x400U) | prior_system;
+            return 0;
+#endif
         }
         if (flags & 4) {
             SceSleep(1);
@@ -2600,6 +2873,18 @@ int EventMgr::EvtFree(char* nm)
         pLog->err(0, 0, "EventMgr::EvtFree : NameEvt failed [%s]", nm);
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_READ_RELEASE_REFS) && RE4DC_EVD_READ_RELEASE_REFS
+    if (unit && no < 8 && ReadTbl.pWork && no < (u32) ReadTbl.NumDatTbl) {
+        const DatTblEntry* row = &ReadTbl.pWork[no];
+        if (row->Dat == unit && row->Etc == 0 && row->FlagBe8 == 3 && !row->dat2 &&
+            row->Count > 1 && row->Count <= 0x7FFF) {
+            // Release this registration only. Other registrations still own
+            // the unit and its current module/exchange role. Count is not an
+            // Event/DMA reader lease; their final-release checks stay below.
+            return DelRead(nm);
+        }
+    }
+#endif
 #if RE4DC_CABIN_SOURCE
     const bool cabin_owned=unit && re4dc_cabin_carrier_reserved(unit);
     if(!cabin_owned)DelRead(nm);
@@ -2685,11 +2970,31 @@ int EventMgr::SetEvt(void* data, u32* key)
         pLog->err(0, 0, "EventMgr::SetEvt : invalid data");
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_START_ROLLBACK) && RE4DC_EVD_START_ROLLBACK
+    // SetEvd reuses a complete prior owner without taking another reference.
+    // Only this call's new admission may be undone after a failed local start.
+    const int prior = EvtMgr.EvdTbl.ChkDat((char*) hdr);
+#endif
     if (EvtMgr.SetEvd((char*) hdr, hdr, 0, 2) == 0) {
         pLog->err(0, 0, "EventMgr::SetEvt : SetEvd failed[%s]", hdr);
         return 0;
     }
     if (EvtMgr.SetEvt((char*) hdr, &evt) == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_START_ROLLBACK) && RE4DC_EVD_START_ROLLBACK
+        void* registered = 0;
+        u8 type = 0;
+        int slot = 0;
+        if (!prior && EvtMgr.EvdTbl.GetDat(&registered, &type, (char*) hdr, &slot) &&
+            registered == hdr && type == 8) {
+            const DatTblEntry* row = &EvtMgr.EvdTbl.pWork[slot];
+            // A transferred/replaced/debug-owned row is not this admission.
+            // The synchronous source call keeps the immutable header and its
+            // bin reference list live until this rollback returns.
+            if (row->Count == 1 && row->FlagBe8 == 3 && row->dat2 == 0) {
+                EvtMgr.DelEvd((char*) hdr);
+            }
+        }
+#endif
         pLog->err(0, 0, "EventMgr::SetEvt : SetEvt failed[%s]", hdr);
         return 0;
     }
@@ -2733,7 +3038,16 @@ int EventMgr::SetEvt(char* nm, Event** out)
 #endif
     if (evt->init(nm, (EvtHeader*) evd) == 0) {
         pLog->err(0, 0, "EventMgr::SetEvt : init failed[%s]", nm);
+#if defined(RE4DC_EVD_START_CLEANUP) && RE4DC_EVD_START_CLEANUP && !defined(__PPC__)
+#if RE4DC_CABIN_SOURCE
+        re4dc_cabin_carrier_event_deleted(evt);
+#endif
+        // No begin or cabin audio binding has happened. The member destructor
+        // releases ModTbl; normal event end would tear down prior live state.
+        destroyNow(evt);
+#else
         DelEvt(evt, 0);
+#endif
         return 0;
     }
     evt->StatusFlag |= 0x01000000;
@@ -2844,6 +3158,9 @@ int EventMgr::GetBin(void** out, const char* nm, int flagGet)
                 return 0;
             }
             if (SetBin((char*) nm, dat, dat, 2) == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_DEBUG_READ_CLEANUP) && RE4DC_EVD_DEBUG_READ_CLEANUP
+                Debug_free(dat);
+#endif
                 pLog->err(0, 0, "EventMgr::GetBin : non SetBin[%s]", path);
                 return 0;
             }
@@ -2885,6 +3202,73 @@ int EventMgr::SetEvd(char* nm, void* data, void* dat2, int flag)
         pLog->err(0, 0, "EventMgr::SetEvd : invalid data[%s]", nm);
         return 0;
     }
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_ADMISSION_TXN) && RE4DC_EVD_ADMISSION_TXN
+    // myRoomInit owns at most 0x140 bin slots. Keep only this call's reference
+    // deltas on the stack; a failed admission does not take ownership of dat2.
+    if (EvdTbl.pWork == 0 || BinTbl.pWork == 0 ||
+        BinTbl.NumDatTbl < 0 || BinTbl.NumDatTbl > 0x140 || hdr->nBin < 0) {
+        pLog->err(0, 0, "EventMgr::SetEvd : invalid admission table[%s]", nm);
+        return 0;
+    }
+    void* registered = 0;
+    u8 type = 0;
+    if (EvdTbl.GetDat(&registered, &type, nm, 0) == 1) {
+        // A name alone is not completeness. Preserve the registered owner and
+        // its counts; a legacy partial parent has no child-ref provenance.
+        EvtHeader* prior = (EvtHeader*) registered;
+        if ((int) prior >= 0 || type != 8 || strncmp(prior->tag, "event", 5) != 0 || prior->nBin < 0) {
+            return 0;
+        }
+        for (i = 0; i < prior->nBin; i++) {
+            e = (EvtBinEntry*) (i * sizeof(EvtBinEntry) + (prior->binOfs + (u32) prior));
+            void* bin = 0;
+            if (BinTbl.GetDat(&bin, &type, e->name, 0) == 0 || (int) bin >= 0 || type != 7) {
+                pLog->err(0, 0, "EventMgr::SetEvd : incomplete owner[%s]", nm);
+                return 0;
+            }
+        }
+        return 1;
+    }
+    u16 addedRefs[0x140] = {};
+    u32 newSlots[0x140 / 32] = {};
+    for (i = 0; i < hdr->nBin; i++) {
+        e = (EvtBinEntry*) (i * sizeof(EvtBinEntry) + (hdr->binOfs + (u32) hdr));
+        int slot = 0;
+        const int existed = BinTbl.GetWkNo(&slot, e->name);
+        // DatTbl deletion uses a signed count. Do not wrap a shared reference.
+        if (existed && BinTbl.pWork[slot].Count >= 0x7FFF) {
+            pLog->err(0, 0, "EventMgr::SetEvd : bin count overflow[%s]", e->name);
+            goto evd_admission_failed;
+        }
+        if (SetBin(e->name, (u8*) (e->ofs + (u32) hdr), 0, flag) == 0) {
+            pLog->err(0, 0, "EventMgr::SetEvd : SetBin failed[%s]", e->name);
+            goto evd_admission_failed;
+        }
+        if (!existed) {
+            BinTbl.GetWkNo(&slot, e->name);
+            newSlots[slot >> 5] |= 1U << (slot & 31);
+        }
+        addedRefs[slot]++;
+    }
+    // Publication is last: GetEvd cannot observe a new partial admission.
+    if (EvdTbl.SetDat(nm, hdr, 8, dat2, flag, 0) != 0) {
+        return 1;
+    }
+    pLog->err(0, 0, "EventMgr::SetEvd : failed[%s]", nm);
+evd_admission_failed:
+    for (i = 0; i < BinTbl.NumDatTbl; i++) {
+        if (addedRefs[i] != 0) {
+            DatTblEntry* bin = &BinTbl.pWork[i];
+            bin->Count -= addedRefs[i];
+            if ((newSlots[i >> 5] & (1U << (i & 31))) && bin->Count == 0) {
+                // New bins borrow hdr (dat2 == 0). Do not use DelDat here: a
+                // permanent entry would remain published at Count == 0.
+                memclr_asm(bin, sizeof(DatTblEntry));
+            }
+        }
+    }
+    return 0;
+#else
     if (EvdTbl.ChkDat(nm) == 1) {
         return 1;
     }
@@ -2900,6 +3284,7 @@ int EventMgr::SetEvd(char* nm, void* data, void* dat2, int flag)
         }
     }
     return 1;
+#endif
 }
 
 // Looks a registered evd up by name (tool: read from disk when missing).
@@ -2923,6 +3308,11 @@ int EventMgr::GetEvd(void** out, char* nm, int flagGet)
                 return 0;
             }
             if (SetEvd(nm, dat, dat, 2) == 0) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EVD_DEBUG_READ_CLEANUP) && RE4DC_EVD_DEBUG_READ_CLEANUP
+                // Transaction failure publishes no owner of this fresh debug
+                // allocation. The legacy partial-admission path cannot free it.
+                Debug_free(dat);
+#endif
                 pLog->err(0, 0, "EventMgr::GetEvd : non SetBin[%s]", path);
                 return 0;
             }

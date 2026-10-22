@@ -1,0 +1,67 @@
+{
+  "scope": "Actual EspgenIsActive/PushEspgen/EspgenDeleteEvent source controls. Archive/reference storage and scheduler source map only; no execution of EstSet/update, native decoder, source SceEventStart or whole reset.",
+  "head": "b228da0eaffbda95a41127f62fbc9aad59fdfb72",
+  "source_sha256": {
+    "src/game/est.cpp": "8b49c628aac0a10d084a7666e7d35bcafea3f503686d6078ed8aa9739b2312bd",
+    "src/game/espgen.cpp": "43bc31c723c59f77d706864322de95d5dd4c3f29bb33bc7fb3dd64e6b1a2bb07",
+    "src/game/espgen00.cpp": "08abab772e8056ac5ff5ff409916b631a1809ea05217376449c177822ed4619c",
+    "src/game/espgen10.cpp": "13116d95c265b3c9e4304b8bc35ba9884018a16a556b0f5341136a18387af668",
+    "src/game/sce_com.cpp": "b18dd8fe318e0bd3e9be6277beef056bc3a8ba7a121f8f70a7ab0a8f93a2ff0e",
+    "src/game/event.cpp": "c3671a9f6107ae9fa44320609cbb58df69c86d5211deb369d61a5aeb0788aeb2",
+    "src/game/read.cpp": "1333da510986bbf7f75ffb35aa9588463db84e5817b8d838ab3c58100e84dfa1",
+    "src/game/game.cpp": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+    "port/dreamcast/game/platform/native_effect.cpp": "e1ac17d4375424739857ae450d8b36ceced5cb8e92cc39aa358b0b1916d43d8f",
+    "port/dreamcast/game/platform/include/native_effect_source.h": "a62dfa066c09ac09d940577a79f0f61d6c18f45cc6814b128a6da7315d0c908e"
+  },
+  "selected_methods": [
+    {
+      "path": "src/game/espgen.cpp",
+      "signature": "static inline int EspgenIsActive(",
+      "line": 119,
+      "sha256": "883d4f5a5dc66b6c8247bbfe5bdd131bb0051135228392297dc2075a9f1ea76f"
+    },
+    {
+      "path": "src/game/espgen.cpp",
+      "signature": "void PushEspgen(",
+      "line": 428,
+      "sha256": "cc96b96948db2b4098e8b37955cf2460775c66c72d0e8d3520fd0d94566f8813"
+    },
+    {
+      "path": "src/game/espgen.cpp",
+      "signature": "void EspgenDeleteEvent(",
+      "line": 816,
+      "sha256": "ccffbc3144c7c3e1a8c08116faf99b5465211cb9c1ca6d00fb543004759661e3"
+    }
+  ],
+  "test_sha256": {
+    "test_effect_borrower_matrix.py": "0e6dff16fe76ce7912e1dd70e0a805e1f4d82aca2d53936d17fc8eac01bad9bd",
+    "effect_borrower_matrix_host.cpp": "7683e61cfe3d4e17122629fa4c9cd0f92479e0d3c2cda21ddeda8bd88dd2c91e"
+  },
+  "command": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g",
+    "-fsanitize=undefined",
+    "-fno-sanitize-recover=all",
+    "-Wall",
+    "-Wextra",
+    "-I/root/probe/cache21-callers-effect-borrower-matrix-20261022-01",
+    "/root/probe/codex-cache21-callers/port/dreamcast/tools/d367/cache21-callers/effect_borrower_matrix_host.cpp",
+    "-o",
+    "/root/probe/cache21-callers-effect-borrower-matrix-20261022-01/test"
+  ],
+  "output": "BORROWER core=0 removed=1 active_during_event=0 PASS\nBORROWER core=1 removed=0 active_during_event=1 PASS\nBORROWER core=800 removed=0 active_during_event=0 PASS\nBORROWER core=801 removed=0 active_during_event=1 PASS\nBORROWER core=2000 removed=1 active_during_event=0 PASS\nBORROWER core=2001 removed=0 active_during_event=1 PASS\nBORROWER core=3000 removed=1 active_during_event=0 PASS\nBORROWER core=3001 removed=0 active_during_event=1 PASS\nEFFECT_BORROWER_MATRIX_CASES=64 PASS\n",
+  "boundaries": [
+    "EspgenWork/Global project only fields used by these three bodies. retained_head is an observational marker; EstSet assignment is source-reviewed separately.",
+    "GetEspgenIdMax returns0, so actual Push sets deletion flag without optional destruct dispatch. Real scheduler clears/deferred destructor/app callbacks remain outside this unit.",
+    "Eight source Core_flg values, four pool flags and event OFF/ON give64 controls. Surviving active flags establish source policy, not route occurrence or a new lifetime implementation."
+  ],
+  "resource_guard": {
+    "start_C_free_bytes": 23652745216,
+    "finish_C_free_bytes": 23648813056,
+    "floor_bytes": 19461570560,
+    "output_bytes_before_receipt": 429727,
+    "output_limit_bytes": 20971520
+  }
+}

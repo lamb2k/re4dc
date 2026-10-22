@@ -1,0 +1,189 @@
+{
+  "scope": "Actual SH-4 event.o only; no linked-program, guest or hardware acceptance",
+  "baseline_revision": "32172f542",
+  "candidate_event_sha256": "051d9ee941c075143f93716847fd065f193877c313648e935defe33b14bd0a29",
+  "qualifier_sha256": "5e3ae04a1ea4855a1ea9d5a2404b4f50380ea4da3dd4d6b578306652a4528f7a",
+  "baseline_make_sha256": "e5ad2dc1ab145c84f5e5a9debb02d8ff20ef05e7a6cb8f6030d460b2a4bbd52d",
+  "start_C_free_bytes": 23623925760,
+  "finish_C_free_bytes": 23284264960,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "invalid_knobs_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "missing_make_prerequisites_rejected": [
+    "0",
+    "1"
+  ],
+  "direct_source_prerequisites_rejected": [
+    null,
+    "0",
+    "1"
+  ],
+  "ppc_selected_preprocessed_sha256": "3fe5ce34dd635e43727819a074596f76120a19b19f9116e19d7b32b0a189f2c9",
+  "ppc_limit": "Selected-source preprocessing only, not a PPC object/full-game identity claim.",
+  "objects": [
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "start_rollback": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "9a4bcc63affe0c5419040fdc258ba66820720b20b7970b5381ada03ad61266f1",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin0-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:254:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2893:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2718:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2676:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "start_rollback": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "051d9ee941c075143f93716847fd065f193877c313648e935defe33b14bd0a29",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin0-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:260:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2919:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2744:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2682:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "9a4bcc63affe0c5419040fdc258ba66820720b20b7970b5381ada03ad61266f1",
+      "stripped_event_o_sha256": "e45f1072f25a2db05491189ccaa2b6b5e7a38702ef28527d7fbd840dd886568d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39841\t      4\t    640\t  40485\t   9e25\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin0-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:254:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2893:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2718:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2676:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "051d9ee941c075143f93716847fd065f193877c313648e935defe33b14bd0a29",
+      "stripped_event_o_sha256": "e45f1072f25a2db05491189ccaa2b6b5e7a38702ef28527d7fbd840dd886568d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39841\t      4\t    640\t  40485\t   9e25\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin0-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:260:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2919:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2744:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2682:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "051d9ee941c075143f93716847fd065f193877c313648e935defe33b14bd0a29",
+      "stripped_event_o_sha256": "52dcf7af3e5e8b38ae771e5a4020bd11cc3df31b8537e1a6dccf8398732546ea",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39993\t      4\t    640\t  40637\t   9ebd\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin0-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:260:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2919:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2744:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2682:5:int EventMgr::SetEvt(void*, u32*)\t40\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "start_rollback": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "9a4bcc63affe0c5419040fdc258ba66820720b20b7970b5381ada03ad61266f1",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin1-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:254:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2893:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2718:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2676:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "start_rollback": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "051d9ee941c075143f93716847fd065f193877c313648e935defe33b14bd0a29",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin1-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:260:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2919:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2744:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2682:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "9a4bcc63affe0c5419040fdc258ba66820720b20b7970b5381ada03ad61266f1",
+      "stripped_event_o_sha256": "4da5cc73e3273ff54fdc081268e98b1900a91d73a24c811e862ba0a771ca2969",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40371\t      4\t    640\t  41015\t   a037\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin1-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:254:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2893:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2718:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2676:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "051d9ee941c075143f93716847fd065f193877c313648e935defe33b14bd0a29",
+      "stripped_event_o_sha256": "4da5cc73e3273ff54fdc081268e98b1900a91d73a24c811e862ba0a771ca2969",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40371\t      4\t    640\t  41015\t   a037\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin1-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:260:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2919:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2744:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2682:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "start_rollback": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "051d9ee941c075143f93716847fd065f193877c313648e935defe33b14bd0a29",
+      "stripped_event_o_sha256": "1347d172b0a5ae61c70394d1e1409dd4c619893c06ce5c00ed77e3e7699602f0",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40523\t      4\t    640\t  41167\t   a0cf\t/root/probe/cache21-callers-rollback-sh4-20261021-01/cabin1-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:260:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2919:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2744:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-rollback-sh4-20261021-01/event.cpp:2682:5:int EventMgr::SetEvt(void*, u32*)\t40\tstatic"
+      ]
+    }
+  ]
+}

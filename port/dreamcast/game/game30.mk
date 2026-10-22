@@ -26,6 +26,33 @@
 #                     timing-perturbation control arm that proves the fixture is insensitive to
 #                     CPU speed before any A/B verdict is trusted.
 # Build every arm in its own OBJDIR (flag changes do not rebuild existing objects).
+# Event storage bookkeeping: every TU must use the same template policy.
+# Native only; other manager predicates/layout and recipe defaults are unchanged.
+# Retire native reset borrowers before destroying their source heaps.
+RESET_RETIRE_BEFORE_HEAPS ?= 0
+ifneq ($(RESET_RETIRE_BEFORE_HEAPS),0)
+ifneq ($(RESET_RETIRE_BEFORE_HEAPS),1)
+$(error RESET_RETIRE_BEFORE_HEAPS must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1
+endif
+# Conditional failed-restore containment; optional source candidate only.
+SS_RESTORE_VALIDATE_FIRST ?= 0
+ifneq ($(SS_RESTORE_VALIDATE_FIRST),0)
+ifneq ($(SS_RESTORE_VALIDATE_FIRST),1)
+$(error SS_RESTORE_VALIDATE_FIRST must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1
+endif
+EVENT_MANAGER_STORAGE_FLAGS ?= 0
+ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),0)
+ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),1)
+$(error EVENT_MANAGER_STORAGE_FLAGS must be 0 or 1)
+endif
+GAME_CPPFLAGS += -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1
+PLATFORM_CPPFLAGS += -DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1
+endif
+
 GAME_CPU ?= 0
 ifeq ($(GAME_CPU),1)
 GAME_PS_ALIAS ?= 1
@@ -2450,6 +2477,24 @@ ifneq ($(TEX_PACK_FAULT),0)
 $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PACK_FAULT=$(TEX_PACK_FAULT)
 endif
 endif
+# TEX_PAYLOAD_RETRY=1 (default 0): space only failed packed-member I/O/validation retries
+# before eviction; dense exact ordinals require the immutable index sector CRC receipts.
+TEX_PAYLOAD_RETRY ?= 0
+ifneq ($(words $(TEX_PAYLOAD_RETRY)),1)
+$(error TEX_PAYLOAD_RETRY must be exactly 0 or 1)
+endif
+ifeq ($(filter 0 1,$(TEX_PAYLOAD_RETRY)),)
+$(error TEX_PAYLOAD_RETRY must be exactly 0 or 1)
+endif
+ifeq ($(TEX_PAYLOAD_RETRY),1)
+ifneq ($(TEX_PACK),1)
+$(error TEX_PAYLOAD_RETRY needs TEX_PACK=1)
+endif
+ifneq ($(TEX_RESIDENT),1)
+$(error TEX_PAYLOAD_RETRY needs TEX_RESIDENT=1)
+endif
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_PAYLOAD_RETRY=1
+endif
 # TEX_PACK_WINDOW=KB (lane plainread16 2026-10-16, user-approved "per-room large texture reads"; default 0 = image
 # unchanged; needs TEX_PACK=1, DISC_READ_FALLBACK=2 and TEX_PAYLOAD_CRC=0): each room preload pass reads tex.pak through
 # a KB read-ahead window (room/texture_package.hpp pack_window_*; a transient staging buffer from the current heap, freed
@@ -3618,4 +3663,16 @@ $(error MOTION_MISS_LOG must be 0 or 1)
 endif
 ifeq ($(MOTION_MISS_LOG),1)
 $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_MISS_LOG=1
+endif
+
+# Validate controller/model/part inputs before native effect record reads.
+EFFECT_CONTROLLER_VALIDATE_FIRST ?= 0
+ifneq ($(words $(EFFECT_CONTROLLER_VALIDATE_FIRST)),1)
+$(error EFFECT_CONTROLLER_VALIDATE_FIRST must be 0 or 1)
+endif
+ifeq ($(filter $(EFFECT_CONTROLLER_VALIDATE_FIRST),0 1),)
+$(error EFFECT_CONTROLLER_VALIDATE_FIRST must be 0 or 1)
+endif
+ifeq ($(EFFECT_CONTROLLER_VALIDATE_FIRST),1)
+$(OBJDIR)/src/game/espgen10.o: GAME_CPPFLAGS += -DRE4DC_EFFECT_CONTROLLER_VALIDATE_FIRST=1
 endif

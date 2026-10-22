@@ -446,6 +446,9 @@ static void* readEm(int id, void* addr, u32 size)
     BitOff(pG->Disp_flg, 0x800);
     m = pullEmModule();
     if (m == NULL) {
+#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_EM_ADMISSION_DISP_FIX) && RE4DC_EM_ADMISSION_DISP_FIX
+        pG->Disp_flg = flags;
+#endif
         return NULL;
     }
     if (readEmData(m, id, addr, size) == 0) {

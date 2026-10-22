@@ -624,6 +624,11 @@ extern "C" void re4dc_subscreen_swap_close(SubScreenWork* wk)
         re4dc_ssb_get(reinterpret_cast<void*>(spans[i].start), spans[i].bytes);
         h = hash_words(reinterpret_cast<const void*>(spans[i].start), spans[i].bytes, h);
     }
+#if RE4DC_SS_RESTORE_VALIDATE_FIRST
+    // A bad restore must halt before thaw or motion recount dereferences it.
+    // Keep suspension and backing ownership intact for the failure diagnostic.
+    if (h != open_hash) re4dc_missing("sub screen backing corrupted while the screen was open");
+#endif
 #if defined(RE4DC_LOGIC_TRACE_SWAPPED) && RE4DC_LOGIC_TRACE_SWAPPED
     re4dc_logic_trace_swap_close();
 #endif

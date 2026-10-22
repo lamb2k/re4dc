@@ -1,0 +1,41 @@
+{
+  "kind": "root-owned-bounded-motion-retirement-repair",
+  "default_switch": "MOTION_RETIRE_PREFLIGHT=0",
+  "sources": [
+    {
+      "path": "/root/probe/codex-cache21-integration-next/port/dreamcast/game/platform/native_motion.cpp",
+      "sha256": "5a4b3c64f98815772021bed83ff1ef5e8b302243002df587991c89bfe49bb58d"
+    },
+    {
+      "path": "/root/probe/codex-cache21-integration-next/port/dreamcast/game/Makefile",
+      "sha256": "11cd1c26b171eb3e361297ee10721d9353ee6be08fc269e3f7052a92f5d5f9e3"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/motion-retire-preflight-v1/host/receipt.json",
+      "sha256": "81902aba8c7e5a838e39dcfa51b00536a08153c6ead7df6200d363f59e639574"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/motion-retire-preflight-v1/sh4/receipt.json",
+      "sha256": "326e9067b9d88d6435d7aa70381dee344d0f74918ee4ae886d05c3cb51b68c7e"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/motion-retire-preflight-v1/make/receipt.json",
+      "sha256": "6b9f17da549089b7da94323fb5664a2a4c4b9b0ae0d36bcf5cfed056825e61f4"
+    }
+  ],
+  "results": [
+    "Actual retire_all/release_binding host bodies:8 cases per baseline/OFF/ON x3 reserve/packing profiles pass UBSan.",
+    "Later pin reproduces earlier-binding frees in original/OFF; ON stops before any motion binding release under the same existing Locked scope.",
+    "Whole SH4 stripped object baseline=unset=explicit0; ON +68text, data0/BSS557 unchanged, retire_all static16B unchanged under selected QA recipe.",
+    "Actual Make dry-run default/0/1 resolve correctly; empty/2/multiword/01/-1/yes rejected."
+  ],
+  "boundaries": [
+    "Discard/allocator and locking are explicit host boundaries; no KOS scheduling or actual allocation test.",
+    "Whole gameRoomMemInit is NOT repaired: weapon/overlay cleanup precede this API; admission freeze/readers/Event/native retirement still require a whole-reset contract.",
+    "No full-program, stage, guest, release, performance or physical Dreamcast acceptance for this new repair.",
+    "Original failed compiler/Make environment scaffolds remain outside selected receipts."
+  ],
+  "time_unix": 1792620844.0240726
+}

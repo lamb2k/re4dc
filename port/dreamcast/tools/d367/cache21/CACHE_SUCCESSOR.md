@@ -42,3 +42,28 @@ Use fresh program lineage, never retarget a prior binary's state. Preserve froze
 
 
 
+
+
+## October 21 main integration preparation
+
+The new isolated codex/cache21-integration-prep branch starts at892c10dd,
+which already contains the six-fix merge. It imports only the reviewed display
+refusal, effect first-admission, EVD transaction, local start cleanup and new
+parent/bin rollback deltas. Every switch remains default zero. The negative
+window restoration, capacity/reset, audio and unfinished outer read repairs
+are excluded. It is source preparation for review, not a production landing.
+
+Selected runtime source9398baeb1 passes the complete all-disabled program
+identity gate against8942ad7e plus all14 overlays. The four composition source
+fixtures pass within their explicit boundaries; the original strict manager
+vptr diagnostic remains in init controls and is not mislabeled a clean full
+sanitizer result. integration-prep-validation.json pins every receipt.
+
+The effect runner needed an exact existing fixture prerequisite, now included.
+The new worktree uses the original pinned SH4ZAM33fa4850. Both early build
+preflight refusals remain preserved; no unsupported knob was silently accepted.
+The enabled full build is still unqualified after a disk preflight refusal.
+No staged image, gameplay I/O improvement, release gate, production merge,
+recipe enablement, SD copy or physical Dreamcast acceptance follows from this
+source/disabled-identity result. Main owns the remaining read/reset audit and
+component review; Claude retains production merge and publication ownership.

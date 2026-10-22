@@ -36,6 +36,44 @@ public:
     int isAlive() { return (be_flag & 0x201) == 1; }
 };
 
+// Event slot storage exists before construction and after destruction. Byte access
+// requires currently allocated pool storage; this is not stale-pointer validation.
+#if !defined(__PPC__) && defined(RE4DC_EVENT_MANAGER_STORAGE_FLAGS) && RE4DC_EVENT_MANAGER_STORAGE_FLAGS
+class Event;
+struct re4dcEventStorageFlags {
+    enum { offset = __builtin_offsetof(cUnit, be_flag) };
+    typedef char FlagWidthMustBeFour[(sizeof(u32) == 4) ? 1 : -1];
+    static u32 load(const Event* p) {
+        u32 value;
+        __builtin_memcpy(&value, (const unsigned char*)p + offset, sizeof(value));
+        return value;
+    }
+    static void store(Event* p, u32 value) {
+        __builtin_memcpy((unsigned char*)p + offset, &value, sizeof(value));
+    }
+    static void set(Event* p, u32 mask) { store(p, load(p) | mask); }
+    static int alive(const Event* p) { return (load(p) & 0x201) == 1; }
+};
+template<class T> struct re4dcManagerStorageFlags {
+    static u32 load(T* p) { return p->be_flag; }
+    static void store(T* p, u32 value) { p->be_flag = value; }
+    static void set(T* p, u32 mask) { p->be_flag |= mask; }
+    static int alive(T* p) { return p->isAlive(); }
+};
+template<> struct re4dcManagerStorageFlags<Event> : re4dcEventStorageFlags {};
+#define RE4DC_MANAGER_FLAG_LOAD(p) re4dcManagerStorageFlags<T>::load(p)
+#define RE4DC_MANAGER_FLAG_STORE(p, value) re4dcManagerStorageFlags<T>::store(p, value)
+#define RE4DC_MANAGER_FLAG_SET(p, mask) re4dcManagerStorageFlags<T>::set(p, mask)
+#define RE4DC_MANAGER_IS_ALIVE(p) re4dcManagerStorageFlags<T>::alive(p)
+#define RE4DC_EVENT_IS_ALIVE(p) re4dcEventStorageFlags::alive(p)
+#else
+#define RE4DC_MANAGER_FLAG_LOAD(p) p->be_flag
+#define RE4DC_MANAGER_FLAG_STORE(p, value) p->be_flag = value
+#define RE4DC_MANAGER_FLAG_SET(p, mask) p->be_flag |= mask
+#define RE4DC_MANAGER_IS_ALIVE(p) p->isAlive()
+#define RE4DC_EVENT_IS_ALIVE(p) p->isAlive()
+#endif
+
 // GAME_ATCHK_LIST (game30.mk): every change of an alive list (and of the work array under it)
 // bumps a generation, so EmAtCheck can keep the list's order in an array and trust it until the
 // next change. One global array defined in at_mod.cpp (slot 1 cEm, 2 cObj, 0 every other type): a
@@ -119,7 +157,7 @@ public:
     int deleteList(T* p) {
         T* q;
         RE4DC_ALIVE_BUMP();
-        if (!p->isAlive()) {
+        if (!RE4DC_MANAGER_IS_ALIVE(p)) {
             log("%s::deleteList() WORK IS ALREADY DEAD 0x%08X", name, p);
             return 0;
         }
@@ -310,12 +348,12 @@ int cManager<T>::dieCheck()
 #if !defined(__PPC__)
         if (!p) continue;
 #endif
-        if (p->be_flag & 0x601) {
-            if (p->be_flag & 0x400) {
+        if (RE4DC_MANAGER_FLAG_LOAD(p) & 0x601) {
+            if (RE4DC_MANAGER_FLAG_LOAD(p) & 0x400) {
                 delete p;
-                p->be_flag = 0;
-            } else if (p->be_flag & 0x200) {
-                p->be_flag |= 0x400;
+                RE4DC_MANAGER_FLAG_STORE(p, 0);
+            } else if (RE4DC_MANAGER_FLAG_LOAD(p) & 0x200) {
+                RE4DC_MANAGER_FLAG_SET(p, 0x400);
             }
         }
     }
@@ -336,7 +374,7 @@ u32 cManager<T>::countActiveWork()
 #if !defined(__PPC__)
         if (!p) continue;
 #endif
-        if (p->be_flag & 0x601) {
+        if (RE4DC_MANAGER_FLAG_LOAD(p) & 0x601) {
             n++;
         }
     }
@@ -360,10 +398,10 @@ T* cManager<T>::create(int id)
         T* p = (T*)((u8*)pArray + size * i);
 #endif
 #if !defined(__PPC__)
-        if (!p || !(p->be_flag & 0x601)) {
+        if (!p || !(RE4DC_MANAGER_FLAG_LOAD(p) & 0x601)) {
             if (!prepareWork(i, 1) || !(p = workAt(i))) return 0;
 #else
-        if (!(p->be_flag & 0x601)) {
+        if (!(RE4DC_MANAGER_FLAG_LOAD(p) & 0x601)) {
 #endif
             memClear(p, size);
             if (construct(p, id) == 0) {
@@ -398,7 +436,7 @@ T* cManager<T>::create(int id, u32 no)
 #else
     T* p = (T*)((u8*)pArray + size * no);
 #endif
-    if (p->be_flag & 0x601) {
+    if (RE4DC_MANAGER_FLAG_LOAD(p) & 0x601) {
         log("create() failed %s id:%d", name, id);
         return 0;
     }
@@ -457,7 +495,7 @@ void cManager<T>::destroyAll()
 #if !defined(__PPC__)
         if (!p) continue;
 #endif
-        if (p->isAlive()) {
+        if (RE4DC_MANAGER_IS_ALIVE(p)) {
             destroy(p);
         }
     }
@@ -477,18 +515,18 @@ inline void cManager<T>::destroy(T* p)
     deleteList(p);
     switch (flag) {
     case 0:
-        if (!p->isAlive()) {
+        if (!RE4DC_MANAGER_IS_ALIVE(p)) {
             log("%s::destroy() delete but not alive", name);
             return;
         }
         delete p;
-        p->be_flag = 0;
+        RE4DC_MANAGER_FLAG_STORE(p, 0);
         break;
     case 1:
-        p->be_flag |= 0x600;
+        RE4DC_MANAGER_FLAG_SET(p, 0x600);
         break;
     case 2:
-        p->be_flag |= 0x200;
+        RE4DC_MANAGER_FLAG_SET(p, 0x200);
         break;
     default:
         log("%s::destroy() INVALID ID %d", name, flag);
@@ -531,14 +569,14 @@ T* cManager<T>::createBack(int id)
         T* p = (T*)((u8*)pArray + size * i);
 #endif
 #if !defined(__PPC__)
-        if (!p || !(p->be_flag & 0x601)) {
+        if (!p || !(RE4DC_MANAGER_FLAG_LOAD(p) & 0x601)) {
             if (!p && unbacked >= 0) continue;
             if (!prepareWork(i, 1) || !(p = workAt(i))) {
                 unbacked = i;
                 continue;
             }
 #else
-        if (!(p->be_flag & 0x601)) {
+        if (!(RE4DC_MANAGER_FLAG_LOAD(p) & 0x601)) {
 #endif
             memClear(p, size);
             if (construct(p, id) == 0) {

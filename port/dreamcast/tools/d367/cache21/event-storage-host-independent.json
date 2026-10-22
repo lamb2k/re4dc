@@ -1,0 +1,382 @@
+{
+  "source_commit": "f3149dfc7a8e9bbf317eae6d192d9665b9568ce5",
+  "source_objects": {
+    "include/cManager.h": {
+      "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+      "bytes": 19670,
+      "blob": "d96f17f114f8b955ff044334a06453d7f567beaf"
+    },
+    "include/event.h": {
+      "sha256": "8d9acb9b41db86dc14c9a31ea045cea16ee9082ca0e8044be5211b96909bb1ac",
+      "bytes": 15462,
+      "blob": "4273a3e0307c5e1fe9d474ea76763c9af73002ba"
+    },
+    "include/atari.h": {
+      "sha256": "852525c2e518f0c1d89301372170425af68e71ffaf917a7a956e42584b68bc72",
+      "bytes": 8500,
+      "blob": "4bdf48fe7bce4ff002065f96e60fb7c32c42027a"
+    },
+    "src/game/event.cpp": {
+      "sha256": "7a067adcfb2b218a404aed79bac1190889adf813f7b557a82e75876a584076fa",
+      "bytes": 122664,
+      "blob": "213b22c1df6e160149cb3790bf26b71f90de075d"
+    },
+    "port/dreamcast/game/game30.mk": {
+      "sha256": "117b06597a942eedef1d4e21c895a44c3c75e9893761843e0731c04feeb2231e",
+      "bytes": 215479,
+      "blob": "4e500c7f6260769b28a4d2dbe841465d10a5d764"
+    }
+  },
+  "selected_actual_fragments": [
+    {
+      "path": "include/event.h",
+      "declaration": "DatTblEntry",
+      "line": 35,
+      "sha256": "c45d495aeee75c6971326afbbb4162906e0677b067bbf1cdc0d33d24acae70a6"
+    },
+    {
+      "path": "include/event.h",
+      "declaration": "DatTbl",
+      "line": 44,
+      "sha256": "8344b8d177b55c894a8741b142999b02cba018c099e0c77b1920185eac8bc618"
+    },
+    {
+      "path": "include/event.h",
+      "declaration": "EvtBinEntry",
+      "line": 66,
+      "sha256": "43863b56a09e4d1bf483aa744fb1aa2b8c8325edee4719a663e28bb06e26505f"
+    },
+    {
+      "path": "include/event.h",
+      "declaration": "EvtHeader",
+      "line": 72,
+      "sha256": "d4a225cb428c249ad633e79acc9647d8232617b3e3a5374b96b4e749352c75d6"
+    },
+    {
+      "path": "include/event.h",
+      "declaration": "EvtPacket",
+      "line": 87,
+      "sha256": "77eee6234f70a954cd4305c674bf4919e451ccdb17f1d7cf57492ba3c3a56062"
+    },
+    {
+      "path": "include/event.h",
+      "declaration": "Event",
+      "line": 142,
+      "sha256": "351b6a6db8b78ced5d20a48b07b82427d907e61d2c5bcbcfc222bd1831fe6018"
+    },
+    {
+      "path": "include/event.h",
+      "declaration": "EvtReadEm",
+      "line": 279,
+      "sha256": "fd81a94d0cee20d06b911ee68c823b3ceba83b8def73cb85cc14ca1aa84d38f8"
+    },
+    {
+      "path": "include/event.h",
+      "declaration": "EventMgr",
+      "line": 287,
+      "sha256": "50055ea294fca4fd8e312e49dc10e52836aaedd84b2da45cbffc4c1743a182d9"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "static inline int EvtWorkNo(",
+      "line": 209,
+      "sha256": "d55c6993be1db2151483277d5ab257ac55930d7bd21f660b2036d154a4c69d4d"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "Event::Event(u8 t)",
+      "line": 287,
+      "sha256": "2dbe887b1382b05469df757fc3325587bf287b38213a82077ec950ae318857f0"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "Event::~Event()",
+      "line": 293,
+      "sha256": "244384e3aae4deec1710f862539dd5dcb23cc3faea8b996463aab278dc9e7297"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "int Event::init(",
+      "line": 301,
+      "sha256": "169774be2d90f787c9d80539564fa29cee2afbc7abf497b9e1e8fcecd8bf82d2"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "EventMgr::EventMgr()",
+      "line": 2222,
+      "sha256": "fa3648ecdf7868b0960e7c8cb0424ad2f0daa7aedc3994b2ce2e89c4741f36d0"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "EventMgr::~EventMgr()",
+      "line": 2227,
+      "sha256": "b1bc78a248d1d8f853680ccff4f037cb048484f88a5df4df3df68a12227eb7dd"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "int EventMgr::construct(",
+      "line": 2232,
+      "sha256": "4a3416903a0ce342a07508c01e066cf60e1dea1c375af34b7901899f8171f1bd"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "int EventMgr::DelAll()",
+      "line": 2291,
+      "sha256": "6a2796c8530e6c620af028587adc48d023a4ae64526e98cfa10114a248f36ae5"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "int EventMgr::Run()",
+      "line": 2309,
+      "sha256": "06d9fb669e897cb689c4a53308dc05c51a51b9a042dd90dfdf0db55f375f9820"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "int EventMgr::IsAliveEvt(",
+      "line": 2368,
+      "sha256": "80fd719afd04828afcf41753d48cde639234cc52fcac42bc3c4cba26135804dd"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "int EventMgr::SetEvt(char* nm, Event** out)",
+      "line": 3009,
+      "sha256": "460fdae387eabd013ef93da978b0a739cadda5a1d2c080b5f54f0116c89386ca"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "DatTbl::DatTbl()",
+      "line": 3676,
+      "sha256": "a931c70a6e2eb2923d195bec64fe036163ab2959af41c2cd9c565fae394d9676"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "DatTbl::~DatTbl()",
+      "line": 3682,
+      "sha256": "24197ac5394099d43598784decd625ef15c3ba2f388365ba638f91cbb2a04a8a"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "void cManager<T>::destroyNow(T* p)",
+      "line": 271,
+      "sha256": "8b8614f26c3b5782771e220881b5ac91e9b49b83091e877d5f468a9faa994ca8"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "signature": "EvtReadExec actual reader census loop",
+      "line": 2813,
+      "sha256": "f864e341cd561d8c48638327aa71812682d148c80c4fc12364a41951f79928c6"
+    },
+    {
+      "path": "include/atari.h",
+      "signature": "inline int cSat::isAlive()",
+      "line": 138,
+      "sha256": "9762d7a4a2a7c77f8c2b702c0248425a81e44eeeebdbb92ca363ffe83878b956"
+    }
+  ],
+  "host_adapter": {
+    "header_delete_size": "Only empty sized operator delete argument unsigned int\u2192std::size_t for64-bit host ABI; all policy/manager bodies unchanged",
+    "placement": "standard host placement new; actual header guard",
+    "scalars": "u32 fixed32; mapped32-bit source addresses",
+    "declarations": "Complete actual DatTbl/Event/EventMgr declarations, host pointer layout; native offset independently qualified by main SH4 receipt",
+    "boundaries": "DatTbl allocation/end and packet frame services, logging, Event run/end callbacks are explicit stubs; SetEvt/init/constructor/destructor/manager/directscan bodies actual",
+    "sat": "actual cSat::isAlive body over projected fields; no non-Event deletion invoked"
+  },
+  "strict_flags": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g0",
+    "-fsanitize=undefined,vptr",
+    "-fno-sanitize-recover=all",
+    "-fno-omit-frame-pointer",
+    "-fno-pie",
+    "-no-pie",
+    "-fpermissive",
+    "-Wall",
+    "-Wextra",
+    "-DRE4DC_GAME=1",
+    "-DRE4DC_CABIN_SOURCE=0",
+    "-DRE4DC_EVD_START_CLEANUP=1",
+    "-I/tmp/cache21-event-storage-independent04",
+    "/tmp/cache21-event-storage-independent04/event_storage_lifetime_host.cpp"
+  ],
+  "variants": [
+    {
+      "guard": 0,
+      "binary_sha256": "a6b06d09691f8be21afd3c3a87e71a82bb85058847d0f8ab3a05ffa27dcaa0be",
+      "bytes": 74128
+    },
+    {
+      "guard": 1,
+      "binary_sha256": "dd52154cd4cbfb4b153dec46c3335c1df7bf3ee3e6e59d613cdf44ad3b0afbd4",
+      "bytes": 106776
+    }
+  ],
+  "commands": [
+    {
+      "label": "compile0",
+      "argv": [
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g0",
+        "-fsanitize=undefined,vptr",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-fno-pie",
+        "-no-pie",
+        "-fpermissive",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_GAME=1",
+        "-DRE4DC_CABIN_SOURCE=0",
+        "-DRE4DC_EVD_START_CLEANUP=1",
+        "-I/tmp/cache21-event-storage-independent04",
+        "/tmp/cache21-event-storage-independent04/event_storage_lifetime_host.cpp",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=0",
+        "-o",
+        "/tmp/cache21-event-storage-independent04/guard0"
+      ],
+      "returncode": 0,
+      "log_sha256": "37243ae6fbef5d580fd02bcada8862d7611cc2cfed389d808d4b186362775ed0"
+    },
+    {
+      "label": "compile1",
+      "argv": [
+        "g++",
+        "-std=c++17",
+        "-O1",
+        "-g0",
+        "-fsanitize=undefined,vptr",
+        "-fno-sanitize-recover=all",
+        "-fno-omit-frame-pointer",
+        "-fno-pie",
+        "-no-pie",
+        "-fpermissive",
+        "-Wall",
+        "-Wextra",
+        "-DRE4DC_GAME=1",
+        "-DRE4DC_CABIN_SOURCE=0",
+        "-DRE4DC_EVD_START_CLEANUP=1",
+        "-I/tmp/cache21-event-storage-independent04",
+        "/tmp/cache21-event-storage-independent04/event_storage_lifetime_host.cpp",
+        "-DRE4DC_EVENT_MANAGER_STORAGE_FLAGS=1",
+        "-o",
+        "/tmp/cache21-event-storage-independent04/guard1"
+      ],
+      "returncode": 0,
+      "log_sha256": "eb2ceae7cb24cdacb6f17b8879608731025b40a128e7ea97c30dacd21be05b02"
+    },
+    {
+      "label": "on-lifecycle",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard1"
+      ],
+      "returncode": 0,
+      "log_sha256": "2468c1923ae0ea53800519e95bcd32d6c975ab6419843de350589ef5b8c82169"
+    },
+    {
+      "label": "off-raw-count",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "raw-count"
+      ],
+      "returncode": 1,
+      "log_sha256": "efae61f2c1af5e819ed51f7d6598091383b5a89e1b7655625d8b0dfe4d1dfcbe"
+    },
+    {
+      "label": "off-create",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "create"
+      ],
+      "returncode": 1,
+      "log_sha256": "c887f74557054b5ebb6bde5b2e0c12487abe0d2b20c1a043326092d0717d8e39"
+    },
+    {
+      "label": "off-index",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "index"
+      ],
+      "returncode": 1,
+      "log_sha256": "4c7076d929fd0cd1af86ed3ed8e3708b2f49668f3d7524200ae312197a663680"
+    },
+    {
+      "label": "off-back",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "back"
+      ],
+      "returncode": 1,
+      "log_sha256": "b142bdebe47bcf74090d17f620856c9d0f0db73e0c01f64fcbea869cb015bdb5"
+    },
+    {
+      "label": "off-immediate",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "immediate"
+      ],
+      "returncode": 1,
+      "log_sha256": "f2b8dfbd35eb37516c7ad081705267e52dce39a8e4779c4d5a1c9ebb6f958af2"
+    },
+    {
+      "label": "off-deferred",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "deferred"
+      ],
+      "returncode": 1,
+      "log_sha256": "ce5491f9c9bb6bb7c78197f6f902ebc77fedbc36ee26ee98875e8f4727d6118e"
+    },
+    {
+      "label": "off-dead-count",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "dead-count"
+      ],
+      "returncode": 1,
+      "log_sha256": "efae61f2c1af5e819ed51f7d6598091383b5a89e1b7655625d8b0dfe4d1dfcbe"
+    },
+    {
+      "label": "off-direct-del",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "direct-del"
+      ],
+      "returncode": 1,
+      "log_sha256": "247656b823db5ae30d918b58e0fd349a5992dabedad52abdec9a309c305d40f6"
+    },
+    {
+      "label": "off-direct-alive",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "direct-alive"
+      ],
+      "returncode": 1,
+      "log_sha256": "2572becd789c4a0251356a4dc505c59b6aa55da039e32afc21c200b62501c8dd"
+    },
+    {
+      "label": "off-reader",
+      "argv": [
+        "/tmp/cache21-event-storage-independent04/guard0",
+        "reader"
+      ],
+      "returncode": 1,
+      "log_sha256": "98c3a42fc62253b50b359fd5c4b06129e9fbd4ff4d599877550a28cefa351435"
+    }
+  ],
+  "off_expected_failures": [
+    "raw-count",
+    "create",
+    "index",
+    "back",
+    "immediate",
+    "deferred",
+    "dead-count",
+    "direct-del",
+    "direct-alive",
+    "reader"
+  ],
+  "scope": "Source/host lifecycle only. No heap reset/ABA/issue52/full programme/guest/hardware closure."
+}

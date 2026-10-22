@@ -1,0 +1,45 @@
+{
+  "scope": "Main guarded implementation and source/host/SH4 qualification only",
+  "baseline": "8b0340cf7dd0916c6094d2c3db4fecd91a4408a7",
+  "guard": "RESIDENT_LIST_CACHE default0; OFF behavior unchanged",
+  "native_ui_raw_sha256": "839d6cd68151a91ffb05e683bc8ef0d6ff04b0364a9a0676871bb218ac903fd7",
+  "native_ui_normalized_sha256": "4b275db2a0e5206a70ac24845887b097c209ccf01c14e5f58700f0e9ab63bb2a",
+  "host_receipt": {
+    "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\cache21-resident-discovery-root-host-20261021-01\\receipt.json",
+    "sha256": "3c9228e9a273b4c84113ff32351ea54d66ab056426f25fb35dc0112826bd4093",
+    "existing_admission_checks": 141,
+    "semantic_assertions": 98
+  },
+  "SH4_receipt": {
+    "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\cache21-resident-discovery-sh4-20261021-02\\receipt.json",
+    "sha256": "a7685f1512fa0a5ca9da6c96ecd09f634c01060bc2b5dd378fc96ae019ae060d",
+    "OFF_exact": true,
+    "prior_ON_to_new_ON": {
+      "text": 20,
+      "data": 0,
+      "bss": 0
+    }
+  },
+  "tools": {
+    "run.py": "841d8b0715180481e6ae6885d4f7605da70fa64c6e9de0ac262655b5b2c9d2a3",
+    "oracles.inc": "9213ce7c730e990d1af9911c474bdda38d961474d78a5aa9fe0779bf29cee659"
+  },
+  "source_tests_preserved": "Baseline full metadata equality; new independent semantic expectations, admission-only parity. Prior original receipts unchanged.",
+  "limitations": [
+    "No normal target saturation proved",
+    "Incomplete scan retains prefix uncertainty",
+    "No full link/image/Flycast/performance/release/hardware acceptance"
+  ],
+  "canonical_ASan_UBSan": {
+    "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\cache21-resident-discovery-canonical-20261021-01\\receipt.json",
+    "sha256": "b5322731bdcc65cfcbf1f48e7974a4fe9f8d061cb85e1d0bb6abbd209a931f7b",
+    "checks": 141
+  },
+  "portable_runner_rerun": {
+    "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\cache21-resident-discovery-portable-host-20261021-01\\receipt.json",
+    "sha256": "331135730d09867df86a4285df94cec44e69b88dd82b5bdb31a7bc96fb793d4a",
+    "admission_checks": 141,
+    "semantic_assertions": 98
+  },
+  "native_ui_git_LF_sha256": "4b275db2a0e5206a70ac24845887b097c209ccf01c14e5f58700f0e9ab63bb2a"
+}

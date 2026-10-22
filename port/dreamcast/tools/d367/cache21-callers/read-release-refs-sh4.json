@@ -1,0 +1,226 @@
+{
+  "scope": "Actual SH-4 event.o only; no linked-program, guest or hardware acceptance",
+  "baseline_revision": "868b43448",
+  "candidate_event_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+  "qualifier_sha256": "eedfc6510cde0093a99100138ef2565511c936b22284ae10cb8c3aa11616ce5a",
+  "baseline_make_sha256": "9452ba9b2838cebc31d649ef4e00dc0ab583f65f711700d8966fa0575122a29e",
+  "start_C_free_bytes": 19530129408,
+  "finish_C_free_bytes": 19525050368,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "invalid_knobs_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "missing_make_prerequisites_rejected": [],
+  "direct_source_prerequisites_rejected": [],
+  "ppc_selected_preprocessed_sha256": "4b3519b73baf2a50d48e1786839558763febd92d7485b7936c4423671bc3becd",
+  "ppc_limit": "Selected-source preprocessing only, not a PPC object/full-game identity claim.",
+  "objects": [
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_RELEASE_REFS": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "d9b88f7d8ca201a0a59bee6801711c001a0dcf725da219ea481f10481ae6694e",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin0-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3053:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2875:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_RELEASE_REFS": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "cbb29914d2d746dab7900cfe66abdf2541c808a1c61f06477953ee50df22adcf",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  38885\t      4\t    640\t  39529\t   9a69\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin0-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_RELEASE_REFS": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "4f66399c71e9c870eb7fdff00216053edcaeb68d1801d79c3ff90d62dabe51ca",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39017\t      4\t    640\t  39661\t   9aed\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin0-txn0/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_RELEASE_REFS": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "d9b88f7d8ca201a0a59bee6801711c001a0dcf725da219ea481f10481ae6694e",
+      "stripped_event_o_sha256": "e45f1072f25a2db05491189ccaa2b6b5e7a38702ef28527d7fbd840dd886568d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39841\t      4\t    640\t  40485\t   9e25\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin0-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3053:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2875:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_RELEASE_REFS": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "e45f1072f25a2db05491189ccaa2b6b5e7a38702ef28527d7fbd840dd886568d",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39841\t      4\t    640\t  40485\t   9e25\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin0-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 0,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_RELEASE_REFS": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "ff37ccd40e84b4db9764ed9245c5a1a6f7b64c36dbe9063e5407d0e268848f03",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39973\t      4\t    640\t  40617\t   9ea9\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin0-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t32\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_RELEASE_REFS": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "d9b88f7d8ca201a0a59bee6801711c001a0dcf725da219ea481f10481ae6694e",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin1-txn0/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3053:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t64\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2875:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_RELEASE_REFS": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "bd46343f42ea3107ce8d4082dde337e4b7a13f9b545d64afa5d10debe1070882",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39405\t      4\t    640\t  40049\t   9c71\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin1-txn0/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t64\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 0,
+      "start_cleanup": 0,
+      "EVD_READ_RELEASE_REFS": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "093e8f5c0f5a8764c13057c634fe49a93536597fc2982450922970d8658ba9ae",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  39549\t      4\t    640\t  40193\t   9d01\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin1-txn0/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t44\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t64\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_RELEASE_REFS": 0,
+      "variant": "baseline",
+      "event_cpp_sha256": "d9b88f7d8ca201a0a59bee6801711c001a0dcf725da219ea481f10481ae6694e",
+      "stripped_event_o_sha256": "4da5cc73e3273ff54fdc081268e98b1900a91d73a24c811e862ba0a771ca2969",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40371\t      4\t    640\t  41015\t   a037\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin1-txn1/baseline/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3053:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t64\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2875:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2813:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_RELEASE_REFS": 0,
+      "variant": "disabled",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "4da5cc73e3273ff54fdc081268e98b1900a91d73a24c811e862ba0a771ca2969",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40371\t      4\t    640\t  41015\t   a037\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin1-txn1/disabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t64\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    },
+    {
+      "cabin_source": 1,
+      "evd_admission_txn": 1,
+      "start_cleanup": 1,
+      "EVD_READ_RELEASE_REFS": 1,
+      "variant": "enabled",
+      "event_cpp_sha256": "177f46842cb81a9c96c647feb7fa9f3db23cc07af6a6cebc5edec1ef034b6b37",
+      "stripped_event_o_sha256": "92435373a096e166690092a05304d8b8f5023f59b4a6f40d5152bad5032283e5",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  40515\t      4\t    640\t  41159\t   a0c7\t/root/probe/cache21-callers-read-release-sh4-20261021-01/cabin1-txn1/enabled/event-stripped.o\n",
+      "selected_stack_usage": [
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:281:5:int Event::init(char*, EvtHeader*)\t16\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:3065:5:int EventMgr::SetEvd(char*, void*, void*, int)\t752\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2743:5:int EventMgr::EvtFree(char*)\t64\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2887:5:int EventMgr::SetEvt(char*, Event**)\t36\tstatic",
+        "/root/probe/cache21-callers-read-release-sh4-20261021-01/event.cpp:2825:5:int EventMgr::SetEvt(void*, u32*)\t24\tstatic"
+      ]
+    }
+  ]
+}

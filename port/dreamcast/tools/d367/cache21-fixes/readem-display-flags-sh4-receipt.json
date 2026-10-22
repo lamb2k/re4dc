@@ -1,0 +1,58 @@
+{
+  "scope": "Actual SH-4 read.o only; no linked-program, guest or hardware acceptance",
+  "baseline_revision": "54cef5d1560c41d074beee05ffa1ecd38f2ee642",
+  "candidate_read_sha256": "74cca5d37556d902f36813bebaa250fb3d3ac0dcc016246302f9fdfb9f52da5d",
+  "start_C_free_bytes": 27652104192,
+  "finish_C_free_bytes": 27649347584,
+  "start_guard": 17314086912,
+  "stop_guard": 17246978048,
+  "invalid_knobs_rejected": [
+    "2",
+    "-1",
+    "yes"
+  ],
+  "objects": [
+    {
+      "heap4": 0,
+      "variant": "baseline",
+      "read_cpp_sha256": "6d0cfec2e30638236a84a44591a1f62d6446b1b1d2af56f4c030f5e612f343a0",
+      "stripped_read_o_sha256": "cc49999f326f976a6a617aca2dd57030708fb7cf799946f2a47f7eeac4caed09",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   7105\t   3892\t    917\t  11914\t   2e8a\t/root/probe/cache21-fixes-flags-sh4-20261021-02/heap0/baseline/read-stripped.o\n"
+    },
+    {
+      "heap4": 0,
+      "variant": "disabled",
+      "read_cpp_sha256": "74cca5d37556d902f36813bebaa250fb3d3ac0dcc016246302f9fdfb9f52da5d",
+      "stripped_read_o_sha256": "cc49999f326f976a6a617aca2dd57030708fb7cf799946f2a47f7eeac4caed09",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   7105\t   3892\t    917\t  11914\t   2e8a\t/root/probe/cache21-fixes-flags-sh4-20261021-02/heap0/disabled/read-stripped.o\n"
+    },
+    {
+      "heap4": 0,
+      "variant": "enabled",
+      "read_cpp_sha256": "74cca5d37556d902f36813bebaa250fb3d3ac0dcc016246302f9fdfb9f52da5d",
+      "stripped_read_o_sha256": "a7f516b817886480dbed1c01b8d02b91bafb9429d11d1b5e1f48807d81cffa15",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   7101\t   3892\t    917\t  11910\t   2e86\t/root/probe/cache21-fixes-flags-sh4-20261021-02/heap0/enabled/read-stripped.o\n"
+    },
+    {
+      "heap4": 1,
+      "variant": "baseline",
+      "read_cpp_sha256": "6d0cfec2e30638236a84a44591a1f62d6446b1b1d2af56f4c030f5e612f343a0",
+      "stripped_read_o_sha256": "1f1a3346f05ee832d839d74a427271e446cbeb693ba61bcb78939389a2fba921",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   8916\t   3892\t    930\t  13738\t   35aa\t/root/probe/cache21-fixes-flags-sh4-20261021-02/heap1/baseline/read-stripped.o\n"
+    },
+    {
+      "heap4": 1,
+      "variant": "disabled",
+      "read_cpp_sha256": "74cca5d37556d902f36813bebaa250fb3d3ac0dcc016246302f9fdfb9f52da5d",
+      "stripped_read_o_sha256": "1f1a3346f05ee832d839d74a427271e446cbeb693ba61bcb78939389a2fba921",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   8916\t   3892\t    930\t  13738\t   35aa\t/root/probe/cache21-fixes-flags-sh4-20261021-02/heap1/disabled/read-stripped.o\n"
+    },
+    {
+      "heap4": 1,
+      "variant": "enabled",
+      "read_cpp_sha256": "74cca5d37556d902f36813bebaa250fb3d3ac0dcc016246302f9fdfb9f52da5d",
+      "stripped_read_o_sha256": "6f685adc2eda707b5640192bfe6e5f718e9e48e729c6ac2bd85217492376faab",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n   8912\t   3892\t    930\t  13734\t   35a6\t/root/probe/cache21-fixes-flags-sh4-20261021-02/heap1/enabled/read-stripped.o\n"
+    }
+  ]
+}

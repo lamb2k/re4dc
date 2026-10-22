@@ -1,0 +1,141 @@
+{
+  "scope": "Main implementation and source/host/whole-SH4-unit qualification of per-index-sector failure backoff. No linked successor/image/Flycast/performance/release/physical acceptance.",
+  "parent": "edfe8f1765fbbd418235537e7b2f0b3b6aeab25d",
+  "source_sha256": "bf95fea5f7bc4881fe438b7c57baea7dc086b34a059573185d6fea8170e02c1d",
+  "guard": "Existing TEX_PAYLOAD_RETRY remains default0; OFF keeps the original last-failure behavior and whole native_ui.o identity.",
+  "defect": "One bad_sector/bad_until pair forgets the first failed index sector after another fails. A/B/H repeated over30 UI frames made90 mock read_file_range calls and60 errors/logs, contrary to the documented per-failed-sector30-frame backoff. These are mock range-reader calls, not physical/KOS/target requests.",
+  "fix": "Under the existing guard,64 independent deadlines plus a two-word bitmap share the existing index mutex. Each failure is held until its own wrap-safe deadline, each successful reread clears only its bit, and existing payload epoch reset clears all failure bits on room/new-ready publication. Deadline values are ignored when their bit is clear. No lookup buffer, payload/registry admission or source lease is broadened.",
+  "unit_results": {
+    "OFF_assertions": 3122,
+    "ON_assertions": 10640,
+    "30_frame_OFF_A_B_healthy_reads": [
+      30,
+      30,
+      30
+    ],
+    "30_frame_ON_A_B_healthy_reads": [
+      1,
+      1,
+      1
+    ],
+    "OFF_logs": 60,
+    "ON_logs": 2,
+    "coverage": [
+      "I/O, first-key, CRC and mixed refusal",
+      "All64 failed sectors hold;64 successful deadline recoveries",
+      "Bitmap31/32 split and independent staggered deadlines",
+      "Unsigned32 frame wrap",
+      "Room/new-ready reset with stale deadlines ignored",
+      "Healthy admission among63 failures",
+      "8192 entries/ordinal8191 accepted;8193 refused"
+    ]
+  },
+  "unchanged_regressions": [
+    "21898 payload-policy assertions",
+    "Actual loader OFF/ON",
+    "Original index suite OFF/ON",
+    "Alternating HEALTHY index lookups still60 range reads/122880B in botharms; only faulty sectors benefit from this fix",
+    "Payload retry fixture still60->3 package opens,60 healthy hits and3 healthy first opens",
+    "Reset-after-find/during-open/newready/late-success/epoch-exhaustion controls"
+  ],
+  "sh4": {
+    "recipe": "Exact c57 full nontrace QA native_ui compile command",
+    "OFF_whole_object_exact": true,
+    "relative_to_prior_payload_ON": {
+      "text_bytes": 100,
+      "data_bytes": 0,
+      "BSS_bytes": 260
+    },
+    "static_frames_unchanged": {
+      "load": 212,
+      "open_locked": 868,
+      "payload_reset_locked": 8,
+      "load_lambda": 44
+    },
+    "full_stack_high_water_qualified": false,
+    "objects": [
+      {
+        "name": "baseline-off",
+        "sha256": "ddd25b648be7f8133cdcf09acda4e2572c50f378adce1d204428d045c4eb13d9",
+        "object_bytes": 355496,
+        "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  90520\t 100505\t 149885\t 340910\t  533ae\t/root/probe/cache21-index-backoff-sh4-20261021-02/baseline-off.o\n",
+        "selected_index_dependency": "control/platform/include/texpack_index.inc",
+        "index_static_frames": [
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:69:10:unsigned int {anonymous}::texpack::word(const unsigned char*)\t0\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:89:6:bool {anonymous}::texpack::read_failed(const char*, unsigned int, unsigned int)\t16\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:85:6:bool {anonymous}::texpack::invalid(const char*, unsigned int, unsigned int)\t8\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:158:6:bool {anonymous}::texpack::settled()\t12\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:100:6:bool {anonymous}::texpack::open_locked(unsigned int)\t620\tstatic"
+        ]
+      },
+      {
+        "name": "new-off",
+        "sha256": "ddd25b648be7f8133cdcf09acda4e2572c50f378adce1d204428d045c4eb13d9",
+        "object_bytes": 355496,
+        "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  90520\t 100505\t 149885\t 340910\t  533ae\t/root/probe/cache21-index-backoff-sh4-20261021-02/new-off.o\n",
+        "selected_index_dependency": "platform/include/texpack_index.inc",
+        "index_static_frames": [
+          "platform/include/texpack_index.inc:81:10:unsigned int {anonymous}::texpack::word(const unsigned char*)\t0\tstatic",
+          "platform/include/texpack_index.inc:101:6:bool {anonymous}::texpack::read_failed(const char*, unsigned int, unsigned int)\t16\tstatic",
+          "platform/include/texpack_index.inc:97:6:bool {anonymous}::texpack::invalid(const char*, unsigned int, unsigned int)\t8\tstatic",
+          "platform/include/texpack_index.inc:170:6:bool {anonymous}::texpack::settled()\t12\tstatic",
+          "platform/include/texpack_index.inc:112:6:bool {anonymous}::texpack::open_locked(unsigned int)\t620\tstatic"
+        ]
+      },
+      {
+        "name": "prior-on",
+        "sha256": "d5d31f7c9f31fbed576cd430a46090140593341957bf5b759327a09c8d950363",
+        "object_bytes": 360488,
+        "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  92058\t 100509\t 152195\t 344762\t  542ba\t/root/probe/cache21-index-backoff-sh4-20261021-02/prior-on.o\n",
+        "selected_index_dependency": "control/platform/include/texpack_index.inc",
+        "index_static_frames": [
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:57:6:bool {anonymous}::texpack::payload_current(unsigned int, unsigned int)\t0\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:69:10:unsigned int {anonymous}::texpack::word(const unsigned char*)\t0\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:49:6:void {anonymous}::texpack::payload_reset_locked()\t8\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:72:10:unsigned int {anonymous}::texpack::crc_update(unsigned int, const unsigned char*, unsigned int)\t0\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:89:6:bool {anonymous}::texpack::read_failed(const char*, unsigned int, unsigned int)\t16\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:85:6:bool {anonymous}::texpack::invalid(const char*, unsigned int, unsigned int)\t8\tstatic",
+          "/root/probe/cache21-index-backoff-sh4-20261021-02/control/platform/include/texpack_index.inc:100:6:bool {anonymous}::texpack::open_locked(unsigned int)\t868\tstatic"
+        ]
+      },
+      {
+        "name": "new-on",
+        "sha256": "ac6ab2f96eaa415d10d09191a5959154c7c87816f0aeaa193adedf4553b9a745",
+        "object_bytes": 360792,
+        "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n  92158\t 100509\t 152455\t 345122\t  54422\t/root/probe/cache21-index-backoff-sh4-20261021-02/new-on.o\n",
+        "selected_index_dependency": "platform/include/texpack_index.inc",
+        "index_static_frames": [
+          "platform/include/texpack_index.inc:69:6:bool {anonymous}::texpack::payload_current(unsigned int, unsigned int)\t0\tstatic",
+          "platform/include/texpack_index.inc:81:10:unsigned int {anonymous}::texpack::word(const unsigned char*)\t0\tstatic",
+          "platform/include/texpack_index.inc:60:6:void {anonymous}::texpack::payload_reset_locked()\t8\tstatic",
+          "platform/include/texpack_index.inc:84:10:unsigned int {anonymous}::texpack::crc_update(unsigned int, const unsigned char*, unsigned int)\t0\tstatic",
+          "platform/include/texpack_index.inc:101:6:bool {anonymous}::texpack::read_failed(const char*, unsigned int, unsigned int)\t16\tstatic",
+          "platform/include/texpack_index.inc:97:6:bool {anonymous}::texpack::invalid(const char*, unsigned int, unsigned int)\t8\tstatic",
+          "platform/include/texpack_index.inc:112:6:bool {anonymous}::texpack::open_locked(unsigned int)\t868\tstatic"
+        ]
+      }
+    ]
+  },
+  "receipts": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-host-v1/receipt.json",
+      "sha256": "4b2c65ef8ddf502cb714e9081077670248b5aede557626e36468b2abfbd673c0"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-payload-20261021/index-backoff-root-regressions-v1/receipt.json",
+      "sha256": "cb3d2e856c37bfed076d8ce8e2d245765aa468a9104a5f8307eaa7f7261d7bd1"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/cache21-integration-prep-20261021/index-backoff-sh4-v2/receipt.json",
+      "sha256": "61442d2bd0dfcab1e1ad9f7a769023e12f3d4c10d157f5a53aba8f84c34a16d6"
+    }
+  ],
+  "failed_control": "SH4 attempt01 is preserved/disqualified: control directory quote-include omitted, both ON arms selected new index; equality assertion failed. Fresh attempt02 explicitly checks dependency selection and OFF equality before ON delta.",
+  "limits": [
+    "No normal media-fault occurrence, physical traffic or speedup claimed from mock fault injection.",
+    "Healthy alternating index-sector reads remain60; this is exact failure spacing, not a multi-sector metadata cache.",
+    "No whole cache/retirement/reset lifetime closure. A01-A16 audit remains open.",
+    "Prior c57/52190ed2 reader programme remains a separate frozen target candidate; this source successor has no full linked programme yet.",
+    "All experimental guards default off; no production recipe, release, SD or third-party changes. Claude owns production merge/release."
+  ]
+}

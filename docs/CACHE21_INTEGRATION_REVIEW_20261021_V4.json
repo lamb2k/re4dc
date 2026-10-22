@@ -1,0 +1,326 @@
+{
+  "runtime_source": "3dcd35da608e5373958cb556b62089880fbf24d6",
+  "arms": [
+    {
+      "arm": "off-02",
+      "program_sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+      "program_bytes": 3348164,
+      "elf_sha256": "9815719bb893273d940f516560bf63bfdc960e146523cec56e23e03befd7e494",
+      "main_text_fnv": 1315056392,
+      "main_text_bytes": 2447200,
+      "all14_bound": true,
+      "overlays": [
+        {
+          "name": "em22.ovl",
+          "sha256": "b6ca37a6819ae25aaaecdaa391e569576fdb55be2ade475160558e988e7a2ac0",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "em2b.ovl",
+          "sha256": "7f911bf121245585986e1a37d199d192490a765cc6fdf727669502ba1834f0bc",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "em2f.ovl",
+          "sha256": "aaa459d40a5a36bb026cbba09ec8601923e011c9b08781b3513728910c782db1",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "em35.ovl",
+          "sha256": "f77eeca51099a2c546c4b294d60eacea043f9a29eefb584e325dbbf835dffbe1",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "em3b.ovl",
+          "sha256": "8d3206a78dbf47dab0978549d41194228cdf7cb23df7d1b71d6d870a7305b08f",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "pl0f.ovl",
+          "sha256": "9e6ef28c7037d6a70df159c3b0b619d642b034dd6c7717e27a2e83ca6f2ba1b2",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "pl11.ovl",
+          "sha256": "c0c09fe91bcd4e773f7f4fd8a0efd6590cf3ecba5ebdd05def988309f7e622a7",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "pl14.ovl",
+          "sha256": "708eccab1479dc998ed75a14a48186bc11779645e56455bfdad79d08cbcc1454",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "sscrn.ovl",
+          "sha256": "90b0d74841fd172a297cb4c6802d84fce6abc56104e3169720ebd305abae5f34",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st1_0.ovl",
+          "sha256": "fb6fd3c5b69b5d8b2f4778adace333cc8b8e129c18839dc978257a0ab660a299",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st1_1.ovl",
+          "sha256": "3040180a3604b63e46780d2d90959c856ef547591c78500ce48260ce700173f5",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st1_2.ovl",
+          "sha256": "90576f23dc80e2409902e9c48f27917ecc5cb29a7c413d3288a7836c8ee0d6a0",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st1_3.ovl",
+          "sha256": "fb5ed4c7c3b71f481129a0d436f91eebf6fcf2f0bcd8ada23c1abea49728054e",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st2_0.ovl",
+          "sha256": "80ba0f71f4f9497c6c066965be309548479b1010a92135173218880da2586ea8",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        }
+      ],
+      "cabin_source_header": "#define RE4DC_CABIN_SOURCE 0\n#define RE4DC_CABIN_HANDOFF_DIAG 0\n#define RE4DC_CABIN_COMPLETE_HANDOFF 0\n#define RE4DC_EVENT_SWAP_RELOAD 0\n",
+      "cabin_source_header_sha256": "dc9518c0eac2c04a10c86e2d02cb40ceb78eda41493d352a94d8520aac12f862",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2671328\t 674916\t1005816\t4352060\t 42683c\t/root/probe/cache21-extended-build-20261021/off-02/re4dc-game.elf\n"
+    },
+    {
+      "arm": "off-03",
+      "program_sha256": "8942ad7e90d9adab56873d0738d76c274b98c28c35587e52fc93e2091f13300d",
+      "program_bytes": 3348164,
+      "elf_sha256": "82385f3ac0f1138c9049c38cbb0faa99dea4b899b1c94e1f7966faac25487da9",
+      "main_text_fnv": 1315056392,
+      "main_text_bytes": 2447200,
+      "all14_bound": true,
+      "overlays": [
+        {
+          "name": "em22.ovl",
+          "sha256": "b6ca37a6819ae25aaaecdaa391e569576fdb55be2ade475160558e988e7a2ac0",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "em2b.ovl",
+          "sha256": "7f911bf121245585986e1a37d199d192490a765cc6fdf727669502ba1834f0bc",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "em2f.ovl",
+          "sha256": "aaa459d40a5a36bb026cbba09ec8601923e011c9b08781b3513728910c782db1",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "em35.ovl",
+          "sha256": "f77eeca51099a2c546c4b294d60eacea043f9a29eefb584e325dbbf835dffbe1",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "em3b.ovl",
+          "sha256": "8d3206a78dbf47dab0978549d41194228cdf7cb23df7d1b71d6d870a7305b08f",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "pl0f.ovl",
+          "sha256": "9e6ef28c7037d6a70df159c3b0b619d642b034dd6c7717e27a2e83ca6f2ba1b2",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "pl11.ovl",
+          "sha256": "c0c09fe91bcd4e773f7f4fd8a0efd6590cf3ecba5ebdd05def988309f7e622a7",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "pl14.ovl",
+          "sha256": "708eccab1479dc998ed75a14a48186bc11779645e56455bfdad79d08cbcc1454",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "sscrn.ovl",
+          "sha256": "90b0d74841fd172a297cb4c6802d84fce6abc56104e3169720ebd305abae5f34",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st1_0.ovl",
+          "sha256": "fb6fd3c5b69b5d8b2f4778adace333cc8b8e129c18839dc978257a0ab660a299",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st1_1.ovl",
+          "sha256": "3040180a3604b63e46780d2d90959c856ef547591c78500ce48260ce700173f5",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st1_2.ovl",
+          "sha256": "90576f23dc80e2409902e9c48f27917ecc5cb29a7c413d3288a7836c8ee0d6a0",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st1_3.ovl",
+          "sha256": "fb5ed4c7c3b71f481129a0d436f91eebf6fcf2f0bcd8ada23c1abea49728054e",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        },
+        {
+          "name": "st2_0.ovl",
+          "sha256": "80ba0f71f4f9497c6c066965be309548479b1010a92135173218880da2586ea8",
+          "main_text_fnv": 1315056392,
+          "main_text_bytes": 2447200
+        }
+      ],
+      "cabin_source_header": "#define RE4DC_CABIN_SOURCE 0\n#define RE4DC_CABIN_HANDOFF_DIAG 0\n#define RE4DC_CABIN_COMPLETE_HANDOFF 0\n#define RE4DC_EVENT_SWAP_RELOAD 0\n",
+      "cabin_source_header_sha256": "dc9518c0eac2c04a10c86e2d02cb40ceb78eda41493d352a94d8520aac12f862",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2671328\t 674916\t1005816\t4352060\t 42683c\t/root/probe/cache21-extended-build-20261021/off-03/re4dc-game.elf\n"
+    },
+    {
+      "arm": "legacy-on-01",
+      "program_sha256": "43f4599a1adc4aef6d21508d623ce4e07e233fc712ed4acc398775e64672efa6",
+      "program_bytes": 3351912,
+      "elf_sha256": "aa32f5a23191d536b9843882dcb96483e42eeb3740fd4050079fe0950bd0a7ef",
+      "main_text_fnv": 3687408485,
+      "main_text_bytes": 2450304,
+      "all14_bound": true,
+      "overlays": [
+        {
+          "name": "em22.ovl",
+          "sha256": "a1a604c9f7342f24b0b4e84051a32aee9dd4a174808050a2cac068095fd8252a",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "em2b.ovl",
+          "sha256": "4e3ec79c2957551008414df16086e540e845d3c53fc447cc6fbd709682ed2813",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "em2f.ovl",
+          "sha256": "fea9226cae4fe61ecd8f24a56cb7cce475154ccf49ba012767e05261de468aba",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "em35.ovl",
+          "sha256": "ce6f1e6319582613eed9bc097eb98ee8803015f622f26a745265a7e3c47f3d4d",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "em3b.ovl",
+          "sha256": "0b632ea82119fdd87acd945221f80996cb12dca860d108f72a1b8c371db27ab2",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "pl0f.ovl",
+          "sha256": "4a6fc86ea63c0fead5ee4c792a99f4cadec64c4a0da9c4761da5633554ce0998",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "pl11.ovl",
+          "sha256": "eb91697cf2a1c416a0adf32f91ab9f181e0e67472dafe466592ff94fb1c3286a",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "pl14.ovl",
+          "sha256": "7a17b314726c2ae48deaf3ca106c8f3cea7400fd26f4f575fda176c612359d88",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "sscrn.ovl",
+          "sha256": "17cf8f8fbf1d2bff0edde257d4749c82cd57187b0e05eb3b83ff215e30167a59",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "st1_0.ovl",
+          "sha256": "9bd51f123de398ec47339001fd465747329a56ae60b9314d7f07e020df8fbe0f",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "st1_1.ovl",
+          "sha256": "f73090c63b2fde389dff6a57bf11ca9c628ad8bb3d531c0f5b025a6622049ebe",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "st1_2.ovl",
+          "sha256": "85994bbe2e0d9617690364b30d7ad6c080c4a3ed7ce67fa089ccd9c2ee8ef238",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "st1_3.ovl",
+          "sha256": "793fb065d805d62889eb57b7d577c29cdd36799727b678524e4dbd5a6b71365e",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        },
+        {
+          "name": "st2_0.ovl",
+          "sha256": "218f0afd3e89b1f35ab9ad5255bf8f62c1782fece79944cd5bd46930eb743173",
+          "main_text_fnv": 3687408485,
+          "main_text_bytes": 2450304
+        }
+      ],
+      "cabin_source_header": "#define RE4DC_CABIN_SOURCE 0\n#define RE4DC_CABIN_HANDOFF_DIAG 0\n#define RE4DC_CABIN_COMPLETE_HANDOFF 0\n#define RE4DC_EVENT_SWAP_RELOAD 0\n",
+      "cabin_source_header_sha256": "dc9518c0eac2c04a10c86e2d02cb40ceb78eda41493d352a94d8520aac12f862",
+      "size": "   text\t   data\t    bss\t    dec\t    hex\tfilename\n2674944\t 674920\t1008120\t4357984\t 427f60\t/root/probe/cache21-extended-build-20261021/legacy-on-01/re4dc-game.elf\n"
+    }
+  ],
+  "enabled_profile": {
+    "EM_ADMISSION_DISP_FIX": "1",
+    "EFFECT_ADMISSION_GUARD": "1",
+    "EVD_ADMISSION_TXN": "1",
+    "EVD_START_CLEANUP": "1",
+    "EVD_START_ROLLBACK": "1",
+    "EVD_DEBUG_READ_CLEANUP": "1",
+    "EVD_EXEC_FAILURE_CLEANUP": "1",
+    "EVD_ARAM_ALLOC_RETRY": "0",
+    "EVD_READ_RELEASE_REFS": "1",
+    "EVD_READ_ADMISSION_PREFLIGHT": "1",
+    "EVD_MODULE_VALIDATE_FIRST": "1",
+    "MOTION_RETIRE_PREFLIGHT": "1",
+    "EVD_FORWARD_RECEIPT": "0",
+    "EFFECT_CONTROLLER_VALIDATE_FIRST": "1",
+    "TEX_PAYLOAD_RETRY": "1"
+  },
+  "cabin_source": 0,
+  "full_off_program_and14_exact": true,
+  "enabled_profile_program_changed": true,
+  "limits": [
+    "Source/program preparation only; no main cache candidate stage/Flycast/release/physical acceptance.",
+    "CABIN1 ARAM/forward paths require an independently matched CABIN1 control. CABIN0 control is insufficient.",
+    "Payload still reads60index sectors in OFF/ON source fixture; no total I/O/performance improvement established.",
+    "Effect lifetime/reset/reader/admission/callback contracts remain open; no audit row closed.",
+    "New repaired chainsaw cold qualification is independent QA source/program, not present in this cache profile."
+  ]
+}

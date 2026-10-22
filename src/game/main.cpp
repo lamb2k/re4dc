@@ -705,6 +705,12 @@ void systemHardReset()
     OSReport("--HARD_RESET END!!\n");
 }
 
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_RESET_RETIRE_BEFORE_HEAPS
+extern "C" void re4dc_room_leave();
+extern "C" void re4dc_motion_retire_all();
+extern "C" void re4dc_effect_retire_room();
+extern "C" void re4dc_ui_retire_room();
+#endif
 // Blacks the screen, cancels DVD/ARAM transfers, resets sound, debug allocations and all heaps,
 // runs the common reset and re-inits the ROM font (the frame loop then restarts).
 void systemSoftReset()
@@ -718,10 +724,25 @@ void systemSoftReset()
     Aram.DmaCancelAll();
     SndSoftReset();
     DbmenuModuleInit();
+#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_RESET_RETIRE_BEFORE_HEAPS
+    // Restore suspended storage and stop its producers before native retirement.
+    // The common UI/task calls below are idempotent after this prephase.
+    SubScreenExitCore(&SubScreenWk);
+    TaskAllClear();
+    re4dc_room_leave();
+    // Preserve per-module cleanup order while all source heaps are still alive.
+    // The unconditional trio also covers a reset without an active Room4 owner.
+    systemResetCommon();
+    re4dc_motion_retire_all();
+    re4dc_effect_retire_room();
+    re4dc_ui_retire_room();
+#endif
     ResetDebugAlloc();
     MemClearAllHeap();
     SndSystemReset();
+#if !defined(RE4DC_GAME) || defined(__PPC__) || !RE4DC_RESET_RETIRE_BEFORE_HEAPS
     systemResetCommon();
+#endif
     RomFontSetting();
     pG->IsMessageInit = 0;
 #if defined(RE4DC_WARP_AFTER_RESET) && RE4DC_WARP_AFTER_RESET
