@@ -14,6 +14,10 @@ def extract(text,sig):
 def run(out,reuse=False):
  if not reuse:assert os.environ.get('D367_SLOT_HELD')=='1','Use qualify_target.sh for both leases'
  if not reuse:out.mkdir(parents=True,exist_ok=False)
+ if reuse:
+  previous=json.loads((out/'target-receipt.json').read_text())
+  for path,expected in previous['source_files'].items():
+   assert H((TREE/path).read_bytes())==expected,'Recorded target input changed: '+path
  assert H(RECIPE.read_bytes())=='f1b86f54a1c6fdf2ccf496c5fb504f5c20047727d9488b3872cba2bfb0646a22'
  archive=KOS/'lib/dreamcast/libkallisti.a';assert H(archive.read_bytes())=='5e2d867fb5825e7825e1843f2542446288e18c383341a58426e452a0b620daaf'
  (out/'candidate.txt').write_bytes(RECIPE.read_bytes())
