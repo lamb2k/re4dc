@@ -1,0 +1,79 @@
+{
+  "utc": "2026-10-22T01:07:29.798639+00:00",
+  "scope": "source/actual-layout/mock and five tiny Python private-job children only; NO Flycast guest, input, RAM or image writer",
+  "tests_expected": 50,
+  "passed": true,
+  "runs": [
+    {
+      "test": "test-observer-v2.py",
+      "exit_code": 0,
+      "seconds": 0.5,
+      "stdout": "",
+      "stderr": "test_actor_inline_and_signed_HP (__main__.InlineMotion.test_actor_inline_and_signed_HP) ... ok\ntest_adversarial_const_pMot_data_not_work (__main__.InlineMotion.test_adversarial_const_pMot_data_not_work) ... ok\ntest_changed_source_frame_rejects_coherence (__main__.InlineMotion.test_changed_source_frame_rejects_coherence) ... ok\ntest_code_const_pointer_never_dereferenced (__main__.InlineMotion.test_code_const_pointer_never_dereferenced) ... ok\ntest_cycle_or_outside_pool_is_not_valid_lifecycle (__main__.InlineMotion.test_cycle_or_outside_pool_is_not_valid_lifecycle) ... ok\ntest_inline_exact_offset_size_and_anon_provenance (__main__.InlineMotion.test_inline_exact_offset_size_and_anon_provenance) ... ok\ntest_null_pMot_still_valid_inline_work (__main__.InlineMotion.test_null_pMot_still_valid_inline_work) ... ok\ntest_startup_junk_and_boundary_pointer_are_unavailable (__main__.InlineMotion.test_startup_junk_and_boundary_pointer_are_unavailable) ... ok\ntest_startup_missing_is_unavailable (__main__.InlineMotion.test_startup_missing_is_unavailable) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.307s\n\nOK\n"
+    },
+    {
+      "test": "test-supervisor.py",
+      "exit_code": 0,
+      "seconds": 0.18800000002374873,
+      "stdout": "",
+      "stderr": "test_absolute_cap_independent_of_inner (__main__.Supervisor.test_absolute_cap_independent_of_inner) ... ok\ntest_after_spawn_exception_no_orphan (__main__.Supervisor.test_after_spawn_exception_no_orphan) ... ok\ntest_assignment_fault_spawn_contract (__main__.Supervisor.test_assignment_fault_spawn_contract) ... ok\ntest_changed_identity_refuses_foreign_keyups (__main__.Supervisor.test_changed_identity_refuses_foreign_keyups) ... ok\ntest_cleanup_wait_failure_cannot_skip_handleclose (__main__.Supervisor.test_cleanup_wait_failure_cannot_skip_handleclose) ... ok\ntest_disappeared_guest_finalization_failure (__main__.Supervisor.test_disappeared_guest_finalization_failure) ... ok\ntest_every_post_spawn_fault_cleanup (__main__.Supervisor.test_every_post_spawn_fault_cleanup) ... ok\ntest_evidence_cap (__main__.Supervisor.test_evidence_cap) ... ok\ntest_global16_admission_and17_runtime (__main__.Supervisor.test_global16_admission_and17_runtime) ... ok\ntest_normal_and_input_release_before41 (__main__.Supervisor.test_normal_and_input_release_before41) ... ok\ntest_runtime_floor (__main__.Supervisor.test_runtime_floor) ... ok\ntest_sampler_and_pipe_failure_both_cleanup (__main__.Supervisor.test_sampler_and_pipe_failure_both_cleanup) ... ok\n\n----------------------------------------------------------------------\nRan 12 tests in 0.001s\n\nOK\n"
+    },
+    {
+      "test": "test-controllers.py",
+      "exit_code": 0,
+      "seconds": 0.21799999999348074,
+      "stdout": "",
+      "stderr": "test_bad_manager_disallows_actor_witness (__main__.Controller.test_bad_manager_disallows_actor_witness) ... ok\ntest_bulk_source_frame_pointer_coherence (__main__.Controller.test_bulk_source_frame_pointer_coherence) ... ok\ntest_catch_needs_reciprocal_exact_actor_identity (__main__.Controller.test_catch_needs_reciprocal_exact_actor_identity) ... ok\ntest_door_ordinary_transition_ends_navigation (__main__.Controller.test_door_ordinary_transition_ends_navigation) ... ok\ntest_event_or_room_after_aim_ends_attempt (__main__.Controller.test_event_or_room_after_aim_ends_attempt) ... ok\ntest_infinite_special_bad_slot_unavailable_ammo_withheld (__main__.Controller.test_infinite_special_bad_slot_unavailable_ammo_withheld) ... ok\ntest_input_cutoff_releases_all (__main__.Controller.test_input_cutoff_releases_all) ... ok\ntest_manual_B_only_two_no_gameplay_mash (__main__.Controller.test_manual_B_only_two_no_gameplay_mash) ... ok\ntest_manual_context_end_releases_immediately (__main__.Controller.test_manual_context_end_releases_immediately) ... ok\ntest_missing_coherence_never_accepted_zero (__main__.Controller.test_missing_coherence_never_accepted_zero) ... ok\ntest_no_ammo_or_counter_proof_from_pulse (__main__.Controller.test_no_ammo_or_counter_proof_from_pulse) ... ok\ntest_nonfinite_position_or_angle_withholds_input (__main__.Controller.test_nonfinite_position_or_angle_withholds_input) ... ok\ntest_ordinary_two_actual_discharge_windows (__main__.Controller.test_ordinary_two_actual_discharge_windows) ... ok\ntest_stale_after_aim_releases_and_never_restarts (__main__.Controller.test_stale_after_aim_releases_and_never_restarts) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.001s\n\nOK\n"
+    },
+    {
+      "test": "test-capture-budget.py",
+      "exit_code": 0,
+      "seconds": 0.18800000002374873,
+      "stdout": "",
+      "stderr": "test_actual_png_count_mismatch_disqualifies (__main__.Broker.test_actual_png_count_mismatch_disqualifies) ... ok\ntest_no_screenshot_traffic_near_evidence_cap (__main__.Broker.test_no_screenshot_traffic_near_evidence_cap) ... ok\ntest_reserves_final_two_and_blocks_duplicate (__main__.Broker.test_reserves_final_two_and_blocks_duplicate) ... ok\ntest_unexpected_external_periodic_capture_disqualifies (__main__.Broker.test_unexpected_external_periodic_capture_disqualifies) ... ok\n\n----------------------------------------------------------------------\nRan 4 tests in 0.000s\n\nOK\n"
+    },
+    {
+      "test": "test-inner-contract.py",
+      "exit_code": 0,
+      "seconds": 0.2809999999590218,
+      "stdout": "",
+      "stderr": "test_cold_keys_select_entry_index4_no_scheduled_kill (__main__.Contract.test_cold_keys_select_entry_index4_no_scheduled_kill) ... ok\ntest_cold_never_seed (__main__.Contract.test_cold_never_seed) ... ok\ntest_inner_limits_and_no_legacy_thresholds (__main__.Contract.test_inner_limits_and_no_legacy_thresholds) ... ok\ntest_only_reviewed_roles_and_later_seed_required (__main__.Contract.test_only_reviewed_roles_and_later_seed_required) ... ok\ntest_read_only_transport_no_memory_write_api (__main__.Contract.test_read_only_transport_no_memory_write_api) ... ok\ntest_source12_transition_sites_new_reader_program_identity (__main__.Contract.test_source12_transition_sites_new_reader_program_identity) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.080s\n\nOK\n"
+    },
+    {
+      "test": "test-windows-private-job.py",
+      "exit_code": 0,
+      "seconds": 1.0780000000377186,
+      "stdout": "",
+      "stderr": "test_after_spawn_exception_reaps_private_child (__main__.Kernel.test_after_spawn_exception_reaps_private_child) ... ok\ntest_closed_stdin_release_and_close_failure_still_reaps (__main__.Kernel.test_closed_stdin_release_and_close_failure_still_reaps) ... ok\ntest_independent_watchdog_terminates_private_job (__main__.Kernel.test_independent_watchdog_terminates_private_job) ... ok\ntest_normal_exit_retained_handle_times_no_query_race (__main__.Kernel.test_normal_exit_retained_handle_times_no_query_race) ... ok\ntest_sampler_exception_reaps_after_release (__main__.Kernel.test_sampler_exception_reaps_after_release) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.852s\n\nOK\n"
+    }
+  ],
+  "source_sha256": {
+    "capture-budget.py": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+    "controller-core.py": "b2c4bc25b3f8c8ef7bb6c33078bb1ee16f3ea5b64af21deede687afaf0057b97",
+    "current-transitions.json": "5c6128fc138be7935e117ef48da33a7d5bc46ea3331192a7b1f4f239c683807c",
+    "empty-keys.txt": "69c29ed80746da752fdd53d2410cf277060bfd04e9805e1c7a8664316ddacca2",
+    "exact-log-symbols.json": "9d26a5b22ad1e54bcc6f6e05df0232666582289d3877becf6608322d375c6566",
+    "guest-profile-v2.json": "873fef956d430ee5bf2ad100183dce38a22ec70e558d98908abba740a45accee",
+    "guest-supervisor-core.py": "35cede831be69d6ef75c3efcc6de4770951224c2ebbdce05c4b241277220f280",
+    "inner-adapter.py": "813ae31b4d91382e24d88612fa275d830baf8103d985be8aad04a15fb8e95c8b",
+    "layout-contract.py": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+    "native-tests-initial-incident.json": "f5dc28e0d4d09e662a29de7543cc0af34c586904e05ed9c775cef64caa9ad63b",
+    "observe.py": "47d2bcce7f98d3e8b90ed96f8de82b9e0df2e3dbca2aa44cd033178d5a738821",
+    "observer-binding-v2.json": "6cbe1600ef8d6016d5a684b811d3db719266c052b174cdfbe8d701c2e045ea5e",
+    "observer-v2-ABI.json": "c48f2858953d7c693e1fb1885d0354fdb2706706c458099697fb1cc288ea228e",
+    "observer-v2.py": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+    "PLAN.md": "9d462fdc11c2ca40bf4d643ce73763568e5fcf9aaf70a825fed3f8fd7f667c94",
+    "policies.py": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+    "r103-cold-keys.txt": "1d521b1ca227b07273fd4f7f1d2a7e1e2848b71eaee18ba07ad691386add2565",
+    "run-unit-tests.py": "137df209174f962ae01e7e1f1ffea1b687a933d08d008591ca9a1240a1e2fca5",
+    "selected-assets.json": "b03b8053b9b85dfce317ed4c174f225bd4ed91cc489ae31cb0cd085ad861eb0e",
+    "source-contract-v2.json": "b242787825500bcd453e399465f19bc2b71e45f881f069047e374d21e135f579",
+    "test-capture-budget.py": "9f3e02286946b0648947f60254d058a9684a8cf388b5cd4c082024c756a963e8",
+    "test-controllers.py": "e82b779637c3fe934c9b4bbb2e5fc3a99c350cc3f640f6390de26a8a6f62bceb",
+    "test-inner-contract.py": "141aee5d0f90ac968074607afcf3a76bd75d45f95e3a121748253a4644c0fade",
+    "test-observer-v2.py": "779847abaccfb619ddbbe1516ed93dd0dcc8837e13bf4d7d053f174acad1a287",
+    "test-supervisor.py": "6fba4a6f54136d861d6f63ec98ed6e5ff3f409980d978b38162d17e4c4feceba",
+    "test-windows-private-job.py": "c381aee93ae5dca166586b738de38c880c089dbd50e4f84c95b8a61c5852ef6d",
+    "windows-backend.py": "49c9b62e3478c0c833ec63c29f7883637332193a685fd91460324e6bdd0451f3"
+  }
+}

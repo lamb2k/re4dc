@@ -1,0 +1,57 @@
+# Fixed c57 nontrace guest preparation v2
+
+This is source/mock qualification and a concrete future guest plan. No new521 Flycast guest is allocated, launched or accepted. The standalone stage/readback is accepted; source/component tests and small Python-child containment tests do not establish game behavior. Main owns allocation/integration/cache audit; Claude owns production merge/release.
+
+## Exact fixture
+
+Use only runtime `c57ff60f0f462fdd2c419883b0258963504d756a`, raw `52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45`, ELF `248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b`, image `da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f`. `guest-profile-v2.json` pins14 overlays, accepted stage/readback receipts, source contract, exact73 ABI reads, unique log objects, template executable/config/VMUs and retained dependencies. Later main cache fixes are absent. GAME_SH4ZAM1/render-only1/SKIN0/QA1/GANADO_ROUTINE_BYTES1/CABIN0/all15 cache guards0; no trace calls. Source fixtures, previous f947 authentic death/catch/Continue states and original images remain unchanged.
+
+`selected-assets.json` binds exact staged extents/SHA for QA/menu, r103 and r103f and the room/actor assets. r103 is entry index4 (four down); source preset has default inventory and no scheduled kill. r103f index5 explicitly kills actor0x12 atframe150 and is excluded. Source QA preset is reached with ordinary retained menu keys; all later gameplay requires observed QA flags0. No health/actor/flag writes, default changes, event skips or synthetic saves.
+
+## Observer v2 and erratum
+
+Preserved v1 misinterpreted `cModel.pMotion` as a MotionWork pointer and is not guest-qualified. Exact c57 DWARF establishes inline `cPlayer/cEm.Motion` at472 bytes, size220, through anonymous union/inheritance; pMotion aliases the work's pMot DATA pointer. v2 reads inline Mot_frame/Seq_frame/Seq_frame_num and exposes pMot solely as identity, including null/const pointers. Nine exact-layout adversarial tests cover misleading data bytes, null/const/startup/junk pointers, frame incoherence, actor inline motion/signedHP and invalid/cyclic pool membership.
+
+The transport uses read-only process rights, ReadProcessMemory, retained PID/start/path and sourceRAM. Bulk16MiB snapshots require live-before/inside/live-after sourceframe and pG/pPL agreement, with atmost4 retries; still explicitly non-atomic. Missing/unreadable/trace-only/private Em10 fields are unavailable, never guessed or accepted as0. Input gates require explicit valid/coherentTrue, fresh age<=0.2s, finite positions/angles and actual source fields. Pool pointer/stride/alignment/serial establish actor lifecycle; an actor slot reused with another serial is another actor. No tracecaller attribution or synthetic type6 is inferred.
+
+## Separately allocated lineage
+
+| Role | Parent | Inputs and measured gate |
+|---|---|---|
+| cold-shoot01 | Cold, no seed/AutoLoadState | Retained r103 entry menu; after4 distinct coherent freeplay frames, aimR<=0.4s/A<=0.15s/release/settle>=0.65s. Atmost2 pulses before any door/event. |
+| return-door01 | Accepted same521 cold-shoot checkpoint | Retained normal route toward(-49731,7670), turn<=0.65s/forward<=0.5s, A<=0.2s at original door gate, max4A. Stop at transition; no movement requalification goal. |
+| cinematic01 | Accepted same521 door checkpoint | Only original PlayingManual2/type64/loop1/room101/QA0 witness permits max2B<=0.15s, >=1s apart. Natural catch/death/demo afterward, no mash/skip/navigation. |
+
+Each role needs fresh main allocation; no automatic chained guest. Entire checkpoint state may be sealed/restored only after immutable ELF anchors, all disc files, emulator, initial-data manifest, ancestry and parent role match. Old programmes, original QA, traced6624/f947, castle and crossprogramme states are excluded. Preserve partial attempts and authentic terminal death; no rollback to hide failure.
+
+Historical first freeplay at host28.547s in old f947 informed the cold41s budget only; it is not a new521 timing or benchmark. If the new cold window cannot establish two discharges, retain partial evidence and report the missing gate. Do not add a door objective to that run.
+
+Discharge requires stable inventory slot/id/equipped weapon, ordinary itemclass1/source weapon-row agreement, loaded low13 decrement equal to both g/c_shot increments in one increasing sourceframe window<=120. Special0x52/0x6d, infinite Debug2, unavailable ammo or a pulse without counters do not qualify. Missed rounds can establish discharge; a hit/kill additionally needs stable actor ptr+serial/id/type, HP/counters and lifecycle evidence. Earliest shooting precedes events; postContinue stop80400000 is not assumed ordinary shooting readiness.
+
+Cinematic evidence must show reciprocal player/actor damage pointers and exact actor identity (historical saw id15/type4 is a candidate, not new runtime acceptance), named routine transition, inline sequence/motion frames, player life, camera, region and body/head resource identity. Region0 JP and region1 overseas have different head policy; pointers alone do not establish visible animation. Save source-frame context before/after each PNG and visually review the actual cinematic. No caller trace exists in this nontrace image; parent attribution remains unavailable. Actual death demo, Continue and renewed ordinary gameplay require observed source/UI/input evidence, not merely absence of life1.
+
+## Bounds and cleanup
+
+Inner41s; stop all new input at40.75s. Actual Flycast process must be <=47.5s; an independent conservative47.0s private-job clock starts before release and can only shorten a guest if startup/preflight consumes time. It does not extend the actual-process ceiling. Fresh admission18GiB+128MiB, runtime18GiB+64MiB; global16 with admission<16 and runtime<=16; evidence60,000,000B remains unchanged.
+
+`guest-supervisor-core.py` independently attempts deadline join, pipe close, owned key release, private-job stop, inner/guest waits and handle close on every postspawn failure. Broken pipe/close/wait errors disqualify and cannot skip later cleanup. PID/start/path changes refuse foreign posts; private job contains any child before observer registration. Windows backend uses retained creation time/signaled exit and cached live-verified path after exit because QueryFullProcessImageNameW may fail WinError31 on a dead process. Join the deadline thread before closing handles; never query a closed handle or kill unrelated processes.
+
+Five native tests use only tiny Python children and no native input/RAM/Flycast. They cover afterspawn failure, closedfd0 release+close OSError, sampler failure, blocked main loop independently killed by deadline and normal postexit handle finalization. Initial assertion failures and confirmed postexit query defect are preserved in native-tests-initial-incident.json. Portable fault tests cover resource caps, source identity changes, every postspawn operation and independent cleanup.
+
+Use a separate future guest evidence root from the sealed stage root. Charge max(logical,allocated) using the retained tested footprint helper; exclude only exact immutable samefile track refs, never a new/private file. No image copies or writers. Temporary harness refs must be removed, source imageID/linkcount1/path/SHA restored after handles close. Count failed evidence too. Recheck all fresh resources immediately before release and continuously in the supervisor.
+
+Disable inherited periodic screenshots. Capture broker permits atmost8PNG (four2PNG sets) and reserves2 for final; reject unexpected external PNGs and captures too near60MB. First before-shot, after each shot and final fit8PNG. Cinematic firstcatch/lifezero/demo/final fit8PNG. Capture is read-only; source inputs must be freshly re-gated after its blocking read. Evidence capture failures are recorded/disqualifying; do not increase caps.
+
+## Concrete integration work still required before launch
+
+`inner-adapter.py` wires the source controllers/read-only observer to the exact retained checkpoint_runner18 without modifying that dependency. It patches only in-memory harness FLOOR/runtime cap/usage and global16 setting, uses period0/seconds41, leased PID/start/path posts, joins observer/controller before closing its handle, and leaves postguest checkpoint audit outside the47s private-job clock. Its pure role/source contract tests pass. It has not run Flycast.
+
+An outer CLI invocation driver must still connect this adapter to the tested portable monitor/WindowsBackend and implement reviewed pre/post full staged-disc/template/dependency/tool/nativeID hashes, root ancestor-alias and exclusive output ownership checks, fresh admission after preflight, capped receipts and separately guarded postguest checkpoint audit/seal. No launcher CLI exists yet, so this unit cannot start a guest inadvertently. Main reviews this concrete source/plan before allocating that remaining source integration and any guest. Do not call portable/mock passing or native dummy tests full harness/guest qualification.
+
+Before any launch, exact reviewed hashes of profile+all own source must be checked; track03 must rehash to da101/nativeID pinned; all original stage receipts/KEEP and1728 unrelated identities remain accepted. Cold data must remain the exact twoVMU template files with no unexpected autosaves; seed env must be cleared. Actual capacity is fresh measured, never inferred from prior C readings.
+
+## Remaining macrotransition coverage
+
+`current-transitions.json` inventories all12 current c57 EM_RTN_SET callsites and exact source contexts:2 writes to0x30,1 to0x32,1 to0x36,2 to0x38,2 to0x37,2 to0x34,1 to0x35,1 to0x3a. Reader source/object correctness is separate main evidence. Cold/door/cinematic plan targets the first ordinary saw path only; it does not claim all12 sites or all8 destinations. Each other path needs an authentic source-derived encounter/weapon/stun/death precondition and separately allocated currentprogramme checkpoint. No fabricated actor/health/flag writes or substituted old build state. Repeated QA reopening/inventory/movie/held/deathContinue/transition regressions from6f9d remain historical accepted evidence and do not qualify this successor.
+
+No release checks, physical Dreamcast acceptance or performance improvement are established here. The menu-window restoration candidate remains disabled after+102lowlevel requests/+168032bytes; no candidate import or improvement claim.
