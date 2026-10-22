@@ -1,0 +1,645 @@
+{
+  "pin": "f3149dfc7a8e9bbf317eae6d192d9665b9568ce5",
+  "observed_head": "4a223f3fe7a72cd62d9021c55688c4d3d54e05fb",
+  "files": [
+    {
+      "path": "include/datactrl.h",
+      "bytes": 3690,
+      "sha256": "dbe0a9709611a900c08b317a446aa23bd905be85db4b6e06f6a27e800d4f4026",
+      "blob": "6bd0e6450bd370a69c5312b27bc752af37098d96",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "port/dreamcast/game/platform/mem.cpp",
+      "bytes": 10033,
+      "sha256": "c42f173e4bf3cb9b08acb117ec3f66edd794e27fd7f9fe0fdb53278526487adb",
+      "blob": "5791ddfc1d025dc24621393dafea86df055bfecb",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "bytes": 36694,
+      "sha256": "31d38c14806250cdf1d7ad58a7dd742641bc2fbe6e3af5cf5c0f361163277216",
+      "blob": "5ea4c4747fe53c89a42c4cbc6500f649fc622240",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "src/game/game.cpp",
+      "bytes": 67752,
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "blob": "53ad0e7322de9ad1d1b9b218ac05982ac9a7c9e2",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "src/game/main.cpp",
+      "bytes": 21850,
+      "sha256": "d2c27ac68757a09cec2a1777558cedcf4cdd417bf57591159447e4f004e17d6a",
+      "blob": "355a1d7b7af5d55e3206914e8bdc05e7ea78b36b",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "src/game/stage.cpp",
+      "bytes": 16798,
+      "sha256": "f95342121195ba1e4ad3d89629c946636866dbca36578d35f42b4cda5b9a1c60",
+      "blob": "867583800994684cb883801af741ff296b5b726d",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "bytes": 77186,
+      "sha256": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343",
+      "blob": "86dbfd27576368a17bb83cf696713359b4a74ced",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "src/game/scheduler.cpp",
+      "bytes": 18839,
+      "sha256": "6479263912945cd5e396f270a2872d88262a69b85bbf4dc357e9e6f4212ea5ce",
+      "blob": "d108af401d421abb3434c5ed352e4d956c6e87eb",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "bytes": 48362,
+      "sha256": "47e3b36faa3ebcffd1874dbb5d53bb46404773c9e0bb91fbb5be99ac52ab12b8",
+      "blob": "c4eb82eabcc990c551442e6cdc897b8e80887de5",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "src/game/read.cpp",
+      "bytes": 54487,
+      "sha256": "fa7688e8cf6a2f21548d7d31e93b3f0e6023131333c3b8c90d25c4d61ce78d08",
+      "blob": "11bf2026b93a2ec663e6509185dd78202cd109ff",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "src/game/roomdata.cpp",
+      "bytes": 14696,
+      "sha256": "6311144a11a3fb8dba23e9e42a6f8f89dd087dda70f47a9d026ce97cb61103d2",
+      "blob": "f8eed723b6846d0753182f11f4a1ab10e011ba61",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "port/dreamcast/game/platform/os.cpp",
+      "bytes": 35736,
+      "sha256": "f861a5b9ebb9c6555fc642922af604674fa1acc16a90ba757f55e8ea135b7c92",
+      "blob": "52b0bc63a46efea208e6e116cf93a5162e6d0acb",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "bytes": 20989,
+      "sha256": "058b5dab66aba43c5e69a0a3733c030c09ef695c4eacac0fa600d5052a82bb7f",
+      "blob": "80eefd2493d785ef2e200de9db3f72f7c7971f54",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "bytes": 34168,
+      "sha256": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2",
+      "blob": "3065eb00d1497cb7aa0d8e50133dc5b8b46ac1b1",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_cabin.cpp",
+      "bytes": 9947,
+      "sha256": "5011f4f5d86713a13e913d5b60c70549657fbc46c648ec36c9e9207d08fb5c14",
+      "blob": "98aeeb1f09c9379068ef20297228d0e7c79d21a4",
+      "same_as_observed_head": true
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "bytes": 45157,
+      "sha256": "426a06c09524c21b6246a818aac130c58bd9fab44fe4d4959f9e8e3042b21f69",
+      "blob": "c73c09498ba6c22f6efda26860f5c18baf892c3c",
+      "same_as_observed_head": true
+    }
+  ],
+  "objects": [
+    {
+      "path": "port/dreamcast/game/platform/mem.cpp",
+      "signature": "void re4dc_missing(",
+      "start": 215,
+      "end": 228,
+      "sha256": "1e992421b70478e21b361ff92130dc6e500b3523b803ffbb67c403b5a4d61055",
+      "body": "\n    // Keep the first failure before the intentional sleep loop hides it from\n    // the watchdog. The hook is absent when CRASH_SCREEN is disabled.\n    if (re4dc_crash_screen_missing) re4dc_crash_screen_missing(name);\n    re4dc_log(\"RE4DC MISSING: %s called; halting\\n\", name);\n#if RE4DC_VMU_DEBUG_SLOT\n    re4dc_dbgslot_ring(2, (unsigned) name, 0);\n#endif\n    fflush(stdout);\n    for (;;) {\n        thd_sleep(1000);\n    }\n"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "signature": "void cDataUnit::setLoadToMram()",
+      "start": 239,
+      "end": 389,
+      "sha256": "51d01cfcd3fab2480d07deb3c56f8056bd1fa4f4e3e2529ddb99fc54f51cecb0",
+      "body": "\n    int no;\n\n    switch (m_condition) {\n    case 1:\n    case 3:\n    case 5:\n    case 6:\n    case 7:\n    case 8:\n        break;\n    case 0:\n        if (m_fix_addr == 0) {\n            if (arg == 0) {\n                if (DC.dbgHeap == 1) {\n                    dest = (u32) Debug_alloc(m_size, 1);\n                } else {\n#line 200 \"D:/Bio4/Prog/datactrl.cpp\"\n                    dest = (u32) MEM_ALLOC(m_size, 1, 0xD);\n                }\n                if (dest == 0) {\n                    m_err = 1;\n                    return;\n                }\n                setMallocInfo(1, (void*) dest);\n            } else {\n                dest = arg;\n                setMallocInfo(0, NULL);\n            }\n        } else {\n            dest = m_fix_addr;\n            setMallocInfo(0, NULL);\n        }\n#line 222 \"D:/Bio4/Prog/datactrl.cpp\"\n        no = DvdReadN(m_name, (void*) dest, 0, 0, 0, wait | 0x10, __FILE__, __LINE__);\n        if (pG->dev_mode == 1) {\n#line 226 \"D:/Bio4/Prog/datactrl.cpp\"\n            DC.setDummyId(DvdReadN(\"dummy.dat\", DC.m_DummyDataMem, 0, 0, 0, wait | 0x10, __FILE__, __LINE__));\n        }\n        m_id = no;\n        if (no >= 0) {\n            m_command = 0;\n            m_condition = 1;\n            if (wait == 1) {\n                checkLoadToMram();\n            }\n            OSReport(\"DC:%s set MRAM_LOAD\\n\", m_name);\n        } else {\n            m_err = 2;\n            checkMallocRelease();\n            pLog->err(0, 0, \"cDataUnit::setLoadToMram command error\");\n        }\n        break;\n    case 2:\n#if RE4DC_CABIN_SOURCE\n        if(re4dc_cabin_carrier_mram_move(this,(void*)(m_fix_addr?m_fix_addr:(arg?arg:(u32)m_addr)))<0){\n            m_err=3;m_command=0;return;\n        }\n#endif\n        if (m_fix_addr == 0) {\n            if (arg != 0 && arg != (u32) m_addr) {\n                checkMallocRelease();\n                memcpy((void*) arg, m_addr, m_size);\n                m_addr = (void*) arg;\n                DCFlushRange((void*) arg, m_size);\n            }\n        } else if (m_fix_addr != (u32) m_addr) {\n            checkMallocRelease();\n            memcpy((void*) m_fix_addr, m_addr, m_size);\n            m_addr = (void*) m_fix_addr;\n            DCFlushRange((void*) arg, m_size);\n        }\n        m_command = 0;\n        OSReport(\"DC:%s set MRAM_TO_MRAM\\n\", m_name);\n        break;\n    case 4:\n        if (m_fix_addr == 0) {\n            if (arg == 0) {\n                if (DC.dbgHeap == 1) {\n                    dest = (u32) Debug_alloc(m_size, 1);\n                } else {\n#line 290 \"D:/Bio4/Prog/datactrl.cpp\"\n                    dest = (u32) MEM_ALLOC(m_size, 1, 0xD);\n                }\n                if (dest == 0) {\n                    m_err = 1;\n                    return;\n                }\n                setMallocInfo(1, (void*) dest);\n            } else {\n                dest = arg;\n                setMallocInfo(0, NULL);\n            }\n        } else {\n            dest = m_fix_addr;\n            setMallocInfo(0, NULL);\n        }\n#if defined(RE4DC_GAME) && RE4DC_EVENT_FILES\n        if (m_be_flag & RE4DC_EVENT_FILE_FLAG) {\n            // The caller's final allocation is the only complete RAM copy.\n            // Failed/partial reads are never published to source consumers.\n            int cabin_install = 0;\n#if RE4DC_CABIN_SOURCE\n            cabin_install = re4dc_cabin_carrier_install(this, (void*) dest);\n#endif\n            if (cabin_install < 0 || (!cabin_install && !re4dc_event_file_install(m_name, m_size, (void*) dest))) {\n                m_err = 2;\n                m_command = 0;\n                checkMallocRelease();\n                dest = 0;\n                break;\n            }\n            m_addr = (void*) dest;\n            m_condition = 2;\n            m_command = 0;\n            m_wait = 0;\n            OSReport(\"DC:%s check FILE_MRAM_OK\\n\", m_name);\n            break;\n        }\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n        // No ARAM copy exists: re-read the unit's disc file into the destination now\n        // (blocking, like the source's synchronous DMA). The ARQ request below still\n        // runs so condition 5 -> MRAM_OK lands on the same check as on GC.\n        if (!re4dc_aram_file_read(m_name, (void*) dest, m_size)) {\n            m_err = 3;\n            checkMallocRelease();\n            pLog->err(0, 0, \"cDataUnit::setLoadToMram disc re-read error\");\n            re4dc_missing(\"ARAM_TO_MRAM disc re-read failed\");\n            break;\n        }\n        DCFlushRange((void*) dest, m_size);\n#endif\n        no = Aram.DmaTransReq(1, (u32) m_addr, dest, m_size, wait);\n        m_id = no;\n        if (no >= 0) {\n            m_command = 0;\n            m_condition = 5;\n            if (wait == 1) {\n                checkAramToMram();\n            }\n            OSReport(\"DC:%s set ARAM_TO_MRAM\\n\", m_name);\n        } else {\n            m_err = 3;\n            checkMallocRelease();\n            pLog->err(0, 0, \"cDataUnit::setLoadToMram command error\");\n        }\n        break;\n    }\n"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "signature": "int cDataUnit::setClear()",
+      "start": 561,
+      "end": 598,
+      "sha256": "1638825766d73b250f3fa92f7d272d75041629e954fb6ecf147fcc0797a48bf6",
+      "body": "\n#if RE4DC_CABIN_SOURCE\n    if (!re4dc_cabin_carrier_clear(this)) return 0;\n#endif\n    m_command = 0;\n    switch (m_condition) {\n    case 5:\n    case 6:\n    case 7:\n        Aram.DmaCancel(m_id);\n        break;\n    case 2:\n    case 4:\n    case 8:\n        break;\n    case 1:\n    case 3:\n        Dvd.ReadCancel(m_id, 0x40);\n        Dvd.ReadCheck(m_id, NULL, NULL, NULL);\n        break;\n    case 0:\n        goto clear;\n    default:\n        goto ret;\n    }\n    OSReport(\"DC:%s set CLEAR\\n\", m_name);\nclear:\n    checkMallocRelease();\n#if defined(RE4DC_GAME)\n    m_be_flag &= ~RE4DC_EVENT_FILE_FLAG;\n#endif\n    m_addr = NULL;\n    dest = 0;\n    m_condition = 0;\nret:\n    return 1;\n"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "signature": "void cDataUnit::checkMallocRelease()",
+      "start": 133,
+      "end": 148,
+      "sha256": "b8549980ac3473bd4e7399f7d0bc1fe9a68e8f930f6e79dcb47929c06a04256c",
+      "body": "\n    if (chk(2) == 1) {\n#if RE4DC_CABIN_SOURCE\n        if(!re4dc_cabin_carrier_before_free(m_malloc_addr)){\n            re4dc_missing(\"cabin unit allocation still leased\");return;\n        }\n#endif\n        if (DC.dbgHeap == 1) {\n            Debug_free_h(m_malloc_addr, m_malloc_heap);\n        } else {\n            Mem_free_h(m_malloc_addr, m_malloc_heap);\n        }\n        m_be_flag &= ~2;\n    }\n"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "signature": "void cDataCtrl::initDataUnit()",
+      "start": 875,
+      "end": 897,
+      "sha256": "964da574d758e05b4d9860606ce9ee8907b9f6f524f7cd539bbea675612be70d",
+      "body": "\n#if RE4DC_CABIN_SOURCE\n    if (!re4dc_cabin_carriers_reset()) { re4dc_missing(\"cabin carrier reader before unit reset\"); return; }\n#endif\n    cDataUnit* u;\n    u32 i;\n\n    m_aram_free = ARAM_FREE_BASE;\n    setAramSort(1);\n    m_data_ctrl_flag = 1;\n    dbgHeap = 0;\n    for (i = 0; i < 32; i++) {\n        u = &m_DataUnit[i];\n        memclr_asm(u, sizeof(cDataUnit));\n        u->m_be_flag &= ~1;\n        u->setCondition(0);\n        u->setCommand(0, 0, 0);\n        u->m_err = 0;\n        u->fixMramAddr(0);\n    }\n    initDummyId();\n"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "signature": "void cDataCtrl::check()",
+      "start": 1175,
+      "end": 1193,
+      "sha256": "2a0f0af1e506de7fb9e42efe80af22e2a1afacb52037f166b802cf4c2449d5e9",
+      "body": "\n    cDataUnit* u;\n    int i;\n\n    if (m_data_ctrl_flag != 0 && m_nblock_read_stop != 1) {\n        while (checkAramSort() == 1) {\n        }\n        for (i = 0; i < 32; i++) {\n            u = &m_DataUnit[i];\n            if (u->chk(1) != 0) {\n                u->m_err = 0;\n                u->checkCommand();\n                u->checkCondition();\n            }\n        }\n        checkDummyId();\n    }\n"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "signature": "void gameDoordemo()",
+      "start": 1420,
+      "end": 1496,
+      "sha256": "2340b62528415f5983e1b7dea302b1c5ed80a6560f5a297ad316f9fed03a2b2e",
+      "body": "\n    OSReport(\"--DOORDEMO START!!\\n\"); RE4DC_DOORPH(\"demo\");\n    BitOn(pG->System_flg, 0x1000000);\n    BitSet(pG->Stop_flg, 0xFFFFFFFF);\n    KeyStop(0xEFCF0000);\n    if (pG->Debug_flg[2] & 0x80000000) {\n        fadeSetG(0, 0, 0, 0);\n        TaskSleep(1);\n    } else if (Flag54(0x80000) || Flag54(0x100)) {\n        fadeSetG(0, 0, 0, 0);\n    } else {\n        switch (SceSys.m_door_fade_eff) {\n        case 0:\n        default: {\n            Filter09GetEFB_801D19E0();\n            Filter09SetbUse(1, 1);\n            fadeSetG(0, 120, 0, 0);\n            break;\n        }\n        case 1: {\n            fadeSetG(0, 15, 0, 0);\n            while (Fade[0].flags & 1) {\n                TaskSleep(1);\n            }\n            break;\n        }\n        case 2: {\n            fadeSetG(0, 0, 0, 0);\n            break;\n        }\n        }\n    }\n    if (!Flag54(0x80000) && !Flag54(0x100)) {\n        cSceSys* s = &SceSys;\n        if (s->pDoorFunc != 0) {\n            ((void (*)(int)) s->pDoorFunc)(s->pDoorParam);\n            s->pDoorFunc = 0;\n        }\n        if (s->pExitFunc != 0) {\n            ((void (*)(int)) s->pExitFunc)(s->pExitParam);\n            s->pExitFunc = 0;\n        }\n    }\n    TaskSleep(1);\n    pG->Disp_flg = 0xFFFFFFFF;\n    TaskSleep(2);\n    BitOn(pG->System_flg, 0x100000);\n    TaskSleep(2);\n    DC.initDataUnit();\n    Dvd.ReadCancelAll();\n    Aram.DmaCancelAll();\n    EmReadInit();\n    ClearOt(); RE4DC_DOORPH(\"demo.cancel\");\n    {\n        int req = SndDoorSeLoad();\n        SndNextRoomInit();\n        while (SndStatDisp(req) == 0) {\n            TaskSleep(1);\n        }\n    }\n    if (!Flag54(0x80000) && !Flag54(0x100)) {\n        DoorSeCall(0);\n    }\n    memcpy((u8*) pG + 0x4FC0, &pG->NextPos, sizeof(Vec));\n    FSet(pG->sub_angle, pG->NextY);\n    U16Set(pG->room_id, pG->next_room);\n    pG->Part = pG->next_point;\n    if ((s32) pG->Debug_flg[2] >= 0 && !(pG->System_flg & 0x80000)) {\n        pG->JumpPoint = 0;\n    }\n    pG->Rno0 = 1;\n    pG->Rno1 = 0;\n    pG->Rno2 = 0;\n    pG->Rno3 = 0;\n    OSReport(\"--DOORDEMO END!!\\n\"); RE4DC_DOORPH(\"demo.end\");\n"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "signature": "void gameRoomInit()",
+      "start": 487,
+      "end": 766,
+      "sha256": "15ad15b6d270a98527e8686131282035a1e6fc6c563ccf3707aa3d071af839c9",
+      "body": "\n    int n;\n    void* p;\n\n#if !defined(__PPC__)\n    if (nativeSkipOpeningRoom()) {\n        return;\n    }\n#endif\n#if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR\n    re4dc_loadind_begin();  // LOAD_INDICATOR: the PS2's loading id (load_indicator.cpp)\n#endif\n    DC.m_nblock_read_stop = 1;\n    RE4DC_DOORPH(\"room\"); SndReadAddrInit();\n    gameRoomMemInit(); RE4DC_DOORPH(\"room.mem\");\n    if (pG->shooting_mode != 0) {\n        pG->debug_mode = 0;\n        BitOn(pG->Debug_flg[3], 0x4000000);\n        BitOn(pG->Debug_flg[3], 0x400);\n        BitOn(pG->Debug_flg[3], 0x80000000);\n        BitOn(pG->Debug_flg[2], 0x100000);\n        BitOn(pG->Debug_flg[3], 0x200);\n        BitOff(pG->Debug_flg[3], 0x2000);\n    }\n    BitOn(pG->Debug_flg[0], 0x200);\n    ReadPlayerData(pG->pl_type, pG->pl_costume); RE4DC_DOORPH(\"room.pl\");\n    ReadAreaData(); RE4DC_DOORPH(\"room.area\");\n    DC.initDataUnit();\n    ActBtn.init();\n    ConsInitRoom((ConsRoom*) GetDataExt(pG->pRoom, \"CNS\", 0));\n    {\n        cSmd* smd = (cSmd*) GetDataExt(pG->pRoom, \"SMD\", 0);\n        cSmx* smx = (cSmx*) GetDataExt(pG->pRoom, \"SMX\", 0);\n        SmdInit(smd, smx, (cSmd*) GetDataExt(pG->pRoom, \"SMD\", 1));\n    }\n    ModInfoMgr.roomInit();\n    n = ConsGetRoomValue(7) + SmdGetObjNum();\n    if (pG->Debug_flg[3] & 0x200000) {\n        n *= 2;\n    }\n    ModInfoMgr.arrayAlloc(n);\n    PartsMgr.roomInit();\n    n = ConsGetRoomValue(6) + SmdGetObjNum();\n    if (pG->Debug_flg[3] & 0x200000) {\n        n *= 2;\n    }\n    PartsMgr.arrayAlloc(n);\n    EmMgr.roomInit();\n    n = ConsGetRoomValue(0);\n    if (pG->Debug_flg[3] & 0x200000) {\n        n *= 2;\n    }\n    EmMgr.arrayAlloc(n); RE4DC_TRACE_OWNER_PUBLISH(RE4DC_OWN_PL | RE4DC_OWN_EM);\n    ObjMgr.roomInit();\n    n = ConsGetRoomValue(1) + SmdGetObjNum();\n    if (pG->Debug_flg[3] & 0x200000) {\n        n *= 2;\n    }\n    ObjMgr.arrayAlloc(n); RE4DC_TRACE_OWNER_PUBLISH(RE4DC_OWN_OB);\n    EspRoomInit();\n    EspArrayAlloc(ConsGetRoomValue(2)); RE4DC_TRACE_OWNER_PUBLISH(RE4DC_OWN_EP);\n    RoomTexRoomInit();\n    EspgenRoomInit();\n    EspgenArrayAlloc(ConsGetRoomValue(3)); RE4DC_TRACE_OWNER_PUBLISH(RE4DC_OWN_EG);\n    CtrlMgr.roomInit();\n    CtrlMgr.arrayAlloc(ConsGetRoomValue(4));\n    LightMgr.roomInit((cLit*) (pG->pArc->ofs_2C + (u32) pG->pArc), (cLit*) GetDataExt(pG->pRoom, \"LIT\", 0),\n                      (cLit*) GetDataExt(pG->pRoom, \"LIT\", 1));\n    LightMgr.arrayAlloc(ConsGetRoomValue(5));\n#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_SS_POOL_HIGH\n    void re4dc_ss_light_array_high();  // sscrn_bridge.cpp\n    re4dc_ss_light_array_high();  // sscrn_bridge.cpp: the light works above the sub screen window\n#endif\n#line 469 \"D:/Bio4/Prog/game.cpp\"\n    LightMgr.initPath((LightPathHeader*) (pG->pArc->ofs_3C + (u32) pG->pArc)); RE4DC_DOORPH(\"room.mgrs\");\n    ShadowRoomInit();\n    DmgMgr.roomInit();\n    DmgMgr.arrayAlloc(20);\n    fadeSetG(2, 0, 0, 0);\n    FilterRoomInit();\n    TexRenderMgrRoomInit();\n    ItemModelRoomInit();\n    EtcModelRoomInit();\n    LightAreaInit();\n    if (pG->System_flg & 0x200000) {\n        pG->nPrim = 0x8000;\n    } else {\n        pG->nPrim = ConsGetRoomValue(8);\n    }\n#if defined(RE4DC_PRIM_CAP_R107) && RE4DC_PRIM_CAP_R107\n    // PRIM_CAP_R107 (heap 4 for r107, issue #1 follow-up): r107's room value asks 589,824 B; a frame there takes at\n    // most ~270 KB (~20 KB primitives, the rest the native actor workspace tail, which declines to smaller sizes).\n    if (pG->room_id == 0x107 && pG->nPrim > RE4DC_PRIM_CAP_R107) {\n        pG->nPrim = RE4DC_PRIM_CAP_R107;\n    }\n#endif\n#if defined(RE4DC_PRIM_CAP_R10B) && RE4DC_PRIM_CAP_R10B\n    // PRIM_CAP_R10B (heap 4 for the r10b lake boss): room value 458,752 B, measured peak 279,808 B per frame.\n    if (pG->room_id == 0x10B && pG->nPrim > RE4DC_PRIM_CAP_R10B) {\n        pG->nPrim = RE4DC_PRIM_CAP_R10B;\n    }\n#endif\n#if defined(RE4DC_PRIM_CAP_R202) && RE4DC_PRIM_CAP_R202\n    // PRIM_CAP_R202 (castle lane 2026-10-15, heap 4 for r202's Ganados): room value 425,984 B; with the room archive,\n    // its PS2 world and parts, em11's 1,323,136 B body found 1,249,888 B free (cx-r202-s31f-01, Flycast).\n    if (pG->room_id == 0x202 && pG->nPrim > RE4DC_PRIM_CAP_R202) {\n        pG->nPrim = RE4DC_PRIM_CAP_R202;\n    }\n#endif\n#if defined(RE4DC_PRIM_MIN_ST3) && RE4DC_PRIM_MIN_ST3\n    // PRIM_MIN_ST3 (st3 lane, issue: GC Leon at r31b entry): the island rooms' room values range 262,144 (r31b) ..\n    // 655,360 (r303). The prim buffer's tail also funds the native actor palette bank (64 KiB) and workspace; at\n    // r31b's entry frame a 262,144 B buffer left less than that, so Leon's plan declined (LEONGC why=0 acq=10) and he\n    // drew through the GameCube path. Raise the island rooms (0x300..0x33F) to at least this many bytes.\n    if (pG->room_id >= 0x300 && pG->room_id <= 0x33F && !(pG->System_flg & 0x200000) && pG->nPrim < RE4DC_PRIM_MIN_ST3) {\n        pG->nPrim = RE4DC_PRIM_MIN_ST3;\n    }\n#endif\n#if defined(RE4DC_PRIM_CAP_R320) && RE4DC_PRIM_CAP_R320\n    // PRIM_CAP_R320 (lane ch5found16 2026-10-17, heap 4 for r320's gatling fight with the PS2 soldier cast): after\n    // PRIM_MIN_ST3, r320 asks 442,368 B; PRIM_WATER peak 288,928 B (actor tail 250,560), overflow 0, cast on.\n    if (pG->room_id == 0x320 && !(pG->System_flg & 0x200000) && pG->nPrim > RE4DC_PRIM_CAP_R320) {\n        pG->nPrim = RE4DC_PRIM_CAP_R320;\n    }\n#endif\n#if defined(RE4DC_PRIM_CAP_R226) && RE4DC_PRIM_CAP_R226\n    // PRIM_CAP_R226 (lane ch4found16 2026-10-17, heap 4 for r226's statue fight): room value 442,368 B; PRIM_WATER\n    // peak 291,360 B per frame with the PS2 cast on, 282,816 B off (actor tail 255,584 / 245,728), overflow 0.\n    if (pG->room_id == 0x226 && pG->nPrim > RE4DC_PRIM_CAP_R226) {\n        pG->nPrim = RE4DC_PRIM_CAP_R226;\n    }\n#endif\n#if defined(RE4DC_PRIM_BUF_KB) && RE4DC_PRIM_BUF_KB\n    // PRIM_BUF_KB (Makefile, lane cast16 2026-10-16; size only, every room): the room's primitive buffer asks at most\n    // this many KB (heap 4). The GC room values (r11f 655,360 B) were sized for the GameCube; the cap is the worst\n    // chapter 1-2 per-frame peak (PRIM_WATER) x 1.5. A primitive that does not fit is skipped (GetPrimBuff's own\n    // OVERFLOW path returns 0; PRIM_WATER counts it) and the native actor tail declines to a smaller size.\n    if (!(pG->System_flg & 0x200000) && pG->nPrim > RE4DC_PRIM_BUF_KB * 1024u) {\n        pG->nPrim = RE4DC_PRIM_BUF_KB * 1024u;\n    }\n#endif\n    primInit(); RE4DC_DOORPH(\"room.prim\");\n    {\n        Vec pos;\n        Vec rot;\n\n        p = GetDataExt(pG->pRoom, \"SAT\", 0);\n        pos.x = 0.0f;\n        pos.y = 0.0f;\n        pos.z = 0.0f;\n        rot.x = 0.0f;\n        rot.y = 0.0f;\n        rot.z = 0.0f;\n        SatMgr.roomInit();\n        SatMgr.arrayAlloc(ConsGetRoomValue(10));\n        SatMgr.create(p, 0, &pos, &rot, 0);\n        p = GetDataExt(pG->pRoom, \"EAT\", 0);\n        EatMgr.roomInit();\n        EatMgr.arrayAlloc(ConsGetRoomValue(11));\n        EatMgr.create(p, 0, &pos, &rot, 0);\n        SatMgr.seCk = 0;\n        EatMgr.seCk = 1;\n        EatMgr.initEffInfo();\n        EatMgr.registEffInfo(EAT_ET_WATER, (AtEffInfo*) &effInfoWater);\n        EatMgr.registEffInfo(EAT_ET_ROOM0, (AtEffInfo*) &effInfoNormal);\n        EatMgr.registEffInfo(EAT_ET_ROOM1, (AtEffInfo*) &effInfoNormal);\n        EatMgr.registEffInfo(EAT_ET_ROOM2, (AtEffInfo*) &effInfoNormal);\n        EatMgr.registEffInfo(EAT_ET_ROOM3, (AtEffInfo*) &effInfoNormal);\n    }\n    SceAtInit(GetDataExt(pG->pRoom, \"AEV\", 0), GetDataExt(pG->pRoom, \"ITA\", 0));\n    EvtMgr.roomInit();\n    EvtMgr.arrayAlloc(2);\n    EvtMgr.myRoomInit();\n    EvtDebug.myRoomInit(); RE4DC_DOORPH(\"room.evt\");\n    if (!(pG->System_flg & 0x200000)) {\n        EmMgr.create(0, 0);\n        PlRegistRoomEff((PlRoomEff*) effRoom);\n    }\n    SmdSetup(-1); RE4DC_DOORPH(\"room.emsmd\");\n    ShdInit((ShdHeader*) GetDataExt(pG->pRoom, \"SHD\", 0));\n    if ((p = GetDataExt(pG->pRoom, \"EFF\", 0)) != 0) {\n        EspDataLoad((u32) p, 1, 0);\n    }\n    if ((p = GetDataExt(pG->pRoom, \"EAR\", 0)) != 0) {\n        EffAreaDataLoad((SstArea*) p);\n    }\n    if ((p = GetDataExt(pG->pRoom, \"SAR\", 0)) != 0) {\n        LightAreaDataLoad(p);\n    }\n    if ((p = GetDataExt(pG->pRoom, \"TEX\", 0)) != 0) {\n        RoomTexDataLoad((TexData*) p, 2);\n    }\n    if ((p = GetDataExt(pG->pRoom, \"ITM\", 0)) != 0) {\n        ItemModelDataLoad(p);\n    }\n    if ((p = GetDataExt(pG->pRoom, \"ETM\", 0)) != 0) {\n        EtcModelDataLoad(p);\n    }\n    RE4DC_DOORPH(\"room.data\"); ClothRoomInit();\n    if ((p = GetDataExt(pG->pRoom, \"ETS\", 0)) != 0) {\n        EtcModelListSet(p);\n    }\n    LightMgr.update(0, -1);\n    FlrAtInit();\n    SeAtInit();\n    CameraRoomInit();\n    p = GetDataExt(pG->pRoom, \"CAM\", 0);\n    if (p != 0) {\n        CamCtrl.RoomDataRead((CameraDataHeader*) p);\n    } else {\n        pG->pCamRoom = p;\n    }\n    CamCtrl.CoreDataRead((CameraDataHeader*) (pG->pArc->ofs_30 + (u32) pG->pArc));\n    CamCtrl.roomInit(); RE4DC_DOORPH(\"room.cam\");\n    View.roomInit();\n    p = GetDataExt(pG->pRoom, \"BLK\", 0);\n    Block.roomInit(p);\n    if ((p = GetDataExt(pG->pRoom, \"EVS\", 0)) != 0) {\n        EvtMgr.SetEvs(p);\n    }\n    EmSetRoomInit();\n    RoomData.initRoomSet(); RE4DC_DOORPH(\"room.emset\");\n    SndRoomStartInit(); RE4DC_DOORPH(\"room.snd\");\n    ItemMgr.roomInit();\n    SubScreenRoomInit(); RE4DC_DOORPH(\"room.sub\");\n#if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR\n    re4dc_loadind_hold();\n#endif\n    IdSys.roomInit();\n    Cckpt.roomInit(); RE4DC_DOORPH(\"room.id\");\n#if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR\n    re4dc_loadind_resume();\n#endif\n    if (pG->shooting_mode == 0) {\n        LightMgr.setItemLight();\n    }\n    DbMenuRoomInit();\n    SstSet(1, 0xFFFF, 1, 0, 0x2F, 1);\n    cMes.roomInit();\n    SndRoomBgmLoad(); RE4DC_DOORPH(\"room.bgm\");\n    DbWork = new cDbWork;\n    U32Set(pG->Disp_flg, 0);\n    if (pG->System_flg & 0x200000) {\n        BitOn(pG->Disp_flg, 0x40000000);\n        BitOn(pG->Stop_flg, 0x10000000);\n        BitOn(pG->Stop_flg, 0x400000);\n    }\n    if (pG->Debug_flg[3] & 0x8000000) {\n        BitOff(pG->System_flg, 0x800);\n    } else {\n        BitOn(pG->System_flg, 0x800);\n    }\n    MerchantRoomInit();\n    fadeSetG(0x80000001, 0, 0, 0);\n    ScenarioRoomInit(); RE4DC_DOORPH(\"room.scen\");\n    SndRoomBgmStartCheck(0);\n    SndRoomStrStartCheck(); RE4DC_DOORPH(\"room.str\");\n    RoomData.setPassed(pG->room_id, pG->Part);\n    if (!Flag54(0x2000) && !Flag54(0x100) && !Flag54(0x80000)) {\n        DoorSeCall(1);\n    }\n#if defined(RE4DC_LOAD_INDICATOR) && RE4DC_LOAD_INDICATOR\n    re4dc_loadind_end();\n#endif\n    BitOff(pG->System_flg, 0x2000);\n    BitOff(pG->System_flg, 0x100);\n    BitOff(pG->System_flg, 0x80000);\n    BitOff(pG->System_flg, 0x400000);\n    BitOff(pG->Debug_flg[2], 0x80000000);\n    Block.check(0);\n    Filter09SetbUse(0, 1);\n    fadeSetG(0x80000002, 0, 0, 0);\n    fadeSetG(0x80000000, 20, 0, 0); RE4DC_DOORPH(\"room.fade\");\n    SubScreenWait(15); RE4DC_DOORPH(\"room.wait15\");\n    BitOff(pG->System_flg, 0x100000);\n    DC.m_nblock_read_stop = 0;\n    pG->Rno0 = 3;\n    pG->SaveKind = 0; RE4DC_DOORPH(\"room.end\");\n"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "signature": "void gameRoomMemInit()",
+      "start": 1507,
+      "end": 1549,
+      "sha256": "322330001aff33b15028cb07bfc738650a26f5b0e63895fe542a4911fb6ff452",
+      "body": "\n#if RE4DC_WEAPON_HEAP4\n    re4dc_weapon_heap4_room_reset();\n#endif\n#if defined(RE4DC_ROUTE_OVL) && RE4DC_ROUTE_OVL\n    re4dc_route_overlay_room_reset();\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    re4dc_motion_retire_all();\n    re4dc_effect_retire_room();\n    re4dc_ui_retire_room();\n#endif\n    if (pG->System_flg & 0x200000) {\n        MemReplaceHeap(3, 4);\n        MemorySwap((void*) 0x807EC000, ARAM_FREE_BASE, 0x188000);\n        memclr_asm((void*) 0x807EC000, 0x188000);\n        MemCreateHeap(10, 0x807EC000, 0x80974000);\n        MemSetCurrentHeap(10);\n    } else {\n        if (pG->System_flg & 0x400000) {\n            MemDestroyHeap(10);\n            MemorySwap((void*) 0x807EC000, ARAM_FREE_BASE, 0x188000);\n        } else {\n            MemReplaceHeap(3, 4);\n        }\n        MemSetCurrentHeap(4);\n    }\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    RE4DC_TRACE_OWNER_RELEASE(3); re4dc_room_enter();\n#endif\n    memclr_asm(pG->pad_16C, 0x4E00);\n    U32Set(pG->Debug_flg[0], 0);\n    U32Set(pG->Debug_flg[1], 0);\n    U32Set(pG->Status_flg[0], 0);\n    U32Set(pG->Status_flg[1], 0);\n    U32Set(pG->Status_flg[2], 0);\n    if (pG->Debug_flg[3] & 0x10000) {\n        BitOn(pG->Debug_flg[0], 0x80000000);\n        BitOn(pG->Stop_flg, 0x800000);\n        BitOn(pG->Stop_flg, 0x20000000);\n    }\n"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "signature": "void gameEnding()",
+      "start": 1185,
+      "end": 1209,
+      "sha256": "eaae936d7e2eecc810a35600bb428470744c840e19e1add98bba37c21c2867da",
+      "body": "\n    static TEXPalette* pTpl;\n\n    switch (pG->Rno1) {\n    case 0: {\n        int req;\n\n        gameRoomMemInit();\n        BitSet(pG->Disp_flg, 0xFFFFFFFF);\n#line 1419 \"D:/Bio4/Prog/game.cpp\"\n        req = DvdReadN(\"Etc/Ending.tpl\", 0, 0, 0, 0, 5, __FILE__, __LINE__);\n        Dvd.ReadCheck(req, 0, 0, (void**) &pTpl);\n        fadeSetG(0x80000000, 30, 0, 0);\n        pG->Rno1++;\n        break;\n    }\n    case 1:\n        DrawTpl(pTpl, 0, 0, 512, 448);\n        if (Joy[0].trg & 0x100) {\n            BitOn(pG->System_flg, 0x4000000);\n        }\n        break;\n    }\n"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "signature": "void systemSoftReset()",
+      "start": 710,
+      "end": 731,
+      "sha256": "58b42fd7040b0b90a14348bd8943420bd16087d494a1e4a9a904030fda754545",
+      "body": "\n    OSReport(\"--SOFT_RESET START!!\\n\");\n    systemVISetBlack(1);\n    VIFlush();\n    VIWaitForRetrace();\n    GXDrawDone();\n    Dvd.ReadCancelAll();\n    Aram.DmaCancelAll();\n    SndSoftReset();\n    DbmenuModuleInit();\n    ResetDebugAlloc();\n    MemClearAllHeap();\n    SndSystemReset();\n    systemResetCommon();\n    RomFontSetting();\n    pG->IsMessageInit = 0;\n#if defined(RE4DC_WARP_AFTER_RESET) && RE4DC_WARP_AFTER_RESET\n    re4dc_warp_soft_reset();  // test rig (WARP_AFTER_RESET=1): an after_reset warp.txt warps from the next title\n#endif\n    OSReport(\"--SOFT_RESET END!!\\n\");\n"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "signature": "void systemResetCommon()",
+      "start": 668,
+      "end": 695,
+      "sha256": "78884998e133858133acdeac74dab7000b571048e905593dae6f6cbdc06546c2",
+      "body": "\n    int i;\n\n    SubScreenExitCore(&SubScreenWk);\n    TaskAllClear();\n    EmReadInit();\n    ReleasePlData();\n#if defined(RE4DC_RESET_MEM_FIX) && RE4DC_RESET_MEM_FIX && defined(RE4DC_ACTOR_PL08_PACK) && RE4DC_ACTOR_PL08_PACK\n    re4dc_pl08_pack_forget();  // RESET_MEM_FIX: the pl08 package follows the released archive (coarse_actor_pl08_pack.inc)\n#endif\n    ReleaseWepData();\n    RoomData.stopRelData();\n    U32Set(pRK->sys_flags, pSys->flags);\n    U8Set(pRK->language, pSys->language);\n    U8Set(pRK->region, pSys->region);\n    U8Set(pRK->game_language, pG->language);\n    U32Set(pRK->sys_unlock_flg, pSys->unlock_flg);\n    U32Set(pRK->g_flags_54, pG->System_flg);\n    for (i = 0; i < 4; i++) {\n        U32SetOfs(pRK->sys_merc_stage, i * 4, pSys->merc_stage[i]);\n    }\n    for (i = 0; i < 2; i++) {\n        U32SetOfs(pRK->sys_merc_rank, i * 4, pSys->merc_rank[i]);\n    }\n    U32Set(pRK->card_checked, pG->CardStatus >> 31);\n    U8Set(pRK->valid, 1);\n"
+    },
+    {
+      "path": "src/game/stage.cpp",
+      "signature": "void StageSet()",
+      "start": 218,
+      "end": 261,
+      "sha256": "96edade0f16dcf473f3b55cddcef05f89684f3780e638f8733f8b67b44621bc3",
+      "body": "\n    GlobalWork* g = pG;\n    u32 flags = g->System_flg;\n    int reload = 0;\n    int relink = 0;\n\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    // Native room owners live in heap 4, which the stage reload / REL relink\n    // below overlays with heaps 2 and 3 before gameRoomMemInit replaces it:\n    // retire them while it is intact (ui_bridge.cpp room lifecycle).\n    re4dc_room_leave(); RE4DC_DOORPH(\"set.leave\");\n#endif\n    if (flags & 0x2000) {\n        reload = 1;\n    } else if (flags & 0x100) {\n        reload = 1;\n    } else if (flags & 0x80000) {\n        reload = 1;\n    } else if (g->stage_prev != g->stage_no) {\n        reload = 1;\n    }\n    if (reload == 1) {\n        RoomData.stopRelData();\n        MemReplaceHeap(1, 2); RE4DC_TRACE_OWNER_RELEASE(1);\n        MemSetCurrentHeap(2);\n        cMes.stageInit(); RE4DC_DOORPH(\"set.reload\");\n        if (pG->stage_no == 1) {\n            pG->Item_find_flg |= 0x4;\n        }\n        TaskSleep(1);\n    }\n    if (RoomData.checkRelRead(G_ROOM_ID) == 1) {\n        relink = 1;\n    }\n    if (relink == 1 || reload == 1) {\n        RoomData.stopRelData();\n        RoomData.m_RelNo = 0;\n        MemReplaceHeap(2, 3); RE4DC_TRACE_OWNER_RELEASE(2);\n        MemSetCurrentHeap(3);\n        RoomData.linkRelData(G_ROOM_ID); RE4DC_DOORPH(\"set.rel\");\n    }\n    readEmList(1); RE4DC_DOORPH(\"set.em\");\n"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvd::ReadCancelAll()",
+      "start": 1725,
+      "end": 1738,
+      "sha256": "fd4987c6e8330acc2545d7e3e6ca6b3a2556710b67ba3c01b3c2b7dc28fa89a3",
+      "body": "\n    if (pCur_queue) {\n        DVDCancelAll();\n        if (pCur_queue->chk(0x100) == 1) {\n            iTaskKill();\n        } else {\n            TaskKill(3);\n        }\n    }\n    memclr_asm(DvdQueue, sizeof(DvdQueue));\n    pCur_queue = 0;\n    pQueue_list = 0;\n"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "int cDvd::ReadCancel(",
+      "start": 1676,
+      "end": 1722,
+      "sha256": "d03fa52c44000e4801a1d3d6e43b6a1a7c687c249ce048c2069fecb5d574814b",
+      "body": "\n    cDvdQueue* q;\n    cDvdQueue* p;\n    char* n;\n    int ret = 0;\n\n    q = getQueuePtr(no);\n    if (q == 0) {\n        ret = -2;\n    } else if ((q->m_be_flag & 0x70000) == 0) {\n        if (q == pCur_queue) {\n            q->m_be_flag |= 0x100000;\n            if (mode == 0x40) {\n                q->m_be_flag |= 0x20000000;\n            }\n            q->m_Rno0 = 3;\n            n = q->m_Name;\n        } else {\n            if (q == pQueue_list) {\n                pQueue_list = q->m_Next;\n                n = q->m_Name;\n            } else {\n                n = q->m_Name;\n                for (p = pQueue_list; p->m_Next != q; p = p->m_Next) {}\n                p->m_Next = q->m_Next;\n            }\n            if (mode == 0x40) {\n                q->PushQueue();\n            } else {\n                q->setStatus(ST_CANCEL);\n            }\n        }\n        OSReport(\"DVD: Read Cancel: %s\\n\", n);\n        ret = 0;\n    } else if (q->getStatus() == ST_READ) {\n        q->fileInfo.cb.userData = q;\n        DVDCancelAsync(&q->fileInfo.cb, readcancel_cb);\n        if (mode == 0x40) {\n            q->m_be_flag |= 0x20000000;\n        }\n        q->m_Rno0 = 2;\n    } else {\n        ret = -1;\n    }\n    return ret;\n"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvdQueue::readMain()",
+      "start": 783,
+      "end": 989,
+      "sha256": "531b607f1b591a353ca19cb4470314e6b2e9302f08339b01a0479b232b76bc6f",
+      "body": "\n    static void (cDvdQueue::*trans_proc_tbl[])(void*, u32, u32) = {\n        &cDvdQueue::trans2mram, &cDvdQueue::trans2mram, &cDvdQueue::trans2aram, &cDvdQueue::trans2aram\n    };\n    static char* blk_tbl[] = {\n        \"CORE\", \"PL\", \"WEP\", \"BGM0\", \"BGM1\", \"FOOT\", \"ROOM\", \"DOOR\",\n        \"ENEMY0\", \"ENEMY1\", \"ENEMY2\", \"ENEMY3\", \"ENEMY4\", \"ENEMY5\"\n    };\n    DvdHeader** ph = &pFilehead[m_NestDepth];\n    int t;\n    int r;\n\n    switch (step) {\n    case 0:\n        switch ((*ph)->type) {\n        case 0xFFFFFFFF:\n            if (m_NestDepth == 0) {\n                m_Rno0 = 3;\n                m_be_flag |= 0x04000000;\n                step = 0;\n            } else {\n                m_NestDepth--;\n                ph[-1]++;\n            }\n            break;\n        case 0xFFFFFFFE:\n            (*ph)++;\n            break;\n        case 4:\n            if (m_NestDepth == 1) {\n                OSReport(\"DVD: \\230A\\214\\213\\203t\\203@\\203C\\203\\213\\202\\314\\203l\\203X\\203g\\202\\315\\202\\261\\202\\352\\210\\310\\217\\343\\202\\305\\202\\253\\202\\334\\202\\271\\202\\361\\n\");\n                (*ph)++;\n            } else {\n                m_NestDepth++;\n                m_Rno0 = 0;\n                step = 1;\n            }\n            break;\n        case 0:\n        case 3:\n            m_LeftSize = (*ph)->size;\n            if ((*ph)->dest) {\n                m_TransAddr = (*ph)->dest;\n            } else if ((*ph)->type == 0) {\n                m_TransAddr = m_MramAddr;\n            } else {\n                m_TransAddr = m_AramAddr;\n            }\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n            // Validate the whole part before the first read/transfer, using the\n            // original request owner even for later parts. Sound blocks retain\n            // their separate source allocation and dispatch semantics.\n            const char* owner;\n            unsigned long capacity;\n            if ((*ph)->type == 0 && !re4dc_resident_read_fits((u32) pBuff,\n                    m_TransAddr, (*ph)->size, pG->pl_type != 0, &owner, &capacity)) {\n                OSReport(\"native %s read REJECTED: request=%u capacity=%u before transfer\\n\",\n                         owner, (*ph)->size, (u32) capacity);\n                re4dc_missing(\"asset exceeds selected resident budget\");\n                return;\n            }\n#endif\n            addrTbl[m_NestDepth][cnt[m_NestDepth]] = m_TransAddr;\n            m_Offset = m_BaseOffset[m_NestDepth] + (*ph)->ofs;\n            step++;\n            if ((*ph)->type == 0) {\n                OSReport(\"DVD: Trans MRAM  addr: %08x size: %08x\\n\", m_TransAddr, m_LeftSize);\n            } else {\n                OSReport(\"DVD: Trans ARAM  addr: %08x size: %08x\\n\", m_TransAddr, m_LeftSize);\n            }\n            break;\n        case 1:\n            t = (*ph)->sndType;\n            switch ((*ph)->sndType) {\n            case 8:\n                r = SndEmDataReadCheck((*ph)->sndArg);\n                if (r == -1) {\n                    OSReport(\"DVD: Snd File not Read!!!\\n\");\n                    *ph += 2;\n                    return;\n                }\n                (*ph)->sndNo = r;\n                (*ph)[1].sndNo = r;\n                t = r + 8;\n            case 5:\n            case 6:\n                SndMem.blk_mram[t] = Snd.mram_top;\n                Snd.mram_top += ALIGN32((*ph)->size);\n                break;\n            case 3:\n                r = SndBgmDataReadCheck((*ph)->sndArg);\n                if (r == -1) {\n                    OSReport(\"DVD: Snd File not Read!!!\\n\");\n                    *ph += 2;\n                    return;\n                }\n                (*ph)->sndNo = r;\n                (*ph)[1].sndNo = r;\n                t = r + 3;\n                Snd.bgm_mram -= ALIGN32((*ph)->size);\n                SndMem.blk_mram[t] = Snd.bgm_mram;\n                break;\n            }\n            m_TransAddr = (u32) SndMem.blk_mram[t];\n            Snd.blk_flag[0] &= ~(1 << t);\n            m_LeftSize = (*ph)->size;\n            m_Offset = m_BaseOffset[m_NestDepth] + (*ph)->ofs;\n            step++;\n            OSReport(\"DVD: Trans MRAM Snddata  addr: %08x size: %08x %s\\n\", m_TransAddr, m_LeftSize, blk_tbl[t]);\n            break;\n        case 2:\n            t = (*ph)->sndType;\n            switch ((*ph)->sndType) {\n            case 8:\n                t = (*ph)->sndNo + 8;\n            case 5:\n            case 6:\n                SndMem.blk_aram[t] = Snd.aram_base_addr;\n                Snd.aram_base_addr += ALIGN32((*ph)->size);\n                break;\n            case 3:\n                t = (*ph)->sndNo + 3;\n                Snd.aram_base_addr_bgm -= ALIGN32((*ph)->size);\n                SndMem.blk_aram[t] = Snd.aram_base_addr_bgm;\n                break;\n            case 0:\n                SndMem.blk_aram[0] = 0x4100;\n                break;\n            case 1:\n                SndMem.blk_aram[1] = 0x44100;\n                break;\n            case 2:\n                SndMem.blk_aram[2] = 0x174100;\n                break;\n            case 7:\n                SndMem.blk_aram[7] = 0x1B4100;\n                break;\n            }\n            m_TransAddr = SndMem.blk_aram[t];\n            m_LeftSize = (*ph)->size;\n            m_Offset = m_BaseOffset[m_NestDepth] + (*ph)->ofs;\n            step++;\n            OSReport(\"DVD: Trans ARAM Snddata  addr: %08x size: %08x %s\\n\", m_TransAddr, m_LeftSize, blk_tbl[t]);\n            UseAramSize[t] = (m_LeftSize + 0x1F) / 0x20 * 0x20;\n            break;\n        }\n        break;\n    case 1:\n        m_Counter = OSGetTick();\n        m_be_flag |= 0x20;\n        m_DivReadSize = m_LeftSize > 0x20000 ? 0x20000 : m_LeftSize;\n        RE4DC_SND_PAD_READ((*ph)->type, m_TransAddr, m_DivReadSize, fileReadAsync(DVD_BUFF, m_DivReadSize, m_Offset));\n        step++;\n        break;\n    case 2:\n        if (chk(0x02000000)) {\n            break;\n        }\n        if (chk(0x100000)) {\n            step = 0;\n            m_Rno0 = 3;\n            break;\n        }\n        if (chk(0x200000)) {\n            OSReport(\"DVD: Read Error!!!\\n\");\n            m_be_flag &= ~0x200020;\n            step--;\n            break;\n        }\n        (this->*trans_proc_tbl[(*ph)->type])(DVD_BUFF, m_TransAddr, m_DivReadSize);\n        step++;\n        m_be_flag &= ~0x20;\n        break;\n    case 3:\n        if (chk(0x01000000)) {\n            break;\n        }\n        m_LeftSize -= m_DivReadSize;\n        m_Offset += m_DivReadSize;\n        m_TransAddr += m_DivReadSize;\n        if (m_LeftSize <= 0) {\n            switch ((*ph)->type) {\n            case 2:\n                SndBlkInit((*ph)->sndType, (*ph)->sndArg, (*ph)->sndNo);\n                break;\n            case 0:\n            case 3:\n                if ((*ph)->dest == 0) {\n                    if ((*ph)->type == 0) {\n                        m_MramAddr += ALIGN32((*ph)->size);\n                    } else {\n                        m_AramAddr += ALIGN32((*ph)->size);\n                    }\n                }\n                sizeTbl[m_NestDepth][cnt[m_NestDepth]] = (*ph)->size;\n                break;\n            }\n            (*ph)++;\n            step = 0;\n            cnt[m_NestDepth]++;\n        } else {\n            step = 1;\n        }\n        break;\n    }\n"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "int cDvdQueue::Read()",
+      "start": 1021,
+      "end": 1061,
+      "sha256": "47354f8659da73a05de742883159cc4cbb9828c4cfa9439609ed1b0d3cd0c30c",
+      "body": "\n#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_IO_PROBE) && RE4DC_IO_PROBE\n    // Gate only a request's start: holding the steps of a read in flight delays its completion\n    // to the next read's target frame (+1 frame per request in the equalised arm).\n    if (m_Rno0 == 0 && step == 0 && re4dc_dvdhold()) return 1;   // held: still pending, as a contended step\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    void* native_step = re4dc_dvd_step_begin();\n    if (!native_step) return 1;\n#endif\n    static void (cDvdQueue::*func_tbl[])() = {\n        &cDvdQueue::readInit, &cDvdQueue::readMain, &cDvdQueue::readCancelWait, &cDvdQueue::readExit\n    };\n    int ret = 1;\n    int pc = 1;\n\n    if ((pG->System_flg & 0x20000) == 0) {\n        pc = 0;\n    }\n    if (pcMode) {\n        pG->System_flg |= 0x20000;\n    } else {\n        pG->System_flg &= ~0x20000;\n    }\n    (this->*func_tbl[m_Rno0])();\n    if (pc) {\n        pG->System_flg |= 0x20000;\n    } else {\n        pG->System_flg &= ~0x20000;\n    }\n    if (chk(0x400000)) {\n        ret = 0;\n    } else if (!chk(1)) {\n        ret = 0;\n    }\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    re4dc_dvd_step_end(native_step);\n#endif\n    return ret;\n"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvd::readProcMain(",
+      "start": 1485,
+      "end": 1496,
+      "sha256": "8fd1147410c3ffdfc066d112b5e1daf61cfdb18e73d17c990c619fa3d6e5af7a",
+      "body": "\n    while (q->Read() == 1) {\n        if (!q->chk(0x40000000)) {\n            if (!q->chk(0x100)) {\n                TaskSleep(1);\n            }\n        } else {\n            ErrCheck(-1, 0);\n        }\n    }\n"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvd::Watcher()",
+      "start": 1641,
+      "end": 1664,
+      "sha256": "798f396fcb053b504e73dfc6928f39c38e11ff5a1f0963877a1e76d82688083f",
+      "body": "\n    if (pCur_queue == 0 && pQueue_list) {\n        bool ok;\n        if (pQueue_list->chk(0x100) == 1) {\n            ok = iTaskExec(DvdReadProc);\n        } else {\n            ok = TaskExec(3, DvdReadProc, 0);\n        }\n        if (ok) {\n            pCur_queue = pQueue_list;\n            pQueue_list = pQueue_list->m_Next;\n        }\n    }\n    if (Aram.pCur == 0 && Aram.pList) {\n        AramReq* r = Aram.pList;\n        Aram.pCur = r;\n        Aram.pList = r->next;\n        Aram.DmaTrans(r, 0);\n    }\n    ErrCheck(-1, 0);\n    queueStatusDisp();\n    DiscReadInfo();\n"
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvdQueue::Initialize()",
+      "start": 1066,
+      "end": 1123,
+      "sha256": "909c0cc833fac52f2533301de3b38a5430b68446f1a9aabf075ed1170041dd4e",
+      "body": "\n    DvdReq* w = &DvdReqWork;\n    char buf[0x40];\n    int hed;\n    int pc;\n\n    if (w->fileNo != 0xFFFF) {\n        entrynum = FileTbl[w->fileNo].entrynum;\n        sprintf(m_Name, \"%s\", FileTbl[w->fileNo].name);\n    } else {\n        entrynum = DVDConvertPathToEntrynum(w->name);\n        sprintf(m_Name, \"%s\", w->name);\n    }\n    if (pG->System_flg & 0x20000) {\n        sprintf(buf, \"d:\\\\bio4/data/%s\", m_Name);\n        sprintf(m_Name, \"%s\", buf);\n    }\n    m_FileNo = w->fileNo;\n    pBuff = w->dst;\n    aram = w->aram;\n    m_Offset = w->ofs;\n    length = w->length;\n    m_Prio = w->prio;\n    hed = w->mode & 0x8;\n    if (hed) {\n        hed = 3;\n    }\n    m_Kind = hed;\n    if (w->mode & 0x1) {\n        m_be_flag |= 0x40000000;\n    } else if (w->mode & 0x100) {\n        m_be_flag |= 0x100;\n    }\n    if (w->mode & 0x8000) {\n        m_be_flag |= 0x80000000;\n    }\n    if (w->mode & 0x4) {\n        m_HeapNo = MemGetCurrentHeap();\n        m_be_flag |= 0x2;\n    } else if (w->mode & 0x2) {\n        m_HeapNo = MemGetCurrentDbgHeap();\n        m_be_flag |= 0x4;\n    }\n    if (w->mode & 0x20) {\n        m_be_flag |= 0x10;\n    }\n    if (w->mode & 0x40) {\n        m_be_flag |= 0x20000000;\n    }\n    sprintf(reqfile, \"%s\", w->file);\n    reqline = w->line;\n    pc = 1;\n    if ((pGS->System_flg & 0x20000) == 0) {\n        pc = 0;\n    }\n    pcMode = pc;\n"
+    },
+    {
+      "path": "src/game/scheduler.cpp",
+      "signature": "void TaskSchedulerMain(TASK* t)",
+      "start": 156,
+      "end": 236,
+      "sha256": "8f3810e9af6f725fffd04f8b44c713819cf22b23e594b3b2071a583c5417f290",
+      "body": "\n    if ((pG->Status_flg[1] & 0x10000000) && !(t->flag & 2)) {\n        return;\n    }\n    if ((pG->Status_flg[0] & 0x100000) && !(t->flag & 4)) {\n        return;\n    }\n    switch (t->Status) {\n    case TASK_EXEC:\n#if !defined(__PPC__)\n        if (t != &Task[TASK_ISR]) {\n            OSInitSemaphore(&nativeTaskResume[t - Task], 0);\n            OSInitSemaphore(&nativeTaskYielded[t - Task], 0);\n        }\n#endif\n        OSCreateThread(&t->Thread, t->hook, (void*) t->arg, t->pStack, t->StackSize, t->Priority, 1);\n        t->Status = TASK_RUN;\n        OSResumeThread(&t->Thread);\n        GXSetCurrentGXThread();\n        break;\n    case TASK_SLEEP:\n        t->SleepCtr--;\n        if (t->SleepCtr != 0) {\n            return;\n        }\n        t->Status = TASK_RUN;\n#if !defined(__PPC__)\n        if (t != &Task[TASK_ISR]) OSSignalSemaphore(&nativeTaskResume[t - Task]);\n        else\n#endif\n        OSWakeupThread(&t->Queue);\n        GXSetCurrentGXThread();\n        break;\n    case TASK_RUN:\n        OSResumeThread(&t->Thread);\n        GXSetCurrentGXThread();\n        break;\n    default:\n        return;\n    }\n#if defined(__PPC__)\n    if (CTASK->Priority > 0xF) {\n        OSWaitSemaphore(&Sema);\n        GXSetCurrentGXThread();\n    }\n#else\n    if (t != &Task[TASK_ISR]) {\n        OSWaitSemaphore(&nativeTaskYielded[t - Task]);\n        GXSetCurrentGXThread();\n    }\n#endif\n    StackOverflowCheck(t);\n#if defined(RE4DC_DEAD_STACK_POISON) && RE4DC_DEAD_STACK_POISON\n    if (t != &Task[TASK_ISR] && (t->Status == TASK_RUN || t->Status == TASK_SLEEP)) re4dc_poison_task_stack(&t->Thread);\n#endif\n#if defined(RE4DC_MODEL_WALK_CHECK) && RE4DC_MODEL_WALK_CHECK\n    // MODEL_WALK_CHECK (debug only): the slot's stack high water. TaskSchedulerInit filled every stack with\n    // 0xB3; the untouched words above the guard word are the bytes this slot has never used. A slot that\n    // reaches 0 ran into the slot below it (slots are contiguous, slot k-1's stack top is slot k's guard).\n    {\n        static u32 hwm_free[TASK_NUM];\n        static bool hwm_init;\n        if (!hwm_init) {\n            for (u32 i = 0; i < TASK_NUM; ++i) hwm_free[i] = ~0u;\n            hwm_init = true;\n        }\n        const u32 slot = (u32) (t - Task);\n        const u32* p = (const u32*) (t->pStack - t->StackSize);\n        const u32 guard = p[0];\n        u32 n = 0;\n        for (++p; n + 1 < (t->StackSize >> 2) && *p == 0xB3B3B3B3u; ++p) ++n;\n        if (n * 4 < hwm_free[slot]) {\n            hwm_free[slot] = n * 4;\n            if (n * 4 < 0x1000)\n                OSReport(\"MWC stack slot=%u free=%u guard=%08x bottom=%08x frame=%u\\n\", (unsigned) slot, (unsigned) (n * 4),\n                         (unsigned) guard, (unsigned) (t->pStack - t->StackSize), (unsigned) pG->Frame_cnt);\n        }\n    }\n#endif\n"
+    },
+    {
+      "path": "src/game/scheduler.cpp",
+      "signature": "void TaskSleep(int frames)",
+      "start": 331,
+      "end": 363,
+      "sha256": "ac8e22aab97334fa3773ee236435bafa1fc8a803cb9a6f759af78f4d35b117aa",
+      "body": "\n#if defined(__PPC__)\n    if (frames == 0) {\n        return;\n    }\n    CTASK->SleepCtr = frames;\n    CTASK->Status = (CTASK->Status & TASK_SUSPEND) | TASK_SLEEP;\n    if (ParentThread() != NULL) {\n        OSResumeThread(ParentThread());\n    }\n    if (CTASK->Priority > 0xF) {\n        OSSignalSemaphore(&Sema);\n    }\n    OSSleepThread(&pCTask->Queue);\n    if (ParentThread() != NULL) {\n        OSSuspendThread(ParentThread());\n    }\n    GXSetCurrentGXThread();\n#else\n    TASK* t = NativeExecutingTask();\n    if (t == NULL || frames == 0) return;\n    t->SleepCtr = frames;\n    t->Status = (t->Status & TASK_SUSPEND) | TASK_SLEEP;\n    if (t == &Task[TASK_ISR]) {\n        OSSleepThread(&t->Queue);\n    } else {\n        NativeYieldTask(t);\n        OSWaitSemaphore(&nativeTaskResume[t - Task]);\n    }\n    GXSetCurrentGXThread();\n#endif\n"
+    },
+    {
+      "path": "src/game/scheduler.cpp",
+      "signature": "void TaskKill(TASK* t)",
+      "start": 427,
+      "end": 457,
+      "sha256": "ea8383f8c485c45d2434446de81df4a04f7ca0ddf91b271eb82b1b8718c12532",
+      "body": "\n    if (t->Status == 0) {\n        return;\n    }\n    switch (t->Status & ~TASK_SUSPEND) {\n    case TASK_NONE:\n    case TASK_EXEC:\n        break;\n    case TASK_SLEEP:\n        OSCancelThread(&t->Thread);\n        break;\n    case TASK_RUN:\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n        // Native disc I/O can yield while this source status is still RUN.\n        // Only the actual executing owner may exit itself. A different task\n        // must use the cancellation drain before its stack can be destroyed.\n        if (OSGetCurrentThread() == &t->Thread) TaskExit();\n        else OSCancelThread(&t->Thread);\n#else\n        if (t->Status & TASK_SUSPEND) {\n            OSCancelThread(&t->Thread);\n        } else {\n            TaskExit();\n        }\n#endif\n        break;\n    }\n    t->Status = TASK_NONE;\n    t->suspend_cnt = 0;\n"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "int MemDestroyHeap(",
+      "start": 394,
+      "end": 429,
+      "sha256": "c848ab85d6aa4c62f68087932d53248d245f850e0340d46b07e87cc6f6afafe1",
+      "body": "\n#if defined(RE4DC_GAME) && !defined(__PPC__) && (RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER)\n    sourceWorldRetainedDestroy(no);\n#endif\n    if (!memCheckHeapActive(no)) {\n        MemSignalHeap(no);\n    }\n    OSReport(\"-- MemDestroyHeap %d  \", no);\n    if (Heap[no].handle >= 0) {\n#if defined(RE4DC_GAME) && !defined(__PPC__) && ((defined(RE4DC_MOVIE_WORLD_ARENA) && RE4DC_MOVIE_WORLD_ARENA) || (defined(RE4DC_CABIN_SOURCE) && RE4DC_CABIN_SOURCE))\n        if (!re4dc_movie_world_before_heap_change((void*)Heap[no].start, Heap[no].end-Heap[no].start)) {\n            re4dc_missing(\"movie arena reader before heap destruction\");\n            return 0;\n        }\n#endif\n#if RE4DC_CABIN_SOURCE\n        if(!re4dc_cabin_carriers_retire_heap((void*)Heap[no].start,Heap[no].end-Heap[no].start)){\n            re4dc_missing(\"cabin retirement before heap destruction\");return 0;\n        }\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__) && RE4DC_ACTOR_TRANSACTION\n        re4dc_actor_forget_range((void*)Heap[no].start,Heap[no].end-Heap[no].start);\n#endif\n        OSDestroyHeap(Heap[no].handle);\n        Heap[no].handle = -1;\n        OSReport(\"succeed!!\\n\");\n#if defined(RE4DC_GAME) && !defined(__PPC__) && defined(RE4DC_SS11_PRELOAD) && RE4DC_SS11_PRELOAD\n        // SS11_PRELOAD: the chapter title / results / save screens (SS heap 11) closed: the room preload runs again.\n        if (no == 11) re4dc_ui_room_preload_again();\n#endif\n        return 1;\n    }\n    OSReport(\"failed!!\\n\");\n    return 0;\n"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "int MemReplaceHeap(",
+      "start": 434,
+      "end": 533,
+      "sha256": "708da6e317a2d1d81998492c7427a5f7301045ee8e9ca362dc23ee5559645683",
+      "body": "\n    u32 start;\n    u32 end;\n    OSHeapDescriptor* hd;  // function scope: a global pseudo, allocated after the blocks' local qtys (lis/cell r9)\n\n    if (CurrentHeap == 0) {\n        hd = HeapHead + Heap[CurrentHeap].handle;\n        cell_main = hd->allocated;\n    }\n    if (CurrentHeap == 1) {\n        hd = HeapHead + Heap[CurrentHeap].handle;\n        cell_game = hd->allocated;\n    }\n    if (CurrentHeap == 2) {\n        hd = HeapHead + Heap[CurrentHeap].handle;\n        cell_stage = hd->allocated;\n    }\n    if (CurrentHeap == 3) {\n        hd = HeapHead + Heap[CurrentHeap].handle;\n        cell_dll = hd->allocated;\n    }\n    if (!memCheckHeapActive(from)) {\n        return 0;\n    }\n    if (!memCheckHeapActive(to)) {\n        return 0;\n    }\n#if RE4DC_CABIN_SOURCE\n    // Check every carrier without mutation before a media close can yield or\n    // either descriptor can be changed. Unit retirement stays at destruction.\n    const int cabin_heaps[]={from,to};\n    for(int heap:cabin_heaps)if(Heap[heap].handle>=0 &&\n       !re4dc_cabin_carriers_before_heap((void*)Heap[heap].start,Heap[heap].end-Heap[heap].start)){\n        re4dc_missing(\"cabin preflight before source heap replacement\");return 0;\n    }\n    for(int heap:cabin_heaps)if(Heap[heap].handle>=0 &&\n       !re4dc_movie_world_before_heap_change((void*)Heap[heap].start,Heap[heap].end-Heap[heap].start)){\n        re4dc_missing(\"cabin reader before source heap replacement\");return 0;\n    }\n    // Media fences can yield. Recheck the entire set after their last return.\n    for(int heap:cabin_heaps)if(Heap[heap].handle>=0 &&\n       !re4dc_cabin_carriers_before_heap((void*)Heap[heap].start,Heap[heap].end-Heap[heap].start)){\n        re4dc_missing(\"cabin revalidation before source heap replacement\");return 0;\n    }\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__) && (RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER)\n    SourceWorldRetainedTransfer retained;\n    if(!sourceWorldRetainedCapture(from,to,&retained))return 0;\n#endif\n    if (Heap[from].handle >= 0) {\n        start = MemCheckHeapEnd(from);\n        end = Heap[from].end;\n#if defined(RE4DC_HEAP_REPLACE_LOG) && RE4DC_HEAP_REPLACE_LOG\n        // Test only: the live cells that set the next heap's base (a save load started heap 2\n        // 2.93 MB higher than a new game). Logs the four highest-ending cells with their tags.\n        {\n            OSHeapDescriptor* d = HeapHead + Heap[from].handle;\n            u32 done = 0xFFFFFFFF;\n            for (int k = 0; k < 4; k++) {\n                OSHeapCell* best = NULL;\n                for (OSHeapCell* c = d->allocated; c != NULL; c = c->next) {\n                    const u32 e = (u32) c + c->size;\n                    if (e < done && (best == NULL || e > (u32) best + best->size)) best = c;\n                }\n                if (best == NULL) break;\n                const u8* t = (const u8*) best + best->size - 0x20;\n                re4dc_log(\"heap replace %d->%d: cell %08x size %u end %08x tag %s\\n\", from, to, (u32) best,\n                          (u32) best->size, (u32) best + best->size,\n                          (best->size >= 0x40 && !t[0] && t[1] == 'M' && t[2] == 'A' && t[3] == 'D') ? (const char*) t + 4 : \"-\");\n                done = (u32) best + best->size;\n            }\n        }\n#endif\n#if RE4DC_CABIN_SOURCE\n        if(!MemDestroyHeap(from))return 0;\n#else\n        MemDestroyHeap(from);\n#endif\n    } else {\n        start = Heap[to].start;\n        end = Heap[to].end;\n    }\n    if (start == 0) {\n        return 0;\n    }\n#if defined(RE4DC_GAME) && !defined(__PPC__) && ((defined(RE4DC_MOVIE_WORLD_ARENA) && RE4DC_MOVIE_WORLD_ARENA) || (defined(RE4DC_CABIN_SOURCE) && RE4DC_CABIN_SOURCE))\n    if (!re4dc_movie_world_before_heap_change((void*)start, end-start)) {\n        re4dc_missing(\"movie arena reader before heap replacement\");\n        return 0;\n    }\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__) && (RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER)\n    const int result=MemCreateHeap(to,start,end);\n    sourceWorldRetainedPublish(retained,result);\n    return result;\n#else\n    return MemCreateHeap(to, start, end);\n#endif\n"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "signature": "void MemClearAllHeap()",
+      "start": 536,
+      "end": 571,
+      "sha256": "8b769f6796280e0487d9620811e32a85f35b89d3c3679170baa51e9e8b6c7682",
+      "body": "\n#if defined(RE4DC_GAME) && !defined(__PPC__) && (RE4DC_PS2_WORLD_SOURCE_OWNER || RE4DC_PS2_WORLD_R11F_OWNER)\n    sourceWorldRetainedReset();\n#endif\n    u32 i;\n\n#if defined(RE4DC_GAME) && !defined(__PPC__) && ((defined(RE4DC_MOVIE_WORLD_ARENA) && RE4DC_MOVIE_WORLD_ARENA) || (defined(RE4DC_CABIN_SOURCE) && RE4DC_CABIN_SOURCE))\n#if RE4DC_CABIN_SOURCE\n    for(i=0;i<MEM_HEAP_NUM;++i)if(Heap[i].handle>=0 &&\n       !re4dc_cabin_carriers_before_heap((void*)Heap[i].start,Heap[i].end-Heap[i].start)){\n        re4dc_missing(\"cabin preflight before all-heap clear\");return;\n    }\n#endif\n    // Ancestor heaps are destroyed first. Retire the overlapping native owner\n    // while all descriptors are intact, before any iteration changes a heap.\n    for (i = 0; i < MEM_HEAP_NUM; i++) {\n        if (Heap[i].handle >= 0 &&\n            !re4dc_movie_world_before_heap_change((void*)Heap[i].start, Heap[i].end-Heap[i].start)) {\n            re4dc_missing(\"movie arena reader before all-heap clear\");\n            return;\n        }\n    }\n#if RE4DC_CABIN_SOURCE\n    for(i=0;i<MEM_HEAP_NUM;++i)if(Heap[i].handle>=0 &&\n       !re4dc_cabin_carriers_before_heap((void*)Heap[i].start,Heap[i].end-Heap[i].start)){\n        re4dc_missing(\"cabin revalidation before all-heap clear\");return;\n    }\n#endif\n#endif\n    for (i = 0; i < MEM_HEAP_NUM; i++) {\n        if (Heap[i].handle >= 0) {\n            MemDestroyHeap(i);\n        }\n    }\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void EmReadInit()",
+      "start": 734,
+      "end": 741,
+      "sha256": "b935e4767c3691605c8c96ac3d514232c7d87b4cfca66177bd1b61399df4622a",
+      "body": "\n    int i;\n\n    for (i = 0; i < 4; i++) {\n        InitModule(&EmReadModule[i]);\n    }\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void InitModule(ReadModule* m)",
+      "start": 404,
+      "end": 433,
+      "sha256": "b3541afd89204d845dc81e4b1cc6d61d80c81f7f5b160790096405b414e27da7",
+      "body": "\n#if RE4DC_CABIN_SOURCE\n    if(!re4dc_cabin_carrier_before_free(m->pArc)){\n        re4dc_missing(\"cabin borrowed module still has readers\");return;\n    }\n#endif\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    // Required before archive destruction, including the separately linked REL.\n    re4dc_motion_unbind(m->pArc);\n#endif\n    if (m->pModule != NULL && (m->flag & 2)) {\n        DLL_Unlink(m->pModule);\n    }\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    re4dc_effect_unbind(m->pArc);\n    re4dc_ui_unbind_enemy(m->pArc);\n#endif\n    if (m->pArc != NULL && (m->flag & 4)) {\n        if (m->flag & 8) {\n            Debug_free(m->pArc);\n        } else {\n            Mem_free(m->pArc);\n        }\n    }\n    if (m->pModule != NULL && (m->flag & 1)) {\n        Mem_free(m->pModule);\n    }\n    memclr_asm(m, sizeof(ReadModule));\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void ReadAreaData()",
+      "start": 223,
+      "end": 297,
+      "sha256": "c28b4e5159a2507a7032399c3fad9d2fa4d1b442519f9ca7b01b2ac18f423ca6",
+      "body": "\n    char name[64];\n    int req;\n    u32 readTime;\n    u32 decodeTime;\n\n    sprintf(name, \"st%x/r%03x.das\", pG->stage_no, pG->room_id);\n    if (pG->System_flg & 0x02000000) {\n        pG->System_flg &= ~0x02000000;\n    } else {\n#if defined(__PPC__)\n        StopwatchStart();\n#line 147 \"D:/Bio4/Prog/read.cpp\"\n        req = DVD_READ_N(name, (void*) (MemGetHeapEndAddr(MemGetCurrentHeap()) - READ_BUFF_OFS), 0, 0, 0, 0x8120);\n        while (Dvd.ReadCheck(req, 0, 0, &in_data_addr) != 1) {\n            TaskSleep(1);\n        }\n        readTime = StopwatchStop(NULL);\n        StopwatchStart();\n        iTaskExec(decodeData);\n        while (iTaskStatus() != 0) {\n            TaskSleep(1);\n        }\n        decodeTime = StopwatchStop(NULL);\n        OSReport(\"\\n\");\n        OSReport(\"********** DataReadTime   %f\\n\", (f32) readTime / 1000.0f);\n        OSReport(\"********** DataEncodeTime %f\\n\", (f32) decodeTime / 1000.0f);\n        OSReport(\"\\n\");\n        if (req < 0) {\n            pLog->err(0, 0, \"ReadAreaData(): DvdReadReqNAlloc error! R%03x\", pG->room_id);\n            return;\n        }\n#else\n        // Native room containers contain an already-decoded LE type-0 payload\n        // plus the original sound entries. The source queue allocates the final\n        // room buffer and still dispatches sound blocks in their authored order.\n        // Never fall back to compressed PPC data or an unqualified .arc sidecar.\n        sprintf(name, \"st%x/r%03x.dar\", pG->stage_no, pG->room_id);\n        StopwatchStart();\n        req = DVD_READ_N(name, 0, 0, 0, 0, 0x8104);\n        if (req < 0) {\n            re4dc_missing(\"native room request failed\");\n            return;\n        }\n        DvdReadInfo roomInfo;\n        int status;\n        while ((status = Dvd.ReadCheckInfo(req, &roomInfo)) == 0) {\n            TaskSleep(1);\n        }\n        if (status != 1 || roomInfo.addr[0][0] == 0 || roomInfo.size[0][0] == 0) {\n            OSReport(\"Native room load failed: %s status=%d\\n\", name, status);\n            re4dc_missing(\"qualified native room container missing or invalid\");\n            return;\n        }\n        PSet(pG->pRoom, (void*) roomInfo.addr[0][0]);\n        out_data_size = roomInfo.size[0][0];\n\n        if (!re4dc_effect_bind_room(pG->pRoom, out_data_size)) {\n            re4dc_missing(\"invalid prepared native room effects\");\n            return;\n        }\n        if (!re4dc_ui_bind_room(pG->pRoom, out_data_size)) {\n            re4dc_missing(\"invalid prepared native room identities\");\n            return;\n        }\n        readTime = StopwatchStop(NULL);\n        OSReport(\"Native room: %s bytes=%u read_us=%u\\n\", name, out_data_size, readTime);\n#endif\n    }\n    PSet(pG->Rtp, GetDataExt(pG->pRoom, \"RTP\", 0));\n    PSet(pG->RoomMes, GetDataExt(pG->pRoom, \"MDT\", 0));\n    PSet(pG->pOsd, GetDataExt(pG->pRoom, \"OSD\", 0));\n    PSet(pG->pEmi, GetDataExt(pG->pRoom, \"EMI\", 0));\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void ReadPlayerData(",
+      "start": 802,
+      "end": 940,
+      "sha256": "25d40240f7b69e726f0da9920013e6c12dcb1e1131e4b08483a0f9fd5007f784",
+      "body": "\n    DvdReadInfo info;\n    int req;\n    int ret;\n    int file;\n    char* name;\n    int dll;\n    u8* data;\n    u32 total;\n    u32 max;\n    u32 size;\n    u32 dataSize;\n    u32 bssSize;\n    void* pArc;\n    OSModuleHeader* pModule;\n    void* bss;\n\n    if (!(pG->pl_flag & 1)) {\n        return;\n    }\n    pG->pl_flag &= ~1;\n    ReleasePlData();\n    pG->pPlayer = (PlArc*) PL_DATA_ADDR;\n    data = (u8*) PL_DATA_ADDR;\n    dll = 0;\n    switch (type) {\n    case 0:\n    default:\n        switch (costume) {\n        default:\n            file = 6;\n            break;\n        case 1:\n            file = 0x5A;\n            break;\n        case 2:\n            file = 0x5B;\n            break;\n        case 3:\n            file = 0x79;\n            break;\n        }\n        dll = 0;\n        break;\n    case 1:\n        if (costume != 1) {\n            file = 0x22;\n        } else {\n            file = 0xBE;\n        }\n        break;\n    case 2:\n        if (costume != 1) {\n            file = 0xA8;\n        } else {\n            file = 0xB4;\n        }\n        dll = 0x1A;\n        break;\n    case 3:\n        file = 0xBC;\n        dll = 0xBD;\n        break;\n    case 4:\n        file = 0xC5;\n        dll = 0xC6;\n        break;\n    case 5:\n        file = 0xC7;\n        dll = 0xC8;\n        break;\n    }\n    name = (char*) FileTbl[file].name;\n    SET_DRS_NAME(name);\n#line 1124 \"D:/Bio4/Prog/read.cpp\"\n    req = DVD_READ_N(FileTbl[file].name, (void*) PL_DATA_ADDR, 0, 0, 0, 0x8100);\n    while ((ret = Dvd.ReadCheckInfo(req, &info)) != 1) {\n        if (ret < 0) {\n            pLog->err(0, 0, \"ReadPlayerData(): error! %s\", FileTbl[file].name);\n#line 1139 \"D:/Bio4/Prog/read.cpp\"\n            HALT();\n        }\n        TaskSleep(1);\n    }\n    total = info.size[0][0] + info.size[0][1];\n    if (type == 0) {\n        max = 0x118000;\n    } else {\n        max = 0x188000;\n    }\n    if (total >= max) {\n        pLog->err(0, 0, \"ERROR: PLAYER_DATA IS TOO LARGE\");\n    }\n    size = total;\n    bssSize = 0;\n    pArc = NULL;\n    pModule = NULL;\n    if (dll != 0) {\n        ReleasePlData();\n        pArc = (void*) PL_DATA_ADDR;\n        pModule = (OSModuleHeader*) (*(u32*) (data + 4) + (u32) data);\n        dataSize = (u32) pModule - (u32) data;\n        bssSize = size - dataSize;\n        size = dataSize;\n        if (!BitChk16(PlReadModule.flag, 2)) {\n            bss = NULL;\n            if (pModule->bssSize != 0) {\n                bss = &PlReadModule;\n            }\n            if (pModule->bssSize > DLL_BSS_MAX) {\n                for (;;) {\n                    eprintf(100, 100, 0, 0, \"PL_DLL BSS SIZE OVER!!!\");\n                    TaskSleep(1);\n                }\n            }\n            BitOn16(PlReadModule.flag, 2);\n            DLL_Link(pModule, bss);\n            pModule->prolog();\n        } else {\n            pModule = NULL;\n        }\n    }\n    PlReadModule.id = file;\n    PlReadModule.pArc = pArc;\n    PlReadModule.size = size;\n    PlReadModule.pModule = pModule;\n    PlReadModule.bssSize = bssSize;\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    // Qualified compact player is the non-REL pl00 family. Its source models\n    // are created after ReadPlayerData returns; no prototype pose path is used.\n    if (!re4dc_ui_bind_player(data, total)) {\n        re4dc_missing(\"invalid prepared player texture identities\");\n    }\n#if RE4DC_ACTOR_PL08_PACK\n    re4dc_pl08_pack_player((unsigned) file); // the pl08 costume package follows the bound archive (render only)\n#endif\n#endif\n"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "int readEmData(ReadModule* m, int id, void* addr, u32 size)",
+      "start": 540,
+      "end": 683,
+      "sha256": "34dc8de0c2311baffed6a19797c387c0f8e60afcf64007d6bc0cc305bf4ba4a7",
+      "body": "\n    DvdReadInfo info;\n    u32 len;\n    ReadFile* e;\n    char* name;\n    int req;\n    int ret;\n    int mode;\n    void* pArc;\n    void* pModule = NULL;\n    u32 bssSize = 0;\n    u32 newSize;\n    u32 dataSize;\n\n    switch (pG->pl_type) {\n    case 0:\n    case 1:\n    default:\n        e = &EmFileTbl[id];\n        break;\n    case 3:\n    case 5:\n        e = &EmFileTbl_Wesker[id];\n        break;\n    case 2:\n        e = &EmFileTbl_Ada[id];\n        break;\n    case 4:\n        e = &EmFileTbl_Klauser[id];\n        break;\n    }\n    if (e->file == 0) {\n        return 0;\n    }\n    name = (char*) FileTbl[e->file].name;\n    if (e->dll != 0) {\n        SET_DRS_NAME(name);\n        name = (char*) FileTbl[e->file].name;\n    }\n    if (Dvd.FileExistCheck(name, &len) < 0) {\n        pLog->err(0, 0, \"readEmData(): error! %s\", name);\n        return 0;\n    }\n    mode = 1;\n    if (pG->Rno0 == 2) {\n        mode = 0x100;\n    }\n    if (addr == NULL) {\n#line 725 \"D:/Bio4/Prog/read.cpp\"\n        req = DVD_READ_N(name, NULL, 0, 0, 0, mode | 0x8004);\n    } else {\n#line 728 \"D:/Bio4/Prog/read.cpp\"\n        req = DVD_READ_N(name, addr, 0, 0, 0, mode | 0x8000);\n    }\n    while ((ret = Dvd.ReadCheckInfo(req, &info)) != 1) {\n        if (ret < 0) {\n            pLog->err(0, 0, \"readEmData(): error! %s\", name);\n            return 0;\n        }\n        if (SceSys.checkCTaskRange() == 1) {\n            SceSys.x73 = 1;\n            SceSleep(1);\n            SceSys.x73 = 0;\n        } else {\n            TaskSleep(1);\n        }\n    }\n    len = info.size[0][0];\n    if (addr == NULL) {\n        m->flag |= 4;\n        pArc = (void*) info.addr[0][0];\n        if (len < size) {\n            void* old = pArc;\n            newSize = size;\n            Mem_free(old);\n#line 776 \"D:/Bio4/Prog/read.cpp\"\n            pArc = MEM_ALLOC(newSize, 1, 0xD);\n            if (pArc != old) {\n                return 0;\n            }\n        } else {\n            newSize = len;\n        }\n    } else {\n        BitOff16(m->flag, 4);\n        pArc = addr;\n        newSize = len;\n    }\n#if defined(RE4DC_GAME) && !defined(__PPC__)\n    if (!re4dc_ui_bind_enemy(pArc, len)) {\n        re4dc_missing(\"invalid prepared enemy texture identities\");\n        return 0;\n    }\n    if (!re4dc_effect_bind(pArc, len)) {\n#if defined(RE4DC_EFFECT_BIND_DIAG) && RE4DC_EFFECT_BIND_DIAG\n        // EFFECT_BIND_DIAG=1: which check refused it (native_effect.cpp line), the file, its size and an FNV-1a of\n        // the buffer (compare with the disc file: a damaged read vs a full or stale binding table)\n        // Then the range is written back and dropped from the operand cache (ocbp) and checked again from RAM: a pass\n        // now means the CPU held stale lines over bytes a DMA had written (cache class); a second failure means RAM\n        // itself is wrong (a damaged / short read, or a dirty line written back over the DMA's bytes).\n        static char why[160];\n        u32 h = 2166136261u, h2 = 2166136261u;\n        for (u32 i = 0; i < (u32) len; ++i) h = (h ^ ((const u8*) pArc)[i]) * 16777619u;\n        const unsigned chk1 = re4dc_effect_bind_fail_line;\n        re4dc_effect_bind_fail_line = 0;\n        re4dc_dcache_purge(pArc, len);\n        const int ok2 = re4dc_effect_bind(pArc, len);\n        for (u32 i = 0; i < (u32) len; ++i) h2 = (h2 ^ ((const u8*) pArc)[i]) * 16777619u;\n        sprintf(why, \"enemy fx chk%u fnv%08x purge %s%u fnv%08x %s %ub @%08x\", chk1, (unsigned) h, ok2 ? \"PASS\" : \"chk\",\n                ok2 ? 0u : re4dc_effect_bind_fail_line, (unsigned) h2, name, (unsigned) len, (unsigned) (u32) pArc);\n        re4dc_missing(why);\n#else\n        re4dc_missing(\"invalid prepared enemy effect records\");\n#endif\n        return 0;\n    }\n    if (!re4dc_motion_bind(pArc, len)) {\n        re4dc_missing(\"invalid prepared enemy motion archive\");\n        return 0;\n    }\n#endif\n    if (e->dll != 0) {\n        pModule = (void*) (*(u32*) ((u8*) pArc + 4) + (u32) pArc);\n        dataSize = (u32) pModule - (u32) pArc;\n        bssSize = len - dataSize;\n        if (addr == NULL && dataSize < size) {\n            void* old = pModule;\n#line 814 \"D:/Bio4/Prog/read.cpp\"\n            pModule = MEM_ALLOC(bssSize, 1, 0xD);\n            memcpy(pModule, old, bssSize);\n            m->flag |= 1;\n        } else do {  // loop notes: `m` weighted ref 15 > newSize in global-alloc (m r29, newSize r28)\n            newSize = dataSize;\n            BitOff16(m->flag, 1);\n        } while (0);\n    }\n    m->id = id;\n    m->pArc = pArc;\n    m->size = newSize;\n    m->pModule = (OSModuleHeader*) pModule;\n    m->bssSize = bssSize;\n    return 1;\n"
+    },
+    {
+      "path": "src/game/roomdata.cpp",
+      "signature": "void cRoomData::linkRelData(",
+      "start": 327,
+      "end": 365,
+      "sha256": "982c58fcf31e6756bebbff5d2ea52abe45c72cd822d189c180072f8a6d001c51",
+      "body": "\n    u8 no = room;\n    u32 stage = room >> 8;\n    int id;\n    int ret;\n\n    if (checkRoomRange(stage, no) != 1) {\n        return;\n    }\n    // The target stores x1C only after the zero test (`sth` behind the `beq`). Left: the promoted\n    // value reaches the compare and the DvdRead argument as `clrlwi r3,r0,16` in the target, ours\n    // folds the extension (`mr`) and compares the halfword register (#2 family).\n    if (Room_data_tbl[stage].tbl[no].rel_no == 0) {\n        return;\n    }\n    m_RelNo = Room_data_tbl[stage].tbl[no].rel_no;\n#line 484\n    id = DvdRead(m_RelNo, 0, 0, 0, 0, 0x104, __FILE__, __LINE__);\n    while ((ret = Dvd.ReadCheck(id, 0, 0, (void**) &pModule)) != 1) {\n        if (ret < 0) {\n            pLog->err(0, 0, \"cRoomData::readRelData(): RelDataReadError! %s\", FileTbl[m_RelNo]);\n            m_RelNo = 0;\n            pModule = 0;\n            return;\n        }\n        TaskSleep(1);\n    }\n    BitOff16(flag, 1);\n    if (pModule->bssSize == 0) {\n        m_pModule_bss = 0;\n    } else {\n#line 503\n        m_pModule_bss = MEM_ALLOC(pModule->bssSize, 1, 13);\n        m_pModule_bss_bak = MEM_ALLOC(pModule->bssSize, 1, 13);\n    }\n    DLL_Link(pModule, m_pModule_bss);\n    pModule->prolog();\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/os.cpp",
+      "signature": "void OSCancelThread(",
+      "start": 453,
+      "end": 478,
+      "sha256": "87027669e7195cbf540ca9eb5cc30e053c4a45363e47d626633338dcc4f80d90",
+      "body": "\n    if (thread->kt != NULL && thread->kt != thd_current) {\n        int old = irq_disable();\n        // A KOS read can yield inside a source evaluation. Let its bounded\n        // native resource scope finish before thd_destroy discards its stack.\n        // Hold IRQ exclusion across the final zero-busy check and destruction.\n        while (thread->nativeIoDepth || re4dc_motion_thread_busy(thread->kt)) {\n            thread->suspend = 0;\n            thread->gateCount = 0;\n            unpark(thread);\n            irq_restore(old);\n            thd_pass();\n            old = irq_disable();\n        }\n        if (thread->kt->state == STATE_WAIT && thread->kt->wait_obj == &g_gate) {\n            thread->kt->wait_obj = NULL;\n            thread->kt->state = STATE_READY;\n            thd_add_to_runnable(thread->kt, false);\n        }\n        thd_destroy(thread->kt);\n        thread->kt = NULL;\n        irq_restore(old);\n    }\n    thread->state = OS_THREAD_STATE_MORIBUND;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "signature": "s32 DVDReadAsyncPrio(",
+      "start": 369,
+      "end": 472,
+      "sha256": "9eb9f80a0352f0966e9e682244da8c64fa2d747973fdbcc351399122eb5aac88",
+      "body": "\n    Re4dcIoScope io;  // includes callback completion before cancellation can drain\n#if RE4DC_IO_SERIAL\n    DvdReading reading;\n#endif\n    (void) prio;\n    int entry = (int) fi->startAddr;\n    char full[96];\n    snprintf(full, sizeof(full), \"%s%s\", g_root, g_entryPath[entry]);\n    fi->cb.addr = addr;\n    fi->cb.offset = (u32) offset;\n    fi->cb.length = (u32) length;\n    fi->cb.state = DVD_STATE_BUSY;\n    fi->cb.currTransferSize = (u32) length;\n    fi->cb.transferredSize = 0;\n    fi->callback = callback;\n#if RE4DC_IO_PROBE\n    const unsigned long long io_t0 = timer_us_gettime64();\n    if (hold_on) re4dc_log(\"dvdhold: read=%u df=%u\\n\", hold_reads++, re4dc_fixture_source_frame() - hold_f0);\n#endif\n    s32 result = DVD_RESULT_FATAL;\n#if RE4DC_DVD_FDCACHE\n    const bool cached = mutex_trylock(&fd_lock) == 0;\n    file_t f = cached ? fd_cached(entry, full) : fs_open(full, O_RDONLY);\n#else\n    file_t f = fs_open(full, O_RDONLY);\n#endif\n    if (f >= 0) {\n        s32 avail = (s32) fi->length - offset;\n        if (avail < 0) avail = 0;\n        s32 want = length < avail ? length : avail;\n        fs_seek(f, offset, SEEK_SET);\n        s32 got = 0;\n        while (got < want) {\n            ssize_t r = fs_read(f, (u8*) addr + got, (size_t) (want - got));\n            if (r <= 0) {\n                break;\n            }\n            got += (s32) r;\n        }\n#if RE4DC_DISC_READ_VERIFY\n        // DISC_READ_VERIFY=1 (Makefile): a short or failed read is retried from where it stopped on a fresh handle\n        // (3 tries), and a read that still falls short is DVD_RESULT_FATAL, never a partial count the caller takes\n        // for a complete buffer.\n        const bool short_first = got != want;\n        for (int tries = 1; got != want && tries <= 3; ++tries) {\n            static unsigned retries;\n            re4dc_log(\"disc read verify: short read %s got=%d want=%d offset=%d errno=%d, retry %d (retries %u)\\n\", full,\n                      (int) got, (int) want, (int) offset, errno, tries, ++retries);\n            thd_sleep(20 * tries);\n            file_t g = fs_open(full, O_RDONLY);\n            if (g < 0) continue;\n            if (fs_seek(g, offset + got, SEEK_SET) == (off_t) (offset + got)) {\n                while (got < want) {\n                    ssize_t r = fs_read(g, (u8*) addr + got, (size_t) (want - got));\n                    if (r <= 0) break;\n                    got += (s32) r;\n                }\n            }\n            fs_close(g);\n        }\n#endif\n#if RE4DC_DVD_FDCACHE\n        if (!cached) fs_close(f);\n#if RE4DC_DISC_READ_VERIFY\n        else if (got != want || short_first) fd_drop(f);   // a retried handle is not kept either\n#else\n        else if (got != want) fd_drop(f);   // a failed read never leaves a suspect fd cached\n#endif\n#else\n#if RE4DC_DISC_READ_VERIFY\n        (void) short_first;\n#endif\n        fs_close(f);\n#endif\n        // The SDK reports the requested (32-byte aligned) length on success.\n#if RE4DC_DISC_READ_VERIFY\n        result = got == want ? length : DVD_RESULT_FATAL;\n#else\n        result = got == want ? length : got;\n#endif\n        if (got != want) {\n            static unsigned short_reads;\n            if (++short_reads <= 8)\n                re4dc_log(\"DVDReadAsyncPrio: short read %s got=%d want=%d offset=%d errno=%d\\n\", full, (int) got,\n                          (int) want, (int) offset, errno);\n        }\n    } else {\n        re4dc_log(\"DVDReadAsyncPrio: open failed %s errno=%d\\n\", full, errno);\n    }\n#if RE4DC_DVD_FDCACHE\n    if (cached) mutex_unlock(&fd_lock);\n#endif\n#if RE4DC_IO_PROBE\n    { const unsigned long long io_t1 = timer_us_gettime64(); note_block(io_t1 > io_t0 ? io_t1 - io_t0 : 0); }\n#endif\n    fi->cb.transferredSize = result > 0 ? (u32) result : 0;\n    fi->cb.state = DVD_STATE_END;\n    if (callback) {\n        callback(result, fi);\n    }\n    return 1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "signature": "int DVDCancelAsync(",
+      "start": 517,
+      "end": 524,
+      "sha256": "0543ea63a0d41c1f4a62cb29686953ef2662ff7edaa04c50bbfc2f65eb296ebc",
+      "body": "\n    block->state = DVD_STATE_END;\n    if (callback) {\n        callback(0, block);\n    }\n    return 1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "signature": "s32 DVDCancelAll(void)",
+      "start": 526,
+      "end": 529,
+      "sha256": "67d3b54372d43804e971335b63c5f56339beaa403c12c3594f562eecae497be3",
+      "body": "\n    return 0;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "signature": "bool carrier_can_retire(",
+      "start": 344,
+      "end": 347,
+      "sha256": "c2fa39dd8f621afa885eab891689300574d5e5ff091733d9150a7206fb87a54e",
+      "body": "\n    return c.state!=CarrierPreparing && c.state!=CarrierSwap && !c.readers &&\n        !c.event && !carrier_event_readers && !carrier_dma_scope && !c.releasing && c.role!=1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "signature": "extern \"C\" int re4dc_cabin_carriers_reset()",
+      "start": 388,
+      "end": 394,
+      "sha256": "bab8a6898d25bf52770f67b58056d34a2252c1bc5cd13480fcd0dab0ddf6938f",
+      "body": "\n    if(carrier_fault || carrier_event_readers || carrier_dma_scope)return 0;\n    // Preflight the entire set; no partial identity erase on a refused reset.\n    for(const auto& c:carriers)if(c.state && !carrier_retirement_ready(c))return 0;\n    for(auto& c:carriers)if(c.state && !re4dc_cabin_source_unit_clear(c.unit))return 0;\n    return 1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "signature": "extern \"C\" int re4dc_cabin_carriers_before_heap(",
+      "start": 482,
+      "end": 491,
+      "sha256": "164f6734f27f7cf25de9dbc15099ae12fb52262917f462eebb950a8b93665001",
+      "body": "\n    const unsigned address=(unsigned)(uintptr_t)start;\n    if(carrier_fault || address+bytes<address)return 0;\n    for(const auto& d:carrier_dma)if(d.state && d.mram &&\n       carrier_overlap(address,bytes,(unsigned)(uintptr_t)d.mram,d.bytes))return 0;\n    for(const auto& c:carriers)if(c.state &&\n       (carrier_overlap(address,bytes,(unsigned)(uintptr_t)c.backing,c.backing?c.bytes:0) ||\n        carrier_overlap(address,bytes,(unsigned)(uintptr_t)c.mram,c.mram?c.bytes:0)) && !carrier_retirement_ready(c))return 0;\n    return 1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "signature": "extern \"C\" int re4dc_cabin_carriers_retire_heap(",
+      "start": 500,
+      "end": 510,
+      "sha256": "39b82364019645295fbc5528bc71490cbc78ac2119af5304281b0acb1318d320",
+      "body": "\n    // The caller has checked every affected range and closed media before this\n    // commit. Revalidate the whole local set before any non-yielding source free.\n    if(!re4dc_cabin_carriers_before_heap(start,bytes))return 0;\n    const unsigned address=(unsigned)(uintptr_t)start;\n    for(auto& c:carriers)if(c.state &&\n       (carrier_overlap(address,bytes,(unsigned)(uintptr_t)c.backing,c.backing?c.bytes:0) ||\n        carrier_overlap(address,bytes,(unsigned)(uintptr_t)c.mram,c.mram?c.bytes:0)) &&\n       !re4dc_cabin_source_unit_clear(c.unit))return 0;\n    return 1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_cabin.cpp",
+      "signature": "extern \"C\" int re4dc_cabin_before_heap_change(",
+      "start": 206,
+      "end": 219,
+      "sha256": "8b023aab1615ba8f13ef2241ba47066ac4ea3d45aefd7a34535fd223e6320a42",
+      "body": "\n    if(!re4dc_cabin_carriers_before_heap(start,bytes))return 0;\n    if(!cabin.id || !bytes)return 1;\n    const uintptr_t lo=(uintptr_t)start,hi=lo+bytes;\n    if(hi<lo)return 0;\n    if(!range_overlap(lo,hi,cabin.heap_begin,cabin.heap_end) &&\n       !range_overlap(lo,hi,cabin.room_begin,cabin.room_end))return 1;\n    if(cabin.beginning || cabin.retiring || cabin_event_readers || cabin_event_reader_fault || cabin.halted)return 0;\n    cabin.retiring=true;\n    if(!close_audio()){cabin.retiring=false;return 0;}\n    if(!re4dc_movie_cabin_close(cabin.movie)){cabin.retiring=false;return 0;}\n    cabin=CabinSource{};cabin_preflight_ready=false;\n    return 1;\n"
+    },
+    {
+      "path": "port/dreamcast/game/ui_bridge.cpp",
+      "signature": "extern \"C\" void re4dc_room_leave()",
+      "start": 397,
+      "end": 440,
+      "sha256": "95df2f9ed234c87fe8a95926c400081f53dc46ddcd2ab968311bdb979087265c",
+      "body": "\n#if defined(RE4DC_DISC_READ_METER) && RE4DC_DISC_READ_METER\n    re4dc_disc_meter_room(0,unsigned(pG->room_id));   // the room-entry load time starts at the door\n#endif\n#if RE4DC_MOVIE_WORLD_ARENA\n    // Must run before any native owner or source heap is retired.\n    if(!re4dc_movie_world_before_room_retire()){\n        re4dc_missing(\"movie world arena has an active reader at room retirement\");return;\n    }\n#endif\n    unsigned generation,cells,bytes,stale,refused;\n    if(!re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused))return;\n    re4dc_motion_retire_all();\n    re4dc_effect_retire_room();\n#if RE4DC_NATIVE_MODEL_REGISTRY_PACK\n    re4dc_registry_room_leave();                         // the room's model registry package (coarse_actor_registry_pack.inc)\n#endif\n#if RE4DC_ACTOR_PL08_PACK\n    re4dc_pl08_pack_room_leave();                        // the pl08 costume package cell (coarse_actor_pl08_pack.inc)\n#endif\n#if defined(RE4DC_GANADO_VAR) && RE4DC_GANADO_VAR\n    re4dc_ganado_var_room_leave();                       // ACTOR_GANADO_PS2_STUMP variant cell (coarse_actor_owner_ganado.inc)\n#endif\n#if defined(RE4DC_STATIC_OBJ_BATCH) && RE4DC_STATIC_OBJ_BATCH\n    re4dc_sob_room_leave();                              // merged static-object lists (heap-4 cells)\n#endif\n#if defined(RE4DC_STATIC_OBJ_BAKE) && RE4DC_STATIC_OBJ_BAKE\n    re4dc_sob_bake_room_leave();                         // baked-object state and rest copies (heap-4 cells)\n#endif\n    re4dc_ui_retire_room();\n#if defined(RE4DC_ENGINE_PREVIEW) && RE4DC_ENGINE_PREVIEW\n    re4dc_rt_room_leave();\n#endif\n#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL\n    re4dc_room_vis_leave();\n#endif\n#if defined(RE4DC_ROOM_FILE) && RE4DC_ROOM_FILE\n    re4dc_room_file_leave();                             // the room data file's heap-4 block (platform/room_file.c)\n#endif\n    re4dc_room4_close();\n    audit(2);\n    re4dc_room4_state(&generation,&cells,&bytes,&stale,&refused);\n    if(cells)re4dc_log(\"room lifecycle: %u native heap-4 cells (%u B) outlived retirement\\n\",cells,bytes);\n"
+    }
+  ],
+  "checks": [
+    {
+      "name": "door descriptor reset precedes DVD and ARAM cancellation",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "no explicit task sleep between door reset and read cancellation",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "unit reset preflights carriers before descriptor erase",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "unit reset is not ordinary queue cancel or owned allocation release",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "single unit clear cancels before owned allocation release",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "single unit clear is one poll without local task wait",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "soft reset cancels before all heap destruction",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "cancel all kills either worker before queue erase",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "platform cancel all itself is no-op",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "actual cancellation waits native IO then destroys thread",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "generic filesystem read scope spans callback",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "whole source pump step enters native guard before source call",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "destination transfer follows cancellation check",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "readMain source data comes through staging",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "ordinary queue worker sleeps outside individual guarded Read steps",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "ordinary scheduler requires yielded acknowledgement",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "ordinary TaskSleep requires resume token",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "ordinary DataCtrl request mode derives from u8 wait",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "ISR bit is request mode100 after sync bit",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "room reset precedes player and area loads",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "room command hold begins before heap reset",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "native DAR loader awaits request",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "player ISR loader awaits completion",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "enemy ISR load during room init awaits completion",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "REL ISR load awaits completion",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "ending directly resets heap without a local blanket drain",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "room reset itself contains no DVD or ordinary DataCtrl drain",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "stage native retirement precedes heap replacement",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "carrier retirement covers own readers and event/DMA scopes",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "CABIN heap replacement revalidates after media yielding hook",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "heap destroy has carrier retirement before OS destruction",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "normal door drains before archive unregister",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "module guard precedes unbind unlink free and row erase",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "common reset clears tasks before archive unregister",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "soft reset reaches common cleanup after heap clear",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    },
+    {
+      "name": "fatal service is nonreturning",
+      "result": "PASS",
+      "kind": "static source condition, not runtime proof"
+    }
+  ],
+  "conclusion": "No new normal source-reachable pending-write/heap-reuse counterexample established. Contracts and open entries described in review; static assertions do not prove task quiescence or destination epoch.",
+  "not_executed": [
+    "No compiler/C++ lifecycle fixture",
+    "No runtime edits",
+    "No build/stage/guest",
+    "No old Event or window test rerun"
+  ]
+}
