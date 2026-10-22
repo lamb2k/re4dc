@@ -9087,17 +9087,37 @@ extern "C" int re4dc_ui_part_key(const Re4dcModelPart* p,unsigned* crc,unsigned*
 extern "C" void __real_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src);
 extern "C" void __real_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src);
 extern "C" void __real_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src);
+#if defined(RE4DC_HDR_ALIGN_PROBE) && RE4DC_HDR_ALIGN_PROBE
+// HDR_ALIGN_PROBE (lane mipfault22, diagnostic): KOS compiles headers with movca.l, which allocates the whole
+// 32-byte line without reading it; a header dst that is not 32-byte aligned leaves stale bytes in the line on
+// console (emulators zero/keep memory). Logs each distinct caller once.
+static void hdr_align_probe(const void* dst,const char* kind) {
+    static void* seen[16];static unsigned n;
+    if((reinterpret_cast<std::uintptr_t>(dst)&31U)==0)return;
+    void* pr=__builtin_return_address(1);
+    for(unsigned i=0;i<n;++i)if(seen[i]==pr)return;
+    if(n<16)seen[n++]=pr;
+    std::printf("re4dc-hdr-misaligned: %s dst=%p pr=%p
+",kind,dst,pr);
+}
+#define RE4DC_HDR_PROBE(d,k) hdr_align_probe(d,k)
+#else
+#define RE4DC_HDR_PROBE(d,k) ((void)0)
+#endif
 extern "C" void __wrap_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    RE4DC_HDR_PROBE(dst,"poly");
     pvr_poly_cxt_t c=*src;
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     __real_pvr_poly_compile(dst,&c);
 }
 extern "C" void __wrap_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src) {
+    RE4DC_HDR_PROBE(dst,"sprite");
     pvr_sprite_cxt_t c=*src;
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     __real_pvr_sprite_compile(dst,&c);
 }
 extern "C" void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    RE4DC_HDR_PROBE(dst,"mod");
     pvr_poly_cxt_t c=*src;
     if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
     if(c.txr2.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr2.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;

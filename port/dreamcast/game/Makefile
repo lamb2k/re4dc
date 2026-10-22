@@ -2757,6 +2757,12 @@ endif
 ifneq ($(OVL_GUARD),0)
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_GUARD=$(OVL_GUARD)
 endif
+# HDR_ALIGN_PROBE=1 (lane mipfault22, diagnostic, default 0): log each caller that compiles a PVR header into a dst that is
+# not 32-byte aligned (KOS compiles with movca.l). Needs TEX_MIP_DADJ (the wrapper it lives in).
+HDR_ALIGN_PROBE ?= 0
+ifneq ($(HDR_ALIGN_PROBE),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_HDR_ALIGN_PROBE=1
+endif
 ifneq ($(OVL_WATCH),0)
 $(OBJDIR)/platform/modules.o $(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_OVL_WATCH=1
 endif
