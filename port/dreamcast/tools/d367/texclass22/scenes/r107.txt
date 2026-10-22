@@ -1,0 +1,9 @@
+name tc22-r107
+# lane texclass22: r107 entry (castgc/warps/r107.txt), then Leon walks forward from frame 900 (a second view). God.
+room 0x107
+pos 29683 -13 -28512
+ang 2.2860
+inv default
+god
+alivelog 150
+act 900 fwd 240
