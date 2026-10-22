@@ -1,0 +1,776 @@
+{
+  "scope": "CLOSED015 read-only file/state audit; no live attach/input/reexecution/newguest. Controlled teleport/script lineage; inherited014intro notnewprogress.",
+  "created_utc": "2026-10-22T05:54:22.581081+00:00",
+  "functional_result": "PASS original native page/Yes/drain-end and expected areas/Stop return. Actor0x68 active NOTobserved; reason unresolved, absence doesNOTprove held. Native upperdoor and nextroom NOTtested.",
+  "supervisor_result": "PASS retained V5 handle signaled/exit0",
+  "guard": {
+    "scope": "Owned process resources/time only; PID/path/start verified. Filesystem sampler isolated on daemon thread; deadline loop never performs filesystem I/O. Fail closed if sampler stale1s. WM_CLOSE at45s or resource boundary, terminate only same verified process at47.1s if needed. Asynchronous termination cleanup retains pinned handle until exit proof within47.5, preserving failed run status; no gameplay memory writes.",
+    "owner": {
+      "pid": 58264,
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\flycast.exe",
+      "start_filetime": 134371218963220837,
+      "created_utc": "2026-10-22T05:51:36.329953+00:00",
+      "rights": "retained subprocess handle receipt"
+    },
+    "closed_identity": {
+      "initial_live_identity_pinned": true,
+      "retained_handle_signaled": true,
+      "exit_code": 0,
+      "postexit_times_available": true,
+      "postexit_path_query": false,
+      "proof_reason": "normal or absolute loop exit"
+    },
+    "process_exited": true,
+    "runtime_floor": 19394461696,
+    "capture_cap": 62914560,
+    "inner_input_seconds": 41,
+    "absolute_process_seconds": 47.5,
+    "exit_age": 39.676092725771014,
+    "actions": []
+  },
+  "guard_minimum_free": 144994893824,
+  "guard_maximum_cap": 38005695,
+  "harness": {
+    "name": "castle21-CONTROLLED-original205-drain015",
+    "status": "RUN_COMPLETE",
+    "start_utc": "2026-10-22T05:51:36.183054+00:00",
+    "disc": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+    "tracks": {
+      "base": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\master",
+      "kind": "release",
+      "track03_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+    },
+    "seconds": 41,
+    "vmu": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event009\\data\\T0000_vmu_save_A1.bin",
+    "keys": null,
+    "stop": null,
+    "fixtures": {
+      "warp": {
+        "src": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\controlled-ch32-drain014-warp.txt",
+        "bytes": 159,
+        "sha256": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe"
+      },
+      "pad": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "w11": {
+        "src": null,
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    "errors": [],
+    "key_log": [],
+    "align": false,
+    "emu": "harness",
+    "emu_env": {},
+    "early_emulator_exit": 0,
+    "log_idle_s": 0.5,
+    "end_utc": "2026-10-22T05:52:16.031264+00:00",
+    "elapsed_s": 39.7,
+    "emulator_exited": true
+  },
+  "actual_rechecks": [
+    {
+      "kind": "advance-intro-A",
+      "fields": {
+        "frame": 632,
+        "process_age": 1.0425963077577762,
+        "Stop": "0x80400100",
+        "saved_RSF205": 0,
+        "message0": {
+          "vptr": 2351752556,
+          "be_flag": 1,
+          "flags2": 1,
+          "routines": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "wait": 0,
+          "button": 1,
+          "attribute": 4114,
+          "text": 2359908670,
+          "table_size": 0,
+          "selection": 0,
+          "current": 0
+        },
+        "message0_source_identity": {
+          "language": 1,
+          "room_table": "0x8ca957e0",
+          "message_no": 0,
+          "start": "0x8ca958f4",
+          "end": "0x8ca9597c",
+          "sha256": "81de22f3af7f69f5bf996eb294de0b236b4669e6e4464a46a5ecc0873d8787f2",
+          "current_offset_bytes": 74,
+          "opcode": 8,
+          "next_opcode": 4
+        },
+        "live_native_code_anchors_verified": true
+      }
+    },
+    {
+      "kind": "confirm-Yes",
+      "fields": {
+        "frame": 654,
+        "process_age": 1.7765963077545166,
+        "Stop": "0x80400100",
+        "saved_RSF205": 0,
+        "message0": {
+          "vptr": 2351752556,
+          "be_flag": 1,
+          "flags2": 1,
+          "routines": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "wait": 0,
+          "button": 1,
+          "attribute": 4114,
+          "text": 2359908728,
+          "table_size": 2,
+          "selection": 0,
+          "current": 0
+        },
+        "message0_source_identity": {
+          "language": 1,
+          "room_table": "0x8ca957e0",
+          "message_no": 0,
+          "start": "0x8ca958f4",
+          "end": "0x8ca9597c",
+          "sha256": "81de22f3af7f69f5bf996eb294de0b236b4669e6e4464a46a5ecc0873d8787f2",
+          "current_offset_bytes": 132,
+          "opcode": 8,
+          "next_opcode": 1
+        },
+        "live_native_code_anchors_verified": true
+      }
+    }
+  ],
+  "actual_pulses": [
+    {
+      "ordinary_owned_UI_pulse": "advance-intro-A",
+      "seconds": 0.2,
+      "ack_observations": [
+        {
+          "frame": 632,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 633,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 633,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 633,
+          "Key_trg": "0x80080000"
+        },
+        {
+          "frame": 634,
+          "Key_trg": "0x80080000"
+        },
+        {
+          "frame": 634,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 635,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 635,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 635,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 636,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 637,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 637,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 637,
+          "Key_trg": "0x0"
+        }
+      ],
+      "process_age": 1.2455963077954948
+    },
+    {
+      "ordinary_owned_UI_pulse": "confirm-Yes",
+      "seconds": 0.2,
+      "ack_observations": [
+        {
+          "frame": 654,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 654,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 655,
+          "Key_trg": "0x80080000"
+        },
+        {
+          "frame": 656,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 656,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 656,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 657,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 657,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 658,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 658,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 658,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 659,
+          "Key_trg": "0x0"
+        }
+      ],
+      "process_age": 1.9795963077922352
+    }
+  ],
+  "first_drain_end": [
+    {
+      "frame": 899,
+      "process_age": 9.979596307792235,
+      "Stop": "0x0",
+      "status1": "0x610",
+      "saved_RSF205": 3254779904,
+      "source68_active_observed": false
+    }
+  ],
+  "closed_state": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\data\\disc.state",
+    "sha256": "2236156faabd0def3e9f38d708dbe983d2632441cd3fba521ef8fab634eb5237",
+    "mainELF_anchor_matches": 4,
+    "fields": {
+      "frame": 1769,
+      "room": "0x205",
+      "phase": [
+        3,
+        0
+      ],
+      "chapter": 7,
+      "Stop": "0x0",
+      "status1": "0x610",
+      "health": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "RSF205": "0xc2000000",
+      "Key_on": "0x0",
+      "Key_trg": "0x0"
+    },
+    "areas": {
+      "0x3": {
+        "enabled": true,
+        "func": "0x8c910ad0"
+      },
+      "0x7": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x8": {
+        "enabled": false,
+        "func": "0x8c910be8"
+      },
+      "0x11": {
+        "enabled": true,
+        "func": "0x0"
+      },
+      "0x15": {
+        "enabled": false,
+        "func": "0x0"
+      },
+      "0x1b": {
+        "enabled": true,
+        "func": "0x8c910988"
+      }
+    },
+    "source68": [],
+    "observed_active_source_lists": [
+      {
+        "ptr": "0x8cd251a0",
+        "id": 45,
+        "type": 0,
+        "source_list": "0x57",
+        "HP": 1000,
+        "be_flag": "0x2002077",
+        "native_status": "0x20",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cd243c0",
+        "id": 45,
+        "type": 0,
+        "source_list": "0x56",
+        "HP": 1000,
+        "be_flag": "0x2002077",
+        "native_status": "0x20",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb464c0",
+        "id": 45,
+        "type": 0,
+        "source_list": "0x6d",
+        "HP": 1000,
+        "be_flag": "0x2002077",
+        "native_status": "0x20",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb456e0",
+        "id": 45,
+        "type": 0,
+        "source_list": "0x6c",
+        "HP": 1000,
+        "be_flag": "0x2002077",
+        "native_status": "0x28",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb34260",
+        "id": 67,
+        "type": 0,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x200686f",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb33480",
+        "id": 67,
+        "type": 0,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x200686f",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb304a0",
+        "id": 67,
+        "type": 3,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x200686f",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb2f6c0",
+        "id": 65,
+        "type": 1,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x2006867",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb2ace0",
+        "id": 65,
+        "type": 2,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x2002867",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb29180",
+        "id": 65,
+        "type": 2,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x2002867",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb283a0",
+        "id": 67,
+        "type": 3,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x200686f",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb25880",
+        "id": 65,
+        "type": 1,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x2006867",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb20ea0",
+        "id": 65,
+        "type": 2,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x2006867",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb1f340",
+        "id": 65,
+        "type": 2,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x2006867",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb1e560",
+        "id": 67,
+        "type": 3,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x200686f",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb1c000",
+        "id": 67,
+        "type": 3,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x200686f",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb19180",
+        "id": 67,
+        "type": 3,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x200686f",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb17ec0",
+        "id": 67,
+        "type": 0,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x200686f",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb170e0",
+        "id": 67,
+        "type": 3,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x200686f",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb14b00",
+        "id": 65,
+        "type": 1,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x2006867",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cb13d20",
+        "id": 65,
+        "type": 2,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x2006867",
+        "native_status": "0x822",
+        "source_active": true
+      },
+      {
+        "ptr": "0x8cabd2a0",
+        "id": 65,
+        "type": 1,
+        "source_list": "0xff",
+        "HP": 1000,
+        "be_flag": "0x2006867",
+        "native_status": "0x822",
+        "source_active": true
+      }
+    ],
+    "actor68_census": "No source-list0x68 actor in final full pAlive chain. Do not infer cause."
+  },
+  "save": {
+    "runtimeVMU_sha256": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "source009_unchanged": true,
+    "nativeCardSave_claim": false
+  },
+  "programme": {
+    "scope": "Exact014 programme/assets+screenshots identities; Flycast014 lever/intro execution PARTIAL, drain NOTcompleted, V5closurePASS. No sourcechecks/runtime/release/hardware conflation.",
+    "runtime_source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+    "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "programme_raw": {
+      "sha256": "78fb06976cc394ec6e4cb7861046c24a15f82ddf7bcb2fcbfd452d3fcbf72e33",
+      "size": 3643960
+    },
+    "image_sha256": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+    "binding_receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+    "actual_Flycast_EXE_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+    "assets": {
+      "bgm/aica_str.dat": {
+        "sha256": "17754bc809dd3401144e1c2e66e76d9cab541967ece38b989782a432a7c33add",
+        "size": 109187072
+      },
+      "dc/em2d.ovl": {
+        "sha256": "b5e2cc5414c3ae1344d9d4c6ce6f5b1781e85e0da23c20c4c52753db6dc23902",
+        "size": 68628
+      },
+      "dc/native/r205/ps2-world.ids": {
+        "sha256": "c28e35db3cb374de2351862ff5fa302656575670e65a3947747fe95d6044752f",
+        "size": 160
+      },
+      "dc/native/r205/ps2-world.r4pw": {
+        "sha256": "3d267102d065971daf3974ba657cf1d5f5f81b1a64383e88ad29d7742839633c",
+        "size": 13564
+      },
+      "dc/native/r205/ps2-world.re4mesh": {
+        "sha256": "358f3301b804a938541a1f848d82c366b3172e31bf68d3a7c08642bb7c428d0f",
+        "size": 888960
+      },
+      "dc/native/r205/registry.re4nmr": {
+        "sha256": "6afbcf24c02b57f24e3265ad224b272a2e53be3769eb236f72ef0dfc92f2b6c7",
+        "size": 222304
+      },
+      "dc/native/r205/room.r4rc": {
+        "sha256": "90cbaa2fdd564005773617155d2135353656a87eb941a3d4e352f44c0f54f74e",
+        "size": 34208
+      },
+      "dc/st2_1.ovl": {
+        "sha256": "53494d01f3e10e83eddf81f0e03c342f239c5220da0bfc687f1c366ca15b4410",
+        "size": 116100
+      },
+      "st2/r205.arc": {
+        "sha256": "e0be4a7b572cd8a1ed6ae0a4ca1582ea0e3bfcb0ca0d75294ac015a2638c6083",
+        "size": 1560032
+      }
+    },
+    "audit_sha256": "3d11567fb53bacab219cbdd97ac769285965894173e7633696d08cf81ef57062",
+    "state_sha256": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+    "Flycast_state_saved": true,
+    "native_CardSave_pass": false,
+    "main_visual": "Root inspecteddeadlinefb0 andconfirmedvisibleintrotext valve/drainage, noYesNo yet. Worker didnot attach/input/viewruntime.",
+    "native_intro_mdt0_identity": {
+      "scope": "Hash-only source MDT message0 identity; no text/content payload. Runtime must resolve MesData.lang+ptr1 through frozen getAddr and match whole source span before ordinaryYes.",
+      "arc_sha256": "e0be4a7b572cd8a1ed6ae0a4ca1582ea0e3bfcb0ca0d75294ac015a2638c6083",
+      "MDT_offset": 1500768,
+      "MDT_size": 1856,
+      "MDT_sha256": "31814df7f5c70edddf44fb1b94c2f17a8bcdf04d370db2097943fe57c226c7ac",
+      "languages": {
+        "0": {
+          "table_offset": 28,
+          "count": 4,
+          "message0_offset": 52,
+          "message0_end": 108,
+          "message0_bytes": 56,
+          "sha256": "6e7bd4a9d409a3acac9623fd7015f2457739288b99fdcb0c7a4b2c3e67ef7dec"
+        },
+        "1": {
+          "table_offset": 252,
+          "count": 4,
+          "message0_offset": 276,
+          "message0_end": 412,
+          "message0_bytes": 136,
+          "sha256": "81de22f3af7f69f5bf996eb294de0b236b4669e6e4464a46a5ecc0873d8787f2"
+        },
+        "2": {
+          "table_offset": 828,
+          "count": 4,
+          "message0_offset": 852,
+          "message0_end": 914,
+          "message0_bytes": 62,
+          "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+        },
+        "3": {
+          "table_offset": 1084,
+          "count": 4,
+          "message0_offset": 1108,
+          "message0_end": 1170,
+          "message0_bytes": 62,
+          "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+        },
+        "4": {
+          "table_offset": 1340,
+          "count": 4,
+          "message0_offset": 1364,
+          "message0_end": 1426,
+          "message0_bytes": 62,
+          "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+        },
+        "5": {
+          "table_offset": 1596,
+          "count": 4,
+          "message0_offset": 1620,
+          "message0_end": 1682,
+          "message0_bytes": 62,
+          "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+        }
+      }
+    }
+  },
+  "source_and_allocation_sha256": {
+    "observe-controlled-ch32-drain015.py": "acff6e46df7e0b8e5362966da7fd74e4fea3853083c6f4da5ec924ac06a40127",
+    "run-controlled-ch32-drain015.py": "471e05d515d70c931fbdaa25bd9c89dec0c6ef000926e6af26bda53e4fb4b2bb",
+    "run-controlled-ch32-drain015.sh": "89e34913194b2b5944da84fc0603896a72c20a0f6f37a9e9bc20182065bb0d22",
+    "controlled-ch32-drain015-pins.json": "cb3c62871def0f354e3236be64021a8835f5c4ca3bbd4016ead99f0ff2ff37a3",
+    "DRAIN015-ROOT-ALLOCATION.json": "ba288fafe5ce3a9203f583f47d67b5bd2ad80157308f2f8ee97354b529b22c73"
+  },
+  "raw_log_references": {
+    "controlled-drain015-observations.jsonl": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\controlled-drain015-observations.jsonl",
+      "sha256": "ec379fa3de2c652fbe106367c736c00fed22cdeef5c9719c0285ead72c79d887",
+      "bytes": 10475835
+    },
+    "run-output.txt": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\run-output.txt",
+      "sha256": "c665e93dca618feb224e98098a92ed3ef17d361b7dc8843eacd9b06481af3650",
+      "bytes": 154803
+    },
+    "controlled-drain015-observer-summary.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\controlled-drain015-observer-summary.json",
+      "sha256": "1560b80d1ee6e7f31a78eec6e46d9abf2ad084a90a51cc3b012461fb0d1a8385",
+      "bytes": 83685
+    },
+    "owned-resource-guard.json": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\owned-resource-guard.json",
+      "sha256": "f5c22c9a103eb4f82fe46185d17437d39ee33d17b92e9b2aff612e12f7f1972c",
+      "bytes": 159948
+    }
+  },
+  "screenshots": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-deadline-context\\controlled-context.json",
+      "sha256": "c98d8d56ebdd8d68ace127efa80fe39678f18ba7fec2da69b8484b4f61a23a2e",
+      "PNGs": [
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-deadline-context\\frames\\fb0.png",
+          "sha256": "1391e0a7526101f605cf29e7d812fb894768feda282306e8bd7b574781d0e98f"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-deadline-context\\frames\\fb1.png",
+          "sha256": "81a8473a11ef8974e652c2ecc3eff5ade14f9fffec5a8b12dd1fffe93cbfb1d6"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-inherited-original-drain-intro\\controlled-context.json",
+      "sha256": "b9ee980d3143d2628aae433ccfacb68b0979a1f775684cca6e4bee4f7b6bcc70",
+      "PNGs": [
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-inherited-original-drain-intro\\frames\\fb0.png",
+          "sha256": "aceb974381fbda1231add53b75b6acbcffc8dea9bcddf0106524bbddc1ca0212"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-inherited-original-drain-intro\\frames\\fb1.png",
+          "sha256": "0d45cffb25db380d37336d060aac2bbf23462828166161d0a3e26693df68bc87"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-original-drain-end\\controlled-context.json",
+      "sha256": "b0eca610084ccec99e408c6449fa5c636074f8974ae71234fcc06c548c311e31",
+      "PNGs": [
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-original-drain-end\\frames\\fb0.png",
+          "sha256": "2643db7420f80031f1f792a270d9e4fb5b31cced5233828a1d6355e93455e4a0"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-original-drain-end\\frames\\fb1.png",
+          "sha256": "80cbddd7280523460fc51b2759377b3cf6ab1ef22d058146e179fc173608c712"
+        }
+      ]
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-original-drain-prompt\\controlled-context.json",
+      "sha256": "0467918251f2c58a3a78bdd553055e2ee939879a788a9115da9a125f8e97a41c",
+      "PNGs": [
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-original-drain-prompt\\frames\\fb0.png",
+          "sha256": "eb217e017380efcf52c1a436adeef9218c748ef2d846b3c5f27f4cc559eaf398"
+        },
+        {
+          "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-drain015\\shots\\controlled-original-drain-prompt\\frames\\fb1.png",
+          "sha256": "becff1918c75b72ec3c7dc03fe3d7b2e713d1397058e32da2b67fcb0d94ec108"
+        }
+      ]
+    }
+  ],
+  "protected_inputs_fresh": {
+    "route-walk127/data/disc.state": "ec9ed07928efec777400317762bb1730a0644def73d610a1631c20381ca40e16",
+    "route-walk294/data/disc.state": "cb7a314b8fd0383af0b7baf17c2e87a712705beb122a1d39c7705553dd795258",
+    "route-walk-controlled-native-radio013/data/disc.state": "97b63602b83d6234a1603dc24a90fa42f2d0702db626ead2e4d4e5e20efafe13",
+    "route-walk-controlled-event009/data/T0000_vmu_save_A1.bin": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+    "route-walk-controlled-ch32-drain014/data/disc.state": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5"
+  },
+  "next": "No nextguest allocated. Root views PNG acceptance and decides next original route unit after this sealed result.",
+  "physical_or_release_acceptance": false,
+  "actual015_runtime_identities": {
+    "flycast.exe": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+    "emu.cfg": "6e6e65448d0d00944fe15caa197704d08b784c670d18b3a4cd76aa2a0ebcbc91",
+    "disc.gdi": "f6bfdec54334dc2eda713f3825f870ba17838b2b1e831e6b9dbe40b254c32ca4",
+    "fixture-warp.txt": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe"
+  },
+  "programme_identity_note": "Asset sidecar is preserved inherited014 context; exact unchanged master/programme/assets used for015 per runtime manifest and fresh actual015EXE hash. No new image or programme change."
+}

@@ -1,0 +1,3651 @@
+{
+  "scope": "CONTROLLED exact014-state continuation: ONE known native MDT0intro page-A, then actualYes and originaldrain/end; readonlymemory+ownedUI.",
+  "last": {
+    "process_age": 38.995596307795495,
+    "pg": 2352652060,
+    "frame": 1768,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x205",
+    "chapter": 7,
+    "Stop": "0x0",
+    "status0": "0x3080300",
+    "status1": "0x610",
+    "status3": "0x10000000",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "Key_on": "0x0",
+    "Key_trg": "0x0",
+    "live_native_code_anchors_verified": true,
+    "player_ptr": 2360067264,
+    "player_pos": [
+      46219.9765625,
+      995.83203125,
+      48606.0390625
+    ],
+    "player_matrix": [
+      1.0,
+      0.0,
+      0.0,
+      46219.9765625,
+      0.0,
+      1.0,
+      0.0,
+      995.83203125,
+      -0.0,
+      0.0,
+      1.0,
+      48606.0390625
+    ],
+    "transformed_front_unclipped": [
+      46219.9765625,
+      1245.83203125,
+      49156.0390625
+    ],
+    "areas": {
+      "0x3": {
+        "ptr": 2359897764,
+        "enabled": true,
+        "type": 2,
+        "checkFlag": 0,
+        "trigger": 129,
+        "checkType": 1,
+        "func": 2358315728,
+        "quad": [
+          [
+            25762.19140625,
+            15815.1953125
+          ],
+          [
+            31144.353515625,
+            15637.197265625
+          ],
+          [
+            31278.24609375,
+            22554.81640625
+          ],
+          [
+            25351.20703125,
+            22797.970703125
+          ]
+        ]
+      },
+      "0x7": {
+        "ptr": 2359898388,
+        "enabled": false,
+        "type": 11,
+        "checkFlag": 1,
+        "trigger": 2,
+        "checkType": 1,
+        "func": 0,
+        "quad": [
+          [
+            38875.15625,
+            45904.140625
+          ],
+          [
+            45147.671875,
+            45993.34375
+          ],
+          [
+            45192.2734375,
+            46884.27734375
+          ],
+          [
+            38959.7578125,
+            46823.16015625
+          ]
+        ]
+      },
+      "0x8": {
+        "ptr": 2359898544,
+        "enabled": false,
+        "type": 0,
+        "checkFlag": 1,
+        "trigger": 8,
+        "checkType": 1,
+        "func": 2358316008,
+        "quad": [
+          [
+            45540.140625,
+            48020.11328125
+          ],
+          [
+            46822.87890625,
+            48288.0625
+          ],
+          [
+            46672.7734375,
+            49480.07421875
+          ],
+          [
+            45438.375,
+            49360.9140625
+          ]
+        ]
+      },
+      "0x11": {
+        "ptr": 2359899948,
+        "enabled": true,
+        "type": 4,
+        "checkFlag": 1,
+        "trigger": 1,
+        "checkType": 1,
+        "func": 0,
+        "quad": [
+          [
+            46691.8828125,
+            29645.201171875
+          ],
+          [
+            48221.6953125,
+            29678.59765625
+          ],
+          [
+            48330.21875,
+            34515.73828125
+          ],
+          [
+            46830.21875,
+            34515.73828125
+          ]
+        ]
+      },
+      "0x15": {
+        "ptr": 2359900572,
+        "enabled": false,
+        "type": 5,
+        "checkFlag": 1,
+        "trigger": 8,
+        "checkType": 1,
+        "func": 0,
+        "quad": [
+          [
+            38853.25390625,
+            45648.61328125
+          ],
+          [
+            44805.1484375,
+            45729.62109375
+          ],
+          [
+            44883.6171875,
+            46276.36328125
+          ],
+          [
+            38875.5859375,
+            46137.47265625
+          ]
+        ]
+      },
+      "0x1b": {
+        "ptr": 2359901508,
+        "enabled": true,
+        "type": 2,
+        "checkFlag": 0,
+        "trigger": 129,
+        "checkType": 1,
+        "func": 2358315400,
+        "quad": [
+          [
+            41101.10546875,
+            52916.70703125
+          ],
+          [
+            43299.328125,
+            52966.4453125
+          ],
+          [
+            43000.08984375,
+            54445.12890625
+          ],
+          [
+            41101.10546875,
+            54416.70703125
+          ]
+        ]
+      }
+    },
+    "native_AEV08_collision_clipped_front_hit": false,
+    "native_AEV08_executed": false,
+    "action": {
+      "active": 0,
+      "stop_old": 0,
+      "num": 0,
+      "work": [
+        {
+          "func": 2350160700,
+          "arg": 2359898544,
+          "kind": 20,
+          "slot": 2,
+          "type": 2,
+          "button": 1,
+          "d": 2360067264,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        },
+        {
+          "func": 0,
+          "arg": 0,
+          "kind": 0,
+          "slot": 0,
+          "type": 0,
+          "button": 0,
+          "d": 0,
+          "flags": 0
+        }
+      ]
+    },
+    "saved_RSF205": 3254779904,
+    "message0": {
+      "vptr": 2351752556,
+      "be_flag": 0,
+      "flags2": 2,
+      "routines": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "wait": 0,
+      "button": 1,
+      "attribute": 4114,
+      "text": 2359908730,
+      "table_size": 2,
+      "selection": 1,
+      "current": 0
+    },
+    "message0_source_identity": null,
+    "actors": [
+      {
+        "ptr": "0x8cd251a0",
+        "id": 45,
+        "type": 0,
+        "source_list": 87,
+        "hp": 1000,
+        "native_status": "0x20",
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "ptr": "0x8cd243c0",
+        "id": 45,
+        "type": 0,
+        "source_list": 86,
+        "hp": 1000,
+        "native_status": "0x20",
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "ptr": "0x8cd230a0",
+        "id": 77,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002067",
+        "routines": [
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cd222c0",
+        "id": 77,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002067",
+        "routines": [
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cd21000",
+        "id": 77,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002067",
+        "routines": [
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cd20220",
+        "id": 77,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2002067",
+        "routines": [
+          1,
+          1,
+          0,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb464c0",
+        "id": 45,
+        "type": 0,
+        "source_list": 109,
+        "hp": 1000,
+        "native_status": "0x20",
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      {
+        "ptr": "0x8cb456e0",
+        "id": 45,
+        "type": 0,
+        "source_list": 108,
+        "hp": 1000,
+        "native_status": "0x28",
+        "be_flag": "0x2002077",
+        "routines": [
+          1,
+          39,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb34260",
+        "id": 67,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb33480",
+        "id": 67,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb304a0",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb2f6c0",
+        "id": 65,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb2e400",
+        "id": 71,
+        "type": 2,
+        "source_list": 255,
+        "hp": 1,
+        "native_status": "0x802",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb2d620",
+        "id": 71,
+        "type": 2,
+        "source_list": 255,
+        "hp": 1,
+        "native_status": "0x802",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb2bac0",
+        "id": 71,
+        "type": 2,
+        "source_list": 255,
+        "hp": 1,
+        "native_status": "0x802",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb2ace0",
+        "id": 65,
+        "type": 2,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          7,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb29180",
+        "id": 65,
+        "type": 2,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2002867",
+        "routines": [
+          1,
+          7,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb283a0",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb26660",
+        "id": 71,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb25880",
+        "id": 65,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb245c0",
+        "id": 71,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb237e0",
+        "id": 71,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb21c80",
+        "id": 71,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb20ea0",
+        "id": 65,
+        "type": 2,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb1f340",
+        "id": 65,
+        "type": 2,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb1e560",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb1c000",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb1b220",
+        "id": 71,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb19f60",
+        "id": 71,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x802",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb19180",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb17ec0",
+        "id": 67,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb170e0",
+        "id": 67,
+        "type": 3,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x200686f",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb14b00",
+        "id": 65,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cb13d20",
+        "id": 65,
+        "type": 2,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cabd2a0",
+        "id": 65,
+        "type": 1,
+        "source_list": 255,
+        "hp": 1000,
+        "native_status": "0x822",
+        "be_flag": "0x2006867",
+        "routines": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "ptr": "0x8cabc4c0",
+        "id": 0,
+        "type": 0,
+        "source_list": 255,
+        "hp": 1440,
+        "native_status": "0x0",
+        "be_flag": "0xb002077",
+        "routines": [
+          0,
+          0,
+          1,
+          1
+        ]
+      }
+    ],
+    "source68_active_observed": false
+  },
+  "events": [
+    {
+      "inherited014_native_intro": true,
+      "source_state_sha256": "3713cb2a4442ec5ddbf3dc4aec8dff107aa66721913e75813858c326a820adc5",
+      "no_new_lever_input": true,
+      "no_rearm": true
+    },
+    {
+      "live_frozen_maincode_anchors": [
+        {
+          "address": "0x8c04bd30",
+          "bytes": 32,
+          "sha256": "50e7e906b1c61dcf502215a4f8de7a06ca0b5ab10cc8c319c93bfab45fc25c61"
+        },
+        {
+          "address": "0x8c087974",
+          "bytes": 32,
+          "sha256": "0eff3f56fdff82c90140058928eb241a6138e3aaf721502c22b82179b90470b7"
+        },
+        {
+          "address": "0x8c110f0c",
+          "bytes": 32,
+          "sha256": "9a24efd20e46ca5cb2030775c0b94a46a5ca477062bda114b1625caccda193ea"
+        },
+        {
+          "address": "0x8c14f0fc",
+          "bytes": 32,
+          "sha256": "503cc45e61da66176f9cf4ce66837adedb4ec6953fb8dfb33022c6fd09797ecb"
+        },
+        {
+          "address": "0x8c2ce564",
+          "bytes": 32,
+          "sha256": "a2187979d8530bba62e6a8382f1f30ad291f85d57b084ccd65a4397b03245b90"
+        }
+      ],
+      "process_age": 0.8075963077717461
+    },
+    {
+      "immediate_input_recheck": "advance-intro-A",
+      "row": {
+        "process_age": 1.0425963077577762,
+        "pg": 2352652060,
+        "frame": 632,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x205",
+        "chapter": 7,
+        "Stop": "0x80400100",
+        "status0": "0x3081300",
+        "status1": "0x10000630",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2360067264,
+        "player_pos": [
+          46215.3203125,
+          995.8291625976562,
+          48610.81640625
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          46215.3203125,
+          0.0,
+          1.0,
+          0.0,
+          995.8291625976562,
+          -0.0,
+          0.0,
+          1.0,
+          48610.81640625
+        ],
+        "transformed_front_unclipped": [
+          46215.3203125,
+          1245.8291625976562,
+          49160.81640625
+        ],
+        "areas": {
+          "0x3": {
+            "ptr": 2359897764,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315728,
+            "quad": [
+              [
+                25762.19140625,
+                15815.1953125
+              ],
+              [
+                31144.353515625,
+                15637.197265625
+              ],
+              [
+                31278.24609375,
+                22554.81640625
+              ],
+              [
+                25351.20703125,
+                22797.970703125
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359898388,
+            "enabled": true,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                38875.15625,
+                45904.140625
+              ],
+              [
+                45147.671875,
+                45993.34375
+              ],
+              [
+                45192.2734375,
+                46884.27734375
+              ],
+              [
+                38959.7578125,
+                46823.16015625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359898544,
+            "enabled": true,
+            "type": 0,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2358316008,
+            "quad": [
+              [
+                45540.140625,
+                48020.11328125
+              ],
+              [
+                46822.87890625,
+                48288.0625
+              ],
+              [
+                46672.7734375,
+                49480.07421875
+              ],
+              [
+                45438.375,
+                49360.9140625
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359899948,
+            "enabled": false,
+            "type": 4,
+            "checkFlag": 1,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                46691.8828125,
+                29645.201171875
+              ],
+              [
+                48221.6953125,
+                29678.59765625
+              ],
+              [
+                48330.21875,
+                34515.73828125
+              ],
+              [
+                46830.21875,
+                34515.73828125
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359900572,
+            "enabled": true,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                38853.25390625,
+                45648.61328125
+              ],
+              [
+                44805.1484375,
+                45729.62109375
+              ],
+              [
+                44883.6171875,
+                46276.36328125
+              ],
+              [
+                38875.5859375,
+                46137.47265625
+              ]
+            ]
+          },
+          "0x1b": {
+            "ptr": 2359901508,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                41101.10546875,
+                52916.70703125
+              ],
+              [
+                43299.328125,
+                52966.4453125
+              ],
+              [
+                43000.08984375,
+                54445.12890625
+              ],
+              [
+                41101.10546875,
+                54416.70703125
+              ]
+            ]
+          }
+        },
+        "native_AEV08_collision_clipped_front_hit": true,
+        "native_AEV08_executed": true,
+        "action": {
+          "active": 0,
+          "stop_old": 1,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350160700,
+              "arg": 2359898544,
+              "kind": 20,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 0,
+        "message0": {
+          "vptr": 2351752556,
+          "be_flag": 1,
+          "flags2": 1,
+          "routines": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "wait": 0,
+          "button": 1,
+          "attribute": 4114,
+          "text": 2359908670,
+          "table_size": 0,
+          "selection": 0,
+          "current": 0
+        },
+        "message0_source_identity": {
+          "language": 1,
+          "room_table": "0x8ca957e0",
+          "message_no": 0,
+          "start": "0x8ca958f4",
+          "end": "0x8ca9597c",
+          "sha256": "81de22f3af7f69f5bf996eb294de0b236b4669e6e4464a46a5ecc0873d8787f2",
+          "current_offset_bytes": 74,
+          "opcode": 8,
+          "next_opcode": 4
+        },
+        "actors": [
+          {
+            "ptr": "0x8cd251a0",
+            "id": 45,
+            "type": 0,
+            "source_list": 87,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd243c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 86,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd230a0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd222c0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd21000",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd20220",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb464c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 109,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cb456e0",
+            "id": 45,
+            "type": 0,
+            "source_list": 108,
+            "hp": 1000,
+            "native_status": "0x28",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              39,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb34260",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb33480",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb304a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2f6c0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2e400",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2d620",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2bac0",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2ace0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb29180",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb283a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb26660",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb25880",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb245c0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb237e0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb21c80",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb20ea0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1f340",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1e560",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1c000",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1b220",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19f60",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19180",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb17ec0",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb170e0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb14b00",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb13d20",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabd2a0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabc4c0",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xf002077",
+            "routines": [
+              5,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      }
+    },
+    {
+      "ordinary_owned_UI_pulse": "advance-intro-A",
+      "seconds": 0.2,
+      "ack_observations": [
+        {
+          "frame": 632,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 633,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 633,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 633,
+          "Key_trg": "0x80080000"
+        },
+        {
+          "frame": 634,
+          "Key_trg": "0x80080000"
+        },
+        {
+          "frame": 634,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 635,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 635,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 635,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 636,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 637,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 637,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 637,
+          "Key_trg": "0x0"
+        }
+      ],
+      "process_age": 1.2455963077954948
+    },
+    {
+      "immediate_input_recheck": "confirm-Yes",
+      "row": {
+        "process_age": 1.7765963077545166,
+        "pg": 2352652060,
+        "frame": 654,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x205",
+        "chapter": 7,
+        "Stop": "0x80400100",
+        "status0": "0x3081300",
+        "status1": "0x18000610",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2360067264,
+        "player_pos": [
+          46215.3203125,
+          995.8291625976562,
+          48610.81640625
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          46215.3203125,
+          0.0,
+          1.0,
+          0.0,
+          995.8291625976562,
+          -0.0,
+          0.0,
+          1.0,
+          48610.81640625
+        ],
+        "transformed_front_unclipped": [
+          46215.3203125,
+          1245.8291625976562,
+          49160.81640625
+        ],
+        "areas": {
+          "0x3": {
+            "ptr": 2359897764,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315728,
+            "quad": [
+              [
+                25762.19140625,
+                15815.1953125
+              ],
+              [
+                31144.353515625,
+                15637.197265625
+              ],
+              [
+                31278.24609375,
+                22554.81640625
+              ],
+              [
+                25351.20703125,
+                22797.970703125
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359898388,
+            "enabled": true,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                38875.15625,
+                45904.140625
+              ],
+              [
+                45147.671875,
+                45993.34375
+              ],
+              [
+                45192.2734375,
+                46884.27734375
+              ],
+              [
+                38959.7578125,
+                46823.16015625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359898544,
+            "enabled": true,
+            "type": 0,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2358316008,
+            "quad": [
+              [
+                45540.140625,
+                48020.11328125
+              ],
+              [
+                46822.87890625,
+                48288.0625
+              ],
+              [
+                46672.7734375,
+                49480.07421875
+              ],
+              [
+                45438.375,
+                49360.9140625
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359899948,
+            "enabled": false,
+            "type": 4,
+            "checkFlag": 1,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                46691.8828125,
+                29645.201171875
+              ],
+              [
+                48221.6953125,
+                29678.59765625
+              ],
+              [
+                48330.21875,
+                34515.73828125
+              ],
+              [
+                46830.21875,
+                34515.73828125
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359900572,
+            "enabled": true,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                38853.25390625,
+                45648.61328125
+              ],
+              [
+                44805.1484375,
+                45729.62109375
+              ],
+              [
+                44883.6171875,
+                46276.36328125
+              ],
+              [
+                38875.5859375,
+                46137.47265625
+              ]
+            ]
+          },
+          "0x1b": {
+            "ptr": 2359901508,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                41101.10546875,
+                52916.70703125
+              ],
+              [
+                43299.328125,
+                52966.4453125
+              ],
+              [
+                43000.08984375,
+                54445.12890625
+              ],
+              [
+                41101.10546875,
+                54416.70703125
+              ]
+            ]
+          }
+        },
+        "native_AEV08_collision_clipped_front_hit": true,
+        "native_AEV08_executed": true,
+        "action": {
+          "active": 0,
+          "stop_old": 1,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350160700,
+              "arg": 2359898544,
+              "kind": 20,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 0,
+        "message0": {
+          "vptr": 2351752556,
+          "be_flag": 1,
+          "flags2": 1,
+          "routines": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "wait": 0,
+          "button": 1,
+          "attribute": 4114,
+          "text": 2359908728,
+          "table_size": 2,
+          "selection": 0,
+          "current": 0
+        },
+        "message0_source_identity": {
+          "language": 1,
+          "room_table": "0x8ca957e0",
+          "message_no": 0,
+          "start": "0x8ca958f4",
+          "end": "0x8ca9597c",
+          "sha256": "81de22f3af7f69f5bf996eb294de0b236b4669e6e4464a46a5ecc0873d8787f2",
+          "current_offset_bytes": 132,
+          "opcode": 8,
+          "next_opcode": 1
+        },
+        "actors": [
+          {
+            "ptr": "0x8cd251a0",
+            "id": 45,
+            "type": 0,
+            "source_list": 87,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd243c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 86,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd230a0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd222c0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd21000",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd20220",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb464c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 109,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cb456e0",
+            "id": 45,
+            "type": 0,
+            "source_list": 108,
+            "hp": 1000,
+            "native_status": "0x28",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              39,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb34260",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb33480",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb304a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2f6c0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2e400",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2d620",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2bac0",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2ace0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb29180",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb283a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb26660",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb25880",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb245c0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb237e0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb21c80",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb20ea0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1f340",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1e560",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1c000",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1b220",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19f60",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19180",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb17ec0",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb170e0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb14b00",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb13d20",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabd2a0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabc4c0",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xf002077",
+            "routines": [
+              5,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      }
+    },
+    {
+      "ordinary_owned_UI_pulse": "confirm-Yes",
+      "seconds": 0.2,
+      "ack_observations": [
+        {
+          "frame": 654,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 654,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 655,
+          "Key_trg": "0x80080000"
+        },
+        {
+          "frame": 656,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 656,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 656,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 657,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 657,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 658,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 658,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 658,
+          "Key_trg": "0x0"
+        },
+        {
+          "frame": 659,
+          "Key_trg": "0x0"
+        }
+      ],
+      "process_age": 1.9795963077922352
+    },
+    {
+      "original_drain_end_observed": {
+        "process_age": 9.979596307792235,
+        "pg": 2352652060,
+        "frame": 899,
+        "phase": [
+          3,
+          0
+        ],
+        "room": "0x205",
+        "chapter": 7,
+        "Stop": "0x0",
+        "status0": "0x3080300",
+        "status1": "0x610",
+        "status3": "0x0",
+        "health": [
+          1440,
+          1440,
+          600,
+          600
+        ],
+        "Key_on": "0x0",
+        "Key_trg": "0x0",
+        "live_native_code_anchors_verified": true,
+        "player_ptr": 2360067264,
+        "player_pos": [
+          46215.3203125,
+          995.8291625976562,
+          48610.81640625
+        ],
+        "player_matrix": [
+          1.0,
+          0.0,
+          0.0,
+          46215.3203125,
+          0.0,
+          1.0,
+          0.0,
+          995.8291625976562,
+          -0.0,
+          0.0,
+          1.0,
+          48610.81640625
+        ],
+        "transformed_front_unclipped": [
+          46215.3203125,
+          1245.8291625976562,
+          49160.81640625
+        ],
+        "areas": {
+          "0x3": {
+            "ptr": 2359897764,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315728,
+            "quad": [
+              [
+                25762.19140625,
+                15815.1953125
+              ],
+              [
+                31144.353515625,
+                15637.197265625
+              ],
+              [
+                31278.24609375,
+                22554.81640625
+              ],
+              [
+                25351.20703125,
+                22797.970703125
+              ]
+            ]
+          },
+          "0x7": {
+            "ptr": 2359898388,
+            "enabled": false,
+            "type": 11,
+            "checkFlag": 1,
+            "trigger": 2,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                38875.15625,
+                45904.140625
+              ],
+              [
+                45147.671875,
+                45993.34375
+              ],
+              [
+                45192.2734375,
+                46884.27734375
+              ],
+              [
+                38959.7578125,
+                46823.16015625
+              ]
+            ]
+          },
+          "0x8": {
+            "ptr": 2359898544,
+            "enabled": false,
+            "type": 0,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 2358316008,
+            "quad": [
+              [
+                45540.140625,
+                48020.11328125
+              ],
+              [
+                46822.87890625,
+                48288.0625
+              ],
+              [
+                46672.7734375,
+                49480.07421875
+              ],
+              [
+                45438.375,
+                49360.9140625
+              ]
+            ]
+          },
+          "0x11": {
+            "ptr": 2359899948,
+            "enabled": true,
+            "type": 4,
+            "checkFlag": 1,
+            "trigger": 1,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                46691.8828125,
+                29645.201171875
+              ],
+              [
+                48221.6953125,
+                29678.59765625
+              ],
+              [
+                48330.21875,
+                34515.73828125
+              ],
+              [
+                46830.21875,
+                34515.73828125
+              ]
+            ]
+          },
+          "0x15": {
+            "ptr": 2359900572,
+            "enabled": false,
+            "type": 5,
+            "checkFlag": 1,
+            "trigger": 8,
+            "checkType": 1,
+            "func": 0,
+            "quad": [
+              [
+                38853.25390625,
+                45648.61328125
+              ],
+              [
+                44805.1484375,
+                45729.62109375
+              ],
+              [
+                44883.6171875,
+                46276.36328125
+              ],
+              [
+                38875.5859375,
+                46137.47265625
+              ]
+            ]
+          },
+          "0x1b": {
+            "ptr": 2359901508,
+            "enabled": true,
+            "type": 2,
+            "checkFlag": 0,
+            "trigger": 129,
+            "checkType": 1,
+            "func": 2358315400,
+            "quad": [
+              [
+                41101.10546875,
+                52916.70703125
+              ],
+              [
+                43299.328125,
+                52966.4453125
+              ],
+              [
+                43000.08984375,
+                54445.12890625
+              ],
+              [
+                41101.10546875,
+                54416.70703125
+              ]
+            ]
+          }
+        },
+        "native_AEV08_collision_clipped_front_hit": true,
+        "native_AEV08_executed": true,
+        "action": {
+          "active": 0,
+          "stop_old": 1,
+          "num": 0,
+          "work": [
+            {
+              "func": 2350160700,
+              "arg": 2359898544,
+              "kind": 20,
+              "slot": 2,
+              "type": 2,
+              "button": 1,
+              "d": 2360067264,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            },
+            {
+              "func": 0,
+              "arg": 0,
+              "kind": 0,
+              "slot": 0,
+              "type": 0,
+              "button": 0,
+              "d": 0,
+              "flags": 0
+            }
+          ]
+        },
+        "saved_RSF205": 3254779904,
+        "message0": {
+          "vptr": 2351752556,
+          "be_flag": 0,
+          "flags2": 2,
+          "routines": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "wait": 0,
+          "button": 1,
+          "attribute": 4114,
+          "text": 2359908730,
+          "table_size": 2,
+          "selection": 1,
+          "current": 0
+        },
+        "message0_source_identity": null,
+        "actors": [
+          {
+            "ptr": "0x8cd251a0",
+            "id": 45,
+            "type": 0,
+            "source_list": 87,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd243c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 86,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cd230a0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd222c0",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd21000",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cd20220",
+            "id": 77,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2002067",
+            "routines": [
+              1,
+              1,
+              0,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb464c0",
+            "id": 45,
+            "type": 0,
+            "source_list": 109,
+            "hp": 1000,
+            "native_status": "0x20",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              1,
+              1,
+              1
+            ]
+          },
+          {
+            "ptr": "0x8cb456e0",
+            "id": 45,
+            "type": 0,
+            "source_list": 108,
+            "hp": 1000,
+            "native_status": "0x28",
+            "be_flag": "0x2002077",
+            "routines": [
+              1,
+              39,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb34260",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb33480",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb304a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2f6c0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2e400",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2d620",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2bac0",
+            "id": 71,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb2ace0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb29180",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2002867",
+            "routines": [
+              1,
+              7,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb283a0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb26660",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb25880",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb245c0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb237e0",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb21c80",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb20ea0",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1f340",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1e560",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1c000",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb1b220",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19f60",
+            "id": 71,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x802",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb19180",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb17ec0",
+            "id": 67,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb170e0",
+            "id": 67,
+            "type": 3,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x200686f",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb14b00",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cb13d20",
+            "id": 65,
+            "type": 2,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabd2a0",
+            "id": 65,
+            "type": 1,
+            "source_list": 255,
+            "hp": 1000,
+            "native_status": "0x822",
+            "be_flag": "0x2006867",
+            "routines": [
+              1,
+              0,
+              1,
+              0
+            ]
+          },
+          {
+            "ptr": "0x8cabc4c0",
+            "id": 0,
+            "type": 0,
+            "source_list": 255,
+            "hp": 1440,
+            "native_status": "0x0",
+            "be_flag": "0xb202077",
+            "routines": [
+              0,
+              0,
+              0,
+              1
+            ]
+          }
+        ],
+        "source68_active_observed": false
+      },
+      "actor68_active": false,
+      "absent_actor_does_not_prove_held": true
+    },
+    {
+      "exact_owned_WM_CLOSE": true,
+      "process_age": 39.02659630775452
+    }
+  ],
+  "owned_close_sent": true,
+  "source_fields_not_acceptance_alone": true
+}
