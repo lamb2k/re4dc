@@ -1,0 +1,34 @@
+{
+  "root-allocation.json": {
+    "bytes": 1624,
+    "sha256": "9e66f1158c063084a464f5f9e5ecc10236c35a76ef1418b2ea32c09436e1f9d4"
+  },
+  ".gitattributes": {
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  "RESULT.md": {
+    "bytes": 2316,
+    "sha256": "c6eda472e71e516448ee49c06923e908ff775b2feaef70dde654e0d272a37260"
+  },
+  "checkpoint.json": {
+    "bytes": 3022,
+    "sha256": "c61d68c940e1ee3fd72446ae066ee28bbf32eda9959ea4e5ea6f08f33c0a0d4d"
+  },
+  "observed-acceptance.json": {
+    "bytes": 58750,
+    "sha256": "c5fcc6141cca426099e1fc34537edfeb522987c8c8a7814059afa150b279b83e"
+  },
+  "launch.json": {
+    "bytes": 2261,
+    "sha256": "326d9951f352964db689b9f301930a363ff23f8f93b255aa8a02132f52f63c47"
+  },
+  "independent-review.json": {
+    "bytes": 25630,
+    "sha256": "e7629de7e4d2dd3d9a0baa749597e570757b98fc7546ffa7ed73a7a9eb7609df"
+  },
+  "qualification.json": {
+    "bytes": 95488,
+    "sha256": "a46f87ab02469a2504c525aedb19ebbe73da9ba5b1ab7519c23866f9cbb31afb"
+  }
+}

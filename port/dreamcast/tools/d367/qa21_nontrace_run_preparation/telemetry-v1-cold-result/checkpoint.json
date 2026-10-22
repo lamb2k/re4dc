@@ -1,0 +1,89 @@
+{
+  "format_version": 1,
+  "scope": "Unedited ordinary-controller route continuation; not a natural no-warp release route",
+  "input": {
+    "files": {
+      "disc.gdi": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+      "track01.bin": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+      "track02.raw": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "track03.iso": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f"
+    },
+    "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b"
+  },
+  "emulator_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+  "data": {
+    "dc_nvmem.bin": {
+      "bytes": 131072,
+      "sha256": "4a598599e9d376573354e4e76879decea8fcd1f7d01a0d97f9365ca6b937d311"
+    },
+    "disc.state": {
+      "bytes": 9273760,
+      "sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75"
+    },
+    "dx11_shader_cache.bin": {
+      "bytes": 52224,
+      "sha256": "2892cce6e64f82dbc9c251b6d3bb844ddb8ba7be38fe9bfa09402771b27ca303"
+    },
+    "T0000_vmu_save_A1.bin": {
+      "bytes": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "vmu_save_A2.bin": {
+      "bytes": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    }
+  },
+  "audit": {
+    "state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+    "state_bytes": 9273760,
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "decoded_bytes": 28274510,
+    "ram_serialization_offset": 11490769,
+    "immutable_anchors": [
+      {
+        "address": "0x8c014000",
+        "bytes": 256,
+        "sha256": "e02ebee59ecd8990d3619d9d34cf98672c6261f206b9dadbba3f4b1dceda4650"
+      },
+      {
+        "address": "0x8c050000",
+        "bytes": 256,
+        "sha256": "7c85749186f81547f95f3fc105b533ab5adeac8ac2e37ceba42dc32a26fb7d54"
+      },
+      {
+        "address": "0x8c110000",
+        "bytes": 256,
+        "sha256": "8596b92764a701d1b0686d3d9ada950a06385df8ad0c28c059af3b5226153c0a"
+      },
+      {
+        "address": "0x8c190000",
+        "bytes": 256,
+        "sha256": "05bbac539b83bf0233b20f0c4424165c5d38ea872056d1cbc3e7cdf8716170e2"
+      }
+    ],
+    "log_head": 169995,
+    "room": 259,
+    "frame": 533,
+    "stop": 0,
+    "player_life": 1200,
+    "player_life_max": 1200,
+    "player_pos": [
+      -47630.48046875,
+      58.71270751953125,
+      7032.71826171875
+    ],
+    "player_rno": [
+      0,
+      0,
+      1,
+      0
+    ],
+    "event_start_cnt": 0,
+    "qa_flags": 0,
+    "memory_edits": false
+  },
+  "parent": null,
+  "inputs_sha256": "baf86bac00d05b2d52f751ab53f09f5047bc9682072e2c628d897b559a9ce385",
+  "state_edits": false
+}

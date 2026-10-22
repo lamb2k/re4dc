@@ -1,0 +1,3316 @@
+{
+  "qualified": true,
+  "actual_guest_seconds": 41.7446011,
+  "input_release_before41": true,
+  "identity": {
+    "pid": 47900,
+    "start_filetime": 134371165481479670,
+    "path": "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\flycast.exe"
+  },
+  "process_telemetry": {
+    "available": true,
+    "identity": {
+      "pid": 47900,
+      "start_filetime": 134371165481479670,
+      "path": "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\flycast.exe"
+    },
+    "creation_filetime": 134371165481479670,
+    "exit_filetime": 134371165898925681,
+    "kernel_100ns": 21718750,
+    "user_100ns": 93750000,
+    "actual_guest_seconds": 41.7446011,
+    "exit_code": 0,
+    "source": "retained verified handle after private job stop/waits, before handle closure; pinned live path, signaled exit"
+  },
+  "final_resources": {
+    "available": true,
+    "free_C_bytes": 39190511616,
+    "charged_evidence_bytes": 27002002,
+    "global_flycast_count": 0,
+    "runtime_floor": 19394461696,
+    "evidence_cap": 60000000,
+    "global_limit": 16,
+    "phase": "after owned stop/waits and private-job empty check, before handle close"
+  },
+  "scope": "automatic source/runtime gates only; PNG visual review/Continue/ordinary gameplay remain separately observed acceptance",
+  "tools_sha256": "0b12c09410599ee55c96d49875dadf5236b210ef8d8267cc0d7aaa82ad921bfd",
+  "cinematic_visual_review": false,
+  "Continue_acceptance": false,
+  "started_utc": "2026-10-22T04:22:27.495860+00:00",
+  "mode": "cold-shoot01",
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "preflight_disc": {
+    "disc.gdi": {
+      "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+      "bytes": 83
+    },
+    "track01.bin": {
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+      "bytes": 1058400
+    },
+    "track02.raw": {
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "bytes": 1237152
+    },
+    "track03.iso": {
+      "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+      "bytes": 1032499200
+    }
+  },
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "image_sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+  "memory_writes": false,
+  "retry": false,
+  "postflight_resource_last": {
+    "free_C_bytes": 39275376640,
+    "charged_evidence_bytes": 27097297,
+    "global_flycast_count": 0
+  },
+  "postflight_disc": {
+    "disc.gdi": {
+      "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+      "bytes": 83
+    },
+    "track01.bin": {
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+      "bytes": 1058400
+    },
+    "track02.raw": {
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "bytes": 1237152
+    },
+    "track03.iso": {
+      "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+      "bytes": 1032499200
+    }
+  },
+  "inner": {
+    "mode": "cold-shoot01",
+    "checkpoint_parent": null,
+    "source_only_prior_tests": true,
+    "memory_writes": false,
+    "inputs": [
+      {
+        "key": "down",
+        "up": false,
+        "guest_s": 3.5775258,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 3.7660000000032596,
+          "observed_monotonic": 392217.312,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392217.328,
+              "after_monotonic": 392217.328,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392217.328,
+              "after_monotonic": 392217.328,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392217.328,
+              "after_monotonic": 392217.328,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392217.328,
+              "after_monotonic": 392217.328,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392217.328,
+              "after_monotonic": 392217.328,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "down",
+        "up": true,
+        "guest_s": 3.7123261,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 3.7660000000032596,
+          "observed_monotonic": 392217.312,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392217.453,
+              "after_monotonic": 392217.453,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392217.453,
+              "after_monotonic": 392217.453,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392217.453,
+              "after_monotonic": 392217.453,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392217.453,
+              "after_monotonic": 392217.453,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392217.453,
+              "after_monotonic": 392217.453,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": false,
+        "guest_s": 4.2381168,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 4.407000000006519,
+          "observed_monotonic": 392217.953,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392217.984,
+              "after_monotonic": 392217.984,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392217.984,
+              "after_monotonic": 392217.984,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392217.984,
+              "after_monotonic": 392217.984,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392217.984,
+              "after_monotonic": 392217.984,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392217.984,
+              "after_monotonic": 392217.984,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": true,
+        "guest_s": 4.3824985,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 4.407000000006519,
+          "observed_monotonic": 392217.953,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392218.125,
+              "after_monotonic": 392218.125,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392218.125,
+              "after_monotonic": 392218.125,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392218.125,
+              "after_monotonic": 392218.125,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392218.125,
+              "after_monotonic": 392218.125,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392218.125,
+              "after_monotonic": 392218.125,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": false,
+        "guest_s": 4.8985623,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 5.063000000023749,
+          "observed_monotonic": 392218.609,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392218.64,
+              "after_monotonic": 392218.64,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392218.64,
+              "after_monotonic": 392218.64,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392218.64,
+              "after_monotonic": 392218.64,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392218.64,
+              "after_monotonic": 392218.64,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392218.64,
+              "after_monotonic": 392218.64,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": true,
+        "guest_s": 5.03644,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 5.063000000023749,
+          "observed_monotonic": 392218.609,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392218.781,
+              "after_monotonic": 392218.781,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392218.781,
+              "after_monotonic": 392218.781,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392218.781,
+              "after_monotonic": 392218.781,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392218.781,
+              "after_monotonic": 392218.781,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392218.781,
+              "after_monotonic": 392218.781,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "down",
+        "up": false,
+        "guest_s": 6.0837786,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 6.282000000006519,
+          "observed_monotonic": 392219.828,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392219.828,
+              "after_monotonic": 392219.828,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392219.828,
+              "after_monotonic": 392219.828,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392219.828,
+              "after_monotonic": 392219.828,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392219.828,
+              "after_monotonic": 392219.828,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392219.828,
+              "after_monotonic": 392219.828,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "down",
+        "up": true,
+        "guest_s": 6.224378,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 6.282000000006519,
+          "observed_monotonic": 392219.828,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392219.968,
+              "after_monotonic": 392219.968,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392219.968,
+              "after_monotonic": 392219.968,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392219.968,
+              "after_monotonic": 392219.968,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392219.968,
+              "after_monotonic": 392219.968,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392219.968,
+              "after_monotonic": 392219.968,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "down",
+        "up": false,
+        "guest_s": 7.2542443,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 7.454000000027008,
+          "observed_monotonic": 392221.0,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392221.0,
+              "after_monotonic": 392221.0,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392221.0,
+              "after_monotonic": 392221.0,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392221.0,
+              "after_monotonic": 392221.0,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392221.0,
+              "after_monotonic": 392221.0,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392221.0,
+              "after_monotonic": 392221.0,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "down",
+        "up": true,
+        "guest_s": 7.3932981,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 7.454000000027008,
+          "observed_monotonic": 392221.0,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392221.14,
+              "after_monotonic": 392221.14,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392221.14,
+              "after_monotonic": 392221.14,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392221.14,
+              "after_monotonic": 392221.14,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392221.14,
+              "after_monotonic": 392221.14,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392221.14,
+              "after_monotonic": 392221.14,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "down",
+        "up": false,
+        "guest_s": 8.4177423,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 8.594000000040978,
+          "observed_monotonic": 392222.14,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392222.156,
+              "after_monotonic": 392222.156,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392222.156,
+              "after_monotonic": 392222.156,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392222.156,
+              "after_monotonic": 392222.156,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392222.156,
+              "after_monotonic": 392222.156,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392222.156,
+              "after_monotonic": 392222.156,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "down",
+        "up": true,
+        "guest_s": 8.5508079,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 8.594000000040978,
+          "observed_monotonic": 392222.14,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392222.296,
+              "after_monotonic": 392222.296,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392222.296,
+              "after_monotonic": 392222.296,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392222.296,
+              "after_monotonic": 392222.296,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392222.296,
+              "after_monotonic": 392222.296,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392222.296,
+              "after_monotonic": 392222.296,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "down",
+        "up": false,
+        "guest_s": 9.5939508,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 9.78200000000652,
+          "observed_monotonic": 392223.328,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392223.343,
+              "after_monotonic": 392223.343,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392223.343,
+              "after_monotonic": 392223.343,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392223.343,
+              "after_monotonic": 392223.343,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392223.343,
+              "after_monotonic": 392223.343,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392223.343,
+              "after_monotonic": 392223.343,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "down",
+        "up": true,
+        "guest_s": 9.7320935,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 9.78200000000652,
+          "observed_monotonic": 392223.328,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392223.484,
+              "after_monotonic": 392223.484,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392223.484,
+              "after_monotonic": 392223.484,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392223.484,
+              "after_monotonic": 392223.484,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392223.484,
+              "after_monotonic": 392223.484,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392223.484,
+              "after_monotonic": 392223.484,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": false,
+        "guest_s": 10.7579016,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 10.922000000020489,
+          "observed_monotonic": 392224.468,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392224.5,
+              "after_monotonic": 392224.5,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392224.5,
+              "after_monotonic": 392224.5,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392224.5,
+              "after_monotonic": 392224.5,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392224.5,
+              "after_monotonic": 392224.5,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392224.5,
+              "after_monotonic": 392224.5,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": true,
+        "guest_s": 10.8885176,
+        "state": {
+          "valid": false,
+          "reason": "unavailable/invalid actor pool",
+          "qa_frames": null,
+          "qa_flags": null,
+          "actors": [],
+          "manager_valid": false,
+          "manager_nodes_seen": 0,
+          "transport_coherent": false,
+          "coherent": false,
+          "transport_attempts": 4,
+          "non_atomic": true,
+          "host_s": 10.922000000020489,
+          "observed_monotonic": 392224.468,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392224.625,
+              "after_monotonic": 392224.625,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392224.625,
+              "after_monotonic": 392224.625,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392224.625,
+              "after_monotonic": 392224.64,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392224.64,
+              "after_monotonic": 392224.64,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392224.64,
+              "after_monotonic": 392224.64,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "rtrig",
+        "up": false,
+        "guest_s": 29.9264603,
+        "state": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 198,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              0
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47610.70703125,
+              57.66302490234375,
+              7082.72412109375
+            ],
+            "ang": [
+              0.0,
+              1.8890000581741333,
+              0.0
+            ],
+            "rno": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "alive": 117448823,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 18,
+          "qa_flags": 0,
+          "keys": {
+            "on": 0,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 0,
+            "c_shot_cnt": 0,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 10,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356172768,
+            "Mot_frame": 20.0,
+            "Seq_frame": 21.0,
+            "Seq_frame_num": 90
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48595.65234375,
+              1807.986083984375,
+              7947.0556640625
+            ],
+            "at": [
+              -46213.50390625,
+              1411.307861328125,
+              6632.8349609375
+            ],
+            "roll": 0.0,
+            "fovy": 50.0
+          },
+          "end_frame": 198,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 2,
+          "host_s": 30.125,
+          "observed_monotonic": 392243.671,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392243.671,
+              "after_monotonic": 392243.671,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392243.671,
+              "after_monotonic": 392243.671,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392243.671,
+              "after_monotonic": 392243.671,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392243.671,
+              "after_monotonic": 392243.671,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392243.671,
+              "after_monotonic": 392243.671,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": false,
+        "guest_s": 30.3714099,
+        "state": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 211,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              268435456
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47610.984375,
+              57.66253662109375,
+              7082.6181640625
+            ],
+            "ang": [
+              0.0,
+              1.8890000581741333,
+              0.0
+            ],
+            "rno": [
+              0,
+              6,
+              1,
+              4
+            ],
+            "alive": 117448823,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 31,
+          "qa_flags": 0,
+          "keys": {
+            "on": 8388624,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 0,
+            "c_shot_cnt": 0,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 10,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356248192,
+            "Mot_frame": 9.0,
+            "Seq_frame": 10.0,
+            "Seq_frame_num": 15
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48045.58203125,
+              1822.15966796875,
+              7781.0986328125
+            ],
+            "at": [
+              -46188.5625,
+              1396.921142578125,
+              6675.9501953125
+            ],
+            "roll": 0.0,
+            "fovy": 45.34360122680664
+          },
+          "end_frame": 211,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 30.56300000002375,
+          "observed_monotonic": 392244.109,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392244.109,
+              "after_monotonic": 392244.109,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392244.109,
+              "after_monotonic": 392244.109,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392244.109,
+              "after_monotonic": 392244.109,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392244.109,
+              "after_monotonic": 392244.109,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392244.109,
+              "after_monotonic": 392244.109,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": true,
+        "guest_s": 30.5067861,
+        "state": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 213,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              268435456
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47610.984375,
+              57.66156005859375,
+              7082.6181640625
+            ],
+            "ang": [
+              0.0,
+              1.8890000581741333,
+              0.0
+            ],
+            "rno": [
+              0,
+              6,
+              2,
+              0
+            ],
+            "alive": 117448823,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 33,
+          "qa_flags": 0,
+          "keys": {
+            "on": 2156397712,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 0,
+            "c_shot_cnt": 0,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 10,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356248192,
+            "Mot_frame": 11.0,
+            "Seq_frame": 12.0,
+            "Seq_frame_num": 15
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48030.85546875,
+              1822.5250244140625,
+              7777.0966796875
+            ],
+            "at": [
+              -46187.56640625,
+              1396.5733642578125,
+              6678.04736328125
+            ],
+            "roll": 0.0,
+            "fovy": 45.219905853271484
+          },
+          "end_frame": 213,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 30.625,
+          "observed_monotonic": 392244.171,
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "death_demo_log_observed": false
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392244.25,
+              "after_monotonic": 392244.25,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392244.25,
+              "after_monotonic": 392244.25,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392244.25,
+              "after_monotonic": 392244.25,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392244.25,
+              "after_monotonic": 392244.25,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392244.25,
+              "after_monotonic": 392244.25,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "rtrig",
+        "up": true,
+        "guest_s": 31.1676445,
+        "state": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 235,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              0
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47610.984375,
+              57.66253662109375,
+              7082.6181640625
+            ],
+            "ang": [
+              0.0,
+              1.8890000581741333,
+              0.0
+            ],
+            "rno": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "alive": 117448823,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 55,
+          "qa_flags": 0,
+          "keys": {
+            "on": 8388624,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 1,
+            "c_shot_cnt": 1,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 9,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356255744,
+            "Mot_frame": 0.0,
+            "Seq_frame": 1.0,
+            "Seq_frame_num": 40
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48005.8984375,
+              1820.3253173828125,
+              7770.68359375
+            ],
+            "at": [
+              -46185.625,
+              1403.141357421875,
+              6681.8056640625
+            ],
+            "roll": 0.0,
+            "fovy": 45.001625061035156
+          },
+          "end_frame": 235,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 31.360000000044238,
+          "observed_monotonic": 392244.906,
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "death_demo_log_observed": false
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392244.906,
+              "after_monotonic": 392244.906,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392244.906,
+              "after_monotonic": 392244.906,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392244.906,
+              "after_monotonic": 392244.906,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392244.906,
+              "after_monotonic": 392244.906,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392244.906,
+              "after_monotonic": 392244.906,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "rtrig",
+        "up": false,
+        "guest_s": 31.741007,
+        "state": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 252,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              268435456
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47617.56640625,
+              58.2056884765625,
+              7059.26318359375
+            ],
+            "ang": [
+              0.0,
+              1.8919360637664795,
+              0.0
+            ],
+            "rno": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "alive": 117448823,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 72,
+          "qa_flags": 0,
+          "keys": {
+            "on": 0,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 1,
+            "c_shot_cnt": 1,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 9,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356172768,
+            "Mot_frame": 2.0,
+            "Seq_frame": 3.0,
+            "Seq_frame_num": 90
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48578.8359375,
+              1807.55517578125,
+              7922.3798828125
+            ],
+            "at": [
+              -46220.26171875,
+              1413.478515625,
+              6610.26416015625
+            ],
+            "roll": 0.0,
+            "fovy": 49.824119567871094
+          },
+          "end_frame": 252,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 31.93800000002375,
+          "observed_monotonic": 392245.484,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392245.484,
+              "after_monotonic": 392245.484,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392245.484,
+              "after_monotonic": 392245.484,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392245.484,
+              "after_monotonic": 392245.484,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392245.484,
+              "after_monotonic": 392245.484,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392245.484,
+              "after_monotonic": 392245.484,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": false,
+        "guest_s": 32.1768769,
+        "state": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 265,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              268435456
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47617.640625,
+              58.20526123046875,
+              7059.18798828125
+            ],
+            "ang": [
+              0.0,
+              1.8919360637664795,
+              0.0
+            ],
+            "rno": [
+              0,
+              6,
+              1,
+              4
+            ],
+            "alive": 251666551,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 85,
+          "qa_flags": 0,
+          "keys": {
+            "on": 8388624,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 1,
+            "c_shot_cnt": 1,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 9,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356248192,
+            "Mot_frame": 9.0,
+            "Seq_frame": 10.0,
+            "Seq_frame_num": 15
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48048.875,
+              1822.57568359375,
+              7758.59521484375
+            ],
+            "at": [
+              -46196.56640625,
+              1397.6112060546875,
+              6648.77587890625
+            ],
+            "roll": 0.0,
+            "fovy": 45.33393478393555
+          },
+          "end_frame": 265,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 32.375,
+          "observed_monotonic": 392245.921,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392245.921,
+              "after_monotonic": 392245.921,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392245.921,
+              "after_monotonic": 392245.921,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392245.921,
+              "after_monotonic": 392245.921,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392245.921,
+              "after_monotonic": 392245.921,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392245.921,
+              "after_monotonic": 392245.921,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "a",
+        "up": true,
+        "guest_s": 32.3154808,
+        "state": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 267,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              0
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47617.640625,
+              58.20428466796875,
+              7059.18798828125
+            ],
+            "ang": [
+              0.0,
+              1.8919360637664795,
+              0.0
+            ],
+            "rno": [
+              0,
+              6,
+              2,
+              0
+            ],
+            "alive": 251666551,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 87,
+          "qa_flags": 0,
+          "keys": {
+            "on": 2156397712,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 1,
+            "c_shot_cnt": 1,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 9,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356248192,
+            "Mot_frame": 11.0,
+            "Seq_frame": 12.0,
+            "Seq_frame_num": 15
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48034.765625,
+              1822.83837890625,
+              7754.7373046875
+            ],
+            "at": [
+              -46195.4140625,
+              1397.62646484375,
+              6650.6767578125
+            ],
+            "roll": 0.0,
+            "fovy": 45.21371841430664
+          },
+          "end_frame": 267,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 32.43800000002375,
+          "observed_monotonic": 392245.984,
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "death_demo_log_observed": false
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392246.062,
+              "after_monotonic": 392246.062,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392246.062,
+              "after_monotonic": 392246.062,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392246.062,
+              "after_monotonic": 392246.062,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392246.062,
+              "after_monotonic": 392246.062,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392246.062,
+              "after_monotonic": 392246.062,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      },
+      {
+        "key": "rtrig",
+        "up": true,
+        "guest_s": 33.0070547,
+        "state": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 290,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              268435456
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47617.640625,
+              58.20477294921875,
+              7059.18798828125
+            ],
+            "ang": [
+              0.0,
+              1.8919360637664795,
+              0.0
+            ],
+            "rno": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "alive": 251666551,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 110,
+          "qa_flags": 0,
+          "keys": {
+            "on": 8388624,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 2,
+            "c_shot_cnt": 2,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 8,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356255744,
+            "Mot_frame": 1.0,
+            "Seq_frame": 2.0,
+            "Seq_frame_num": 40
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48010.57421875,
+              1818.5380859375,
+              7748.38330078125
+            ],
+            "at": [
+              -46194.19140625,
+              1409.1123046875,
+              6654.78955078125
+            ],
+            "roll": 0.0,
+            "fovy": 45.00126647949219
+          },
+          "end_frame": 290,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 33.20400000002701,
+          "observed_monotonic": 392246.75,
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "death_demo_log_observed": false
+        },
+        "native_queue": {
+          "queued": true,
+          "messages": [
+            {
+              "hwnd": 443090598,
+              "before_monotonic": 392246.75,
+              "after_monotonic": 392246.75,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 20385158,
+              "before_monotonic": 392246.75,
+              "after_monotonic": 392246.75,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 172034446,
+              "before_monotonic": 392246.75,
+              "after_monotonic": 392246.75,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 36114306,
+              "before_monotonic": 392246.75,
+              "after_monotonic": 392246.75,
+              "post_succeeded": true
+            },
+            {
+              "hwnd": 8261198,
+              "before_monotonic": 392246.75,
+              "after_monotonic": 392246.75,
+              "post_succeeded": true
+            }
+          ],
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+        }
+      }
+    ],
+    "captures": [
+      "before-shot-0",
+      "after-shot-1",
+      "after-shot-2",
+      "final"
+    ],
+    "errors": [],
+    "last": {
+      "global": {
+        "ptr": "0x8c361a58",
+        "frame": 477,
+        "room": 259,
+        "player_life": 1200,
+        "rno": [
+          3,
+          0,
+          0,
+          0
+        ],
+        "stop": 0,
+        "status": [
+          50856192,
+          512,
+          0,
+          0
+        ]
+      },
+      "player": {
+        "ptr": 2359402144,
+        "pos": [
+          -47624.8671875,
+          58.74517822265625,
+          7035.46142578125
+        ],
+        "ang": [
+          0.0,
+          1.8906834125518799,
+          0.0
+        ],
+        "rno": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "alive": 117448823,
+        "serial": 0,
+        "dmgType": 0,
+        "dmgType_bits": 0
+      },
+      "event_start_cnt": 0,
+      "subscreen_type": 0,
+      "ssloop": 0,
+      "qa_frames": 297,
+      "qa_flags": 0,
+      "keys": {
+        "on": 0,
+        "trg": 0,
+        "rel": 0
+      },
+      "counters": {
+        "g_shot_cnt": 2,
+        "c_shot_cnt": 2,
+        "g_hit_cnt": 0,
+        "c_hit_cnt": 0,
+        "g_kill_cnt": 0,
+        "c_kill_cnt": 0
+      },
+      "debug_flags": [
+        512,
+        0,
+        32768,
+        0
+      ],
+      "weapon_no": 2,
+      "pl_type": 0,
+      "weapon": {
+        "slot": 2357594286,
+        "id": 35,
+        "equipped_id": 35,
+        "weapon_no": 2,
+        "loaded_rounds": 8,
+        "item_class": 1,
+        "attribute": 0,
+        "weapon_source_match": true,
+        "valid_inventory_slot": true
+      },
+      "motion": {
+        "pMot": 2356172768,
+        "Mot_frame": 83.0,
+        "Seq_frame": 84.0,
+        "Seq_frame_num": 90
+      },
+      "body": {
+        "pHeadData": 2355310272,
+        "pShape": 2359412108,
+        "pHair": 2359412400,
+        "pEye": 2359412692
+      },
+      "system": {
+        "region": 1,
+        "key_type": 0,
+        "flags": 0
+      },
+      "camera": {
+        "pos": [
+          -48609.73828125,
+          1809.057373046875,
+          7900.662109375
+        ],
+        "at": [
+          -46229.796875,
+          1412.40283203125,
+          6582.43798828125
+        ],
+        "roll": 0.0,
+        "fovy": 49.999996185302734
+      },
+      "end_frame": 477,
+      "coherent": true,
+      "valid": true,
+      "non_atomic": true,
+      "diagnostics": {
+        "death_trace": null,
+        "lethal_caller": null,
+        "LifeDownSet2_before_after": null
+      },
+      "unavailable": [
+        "diagnostics.death_trace",
+        "diagnostics.lethal_caller",
+        "diagnostics.LifeDownSet2_before_after"
+      ],
+      "actors": [],
+      "manager_valid": false,
+      "reason": "active node outside exact pool",
+      "manager_nodes_seen": 0,
+      "transport_coherent": true,
+      "transport_attempts": 1,
+      "host_s": 39.42200000002049,
+      "observed_monotonic": 392252.968,
+      "pid": 47900,
+      "start_filetime": 134371165481479670,
+      "death_demo_log_observed": false
+    },
+    "original_manual_witness": false,
+    "witnesses": [
+      {
+        "down": "rtrig",
+        "source_frame": 186,
+        "capture": "before-shot"
+      },
+      {
+        "proof": {
+          "accepted": true,
+          "rounds": 1,
+          "reasons": [],
+          "hit_count_delta": 0,
+          "kill_count_delta": 0
+        },
+        "before": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 198,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              0
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47610.70703125,
+              57.66302490234375,
+              7082.72412109375
+            ],
+            "ang": [
+              0.0,
+              1.8890000581741333,
+              0.0
+            ],
+            "rno": [
+              0,
+              0,
+              1,
+              1
+            ],
+            "alive": 117448823,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 18,
+          "qa_flags": 0,
+          "keys": {
+            "on": 0,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 0,
+            "c_shot_cnt": 0,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 10,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356172768,
+            "Mot_frame": 20.0,
+            "Seq_frame": 21.0,
+            "Seq_frame_num": 90
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48595.65234375,
+              1807.986083984375,
+              7947.0556640625
+            ],
+            "at": [
+              -46213.50390625,
+              1411.307861328125,
+              6632.8349609375
+            ],
+            "roll": 0.0,
+            "fovy": 50.0
+          },
+          "end_frame": 198,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 2,
+          "host_s": 30.125,
+          "observed_monotonic": 392243.671,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "after": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 235,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              0
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47610.984375,
+              57.66253662109375,
+              7082.6181640625
+            ],
+            "ang": [
+              0.0,
+              1.8890000581741333,
+              0.0
+            ],
+            "rno": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "alive": 117448823,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 55,
+          "qa_flags": 0,
+          "keys": {
+            "on": 8388624,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 1,
+            "c_shot_cnt": 1,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 9,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356255744,
+            "Mot_frame": 0.0,
+            "Seq_frame": 1.0,
+            "Seq_frame_num": 40
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48005.8984375,
+              1820.3253173828125,
+              7770.68359375
+            ],
+            "at": [
+              -46185.625,
+              1403.141357421875,
+              6681.8056640625
+            ],
+            "roll": 0.0,
+            "fovy": 45.001625061035156
+          },
+          "end_frame": 235,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 31.360000000044238,
+          "observed_monotonic": 392244.906,
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "death_demo_log_observed": false
+        },
+        "capture": "after-shot"
+      },
+      {
+        "proof": {
+          "accepted": true,
+          "rounds": 1,
+          "reasons": [],
+          "hit_count_delta": 0,
+          "kill_count_delta": 0
+        },
+        "before": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 252,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              268435456
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47617.56640625,
+              58.2056884765625,
+              7059.26318359375
+            ],
+            "ang": [
+              0.0,
+              1.8919360637664795,
+              0.0
+            ],
+            "rno": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "alive": 117448823,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 72,
+          "qa_flags": 0,
+          "keys": {
+            "on": 0,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 1,
+            "c_shot_cnt": 1,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 9,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356172768,
+            "Mot_frame": 2.0,
+            "Seq_frame": 3.0,
+            "Seq_frame_num": 90
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48578.8359375,
+              1807.55517578125,
+              7922.3798828125
+            ],
+            "at": [
+              -46220.26171875,
+              1413.478515625,
+              6610.26416015625
+            ],
+            "roll": 0.0,
+            "fovy": 49.824119567871094
+          },
+          "end_frame": 252,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 31.93800000002375,
+          "observed_monotonic": 392245.484,
+          "pid": 47900,
+          "start_filetime": 134371165481479670
+        },
+        "after": {
+          "global": {
+            "ptr": "0x8c361a58",
+            "frame": 290,
+            "room": 259,
+            "player_life": 1200,
+            "rno": [
+              3,
+              0,
+              0,
+              0
+            ],
+            "stop": 0,
+            "status": [
+              50856192,
+              512,
+              0,
+              268435456
+            ]
+          },
+          "player": {
+            "ptr": 2359402144,
+            "pos": [
+              -47617.640625,
+              58.20477294921875,
+              7059.18798828125
+            ],
+            "ang": [
+              0.0,
+              1.8919360637664795,
+              0.0
+            ],
+            "rno": [
+              0,
+              6,
+              1,
+              1
+            ],
+            "alive": 251666551,
+            "serial": 0,
+            "dmgType": 0,
+            "dmgType_bits": 0
+          },
+          "event_start_cnt": 0,
+          "subscreen_type": 0,
+          "ssloop": 0,
+          "qa_frames": 110,
+          "qa_flags": 0,
+          "keys": {
+            "on": 8388624,
+            "trg": 0,
+            "rel": 0
+          },
+          "counters": {
+            "g_shot_cnt": 2,
+            "c_shot_cnt": 2,
+            "g_hit_cnt": 0,
+            "c_hit_cnt": 0,
+            "g_kill_cnt": 0,
+            "c_kill_cnt": 0
+          },
+          "debug_flags": [
+            512,
+            0,
+            32768,
+            0
+          ],
+          "weapon_no": 2,
+          "pl_type": 0,
+          "weapon": {
+            "slot": 2357594286,
+            "id": 35,
+            "equipped_id": 35,
+            "weapon_no": 2,
+            "loaded_rounds": 8,
+            "item_class": 1,
+            "attribute": 0,
+            "weapon_source_match": true,
+            "valid_inventory_slot": true
+          },
+          "motion": {
+            "pMot": 2356255744,
+            "Mot_frame": 1.0,
+            "Seq_frame": 2.0,
+            "Seq_frame_num": 40
+          },
+          "body": {
+            "pHeadData": 2355310272,
+            "pShape": 2359412108,
+            "pHair": 2359412400,
+            "pEye": 2359412692
+          },
+          "system": {
+            "region": 1,
+            "key_type": 0,
+            "flags": 0
+          },
+          "camera": {
+            "pos": [
+              -48010.57421875,
+              1818.5380859375,
+              7748.38330078125
+            ],
+            "at": [
+              -46194.19140625,
+              1409.1123046875,
+              6654.78955078125
+            ],
+            "roll": 0.0,
+            "fovy": 45.00126647949219
+          },
+          "end_frame": 290,
+          "coherent": true,
+          "valid": true,
+          "non_atomic": true,
+          "diagnostics": {
+            "death_trace": null,
+            "lethal_caller": null,
+            "LifeDownSet2_before_after": null
+          },
+          "unavailable": [
+            "diagnostics.death_trace",
+            "diagnostics.lethal_caller",
+            "diagnostics.LifeDownSet2_before_after"
+          ],
+          "actors": [],
+          "manager_valid": false,
+          "reason": "active node outside exact pool",
+          "manager_nodes_seen": 0,
+          "transport_coherent": true,
+          "transport_attempts": 1,
+          "host_s": 33.20400000002701,
+          "observed_monotonic": 392246.75,
+          "pid": 47900,
+          "start_filetime": 134371165481479670,
+          "death_demo_log_observed": false
+        },
+        "capture": "after-shot"
+      }
+    ],
+    "discharges": [
+      {
+        "accepted": true,
+        "rounds": 1,
+        "reasons": [],
+        "hit_count_delta": 0,
+        "kill_count_delta": 0
+      },
+      {
+        "accepted": true,
+        "rounds": 1,
+        "reasons": [],
+        "hit_count_delta": 0,
+        "kill_count_delta": 0
+      }
+    ]
+  },
+  "checkpoint": {
+    "format_version": 1,
+    "scope": "Unedited ordinary-controller route continuation; not a natural no-warp release route",
+    "input": {
+      "files": {
+        "disc.gdi": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+        "track01.bin": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+        "track02.raw": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+        "track03.iso": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f"
+      },
+      "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+      "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b"
+    },
+    "emulator_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+    "data": {
+      "dc_nvmem.bin": {
+        "bytes": 131072,
+        "sha256": "4a598599e9d376573354e4e76879decea8fcd1f7d01a0d97f9365ca6b937d311"
+      },
+      "disc.state": {
+        "bytes": 9273760,
+        "sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75"
+      },
+      "dx11_shader_cache.bin": {
+        "bytes": 52224,
+        "sha256": "2892cce6e64f82dbc9c251b6d3bb844ddb8ba7be38fe9bfa09402771b27ca303"
+      },
+      "T0000_vmu_save_A1.bin": {
+        "bytes": 131072,
+        "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      },
+      "vmu_save_A2.bin": {
+        "bytes": 131072,
+        "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      }
+    },
+    "audit": {
+      "state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+      "state_bytes": 9273760,
+      "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+      "decoded_bytes": 28274510,
+      "ram_serialization_offset": 11490769,
+      "immutable_anchors": [
+        {
+          "address": "0x8c014000",
+          "bytes": 256,
+          "sha256": "e02ebee59ecd8990d3619d9d34cf98672c6261f206b9dadbba3f4b1dceda4650"
+        },
+        {
+          "address": "0x8c050000",
+          "bytes": 256,
+          "sha256": "7c85749186f81547f95f3fc105b533ab5adeac8ac2e37ceba42dc32a26fb7d54"
+        },
+        {
+          "address": "0x8c110000",
+          "bytes": 256,
+          "sha256": "8596b92764a701d1b0686d3d9ada950a06385df8ad0c28c059af3b5226153c0a"
+        },
+        {
+          "address": "0x8c190000",
+          "bytes": 256,
+          "sha256": "05bbac539b83bf0233b20f0c4424165c5d38ea872056d1cbc3e7cdf8716170e2"
+        }
+      ],
+      "log_head": 169995,
+      "room": 259,
+      "frame": 533,
+      "stop": 0,
+      "player_life": 1200,
+      "player_life_max": 1200,
+      "player_pos": [
+        -47630.48046875,
+        58.71270751953125,
+        7032.71826171875
+      ],
+      "player_rno": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "event_start_cnt": 0,
+      "qa_flags": 0,
+      "memory_edits": false
+    },
+    "parent": null,
+    "inputs_sha256": "baf86bac00d05b2d52f751ab53f09f5047bc9682072e2c628d897b559a9ce385",
+    "state_edits": false
+  }
+}
