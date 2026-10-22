@@ -1,0 +1,16 @@
+squeeze 49152 0
+name castle22-r201-garrador
+room 0x201
+jp 0
+chapter 6
+status 3 0x04000000
+god
+pos 31369.3315 -2000 -41951.6318
+ang 1.57079632679
+goto 60 19000 -2000 -45000 1.57079632679 sub
+trg 0 90 0x201
+kill 0x1b 100 0x201 1
+killpart 37
+alivelog 30
+census 400
+dump
