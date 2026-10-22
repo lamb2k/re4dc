@@ -1,0 +1,30 @@
+{
+  "created_utc": "2026-10-22T02:38:50.831971+00:00",
+  "receipt_sha256": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "auditor_sha256": "e21604c7d08db0e9f9c216966318de143c4438076f409738ca554ff838bb357c",
+  "frozen_source_commit": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "current_derivation_scripts_byte_identical_to_frozen_commit": [
+    "port/dreamcast/tools/d367/castle18/build-test21-disc2.sh",
+    "port/dreamcast/tools/d367/ch2/ch2-build.sh",
+    "port/dreamcast/tools/d367/test15/t15-build.sh",
+    "port/dreamcast/tools/d367/route/route-build.sh",
+    "port/dreamcast/tools/d367/discsets/mkdisc2.py",
+    "port/dreamcast/game/tools/link.sh",
+    "port/dreamcast/game/tools/gen_overlay.py",
+    "port/dreamcast/game/tools/ovl_id_patch.py",
+    "port/dreamcast/tools/d367/build-r21.sh"
+  ],
+  "script_hashes": {
+    "port/dreamcast/tools/d367/castle18/build-test21-disc2.sh": "da751afe7269335f4d443fbe47039ff3b5785166e5af6618d1c650cbb7ea1da1",
+    "port/dreamcast/tools/d367/ch2/ch2-build.sh": "d924420ed9d6515e66231166fb148015418f6af13568b6d260297656e1c89f57",
+    "port/dreamcast/tools/d367/test15/t15-build.sh": "19237f91b76db3c9bd105658fe7a26a1bc309a1a9e94f7b0f68f1c555a9b1b46",
+    "port/dreamcast/tools/d367/route/route-build.sh": "c952d7ef17247a181f2febca1ccdf1f8a59fe35b50f344d49ab94509a73e7b2a",
+    "port/dreamcast/tools/d367/discsets/mkdisc2.py": "365d3233f46c665715a4cc0b352e0d882beb5d8e8069c98fb06341b259d2fe61",
+    "port/dreamcast/game/tools/link.sh": "c6fc8afe178717d3ec2f4629101684912f1676fa3e3baaca7dd3fe6e339f26ed",
+    "port/dreamcast/game/tools/gen_overlay.py": "42e8c047dc14878590b537ee6fb5d5b034b861d66485b91ed7b6d9e0bc30a137",
+    "port/dreamcast/game/tools/ovl_id_patch.py": "05aee5b35c5f7c8b6da46f557f200490823f0124b603f44cce3fa15e1e78ab21",
+    "port/dreamcast/tools/d367/build-r21.sh": "9eefec1bd90ee92e3b6d548fcd982920fa00ee6c5cf873d8da587381cafc3e93"
+  },
+  "audit_first_invocation": "All binding assertions passed and final receipt written; unrelated cp1252 status refresh then raised UnicodeDecodeError. Original receipt unchanged; metadata refresh now uses UTF8. No target guest ran.",
+  "scope": "Stored byte/source binding, no full historical per-TU dependency closure reconstruction, no live target or hardware acceptance."
+}
