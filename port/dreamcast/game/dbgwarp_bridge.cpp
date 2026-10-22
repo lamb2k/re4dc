@@ -1959,5 +1959,11 @@ unsigned re4dc_warp_late(void)
 
 int re4dc_warp_late_set(void) { return wp.has_late ? 1 : 0; }
 
+// Read-only activation query, including mask0 OFF controls; does not log or arm.
+int re4dc_warp_late_open(void)
+{
+    return wp.has_late && pG && pG->room_id == wp.late_room && pG->Frame_cnt >= wp.late_tick ? 1 : 0;
+}
+
 }  // extern "C"
 #endif  // RE4DC_DBG_WARP
