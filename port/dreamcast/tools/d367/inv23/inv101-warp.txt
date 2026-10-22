@@ -1,0 +1,18 @@
+name inv101
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alert 30
+alivelog 150
+act 60 y 3
+act 300 b 4
+act 340 b 4
+act 500 y 3
+act 740 b 4
+act 780 b 4
+act 940 y 3
+act 1180 b 4
+act 1220 b 4

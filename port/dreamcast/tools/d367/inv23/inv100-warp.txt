@@ -1,0 +1,18 @@
+name inv100
+# inv23: r100 after the radio call, 3 inventory open/close cycles (Y opens, B x2 closes)
+room 0x100
+pos -99685 -484 -1343
+ang 2.2460
+rsf 0x100 13
+scenario 0 0x00000010
+inv default
+god
+act 60 y 3
+act 300 b 4
+act 340 b 4
+act 500 y 3
+act 740 b 4
+act 780 b 4
+act 940 y 3
+act 1180 b 4
+act 1220 b 4
