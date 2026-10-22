@@ -20,7 +20,7 @@ set -euo pipefail
 PORT=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # The current test release. At each test release, point this at the new test's knob file (one line).
-RELEASE_KNOBS=${RELEASE_KNOBS:-$PORT/tools/d367/test21/release-knobs.txt}
+RELEASE_KNOBS=${RELEASE_KNOBS:-$PORT/tools/d367/test22/release-knobs.txt}
 
 OUT=${OUT:-$PORT/out-public}
 OBJDIR=${OBJDIR:-$OUT/obj}
@@ -44,6 +44,7 @@ RECIPE=$(python3 "$PORT/tools/d367/release-knobs.py" args "$RELEASE_KNOBS" "$ASS
 #   PS2_GANADO=0 PS2_GANADO_LIT=0    the male villagers are the GameCube models (the release: PS2 models, PS2-lit).
 #   GANADO_LOD=0                     (test 15 on) no lighter villager meshes: they need the PS2 villager models and
 #                                    the Build-Assets zip's glod/ganado_lod.re4gl (GANADO_LOD_PACK).
+#   GANADO_EVENT_KEEP_LOD=0          (test 22 on) Ganados keep their LOD through events: needs GANADO_LOD.
 #   ACTOR_PROBE_LIGHT=1 GANADO_LIT=0 (test 15 on) only Leon takes the room-light probe (the release: the PS2 villagers
 #                                    too, which needs PS2_GANADO_LIT).
 #   NATIVE_MODEL_REGISTRY_DYING=0    (test 17 on) a dying Ganado fades on the GameCube model (the release keeps the PS2
@@ -53,7 +54,7 @@ RECIPE=$(python3 "$PORT/tools/d367/release-knobs.py" args "$RELEASE_KNOBS" "$ASS
 PRIVATE_OFF=
 if [ ! -f "$ASSETS/ps2leon/ps2leon_runtime.h" ] || [ ! -f "$ASSETS/ps2ganado/ganado_cast_runtime.h" ]; then
   RECIPE=$(tr ' ' '\n' <<<"$RECIPE" | grep -vE '^(PS2_(LEON|GANADO)_DIR|GANADO_LOD_PACK|LEON_HEADLESS_DIR)=' | tr '\n' ' ')
-  PRIVATE_OFF="PS2_LEON=0 LEON_HAND_PACK=0 PS2_GANADO=0 PS2_GANADO_LIT=0 GANADO_LOD=0 ACTOR_PROBE_LIGHT=1 GANADO_LIT=0 NATIVE_MODEL_REGISTRY_DYING=0 LEON_HEADLESS=0"
+  PRIVATE_OFF="PS2_LEON=0 LEON_HAND_PACK=0 PS2_GANADO=0 PS2_GANADO_LIT=0 GANADO_LOD=0 GANADO_EVENT_KEEP_LOD=0 ACTOR_PROBE_LIGHT=1 GANADO_LIT=0 NATIVE_MODEL_REGISTRY_DYING=0 LEON_HEADLESS=0"
   echo "build-public: no PS2 character data in $ASSETS: $PRIVATE_OFF (GameCube character models; see CONTRIBUTING-PORT.md)"
 fi
 # Test 17 on: the chapter 2-2 / 2-3 PS2 enemy rows (ASSETS/ps2enemych2/ps2_enemy_ch22_data.inc and
