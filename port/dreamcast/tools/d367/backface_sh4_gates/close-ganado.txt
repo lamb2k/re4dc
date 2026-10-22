@@ -1,0 +1,13 @@
+name bf-r101-close-ganado-f420
+# Existing face-near syntax places the actual live class0x15 target 500mm ahead once.
+# NOT accepted until log proves placement, alive/NMRS class0x15 and positive cls4 BFC burst.
+room 0x101
+pos -7914 0 2000
+ang 1.5708
+find 0x00002000
+inv default
+god
+alivelog 30
+alert 200
+face near 0x15 5
+freeze 420
