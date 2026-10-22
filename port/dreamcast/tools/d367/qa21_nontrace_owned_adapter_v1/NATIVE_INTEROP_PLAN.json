@@ -1,0 +1,38 @@
+{
+  "scope": "DESCRIPTION ONLY; no native fixture/helper/queries/allocation executed",
+  "why": "source mocks cannot establish Windows native sharing/disposition, retained process duplication/job membership, IPC liveness or unchanged deadline feasibility",
+  "proposed_owned_root": "C:/Flycast-Evidence/re4-dreamcast/qa21-owned-reference-native-interop-20261022/fixture01",
+  "proposed_data": {
+    "bytes": 16384,
+    "contents": "bytes(range(256))*64",
+    "retained_links": 3,
+    "active_owned_link": 1,
+    "no_real_game_image_or_state": true
+  },
+  "existing_helpers": [
+    "reference-hooks/native_reference_api.py",
+    "reference-hooks/reference_collector.py",
+    "reference-hooks/parent_reference_broker.py",
+    "wiring-backend.py"
+  ],
+  "coordinator_status": "separate owned fixture coordinator+independent supervisor source review required before root allocation; not a runnable request here",
+  "proposed_bounds": {
+    "parent_wall_seconds": 10,
+    "child_seconds": 5,
+    "cumulative_all_outputs_bytes": 4194304,
+    "logs_bytes": 262144,
+    "runtime_floor_bytes": 19394461696,
+    "fresh_admission_base_plus_sourcepeer_bytes": 19528679424,
+    "children_max": 2,
+    "flycast_children": 0
+  },
+  "checks": [
+    "fresh owned paths/no aliases/KEEP/source IDs",
+    "tiny-file native FileID/birth/fullnames/refstats/hash staged3->4, mutation refusal/no unlink",
+    "READ-only held qualification handles versus ordinary ISO-like reader sharing; DELETE only after retained signaled stop",
+    "actual remote PROCESS handle duplicate/birth/path/job; never duplicate jobHANDLE",
+    "bounded actual context IPC/release exception/serviceclose-beforebackendclose/no orphan",
+    "failure preserves all fixture refs; no realimage/source mutation"
+  ],
+  "root_action": "review description then separately authorize helper source/native fixture; do not infer allocation from planned caps"
+}

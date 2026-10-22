@@ -1,0 +1,168 @@
+--- 505f/outer-driver.py
++++ NEW/outer-driver.py
+@@ -49,10 +49,28 @@
+   if reference!=old/'cold-shoot01'/name or not reference.samefile(source):raise RuntimeError('retained reference is not exact declared samefile: '+name)
+   stat=source.stat()
+   if stat.st_size!=row['bytes'] or pin['bytes']!=row['bytes'] or pin['sha256']!=row['sha256']:raise RuntimeError('retained source byte identity changed: '+name)
+-  if name=='track03.iso' and (pin['expected_source_links']!=2 or stat.st_nlink!=2 or stat.st_mtime_ns!=pin['source_mtime_ns'] or native_id(source)!=int(pin['source_native_id'],16)):raise RuntimeError('retained image nativeID/linkcount/mtime changed')
++  if name=='track03.iso' and (pin['expected_source_links']!=2 or stat.st_mtime_ns!=pin['source_mtime_ns'] or native_id(source)!=int(pin['source_native_id'],16)):raise RuntimeError('historical baseline-two declaration/nativeID/mtime changed')
++
++ # Explicit exact-three extension replaces ONLY current baseline count-two check;
++ # historical profile/owner/failedcold declaration stays bytepinned and validated.
++ extra=json.loads((P/'EXTRA_REFERENCE_RECEIPT.json').read_text());failed_path=no_alias(extra['path'])
++ if hash_file(failed_path,guard)!=extra['sha256']:raise RuntimeError('third retained failed fixture receipt changed')
++ failed_extra=json.loads(failed_path.read_text())
++ for key,value in extra.items():
++  if key not in ('path','sha256') and (type(failed_extra.get(key)) is not type(value) or failed_extra.get(key)!=value):raise RuntimeError('third retained reference is not exact failed observer01')
++ hooks=P/'reference-hooks';sys.path.insert(0,str(hooks))
++ from native_reference_api import WindowsApi
++ from reference_collector import Collector
++ collector=Collector(WindowsApi(),json.loads((hooks/'COLLECTOR_CONTRACT.json').read_text()),json.loads((hooks/'retained-all-track-declarations.json').read_text()),guard)
++ try:return collector.validate('prelaunch')
++ finally:collector.close()
+ 
+ def preflight(profile,guard,native_id=native_file_id):
+  fixed_profile(profile);disc=no_alias(profile['disc']['path']);stage=disc.parents[1];records={}
++ reviewed=json.loads((P/'REVIEWED_COMPONENTS.json').read_text())
++ if hash_file(no_alias(reviewed['review_path']),guard)!=reviewed['review_sha256']:raise RuntimeError('cleared v2 review receipt changed')
++ for name,pin in reviewed['local_hooks'].items():
++  if hash_file(no_alias(P/'reference-hooks'/name),guard)!=pin:raise RuntimeError('reviewed v2 hook mirror changed')
+  for name,row in profile['disc']['stage_receipts'].items():
+   actual=hash_file(no_alias(stage/name),guard)
+   if actual!=row:raise RuntimeError('sealed stage receipt changed: '+name)
+@@ -62,7 +80,7 @@
+   records[name]={'sha256':row['sha256'],'bytes':row['bytes']}
+  image=disc/'track03.iso';expected=int(profile['disc']['files']['track03.iso']['native_id'],16)
+  if native_id(image)!=expected:raise RuntimeError('image replacement: native fileID')
+- validate_source_references(profile,disc,guard,native_id)
++ records['exact_three_reference_extension']=validate_source_references(profile,disc,guard,native_id)
+  if hash_file(no_alias(profile['elf_path']),guard)!=ELF:raise RuntimeError('ELF changed; no copies permitted')
+  if hash_file(no_alias(profile['observer']['layout']),guard)!=profile['observer']['layout_sha256']:raise RuntimeError('DWARF changed')
+  for name,row in profile['retained_dependencies'].items():
+@@ -86,9 +104,14 @@
+  receipt=json.loads((root/(parent+'-control')/'qualification.json').read_text())
+  if receipt.get('qualified') is not True or receipt.get('profile_sha256')!=profile_sha or receipt.get('program_sha256')!=PROGRAM:raise RuntimeError('parent not qualified with exact programme/profile')
+ 
++ pin=json.loads((P/'SEED_CONTRACT.json').read_text())
++ if no_alias(seed)!=no_alias(pin['seed']) or hash_file(seed/'checkpoint.json')!=pin['checkpoint_sha256'] or hash_file(seed/'data'/'disc.state')!=pin['state_sha256']:raise RuntimeError('exact e81e/533 seed bytes changed')
++ row=json.loads((seed/'checkpoint.json').read_text())
++ if row.get('state_edits') is not False or row.get('parent') is not None or any(row['audit'].get(k)!=pin[k] for k in ('state_sha256','frame','room','log_head')):raise RuntimeError('exact original cold checkpoint lineage changed')
++
+ def output_paths(profile,mode):
+  if mode!='return-door01':raise RuntimeError('this child seal allows only return-door01')
+- root=no_alias(profile['evidence_root']);cap=no_alias(root/'return-door-observer01');control=no_alias(root/'return-door-observer01-control')
++ root=no_alias(profile['evidence_root']);cap=no_alias(root/'return-door-domains01');control=no_alias(root/'return-door-domains01-control')
+  if cap.exists() or control.exists():raise RuntimeError('preserve existing output; no retry/overwrite')
+  marker=root/'OWNED-BY.json';identity={'lane':'qa21-combined-regression','programme':PROGRAM,'image':IMAGE}
+  if root.exists():
+@@ -120,31 +143,36 @@
+  guard()
+ 
+ def parse_args(argv=None):
+- ap=argparse.ArgumentParser();ap.add_argument('--profile',type=pathlib.Path,required=True);ap.add_argument('--profile-sha256',required=True);ap.add_argument('--tools-sha256',required=True);ap.add_argument('--mode',choices=['return-door01'],required=True);ap.add_argument('--seed',type=pathlib.Path);return ap.parse_args(argv)
++ ap=argparse.ArgumentParser();ap.add_argument('--profile',type=pathlib.Path,required=True);ap.add_argument('--profile-sha256',required=True);ap.add_argument('--tools-sha256',required=True);ap.add_argument('--mode',choices=['return-door01'],required=True);ap.add_argument('--seed',type=pathlib.Path);ap.add_argument('--root-allocation',type=pathlib.Path,required=True);ap.add_argument('--root-allocation-sha256',required=True);ap.add_argument('--execute-root-allocation',action='store_true',default=False);return ap.parse_args(argv)
+ 
+ def main():
+  if os.name!='nt':raise RuntimeError('Windows runtime only')
+  a=parse_args()
++ if not a.execute_root_allocation:raise RuntimeError('wiring is default-off; separate exact ROOT allocation required')
+  if hash_file(no_alias(a.profile))!=a.profile_sha256:raise RuntimeError('reviewed profile hash changed')
+  if hash_file(no_alias(P/'source-manifest.json'))!=a.tools_sha256:raise RuntimeError('reviewed source manifest hash changed')
+  manifest=json.loads((P/'source-manifest.json').read_text())
+  for name,row in manifest['files'].items():
+   if hash_file(no_alias(P/name))!=row['sha256']:raise RuntimeError('reviewed source changed before imports: '+name)
+  profile=fixed_profile(json.loads(a.profile.read_text()));adapter=load('adapter',P/'inner-adapter.py');adapter.validate_role(profile,a.mode,a.seed);validate_seed(profile,a.mode,a.seed,a.profile_sha256)
+- core=load('core',P/'guest-supervisor-core.py');backend_type=load('backend',P/'windows-backend.py').WindowsBackend;footprint_row=profile['retained_dependencies']['evidence_footprint.py']
++ core=load('core',P/'guest-supervisor-core.py');backend_type=load('backend_wiring',P/'wiring-backend.py').WindowsBackend;footprint_row=profile['retained_dependencies']['evidence_footprint.py']
+  if hash_file(no_alias(footprint_row['path']))!=footprint_row['sha256']:raise RuntimeError('footprint helper changed before import')
+  footprint=load('footprint',footprint_row['path'])
+- root=no_alias(profile['evidence_root']);provisionalcap=root/'return-door-observer01';provisionalcontrol=root/'return-door-observer01-control';backend=backend_type(provisionalcap,provisionalcontrol,profile['disc']['path'],profile['template']['files']['flycast.exe']['sha256'],footprint)
++ root=no_alias(profile['evidence_root']);provisionalcap=root/'return-door-domains01';provisionalcontrol=root/'return-door-domains01-control';backend=backend_type(provisionalcap,provisionalcontrol,profile['disc']['path'],profile['template']['files']['flycast.exe']['sha256'],footprint,allocation=a.root_allocation,allocation_sha256=a.root_allocation_sha256,tools_sha256=a.tools_sha256)
+  def guard():
+   if backend.free()<RUNTIME:raise RuntimeError('read-only preflight floor')
+  pre=preflight(profile,guard)
+  # Fresh admission AFTER all hashes, BEFORE output metadata/release. Monitor repeats it.
+  if backend.free()<ADMISSION or backend.global_count()>=16:raise RuntimeError('fresh resource admission before output')
+  cap,control,marker=output_paths(profile,a.mode);backend.marker_bytes=max(marker.stat().st_size,4096)
+- cmd=[sys.executable,str(P/'inner-adapter.py'),'--profile',str(a.profile),'--mode',a.mode,'--cap',str(cap)]
++ cmd=[sys.executable,'-B',str(P/'inner-adapter.py'),'--profile',str(a.profile),'--mode',a.mode,'--cap',str(cap)]
+  if a.seed:cmd+=['--seed',str(no_alias(a.seed))]
+  started=datetime.datetime.now(datetime.timezone.utc).isoformat();result=core.monitor(backend,cmd)
+- result.update(scope='automatic source/runtime gates only; PNG visual review/Continue/ordinary gameplay remain separately observed acceptance',tools_sha256=a.tools_sha256,cinematic_visual_review=False,Continue_acceptance=False,started_utc=started,mode=a.mode,output_name='return-door-observer01',profile_sha256=a.profile_sha256,preflight_disc=pre,source=SOURCE,program_sha256=PROGRAM,elf_sha256=ELF,image_sha256=IMAGE,memory_writes=False,retry=False)
++ try:
++  result['reference_broker']=backend.reference_receipt()
++  if result['reference_broker'].get('closed_after_join') is not True or result['reference_broker'].get('hold') or result['reference_broker'].get('stage')!='cleaned':raise RuntimeError('reference lifecycle not cleanly closed')
++ except BaseException as error:result.update(qualified=False,reference_error=type(error).__name__+': '+str(error))
++ result.update(scope='automatic source/runtime gates only; PNG visual review/Continue/ordinary gameplay remain separately observed acceptance',tools_sha256=a.tools_sha256,cinematic_visual_review=False,Continue_acceptance=False,started_utc=started,mode=a.mode,output_name='return-door-domains01',profile_sha256=a.profile_sha256,preflight_disc=pre,source=SOURCE,program_sha256=PROGRAM,elf_sha256=ELF,image_sha256=IMAGE,memory_writes=False,retry=False)
+  try:
+   if result['qualified']:postflight(profile,cap,control,backend,result)
+  except BaseException as error:result.update(qualified=False,postflight_error=type(error).__name__+': '+str(error))
+--- 505f/inner-adapter.py
++++ NEW/inner-adapter.py
+@@ -26,19 +26,33 @@
+  with pending.open('x') as f:json.dump(payload,f)
+  os.replace(pending,marker)
+ 
++def read_reference_release(stream):
++ if stream.readline(64)!=b'owned-job-ready\n':raise RuntimeError('missing owned private-job release')
++ descriptor_line=stream.readline(4097)
++ if not descriptor_line.endswith(b'\n') or len(descriptor_line)>4096:raise RuntimeError('missing/oversized parent reference context')
++ descriptor=json.loads(descriptor_line)
++ if not isinstance(descriptor,dict) or set(descriptor)!={'context_path','context_sha256'} or type(descriptor['context_path']) is not str or type(descriptor['context_sha256']) is not str or not re.fullmatch('[0-9a-f]{64}',descriptor['context_sha256']):raise RuntimeError('invalid parent context descriptor')
++ return descriptor
++
+ def main():
+  ap=argparse.ArgumentParser();ap.add_argument('--profile',type=pathlib.Path,required=True);ap.add_argument('--mode',required=True);ap.add_argument('--cap',type=pathlib.Path,required=True);ap.add_argument('--seed',type=pathlib.Path);a=ap.parse_args()
+  # No filesystem mutation or subprocess occurs before containment release.
+- if sys.stdin.buffer.readline()!=b'owned-job-ready\n':raise RuntimeError('missing owned private-job release')
++ descriptor=read_reference_release(sys.stdin.buffer)
+  profile=json.loads(a.profile.read_text());role=validate_role(profile,a.mode,a.seed);cap=a.cap
+- if cap!=pathlib.Path(profile['evidence_root'])/'return-door-observer01':raise RuntimeError('wrong fixed child output contract')
++ if cap!=pathlib.Path(profile['evidence_root'])/'return-door-domains01':raise RuntimeError('wrong fixed child output contract')
+  if cap.exists() or cap.resolve()!=cap.absolute():raise RuntimeError('evidence destination exists/alias')
+- deps=profile['retained_dependencies'];runnerpath=pathlib.Path(deps['checkpoint_runner18.py']['path'])
+- sys.path.insert(0,str(runnerpath.parent));sys.path.insert(0,str(P))
++ deps=profile['retained_dependencies'];runnerpath=P/'reference-hooks'/'checkpoint_runner18.child.py'
++ expected_context=cap.parent/'return-door-domains01-control'/'reference-hooks'/'context.json'
++ if pathlib.Path(descriptor['context_path'])!=expected_context:raise RuntimeError('wrong exact parent reference context path')
++ sys.path.insert(0,str(P/'reference-hooks'))
++ from child_reference_proxy import Proxy
++ reference_proxy=Proxy(expected_context,descriptor['context_sha256'],a.profile)
++ sys.path.insert(0,str(pathlib.Path(deps['checkpoint.py']['path']).parent));sys.path.insert(0,str(P))
+  for row in deps.values():
+   if hashlib.sha256(pathlib.Path(row['path']).read_bytes()).hexdigest()!=row['sha256']:raise RuntimeError('retained dependency changed')
+  from observe import Observer
+  core=load('controller',P/'controller-core.py');broker=load('broker',P/'capture-budget.py').Budget();runner=load('runner',runnerpath)
++ runner.REFERENCE_HOOKS=reference_proxy
+  footprint=load('footprint',profile['retained_dependencies']['evidence_footprint.py']['path'])
+  if pathlib.Path(runner.TEMPLATE).resolve()!=pathlib.Path(profile['template']['path']).resolve():raise RuntimeError('retained runner template differs')
+  runner.FLOOR=18*1024**3+64*1024**2;runner.CAPTURE_LIMIT=60000000;runner.usage=lambda folder:footprint.measure(folder,pathlib.Path(profile['disc']['path']))['charged_bytes']
+@@ -49,6 +63,7 @@
+   from checkpoint import verify
+   disc_identity={'files':{n:r['sha256'] for n,r in profile['disc']['files'].items()},'program_sha256':profile['fixed_runtime']['program_sha256'],'elf_sha256':profile['fixed_runtime']['elf_sha256']}
+   parent=verify(a.seed,pathlib.Path(profile['elf_path']),profile['observer']['binding'],profile['observer']['layout'],disc_identity,runner.emu_exe())
++  if parent['audit']['state_sha256']!='e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75' or parent['audit']['frame']!=533 or parent['audit']['room']!=0x103 or parent.get('state_edits') is not False or parent.get('parent') is not None:raise RuntimeError('exact e81e/533 cold parent required')
+   parent_role=json.loads((a.seed/'inner-control.json').read_text())['mode'];expected='cold-shoot01' if a.mode=='return-door01' else 'return-door01'
+   if parent_role!=expected:raise RuntimeError('same-program parent role differs')
+   os.environ['RE4DC_CHECKPOINT_SEED']=str(a.seed);os.environ['RE4DC_CHECKPOINT_LOG_HEAD']=str(parent['audit']['log_head'])
+@@ -177,13 +192,17 @@
+    with lock:
+     try:release_all()
+     except BaseException as error:state['errors'].append('release: '+str(error))
+- thread=threading.Thread(target=watch,name='owned-readonly-controller',daemon=True);thread.start()
+  logs=json.loads((P/'exact-log-symbols.json').read_text())['symbols'];syms=' '.join(hex(logs[n][0]['address']-0x8c000000) for n in ['_re4dc_logbuf','_re4dc_log_head','_re4dc_stage'])
+  sys.argv=[str(runnerpath),'--disc',profile['disc']['path'],'--cap',str(cap),'--syms',syms,'--seconds','41','--period','0','--name',a.mode,'--keys',role['keys']]
+- try:runner.main()
++ thread=threading.Thread(target=watch,name='owned-readonly-controller',daemon=True)
++ started=False
++ try:
++  thread.start();started=True
++  runner.main()
+  finally:
+   done.set()
+-  try:thread.join(timeout=2)
++  try:
++   if started:thread.join(timeout=2)
+   finally:inputs.close()
+   if thread.is_alive():raise RuntimeError('observer/controller thread still active; outer private job must reap')
+   observer.close()

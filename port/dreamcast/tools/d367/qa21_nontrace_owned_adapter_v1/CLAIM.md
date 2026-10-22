@@ -1,0 +1,1 @@
+Parent-authorized SOURCE-only NEW concrete outer/inner wiring; <=512KiB tools/metadata. Frozen505f/v1/v2 untouched. No native query, real image read, preflight, Flycast, build or actual allocation. Runtime guards/gameplay/input remain frozen505f; exact reviewedv2 hooks mirrored locally. Root concrete review and separate allocations still required.

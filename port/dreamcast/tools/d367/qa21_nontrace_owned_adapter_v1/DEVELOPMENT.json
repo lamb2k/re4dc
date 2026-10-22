@@ -1,0 +1,23 @@
+{
+  "scope": "source construction only, no attempted runtime/preflight",
+  "failures": [
+    {
+      "phase": "AST-only first construction",
+      "error": "broad text substitution changed function declaration; corrected before source tests"
+    },
+    {
+      "phase": "source inspection",
+      "error": "inspection script loop variable changed path; source files unaffected"
+    },
+    {
+      "phase": "source documentation generation",
+      "error": "missing json import in generation script; runtime code unaffected; corrected before final qualification"
+    }
+  ],
+  "initial_source_test_result": {
+    "Linux": 20,
+    "failures": 0,
+    "errors": 0
+  },
+  "runtime_adopted": false
+}

@@ -1,0 +1,125 @@
+{
+  "scope": "SOURCE-only actual adapter delta and immutable dependency proof",
+  "parents": {
+    "qa21_nontrace_owned_runner_v1": {
+      "manifest_sha256": "d15859daa1f98a4b76f53432feee947b6e5f9acc405bab702429f2b0c27603fb",
+      "all_pins_unchanged": true
+    },
+    "qa21_nontrace_owned_runner_v2": {
+      "manifest_sha256": "c0c76c772d05b1c6fa22ceed725f260c1e0c5cbb84863b118795a95b472e9383",
+      "all_pins_unchanged": true
+    }
+  },
+  "frozen_505f_inputs": {
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/SOURCE_ONLY_MANIFEST.json": {
+      "sha256": "0b73077358b87a8b73325d6d823acd24c0037e57a7b653ad8f6f76a5bcc25e63",
+      "bytes": 4973
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/capture-budget.py": {
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "bytes": 712
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/controller-core.py": {
+      "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "bytes": 7468
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/exact-log-symbols.json": {
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29",
+      "bytes": 634
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/global-ui-ABI-supplement.json": {
+      "sha256": "44a0a870112b16bca38bda2a06e5e325d39bd17a57aae82c1ab302c1639aa2dc",
+      "bytes": 1860
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/guest-profile-v2.json": {
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+      "bytes": 13113
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/guest-supervisor-core.py": {
+      "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "bytes": 5185
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/inner-adapter.py": {
+      "sha256": "82c4bf56dcb2a67407f20bb4f8eb008583ef14bfd1f3be026bba317ff63c6307",
+      "bytes": 14468
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/input-deadlines.py": {
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "bytes": 3728
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/layout-contract.py": {
+      "sha256": "74754ec6977299b1268bc8c1a48423e42bed9e3b236d96e84cec36e255667b2e",
+      "bytes": 4606
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/observe.py": {
+      "sha256": "ab9f4d942bb2fac633ad16ba4ed81d8ee8f0e38e69cd0fbd3f906ce9b333d6dc",
+      "bytes": 8571
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/observer-v2.py": {
+      "sha256": "b4ce92c72aba84010a4b22db372622415433c3ad531adae26bc17eed5dc7194c",
+      "bytes": 11338
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/outer-driver.py": {
+      "sha256": "61d6638aeb8f437ee9e932dc801fc78af6d99739d8611d7529960f85543e26bf",
+      "bytes": 13489
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/policies.py": {
+      "sha256": "f1f23f2ae281f9e35410d2a51fee6de13dc18d1643501644955fc0d40b92e899",
+      "bytes": 4231
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/run-domains-exit-tests.py": {
+      "sha256": "26fc5b9f455a8546ae4dc5874412e1b838329b25ba5d85723bddce5294872497",
+      "bytes": 1274
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/test-domains-exit.py": {
+      "sha256": "0b4fe0d8b2e305a7f947200d66f1d9c2f2937ffcc968a18e86e36c2c671fb1ca",
+      "bytes": 9225
+    },
+    "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_domains_exit_v1/windows-backend.py": {
+      "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+      "bytes": 16010
+    }
+  },
+  "byteexact_505f_runtime_copies": [
+    "capture-budget.py",
+    "controller-core.py",
+    "exact-log-symbols.json",
+    "global-ui-ABI-supplement.json",
+    "guest-profile-v2.json",
+    "guest-supervisor-core.py",
+    "input-deadlines.py",
+    "layout-contract.py",
+    "observe.py",
+    "observer-v2.py",
+    "policies.py",
+    "windows-backend.py"
+  ],
+  "reviewed_v2_hook_copies": 7,
+  "unchanged_inner_functions": [
+    "load",
+    "validate_role",
+    "input_allowed",
+    "publish_input_failure",
+    "elapsed",
+    "native_post",
+    "input_failure",
+    "synchronize",
+    "post",
+    "release_all",
+    "qa_press",
+    "capture_work",
+    "capture",
+    "watch"
+  ],
+  "changed_outer_functions": [
+    "validate_source_references",
+    "preflight",
+    "validate_seed",
+    "output_paths",
+    "parse_args",
+    "main"
+  ],
+  "core_supervision_input_policy_pending_exit_unchanged": true,
+  "native_queries_or_images_or_guest_runs": 0,
+  "all22test_source_pins_current": true
+}

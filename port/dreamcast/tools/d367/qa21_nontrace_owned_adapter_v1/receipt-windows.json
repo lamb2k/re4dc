@@ -1,0 +1,33 @@
+{
+  "scope": "SOURCE-only actual wiring/core/pipe/seed/collector tests with injected APIs, no native query/realimage/state/preflight/guest",
+  "utc": "2026-10-22T07:33:44.163540+00:00",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26220-SP0",
+  "tests": 22,
+  "failures": 0,
+  "errors": 0,
+  "successful": true,
+  "source_sha256": {
+    "capture-budget.py": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+    "controller-core.py": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+    "guest-supervisor-core.py": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+    "inner-adapter.py": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758",
+    "input-deadlines.py": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+    "layout-contract.py": "74754ec6977299b1268bc8c1a48423e42bed9e3b236d96e84cec36e255667b2e",
+    "observe.py": "ab9f4d942bb2fac633ad16ba4ed81d8ee8f0e38e69cd0fbd3f906ce9b333d6dc",
+    "observer-v2.py": "b4ce92c72aba84010a4b22db372622415433c3ad531adae26bc17eed5dc7194c",
+    "outer-driver.py": "aff7a57f9e6c69b7043d1e11a655879bb29d0a506a30e84941c61838d8c5cfbe",
+    "policies.py": "f1f23f2ae281f9e35410d2a51fee6de13dc18d1643501644955fc0d40b92e899",
+    "reference-hooks/checkpoint_runner18.child.py": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6",
+    "reference-hooks/child_reference_proxy.py": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19",
+    "reference-hooks/native_reference_api.py": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+    "reference-hooks/parent_reference_broker.py": "4d77a1871d197a91c4cdf8321afbcd44dc929ee7118fefaa5691b499024df75f",
+    "reference-hooks/reference_collector.py": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d",
+    "run_wiring_tests.py": "50dc6a42f5080d5b927d67e40bd23b0dbfb2f6dfbbb772edeb0ea8091b23ec8e",
+    "test_wiring.py": "4e192b44ec5a950845dfd5a3088a8ad27d27e7d8352222bfadc0be9387f18429",
+    "windows-backend.py": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+    "wiring-backend.py": "69b4a350882d0b65f50fdec0ce8545822853bf6d911b261c6a5332c123d1ba9c"
+  },
+  "output": "test_actual_outer_extension_fourth_ref_refuses_and_closes_no_unlink (wiring_tests.ActualReferenceExtensionTests.test_actual_outer_extension_fourth_ref_refuses_and_closes_no_unlink) ... ok\ntest_actual_outer_extension_uses_real_collector_three_reference_proof (wiring_tests.ActualReferenceExtensionTests.test_actual_outer_extension_uses_real_collector_three_reference_proof) ... ok\ntest_actual_backend_missing_authority_prevents_native_base_constructor (wiring_tests.DefaultAndAuthorityTests.test_actual_backend_missing_authority_prevents_native_base_constructor) ... ok\ntest_actual_outer_default_off_before_hash_or_backend_import (wiring_tests.DefaultAndAuthorityTests.test_actual_outer_default_off_before_hash_or_backend_import) ... ok\ntest_literal_future_command_parser_and_pins_exact (wiring_tests.FutureContractTests.test_literal_future_command_parser_and_pins_exact) ... ok\ntest_literal_future_root_bytes_match_real_authority_schema_without_root_io (wiring_tests.FutureContractTests.test_literal_future_root_bytes_match_real_authority_schema_without_root_io) ... ok\ntest_actual_close_refuses_foreign_core_guest_after_service_join (wiring_tests.ReleaseAndClosureTests.test_actual_close_refuses_foreign_core_guest_after_service_join) ... ok\ntest_actual_close_retains_guest_acquired_before_core_pid_notice (wiring_tests.ReleaseAndClosureTests.test_actual_close_retains_guest_acquired_before_core_pid_notice) ... ok\ntest_actual_core_broker_close_failure_holds_and_never_closes_backend (wiring_tests.ReleaseAndClosureTests.test_actual_core_broker_close_failure_holds_and_never_closes_backend) ... ok\ntest_actual_core_release_exception_closes_service_before_backend_job (wiring_tests.ReleaseAndClosureTests.test_actual_core_release_exception_closes_service_before_backend_job) ... ok\ntest_actual_parent_release_starts_service_before_two_line_pipe (wiring_tests.ReleaseAndClosureTests.test_actual_parent_release_starts_service_before_two_line_pipe) ... ok\ntest_repeated_service_close_is_safe_and_completed_receipt_requires_join (wiring_tests.ReleaseAndClosureTests.test_repeated_service_close_is_safe_and_completed_receipt_requires_join) ... ok\ntest_actual_inner_descriptor_types_and_extra_fields_refuse (wiring_tests.ReleaseParserTests.test_actual_inner_descriptor_types_and_extra_fields_refuse) ... ok\ntest_actual_inner_parser_rejects_missing_wrong_or_oversized_release (wiring_tests.ReleaseParserTests.test_actual_inner_parser_rejects_missing_wrong_or_oversized_release) ... ok\ntest_actual_inner_release_parser_accepts_exact_descriptor (wiring_tests.ReleaseParserTests.test_actual_inner_release_parser_accepts_exact_descriptor) ... ok\ntest_actual_outer_parser_has_one_mode_and_execute_default_off (wiring_tests.ReleaseParserTests.test_actual_outer_parser_has_one_mode_and_execute_default_off) ... ok\ntest_authority_path_cannot_be_template_or_arbitrary_file (wiring_tests.ReleaseParserTests.test_authority_path_cannot_be_template_or_arbitrary_file) ... ok\ntest_exact_e81e_533_seed_positive (wiring_tests.SeedTests.test_exact_e81e_533_seed_positive) ... ok\ntest_wrong_state_frame_or_parent_profile_refuses (wiring_tests.SeedTests.test_wrong_state_frame_or_parent_profile_refuses) ... ok\ntest_all_original_inner_input_observer_watch_functions_unchanged (wiring_tests.StaticWiringTests.test_all_original_inner_input_observer_watch_functions_unchanged) ... ok\ntest_exact_reviewed_hooks_and_frozen_core_guards_are_mirrored (wiring_tests.StaticWiringTests.test_exact_reviewed_hooks_and_frozen_core_guards_are_mirrored) ... ok\ntest_reviewed_child_gate_positions_and_no_generic_unlink_remain (wiring_tests.StaticWiringTests.test_reviewed_child_gate_positions_and_no_generic_unlink_remain) ... ok\n\n----------------------------------------------------------------------\nRan 22 tests in 0.334s\n\nOK\n",
+  "runtime_adopted": false
+}

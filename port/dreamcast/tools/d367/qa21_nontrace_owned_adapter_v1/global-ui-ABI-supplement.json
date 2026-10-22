@@ -1,0 +1,68 @@
+{
+  "scope": "3NEW exact248DWARF fieldreads; immutableprofileold73-field metadata preserved, no guessedoffsets",
+  "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "layout_path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_plan\\reader-c57-on-layout.json",
+  "layout_sha256": "17289a5336a9fb5de4e83a3ed7b198696fcc2249342e26fe03d2aeaa6ca5baf8",
+  "extra_fields": [
+    {
+      "structure": "SUB_SCREEN",
+      "requested": "get_item_id",
+      "path": "get_item_id",
+      "offset": 762,
+      "format": "H",
+      "type": "short unsigned int",
+      "tag": "DW_TAG_base_type",
+      "bytes": 2,
+      "route": [
+        {
+          "name": "get_item_id",
+          "die_offset": 85407,
+          "offset": 762,
+          "tag": "DW_TAG_member"
+        }
+      ],
+      "pointee": null
+    },
+    {
+      "structure": "SUB_SCREEN",
+      "requested": "pBuf",
+      "path": "pBuf",
+      "offset": 448,
+      "format": "I",
+      "type": "",
+      "tag": "DW_TAG_pointer_type",
+      "bytes": 4,
+      "route": [
+        {
+          "name": "pBuf",
+          "die_offset": 84665,
+          "offset": 448,
+          "tag": "DW_TAG_member"
+        }
+      ],
+      "pointee": null
+    },
+    {
+      "structure": "GlobalWork",
+      "requested": "pStFnt",
+      "path": "pStFnt",
+      "offset": 60,
+      "format": "I",
+      "type": "",
+      "tag": "DW_TAG_pointer_type",
+      "bytes": 4,
+      "route": [
+        {
+          "name": "pStFnt",
+          "die_offset": 80483,
+          "offset": 60,
+          "tag": "DW_TAG_member"
+        }
+      ],
+      "pointee": null
+    }
+  ],
+  "new_full_field_count": 76,
+  "original_profile_field_count": 73,
+  "futurelaunchseal": "supplement mustbeexplicitlypinned/reviewed; no launchseal inthissourceunit"
+}
