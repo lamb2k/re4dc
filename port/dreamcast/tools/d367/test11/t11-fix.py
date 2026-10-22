@@ -880,6 +880,12 @@ if os.path.isdir(MIP22D):
     for _r in sorted(os.listdir(MIP22D + '/dc/native')):
         DATA['mip22']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22D, _r)
     PAK_DERIVED['mip22'] = MIP22D + '/pak-derived.json'
+# res22c (lane codex22, 10-22, data only): dc/resident.bin = mip22's remapped file + the listed keys it lacks
+# (vram/resident_keys.py extend <out> mip22/dc/resident.bin mip22/dc/resident-remap.tsv vram/resident/r*.tsv; same inputs,
+# same bytes). Carries the first-use keys (HUD ammo digits in r000, shot effects, first Ganado pictures). Ships the remap
+# table beside it for the coverage gate. After mip22; release discs only (not in KSETS, like mip22).
+RES22CD = os.environ.get('RES22CD', '/root/re4data/private/res22c-20261022')
+DATA['res22c'] = {'dc/resident.bin': RES22CD + '/resident.bin'}
 
 
 if __name__ == '__main__':
