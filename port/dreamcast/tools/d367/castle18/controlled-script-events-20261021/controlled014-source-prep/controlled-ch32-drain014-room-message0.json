@@ -1,0 +1,57 @@
+{
+  "scope": "Hash-only source MDT message0 identity; no text/content payload. Runtime must resolve MesData.lang+ptr1 through frozen getAddr and match whole source span before ordinaryYes.",
+  "arc_sha256": "e0be4a7b572cd8a1ed6ae0a4ca1582ea0e3bfcb0ca0d75294ac015a2638c6083",
+  "MDT_offset": 1500768,
+  "MDT_size": 1856,
+  "MDT_sha256": "31814df7f5c70edddf44fb1b94c2f17a8bcdf04d370db2097943fe57c226c7ac",
+  "languages": {
+    "0": {
+      "table_offset": 28,
+      "count": 4,
+      "message0_offset": 52,
+      "message0_end": 108,
+      "message0_bytes": 56,
+      "sha256": "6e7bd4a9d409a3acac9623fd7015f2457739288b99fdcb0c7a4b2c3e67ef7dec"
+    },
+    "1": {
+      "table_offset": 252,
+      "count": 4,
+      "message0_offset": 276,
+      "message0_end": 412,
+      "message0_bytes": 136,
+      "sha256": "81de22f3af7f69f5bf996eb294de0b236b4669e6e4464a46a5ecc0873d8787f2"
+    },
+    "2": {
+      "table_offset": 828,
+      "count": 4,
+      "message0_offset": 852,
+      "message0_end": 914,
+      "message0_bytes": 62,
+      "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+    },
+    "3": {
+      "table_offset": 1084,
+      "count": 4,
+      "message0_offset": 1108,
+      "message0_end": 1170,
+      "message0_bytes": 62,
+      "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+    },
+    "4": {
+      "table_offset": 1340,
+      "count": 4,
+      "message0_offset": 1364,
+      "message0_end": 1426,
+      "message0_bytes": 62,
+      "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+    },
+    "5": {
+      "table_offset": 1596,
+      "count": 4,
+      "message0_offset": 1620,
+      "message0_end": 1682,
+      "message0_bytes": 62,
+      "sha256": "82845532829868599e9a80ffde1814a2b06d6575f862f71040facea4c0c4a035"
+    }
+  }
+}
