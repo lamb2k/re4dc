@@ -13,6 +13,8 @@ def sha(p):
  return h.hexdigest()
 def require(x,msg):
  if not x:raise RuntimeError(msg)
+for line in (M/'SHA256SUMS').read_text().splitlines():
+ h,name=line.split('  ',1);require(sha(M/name)==h,'metadata checksum disagreement '+name)
 r=load('preparation.json');T=Path('/root/probe/codex-mipmap21-next650')
 require(subprocess.check_output(['git','rev-parse','HEAD'],cwd=T,text=True).strip()==r['source'],'candidate HEAD changed')
 require(not subprocess.check_output(['git','status','--porcelain'],cwd=T,text=True).strip(),'candidate dirty')
