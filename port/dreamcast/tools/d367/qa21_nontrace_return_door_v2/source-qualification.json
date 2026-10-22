@@ -1,0 +1,58 @@
+{
+  "scope": "successor startup-binding source qualification only, no runtime/door qualification",
+  "utc": "2026-10-22T04:59:47.076638+00:00",
+  "pass": true,
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "blocked_predecessor": {
+    "commit": "514fe3b5a61c370addd8719eee32f6aa8ae079be",
+    "tools_sha256": "8d06f482b0a4587aef90a610e2b2db132fa0fb9a09c015496f7f93e836d5f500",
+    "qualified": false,
+    "cause": "missing actual P/exact-log-symbols.json at inner startup after watch starts before runner try",
+    "review": "a0710af6c87df64471ec19fbc9873b0eb96418af",
+    "preserved": true
+  },
+  "repair": "local634byte accepted-v1 exact-log-symbols.json + new local pin; no runtimecode delta from514",
+  "runtime_proof_sha256": "9b1611e7a11980be6099ae428830f2296a20e2cd85299a1db99de0db0d471273",
+  "new_tests": {
+    "linux": {
+      "path": "binding-tests-linux-20261022T045915136395Z.json",
+      "bytes": 1818,
+      "sha256": "f2695165bf7a7491ad2c78955c8e88719c14b292aed5468a10d3bfc86436a993",
+      "new_tests": 5,
+      "sources_current": true
+    },
+    "windows": {
+      "path": "binding-tests-windows-20261022T045915900862Z.json",
+      "bytes": 1798,
+      "sha256": "0234a82c845cdbfb6d7f2d2c1e96ced611075451f300489193bf0106bef3a70a",
+      "new_tests": 5,
+      "sources_current": true
+    }
+  },
+  "local_metadata": {
+    "bytes": 634,
+    "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+  },
+  "inherited_previous_child_source_tests": {
+    "path": "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_return_door_v1\\source-qualification.json",
+    "bytes": 2044,
+    "sha256": "845c480e771fc536d1aed1c88d1aa60fa9951b8430749a965953c471ebe397ee",
+    "meaning": "9source contracts each Windows/Linux retained by byteexact runtime/profile; not sufficient alone for missing local binding"
+  },
+  "inherited_guard_qualification": {
+    "meaning": "byteidentity; no broad/native test rerun",
+    "source_v1_manifest": "0b12c09410599ee55c96d49875dadf5236b210ef8d8267cc0d7aaa82ad921bfd",
+    "source_v1_commit": "f63bb6de05630a4e06084baf769f2b4b364b3f0f",
+    "source_v1_review": "cf4881ec21101fa25b7fff2cf60c45044d648259",
+    "actual_cold_pass_commit": "64e075fb95a3f31dde891c037d6ddd4dda5e43dc",
+    "actual_cold_retained_seconds": 41.7446011,
+    "actual_cold_acceptance_sha256": "c5fcc6141cca426099e1fc34537edfeb522987c8c8a7814059afa150b279b83e",
+    "native_job_fixture": "all3sourcev1 tinyPythonchild receipts remainpinned via actualv1 externalmanifest",
+    "does_not_establish_door_runtime": true
+  },
+  "strict_parent_source_qualification_sha256": "a4e429b264200f3709dc73b3c2e8d50c36b586ac81d045d77785c1aeab49c7c8",
+  "actual_external_readonly_files": 84,
+  "guest_allocated": false,
+  "door_guest_qualified": false,
+  "old_failed_shooting_preserved": true
+}

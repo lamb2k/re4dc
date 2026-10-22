@@ -1,0 +1,67 @@
+{
+  "scope": "sourceidentityonly, no guest",
+  "parent_seal_commit": "f63bb6de05630a4e06084baf769f2b4b364b3f0f",
+  "candidate_commit": "6822dd695224bad2320b16b3fca20a2f7cbc921f",
+  "profile_byte_exact": true,
+  "runtime_files": {
+    "outer-driver.py": {
+      "base_sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "child_sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "same": true
+    },
+    "inner-adapter.py": {
+      "base_sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "child_sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "same": true
+    },
+    "windows-backend.py": {
+      "base_sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "child_sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "same": true
+    },
+    "guest-supervisor-core.py": {
+      "base_sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "child_sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "same": true
+    },
+    "input-deadlines.py": {
+      "base_sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "child_sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "same": true
+    },
+    "controller-core.py": {
+      "base_sha256": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a",
+      "child_sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+      "same": false
+    },
+    "policies.py": {
+      "base_sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "child_sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "same": true
+    },
+    "observe.py": {
+      "base_sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "child_sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "same": true
+    },
+    "observer-v2.py": {
+      "base_sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "child_sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "same": true
+    },
+    "layout-contract.py": {
+      "base_sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "child_sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "same": true
+    },
+    "capture-budget.py": {
+      "base_sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "child_sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "same": true
+    }
+  },
+  "only_runtime_delta": "controller contactA.20\u2192.15",
+  "actual_parser_unchanged": true,
+  "allocated_mode": "NONE; future requested return-door01 only",
+  "cold_role_executed": false
+}
