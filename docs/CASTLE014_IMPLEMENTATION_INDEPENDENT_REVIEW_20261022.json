@@ -1,0 +1,130 @@
+{
+  "state": "CLEAR_SOURCE_IMPLEMENTATION_REVIEW_WITH_LIMITS_ROOT_ALLOCATION_REQUIRED",
+  "exact_candidate": {
+    "scope": "Source-qualified014 candidate and launch proposal only. NO guest/build/image allocation or execution. Independent perf21_scene review pending.",
+    "observer": "c2b0331770e8f013e3d68a1522814e8d2b655eb2595cd11d62998a72cda31688",
+    "wrapper": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+    "shell": "8db6799ad4d6fc01256a577b27ee89da224c7aa69be8117b79b44d615c8b9936",
+    "pins": "3d01155a3c1bd7c4b4c85c1d1d8f23b5ced1d94dd1626fdb9ffac9bfb5f331bd",
+    "fixture": "26b551c37eef728d17e3686cfb60763cde8c43b979dd5d1a029ca1f7f31a9ebe",
+    "ABI": "7c1d549c21590c4a6027f784cca4a0e995489beb4cbc2b37333dd3f7f3bdecea",
+    "DWARF": "ac0c7fb410a572522b494954f906250e6194835dcd21690031ec5cbb8725fc2b",
+    "message0_identity": "d9954a3b9bac1b35b31f953323b4e820798a4514192a88d6d9c75b0e919e33fb",
+    "focused_source_checks": "195121da5a7953ab39b659b6847e04611c35e1588cac4754e063d5f59637cef6",
+    "source_checks_pass": 27,
+    "native_offset_checks": 35,
+    "root_command": [
+      "wsl.exe",
+      "-d",
+      "Ubuntu-24.04",
+      "-u",
+      "root",
+      "--",
+      "bash",
+      "/mnt/c/Game Dev/Emulators/codex-lanes/castle18/run-controlled-ch32-drain014.sh",
+      "--execute-allocated014"
+    ],
+    "allocation_required": {
+      "file": "DRAIN014-ROOT-ALLOCATION.json",
+      "allocated014": true,
+      "wrapper_sha256": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+      "pins_sha256": "3d01155a3c1bd7c4b4c85c1d1d8f23b5ced1d94dd1626fdb9ffac9bfb5f331bd"
+    },
+    "resources": {
+      "start_free_bytes": 20342374400,
+      "runtime_free_bytes": 19394461696,
+      "raw_seconds": 41,
+      "normal_close_seconds": 39,
+      "absolute_seconds": 47.5,
+      "capture_cap_bytes": 62914560,
+      "global_Flycasts": 16,
+      "castle_Flycasts": 2,
+      "peers": "Conservative floor retains18GiB+128MiB+200MiBstandingpeers+640MiBformerextra. Global64MiBsourcepeer included; root must charge any newer peer allocation before execution."
+    },
+    "method": "Cold205 at original lever. Actual native collision-clipped hit08 and registeredaction gate ordinaryA. Exact sourceMDT message0 native slot0/hash/readiness gates ordinaryYes; no blind input or memorywrites. Observe original drain/end+source68 status truthfully, retainpartial atbound. No optional upperdoor/goto, no snapshot seed or outcome flag presets.",
+    "protected": "Actual01397b636,auth127ec9ed,auth294cb7a,009VMU425595 rehashed by default wrapper; no use as snapshot seed.",
+    "known_limits": [
+      "Storedsource/ELF/asset qualification and purehostpredicates are not actual gameplay acceptance",
+      "Actionwork is a registered candidate; actualnativeclipped-hit and resulting exactsourceprompt establish execution. No selected-action-pointer ABI is invented.",
+      "Source68 absence alone is not a proven cap hold; inspect original log/cap reason separately",
+      "Camouflage CAST failure remains independent; no performance/release/hardwareclaim"
+    ],
+    "additional_guards": "5live32B maincode/vtable PT_LOAD anchors; transient readiness/coherence onlyskipsinput, preserves fullboundedobservation. No guestexecuted.",
+    "final_candidate": "observerc2b033 active classification; wrapperdbdb673 protected helperstartup cleanup. Final independent delta review pending; no guest allocation.",
+    "startup_cleanup_case": {
+      "path": "controlled-ch32-drain014-startup-cleanup-source-case.json",
+      "sha256": "3c5bda0baa727b2f6ed430e9a3cbb8a061b1340963669e3fa7f21e060d521980",
+      "scope": "One focused actualwrapperAST fake-helpercase, zero OSchild/guest/runtimefiles; source-only"
+    }
+  },
+  "proposal_sha256": "79022fc5cbf8d5bae2527ef844262697aef368d4efcf359f4139fa259df98955",
+  "reviewed_prior_sourceplan_commit": "8761bc4dad98501118cca2fbf847b5dbe5e5f0d7",
+  "source_programme": {
+    "source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+    "ELF": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+    "raw": "78fb06976cc394ec6e4cb7861046c24a15f82ddf7bcb2fcbfd452d3fcbf72e33",
+    "master": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6"
+  },
+  "blocking_findings_remaining": [],
+  "confirmed_defect_fixed": {
+    "old_wrapper": "3d9f0169b3603a0f3135d5b5b3cc1372861be466922baef982795e85f58d1c42",
+    "finding": "Observer Popen failure after watcher start occurred before try, leaving helper with zero cleanup calls until80s self-timeout. Exact AST fake-object reproduction preserved.",
+    "fix": "Both helper starts protected; if no harness started/noownedprocess artifact, terminate and wait exact started helpers, collecting errors so next helper is not skipped. Guest path retains independent V5 and nests observer reap even when watcher wait fails. Protected-input hash checks remain outer finally.",
+    "independent_fixed_case": {
+      "scope": "ONE focused actual-wrapper AST control case with fake helpers only. Zero spawned OS processes/Flycast/guest/ownership/files. Does not qualify live kernel stalls or guest cleanup.",
+      "wrapper_sha256": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+      "expected_exception": "focused fake observer spawn failure; no child or guest created",
+      "helper_Popen_calls": 2,
+      "started_fake_watcher_terminate_calls": 1,
+      "started_fake_watcher_wait_calls": 1,
+      "harness_started": false,
+      "PASS": true
+    },
+    "zero_spawned_processes_in_fault_fixtures": true
+  },
+  "ABI": {
+    "new_selected_offsets": 35,
+    "fresh_actual_ELF_DWARF_report_sha256": "1023a9cda8f92c702f117ce60759e01a61c2b459945dd1bdb257fe7c112ae39d",
+    "critical_read_widths_independently_asserted": 13,
+    "signed_Message_selection_cursor_tablesize": "Fresh actual DWARF resolved encoding6 signed char,1B; button is unsigned char1B; waitCnt unsigned2B; attr unsigned4B; text4Bpointer. Matrix48B/position12B andcEm.status4B verified.",
+    "globals_and_sites": "Eighteen exact actual linked symbols independently matched, five32B maincode/vtable PT_LOAD anchor bytes derived. Runtime compares live bytes before new input gates. Existing frozen global/PVR readback ABI retained; no69f mip observer addresses imported.",
+    "native_alive": "ActualSceCheckEmAlive disassembly0x8c14f178 tests be_flag&0x201==1 then checkStatus(5); actualcheckStatus0x8c0210fc loadsstatus+0x3c4 and tests1<<5. Corrected actor68 observation follows that predicate, withHP reported separately."
+  },
+  "input_and_state_review": [
+    "Guest handles are READ/QUERY/SYNCHRONIZE only; noWriteProcessMemory or native function call. Existing cold fixture/chapter/position setup is exactdeclared CONTROLLED lineage; noRSF/HP/dead/inventory/AI/atfunc/outcome presets or follow-on goto.",
+    "Native hit08/checkType1 and matching registered action gate initial ordinaryA. Actionwork is a registered candidate, not invented selected-action-pointer ABI. Actualsourceprompt span/hash is subsequent confirmation gate.",
+    "MesData.ptr1 andRoomMes mustagree; all6language message0 spans match actualstagedhash. Typednative slot0/vptr/button/wait/attr/selection/current checks gate Yes; direction source0x00800000 selectsUp, otherwiseLeft.",
+    "Each allowed key is exactowned SDLwindow WM_KEYDOWN/UP with immediate recheck,200ms andfinally keyup. State advances only when pulse sent; no claim that successfulPostMessage alone establishes guestack/execution. Maximumone leverA,one optionaldirection,one confirmA. Unknown/transientcoherence/readiness skipsinput andcontinues same boundedobserver.",
+    "Full observer continues until39s evenif drain-end fields appear early. EarlyRSF0 alone nevermarks completion; original RSF0+1/area08,07,15off/11on/1Bregistration/Stopreturn/frameadvance requirepostrun audit andscreenshots.",
+    "Actor68absence is never inferred held. Correctednative alive predicate is observability only, notinput gate. Area1Bregistration is not58wavefiring; fullspawn/cast/materialization remains separate fromdrainend source-state observation."
+  ],
+  "independent_checks": {
+    "existing_input_and_actualMDT_predicates": 27,
+    "receipt_sha256": "195121da5a7953ab39b659b6847e04611c35e1588cac4754e063d5f59637cef6",
+    "fixed_helper_failure_case": 1,
+    "default_prepare": {
+      "scope": "Independent default prepare invocation; no execute flag, no guest or helper processes. Actual nineteen pin assertions and four protected-input assertions passed; exactfixture/AST/argv assertions passed.",
+      "tool_output_chunk": "16c745",
+      "observer_sha256": "c2b0331770e8f013e3d68a1522814e8d2b655eb2595cd11d62998a72cda31688",
+      "wrapper_sha256": "dbdb673f9b8bc0ef7fb86b9e9d21d98e756523563493de2b120bc1a63980f600",
+      "pins_sha256": "3d01155a3c1bd7c4b4c85c1d1d8f23b5ced1d94dd1626fdb9ffac9bfb5f331bd",
+      "prepared_only": true,
+      "no_guest": true,
+      "exit_code": 0
+    },
+    "syntax_checked_by_default_prepare": true,
+    "no_guest_or_gamebuild": true
+  },
+  "lifecycle_and_bounds": [
+    "Defaultwrapper checks only. Exactexecute flag androot allocationfile matchingwrapper/pins are required. Freshcap/ready/segment namespaces preserveoldinputs.",
+    "Readonlysource sample uses bounded mainRAM extents and bounded AEV/actor walks. Sourceframe/playerpointer bracket plus immediate resample is readiness observation, not an atomic fullphase/allgameplay snapshot or performanceframe qualification.",
+    "OwnedPID/path/creation checks protect keys andWM_CLOSE. Normalclose39s/raw41s, V5 independent absolute47.5s/resources unchanged. Freshstart20342374400B/runtime19394461696B and60MiB/global16/castle2 are retained. Root must add currentpeer reservations and recheckprocess inventory immediately before launch.",
+    "Outer shell acquires16-slot trace_lock. Parent launchreview should additionally pin exactsharedtrace_lock dependency SHAe5d301a1e5888b5256feee01ab7e90b7c21633d36450691a9e9df1836e913688; shell literalpath alone is not thatdependencybytepin.",
+    "Protectedauth127/294/actual013/private009VMU checked atdefaultprepare andagain finally; no input used as snapshotseed. NoAutoLoadState for controlledcold014."
+  ],
+  "limits": [
+    "No guest has been launched by thisreview. Hostpredicate/DWARF/defaultprepare/fakecleanup evidence doesnot certify actualscriptcompletion, inputlatency/kernelstalls, visual/cast correctness, endsave, nowarp/release orphysicalDreamcast acceptance.",
+    "Final wrapper/sourceABI CLEAR doesnot allocate a guest or permitfollowing retries. Root reviews concrete exactlaunchrequest, freshdisk/process/peeradmission andone-runallocation.",
+    "The completed sourceplan is controlledcold205 coverage only, notcontinuationof013 orauthentic127. Preservepartial realstate iftime ends; noforcedeventflags/outcomes orroutinepermissionquestions."
+  ]
+}
