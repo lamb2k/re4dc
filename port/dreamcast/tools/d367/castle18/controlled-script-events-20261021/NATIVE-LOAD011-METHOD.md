@@ -1,0 +1,13 @@
+# Native LOAD011: source-gated successor, no guest allocation
+
+LOAD010 cold-booted the actual009 saved VMU and closed normally at39.533s, but its screenshot remained on the original title menu with LOAD selected. The closed state is bffe1251ec3e0ca7defb4084cc2adf07edbfc3c12abeec51fb7ae681bc1624a2. Its source frame1055 was below the old pending absolute1500 Start input. Fixture state-transition log frames are VI retraces; source input scheduling uses pG->Frame_cnt. No CardLoad success was observed. Preserve this partial outcome and its V5 normal-closure PASS separately.
+
+The proposed successor is a fresh cold boot using the same actual009 privateVMU425595, exact frozen programme and inactive observer warp. It supplies no state seed. This avoids restoring the old pending timed pad sequence or editing/rearming that sequence. Native source callbacks and state-gated controller input perform the load.
+
+Exact fixture is native-load011-pad.txt, SHA103b7d67a4c993d936d4ae46a46765a582c1429bbfa0a563d062e795444faceb. Nine steps keep source-clock holds and native title/card gates while replacing absolute1500, +120 and +40 delays with eligibility at the observed native screen. Neutral steps separate input edges. The first Start at title2 is harmless; it does not skip Nintendo, and automatic logos remain original.
+
+titleMenuInit selects LOAD by default (cursor1 for the ordinary three-entry menu, cursor3 when unlocked). A at title5/1 selects4, causing native title Rno1=7 and CardLoad. Valid slot01 in load mode type0 enters dataSelect case5, sets the confirmation cursor1 (No), then enters card2/6. cardMesSet0x12 uses attr01020051 without00800000, so ordinary Left selects Yes; neutral then A confirms. No save overwrite, outcome flag, HP, AI or room intervention is supplied.
+
+The wrapper/observer are the reviewed010 method with names and pad input changed. V5 exact7aa4113d,41s raw,39s normal close,47.5s absolute,60MiB capture, global16, castle2 and conservative20,342,374,400-byte start /19,394,461,696-byte runtime floors remain unchanged. It pins the template executable/config/helpers, actual VMU, programme/ELF/master and independent binding receipt. Default execution performs preparation checks only. The explicit allocated launcher remains required; no011 guest has run.
+
+Acceptance requires original card-vmu load ok/digest and CardLoad completion, then actual loaded chapter7/room204 context with screenshots/closed state. Merely opening a menu or reading those fields is partial. If the deadline reaches a later native stage, preserve it accurately. Teleport/scripted-event progression follows actual load evidence in a separately reviewed unit. Physical Dreamcast, release, performance and audio-clean acceptance remain separate.
