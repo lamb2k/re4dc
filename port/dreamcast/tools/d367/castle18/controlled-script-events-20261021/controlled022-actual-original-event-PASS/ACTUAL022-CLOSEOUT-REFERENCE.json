@@ -1,0 +1,140 @@
+{
+  "scope": "Actual022controlledFlycast originalphysicalDoor1/leader-event PASS only; wholechapter/hardware/audio/release/performance open. Fullimmutableaudit external, bounded64KiBmetadata mirror useshashreference.",
+  "audit_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\controlled022-native-physical-door-original-event-PASS-audit.json",
+  "audit_sha256": "80536ff21492e5c7ee16239e2e92bb4fae6adc4fa8f47e8a669b728c807d7eb1",
+  "state": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\data\\disc.state",
+    "sha256": "b63e07f2ebb8be87be27e051d4580d28c878a0495348c5f99792ff2dcab4f16a",
+    "native": {
+      "frame": 6612,
+      "room": "0x209",
+      "Part": 0,
+      "previous": "0x204",
+      "phase": [
+        3,
+        0
+      ],
+      "Stop": "0x0",
+      "HP": [
+        1040,
+        1440,
+        600,
+        600
+      ],
+      "position": [
+        -15379.6787109375,
+        1999.9993896484375,
+        13496.640625
+      ],
+      "Key": [
+        2148009088,
+        2148009088,
+        0
+      ]
+    }
+  },
+  "closed": {
+    "PID": 55588,
+    "retained_signaled": true,
+    "exit_code": 0,
+    "exit_age": 39.788387504580896,
+    "guard_actions": [],
+    "harness_seconds": 39.8,
+    "harness_errors": [],
+    "minimum_free": 154070102016,
+    "maximum_cap": 44904685
+  },
+  "sourcepins": {
+    "count": 41,
+    "sha256": "a8e52dbdb5ac199f6f0ec410f1a10316c8d3fdc1b152cfbf2c2b0e8a6a66fd1a",
+    "all_freshly_matched": true,
+    "protected_count": 20,
+    "protected_all_freshly_matched": true,
+    "closed_main_anchors": 4
+  },
+  "milestones": {
+    "original_physicalDoor1_open_flag": {
+      "frame": 5567,
+      "process_age": 2.966893470787909,
+      "camera_no": 1,
+      "Stop": "0x0"
+    },
+    "original_leader_cut_camera3": {
+      "frame": 5569,
+      "process_age": 3.02889347076416,
+      "camera_no": 3,
+      "Stop": "0x80400100"
+    },
+    "original_leader_cut_camera2": {
+      "frame": 5601,
+      "process_age": 4.200893470784649,
+      "camera_no": 2,
+      "Stop": "0x80400100"
+    },
+    "original_leader_cut_return": {
+      "frame": 5694,
+      "process_age": 7.247893470746931,
+      "camera_no": 1,
+      "Stop": "0x0"
+    }
+  },
+  "source": "12a841d7cfe2c747266b0c330555557e651a4af0",
+  "ELF": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "master": "b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6",
+  "binding": "ccd160943c8d91d47c854ff3fe136ec42c25f59c554323f66532287f5f7371ed",
+  "VMU": "425595f75b099a23789e09bbbd8fa4a3661072539644eae6051aa884943400b0",
+  "actual_game_memory_writes": 0,
+  "pulse_acknowledged": true,
+  "legitimate_injury": {
+    "initial_Leon1440": true,
+    "terminal_Leon1040": true,
+    "HP_drop": 400,
+    "no_abort_edit_heal_or_rollback": true
+  },
+  "screenshots": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\shots\\controlled-deadline-context\\frames\\fb0.png",
+      "bytes": 240835,
+      "sha256": "deb60c16f0e6196bd8fa650e36b09bcc4d1ba5963e4367c050443feadb7e5f5a"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\shots\\controlled-deadline-context\\frames\\fb1.png",
+      "bytes": 240794,
+      "sha256": "7638f777a1738a5561f7cd689609cc550d7bb3c85445fab07e989220bc710044"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\shots\\controlled-original-leader-cut-camera2\\frames\\fb0.png",
+      "bytes": 252548,
+      "sha256": "a40288767628a688fdf9e7d81c71ac27eb63a37aeec07ab09e302df445fbc891"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\shots\\controlled-original-leader-cut-camera2\\frames\\fb1.png",
+      "bytes": 253343,
+      "sha256": "88f4d22290364646a618cca89ed4e09fe8ef3c91c0ffe0a9ef3e52dd7d2e4774"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\shots\\controlled-original-leader-cut-camera3\\frames\\fb0.png",
+      "bytes": 255269,
+      "sha256": "e901d1344ba09d79966aab833f7546cc516ebf632d84160ac47086de286864c0"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\shots\\controlled-original-leader-cut-camera3\\frames\\fb1.png",
+      "bytes": 238875,
+      "sha256": "303648c8dfcd9af9fd99c9755e73c6df4beca058740658d49f7fb9a14e4c3af5"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\shots\\controlled-original-leader-cut-return\\frames\\fb0.png",
+      "bytes": 191585,
+      "sha256": "6eff6fea3df7baef0dac9e536a4f65843e5ac683a2db74180a232d7a0a953acd"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door022\\shots\\controlled-original-leader-cut-return\\frames\\fb1.png",
+      "bytes": 189905,
+      "sha256": "72b10565fd8136973168a1c375ccd9838a1e1885ecbad890646d02014141a9bd"
+    }
+  ],
+  "visual": "Worker viewedcamera3 PNG: hornedredcultistleader/frontcompanions; camera2 PNG: leaderpoints. ReturnlabelPNG isbalcony/cinematicpixels despite source-returnmilestone. LaterdeadlinePNG showsLeon/HUDbyopeneddoor; sourceStop0/advancingframes confirmsreturn separately.",
+  "root_allocation": "d1e538df9c306568addc58b36eb301dd5b030409985fc934a46cd9592ff5fef0",
+  "native_Key_caveat": "Terminalold/on80080480,trg0 despiteAPIkeyupcount1/OSasyncX0; causeunclassified. Freshrestore/nativePADneutralmustbeobservedbeforenextA; no stateedit.",
+  "next": "AuthorizednextSOURCEONLYoriginal209route/exit20aplan fromactual022, nofollowingguestallocated."
+}
