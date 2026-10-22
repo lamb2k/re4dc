@@ -52,7 +52,7 @@ see-through scenery drawn solid in every chapter 2 room too, and fewer disc read
 | ✅ Confirmed fixed | Fixed and confirmed on a real Dreamcast | 1 |
 | 🟢 Fixed, needs console check | Fixed and checked in our tests; waiting for a console report (see the checklist below) | 8 |
 | 🟢 Fixed in test 8 / 9 / 9.1 / 10 / 12 / 12.1 / 13 / 15 / 15.1 / 16 / 16.1 / 16.2 / 16.3 / 16.5 / 17 / 17.1 / 18 / 19.1 | Fixed and checked in our tests; the problem was not console-only | 47 |
-| 🛠️ In progress | Being fixed now | 0 |
+| 🛠️ In progress | Being fixed now | 2 |
 | 🔍 Investigating | Being reproduced or traced | 4 |
 | ⏸️ Open | Known, not yet worked on | 15 |
 | ❔ Not reproduced | We could not make it happen; more details welcome | 1 |
@@ -72,6 +72,8 @@ Not bugs: work that goes on from test to test.
 
 | Problem | Builds | Status | Report |
 | --- | --- | --- | --- |
+| A Ganado with a chainsaw who catches Leon at low health can stall: Leon lies down but the death scene and Continue never come | test 21 and earlier | 🛠️ In progress: fixed for Test 22 (not in this download). The death scene plays and Continue returns you to the room | |
+| Opening the pause menu (Options / RETRY) changes the world behind it: GameCube scenery drawn over the room outdoors, and a big lighting change in the Mendez fight | test 21 | 🛠️ In progress: fixed for Test 22 (not in this download). The paused world stays as it was and play resumes cleanly | [#48](https://github.com/lamb2k/re4dc/issues/48) |
 | Random crashes on a real console, often in the village or shortly after a room loads (memory corruption) | test 7, test 8 | 🟢 Fixed, needs console check | [#23](https://github.com/lamb2k/re4dc/issues/23), [#27](https://github.com/lamb2k/re4dc/issues/27), [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Changing the Rendering level sometimes crashes a few seconds later | test 8 | 🟢 Fixed in test 9: the Rendering option was removed. Test 12 brings the row back with two choices, Standard and FSAA (both full 480-line pictures), checked in both and while switching | [#26](https://github.com/lamb2k/re4dc/issues/26) |
 | Loading a save and then starting a New Game shows an error | test 7, test 8 | 🟢 Fixed in test 9 | [#26](https://github.com/lamb2k/re4dc/issues/26) |
