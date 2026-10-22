@@ -29,7 +29,7 @@
 # Event storage bookkeeping: every TU must use the same template policy.
 # Native only; other manager predicates/layout and recipe defaults are unchanged.
 # Retire native reset borrowers before destroying their source heaps.
-RESET_RETIRE_BEFORE_HEAPS ?= 0
+RESET_RETIRE_BEFORE_HEAPS ?= 1
 ifneq ($(RESET_RETIRE_BEFORE_HEAPS),0)
 ifneq ($(RESET_RETIRE_BEFORE_HEAPS),1)
 $(error RESET_RETIRE_BEFORE_HEAPS must be 0 or 1)
@@ -37,14 +37,14 @@ endif
 GAME_CPPFLAGS += -DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1
 endif
 # Conditional failed-restore containment; optional source candidate only.
-SS_RESTORE_VALIDATE_FIRST ?= 0
+SS_RESTORE_VALIDATE_FIRST ?= 1
 ifneq ($(SS_RESTORE_VALIDATE_FIRST),0)
 ifneq ($(SS_RESTORE_VALIDATE_FIRST),1)
 $(error SS_RESTORE_VALIDATE_FIRST must be 0 or 1)
 endif
 GAME_CPPFLAGS += -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1
 endif
-EVENT_MANAGER_STORAGE_FLAGS ?= 0
+EVENT_MANAGER_STORAGE_FLAGS ?= 1
 ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),0)
 ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),1)
 $(error EVENT_MANAGER_STORAGE_FLAGS must be 0 or 1)
@@ -2495,7 +2495,7 @@ endif
 endif
 # TEX_PAYLOAD_RETRY=1 (default 0): space only failed packed-member I/O/validation retries
 # before eviction; dense exact ordinals require the immutable index sector CRC receipts.
-TEX_PAYLOAD_RETRY ?= 0
+TEX_PAYLOAD_RETRY ?= $(if $(and $(filter 1,$(TEX_PACK)),$(filter 1,$(TEX_RESIDENT))),1,0)
 ifneq ($(words $(TEX_PAYLOAD_RETRY)),1)
 $(error TEX_PAYLOAD_RETRY must be exactly 0 or 1)
 endif
@@ -3480,6 +3480,17 @@ EM_READ_FAIL_INJECT_ROOM ?= 0x10C
 ifneq ($(EM_READ_FAIL_INJECT),0)
 GAME_CPPFLAGS += -DRE4DC_EM_READ_FAIL_INJECT=$(EM_READ_FAIL_INJECT) -DRE4DC_EM_READ_FAIL_INJECT_ROOM=$(EM_READ_FAIL_INJECT_ROOM)
 endif
+# GUARD_FAIL_INJECT=N (test only, lane guards22, default 0 = no code): in room GUARD_FAIL_INJECT_ROOM (default 0x100)
+#   fresh event file reads (MASK bit 0) are refused and first effect-file admissions (bit 1) take the invalid-file path,
+#   N times each (>= 99: always). The failure-injection proof of the audit guard set; never in a product image.
+GUARD_FAIL_INJECT ?= 0
+GUARD_FAIL_INJECT_ROOM ?= 0x100
+GUARD_FAIL_INJECT_MASK ?= 3
+# GUARD_FAIL_INJECT_EVT=0xNN: only event file sNN of that room (and effect admissions after its first read); -1 = any.
+GUARD_FAIL_INJECT_EVT ?= -1
+ifneq ($(GUARD_FAIL_INJECT),0)
+$(OBJDIR)/src/game/event.o $(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_GUARD_FAIL_INJECT=$(GUARD_FAIL_INJECT) -DRE4DC_GUARD_FAIL_INJECT_ROOM=$(GUARD_FAIL_INJECT_ROOM) -DRE4DC_GUARD_FAIL_INJECT_MASK=$(GUARD_FAIL_INJECT_MASK) -DRE4DC_GUARD_FAIL_INJECT_EVT=$(GUARD_FAIL_INJECT_EVT)
+endif
 # RESET_MEM_FIX=1 (lane resetmem; load a save, Game Reset / Retry, New Game: r100 started with less heap 4 and KOS
 #   malloc than after a fresh boot): state the port keeps across a soft reset goes back to its fresh-boot value.
 #   ACTOR_PL08_PACK: the bound player file is forgotten with the player archive (systemResetCommon), so a New Game's
@@ -3832,7 +3843,7 @@ $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_MISS_LOG
 endif
 
 # Validate controller/model/part inputs before native effect record reads.
-EFFECT_CONTROLLER_VALIDATE_FIRST ?= 0
+EFFECT_CONTROLLER_VALIDATE_FIRST ?= 1
 ifneq ($(words $(EFFECT_CONTROLLER_VALIDATE_FIRST)),1)
 $(error EFFECT_CONTROLLER_VALIDATE_FIRST must be 0 or 1)
 endif
