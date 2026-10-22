@@ -1,0 +1,44 @@
+{
+  "scope": "SOURCE ONLY020; controlledactual019continuation, no guest/allocation. Reversiblefocusrequests targetexactownedSDLonly; unknown019focuscause notclaimed.",
+  "seed_sha256": "669b920f06e89403a15d3796021878c39ee9807fe020487e6a8666220f635631",
+  "minimum_frame": 3684,
+  "inherited_position": "Actual019alreadyatDoor4,go1done/max_entry2/n_go2/rooms2; nofirstgoto/rollback.",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 29,
+  "write_gate": "ONLYactual209freeplay/currententry3/Stop0; existing descriptor\u2192max3\u2192count3last. No firststageconfigwrite permitted.",
+  "input_contract": "AtmostONEkeydownperstage. RecordPID/HWND/UIthread/foreground/GUIactive+focus evidence. Ifnotverifiedfocus, requestSetForegroundWindowONLYownedSDLonce/poll<=.35s; ifunverifiedNOinput/no retry. ImmediatecoherentsourceDoorready recheckthenoneX/scan2Dkeydown; holduntilcoherentnativeKeyu64on/trgAack ororiginal209doorrequest or<=.75s, releasefinally. Noautomaticretry; continueboundedobservation. GetGUIThreadInfo72B/native64; no otherwindowinput/focusrequest.",
+  "native_Key": {
+    "symbol": "0x8c3a948c",
+    "old": 8,
+    "on": 16,
+    "trg": 24,
+    "width": 8,
+    "endian": "little",
+    "mask": "0x80080000",
+    "DWARF_sha256": "435b7811682093c5eadee5ba80a9654997b1f1d1929d2ebf16913a4cc4f2fce7"
+  },
+  "Windows_GUI": {
+    "size": 72,
+    "cbSize": 0,
+    "flags": 4,
+    "hwndActive": 8,
+    "hwndFocus": 16,
+    "rcCaret": 56
+  },
+  "source_qualification": "Onlynarrownewfocus/ack/release/no-repeat/no-firstwrite cases; no44/17/31rerun.",
+  "guards": "Same41raw/39close/47.5absolute/60MiB/global16/castle2/start20342374400/runtime19394461696. Identity/release/capture/V5/startuplog/coreABI unchanged.",
+  "exclusive_gui_input": "RootmustcloseQAandallpeerGUIinputbeforeallocation, reserveexclusiveguileasefor020. WrapperfreshFlycastinventorymustbeemptybeforelaunch; observerandwrapperrequireallocationexclusive_gui_input=true. Nopeerinputguestsduringfocuschanges. Global16/castle2capacityunchanged; thisunitserializesonlyitsconflictingGUIresource."
+}

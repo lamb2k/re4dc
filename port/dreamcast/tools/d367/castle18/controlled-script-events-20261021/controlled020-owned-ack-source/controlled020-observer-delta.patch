@@ -1,0 +1,107 @@
+--- frozen019
++++ candidate020
+@@ -1 +1 @@
+-"""CONTROLLED exact018state: existing Goto slots/current-entry admission only; native204Door4 to209, physicalDoor1 then original leader cut. No actor/room/outcome writes."""
++"""CONTROLLED exact019state alreadyatnative204Door4: acknowledgedowned-windowA to209, remainingcurrententryGoto thenphysicalDoor1/originalleadercut. No actor/room/outcome writes."""
+@@ -5 +5 @@
+-L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');cap=Path(sys.argv[1]).resolve();assert cap==D/'route-walk-controlled-ch32-door019'
++L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');cap=Path(sys.argv[1]).resolve();assert cap==D/'route-walk-controlled-ch32-door020'
+@@ -9,0 +10,10 @@
++class GuiThreadInfo(C.Structure):
++ _fields_=[('cbSize',W.DWORD),('flags',W.DWORD),('hwndActive',W.HWND),('hwndFocus',W.HWND),('hwndCapture',W.HWND),('hwndMenuOwner',W.HWND),('hwndMoveSize',W.HWND),('hwndCaret',W.HWND),('rcCaret',W.RECT)]
++assert C.sizeof(GuiThreadInfo)==72
++u.GetForegroundWindow.argtypes=[];u.GetForegroundWindow.restype=W.HWND
++u.GetGUIThreadInfo.argtypes=[W.DWORD,C.POINTER(GuiThreadInfo)];u.GetGUIThreadInfo.restype=W.BOOL
++u.SetForegroundWindow.argtypes=[W.HWND];u.SetForegroundWindow.restype=W.BOOL
++u.IsWindowVisible.argtypes=[W.HWND];u.IsWindowVisible.restype=W.BOOL
++u.IsIconic.argtypes=[W.HWND];u.IsIconic.restype=W.BOOL
++u.IsChild.argtypes=[W.HWND,W.HWND];u.IsChild.restype=W.BOOL
++u.GetWindowThreadProcessId.restype=W.DWORD
+@@ -64 +74 @@
+- return bool(row and previous and row.get('live_native_code_anchors_verified')is True and row.get('phase')==[3,0]and row.get('room')in['0x204','0x209']and row.get('pg')==previous.get('pg')and current_ram==previous.get('RAM_base')and row.get('frame',0)>previous.get('frame',0)and row.get('frame',0)>=2604)
++ return bool(row and previous and row.get('live_native_code_anchors_verified')is True and row.get('phase')==[3,0]and row.get('room')in['0x204','0x209']and row.get('pg')==previous.get('pg')and current_ram==previous.get('RAM_base')and row.get('frame',0)>previous.get('frame',0)and row.get('frame',0)>=3684)
+@@ -147 +157 @@
+-WRITE_ALLOWLIST=[{'address':hex(STAGES[1]['address']),'bytes':24},{'address':hex(STAGES[2]['address']),'bytes':24},{'address':hex(MAX_ENTRY),'bytes':1},{'address':hex(COUNT),'bytes':4}]
++WRITE_ALLOWLIST=[{'address':hex(STAGES[2]['address']),'bytes':24},{'address':hex(MAX_ENTRY),'bytes':1},{'address':hex(COUNT),'bytes':4}]
+@@ -164,0 +175 @@
++ assert stage==2,'Inheritedfirstplacementmustnotbereplayed'
+@@ -174,0 +186 @@
++ assert stage==2
+@@ -203,0 +216,28 @@
++def window_evidence(hwnd):
++ check();p=W.DWORD();thread=int(u.GetWindowThreadProcessId(hwnd,C.byref(p)));assert p.value==owner['pid']and thread
++ fg=int(u.GetForegroundWindow()or 0);fp=W.DWORD()
++ if fg:u.GetWindowThreadProcessId(fg,C.byref(fp))
++ q=GuiThreadInfo();q.cbSize=C.sizeof(q);C.set_last_error(0);ok=bool(u.GetGUIThreadInfo(thread,C.byref(q)));error=C.get_last_error();focus=int(q.hwndFocus or 0);kp=W.DWORD()
++ if focus:u.GetWindowThreadProcessId(focus,C.byref(kp))
++ return dict(hwnd=int(hwnd),owner_pid=p.value,thread_id=thread,foreground_hwnd=fg,foreground_pid=fp.value,gui_query_ok=ok,gui_query_error=error,active_hwnd=int(q.hwndActive or 0),focus_hwnd=focus,focus_pid=kp.value,focus_is_owned_child=bool(focus and u.IsChild(hwnd,focus)),gui_flags=q.flags,visible=bool(u.IsWindowVisible(hwnd)),iconic=bool(u.IsIconic(hwnd)),process_age=age())
++
++def verified_owned_focus(e):
++ return bool(e.get('gui_query_ok')and e.get('owner_pid')==owner['pid']and e.get('foreground_hwnd')==e.get('hwnd')and e.get('active_hwnd')==e.get('hwnd')and e.get('focus_pid')==owner['pid']and(e.get('focus_hwnd')==e.get('hwnd')or e.get('focus_is_owned_child')))
++
++def ensure_owned_focus(hwnd):
++ before=window_evidence(hwnd);events.append(dict(owned_window_before_focus=before))
++ if verified_owned_focus(before):return True
++ # One reversible focus request targets only this exact guest-owned SDL window.
++ # No foreign window receives an input/focus request; guest closure returns control to Windows.
++ check();accepted=bool(u.SetForegroundWindow(hwnd));until=time.monotonic()+.35;after=before
++ while time.monotonic()<until and age()<32:
++  check();after=window_evidence(hwnd)
++  if verified_owned_focus(after):events.append(dict(owned_window_focus_verified=after,SetForegroundWindow_returned=accepted));return True
++  time.sleep(.01)
++ events.append(dict(owned_window_focus_unverified=after,SetForegroundWindow_returned=accepted,no_input=True));return False
++
++def native_input_ack(row,stage):
++ check();pg=u32(0x8c2e91dc);assert pg==row['pg'];f=u32(pg+0x51e4);old,on,trg=struct.unpack('<3Q',read(0x8c3a948c+8,24));phase=list(read(pg+0x20,2));nextroom=struct.unpack('<H',read(pg+0x28,2))[0];stable=f==u32(pg+0x51e4)
++ keys=stable and bool((on|trg)&0x80080000==0x80080000);effect=stable and stage==1 and phase[0]==4 and nextroom==0x209
++ return dict(frame=f,coherent=stable,Key_old=hex(old),Key_on=hex(on),Key_trg=hex(trg),phase=phase,next_room=hex(nextroom),native_key_ack=keys,original_door_request_ack=effect,acknowledged=keys or effect)
++
+@@ -205,2 +245,2 @@
+- check();row=sample()
+- if not memory_ready or age()>=32 or not door_ready(row,stage):return False
++ check();row=sample();result=dict(pressed=False,acknowledged=False,stage=stage)
++ if not memory_ready or age()>=31.5 or not door_ready(row,stage):return result
+@@ -213,0 +254 @@
++ if not ensure_owned_focus(hwnd):return result
+@@ -215,3 +256,3 @@
+-  check();assert memory_ready and age()<32;row=sample()
+-  if not door_ready(row,stage):return False
+-  events.append(dict(immediate_native_door_A_recheck=row,stage=stage));assert u.PostMessageW(hwnd,0x100,vk,1|(scan<<16));pressed=True;until=time.monotonic()+.2
++  check();assert memory_ready and age()<32;row=sample();focus=window_evidence(hwnd)
++  if not door_ready(row,stage)or not verified_owned_focus(focus):return result
++  events.append(dict(immediate_native_door_A_recheck=row,stage=stage,owned_window_evidence=focus));assert u.PostMessageW(hwnd,0x100,vk,1|(scan<<16));pressed=True;result['pressed']=True;until=time.monotonic()+.75
+@@ -219 +260,3 @@
+-   check();assert age()<40.5;ack.append(dict(frame=u32(row['pg']+0x51e4),Key_trg=hex(u32(0x8c3a948c+24))));time.sleep(.015)
++   check();assert age()<40.5;proof=native_input_ack(row,stage);ack.append(proof)
++   if proof['acknowledged']:result['acknowledged']=True;break
++   time.sleep(.003)
+@@ -223 +266,2 @@
+- events.append(dict(ordinary_owned_UI_pulse=('native204-Door4-A'if stage==1 else'native209-physicalDoor1-A'),stage=stage,seconds=.2,ack_observations=ack,process_age=age()));return True
++ if pressed:events.append(dict(ordinary_owned_UI_pulse=('native204-Door4-A'if stage==1 else'native209-physicalDoor1-A'),stage=stage,maximum_hold_seconds=.75,one_keydown_only=True,result=result,ack_observations=ack,owned_window_after_release=window_evidence(hwnd),process_age=age()))
++ return result
+@@ -234 +278 @@
+- (shot/'controlled-context.json').write_text(json.dumps(dict(scope='CONTROLLED actual018state; existing config command setup separate from original204Door4/209physicalDoor1/leader-event outputs.',observation=row,before=before,after=after,pngs=[dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())for p in(shot/'frames').glob('*.png')]),indent=2)+'\n')
++ (shot/'controlled-context.json').write_text(json.dumps(dict(scope='CONTROLLED actual019state; existing config command setup separate from original204Door4/209physicalDoor1/leader-event outputs.',observation=row,before=before,after=after,pngs=[dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())for p in(shot/'frames').glob('*.png')]),indent=2)+'\n')
+@@ -237 +281 @@
+- allocation=json.loads((L/'DOOR019-ROOT-ALLOCATION.json').read_text(encoding='utf-8'));assert allocation['allocated019']is True and allocation['allow_debug_goto_command_writes']is True and allocation['observer_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest() and allocation['write_allowlist']==WRITE_ALLOWLIST, 'Exact root-owned debug command allocation required'
++ allocation=json.loads((L/'DOOR020-ROOT-ALLOCATION.json').read_text(encoding='utf-8'));assert allocation['allocated020']is True and allocation['allow_debug_goto_command_writes']is True and allocation['allow_owned_window_focus']is True and allocation['exclusive_gui_input']is True and allocation['maximum_successful_command_bytes']==29 and allocation['observer_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest() and allocation['write_allowlist']==WRITE_ALLOWLIST, 'Exact root-owned debug command allocation required'
+@@ -242 +286 @@
+- assert re.search(r'(?m)^Dreamcast\.AutoLoadState = yes\s*$',(cap/'emu.cfg').read_text()),'Exact018 fullstate continuation requires AutoLoadState=yes'
++ assert re.search(r'(?m)^Dreamcast\.AutoLoadState = yes\s*$',(cap/'emu.cfg').read_text()),'Exact019 fullstate continuation requires AutoLoadState=yes'
+@@ -246,3 +290,3 @@
+- published={1:False,2:False};sent={1:False,2:False};placed={1:False,2:False};entry=False;door_open=False;cut3=False;cut2=False;returned=False;shots=set();cut2frame=None
+- events.append(dict(inherited017_firstcut_return=True,state_sha256='4d7178b9d7420156b39328396cae08661f92c297f4ed28794b145a3cfe03ecdc',no_replay_015_drain_or_017_firstcut=True,controlled_setup_maximum_successful_bytes=58))
+- with(cap/'controlled-door019-observations.jsonl').open('x')as out:
++ published={1:True,2:False};sent={1:False,2:False};attempted={1:False,2:False};placed={1:True,2:False};entry=False;door_open=False;cut3=False;cut2=False;returned=False;shots=set();cut2frame=None
++ events.append(dict(inherited017_firstcut_return=True,inherited019_placement_already_consumed=True,state_sha256='669b920f06e89403a15d3796021878c39ee9807fe020487e6a8666220f635631',no_replay_015_drain_or_017_firstcut=True,controlled_setup_maximum_successful_bytes=29))
++ with(cap/'controlled-door020-observations.jsonl').open('x')as out:
+@@ -272,2 +316,4 @@
+-     if memory_ready and not action_blocked and placed[stage]and not sent[stage]and age()<32 and door_ready(row,stage):
+-      try:sent[stage]=pulse_door(stage)
++     if memory_ready and not action_blocked and placed[stage]and not attempted[stage]and age()<31.5 and door_ready(row,stage):
++      attempted[stage]=True
++      try:
++       pulse_result=pulse_door(stage);sent[stage]=pulse_result['pressed'];events.append(dict(single_action_attempt=pulse_result,no_automatic_retry=True))
+@@ -306 +352 @@
+- if cap.exists():(cap/'controlled-door019-observer-summary.json').write_text(json.dumps(dict(scope=__doc__,last=last,events=events,owned_close_sent=closed_sent,source_fields_not_acceptance_alone=True,controlled_setup_not_event_completion=True,read_failure_count=read_failure_count,region_failure_count=region_failure_count,read_diagnostics=read_diagnostics),indent=2)+'\n')
++ if cap.exists():(cap/'controlled-door020-observer-summary.json').write_text(json.dumps(dict(scope=__doc__,last=last,events=events,owned_close_sent=closed_sent,source_fields_not_acceptance_alone=True,controlled_setup_not_event_completion=True,read_failure_count=read_failure_count,region_failure_count=region_failure_count,read_diagnostics=read_diagnostics),indent=2)+'\n')

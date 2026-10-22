@@ -1,0 +1,67 @@
+{
+  "ELF_sha256": "4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f",
+  "selected": {
+    "KeyWork": {
+      "root_die": "4fbf8",
+      "size": 184,
+      "members": {
+        "old": {
+          "offset": 8,
+          "type_die": "4cd9a",
+          "member_die": "4fc6c"
+        },
+        "on": {
+          "offset": 16,
+          "type_die": "4cd9a",
+          "member_die": "4fc79"
+        },
+        "trg": {
+          "offset": 24,
+          "type_die": "4cd9a",
+          "member_die": "4fc85"
+        }
+      }
+    },
+    "Act": {
+      "root_die": "c87733",
+      "size": 16,
+      "members": {
+        "frame": {
+          "offset": 0,
+          "type_die": "c7e798",
+          "member_die": "c8773e"
+        },
+        "buttons": {
+          "offset": 4,
+          "type_die": "c7e780",
+          "member_die": "c8774b"
+        },
+        "stick": {
+          "offset": 6,
+          "type_die": "c7e720",
+          "member_die": "c87758"
+        },
+        "hold": {
+          "offset": 8,
+          "type_die": "c7e780",
+          "member_die": "c87765"
+        },
+        "entry": {
+          "offset": 10,
+          "type_die": "c7e764",
+          "member_die": "c87772"
+        },
+        "ev": {
+          "offset": 11,
+          "type_die": "c7fa5d",
+          "member_die": "c8777f"
+        },
+        "stickx": {
+          "offset": 12,
+          "type_die": "c7e720",
+          "member_die": "c8778b"
+        }
+      }
+    }
+  }
+}

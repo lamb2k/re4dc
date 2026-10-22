@@ -1,0 +1,95 @@
+{
+  "scope": "Frozen020sourcecandidate andfocused019inputcomparison only; noactual020run.",
+  "members": [
+    {
+      "path": "observe-controlled-ch32-door020.py",
+      "bytes": 31657,
+      "sha256": "7edaf6ad057cd3291795b5260b52283091a0a6ed4fd808f46e7366978a4b2522"
+    },
+    {
+      "path": "run-controlled-ch32-door020.py",
+      "bytes": 10183,
+      "sha256": "9151ec8b466a01d9e5ef2ad164fa5af403f3697b202d0d948e463fa3b9853eaa"
+    },
+    {
+      "path": "run-controlled-ch32-door020.sh",
+      "bytes": 352,
+      "sha256": "723d12927aef72490cc497b80e851b13db9b96814287770c436a73354eb9742b"
+    },
+    {
+      "path": "controlled-ch32-door020-pins.json",
+      "bytes": 7547,
+      "sha256": "6ddc80d2a2cb92f92e04b2c64ff9b201e3a07581902a93c9ecb29013a77672ed"
+    },
+    {
+      "path": "controlled020-OWNED-INPUT-CONTRACT.json",
+      "bytes": 2305,
+      "sha256": "dcd9d3e8eb0ee8c293e7d32cc6136943c5d4169d80b82bbf308be4ed92e9adc4"
+    },
+    {
+      "path": "test-controlled020-owned-input-source.py",
+      "bytes": 5237,
+      "sha256": "93094ece2047fc35d1d9bc02542578ef999949bfe6cfcd130d952b81c0b26899"
+    },
+    {
+      "path": "controlled020-owned-input-source-cases.json",
+      "bytes": 1122,
+      "sha256": "c0375ff93bc97b4e8d7d747062cb701fda02bd1d75e4a0a47abf4b0d480822b6"
+    },
+    {
+      "path": "controlled020-default-prepare.json",
+      "bytes": 1603,
+      "sha256": "77efdb9d4f45b7e104612153d8ba64aeb5eb5f93f55def1e09cf2109fb8bf4dd"
+    },
+    {
+      "path": "CONTROLLED020-SOURCE-LAUNCH-PROPOSAL.json",
+      "bytes": 6516,
+      "sha256": "74b087687ecf0e38bf3d2539dc5532afa6980f83dc35119c35cabe7dd34cb910"
+    },
+    {
+      "path": "controlled020-observer-delta.patch",
+      "bytes": 11457,
+      "sha256": "5e8c26230c81adac6d1558ad6def377395c6f27cf5ceb83bc0ac8beb7757fe51"
+    },
+    {
+      "path": "prepare-controlled020-owned-ack-delta.py",
+      "bytes": 9708,
+      "sha256": "316e5ac5291a60ca8c9e7cb6e1b42c646306b0712871ef92ee4f8dd05f54864a"
+    },
+    {
+      "path": "pin-controlled020-input-contract.py",
+      "bytes": 3179,
+      "sha256": "50aff57d89f92867143b2f88a75916f35b6cc7effff86c7a8737834fc52dcf67"
+    },
+    {
+      "path": "apply-controlled020-GUI-lease.py",
+      "bytes": 1940,
+      "sha256": "7c7fac5f26539d1e8379616bf3fe6a0ada02c35ae5c28391b042a9d97d4e523f"
+    },
+    {
+      "path": "prepare-controlled020-source-handoff.py",
+      "bytes": 5748,
+      "sha256": "92efc4698370241f06865d0e0ac83d97685ab9213ba61ca67585bc48c65dbfb5"
+    },
+    {
+      "path": "compare-controlled019-native-input.py",
+      "bytes": 3929,
+      "sha256": "13d991bb53f21119a348deb415910d3e0b97a67acb1365c9c71159a027343f87"
+    },
+    {
+      "path": "controlled019-input-path-comparison.json",
+      "bytes": 10938,
+      "sha256": "a3026151023bd8ef0a39d75d242f80822cacb87149cf648f3165fa02aea18c2c"
+    },
+    {
+      "path": "controlled019-input-DWARF.json",
+      "bytes": 1466,
+      "sha256": "435b7811682093c5eadee5ba80a9654997b1f1d1929d2ebf16913a4cc4f2fce7"
+    },
+    {
+      "path": "extract-controlled019-input-DWARF.py",
+      "bytes": 2534,
+      "sha256": "8a4ce31c23fc30222c1c2db324676908e3ca10c6a06e870e5017c3acb2fccde6"
+    }
+  ]
+}
