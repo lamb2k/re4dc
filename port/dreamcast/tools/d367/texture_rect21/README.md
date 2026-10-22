@@ -1,5 +1,13 @@
 # Rectangular native-world adaptation
 
+Current acceptance boundary: staged C proves texture admission only. The audit
+found whole-R4PW checksum dependencies missed by the earlier byte-level image
+gate: C rejects dynamic IDs, transparency classes and the r100 interior
+fingerprint. Preserve those captures; they do not establish gameplay or
+comparison equivalence. `coupled-behavior-qualification.json` records the defect,
+original-four provenance and guarded repair proposal. Originals remain and
+WORLD_RECT21 stays default0. The following entries retain the work history.
+
 The first main-lane step recovers existing native bindings before changing layouts. `world_bindings.py` consumes an exact 29-world candidate receipt and the 792-key main queue, verifies every R4PW body checksum and input SHA, then joins actual material-part bindings to logical texture dimensions. It never changes textures, geometry, UVs, runtime or a release.
 
 2026-10-21: all 29 sidecars read from current QA aafc10f3 match the selected original inputs exactly. All 792 rectangular keys have exact native bindings, across 4,371 part rows. Evidence: `C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/native-bindings-01/bindings.json`. Missing references in the older generic TPL probe therefore do not mean these native texture consumers are unidentified.
@@ -182,3 +190,30 @@ selected entries are excluded. An initial postprocessor field-name error
 (reserved versus actual reserved_0) is preserved with its corrected analysis;
 the frozen observer, program and raw guest are unchanged. No additional guest,
 traversal extension, timing gain, release or physical Dreamcast acceptance.
+
+`coupled_sidecars.py` is a pure byte preparer for exactly two dependent gates:
+R4ID CRC bytes12–15 and R4TC binding bytes16–19. It requires pinned original
+sidecars, byte-identical pinned geometry and placements, unchanged logical
+material/pass/alpha fields, exact immutable selected package SHA/layout/CRC,
+unchanged other package bytes and valid original class semantics. It returns
+proposed bytes and hashes; it never writes assets. `audit_coupled_sidecars.py`
+reads frozen B/C inputs and writes JSON only.18 mutation/control tests pass on
+Linux, optimized Python and Windows, including valid texture slot0, exact
+identical-world control and rejection of changed geometry/material/placements,
+classes, mappings and package identities. No full image or asset is generated.
+
+The actual78 changed rows are45 r100 opaque plus4 vertex-alpha rows, and29 r103
+opaque rows. All selected texture formats are RGB565 with alpha1; vertex-alpha
+flags/colors, mesh and placement bytes stay exact. The classifier actions are
+therefore unchanged relative to B. This does not certify every inherited948
+mipmap/classifier path. PCL1/runtime interior constants and OCCL consumers remain
+separate, and the preparer always reports full_equivalence=false. Main owns the
+coherent integration decision; this module is not a runtime fingerprint bypass.
+
+Four old keys are selected directly by resident.bin room100 rows13,21,23,46.
+They do not appear in the active DAR146 or scenery ARC100 identity rows, current
+R4PW, typed19 native room/mesh inventories, or registry target/source texture
+facts. Their observed entry UI frame remains181 after source241. This explains
+current conservative preload overlap; it does not prove global nonuse across
+core/enemy/weapon/inventory/future routes, so originals remain available and no
+removal is proposed. No net savings, speedup, release or hardware acceptance.

@@ -1,0 +1,275 @@
+{
+  "scope": "Read-only original4 provenance and guarded narrow dependency-preparer proposal",
+  "source_runtime": "004cf224674fa60cf08dc10e641c723de238a0fd",
+  "program": "a58579b87da0c45267cb93efe29feea2438da9ddab62d0fe31c47a1c6ff32c71",
+  "elf": "e08c9abc8f6bb44bb2a94642fc9a2e664d22039659cea7fcce311cb9989d7433",
+  "C_track": "13c998136f24212e39a86bc82a0dc54eb14bb8bacca38ca14cb855e2897309fd",
+  "current_C_status": "Admission evidence only; coupled IDs/class/interior behavior mismatches prevent gameplay/comparison equivalence.",
+  "original4": {
+    "1170b2b5-9710ab82": {
+      "resident_records": [
+        {
+          "index": 13,
+          "room": 256,
+          "width": 128,
+          "height": 64,
+          "format": 5,
+          "key": "1170b2b5-9710ab82"
+        }
+      ],
+      "active_DAR_matches": [],
+      "scenery_ARC_matches": [],
+      "current_R4PW_rows": [],
+      "entry_timeline": {
+        "source_tick_range": [
+          179,
+          565
+        ],
+        "observed_entry_UI_frames": [
+          178,
+          179,
+          180,
+          181,
+          182
+        ],
+        "post241_entry_UI_frames": [
+          181
+        ],
+        "post241_sample_count": 52,
+        "known_base_offsets": [
+          6670336
+        ],
+        "limit": "Entry frame is UI/liveness bookkeeping; not source tick or proof of all draw nonuse"
+      }
+    },
+    "1ab5c10f-d8d37c49": {
+      "resident_records": [
+        {
+          "index": 21,
+          "room": 256,
+          "width": 128,
+          "height": 64,
+          "format": 5,
+          "key": "1ab5c10f-d8d37c49"
+        }
+      ],
+      "active_DAR_matches": [],
+      "scenery_ARC_matches": [],
+      "current_R4PW_rows": [],
+      "entry_timeline": {
+        "source_tick_range": [
+          179,
+          565
+        ],
+        "observed_entry_UI_frames": [
+          178,
+          179,
+          180,
+          181,
+          182
+        ],
+        "post241_entry_UI_frames": [
+          181
+        ],
+        "post241_sample_count": 52,
+        "known_base_offsets": [
+          6711296
+        ],
+        "limit": "Entry frame is UI/liveness bookkeeping; not source tick or proof of all draw nonuse"
+      }
+    },
+    "24b92cf4-ddafaf29": {
+      "resident_records": [
+        {
+          "index": 23,
+          "room": 256,
+          "width": 128,
+          "height": 64,
+          "format": 5,
+          "key": "24b92cf4-ddafaf29"
+        }
+      ],
+      "active_DAR_matches": [],
+      "scenery_ARC_matches": [],
+      "current_R4PW_rows": [],
+      "entry_timeline": {
+        "source_tick_range": [
+          179,
+          565
+        ],
+        "observed_entry_UI_frames": [
+          178,
+          179,
+          180,
+          181,
+          182
+        ],
+        "post241_entry_UI_frames": [
+          181
+        ],
+        "post241_sample_count": 52,
+        "known_base_offsets": [
+          6742016
+        ],
+        "limit": "Entry frame is UI/liveness bookkeeping; not source tick or proof of all draw nonuse"
+      }
+    },
+    "5cbedd66-ce488718": {
+      "resident_records": [
+        {
+          "index": 46,
+          "room": 256,
+          "width": 128,
+          "height": 64,
+          "format": 5,
+          "key": "5cbedd66-ce488718"
+        }
+      ],
+      "active_DAR_matches": [],
+      "scenery_ARC_matches": [],
+      "current_R4PW_rows": [],
+      "entry_timeline": {
+        "source_tick_range": [
+          179,
+          565
+        ],
+        "observed_entry_UI_frames": [
+          178,
+          179,
+          180,
+          181,
+          182
+        ],
+        "post241_entry_UI_frames": [
+          181
+        ],
+        "post241_sample_count": 52,
+        "known_base_offsets": [
+          6862848
+        ],
+        "limit": "Entry frame is UI/liveness bookkeeping; not source tick or proof of all draw nonuse"
+      }
+    }
+  },
+  "active_archive": {
+    "path": "st1/r100.dar type0",
+    "bytes": 1606688,
+    "identity_count": 146,
+    "metadata_sha256": "61cb82947d0c8ac0e2db31eaaff943b158f9e8c0c9a5d4c1d96db53830aa7dcf",
+    "scenery_arc_identity_count": 100,
+    "distinct_archives": true
+  },
+  "known_consumer_inventory": {
+    "native_assets_scanned": 19,
+    "matching_MeshTexture_or_impostor_refs": 0,
+    "registry_target_texture_records": 4,
+    "registry_source_texture_records": 6,
+    "registry_matches": 0
+  },
+  "preload_path": [
+    "preload_identities native_ui.cpp3959: PS2 lean uses current R4PW part keys when open; otherwise source room identities",
+    "preload_select3804 and preload_resident3840 dedupe by exact key, not representation family",
+    "resident.bin room100 rows13/21/23/46 warm original4; CORE_PIN2 enables core rows when this room has a list; original4 are room rows, not core pins; TEX_PKG_SKIP1 registry has no matching4",
+    "Preload logs179before active room bind,180/181later passes; source+5 UI relation is not a completed-state latch"
+  ],
+  "removal": "NOT JUSTIFIED: core/option/player/weapon/enemy/inventory/future-route source consumers remain open. Keep all6501 originals; conditional room-world preload redundancy only, not global nonuse.",
+  "confirmed_couplings": {
+    "R4ID": "CRC offset12; current C logids=header/placements0/unique0, dynamic placements remain baked",
+    "R4TC": "CRC offset16; current C classes=other r4pw",
+    "PCL1_runtime": "Frozen interior constant and PCL1 use original R100 CRC; current C not thispackage; data-only IDs/TC repair cannot close this",
+    "OCCL": "Consumer worker owns complete active fingerprint census; do not stamp blindly"
+  },
+  "repair": {
+    "tool": "coupled_sidecars.py prepare()",
+    "audit": "audit_coupled_sidecars.py JSONonly; no asset-writing path",
+    "specific_gates": [
+      "R4ID",
+      "R4TC"
+    ],
+    "full_equivalence": false,
+    "actual_pair_plan_sha256": "897fcd1cbd7ba72ab089d9765e1f15b8e8dc6211a99c7dce60a8b85b22e548b3",
+    "predicted": {
+      "r100": {
+        "ids": {
+          "bytes": 320,
+          "predicted_sha256": "de2a858e8c9763c4357cf27ddba6d21d34b2ac9b80a1e66fff6f4e862e2df476",
+          "changed_byte_ranges": [
+            [
+              12,
+              16
+            ]
+          ]
+        },
+        "classes": {
+          "bytes": 328,
+          "predicted_sha256": "6e524f9743dfca756bcf9edcb243380f5cbc239e1eb7050e032c8eace85533ae",
+          "changed_byte_ranges": [
+            [
+              16,
+              20
+            ]
+          ]
+        }
+      },
+      "r103": {
+        "ids": {
+          "bytes": 160,
+          "predicted_sha256": "44d60f9dbad1e2a1e08675bdece456d9312d60915285bda8364a3bcbc63af223",
+          "changed_byte_ranges": [
+            [
+              12,
+              16
+            ]
+          ]
+        },
+        "classes": {
+          "bytes": 292,
+          "predicted_sha256": "e99286e24c14d1e4d7ca18e4cbad99207524ad40526c0850adfaf68d3ef67efc",
+          "changed_byte_ranges": [
+            [
+              16,
+              20
+            ]
+          ]
+        }
+      }
+    },
+    "source_hashes": {
+      "coupled_sidecars.py": "b7e6b38aa1ca7b75d20fad4dd94c00585f8b1c94f7d3306a630ad90b487fdc82",
+      "audit_coupled_sidecars.py": "e44f748ec04283f9564bbe5777a752a22849254eb47dbd63ec32139dbc4cb47c",
+      "test_coupled_sidecars.py": "76b70efe5aacc0f5c77d43dfb5d3cd3db74e7c442e7c450d429e431f653b3ad7"
+    },
+    "tests": "18PASS Linux,18PASS python-O,18PASS Windows",
+    "source_tests_only": true
+  },
+  "material_policy": {
+    "r100_changed_rows": 49,
+    "r100_pass0_OP": 45,
+    "r100_pass2_VA": 4,
+    "r100_VA_parts": [
+      274,
+      276,
+      278,
+      281
+    ],
+    "r103_changed_rows": 29,
+    "r103_pass0_OP": 29,
+    "alpha": "All selected original/candidate RGB565 textures have alpha1 at every level. Vertex-alpha flags/colors/mesh/placements byteexact,so classVA9 preserved; basecolors/filter approximation changes look.",
+    "scope": "Relative B-to-C changedpart alpha/pass and unchanged memberbytes only; inherited948 classifier/mipmap correctness remains separate."
+  },
+  "actual_asset_regeneration": false,
+  "new_image": false,
+  "new_guest": false,
+  "shared_runtime_edit": false,
+  "production_or_release_change": false,
+  "physical_Dreamcast_acceptance": false,
+  "evidence": "C:/Flycast-Evidence/re4-dreamcast/texture-rect21-20261021/original4-provenance-01",
+  "evidence_seal": {
+    "manifest_sha256": "969978bd1bea7b6a7059e61b9eb4270b817580081fa5cf676de179c3d4d01d27",
+    "files": 37,
+    "evidence_bytes_per_copy": 1927892,
+    "forecast_all_new_with_128KiB_metadata_Git_reserve": 4038077,
+    "budget": 4194304,
+    "mirror": "/root/re4data/private/texture-rect21-original4-provenance-20261021"
+  }
+}
