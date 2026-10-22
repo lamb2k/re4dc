@@ -217,3 +217,40 @@ facts. Their observed entry UI frame remains181 after source241. This explains
 current conservative preload overlap; it does not prove global nonuse across
 core/enemy/weapon/inventory/future routes, so originals remain available and no
 removal is proposed. No net savings, speedup, release or hardware acceptance.
+
+### Certified metadata provenance implementation, source/host only
+
+The first scoped C images are retained as admission-only controls: changed R4PW
+body CRCs disabled original R4ID/R4TC/PCL1/OCCL metadata. The default-off
+world_rect_provenance.h now recognizes exactly the two sealed scoped17
+room/file/header/mesh tuples after genuine package and R4PW validation. It adds
+a complete-file FNV guard to the body CRC, checks both header reserved words,
+and returns a separately named policySourceCrc. The 78 changed key records
+are 74 opaque plus four vertex-alpha rows; mesh, placements, pass/cull and
+material bytes are unchanged. All 17 selected replacements are RGB565 with
+opaque alpha at every mip. Their filtered RGB appearance remains approximate.
+
+Only IDs, transparency, interior package checks and baked visibility source
+anchors receive this provenance identity. Optional PVS/strip-group bindings
+use the same source lineage. Original metadata bytes and their authentic SRCB
+provenance remain unchanged. AREA/r11f/source-owner profiles, physical header
+CRC, logged file CRC, and complete movie CRC/FNV capture/reload stay actual.
+Unknown room/extent/header/CRC/FNV/mesh tuples retain ordinary mismatch fallback.
+Movie return retains the existing transparency-policy idle behavior.
+
+qualify_provenance.py streams frozen B/C bytes into a host probe compiled from
+the actual native_static physical validator, ID unique-source census,
+transparency parser, PC package/header predicates, visibility world/placement
+guards, and movie capture/reload predicates. Filesystem/allocator/header seams
+are explicit; this is not a full PC heap/load/lend or room_occl parser test.
+The first 41 cases include a deliberately forged same-body-CRC candidate that
+the full-file FNV refuses. Enabled C preserves the baseline unique-source
+counts and exact original class arrays. Default and explicit-zero host probe
+bytes match. The actual existing make block resolves ON to both native_ui and
+native_static; its default/zero flags and seven invalid-value/prerequisite
+failures remain unchanged.
+
+Evidence: provenance-source-01/{host02,make01} under the lane's C evidence
+folder. SH-4 object/default identity, full program, fresh target lifecycle/look/
+strict comparison, release and physical Dreamcast acceptance remain open.
+No asset, image, guest or production recipe was changed in this unit.

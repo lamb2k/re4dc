@@ -2566,7 +2566,7 @@ endif
 ifneq ($(MESH_DIRECT),1)
 $(error WORLD_RECT21=1 requires MESH_DIRECT=1)
 endif
-$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_RECT21=1
+$(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_WORLD_RECT21=1
 endif
 
 # PS2_WORLD_HDR_CACHE=1 (native_ui.cpp, render only, exact, default 0; needs PS2_WORLD_MESH=1): the PS2 world's

@@ -16,6 +16,15 @@
 #ifndef RE4DC_PS2_WORLD_MESH
 #define RE4DC_PS2_WORLD_MESH 0
 #endif
+#ifndef RE4DC_WORLD_RECT21
+#define RE4DC_WORLD_RECT21 0
+#endif
+#if RE4DC_WORLD_RECT21
+#if !RE4DC_PS2_WORLD_DRAW || !RE4DC_PS2_WORLD_MESH || !RE4DC_MESH_DIRECT
+#error WORLD_RECT21 requires the qualified PS2 world mesh direct consumer
+#endif
+#include "../../tools/d367/texture_rect21/world_rect_provenance.h"
+#endif
 // MESH_DEPTH_CULL: the meshlet fast path drops a strip whose corners all lie outside one depth
 // plane instead of clipping it to nothing (exact). On with PS2_WORLD_MESH.
 #ifndef RE4DC_MESH_DEPTH_CULL
@@ -5190,6 +5199,17 @@ bool ps2_open(){
         return false;
     }
     ps2w.storage=s;ps2w.bytes=total;ps2w.nplacements=h.placements;
+    // Geometry/material policy identity is separate from the physical R4PW
+    // checksum. Only the certified scoped17 lineage can reuse original baked
+    // metadata; profiles, logs and movie lifetime fingerprints remain actual.
+    const std::uint32_t policySourceCrc=
+#if RE4DC_WORLD_RECT21 && RE4DC_PS2_WORLD_ROOMS
+        re4dc::rect21::provenance::policy_source_crc(ps2w.room,s+mbytes,psize,
+            ps2w.package.header().crc,ps2w.package.header().bytes,
+            ps2w.package.header().part_count,ps2w.package.header().mesh_count);
+#else
+        h.crc;
+#endif
 #if RE4DC_PS2_AREA_HIDE
     area::open(ps2w.room,h.crc,h.placements);
 #endif
@@ -5201,7 +5221,7 @@ bool ps2_open(){
     sourceWorldSidecarCrc=h.crc;
 #endif
 #if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
-    enemyVisSidecarCrc=h.crc;
+    enemyVisSidecarCrc=policySourceCrc;
 #endif
 #if RE4DC_PS2_WORLD_DYNAMIC && RE4DC_PS2_WORLD_ROOMS
     {
@@ -5225,7 +5245,7 @@ bool ps2_open(){
         if(iread){
             std::memcpy(&ih,ib,sizeof(ih));
             iwhy="header";
-            if(!std::memcmp(ih.magic,"R4ID",4) && ih.version==1 && ih.crc==h.crc && ih.count==h.placements &&
+            if(!std::memcmp(ih.magic,"R4ID",4) && ih.version==1 && ih.crc==policySourceCrc && ih.count==h.placements &&
                ih.count<=isize-sizeof(ih)){
                 const std::uint8_t* idv=ib+sizeof(ih);
                 std::uint8_t count[dyn::kIds]={};
@@ -5260,13 +5280,13 @@ bool ps2_open(){
     }
 #endif
 #if defined(RE4DC_TRANS_POLICY)
-    trans::open(ps2w.room,h.crc,h.parts);
+    trans::open(ps2w.room,policySourceCrc,h.parts);
 #if RE4DC_PS2_PASS_MASK
     trans::mask(ps2w.parts,ps2w.placements,h.placements);
 #endif
 #endif
 #if RE4DC_PS2_PVS
-    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,h.crc);
+    pvs::open(ps2w.room,ps2w.package.header().crc,ps2w.package.header().bytes,policySourceCrc);
 #endif
 #if RE4DC_MESH_FASTPATH
     auto* lut=reinterpret_cast<std::uint32_t*>(s+mbytes+pbytes);re4dc::vp::build_lut(lut);ps2w.lut=lut;
@@ -5275,7 +5295,7 @@ bool ps2_open(){
     const auto& mh=ps2w.package.header();
 #if RE4DC_PS2_INTERIOR_CULL
     // The cell's portals hold for the package it was built from only.
-    pc::st.ok=ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && h.crc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
+    pc::st.ok=ps2w.room==pc::kPcRoom && mh.crc==pc::kPcMeshUse && policySourceCrc==pc::kPcSidecarUse && mh.bytes==pc::kPcMeshBytesUse;
     re4dc_log("PCCULL cell room=%03x mesh_crc=%08x sidecar_crc=%08x %s cells=%u portals=%u mode=%d\n",ps2w.room,unsigned(mh.crc),unsigned(h.crc),
         pc::st.ok?"adopted":"not this package",pc::kPcCellCount,pc::kPcPortalCount,int(RE4DC_PS2_INTERIOR_CULL));
     pc::data.lent=false;
@@ -5332,7 +5352,7 @@ bool ps2_open(){
         if(!gwhy){
             std::memcpy(w,gb,32);
             if(std::memcmp(gb,"R4SG",4) || w[1]!=1U || w[2]!=mh.meshlet_count || !w[3] || w[3]>8U || w[4]!=mh.crc ||
-               w[5]!=mh.bytes || w[6]!=h.crc || gsize!=32U+16U*w[2]*w[3] || ps2_crc32(gb+32,gsize-32U)!=w[7])gwhy="header";
+               w[5]!=mh.bytes || w[6]!=policySourceCrc || gsize!=32U+16U*w[2]*w[3] || ps2_crc32(gb+32,gsize-32U)!=w[7])gwhy="header";
         }
         if(gwhy){if(gb)re4dc_static_free(gb);}
         else {ps2w.sg_block=gb;ps2w.sg=gb+32;ps2w.sg_groups=w[3];
