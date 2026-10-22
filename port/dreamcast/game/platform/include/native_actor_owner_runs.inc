@@ -96,6 +96,11 @@ extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart* part,const Re4dcAct
     // an actor lease later cannot evict an already-submitted GPU texture.
     for(unsigned i=0;i<nm;++i)if(!re4dc_actor_texture_commit(&textures[i]))return 0;
     OneWindow window;owned_submission=true;bool okay=true;unsigned previous=~0u;
+#if defined(RE4DC_ACTOR_BACKFACE) && RE4DC_ACTOR_BACKFACE
+    // ACTOR_BACKFACE (backface.mk): the part's source cull (coarse_actor_transaction.inc) applies to opaque, depth-writing
+    // materials only; alpha-mask cards (hair, lashes, cloth edges) and no-depth-write materials stay double-sided.
+    const unsigned char bf_base_cull=part->cull;
+#endif
     for(unsigned i=0;i<n && okay;++i) {
         const unsigned material=runs[i].material;
         // A header is never reused across a different texture/blend/depth run.
@@ -103,6 +108,9 @@ extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart* part,const Re4dcAct
         const bool changed=material!=previous;
         if(changed)one_close(window);
         owned_run_load(*part,runs[i],materials[material]);previous=material;
+#if defined(RE4DC_ACTOR_BACKFACE) && RE4DC_ACTOR_BACKFACE
+        part->cull=((materials[material].material_flags&4U) || materials[material].depth_mode!=0U)?0U:bf_base_cull;
+#endif
 #if defined(RE4DC_PS2_WORLD_DRAW) && RE4DC_PS2_WORLD_DRAW
         // No live SQ window, packet reserve or resolved texture handle here.
         // Every actor material already has a scene pin from the commit above.
@@ -123,6 +131,9 @@ extern "C" int re4dc_actor_submit_owned_runs(Re4dcModelPart* part,const Re4dcAct
             after.invalid==before.invalid && after.resource==before.resource && after.overflow==before.overflow;
     }
     one_close(window);owned_submission=false;
+#if defined(RE4DC_ACTOR_BACKFACE) && RE4DC_ACTOR_BACKFACE
+    part->cull=bf_base_cull;
+#endif
     Re4dcActorStreamState closed{};
     if(!okay || !re4dc_actor_stream_state(&closed) || closed.frame!=before.frame ||
        closed.invalid!=before.invalid || closed.resource!=before.resource || closed.overflow!=before.overflow ||

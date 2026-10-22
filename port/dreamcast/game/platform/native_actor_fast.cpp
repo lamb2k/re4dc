@@ -26,6 +26,10 @@
 //     buffer), positions/normals are skinned here from vtxOrig/nrmOrig with
 //     that palette. Anything that needs pPosBuf/pNrmBuf (the generic path)
 //     first materializes them with the source's own CalcSk1_x.
+#include "include/bfc_class.h"
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#include "../../room/backface_emit.hpp"  // CPU_BACKFACE (backface.mk)
+#endif
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
 #ifndef RE4DC_ACTOR_SKIN_OWNER_POOL
@@ -2590,6 +2594,9 @@ inline void* emit_meshlet(void* dst, const pvr_vertex_t* cache, const u8* index,
     // flags word from index bit 7 (EOL ends a strip). Whole meshlets (Part::whole, the common direct case and the
     // ONE_SUBMIT window) were the actor fast path's unhashed writer (review 2026-10-04).
     if constexpr (SQ) {
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+        RE4DC_BFC_SCOPE((re4dc_bfc_class>=3u && re4dc_bfc_class<=5u)?unsigned(re4dc_bfc_class):6u,unsigned(re4dc_bfc_id));  // an actor burst outside a tagged transaction: class 6
+#endif
         for (unsigned k = 0; k < n; ++k) {
             std::uint32_t w[8];
             __builtin_memcpy(w, cache + (index[k] & 127u), 32);
@@ -2720,6 +2727,9 @@ inline void* emit_meshlet(void* dst, const pvr_vertex_t* cache, const u8* index,
 // The same copy straight into the TA through the store queues (TA_DIRECT):
 // EOL goes into the last vertex before its burst leaves.
 inline std::uint32_t* emit_sq(std::uint32_t* sq, const pvr_vertex_t* cache, const u8* index, unsigned n) {
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+    RE4DC_BFC_SCOPE((re4dc_bfc_class>=3u && re4dc_bfc_class<=5u)?unsigned(re4dc_bfc_class):6u,unsigned(re4dc_bfc_id));
+#endif
     const std::uint32_t eol = PVR_CMD_VERTEX_EOL;
 #if RE4DC_TA_HASH && RE4DC_TA_HASH != 4
     // TA_HASH (test builds): the words this strip sends (EOL in the last flags word), as re4dc_ta_put hashes its own.
@@ -2988,10 +2998,21 @@ struct Part {
 #if RE4DC_COARSE_ONE_SUBMIT == 2
         if (direct) one_tap_strip(cache.v, index, n);
 #endif
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+        if (direct && (p.cull == 1 || p.cull == 2)) { bf_send(index, n); return; }
+#endif
         if (direct) { sq = emit_sq(sq, cache.v, index, n); slots += n; return; }
 #endif
         emit(at(), cache.v, index, n); used += n;
     }
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE && RE4DC_ACTOR_DIRECT
+    // CPU_BACKFACE (lane backface22): only the triangles the ISP keeps (room/backface_emit.hpp); cull-none parts never
+    // come here.
+    void bf_send(const u8* index, unsigned n) {
+        slots += re4dc::bf::strip(cache.v, index, n, 127u, p.cull,
+                                  [&](const std::uint8_t* i, unsigned c) { sq = emit_sq(sq, cache.v, i, c); });
+    }
+#endif
     // A meshlet with no corner outside, beyond far or in front of near.
     bool fits(unsigned n) const {
 #if RE4DC_ACTOR_DIRECT
@@ -3005,6 +3026,17 @@ struct Part {
         if (direct) {
 #if RE4DC_COARSE_ONE_SUBMIT == 2
             one_tap_meshlet(cache.v, index, count);
+#endif
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+            if (p.cull == 1 || p.cull == 2) {
+                // the meshlet's strips (bit 7 = the strip's last index), each through the back-face split
+                unsigned a = 0;
+                for (unsigned k = 0; k < count; ++k)
+                    if (index[k] & 128u) { bf_send(index + a, k + 1 - a); a = k + 1; }
+                if (a < count) bf_send(index + a, count - a);
+                input += triangles; output += triangles;
+                return true;
+            }
 #endif
             sq = static_cast<std::uint32_t*>(emit_meshlet<true>(sq, cache.v, index, count)); slots += count;
         } else

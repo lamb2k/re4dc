@@ -452,6 +452,13 @@ ActorOwnedRecord* actor_acquire(cModel* m,const Re4dcActorPlan& p,
                                                ((RE4DC_NMR_SOURCE_CULL&8) && m->id==0x23)))
         b.cull=(unsigned char)re4dc_model_cull(m->CullMode,(pG->Debug_flg[0]&0x20000000)!=0);
 #endif
+#if defined(RE4DC_ACTOR_BACKFACE) && RE4DC_ACTOR_BACKFACE
+    // ACTOR_BACKFACE (backface.mk, needs CPU_BACKFACE): Leon (id 0), the Ganados (0x10..0x20) and El Gigante (0x2B) take the source model's
+    // cull mode (as model_bridge.cpp's source path and the NMR_SOURCE_CULL bosses do) instead of cull none; per material,
+    // native_actor_owner_runs.inc keeps alpha-mask and no-depth-write materials double-sided.
+    if(m->id==0 || (m->id>=0x10 && m->id<=0x20) || m->id==0x2B)  // + El Gigante (em2b)
+        b.cull=(unsigned char)re4dc_model_cull(m->CullMode,(pG->Debug_flg[0]&0x20000000)!=0);
+#endif
 #if RE4DC_ACTOR_GANADO_SOURCE_LIGHT
     if(!RE4DC_LEON_LIKE(p.appearance)) {
 #if RE4DC_ACTOR_GANADO_DEATH_FADE
@@ -766,6 +773,7 @@ static int aprof_transaction_draw(cModel* m) {
 #else
 extern "C" int re4dc_actor_transaction_draw(cModel* m) {
 #endif
+    RE4DC_BFC_SCOPE(!m?5u:m->id==0?3u:(m->id>=0x10 && m->id<=0x20)?4u:5u,m?unsigned(m->id):0u);  // BACKFACE_CENSUS
     ATD(m,0,0,0);INVIS_NOTE(m,0);
 #if RE4DC_ACTOR_BIND_REUSE
     ++re4dc_actor_tx_serial;  // this call: the Ganado plan's binding token names it (coarse_actor_owner_ganado.inc)
