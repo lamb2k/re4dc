@@ -1,0 +1,10 @@
+{
+  "scope": "v2 SOURCE direct lineage/cleanup failures only; no native API/child/image/input",
+  "test_count": 13,
+  "status": "PASS",
+  "tests_sha256": "f953f30bbc279d4c4e8e1b50564a9b3c94421d4b907a56dcb4255b7def5999fd",
+  "runtime_manifest_sha256": "dd43ac827378e107bf774f03f2be4ad68e51543a16683697f45cb5fd91a23734",
+  "v1_manifest_preserved": true,
+  "frozen_backend_api_exact": true,
+  "platform": "Windows Python3.12 -B; 13 unittest paths PASS"
+}
