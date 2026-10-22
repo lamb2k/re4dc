@@ -1,0 +1,37 @@
+{
+  "scope": "CONTROLLED TEST ordinary sourceSaveYes\u2192CardSave UI; no savewrite/physicalhardware/release/authenticcombat claim.",
+  "source": 1950,
+  "state_sha256": "739bbcf1a551961d4b95c44079283f3a6879e4cddd3f1f242ae867f10f31cd8c",
+  "chapter": 7,
+  "health": [
+    1440,
+    1440,
+    600,
+    600
+  ],
+  "PASS": "ExactlyONE ordinaryX/A200ms at immediate nativeSaveYes recheck/source888; actualKeytrg80080000 at889; CardStatus80000028, nativeCardmode1/state2/1/error0/slot0/save0. After-A PNG directlyinspected shows emptySlot01 selected.",
+  "not_yet_observed": [
+    "slotconfirmation",
+    "sourcefilewrite",
+    "VMUreadback",
+    "saveUIexit",
+    "radio0xE"
+  ],
+  "vmu_bytes_unchanged": {
+    "7": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event007\\data\\T0000_vmu_save_A1.bin",
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "8": {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-event008\\data\\T0000_vmu_save_A1.bin",
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    }
+  },
+  "next": "009 direct008 consolidated normalA\u2192actualdefaultNOconfirmation\u2192ordinaryYesselection\u2192confirmA(max3pulses), sourcewrite/result/privateVMUdelta/readback underrootallocation.",
+  "guard": "PID9492/raw40.1/V4verified/noactions; admissioncharged640MiBadditional peers. Authentic127/294fullSHAunchanged.",
+  "raw_observer_label_errata": [
+    "008observer-ready saysread-only/noinput; actualONEownedkeypulse is fullylogged, labelstale",
+    "008finalscope saysclosed006; ACTUALrun-startseed007data/pinnedstatee20edc isauthoritative. Rawreceiptunchanged.",
+    "Residualbaseline_RSF5/crank fields are unusedinthis204unit; actualrowbaselineRSF0/typedchapter/card fields used."
+  ]
+}

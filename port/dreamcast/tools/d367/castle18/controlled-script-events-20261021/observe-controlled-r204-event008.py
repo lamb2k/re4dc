@@ -18,7 +18,9 @@ def pulse_action():
   return True
  assert u.EnumWindows(cb,0)and len(wins)==1;hwnd=wins[0];held=False;ack=[]
  try:
-  check();assert u.PostMessageW(hwnd,0x100,ord('X'),1|(0x2d<<16));held=True;until=time.monotonic()+.2
+  check();pg_now=u32(0x8c2e91dc);assert 0x8c000000<=pg_now<0x8cffa000 and read(pg_now+0x4f8a,1)[0]==7 and u32(0x8c39d6fc)==0,'Save prompt chapter/partner changed'
+  assert read(0x8c3b6938,3)==bytes([2,0,0]) and read(0x8c3b684c+0x7c,1)[0]==1 and u32(0x8c3b684c+0x8c)==0x1001,'Live SaveYes selector changed before A'
+  assert age()<35;events.append(dict(immediate_native_SaveYes_recheck=True,frame=u32(pg_now+0x51e4),process_age=age()));assert u.PostMessageW(hwnd,0x100,ord('X'),1|(0x2d<<16));held=True;until=time.monotonic()+.2
   while time.monotonic()<until:
    check();assert age()<40.5;ack.append(dict(frame=u32(u32(0x8c2e91dc)+0x51e4),Key_trg=hex(u32(0x8c3a948c+24))));time.sleep(.02)
  finally:

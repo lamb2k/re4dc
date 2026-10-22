@@ -1,0 +1,23 @@
+{
+  "scope": "Read-only closed008 native cCard. Source class has no inheritance/virtual members; observed source-backed initial offsets agree with native card-mode1 state2/1 log and viewedSlot01 UI. Not a constructor-disassembly or DWARF qualification.",
+  "state_sha256": "739bbcf1a551961d4b95c44079283f3a6879e4cddd3f1f242ae867f10f31cd8c",
+  "pCard": "0x8cd050a0",
+  "routines": [
+    2,
+    1,
+    0,
+    0
+  ],
+  "status": "0x0",
+  "type": 1,
+  "is_system": 0,
+  "slot": 0,
+  "save_no": 0,
+  "error": 0,
+  "Message0": {
+    "table": 0,
+    "selection": 0,
+    "current": 0,
+    "attribute": "0x1020051"
+  }
+}
