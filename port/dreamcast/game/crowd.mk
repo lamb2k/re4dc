@@ -286,7 +286,7 @@ $(OBJDIR)/coarse_actor.o: actor_swap_park.inc
 endif
 # SS_CERT_PARTNER_CAPACITY=1: 32 parked source assets for a full Castle monk archive plus Ashley.
 # Default off; only storage grows, with all SS_CERT ownership and restore checks unchanged.
-SS_CERT_PARTNER_CAPACITY ?= 0
+SS_CERT_PARTNER_CAPACITY ?= $(if $(filter 1,$(SS_CERT)),1,0)
 ifneq ($(words $(SS_CERT_PARTNER_CAPACITY)),1)
 $(error SS_CERT_PARTNER_CAPACITY must be 0 or 1)
 endif

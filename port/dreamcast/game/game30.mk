@@ -29,7 +29,7 @@
 # Event storage bookkeeping: every TU must use the same template policy.
 # Native only; other manager predicates/layout and recipe defaults are unchanged.
 # Retire native reset borrowers before destroying their source heaps.
-RESET_RETIRE_BEFORE_HEAPS ?= 0
+RESET_RETIRE_BEFORE_HEAPS ?= 1
 ifneq ($(RESET_RETIRE_BEFORE_HEAPS),0)
 ifneq ($(RESET_RETIRE_BEFORE_HEAPS),1)
 $(error RESET_RETIRE_BEFORE_HEAPS must be 0 or 1)
@@ -37,14 +37,14 @@ endif
 GAME_CPPFLAGS += -DRE4DC_RESET_RETIRE_BEFORE_HEAPS=1
 endif
 # Conditional failed-restore containment; optional source candidate only.
-SS_RESTORE_VALIDATE_FIRST ?= 0
+SS_RESTORE_VALIDATE_FIRST ?= 1
 ifneq ($(SS_RESTORE_VALIDATE_FIRST),0)
 ifneq ($(SS_RESTORE_VALIDATE_FIRST),1)
 $(error SS_RESTORE_VALIDATE_FIRST must be 0 or 1)
 endif
 GAME_CPPFLAGS += -DRE4DC_SS_RESTORE_VALIDATE_FIRST=1
 endif
-EVENT_MANAGER_STORAGE_FLAGS ?= 0
+EVENT_MANAGER_STORAGE_FLAGS ?= 1
 ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),0)
 ifneq ($(EVENT_MANAGER_STORAGE_FLAGS),1)
 $(error EVENT_MANAGER_STORAGE_FLAGS must be 0 or 1)
@@ -2495,7 +2495,7 @@ endif
 endif
 # TEX_PAYLOAD_RETRY=1 (default 0): space only failed packed-member I/O/validation retries
 # before eviction; dense exact ordinals require the immutable index sector CRC receipts.
-TEX_PAYLOAD_RETRY ?= 0
+TEX_PAYLOAD_RETRY ?= $(if $(and $(filter 1,$(TEX_PACK)),$(filter 1,$(TEX_RESIDENT))),1,0)
 ifneq ($(words $(TEX_PAYLOAD_RETRY)),1)
 $(error TEX_PAYLOAD_RETRY must be exactly 0 or 1)
 endif
@@ -3843,7 +3843,7 @@ $(OBJDIR)/platform/native_motion.o: PLATFORM_CPPFLAGS += -DRE4DC_MOTION_MISS_LOG
 endif
 
 # Validate controller/model/part inputs before native effect record reads.
-EFFECT_CONTROLLER_VALIDATE_FIRST ?= 0
+EFFECT_CONTROLLER_VALIDATE_FIRST ?= 1
 ifneq ($(words $(EFFECT_CONTROLLER_VALIDATE_FIRST)),1)
 $(error EFFECT_CONTROLLER_VALIDATE_FIRST must be 0 or 1)
 endif
