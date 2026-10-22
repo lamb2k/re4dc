@@ -1,0 +1,60 @@
+{
+  "scope": "OFFLINE sourceSAT completeSouth-offsetescapeWest then directNorthquietroute afterbell, bypassoriginalNorthobstruction. Bellgameroute/snapshotfree alivecannotguaranteesilence/safety/strongrear; normalcollision/dynamicactors authoritative.",
+  "legs": [
+    {
+      "start": [
+        28490.3535,
+        -47492.6914
+      ],
+      "end": [
+        28500,
+        -49000
+      ],
+      "blocked": []
+    },
+    {
+      "start": [
+        28500,
+        -49000
+      ],
+      "end": [
+        23500,
+        -49000
+      ],
+      "blocked": []
+    },
+    {
+      "start": [
+        23500,
+        -49000
+      ],
+      "end": [
+        23500,
+        -47500
+      ],
+      "blocked": []
+    },
+    {
+      "start": [
+        23500,
+        -47500
+      ],
+      "end": [
+        19000,
+        -45000
+      ],
+      "blocked": []
+    },
+    {
+      "start": [
+        19000,
+        -45000
+      ],
+      "end": [
+        25000,
+        -44000
+      ],
+      "blocked": []
+    }
+  ]
+}
