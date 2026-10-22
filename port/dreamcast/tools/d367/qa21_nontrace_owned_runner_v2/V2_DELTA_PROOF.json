@@ -1,0 +1,30 @@
+{
+  "scope": "v2 source-only successor delta, no native execution",
+  "parent_commit": "25763e7e0a045bf8e14c298a8978d16479d0dd0e",
+  "v1_manifest_sha256": "d15859daa1f98a4b76f53432feee947b6e5f9acc405bab702429f2b0c27603fb",
+  "v1_all_pins_still_exact": true,
+  "byteexact_copies": {
+    "checkpoint_runner18.child.py": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6",
+    "checkpoint_runner18.original.txt": "8960ffcf6652e1aac9f846d2857cc5932314bf03bcbf99ae538d68d131d1ca20",
+    "reference_collector.py": "fb86ea60f8d39f61aa25e6a5facc5c3eafa11a695f2bf3ee40211243be17165d",
+    "child_reference_proxy.py": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19",
+    "run_source_tests.py": "72b32633875c67427d8ccb124965548e06fdb6fcad2a0eb3eb7e3ab0c685e4b8",
+    "guest-profile-v2.json": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+    "retained-all-track-declarations.json": "dc7e2d19fce835f3d68cde66ae1a15afd3705dabb982921730fdd43cc92a0af0",
+    "PROPOSAL_INPUT.json": "59f6bb01ea28822c319549a180fcdaad4998442167da67823bb3aa87f2732b45",
+    "runner-origin.json": "43db462a9f865031d2c6b3851a1316db0708bdec95f988d072173fe57144edb1",
+    ".gitattributes": "3d518c8907fb67ffad0685f52e941b1440892ccffa35724ae820d33fb2cd62e1"
+  },
+  "changed_production_functions": {
+    "parent_reference_broker.py": [
+      "Broker.marker_proof",
+      "Broker.resource_guard"
+    ],
+    "native_reference_api.py": [
+      "WindowsApi.stat"
+    ]
+  },
+  "all_v1_test_functions_unchanged": true,
+  "new_direct_test_methods": 10,
+  "runtime_adoption": false
+}
