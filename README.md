@@ -125,6 +125,7 @@ Planned, with no date yet. Ticked items have passed our checks and will be in Te
 
 - [ ] **Chapter 3-1 playable:** the castle's first part, past the gate, on a second disc.
 - [ ] **Faster scenery drawing.**
+- [ ] **Sharper, steadier textures:** distant ground and walls use smaller copies of their pictures (mipmaps), so they shimmer less.
 
 ## What's new in Test 17.1
 

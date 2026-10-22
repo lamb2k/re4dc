@@ -36,7 +36,8 @@ class LosslessNativeVq(unittest.TestCase):
                 result, report = compact.compact(source, enabled=True)
                 self.assertTrue(report["changed"])
                 before, after = twiddled.read_native_twiddled(source), vq.read_native_vq(result)
-                self.assertEqual(after.crc_rule, rule)
+                self.assertEqual(before.crc_rule, rule)
+                self.assertEqual(after.crc_rule, "header")  # legacy input accepted; enabled output carries the canonical checksum
                 self.assertEqual(before.texture[:5], after.texture[:5])
                 self.assertEqual(before.texture[6], after.texture[6])
                 self.assertEqual(before.header[9:], after.header[9:])

@@ -1,3 +1,6 @@
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
+#endif
 #if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
 #include "include/resident_list_cache.h"
 #endif
@@ -477,7 +480,16 @@ unsigned movie_window_release(unsigned bytes,bool pinned_ok,unsigned& released_b
 #if RE4DC_UI_VRAM && RE4DC_TEX_RESIDENT && RE4DC_UI_OVERLAY_SLAB_KB
 constexpr unsigned kOverlaySlabBytes=RE4DC_UI_OVERLAY_SLAB_KB*1024U;
 pvr_ptr_t overlay_slab; const Entry* overlay_owner; unsigned overlay_uses;
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+void overlay_slab_take(){
+    if(overlay_slab || overlay_owner)return;
+    re4dc_vram_arena_class=2;   // VRAM_ROOM_ARENA: long-lived, from the top
+    overlay_slab=pvr_mem_malloc(kOverlaySlabBytes);
+    re4dc_vram_arena_class=0;
+}
+#else
 void overlay_slab_take(){ if(!overlay_slab && !overlay_owner)overlay_slab=pvr_mem_malloc(kOverlaySlabBytes); }
+#endif
 #endif
 #if RE4DC_TEX_RESIDENT
 bool preload_pending; unsigned preload_loads,preload_skipped,preload_runs;
@@ -3442,6 +3454,15 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
             if(!evict()) {RE4DC_PROFILE_COUNT(TextureBudgetFailures,1);ok=false;}
     }
     const unsigned vram_before=pvr_mem_available();
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    // VRAM_ROOM_ARENA: core keys (cross-room) from the top of texture RAM, every other texture from the bottom.
+    struct ArenaClass { explicit ArenaClass(unsigned c){re4dc_vram_arena_class=c;} ~ArenaClass(){re4dc_vram_arena_class=0;} };
+    bool arena_core=false;
+#if defined(RE4DC_CORE_PIN) && RE4DC_CORE_PIN
+    for(unsigned k=0;k<core_nkeys && !arena_core;++k)arena_core=core_keys[k]==slot->key;
+#endif
+    const ArenaClass arena_class(arena_core?2U:1U);
+#endif
     if(ok) {RE4DC_PROFILE_SCOPE(TextureUpload);
         ok=slot->package.upload();
 #if RE4DC_TEX_RESIDENT && RE4DC_UI_OVERLAY_SLAB_KB
@@ -4201,7 +4222,11 @@ void preload_identities(){
         for(auto& e:entries){
             if(!e.valid || RE4DC_ENTRY_PINNED(e))continue;
             const unsigned sz=e.package.vram_bytes();
-#if defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+            // VRAM_ROOM_ARENA: the old room's region is freed as one block; core keys live at the top. Nothing else
+            // is kept, so the new room's preload fills one hole-free region from the bottom.
+            if(RE4DC_CORE_PINNED(e)){++kept;kept_bytes+=sz;continue;}
+#elif defined(RE4DC_ROOM_REENTRY_EVICT) && RE4DC_ROOM_REENTRY_EVICT
             if(!rce_same && e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
 #else
             if(e.frame+RE4DC_ROOM_CHANGE_EVICT>=rce_retire_frame){++kept;kept_bytes+=sz;continue;}
@@ -4941,7 +4966,13 @@ void glyph_init(){
         glyph_twx[i]=(unsigned short)x;glyph_twy[i]=(unsigned short)y;
     }
     const unsigned before=pvr_mem_available();
+    #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    re4dc_vram_arena_class=2;   // VRAM_ROOM_ARENA: long-lived, from the top
+#endif
     glyph_atlas=pvr_mem_malloc(kGlyphAtlasBytes);
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+    re4dc_vram_arena_class=0;
+#endif
     if(!glyph_atlas){re4dc_log("native mes: glyph atlas allocation FAILED (free=%u); message text off\n",before);return;}
     alignas(32) static const unsigned char zero[512]={};
     for(unsigned n=0;n<kGlyphAtlasBytes;n+=sizeof(zero))pvr_txr_load(zero,(char*)glyph_atlas+n,sizeof(zero));
@@ -9026,5 +9057,28 @@ extern "C" int re4dc_ui_part_key(const Re4dcModelPart* p,unsigned* crc,unsigned*
     ok=image_key(p->image,k);
 #endif
     *crc=k.crc;*fnv=k.fnv;return ok?1:0;
+}
+#endif
+
+#if defined(RE4DC_TEX_MIP_DADJ) && RE4DC_TEX_MIP_DADJ
+// TEX_MIP_DADJ (lane mipmap22): replace KOS's default mipmap D adjust in every compiled header (render only).
+extern "C" void __real_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src);
+extern "C" void __real_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src);
+extern "C" void __real_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src);
+extern "C" void __wrap_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    pvr_poly_cxt_t c=*src;
+    if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    __real_pvr_poly_compile(dst,&c);
+}
+extern "C" void __wrap_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src) {
+    pvr_sprite_cxt_t c=*src;
+    if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    __real_pvr_sprite_compile(dst,&c);
+}
+extern "C" void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    pvr_poly_cxt_t c=*src;
+    if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    if(c.txr2.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr2.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    __real_pvr_poly_mod_compile(dst,&c);
 }
 #endif

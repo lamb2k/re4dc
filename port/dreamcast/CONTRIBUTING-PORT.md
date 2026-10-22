@@ -244,6 +244,13 @@ STRICT, except the approximations marked below):
   occluders, tools/enginebake/room_compile.py), staged by data set `rc19` (private store `rc19o2-20261019`, in the
   Build-Assets zip). A room without its file draws every villager, as before.
 * `MANUAL_PACK_PROBE=1`: the Player's Manual finds the Dreamcast manual pages in `dc/tex.pak`.
+* **Texture pipeline** (Test 22, render only): `CAST_MIPMAP TEX_TWIDDLED_MIPMAP TEX_PAL4_ALPHA TEX_PAL4_MIPMAP TEX_PAL8_ALPHA
+  TEX_PAL8_MIPMAP WORLD_RECT21` (mip chains, rectangle textures, scoped world texture keys; the key tables are in the
+  source, `tools/d367/texture_rect21/`), `TEX_MIP_DADJ=3` (mip D adjust 0.75) and `VRAM_ROOM_ARENA=1` (core textures
+  from the top of texture memory, room textures from the bottom; the old room's block is freed as one piece). They read
+  disc data set `mip22` (private store `mip22-20261022`: `dc/tex.pak` with the mip chains, the 27 rekeyed worlds'
+  `ps2-world.r4pw`, `dc/resident.bin`). It is on the release disc; a program built with these knobs needs that disc data,
+  and a knob-off program must not read it (mip22 is not in the knob-off disc sets).
 
 Render knobs in the release recipe:
 

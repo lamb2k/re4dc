@@ -127,8 +127,22 @@ def cmd_pack(a):
     print('%s: %d records, %d bytes' % (out, len(recs), len(b)))
 
 
-def coverage(bin_path, tsvs):
-    """[(room, listed, packed_of_listed)] for every list whose keys the packed file does not all carry."""
+def load_remap(path):
+    """{(room, crc, fnv) original: (room, crc, fnv) scoped} from a remap table (room, original, scoped, why; lane
+    mipmap22's mip22 data set, written by mipmap22/tables_resident.py parts). Only rows with why == remapped count."""
+    m = {}
+    for ln in Path(path).read_text().splitlines()[1:]:
+        f = ln.split('	')
+        if len(f) >= 4 and f[3] == 'remapped':
+            room = int(f[0], 16)
+            m[(room, *(int(x, 16) for x in f[1].split('-')))] = (room, *(int(x, 16) for x in f[2].split('-')))
+    return m
+
+
+def coverage(bin_path, tsvs, remap=None):
+    """[(room, listed, packed_of_listed)] for every list whose keys the packed file does not all carry. remap
+    (load_remap): an original key also counts as carried when the file carries the scoped key the table maps it to
+    (WORLD_RECT21 discs); an original that is neither carried nor mapped is still short."""
     b = Path(bin_path).read_bytes()
     have = set()
     for o in range(0, len(b) - 15, 16):
@@ -139,7 +153,11 @@ def coverage(bin_path, tsvs):
     for t in tsvs:
         room = int(re.match(r'r([0-9a-f]+)', Path(t).stem).group(1), 16)
         keys = [ln.split('\t')[0] for ln in Path(t).read_text().splitlines()[1:] if ln.strip()]
-        got = sum(1 for k in keys if (room, *(int(x, 16) for x in k.split('-'))) in have)
+        remap = remap or {}
+        got = 0
+        for k in keys:
+            o = (room, *(int(x, 16) for x in k.split('-')))
+            got += o in have or remap.get(o) in have
         if got < len(keys):
             short.append((room, len(keys), got))
     return short

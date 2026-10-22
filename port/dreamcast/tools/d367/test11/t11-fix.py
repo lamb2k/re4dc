@@ -748,7 +748,12 @@ def resident_gate(v, rec):
     s_ = iu_.spec_from_file_location('resident_keys', os.path.join(here_, '..', 'vram', 'resident_keys.py'))
     m_ = iu_.module_from_spec(s_); s_.loader.exec_module(m_)
     tsvs = sorted(glob.glob(os.path.join(here_, '..', 'vram', 'resident', 'r*.tsv')))
-    short = m_.coverage(v, tsvs)
+    # A data set that remaps resident keys (mip22: WORLD_RECT21 scoped keys) ships its table beside the file.
+    rm_ = os.path.join(os.path.dirname(v), 'resident-remap.tsv')
+    remap_ = m_.load_remap(rm_) if os.path.isfile(rm_) else None
+    if remap_:
+        rec.append('RESIDENT REMAP %s %d' % (rm_, len(remap_)))
+    short = m_.coverage(v, tsvs, remap_)
     for room, n, got in short:
         rec.append('RESIDENT SHORT r%03x %d/%d' % (room, got, n))
         sys.stderr.write('t11-fix: dc/resident.bin %s carries %d of the %d keys r%03x lists\n' % (v, got, n, room))
@@ -857,6 +862,18 @@ def main():
 # After ch2 in the data line. Private store copy: re4-assets-private/ash21-20261020 (RECIPE.txt, SHA256SUMS).
 ASH21D = os.environ.get('ASH21D', '/root/re4data/private/ash21-20261020')
 DATA['ash21'] = {'em/pl11.drs': ASH21D + '/em/pl11.drs'}
+
+# mip22 (lane mipmap22 10-22, Test 22): the texture pipeline data for CAST_MIPMAP / TEX_*_MIPMAP / WORLD_RECT21: dc/tex.pak
+# = pack v5 (a21e75d1: ch21l's pack with 885 packages re-encoded with mip chains and 798 scoped rect21 keys added; every
+# base key kept), the 27 PS2 worlds' r4pw part records rekeyed to the scoped keys, and dc/resident.bin remapped to them.
+# Last in the data line (after ash21). Release discs only (not in KSETS). Private store copy:
+# re4-assets-private/mip22-20261022 (RECIPE.txt, SHA256SUMS).
+MIP22D = os.environ.get('MIP22D', '/root/re4data/private/mip22-20261022')
+if os.path.isdir(MIP22D):
+    DATA['mip22'] = {'dc/tex.pak': MIP22D + '/dc/tex.pak', 'dc/resident.bin': MIP22D + '/dc/resident.bin'}
+    for _r in sorted(os.listdir(MIP22D + '/dc/native')):
+        DATA['mip22']['dc/native/%s/ps2-world.r4pw' % _r] = '%s/dc/native/%s/ps2-world.r4pw' % (MIP22D, _r)
+    PAK_DERIVED['mip22'] = MIP22D + '/pak-derived.json'
 
 
 if __name__ == '__main__':
