@@ -10,7 +10,7 @@ watch=subprocess.Popen([sys.executable,str(guard),str(cap)],creationflags=subpro
 try:
  until=time.monotonic()+15
  while not(D/(cap.name+'-observer-ready.json')).exists():assert obs.poll()is None and time.monotonic()<until;time.sleep(.05)
- subprocess.run([sys.executable,str(R/'tools/fp_run_ram.py'),'--base',str(D/'master'),'--cap',str(cap),'--syms',(R/'programs/candidate-routec21jmW/syms.txt').read_text().strip(),'--seconds','41','--warp',str(fixture),'--period','0','--name','castle21-CONTROLLED-r201-events004'],check=True)
+ subprocess.run([sys.executable,str(R/'tools/fp_run_ram.py'),'--base',str(D/'master'),'--cap',str(cap),'--syms',(R/'programs/candidate-routec21jmW/syms.txt').read_text().strip(),'--seconds','41','--warp',str(fixture),'--period','0','--name','castle21-CONTROLLED-r208-crank-exit004'],check=True)
 finally:
  watch.wait(timeout=85)
  if obs.poll()is None:
