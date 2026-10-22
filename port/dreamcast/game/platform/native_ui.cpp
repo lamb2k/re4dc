@@ -1,5 +1,8 @@
 #if defined(RE4DC_RESIDENT_LIST_CACHE) && RE4DC_RESIDENT_LIST_CACHE
 #include "include/resident_list_cache.h"
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
+extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
+#endif
 #endif
 #include "include/movie_world_arena.h"
 #include "include/actor_visibility_diag.h"
@@ -395,9 +398,6 @@ Key room_pin_key{};
 #define RE4DC_WRAP_SAFE(pkg) ((((pkg).header().flags>>30)&1U)!=0U)
 #else
 #define RE4DC_WRAP_SAFE(pkg) false
-#endif
-#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
-extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
 #endif
 #if RE4DC_ACTOR_TRANSACTION
 re4dc_actor::TextureLeases<kTextureCount> actor_texture_leases;
