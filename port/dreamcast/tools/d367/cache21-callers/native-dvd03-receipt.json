@@ -1,0 +1,407 @@
+{
+  "source_commit": "edfe8f1765fbbd418235537e7b2f0b3b6aeab25d",
+  "kind": "native DVD/ISR destination lifetime source graph",
+  "files": [
+    {
+      "path": "src/game/dvd.cpp",
+      "bytes": 77186,
+      "sha256": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343",
+      "blob": "86dbfd27576368a17bb83cf696713359b4a74ced"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "bytes": 54487,
+      "sha256": "fa7688e8cf6a2f21548d7d31e93b3f0e6023131333c3b8c90d25c4d61ce78d08",
+      "blob": "11bf2026b93a2ec663e6509185dd78202cd109ff"
+    },
+    {
+      "path": "src/game/roomdata.cpp",
+      "bytes": 14696,
+      "sha256": "6311144a11a3fb8dba23e9e42a6f8f89dd087dda70f47a9d026ce97cb61103d2",
+      "blob": "f8eed723b6846d0753182f11f4a1ab10e011ba61"
+    },
+    {
+      "path": "src/game/stage.cpp",
+      "bytes": 16798,
+      "sha256": "f95342121195ba1e4ad3d89629c946636866dbca36578d35f42b4cda5b9a1c60",
+      "blob": "867583800994684cb883801af741ff296b5b726d"
+    },
+    {
+      "path": "src/game/game.cpp",
+      "bytes": 67752,
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "blob": "53ad0e7322de9ad1d1b9b218ac05982ac9a7c9e2"
+    },
+    {
+      "path": "src/game/main.cpp",
+      "bytes": 21850,
+      "sha256": "d2c27ac68757a09cec2a1777558cedcf4cdd417bf57591159447e4f004e17d6a",
+      "blob": "355a1d7b7af5d55e3206914e8bdc05e7ea78b36b"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "bytes": 36694,
+      "sha256": "31d38c14806250cdf1d7ad58a7dd742641bc2fbe6e3af5cf5c0f361163277216",
+      "blob": "5ea4c4747fe53c89a42c4cbc6500f649fc622240"
+    },
+    {
+      "path": "src/game/scheduler.cpp",
+      "bytes": 18839,
+      "sha256": "6479263912945cd5e396f270a2872d88262a69b85bbf4dc357e9e6f4212ea5ce",
+      "blob": "d108af401d421abb3434c5ed352e4d956c6e87eb"
+    },
+    {
+      "path": "src/game/snd_str0.cpp",
+      "bytes": 8391,
+      "sha256": "5d475776e203a82919afbed0ea72346d6dfc655eb93ab58a37264bb0335474ba",
+      "blob": "c764f337e180b6dd5862b210136b214b1641fbcd"
+    },
+    {
+      "path": "src/game/snd_str1.cpp",
+      "bytes": 9912,
+      "sha256": "cd28136ba56011840685168971cf8edaf4f8c6fd089573e5b3d4b25788a0dc30",
+      "blob": "cd1b13caca83e0d3b9d4f3a4f438eb22c51bf99d"
+    },
+    {
+      "path": "src/game/snd_str2.cpp",
+      "bytes": 9574,
+      "sha256": "ef9f6628c47df03b2928e9397ad60ab16ebbf3465c7d55612eb51e9013394398",
+      "blob": "668718e147b9b19b4b6c55f9c08c0b62c2a85730"
+    },
+    {
+      "path": "src/game/snd_ram.cpp",
+      "bytes": 559,
+      "sha256": "90cf37b1da1a4a76a0bd82c8157f67cb59ba887baa7eb8bf78658cd8885d3196",
+      "blob": "6bc0af673ec53cb1755321a605cb0acc1f1fb935"
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "bytes": 20989,
+      "sha256": "058b5dab66aba43c5e69a0a3733c030c09ef695c4eacac0fa600d5052a82bb7f",
+      "blob": "80eefd2493d785ef2e200de9db3f72f7c7971f54"
+    },
+    {
+      "path": "port/dreamcast/game/platform/os.cpp",
+      "bytes": 35736,
+      "sha256": "f861a5b9ebb9c6555fc642922af604674fa1acc16a90ba757f55e8ea135b7c92",
+      "blob": "52b0bc63a46efea208e6e116cf93a5162e6d0acb"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_strm.cpp",
+      "bytes": 8663,
+      "sha256": "a2001ed624245163cc319f496cbcbfec52de39e74733aaefd59cc4d5a6f93b6a",
+      "blob": "dcd941cfc6d888437a35d4ac14014edad636c1e8"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_stub.cpp",
+      "bytes": 12675,
+      "sha256": "30cf01fc29bd20163db1cda2d888931b3494e0b1b50bdf47eed8ee11a26f944e",
+      "blob": "618e01ca339231bbee33a61c5a89b4142ce05d40"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "bytes": 99860,
+      "sha256": "abef204aa60471d1388763bd38c6411677c2e4fea9b1b56df7aa97af3b3db261",
+      "blob": "796df73e071b918a3ede2a43bcb50c88a787b855"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/native_io.h",
+      "bytes": 1504,
+      "sha256": "249cbab48d5dbc6ee48159afa26ac1d4a23d272e9c6b00a01697e89e26feec86",
+      "blob": "600ba38493e9adedadfb82d0639b762a730760a1"
+    },
+    {
+      "path": "port/dreamcast/game/Makefile",
+      "bytes": 205898,
+      "sha256": "de05ed757c084ae3842491d4cb406a63a69dd79967321347288de510fbc183d1",
+      "blob": "a62010fb1848caac0f2a18a733fa6f38ac50f10e"
+    },
+    {
+      "path": "port/dreamcast/game/game30.mk",
+      "bytes": 215030,
+      "sha256": "c1c5014d2616b68fa1f8cfd4a49455cb78d4914139dca0ba4d0d4f14de513a6c",
+      "blob": "75021ef4bc9f28ba2a1820f39b4b01246be77045"
+    },
+    {
+      "path": "include/dvd.h",
+      "bytes": 8493,
+      "sha256": "2487625b2040a7b45e11e1b5c758555274e750e0c88fc19394d52367e5cdddda",
+      "blob": "e46c4558ee7ae341880d2715b50e244b4a8544d8"
+    },
+    {
+      "path": "include/datactrl.h",
+      "bytes": 3690,
+      "sha256": "dbe0a9709611a900c08b317a446aa23bd905be85db4b6e06f6a27e800d4f4026",
+      "blob": "6bd0e6450bd370a69c5312b27bc752af37098d96"
+    },
+    {
+      "path": "include/snd_drv.h",
+      "bytes": 33090,
+      "sha256": "726f78ee11674cd7321d2b32b960a3cb345224655a40380c8ae15b1bfbd7a695",
+      "blob": "e017eb091e21abb4ed9b101e498592538bf454cf"
+    }
+  ],
+  "functions": [
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvdQueue::Initialize()",
+      "start": 1066,
+      "end": 1123
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvd::Watcher()",
+      "start": 1641,
+      "end": 1664
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "int cDvdQueue::Read()",
+      "start": 1021,
+      "end": 1061
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "signature": "s32 DVDReadAsyncPrio(",
+      "start": 369,
+      "end": 472
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void dvdread_callback(",
+      "start": 632,
+      "end": 642
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvdQueue::readMain()",
+      "start": 783,
+      "end": 989
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvd::ReadCancelAll()",
+      "start": 1725,
+      "end": 1738
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "signature": "s32 DVDCancelAll(void)",
+      "start": 526,
+      "end": 529
+    },
+    {
+      "path": "port/dreamcast/game/platform/os.cpp",
+      "signature": "void OSCancelThread(",
+      "start": 453,
+      "end": 478
+    },
+    {
+      "path": "port/dreamcast/game/platform/dvd.cpp",
+      "signature": "int DVDCancelAsync(",
+      "start": 517,
+      "end": 524
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvd::ReadNblk2Blk(",
+      "start": 1500,
+      "end": 1539
+    },
+    {
+      "path": "src/game/dvd.cpp",
+      "signature": "void cDvd::blockRead(",
+      "start": 1592,
+      "end": 1637
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void ReadAreaData()",
+      "start": 223,
+      "end": 297
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "void ReadPlayerData(",
+      "start": 802,
+      "end": 940
+    },
+    {
+      "path": "src/game/read.cpp",
+      "signature": "int readEmData(ReadModule* m, int id, void* addr, u32 size)",
+      "start": 540,
+      "end": 683
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_strm.cpp",
+      "signature": "s32 __wrap_DVDReadAsyncPrio(",
+      "start": 73,
+      "end": 87
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_strm.cpp",
+      "signature": "void re4dc_audio_pend_run(void)",
+      "start": 98,
+      "end": 116
+    },
+    {
+      "path": "src/game/snd_str1.cpp",
+      "signature": "void str_abort_wait(",
+      "start": 186,
+      "end": 204
+    }
+  ],
+  "checks": [
+    {
+      "name": "sync request bit wins over ISR bit",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "watcher dispatches native ISR request",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "request heap index captured at initialization",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "each source step owns DVD/nativeIO scope",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "generic read holds nativeIO through callback",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "generic callback happens before function return",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "source DVD callback changes flags only",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "final MRAM transfer uses copied staging payload",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "cancel checked before staging transfer",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "resident budget checks span before transfer",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "cancel all kills worker before clearing slots",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "platform cancel all has no native read drain",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "task cancellation waits nativeIO before destruction",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "platform single cancellation callback is synchronous",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "blocking takeover kills worker then pumps source",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "blockread carries source pump borrow through saved slot",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "native room allocates via ISR mode8104",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "old decode is in branch preceding native DAR",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "player retires old owner before fixed ISR destination",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "enemy enables ISR only during room setup",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "enemy binds metadata only after completion",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "REL requested into current heap by mode104",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "actual enemy list call is sync",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "datactrl wait cannot hold bit100",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "audio wrapper matches exact stream callback",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "matched stream queues completion and never reads destination",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "audio wrap flags apply unconditionally",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "audio pending batch detached before callbacks",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    },
+    {
+      "name": "source stream rearm waits callback-owned busy",
+      "result": "PASS",
+      "qualification": "static source assertion only"
+    }
+  ],
+  "not_established": [
+    "No runtime execution/compile/build/stage/guest",
+    "No old live archive overlap demonstrated for actual flag100 producer",
+    "Native IO protects executing scope/thread stack, not entire queued destination epoch",
+    "Audio deferred callback is distinct from generic synchronous service"
+  ]
+}
