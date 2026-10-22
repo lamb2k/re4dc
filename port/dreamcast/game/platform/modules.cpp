@@ -726,13 +726,13 @@ void ovlGuardAdd(const char* name, u8* image, u32 code_bytes)
     for (auto& g : g_guard) if (g.image == image) g.image = 0;
     if (code_bytes > kGuardBlock * kGuardMax) code_bytes = kGuardBlock * kGuardMax;
     code_bytes &= ~(kGuardBlock - 1);
-    for (auto& g : g_guard) if (RE4DC_OVL_GUARD == 1 && !g.image) {
+    for (auto& g : g_guard) if (RE4DC_OVL_GUARD != 2 && !g.image) {
         for (u32 b = 0; b < code_bytes / kGuardBlock; ++b) g.hash[b] = guardHash(image + b * kGuardBlock);
         g.image = image; g.bytes = code_bytes; g.name = name;
         re4dc_log("OVLGUARD arm %s at %08lx code %lx\n", name, u32(image), code_bytes);
         break;
     }
-#if RE4DC_OVL_GUARD == 2
+#if RE4DC_OVL_GUARD >= 2
     if (!strcmp(name, "st1_1") && code_bytes > 0x6118) {
         ovlGuardUbcOff();
         g_ubc_page = ubc_breakpoint_t();

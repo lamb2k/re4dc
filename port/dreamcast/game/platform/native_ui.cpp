@@ -405,6 +405,9 @@ extern "C" void re4dc_ovl_watch(const char* where);
 #else
 #define OVLW(x) ((void)0)
 #endif
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+extern "C" void re4dc_vram_ring_upload(std::uint32_t crc, std::uint32_t bytes, const void* package);
+#endif
 #if defined(RE4DC_OVL_GUARD) && RE4DC_OVL_GUARD
 extern "C" void re4dc_ovl_guard(const char* where);
 #define OVLG(x) re4dc_ovl_guard(x)
@@ -3606,6 +3609,9 @@ Entry* load(const Re4dcUiImage& image,bool pin=true,const Key* prepared_key=null
 #endif
     re4dc_log("native UI: upload %s vram=%u\n",ok?"ok":"FAILED",slot->package.vram_bytes());
     OVLW("upload");
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+    re4dc_vram_ring_upload(slot->key.crc, ok ? slot->package.vram_bytes() : 0xFFFFFFFFU, &slot->package);
+#endif
     OVLG("upload");
 #if RE4DC_TEX_CHECK
     const char* const texchk_why=slot->package.error()?slot->package.error():"upload";
