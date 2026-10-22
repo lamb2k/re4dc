@@ -1,0 +1,110 @@
+#!/usr/bin/env python3
+"""Separate owned process supervisor; only exact child PID/PGID/start may be stopped."""
+import argparse,fcntl,hashlib,importlib.util,json,os,signal,subprocess,sys,time,traceback
+from pathlib import Path
+
+def load(name,path):
+ s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+budget=load('budget',Path(__file__).with_name('stage-budget.py'))
+
+def sha(path):
+ h=hashlib.sha256()
+ with Path(path).open('rb') as f:
+  for b in iter(lambda:f.read(1024**2),b''):h.update(b)
+ return h.hexdigest()
+
+def identity(pid):
+ t=Path('/proc/'+str(pid)+'/stat').read_text();v=t[t.rfind(')')+2:].split()
+ return {'pid':pid,'pgid':int(v[2]),'proc_start':v[19]}
+
+def stop_owned(child,owned):
+ if child.poll() is not None:return
+ try:now=identity(child.pid)
+ except FileNotFoundError:
+  child.wait(timeout=2);return
+ if now!={k:owned[k] for k in ('pid','pgid','proc_start')} or now['pgid']!=child.pid:raise RuntimeError('refusing foreign/reused PID or group')
+ os.killpg(child.pid,signal.SIGTERM)
+ try:child.wait(timeout=2)
+ except subprocess.TimeoutExpired:
+  if identity(child.pid)!=now:raise RuntimeError('PID identity changed before escalation')
+  os.killpg(child.pid,signal.SIGKILL);child.wait(timeout=2)
+
+def supervise(cmd,stream,sample,after_spawn=None,timeout=300,release=None):
+ child=None;owned=None;began=time.monotonic();result={'qualified':False}
+ try:
+  child=subprocess.Popen(cmd,stdin=subprocess.PIPE,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
+  owned=identity(child.pid)
+  if owned['pgid']!=child.pid:raise RuntimeError('child group ownership mismatch')
+  if after_spawn:after_spawn(owned)
+  if release is not None:child.stdin.write((release+'\n').encode());child.stdin.flush()
+  child.stdin.close()
+  while child.poll() is None:
+   sample()
+   if time.monotonic()-began>timeout:raise RuntimeError('stage wall timeout')
+   time.sleep(.2)
+  sample();result.update(returncode=child.wait(),qualified=child.returncode==0)
+ except BaseException as error:
+  result.update(error=type(error).__name__+': '+str(error),traceback=traceback.format_exc())
+ finally:
+  # Covers EVERY post-spawn exception, including identity/receipt/callback/sampler failures.
+  if child is not None:
+   try:
+    try:
+     if child.stdin and not child.stdin.closed:child.stdin.close()
+    except BaseException as close_error:
+     result.update(qualified=False,pipe_close_error=type(close_error).__name__+': '+str(close_error))
+   finally:
+    # Pipe release/flush/close failures can never skip exact-owned stop and wait.
+    try:
+     if child.poll() is None:
+      if owned is None:owned=identity(child.pid)
+      stop_owned(child,owned)
+    finally:
+     child.wait(timeout=2)
+     result.update(owned=owned,returncode=child.returncode,child_exited=True,seconds=time.monotonic()-began)
+ return result
+
+def validate_root(root):
+ root=Path(root)
+ if root.resolve()!=root.absolute():raise ValueError('stage root ancestor alias forbidden')
+ return root
+
+def main():
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--config',type=Path,required=True);ap.add_argument('--reviewed-manifest-sha256',required=True);a=ap.parse_args()
+ if sha(a.config)!=a.reviewed_manifest_sha256:raise ValueError('reviewed config identity mismatch')
+ c=json.loads(a.config.read_text())
+ for path,digest in c['reviewed_tools'].items():
+  if sha(path)!=digest:raise ValueError('reviewed tool changed '+path)
+ if c['scope']!='c57 fixed521 standalone stage' or c['stage_cap']!=budget.CAP or c['admission_floor']!=budget.ADMISSION or c['runtime_floor']!=budget.RUNTIME:raise ValueError('reviewed scope/resource guard mismatch')
+ root=validate_root(c['output_root'])
+ if str(root)!='/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021':raise ValueError('wrong output root')
+ guard=budget.Guard(root);guard.check(extra=c['estimated_new_bytes'],admission=True)
+ root.mkdir(exist_ok=True)
+ with (root/'.supervisor.lock').open('a+b') as lock:
+  fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+  marker=root/'budget-identity.json'
+  binding={'scope':c['scope'],'expected_image':c['expected_image'],'source_image':c['source_image'],'config_sha256':a.reviewed_manifest_sha256}
+  if marker.exists():
+   if json.loads(marker.read_text())!=binding:raise ValueError('existing evidence root belongs to another fixture')
+  else:
+   if any(p.name!='.supervisor.lock' for p in root.iterdir()):raise ValueError('unowned existing stage root')
+   with marker.open('x') as f:json.dump(binding,f,indent=2)
+  attempts=root/'attempts';attempts.mkdir(exist_ok=True);index=1
+  while (attempts/('stage-%03d'%index)).exists():index+=1
+  attempt=attempts/('stage-%03d'%index);attempt.mkdir();log=attempt/'writer.log';owned=attempt/'owned-process.json'
+  def sample():
+   guard.check()
+   if log.exists() and log.stat().st_size>8*budget.MiB:raise RuntimeError('stage log cap8MiB')
+  def after_spawn(info):
+   with owned.open('x') as f:json.dump(info,f,indent=2)
+   sample()
+  cmd=[sys.executable,c['writer'],'--config',str(a.config),'--reviewed-manifest-sha256',a.reviewed_manifest_sha256,'--attempt',str(attempt)]
+  with log.open('xb') as stream:result=supervise(cmd,stream,sample,after_spawn=after_spawn,timeout=300,release=a.reviewed_manifest_sha256)
+  result.update(scope=c['scope'],config_sha256=a.reviewed_manifest_sha256,minimum_C=guard.minimum,peak_stage_bytes=guard.peak,cumulative=budget.measure(root))
+  # No post-failure receipt bypass of cap/floor; stdout still retains incident if refused.
+  try:
+   guard.check(extra=65536)
+   with (attempt/'supervisor-receipt.json').open('x') as f:json.dump(result,f,indent=2)
+  except Exception as receipt_error:result['receipt_unwritten']=str(receipt_error)
+  print(json.dumps(result));return 0 if result['qualified'] else 1
+if __name__=='__main__':raise SystemExit(main())

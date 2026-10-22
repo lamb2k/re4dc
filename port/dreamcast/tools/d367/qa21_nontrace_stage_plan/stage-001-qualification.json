@@ -1,0 +1,114 @@
+{
+  "scope": "Standalone corrected-reader NONTRACE stage plus independent readback only; NO Flycast/release/hardware acceptance",
+  "utc": "2026-10-22T00:33:19.195108+00:00",
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "ELF_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "image_sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+  "main_fullpair_docs": "047f6301152393bba2189ed111f0995d8e2e6bc4",
+  "reviewed_stage_config_sha256": "4c912017f8220dd431c6e0ec43e1bdffa592a6baa83f8cdf96c8ee2908cb7039",
+  "stage_writer_source_commit": "6fd506a79bc41dbbaa596729af437147edb32ba8",
+  "disc": "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu",
+  "source_image_before_after": "3c216e5ae8e8c9716906eace0ac98bc1b0712c8540f053359438d32ba77a9238",
+  "source_identity_before_after": {
+    "device": 64,
+    "inode": 9851624185038722,
+    "bytes": 1032499200,
+    "mtime_ns": 1792623951191148500,
+    "links": 1
+  },
+  "new_image_identity": {
+    "device": 64,
+    "inode": 844424935161039,
+    "bytes": 1032499200,
+    "mtime_ns": 1792628865730857700,
+    "links": 1
+  },
+  "native_file_identities": {
+    "scope": "post-stage read-only fsutil ID/hardlink queries",
+    "new_file_id": "0x000000000000000000030000004cbccd",
+    "source_file_id": "0x00000000000000000023000000028780",
+    "new_link_count": 1,
+    "source_link_count": 1,
+    "independent_files": true,
+    "image_compression_changed": false
+  },
+  "all14_NEW_ELF_bound_twice": true,
+  "exact_unrelated_file_count": 1728,
+  "complete_file_count": 1743,
+  "fixed_IP_sha256": "0e4e13d0b8df6477d9e43370591fd1a580c54b4df2209b944610d2a0b6b0062c",
+  "primary_only_no_Joliet": true,
+  "sole_metadata_delta": [
+    {
+      "path": "/1ST_READ.BIN",
+      "kind": "directory-size-both-endian",
+      "offset": 37128,
+      "old_file_bytes": 3349284,
+      "new_file_bytes": 3348196,
+      "tree": 1
+    }
+  ],
+  "stage_guard_seconds": 70.61625151100452,
+  "stage_guard_peak_bytes": 1035678270,
+  "stage_guard_minimum_C": 19936587776,
+  "independent_readback_seconds": 115.80855016100395,
+  "independent_readback_minimum_C": 19935387648,
+  "all_owned_processes_closed": {
+    "writer": {
+      "pid": 992823,
+      "pgid": 992823,
+      "proc_start": "3910895"
+    },
+    "readback": {
+      "pid": 993288,
+      "procstart": "3925126"
+    }
+  },
+  "attempts": 1,
+  "retries": 0,
+  "guest_allocated": false,
+  "guest_run": false,
+  "no_ELFcopy": true,
+  "no_extraction": true,
+  "no_input_mutation": true,
+  "no_oldstate_transfer": true,
+  "recipe_sha256": "725a37281fef8b08b423158aa306523827ee8e4f06a7d410d669906bca8cf66e",
+  "resolved_knobs_sha256": "b98927536ca633e1823376e00fae8601576ce17b1c226aeca3431f4b7a24e09e",
+  "knobs": {
+    "GANADO_ROUTINE_BYTES": "1",
+    "GAME_SH4ZAM": "1",
+    "GAME_SH4ZAM_RENDER_ONLY": "1",
+    "SKIN_SH4ZAM": "0",
+    "QA_MENU": "1",
+    "CABIN_SOURCE": "0"
+  },
+  "DEATH_TRACE": "not imported; no diagnostic helpers/text; trace-only observer fields unavailable",
+  "all15_cache_guards": 0,
+  "source_evidence_KEEP_sha_before_after": {
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-death-repair-runtime-20261021/trace-input/file-manifest.json": "6c225ba8f8c558d2678bebe1cef4edcbdbc5dcb7f6a87e25e6f6e3db1e3bae57",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-death-repair-runtime-20261021/stage-receipt.json": "948b690f3df191aae21ce8b98aad2c1f4119a5285da32a26e53b7182c6683c87",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-death-repair-runtime-20261021/builds/trace/KEEP.txt": "cb861f0986723aa54993753ef57f68579dd1139e8fd5f7ab3161c9dcb0e1a339"
+  },
+  "stage_KEEP_sha256": "08fb8fe412572af44507571d3e4935fa8412650d918fbe1f96a8efb3ea405127",
+  "private_files": {
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/stage-receipt.json": "b06c3a5602f70934022a134a9445bd0e54359728fe42bf445a47ea170ecb8c34",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/supervisor-receipt.json": "fbb726f66ff0b928c0d045f33d6442553cddf705ce7da23d2cf48897d2ea1884",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/independent-readback.json": "88fdb6c470110ead19c5b9fe75cad6ed9773b1a353f65cc8b866c6b9b54cb575",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/file-manifest.json": "b00dc88aaa45b1a784c5a472b4a81185a624a1195980120acfaa4fb5ad3ff801",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/writer.log": "ded5ebb84d20baf52842b4997d61791e02940af00bd0bf941550e63e60dc055e",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/owned-process.json": "9d81f516dacccd50233e99b0914742b656b359955ab65879cc3e822aeb2cd69f",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/KEEP.txt": "08fb8fe412572af44507571d3e4935fa8412650d918fbe1f96a8efb3ea405127",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/native-image-identity.json": "0cfdad012fb46165888aa2dac90c995ca1b42864dacd9875fa3e9690e3557cad",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/recipe/candidate.txt": "725a37281fef8b08b423158aa306523827ee8e4f06a7d410d669906bca8cf66e",
+    "/mnt/c/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/recipe/resolved-knobs.txt": "b98927536ca633e1823376e00fae8601576ce17b1c226aeca3431f4b7a24e09e"
+  },
+  "limitations": [
+    "No new guest has run; source/unit and stage/readback checks do not establish shooting or cinematic fidelity",
+    "No release or physical Dreamcast acceptance",
+    "Prior f947 traced results/authentic terminaldeath and all failures preserved",
+    "Menu-window restoration negative traffic finding remains separate; no performance improvement claimed"
+  ],
+  "current_cumulative_stage_bytes": 1035417022,
+  "remaining_stage_cap_bytes": 253073166,
+  "current_C_bytes": 19911528448
+}

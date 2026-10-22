@@ -1,0 +1,10 @@
+{
+  "seed": "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/cold-shoot01",
+  "checkpoint_sha256": "c61d68c940e1ee3fd72446ae066ee28bbf32eda9959ea4e5ea6f08f33c0a0d4d",
+  "state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+  "frame": 533,
+  "room": 259,
+  "log_head": 169995,
+  "state_edits": false,
+  "parent": null
+}

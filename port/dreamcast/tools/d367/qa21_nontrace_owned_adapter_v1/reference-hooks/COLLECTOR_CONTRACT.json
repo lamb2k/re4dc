@@ -1,0 +1,99 @@
+{
+  "tools_source": {
+    "commit": "505f3ee487a1bb658199986f4988fdf14008c960",
+    "source_only_manifest_sha256": "0b73077358b87a8b73325d6d823acd24c0037e57a7b653ad8f6f76a5bcc25e63",
+    "independent_review_commit": "df55d43ad37385bb9059b4564907db4a20579abd",
+    "independent_review_sha256": "831a09011d5abf352c3aa8d48639a04c0479ea858402bf4789f151bf159116a9"
+  },
+  "fixed_runtime": {
+    "game_source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+    "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+    "runtime_flags": "existing c57 default-off cache/trace/CABIN flags unchanged"
+  },
+  "image": {
+    "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+    "bytes": 1032499200,
+    "native_file_id": "0x000000000000000000030000004cbccd",
+    "inode": 844424935161037,
+    "mtime_ns": 1792628865730857700,
+    "source_path": "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso"
+  },
+  "new_output_contract_proposal": {
+    "semantic_mode": "return-door01 ONLY",
+    "output_name": "return-door-domains01",
+    "control_name": "return-door-domains01-control",
+    "seed_path": "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/cold-shoot01",
+    "seed_state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+    "seed_frame": 533,
+    "strict_same_profile_parent": true,
+    "preserve_failed_outputs": [
+      "return-door01",
+      "return-door-observer01"
+    ],
+    "arbitrary_name_option": false,
+    "no_automatic_retry": true
+  },
+  "unchanged_bounds": {
+    "inner_seconds": 41,
+    "input_cutoff_seconds": 40.75,
+    "private_job_seconds": 47.0,
+    "absolute_actual_seconds": 47.5,
+    "evidence_cap_bytes": 60000000,
+    "admission_bytes": 19461570560,
+    "runtime_floor_bytes": 19394461696,
+    "max_png": 8,
+    "global_limit": 16,
+    "per_lane_limit": 2
+  },
+  "scope": "V2 SOURCE-ONLY concrete collector/child hook contract, unadopted; no launchseal/allocation/native qualification",
+  "proposal_input_sha256": "59f6bb01ea28822c319549a180fcdaad4998442167da67823bb3aa87f2732b45",
+  "proposed_phase_rules": {
+    "prelaunch": {
+      "expected_links": 3,
+      "paths": [
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-guests-20261021/cold-shoot01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/track03.iso"
+      ]
+    },
+    "live_owned": {
+      "expected_links": 4,
+      "paths": [
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-guests-20261021/cold-shoot01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-domains01/track03.iso"
+      ]
+    },
+    "post_clean": {
+      "expected_links": 3,
+      "paths": [
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-guests-20261021/cold-shoot01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/track03.iso"
+      ]
+    },
+    "staged_owned": {
+      "expected_links": 4,
+      "paths": [
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-runtime-20261021/attempts/stage-001/input/gdemu/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-guests-20261021/cold-shoot01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-observer01/track03.iso",
+        "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/return-door-domains01/track03.iso"
+      ]
+    }
+  },
+  "actual_proof_domains": [
+    "root-approved allocation exact file bytes/SHA/schema from future immutable parent seal",
+    "retained INNER HANDLE PID/birth/path/private job membership",
+    "runner exact source bytes, fresh cap, actual successful os.link ledger plus native per-alias check",
+    "exclusive cap creator metadata hash/retained native identity",
+    "guest/reader Popen HANDLE duplicated from exact retained inner, native PID/birth/path/job verified",
+    "cleanup requires both retained signaled exits, job current INNER only; no request Boolean authorizes deletion"
+  ],
+  "hold": "Any staged/live validation refusal latches HOLD and preserves every current image reference; failed/partial run cannot cleanup. No automatic retry.",
+  "creator_proof": "Original native ID/creation time/path/hash retained; fresh current-alias handles/stat/hash before and after operation, deleted/directory/rename/replacement refuse; no reseal.",
+  "resource_boundary": "refuse cumulative evidence >=60000000, unchanged original cap boundary"
+}

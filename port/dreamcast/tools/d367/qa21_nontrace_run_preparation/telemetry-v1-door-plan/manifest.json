@@ -1,0 +1,42 @@
+{
+  "seed-contract.json": {
+    "bytes": 4908,
+    "sha256": "1b9b25ca53b693e9e4a4c964f8aee7cc11c2439d7c5d6f24a8914decf522041f"
+  },
+  ".gitattributes": {
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  "door-plan-tests-windows.json": {
+    "bytes": 2241,
+    "sha256": "c4e4e8436372792a4e9870b8889f2400718c1f938ab17e61a3c7e32a0a484ab7"
+  },
+  "RETURN-DOOR-PLAN.json": {
+    "bytes": 6854,
+    "sha256": "15aea721814a94d5797fff5a20ba2cb60e7ddd4df2026e9f6a64c5f033bfb976"
+  },
+  "RETURN-DOOR-PLAN.md": {
+    "bytes": 3492,
+    "sha256": "ebdc434591c9091f860daf140460eff62f761138c2e68a0ac8e7d3ce169f1461"
+  },
+  "door-plan-tests-linux.json": {
+    "bytes": 2261,
+    "sha256": "d0f8199b6215dda1e1e02a6d2e2b6046e222145969ac6c72db6cba76847f6e55"
+  },
+  "run-door-plan-tests.py": {
+    "bytes": 1049,
+    "sha256": "a049859ab589c780debd91a8196ced0eeda6794dc6cfd2728014668924772f73"
+  },
+  "policies.py": {
+    "bytes": 3455,
+    "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233"
+  },
+  "test-door-plan.py": {
+    "bytes": 5365,
+    "sha256": "70bb8e47b9dc91bc48ea2ddc9ecbe1383490dd4161161d95efdeffaa2f067b3e"
+  },
+  "controller-candidate.py": {
+    "bytes": 7468,
+    "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b"
+  }
+}

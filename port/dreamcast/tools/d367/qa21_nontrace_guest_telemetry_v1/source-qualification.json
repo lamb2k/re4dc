@@ -1,0 +1,89 @@
+{
+  "scope": "source/mock33Win/30Linux and three real tinyPythonchildren; NOT Flycast/launch acceptance",
+  "utc": "2026-10-22T04:09:26.281237+00:00",
+  "pass": true,
+  "coverage": [
+    {
+      "platform": "windows",
+      "module": "test-failure-telemetry.py",
+      "receipt": "seal-receipt-windows-20261022T040453558946Z.json",
+      "receipt_sha256": "19d86c72342db076919de1c56e88a805923238049156cf6b59c821c3d7a511b2",
+      "relevant_source_pins_current": true,
+      "dependencies": [
+        "input-deadlines.py",
+        "inner-adapter.py",
+        "windows-backend.py",
+        "guest-supervisor-core.py",
+        "test-failure-telemetry.py"
+      ]
+    },
+    {
+      "platform": "windows",
+      "module": "test-seal.py",
+      "receipt": "seal-receipt-windows-20261022T040453558946Z.json",
+      "receipt_sha256": "19d86c72342db076919de1c56e88a805923238049156cf6b59c821c3d7a511b2",
+      "relevant_source_pins_current": true,
+      "dependencies": [
+        "input-deadlines.py",
+        "inner-adapter.py",
+        "windows-backend.py",
+        "guest-supervisor-core.py",
+        "test-seal.py",
+        "outer-driver.py",
+        "guest-profile-v2.json",
+        "test-failure-telemetry.py"
+      ]
+    },
+    {
+      "platform": "linux",
+      "module": "test-failure-telemetry.py",
+      "receipt": "seal-receipt-linux-20261022T040453736461Z.json",
+      "receipt_sha256": "0bbf8b1c399cc74a52811a46cd86f4fb74f0e0ea1339f7f3d3705b1c45fa435e",
+      "relevant_source_pins_current": true,
+      "dependencies": [
+        "input-deadlines.py",
+        "inner-adapter.py",
+        "windows-backend.py",
+        "guest-supervisor-core.py",
+        "test-failure-telemetry.py"
+      ]
+    },
+    {
+      "platform": "linux",
+      "module": "test-seal.py",
+      "receipt": "seal-receipt-linux-20261022T040453736461Z.json",
+      "receipt_sha256": "0bbf8b1c399cc74a52811a46cd86f4fb74f0e0ea1339f7f3d3705b1c45fa435e",
+      "relevant_source_pins_current": true,
+      "dependencies": [
+        "input-deadlines.py",
+        "inner-adapter.py",
+        "windows-backend.py",
+        "guest-supervisor-core.py",
+        "test-seal.py",
+        "outer-driver.py",
+        "guest-profile-v2.json",
+        "test-failure-telemetry.py"
+      ]
+    },
+    {
+      "platform": "windows",
+      "module": "test-native-seal.py",
+      "receipt": "seal-receipt-windows-20261022T040636472072Z.json",
+      "receipt_sha256": "70ebc51deb885ccbd17946d07e51e7ccba4c1650d62ce0e235cd0d6fccf60017",
+      "relevant_source_pins_current": true,
+      "dependencies": [
+        "input-deadlines.py",
+        "inner-adapter.py",
+        "windows-backend.py",
+        "guest-supervisor-core.py",
+        "test-native-seal.py"
+      ]
+    }
+  ],
+  "initial_native_failure_preserved": "seal-receipt-windows-20261022T040453558946Z.json + incidents/test-native-seal-initial.py",
+  "failure_cause": "normalhostfixture exited before discovery; runtime correctly refused Win31/no retained guest. Test-only discovery handshake corrected; programme/guards unchanged.",
+  "underlying_late_A_cause": "still unknown; no timing improvement claimed",
+  "programme_image_unchanged": true,
+  "failed_shoot01_still_failed": true,
+  "output_root_not_created_by_unit": true
+}

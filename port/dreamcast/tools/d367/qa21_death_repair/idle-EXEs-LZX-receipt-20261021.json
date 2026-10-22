@@ -1,0 +1,181 @@
+{
+  "scope": "Exact closed owned runtime executable copies only; no source,image,state or gameplay changes",
+  "cases": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-cold-r10301\\flycast.exe",
+      "status": "COMPRESSED",
+      "before": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 14415872,
+        "file_id": [
+          14332939485708580193,
+          4503599630581852
+        ],
+        "links": 1
+      },
+      "after": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 6537216,
+        "file_id": [
+          14332939485708580193,
+          4503599630581852
+        ],
+        "links": 1
+      },
+      "guard": null,
+      "returncode": 0,
+      "seconds": 0.2029999999795109
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-return-door01\\flycast.exe",
+      "status": "COMPRESSED",
+      "before": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 14415872,
+        "file_id": [
+          14332939485708580193,
+          2251799818640866
+        ],
+        "links": 1
+      },
+      "after": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 6537216,
+        "file_id": [
+          14332939485708580193,
+          2251799818640866
+        ],
+        "links": 1
+      },
+      "guard": null,
+      "returncode": 0,
+      "seconds": 0.25
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-BB-only01\\flycast.exe",
+      "status": "COMPRESSED",
+      "before": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 14415872,
+        "file_id": [
+          14332939485708580193,
+          562949958418562
+        ],
+        "links": 1
+      },
+      "after": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 6537216,
+        "file_id": [
+          14332939485708580193,
+          562949958418562
+        ],
+        "links": 1
+      },
+      "guard": null,
+      "returncode": 0,
+      "seconds": 0.2190000000409782
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-continue01\\flycast.exe",
+      "status": "COMPRESSED",
+      "before": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 14415872,
+        "file_id": [
+          14332939485708580193,
+          562949958424632
+        ],
+        "links": 1
+      },
+      "after": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 6537216,
+        "file_id": [
+          14332939485708580193,
+          562949958424632
+        ],
+        "links": 1
+      },
+      "guard": null,
+      "returncode": 0,
+      "seconds": 0.20400000002700835
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-gameplay01\\flycast.exe",
+      "status": "COMPRESSED",
+      "before": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 14415872,
+        "file_id": [
+          14332939485708580193,
+          562949958450202
+        ],
+        "links": 1
+      },
+      "after": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 6537216,
+        "file_id": [
+          14332939485708580193,
+          562949958450202
+        ],
+        "links": 1
+      },
+      "guard": null,
+      "returncode": 0,
+      "seconds": 0.2029999999795109
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-continue-play02\\flycast.exe",
+      "status": "COMPRESSED",
+      "before": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 14415872,
+        "file_id": [
+          14332939485708580193,
+          281474981742159
+        ],
+        "links": 1
+      },
+      "after": {
+        "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+        "logical_bytes": 14415872,
+        "allocated_bytes": 6537216,
+        "file_id": [
+          14332939485708580193,
+          281474981742159
+        ],
+        "links": 1
+      },
+      "guard": null,
+      "returncode": 0,
+      "seconds": 0.21899999998277053
+    }
+  ],
+  "allocated_recovered_bytes": 47271936,
+  "actual_C_before": 21597499392,
+  "actual_C_after": 21644824576,
+  "actual_C_delta": 47325184,
+  "KEEP_unchanged": true,
+  "all6_state_hashes_unchanged": {
+    "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-cold-r10301\\data\\disc.state": "b4667fda844827e9d1d53128aa42d6ebc9b83ea021378cdd06cb3ea78f54d5bb",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-return-door01\\data\\disc.state": "b7fd5349efee95e47b57d974233a4edd19c8947998955ac10900dbf64c6f5b71",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-BB-only01\\data\\disc.state": "884bc747f3ed33cd592bfbe7aaf106adef5d64456a50f6621626c779d0f2986b",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-continue01\\data\\disc.state": "3a4d97611d6dfd88013d3b8ce72b9f35b3dbab6f954469703e33cce393619b4d",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-gameplay01\\data\\disc.state": "578a1d60fe56045341bcb48fde90ae3e8a8eace2f2a706cf66c66d3f0a72fc11",
+    "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-death-repair-runtime-20261021\\repair-continue-play02\\data\\disc.state": "0abbe8706bf7240adeda58c261141572270b1259cbe7bf3e478d2786fcb19a0e"
+  },
+  "no_further_guest_run_for_cleanup": true
+}

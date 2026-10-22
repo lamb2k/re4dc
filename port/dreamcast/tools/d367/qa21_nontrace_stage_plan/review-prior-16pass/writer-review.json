@@ -1,0 +1,65 @@
+{
+  "utc": "2026-10-22T00:22:11.919606+00:00",
+  "scope": "Writer/supervisor preparation ONLY; no image reservation/copy or guest",
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "program": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "ELF": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "expected_image": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+  "config_sha256": "8d3dc1ec6200eededdcb8f80e6b0c30e769aed2c311e9d8a57befdb06f8c31ce",
+  "writer_sha256": "fe7d741bf21097db789ad29fe05670745cf9123f0009c67ee3f5b762ab2f6015",
+  "supervisor_sha256": "0b53b7334eff7e6c9996b8c47eadef15d124bf9df675e10b50b187590f5bcfec",
+  "budget_sha256": "19c075bbfd64ec6cad4478e570fd3176df9a41401b3e65defb0a74f2278acb1f",
+  "fake_IO_process_tests": {
+    "script": "/root/probe/codex-qa21-death-repair/port/dreamcast/tools/d367/qa21_nontrace_stage_plan/test-writer-supervisor.py",
+    "sha256": "26307a4611cb7c4b5ccbeda1558edf03db4c160c749050cbd6d0cc6cee94f384",
+    "tests": 16,
+    "result": "pass",
+    "observed_seconds": 2.63,
+    "methods": [
+      "test_small_fake_stream_chunks_and_pre_post_guards",
+      "test_fault_retains_partial_output_charged",
+      "test_prewrite_guard_refuses_before_any_write",
+      "test_declared_metadata_only_and_payload_digest",
+      "test_per_file_max_not_max_of_totals",
+      "test_sparse_failed_outputs_and_disappearing_temp",
+      "test_runtime_and_admission_floor_refuse",
+      "test_next_write_reserves_runtime_floor",
+      "test_hardlinks_and_symlinks_not_exempted",
+      "test_fault_after_spawn_cleanup_no_orphan",
+      "test_sampler_exception_cleanup_no_orphan",
+      "test_initial_identity_exception_finally_recovers",
+      "test_timeout_and_success",
+      "test_foreign_identity_refuses_and_owned_cleanup_still_possible",
+      "test_ignored_TERM_escalates_only_owned_group",
+      "test_final_sampler_failure_disqualifies_zero_exit"
+    ],
+    "qualification": "small temp files and fake owned Python children only; no real stage main invocation"
+  },
+  "all16_RAM_materialized_patches_exact": true,
+  "admission_floor_bytes": 20825558220,
+  "runtime_floor_bytes": 19394461696,
+  "cumulative_cap_bytes_including_failures": 1288490188,
+  "image_allocation_released_by_main": true,
+  "must_wait_for": [
+    "main writer/config source review",
+    "rectangle functional guest plus observer closed",
+    "fresh whole reservation+200MiB peer admission"
+  ],
+  "diffs": {
+    "writer-vs-stage-repair.diff": "fa4f9ee2eafa709c88178355d65d439b8646a1a6d88c2f3e1ead1acce23866a0",
+    "supervisor-vs-guarded-process.diff": "76c8aed646f8baaabd45c91c7abe28ac77d66c1b030ad6398ca0e621bdcabb85"
+  },
+  "old_helpers": {
+    "stage-repair.py": "90544896a3ddb93e639c7eb2c44b7fb731539919fe1b79bb5f9f2c3ddf3af403",
+    "guarded_process.py": "e13fc838a5b94c2a7e8c42fc6f31545597d96887c6758c839a7a55d224b44ed8"
+  },
+  "changes": [
+    "single source stream directly to exclusive output;16 exact reserved/metadata patches",
+    "no full-build/ELF copy, extraction, mirrored image, oldstate/input/default/production changes",
+    "separate supervisor releases writer only after exact PID/PGID/procstart receipt; every post-spawn exception finally cleans owned child",
+    "whole copy/patch/hash/two-parser/all-input rehash guarded",
+    "per-file max(logical,allocated), directories and all failures charged; disappearing temp handled, no hardlink/symlink exceptions",
+    "image admission immediately before write18GiB+1.2GiB+200MiB; runtime18GiB+64MiB plus next-write reserve",
+    "300s stage timeout,8MiB log cap, no orphan or foreign process actions in tests"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "qualified": false,
+  "error": "RuntimeError: owned input guard failed; private job qualification aborted",
+  "scope": "automatic source/runtime gates only; PNG visual review/Continue/ordinary gameplay remain separately observed acceptance",
+  "tools_sha256": "3557c5224df6b3715d282d3deab5fff7557b1c2ec8273c7d0ea76c1f359a41c1",
+  "cinematic_visual_review": false,
+  "Continue_acceptance": false,
+  "started_utc": "2026-10-22T02:43:05.829426+00:00",
+  "mode": "cold-shoot01",
+  "profile_sha256": "8aae247a6c0998af06ffce2d16a3832bfaaaf99dbab1769fc75b32b1a2103d1b",
+  "preflight_disc": {
+    "disc.gdi": {
+      "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+      "bytes": 83
+    },
+    "track01.bin": {
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+      "bytes": 1058400
+    },
+    "track02.raw": {
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "bytes": 1237152
+    },
+    "track03.iso": {
+      "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+      "bytes": 1032499200
+    }
+  },
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "image_sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+  "memory_writes": false,
+  "retry": false
+}

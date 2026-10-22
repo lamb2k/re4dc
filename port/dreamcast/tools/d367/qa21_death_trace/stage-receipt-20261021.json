@@ -1,0 +1,31 @@
+{
+  "scope": "Standalone diagnostic trace image only, no release/hardware acceptance",
+  "source": "58b589413deb2adc6af052cf0910deab164366d7",
+  "trace_runtime_source": "f99dc69ad8bfeebcdb10913443543514dc40f9cc",
+  "program_sha256": "ca30bfc0c28490c91d18dbd37182e89d1f905cbf9bf735280bc7cd90cdb93b94",
+  "elf_sha256": "56bc10f8c82ff08bed11f6481dbcc57043d8c13b1d75cbd6155b0d31297fead8",
+  "input_track03_sha256": "97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18",
+  "input_track03_sha256_after": "97a3219f2876783cd28c5250479882e0b7643fecbff7a9bbbfc5df0886fc0a18",
+  "input_track03_name": "track03.iso",
+  "staged_track03_sha256": "2e40da769c049ab502f3608ea4f633b2b8ff32f4e9fe290b0c15ae30ac31b0aa",
+  "unrelated_exact_file_count": 1728,
+  "all14_staged_overlays_match_build": true,
+  "source_image_mutated": false,
+  "image_hardlinks_or_shared_writable_extents": false,
+  "extracted_asset_tree": false,
+  "program_extent_preserved": 547365,
+  "old_volume_blocks": 504000,
+  "new_volume_blocks": 504001,
+  "track_length": 1032499200,
+  "peak_total_fresh_footprint_bytes": 1527220523,
+  "total_fresh_footprint_after": 1527220523,
+  "fresh_reservation_bytes": 2469606195,
+  "minimum_free_C_bytes": 22525595648,
+  "seconds": 164.82598418999987,
+  "files": {
+    "disc.gdi": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+    "track01.bin": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+    "track02.raw": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+    "track03.iso": "2e40da769c049ab502f3608ea4f633b2b8ff32f4e9fe290b0c15ae30ac31b0aa"
+  }
+}

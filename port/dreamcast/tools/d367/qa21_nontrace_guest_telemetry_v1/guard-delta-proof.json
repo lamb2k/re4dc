@@ -1,0 +1,68 @@
+{
+  "scope": "static source identity, not runtime acceptance",
+  "utc": "2026-10-22T04:07:44.735084+00:00",
+  "base": "85bac7a7113816d3e8c9564d0c301ed4c670aa94",
+  "source_files": {
+    "observer-v2.py": {
+      "base_sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "current_sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf",
+      "exact_85bac": true
+    },
+    "inner-adapter.py": {
+      "base_sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "current_sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e",
+      "exact_85bac": true
+    },
+    "controller-core.py": {
+      "base_sha256": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a",
+      "current_sha256": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a",
+      "exact_85bac": true
+    },
+    "input-deadlines.py": {
+      "base_sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "current_sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9",
+      "exact_85bac": true
+    },
+    "layout-contract.py": {
+      "base_sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "current_sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5",
+      "exact_85bac": true
+    },
+    "guest-supervisor-core.py": {
+      "base_sha256": "3227d411abf7370901b12f894dd35c33ca2b865f8be3eb88099f324814f87510",
+      "current_sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb",
+      "exact_85bac": false
+    },
+    "capture-budget.py": {
+      "base_sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "current_sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda",
+      "exact_85bac": true
+    },
+    "observe.py": {
+      "base_sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "current_sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490",
+      "exact_85bac": true
+    },
+    "policies.py": {
+      "base_sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "current_sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233",
+      "exact_85bac": true
+    },
+    "windows-backend.py": {
+      "base_sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "current_sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e",
+      "exact_85bac": true
+    },
+    "outer-driver.py": {
+      "base_sha256": "2c36123ba025ad431a85735e4a7cff8a9b1315613ba7595dbefc215adc83a6e8",
+      "current_sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c",
+      "exact_85bac": false
+    }
+  },
+  "controls": {
+    "all_core_resource_timing_constants_exact": true,
+    "core_without_only_final_resource_addition_exact85bac_AST": true,
+    "actual_argparse_argument_calls_exact": true,
+    "inner_backend_input_controller_policy_observer_all_exact": true
+  }
+}

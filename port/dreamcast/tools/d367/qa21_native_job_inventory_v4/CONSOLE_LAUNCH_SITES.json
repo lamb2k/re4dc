@@ -1,0 +1,78 @@
+{
+  "scope": "read-only LOCAL source/PE header inventory; no native query or process launch",
+  "python_exe": {
+    "sha256": "4d6f5f81a4bca11191c4c7c6b43632694d0a4ce74e068619d8fdc161d469859a",
+    "subsystem": 3
+  },
+  "local_subprocess_py_sha256": "e9886605ccac88bcfe2330a1b4cd8f132cbaf97ebb6834b1dcb5a69b127b8d5b",
+  "flycast_profile_pinned_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+  "flycast_template_header_subsystem": 2,
+  "sources": {
+    "windows-backend.py": {
+      "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55"
+    },
+    "inner-adapter.py": {
+      "sha256": "3f576be885b7f165f9d3a40ef6fd75292114db881754c620f159417223452758"
+    },
+    "reference-hooks/checkpoint_runner18.child.py": {
+      "sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6"
+    },
+    "reference-hooks/child_reference_proxy.py": {
+      "sha256": "35fd3ab48a43f7a0604770b8b2b1708d0eb546371bd2101eb21ae3e022b6af19"
+    }
+  },
+  "sites": [
+    {
+      "file": "windows-backend.py",
+      "line": 37,
+      "role": "inner",
+      "inside_private_job": "assigned immediately after Popen",
+      "flag": "CREATE_NO_WINDOW",
+      "v4_candidate_change": "DETACHED_PROCESS only in owned fixture startup.py; production frozen unchanged"
+    },
+    {
+      "file": "windows-backend.py",
+      "line": 93,
+      "role": "parent tasklist global_count",
+      "inside_private_job": false,
+      "flag": "CREATE_NO_WINDOW",
+      "fixture03_04": "not called"
+    },
+    {
+      "file": "reference-hooks/checkpoint_runner18.child.py",
+      "line": 60,
+      "role": "inner tasklist count_flycasts",
+      "inside_private_job": true,
+      "flag": "CREATE_NO_WINDOW",
+      "fixture03_04": "not reached; release blocked"
+    },
+    {
+      "file": "reference-hooks/checkpoint_runner18.child.py",
+      "line": 224,
+      "role": "Flycast",
+      "inside_private_job": true,
+      "flag": "0 + STARTF_USESHOWWINDOW/SW_HIDE",
+      "PE_subsystem": 2,
+      "fixture03_04": "not reached; release blocked"
+    },
+    {
+      "file": "reference-hooks/checkpoint_runner18.child.py",
+      "line": 228,
+      "role": "Python read_log",
+      "inside_private_job": true,
+      "flag": "CREATE_NO_WINDOW",
+      "fixture03_04": "not reached; release blocked"
+    },
+    {
+      "file": "native_inventory_v4/supervisor.py",
+      "role": "coordinator",
+      "inside_private_job": false,
+      "flag": "CREATE_NO_WINDOW",
+      "v4_candidate_change": "unchanged; membership diagnostic concerns owned inner private job only"
+    }
+  ],
+  "console_API_calls_in_owned_inner_runner_proxy_capture_sources": [],
+  "actual03_parent_pid": "UNAVAILABLE",
+  "actual03_commandline": "UNAVAILABLE",
+  "actual03_os_image_hash_signature_nativefileID": "UNAVAILABLE; not queried during retained live capture"
+}

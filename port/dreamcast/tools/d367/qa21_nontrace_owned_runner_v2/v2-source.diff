@@ -1,0 +1,78 @@
+--- V1/parent_reference_broker.py
++++ V2/parent_reference_broker.py
+@@ -68,7 +68,7 @@
+         self.backend.check_deadlines()
+         if self.backend.job!=self.job:raise Refusal('parent job authority changed')
+         if self.backend.free()<19394461696:raise Refusal('unchanged runtime disk floor')
+-        if self.backend.evidence_bytes()>60000000:raise Refusal('unchanged cumulative evidence cap')
++        if self.backend.evidence_bytes()>=60000000:raise Refusal('unchanged cumulative evidence cap')
+         # Every chunk also checks retained live inner, including process birth.
+         self.api.process(int(self.inner._handle),self.job,self.inner_pin,require_live=True)
+ 
+@@ -112,17 +112,46 @@
+         except BaseException:self.api.close(handle);raise
+ 
+     def marker_proof(self):
+-        path=self.cap/'.owned-reference-creator.json'
++        path=self.cap/'.owned-reference-creator.json';key=canonical(str(path))
++        expected={'inner_pid':self.inner.pid,'nonce':self.nonce,'runner_sha256':self.runner_sha,'allocation_sha256':self.authority['sha256']}
++        raw=json.dumps(expected,sort_keys=True).encode('utf-8')
++        wanted={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}
+         if self.marker_handle is None:
+             self.collector.parents(str(path));self.marker_handle=self.api.open_file(str(path))
+-        expected={'inner_pid':self.inner.pid,'nonce':self.nonce,'runner_sha256':self.runner_sha,'allocation_sha256':self.authority['sha256']}
+-        raw=json.dumps(expected,sort_keys=True).encode('utf-8')
+-        before=self.api.stat(self.marker_handle)
+-        hashed=self.api.hash_file(self.marker_handle,self.resource_guard)
+-        if self.api.final_path(self.marker_handle)!=canonical(str(path)) or hashed!={'sha256':hashlib.sha256(raw).hexdigest(),'bytes':len(raw)}:
+-            raise Refusal('exclusive current creator marker differs')
+-        after=self.api.stat(self.marker_handle)
+-        if before!=after:raise Refusal('creator marker changed during hash')
++            # Pin original creator identity once. Never reseal a replacement alias.
++            self.marker_original=self.api.stat(self.marker_handle)
++        def current():
++            retained=self.api.stat(self.marker_handle)
++            if retained['deleted'] or retained['directory'] or retained['creation_filetime']<=0 or retained!=self.marker_original or self.api.final_path(self.marker_handle)!=key:
++                raise Refusal('retained creator marker identity/type/path changed')
++            fresh=self.api.open_file(str(path))
++            try:
++                now=self.api.stat(fresh)
++                if now['deleted'] or now['directory'] or self.api.final_path(fresh)!=key or now!=self.marker_original:
++                    raise Refusal('current creator marker alias differs from original retained identity')
++                # Fresh pathname and original retained object must BOTH contain the
++                # exact creator data, around every operation; no request Boolean.
++                hashed=self.api.hash_file(fresh,self.resource_guard)
++                if hashed!=wanted:raise Refusal('current creator marker contents differ')
++                after=self.api.stat(fresh)
++                if after!=now or after['deleted'] or after['directory'] or self.api.final_path(fresh)!=key:
++                    raise Refusal('current creator marker changed during hash')
++                # Re-open the pathname AFTER hashing as well. The retained handle
++                # can still name a removed/renamed object when DELETE sharing allows
++                # a replacement at its old pathname.
++                post=self.api.open_file(str(path))
++                try:
++                    poststat=self.api.stat(post)
++                    if poststat!=self.marker_original or poststat['deleted'] or poststat['directory'] or self.api.final_path(post)!=key:
++                        raise Refusal('creator marker current pathname changed after operation')
++                finally:self.api.close(post)
++                return after
++            finally:self.api.close(fresh)
++        before=current();hashed=self.api.hash_file(self.marker_handle,self.resource_guard)
++        if hashed!=wanted:raise Refusal('original retained creator marker contents differ')
++        after=current()
++        if before!=after or self.api.stat(self.marker_handle)!=self.marker_original or self.api.final_path(self.marker_handle)!=key:
++            raise Refusal('creator marker alias/retained identity changed across operation')
+         return {'native_identity':after,'hash':hashed,'exact_contents':expected}
+ 
+     def stopped(self):
+--- V1/native_reference_api.py
++++ V2/native_reference_api.py
+@@ -89,7 +89,7 @@
+             self.checked(self.k.GetFileInformationByHandleEx(h,kind,C.byref(obj),C.sizeof(obj)))
+         return dict(volume=ident.volume,native_file_id='0x'+format(int.from_bytes(bytes(ident.identifier),'little'),'032x'),
+                     size=std.size,allocated=std.allocated,links=std.links,deleted=bool(std.deleted),directory=bool(std.directory),
+-                    mtime_ns=(basic.write-116444736000000000)*100,attributes=basic.attributes)
++                    mtime_ns=(basic.write-116444736000000000)*100,creation_filetime=basic.creation,attributes=basic.attributes)
+ 
+     def names(self,path):
+         # Fixed ample buffer and bounded count: MORE_DATA/any partial enumeration refuses.

@@ -1,0 +1,18 @@
+{
+  "output": "C:/Flycast-Evidence/re4-dreamcast/qa21-native-job-inventory-20261022-02",
+  "allocation": "C:/Game Dev/Emulators/codex-lanes/qa21-combined-regression/NATIVE-JOB-INVENTORY02-ROOT-ALLOCATION.json",
+  "admission": 19528679424,
+  "inner_argv": [
+    "C:/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_owned_adapter_v1\\inner-adapter.py",
+    "--profile",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_nontrace_owned_adapter_v1\\guest-profile-v2.json",
+    "--mode",
+    "return-door01",
+    "--cap",
+    "C:/Flycast-Evidence/re4-dreamcast/qa21-native-job-inventory-20261022-02/NEVER-CREATE-GUEST",
+    "--seed",
+    "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022/cold-shoot01"
+  ]
+}

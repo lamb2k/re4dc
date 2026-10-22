@@ -1,0 +1,17 @@
+{
+  "scope": "9NEWchildseal source/readonlydata contracts; noguest/input/RAM/nativechild",
+  "utc": "2026-10-22T04:48:42.705326+00:00",
+  "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39",
+  "sources": {
+    "test-child-seal.py": "41a1eda900ae23ba0a0728c944dd57657a83767dc297ab4e800b17505f2d19f7",
+    "runtime-source-proof.json": "9b1611e7a11980be6099ae428830f2296a20e2cd85299a1db99de0db0d471273",
+    "referenced-readonly-files.json": "8d0242980b9eaa47415d275a3ce74d8ddfb03ca855ced56b6b04fe46dd097747",
+    "guest-profile-v2.json": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+    "controller-core.py": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b",
+    "run-child-seal-tests.py": "14c155749e39b62eade74d73a19a669fc9f65a686bdef57ab19294f79b508ac3"
+  },
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "test_actual_existing_profile_validator_has_no_ancestry_bypass (__main__.Child.test_actual_existing_profile_validator_has_no_ancestry_bypass) ... ok\ntest_all_actual_readonly_data_hashes_and_sizes_match (__main__.Child.test_all_actual_readonly_data_hashes_and_sizes_match) ... ok\ntest_exact_serialized_parent_first_turn_and_bounded_A_candidate (__main__.Child.test_exact_serialized_parent_first_turn_and_bounded_A_candidate) ... ok\ntest_no_inherited_default_mode_or_unseeded_later_role (__main__.Child.test_no_inherited_default_mode_or_unseeded_later_role) ... ok\ntest_only_runtime_contact_literal_changes_all_guardians_exact (__main__.Child.test_only_runtime_contact_literal_changes_all_guardians_exact) ... ok\ntest_original_resource_parser_exit_job_input_structures_and_bounds_unchanged (__main__.Child.test_original_resource_parser_exit_job_input_structures_and_bounds_unchanged) ... ok\ntest_profile_byte_exact_4c_and_actual_arguments_request_only_return_role (__main__.Child.test_profile_byte_exact_4c_and_actual_arguments_request_only_return_role) ... ok\ntest_strict_parent_metadata_exact_profile_state_programme_and_no_failedparent (__main__.Child.test_strict_parent_metadata_exact_profile_state_programme_and_no_failedparent) ... ok\ntest_windows_absolute_path_join_pins_actual_v1_data_not_child_shadow (__main__.Child.test_windows_absolute_path_join_pins_actual_v1_data_not_child_shadow) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.208s\n\nOK\n",
+  "guest_qualified": false
+}

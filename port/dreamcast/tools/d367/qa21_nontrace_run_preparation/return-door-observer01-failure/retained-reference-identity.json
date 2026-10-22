@@ -1,0 +1,39 @@
+{
+  "scope": "readonly exactretainedfailed-reference declaration; no unlink/profileguardrelaxation",
+  "utc": "2026-10-22T05:54:20.442524+00:00",
+  "image_sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+  "native_file_id": "File ID is 0x000000000000000000030000004cbccd",
+  "references": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track03.iso",
+      "bytes": 1032499200,
+      "inode": 844424935161037,
+      "mtime_ns": 1792628865730857700,
+      "links": 3,
+      "samefile": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track03.iso",
+      "bytes": 1032499200,
+      "inode": 844424935161037,
+      "mtime_ns": 1792628865730857700,
+      "links": 3,
+      "samefile": true
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track03.iso",
+      "bytes": 1032499200,
+      "inode": 844424935161037,
+      "mtime_ns": 1792628865730857700,
+      "links": 3,
+      "samefile": true
+    }
+  ],
+  "immutable_profile4c_expected_links": 2,
+  "current_links": 3,
+  "future_preflight": "immutable4c baselineguard2 MUSTcurrentlyrefuse; futureexact3referenceextension needsnewreviewed source/outputcontract, no silentrelaxation",
+  "runtimefloor": 19394461696,
+  "minimum_C": 144995434496,
+  "source_unchanged": true,
+  "guest_allocated": false
+}

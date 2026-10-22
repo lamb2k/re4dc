@@ -1,0 +1,35 @@
+{
+  "scope": "9NEW capturedterminal/adversarial source controls; no guestqualification",
+  "utc": "2026-10-22T05:11:35.378982+00:00",
+  "pass": true,
+  "tests": {
+    "windows": {
+      "path": "lifecycle-tests-windows-20261022T051034672009Z.json",
+      "bytes": 2557,
+      "sha256": "3d261e93f8c920940efdc2396bea2c1d9655bebf6c318407d24cc59633047bfc",
+      "tests": 9,
+      "sources_current": true
+    },
+    "linux": {
+      "path": "lifecycle-tests-linux-20261022T051034062935Z.json",
+      "bytes": 2577,
+      "sha256": "03b42704fa7b14be736f20e69f2649bb0b5c9a8e4f3414b94ef194a103c54ada",
+      "tests": 9,
+      "sources_current": true
+    }
+  },
+  "runtime_delta_proof": {
+    "bytes": 2767,
+    "sha256": "bb8f71ab7b375622f972caf36075da8187c9dd0d6bb18673299b76dee52eae3d"
+  },
+  "captured_terminal_fixture": {
+    "bytes": 6607,
+    "sha256": "652ae5c7cd9cf98b4190414738894d1b44d1e81f4dfe0c1ccdb68b9c9fb3a881"
+  },
+  "terminal_state_sha256": "640c9dadddf5b42a5b9b58e2781cbda3b797b0ac439b0ae78b180a10f7986ee0",
+  "missing_live_badaddress": "unavailable; not retained",
+  "original_guest_qualified": false,
+  "new_guest_allocated": false,
+  "source_manifest_seal": false,
+  "limits_unchanged": true
+}

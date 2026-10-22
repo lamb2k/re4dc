@@ -1,0 +1,14 @@
+{
+  "scope": "dummy Python children only; no Flycast",
+  "result": "2 assertion failures; all four owned children reaped/private jobs closed",
+  "failures": [
+    "Windows closed fd0 reports OSError errno22 Invalid argument, not Python BrokenPipeError; cleanup remained complete",
+    "Accelerated-clock main loop reached47.5 before independent thread47.0; independent deadline test must deliberately block sampler/main loop to establish independence"
+  ],
+  "correction": "retain platform OSError acceptance and assert both release+close errors; block main tick to test independent watchdog rather than racing two valid guards",
+  "second_run": {
+    "result": "4pass/1fail; owned child reaped, handles closed",
+    "confirmed_backend_defect": "QueryFullProcessImageNameW on signaled exited retained Python child returns WinError31, causing normal run and cleanup false failure",
+    "fix": "retained creation time+signaled finalized exit validates cached live path on un-reusable retained HANDLE; no post-exit image-name query. Applied identically to guest and inner."
+  }
+}

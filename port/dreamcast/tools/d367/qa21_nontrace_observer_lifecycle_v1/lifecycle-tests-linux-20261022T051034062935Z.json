@@ -1,0 +1,17 @@
+{
+  "scope": "9NEW focused actualterminalvalid/adversarialinvalidpointer/lifecycle/no-input/identity controls; notactualmissinglive replay",
+  "utc": "2026-10-22T05:10:34.061666+00:00",
+  "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39",
+  "sources": {
+    "test-lifecycle-reader.py": "df6fc68e8dbec4db484f8c10f21a198a598d59159586ac11263fcd7dcb07e735",
+    "run-lifecycle-tests.py": "6dadce1e6102e5c315b4182905ebecf583aa988c10af13d90037c2151e1a344a",
+    "observe.py": "4f98cc5c10c1242930edc871f9a03dbcb8dc86eaec2bf9ac7f2ac1cc18b48c03",
+    "observer-v2.py": "254f708a1374d2a43f13225b7759fa014b61c9898b5672f0738316fef754157a",
+    "captured-terminal-fixture.json": "652ae5c7cd9cf98b4190414738894d1b44d1e81f4dfe0c1ccdb68b9c9fb3a881",
+    "guest-profile-v2.json": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+  },
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "test_actual_terminal_fixture_matches_existing_reader_control_exactly (__main__.Lifecycle.test_actual_terminal_fixture_matches_existing_reader_control_exactly) ... ok\ntest_arm_invalid_pointer_records_field_extent_before_any_bad_rawread (__main__.Lifecycle.test_arm_invalid_pointer_records_field_extent_before_any_bad_rawread) ... ok\ntest_body_invalid_pointer_records_field_extent_before_any_bad_rawread (__main__.Lifecycle.test_body_invalid_pointer_records_field_extent_before_any_bad_rawread) ... ok\ntest_four_invalid_attempts_clear_old_row_no_inputs_no_witness_and_check_post_identity (__main__.Lifecycle.test_four_invalid_attempts_clear_old_row_no_inputs_no_witness_and_check_post_identity) ... ok\ntest_null_optional_pointers_not_zero_accepted_and_no_input_guard_changes (__main__.Lifecycle.test_null_optional_pointers_not_zero_accepted_and_no_input_guard_changes) ... ok\ntest_recovered_second_snapshot_requires_fresh_coherence_and_keeps_failure_context (__main__.Lifecycle.test_recovered_second_snapshot_requires_fresh_coherence_and_keeps_failure_context) ... ok\ntest_retained_PID_exit_after_failed_read_still_prevents_publish (__main__.Lifecycle.test_retained_PID_exit_after_failed_read_still_prevents_publish) ... ok\ntest_system_invalid_pointer_records_field_extent_before_any_bad_rawread (__main__.Lifecycle.test_system_invalid_pointer_records_field_extent_before_any_bad_rawread) ... ok\ntest_unrelated_ValueError_remains_fatal_not_invalid_sample (__main__.Lifecycle.test_unrelated_ValueError_remains_fatal_not_invalid_sample) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.026s\n\nOK\n",
+  "guest_qualified": false
+}

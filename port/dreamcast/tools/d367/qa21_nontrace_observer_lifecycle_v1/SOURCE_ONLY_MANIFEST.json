@@ -1,0 +1,93 @@
+{
+  "scope": "source-only integrity, NOT source-manifest.json launchseal",
+  "files": {
+    "observer-v2.py": {
+      "bytes": 9608,
+      "sha256": "254f708a1374d2a43f13225b7759fa014b61c9898b5672f0738316fef754157a"
+    },
+    ".gitattributes": {
+      "bytes": 71,
+      "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7"
+    },
+    "runtime-delta-proof.json": {
+      "bytes": 2767,
+      "sha256": "bb8f71ab7b375622f972caf36075da8187c9dd0d6bb18673299b76dee52eae3d"
+    },
+    "test-lifecycle-reader.py": {
+      "bytes": 7490,
+      "sha256": "df6fc68e8dbec4db484f8c10f21a198a598d59159586ac11263fcd7dcb07e735"
+    },
+    "inner-adapter.py": {
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    "controller-core.py": {
+      "bytes": 7468,
+      "sha256": "855031621b081db837b8bd226d9fb20c8faee3ecde820760e2b75397e5ed195b"
+    },
+    "input-deadlines.py": {
+      "bytes": 3728,
+      "sha256": "c60b233bae52aa9bfd7f915926021a965f0bf7b169489dadc56026901e943dd9"
+    },
+    "layout-contract.py": {
+      "bytes": 4538,
+      "sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5"
+    },
+    "guest-supervisor-core.py": {
+      "bytes": 5185,
+      "sha256": "4726bcbc46653e737c45a75e901b31bc00f42b2e5015f931cdf98b26a5540deb"
+    },
+    "lifecycle-tests-linux-20261022T051034062935Z.json": {
+      "bytes": 2577,
+      "sha256": "03b42704fa7b14be736f20e69f2649bb0b5c9a8e4f3414b94ef194a103c54ada"
+    },
+    "captured-terminal-fixture.json": {
+      "bytes": 6607,
+      "sha256": "652ae5c7cd9cf98b4190414738894d1b44d1e81f4dfe0c1ccdb68b9c9fb3a881"
+    },
+    "capture-budget.py": {
+      "bytes": 712,
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+    },
+    "observe.py": {
+      "bytes": 7226,
+      "sha256": "4f98cc5c10c1242930edc871f9a03dbcb8dc86eaec2bf9ac7f2ac1cc18b48c03"
+    },
+    "DIAGNOSIS.md": {
+      "bytes": 3798,
+      "sha256": "9a57b8dbe93d791db42e7ef8ec52503d470c5024e25855658877469aefb0db5a"
+    },
+    "policies.py": {
+      "bytes": 3455,
+      "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233"
+    },
+    "windows-backend.py": {
+      "bytes": 15331,
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e"
+    },
+    "exact-log-symbols.json": {
+      "bytes": 634,
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+    },
+    "source-qualification.json": {
+      "bytes": 1209,
+      "sha256": "e04711c66a91353de63a38eca15ed8231ee90e98705155b5f381196205921944"
+    },
+    "run-lifecycle-tests.py": {
+      "bytes": 1219,
+      "sha256": "6dadce1e6102e5c315b4182905ebecf583aa988c10af13d90037c2151e1a344a"
+    },
+    "outer-driver.py": {
+      "bytes": 13247,
+      "sha256": "41c408bb3af6fe2f2be7dfd8fbaacba7687626a37574a3547e677dce1964fa2c"
+    },
+    "lifecycle-tests-windows-20261022T051034672009Z.json": {
+      "bytes": 2557,
+      "sha256": "3d261e93f8c920940efdc2396bea2c1d9655bebf6c318407d24cc59633047bfc"
+    },
+    "guest-profile-v2.json": {
+      "bytes": 13113,
+      "sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+*.py text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.diff text eol=lf
+*.txt -text
+receipt-*.json -text

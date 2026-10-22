@@ -1,0 +1,107 @@
+{
+  "scope": "immutable SOURCE-only strict inventory04 candidate; unallocated",
+  "baseline_v3": "ac5706833",
+  "actual03_evidence_commit": "2042f745f",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+      "bytes": 8
+    },
+    {
+      "path": "CONSOLE_LAUNCH_SITES.json",
+      "sha256": "4ec52eca532935435b442128cf5005f037b468b2379137b89a0bbbd7732e3456",
+      "bytes": 2847
+    },
+    {
+      "path": "FUTURE_ROOT_ALLOCATION_BYTES.json",
+      "sha256": "dcd1143bf78bcb856d37932f87206dab1b0169bf7b7c6b09d58ffaff2cfaefaa",
+      "bytes": 542
+    },
+    {
+      "path": "LAUNCH_REQUEST.json",
+      "sha256": "e6df4294699d9762bfa23d62166b22b788e6d891136f4ba5f2924e31a78a9d0f",
+      "bytes": 815
+    },
+    {
+      "path": "NATIVE_INVENTORY_PLAN.md",
+      "sha256": "43c6b4bcef1dfe751ba72b26f31a5b5e50d7537f0f004808e0c06e340f2b7c92",
+      "bytes": 4936
+    },
+    {
+      "path": "README.md",
+      "sha256": "97b2c52d70576a71c9f42f5e8fb162664194160dca10844da33e7816d8ae55b5",
+      "bytes": 454
+    },
+    {
+      "path": "allocation.py",
+      "sha256": "0a63f1c869bf6965a009850cd81ea655c37d08662e12849b9a11acd3f48f6c31",
+      "bytes": 1039
+    },
+    {
+      "path": "cleanup.py",
+      "sha256": "5a76565c99154461ec11c1aa91fbb8ccd04aa43a06267c453a26e965748af585",
+      "bytes": 3232
+    },
+    {
+      "path": "config.json",
+      "sha256": "24c8c2c7de271ed8ba3c0962aaf3037a919c65f90afb04d27c8cbbae3f44f21d",
+      "bytes": 940
+    },
+    {
+      "path": "coordinator.py",
+      "sha256": "75f0e5c21eb05fadd12493a1db42dc3c352e7f2451892239f2166063d0cd9a20",
+      "bytes": 4980
+    },
+    {
+      "path": "frozen-native-reference-api.py",
+      "sha256": "466d5cfb558b57dc03d08050012573a5e783dfe21c69990aa4fd4fdf6f35d255",
+      "bytes": 9151
+    },
+    {
+      "path": "frozen-windows-backend.py",
+      "sha256": "0b0646c7d2d704707922ee671fafea5edeb97d7d160fa4a6f698f97555702a55",
+      "bytes": 16010
+    },
+    {
+      "path": "inventory.py",
+      "sha256": "bc24bd095ae1e7e9c164abdbf849755ea092a98627e1f9228f9fd387b2c9fee4",
+      "bytes": 1480
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "031077676c334cb7989039c53bbcdbb0153e9b6ff93590d93a4eec71f73ac115",
+      "bytes": 1964
+    },
+    {
+      "path": "receipt-linux.json",
+      "sha256": "20775a5470dfcac5d99049cab8f283ee53d57d59cc579a1b0ca7bbd9cf668845",
+      "bytes": 716
+    },
+    {
+      "path": "receipt-windows.json",
+      "sha256": "79853986060b122511df3ed8b69e305f74cd310768954706c4bbe5b0a6efef49",
+      "bytes": 739
+    },
+    {
+      "path": "startup.py",
+      "sha256": "d0e7e01ce2d965fb45b714126218f61bee3ab37253fba9d860f50ed60856bd78",
+      "bytes": 911
+    },
+    {
+      "path": "supervisor.py",
+      "sha256": "4ef4bf4a07971982e5840fabb2a0a6a6ee56ada3d5bbe25940cad98b37770b34",
+      "bytes": 8483
+    },
+    {
+      "path": "test_allocation.py",
+      "sha256": "d5dd16ae6446f2f463b7224fce218aff910a743855fe7b230e355d9cf28b6e21",
+      "bytes": 1289
+    },
+    {
+      "path": "test_startup.py",
+      "sha256": "e96730de348c9ff602272415bd1c76ae7493df0a198e5b0c0c8f60e1a1c3a271",
+      "bytes": 5255
+    }
+  ]
+}

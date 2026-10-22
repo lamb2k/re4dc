@@ -1,0 +1,188 @@
+{
+  "scope": "actualterminal autosave read-only replay, NOT exact lost failing-live snapshot",
+  "utc": "2026-10-22T05:07:07.616693+00:00",
+  "state_sha256": "640c9dadddf5b42a5b9b58e2781cbda3b797b0ac439b0ae78b180a10f7986ee0",
+  "audit": {
+    "state_sha256": "640c9dadddf5b42a5b9b58e2781cbda3b797b0ac439b0ae78b180a10f7986ee0",
+    "state_bytes": 8463373,
+    "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+    "decoded_bytes": 27785294,
+    "ram_serialization_offset": 11001553,
+    "immutable_anchors": [
+      {
+        "address": "0x8c014000",
+        "bytes": 256,
+        "sha256": "e02ebee59ecd8990d3619d9d34cf98672c6261f206b9dadbba3f4b1dceda4650"
+      },
+      {
+        "address": "0x8c050000",
+        "bytes": 256,
+        "sha256": "7c85749186f81547f95f3fc105b533ab5adeac8ac2e37ceba42dc32a26fb7d54"
+      },
+      {
+        "address": "0x8c110000",
+        "bytes": 256,
+        "sha256": "8596b92764a701d1b0686d3d9ada950a06385df8ad0c28c059af3b5226153c0a"
+      },
+      {
+        "address": "0x8c190000",
+        "bytes": 256,
+        "sha256": "05bbac539b83bf0233b20f0c4424165c5d38ea872056d1cbc3e7cdf8716170e2"
+      }
+    ],
+    "log_head": 208317,
+    "room": 257,
+    "frame": 671,
+    "stop": 0,
+    "player_life": 1200,
+    "player_life_max": 1200,
+    "player_pos": [
+      39371.69921875,
+      3101.37744140625,
+      -26666.501953125
+    ],
+    "player_rno": [
+      0,
+      0,
+      1,
+      1
+    ],
+    "event_start_cnt": 0,
+    "qa_flags": 0,
+    "memory_edits": false
+  },
+  "snapshot": {
+    "global": {
+      "ptr": "0x8c361a58",
+      "frame": 671,
+      "room": 257,
+      "player_life": 1200,
+      "rno": [
+        2,
+        0,
+        0,
+        0
+      ],
+      "stop": 0,
+      "status": [
+        50331648,
+        0,
+        0,
+        0
+      ]
+    },
+    "player": {
+      "ptr": 2359697536,
+      "pos": [
+        39371.69921875,
+        3101.37744140625,
+        -26666.501953125
+      ],
+      "ang": [
+        0.0,
+        -1.503808856010437,
+        0.0
+      ],
+      "rno": [
+        0,
+        0,
+        1,
+        1
+      ],
+      "alive": 117448823,
+      "serial": 31,
+      "dmgType": 0,
+      "dmgType_bits": 0
+    },
+    "event_start_cnt": 0,
+    "subscreen_type": 0,
+    "ssloop": 0,
+    "qa_frames": 0,
+    "qa_flags": 0,
+    "keys": {
+      "on": 0,
+      "trg": 0,
+      "rel": 0
+    },
+    "counters": {
+      "g_shot_cnt": 2,
+      "c_shot_cnt": 2,
+      "g_hit_cnt": 0,
+      "c_hit_cnt": 0,
+      "g_kill_cnt": 0,
+      "c_kill_cnt": 0
+    },
+    "debug_flags": [
+      512,
+      0,
+      32768,
+      0
+    ],
+    "weapon_no": 2,
+    "pl_type": 0,
+    "weapon": {
+      "slot": 2357594286,
+      "id": 35,
+      "equipped_id": 35,
+      "weapon_no": 2,
+      "loaded_rounds": 8,
+      "item_class": 1,
+      "attribute": 0,
+      "weapon_source_match": true,
+      "valid_inventory_slot": true
+    },
+    "motion": {
+      "pMot": 2356172768,
+      "Mot_frame": 2.0,
+      "Seq_frame": 3.0,
+      "Seq_frame_num": 90
+    },
+    "body": {
+      "pHeadData": 2355310272,
+      "pShape": 2359707500,
+      "pHair": 2359707792,
+      "pEye": 2359708084
+    },
+    "system": {
+      "region": 1,
+      "key_type": 0,
+      "flags": 0
+    },
+    "camera": {
+      "pos": [
+        -47374.859375,
+        1806.322998046875,
+        6908.1875
+      ],
+      "at": [
+        -49966.5703125,
+        1356.97998046875,
+        7656.60888671875
+      ],
+      "roll": 0.0,
+      "fovy": 49.999996185302734
+    },
+    "end_frame": 671,
+    "coherent": true,
+    "valid": true,
+    "non_atomic": true,
+    "diagnostics": {
+      "death_trace": null,
+      "lethal_caller": null,
+      "LifeDownSet2_before_after": null
+    },
+    "unavailable": [
+      "diagnostics.death_trace",
+      "diagnostics.lethal_caller",
+      "diagnostics.LifeDownSet2_before_after"
+    ],
+    "actors": [],
+    "manager_valid": false,
+    "reason": "active node outside exact pool",
+    "manager_nodes_seen": 0
+  },
+  "badread_chain": [],
+  "traceback": null,
+  "guest_qualification": false,
+  "raw_saved_or_copied": false
+}

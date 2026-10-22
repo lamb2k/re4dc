@@ -1,0 +1,25 @@
+{
+  "scope": "externalimmutablechildv2 request/readonly receipts; notguestallocation",
+  "files": {
+    "LAUNCH-REQUEST.json": {
+      "bytes": 5782,
+      "sha256": "3556d4f53fc05d48dbf5fd32227be15429a4164972739d39f8f76486278b134a"
+    },
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "LAUNCH-REQUEST.md": {
+      "bytes": 1602,
+      "sha256": "31f0e9914018254d226b0d1f3496dcd79c95912689e3e7ffe7b62f3c6af1f9de"
+    },
+    "read-only-preflight.py": {
+      "bytes": 3721,
+      "sha256": "8c13d5d41ae96b59d7d3588542578e8028835d615bd3dcd771cc15a67e950e94"
+    },
+    "readonly-preflight.json": {
+      "bytes": 2754,
+      "sha256": "708841c129993c50e3cde0ca244d6f5fe1f5eb9ee229310f3c34b4fc24c0ce6c"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "scope": "NEW child source qualification only, no door guest",
+  "utc": "2026-10-22T04:49:43.305762+00:00",
+  "pass": true,
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "runtime_only_delta": "contactA literal.20\u2192.15",
+  "runtime_source_identity_proof_sha256": "9b1611e7a11980be6099ae428830f2296a20e2cd85299a1db99de0db0d471273",
+  "new_child_tests": {
+    "windows": {
+      "path": "child-tests-windows-20261022T044842397099Z.json",
+      "sha256": "98d2cdbb8cde7745eb2da21aff88a454968bcc896d8ba0100f787937d38f3e2a",
+      "new_tests": 9,
+      "sources_current": true
+    },
+    "linux": {
+      "path": "child-tests-linux-20261022T044842706272Z.json",
+      "sha256": "8cbdc6233f5407652fa3fb21020a457f70029b9b2f5977a1f403d105662f365a",
+      "new_tests": 9,
+      "sources_current": true
+    }
+  },
+  "inherited_guard_qualification": {
+    "meaning": "byteidentity; no broad/native test rerun",
+    "source_v1_manifest": "0b12c09410599ee55c96d49875dadf5236b210ef8d8267cc0d7aaa82ad921bfd",
+    "source_v1_commit": "f63bb6de05630a4e06084baf769f2b4b364b3f0f",
+    "source_v1_review": "cf4881ec21101fa25b7fff2cf60c45044d648259",
+    "actual_cold_pass_commit": "64e075fb95a3f31dde891c037d6ddd4dda5e43dc",
+    "actual_cold_retained_seconds": 41.7446011,
+    "actual_cold_acceptance_sha256": "c5fcc6141cca426099e1fc34537edfeb522987c8c8a7814059afa150b279b83e",
+    "native_job_fixture": "all3sourcev1 tinyPythonchild receipts remainpinned via actualv1 externalmanifest",
+    "does_not_establish_door_runtime": true
+  },
+  "strict_e81e_parent_source_qualification_sha256": "a4e429b264200f3709dc73b3c2e8d50c36b586ac81d045d77785c1aeab49c7c8",
+  "actual_external_readonly_files": 56,
+  "initial_test_incident": "Comment-only emptykeys is not zero bytes. Initial test expectedbempty, failed safely, retained inincidents; corrected test checks no executable key actions. No runtimechange for this incident.",
+  "door_guest_qualified": false,
+  "guest_allocation": false,
+  "cold_role_invoked": false
+}

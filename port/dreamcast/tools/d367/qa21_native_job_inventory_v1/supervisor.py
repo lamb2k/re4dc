@@ -1,0 +1,84 @@
+"""Default-off ONE native inventory supervisor; requires separately allocated literal bytes."""
+import argparse,ctypes,hashlib,json,os,pathlib,shutil,subprocess,sys,threading,time
+P=pathlib.Path(__file__).parent
+
+def hard_parent(done):
+    if not done.wait(9.5):os._exit(125)
+
+def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+
+def main():
+    absolute_done=threading.Event();absolute_guard=threading.Thread(target=hard_parent,args=(absolute_done,),daemon=True);absolute_guard.start()
+    ap=argparse.ArgumentParser();ap.add_argument('--tools-sha256',required=True);ap.add_argument('--execute-root-allocation',action='store_true');args=ap.parse_args()
+    if not args.execute_root_allocation:raise RuntimeError('default-off; root allocation required')
+    if sha(P/'manifest.json')!=args.tools_sha256:raise RuntimeError('exact reviewed tools seal required')
+    if os.name!='nt':raise RuntimeError('Windows only')
+    cfg=json.loads((P/'config.json').read_text());template=(P/'FUTURE_ROOT_ALLOCATION_BYTES.json').read_bytes()
+    if pathlib.Path(cfg['allocation']).read_bytes()!=template:raise RuntimeError('exact root allocation bytes required')
+    for row in json.loads((P/'manifest.json').read_text())['files']:
+        path=pathlib.Path(row['path']) if row['absolute'] else P/row['path']
+        if sha(path)!=row['sha256']:raise RuntimeError('source pin changed: '+str(path))
+    root=pathlib.Path(cfg['output'])
+    if root.resolve()!=root.absolute() or root.exists():raise RuntimeError('fresh canonical fixture output required')
+    if shutil.disk_usage('C:/').free<cfg['admission']:raise RuntimeError('fresh admission refused')
+    root.mkdir();(root/'KEEP').write_text('Owned one-shot native startup inventory; preserve failures. No image/input/guest.\n')
+    k=ctypes.WinDLL('kernel32',use_last_error=True)
+    k.QueryFullProcessImageNameW.argtypes=[ctypes.c_void_p,ctypes.c_ulong,ctypes.c_wchar_p,ctypes.POINTER(ctypes.c_ulong)]
+    k.TerminateProcess.argtypes=[ctypes.c_void_p,ctypes.c_uint];k.GetProcessTimes.argtypes=[ctypes.c_void_p]+[ctypes.POINTER(ctypes.c_ulonglong)]*4
+    k.GetCompressedFileSizeW.argtypes=[ctypes.c_wchar_p,ctypes.POINTER(ctypes.c_ulong)];k.GetCompressedFileSizeW.restype=ctypes.c_ulong
+    def usage():
+        total=4096
+        for file in root.rglob('*'):
+            if not file.is_file():total+=4096;continue
+            high=ctypes.c_ulong();ctypes.set_last_error(0);low=k.GetCompressedFileSizeW(str(file),ctypes.byref(high))
+            if low==0xffffffff and ctypes.get_last_error():raise ctypes.WinError(ctypes.get_last_error())
+            total+=max(file.stat().st_size,(high.value<<32)|low)
+        return total
+    proc=None;done=threading.Event();guard=None;result={'qualified':False,'no_flycast':True,'no_input':True};origin=time.monotonic()
+    try:
+        proc=subprocess.Popen([sys.executable,'-B',str(P/'coordinator.py'),str(root)],stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,creationflags=subprocess.CREATE_NO_WINDOW)
+        # Parent owns only coordinator's retained Popen HANDLE. Child owns sole job.
+        # Hard thread never writes/enumerates/joins; parent cap <=10s, child <=5s.
+        def deadline():
+            if not done.wait(max(0,4.75-(time.monotonic()-origin))):k.TerminateProcess(int(proc._handle),125)
+            if not done.wait(max(0,9.5-(time.monotonic()-origin))):os._exit(125)
+        guard=threading.Thread(target=deadline,name='fixture-retained-parent-deadline',daemon=True);guard.start()
+        times=[ctypes.c_ulonglong() for _ in range(4)]
+        if not k.GetProcessTimes(int(proc._handle),*[ctypes.byref(x) for x in times]):raise ctypes.WinError(ctypes.get_last_error())
+        buf=ctypes.create_unicode_buffer(32768);n=ctypes.c_ulong(len(buf))
+        if not k.QueryFullProcessImageNameW(int(proc._handle),0,buf,ctypes.byref(n)):raise ctypes.WinError(ctypes.get_last_error())
+        if os.path.normcase(os.path.abspath(buf.value))!=os.path.normcase(os.path.abspath(sys.executable)):raise RuntimeError('coordinator retained executable mismatch')
+        result['coordinator']={'pid':proc.pid,'creation_filetime':times[0].value,'path':buf.value}
+        while proc.poll() is None:
+            if usage()>=4194304:raise RuntimeError('cumulative logical/allocated output cap')
+            if shutil.disk_usage('C:/').free<19394461696:raise RuntimeError('runtime floor')
+            time.sleep(.02)
+        result['exit_code']=proc.wait(timeout=.2)
+        child=json.loads((root/'coordinator-result.json').read_text())
+        result['qualified']=result['exit_code']==0 and child.get('qualified') is True and child.get('private_job_empty') is True and child.get('hardstop_fired') is False
+    except BaseException as exc:result['error']=type(exc).__name__+': '+str(exc)
+    finally:
+        try:
+            if proc is not None:
+                if proc.poll() is None:k.TerminateProcess(int(proc._handle),125)
+                proc.wait(timeout=.5)
+                ts=[ctypes.c_ulonglong() for _ in range(4)]
+                if not k.GetProcessTimes(int(proc._handle),*[ctypes.byref(x) for x in ts]):raise ctypes.WinError(ctypes.get_last_error())
+                result['retained_times']=[x.value for x in ts];result['actual_seconds']=(ts[1].value-ts[0].value)/1e7
+                if not ts[1].value or result['actual_seconds']>5:raise RuntimeError('child bound/finalized exit failed')
+            result['charged_bytes']=usage();result['free_bytes']=shutil.disk_usage('C:/').free
+            if result['charged_bytes']+131072>=4194304 or result['free_bytes']<19394461696:raise RuntimeError('final resource gate')
+            result['parent_seconds']=time.monotonic()-origin
+            (root/'supervisor-result.json').write_text(json.dumps(result,indent=2))
+            if usage()>=4194304 or shutil.disk_usage('C:/').free<19394461696:raise RuntimeError('postwrite resource gate')
+        finally:
+            done.set()
+            if guard is not None:
+                guard.join(timeout=.2)
+                if guard.is_alive():raise RuntimeError('retained deadline did not join; keep handle')
+            if proc is not None:proc._handle.Close()
+            absolute_done.set();absolute_guard.join(timeout=.2)
+            if absolute_guard.is_alive():raise RuntimeError('absolute guard failed to join')
+    return 0 if result['qualified'] else 1
+
+if __name__=='__main__':raise SystemExit(main())

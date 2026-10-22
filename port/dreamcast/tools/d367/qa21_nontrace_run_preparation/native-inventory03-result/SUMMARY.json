@@ -1,0 +1,57 @@
+{
+  "scope": "ONE root-allocated actual inventory03; strict qualification FALSE, diagnostic captured",
+  "supervisor": {
+    "pid": 9412,
+    "birth": 134371316754552671,
+    "seconds": 0.5072365,
+    "exit_code": 1
+  },
+  "coordinator": {
+    "pid": 34472,
+    "birth": 134371316757187531,
+    "seconds": 0.2281266,
+    "exit_code": 1,
+    "signaled": true
+  },
+  "inner": {
+    "pid": 19944,
+    "birth": 134371316759133980,
+    "seconds": 0.0279963,
+    "exit_code": 125,
+    "signaled": true
+  },
+  "observed_member": {
+    "pid": 37152,
+    "birth": 134371316759198421,
+    "path": "c:/windows/system32/conhost.exe",
+    "live_owned_job": true,
+    "parent_pid": "UNAVAILABLE",
+    "commandline": "UNAVAILABLE"
+  },
+  "first_members": [
+    19944
+  ],
+  "refused_members": [
+    19944,
+    37152
+  ],
+  "missing": [],
+  "cleanup_errors": [],
+  "private_job_empty": true,
+  "hardstop_fired": false,
+  "remaining_exact_owned_and_global_flycast": [],
+  "explicit_child_launches": 2,
+  "unexpected_native_member": 1,
+  "no_release": true,
+  "no_profile_state_image_read": true,
+  "no_input_flycast": true,
+  "source_commit": "ac5706833",
+  "strict_qualification": false,
+  "original55368_cause": "UNKNOWN: original member list was never persisted",
+  "internal_charged_before_final_supervisor_write": 8653,
+  "postclose_native_file_max_logical_allocated": 9264,
+  "postclose_plus4096_dir": 13360,
+  "four_mib_breach": false,
+  "accounting_defect": "GetCompressedFileSizeW is not FILE_STANDARD_INFO.AllocationSize; do not equate old guard value with actual allocation",
+  "actual_retry": false
+}

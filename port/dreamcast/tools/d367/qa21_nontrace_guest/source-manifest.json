@@ -1,0 +1,218 @@
+{
+  "scope": "source/mock-only;25NEW livewire cases each platform; independent source reviewCLEAR, no code/test rerun for disposition seal",
+  "created_utc": "2026-10-22T02:26:02.671399+00:00",
+  "files": {
+    ".gitattributes": {
+      "bytes": 71,
+      "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7"
+    },
+    "LIVEWIRE_REPAIRS.md": {
+      "bytes": 3064,
+      "sha256": "c86d13565ba5c2b4da20ff8cbd1d663913bb0ee5dbcb58c888ba6376fa3f5e09"
+    },
+    "PLAN.md": {
+      "bytes": 15074,
+      "sha256": "8e9b78a36618d6bb6575592a77ba125431ae55d5f1e8e2aaeb260a9bd6d96846"
+    },
+    "capture-budget.py": {
+      "bytes": 712,
+      "sha256": "f88d3326eddd05267e49d7926ff50afc2236d1d91acae8b4b202afcfecab4cda"
+    },
+    "checkpoint-ABI.json": {
+      "bytes": 4613,
+      "sha256": "15b4c7ea458bb8f957c5b4e86e3dde47cf82a8b35da4c8575bbd92d453d1140f"
+    },
+    "controller-core.py": {
+      "bytes": 7467,
+      "sha256": "e553ac26486ef9d56b32d379112dfd5211c59858976d257236fc260f8940c84a"
+    },
+    "current-transitions.json": {
+      "bytes": 18703,
+      "sha256": "25c5d4cccfbcea660849a02350aa0c334d2205e84a54d856819cf28f8e44a041"
+    },
+    "death-demo-source.json": {
+      "bytes": 2192,
+      "sha256": "e863aa62087251dd200fe7f34e0edfaef835fbd50773304e619c5279d3ff62e6"
+    },
+    "empty-keys.txt": {
+      "bytes": 76,
+      "sha256": "69c29ed80746da752fdd53d2410cf277060bfd04e9805e1c7a8664316ddacca2"
+    },
+    "exact-log-symbols.json": {
+      "bytes": 634,
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
+    },
+    "guest-profile-v2.json": {
+      "bytes": 10101,
+      "sha256": "8aae247a6c0998af06ffce2d16a3832bfaaaf99dbab1769fc75b32b1a2103d1b"
+    },
+    "guest-supervisor-core.py": {
+      "bytes": 3485,
+      "sha256": "2d32dbc3df77c67d6865cef6faa92ce815ec2a92dd9519896ac4500d29b57de0"
+    },
+    "independent-livewire-review.md": {
+      "bytes": 7997,
+      "sha256": "013c6e4f9b26b037b3bcd168b86b42951c0553af4cb7f12d97a00af0ae7ed1a9"
+    },
+    "inner-adapter.py": {
+      "bytes": 13084,
+      "sha256": "90b39901bce2489bf2eeff6f3dbb7540f4ac02a87dca9634b95f5c97ab6b21e4"
+    },
+    "input-deadlines.py": {
+      "bytes": 2823,
+      "sha256": "6917893fe1b2f27f87cb49ebea7a93843e84c249e7acdc1242fcf1420164fb8a"
+    },
+    "layout-contract.py": {
+      "bytes": 4538,
+      "sha256": "0d198918241ac135371c4369d92a843b324f395cd9ef33a649844df0200ddeb5"
+    },
+    "livewire-repair-receipt-linux-20261022T020553515633Z.json": {
+      "bytes": 3867,
+      "sha256": "2f00579096f5f3f58c5720025f8c2ed59a7a1363f3b0ba06d6a295dc1314f77a"
+    },
+    "livewire-repair-receipt-linux-20261022T020803903319Z.json": {
+      "bytes": 4019,
+      "sha256": "c10cfd0861a817b400dd839fe3a4edb59429b7287ce4ecbb34fd2d63aca989b6"
+    },
+    "livewire-repair-receipt-linux-20261022T021252794745Z.json": {
+      "bytes": 4282,
+      "sha256": "25d58d322a1793b194a4b7668c5756b5b2e8ae95db4b5bc79cf192412f3e8666"
+    },
+    "livewire-repair-receipt-linux-20261022T021515408756Z.json": {
+      "bytes": 4429,
+      "sha256": "fbdf57c59af8590c119e00f9bef7826a7f219f690c3d5efa467b34ee1f59edae"
+    },
+    "livewire-repair-receipt-linux-20261022T021903490482Z.json": {
+      "bytes": 4594,
+      "sha256": "27e5a3f428991935a937e456033e8d56e18962577751147127c6d8ceda86a822"
+    },
+    "livewire-repair-receipt-windows-20261022T020553238753Z.json": {
+      "bytes": 3869,
+      "sha256": "5764ac0adeb35f14c298089068b146b2c1b8878d2d435c526e7e9b64a7dfffe1"
+    },
+    "livewire-repair-receipt-windows-20261022T020803147942Z.json": {
+      "bytes": 4021,
+      "sha256": "73564d427e0c03c3e61c009160d36c7a3a275126a55cb29b18dc3718e89cc9b6"
+    },
+    "livewire-repair-receipt-windows-20261022T021252009739Z.json": {
+      "bytes": 4284,
+      "sha256": "40186663bd6031edb7c28e25d887ac912c82e619aaeab7b88a520140ebf3b409"
+    },
+    "livewire-repair-receipt-windows-20261022T021514642542Z.json": {
+      "bytes": 4431,
+      "sha256": "fddf31aff5f8b07fd29c13e6aaa9ff68cd269fa3b49b46c98e1722fdf8416b46"
+    },
+    "livewire-repair-receipt-windows-20261022T021902714424Z.json": {
+      "bytes": 4596,
+      "sha256": "ca53110195b0526b18fad945dcecf9ee5feb83e276c405b4e81117bc9f5299c7"
+    },
+    "livewire-review.json": {
+      "bytes": 2521,
+      "sha256": "8b1dea0dc97a019d72bf6c55dd70643e773166c513f8aebdaf5912f4dd8d90c3"
+    },
+    "native-tests-initial-incident.json": {
+      "bytes": 1077,
+      "sha256": "f5dc28e0d4d09e662a29de7543cc0af34c586904e05ed9c775cef64caa9ad63b"
+    },
+    "observe.py": {
+      "bytes": 6626,
+      "sha256": "d6d7e8da58de0c4d8c11f089ec919989357b9de5445d4dd3397ba9fe16b8a490"
+    },
+    "observer-binding-v2.json": {
+      "bytes": 1421,
+      "sha256": "da8944768ca95ad4d5ab557f9c52334888465ea414e2b3909aae4dc68c1d21ca"
+    },
+    "observer-v2-ABI.json": {
+      "bytes": 43125,
+      "sha256": "c48f2858953d7c693e1fb1885d0354fdb2706706c458099697fb1cc288ea228e"
+    },
+    "observer-v2.py": {
+      "bytes": 8805,
+      "sha256": "3d91acc380e386b1950082abde2d8001e9f9b72aefa111ad180380d543652abf"
+    },
+    "outer-driver.py": {
+      "bytes": 10969,
+      "sha256": "2c36123ba025ad431a85735e4a7cff8a9b1315613ba7595dbefc215adc83a6e8"
+    },
+    "policies.py": {
+      "bytes": 3455,
+      "sha256": "8555e3fd8708abbca11783baf09b3ce74a9fac7f683ab198edd0dce31ae4c233"
+    },
+    "r103-cold-keys.txt": {
+      "bytes": 189,
+      "sha256": "1d521b1ca227b07273fd4f7f1d2a7e1e2848b71eaee18ba07ad691386add2565"
+    },
+    "run-livewire-targeted.py": {
+      "bytes": 1418,
+      "sha256": "38906436f612c0988522b23009224364d2e72ac8108f4b3cbf39d4daddb6e743"
+    },
+    "run-unit-tests.py": {
+      "bytes": 1716,
+      "sha256": "076fdcbed6560ca98f2cef4b390bf077c663721d347c25ec2610ea6ee78689bc"
+    },
+    "selected-assets.json": {
+      "bytes": 2561,
+      "sha256": "b03b8053b9b85dfce317ed4c174f225bd4ed91cc489ae31cb0cd085ad861eb0e"
+    },
+    "source-contract-v2.json": {
+      "bytes": 8160,
+      "sha256": "b242787825500bcd453e399465f19bc2b71e45f881f069047e374d21e135f579"
+    },
+    "test-capture-budget.py": {
+      "bytes": 939,
+      "sha256": "9f3e02286946b0648947f60254d058a9684a8cf388b5cd4c082024c756a963e8"
+    },
+    "test-controllers.py": {
+      "bytes": 5472,
+      "sha256": "bdd31dd98b03d7a66121390d536ebce5a8a9c3856371051ed8fbaafac660032f"
+    },
+    "test-inner-contract.py": {
+      "bytes": 3319,
+      "sha256": "999b4908ab4e2b64201cc8f7148c07978ddf20af4531ff24880be36787589c97"
+    },
+    "test-livewire-repairs.py": {
+      "bytes": 12786,
+      "sha256": "144e69ee4276d3e692b15493555f122c6f03be0b75daa0afeea32c3a11ea114c"
+    },
+    "test-observer-v2.py": {
+      "bytes": 4289,
+      "sha256": "779847abaccfb619ddbbe1516ed93dd0dcc8837e13bf4d7d053f174acad1a287"
+    },
+    "test-outer-preflight.py": {
+      "bytes": 5414,
+      "sha256": "8b8786377e0c85e406bec099baba5a1efeb0623872ef0b497582dda55e136ee6"
+    },
+    "test-supervisor.py": {
+      "bytes": 4775,
+      "sha256": "d93ea3c21094f23e9a0cc8ad11811f2084dee4fc2f225a09fc321e9098ac40af"
+    },
+    "test-windows-private-job.py": {
+      "bytes": 5646,
+      "sha256": "ba84ef4cfa7949977d8c8e5189ca7841abd2dba5174166dd8e39a2d311981ed5"
+    },
+    "unit-test-receipt-linux.json": {
+      "bytes": 11630,
+      "sha256": "9be431404aa553a99df4e25df5ec73a4e9c59164030add02f49d69444c746b25"
+    },
+    "unit-test-receipt-windows.json": {
+      "bytes": 12709,
+      "sha256": "5fb83b555ec57f2382a1702e47c2bfb0b51d25fa7f77421df9477cc5fc579664"
+    },
+    "unit-test-receipt.json": {
+      "bytes": 10132,
+      "sha256": "215e83b38c7a871c67afc90b17636d782c30bb79c78e7f4698c607f7f663ae88"
+    },
+    "windows-backend.py": {
+      "bytes": 14301,
+      "sha256": "561885621f9984226b42ed5ab89387e9e0179dff290a541cc8645cdbdbd4334e"
+    }
+  },
+  "logical_bytes": 320481,
+  "actual_tree_bytes_including_bytecode": 561559,
+  "allocation_limit": 4194304,
+  "extra_receipts_limit": 2097152,
+  "all_prior_fixtures_preserved": true,
+  "reviewed_code_commit": "14996210df933406fc74f23f6df9404e4a5b9f48",
+  "launch_ready": false,
+  "remaining_gate": "main reviews exact final tools/profile and separately allocates fresh bounded guest after peer resources; no automatic launch/retry"
+}

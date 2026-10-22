@@ -1,0 +1,1997 @@
+{
+  "scope": "actual onecold Flycast+read-only source witness and visual review; no performance/release/hardware/AI/cinematic acceptance",
+  "utc": "2026-10-22T04:26:57.213240+00:00",
+  "qualified_ordinary_discharge": true,
+  "automated_qualified": true,
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "image_sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "tools_sha256": "0b12c09410599ee55c96d49875dadf5236b210ef8d8267cc0d7aaa82ad921bfd",
+  "process_telemetry": {
+    "available": true,
+    "identity": {
+      "pid": 47900,
+      "start_filetime": 134371165481479670,
+      "path": "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\cold-shoot01\\flycast.exe"
+    },
+    "creation_filetime": 134371165481479670,
+    "exit_filetime": 134371165898925681,
+    "kernel_100ns": 21718750,
+    "user_100ns": 93750000,
+    "actual_guest_seconds": 41.7446011,
+    "exit_code": 0,
+    "source": "retained verified handle after private job stop/waits, before handle closure; pinned live path, signaled exit"
+  },
+  "final_resources": {
+    "available": true,
+    "free_C_bytes": 39190511616,
+    "charged_evidence_bytes": 27002002,
+    "global_flycast_count": 0,
+    "runtime_floor": 19394461696,
+    "evidence_cap": 60000000,
+    "global_limit": 16,
+    "phase": "after owned stop/waits and private-job empty check, before handle close"
+  },
+  "postflight_resource_last": {
+    "free_C_bytes": 39275376640,
+    "charged_evidence_bytes": 27097297,
+    "global_flycast_count": 0
+  },
+  "actual_native_pairs": [
+    {
+      "key": "down",
+      "down_guest_s": 3.5775258,
+      "up_guest_s": 3.7123261,
+      "native_queue_hold_upper_seconds": 0.125,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392217.328,
+            "after_monotonic": 392217.328,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392217.328,
+            "after_monotonic": 392217.328,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392217.328,
+            "after_monotonic": 392217.328,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392217.328,
+            "after_monotonic": 392217.328,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392217.328,
+            "after_monotonic": 392217.328,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392217.453,
+            "after_monotonic": 392217.453,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392217.453,
+            "after_monotonic": 392217.453,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392217.453,
+            "after_monotonic": 392217.453,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392217.453,
+            "after_monotonic": 392217.453,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392217.453,
+            "after_monotonic": 392217.453,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": null,
+      "up_source_frame": null
+    },
+    {
+      "key": "a",
+      "down_guest_s": 4.2381168,
+      "up_guest_s": 4.3824985,
+      "native_queue_hold_upper_seconds": 0.14100000000325963,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392217.984,
+            "after_monotonic": 392217.984,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392217.984,
+            "after_monotonic": 392217.984,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392217.984,
+            "after_monotonic": 392217.984,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392217.984,
+            "after_monotonic": 392217.984,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392217.984,
+            "after_monotonic": 392217.984,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392218.125,
+            "after_monotonic": 392218.125,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392218.125,
+            "after_monotonic": 392218.125,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392218.125,
+            "after_monotonic": 392218.125,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392218.125,
+            "after_monotonic": 392218.125,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392218.125,
+            "after_monotonic": 392218.125,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": null,
+      "up_source_frame": null
+    },
+    {
+      "key": "a",
+      "down_guest_s": 4.8985623,
+      "up_guest_s": 5.03644,
+      "native_queue_hold_upper_seconds": 0.14100000000325963,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392218.64,
+            "after_monotonic": 392218.64,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392218.64,
+            "after_monotonic": 392218.64,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392218.64,
+            "after_monotonic": 392218.64,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392218.64,
+            "after_monotonic": 392218.64,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392218.64,
+            "after_monotonic": 392218.64,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392218.781,
+            "after_monotonic": 392218.781,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392218.781,
+            "after_monotonic": 392218.781,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392218.781,
+            "after_monotonic": 392218.781,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392218.781,
+            "after_monotonic": 392218.781,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392218.781,
+            "after_monotonic": 392218.781,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": null,
+      "up_source_frame": null
+    },
+    {
+      "key": "down",
+      "down_guest_s": 6.0837786,
+      "up_guest_s": 6.224378,
+      "native_queue_hold_upper_seconds": 0.14000000001396984,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392219.828,
+            "after_monotonic": 392219.828,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392219.828,
+            "after_monotonic": 392219.828,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392219.828,
+            "after_monotonic": 392219.828,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392219.828,
+            "after_monotonic": 392219.828,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392219.828,
+            "after_monotonic": 392219.828,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392219.968,
+            "after_monotonic": 392219.968,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392219.968,
+            "after_monotonic": 392219.968,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392219.968,
+            "after_monotonic": 392219.968,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392219.968,
+            "after_monotonic": 392219.968,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392219.968,
+            "after_monotonic": 392219.968,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": null,
+      "up_source_frame": null
+    },
+    {
+      "key": "down",
+      "down_guest_s": 7.2542443,
+      "up_guest_s": 7.3932981,
+      "native_queue_hold_upper_seconds": 0.14000000001396984,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392221.0,
+            "after_monotonic": 392221.0,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392221.0,
+            "after_monotonic": 392221.0,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392221.0,
+            "after_monotonic": 392221.0,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392221.0,
+            "after_monotonic": 392221.0,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392221.0,
+            "after_monotonic": 392221.0,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392221.14,
+            "after_monotonic": 392221.14,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392221.14,
+            "after_monotonic": 392221.14,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392221.14,
+            "after_monotonic": 392221.14,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392221.14,
+            "after_monotonic": 392221.14,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392221.14,
+            "after_monotonic": 392221.14,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": null,
+      "up_source_frame": null
+    },
+    {
+      "key": "down",
+      "down_guest_s": 8.4177423,
+      "up_guest_s": 8.5508079,
+      "native_queue_hold_upper_seconds": 0.13999999995576218,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392222.156,
+            "after_monotonic": 392222.156,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392222.156,
+            "after_monotonic": 392222.156,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392222.156,
+            "after_monotonic": 392222.156,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392222.156,
+            "after_monotonic": 392222.156,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392222.156,
+            "after_monotonic": 392222.156,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392222.296,
+            "after_monotonic": 392222.296,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392222.296,
+            "after_monotonic": 392222.296,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392222.296,
+            "after_monotonic": 392222.296,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392222.296,
+            "after_monotonic": 392222.296,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392222.296,
+            "after_monotonic": 392222.296,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": null,
+      "up_source_frame": null
+    },
+    {
+      "key": "down",
+      "down_guest_s": 9.5939508,
+      "up_guest_s": 9.7320935,
+      "native_queue_hold_upper_seconds": 0.14100000000325963,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392223.343,
+            "after_monotonic": 392223.343,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392223.343,
+            "after_monotonic": 392223.343,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392223.343,
+            "after_monotonic": 392223.343,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392223.343,
+            "after_monotonic": 392223.343,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392223.343,
+            "after_monotonic": 392223.343,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392223.484,
+            "after_monotonic": 392223.484,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392223.484,
+            "after_monotonic": 392223.484,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392223.484,
+            "after_monotonic": 392223.484,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392223.484,
+            "after_monotonic": 392223.484,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392223.484,
+            "after_monotonic": 392223.484,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": null,
+      "up_source_frame": null
+    },
+    {
+      "key": "a",
+      "down_guest_s": 10.7579016,
+      "up_guest_s": 10.8885176,
+      "native_queue_hold_upper_seconds": 0.14000000001396984,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392224.5,
+            "after_monotonic": 392224.5,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392224.5,
+            "after_monotonic": 392224.5,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392224.5,
+            "after_monotonic": 392224.5,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392224.5,
+            "after_monotonic": 392224.5,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392224.5,
+            "after_monotonic": 392224.5,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392224.625,
+            "after_monotonic": 392224.625,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392224.625,
+            "after_monotonic": 392224.625,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392224.625,
+            "after_monotonic": 392224.64,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392224.64,
+            "after_monotonic": 392224.64,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392224.64,
+            "after_monotonic": 392224.64,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": null,
+      "up_source_frame": null
+    },
+    {
+      "key": "a",
+      "down_guest_s": 30.3714099,
+      "up_guest_s": 30.5067861,
+      "native_queue_hold_upper_seconds": 0.14100000000325963,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392244.109,
+            "after_monotonic": 392244.109,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392244.109,
+            "after_monotonic": 392244.109,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392244.109,
+            "after_monotonic": 392244.109,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392244.109,
+            "after_monotonic": 392244.109,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392244.109,
+            "after_monotonic": 392244.109,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392244.25,
+            "after_monotonic": 392244.25,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392244.25,
+            "after_monotonic": 392244.25,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392244.25,
+            "after_monotonic": 392244.25,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392244.25,
+            "after_monotonic": 392244.25,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392244.25,
+            "after_monotonic": 392244.25,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": 211,
+      "up_source_frame": 213
+    },
+    {
+      "key": "rtrig",
+      "down_guest_s": 29.9264603,
+      "up_guest_s": 31.1676445,
+      "native_queue_hold_upper_seconds": 1.2350000000442378,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392243.671,
+            "after_monotonic": 392243.671,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392243.671,
+            "after_monotonic": 392243.671,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392243.671,
+            "after_monotonic": 392243.671,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392243.671,
+            "after_monotonic": 392243.671,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392243.671,
+            "after_monotonic": 392243.671,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392244.906,
+            "after_monotonic": 392244.906,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392244.906,
+            "after_monotonic": 392244.906,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392244.906,
+            "after_monotonic": 392244.906,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392244.906,
+            "after_monotonic": 392244.906,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392244.906,
+            "after_monotonic": 392244.906,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": 198,
+      "up_source_frame": 235
+    },
+    {
+      "key": "a",
+      "down_guest_s": 32.1768769,
+      "up_guest_s": 32.3154808,
+      "native_queue_hold_upper_seconds": 0.14100000000325963,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392245.921,
+            "after_monotonic": 392245.921,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392245.921,
+            "after_monotonic": 392245.921,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392245.921,
+            "after_monotonic": 392245.921,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392245.921,
+            "after_monotonic": 392245.921,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392245.921,
+            "after_monotonic": 392245.921,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392246.062,
+            "after_monotonic": 392246.062,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392246.062,
+            "after_monotonic": 392246.062,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392246.062,
+            "after_monotonic": 392246.062,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392246.062,
+            "after_monotonic": 392246.062,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392246.062,
+            "after_monotonic": 392246.062,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": 265,
+      "up_source_frame": 267
+    },
+    {
+      "key": "rtrig",
+      "down_guest_s": 31.741007,
+      "up_guest_s": 33.0070547,
+      "native_queue_hold_upper_seconds": 1.2660000000032596,
+      "down_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392245.484,
+            "after_monotonic": 392245.484,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392245.484,
+            "after_monotonic": 392245.484,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392245.484,
+            "after_monotonic": 392245.484,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392245.484,
+            "after_monotonic": 392245.484,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392245.484,
+            "after_monotonic": 392245.484,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "up_native": {
+        "queued": true,
+        "messages": [
+          {
+            "hwnd": 443090598,
+            "before_monotonic": 392246.75,
+            "after_monotonic": 392246.75,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 20385158,
+            "before_monotonic": 392246.75,
+            "after_monotonic": 392246.75,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 172034446,
+            "before_monotonic": 392246.75,
+            "after_monotonic": 392246.75,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 36114306,
+            "before_monotonic": 392246.75,
+            "after_monotonic": 392246.75,
+            "post_succeeded": true
+          },
+          {
+            "hwnd": 8261198,
+            "before_monotonic": 392246.75,
+            "after_monotonic": 392246.75,
+            "post_succeeded": true
+          }
+        ],
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "scope": "PostMessageW return interval only; game acknowledgement unavailable"
+      },
+      "down_source_frame": 252,
+      "up_source_frame": 290
+    }
+  ],
+  "unpaired_downs": [],
+  "discharges": [
+    {
+      "accepted": true,
+      "rounds": 1,
+      "reasons": [],
+      "hit_count_delta": 0,
+      "kill_count_delta": 0
+    },
+    {
+      "accepted": true,
+      "rounds": 1,
+      "reasons": [],
+      "hit_count_delta": 0,
+      "kill_count_delta": 0
+    }
+  ],
+  "witnesses": [
+    {
+      "down": "rtrig",
+      "source_frame": 186,
+      "capture": "before-shot"
+    },
+    {
+      "proof": {
+        "accepted": true,
+        "rounds": 1,
+        "reasons": [],
+        "hit_count_delta": 0,
+        "kill_count_delta": 0
+      },
+      "before": {
+        "global": {
+          "ptr": "0x8c361a58",
+          "frame": 198,
+          "room": 259,
+          "player_life": 1200,
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "stop": 0,
+          "status": [
+            50856192,
+            512,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": 2359402144,
+          "pos": [
+            -47610.70703125,
+            57.66302490234375,
+            7082.72412109375
+          ],
+          "ang": [
+            0.0,
+            1.8890000581741333,
+            0.0
+          ],
+          "rno": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "alive": 117448823,
+          "serial": 0,
+          "dmgType": 0,
+          "dmgType_bits": 0
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "ssloop": 0,
+        "qa_frames": 18,
+        "qa_flags": 0,
+        "keys": {
+          "on": 0,
+          "trg": 0,
+          "rel": 0
+        },
+        "counters": {
+          "g_shot_cnt": 0,
+          "c_shot_cnt": 0,
+          "g_hit_cnt": 0,
+          "c_hit_cnt": 0,
+          "g_kill_cnt": 0,
+          "c_kill_cnt": 0
+        },
+        "debug_flags": [
+          512,
+          0,
+          32768,
+          0
+        ],
+        "weapon_no": 2,
+        "pl_type": 0,
+        "weapon": {
+          "slot": 2357594286,
+          "id": 35,
+          "equipped_id": 35,
+          "weapon_no": 2,
+          "loaded_rounds": 10,
+          "item_class": 1,
+          "attribute": 0,
+          "weapon_source_match": true,
+          "valid_inventory_slot": true
+        },
+        "motion": {
+          "pMot": 2356172768,
+          "Mot_frame": 20.0,
+          "Seq_frame": 21.0,
+          "Seq_frame_num": 90
+        },
+        "body": {
+          "pHeadData": 2355310272,
+          "pShape": 2359412108,
+          "pHair": 2359412400,
+          "pEye": 2359412692
+        },
+        "system": {
+          "region": 1,
+          "key_type": 0,
+          "flags": 0
+        },
+        "camera": {
+          "pos": [
+            -48595.65234375,
+            1807.986083984375,
+            7947.0556640625
+          ],
+          "at": [
+            -46213.50390625,
+            1411.307861328125,
+            6632.8349609375
+          ],
+          "roll": 0.0,
+          "fovy": 50.0
+        },
+        "end_frame": 198,
+        "coherent": true,
+        "valid": true,
+        "non_atomic": true,
+        "diagnostics": {
+          "death_trace": null,
+          "lethal_caller": null,
+          "LifeDownSet2_before_after": null
+        },
+        "unavailable": [
+          "diagnostics.death_trace",
+          "diagnostics.lethal_caller",
+          "diagnostics.LifeDownSet2_before_after"
+        ],
+        "actors": [],
+        "manager_valid": false,
+        "reason": "active node outside exact pool",
+        "manager_nodes_seen": 0,
+        "transport_coherent": true,
+        "transport_attempts": 2,
+        "host_s": 30.125,
+        "observed_monotonic": 392243.671,
+        "pid": 47900,
+        "start_filetime": 134371165481479670
+      },
+      "after": {
+        "global": {
+          "ptr": "0x8c361a58",
+          "frame": 235,
+          "room": 259,
+          "player_life": 1200,
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "stop": 0,
+          "status": [
+            50856192,
+            512,
+            0,
+            0
+          ]
+        },
+        "player": {
+          "ptr": 2359402144,
+          "pos": [
+            -47610.984375,
+            57.66253662109375,
+            7082.6181640625
+          ],
+          "ang": [
+            0.0,
+            1.8890000581741333,
+            0.0
+          ],
+          "rno": [
+            0,
+            6,
+            1,
+            1
+          ],
+          "alive": 117448823,
+          "serial": 0,
+          "dmgType": 0,
+          "dmgType_bits": 0
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "ssloop": 0,
+        "qa_frames": 55,
+        "qa_flags": 0,
+        "keys": {
+          "on": 8388624,
+          "trg": 0,
+          "rel": 0
+        },
+        "counters": {
+          "g_shot_cnt": 1,
+          "c_shot_cnt": 1,
+          "g_hit_cnt": 0,
+          "c_hit_cnt": 0,
+          "g_kill_cnt": 0,
+          "c_kill_cnt": 0
+        },
+        "debug_flags": [
+          512,
+          0,
+          32768,
+          0
+        ],
+        "weapon_no": 2,
+        "pl_type": 0,
+        "weapon": {
+          "slot": 2357594286,
+          "id": 35,
+          "equipped_id": 35,
+          "weapon_no": 2,
+          "loaded_rounds": 9,
+          "item_class": 1,
+          "attribute": 0,
+          "weapon_source_match": true,
+          "valid_inventory_slot": true
+        },
+        "motion": {
+          "pMot": 2356255744,
+          "Mot_frame": 0.0,
+          "Seq_frame": 1.0,
+          "Seq_frame_num": 40
+        },
+        "body": {
+          "pHeadData": 2355310272,
+          "pShape": 2359412108,
+          "pHair": 2359412400,
+          "pEye": 2359412692
+        },
+        "system": {
+          "region": 1,
+          "key_type": 0,
+          "flags": 0
+        },
+        "camera": {
+          "pos": [
+            -48005.8984375,
+            1820.3253173828125,
+            7770.68359375
+          ],
+          "at": [
+            -46185.625,
+            1403.141357421875,
+            6681.8056640625
+          ],
+          "roll": 0.0,
+          "fovy": 45.001625061035156
+        },
+        "end_frame": 235,
+        "coherent": true,
+        "valid": true,
+        "non_atomic": true,
+        "diagnostics": {
+          "death_trace": null,
+          "lethal_caller": null,
+          "LifeDownSet2_before_after": null
+        },
+        "unavailable": [
+          "diagnostics.death_trace",
+          "diagnostics.lethal_caller",
+          "diagnostics.LifeDownSet2_before_after"
+        ],
+        "actors": [],
+        "manager_valid": false,
+        "reason": "active node outside exact pool",
+        "manager_nodes_seen": 0,
+        "transport_coherent": true,
+        "transport_attempts": 1,
+        "host_s": 31.360000000044238,
+        "observed_monotonic": 392244.906,
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "death_demo_log_observed": false
+      },
+      "capture": "after-shot"
+    },
+    {
+      "proof": {
+        "accepted": true,
+        "rounds": 1,
+        "reasons": [],
+        "hit_count_delta": 0,
+        "kill_count_delta": 0
+      },
+      "before": {
+        "global": {
+          "ptr": "0x8c361a58",
+          "frame": 252,
+          "room": 259,
+          "player_life": 1200,
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "stop": 0,
+          "status": [
+            50856192,
+            512,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": 2359402144,
+          "pos": [
+            -47617.56640625,
+            58.2056884765625,
+            7059.26318359375
+          ],
+          "ang": [
+            0.0,
+            1.8919360637664795,
+            0.0
+          ],
+          "rno": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "alive": 117448823,
+          "serial": 0,
+          "dmgType": 0,
+          "dmgType_bits": 0
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "ssloop": 0,
+        "qa_frames": 72,
+        "qa_flags": 0,
+        "keys": {
+          "on": 0,
+          "trg": 0,
+          "rel": 0
+        },
+        "counters": {
+          "g_shot_cnt": 1,
+          "c_shot_cnt": 1,
+          "g_hit_cnt": 0,
+          "c_hit_cnt": 0,
+          "g_kill_cnt": 0,
+          "c_kill_cnt": 0
+        },
+        "debug_flags": [
+          512,
+          0,
+          32768,
+          0
+        ],
+        "weapon_no": 2,
+        "pl_type": 0,
+        "weapon": {
+          "slot": 2357594286,
+          "id": 35,
+          "equipped_id": 35,
+          "weapon_no": 2,
+          "loaded_rounds": 9,
+          "item_class": 1,
+          "attribute": 0,
+          "weapon_source_match": true,
+          "valid_inventory_slot": true
+        },
+        "motion": {
+          "pMot": 2356172768,
+          "Mot_frame": 2.0,
+          "Seq_frame": 3.0,
+          "Seq_frame_num": 90
+        },
+        "body": {
+          "pHeadData": 2355310272,
+          "pShape": 2359412108,
+          "pHair": 2359412400,
+          "pEye": 2359412692
+        },
+        "system": {
+          "region": 1,
+          "key_type": 0,
+          "flags": 0
+        },
+        "camera": {
+          "pos": [
+            -48578.8359375,
+            1807.55517578125,
+            7922.3798828125
+          ],
+          "at": [
+            -46220.26171875,
+            1413.478515625,
+            6610.26416015625
+          ],
+          "roll": 0.0,
+          "fovy": 49.824119567871094
+        },
+        "end_frame": 252,
+        "coherent": true,
+        "valid": true,
+        "non_atomic": true,
+        "diagnostics": {
+          "death_trace": null,
+          "lethal_caller": null,
+          "LifeDownSet2_before_after": null
+        },
+        "unavailable": [
+          "diagnostics.death_trace",
+          "diagnostics.lethal_caller",
+          "diagnostics.LifeDownSet2_before_after"
+        ],
+        "actors": [],
+        "manager_valid": false,
+        "reason": "active node outside exact pool",
+        "manager_nodes_seen": 0,
+        "transport_coherent": true,
+        "transport_attempts": 1,
+        "host_s": 31.93800000002375,
+        "observed_monotonic": 392245.484,
+        "pid": 47900,
+        "start_filetime": 134371165481479670
+      },
+      "after": {
+        "global": {
+          "ptr": "0x8c361a58",
+          "frame": 290,
+          "room": 259,
+          "player_life": 1200,
+          "rno": [
+            3,
+            0,
+            0,
+            0
+          ],
+          "stop": 0,
+          "status": [
+            50856192,
+            512,
+            0,
+            268435456
+          ]
+        },
+        "player": {
+          "ptr": 2359402144,
+          "pos": [
+            -47617.640625,
+            58.20477294921875,
+            7059.18798828125
+          ],
+          "ang": [
+            0.0,
+            1.8919360637664795,
+            0.0
+          ],
+          "rno": [
+            0,
+            6,
+            1,
+            1
+          ],
+          "alive": 251666551,
+          "serial": 0,
+          "dmgType": 0,
+          "dmgType_bits": 0
+        },
+        "event_start_cnt": 0,
+        "subscreen_type": 0,
+        "ssloop": 0,
+        "qa_frames": 110,
+        "qa_flags": 0,
+        "keys": {
+          "on": 8388624,
+          "trg": 0,
+          "rel": 0
+        },
+        "counters": {
+          "g_shot_cnt": 2,
+          "c_shot_cnt": 2,
+          "g_hit_cnt": 0,
+          "c_hit_cnt": 0,
+          "g_kill_cnt": 0,
+          "c_kill_cnt": 0
+        },
+        "debug_flags": [
+          512,
+          0,
+          32768,
+          0
+        ],
+        "weapon_no": 2,
+        "pl_type": 0,
+        "weapon": {
+          "slot": 2357594286,
+          "id": 35,
+          "equipped_id": 35,
+          "weapon_no": 2,
+          "loaded_rounds": 8,
+          "item_class": 1,
+          "attribute": 0,
+          "weapon_source_match": true,
+          "valid_inventory_slot": true
+        },
+        "motion": {
+          "pMot": 2356255744,
+          "Mot_frame": 1.0,
+          "Seq_frame": 2.0,
+          "Seq_frame_num": 40
+        },
+        "body": {
+          "pHeadData": 2355310272,
+          "pShape": 2359412108,
+          "pHair": 2359412400,
+          "pEye": 2359412692
+        },
+        "system": {
+          "region": 1,
+          "key_type": 0,
+          "flags": 0
+        },
+        "camera": {
+          "pos": [
+            -48010.57421875,
+            1818.5380859375,
+            7748.38330078125
+          ],
+          "at": [
+            -46194.19140625,
+            1409.1123046875,
+            6654.78955078125
+          ],
+          "roll": 0.0,
+          "fovy": 45.00126647949219
+        },
+        "end_frame": 290,
+        "coherent": true,
+        "valid": true,
+        "non_atomic": true,
+        "diagnostics": {
+          "death_trace": null,
+          "lethal_caller": null,
+          "LifeDownSet2_before_after": null
+        },
+        "unavailable": [
+          "diagnostics.death_trace",
+          "diagnostics.lethal_caller",
+          "diagnostics.LifeDownSet2_before_after"
+        ],
+        "actors": [],
+        "manager_valid": false,
+        "reason": "active node outside exact pool",
+        "manager_nodes_seen": 0,
+        "transport_coherent": true,
+        "transport_attempts": 1,
+        "host_s": 33.20400000002701,
+        "observed_monotonic": 392246.75,
+        "pid": 47900,
+        "start_filetime": 134371165481479670,
+        "death_demo_log_observed": false
+      },
+      "capture": "after-shot"
+    }
+  ],
+  "checkpoint": {
+    "format_version": 1,
+    "scope": "Unedited ordinary-controller route continuation; not a natural no-warp release route",
+    "input": {
+      "files": {
+        "disc.gdi": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+        "track01.bin": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+        "track02.raw": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+        "track03.iso": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f"
+      },
+      "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+      "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b"
+    },
+    "emulator_sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a",
+    "data": {
+      "dc_nvmem.bin": {
+        "bytes": 131072,
+        "sha256": "4a598599e9d376573354e4e76879decea8fcd1f7d01a0d97f9365ca6b937d311"
+      },
+      "disc.state": {
+        "bytes": 9273760,
+        "sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75"
+      },
+      "dx11_shader_cache.bin": {
+        "bytes": 52224,
+        "sha256": "2892cce6e64f82dbc9c251b6d3bb844ddb8ba7be38fe9bfa09402771b27ca303"
+      },
+      "T0000_vmu_save_A1.bin": {
+        "bytes": 131072,
+        "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      },
+      "vmu_save_A2.bin": {
+        "bytes": 131072,
+        "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+      }
+    },
+    "audit": {
+      "state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+      "state_bytes": 9273760,
+      "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+      "decoded_bytes": 28274510,
+      "ram_serialization_offset": 11490769,
+      "immutable_anchors": [
+        {
+          "address": "0x8c014000",
+          "bytes": 256,
+          "sha256": "e02ebee59ecd8990d3619d9d34cf98672c6261f206b9dadbba3f4b1dceda4650"
+        },
+        {
+          "address": "0x8c050000",
+          "bytes": 256,
+          "sha256": "7c85749186f81547f95f3fc105b533ab5adeac8ac2e37ceba42dc32a26fb7d54"
+        },
+        {
+          "address": "0x8c110000",
+          "bytes": 256,
+          "sha256": "8596b92764a701d1b0686d3d9ada950a06385df8ad0c28c059af3b5226153c0a"
+        },
+        {
+          "address": "0x8c190000",
+          "bytes": 256,
+          "sha256": "05bbac539b83bf0233b20f0c4424165c5d38ea872056d1cbc3e7cdf8716170e2"
+        }
+      ],
+      "log_head": 169995,
+      "room": 259,
+      "frame": 533,
+      "stop": 0,
+      "player_life": 1200,
+      "player_life_max": 1200,
+      "player_pos": [
+        -47630.48046875,
+        58.71270751953125,
+        7032.71826171875
+      ],
+      "player_rno": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "event_start_cnt": 0,
+      "qa_flags": 0,
+      "memory_edits": false
+    },
+    "parent": null,
+    "inputs_sha256": "baf86bac00d05b2d52f751ab53f09f5047bc9682072e2c628d897b559a9ce385",
+    "state_edits": false
+  },
+  "all_existing_files": {
+    "cold-shoot01\\__pycache__\\capture_ui_vram.cpython-312.pyc": {
+      "bytes": 6176,
+      "sha256": "c5ef15a648343628421b5a95420c8b3bdc8b930c965b9861062153e4a193072c"
+    },
+    "cold-shoot01\\capture_ui_vram.py": {
+      "bytes": 3725,
+      "sha256": "14a3561e730df57e29d271e6fb7cdbf44b8fea2d1b7b2be076a5cb4590856d57"
+    },
+    "cold-shoot01\\checkpoint.json": {
+      "bytes": 3022,
+      "sha256": "c61d68c940e1ee3fd72446ae066ee28bbf32eda9959ea4e5ea6f08f33c0a0d4d"
+    },
+    "cold-shoot01\\data\\dc_nvmem.bin": {
+      "bytes": 131072,
+      "sha256": "4a598599e9d376573354e4e76879decea8fcd1f7d01a0d97f9365ca6b937d311"
+    },
+    "cold-shoot01\\data\\disc.state": {
+      "bytes": 9273760,
+      "sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75"
+    },
+    "cold-shoot01\\data\\dx11_shader_cache.bin": {
+      "bytes": 52224,
+      "sha256": "2892cce6e64f82dbc9c251b6d3bb844ddb8ba7be38fe9bfa09402771b27ca303"
+    },
+    "cold-shoot01\\data\\T0000_vmu_save_A1.bin": {
+      "bytes": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "cold-shoot01\\data\\vmu_save_A2.bin": {
+      "bytes": 131072,
+      "sha256": "b4c5a531493665876fc72c3fcdef8ebd05fe0f7d14fb2aa73dd87d3586670b20"
+    },
+    "cold-shoot01\\disc.gdi": {
+      "bytes": 83,
+      "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140"
+    },
+    "cold-shoot01\\emu.cfg": {
+      "bytes": 718,
+      "sha256": "cc71bdc20a68e5d81103a058eea8819daa1cc762a89b3eecf8317fc344155028"
+    },
+    "cold-shoot01\\events\\after-shot-1\\boot.log": {
+      "bytes": 46,
+      "sha256": "c9e19310a2879f6de7e041cd7fe56a9081e589786e5551322204c7d28fa227ee"
+    },
+    "cold-shoot01\\events\\after-shot-1\\emu.cfg": {
+      "bytes": 718,
+      "sha256": "010c254d5f71192ba5f78cb6e7e06875b77ab897d3273779f698212d1a56839e"
+    },
+    "cold-shoot01\\events\\after-shot-1\\flycast.log": {
+      "bytes": 2347,
+      "sha256": "5fc9a6cda35b7d3a7ba2ea7cf75872b49001318b0d75084428072f9b7e1df114"
+    },
+    "cold-shoot01\\events\\after-shot-1\\flycast.pid": {
+      "bytes": 5,
+      "sha256": "931e034b0bc784da270d22bd094be020d38cd79a74c6e1c0c791feb6155c78dc"
+    },
+    "cold-shoot01\\events\\after-shot-1\\frames\\fb0.png": {
+      "bytes": 292517,
+      "sha256": "047745a974b5a033cc11bb4ce74d5b96f5e7cb8509bdba656add5cf0db31230e"
+    },
+    "cold-shoot01\\events\\after-shot-1\\frames\\fb1.png": {
+      "bytes": 291903,
+      "sha256": "b013beedd08f89de054cd785676cd0153eaa33b91cb34675f5cb72fb48f6c6aa"
+    },
+    "cold-shoot01\\events\\after-shot-1\\state-context.json": {
+      "bytes": 5621,
+      "sha256": "14e6a4853274939977d03f0d814d4698487956ce4055ba55e487e7b8b9676c3d"
+    },
+    "cold-shoot01\\events\\after-shot-2\\boot.log": {
+      "bytes": 46,
+      "sha256": "c9e19310a2879f6de7e041cd7fe56a9081e589786e5551322204c7d28fa227ee"
+    },
+    "cold-shoot01\\events\\after-shot-2\\emu.cfg": {
+      "bytes": 718,
+      "sha256": "010c254d5f71192ba5f78cb6e7e06875b77ab897d3273779f698212d1a56839e"
+    },
+    "cold-shoot01\\events\\after-shot-2\\flycast.log": {
+      "bytes": 2347,
+      "sha256": "5fc9a6cda35b7d3a7ba2ea7cf75872b49001318b0d75084428072f9b7e1df114"
+    },
+    "cold-shoot01\\events\\after-shot-2\\flycast.pid": {
+      "bytes": 5,
+      "sha256": "931e034b0bc784da270d22bd094be020d38cd79a74c6e1c0c791feb6155c78dc"
+    },
+    "cold-shoot01\\events\\after-shot-2\\frames\\fb0.png": {
+      "bytes": 295726,
+      "sha256": "4c701a89869d7d2afd9fadbf4a25d103e3196822ee4c457811746ee8c0021b3d"
+    },
+    "cold-shoot01\\events\\after-shot-2\\frames\\fb1.png": {
+      "bytes": 296439,
+      "sha256": "1d95eb073ac522d0c42604a9ff76eba130433dd3888d91838d201c70e06004f7"
+    },
+    "cold-shoot01\\events\\after-shot-2\\state-context.json": {
+      "bytes": 5643,
+      "sha256": "4358555c9873cfd5e19b72a10fe2fcac132be3a058c47d27ea6088d3b58eafd6"
+    },
+    "cold-shoot01\\events\\before-shot-0\\boot.log": {
+      "bytes": 46,
+      "sha256": "c9e19310a2879f6de7e041cd7fe56a9081e589786e5551322204c7d28fa227ee"
+    },
+    "cold-shoot01\\events\\before-shot-0\\emu.cfg": {
+      "bytes": 718,
+      "sha256": "010c254d5f71192ba5f78cb6e7e06875b77ab897d3273779f698212d1a56839e"
+    },
+    "cold-shoot01\\events\\before-shot-0\\flycast.log": {
+      "bytes": 2347,
+      "sha256": "5fc9a6cda35b7d3a7ba2ea7cf75872b49001318b0d75084428072f9b7e1df114"
+    },
+    "cold-shoot01\\events\\before-shot-0\\flycast.pid": {
+      "bytes": 5,
+      "sha256": "931e034b0bc784da270d22bd094be020d38cd79a74c6e1c0c791feb6155c78dc"
+    },
+    "cold-shoot01\\events\\before-shot-0\\frames\\fb0.png": {
+      "bytes": 295347,
+      "sha256": "228068d5a6ba065adf3a5ae46bf070dce248c5b65a16e2675c13599731db0629"
+    },
+    "cold-shoot01\\events\\before-shot-0\\frames\\fb1.png": {
+      "bytes": 295003,
+      "sha256": "8332536cabb4996a818a79007321e11982d7448af1811dc1c50276b4a3976587"
+    },
+    "cold-shoot01\\events\\before-shot-0\\state-context.json": {
+      "bytes": 5629,
+      "sha256": "2618877740a3952ff0ee19fd92e5a94ccc96e7b2960a264211f5d015e2ed3650"
+    },
+    "cold-shoot01\\events\\final\\boot.log": {
+      "bytes": 46,
+      "sha256": "c9e19310a2879f6de7e041cd7fe56a9081e589786e5551322204c7d28fa227ee"
+    },
+    "cold-shoot01\\events\\final\\emu.cfg": {
+      "bytes": 718,
+      "sha256": "010c254d5f71192ba5f78cb6e7e06875b77ab897d3273779f698212d1a56839e"
+    },
+    "cold-shoot01\\events\\final\\flycast.log": {
+      "bytes": 2347,
+      "sha256": "5fc9a6cda35b7d3a7ba2ea7cf75872b49001318b0d75084428072f9b7e1df114"
+    },
+    "cold-shoot01\\events\\final\\flycast.pid": {
+      "bytes": 5,
+      "sha256": "931e034b0bc784da270d22bd094be020d38cd79a74c6e1c0c791feb6155c78dc"
+    },
+    "cold-shoot01\\events\\final\\frames\\fb0.png": {
+      "bytes": 302341,
+      "sha256": "e084bc9cc4efae17247ce52f20a7e41e5dbdebe88633ed2a9211a13736f2ae47"
+    },
+    "cold-shoot01\\events\\final\\frames\\fb1.png": {
+      "bytes": 302227,
+      "sha256": "0d322542e10b9cc09fdf96ff6bc01129b30f02670e3bbd7f456803d06fe4830c"
+    },
+    "cold-shoot01\\events\\final\\state-context.json": {
+      "bytes": 5586,
+      "sha256": "bfb129fe71f95819aa3ea56f654554012fb932d7cf2a727fd5aec54f2c31e3c0"
+    },
+    "cold-shoot01\\flycast.exe": {
+      "bytes": 14415872,
+      "sha256": "64491c005db917cc643b50e312f78c5b04ccfa77acebbe1cd07ad6371d422c8a"
+    },
+    "cold-shoot01\\flycast.log": {
+      "bytes": 3466,
+      "sha256": "7a2672cd231f63ea5624e3af0802a5cbff3befbd04cbabdc1f97c765bde1ac8c"
+    },
+    "cold-shoot01\\flycast.pid": {
+      "bytes": 5,
+      "sha256": "931e034b0bc784da270d22bd094be020d38cd79a74c6e1c0c791feb6155c78dc"
+    },
+    "cold-shoot01\\initial-data.json": {
+      "bytes": 279,
+      "sha256": "333cf23fcbc9a5f6574c5f856551358be7f59d1789c50f04663533b294228d3c"
+    },
+    "cold-shoot01\\inner-control.json": {
+      "bytes": 82595,
+      "sha256": "b904189bd1a76fb32eca023cb0c0ec6d36cccfc148135160f50b89db264183b5"
+    },
+    "cold-shoot01\\inputs-disabled.json": {
+      "bytes": 45,
+      "sha256": "4efff14c8a5d6d209465a339d092ad95e6714edb39687e823e0b041f0e07f759"
+    },
+    "cold-shoot01\\latest-state.json": {
+      "bytes": 359,
+      "sha256": "2cf3f2b82e9e4c646b9225e21abb1012dee733adc5ab9bdc37833e1ce30283dc"
+    },
+    "cold-shoot01\\ownership-resource-guard.json": {
+      "bytes": 92273,
+      "sha256": "baf86bac00d05b2d52f751ab53f09f5047bc9682072e2c628d897b559a9ce385"
+    },
+    "cold-shoot01\\read-log.err": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cold-shoot01\\read-only-state.jsonl": {
+      "bytes": 178277,
+      "sha256": "6f62f66c6f9b3d0609ee8e40e8e71ecdef305a704f5f0a2a4b723c13706b3530"
+    },
+    "cold-shoot01\\read_log.py": {
+      "bytes": 6235,
+      "sha256": "e708e4cf748ce679aceaf9124f1a2412bd4d8242ddbdaaa92e3accae7323850f"
+    },
+    "cold-shoot01\\run-output.txt": {
+      "bytes": 172639,
+      "sha256": "dd3140d6e09bb7a03502781f5af8e9461362c0bac9b9f130f385dc8afcb62a3b"
+    },
+    "cold-shoot01\\run-result.json": {
+      "bytes": 1758,
+      "sha256": "ff051c5a44981f2901160565191ffb67f1aa90c90a8626d105e6aa5a9db4113a"
+    },
+    "cold-shoot01\\serial.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cold-shoot01\\syms.txt": {
+      "bytes": 28,
+      "sha256": "b383c3eeb32dc5841415e65f4a250d464926545086392c3829879acbbbe4f93b"
+    },
+    "cold-shoot01-control\\qualification.json": {
+      "bytes": 95488,
+      "sha256": "a46f87ab02469a2504c525aedb19ebbe73da9ba5b1ab7519c23866f9cbb31afb"
+    },
+    "OWNED-BY.json": {
+      "bytes": 208,
+      "sha256": "6e6f874c898b31e7f403178230612b6e4882e6d741218dfc998e68af1725adbf"
+    }
+  },
+  "PNG_visual_review": {
+    "eight_inspected": true,
+    "before": "outdoor Leon handgun,HUD10",
+    "after_first": "aiming laser,HUD09",
+    "after_second": "aiming laser,HUD08 (root independently confirmed sameframe)",
+    "final": "ordinary standing handgun,HUD08",
+    "frames_non_atomic": true,
+    "acceptance": "observed visible controls/HUD and exact matched source discharges only"
+  },
+  "actor_AI": "unavailable: active node outside exact pool; hit/kill counter deltas0 do not establish AI absence",
+  "natural_route": "QA r103entry; no naturalno-warp route release acceptance",
+  "later_roles": "NOT allocated/executed",
+  "old_failed_shoot01": "remainsFAILED; no state/reference modifications",
+  "source_reference_identities_after": {
+    "track01.bin": {
+      "inode": "562949958428473",
+      "links": 13,
+      "mtime_ns": 1792601985000000000,
+      "old_failed_ref_samefile": true,
+      "new_guest_ref_present": false
+    },
+    "track02.raw": {
+      "inode": "281474981717818",
+      "links": 13,
+      "mtime_ns": 1792601985000000000,
+      "old_failed_ref_samefile": true,
+      "new_guest_ref_present": false
+    },
+    "track03.iso": {
+      "inode": "844424935161037",
+      "links": 2,
+      "mtime_ns": 1792628865730857700,
+      "old_failed_ref_samefile": true,
+      "new_guest_ref_present": false
+    }
+  },
+  "owned_qa_quiescent": true,
+  "all_other_live_processes_snapshot": [],
+  "charged_total_before_receipt": 27192785,
+  "actual_C_now": 41639333888,
+  "independent_review": {
+    "commit": "cf4881ec21101fa25b7fff2cf60c45044d648259",
+    "review_sha256": "e7629de7e4d2dd3d9a0baa749597e570757b98fc7546ffa7ed73a7a9eb7609df"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "qualified": true,
+  "no_flycast": true,
+  "no_input": true,
+  "cleanup_errors": [],
+  "coordinator": {
+    "pid": 13776,
+    "creation_filetime": 134371324934873205,
+    "path": "C:\\Users\\lambd\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+  },
+  "exit_code": 0,
+  "signaled_finalized": true,
+  "retained_times": [
+    134371324934873205,
+    134371324938075900,
+    781250,
+    156250
+  ],
+  "wait_status": 0,
+  "actual_seconds": 0.3202695,
+  "charged_bytes": 16856,
+  "free_bytes": 154065645568,
+  "parent_seconds": 0.34399999998277053
+}

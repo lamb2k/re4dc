@@ -1,0 +1,177 @@
+{
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "ELF": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "layout_sha256": "17289a5336a9fb5de4e83a3ed7b198696fcc2249342e26fe03d2aeaa6ca5baf8",
+  "additional_reads": [
+    {
+      "structure": "GlobalWork",
+      "requested": "pl_life_max",
+      "path": "pl_life_max",
+      "offset": 20390,
+      "format": "H",
+      "type": "short unsigned int",
+      "tag": "DW_TAG_base_type",
+      "bytes": 2,
+      "route": [
+        {
+          "name": "pl_life_max",
+          "die_offset": 81227,
+          "offset": 20390,
+          "tag": "DW_TAG_member"
+        }
+      ],
+      "pointee": null
+    },
+    {
+      "structure": "cModel",
+      "requested": "pos",
+      "path": "cCoord.pos",
+      "offset": 148,
+      "format": "3f",
+      "type": "",
+      "tag": "DW_TAG_structure_type",
+      "bytes": 12,
+      "route": [
+        {
+          "name": "cCoord",
+          "die_offset": 3008237,
+          "offset": 0,
+          "tag": "DW_TAG_inheritance"
+        },
+        {
+          "name": "pos",
+          "die_offset": 111163,
+          "offset": 148,
+          "tag": "DW_TAG_member"
+        }
+      ],
+      "pointee": null
+    },
+    {
+      "structure": "cModel",
+      "requested": "r_no_0",
+      "format": "4B",
+      "offset": 252,
+      "proof": "four named contiguous unsigned byte members, same inherited offset as validated cPlayer; no packed endian assumption",
+      "members": [
+        {
+          "name": "r_no_0",
+          "offset": 252,
+          "type": "unsigned char",
+          "tag": "DW_TAG_base_type",
+          "die_offset": 3004149,
+          "bytes": 1,
+          "encoding": 8,
+          "route": [
+            {
+              "name": "@anonymous",
+              "die_offset": 3008289,
+              "offset": 252,
+              "tag": "DW_TAG_member"
+            },
+            {
+              "name": "@anonymous",
+              "die_offset": 3007305,
+              "offset": 0,
+              "tag": "DW_TAG_member"
+            },
+            {
+              "name": "r_no_0",
+              "die_offset": 3007240,
+              "offset": 0,
+              "tag": "DW_TAG_member"
+            }
+          ]
+        },
+        {
+          "name": "r_no_1",
+          "offset": 253,
+          "type": "unsigned char",
+          "tag": "DW_TAG_base_type",
+          "die_offset": 3004149,
+          "bytes": 1,
+          "encoding": 8,
+          "route": [
+            {
+              "name": "@anonymous",
+              "die_offset": 3008289,
+              "offset": 252,
+              "tag": "DW_TAG_member"
+            },
+            {
+              "name": "@anonymous",
+              "die_offset": 3007305,
+              "offset": 0,
+              "tag": "DW_TAG_member"
+            },
+            {
+              "name": "r_no_1",
+              "die_offset": 3007253,
+              "offset": 1,
+              "tag": "DW_TAG_member"
+            }
+          ]
+        },
+        {
+          "name": "r_no_2",
+          "offset": 254,
+          "type": "unsigned char",
+          "tag": "DW_TAG_base_type",
+          "die_offset": 3004149,
+          "bytes": 1,
+          "encoding": 8,
+          "route": [
+            {
+              "name": "@anonymous",
+              "die_offset": 3008289,
+              "offset": 252,
+              "tag": "DW_TAG_member"
+            },
+            {
+              "name": "@anonymous",
+              "die_offset": 3007305,
+              "offset": 0,
+              "tag": "DW_TAG_member"
+            },
+            {
+              "name": "r_no_2",
+              "die_offset": 3007266,
+              "offset": 2,
+              "tag": "DW_TAG_member"
+            }
+          ]
+        },
+        {
+          "name": "r_no_3",
+          "offset": 255,
+          "type": "unsigned char",
+          "tag": "DW_TAG_base_type",
+          "die_offset": 3004149,
+          "bytes": 1,
+          "encoding": 8,
+          "route": [
+            {
+              "name": "@anonymous",
+              "die_offset": 3008289,
+              "offset": 252,
+              "tag": "DW_TAG_member"
+            },
+            {
+              "name": "@anonymous",
+              "die_offset": 3007305,
+              "offset": 0,
+              "tag": "DW_TAG_member"
+            },
+            {
+              "name": "r_no_3",
+              "die_offset": 3007279,
+              "offset": 3,
+              "tag": "DW_TAG_member"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scope": "offline exact ABI only; serialized new-program checkpoint and state remain uncreated"
+}

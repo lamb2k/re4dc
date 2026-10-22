@@ -1,0 +1,18 @@
+{
+  "scope": "SOURCEONLY fixed child output contract; no guestallocation",
+  "mode": "return-door01",
+  "output_name": "return-door-observer01",
+  "output_control_name": "return-door-observer01-control",
+  "evidence_root": "C:/Flycast-Evidence/re4-dreamcast/qa21-ganado-reader-telemetry-guests-20261022",
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "parent_name": "cold-shoot01",
+  "parent_state_sha256": "e81e572fefa7a94771ecde68c1d38456e4a51d62d3b3641ecd52de0db51b0c75",
+  "parent_frame": 533,
+  "preserved_failed_output": "return-door01",
+  "failed_output_qualified": false,
+  "parent_validation": "same exactprofile4c, qualifiedcold521/e81e; originaloutervalidate_seed/innercheckpointverify unchanged",
+  "arbitrary_output_option": false,
+  "other_modes_allowed": false,
+  "no_automatic_retry": true,
+  "no_guest_allocated": true
+}

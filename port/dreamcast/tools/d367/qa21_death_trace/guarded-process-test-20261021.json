@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "injected_exception": "sampler",
+      "pid": 646518,
+      "returncode": -15,
+      "remaining_group_members": [],
+      "pass": true
+    },
+    {
+      "injected_exception": "receipt",
+      "pid": 646519,
+      "returncode": -15,
+      "remaining_group_members": [],
+      "pass": true
+    },
+    {
+      "injected_exception": "first-identity",
+      "pid": 646520,
+      "returncode": -15,
+      "remaining_group_members": [],
+      "pass": true
+    }
+  ]
+}

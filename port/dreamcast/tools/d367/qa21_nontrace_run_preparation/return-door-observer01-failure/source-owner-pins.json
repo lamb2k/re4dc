@@ -1,0 +1,46 @@
+{
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "files": {
+    "include/cManager.h": {
+      "bytes": 17522,
+      "sha256": "19ce63044d273bce47c208773df8921f08f90fc58bdfc162e7bb9507f5940e3c",
+      "git_blob": "6ed002e247aa7fce08efa0ef14cbba3b06cea27c"
+    },
+    "include/sscrn.h": {
+      "bytes": 10593,
+      "sha256": "247493f212c5daf84312d860cde9fef3346dfb8e3a3e617581955e61ea5a236d",
+      "git_blob": "d05420897c2597bf0d22e99e1ae7b092bc7c6a58"
+    },
+    "src/game/game.cpp": {
+      "bytes": 67752,
+      "sha256": "225f4680a055b4849e5415d9361fec1988d83d39c26fbec882316f031ed02d90",
+      "git_blob": "53ad0e7322de9ad1d1b9b218ac05982ac9a7c9e2"
+    },
+    "src/game/sscrn.cpp": {
+      "bytes": 39309,
+      "sha256": "46ad97e6a8951e9e5fe7502aaa4798b4a97dd213576a70daef0f74a64f56267a",
+      "git_blob": "34f901d0e39203eb5d2196db990014f7c181428e"
+    },
+    "src/Sscrn/ss_file.cpp": {
+      "bytes": 37005,
+      "sha256": "ffd1210b7afba7d54b9ebbed36407a3938f128ab20b50dde981f9de6860c374d",
+      "git_blob": "4e26c8c57b6d41da2479d8a848cab95955ef8520"
+    },
+    "port/dreamcast/game/parts_bridge.cpp": {
+      "bytes": 19998,
+      "sha256": "616bcfd7b1606ed0b47a36791b183e6bf1476bfe61b687f2b3652e613536d35f",
+      "git_blob": "2ef99488529ddbbfb5025adb6cab73df7e03bdb5"
+    },
+    "port/dreamcast/game/sscrn_bridge.cpp": {
+      "bytes": 46393,
+      "sha256": "eb704d519337b4349fc069b11fd9aea7825831f5048a4fd5980b81f857a703ab",
+      "git_blob": "1407f6759b8a404c58fc7ff1ab5aea8e7e712362"
+    },
+    "src/game/em.cpp": {
+      "bytes": 20073,
+      "sha256": "12f2df9e82640ede3c4ba408edbb8b1684ceb08b63f3042a0e3331267b229fbb",
+      "git_blob": "0b3ebbc3fabe415d0ce8868739b9c6f562ebbe03"
+    }
+  },
+  "no_currentHEAD_game_source_assumption": true
+}

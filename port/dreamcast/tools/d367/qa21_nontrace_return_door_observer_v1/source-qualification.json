@@ -1,0 +1,45 @@
+{
+  "scope": "NEW child immutable outputcontract source qualification only",
+  "utc": "2026-10-22T05:24:24.392312+00:00",
+  "pass": true,
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "new_contract_tests": {
+    "linux": {
+      "path": "child-contract-tests-linux-20261022T052339091944Z.json",
+      "bytes": 2454,
+      "sha256": "04eed4cdaafb3ebcf629d7ee420f950a5c16d2bd99bc54ee0b5184cb412fe6f9",
+      "new_tests": 8,
+      "sources_current": true
+    },
+    "windows": {
+      "path": "child-contract-tests-windows-20261022T052339796089Z.json",
+      "bytes": 2434,
+      "sha256": "7779eda26a0e3a3fa84a8c932d5c1575853a0299d1cf192331600dbaa5edcb13",
+      "new_tests": 8,
+      "sources_current": true
+    }
+  },
+  "runtime_delta_proof": {
+    "bytes": 2921,
+    "sha256": "bdb9a306c1f52ef38dadb4a35b98ce88311714d184b81cad3bdf086a36d48dc2"
+  },
+  "output_contract": {
+    "bytes": 882,
+    "sha256": "28c36f2075342ae37a68fe0c7bc62ad44134b7148c25b689d2fd58a420c6b7fe"
+  },
+  "reviewed_observer_source": "7c17119ea2517c390acd2e143a33ea839334cc12",
+  "reviewed_observer_review": "599c2a063e8679af55aa2cae86f77fad81ed1790",
+  "inherited_observer_qualification": {
+    "bytes": 1209,
+    "sha256": "e04711c66a91353de63a38eca15ed8231ee90e98705155b5f381196205921944"
+  },
+  "inherited_source_only_manifest": {
+    "bytes": 3228,
+    "sha256": "8f2d76dd31d29e7f093cd26b4287294cfc101c010b211f0287fafde58cd40a7c"
+  },
+  "original_door_qualification": false,
+  "missing_live_badpointer": "unavailable, notretained",
+  "initial_test_incident": "mock existingroot missingOWNEDmarker refused correctly; fixture onlyfixed, oldsource/receiptspreserved",
+  "guest_allocated": false,
+  "runtime_qualified": false
+}

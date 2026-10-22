@@ -1,0 +1,10 @@
+{
+  "scope": "v3 SOURCE direct startup failure controls only; no native API/child/image/input",
+  "test_count": 5,
+  "status": "PASS",
+  "tests_sha256": "b1283e850c42e6b72afa89f72ce3ca622dcf7f8147d455a41a1a77db08396c03",
+  "runtime_manifest_sha256": "85ab97fee4b8d41dc797c8bb7f393f6e2218f09f7f039648cb0a831b28151b65",
+  "v1_v2_preserved": true,
+  "supervisor_inventory_frozen_api_backend_exact_v2": true,
+  "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39"
+}

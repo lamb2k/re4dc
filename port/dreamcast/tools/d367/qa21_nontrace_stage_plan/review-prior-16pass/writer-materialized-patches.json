@@ -1,0 +1,119 @@
+{
+  "scope": "Readonly actual521 payload -> writer RAM bytes; no image writes",
+  "patch_count": 16,
+  "all_exact": true,
+  "patches": [
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 1028843520,
+      "bytes": 3655680,
+      "sha256": "579908df70d4ff5ef67d107383dfbd5926e8a83a802b9ba173e8d814ca173775",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 73984000,
+      "bytes": 28672,
+      "sha256": "ff45d84a1f65dc6fd96e6eae9a8ed932183b957deffb3055e215916d7b769f08",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 74012672,
+      "bytes": 69632,
+      "sha256": "ad665daf57fed90cff22e76fff96a2ba507bd8d2164c59e328ae3898f65135a5",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 74082304,
+      "bytes": 18432,
+      "sha256": "625678fea919168791183d024f0acef5d5638ad117482bc90c1476cc83aa2c56",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 74100736,
+      "bytes": 53248,
+      "sha256": "9ccf647d14733a6407f45c23928b7a1b29baa24dd118c4c71e73a6c724b473e0",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 74153984,
+      "bytes": 8192,
+      "sha256": "dc7daa6aac8cae2eb41eb045f57e132978b4cb3b3768369d2ac71b0b6f4cdaf3",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 439461888,
+      "bytes": 47104,
+      "sha256": "9c8273151516ebe85e212f0ad4a98acf10843d1070a6584aac92259e44056c6b",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 439508992,
+      "bytes": 36864,
+      "sha256": "309eff41b9f926c5b6a6668c48cbba24952f4aca07fbfbe2504014cae91c4fb3",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 439545856,
+      "bytes": 20480,
+      "sha256": "726b4f45bb31fb07ce60e7135174c528edf0267a849867e6deebcbb2a2ea4286",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 439724032,
+      "bytes": 135168,
+      "sha256": "e2bc90a5cadb0d55120a6c9f21abc8d65776a5e3f178c28eb0136c346d296b51",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 439859200,
+      "bytes": 36864,
+      "sha256": "6798f971390dfa2e08b19c42931f462328e83b20dbd2b7b56532964ad31fd828",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 439896064,
+      "bytes": 81920,
+      "sha256": "004df5ec631d9357ecab45921b29d75eea4533358d42d32313cc7af2c13c54ae",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 439977984,
+      "bytes": 51200,
+      "sha256": "60a1aa1ae8ba4232b9aaeb3fda278031b678026035fb400a3e15f0e67b514376",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 440029184,
+      "bytes": 90112,
+      "sha256": "9714017654e73dc1bcc317761e5ea80fb57c7ec5b77c5fff33a4ce5ab31571c2",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "payload/reserved-zero-tail",
+      "offset": 440119296,
+      "bytes": 98304,
+      "sha256": "f2a8bc1345dee3e6588a36d0ebdd9a30a6c1472dcd370bc34aeb714a393cc02a",
+      "equals_virtual_plan": true
+    },
+    {
+      "kind": "directory-size-both-endian",
+      "offset": 37128,
+      "bytes": 8,
+      "sha256": "14a8827d1c8cb94342e56b6ffdb0c9528d99d542917a292140dddb54775f27b5",
+      "equals_virtual_plan": true
+    }
+  ]
+}

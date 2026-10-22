@@ -1,0 +1,1 @@
+{"qualified": false, "control": "C:\\Flycast-Evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-domains01-control", "mode": "return-door01"}

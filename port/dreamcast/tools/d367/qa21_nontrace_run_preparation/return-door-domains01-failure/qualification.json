@@ -1,0 +1,315 @@
+{
+  "qualified": false,
+  "error": "Refusal: unexpected/missing private job member",
+  "process_telemetry": {
+    "available": false,
+    "reason": "no verified retained guest handle acquired"
+  },
+  "final_resources": {
+    "available": true,
+    "free_C_bytes": 142969094144,
+    "charged_evidence_bytes": 4096,
+    "global_flycast_count": 0,
+    "runtime_floor": 19394461696,
+    "evidence_cap": 60000000,
+    "global_limit": 16,
+    "phase": "after owned stop/waits and private-job empty check, before handle close"
+  },
+  "reference_broker": {
+    "available": true,
+    "closed_after_join": true,
+    "hold": false,
+    "stage": "new",
+    "sequence": 0,
+    "records": {},
+    "root_authority": {
+      "path": "C:\\Game Dev\\Emulators\\codex-lanes\\qa21-combined-regression\\RETURN-DOOR-DOMAINS01-WIRING-ROOT-ALLOCATION.json",
+      "sha256": "b3d6d2cb9669de8ddb51967d2168b699f54aa3cce783678d75cd4dd9c1e3dc41",
+      "contents": {
+        "absolute_actual_seconds": 47.5,
+        "attempt_limit": 1,
+        "cap": "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-domains01",
+        "contract_sha256": "ff15e0f1ae5dd059a01f71bd25245b16c977f576ece6f8c0d07ff6b30a4546b1",
+        "control": "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-domains01-control\\reference-hooks",
+        "evidence_cap_bytes": 60000000,
+        "inner_seconds": 41,
+        "input_cutoff_seconds": 40.75,
+        "private_job_seconds": 47.0,
+        "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+        "runner_sha256": "b9229b91c96c4b8bbc0417e9a0822e419c3eda04f64506f50e32b3d5349584e6",
+        "runtime_floor_bytes": 19394461696,
+        "semantic_mode": "return-door01",
+        "tools_sha256": "8eac4789a775333c218ede0292569e88cb54971ec295da9552d38b6332e956f1",
+        "tools_source": "505f3ee487a1bb658199986f4988fdf14008c960"
+      }
+    },
+    "scope": "actual broker operations; source/native/role qualification still separate"
+  },
+  "reference_error": "RuntimeError: reference lifecycle not cleanly closed",
+  "scope": "automatic source/runtime gates only; PNG visual review/Continue/ordinary gameplay remain separately observed acceptance",
+  "tools_sha256": "8eac4789a775333c218ede0292569e88cb54971ec295da9552d38b6332e956f1",
+  "cinematic_visual_review": false,
+  "Continue_acceptance": false,
+  "started_utc": "2026-10-22T07:52:29.568220+00:00",
+  "mode": "return-door01",
+  "output_name": "return-door-domains01",
+  "profile_sha256": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b",
+  "preflight_disc": {
+    "disc.gdi": {
+      "sha256": "9765f17c6431b1e55ae57ce1fc3055cdb0228ed91585c4cf4390412f7bd7a140",
+      "bytes": 83
+    },
+    "track01.bin": {
+      "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+      "bytes": 1058400
+    },
+    "track02.raw": {
+      "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+      "bytes": 1237152
+    },
+    "track03.iso": {
+      "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+      "bytes": 1032499200
+    },
+    "exact_three_reference_extension": {
+      "before": {
+        "phase": "prelaunch",
+        "names": [
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track03.iso",
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track03.iso",
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track03.iso"
+        ],
+        "references": {
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track01.bin": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000020000004c6739",
+            "size": 1058400,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 32768,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track02.raw": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000010000004c673a",
+            "size": 1237152,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 4096,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track03.iso": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000030000004cbccd",
+            "size": 1032499200,
+            "mtime_ns": 1792628865730857700,
+            "allocated": 669679616,
+            "links": 3,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track01.bin": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000020000004c6739",
+            "size": 1058400,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 32768,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track02.raw": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000010000004c673a",
+            "size": 1237152,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 4096,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track03.iso": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000030000004cbccd",
+            "size": 1032499200,
+            "mtime_ns": 1792628865730857700,
+            "allocated": 669679616,
+            "links": 3,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track01.bin": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000020000004c6739",
+            "size": 1058400,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 32768,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track02.raw": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000010000004c673a",
+            "size": 1237152,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 4096,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track03.iso": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000030000004cbccd",
+            "size": 1032499200,
+            "mtime_ns": 1792628865730857700,
+            "allocated": 669679616,
+            "links": 3,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          }
+        }
+      },
+      "hashes": {
+        "track01.bin": {
+          "sha256": "058298a2bd8a0ade4637efaf67cb2c71a2f4c924b1e7d59c2c5989ac550fe8e9",
+          "bytes": 1058400
+        },
+        "track02.raw": {
+          "sha256": "15453e38e9c8e03d6e7854c2414f93e944b6059b4933847ebf735834407cec48",
+          "bytes": 1237152
+        },
+        "track03.iso": {
+          "sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+          "bytes": 1032499200
+        }
+      },
+      "after": {
+        "phase": "prelaunch",
+        "names": [
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track03.iso",
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track03.iso",
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track03.iso"
+        ],
+        "references": {
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track01.bin": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000020000004c6739",
+            "size": 1058400,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 32768,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track02.raw": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000010000004c673a",
+            "size": 1237152,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 4096,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-runtime-20261021\\attempts\\stage-001\\input\\gdemu\\track03.iso": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000030000004cbccd",
+            "size": 1032499200,
+            "mtime_ns": 1792628865730857700,
+            "allocated": 669679616,
+            "links": 3,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track01.bin": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000020000004c6739",
+            "size": 1058400,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 32768,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track02.raw": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000010000004c673a",
+            "size": 1237152,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 4096,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-guests-20261021\\cold-shoot01\\track03.iso": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000030000004cbccd",
+            "size": 1032499200,
+            "mtime_ns": 1792628865730857700,
+            "allocated": 669679616,
+            "links": 3,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track01.bin": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000020000004c6739",
+            "size": 1058400,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 32768,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track02.raw": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000010000004c673a",
+            "size": 1237152,
+            "mtime_ns": 1792601985000000000,
+            "allocated": 4096,
+            "links": 16,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          },
+          "c:\\flycast-evidence\\re4-dreamcast\\qa21-ganado-reader-telemetry-guests-20261022\\return-door-observer01\\track03.iso": {
+            "volume": 14332939485708580193,
+            "native_file_id": "0x000000000000000000030000004cbccd",
+            "size": 1032499200,
+            "mtime_ns": 1792628865730857700,
+            "allocated": 669679616,
+            "links": 3,
+            "attributes": 32,
+            "deleted": false,
+            "directory": false
+          }
+        }
+      }
+    }
+  },
+  "source": "c57ff60f0f462fdd2c419883b0258963504d756a",
+  "program_sha256": "52190ed293d8e62238bcad40fd351d35a965b253ad5b59cda570d0de34187e45",
+  "elf_sha256": "248dd4aac7c4e22a7a18a0183fc6409401fddf610d98881c90dd9664e342640b",
+  "image_sha256": "da10104f6d4e28c6e4509a9fb75182fc4612f89a411ed4c1efa85d8a6c8bde7f",
+  "memory_writes": false,
+  "retry": false
+}

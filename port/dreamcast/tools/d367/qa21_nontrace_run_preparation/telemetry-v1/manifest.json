@@ -1,0 +1,14 @@
+{
+  "LAUNCH-REQUEST.json": {
+    "bytes": 4146,
+    "sha256": "a6f4c5fbeeda607712df3317665a6f5c7786f0a8d6b08e4a99ffdeee105ba9da"
+  },
+  "LAUNCH-REQUEST.md": {
+    "bytes": 2533,
+    "sha256": "d0e410903c95ddeda03c07079249a013158632600288482d53835f6aa1634c24"
+  },
+  "readonly-preflight.json": {
+    "bytes": 1973,
+    "sha256": "cc187df13bf57d7ca16edcaf4b81f4b613aa4a80f1361f5180dbd7759189c82f"
+  }
+}

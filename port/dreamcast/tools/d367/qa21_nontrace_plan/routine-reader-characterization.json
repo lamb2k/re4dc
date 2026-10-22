@@ -1,0 +1,329 @@
+{
+  "scope": "Read-only source and host byte-semantics characterization; not new guest/repair acceptance",
+  "source": "a18f2cf60faa25266271b2c33a6c7c8b0f3e3c1f",
+  "em10_sha256": "bf6507e9c5be7261c316e28111e9b8ed5bd2bafc098bc8f78ca17361306c6099",
+  "reader_macro_line": 549,
+  "reader_sites": [
+    {
+      "line": 332,
+      "function": "extern \"C\" int em10SearchParasite(cEm10* em);",
+      "source": "if (pG->Game_level <= 1 && !EM_RTN(em, 1, 0x1B) && (r = Rnd() % 10, r > 4)) {                   \\",
+      "context": "        if (hit) {                                                                                 \\\n            return 0;                                                                              \\\n        }                                                                                          \\\n        if (pG->Game_level <= 1 && !EM_RTN(em, 1, 0x1B) && (r = Rnd() % 10, r > 4)) {                   \\\n            w->Atk_wait = 30;                                                                          \\\n            EmRoutineSet(em, 1, 0x1B, hit, hit);                                                   \\\n            return 1;                                                                              \\"
+    },
+    {
+      "line": 976,
+      "function": "void em10DmCk(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x5E) && (w->flags & 8)) {",
+      "context": "                    }\n                    return;\n                }\n                if (EM_RTN(em, 1, 0x5E) && (w->flags & 8)) {\n                    w->x68C = 120;\n                    EstSetEm(em, -1, 0, 0, 0x10, 0x1E, 0, 0, em, 0);\n                    return;"
+    },
+    {
+      "line": 1063,
+      "function": "void em10DmCk(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x5E) && (w->flags & 8)) {",
+      "context": "        GameAddPoint(LVADD_CRITICALHIT);\n        return;\n    }\n    if (EM_RTN(em, 1, 0x5E) && (w->flags & 8)) {\n        em10BloodSet(em, 0);\n        if (!(pG->Status_flg[1] & 0x20000000)) {\n            BitOn(pG->Status_flg[1], 0x20000000);"
+    },
+    {
+      "line": 1079,
+      "function": "void em10DmCk(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x5F)) {",
+      "context": "    if (w->x686 & 0x8000) {\n        w->x686 = 0;\n    }\n    if (EM_RTN(em, 1, 0x5F)) {\n        em->dmg.m_Flag = 0;\n        em10BloodSet(em, 0);\n        if (em->hp > 0) {"
+    },
+    {
+      "line": 2823,
+      "function": "static int em10RtOwns(cEm10* em)",
+      "source": "if (!EM_RTN(this, 1, 7)) {",
+      "context": "    case 5:\n    case 6:\n    case 0x1A:\n        if (!EM_RTN(this, 1, 7)) {\n            EffectEspDelete(0, w->EffKindIdWork, (u32) this, 0);\n            EffectEspgenDelete(0, w->EffKindIdWork, (int) this);\n            EffectEfmDelete(0, w->EffKindIdWork, (int) this);"
+    },
+    {
+      "line": 2832,
+      "function": "static int em10RtOwns(cEm10* em)",
+      "source": "if (!EM_RTN(this, 1, 8)) {",
+      "context": "    case 7:\n    case 8:\n    case 9:\n        if (!EM_RTN(this, 1, 8)) {\n            EffectEspDelete(0, w->EffKindIdWork, (u32) this, 0);\n            EffectEspgenDelete(0, w->EffKindIdWork, (int) this);\n            EffectEfmDelete(0, w->EffKindIdWork, (int) this);"
+    },
+    {
+      "line": 2861,
+      "function": "static int em10RtOwns(cEm10* em)",
+      "source": "if (w->pCart && !EM_RTN(this, 1, 9)) {",
+      "context": "        SndStop(w->sndId, 0);\n        w->sndId = 0;\n    }\n    if (w->pCart && !EM_RTN(this, 1, 9)) {\n        if (w->mot[51]) {\n            MotionSetCore(w->pCart, MOTION(w->pCart), w->mot[51], 0, 0, 0, 0);\n        }"
+    },
+    {
+      "line": 7746,
+      "function": "static void em10_R1_Stay(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x1B)) {",
+      "context": "                }\n                if (em->Character == 0 || em->Character == 2) {\n                    if (em10StayCk(em)) {\n                        if (EM_RTN(em, 1, 0x1B)) {\n                            em->r_no_2 = one;\n                            w->Timer2 = 0x23;\n                        }"
+    },
+    {
+      "line": 11012,
+      "function": "static void em10_R1_ClawAtk(cEm10* em)",
+      "source": "!EM_RTN(em, 1, 0x11)) {",
+      "context": "                r = em10ClawCriAtkCk(em);\n                if (r == 0) {\n                    if ((em->pos.x - w->Pl_pos.x) * (em->pos.x - w->Pl_pos.x) + (em->pos.z - w->Pl_pos.z) * (em->pos.z - w->Pl_pos.z) > 16000000.0f &&\n                        !EM_RTN(em, 1, 0x11)) {\n                        em10CallVoiceSe2(em, 0x71, 6);\n                        w->Route_type = 0;\n                        EmRoutineSet(em, 1, 0x11, 0, 0);"
+    },
+    {
+      "line": 11796,
+      "function": "static void plem10_C_SawHit(cPlayer* pl)",
+      "source": "if (!EM_RTN(em, 1, 0x30)) {",
+      "context": "            break;\n        }\n        em = (cEm*) pPL->dmgType;\n        if (!EM_RTN(em, 1, 0x30)) {\n            EndPlDamage();\n            SndStop(pl->m_Work2, 0);\n            pl->dmg.set(0, 30);"
+    },
+    {
+      "line": 12321,
+      "function": "static void plem10_NeckHang(cPlayer* pl)",
+      "source": "if (!EM_RTN(em, 1, 0x34)) {",
+      "context": "    case 1:\n        EmCatchMotionMove(pl, 0.3f, 0.2f);\n        em = (cEm*) pPL->dmgType;\n        if (!EM_RTN(em, 1, 0x34)) {\n            VibSetClearType(1);\n            pl->Wep->setTrans(1, 0);\n            EndPlDamage();"
+    },
+    {
+      "line": 12350,
+      "function": "static void plem10_NeckHang(cPlayer* pl)",
+      "source": "if (!EM_RTN(em, 1, 0x34)) {",
+      "context": "    case 3:\n        end = MotionMoveF(pl, 0);\n        em = (cEm*) pPL->dmgType;\n        if (!EM_RTN(em, 1, 0x34)) {\n            pl->Wep->setTrans(1, 0);\n            EndPlDamage();\n            pl->dmg.set(0, 0x1E);"
+    },
+    {
+      "line": 12400,
+      "function": "static void plem10_NeckHang(cPlayer* pl)",
+      "source": "if (!EM_RTN(em, 1, 0x34)) {",
+      "context": "            pl->m_Work0--;\n            end = EmCatchMotionMove(pl, 0.3f, 0.2f);\n            em = (cEm*) pPL->dmgType;\n            if (!EM_RTN(em, 1, 0x34)) {\n                pl->Wep->setTrans(1, 0);\n                EndPlDamage();\n                pl->dmg.set(0, 0x1E);"
+    },
+    {
+      "line": 12690,
+      "function": "static void subem10_NeckHang_Ashley(cSubChar* sub)",
+      "source": "if (!EM_RTN(em, 1, 0x36)) {",
+      "context": "    case 1:\n        EmCatchMotionMove(pl, 0.3f, 0.2f);\n        em = (cEm*) pPL->dmgType;\n        if (!EM_RTN(em, 1, 0x36)) {\n            VibSetClearType(1);\n            EndPlDamage();\n            pl->dmg.set(0, 0x1E);"
+    },
+    {
+      "line": 12728,
+      "function": "static void subem10_NeckHang_Ashley(cSubChar* sub)",
+      "source": "if (!EM_RTN(em, 1, 0x36)) {",
+      "context": "            pl->m_Work0--;\n            end = EmCatchMotionMove(pl, 0.3f, 0.2f);\n            em = (cEm*) pPL->dmgType;\n            if (!EM_RTN(em, 1, 0x36)) {\n                EndPlDamage();\n                pl->dmg.set(0, 0x1E);\n                break;"
+    },
+    {
+      "line": 12899,
+      "function": "static void plem10_Backhold(cPlayer* pl)",
+      "source": "if (!EM_RTN(em, 1, 0x37)) {",
+      "context": "    case 1:\n        EmCatchMotionMove(pl, 0.3f, 0.2f);\n        em = (cEm*) pPL->dmgType;\n        if (!EM_RTN(em, 1, 0x37)) {\n            pl->Wep->setTrans(1, 0);\n            EndPlDamage();\n            pl->dmg.set(0, 0x1E);"
+    },
+    {
+      "line": 13086,
+      "function": "static void plem10_Bombhold(cPlayer* pl)",
+      "source": "if (!EM_RTN((cEm*) pPL->dmgType, 1, 0x38)) {",
+      "context": "        pl->r_no_2++;\n    case 1:\n        EmCatchMotionMove(pl, 0.3f, 0.2f);\n        if (!EM_RTN((cEm*) pPL->dmgType, 1, 0x38)) {\n            pl->Wep->setTrans(1, 0);\n            EndPlDamage();\n            pl->dmg.set(0, 0x1E);"
+    },
+    {
+      "line": 17420,
+      "function": "extern \"C\" int em10CatchPLRtnCk(cEm10* em)",
+      "source": "if (pG->Game_level <= 1 && !EM_RTN(em, 1, 0x1B) && (r = Rnd() % 10, r > 4)) {",
+      "context": "    if (hit) {\n        return 0;\n    }\n    if (pG->Game_level <= 1 && !EM_RTN(em, 1, 0x1B) && (r = Rnd() % 10, r > 4)) {\n        w->Atk_wait = 30;\n        EmRoutineSet(em, 1, 0x1B, hit, hit);\n        return 1;"
+    },
+    {
+      "line": 20921,
+      "function": "extern \"C\" int em10AxeAtkCk(cEm10* em)",
+      "source": "if (pG->Game_level <= 1 && !EM_RTN(em, 1, 0x1B)) {",
+      "context": "            return 0;\n        }\n    }\n    if (pG->Game_level <= 1 && !EM_RTN(em, 1, 0x1B)) {\n        u8 r = Rnd() % 10;\n        if (r > 4) {\n            w->Atk_wait = 0x1E;"
+    },
+    {
+      "line": 21033,
+      "function": "extern \"C\" int em10ShieldAtkCk(cEm10* em)",
+      "source": "if (pG->Game_level <= 1 && !EM_RTN(em, 1, 0x1B) && (r = Rnd() % 10, r > 4)) {",
+      "context": "            return 0;\n        }\n    }\n    if (pG->Game_level <= 1 && !EM_RTN(em, 1, 0x1B) && (r = Rnd() % 10, r > 4)) {\n        w->Atk_wait = 30;\n        EmRoutineSet(em, 1, 0x1B, 0, 0);\n        return 1;"
+    },
+    {
+      "line": 21734,
+      "function": "int em10FindCk2(cEm10* em)",
+      "source": "if (EM_RTN(pPL, 0, 3)) {",
+      "context": "    }\n    if ((s32) pG->Status_flg[1] < 0) {\n        f32 r = 12250000.0f;\n        if (EM_RTN(pPL, 0, 3)) {\n            r = 64000000.0f;\n        }\n        if (em->plDist2 < r) {"
+    },
+    {
+      "line": 21783,
+      "function": "extern \"C\" int em10SomebodyFindNowCk(cEm10* em)",
+      "source": "if (EM_RTN(e, 1, 0xD)) {",
+      "context": "        if (!e->checkStatus(EM_STATUS_ACTIVE)) {\n            continue;\n        }\n        if (EM_RTN(e, 1, 0xD)) {\n            return 0;\n        }\n    }"
+    },
+    {
+      "line": 22066,
+      "function": "void em10WalkRtnSet(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x1B)) {",
+      "context": "        return;\n    }\n    if (em->Character == 3) {\n        if (EM_RTN(em, 1, 0x1B)) {\n            return;\n        }\n        EmRoutineSet(em, 1, 0x1B, 0, 0);"
+    },
+    {
+      "line": 22133,
+      "function": "extern \"C\" int em10BackCk(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x1B)) {",
+      "context": "        return 0;\n    }\n    if (em->Character == 3) {\n        if (EM_RTN(em, 1, 0x1B)) {\n            return 1;\n        }\n    } else if (em->plDist2 > 4000000.0f) {"
+    },
+    {
+      "line": 22140,
+      "function": "extern \"C\" int em10BackCk(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x1B)) {",
+      "context": "        if (em->Character == 2) {\n            return 0;\n        }\n        if (EM_RTN(em, 1, 0x1B)) {\n            return 0;\n        }\n    } else if (w->Wep_type != 4) {"
+    },
+    {
+      "line": 23149,
+      "function": "extern \"C\" int em10DashCk(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x1B)) {",
+      "context": "        return 1;\n    }\n    if (em->Character == 3) {\n        if (EM_RTN(em, 1, 0x1B)) {\n            return 1;\n        }\n        EmRoutineSet(em, 1, 0x1B, 0, 0);"
+    },
+    {
+      "line": 23279,
+      "function": "extern \"C\" int em10StayCk(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x1B)) {",
+      "context": "        return 1;\n    }\n    if (em->Character == 3) {\n        if (EM_RTN(em, 1, 0x1B)) {\n            return 1;\n        }\n        EmRoutineSet(em, 1, 0x1B, 0, 0);"
+    },
+    {
+      "line": 26828,
+      "function": "int em10GotoPosCk(cEm10* em)",
+      "source": "if (EM_RTN(o, 1, 0x13)) {",
+      "context": "                    continue;\n                }\n            }\n            if (EM_RTN(o, 1, 0x13)) {\n                continue;\n            }\n            cnt++;"
+    },
+    {
+      "line": 26912,
+      "function": "extern \"C\" int em10ReturnCk(cEm10* em)",
+      "source": "if (EM_RTN(em, 1, 0x1B)) {",
+      "context": "        f32 dy = em->pos.y - w->Keep_pos.y;\n        f32 dz = em->pos.z - w->Keep_pos.z;\n        if (dx * dx + dy * dy + dz * dz < 6250000.0f) {\n            if (EM_RTN(em, 1, 0x1B)) {\n                return 0;\n            }\n            EmRoutineSet(em, 1, 0x1B, 0, 0);"
+    },
+    {
+      "line": 27125,
+      "function": "int em10ClawStickCK(cEm10* em)",
+      "source": "!EM_RTN(em, 1, 0x11)) {",
+      "context": "            return 1;\n        }\n        if ((em->pos.x - w->Pl_pos.x) * (em->pos.x - w->Pl_pos.x) + (em->pos.z - w->Pl_pos.z) * (em->pos.z - w->Pl_pos.z) > 16000000.0f &&\n            !EM_RTN(em, 1, 0x11)) {\n            em10CallVoiceSe2(em, 0x71, 6);\n            w->Route_type = 0;\n            EmRoutineSet(em, 1, 0x11, 0, 0);"
+    }
+  ],
+  "reader_site_count": 30,
+  "target_cases": [
+    {
+      "routine_bytes": [
+        1,
+        48,
+        0,
+        0
+      ],
+      "LE_stat": "0x3001",
+      "original_LE_reader": false,
+      "original_BE_reader": true,
+      "named_byte_reader": true
+    },
+    {
+      "routine_bytes": [
+        1,
+        50,
+        0,
+        0
+      ],
+      "LE_stat": "0x3201",
+      "original_LE_reader": false,
+      "original_BE_reader": true,
+      "named_byte_reader": true
+    },
+    {
+      "routine_bytes": [
+        1,
+        52,
+        0,
+        0
+      ],
+      "LE_stat": "0x3401",
+      "original_LE_reader": false,
+      "original_BE_reader": true,
+      "named_byte_reader": true
+    },
+    {
+      "routine_bytes": [
+        1,
+        53,
+        0,
+        0
+      ],
+      "LE_stat": "0x3501",
+      "original_LE_reader": false,
+      "original_BE_reader": true,
+      "named_byte_reader": true
+    },
+    {
+      "routine_bytes": [
+        1,
+        54,
+        0,
+        0
+      ],
+      "LE_stat": "0x3601",
+      "original_LE_reader": false,
+      "original_BE_reader": true,
+      "named_byte_reader": true
+    },
+    {
+      "routine_bytes": [
+        1,
+        55,
+        0,
+        0
+      ],
+      "LE_stat": "0x3701",
+      "original_LE_reader": false,
+      "original_BE_reader": true,
+      "named_byte_reader": true
+    },
+    {
+      "routine_bytes": [
+        1,
+        56,
+        0,
+        0
+      ],
+      "LE_stat": "0x3801",
+      "original_LE_reader": false,
+      "original_BE_reader": true,
+      "named_byte_reader": true
+    },
+    {
+      "routine_bytes": [
+        1,
+        58,
+        0,
+        0
+      ],
+      "LE_stat": "0x3a01",
+      "original_LE_reader": false,
+      "original_BE_reader": true,
+      "named_byte_reader": true
+    }
+  ],
+  "actual_old_Flycast_correlation": [
+    {
+      "frame": 1716,
+      "life": 1,
+      "player_rno": [
+        4,
+        0,
+        0,
+        0
+      ],
+      "actor_rno": [
+        1,
+        48,
+        0,
+        0
+      ],
+      "reciprocal_catch_pointers": true,
+      "actor_ptr": "0x8cc8a340"
+    },
+    {
+      "frame": 1720,
+      "life": 1,
+      "player_rno": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "actor_rno": [
+        1,
+        48,
+        1,
+        3
+      ],
+      "reciprocal_catch_pointers": true,
+      "actor_ptr": "0x8cc8a340"
+    }
+  ],
+  "actual_old_readonly_log_sha256": "be20d61b497ae2bf1d0ec07a77236179e0841cbc5ddaf7fcb28b1abe408dec59",
+  "exact_old_program": "6624b9a8a8ac1a2f8aa143f1d159247ecc7ad48db5b1e8e9390fd3e6d2e29f9c",
+  "finding": "After named-byte setter, legacy LE stat reader rejects correct r0/r1; plem10_C_SawHit can EndPlDamage while enemy still1/30. Main owns repair, no shared source edits here.",
+  "repair_owner": "main under existing default-off GANADO_ROUTINE_BYTES guard"
+}

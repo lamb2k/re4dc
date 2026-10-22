@@ -1,0 +1,77 @@
+"""Focused captured manual domains + fake retained-exit ordering only. No native process."""
+import ast,copy,ctypes,hashlib,importlib.util,json,os,pathlib,struct,tempfile,time,types,unittest
+P=pathlib.Path(__file__).parent;BASE=P.parent/'qa21_nontrace_return_door_observer_v1'
+def load(n,f):
+ s=importlib.util.spec_from_file_location(n,f);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+def resolve(n):
+ if os.name=='nt':return pathlib.Path(n)
+ w=pathlib.PureWindowsPath(n);return (pathlib.Path('/mnt/c') if w.drive.lower()=='c:' else pathlib.Path('/'))/pathlib.Path(*w.parts[1:])
+def fn(f,n):return ast.dump(next(x for x in ast.walk(ast.parse(f.read_text())) if isinstance(x,ast.FunctionDef) and x.name==n),include_attributes=False)
+o=load('domain_observe',P/'observe.py');a=o.a;policy=load('domain_policy',P/'policies.py');core=load('domain_controller',P/'controller-core.py');back=load('domain_backend',P/'windows-backend.py');fixture=json.loads((P/'captured-manual-terminal-fixture.json').read_text());profile=json.loads((P/'guest-profile-v2.json').read_text());binding=json.loads(resolve(profile['observer']['binding']).read_text());layout=json.loads(resolve(profile['observer']['layout']).read_text());source=json.loads(resolve(binding['source_contract']).read_text())
+class Fixture:
+ def __init__(self):self.data={k:bytes.fromhex(v) for k,v in fixture['reads'].items()};self.r=a.Reader(self.raw,binding['observer_symbols'],layout,binding['elf_sha256'],source_contract=source,expected_source=binding['source_candidate'])
+ def raw(self,p,n):return self.data[hex(p)+':'+str(n)]
+ def set(self,addr,fmt,value):self.data[hex(addr)+':'+str(struct.calcsize('<'+fmt))]=struct.pack('<'+fmt,value)
+ def observer(self,path,fail_post=False):
+  ob=o.Observer.__new__(o.Observer);ob.cap=pathlib.Path(path);ob.binding=binding;ob.layout=layout;ob.handle=1;ob.ram=1;ob.last=None;ob.started=time.monotonic();ob.last_log=0;ob.last_key=None;ob.buffer=None;ob.pid=50724;ob.start=134371211620128448;ob.adapter=self.r;ob.phases=[]
+  def live(p,n):return b'host-only sparsebulk token' if p==0x8c000000 and n==16*1024**2 else self.raw(p,n)
+  def require(phase):
+   ob.phases.append(phase)
+   if fail_post and phase.startswith('after snapshot'):ob.last=None;ob.buffer=None;raise EOFError('retained PID changed')
+  ob.live_read=live;ob.require_live=require;return ob
+class Domains(unittest.TestCase):
+ def test_captured_manual_globalUI_valid_borrowed_player_and_actor_unavailable(self):
+  f=Fixture();u=f.r.global_ui_snapshot();row=f.r.snapshot();manager=f.r.actor_chain();self.assertTrue(u['valid']);self.assertTrue(u['coherent']);self.assertTrue(u['borrowed_window']);self.assertEqual((u['global']['frame'],u['global']['room'],u['subscreen_type'],u['ssloop'],u['get_item_id']),(1230,257,64,1,174));self.assertFalse(row['valid']);self.assertIsNone(row['player']);self.assertTrue(row['player_storage_unavailable']);self.assertFalse(manager['manager_valid']);self.assertEqual(manager['actors'],[]);self.assertIn('borrowed',manager['reason'])
+ def test_sample_strictUI_domain_and_no_gameplay_inputs_or_actor_witness(self):
+  with tempfile.TemporaryDirectory() as d:
+   ob=Fixture().observer(d);ob.sample();row=ob.last;self.assertEqual(row['transport_attempts'],1);self.assertFalse(row['valid']);self.assertFalse(row['coherent']);self.assertTrue(row['domains']['global_ui']['transport_coherent']);self.assertTrue(policy.manual_ui_evidence(row));self.assertFalse(policy.valid_sample(row));door=core.Door();door.held={'fwd'};actions=door.step(row,0,1);self.assertEqual(actions,[{'up':'fwd','reason':'missing/stale/coherence'}]);self.assertFalse(core.Cinematic().step(row,0,1,manual_log=True));self.assertEqual(ob.phases,['before snapshot','after snapshot attempt 1','before publish']);self.assertIn('player storage',row['reason']);self.assertIn('actor pool storage',row['actor_reason'])
+ def test_manual_evidence_rejects_defaults_other_file_and_stale_identity_coherence(self):
+  with tempfile.TemporaryDirectory() as d:
+   ob=Fixture().observer(d);ob.sample();valid=ob.last
+  for path,value in [('pid',0),('start_filetime',0),('retained_identity_validated',False),('domains.global_ui.valid',False),('domains.global_ui.coherent',False),('domains.global_ui.transport_coherent',False),('domains.global_ui.borrowed_window',False),('domains.global_ui.get_item_id',173),('domains.global_ui.subscreen_type',32),('domains.global_ui.ssloop',0),('domains.global_ui.qa_flags',1),('domains.global_ui.global.player_life',0),('domains.global_ui.global.frame',533),('domains.global_ui.global.room',259)]:
+   row=copy.deepcopy(valid);target=row;parts=path.split('.')
+   for part in parts[:-1]:target=target[part]
+   target[parts[-1]]=value;self.assertFalse(policy.manual_ui_evidence(row),path)
+ def test_initial_player_reason_not_clobbered_by_independent_actor_reason(self):
+  with tempfile.TemporaryDirectory() as d:
+   f=Fixture();f.set(f.r.sy['_pPL'],'I',0);ob=f.observer(d);ob.sample();self.assertFalse(ob.last['valid']);self.assertIn('initial global/player',ob.last['reason']);self.assertIn('actor pool storage',ob.last['actor_reason']);self.assertTrue(policy.manual_ui_evidence(ob.last))
+ def test_UI_change_inside_same_source_frame_refuses_manual_domain(self):
+  with tempfile.TemporaryDirectory() as d:
+   ob=Fixture().observer(d);actual=ob.live_ui_signature;calls=[]
+   def signature(pg):
+    values=actual(pg);calls.append(values)
+    return values if len(calls)%2 else (values[0],values[1],173,values[3])
+   ob.live_ui_signature=signature;ob.sample();self.assertFalse(ob.last['domains']['global_ui']['signature_coherent']);self.assertFalse(ob.last['domains']['global_ui']['coherent']);self.assertFalse(policy.manual_ui_evidence(ob.last));self.assertEqual(ob.last['transport_attempts'],4)
+ def test_postread_PID_failure_prevents_all_domain_publication(self):
+  with tempfile.TemporaryDirectory() as d:
+   ob=Fixture().observer(d,fail_post=True)
+   with self.assertRaises(EOFError):ob.sample()
+   self.assertIsNone(ob.last);self.assertIsNone(ob.buffer);self.assertFalse((pathlib.Path(d)/'latest-state.json').exists())
+ def test_existing_input_policies_and_deadline_core_unchanged(self):
+  for name in ['valid_sample','free_play','shooting_safe','ordinary_weapon_ready','qa_safe','discharge']:self.assertEqual(fn(P/'policies.py',name),fn(BASE/'policies.py',name))
+  for name in ['controller-core.py','guest-supervisor-core.py','input-deadlines.py','capture-budget.py','guest-profile-v2.json']:self.assertEqual((P/name).read_bytes(),(BASE/name).read_bytes(),name)
+  for name in ['arm_deadlines','check_deadlines','stop_deadlines','wait_guest','wait_private_job_empty','close_owned_handles','final_process_telemetry']:self.assertEqual(fn(P/'windows-backend.py',name),fn(BASE/'windows-backend.py',name),name)
+class Exit:
+ @staticmethod
+ def backend(status=258,created=100000000,exited=120000000):
+  b=back.WindowsBackend.__new__(back.WindowsBackend);b.k=types.SimpleNamespace(WaitForSingleObject=lambda h,t:status,GetSystemTimeAsFileTime=lambda p:setattr(p._obj,'value',150000000));b.times=lambda h:[created,exited,0,0];b.clock=lambda:10.;b.input_released=True;b.guest={'pid':50724,'handle':9,'identity':{'pid':50724,'start_filetime':100000000,'path':'owned.exe'},'anchor':5.};b.info=lambda *args:(_ for _ in ()).throw(AssertionError('no live path query after exit timestamp'));return b
+class ExitPhase(unittest.TestCase):
+ def test_exit_timestamp_with_TIMEOUT_preserves_pinned_birth_identity_not_final_exit(self):
+  b=Exit.backend();self.assertEqual(b.identity(b.guest),b.guest['identity']);self.assertEqual(b.actual_seconds(b.guest),5.);self.assertEqual(b.retained_exit_phase(9,100000000,120000000,b.guest['identity']),'exiting')
+ def test_signaled_exit_uses_exact_final_duration(self):
+  b=Exit.backend(0);self.assertEqual(b.actual_seconds(b.guest),2.);self.assertEqual(b.retained_exit_phase(9,100000000,120000000,b.guest['identity']),'exited')
+ def test_FAILED_unknown_reversed_time_and_birth_mismatch_refuse(self):
+  for status in [-1,0xffffffff,17]:
+   b=Exit.backend(status)
+   with self.assertRaises((OSError,RuntimeError)):b.identity(b.guest)
+  for c,e in [(100000001,120000000),(100000000,99999999)]:
+   b=Exit.backend(created=c,exited=e)
+   with self.assertRaises(RuntimeError):b.identity(b.guest)
+ def test_pending_exit_keyrelease_claims_no_queue_or_released_flag(self):
+  b=Exit.backend();b.release_inputs(b.guest);self.assertFalse(b.input_released);self.assertEqual(b.input_release_receipt['queued_keyups'],0);self.assertEqual(b.input_release_receipt['exit_phase'],'exiting');self.assertIn('no keyup delivery',b.input_release_receipt['scope'])
+ def test_final_telemetry_still_refuses_pending_exit(self):
+  b=Exit.backend()
+  with self.assertRaisesRegex(RuntimeError,'unfinalized'):b.final_process_telemetry()
+ def test_pending_inner_exit_cannot_skip_owned_job_stop(self):
+  b=Exit.backend();calls=[];b.job=3;b.inner=types.SimpleNamespace(pid=7,_handle=12);b.inner_identity={'pid':7,'start_filetime':100000000,'path':'inner.exe'};b.k.TerminateJobObject=lambda job,code:calls.append((job,code)) or 1;b.checked=lambda v:v;b.stop_private_job(3);self.assertEqual(calls,[(3,125)])
+if __name__=='__main__':unittest.main(verbosity=2)

@@ -1,0 +1,26 @@
+{
+  "source": "6f9d31b0e00497a75fdd7e25bb04f92305103087",
+  "program": "ce080eb290aec073f406e93da27911f4fa70b457768288f52a893175a6846e8e",
+  "asset": {
+    "path": "/st1/r100.dar",
+    "bytes": 5373952,
+    "sha256": "4abfcc88bb61989fadc4759d885879da07b9e670d8c38206620d57912482c37d"
+  },
+  "archive_endian": "<",
+  "aev_record_count": 40,
+  "door_source": {
+    "file": "src/st1/r100.cpp",
+    "function": "r100_DoorCk",
+    "door_id": 2,
+    "normal_requirement": "Original RsfCheck room bit4 must become true; before that the normal door is open-locked or close-locked by original ambush logic. No flag poke or warp can qualify the normal route."
+  },
+  "source_order": [
+    "Original s03 and first Ganado death callback",
+    "Original s20, radio and post-event ambush",
+    "Original source room-bit4 completion/unlock",
+    "Ordinary door interaction, source leave/entry to a new room",
+    "Repeat QA reopen only at the actual new-room source-safe state"
+  ],
+  "private_evidence": "C:/Flycast-Evidence/re4-dreamcast/qa21-combined-regression-20261021/r100-route-fixture-v2.json",
+  "scope": "Source/asset identity and original door prerequisites only. Extracted event records remain private evidence."
+}

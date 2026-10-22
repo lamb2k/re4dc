@@ -1,0 +1,11 @@
+{
+  "scope": "ONE startup-only native job inventory; no Flycast/image/input",
+  "output": "C:/Flycast-Evidence/re4-dreamcast/qa21-native-job-inventory-20261022-01",
+  "max_children": 2,
+  "child_seconds": 5,
+  "parent_seconds": 10,
+  "output_cap_bytes": 4194304,
+  "logs_cap_bytes": 262144,
+  "no_release": true,
+  "automatic_retry": false
+}

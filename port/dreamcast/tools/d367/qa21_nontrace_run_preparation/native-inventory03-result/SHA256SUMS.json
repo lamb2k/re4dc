@@ -1,0 +1,62 @@
+[
+  {
+    "file": ".gitattributes",
+    "bytes": 8,
+    "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+  },
+  {
+    "file": "KEEP",
+    "bytes": 83,
+    "sha256": "57dc876acd3c641395f37f4d3500be9370cdde7dc72ca6b9cc80863006dda4d2"
+  },
+  {
+    "file": "NATIVE-INVENTORY03-ACTUAL-invocation.json",
+    "bytes": 876,
+    "sha256": "8ec5e8a4bfe777133704c3fdec445f9373d0b448ee6678a51ac51f6658a7fae1"
+  },
+  {
+    "file": "NATIVE-INVENTORY03-ACTUAL-native-files.json",
+    "bytes": 3379,
+    "sha256": "db0f08e65a8e8fc647864f35c601ca6a99f8cab87a9bee7bfc1b9e6ad1da6d40"
+  },
+  {
+    "file": "NATIVE-INVENTORY03-ACTUAL-postclose.json",
+    "bytes": 177,
+    "sha256": "34e8aedf5f40fa5b054264e512ed91491759f500e52f82a02e94f946d722922d"
+  },
+  {
+    "file": "NATIVE-INVENTORY03-ACTUAL-stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "NATIVE-INVENTORY03-ACTUAL-stdout.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "file": "SUMMARY.json",
+    "bytes": 1596,
+    "sha256": "50b7f60652e8a518e3460f5702f80c13d19615ba296d85f2618830bcbddbc740"
+  },
+  {
+    "file": "coordinator-result.json",
+    "bytes": 2332,
+    "sha256": "6e538a8abf8cfffd5ad7ff14a7960f4f76e48eef23d45e9496a5de0ab89602d4"
+  },
+  {
+    "file": "inventory.json",
+    "bytes": 1743,
+    "sha256": "007e8b8d4eaf5d290973180c53f353155e626c59d31793a3ded23eec87f9e78c"
+  },
+  {
+    "file": "startup.json",
+    "bytes": 399,
+    "sha256": "0fcf207cd3f9f7de8f5a1169761b525366501568afba4667193e993689c257b0"
+  },
+  {
+    "file": "supervisor-result.json",
+    "bytes": 581,
+    "sha256": "fdfef6f05023483f2dd61813e4bbeb7d91656d13a8426f87221d9fa6c7880927"
+  }
+]
