@@ -3562,6 +3562,19 @@ endif
 $(OBJDIR)/native-reuse/texture_package.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_TWIDDLED_MIPMAP=1
 endif
 
+# TEX_MIP_DADJ=<1..15> (lane mipmap22, render only, default 0 = KOS default 1.00): the PVR "mipmap D adjust" (LOD bias)
+# every compiled polygon / sprite / modifier header carries when its context left KOS's default (PVR_MIPBIAS_NORMAL).
+# 4 = 1.00 (KOS default), 3 = 0.75, 2 = 0.50, 1 = 0.25 (sharper: lower mip levels are chosen later). Only mipmapped
+# textures use it. Link wraps pvr_poly_compile / pvr_sprite_compile / pvr_poly_mod_compile (platform/native_ui.cpp).
+TEX_MIP_DADJ ?= 0
+ifeq ($(filter $(TEX_MIP_DADJ),0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15),)
+$(error TEX_MIP_DADJ must be 0..15)
+endif
+ifneq ($(TEX_MIP_DADJ),0)
+$(OBJDIR)/platform/native_ui.o: PLATFORM_CPPFLAGS += -DRE4DC_TEX_MIP_DADJ=$(TEX_MIP_DADJ)
+GAME_LDFLAGS += -Wl,--wrap=pvr_poly_compile -Wl,--wrap=pvr_sprite_compile -Wl,--wrap=pvr_poly_mod_compile
+endif
+
 # Exact private r11f Mendez/Luis version3 profiles; legacy version2 stays unchanged.
 # Two owned slabs per binding, existing global pressure cap, no spill for these profiles.
 MOTION_BOUNDED_R11F ?= 0

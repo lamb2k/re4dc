@@ -9028,3 +9028,26 @@ extern "C" int re4dc_ui_part_key(const Re4dcModelPart* p,unsigned* crc,unsigned*
     *crc=k.crc;*fnv=k.fnv;return ok?1:0;
 }
 #endif
+
+#if defined(RE4DC_TEX_MIP_DADJ) && RE4DC_TEX_MIP_DADJ
+// TEX_MIP_DADJ (lane mipmap22): replace KOS's default mipmap D adjust in every compiled header (render only).
+extern "C" void __real_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src);
+extern "C" void __real_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src);
+extern "C" void __real_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src);
+extern "C" void __wrap_pvr_poly_compile(pvr_poly_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    pvr_poly_cxt_t c=*src;
+    if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    __real_pvr_poly_compile(dst,&c);
+}
+extern "C" void __wrap_pvr_sprite_compile(pvr_sprite_hdr_t* dst,const pvr_sprite_cxt_t* src) {
+    pvr_sprite_cxt_t c=*src;
+    if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    __real_pvr_sprite_compile(dst,&c);
+}
+extern "C" void __wrap_pvr_poly_mod_compile(pvr_poly_mod_hdr_t* dst,const pvr_poly_cxt_t* src) {
+    pvr_poly_cxt_t c=*src;
+    if(c.txr.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    if(c.txr2.mipmap_bias==PVR_MIPBIAS_NORMAL)c.txr2.mipmap_bias=(pvr_mip_bias_t)RE4DC_TEX_MIP_DADJ;
+    __real_pvr_poly_mod_compile(dst,&c);
+}
+#endif
