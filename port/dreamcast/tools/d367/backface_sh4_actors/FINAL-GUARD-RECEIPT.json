@@ -1,0 +1,41 @@
+{
+  "scope": "Focused final census-tag delta qualification; prior full actor matrix is retained.",
+  "actor_source": "d93b5ee8e9d1a077918193a69010a5bbb29bce8e06307d54125e65e0d0ec559e",
+  "model_bridge_source": "2796499d6927fa4015cbf9b953ba18a99b450d7053730773a267f91c10676839",
+  "prior_matrix": "d6102073be29f305a29599c8f3d95155df7b12a73d3fb83d9b00d4ede17c3994",
+  "final_CPU0_CPU1_preprocess": [
+    {
+      "cpu": 0,
+      "movca": 0,
+      "skin": 0,
+      "preprocessed_sha256": "6ba75d1c2af407325c959baa1dc564ec5d0c08c1150009effefcb0a2e57c3f8b",
+      "matches_prior_compiled_identity_control": true
+    },
+    {
+      "cpu": 1,
+      "movca": 0,
+      "skin": 0,
+      "preprocessed_sha256": "9ec71e0ca4b802ea5e0598070f2c76df5c3d5da55f8130934800bb64e766ab0e",
+      "matches_prior_compiled_identity_control": true
+    },
+    {
+      "cpu": 0,
+      "movca": 1,
+      "skin": 1,
+      "preprocessed_sha256": "d0ba9871a607d68b14e23be13d5e720e9584f4d8245f5e747634a3be02a2f94b",
+      "matches_prior_compiled_identity_control": true
+    },
+    {
+      "cpu": 1,
+      "movca": 1,
+      "skin": 1,
+      "preprocessed_sha256": "779376b31db35a08d9950199e8bf43fcedbead966a6da86fa0a8884d0a42d51a",
+      "matches_prior_compiled_identity_control": true
+    }
+  ],
+  "final_CPU2_trace_object": "83d3ad169a46253705f2bf94bfc9f32ba39cdf9d93df27ebc51c5fa8463b5502",
+  "bridge_diagnostic_guard_is_only_delta": true,
+  "bridge_typed_identity_no_actorwalk": true,
+  "total_object_test_output_bytes": 25040681,
+  "not_full_program_or_target_acceptance": true
+}

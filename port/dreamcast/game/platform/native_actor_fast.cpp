@@ -27,8 +27,13 @@
 //     that palette. Anything that needs pPosBuf/pNrmBuf (the generic path)
 //     first materializes them with the source's own CalcSk1_x.
 #include "include/bfc_class.h"
-#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
-#include "../../room/backface_emit.hpp"  // CPU_BACKFACE (backface.mk)
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+extern "C" unsigned re4dc_backface_model_tag(const void* model);
+#endif
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE == 2
+#include "../../room/backface_sh4.hpp"  // CPU_BACKFACE=2: common SH-4 SQ ABI
+#elif defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#include "../../room/backface_emit.hpp"  // CPU_BACKFACE=1: unchanged C reference
 #endif
 #include "re4dc_screen.h"
 #include "native_actor.hpp"
@@ -2736,7 +2741,13 @@ inline std::uint32_t* emit_sq(std::uint32_t* sq, const pvr_vertex_t* cache, cons
     for (unsigned k = 0; k < n; ++k) {
         std::uint32_t w[8];
         __builtin_memcpy(w, cache + (index[k] & 127u), 32);
+#if RE4DC_ACTOR_MOVCA
+        // MOVCA leaves cache word0 unprimed; hash the command the SQ loop
+        // actually writes, matching CPU_BACKFACE=2's actor trace.
+        w[0] = k + 1 == n ? eol : PVR_CMD_VERTEX;
+#else
         if (k + 1 == n) w[0] = eol;
+#endif
         re4dc_ta_hash(w, 32);
     }
 #endif
@@ -2999,19 +3010,49 @@ struct Part {
         if (direct) one_tap_strip(cache.v, index, n);
 #endif
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#if RE4DC_CPU_BACKFACE == 2
+        if (direct && bf_on()) { bf_send(index, n); return; }
+#else
         if (direct && (p.cull == 1 || p.cull == 2)) { bf_send(index, n); return; }
+#endif
 #endif
         if (direct) { sq = emit_sq(sq, cache.v, index, n); slots += n; return; }
 #endif
         emit(at(), cache.v, index, n); used += n;
     }
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE && RE4DC_ACTOR_DIRECT
+#if RE4DC_CPU_BACKFACE == 2
+    bool bf_on() const {
+        // Generic/source submissions need the same material exclusions as
+        // owned runs. Preserve their original copy/header for these parts.
+        return (p.cull == 1 || p.cull == 2) && !(p.material_flags & 4u) && p.depth_mode == 0;
+    }
+#endif
     // CPU_BACKFACE (lane backface22): only the triangles the ISP keeps (room/backface_emit.hpp); cull-none parts never
     // come here.
     void bf_send(const u8* index, unsigned n) {
+#if RE4DC_CPU_BACKFACE == 2
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+        RE4DC_BFC_SCOPE((re4dc_bfc_class>=3u && re4dc_bfc_class<=5u)?unsigned(re4dc_bfc_class):6u,unsigned(re4dc_bfc_id));
+#endif
+        // An unclipped strip: assembly classifies and emits its kept runs;
+        // mask127 removes the actor EOL bit from every cache lookup.
+        slots += re4dc::bf::strip_sq(cache.v, index, n, 127u, p.cull, sq);
+#else
         slots += re4dc::bf::strip(cache.v, index, n, 127u, p.cull,
                                   [&](const std::uint8_t* i, unsigned c) { sq = emit_sq(sq, cache.v, i, c); });
+#endif
     }
+#if RE4DC_CPU_BACKFACE == 2
+    void bf_whole(const u8* index, unsigned n) {
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+        RE4DC_BFC_SCOPE((re4dc_bfc_class>=3u && re4dc_bfc_class<=5u)?unsigned(re4dc_bfc_class):6u,unsigned(re4dc_bfc_id));
+#endif
+        // One whole-meshlet call retains the assembly index/SQ walk. The
+        // kernel resets strip parity at bit7 EOL (mask0x17f); no C scan.
+        slots += re4dc::bf::stream_sq(cache.v, index, n, p.cull, sq);
+    }
+#endif
 #endif
     // A meshlet with no corner outside, beyond far or in front of near.
     bool fits(unsigned n) const {
@@ -3028,12 +3069,20 @@ struct Part {
             one_tap_meshlet(cache.v, index, count);
 #endif
 #if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#if RE4DC_CPU_BACKFACE == 2
+            if (bf_on()) {
+#else
             if (p.cull == 1 || p.cull == 2) {
+#endif
+#if RE4DC_CPU_BACKFACE == 2
+                bf_whole(index, count);
+#else
                 // the meshlet's strips (bit 7 = the strip's last index), each through the back-face split
                 unsigned a = 0;
                 for (unsigned k = 0; k < count; ++k)
                     if (index[k] & 128u) { bf_send(index + a, k + 1 - a); a = k + 1; }
                 if (a < count) bf_send(index + a, count - a);
+#endif
                 input += triangles; output += triangles;
                 return true;
             }
@@ -4941,6 +4990,12 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #endif
     if (!part || !qualifies(*part)) { ++stats.declined; RE4DC_CENSUS_DEC(part); PXF_EXIT(kDecl); return 0; }
     const Re4dcModelPart& p = *part;
+#if defined(RE4DC_BACKFACE_CENSUS) && RE4DC_BACKFACE_CENSUS
+    // Generic/source replay may occur after the transaction scope ended.
+    // Re-establish its actual actor identity for every subsequent SQ burst.
+    const unsigned bf_tag=re4dc_backface_model_tag(p.model);
+    RE4DC_BFC_SCOPE(bf_tag?bf_tag>>8:unsigned(re4dc_bfc_class),bf_tag?bf_tag&255u:unsigned(re4dc_bfc_id));
+#endif
 #if defined(RE4DC_PROP_PROF) && RE4DC_PROP_PROF
     unsigned long long pxt = pxf::t0;
     PXF_SPAN(q_us, pxt);
