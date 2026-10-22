@@ -17,6 +17,14 @@ def validate_role(profile,mode,seed):
 def input_allowed(cap,disabled,elapsed):
  return not disabled and not (pathlib.Path(cap)/'inputs-disabled.json').exists() and elapsed<40.75
 
+def publish_input_failure(cap,error):
+ cap=pathlib.Path(cap);marker=cap/'input-failure.json'
+ if marker.exists():return
+ payload={'error':str(error),'pulse_telemetry':getattr(error,'pulse_telemetry',None),'scope':'failed qualification; unavailable telemetry is null'}
+ pending=cap/'input-failure.pending'
+ with pending.open('x') as f:json.dump(payload,f)
+ os.replace(pending,marker)
+
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--profile',type=pathlib.Path,required=True);ap.add_argument('--mode',required=True);ap.add_argument('--cap',type=pathlib.Path,required=True);ap.add_argument('--seed',type=pathlib.Path);a=ap.parse_args()
  # No filesystem mutation or subprocess occurs before containment release.
@@ -56,13 +64,13 @@ def main():
   t=[ctypes.c_ulonglong() for _ in range(4)]
   if not observer.k.GetProcessTimes(observer.handle,*[ctypes.byref(x) for x in t]) or t[0].value!=observer.start:raise RuntimeError('input retained start mismatch')
   if t[1].value:
-   if up:return
+   if up:return {'queued':False,'messages':[],'reason':'retained guest already exited'}
    raise RuntimeError('no down to exited guest')
   # Live path rechecked before posts; this retained observer handle cannot target recycled PID.
   path=ctypes.create_unicode_buffer(32768);n=ctypes.c_ulong(len(path))
   if not observer.k.QueryFullProcessImageNameW(observer.handle,0,path,ctypes.byref(n)):
    ended=[ctypes.c_ulonglong() for _ in range(4)]
-   if up and observer.k.GetProcessTimes(observer.handle,*[ctypes.byref(x) for x in ended]) and ended[0].value==observer.start and ended[1].value:return
+   if up and observer.k.GetProcessTimes(observer.handle,*[ctypes.byref(x) for x in ended]) and ended[0].value==observer.start and ended[1].value:return {'queued':False,'messages':[],'reason':'retained guest exited during path query'}
    raise RuntimeError('live input path unavailable')
   if pathlib.Path(path.value).resolve()!=(cap/'flycast.exe').resolve():raise RuntimeError('input path mismatch')
   if not up and not input_allowed(cap,input_disabled or bool(state['errors']) or runner.STOP_REQUESTED,elapsed()):raise RuntimeError('no keydown after disabled/cutoff')
@@ -71,16 +79,25 @@ def main():
   scan,ext=runner.KEYS[key];flags=1|(scan<<16)|(ext<<24)|(((1<<30)|(1<<31)) if up else 0)
   runner.user32.PostMessageW.argtypes=[ctypes.c_void_p,ctypes.c_uint,ctypes.c_size_t,ctypes.c_ssize_t]
   runner.user32.GetWindowThreadProcessId.argtypes=[ctypes.c_void_p,ctypes.POINTER(ctypes.c_ulong)]
-  for hwnd in windows:
-   owner=ctypes.c_ulong()
-   if not runner.user32.GetWindowThreadProcessId(hwnd,ctypes.byref(owner)) or owner.value!=observer.pid:raise RuntimeError('owned HWND changed before input queue')
-   if not runner.user32.PostMessageW(hwnd,0x101 if up else 0x100,runner.VK[key],flags):raise ctypes.WinError(ctypes.get_last_error())
-  state['inputs'].append({'key':key,'up':up,'guest_s':elapsed(),'state':observer.last})
+  native={'queued':False,'messages':[],'pid':observer.pid,'start_filetime':observer.start,'scope':'PostMessageW return interval only; game acknowledgement unavailable'}
+  try:
+   for hwnd in windows:
+    owner=ctypes.c_ulong()
+    if not runner.user32.GetWindowThreadProcessId(hwnd,ctypes.byref(owner)) or owner.value!=observer.pid:raise RuntimeError('owned HWND changed before input queue')
+    before=time.monotonic();queued=runner.user32.PostMessageW(hwnd,0x101 if up else 0x100,runner.VK[key],flags);after=time.monotonic()
+    native['messages'].append({'hwnd':int(hwnd),'before_monotonic':before,'after_monotonic':after,'post_succeeded':bool(queued)})
+    if not queued:raise ctypes.WinError(ctypes.get_last_error())
+   native['queued']=True
+   state['inputs'].append({'key':key,'up':up,'guest_s':elapsed(),'state':observer.last,'native_queue':native})
+  except BaseException as error:error.native_queue_telemetry=native;raise
+  return native
+ failure_lock=threading.Lock()
  def input_failure(error):
   state['errors'].append('input deadline: '+str(error));runner.STOP_REQUESTED=True
   try:
-   with (cap/'input-failure.json').open('x') as f:json.dump({'error':str(error)},f)
-  except FileExistsError:pass
+   # Final name appears only after complete JSON, before outer job termination.
+   # IO is after keyup, separate from the pure independent hardstop thread.
+   with failure_lock:publish_input_failure(cap,error)
   except OSError as marker_error:state['errors'].append('input-failure marker unavailable: '+str(marker_error))
  inputs=load('input_deadlines',P/'input-deadlines.py').Inputs(native_post,elapsed,input_failure)
  def synchronize(forced=False):core.released_events(engine,a.mode,inputs.keys(),inputs.drain(),forced)

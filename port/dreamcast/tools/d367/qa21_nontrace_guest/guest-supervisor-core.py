@@ -51,6 +51,18 @@ def monitor(backend,cmd,after_spawn=None):
    cleanup('input release',release_owned)
   if inner is not None:cleanup('inner wait',lambda:backend.wait(inner))
   if guest is not None:cleanup('guest wait',lambda:backend.wait_guest(guest))
+  def retain_exit_telemetry():
+   reporter=getattr(backend,'final_process_telemetry',None)
+   if reporter is None:
+    result['process_telemetry']={'available':False,'reason':'backend has no retained process telemetry provider'};return
+   try:result['process_telemetry']=reporter()
+   except BaseException as error:
+    result['process_telemetry']={'available':False,'reason':type(error).__name__+': '+str(error)};raise
+   if result['process_telemetry'].get('available'):
+    result['identity']=result['process_telemetry']['identity'];result['actual_guest_seconds']=result['process_telemetry']['actual_guest_seconds']
+    if result['actual_guest_seconds']>ABSOLUTE:raise RuntimeError('final retained process exceeded47.5s')
+  # Diagnostic failures cannot skip cleanup or change a failed run into PASS.
+  cleanup('retained exit telemetry',retain_exit_telemetry)
   job_empty=job is None
   if job is not None:
    def confirm_empty():

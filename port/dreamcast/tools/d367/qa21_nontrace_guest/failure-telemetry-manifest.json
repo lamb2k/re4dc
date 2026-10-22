@@ -1,0 +1,49 @@
+{
+  "scope": "source-only failure-telemetry successor; NOT guest-qualified, original profile/source-manifest intentionally retained and reject changed tools",
+  "utc": "2026-10-22T02:56:22.785048+00:00",
+  "parent": "1bcbc5df33ed2f3b3dfaf376e06416b34f7176bb",
+  "old_reviewed_code": "14996210df933406fc74f23f6df9404e4a5b9f48",
+  "old_profile_sha256": "8aae247a6c0998af06ffce2d16a3832bfaaaf99dbab1769fc75b32b1a2103d1b",
+  "old_tools_sha256": "3557c5224df6b3715d282d3deab5fff7557b1c2ec8273c7d0ea76c1f359a41c1",
+  "unchanged_AST_controls": [
+    "ALL core timing/disk/cap constants",
+    "complete Inputs.down including lease start/timer delay/safety margin",
+    "controller/policies/observer/outer/profile/PLAN source bytes exact"
+  ],
+  "sources": {
+    "input-deadlines.py": {
+      "bytes": 3694,
+      "sha256": "c0f6f02cf3d8456a2fcff6181724e54e0399f41d90de498fea702cf8fdd470d5"
+    },
+    "inner-adapter.py": {
+      "bytes": 14262,
+      "sha256": "3ba5069959532513270ebea34cd06a11055e9a2ae2ba9c4419c1d2b5acc6a15e"
+    },
+    "windows-backend.py": {
+      "bytes": 15331,
+      "sha256": "58a851b9216bb942e15e953951188d3b1105b2955e313a903756da868e2c9b4e"
+    },
+    "guest-supervisor-core.py": {
+      "bytes": 4346,
+      "sha256": "3227d411abf7370901b12f894dd35c33ca2b865f8be3eb88099f324814f87510"
+    },
+    "test-failure-telemetry.py": {
+      "bytes": 8090,
+      "sha256": "9ddb641cc9f076f847721a344d99dadf4915bb58be374f03d41c4b8d41590067"
+    },
+    "run-failure-telemetry-tests.py": {
+      "bytes": 1375,
+      "sha256": "4e5193fb67165a26809d77a6536ed980aefcf5c97b54af5b4b3f6556851c9fcd"
+    }
+  },
+  "receipts": {
+    "failure-telemetry-receipt-linux-20261022T025519891785Z.json": {
+      "bytes": 3073,
+      "sha256": "039cb2fbab4625ca0eb6b93240cc59e10b3c594095b7269dfa1b39730106d6f8"
+    },
+    "failure-telemetry-receipt-windows-20261022T025519788197Z.json": {
+      "bytes": 3183,
+      "sha256": "780b152275bc42a857ac363257b50bf86cf1375c9ecd9333dd25c6f07c9b3591"
+    }
+  }
+}

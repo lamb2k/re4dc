@@ -19,10 +19,18 @@ class Inputs:
  def _up(self,key,reason):
   token=self.held.get(key)
   if token is None:return
-  self.post(key,True);end=self.clock();released=self.elapsed();token['timer'].cancel();del self.held[key]
-  event={'key':key,'reason':reason,'elapsed':released,'queue_hold_upper_seconds':end-token['start'],'bound':token['bound']};self.events.append(event)
+  pulse={'key':key,'reason':reason,'lease_start_monotonic':token['start'],'deadline_monotonic':token['start']+token['bound'],'bound_seconds':token['bound'],'keyup_attempt_monotonic':self.clock(),'keyup_return_monotonic':None,'keyup_queued':None,'queue_hold_upper_seconds':None,'scope':'native queue return; game acknowledgement not inferred'}
+  try:native=self.post(key,True)
+  except BaseException as error:
+   # No keyup return established. Preserve unavailable as null, never zero.
+   pulse['native_keyup']=getattr(error,'native_queue_telemetry',None);error.pulse_telemetry=pulse;raise
+  end=self.clock();pulse.update(keyup_return_monotonic=end,keyup_queued=native.get('queued') if isinstance(native,dict) else None,native_keyup=native,queue_hold_upper_seconds=end-token['start'])
+  try:released=self.elapsed()
+  except BaseException as error:error.pulse_telemetry=pulse;raise
+  token['timer'].cancel();del self.held[key]
+  event={'key':key,'reason':reason,'elapsed':released,'queue_hold_upper_seconds':end-token['start'],'bound':token['bound'],'pulse_telemetry':pulse};self.events.append(event)
   if event['queue_hold_upper_seconds']>token['bound']:
-   error=RuntimeError('native keyup queued after declared pulse bound: '+key);self.fail(error);raise error
+   error=RuntimeError('native keyup queued after declared pulse bound: '+key);error.pulse_telemetry=pulse;self.fail(error);raise error
  def up(self,key):
   with self.lock:self._up(key,'engine-up')
  def expire(self,key,token):

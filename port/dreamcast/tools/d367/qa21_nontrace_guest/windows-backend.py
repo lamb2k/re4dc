@@ -137,6 +137,16 @@ class WindowsBackend:
    if exited<created:raise RuntimeError('invalid process timestamps')
    return (exited-created)/1e7
   now=ctypes.c_ulonglong();self.k.GetSystemTimeAsFileTime(ctypes.byref(now));return max((now.value-created)/1e7,self.clock()-guest['anchor'])
+ def final_process_telemetry(self):
+  guest=self.guest
+  if guest is None:return {'available':False,'reason':'no verified retained guest handle acquired'}
+  identity=self.identity(guest)
+  if identity!=guest['identity']:raise RuntimeError('final telemetry retained identity mismatch')
+  created,exited,kernel,user=self.times(guest['handle'])
+  if created!=identity['start_filetime']:raise RuntimeError('final telemetry retained start changed')
+  if not exited or exited<created or self.k.WaitForSingleObject(guest['handle'],0)!=0:raise RuntimeError('final telemetry guest exit unavailable/unfinalized')
+  code=ctypes.c_ulong();self.checked(self.k.GetExitCodeProcess(guest['handle'],ctypes.byref(code)))
+  return {'available':True,'identity':identity,'creation_filetime':created,'exit_filetime':exited,'kernel_100ns':kernel,'user_100ns':user,'actual_guest_seconds':(exited-created)/1e7,'exit_code':code.value,'source':'retained verified handle after private job stop/waits, before handle closure; pinned live path, signaled exit'}
  def guest_alive(self,guest):
   code=ctypes.c_ulong();self.checked(self.k.GetExitCodeProcess(guest['handle'],ctypes.byref(code)));return code.value==259
  def inner_alive(self,inner):return inner.poll() is None
