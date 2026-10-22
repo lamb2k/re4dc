@@ -1,3 +1,7 @@
+#include "../world_scratch.h"
+#if RE4DC_WORLD_SCRATCH
+extern "C" unsigned re4dc_ps2_mesh_room();
+#endif
 #if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA
 extern "C" volatile unsigned re4dc_vram_arena_class;   // vram_pages.cpp (VRAM_ROOM_ARENA)
 #endif
@@ -4888,6 +4892,10 @@ void room_change_retire(){
 }  // namespace
 #endif
 extern "C" void re4dc_ui_retire_room(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if defined(RE4DC_FX_TEX_POOL) && RE4DC_FX_TEX_POOL
     for(unsigned i=0;i<kTextureCount;++i)fx_pool_pin[i]=false;   // FX_TEX_POOL: the next room fills its own pool
     fx_pool_bytes=0;fx_pool_full=0;
@@ -5354,10 +5362,16 @@ extern "C" void re4dc_ui_begin_skip(){
     stream_aborted=false;stream_model_bytes=0;
 #endif
     nquad=0;model_used=0;frame_ready=false;pace_skip_frame=true;++pace_skipped_frames;
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_begin(re4dc_ps2_mesh_room());
+#endif
     re4dc_prepare_model_assets();
 }
 // Skipped iteration: nothing to present; the previous picture stays. Frame boundary only.
 extern "C" void re4dc_ui_end_frame_skip(){
+#if RE4DC_WORLD_SCRATCH
+    Re4dcWorldScratchFrameEnd scratch_frame_end{&stream_aborted};
+#endif
     re4dc_pcs_frame(frame+pace_skipped_frames);
 }
 #endif
@@ -5581,6 +5595,9 @@ extern "C" void re4dc_ui_begin(){
     if(model_diagnostic==1 && frame%120==0)
         re4dc_log("native model DIAGNOSTIC boundary: frame=%u previous_bytes=%u committed_parts=%u invalid=%u resource=%u overflow=%u presented=%u\n",frame,model_used*32,model_parts,model_invalid,model_resource,model_overflow,model_presented);
     nquad=0;model_used=0;++frame;
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_begin(re4dc_ps2_mesh_room());
+#endif
 #if RE4DC_TEX_CHECK
     texchk::frame_sweep();
 #endif
@@ -6040,6 +6057,9 @@ extern "C" void re4dc_ui_present(){
 }
 
 extern "C" void re4dc_ui_end_frame(int present){
+#if RE4DC_WORLD_SCRATCH
+    Re4dcWorldScratchFrameEnd scratch_frame_end{&stream_aborted};
+#endif
 #if defined(RE4DC_FX_CORE_TEX_PREP) && RE4DC_FX_CORE_TEX_PREP
     fxCoreFinish();
 #endif
@@ -6052,6 +6072,9 @@ extern "C" void re4dc_ui_end_frame(int present){
 #endif
     re4dc_model_draw_plan_frame(frame);
 #if RE4DC_PVR_STREAM
+#if RE4DC_WORLD_SCRATCH
+    if(!frame_ready || stream_aborted)re4dc_world_scratch_cancel();
+#endif
     if(!frame_ready)return;
 #if RE4DC_ROUTE_MOVIES
     const bool movie_shown=movie_texture && movie_picture;
@@ -6605,6 +6628,10 @@ extern "C" unsigned re4dc_model_input_count(){return model_input;}  // ENC_CENSU
 
 extern "C" int re4dc_model_packet_streaming(){return RE4DC_PVR_STREAM;}
 extern "C" void re4dc_model_packet_abort(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if RE4DC_PVR_STREAM
     RE4DC_WHD_ABORT(2,__builtin_return_address(0),0);
     // Previous chunks may already be in TA. Never present an incomplete model:
@@ -8825,6 +8852,9 @@ extern "C" int re4dc_ui_movie_cabin_complete(unsigned generation,const void* tex
     if(draining_parts)return 0;
     reset_deferred();source_draws_finished=true;
 #endif
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_cancel();
+#endif
     re4dc_ps2_world_movie_discard();stream_aborted=true;
 #if RE4DC_PVR_STREAM
     if(stream_scene)stream_close(false);
@@ -8862,6 +8892,9 @@ extern "C" int re4dc_ui_movie_handoff_ready(){
     if(draining_parts)return 0; // executing readers cannot be discarded
     reset_deferred();source_draws_finished=true;
 #endif
+#if RE4DC_WORLD_SCRATCH
+    re4dc_world_scratch_cancel();
+#endif
     re4dc_ps2_world_movie_discard();stream_aborted=true;
 #if RE4DC_PVR_STREAM
     if(stream_scene)stream_close(false);
@@ -8886,6 +8919,10 @@ extern "C" int re4dc_ui_movie_handoff_ready(){
 #endif
 #if RE4DC_ROUTE_MOVIES
 extern "C" int re4dc_ui_movie_open(unsigned width,unsigned height){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if RE4DC_CABIN_SOURCE
     MovieCabinUiScope owner;if(!owner.held || movie_cabin_ui_epoch==~0u)return 0;
 #endif
@@ -8922,6 +8959,10 @@ extern "C" int re4dc_ui_movie_open(unsigned width,unsigned height){
 }
 // The previous scene must have finished sampling the texture before rows change.
 extern "C" int re4dc_ui_movie_upload_begin(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
     if(!movie_texture)return 0;
 #if RE4DC_PVR_STREAM
     // A movie-owned presentation interrupts a source frame: its open (hidden
@@ -8999,6 +9040,10 @@ extern "C" int re4dc_ui_movie_present_now(){
 // own frames, under their UI quads (the action prompt), until switched off.
 extern "C" void re4dc_ui_movie_background(int on){movie_background=on!=0;}
 extern "C" int re4dc_ui_movie_close(){
+#if RE4DC_WORLD_SCRATCH
+    // Close admission immediately; the final synchronous borrower restores mode.
+    re4dc_world_scratch_cancel();
+#endif
 #if RE4DC_CABIN_SOURCE
     MovieCabinUiScope owner;if(!owner.held)return 0;
 #endif
