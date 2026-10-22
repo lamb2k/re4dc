@@ -19,6 +19,9 @@
 #include "re4dc_platform.h"
 #if defined(RE4DC_CRASH_OVL_LINE) && RE4DC_CRASH_OVL_LINE
 extern "C" int re4dc_ovl_crash_line(char* out, int size);   // modules.cpp
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+extern "C" int re4dc_vram_ring_line(unsigned age, char* out, unsigned size);   // vram_pages.cpp (OVL_GUARD=3)
+#endif
 #endif
 #if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
 #include "issue52_actor_diag.h"
@@ -44,7 +47,10 @@ extern "C" int pvr_present_pending(void) __attribute__((weak));
 #if RE4DC_PVR_LATCH
 extern "C" int re4dc_pvr_latch_line(unsigned which, char* out, unsigned size) __attribute__((weak));  /* native_ui.cpp */ extern "C" void re4dc_pvr_ready_test_arm(int slices) __attribute__((weak));  // PVR_READY_STRICT; one line: keeps __LINE__
 #endif
-static const unsigned kLogSize = 0x10000;  // mem.cpp RE4DC_LOG_SIZE
+#ifndef RE4DC_LOG_TRIM
+#define RE4DC_LOG_TRIM 0
+#endif
+static const unsigned kLogSize = 0x10000 - RE4DC_LOG_TRIM;  // mem.cpp RE4DC_LOG_SIZE
 
 #if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
 struct Issue52ActorSnapshot {
@@ -358,6 +364,12 @@ void show(const char* kind, const char* detail, bool wait_render)
         char ol[192];
         if (re4dc_ovl_crash_line(ol, sizeof(ol)))
             for (int k = 0; ol[k] && row < 40; k += 52) { snprintf(line, 53, "%s", ol + k); put_text(0, row++, line, 0x07FF); }
+    }
+#endif
+#if defined(RE4DC_ARENA_RING) && RE4DC_ARENA_RING
+    {
+        for (unsigned age = 0; age < 12 && row < 40; ++age)
+            if (re4dc_vram_ring_line(age, line, 53)) put_text(0, row++, line, 0xF81F);
     }
 #endif
 #if defined(RE4DC_ISSUE52_ACTOR_DIAG) && RE4DC_ISSUE52_ACTOR_DIAG
