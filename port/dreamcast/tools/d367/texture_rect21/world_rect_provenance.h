@@ -3,7 +3,7 @@
 
 // Scoped36 policy/source provenance, never physical file integrity.
 // Call only AFTER MeshPackage::adopt(...,true,true) and the genuine R4PW
-// CRC/record validation. The four immutable full-file certificates come from
+// CRC/record validation. The three immutable full-file certificates come from
 // 164 key-only remaps (160 OP,4 VA); all geometry/placements/pass/cull remain
 // exact and the 36 RGB565 replacements have opaque alpha at every mip level.
 // This does not certify filtered RGB appearance, final draws or performance.
@@ -17,7 +17,7 @@ struct Certificate {
 inline constexpr Certificate certificates[] = {
 #include "provenance_certificates.inc"
 };
-static_assert(sizeof(certificates)/sizeof(certificates[0])==4U);
+static_assert(sizeof(certificates)/sizeof(certificates[0])==3U);
 inline std::uint32_t word(const unsigned char* b) {
     return std::uint32_t(b[0])|(std::uint32_t(b[1])<<8)|
            (std::uint32_t(b[2])<<16)|(std::uint32_t(b[3])<<24);

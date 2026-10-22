@@ -84,7 +84,7 @@ def compact(blob, *, enabled=False):
     h, t = list(native.header), list(native.texture)
     t[3], t[5], t[7], h[7] = fmt, len(payload), tpl.PAYLOAD_VQ, len(payload)
     body = tpl.TEXTURE.pack(*t) + payload
-    h[8] = zlib.crc32(body if native.crc_rule == "header" else payload) & 0xffffffff
+    h[8] = zlib.crc32(body) & 0xffffffff
     result = tpl.HEADER.pack(*h) + body
     checked = vq.read_native_vq(result)
     if reader.decode_level(native, native.size) != vq.decode_level(checked, checked.size):

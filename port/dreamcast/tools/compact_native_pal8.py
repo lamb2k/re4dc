@@ -90,7 +90,7 @@ def compact(blob,*,enabled=False):
     payload=bytes(lookup[w] for w in words)+struct.pack('<256H',*palette)
     h,t=list(source.header),list(source.texture);t[3],t[5],h[7]=FORMAT_PAL8_ARGB4444,len(payload),len(payload)
     body=tpl.TEXTURE.pack(*t)+payload
-    h[8]=zlib.crc32(body if source.crc_rule=='header' else payload)&0xffffffff
+    h[8]=zlib.crc32(body)&0xffffffff
     result=tpl.HEADER.pack(*h)+body;checked=read_native_pal8(result)
     levels=range(source.size.bit_length()) if source.mipmapped else [source.size.bit_length()-1]
     for i in levels:

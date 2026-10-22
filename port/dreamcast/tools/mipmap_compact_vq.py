@@ -140,7 +140,7 @@ def add_mipmaps(base_blob, reference_blob, *, enabled=False, engine="auto"):
     h,t=list(base.header),list(base.texture)
     t[5],t[6],h[7]=len(payload),t[6]|tpl.FLAG_MIPMAP,len(payload)
     body=tpl.TEXTURE.pack(*t)+payload
-    h[8]=zlib.crc32(body if base.crc_rule=="header" else payload)&0xffffffff
+    h[8]=zlib.crc32(body)&0xffffffff
     result=tpl.HEADER.pack(*h)+body
     checked=vq.read_native_vq(result)
     if checked.base_indices != base.base_indices or any(

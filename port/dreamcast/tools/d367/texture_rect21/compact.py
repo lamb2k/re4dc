@@ -19,7 +19,7 @@ def shorter_square(blob,source_pixels,*,enabled=False):
  feature=[mip._feature(tuple(source_pixels[i:i+4])) for i in range(0,len(source_pixels),4)]
  target=[tuple((feature[y*w+2*x][c]+feature[y*w+2*x+1][c]+1)//2 for c in range(4)) for y in range(hh) for x in range(hh)]
  words=struct.unpack('<1024H',payload[:2048]);book=[tuple(c for j in range(i,i+4) for c in mip._feature(mip.rgba(words[j],0))) for i in range(0,1024,4)]
- indices,_=mip._encode_level(target,hh,book,'python');p=payload[:2048]+indices;t[1]=t[2]=hh;t[5]=len(p);h[7]=len(p);body=tpl.TEXTURE.pack(*t)+p;h[8]=zlib.crc32(body if rule=='header' else p)&0xffffffff
+ indices,_=mip._encode_level(target,hh,book,'python');p=payload[:2048]+indices;t[1]=t[2]=hh;t[5]=len(p);h[7]=len(p);body=tpl.TEXTURE.pack(*t)+p;h[8]=zlib.crc32(body)&0xffffffff
  return tpl.HEADER.pack(*h)+body
 
 def main():
