@@ -1,0 +1,11 @@
+# Controlled013: continue the original radio to its actual return
+
+Controlled012 entered native room204 and executed the original Salazar/Leon radio. Fresh type20 backing-open, portrait animation and later English subtitle captures establish execution. It remained active at the bounded close. Exact actual state64a178245be5dd8b9dbb14ec1a4f4da0e8be08b3d5041e8c6b0388ab0b809436 has source2750, chapter7/room204, RSF81000000 and the ongoing radio. Preserve012, authentic127/294, the actual009 VMU and prior011 seed unchanged.
+
+The source-only013 method restores this exact012 full state, programme, media and VMU. Existing nativepad011 entries are already delivered. No new inputs, rearm, teleport, HP/AI/RSF edits or event completion flags are supplied. AutoLoadState=yes is explicit. Required actual argv paths must be in the hash pin map; seed012 state and VMU are checked again after the run.
+
+This resumes an existing event. Restored ring-log fragments may include012's radio-open lines, and RSF7 is already set; neither counts as new execution or completion. The012 log has no backing-close line. The observer records any new close line, including MISMATCH, as diagnostics only. Completion requires a new close reporting the expected15e45996 hash and ok, then original event return, Stop restoration, advancing post-return source frames and an inspected gameplay capture. Compare frame progression after return, rather than against a paused codec counter. Voice playback, subtitle synchronization and physical-console acceptance remain separate.
+
+Optional captures show the continued radio, context after a close and the deadline. They do not create acceptance automatically. A captured world with a held Stop flag, a black/loading capture or RSF7 alone remains partial. If the original call is still ongoing at the deadline, preserve its real continuation without a skip.
+
+Bounds remain V5exact7aa4113d,41s raw,39s normal close,47.5s absolute,60MiB capture, global16/castle2,20,342,374,400-byte start admission and19,394,461,696-byte runtime floor. The existing frozen PVR fallback and source namespace are unchanged. Default wrapper execution validates pins/syntax only;013 has no guest allocation until root validates the concrete launch request.
