@@ -48,6 +48,36 @@ class Gate(unittest.TestCase):
         self.assertFalse(n.mipmapped)
         self.assertEqual((n.codebook, n.base_indices), (vq.read_native_vq(blob).codebook, vq.read_native_vq(blob).base_indices))
 
+    def test_vq_colour_error_only_at_2x2_and_1x1_is_held(self):
+        # 4x4 and larger pass, the final levels are wrong: they must still hold the texture
+        # flat grey 16x16 chain whose 2x2 and 1x1 levels select a black vector
+        words = [tpl._pack_565((128, 128, 128, 255))] * 4 + [0x0000] * 4 + [0xffff] * 4 * 254
+        side = 16
+        payload_book = struct.pack("<1024H", *words)
+        def idx(s, v): return bytes([v]) * max(1, (s // 2) ** 2) if s > 1 else bytes([v])
+        base = idx(16, 0)
+        chain = payload_book + b"".join(idx(1 << i, 0 if (1 << i) >= 4 else 1) for i in range(5))
+        # 1x1/2x2 levels select vector 1 (black) while the texture is grey
+        t = tpl.TEXTURE.pack(b"tiny", side, side, 0, 144, len(chain), tpl.FLAG_MIPMAP, 2, 0)
+        crc = zlib.crc32(t + chain) & 0xffffffff
+        blob = tpl.HEADER.pack(tpl.MAGIC, 2, 48, 96, 1, 48, 144, len(chain), crc, 1, 0) + t + chain
+        nat = vq.read_native_vq(blob)
+        self.assertEqual(vq.decode_level(nat, 4)[0][:3], (vq.rgba(words[0], 0)[:3]))
+        _, row, held = mq.audit(((9, 9), blob))
+        big = [l for l in row["levels"] if l["side"] >= 4]
+        self.assertTrue(all(l["mean_shift"] <= mq.MEAN_SHIFT for l in big))
+        self.assertIn("vq-colour", row["reasons"])
+        self.assertIsNotNone(held)
+
+    def test_tiny_alpha_levels_follow_the_4x4_majority(self):
+        on, off = tpl._pack_1555((255, 255, 255, 255)), tpl._pack_1555((0, 0, 0, 0))
+        words = [on if x < 12 else off for y in range(16) for x in range(16)]   # 75 % opaque, columns
+        blob, _ = tw.add_mipmaps(from_words(words, 16, fmt=1), enabled=True)
+        _, row, _ = mq.audit(((1, 1), blob))
+        tiny = {l["side"]: l["coverage"] for l in row["levels"] if l["side"] < 4}
+        self.assertEqual(tiny[1] >= 0.5, [l for l in row["levels"] if l["side"] == 4][0]["coverage"] >= 0.5)
+        self.assertEqual("coverage-tiny" in row["reasons"], False)
+
     def test_scoped_rows_of_held_keys_are_rebound(self):
         blob, _ = vq.add_mipmaps(vq_blocks(), enabled=True, engine="python")
         _, _, held = mq.audit(((3, 4), blob))
