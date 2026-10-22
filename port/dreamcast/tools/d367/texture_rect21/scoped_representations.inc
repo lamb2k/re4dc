@@ -17,7 +17,7 @@
 {0xb0b27473U,0xdcca4ceaU,128U,64U,{64U,64U,0U,4U,2U,3414U,0x691e9ca0U},1.0f,1.0f},
 {0x46df6ca6U,0x30ee4810U,128U,64U,{64U,64U,0U,4U,2U,3414U,0xa8db9c9dU},1.0f,1.0f},
 
-// PROPOSED r101 nine. Not installed in the active guarded table.
+// Integrated r101 nine; the enclosing WORLD_RECT21 guard defaults to zero.
 {0xab653026U,0xdd5cfb69U,256U,128U,{128U,128U,0U,4U,2U,7510U,0x2fdf637cU},1.0f,1.0f},
 {0x9b205508U,0x9a73642aU,256U,128U,{128U,128U,0U,4U,2U,7510U,0x7b8bc1bdU},1.0f,1.0f},
 {0x56a67b18U,0xf1b19d85U,256U,128U,{128U,128U,0U,4U,2U,7510U,0x7edbcc93U},1.0f,1.0f},

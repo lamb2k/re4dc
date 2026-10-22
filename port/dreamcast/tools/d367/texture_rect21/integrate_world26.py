@@ -28,7 +28,8 @@ OUT.mkdir()
 for name in paths: shutil.copyfile(RECT/name,OUT/('before-'+name))
 for name,addition in [('scoped_representations.inc','proposed_representations.inc'),('provenance_certificates.inc','proposed_provenance_certificate.inc')]:
  original = (RECT/name).read_bytes()
- (RECT/name).write_bytes(original + b'\n' + (DELTA/addition).read_bytes())
+ extra = (DELTA/addition).read_bytes().replace(b'// PROPOSED r101 nine. Not installed in the active guarded table.', b'// Integrated r101 nine; the enclosing WORLD_RECT21 guard defaults to zero.')
+ (RECT/name).write_bytes(original + b'\n' + extra)
 p = RECT/'world_rect_provenance.h'
 text = p.read_text()
 needle = 'static_assert(sizeof(certificates)/sizeof(certificates[0])==2U);'

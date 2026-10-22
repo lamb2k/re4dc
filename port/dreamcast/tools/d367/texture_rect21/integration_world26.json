@@ -11,7 +11,7 @@
     "world_rect_bind.h": "8feabe767fbf77428e0f414a22150c4dfa582cba5221a418aa6a80fd174cd072"
   },
   "after": {
-    "scoped_representations.inc": "1ccf419d3ec3ae697228e56596c2d57ad7c36cfe2c8bd9389eb2322ff6c558f8",
+    "scoped_representations.inc": "3fb4c49068ee7deb04c124bc02d80100e7bb6b59ac12215ff13db0b0d968d49e",
     "provenance_certificates.inc": "a6b1f5d498adc22e16948955cc19d649f7601edfe055f566369acf93b2010a97",
     "world_rect_provenance.h": "8cb7c4209b1ee0cd4d001c04b04364c4e9c8823c88072a1aad1fa6cd7155e6f2",
     "world_rect_bind.h": "8feabe767fbf77428e0f414a22150c4dfa582cba5221a418aa6a80fd174cd072"
@@ -45,5 +45,6 @@
     "No new SH4 object or linked programme",
     "No materialized combined pack or image",
     "No new Flycast mipmap qualification or look/performance/release/hardware acceptance"
-  ]
+  ],
+  "integration_comment": "Installed experimental rows; default-off guard unchanged"
 }
