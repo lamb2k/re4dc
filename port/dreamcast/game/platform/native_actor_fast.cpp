@@ -88,6 +88,7 @@ void re4dc_ganlit_fill_set(unsigned percent) {
 #endif
 
 #include "actor_lifetime.h"
+#include "include/actor_visibility23.h"
 #ifndef RE4DC_ACTOR_LOG
 #define RE4DC_ACTOR_LOG 0
 #endif
@@ -1636,6 +1637,47 @@ const float* position_matrix(Frame& f, unsigned i, float* fallback) {
     if (!f.skin_ready[i]) { skin_position_matrix(f, i, m); f.skin_ready[i] = 1; }
     return m;
 }
+
+#if RE4DC_ACTOR_VISIBILITY23
+// Synchronous pre-position test. Level0 bounds include all selected-LOD records.
+static bool section_wall23(const Re4dcModelPart& p,Frame& f,const BlobHeader* blob,
+                          const MeshletInfo& m,const Records& records,unsigned mi,unsigned nv,unsigned nt) {
+    auto& st=*const_cast<Re4dcActorVisibility23Stats*>(re4dc_actor_visibility23_stats());
+    if(!re4dc_actor_visibility23_mode)return false;
+    ++st.queries;
+    unsigned fpscr=0;
+#if defined(__sh__)
+    __asm__ volatile("sts fpscr,%0":"=r"(fpscr));
+#endif
+    if(!shz_bounds_mode_supported(fpscr)){++st.numeric_draw;return false;}
+    // First cohort: owned immutable skeletal positions, opaque depth-writing,
+    // one-sided body/head parts only. Alpha, masks and attachments draw.
+    if(p.blend || (p.material_flags&4U) || p.alpha_state!=255 || p.mask.pixels || (p.cull!=1&&p.cull!=2) ||
+       f.mode!=kSkin || !owned_submission || f.position_stride!=8 || !f.palette ||
+       p.depth_mode!=0) {++st.material_draw;return false;}
+    float view[12];const unsigned epoch=re4dc_actor_visibility23_view(view,p.model,p.info);
+    if(!epoch){++st.identity_draw;return false;}
+    actor_visibility23::Key key{f.positions,blob,records.r,epoch,f.position_count,p.stream_bytes,
+                               (unsigned short)mi,(unsigned short)m.n.vertices(),
+                               (unsigned char)f.position_stride,(unsigned char)records.stride};
+    unsigned n=0;const auto* groups=actor_visibility23::acquire(key,&n);
+    if(!groups)return false;
+    for(unsigned g=0;g<n;g++) {
+        if(groups[g].palette>=f.palette_entries){++st.identity_draw;return false;}
+        alignas(8) float fallback[16];const float* matrix=position_matrix(f,groups[g].palette,fallback);
+        for(unsigned j=0;j<16;j++){shz_interval_t t;if(!shz_bounds_point(matrix[j],&t)){++st.numeric_draw;return false;}}
+    }
+    float lo[3],hi[3];
+    if(!actor_visibility23::camera_bounds(groups,n,f.palette,f.palette_entries,f.q,p.modelview,view,p.projection,p.viewport,f.near_distance,f.far_distance,lo,hi)) {
+        ++st.numeric_draw;return false;
+    }
+    ++st.wall_tests;
+    if(!re4dc_actor_visibility23_wall(p.model,lo,hi))return false;
+    ++st.hidden_sections;
+    if(re4dc_actor_visibility23_mode!=2)return false;
+    st.positions_avoided+=nv;st.triangles_avoided+=nt;return true;
+}
+#endif
 
 // ---------------------------------------------------------------- lights --
 // The source-selected GX lights folded into <=3 directional lights in the
@@ -4025,6 +4067,9 @@ BakeUse bake_prepare(Part& e, const Lights& L, const BlobHeader& b, unsigned rs,
             if (prop) { ++stats.bake_scaled; return kBakeScaled; }
         }
     }
+    #if RE4DC_ACTOR_VISIBILITY23
+    re4dc_actor_visibility23_reset();
+#endif
     Re4dcActorStreamMutation mutation(&b,e.p.stream_bytes);
     // Rebake: light every level-0 record into its colour field.
     const auto* table = reinterpret_cast<const MeshletInfo*>(base + sizeof(BlobHeader));
@@ -4331,6 +4376,9 @@ bool qualifies(const Re4dcModelPart& p) {
 }
 
 const BlobHeader* convert(const Re4dcModelPart& p) {
+#if RE4DC_ACTOR_VISIBILITY23
+    re4dc_actor_visibility23_reset();
+#endif
     SortSource sort;
     Re4dcActorSource src{};
     if (re4dc_actor_model_source(p.info, &src) && src.positions && src.position_count == p.position_count) {
@@ -4367,7 +4415,10 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
             if (kLodBuild && opaque && lod_budget_frame) out[2] |= kLodPending;  // levels: relod()
             unsigned size = c.bytes();
             if (prelit_candidate(p)) size = add_bake_field(out, size, p.stream_bytes);
-            Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
+            #if RE4DC_ACTOR_VISIBILITY23
+    re4dc_actor_visibility23_reset();
+#endif
+    Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
             std::memcpy(const_cast<u8*>(p.stream), out, size);
             ++stats.conversions;
             if (c.level_count()) ++stats.lod_parts;
@@ -4406,6 +4457,9 @@ const BlobHeader* convert(const Re4dcModelPart& p) {
 // The triangle set is unchanged. Tried once, on a frame with enough
 // workspace and budget left; on failure the part stays at level 0.
 void relod(const Re4dcModelPart& p, bool crowd_part) {
+#if RE4DC_ACTOR_VISIBILITY23
+    re4dc_actor_visibility23_reset();
+#endif
     lod_wanted = true;
     if (workspace_bytes < kLodMinWorkspace) return;
     u8* stream = const_cast<u8*>(p.stream);
@@ -4422,12 +4476,18 @@ void relod(const Re4dcModelPart& p, bool crowd_part) {
     // such build is ~20 hw ms in a single frame, the first time a gun, arm or Ganado part is drawn); it stays at
     // level 0, full detail.
     if (triangles > RE4DC_ACTOR_LOD_PART_MAX) {
-        Re4dcActorStreamMutation mutation(p.stream, p.stream_bytes);
+        #if RE4DC_ACTOR_VISIBILITY23
+    re4dc_actor_visibility23_reset();
+#endif
+    Re4dcActorStreamMutation mutation(p.stream, p.stream_bytes);
         stream[2] &= u8(~kLodPending);
         return;
     }
 #endif
     if (triangles >= kLodMinTriangles && !lod_take(triangles)) return;
+    #if RE4DC_ACTOR_VISIBILITY23
+    re4dc_actor_visibility23_reset();
+#endif
     Re4dcActorStreamMutation mutation(p.stream,p.stream_bytes);
     stream[2] &= u8(~kLodPending);
     if (triangles < kLodMinTriangles) return;
@@ -5316,6 +5376,9 @@ extern "C" int re4dc_actor_submit(const Re4dcModelPart* part) {
 #if RE4DC_ACTOR_CENSUS
         if (census_cur) { census_cur->nv += nv; census_cur->nt += nt; census_cur->lvl += level; }
 #endif
+#if RE4DC_ACTOR_VISIBILITY23
+        if(section_wall23(p,f,blob,m,r,mi,nv,nt)){++stats.meshlets_culled;e.input+=nt;continue;}
+#endif
         unsigned all, any;
 #if defined(RE4DC_CHAR_CHUNK) && RE4DC_CHAR_CHUNK
         chunk_positions(e, r, nv, k, s16_uv, all, any);
@@ -5946,6 +6009,9 @@ int one_chunk(Re4dcModelPart& p, OneWindow& w) {
         const u8* index = lists + (lt ? lt[mi].index : m.index);
         ++stats.meshlets; stats.vertices += nv; stats.corners += ni; stats.triangles += nt;
         if (kCrowd) stats.crowd_triangles[tier] += nt;
+#if RE4DC_ACTOR_VISIBILITY23
+        if(section_wall23(p,f,blob,m,r,mi,nv,nt)){++stats.meshlets_culled;e.input+=nt;continue;}
+#endif
         unsigned all, any;
         APROF_COUNT(APROF_N_VERTS, nv); APROF_COUNT(APROF_N_MESHLETS, 1);
         APROF_SPAN(aprof_pos, APROF_POS);

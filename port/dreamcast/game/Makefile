@@ -3319,3 +3319,5 @@ endif
 include bench.mk
 # QA_MENU=1: the tester QA disc menu (qamenu.mk; default 0: nothing compiled, image unchanged)
 include qamenu.mk
+
+include actor_visibility23.mk

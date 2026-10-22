@@ -16,6 +16,10 @@ extern "C" int re4dc_actor_owned_live();               // coarse_actor_transacti
 extern "C" unsigned re4dc_ui_frame();
 extern "C" void re4dc_actor_immutable_chunk_reset(unsigned asset_id);  // coarse_actor_geometry_once.inc
 #endif
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+namespace re4dc_material { namespace life {extern unsigned epoch;extern bool exhausted;} }
+extern "C" unsigned re4dc_actor_visibility23_epoch(){return re4dc_material::life::exhausted?0:re4dc_material::life::epoch;}
+#endif
 namespace {
 #if RE4DC_ACTOR_GANADO_PS2_STUMP
 namespace ganado_var { int find(unsigned app,unsigned role,unsigned bin); }  // below: the package variant of a source BIN
@@ -928,6 +932,31 @@ static inline bool invis_trans_active() { return re4dc_ps2_interior_trans_active
 static inline bool invis_wall_hidden(const float*, const float*) { return false; }
 #else
 static inline bool invis_wall_hidden(const float*, const float*) { return false; }
+#endif
+#if defined(RE4DC_ACTOR_VISIBILITY23) && RE4DC_ACTOR_VISIBILITY23
+// Same current opaque static-world proof as the whole-actor path. These
+// functions borrow the source owner/view synchronously; no queued pointer.
+extern "C" unsigned re4dc_actor_visibility23_epoch();
+extern "C" unsigned re4dc_actor_visibility23_view(float view[12],const void* owner,const void* info) {
+#if defined(RE4DC_ENEMY_VIS_CULL) && RE4DC_ENEMY_VIS_CULL
+    const auto* m=static_cast<const cModel*>(owner);
+    if(!m || !((m->id>=0x10&&m->id<=0x20)||m->id==0x2b) ||
+       !invis_view.ok || invis_view.fog<0 || !re4dc_room_vis_active())return 0;
+    // Only first two immutable body/head ModelInfos, never extra gear/hands.
+    const auto* first=m->pModelInfo;
+    if(!first || (info!=first && info!=first->pList))return 0;
+    const float origin[3]={m->pos.x,m->pos.y,m->pos.z};
+    if(invis_near_actor(re4dc_vis_pl,origin,origin)||invis_near_actor(re4dc_vis_sub,origin,origin))return 0;
+    std::memcpy(view,&pG->Cam.v_mat[0][0],48);
+    return re4dc_actor_visibility23_epoch();
+#else
+    (void)view;(void)owner;(void)info;return 0;
+#endif
+}
+extern "C" int re4dc_actor_visibility23_wall(const void* owner,const float lo[3],const float hi[3]) {
+    float view[12];if(!re4dc_actor_visibility23_view(view,owner,static_cast<const cModel*>(owner)->pModelInfo))return 0;
+    return invis_wall_hidden(lo,hi)?1:0;
+}
 #endif
 static inline void invis_acc(float* lo, float* hi, const float* w, float rho) {
     for (unsigned a = 0; a < 3; ++a) { if (w[a] - rho < lo[a]) lo[a] = w[a] - rho; if (w[a] + rho > hi[a]) hi[a] = w[a] + rho; }
