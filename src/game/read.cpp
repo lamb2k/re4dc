@@ -585,6 +585,27 @@ int readEmData(ReadModule* m, int id, void* addr, u32 size)
     if (pG->Rno0 == 2) {
         mode = 0x100;
     }
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+    // EM_READ_RETRY (issue #52, default 1): a failed enemy module read (no free DVD queue slot, a GD read error or
+    // a cancelled request; seen on GDEMU, never on Flycast) is issued again after a short sleep instead of
+    // returning 0, which made EmCreate / EmSetFromList2 return NULL to room events that dereference it (r10c
+    // dam first villager: FAULT 0e0 on the NULL enemy's vptr). A read that succeeds first time is unchanged.
+    int tries = 0;
+retry:
+#endif
+#if defined(RE4DC_EM_READ_FAIL_INJECT) && RE4DC_EM_READ_FAIL_INJECT
+    // EM_READ_FAIL_INJECT=N (test only, issue #52 proof): in r10c the enemy reads fail N times in a row (as a
+    // console read error would; N >= 99: every time) without touching the disc.
+    {
+        static int injected;
+
+        if (pG->room_id == 0x10C && (RE4DC_EM_READ_FAIL_INJECT >= 99 || injected < RE4DC_EM_READ_FAIL_INJECT)) {
+            injected++;
+            req = -3;
+            goto issued;
+        }
+    }
+#endif
     if (addr == NULL) {
 #line 725 "D:/Bio4/Prog/read.cpp"
         req = DVD_READ_N(name, NULL, 0, 0, 0, mode | 0x8004);
@@ -592,8 +613,28 @@ int readEmData(ReadModule* m, int id, void* addr, u32 size)
 #line 728 "D:/Bio4/Prog/read.cpp"
         req = DVD_READ_N(name, addr, 0, 0, 0, mode | 0x8000);
     }
+#if defined(RE4DC_EM_READ_FAIL_INJECT) && RE4DC_EM_READ_FAIL_INJECT
+issued:
+#endif
     while ((ret = Dvd.ReadCheckInfo(req, &info)) != 1) {
         if (ret < 0) {
+#if defined(RE4DC_EM_READ_RETRY) && RE4DC_EM_READ_RETRY
+            if (++tries <= 8) {
+                int k;
+
+                OSReport("readEmData: %s read failed (%d), retry %d\n", name, ret, tries);
+                for (k = 0; k < 4 * tries; k++) {
+                    if (SceSys.checkCTaskRange() == 1) {
+                        SceSys.x73 = 1;
+                        SceSleep(1);
+                        SceSys.x73 = 0;
+                    } else {
+                        TaskSleep(1);
+                    }
+                }
+                goto retry;
+            }
+#endif
             pLog->err(0, 0, "readEmData(): error! %s", name);
             return 0;
         }
