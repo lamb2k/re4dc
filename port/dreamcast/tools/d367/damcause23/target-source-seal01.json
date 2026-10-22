@@ -1,0 +1,64 @@
+{
+  "source_sha": "543c55f17dbd437e3453434224dea337725ebb73",
+  "paths": [
+    {
+      "path": "src/game/em_set.cpp",
+      "sha256": "ee690c7b74f42589a293e9b0a3a81718fe09578429d9bea0d90ab2742566d667",
+      "git_blob": "64ba7ab15bb91b3cdb9af0b0e022805436b906a3"
+    },
+    {
+      "path": "src/game/em.cpp",
+      "sha256": "c286c701c8374275abf2df37f69379069e50094c1f0d6572a5408fc508e556a8",
+      "git_blob": "40fc95633df707c358ac52af2f40e90527d9348b"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "sha256": "fd3c97658d17ac91661bdc59545c1c6e81e6fb63f11822b2b603de37af35c1c6",
+      "git_blob": "c6dcca32962131c2074548e8b48fb89646690451"
+    },
+    {
+      "path": "port/dreamcast/game/platform/include/issue52_actor_diag.h",
+      "sha256": "97585b2e172ef28f63b7d2fd6f450fabf054d9b373f8f2ecd7646363aaa45b52",
+      "git_blob": "c3374ca8ce7d8dba6af611f42297e45d0423d9f9"
+    },
+    {
+      "path": "port/dreamcast/game/platform/crash_screen.cpp",
+      "sha256": "0a1348d4a20fa5c849f7452ac3c14220faed84797461ca02778d96cb6c6688b8",
+      "git_blob": "1f6c02322353710a97624c878a23b7709a69edc8"
+    },
+    {
+      "path": "src/st1/r10c.cpp",
+      "sha256": "2add4ebc618de1380ed0ae80b9054fa3d9d82909da099e0b90c0b1adbffe8e19",
+      "git_blob": "30348dc084c3b22290046ea113c35319ee55c562"
+    },
+    {
+      "path": "port/dreamcast/game/platform/modules.cpp",
+      "sha256": "a06b373bd451bc2b852511109774ee2043224ce772a6d59a41a17c2024ca1ad0",
+      "git_blob": "4e894aa18d361ef115b5a212b3105600352c4cf5"
+    },
+    {
+      "path": "port/dreamcast/game/game30.mk",
+      "sha256": "77a0b38a106c73725da6a37cb303ae0834e0f2c824926c61f2820e6d119f6ebe",
+      "git_blob": "2f2ae9676b4201a7fa64cb12707c8f267be41ef2"
+    },
+    {
+      "path": "port/dreamcast/game/Makefile",
+      "sha256": "065f5b81a31653ce03cff3bf61a353b7bded48a348dc9c6221621c34d4d4ec43",
+      "git_blob": "7f9dc65e77adf35cfab6a511d49f2c7057995e52"
+    },
+    {
+      "path": "include/scheduler.h",
+      "sha256": "85af29294a35315b47be5d14e42b1c479a0dcc273846f0a1e3dd839a2b06a826",
+      "git_blob": "13314ce316d6a8561c44a4ec4e66e7ebb301bec9"
+    },
+    {
+      "path": "include/cManager.h",
+      "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20",
+      "git_blob": "d96f17f114f8b955ff044334a06453d7f567beaf"
+    }
+  ],
+  "objects_receipt_sha256": "1e72ba0c1521293b911d3ca8a2c4d21ab9fd0ac30c8210aa9cc64d5067b03bcf",
+  "all_source_unchanged": true,
+  "free_C_bytes": 54706151424,
+  "peak_allocation_approved": 268435456
+}
