@@ -1,3 +1,4 @@
+#include "include/bfc_class.h"
 #include "include/movie_world_arena.h"
 #include "include/native_cabin.h"
 #if RE4DC_MOVIE_WORLD_ARENA
@@ -171,6 +172,9 @@ static volatile unsigned ps2_mask_select=1U+RE4DC_PS2_PASS_MASK_SELECT;
 #endif
 #if RE4DC_NATIVE_MESH && RE4DC_MESH_FASTPATH
 #include "../../room/mesh_fastpath.hpp"
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+#include "../../room/backface_emit.hpp"  // CPU_BACKFACE (backface.mk, lane backface22)
+#endif
 #if RE4DC_MESH_VP_SCHED
 #include "../../room/mesh_fastpath_sched.hpp"
 #endif
@@ -2461,6 +2465,9 @@ struct MeshDraw : Emitter {
                 stats.vertices+=n;
                 if(c.all&screen)++stats.strips_culled;
 #if RE4DC_MESH_DIRECT
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+                else if(sq && bf_on()){bf_send(s,n);output+=n-2;++stats.strips;}
+#endif
                 else if(sq){sq=vp::emit_sq(sq,cache,s,n);slots+=n;output+=n-2;++stats.strips;}
 #endif
                 else {
@@ -2482,6 +2489,37 @@ struct MeshDraw : Emitter {
     // input = sum n - 2 * strips, stats.vertices = sum n. lean_flush() writes these back before the
     // clipper (which reads and updates the members) and at the end; the clip strip itself runs the
     // original code. Returns nullptr when the meshlet is done (result: meshlet()'s value).
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+    // CPU_BACKFACE (lane backface22): parts whose header culls (p.cull 1 CCW, 2 CW) send only the triangles the ISP would
+    // keep (room/backface_emit.hpp); cull-none parts keep the unchanged paths. strips_bf: the lean walk's decisions in C
+    // (depth-all cull, clipper for a depth crossing or n > limit, screen-all cull, else the back-face split).
+    bool bf_on()const{return p.cull==1U || p.cull==2U;}
+    void bf_send(const std::uint8_t* s,unsigned n){
+        slots+=re4dc::bf::strip(cache,s,n,0xffU,p.cull,[&](const std::uint8_t* i,unsigned c){sq=re4dc::vp::emit_sq(sq,cache,i,c);});
+    }
+    const std::uint8_t* strips_bf(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
+                                  const re4dc::room::CompactBatch& batch,int& result){
+        namespace vp=re4dc::vp;
+        constexpr unsigned screen=vp::screen_mask(vp::kChecksAll),depth=vp::depth_mask(vp::kChecksAll);
+        while(s<end){
+            const unsigned n=*s++;
+            input+=n-2;
+            const vp::StripCodes c=vp::codes(outcodes,s,n);
+            if(c.all&depth){stats.vertices+=n;++stats.strips_culled;s+=n;continue;}
+            if((c.any&depth) || n>limit){
+                if(n<=limit)stats.vertices+=n;
+                result=clip_strip(base,batch,s,n);
+                if(result<=0)return nullptr;
+            }else{
+                stats.vertices+=n;
+                if(c.all&screen)++stats.strips_culled;
+                else{bf_send(s,n);output+=n-2;++stats.strips;}
+            }
+            s+=n;
+        }
+        result=1;return nullptr;
+    }
+#endif
     void lean_flush(const std::uint8_t* s,const std::uint8_t* mark,std::uint32_t* q,const std::uint32_t* qmark,
                     unsigned culled,unsigned emitted){
         const unsigned strips=culled+emitted,sum=unsigned(s-mark)-strips,v=unsigned(q-qmark)/8U;
@@ -2490,6 +2528,9 @@ struct MeshDraw : Emitter {
     }
     const std::uint8_t* strips_lean(const std::uint8_t* s,const std::uint8_t* end,const re4dc::room::CompactVertex12* base,
                                     const re4dc::room::CompactBatch& batch,int& result){
+#if defined(RE4DC_CPU_BACKFACE) && RE4DC_CPU_BACKFACE
+        if(bf_on())return strips_bf(s,end,base,batch,result);
+#endif
         for(;;){
             const std::uint8_t* const mark=s;std::uint32_t* q=sq;const std::uint32_t* const qmark=q;
             unsigned culled=0,emitted=0;
@@ -4065,6 +4106,7 @@ int mesh_submit(const Re4dcModelPart& p){
 }
 #endif
 extern "C" int re4dc_static_submit(const Re4dcModelPart* part){
+    RE4DC_BFC_SCOPE(2u,0u);  // BACKFACE_CENSUS
 #if RE4DC_NATIVE_STATIC
     const Re4dcModelPart& p=*part;
     const unsigned frame=re4dc_ui_frame();
@@ -6445,6 +6487,7 @@ void pc_scan(unsigned frame){
 #undef RE4DC_FAR_SHELL_PART
 #endif
 extern "C" int re4dc_ps2_mesh_draw(unsigned pass,float zfar){
+    RE4DC_BFC_SCOPE(1u,0u);  // BACKFACE_CENSUS
 #if RE4DC_MOVIE_WORLD_ARENA
     if(ps2_movie_blocked())return 1;
 #endif
