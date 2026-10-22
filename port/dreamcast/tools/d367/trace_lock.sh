@@ -11,7 +11,7 @@
 # Slot 0 is /root/probe/.trace.lock (the old single lock, so copies of the old script in lane trees take slot 0 and
 # the cap still holds); slot k > 0 is /root/probe/.trace.lock.k. Holders: /root/probe/.trace.holder[.k].
 set -u
-N=${TRACE_SLOTS:-12}
+N=${TRACE_SLOTS:-16}
 lockf() { [ "$1" -eq 0 ] && echo /root/probe/.trace.lock || echo "/root/probe/.trace.lock.$1"; }
 holdf() { [ "$1" -eq 0 ] && echo /root/probe/.trace.holder || echo "/root/probe/.trace.holder.$1"; }
 if [ "${1:-}" = "--status" ]; then
