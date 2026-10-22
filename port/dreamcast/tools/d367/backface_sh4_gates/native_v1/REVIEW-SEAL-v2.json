@@ -1,0 +1,70 @@
+{
+  "sealed_utc": "2026-10-22T20:14:33.728035+00:00",
+  "scope": "Native non-emulator controls and15 source/host tests only. No guest or VRAM read.",
+  "files": {
+    "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\gates\\pixel-native-v1\\compare_four.py": {
+      "bytes": 2466,
+      "sha256": "93c164b742873ee1807a7ddcf0b0df62fe38b0b7ec15d9c98171e616bc3d8fe2"
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\gates\\pixel-native-v1\\contain.py": {
+      "bytes": 16881,
+      "sha256": "c9643168bb0cb9fe3fdb14c6362a5ad3da4fd960f018eb32ce6ad81d6bca1f5c"
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\gates\\pixel-native-v1\\control_child.py": {
+      "bytes": 871,
+      "sha256": "90ef11543687ac4edcabb1c8cbd9da195fc382bd887b53a010b76597b4b4e9c7"
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\gates\\pixel-native-v1\\controls.py": {
+      "bytes": 1981,
+      "sha256": "4c95aa0630a6f71e9ded33d9138f51d36b500688aaedcdddab95b3347a7d3446"
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\gates\\pixel-native-v1\\launch.py": {
+      "bytes": 1205,
+      "sha256": "f8f8a1b504988f23df2a0e88811a8fa329deb24cb759df1351e2016a2d30e058"
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\gates\\pixel-native-v1\\stock_child.py": {
+      "bytes": 7610,
+      "sha256": "bc74a0477ebf59906cde3d7f169555b9ef3ed7a148c405e74efd0dd1fed354af"
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\gates\\pixel-native-v1\\test_capture.py": {
+      "bytes": 4012,
+      "sha256": "2ab6eee09c7d2aa004962dc39452d42e536246e1430dbd7268531691714dda6f"
+    },
+    "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\gates\\pixel-native-v1\\test_four.py": {
+      "bytes": 1582,
+      "sha256": "4f0ce4cbc889b977d45fd4c772c012f6fcef17675f58681d0bd6520dffcb4756"
+    }
+  },
+  "native_controls": {
+    "path": "C:\\Game Dev\\Emulators\\codex-lanes\\backface-sh4zam\\gates\\pixel-native-v1\\native-controls-20261022T201250377430Z.json",
+    "sha256": "b43b25dcb148b79192cb50085fbd06194e2b04087bae1cb587ccf5e5e4861b8c",
+    "all_six_pass": true,
+    "unchanged_controller": true
+  },
+  "host_tests": [
+    {
+      "script": "test_capture.py",
+      "returncode": 0,
+      "output": "...........\n----------------------------------------------------------------------\nRan 11 tests in 0.068s\n\nOK\n"
+    },
+    {
+      "script": "test_four.py",
+      "returncode": 0,
+      "output": "....\n----------------------------------------------------------------------\nRan 4 tests in 0.044s\n\nOK\n"
+    }
+  ],
+  "job_limit": 8,
+  "guard_seconds": 59,
+  "closure_seconds": 59.5,
+  "stock_run": {
+    "seconds": 40,
+    "period": 2,
+    "stop": "^warp: frozen at tick 330$",
+    "grace": 8
+  },
+  "freeze_clock": "Exact caller stop_at minus8, before capture block; start within8 and end within26. Host observed log marker, not precise guest-time claim.",
+  "pixel_rule": "All four C/ASM fb0/fb1 mutually identical. Pairwise-only fails. Unknown active selector never silently selected.",
+  "limits": "OS calls that never return are outside closure proof. Soft resource polling cannot mathematically prevent byte-cap overshoot. Metadata after handle closure is separately scoped.",
+  "source_bytes": 36608,
+  "output_logical_bytes": 5401447
+}
