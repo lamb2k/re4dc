@@ -1,0 +1,21 @@
+{
+  "scope": "Finalindependent020sourcequalification addendum; originalsource/failures unchanged.",
+  "prior_source_seal_sha256": "87a21cda8258f34cb16da6b8d4695f35de7079e3ad4a0e9e1511836bd5a6e15a",
+  "members": [
+    {
+      "path": "DOOR020-SOURCE-QUALIFIED-HANDBACK.json",
+      "bytes": 4675,
+      "sha256": "0cc5a2ac2e7379d0f7cac56fd1c99b47441d4e1385e43ce2c782d4996d83a82e"
+    },
+    {
+      "path": "INDEPENDENT-REVIEW.json",
+      "bytes": 6943,
+      "sha256": "946eb7a819cfe9cffcd90efce7462a6c576c10f7771f482e0e4c88d0ebb625f8"
+    },
+    {
+      "path": "FINAL-CURRENT-STATUS.md",
+      "bytes": 3366,
+      "sha256": "c4d76157f0cbbbe8eaa6d5e2d4f4aa951526b9d093ba17361d13f00b1db2bc1b"
+    }
+  ]
+}

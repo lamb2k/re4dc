@@ -1,0 +1,130 @@
+{
+  "status": "CASTLE020_SOURCE_REVIEW_CLEAR_ROOT_ALLOCATION_AND_GUI_SERIALIZATION_REQUIRED",
+  "checks": 44,
+  "checks_named": [
+    "sourceSealExact",
+    "mirrorAndSource-observe-controlled-ch32-door020.py",
+    "mirrorAndSource-run-controlled-ch32-door020.py",
+    "mirrorAndSource-run-controlled-ch32-door020.sh",
+    "mirrorAndSource-controlled-ch32-door020-pins.json",
+    "mirrorAndSource-controlled020-OWNED-INPUT-CONTRACT.json",
+    "mirrorAndSource-test-controlled020-owned-input-source.py",
+    "mirrorAndSource-controlled020-owned-input-source-cases.json",
+    "mirrorAndSource-controlled020-default-prepare.json",
+    "mirrorAndSource-CONTROLLED020-SOURCE-LAUNCH-PROPOSAL.json",
+    "mirrorAndSource-controlled020-observer-delta.patch",
+    "mirrorAndSource-prepare-controlled020-owned-ack-delta.py",
+    "mirrorAndSource-pin-controlled020-input-contract.py",
+    "mirrorAndSource-apply-controlled020-GUI-lease.py",
+    "mirrorAndSource-prepare-controlled020-source-handoff.py",
+    "mirrorAndSource-compare-controlled019-native-input.py",
+    "mirrorAndSource-controlled019-input-path-comparison.json",
+    "mirrorAndSource-controlled019-input-DWARF.json",
+    "mirrorAndSource-extract-controlled019-input-DWARF.py",
+    "preparedPin-observer_sha256",
+    "preparedPin-wrapper_sha256",
+    "preparedPin-pins_sha256",
+    "retained26BoundToSource",
+    "retainedDefault41Pins",
+    "exclusiveGUIRequired",
+    "29BOnly",
+    "writeAllowlistExact",
+    "noFirstStageWrites",
+    "descriptorMaxCountOrder",
+    "currentStateEachPublication",
+    "inheritedDoor4AlreadyPlaced",
+    "noRetryAttemptBeforePulse",
+    "actual209BeforeStage2",
+    "oneDownAndUpInFinally",
+    "ackHoldBounded",
+    "oneOwnedFocusRequestBounded",
+    "immediateFocusAndDoorRecheck",
+    "full64BitNativeAck",
+    "wrapperFreshEmptyInventory",
+    "actual019AuditExact",
+    "actual019Source3684",
+    "actual019Door4Config",
+    "actual019Go1ConsumedExact",
+    "frozenProgrammeLineage"
+  ],
+  "source_seal_sha256": "87a21cda8258f34cb16da6b8d4695f35de7079e3ad4a0e9e1511836bd5a6e15a",
+  "pins": {
+    "observe-controlled-ch32-door020.py": "7edaf6ad057cd3291795b5260b52283091a0a6ed4fd808f46e7366978a4b2522",
+    "run-controlled-ch32-door020.py": "9151ec8b466a01d9e5ef2ad164fa5af403f3697b202d0d948e463fa3b9853eaa",
+    "run-controlled-ch32-door020.sh": "723d12927aef72490cc497b80e851b13db9b96814287770c436a73354eb9742b",
+    "controlled-ch32-door020-pins.json": "6ddc80d2a2cb92f92e04b2c64ff9b201e3a07581902a93c9ecb29013a77672ed",
+    "controlled020-OWNED-INPUT-CONTRACT.json": "dcd9d3e8eb0ee8c293e7d32cc6136943c5d4169d80b82bbf308be4ed92e9adc4",
+    "test-controlled020-owned-input-source.py": "93094ece2047fc35d1d9bc02542578ef999949bfe6cfcd130d952b81c0b26899",
+    "controlled020-owned-input-source-cases.json": "c0375ff93bc97b4e8d7d747062cb701fda02bd1d75e4a0a47abf4b0d480822b6",
+    "controlled020-default-prepare.json": "77efdb9d4f45b7e104612153d8ba64aeb5eb5f93f55def1e09cf2109fb8bf4dd",
+    "CONTROLLED020-SOURCE-LAUNCH-PROPOSAL.json": "74b087687ecf0e38bf3d2539dc5532afa6980f83dc35119c35cabe7dd34cb910",
+    "controlled020-observer-delta.patch": "5e8c26230c81adac6d1558ad6def377395c6f27cf5ceb83bc0ac8beb7757fe51",
+    "prepare-controlled020-owned-ack-delta.py": "316e5ac5291a60ca8c9e7cb6e1b42c646306b0712871ef92ee4f8dd05f54864a",
+    "pin-controlled020-input-contract.py": "50aff57d89f92867143b2f88a75916f35b6cc7effff86c7a8737834fc52dcf67",
+    "apply-controlled020-GUI-lease.py": "7c7fac5f26539d1e8379616bf3fe6a0ada02c35ae5c28391b042a9d97d4e523f",
+    "prepare-controlled020-source-handoff.py": "92efc4698370241f06865d0e0ac83d97685ab9213ba61ca67585bc48c65dbfb5",
+    "compare-controlled019-native-input.py": "13d991bb53f21119a348deb415910d3e0b97a67acb1365c9c71159a027343f87",
+    "controlled019-input-path-comparison.json": "a3026151023bd8ef0a39d75d242f80822cacb87149cf648f3165fa02aea18c2c",
+    "controlled019-input-DWARF.json": "435b7811682093c5eadee5ba80a9654997b1f1d1929d2ebf16913a4cc4f2fce7",
+    "extract-controlled019-input-DWARF.py": "8a4ce31c23fc30222c1c2db324676908e3ca10c6a06e870e5017c3acb2fccde6"
+  },
+  "retained_owner_qualification": "26 focused extracted mock API/clock source cases and default41 dependency pin check, tied to final hashes; reviewer did not execute them or rehash full game images.",
+  "actual019_closed_state": {
+    "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-ch32-door019\\data\\disc.state",
+    "sha256": "669b920f06e89403a15d3796021878c39ee9807fe020487e6a8666220f635631",
+    "main_ELF_anchors": 4,
+    "native": {
+      "frame": 3684,
+      "phase": [
+        3,
+        0
+      ],
+      "room": "0x204",
+      "Part": 1,
+      "previous_room": "0x205",
+      "Stop": "0x0",
+      "health": [
+        1440,
+        1440,
+        600,
+        600
+      ],
+      "Key_on": "0x0",
+      "Key_trg": "0x0",
+      "player_pos": [
+        -11179.7578125,
+        6000.99853515625,
+        -28483.630859375
+      ],
+      "warp": {
+        "flags": [
+          1,
+          1,
+          0,
+          1,
+          1
+        ],
+        "rooms": 2,
+        "max_entry": 2,
+        "n_go": 2,
+        "go0": "00000000a894e4454f331c46025e27470000000001010001",
+        "go1": "00000000f1af2ec6fd87bb45c586dec60000000001010002",
+        "go2": "000000000000000000000000000000000000000000000000"
+      }
+    }
+  },
+  "source_findings": [
+    "No redundant first goto; only29B stage2 configuration publication after actual209/current state.",
+    "Owned PID/path/start-time/HWND/UIthread checks; verified foreground+GUIactive/focus; one owned focus request with .35s verification bound, otherwise no input.",
+    "Immediate coherent native ready/focus recheck; single X/scan2d keydown per stage, full64-bit native key or original209 request acknowledgement, .75s bound and owned keyup in finally; attempt recorded before call prevents retries.",
+    "Exact descriptor/max/count-last publication and state revalidation retained. Original physicalDoor1/camera3\u21922/event clear/Stop0/advancing-source-frame acceptance remains distinct from key or door acknowledgement.",
+    "No concrete source blocker found in bounded review."
+  ],
+  "limits": [
+    "Root must close QA and other GUI-input guests before allocation and hold exclusive GUI lease through020; fresh empty inventory is not a mutex against future launches.",
+    "Focus may be denied; no input/no retry is an honest partial.019 missing acknowledgement cause remains unclassified.",
+    "Keyup is conditional on retained live owned-process identity; identity/API failures cannot establish release delivery and must retain failure evidence/owned closure.",
+    "No020 guest, input, new tests, programme/build/image, assets, authentic combat, release, hardware or performance acceptance by reviewer."
+  ],
+  "reviewer_scope": "Own small metadata only; no runtime or owner source edits."
+}
