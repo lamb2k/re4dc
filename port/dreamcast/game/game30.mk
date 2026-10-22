@@ -3480,6 +3480,17 @@ EM_READ_FAIL_INJECT_ROOM ?= 0x10C
 ifneq ($(EM_READ_FAIL_INJECT),0)
 GAME_CPPFLAGS += -DRE4DC_EM_READ_FAIL_INJECT=$(EM_READ_FAIL_INJECT) -DRE4DC_EM_READ_FAIL_INJECT_ROOM=$(EM_READ_FAIL_INJECT_ROOM)
 endif
+# GUARD_FAIL_INJECT=N (test only, lane guards22, default 0 = no code): in room GUARD_FAIL_INJECT_ROOM (default 0x100)
+#   fresh event file reads (MASK bit 0) are refused and first effect-file admissions (bit 1) take the invalid-file path,
+#   N times each (>= 99: always). The failure-injection proof of the audit guard set; never in a product image.
+GUARD_FAIL_INJECT ?= 0
+GUARD_FAIL_INJECT_ROOM ?= 0x100
+GUARD_FAIL_INJECT_MASK ?= 3
+# GUARD_FAIL_INJECT_EVT=0xNN: only event file sNN of that room (and effect admissions after its first read); -1 = any.
+GUARD_FAIL_INJECT_EVT ?= -1
+ifneq ($(GUARD_FAIL_INJECT),0)
+$(OBJDIR)/src/game/event.o $(OBJDIR)/src/game/eff_sys.o: GAME_CPPFLAGS += -DRE4DC_GUARD_FAIL_INJECT=$(GUARD_FAIL_INJECT) -DRE4DC_GUARD_FAIL_INJECT_ROOM=$(GUARD_FAIL_INJECT_ROOM) -DRE4DC_GUARD_FAIL_INJECT_MASK=$(GUARD_FAIL_INJECT_MASK) -DRE4DC_GUARD_FAIL_INJECT_EVT=$(GUARD_FAIL_INJECT_EVT)
+endif
 # RESET_MEM_FIX=1 (lane resetmem; load a save, Game Reset / Retry, New Game: r100 started with less heap 4 and KOS
 #   malloc than after a fresh boot): state the port keeps across a soft reset goes back to its fresh-boot value.
 #   ACTOR_PL08_PACK: the bound player file is forgotten with the player archive (systemResetCommon), so a New Game's
