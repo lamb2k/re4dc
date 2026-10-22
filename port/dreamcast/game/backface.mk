@@ -42,7 +42,13 @@ PLATFORM_OBJS += $(OBJDIR)/platform/backface_sh4_trace.o
 $(TARGET): $(OBJDIR)/platform/backface_sh4_trace.o
 $(OBJDIR)/platform/backface_sh4.o: KOS_CFLAGS += -DRE4DC_BACKFACE_SH4_TRACE=1
 endif
-$(OBJDIR)/platform/backface_sh4.o: platform/backface_sh4.S
+# Compile the real pinned SDK primitives and verify the inline runtime body.
+# Order-only: verify each build without forcing an unchanged object to rebuild.
+.PHONY: backface-sh4zam-verify
+backface-sh4zam-verify:
+	python3 ../tools/d367/backface_sh4zam_sdk/generate.py --check
+$(OBJDIR)/platform/backface_sh4.o: | backface-sh4zam-verify
+$(OBJDIR)/platform/backface_sh4.o: platform/backface_sh4.S platform/backface_sh4zam_area.inc ../tools/d367/backface_sh4zam_sdk/generate.py ../room/backface_sh4zam.hpp
 	@mkdir -p $(dir $@)
 	kos-cc $(KOS_CFLAGS) -c $< -o $@
 endif
