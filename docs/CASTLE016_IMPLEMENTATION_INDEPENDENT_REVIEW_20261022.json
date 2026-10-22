@@ -1,0 +1,64 @@
+{
+  "verdict": "CLEAR_SOURCE_ONLY",
+  "scope": "Narrow final016 implementation review; no guest, runtime writes, UI input, build or new ABI sweep. Existing24 pure checks plus narrow mock failure cases and default26-pin preparation.",
+  "frozen_inputs": {
+    "observe-controlled-ch32-door016.py": "718e1c2e2ede7ded9f2de6d74970447c94f2820e56c0f77e98d3f8709d7405cd",
+    "run-controlled-ch32-door016.py": "41984c58a9b9160f826a33f7ae7575caa22fd295744c054f2c26b53878b860b8",
+    "controlled-ch32-door016-pins.json": "03f30e8c5e0bdc4ff8e9a58726c5e8b10ef3691b76c3dc83d0b7e020454de87d",
+    "controlled016-ABI-WRITE-ALLOWLIST.json": "c63c8ac0f3ab8ee4810fb3776286570631f2cd6126e454f01635b9e30e15dbaf",
+    "CONTROLLED016-SOURCE-LAUNCH-PROPOSAL.json": "508bc5e6dc7f44a72668eee4729c769c9e9fa3ebfdb72220460f6291cb48a23c"
+  },
+  "checks": [
+    "frozen-observe-controlled-ch32-door016.py",
+    "frozen-run-controlled-ch32-door016.py",
+    "frozen-controlled-ch32-door016-pins.json",
+    "frozen-controlled016-ABI-WRITE-ALLOWLIST.json",
+    "frozen-CONTROLLED016-SOURCE-LAUNCH-PROPOSAL.json",
+    "single-output-redirection",
+    "actual-layout-size",
+    "Goto-offset-frame",
+    "Goto-offset-pos",
+    "Goto-offset-ang",
+    "Goto-offset-has_ang",
+    "Goto-offset-done",
+    "Goto-offset-sub",
+    "Goto-offset-entry",
+    "Warp-write-offsets",
+    "exact-descriptor-fields",
+    "short-descriptor-write-aborts-no-count",
+    "changed-state-after-descriptor-no-publication",
+    "failed-api-aborts-no-count",
+    "only-one-WPM-callsite",
+    "no-other-write-api",
+    "inherited-fixed-helper-lifecycle-identical",
+    "root-consent-both-entrypoints",
+    "default-prepare-exit-zero",
+    "default-prepare-no-guest"
+  ],
+  "checks_passed": 25,
+  "existing_pure_checks": 24,
+  "only_write_ranges": [
+    {
+      "address": "0x8c47ff30",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "limitations": [
+    "Source and mock tests do not establish actual command consumption, relocation, native Door0 execution, 204Part1 entry or cut completion.",
+    "Frame/phase/room brackets are consistency filters, not atomic runtime snapshots.",
+    "A native registered Door0 action plus clipped-front hit gates input; reported pose remains evidence to audit, not a chosen LOD/performance result.",
+    "Engine marks done before setPos; done alone is not placement acceptance.",
+    "Root must provide exact one-run write consent and fresh resource/process admission; no entry2/209 command is included.",
+    "Partial publication/write failures are retained without rollback; watcher owns bounded guest cleanup."
+  ],
+  "prior_source_route_review_commit": "202fed03bd101fdd1769786a040e7b3d6edea98e",
+  "review_correction": "The first independent descriptor check compared binary32 unpacked coordinates to unrounded decimal literals and failed. The review predicate was corrected to compare exact packed float32 descriptor bytes; source candidate unchanged.",
+  "evidence_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle016-implementation-review21-20261022",
+  "evidence_review_sha256": "eb1c06bd81c1bc1917f5b5c06b21eb1ca47e68c47e86a8d9df6c555b7ed249d8",
+  "evidence_seal_sha256": "6bdb49eef0c9bfaf88093e39634429f19215176e1c5d7dcf7568e5025b116984",
+  "root_ownership": "Main retains exact one-run root allocation/write consent, current process/disk/peer admission and runtime acceptance. Claude retains production merge/release ownership."
+}
