@@ -1,66 +1,71 @@
-# Common backface kernel: correctness baseline, optimization open
+# Common CPU_BACKFACE=2 kernel: exact target arithmetic, timing gate open
 
-Base QA22-All: `20752045a856121ef97cef92662e31bd661b4988`.
-The common assembly consumes the main-owned 32-byte BackfaceSq context.
-World mask255 preserves nonterminal cache command words. Actor mask127
-synthesizes VERTEX/EOL. Actor mask383 additionally scans EOL-bit7 boundaries
-inside assembly, including streams with more than255 total indices.
+Base QA22-All20752045. The 32-byte BackfaceSq ABI is unchanged. Mask255 is
+world; mask127 is explicit actor strips; mask383 scans actor bit7 EOL streams
+inside assembly. No C classification or EOL scanning fallback is used.
 
-The kernel uses the original C determinant's four subtractions, two products,
-subtraction and ordered comparison. No reassociated edges, fipr/FMA, C facing
-fallback, whole-strip keep array or C EOL scan. It streams with a delayed final
-front vertex; trailing/leading back runs drop, inner runs below three stay,
-and restarts begin at even original parity. Material exclusions and clipping
-remain caller-owned.
+The generic state machine and fused pending-vertex continuation preserve the
+C strip run/parity rules and exact emitted words. Leading/trailing backs drop;
+inner back runs shorter than three remain; new pieces start at even original
+triangle parity. Material exclusions and clip decisions remain caller-owned.
+
+## Actual C arithmetic is the contract
+
+The final target CPU1 native_static.o AND native_actor_fast.o lower the C
+expression to four rounded subtractions, a rounded second product, FNEG, then
+FMAC of the first product plus that negative second product. The original C
+reference stays unchanged. Earlier strict non-FMA host-oracle tests establish
+only that earlier source interpretation; they do not establish target parity.
+
+A finite witness proves the distinction. A=(0,0),
+B=(570.0137939453125,438.41583251953125), C=2B gives strict two-product area
+0x00000000 but actual-C FMAC area0xbc480b30, so cull2/even accepts it.
+The current assembly uses the target FMUL/FNEG/FMAC order in BOTH paths.
+The current FMA-path scalar register move explicitly runs with FPSCR.SZ=0.
+
+build_oracle.py generates a private header from the original backface_emit.hpp
+with only the determinant line lowered to std::fma. It pins the source and
+transformed header hashes and host library. CPU1 source is read-only. This is
+an explicitly target-lowered C template oracle, not an unmodified host-C or
+actual target execution claim. The original C run/emit algorithm is retained.
 
 ## Object qualification
 
-`oracle.cpp` includes the actual `room/backface_emit.hpp`; the only stand-in is
-the public 32-byte PVR vertex structure in include/dc/pvr.h. Compile the oracle
-with `-fno-fast-math -ffp-contract=off`. `object_test.py` loads actual ELF32 SH4
-machinecode (and actual trace-hook relocations), rejects unknown opcodes and
-interprets it with memory guards and a two-slot SQ model. PREF records a full
-32-byte burst immediately, so late EOL repair and incomplete writes fail.
+Latest outputs: /root/probe/backface-sh4zam-kernel-objects-20261022-202252-fmac08.
+Actual GCC SH4 objects were compiled once in isolated fmac07 then copied with
+identical hashes into fmac08 for expanded host tests. Trace0 SHA256:
+b35c978b5d42f366ff2faad3008dc29f4d2d7b370d7c581d25a4c9efeaa78ad2.
+Trace1 SHA256:
+32ef2271f804cc11e8b36fc563daf41b6b131e0178b385db58501cbc48f44aae.
 
-Initial actual objects: trace0 SHA256
-`b1dff8a1518d5e4979bb02fb04a374d1e1d151d17b79a42a87204359e402c3b5`,
-trace1 SHA256
-`b5d421810509a99ee3dbfc5f77fa95ba3a65dad21856249403d55433577f9486`.
+2,110 bounded cases /4,220 trace-off/on comparisons pass: exhaustive binary
+facing patterns through nine triangles for both world/actor masks; random
+sizes through256; long all-front/all-back zigzags; the FMAC cancellation
+witness; zero/subnormal/near-limit/infinity/NaN; EOL streams300/1024/2048.
+The original C array bound limits an individual reference strip to256.
 
-1,067 bounded cases / 2,134 trace-off/on comparisons passed, including all
-binary facing-run patterns up to nine triangles, random masks/culls and sizes
-through256, zero/subnormal/near-limit/infinity/NaN inputs, and EOL streams of
-300/1024/2048 indices. Actual emitted words and piece counts match the actual
-C template. The explicit C reference is array-safe only through256; its
-documented production strip limit is255. No C-oracle claim for a longer
-individual strip.
+32 FR/SZ/PR/DN entry-mode combinations pass using finite exact coordinates.
+All16 opposite-bank/XMTRX sentinels, callee GPR/FPR, PR and original FPSCR
+are preserved. The trace callback adversarially clobbers caller-save registers
+and XF; emitted-piece replay exactly matches actual PREF bursts. Every SQ
+burst is complete before PREF; EOL and parity/front words compare exactly.
+Rounding-mode alternatives and actual FPU exception/trap behaviour are not
+claimed by the deliberately bounded interpreter.
 
-Sixteen entry FR/SZ/PR combinations passed emitted-word, all16 opposite-bank
-sentinel, callee-save GPR/FPR, PR and exact FPSCR restoration checks. Production
-copy bursts use current-bank DR0..6, preserving XMTRX. Trace-only code saves
-both live active registers and the complete opposite bank, normalizes FR0 for
-ordinary C, then restores them. The adversarial simulated hook clobbers
-caller-save GPR/FPR and XF words; its replay of each actual emitted piece
-matches the PREF output without any facing recomputation.
+These are host interpretations of actual SH4 opcodes plus a target-lowered C
+oracle. They are not Flycast, pixel, KOS, s30, full release or physical-console
+acceptance. Objects04 were accidentally rebuilt over prior outputs; retained
+historical receipt and exact impact ledger are in the external kernel lane.
 
-This is **host interpretation of actual SH4 object opcodes**, not SH4 hardware,
-Flycast, pixels, KOS, s30, a whole programme or physical-console acceptance.
-The host interpreter is deliberately limited to emitted opcodes; it is not a
-timing model and does not establish SH4 cache, FPU-exception or TA behaviour.
+## Performance acceptance remains open
 
-## Performance is not accepted
+The generic correctness path was too slow. The new all-front continuation
+keeps pending B in DR0..6, Axy in alternating FR8/9 versus FR10/11 and Cxy in
+FR12/13. Determinant work begins only after SQ stores consume B words. Mixed
+runs return to the exact state machine. Trace remains optional.
 
-The first generic path is a correctness baseline. An independent source issue
-model found roughly67 world /75 actor cycles on a steady all-front path before
-several omitted costs, far above the requested <=4 incremental cycles over
-the existing lean copies. These initial numbers do not apply to any later
-optimized source. No performance/FPS gain is claimed and this baseline must
-not be presented as an accepted optimization.
-
-Next: a scheduled all-front path with pending full B vertex in DR0..6, Axy
-in alternating FR8/9 versus FR10/11, Cxy in FR12/13, and exact determinant
-operations after the corresponding SQ stores consume B's x/y words. Only
-two Cxy loads plus two retained Bxy moves add LS work in that proposed path;
-the theoretical four-extra-LS floor is not a cycle result. Mixed runs retain
-the exact assembly state machine. Actual object oracle and independent
-full-path scheduling gates remain mandatory after changes.
+Independent full-path MODELLED schedules are being recomputed after the FMAC
+correction; old strict-kernel timings do not apply. The requested <=4
+incremental cycles/triangle is NOT accepted and no FPS/performance improvement
+is claimed. Actual pixel/memory gates and independent caller-inclusive timing
+remain necessary before the private QA disc is described as qualified.
