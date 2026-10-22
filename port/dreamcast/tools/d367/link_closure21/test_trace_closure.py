@@ -87,6 +87,23 @@ class TraceTests(unittest.TestCase):
         for count in (0,-1,True,'1'):
             c=copy.deepcopy(self.contract);c['executions'][0]['count']=count
             with self.subTest(count=count): self.reject(contract=c)
+    def mutable_case(self):
+        c=copy.deepcopy(self.contract); pre=c['inputs'].pop()['pin'];self.data.write_bytes(b'changed-same-extent!!')
+        self.data.write_bytes(b'B'*pre['bytes']);post=tools.pin(self.data,pre['role'])
+        c['required_reads']=[];c['mutable_data']=[dict(pre_pin=pre,post_pin=post,prechecked_and_reviewed_span_verified=True,aliases=[str(self.data)],readers=[str(Path(self.exe).resolve())],writers=[str(Path(self.exe).resolve())],read_flags=['O_RDONLY|O_CLOEXEC'],write_flags=['O_WRONLY|O_TRUNC'],reads=1,writes=1)]
+        return c,self.lines+[self.lines[1].replace('O_RDONLY|O_CLOEXEC','O_WRONLY|O_TRUNC')]
+    def test_mutable_generated_data(self):
+        c,lines=self.mutable_case();self.assertEqual(self.run_trace(lines,c)['mutable_data_files'],1)
+    def test_mutable_requires_reviewed_pre_and_span(self):
+        c,lines=self.mutable_case();c['mutable_data'][0]['prechecked_and_reviewed_span_verified']=False;self.reject(lines,c)
+    def test_mutable_postbytes_changed(self):
+        c,lines=self.mutable_case();self.data.write_bytes(b'X'*self.data.stat().st_size);self.reject(lines,c)
+    def test_mutable_order(self):
+        c,lines=self.mutable_case();self.reject([lines[0],lines[2],lines[1]],c)
+    def test_mutable_unknown_reader(self):
+        c,lines=self.mutable_case();c['mutable_data'][0]['readers']=['/usr/bin/unknown'];self.reject(lines,c)
+    def test_mutable_cannot_shadow_pinned_input(self):
+        c,lines=self.mutable_case();c['inputs'].append(dict(pin=c['mutable_data'][0]['post_pin'],aliases=[str(self.data)],read_flags=['O_RDONLY|O_CLOEXEC']));self.reject(lines,c)
     def test_real_prepinned_trace(self):
         fixture=os.environ.get('TRACE_CLOSURE_FIXTURE')
         if not fixture:self.skipTest('set TRACE_CLOSURE_FIXTURE to retained source-only trace namespace')

@@ -6,7 +6,8 @@ import re
 import tool_closure as tools
 
 NONCES = {'gcc_resolution': r'cc[A-Za-z0-9]{6}\.res',
-          'python_named_temp': r'tmp[a-z0-9_]{8}'}
+          'python_named_temp': r'tmp[a-z0-9_]{8}',
+          'python_temp_probe': r'[a-z0-9_]{8}'}
 ENV_KEYS = tools.INFLUENCING
 
 
@@ -66,17 +67,17 @@ def parse(text):
                 raise ValueError('nonzero traced child exit')
             continue
         if rest.startswith('<... '):
-            resumed = re.fullmatch(r'<\.\.\. (execve|openat) resumed>(.*)', rest)
+            resumed = re.fullmatch(r'<\.\.\. (execve|openat|unlink) resumed>(.*)', rest)
             if not resumed or pid not in pending or pending[pid][0] != resumed.group(1):
                 raise ValueError('unmatched resumed syscall')
             rest = pending.pop(pid)[1] + resumed.group(2)
         elif rest.endswith(' <unfinished ...>'):
             kind = rest.split('(', 1)[0]
-            if kind not in ('execve', 'openat') or pid in pending:
+            if kind not in ('execve', 'openat', 'unlink') or pid in pending:
                 raise ValueError('ambiguous unfinished syscall')
             pending[pid] = (kind, rest[:-len(' <unfinished ...>')])
             continue
-        call = re.fullmatch(r'(execve|openat)\((.*)\)\s+=\s+(-?\d+)(.*)', rest)
+        call = re.fullmatch(r'(execve|openat|unlink)\((.*)\)\s+=\s+(-?\d+)(.*)', rest)
         if not call:
             raise ValueError('unknown/error/truncated syscall: ' + rest[:100])
         kind, arguments, result = call.group(1), split_top(call.group(2)), int(call.group(3))
@@ -86,6 +87,11 @@ def parse(text):
                 raise ValueError('bad execve arity')
             event.update(path=cstring(arguments[0]), argv=strings(arguments[1]),
                          environment=strings(arguments[2]))
+        elif kind == 'unlink':
+            if len(arguments) != 1:
+                raise ValueError('bad unlink arity')
+            path = cstring(arguments[0])
+            event.update(path=path, resolved=str(Path(path).resolve()))
         else:
             if len(arguments) not in (3, 4):
                 raise ValueError('bad openat arity')
@@ -149,6 +155,16 @@ def validate(text, contract):
         if resolved in inputs:
             raise ValueError('duplicate resolved input policy')
         inputs[resolved] = row
+    mutable = {}
+    for row in contract.get('mutable_data', []):
+        resolved = row['post_pin']['resolved']
+        if resolved in inputs or resolved in mutable or row['pre_pin']['path'] != row['post_pin']['path'] or row['pre_pin']['bytes'] != row['post_pin']['bytes'] or not row.get('prechecked_and_reviewed_span_verified'):
+            raise ValueError('invalid mutable generated-data contract')
+        if tools.pin(row['post_pin']['path'], row['post_pin']['role']) != row['post_pin']:
+            raise ValueError('mutable generated-data posthash changed')
+        if not set(row['readers'] + row['writers']) <= set(inputs):
+            raise ValueError('unknown mutable data reader/writer')
+        mutable[resolved] = dict(policy=row, reads=0, writes=0)
     rules = contract['executions']
     if not rules or any(type(row.get('count', 1)) is not int or row.get('count', 1) <= 0 for row in rules):
         raise ValueError('invalid execution count contract')
@@ -156,6 +172,10 @@ def validate(text, contract):
     successful_exec = 0
     execution_counts = {}
     nonce_state = ({}, {})
+    pid_executables, transient = {}, {}
+    transient_rules = contract.get('transient_data', [])
+    if any(row['root'] != contract['owned_temp'] or row['profile'] not in NONCES or any(type(row[key]) is not int or row[key] < (1 if key == 'count' else 0) for key in ('count', 'writes', 'reads')) or not set(row['creators'] + row['writers'] + row['readers'] + row['unlinkers']) <= set(inputs) for row in transient_rules):
+        raise ValueError('invalid transient data contract')
     for event in events:
         if not event['success']:
             continue  # Failed probes admit no executed code or bytes; root success/coverage still required.
@@ -187,8 +207,49 @@ def validate(text, contract):
             seen_exec.add(matched)
             execution_counts[matched] = execution_counts.get(matched, 0) + 1
             successful_exec += 1
+            pid_executables[event['PID']] = resolved
             continue
-        resolved, flags, requested = event['resolved'], event['flags'], event['path']
+        resolved, requested = event['resolved'], event['path']
+        executable = pid_executables.get(event['PID'])
+        if event['kind'] == 'unlink':
+            state = transient.get(resolved)
+            if not state or state['unlinked'] or requested != resolved or executable not in transient_rules[state['rule']]['unlinkers']:
+                raise ValueError('unknown/repeated/unapproved transient unlink')
+            state['unlinked'] = True
+            continue
+        flags = event['flags']
+        if resolved in mutable:
+            state = mutable[resolved]; row = state['policy']
+            if requested not in row['aliases']:
+                raise ValueError('mutable data alias changed')
+            if flags in row['write_flags'] and executable in row['writers'] and state['reads'] == row['reads']:
+                state['writes'] += 1
+            elif flags in row['read_flags'] and executable in row['readers'] and not state['writes']:
+                state['reads'] += 1
+            else:
+                raise ValueError('mutable data order/reader/writer/flags')
+            continue
+        temporary_match = [index for index, row in enumerate(transient_rules)
+            if str(Path(resolved).parent) == row['root'] and re.fullmatch(NONCES[row['profile']], Path(resolved).name)]
+        if temporary_match:
+            if len(temporary_match) != 1 or requested != resolved or resolved in inputs:
+                raise ValueError('ambiguous/aliased/pinned transient data')
+            index = temporary_match[0]; row = transient_rules[index]
+            state = transient.get(resolved)
+            if state is None:
+                if flags not in row['create_flags'] or 'O_EXCL' not in flags.split('|') or executable not in row['creators']:
+                    raise ValueError('transient read/write before exclusive creation')
+                transient[resolved] = dict(rule=index, writes=0, reads=0, unlinked=False)
+            elif state['unlinked']:
+                raise ValueError('transient accessed after unlink')
+            elif flags in row['write_flags'] and executable in row['writers']:
+                state['writes'] += 1
+            elif flags in row['read_flags'] and executable in row['readers'] and state['writes'] in row.get('allowed_writes', [row['writes']]):
+                state['reads'] += 1
+            else:
+                raise ValueError('unapproved transient data flags/reader/writer/order')
+            continue
+
         writing = any(flag in flags.split('|') for flag in ('O_WRONLY', 'O_RDWR', 'O_CREAT', 'O_TRUNC', 'O_APPEND'))
         if writing:
             permitted = any(resolved == row['path'] and requested == row.get('alias', row['path']) and flags in row['flags'] for row in contract.get('writes', []))
@@ -214,10 +275,16 @@ def validate(text, contract):
             continue
         else:
             raise ValueError('unknown successful input/plugin/code open')
+    if any(state['reads'] != state['policy']['reads'] or state['writes'] != state['policy']['writes'] for state in mutable.values()):
+        raise ValueError('mutable generated-data read/write count differs')
+    for index, row in enumerate(transient_rules):
+        states = [(path, state) for path, state in transient.items() if state['rule'] == index]
+        if len(states) != row['count'] or any(not state['unlinked'] or state['writes'] not in row.get('allowed_writes', [row['writes']]) or state['reads'] != row['reads'] or Path(path).exists() or Path(path).is_symlink() for path, state in states):
+            raise ValueError('incomplete transient data lifecycle/count/postabsence')
     if any(execution_counts.get(index, 0) != rule.get('count', 1) for index, rule in enumerate(rules)):
         raise ValueError('subprocess execution count differs')
     if not successful_exec or not set(contract['required_executions']) <= seen_exec or not set(contract['required_reads']) <= seen_read:
         raise ValueError('required executable/plugin coverage missing')
     return dict(status='PASS_EXACT_PREPINNED_TRACE', events=len(events),
                 successful_executions=successful_exec, seen_execution_rules=sorted(seen_exec),
-                distinct_prepinned_reads=len(seen_read), approved_writes=sorted(writes))
+                distinct_prepinned_reads=len(seen_read), approved_writes=sorted(writes), transient_data_files=len(transient), mutable_data_files=len(mutable))

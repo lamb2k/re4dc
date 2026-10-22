@@ -40,3 +40,24 @@ per-child expansion/prepin contract are frozen. No runner or programme is create
 
 The held650 outputs and missing fresh-unit tool-prehash gate remain unchanged.
 Source fixtures and current tool snapshots cannot retroactively qualify them.
+
+
+The concrete792 bridge/controller adds explicit, optional generated-data rules.
+They do not admit tools or source through mutable inputs. Private Python temp
+probes and NamedTemporaryFile data require exclusive creation, exact approved
+reader/writer executables and open flags, bounded counts, read/write order,
+unlink and postabsence. GCC's one exclusive resolution file permits zero or one
+linker data write, no reads and driver unlink; it is never an executable/plugin.
+The image-ID patch alone admits its newly generated ELF as mutable data after
+fresh prehash. Independent ELF parsing computes the exact8-byte expected ID and
+masked SHA; all other bytes and extent must match before posthash/trace admission.
+Default contracts refuse both classes.
+
+`next792_controller.py` is an allocation-gated ONE-unit implementation, not a
+source-fixture entrypoint. It requires the exact new root allocation and frozen
+controller hash/size/AST/syntax plus fresh source-clean entry proof, absent unit
+roots, one leased d367 slot and physical allocation guards. All41 tool trees use
+strict trace contracts. Source branch/head and all explicit/implicit inputs stay
+pinned; the live preparation checkout may advance because only its immutable
+sealed object receipts and archived source lineage are consumed. No old650/69f
+programme state or output is substituted. Root still owns allocation/adoption.
