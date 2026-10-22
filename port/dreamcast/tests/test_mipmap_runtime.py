@@ -56,10 +56,13 @@ class RuntimeMipmapAdmission(unittest.TestCase):
             self.assertEqual(lines[0], "ok|ok")
             self.assertFalse(int(lines[1].split(":")[1], 16) & 0x80000000)
 
-    def test_legacy_crc_is_preserved_and_only_streamed_release_path_accepts_it(self):
-        blob, _ = data.mip.add_mipmaps(data.native(rule="data"), enabled=True, engine="python")
-        first = self.read(blob)[0]
-        self.assertEqual(first, "payload CRC mismatch|ok")
+    def test_legacy_input_generates_canonical_output_admitted_strict_and_streamed(self):
+        source = data.native(rule="data")
+        self.assertEqual(data.mip.read_native_vq(source).crc_rule, "data")   # supported legacy input
+        self.assertEqual(data.mip.add_mipmaps(source)[0], source)            # disabled: exact input
+        blob, _ = data.mip.add_mipmaps(source, enabled=True, engine="python")
+        self.assertEqual(data.mip.read_native_vq(blob).crc_rule, "header")   # canonical output checksum
+        self.assertEqual(self.read(blob)[0], "ok|ok")                        # strict memory and streamed paths
 
     def test_truncated_chain_is_refused_by_actual_reader(self):
         blob, _ = data.mip.add_mipmaps(data.native(), enabled=True, engine="python")

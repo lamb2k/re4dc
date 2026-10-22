@@ -48,9 +48,11 @@ class PaletteMipData(unittest.TestCase):
         import zlib
         source = bytearray(package())
         struct.pack_into("<I", source, 36, zlib.crc32(source[144:]) & 0xffffffff)
+        self.assertEqual(mip.read_native_pal4(bytes(source)).crc_rule, "data")  # legacy input accepted
+        self.assertEqual(mip.add_mipmaps(bytes(source))[0], bytes(source))    # disabled: exact input
         result, _ = mip.add_mipmaps(source, enabled=True, engine="python")
         after = mip.read_native_pal4(result)
-        self.assertEqual(after.crc_rule, "data")
+        self.assertEqual(after.crc_rule, "header")                           # canonical output checksum
         self.assertEqual(after.base_indices, bytes(source[144:-32]))
 
     def test_invalid_layouts_and_palette_tail_are_refused(self):

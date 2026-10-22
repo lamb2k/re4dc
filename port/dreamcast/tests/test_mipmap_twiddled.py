@@ -49,7 +49,8 @@ class TwiddledMipData(unittest.TestCase):
                 self.assertEqual(before.texture[:5], after.texture[:5])
                 self.assertEqual(before.texture[6] | 4, after.texture[6])
                 self.assertEqual(before.header[9:], after.header[9:])
-                self.assertEqual(after.crc_rule, rule)
+                self.assertEqual(before.crc_rule, rule)
+                self.assertEqual(after.crc_rule, "header")  # legacy input accepted; enabled output carries the canonical checksum
                 self.assertEqual(after.payload[:6], bytes(6))
                 self.assertEqual(len(after.payload), mip.chain_bytes(16))
                 self.assertEqual(report["extra_payload_bytes"], 176)

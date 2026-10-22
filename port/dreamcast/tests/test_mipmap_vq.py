@@ -67,7 +67,8 @@ class Mipmaps(unittest.TestCase):
                     self.assertEqual(after.codebook, before.codebook)
                     self.assertEqual(after.base_indices, before.base_indices)
                     self.assertEqual(mip.decode_level(after, 8), mip.decode_level(before, 8))
-                    self.assertEqual(after.crc_rule, rule)
+                    self.assertEqual(before.crc_rule, rule)
+                    self.assertEqual(after.crc_rule, "header")  # legacy input accepted; enabled output carries the canonical checksum
                     self.assertEqual(after.header[9:], before.header[9:])
                     self.assertEqual(after.texture[:5], before.texture[:5])
                     self.assertEqual(after.texture[6], before.texture[6] | tpl.FLAG_MIPMAP)
