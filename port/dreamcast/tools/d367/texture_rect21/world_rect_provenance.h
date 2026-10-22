@@ -1,11 +1,12 @@
 #pragma once
 #include <cstdint>
 
-// Scoped36 policy/source provenance, never physical file integrity.
+// Private 792-descriptor candidate policy/source provenance.
 // Call only AFTER MeshPackage::adopt(...,true,true) and the genuine R4PW
-// CRC/record validation. The three immutable full-file certificates come from
-// 164 key-only remaps (160 OP,4 VA); all geometry/placements/pass/cull remain
-// exact and the 36 RGB565 replacements have opaque alpha at every mip level.
+// CRC/record validation. These 27 immutable full-file certificates describe
+// key-only remaps; geometry/placements/pass/cull remain exact. The added alpha
+// descriptors preserve the reviewed shipped-class or intentional-unlisted policy.
+// Filtered mip appearance remains unaccepted; r11f/r200 ownership remains held.
 // This does not certify filtered RGB appearance, final draws or performance.
 namespace re4dc::rect21::provenance {
 struct Certificate {
@@ -17,7 +18,7 @@ struct Certificate {
 inline constexpr Certificate certificates[] = {
 #include "provenance_certificates.inc"
 };
-static_assert(sizeof(certificates)/sizeof(certificates[0])==3U);
+static_assert(sizeof(certificates)/sizeof(certificates[0])==27U);
 inline std::uint32_t word(const unsigned char* b) {
     return std::uint32_t(b[0])|(std::uint32_t(b[1])<<8)|
            (std::uint32_t(b[2])<<16)|(std::uint32_t(b[3])<<24);

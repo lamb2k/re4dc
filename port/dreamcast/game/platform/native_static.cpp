@@ -4350,7 +4350,16 @@ unsigned state=~0U,flags_room=0,flags=0,skipped=0;
 void open(unsigned room,std::uint32_t crc,unsigned n){
     cur=nullptr;state=~0U;hidden[0]=hidden[1]=hidden[2]=0;
     for(const auto& r:kRooms)if(r.room==room){
+#if RE4DC_WORLD_RECT21
+        // The retained r107 R4ID binds all 71 placement ordinals to this
+        // original source CRC; its six group masks exactly match this table.
+        // Certified remaps supply that policy identity, never a forged file CRC.
+        const bool source_crc=r.crc==crc ||
+            (r.room==0x107 && r.placements==71 && crc==0x43dc8ff9U);
+        if(source_crc && r.placements==n)cur=&r;
+#else
         if(r.crc==crc && r.placements==n)cur=&r;
+#endif
         re4dc_log("PS2AREA room=%03x package crc=%08x placements=%u %s\n",room,unsigned(crc),n,cur?"ok":"mismatch: off");
     }
 }
@@ -5262,7 +5271,11 @@ bool ps2_open(){
         h.crc;
 #endif
 #if RE4DC_PS2_AREA_HIDE
+#if RE4DC_WORLD_RECT21
+    area::open(ps2w.room,policySourceCrc,h.placements);
+#else
     area::open(ps2w.room,h.crc,h.placements);
+#endif
 #endif
 #if RE4DC_PS2_WORLD_R11F_OWNER
     r11fSidecarCrc=h.crc;
