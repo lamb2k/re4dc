@@ -1,0 +1,192 @@
+{
+  "schema": "damcause23-source-evidence-v1",
+  "base": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+  "test21_source": "fe0efcddc736c49861b51988593629ca04ced336",
+  "verdict": "source-confirmed unchecked refusal; photographed hardware cause remains unproven",
+  "accepted_hardware_source_mapping": false,
+  "hardware": {
+    "pc": "8c890d9a",
+    "pr": "8c890d8c",
+    "address": "4328e417",
+    "r0": "00000000",
+    "r1": "4328e3ff",
+    "actor_r8": "not visible in cropped photograph"
+  },
+  "conditional_module": {
+    "section": ".ovl_st1_2",
+    "function": "r10c_EmEvent()",
+    "offset": "0x42ba",
+    "inferred_runtime_base": "0x8c88cae0",
+    "fault_instruction": "mov.l\t@(24,r1),r1",
+    "previous_call": "jsr\t@r0"
+  },
+  "instruction_checks": {
+    "actor_return_saved_r8": true,
+    "r9_explicitly_zero": true,
+    "r0_clobbered_after_return": true,
+    "actor_vptr_read": true,
+    "vptr_slot24_read": true,
+    "this_argument_r8": true
+  },
+  "conclusions": [
+    "Visible r0 was overwritten after EmSetFromList2; it cannot establish the return value.",
+    "Visible r1 is a loaded word, not the actor pointer; nonzero r1 cannot establish nonnull actor.",
+    "Photographed er and rdy rows report PVR errors/timeouts, not an enemy read result.",
+    "No physical-console BIOS/low-address identity or value has been bound.",
+    "No new runtime fix is justified by these source-only discriminants."
+  ],
+  "source_pins": [
+    {
+      "commit": "fe0efcddc736c49861b51988593629ca04ced336",
+      "path": "src/st1/r10c.cpp",
+      "bytes": 48160,
+      "sha256": "4b43e8cb20e86f47b208fcabe4270b0ee1b5eaa81005da0bdd3454f1c201f50e"
+    },
+    {
+      "commit": "fe0efcddc736c49861b51988593629ca04ced336",
+      "path": "src/game/read.cpp",
+      "bytes": 53219,
+      "sha256": "6d0cfec2e30638236a84a44591a1f62d6446b1b1d2af56f4c030f5e612f343a0"
+    },
+    {
+      "commit": "fe0efcddc736c49861b51988593629ca04ced336",
+      "path": "src/game/em_set.cpp",
+      "bytes": 37614,
+      "sha256": "ba44bd6e2fc0eae391956f1a4648a0b25439f826fa292c4256c5bc47be8b0d6a"
+    },
+    {
+      "commit": "fe0efcddc736c49861b51988593629ca04ced336",
+      "path": "src/game/em.cpp",
+      "bytes": 20073,
+      "sha256": "12f2df9e82640ede3c4ba408edbb8b1684ceb08b63f3042a0e3331267b229fbb"
+    },
+    {
+      "commit": "fe0efcddc736c49861b51988593629ca04ced336",
+      "path": "include/cManager.h",
+      "bytes": 17522,
+      "sha256": "19ce63044d273bce47c208773df8921f08f90fc58bdfc162e7bb9507f5940e3c"
+    },
+    {
+      "commit": "fe0efcddc736c49861b51988593629ca04ced336",
+      "path": "src/game/dvd.cpp",
+      "bytes": 77186,
+      "sha256": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343"
+    },
+    {
+      "commit": "fe0efcddc736c49861b51988593629ca04ced336",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "bytes": 479210,
+      "sha256": "cb436dcb57de59d8fb719e7fef70680ff25cd4b328d905f899226275cd80319e"
+    },
+    {
+      "commit": "fe0efcddc736c49861b51988593629ca04ced336",
+      "path": "port/dreamcast/game/platform/crash_screen.cpp",
+      "bytes": 27124,
+      "sha256": "9ce48d24d5a5a20ed70752fc5b1b5aa698976d4971920444841615e34b64d9e3"
+    },
+    {
+      "commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "path": "src/st1/r10c.cpp",
+      "bytes": 49613,
+      "sha256": "2add4ebc618de1380ed0ae80b9054fa3d9d82909da099e0b90c0b1adbffe8e19"
+    },
+    {
+      "commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "path": "src/game/read.cpp",
+      "bytes": 56670,
+      "sha256": "5b55735df468a38ec9af1df809becacbe373bb483b1b0f700879633b15efa237"
+    },
+    {
+      "commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "path": "src/game/em_set.cpp",
+      "bytes": 50461,
+      "sha256": "b374d561028b70f14a191af8415ab532ec7c4873d9b052f4dd4743841941ddb5"
+    },
+    {
+      "commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "path": "src/game/em.cpp",
+      "bytes": 20073,
+      "sha256": "12f2df9e82640ede3c4ba408edbb8b1684ceb08b63f3042a0e3331267b229fbb"
+    },
+    {
+      "commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "path": "include/cManager.h",
+      "bytes": 19670,
+      "sha256": "74677159afaebbb56b9a5849d4ca06cc87ee02323c47da4b0d8e45eebf6e8e20"
+    },
+    {
+      "commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "path": "src/game/dvd.cpp",
+      "bytes": 77186,
+      "sha256": "eef52f4007e7351c2574ee29a69d707f46bafa71e4cbf8380ba92fb431b16343"
+    },
+    {
+      "commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "bytes": 489604,
+      "sha256": "d4c9aa420e0de77ee7f51c30404e48a80d59d2ec8bfc0a356a9019b82ffae2d5"
+    },
+    {
+      "commit": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+      "path": "port/dreamcast/game/platform/crash_screen.cpp",
+      "bytes": 29093,
+      "sha256": "0efb58916343a9fd9d427f7eff0886385a893758df406019f553156bfd6c10ea"
+    }
+  ],
+  "preserved_evidence": [
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-crash-20261021/exact-test21-binding.json",
+      "bytes": 4228,
+      "sha256": "c8d76625f6af39e3f6672064e1d9c5a9065791e073a311c25094a8b83ecbf956"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-crash-20261021/exact-test21-overlay-binding.json",
+      "bytes": 759,
+      "sha256": "33abf619bb26bcdad3a452d3135b305b9091cbf0b6d305f78047af3184ac07d4"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-crash-20261021/final-full-identity-verification.json",
+      "bytes": 6201,
+      "sha256": "2aecf21b4127f0e7962d0f89461262ab0917b10b9f5fc449c28c3a2650856384"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-crash-20261021/hardware-relocation-candidates.json",
+      "bytes": 1178,
+      "sha256": "4b329baa52c6c30d9f26564f717f8e12173edb1001248b0ac70d3aa1fbb67f2d"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-crash-20261021/photographed-word-search.json",
+      "bytes": 1652,
+      "sha256": "20eef659dac697618566f3ac3506ae1d2a714f13b2acd326e228cd991dda9176"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-crash-20261021/dam-first-event-trigger-plan.json",
+      "bytes": 1375,
+      "sha256": "63f3f52951d9beabe289c7d720a3c1e76a7b74e686304072cefb8ea1e93826c0"
+    },
+    {
+      "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-crash-20261021/exact-public-archive-source-bounds.json",
+      "bytes": 11245,
+      "sha256": "01d0960ceebb2d9bc3e3ce66d5634a9802b929c09a18df465689ca5eedaa8057"
+    }
+  ],
+  "preserved_photo": {
+    "path": "/mnt/c/Flycast-Evidence/re4-dreamcast/issue52-20261021/issue52-01.png",
+    "sha256": "b55f15228d52bd8778041b44dfd97cc716b3b8b9521fefa6567c2c6ed8d82fb1"
+  },
+  "unchanged_runtime_paths": [
+    "src/st1/r10c.cpp",
+    "src/game/read.cpp",
+    "src/game/em_set.cpp",
+    "src/game/em.cpp",
+    "include/cManager.h",
+    "src/game/dvd.cpp",
+    "port/dreamcast/game/platform/native_ui.cpp",
+    "port/dreamcast/game/platform/crash_screen.cpp"
+  ],
+  "limits": [
+    "No compile, build, image, guest, runtime edit or native-process query.",
+    "No new hardware acceptance, release check, Flycast result or performance result.",
+    "No substitution of local emulator BIOS for the photographed console."
+  ]
+}

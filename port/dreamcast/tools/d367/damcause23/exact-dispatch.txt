@@ -1,0 +1,14 @@
+908042a6:	59 d0       	mov.l	9080440c <r10c_EmEvent()+0x1c8>,r0	! 8c0ac7f0 <EmSetFromList2>
+908042a8:	0b 40       	jsr	@r0
+908042aa:	02 e4       	mov	#2,r4
+908042ac:	03 68       	mov	r0,r8
+908042ae:	9d 91       	mov.w	908043ec <r10c_EmEvent()+0x1a8>,r1	! 5328
+908042b0:	9c 31       	add	r9,r1
+908042b2:	00 e9       	mov	#0,r9
+908042b4:	93 60       	mov	r9,r0
+908042b6:	13 80       	mov.b	r0,@(3,r1)
+908042b8:	82 61       	mov.l	@r8,r1
+908042ba:	16 51       	mov.l	@(24,r1),r1
+908042bc:	01 e5       	mov	#1,r5
+908042be:	0b 41       	jsr	@r1
+908042c0:	83 64       	mov	r8,r4
