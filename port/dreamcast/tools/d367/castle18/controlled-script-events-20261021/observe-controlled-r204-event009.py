@@ -35,7 +35,7 @@ def pulse_ui(kind):
    if kind=='confirm-A':assert m['current']==0;vk,scan,ext=ord('X'),0x2d,0
    else:
     assert kind=='choose-Yes' and m['current']==1
-    vk,scan,ext=(0x25,0x4b,1)if int(m['attribute'],16)&0x00100000 else(0x26,0x48,1)
+    vk,scan,ext=(0x26,0x48,1)if int(m['attribute'],16)&0x00800000 else(0x25,0x4b,1)
   assert age()<30;events.append(dict(immediate_native_save_UI_recheck=kind,card=c,message=m,process_age=age()))
   assert u.PostMessageW(hwnd,0x100,vk,1|(scan<<16)|(ext<<24));held=True;until=time.monotonic()+.2
   while time.monotonic()<until:

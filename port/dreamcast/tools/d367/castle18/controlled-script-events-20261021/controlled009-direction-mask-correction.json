@@ -1,0 +1,9 @@
+{
+  "scope": "Unused prepared009 host direction correction, no guest launched",
+  "old_raw_sha256": "90deff2e0b38841dd230a878206e56640ee4478294e7b3929e8c315932763275",
+  "new_raw_sha256": "35deeb6a65923804e6fe5ac61128ed6fbd7e5ecde97eb9b5817f6e7b2093b11d",
+  "source": "src/game/mes.cpp Message::code08 actualbranch1467ff",
+  "fix": "Up iff attr00800000, elseLeft;00100000 controlsBcancel. Priorcomment misleading.",
+  "preserved_old_path": "C:\\Game Dev\\Emulators\\codex-lanes\\castle18\\observe-controlled-r204-event009-before-direction-mask-fix.py",
+  "unchanged": "Immediateactualcur0 beforeA; max3ordinaryownedpulses; same006/007/008protectedlineage,V4resource/timeguards"
+}
