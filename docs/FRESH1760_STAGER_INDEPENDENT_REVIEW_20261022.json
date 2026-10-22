@@ -1,0 +1,32 @@
+{
+  "verdict": "BLOCK_CONFIRMED",
+  "scope": "One necessary focused metadata-only negative gate check; no real programme/pack/ISO/asset reads or writes, no image/link/guest. Existing13Win/12Linux+skip receipts reused, not rerun.",
+  "source_commit": "04fc7ca48ecb5f143d68c7277a0066c6772b8d7d",
+  "writer_sha256": "d175d9375a151ae90c6c4969512179fb0a64f3309328930637ed24e32df77ab8",
+  "reader_sha256": "f83601d116db18d654b466cf2e537a7d9a65f123d7fe0bbccdab7fba53595119",
+  "unit_seal_sha256": "48c029d131571196cd197baefc2f8eb8db83e8abddba7346dbc9382bb01c08d0",
+  "finding": {
+    "title": "Linked-consumer qualification is not joined to the staged ELF/programme identities",
+    "consumer_gate_line": 54,
+    "programme_join_line": 57,
+    "source": "63644457a2251a398de174f47be650e1b2b4c791",
+    "expected": "REFUSE mismatched linked-consumer ELF/programme SHA even when source and booleans match",
+    "actual": "ACCEPT: qualified_programme returned manifest and15 rows",
+    "staged_ELF_sha256": "acb1742b5c31f5bffb5a1494fc95a3529fbc7f02ad9efd425212600c5771fd4d",
+    "staged_programme_sha256": "df7e70e5021544f4834bbee64a9e3789febc4be81470df629cad6ddb03320a5c",
+    "consumer_ELF_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "consumer_programme_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "cause": "consumer gate tests source/new_programme_qualified/all_consumer_gates_qualified only; exact hash join includes q,ind,manifest but omits consumer.",
+    "required_fix": "NEW frozen successor must require linked-consumer receipt exactELF/programme SHA to equal q/ind/manifest plus actual792source and existing gates; preserve04fc unit. Missing identity fields must refuse. Future actual792 receipts/all15 outputs remain required."
+  },
+  "limits": [
+    "Synthetic receipt truth flags and tiny stand-ins exercise source gate; this is not a qualified programme or candidate image.",
+    "Reader/layout/nooverwrite/accounting review was inspected, but no blanket clearance or real image execution is issued.",
+    "External retained-job controller, actual792programme/consumer/toolclosure receipts,15outputs and root allocation remain pending.",
+    "No all1760draws/strict121frame requirement is imposed before first cold functional check."
+  ],
+  "evidence_path": "C:\\Flycast-Evidence\\re4-dreamcast\\fresh1760-stage-independent-review21-20261022",
+  "evidence_review_sha256": "37010b5f6c52e0869b5efcc3642142e5ee2c16191db4fcb3c3f48ad5e9cc69ef",
+  "evidence_seal_sha256": "d1fc5f5643291c20b759aad0192a148b1de09ab892ae39f1c6fb02819878e322",
+  "disposition": "BLOCK current sourcegate; require new successor and exact consumerELF/programme join before binding/staging. No image/guest allocation implied."
+}
