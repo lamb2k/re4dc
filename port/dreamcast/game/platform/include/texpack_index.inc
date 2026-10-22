@@ -41,6 +41,17 @@ unsigned long long pack_bytes=0;
 Key first[kMaxSectors];
 #if RE4DC_TEX_PAYLOAD_RETRY
 unsigned sector_crc[kMaxSectors]{}; // exact ordinal identity when a validated sector is re-read
+// A failed lookup invalidates the shared sector buffer. Remember every failed
+// sector independently: alternating failures must not erase each other's wait.
+unsigned index_bad_bits[2]{};
+unsigned index_bad_until[kMaxSectors]{};
+bool index_blocked(unsigned s,unsigned now){
+    return (index_bad_bits[s>>5]&(1U<<(s&31))) && int(now-index_bad_until[s])<0;
+}
+void index_failed(unsigned s,unsigned now){
+    index_bad_until[s]=now+kRetryFrames;index_bad_bits[s>>5]|=1U<<(s&31);
+}
+void index_succeeded(unsigned s){index_bad_bits[s>>5]&=~(1U<<(s&31));}
 unsigned payload_epoch=1;
 bool payload_epoch_exhausted;
 // All bitmap operations and epoch publication use this existing index mutex.
@@ -48,6 +59,7 @@ bool payload_epoch_exhausted;
 // must never change the next room/index epoch's retry bits.
 void payload_reset_locked(){
     texpack_payload_retry::reset();
+    std::memset(index_bad_bits,0,sizeof(index_bad_bits));
     if(payload_epoch!=~0U)++payload_epoch;
     else if(!payload_epoch_exhausted){
         payload_epoch_exhausted=true;
@@ -180,7 +192,11 @@ Result find(const Key& key,unsigned& offset,unsigned& size,unsigned now
         while(s+1<sectors && !less(key,first[s+1]))++s;
         if(!less(key,first[s])){
             if(cached!=s){
+#if RE4DC_TEX_PAYLOAD_RETRY
+                if(index_blocked(s,now))r=kError;
+#else
                 if(s==bad_sector && int(now-bad_until)<0)r=kError;   // failed lately: no re-read before bad_until
+#endif
                 else{
                     cached=~0U;
                     if(read_sector(2048U*(s+1))!=re4dc::texture::RangeRead::ok || word(sector)!=first[s].crc ||
@@ -190,9 +206,17 @@ Result find(const Key& key,unsigned& offset,unsigned& size,unsigned now
 #endif
                        ){
                         ++errors;r=kError;bad_sector=s;bad_until=now+kRetryFrames;
+#if RE4DC_TEX_PAYLOAD_RETRY
+                        index_failed(s,now);
+#endif
                         re4dc_log("tex pack: %s index sector %u read error (lookup %08x-%08x); re-read in %u frames\n",
                                   kPath,s,key.crc,key.fnv,kRetryFrames);
-                    } else {cached=s;if(s==bad_sector)bad_sector=~0U;}
+                    } else {
+                        cached=s;if(s==bad_sector)bad_sector=~0U;
+#if RE4DC_TEX_PAYLOAD_RETRY
+                        index_succeeded(s);
+#endif
+                    }
                 }
             }
             if(cached==s){
