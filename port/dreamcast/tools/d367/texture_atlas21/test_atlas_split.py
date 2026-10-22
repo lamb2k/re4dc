@@ -1,9 +1,29 @@
 import struct
 import unittest
+import zlib
 import atlas_split as atlas
 
 
 class AtlasTests(unittest.TestCase):
+    def test_crop_from_legacy_crc_emits_canonical_body_crc(self):
+        payload=bytes(i&255 for i in range(2048))+bytes((i*37)&255 for i in range(65536))
+        descriptor=atlas.tpl.TEXTURE.pack(b'synthetic-tile',512,512,
+            atlas.tpl.FORMAT_RGB565,144,len(payload),0,atlas.tpl.PAYLOAD_VQ,0)
+        body=descriptor+payload
+        def package(crc):
+            return atlas.tpl.HEADER.pack(atlas.tpl.MAGIC,atlas.tpl.VERSION,
+                48,96,1,48,144,len(payload),crc,1,0)+body
+        canonical=package(zlib.crc32(body))
+        legacy=package(zlib.crc32(payload))
+        self.assertEqual(atlas.mip.read_native_vq(legacy).crc_rule,'data')
+        from_canonical=atlas.crop_vq(canonical,(384,256,128))
+        from_legacy=atlas.crop_vq(legacy,(384,256,128))
+        self.assertEqual(from_legacy,from_canonical)
+        self.assertEqual(struct.unpack_from('<I',from_legacy,36)[0],
+            zlib.crc32(from_legacy[48:]))
+        self.assertEqual(atlas.mip.read_native_vq(from_legacy).crc_rule,'header')
+        self.assertEqual(from_legacy[144:2192],payload[:2048])
+
     def test_source_uv_texel_coordinates_are_exact_under_power_of_two_map(self):
         rect=(384,256,128)
         for u in range(384*64,512*64,53):

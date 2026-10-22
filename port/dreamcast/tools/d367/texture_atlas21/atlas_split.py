@@ -113,7 +113,9 @@ def crop_vq(blob,rect):
     h,t=list(source.header),list(source.texture)
     t[1]=t[2]=side;t[5]=len(payload);h[7]=len(payload)
     body=tpl.TEXTURE.pack(*t)+payload
-    h[8]=zlib.crc32(body if source.crc_rule=='header' else payload)&0xffffffff
+    # Package::adopt/open_streamed CRC covers descriptors and payload together.
+    # Accept legacy source checksums, but always emit the canonical contract.
+    h[8]=zlib.crc32(body)&0xffffffff
     result=tpl.HEADER.pack(*h)+body
     if mip.read_native_vq(result).codebook!=source.codebook:raise ValueError('source book changed')
     return result
