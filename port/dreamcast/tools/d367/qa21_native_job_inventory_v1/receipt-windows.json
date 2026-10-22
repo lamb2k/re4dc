@@ -1,0 +1,10 @@
+{
+  "scope": "SOURCE fake inventory tests only; no native API/child/image/input",
+  "test_count": 8,
+  "status": "PASS",
+  "tests_sha256": "eed2239ee3e3b416f492b475332c9465bbb8e2814d96057610fe21e4898acf80",
+  "runtime_manifest_sha256": "96b6796fd6cc198907820d3914559ab083e9049e2271306f28390f6007a2f564",
+  "exact_frozen_backend_api_mirrors": true,
+  "frozen_inner_release_before_profile_or_guest": true,
+  "platform": "Windows Python3.12 -B; eight unittest paths PASS"
+}
