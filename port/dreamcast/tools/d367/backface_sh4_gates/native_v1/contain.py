@@ -43,6 +43,20 @@ def fixed_stock_contract(profile):
  if (opts['--cap'],opts['--seconds'],opts['--period'],opts['--stop'],opts['--grace'])!=(profile['capture'],'40','2','^warp: frozen at tick '+str(tick)+'$','8'):raise ValueError('fixed40/2/fixturefreeze/grace8 required')
  return opts
 
+def root_review_contract(profile):
+ review=profile.get('root_review')
+ if not isinstance(review,dict):raise ValueError('explicit root review missing')
+ for key in ('source','qa_source','pair','fixture_name','arm','stage_receipt_sha256'):
+  review_key='fixture' if key=='fixture_name' else key
+  if review.get(review_key)!=profile.get(key):raise ValueError('root review does not bind current '+key)
+ if review.get('programme_and_asset_disc_closure_reviewed')is not True or review.get('actual_sdk_source_reviewed')is not True:raise ValueError('explicit root stage and actual SDK review missing')
+ if review.get('lane_live_guests')!=profile.get('lane_live_guests') or review.get('lane_live_guests')not in(0,1):raise ValueError('root lane review mismatch')
+ count=review.get('global_live_guests')
+ if type(count)is not int or not review['lane_live_guests']<=count<16:raise ValueError('root global review mismatch')
+ age=(datetime.datetime.now(datetime.timezone.utc)-datetime.datetime.fromisoformat(review['capacity_reviewed_utc'])).total_seconds()
+ if not 0<=age<=60:raise ValueError('root capacity review is stale at invocation')
+ return review
+
 def validate_pixel(argv,output,authority):
  if not authority:raise ValueError('pixel execution requires exact ROOT authority; controls grant does not allocate a guest')
  profile_path,profile_pin,allocation_path,allocation_pin=authority
@@ -59,10 +73,8 @@ def validate_pixel(argv,output,authority):
  if profile['environment']!={k:v for k,v in os.environ.items() if k.startswith(('RE4DC_','FP_NOLIMIT'))}:raise ValueError('environment mismatch')
  if profile['environment'].get('RE4DC_EMU')!='console' or profile['environment'].get('RE4DC_MAX_FLYCASTS')!='16':raise ValueError('console/global16 required')
  if profile['lane_live_guests'] not in (0,1) or not profile['fresh_root_capacity_review']:raise ValueError('main fresh lane2/global census required')
- review=profile.get('root_review')
- if not isinstance(review,dict) or not review.get('programme_and_asset_disc_closure_reviewed') or not review.get('actual_sdk_source_reviewed'):raise ValueError('explicit root stage and actual SDK review missing')
- age=(datetime.datetime.now(datetime.timezone.utc)-datetime.datetime.fromisoformat(review['capacity_reviewed_utc'])).total_seconds()
- if not 0<=age<=60:raise ValueError('root capacity review is stale at invocation')
+ root_review_contract(profile)
+ if profile['environment'].get('RE4DC_CONSOLE_EXE')!=profile['console_source']:raise ValueError('explicit console environment does not select pinned source')
  for path in (sys.executable,__file__,P/'stock_child.py',P/'launch.py',HELPER,API,COUNTER,profile['stock_runner'],profile['console_source']):
   if str(Path(path))not in profile['inputs']:raise ValueError('required execution input pin missing: '+str(path))
  if profile['inputs'][profile['stock_runner']]!=profile['stock_sha256'] or profile['inputs'][profile['console_source']]!=profile['console_sha256']:raise ValueError('stock/console source pins disagree')

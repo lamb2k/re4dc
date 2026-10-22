@@ -11,6 +11,9 @@ BASE=Path(r'C:\Flycast-Evidence\re4-dreamcast\backface-sh4zam')
 TEMPLATE=Path(r'C:\Flycast-Evidence\re4-dreamcast\d367-harness-par')
 TRACKS={'track01.bin','track02.raw','track03.bin','track03.iso'}
 
+def console_contract(env,console):
+ if env.get('RE4DC_CONSOLE_EXE')!=str(console):raise ValueError('explicit environment must select the pinned console executable')
+
 def native_path(value):
  if value.startswith('/mnt/c/'):return Path('C:/'+value[7:])
  if value.startswith('/root/'):return Path(r'\\wsl.localhost\Ubuntu-24.04')/Path(value[1:])
@@ -111,7 +114,7 @@ def prepare(a):
  env=json.loads(Path(a.environment).read_text());pin(a.environment,inputs)
  if not isinstance(env,dict) or env.get('RE4DC_EMU')!='console' or env.get('RE4DC_MAX_FLYCASTS')!='16':raise ValueError('explicit console/global16 environment required')
  if not all(isinstance(k,str)and isinstance(v,str)and(k.startswith('RE4DC_')or k=='FP_NOLIMIT')for k,v in env.items()):raise ValueError('explicit runner environment only')
- if env.get('RE4DC_CONSOLE_EXE',str(console))!=str(console):raise ValueError('console environment selects another executable')
+ console_contract(env,console)
  profile_path=Path(a.profile).absolute();output=BASE/(a.source+'-'+a.fixture+'-'+a.arm.lower()+'-01');capture=output/'capture'
  if output.exists() or profile_path.exists():raise FileExistsError('fresh output and profile required')
  hardlinks={}

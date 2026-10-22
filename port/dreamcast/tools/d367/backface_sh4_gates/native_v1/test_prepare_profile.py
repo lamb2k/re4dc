@@ -29,7 +29,7 @@ class Tests(unittest.TestCase):
   stock=base/'stock.py';write(stock,b"mod.capture(shot, shot / 'frames')\n")
   console=base/'console.exe';write(console,b'fake console source control only')
   for dep in ('emu.cfg','read_log.py','capture_ui_vram.py'):write(template/dep,b'rend.EmulateFramebuffer = yes\n')
-  env=base/'environment.json';obj(env,dict(RE4DC_EMU='console',RE4DC_MAX_FLYCASTS='16'))
+  env=base/'environment.json';obj(env,dict(RE4DC_EMU='console',RE4DC_MAX_FLYCASTS='16',RE4DC_CONSOLE_EXE=str(console)))
   a=argparse.Namespace(stage=str(stage),stage_sha256=sha(stage),source='1'*40,qa_source='2'*40,pair='pair02',fixture=name,arm='ASM',sdk_evidence=str(sdk),sdk_sha256=sha(sdk),stock=str(stock),stock_sha256=sha(stock),console=str(console),console_sha256=sha(console),environment=str(env),profile=str(base/'profile.json'),root_review=None,root_review_sha256=None)
   return a,template
  def run_fixture(self,a,template):
