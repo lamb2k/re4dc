@@ -1,0 +1,8 @@
+name tc22-r10c
+# lane texclass22: r10c entry (castgc/warps/r10c.txt), then Leon walks forward from frame 900 (a second view). God.
+room 0x10c
+pos 27865 -15316 43935
+ang 2.4180
+inv default
+god
+act 900 fwd 240
