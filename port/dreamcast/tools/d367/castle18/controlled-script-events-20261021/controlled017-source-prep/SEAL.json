@@ -39,6 +39,10 @@
     "bytes": 352,
     "sha256": "9514aa90e5f6bbd65dee7ed65a0bc823b4299e620e4fb7c4ee857c6cac83e66f"
   },
+  "CONTROLLED017-SOURCE-LAUNCH-PROPOSAL.json": {
+    "bytes": 6245,
+    "sha256": "a71329c5f580384e9a40b190f9ca5876230fcd6ac2e844b2a8d3393ee9691a06"
+  },
   "run-controlled-ch32-door017.py": {
     "bytes": 8936,
     "sha256": "cccc779f574fcc35e0c284ca71eb05f77b95055bcb6c396f60f428229795cbba"
