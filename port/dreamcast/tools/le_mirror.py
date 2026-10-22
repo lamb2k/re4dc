@@ -785,6 +785,13 @@ def fmt_itm(sw, off, size, ctx):
     oi, ob, ot = (sw.offset32(off + 4*i, off) for i in range(1,4))
     if version != 3:
         raise ValueError('unsupported item model pack version')
+    # cItmSys::DataLoad never accesses BIN/TPL tables when the id count is
+    # zero. Authored empty packs (r215/r22b) use two null table offsets.
+    if oi >= 16 and ob == ot == 0:
+        with sw.bounded(off + oi, off + size - (off + oi)):
+            if sw.u32(off + oi) != 0:
+                raise ValueError('nonempty item model pack has null tables')
+        return
     bases = [off + v for v in (oi, ob, ot)]
     if len(set(bases)) != 3 or min(bases) < off + 16:
         raise ValueError('invalid item model tables')
@@ -1021,9 +1028,13 @@ def fmt_sce_at(sw, off, size, ctx):
         null_pointer(p + 76)
         sw.u16(p + 80)
         d = p + 92
-        if kind in (0, 2, 6, 7, 20):
-            # Normal hit-model list or source-installed callback, never an
-            # executable pointer copied from the GameCube data file.
+        if kind in (0, 2):
+            # sceAtDataLoopInit clears type-0 hitModel scratch before checks;
+            # sceAtFunc_exec (type 2) reads only the shared header. Preserve
+            # their inert authored union bytes, including old editor data.
+            # Live callbacks/parents in the shared header must still be null.
+            pass
+        elif kind in (6, 7, 20):
             if any(sw.data[d:d + 64]):
                 raw.append('scenario%d runtime work is nonzero' % i)
         elif kind == 1:  # SceAtDoor
@@ -1044,10 +1055,36 @@ def fmt_sce_at(sw, off, size, ctx):
             sw.u16(d + 6)
         elif kind == 8:
             sw.u32(d)
-        elif kind == 11:  # runtime SAT/EAT objects plus authored collision attrs
+        elif kind == 9:  # SceAtShdDisp (sce_at.h): shadow number, then byte flags
+            sw.u16(d)
+        elif kind == 10:  # SceAtDamage: time, byte kind/flags, arg, power
+            sw.u32(d)
+            sw.u32(d + 8)
+            sw.f32s(d + 12, 1)
+        elif kind == 12:  # SceAtCamCtrl: position/angle, byte mode, two ranges
+            sw.f32s(d, 4)
+            sw.f32s(d + 20, 2)
+        elif kind == 15:  # SceAtSkey: source installs both runtime pointers
             null_pointer(d)
             null_pointer(d + 4)
-            sw.u32s(d + 12, 4)
+        elif kind == 18:  # SceAtHide: byte state, authored position, callback
+            sw.f32s(d + 36, 3)
+            null_pointer(d + 48)
+        elif kind == 19:  # SceAtWork::jumpPos, sceAtFunc_pos_jump
+            sw.f32s(d, 3)
+        elif kind == 11:  # runtime SAT/EAT objects plus authored collision attrs
+            pointers = sw.u32s(d, 2)
+            attrs = sw.u32s(d + 12, 4)
+            for value, suppress_bit in zip(pointers, (2, 1)):
+                if value:
+                    # sceAtSetScrAt overwrites enabled, uncreated quad slots.
+                    # Small authored placeholders occur in r208/r212; accept
+                    # only that form, never a saved runtime/PPC address or a
+                    # slot excluded from creation by scr.flags.
+                    if (value > 0xff or sw.data[p + 4] != 1 or
+                            not (sw.data[p + 52] & 1) or sw.data[d + 8] or
+                            sw.data[p + 70] or attrs[2] & suppress_bit):
+                        raise ValueError('scenario collision placeholder is not rebuilt')
         elif kind == 13:
             sw.u32(d)
             null_pointer(d + 4)
