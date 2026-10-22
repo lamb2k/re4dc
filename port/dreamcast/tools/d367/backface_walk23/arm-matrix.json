@@ -1,0 +1,61 @@
+{
+  "base": "a2477bd2b4d2dc5354fe1bbcc5b5c6b45312928f",
+  "fixture": "r101-calm.txt",
+  "fixture_sha256": "613f6a806e9d9f6d0dec35ec8648f385095c32ba8090896a4f6a682bcbd84e02",
+  "arms": [
+    {
+      "name": "A-OFF",
+      "CPU_BACKFACE": 0,
+      "ACTOR_BACKFACE": 0,
+      "BACKFACE_WALK_PROBE": 0
+    },
+    {
+      "name": "B-C-WALK-KEEP-ALL",
+      "CPU_BACKFACE": 1,
+      "ACTOR_BACKFACE": 0,
+      "BACKFACE_WALK_PROBE": 1
+    },
+    {
+      "name": "C-C-WALK-DROP",
+      "CPU_BACKFACE": 1,
+      "ACTOR_BACKFACE": 0,
+      "BACKFACE_WALK_PROBE": 2
+    }
+  ],
+  "timing_overrides": {
+    "TA_HASH": 0,
+    "BACKFACE_CENSUS": 0,
+    "WORLD_METER": 1,
+    "PS2_PVS": 0,
+    "VRAM_ROOM_ARENA": 0
+  },
+  "counts_only_overrides": {
+    "TA_HASH": 1,
+    "BACKFACE_CENSUS": 1,
+    "WORLD_METER": 1,
+    "PS2_PVS": 0,
+    "VRAM_ROOM_ARENA": 0
+  },
+  "runtime_view": "Near18.75m without far shell first; record actual setting each arm",
+  "build_status": "Two production translation units qualified only; no full programme, media, guest, or console comparison.",
+  "fixture_files": {
+    "/cd/dc/warp.txt": {
+      "path": "r101-calm.txt",
+      "sha256": "613f6a806e9d9f6d0dec35ec8648f385095c32ba8090896a4f6a682bcbd84e02"
+    },
+    "/cd/dc/bench2.txt": {
+      "path": "r101-calm-repeat.txt",
+      "sha256": "8a0aa398c519621d209859f31b72dd988b25a21c67098e3718690b9a2a89afbd"
+    }
+  },
+  "common_fixture_overrides": {
+    "DBG_WARP": 1,
+    "WARP_AFTER_RESET": 1,
+    "BENCHMARK": 1,
+    "BENCH_SCENES": 2,
+    "BENCH_CENSUS": 0,
+    "BENCH_FILES": 2
+  },
+  "bench_warning": "BENCH_FILES is dormant with BENCH_CENSUS=0; kScenes=2 therefore consumes two explicit files. Do not enable BENCH_CENSUS: it requires unrelated RIGID_CENSUS=2 and MIST_CUT=239.",
+  "base_files_equal_cached_origin_tip": true
+}

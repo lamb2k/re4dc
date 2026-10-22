@@ -25,8 +25,28 @@ CPU_BACKFACE ?= 0
 ifneq ($(filter $(CPU_BACKFACE),0 1),$(CPU_BACKFACE))
 $(error CPU_BACKFACE must be 0 or 1)
 endif
+# Diagnostic only: 1 = world C walk, keep every triangle; 2 = normal world C/drop.
+# Both nonzero arms leave actor objects at CPU_BACKFACE=0. Default 0 is unchanged.
+BACKFACE_WALK_PROBE ?= 0
+ifneq ($(words $(BACKFACE_WALK_PROBE)),1)
+$(error BACKFACE_WALK_PROBE must be 0, 1 or 2)
+endif
+ifneq ($(filter $(BACKFACE_WALK_PROBE),0 1 2),$(BACKFACE_WALK_PROBE))
+$(error BACKFACE_WALK_PROBE must be 0, 1 or 2)
+endif
+ifneq ($(BACKFACE_WALK_PROBE),0)
+ifneq ($(CPU_BACKFACE),1)
+$(error BACKFACE_WALK_PROBE needs CPU_BACKFACE=1)
+endif
+endif
 ifeq ($(CPU_BACKFACE),1)
-$(OBJDIR)/platform/native_static.o $(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=1
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=1
+ifeq ($(BACKFACE_WALK_PROBE),0)
+$(OBJDIR)/platform/native_actor_fast.o: PLATFORM_CPPFLAGS += -DRE4DC_CPU_BACKFACE=1
+endif
+endif
+ifeq ($(BACKFACE_WALK_PROBE),1)
+$(OBJDIR)/platform/native_static.o: PLATFORM_CPPFLAGS += -DRE4DC_BACKFACE_KEEP_ALL=1
 endif
 # ACTOR_BACKFACE=1 (render, look change; needs CPU_BACKFACE=1): Leon, the Ganados and El Gigante (owned path) use the source model's cull
 #   mode instead of cull none, so CPU_BACKFACE drops their back faces too; alpha-mask and no-depth-write materials stay
@@ -36,6 +56,9 @@ ifneq ($(filter $(ACTOR_BACKFACE),0 1),$(ACTOR_BACKFACE))
 $(error ACTOR_BACKFACE must be 0 or 1)
 endif
 ifeq ($(ACTOR_BACKFACE),1)
+ifneq ($(BACKFACE_WALK_PROBE),0)
+$(error BACKFACE_WALK_PROBE needs ACTOR_BACKFACE=0)
+endif
 ifneq ($(CPU_BACKFACE),1)
 $(error ACTOR_BACKFACE=1 needs CPU_BACKFACE=1)
 endif

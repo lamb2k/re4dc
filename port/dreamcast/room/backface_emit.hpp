@@ -27,6 +27,11 @@ inline unsigned strip(const pvr_vertex_t* __restrict cache, const std::uint8_t* 
     if (n < 3) return 0;
     std::uint8_t plain[256];
     for (unsigned k = 0; k < n; ++k) plain[k] = std::uint8_t(idx[k] & mask);
+#if defined(RE4DC_BACKFACE_KEEP_ALL) && RE4DC_BACKFACE_KEEP_ALL
+    // Walker control: retain the C caller and index copy, bypass facing/run/drop work.
+    emit(plain, n);
+    return n;
+#else
     const unsigned t = n - 2;
     std::uint8_t keep[256];
     // Facing.
@@ -64,6 +69,7 @@ inline unsigned strip(const pvr_vertex_t* __restrict cache, const std::uint8_t* 
         sent += count;
     }
     return sent;
+#endif
 }
 
 }  // namespace re4dc::bf
