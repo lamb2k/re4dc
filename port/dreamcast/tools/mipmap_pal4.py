@@ -126,7 +126,13 @@ def add_mipmaps(blob, *, enabled=False, engine="auto"):
             after_payload_bytes=len(native.payload), extra_payload_bytes=0,
             package_sha256=evidence["source_package_sha256"],
             base_level_exact=True, palette_exact=True)
-        return blob, evidence
+        result = tpl.canonical_native_crc(blob) if enabled else blob
+        evidence.update(changed=result != blob,
+                        package_sha256=hashlib.sha256(result).hexdigest(),
+                        source_crc_rule=native.crc_rule,
+                        output_crc_rule="header" if enabled else native.crc_rule,
+                        crc_normalized=bool(enabled and result != blob))
+        return result, evidence
     palette = [_feature(p) for p in palette_rgba(native)]
     pixels = [_feature(p) for p in decode_level(native, native.size)]
     side, engines = native.size, set()
@@ -143,7 +149,7 @@ def add_mipmaps(blob, *, enabled=False, engine="auto"):
     h, t = list(native.header), list(native.texture)
     t[5], t[6], h[7] = len(payload), t[6] | tpl.FLAG_MIPMAP, len(payload)
     body = tpl.TEXTURE.pack(*t) + payload
-    h[8] = zlib.crc32(body if native.crc_rule == "header" else payload) & 0xffffffff
+    h[8] = zlib.crc32(body) & 0xffffffff
     result = tpl.HEADER.pack(*h) + body
     checked = read_native_pal4(result)
     if checked.base_indices != native.base_indices or checked.palette != native.palette:

@@ -2,7 +2,8 @@
 
 The existing codebook and largest-level index plane remain byte-identical.
 Only lower levels are generated. Native format/UVs, material/source identity,
-alpha flags, and the source CRC convention are preserved. No runtime changes.
+alpha flags are preserved. Legacy CRC inputs are accepted; enabled output uses
+the runtime CRC over descriptors and payload. No runtime changes.
 
 PVR layout authority: pinned KOS utils/pvrtex pvr_texture.c MipMapOffset and
 pvr_texture_decoder.c. Indices are Morton ordered; a codebook vector is
@@ -202,7 +203,13 @@ def add_mipmaps(blob: bytes, *, enabled=False, engine="auto"):
                         after_payload_bytes=len(native.payload), extra_payload_bytes=0,
                         package_sha256=evidence["source_package_sha256"],
                         base_level_exact=True, codebook_exact=True)
-        return blob, evidence
+        result = tpl.canonical_native_crc(blob) if enabled else blob
+        evidence.update(changed=result != blob,
+                        package_sha256=hashlib.sha256(result).hexdigest(),
+                        source_crc_rule=native.crc_rule,
+                        output_crc_rule="header" if enabled else native.crc_rule,
+                        crc_normalized=bool(enabled and result != blob))
+        return result, evidence
     book = [tuple(c for pixel in vector for c in _feature(pixel))
             for vector in codebook_rgba(native)]
     pixels = [_feature(p) for p in decode_level(native, native.size)]
@@ -221,7 +228,7 @@ def add_mipmaps(blob: bytes, *, enabled=False, engine="auto"):
     t[5], t[6] = len(payload), t[6] | tpl.FLAG_MIPMAP
     h[7] = len(payload)
     body = tpl.TEXTURE.pack(*t) + payload
-    h[8] = zlib.crc32(body if native.crc_rule == "header" else payload) & 0xffffffff
+    h[8] = zlib.crc32(body) & 0xffffffff
     result = tpl.HEADER.pack(*h) + body
     checked = read_native_vq(result)
     if checked.codebook != native.codebook or checked.base_indices != native.base_indices:

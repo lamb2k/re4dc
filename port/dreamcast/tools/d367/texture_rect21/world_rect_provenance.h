@@ -1,11 +1,11 @@
 #pragma once
 #include <cstdint>
 
-// Scoped26 policy/source provenance, never physical file integrity.
+// Scoped36 policy/source provenance, never physical file integrity.
 // Call only AFTER MeshPackage::adopt(...,true,true) and the genuine R4PW
 // CRC/record validation. The three immutable full-file certificates come from
-// 90 key-only remaps (86 OP,4 VA); all geometry/placements/pass/cull remain
-// exact and the 26 RGB565 replacements have opaque alpha at every mip level.
+// 164 key-only remaps (160 OP,4 VA); all geometry/placements/pass/cull remain
+// exact and the 36 RGB565 replacements have opaque alpha at every mip level.
 // This does not certify filtered RGB appearance, final draws or performance.
 namespace re4dc::rect21::provenance {
 struct Certificate {

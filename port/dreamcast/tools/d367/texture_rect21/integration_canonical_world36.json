@@ -1,0 +1,50 @@
+{
+  "state": "CANONICAL_1004_WORLD_SOURCE_INTEGRATED",
+  "before": {
+    "scoped_representations.inc": "e11601a9ae21230693319cd787a38a7112d6f6d9f28e7c06903f0fda2d35ca63",
+    "provenance_certificates.inc": "f9e57bfa446ca92a0ede4a89b216bd6270f5359a2027e54c18bc9eb0ba203ed0",
+    "world_rect_provenance.h": "8a5f866395189640442fef84aee0703151fa91aede72c451b5d94074d8e203df",
+    "world_rect_bind.h": "8feabe767fbf77428e0f414a22150c4dfa582cba5221a418aa6a80fd174cd072"
+  },
+  "after": {
+    "scoped_representations.inc": "e446dcc9de719c3ece0606987bb36fc764c291cbebf0e20e247c73e3eb3e2239",
+    "provenance_certificates.inc": "3270b867c224d57a66901f40602f8be57772d0ec126d0b842933ec93fae068cc",
+    "world_rect_provenance.h": "286d07060a584a466698a5efdaa8f2a4a108014ef0daf698c6df1aa86cfc42ab",
+    "world_rect_bind.h": "8feabe767fbf77428e0f414a22150c4dfa582cba5221a418aa6a80fd174cd072"
+  },
+  "canonical_delta_source": "94a6d54076eb1e9ed05d61ae72c67b2eedad8d92",
+  "canonical_delta_receipt_sha256": "77700bf92d3585285b9d14fa8eaa067b90c39f23d9e455abf300fd4c8c6b0789",
+  "canonical_delta_seal_sha256": "56a5dc26e0bda2a0887ed6ab935978591a4852e23f762913a7a36c08b2cb3ed5",
+  "representations": 36,
+  "certificates": 3,
+  "header_only_world_repairs": 21,
+  "legacy_world_ids_rejected": 21,
+  "host_checks": 573,
+  "host_command": [
+    "g++",
+    "-std=c++17",
+    "-O1",
+    "-g0",
+    "-fsanitize=undefined",
+    "-fno-sanitize-recover=all",
+    "-I/root/probe/codex-mipmap21-integration/port/dreamcast/tools/d367/texture_rect21",
+    "/root/probe/mipmap21-canonical-integration-20261021/probe.cpp",
+    "-o",
+    "/root/probe/mipmap21-canonical-integration-20261021/probe"
+  ],
+  "probe_sha256": "c1b49b6e8e20478d2d3f6419af689e5f08b6b9f2237a9af9770e91dbb2db2702",
+  "emitter_qualification_sha256": "dd8e511ae1612d923069f050c9835fdfa2ad600696c5a84579e06c2ccfa55d12",
+  "actual_Package_strict_and_CRC_stream_emitter_cases": 48,
+  "worlds": {
+    "/root/re4data/private/texture-world36-canonical-crc-20261021/dc/native/r100/ps2-world.r4pw": "2196677b4c672da4b3491533e162690b11e623db80843a21fb1d500edac7af91",
+    "/root/re4data/private/texture-world36-canonical-crc-20261021/dc/native/r101/ps2-world.r4pw": "8e62cee593f6df8826fddca0c62dce343ccce50445ff4dcd4fe6fc893c797e5b",
+    "/root/re4data/private/texture-world36-canonical-crc-20261021/dc/native/r103/ps2-world.r4pw": "1fd41c64b8c7f8e5316bc19f314c34f973aaac7214ed36e2b133156b7082237c"
+  },
+  "guard_default_zero": true,
+  "runtime_CRC_unchanged": true,
+  "limits": [
+    "New canonical programme/pack/image not built by this unit",
+    "Previous994packs/programmes preserved on CRC hold",
+    "No Flycast/performance/release/hardware acceptance"
+  ]
+}

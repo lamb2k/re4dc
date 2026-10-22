@@ -23,8 +23,8 @@ def square_candidate(blob,*,enabled=False):
  for at,index in enumerate(tpl.twiddle_16bpp(list(range(bw*bh)),bw,bh)):linear[index]=payload[2048+at]
  indices=bytes(linear[(i//bs%bh)*bw+(i%bs%bw)] for i in tpl.twiddle_16bpp(list(range(bs*bs)),bs,bs))
  square=payload[:2048]+indices;t[1:3]=[s,s];t[5]=len(square);h[7]=len(square)
- body=tpl.TEXTURE.pack(*t)+square;h[8]=zlib.crc32(body if rule=='header' else square)&0xffffffff
- return tpl.HEADER.pack(*h)+body,dict(enabled=True,source_dimensions=[w,hh],square_side=s,uv_scale=[w/s,hh/s],source_payload_bytes=n,square_base_payload_bytes=len(square),crc_rule=rule,codebook_exact=True,runtime_compatible=False)
+ body=tpl.TEXTURE.pack(*t)+square;h[8]=zlib.crc32(body)&0xffffffff
+ return tpl.HEADER.pack(*h)+body,dict(enabled=True,source_dimensions=[w,hh],square_side=s,uv_scale=[w/s,hh/s],source_payload_bytes=n,square_base_payload_bytes=len(square),crc_rule='header',source_crc_rule=rule,codebook_exact=True,runtime_compatible=False)
 
 def sample(p,w,h,u,v):
  x,y=u*w-.5,v*h-.5;ix,iy=math.floor(x),math.floor(y);fx,fy=x-ix,y-iy

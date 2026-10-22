@@ -56,6 +56,29 @@ TEXTURE = struct.Struct("<64s8I")
 IMAGE_NUMBER = re.compile(r"-(\d+)\.png$", re.IGNORECASE)
 
 
+def canonical_native_crc(blob: bytes) -> bytes:
+    """Accept a verified legacy CRC domain, emit the runtime's full body CRC.
+
+    Texture Package::adopt covers everything after header_size, including all
+    descriptors. The CRC word is Header field8 at byte36; data_size at32 is
+    untouched. This changes no descriptor, palette, codebook or texel byte.
+    """
+    if len(blob) < HEADER.size:
+        raise ValueError("short native texture header")
+    h = list(HEADER.unpack_from(blob))
+    if (h[:4] != [MAGIC, VERSION, HEADER.size, TEXTURE.size] or
+            not h[4] or h[5] != HEADER.size or
+            h[5] + h[4] * h[3] > h[6] or h[6] + h[7] != len(blob)):
+        raise ValueError("unsupported native texture CRC bounds")
+    canonical = zlib.crc32(blob[h[2]:]) & 0xffffffff
+    if h[8] == canonical:
+        return blob
+    if h[8] != zlib.crc32(blob[h[6]:]) & 0xffffffff:
+        raise ValueError("unknown native texture CRC convention")
+    h[8] = canonical
+    return HEADER.pack(*h) + blob[HEADER.size:]
+
+
 @dataclass(frozen=True)
 class TplImage:
     width: int
