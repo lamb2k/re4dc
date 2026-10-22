@@ -1,0 +1,36 @@
+{
+  "scope": "Source-only route-selection postmortem; original authored door, not runtime defect. No game/control/state writes.",
+  "runtime": "12a841d7c",
+  "source": "src/st2/r201.cpp",
+  "runtime_and_inspected_git_blob": "eac3fbf94dbf9d79ae6ccaeb0750cfc0f794b0a8",
+  "source_sha256": "13265eb6c38e8b248c2109637ee263f4df4aa2cd34813d008404a35c16b0e67a",
+  "anchors": {
+    "ambush_closes_door_and_waits_alive": [
+      978,
+      1005
+    ],
+    "sets_RSF0_then_opens": [
+      1006,
+      1026
+    ]
+  },
+  "mistake": "Castle used established postboss stairs route while current boss4000 alive. Door closed naturally; source-SAT staticroute could not establish dynamic door passage. This trapped currentreplay and originalenemy followed stairs. Authenticinjuries/death retained.",
+  "prohibition": "No further upperWeststairs retreat/door probes until actualcurrentbossdeath andsourceRSF0 proof. NextauthenticContinue lowerfloorfight only.",
+  "current_death": {
+    "run": 284,
+    "source": 33375,
+    "state_sha256": "1f354f6a4a55d565e8989d9cddc2d47e645706716e2d286b0f8c285bdfe77abb",
+    "health": [
+      0,
+      1200,
+      90,
+      600
+    ],
+    "boss": 4000,
+    "handgun": [
+      9,
+      25
+    ]
+  },
+  "frozen_127_preserved": true
+}
