@@ -1,0 +1,18 @@
+{
+  "scope": "8NEW fixed child-output source contracts, no nativechild/RAM/input/guest",
+  "utc": "2026-10-22T05:23:39.091076+00:00",
+  "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39",
+  "sources": {
+    "test-child-contract.py": "be77826e341d90f99f9c2ba34a966cc434ff2b181018e7fd72acc1cb0a35ea80",
+    "run-child-contract-tests.py": "cde18e83ded8ba9e8a960c1afe03e7fbadcd06f92525d31627da03adef2b4b56",
+    "outer-driver.py": "067073caf97a651ea585db29106004e2091c0286fc7b9793e2ad010ba286cc57",
+    "inner-adapter.py": "1a9e98bed53017256f1ebf5b6e449cacce30d40d5a75cb311988a3c2d23ed34c",
+    "output-contract.json": "28c36f2075342ae37a68fe0c7bc62ad44134b7148c25b689d2fd58a420c6b7fe",
+    "runtime-delta-proof.json": "bdb9a306c1f52ef38dadb4a35b98ce88311714d184b81cad3bdf086a36d48dc2",
+    "guest-profile-v2.json": "4c386fa2fd826d2b04f7bf5b8696dca3e339dd92485c11b8ec91b863d21ce99b"
+  },
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "test_actual_failed_evidence_remains_false_and_separate_from_accepted_parent (__main__.Contract.test_actual_failed_evidence_remains_false_and_separate_from_accepted_parent) ... ok\ntest_actual_parser_door_only_no_fallback_default_or_arbitrary_name (__main__.Contract.test_actual_parser_door_only_no_fallback_default_or_arbitrary_name) ... ok\ntest_actual_startup_log_reads_and_literal_local_dependencies_present (__main__.Contract.test_actual_startup_log_reads_and_literal_local_dependencies_present) ... ok\ntest_existing_new_output_or_control_refuses_before_marker_mutation (__main__.Contract.test_existing_new_output_or_control_refuses_before_marker_mutation) ... ok\ntest_fixed_new_paths_create_only_new_control_and_preserve_old_failed_namespace (__main__.Contract.test_fixed_new_paths_create_only_new_control_and_preserve_old_failed_namespace) ... ok\ntest_inner_actual_cap_expression_refuses_old_failed_and_other_paths (__main__.Contract.test_inner_actual_cap_expression_refuses_old_failed_and_other_paths) ... ok\ntest_reviewed_observer_pair_native_input_deadline_job_and_policy_bytes_exact (__main__.Contract.test_reviewed_observer_pair_native_input_deadline_job_and_policy_bytes_exact) ... ok\ntest_strict_original_parent_profile_and_alias_validators_remain_identical (__main__.Contract.test_strict_original_parent_profile_and_alias_validators_remain_identical) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.098s\n\nOK\n",
+  "guest_qualified": false
+}

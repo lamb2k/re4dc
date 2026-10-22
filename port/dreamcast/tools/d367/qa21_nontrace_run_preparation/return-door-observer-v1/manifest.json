@@ -1,0 +1,25 @@
+{
+  "scope": "external immutable request/readonlyreceipt; notguestallocation",
+  "files": {
+    "LAUNCH-REQUEST.json": {
+      "bytes": 6707,
+      "sha256": "df3a3c17aff5e547ff532bf3b71012683040be1b68e2be9b25ac6ba2336254ef"
+    },
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "LAUNCH-REQUEST.md": {
+      "bytes": 1444,
+      "sha256": "0f8fa40870f348ec0b1550a921739a72da22a14c60f6e87c047bb10e87439d6d"
+    },
+    "read-only-preflight.py": {
+      "bytes": 4086,
+      "sha256": "992beb370d173f328e06347b78f99ad2b15a1061ac43077c4b39857771c645b5"
+    },
+    "readonly-preflight.json": {
+      "bytes": 2860,
+      "sha256": "a81cfa78a96f86e860db0ea9d4119168e5cda434013cb0e6e14538d2a865bf3e"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# Concrete ONE door observer request — source only, no guest allocation
+
+Exact literal argv in LAUNCH-REQUEST.json uses SAME4c profile and NEW10223e4f tools with return-door01 semanticrole, immutable fixedoutput return-door-observer01(+control), exact acceptedcold e81e/frame533 seed. No arbitraryoutput/mode/ancestry option, no inheritedcold, laterrole or automaticretry. The failed original return-door01 remains unqualified/preserved; old514seal remainsblocked. Observer pair exactreviewed7c/599c, no gameprogramme/image/ELF/assets changes.
+
+165source/data/parent/failure pins (139actualreadonly) and exactdisc/ELF/nativeID/linkcount passed fullWindows readonlypreflight,1178floorchecks. Strictsameprofile/coldparent independentcheckpoint.verify passed, differentprofile refused. Eight NEW fixedoutput contracts passed eachWindows/Linux; inherited9observer tests and nativeguards carry only by exactsource. No tests/nativechild/guest were run outside source qualification.
+
+Future allocation must use exactargv, freshrootpeeradmission/global16/currentownership+47purejob/47.5actual/41inner/40.75input/60000000B/runtime18GiB64/admission18GiB128/max8PNG. Typedrangefailures retain exactreadcontext but produce invalidrows and withholdinputs/witness; unrelatederrors stayfatal. The missing originalbadpointer remains unknown. Actualordinarydoor/manual+PNG gates remain unmeasured; no AI/cinematic/Continue/performance/release/hardware claim.
