@@ -1,0 +1,79 @@
+{
+  "scope": "Controlled originalradio continuation; inheritedRSF7/openlogs are not newexecution orcompletion. Actualclose/hash, Stop/frame progress and inspectedgameplay required.",
+  "observation": {
+    "process_age": 26.11513962171739,
+    "pg": 2352652060,
+    "frame": 3493,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x0",
+    "partner_ptr": "0x0",
+    "saved_RSF204": "0x81000000"
+  },
+  "before": {
+    "process_age": 26.13013962173136,
+    "pg": 2352652060,
+    "frame": 3493,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x10000000",
+    "partner_ptr": "0x0",
+    "saved_RSF204": "0x81000000"
+  },
+  "after": {
+    "process_age": 26.17713962175185,
+    "pg": 2352652060,
+    "frame": 3495,
+    "phase": [
+      3,
+      0
+    ],
+    "room": "0x204",
+    "chapter": 7,
+    "Stop": "0x0",
+    "health": [
+      1440,
+      1440,
+      600,
+      600
+    ],
+    "CardStatus": "0x80000005",
+    "status3": "0x10000000",
+    "partner_ptr": "0x0",
+    "saved_RSF204": "0x81000000"
+  },
+  "pngs": [
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-after-radio-close\\frames\\fb0.png",
+      "sha256": "a5d7ac83f7e24bf6226b7bc42d3ffb1a960c2f7d0f55bc691e1eb3555e5bea31"
+    },
+    {
+      "path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle18-20261018\\Test21\\recovered-j-content-20261021\\route-walk-controlled-native-radio013\\shots\\controlled-after-radio-close\\frames\\fb1.png",
+      "sha256": "40399646b2994f1598bad0082f4648dbe79bd22a7eee3fa8d2c5ed2315181df7"
+    }
+  ]
+}
