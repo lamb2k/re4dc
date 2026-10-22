@@ -8270,6 +8270,12 @@ extern "C" int re4dc_pvs23_opaque_ready(const unsigned k[6],unsigned minimum_scr
        !frame_ready || stream_aborted || direct_open || draining_parts || source_draws_finished || !model_packets)return 0;
     const unsigned slots=kModelPacketBytes/32U;
     if(model_used>=slots || minimum_scratch>slots-model_used-1U)return 0;
+#if RE4DC_PS2_INTERIOR_CULL==2
+    if(re4dc_ps2_check_header)return 0;
+#endif
+#if defined(RE4DC_SKY_FAR) || defined(RE4DC_LOOK_TOGGLE)
+    if(re4dc_ps2_sky_header)return 0;
+#endif
     if(stream_scene){
         if(stream_list!=PVR_LIST_OP_POLY || (stream_closed_lists&(1U<<unsigned(PVR_LIST_OP_POLY))))return 0;
     }else if(desired_list!=PVR_LIST_OP_POLY)return 0;

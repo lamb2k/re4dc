@@ -93,9 +93,13 @@ opaque coplanar triangle pairs sharing cache endpoints. Earlier targets remain
 visible: all clear bits follow the global source-placement prefix.
 
 Geometric cell selection alone cannot hide anything. Each required panel must
-be observed in a successful **whole** kChecksAll meshlet/pick, with all low six
-outcode bits clear, finite cache coordinates, exact oriented source triangles
-and a strong front-facing area margin. Partial strip-group picks publish no
+be observed in a successful **whole** kChecksAll meshlet/pick. Each exact
+oriented source triangle must belong to a strip no larger than the actual
+post-borrow emitter limit, with no depth-plane crossing or common screen-plane
+rejection. The strip was therefore sent unchanged; unrelated strips may clip
+or cull. High outcode bits are don't-care and are masked. Cached panel positions
+are finite, within +/-4096 screen units and have a strong front-facing area
+margin. Partial strip-group picks publish no
 receipt. Pending receipts carry the actual frame/scene epoch and commit only
 after end_direct succeeds. Read-only material admission then requires the exact
 pinned resident RGB565 texture, complete upload, matching opaque depth-writing

@@ -35,6 +35,7 @@ struct Entry {Package package;Key key{11,22};unsigned frame=10;bool valid=false;
 Entry entries[3];
 bool frame_ready=true,stream_aborted=false,direct_open=false,draining_parts=false,source_draws_finished=false;
 bool stream_scene=false,ui_order=false,source_binding=true,r11f_binding=true;
+unsigned re4dc_ps2_sky_header=0,re4dc_ps2_check_header=0;
 unsigned stream_list=0,desired_list=0,stream_closed_lists=0,model_used=0,frame=10;
 void* model_packets=reinterpret_cast<void*>(32);
 constexpr unsigned kModelPacketBytes=65536;
@@ -70,6 +71,7 @@ void reset(){
  frame_ready=true;stream_aborted=direct_open=draining_parts=source_draws_finished=stream_scene=ui_order=false;
  stream_list=desired_list=stream_closed_lists=model_used=0;model_packets=reinterpret_cast<void*>(32);
  source_binding=r11f_binding=true;key[4]=0;key[5]=2;
+ re4dc_ps2_sky_header=re4dc_ps2_check_header=0;
  for(auto& row:ps2_hdr)for(auto& slot:row)slot=Slot{};
 }
 int ready(){return re4dc_pvs23_opaque_ready(key,328);}
@@ -88,6 +90,8 @@ int main(){
  reset();stream_scene=true;stream_closed_lists=1;assert(!ready());
  reset();source_binding=false;assert(!ready());
  reset();r11f_binding=false;assert(!ready());
+ reset();re4dc_ps2_sky_header=1;assert(!ready());
+ reset();re4dc_ps2_check_header=1;assert(!ready());
  reset();entries[0].frame=9;assert(!ready());
  reset();entries[0].package.uploaded=false;assert(!ready());
  reset();entries[0].package.h.texture_count=0;assert(!ready());
@@ -111,7 +115,7 @@ int main(){
 '''
     flags=['-DRE4DC_TA_DIRECT=1','-DRE4DC_D349_RENDERER_STACK=1','-DRE4DC_PVR_STREAM=1',
         '-DRE4DC_UI_POLY_ORDER=1','-DRE4DC_PS2_WORLD_TRANSITION_OWNER=1','-DRE4DC_PS2_WORLD_R11F_OWNER=1',
-        '-DRE4DC_NATIVE_FOG=1','-DRE4DC_PS2_WORLD_FOG_SOURCE=1']
+        '-DRE4DC_NATIVE_FOG=1','-DRE4DC_PS2_WORLD_FOG_SOURCE=1','-DRE4DC_LOOK_TOGGLE=1','-DRE4DC_PS2_INTERIOR_CULL=2']
     with tempfile.TemporaryDirectory(prefix='pvs23-opaque-') as td:
         for cache in (0,1):
             compile_run(Path(td),'opaque'+str(cache),prefix+body+tests,(*flags,'-DRE4DC_PS2_WORLD_HDR_CACHE='+str(cache)))

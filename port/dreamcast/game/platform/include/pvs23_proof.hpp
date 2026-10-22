@@ -95,24 +95,32 @@ struct Receipts {
     bool complete(unsigned n)const{return n && n<=kMaxPanels && committed==((1U<<n)-1U);}
 };
 
-// A whole successfully processed meshlet is the strict first cohort. Every
-// cached input must be inside all clipping planes; partial SG picks do not call
-// this predicate. The source index stream must contain both exact triangles.
+// A whole successfully processed meshlet is the strict first cohort. Each
+// qualifying source strip must have been emitted unchanged; partial SG picks do
+// not call this predicate. Other strips may clip/cull. The source index stream
+// must contain both exact triangles in qualifying strips.
 // This is a witness of submitted inputs, never a claim of depth-visible pixels.
 template<class Vertex>
 inline bool panel_sent(const Panel& p,const Vertex* cache,const std::uint8_t* codes,unsigned count,
-                       const std::uint8_t* strips,unsigned bytes,unsigned cull){
+                       const std::uint8_t* strips,unsigned bytes,unsigned cull,unsigned limit){
     if(!cache || !codes || !strips || !count || count>256U || (cull!=0U && cull!=2U))return false;
     for(unsigned i=0;i<count;++i)
-        if((codes[i]&0x3fU) || !normal_or_zero(cache[i].x) || !normal_or_zero(cache[i].y) ||
+        if(!normal_or_zero(cache[i].x) || !normal_or_zero(cache[i].y) ||
            !normal_or_zero(cache[i].z) || cache[i].z<=0)return false;
-    for(unsigned i:p.corners)if(i>=count)return false;
+    for(unsigned i:p.corners)if(i>=count || std::fabs(cache[i].x)>4096 || std::fabs(cache[i].y)>4096)return false;
     unsigned found=0;
     for(unsigned off=0;off<bytes;){
         const unsigned n=strips[off++];
         if(n<3 || n>bytes-off)return false;
-        for(unsigned i=0;i<n;++i)if(strips[off+i]>=count)return false;
-        for(unsigned t=0;t+2<n;++t){
+        unsigned any=0,all=0x3fU;
+        for(unsigned i=0;i<n;++i){
+            if(strips[off+i]>=count)return false;
+            const unsigned code=codes[strips[off+i]]&0x3fU;any|=code;all&=code;
+        }
+        // walk_lean also sends an oversized strip to the CPU clipper even when
+        // it crosses no depth plane. The real post-borrow limit is mandatory.
+        const bool unchanged=n<=limit && !(any&0x30U) && !(all&0x0fU);
+        for(unsigned t=0;unchanged && t+2<n;++t){
             const unsigned a=strips[off+((t&1U)?t+2:t)];
             const unsigned b=strips[off+t+1];
             const unsigned c=strips[off+((t&1U)?t:t+2)];
@@ -128,7 +136,7 @@ inline bool panel_sent(const Panel& p,const Vertex* cache,const std::uint8_t* co
         const double area=(double(b.x)-a.x)*(double(c.y)-a.y)-(double(b.y)-a.y)*(double(c.x)-a.x);
         // Strong screen-area margin excludes degenerate/near-zero winding and
         // is much larger than single-precision area-rounding uncertainty here.
-        if(!finite(area) || (cull==2U?area>=-16.0:std::fabs(area)<=16.0))return false;
+        if(!finite(area) || (cull==2U?area>=-256.0:std::fabs(area)<=256.0))return false;
     }
     return true;
 }

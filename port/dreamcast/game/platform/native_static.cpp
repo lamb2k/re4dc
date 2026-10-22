@@ -60,7 +60,7 @@
 #include "include/pvs23_format.hpp"
 #include "include/pvs23_proof.hpp"
 extern "C" void re4dc_pvs23_observe(unsigned,unsigned,unsigned,const void*,const std::uint8_t*,unsigned,
-                                   const std::uint8_t*,unsigned,unsigned,unsigned*);
+                                   const std::uint8_t*,unsigned,unsigned,unsigned,unsigned*);
 extern "C" void re4dc_pvs23_commit(unsigned,unsigned,const unsigned*,const unsigned*);
 #endif
 #include "cache20.h"
@@ -2313,7 +2313,7 @@ struct MeshDraw : Emitter {
 #if RE4DC_MESH_DIRECT
         if(ps2 && direct && sq && pvs_placement!=~0U)
             re4dc_pvs23_observe(pvs_placement,part_index,unsigned(&l-package.meshlets()),cache,
-                outcodes,l.vertex_count,package.strip_begin(l),l.strip_bytes,p.cull,pvs_pending);
+                outcodes,l.vertex_count,package.strip_begin(l),l.strip_bytes,p.cull,limit,pvs_pending);
 #else
         (void)l;
 #endif

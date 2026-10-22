@@ -91,7 +91,7 @@ extern "C" int re4dc_pvs23_frame_guard(unsigned room,const float* view,const flo
 #endif
 }
 extern "C" void re4dc_pvs23_observe(unsigned placement,unsigned part,unsigned meshlet,const void* cache,const std::uint8_t* codes,unsigned count,
-                                    const std::uint8_t* strips,unsigned bytes,unsigned cull,unsigned pending[3]){
+                                    const std::uint8_t* strips,unsigned bytes,unsigned cull,unsigned limit,unsigned pending[3]){
     using namespace proof23;
     if(!pending || !cert || !valid || !pvs::cur || re4dc_ps2_pvs_on!=1U)return;
     unsigned matching=0;
@@ -100,7 +100,7 @@ extern "C" void re4dc_pvs23_observe(unsigned placement,unsigned part,unsigned me
     unsigned epoch[2];if(!sync(epoch))return;
     if(pending[0]!=epoch[0] || pending[1]!=epoch[1]){pending[0]=epoch[0];pending[1]=epoch[1];pending[2]=0;}
     for(unsigned q=0;q<cert->npanels;++q)if((matching>>q)&1U)
-        if(re4dc::pvsproof::panel_sent(cert->panels[q],static_cast<const pvr_vertex_t*>(cache),codes,count,strips,bytes,cull))pending[2]|=1U<<q;
+        if(re4dc::pvsproof::panel_sent(cert->panels[q],static_cast<const pvr_vertex_t*>(cache),codes,count,strips,bytes,cull,limit))pending[2]|=1U<<q;
 }
 extern "C" void re4dc_pvs23_commit(unsigned placement,unsigned part,const unsigned pending[3],const unsigned* key){
     using namespace proof23;

@@ -62,16 +62,21 @@ namespace pvs {unsigned generation=1,pl_skipped=0,cl_skipped=0;unsigned char bit
 void generic(){
  using namespace re4dc::pvsproof;
  Panel panel{0,0,0,0,0,{0,1,2,3,2,1}};
- pvr_vertex_t v[4]{};v[0].x=10;v[0].y=10;v[1].x=10;v[1].y=100;v[2].x=100;v[2].y=10;v[3].x=100;v[3].y=100;
+ pvr_vertex_t v[5]{};v[0].x=10;v[0].y=10;v[1].x=10;v[1].y=100;v[2].x=100;v[2].y=10;v[3].x=100;v[3].y=100;
  for(auto& x:v)x.z=.001f;
- std::uint8_t codes[4]={0,0x40,0x80,0xc0},strip[5]={4,0,1,2,3};
- assert(panel_sent(panel,v,codes,4,strip,5,2)); // upper outcode bits are don't-care
- codes[0]=1;assert(!panel_sent(panel,v,codes,4,strip,5,2));codes[0]=0;
- codes[0]=32;assert(!panel_sent(panel,v,codes,4,strip,5,2));codes[0]=0;
- strip[4]=0;assert(!panel_sent(panel,v,codes,4,strip,5,2));strip[4]=3;
- assert(!panel_sent(panel,v,codes,4,strip,4,2));
- std::swap(v[1],v[2]);assert(!panel_sent(panel,v,codes,4,strip,5,2));assert(panel_sent(panel,v,codes,4,strip,5,0));
- std::swap(v[1],v[2]);v[0].x=std::numeric_limits<float>::quiet_NaN();assert(!panel_sent(panel,v,codes,4,strip,5,2));
+ std::uint8_t codes[5]={0,0x40,0x80,0xc0,0},strip[5]={4,0,1,2,3};
+ assert(panel_sent(panel,v,codes,4,strip,5,2,64)); // upper outcode bits are don't-care
+ codes[0]=1;assert(panel_sent(panel,v,codes,4,strip,5,2,64));codes[0]=0; // side-straddling strip is unchanged
+ for(unsigned i=0;i<4;++i)codes[i]|=1;assert(!panel_sent(panel,v,codes,4,strip,5,2,64));
+ for(unsigned i=0;i<4;++i)codes[i]&=0xc0;
+ codes[0]=32;assert(!panel_sent(panel,v,codes,4,strip,5,2,64));codes[0]=0;
+ strip[4]=0;assert(!panel_sent(panel,v,codes,4,strip,5,2,64));strip[4]=3;
+ assert(!panel_sent(panel,v,codes,4,strip,4,2,64));
+ assert(!panel_sent(panel,v,codes,4,strip,5,2,3)); // oversized source strip invokes CPU clipper
+ std::uint8_t unrelated[9]={4,0,1,2,3,3,4,4,4};codes[4]=32;
+ assert(panel_sent(panel,v,codes,5,unrelated,9,2,64));codes[4]=0; // unrelated strip may clip
+ std::swap(v[1],v[2]);assert(!panel_sent(panel,v,codes,4,strip,5,2,64));assert(panel_sent(panel,v,codes,4,strip,5,0,64));
+ std::swap(v[1],v[2]);v[0].x=std::numeric_limits<float>::quiet_NaN();assert(!panel_sent(panel,v,codes,4,strip,5,2,64));
  Receipts r;float k[27]{};r.sync(1,1,0x100,1,k);r.committed=3;assert(r.complete(2));
  r.sync(1,2,0x100,1,k);assert(!r.complete(2));r.committed=3;k[1]=1;r.sync(1,2,0x100,1,k);assert(!r.complete(2));
  r.committed=3;r.sync(1,2,0x100,2,k);assert(!r.complete(2));r.clear();assert(!r.complete(0));
@@ -117,12 +122,12 @@ int main(){
     for(unsigned j=0;j<l.vertex_count;++j){const auto& c=base[offsets?offsets[j]:j];const unsigned xyz[3]={c.x,c.y,c.z};lo[0]=std::min(lo[0],double(xyz[ax]));hi[0]=std::max(hi[0],double(xyz[ax]));lo[1]=std::min(lo[1],double(xyz[ay]));hi[1]=std::max(hi[1],double(xyz[ay]));}
     if(hi[0]==lo[0] || hi[1]==lo[1])continue;
     for(unsigned j=0;j<l.vertex_count;++j){const auto& c=base[offsets?offsets[j]:j];const unsigned xyz[3]={c.x,c.y,c.z};cache[j].x=10+600*(xyz[ax]-lo[0])/(hi[0]-lo[0]);cache[j].y=10+440*(xyz[ay]-lo[1])/(hi[1]-lo[1]);cache[j].z=.001f;}
-    if(!re4dc::pvsproof::panel_sent(p,cache.data(),codes.data(),l.vertex_count,ps2w.package.strip_begin(l),l.strip_bytes,2))for(auto& c:cache)c.x=640-c.x;
-    found=re4dc::pvsproof::panel_sent(p,cache.data(),codes.data(),l.vertex_count,ps2w.package.strip_begin(l),l.strip_bytes,2);
+    if(!re4dc::pvsproof::panel_sent(p,cache.data(),codes.data(),l.vertex_count,ps2w.package.strip_begin(l),l.strip_bytes,2,64))for(auto& c:cache)c.x=640-c.x;
+    found=re4dc::pvsproof::panel_sent(p,cache.data(),codes.data(),l.vertex_count,ps2w.package.strip_begin(l),l.strip_bytes,2,64);
    }
    assert(found);
    unsigned pending[3]={~0U,~0U,0},key[6]={1,2,64,64,0,2};
-   re4dc_pvs23_observe(p.placement,p.part,p.meshlet,cache.data(),codes.data(),l.vertex_count,ps2w.package.strip_begin(l),l.strip_bytes,2,pending);
+   re4dc_pvs23_observe(p.placement,p.part,p.meshlet,cache.data(),codes.data(),l.vertex_count,ps2w.package.strip_begin(l),l.strip_bytes,2,64,pending);
    assert((pending[2]>>q)&1U);
    const unsigned before=proof23::receipts.committed;
    material=false;re4dc_pvs23_commit(p.placement,p.part,pending,key);assert(proof23::receipts.committed==before);material=true;
