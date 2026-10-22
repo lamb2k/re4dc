@@ -3,8 +3,8 @@
   "created_utc": "2026-10-22T01:07:56.671673+00:00",
   "files": {
     ".gitattributes": {
-      "bytes": 47,
-      "sha256": "e087f0bf129329bfe070e6cee72c709bf72f539200a77d6ebe6a91b7c6dd09b2"
+      "bytes": 71,
+      "sha256": "c672647d019253d54bd214271a954e3b7f1c32e683a2e0582ab9f2df4c7ee3b7"
     },
     "PLAN.md": {
       "bytes": 10511,
@@ -27,8 +27,8 @@
       "sha256": "69c29ed80746da752fdd53d2410cf277060bfd04e9805e1c7a8664316ddacca2"
     },
     "exact-log-symbols.json": {
-      "bytes": 665,
-      "sha256": "9d26a5b22ad1e54bcc6f6e05df0232666582289d3877becf6608322d375c6566"
+      "bytes": 634,
+      "sha256": "b47debb79a4f68c9e07554fd77679468bf71941df80981d3bce86254a3a72b29"
     },
     "guest-profile-v2.json": {
       "bytes": 8850,
@@ -55,8 +55,8 @@
       "sha256": "47d2bcce7f98d3e8b90ed96f8de82b9e0df2e3dbca2aa44cd033178d5a738821"
     },
     "observer-binding-v2.json": {
-      "bytes": 1456,
-      "sha256": "6cbe1600ef8d6016d5a684b811d3db719266c052b174cdfbe8d701c2e045ea5e"
+      "bytes": 1421,
+      "sha256": "da8944768ca95ad4d5ab557f9c52334888465ea414e2b3909aae4dc68c1d21ca"
     },
     "observer-v2-ABI.json": {
       "bytes": 43125,
@@ -75,8 +75,8 @@
       "sha256": "1d521b1ca227b07273fd4f7f1d2a7e1e2848b71eaee18ba07ad691386add2565"
     },
     "run-unit-tests.py": {
-      "bytes": 1393,
-      "sha256": "137df209174f962ae01e7e1f1ffea1b687a933d08d008591ca9a1240a1e2fca5"
+      "bytes": 1406,
+      "sha256": "ac05edada99f0d70c482d0bfa9626cb7c462c9685aab23ebd52400ffc1a9a660"
     },
     "selected-assets.json": {
       "bytes": 2561,
@@ -111,15 +111,15 @@
       "sha256": "c381aee93ae5dca166586b738de38c880c089dbd50e4f84c95b8a61c5852ef6d"
     },
     "unit-test-receipt.json": {
-      "bytes": 10211,
-      "sha256": "d92f779b96afab31b6d03027728f9e4041c993d956a94aacc413a9416e5a458e"
+      "bytes": 10132,
+      "sha256": "215e83b38c7a871c67afc90b17636d782c30bb79c78e7f4698c607f7f663ae88"
     },
     "windows-backend.py": {
       "bytes": 11248,
       "sha256": "49c9b62e3478c0c833ec63c29f7883637332193a685fd91460324e6bdd0451f3"
     }
   },
-  "logical_bytes": 177584,
+  "logical_bytes": 177476,
   "allocation_limit": 4194304,
   "all_prior_fixtures_preserved": true,
   "launch_ready": false,
