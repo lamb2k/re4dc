@@ -36,6 +36,7 @@ unsigned fails, peak_alloc, peak_free;
 // VRAM_ROOM_ARENA (Makefile; lane mipmap22): two-ended placement. Class 2 (long-lived: core keys, glyph atlas, overlay
 // slab) takes the highest place that fits, class 1 (room-lifetime textures) the lowest; class 0 (dynamic: movie, door,
 // lake, probes) keeps best fit in between. native_ui.cpp sets re4dc_vram_arena_class around its allocations.
+#if !defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) || !RE4DC_VRAM_ROOM_ARENA_NO_TOP
 // Highest page-rule placement of `len` bytes in extent e, or ~0 if it does not fit.
 std::uint32_t place_high(const Extent& e, std::uint32_t len) {
     if(len > e.len) return ~0U;
@@ -49,6 +50,7 @@ std::uint32_t place_high(const Extent& e, std::uint32_t len) {
     if(at < base + e.off) return ~0U;
     return std::uint32_t(at - base);
 }
+#endif
 #endif
 #if defined(RE4DC_TEX_CHECK) && RE4DC_TEX_CHECK == 2
 // TEX_CHECK=2 (test only): free texture RAM reads magenta (RGB565 0xF81F), so a draw from never-written or
@@ -129,17 +131,34 @@ pvr_ptr_t pvr_mem_malloc(size_t size) {
             const std::uint32_t at = place(free_list[i], len);
             if(at != ~0U) { best = i; best_at = at; }
         }
+#if !defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) || !RE4DC_VRAM_ROOM_ARENA_NO_TOP
     } else if(cls == 2) {   // long-lived: highest address that fits
         for(unsigned i = nfree; i-- > 0 && best == ~0U;) {
             const std::uint32_t at = place_high(free_list[i], len);
             if(at != ~0U) { best = i; best_at = at; }
         }
+#endif
     } else
 #endif
     for(unsigned i = 0; i < nfree; ++i) {
-        const std::uint32_t at = place(free_list[i], len);
+        Extent candidate = free_list[i];
+#if defined(RE4DC_VRAM_ROOM_ARENA) && RE4DC_VRAM_ROOM_ARENA && \
+    defined(RE4DC_VRAM_ROOM_ARENA_NO_TOP) && RE4DC_VRAM_ROOM_ARENA_NO_TOP
+        // Console experiment: keep glyphs, the overlay slab and core keys below
+        // a47f2000. Class 1 room placement/retirement and dynamic use are unchanged.
+        // Clip only the candidate, never the real free list: other classes may
+        // still use the final 56 KiB. Do not fall back into that range on failure.
+        if(cls == 2) {
+            constexpr std::uintptr_t kLongLivedEnd = 0xa47f2000U;
+            const std::uintptr_t start = base + candidate.off;
+            if(start >= kLongLivedEnd) continue;
+            const std::uintptr_t available = kLongLivedEnd - start;
+            if(candidate.len > available) candidate.len = std::uint32_t(available);
+        }
+#endif
+        const std::uint32_t at = place(candidate, len);
         if(at == ~0U) continue;
-        const std::uint32_t left = free_list[i].len - len;
+        const std::uint32_t left = candidate.len - len;
         if(left < best_left) { best = i; best_at = at; best_left = left; if(!left) break; }
     }
     if(best == ~0U || nalloc >= kMaxAlloc) { ++fails; return nullptr; }

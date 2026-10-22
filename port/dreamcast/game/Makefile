@@ -2730,6 +2730,19 @@ VRAM_PAGES_VQ_ONLY ?= 0
 # room change every unpinned, non-core texture of the old room closes (the listed keys of the new room are pinned),
 # so the new room's preload fills one hole-free region (r101 -> r100 x3 had 14 KB largest blocks and 82 evictions).
 VRAM_ROOM_ARENA ?= 0
+# VRAM_ROOM_ARENA_NO_TOP=1 (arena23 console experiment, default 0): long-lived
+# class 2 allocations use best fit below a47f2000 instead of top placement. The
+# final 56 KiB stays available to room/dynamic allocations. Room residency stays on.
+VRAM_ROOM_ARENA_NO_TOP ?= 0
+ifneq ($(filter-out 0 1,$(VRAM_ROOM_ARENA_NO_TOP)),)
+$(error VRAM_ROOM_ARENA_NO_TOP must be 0 or 1)
+endif
+ifeq ($(VRAM_ROOM_ARENA_NO_TOP),1)
+ifneq ($(VRAM_ROOM_ARENA)$(VRAM_PAGES)$(UI_VRAM),111)
+$(error VRAM_ROOM_ARENA_NO_TOP=1 needs VRAM_ROOM_ARENA=1 VRAM_PAGES=1 UI_VRAM=1)
+endif
+$(OBJDIR)/platform/vram_pages.o: PLATFORM_CPPFLAGS += -DRE4DC_VRAM_ROOM_ARENA_NO_TOP=1
+endif
 # CRASH_OVL_LINE=1 (lane mipfault22, diagnostic, default 0 = image unchanged): the crash screen lists each loaded
 # route overlay as name@image+bytes, so a console fault pc / pr in an overlay can be symbolized.
 CRASH_OVL_LINE ?= 0
