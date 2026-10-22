@@ -1,0 +1,14 @@
+{
+  "scope": "UNALLOCATED strict inventory04 DETACHED_PROCESS SOURCE candidate; root separately reviews/adopts/allocates",
+  "argv": [
+    "C:/Users/lambd/AppData/Local/Programs/Python/Python312/python.exe",
+    "-B",
+    "\\\\wsl.localhost\\Ubuntu-24.04\\root\\probe\\codex-qa21-death-repair\\port\\dreamcast\\tools\\d367\\qa21_native_job_inventory_v4\\supervisor.py",
+    "--tools-sha256",
+    "031077676c334cb7989039c53bbcdbb0153e9b6ff93590d93a4eec71f73ac115",
+    "--execute-root-allocation"
+  ],
+  "allocation_path": "C:/Game Dev/Emulators/codex-lanes/qa21-combined-regression/NATIVE-JOB-INVENTORY04-ROOT-ALLOCATION.json",
+  "allocation_template_sha256": "dcd1143bf78bcb856d37932f87206dab1b0169bf7b7c6b09d58ffaff2cfaefaa",
+  "tools_sha256": "031077676c334cb7989039c53bbcdbb0153e9b6ff93590d93a4eec71f73ac115"
+}

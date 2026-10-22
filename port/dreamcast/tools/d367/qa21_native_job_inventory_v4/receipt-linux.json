@@ -1,0 +1,15 @@
+{
+  "scope": "v4 SOURCE focused flags/retained-startup five controls + actual-allocation three fake controls only; no native API/child/image/input",
+  "test_count": 8,
+  "startup_controls": 5,
+  "allocation_controls": 3,
+  "status": "PASS",
+  "tests": {
+    "test_startup.py": "e96730de348c9ff602272415bd1c76ae7493df0a198e5b0c0c8f60e1a1c3a271",
+    "test_allocation.py": "d5dd16ae6446f2f463b7224fce218aff910a743855fe7b230e355d9cf28b6e21"
+  },
+  "runtime_manifest_sha256": "031077676c334cb7989039c53bbcdbb0153e9b6ff93590d93a4eec71f73ac115",
+  "coordinator_cleanup_inventory_and_frozen_api_backend_exact_v3": true,
+  "strict_membership_unchanged": true,
+  "platform": "Linux-6.6.87.2-unicode+-x86_64-with-glibc2.39"
+}
