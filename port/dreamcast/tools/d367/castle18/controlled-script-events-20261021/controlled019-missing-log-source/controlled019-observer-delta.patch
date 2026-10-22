@@ -1,0 +1,82 @@
+--- frozen018
++++ candidate019
+@@ -1,8 +1,8 @@
+-"""CONTROLLED exact017state: existing Goto slots/current-entry admission only; native204Door4 to209, physicalDoor1 then original leader cut. No actor/room/outcome writes."""
++"""CONTROLLED exact018state: existing Goto slots/current-entry admission only; native204Door4 to209, physicalDoor1 then original leader cut. No actor/room/outcome writes."""
+ from pathlib import Path
+ import math
+ import ctypes as C,ctypes.wintypes as W,json,time,re,struct,sys,hashlib,importlib.util,shutil,traceback
+-L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');cap=Path(sys.argv[1]).resolve();assert cap==D/'route-walk-controlled-ch32-door018'
++L=Path(__file__).parent;D=Path(r'C:\Flycast-Evidence\re4-dreamcast\castle18-20261018\Test21\recovered-j-content-20261021');cap=Path(sys.argv[1]).resolve();assert cap==D/'route-walk-controlled-ch32-door019'
+ k=C.WinDLL('kernel32',use_last_error=True);u=C.WinDLL('user32',use_last_error=True)
+ k.OpenProcess.argtypes=[W.DWORD,W.BOOL,W.DWORD];k.OpenProcess.restype=W.HANDLE;k.GetProcessTimes.argtypes=[W.HANDLE]+[C.POINTER(W.FILETIME)]*4;k.QueryFullProcessImageNameW.argtypes=[W.HANDLE,W.DWORD,W.LPWSTR,C.POINTER(W.DWORD)];k.ReadProcessMemory.argtypes=[W.HANDLE,C.c_void_p,C.c_void_p,C.c_size_t,C.POINTER(C.c_size_t)];k.WaitForSingleObject.argtypes=[W.HANDLE,W.DWORD];k.CloseHandle.argtypes=[W.HANDLE]
+ u.GetWindowThreadProcessId.argtypes=[W.HWND,C.POINTER(W.DWORD)];u.GetClassNameW.argtypes=[W.HWND,W.LPWSTR,C.c_int];u.PostMessageW.argtypes=[W.HWND,W.UINT,W.WPARAM,W.LPARAM];CALL=C.WINFUNCTYPE(W.BOOL,W.HWND,W.LPARAM);u.EnumWindows.argtypes=[CALL,W.LPARAM]
+@@ -40,6 +40,25 @@
+  maps=list(re.finditer(r'(?m)^.*RAM\(16 MB\)\s+([0-9a-fA-F]+).*$',log));loaded=re.search(r'(?m)^.*Loaded state ver [0-9]+ from '+re.escape(str(expected_state))+r' size [0-9]+.*$',log)
+  if not maps or not loaded:return None
+  return dict(RAM=int(maps[-1].group(1),16),mapping_line=maps[-1].group(0),state_load_line=loaded.group(0),mapping_precedes_load=maps[-1].end()<=loaded.start())
++
++def wait_startup_mapping():
++ global ram,region_failure_count
++ missing_recorded=False
++ while age()<38:
++  check()
++  try:log=(cap/'flycast.log').read_text(errors='replace')
++  except FileNotFoundError:
++   if not missing_recorded:events.append(dict(startup_log_not_created_pending=True,process_age=age(),no_inputs=True));missing_recorded=True
++   time.sleep(.03);continue
++  mapping=startup_log_mapping(log,cap/'data/disc.state')
++  if mapping and mapping['mapping_precedes_load']:
++   ram=mapping['RAM'];q=region_query(ram+0x2e91dc,4)
++   if q['committed']and q['accessible']and q['covers']:
++    events.append(dict(startup_exact_state_load_and_mapping=mapping,process_age=age(),process_identity=owner,initial_pG_region=q));return mapping
++   region_failure_count+=1
++   if len(read_diagnostics)<100:read_diagnostics.append(dict(operation='startupVirtualQueryEx',RAM_base=hex(ram),process_age=age(),pid=owner['pid'],process_start_filetime=owner['start_filetime'],region=q))
++  time.sleep(.03)
++ return None
+ 
+ def readable_sequence(row,previous,current_ram):
+  return bool(row and previous and row.get('live_native_code_anchors_verified')is True and row.get('phase')==[3,0]and row.get('room')in['0x204','0x209']and row.get('pg')==previous.get('pg')and current_ram==previous.get('RAM_base')and row.get('frame',0)>previous.get('frame',0)and row.get('frame',0)>=2604)
+@@ -212,30 +231,21 @@
+  shot=cap/'shots'/('controlled-'+label);shot.mkdir(parents=True,exist_ok=False)
+  for n in ['emu.cfg','flycast.log','flycast.pid']:shutil.copyfile(cap/n,shot/n)
+  (shot/'boot.log').write_text(matches[-1]+'\n',encoding='utf-16');before=sample();fc.capture(shot,shot/'frames');after=sample()
+- (shot/'controlled-context.json').write_text(json.dumps(dict(scope='CONTROLLED actual017state; existing config command setup separate from original204Door4/209physicalDoor1/leader-event outputs.',observation=row,before=before,after=after,pngs=[dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())for p in(shot/'frames').glob('*.png')]),indent=2)+'\n')
++ (shot/'controlled-context.json').write_text(json.dumps(dict(scope='CONTROLLED actual018state; existing config command setup separate from original204Door4/209physicalDoor1/leader-event outputs.',observation=row,before=before,after=after,pngs=[dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())for p in(shot/'frames').glob('*.png')]),indent=2)+'\n')
+ 
+ try:
+- allocation=json.loads((L/'DOOR018-ROOT-ALLOCATION.json').read_text(encoding='utf-8'));assert allocation['allocated018']is True and allocation['allow_debug_goto_command_writes']is True and allocation['observer_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest() and allocation['write_allowlist']==WRITE_ALLOWLIST, 'Exact root-owned debug command allocation required'
++ allocation=json.loads((L/'DOOR019-ROOT-ALLOCATION.json').read_text(encoding='utf-8'));assert allocation['allocated019']is True and allocation['allow_debug_goto_command_writes']is True and allocation['observer_sha256']==hashlib.sha256(Path(__file__).read_bytes()).hexdigest() and allocation['write_allowlist']==WRITE_ALLOWLIST, 'Exact root-owned debug command allocation required'
+  until=time.monotonic()+70
+  while not(cap/'owned-process.json').exists():assert time.monotonic()<until;time.sleep(.05)
+  owner=json.loads((cap/'owned-process.json').read_text());h=k.OpenProcess(0x1000|0x10|0x20|0x8|0x100000,False,owner['pid']);assert h;check();age0=time.time()-(owner['start_filetime']/1e7-11644473600);mono0=time.monotonic();age=lambda:age0+time.monotonic()-mono0
+  start=json.loads((cap/'run-start.json').read_text());assert start['elf_sha256']=='4d823b496b9a402baadabe7f679c089fa0fd55c7ffd175ec634915745a11487f'and start['disc_sha256']=='b67ac21eff8d819ef9ca5f0997b4c16401cb98a3d304feb65aa4b90f7affbeb6'
+- assert re.search(r'(?m)^Dreamcast\.AutoLoadState = yes\s*$',(cap/'emu.cfg').read_text()),'Exact017 fullstate continuation requires AutoLoadState=yes'
+- mapping=None;mapping_ready=False
+- while age()<38:
+-  check();mapping=startup_log_mapping((cap/'flycast.log').read_text(errors='replace'),cap/'data/disc.state')
+-  if mapping and mapping['mapping_precedes_load']:
+-   ram=mapping['RAM'];q=region_query(ram+0x2e91dc,4)
+-   if q['committed']and q['accessible']and q['covers']:
+-    events.append(dict(startup_exact_state_load_and_mapping=mapping,process_age=age(),process_identity=owner,initial_pG_region=q));mapping_ready=True;break
+-   region_failure_count+=1
+-   if len(read_diagnostics)<100:read_diagnostics.append(dict(operation='startupVirtualQueryEx',RAM_base=hex(ram),process_age=age(),pid=owner['pid'],process_start_filetime=owner['start_filetime'],region=q))
+-  time.sleep(.03)
++ assert re.search(r'(?m)^Dreamcast\.AutoLoadState = yes\s*$',(cap/'emu.cfg').read_text()),'Exact018 fullstate continuation requires AutoLoadState=yes'
++ mapping=wait_startup_mapping();mapping_ready=mapping is not None
+  if not mapping_ready:events.append(dict(startup_readiness_timeout=True,no_inputs=True))
+  previous_readable=None;readiness_recorded=False;action_blocked=False
+  published={1:False,2:False};sent={1:False,2:False};placed={1:False,2:False};entry=False;door_open=False;cut3=False;cut2=False;returned=False;shots=set();cut2frame=None
+- events.append(dict(inherited017_firstcut_return=True,state_sha256='1b1485784a8c796fbaad18573002ae353f75d9b67c0b4b156e1724bf296ac04b',no_replay_015_drain_or_017_firstcut=True,controlled_setup_maximum_successful_bytes=58))
+- with(cap/'controlled-door018-observations.jsonl').open('x')as out:
++ events.append(dict(inherited017_firstcut_return=True,state_sha256='4d7178b9d7420156b39328396cae08661f92c297f4ed28794b145a3cfe03ecdc',no_replay_015_drain_or_017_firstcut=True,controlled_setup_maximum_successful_bytes=58))
++ with(cap/'controlled-door019-observations.jsonl').open('x')as out:
+   while k.WaitForSingleObject(h,0)==258 and age()<39:
+    check()
+    if not mapping_ready:time.sleep(.03);continue
+@@ -293,4 +303,4 @@
+  raise
+ finally:
+  if h:k.CloseHandle(h)
+- if cap.exists():(cap/'controlled-door018-observer-summary.json').write_text(json.dumps(dict(scope=__doc__,last=last,events=events,owned_close_sent=closed_sent,source_fields_not_acceptance_alone=True,controlled_setup_not_event_completion=True,read_failure_count=read_failure_count,region_failure_count=region_failure_count,read_diagnostics=read_diagnostics),indent=2)+'\n')
++ if cap.exists():(cap/'controlled-door019-observer-summary.json').write_text(json.dumps(dict(scope=__doc__,last=last,events=events,owned_close_sent=closed_sent,source_fields_not_acceptance_alone=True,controlled_setup_not_event_completion=True,read_failure_count=read_failure_count,region_failure_count=region_failure_count,read_diagnostics=read_diagnostics),indent=2)+'\n')

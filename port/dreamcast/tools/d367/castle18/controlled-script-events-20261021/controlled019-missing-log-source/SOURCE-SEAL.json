@@ -1,0 +1,70 @@
+{
+  "scope": "019source/018failedactual preserved; no019guest.",
+  "members": [
+    {
+      "path": "run-controlled-ch32-door019.py",
+      "bytes": 9524,
+      "sha256": "f1dec0d483080df1fb266a48083d2d6aa3cbddd600070501066d7e3d17ffaeb8"
+    },
+    {
+      "path": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "path": "controlled019-default-prepare.json",
+      "bytes": 1562,
+      "sha256": "9a49fe649dabe811dd1dbd99df4bfcc253a3d9bfe4211ab651cbcb1050c27001"
+    },
+    {
+      "path": "prepare-controlled019-source-handoff.py",
+      "bytes": 5284,
+      "sha256": "dbeb0d338deae82ec9f4ba5c210409ba616c8346958a5de8c3f7518f0770afd2"
+    },
+    {
+      "path": "observe-controlled-ch32-door019.py",
+      "bytes": 27565,
+      "sha256": "fe49e279d47c0c6e5cdbfa5bac6e669a4997031dd33bb88ea21427a616e30885"
+    },
+    {
+      "path": "CONTROLLED019-SOURCE-LAUNCH-PROPOSAL.json",
+      "bytes": 4385,
+      "sha256": "5f792029e9ae8c28accbee430fae52532ee99fdf928f7796b34a7b8519d42778"
+    },
+    {
+      "path": "controlled019-startup-log-source-cases.json",
+      "bytes": 2265,
+      "sha256": "728447a495c82ff2ae5c8c6048f73cb47acfe7b319e846dd4911580a3be8a252"
+    },
+    {
+      "path": "run-controlled-ch32-door019.sh",
+      "bytes": 352,
+      "sha256": "b6696a56be94892fee5a1dd890ca05d6c82cbcad1f749f90ad0d1f0957fa6f72"
+    },
+    {
+      "path": "test-controlled019-startup-log-source.py",
+      "bytes": 3027,
+      "sha256": "a76cbfdc98ad985c8c2157a5f4f403edec5106f9ad0e87265d7ec170574c35e4"
+    },
+    {
+      "path": "prepare-controlled019-missing-log-delta.py",
+      "bytes": 3382,
+      "sha256": "37768eb436adc48f35dfb9f54888ae4a69d1abb9069d403cdbb4de92b94ade50"
+    },
+    {
+      "path": "controlled-ch32-door019-pins.json",
+      "bytes": 6779,
+      "sha256": "818945d5ab42c80ef6d18ef55ba8b7582addf8f803677e140d2d968ffa5436f3"
+    },
+    {
+      "path": "controlled019-observer-delta.patch",
+      "bytes": 8961,
+      "sha256": "f64d6f661e77d247dd1ed085e54ce2ed41a5243da007a08863eba1d2ea7951d7"
+    },
+    {
+      "path": "CURRENT-STATUS.md",
+      "sha256": "eccc34a001498342ea375de385881daca7c126349c1343c87e421766aabe1a01",
+      "bytes": 3596
+    }
+  ]
+}

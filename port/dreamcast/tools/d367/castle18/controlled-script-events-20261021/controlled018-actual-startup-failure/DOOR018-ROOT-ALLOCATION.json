@@ -1,0 +1,53 @@
+{
+  "file": "DOOR018-ROOT-ALLOCATION.json",
+  "owner": "root",
+  "utc": "2026-10-22T07:18:21.7166223Z",
+  "allocated018": true,
+  "allowed_runs": 1,
+  "no_retry": true,
+  "no_following_guest": true,
+  "allow_debug_goto_command_writes": true,
+  "observer_sha256": "16154512b11b99880c76392e198b2b7de38650d7618502ba83236928b4f21eae",
+  "wrapper_sha256": "cdd4de7242f870fac6c9e595142a9f6d5a0f37d5d43e6a2d904440d728e40a33",
+  "pins_sha256": "2bb24552c810c222f6f08795bbb18637e798625a6cab6ea3cd94cb4f782412fc",
+  "proposal_sha256": "b01d8564a4dfbfe9f612f8e5419004221915d4e6475ab53eccc262d01784d8ed",
+  "review_sha256": "1763fd8aa8bd0dd2172a0e89455186c934fd8f8694db0f43215fd32ac3fb93e5",
+  "source": "3b095e77db9f9d564155e43a3c1669597205f947",
+  "seed_sha256": "1b1485784a8c796fbaad18573002ae353f75d9b67c0b4b156e1724bf296ac04b",
+  "write_allowlist": [
+    {
+      "address": "0x8c47ff48",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c47ff60",
+      "bytes": 24
+    },
+    {
+      "address": "0x8c4801b6",
+      "bytes": 1
+    },
+    {
+      "address": "0x8c47fff0",
+      "bytes": 4
+    }
+  ],
+  "maximum_successful_command_bytes": 58,
+  "scope": "One exact017 continuation: existing engine placement commands, native r204 Door4, r209 physical Door1 and original leader event. No outcome writes. Preserve all authentic states and VMUs.",
+  "resources": {
+    "start_bytes": 20342374400,
+    "runtime_bytes": 19394461696,
+    "raw_seconds": 41,
+    "normal_close": 39,
+    "absolute_seconds": 47.5,
+    "capture_bytes": 62914560,
+    "global_flycast": 16,
+    "castle": 2,
+    "global_source_peer_bytes": 67108864
+  },
+  "global_Flycasts": 0,
+  "C_free_bytes": 145655447552,
+  "peer_reserved_bytes": 67108864,
+  "additional_object_reserve_bytes": 33554432,
+  "protected_inputs": "All wrapper pins and current process/resource guards remain mandatory."
+}
