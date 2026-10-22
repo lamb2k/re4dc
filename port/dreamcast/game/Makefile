@@ -2730,6 +2730,12 @@ VRAM_PAGES_VQ_ONLY ?= 0
 # room change every unpinned, non-core texture of the old room closes (the listed keys of the new room are pinned),
 # so the new room's preload fills one hole-free region (r101 -> r100 x3 had 14 KB largest blocks and 82 evictions).
 VRAM_ROOM_ARENA ?= 0
+# CRASH_OVL_LINE=1 (lane mipfault22, diagnostic, default 0 = image unchanged): the crash screen lists each loaded
+# route overlay as name@image+bytes, so a console fault pc / pr in an overlay can be symbolized.
+CRASH_OVL_LINE ?= 0
+ifneq ($(CRASH_OVL_LINE),0)
+$(OBJDIR)/platform/modules.o $(OBJDIR)/platform/crash_screen.o: PLATFORM_CPPFLAGS += -DRE4DC_CRASH_OVL_LINE=1
+endif
 ifneq ($(VRAM_ROOM_ARENA),0)
 $(OBJDIR)/platform/native_ui.o $(OBJDIR)/platform/vram_pages.o: PLATFORM_CPPFLAGS += -DRE4DC_VRAM_ROOM_ARENA=1
 endif

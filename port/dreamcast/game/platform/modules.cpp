@@ -621,6 +621,26 @@ static void routeOverlayLoad(unsigned index)
 #endif
 }
 
+#if defined(RE4DC_CRASH_OVL_LINE) && RE4DC_CRASH_OVL_LINE
+// CRASH_OVL_LINE (lane mipfault22, diagnostic, default 0): the crash screen's overlay line, "name@image+bytes" per
+// loaded route overlay, so a console pc / pr inside an overlay can be symbolized against its .dbg.elf.
+extern "C" int re4dc_ovl_crash_line(char* out, int size)
+{
+    int n = 0, used = 0;
+    out[0] = 0;
+    for (unsigned i = 0; i < sizeof(g_modules) / sizeof(g_modules[0]) && used < size - 24; ++i) {
+        const Re4dcModule& m = g_modules[i];
+        if (!OVL_ID(m.id)) continue;
+        const RouteOverlay& o = OVL_REF(m.id);
+        if (!o.block) continue;
+        used += snprintf(out + used, size - used, "%s%s@%08lx+%lx", n ? " " : "", m.name,
+                         u32(o.block + sizeof(RouteOverlayHeader)), u32(o.image_bytes));
+        ++n;
+    }
+    return n;
+}
+#endif
+
 // Unlink or room heap rebuild: fill the code with `trapa #0xFF` (a stale call into it stops loudly
 // in the exception handler instead of running reused memory as code until the cell is reused), free it,
 // empty the table entry (the next link reads the overlay again: a fresh link).
