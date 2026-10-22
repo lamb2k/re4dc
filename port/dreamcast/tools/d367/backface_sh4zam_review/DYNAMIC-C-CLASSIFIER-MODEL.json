@@ -1,0 +1,193 @@
+{
+  "scope": "MODELLED actual C classifier opcodes only; external memcpy implementation and emitter callbacks excluded, caller walk also excluded",
+  "object_sha256": {
+    "native_static": "5189391c513c5639a3919a748d7ebb81a2600750d16a31ee6d7a0974b6777b2b"
+  },
+  "rows": [
+    {
+      "kind": "native_static",
+      "n": 4,
+      "pattern": "front",
+      "sent": 4,
+      "pieces": 1,
+      "external_memcpy_bytes": 4,
+      "classifier_only_modelled_cycles": 183,
+      "per_input_triangle": 91.5
+    },
+    {
+      "kind": "native_static",
+      "n": 4,
+      "pattern": "back",
+      "sent": 0,
+      "pieces": 0,
+      "external_memcpy_bytes": 4,
+      "classifier_only_modelled_cycles": 166,
+      "per_input_triangle": 83.0
+    },
+    {
+      "kind": "native_static",
+      "n": 4,
+      "pattern": "mixed",
+      "sent": 0,
+      "pieces": 0,
+      "external_memcpy_bytes": 4,
+      "classifier_only_modelled_cycles": 166,
+      "per_input_triangle": 83.0
+    },
+    {
+      "kind": "native_static",
+      "n": 8,
+      "pattern": "front",
+      "sent": 8,
+      "pieces": 1,
+      "external_memcpy_bytes": 8,
+      "classifier_only_modelled_cycles": 395,
+      "per_input_triangle": 65.833
+    },
+    {
+      "kind": "native_static",
+      "n": 8,
+      "pattern": "back",
+      "sent": 0,
+      "pieces": 0,
+      "external_memcpy_bytes": 8,
+      "classifier_only_modelled_cycles": 370,
+      "per_input_triangle": 61.667
+    },
+    {
+      "kind": "native_static",
+      "n": 8,
+      "pattern": "mixed",
+      "sent": 0,
+      "pieces": 0,
+      "external_memcpy_bytes": 8,
+      "classifier_only_modelled_cycles": 370,
+      "per_input_triangle": 61.667
+    },
+    {
+      "kind": "native_static",
+      "n": 16,
+      "pattern": "front",
+      "sent": 16,
+      "pieces": 1,
+      "external_memcpy_bytes": 16,
+      "classifier_only_modelled_cycles": 819,
+      "per_input_triangle": 58.5
+    },
+    {
+      "kind": "native_static",
+      "n": 16,
+      "pattern": "back",
+      "sent": 0,
+      "pieces": 0,
+      "external_memcpy_bytes": 16,
+      "classifier_only_modelled_cycles": 778,
+      "per_input_triangle": 55.571
+    },
+    {
+      "kind": "native_static",
+      "n": 16,
+      "pattern": "mixed",
+      "sent": 8,
+      "pieces": 1,
+      "external_memcpy_bytes": 16,
+      "classifier_only_modelled_cycles": 827,
+      "per_input_triangle": 59.071
+    },
+    {
+      "kind": "native_static",
+      "n": 32,
+      "pattern": "front",
+      "sent": 32,
+      "pieces": 1,
+      "external_memcpy_bytes": 32,
+      "classifier_only_modelled_cycles": 1667,
+      "per_input_triangle": 55.567
+    },
+    {
+      "kind": "native_static",
+      "n": 32,
+      "pattern": "back",
+      "sent": 0,
+      "pieces": 0,
+      "external_memcpy_bytes": 32,
+      "classifier_only_modelled_cycles": 1594,
+      "per_input_triangle": 53.133
+    },
+    {
+      "kind": "native_static",
+      "n": 32,
+      "pattern": "mixed",
+      "sent": 17,
+      "pieces": 2,
+      "external_memcpy_bytes": 32,
+      "classifier_only_modelled_cycles": 1713,
+      "per_input_triangle": 57.1
+    },
+    {
+      "kind": "native_static",
+      "n": 64,
+      "pattern": "front",
+      "sent": 64,
+      "pieces": 1,
+      "external_memcpy_bytes": 64,
+      "classifier_only_modelled_cycles": 3363,
+      "per_input_triangle": 54.242
+    },
+    {
+      "kind": "native_static",
+      "n": 64,
+      "pattern": "back",
+      "sent": 0,
+      "pieces": 0,
+      "external_memcpy_bytes": 64,
+      "classifier_only_modelled_cycles": 3226,
+      "per_input_triangle": 52.032
+    },
+    {
+      "kind": "native_static",
+      "n": 64,
+      "pattern": "mixed",
+      "sent": 35,
+      "pieces": 4,
+      "external_memcpy_bytes": 64,
+      "classifier_only_modelled_cycles": 3485,
+      "per_input_triangle": 56.21
+    },
+    {
+      "kind": "native_static",
+      "n": 128,
+      "pattern": "front",
+      "sent": 128,
+      "pieces": 1,
+      "external_memcpy_bytes": 128,
+      "classifier_only_modelled_cycles": 6755,
+      "per_input_triangle": 53.611
+    },
+    {
+      "kind": "native_static",
+      "n": 128,
+      "pattern": "back",
+      "sent": 0,
+      "pieces": 0,
+      "external_memcpy_bytes": 128,
+      "classifier_only_modelled_cycles": 6490,
+      "per_input_triangle": 51.508
+    },
+    {
+      "kind": "native_static",
+      "n": 128,
+      "pattern": "mixed",
+      "sent": 71,
+      "pieces": 8,
+      "external_memcpy_bytes": 128,
+      "classifier_only_modelled_cycles": 7029,
+      "per_input_triangle": 55.786
+    }
+  ],
+  "limitations": [
+    "Census/hash diagnostics excluded by stubbing entire emit callback, along with actual SQ emitter; cannot claim this is complete C path.",
+    "Includes C function prologue/epilogue, classify, run scans, piece selection and actual call/return issue but not callback instructions.",
+    "No cache, memory, TA stalls or FPU exceptions; existing AVK latency/group approximation."
+  ]
+}

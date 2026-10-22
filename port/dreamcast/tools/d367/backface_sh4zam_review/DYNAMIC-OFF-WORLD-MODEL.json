@@ -1,0 +1,52 @@
+{
+  "scope": "MODELLED actual original world walk_lean entire function; zero outcodes, one accepted strip, no caller",
+  "object_sha256": "5189391c513c5639a3919a748d7ebb81a2600750d16a31ee6d7a0974b6777b2b",
+  "rows": [
+    {
+      "vertices": 4,
+      "emitted": 4,
+      "function_cycles": 121,
+      "per_input_triangle": 60.5,
+      "per_vertex": 30.25
+    },
+    {
+      "vertices": 8,
+      "emitted": 8,
+      "function_cycles": 189,
+      "per_input_triangle": 31.5,
+      "per_vertex": 23.625
+    },
+    {
+      "vertices": 16,
+      "emitted": 16,
+      "function_cycles": 325,
+      "per_input_triangle": 23.214,
+      "per_vertex": 20.312
+    },
+    {
+      "vertices": 32,
+      "emitted": 32,
+      "function_cycles": 597,
+      "per_input_triangle": 19.9,
+      "per_vertex": 18.656
+    },
+    {
+      "vertices": 64,
+      "emitted": 64,
+      "function_cycles": 1141,
+      "per_input_triangle": 18.403,
+      "per_vertex": 17.828
+    },
+    {
+      "vertices": 128,
+      "emitted": 128,
+      "function_cycles": 2229,
+      "per_input_triangle": 17.69,
+      "per_vertex": 17.414
+    }
+  ],
+  "limitations": [
+    "No cache, memory, TA stalls; existing AVK issue-group/latency approximation.",
+    "Includes outcode scan/decisions and exact SQ copy plus function setup/exit; culling tests not in OFF."
+  ]
+}
