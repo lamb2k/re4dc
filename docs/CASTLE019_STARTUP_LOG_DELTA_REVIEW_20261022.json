@@ -1,0 +1,45 @@
+{
+  "verdict": "CLEAR_SOURCE_ONLY",
+  "scope": "Narrow019 missing-exact-log startup delta only. Two actual helper mock cases plus AST/identity/default37pin checks. No unrelated44/17/31 rerun, target process/probe, guest, writes/input/build/image.",
+  "frozen_inputs": {
+    "observe-controlled-ch32-door019.py": "fe49e279d47c0c6e5cdbfa5bac6e669a4997031dd33bb88ea21427a616e30885",
+    "run-controlled-ch32-door019.py": "f1dec0d483080df1fb266a48083d2d6aa3cbddd600070501066d7e3d17ffaeb8",
+    "controlled-ch32-door019-pins.json": "818945d5ab42c80ef6d18ef55ba8b7582addf8f803677e140d2d968ffa5436f3",
+    "CONTROLLED019-SOURCE-LAUNCH-PROPOSAL.json": "5f792029e9ae8c28accbee430fae52532ee99fdf928f7796b34a7b8519d42778"
+  },
+  "checks": [
+    "frozen-observe-controlled-ch32-door019.py",
+    "frozen-run-controlled-ch32-door019.py",
+    "frozen-controlled-ch32-door019-pins.json",
+    "frozen-CONTROLLED019-SOURCE-LAUNCH-PROPOSAL.json",
+    "frozen018-control",
+    "single-owned-case-output-redirection",
+    "019-main-calls-helper",
+    "018-old-block-is-two-assigns-and-bound-loop",
+    "ENTIRE-observer-AST-unchanged-outside-startup-extraction-and-exact-lineage-labels",
+    "only-missing-file-caught",
+    "startup-bound-38",
+    "no-command-or-input-call-in-startup-helper",
+    "same-cleared-helper-lifecycle",
+    "default-prepare-exit-zero",
+    "default-no-guest",
+    "37dependency-pins"
+  ],
+  "passed": 16,
+  "existing_startup_cases": 2,
+  "review": [
+    "Only FileNotFoundError from the exact current cap flycast.log read is bounded pending. Other errors preserve existing failclosed behavior.",
+    "Missing log emits one pending record, sleeps, checks owned identity eachiteration and returnsNone atage38. Permanentabsence then stays no-input to normal39close under independentV5.",
+    "ExactcurrentstateLoaded after lastRAMmap and VQE/readableadvancingnativeframes/codeanchors remain gates. The entire remaining observer AST is identical after narrow startup extraction and exact namespace/seed-label normalization.",
+    "Actual018seed4d7178 is selected/protected, preserving its serialized/peripheral lineage; no rewindto017. Fixed lifecycle and exact58Bexistingcommand/originalnativeeventmethod inherited unchanged."
+  ],
+  "limits": [
+    "Source-only qualification does not prove actual019 fix or original209event completion.",
+    "Startup log and native reads are synchronous; independentV5 remains the outer process/resource authority.",
+    "Actual018 target actions were unexercised because the log-read race closed the observer early. Do not classify this as game crash or originalroute defect.",
+    "Root retains exactone-run allocation/writeconsent/currentresources and actual019 loaded/readable/door/camera/event/visualacceptance."
+  ],
+  "evidence_path": "C:\\Flycast-Evidence\\re4-dreamcast\\castle019-startup-log-review21-20261022",
+  "evidence_review_sha256": "157aa54e4239c83caea2acdd7f0c41a9669db9816ecdc77b704ba1dc0f52b763",
+  "evidence_seal_sha256": "b9208d1d11a9a5da30296116809b5e70bb34b4fd41a5156d1a4a72270493d53f"
+}
