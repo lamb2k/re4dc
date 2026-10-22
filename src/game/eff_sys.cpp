@@ -448,6 +448,22 @@ int EspDataLoad(u32 addr, u32 owner, int flag)
         OWNER_ERR(owner, "EspDataLoad():EffData [%s:NULL] Invalid.", "EspDataLoad():EffData [%x:NULL] Invalid.");
         return 0;
     }
+#if defined(RE4DC_GUARD_FAIL_INJECT) && RE4DC_GUARD_FAIL_INJECT && (RE4DC_GUARD_FAIL_INJECT_MASK & 2)
+    // GUARD_FAIL_INJECT (test only, lane guards22): a first effect admission in room GUARD_FAIL_INJECT_ROOM arrives
+    // damaged N times (>= 99: always): the load takes the invalid-file path (as a bad disc read would).
+    {
+        static int injected;
+        if (sys->ownerCnt[owner] == 0 && pG->room_id == RE4DC_GUARD_FAIL_INJECT_ROOM &&
+            (RE4DC_GUARD_FAIL_INJECT >= 99 || injected < RE4DC_GUARD_FAIL_INJECT)) {
+            injected++;
+            OSReport("guard inject: effect load refused owner %u (%d)\n", (unsigned) owner, injected);
+#if !defined(RE4DC_EFFECT_ADMISSION_GUARD) || !RE4DC_EFFECT_ADMISSION_GUARD
+            sys->ownerCnt[owner]++;
+#endif
+            return 0;
+        }
+    }
+#endif
 #if defined(RE4DC_EFFECT_ADMISSION_GUARD) && RE4DC_EFFECT_ADMISSION_GUARD
     // Validate the first admission before publishing its reference. Existing
     // registrations retain the original duplicate/refcount semantics below.

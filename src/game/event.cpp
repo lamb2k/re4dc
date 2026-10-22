@@ -2497,6 +2497,20 @@ int EventMgr::EvtReadSub(char* nm, int aram, int em, int* out, int wait, u32 sz)
             return 0;
         }
         p = NameChange(p);
+#if defined(RE4DC_GUARD_FAIL_INJECT) && RE4DC_GUARD_FAIL_INJECT && (RE4DC_GUARD_FAIL_INJECT_MASK & 1)
+        // GUARD_FAIL_INJECT (test only, lane guards22): fresh event file reads in room GUARD_FAIL_INJECT_ROOM are
+        // refused N times (>= 99: always), as a read the disc layer could not admit.
+        {
+            static int injected;
+            if (pG->room_id == RE4DC_GUARD_FAIL_INJECT_ROOM &&
+                (RE4DC_GUARD_FAIL_INJECT >= 99 || injected < RE4DC_GUARD_FAIL_INJECT)) {
+                injected++;
+                OSReport("guard inject: evd read refused %s (%d)\n", p, injected);
+                pLog->err(0, 0, "EventMgr::EvtRead : DC.setData failed [%s]", p);
+                return 0;
+            }
+        }
+#endif
         unit = DC.setData(p);
         if (unit == 0) {
             pLog->err(0, 0, "EventMgr::EvtRead : DC.setData failed [%s]", p);
