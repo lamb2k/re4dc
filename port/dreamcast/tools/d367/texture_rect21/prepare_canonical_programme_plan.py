@@ -46,6 +46,17 @@ for row in retained:
  path=Path(OLDROOT)/row['path'];assert pin(path)['sha256']==row['sha256'] and path.stat().st_size==row['bytes']
 prior_final=[pin(x)for x in sorted((Path(OLDROOT)/'out').iterdir())if x.is_file()]
 assert sha(Path(OLDROOT)/'out/re4dc-game.elf')==previous['ELF_sha256'] and sha(Path(OLDROOT)/'out/program.bin')==previous['programme_sha256']
+manifest=Path('/root/re4data/private/texture-canonical1004-plan-v1-20261021/CANONICAL1004-MANIFEST.json')
+assert sha(manifest)=='acf4abe0a6d449f31aaefa8ab7046cd14265b625edf90a03b429f7cd040ba7c6'
+link_objects=[x.replace(OLDROOT,NEWROOT)for x in p['future_direct_link_argv']if x.endswith('.o')]
+direct_names={x['path']for x in p['unchanged_original_object_pins']}
+derived_names={x['derived']['path']for x in p['frozen_overlay_derived_objects']}
+actual_direct=[pin(x)for x in link_objects if x in direct_names]
+actual_derived=[pin(x)for x in link_objects if x in derived_names]
+replacements=[x for x in link_objects if x.startswith(NEWROOT+'/objects/')]
+other=[pin(x)for x in link_objects if x not in direct_names|derived_names and x not in replacements]
+assert (len(link_objects),len(actual_direct),len(actual_derived),len(replacements),len(other))==(447,402,42,2,1)
+assert other[0]['path'].endswith('/obj/missing.o')
 # No rebuilt library or recipes: exact old recorded flags/headers/objects.
 new=copy.deepcopy(p);new.update(schema=3,source=SOURCE,owned_checkout_commit=head,source_branch='codex/texture-rect21',status='PLAN_ONLY_NO_COMPILER_LINK_IMAGE_OR_GUEST',runtime_scope='Canonical WORLD_RECT21 source36/three certificates. Same algorithm/six policy anchors; no runtime CRC weakening, cache/Ganado/actor/atlas or recipe changes.',
  source_lineage=dict(runtime_source=SOURCE,owned_checkout=head,extra_checkout_files=[x for x in subprocess.check_output(['git','-C',str(T),'diff','--name-only',SOURCE,head],text=True).splitlines()],compiler_cpp_make_unchanged_since=OLD),
@@ -55,6 +66,7 @@ new=copy.deepcopy(p);new.update(schema=3,source=SOURCE,owned_checkout_commit=hea
  canonical_world36=canon,canonical_world_file_pins=worlds,previous_static_hold_programme=dict(ELF_sha256=previous['ELF_sha256'],programme_sha256=previous['programme_sha256'],namespace=OLDROOT,retained_manifest=pin(retained_manifest),final_files=prior_final),
  old_default_off_controls={k:v for k,v in previous['objects'].items()if not k.endswith('-on')})
 new.pop('world26_integration',None)
+new['actual_link_object_census']=dict(total=447,retained_original_full=actual_direct,reused_derived_helpers=actual_derived,owned_replacements=replacements,retained_support=other,preserved_but_not_all_directly_linked=dict(original_pins=446,derived_pins=43))
 new['environment']['TMPDIR']=NEWROOT+'/temp'
 new['root36_object_gates']=new.pop('root26_object_gates')
 new['root36_object_gates']+=[
@@ -63,11 +75,11 @@ new['root36_object_gates']+=[
  'Recheck actual .d closure against948 pinned dependencies; only3 allowed existing headers changed fromf42 and no unknown dependencies. Record actual source checkout and042 runtime source equivalence.',
  'native_static area_flags20B and2 normalized relocations must equal original before rename and after fresh derived rename; no old object blind replacement.'
 ]
-new['assets']=dict(status='CANONICAL_VIRTUAL_ONLY_NOT_A_PROGRAMME_QUALIFICATION',primary='M0 original6501 18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef vs canonical1004 candidate; full texture pipeline, not isolated mip causality',canonical_candidate_manifest_sha256='acf4abe0a6d449f31aaefa8ab7046cd14265b625edf90a03b429f7cd040ba7c6',canonical_candidate_expected_pack_sha256='89ef27a767fcee529c3ac6ca07fef5a8f9a3e2515f38eda63b61c8929fb0be62',pack_bytes=156248064,pack_members=6537,worlds=worlds,metadata='Old original R4ID/R4TC/PCL/OCCL/R4SG retained byteexact. New programme shared by both arms; actual physical checksums/profile/movie distinct from source anchors.',old_965_994='Historical held diagnostic fixtures, no substitution into canonical image',no_asset_or_image_write=True)
+new['assets']=dict(status='CANONICAL_VIRTUAL_ONLY_NOT_A_PROGRAMME_QUALIFICATION',primary='M0 original6501 18fcee11491f2c1f212863d6d6b572b3997f691b2e990217e1c2518f134021ef vs canonical1004 candidate; full texture pipeline, not isolated mip causality',canonical_candidate_manifest_path=str(manifest),canonical_candidate_manifest_pin=pin(manifest),canonical_candidate_manifest_sha256='acf4abe0a6d449f31aaefa8ab7046cd14265b625edf90a03b429f7cd040ba7c6',canonical_candidate_expected_pack_sha256='89ef27a767fcee529c3ac6ca07fef5a8f9a3e2515f38eda63b61c8929fb0be62',pack_bytes=156248064,pack_members=6537,worlds=worlds,metadata='Old original R4ID/R4TC/PCL/OCCL/R4SG retained byteexact. New programme shared by both arms; actual physical checksums/profile/movie distinct from source anchors.',old_965_994='Historical held diagnostic fixtures, no substitution into canonical image',no_asset_or_image_write=True)
 new['link_steps']=[
  'After parent allocation only, create one fresh owned namespace/link-context/temp; preserve every old namespace. Verify all pins and fresh capacity before output.',
  'Sequential six small TU objects through shared buildslot,55s bound each, exact recorded argv/forced headers, -MF/-o redirected, stack reports; OFF identity gates precede ON.',
- 'Freshly derive native_static-linked.o only after exact area_flags body+normalized-relocation proof. Reuse444 other full objects,43 derived helper copies,30 libraries and old linker scripts immutable; native_ui ON and derived native_static are only replacement link objects.',
+ 'Freshly derive native_static-linked.o only after exact area_flags body+normalized-relocation proof. Reuse402 directly linked original full objects,42 derived helper copies,one pinned missing.o and30 libraries and old linker scripts immutable; native_ui ON and derived native_static are only replacement link objects.',
  'ONE new base link<=180s plus14 sequential shifted link/seals; same exact overlay addresses/moves/slots. Each shifted ELF and gen_overlay temporary in owned monitored TMPDIR, preserve failure identities and bounded logs; remove only known owned rebuild intermediates.',
  'Patch genuinely new image IDs, independently validate14 header/payload/reloc-word FNV/targets/within-original-slot/newELF binding. Remove overlay sections from final ELF only after all reseals.',
  'Reconstruct raw via PT_LOAD and compare exact program bytes. Record _end/static RAM/tail/slack and actual static stacks. Preserve previous845/f42 entire immutable evidence; final program+ELF+14 exact Windows mirrors.',
@@ -82,6 +94,8 @@ new['resources']=dict(status='PARENT_REVIEW_REQUIRED_NOT_ALLOCATED',request_tota
 new['next_acceptance']='Main review/allocation. Actual strict Package/CRC canonical pack proof, fresh image and cold functional/equivalence/timing remain separate.'
 # Arithmetic is exact; no quota lowering.
 assert sum(new['resources']['forecast_components'].values())==new['resources']['forecast_bytes']
-for f,x in [('plan01.json',new),('current948-dependency-pins.json',fresh),('three-changed-dependencies.json',changes)]:
- with(E/f).open('x')as out:json.dump(x,out,indent=2);out.write('\n')
-print(json.dumps(dict(source=SOURCE,checkout=head,old_objects=446,reused_non_replacement_objects=444,derived_helpers=43,libraries=30,deps=len(fresh),changed_dependencies=len(changes),new_header_pins=len(headerpins),old_namespace_files=len(retained),plan_sha256=sha(E/'plan01.json'),plan_bytes=(E/'plan01.json').stat().st_size,forecast_bytes=128*1024**2)))
+for f,x in [('plan02.json',new),('current948-dependency-pins.json',fresh),('three-changed-dependencies.json',changes)]:
+ if (E/f).exists():assert json.loads((E/f).read_text())==x
+ else:
+  with(E/f).open('x')as out:json.dump(x,out,indent=2);out.write('\n')
+print(json.dumps(dict(source=SOURCE,checkout=head,old_objects=446,directly_reused_full=402,actually_reused_derived=42,retained_support=1,derived_helpers=43,libraries=30,deps=len(fresh),changed_dependencies=len(changes),new_header_pins=len(headerpins),old_namespace_files=len(retained),plan_sha256=sha(E/'plan02.json'),plan_bytes=(E/'plan02.json').stat().st_size,forecast_bytes=128*1024**2)))
