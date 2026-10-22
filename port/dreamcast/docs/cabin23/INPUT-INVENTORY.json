@@ -1,0 +1,241 @@
+{
+  "scope": "Design-only retained-input reads, no payload creation or target execution",
+  "base": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+  "retained_inputs": [
+    {
+      "disc_path": "evd/r11cs00.evd",
+      "source": "/root/re4data/private/ch2data-20261018/files/evd/r11cs00.evd",
+      "bytes": 27456,
+      "sha256": "a420f91ff7c1bc7de8e32a024dac2280102b671ce86952ca215021a776891cbc",
+      "mirror_exists": true,
+      "mirror_sha256": "a420f91ff7c1bc7de8e32a024dac2280102b671ce86952ca215021a776891cbc",
+      "mirror_exact": true,
+      "crc32": "049c020d"
+    },
+    {
+      "disc_path": "evd/r11cs00.evd.evq",
+      "source": "/root/re4data/private/ch2data-20261018/files/evd/r11cs00.evd.evq",
+      "bytes": 36,
+      "sha256": "5ed8db2da03a8c03f9e2912dc48755bb7847e59563054b0b802f2481cda6b60c",
+      "mirror_exists": true,
+      "mirror_sha256": "5ed8db2da03a8c03f9e2912dc48755bb7847e59563054b0b802f2481cda6b60c",
+      "mirror_exact": true,
+      "crc32": "71ab9c4d",
+      "evq": {
+        "magic": "R4EVDREF",
+        "version": 1,
+        "payload_bytes": 27456,
+        "chunk_bytes": 65536,
+        "chunk_count": 1,
+        "canonical_name_crc": "13e95aaa",
+        "crc_table_crc": "0a33d2a0"
+      }
+    },
+    {
+      "disc_path": "event/evd/r11cs00.evd",
+      "source": "/root/re4data/private/ch2data-20261018/files/event/evd/r11cs00.evd",
+      "bytes": 27456,
+      "sha256": "a420f91ff7c1bc7de8e32a024dac2280102b671ce86952ca215021a776891cbc",
+      "mirror_exists": true,
+      "mirror_sha256": "a420f91ff7c1bc7de8e32a024dac2280102b671ce86952ca215021a776891cbc",
+      "mirror_exact": true,
+      "crc32": "049c020d"
+    },
+    {
+      "disc_path": "dc/movie/r11cs00.seq",
+      "source": "/root/re4data/private/ch2data-20261018/files/dc/movie/r11cs00.seq",
+      "bytes": 16100668,
+      "sha256": "308a54a601f3f7689488c896a4f5658430fa5addb60c737b73543952ac55e418",
+      "mirror_exists": true,
+      "mirror_sha256": "308a54a601f3f7689488c896a4f5658430fa5addb60c737b73543952ac55e418",
+      "mirror_exact": true,
+      "movie_header": {
+        "magic": "R4FMV003",
+        "words": [
+          288,
+          192,
+          6271092,
+          9809152,
+          2296,
+          1
+        ]
+      }
+    },
+    {
+      "disc_path": "evd/r11cs10.evd",
+      "source": "/root/re4data/private/ch2data-20261018/files/evd/r11cs10.evd",
+      "bytes": 7296,
+      "sha256": "4dde437950c16091d241d3308ef84fc844d0345fc2df614ab843e37805f22564",
+      "mirror_exists": true,
+      "mirror_sha256": "4dde437950c16091d241d3308ef84fc844d0345fc2df614ab843e37805f22564",
+      "mirror_exact": true,
+      "crc32": "5d7c586f"
+    },
+    {
+      "disc_path": "evd/r11cs10.evd.evq",
+      "source": "/root/re4data/private/ch2data-20261018/files/evd/r11cs10.evd.evq",
+      "bytes": 36,
+      "sha256": "a721280493ca3f7f7ee4ab1c8eb0c50150a135491738bcbe7406fef3bad4032c",
+      "mirror_exists": true,
+      "mirror_sha256": "a721280493ca3f7f7ee4ab1c8eb0c50150a135491738bcbe7406fef3bad4032c",
+      "mirror_exact": true,
+      "crc32": "8ede2d00",
+      "evq": {
+        "magic": "R4EVDREF",
+        "version": 1,
+        "payload_bytes": 7296,
+        "chunk_bytes": 65536,
+        "chunk_count": 1,
+        "canonical_name_crc": "d8b5890f",
+        "crc_table_crc": "b6fe5cf2"
+      }
+    },
+    {
+      "disc_path": "event/evd/r11cs10.evd",
+      "source": "/root/re4data/private/ch2data-20261018/files/event/evd/r11cs10.evd",
+      "bytes": 7296,
+      "sha256": "4dde437950c16091d241d3308ef84fc844d0345fc2df614ab843e37805f22564",
+      "mirror_exists": true,
+      "mirror_sha256": "4dde437950c16091d241d3308ef84fc844d0345fc2df614ab843e37805f22564",
+      "mirror_exact": true,
+      "crc32": "5d7c586f"
+    },
+    {
+      "disc_path": "dc/movie/r11cs10.seq",
+      "source": "/root/re4data/private/ch2data-20261018/files/dc/movie/r11cs10.seq",
+      "bytes": 5584817,
+      "sha256": "b6f99cb6319ed04d8ef3875364e8892e3feafdae880ee705bb515cfc7f236b20",
+      "mirror_exists": true,
+      "mirror_sha256": "b6f99cb6319ed04d8ef3875364e8892e3feafdae880ee705bb515cfc7f236b20",
+      "mirror_exact": true,
+      "movie_header": {
+        "magic": "R4FMV003",
+        "words": [
+          288,
+          192,
+          2120385,
+          3456088,
+          761,
+          1
+        ]
+      }
+    },
+    {
+      "disc_path": "evd/r11cs20.evd",
+      "source": "/root/re4data/private/ch2data-20261018/files/evd/r11cs20.evd",
+      "bytes": 5568,
+      "sha256": "8f541990ec9515c63a8a4eea8ac6148501b67e3bdbe4207fb817917c1a5ca5e0",
+      "mirror_exists": true,
+      "mirror_sha256": "8f541990ec9515c63a8a4eea8ac6148501b67e3bdbe4207fb817917c1a5ca5e0",
+      "mirror_exact": true,
+      "crc32": "2d331534"
+    },
+    {
+      "disc_path": "evd/r11cs20.evd.evq",
+      "source": "/root/re4data/private/ch2data-20261018/files/evd/r11cs20.evd.evq",
+      "bytes": 36,
+      "sha256": "735fb7aba3a3c839e857fd1d39cd6b067a0f5a721ad202558c21aa42a55b88c1",
+      "mirror_exists": true,
+      "mirror_sha256": "735fb7aba3a3c839e857fd1d39cd6b067a0f5a721ad202558c21aa42a55b88c1",
+      "mirror_exact": true,
+      "crc32": "55c322f1",
+      "evq": {
+        "magic": "R4EVDREF",
+        "version": 1,
+        "payload_bytes": 5568,
+        "chunk_bytes": 65536,
+        "chunk_count": 1,
+        "canonical_name_crc": "5e21fba1",
+        "crc_table_crc": "f554e834"
+      }
+    },
+    {
+      "disc_path": "event/evd/r11cs20.evd",
+      "source": "/root/re4data/private/ch2data-20261018/files/event/evd/r11cs20.evd",
+      "bytes": 5568,
+      "sha256": "8f541990ec9515c63a8a4eea8ac6148501b67e3bdbe4207fb817917c1a5ca5e0",
+      "mirror_exists": true,
+      "mirror_sha256": "8f541990ec9515c63a8a4eea8ac6148501b67e3bdbe4207fb817917c1a5ca5e0",
+      "mirror_exact": true,
+      "crc32": "2d331534"
+    },
+    {
+      "disc_path": "dc/movie/r11cs20.seq",
+      "source": "/root/re4data/private/ch2data-20261018/files/dc/movie/r11cs20.seq",
+      "bytes": 3697013,
+      "sha256": "ca1fc1d7bd0af59a2eab48817c7330b72054dd1ca87683bbbf670064abafc326",
+      "mirror_exists": true,
+      "mirror_sha256": "ca1fc1d7bd0af59a2eab48817c7330b72054dd1ca87683bbbf670064abafc326",
+      "mirror_exact": true,
+      "movie_header": {
+        "magic": "R4FMV003",
+        "words": [
+          288,
+          192,
+          1446405,
+          2244352,
+          526,
+          1
+        ]
+      }
+    }
+  ],
+  "source_identities": [
+    {
+      "path": "src/st1/r11c.cpp",
+      "bytes": 49046,
+      "sha256": "0d144c5649bb8fa56b982eedc7d8778dd3057c75642fa288952a965a7c65b258"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_cabin.cpp",
+      "bytes": 9947,
+      "sha256": "5011f4f5d86713a13e913d5b60c70549657fbc46c648ec36c9e9207d08fb5c14"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_event_file.cpp",
+      "bytes": 34168,
+      "sha256": "ab5f2f85b530e9237cb4eb60acd49a332400351f9e066aab2e675179f9e37db2"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie.cpp",
+      "bytes": 68858,
+      "sha256": "93df753579f4191495a5827939a2cda784937c2931839b978104c09015155500"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_movie_stream.c",
+      "bytes": 16225,
+      "sha256": "edbac333f7ab39a661c655777fd66ddf05f50403413fc347348e2642788cada7"
+    },
+    {
+      "path": "port/dreamcast/game/platform/audio_aica.cpp",
+      "bytes": 102091,
+      "sha256": "462de3a65f0aaff3458d52d1a50f45c6a439f0c9105b09a57c8f9faf726ea054"
+    },
+    {
+      "path": "src/game/datactrl.cpp",
+      "bytes": 36694,
+      "sha256": "31d38c14806250cdf1d7ad58a7dd742641bc2fbe6e3af5cf5c0f361163277216"
+    },
+    {
+      "path": "src/game/read.cpp",
+      "bytes": 56670,
+      "sha256": "5b55735df468a38ec9af1df809becacbe373bb483b1b0f700879633b15efa237"
+    },
+    {
+      "path": "src/game/event.cpp",
+      "bytes": 122664,
+      "sha256": "7a067adcfb2b218a404aed79bac1190889adf813f7b557a82e75876a584076fa"
+    },
+    {
+      "path": "src/game/main_mem.cpp",
+      "bytes": 49367,
+      "sha256": "2d0951bdd8d69c4fcf332e8d0a02d8d18afeef03a4c65059e931828d20d2e372"
+    },
+    {
+      "path": "port/dreamcast/game/Makefile",
+      "bytes": 211802,
+      "sha256": "e0efff42e9ec0c54b5c59b26fb448c3eba92beb240f9b71ef52fd203a1ba434c"
+    }
+  ],
+  "logical_input_payload_bytes": 25463246
+}
