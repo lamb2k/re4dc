@@ -2488,11 +2488,11 @@ struct MeshDraw : Emitter {
 #if RE4DC_MESH_STRIP_LEAN==3
            && strip_lean_select==2U
 #endif
-          ){int result=1;s=strips_lean(s,end,base,batch,result);if(!s){
+          ){int result=1;s=strips_lean(s,end,base,batch,result);
 #if RE4DC_PS2_PVS
-                if(result>0 && checks==vp::kChecksAll)pvs_observed(l);
+                if(!s && result>0 && checks==vp::kChecksAll)pvs_observed(l);
 #endif
-                return result;}}
+                if(!s)return result;}
 #endif
         while(s<end){
             const unsigned n=*s++;
@@ -4643,9 +4643,11 @@ extern "C" int re4dc_ps2_world_intact(unsigned room,std::uint32_t crc){
     return (ps2w.storage && ps2w.parts && crc && enemyVisSidecarCrc==crc)?1:0;
 }
 extern "C" int re4dc_ps2_placements_intact(unsigned room,const unsigned char* fields,unsigned n){
+#if RE4DC_PS2_PVS
     if(!ps2w.storage || !ps2w.parts || (!fields && n))return 0;
 #if RE4DC_PS2_WORLD_ROOMS
     if(ps2w.room!=room)return 0;
+#endif
 #endif
     (void)room;
     for(unsigned i=0;i<n;++i){

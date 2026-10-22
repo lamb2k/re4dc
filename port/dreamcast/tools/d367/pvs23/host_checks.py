@@ -261,18 +261,29 @@ int qrcodegen_getSize(const uint8_t*);bool qrcodegen_getModule(const uint8_t*,in
             '-DRE4DC_WORLD_METER=1','-DRE4DC_QA_NAME="host"',str(GAME/'qa_menu.cpp')],check=True)
         # This is source-token off identity, not a linked-program gate. Headers
         # are removed identically so no target runtime/toolchain is invoked.
-        for name in ('platform/native_static.cpp','tick_log.cpp','qa_menu.cpp'):
+        common=['-DRE4DC_WORLD_METER=0','-DRE4DC_PS2_PVS=0','-DRE4DC_NATIVE_MESH=1',
+                '-DRE4DC_PS2_WORLD_MESH=1','-DRE4DC_PS2_WORLD_DRAW=1','-DRE4DC_PS2_WORLD_ROOMS=2','-DRE4DC_SS_UI_ORDER=1',
+                '-DRE4DC_D349_RENDERER_STACK=1','-DRE4DC_PVR_STREAM=1']
+        # The current production control retains ENEMY_VIS_CULL=1. PVS-only
+        # liveness strengthening must not alter that existing helper when off.
+        current=['-D__sh__=1','-DRE4DC_ENEMY_VIS_CULL=1','-DRE4DC_MESH_FASTPATH=1','-DRE4DC_MESH_DIRECT=1',
+                 '-DRE4DC_MESH_VP_SCHED=1','-DRE4DC_HW_LEAN=1','-DRE4DC_SCENERY_CHUNK=1',
+                 '-DRE4DC_PS2_WORLD_LEAN=23','-DRE4DC_MESH_PRIME_LAZY=1','-DRE4DC_MESH_STRIP_LEAN=1',
+                 '-DRE4DC_MESH_LOD=1','-DRE4DC_MESH_CLASSIFY=0','-DRE4DC_PS2_STRIP_GROUPS=1','-DRE4DC_PS2_WORLD_DYNAMIC=1',
+                 '-DRE4DC_PS2_WORLD_ROOT_POSE=1','-DRE4DC_PS2_WORLD_PARTS=1','-DRE4DC_PS2_PLACE_GATE=1',
+                 '-DRE4DC_PS2_AREA_HIDE=1']
+        for name in ('platform/native_static.cpp','tick_log.cpp','qa_menu.cpp','platform/native_ui.cpp',
+                     'platform/native_ps2_world.cpp','platform/vram_pages.cpp','dbgwarp_bridge.cpp'):
             before=subprocess.check_output(['git','-C',str(TREE),'show','272e2892f:port/dreamcast/game/'+name]).decode()
             after=(GAME/name).read_text()
-            tokens=[]
-            for revision,text in (('before',before),('after',after)):
-                path=scratch/(revision+'.cc')
-                path.write_text(re.sub(r'^\s*#\s*include[^\n]*','',text,flags=re.M))
-                pp=subprocess.check_output(['g++','-E','-P','-x','c++','-DRE4DC_WORLD_METER=0',
-                    '-DRE4DC_PS2_PVS=0','-DRE4DC_NATIVE_MESH=1','-DRE4DC_PS2_WORLD_MESH=1',
-                    '-DRE4DC_PS2_WORLD_DRAW=1','-DRE4DC_PS2_WORLD_ROOMS=2','-DRE4DC_SS_UI_ORDER=1',str(path)]).decode()
-                tokens.append(re.sub(r'\s+','',pp))
-            assert tokens[0]==tokens[1], 'off preprocessed tokens differ: '+name
+            for mode,flags in (('minimal',common),('current',common+current)):
+                tokens=[]
+                for revision,text in (('before',before),('after',after)):
+                    path=scratch/(revision+'.cc')
+                    path.write_text(re.sub(r'^\s*#\s*include[^\n]*','',text,flags=re.M))
+                    pp=subprocess.check_output(['g++','-E','-P','-x','c++',*flags,str(path)]).decode()
+                    tokens.append(re.sub(r'\s+','',pp))
+                assert tokens[0]==tokens[1], 'off preprocessed tokens differ: '+name+' '+mode
     files=[NATIVE,GAME/'tick_log.cpp',GAME/'qa_menu.cpp',GAME/'platform/include/pvs23_meter.hpp',GAME/'platform/include/pvs23_format.hpp']
     print(json.dumps(dict(result='PASS',scope='ASan/UBSan host source execution only',
         files={str(p.relative_to(TREE)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files}),sort_keys=True))
