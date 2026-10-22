@@ -1,6 +1,6 @@
 {
   "scope": "Design-only retained-input reads, no payload creation or target execution",
-  "base": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+  "base": "64a28a7bdc44312924b14414501b7d4ff1d2d032",
   "retained_inputs": [
     {
       "disc_path": "evd/r11cs00.evd",
@@ -233,9 +233,25 @@
     },
     {
       "path": "port/dreamcast/game/Makefile",
-      "bytes": 211802,
-      "sha256": "e0efff42e9ec0c54b5c59b26fb448c3eba92beb240f9b71ef52fd203a1ba434c"
+      "bytes": 211822,
+      "sha256": "065f5b81a31653ce03cff3bf61a353b7bded48a348dc9c6221621c34d4d4ec43"
+    },
+    {
+      "path": "port/dreamcast/game/platform/native_ui.cpp",
+      "bytes": 490081,
+      "sha256": "59f0017cc6e46e30c8b050d111a0c06379785c2bbc34845f69a1b41d5fa1b87c"
+    },
+    {
+      "path": "port/dreamcast/game/backface.mk",
+      "bytes": 2808,
+      "sha256": "57fdf655c5936c691720bac771f2b6341628770ee4c86d923b188fadaf39e687"
     }
   ],
-  "logical_input_payload_bytes": 25463246
+  "logical_input_payload_bytes": 25463246,
+  "previous_design_base": "f047721fb138b9d7c1a4bf2edf217f76beda4d6c",
+  "rebase_review": {
+    "preserved_tip": "88532e6eb44d95f5cbf24f4946c7039879b5c172",
+    "backup_ref": "refs/backup/cabin23/pre-rebase-20261022-88532e6eb",
+    "review": "Reviewed full Oct22 update including Addendum and Correction. Backface merge changes main Makefile include and guarded native UI census hooks; cabin/event/audio/media/lifetime implementations unchanged. No new build approval."
+  }
 }

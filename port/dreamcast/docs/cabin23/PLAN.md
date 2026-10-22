@@ -1,6 +1,12 @@
 # CABIN_SOURCE carrier staging proposal
 
-Design only, 2026-10-22. Base: origin/t15/int f047721fb138b9d7c1a4bf2edf217f76beda4d6c, verified against the remote before this lane began. No runtime changes, asset creation, compiler, stage, image or guest was started. The user instruction in CODEX-UPDATE-20261022.md is explicit: "Write the design and ask before building."
+Design only, 2026-10-22. Base: origin/t15/int 64a28a7bdc44312924b14414501b7d4ff1d2d032, verified against the remote before this lane began. No runtime changes, asset creation, compiler, stage, image or guest was started. The user instruction in CODEX-UPDATE-20261022.md is explicit: "Write the design and ask before building."
+
+## Current-base rebase review
+
+Rebased the two owned design commits onto current origin/t15/int 64a28a7bdc44312924b14414501b7d4ff1d2d032 after preserving the exact original tip88532e6eb44d95f5cbf24f4946c7039879b5c172 at refs/backup/cabin23/pre-rebase-20261022-88532e6eb. The prior reviewed base was f047721fb138b9d7c1a4bf2edf217f76beda4d6c. The intervening backface22 merge adds backface.mk and guarded native_ui census hooks; the eleven cabin/event/audio/media/lifetime source contracts below are unchanged except the main Makefile include. Current source hashes include the new Makefile, native_ui and backface.mk. Keep the approved base's actual backface/census flags when later freezing qualification identities; this design does not enable or edit them.
+
+The full October22 update, Addendum and Correction were reread. They withdraw pack pruning and hold the shared Ganado texture mip decisions: this overlay proposes no prune, mip generation or atlas work. Cabin remains design only. The pending approval question is unanswered; elapsed time is not approval. No assets, build or guest are authorized by this rebase.
 
 ## Proposed first deliverable
 
